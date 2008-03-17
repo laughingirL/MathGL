@@ -1,0 +1,304 @@
+1.6 Released 13 March 2008
+	- The font parsing and printing codes are completely rewritten
+		* Unicode supprot is added for all functions which print/draw the text.
+		* The class mglFont is completely rewritten for handling new format of solid/wire fonts with UTF glyphs.
+		* The set of recognized TeX symbols and commands is extended.
+		* It is possible now to use different font typefaces in MathGL.
+		* Tools for making solid/wire font files from *.otf, *.ttf and so on files are added.
+		* Function mglFont::Load always sets locale LC_NUMERIC to "C".
+		* Internal font has limited set of characters and no italic/bold symbols. This font is used as default under MS Windows.
+	- The structure of library is reorganized
+		* Header files now are placed in mgl/ subdirectory.
+		* Classes mglGraphFLTK and mglGraphGLUT are extracted as separate dynamic libraries. You should use linker keys -lmgl-fltk or -lmgl-glut for linking them.
+		* The linker key -lmgl is self-consistent and does not need any additional libraryes for linking.
+		* Modules for writing to JPEG or TIFF files are extracted as separate dynamic libraries.
+		* Classes mglGraph and mglGraphAB are pure classes now.
+	- New class mglGraphFLTK for making window with bitmap graphics (including frames and animation) is added. Each class instance may have only one window. However, several instances (windows) can be in application. You should call mglFlRun() at the end for starting FLTK message handling cycle.
+	- New class Fl_MathGL is added. This class is FLTK widget for drawing plots by help of MathGL.
+	- New tool 'mglview' showing MGL script in FLTK window is added.
+	- New function Perspective() switching on/off the perspective in the plot is added .
+	- New function Cone() for the truncated cone drawing is added.
+	- New functions mglData::ReadAll(), mglData::ReadRange() for data reading from a set of files into one mglData object are done.
+	- New function STFA() for Short Time Fourier Analysis is added.
+	- New variables PlotFactor and AutoPlotFactor for picture overall sizing (some analogue of Zoom() function) are added.
+	- New variable mglGraph::WarnCode contains numerical ID of warnings (in some sence it duplicates mglGraph::Message).
+	- TuneTicks flag now influences on Colorbar ticks also.
+	- New variable FactorPos displaying the factor position of axis ticks (0 at Min, 1 at Max, 1.15 is default) is added.
+	- New variable mglGraph::AutoOrg for shifting Org automatically if it lies outside Min ... Max range is added.
+	- Origin of axis is automatically shifted for better view if Org.[xyz] = NAN.
+	- New variable mglGraphGLUT::AutoClf for switching on/off automatic Clf() (picture clearing) between drawing (in GLUT and FLTK windows) is added.
+	- CloudQ plot now uses interpolated color scheme even if it lies inside the face.
+	- New functions for data loading from gsl_vector * and gsl_matrix * are added.
+	- New functions SetFontSizePT(), SetFontSizeCM() and SetFontSizeIN() for setting FontSize in pt, cm and inches are added.
+	- New variable CirclePnts for setting the number of points in circle drawing (like Tube(), Sphere(), Drop(), Cone()) is added.
+	- New MGL commands 'cone', 'readhdf', 'writehdf', 'stfa', 'plotfactor'
+	- New functions mgl_set_draw_face(), mgl_create_graph_fltk(), mgl_fltk_run(), mgl_tune_ticks(), mgl_data_set_value(), mgl_data_get_value(), mgl_set_zoom().
+	- Uniform interface for writting in bitmap files (PNG, BMP, JPEG, TIFF) is created.
+	- Rare bug with alpha channel overflow in mglGraphZB is corrected.
+	- Bug with Transform() is corrected for multidimensional arrays.
+
+1.5 Released 8 January 2008
+	- User may now set the format for tick labels by templates mglGraph::xtt, mglGraph::ytt, mglGraph::ztt or by user-supplied function mglGraph::TickStr. If one of these variables are not NULL then for that axis flag mglGraph::TuneTicks=false.
+	- New function Pipe() is added for the drawing of flow pipes for vector fields.
+	- New functions Sphere() and Drop() are added.
+	- New function Dew() is added for the drawing of vector fields by drops (like dew-drops under wind).
+	- Operators for class mglPoint (longitudinal and transverse component, perpendicular vector, vector product) are added.
+	- New MGL commands (sphere, drop, dew) are added.
+	- MGL commands [xyz]ticks now may have string as an argument for the setting of template of tick labels.
+	- MGL command norm has now additional argument for applying changes for slices >= its value.
+	- MGL command fill has now additional argument for direction of filling.
+	- Functions NewFrame(), EndFrame() are now defined for class mglGraphGL also.
+	- Class mglGraphGL (OpenGL mode) has now fog, arrows and curved text features.
+	- Class mglGraphPS (EPS and SVG files) has now fog feature.
+	- Bug with Surf3() for extremly irregular data is corrected.
+	- Bug with undefined Fog variables is corrected.
+
+1.4.3.1 Released 24 December 2008
+	- Bug with mglGraphGLUT (under MS Windows)
+	- Bug with Fortran subroutines: mgl_label_ext() and mgl_text().
+	- Update verson number (inside help string) for mgl2png, mgl2eps, mgl2svg.
+	- Rename back mglGraph::MessageBuf to mglGraph::Message (for
+	  compatibility with UDAV v.0.2).
+	- Add file with examples for mglGraphGLUT.
+	
+1.4.3 Released 18 December 2008
+	- Fortran interface for most of functions is added.
+	- New function mglGraph::Ternary() for switching on/off
+	  the drawing of Ternary plot is added.
+	- New function mglGraph::Fog() for the fog imitation on picture is added.
+	- New commands "ternary" and "fog" are added to MGL scripts.
+	- Correct line dashing in EPS and SVG files.
+	- Capital letters ("XYZ") in Axis() function argument change shift
+	  to -shift for ticks and labels.
+	- New function mglGraph::CutOff() is added for cutting off arbitrary 
+	  region of 3D space, specified by a formula.
+	- New function mglGraph::WriteBMP() is added.
+	- Symbol ':' (if present) now terminates the color scheme specification 
+	  for all cases.
+	- The lightning in zoom mode is improved.
+	- Formulas now give NAN value for points lied out of range of
+	  function definition.
+	- Orts in mglGraph::Beam() are swapped.
+	- Some changes for compatability with MacOS and MS Visual Studio are done.
+	- Variable FILE *mglGraph::Message is changed to char *mglGraph::MessageBuf.
+
+
+1.4.2 Released 21 November 2007
+	- The order of arguments in [xyz]range options now set the invert or
+	  not the auto-filled coordinate of plots.
+	- Speed up drawing (especially with DrawFace=false).
+	- Command modify now has optional argument vdat and wdat for using in formulas.
+	- New functions mglData::Modify() are added for using of several data
+	  arrays in formulas (variable names are  'v' and 'w').
+	- The library is compatible now with MS Visial Studio.
+	- New functions mglData::Find() are added for the search of values
+	  satisfying the condition.
+	- Change mglData::Resize() to keep values at boundaries.
+	- New command map is added for MGL scripts.
+	- New command once is added for MGL scripts. The code between once on
+	  and once off is executed only one time.
+	- Flag DrawFace=false now sets to draw wire surfaces in all cases except
+	  isosurfaces (Axial(), Surf3*()) and Crust().
+	- Puts and Label functions now have argument for additional shifting of
+	  text (label).
+	- Error with marks drawing for dashed lines is corrected.
+	- Error with tuned ticks along y- and z-direction is corrected.
+
+1.4.1 Released 14 November 2007
+	- If minimal and maximal values of a range are equal then they are
+	  ignored in mglGraph::Axis() function. I.e. it is possible to use
+	  Axis(mglPoint(x1,y1),mglPoint(x2,y2)); to set boundaries of
+	  plain (on X-Y plane) plot.
+	- Ticks looks better now for small (like, from 0.001 to 0.002) or large
+	  (like, from 1000 to 2000) coordinate values and for narrow range
+	  (like, from 0.999 to 1.000). To disable this feature use
+	  mglGraph::TuneTicks=false.
+	- Lines, text and marks now are smoothed (if MGL_SIMPLE_LINE is not defined)
+	- MathGL is now compatible with 64-bit operating systems.
+	- A numerical value (a number) can be extracted from variables in MGL
+	  scripts with the help of suffix:
+		* for sizes -- .nx, .ny, .nz
+		* for maximum position -- .mx, .my, .mz
+		* for average -- .ax, .ay, .az, .aa
+		* for widths -- .wx, .wy, .wz, .wa
+		* for skewness -- .sx, .sy, .sz, .sa
+		* for kurtosis -- .kx, .ky, .kz, .ka
+		* for maximum and minimum -- .max, .min
+		* for sum of all element -- .sum
+	- The error concerned with the script drawing with [xyz]range options exceeding the
+	  axis range is corrected.
+	- The look of legend and ticks is improved.
+	- Log-scaled ticks now is drawn correctly.
+	- New command info is added in MGL script.
+	- New variable mglGraph::Message is added for the handle of warnings output (set
+	  to 0 to disable warnings).
+	- All MathGL drawing functions now tell (by using mglGraph::Message) the matter
+	  why the plot is absent.
+	- Negative font size values are now equal to |size|*FontSize in all cases.
+	- The order of rows in GetBits() and GetRGBA() functions are inverted (for
+	  simpler window drawing).
+	- A short built-in instruction for mgl2png, mgl2eps, mgl2svg programs is added.
+
+1.4 Released 30 October 2007
+	- New function WriteSVG() is added for exporting graphics to SVG files
+	  (actually work only in mglGraphPS class). New interpreter mgl2svg is added.
+	- All MGL script commands now may have options, which change some general
+	  behavior for particular command (plot). The options are: crange, xrange,
+	  yrange, zrange, alpha (or alphadef), meshnum, cut, fontsize, ambient.
+	  Each option should be delimited from previous text by symbol ';'.
+	- Argument of script commands can now contain subarrays (like "plot a(:,1)")
+	- MGL scripts now can have external arguments (string $1, $2, ... $9 in
+	  script). Argument values added by mglParse::AddParam() function.
+	- Font definition string now may contain color specification after symbol ':'.
+	- Optional symbol 't' in the string argument of mglGraph::Cont(),
+	  mglGraph::Cont3(), mglGraph::ContA() plots set to draw contour values
+	  near contour line.
+	- New functions mglGraph::ContFX(), mglGraph::ContFY(), mglGraph::ContFZ(),
+	  mglGraph::ContF(), mglGraph::ContF3(), mglGraph::ContFA() are added for
+	  for plotting solid contours.
+	- New function mglGraph::Crust() is added for plotting reconstructed
+	  surface (crust) for points (it work but not so fine).
+	- New function mglGraph::Dots() is added for plotting dots in space.
+	- New function mglGraph::TriPlot() is added for drawing triangle surface or
+	  mesh (if symbol '#' is specified).
+	- New function mglGraph::Mark() is added for drawing marks with	variable sizes.
+	- New function mglGraph::Tube() is added for drawing tube with specified
+	  radius along the curve.
+	- New function mglGraph::Text() is added for printing text along the curve.
+	- New function mglGraph::Beam() is added for making isosurfaces of beam
+	  amplitude in curvilinear coordinates.
+	- New function mglGraph::Zoom() is added for zoom in/out a part of picture.
+	- New flag mglGraph::DrawFace is added for exclude face drawing
+	  (faster plotting during rotation and so on).
+	- Number of cells in mglGraph::CloudQ() plot and number of hachures in
+	  mglGraph::Vect(), mglGraph::VectC() plots depend now on value
+	  of mglGraph::MeshNum.
+	- New commands chdir, stop and call are added to MGL scripts.
+	- MGL commands xrange, yrange, zrange, crange now may have 2 numbers as arguments.
+	- Points with nan values are not drawn (are ignored) now.
+	- PNG pictures is saved now with transparent background by default.
+	- Some errors are corrected.
+	- Section "<Hints"> is added to chapter "<Examples"> of documentation.
+	- Current changes concerning new functions are added in the library documentation.
+
+1.3	Released 8 October 2007
+	- New script language MGL is introduced.
+	- New class mglParse is added for string-by-string parsing and executing
+	  of MGL scripts.
+	- New function mglGraph::Exec() is added for executing of script commands.
+	- Logical operators are to textual formula parsing in class mglFormula.
+	- Function mglData::Transpose() now have textual argument which specify
+	  new order of dimensions after transposing.
+	- New function mglData::Extend() is added for extending (increasing) the
+	  dimensions of data array.
+	- A function for EPS export is excluded from mglGraphGLUT class.
+	- Parameter \textit{dir} of functions mglGraph::Belt() and mglGraph::Fall()
+	  is excluded. Corresponding flag now is  included in string argument
+	  of these functions.
+	- Rotation direction in mglGraph::Torus() and mglGraph::Axial() now can be
+	  specified in string argument.
+	- Function mglGraph::Bars() does not draw marks of points now.
+	- Black color is changed to dark gray in color palette for 1d plots.
+	- The algorithm of equations parsing is changed.
+	- Some errors are corrected.
+	- The chapter "Script language MGL" is added to the library documentation.
+	- Sections about the using of transparency and pure C interface are added
+	  to chapter "Examples" of the library documentation.
+	- Current changes concerning new functions and so on are added to the
+	  library documentation.
+
+1.2.2	Released 26 September 2007
+	- Add functions mglData::Hist() for creating histogram (distribution)
+	  of data values
+	- Add function mglGraph::Curve for drawing spline (like Bezier curve).
+	- Rewritten mglGraph::Line function.
+	- Add new variable mglGraph::BaseLineWidth for setting base width of lines.
+	  Useful for large bitmap pictures.
+	- Add arrow styles "AKDTVISO_" in line parameters (see mglGraph::SelectPen,
+	  now not supported in OpenGL mode).
+	- Add variables CutMin, CutMax for cutting off a point in some area.
+	  Useful for isosurface plots.
+	- New function mglGraph::Tile is added for drawing surface of horisontal tiles.
+	- New function mglGraph::Error is added for drawing error boxes of data points.
+	- New function mglGraph::Chart is added for drawing charts.
+	- Size of marks now depend on relative size of plot (depend on SubPlot or InPlot calls).
+	- Add function for switching on/off light source separately.
+
+1.2.1	Released 14 September 2007
+	- Autoconf/automake transition (thanks to D. Kulagin)
+
+1.2	Released 10 September 2007
+	- New variant of library also use dynamic linking
+	- Autoconf script is written for Linux mode (thanks to D. Kulagin)
+	- Corrected Colorbar drawing.
+	- New function mglGraph::Belt is added for drawing 2D plot of belts.
+	- New functions XRange, YRange, ZRange are added for automatic determining
+	  scales on x-, y-, z-directions on base of data values.
+	- New variable AxialDir is added for specifing direction of rotation in
+	  Axial and Torus plots.
+	- Added logaritmic-like ticks drawing on axis if mglGraph::dx, mglGraph::dy
+	  or mglGraph::dz is equal to zero.
+	- Flag LegendBox is added for switching on/off box drawing in legend.
+	- Character '_' in string argument of mglGraph::Axis(char *) function
+	  disable tick numbers drawing.
+	- Add function mglGraph::Ambient for brightness of ambient light (surface color)
+	- New parameter added to Light function for brightness of light source
+	- Variable mglGraph::font is renamed to mglGraph::FontDef
+	- Rewritten mglData::Read function to be compatible with Windows Vista
+	- Add function for export/import data to bitmap picture (now only in PNG format)
+	- Rewritten method of automatic tick labels rotation on axis
+	- Add functions mglData::Momentum() for data momentum (average, width,
+	  skewness and so on) evaluation
+	- Add functions to find position of data maximal or minimal value, including
+	  its interpolated position
+	- An "Pure C interface" section is added in documentation.
+	- An "News" section is added in documentation.
+	- Some errors are corrected and minor optimization are done.
+
+1.1	Released 23 May 2007
+	- New class mglGraphPS is written for image exporting to vector EPS file.
+	- New waterfall-like plot is added for 2D data (see mglGraph::Fall).
+	- New Surf3C plot is added for isosurface coloring by other data.
+	- New function for distribution (histogram) creation is added
+	  (see mglData::Hist).
+	- New function for data cropping is added (see mglData::Crop).
+	- Variable mglGraph::MeshNum is added for setting desired number of
+	  lines in Grid and Mesh plots.
+	- Surface lightning is smoothed in ZBuffer mode.
+	- Lightning formula is changed to agree with OpenGL mode.
+	- Flag '#' is added to surface plots. It draws grid (or mesh) on 2D plots
+	  and switches off face drawing for isosurfaces (set wire drawing).
+	- Flag 'sum' is added to Area plot.
+	- Pure C/Fortran interface is written.
+	- Documentation is sufficiently rewritten and extended.
+	- Documentation on Russian is added.
+	- Some errors are corrected.
+
+1.0	Released 2 April 2007
+	- Improved speed of expression parsing.
+	- The SurfA function for the plotting of surface with transparency
+	  determined by other data is added.
+	- The Torus function for the plotting of surface which is result of
+	  the curve rotation is added.
+	- Corrected contour plotting procedure.
+	- Extended library documentation.
+	- Slightly improved speed of ZBuffer drawing.
+
+0.9	Last beta version of the MathGL library. Released 2 March 2007
+	- Rewritten low-level primitive drawing in ZBuffer mode.
+	- Improved surface look in ZBuffer mode.
+	- Improved speed of drawing and formulas evaluation.
+	- 2 additional types of transparency: like glasses and like
+	  superposition of light sources (only in ZBuffer mode).
+	- Corrected Colorbar drawing in OpenGL mode.
+
+0.8.1	ZBuffer drawing was written. Released 19 Febriary 2007
+	- Correct using of the color array under MESA (Linux).
+	- ZBuffer plotting functions are sufficiently rewritten.
+	- A text drawing in ZBuffer mode is added.
+	- A colorbar drawing in ZBuffer mode is added.
+	- All images for documentation are moved in images/ subdirectory.
+	- An example section is added in documentation.
+	- The colorbar description is added in documentation.
+
+0.8.0	First public release
