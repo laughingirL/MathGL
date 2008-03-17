@@ -1,0 +1,22 @@
+This package was debianized by Dmitry I. Kulagin <dik@kulagin.nnov.ru> on
+Wed, 10 Oct 2007 20:00:16 +0400.
+
+It was downloaded from http://mathgl.sourceforge.net/
+
+Upstream Author(s): 
+
+    Alexey Balakin <balakin@appl.sci-nnov.ru>
+
+Copyright: 
+
+    Copyright (C) 2007 Alexey Balakin
+
+License:
+
+    GPLv2
+
+The Debian packaging is (C) 2007, Dmitry I. Kulagin <dik@kulagin.nnov.ru> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+
+# Please also look if there are files or directories which have a
+# different copyright/license attached and list them here.
