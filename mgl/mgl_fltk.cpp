@@ -647,7 +647,10 @@ void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void 
 	w1->end();
 	Wnd = w1;
 	w1->resizable(scroll);	//w->graph);
-	w1->show(argc, argv);
+	
+	char *tmp[1];	tmp[0]=new char[1];	tmp[0][0]=0;
+	w1->show(argc, argv ? argv:tmp);
+	delete []tmp[0];
 }
 //-----------------------------------------------------------------------------
 HMGL mgl_create_graph_fltk(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),

@@ -37,6 +37,24 @@ const char *mglWarn[mglWarnEnd] = {"%s: data dimension(s) is incompatible",
 								"Setsize: size(s) is zero or negative",
 								"Format %s is not supported for that build"};
 //-----------------------------------------------------------------------------
+mglColorID mglColorIds[] = {{'k', mglColor(0,0,0)},
+	{'r', mglColor(1,0,0)},		{'R', mglColor(0.5,0,0)},
+	{'g', mglColor(0,1,0)},		{'G', mglColor(0,0.5,0)},
+	{'b', mglColor(0,0,1)},		{'B', mglColor(0,0,0.5)},
+	{'w', mglColor(1,1,1)},		{'W', mglColor(0.7,0.7,0.7)},
+	{'c', mglColor(0,1,1)},		{'C', mglColor(0,0.5,0.5)},
+	{'m', mglColor(1,0,1)},		{'M', mglColor(0.5,0,0.5)},
+	{'y', mglColor(1,1,0)},		{'Y', mglColor(0.5,0.5,0)},
+	{'h', mglColor(0.5,0.5,0.5)},	{'H', mglColor(0.3,0.3,0.3)},
+	{'l', mglColor(0,1,0.5)},	{'L', mglColor(0,0.5,0.25)},
+	{'e', mglColor(0.5,1,0)},	{'E', mglColor(0.25,0.5,0)},
+	{'n', mglColor(0,0.5,1)},	{'N', mglColor(0,0.25,0.5)},
+	{'u', mglColor(0.5,0,1)},	{'U', mglColor(0.25,0,0.5)},
+	{'q', mglColor(1,0.5,0)},	{'Q', mglColor(0.5,0.25,0)},
+	{'p', mglColor(1,0,0.5)},	{'P', mglColor(0.5,0,0.25)},
+	{0, mglColor(0,0,0)}	// the last one MUST have id=0
+};
+//-----------------------------------------------------------------------------
 void mglGraph::RecalcBorder()
 {
 	float x,y,z;
@@ -411,39 +429,10 @@ float GetY(mglData &y, int i, int j, int k)
 //-----------------------------------------------------------------------------
 void mglColor::Set(char p)
 {
-	switch(p)
-	{
-	case 'k':	r=g=b=0;	break;
-	case 'r':	r=1;g=0;b=0;	break;
-	case 'g':	r=0;g=1;b=0;	break;
-	case 'b':	r=0;g=0;b=1;	break;
-	case 'w':	r=1;g=1;b=1;	break;
-	case 'c':	r=0;g=1;b=1;	break;
-	case 'm':	r=1;g=0;b=1;	break;
-	case 'y':	r=1;g=1;b=0;	break;
-	case 'h':	r=0.5;g=0.5;b=0.5;	break;
-	case 'R':	r=0.5;g=0;b=0;		break;
-	case 'G':	r=0;g=0.5;b=0;		break;
-	case 'B':	r=0;g=0;b=0.5;		break;
-	case 'C':	r=0;g=0.5;b=0.5;	break;
-	case 'M':	r=0.5;g=0;b=0.5;	break;
-	case 'Y':	r=0.5;g=0.5;b=0;	break;
-	case 'H':	r=0.3;g=0.3;b=0.3;	break;
-	case 'W':	r=0.7;g=0.7;b=0.7;	break;
-	case 'l':	r=0;g=1;b=0.5;	break;
-	case 'e':	r=0.5;g=1;b=0;	break;
-	case 'n':	r=0;g=0.5;b=1;	break;
-	case 'u':	r=0.5;g=0;b=1;	break;
-	case 'q':	r=1;g=0.5;b=0;	break;
-	case 'p':	r=1;g=0;b=0.5;	break;
-	case 'L':	r=0;g=0.5;b=0.25;	break;
-	case 'E':	r=0.25;g=0.5;b=0;	break;
-	case 'N':	r=0;g=0.25;b=0.5;	break;
-	case 'U':	r=0.25;g=0;b=0.5;	break;
-	case 'Q':	r=0.5;g=0.25;b=0;	break;
-	case 'P':	r=0.5;g=0;b=0.25;	break;
-	default:	r=-1;g=-1;b=-1;		break;
-	}
+	Set(-1,-1,-1);
+	for(long i=0; mglColorIds[i].id; i++)
+		if(mglColorIds[i].id==p)
+		{	Set(mglColorIds[i].col);	break;	}
 }
 //-----------------------------------------------------------------------------
 void mglGraph::ball(float *p,float *c)
@@ -711,7 +700,7 @@ void mglGraph::Ambient(float bright)	{	AmbBr = bright;	}
 //-----------------------------------------------------------------------------
 mglGraph::mglGraph()
 {
-	fnt = new mglFont;	fnt_alloc = true;
+	fnt = new mglFont;
 	CloudFactor=10;
 	DefaultPlotParam();
 	InitSaveFunc();	
@@ -722,7 +711,7 @@ mglGraph::~mglGraph()
 	ClearEq();
 	ClearLegend();
 	FreeSaveFunc();
-	if(fnt_alloc)	delete fnt;
+	delete fnt;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::SetWarn(int code, const char *who)
@@ -734,19 +723,8 @@ void mglGraph::SetWarn(int code, const char *who)
 //-----------------------------------------------------------------------------
 void mglGraph::SetFont(mglFont *f)
 {
-	if(f)						// set new typeface and delete existed
-	{
-		if(fnt_alloc)	delete fnt;
-		fnt_alloc = false;
-		fnt = f;
-	}
-	else	if(!fnt_alloc)		// create the font with default typeface
-	{
-		fnt_alloc = true;
-		fnt = new mglFont;
-	}
-	else	fnt->Load("STIX");	//	restore (reload) default typeface
-	fnt->gr = this;
+	if(f)	fnt->Copy(f);					// set new typeface and delete existed
+	else	fnt->Load(MGL_DEF_FONT_NAME,0);	//	restore (reload) default typeface
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Label(char dir, const char *str, int pos, float size, float shift)

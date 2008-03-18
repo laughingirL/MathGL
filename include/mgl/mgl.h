@@ -62,7 +62,9 @@ struct mglColor
 	/// Constructor set color from character id
 	mglColor(char c='k'){	Set(c);	};
 	/// Set color as Red, Green, Blue values
-	void Set(float R,float G,float B)	{r=R;g=G;b=B;};
+	void Set(float R,float G,float B)	{r=R;	g=G;	b=B;};
+	/// Set color as Red, Green, Blue values
+	void Set(mglColor c)	{r=c.r;	g=c.g;	b=c.b;};
 	/// Check if color is valid
 	inline bool Valid()
 	{	return (r>=0 && r<=1 && g>=0 && g<=1 && b>=0 && b<=1);	};
@@ -91,6 +93,14 @@ inline mglColor operator!(mglColor a)
 #define BC	mglColor( 0, 0, 0)
 #define WC	mglColor( 1, 1, 1)
 #define RC	mglColor( 1, 0, 0)
+//-----------------------------------------------------------------------------
+/// Structure for color ID
+struct mglColorID
+{
+	char id;
+	mglColor col;
+};
+extern mglColorID mglColorIds[];
 //-----------------------------------------------------------------------------
 /// Class for incapsulating point in space
 struct mglPoint
@@ -587,6 +597,10 @@ public:
 	void Dens(mglData &x, mglData &y, mglData &z, const char *sch=0,float zVal=NAN);
 	/// Draw density plot for 2d data
 	void Dens(mglData &z, const char *sch=0,float zVal=NAN);
+	/// Draw density plot for spectra-gramm specified parametrically
+	void STFA(mglData &x, mglData &y, mglData &re, mglData &im, int dn, const char *sch=0,float zVal=NAN);
+	/// Draw density plot for spectra-gramm
+	void STFA(mglData &re, mglData &im, int dn, const char *sch=0,float zVal=NAN);
 	/// Draw vertical boxes for 2d data specified parametrically
 	void Boxs(mglData &x, mglData &y, mglData &z, const char *sch=0,float zVal=NAN);
 	/// Draw vertical boxes for 2d data
@@ -595,6 +609,10 @@ public:
 	void Tile(mglData &x, mglData &y, mglData &z, const char *sch=0);
 	/// Draw vertical tiles for 2d data
 	void Tile(mglData &z, const char *sch=0);
+	/// Draw vertical tiles with variable size for 2d data specified parametrically
+	void Tile(mglData &x, mglData &y, mglData &z, mglData &z, const char *sch=0);
+	/// Draw vertical tiles with variable size for 2d data
+	void Tile(mglData &z, mglData &z, const char *sch=0);
 	/// Draw contour lines for 2d data specified parametrically
 	void Cont(mglData &v, mglData &x, mglData &y, mglData &z, const char *sch=0, float zVal=NAN);
 	/// Draw contour lines for 2d data
@@ -830,7 +848,6 @@ protected:
 	char Arrow1, Arrow2;		// Style of arrows at end and at start of curve
 	float AmbBr;				///< Default ambient light brightness
 	mglFont *fnt;				///< Class for printing vector text
-	bool fnt_alloc;				///< Flag that font was allocated and must be deleted.
 	float font_factor;
 	bool UseAlpha;				///< Flag that Alpha is used
 	mglColor cmap[NUM_COLOR];	///< Colors for color scheme

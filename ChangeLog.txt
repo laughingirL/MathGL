@@ -1,3 +1,15 @@
+1.6.1 Released ?? March 2008
+	- New plot STFA() is added for ??spectral-gramm??
+	- New plot Tile with variable size of tiles
+	- New function mglData::ReadMat() is added for reading data from text file with sizes specified at beginning.
+	- New function mglFont::Copy() for copying font data from other instance.
+	- New function mgl_set_font().
+	- Bug with ctt is corrected.
+	- Improve Window() functions (for FLTK and GLUT) so that argc, argv can be NULL now.
+	- Improve color Ids so that user may change it (for example, add new color).
+	- Add "smoothing" for edges of cutted surfaces.
+	- Improve TeX symbol parsing.
+
 1.6 Released 13 March 2008
 	- The font parsing and printing codes are completely rewritten
 		* Unicode supprot is added for all functions which print/draw the text.
@@ -31,7 +43,7 @@
 	- New functions for data loading from gsl_vector * and gsl_matrix * are added.
 	- New functions SetFontSizePT(), SetFontSizeCM() and SetFontSizeIN() for setting FontSize in pt, cm and inches are added.
 	- New variable CirclePnts for setting the number of points in circle drawing (like Tube(), Sphere(), Drop(), Cone()) is added.
-	- New MGL commands 'cone', 'readhdf', 'writehdf', 'stfa', 'plotfactor'
+	- New MGL commands 'cone', 'readhdf', 'savehdf', 'stfa', 'plotfactor'
 	- New functions mgl_set_draw_face(), mgl_create_graph_fltk(), mgl_fltk_run(), mgl_tune_ticks(), mgl_data_set_value(), mgl_data_get_value(), mgl_set_zoom().
 	- Uniform interface for writting in bitmap files (PNG, BMP, JPEG, TIFF) is created.
 	- Rare bug with alpha channel overflow in mglGraphZB is corrected.

@@ -431,6 +431,22 @@ void mglGraph::Dens(mglData &z, const char *sch,float zVal)
 }
 //-----------------------------------------------------------------------------
 //
+//	STFA series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::STFA(mglData &x, mglData &y, mglData &re, mglData &im, int dn, const char *sch,float zVal)
+{
+	mglData z = ::STFA(re,im,dn,'x');
+	Dens(x,y,z,sch,zVal);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::STFA(mglData &re, mglData &im, int dn, const char *sch,float zVal)
+{
+	mglData z = ::STFA(re,im,dn,'x');
+	Dens(z,sch,zVal);
+}
+//-----------------------------------------------------------------------------
+//
 //	SurfC series
 //
 //-----------------------------------------------------------------------------
@@ -618,7 +634,7 @@ void mglGraph::Tile(mglData &x, mglData &y, mglData &z, const char *sch)
 			cc[16*i0+2] = cc[16*i0+6] = cc[16*i0+10] = cc[16*i0+14] = c.b;
 			cc[16*i0+3] = cc[16*i0+7] = cc[16*i0+11] = cc[16*i0+15] = Transparent ? AlphaDef:1;
 			pp[12*i0+2] = pp[12*i0+5] = pp[12*i0+8] = pp[12*i0+11] =
-				(z.a[i1]+z.a[i1+1]+z.a[i1+n]+z.a[i1+1+n])/4;
+				(z.a[i1 + n*m*k]+z.a[i1+1 + n*m*k]+z.a[i1+n + n*m*k]+z.a[i1+1+n + n*m*k])/4;
 
 			pp[12*i0+0] = GetX(x,i,j,k);	pp[12*i0+1] = GetY(y,i,j,k);
 			pp[12*i0+3] = GetX(x,i+1,j,k);	pp[12*i0+4] = GetY(y,i+1,j,k);
@@ -642,6 +658,72 @@ void mglGraph::Tile(mglData &z, const char *sch)
 	x.Fill(Min.x,Max.x);
 	y.Fill(Min.y,Max.y);
 	Tile(x,y,z,sch);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Tile(mglData &x, mglData &y, mglData &z, mglData &s, const char *sch)
+{
+	register long i,j,k,n=z.nx,m=z.ny,i0,i1;
+	if(x.nx!=z.nx || s.nx*s.ny*s.nz!=z.nx*z.ny*z.nz)
+	{	SetWarn(mglWarnDim,"Tile");	return;	}
+	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Tile");	return;	}
+	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
+	{	SetWarn(mglWarnDim);	return;	}
+	SetScheme(sch);
+
+	float *pp = new float[12*(n-1)*(m-1)], ss;
+	float *cc = new float[16*(n-1)*(m-1)];
+	bool *tt = new bool[4*(n-1)*(m-1)];
+	float x1,x2,x3,x4,y1,y2,y3,y4;
+	mglColor c;
+
+	for(k=0;k<z.nz;k++)
+	{
+		for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
+		{
+			i0 = i+(n-1)*j;
+			i1 = i+n*j;
+
+			c = GetC(z.a[i1 + n*m*k]);
+			ss = (s.a[i1 + n*m*k] + s.a[i1+1 + n*m*k] + s.a[i1+n + n*m*k] + s.a[i1+1+n + n*m*k])/4.f;
+			ss = (1-GetA(ss))/4;
+			cc[16*i0] = cc[16*i0+4] = cc[16*i0+8] = cc[16*i0+12] = c.r;
+			cc[16*i0+1] = cc[16*i0+5] = cc[16*i0+9] = cc[16*i0+13] = c.g;
+			cc[16*i0+2] = cc[16*i0+6] = cc[16*i0+10] = cc[16*i0+14] = c.b;
+			cc[16*i0+3] = cc[16*i0+7] = cc[16*i0+11] = cc[16*i0+15] = Transparent ? AlphaDef:1;
+			pp[12*i0+2] = pp[12*i0+5] = pp[12*i0+8] = pp[12*i0+11] =
+				(z.a[i1 + n*m*k]+z.a[i1+1 + n*m*k]+z.a[i1+n + n*m*k]+z.a[i1+1+n + n*m*k])/4;
+
+			x1 = GetX(x,i,j,k);			y1 = GetY(y,i,j,k);
+			x2 = GetX(x,i+1,j,k)-x1;	y2 = GetY(y,i+1,j,k)-y1;
+			x4 = GetX(x,i,j+1,k)-x1;	y4 = GetY(y,i,j+1,k)-y1;
+			x3 = GetX(x,i+1,j+1,k)-x2-x4-x1;
+			y3 = GetY(y,i+1,j+1,k)-y2-y4-y1;
+			pp[12*i0+0] = x1+x2*ss+x4*ss+x3*ss*ss;
+			pp[12*i0+1] = y1+y2*ss+y4*ss+y3*ss*ss;
+			pp[12*i0+3] = x1+x2*(1-ss)+x4*ss+x3*ss*(1-ss);
+			pp[12*i0+4] = y1+y2*(1-ss)+y4*ss+y3*ss*(1-ss);
+			pp[12*i0+6] = x1+x2*(1-ss)+x4*(1-ss)+x3*(1-ss)*(1-ss);
+			pp[12*i0+7] = y1+y2*(1-ss)+y4*(1-ss)+y3*(1-ss)*(1-ss);
+			pp[12*i0+9] = x1+x2*ss+x4*(1-ss)+x3*ss*(1-ss);
+			pp[12*i0+10]= y1+y2*ss+y4*(1-ss)+y3*ss*(1-ss);
+			tt[4*i0] = ScalePoint(pp[12*i0+0],pp[12*i0+1],pp[12*i0+2]);
+			tt[4*i0+1] = ScalePoint(pp[12*i0+3],pp[12*i0+4],pp[12*i0+5]);
+			tt[4*i0+2] = ScalePoint(pp[12*i0+6],pp[12*i0+7],pp[12*i0+8]);
+			tt[4*i0+3] = ScalePoint(pp[12*i0+9],pp[12*i0+10],pp[12*i0+11]);
+		}
+		quads_plot((n-1)*(m-1), pp, cc, tt);
+	}
+	Flush();
+	delete []pp;	delete []cc;	delete []tt;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Tile(mglData &z, mglData &s, const char *sch)
+{
+	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Tile");	return;	}
+	mglData x(z.nx), y(z.ny);
+	x.Fill(Min.x,Max.x);
+	y.Fill(Min.y,Max.y);
+	Tile(x,y,z,s,sch);
 }
 //-----------------------------------------------------------------------------
 //		2D plotting functions

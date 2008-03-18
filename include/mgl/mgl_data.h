@@ -103,6 +103,8 @@ public:
 	bool ReadRange(const char *templ, float from, float to, float step=1.f, bool as_slice=false);
 	/// Read data from tab-separated text files with auto determining size which filenames are satisfied to template (like "t_*.dat")
 	bool ReadAll(const char *templ, bool as_slice=false);
+	/// Read data from text file with size specified at beginning of the file
+	bool ReadMat(const char *fname, int dim=2);
 
 	/// Create or recreate the array with specified size and fill it by zero
 	void Create(int nx,int ny=1,int nz=1);

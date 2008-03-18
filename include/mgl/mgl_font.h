@@ -80,6 +80,8 @@ public:
 	float Width(const wchar_t *str,int font=0);
 	/// Return number of glyphs
 	inline unsigned GetNumGlyph()	{	return numg;	};
+	/// Copy data from other font
+	void Copy(mglFont *);	
 protected:
 	wchar_t *id;		///< Unicode ID for glyph
 	unsigned *tr[4];	///< Shift of glyph description by triangles (for solid font)
@@ -88,9 +90,9 @@ protected:
 	short *numl[4];		///< Number of lines in glyph description (for wire font)
 	short *width[4];	///< Width of glyph for wire font
 	float fact[4];		///< Divider for width of glyph
-//	float factor;		///< Factor for normalizing the font
 	unsigned numg;		///< Number of glyphs
-	short *buf;	///< Buffer for glyph descriptions
+	short *buf;			///< Buffer for glyph descriptions
+	long numb;			///< Buffer size
 
 	/// Draw string recursively
 	/* x,y - position, f - factor, style: 0x1 - italic, 0x2 - bold, 0x4 - overline, 0x8 - underline, 0x10 - empty (not draw) */

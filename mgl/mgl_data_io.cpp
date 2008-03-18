@@ -257,6 +257,25 @@ bool mglData::Read(const char *fname,int mx,int my,int mz)
 	return true;
 }
 //-----------------------------------------------------------------------------
+bool mglData::ReadMat(const char *fname,int dim)
+{
+	if(dim<=0 || dim>3)	return false;
+	FILE *fp = fopen(fname,"rt");
+	if(!fp)	return false;
+	nx = ny = nz = 1;
+	if(dim==1)		fscanf(fp,"%d",&nx);
+	else if(dim==2)	fscanf(fp,"%d%d",&nx,&ny);
+	else if(dim==3)	fscanf(fp,"%d%d%d",&nx,&ny,&nz);
+	Create(nx,ny,nz);
+	for(long i=0;i<nx*ny*nz;i++)
+	{
+		if(feof(fp))	break;
+		fscanf(fp,"%g",a+i);
+	}
+	fclose(fp);
+	return true;
+}
+//-----------------------------------------------------------------------------
 void mglData::PrintInfo(FILE *fp)
 {
 	if(fp==0)	return;

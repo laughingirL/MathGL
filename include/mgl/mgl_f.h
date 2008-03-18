@@ -341,6 +341,7 @@ void mgl_data_set_(long *dat, long *a);
 float mgl_data_get_value_(long *d, int *i, int *j, int *k);
 void mgl_data_set_value_(long *d, int *i, int *j, int *k, float *v);
 int mgl_data_read_(long *dat, const char *fname,int);
+int mgl_data_read_mat_(long *dat, const char *fname, int *dim, int);
 int mgl_data_read_dim_(long *dat, const char *fname,int *mx,int *my,int *mz,int);
 void mgl_data_save_(long *dat, const char *fname,int *ns,int);
 void mgl_data_export_(long *dat, const char *fname, const char *scheme,float *v1,float *v2,int *ns,int,int);

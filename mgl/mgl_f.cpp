@@ -99,6 +99,14 @@ void mgl_set_scheme_(long *gr, char *sch, int l)
 	{	s=new char[7];		strcpy(s,"BbcyrR");			}
 	_GR_->SetScheme(s);		delete []s;
 }
+/// Set font facename
+void mgl_set_font(long *gr, char *name, char *path, int l,int n)
+{
+	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
+	char *d=new char[n+1];		memcpy(d,path,n);	d[n]=0;
+	_GR_->GetFont()->Load(s,d);	delete []s;		delete []d;
+}
+
 //-----------------------------------------------------------------------------
 //		Export to file
 //-----------------------------------------------------------------------------

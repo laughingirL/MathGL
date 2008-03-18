@@ -225,15 +225,28 @@ mglTeXsymb mgl_act_symb[] = {
 	{0x02c6, L"hat"}, {0x02dc, L"tilde"}, {0x02d9, L"dot"}, {0x00a8, L"ddot"}, {0x20db, L"dddot"}, {0x20dc, L"ddddot"}, {0x02ca, L"acute"}, {0x02c7, L"check"}, {0x02cb, L"grave"}, {0x20d7, L"vec"}, {0x02c9, L"bar"}, {0x02d8, L"breve"},
 	/*end*/{0, L"\0"}};
 //-----------------------------------------------------------------------------
+int mgl_tex_symb_cmp(const void *a, const void *b)
+{
+	const mglTeXsymb *aa = (const mglTeXsymb *)a;
+	const mglTeXsymb *bb = (const mglTeXsymb *)b;
+	return wcscmp(aa->tex, bb->tex);
+}
+//-----------------------------------------------------------------------------
 // parse LaTeX commands (mostly symbols and acents, and some font-style commands)
 unsigned mglFont::Parse(const wchar_t *s)
 {
 	register long k;
 	unsigned res = unsigned(-2);		// Default is no symbol
 	if(!s || !s[0])	return res;
-	for(k=0;mgl_tex_symb[k].kod;k++)	// special symbols
-		if(!wcscmp(s,mgl_tex_symb[k].tex))
-			return mgl_tex_symb[k].kod;
+	for(k=0;mgl_tex_symb[k].kod;k++);	// determine the number of symbols
+	mglTeXsymb tst, *rts;
+	tst.tex = s;
+	rts = (mglTeXsymb *) bsearch(&tst, mgl_tex_symb, k, sizeof(mglTeXsymb), mgl_tex_symb_cmp);
+	if(rts)	return rts->kod;
+	
+//	for(k=0;mgl_tex_symb[k].kod;k++)	// special symbols
+//		if(!wcscmp(s,mgl_tex_symb[k].tex))
+//			return mgl_tex_symb[k].kod;
 	for(k=0;mgl_act_symb[k].kod;k++)	// acents
 		if(!wcscmp(s,mgl_act_symb[k].tex))
 			return mgl_act_symb[k].kod | MGL_FONT_ZEROW;
@@ -537,6 +550,7 @@ bool mglFont::Load(const char *base, const char *path)
 	sprintf(str,"%s/%s_bi.vfm",path,base);
 	fp = fopen(str,"rt");
 	if(fp)	read_data(fp, fact+3, width[3], numl[3], ln[3], numt[3], tr[3], cur);
+	numb = cur;
 
 	// Finally normalize all factors
 	fact[0] *= mgl_fgen;	fact[1] *= mgl_fgen;
@@ -559,5 +573,39 @@ void mglFont::Clear()
 		delete []numt[0];	delete []numt[1];	delete []numt[2];	delete []numt[3];
 		delete []numl[0];	delete []numl[1];	delete []numl[2];	delete []numl[3];
 	}
+}
+//-----------------------------------------------------------------------------
+void mglFont::Copy(mglFont *f)
+{
+	if(!f || f==this)	return;
+	Clear();
+	numg = f->numg;		numb = f->numb;
+	mem_alloc();
+	// copy general data
+	memcpy(id,f->id,numg*sizeof(wchar_t));
+	memcpy(width[0],f->width[0],numg*sizeof(short));
+	memcpy(width[1],f->width[1],numg*sizeof(short));
+	memcpy(width[2],f->width[2],numg*sizeof(short));
+	memcpy(width[3],f->width[3],numg*sizeof(short));
+	memcpy(tr[0],f->tr[0],numg*sizeof(unsigned));
+	memcpy(tr[1],f->tr[1],numg*sizeof(unsigned));
+	memcpy(tr[2],f->tr[2],numg*sizeof(unsigned));
+	memcpy(tr[3],f->tr[3],numg*sizeof(unsigned));
+	memcpy(numt[0],f->numt[0],numg*sizeof(short));
+	memcpy(numt[1],f->numt[1],numg*sizeof(short));
+	memcpy(numt[2],f->numt[2],numg*sizeof(short));
+	memcpy(numt[3],f->numt[3],numg*sizeof(short));
+	memcpy(ln[0],f->ln[0],numg*sizeof(unsigned));
+	memcpy(ln[1],f->ln[1],numg*sizeof(unsigned));
+	memcpy(ln[2],f->ln[2],numg*sizeof(unsigned));
+	memcpy(ln[3],f->ln[3],numg*sizeof(unsigned));
+	memcpy(numl[0],f->numl[0],numg*sizeof(short));
+	memcpy(numl[1],f->numl[1],numg*sizeof(short));
+	memcpy(numl[2],f->numl[2],numg*sizeof(short));
+	memcpy(numl[3],f->numl[3],numg*sizeof(short));
+	memcpy(fact,f->fact,4*sizeof(float));
+	// now copy symbols descriptions
+	buf = (short *)malloc(numb*sizeof(short));
+	memcpy(buf, f->buf, numb*sizeof(short));
 }
 //-----------------------------------------------------------------------------

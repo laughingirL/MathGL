@@ -80,14 +80,21 @@ void mgl_set_alpha_default(HMGL gr, float alpha)
 /// Set size of frame in pixels. Normally this function is called internaly.
 void mgl_set_size(HMGL gr, int width, int height)
 {	gr->SetSize(width,height);	}
+/// Set rotation direction
 void mgl_set_axial_dir(HMGL gr, char dir)
 {	gr->AxialDir = dir;	}
+/// Set number of lines in mesh
 void mgl_set_meshnum(HMGL gr, int num)
 {	gr->MeshNum = num;	}
+/// Switch on/off face drawing
 void mgl_set_draw_face(HMGL gr, bool enable)
 {	gr->DrawFace = enable;	}
+/// Set color scheme
 void mgl_set_scheme(HMGL gr, char *sch)
 {	gr->SetScheme((sch && sch[0]) ? sch : "BbcyrR");	}
+/// Set font facename
+void mgl_set_font(HMGL gr, char *name, char *path)
+{	gr->GetFont()->Load(name,path);	}
 //-----------------------------------------------------------------------------
 //		Export to file
 //-----------------------------------------------------------------------------

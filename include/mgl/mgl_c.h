@@ -67,6 +67,7 @@ void mgl_set_meshnum(HMGL graph, int num);
 void mgl_set_zoom(HMGL gr, float x1, float y1, float x2, float y2);
 void mgl_set_draw_face(HMGL gr, bool enable);
 void mgl_set_scheme(HMGL gr, char *sch);
+void mgl_set_font(HMGL gr, char *name, char *path);
 /*****************************************************************************/
 /*		Export to file or to memory														 */
 /*****************************************************************************/
@@ -359,6 +360,7 @@ void mgl_data_set_matrix(HMDT dat, gsl_matrix *m);
 float mgl_data_get_value(HMDT dat, int i, int j, int k);
 void mgl_data_set_value(HMDT dat, int i, int j, int k, float v);
 bool mgl_data_read(HMDT dat, const char *fname);
+bool mgl_data_read_mat(HMDT dat, const char *fname, int dim);
 bool mgl_data_read_dim(HMDT dat, const char *fname,int mx,int my,int mz);
 void mgl_data_save(HMDT dat, const char *fname,int ns);
 void mgl_data_export(HMDT dat, const char *fname, const char *scheme,float v1,float v2,int ns);

@@ -354,16 +354,16 @@ int sample_d(mglGraph *gr, void *)
 int main(int argc,char **argv)
 {
 	mglGraphGLUT gr;
-	char key = '1';
+	char key = 0;
 	if(argc>1 && argv[1][0]!='-')	key = argv[1][0];
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting");
 	switch(key)
 	{
-	case '1':	gr.Window(argc,argv,sample_1,"1D plots",NULL);	break;
-	case '2':	gr.Window(argc,argv,sample_2,"2D plots",NULL);	break;
-	case '3':	gr.Window(argc,argv,sample_3,"3D plots",NULL);	break;
-	case 'd':	gr.Window(argc,argv,sample_d,"Dual plots",NULL);	break;
-	default:	gr.Window(argc,argv,sample,"Subplot, and rotations",NULL);	break;
+	case '1':	gr.Window(0,0,sample_1,"1D plots",NULL);	break;
+	case '2':	gr.Window(0,0,sample_2,"2D plots",NULL);	break;
+	case '3':	gr.Window(0,0,sample_3,"3D plots",NULL);	break;
+	case 'd':	gr.Window(0,0,sample_d,"Dual plots",NULL);	break;
+	default:	gr.Window(0,0,sample,"Subplot, and rotations",NULL);	break;
 	}
 	return 0;
 }

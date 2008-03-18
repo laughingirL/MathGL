@@ -88,6 +88,9 @@ void mgl_data_set_double3(HMDT d, const double ***A,int N1,int N2,int N3)
 void mgl_data_set(HMDT d, HMDT a)	{	d->Set(*a);	}
 /// Read data from tab-separated text file with auto determining size
 bool mgl_data_read(HMDT d, const char *fname)	{	return d->Read(fname);	}
+/// Read data from tab-separated text file with built-in sizes
+bool mgl_data_read_mat(HMDT d, const char *fname, int dim)
+{	return d->ReadMat(fname,dim);	}
 /// Read data from text file with specifeid size
 bool mgl_data_read_dim(HMDT d, const char *fname,int mx,int my,int mz)
 {	return d->Read(fname,mx,my,mz);	}
@@ -217,6 +220,12 @@ int mgl_data_read_(long *d, const char *fname,int l)
 {
 	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = _DT_->Read(s);	delete []s;			return r;
+}
+/// Read data from tab-separated text file with buit-in sizes
+int mgl_data_read_(long *d, const char *fname,int *dim,int l)
+{
+	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
+	int r = _DT_->Read(s,*dim);	delete []s;			return r;
 }
 /// Read data from text file with specifeid size
 int mgl_data_read_dim_(long *d, const char *fname,int *mx,int *my,int *mz,int l)

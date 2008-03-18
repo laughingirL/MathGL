@@ -186,6 +186,14 @@ void mglGraphAB::surf_plot(long n,long m,float *pp,float *cc,bool *tt)
 			i0 = i+n*j;		p = pp+3*i0;	c = cc+4*i0;	s = ns+3*i0;
 			if(!tt || (tt[i0] && tt[i0+1] && tt[i0+n] && tt[i0+1+n]))
 				quad_plot_n(p,p+3,p+k,p+k+3,c,c+4,c+4*n,c+4*n+4,s,s+3,s+k,s+k+3);
+			else if(tt[i0] && tt[i0+1] && tt[i0+n])
+				trig_plot_n(p,p+3,p+k,c,c+4,c+4*n,s,s+3,s+k);
+			else if(tt[i0] && tt[i0+1] && tt[i0+n+1])
+				trig_plot_n(p,p+3,p+k+3,c,c+4,c+4*n+4,s,s+3,s+k+3);
+			else if(tt[i0] && tt[i0+n+1] && tt[i0+n])
+				trig_plot_n(p,p+k+3,p+k,c,c+4*n+4,c+4*n,s,s+k+3,s+k);
+			else if(tt[i0+n+1] && tt[i0+1] && tt[i0+n])
+				trig_plot_n(p+k+3,p+3,p+k,c+4+4*n,c+4,c+4*n,s+3+k,s+3,s+k);
 		}
 	}
 	else
@@ -195,6 +203,14 @@ void mglGraphAB::surf_plot(long n,long m,float *pp,float *cc,bool *tt)
 			i0 = i+n*j;		p = pp+3*i0;	s = ns+3*i0;
 			if(!tt || (tt[i0] && tt[i0+1] && tt[i0+n] && tt[i0+1+n]))
 				quad_plot_n(p,p+3,p+k,p+k+3,CDef,CDef,CDef,CDef,s,s+3,s+k,s+k+3);
+			else if(tt[i0] && tt[i0+1] && tt[i0+n])
+				trig_plot_n(p,p+3,p+k,CDef,CDef,CDef,s,s+3,s+k);
+			else if(tt[i0] && tt[i0+1] && tt[i0+n+1])
+				trig_plot_n(p,p+3,p+k+3,CDef,CDef,CDef,s,s+3,s+k+3);
+			else if(tt[i0] && tt[i0+n+1] && tt[i0+n])
+				trig_plot_n(p,p+k+3,p+k,CDef,CDef,CDef,s,s+k+3,s+k);
+			else if(tt[i0+n+1] && tt[i0+1] && tt[i0+n])
+				trig_plot_n(p+k+3,p+3,p+k,CDef,CDef,CDef,s+3+k,s+3,s+k);
 		}
 	}
 	delete []ns;

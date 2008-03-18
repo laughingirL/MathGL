@@ -809,10 +809,18 @@ int mglGraph::exec_s(const char *com, long n, mglArg *a,int k[9])
 			Sphere(mglPoint(a[0].v,a[1].v), a[2].v, k[3]==2 ? a[3].s:"r");
 		else	res = 1;
 	}
-	else if(!strcmp(com,"stfa"))
+	else if(!strcmp(com,"stfad"))
 	{
 		if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==3)
-			*(a[0].d) = STFA(*(a[1].d),*(a[2].d), int(a[3].v), k[4]==2?a[4].s[0]:'x');
+			*(a[0].d) = ::STFA(*(a[1].d),*(a[2].d), int(a[3].v), k[4]==2?a[4].s[0]:'x');
+		else	res = 1;
+	}
+	else if(!strcmp(com,"stfa"))
+	{
+		if(k[0]==1 && k[1]==1 && k[2]==3)
+			STFA(*(a[0].d),*(a[1].d), int(a[2].v), k[3]==2?a[3].s:"");
+		else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==3)
+			STFA(*(a[0].d),*(a[1].d), *(a[2].d),*(a[3].d), int(a[4].v), k[5]==2?a[5].s:"");
 		else	res = 1;
 	}
 	else res = 2;
@@ -945,6 +953,10 @@ int mglGraph::exec_t(const char *com, long , mglArg *a,int k[9])
 		if(k[0]!=1)	res = 1;
 		else if(k[1]==0)	Tile(*(a[0].d));
 		else if(k[1]==2)	Tile(*(a[0].d),a[1].s);
+		else if(k[1]==1 && k[2]==2)
+			Tile(*(a[0].d),*(a[1].d),a[2].s);
+		else if(k[1]==1 && k[2]==1 && k[3]==1)
+			Tile(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2? a[4].s:0);
 		else if(k[1]==1 && k[2]==1)
 			Tile(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2? a[3].s:0);
 		else	res = 1;

@@ -174,7 +174,9 @@ void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *
 	_mgl_glwnd = this;
 	CurFrameId = 1;
 
-	glutInit(&argc, argv);
+	char *tmp[1];	tmp[0]=new char[1];	tmp[0][0]=0;
+	glutInit(&argc, argv ? argv:tmp);
+	delete []tmp[0];
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(600, 400);
 	glutCreateWindow("MathPlotLibrary");
