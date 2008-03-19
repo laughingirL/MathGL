@@ -32,6 +32,12 @@ HMDT mgl_data_resize(HMDT d, int mx,int my,int mz,float x1,float x2,
 /// Get sub-array of the data with given fixed indexes
 HMDT mgl_data_subdata(HMDT d, int xx,int yy,int zz)
 {	return new mglData(d->SubData(xx,yy,zz));	}
+/// Get column (or slice) of the data filled by formulas of other named columns
+HMDT mgl_data_subdata(HMDT d, const char *eq)
+{	return new mglData(d->Column(eq));	}
+/// Set names for columns (slices)
+void mgl_data_set_id(HMDT d, const char *id)
+{	d->SetColumnId(id);	}
 /// Eqidistantly fill the data to range [x1,x2] in direction \a dir
 void mgl_data_fill(HMDT d, float x1,float x2,char dir)
 {	d->Fill(x1,x2,dir);	}
@@ -137,6 +143,19 @@ long mgl_data_resize_(long *d, int *mx,int *my,int *mz,float *x1,float *x2,
 /// Get sub-array of the data with given fixed indexes
 long mgl_data_subdata_(long *d, int *xx,int *yy,int *zz)
 {	return long(new mglData(_DT_->SubData(*xx,*yy,*zz)));	}
+/// Get column (or slice) of the data filled by formulas of other named columns
+long mgl_data_column_(long *d, const char *eq,int l)
+{
+	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
+	long r = long(new mglData(_DT_->Column(s)));
+	delete []s;	return r;
+}
+/// Set names for columns (slices)
+void mgl_data_set_id_(long *d, const char *eq,int l)
+{
+	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
+	_DT_->SetColumnId(s);	delete []s;
+}
 /// Eqidistantly fill the data to range [x1,x2] in direction \a dir
 void mgl_data_fill_(long *d, float *x1,float *x2,const char *dir,int)
 {	_DT_->Fill(*x1,*x2,*dir);	}
@@ -144,8 +163,7 @@ void mgl_data_fill_(long *d, float *x1,float *x2,const char *dir,int)
 void mgl_data_modify_(long *d, const char *eq,int *dim,int l)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
-	_DT_->Modify(s,*dim);
-	delete []s;
+	_DT_->Modify(s,*dim);	delete []s;
 }
 /// Modify the data by specified formula
 void mgl_data_modify_vw_(long *d, const char *eq, long *v, long *w,int l)

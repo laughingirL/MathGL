@@ -350,6 +350,8 @@ void mgl_data_create_(long *dat, int *nx,int *ny,int *nz);
 void mgl_data_transpose_(long *dat, const char *dim,int);
 void mgl_data_norm_(long *dat, float *v1,float *v2,int *sym,int *dim);
 long mgl_data_subdata_(long *dat, int *xx,int *yy,int *zz);
+long mgl_data_column_(long *dat, const char *eq,int l);
+void mgl_data_set_id_(long *dat, const char *id,int l);
 void mgl_data_fill_(long *dat, float *x1,float *x2,const char *dir,int);
 void mgl_data_modify_(long *dat, const char *eq,int *dim,int);
 void mgl_data_modify_vw_(long *dat, const char *eq, long *vdat, long *wdat,int);

@@ -32,7 +32,7 @@ public:
 	/// Evaluates the formula for 'x, y, z, u, v, w'
 	float Calc(float x,float y,float z,float u,float v,float w);
 	/// Evaluates the formula for variables \a var
-	float Calc(float *var);
+	float Calc(float var['z'-'a'+1]);
 	/// Return error code
 	int GetError();
 	/// Parse the formula \a str and create formula-tree

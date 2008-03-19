@@ -800,6 +800,12 @@ int mglGraph::exec_s(const char *com, long n, mglArg *a,int k[9])
 			SetSize(int(a[0].v), int(a[1].v));
 		else	res = 1;
 	}
+	else if(!strcmp(com,"set_id"))
+	{
+		if(k[0]==1 && k[1]==2)
+			a[0].d->SetColumnId(a[1].s);
+		else	res = 1;
+	}
 	else if(!strcmp(com,"sphere"))
 	{
 		for(i=0;i<7;i++)	if(k[i]!=3)	break;
@@ -1310,7 +1316,7 @@ void mglParse::FillArg(int k, char **arg, mglArg *a)
 		mglVar *v, *u;
 		a[n-1].type = -1;
 		p = strchr(arg[n],'.');
-		if(arg[n][0]!='\'' && (s=strchr(arg[n],'(')))	// subdata in argument
+		if(arg[n][0]!='\'' && (s=strchr(arg[n],'(')))	// subdata or column in argument
 		{
 			p = strchr(arg[n],'.');	if(p)	{	p[0]=0;	p++;	}
 			s = strdup(arg[n]);
@@ -1318,13 +1324,23 @@ void mglParse::FillArg(int k, char **arg, mglArg *a)
 			v = FindVar(t);
 			if(v==0)
 			{	a[n-1].type = 2;	a[n-1].v = NAN;		free(s);	return;	}
-			long k[3]={-1,-1,-1};
-			t = strtok (0, "(,)");	if(t)	k[0] = t[0]==':'?-1:atoi(t);
-			t = strtok (0, "(,)");	if(t)	k[1] = t[0]==':'?-1:atoi(t);
-			t = strtok (0, "(,)");	if(t)	k[2] = t[0]==':'?-1:atoi(t);
-			free(s);
-			u = new mglVar;		u->temp = true;
-			u->d = v->d.SubData(k[0],k[1],k[2]);
+			if(strchr(arg[n],':'))	// this subdata
+			{
+				long k[3]={-1,-1,-1};
+				t = strtok (0, "(,)");	if(t)	k[0] = t[0]==':'?-1:atoi(t);
+				t = strtok (0, "(,)");	if(t)	k[1] = t[0]==':'?-1:atoi(t);
+				t = strtok (0, "(,)");	if(t)	k[2] = t[0]==':'?-1:atoi(t);
+				free(s);
+				u = new mglVar;		u->temp = true;
+				u->d = v->d.SubData(k[0],k[1],k[2]);
+			}
+			else	// this is column formula
+			{
+				char *tt = strtok(0,"'");
+				t = strtok(0,"'");	t[-1]=0;
+				u = new mglVar;		u->temp = true;
+				u->d = v->d.Column(tt);
+			}
 			if(DataList)	u->MoveAfter(DataList);
 			else			DataList = u;
 			a[n-1].type = 0;	a[n-1].d = &(u->d);

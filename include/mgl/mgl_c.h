@@ -369,6 +369,8 @@ void mgl_data_create(HMDT dat, int nx,int ny,int nz);
 void mgl_data_transpose(HMDT dat, const char *dim);
 void mgl_data_norm(HMDT dat, float v1,float v2,bool sym,int dim);
 HMDT mgl_data_subdata(HMDT dat, int xx,int yy,int zz);
+HMDT mgl_data_column(HMDT dat, const char *eq);
+void mgl_data_set_id(HMDT d, const char *id);
 void mgl_data_fill(HMDT dat, float x1,float x2,char dir);
 void mgl_data_modify(HMDT dat, const char *eq,int dim);
 void mgl_data_modify_vw(HMDT dat, const char *eq,HMDT vdat,HMDT wdat);

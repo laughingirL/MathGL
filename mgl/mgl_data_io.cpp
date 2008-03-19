@@ -135,6 +135,30 @@ mglData &mglData::SubData(int xx,int yy,int zz)
 	return d;
 }
 //-----------------------------------------------------------------------------
+mglData &mglData::Column(const char *eq)
+{
+	mglFormula f(eq);
+	static mglData d;
+	d.Create(ny,nz);
+	float var['z'-'a'+1];
+	memset(var,0,('z'-'a')*sizeof(float));
+	register long i,j;
+	for(i=0;i<ny*nz;i++)
+	{
+		for(j=0;j<nx;j++)
+			if(id[j]>='a' && id[j]<='z')
+				var[id[j]-'a'] = a[j+nx*i];
+		d.a[i] = f.Calc(var);
+	}
+	return d;
+}
+//-----------------------------------------------------------------------------
+void mglData::SetColumnId(const char *ids)
+{
+	if(ids)	strncpy(id,ids,nx);
+	else	memset(id,0,nx*sizeof(char));
+}
+//-----------------------------------------------------------------------------
 void mglData::Save(const char *fname,int ns)
 {
 	FILE *fp;
@@ -198,8 +222,7 @@ bool mglData::Read(const char *fname)
 	{
 		ch = buf[i];
 		sp = (ch==' ' || ch=='\t');
-		if(ch=='#')	com = true;
-		if(com && ch!='\n')	continue;	else	com = false;
+		if(ch=='#')		while(buf[i]!='\n' && i<nb)	i++;
 		if(!sp && !first)	first=true;
 		if(first && sp && !isspace(buf[i+1])) k++;
 	}
@@ -207,8 +230,7 @@ bool mglData::Read(const char *fname)
 	for(i=0;i<nb-1;i++)					// determine ny
 	{
 		ch = buf[i];
-//		if(ch=='#')	com = true;	// comment
-//		if(com && ch!='\n')	continue;	else	com = false;
+		if(ch=='#')	while(buf[i]!='\n' && i<nb)	i++;
 		if(ch=='\n')
 		{
 			if(buf[i+1]=='\n')	{first=true;	break;	}
@@ -234,12 +256,12 @@ bool mglData::Read(const char *fname)
 //-----------------------------------------------------------------------------
 void mglData::Create(int mx,int my,int mz)
 {
-//	if(mx<=0 || my<=0 || mz<=0)	return;
-
 	nx = mx>0 ? mx:1;	ny = my>0 ? my:1;	nz = mz>0 ? mz:1;
-	if(a)	delete []a;
+	if(a)	{	delete []a;	delete []id;	}
 	a = new float[nx*ny*nz];
+	id = new char[nx];
 	memset(a,0,nx*ny*nz*sizeof(float));
+	memset(id,0,nx*sizeof(char));
 }
 //-----------------------------------------------------------------------------
 bool mglData::Read(const char *fname,int mx,int my,int mz)
@@ -248,12 +270,39 @@ bool mglData::Read(const char *fname,int mx,int my,int mz)
 	FILE *fp = fopen(fname,"rt");
 	if(!fp)	return false;
 	Create(mx,my,mz);
-	for(long i=0;i<mx*my*mz;i++)
-	{
-		if(feof(fp))	break;
-		fscanf(fp,"%g",a+i);
-	}
+	
+	fseek(fp,0,SEEK_END);
+	long nb = ftell(fp);
+	char *buf = new char[nb+1];
+	fseek(fp,0,SEEK_SET);
+	memset(buf,0,nb);	fread(buf,nb,1,fp);
 	fclose(fp);
+
+	register long i=0, j=0, k=0;
+	while(j<nb)
+	{
+		while(buf[j]<=' ' && j<nb)	j++;
+		while(buf[j]=='#')		// skip comment
+		{
+			if(i>0 || buf[j+1]!='#')	// this is columns id
+				while(buf[j]!='\n' && j<nb)	j++;
+			else
+			{
+				while(buf[j]!='\n' && j<nb)
+				{
+					if(buf[j]>='a' && buf[j]<='z')
+						id[k++] = buf[j];
+					j++;
+				}
+			}
+//			while(buf[j]!='\n' && j<nb)	j++;
+			while(buf[j]<=' ' && j<nb)	j++;
+		}
+		a[i] = atof(buf+j);	i++;
+		if(i>=nx*ny*nz)	break;
+		while(buf[j]>' ' && j<nb)	j++;
+	}
+	delete []buf;
 	return true;
 }
 //-----------------------------------------------------------------------------
@@ -263,16 +312,56 @@ bool mglData::ReadMat(const char *fname,int dim)
 	FILE *fp = fopen(fname,"rt");
 	if(!fp)	return false;
 	nx = ny = nz = 1;
-	if(dim==1)		fscanf(fp,"%d",&nx);
-	else if(dim==2)	fscanf(fp,"%d%d",&nx,&ny);
-	else if(dim==3)	fscanf(fp,"%d%d%d",&nx,&ny,&nz);
-	Create(nx,ny,nz);
-	for(long i=0;i<nx*ny*nz;i++)
-	{
-		if(feof(fp))	break;
-		fscanf(fp,"%g",a+i);
-	}
+	
+	fseek(fp,0,SEEK_END);
+	long nb = ftell(fp);
+	char *buf = new char[nb+1];
+	fseek(fp,0,SEEK_SET);
+	memset(buf,0,nb);	fread(buf,nb,1,fp);
 	fclose(fp);
+
+	register long i=0,j=0;
+	while(j<nb)
+	{
+		if(buf[j]=='#')	while(buf[j]!='\n')	j++;	// skip comment
+		while(buf[j]<=' ' && j<nb)	j++;
+		break;
+	}
+	if(dim==1)
+	{
+		sscanf(buf+j,"%d",&nx);
+		while(buf[j]>' ')	j++;
+	}
+	else if(dim==2)
+	{
+		sscanf(buf+j,"%d%d",&nx,&ny);
+		while(buf[j]>' ' && j<nb)	j++;
+		while(buf[j]<=' ' && j<nb)	j++;
+		while(buf[j]>' ' && j<nb)	j++;
+	}
+	else if(dim==3)
+	{
+		sscanf(buf+j,"%d%d%d",&nx,&ny,&nz);
+		while(buf[j]>' ' && j<nb)	j++;
+		while(buf[j]<=' ' && j<nb)	j++;
+		while(buf[j]>' ' && j<nb)	j++;
+		while(buf[j]<=' ' && j<nb)	j++;
+		while(buf[j]>' ' && j<nb)	j++;
+	}
+	Create(nx,ny,nz);
+	while(j<nb)
+	{
+		while(buf[j]<=' ' && j<nb)	j++;
+		while(buf[j]=='#')		// skip comment
+		{
+			while(buf[j]!='\n' && j<nb)	j++;
+			while(buf[j]<=' ' && j<nb)	j++;
+		}
+		a[i] = atof(buf+j);	i++;
+		if(i>=nx*ny*nz)	break;
+		while(buf[j]>' ' && j<nb)	j++;
+	}
+	delete []buf;
 	return true;
 }
 //-----------------------------------------------------------------------------

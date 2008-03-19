@@ -419,10 +419,10 @@ float mglFormula::Calc(float x,float y,float t,float u,float v,float w)
 }
 //-----------------------------------------------------------------------------
 // вычисление значения формулы
-float mglFormula::Calc(float *var)
+float mglFormula::Calc(float var['z'-'a'+1])
 {
 	Error=0;
-	for(long i=0;i<'z'-'a';i++)	a1[i] = var[i];
+	for(long i=0;i<='z'-'a';i++)	a1[i] = var[i];
 	return CalcIn();
 }
 //-----------------------------------------------------------------------------

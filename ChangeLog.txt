@@ -9,6 +9,13 @@
 	- Improve color Ids so that user may change it (for example, add new color).
 	- Add "smoothing" for edges of cutted surfaces.
 	- Improve TeX symbol parsing.
+	
+	- Support of named columns
+		* Column names recognition in mglData::Read(). The string with ## supposed to contain the column name (id) -- character from 'a' to 'z'.
+		* New functions mglData::Column(), mglData::SetColumnId() for named columns handling.
+		* Column function (like "plot a('t') a('p*b')") in MGL scripts.
+		* New functions mgl_data_column(), mgl_data_set_id().
+	
 
 1.6 Released 13 March 2008
 	- The font parsing and printing codes are completely rewritten

@@ -60,10 +60,11 @@ class mglData
 {
 public:
 
-	long nx;			///< number of points in 1st dimensions ('x' dimension)
-	long ny;			///< number of points in 2nd dimensions ('y' dimension)
-	long nz;			///< number of points in 3d dimensions ('z' dimension)
+	long nx;		///< number of points in 1st dimensions ('x' dimension)
+	long ny;		///< number of points in 2nd dimensions ('y' dimension)
+	long nz;		///< number of points in 3d dimensions ('z' dimension)
 	float *a;	  	///< data array
+	char *id;		///< column (or slice) names
 
 	// ~~~~~~~~~~~~~~~~~~~~ операции ~~~~~~~~~~~~~~~~~~~~
 	/// Allocate memory and copy the data from the gsl_vector
@@ -122,6 +123,10 @@ public:
 	void Modify(const char *eq,mglData &v, mglData &w);
 	/// Modify the data by specified formula
 	void Modify(const char *eq,mglData &v);
+	/// Get column (or slice) of the data filled by formulas of other named columns
+	mglData &Column(const char *eq);
+	/// Set names for columns (slices)
+	void SetColumnId(const char *ids);
 	/// Reduce size of the data
 	void Squeeze(int rx,int ry=1,int rz=1,bool smooth=true);
 	/// Crop the data
@@ -214,7 +219,7 @@ public:
 	/// Allocate the memory for data array and initialize it zero
 	mglData(int xx=1,int yy=1,int zz=1)	{	a=0;	Create(xx,yy,zz);	};
 	/// Delete the array
-	~mglData()			{	if(a)	delete []a;		};
+	~mglData()			{	if(a)	{	delete []a;	delete []id;	}	};
 	/// Copy data from other mglData variable
 	void operator=(mglData &d)	{	Set(d.a,d.nx,d.ny,d.nz);	};
 	/// Multiplicate the data by other one for each element
