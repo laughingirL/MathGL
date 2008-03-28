@@ -35,7 +35,7 @@ extern short mgl_buf_fnt[246080];
 const float mgl_fgen = 4*14;
 extern mglTeXsymb mgl_tex_symb[];
 //-----------------------------------------------------------------------------
-void mglFont::Puts(const char *str,const char *how)
+float mglFont::Puts(const char *str,const char *how)
 {
 	int font=0, align=0;
 	if(how)
@@ -49,7 +49,7 @@ void mglFont::Puts(const char *str,const char *how)
 		if(strchr(how,'o'))	font = font|MGL_FONT_OLINE;
 		if(strchr(how,'u'))	font = font|MGL_FONT_ULINE;
 	}
-	Puts(str, font, align);
+	return Puts(str, font, align);
 }
 //-----------------------------------------------------------------------------
 float mglFont::Width(const char *str,const char *how)
@@ -66,7 +66,7 @@ float mglFont::Width(const char *str,const char *how)
 	return Width(str, font);
 }
 //-----------------------------------------------------------------------------
-void mglFont::Puts(const wchar_t *str,const char *how)
+float mglFont::Puts(const wchar_t *str,const char *how)
 {
 	int font=0, align=0;
 	if(how)
@@ -80,7 +80,7 @@ void mglFont::Puts(const wchar_t *str,const char *how)
 		if(strchr(how,'o'))	font = font|MGL_FONT_OLINE;
 		if(strchr(how,'u'))	font = font|MGL_FONT_ULINE;
 	}
-	Puts(str, font, align);
+	return Puts(str, font, align);
 }
 //-----------------------------------------------------------------------------
 float mglFont::Width(const wchar_t *str,const char *how)
@@ -97,13 +97,14 @@ float mglFont::Width(const wchar_t *str,const char *how)
 	return Width(str, font);
 }
 //-----------------------------------------------------------------------------
-void mglFont::Puts(const char *str,int font,int align)
+float mglFont::Puts(const char *str,int font,int align)
 {
 	unsigned size = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[size];
 	mbstowcs(wcs,str,size);
-	Puts(wcs,font,align);
+	float w = Puts(wcs,font,align);
 	delete []wcs;
+	return w;
 }
 //-----------------------------------------------------------------------------
 float mglFont::Width(const char *str,int font)
@@ -116,17 +117,17 @@ float mglFont::Width(const char *str,int font)
 	return w;
 }
 //-----------------------------------------------------------------------------
-void mglFont::Puts(const wchar_t *str,int font,int align)
+float mglFont::Puts(const wchar_t *str,int font,int align)
 {
-	if(numg==0)	return;
-	float w=0,h = (align&4) ? 500./fact[0] : 0;
+	if(numg==0)	return 0;
+	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0;
 	unsigned size = wcslen(str)+1;
 	if(parse)
 	{
 		unsigned *wcs = new unsigned[size];
 		memcpy(wcs,str,size*sizeof(unsigned));
 		Convert(str, wcs);
-		w = Puts(wcs,0,0,1.f,0x10|font);	// find width
+		ww = w = Puts(wcs,0,0,1.f,0x10|font);	// find width
 		Puts(wcs,-w*(align&3)/2.f,-h,1.f,font);	// draw it really
 		delete []wcs;
 	}
@@ -141,7 +142,7 @@ void mglFont::Puts(const wchar_t *str,int font,int align)
 			if(j==-1)	continue;
 			w+= width[s][j]/fact[s];
 		}
-		w *= -(align&3)/2.f;
+		ww = w;		w *= -(align&3)/2.f;
 		if(gr)	for(i=0;i<size;i++)		// draw it
 		{
 			if(str[i]!=' ')
@@ -157,6 +158,7 @@ void mglFont::Puts(const wchar_t *str,int font,int align)
 			w+= width[s][j]/fact[s];
 		}
 	}
+	return ww;
 }
 //-----------------------------------------------------------------------------
 float mglFont::Width(const wchar_t *str,int font)

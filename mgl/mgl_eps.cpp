@@ -326,9 +326,9 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	fprintf(fp,"/rl {rlineto} def\n");
 	fprintf(fp,"/rm {rmoveto} def\n");
 	fprintf(fp,"/dr {stroke} def\n");
-	fprintf(fp,"/ss {%g} def\n",Depth*MarkSize*0.4*font_factor);
-	fprintf(fp,"/s2 {%g} def\n",Depth*MarkSize*0.8*font_factor);
-	fprintf(fp,"/sm {-%g} def\n",Depth*MarkSize*0.4*font_factor);
+	fprintf(fp,"/ss {%g} def\n",MarkSize*0.4*font_factor);
+	fprintf(fp,"/s2 {%g} def\n",MarkSize*0.8*font_factor);
+	fprintf(fp,"/sm {-%g} def\n",MarkSize*0.4*font_factor);
 	fprintf(fp,"/m_c {ss 0.3 mul 0 360 arc} def\n");
 	fprintf(fp,"/d0 {[] 0 setdash} def\n");
 	fprintf(fp,"/sd {0 setdash} def\n");
@@ -385,9 +385,9 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 		{
 			if(P[i].s!=MarkSize)
 			{
-				fprintf(fp,"/ss {%g} def\n",Depth*P[i].s*0.4*font_factor);
-				fprintf(fp,"/s2 {%g} def\n",Depth*P[i].s*0.8*font_factor);
-				fprintf(fp,"/sm {-%g} def\n",Depth*P[i].s*0.4*font_factor);
+				fprintf(fp,"/ss {%g} def\n",P[i].s*0.4*font_factor);
+				fprintf(fp,"/s2 {%g} def\n",P[i].s*0.8*font_factor);
+				fprintf(fp,"/sm {-%g} def\n",P[i].s*0.4*font_factor);
 			}
 			switch(P[i].m)
 			{
@@ -404,9 +404,9 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 			}
 			if(P[i].s!=MarkSize)
 			{
-				fprintf(fp,"/ss {%g} def\n",Depth*MarkSize*0.4*font_factor);
-				fprintf(fp,"/s2 {%g} def\n",Depth*MarkSize*0.8*font_factor);
-				fprintf(fp,"/sm {-%g} def\n",Depth*MarkSize*0.4*font_factor);
+				fprintf(fp,"/ss {%g} def\n",MarkSize*0.4*font_factor);
+				fprintf(fp,"/s2 {%g} def\n",MarkSize*0.8*font_factor);
+				fprintf(fp,"/sm {-%g} def\n",MarkSize*0.4*font_factor);
 			}
 		}
 		else if(P[i].type==2)
@@ -492,7 +492,7 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 	{
 		if(P[i].type==0)
 		{
-			float x=P[i].x[0],y=Height-P[i].y[0],s=Depth*0.4*font_factor*P[i].s;
+			float x=P[i].x[0],y=Height-P[i].y[0],s=0.4*font_factor*P[i].s;
 			fprintf(fp,"<g stroke=\"#%02x%02x%02x\">\n",
 					int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
 			switch(P[i].m)
@@ -635,39 +635,40 @@ void mglPrim::Draw(mglGraphPS *gr)
 	}
 	else if(type==3 && c[3]>0)
 	{
-		float d3[2],dd,dsx,dsy;
-
-		d1[0] = x[1]-x[0];	d2[0] = x[2]-x[0];	d3[0] = x[3]+x[0]-x[1]-x[2];
-		d1[1] = y[1]-y[0];	d2[1] = y[2]-y[0];	d3[1] = y[3]+y[0]-y[1]-y[2];
 		x1 = imin(imin(long(x[0]),long(x[3])),imin(long(x[1]),long(x[2])));	// bounding box
 		y1 = imin(imin(long(y[0]),long(y[3])),imin(long(y[1]),long(y[2])));
 		x2 = imax(imax(long(x[0]),long(x[3])),imax(long(x[1]),long(x[2])));
 		y2 = imax(imax(long(y[0]),long(y[3])),imax(long(y[1]),long(y[2])));
-		dd=d1[0]*d2[1]-d1[1]*d2[0];
-		dsx =-4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[1];
-		dsy = 4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[0];
+		
+		d1[0] = x[1]-x[0];	d2[0] = x[2]-x[0];
+		d1[1] = y[1]-y[0];	d2[1] = y[2]-y[0];
+		dxu = d2[0]*d1[1] - d1[0]*d2[1];
+		if(fabs(dxu)<1e-5)	return;		// points lies on the same line
+		dyv =-d1[0]/dxu;	dxv = d1[1]/dxu;
+		dyu = d2[0]/dxu;	dxu =-d2[1]/dxu;
 
-		register float s,q;
 		for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 		{
 			xx = (i-x[0]);	yy = (j-y[0]);
-			s = dsx*xx + dsy*yy + ipow_mgl(dd+d3[1]*xx-d3[0]*yy,2);
-			if(s<0)	continue;	// no solution
-			s = sqrt(s);
-			q = d3[0]*yy - d3[1]*xx + dd + s;
-			u = q ? 2.f*(d2[1]*xx - d2[0]*yy)/q : -1.f;
-			q = d3[1]*xx - d3[0]*yy + dd + s;
-			v = q ? 2.f*(d1[0]*yy - d1[1]*xx)/q : -1.f;
-			g = u<0.f || u>1.f || v<0.f || v>1.f;
-			if(g)	// first root bad
-			{
-				q = d3[0]*yy - d3[1]*xx + dd - s;
-				u = q ? 2.f*(d2[1]*xx - d2[0]*yy)/q : -1.f;
-				q = d3[1]*xx - d3[0]*yy + dd - s;
-				v = q ? 2.f*(d1[0]*yy - d1[1]*xx)/q : -1.f;
-				g = u<0.f || u>1.f || v<0.f || v>1.f;
-				if(g)	continue;	// second root bad
-			}
+			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
+			g = u<0 || v<0 || u+v>1;
+			if(g)	continue;
+			gr->pnt_plot(i,j,r);
+		}
+
+		d1[0] = x[1]-x[3];	d2[0] = x[2]-x[3];
+		d1[1] = y[1]-y[3];	d2[1] = y[2]-y[3];
+		dxu = d2[0]*d1[1] - d1[0]*d2[1];
+		if(fabs(dxu)<1e-5)	return;		// points lies on the same line
+		dyv =-d1[0]/dxu;	dxv = d1[1]/dxu;
+		dyu = d2[0]/dxu;	dxu =-d2[1]/dxu;
+
+		for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
+		{
+			xx = (i-x[3]);	yy = (j-y[3]);
+			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
+			g = u<0 || v<0 || u+v>1;
+			if(g)	continue;
 			gr->pnt_plot(i,j,r);
 		}
 	}
@@ -717,7 +718,7 @@ void mglGraphPS::mark_plot(int x,int y, char type, unsigned char cs[4])
 //	unsigned char cs[4]={(unsigned char)(255*cs[0]), (unsigned char)(255*cs[1]),
 //						(unsigned char)(255*cs[2]), (unsigned char)(255*cs[3])};
 	float v;
-	register long i,j,ss = long(Depth*MarkSize*0.35*font_factor);
+	register long i,j,ss = long(MarkSize*0.35*font_factor);
 	if(type=='.' || ss==0)
 	{
 		ss = long(3.5+PenWidth);

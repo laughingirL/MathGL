@@ -682,6 +682,19 @@ int mglGraph::exec_r(const char *com, long n, mglArg *a,int k[9])
 				k[3]==3?int(a[3].v):1, k[4]==3?int(a[4].v):1);
 		if(!rr)	SetWarn(mglWarnFile);
 	}
+	else if(!strcmp(com,"readall"))
+	{
+		if(k[0]!=1 || k[1]!=2)	res = 1;
+		else if(k[2]==3 && k[3]==3)
+			a[0].d->ReadRange(a[1].s, a[2].v, a[3].v, k[4]==3?a[4].v:1.f, k[5]==3?(a[5].v!=0) : false);
+		else a[0].d->ReadAll(a[1].s, k[2]==3?(a[2].v!=0) : false);
+	}
+/*	else if(!strcmp(com,"read_range"))
+	{
+		if(k[0]==1 && k[1]==2 && k[2]==3 && k[3]==3)
+			a[0].d->ReadRange(a[1].s, a[2].v, a[3].v, k[2]==3?a[4].v:1.f);
+		else res=1;
+	}*/
 	else if(!strcmp(com,"readhdf"))
 	{
 		if(k[0]!=1 || k[1]!=2 || k[2]!=2)	res = 1;
@@ -1324,7 +1337,7 @@ void mglParse::FillArg(int k, char **arg, mglArg *a)
 			v = FindVar(t);
 			if(v==0)
 			{	a[n-1].type = 2;	a[n-1].v = NAN;		free(s);	return;	}
-			if(strchr(arg[n],':'))	// this subdata
+			if(!strchr(arg[n],'\''))	// this subdata
 			{
 				long k[3]={-1,-1,-1};
 				t = strtok (0, "(,)");	if(t)	k[0] = t[0]==':'?-1:atoi(t);

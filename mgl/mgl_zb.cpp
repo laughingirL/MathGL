@@ -23,6 +23,9 @@
 #include "mgl/mgl_f.h"
 #define imax(a,b)	(a)>(b) ? (a) : (b)
 #define imin(a,b)	(a)<(b) ? (a) : (b)
+
+//#define MGL_ABUF_8
+
 //#define MGL_SIMPLE_LINE
 //-----------------------------------------------------------------------------
 /// Create mglGraph object in ZBuffer mode.
@@ -127,7 +130,11 @@ void mglGraphZB::pnt_plot(long x,long y,float z,unsigned char c[4])
 	long i0=x+Width*(Height-1-y), n=Width*Height;
 	if(x<0 || x>=Width || y<0 || y>=Height)	return;
 	float *zz = Z+i0;
+#ifdef MGL_ABUF_8
 	unsigned char *cc = C+4*i0,*cf=cc+28*n;
+#else
+	unsigned char *cc = C+4*i0,*cf=cc+12*n;
+#endif
 	
 	float zf = FogDist*(z/Depth-0.5-FogDz);
 	if(zf<0)
@@ -139,29 +146,29 @@ void mglGraphZB::pnt_plot(long x,long y,float z,unsigned char c[4])
 	}
 	if(DrawFace || !FastNoFace)
 	{
+#ifdef MGL_ABUF_8
 		if(z>zz[3*n])
 		{
+#endif
 			if(z>zz[n])
 			{
+#ifdef MGL_ABUF_8
+				combine(cf,cc+24*n);	zz[7*n] = zz[6*n];
+				zz[6*n] = zz[5*n];		memcpy(cc+24*n,cc+20*n,4);
+				zz[5*n] = zz[4*n];		memcpy(cc+20*n,cc+16*n,4);
+				zz[4*n] = zz[3*n];		memcpy(cc+16*n,cc+12*n,4);
+				zz[3*n] = zz[2*n];		memcpy(cc+12*n,cc+8*n,4);
+#else
+				combine(cf,cc+8*n);		zz[3*n] = zz[2*n];
+#endif
+				zz[2*n] = zz[1*n];		memcpy(cc+8*n,cc+4*n,4);
 				if(z>zz[0])	// shift point on slice down and paste new point
 				{
-					combine(cf,cc+24*n);	zz[7*n] = zz[6*n];
-					zz[6*n] = zz[5*n];		memcpy(cc+24*n,cc+20*n,4);
-					zz[5*n] = zz[4*n];		memcpy(cc+20*n,cc+16*n,4);
-					zz[4*n] = zz[3*n];		memcpy(cc+16*n,cc+12*n,4);
-					zz[3*n] = zz[2*n];		memcpy(cc+12*n,cc+8*n,4);
-					zz[2*n] = zz[1*n];		memcpy(cc+8*n,cc+4*n,4);
 					zz[1*n] = zz[0*n];		memcpy(cc+4*n,cc,4);
 					zz[0] = z;				memcpy(cc,c,4);
 				}
 				else	// shift point on slice down and paste new point
 				{
-					combine(cf,cc+24*n);	zz[7*n] = zz[6*n];
-					zz[6*n] = zz[5*n];		memcpy(cc+24*n,cc+20*n,4);
-					zz[5*n] = zz[4*n];		memcpy(cc+20*n,cc+16*n,4);
-					zz[4*n] = zz[3*n];		memcpy(cc+16*n,cc+12*n,4);
-					zz[3*n] = zz[2*n];		memcpy(cc+12*n,cc+8*n,4);
-					zz[2*n] = zz[1*n];		memcpy(cc+8*n,cc+4*n,4);
 					zz[n] = z;				memcpy(cc+4*n,c,4);
 				}
 			}
@@ -169,22 +176,34 @@ void mglGraphZB::pnt_plot(long x,long y,float z,unsigned char c[4])
 			{
 				if(z>zz[2*n])	// shift point on slice down and paste new point
 				{
+#ifdef MGL_ABUF_8
 					combine(cf,cc+24*n);	zz[7*n] = zz[6*n];
 					zz[6*n] = zz[5*n];		memcpy(cc+24*n,cc+20*n,4);
 					zz[5*n] = zz[4*n];		memcpy(cc+20*n,cc+16*n,4);
 					zz[4*n] = zz[3*n];		memcpy(cc+16*n,cc+12*n,4);
 					zz[3*n] = zz[2*n];		memcpy(cc+12*n,cc+8*n,4);
+#else
+					combine(cf,cc+8*n);		zz[3*n] = zz[2*n];
+#endif
 					zz[2*n] = z;			memcpy(cc+8*n,c,4);
 				}
 				else	// shift point on slice down and paste new point
 				{
+#ifdef MGL_ABUF_8
 					combine(cf,cc+24*n);	zz[7*n] = zz[6*n];
 					zz[6*n] = zz[5*n];		memcpy(cc+24*n,cc+20*n,4);
 					zz[5*n] = zz[4*n];		memcpy(cc+20*n,cc+16*n,4);
 					zz[4*n] = zz[3*n];		memcpy(cc+16*n,cc+12*n,4);
 					zz[3*n] = z;			memcpy(cc+12*n,c,4);
+#else
+					if(z>zz[3*n])	// point upper the background
+					{	zz[3*n]=z;		combine(cf,c);	}
+					else			// point below the background
+					{	combine(c,cf);	memcpy(cf,c,4);	}
+#endif
 				}
 			}
+#ifdef MGL_ABUF_8
 		}
 		else
 		{
@@ -217,6 +236,7 @@ void mglGraphZB::pnt_plot(long x,long y,float z,unsigned char c[4])
 				{	combine(c,cf);	memcpy(cf,c,4);	}
 			}
 		}
+#endif
 	}
 	else
 	{
@@ -234,8 +254,10 @@ void mglGraphZB::Finish()
 	{
 		i0 = 4*i;	cc = C+i0;
 		c[0]=BDef[0];	c[1]=BDef[1];	c[2]=BDef[2];	c[3]=alf;
+#ifdef MGL_ABUF_8
 		combine(c,cc+28*n);		combine(c,cc+24*n);
 		combine(c,cc+20*n);		combine(c,cc+16*n);
+#endif
 		combine(c,cc+12*n);		combine(c,cc+8*n);
 		combine(c,cc+4*n);		combine(c,cc);
 		memcpy(G4+i0,c,4);
@@ -329,14 +351,15 @@ void mglGraphZB::quad_plot(float *pp0,float *pp1,float *pp2,float *pp3,
 			g = u<0.f || u>1.f || v<0.f || v>1.f;
 			if(g)	continue;	// second root bad
 		}
-		cs[0] = cc0[0]+c1[0]*u+c2[0]*v+c3[0]*u*v;
-		cs[1] = cc0[1]+c1[1]*u+c2[1]*v+c3[1]*u*v;
-		cs[2] = cc0[2]+c1[2]*u+c2[2]*v+c3[2]*u*v;
-		cs[3] = cc0[3]+c1[3]*u+c2[3]*v+c3[3]*u*v;
+		s = u*v;
+		cs[0] = cc0[0]+c1[0]*u+c2[0]*v+c3[0]*s;
+		cs[1] = cc0[1]+c1[1]*u+c2[1]*v+c3[1]*s;
+		cs[2] = cc0[2]+c1[2]*u+c2[2]*v+c3[2]*s;
+		cs[3] = cc0[3]+c1[3]*u+c2[3]*v+c3[3]*s;
 		ns[0]=(d2[2]+d3[2]*u)*(d1[1]+d3[1]*v)-(d2[1]+d3[1]*u)*(d1[2]+d3[2]*v);	// normal vector
 		ns[1]=(d2[0]+d3[0]*u)*(d1[2]+d3[2]*v)-(d2[2]+d3[2]*u)*(d1[0]+d3[0]*v);
 		ns[2]=(d2[1]+d3[1]*u)*(d1[0]+d3[0]*v)-(d2[0]+d3[0]*u)*(d1[1]+d3[1]*v);
-		pnt_plot(i,j,pp0[2]+d1[2]*u+d2[2]*v+d3[2]*u*v,col2int(cs,ns,r));
+		pnt_plot(i,j,pp0[2]+d1[2]*u+d2[2]*v+d3[2]*s,col2int(cs,ns,r));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -392,14 +415,15 @@ void mglGraphZB::quad_plot_n(float *pp0,float *pp1,float *pp2,float *pp3,
 			g = u<0.f || u>1.f || v<0.f || v>1.f;
 			if(g)	continue;	// second root bad
 		}
-		cs[0] = cc0[0]+c1[0]*u+c2[0]*v+c3[0]*u*v;
-		cs[1] = cc0[1]+c1[1]*u+c2[1]*v+c3[1]*u*v;
-		cs[2] = cc0[2]+c1[2]*u+c2[2]*v+c3[2]*u*v;
-		cs[3] = cc0[3]+c1[3]*u+c2[3]*v+c3[3]*u*v;
-		ns[0] = nn0[0]+n1[0]*u+n2[0]*v+n3[0]*u*v;
-		ns[1] = nn0[1]+n1[1]*u+n2[1]*v+n3[1]*u*v;
-		ns[2] = nn0[2]+n1[2]*u+n2[2]*v+n3[2]*u*v;
-		pnt_plot(i,j,pp0[2]+d1[2]*u+d2[2]*v+d3[2]*u*v,col2int(cs,ns,r));
+		s = u*v;
+		cs[0] = cc0[0]+c1[0]*u+c2[0]*v+c3[0]*s;
+		cs[1] = cc0[1]+c1[1]*u+c2[1]*v+c3[1]*s;
+		cs[2] = cc0[2]+c1[2]*u+c2[2]*v+c3[2]*s;
+		cs[3] = cc0[3]+c1[3]*u+c2[3]*v+c3[3]*s;
+		ns[0] = nn0[0]+n1[0]*u+n2[0]*v+n3[0]*s;
+		ns[1] = nn0[1]+n1[1]*u+n2[1]*v+n3[1]*s;
+		ns[2] = nn0[2]+n1[2]*u+n2[2]*v+n3[2]*s;
+		pnt_plot(i,j,pp0[2]+d1[2]*u+d2[2]*v+d3[2]*s,col2int(cs,ns,r));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -648,7 +672,7 @@ void mglGraphZB::mark_plot(float *pp, char type)
 {
 	unsigned char cs[4]={(unsigned char)(255.f*CDef[0]), (unsigned char)(255.f*CDef[1]),
 						(unsigned char)(255.f*CDef[2]), (unsigned char)(255.f*CDef[3])};
-	float p[6]={0,0,pp[2],0,0,pp[2]}, v, ss=Depth*MarkSize*0.35*font_factor;
+	float p[6]={0,0,pp[2],0,0,pp[2]}, v, ss=MarkSize*0.35*font_factor;
 	register long i,j,s;
 	if(type=='.' || ss==0)
 	{

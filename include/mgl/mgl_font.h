@@ -62,20 +62,20 @@ public:
 	/// Get height of text
 	float Height(const char *how);
 	/// Print text string for font specified by string
-	void Puts(const char *str,const char *how);
+	float Puts(const char *str,const char *how);
 	/// Get width of text string for font specified by string
 	float Width(const char *str,const char *how);
 	/// Print text string for font specified by integer constant
-	void Puts(const char *str,int font=0,int align=0);
+	float Puts(const char *str,int font=0,int align=0);
 	/// Get width of text string for font specified by integer constant
 	float Width(const char *str,int font=0);
 	
 	/// Print text string for font specified by string
-	void Puts(const wchar_t *str,const char *how);
+	float Puts(const wchar_t *str,const char *how);
 	/// Get width of text string for font specified by string
 	float Width(const wchar_t *str,const char *how);
 	/// Print text string for font specified by integer constant
-	void Puts(const wchar_t *str,int font=0,int align=0);
+	float Puts(const wchar_t *str,int font=0,int align=0);
 	/// Get width of text string for font specified by integer constant
 	float Width(const wchar_t *str,int font=0);
 	/// Return number of glyphs

@@ -98,7 +98,13 @@ void mglGraphAB::RotateN(float Tet,float x,float y,float z)
 		m = m<fabs(B[3]+B[4]-B[5]) ? fabs(B[3]+B[4]-B[5]) : m;
 		m = m<fabs(B[3]-B[4]+B[5]) ? fabs(B[3]-B[4]+B[5]) : m;
 		m = m<fabs(B[3]-B[4]-B[5]) ? fabs(B[3]-B[4]-B[5]) : m;
-		m /= Height*font_factor;
+		m /= B1[4];//Height;
+		register float n = fabs(B[0]+B[1]+B[2]);
+		n = n<fabs(B[0]+B[1]-B[2]) ? fabs(B[0]+B[1]-B[2]) : n;
+		n = n<fabs(B[0]-B[1]+B[2]) ? fabs(B[0]-B[1]+B[2]) : n;
+		n = n<fabs(B[0]-B[1]-B[2]) ? fabs(B[0]-B[1]-B[2]) : n;
+		n /= B1[0];//Width;
+		m = m<n ? n:m;
 		PlotFactor = 1.55+0.6147*(m-1);
 	}
 }
@@ -110,7 +116,7 @@ void mglGraphAB::Perspective(float a)	// I'm too lazy for using 4*4 matrix
 //-----------------------------------------------------------------------------
 void mglGraphAB::InPlot(float x1,float x2,float y1,float y2)
 {
-	font_factor = x2-x1 > y2-y1 ? x2-x1 : y2-y1;
+	font_factor = Width*(x2-x1) < Height*(y2-y1) ? Width*(x2-x1) : Height*(y2-y1);
 	SelectPen("k-1");
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
 	xPos = int((x1+x2)/2*Width+0.5f);
@@ -212,8 +218,8 @@ float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float
 	Arrow1 = Arrow2 = '_';
 
 	if(size<0)	size = -size*FontSize;
-	long xx=xPos, yy=yPos, zz=zPos,ww = long(sqrt(float(Width*Height)));
-	float shift = 0.07, fsize=ww*size/8.*font_factor;
+	long xx=xPos, yy=yPos, zz=zPos;
+	float shift = 0.07, fsize=size/8.*font_factor;
 	float x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2, _p = Persp;
 	if(font=='t')	shift = -0.07;
 
@@ -241,9 +247,9 @@ float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float
 	yPos = long(pp[1]-shift*(pp[3]-pp[0])/sqrt(ll) - B[4]*0.02f);
 	zPos = long(pp[2]);
 
-	fnt->Puts(str,"rL");
+	fsize = fnt->Puts(str,"rL")*size/8.;
 	xPos=xx;	yPos=yy;	zPos=zz;	memcpy(B,bb,9*sizeof(float));	Persp=_p;
-	return fnt->Width(str,"rL")*size/8.;
+	return fsize;
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::Putsw(mglPoint p,const wchar_t *wcs,const char *font,
@@ -261,8 +267,8 @@ void mglGraphAB::Putsw(mglPoint p,const wchar_t *wcs,const char *font,
 	SelectPen(stl);
 
 	if(size<0)	size = -size*FontSize;
-	long xx=xPos, yy=yPos, zz=zPos,ww = Width<Height ? Width : Height;
-	float shift = (sh/10+0.2)*2/PlotFactor, fsize=ww*size/8.*font_factor;
+	long xx=xPos, yy=yPos, zz=zPos;
+	float shift = (sh/10+0.2)*2/PlotFactor, fsize=size/8.*font_factor;
 	float x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2, _p=Persp;
 	zoomx1=zoomy1=0;	zoomx2=zoomy2=1;
 
@@ -304,6 +310,7 @@ void mglGraphAB::Putsw(mglPoint p,const wchar_t *wcs,const char *font,
 	}
 	else if(dir=='n')
 	{
+		int ww = Width<Height ? Width : Height;
 		float ax=ww*size/8./Width, ay=ww*size/8./Height, az=ww*size/8./sqrt(float(Height*Width));
 //		float ax=fsize/Width, ay=fsize/Height, az=fsize/sqrt(float(Height*Width));
 		xPos = long(pp[0]);	yPos = long(pp[1]);	zPos = long(pp[2]);
@@ -492,8 +499,8 @@ void mglGraphAB::arrow_plot(float *p1,float *p2,char st)
 {
 	if(!strchr("AVKSDTIO",st))	return;
 	float lx=p1[0]-p2[0], ly=p1[1]-p2[1], ll, kx,ky;
-	float pp[12], ss = Depth*ArrowSize*0.35;
-	ll = hypot(lx,ly)/(ss*font_factor);		if(ll==0)	return;
+	float pp[12];
+	ll = hypot(lx,ly)/(ArrowSize*0.35*font_factor);		if(ll==0)	return;
 	lx /= ll;	ly /= ll;	kx = ly;	ky = -lx;
 	pp[2] = pp[5] = pp[8] = pp[11] = p1[2];
 
@@ -543,7 +550,7 @@ void mglGraphAB::arrow_plot(float *p1,float *p2,char st)
 		pp[9] = p1[0]+kx+2*lx;	pp[10] = p1[1]+ky+2*ly;
 		quad_plot(pp,pp+3,pp+9,pp+6,CDef,CDef,CDef,CDef);	break;
 	case 'O':
-		ss = MarkSize;	MarkSize = ArrowSize;
+		float ss = MarkSize;	MarkSize = ArrowSize;
 		mark_plot(p1,'O');
 		MarkSize = ss;
 	}

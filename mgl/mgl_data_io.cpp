@@ -837,27 +837,34 @@ mglData &mglData::Combine(mglData &b)
 //-----------------------------------------------------------------------------
 void mglData::Extend(int n1, int n2)
 {
-	if(nz>2 || (n1==0 && n2==0))	return;
-	long mx,my,mz,m1,m2;
+	if(nz>2 || n1==0)	return;
+	long mx,my,mz;
 	float *b=0;
-	if(n1>=0 && n2>=0)	// extend to up dimensions
+	register long i,j;
+	if(n1>0) // extend to higher dimension(s)
 	{
-		mx = nx;	my = ny;	mz = n1+1;	m1 = nx*ny;	m2=mz;
-		if(ny>1)	{	my=n1+1;	mz=n2+1;	m1=nx;	m2=my*mz;	}
+		n2 = n2>0 ? n2:1;
+		mx = nx;	my = ny>1?ny:n1;	mz = ny>1 ? n1 : n2;
 		b = new float[mx*my*mz];
-		for(long i=0;i<m2;i++)
-			memcpy(b+i*m1,a,m1*sizeof(float));
+		if(ny>1)	for(i=0;i<n1;i++)
+			memcpy(b+i*nx*ny, a, nx*ny*sizeof(float));
+		else		for(i=0;i<n1*n2;i++)
+			memcpy(b+i*nx, a, nx*sizeof(float));		
 	}
-	else if(n1<0)
+	else
 	{
-		if(ny==1 && n2<0)
-		{	mx = 1-n1;	my = 1-n2;	mz = nx;	m1 = mx*my;	m2 = nx;	}
-		else
-		{	mx = 1-n1;	my = nx;	mz = ny;	m1 = mx;	m2 = nx*ny;	}
-		b = new float[mx*my*mz];
-		for(long i=0;i<m1;i++)	for(long j=0;j<m2;j++)	b[i+m1*j] = a[j];
+		mx = -n1;	my = n2<0 ? -n2 : nx;	mz = n2<0 ? nx : ny;
+		if(n2<0)	for(i=0;i<mx*my;i++)	for(j=0;j<nx;j++)
+			b[i+mx*my*j] = a[j];
+		else		for(i=0;i<mx;i++)		for(j=0;j<nx*ny;j++)
+			b[i+mx*j] = a[j];
+		if(n2>0 && ny==1)
+		{
+			mz = n2;
+			for(i=0;i<n2;i++)	memcpy(b+i*mx*my, a, mx*my*sizeof(float));
+		}
 	}
-	if(b)	{	delete []a;	a = b;	}
+	if(b)	{	delete []a;	a = b;	nx = mx;	ny = my;	nz = mz;	}
 }
 //-----------------------------------------------------------------------------
 void mglData::Transpose(const char *dim)

@@ -452,7 +452,7 @@ void mglGraph::DefaultPlotParam()
 	Cut = true;				OnCoord=false;
 	dx = dy = dz = -5;		NSx = NSy = NSz = 0;
 	fx = fy = fz = fc = 0;	Cmin = -1;	Cmax = 1;
-	BarWidth = 0.7;			font_factor = 1;
+	BarWidth = 0.7;
 	MarkSize = 0.02;		ArrowSize = 0.03;
 	AlphaDef = 0.5;			Transparent = true;
 	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1), mglPoint(0,0,0));
@@ -578,6 +578,7 @@ void mglGraph::string_curve(long f,long n,float *pp,long *nn,const wchar_t *text
 	for(unsigned j=0;j<wcslen(text);j++)
 	{
 		L[0] = text[j];		ww = Putsw(p0,n0,L,pos<0?'T':'t',size);
+printf("%lc -> %g\n",L[0], ww);
 		p1 = p0+(ww/Norm(n0))*n0;
 		// let find closest point
 		for(r=1e10,i=0;i<n;i++)
