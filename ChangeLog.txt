@@ -1,6 +1,6 @@
 1.6.1 Released ?? March 2008
 	- New plot STFA() is added for ??spectral-gramm??
-	- New plot Tile with variable size of tiles
+	- Extend plot Tile by variable size of tiles
 	- New function mglData::ReadMat() is added for reading data from text file with sizes specified at beginning.
 	- New function mglFont::Copy() for copying font data from other instance.
 	- New function mgl_set_font().
@@ -9,6 +9,14 @@
 	- Improve color Ids so that user may change it (for example, add new color).
 	- Add "smoothing" for edges of cutted surfaces.
 	- Improve TeX symbol parsing.
+
+	- Improve log-axis ticks.
+	- Add 'marksize' option in MGL scripts for changing MarkSize for single plot only.
+	- Add 'legend' option in MGL scripts for adding plot annotation.
+	- Improve text in Legend().
+	- Extend plot Bars() for drawing bars side-by-side or one-above-one.
+	- New plot TextMark() is added for drawing textual (includeing LaTeX) symbols at point position.
+	- New MGL command 'textmark' is added.
 	
 	- Support of named columns
 		* Column names recognition in mglData::Read(). The string with ## supposed to contain the column name (id) -- character from 'a' to 'z'.

@@ -48,7 +48,7 @@ public:
 
 	void Mark(float x,float y,float z,char mark='.');
 	void Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line);
-	float GetRatio()	{	return float(Width)/float(Height);	};
+	float GetRatio()	{	return B1[0]/B1[4];	};
 	void Putsw(mglPoint p,const wchar_t *text,const char *font=0,float size=-1,char dir=0,float shift=0);
 	float Putsw(mglPoint p,mglPoint l,const wchar_t *text,char font='t',float size=-1);
 	void Pen(mglColor col, char style,float width);

@@ -394,10 +394,13 @@ void mglGraph::AxisX(bool text)
 			pp[0]=x;	pp[1]=y0+ddy/7;	pp[2]=z0;
 			pp[3]=x;	pp[4]=y0;	pp[5]=z0;
 			pp[6]=x;	pp[7]=y0;	pp[8]=z0+ddz/7;
-			DrawTick(pp,false);
-			swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(x))));
-			if(text && cur%k==0)
-				Putsw(mglPoint(x,y0,z0),str,FontDef,FontSize,'x');
+			if(xx>=Min.x && xx<=Max.x)
+			{
+				DrawTick(pp,false);
+				swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(x))));
+				if(text && cur%k==0)
+					Putsw(mglPoint(x,y0,z0),str,FontDef,FontSize,'x');
+			}
 			// subticks drawing
 			for(xx=x;xx<10*x;xx+=x)
 			{
@@ -492,10 +495,13 @@ void mglGraph::AxisY(bool text)
 			pp[0]=x0+ddx/7;	pp[1]=y;	pp[2]=z0;
 			pp[3]=x0;		pp[4]=y;	pp[5]=z0;
 			pp[6]=x0;		pp[7]=y;	pp[8]=z0+ddz/7;
-			DrawTick(pp,false);
-			swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(y))));
-			if(text && cur&k==0)
-				Putsw(mglPoint(x0,y,z0),str,FontDef,FontSize,'y');
+			if(yy>=Min.y && yy<=Max.y)
+			{
+				DrawTick(pp,false);
+				swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(y))));
+				if(text && cur&k==0)
+					Putsw(mglPoint(x0,y,z0),str,FontDef,FontSize,'y');
+			}
 			// subticks drawing
 			for(yy=y;yy<10*y;yy+=y)
 			{
@@ -590,10 +596,13 @@ void mglGraph::AxisZ(bool text)
 			pp[0]=x0;	pp[1]=y0+ddy/7;	pp[2]=z;
 			pp[3]=x0;	pp[4]=y0;		pp[5]=z;
 			pp[6]=x0+ddx/7;	pp[7]=y0;	pp[8]=z;
-			DrawTick(pp,false);
-			swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(z))));
-			if(text && cur%k==0)
-				Putsw(mglPoint(x0,y0,z),str,FontDef,FontSize,'z');
+			if(zz>=Min.z && zz<=Max.z)
+			{
+				DrawTick(pp,false);
+				swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(z))));
+				if(text && cur%k==0)
+					Putsw(mglPoint(x0,y0,z),str,FontDef,FontSize,'z');
+			}
 			// subticks drawing
 			for(zz=z;zz<10*z;zz+=z)
 			{
@@ -656,6 +665,7 @@ void mglGraph::TickBox()
 		x0 = exp(M_LN10*floor(0.1+log10(Min.x)));
 		for(x=x0;x<Max.x;x*=10)
 		{
+			if(x<Min.x)	continue;
 			pp[0]=x;	pp[1]=Min.y+ddy/7;	pp[2]=Min.z;
 			pp[3]=x;	pp[4]=Min.y;		pp[5]=Min.z;
 			pp[6]=x;	pp[7]=Min.y;		pp[8]=Min.z+ddz/7;
@@ -698,6 +708,7 @@ void mglGraph::TickBox()
 		y0 = exp(M_LN10*floor(0.1+log10(Min.y)));
 		for(y=y0;y<Max.y;y*=10)
 		{
+			if(y<Min.y)	continue;
 			pp[0]=Min.x+ddx/7;	pp[1]=y;	pp[2]=Min.z;
 			pp[3]=Min.x;		pp[4]=y;	pp[5]=Min.z;
 			pp[6]=Min.x;		pp[7]=y;	pp[8]=Min.z+ddz/7;
@@ -740,6 +751,7 @@ void mglGraph::TickBox()
 		z0 = exp(M_LN10*floor(0.1+log10(Min.z)));
 		for(z=z0;z<Max.z;z*=10)
 		{
+			if(z<Min.z)	continue;
 			pp[0]=Min.x+ddx/7;	pp[1]=Min.y;		pp[2]=z;
 			pp[3]=Min.x;		pp[4]=Min.y;		pp[5]=z;
 			pp[6]=Min.x;		pp[7]=Min.y+ddy/7;	pp[8]=z;
@@ -824,9 +836,11 @@ void mglGraph::Box(mglColor p,bool ticks)
 //-----------------------------------------------------------------------------
 void mglGraph::AddLegend(const wchar_t *text,const char *style)
 {
+	if(!text)	return;
 	if(NumLeg>=100)	{	SetWarn(mglWarnLegA);	return;	}
 	LegStr[NumLeg] = wcsdup(text);
-	LegStl[NumLeg] = strdup(style);
+	if(style)	LegStl[NumLeg] = strdup(style);
+	else		LegStl[NumLeg] = strdup(last_style);
 	NumLeg++;
 }
 //-----------------------------------------------------------------------------

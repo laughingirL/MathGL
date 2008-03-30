@@ -98,14 +98,13 @@ void mglGraphAB::RotateN(float Tet,float x,float y,float z)
 		m = m<fabs(B[3]+B[4]-B[5]) ? fabs(B[3]+B[4]-B[5]) : m;
 		m = m<fabs(B[3]-B[4]+B[5]) ? fabs(B[3]-B[4]+B[5]) : m;
 		m = m<fabs(B[3]-B[4]-B[5]) ? fabs(B[3]-B[4]-B[5]) : m;
-		m /= B1[4];//Height;
+		m /= B1[4];
 		register float n = fabs(B[0]+B[1]+B[2]);
 		n = n<fabs(B[0]+B[1]-B[2]) ? fabs(B[0]+B[1]-B[2]) : n;
 		n = n<fabs(B[0]-B[1]+B[2]) ? fabs(B[0]-B[1]+B[2]) : n;
 		n = n<fabs(B[0]-B[1]-B[2]) ? fabs(B[0]-B[1]-B[2]) : n;
-		n /= B1[0];//Width;
-		m = m<n ? n:m;
-		PlotFactor = 1.55+0.6147*(m-1);
+		n /= B1[0];
+		PlotFactor = 1.55+0.6147*(m<n ? (n-1):(m-1));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -310,9 +309,7 @@ void mglGraphAB::Putsw(mglPoint p,const wchar_t *wcs,const char *font,
 	}
 	else if(dir=='n')
 	{
-		int ww = Width<Height ? Width : Height;
-		float ax=ww*size/8./Width, ay=ww*size/8./Height, az=ww*size/8./sqrt(float(Height*Width));
-//		float ax=fsize/Width, ay=fsize/Height, az=fsize/sqrt(float(Height*Width));
+		float ax=fsize/B1[0], ay=fsize/B1[4], az=fsize/B1[8];
 		xPos = long(pp[0]);	yPos = long(pp[1]);	zPos = long(pp[2]);
 		B[0]*= ax;	B[3]*= ax;	B[6]*= ax;
 		B[1]*= ay;	B[4]*= ay;	B[7]*= ay;

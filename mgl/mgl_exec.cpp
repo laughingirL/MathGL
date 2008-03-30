@@ -41,19 +41,26 @@ int mglGraph::Exec(const char *com, long n, mglArg *a)
 	char ch = com[0];
 	int k[9], i;
 	for(i=0;i<9;i++)	k[i] = i<n ? a[i].type + 1 : 0;
-	if(ch == 'a')		return exec_a(com,n,a,k);
-	else if(ch == 'b')	return exec_b(com,n,a,k);
-	else if(ch == 'c')	return exec_c(com,n,a,k);
-	else if(ch == 'd')	return exec_d(com,n,a,k);
-	else if(ch == 'f')	return exec_f(com,n,a,k);
-	else if(ch == 'g')	return exec_g(com,n,a,k);
-	else if(ch == 'l')	return exec_l(com,n,a,k);
-	else if(ch == 'm')	return exec_m(com,n,a,k);
-	else if(ch == 'r')	return exec_r(com,n,a,k);
-	else if(ch == 's')	return exec_s(com,n,a,k);
-	else if(ch == 't')	return exec_t(com,n,a,k);
-	else if(ch >= 'v')	return exec_vz(com,n,a,k);
-	else	return exec_misc(com,n,a,k);
+	if(ch<'m')
+	{
+		if(ch == 'a')		return exec_a(com,n,a,k);
+		else if(ch == 'b')	return exec_b(com,n,a,k);
+		else if(ch == 'c')	return exec_c(com,n,a,k);
+		else if(ch == 'd')	return exec_d(com,n,a,k);
+		else if(ch == 'f')	return exec_f(com,n,a,k);
+		else if(ch == 'g')	return exec_g(com,n,a,k);
+		else if(ch == 'l')	return exec_l(com,n,a,k);
+		else	return exec_misc1(com,n,a,k);
+	}
+	else
+	{
+		if(ch == 'm')	return exec_m(com,n,a,k);
+		else if(ch == 'r')	return exec_r(com,n,a,k);
+		else if(ch == 's')	return exec_s(com,n,a,k);
+		else if(ch == 't')	return exec_t(com,n,a,k);
+		else if(ch >= 'v')	return exec_vz(com,n,a,k);
+		else	return exec_misc2(com,n,a,k);
+	}
 }
 //-----------------------------------------------------------------------------
 int mglGraph::exec_a(const char *com, long n, mglArg *a,int k[9])
@@ -142,13 +149,18 @@ int mglGraph::exec_b(const char *com, long , mglArg *a,int k[9])
 	else if(!strcmp(com,"bars"))
 	{
 		if(k[0]!=1)	res = 1;
-		else if(k[1]==2)	Bars(*(a[0].d),a[1].s,k[2]==3 ? a[2].v : NAN);
+		else if(k[1]==2)
+			Bars(*(a[0].d),a[1].s,k[2]==3 ? a[2].v : NAN, 
+				   k[3]==3 ? (a[3].v!=0) : false);
 		else if(k[1]==1)
 		{
 			if(k[2]==2)
-				Bars(*(a[0].d),*(a[1].d),a[2].s,k[3]==3 ? a[3].v : NAN);
+				Bars(*(a[0].d),*(a[1].d),a[2].s,k[3]==3 ? a[3].v : NAN,
+					k[4]==3 ? (a[4].v!=0) : false);
 			else if(k[2]==0)	Bars(*(a[0].d),*(a[1].d));
-			else if(k[2]==1)	Bars(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0);
+			else if(k[2]==1)
+				Bars(*(a[0].d),*(a[1].d),*(a[2].d),	k[3]==2?a[3].s:0,
+					k[4]==3 ? (a[4].v!=0) : false);
 		}
 		else	Bars(*(a[0].d));
 	}
@@ -1020,6 +1032,18 @@ int mglGraph::exec_t(const char *com, long , mglArg *a,int k[9])
 	}
 	else if(!strcmp(com,"transpose"))
 	{	if(k[0]==1)	a[0].d->Transpose(k[1]==2?a[1].s:"yxz");	else	res = 1;	}
+	else if(!strcmp(com,"textmark"))
+	{
+		if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+			TextMark(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,k[5]==2?a[5].s:0);
+		else if(k[0]==1 && k[1]==1 && k[2]==1)
+			TextMark(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,k[4]==2?a[4].s:0,k[5]==3?a[5].v:NAN);
+		else if(k[0]==1 && k[1]==1)
+			TextMark(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,k[3]==2?a[3].s:0,k[4]==3?a[4].v:NAN);
+		else if(k[0]==1)
+			TextMark(*(a[0].d),k[1]==2?a[1].s:0,k[2]==2?a[2].s:0,k[3]==3?a[3].v:NAN);
+		else	res = 1;
+	}
 	else if(!strcmp(com,"triplot"))
 	{
 		if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
@@ -1130,7 +1154,53 @@ int mglGraph::exec_vz(const char *com, long , mglArg *a,int k[9])
 	return res;
 }
 //-----------------------------------------------------------------------------
-int mglGraph::exec_misc(const char *com, long , mglArg *a,int k[9])
+int mglGraph::exec_misc1(const char *com, long , mglArg *a,int k[9])
+{
+	int res = 0;
+	if(!strcmp(com,"error"))
+	{
+		if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+			Error(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),
+				k[4]==2?a[4].s:0, k[5]==3?a[5].v:NAN);
+		if(k[0]==1 && k[1]==1 && k[2]==1)
+			Error(*(a[0].d),*(a[1].d),*(a[2].d), k[3]==2?a[3].s:0, k[4]==3?a[4].v:NAN);
+		else if(k[0]==1 && k[1]==1)
+			Error(*(a[0].d),*(a[1].d), k[2]==2?a[2].s:0, k[3]==3?a[3].v:NAN);
+		else	res = 1;
+	}
+	else if(!strcmp(com,"extend"))
+	{
+		if(k[0]==1 && k[1]==3)
+			a[0].d->Extend(int(a[1].v),k[2]==3?int(a[2].v):0);
+		else	res = 1;
+	}
+	else if(!strcmp(com,"inplot"))
+	{
+		if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
+			InPlot(a[0].v,a[1].v,a[2].v,a[3].v);
+		else	res = 1;
+	}
+	else if(!strcmp(com,"integrate"))
+	{	if(k[0]==1 && k[1]==2)	a[0].d->Integral(a[1].s);	else	res = 1;	}
+	else if(!strcmp(com,"hist"))
+	{
+		if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==3 && k[4]==3 && k[5]==3)
+			*(a[0].d) = a[1].d->Hist(*(a[2].d),int(a[3].v),a[4].v,a[5].v);
+		else if(k[0]==1 && k[1]==1 && k[2]==3 && k[3]==3 && k[4]==3)
+			*(a[0].d) = a[1].d->Hist(int(a[2].v),a[3].v,a[4].v);
+		else	res = 1;
+	}
+	else if(!strcmp(com,"info"))
+	{
+		if(k[0]==1)
+			a[0].d->PrintInfo(Message);
+		else	res = 1;
+	}
+	else res = 2;
+	return res;
+}
+//-----------------------------------------------------------------------------
+int mglGraph::exec_misc2(const char *com, long , mglArg *a,int k[9])
 {
 	int res = 0;
 	if(!strcmp(com,"plot"))
@@ -1172,23 +1242,6 @@ int mglGraph::exec_misc(const char *com, long , mglArg *a,int k[9])
 				k[6]==2?a[6].s:0,k[7]==3?a[7].v:0.05,k[8]==3?int(a[8].v):3);
 		else	res = 1;
 	}
-	else if(!strcmp(com,"error"))
-	{
-		if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-			Error(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),
-				k[4]==2?a[4].s:0, k[5]==3?a[5].v:NAN);
-		if(k[0]==1 && k[1]==1 && k[2]==1)
-			Error(*(a[0].d),*(a[1].d),*(a[2].d), k[3]==2?a[3].s:0, k[4]==3?a[4].v:NAN);
-		else if(k[0]==1 && k[1]==1)
-			Error(*(a[0].d),*(a[1].d), k[2]==2?a[2].s:0, k[3]==3?a[3].v:NAN);
-		else	res = 1;
-	}
-	else if(!strcmp(com,"extend"))
-	{
-		if(k[0]==1 && k[1]==3)
-			a[0].d->Extend(int(a[1].v),k[2]==3?int(a[2].v):0);
-		else	res = 1;
-	}
 	else if(!strcmp(com,"origin"))
 	{
 		if(k[0]==3 && k[1]==3)
@@ -1199,28 +1252,6 @@ int mglGraph::exec_misc(const char *com, long , mglArg *a,int k[9])
 	{
 		if(k[0]==1 && k[1]==3 && k[2]==3)
 			a[0].d->Norm(a[1].v,a[2].v,k[3]==3?a[3].v!=0:false,k[4]==3?int(a[4].v):0);
-		else	res = 1;
-	}
-	else if(!strcmp(com,"inplot"))
-	{
-		if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
-			InPlot(a[0].v,a[1].v,a[2].v,a[3].v);
-		else	res = 1;
-	}
-	else if(!strcmp(com,"integrate"))
-	{	if(k[0]==1 && k[1]==2)	a[0].d->Integral(a[1].s);	else	res = 1;	}
-	else if(!strcmp(com,"hist"))
-	{
-		if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==3 && k[4]==3 && k[5]==3)
-			*(a[0].d) = a[1].d->Hist(*(a[2].d),int(a[3].v),a[4].v,a[5].v);
-		else if(k[0]==1 && k[1]==1 && k[2]==3 && k[3]==3 && k[4]==3)
-			*(a[0].d) = a[1].d->Hist(int(a[2].v),a[3].v,a[4].v);
-		else	res = 1;
-	}
-	else if(!strcmp(com,"info"))
-	{
-		if(k[0]==1)
-			a[0].d->PrintInfo(Message);
 		else	res = 1;
 	}
 	else res = 2;
@@ -1700,7 +1731,9 @@ void mglParse::ProcOpt(mglGraph *gr, char *str)
 		if(opt[6])	gr->AlphaDef = val[12];
 		if(opt[7])	gr->MeshNum  = int(val[14]);
 		if(opt[8])	gr->FontSize = val[16];
-		for(long i=0;i<10;i++)	opt[i]=false;
+		if(opt[9])	gr->MarkSize = val[17];
+		if(opt[10])	gr->AddLegend(leg, gr->last_style);
+		for(long i=0;i<16;i++)	opt[i]=false;
 	}
 	else
 	{
@@ -1710,7 +1743,7 @@ void mglParse::ProcOpt(mglGraph *gr, char *str)
 		val[6] = gr->Cmin;		val[7] = gr->Cmax;
 		val[8] = gr->AmbBr;		val[10]= gr->Cut;
 		val[12]= gr->AlphaDef;	val[14]= gr->MeshNum;
-		val[16]= gr->FontSize;
+		val[16]= gr->FontSize;	val[17]= gr->MarkSize;
 		char *s = str,*a,*b;
 		long n;
 		while((s=strchr(s,';'))!=0)
@@ -1719,6 +1752,7 @@ void mglParse::ProcOpt(mglGraph *gr, char *str)
 			n=mglFindArg(s);
 			if(n<1)	return;
 			s[n]=0;		a=s;	s=s+n+1;	strtrim_mgl(a);
+			float ff = atof(s);
 			if(!strcmp(a+1,"range"))
 			{
 				n=mglFindArg(s);	if(n<1)	return;
@@ -1734,17 +1768,21 @@ void mglParse::ProcOpt(mglGraph *gr, char *str)
 				//gr->RecalcBorder();
 			}
 			else if(!strcmp(a,"cut"))
-			{	opt[5]=true;	gr->Cut = atoi(s)!=0 || !strncmp(s,"on",2);	}
+			{	opt[5]=true;	gr->Cut = (ff!=0 || !strncmp(s,"on",2));	}
 			else if(!strcmp(a,"meshnum"))
-			{	opt[7]=true;	gr->MeshNum = atoi(s);	}
+			{	opt[7]=true;	gr->MeshNum = int(ff);	}
 			else if(!strcmp(a,"alphadef"))
-			{	opt[6]=true;	gr->AlphaDef = atof(s);	}
+			{	opt[6]=true;	gr->AlphaDef = ff;	}
 			else if(!strcmp(a,"alpha"))
-			{	opt[6]=true;	gr->AlphaDef = atof(s);	}
+			{	opt[6]=true;	gr->AlphaDef = ff;	}
 			else if(!strcmp(a,"fontsize"))
-			{	opt[8]=true;	gr->FontSize = atof(s);	}
+			{	opt[8]=true;	gr->FontSize = ff>0 ? ff : -ff*gr->FontSize;	}
 			else if(!strcmp(a,"ambient"))
-			{	opt[4]=true;	gr->Ambient(atof(s));	}
+			{	opt[4]=true;	gr->Ambient(ff);	}
+			else if(!strcmp(a,"marksize"))
+			{	opt[9]=true;	gr->MarkSize = ff/50;	}
+			else if(!strcmp(a,"legend"))
+			{	opt[10]=true;	strcpy(leg,s);	}
 		}
 	}
 }

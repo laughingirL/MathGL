@@ -470,6 +470,7 @@ public:
 	void Plot2(mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
 	void Plot3(mglData &a, const char *pen=0);
+	
 	/// Draw area plot for points in arrays \a x, \a y, \a z.
 	void Area(mglData &x, mglData &y, mglData &z, const char *pen=0);
 	/// Draw area plot for points in arrays \a x, \a y.
@@ -480,6 +481,7 @@ public:
 	void Area2(mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw area plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
 	void Area3(mglData &a, const char *pen=0);
+	
 	/// Draw vertical lines from points in arrays \a x, \a y, \a z to mglGraph::Org.
 	void Stem(mglData &x, mglData &y, mglData &z, const char *pen=0);
 	/// Draw vertical lines from points in arrays \a x, \a y to mglGraph::Org.
@@ -490,6 +492,7 @@ public:
 	void Stem2(mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
 	void Stem3(mglData &a, const char *pen=0);
+	
 	/// Draw stairs for points in arrays \a x, \a y, \a z.
 	void Step(mglData &x, mglData &y, mglData &z, const char *pen=0);
 	/// Draw stairs for points in arrays \a x, \a y.
@@ -500,36 +503,59 @@ public:
 	void Step2(mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw stairs for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
 	void Step3(mglData &a, const char *pen=0);
+	
 	/// Draw vertical bars from points in arrays \a x, \a y, \a z to mglGraph::Org.
-	void Bars(mglData &x, mglData &y, mglData &z, const char *pen=0);
+	void Bars(mglData &x, mglData &y, mglData &z, const char *pen=0, bool above=false);
 	/// Draw vertical bars from points in arrays \a x, \a y to mglGraph::Org.
-	void Bars(mglData &x, mglData &y, const char *pen=0,float zVal=NAN);
+	void Bars(mglData &x, mglData &y, const char *pen=0,float zVal=NAN, bool above=false);
 	/// Draw vertical bars from points in arrays \a y to mglGraph::Org.
-	void Bars(mglData &y, const char *pen=0,float zVal=NAN);
+	void Bars(mglData &y, const char *pen=0,float zVal=NAN, bool above=false);
 	/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-	void Bars2(mglData &a, const char *pen=0,float zVal=NAN);
+	void Bars2(mglData &a, const char *pen=0,float zVal=NAN, bool above=false);
 	/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-	void Bars3(mglData &a, const char *pen=0);
+	void Bars3(mglData &a, const char *pen=0, bool above=false);
+	
 	/// Draw surface of curve {\a r,\a z} rotatation around Z axis
 	void Torus(mglData &r, mglData &z, const char *pen=0);
 	/// Draw surface of curve rotatation around Z axis
 	void Torus(mglData &z, const char *pen=0);
 	/// Draw surface of curve {\a a(0,:),\a a(1,:)} rotatation around Z axis for
 	void Torus2(mglData &a, const char *pen=0);
+	
 	/// Draw chart for data a
 	void Chart(mglData &a, const char *col=0);
+	
 	/// Draw error boxes ey for data y
 	void Error(mglData &y, mglData &ey, const char *pen=0,float zVal=NAN);
 	/// Draw error boxes ey for data {x,y}
 	void Error(mglData &x, mglData &y, mglData &ey, const char *pen=0,float zVal=NAN);
 	/// Draw error boxes {ex,ey} for data {x,y}
 	void Error(mglData &x, mglData &y, mglData &ex, mglData &ey, const char *pen=0,float zVal=NAN);
+	
 	/// Draw marks with diffenernt sizes \a r for points in arrays \a x, \a y, \a z.
 	void Mark(mglData &x, mglData &y, mglData &z, mglData &r, const char *pen=0);
 	/// Draw marks with diffenernt sizes \a r for points in arrays \a x, \a y.
 	void Mark(mglData &x, mglData &y, mglData &r, const char *pen=0,float zVal=NAN);
 	/// Draw marks with diffenernt sizes \a r for points in arrays \a y.
 	void Mark(mglData &y, mglData &r, const char *pen=0,float zVal=NAN);
+	
+	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a x, \a y, \a z.
+	void TextMark(mglData &x, mglData &y, mglData &z, mglData &r, const char *text, const char *fnt=0);
+	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a x, \a y.
+	void TextMark(mglData &x, mglData &y, mglData &r, const char *text, const char *fnt=0,float zVal=NAN);
+	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a y.
+	void TextMark(mglData &y, mglData &r, const char *text, const char *fnt=0,float zVal=NAN);
+	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a x, \a y, \a z.
+	void TextMark(mglData &x, mglData &y, mglData &z, mglData &r, const wchar_t *text, const char *fnt=0);
+	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a x, \a y.
+	void TextMark(mglData &x, mglData &y, mglData &r, const wchar_t *text, const char *fnt=0,float zVal=NAN);
+	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a y.
+	void TextMark(mglData &y, mglData &r, const wchar_t *text, const char *fnt=0,float zVal=NAN);
+	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a y.
+	void TextMark(mglData &y, const char *text, const char *fnt=0,float zVal=NAN);
+	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a y.
+	void TextMark(mglData &y, const wchar_t *text, const char *fnt=0,float zVal=NAN);
+	
 	/// Draw tube with radial sizes \a r for points in arrays \a x, \a y, \a z.
 	void Tube(mglData &x, mglData &y, mglData &z, mglData &r, const char *pen=0);
 	/// Draw tube with radial sizes \a r for points in arrays \a x, \a y.
@@ -936,6 +962,7 @@ protected:
 				float k1,float k2,bool scale);
 
 private:
+	char last_style[64];
 	float _tetx,_tety,_tetz;
 	/// Actual lower edge of bounding box after applying transformation formulas.
 	mglPoint FMin;
@@ -1028,8 +1055,10 @@ private:
 	int exec_t(const char *com, long n, mglArg *a,int k[9]);
 	/// Execute commands [vxyz]*
 	int exec_vz(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute other commands
-	int exec_misc(const char *com, long n, mglArg *a,int k[9]);
+	/// Execute commands [eih]*
+	int exec_misc1(const char *com, long n, mglArg *a,int k[9]);
+	/// Execute commands [nop]*
+	int exec_misc2(const char *com, long n, mglArg *a,int k[9]);
 };
 //-----------------------------------------------------------------------------
 /// Structure for the mglData handling (see mglParse class).
@@ -1075,7 +1104,8 @@ public:
 private:
 	long parlen;	///< Length of parameter strings
 	char *par[10];	///< Parameter for substituting instead of $1, ..., $9
-	bool opt[10];	///< Set on/off optional parameters for command argument
+	char leg[128];	///< Buffer for legend
+	bool opt[16];	///< Set on/off optional parameters for command argument
 	float val[20];	///< Values for optional parameters
 	bool Once;		///< Flag for command which should be executed only once
 	bool Skip;		///< Flag that commands should be skiped

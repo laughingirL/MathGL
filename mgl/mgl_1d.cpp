@@ -397,15 +397,17 @@ void mglGraph::Stem(mglData &y, const char *pen,float zVal)
 //	Bars series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Bars(mglData &x, mglData &y, mglData &z, const char *pen)
+void mglGraph::Bars(mglData &x, mglData &y, mglData &z, const char *pen, bool above)
 {
 	long i,j,m,mx,my,mz,n=y.nx;
 	char mk=0;
 	if(x.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Bars");	return;	}
 	if(n<2)					{	SetWarn(mglWarnLow,"Bars");	return;	}
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	float *pp = new float[12*n],x1,x2,y1,y2,z0=GetOrgZ();
+	float *pp = new float[12*n],x1,x2,y1,y2,z0=GetOrgZ(),zz;
 	bool *tt = new bool[4*n];
+	mglData dd(above ? n : 1);
+	
 	for(j=0;j<m;j++)
 	{
 		if(pen && *pen)	mk=SelectPen(pen);
@@ -426,10 +428,19 @@ void mglGraph::Bars(mglData &x, mglData &y, mglData &z, const char *pen)
 				y1 = y.a[i+n*my] - BarWidth*(y.a[i+n*my]-y.a[i-1+n*my])/2;
 			}
 			else	{	x1 = x.a[i+n*mx];	y1 = y.a[i+n*my];	}
-			pp[12*i+0] = x1;	pp[12*i+1] = y1;	pp[12*i+2] = z.a[i+n*mz];
+			zz = z.a[i+n*mz];
+			if(!above)
+			{
+				x2 = (x2-x1)/m;		x1 += j*x2;		x2 += x1;
+				y2 = (y2-y1)/m;		y1 += j*y2;		y2 += y1;
+			}
+			else
+			{	z0 = GetOrgZ() + dd.a[i];	dd.a[i] += zz;	zz += z0;	}
+			
+			pp[12*i+0] = x1;	pp[12*i+1] = y1;	pp[12*i+2] = zz;
 			pp[12*i+3] = x1;	pp[12*i+4] = y1;	pp[12*i+5] = z0;
 			pp[12*i+6] = x2;	pp[12*i+7] = y2;	pp[12*i+8] = z0;
-			pp[12*i+9] = x2;	pp[12*i+10]= y2;	pp[12*i+11]= z.a[i+n*mz];
+			pp[12*i+9] = x2;	pp[12*i+10]= y2;	pp[12*i+11]= zz;
 			tt[4*i]   = ScalePoint(pp[12*i+0],pp[12*i+1],pp[12*i+2]);
 			tt[4*i+1] = ScalePoint(pp[12*i+3],pp[12*i+4],pp[12*i+5]);
 			tt[4*i+2] = ScalePoint(pp[12*i+6],pp[12*i+7],pp[12*i+8]);
@@ -440,16 +451,17 @@ void mglGraph::Bars(mglData &x, mglData &y, mglData &z, const char *pen)
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Bars(mglData &x, mglData &y, const char *pen,float zVal)
+void mglGraph::Bars(mglData &x, mglData &y, const char *pen,float zVal, bool above)
 {
 	long i,j,m,mx,my,n=y.nx;
 	char mk=0;
 	if(x.nx!=n)	{	SetWarn(mglWarnDim,"Bars");	return;	}
 	if(n<2)		{	SetWarn(mglWarnLow,"Bars");	return;	}
 	m = x.ny > y.ny ? x.ny : y.ny;
-	float *pp = new float[12*n],x1,x2,y0=GetOrgY();
+	float *pp = new float[12*n],x1,x2,yy,y0=GetOrgY();
 	bool *tt = new bool[4*n];
 	if(isnan(zVal))	zVal = Min.z;
+	mglData dd(above ? n : 1);
 
 	for(j=0;j<m;j++)
 	{
@@ -463,10 +475,15 @@ void mglGraph::Bars(mglData &x, mglData &y, const char *pen,float zVal)
 			else		x2 = x.a[i+n*mx];
 			if(i>0)		x1 = x.a[i+n*mx] - BarWidth*(x.a[i+n*mx]-x.a[i-1+n*mx])/2;
 			else		x1 = x.a[i+n*mx];
-			pp[12*i+0] = x1;	pp[12*i+1] = y.a[i+n*my];	pp[12*i+2] = zVal;
-			pp[12*i+3] = x1;	pp[12*i+4] = y0;			pp[12*i+5] = zVal;
-			pp[12*i+6] = x2;	pp[12*i+7] = y0;			pp[12*i+8] = zVal;
-			pp[12*i+9] = x2;	pp[12*i+10]= y.a[i+n*my];	pp[12*i+11]= zVal;
+			yy = y.a[i+n*my];
+			if(!above)
+			{	x2 = (x2-x1)/m;		x1 += j*x2;		x2 += x1;	}
+			else
+			{	y0 = GetOrgY() + dd.a[i];	dd.a[i] += yy;	yy += y0;	}
+			pp[12*i+0] = x1;	pp[12*i+1] = yy;	pp[12*i+2] = zVal;
+			pp[12*i+3] = x1;	pp[12*i+4] = y0;	pp[12*i+5] = zVal;
+			pp[12*i+6] = x2;	pp[12*i+7] = y0;	pp[12*i+8] = zVal;
+			pp[12*i+9] = x2;	pp[12*i+10]= yy;	pp[12*i+11]= zVal;
 			tt[4*i]   = ScalePoint(pp[12*i+0],pp[12*i+1],pp[12*i+2]);
 			tt[4*i+1] = ScalePoint(pp[12*i+3],pp[12*i+4],pp[12*i+5]);
 			tt[4*i+2] = ScalePoint(pp[12*i+6],pp[12*i+7],pp[12*i+8]);
@@ -477,12 +494,12 @@ void mglGraph::Bars(mglData &x, mglData &y, const char *pen,float zVal)
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Bars(mglData &y, const char *pen,float zVal)
+void mglGraph::Bars(mglData &y, const char *pen,float zVal, bool above)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Bars");	return;	}
 	mglData x(y.nx);
 	x.Fill(Min.x,Max.x);
-	Bars(x,y,pen,zVal);
+	Bars(x,y,pen,zVal,above);
 }
 //-----------------------------------------------------------------------------
 //
@@ -729,6 +746,53 @@ void mglGraph::Mark(mglData &y, mglData &r, const char *pen,float zVal)
 }
 //-----------------------------------------------------------------------------
 //
+//	Mark series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::TextMark(mglData &x, mglData &y, mglData &z, mglData &r, const wchar_t *text, const char *fnt)
+{
+	long j,m,mx,my,mz,mr,n=y.nx;
+	if(x.nx!=n || z.nx!=n || r.nx!=n)
+	{	SetWarn(mglWarnDim,"Mark");	return;	}
+	if(n<2)	{	SetWarn(mglWarnLow,"Mark");	return;	}
+	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
+	float xx,yy,zz;
+	bool tt;
+
+	for(j=0;j<m;j++)
+	{
+		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
+		mz = j<z.ny ? j:0;	mr = j<r.ny ? j:0;
+		register long i;
+		for(i=0;i<n;i++)
+			Putsw(mglPoint(x.a[i+mx*n],y.a[i+my*n],z.a[i+mz*n]),text,
+				  fnt?fnt:"rC",-25*MarkSize*fabs(r.a[i+mr*n]));
+	}
+}
+//-----------------------------------------------------------------------------
+void mglGraph::TextMark(mglData &x, mglData &y, mglData &r, const wchar_t *text, const char *fnt,float zVal)
+{
+	mglData z(y.nx);
+	if(isnan(zVal))	zVal = Min.z;
+	z.Fill(zVal,zVal);
+	TextMark(x,y,z,r,text,fnt);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::TextMark(mglData &y, mglData &r, const wchar_t *text, const char *fnt,float zVal)
+{
+	if(y.nx<2)	{	SetWarn(mglWarnLow,"Mark");	return;	}
+	mglData x(y.nx);
+	x.Fill(Min.x,Max.x);
+	TextMark(x,y,r,text,fnt,zVal);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::TextMark(mglData &y, const wchar_t *text, const char *fnt,float zVal)
+{
+	mglData r(y.nx);	r.Fill(1,1);
+	TextMark(y,r,text,fnt,zVal);
+}
+//-----------------------------------------------------------------------------
+//
 //	Tube series
 //
 //-----------------------------------------------------------------------------
@@ -947,25 +1011,25 @@ void mglGraph::Step3(mglData &a, const char *pen)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Bars2(mglData &a, const char *pen,float zVal)
+void mglGraph::Bars2(mglData &a, const char *pen,float zVal, bool above)
 {
 	if(a.nx<2 || a.ny<2)	{	SetWarn(mglWarnLow,"Bars2");	return;	}
 	mglData x,y;
 	for(long i=0;i<a.ny/2;i++)
 	{
 		x=a.SubData(-1,2*i);	y=a.SubData(-1,2*i+1);
-		Bars(x,y,pen,zVal);
+		Bars(x,y,pen,zVal,above);
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Bars3(mglData &a, const char *pen)
+void mglGraph::Bars3(mglData &a, const char *pen, bool above)
 {
 	if(a.nx<2 || a.ny<3)	{	SetWarn(mglWarnLow,"Bars3");	return;	}
 	mglData x,y,z;
 	for(long i=0;i<a.ny/2;i++)
 	{
 		x=a.SubData(-1,3*i);	y=a.SubData(-1,3*i+1);	z=a.SubData(-1,3*i+2);
-		Bars(x,y,z,pen);
+		Bars(x,y,z,pen,above);
 	}
 }
 //-----------------------------------------------------------------------------

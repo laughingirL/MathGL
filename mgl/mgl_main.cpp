@@ -226,6 +226,7 @@ void mglGraph::SetScheme(const char *s)
 	mglColor c;
 	const char *col = "kwrgbcymhWRGBCYMHlenpquLENPQU";
 	if(!s || s[0]==0 || (!strchr(col,s[0]) && s[1]==0) || s[0]==':' )	return;
+	strcpy(last_style, s);
 	NumCol = 0;
 	for(i=0;i<NUM_COLOR;i++)	cmap[i] = NC;
 	cmap[0] = mglColor(0,0,0);	cmap[1] = mglColor(1,1,1);
@@ -362,6 +363,7 @@ void mglGraph::ZRange(mglData &a,bool add)
 //-----------------------------------------------------------------------------
 char mglGraph::SelectPen(const char *p)
 {
+	const char *PalNames = "Hbgrcmyhlnqeup";	// default pallette
 	mglColor c = NC;
 	int w=1;
 	char st='-',mk=0;
@@ -369,6 +371,7 @@ char mglGraph::SelectPen(const char *p)
 	Arrow1 = Arrow2 = '-';
 	if(p && *p!=0)
 	{
+		strcpy(last_style, p);
 		const char *col = "wkrgbcymhRGBCYMHWlenuqpLENUQP";
 		const char *stl = " -|;:ji";
 		const char *mrk = "*o+xsd.^vO";
@@ -387,6 +390,8 @@ char mglGraph::SelectPen(const char *p)
 			}
 		}
 	}
+	else
+	{	last_style[0] = PalNames[(CurrPal+1)%14];	last_style[1] = 0;	}
 	Pen(c,st,BaseLineWidth*w);
 	return mk;
 }
@@ -799,8 +804,45 @@ void mglGraph::Text(mglData &x,mglData &y,mglData &z,const char *str,const char 
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
+void mglGraph::TextMark(mglData &x, mglData &y, mglData &z, mglData &r, const char *str, const char *fnt)
+{
+	unsigned s = strlen(str)+1;
+	wchar_t *wcs = new wchar_t[s];
+	mbstowcs(wcs,str,s);
+	TextMark(x, y, z, r, wcs, fnt);
+	delete []wcs;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::TextMark(mglData &x, mglData &y, mglData &r, const char *str, const char *fnt, float zVal)
+{
+	unsigned s = strlen(str)+1;
+	wchar_t *wcs = new wchar_t[s];
+	mbstowcs(wcs,str,s);
+	TextMark(x, y, r, wcs, fnt, zVal);
+	delete []wcs;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::TextMark(mglData &y, mglData &r, const char *str, const char *fnt, float zVal)
+{
+	unsigned s = strlen(str)+1;
+	wchar_t *wcs = new wchar_t[s];
+	mbstowcs(wcs,str,s);
+	TextMark(y, r, wcs, fnt, zVal);
+	delete []wcs;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::TextMark(mglData &y, const char *str, const char *fnt, float zVal)
+{
+	unsigned s = strlen(str)+1;
+	wchar_t *wcs = new wchar_t[s];
+	mbstowcs(wcs,str,s);
+	TextMark(y, wcs, fnt, zVal);
+	delete []wcs;
+}
+//-----------------------------------------------------------------------------
 void mglGraph::AddLegend(const char *str,const char *style)
 {
+	if(!str)	return;
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
