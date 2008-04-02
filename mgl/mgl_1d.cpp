@@ -1455,3 +1455,49 @@ void mgl_tube_(long *gr, long *y, float *r, const char *pen,int l)
 	delete []s;
 }
 //-----------------------------------------------------------------------------
+void mgl_textmark_xyzr(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT r, const char *text, const char *fnt)
+{	if(gr&&z&&x&&y&&r&&text)	gr->TextMark(*x,*y,*z,*r,text,fnt);	}
+void mgl_textmark_xyr(HMGL gr, HMDT x, HMDT y, HMDT r, const char *text, const char *fnt)
+{	if(gr&&x&&y&&r&&text)	gr->TextMark(*x,*y,*r,text,fnt);	}
+void mgl_textmark_yr(HMGL gr, HMDT y, HMDT r, const char *text, const char *fnt)
+{	if(gr&&y&&r&&text)	gr->TextMark(*y,*r,text,fnt);	}
+void mgl_textmark(HMGL gr, HMDT y, const char *text, const char *fnt)
+{	if(gr&&y&&text)	gr->TextMark(*y,text,fnt);	}
+void mgl_textmarkw_xyzr(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT r, const wchar_t *text, const char *fnt)
+{	if(gr&&z&&x&&y&&r&&text)	gr->TextMark(*x,*y,*z,*r,text,fnt);	}
+void mgl_textmarkw_xyr(HMGL gr, HMDT x, HMDT y, HMDT r, const wchar_t *text, const char *fnt)
+{	if(gr&&x&&y&&r&&text)	gr->TextMark(*x,*y,*r,text,fnt);	}
+void mgl_textmarkw_yr(HMGL gr, HMDT y, HMDT r, const wchar_t *text, const char *fnt)
+{	if(gr&&y&&r&&text)	gr->TextMark(*y,*r,text,fnt);	}
+void mgl_textmarkw(HMGL gr, HMDT y, const wchar_t *text, const char *fnt)
+{	if(gr&&y&&text)	gr->TextMark(*y,text,fnt);	}
+//-----------------------------------------------------------------------------
+void mgl_textmark_xyzr_(long *gr, long *x, long *y, long *z, long *r, const char *text, const char *fnt, int l,int n)
+{
+	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(s,fnt,n);	f[n]=0;
+	if(gr&&y&&x&&z&&r)	_GR_->TextMark(_D_(x),_D_(y),_D_(z),_D_(r),s,f);
+	delete []s;		delete []f;
+}
+void mgl_textmark_xyr_(long *gr, long *x, long *y, long *r, const char *text, const char *fnt, int l,int n)
+{
+	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(s,fnt,n);	f[n]=0;
+	if(gr&&y&&x&&r)	_GR_->TextMark(_D_(x),_D_(y),_D_(r),s,f);
+	delete []s;		delete []f;
+}
+void mgl_textmark_yr_(long *gr, long *y, long *r, const char *text, const char *fnt, int l,int n)
+{
+	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(s,fnt,n);	f[n]=0;
+	if(gr&&y&&r)	_GR_->TextMark(_D_(y),_D_(r),s,f);
+	delete []s;		delete []f;
+}
+void mgl_textmark_(long *gr, long *y, const char *text, const char *fnt, int l,int n)
+{
+	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(s,fnt,n);	f[n]=0;
+	if(gr&&y)	_GR_->TextMark(_D_(y),s,f);
+	delete []s;		delete []f;
+}
+//-----------------------------------------------------------------------------

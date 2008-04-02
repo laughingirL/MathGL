@@ -374,7 +374,7 @@ char mglGraph::SelectPen(const char *p)
 		strcpy(last_style, p);
 		const char *col = "wkrgbcymhRGBCYMHWlenuqpLENUQP";
 		const char *stl = " -|;:ji";
-		const char *mrk = "*o+xsd.^vO";
+		const char *mrk = "*o+xsd.^v";
 		const char *wdh = "123456789";
 		const char *arr = "AKDTVISO_";
 		for(unsigned i=0;i<strlen(p);i++)
@@ -388,6 +388,14 @@ char mglGraph::SelectPen(const char *p)
 				if(Arrow1=='-')	Arrow1 = p[i];
 				else	Arrow2 = p[i];
 			}
+		}
+		if(strchr(p,'#'))
+		{
+			if(mk=='o')	mk = 'O';
+			if(mk=='d')	mk = 'D';
+			if(mk=='s')	mk = 'S';
+			if(mk=='^')	mk = 'T';
+			if(mk=='v')	mk = 'V';
 		}
 	}
 	else
@@ -573,7 +581,7 @@ void mglGraph::string_curve(long f,long n,float *pp,long *nn,const wchar_t *text
 	wchar_t L[2]=L"a";
 	mglPoint p1,n1,p2;
 
-	float w, r, ww, wg=fnt->Height("")*size/8.*font_factor;
+	float w, r, ww, wg=fnt->Height("")*size/8.;//*font_factor;
 	register long i,k,h;
 	ScalePuts = false;
 
@@ -583,7 +591,7 @@ void mglGraph::string_curve(long f,long n,float *pp,long *nn,const wchar_t *text
 	for(unsigned j=0;j<wcslen(text);j++)
 	{
 		L[0] = text[j];		ww = Putsw(p0,n0,L,pos<0?'T':'t',size);
-printf("%lc -> %g\n",L[0], ww);
+//printf("%lc -> %g\n",L[0], ww);
 		p1 = p0+(ww/Norm(n0))*n0;
 		// let find closest point
 		for(r=1e10,i=0;i<n;i++)

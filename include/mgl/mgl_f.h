@@ -57,6 +57,8 @@ void mgl_set_meshnum_(long *graph, int *num);
 void mgl_set_zoom_(long *gr, float *x1, float *y1, float *x2, float *y2);
 void mgl_set_draw_face_(long *gr, int *enable);
 void mgl_set_scheme_(long *gr, char *sch, int);
+void mgl_set_font_(long *gr, char *name, char *path);
+void mgl_copy_font_(long *gr, long *gr_from);
 /*****************************************************************************/
 /*		Export to file or to memory														 */
 /*****************************************************************************/
@@ -188,6 +190,11 @@ void mgl_tube_r_(long *graph, long *y, long *r, const char *pen,int);
 void mgl_tube_xyz_(long *graph, long *x, long *y, long *z, float *r, const char *pen,int);
 void mgl_tube_xy_(long *graph, long *x, long *y, float *r, const char *pen,int);
 void mgl_tube_(long *graph, long *y, float *r, const char *pen,int);
+
+void mgl_textmark_xyzr_(long *graph, long *x, long *y, long *z, long *r, const char *text, const char *fnt,int,int);
+void mgl_textmark_xyr_(long *graph, long *x, long *y, long *r, const char *text, const char *fnt,int,int);
+void mgl_textmark_yr_(long *graph, long *y, long *r, const char *text, const char *fnt,int,int);
+void mgl_textmark_(long *graph, long *y, const char *text, const char *fnt,int,int);
 /*****************************************************************************/
 /*		2D plotting functions												 */
 /*****************************************************************************/

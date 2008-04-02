@@ -68,6 +68,7 @@ void mgl_set_zoom(HMGL gr, float x1, float y1, float x2, float y2);
 void mgl_set_draw_face(HMGL gr, bool enable);
 void mgl_set_scheme(HMGL gr, char *sch);
 void mgl_set_font(HMGL gr, char *name, char *path);
+void mgl_copy_font(HMGL gr, HMGL gr_from);
 /*****************************************************************************/
 /*		Export to file or to memory														 */
 /*****************************************************************************/
@@ -206,6 +207,15 @@ void mgl_tube_r(HMGL graph, HMDT y, HMDT r, const char *pen);
 void mgl_tube_xyz(HMGL graph, HMDT x, HMDT y, HMDT z, float r, const char *pen);
 void mgl_tube_xy(HMGL graph, HMDT x, HMDT y, float r, const char *penl);
 void mgl_tube(HMGL graph, HMDT y, float r, const char *pen);
+
+void mgl_textmark_xyzr(HMGL graph, HMDT x, HMDT y, HMDT z, HMDT r, const char *text, const char *fnt);
+void mgl_textmark_xyr(HMGL graph, HMDT x, HMDT y, HMDT r, const char *text, const char *fnt);
+void mgl_textmark_yr(HMGL graph, HMDT y, HMDT r, const char *text, const char *fnt);
+void mgl_textmark(HMGL graph, HMDT y, const char *text, const char *fnt);
+void mgl_textmarkw_xyzr(HMGL graph, HMDT x, HMDT y, HMDT z, HMDT r, const wchar_t *text, const char *fnt);
+void mgl_textmarkw_xyr(HMGL graph, HMDT x, HMDT y, HMDT r, const wchar_t *text, const char *fnt);
+void mgl_textmarkw_yr(HMGL graph, HMDT y, HMDT r, const wchar_t *text, const char *fnt);
+void mgl_textmarkw(HMGL graph, HMDT y, const wchar_t *text, const char *fnt);
 /*****************************************************************************/
 /*		2D plotting functions												 */
 /*****************************************************************************/

@@ -257,6 +257,13 @@ unsigned mglFont::Parse(const wchar_t *s)
 	{	wscanf(s+3,"%lx",&k);	return wchar_t(k);	}
 	// font/style changes for next symbol
 	if(!wcscmp(s,L"big"))		res = unsigned(-5);
+	else if(!wcscmp(s,L"frac"))	res = unsigned(-6);
+	else if(!wcscmp(s,L"stack"))	res = unsigned(-7);
+	else if(!wcscmp(s,L"overset"))	res = unsigned(-8);
+	else if(!wcscmp(s,L"underset"))	res = unsigned(-9);
+	else if(!wcscmp(s,L"stackr"))	res = unsigned(-10);
+	else if(!wcscmp(s,L"stackl"))	res = unsigned(-11);
+	else if(!wcscmp(s,L"binom"))	res = unsigned(-12);	// binom = (stack)
 	else if(!wcscmp(s,L"b"))	res = MGL_FONT_BOLD;
 	else if(!wcscmp(s,L"i"))	res = MGL_FONT_ITAL;
 	else if(!wcscmp(s,L"bi"))	res = MGL_FONT_BOLD|MGL_FONT_ITAL;

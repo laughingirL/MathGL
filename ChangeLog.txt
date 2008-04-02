@@ -9,7 +9,6 @@
 	- Improve color Ids so that user may change it (for example, add new color).
 	- Add "smoothing" for edges of cutted surfaces.
 	- Improve TeX symbol parsing.
-
 	- Improve log-axis ticks.
 	- Add 'marksize' option in MGL scripts for changing MarkSize for single plot only.
 	- Add 'legend' option in MGL scripts for adding plot annotation.
@@ -17,12 +16,17 @@
 	- Extend plot Bars() for drawing bars side-by-side or one-above-one.
 	- New plot TextMark() is added for drawing textual (includeing LaTeX) symbols at point position.
 	- New MGL command 'textmark' is added.
-	
 	- Support of named columns
 		* Column names recognition in mglData::Read(). The string with ## supposed to contain the column name (id) -- character from 'a' to 'z'.
 		* New functions mglData::Column(), mglData::SetColumnId() for named columns handling.
 		* Column function (like "plot a('t') a('p*b')") in MGL scripts.
 		* New functions mgl_data_column(), mgl_data_set_id().
+	
+	- Command 'legend' now have variant for arbitrary position of legend.
+	- Symbol '#' in line style now switch on the filling of markers.
+	- New function mgl_set_font, mgl_copy_font, mgl_textmark_*, mgl_textmarkw_*
+
+	
 	
 
 1.6 Released 13 March 2008

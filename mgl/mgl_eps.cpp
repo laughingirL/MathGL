@@ -339,7 +339,7 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 //	fprintf(fp,"/d5 {[3 2 1 2] 0 setdash} def\n");
 
 	bool m_p=false,m_x=false,m_d=false,m_v=false,m_t=false,
-		m_s=false,m_a=false,m_o=false,m_O=false;
+		m_s=false,m_a=false,m_o=false,m_O=false,m_T=false,m_V=false,m_S=false,m_D=false;
 	register long i,j,k;
 	for(i=0;i<pNum;i++)
 	{
@@ -353,6 +353,10 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 		if(P[i].m=='*')	m_a = true;
 		if(P[i].m=='o')	m_o = true;
 		if(P[i].m=='O')	m_O = true;
+		if(P[i].m=='S')	m_S = true;
+		if(P[i].m=='D')	m_D = true;
+		if(P[i].m=='V')	m_V = true;
+		if(P[i].m=='T')	m_T = true;
 	}
 	if(m_p)	fprintf(fp,"/m_p {sm 0 rm s2 0 rl sm sm rm 0 s2 rl d0} def\n");
 	if(m_x)	fprintf(fp,"/m_x {sm sm rm s2 s2 rl 0 sm 2 mul rm sm 2 mul s2 rl d0} def\n");
@@ -363,6 +367,10 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	if(m_a)	fprintf(fp,"/m_a {sm 0 rm s2 0 rl sm 1.6 mul sm 0.8 mul rm ss 1.2 mul ss 1.6 mul rl 0 sm 1.6 mul rm sm 1.2 mul ss 1.6 mul rl d0} def\n");
 	if(m_o)	fprintf(fp,"/m_o {ss 0 360 d0 arc} def\n");
 	if(m_O)	fprintf(fp,"/m_O {ss 0 360 d0 arc fill} def\n");
+	if(m_S)	fprintf(fp,"/m_S {sm sm rm 0 s2 rl s2 0 rl 0 sm 2 mul rl cp} def\n");
+	if(m_D)	fprintf(fp,"/m_D {sm 0 rm ss ss rl ss sm rl sm sm rl cp} def\n");
+	if(m_V)	fprintf(fp,"/m_V {sm ss 2 div rm s2 0 rl sm sm 1.5 mul rl cp} def\n");
+	if(m_T)	fprintf(fp,"/m_T {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl cp} def\n");
 	fprintf(fp,"\n");
 
 	float cp[3]={-1,-1,-1},wp=-1;
@@ -398,6 +406,10 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 			case '*':	fprintf(fp,"np %g %g mt m_a %sdr\n",P[i].x[0],P[i].y[0],str);	break;
 			case 'v':	fprintf(fp,"np %g %g mt m_v %sdr\n",P[i].x[0],P[i].y[0],str);	break;
 			case '^':	fprintf(fp,"np %g %g mt m_t %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'S':	fprintf(fp,"np %g %g mt m_S %sfill\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'D':	fprintf(fp,"np %g %g mt m_D %sfill\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'V':	fprintf(fp,"np %g %g mt m_V %sfill\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'T':	fprintf(fp,"np %g %g mt m_T %sfill\n",P[i].x[0],P[i].y[0],str);	break;
 			case 'o':	fprintf(fp,"%g %g m_o %sdr\n",P[i].x[0],P[i].y[0],str);break;
 			case 'O':	fprintf(fp,"%g %g m_O %sdr\n",P[i].x[0],P[i].y[0],str);break;
 			default:	fprintf(fp,"%g %g m_c %sfill\n",P[i].x[0],P[i].y[0],str);
@@ -493,7 +505,11 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 		if(P[i].type==0)
 		{
 			float x=P[i].x[0],y=Height-P[i].y[0],s=0.4*font_factor*P[i].s;
-			fprintf(fp,"<g stroke=\"#%02x%02x%02x\">\n",
+			if(strchr("SDVT",P[i].m))
+				fprintf(fp,"<g fill=\"#%02x%02x%02x\">\n",
+					int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
+			else
+				fprintf(fp,"<g stroke=\"#%02x%02x%02x\">\n",
 					int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
 			switch(P[i].m)
 			{
@@ -513,6 +529,18 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
 						x-s,y+s/2,x+s,y+s/2,x,y-s);	break;
 			case 'v':
+				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
+						x-s,y-s/2,x+s,y-s/2,x,y+s);	break;
+			case 'S':
+				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g L %g %gZ\"/>\n",
+						x-s,y-s,x+s,y-s,x+s,y+s,x-s,y+s);	break;
+			case 'D':
+				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g L %g %gZ\"/>\n",
+						x-s,y,x,y-s,x+s,y,x,y+s);	break;
+			case 'T':
+				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
+						x-s,y+s/2,x+s,y+s/2,x,y-s);	break;
+			case 'V':
 				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
 						x-s,y-s/2,x+s,y-s/2,x,y+s);	break;
 			case 'o':
@@ -808,6 +836,28 @@ void mglGraphPS::mark_plot(int x,int y, char type, unsigned char cs[4])
 				if(i*i+j*j>=ss*ss)	continue;
 				pnt_plot(x+i, y+j,cs);
 			}
+			break;
+		case 'S':
+			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
+				pnt_plot(x+i,y+j,cs);
+			break;
+		case 'D':
+			ss = int(ss*1.1);
+			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
+				if(abs(i)+abs(j)<=long(ss))
+					pnt_plot(x+i,y+j,cs);
+			break;
+		case 'T':
+			ss = int(ss*1.1);
+			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss/2);j<=long(ss);j++)
+				if(1.5*abs(i)+j<=long(ss))
+					pnt_plot(x+i,y+j,cs);
+			break;
+		case 'V':
+			ss = int(ss*1.1);
+			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss/2);j++)
+				if(1.5*abs(i)-j<=long(ss))
+					pnt_plot(x+i,y+j,cs);
 			break;
 		}
 	}

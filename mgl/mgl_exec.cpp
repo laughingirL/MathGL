@@ -584,7 +584,12 @@ int mglGraph::exec_l(const char *com, long n, mglArg *a,int k[9])
 		else	Light(int(a[0].v),a[1].v!=0);
 	}
 	else if(!strcmp(com,"legend"))
-		Legend(k[0]==3?int(a[0].v):3, k[1]==2?a[1].s:"rL", k[2]==3?a[2].v:-1);
+	{
+		if(k[0]==3 && k[1]==3)
+			Legend(a[0].v, a[1].v, k[2]==2?a[2].s:"rL", k[3]==3?a[3].v:-1);
+		else
+			Legend(k[0]==3?int(a[0].v):3, k[1]==2?a[1].s:"rL", k[2]==3?a[2].v:-1);
+	}
 	else if(!strcmp(com,"line"))
 	{
 		if(n>5)

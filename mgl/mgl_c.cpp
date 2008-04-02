@@ -95,6 +95,9 @@ void mgl_set_scheme(HMGL gr, char *sch)
 /// Set font facename
 void mgl_set_font(HMGL gr, char *name, char *path)
 {	gr->GetFont()->Load(name,path);	}
+/// Copy font data from another HMGL object
+void mgl_copy_font(HMGL gr, HMGL gr_from)
+{	gr->GetFont()->Copy(gr_from->GetFont());	}
 //-----------------------------------------------------------------------------
 //		Export to file
 //-----------------------------------------------------------------------------

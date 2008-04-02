@@ -18,7 +18,7 @@
 #ifndef _MGL_H_
 #define _MGL_H_
 
-#define MGL_VERSION	6.
+#define MGL_VERSION	6.1
 
 #include "mgl/mgl_data.h"
 #include "mgl/mgl_font.h"

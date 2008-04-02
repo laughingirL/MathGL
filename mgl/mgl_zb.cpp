@@ -672,7 +672,8 @@ void mglGraphZB::mark_plot(float *pp, char type)
 {
 	unsigned char cs[4]={(unsigned char)(255.f*CDef[0]), (unsigned char)(255.f*CDef[1]),
 						(unsigned char)(255.f*CDef[2]), (unsigned char)(255.f*CDef[3])};
-	float p[6]={0,0,pp[2],0,0,pp[2]}, v, ss=MarkSize*0.35*font_factor;
+	float p[12]={0,0,pp[2],0,0,pp[2],0,0,pp[2],0,0,pp[2]};
+	float v, ss=MarkSize*0.35*font_factor;
 	register long i,j,s;
 	if(type=='.' || ss==0)
 	{
@@ -753,6 +754,28 @@ void mglGraphZB::mark_plot(float *pp, char type)
 			line_plot(p,p+3,CDef,CDef);
 			p[0] = pp[0]+ss;	p[1] = pp[1]+ss/2;	p[3] = pp[0];	p[4] = pp[1]-ss;
 			line_plot(p,p+3,CDef,CDef);
+			break;
+		case 'S':
+			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
+				pnt_plot(long(pp[0])+i,long(pp[1])+j,pp[2],cs);
+			break;
+		case 'D':
+			ss = ss*1.1;
+			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
+				if(abs(i)+abs(j)<=long(ss))
+					pnt_plot(long(pp[0])+i,long(pp[1])+j,pp[2],cs);
+			break;
+		case 'T':
+			ss = ss*1.1;
+			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss/2);j<=long(ss);j++)
+				if(3*abs(i)+2*j<=2*long(ss))
+					pnt_plot(long(pp[0])+i,long(pp[1])+j,pp[2],cs);
+			break;
+		case 'V':
+			ss = ss*1.1;
+			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss/2);j++)
+				if(3*abs(i)-2*j<=2*long(ss))
+					pnt_plot(long(pp[0])+i,long(pp[1])+j,pp[2],cs);
 			break;
 		case 'o':
 			for(i=long(-4*ss);i<=long(4*ss);i++)
