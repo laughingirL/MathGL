@@ -25,6 +25,7 @@
 #endif
 //#include <unistd.h>
 #include "mgl/mgl.h"
+char *mgl_strdup(const char *s);
 //-----------------------------------------------------------------------------
 wchar_t *mgl_str_copy(const char *s)
 {
@@ -143,6 +144,8 @@ int mglGraph::exec_b(const char *com, long , mglArg *a,int k[9])
 	{
 		if(k[0]==3 && k[1]==3 && k[2]==3)
 			Ball(mglPoint(a[0].v,a[1].v,a[2].v),k[3]==2 ? a[3].s[0]:'r');
+		else if(k[0]==3 && k[1]==3)
+			Ball(mglPoint(a[0].v,a[1].v),k[2]==2 ? a[2].s[0]:'r');
 		else	res = 1;
 	}
 	else if(!strcmp(com,"box"))		Box(k[0]==2 ? a[0].s : (TranspType!=2 ?"k-":"w-"));
@@ -227,19 +230,20 @@ int mglGraph::exec_c(const char *com, long n, mglArg *a,int k[9])
 	{	if(k[0]==1 && k[1]==2)	a[0].d->CumSum(a[1].s);	else	res = 1;}
 	else if(!strcmp(com,"curve"))
 	{
-		if(n<12)	res = 1;
-		else
-		{
-			bool ok=true;
-			for(i=0;i<12;i++)	if(a[i].type!=2)	ok=false;
-			if(ok)
-				Curve(mglPoint(a[0].v,a[1].v,a[2].v),
-					mglPoint(a[3].v,a[4].v,a[5].v),
-					mglPoint(a[6].v,a[7].v,a[8].v),
-					mglPoint(a[9].v,a[10].v,a[11].v),
-					(n==13 && a[12].type==1) ? a[12].s : 0);
-			else	res = 1;
-		}
+		for(i=0;i<12;i++)	if(a[i].type!=2 || i>=n)	break;
+		if(i==12)
+			Curve(mglPoint(a[0].v,a[1].v,a[2].v),
+				mglPoint(a[3].v,a[4].v,a[5].v),
+				mglPoint(a[6].v,a[7].v,a[8].v),
+				mglPoint(a[9].v,a[10].v,a[11].v),
+				(n>12 && a[12].type==1) ? a[12].s : 0);
+		else if(i==8)
+			Curve(mglPoint(a[0].v,a[1].v),
+				mglPoint(a[2].v,a[3].v),
+				mglPoint(a[4].v,a[5].v),
+				mglPoint(a[6].v,a[7].v),
+				(n>8 && a[8].type==1) ? a[8].s : 0);
+		else	res = 1;
 	}
 	else if(!strcmp(com,"cut"))
 	{
@@ -697,6 +701,13 @@ int mglGraph::exec_r(const char *com, long n, mglArg *a,int k[9])
 		else if(n==2)	rr=a[0].d->Read(a[1].s);
 		else rr=a[0].d->Read(a[1].s, k[2]==3?int(a[2].v):1,
 				k[3]==3?int(a[3].v):1, k[4]==3?int(a[4].v):1);
+		if(!rr)	SetWarn(mglWarnFile);
+	}
+	else if(!strcmp(com,"readmat"))
+	{
+		bool rr=true;
+		if(k[0]!=1 || k[1]!=2)	res = 1;
+		else	rr=a[0].d->ReadMat(a[1].s, k[2]==3?int(a[2].v):2);
 		if(!rr)	SetWarn(mglWarnFile);
 	}
 	else if(!strcmp(com,"readall"))
@@ -1317,7 +1328,7 @@ mglParse::~mglParse()
 mglVar *mglParse::FindVar(const char *name)
 {
 	mglVar *v=DataList;
-	char *s = strdup(name),*p;
+	char *s = mgl_strdup(name),*p;
 	p = strchr(s,'.');	if(p)	{	p[0]=0;	p++;	}
 	while(v)
 	{
@@ -1368,7 +1379,7 @@ void mglParse::FillArg(int k, char **arg, mglArg *a)
 		if(arg[n][0]!='\'' && (s=strchr(arg[n],'(')))	// subdata or column in argument
 		{
 			p = strchr(arg[n],'.');	if(p)	{	p[0]=0;	p++;	}
-			s = strdup(arg[n]);
+			s = mgl_strdup(arg[n]);
 			t = strtok (s, "(,)");
 			v = FindVar(t);
 			if(v==0)
@@ -1379,7 +1390,6 @@ void mglParse::FillArg(int k, char **arg, mglArg *a)
 				t = strtok (0, "(,)");	if(t)	k[0] = t[0]==':'?-1:atoi(t);
 				t = strtok (0, "(,)");	if(t)	k[1] = t[0]==':'?-1:atoi(t);
 				t = strtok (0, "(,)");	if(t)	k[2] = t[0]==':'?-1:atoi(t);
-				free(s);
 				u = new mglVar;		u->temp = true;
 				u->d = v->d.SubData(k[0],k[1],k[2]);
 			}
@@ -1390,6 +1400,7 @@ void mglParse::FillArg(int k, char **arg, mglArg *a)
 				u = new mglVar;		u->temp = true;
 				u->d = v->d.Column(tt);
 			}
+			free(s);
 			if(DataList)	u->MoveAfter(DataList);
 			else			DataList = u;
 			a[n-1].type = 0;	a[n-1].d = &(u->d);
@@ -1526,10 +1537,11 @@ int mglParse::PreExec(mglGraph *gr, long k, char **arg, mglArg *a)
 
 	}
 	// parse commands for automatic data creation
-	else if(!strcmp("read",arg[0]) || !strcmp("readhdf",arg[0]) || !strcmp("copy",arg[0]) || !strcmp("subdata",arg[0]))
+	else if(!strcmp("read",arg[0]) || !strcmp("readhdf",arg[0]) || !strcmp("copy",arg[0]) || !strcmp("readmat",arg[0]) || !strcmp("readall",arg[0]) || !strcmp("hist",arg[0]) || !strcmp("max",arg[0]) || !strcmp("min",arg[0]) || !strcmp("sum",arg[0]) || !strcmp("resize",arg[0]) || !strcmp("subdata",arg[0]))
 	{
 		if(k<3 || check_for_name(arg[1]))	return 2;
 		v = AddVar(arg[1]);
+		v->d.Create(1,1,1);
 		a[0].type = 0;	a[0].d = &(v->d);
 		n = 1+(gr->Exec(arg[0],k-1,a));
 	}

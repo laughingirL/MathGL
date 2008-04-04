@@ -109,6 +109,7 @@ protected:
 	/// Get symbol for character \a ch with given \a font style
 	unsigned Symbol(char ch);
 private:
+	float get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float &w1,float &w2, float f1, float f2, int st);
 	void read_data(FILE *fp, float *ff, short *wdt, short *numl, unsigned *posl, short *numt, unsigned *post, unsigned &cur);
 	void main_copy();
 	bool read_main(const char *base, const char *path, unsigned &cur);

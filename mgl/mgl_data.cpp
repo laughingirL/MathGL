@@ -605,8 +605,9 @@ void mglData::Crop(int n1,int n2,char dir)
 //-----------------------------------------------------------------------------
 mglData &mglData::Hist(int n,float v1,float v2,int nsub)
 {
-	static mglData b(n);
+	static mglData b;
 	register long i,k;
+	b.Create(n);
 	if(v1==v2)	return b;
 	if(nsub==0)	for(i=0;i<nx*ny*nz;i++)
 	{
@@ -629,8 +630,9 @@ mglData &mglData::Hist(int n,float v1,float v2,int nsub)
 //-----------------------------------------------------------------------------
 mglData &mglData::Hist(mglData &w, int n,float v1,float v2,int nsub)
 {
-	static mglData b(n);
+	static mglData b;
 	register long i,k;
+	b.Create(n);
 	if(v1==v2 || nx*ny*nz!=w.nx*w.ny*w.nz)	return b;
 	if(nsub==0)	for(i=0;i<nx*ny*nz;i++)
 	{

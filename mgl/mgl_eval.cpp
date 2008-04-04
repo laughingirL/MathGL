@@ -191,7 +191,7 @@ int mglFindInText(char *str,const char *lst);
 //-----------------------------------------------------------------------------
 void strtrim_mgl(char *str)
 {
-	char *c = strdup(str);
+	char *c = mgl_strdup(str);
 	unsigned long n=strlen(str);
 	long k;
 	for(k=0;k<long(strlen(str));k++)	// удаляем начальные пробелы

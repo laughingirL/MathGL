@@ -254,7 +254,8 @@ unsigned mglFont::Parse(const wchar_t *s)
 			return mgl_act_symb[k].kod | MGL_FONT_ZEROW;
 	// arbitrary UTF symbol
 	if(s[0]=='u' && s[1]=='t' && s[2]=='f')
-	{	wscanf(s+3,"%lx",&k);	return wchar_t(k);	}
+//	{	wscanf(s+3,"%lx",&k);	return wchar_t(k);	}
+	{	k = wcstoul(s+3,NULL,16);	return wchar_t(k);	}
 	// font/style changes for next symbol
 	if(!wcscmp(s,L"big"))		res = unsigned(-5);
 	else if(!wcscmp(s,L"frac"))	res = unsigned(-6);
@@ -263,7 +264,6 @@ unsigned mglFont::Parse(const wchar_t *s)
 	else if(!wcscmp(s,L"underset"))	res = unsigned(-9);
 	else if(!wcscmp(s,L"stackr"))	res = unsigned(-10);
 	else if(!wcscmp(s,L"stackl"))	res = unsigned(-11);
-	else if(!wcscmp(s,L"binom"))	res = unsigned(-12);	// binom = (stack)
 	else if(!wcscmp(s,L"b"))	res = MGL_FONT_BOLD;
 	else if(!wcscmp(s,L"i"))	res = MGL_FONT_ITAL;
 	else if(!wcscmp(s,L"bi"))	res = MGL_FONT_BOLD|MGL_FONT_ITAL;
@@ -318,35 +318,142 @@ void mglFont::Convert(const wchar_t *str, unsigned *res)
 	res[j] = 0;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Puts(const unsigned *str, float x,float y,float f,int style)
+float mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float &w1,float &w2, float f1, float f2, int st)
+{
+	static unsigned s1[2]={0,0}, s2[2]={0,0};
+	register long k;
+	i++;
+	if(str[i]==unsigned(-3))
+	{
+		i++;	*b1 = str+i;
+		for(k=1;k>0 && str[i];i++)
+		{
+			if(str[i]==unsigned(-4))	k--;
+			if(str[i]==unsigned(-3))	k++;
+		}
+		str[i-1]=0;
+	}
+	else	{	s1[0] = str[i];	*b1 = s1;	i++;	}
+	if(str[i]==unsigned(-3))
+	{
+		i++;	*b2 = str+i;
+		for(k=1;k>0 && str[i];i++)
+		{
+			if(str[i]==unsigned(-4))	k--;
+			if(str[i]==unsigned(-3))	k++;
+		}
+		str[i-1]=0;
+	}
+	else	{	s2[0] = str[i];	*b2 = s2;	i++;	}
+	i--;
+	w1 = Puts(*b1, 0, 0, f1, 0x10|st);
+	w2 = Puts(*b2, 0, 0, f2, 0x10|st);
+	return w1>w2 ? w1 : w2;
+}
+//-----------------------------------------------------------------------------
+float mglFont::Puts(const unsigned *text, float x,float y,float f,int style)
 {
 	if(numg==0)	return 0;
 	register long i,j,k;
 	register unsigned s,ss;
 	float w=0;				// string width
 	int st = style;			// current style
-	unsigned *b=0;			// buffer for substring
-	float yy=y, ff=f, ww;
+	unsigned *b1, *b2;		// pointer to substring
+	unsigned *str;			// string itself
+	float yy=y, ff=f, ww, w1, w2;
 	int a = (st/MGL_FONT_BOLD)&3;
+	for(i=0;text[i];i++);
+	str = new unsigned[i+1];
+	memcpy(str,text,(i+1)*sizeof(unsigned));
+	
 	for(i=0;str[i];i++)
 	{
 		s = str[i];		ww = 0;
 		if(s==unsigned(-3))	// recursion call here
 		{
-			k=1;
-			for(j=0;k>0 && str[i];j++)
+			i++;	b1 = str+i;
+			for(k=1;k>0 && str[i];i++)
 			{
-				i++;
 				if(str[i]==unsigned(-4))	k--;
 				if(str[i]==unsigned(-3))	k++;
 			}
-			b = new unsigned[j+1];
-			memcpy(b,str+i-j+1,j*sizeof(unsigned));	b[j]=0;
-			ww = Puts(b, x, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
-			delete []b;
-//			if(st & MGL_FONT_ZEROW)	ww = 0;
+			str[i-1]=0;	i--;
+			ww = Puts(b1, x, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
 			if(gr && !(style&0x10))	// add under-/over- line now
 			{
+				if(st&MGL_FONT_OLINE)	gr->Glyph(x,y+499*f/fact[a],ww,0,0,-1,0);
+				if(st&MGL_FONT_ULINE)	gr->Glyph(x,y-200*f/fact[a],ww,0,0,-1,0);
+			}
+			st = style;	yy = y;	ff = f;		// clear style modification
+		}
+		else if(s==unsigned(-9))	// underset
+		{
+			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
+			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
+			Puts(b2, x+(ww-w2)/2, yy-150*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
+			if(gr && !(style&0x10))	// add under-/over- line now
+			{
+				if(st&MGL_FONT_OLINE)	gr->Glyph(x,y+499*f/fact[a],ww,0,0,-1,0);
+				if(st&MGL_FONT_ULINE)	gr->Glyph(x,y-200*f/fact[a],ww,0,0,-1,0);
+			}
+			st = style;	yy = y;	ff = f;		// clear style modification
+		}
+		else if(s==unsigned(-8))	// overset
+		{
+			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
+			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
+			Puts(b2, x+(ww-w2)/2, yy+375*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
+			if(gr && !(style&0x10))	// add under-/over- line now
+			{
+				if(st&MGL_FONT_OLINE)	gr->Glyph(x,y+499*f/fact[a],ww,0,0,-1,0);
+				if(st&MGL_FONT_ULINE)	gr->Glyph(x,y-200*f/fact[a],ww,0,0,-1,0);
+			}
+			st = style;	yy = y;	ff = f;		// clear style modification
+		}
+		else if(s==unsigned(-11))	// stackl
+		{
+			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff*0.45, ff*0.45, st);
+			Puts(b1, x, yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
+			Puts(b2, x, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
+			if(gr && !(style&0x10))	// add under-/over- line now
+			{
+				if(st&MGL_FONT_OLINE)	gr->Glyph(x,y+499*f/fact[a],ww,0,0,-1,0);
+				if(st&MGL_FONT_ULINE)	gr->Glyph(x,y-200*f/fact[a],ww,0,0,-1,0);
+			}
+			st = style;	yy = y;	ff = f;		// clear style modification
+		}
+		else if(s==unsigned(-10))	// stacr
+		{
+			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff*0.45, ff*0.45, st);
+			Puts(b1, x+(ww-w1), yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
+			Puts(b2, x+(ww-w2), yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
+			if(gr && !(style&0x10))	// add under-/over- line now
+			{
+				if(st&MGL_FONT_OLINE)	gr->Glyph(x,y+499*f/fact[a],ww,0,0,-1,0);
+				if(st&MGL_FONT_ULINE)	gr->Glyph(x,y-200*f/fact[a],ww,0,0,-1,0);
+			}
+			st = style;	yy = y;	ff = f;		// clear style modification
+		}
+		else if(s==unsigned(-7))	// stack
+		{
+			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff*0.45, ff*0.45, st);
+			Puts(b1, x+(ww-w1)/2, yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
+			Puts(b2, x+(ww-w2)/2, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
+			if(gr && !(style&0x10))	// add under-/over- line now
+			{
+				if(st&MGL_FONT_OLINE)	gr->Glyph(x,y+499*f/fact[a],ww,0,0,-1,0);
+				if(st&MGL_FONT_ULINE)	gr->Glyph(x,y-200*f/fact[a],ww,0,0,-1,0);
+			}
+			st = style;	yy = y;	ff = f;		// clear style modification
+		}
+		else if(s==unsigned(-6))	// frac
+		{
+			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff*0.45, ff*0.45, st);
+			Puts(b1, x+(ww-w1)/2, yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
+			Puts(b2, x+(ww-w2)/2, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)));
+			if(gr && !(style&0x10))	// add under-/over- line now
+			{
+				gr->Glyph(x,y+150*f/fact[a],ww,0,0,-1,0);
 				if(st&MGL_FONT_OLINE)	gr->Glyph(x,y+499*f/fact[a],ww,0,0,-1,0);
 				if(st&MGL_FONT_ULINE)	gr->Glyph(x,y-200*f/fact[a],ww,0,0,-1,0);
 			}
@@ -400,6 +507,7 @@ float mglFont::Puts(const unsigned *str, float x,float y,float f,int style)
 		}
 		x += ww;	w += ww;
 	}
+	delete []str;
 	return w;
 }
 //-----------------------------------------------------------------------------

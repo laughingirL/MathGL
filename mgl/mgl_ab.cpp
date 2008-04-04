@@ -26,7 +26,7 @@
 #ifdef WIN32
 #define swprintf    _snwprintf
 #endif
-
+char *mgl_strdup(const char *s);
 //-----------------------------------------------------------------------------
 void strtrim_mgl(char *str);
 void wcstrim_mgl(wchar_t *str);
@@ -259,7 +259,7 @@ void mglGraphAB::Putsw(mglPoint p,const wchar_t *wcs,const char *font,
 					((_sz==-1 ^ (Org.y==Max.y || Org.x==Max.x)) && (dir=='z' || dir=='Z')) );
 	float pp[6] = {p.x,p.y,p.z,p.x,p.y,p.z}, bb[9];
 	Arrow1 = Arrow2 = '_';
-	char *font1 = strdup(font ? font:FontDef),*f;
+	char *font1 = mgl_strdup(font ? font:FontDef),*f;
 	char col=TranspType!=2 ? 'k':'w',stl[3]="-k";
 	f = strchr(font1,':');	if(f)	{	f[0]=0;	col=f[1];	}
 	stl[1] = col;

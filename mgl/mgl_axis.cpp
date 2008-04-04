@@ -28,9 +28,23 @@
 #endif
 
 //-----------------------------------------------------------------------------
+wchar_t *mgl_wcsdup(const wchar_t *s)
+{
+	wchar_t *r = (wchar_t *)malloc((wcslen(s)+1)*sizeof(wchar_t));
+	memcpy(r,s,(wcslen(s)+1)*sizeof(wchar_t));
+	return r;
+}
+//-----------------------------------------------------------------------------
+char *mgl_strdup(const char *s)
+{
+	char *r = (char *)malloc((strlen(s)+1)*sizeof(char));
+	memcpy(r,s,(strlen(s)+1)*sizeof(char));
+	return r;
+}
+//-----------------------------------------------------------------------------
 void wcstrim_mgl(wchar_t *str)
 {
-	wchar_t *c = wcsdup(str);
+	wchar_t *c = mgl_wcsdup(str);
 	unsigned long n=wcslen(str);
 	long k;
 	for(k=0;k<long(wcslen(str));k++)	// удаляем начальные пробелы
@@ -394,7 +408,7 @@ void mglGraph::AxisX(bool text)
 			pp[0]=x;	pp[1]=y0+ddy/7;	pp[2]=z0;
 			pp[3]=x;	pp[4]=y0;	pp[5]=z0;
 			pp[6]=x;	pp[7]=y0;	pp[8]=z0+ddz/7;
-			if(xx>=Min.x && xx<=Max.x)
+			if(x>=Min.x && x<=Max.x)
 			{
 				DrawTick(pp,false);
 				swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(x))));
@@ -495,7 +509,7 @@ void mglGraph::AxisY(bool text)
 			pp[0]=x0+ddx/7;	pp[1]=y;	pp[2]=z0;
 			pp[3]=x0;		pp[4]=y;	pp[5]=z0;
 			pp[6]=x0;		pp[7]=y;	pp[8]=z0+ddz/7;
-			if(yy>=Min.y && yy<=Max.y)
+			if(y>=Min.y && y<=Max.y)
 			{
 				DrawTick(pp,false);
 				swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(y))));
@@ -596,7 +610,7 @@ void mglGraph::AxisZ(bool text)
 			pp[0]=x0;	pp[1]=y0+ddy/7;	pp[2]=z;
 			pp[3]=x0;	pp[4]=y0;		pp[5]=z;
 			pp[6]=x0+ddx/7;	pp[7]=y0;	pp[8]=z;
-			if(zz>=Min.z && zz<=Max.z)
+			if(z>=Min.z && z<=Max.z)
 			{
 				DrawTick(pp,false);
 				swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(z))));
@@ -838,9 +852,9 @@ void mglGraph::AddLegend(const wchar_t *text,const char *style)
 {
 	if(!text)	return;
 	if(NumLeg>=100)	{	SetWarn(mglWarnLegA);	return;	}
-	LegStr[NumLeg] = wcsdup(text);
-	if(style)	LegStl[NumLeg] = strdup(style);
-	else		LegStl[NumLeg] = strdup(last_style);
+	LegStr[NumLeg] = mgl_wcsdup(text);
+	if(style)	LegStl[NumLeg] = mgl_strdup(style);
+	else		LegStl[NumLeg] = mgl_strdup(last_style);
 	NumLeg++;
 }
 //-----------------------------------------------------------------------------

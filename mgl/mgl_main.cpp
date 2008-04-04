@@ -234,12 +234,22 @@ void mglGraph::SetScheme(const char *s)
 	for(i=0;i<strlen(s);i++)
 	{
 		if(s[i]=='d')	OnCoord = true;
-		if(s[i]==':')	break;
-		if(strchr(col,s[i]))
+		else if(s[i]==':')	break;
+		else if(strchr(col,s[i]))
 		{
 			cmap[NumCol].Set(s[i]);
 			NumCol++;
 			if(NumCol>=NUM_COLOR)	break;
+		}
+		else
+		{
+			mglColor c1(s[i]);
+			if(c1.r!=-1)
+			{
+				cmap[NumCol].Set(s[i]);
+				NumCol++;
+				if(NumCol>=NUM_COLOR)	break;
+			}
 		}
 	}
 	if(NumCol==0)	NumCol = 2;
@@ -380,13 +390,18 @@ char mglGraph::SelectPen(const char *p)
 		for(unsigned i=0;i<strlen(p);i++)
 		{
 			if(strchr(stl,p[i]))	st  = p[i];
-			if(strchr(mrk,p[i]))	mk = p[i];
-			if(strchr(wdh,p[i]))	w = p[i]-'0';
-			if(strchr(col,p[i]))	c.Set(p[i]);
-			if(strchr(arr,p[i]))
+			else if(strchr(mrk,p[i]))	mk = p[i];
+			else if(strchr(wdh,p[i]))	w = p[i]-'0';
+			else if(strchr(col,p[i]))	c.Set(p[i]);
+			else if(strchr(arr,p[i]))
 			{
 				if(Arrow1=='-')	Arrow1 = p[i];
 				else	Arrow2 = p[i];
+			}
+			else
+			{
+				mglColor c1(p[i]);
+				if(c1.r!=-1)	c = c1;
 			}
 		}
 		if(strchr(p,'#'))

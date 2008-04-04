@@ -18,11 +18,12 @@
 #ifndef _MGL_H_
 #define _MGL_H_
 
-#define MGL_VERSION	6.1
+#define MGL_VERSION	6.2
 
 #include "mgl/mgl_data.h"
 #include "mgl/mgl_font.h"
 #include <math.h>
+#include <string.h>
 
 #ifndef NUM_COLOR
 #define NUM_COLOR	7
@@ -88,7 +89,8 @@ inline mglColor operator*(float b, mglColor a)
 inline mglColor operator/(mglColor a, float b)
 {	return mglColor(a.r/b, a.g/b, a.b/b);	};
 inline mglColor operator!(mglColor a)
-{	return mglColor(1-a.r, 1-a.g, 1-a.b);	} //-----------------------------------------------------------------------------
+{	return mglColor(1-a.r, 1-a.g, 1-a.b);	}
+//-----------------------------------------------------------------------------
 #define NC	mglColor(-1,-1,-1)
 #define BC	mglColor( 0, 0, 0)
 #define WC	mglColor( 1, 1, 1)
@@ -128,6 +130,8 @@ inline mglPoint operator^(mglPoint a, mglPoint b)
 {	return mglPoint(a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x);	};
 inline mglPoint operator!(mglPoint a)
 {	return (a.x==0 && a.y==0)?mglPoint(1,0,0):mglPoint(-a.y/hypot(a.x,a.y), a.x/hypot(a.x,a.y), 0);	};
+inline bool operator==(mglPoint a, mglPoint b)
+{	return !memcmp(&a, &b, sizeof(mglPoint));	}
 float Norm(mglPoint p);
 //-----------------------------------------------------------------------------
 /// Structure for the command argument (see mglGraph::Exec()).
