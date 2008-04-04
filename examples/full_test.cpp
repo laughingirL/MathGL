@@ -8,6 +8,7 @@ mglData s;
 //-----------------------------------------------------------------------------
 void save(mglGraph *gr,const char *name,const char *suf="",int type=0)
 {
+//	return;
 	char buf[128];
 	switch(type)
 	{
@@ -200,9 +201,9 @@ int sample_a7(mglGraph *gr, const void *)	// smoothing
 	y3=y0;	y3.Smooth(SMOOTH_QUAD_5);
 
 	gr->Plot(y0,"k");	gr->AddLegend("NONE","k");
-	gr->Plot(y1,"r");	gr->AddLegend("LINE_3","r");
-	gr->Plot(y2,"g");	gr->AddLegend("LINE_5","g");
-	gr->Plot(y3,"b");	gr->AddLegend("QUAD_5","b");
+	gr->Plot(y1,"r");	gr->AddLegend("LINE\\_3","r");
+	gr->Plot(y2,"g");	gr->AddLegend("LINE\\_5","g");
+	gr->Plot(y3,"b");	gr->AddLegend("QUAD\\_5","b");
 	gr->Legend();		gr->Box();
 	gr->ClearLegend();	// clear legend strings
 	return 0;
@@ -380,13 +381,28 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	mglData  a(50,40), b(50,40), c(60,50,40), d(60,50,40);
 	mglData y(50,3), x(50), x2(50), y1(50), y2(50), f(50,3);
 	mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-	ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5)-0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-	ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5)-0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-	ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5)-0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+	
+/*	int i,j,k;
+	float xx,yy,zz,dd;
+	for(i=0;i<10;i++)	for(j=0;j<10;j++)	for(k=0;k<10;k++)
+	{
+		xx = i*0.1-0.5;	yy = j*0.1-0.5;	zz = k*0.1-0.35;	dd = k*0.1-0.65;
+		ex.a[i+10*(j+10*k)] = 0.1*xx/pow(xx*xx+yy*yy+zz*zz,1.5) - 0.1*xx/pow(xx*xx+yy*yy+dd*dd,1.5);
+		ey.a[i+10*(j+10*k)] = 0.1*yy/pow(xx*xx+yy*yy+zz*zz,1.5) - 0.1*yy/pow(xx*xx+yy*yy+dd*dd,1.5);
+		ez.a[i+10*(j+10*k)] = 0.1*zz/pow(xx*xx+yy*yy+zz*zz,1.5) - 0.1*dd/pow(xx*xx+yy*yy+dd*dd,1.5);
+	}
+	for(i=0;i<60;i++)	for(j=0;j<50;j++)	for(k=0;k<40;k++)
+	{
+		xx = i/30.-1;	yy = j/25.-1;	zz = k/20.-1;
+		c.a[i+60*(j+50*k)] = -2*(xx*xx + yy*yy + zz*zz*zz*zz - zz*zz - 0.1);
+		d.a[i+60*(j+50*k)] = 1-2*tanh((xx+yy)*(xx+yy));
+	}*/
+	ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2 + (y-0.5)^2+(z-0.65)^2,1.5)");
+	ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2 + (y-0.5)^2+(z-0.65)^2,1.5)");
+	ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.65)^2,1.5)");
 	a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 	b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 	c.Modify("(-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1))");
-//	d.Modify("2*exp(-2*((2*x-1)^2 + (2*y-1)^2))-1");
 	d.Modify("1-2*tanh(4*(x+y-1)^2)");
 	y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 	y.Modify("sin(2*pi*x)",1);	y.Modify("cos(2*pi*x)",2);
@@ -455,12 +471,14 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->Step(y);	save(gr,"step",suf);
 	gr->Clf();	gr->Box();	gr->Bars(y);	save(gr,"bars",suf);
 	gr->Clf();	gr->Box();	gr->Mark(y,y1,"bs");	save(gr,"mark",suf);
+	gr->Clf();	gr->Box();	gr->TextMark(y,y1,"\\gamma");	save(gr,"textmark",suf);
 	gr->Clf();	gr->Box();	gr->Plot(y.SubData(-1,0));
 	gr->Text(y,"This is very long string drawn along a curve",":k");
 	gr->Text(y,"Another string drawn above a curve","T:r");	save(gr,"text",suf);
 	gr->Clf();	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ex0,ey0,"ko");	save(gr,"error",suf);
 
 	gr->Clf();	gr->Box();	gr->Dens(a,"BbcyrR");	gr->Colorbar();	save(gr,"dens",suf);
+	gr->Clf();	gr->Box();	gr->Tile(a,b,"BbcyrR");		save(gr,"tiler",suf);
 	gr->Clf();	gr->Box();	gr->Cont(a,"BbcyrRt");		save(gr,"contt",suf);
 	gr->Clf();	gr->Box();	gr->Vect(a,b,"BbcyrR");		save(gr,"vect",suf);
 	gr->Clf();	gr->Box();	gr->VectC(a,b,"BbcyrR");	save(gr,"vectc",suf);
@@ -773,10 +791,13 @@ int main(int argc,char **argv)
 		}
 	}
 
+//	for(int i=0;i<10;i++)
+	{
 	all_samples(&zb,suf);
 	sample_transp(&zb,suf);
 	sample_hint(&zb,suf);
 	full_test(&zb,suf);
+	}
 	return 0;
 }
 //-----------------------------------------------------------------------------

@@ -214,6 +214,8 @@ void mgl_boxs_xy_(long *graph, long *x, long *y, long *z, const char *sch,float 
 void mgl_boxs_(long *graph, long *z, const char *sch,float *zVal,int);
 void mgl_tile_xy_(long *graph, long *x, long *y, long *z, const char *sch,int);
 void mgl_tile_(long *graph, long *z, const char *sch,int);
+void mgl_tile_rxy_(long *graph, long *x, long *y, long *z, long *r, const char *sch,int);
+void mgl_tile_r_(long *graph, long *z, long *r, const char *sch,int);
 void mgl_cont_xy_val_(long *graph, long *v, long *x, long *y, long *z, const char *sch, float *zVal,int);
 void mgl_cont_val_(long *graph, long *v, long *z, const char *sch,float *zVal,int);
 void mgl_cont_xy_(long *graph, long *x, long *y, long *z, const char *sch, int *Num, float *zVal,int);
@@ -233,6 +235,8 @@ void mgl_surfc_xy_(long *graph, long *x, long *y, long *z, long *c, const char *
 void mgl_surfc_(long *graph, long *z, long *c, const char *sch,int);
 void mgl_surfa_xy_(long *graph, long *x, long *y, long *z, long *c, const char *sch,int);
 void mgl_surfa_(long *graph, long *z, long *c, const char *sch,int);
+void mgl_stfa_xy_(long *graph, long *x, long *y, long *re, long *im, int *dn, const char *sch, float *zVal, int);
+void mgl_stfa_(long *graph, long *re, long *im, int *dn, const char *sch, float *zVal, int);
 void mgl_vect_xy_(long *graph, long *x, long *y, long *ax, long *ay, const char *sch,float *zVal,int);
 void mgl_vect_2d_(long *graph, long *ax, long *ay, const char *sch,float *zVal,int);
 void mgl_vectc_xy_(long *graph, long *x, long *y, long *ax, long *ay, const char *sch,float *zVal,int);

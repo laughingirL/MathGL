@@ -1000,8 +1000,8 @@ int mglGraph::exec_t(const char *com, long , mglArg *a,int k[9])
 		if(k[0]!=1)	res = 1;
 		else if(k[1]==0)	Tile(*(a[0].d));
 		else if(k[1]==2)	Tile(*(a[0].d),a[1].s);
-		else if(k[1]==1 && k[2]==2)
-			Tile(*(a[0].d),*(a[1].d),a[2].s);
+		else if(k[1]==1 && k[2]!=1)
+			Tile(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0);
 		else if(k[1]==1 && k[2]==1 && k[3]==1)
 			Tile(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2? a[4].s:0);
 		else if(k[1]==1 && k[2]==1)
@@ -1050,14 +1050,14 @@ int mglGraph::exec_t(const char *com, long , mglArg *a,int k[9])
 	{	if(k[0]==1)	a[0].d->Transpose(k[1]==2?a[1].s:"yxz");	else	res = 1;	}
 	else if(!strcmp(com,"textmark"))
 	{
-		if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-			TextMark(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,k[5]==2?a[5].s:0);
-		else if(k[0]==1 && k[1]==1 && k[2]==1)
-			TextMark(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,k[4]==2?a[4].s:0,k[5]==3?a[5].v:NAN);
-		else if(k[0]==1 && k[1]==1)
-			TextMark(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,k[3]==2?a[3].s:0,k[4]==3?a[4].v:NAN);
-		else if(k[0]==1)
-			TextMark(*(a[0].d),k[1]==2?a[1].s:0,k[2]==2?a[2].s:0,k[3]==3?a[3].v:NAN);
+		if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
+			TextMark(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].s,k[5]==2?a[5].s:0);
+		else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
+			TextMark(*(a[0].d),*(a[1].d),*(a[2].d),a[3].s,k[4]==2?a[4].s:0,k[5]==3?a[5].v:NAN);
+		else if(k[0]==1 && k[1]==1 && k[2]==2)
+			TextMark(*(a[0].d),*(a[1].d),a[2].s,k[3]==2?a[3].s:0,k[4]==3?a[4].v:NAN);
+		else if(k[0]==1 && k[1]==2)
+			TextMark(*(a[0].d),a[1].s,k[2]==2?a[2].s:0,k[3]==3?a[3].v:NAN);
 		else	res = 1;
 	}
 	else if(!strcmp(com,"triplot"))

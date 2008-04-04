@@ -776,6 +776,12 @@ void mgl_tile_xy(HMGL gr, HMDT x, HMDT y, HMDT a, const char *sch)
 /// Draw mesh lines for 2d data
 void mgl_tile(HMGL gr, HMDT a, const char *sch)
 {	if(gr && a)	gr->Tile(*a, sch);	}
+/// Draw variable-size tiles for 2d data specified parametrically
+void mgl_tile_rxy(HMGL gr, HMDT x, HMDT y, HMDT a, HMDT r, const char *sch)
+{	if(gr && a && x && y && r)	gr->Tile(*x, *y, *a, *r, sch);	}
+/// Draw variable-size mesh lines for 2d data
+void mgl_tile_r(HMGL gr, HMDT a, HMDT r, const char *sch)
+{	if(gr && a && r)	gr->Tile(*a, *r, sch);	}
 //-----------------------------------------------------------------------------
 /// Draw surface specified parametrically with coloring by other matrix
 void mgl_surfc_xy(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT a, const char *sch)
@@ -789,6 +795,12 @@ void mgl_surfa_xy(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT a, const char *sch)
 /// Draw surface specified by matrix which transparency is determined by other matrix
 void mgl_surfa(HMGL gr, HMDT z, HMDT a, const char *sch)
 {	if(gr && a && z)	gr->SurfA(*z, *a, sch);	}
+/// Draw spectrogram for data specified parametrically which transparency is determined by other matrix
+void mgl_stfa_xy(HMGL gr, HMDT x, HMDT y, HMDT re, HMDT im, int dn, const char *sch, float zval)
+{	if(gr && re && im && x && y)	gr->STFA(*x, *y, *re, *im, dn, sch, zval);	}
+/// Draw spectrogram for data specified by matrix which transparency is determined by other matrix
+void mgl_stfa(HMGL gr, HMDT re, HMDT im, int dn, const char *sch, float zval)
+{	if(gr && re && im)	gr->STFA(*re, *im, dn, sch, zval);	}
 //-----------------------------------------------------------------------------
 //		2D plotting functions (Fortran)
 //-----------------------------------------------------------------------------
@@ -904,6 +916,21 @@ void mgl_tile_(long *gr, long *a, const char *sch,int l)
 	if(gr && a)	_GR_->Tile(_D_(a), s);
 	delete []s;
 }
+/// Draw tiles for 2d data specified parametrically
+void mgl_tile_rxy_(long *gr, long *x, long *y, long *a, long *r, const char *sch,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && a && x && y && r)
+		_GR_->Tile(_D_(x), _D_(y), _D_(a), _D_(r), s);
+	delete []s;
+}
+/// Draw mesh lines for 2d data
+void mgl_tile_r_(long *gr, long *a, long *r, const char *sch,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && a && r)	_GR_->Tile(_D_(a), _D_(r), s);
+	delete []s;
+}
 //-----------------------------------------------------------------------------
 /// Draw surface specified parametrically with coloring by other matrix
 void mgl_surfc_xy_(long *gr, long *x, long *y, long *z, long *a, const char *sch,int l)
@@ -931,6 +958,21 @@ void mgl_surfa_(long *gr, long *z, long *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && z)	_GR_->SurfA(_D_(z), _D_(a), s);
+	delete []s;
+}
+/// Draw spectrogram for data specified parametrically which transparency is determined by other matrix
+void mgl_stfa_xy_(long *gr, long *x, long *y, long *re, long *im, int *dn, const char *sch, float *zVal, int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && re && im && x && y)
+		_GR_->STFA(_D_(x), _D_(y), _D_(re), _D_(im), *dn, s, *zVal);
+	delete []s;
+}
+/// Draw spectrogram for data specified by matrix which transparency is determined by other matrix
+void mgl_stfa_(long *gr, long *re, long *im, int *dn, const char *sch, float *zVal, int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && re && im)	_GR_->STFA(_D_(re), _D_(im), *dn, s, *zVal);
 	delete []s;
 }
 //-----------------------------------------------------------------------------

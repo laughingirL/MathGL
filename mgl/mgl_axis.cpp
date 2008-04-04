@@ -408,12 +408,13 @@ void mglGraph::AxisX(bool text)
 			pp[0]=x;	pp[1]=y0+ddy/7;	pp[2]=z0;
 			pp[3]=x;	pp[4]=y0;	pp[5]=z0;
 			pp[6]=x;	pp[7]=y0;	pp[8]=z0+ddz/7;
-			if(x>=Min.x && x<=Max.x)
+			if(x*FLT_EPS>=Min.x && x<=Max.x*FLT_EPS)
 			{
 				DrawTick(pp,false);
 				swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(x))));
 				if(text && cur%k==0)
 					Putsw(mglPoint(x,y0,z0),str,FontDef,FontSize,'x');
+				cur++;
 			}
 			// subticks drawing
 			for(xx=x;xx<10*x;xx+=x)
@@ -502,19 +503,20 @@ void mglGraph::AxisY(bool text)
 	else if(Min.y>0)
 	{
 		float yy;
-		int k=1+int(log10(Max.x/Min.x)/5), cur=0;
+		int k=1+int(log10(Max.y/Min.y)/5), cur=0;
 		y0 = exp(M_LN10*floor(0.1+log10(Min.y)));
 		for(y=y0;y<=Max.y*FLT_EPS;y*=10)
 		{
 			pp[0]=x0+ddx/7;	pp[1]=y;	pp[2]=z0;
 			pp[3]=x0;		pp[4]=y;	pp[5]=z0;
 			pp[6]=x0;		pp[7]=y;	pp[8]=z0+ddz/7;
-			if(y>=Min.y && y<=Max.y)
+			if(y*FLT_EPS>=Min.y && y<=Max.y*FLT_EPS)
 			{
 				DrawTick(pp,false);
 				swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(y))));
-				if(text && cur&k==0)
+				if(text && cur%k==0)
 					Putsw(mglPoint(x0,y,z0),str,FontDef,FontSize,'y');
+				cur++;
 			}
 			// subticks drawing
 			for(yy=y;yy<10*y;yy+=y)
@@ -603,19 +605,20 @@ void mglGraph::AxisZ(bool text)
 	else if(Min.z>0)
 	{
 		float zz;
-		int k=1+int(log10(Max.x/Min.x)/5), cur=0;
+		int k=1+int(log10(Max.z/Min.z)/5), cur=0;
 		z0 = exp(M_LN10*floor(0.1+log10(Min.z)));
 		for(z=z0;z<=Max.z*FLT_EPS;z*=10)
 		{
 			pp[0]=x0;	pp[1]=y0+ddy/7;	pp[2]=z;
 			pp[3]=x0;	pp[4]=y0;		pp[5]=z;
 			pp[6]=x0+ddx/7;	pp[7]=y0;	pp[8]=z;
-			if(z>=Min.z && z<=Max.z)
+			if(z*FLT_EPS>=Min.z && z<=Max.z*FLT_EPS)
 			{
 				DrawTick(pp,false);
 				swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(z))));
 				if(text && cur%k==0)
 					Putsw(mglPoint(x0,y0,z),str,FontDef,FontSize,'z');
+				cur++;
 			}
 			// subticks drawing
 			for(zz=z;zz<10*z;zz+=z)

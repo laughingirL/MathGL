@@ -235,6 +235,8 @@ void mgl_boxs_xy(HMGL graph, HMDT x, HMDT y, HMDT z, const char *sch,float zVal)
 void mgl_boxs(HMGL graph, HMDT z, const char *sch,float zVal);
 void mgl_tile_xy(HMGL graph, HMDT x, HMDT y, HMDT z, const char *sch);
 void mgl_tile(HMGL graph, HMDT z, const char *sch);
+void mgl_tile_rxy(HMGL graph, HMDT x, HMDT y, HMDT z, HMDT r, const char *sch);
+void mgl_tile_r(HMGL graph, HMDT z, HMDT r, const char *sch);
 void mgl_cont_xy_val(HMGL graph, HMDT v, HMDT x, HMDT y, HMDT z, const char *sch, float zVal);
 void mgl_cont_val(HMGL graph, HMDT v, HMDT z, const char *sch,float zVal);
 void mgl_cont_xy(HMGL graph, HMDT x, HMDT y, HMDT z, const char *sch, int Num, float zVal);
@@ -254,6 +256,8 @@ void mgl_surfc_xy(HMGL graph, HMDT x, HMDT y, HMDT z, HMDT c, const char *sch);
 void mgl_surfc(HMGL graph, HMDT z, HMDT c, const char *sch);
 void mgl_surfa_xy(HMGL graph, HMDT x, HMDT y, HMDT z, HMDT c, const char *sch);
 void mgl_surfa(HMGL graph, HMDT z, HMDT c, const char *sch);
+void mgl_stfa_xy(HMGL graph, HMDT x, HMDT y, HMDT re, HMDT im, int dn, const char *sch, float zVal);
+void mgl_stfa(HMGL graph, HMDT re, HMDT im, int dn, const char *sch, float zVal);
 void mgl_vect_xy(HMGL graph, HMDT x, HMDT y, HMDT ax, HMDT ay, const char *sch,float zVal);
 void mgl_vect_2d(HMGL graph, HMDT ax, HMDT ay, const char *sch,float zVal);
 void mgl_vectc_xy(HMGL graph, HMDT x, HMDT y, HMDT ax, HMDT ay, const char *sch,float zVal);
