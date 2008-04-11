@@ -89,6 +89,7 @@ protected:
 	bool Finished;		///< Flag that final picture \a mglGraphZB::G is ready
 	float PenWidth;		///< Pen width for further line plotting (must be >0 !!!)
 	bool NoAutoFactor;	///< Temporary variable
+	float f_size;		///< font size for glyph lines
 
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 	virtual void ball(float *p,float *c)=0;

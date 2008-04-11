@@ -69,7 +69,7 @@ public:
 	float Puts(const char *str,int font=0,int align=0);
 	/// Get width of text string for font specified by integer constant
 	float Width(const char *str,int font=0);
-	
+
 	/// Print text string for font specified by string
 	float Puts(const wchar_t *str,const char *how);
 	/// Get width of text string for font specified by string
@@ -81,7 +81,9 @@ public:
 	/// Return number of glyphs
 	inline unsigned GetNumGlyph()	{	return numg;	};
 	/// Copy data from other font
-	void Copy(mglFont *);	
+	void Copy(mglFont *);
+	/// Return true if font is loaded
+	inline bool Ready()	{	return numg!=0;	};
 protected:
 	wchar_t *id;		///< Unicode ID for glyph
 	unsigned *tr[4];	///< Shift of glyph description by triangles (for solid font)
@@ -103,7 +105,7 @@ protected:
 	unsigned Parse(const wchar_t *s);
 	/// Get internal code for symbol
 	long Internal(unsigned s);
-	
+
 	/// Convert string to internal kod, also recognize TeX command
 	void Convert(const wchar_t *str,unsigned *kod,int font);
 	/// Get symbol for character \a ch with given \a font style

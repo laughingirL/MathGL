@@ -862,10 +862,10 @@ void mglGraph::AddLegend(const wchar_t *text,const char *style)
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Legend(float x, float y, const char *font, float size)
-{	if(NumLeg>0)	Legend(NumLeg,LegStr,LegStl,x,y,font,size);	}
+{	Legend(NumLeg,LegStr,LegStl,x,y,font,size);	}
 //-----------------------------------------------------------------------------
 void mglGraph::Legend(int where, const char *font, float size)
-{	if(NumLeg>0)	Legend(NumLeg,LegStr,LegStl,where,font,size);	}
+{	Legend(NumLeg,LegStr,LegStl,where,font,size);	}
 //-----------------------------------------------------------------------------
 void mglGraph::ClearLegend()
 {

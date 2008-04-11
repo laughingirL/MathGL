@@ -217,6 +217,7 @@ float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float
 	Arrow1 = Arrow2 = '_';
 
 	if(size<0)	size = -size*FontSize;
+	f_size = size;
 	long xx=xPos, yy=yPos, zz=zPos;
 	float shift = 0.07, fsize=size/8.*font_factor;
 	float x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2, _p = Persp;
@@ -266,6 +267,7 @@ void mglGraphAB::Putsw(mglPoint p,const wchar_t *wcs,const char *font,
 	SelectPen(stl);
 
 	if(size<0)	size = -size*FontSize;
+	f_size = size;
 	long xx=xPos, yy=yPos, zz=zPos;
 	float shift = (sh/10+0.2)*2/PlotFactor, fsize=size/8.*font_factor;
 	float x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2, _p=Persp;

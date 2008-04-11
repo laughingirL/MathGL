@@ -33,17 +33,19 @@ class mglGraphGL : public mglGraph
 public:
 	mglGraphGL();
 	~mglGraphGL();
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Служебные ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	void Flush() {glFlush();};		// заканчивает рисование
-	void Finish(){glFinish();};		// заканчивает рисование
-	void Alpha(bool enable);		// вкл/выкл прозрачности
-	void Light(bool enable);		// вкл/выкл освещенности
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	void Flush() {glFlush();};
+	void Finish(){glFinish();};
+	void Alpha(bool enable);
+	void Light(bool enable);
 	void Light(int n, bool enable);
 	void Fog(float d, float dz=0.25);
-	// добавляет источник света
 	void Light(int n,mglPoint p, mglColor c=NC, float br=0.5, bool infty=true);
-	void View(float tetX,float tetY,float tetZ);// углы зрения
-	void Clf(mglColor Back=NC);					// очистка области рисования
+	void View(float tetX,float tetY,float tetZ);
+	void Clf(mglColor Back=NC);
+	int NewFrame(int id=-1);
+	void EndFrame();
+	
 	void InPlot(float x1,float x2,float y1,float y2);	// подграфик произвольно
 	void Aspect(float Ax,float Ay,float Az);			// введение аспекта для подграфика
 	void RotateN(float Tet,float x,float y,float z);	// вращение относительно оси
@@ -57,10 +59,6 @@ public:
 	void Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line);
 	// рисование линейки цвета сбоку от графика
 	void Colorbar(const char *sch=0,int where=0);
-	/// Create new frame.
-	int NewFrame(int id=-1);
-	/// Finish frame drawing
-	void EndFrame();
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 protected:
 	float tetx, tety, tetz;	///< rotation angle values

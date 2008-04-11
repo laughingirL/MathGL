@@ -26,7 +26,7 @@
 #include <string.h>
 
 #ifndef NUM_COLOR
-#define NUM_COLOR	7
+#define NUM_COLOR	32
 #endif
 //-----------------------------------------------------------------------------
 class mglGraph;
@@ -65,7 +65,7 @@ struct mglColor
 	/// Set color as Red, Green, Blue values
 	void Set(float R,float G,float B)	{r=R;	g=G;	b=B;};
 	/// Set color as Red, Green, Blue values
-	void Set(mglColor c)	{r=c.r;	g=c.g;	b=c.b;};
+	void Set(mglColor c, float bright=1);
 	/// Check if color is valid
 	inline bool Valid()
 	{	return (r>=0 && r<=1 && g>=0 && g<=1 && b>=0 && b<=1);	};
@@ -73,7 +73,7 @@ struct mglColor
 	inline float Norm()
 	{	return r>g ? r : (g>b ? g : b);	};
 	/// Set color from symbolic id
-	void Set(char p);
+	void Set(char p, float bright=1);
 	/// Copy color from other one
 	bool operator==(mglColor c)
 	{	return (r==c.r && g==c.g && b==c.b);	};
@@ -285,7 +285,7 @@ public:
 	/// Clear up the frame
 	virtual void Clf(mglColor Back=WC); //=0
 	/// Put further plotting in some region of whole frame surface.
-	void SubPlot(int nx,int ny,int m);
+	void SubPlot(int nx,int ny,int m, float dx=0, float dy=0);
 	/// Put further plotting in some region of whole frame surface.
 	virtual void InPlot(float x1,float x2,float y1,float y2); //=0
 	/// Set aspect ratio for further plotting.
@@ -396,7 +396,7 @@ public:
 	void SetFont(mglFont *f);
 	/// Get current typeface. Note that this variable can be deleted at next SetFont() call!
 	inline mglFont *GetFont()	{	return fnt;	};
-	
+
 	/// Get ratio (real width)/(real height).
 	virtual float GetRatio();
 	/// Print string \a str in position \a p with font size \a size.
@@ -474,7 +474,7 @@ public:
 	void Plot2(mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
 	void Plot3(mglData &a, const char *pen=0);
-	
+
 	/// Draw area plot for points in arrays \a x, \a y, \a z.
 	void Area(mglData &x, mglData &y, mglData &z, const char *pen=0);
 	/// Draw area plot for points in arrays \a x, \a y.
@@ -485,7 +485,7 @@ public:
 	void Area2(mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw area plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
 	void Area3(mglData &a, const char *pen=0);
-	
+
 	/// Draw vertical lines from points in arrays \a x, \a y, \a z to mglGraph::Org.
 	void Stem(mglData &x, mglData &y, mglData &z, const char *pen=0);
 	/// Draw vertical lines from points in arrays \a x, \a y to mglGraph::Org.
@@ -496,7 +496,7 @@ public:
 	void Stem2(mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
 	void Stem3(mglData &a, const char *pen=0);
-	
+
 	/// Draw stairs for points in arrays \a x, \a y, \a z.
 	void Step(mglData &x, mglData &y, mglData &z, const char *pen=0);
 	/// Draw stairs for points in arrays \a x, \a y.
@@ -507,7 +507,7 @@ public:
 	void Step2(mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw stairs for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
 	void Step3(mglData &a, const char *pen=0);
-	
+
 	/// Draw vertical bars from points in arrays \a x, \a y, \a z to mglGraph::Org.
 	void Bars(mglData &x, mglData &y, mglData &z, const char *pen=0, bool above=false);
 	/// Draw vertical bars from points in arrays \a x, \a y to mglGraph::Org.
@@ -518,31 +518,31 @@ public:
 	void Bars2(mglData &a, const char *pen=0,float zVal=NAN, bool above=false);
 	/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
 	void Bars3(mglData &a, const char *pen=0, bool above=false);
-	
+
 	/// Draw surface of curve {\a r,\a z} rotatation around Z axis
 	void Torus(mglData &r, mglData &z, const char *pen=0);
 	/// Draw surface of curve rotatation around Z axis
 	void Torus(mglData &z, const char *pen=0);
 	/// Draw surface of curve {\a a(0,:),\a a(1,:)} rotatation around Z axis for
 	void Torus2(mglData &a, const char *pen=0);
-	
+
 	/// Draw chart for data a
 	void Chart(mglData &a, const char *col=0);
-	
+
 	/// Draw error boxes ey for data y
 	void Error(mglData &y, mglData &ey, const char *pen=0,float zVal=NAN);
 	/// Draw error boxes ey for data {x,y}
 	void Error(mglData &x, mglData &y, mglData &ey, const char *pen=0,float zVal=NAN);
 	/// Draw error boxes {ex,ey} for data {x,y}
 	void Error(mglData &x, mglData &y, mglData &ex, mglData &ey, const char *pen=0,float zVal=NAN);
-	
+
 	/// Draw marks with diffenernt sizes \a r for points in arrays \a x, \a y, \a z.
 	void Mark(mglData &x, mglData &y, mglData &z, mglData &r, const char *pen=0);
 	/// Draw marks with diffenernt sizes \a r for points in arrays \a x, \a y.
 	void Mark(mglData &x, mglData &y, mglData &r, const char *pen=0,float zVal=NAN);
 	/// Draw marks with diffenernt sizes \a r for points in arrays \a y.
 	void Mark(mglData &y, mglData &r, const char *pen=0,float zVal=NAN);
-	
+
 	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a x, \a y, \a z.
 	void TextMark(mglData &x, mglData &y, mglData &z, mglData &r, const char *text, const char *fnt=0);
 	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a x, \a y.
@@ -559,7 +559,7 @@ public:
 	void TextMark(mglData &y, const char *text, const char *fnt=0,float zVal=NAN);
 	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a y.
 	void TextMark(mglData &y, const wchar_t *text, const char *fnt=0,float zVal=NAN);
-	
+
 	/// Draw tube with radial sizes \a r for points in arrays \a x, \a y, \a z.
 	void Tube(mglData &x, mglData &y, mglData &z, mglData &r, const char *pen=0);
 	/// Draw tube with radial sizes \a r for points in arrays \a x, \a y.

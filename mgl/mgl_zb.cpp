@@ -928,11 +928,13 @@ void mglGraphZB::Glyph(float x,float y, float f, int nt, const short *trig, int 
 			font_line(p,c);
 		}
 	}
-	if(nl==-1)	// overline or underline
+	if(nl<0)	// overline or underline
 	{
 		p[0]=x;		p[1]=y;	p[2]=0;
 		p[3]=fabs(f)+x;	p[4]=y;	p[5]=0;
+//		float pw = PenWidth, ff = -0.01*f_size*nl/6;	PenWidth = ff;
 		font_line(p,c,false);
+//		PenWidth = pw;
 	}
 }
 //-----------------------------------------------------------------------------

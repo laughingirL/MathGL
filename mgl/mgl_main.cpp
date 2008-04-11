@@ -237,7 +237,9 @@ void mglGraph::SetScheme(const char *s)
 		else if(s[i]==':')	break;
 		else if(strchr(col,s[i]))
 		{
-			cmap[NumCol].Set(s[i]);
+			if(s[i+1]>='1' && s[i+1]<='9')
+			{	cmap[NumCol].Set(s[i],(s[i+1]-'0')/5.f);	i++;	}
+			else	cmap[NumCol].Set(s[i]);
 			NumCol++;
 			if(NumCol>=NUM_COLOR)	break;
 		}
@@ -419,12 +421,14 @@ char mglGraph::SelectPen(const char *p)
 	return mk;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SubPlot(int nx,int ny,int m)
+void mglGraph::SubPlot(int nx,int ny,int m, float dx, float dy)
 {
 	float x1,x2,y1,y2;
 	int mx = m%nx, my = m/nx;
-	x1 = mx*1./nx;		x2 = (mx+1.)/nx;
-	y2 = 1.-my*1./ny;	y1 = 1.-(my+1.)/ny;
+	if(AutoPlotFactor)	{	dx /= 1.55;	dy /= 1.55;	}
+	else	{	dx /= 2;	dy /= 2;	}
+	x1 = (mx+dx)/nx;		x2 = (mx+1+dx)/nx;
+	y2 = 1.f-(my+dy)/ny;	y1 = 1.f-(my+1+dy)/ny;
 	InPlot(x1,x2,y1,y2);
 }
 //-----------------------------------------------------------------------------
@@ -455,12 +459,20 @@ float GetY(mglData &y, int i, int j, int k)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-void mglColor::Set(char p)
+void mglColor::Set(mglColor c, float br)
+{
+	if(br<0)	br=0;	if(br>2.f)	br=2.f;
+	r= br<=1.f ? c.r*br : 1 - (1-c.r)*(2-br);
+	g= br<=1.f ? c.g*br : 1 - (1-c.g)*(2-br);
+	b= br<=1.f ? c.b*br : 1 - (1-c.b)*(2-br);
+}
+//-----------------------------------------------------------------------------
+void mglColor::Set(char p, float bright)
 {
 	Set(-1,-1,-1);
 	for(long i=0; mglColorIds[i].id; i++)
 		if(mglColorIds[i].id==p)
-		{	Set(mglColorIds[i].col);	break;	}
+		{	Set(mglColorIds[i].col, bright);	break;	}
 }
 //-----------------------------------------------------------------------------
 void mglGraph::ball(float *p,float *c)
@@ -732,7 +744,7 @@ mglGraph::mglGraph()
 	fnt = new mglFont;
 	CloudFactor=10;
 	DefaultPlotParam();
-	InitSaveFunc();	
+	InitSaveFunc();
 }
 //-----------------------------------------------------------------------------
 mglGraph::~mglGraph()

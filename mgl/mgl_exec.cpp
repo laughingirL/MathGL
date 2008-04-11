@@ -956,7 +956,8 @@ int mglGraph::exec_su(const char *com, long , mglArg *a,int k[9])
 	else if(!strcmp(com,"subplot"))
 	{
 		if(k[0]==3 && k[1]==3 && k[2]==3)
-			SubPlot(int(a[0].v),int(a[1].v),int(a[2].v));
+			SubPlot(int(a[0].v), int(a[1].v), int(a[2].v),
+					k[3]==3?int(a[3].v):0, k[4]==3?int(a[4].v):0);
 		else	res = 1;
 	}
 	else if(!strcmp(com,"subto"))

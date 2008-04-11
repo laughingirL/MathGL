@@ -1,3 +1,9 @@
+1.6.3 Released ?? ?? 2008
+	- Color scheme now may have up to 32 colors.
+	- Function mglColor::Set now have additional argument for "brightness" of color
+	- Color specification in color scheme now support "brighted" colors like "b1b2b3...b9". Color "b5" is equal to "b".
+	- Function SubPlot() and MGL command 'subplot' now have additional arguments for additional relative plot shifting.
+
 1.6.2 Released 5 April 2008
 	- Add recognition of TeX commands: \frac, \stack, \stackr, \stackl, \overset, \underset.
 	- Redefine strdup, wcsdup for compatibility with MS Visual Studio.
