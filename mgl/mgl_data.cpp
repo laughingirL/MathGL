@@ -1,5 +1,5 @@
 /* mgl_data.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -811,6 +811,21 @@ int mglData::Find(const char *cond, char dir, int i, int j, int k)
 	return m;
 }
 //-----------------------------------------------------------------------------
+bool mglData::FindAny(const char *cond)
+{
+	register long i,j,k;
+	register float x,y,z;
+	bool cc = false;
+	if(!cond || *cond==0)	cond = "u";
+	mglFormula eq(cond);
+	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+	{
+		x=i/(nx-1.);	y=j/(ny-1.);	z=k/(nz-1.);
+		if(eq.Calc(x,y,z,a[i+nx*(j+ny*k)]))	{	cc = true;	break;	}
+	}
+	return cc;
+}
+//-----------------------------------------------------------------------------
 mglData &TransformA(mglData &am, mglData &ph, const char *tr)
 {
 	static mglData d;
@@ -932,5 +947,75 @@ mglData &STFA(mglData &re, mglData &im, int dn, char dir)
 	gsl_fft_complex_wavetable_free(wt);
 #endif
 	return d;
+}
+//-----------------------------------------------------------------------------
+void mglData::Swap(const char *dir)
+{
+	register long i,j,k,i0,nn,j0;
+	float b;
+	if(strchr(dir,'z') && nz>1)
+	{
+		for(i=0;i<nx*ny;i++)
+		{
+			nn = (nz/2)*nx*ny;
+			for(j=0;j<nz/2;j++)
+			{	i0 = i+j*nx*ny;	b = a[i0];	a[i0] = a[i0+nn];	a[i0+nn] = b;	}
+		}
+	}
+	if(strchr(dir,'y') && ny>1)
+	{
+		nn = (ny/2)*nx;
+		for(i=0;i<nx;i++)  for(k=0;k<nz;k++)
+		{
+			j0 = i+nx*ny*k;
+			for(j=0;j<ny/2;j++)
+			{	i0 = j0+j*nx;	b = a[i0];	a[i0] = a[i0+nn];	a[i0+nn] = b;	}
+		}
+	}
+	if(strchr(dir,'x') && nx>1)
+	{
+		nn = nx/2;
+		for(j=0;j<ny*nz;j++)
+		{
+			j0 = j*nx;
+			for(i=0;i<nx/2;i++)
+			{	i0 = i+j0;	b = a[i0];	a[i0] = a[i0+nn];	a[i0+nn] = b;	}
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+void mglData::Mirror(const char *dir)
+{
+	register long i,j,k,i0,j0;
+	float b;
+	if(strchr(dir,'z') && nz>1)
+	{
+		for(i=0;i<nx*ny;i++)	for(j=0;j<nz/2;j++)
+		{
+			i0 = i+j*nx*ny;	j0 = i+(nz-1-j)*nx*ny;
+			b = a[i0];	a[i0] = a[j0];	a[j0] = b;
+		}
+	}
+	if(strchr(dir,'y') && ny>1)
+	{
+		for(i=0;i<nx;i++)  for(k=0;k<nz;k++)
+		{
+			j0 = i+nx*ny*k;
+			for(j=0;j<ny/2;j++)
+			{
+				i0 = j0+(ny-1-j)*nx;	b = a[j0+j*nx];	
+				a[j0+j*nx] = a[i0];	a[i0] = b;
+			}
+		}
+	}
+	if(strchr(dir,'x') && nx>1)
+	{
+		for(j=0;j<ny*nz;j++)
+		{
+			j0 = j*nx;
+			for(i=0;i<nx/2;i++)
+			{	i0 = nx-1-i+j0;	b = a[i+j0];	a[i+j0] = a[i0];	a[i0] = b;	}
+		}
+	}
 }
 //-----------------------------------------------------------------------------

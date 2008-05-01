@@ -1,5 +1,5 @@
 /* mgl_vect.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -351,7 +351,7 @@ void mglGraph::Map(mglData &x, mglData &y, mglData &ax, mglData &ay,
 		for(i=0;i<n*m;i++)
 			if(tt[i])
 				Ball(pp[3*i],pp[3*i+1],pp[3*i+2],
-						mglColor(cc[4*i],cc[4*i+1],cc[4*i+2]),cc[4*i+3]);
+						mglColor(cc[4*i],cc[4*i+1],cc[4*i+2]),-cc[4*i+3]);
 	}
 	else	surf_plot(n, m, pp, cc, tt);
 	Flush();

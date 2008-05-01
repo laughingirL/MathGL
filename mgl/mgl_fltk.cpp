@@ -1,5 +1,5 @@
 /* mgl_fltk.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -95,14 +95,13 @@ void Fl_MathGL::update(mglGraph *gr)
 	gr->Zoom(x1,y1,x2,y2);
 	gr->DrawFace = !rotate;
 
-//	if(!script || !strstr(script,"rotate"))	gr->Rotate(0,0);
-
 	gr->Message = new char[2048];	gr->Message[0] = 0;
 	if(draw_func)	draw_func(gr, draw_par);
 	if(gr->Message[0] != 0)			fl_message(gr->Message);
 	delete []gr->Message;			gr->Message = 0;
 
-	if(gr==graph)	size(graph->GetWidth(), graph->GetHeight());
+	if(gr==graph && (graph->GetWidth()!=w() || graph->GetHeight()!=h()))
+		size(graph->GetWidth(), graph->GetHeight());
 	redraw();
 }
 //-----------------------------------------------------------------------------
@@ -390,6 +389,7 @@ void export_svg_cb(Fl_Widget*, void* v)
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.svg", 0);
 	if(!fname || !fname[0])	return;
 	mglGraphPS *ps = new mglGraphPS(e->GetWidth(), e->GetHeight());
+	ps->SetFont(e->GetFont());
 	e->FMGL->update(ps);		ps->WriteSVG(fname);
 	delete ps;
 }
@@ -400,7 +400,9 @@ void export_eps_cb(Fl_Widget*, void* v)
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.eps", 0);
 	if(!fname || !fname[0])	return;
 	mglGraphPS *ps = new mglGraphPS(e->GetWidth(), e->GetHeight());
-	e->FMGL->update(ps);		ps->WriteEPS(fname);
+	ps->SetFont(e->GetFont());
+	e->FMGL->update(ps);
+	ps->WriteEPS(fname);
 	delete ps;
 }
 //-----------------------------------------------------------------------------
@@ -638,7 +640,7 @@ void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void 
 	FMGL = new Fl_MathGL(30, 60, 600, 400);
 	FMGL->tet_val = tet;
 	FMGL->phi_val = phi;
-	FMGL->set_popup(pop_graph,w1,w1);
+	FMGL->set_popup(pop_graph,w1,this);
 	FMGL->graph = this;
 	FMGL->draw_func = draw;
 	FMGL->draw_par = par;

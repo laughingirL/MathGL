@@ -1,5 +1,5 @@
 /* mgl_data_io.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -26,10 +26,6 @@
 
 #include "mgl/mgl_eval.h"
 #include "mgl/mgl_data.h"
-
-#ifndef NO_GSL
-#include <gsl/gsl_vector.h>
-#endif
 
 //-----------------------------------------------------------------------------
 void mglData::Set(gsl_vector *v)
@@ -399,41 +395,6 @@ float mglData::v(int i,int j,int k)
 	bool not_ok = i<0 || i>=nx || j<0 || j>=ny || k<0 || k>=nz;
 	if(not_ok)	return 0;
 	return a[i+nx*(j+ny*k)];
-}
-//-----------------------------------------------------------------------------
-void mglData::Swap(const char *dir)
-{
-	register long i,j,k,i0,nn,j0;
-	float b;
-	if(strchr(dir,'z') && nz>1)
-	{
-		for(i=0;i<nx*ny;i++)
-		{
-			nn = (nz/2)*nx*ny;
-			for(j=0;j<nz/2;j++)
-			{	i0 = i+j*nx*ny;	b = a[i0];	a[i0] = a[i0+nn];	a[i0+nn] = b;	}
-		}
-	}
-	if(strchr(dir,'y') && ny>1)
-	{
-		nn = (ny/2)*nx;
-		for(i=0;i<nx;i++)  for(k=0;k<nz;k++)
-		{
-			j0 = i+nx*ny*k;
-			for(j=0;j<ny/2;j++)
-			{	i0 = j0+j*nx;	b = a[i0];	a[i0] = a[i0+nn];	a[i0+nn] = b;	}
-		}
-	}
-	if(strchr(dir,'x') && nx>1)
-	{
-		nn = nx/2;
-		for(j=0;j<ny*nz;j++)
-		{
-			j0 = j*nx;
-			for(i=0;i<nx/2;i++)
-			{	i0 = i+j0;	b = a[i0];	a[i0] = a[i0+nn];	a[i0+nn] = b;	}
-		}
-	}
 }
 //-----------------------------------------------------------------------------
 mglData &mglData::Resize(int mx, int my, int mz, float x1, float x2,

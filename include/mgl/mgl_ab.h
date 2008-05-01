@@ -1,5 +1,5 @@
 /* mgl_ab.h is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -69,9 +69,9 @@ protected:
 	float CDef[4];				///< Default color
 	unsigned char BDef[4];		///< Background color
 	float Persp;		///< Perspective factor (=0 is perspective off)
-	int xPos;			///< Shifting plot in X-direction (used by PostScale() function)
-	int yPos;			///< Shifting plot in Y-direction (used by PostScale() function)
-	int zPos;			///< Shifting plot in depth (used by PostScale() function)
+	float xPos;			///< Shifting plot in X-direction (used by PostScale() function)
+	float yPos;			///< Shifting plot in Y-direction (used by PostScale() function)
+	float zPos;			///< Shifting plot in depth (used by PostScale() function)
 	int Width;			///< Width of the image
 	int Height;			///< Height of the image
 	int Depth;			///< Depth of the image
@@ -81,8 +81,9 @@ protected:
 	float pPos;			///< Current position in pen mask
 	bool UseLight;		///< Flag of using lightning
 	bool nLight[10];	///< Availability of light sources
+	bool iLight[10];	///< Infinity/local position of light sources
 	float rLight[30];	///< Position of light sources
-	float pLight[30];	///< Actual position of light sources (filled by PostScale() function)
+	float pLight[30];	///< Actual position of light sources (filled by LightScale() function)
 	float aLight[10];	///< Aperture of light sources
 	float bLight[10];	///< Brightness of light sources
 	float cLight[30];	///< Color of light sources
@@ -94,7 +95,9 @@ protected:
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 	virtual void ball(float *p,float *c)=0;
 	/// Additionally scale points \a p (array with length 3*n) for positioning in image
-	void PostScale(float *p,long n,bool full=true);
+	void PostScale(float *p,long n);
+	/// Additionally scale positions of light sources
+	virtual void LightScale();
 	/// Additionally scale normals \a s (array with length 3*n)
 	void NormScale(float *s,long n);
 	/// Set default color
@@ -123,7 +126,7 @@ protected:
 	void combine(unsigned char *c1,unsigned char *c2);	// смешение цветов
 	virtual void cloud_plot(long nx,long ny,long nz,float *pp,float *a,float alpha);
 	// рисование примитивов для mglGraph
-	void arrow_plot(float *p1,float *p2,char st);
+	virtual void arrow_plot(float *p1,float *p2,char st);
 	void curv_plot(long n,float *pp,bool *tt);
 	void curv_plot(long n,float *pp,bool *tt,long *nn);
 	void curv_plot(long n,float *pp,float *cc,bool *tt);

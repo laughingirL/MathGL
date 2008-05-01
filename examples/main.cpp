@@ -1,3 +1,4 @@
+#include "mgl/mgl_parse.h"
 #include "mgl/mgl_fltk.h"
 #include "mgl/mgl_eps.h"
 #include "mgl/mgl_c.h"
@@ -64,20 +65,12 @@ int sample(mglGraph *gr, void *)
 //	gr->SubPlot(1,2,0);
 //	gr->Rotate(40,60);
 	gr->Rotate(0,0);
-	gr->Axis(mglPoint(1e-15,1e-15,1e-15),mglPoint(1e18,1e18,1e18));
-	gr->dx = gr->dy = gr->dz = 0;
-	gr->Label('x',"x");
-	gr->Label('y',"y");
-	gr->Label('z',"z");
-	gr->Axis("lg(x)","lg(y)","lg(z)");
-	gr->Axis();
-	gr->Box();
 //	gr->Axis();
-//	gr->CutOff("z>0.4");	gr->Surf(a,"g#");
-//	gr->CutOff("z<0.4");	gr->Surf(a,"b#");
+	gr->CutOff("z>0.4");	gr->Surf(a,"b7#");
+	gr->CutOff("z<0.4");	gr->Surf(a,"b#");
 //	gr->Puts(mglPoint(0,0,0), "\\alpha^2\\sqrt{\\int \\yen d\\zeta_{\\i j}+c^{b+d}}");
 //	gr->Puts(mglPoint(0,0,0), "\\frac{a^2}{\\sqrt3{b^{2_{i+j}}+c}}",0,-5);
-	gr->Puts(mglPoint(0,0,0), "\\underset{lim}{\\sqrt3{b+c}\\to 0}",0,-5);
+	gr->Puts(mglPoint(0,0,0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}",0,-5);
 //	gr->Text(y,"This is very long string drawn along a curve",":k");
 //	gr->Text(y,"Another string drawn above a curve","T:r");
 //	gr->Plot(y);
@@ -93,7 +86,7 @@ int tex_sort(const void *a, const void *b)
 	const mglTeXsymb *bb = (mglTeXsymb *)b;
 	return wcscmp(aa->tex, bb->tex);
 }
-
+int mgl_cmd_cmp(const void *a, const void *b);
 int main(int argc,char **argv)
 {
 //	mglData a;
@@ -106,6 +99,15 @@ int main(int argc,char **argv)
 		fprintf(fp,"\t{0x%x, L\"%ls\"},\n",mgl_tex_symb[i].kod, mgl_tex_symb[i].tex);
 	fclose(fp);*/
 	
+	long k,i;
+//	mglCommand mgls_base_cmd
+	for(k=0;mgls_base_cmd[k].name[0];k++);
+	qsort(mgls_base_cmd, k, sizeof(mglCommand), mgl_cmd_cmp);
+	FILE *fp = fopen("cmd.txt","w");
+	for(i=0;i<k;i++)
+		fprintf(fp,"\"%s\"\n",mgls_base_cmd[i].name);
+	fclose(fp);
+
 //	setlocale(LC_ALL, "ru_RU.cp1251");
 //	setlocale(LC_CTYPE, "ru_RU.cp1251");
 //	mglGraphZB gr;//(1280,800);

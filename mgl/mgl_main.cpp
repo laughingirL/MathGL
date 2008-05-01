@@ -1,5 +1,5 @@
 /* mgl_main.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -310,9 +310,12 @@ mglColor mglGraph::GetC2(float x,float y)
 		c = cmap[0]*(x*m) + cmap[1]*(y*m);
 	}
 	else if(NumCol==3)
-		c = cmap[0]*x + cmap[1]*y + (cmap[3]-cmap[0]-cmap[1])*(x*y);
+		c = cmap[0]*(x*(1-y)) + cmap[1]*(y*(1-x)) + cmap[2]*(x*y);
 	else if(NumCol>3)
 		c = cmap[0]*(1-x-y+x*y) + cmap[1]*(x*(1-y)) + cmap[2]*(y*(1-x)) + cmap[3]*(x*y);
+	if(c.r>1)	c.r=1;	if(c.r<0)	c.r=0;
+	if(c.g>1)	c.g=1;	if(c.g<0)	c.g=0;
+	if(c.b>1)	c.b=1;	if(c.b<0)	c.b=0;
 	return c;
 }
 //-----------------------------------------------------------------------------
@@ -326,6 +329,7 @@ void mglGraph::CRange(mglData &a,bool add)
 		Cmin = Cmin<a.a[i] ? Cmin : a.a[i];
 		Cmax = Cmax>a.a[i] ? Cmax : a.a[i];
 	}
+	if(Cmin==Cmax)	Cmax += 1;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::XRange(mglData &a,bool add)

@@ -35,8 +35,9 @@ mgl_c.cpp          mgl_eps.cpp      mgl_font.cpp      mgl_zb.cpp \
 mgl_combi.cpp      mgl_eval.cpp     mgl_gl.cpp        mgl_def_font.cpp\
 mgl_1d.cpp         mgl_cont.cpp     mgl_exec.cpp      mgl_tex_table.cpp\
 mgl_2d.cpp         mgl_crust.cpp    mgl_export.cpp    mgl_main.cpp  \
-mgl_3d.cpp         mgl_data.cpp     mgl_f.cpp         mgl_tool.cpp \
-mgl_ab.cpp         mgl_data_io.cpp  mgl_flow.cpp      mgl_vect.cpp
+mgl_3d.cpp         mgl_data.cpp     mgl_f.cpp         mgl_idtf.cpp \
+mgl_ab.cpp         mgl_data_io.cpp  mgl_flow.cpp      mgl_vect.cpp \
+mgl_parse.cpp
 
 if USE_FLTK
 libmgl_fltk_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)

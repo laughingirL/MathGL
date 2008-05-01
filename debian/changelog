@@ -1,3 +1,15 @@
+mathgl (1.6.2.1) unstable; urgency=low
+
+  * Upstream update
+
+ -- Dmitry I. Kulagin <dik@kulagin.nnov.ru>  Wed, 11 Apr 2008 18:10:16 +0300
+
+mathgl (1.6.1) unstable; urgency=low
+
+  * Upstream update
+
+ -- Dmitry I. Kulagin <dik@kulagin.nnov.ru>  Wed, 02 Apr 2008 21:15:05 +0300
+
 mathgl (1.6) unstable; urgency=low
 
   * Upstream update

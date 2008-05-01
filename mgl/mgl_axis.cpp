@@ -1,5 +1,5 @@
 /* mgl_axis.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -244,12 +244,12 @@ void mglGraph::Label(char dir,const wchar_t *text,int pos,float size,float shift
 	if(size<=0)	size = -size*FontSize;
 	if(dir=='x')
 	{
-		t = pos>0 ? Max.x : (pos<0 ? Min.x : (Min.x+Max.x)/2);
+		t = pos>0 ? Max.x : (pos<0 ? Min.x : (dx ? (Min.x+Max.x)/2 : sqrt(Min.x*Max.x)));
 		Putsw(mglPoint(t,y0,z0),text,FontDef,size,'X',shift);
 	}
 	if(dir=='y')
 	{
-		t = pos>0 ? Max.y : (pos<0 ? Min.y : (Min.y+Max.y)/2);
+		t = pos>0 ? Max.y : (pos<0 ? Min.y : (dy ? (Min.y+Max.y)/2 : sqrt(Min.y*Max.y)));
 		if(TernAxis)
 			Putsw(mglPoint(Max.x-t,t,z0),text,FontDef,size,'Y',shift);
 		else
@@ -257,7 +257,7 @@ void mglGraph::Label(char dir,const wchar_t *text,int pos,float size,float shift
 	}
 	if(dir=='z')
 	{
-		t = pos>0 ? Max.z : (pos<0 ? Min.z : (Min.z+Max.z)/2);
+		t = pos>0 ? Max.z : (pos<0 ? Min.z : (dz ? (Min.z+Max.z)/2 : sqrt(Min.z*Max.z)));
 		if(TernAxis)
 			Putsw(mglPoint(x0,Max.y-t,z0),text,FontDef,size,'Z',shift);
 		else

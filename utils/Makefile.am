@@ -1,6 +1,6 @@
 INCLUDES        = -I$(top_builddir)/include
 
-bin_PROGRAMS = mgl2png mgl2eps mgl2svg
+bin_PROGRAMS = mgl2png mgl2eps mgl2svg mgl2cpp
 if USE_FLTK
 bin_PROGRAMS += mglview
 endif
@@ -9,6 +9,11 @@ mgl2png_SOURCES = mgl2png.cpp
 mgl2png_LDADD = $(top_builddir)/mgl/libmgl.la
 #mgl2png_CFLAGS = -O3 -mfpmath=sse $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFFFLAGS) $(PNGFLAGS)
 mgl2png_CPPFLAGS = $(libmgl_la_CFLAGS)
+
+mgl2cpp_SOURCES = mgl2cpp.cpp
+mgl2cpp_LDADD = $(top_builddir)/mgl/libmgl.la
+#mgl2cpp_CFLAGS = -O3 -mfpmath=sse $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFFFLAGS) $(PN
+mgl2cpp_CPPFLAGS = $(libmgl_la_CFLAGS)
 
 mgl2eps_SOURCES = mgl2eps.cpp
 mgl2eps_LDADD = $(top_builddir)/mgl/libmgl.la

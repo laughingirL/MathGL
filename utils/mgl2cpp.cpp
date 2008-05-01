@@ -1,4 +1,4 @@
-/* mglview.cpp is part of Math Graphic Library
+/* mgl2eps.cpp is part of Math Graphic Library
  * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -16,61 +16,51 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include "mgl/mgl_fltk.h"
+#include "mgl/mgl_eps.h"
 #include "mgl/mgl_parse.h"
-//-----------------------------------------------------------------------------
-char fname[256];
-mglParse p(true);
-char str[8192];
-char buf[2048];
-//-----------------------------------------------------------------------------
-int show(mglGraph *gr, void *)
-{
-	FILE *fp = fopen(fname,"rt");
-	p.Execute(gr, fp, true);
-	fclose(fp);
-	return 0;
-}
 //-----------------------------------------------------------------------------
 int main(int narg, char **arg)
 {
-	mglGraphFLTK gr;
+	mglGraphPS gr;
+	mglParse p(true);
 
 	if(narg==1)
 	{
-		printf("mglview show MGL script in FLTK window.\n");
+		printf("mgl2cpp convert mgl script to C++ file.\n");
 		printf("Current version is 1.%g\n",MGL_VERSION);
-		printf("Usage:\tmglview scriptfile [parameter(s)]\n");
+		printf("Usage:\tmgl2cpp scriptfile [outputfile parameter(s)]\n");
 		printf("\tParameters have format \"-Nval\".\n");
 		printf("\tHere N=0,1...9 is parameter ID and val is its value\n");
 	}
 	else
 	{
-		FILE *fp = fopen(arg[1],"rt");
-		if(fp==0)	printf("Couldn't open file %s\n",arg[1]);
+		FILE *fp = fopen(arg[1],"rt"), *fo;
+		if(fp==0)	{	printf("Couldn't open file %s\n",arg[1]);	return 1;	}
+		char str[8192], out[1024];
+		for(long i=2;i<narg;i++)	// add arguments for the script
+			if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
+				p.AddParam(arg[i][1]-'0',arg[i]+2);
+		if(narg>2 && arg[2][0]!='-')	strcpy(str,arg[2]);
 		else
 		{
-			register long i,j;
-			for(i=2;i<narg;i++)	// add arguments for the script
-				if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
-				{
-					p.AddParam(arg[i][1]-'0',arg[i]+2);
-					arg[i][0]=0;
-				}
-			strncpy(fname,arg[1],256);
-			fclose(fp);
-			arg[1][0] = 0;
-			for(i=narg-1;i>=0;i--)
-			{
-				if(arg[i][0]==0)
-				{
-					for(j=i;j<narg-1;j++)	arg[j] = arg[j+1];
-					narg--;
-				}
-			}
-			gr.Window(narg,arg,show,fname,NULL);
-			return mglFlRun();
+			strcpy(str,arg[1]);	strcat(str,".cpp");
+			printf("Write output to %s\n",str);
 		}
+		fo = fopen(str,"wt");
+		fprintf(fo,"int draw_func(mglGraph *gr, void *)\n{\n");
+		fprintf(fo,"\tstatic bool once = false;\n");
+		while(!feof(fp))
+		{
+			if(!fgets(str,8192,fp))	break;
+			out[0] = 0;
+			int r = p.Export(out,&gr,str);
+			if(*out)	fprintf(fo,"\t%s\t//%s",out,str);
+			if(r==1)	printf("Wrong argument(s) in %s\n",str);
+			if(r==2)	printf("Wrong command in %s\n",str);
+			if(r==3)	printf("String too long in %s\n",str);
+		}
+		fprintf(fo,"\treturn 0;\n}\n");
+		fclose(fp);	fclose(fo);
 	}
 	return 0;
 }

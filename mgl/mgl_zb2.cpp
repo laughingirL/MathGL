@@ -1,5 +1,5 @@
 /* mgl_zb2.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -158,7 +158,7 @@ void mglGraphAB::surf_plot(long n,long m,float *pp,float *cc,bool *tt)
 	float *p,*c,*ns,d1[3],d2[3],*s;
 	long k=3*n;
 	if(!pp || n<2 || m<2)	return;
-	PostScale(pp,n*m);
+	PostScale(pp,n*m);	LightScale();
 	if(!DrawFace)	{	wire_plot(n,m,pp,cc,tt);	return;	}
 	ns = new float[3*n*m];
 	for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
@@ -224,7 +224,7 @@ void mglGraphAB::boxs_plot(long n, long m, float *pp, mglColor *cc, bool *tt,
 	bool h1,h2,s1,s2,s3,s4;
 	float cs[4],*p0,*p1,bs[4]={0,0,0,255};
 	if(!pp || !cc)	return;
-	PostScale(pp,n*m+4*(n-1)*(m-1));
+	PostScale(pp,n*m+4*(n-1)*(m-1));	LightScale();
 	alpha = Transparent ? AlphaDef : 1;
 	for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
 	{
@@ -323,8 +323,7 @@ void mglGraphAB::surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky
 	register long i,j,k,i0,ii,jj=0;
 	long id[12],us[12],ni;
 	float d,d0,p[9],s[9],*c0,*c1,*c2=cc;
-
-	PostScale(pp,0,true);	// set up light source
+	LightScale();	// set up light source
 
 	for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
 	{
@@ -350,7 +349,7 @@ void mglGraphAB::surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky
 			memcpy(p+3,pp+3*id[1],3*sizeof(float));
 			memcpy(s,nn+3*id[0],3*sizeof(float));
 			memcpy(s+3,nn+3*id[1],3*sizeof(float));
-			PostScale(p,2,false);
+			PostScale(p,2);
 			NormScale(s,2);
 			us[0]=1;
 			c0 = cc ? cc+4*id[0] : CDef;
@@ -369,7 +368,7 @@ void mglGraphAB::surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky
 				jj = i0;	us[jj]=1;
 				memcpy(p+6,pp+3*id[jj],3*sizeof(float));
 				memcpy(s+6,nn+3*id[jj],3*sizeof(float));
-				PostScale(p+6,1,false);
+				PostScale(p+6,1);
 				NormScale(s+6,1);
 				c2 = cc ? cc+4*id[jj] : CDef;
 				if(wire)	line_plot(p+3,p+6,c1,c2,true);
@@ -395,7 +394,7 @@ void mglGraphAB::axial_plot(long n,float *pp,long *nn,long np, bool wire)
 	bool g1,g2;
 	float r1,r2,y1,y2,c1,s1,ph,p1[6],p2[6],n1[6],n2[6],d;
 	if(!pp || !nn)	return;
-	PostScale(pp,0,true);	// set up light source
+	LightScale();	// set up light source
 	long k0=0,k1=1,k2=2;
 	if(AxialDir=='y')	{	k0=0;k1=2;k2=1;	}
 	if(AxialDir=='x')	{	k0=2;k1=1;k2=0;	}
@@ -421,7 +420,7 @@ void mglGraphAB::axial_plot(long n,float *pp,long *nn,long np, bool wire)
 			else
 			{	n1[3] = n1[0];	n1[4] = n1[1];	n1[5] = n1[2];	}
 			g1 = ScalePoint(p1[0],p1[1],p1[2]) && ScalePoint(p1[3],p1[4],p1[5]);
-			PostScale(p1,2,false);
+			PostScale(p1,2);
 			NormScale(n1,2);
 			if(g1 && g2)
 			{
@@ -452,7 +451,7 @@ void mglGraphAB::quads_plot(long n,float *pp,float *cc,bool *tt)
 //	if(!DrawFace)	return;
 	register long i;
 	float *p,*c;
-	PostScale(pp,4*n);
+	PostScale(pp,4*n);	LightScale();
 	if(cc)
 	{
 		for(i=0;i<n;i++)
@@ -499,7 +498,7 @@ void mglGraphAB::trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool
 {
 	if(!DrawFace)	wire=true;
 	register long i,j1,j2,j3;
-	PostScale(pp,m);
+	PostScale(pp,m);	LightScale();
 	if(cc)
 	{
 		for(i=0;i<n;i++)
@@ -631,7 +630,7 @@ void mglGraphAB::combine(unsigned char *c1,unsigned char *c2)
 void mglGraphAB::Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line)
 {
 	long ik,ii,il;
-	float p[9];
+	float p[9],n[3]={0,0,0};
 	if(trig && nt>0)
 	{
 		for(ik=0;ik<nt;ik++)
@@ -639,8 +638,8 @@ void mglGraphAB::Glyph(float x,float y, float f, int nt, const short *trig, int 
 			ii = 6*ik;	p[0]=f*trig[ii]+x;	p[1]=f*trig[ii+1]+y;	p[2]=0;
 			ii+=2;		p[3]=f*trig[ii]+x;	p[4]=f*trig[ii+1]+y;	p[5]=0;
 			ii+=2;		p[6]=f*trig[ii]+x;	p[7]=f*trig[ii+1]+y;	p[8]=0;
-			PostScale(p,3,false);
-			trig_plot(p,p+3,p+6,CDef,CDef,CDef);
+			PostScale(p,3);
+			trig_plot_n(p,p+3,p+6,CDef,CDef,CDef,n,n,n);
 		}
 	}
 	else if(line && nl>0)
@@ -661,15 +660,15 @@ void mglGraphAB::Glyph(float x,float y, float f, int nt, const short *trig, int 
 				p[0]=f*line[ii]+x;	p[1]=f*line[ii+1]+y;	p[2]=0;	ii+=2;
 				p[3]=f*line[ii]+x;	p[4]=f*line[ii+1]+y;	p[5]=0;
 			}
-			PostScale(p,2,false);
+			PostScale(p,2);
 			line_plot(p,p+3,CDef,CDef);
 		}
 	}
-	if(nl==-1)	// overline or underline
+	if(nl<0)	// overline or underline
 	{
 		p[0]=x;		p[1]=y;	p[2]=0;
 		p[3]=fabs(f)+x;	p[4]=y;	p[5]=0;
-		PostScale(p,2,false);
+		PostScale(p,2);
 		line_plot(p,p+3,CDef,CDef);
 	}
 }

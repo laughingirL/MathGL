@@ -1,5 +1,5 @@
 /* mgl_3d.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -729,7 +729,7 @@ void mglGraph::AVertex(float x,float y,float z, float a,float alpha)
 	else		c = GetC(a,false);
 	a = alpha>0 ? (a+1)*(a+1)/4 : -(a-1)*(a-1)/4;
 //	a = alpha>0 ? (a+1)/2 : (a-1)/2;
-	if(a)	Ball(x,y,z,c,alpha*a);
+	if(a)	Ball(x,y,z,c,-alpha*a);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::CloudP(mglData &x, mglData &y, mglData &z, mglData &a, const char *sch, float alpha)

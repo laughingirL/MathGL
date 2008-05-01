@@ -1,5 +1,5 @@
 /* mgl.h is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -134,16 +134,6 @@ inline bool operator==(mglPoint a, mglPoint b)
 {	return !memcmp(&a, &b, sizeof(mglPoint));	}
 float Norm(mglPoint p);
 //-----------------------------------------------------------------------------
-/// Structure for the command argument (see mglGraph::Exec()).
-struct mglArg
-{
-	int type;		///< Type of argument {0-data,1-string,2-number}
-	mglData *d;		///< Pointer to data (used if type==0)
-	char s[2048];	///< String with parameters (used if type==1)
-	float v;		///< Numerical value (used if type==2)
-	mglArg()	{	type=-1;	d=0;	v=0;	s[0]=0;	};
-};
-//-----------------------------------------------------------------------------
 float GetX(mglData &x, int i, int j, int k);
 float GetY(mglData &y, int i, int j, int k);
 typedef int (*mgl_save) (const char *fname, int w, int h, unsigned char **);
@@ -266,6 +256,8 @@ public:
 	void SetScheme(const char *sch);
 	/// Set the parameter of line (usualy called internaly)
 	char SelectPen(const char *pen);
+	/// Set warning code ant fill Message
+	void SetWarn(int code, const char *who="");
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Plot positioning functions
 	  * These functions control how and where further plotting will be placed.
@@ -449,8 +441,6 @@ public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ������� ~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Plot data depending on its dimensions and \a type parameter
 	void SimplePlot(mglData &a, int type=0, const char *stl=0);
-	/// Execute the command
-	int Exec(const char *com, long narg, mglArg *args);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name 1D plotting functions
 	  * These functions perform plotting of 1D data. 1D means that data
@@ -910,8 +900,6 @@ protected:
 	virtual float GetOrgY();
 	/// Get Org.z (parse NAN value)
 	virtual float GetOrgZ();
-	/// Set warning code ant fill Message
-	void SetWarn(int code, const char *who="");
 	/// Set the parameter lines directly (internaly used by mglGraph::SelectPen)
 	virtual void Pen(mglColor col, char style,float width);	//=0
 	/// Set the default color
@@ -1031,95 +1019,6 @@ private:
 	void TickBox();
 	/// Draw tick
 	void DrawTick(float *pp,bool sub);
-	/// Execute commands a*
-	int exec_a(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands b*
-	int exec_b(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands c*
-	int exec_c(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands co*
-	int exec_co(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands d*
-	int exec_d(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands f*
-	int exec_f(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands g*
-	int exec_g(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands l*
-	int exec_l(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands m*
-	int exec_m(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands r*
-	int exec_r(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands s*
-	int exec_s(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands su*
-	int exec_su(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands t*
-	int exec_t(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands [vxyz]*
-	int exec_vz(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands [eih]*
-	int exec_misc1(const char *com, long n, mglArg *a,int k[9]);
-	/// Execute commands [nop]*
-	int exec_misc2(const char *com, long n, mglArg *a,int k[9]);
-};
-//-----------------------------------------------------------------------------
-/// Structure for the mglData handling (see mglParse class).
-struct mglVar
-{
-	mglData d;		///< Data itself
-	char s[64];		///< Data name
-	void *o;		///< Pointer to external object
-	mglVar *next;	///< Pointer to next instance in list
-	mglVar *prev;	///< Pointer to prev instance in list
-	bool temp;		///< This temporar variable
-	void (*func)(void *);	///< Callback function for destroying
-
-	mglVar()	{	o=0;	s[0]=0;		next=prev=0;	func=0;	temp=false;	};
-	~mglVar();
-	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
-	void MoveAfter(mglVar *var);
-};
-//-----------------------------------------------------------------------------
-/// Structure for the command argument (see mglGraph::Exec()).
-class mglParse
-{
-friend void mgl_export(char *out, const char *in, int type);
-public:
-	mglVar *DataList;	///< List with data and its names
-	bool AllowSetSize;	///< Allow using setsize command
-	bool Stop;			///< Stop command was. Flag prevent further execution
-
-	mglParse(bool setsize=false);
-	~mglParse();
-	/// Parse and execute the string of MGL script
-	int Parse(mglGraph *gr, const char *str);
-	/// Execute MGL script file \a fname
-	void Execute(mglGraph *gr, const char *fname);
-	/// Find variable or return 0 if absent
-	mglVar *FindVar(const char *name);
-	/// Find variable or create it if absent
-	mglVar *AddVar(const char *name);
-	/// Add string for parameter $1, ..., $9
-	bool AddParam(int n, const char *str);
-	/// Restore Once flag
-	inline void RestoreOnce()	{	Once = true;	};
-private:
-	long parlen;	///< Length of parameter strings
-	char *par[10];	///< Parameter for substituting instead of $1, ..., $9
-	char leg[128];	///< Buffer for legend
-	bool opt[16];	///< Set on/off optional parameters for command argument
-	float val[20];	///< Values for optional parameters
-	bool Once;		///< Flag for command which should be executed only once
-	bool Skip;		///< Flag that commands should be skiped
-
-	/// Fill arguments \a a from strings
-	void FillArg(int n, char **arg, mglArg *a);
-	/// PreExecute stage -- parse some commands and create variables
-	int PreExec(mglGraph *gr, long n, char **arg, mglArg *a);
-	/// Process optional arguments
-	void ProcOpt(mglGraph *gr, char *str);
 };
 //-----------------------------------------------------------------------------
 #endif

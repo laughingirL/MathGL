@@ -1,5 +1,5 @@
 /* mgl_data.h is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -158,6 +158,8 @@ public:
 	float Last(const char *cond, int &i, int &j, int &k);
 	/// Find position of first in direction 'dir' nonzero value of formula
 	int Find(const char *cond, char dir, int i=0, int j=0, int k=0);
+	/// Find if any nonzero value of formula
+	bool FindAny(const char *cond);
 
 	/// Smooth the data on specified direction or directions
 	void Smooth(int Type,const char *dirs="xyz",float delta=0);
@@ -189,10 +191,8 @@ public:
 	void Diff2(const char *dir);
 	/// Swap left and right part of the data in given direction (useful for fourier spectrums)
 	void Swap(const char *dir);
-//	/// Fourier transform of the data in given direction or directions
-//	void Fourier(const char *dir);
-//	/// Hankel transform of the data in given direction or directions
-//	void Hankel(const char *dir);
+	/// Mirror the data in given direction (useful for fourier spectrums)
+	void Mirror(const char *dir);
 
 	/// Interpolate by qubic splain the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	float Spline(float x,float y=0,float z=0);

@@ -1,8 +1,21 @@
-1.6.3 Released ?? ?? 2008
+1.7 Released 11 April 2008
 	- Color scheme now may have up to 32 colors.
 	- Function mglColor::Set now have additional argument for "brightness" of color
-	- Color specification in color scheme now support "brighted" colors like "b1b2b3...b9". Color "b5" is equal to "b".
-	- Function SubPlot() and MGL command 'subplot' now have additional arguments for additional relative plot shifting.
+	- Color specification in color scheme now support "brighted" colors like "b1b2b3...b9". At this color "b5" is equal to "b".
+	- Function SubPlot() and MGL command 'subplot' now have arguments for additional relative plot shifting.
+	- Class mglGraphGL now is derived from mglGraphAB.
+	- Function mglGraphAB::LightScale() is extracted from mglGraphAB::PostScale()
+	- New class mglGraphIDTF is added for export plots in IDTF formant (U3D pictures for inserting in PDF)
+	- New function mglData::Mirror
+	- Tool 'mglview' now not display info/error message about availible command-line arguments.
+	- Centered label now are drawn at sqrt(Min*Max) if dx (or dy, dz) is zero.
+	- Sufficiently rewritten MGL parser:
+		* User now can define its own MGL command (by changing mglParse::Cmd).
+		* Export MGL -> C++ for most of commands (except 'list', 'delete', 'call')
+		* Uniform interface for utils (mgl2png, mgl2eps, mgl2svg, mglview)
+		* New command 'define $N sth'
+		* New conditional commands 'if|else|elseif|endif'
+		* New for-cycle commands 'for|next'. Format is: 'for $N var' or 'for $N x1 x2 [dx]'
 
 1.6.2 Released 5 April 2008
 	- Add recognition of TeX commands: \frac, \stack, \stackr, \stackl, \overset, \underset.

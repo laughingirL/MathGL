@@ -1,3 +1,4 @@
+#include <time.h>
 #include <locale.h>
 #include <string.h>
 #include <stdio.h>
@@ -28,6 +29,13 @@ void save(mglGraph *gr,const char *name,const char *suf="",int type=0)
 		sprintf(buf,"%s%s.png",name,suf);
 		gr->WritePNG(buf,0,false);	break;
 	}
+}
+//-----------------------------------------------------------------------------
+int sample_ae(mglGraph *gr, const void *)	// arrow styles
+{
+	gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}",
+			 0, -4);
+	return 0;
 }
 //-----------------------------------------------------------------------------
 int sample_ad(mglGraph *gr, const void *)	// arrow styles
@@ -448,7 +456,7 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->Surf(a,"BbcyrR");		save(gr,"surf_alpha",suf);
 	gr->Clf();	gr->Box();	gr->Axial(a,"BbcyrR");		save(gr,"axial",suf);
 	gr->Clf();	gr->Box();	gr->SurfA(a,b,"BbcyrR");	save(gr,"surfa",suf);
-	gr->Clf();	gr->Box();	gr->Map(a,b,"BbcyrR");		save(gr,"map",suf);
+	gr->Clf();	gr->Box();	gr->Map(a,b,"brg");			save(gr,"map",suf);
 	gr->Clf();	gr->Box();	gr->Surf3(c,"BbcyrR");		save(gr,"surf3",suf);
 	gr->Clf();	gr->Box();	gr->Surf3(c,"bgrd");		save(gr,"surf3_rgbd_light",suf);
 	gr->Clf();	gr->Box();	gr->Surf3A(c,d,"BbcyrR");	save(gr,"surf3a",suf);
@@ -763,9 +771,10 @@ int all_samples(mglGraph *gr, const void *s)
 	gr->SubPlot(1,1,0);gr->Clf();sample_a8(gr,0);	save(gr,"sample8",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_a9(gr,0);	save(gr,"sample9",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_aa(gr,0);	save(gr,"samplea",suf);
-	gr->SubPlot(1,1,0);gr->Clf();sample_ac(gr,0);	save(gr,"samplec",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_ab(gr,0);	save(gr,"sampleb",suf);
+	gr->SubPlot(1,1,0);gr->Clf();sample_ac(gr,0);	save(gr,"samplec",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_ad(gr,0);	save(gr,"sampled",suf);
+	gr->SubPlot(1,1,0);gr->Clf();sample_ae(gr,0);	save(gr,"samplee",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_molecule(gr,0);	save(gr,"molecule",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_ternary(gr,0);	save(gr,"ternary",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_drops(gr,s);
@@ -775,29 +784,198 @@ int all_samples(mglGraph *gr, const void *s)
 	return 0;
 }
 //-----------------------------------------------------------------------------
+int time_test(mglGraph *gr, const void *)	// full test (in PNG)
+{
+	time_t t1,t2;
+	int i;
+	mglData pnts("hotdogs.pts");
+	pnts.Norm(-1,1,true);
+	mglData  a(50,40), b(50,40), c(50,40,30), d(50,40,30);
+	mglData y(50,3), x(50), x2(50), y1(50), y2(50), f(50,3);
+	mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
+	
+	ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2 + (y-0.5)^2+(z-0.65)^2,1.5)");
+	ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2 + (y-0.5)^2+(z-0.65)^2,1.5)");
+	ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.65)^2,1.5)");
+	a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+	b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+	c.Modify("(-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1))");
+	d.Modify("1-2*tanh(4*(x+y-1)^2)");
+	y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
+	y.Modify("sin(2*pi*x)",1);	y.Modify("cos(2*pi*x)",2);
+	y1.Modify("0.5+0.3*cos(2*pi*x)");
+	y2.Modify("0.3*sin(2*pi*x)");
+	x.Fill(-1,1,'x');
+	x2.Modify("0.05+0.03*cos(2*pi*x)");
+
+	mglData  x0(10), y0(10), ex0(10), ey0(10),ch(7,2);
+	x0.Modify("2*x-1 + 0.1*rnd-0.05");
+	y0.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x) + 0.2*rnd-0.1");
+	ey0.Modify("0.2");	ex0.Modify("0.1");	ch.Modify("rnd+0.1");
+
+	gr->SubPlot(1,1,0);	gr->Alpha(false);
+	t1 = time(NULL);
+	for(i=0;i<100;i++)	gr->Clf();
+	t2 = time(NULL);	printf("Clf: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+//	for(i=0;i<100;i++)	{	gr->Clf();	gr->MeshNum=20;	gr->Dew(a,b,"BbcyrR");	gr->MeshNum=0;}
+	t2 = time(NULL);	printf("Dew: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	gr->Rotate(40,60);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Box();	}
+	t2 = time(NULL);	printf("Box: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->MeshNum=20;	gr->Dew(a,b,"BbcyrR");	gr->MeshNum=0;}
+	t2 = time(NULL);	printf("Dew rotated: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Pipe(a,b,"BbcyrR");	}
+	t2 = time(NULL);	printf("Pipe: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Surf(a,"BbcyrR");	}
+	t2 = time(NULL);	printf("Surf: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Tile(a,"BbcyrR");	}
+	t2 = time(NULL);	printf("Tile: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Belt(a,"BbcyrR");	}
+	t2 = time(NULL);	printf("Belt: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Mesh(a,"BbcyrR");	}
+	t2 = time(NULL);	printf("Mesh: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Fall(a,"BbcyrR");	}
+	t2 = time(NULL);	printf("Fall: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->SurfC(a,b,"BbcyrR");	}
+	t2 = time(NULL);	printf("SurfC: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Boxs(a,"BbcyrR");	}
+	t2 = time(NULL);	printf("Boxs: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Flow(ex,ey,ez,"bwr");	}
+	t2 = time(NULL);	printf("Flow 3d: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Vect(ex,ey,ez,"bwr");	}
+	t2 = time(NULL);	printf("Vect 3d: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->VectC(ex,ey,ez,"bwr");	}
+	t2 = time(NULL);	printf("VectC 3d: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Pipe(ex,ey,ez,"bwr");	}
+	t2 = time(NULL);	printf("Pipe 3d: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Torus(y1,y2,"pz");	}
+	t2 = time(NULL);	printf("Torus: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Crust(pnts,"BbcyrR");	}
+	t2 = time(NULL);	printf("Crust: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Dots(pnts,"BbcyrR");	}
+	t2 = time(NULL);	printf("Dots: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->ContF(a,"BbcyrR");	}
+	t2 = time(NULL);	printf("ContF: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Cont(a,"BbcyrR");	}
+	t2 = time(NULL);	printf("Cont: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->ContFA(c,"BbcyrR");	}
+	t2 = time(NULL);	printf("ContFA: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Fog(1);	gr->Surf(a,"BbcyrR");	gr->Fog(0);	}
+	t2 = time(NULL);	printf("Fog: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Tube(y,0.05);	}
+	t2 = time(NULL);	printf("Tube: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Chart(ch,"#");	}
+	t2 = time(NULL);	printf("Chart: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	gr->Axis("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)",0);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Chart(ch,"#");	}
+	gr->Axis(0,0,0);	gr->Alpha(true);
+	t2 = time(NULL);	printf("Pie: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Surf(a,"BbcyrR");	}
+	t2 = time(NULL);	printf("Surf transp: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Axial(a,"BbcyrR");	}
+	t2 = time(NULL);	printf("Axial: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->SurfA(a,b,"BbcyrR");	}
+	t2 = time(NULL);	printf("SurfA: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Map(a,b,"BbcyrR");	}
+	t2 = time(NULL);	printf("Map: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Surf3(c,"BbcyrR");	}
+	t2 = time(NULL);	printf("Surf3: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Surf3(c,"bgrd");	}
+	t2 = time(NULL);	printf("Surf3 rgbd: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Surf3A(c,d,"BbcyrR");	}
+	t2 = time(NULL);	printf("Surf3A: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Surf3C(c,d,"BbcyrR");	}
+	t2 = time(NULL);	printf("Surf3C: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->ContA(c,"BbcyrR");	}
+	t2 = time(NULL);	printf("ContA: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	gr->Light(false);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->CloudQ(c,"wyrRk");	}
+	t2 = time(NULL);	printf("CloudQ: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->CloudP(c,"wyrRk");	}
+	t2 = time(NULL);	printf("CloudP: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->DensA(c,"BbcyrR");	}
+	t2 = time(NULL);	printf("DensA: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	gr->Alpha(false);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Surf3(c,"bgrd");	}
+	t2 = time(NULL);	printf("Surf3 rgbd no alpha: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->DensX(c.Sum("x"),"BbcyrR",-1);	gr->DensY(c.Sum("y"),"BbcyrR",1);
+	gr->DensZ(c.Sum("z"),"BbcyrR",-1);	}
+	t2 = time(NULL);	printf("Dens[XYZ]: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->ContX(c.Sum("x"),"BbcyrR",-1);	gr->ContY(c.Sum("y"),"BbcyrR",1);
+	gr->ContZ(c.Sum("z"),"BbcyrR",-1);	}
+	t2 = time(NULL);	printf("Cont[XYZ]: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	gr->SubPlot(1,1,0);	// 1D Plots
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Plot(y);	}
+	t2 = time(NULL);	printf("Plot: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Area(y);	}
+	t2 = time(NULL);	printf("Area: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Stem(y);	}
+	t2 = time(NULL);	printf("Stem: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Step(y);	}
+	t2 = time(NULL);	printf("Step: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Bars(y);	}
+	t2 = time(NULL);	printf("Bars: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Mark(y,y1,"bs");	}
+	t2 = time(NULL);	printf("Mark: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->TextMark(y,y1,"\\gamma");	}
+	t2 = time(NULL);	printf("TextMark: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Plot(y.SubData(-1,0));
+	gr->Text(y,"This is very long string drawn along a curve",":k");
+	gr->Text(y,"Another string drawn above a curve","T:r");	}
+	t2 = time(NULL);	printf("Text: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ex0,ey0,"ko");	}
+	t2 = time(NULL);	printf("Error: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Dens(a,"BbcyrR");	}
+	t2 = time(NULL);	printf("Dens: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Tile(a,b,"BbcyrR");	}
+	t2 = time(NULL);	printf("TileR: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Cont(a,"BbcyrRt");	}
+	t2 = time(NULL);	printf("Cont: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Vect(a,b,"BbcyrR");	}
+	t2 = time(NULL);	printf("Vect: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->VectC(a,b,"BbcyrR");	}
+	t2 = time(NULL);	printf("VectC: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Flow(a,b,"BbcyrR");	}
+	t2 = time(NULL);	printf("Flow: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	for(i=0;i<100;i++)	{	gr->Clf();	gr->Pipe(a,b,"BbcyrR");	}
+	t2 = time(NULL);	printf("Pipe 3d: %g ms\n", 10*difftime(t2,t1));	t1 = time(NULL);
+	return 0;
+}
+//-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
 	const char *suf = "";
 	mglGraphZB zb;
 	mglGraphPS ps;
+	mglGraph &gr = zb;
 	if(argc>1)
 	{
 		if(!strcmp(argv[1],"mini"))
-		{	zb.SetSize(200,133);	ps.SetSize(200,133);	suf = "_sm";	}
+		{	gr.SetSize(200,133);	suf = "_sm";	}
 		if(!strcmp(argv[1],"big"))
 		{
-			zb.SetSize(1280,800);	ps.SetSize(1280,800);	suf = "_lg";
-			zb.BaseLineWidth = ps.BaseLineWidth = 2;
+			gr.SetSize(1200,800);	suf = "_lg";
+			gr.BaseLineWidth = 2;
 		}
 	}
 
-//	for(int i=0;i<10;i++)
-	{
-	all_samples(&zb,suf);
-	sample_transp(&zb,suf);
-	sample_hint(&zb,suf);
-	full_test(&zb,suf);
-	}
+	all_samples(&gr,suf);
+	sample_transp(&gr,suf);
+	sample_hint(&gr,suf);
+	full_test(&gr,suf);
+
+/*	printf("\n\n\t\t mglGraphZB (600*400) \n");	fflush(stdout);
+	zb.SetSize(600,400);	time_test(&zb,0);
+	printf("\n\n\t\t mglGraphZB (1200*800) \n");	fflush(stdout);
+	zb.BaseLineWidth = 2;
+	zb.SetSize(1200,800);	time_test(&zb,0);
+	
+	printf("\n\n\t\t mglGraphPS (600*400) \n");	fflush(stdout);
+	ps.SetSize(600,400);	time_test(&ps,0);
+	printf("\n\n\t\t mglGraphPS (1200*800) \n");	fflush(stdout);
+	ps.BaseLineWidth = 2;
+	ps.SetSize(1200,800);	time_test(&ps,0);
+*/	
 	return 0;
 }
 //-----------------------------------------------------------------------------

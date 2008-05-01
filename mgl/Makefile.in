@@ -86,9 +86,10 @@ am_libmgl_la_OBJECTS = libmgl_la-mgl_data_cf.lo libmgl_la-mgl_axis.lo \
 	libmgl_la-mgl_tex_table.lo libmgl_la-mgl_2d.lo \
 	libmgl_la-mgl_crust.lo libmgl_la-mgl_export.lo \
 	libmgl_la-mgl_main.lo libmgl_la-mgl_3d.lo \
-	libmgl_la-mgl_data.lo libmgl_la-mgl_f.lo libmgl_la-mgl_tool.lo \
+	libmgl_la-mgl_data.lo libmgl_la-mgl_f.lo libmgl_la-mgl_idtf.lo \
 	libmgl_la-mgl_ab.lo libmgl_la-mgl_data_io.lo \
-	libmgl_la-mgl_flow.lo libmgl_la-mgl_vect.lo
+	libmgl_la-mgl_flow.lo libmgl_la-mgl_vect.lo \
+	libmgl_la-mgl_parse.lo
 libmgl_la_OBJECTS = $(am_libmgl_la_OBJECTS)
 libmgl_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
@@ -283,8 +284,9 @@ mgl_c.cpp          mgl_eps.cpp      mgl_font.cpp      mgl_zb.cpp \
 mgl_combi.cpp      mgl_eval.cpp     mgl_gl.cpp        mgl_def_font.cpp\
 mgl_1d.cpp         mgl_cont.cpp     mgl_exec.cpp      mgl_tex_table.cpp\
 mgl_2d.cpp         mgl_crust.cpp    mgl_export.cpp    mgl_main.cpp  \
-mgl_3d.cpp         mgl_data.cpp     mgl_f.cpp         mgl_tool.cpp \
-mgl_ab.cpp         mgl_data_io.cpp  mgl_flow.cpp      mgl_vect.cpp
+mgl_3d.cpp         mgl_data.cpp     mgl_f.cpp         mgl_idtf.cpp \
+mgl_ab.cpp         mgl_data_io.cpp  mgl_flow.cpp      mgl_vect.cpp \
+mgl_parse.cpp
 
 @USE_FLTK_TRUE@libmgl_fltk_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 @USE_FLTK_TRUE@libmgl_fltk_la_LIBADD = $(FLTK_LIBS) libmgl.la
@@ -441,9 +443,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_flow.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_font.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_gl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_idtf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_main.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_parse.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_tex_table.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_tool.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_vect.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_zb.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_zb2.Plo@am__quote@
@@ -647,12 +650,12 @@ libmgl_la-mgl_f.lo: mgl_f.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmgl_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmgl_la-mgl_f.lo `test -f 'mgl_f.cpp' || echo '$(srcdir)/'`mgl_f.cpp
 
-libmgl_la-mgl_tool.lo: mgl_tool.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmgl_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmgl_la-mgl_tool.lo -MD -MP -MF $(DEPDIR)/libmgl_la-mgl_tool.Tpo -c -o libmgl_la-mgl_tool.lo `test -f 'mgl_tool.cpp' || echo '$(srcdir)/'`mgl_tool.cpp
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmgl_la-mgl_tool.Tpo $(DEPDIR)/libmgl_la-mgl_tool.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl_tool.cpp' object='libmgl_la-mgl_tool.lo' libtool=yes @AMDEPBACKSLASH@
+libmgl_la-mgl_idtf.lo: mgl_idtf.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmgl_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmgl_la-mgl_idtf.lo -MD -MP -MF $(DEPDIR)/libmgl_la-mgl_idtf.Tpo -c -o libmgl_la-mgl_idtf.lo `test -f 'mgl_idtf.cpp' || echo '$(srcdir)/'`mgl_idtf.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmgl_la-mgl_idtf.Tpo $(DEPDIR)/libmgl_la-mgl_idtf.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl_idtf.cpp' object='libmgl_la-mgl_idtf.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmgl_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmgl_la-mgl_tool.lo `test -f 'mgl_tool.cpp' || echo '$(srcdir)/'`mgl_tool.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmgl_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmgl_la-mgl_idtf.lo `test -f 'mgl_idtf.cpp' || echo '$(srcdir)/'`mgl_idtf.cpp
 
 libmgl_la-mgl_ab.lo: mgl_ab.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmgl_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmgl_la-mgl_ab.lo -MD -MP -MF $(DEPDIR)/libmgl_la-mgl_ab.Tpo -c -o libmgl_la-mgl_ab.lo `test -f 'mgl_ab.cpp' || echo '$(srcdir)/'`mgl_ab.cpp
@@ -681,6 +684,13 @@ libmgl_la-mgl_vect.lo: mgl_vect.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl_vect.cpp' object='libmgl_la-mgl_vect.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmgl_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmgl_la-mgl_vect.lo `test -f 'mgl_vect.cpp' || echo '$(srcdir)/'`mgl_vect.cpp
+
+libmgl_la-mgl_parse.lo: mgl_parse.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmgl_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmgl_la-mgl_parse.lo -MD -MP -MF $(DEPDIR)/libmgl_la-mgl_parse.Tpo -c -o libmgl_la-mgl_parse.lo `test -f 'mgl_parse.cpp' || echo '$(srcdir)/'`mgl_parse.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmgl_la-mgl_parse.Tpo $(DEPDIR)/libmgl_la-mgl_parse.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl_parse.cpp' object='libmgl_la-mgl_parse.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmgl_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmgl_la-mgl_parse.lo `test -f 'mgl_parse.cpp' || echo '$(srcdir)/'`mgl_parse.cpp
 
 mgl_hdf5_la-data_hdf.lo: data_hdf.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl_hdf5_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mgl_hdf5_la-data_hdf.lo -MD -MP -MF $(DEPDIR)/mgl_hdf5_la-data_hdf.Tpo -c -o mgl_hdf5_la-data_hdf.lo `test -f 'data_hdf.cpp' || echo '$(srcdir)/'`data_hdf.cpp

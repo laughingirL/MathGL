@@ -1,5 +1,5 @@
 /* mgl_zb.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
   *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -37,6 +37,10 @@ long mgl_create_graph_zb_(int *width, int *height)
 //-----------------------------------------------------------------------------
 void mglGraphZB::Ball(float x,float y,float z,mglColor col,float alpha)
 {
+	if(alpha==0)	return;
+	if(alpha<0)	{	alpha = -alpha;	}
+	else		{	if(!ScalePoint(x,y,z))	return;	}
+	if(!col.Valid())	col = mglColor(1.,0.,0.);
 	unsigned char r[4];
 	Finished = false;
 	alpha = Transparent ? alpha : 1;
@@ -657,14 +661,14 @@ void mglGraphZB::line_plot(float *pp0,float *pp1,float *cc0,float *cc1,bool all)
 		if(u<0)			{	v += u*u;			u = 0;	}
 		else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
 		if(v>b)		continue;
-		tt = all || (PDef & (1<<long(fmod(pPos+u/PenWidth, 16))));
+		tt = all || (PDef & (1<<long(fmod(pPos+u/PenWidth/1.5, 16))));
 		if(!tt)		continue;
 		u /= dd;
 		r[0] = (unsigned char)(255.f*(cc0[0]+c10*u));	r[1] = (unsigned char)(255.f*(cc0[1]+c11*u));
 		r[2] = (unsigned char)(255.f*(cc0[2]+c12*u));	r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
 		pnt_plot(i,j,pp0[2]+d12*u+PenWidth,r);
 	}
-	pPos = fmod(pPos+dd/PenWidth, 16);
+	pPos = fmod(pPos+dd/PenWidth/1.5, 16);
 	UseAlpha = aa;
 }
 //-----------------------------------------------------------------------------
@@ -829,7 +833,7 @@ void mglGraphZB::WriteSlice(int n)
 void mglGraphZB::font_line(float *p, unsigned char *c,bool thin)
 {
 	unsigned char r[4];
-	PostScale(p,2,false);
+	PostScale(p,2);
 
 	float d10,d11,d12, b = PenWidth*PenWidth;
 	long y1,x1,y2,x2;
@@ -879,7 +883,7 @@ void mglGraphZB::Glyph(float x,float y, float f, int nt, const short *trig, int 
 			ii = 6*ik;	p[0]=f*trig[ii]+x;	p[1]=f*trig[ii+1]+y;	p[2]=0;
 			ii+=2;		p[3]=f*trig[ii]+x;	p[4]=f*trig[ii+1]+y;	p[5]=0;
 			ii+=2;		p[6]=f*trig[ii]+x;	p[7]=f*trig[ii+1]+y;	p[8]=0;
-			PostScale(p,3,false);
+			PostScale(p,3);
 	
 			float d1[3],d2[3];		
 			d1[0] = p[3]-p[0];	d2[0] = p[6]-p[0];

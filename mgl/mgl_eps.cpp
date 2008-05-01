@@ -1,5 +1,5 @@
 /* mgl_eps.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -67,8 +67,12 @@ mglGraphPS::mglGraphPS(int w,int h) : mglGraphAB(w,h)
 //-----------------------------------------------------------------------------
 mglGraphPS::~mglGraphPS()	{	if(P)	delete []P;	}
 //-----------------------------------------------------------------------------
-void mglGraphPS::Ball(float x,float y,float z,mglColor col,float )
+void mglGraphPS::Ball(float x,float y,float z,mglColor col,float alpha)
 {
+	if(alpha==0)	return;
+	if(alpha<0)	{	alpha = -alpha;	}
+	else		{	if(!ScalePoint(x,y,z))	return;	}
+	if(!col.Valid())	col = mglColor(1.,0.,0.);
 	float p[3] = {x,y,z};	PostScale(p,1);
 	mglPrim a;		a.m = '.';
 	a.x[0] = p[0];	a.y[0] = p[1];	a.z = p[2];
@@ -103,7 +107,7 @@ void mglGraphPS::line_plot(float *p1,float *p2,float *c1,float *,bool all)
 	a.c[0]=c1[0];	a.c[1]=c1[1];	a.c[2]=c1[2];
 	a.SetStyle(all? 0xffff:PDef,int(pPos));
 	add_prim(&a);
-	pPos = fmod(pPos+hypot(p2[0]-p1[0], p2[1]-p1[1])/PenWidth, 16);
+	pPos = fmod(pPos+hypot(p2[0]-p1[0], p2[1]-p1[1])/PenWidth/1.5, 16);
 }
 //-----------------------------------------------------------------------------
 void mglGraphPS::trig_plot(float *p3,float *p1,float *p2,float *c3,float *c1,float *c2)
@@ -256,7 +260,7 @@ void mglGraphPS::add_prim(mglPrim *a)
 //-----------------------------------------------------------------------------
 void mglGraphPS::add_light(float *b, float n0,float n1, float n2)
 {
-	if(UseLight)
+	if(UseLight && (n0*n0+n1*n1+n2*n2)!=0)
 	{
 		float d0,d1,d2,nn;
 		register long i,j;

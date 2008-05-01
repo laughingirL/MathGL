@@ -1,5 +1,5 @@
 /* mgl_ab.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -118,10 +118,10 @@ void mglGraphAB::InPlot(float x1,float x2,float y1,float y2)
 	font_factor = Width*(x2-x1) < Height*(y2-y1) ? Width*(x2-x1) : Height*(y2-y1);
 	SelectPen("k-1");
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
-	xPos = int((x1+x2)/2*Width+0.5f);
-	yPos = int((y1+y2)/2*Height+0.5f);
+	xPos = (x1+x2)/2*Width;
+	yPos = (y1+y2)/2*Height;
 	float d = sqrt(fabs((x2-x1)*(y2-y1)));
-	zPos = int((1.f-d/2.f)*Depth+0.5f);
+	zPos = (1.f-d/2.f)*Depth;
 	memset(B,0,9*sizeof(float));
 	B[0] = Width*(x2-x1);	B[4] = Height*(y2-y1);	B[8] = Depth*d;
 	memcpy(B1,B,9*sizeof(float));
@@ -147,25 +147,25 @@ void mglGraphAB::NormScale(float *p,long n)
 	for(i=0;i<n;i++)
 	{
 		y = p+3*i;
-		x[0] = y[0]*B[0] + y[1]*B[1] + y[2]*B[2];
-		x[1] = y[0]*B[3] + y[1]*B[4] + y[2]*B[5];
-		x[2] = y[0]*B[6] + y[1]*B[7] + y[2]*B[8];
+		x[0] = (y[0]*B[0] + y[1]*B[1] + y[2]*B[2])/zoomx2;
+		x[1] = (y[0]*B[3] + y[1]*B[4] + y[2]*B[5])/zoomy2;
+		x[2] = (y[0]*B[6] + y[1]*B[7] + y[2]*B[8])/sqrt(zoomx2*zoomy2);
 		memcpy(y,x,3*sizeof(float));
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::PostScale(float *p,long n,bool full)
+void mglGraphAB::PostScale(float *p,long n)
 {
-	const float s3=2*PlotFactor;
+	register float s3=2*PlotFactor;
 	register long i;
 	float x[3], *y;
 	for(i=0;i<n;i++)
 	{
 		y = p+3*i;
 		y[0] = y[0]/s3;		y[1] = y[1]/s3;		y[2] = y[2]/s3;
-		x[0] = (xPos + 0.5f + y[0]*B[0] + y[1]*B[1] + y[2]*B[2] - zoomx1*Width)/zoomx2;
-		x[1] = (yPos + 0.5f + y[0]*B[3] + y[1]*B[4] + y[2]*B[5] - zoomy1*Height)/zoomy2;
-		x[2] = (zPos + 0.5f + y[0]*B[6] + y[1]*B[7] + y[2]*B[8])/sqrt(zoomx2*zoomy2);
+		x[0] = (xPos + y[0]*B[0] + y[1]*B[1] + y[2]*B[2] - zoomx1*Width)/zoomx2;
+		x[1] = (yPos + y[0]*B[3] + y[1]*B[4] + y[2]*B[5] - zoomy1*Height)/zoomy2;
+		x[2] = (zPos + y[0]*B[6] + y[1]*B[7] + y[2]*B[8])/sqrt(zoomx2*zoomy2);
 		if(Persp)
 		{
 			register float d = (1-Persp*Depth/2)/(1-Persp*x[2]);
@@ -174,7 +174,12 @@ void mglGraphAB::PostScale(float *p,long n,bool full)
 		}
 		memcpy(y,x,3*sizeof(float));
 	}
-	if(full)	for(i=0;i<10;i++)
+}
+//-----------------------------------------------------------------------------
+void mglGraphAB::LightScale()
+{
+	float x[3];
+	for(int i=0;i<10;i++)
 	{
 		register float nn;
 		if(!nLight[i])	continue;
@@ -182,7 +187,7 @@ void mglGraphAB::PostScale(float *p,long n,bool full)
 		memcpy(x,rLight+j,3*sizeof(float));
 		pLight[j] = (x[0]*B[0] + x[1]*B[1] + x[2]*B[2])/zoomx2;
 		pLight[j+1] = (x[0]*B[3] + x[1]*B[4] + x[2]*B[5])/zoomy2;
-		pLight[j+2] = x[0]*B[6] + x[1]*B[7] + x[2]*B[8];
+		pLight[j+2] = (x[0]*B[6] + x[1]*B[7] + x[2]*B[8])/sqrt(zoomx2*zoomy2);
 		nn=sqrt(pLight[j]*pLight[j]+pLight[j+1]*pLight[j+1]+pLight[j+2]*pLight[j+2]);
 		pLight[j] /= nn;		pLight[j+1] /= nn;	pLight[j+2] /= nn;
 	}
@@ -194,10 +199,10 @@ void mglGraphAB::Light(int n, bool enable)
 	nLight[n] = enable;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Light(int n, mglPoint p, mglColor c, float br, bool )
+void mglGraphAB::Light(int n, mglPoint p, mglColor c, float br, bool inf)
 {
 	if(n<0 || n>9)	{	SetWarn(mglWarnLId);	return;	}
-	nLight[n] = true;	aLight[n] = 3;	bLight[n] = br;
+	nLight[n] = true;	aLight[n] = 3;	bLight[n] = br;	iLight[n] = inf;
 	rLight[3*n] = p.x;	rLight[3*n+1] = p.y;	rLight[3*n+2] = p.z;
 	cLight[3*n] = c.r;	cLight[3*n+1] = c.g;	cLight[3*n+2] = c.b;
 }
@@ -218,7 +223,7 @@ float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float
 
 	if(size<0)	size = -size*FontSize;
 	f_size = size;
-	long xx=xPos, yy=yPos, zz=zPos;
+	float xx=xPos, yy=yPos, zz=zPos;
 	float shift = 0.07, fsize=size/8.*font_factor;
 	float x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2, _p = Persp;
 	if(font=='t')	shift = -0.07;
@@ -233,7 +238,7 @@ float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float
 		Cut = tt;
 	}
 	zoomx1=zoomy1=0;	zoomx2=zoomy2=1;
-	PostScale(pp,2,false);
+	PostScale(pp,2);
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	Persp=0;
 
 	float ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
@@ -243,9 +248,9 @@ float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float
 	memset(B,0,9*sizeof(float));
 	B[0] = B[4] = B[8] = fsize;
 	NoAutoFactor=true;	RotateN(-tet,0,0,1);	NoAutoFactor=false;
-	xPos = long(pp[0]+shift*(pp[4]-pp[1])/sqrt(ll) - B[1]*0.02f);
-	yPos = long(pp[1]-shift*(pp[3]-pp[0])/sqrt(ll) - B[4]*0.02f);
-	zPos = long(pp[2]);
+	xPos = pp[0]+shift*(pp[4]-pp[1])/sqrt(ll) - B[1]*0.02f;
+	yPos = pp[1]-shift*(pp[3]-pp[0])/sqrt(ll) - B[4]*0.02f;
+	zPos = pp[2];
 
 	fsize = fnt->Puts(str,"rL")*size/8.;
 	xPos=xx;	yPos=yy;	zPos=zz;	memcpy(B,bb,9*sizeof(float));	Persp=_p;
@@ -268,7 +273,7 @@ void mglGraphAB::Putsw(mglPoint p,const wchar_t *wcs,const char *font,
 
 	if(size<0)	size = -size*FontSize;
 	f_size = size;
-	long xx=xPos, yy=yPos, zz=zPos;
+	float xx=xPos, yy=yPos, zz=zPos;
 	float shift = (sh/10+0.2)*2/PlotFactor, fsize=size/8.*font_factor;
 	float x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2, _p=Persp;
 	zoomx1=zoomy1=0;	zoomx2=zoomy2=1;
@@ -301,18 +306,18 @@ void mglGraphAB::Putsw(mglPoint p,const wchar_t *wcs,const char *font,
 		ScalePoint(pp[3],pp[4],pp[5]);
 		Cut = tt;
 	}
-	PostScale(pp,2,false);	Persp=0;
+	PostScale(pp,2);	Persp=0;
 
 	if(dir==0 || dir=='t')
 	{
-		xPos = long(pp[0]);	yPos = long(pp[1]);	zPos = long(pp[2]);
+		xPos = pp[0];	yPos = pp[1];	zPos = pp[2];
 		memset(B,0,9*sizeof(float));
 		B[0] = B[4] = B[8] = fsize;
 	}
 	else if(dir=='n')
 	{
 		float ax=fsize/B1[0], ay=fsize/B1[4], az=fsize/B1[8];
-		xPos = long(pp[0]);	yPos = long(pp[1]);	zPos = long(pp[2]);
+		xPos = pp[0];	yPos = pp[1];	zPos = pp[2];
 		B[0]*= ax;	B[3]*= ax;	B[6]*= ax;
 		B[1]*= ay;	B[4]*= ay;	B[7]*= ay;
 		B[2]*= az;	B[5]*= az;	B[8]*= az;
@@ -328,9 +333,9 @@ void mglGraphAB::Putsw(mglPoint p,const wchar_t *wcs,const char *font,
 		B[0] = B[4] = B[8] = fsize;
 		NoAutoFactor=true;	RotateN(-tet,0,0,1);	NoAutoFactor=false;
 		float ss = (pp[3]>pp[0] || tet==-90) ? 1 : -1;
-		xPos = long(pp[0]+shift*ss*(pp[4]-pp[1])/sqrt(ll) - B[1]*0.02f);
-		yPos = long(pp[1]-shift*ss*(pp[3]-pp[0])/sqrt(ll) - B[4]*0.02f);
-		zPos = long(pp[2]);
+		xPos = pp[0]+shift*ss*(pp[4]-pp[1])/sqrt(ll) - B[1]*0.02f;
+		yPos = pp[1]-shift*ss*(pp[3]-pp[0])/sqrt(ll) - B[4]*0.02f;
+		zPos = pp[2];
 	}
 	else
 	{
@@ -341,9 +346,9 @@ void mglGraphAB::Putsw(mglPoint p,const wchar_t *wcs,const char *font,
 //		if(fabs(tet)>90)	tet+=180;
 		memset(B,0,9*sizeof(float));	B[0] = B[4] = B[8] = fsize;
 		float ss = (pp[3]>pp[0] || tet==-90) ? 1 : -1;
-		xPos = long(pp[0]+shift*ss*(pp[4]-pp[1])/sqrt(ll));
-		yPos = long(pp[1]-shift*ss*(pp[3]-pp[0])/sqrt(ll));
-		zPos = long(pp[2]);
+		xPos = pp[0]+shift*ss*(pp[4]-pp[1])/sqrt(ll);
+		yPos = pp[1]-shift*ss*(pp[3]-pp[0])/sqrt(ll);
+		zPos = pp[2];
 		font = ss>0 ? "rL":"rR";
 		if(pp[4]==pp[1])	font = "rC";
 	}

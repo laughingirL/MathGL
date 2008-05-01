@@ -1,6 +1,23 @@
+/* mgl2eps.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License
+ * as published by the Free Software Foundation
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 #include <stdio.h>
 #include <string.h>
 #include "mgl/mgl_eps.h"
+#include "mgl/mgl_parse.h"
 //-----------------------------------------------------------------------------
 int main(int narg, char **arg)
 {
@@ -18,37 +35,21 @@ int main(int narg, char **arg)
 	else
 	{
 		FILE *fp = fopen(arg[1],"rt");
-		if(fp==0)	printf("Couldn't open file %s\n",arg[1]);
+		if(fp==0)	{	printf("Couldn't open file %s\n",arg[1]);	return 1;	}
+		char str[8192], buf[2048];
+		for(long i=2;i<narg;i++)	// add arguments for the script
+			if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
+				p.AddParam(arg[i][1]-'0',arg[i]+2);
+		gr.Message = buf;
+		p.Execute(&gr,fp,true);
+		fclose(fp);
+		if(narg>2 && arg[2][0]!='-')	strcpy(str,arg[2]);
 		else
 		{
-			char str[4096];
-			for(long i=2;i<narg;i++)	// add arguments for the script
-				if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
-					p.AddParam(arg[i][1]-'0',arg[i]+2);
-			char buf[2048];
-			while(!feof(fp))
-			{
-				fgets(str,4096,fp);
-				buf[0]=0;
-				int r = p.Parse(&gr,str);
-				if(*buf)	printf("%s\n",buf);
-				if(r==1)
-					printf("Wrong argument(s) in %s\n",str);
-				if(r==2)
-					printf("Wrong command in %s\n",str);
-				if(r==3)
-					printf("String too long in %s\n",str);
-			}
-			fclose(fp);
-			if(narg>2 && arg[2][0]!='-')	strcpy(str,arg[2]);
-			else
-			{
-				strcpy(str,arg[1]);
-				strcat(str,".eps");
-				printf("Write output to %s\n",str);
-			}
-			gr.WriteEPS(str);
+			strcpy(str,arg[1]);	strcat(str,".eps");
+			printf("Write output to %s\n",str);
 		}
+		gr.WriteEPS(str);
 	}
 	return 0;
 }

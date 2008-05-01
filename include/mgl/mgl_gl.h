@@ -1,5 +1,5 @@
 /* mgl_gl.h is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -25,10 +25,10 @@
 #else
 #include <GL/gl.h>
 #endif
-#include "mgl/mgl.h"
+#include "mgl/mgl_ab.h"
 //-----------------------------------------------------------------------------
 /// Class implements the creation of different mathematical plots under OpenGL
-class mglGraphGL : public mglGraph
+class mglGraphGL : public mglGraphAB
 {
 public:
 	mglGraphGL();
@@ -45,49 +45,37 @@ public:
 	void Clf(mglColor Back=NC);
 	int NewFrame(int id=-1);
 	void EndFrame();
+	void InPlot(float x1,float x2,float y1,float y2);
+	void SetSize(int ,int ){};
 	
-	void InPlot(float x1,float x2,float y1,float y2);	// подграфик произвольно
-	void Aspect(float Ax,float Ay,float Az);			// введение аспекта дл€ подграфика
-	void RotateN(float Tet,float x,float y,float z);	// вращение относительно оси
-	void Perspective(float a);
-	//	рисование точки (м€чика)
 	void Ball(float x,float y,float z,mglColor col=RC,float alpha=1);
-	void Putsw(mglPoint p,const wchar_t *text,const char *font=0,float size=-1,char dir=0,float shift=0);
-	float Putsw(mglPoint p,mglPoint l,const wchar_t *text,char font='t',float size=-1);
-	// рисование точки разного типа
-	void Mark(float x,float y,float z,char mark='.');
-	void Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line);
-	// рисование линейки цвета сбоку от графика
-	void Colorbar(const char *sch=0,int where=0);
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//	void Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line);
 protected:
-	float tetx, tety, tetz;	///< rotation angle values
-	float back[4];
-	float tetr[8];
 	mglColor def_col;
 
-	void DefColor(mglColor c, float alpha=-1);
+//	void DefColor(mglColor c, float alpha=-1);
 	void Pen(mglColor col, char style,float width);
-
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
+	
 	void ball(float *p,float *c);
-	void arrow_plot(float *p1,float *p2,char st);
-	void curv_plot(long n,float *pp,bool *tt);
-	void curv_plot(long n,float *pp,float *cc,bool *tt);
-	void curv_plot(long n,float *pp,bool *tt,long *nn);
-	void mesh_plot(long n,long m,float *pp,float *cc,bool *tt,int how);
-	void surf_plot(long n,long m,float *pp,float *cc,bool *tt);
-	void axial_plot(long n,float *pp,long *nn,long np, bool wire);
-	void cloud_plot(long nx,long ny,long nz,float *pp,float *a,float alpha);
-	void boxs_plot(long n, long m, float *pp, mglColor *cc,
-				bool *tt,float Alpha, bool line);
-	void surf3_plot(long n,long m,long *kx1,long *kx2, long *ky1,long *ky2,long *kz,
-					float *pp,float *cc,float *kk,float *nn,bool wire);
-	void quads_plot(long n, float *pp, float *cc, bool *tt);
-	void trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool *tt,bool wire);
-	void lines_plot(long n, float *pp, float *cc, bool *tt);
-	void normal(float *p1,float *p2,float *p3);
-	void normal(long nx,long ny,float *pp,float *nn);
+	
+	void LightScale();
+	void line_plot(float *p1,float *p2,float *c1,float *c2,bool all=false);
+	void line_plot_s(float *p1,float *p2,float *c1,float *c2,bool all=false);
+	void trig_plot(float *p0,float *p1,float *p2,
+					float *c0,float *c1,float *c2);
+	void trig_plot_n(float *p0,float *p1,float *p2,
+					float *c0,float *c1,float *c2,
+					float *n0,float *n1,float *n2);
+	void quad_plot(float *p0,float *p1,float *p2,float *p3,
+					float *c0,float *c1,float *c2,float *c3);
+	void quad_plot_a(float *p0,float *p1,float *p2,float *p3,
+					float a0,float a1,float a2,float a3,float alpha);
+	void quad_plot_n(float *p0,float *p1,float *p2,float *p3,
+					float *c0,float *c1,float *c2,float *c3,
+					float *n0,float *n1,float *n2,float *n3);
+	void mark_plot(float *pp, char type);
+	void font_line(float *p, unsigned char *r,bool thin=true);
 };
 //-----------------------------------------------------------------------------
 #endif
