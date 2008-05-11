@@ -361,35 +361,6 @@ bool mglData::ReadMat(const char *fname,int dim)
 	return true;
 }
 //-----------------------------------------------------------------------------
-void mglData::PrintInfo(FILE *fp)
-{
-	if(fp==0)	return;
-	char *buf = new char[512];
-	PrintInfo(buf);
-	fprintf(fp,buf);	fflush(fp);
-	delete []buf;
-}
-//-----------------------------------------------------------------------------
-void mglData::PrintInfo(char *buf)
-{
-	if(buf==0)	return;
-	char s[128];
-	buf[0]=0;
-	sprintf(s,"nx = %ld\tny = %ld\tnz = %ld\n",nx,ny,nz);	strcat(buf,s);
-
-	int i=0,j=0,k=0;
-	float b = Maximal(i,j,k);
-	sprintf(s,"Maximum is %g\t at coordinates x = %d\ty = %d\tz = %d\n", b,i,j,k);	strcat(buf,s);
-	b = Minimal(i,j,k);
-	sprintf(s,"Minimum is %g\t at coordinates x = %d\ty = %d\tz = %d\n", b,i,j,k);	strcat(buf,s);
-	float A=0,Wa=0,X=0,Y=0,Z=0,Wx=0,Wy=0,Wz=0;
-	Momentum('x',X,Wx);		Momentum('y',Y,Wy);
-	Momentum('z',Z,Wz);		Momentum(0,A,Wa);
-	sprintf(s,"Averages are:\n<a> = %g\t<x> = %g\t<y> = %g\t<z> = %g\n", A,X,Y,Z);	strcat(buf,s);
-	sprintf(s,"Widths (dispersions) are:\nWa = %g\tWx = %g\tWy = %g\tWz = %g\n\n",
-		Wa,Wx,Wy,Wz);	strcat(buf,s);
-}
-//-----------------------------------------------------------------------------
 float mglData::v(int i,int j,int k)
 {
 	bool not_ok = i<0 || i>=nx || j<0 || j>=ny || k<0 || k>=nz;
@@ -602,83 +573,6 @@ float mglData::Minimal(float &x,float &y,float &z)
 		z = km+(a[tm+i]-a[tm-i])/(a[tm+i]+a[tm-i]-2*a[tm])/2;
 	}
 	return m;
-}
-//-----------------------------------------------------------------------------
-float mglData::Momentum(char dir,float &x,float &w)
-{
-	float i0=0,i1=0,i2=0,d;
-	register long i;
-	switch(dir)
-	{
-		case 'x':
-			for(i=0;i<nx*ny*nz;i++)
-			{
-				d = i%nx;		i0+= a[i];
-				i1+= a[i]*d;	i2+= a[i]*d*d;
-			}
-		case 'y':
-			for(i=0;i<nx*ny*nz;i++)
-			{
-				d = (i/nx)%ny;	i0+= a[i];
-				i1+= a[i]*d;	i2+= a[i]*d*d;
-			}
-			break;
-		case 'z':
-			for(i=0;i<nx*ny*nz;i++)
-			{
-				d = i/(nx*ny);	i0+= a[i];
-				i1+= a[i]*d;	i2+= a[i]*d*d;
-			}
-			break;
-		default:	// "self-dispersion"
-			i0 = nx*ny*nz;
-			for(i=0;i<nx*ny*nz;i++)
-			{
-				i1+= a[i];	i2+= a[i]*a[i];
-			}
-	}
-	if(i0==0)	return 0;
-	x = i1/i0;	w = i2>x*x*i0 ? sqrt(i2/i0 - x*x) : 0;
-	return i0;
-}
-//-----------------------------------------------------------------------------
-float mglData::Momentum(char dir,float &x,float &w,float &s,float &k)
-{
-	float i0=0,i1=0,i2=0,d,t;
-	register long i;
-	i0 = Momentum(dir,x,w);
-	if(i0==0 || w==0)	return 0;
-	switch(dir)
-	{
-		case 'x':
-			for(i=0;i<nx*ny*nz;i++)
-			{
-				d = (i%nx - x)/w;		t = d*d;
-				i1+= a[i]*t*d;	i2+= a[i]*t*t;
-			}
-		case 'y':
-			for(i=0;i<nx*ny*nz;i++)
-			{
-				d = ((i/nx)%ny - x)/w;	t = d*d;
-				i1+= a[i]*t*d;	i2+= a[i]*t*t;
-			}
-			break;
-		case 'z':
-			for(i=0;i<nx*ny*nz;i++)
-			{
-				d = (i/(nx*ny) - x)/w;	t = d*d;
-				i1+= a[i]*t*d;	i2+= a[i]*t*t;
-			}
-			break;
-		default:	// "self-dispersion"
-			for(i=0;i<nx*ny*nz;i++)
-			{
-				d = (a[i] - x)/w;		t = d*d;
-				i1+= t*d;	i2+= t*t;
-			}
-	}
-	s = i1/i0;	k = i2/(i0*3);
-	return i0;
 }
 //-----------------------------------------------------------------------------
 void mglData::Modify(const char *eq,int dim)

@@ -34,12 +34,11 @@ void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const ch
 
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)
 	{
-		u = i/(n-1.);	v = j/(n-1.);	i0 = i+n*j;
+		u = i/(n-1.);	v = j/(n-1.);	i0 = i+n*j;		cc[4*i0+3] = AlphaDef;
 		pp[3*i0+0] = p1.x+u*(p2.x-p1.x)+v*(p3.x-p1.x)+u*v*(p4.x+p1.x-p2.x-p3.x);
 		pp[3*i0+1] = p1.y+u*(p2.y-p1.y)+v*(p3.y-p1.y)+u*v*(p4.y+p1.y-p2.y-p3.y);
 		pp[3*i0+2] = p1.z+u*(p2.z-p1.z)+v*(p3.z-p1.z)+u*v*(p4.z+p1.z-p2.z-p3.z);
-		tt[i] = ScalePoint(pp[3*i+0],pp[3*i+1],pp[3*i+2]);
-		cc[4*i0+3] = 1;
+		tt[i] = ScalePoint(pp[3*i0+0],pp[3*i0+1],pp[3*i0+2]);
 		if(all)
 		{
 			cc[4*i0+0] = c1.r+u*(c2.r-c1.r)+v*(c3.r-c1.r)+u*v*(c4.r+c1.r-c2.r-c3.r);
@@ -50,6 +49,8 @@ void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const ch
 		{	cc[4*i0] = c1.r;	cc[4*i0+1] = c1.g;	cc[4*i0+2] = c1.b;	}
 	}
 	surf_plot(n,n,pp,cc,0);
+	if(stl && strchr(stl,'#'))
+	{	SelectPen("k-");	memset(cc,0,4*n*n*sizeof(float));	mesh_plot(n,n,pp,cc,0,-3);	}
 	delete []pp;	delete []tt;	delete []cc;
 }
 //-----------------------------------------------------------------------------

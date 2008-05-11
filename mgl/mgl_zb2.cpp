@@ -104,7 +104,8 @@ void mglGraphAB::mesh_plot(long n,long m,float *pp,float *cc,bool *tt, int how)
 	if(dx<1)	dx=1;
 	if(dy<1)	dy=1;
 	if(!pp || n<2 || m<2)	return;
-	PostScale(pp,n*m);
+	if(how<0)	how = -how;
+	else		PostScale(pp,n*m);
 	if(how&2) for(i=0;i<n-1;i++)	for(j=0;j<m;j+=dy)
 	{
 		i0 = i+n*j;		p = pp+3*i0;	c = cc+3*i0;

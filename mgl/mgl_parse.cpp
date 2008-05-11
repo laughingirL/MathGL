@@ -47,8 +47,8 @@ int mgl_cmd_cmp(const void *a, const void *b)
 int mglParse::Exec(mglGraph *gr, const char *com, long n, mglArg *a)
 {
 	char ch = com[0];
-	int k[9], i;
-	for(i=0;i<9;i++)	k[i] = i<n ? a[i].type + 1 : 0;
+	int k[10], i;
+	for(i=0;i<10;i++)	k[i] = i<n ? a[i].type + 1 : 0;
 	mglCommand tst, *rts;
 	for(i=0;Cmd[i].name[0];i++);	// determine the number of symbols
 	tst.name = com;
@@ -84,19 +84,11 @@ mglParse::mglParse(bool setsize)
 {
 	DataList=0;		Cmd = mgls_base_cmd;
 	AllowSetSize=setsize;
-	Once = true;	Skip = false;
+	Once = true;	Skip = false;	out = 0;
 	parlen=320;		Stop=false;		if_pos = 0;
 	for(long i=0;i<10;i++)	{	par[i] = 0;	for_stack[i]=0;	opt[i]=false;	}
-}
-//-----------------------------------------------------------------------------
-bool mglParse::AddParam(int n, const char *str, bool isstr)
-{
-	if(n<0 || n>9 || strchr(str,'$'))	return false;
-	if(!isstr)	parlen += strlen(str);
-	if(par[n])	delete []par[n];
-	par[n] = new char[strlen(str)+1];
-	strcpy(par[n],str);
-	return true;
+	opt[10] = false;
+	op1 = new char[2048];	op2 = new char[2048];
 }
 //-----------------------------------------------------------------------------
 mglParse::~mglParse()
@@ -107,6 +99,17 @@ mglParse::~mglParse()
 		delete DataList;
 	}
 	for(long i=0;i<10;i++)	if(par[i])	delete [] par[i];
+	delete []op1;	delete []op2;
+}
+//-----------------------------------------------------------------------------
+bool mglParse::AddParam(int n, const char *str, bool isstr)
+{
+	if(n<0 || n>9 || strchr(str,'$'))	return false;
+	if(!isstr)	parlen += strlen(str);
+	if(par[n])	delete []par[n];
+	par[n] = new char[strlen(str)+1];
+	strcpy(par[n],str);
+	return true;
 }
 //-----------------------------------------------------------------------------
 mglVar *mglParse::FindVar(const char *name)
@@ -162,15 +165,15 @@ bool mgls_suffix(const char *p, mglData *d, float *v)
 	else if(!strcmp(p,"max"))	{	ok = true;	*v=d->Maximal();	}
 	else if(!strcmp(p,"min"))	{	ok = true;	*v=d->Minimal();	}
 	else if(!strcmp(p,"sum"))	{	ok = true;	*v=d->Momentum('x',x,y);	}
-	else if(!strcmp(p,"mx"))	{	ok = true;	d->Maximal(x,y,z);	*v=x/d->nx;	}
-	else if(!strcmp(p,"my"))	{	ok = true;	d->Maximal(x,y,z);	*v=y/d->ny;	}
-	else if(!strcmp(p,"mz"))	{	ok = true;	d->Maximal(x,y,z);	*v=z/d->nz;	}
-	else if(!strcmp(p,"ax"))	{	ok = true;	d->Momentum('x',x,y);*v=x/d->nx;	}
-	else if(!strcmp(p,"ay"))	{	ok = true;	d->Momentum('y',x,y);*v=x/d->ny;	}
-	else if(!strcmp(p,"az"))	{	ok = true;	d->Momentum('z',x,y);*v=x/d->nz;	}
-	else if(!strcmp(p,"wx"))	{	ok = true;	d->Momentum('x',x,y);*v=y/d->nx;	}
-	else if(!strcmp(p,"wy"))	{	ok = true;	d->Momentum('y',x,y);*v=y/d->ny;	}
-	else if(!strcmp(p,"wz"))	{	ok = true;	d->Momentum('z',x,y);*v=y/d->nz;	}
+	else if(!strcmp(p,"mx"))	{	ok = true;	d->Maximal(x,y,z);		*v=x/d->nx;	}
+	else if(!strcmp(p,"my"))	{	ok = true;	d->Maximal(x,y,z);		*v=y/d->ny;	}
+	else if(!strcmp(p,"mz"))	{	ok = true;	d->Maximal(x,y,z);		*v=z/d->nz;	}
+	else if(!strcmp(p,"ax"))	{	ok = true;	d->Momentum('x',x,y);	*v=x/d->nx;	}
+	else if(!strcmp(p,"ay"))	{	ok = true;	d->Momentum('y',x,y);	*v=x/d->ny;	}
+	else if(!strcmp(p,"az"))	{	ok = true;	d->Momentum('z',x,y);	*v=x/d->nz;	}
+	else if(!strcmp(p,"wx"))	{	ok = true;	d->Momentum('x',x,y);	*v=y/d->nx;	}
+	else if(!strcmp(p,"wy"))	{	ok = true;	d->Momentum('y',x,y);	*v=y/d->ny;	}
+	else if(!strcmp(p,"wz"))	{	ok = true;	d->Momentum('z',x,y);	*v=y/d->nz;	}
 	else if(!strcmp(p,"sx"))	{	ok = true;	d->Momentum('x',x,y,z,k);	*v=z/d->nx;	}
 	else if(!strcmp(p,"sy"))	{	ok = true;	d->Momentum('y',x,y,z,k);	*v=z/d->ny;	}
 	else if(!strcmp(p,"sz"))	{	ok = true;	d->Momentum('z',x,y,z,k);	*v=z/d->nz;	}
@@ -266,7 +269,7 @@ int mglParse::PreExec(mglGraph *gr, long k, char **arg, mglArg *a)
 {
 	long n=0;
 	mglVar *v;
-	if(!strncmp("read",arg[0],4) || !strcmp("new",arg[0]) || !strcmp("copy",arg[0]) || !strcmp("var",arg[0]) || !strcmp("hist",arg[0]) || !strcmp("max",arg[0]) || !strcmp("min",arg[0]) || !strcmp("sum",arg[0]) || !strcmp("resize",arg[0]) || !strcmp("subdata",arg[0]))
+	if(!strncmp("read",arg[0],4) || !strcmp("new",arg[0]) || !strcmp("copy",arg[0]) || !strcmp("var",arg[0]) || !strcmp("hist",arg[0]) || !strcmp("max",arg[0]) || !strcmp("min",arg[0]) || !strcmp("sum",arg[0]) || !strcmp("resize",arg[0]) || !strcmp("subdata",arg[0]) || !strcmp("momentum",arg[0]) || !strcmp("fit",arg[0]))
 	{
 		if(k<3 || check_for_name(arg[1]))	return 2;
 		v = AddVar(arg[1]);
@@ -373,10 +376,10 @@ int mglParse::Parse(mglGraph *gr, const char *string, long pos)
 	}
 	if(!memcmp(str,"for",3) && (str[3]==' ' || str[3]=='\t'))
 	{
-		while(*str && isspace(*str))	str++;
+		t = str+4;
+		while(*t && isspace(*t))	t++;
 		// if command have format 'for $N ...' then change it to 'for N ...'
-		if(*str=='$' && str[1]>='0' && str[1]<='9')
-			*str = ' ';
+		if(*t=='$' && t[1]>='0' && t[1]<='9')	*t = ' ';
 	}	
 	// parse arguments (parameters $1, ..., $9)
 	if(parlen>0)
@@ -395,7 +398,6 @@ int mglParse::Parse(mglGraph *gr, const char *string, long pos)
 
 	strtrim_mgl(str);
 	if(!strcmp(str,"stop"))	{	Stop = true;	delete []s;	return 0;	}
-
 	long k=0,n;
 	while(k<1024)	// parse string to substrings (by spaces)
 	{
@@ -417,8 +419,6 @@ int mglParse::Parse(mglGraph *gr, const char *string, long pos)
 		// fill arguments by its values
 		mglArg *a = new mglArg[k];
 		FillArg(k, arg, a);
-		if(for_addr)
-		{	fval[for_addr-1].nz = pos;	for_addr = 0;	}
 		// execute first special (program-flow-control) commands
 		n = FlowExec(gr, arg[0],k-1,a);
 		if(n)	{	delete []s;	delete []a;	return n-1;	}
@@ -447,14 +447,14 @@ int mglParse::Parse(mglGraph *gr, const char *string, long pos)
 					int m = int(step>0 ? (a[2].v-a[1].v)/step : 0);
 					if(m>0)
 					{
-						n=0;	fval[r].Create(m);
+						n=0;	fval[r].Create(m+1);
 						fval[r].Fill(a[1].v, a[2].v);
 					}
 				}
 				if(n==0)
 				{
 					for(int i=9;i>0;i--)	for_stack[i] = for_stack[i-1];
-					for_addr = for_stack[0] = r+1;
+					for_stack[0] = r+1;		fval[r].nz = pos;
 					char buf[32];			sprintf(buf,"%g",fval[r].a[0]);
 					AddParam(r, buf,true);	fval[r].ny = 1;
 				}
@@ -472,8 +472,7 @@ int mglParse::Parse(mglGraph *gr, const char *string, long pos)
 	while(v)	// remove temporary data arrays
 	{
 		u = v->next;
-		if(v->temp)
-		{	if(DataList==v)	DataList = v->next;		delete v;	}
+		if(v->temp)	{	if(DataList==v)	DataList = v->next;		delete v;	}
 		v = u;
 	}
 	// restore plot settings if it was changed
@@ -554,7 +553,7 @@ int mglParse::FlowExec(mglGraph *gr, const char *com, long m, mglArg *a)
 		{
 			if(fval[r].ny<fval[r].nx)
 			{
-				char buf[32];			sprintf(buf,"%g",fval[r].a[0]);
+				char buf[32];			sprintf(buf,"%g",fval[r].a[fval[r].ny]);
 				AddParam(r, buf,true);	fval[r].ny += 1;
 				n = -fval[r].nz-1;
 			}
@@ -580,13 +579,14 @@ void mglParse::Execute(mglGraph *gr, FILE *fp, bool print)
 		line++;
 		if(gr->Message) gr->Message[0] = 0;
 		r = Parse(gr,str,ftell(fp));
-		if(r<0)	{	fseek(fp,1-r,0);	continue;	}
-		if(printf)
+		if(r<0)	{	fseek(fp,-r-1,SEEK_SET);	continue;	}
+
+		if(print)
 		{
 			if(gr->Message && gr->Message[0])	printf("%s\n",gr->Message);
-			if(r==1)	printf("Wrong argument(s) in line %d (%s)\n", line, str);
-			if(r==2)	printf("Wrong command in line %d (%s)\n", line, str);
-			if(r==3)	printf("String too long line %d (%s)\n", line, str);
+			if(r==1)	printf("Wrong argument(s) in line %d -- %s\n", line, str);
+			if(r==2)	printf("Wrong command in line %d -- %s\n", line, str);
+			if(r==3)	printf("String too long line %d -- %s\n", line, str);
 		}
 	}
 }
@@ -597,7 +597,7 @@ void mglParse::Execute(mglGraph *gr, int n, const char **text, void (*error)(int
 	long i, r;
 	for(i=0;i<n;i++)
 	{
-		r = Parse(gr,text[i],n);
+		r = Parse(gr,text[i],i+1);
 		if(r<0)	{	i = 1-r;	continue;	}
 		if(error)
 		{
@@ -609,6 +609,7 @@ void mglParse::Execute(mglGraph *gr, int n, const char **text, void (*error)(int
 //-----------------------------------------------------------------------------
 int mglParse::Export(char cpp_out[1024], mglGraph *gr, const char *str)
 {
+	*op1 = *op2 = 0;
 	out = cpp_out;
 	int res = Parse(gr, str);
 	out = 0;
@@ -617,19 +618,75 @@ int mglParse::Export(char cpp_out[1024], mglGraph *gr, const char *str)
 //-----------------------------------------------------------------------------
 void mglParse::ProcOpt(mglGraph *gr, char *str)
 {
+	char buf[256]="";
 	if(str==0)
 	{
-		if(opt[0])	{	gr->Min.x = val[0];	gr->Max.x = val[1];	gr->RecalcBorder();	}
-		if(opt[1])	{	gr->Min.y = val[2];	gr->Max.y = val[3];	gr->RecalcBorder();	}
-		if(opt[2])	{	gr->Min.z = val[4];	gr->Max.z = val[5];	gr->RecalcBorder();	}
-		if(opt[3])	{	gr->Cmin = val[6];	gr->Cmax = val[7];	}
-		if(opt[4])	gr->Ambient(val[8]);
-		if(opt[5])	gr->Cut = val[10]!=0;
-		if(opt[6])	gr->AlphaDef = val[12];
-		if(opt[7])	gr->MeshNum  = int(val[14]);
-		if(opt[8])	gr->FontSize = val[16];
-		if(opt[9])	gr->MarkSize = val[17];
-		if(opt[10])	gr->AddLegend(leg, gr->last_style);
+		if(opt[0])
+		{
+			gr->Min.x = val[0];	gr->Max.x = val[1];	gr->RecalcBorder();
+			if(out)	sprintf(buf,"\tgr->Min.x = tx1;\tgr->Max.x = tx2;}");
+			strcat(op2,buf);
+		}
+		if(opt[1])
+		{
+			gr->Min.y = val[2];	gr->Max.y = val[3];	gr->RecalcBorder();
+			if(out)	sprintf(buf,"\tgr->Min.y = ty1;\tgr->Max.y = ty2;}");
+			strcat(op2,buf);
+		}
+		if(opt[2])
+		{
+			gr->Min.z = val[4];	gr->Max.z = val[5];	gr->RecalcBorder();
+			if(out)	sprintf(buf,"\tgr->Min.z = tz1;\tgr->Max.z = tz2;}");
+			strcat(op2,buf);
+		}
+		if(opt[3])
+		{
+			gr->Cmin = val[6];	gr->Cmax = val[7];
+			if(out)	sprintf(buf,"\tgr->Cmin = tc1;\tgr->Cmax = tc2;}");
+			strcat(op2,buf);
+		}
+		if(opt[4])
+		{
+			gr->Ambient(val[8]);
+			if(out)	sprintf(buf,"\tgr->Ambient(tam);}");
+			strcat(op2,buf);
+		}
+		if(opt[5])
+		{
+			gr->Cut = val[10]!=0;
+			if(out)	sprintf(buf,"\tgr->Cut = tct;}");
+			strcat(op2,buf);
+		}
+		if(opt[6])
+		{
+			gr->AlphaDef = val[12];
+			if(out)	sprintf(buf,"\tgr->AlphaDef = tad;}");
+			strcat(op2,buf);
+		}
+		if(opt[7])
+		{
+			gr->MeshNum  = int(val[14]);
+			if(out)	sprintf(buf,"\tgr->MeshNum = tmn;}");
+			strcat(op2,buf);
+		}
+		if(opt[8])
+		{
+			gr->FontSize = val[16];
+			if(out)	sprintf(buf,"\tgr->FontSize = tfs;}");
+			strcat(op2,buf);
+		}
+		if(opt[9])
+		{
+			gr->MarkSize = val[17];
+			if(out)	sprintf(buf,"\tgr->MarkSize = tms;}");
+			strcat(op2,buf);
+		}
+		if(opt[10])
+		{
+			gr->AddLegend(leg, gr->last_style);
+			if(out)	sprintf(buf,"\tgr->AddLegend(\"%s\", \"%s\");", leg, gr->last_style);
+			strcat(op2,buf);
+		}
 		for(long i=0;i<16;i++)	opt[i]=false;
 	}
 	else
@@ -655,31 +712,77 @@ void mglParse::ProcOpt(mglGraph *gr, char *str)
 				n=mglFindArg(s);	if(n<1)	return;
 				s[n]=0;		b=s;	s=s+n+1;	strtrim_mgl(b);
 				if(a[0]=='x')
-				{	opt[0]=true;	gr->Min.x = atof(b);	gr->Max.x = atof(s);}
+				{
+					opt[0]=true;	gr->Min.x = atof(b);	gr->Max.x = atof(s);
+					if(out)	sprintf(buf,"{float tx1=gr->Min.x, tx2=gr->Max.x;\tgr->Min.x=%g;\tgr->Max.x=%g;", atof(b), atof(s));
+					strcat(op1,buf);
+				}
 				else if(a[0]=='y')
-				{	opt[1]=true;	gr->Min.y = atof(b);	gr->Max.y = atof(s);}
+				{
+					opt[1]=true;	gr->Min.y = atof(b);	gr->Max.y = atof(s);
+					if(out)	sprintf(buf,"{float ty1=gr->Min.y, ty2=gr->Max.y;\tgr->Min.y=%g;\tgr->Max.y=%g;", atof(b), atof(s));
+					strcat(op1,buf);
+				}
 				else if(a[0]=='z')
-				{	opt[2]=true;	gr->Min.z = atof(b);	gr->Max.z = atof(s);}
+				{
+					opt[2]=true;	gr->Min.z = atof(b);	gr->Max.z = atof(s);
+					if(out)	sprintf(buf,"{float tz1=gr->Min.z, tz2=gr->Max.z;\tgr->Min.z=%g;\tgr->Max.z=%g;", atof(b), atof(s));
+					strcat(op1,buf);
+				}
 				else if(a[0]=='c')
-				{	opt[3]=true;	gr->Cmin = atof(b);		gr->Cmax = atof(s);	}
-				//gr->RecalcBorder();
+				{
+					opt[3]=true;	gr->Cmin = atof(b);		gr->Cmax = atof(s);
+					if(out)	sprintf(buf,"{float tc1=gr->Cmin, tc2=gr->Cmax;\tgr->Cmin=%g;\tgr->Cmax=%g;", atof(b), atof(s));
+					strcat(op1,buf);
+				}
 			}
 			else if(!strcmp(a,"cut"))
-			{	opt[5]=true;	gr->Cut = (ff!=0 || !strncmp(s,"on",2));	}
+			{
+				opt[5]=true;	gr->Cut = (ff!=0 || !strncmp(s,"on",2));
+				if(out)	sprintf(buf,"{bool tct=gr->Cut;\tgr->Cut=%s;", gr->Cut?"true":"false");
+				strcat(op1,buf);
+			}
 			else if(!strcmp(a,"meshnum"))
-			{	opt[7]=true;	gr->MeshNum = int(ff);	}
+			{
+				opt[7]=true;	gr->MeshNum = int(ff);
+				if(out)	sprintf(buf,"{int tmn=gr->MeshNum;\tgr->MeshNum=%d;", gr->MeshNum);
+				strcat(op1,buf);
+			}
 			else if(!strcmp(a,"alphadef"))
-			{	opt[6]=true;	gr->AlphaDef = ff;	}
+			{
+				opt[6]=true;	gr->AlphaDef = ff;
+				if(out)	sprintf(buf,"{float tad=gr->AlphaDef;\tgr->AlphaDef=%g;", ff);
+				strcat(op1,buf);
+			}
 			else if(!strcmp(a,"alpha"))
-			{	opt[6]=true;	gr->AlphaDef = ff;	}
+			{
+				opt[6]=true;	gr->AlphaDef = ff;
+				if(out)	sprintf(buf,"{float tad=gr->AlphaDef;\tgr->AlphaDef=%g;", ff);
+				strcat(op1,buf);
+			}
 			else if(!strcmp(a,"fontsize"))
-			{	opt[8]=true;	gr->FontSize = ff>0 ? ff : -ff*gr->FontSize;	}
+			{
+				opt[8]=true;	gr->FontSize = ff>0 ? ff : -ff*gr->FontSize;
+				if(out)	sprintf(buf,"{float tfs=gr->FontSize;\tgr->FontSize=%g;", gr->FontSize);
+				strcat(op1,buf);
+			}
 			else if(!strcmp(a,"ambient"))
-			{	opt[4]=true;	gr->Ambient(ff);	}
+			{
+				opt[4]=true;	gr->Ambient(ff);
+				if(out)	sprintf(buf,"{float tam=gr->AmbBr;\tgr->Ambient(%g);", ff);
+				strcat(op1,buf);
+			}
 			else if(!strcmp(a,"marksize"))
-			{	opt[9]=true;	gr->MarkSize = ff/50;	}
+			{
+				opt[9]=true;	gr->MarkSize = ff/50;
+				if(out)	sprintf(buf,"{float tad=gr->MarkSize;\tgr->MarkSize=%g/50;", ff);
+				strcat(op1,buf);
+			}
 			else if(!strcmp(a,"legend"))
-			{	opt[10]=true;	strcpy(leg,s);	}
+			{
+				b = strchr(s+1,'\'');	if(b)	*b=0;
+				opt[10]=true;	strcpy(leg,s+1);
+			}
 		}
 	}
 }

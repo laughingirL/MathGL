@@ -101,6 +101,7 @@ void mglGraph::Grid(const char *dir, const char *pen)
 	if(strchr(dir,'x') && dx!=0)
 	{
 		x0 = GetOrgX();	y0 = GetOrgY();	z0 = GetOrgZ();
+		x0 = isnan(TOrg.x) ? x0 : TOrg.x;
 		x0 = x0 - ddx*floor((x0-Min.x)/ddx);
 		for(t=x0;t<=Max.x;t+=ddx)
 		{
@@ -147,6 +148,7 @@ void mglGraph::Grid(const char *dir, const char *pen)
 	if(strchr(dir,'y') && dy!=0)
 	{
 		x0 = GetOrgX();	y0 = GetOrgY();	z0 = GetOrgZ();
+		y0 = isnan(TOrg.y) ? y0 : TOrg.y;
 		y0 = y0 - ddy*floor((y0-Min.y)/ddy);
 		for(t=y0;t<=Max.y;t+=ddy)
 		{
@@ -192,6 +194,7 @@ void mglGraph::Grid(const char *dir, const char *pen)
 	if(strchr(dir,'z') && dz!=0)
 	{
 		x0 = GetOrgX();	y0 = GetOrgY();	z0 = GetOrgZ();
+		z0 = isnan(TOrg.z) ? z0 : TOrg.z;
 		z0 = z0 - ddz*floor((z0-Min.z)/ddz);
 		for(t=z0;t<=Max.z;t+=ddz)
 		{
@@ -359,6 +362,7 @@ void mglGraph::AxisX(bool text)
 		if(!TuneTicks)	kind = 0;
 
 		NSx = NSx<0 ? 0 : NSx;
+		x0 = isnan(TOrg.x) ? x0 : TOrg.x;
 		x0 = x0 - ddx*floor((x0-Min.x)/ddx+1e-3);
 		for(x=x0;x<=Max.x+(Max.x-Min.x)*1e-6;x+=ddx)
 		{
@@ -461,6 +465,7 @@ void mglGraph::AxisY(bool text)
 		if(!TuneTicks)	kind = 0;
 
 		NSy = NSy<0 ? 0 : NSy;
+		y0 = isnan(TOrg.y) ? y0 : TOrg.y;
 		y0 = y0 - ddy*floor((y0-Min.y)/ddy+1e-3);
 		for(y=y0;y<=Max.y+(Max.y-Min.y)*1e-6;y+=ddy)
 		{
@@ -563,6 +568,7 @@ void mglGraph::AxisZ(bool text)
 		if(!TuneTicks)	kind = 0;
 
 		NSz = NSz<0 ? 0 : NSz;
+		z0 = isnan(TOrg.z) ? z0 : TOrg.z;
 		z0 = z0 - ddz*floor((z0-Min.z)/ddz+1e-3);
 		for(z=z0;z<=Max.z+(Max.z-Min.z)*1e-6;z+=ddz)
 		{
@@ -658,6 +664,7 @@ void mglGraph::TickBox()
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
 	if(ddx>0)	// рисуем метки по х
 	{
+		x0 = isnan(TOrg.x) ? x0 : TOrg.x;
 		x0 = x0 - ddx*floor((x0-Min.x)/ddx);
 		for(x=x0;x<Max.x;x+=ddx)
 		{
@@ -699,8 +706,10 @@ void mglGraph::TickBox()
 			DrawTick(pp+18,false);	DrawTick(pp+27,false);
 		}
 	}
+	x0 = GetOrgX();
 	if(ddy>0)	// рисуем метки по y
 	{
+		y0 = isnan(TOrg.y) ? y0 : TOrg.y;
 		y0 = y0 - ddy*floor((y0-Min.y)/ddy);
 		for(y=y0;y<Max.y;y+=ddy)
 		{
@@ -742,8 +751,10 @@ void mglGraph::TickBox()
 			DrawTick(pp+18,false);	DrawTick(pp+27,false);
 		}
 	}
+	y0 = GetOrgY();
 	if(ddz>0)	// рисуем метки
 	{
+		z0 = isnan(TOrg.z) ? z0 : TOrg.z;
 		z0 = z0 - ddz*floor((z0-Min.z)/ddz);
 		for(z=z0;z<Max.z;z+=ddz)
 		{
@@ -946,7 +957,7 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
 void mglGraph::Ternary(bool t)
 {
 	static mglPoint x1(-1,-1,-1),x2(1,1,1),o(0,0,0);
-	TernAxis = t;	Cut = false;
+	TernAxis = t;	Cut = false;	TOrg = mglPoint(NAN,NAN,NAN);
 	if(t)
 	{
 		x1 = Min;	x2 = Max;	o = Org;

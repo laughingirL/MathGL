@@ -128,7 +128,7 @@ void mglGraph::Axis(mglPoint m1, mglPoint m2, mglPoint org)
 	if(m1.y>m2.y)	{	Min.y=m2.y;	Max.y = m1.y;	}
 	if(m1.z<m2.z)	{	Min.z=m1.z;	Max.z = m2.z;	}
 	if(m1.z>m2.z)	{	Min.z=m2.z;	Max.z = m1.z;	}
-	Org = org;	Cmin = Min.z;	Cmax = Max.z;
+	Org = org;	Cmin = Min.z;	Cmax = Max.z;	TOrg = mglPoint(NAN,NAN,NAN);
 	if(AutoOrg)
 	{
 		if(Org.x<Min.x && !isnan(Org.x))	Org.x = Min.x;
@@ -191,6 +191,7 @@ bool mglGraph::ScalePoint(float &x,float &y,float &z)
 	if(fx)	x1 = fx->Calc(x,y,z);	else	x1=x;
 	if(fy)	y1 = fy->Calc(x,y,z);	else	y1=y;
 	if(fz)	z1 = fz->Calc(x,y,z);	else	z1=z;
+	if(isnan(x1) || isnan(y1) || isnan(z1))	return false;
 
 	x = (2*x1 - FMin.x - FMax.x)/(FMax.x - FMin.x);
 	y = (2*y1 - FMin.y - FMax.y)/(FMax.y - FMin.y);
@@ -463,6 +464,14 @@ float GetY(mglData &y, int i, int j, int k)
 	return 0;
 }
 //-----------------------------------------------------------------------------
+float GetZ(mglData &z, int i, int j, int k)
+{
+	k = k<z.nz ? k : 0;
+	if(z.ny>j && z.nx>i && z.ny>1)	return z.v(i,j,k);
+	else if(z.nx>i)	return z.v(i);
+	return 0;
+}
+//-----------------------------------------------------------------------------
 void mglColor::Set(mglColor c, float br)
 {
 	if(br<0)	br=0;	if(br>2.f)	br=2.f;
@@ -496,7 +505,7 @@ void mglGraph::DefaultPlotParam()
 	Cut = true;				OnCoord=false;
 	dx = dy = dz = -5;		NSx = NSy = NSz = 0;
 	fx = fy = fz = fc = 0;	Cmin = -1;	Cmax = 1;
-	BarWidth = 0.7;
+	BarWidth = 0.7;			fit_res[0] = 0;
 	MarkSize = 0.02;		ArrowSize = 0.03;
 	AlphaDef = 0.5;			Transparent = true;
 	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1), mglPoint(0,0,0));
@@ -515,7 +524,7 @@ void mglGraph::DefaultPlotParam()
 	ScalePuts = true;		TickStr = 0;
 	xtt=ytt=ztt=ctt=0;		FactorPos = 1.15;
 	AutoOrg = true;			CurFrameId = 0;
-	CirclePnts = 40;
+	CirclePnts = 40;		FitPnts = 100;
 	AutoPlotFactor = true;	PlotFactor = AutoPlotFactor ? 1.55f :2.f;
 
 	memset(Pal,0,100*sizeof(mglColor));
@@ -745,6 +754,7 @@ void mglGraph::Ambient(float bright)	{	AmbBr = bright;	}
 //-----------------------------------------------------------------------------
 mglGraph::mglGraph()
 {
+	fit_res = new char[1024];
 	fnt = new mglFont;
 	CloudFactor=10;
 	DefaultPlotParam();
@@ -753,6 +763,7 @@ mglGraph::mglGraph()
 //-----------------------------------------------------------------------------
 mglGraph::~mglGraph()
 {
+	delete []fit_res;
 	ClearEq();
 	ClearLegend();
 	FreeSaveFunc();
@@ -895,4 +906,19 @@ void mglGraph::SetFontSizePT(float pt, int dpi)
 float mglGraph::GetOrgX()	{	return isnan(Org.x) ? Min.x : Org.x;	}
 float mglGraph::GetOrgY()	{	return isnan(Org.y) ? Min.y : Org.y;	}
 float mglGraph::GetOrgZ()	{	return isnan(Org.z) ? Min.z : Org.z;	}
+//-----------------------------------------------------------------------------
+void mglGraph::FaceX(float x0, float y0, float z0, float wy, float wz, const char *stl, float d1, float d2)
+{
+	Face(mglPoint(x0,y0,z0), mglPoint(x0,y0+wy,z0), mglPoint(x0,y0,z0+wz), mglPoint(x0,y0+wy+d1,z0+wz+d2), stl, 2);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::FaceY(float x0, float y0, float z0, float wx, float wz, const char *stl, float d1, float d2)
+{
+	Face(mglPoint(x0,y0,z0), mglPoint(x0+wx,y0,z0), mglPoint(x0,y0,z0+wz), mglPoint(x0+wx+d1,y0,z0+wz+d2), stl, 2);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::FaceZ(float x0, float y0, float z0, float wx, float wy, const char *stl, float d1, float d2)
+{
+	Face(mglPoint(x0,y0,z0), mglPoint(x0,y0+wy,z0), mglPoint(x0+wx,y0,z0), mglPoint(x0+wx+d1,y0+wy+d2,z0), stl, 2);
+}
 //-----------------------------------------------------------------------------

@@ -330,9 +330,9 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	fprintf(fp,"/rl {rlineto} def\n");
 	fprintf(fp,"/rm {rmoveto} def\n");
 	fprintf(fp,"/dr {stroke} def\n");
-	fprintf(fp,"/ss {%g} def\n",MarkSize*0.4*font_factor);
-	fprintf(fp,"/s2 {%g} def\n",MarkSize*0.8*font_factor);
-	fprintf(fp,"/sm {-%g} def\n",MarkSize*0.4*font_factor);
+	fprintf(fp,"/ss {%g} def\n",MarkSize*0.4*font_factor);// remove *font_factor); ???
+	fprintf(fp,"/s2 {%g} def\n",MarkSize*0.8*font_factor);// remove *font_factor); ???
+	fprintf(fp,"/sm {-%g} def\n",MarkSize*0.4*font_factor);//remove *font_factor); ???
 	fprintf(fp,"/m_c {ss 0.3 mul 0 360 arc} def\n");
 	fprintf(fp,"/d0 {[] 0 setdash} def\n");
 	fprintf(fp,"/sd {0 setdash} def\n");

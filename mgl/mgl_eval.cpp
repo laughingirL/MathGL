@@ -47,7 +47,7 @@ EQ_NUM=0,	// a variable substitution
 EQ_RND,		// random number
 EQ_A,		// numeric constant
 // двуместные функции
-EQ_LT,		// comparison x<y	!!! MUST BE FIRST 2-PLACE FUNCTION
+EQ_LT,		// comparison x<y			!!! MUST BE FIRST 2-PLACE FUNCTION
 EQ_GT,		// comparison x>y
 EQ_EQ,		// comparison x=y
 EQ_OR,		// comparison x|y
@@ -67,9 +67,9 @@ EQ_BESI,	// regular modified Bessel function of fractional order
 EQ_BESK,	// irregular modified Bessel function of fractional order
 EQ_ELE,		// elliptic integral E(\phi,k) = \int_0^\phi dt   \sqrt((1 - k^2 \sin^2(t)))
 EQ_ELF,		// elliptic integral F(\phi,k) = \int_0^\phi dt 1/\sqrt((1 - k^2 \sin^2(t)))
-EQ_LP,		// Legendre polynomial P_l(x), (|x|<=1, l>=0) !!! MUST BE LAST 2-PLACE FUNCTION
+EQ_LP,		// Legendre polynomial P_l(x), (|x|<=1, l>=0)
 // одноместные функции
-EQ_SIN,		// sine function \sin(x).
+EQ_SIN,		// sine function \sin(x).			!!! MUST BE FIRST 1-PLACE FUNCTION
 EQ_COS,		// cosine function \cos(x).
 EQ_TAN,		// tangent function \tan(x).
 EQ_ASIN,	// inverse sine function \sin(x).
@@ -108,9 +108,8 @@ EQ_W1,		// secondary real-valued branch of the Lambert W function, W_{-1}(x). Fu
 EQ_SINC,		// compute \sinc(x) = \sin(\pi x) / (\pi x) for any value of x.
 EQ_ZETA,		// Riemann zeta function \zeta(s) = \sum_{k=1}^\infty k^{-s}for arbitrary s, s \ne 1.
 EQ_ETA,		// eta function \eta(s) = (1-2^{1-s}) \zeta(s) for arbitrary s.
-			// !!! MUST BE LAST 1-PLACE FUNCTION
 // эллиптические функции
-EQ_SN,		// Jacobian elliptic function sn(u|m)
+EQ_SN,		// Jacobian elliptic function sn(u|m)	// !!! MUST BE FIRST NON 1-PLACE FUNCTION
 EQ_SC,		// Jacobian elliptic function sn(u|m)/cn(u|m)
 EQ_SD,		// Jacobian elliptic function sn(u|m)/dn(u|m)
 EQ_NS,		// Jacobian elliptic function 1/sn(u|m)
@@ -378,9 +377,7 @@ mglFormula::mglFormula(const char *string)
 		else if(!strcmp(name,"zeta")) Kod=EQ_ZETA;
 		else if(!strcmp(name,"eta")) Kod=EQ_ETA;
 		else if(!strcmp(name,"ei3")) Kod=EQ_EI3;
-//		else if(!strcmp(name,"a")) Kod=EQ_A;
-		else {	delete []str;	return;	}	// неизвестная функция
-		// и так далее
+		else {	delete []str;	return;	}	// unknown function
 		n=mglFindInText(Buf,",");
 		if(n>=0)
 		{
@@ -394,7 +391,7 @@ mglFormula::mglFormula(const char *string)
 	delete []str;
 }
 //-----------------------------------------------------------------------------
-// вычисление значения формулы
+// evaluate formula for 'x'='r', 'y'='n', 't'='z', 'u'='a' variables
 float mglFormula::Calc(float x,float y,float t,float u)
 {
 	Error=0;
@@ -405,7 +402,7 @@ float mglFormula::Calc(float x,float y,float t,float u)
 	return CalcIn();
 }
 //-----------------------------------------------------------------------------
-// вычисление значения формулы
+// evaluate formula for 'x'='r', 'y'='n', 't'='z', 'u'='a', 'v'='b', 'w'='c' variables
 float mglFormula::Calc(float x,float y,float t,float u,float v,float w)
 {
 	Error=0;
@@ -418,12 +415,20 @@ float mglFormula::Calc(float x,float y,float t,float u,float v,float w)
 	return CalcIn();
 }
 //-----------------------------------------------------------------------------
-// вычисление значения формулы
+// evaluate formula for arbitrary set of variables
 float mglFormula::Calc(float var['z'-'a'+1])
 {
 	Error=0;
 	for(long i=0;i<='z'-'a';i++)	a1[i] = var[i];
 	return CalcIn();
+}
+//-----------------------------------------------------------------------------
+// evaluate derivate of formula respect to 'diff' variable for arbitrary set of other variables
+float mglFormula::CalcD(float var['z'-'a'+1], char diff)
+{
+	Error=0;
+	for(long i=0;i<='z'-'a';i++)	a1[i] = var[i];
+	return CalcDIn(diff-'a');
 }
 //-----------------------------------------------------------------------------
 double cand(double a,double b)	{return a&&b?1:0;}
@@ -458,7 +463,7 @@ double atanh(double x)	{	return fabs(x)<1 ? log((1+x)/(1-x))/2 : NAN;	}
 //-----------------------------------------------------------------------------
 typedef double (*func_1)(double);
 typedef double (*func_2)(double, double);
-// вычисление значения вложенных выражений
+// evaluation of embedded (included) expressions
 float mglFormula::CalcIn()
 {
 	func_2 f2[20] = {clt,cgt,ceq,cor,cand,add,sub,mul,div,ipw,pow,fmod,llg
@@ -482,7 +487,7 @@ float mglFormula::CalcIn()
 			mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1
 #endif
 		};
-	if(Error)	return 0;
+//	if(Error)	return 0;
 	if(Kod==EQ_A)	return a1[(int)Res];
 	if(Kod==EQ_RND)	return mgl_rnd();
 	if(Kod==EQ_NUM) return Res;
@@ -490,20 +495,20 @@ float mglFormula::CalcIn()
 	double a = Left->CalcIn();
 	if(isnan(a))	return NAN;
 
-	if(Kod<=EQ_LP)
+	if(Kod<EQ_SIN)
 	{
 		double b = Right->CalcIn();
 		if(isnan(b))	return NAN;
-		if(Kod==EQ_POW && fabs(a)<=0)		{ Error=MGL_ERR_LOG; return NAN; }
+		if(Kod==EQ_POW && a<=0)		{ Error=MGL_ERR_LOG; return NAN; }
 		if(Kod==EQ_LOG && (a<=0 || b<=0))	{ Error=MGL_ERR_LOG; return NAN; }
 		return f2[Kod-EQ_LT](a,b);
 	}
-	else if(Kod<=EQ_ETA)
+	else if(Kod<EQ_SN)
 	{
 		if((Kod==EQ_ACOS || Kod==EQ_ASIN) && fabs(a)>1)	{ Error=MGL_ERR_ARC; return NAN; }
-		if((Kod==EQ_LG || Kod==EQ_LN) && fabs(a)<=0)	{ Error=MGL_ERR_LOG; return NAN; }
+		if((Kod==EQ_LG || Kod==EQ_LN) && a<=0)	{ Error=MGL_ERR_LOG; return NAN; }
 		if(Kod==EQ_SQRT && a<0) { Error=MGL_ERR_SQRT; return NAN; }
-		return f1[Kod-EQ_LP-1](a);
+		return f1[Kod-EQ_SIN](a);
 	}
 #ifndef NO_GSL
 	else if(Kod<=EQ_DC)
@@ -525,6 +530,129 @@ float mglFormula::CalcIn()
 		case EQ_NS:		return 1./sn;
 		case EQ_NC:		return 1./cn;
 		case EQ_ND:		return 1./dn;
+		}
+	}
+#endif
+	return Res;
+}
+//-----------------------------------------------------------------------------
+double mgp(double a,double b)	{return 1;}
+double mgm(double a,double b)	{return -1;}
+double mul1(double a,double b)	{return b;}
+double mul2(double a,double b)	{return a;}
+double div1(double a,double b)	{return b?1/b:NAN;}
+double div2(double a,double b)	{return b?-a/(b*b):NAN;}
+double ipw1(double a,double b)	{return int(b)*ipow_mgl(a,int(b-1));}
+double pow1(double a,double b)	{return b*pow(a,b-1);}
+double pow2(double a,double b)	{return log(a)*pow(a,b);}
+double llg1(double a,double b)	{return 1/(a*log(b));}
+double llg2(double a,double b)	{return -log(a)/(b*log(b)*log(b));}
+double cos_d(double a)	{return -sin(a);}
+double tan_d(double a)	{return 1./(cos(a)*cos(a));}
+double asin_d(double a)	{return 1./sqrt(1-a*a);}
+double acos_d(double a)	{return -1./sqrt(1-a*a);}
+double atan_d(double a)	{return 1./(1+a*a);}
+double tanh_d(double a)	{return 1./(cosh(a)*cosh(a));}
+double atanh_d(double a){return 1./(1-a*a);}
+double asinh_d(double a){return 1./sqrt(1+a*a);}
+double acosh_d(double a){return 1./sqrt(a*a-1);}
+double sqrt_d(double a)	{return 0.5/sqrt(a);}
+double log10_d(double a){return M_LN10/a;}
+double log_d(double a)	{return 1/a;}
+double erf_d(double a)	{return 2*exp(-a*a)/sqrt(M_PI);}
+double dilog_d(double a){return log(a)/(1-a);}
+double ei_d(double a)	{return exp(a)/a;}
+double si_d(double a)	{return a?sin(a)/a:1;}
+double ci_d(double a)	{return cos(a)/a;}
+double exp3_d(double a)	{return exp(-a*a*a);}
+double e1_d(double a)	{return exp(-a)/a;}
+double e2_d(double a)	{return -gsl_sf_expint_E1(a);}
+double sinc_d(double a)	{return a ? (cos(M_PI*a)/a-sin(M_PI*a)/(M_PI*a*a)) : 0;}
+#ifndef NO_GSL
+double gslJnuD(double a,double b)	{return 0.5*(gsl_sf_bessel_Jnu(a-1,b)-gsl_sf_bessel_Jnu(a+1,b));}
+double gslYnuD(double a,double b)	{return 0.5*(gsl_sf_bessel_Ynu(a-1,b)-gsl_sf_bessel_Ynu(a+1,b));}
+double gslKnuD(double a,double b)	{return -(a*gsl_sf_bessel_Knu(a,b)/b +gsl_sf_bessel_Knu(a-1,b));}
+double gslInuD(double a,double b)	{return -(a*gsl_sf_bessel_Inu(a,b)/b -gsl_sf_bessel_Inu(a-1,b));}
+double gslEllE1(double a,double b)	{return sqrt(1-sin(a)*sin(a)*b);}
+double gslEllE2(double a,double b)	{return (gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE) - gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE))/(2*b);}
+double gslEllF1(double a,double b)	{return 1./sqrt(1-sin(a)*sin(a)*b);}
+double gslEllF2(double a,double b)	{return (gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE) - gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE)*(1-b))/(2*b*(1-b)) - sin(2*a)/(sqrt(1-sin(a)*sin(a)*b)*2*(1-b));}
+double gslE_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2*a);}
+double gslK_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - (1-a)*gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2*a*(1-a));}
+double gslAi_d(double a)	{return gsl_sf_airy_Ai_deriv(a,GSL_PREC_SINGLE);}
+double gslBi_d(double a)	{return gsl_sf_airy_Bi_deriv(a,GSL_PREC_SINGLE);}
+double gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
+#endif
+//-----------------------------------------------------------------------------
+// evaluation of derivative of embedded (included) expressions
+float mglFormula::CalcDIn(int id)
+{
+	func_2 f21[20] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgp,mul1,div1,ipw1,pow1,mgp,llg1
+#ifndef NO_GSL
+			,mgz2,mgz2,mgz2,mgz2,gslEllE1,gslEllF2,mgz2
+#else
+			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
+#endif
+		};
+	func_2 f22[20] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgm,mul2,div2,mgz2,pow2,mgz2,llg2
+#ifndef NO_GSL
+			,gslJnuD,gslYnuD,gslInuD,gslKnuD,gslEllE2,gslEllF2,mgz2/*gslLegP*/
+#else
+			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
+#endif
+		};
+	func_1 f11[38] = {cos,cos_d,tan_d,asin_d,acos_d,atan_d,cosh,sinh,tanh_d,
+					asinh_d,acosh_d,atanh_d,sqrt_d,exp,log_d,log10_d,mgz1,mgz1,sgn
+#ifndef NO_GSL
+			,dilog_d,gslE_d,gslK_d,gslAi_d,gslBi_d,erf_d,exp3_d,ei_d,e1_d,e2_d,
+			si_d,ci_d,gamma_d,gsl_sf_psi_1,mgz1,mgz1,sinc_d,mgz1,mgz1
+#else
+			,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,
+			mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1
+#endif
+		};
+//	if(Error)	return 0;
+	if(Kod==EQ_A)	return id==(int)Res?1:0;
+	if(Kod==EQ_RND || Kod==EQ_NUM) return 0;
+
+	double a = Left->CalcIn(), d = Left->CalcDIn(id);
+	if(isnan(a))	return NAN;
+
+	if(Kod<EQ_SIN)
+	{
+		double b = Right->CalcIn();
+		if(isnan(b))	return NAN;
+		if(Kod==EQ_POW && a<=0)		{ Error=MGL_ERR_LOG; return NAN; }
+		if(Kod==EQ_LOG && (a<=0 || b<=0))	{ Error=MGL_ERR_LOG; return NAN; }
+		return f21[Kod-EQ_LT](a,b)*d + f22[Kod-EQ_LT](a,b)*Right->CalcDIn(id);
+	}
+	else if(Kod<EQ_SN)
+	{
+		if((Kod==EQ_ACOS || Kod==EQ_ASIN) && fabs(a)>1)	{ Error=MGL_ERR_ARC; return NAN; }
+		if((Kod==EQ_LG || Kod==EQ_LN) && a<=0)	{ Error=MGL_ERR_LOG; return NAN; }
+		if(Kod==EQ_SQRT && a<0) { Error=MGL_ERR_SQRT; return NAN; }
+		return f11[Kod-EQ_SIN](a)*d;
+	}
+#ifndef NO_GSL
+	else if(Kod<=EQ_DC)
+	{
+		double sn=0,cn=0,dn=0,b = Right->CalcIn();
+		if(isnan(b))	return NAN;
+		gsl_sf_elljac_e(a,b, &sn, &cn, &dn);
+		switch(Kod)	// At this moment parse only differentiation or argument NOT mu !!!
+		{
+		case EQ_SN:		return cn*dn*d;
+		case EQ_SC:		return dn*d/(cn*cn);
+		case EQ_SD:		return cn*d/(dn*dn);
+		case EQ_CN:		return -dn*sn*d;
+		case EQ_CS:		return dn*d/(sn*sn);
+		case EQ_CD:		return (b-1)*d*sn/(dn*dn);
+		case EQ_DN:		return -b*d*cn*sn;
+		case EQ_DS:		return -cn*d/(sn*sn);
+		case EQ_DC:		return (1-b)*sn*d/(cn*cn);
+		case EQ_NS:		return -cn*dn*d/(sn*sn);
+		case EQ_NC:		return dn*sn*d/(cn*cn);
+		case EQ_ND:		return b*cn*sn*d/(dn*dn);
 		}
 	}
 #endif
