@@ -1,4 +1,4 @@
-/* mgl2eps.cpp is part of Math Graphic Library
+/* mgl2cpp.cpp is part of Math Graphic Library
  * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -15,9 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include <stdio.h>
+#include <wchar.h>
 #include <string.h>
 #include "mgl/mgl_eps.h"
 #include "mgl/mgl_parse.h"
+void wcstrim_mgl(wchar_t *str);
 //-----------------------------------------------------------------------------
 int main(int narg, char **arg)
 {
@@ -36,30 +38,39 @@ int main(int narg, char **arg)
 	{
 		FILE *fp = fopen(arg[1],"rt"), *fo;
 		if(fp==0)	{	printf("Couldn't open file %s\n",arg[1]);	return 1;	}
-		char str[8192], out[1024];
+		wchar_t str[8192], out[1024];
+		char fname[256];
 		for(long i=2;i<narg;i++)	// add arguments for the script
 			if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
 				p.AddParam(arg[i][1]-'0',arg[i]+2);
-		if(narg>2 && arg[2][0]!='-')	strcpy(str,arg[2]);
+		if(narg>2 && arg[2][0]!='-')	strcpy(fname,arg[2]);
 		else
 		{
-			strcpy(str,arg[1]);	strcat(str,".cpp");
-			printf("Write output to %s\n",str);
+			strcpy(fname,arg[1]);	strcat(fname,".cpp");
+			wprintf(L"Write output to %s\n",fname);
 		}
-		fo = fopen(str,"wt");
-		fprintf(fo,"int draw_func(mglGraph *gr, void *)\n{\n");
-		fprintf(fo,"\tstatic bool once = false;\n");
+		fo = fopen(fname,"wt");
+		fwprintf(fo,L"int draw_func(mglGraph *gr, void *)\n{\n");
+		fwprintf(fo,L"\tstatic bool once = false;\n");
 		while(!feof(fp))
 		{
-			if(!fgets(str,8192,fp))	break;
+			if(!fgetws(str,8192,fp))	break;
+			wcstrim_mgl(str);
 			out[0] = 0;
 			int r = p.Export(out,&gr,str);
-			if(*out)	fprintf(fo,"\t%s\t//%s",out,str);
-			if(r==1)	printf("Wrong argument(s) in %s\n",str);
-			if(r==2)	printf("Wrong command in %s\n",str);
-			if(r==3)	printf("String too long in %s\n",str);
+			fwprintf(fo,L"\t//%ls\n",str);
+			if(*out)
+			{
+				if(*(p.op1))	fwprintf(fo,L"%ls\n",p.op1);
+				fwprintf(fo,L"\t%ls\n",out);
+				if(*(p.op2))	fwprintf(fo,L"%ls\n",p.op2);
+				fflush(fo);
+			}
+			if(r==1)	wprintf(L"Wrong argument(s) in %ls\n",str);
+			if(r==2)	wprintf(L"Wrong command in %ls\n",str);
+			if(r==3)	wprintf(L"String too long in %ls\n",str);
 		}
-		fprintf(fo,"\treturn 0;\n}\n");
+		fwprintf(fo,L"\treturn 0;\n}\n");
 		fclose(fp);	fclose(fo);
 	}
 	return 0;

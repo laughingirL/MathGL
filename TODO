@@ -1,0 +1,38 @@
+					MathGL (for v.1.6.3)
+					
+1. Algorith for automatic axis drawing
+2. Hankel transform
+3. Try to evaluate to number if it contain only "+-/*^0123456789." in Parse() ??? + string concatenation ???
+4. Export to fortran (tool mgl2for) ???
+5. Update C/Fortran interface: fit, idtf, orgt, subplot, mirror, face[xyz], normsl, momentum
+6. Example of Fit() in documentation and in full_test.cpp
+7. Bounding box in curved coordinates
+8. setlocale in full_test.cpp
+9. Font size in mglGraphGL
+10. "Cutting" in OpenGL
+11. Check sampled in OpenGL
+12. Update documentation
+13. Error with "text 0 0 'aaaaaaaa'" -- sometime seg.fault :(
+
+15. Save primitives for plotting (like EPS && OpenGL) ???
+16. Save curves (contour lines and flow threads) in file ???
+
+					MathGL (for v.1.6.?) ???
+					
+1. Interface for Python
+2. Interface for Java
+3. Interface for Gambas
+4. Interface for Scilab
+5. Interface for Octave ???
+6. GTK window ???
+7. Qt window ???
+
+					FAQ
+					
+1. On which things the subplot influence
+2. Sharp color change
+3. Most useful color scheme (copy from manual).
+4. About unrotated text
+5. Extend colors in line style (pdf + MGL html)
+6. Add "Howto" section in web site.
+7. Question about mglGraphXX::Ball (overloaded function have the same name)

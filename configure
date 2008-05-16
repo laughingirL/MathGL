@@ -1999,7 +1999,7 @@ subdirs="$subdirs libltdl"
 #   (No interfaces changed:                   REVISION++)
 MGL_CURRENT=4
 MGL_REVISION=0
-MGL_AGE=0
+MGL_AGE=2
 
 
 
@@ -20249,7 +20249,6 @@ fi
 case "${host}" in
   *darwin*)
        GL_LIBS="-framework OpenGL"
-       GLUT_LIBS="-framework GLUT"
        ;;
 
        *)
@@ -20489,7 +20488,7 @@ fi
 
 case "${host}" in
   *darwin*)
-       GLUT_LIBS="-framework GLUT"
+       GLUT_LIBS="-framework GLUT -framework OpenGL"
        ;;
 
        *)

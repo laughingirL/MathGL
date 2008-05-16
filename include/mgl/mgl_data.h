@@ -115,6 +115,8 @@ public:
 	void Transpose(const char *dim="yx");
 	/// Normalize the data to range [v1,v2]
 	void Norm(float v1=0,float v2=1,bool sym=false,int dim=0);
+	/// Normalize the data to range [v1,v2] slice by slice
+	void NormSl(float v1=0,float v2=1,char dir='z',bool keep_en=true,bool sym=false);
 	/// Eqidistantly fill the data to range [x1,x2] in direction \a dir
 	void Fill(float x1,float x2,char dir='x');
 	/// Modify the data by specified formula
@@ -148,6 +150,8 @@ public:
 	float Momentum(char dir,float &m,float &w);
 	/// Get "energy and find 4 momentums of data: median, width, skewness, kurtosis
 	float Momentum(char dir,float &m,float &w,float &s,float &k);
+	/// Get momentum (1D-array) of data along direction 'dir'. String looks like "x1" for median in x-direction, "x2" for width in x-dir and so on.
+	mglData &Momentum(char dir, const char *how);
 	/// Print information about the data (sizes and momentum) to string
 	void PrintInfo(char *buf);
 	/// Print information about the data (sizes and momentum) to FILE (for example, stdout)

@@ -128,7 +128,7 @@ void mglGraph::Axis(mglPoint m1, mglPoint m2, mglPoint org)
 	if(m1.y>m2.y)	{	Min.y=m2.y;	Max.y = m1.y;	}
 	if(m1.z<m2.z)	{	Min.z=m1.z;	Max.z = m2.z;	}
 	if(m1.z>m2.z)	{	Min.z=m2.z;	Max.z = m1.z;	}
-	Org = org;	Cmin = Min.z;	Cmax = Max.z;	TOrg = mglPoint(NAN,NAN,NAN);
+	Org = org;	Cmin = Min.z;	Cmax = Max.z;	OrgT = mglPoint(NAN,NAN,NAN);
 	if(AutoOrg)
 	{
 		if(Org.x<Min.x && !isnan(Org.x))	Org.x = Min.x;

@@ -33,6 +33,8 @@ public:
 	float Calc(float x,float y,float z,float u,float v,float w);
 	/// Evaluates the formula for variables \a var
 	float Calc(float var['z'-'a'+1]);
+	/// Evaluates the derivates of the formula for variables \a var respect to variable \a diff
+	float CalcD(float var['z'-'a'+1], char diff);
 	/// Return error code
 	int GetError();
 	/// Parse the formula \a str and create formula-tree
@@ -42,9 +44,10 @@ public:
 protected:
 	static float a1['z'-'a'+1];
 	float CalcIn();
-	mglFormula *Left,*Right;	// первый и второй аргументы функции
-	int Kod;					// код операции
-	float Res;					// число если нет аргументов и не переменная
+	float CalcDIn(int id);
+	mglFormula *Left,*Right;	// first and second argument of the function
+	int Kod;					// the function ID
+	float Res;					// the number or the variable ID
 	static int Error;
 };
 //---------------------------------------------------------------------------

@@ -136,6 +136,7 @@ float Norm(mglPoint p);
 //-----------------------------------------------------------------------------
 float GetX(mglData &x, int i, int j, int k);
 float GetY(mglData &y, int i, int j, int k);
+float GetZ(mglData &z, int i, int j, int k);
 typedef int (*mgl_save) (const char *fname, int w, int h, unsigned char **);
 //-----------------------------------------------------------------------------
 /// Class contains base functionality for creating different mathematical plots
@@ -149,6 +150,7 @@ public:
 	float Cmin;			///< Minimal value for data coloring.
 	float Cmax;			///< Maximal value for data coloring.
 	mglPoint Org;		///< Center of axis cross section.
+	mglPoint OrgT;		///< Point of starting ticks numbering (if NAN then Org is used).
 	bool AutoOrg;		///< Shift Org automatically if it lye outside Min ... Max range
 	mglColor Pal[101];	///< Color palette for 1D plotting.
 	int NumPal;			///< Number of colors in palette.
@@ -201,6 +203,7 @@ public:
 	bool TuneTicks;		///< Draw tuned ticks with extracted common component
 	float FactorPos;	///< Position of axis ticks factor (0 at Min, 1 at Max, 1.1 is default)
 	int CirclePnts;		///< Number of points for a circle drawing (used in Tube(), Drop(), Sphere(), Cone())
+	int FitPnts;		///< Number of output points in fitting
 
 	/// Set default parameter for plotting
 	mglGraph();
@@ -358,6 +361,9 @@ public:
 	void Curve(mglPoint p1, mglPoint d1, mglPoint p2, mglPoint d2, const char *stl="B",int num=100);
 	/// Draws the face between points with color \a stl (include interpolation up to 4 colors).
 	void Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl="w", int num=2);
+	void FaceX(float x0, float y0, float z0, float wy, float wz, const char *stl="w", float dx=0, float dy=0);
+	void FaceY(float x0, float y0, float z0, float wx, float wz, const char *stl="w", float dx=0, float dy=0);
+	void FaceZ(float x0, float y0, float z0, float wx, float wy, const char *stl="w", float dx=0, float dy=0);
 	/// Draws the sphere at point \a p with color \a stl and radius \a r.
 	void Sphere(mglPoint p, float r, const char *stl="r");
 	/// Draws the drop at point \a p in direction \a q with color \a stl and radius \a r.
@@ -370,8 +376,44 @@ public:
 	virtual void Mark(mglPoint p,char mark='.');
 	/// Draw a set of triangles (or lines if trig==NULL) for glyph from point (0,0). Normally this function is used internally.
 	virtual void Glyph(float x,float y, float f,int nt, const short *trig, int nl, const short *line)=0;
-
 	//@}
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	/** @name Fitting functions
+	  * These functions fit data to formula (find formula parameters for best fitting the data points). This functions do not draw obtained curve itself.*/
+	//@{
+	/// Fit data along x-direction for each data row. Data 'fit' will contain values for found formula.
+	float Fit(mglData &fit, mglData &y, const char *eq, const char *var, float *ini, bool print=false);
+	float Fit(mglData &fit, mglData &y, const char *eq, const char *var, mglData &ini, bool print=false);
+	/// Fit data along x-,y-directions for each data slice. Data 'fit' will contain values for found formula.
+	float Fit2(mglData &fit, mglData &z, const char *eq, const char *var, float *ini, bool print=false);
+	float Fit2(mglData &fit, mglData &z, const char *eq, const char *var, mglData &ini, bool print=false);
+	/// Fit data along all directions. Data 'fit' will contain values for found formula.
+	float Fit3(mglData &fit, mglData &a, const char *eq, const char *var, float *ini, bool print=false);
+	float Fit3(mglData &fit, mglData &a, const char *eq, const char *var, mglData &ini, bool print=false);
+	/// Fit data along x-direction for each data row. Data 'fit' will contain values for found formula.
+	float Fit(mglData &fit, mglData &x, mglData &y, const char *eq, const char *var, float *ini, bool print=false);
+	float Fit(mglData &fit, mglData &x, mglData &y, const char *eq, const char *var, mglData &ini, bool print=false);
+	/// Fit data along x-,y-directions for each data slice. Data 'fit' will contain values for found formula.
+	float Fit(mglData &fit, mglData &x, mglData &y, mglData &z, const char *eq, const char *var, float *ini, bool print=false);
+	float Fit(mglData &fit, mglData &x, mglData &y, mglData &z, const char *eq, const char *var, mglData &ini, bool print=false);
+	/// Fit data along all directions. Data 'fit' will contain values for found formula.
+	float Fit(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &a, const char *eq, const char *var, float *ini, bool print=false);
+	float Fit(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &a, const char *eq, const char *var, mglData &ini, bool print=false);
+	/// Fit data with dispersion s along x-direction for each data row. Data 'fit' will contain values for found formula.
+	float FitS(mglData &fit, mglData &y, mglData &s, const char *eq, const char *var, float *ini, bool print=false);
+	float FitS(mglData &fit, mglData &y, mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
+	/// Fit data with dispersion s along x-direction for each data row. Data 'fit' will contain values for found formula.
+	float FitS(mglData &fit, mglData &x, mglData &y, mglData &s, const char *eq, const char *var, float *ini, bool print=false);
+	float FitS(mglData &fit, mglData &x, mglData &y, mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
+	/// Fit data with dispersion s along x-,y-directions for each data slice. Data 'fit' will contain values for found formula.
+	float FitS(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &s, const char *eq, const char *var, float *ini, bool print=false);
+	float FitS(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
+	/// Fit data with dispersion s along all directions. Data 'fit' will contain values for found formula.
+	float FitS(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &a, mglData &s, const char *eq, const char *var, float *ini, bool print=false);
+	float FitS(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &a, mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
+	/// Print fitted last formula (with coefficients)
+	void PutsFit(mglPoint p, const char *prefix=0, const char *font=0, float size=-1); 
+	//@}	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Text functions
 	  * Text functions draw the text. There is a function for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The font style for text is specified by string argument. The size argument control the size of text: if positive it give the value if negative it give the value relative to FontSize. The font type (STIX, arial, courier, times and so on) can be selected by function SetFont(), GetFont().*/
@@ -960,6 +1002,7 @@ private:
 	mglPoint FMin;
 	/// Actual upper edge of bounding box after applying transformation formulas.
 	mglPoint FMax;
+	char *fit_res;				///< Last fitted formula
 
 	static void *jmodule;		///< Module for JPEG function
 	static void *tmodule;		///< Module for TIFF function
@@ -968,6 +1011,8 @@ private:
 	void ClearEq();				///< Clear the used variables for axis transformation
 	mglColor GetC2(float x,float y);
 
+	/// Prepare fitted formula
+	void PrepareFitEq(float chi, const char *eq, const char *var, float *par, bool print);
 	/// Print curved text
 	void font_curve(long n,float *pp,bool *tt,long *nn,const wchar_t *text,
 					int pos,float size);

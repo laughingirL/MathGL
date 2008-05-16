@@ -1,7 +1,9 @@
 #include "mgl/mgl_parse.h"
+#include "mgl/mgl_idtf.h"
 #include "mgl/mgl_fltk.h"
 #include "mgl/mgl_eps.h"
 #include "mgl/mgl_c.h"
+#include "mgl/mgl_eval.h"
 #include <locale.h>
 #include <wchar.h>
 
@@ -57,24 +59,28 @@ int sample_transp(mglGraph *gr, void *)	// flag #
 //-----------------------------------------------------------------------------
 int sample(mglGraph *gr, void *)
 {
-	mglData a(30,20),y(50);
-//	a.Read("test.dat");
-//	gr->Rotate(40,60);
-	a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-//	y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)");
-//	gr->SubPlot(1,2,0);
-//	gr->Rotate(40,60);
-	gr->Rotate(0,0);
-//	gr->Axis();
-	gr->CutOff("z>0.4");	gr->Surf(a,"b7#");
-	gr->CutOff("z<0.4");	gr->Surf(a,"b#");
-//	gr->Puts(mglPoint(0,0,0), "\\alpha^2\\sqrt{\\int \\yen d\\zeta_{\\i j}+c^{b+d}}");
-//	gr->Puts(mglPoint(0,0,0), "\\frac{a^2}{\\sqrt3{b^{2_{i+j}}+c}}",0,-5);
-	gr->Puts(mglPoint(0,0,0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}",0,-5);
-//	gr->Text(y,"This is very long string drawn along a curve",":k");
-//	gr->Text(y,"Another string drawn above a curve","T:r");
-//	gr->Plot(y);
-//	gr->Surf(a,"bwr#");
+	mglData f(200), fa(200), fb(200), fc(200), fx(200);
+	float v[30];
+//	mglFormula eq("a+b*sin(c*x)");
+	mglFormula eq("cos(c*x)");
+	memset(v,0,30*sizeof(float));
+	v[0] = v[1] = v[2] = 2;
+	for(int i=0;i<200;i++)
+	{
+		v['x'-'a']=i*0.01-1;
+		f.a[i] = eq.Calc(v);
+		fa.a[i] = eq.CalcD(v,'a');
+		fb.a[i] = eq.CalcD(v,'b');
+		fc.a[i] = eq.CalcD(v,'c');
+		fx.a[i] = eq.CalcD(v,'x');
+	}
+	gr->Axis(mglPoint(-1,-2), mglPoint(1,2));
+	gr->Plot(f,"k");
+//	gr->Plot(fa,"g");
+//	gr->Plot(fb,"b");
+	gr->Plot(fc,"r");
+	gr->Plot(fx,"n");
+	gr->Box();
 	return 0;
 }
 
@@ -99,20 +105,21 @@ int main(int argc,char **argv)
 		fprintf(fp,"\t{0x%x, L\"%ls\"},\n",mgl_tex_symb[i].kod, mgl_tex_symb[i].tex);
 	fclose(fp);*/
 	
-	long k,i;
-//	mglCommand mgls_base_cmd
+/*	long k,i;
 	for(k=0;mgls_base_cmd[k].name[0];k++);
 	qsort(mgls_base_cmd, k, sizeof(mglCommand), mgl_cmd_cmp);
 	FILE *fp = fopen("cmd.txt","w");
 	for(i=0;i<k;i++)
 		fprintf(fp,"\"%s\"\n",mgls_base_cmd[i].name);
-	fclose(fp);
+	fclose(fp);*/
 
 //	setlocale(LC_ALL, "ru_RU.cp1251");
 //	setlocale(LC_CTYPE, "ru_RU.cp1251");
 //	mglGraphZB gr;//(1280,800);
 //	mglGraphPS gr;//(1280,800);
 //	sample(&gr,0);	gr.WritePNG("1.png",0,false);	return 0;
+//	mglGraphIDTF gr;//(1280,800);
+//	sample(&gr,0);	gr.WriteIDTF("1.idtf");	return 0;
 	mglGraphFLTK gr;//(1280,800);
 	gr.Window(0,0,sample,"Test");	return mglFlRun();
 //	mglGraphGLUT gr;//(1280,800);

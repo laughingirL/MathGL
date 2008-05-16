@@ -40,7 +40,6 @@ AC_CHECK_LIB([gsl], [main], [GSL_LIBS="-lgsl -lgslcblas" AC_SUBST(GSL_LIBS)],
 case "${host}" in
   *darwin*)
        GL_LIBS="-framework OpenGL"
-       GLUT_LIBS="-framework GLUT"
        ;;
 
        *)
@@ -68,7 +67,7 @@ AC_ARG_ENABLE(glut,
 esac],[glut=false])
 case "${host}" in
   *darwin*)
-       GLUT_LIBS="-framework GLUT"
+       GLUT_LIBS="-framework GLUT -framework OpenGL"
        ;;
 
        *)

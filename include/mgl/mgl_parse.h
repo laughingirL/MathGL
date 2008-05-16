@@ -24,6 +24,7 @@ struct mglArg
 {
 	int type;		///< Type of argument {0-data,1-string,2-number}
 	mglData *d;		///< Pointer to data (used if type==0)
+	wchar_t w[2048];///< String with parameters (used if type==1)
 	char s[2048];	///< String with parameters (used if type==1)
 	float v;		///< Numerical value (used if type==2)
 	mglArg()	{	type=-1;	d=0;	v=0;	s[0]=0;	};
@@ -32,13 +33,13 @@ struct mglArg
 /// Structure for MGL command
 struct mglCommand
 {
-	const char *name;	///< Name of command
-	const char *desc;	///< Short command description (can be NULL)
-	const char *form;	///< Format of command arguments (can be NULL)
+	const wchar_t *name;	///< Name of command
+	const wchar_t *desc;	///< Short command description (can be NULL)
+	const wchar_t *form;	///< Format of command arguments (can be NULL)
 	/// Function for executing (plotting)
-	int (*exec)(mglGraph *gr, long n, mglArg *a, int k[9]);
+	int (*exec)(mglGraph *gr, long n, mglArg *a, int k[10]);
 	/// Function for exporting in C++ (can be NULL)
-	void (*save)(char out[1024], long n, mglArg *a, int k[9]);
+	void (*save)(wchar_t out[1024], long n, mglArg *a, int k[10]);
 };
 extern mglCommand mgls_base_cmd[];
 //-----------------------------------------------------------------------------
@@ -46,7 +47,7 @@ extern mglCommand mgls_base_cmd[];
 struct mglVar
 {
 	mglData d;		///< Data itself
-	char s[256];	///< Data name
+	wchar_t s[256];	///< Data name
 	void *o;		///< Pointer to external object
 	mglVar *next;	///< Pointer to next instance in list
 	mglVar *prev;	///< Pointer to prev instance in list
@@ -62,36 +63,45 @@ struct mglVar
 /// Structure for the command argument (see mglGraph::Exec()).
 class mglParse
 {
-friend void mgl_export(char *out, const char *in, int type);
+friend void mgl_export(wchar_t *out, const wchar_t *in, int type);
 public:
 	mglVar *DataList;	///< List with data and its names
 	bool AllowSetSize;	///< Allow using setsize command
 	bool Stop;			///< Stop command was. Flag prevent further execution
 	mglCommand *Cmd;	///< Table of recognizable MGL commands (can be changed by user). It MUST be sorted by 'name' field !!!
+	wchar_t *op1, *op2;	///< Buffer for options (are used if out!=NULL)		
 
 	mglParse(bool setsize=false);
 	~mglParse();
 	/// Parse and execute the string of MGL script
 	int Parse(mglGraph *gr, const char *str, long pos=0);
+	/// Parse and execute the unicode string of MGL script
+	int Parse(mglGraph *gr, const wchar_t *str, long pos=0);
 	/// Parse, execute and export it in C++ code the string of MGL script
-	int Export(char cpp_out[1024], mglGraph *gr, const char *str);
+	int Export(wchar_t cpp_out[1024], mglGraph *gr, const wchar_t *str);
 	/// Execute MGL script file \a fname
 	void Execute(mglGraph *gr, FILE *fp, bool print=false);
 	/// Execute MGL script file \a fname
-	void Execute(mglGraph *gr, int num, const char **text, void (*error)(int line, int kind)=NULL);
+	void Execute(mglGraph *gr, int num, const wchar_t **text, void (*error)(int line, int kind)=NULL);
 	/// Find variable or return 0 if absent
 	mglVar *FindVar(const char *name);
+	/// Find variable or return 0 if absent
+	mglVar *FindVar(const wchar_t *name);
 	/// Find variable or create it if absent
 	mglVar *AddVar(const char *name);
+	/// Find variable or create it if absent
+	mglVar *AddVar(const wchar_t *name);
 	/// Add string for parameter $1, ..., $9
 	bool AddParam(int n, const char *str, bool str=true);
+	/// Add unicode string for parameter $1, ..., $9
+	bool AddParam(int n, const wchar_t *str, bool str=true);
 	/// Restore Once flag
 	inline void RestoreOnce()	{	Once = true;	};
 private:
 	long parlen;	///< Length of parameter strings
-	char *par[10];	///< Parameter for substituting instead of $1, ..., $9
-	char *out;		///< Buffer for writing C++ code (if not NULL)
-	char leg[128];	///< Buffer for legend
+	wchar_t *par[10];	///< Parameter for substituting instead of $1, ..., $9
+	wchar_t *out;		///< Buffer for writing C++ code (if not NULL)
+	wchar_t leg[128];	///< Buffer for legend
 	bool opt[16];	///< Set on/off optional parameters for command argument
 	float val[20];	///< Values for optional parameters
 	bool Once;		///< Flag for command which should be executed only once
@@ -103,15 +113,15 @@ private:
 	int for_addr;			///< Flag for saving address in variable (for_addr-1)
 
 	/// Parse command
-	int Exec(mglGraph *gr, const char *com, long n, mglArg *a);
+	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a);
 	/// Fill arguments \a a from strings
-	void FillArg(int n, char **arg, mglArg *a);
+	void FillArg(int n, wchar_t **arg, mglArg *a);
 	/// PreExecute stage -- parse some commands and create variables
-	int PreExec(mglGraph *gr, long n, char **arg, mglArg *a);
+	int PreExec(mglGraph *gr, long n, wchar_t **arg, mglArg *a);
 	/// Process optional arguments
-	void ProcOpt(mglGraph *gr, char *str);
+	void ProcOpt(mglGraph *gr, wchar_t *str);
 	/// Execute program-flow control commands
-	int FlowExec(mglGraph *gr, const char *com, long n, mglArg *a);
+	int FlowExec(mglGraph *gr, const wchar_t *com, long n, mglArg *a);
 };
 //-----------------------------------------------------------------------------
 #endif
