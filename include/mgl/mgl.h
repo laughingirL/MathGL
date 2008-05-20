@@ -672,9 +672,9 @@ public:
 	/// Draw vertical tiles for 2d data
 	void Tile(mglData &z, const char *sch=0);
 	/// Draw vertical tiles with variable size for 2d data specified parametrically
-	void Tile(mglData &x, mglData &y, mglData &z, mglData &z, const char *sch=0);
+	void Tile(mglData &x, mglData &y, mglData &z, mglData &r, const char *sch=0);
 	/// Draw vertical tiles with variable size for 2d data
-	void Tile(mglData &z, mglData &z, const char *sch=0);
+	void Tile(mglData &z, mglData &r, const char *sch=0);
 	/// Draw contour lines for 2d data specified parametrically
 	void Cont(mglData &v, mglData &x, mglData &y, mglData &z, const char *sch=0, float zVal=NAN);
 	/// Draw contour lines for 2d data

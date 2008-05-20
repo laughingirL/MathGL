@@ -1,4 +1,4 @@
-1.7 Released ?? May 2008
+1.6.3 Released ?? May 2008
 	- MGL parser is sufficiently rewritten:
 		* User now can define its own MGL command (by changing mglParse::Cmd).
 		* Export MGL script to C++ file for most of commands (except 'list', 'delete', 'call', 'for|next') is possible.

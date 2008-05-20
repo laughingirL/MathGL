@@ -24,6 +24,13 @@
 #else
 #include <direct.h>
 #endif
+#ifdef WIN32
+wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim){
+    wcstok(wcs,delim);
+}
+#define swprintf    _snwprintf
+#define wcstok(a,b,c) wcstokw32(a,b)
+#endif
 //#include <unistd.h>
 #include "mgl/mgl_parse.h"
 wchar_t *mgl_wcsdup(const wchar_t *s);

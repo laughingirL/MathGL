@@ -29,7 +29,7 @@ AC_SUBST(INCLTDL)
 AC_SUBST(LIBLTDL)
 
 AC_CHECK_HEADERS([math.h string.h sys/types.h stdarg.h time.h float.h stdio.h \
-stdlib.h ctype.h dlfcn.h],,exit)
+stdlib.h ctype.h],,exit)
 
 AC_CHECK_HEADERS([gsl/gsl_fft_complex.h gsl/gsl_fft_real.h gsl/gsl_sf.h],,\
 [echo "Please install gsl headers"; exit])
@@ -40,6 +40,12 @@ AC_CHECK_LIB([gsl], [main], [GSL_LIBS="-lgsl -lgslcblas" AC_SUBST(GSL_LIBS)],
 case "${host}" in
   *darwin*)
        GL_LIBS="-framework OpenGL"
+       ;;
+
+  *w32*)
+	AC_CHECK_HEADERS([GL/gl.h],,[echo "Please install OpenGL headers (GL/gl.h)"; exit])
+	AC_CHECK_LIB([opengl32], [main], [GL_LIBS=-lopengl32 AC_SUBST(GL_LIBS)], 
+	    [echo "Please install OpenGL library (libopengl32.a)"; exit])
        ;;
 
        *)
@@ -70,6 +76,13 @@ case "${host}" in
        GLUT_LIBS="-framework GLUT -framework OpenGL"
        ;;
 
+  *win32*)
+	AC_CHECK_HEADERS([GL/glut.h],[(test x$all = xtrue || test x$glut = xtrue) && GLUT_FLAGS=-DHAVE_GLUT AC_SUBST(GLUT_FLAGS)],
+	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT headers (GL/glut.h)"; exit])
+	AC_CHECK_LIB([glut32], [main], [(test x$all = xtrue || test x$glut = xtrue) && GLUT_LIBS=glut32 AC_SUBST(GLUT_LIBS)],
+	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (glut32.dll)"; exit])
+       ;;
+       
        *)
 	AC_CHECK_HEADERS([GL/glut.h],[(test x$all = xtrue || test x$glut = xtrue) && GLUT_FLAGS=-DHAVE_GLUT AC_SUBST(GLUT_FLAGS)],
 	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT headers (GL/glut.h)"; exit])

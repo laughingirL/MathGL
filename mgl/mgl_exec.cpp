@@ -24,6 +24,9 @@
 #else
 #include <direct.h>
 #endif
+#ifdef WIN32
+#define swprintf    _snwprintf
+#endif
 //#include <unistd.h>
 #include "mgl/mgl_parse.h"
 char *mgl_strdup(const char *s);

@@ -89,7 +89,7 @@ am_libmgl_la_OBJECTS = libmgl_la-mgl_data_cf.lo libmgl_la-mgl_axis.lo \
 	libmgl_la-mgl_data.lo libmgl_la-mgl_f.lo libmgl_la-mgl_idtf.lo \
 	libmgl_la-mgl_ab.lo libmgl_la-mgl_data_io.lo \
 	libmgl_la-mgl_flow.lo libmgl_la-mgl_vect.lo \
-	libmgl_la-mgl_parse.lo
+	libmgl_la-mgl_parse.lo libmgl_la-mgl_fit.lo
 libmgl_la_OBJECTS = $(am_libmgl_la_OBJECTS)
 libmgl_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
@@ -276,7 +276,7 @@ mgllibdir = $(libdir)/mgl
 #libmgl_la_LDFLAGS = -release $(MGL_RELEASE) -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 libmgl_la_LIBADD = @LIBLTDL@ $(PNG_LIBS) $(GSL_LIBS) $(GL_LIBS)
-libmgl_la_CFLAGS = -O2 -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFF_FLAGS) $(PNG_FLAGS) $(FLTK_FLAGS) $(ADDON_FLAGS) 
+libmgl_la_CFLAGS = -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFF_FLAGS) $(PNG_FLAGS) $(FLTK_FLAGS) $(ADDON_FLAGS) 
 libmgl_la_CPPFLAGS = $(libmgl_la_CFLAGS)
 libmgl_la_SOURCES = \
 mgl_data_cf.cpp	   mgl_axis.cpp     mgl_data_png.cpp  mgl_zb2.cpp \
@@ -286,31 +286,31 @@ mgl_1d.cpp         mgl_cont.cpp     mgl_exec.cpp      mgl_tex_table.cpp\
 mgl_2d.cpp         mgl_crust.cpp    mgl_export.cpp    mgl_main.cpp  \
 mgl_3d.cpp         mgl_data.cpp     mgl_f.cpp         mgl_idtf.cpp \
 mgl_ab.cpp         mgl_data_io.cpp  mgl_flow.cpp      mgl_vect.cpp \
-mgl_parse.cpp
+mgl_parse.cpp      mgl_fit.cpp
 
 @USE_FLTK_TRUE@libmgl_fltk_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 @USE_FLTK_TRUE@libmgl_fltk_la_LIBADD = $(FLTK_LIBS) libmgl.la
-@USE_FLTK_TRUE@libmgl_fltk_la_CFLAGS = -O2 $(FLTK_FLAGS)
+@USE_FLTK_TRUE@libmgl_fltk_la_CFLAGS = $(FLTK_FLAGS)
 @USE_FLTK_TRUE@libmgl_fltk_la_CPPFLAGS = $(libmgl_fltk_la_CFLAGS)
 @USE_FLTK_TRUE@libmgl_fltk_la_SOURCES = mgl_fltk.cpp
 @USE_GLUT_TRUE@libmgl_glut_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 @USE_GLUT_TRUE@libmgl_glut_la_LIBADD = $(GLUT_LIBS) libmgl.la
-@USE_GLUT_TRUE@libmgl_glut_la_CFLAGS = -O2 $(GLUT_FLAGS)
+@USE_GLUT_TRUE@libmgl_glut_la_CFLAGS = $(GLUT_FLAGS)
 @USE_GLUT_TRUE@libmgl_glut_la_CPPFLAGS = $(libmgl_glut_la_CFLAGS)
 @USE_GLUT_TRUE@libmgl_glut_la_SOURCES = mgl_glut.cpp
 @USE_JPEG_TRUE@mgl_jpeg_la_LDFLAGS = -no-undefined -module -avoid-version -shared
 @USE_JPEG_TRUE@mgl_jpeg_la_LIBADD = $(JPEG_LIBS)
-@USE_JPEG_TRUE@mgl_jpeg_la_CFLAGS = -O2 $(JPEG_FLAGS)
+@USE_JPEG_TRUE@mgl_jpeg_la_CFLAGS = $(JPEG_FLAGS)
 @USE_JPEG_TRUE@mgl_jpeg_la_CPPFLAGS = $(libmgl_jpeg_la_CFLAGS)
 @USE_JPEG_TRUE@mgl_jpeg_la_SOURCES = mgl_zb_jpg.cpp
 @USE_HDF5_TRUE@mgl_hdf5_la_LDFLAGS = -no-undefined -module -avoid-version -shared
 @USE_HDF5_TRUE@mgl_hdf5_la_LIBADD = $(HDF5_LIBS)
-@USE_HDF5_TRUE@mgl_hdf5_la_CFLAGS = -O2 $(HDF5_FLAGS)
+@USE_HDF5_TRUE@mgl_hdf5_la_CFLAGS = $(HDF5_FLAGS)
 @USE_HDF5_TRUE@mgl_hdf5_la_CPPFLAGS = $(libmgl_hdf5_la_CFLAGS)
 @USE_HDF5_TRUE@mgl_hdf5_la_SOURCES = data_hdf.cpp
 @USE_TIFF_TRUE@mgl_tiff_la_LDFLAGS = -no-undefined -module -avoid-version -shared
 @USE_TIFF_TRUE@mgl_tiff_la_LIBADD = $(TIFF_LIBS)
-@USE_TIFF_TRUE@mgl_tiff_la_CFLAGS = -O2 $(TIFF_FLAGS)
+@USE_TIFF_TRUE@mgl_tiff_la_CFLAGS = $(TIFF_FLAGS)
 @USE_TIFF_TRUE@mgl_tiff_la_CPPFLAGS = $(libmgl_tiff_la_CFLAGS)
 @USE_TIFF_TRUE@mgl_tiff_la_SOURCES = mgl_zb_tiff.cpp
 all: all-am
@@ -440,6 +440,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_exec.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_export.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_f.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_fit.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_flow.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_font.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_gl.Plo@am__quote@
@@ -691,6 +692,13 @@ libmgl_la-mgl_parse.lo: mgl_parse.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl_parse.cpp' object='libmgl_la-mgl_parse.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmgl_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmgl_la-mgl_parse.lo `test -f 'mgl_parse.cpp' || echo '$(srcdir)/'`mgl_parse.cpp
+
+libmgl_la-mgl_fit.lo: mgl_fit.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmgl_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmgl_la-mgl_fit.lo -MD -MP -MF $(DEPDIR)/libmgl_la-mgl_fit.Tpo -c -o libmgl_la-mgl_fit.lo `test -f 'mgl_fit.cpp' || echo '$(srcdir)/'`mgl_fit.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmgl_la-mgl_fit.Tpo $(DEPDIR)/libmgl_la-mgl_fit.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl_fit.cpp' object='libmgl_la-mgl_fit.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmgl_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmgl_la-mgl_fit.lo `test -f 'mgl_fit.cpp' || echo '$(srcdir)/'`mgl_fit.cpp
 
 mgl_hdf5_la-data_hdf.lo: data_hdf.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl_hdf5_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mgl_hdf5_la-data_hdf.lo -MD -MP -MF $(DEPDIR)/mgl_hdf5_la-data_hdf.Tpo -c -o mgl_hdf5_la-data_hdf.lo `test -f 'data_hdf.cpp' || echo '$(srcdir)/'`data_hdf.cpp

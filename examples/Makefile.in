@@ -217,19 +217,19 @@ top_srcdir = @top_srcdir@
 INCLUDES = -I$(top_builddir)/include -I$(top_builddir) @INCLTDL@
 mgl_example_SOURCES = full_test.cpp
 mgl_example_LDADD = $(top_builddir)/mgl/libmgl.la
-mgl_example_CFLAGS = -O2
+mgl_example_CFLAGS = 
 mgl_example_CPPFLAGS = $(mgl_example_CFLAGS)
 @USE_FLTK_TRUE@mgl_fltk_example_SOURCES = fltk_example.cpp
 @USE_FLTK_TRUE@mgl_fltk_example_LDADD = $(top_builddir)/mgl/libmgl-fltk.la
-@USE_FLTK_TRUE@mgl_fltk_example_CFLAGS = -O2
+@USE_FLTK_TRUE@mgl_fltk_example_CFLAGS = 
 @USE_FLTK_TRUE@mgl_fltk_example_CPPFLAGS = $(mgl_fltk_example_CFLAGS)
 @USE_GLUT_TRUE@mgl_glut_example_SOURCES = glut_example.cpp
 @USE_GLUT_TRUE@mgl_glut_example_LDADD = $(top_builddir)/mgl/libmgl-glut.la
-@USE_GLUT_TRUE@mgl_glut_example_CFLAGS = -O2
+@USE_GLUT_TRUE@mgl_glut_example_CFLAGS = 
 @USE_GLUT_TRUE@mgl_glut_example_CPPFLAGS = $(mgl_glut_example_CFLAGS)
 test_SOURCES = main.cpp
 test_LDADD = $(top_builddir)/mgl/libmgl-fltk.la
-test_CFLAGS = -O2
+test_CFLAGS = 
 test_CPPFLAGS = $(test_CFLAGS)
 all: all-am
 

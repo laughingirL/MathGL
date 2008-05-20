@@ -47,16 +47,16 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_mgl2cpp_OBJECTS = mgl2cpp-mgl2cpp.$(OBJEXT)
+am_mgl2cpp_OBJECTS = mgl2cpp.$(OBJEXT)
 mgl2cpp_OBJECTS = $(am_mgl2cpp_OBJECTS)
 mgl2cpp_DEPENDENCIES = $(top_builddir)/mgl/libmgl.la
-am_mgl2eps_OBJECTS = mgl2eps-mgl2eps.$(OBJEXT)
+am_mgl2eps_OBJECTS = mgl2eps.$(OBJEXT)
 mgl2eps_OBJECTS = $(am_mgl2eps_OBJECTS)
 mgl2eps_DEPENDENCIES = $(top_builddir)/mgl/libmgl.la
-am_mgl2png_OBJECTS = mgl2png-mgl2png.$(OBJEXT)
+am_mgl2png_OBJECTS = mgl2png.$(OBJEXT)
 mgl2png_OBJECTS = $(am_mgl2png_OBJECTS)
 mgl2png_DEPENDENCIES = $(top_builddir)/mgl/libmgl.la
-am_mgl2svg_OBJECTS = mgl2svg-mgl2svg.$(OBJEXT)
+am_mgl2svg_OBJECTS = mgl2svg.$(OBJEXT)
 mgl2svg_OBJECTS = $(am_mgl2svg_OBJECTS)
 mgl2svg_DEPENDENCIES = $(top_builddir)/mgl/libmgl.la
 am__mglview_SOURCES_DIST = mglview.cpp
@@ -215,22 +215,22 @@ INCLUDES = -I$(top_builddir)/include
 mgl2png_SOURCES = mgl2png.cpp
 mgl2png_LDADD = $(top_builddir)/mgl/libmgl.la
 #mgl2png_CFLAGS = -O3 -mfpmath=sse $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFFFLAGS) $(PNGFLAGS)
-mgl2png_CPPFLAGS = $(libmgl_la_CFLAGS)
+#mgl2png_CPPFLAGS = $(libmgl_la_CFLAGS)
 mgl2cpp_SOURCES = mgl2cpp.cpp
 mgl2cpp_LDADD = $(top_builddir)/mgl/libmgl.la
 #mgl2cpp_CFLAGS = -O3 -mfpmath=sse $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFFFLAGS) $(PN
-mgl2cpp_CPPFLAGS = $(libmgl_la_CFLAGS)
+#mgl2cpp_CPPFLAGS = $(libmgl_la_CFLAGS)
 mgl2eps_SOURCES = mgl2eps.cpp
 mgl2eps_LDADD = $(top_builddir)/mgl/libmgl.la
 #mgl2eps_CFLAGS = -O3 -mfpmath=sse $(HDF5FLAGS) $(JPEGFLAGS) $(TIFF_FLAGS) $(PNG_FLAGS)
-mgl2eps_CPPFLAGS = $(libmgl_la_CFLAGS)
+#mgl2eps_CPPFLAGS = $(libmgl_la_CFLAGS)
 mgl2svg_SOURCES = mgl2svg.cpp
 mgl2svg_LDADD = $(top_builddir)/mgl/libmgl.la
 #mgl2svg_CFLAGS = -O3 -mfpmath=sse $(HDF5FLAGS) $(JPEGFLAGS) $(TIFFFLAGS) $(PNGFLAGS)
-mgl2svg_CPPFLAGS = $(libmgl_la_CFLAGS)
+#mgl2svg_CPPFLAGS = $(libmgl_la_CFLAGS)
 @USE_FLTK_TRUE@mglview_SOURCES = mglview.cpp
 @USE_FLTK_TRUE@mglview_LDADD = $(top_builddir)/mgl/libmgl-fltk.la
-@USE_FLTK_TRUE@mglview_CFLAGS = -O2 $(FLTK_FLAGS)
+@USE_FLTK_TRUE@mglview_CFLAGS = $(FLTK_FLAGS)
 @USE_FLTK_TRUE@mglview_CPPFLAGS = $(mglview_CFLAGS)
 all: all-am
 
@@ -315,10 +315,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2cpp-mgl2cpp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2eps-mgl2eps.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2png-mgl2png.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2svg-mgl2svg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2cpp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2eps.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2png.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2svg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mglview-mglview.Po@am__quote@
 
 .cpp.o:
@@ -341,62 +341,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
-
-mgl2cpp-mgl2cpp.o: mgl2cpp.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2cpp_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mgl2cpp-mgl2cpp.o -MD -MP -MF $(DEPDIR)/mgl2cpp-mgl2cpp.Tpo -c -o mgl2cpp-mgl2cpp.o `test -f 'mgl2cpp.cpp' || echo '$(srcdir)/'`mgl2cpp.cpp
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl2cpp-mgl2cpp.Tpo $(DEPDIR)/mgl2cpp-mgl2cpp.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl2cpp.cpp' object='mgl2cpp-mgl2cpp.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2cpp_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mgl2cpp-mgl2cpp.o `test -f 'mgl2cpp.cpp' || echo '$(srcdir)/'`mgl2cpp.cpp
-
-mgl2cpp-mgl2cpp.obj: mgl2cpp.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2cpp_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mgl2cpp-mgl2cpp.obj -MD -MP -MF $(DEPDIR)/mgl2cpp-mgl2cpp.Tpo -c -o mgl2cpp-mgl2cpp.obj `if test -f 'mgl2cpp.cpp'; then $(CYGPATH_W) 'mgl2cpp.cpp'; else $(CYGPATH_W) '$(srcdir)/mgl2cpp.cpp'; fi`
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl2cpp-mgl2cpp.Tpo $(DEPDIR)/mgl2cpp-mgl2cpp.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl2cpp.cpp' object='mgl2cpp-mgl2cpp.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2cpp_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mgl2cpp-mgl2cpp.obj `if test -f 'mgl2cpp.cpp'; then $(CYGPATH_W) 'mgl2cpp.cpp'; else $(CYGPATH_W) '$(srcdir)/mgl2cpp.cpp'; fi`
-
-mgl2eps-mgl2eps.o: mgl2eps.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2eps_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mgl2eps-mgl2eps.o -MD -MP -MF $(DEPDIR)/mgl2eps-mgl2eps.Tpo -c -o mgl2eps-mgl2eps.o `test -f 'mgl2eps.cpp' || echo '$(srcdir)/'`mgl2eps.cpp
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl2eps-mgl2eps.Tpo $(DEPDIR)/mgl2eps-mgl2eps.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl2eps.cpp' object='mgl2eps-mgl2eps.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2eps_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mgl2eps-mgl2eps.o `test -f 'mgl2eps.cpp' || echo '$(srcdir)/'`mgl2eps.cpp
-
-mgl2eps-mgl2eps.obj: mgl2eps.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2eps_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mgl2eps-mgl2eps.obj -MD -MP -MF $(DEPDIR)/mgl2eps-mgl2eps.Tpo -c -o mgl2eps-mgl2eps.obj `if test -f 'mgl2eps.cpp'; then $(CYGPATH_W) 'mgl2eps.cpp'; else $(CYGPATH_W) '$(srcdir)/mgl2eps.cpp'; fi`
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl2eps-mgl2eps.Tpo $(DEPDIR)/mgl2eps-mgl2eps.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl2eps.cpp' object='mgl2eps-mgl2eps.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2eps_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mgl2eps-mgl2eps.obj `if test -f 'mgl2eps.cpp'; then $(CYGPATH_W) 'mgl2eps.cpp'; else $(CYGPATH_W) '$(srcdir)/mgl2eps.cpp'; fi`
-
-mgl2png-mgl2png.o: mgl2png.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2png_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mgl2png-mgl2png.o -MD -MP -MF $(DEPDIR)/mgl2png-mgl2png.Tpo -c -o mgl2png-mgl2png.o `test -f 'mgl2png.cpp' || echo '$(srcdir)/'`mgl2png.cpp
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl2png-mgl2png.Tpo $(DEPDIR)/mgl2png-mgl2png.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl2png.cpp' object='mgl2png-mgl2png.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2png_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mgl2png-mgl2png.o `test -f 'mgl2png.cpp' || echo '$(srcdir)/'`mgl2png.cpp
-
-mgl2png-mgl2png.obj: mgl2png.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2png_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mgl2png-mgl2png.obj -MD -MP -MF $(DEPDIR)/mgl2png-mgl2png.Tpo -c -o mgl2png-mgl2png.obj `if test -f 'mgl2png.cpp'; then $(CYGPATH_W) 'mgl2png.cpp'; else $(CYGPATH_W) '$(srcdir)/mgl2png.cpp'; fi`
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl2png-mgl2png.Tpo $(DEPDIR)/mgl2png-mgl2png.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl2png.cpp' object='mgl2png-mgl2png.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2png_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mgl2png-mgl2png.obj `if test -f 'mgl2png.cpp'; then $(CYGPATH_W) 'mgl2png.cpp'; else $(CYGPATH_W) '$(srcdir)/mgl2png.cpp'; fi`
-
-mgl2svg-mgl2svg.o: mgl2svg.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2svg_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mgl2svg-mgl2svg.o -MD -MP -MF $(DEPDIR)/mgl2svg-mgl2svg.Tpo -c -o mgl2svg-mgl2svg.o `test -f 'mgl2svg.cpp' || echo '$(srcdir)/'`mgl2svg.cpp
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl2svg-mgl2svg.Tpo $(DEPDIR)/mgl2svg-mgl2svg.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl2svg.cpp' object='mgl2svg-mgl2svg.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2svg_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mgl2svg-mgl2svg.o `test -f 'mgl2svg.cpp' || echo '$(srcdir)/'`mgl2svg.cpp
-
-mgl2svg-mgl2svg.obj: mgl2svg.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2svg_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mgl2svg-mgl2svg.obj -MD -MP -MF $(DEPDIR)/mgl2svg-mgl2svg.Tpo -c -o mgl2svg-mgl2svg.obj `if test -f 'mgl2svg.cpp'; then $(CYGPATH_W) 'mgl2svg.cpp'; else $(CYGPATH_W) '$(srcdir)/mgl2svg.cpp'; fi`
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl2svg-mgl2svg.Tpo $(DEPDIR)/mgl2svg-mgl2svg.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl2svg.cpp' object='mgl2svg-mgl2svg.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl2svg_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mgl2svg-mgl2svg.obj `if test -f 'mgl2svg.cpp'; then $(CYGPATH_W) 'mgl2svg.cpp'; else $(CYGPATH_W) '$(srcdir)/mgl2svg.cpp'; fi`
 
 mglview-mglview.o: mglview.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mglview_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mglview-mglview.o -MD -MP -MF $(DEPDIR)/mglview-mglview.Tpo -c -o mglview-mglview.o `test -f 'mglview.cpp' || echo '$(srcdir)/'`mglview.cpp

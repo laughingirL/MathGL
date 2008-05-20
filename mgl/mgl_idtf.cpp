@@ -24,6 +24,7 @@
 #include "mgl/mgl_f.h"
 #ifdef WIN32
 #define swprintf    _snwprintf
+#define bzero(a,b) memset(a,0,b)
 #endif
 #include "mgl/mgl_idtf.h"
 #include <iomanip>
