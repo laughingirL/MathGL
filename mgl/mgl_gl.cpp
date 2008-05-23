@@ -398,7 +398,7 @@ void mglGraphGL::InPlot(float x1,float x2,float y1,float y2)
 	mglGraphAB::InPlot(x1,x2,y1,y2);
 	glMatrixMode(GL_MODELVIEW);//GL_MODELVIEW GL_VIEWPORT GL_PROJECTION
 	glLoadIdentity();
-	glScaled(2,2,2);
+	glScaled(2,2,1.5);
 	glTranslated(-0.5,-0.5,-0.5);
 }
 //-----------------------------------------------------------------------------

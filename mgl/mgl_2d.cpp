@@ -558,7 +558,7 @@ void mglGraph::Boxs(mglData &x, mglData &y, mglData &z, const char *sch,float zV
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Boxs");	return;	}
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
-	if(isnan(zVal))	zVal = GetOrgZ();
+	if(isnan(zVal))	zVal = GetOrgZ('z');
 	SetScheme(sch);
 
 	float *pp = new float[3*(n*m+4*(n-1)*(m-1))];

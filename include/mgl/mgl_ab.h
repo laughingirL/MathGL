@@ -141,9 +141,10 @@ protected:
 	void trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool *tt,bool wire);
 	void quads_plot(long n, float *pp, float *cc, bool *tt);
 	void lines_plot(long n, float *pp, float *cc, bool *tt);
-	float GetOrgX();
-	float GetOrgY();
-	float GetOrgZ();
+	void FindOptOrg(float ax[3], float ay[3], float az[3]);
+	float GetOrgX(char dir);
+	float GetOrgY(char dir);
+	float GetOrgZ(char dir);
 private:
 };
 //-----------------------------------------------------------------------------

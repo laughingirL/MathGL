@@ -31,6 +31,13 @@
 
 const static bool dbg = true;
 //-----------------------------------------------------------------------------
+/// Create mglGraph object in OpenGL mode.
+HMGL mgl_create_graph_idtf()
+{	return new mglGraphIDTF;	}
+/// Create mglGraph object in OpenGL mode.
+long mgl_create_graph_idtf_()
+{	return long(new mglGraphIDTF);	}
+//-----------------------------------------------------------------------------
 // helper output routines
 //-----------------------------------------------------------------------------
 inline std::string f2s ( float x )
@@ -1537,3 +1544,6 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 
 	fclose ( fp );
 }
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------

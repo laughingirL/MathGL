@@ -165,7 +165,7 @@ void mglGraph::Area(mglData &x, mglData &y, mglData &z, const char *pen)
 	if(x.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Area");	return;	}
 	if(n<2)					{	SetWarn(mglWarnLow,"Area");	return;	}
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	float *pp = new float[6*n],z0=GetOrgZ();
+	float *pp = new float[6*n],z0=GetOrgZ('z');
 	bool *tt = new bool[2*n];
 	for(j=0;j<m;j++)
 	{
@@ -195,7 +195,7 @@ void mglGraph::Area(mglData &x, mglData &y, const char *pen,bool sum,float zVal)
 	char mk=0;
 	if(x.nx!=n)	{	SetWarn(mglWarnDim,"Area");	return;	}
 	if(n<2)		{	SetWarn(mglWarnLow,"Area");	return;	}
-	float *pp = new float[6*n],y0=GetOrgY();
+	float *pp = new float[6*n],y0=GetOrgY('y');
 	bool *tt = new bool[2*n];
 	if(isnan(zVal))	zVal = Min.z;
 	mglData f(y);
@@ -327,7 +327,7 @@ void mglGraph::Stem(mglData &x, mglData &y, mglData &z, const char *pen)
 	if(x.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Stem");	return;	}
 	if(n<2)					{	SetWarn(mglWarnLow,"Stem");	return;	}
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	float *pp = new float[6*n],z0=GetOrgZ();
+	float *pp = new float[6*n],z0=GetOrgZ('z');
 	long *nn = new long[2*n];
 	bool *tt = new bool[2*n];
 	for(j=0;j<m;j++)
@@ -359,7 +359,7 @@ void mglGraph::Stem(mglData &x, mglData &y, const char *pen,float zVal)
 	if(x.nx!=n)	{	SetWarn(mglWarnDim,"Stem");	return;	}
 	if(n<2)		{	SetWarn(mglWarnLow,"Stem");	return;	}
 	m = x.ny > y.ny ? x.ny : y.ny;
-	float *pp = new float[6*n],y0=GetOrgY();
+	float *pp = new float[6*n],y0=GetOrgY('y');
 	long *nn = new long[2*n];
 	bool *tt = new bool[2*n];
 	if(isnan(zVal))	zVal = Min.z;
@@ -404,7 +404,7 @@ void mglGraph::Bars(mglData &x, mglData &y, mglData &z, const char *pen, bool ab
 	if(x.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Bars");	return;	}
 	if(n<2)					{	SetWarn(mglWarnLow,"Bars");	return;	}
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	float *pp = new float[12*n],x1,x2,y1,y2,z0=GetOrgZ(),zz;
+	float *pp = new float[12*n],x1,x2,y1,y2,z0=GetOrgZ('z'),zz;
 	bool *tt = new bool[4*n];
 	mglData dd(above ? n : 1);
 	
@@ -435,7 +435,7 @@ void mglGraph::Bars(mglData &x, mglData &y, mglData &z, const char *pen, bool ab
 				y2 = (y2-y1)/m;		y1 += j*y2;		y2 += y1;
 			}
 			else
-			{	z0 = GetOrgZ() + dd.a[i];	dd.a[i] += zz;	zz += z0;	}
+			{	z0 = GetOrgZ('z') + dd.a[i];	dd.a[i] += zz;	zz += z0;	}
 			
 			pp[12*i+0] = x1;	pp[12*i+1] = y1;	pp[12*i+2] = zz;
 			pp[12*i+3] = x1;	pp[12*i+4] = y1;	pp[12*i+5] = z0;
@@ -458,7 +458,7 @@ void mglGraph::Bars(mglData &x, mglData &y, const char *pen,float zVal, bool abo
 	if(x.nx!=n)	{	SetWarn(mglWarnDim,"Bars");	return;	}
 	if(n<2)		{	SetWarn(mglWarnLow,"Bars");	return;	}
 	m = x.ny > y.ny ? x.ny : y.ny;
-	float *pp = new float[12*n],x1,x2,yy,y0=GetOrgY();
+	float *pp = new float[12*n],x1,x2,yy,y0=GetOrgY('y');
 	bool *tt = new bool[4*n];
 	if(isnan(zVal))	zVal = Min.z;
 	mglData dd(above ? n : 1);
@@ -479,7 +479,7 @@ void mglGraph::Bars(mglData &x, mglData &y, const char *pen,float zVal, bool abo
 			if(!above)
 			{	x2 = (x2-x1)/m;		x1 += j*x2;		x2 += x1;	}
 			else
-			{	y0 = GetOrgY() + dd.a[i];	dd.a[i] += yy;	yy += y0;	}
+			{	y0 = GetOrgY('y') + dd.a[i];	dd.a[i] += yy;	yy += y0;	}
 			pp[12*i+0] = x1;	pp[12*i+1] = yy;	pp[12*i+2] = zVal;
 			pp[12*i+3] = x1;	pp[12*i+4] = y0;	pp[12*i+5] = zVal;
 			pp[12*i+6] = x2;	pp[12*i+7] = y0;	pp[12*i+8] = zVal;

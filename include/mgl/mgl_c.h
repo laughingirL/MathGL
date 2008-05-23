@@ -22,9 +22,11 @@ extern "C" {
 #endif
 /*****************************************************************************/
 struct mglGraph;
-struct mglData;
 typedef mglGraph *HMGL;
+struct mglData;
 typedef mglData *HMDT;
+struct mglParse;
+typedef mglParse *HMPR;
 #ifndef NO_GSL
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_matrix.h>
@@ -40,6 +42,7 @@ HMGL mgl_create_graph_glut(int argc, char **argv, int (*draw)(mglGraph *gr, void
 						const char *title, void (*reload)(bool next), void *par);
 HMGL mgl_create_graph_fltk(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
 						const char *title, void (*reload)(bool next), void *par);
+HMGL mgl_create_graph_idtf();
 void mgl_fltk_run();
 void mgl_delete_graph(HMGL graph);
 /*****************************************************************************/
@@ -47,6 +50,19 @@ HMDT mgl_create_data();
 HMDT mgl_create_data_size(int nx, int ny, int nz);
 HMDT mgl_create_data_file(const char *fname);
 void mgl_delete_data(HMDT dat);
+/*****************************************************************************/
+HMPR mgl_create_parser();
+void mgl_delete_parser(HMPR p);
+void mgl_add_param(HMPR p, int id, const char *str);
+void mgl_add_paramw(HMPR p, int id, const wchar_t *str);
+/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
+HMDT mgl_add_var(HMPR, const char *name);
+/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
+HMDT mgl_find_var(HMPR, const char *name);
+int mgl_parse(HMGL gr, HMPR p, const char *str, int pos);
+int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos);
+void mgl_restore_once(HMPR p);
+void mgl_parser_allow_setsize(HMPR p, bool a);
 /*****************************************************************************/
 /*		Setup mglGraph														 */
 /*****************************************************************************/
@@ -65,10 +81,12 @@ void mgl_set_size(HMGL graph, int width, int height);
 void mgl_set_axial_dir(HMGL graph, char dir);
 void mgl_set_meshnum(HMGL graph, int num);
 void mgl_set_zoom(HMGL gr, float x1, float y1, float x2, float y2);
+void mgl_set_plotfactor(HMGL gr, float val);
 void mgl_set_draw_face(HMGL gr, bool enable);
 void mgl_set_scheme(HMGL gr, char *sch);
 void mgl_set_font(HMGL gr, char *name, char *path);
 void mgl_copy_font(HMGL gr, HMGL gr_from);
+void mgl_restore_font(HMGL gr);
 /*****************************************************************************/
 /*		Export to file or to memory														 */
 /*****************************************************************************/
@@ -104,6 +122,7 @@ void mgl_identity(HMGL graph);
 void mgl_clf(HMGL graph);
 void mgl_clf_rgb(HMGL graph, float r, float g, float b);
 void mgl_subplot(HMGL graph, int nx,int ny,int m);
+void mgl_subplot_d(HMGL graph, int nx,int ny,int m, float dx, float dy);
 void mgl_inplot(HMGL graph, float x1,float x2,float y1,float y2);
 void mgl_aspect(HMGL graph, float Ax,float Ay,float Az);
 void mgl_rotate(HMGL graph, float TetX,float TetZ,float TetY);
@@ -119,6 +138,7 @@ void mgl_set_axis(HMGL graph, float x1, float y1, float z1, float x2, float y2, 
 void mgl_set_axis_3d(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2);
 void mgl_set_axis_2d(HMGL graph, float x1, float y1, float x2, float y2);
 void mgl_set_origin(HMGL graph, float x0, float y0, float z0);
+void mgl_set_tick_origin(HMGL graph, float x0, float y0, float z0);
 void mgl_set_crange(HMGL graph, HMDT a, bool add);
 void mgl_set_xrange(HMGL graph, HMDT a, bool add);
 void mgl_set_yrange(HMGL graph, HMDT a, bool add);
@@ -144,6 +164,11 @@ void mgl_ball(HMGL graph, float x,float y,float z);
 void mgl_ball_rgb(HMGL graph, float x, float y, float z, float r, float g, float b, float alpha);
 void mgl_ball_str(HMGL graph, float x, float y, float z, const char *col);
 void mgl_line(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2, const char *pen,int n);
+void mgl_facex(HMGL graph, float x0, float y0, float z0, float wy, float wz, const char *stl, float dx, float dy);
+void mgl_facey(HMGL graph, float x0, float y0, float z0, float wx, float wz, const char *stl, float dx, float dy);
+void mgl_facez(HMGL graph, float x0, float y0, float z0, float wx, float wy, const char *stl, float dx, float dy);
+void mgl_curve(HMGL graph, float x1, float y1, float z1, float dx1, float dy1, float dz1, float x2, float y2, float z2, float dx2, float dy2, float dz2, const char *pen,int n);
+
 void mgl_putsw(HMGL graph, float x, float y, float z,const char *text);
 void mgl_puts(HMGL graph, float x, float y, float z,const wchar_t *text);
 void mgl_text(HMGL graph, float x, float y, float z,const char *text);
@@ -361,6 +386,7 @@ void mgl_contf_z_val(HMGL graph, HMDT v, HMDT a, const char *stl, float sVal);
 /*****************************************************************************/
 /*		Data creation functions												 */
 /*****************************************************************************/
+void mgl_data_rearrange(HMDT dat, int mx, int my, int mz);
 void mgl_data_set_float(HMDT dat, const float *A,int NX,int NY,int NZ);
 void mgl_data_set_double(HMDT dat, const double *A,int NX,int NY,int NZ);
 void mgl_data_set_float2(HMDT d, const float **A,int N1,int N2);
@@ -382,6 +408,7 @@ void mgl_data_import(HMDT dat, const char *fname, const char *scheme,float v1,fl
 void mgl_data_create(HMDT dat, int nx,int ny,int nz);
 void mgl_data_transpose(HMDT dat, const char *dim);
 void mgl_data_norm(HMDT dat, float v1,float v2,bool sym,int dim);
+void mgl_data_norm_slice(HMDT dat, float v1,float v2,char dir,bool keep_en,bool sym);
 HMDT mgl_data_subdata(HMDT dat, int xx,int yy,int zz);
 HMDT mgl_data_column(HMDT dat, const char *eq);
 void mgl_data_set_id(HMDT d, const char *id);
@@ -409,6 +436,7 @@ void mgl_data_integral(HMDT dat, const char *dir);
 void mgl_data_diff(HMDT dat, const char *dir);
 void mgl_data_diff2(HMDT dat, const char *dir);
 void mgl_data_swap(HMDT dat, const char *dir);
+void mgl_data_mirror(HMDT dat, const char *dir);
 float mgl_data_spline(HMDT dat, float x,float y,float z);
 float mgl_data_spline1(HMDT dat, float x,float y,float z);
 float mgl_data_linear(HMDT dat, float x,float y,float z);
@@ -429,6 +457,20 @@ void mgl_data_mul_num(HMDT dat, float d);
 void mgl_data_div_num(HMDT dat, float d);
 void mgl_data_add_num(HMDT dat, float d);
 void mgl_data_sub_num(HMDT dat, float d);
+/*****************************************************************************/
+/*		Nonlinear fitting													 */
+/*****************************************************************************/
+float mgl_fit_1(HMGL gr, HMDT fit, HMDT y, const char *eq, const char *var, float *ini, bool print);
+float mgl_fit_2(HMGL gr, HMDT fit, HMDT z, const char *eq, const char *var, float *ini, bool print);
+float mgl_fit_3(HMGL gr, HMDT fit, HMDT a, const char *eq, const char *var, float *ini, bool print);
+float mgl_fit_xy(HMGL gr, HMDT fit, HMDT x, HMDT y, const char *eq, const char *var, float *ini, bool print);
+float mgl_fit_xyz(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT z, const char *eq, const char *var, float *ini, bool print);
+float mgl_fit_xyza(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT z, HMDT a, const char *eq, const char *var, float *ini, bool print);
+float mgl_fit_ys(HMGL gr, HMDT fit, HMDT y, HMDT s, const char *eq, const char *var, float *ini, bool print);
+float mgl_fit_xys(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT s, const char *eq, const char *var, float *ini, bool print);
+float mgl_fit_xyzs(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT z, HMDT s, const char *eq, const char *var, float *ini, bool print);
+float mgl_fit_xyzas(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT z, HMDT a, HMDT s, const char *eq, const char *var, float *ini, bool print);
+void mgl_puts_fit(HMGL gr, float x, float y, float z, const char *prefix, const char *font, float size); 
 /*****************************************************************************/
 #ifdef __cplusplus
 }

@@ -85,6 +85,8 @@ public:
 	void Set(const double ***A,int N1,int N2,int N3);
 	/// Copy the data from other mglData variable
 	inline void Set(mglData &dat)	{	Set(dat.a,dat.nx,dat.ny,dat.nz);	};
+	/// Rearange data dimensions
+	void Rearrange(int mx, int my=0, int mz=0);
 	
 	/// Read data array from HDF file
 	void ReadHDF(const char *fname,const char *data);

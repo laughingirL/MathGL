@@ -2743,6 +2743,32 @@ void mglc_putsfit(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"gr->FitS(%s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, (k[5]==1 && a[5].d->nx>=strlen(a[4].s))?a[5].s:"NULL", (k[6]==3&&a[6].v!=0)?"true":"false");
 }
 //-----------------------------------------------------------------------------
+//	{"arrowsize","Set arrow sizes","arrowsize val", mgls_arrowsize, mglc_arrowsize}
+int mgls_arrowsize(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==3)	gr->ArrowSize = a[0].v/50;
+	else	return 1;
+	return 0;
+}
+void mglc_arrowsize(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==3)	swprintf(out,1024,L"gr->ArrowSize = %g;", a[0].v/50);
+}
+//-----------------------------------------------------------------------------
+//	{"rearrange","Rearrange data dimensions","rearrange mx [my mz]", mgls_rearrange, mglc_rearrange}
+int mgls_rearrange(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==3)
+		a[0].d->Rearrange(int(a[1].v), k[2]==3?int(a[2].v):0, k[3]==3?int(a[3].v):0);
+	else	return 1;
+	return 0;
+}
+void mglc_rearrange(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==3)
+		swprintf(out,1024,L"%s.Rearrange(%d, %d, %d);",a[0].s, int(a[1].v), k[2]==3?int(a[2].v):0, k[3]==3?int(a[3].v):0);
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{L"addlegend",L"Add legend entry",L"addlegend txt fmt", mgls_addlegend, mglc_addlegend},
 	{L"addto",L"Add data or number",L"addto var|num", mgls_addto, mglc_addto},
@@ -2750,6 +2776,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"alphadef",L"Set default transparency",L"alphadef num", mgls_alphadef, mglc_alphadef},
 	{L"ambient",L"Set ambient light brightness",L"ambient txt fmt", mgls_ambient, mglc_ambient},
 	{L"area",L"Draw area plot for 1D data",L"area {xvar} yvar {{zvar}} [fmt num]", mgls_area, mglc_area},
+	{L"arrowsize",L"Set size of arrows",L"arrowsize val", mgls_arrowsize, mglc_arrowsize},
 	{L"aspect",L"Set aspect ration",L"aspect numx numy numz", mgls_aspect, mglc_aspect},
 	{L"axial",L"Draw surfaces of contour lines rotation",L"axial {xvar yvar} zvar [fmt num]", mgls_axial, mglc_axial},
 	{L"axialdir",L"Set axis of rotation",L"axialdir dir", mgls_axialdir, mglc_axialdir},
@@ -2847,6 +2874,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"readall",L"Read and join data from several files",L"", mgls_readall, mglc_readall},
 	{L"readhdf",L"Read data from HDF5 file",L"readhdf var file id", mgls_readhdf, mglc_readhdf},
 	{L"readmat",L"Read data from file with sizes specified in first row",L"readmat var file [dim=2]", mgls_readmat, mglc_readmat},
+	{L"rearrange",L"Rearrange data dimensions",L"rearrange mx [my mz]", mgls_rearrange, mglc_rearrange},
 	{L"rect",L"Draw rectangle",L"", mgls_rect, mglc_rect},
 	{L"resize",L"Resize data",L"resize ovar ivar [nx ny nz]", mgls_resize, mglc_resize},
 	{L"rotate",L"Rotate plot",L"", mgls_rotate, mglc_rotate},

@@ -937,11 +937,11 @@ protected:
 	virtual unsigned char **GetRGBLines(long &width, long &height, unsigned char *&f, bool alpha=false);
 
 	/// Get Org.x (parse NAN value)
-	virtual float GetOrgX();
+	virtual float GetOrgX(char dir);
 	/// Get Org.y (parse NAN value)
-	virtual float GetOrgY();
+	virtual float GetOrgY(char dir);
 	/// Get Org.z (parse NAN value)
-	virtual float GetOrgZ();
+	virtual float GetOrgZ(char dir);
 	/// Set the parameter lines directly (internaly used by mglGraph::SelectPen)
 	virtual void Pen(mglColor col, char style,float width);	//=0
 	/// Set the default color

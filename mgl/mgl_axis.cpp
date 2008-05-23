@@ -100,7 +100,7 @@ void mglGraph::Grid(const char *dir, const char *pen)
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
 	if(strchr(dir,'x') && dx!=0)
 	{
-		x0 = GetOrgX();	y0 = GetOrgY();	z0 = GetOrgZ();
+		x0 = GetOrgX('x');	y0 = GetOrgY('x');	z0 = GetOrgZ('x');
 		x0 = isnan(OrgT.x) ? x0 : OrgT.x;
 		x0 = x0 - ddx*floor((x0-Min.x)/ddx);
 		for(t=x0;t<=Max.x;t+=ddx)
@@ -124,7 +124,7 @@ void mglGraph::Grid(const char *dir, const char *pen)
 	}
 	if(strchr(dir,'x') && dx==0 && Min.x>0)
 	{
-		y0 = GetOrgY();	z0 = GetOrgZ();
+		y0 = GetOrgY('x');	z0 = GetOrgZ('x');
 		x0 = exp(M_LN10*floor(0.1+log10(Min.x)));
 		for(t=x0;t<=Max.x*FLT_EPS;t*=10)
 		{
@@ -147,7 +147,7 @@ void mglGraph::Grid(const char *dir, const char *pen)
 	}
 	if(strchr(dir,'y') && dy!=0)
 	{
-		x0 = GetOrgX();	y0 = GetOrgY();	z0 = GetOrgZ();
+		x0 = GetOrgX('y');	y0 = GetOrgY('y');	z0 = GetOrgZ('y');
 		y0 = isnan(OrgT.y) ? y0 : OrgT.y;
 		y0 = y0 - ddy*floor((y0-Min.y)/ddy);
 		for(t=y0;t<=Max.y;t+=ddy)
@@ -171,7 +171,7 @@ void mglGraph::Grid(const char *dir, const char *pen)
 	}
 	if(strchr(dir,'y') && dy==0 && Min.y>0)
 	{
-		x0 = GetOrgX();	z0 = GetOrgZ();
+		x0 = GetOrgX('y');	z0 = GetOrgZ('y');
 		y0 = exp(M_LN10*floor(0.1+log10(Min.y)));
 		for(t=y0;t<=Max.y*FLT_EPS;t*=10)
 		{
@@ -193,7 +193,7 @@ void mglGraph::Grid(const char *dir, const char *pen)
 	}
 	if(strchr(dir,'z') && dz!=0)
 	{
-		x0 = GetOrgX();	y0 = GetOrgY();	z0 = GetOrgZ();
+		x0 = GetOrgX('z');	y0 = GetOrgY('z');	z0 = GetOrgZ('z');
 		z0 = isnan(OrgT.z) ? z0 : OrgT.z;
 		z0 = z0 - ddz*floor((z0-Min.z)/ddz);
 		for(t=z0;t<=Max.z;t+=ddz)
@@ -216,7 +216,7 @@ void mglGraph::Grid(const char *dir, const char *pen)
 	}
 	if(strchr(dir,'z') && dz==0 && Min.z>0)
 	{
-		x0 = GetOrgX();	y0 = GetOrgY();
+		x0 = GetOrgX('z');	y0 = GetOrgY('z');
 		z0 = exp(M_LN10*floor(0.1+log10(Min.z)));
 		for(t=z0;t<=Max.z*FLT_EPS;t*=10)
 		{
@@ -243,7 +243,7 @@ void mglGraph::Label(char dir,const wchar_t *text,int pos,float size,float shift
 {
 	float t, x0, y0, z0;
 	SelectPen("k-1");
-	x0 = GetOrgX();	y0 = GetOrgY();	z0 = GetOrgZ();
+	x0 = GetOrgX(dir);	y0 = GetOrgY(dir);	z0 = GetOrgZ(dir);
 	if(size<=0)	size = -size*FontSize;
 	if(dir=='x')
 	{
@@ -337,7 +337,7 @@ void mglGraph::AxisX(bool text)
 	wchar_t str[64];
 	long i;
 	float x0,y0,z0,x,ddx,ddy,ddz;
-	x0 = GetOrgX();	y0 = GetOrgY();	z0 = GetOrgZ();
+	x0 = GetOrgX('x');	y0 = GetOrgY('x');	z0 = GetOrgZ('x');
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
@@ -392,7 +392,7 @@ void mglGraph::AxisX(bool text)
 		if(NSx>0)
 		{
 			ddx /= (NSx+1);	// subticks drawing
-			x0 = GetOrgX();	x0 = x0 - ddx*floor((x0-Min.x)/ddx);
+			x0 = GetOrgX('x');	x0 = x0 - ddx*floor((x0-Min.x)/ddx);
 			for(x=x0;x<=Max.x;x+=ddx)
 			{
 				pp[0]=x;	pp[1]=y0+ddy/14;	pp[2]=z0;
@@ -440,7 +440,7 @@ void mglGraph::AxisY(bool text)
 	wchar_t str[64];
 	long i;
 	float x0,y0,z0,y,ddx,ddy,ddz;
-	x0 = GetOrgX();	y0 = GetOrgY();	z0 = GetOrgZ();
+	x0 = GetOrgX('y');	y0 = GetOrgY('y');	z0 = GetOrgZ('y');
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
@@ -495,7 +495,7 @@ void mglGraph::AxisY(bool text)
 		if(NSy>0)
 		{
 			ddy /= (NSy+1);	// subticks drawing
-			y0 = GetOrgY();	y0 = y0 - ddy*floor((y0-Min.y)/ddy);
+			y0 = GetOrgY('y');	y0 = y0 - ddy*floor((y0-Min.y)/ddy);
 			for(y=y0;y<=Max.y;y+=ddy)
 			{
 				pp[0]=x0+ddx/14;pp[1]=y;	pp[2]=z0;
@@ -543,7 +543,7 @@ void mglGraph::AxisZ(bool text)
 	wchar_t str[64];
 	long i;
 	float x0,y0,z0,z,ddx,ddy,ddz;
-	x0 = GetOrgX();	y0 = GetOrgY();	z0 = GetOrgZ();
+	x0 = GetOrgX('z');	y0 = GetOrgY('z');	z0 = GetOrgZ('z');
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
@@ -598,7 +598,7 @@ void mglGraph::AxisZ(bool text)
 		if(NSz>0)
 		{
 			ddz /= (NSz+1);	// subticks drawing
-			z0 = GetOrgZ();	z0 = z0 - ddz*floor((z0-Min.z)/ddz);
+			z0 = GetOrgZ('z');	z0 = z0 - ddz*floor((z0-Min.z)/ddz);
 			for(z=z0;z<=Max.z;z+=ddz)
 			{
 				pp[0]=x0;	pp[1]=y0+ddy/14;	pp[2]=z;
@@ -658,7 +658,7 @@ void mglGraph::TickBox()
 {
 	float pp[36];
 	float x0,y0,z0,x,y,z,ddx,ddy,ddz;
-	x0 = GetOrgX();	y0 = GetOrgY();	z0 = GetOrgZ();
+	x0 = GetOrgX(0);	y0 = GetOrgY(0);	z0 = GetOrgZ(0);
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
@@ -706,7 +706,7 @@ void mglGraph::TickBox()
 			DrawTick(pp+18,false);	DrawTick(pp+27,false);
 		}
 	}
-	x0 = GetOrgX();
+	x0 = GetOrgX(0);
 	if(ddy>0)	// рисуем метки по y
 	{
 		y0 = isnan(OrgT.y) ? y0 : OrgT.y;
@@ -751,7 +751,7 @@ void mglGraph::TickBox()
 			DrawTick(pp+18,false);	DrawTick(pp+27,false);
 		}
 	}
-	y0 = GetOrgY();
+	y0 = GetOrgY(0);
 	if(ddz>0)	// рисуем метки
 	{
 		z0 = isnan(OrgT.z) ? z0 : OrgT.z;
@@ -809,56 +809,30 @@ void mglGraph::Box(const char *col,bool ticks)
 void mglGraph::Box(mglColor p,bool ticks)
 {
 	float x1=Min.x,x2=Max.x,y1=Min.y,y2=Max.y,z1=Min.z,z2=Max.z;
-	float pp[3*16];
-	long nn[16];
 	Arrow1 = Arrow2 = '_';
 	if(p.Valid())	Pen(p,'-',BaseLineWidth);
 	else			Pen(TranspType!=2 ? BC:WC,'-',BaseLineWidth);
+	
+	Line(mglPoint(x1,y1,z1), mglPoint(x1,y1,z2), 0, 100);
+	Line(mglPoint(x1,y2,z1), mglPoint(x1,y2,z2), 0, 100);
+	Line(mglPoint(x2,y1,z1), mglPoint(x2,y1,z2), 0, 100);
+	Line(mglPoint(x1,y1,z1), mglPoint(x1,y2,z1), 0, 100);
+	Line(mglPoint(x1,y1,z1), mglPoint(x2,y1,z1), 0, 100);
+	Line(mglPoint(x1,y1,z2), mglPoint(x1,y2,z2), 0, 100);
+	Line(mglPoint(x1,y1,z2), mglPoint(x2,y1,z2), 0, 100);
 	if(TernAxis)
 	{
-		pp[3*0+0] = x1;	pp[3*0+1] = y1;	pp[3*0+2] = z1;	nn[0] = 1;
-		pp[3*1+0] = x1;	pp[3*1+1] = y1;	pp[3*1+2] = z2;	nn[1] = 2;
-		pp[3*2+0] = x1;	pp[3*2+1] = y2;	pp[3*2+2] = z2;	nn[2] = 3;
-		pp[3*3+0] = x1;	pp[3*3+1] = y2;	pp[3*3+2] = z1;	nn[3] = 0;
-
-		pp[3*4+0] = x2;	pp[3*4+1] = y1;	pp[3*4+2] = z1;	nn[4] = 5;
-		pp[3*5+0] = x2;	pp[3*5+1] = y1;	pp[3*5+2] = z2;	nn[5] = 6;
-		pp[3*6+0] = x2;	pp[3*6+1] = y1;	pp[3*6+2] = z2;	nn[6] = 7;
-		pp[3*7+0] = x2;	pp[3*7+1] = y1;	pp[3*7+2] = z1;	nn[7] = 4;
-
-		pp[3*8+0] = x1;	pp[3*8+1] = y1;	pp[3*8+2] = z1;	nn[8] = 9;
-		pp[3*9+0] = x2;	pp[3*9+1] = y1;	pp[3*9+2] = z1;	nn[9] = -1;
-		pp[3*10+0]= x1;	pp[3*10+1] = y1;pp[3*10+2] = z2;nn[10] = 11;
-		pp[3*11+0]= x2;	pp[3*11+1] = y1;pp[3*11+2] = z2;nn[11] = -1;
-		pp[3*12+0]= x1;	pp[3*12+1] = y2;pp[3*12+2] = z2;nn[12] = 13;
-		pp[3*13+0]= x2;	pp[3*13+1] = y1;pp[3*13+2] = z2;nn[13] = -1;
-		pp[3*14+0]= x1;	pp[3*14+1] = y2;pp[3*14+2] = z1;nn[14] = 15;
-		pp[3*15+0]= x2;	pp[3*15+1] = y1;pp[3*15+2] = z1;nn[15] = -1;
+		Line(mglPoint(x1,y2,z1), mglPoint(x2,y1,z1), 0, 100);
+		Line(mglPoint(x1,y2,z2), mglPoint(x2,y1,z2), 0, 100);
 	}
 	else
 	{
-		pp[3*0+0] = x1;	pp[3*0+1] = y1;	pp[3*0+2] = z1;	nn[0] = 1;
-		pp[3*1+0] = x1;	pp[3*1+1] = y1;	pp[3*1+2] = z2;	nn[1] = 2;
-		pp[3*2+0] = x1;	pp[3*2+1] = y2;	pp[3*2+2] = z2;	nn[2] = 3;
-		pp[3*3+0] = x1;	pp[3*3+1] = y2;	pp[3*3+2] = z1;	nn[3] = 0;
-
-		pp[3*4+0] = x2;	pp[3*4+1] = y1;	pp[3*4+2] = z1;	nn[4] = 5;
-		pp[3*5+0] = x2;	pp[3*5+1] = y1;	pp[3*5+2] = z2;	nn[5] = 6;
-		pp[3*6+0] = x2;	pp[3*6+1] = y2;	pp[3*6+2] = z2;	nn[6] = 7;
-		pp[3*7+0] = x2;	pp[3*7+1] = y2;	pp[3*7+2] = z1;	nn[7] = 4;
-
-		pp[3*8+0] = x1;	pp[3*8+1] = y1;	pp[3*8+2] = z1;	nn[8] = 9;
-		pp[3*9+0] = x2;	pp[3*9+1] = y1;	pp[3*9+2] = z1;	nn[9] = -1;
-		pp[3*10+0]= x1;	pp[3*10+1] = y1;pp[3*10+2] = z2;nn[10] = 11;
-		pp[3*11+0]= x2;	pp[3*11+1] = y1;pp[3*11+2] = z2;nn[11] = -1;
-		pp[3*12+0]= x1;	pp[3*12+1] = y2;pp[3*12+2] = z2;nn[12] = 13;
-		pp[3*13+0]= x2;	pp[3*13+1] = y2;pp[3*13+2] = z2;nn[13] = -1;
-		pp[3*14+0]= x1;	pp[3*14+1] = y2;pp[3*14+2] = z1;nn[14] = 15;
-		pp[3*15+0]= x2;	pp[3*15+1] = y2;pp[3*15+2] = z1;nn[15] = -1;
+		Line(mglPoint(x2,y2,z1), mglPoint(x2,y2,z2), 0, 100);
+		Line(mglPoint(x2,y2,z1), mglPoint(x1,y2,z1), 0, 100);
+		Line(mglPoint(x2,y2,z1), mglPoint(x2,y1,z1), 0, 100);
+		Line(mglPoint(x2,y2,z2), mglPoint(x1,y2,z2), 0, 100);
+		Line(mglPoint(x2,y2,z2), mglPoint(x2,y1,z2), 0, 100);
 	}
-	for(long i=0;i<16;i++)
-		ScalePoint(pp[3*i+0],pp[3*i+1],pp[3*i+2]);
-	curv_plot(16,pp,0,nn);
 	if(ticks && !TernAxis)	TickBox();
 }
 //-----------------------------------------------------------------------------
@@ -973,7 +947,7 @@ void mglGraph::AxisTY(bool text)
 	wchar_t str[64];
 	long i;
 	float y0,z0,y,ddx,ddy,ddz;
-	y0 = GetOrgY();	z0 = GetOrgZ();
+	y0 = GetOrgY('y');	z0 = GetOrgZ('y');
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
@@ -1023,7 +997,7 @@ void mglGraph::AxisTZ(bool text)
 	wchar_t str[64];
 	long i;
 	float x0,z0,z,ddx,ddy,ddz;
-	x0 = GetOrgX();	z0 = GetOrgZ();
+	x0 = GetOrgX('t');	z0 = GetOrgZ('t');
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);

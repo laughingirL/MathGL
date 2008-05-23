@@ -33,6 +33,8 @@ wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim){
 #endif
 //#include <unistd.h>
 #include "mgl/mgl_parse.h"
+#include "mgl/mgl_c.h"
+#include "mgl/mgl_f.h"
 wchar_t *mgl_wcsdup(const wchar_t *s);
 //-----------------------------------------------------------------------------
 wchar_t *mgl_str_copy(const char *s)
@@ -836,4 +838,45 @@ void mglParse::ProcOpt(mglGraph *gr, wchar_t *str)
 		}
 	}
 }
+//-----------------------------------------------------------------------------
+HMPR mgl_create_parser()		{	return new mglParse;	}
+void mgl_delete_parser(HMPR p)	{	delete p;	}
+void mgl_add_param(HMPR p, int id, const char *str)			{	p->AddParam(id,str);	}
+void mgl_add_paramw(HMPR p, int id, const wchar_t *str)		{	p->AddParam(id,str);	}
+HMDT mgl_add_var(HMPR p, const char *name)	{	mglVar *v=p->AddVar(name);	return &(v->d);	}
+HMDT mgl_find_var(HMPR p, const char *name)	{	mglVar *v=p->FindVar(name);	return &(v->d);	}
+int mgl_parse(HMGL gr, HMPR p, const char *str, int pos)	{	p->Parse(gr, str, pos);	}
+int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos){	p->Parse(gr, str, pos);	}
+void mgl_restore_once(HMPR p)	{	p->RestoreOnce();	}
+void mgl_parser_allow_setsize(HMPR p, bool a)	{	p->AllowSetSize = a;	}
+//-----------------------------------------------------------------------------
+long mgl_create_parser_()	{	return long(new mglParse);	}
+void mgl_delete_parser_(long* p)	{	delete _PR_;	}
+void mgl_add_param_(long* p, int *id, const char *str, int l)
+{
+	char *s=new char[l+1];		memcpy(s,str,l);	s[l]=0;
+	_PR_->AddParam(*id, s);		delete []s;
+}
+/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
+long mgl_add_var_(long* p, const char *name, int l)
+{
+	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
+	mglVar *v=_PR_->AddVar(s);	delete []s;
+	return long(&(v->d));
+}
+/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
+long mgl_find_var_(long* p, const char *name, int l)
+{
+	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
+	mglVar *v=_PR_->FindVar(s);	delete []s;
+	return long(&(v->d));
+}
+int mgl_parse_(long* gr, long* p, const char *str, int *pos, int l)
+{
+	char *s=new char[l+1];		memcpy(s,str,l);	s[l]=0;
+	_PR_->Parse(_GR_, s, *pos);	delete []s;
+}
+void mgl_restore_once_(long* p)	{	_PR_->RestoreOnce();	}
+void mgl_parser_allow_setsize_(long* p, int *a)
+{	_PR_->AllowSetSize = *a;	}
 //-----------------------------------------------------------------------------

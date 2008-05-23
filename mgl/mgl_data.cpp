@@ -1252,5 +1252,14 @@ void mglData::PrintInfo(char *buf)
 		Wa,Wx,Wy,Wz);	strcat(buf,s);
 }
 //-----------------------------------------------------------------------------
+void mglData::Rearrange(int mx, int my, int mz)
+{
+	if(mx<1)	return;	// wrong mx
+	if(my<1)	{	my = nx*ny*nz/mx;	mz = 1;	}
+	else if(mz<1)	mz = (nx*ny*nz)/(mx*my);
+	long m = mx*my*mz;
+	if(m==0 || m>nx*ny*nz)	return;	// too high desired dimensions
+	nx = mx;	ny = my;	nz = mz;
+}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

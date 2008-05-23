@@ -554,9 +554,24 @@ void mglGraphAB::arrow_plot(float *p1,float *p2,char st)
 		pp[9] = p1[0]+kx+2*lx;	pp[10] = p1[1]+ky+2*ly;
 		quad_plot(pp,pp+3,pp+9,pp+6,CDef,CDef,CDef,CDef);	break;
 	case 'O':
-		float ss = MarkSize;	MarkSize = ArrowSize;
+	{
+		pp[0] = p1[0];	pp[1] = p1[1];
+		double t;
+		for(int i=0;i<16;i++)
+		{
+			t = M_PI*i/8.;
+			pp[3] = p1[0] + kx*sin(t) + lx*cos(t);
+			pp[4] = p1[1] + ky*sin(t) + ly*cos(t);
+			t = M_PI*(i+1)/8.;
+			pp[6] = p1[0] + kx*sin(t) + lx*cos(t);
+			pp[7] = p1[1] + ky*sin(t) + ly*cos(t);
+			trig_plot(pp,pp+3,pp+6,CDef,CDef,CDef);
+		}
+		break;
+	}
+/*		float ss = MarkSize;	MarkSize = ArrowSize;
 		mark_plot(p1,'O');
-		MarkSize = ss;
+		MarkSize = ss;*/
 	}
 	UseLight = ul;
 }
@@ -582,8 +597,122 @@ void mglGraphAB::EndFrame()
 	WritePNG(fname);
 }
 //-----------------------------------------------------------------------------
-float mglGraphAB::GetOrgX()	{	return isnan(Org.x) ? (B[6]>0 ? Max.x:Min.x) : Org.x;	}
-float mglGraphAB::GetOrgY()	{	return isnan(Org.y) ? (B[7]>0 ? Max.y:Min.y) : Org.y;	}
-float mglGraphAB::GetOrgZ()	{	return isnan(Org.z) ? (B[8]>0 ? Max.z:Min.z) : Org.z;	}
-//	x[2] = (zPos + 0.5f + y[0]*B[6] + y[1]*B[7] + y[2]*B[8])/sqrt(zoomx2*zoomy2);
+void mglGraphAB::FindOptOrg(float ax[3], float ay[3], float az[3])
+{
+	static float px[3]={0,0,0}, py[3]={0,0,0}, pz[3]={0,0,0},
+				bb[9]={0,0,0, 0,0,0, 0,0,0};
+	float nn[24]={0,0,0, 0,0,1, 0,1,0, 0,1,1, 1,0,0, 1,0,1, 1,1,0, 1,1,1};
+	float pp[24];
+	memcpy(pp, nn, 24*sizeof(float));
+	// do nothing if transformation matrix the same
+	if(memcmp(B,bb,9*sizeof(float)))
+	{
+		memcpy(bb,B,9*sizeof(float));	PostScale(pp,8);
+		// find point with minimal y
+		register long i,j;
+		for(i=j=1;i<24;i+=3)	if(pp[i]<pp[j])	j=i;
+		j--;	memcpy(pp,pp+j,3*sizeof(float));
+		// find max angle and left point
+		// first select 3 closest points
+		memcpy(pp+3,nn+j,3*sizeof(float));	pp[3]=1-pp[3];	// along x
+		memcpy(pp+6,nn+j,3*sizeof(float));	pp[7]=1-pp[7];	// along y
+		memcpy(pp+9,nn+j,3*sizeof(float));	pp[11]=1-pp[11];// along z
+		PostScale(pp+3,3);
+		pp[3] -= pp[0];	pp[4] -= pp[1];	pp[5] -= pp[2];
+		pp[6] -= pp[0];	pp[7] -= pp[1];	pp[8] -= pp[2];
+		pp[9] -= pp[0];	pp[10]-= pp[1];	pp[11]-= pp[2];
+		// find cosine of axis projection
+		float cxy, cxz, cyz, dx, dy, dz;
+		dx = pp[3]*pp[3] + pp[4]*pp[4];
+		dy = pp[6]*pp[6] + pp[7]*pp[7];
+		dz = pp[9]*pp[9] + pp[10]*pp[10];
+		cxy= pp[3]*pp[6] + pp[4]*pp[7];
+		cxz= pp[3]*pp[9] + pp[4]*pp[10];
+		cyz= pp[9]*pp[6] + pp[10]*pp[7];
+		if(dx==0)		cxy = cxz = 1;
+		else if(dy==0)	cxy = cyz = 1;
+		else if(dz==0)	cyz = cxz = 1;
+		else
+		{	cxy /= sqrt(dx*dy);	cxz /= sqrt(dx*dz);	cyz /= sqrt(dz*dy);	}
+		// find points for axis
+		memcpy(px,nn+j,3*sizeof(float));
+		memcpy(py,nn+j,3*sizeof(float));
+		memcpy(pz,nn+j,3*sizeof(float));
+		if(cxy<cxz && cxy<cyz)	// xy is lowest
+		{	// px, py the same as pp
+			if(pp[3]<pp[6])	pz[0] = 1-pz[0];
+			else	pz[1] = 1-pz[1];
+		}
+		if(cxz<cxy && cxz<cyz)	// xz is lowest
+		{	// px, pz the same as pp
+			if(pp[3]<pp[9])	py[0] = 1-py[0];
+			else	py[2] = 1-py[2];
+		}
+		if(cyz<cxz && cyz<cxy)	// yz is lowest
+		{	// py, pz the same as pp
+			if(pp[9]<pp[6])	px[2] = 1-px[2];
+			else	px[1] = 1-px[1];
+		}
+		// return to normal variables
+		// NOTE: this may not work in "inverse" curvilinear coordinates like x->1-x
+		px[0] = Min.x + (Max.x-Min.x)*px[0];
+		px[1] = Min.y + (Max.y-Min.y)*px[1];
+		px[2] = Min.z + (Max.z-Min.z)*px[2];
+		py[0] = Min.x + (Max.x-Min.x)*py[0];
+		py[1] = Min.y + (Max.y-Min.y)*py[1];
+		py[2] = Min.z + (Max.z-Min.z)*py[2];
+		pz[0] = Min.x + (Max.x-Min.x)*pz[0];
+		pz[1] = Min.y + (Max.y-Min.y)*pz[1];
+		pz[2] = Min.z + (Max.z-Min.z)*pz[2];
+	}
+	// just copy saved values
+	memcpy(ax,px,3*sizeof(float));
+	memcpy(ay,py,3*sizeof(float));
+	memcpy(az,pz,3*sizeof(float));
+}
+//-----------------------------------------------------------------------------
+float mglGraphAB::GetOrgX(char dir)
+{
+	float res = Org.x;
+	if(isnan(res))
+	{
+		float ax[3], ay[3], az[3];
+		FindOptOrg(ax,ay,az);
+		if(dir=='x')		res = ax[0];
+		else if(dir=='y')	res = ay[0];
+		else if(dir=='z')	res = az[0];
+		else res = B[6]>0 ? Max.x:Min.x;
+	}
+	return res;
+}
+//-----------------------------------------------------------------------------
+float mglGraphAB::GetOrgY(char dir)
+{
+	float res = Org.y;
+	if(isnan(res))
+	{
+		float ax[3], ay[3], az[3];
+		FindOptOrg(ax,ay,az);
+		if(dir=='x')		res = ax[1];
+		else if(dir=='y')	res = ay[1];
+		else if(dir=='z')	res = az[1];
+		else res = B[7]>0 ? Max.y:Min.y;
+	}
+	return res;
+}
+//-----------------------------------------------------------------------------
+float mglGraphAB::GetOrgZ(char dir)
+{
+	float res = Org.z;
+	if(isnan(res))
+	{
+		float ax[3], ay[3], az[3];
+		FindOptOrg(ax,ay,az);
+		if(dir=='x')		res = ax[2];
+		else if(dir=='y')	res = ay[2];
+		else if(dir=='z')	res = az[2];
+		else res = B[8]>0 ? Max.z:Min.z;
+	}
+	return res;
+}
 //-----------------------------------------------------------------------------

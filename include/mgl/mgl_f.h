@@ -21,14 +21,14 @@
 extern "C" {
 #endif
 #define _GR_	((mglGraph *)(*gr))
+#define _PR_	((mglParse *)(*p))
 #define _DT_	((mglData *)*d)
 #define _D_(d)	*((mglData *)*(d))
 /*****************************************************************************/
 long mgl_create_graph_gl_();
-/*long mgl_create_graph_glut_(int argc, char **argv, int _(*draw)_(mglGraph *gr, const void *p),
-				const char *title, void _(*reload)_(int *next), const void *par);
-long mgl_create_graph_fltk_(int argc, char **argv, int _(*draw)_(mglGraph *gr, const void *p),
-				const char *title, void _(*reload)_(int *next), const void *par);*/
+long mgl_create_graph_idtf_();
+/*long mgl_create_graph_glut_(int argc, char **argv, int _(*draw)_(mglGraph *gr, const void *p), const char *title, void _(*reload)_(int *next), const void *par);
+long mgl_create_graph_fltk_(int argc, char **argv, int _(*draw)_(mglGraph *gr, const void *p), const char *title, void _(*reload)_(int *next), const void *par);*/
 long mgl_create_graph_zb_(int *width, int *height);
 long mgl_create_graph_ps_(int *width, int *height);
 void mgl_delete_graph_(long *graph);
@@ -55,10 +55,12 @@ void mgl_set_size_(long *graph, int *width, int *height);
 void mgl_set_axial_dir_(long *graph, const char *dir,int);
 void mgl_set_meshnum_(long *graph, int *num);
 void mgl_set_zoom_(long *gr, float *x1, float *y1, float *x2, float *y2);
+void mgl_set_plotfactor_(long *gr, float *val);
 void mgl_set_draw_face_(long *gr, int *enable);
 void mgl_set_scheme_(long *gr, char *sch, int);
-void mgl_set_font_(long *gr, char *name, char *path);
+void mgl_set_font_(long *gr, char *name, char *path, int l, int n);
 void mgl_copy_font_(long *gr, long *gr_from);
+void mgl_restore_font_(long *gr);
 /*****************************************************************************/
 /*		Export to file or to memory														 */
 /*****************************************************************************/
@@ -94,6 +96,7 @@ void mgl_identity_(long *graph);
 void mgl_clf_(long *graph);
 void mgl_clf_rgb_(long *graph, float *r, float *g, float *b);
 void mgl_subplot_(long *graph, int *nx,int *ny,int *m);
+void mgl_subplot_d_(long *graph, int *nx,int *ny,int *m,float *dx,float *dy);
 void mgl_inplot_(long *graph, float *x1,float *x2,float *y1,float *y2);
 void mgl_aspect_(long *graph, float *Ax,float *Ay,float *Az);
 void mgl_rotate_(long *graph, float *TetX,float *TetZ,float *TetY);
@@ -110,6 +113,7 @@ void mgl_set_axis_(long *graph, float *x1, float *y1, float *z1, float *x2, floa
 void mgl_set_axis_3d_(long *graph, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2);
 void mgl_set_axis_2d_(long *graph, float *x1, float *y1, float *x2, float *y2);
 void mgl_set_origin_(long *graph, float *x0, float *y0, float *z0);
+void mgl_set_tick_origin_(long *graph, float *x0, float *y0, float *z0);
 void mgl_set_crange_(long *graph, long *a, int *add);
 void mgl_set_xrange_(long *graph, long *a, int *add);
 void mgl_set_yrange_(long *graph, long *a, int *add);
@@ -130,6 +134,12 @@ void mgl_ball_(long *graph, float *x,float *y,float *z);
 void mgl_ball_rgb_(long *graph, float *x, float *y, float *z, float *r, float *g, float *b, float *alpha);
 void mgl_ball_str_(long *graph, float *x, float *y, float *z, const char *col,int);
 void mgl_line_(long *graph, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, const char *pen,int *n,int);
+
+void mgl_facex_(long* graph, float *x0, float *y0, float *z0, float *wy, float *wz, const char *stl, float *dx, float *dy, int l);
+void mgl_facey_(long* graph, float *x0, float *y0, float *z0, float *wx, float *wz, const char *stl, float *dx, float *dy, int l);
+void mgl_facez_(long* graph, float *x0, float *y0, float *z0, float *wx, float *wy, const char *stl, float *dx, float *dy, int l);
+void mgl_curve_(long* graph, float *x1, float *y1, float *z1, float *dx1, float *dy1, float *dz1, float *x2, float *y2, float *z2, float *dx2, float *dy2, float *dz2, const char *pen,int *n, int l);
+
 void mgl_puts_(long *graph, float *x, float *y, float *z,const char *text,int);
 void mgl_text_(long *graph, float *x, float *y, float *z,const char *text,int);
 void mgl_puts_ext_(long *graph, float *x, float *y, float *z,const char *text,const char *font,float *size,const char *dir,int,int,int);
@@ -340,6 +350,7 @@ void mgl_contf_z_val_(long *graph, long *v, long *a, const char *stl, float *sVa
 /*****************************************************************************/
 /*		Data creation functions												 */
 /*****************************************************************************/
+void mgl_data_rearrange_(long *dat, int *mx, int *my, int *mz);
 void mgl_data_set_real_(long *dat, const float *A,int *NX,int *NY,int *NZ);
 void mgl_data_set_double_(long *dat, const double *A,int *NX,int *NY,int *NZ);
 void mgl_data_set_real1_(long *d, const float *A,int *N1);
@@ -360,6 +371,7 @@ void mgl_data_import_(long *dat, const char *fname, const char *scheme,float *v1
 void mgl_data_create_(long *dat, int *nx,int *ny,int *nz);
 void mgl_data_transpose_(long *dat, const char *dim,int);
 void mgl_data_norm_(long *dat, float *v1,float *v2,int *sym,int *dim);
+void mgl_data_norm_slice_(long *dat, float *v1,float *v2,char *dir,int *keep_en,int *sym,int l);
 long mgl_data_subdata_(long *dat, int *xx,int *yy,int *zz);
 long mgl_data_column_(long *dat, const char *eq,int l);
 void mgl_data_set_id_(long *dat, const char *id,int l);
@@ -386,6 +398,7 @@ void mgl_data_integral_(long *dat, const char *dir,int);
 void mgl_data_diff_(long *dat, const char *dir,int);
 void mgl_data_diff2_(long *dat, const char *dir,int);
 void mgl_data_swap_(long *dat, const char *dir,int);
+void mgl_data_mirror_(long *dat, const char *dir,int);
 float mgl_data_spline_(long *dat, float *x,float *y,float *z);
 float mgl_data_spline1_(long *dat, float *x,float *y,float *z);
 float mgl_data_linear_(long *dat, float *x,float *y,float *z);
@@ -405,6 +418,31 @@ void mgl_data_mul_num_(long *dat, float *d);
 void mgl_data_div_num_(long *dat, float *d);
 void mgl_data_add_num_(long *dat, float *d);
 void mgl_data_sub_num_(long *dat, float *d);
+/*****************************************************************************/
+/*		Nonlinear fitting													 */
+/*****************************************************************************/
+float mgl_fit_1_(long* fit, long* y, const char *eq, const char *var, float *ini, bool *print, int,int);
+float mgl_fit_2_(long* fit, long* z, const char *eq, const char *var, float *ini, bool *print, int,int);
+float mgl_fit_3_(long* fit, long* a, const char *eq, const char *var, float *ini, bool *print, int,int);
+float mgl_fit_xy_(long* fit, long* x, long* y, const char *eq, const char *var, float *ini, bool *print, int,int);
+float mgl_fit_xyz_(long* fit, long* x, long* y, long* z, const char *eq, const char *var, float *ini, bool *print, int,int);
+float mgl_fit_xyza_(long* fit, long* x, long* y, long* z, long* a, const char *eq, const char *var, float *ini, bool *print, int,int);
+float mgl_fit_ys_(long* fit, long* y, long* s, const char *eq, const char *var, float *ini, bool *print, int,int);
+float mgl_fit_xys_(long* fit, long* x, long* y, long* s, const char *eq, const char *var, float *ini, bool *print, int,int);
+float mgl_fit_xyzs_(long* fit, long* x, long* y, long* z, long* s, const char *eq, const char *var, float *ini, bool *print, int,int);
+float mgl_fit_xyzas_(long* fit, long* x, long* y, long* z, long* a, long* s, const char *eq, const char *var, float *ini, bool *print, int,int);
+void mgl_puts_fit_(float *x, float *y, float *z, const char *prefix, const char *font, float *size, int,int); 
+/*****************************************************************************/
+long mgl_create_parser_();
+void mgl_delete_parser_(long* p);
+void mgl_add_param_(long* p, int *id, const char *str, int l);
+/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
+long mgl_add_var_(long* p, const char *name, int l);
+/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
+long mgl_find_var_(long* p, const char *name, int l);
+int mgl_parse_(long* gr, long* p, const char *str, int *pos, int l);
+void mgl_restore_once_(long* p);
+void mgl_parser_allow_setsize_(long* p, int *a);
 /*****************************************************************************/
 #ifdef __cplusplus
 }

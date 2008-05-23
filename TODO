@@ -1,19 +1,8 @@
 					MathGL (for v.1.6.3)
 					
-1. Algorith for automatic axis drawing
-2. Hankel transform
-3. Try to evaluate to number if it contain only "+-/*^0123456789." in Parse() ??? + string concatenation ???
-4. Export to fortran (tool mgl2for) ???
-5. Update C/Fortran interface: fit, idtf, orgt, subplot, mirror, face[xyz], normsl, momentum, plotfactor
-6. Example of Fit() in documentation and in full_test.cpp
-7. Bounding box in curved coordinates
-8. setlocale in full_test.cpp
-9. Font size in mglGraphGL
-10. "Cutting" in OpenGL
-11. Check sampled in OpenGL
-12. Update documentation
-13. Default variables for font and just coping it while new instance created.
-14. Ternary axis -- keep z-axis as normal one ???
+1. Hankel transform
+2. Update documentation + add example of Fit()
+3. Ternary axis -- keep z-axis as normal one ???
 
 15. Save primitives for plotting (like EPS && OpenGL) ???
 16. Save curves (contour lines and flow threads) in file ???
@@ -27,6 +16,8 @@
 5. Interface for Octave ???
 6. GTK window ???
 7. Qt window ???
+8. Export to fortran (tool mgl2for) ???
+9. Try to evaluate to number if it contain only "+-/*^0123456789." in Parse() ??? + string concatenation ???
 
 					FAQ
 					

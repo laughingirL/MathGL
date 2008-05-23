@@ -27,7 +27,7 @@ void mglGraph::DensX(mglData &a, const char *sch,float sVal)
 {
 	register long i,j,i0,k,n=a.nx,m=a.ny;
 	mglColor col;
-	if(isnan(sVal))	sVal = GetOrgX();
+	if(isnan(sVal))	sVal = GetOrgX('x');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"DensX");	return;	}
 	if(sVal<Min.x || sVal>Max.x){	SetWarn(mglWarnSlc,"DensX");	return;	}
 	SetScheme(sch);
@@ -66,7 +66,7 @@ void mglGraph::DensY(mglData &a, const char *sch,float sVal)
 {
 	register long i,j,i0,k,n=a.nx,m=a.ny;
 	mglColor col;
-	if(isnan(sVal))	sVal = GetOrgY();
+	if(isnan(sVal))	sVal = GetOrgY('y');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"DensY");	return;	}
 	if(sVal<Min.y || sVal>Max.y){	SetWarn(mglWarnSlc,"DensY");	return;	}
 	SetScheme(sch);
@@ -105,7 +105,7 @@ void mglGraph::DensZ(mglData &a, const char *sch,float sVal)
 {
 	register long i,j,i0,k,n=a.nx,m=a.ny;
 	mglColor col;
-	if(isnan(sVal))	sVal = GetOrgZ();
+	if(isnan(sVal))	sVal = GetOrgZ('z');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"DensZ");	return;	}
 	if(sVal<Min.z || sVal>Max.z){	SetWarn(mglWarnSlc,"DensZ");	return;	}
 	SetScheme(sch);
@@ -171,7 +171,7 @@ void mglGraph::ContX(mglData &v, mglData &a, const char *sch, float sVal)
 {
 	register long i,j,k,n=a.nx,m=a.ny;
 	mglColor col;
-	if(isnan(sVal))	sVal = GetOrgX();
+	if(isnan(sVal))	sVal = GetOrgX('x');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContX");	return;	}
 	if(sVal<Min.x || sVal>Max.x){	SetWarn(mglWarnSlc,"ContX");	return;	}
 	long text=0;
@@ -210,7 +210,7 @@ void mglGraph::ContY(mglData &v, mglData &a, const char *sch, float sVal)
 {
 	register long i,j,k,n=a.nx,m=a.ny;
 	mglColor col;
-	if(isnan(sVal))	sVal = GetOrgY();
+	if(isnan(sVal))	sVal = GetOrgY('y');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContY");	return;	}
 	if(sVal<Min.y || sVal>Max.y){	SetWarn(mglWarnSlc,"ContY");	return;	}
 	long text=0;
@@ -249,7 +249,7 @@ void mglGraph::ContZ(mglData &v, mglData &a, const char *sch, float sVal)
 {
 	register long i,j,k,n=a.nx,m=a.ny;
 	mglColor col;
-	if(isnan(sVal))	sVal = GetOrgZ();
+	if(isnan(sVal))	sVal = GetOrgZ('z');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContZ");	return;	}
 	if(sVal<Min.z || sVal>Max.z){	SetWarn(mglWarnSlc,"ContZ");	return;	}
 	long text=0;
@@ -315,7 +315,7 @@ void mglGraph::ContFX(mglData &v, mglData &a, const char *sch, float sVal)
 {
 	register long i,j,k,n=a.nx,m=a.ny;
 	mglColor col;
-	if(isnan(sVal))	sVal = GetOrgX();
+	if(isnan(sVal))	sVal = GetOrgX('x');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContFX");	return;	}
 	if(sVal<Min.x || sVal>Max.x){	SetWarn(mglWarnSlc,"ContFX");	return;	}
 	long text=0;
@@ -354,7 +354,7 @@ void mglGraph::ContFY(mglData &v, mglData &a, const char *sch, float sVal)
 {
 	register long i,j,k,n=a.nx,m=a.ny;
 	mglColor col;
-	if(isnan(sVal))	sVal = GetOrgY();
+	if(isnan(sVal))	sVal = GetOrgY('y');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContFY");	return;	}
 	if(sVal<Min.y || sVal>Max.y){	SetWarn(mglWarnSlc,"ContFY");	return;	}
 	long text=0;
@@ -393,7 +393,7 @@ void mglGraph::ContFZ(mglData &v, mglData &a, const char *sch, float sVal)
 {
 	register long i,j,k,n=a.nx,m=a.ny;
 	mglColor col;
-	if(isnan(sVal))	sVal = GetOrgZ();
+	if(isnan(sVal))	sVal = GetOrgZ('z');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContFZ");	return;	}
 	if(sVal<Min.z || sVal>Max.z){	SetWarn(mglWarnSlc,"ContFZ");	return;	}
 	long text=0;

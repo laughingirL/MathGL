@@ -12,7 +12,7 @@ void save(mglGraph *gr,const char *name,const char *suf="",int type=0)
 //	return;
 	char buf[128];
 	switch(type)
-	{
+{
 	case 1:	// EPS
 		sprintf(buf,"%s%s.eps",name,suf);
 		gr->WriteEPS(buf);	break;
@@ -28,7 +28,7 @@ void save(mglGraph *gr,const char *name,const char *suf="",int type=0)
 	default:// PNG (no alpha)
 		sprintf(buf,"%s%s.png",name,suf);
 		gr->WritePNG(buf,0,false);	break;
-	}
+}
 }
 //-----------------------------------------------------------------------------
 int sample_ae(mglGraph *gr, const void *)	// arrow styles
@@ -260,8 +260,9 @@ int sample_a5(mglGraph *gr, const void *)	// pen styles
 //-----------------------------------------------------------------------------
 int sample_a4(mglGraph *gr, const void *)	// font features
 {
-	setlocale(LC_CTYPE, "ru_RU.cp1251");
-	gr->Puts(mglPoint(0,1),"Text can be in english и на русском");
+//	setlocale(LC_CTYPE, "ru_RU.cp1251");
+//	gr->Putsw(mglPoint(0,1),L"Text can be in english и в ёникоде");
+	gr->Putsw(mglPoint(0,1),L"Text can be in ASCII and in Unicode");
 	gr->Puts(mglPoint(0,0.6),"It can be \\wire{wire} and \\big{big}");
 	gr->Puts(mglPoint(0,0.2),"One can change style in string: "
 		"\\b{bold}, \\i{italic, \\b{both}}");
@@ -393,18 +394,18 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 /*	int i,j,k;
 	float xx,yy,zz,dd;
 	for(i=0;i<10;i++)	for(j=0;j<10;j++)	for(k=0;k<10;k++)
-	{
+{
 		xx = i*0.1-0.5;	yy = j*0.1-0.5;	zz = k*0.1-0.35;	dd = k*0.1-0.65;
 		ex.a[i+10*(j+10*k)] = 0.1*xx/pow(xx*xx+yy*yy+zz*zz,1.5) - 0.1*xx/pow(xx*xx+yy*yy+dd*dd,1.5);
 		ey.a[i+10*(j+10*k)] = 0.1*yy/pow(xx*xx+yy*yy+zz*zz,1.5) - 0.1*yy/pow(xx*xx+yy*yy+dd*dd,1.5);
 		ez.a[i+10*(j+10*k)] = 0.1*zz/pow(xx*xx+yy*yy+zz*zz,1.5) - 0.1*dd/pow(xx*xx+yy*yy+dd*dd,1.5);
-	}
+}
 	for(i=0;i<60;i++)	for(j=0;j<50;j++)	for(k=0;k<40;k++)
-	{
+{
 		xx = i/30.-1;	yy = j/25.-1;	zz = k/20.-1;
 		c.a[i+60*(j+50*k)] = -2*(xx*xx + yy*yy + zz*zz*zz*zz - zz*zz - 0.1);
 		d.a[i+60*(j+50*k)] = 1-2*tanh((xx+yy)*(xx+yy));
-	}*/
+}*/
 	ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2 + (y-0.5)^2+(z-0.65)^2,1.5)");
 	ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2 + (y-0.5)^2+(z-0.65)^2,1.5)");
 	ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.65)^2,1.5)");
@@ -481,7 +482,7 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->Mark(y,y1,"bs");	save(gr,"mark",suf);
 	gr->Clf();	gr->Box();	gr->TextMark(y,y1,"\\gamma");	save(gr,"textmark",suf);
 	gr->Clf();	gr->Box();	gr->Plot(y.SubData(-1,0));
-	gr->Text(y,"This is very long string drawn along a curve",":k");
+	gr->Text(y,"This is very very long string drawn along a curve",":k");
 	gr->Text(y,"Another string drawn above a curve","T:r");	save(gr,"text",suf);
 	gr->Clf();	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ex0,ey0,"ko");	save(gr,"error",suf);
 
@@ -757,6 +758,27 @@ int sample_logaxis(mglGraph *gr, const void *s)	// flag #
 	return 0;
 }
 //-----------------------------------------------------------------------------
+int sample_fit(mglGraph *gr, const void *s)	// flag #
+{
+	mglData rnd(100), in(100), res;
+	rnd.Modify("0.4*rnd+0.1+sin(4*pi*x)", 0);
+	in.Modify("0.3+sin(4*pi*x)", 0);
+	
+	gr->Axis(mglPoint(-1,-2), mglPoint(1,2));
+	gr->Plot(rnd, ". ");
+	gr->Box();
+	
+	float ini[3] = {1,1,3};
+	gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", ini);
+	gr->Plot(res, "r");
+	gr->Plot(in, "b");
+	gr->Text(mglPoint(-1, -1.3), "fitted:", "L:r", -1);
+	gr->PutsFit(mglPoint(0, -1.8), "y = ", "C:r", -1);
+	gr->Text(mglPoint(0, 2.2), "initial: y = 0.3+sin(2\\pi x)", "C:b", -1);
+	gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(0,0,0));
+	return 0;
+}
+//-----------------------------------------------------------------------------
 int all_samples(mglGraph *gr, const void *s)
 {
 	const char *suf = (const char *)s;
@@ -777,6 +799,7 @@ int all_samples(mglGraph *gr, const void *s)
 	gr->SubPlot(1,1,0);gr->Clf();sample_ae(gr,0);	save(gr,"samplee",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_molecule(gr,0);	save(gr,"molecule",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_ternary(gr,0);	save(gr,"ternary",suf);
+	gr->SubPlot(1,1,0);gr->Clf();sample_fit(gr,0);	save(gr,"fit",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_drops(gr,s);
 	gr->SubPlot(1,1,0);gr->Clf();sample_logaxis(gr,s);
 	gr->SubPlot(1,1,0);gr->Clf();sample_mirror(gr,0);	save(gr,"mirror",suf);
@@ -949,15 +972,15 @@ int main(int argc,char **argv)
 	mglGraphPS ps;
 	mglGraph &gr = zb;
 	if(argc>1)
-	{
+{
 		if(!strcmp(argv[1],"mini"))
-		{	gr.SetSize(200,133);	suf = "_sm";	}
+{	gr.SetSize(200,133);	suf = "_sm";	}
 		if(!strcmp(argv[1],"big"))
-		{
+{
 			gr.SetSize(1200,800);	suf = "_lg";
 			gr.BaseLineWidth = 2;
-		}
-	}
+}
+}
 
 	all_samples(&gr,suf);
 	sample_transp(&gr,suf);

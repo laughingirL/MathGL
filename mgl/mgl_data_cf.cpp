@@ -42,6 +42,9 @@ void mgl_data_add_num(HMDT d, float b) {	*d += b;	}
 /// Substract the number
 void mgl_data_sub_num(HMDT d, float b) {	*d -= b;	}
 //-----------------------------------------------------------------------------
+/// Rearrange data dimensions
+void mgl_data_rearrange(HMDT d, int mx, int my, int mz)
+{	d->Rearrange(mx,my,mz);	}
 /// Resize the data to new size of box [x1,x2]*[y1,y2]*[z1,z2]
 HMDT mgl_data_resize(HMDT d, int mx,int my,int mz,float x1,float x2,
 	float y1,float y2,float z1,float z2)
@@ -72,6 +75,9 @@ void mgl_data_transpose(HMDT d, const char *dim)	{	d->Transpose(dim);	}
 /// Normalize the data to range [v1,v2]
 void mgl_data_norm(HMDT d, float v1,float v2,bool sym,int dim)
 {	d->Norm(v1,v2,sym,dim);	}
+/// Normalize the data to range [v1,v2] slice by slice
+void mgl_data_norm(HMDT d, float v1,float v2,char dir,bool keep_en,bool sym)
+{	d->NormSl(v1,v2,dir,keep_en,sym);	}
 /// Reduce size of the data
 void mgl_data_squeeze(HMDT d, int rx,int ry,int rz,bool smooth)
 {	d->Squeeze(rx,ry,rz,smooth);	}
@@ -88,6 +94,9 @@ float &mgl_data_value(HMDT d, int i,int j,int k)	{	return d->a[i+d->nx*(j+d->ny*
 /// Swap left and right part of the data in given direction (useful for fourier spectrums)
 void mgl_data_swap(HMDT d, const char *dir)
 {	d->Swap(dir);	}
+/// Mirror the data in given direction
+void mgl_data_mirror(HMDT d, const char *dir)
+{	d->Mirror(dir);	}
 //-----------------------------------------------------------------------------
 /// Allocate memory and copy the data from the (float *) array
 void mgl_data_set_float(HMDT d, const float *A,int NX,int NY,int NZ)
@@ -153,6 +162,9 @@ void mgl_data_add_num_(long *d, float *b) {	_D_(d) += *b;	}
 /// Substract the number
 void mgl_data_sub_num_(long *d, float *b) {	_D_(d) -= *b;	}
 //-----------------------------------------------------------------------------
+/// Rearrange data dimensions
+void mgl_data_rearrange_(long *d, int *mx, int *my, int *mz)
+{	_DT_->Rearrange(*mx,*my,*mz);	}
 /// Resize the data to new size of box [x1,x2]*[y1,y2]*[z1,z2]
 long mgl_data_resize_(long *d, int *mx,int *my,int *mz,float *x1,float *x2,
 						float *y1,float *y2,float *z1,float *z2)
@@ -203,6 +215,9 @@ void mgl_data_transpose_(long *d, const char *dim,int l)
 /// Normalize the data to range [v1,v2]
 void mgl_data_norm_(long *d, float *v1,float *v2,int *sym,int *dim)
 {	_DT_->Norm(*v1,*v2,*sym,*dim);	}
+/// Normalize the data to range [v1,v2]
+void mgl_data_norm_(long *d, float *v1,float *v2,char *dir,int *keep_en,int *sym,int l)
+{	_DT_->NormSl(*v1,*v2,*dir,*keep_en,*sym);	}
 /// Reduce size of the data
 void mgl_data_squeeze_(long *d, int *rx,int *ry,int *rz,int *smooth)
 {	_DT_->Squeeze(*rx,*ry,*rz,*smooth);	}
@@ -221,6 +236,13 @@ void mgl_data_swap_(long *d, const char *dir,int l)
 {
 	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	_DT_->Swap(s);
+	delete []s;
+}
+/// Mirror the data in given direction
+void mgl_data_mirror_(long *d, const char *dir,int l)
+{
+	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	_DT_->Mirror(s);
 	delete []s;
 }
 //-----------------------------------------------------------------------------

@@ -98,6 +98,9 @@ void mgl_set_font(HMGL gr, char *name, char *path)
 /// Copy font data from another HMGL object
 void mgl_copy_font(HMGL gr, HMGL gr_from)
 {	gr->GetFont()->Copy(gr_from->GetFont());	}
+/// Restore font data
+void mgl_restore_font(HMGL gr)
+{	gr->GetFont()->Restore();	}
 //-----------------------------------------------------------------------------
 //		Export to file
 //-----------------------------------------------------------------------------
@@ -153,6 +156,9 @@ void mgl_clf_rgb(HMGL gr, float r, float g, float b)
 /// Put further plotting in some region of whole frame surface.
 void mgl_subplot(HMGL gr, int nx,int ny,int m)
 {	gr->SubPlot(nx,ny,m);	}
+/// Put further plotting in some region of whole frame surface.
+void mgl_subplot_d(HMGL gr, int nx,int ny,int m,float dx,float dy)
+{	gr->SubPlot(nx,ny,m,dx,dy);	}
 /// Put further plotting in some region of whole frame surface.
 void mgl_inplot(HMGL gr, float x1,float x2,float y1,float y2)
 {	gr->InPlot(x1,x2,y1,y2);	}
@@ -234,6 +240,16 @@ void mgl_ball_str(HMGL gr, float x, float y, float z, const char *col)
 /// Draws the line between points with style \a sch.
 void mgl_line(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, const char *pen,int n)
 {	gr->Line(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2),pen,n);	}
+
+void mgl_facex(HMGL gr, float x0, float y0, float z0, float wy, float wz, const char *stl, float dx, float dy)
+{	gr->FaceX(x0,y0,z0,wy,wz,stl,dx,dy);	}
+void mgl_facey(HMGL gr, float x0, float y0, float z0, float wx, float wz, const char *stl, float dx, float dy)
+{	gr->FaceY(x0,y0,z0,wx,wz,stl,dx,dy);	}
+void mgl_facez(HMGL gr, float x0, float y0, float z0, float wx, float wy, const char *stl, float dx, float dy)
+{	gr->FaceZ(x0,y0,z0,wx,wy,stl,dx,dy);	}
+void mgl_curve(HMGL gr, float x1, float y1, float z1, float dx1, float dy1, float dz1, float x2, float y2, float z2, float dx2, float dy2, float dz2, const char *pen,int n)
+{	gr->Curve(mglPoint(x1,y1,z1), mglPoint(dx1,dy1,dz1), mglPoint(x2,y2,z2), mglPoint(dx2,dy2,dz2), pen, n);	}
+
 /// Print string \a str in position \a p with font size \a size.
 void mgl_puts(HMGL gr, float x, float y, float z,const char *text)
 {	gr->Puts(mglPoint(x,y,z),text);	}
@@ -306,10 +322,37 @@ void mgl_data_set_value(HMDT d, int i, int j, int k, float v)
 /// Zoom in/out a part of picture
 void mgl_set_zoom(HMGL gr, float x1, float y1, float x2, float y2)
 {	gr->Zoom(x1,y1,x2,y2);	}
+void mgl_set_plotfactor(HMGL gr, float val)
+{	gr->PlotFactor = val;	}
 void mgl_set_axis_3d(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2)
 {	gr->Axis(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2));	}
 void mgl_set_axis_2d(HMGL gr, float x1, float y1, float x2, float y2)
 {	gr->Axis(mglPoint(x1,y1),mglPoint(x2,y2));	}
 void mgl_set_origin(HMGL gr, float x0, float y0, float z0)
 {	gr->Org = mglPoint(x0,y0,z0);	}
+void mgl_set_tick_origin(HMGL gr, float x0, float y0, float z0)
+{	gr->OrgT = mglPoint(x0,y0,z0);	}
+//-----------------------------------------------------------------------------
+float mgl_fit_1(HMGL gr, HMDT fit, HMDT y, const char *eq, const char *var, float *ini, bool print)
+{	gr->Fit(*fit, *y, eq, var, ini, print);	}
+float mgl_fit_2(HMGL gr, HMDT fit, HMDT z, const char *eq, const char *var, float *ini, bool print)
+{	gr->Fit2(*fit, *z, eq, var, ini, print);	}
+float mgl_fit_3(HMGL gr, HMDT fit, HMDT a, const char *eq, const char *var, float *ini, bool print)
+{	gr->Fit3(*fit, *a, eq, var, ini, print);	}
+float mgl_fit_xy(HMGL gr, HMDT fit, HMDT x, HMDT y, const char *eq, const char *var, float *ini, bool print)
+{	gr->Fit(*fit, *x, *y, eq, var, ini, print);	}
+float mgl_fit_xyz(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT z, const char *eq, const char *var, float *ini, bool print)
+{	gr->Fit(*fit, *x, *y, *z, eq, var, ini, print);	}
+float mgl_fit_xyza(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT z, HMDT a, const char *eq, const char *var, float *ini, bool print)
+{	gr->Fit(*fit, *x, *y, *z, *a, eq, var, ini, print);	}
+float mgl_fit_ys(HMGL gr, HMDT fit, HMDT y, HMDT s, const char *eq, const char *var, float *ini, bool print)
+{	gr->FitS(*fit, *y, *s, eq, var, ini, print);	}
+float mgl_fit_xys(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT s, const char *eq, const char *var, float *ini, bool print)
+{	gr->FitS(*fit, *x, *y, *s, eq, var, ini, print);	}
+float mgl_fit_xyzs(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT z, HMDT s, const char *eq, const char *var, float *ini, bool print)
+{	gr->FitS(*fit, *x, *y, *z, *s, eq, var, ini, print);	}
+float mgl_fit_xyzas(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT z, HMDT a, HMDT s, const char *eq, const char *var, float *ini, bool print)
+{	gr->FitS(*fit, *x, *y, *z, *a, *s, eq, var, ini, print);	}
+void mgl_puts_fit(HMGL gr, float x, float y, float z, const char *prefix, const char *font, float size) 
+{	gr->PutsFit(mglPoint(x,y,z), prefix, font, size);	}
 //-----------------------------------------------------------------------------

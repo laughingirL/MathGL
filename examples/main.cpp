@@ -59,28 +59,13 @@ int sample_transp(mglGraph *gr, void *)	// flag #
 //-----------------------------------------------------------------------------
 int sample(mglGraph *gr, void *)
 {
-	mglData f(200), fa(200), fb(200), fc(200), fx(200);
-	float v[30];
-//	mglFormula eq("a+b*sin(c*x)");
-	mglFormula eq("cos(c*x)");
-	memset(v,0,30*sizeof(float));
-	v[0] = v[1] = v[2] = 2;
-	for(int i=0;i<200;i++)
-	{
-		v['x'-'a']=i*0.01-1;
-		f.a[i] = eq.Calc(v);
-		fa.a[i] = eq.CalcD(v,'a');
-		fb.a[i] = eq.CalcD(v,'b');
-		fc.a[i] = eq.CalcD(v,'c');
-		fx.a[i] = eq.CalcD(v,'x');
-	}
-	gr->Axis(mglPoint(-1,-2), mglPoint(1,2));
-	gr->Plot(f,"k");
-//	gr->Plot(fa,"g");
-//	gr->Plot(fb,"b");
-	gr->Plot(fc,"r");
-	gr->Plot(fx,"n");
+	gr->Rotate(0,0);
+	gr->Org = mglPoint(NAN,NAN,NAN);
 	gr->Box();
+	gr->Label('x',"x");
+	gr->Label('y',"y");
+	gr->Label('z',"z");
+	gr->Axis();
 	return 0;
 }
 

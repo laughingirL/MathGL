@@ -82,6 +82,8 @@ public:
 	inline unsigned GetNumGlyph()	{	return numg;	};
 	/// Copy data from other font
 	void Copy(mglFont *);
+	/// Restore default font
+	void Restore();
 	/// Return true if font is loaded
 	inline bool Ready()	{	return numg!=0;	};
 protected:

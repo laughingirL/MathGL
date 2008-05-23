@@ -509,7 +509,7 @@ void mglGraph::DefaultPlotParam()
 	MarkSize = 0.02;		ArrowSize = 0.03;
 	AlphaDef = 0.5;			Transparent = true;
 	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1), mglPoint(0,0,0));
-	FontSize = 6;			BaseLineWidth = 1;
+	FontSize = 5;			BaseLineWidth = 1;
 	strcpy(FontDef,"rC");	AxialDir = 'y';
 	UseAlpha = false;		TranspType = 0;
 	RotatedText = true;		fnt->gr = this;
@@ -903,9 +903,9 @@ void mglGraph::AddLegend(const char *str,const char *style)
 void mglGraph::SetFontSizePT(float pt, int dpi)
 {	FontSize = pt*27.f/dpi;	}
 //-----------------------------------------------------------------------------
-float mglGraph::GetOrgX()	{	return isnan(Org.x) ? Min.x : Org.x;	}
-float mglGraph::GetOrgY()	{	return isnan(Org.y) ? Min.y : Org.y;	}
-float mglGraph::GetOrgZ()	{	return isnan(Org.z) ? Min.z : Org.z;	}
+float mglGraph::GetOrgX(char)	{	return isnan(Org.x) ? Min.x : Org.x;	}
+float mglGraph::GetOrgY(char)	{	return isnan(Org.y) ? Min.y : Org.y;	}
+float mglGraph::GetOrgZ(char)	{	return isnan(Org.z) ? Min.z : Org.z;	}
 //-----------------------------------------------------------------------------
 void mglGraph::FaceX(float x0, float y0, float z0, float wy, float wz, const char *stl, float d1, float d2)
 {

@@ -34,6 +34,7 @@ extern long mgl_gen_fnt[516][6];
 extern short mgl_buf_fnt[246080];
 const float mgl_fgen = 4*14;
 extern mglTeXsymb mgl_tex_symb[];
+mglFont mglDefFont;
 //-----------------------------------------------------------------------------
 float mglFont::Puts(const char *str,const char *how)
 {
@@ -680,8 +681,13 @@ bool mglFont::Load(const char *base, const char *path)
 }
 //-----------------------------------------------------------------------------
 mglFont::mglFont(const char *name, const char *path)
-{	parse = true;	numg=0;	Load(name, path);	}
+{
+	parse = true;	numg=0;	
+	if(this==&mglDefFont)	Load(name, path);
+	else	Copy(&mglDefFont);
+}
 mglFont::~mglFont()	{	Clear();	}
+void mglFont::Restore()	{	Copy(&mglDefFont);	}
 //-----------------------------------------------------------------------------
 void mglFont::Clear()
 {
