@@ -45,16 +45,16 @@ function mgl_create_graph_ps(width, height: integer): HMGL; cdecl; external 'mgl
 
 
 //HMGL mgl_create_graph_glut(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),	const char *title, void (*reload)(bool next), void *par);
-type TGLUTDrawFunction = function (gr: HMGL; p: pointer): integer; cdecl;
-type TGLUTReloadFunction = procedure (next: boolean); cdecl;
+type TGLUTDrawFunction = function (gr: HMGL; p: pointer): integer;
+type TGLUTReloadFunction = procedure (next: boolean);
 type PPChar = ^PChar;
-function mgl_create_graph_glut(argc: integer; argv: PPChar; draw: TGLUTDrawFunction; const title: PChar; reload: TGLUTReloadFunction; par: pointer): HMGL; cdecl; external 'libmgl-glut.dll';
+function mgl_create_graph_glut(argc: integer; argv: PPChar; draw: TGLUTDrawFunction; const title: PChar; reload: TGLUTReloadFunction; par: pointer): HMGL; cdecl; external 'mgl.dll';
 
 //HMGL mgl_create_graph_fltk(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void (*reload)(bool next), void *par);
-function mgl_create_graph_fltk(argc: integer; argv: PPChar; draw: TGLUTDrawFunction; const title: PChar; reload: TGLUTReloadFunction; par: pointer): HMGL; cdecl; external 'libmgl-fltk.dll';
+function mgl_create_graph_fltk(argc: integer; argv: PPChar; draw: TGLUTDrawFunction; const title: PChar; reload: TGLUTReloadFunction; par: pointer): HMGL; cdecl; external 'mgl.dll';
 
 //void mgl_fltk_run();
-procedure mgl_fltk_run(); cdecl; external 'libmgl-fltk.dll';
+procedure mgl_fltk_run(); cdecl; external 'mgl.dll';
 
 //void mgl_delete_graph(HMGL graph);
 procedure mgl_delete_graph(graph: HMGL); cdecl; external 'mgl.dll';

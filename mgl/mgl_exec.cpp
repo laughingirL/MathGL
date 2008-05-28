@@ -2182,40 +2182,40 @@ void mglc_vect(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"gr->Vect(%s, %s, %s, %s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, k[6]==2?a[6].s:"");
 }
 //-----------------------------------------------------------------------------
-//	{"xlabel","Draw label for x-axis","xlabel txt [fnt pos]", mgls_xlabel, mglc_xlabel}
+//	{"xlabel","Draw label for x-axis","xlabel txt [fnt pos shift]", mgls_xlabel, mglc_xlabel}
 int mgls_xlabel(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Label('x',a[0].s,k[1]==3?int(a[1].v):1);
+	if(k[0]==2)	gr->Label('x', a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 	else	return 1;
 	return 0;
 }
 void mglc_xlabel(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)	swprintf(out,1024,L"gr->Label('x',\"%s\",%d);", a[0].s, k[1]==3?int(a[1].v):1);
+	if(k[0]==2)	swprintf(out,1024,L"gr->Label('x', \"%s\", %d, %g, %g);", a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 }
 //-----------------------------------------------------------------------------
 //	{"ylabel","Draw label for y-axis","ylabel txt [fnt pos]", mgls_ylabel, mglc_ylabel}
 int mgls_ylabel(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Label('y',a[0].s,k[1]==3?int(a[1].v):1);
+	if(k[0]==2)	gr->Label('y', a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 	else	return 1;
 	return 0;
 }
 void mglc_ylabel(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)	swprintf(out,1024,L"gr->Label('y',\"%s\",%d);", a[0].s, k[1]==3?int(a[1].v):1);
+	if(k[0]==2)	swprintf(out,1024,L"gr->Label('y', \"%s\", %d, %g, %g);", a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 }
 //-----------------------------------------------------------------------------
 //	{"zlabel","Draw label for z-axis","zlabel txt [fnt pos]", mgls_zlabel, mglc_zlabel}
 int mgls_zlabel(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Label('z',a[0].s,k[1]==3?int(a[1].v):1);
+	if(k[0]==2)	gr->Label('z', a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 	else	return 1;
 	return 0;
 }
 void mglc_zlabel(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)	swprintf(out,1024,L"gr->Label('z',\"%s\",%d);", a[0].s, k[1]==3?int(a[1].v):1);
+	if(k[0]==2)	swprintf(out,1024,L"gr->Label('z', \"%s\", %d, %g, %g);", a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 }
 //-----------------------------------------------------------------------------
 //	{"xrange","Set range for x-axis","xrange {var [add]} | {x1 x2}", mgls_xrange, mglc_xrange}
@@ -2769,6 +2769,23 @@ void mglc_rearrange(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"%s.Rearrange(%d, %d, %d);",a[0].s, int(a[1].v), k[2]==3?int(a[2].v):0, k[3]==3?int(a[3].v):0);
 }
 //-----------------------------------------------------------------------------
+//	{"ctick","Set ticks for colorbar","ctick tmpl", mgls_ctick, mglc_ctick}
+int mgls_ctick(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)
+	{
+		if(gr->ctt)	delete []gr->ctt;
+		gr->ctt = a[0].s[0] ? mgl_str_copy(a[0].s) : 0;
+	}
+	else	return 1;
+	return 0;
+}
+void mglc_ctick(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)
+		swprintf(out,1024,L"if(gr->ctt) delete []gr->ctt;\tgr->ctt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{L"addlegend",L"Add legend entry",L"addlegend txt fmt", mgls_addlegend, mglc_addlegend},
 	{L"addto",L"Add data or number",L"addto var|num", mgls_addto, mglc_addto},
@@ -2811,6 +2828,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"crange",L"Set color range",L"crange {var [sym] | c1 c2}", mgls_crange, mglc_crange},
 	{L"crop",L"Crop edge of data",L"crop var n1 n2 dir", mgls_crop, mglc_crop},
 	{L"crust",L"Draw reconstructed surface for arbitrary data points",L"crust {xvar yvar zvar} | var [fmt]", mgls_crust, mglc_crust},
+	{"ctick","Set ticks for colorbar","ctick tmpl", mgls_ctick, mglc_ctick},
 	{L"cumsum",L"Crop edge of data",L"cumsum var dir", mgls_cumsum, mglc_cumsum},
 	{L"curve",L"Draw curve",L"", mgls_curve, mglc_curve},
 	{L"cut",L"Setup plot points cutting",L"", mgls_cut, mglc_cut},

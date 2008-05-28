@@ -156,7 +156,7 @@ public:
 	int NumPal;			///< Number of colors in palette.
 	char FontDef[32];	///< Font specification (see mglGraph::Puts). Default is Roman with align at center.
 	bool RotatedText;	///< Use text rotation along axis
-	const char *PlotId;		///< Id of plot for saving filename (in GLUT window for example)
+	const char *PlotId;	///< Id of plot for saving filename (in GLUT window for example)
 	int MeshNum;		///< Set approximate number of lines in mglGraph::Mesh and mglGraph::Grid. By default (=0) it draw all lines.
 
 	float dx;			///< Step for axis mark (if positive) or its number (if negative) in x direction.
@@ -175,10 +175,8 @@ public:
 	const wchar_t *ctt;	///< Colorbar-tick template (set NULL to use default one ("%.2g" in simplest case))
 	/// Function for writting tick label to \a str for axis in direction \a dir for value \a val. Must return true if \a str should be used as tick label.
 	bool (*TickStr)(char dir, float val, wchar_t str[64]);
-	/// Factor for sizing overall plot (should be >1.6, default is =2)
-	float PlotFactor;
-	/// Enable autochange PlotFactor
-	bool AutoPlotFactor;
+	float PlotFactor;	///< Factor for sizing overall plot (should be >1.6, default is =2)
+	bool AutoPlotFactor;///< Enable autochange PlotFactor
 
 	/// Flag which determines how points outside bounding box are drown.
 	bool Cut;
@@ -196,8 +194,7 @@ public:
 	bool LegendBox;		///< Set on/off drawing legend box.
 	char AxialDir;		///< Direction of rotation for Axial() and Torus().
 	bool DrawFace;		///< Switch on/off face drawing (for faster plot rotation, redrawing and so on)
-	/// Default value of alpha channel for transparency for all plotting functions.
-	float AlphaDef;
+	float AlphaDef;		///< Default value of alpha channel (transparency) for all plotting functions.
 	char *Message;		///< Buffer for receiving messages
 	int WarnCode;		///< Warning code
 	bool TuneTicks;		///< Draw tuned ticks with extracted common component
@@ -205,10 +202,8 @@ public:
 	int CirclePnts;		///< Number of points for a circle drawing (used in Tube(), Drop(), Sphere(), Cone())
 	int FitPnts;		///< Number of output points in fitting
 
-	/// Set default parameter for plotting
-	mglGraph();
-	/// Clear the used variables
-	virtual ~mglGraph();
+	mglGraph();			///< Set default parameter for plotting
+	virtual ~mglGraph();///< Clear the used variables
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Export functions
 	  * These functions export current view to a graphic file.

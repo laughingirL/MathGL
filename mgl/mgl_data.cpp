@@ -42,6 +42,15 @@ double ipow_mgl(double x,int n)
 	return t;
 }
 //-----------------------------------------------------------------------------
+void mglData::Smooth(const char *dirs)
+{
+	int type = SMOOTH_QUAD_5;
+	if(strchr(dirs,'0') || strchr(dirs,'1'))	return;
+	if(strchr(dirs,'3'))	type = SMOOTH_LINE_3;
+	if(strchr(dirs,'5'))	type = SMOOTH_LINE_5;
+	Smooth(type, dirs, 0);
+}
+//-----------------------------------------------------------------------------
 void mglData::Smooth(int Type,const char *dirs,float delta)
 {
 	if(Type == SMOOTH_NONE)	return;
@@ -70,7 +79,7 @@ void mglData::Smooth(int Type,const char *dirs,float delta)
 			if(d3)	b[i0] = a[i0];
 			else if(Type==SMOOTH_LINE_3 || d5)	b[i0] = y3/3.;
 			else if(Type==SMOOTH_LINE_5)		b[i0] = y5/5.;
-			else if(Type==SMOOTH_QUAD_5)				b[i0] = (17*y5-5*x2y)/35.;
+			else if(Type==SMOOTH_QUAD_5)		b[i0] = (17*y5-5*x2y)/35.;
 			if(delta>0)		b[i0] = mgl_max(a[i0]-delta,mgl_min(a[i0]+delta,b[i0]));
 		}
 		memcpy(a,b,nx*ny*nz*sizeof(float));	memset(b,0,nx*ny*nz*sizeof(float));
@@ -96,7 +105,7 @@ void mglData::Smooth(int Type,const char *dirs,float delta)
 			if(d3)	b[i0] = a[i0];
 			else if(Type==SMOOTH_LINE_3 || d5)	b[i0] = y3/3.;
 			else if(Type==SMOOTH_LINE_5)		b[i0] = y5/5.;
-			else if(Type==SMOOTH_QUAD_5)				b[i0] = (17*y5-5*x2y)/35.;
+			else if(Type==SMOOTH_QUAD_5)		b[i0] = (17*y5-5*x2y)/35.;
 			if(delta>0)		b[i0] = mgl_max(a[i0]-delta,mgl_min(a[i0]+delta,b[i0]));
 		}
 		memcpy(a,b,nx*ny*nz*sizeof(float));	memset(b,0,nx*ny*nz*sizeof(float));
@@ -122,7 +131,7 @@ void mglData::Smooth(int Type,const char *dirs,float delta)
 			if(d3)	b[i0] = a[i0];
 			else if(Type==SMOOTH_LINE_3 || d5)	b[i0] = y3/3.;
 			else if(Type==SMOOTH_LINE_5)		b[i0] = y5/5.;
-			else if(Type==SMOOTH_QUAD_5)				b[i0] = (17*y5-5*x2y)/35.;
+			else if(Type==SMOOTH_QUAD_5)		b[i0] = (17*y5-5*x2y)/35.;
 			if(delta>0)		b[i0] = mgl_max(a[i0]-delta,mgl_min(a[i0]+delta,b[i0]));
 		}
 		memcpy(a,b,nx*ny*nz*sizeof(float));
@@ -1248,7 +1257,7 @@ void mglData::PrintInfo(char *buf)
 	Momentum('x',X,Wx);		Momentum('y',Y,Wy);
 	Momentum('z',Z,Wz);		Momentum(0,A,Wa);
 	sprintf(s,"Averages are:\n<a> = %g\t<x> = %g\t<y> = %g\t<z> = %g\n", A,X,Y,Z);	strcat(buf,s);
-	sprintf(s,"Widths (dispersions) are:\nWa = %g\tWx = %g\tWy = %g\tWz = %g\n\n",
+	sprintf(s,"Widths (dispersions) are:\nWa = %g\tWx = %g\tWy = %g\tWz = %g\n",
 		Wa,Wx,Wy,Wz);	strcat(buf,s);
 }
 //-----------------------------------------------------------------------------
@@ -1262,4 +1271,122 @@ void mglData::Rearrange(int mx, int my, int mz)
 	nx = mx;	ny = my;	nz = mz;
 }
 //-----------------------------------------------------------------------------
+void mglData::InsertColumns(int at, int num, const char *eq)
+{
+	if(num<1)	return;
+	mglData b(nx+num,ny,nz);
+	if(at<1)	at=1;	if(at>nx)	at=nx;
+	register long i,j,k;
+	for(i=0;i<at;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+		b.a[i+(nx+num)*(j+ny*k)] = a[i+nx*(j+ny*k)];
+	for(i=at;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+		b.a[i+num+(nx+num)*(j+ny*k)] = a[i+nx*(j+ny*k)];
+	if(eq)
+	{
+		mglFormula e(eq);
+		float dx,dy,dz;
+		dx = num==1?0:1./(num-1);
+		dy = ny==1?0:1./(ny-1);
+		dz = nz==1?0:1./(nz-1);
+		for(i=0;i<num;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+			b.a[i+at+(nx+num)*(j+ny*k)] = e.Calc(i*dx,j*dy, k*dz);
+	}
+	Set(b);
+}
+//-----------------------------------------------------------------------------
+void mglData::InsertRows(int at, int num, const char *eq)
+{
+	if(num<1)	return;
+	mglData b(nx,ny+num,nz);
+	if(at<1)	at=1;	if(at>nx)	at=nx;
+	register long i,j,k;
+	for(i=0;i<nx;i++)	for(j=0;j<at;j++)	for(k=0;k<nz;k++)
+		b.a[i+nx*(j+(ny+num)*k)] = a[i+nx*(j+ny*k)];
+	for(i=0;i<nx;i++)	for(j=at;j<ny;j++)	for(k=0;k<nz;k++)
+		b.a[i+nx*(j+num+(ny+num)*k)] = a[i+nx*(j+ny*k)];
+	if(eq)
+	{
+		mglFormula e(eq);
+		float dx,dy,dz;
+		dy = num==1?0:1./(num-1);
+		dx = nx==1?0:1./(nx-1);
+		dz = nz==1?0:1./(nz-1);
+		for(i=0;i<nx;i++)	for(j=0;j<num;j++)	for(k=0;k<nz;k++)
+			b.a[i+nx*(j+at+(ny+num)*k)] = e.Calc(i*dx,j*dy, k*dz);
+	}
+	Set(b);
+}
+//-----------------------------------------------------------------------------
+void mglData::InsertSlices(int at, int num, const char *eq)
+{
+	if(num<1)	return;
+	mglData b(nx,ny,nz+num);
+	if(at<1)	at=1;	if(at>nx)	at=nx;
+	register long i,j,k;
+	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<at;k++)
+		b.a[i+nx*(j+ny*k)] = a[i+nx*(j+ny*k)];
+	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=at;k<nz;k++)
+		b.a[i+nx*(j+ny*(k+num))] = a[i+nx*(j+ny*k)];
+	if(eq)
+	{
+		mglFormula e(eq);
+		float dx,dy,dz;
+		dz = num==1?0:1./(num-1);
+		dx = nx==1?0:1./(nx-1);
+		dy = ny==1?0:1./(ny-1);
+		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<num;k++)
+			b.a[i+nx*(j+(at+k)*ny)] = e.Calc(i*dx,j*dy, k*dz);
+	}
+	Set(b);
+}
+//-----------------------------------------------------------------------------
+void mglData::DeleteColumns(int at, int num)
+{
+	if(num<1 || at<0 || at+num>=nx)	return;
+	mglData b(nx-num,ny,nz);
+	register long i,j,k;
+	for(i=0;i<at;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+		b.a[i+(nx-num)*(j+ny*k)] = a[i+nx*(j+ny*k)];
+	for(i=at+num;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+		b.a[i-num+(nx-num)*(j+ny*k)] = a[i+nx*(j+ny*k)];
+	Set(b);
+}
+//-----------------------------------------------------------------------------
+void mglData::DeleteRows(int at, int num)
+{
+	if(num<1 || at<0 || at+num>=ny)	return;
+	mglData b(nx,ny-num,nz);
+	register long i,j,k;
+	for(i=0;i<nx;i++)	for(j=0;j<at;j++)	for(k=0;k<nz;k++)
+		b.a[i+nx*(j+(ny-num)*k)] = a[i+nx*(j+ny*k)];
+	for(i=0;i<nx;i++)	for(j=at+num;j<ny;j++)	for(k=0;k<nz;k++)
+		b.a[i+nx*(j-num+(ny-num)*k)] = a[i+nx*(j+ny*k)];
+	Set(b);
+}
+//-----------------------------------------------------------------------------
+void mglData::DeleteSlices(int at, int num)
+{
+	if(num<1 || at<0 || at+num>=nz)	return;
+	mglData b(nx,ny,nz-num);
+	register long i,j,k;
+	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<at;k++)
+		b.a[i+nx*(j+ny*k)] = a[i+nx*(j+ny*k)];
+	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=at+num;k<nz;k++)
+		b.a[i+nx*(j+(k-num)*num)] = a[i+nx*(j+ny*k)];
+	Set(b);
+}
+//-----------------------------------------------------------------------------
+void mglData::Insert(char dir, int at, int num)
+{
+	if(dir=='x')	InsertColumns(at,num);
+	if(dir=='y')	InsertRows(at,num);
+	if(dir=='z')	InsertSlices(at,num);
+}
+//-----------------------------------------------------------------------------
+void mglData::Delete(char dir, int at, int num)
+{
+	if(dir=='x')	DeleteColumns(at,num);
+	if(dir=='y')	DeleteRows(at,num);
+	if(dir=='z')	DeleteSlices(at,num);
+}
 //-----------------------------------------------------------------------------

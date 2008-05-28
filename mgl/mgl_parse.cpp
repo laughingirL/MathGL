@@ -333,13 +333,7 @@ int mglParse::PreExec(mglGraph *gr, long k, wchar_t **arg, mglArg *a)
 	else if(!wcscmp(L"delete",arg[0]))	// parse command "delete"
 	{
 		if(k<2)	return 2;
-		v = FindVar(arg[1]);
-		if(v)
-		{
-			if(DataList==v)	DataList = v->next;
-			delete v;
-		}
-		n=1;
+		DeleteVar(arg[1]);	n=1;
 	}
 	else if(!wcscmp(L"list",arg[0]))	// parse command "list"
 	{
@@ -837,6 +831,25 @@ void mglParse::ProcOpt(mglGraph *gr, wchar_t *str)
 			}
 		}
 	}
+}
+//-----------------------------------------------------------------------------
+void mglParse::DeleteVar(mglVar *v)
+{
+	if(!v)	return;
+	if(DataList==v)	DataList = v->next;
+	delete v;
+}
+//-----------------------------------------------------------------------------
+void mglParse::DeleteVar(const char *name)
+{
+	mglVar *v = FindVar(name);
+	DeleteVar(v);
+}
+//-----------------------------------------------------------------------------
+void mglParse::DeleteVar(const wchar_t *name)
+{
+	mglVar *v = FindVar(name);
+	DeleteVar(v);
 }
 //-----------------------------------------------------------------------------
 HMPR mgl_create_parser()		{	return new mglParse;	}

@@ -97,6 +97,12 @@ public:
 	bool AddParam(int n, const wchar_t *str, bool str=true);
 	/// Restore Once flag
 	inline void RestoreOnce()	{	Once = true;	};
+	/// Delete variable
+	void DeleteVar(mglVar *v);
+	/// Delete variable by its name
+	void DeleteVar(const char *name);
+	/// Delete variable by its name
+	void DeleteVar(const wchar_t *name);
 private:
 	long parlen;	///< Length of parameter strings
 	wchar_t *par[10];	///< Parameter for substituting instead of $1, ..., $9

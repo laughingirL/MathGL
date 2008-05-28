@@ -258,10 +258,10 @@ void mgl_label_(long *gr, const char *dir, const char *text,int,int l)
 	_GR_->Label(*dir, s);	delete []s;
 }
 /// Print the label \a text for axis \a dir.
-void mgl_label_ext_(long *gr, const char *dir, const char *text, int *pos, float *size,int,int l)
+void mgl_label_ext_(long *gr, const char *dir, const char *text, int *pos, float *size, float *shift,int,int l)
 {
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
-	_GR_->Label(*dir, s, *pos, *size);	delete []s;
+	_GR_->Label(*dir, s, *pos, *size, *shift);	delete []s;
 }
 //-----------------------------------------------------------------------------
 //		Simple drawing

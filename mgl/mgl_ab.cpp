@@ -257,8 +257,8 @@ float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float
 	return fsize;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Putsw(mglPoint p,const wchar_t *wcs,const char *font,
-					float size,char dir,float sh)
+void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font,
+					float size, char dir, float sh)
 {
 	bool upside = ( ((_sx==-1 ^ (Org.y==Max.y || Org.z==Max.z)) && (dir=='x' || dir=='X')) ||
 					((_sy==-1 ^ (Org.x==Max.x || Org.z==Max.z)) && (dir=='y' || dir=='Y')) ||

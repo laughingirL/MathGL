@@ -219,8 +219,8 @@ void mgl_axis_grid(HMGL gr, const char *dir,const char *pen)
 void mgl_label(HMGL gr, char dir, const char *text)
 {	gr->Label(dir, text);	}
 /// Print the label \a text for axis \a dir.
-void mgl_label_ext(HMGL gr, char dir, const char *text, int pos, float size)
-{	gr->Label(dir, text, pos, size);	}
+void mgl_label_ext(HMGL gr, char dir, const char *text, int pos, float size, float shift)
+{	gr->Label(dir, text, pos, size, shift);	}
 void mgl_set_xtt(HMGL gr, const wchar_t *templ)	{gr->xtt = templ;}
 void mgl_set_ytt(HMGL gr, const wchar_t *templ)	{gr->ytt = templ;}
 void mgl_set_ztt(HMGL gr, const wchar_t *templ)	{gr->ztt = templ;}

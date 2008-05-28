@@ -59,13 +59,9 @@ int sample_transp(mglGraph *gr, void *)	// flag #
 //-----------------------------------------------------------------------------
 int sample(mglGraph *gr, void *)
 {
-	gr->Rotate(0,0);
-	gr->Org = mglPoint(NAN,NAN,NAN);
-	gr->Box();
-	gr->Label('x',"x");
-	gr->Label('y',"y");
-	gr->Label('z',"z");
-	gr->Axis();
+	mglData a(30,30);
+	a.Squeeze(3,1,1);
+	gr->Surf(a,"#");
 	return 0;
 }
 

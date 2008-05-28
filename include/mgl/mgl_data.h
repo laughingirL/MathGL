@@ -169,6 +169,8 @@ public:
 
 	/// Smooth the data on specified direction or directions
 	void Smooth(int Type,const char *dirs="xyz",float delta=0);
+	/// Smooth the data on specified direction or directions
+	void Smooth(const char *dirs="xyz");
 	/// Get sub-array of the data with given fixed indexes
 	mglData &SubData(int xx,int yy=-1,int zz=-1);
 	/// Create n-th points distribution of this data values in range [v1, v2]
@@ -211,10 +213,23 @@ public:
 	float Linear1(float x,float y=0,float z=0)
 	{	return Linear(x*(nx-1),y*(ny-1),z*(nz-1));	};
 
-	/// Insert a slice to the data at begin and fill it by formula \a eq
-	void Insert(const char *eq);		// not ready
-	/// Remove first slice of the data
-	void PullOut();				// not ready
+	/// Insert \a num rows after \a at and fill it by formula \a eq
+	void InsertRows(int at, int num=1, const char *eq=0);
+	/// Insert \a num columns after \a at and fill it by formula \a eq
+	void InsertColumns(int at, int num=1, const char *eq=0);
+	/// Insert \a num slices after \a at and fill it by formula \a eq
+	void InsertSlices(int at, int num=1, const char *eq=0);
+	/// Delete \a num rows starting from \a at
+	void DeleteRows(int at, int num=1);
+	/// Delete \a num rows starting from \a at
+	void DeleteColumns(int at, int num=1);
+	/// Delete \a num rows starting from \a at
+	void DeleteSlices(int at, int num=1);
+	/// Insert data
+	void Insert(char dir, int at=0, int num=1);
+	/// Delete data
+	void Delete(char dir, int at=0, int num=1);
+	
 	/// Get the value in given cell of the data with border checking
 	float v(int i,int j=0,int k=0);
 

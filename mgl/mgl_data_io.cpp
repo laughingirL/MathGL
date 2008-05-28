@@ -646,22 +646,21 @@ void mglData::Norm(float v1,float v2,bool sym,int dim)
 //-----------------------------------------------------------------------------
 void mglData::Squeeze(int rx,int ry,int rz,bool smooth)
 {
-	long kx=nx,ky=ny,kz=nz,i,j,k;
+	long kx,ky,kz,i,j,k;
 	float *b;
 
 	// simple checking
-	rx = rx<1 ? 1:rx;  ry = ry<1 ? 1:ry;  rz = rz<1 ? 1:rz;
+	if(rx<1)	rx=1;	if(rx>nx)	rx=nx;
+	if(ry<1)	ry=1;	if(ry>ny)	ry=ny;
+	if(rz<1)	rz=1;	if(rz>nz)	rz=nz;
 	// new sizes
-	kx /= rx;  kx = kx<1 ? 1:kx;
-	ky /= ry;  ky = ky<1 ? 1:ky;
-	kz /= rz;  kz = kz<1 ? 1:kz;
+	kx = nx/rx;	ky = ny/ry;	kz = nz/rz;
 	b = new float[kx*ky*kz];
-
-	if(!smooth)
-		for(i=0;i<kx;i++)  for(j=0;j<ky;j++)  for(k=0;k<ky;k++)
-			b[i+kx*(j+ky*k)] = a[i*rx+nx*(j*ry+ny*rz*k)];
-	else
-		for(i=0;i<kx;i++)  for(j=0;j<ky;j++)  for(k=0;k<ky;k++)
+//	if(!smooth)
+	for(i=0;i<kx;i++)  for(j=0;j<ky;j++)  for(k=0;k<kz;k++)
+		b[i+kx*(j+ky*k)] = a[i*rx+nx*(j*ry+ny*rz*k)];
+/*	else
+		for(i=0;i<kx;i++)  for(j=0;j<ky;j++)  for(k=0;k<kz;k++)
 		{
 			long dx,dy,dz,i1,j1,k1;
 			dx = (i+1)*rx<=nx ? rx : nx-i*rx;
@@ -669,7 +668,7 @@ void mglData::Squeeze(int rx,int ry,int rz,bool smooth)
 			dz = (k+1)*rz<=nz ? rz : nz-k*rz;
 			for(i1=i*rx;i1<i*rx+dx;i1++)	for(j1=j*ry;j1<j*ry+dz;j1++)	for(k1=k*rz;k1<k*rz+dz;k1++)
 				b[i+kx*(j+ky*k)] += a[i*rx+nx*(j*ry+ny*rz*k)]/(dx*dy*dz);
-		}
+		}*/
 	delete []a;
 	a = b;
 	nx = kx;  ny = ky;  nz = kz;

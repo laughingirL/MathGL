@@ -1,9 +1,11 @@
-					MathGL (for v.1.6.3)
+					MathGL (for v.1.7.1)
 					
 1. Hankel transform
 2. Update documentation + add example of Fit()
 3. Ternary axis -- keep z-axis as normal one ???
 
+13. Add FLTK & GLUT to Fortran ??? How pass arguments ???
+14. Converter MGL->C (+ interface for MGL->Fortran by change HMDT->int, HMGL->int, "->');
 15. Save primitives for plotting (like EPS && OpenGL) ???
 16. Save curves (contour lines and flow threads) in file ???
 

@@ -151,7 +151,7 @@ void mgl_box_rgb(HMGL graph, float r, float g, float b, bool ticks);
 void mgl_axis(HMGL graph, const char *dir);
 void mgl_axis_grid(HMGL graph, const char *dir,const char *pen);
 void mgl_label(HMGL graph, char dir, const char *text);
-void mgl_label_ext(HMGL graph, char dir, const char *text, int pos, float size);
+void mgl_label_ext(HMGL graph, char dir, const char *text, int pos, float size, float shift);
 void mgl_tune_ticks(HMGL graph, bool tune, float fact_pos);
 void mgl_set_xtt(HMGL graph, const wchar_t *templ);
 void mgl_set_ytt(HMGL graph, const wchar_t *templ);

@@ -126,7 +126,7 @@ void mgl_box_rgb_(long *graph, float *r, float *g, float *b, int *ticks);
 void mgl_axis_(long *graph, const char *dir,int);
 void mgl_axis_grid_(long *graph, const char *dir,const char *pen,int,int);
 void mgl_label_(long *graph, const char *dir, const char *text,int,int);
-void mgl_label_ext_(long *graph, const char *dir, const char *text, int *pos, float *size,int,int);
+void mgl_label_ext_(long *graph, const char *dir, const char *text, int *pos, float *size, float *shift,int,int);
 /*****************************************************************************/
 /*		Simple drawing														 */
 /*****************************************************************************/
