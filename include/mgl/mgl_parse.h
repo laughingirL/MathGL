@@ -69,7 +69,7 @@ public:
 	bool AllowSetSize;	///< Allow using setsize command
 	bool Stop;			///< Stop command was. Flag prevent further execution
 	mglCommand *Cmd;	///< Table of recognizable MGL commands (can be changed by user). It MUST be sorted by 'name' field !!!
-	wchar_t *op1, *op2;	///< Buffer for options (are used if out!=NULL)		
+	wchar_t *op1, *op2;	///< Buffer for options (are used if out!=NULL)
 
 	mglParse(bool setsize=false);
 	~mglParse();
@@ -92,9 +92,9 @@ public:
 	/// Find variable or create it if absent
 	mglVar *AddVar(const wchar_t *name);
 	/// Add string for parameter $1, ..., $9
-	bool AddParam(int n, const char *str, bool str=true);
+	bool AddParam(int n, const char *str, bool isstr=true);
 	/// Add unicode string for parameter $1, ..., $9
-	bool AddParam(int n, const wchar_t *str, bool str=true);
+	bool AddParam(int n, const wchar_t *str, bool isstr=true);
 	/// Restore Once flag
 	inline void RestoreOnce()	{	Once = true;	};
 	/// Delete variable
@@ -132,4 +132,4 @@ private:
 //-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------
- 
+

@@ -1,4 +1,4 @@
-1.7 Released 29 May 2008
+1.7 Released 1 June 2008
 	- MGL parser is sufficiently rewritten:
 		* User now can define its own MGL command (by changing mglParse::Cmd).
 		* Export MGL script to C++ file for the most of commands (except 'list', 'delete', 'call', 'for|next') is possible.
@@ -6,7 +6,7 @@
 		* Uniform interface for tools: mgl2png, mgl2eps, mgl2svg, mglview.
 		* New command: 'define $N sth'.
 		* New conditional commands: 'if|else|elseif|endif'.
-		* New for-cycle commands: 'for|next'. Format is: 'for $N var' or 'for $N x1 x2 [dx]'. Do not work in UDAV for now!
+		* New for-cycle commands: 'for|next'. Format is: 'for $N var' or 'for $N x1 x2 [dx]'.
 		* Command [xyz]tick now has additional argument for the start position of ticks.
 		* A set of MGL commands is extended by adding the new ones: 'mirror', 'face[xyz]', 'perspective', 'fit', 'fits', 'normsl', 'momentum', 'putsfit', 'rearrange', 'arrowsize', '[xyz]label', 'ctick'.
 		* Unicode support in scripts.
@@ -27,7 +27,7 @@
 	- New functions FaceX(), FaceY(), FaceZ() are added as simplified interface to the Face() function.
 	- New function mglData::NormSl() for data normalization slice by slice is added.
 	- New function mglData::Momentum() for getting an array of data momentums along some direction is created.
-	- New functions mglData::Insert*(), mglData::Delete*().
+	- New functions mglData::Insert*(), mglData::Delete*() are added for inserting/deleting slices in data arrays.
 	- Font loading is speeded up and new function mglFont::Restore() is added.
 	- Default font size is decreased.
 	- New function mglFormula::CalcD() is added for evaluating the formula derivative over some variable.
@@ -38,11 +38,6 @@
 	- Bug with mglData::Squeeze() is corrected.
 	- Added C/Fortran functions: mgl_restore_font(), mgl_subplot_d(), mgl_set_tick_origin(), mgl_data_norm_slice(), mgl_set_plotfactor(), mgl_data_mirror(), mgl_create_graph_idtf(), mgl_data_rearrange(), mgl_fit_*(), mgl_face*(), mgl_curve(), mgl_create_parser(), mgl_delete_parser(), mgl_add_param(), mgl_add_paramw(), mgl_add_var(), mgl_find_var(), mgl_parse(), mgl_parsew(), mgl_restore_once(), mgl_parser_allow_setsize().
 	- Updated Pascal interface.
-.
-
-
-
-
 
 1.6.2 Released 5 April 2008
 	- Add recognition of TeX commands: \frac, \stack, \stackr, \stackl, \overset, \underset.

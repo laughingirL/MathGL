@@ -234,7 +234,7 @@ int mgls_bars(mglGraph *gr, long n, mglArg *a, int k[10])
 void mglc_bars(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]!=1)	return;
-	else if(k[1]!=1)	
+	else if(k[1]!=1)
 		swprintf(out,1024,L"gr->Bars(%s, \"%s\", %g, %s);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:NAN, (k[3]==3&&a[3].v!=0)?"true":"false");
 	else if(k[2]!=1)
 		swprintf(out,1024,L"gr->Bars(%s, %s, \"%s\", %g, %s);",a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN, (k[4]==3&&a[4].v!=0)?"true":"false");
@@ -2668,52 +2668,52 @@ void mglc_momentum(wchar_t out[1024], long n, mglArg *a, int k[10])
 int mgls_fit(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1&& k[5]==2 && k[6]==2)
-		gr->Fit(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s, a[6].s, (k[7]==1 && a[7].d->nx>=strlen(a[6].s))?a[7].d->a:0, k[8]==3?a[8].v!=0:false);
+		gr->Fit(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s, a[6].s, (k[7]==1 && a[7].d->nx>=long(strlen(a[6].s)))?a[7].d->a:0, k[8]==3?a[8].v!=0:false);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2 && k[5]==2)
-		gr->Fit(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), a[4].s, a[5].s, (k[6]==1 && a[6].d->nx>=strlen(a[5].s))?a[6].d->a:0, k[7]==3?a[7].v!=0:false);
+		gr->Fit(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), a[4].s, a[5].s, (k[6]==1 && a[6].d->nx>=long(strlen(a[5].s)))?a[6].d->a:0, k[7]==3?a[7].v!=0:false);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2 && k[4]==2)
-		gr->Fit(*(a[0].d), *(a[1].d), *(a[2].d), a[3].s, a[4].s, (k[5]==1 && a[5].d->nx>=strlen(a[4].s))?a[5].d->a:0, k[6]==3?a[6].v!=0:false);
+		gr->Fit(*(a[0].d), *(a[1].d), *(a[2].d), a[3].s, a[4].s, (k[5]==1 && a[5].d->nx>=long(strlen(a[4].s)))?a[5].d->a:0, k[6]==3?a[6].v!=0:false);
 	else if(k[0]==1 && k[1]==1 && k[2]==2 && k[3]==2)
-		gr->Fit(*(a[0].d), *(a[1].d), a[2].s, a[3].s, (k[4]==1 && a[4].d->nx>=strlen(a[3].s))?a[4].d->a:0, k[5]==3?a[5].v!=0:false);
+		gr->Fit(*(a[0].d), *(a[1].d), a[2].s, a[3].s, (k[4]==1 && a[4].d->nx>=long(strlen(a[3].s)))?a[4].d->a:0, k[5]==3?a[5].v!=0:false);
 	else	return 1;
 	return 0;
 }
 void mglc_fit(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1&& k[5]==2 && k[6]==2)
-		swprintf(out,1024,L"gr->Fit(%s, %s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, a[6].s, (k[7]==1 && a[7].d->nx>=strlen(a[6].s))?a[7].s:"NULL", (k[8]==3&&a[8].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->Fit(%s, %s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, a[6].s, (k[7]==1 && a[7].d->nx>=long(strlen(a[6].s)))?a[7].s:"NULL", (k[8]==3&&a[8].v!=0)?"true":"false");
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2 && k[5]==2)
-		swprintf(out,1024,L"gr->Fit(%s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, (k[6]==1 && a[6].d->nx>=strlen(a[5].s))?a[6].s:"NULL", (k[7]==3&&a[7].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->Fit(%s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, (k[6]==1 && a[6].d->nx>=long(strlen(a[5].s)))?a[6].s:"NULL", (k[7]==3&&a[7].v!=0)?"true":"false");
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2 && k[4]==2)
-		swprintf(out,1024,L"gr->Fit(%s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, (k[5]==1 && a[5].d->nx>=strlen(a[4].s))?a[5].s:"NULL", (k[6]==3&&a[6].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->Fit(%s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, (k[5]==1 && a[5].d->nx>=long(strlen(a[4].s)))?a[5].s:"NULL", (k[6]==3&&a[6].v!=0)?"true":"false");
 	else if(k[0]==1 && k[1]==1 && k[2]==2 && k[3]==2)
-		swprintf(out,1024,L"gr->Fit(%s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, (k[5]==1 && a[5].d->nx>=strlen(a[4].s))?a[5].s:"NULL", (k[6]==3&&a[6].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->Fit(%s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, (k[5]==1 && a[5].d->nx>=long(strlen(a[4].s)))?a[5].s:"NULL", (k[6]==3&&a[6].v!=0)?"true":"false");
 }
 //-----------------------------------------------------------------------------
 //	{"fits","Fit data by formula","fits res {x {y {z}}} a s eq var [ini print]", mgls_fits, mglc_fits}
 int mgls_fits(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==1 && k[6]==2 && k[7]==2)
-		gr->FitS(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), *(a[5].d), a[6].s, a[7].s, (k[8]==1 && a[8].d->nx>=strlen(a[7].s))?a[8].d->a:0, k[9]==3?a[9].v!=0:false);
+		gr->FitS(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), *(a[5].d), a[6].s, a[7].s, (k[8]==1 && a[8].d->nx>=long(strlen(a[7].s)))?a[8].d->a:0, k[9]==3?a[9].v!=0:false);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==2 && k[6]==2)
-		gr->FitS(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s, a[6].s, (k[7]==1 && a[7].d->nx>=strlen(a[6].s))?a[7].d->a:0, k[8]==3?a[8].v!=0:false);
+		gr->FitS(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s, a[6].s, (k[7]==1 && a[7].d->nx>=long(strlen(a[6].s)))?a[7].d->a:0, k[8]==3?a[8].v!=0:false);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2 && k[5]==2)
-		gr->FitS(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), a[4].s, a[5].s, (k[6]==1 && a[6].d->nx>=strlen(a[5].s))?a[6].d->a:0, k[7]==3?a[7].v!=0:false);
+		gr->FitS(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), a[4].s, a[5].s, (k[6]==1 && a[6].d->nx>=long(strlen(a[5].s)))?a[6].d->a:0, k[7]==3?a[7].v!=0:false);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2 && k[4]==2)
-		gr->FitS(*(a[0].d), *(a[1].d), *(a[2].d), a[3].s, a[4].s, (k[5]==1 && a[5].d->nx>=strlen(a[4].s))?a[5].d->a:0, k[6]==3?a[6].v!=0:false);
+		gr->FitS(*(a[0].d), *(a[1].d), *(a[2].d), a[3].s, a[4].s, (k[5]==1 && a[5].d->nx>=long(strlen(a[4].s)))?a[5].d->a:0, k[6]==3?a[6].v!=0:false);
 	else	return 1;
 	return 0;
 }
 void mglc_fits(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==1 && k[6]==2 && k[7]==2)
-		swprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, a[6].s, a[7].s, (k[8]==1 && a[8].d->nx>=strlen(a[7].s))?a[8].s:"NULL", (k[9]==3&&a[9].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, a[6].s, a[7].s, (k[8]==1 && a[8].d->nx>=long(strlen(a[7].s)))?a[8].s:"NULL", (k[9]==3&&a[9].v!=0)?"true":"false");
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==2 && k[6]==2)
-		swprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, a[6].s, (k[7]==1 && a[7].d->nx>=strlen(a[6].s))?a[7].s:"NULL", (k[8]==3&&a[8].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, a[6].s, (k[7]==1 && a[7].d->nx>=long(strlen(a[6].s)))?a[7].s:"NULL", (k[8]==3&&a[8].v!=0)?"true":"false");
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2 && k[5]==2)
-		swprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, (k[6]==1 && a[6].d->nx>=strlen(a[5].s))?a[6].s:"NULL", (k[7]==3&&a[7].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, (k[6]==1 && a[6].d->nx>=long(strlen(a[5].s)))?a[6].s:"NULL", (k[7]==3&&a[7].v!=0)?"true":"false");
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2 && k[4]==2)
-		swprintf(out,1024,L"gr->FitS(%s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, (k[5]==1 && a[5].d->nx>=strlen(a[4].s))?a[5].s:"NULL", (k[6]==3&&a[6].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->FitS(%s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, (k[5]==1 && a[5].d->nx>=long(strlen(a[4].s)))?a[5].s:"NULL", (k[6]==3&&a[6].v!=0)?"true":"false");
 }
 //-----------------------------------------------------------------------------
 //	{"putsfit","Print fitted formula","putsfit x y {z} [pre font size]", mgls_putsfit, mglc_putsfit}
@@ -2732,15 +2732,15 @@ void mglc_putsfit(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"gr->PutsFit(mglPoint(%g, %g, %g), \"%s\", \"%s\", %g);", a[0].v,a[1].v,a[2].v, k[3]==2?a[3].s:"", k[4]==2?a[4].s:"", k[5]==3?a[5].v:-1);
 	else if(k[0]==3 && k[1]==3)
 		swprintf(out,1024,L"gr->PutsFit(mglPoint(%g, %g), \"%s\", \"%s\", %g);", a[0].v,a[1].v, k[2]==2?a[2].s:"", k[3]==2?a[3].s:"", k[4]==3?a[4].v:-1);
-	
+
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==1 && k[6]==2 && k[7]==2)
-		swprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, a[6].s, a[7].s, (k[8]==1 && a[8].d->nx>=strlen(a[7].s))?a[8].s:"NULL", (k[9]==3&&a[9].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, a[6].s, a[7].s, (k[8]==1 && a[8].d->nx>=long(strlen(a[7].s)))?a[8].s:"NULL", (k[9]==3&&a[9].v!=0)?"true":"false");
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==2 && k[6]==2)
-		swprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, a[6].s, (k[7]==1 && a[7].d->nx>=strlen(a[6].s))?a[7].s:"NULL", (k[8]==3&&a[8].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, a[6].s, (k[7]==1 && a[7].d->nx>=long(strlen(a[6].s)))?a[7].s:"NULL", (k[8]==3&&a[8].v!=0)?"true":"false");
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2 && k[5]==2)
-		swprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, (k[6]==1 && a[6].d->nx>=strlen(a[5].s))?a[6].s:"NULL", (k[7]==3&&a[7].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->FitS(%s, %s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, (k[6]==1 && a[6].d->nx>=long(strlen(a[5].s)))?a[6].s:"NULL", (k[7]==3&&a[7].v!=0)?"true":"false");
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2 && k[4]==2)
-		swprintf(out,1024,L"gr->FitS(%s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, (k[5]==1 && a[5].d->nx>=strlen(a[4].s))?a[5].s:"NULL", (k[6]==3&&a[6].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->FitS(%s, %s, %s, \"%s\", \"%s\", %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, (k[5]==1 && a[5].d->nx>=long(strlen(a[4].s)))?a[5].s:"NULL", (k[6]==3&&a[6].v!=0)?"true":"false");
 }
 //-----------------------------------------------------------------------------
 //	{"arrowsize","Set arrow sizes","arrowsize val", mgls_arrowsize, mglc_arrowsize}
@@ -2828,7 +2828,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"crange",L"Set color range",L"crange {var [sym] | c1 c2}", mgls_crange, mglc_crange},
 	{L"crop",L"Crop edge of data",L"crop var n1 n2 dir", mgls_crop, mglc_crop},
 	{L"crust",L"Draw reconstructed surface for arbitrary data points",L"crust {xvar yvar zvar} | var [fmt]", mgls_crust, mglc_crust},
-	{"ctick","Set ticks for colorbar","ctick tmpl", mgls_ctick, mglc_ctick},
+	{L"ctick",L"Set ticks for colorbar",L"ctick tmpl", mgls_ctick, mglc_ctick},
 	{L"cumsum",L"Crop edge of data",L"cumsum var dir", mgls_cumsum, mglc_cumsum},
 	{L"curve",L"Draw curve",L"", mgls_curve, mglc_curve},
 	{L"cut",L"Setup plot points cutting",L"", mgls_cut, mglc_cut},

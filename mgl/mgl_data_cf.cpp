@@ -76,7 +76,7 @@ void mgl_data_transpose(HMDT d, const char *dim)	{	d->Transpose(dim);	}
 void mgl_data_norm(HMDT d, float v1,float v2,bool sym,int dim)
 {	d->Norm(v1,v2,sym,dim);	}
 /// Normalize the data to range [v1,v2] slice by slice
-void mgl_data_norm(HMDT d, float v1,float v2,char dir,bool keep_en,bool sym)
+void mgl_data_norm_slice(HMDT d, float v1,float v2,char dir,bool keep_en,bool sym)
 {	d->NormSl(v1,v2,dir,keep_en,sym);	}
 /// Reduce size of the data
 void mgl_data_squeeze(HMDT d, int rx,int ry,int rz,bool smooth)
@@ -216,7 +216,7 @@ void mgl_data_transpose_(long *d, const char *dim,int l)
 void mgl_data_norm_(long *d, float *v1,float *v2,int *sym,int *dim)
 {	_DT_->Norm(*v1,*v2,*sym,*dim);	}
 /// Normalize the data to range [v1,v2]
-void mgl_data_norm_(long *d, float *v1,float *v2,char *dir,int *keep_en,int *sym,int l)
+void mgl_data_norm_slice_(long *d, float *v1,float *v2,char *dir,int *keep_en,int *sym,int l)
 {	_DT_->NormSl(*v1,*v2,*dir,*keep_en,*sym);	}
 /// Reduce size of the data
 void mgl_data_squeeze_(long *d, int *rx,int *ry,int *rz,int *smooth)

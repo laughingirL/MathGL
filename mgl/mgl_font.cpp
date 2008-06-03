@@ -216,12 +216,10 @@ long mglFont::Internal(unsigned s)
 	while(i1<i2)
 	{
 		i = (i1+i2)/2;
-//printf("j=%d -- %d[%d] %d[%d] %d[%d]\n",j,id[i1],i1,id[i],i,id[i2],i2);	fflush(stdout);
 		if(j<id[i])			i2 = i;
 		else if(j>id[i])	i1=i+1;	// i is bad
 		else return i;
 	}
-//printf("not found\n");	fflush(stdout);
 	return j==id[i2] ? i2 : -1;
 }
 //-----------------------------------------------------------------------------
@@ -536,7 +534,6 @@ void mglFont::read_data(FILE *fp, float *ff, short *wdt, short *numl,
 		if(wdt)	wdt[j] = tmpw;
 		numl[j] = tmpnl;	posl[j] = tmppl+cur;
 		numt[j] = tmpnt;	post[j] = tmppt+cur;
-//printf("%u - %d %d %d %u %d %u\n",j, tmpi,tmpw,tmpnl, tmppl, tmpnt, tmppt);	fflush(stdout);
 	}
 	for(i=0;i<s;i++)	{	fscanf(fp,"%d", &tmpi);	buf[i+cur] = tmpi;	}
 	cur += s;
@@ -584,7 +581,13 @@ bool mglFont::read_main(const char *base, const char *path, unsigned &cur)
 	char str[256];
 	int tmpi, tmpw, tmpnl, tmpnt;
 	unsigned s, tmppl, tmppt;
-	sprintf(str,"%s/%s.vfm",path,base);	// normal weight (should have most of symbols !!!)
+#ifdef WIN32	// normal weight (should have most of symbols !!!)
+	if(path)	sprintf(str,"%s\%s.vfm",path,base);
+#else
+	if(path)	sprintf(str,"%s/%s.vfm",path,base);
+#endif
+	else	sprintf(str,"%s.vfm",path,base);
+	
 	fp = fopen(str,"r");
 	if(!fp)	return false;			// this font must be in any case
 	fgets(str,256,fp);				// first string is comment (not used)
@@ -606,6 +609,7 @@ bool mglFont::read_main(const char *base, const char *path, unsigned &cur)
 	for(i=0;i<s;i++)	{	fscanf(fp,"%d", &tmpi);	buf[i] = tmpi;	}
 	cur += s;
 	fclose(fp);		// finish wire normal font
+	numb = cur;
 	main_copy();	// copy normal style as default for other styles
 	return true;
 }
@@ -630,12 +634,14 @@ bool mglFont::read_def(unsigned &cur)
 		tr[0][i] = mgl_gen_fnt[i][5];
 	}
 	memcpy(buf, mgl_buf_fnt, cur*sizeof(short));
+	numb = cur;
 	main_copy();	// copy normal style as default for other styles
 	return true;
 }
 //-----------------------------------------------------------------------------
 bool mglFont::Load(const char *base, const char *path)
 {
+//	base = 0;
 	FILE *fp;
 	char str[256];
 	setlocale(LC_NUMERIC,"C");
@@ -645,9 +651,8 @@ bool mglFont::Load(const char *base, const char *path)
 	if(!path)	path = MGL_FONT_PATH;
 	Clear();							// first clear old
 
-	if(!base)	{	read_def(cur);	return true;	}
-	else	if(!read_main(base,path,cur))	return false;
-
+	if(!base || !read_main(base,path,cur))	{	read_def(cur);	return true;	}
+	
 	//================== bold ===========================================
 	sprintf(str,"%s/%s_b.vfm",path,base);
 	fp = fopen(str,"rt");

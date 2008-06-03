@@ -1,16 +1,17 @@
 					MathGL (for v.1.7.1)
-					
+
 1. Hankel transform
 2. Update documentation + add example of Fit()
 3. Ternary axis -- keep z-axis as normal one ???
+4. MGL commands 'fplot', 'fsurf' -- curve|surface specified by formula.
 
 13. Add FLTK & GLUT to Fortran ??? How pass arguments ???
 14. Converter MGL->C (+ interface for MGL->Fortran by change HMDT->int, HMGL->int, "->');
 15. Save primitives for plotting (like EPS && OpenGL) ???
 16. Save curves (contour lines and flow threads) in file ???
 
-					MathGL (for v.1.6.?) ???
-					
+					MathGL (for v.1.7.?) ???
+
 1. Interface for Python
 2. Interface for Java
 3. Interface for Gambas
@@ -22,7 +23,7 @@
 9. Try to evaluate to number if it contain only "+-/*^0123456789." in Parse() ??? + string concatenation ???
 
 					FAQ
-					
+
 1. On which things the subplot influence
 2. Sharp color change
 3. Most useful color scheme (copy from manual).

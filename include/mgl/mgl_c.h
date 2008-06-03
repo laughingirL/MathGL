@@ -169,11 +169,11 @@ void mgl_facey(HMGL graph, float x0, float y0, float z0, float wx, float wz, con
 void mgl_facez(HMGL graph, float x0, float y0, float z0, float wx, float wy, const char *stl, float dx, float dy);
 void mgl_curve(HMGL graph, float x1, float y1, float z1, float dx1, float dy1, float dz1, float x2, float y2, float z2, float dx2, float dy2, float dz2, const char *pen,int n);
 
-void mgl_putsw(HMGL graph, float x, float y, float z,const char *text);
-void mgl_puts(HMGL graph, float x, float y, float z,const wchar_t *text);
+void mgl_puts(HMGL graph, float x, float y, float z,const char *text);
+void mgl_putsw(HMGL graph, float x, float y, float z,const wchar_t *text);
 void mgl_text(HMGL graph, float x, float y, float z,const char *text);
-void mgl_puts_ext(HMGL graph, float x, float y, float z,const wchar_t *text,const char *font,float size,char dir);
-void mgl_putsw_ext(HMGL graph, float x, float y, float z,const char *text,const char *font,float size,char dir);
+void mgl_putsw_ext(HMGL graph, float x, float y, float z,const wchar_t *text,const char *font,float size,char dir);
+void mgl_puts_ext(HMGL graph, float x, float y, float z,const char *text,const char *font,float size,char dir);
 void mgl_text_ext(HMGL graph, float x, float y, float z,const char *text,const char *font,float size,char dir);
 void mgl_colorbar(HMGL graph, const char *sch,int where);
 void mgl_simple_plot(HMGL graph, HMDT a, int type, const char *stl);
@@ -470,7 +470,7 @@ float mgl_fit_ys(HMGL gr, HMDT fit, HMDT y, HMDT s, const char *eq, const char *
 float mgl_fit_xys(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT s, const char *eq, const char *var, float *ini, bool print);
 float mgl_fit_xyzs(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT z, HMDT s, const char *eq, const char *var, float *ini, bool print);
 float mgl_fit_xyzas(HMGL gr, HMDT fit, HMDT x, HMDT y, HMDT z, HMDT a, HMDT s, const char *eq, const char *var, float *ini, bool print);
-void mgl_puts_fit(HMGL gr, float x, float y, float z, const char *prefix, const char *font, float size); 
+void mgl_puts_fit(HMGL gr, float x, float y, float z, const char *prefix, const char *font, float size);
 /*****************************************************************************/
 #ifdef __cplusplus
 }

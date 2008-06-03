@@ -1998,7 +1998,7 @@ subdirs="$subdirs libltdl"
 #   (Interfaces added:      CURRENT++, AGE++, REVISION=0)
 #   (No interfaces changed:                   REVISION++)
 MGL_CURRENT=4
-MGL_REVISION=0
+MGL_REVISION=1
 MGL_AGE=2
 
 
