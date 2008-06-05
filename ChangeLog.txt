@@ -1,3 +1,6 @@
+1.7.1 Released ?? September 2008
+	- Bug with wrong normales at boundary points in Surf3*() is corrected.
+
 1.7 Released 1 June 2008
 	- MGL parser is sufficiently rewritten:
 		* User now can define its own MGL command (by changing mglParse::Cmd).
@@ -138,7 +141,7 @@
 	- Rename back mglGraph::MessageBuf to mglGraph::Message (for
 	  compatibility with UDAV v.0.2).
 	- Add file with examples for mglGraphGLUT.
-	
+
 1.4.3 Released 18 December 2008
 	- Fortran interface for most of functions is added.
 	- New function mglGraph::Ternary() for switching on/off
@@ -148,10 +151,10 @@
 	- Correct line dashing in EPS and SVG files.
 	- Capital letters ("XYZ") in Axis() function argument change shift
 	  to -shift for ticks and labels.
-	- New function mglGraph::CutOff() is added for cutting off arbitrary 
+	- New function mglGraph::CutOff() is added for cutting off arbitrary
 	  region of 3D space, specified by a formula.
 	- New function mglGraph::WriteBMP() is added.
-	- Symbol ':' (if present) now terminates the color scheme specification 
+	- Symbol ':' (if present) now terminates the color scheme specification
 	  for all cases.
 	- The lightning in zoom mode is improved.
 	- Formulas now give NAN value for points lied out of range of

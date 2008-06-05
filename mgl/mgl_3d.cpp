@@ -137,19 +137,21 @@ float mgl_cos_pp(float *pp,long i0,long i1,long i2)
 void normal_3d(mglData &a,float x,float y,float z,float *nx,float *ny,
 			float *nz,bool inv)
 {
-	register long n=a.nx, m=a.ny, l=a.nz, i=long(x), j=long(y), k=long(z), i0=i+n*(j+m*k);
+	long n=a.nx, m=a.ny, l=a.nz, o=n*m;
+	register long i,j,k,i0;
+//	i=x<n-1?long(x):n-2;	j=y<m-1?long(y):m-2;
+//	k=z<l-1?long(z):l-2;	i0=i+n*(j+m*k);
+	i=long(x);	j=long(y);	k=long(z);	i0=i+n*(j+m*k);
+	x-=i;	y-=j;	z-=k;
 
-	if(n==2 || x<=1)	*nx = a.a[i0+1] - a.a[i0];
-	else if(x>=n-2)		*nx = a.a[i0] - a.a[i0-1];
-	else	*nx = ((a.a[i0+1] - a.a[i0-1])*(i+1-x) + (a.a[i0+2] - a.a[i0])*(x-i))/2;
+	if(n==2 || i==0 || i>=n-2)	*nx = a.a[i0+1] - a.a[i0];
+	else	*nx = ((a.a[i0+1] - a.a[i0-1])*(1-x) + (a.a[i0+2] - a.a[i0])*x)/2;
 
-	if(m==2 || y<=1)	*ny = a.a[i0+n] - a.a[i0];
-	else if(y>=m-2)		*ny = a.a[i0] - a.a[i0-n];
-	else	*ny = ((a.a[i0+n] - a.a[i0-n])*(j+1-y) + (a.a[i0+2*n] - a.a[i0])*(y-j))/2;
+	if(m==2 || j==0 || j>=m-2)	*ny = a.a[i0+n] - a.a[i0];
+	else	*ny = ((a.a[i0+n] - a.a[i0-n])*(1-y) + (a.a[i0+2*n] - a.a[i0])*y)/2;
 
-	if(l==2 || z<=1)	*nz = a.a[i0+n*m] - a.a[i0];
-	else if(z>=l-2)		*nz = a.a[i0] - a.a[i0-n*m];
-	else	*nz = ((a.a[i0+n*m] - a.a[i0-n*m])*(k+1-z) + (a.a[i0+2*n*m] - a.a[i0])*(z-k))/2;
+	if(l==2 || k==0 || k>=l-2)	*nz = a.a[i0+o] - a.a[i0];
+	else	*nz = ((a.a[i0+o] - a.a[i0-o])*(1-z) + (a.a[i0+2*o] - a.a[i0])*z)/2;
 	if(!inv)	{	*nx = -*nx;	*ny = -*ny;	*nz = -*nz;		}
 }
 //-----------------------------------------------------------------------------

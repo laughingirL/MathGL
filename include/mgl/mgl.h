@@ -320,7 +320,7 @@ public:
 	/// Safetly set the values of mglGraph::Cmin and mglGraph::Cmax
 	void inline CAxis(float C1,float C2)	{	Cmin=C1;	Cmax=C2;	};
 	/// Safetly set the value for mglGraph::Min, mglGraph::Max and mglGraph::Org members of the class.
-	void Axis(mglPoint Min, mglPoint Max, mglPoint Org=mglPoint(0,0,0));
+	void Axis(mglPoint Min, mglPoint Max, mglPoint Org=mglPoint(NAN,NAN,NAN));
 	/// Safetly set the transformation formulas for coordinate.
 	void Axis(const char *EqX,const char *EqY,const char *EqZ);
 	/// Safetly set the cutting off condition (formula).
@@ -407,8 +407,8 @@ public:
 	float FitS(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &a, mglData &s, const char *eq, const char *var, float *ini, bool print=false);
 	float FitS(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &a, mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
 	/// Print fitted last formula (with coefficients)
-	void PutsFit(mglPoint p, const char *prefix=0, const char *font=0, float size=-1); 
-	//@}	
+	void PutsFit(mglPoint p, const char *prefix=0, const char *font=0, float size=-1);
+	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Text functions
 	  * Text functions draw the text. There is a function for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The font style for text is specified by string argument. The size argument control the size of text: if positive it give the value if negative it give the value relative to FontSize. The font type (STIX, arial, courier, times and so on) can be selected by function SetFont(), GetFont().*/

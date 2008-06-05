@@ -88,7 +88,7 @@ void mgl_set_font(HMGL gr, char *name, char *path);
 void mgl_copy_font(HMGL gr, HMGL gr_from);
 void mgl_restore_font(HMGL gr);
 /*****************************************************************************/
-/*		Export to file or to memory														 */
+/*		Export to file or to memory											 */
 /*****************************************************************************/
 void mgl_write_tif(HMGL graph, const char *fname,const char *descr);
 void mgl_write_jpg(HMGL graph, const char *fname,const char *descr);

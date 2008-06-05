@@ -107,11 +107,11 @@ unsigned char* mglGraphZB::col2int(float *c,float *n,unsigned char *r)
 			if(!nLight[i])	continue;
 			j = 3*i;
 			nn = 2*(n[0]*pLight[j]+n[1]*pLight[j+1]+n[2]*pLight[j+2]) /
-					(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]);
+					(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]+1e-6);
 			d0 = pLight[j] - n[0]*nn;
 			d1 = pLight[j+1]-n[1]*nn;
 			d2 = pLight[j+2]-n[2]*nn;
-			nn = 1 + d2/sqrt(d0*d0+d1*d1+d2*d2);
+			nn = 1 + d2/sqrt(d0*d0+d1*d1+d2*d2+1e-6);
 
 			nn = exp(-aLight[i]*nn)*bLight[i]*2;
 			b0 += nn*cLight[j];

@@ -128,7 +128,8 @@ void mglGraph::Axis(mglPoint m1, mglPoint m2, mglPoint org)
 	if(m1.y>m2.y)	{	Min.y=m2.y;	Max.y = m1.y;	}
 	if(m1.z<m2.z)	{	Min.z=m1.z;	Max.z = m2.z;	}
 	if(m1.z>m2.z)	{	Min.z=m2.z;	Max.z = m1.z;	}
-	Org = org;	Cmin = Min.z;	Cmax = Max.z;	OrgT = mglPoint(NAN,NAN,NAN);
+	if(!isnan(org.x) || !isnan(org.y) || !isnan(org.z))	Org = org;
+	Cmin = Min.z;	Cmax = Max.z;	OrgT = mglPoint(NAN,NAN,NAN);
 	if(AutoOrg)
 	{
 		if(Org.x<Min.x && !isnan(Org.x))	Org.x = Min.x;
@@ -508,7 +509,8 @@ void mglGraph::DefaultPlotParam()
 	BarWidth = 0.7;			fit_res[0] = 0;
 	MarkSize = 0.02;		ArrowSize = 0.03;
 	AlphaDef = 0.5;			Transparent = true;
-	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1), mglPoint(0,0,0));
+	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1));
+	Org = mglPoint(NAN, NAN, NAN);
 	FontSize = 5;			BaseLineWidth = 1;
 	strcpy(FontDef,"rC");	AxialDir = 'y';
 	UseAlpha = false;		TranspType = 0;

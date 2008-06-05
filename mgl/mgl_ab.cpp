@@ -178,18 +178,18 @@ void mglGraphAB::PostScale(float *p,long n)
 //-----------------------------------------------------------------------------
 void mglGraphAB::LightScale()
 {
-	float x[3];
-	for(int i=0;i<10;i++)
+	float *x;
+	register float nn;
+	register long i,j;
+	for(i=0;i<10;i++)
 	{
-		register float nn;
 		if(!nLight[i])	continue;
-		register long j=3*i;
-		memcpy(x,rLight+j,3*sizeof(float));
+		j=3*i;		x = rLight+j;
 		pLight[j] = (x[0]*B[0] + x[1]*B[1] + x[2]*B[2])/zoomx2;
 		pLight[j+1] = (x[0]*B[3] + x[1]*B[4] + x[2]*B[5])/zoomy2;
 		pLight[j+2] = (x[0]*B[6] + x[1]*B[7] + x[2]*B[8])/sqrt(zoomx2*zoomy2);
 		nn=sqrt(pLight[j]*pLight[j]+pLight[j+1]*pLight[j+1]+pLight[j+2]*pLight[j+2]);
-		pLight[j] /= nn;		pLight[j+1] /= nn;	pLight[j+2] /= nn;
+		pLight[j] /= nn;	pLight[j+1] /= nn;	pLight[j+2] /= nn;
 	}
 }
 //-----------------------------------------------------------------------------
