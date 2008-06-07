@@ -72,7 +72,7 @@ void mglGraph::Drop(mglPoint p, mglPoint q, float r, mglColor c, float sh, float
 	long n = CirclePnts;
 	n = (n<3) ? 3 : n;
 	float *pp = new float[3*n*n],u,v,x,y,z;
-	
+
 	if(q.x==0 && q.y==0 && q.z==0)	{	q = mglPoint(1,0,0);	sh=0;	}
 	mglPoint p1,p2;
 	q = q/sqrt(q*q);	p1 = !q;	p2 = q^p1;	r /= 2;
@@ -558,7 +558,7 @@ void mglGraph::Boxs(mglData &x, mglData &y, mglData &z, const char *sch,float zV
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Boxs");	return;	}
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
-	if(isnan(zVal))	zVal = GetOrgZ('z');
+	if(isnan(zVal))	zVal = GetOrgZ('x');
 	SetScheme(sch);
 
 	float *pp = new float[3*(n*m+4*(n-1)*(m-1))];

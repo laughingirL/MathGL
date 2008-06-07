@@ -266,7 +266,7 @@ bool mglData::Read(const char *fname,int mx,int my,int mz)
 	FILE *fp = fopen(fname,"rt");
 	if(!fp)	return false;
 	Create(mx,my,mz);
-	
+
 	fseek(fp,0,SEEK_END);
 	long nb = ftell(fp);
 	char *buf = new char[nb+1];
@@ -308,7 +308,7 @@ bool mglData::ReadMat(const char *fname,int dim)
 	FILE *fp = fopen(fname,"rt");
 	if(!fp)	return false;
 	nx = ny = nz = 1;
-	
+
 	fseek(fp,0,SEEK_END);
 	long nb = ftell(fp);
 	char *buf = new char[nb+1];
@@ -373,11 +373,14 @@ mglData &mglData::Resize(int mx, int my, int mz, float x1, float x2,
 {
 	register long i,j,k;
 	static mglData d;
-	mx = mx<2 ? 2:mx;	my = my<2 ? 2:my;	mz = mz<2 ? 2:mz;
+	mx = mx<1 ? 1:mx;	my = my<1 ? 1:my;	mz = mz<1 ? 1:mz;
 	d.Create(mx,my,mz);
+	float dx, dy, dz;
+	dx = mx>1 ? (x2-x1)/(mx-1):0;
+	dy = my>1 ? (y2-y1)/(my-1):0;
+	dz = mz>1 ? (z2-z1)/(mz-1):0;
 	for(i=0;i<mx;i++)	for(j=0;j<my;j++)	for(k=0;k<mz;k++)
-		d.a[i+mx*(j+my*k)] = Spline1(x1+i*(x2-x1)/(mx-1),	y1+j*(y2-y1)/(my-1),
-									z1+k*(z2-z1)/(mz-1));
+		d.a[i+mx*(j+my*k)] = Spline1(x1+i*dx, y1+j*dy, z1+k*dz);
 	return d;
 }
 //-----------------------------------------------------------------------------
@@ -703,7 +706,7 @@ void mglData::Extend(int n1, int n2)
 		if(ny>1)	for(i=0;i<n1;i++)
 			memcpy(b+i*nx*ny, a, nx*ny*sizeof(float));
 		else		for(i=0;i<n1*n2;i++)
-			memcpy(b+i*nx, a, nx*sizeof(float));		
+			memcpy(b+i*nx, a, nx*sizeof(float));
 	}
 	else
 	{

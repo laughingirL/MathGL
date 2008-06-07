@@ -1,4 +1,5 @@
 1.7.1 Released ?? September 2008
+	- Default mglGraph::Org value now is mglPoint(NAN,NAN,NAN).
 	- Bug with wrong normales at boundary points in Surf3*() is corrected.
 
 1.7 Released 1 June 2008
