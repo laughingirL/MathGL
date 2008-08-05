@@ -16,11 +16,14 @@
  */
 //-----------------------------------------------------------------------------
 #include <locale.h>
-#include <stdlib.h>
-#include <string.h>
-#include <wchar.h>
-#include <stdio.h>
 #include <ctype.h>
+
+#ifdef WIN32
+#include <windows.h>
+#else
+#include <wchar.h>
+#endif
+
 #include "mgl/mgl.h"
 #include "mgl/mgl_font.h"
 //-----------------------------------------------------------------------------
@@ -137,14 +140,14 @@ float mglFont::Puts(const wchar_t *str,int font,int align)
 		int s = (font/MGL_FONT_BOLD)&3;
 		long i,j;
 		h *= fact[0]/fact[s];
-		for(i=0;i<size;i++)		// find width
+		for(i=0;i<int(size);i++)		// find width
 		{
 			j = str[i]!=' ' ? Internal(str[i]) : Internal('!');
 			if(j==-1)	continue;
 			w+= width[s][j]/fact[s];
 		}
 		ww = w;		w *= -(align&3)/2.f;
-		if(gr)	for(i=0;i<size;i++)		// draw it
+		if(gr)	for(i=0;i<int(size);i++)		// draw it
 		{
 			if(str[i]!=' ')
 			{
@@ -179,7 +182,7 @@ float mglFont::Width(const wchar_t *str,int font)
 	{
 		long i,j;
 		int s = (font/MGL_FONT_BOLD)&3;
-		for(i=0;i<size;i++)
+		for(i=0;i<int(size);i++)
 		{
 			j = str[i]!=' ' ? Internal(str[i]) : Internal('!');
 			if(j==-1)	continue;
@@ -586,8 +589,8 @@ bool mglFont::read_main(const char *base, const char *path, unsigned &cur)
 #else
 	if(path)	sprintf(str,"%s/%s.vfm",path,base);
 #endif
-	else	sprintf(str,"%s.vfm",path,base);
-	
+	else	sprintf(str,"%s.vfm",base);
+
 	fp = fopen(str,"r");
 	if(!fp)	return false;			// this font must be in any case
 	fgets(str,256,fp);				// first string is comment (not used)
@@ -599,14 +602,14 @@ bool mglFont::read_main(const char *base, const char *path, unsigned &cur)
 	mem_alloc();
 	// and load symbols itself
 	register long i;
-	for(i=0;i<numg;i++)
+	for(i=0;i<int(numg);i++)
 	{
 		fscanf(fp,"%u%d%d%u%d%u", &tmpi, &tmpw, &tmpnl, &tmppl, &tmpnt, &tmppt);
 		id[i] = tmpi;		width[0][i] = tmpw;
 		numl[0][i] = tmpnl; ln[0][i] = tmppl;
 		numt[0][i] = tmpnt;	tr[0][i] = tmppt;
 	}
-	for(i=0;i<s;i++)	{	fscanf(fp,"%d", &tmpi);	buf[i] = tmpi;	}
+	for(i=0;i<int(s);i++)	{	fscanf(fp,"%d", &tmpi);	buf[i] = tmpi;	}
 	cur += s;
 	fclose(fp);		// finish wire normal font
 	numb = cur;
@@ -624,7 +627,7 @@ bool mglFont::read_def(unsigned &cur)
 	mem_alloc();
 	// and load symbols itself
 	register long i;
-	for(i=0;i<numg;i++)
+	for(i=0;i<int(numg);i++)
 	{
 		id[i] = mgl_gen_fnt[i][0];
 		width[0][i] = mgl_gen_fnt[i][1];
@@ -645,14 +648,12 @@ bool mglFont::Load(const char *base, const char *path)
 	FILE *fp;
 	char str[256];
 	setlocale(LC_NUMERIC,"C");
-	short *tmpi, *tmpw, *tmpn;
-	unsigned s,i,j,cur=0, *tmpp;
-	float ff;
+	unsigned cur=0;
 	if(!path)	path = MGL_FONT_PATH;
 	Clear();							// first clear old
 
 	if(!base || !read_main(base,path,cur))	{	read_def(cur);	return true;	}
-	
+
 	//================== bold ===========================================
 	sprintf(str,"%s/%s_b.vfm",path,base);
 	fp = fopen(str,"rt");
@@ -687,7 +688,7 @@ bool mglFont::Load(const char *base, const char *path)
 //-----------------------------------------------------------------------------
 mglFont::mglFont(const char *name, const char *path)
 {
-	parse = true;	numg=0;	
+	parse = true;	numg=0;
 	if(this==&mglDefFont)	Load(name, path);
 	else	Copy(&mglDefFont);
 }

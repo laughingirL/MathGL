@@ -15,9 +15,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "mgl/mgl_eps.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
@@ -100,14 +97,15 @@ void mglGraphPS::line_plot(float *p1,float *p2,float *c1,float *,bool all)
 {
 	if((PDef==0 && !all) || (fabs(p1[0]-p2[0])<0.01 && fabs(p1[1]-p2[1])<0.01))	return;
 	mglPrim a(1);
-	a.z = (p1[2]+p2[2])/2;	a.w = PenWidth;
-	if(PenWidth>1)	a.z += PenWidth-1;
+	float pw = fabs(PenWidth);
+	a.z = (p1[2]+p2[2])/2;	a.w = pw;
+	if(pw>1)	a.z += pw-1;
 	a.x[0]=p1[0];	a.y[0]=p1[1];	a.x[1]=p2[0];	a.y[1]=p2[1];
 //	a.c[0]=(c1[0]+c2[0])/2;	a.c[1]=(c1[1]+c2[1])/2;	a.c[2]=(c1[2]+c2[2])/2;
 	a.c[0]=c1[0];	a.c[1]=c1[1];	a.c[2]=c1[2];
 	a.SetStyle(all? 0xffff:PDef,int(pPos));
 	add_prim(&a);
-	pPos = fmod(pPos+hypot(p2[0]-p1[0], p2[1]-p1[1])/PenWidth/1.5, 16);
+	pPos = fmod(pPos+hypot(p2[0]-p1[0], p2[1]-p1[1])/pw/1.5, 16);
 }
 //-----------------------------------------------------------------------------
 void mglGraphPS::trig_plot(float *p3,float *p1,float *p2,float *c3,float *c1,float *c2)
@@ -246,7 +244,7 @@ void mglGraphPS::add_prim(mglPrim *a)
 		a->c[0] = a->c[0]*b + cb[0]*d;	a->c[1] = a->c[1]*b + cb[1]*d;
 		a->c[2] = a->c[2]*b + cb[2]*d;	a->c[3] = a->c[3]*b + d;
 	}
-	
+
 	a->c[0] = int(a->c[0]*100)*0.01;	a->c[1] = int(a->c[1]*100)*0.01;
 	a->c[2] = int(a->c[2]*100)*0.01;	a->c[3] = UseAlpha ? int(a->c[3]*500)*0.002 : 1;
 //	if(a->c[3]<0)	a->c[3] = 0;		if(a->c[3]>1)	a->c[3] = 1;
@@ -447,8 +445,7 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 			if(sd && sd[0])
 				fprintf(fp,"%s [%s] sd dr\n",str,sd);
 			else
-				fprintf(fp,"%s d0 dr\n",str,sd);
-//			fprintf(fp,"%sdr\n",str);
+				fprintf(fp,"%s d0 dr\n",str);
 		}
 		memcpy(cp,P[i].c,3*sizeof(float));
 		if(P[i].type==0)	wp = 1;
@@ -671,7 +668,7 @@ void mglPrim::Draw(mglGraphPS *gr)
 		y1 = imin(imin(long(y[0]),long(y[3])),imin(long(y[1]),long(y[2])));
 		x2 = imax(imax(long(x[0]),long(x[3])),imax(long(x[1]),long(x[2])));
 		y2 = imax(imax(long(y[0]),long(y[3])),imax(long(y[1]),long(y[2])));
-		
+
 		d1[0] = x[1]-x[0];	d2[0] = x[2]-x[0];
 		d1[1] = y[1]-y[0];	d2[1] = y[2]-y[0];
 		dxu = d2[0]*d1[1] - d1[0]*d2[1];
@@ -753,10 +750,10 @@ void mglGraphPS::mark_plot(int x,int y, char type, unsigned char cs[4])
 	register long i,j,ss = long(MarkSize*0.35*font_factor);
 	if(type=='.' || ss==0)
 	{
-		ss = long(3.5+PenWidth);
+		ss = long(3.5+fabs(PenWidth));
 		for(i=-ss;i<=ss;i++)	for(j=-ss;j<=ss;j++)
 		{
-			v = hypot(i,j)/PenWidth/3;
+			v = hypot(i,j)/fabs(PenWidth)/3;
 			cs[3] = (unsigned char)(cs[3]*exp(-6*v*v));
 			if(cs[3]==0)	continue;
 			pnt_plot(x+i,y+j,cs);

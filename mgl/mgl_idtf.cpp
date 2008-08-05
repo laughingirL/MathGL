@@ -14,20 +14,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdarg.h>
-#include <wchar.h>
 #include "mgl/mgl_gl.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
 #ifdef WIN32
-#define swprintf    _snwprintf
 #define bzero(a,b) memset(a,0,b)
 #endif
 #include "mgl/mgl_idtf.h"
 #include <iomanip>
+#ifndef MAXFLOAT
+#define MAXFLOAT	1e30
+#endif
 
 const static bool dbg = true;
 //-----------------------------------------------------------------------------
@@ -151,7 +148,7 @@ void mglGraphIDTF::AddLight ( mglPoint p, mglColor color, float br, bool infty )
 	if ( infty )
 	{
 		Light.type = "DIRECTIONAL";
-		NormScale ( pp, 1 );
+//		NormScale ( pp, 1 );
 		float a, b, c;
 		a = pp[0]; b = pp[1]; c = pp[2];
 		float n = sqrt ( a*a+b*b+c*c );
@@ -186,7 +183,7 @@ void mglGraphIDTF::AddLight ( mglPoint p, mglColor color, float br, bool infty )
 	else
 	{
 		Light.type = "POINT";
-		PostScale ( pp, 1 );
+//		PostScale ( pp, 1 );
 		Light.position[3][0] = pp[0];
 		Light.position[3][1] = pp[1];
 		Light.position[3][2] = pp[2];
@@ -200,7 +197,7 @@ void u3dMaterial::print_material ( std::ostringstream& ostr )
 	ostr
 	<< "\t\tRESOURCE_NAME \"" << this->name << "\"\n"
 //	  << "\t\tMATERIAL_AMBIENT 0 0 0\n"
-	<< "\t\tMATERIAL_AMBIENT "  << 0.5*this->color.r << " " << 0.5*this->color.g << " " << 0.5*this->color.b  << "\n"
+	<< "\t\tMATERIAL_AMBIENT "  << 0.125*this->color.r << " " << 0.125*this->color.g << " " << 0.125*this->color.b  << "\n"
 	<< "\t\tMATERIAL_DIFFUSE "  << this->color.r << " " << this->color.g << " " << this->color.b  << "\n"
 //	  << "\t\tMATERIAL_SPECULAR 0 0 0\n";
 //	  << "\t\tMATERIAL_DIFFUSE 0 0 0\n"
@@ -209,8 +206,8 @@ void u3dMaterial::print_material ( std::ostringstream& ostr )
 	if ( this->emissive )
 		ostr << "\t\tMATERIAL_EMISSIVE "  << this->color.r << " " << this->color.g << " " << this->color.b  << "\n";
 	else
-		ostr << "\t\tMATERIAL_EMISSIVE "  << 0.125*this->color.r << " " << 0.125*this->color.g << " " << 0.125*this->color.b  << "\n";
-//		ostr << "\t\tMATERIAL_EMISSIVE  0 0 0\n";
+//		ostr << "\t\tMATERIAL_EMISSIVE "  << 0.125*this->color.r << " " << 0.125*this->color.g << " " << 0.125*this->color.b  << "\n";
+		ostr << "\t\tMATERIAL_EMISSIVE 0 0 0\n";
 	ostr
 	<< "\t\tMATERIAL_REFLECTIVITY 0.5\n"
 	<< "\t\tMATERIAL_OPACITY " << this->opacity << "\n";
@@ -245,15 +242,17 @@ size_t mglGraphIDTF::AddMaterial ( const u3dMaterial& Material )
 u3dPointSet& mglGraphIDTF::AddPointSet ( std::string name )
 {
 	if ( name.empty() || name.size() == 0 )
+	{
 		if ( !CurrentName.empty() && CurrentName.size() != 0 )
 		{
 			name = CurrentName;
 			CurrentName.clear();
 		}
-		else if ( !CurrentGroup.empty() || CurrentGroup.size() != 0 )
+		else if ( !CurrentGroup.empty() && CurrentGroup.size() != 0 )
 			name = CurrentGroup + "Points" + i2s ( PointSets.size() );
 		else
 			name = "Points" + i2s ( PointSets.size() );
+	}
 	for ( u3dNode_list::iterator it = this->Nodes.begin(); it != this->Nodes.end(); ++it )
 		if ( *it == name )
 			{	name = "Node" + i2s ( Nodes.size() ); break; }
@@ -276,15 +275,17 @@ u3dPointSet& mglGraphIDTF::GetPointSet()
 u3dLineSet& mglGraphIDTF::AddLineSet ( std::string name )
 {
 	if ( name.empty() || name.size() == 0 )
+	{
 		if ( !CurrentName.empty() && CurrentName.size() != 0 )
 		{
 			name = CurrentName;
 			CurrentName.clear();
 		}
-		else if ( !CurrentGroup.empty() || CurrentGroup.size() != 0 )
+		else if ( !CurrentGroup.empty() && CurrentGroup.size() != 0 )
 			name = CurrentGroup + "Lines" + i2s ( LineSets.size() );
 		else
 			name = "Lines" + i2s ( LineSets.size() );
+	}
 	for ( u3dNode_list::iterator it = this->Nodes.begin(); it != this->Nodes.end(); ++it )
 		if ( *it == name )
 			{	name = "Node" + i2s ( Nodes.size() ); break; }
@@ -307,15 +308,17 @@ u3dLineSet& mglGraphIDTF::GetLineSet()
 u3dMesh& mglGraphIDTF::AddMesh ( std::string name )
 {
 	if ( name.empty() || name.size() == 0 )
+	{
 		if ( !CurrentName.empty() && CurrentName.size() != 0 )
 		{
 			name = CurrentName;
 			CurrentName.clear();
 		}
-		else if ( !CurrentGroup.empty() || CurrentGroup.size() != 0 )
+		else if ( !CurrentGroup.empty() && CurrentGroup.size() != 0 )
 			name = CurrentGroup + "Mesh" + i2s ( Meshes.size() );
 		else
 			name = "Mesh" + i2s ( Meshes.size() );
+	}
 	for ( u3dNode_list::iterator it = this->Nodes.begin(); it != this->Nodes.end(); ++it )
 		if ( *it == name )
 			{	name = "Node" + i2s ( Nodes.size() ); break; }
@@ -449,6 +452,44 @@ void u3dModel::print_shading_modifier ( std::ostringstream& ostr )
 // {
 //   Models.push_back(Model);
 //}
+void u3dBall::print_node ( std::ostringstream& ostr )
+{
+	u3dNode Node;
+	Node.name = name;
+	Node.resource = "UnitBall";
+	bzero ( Node.position, sizeof ( Node.position ) );
+	Node.position[0][0] = this->radius;
+	Node.position[1][1] = this->radius;
+	Node.position[2][2] = this->radius;
+	Node.position[3][0] = this->center.x;
+	Node.position[3][1] = this->center.y;
+	Node.position[3][2] = this->center.z;
+	Node.position[3][3] = 1.0f;
+	Node.type = "MODEL";
+	Node.both_visible = false;
+	Node.parent = this->parent;
+	Node.print ( ostr );
+}
+
+void u3dBall::print_shading_modifier ( std::ostringstream& ostr )
+{
+	ostr << "MODIFIER \"SHADING\" {\n"
+	<< "\tMODIFIER_NAME \"" << this->name << "\"\n"
+	<< "\tPARAMETERS {\n"
+	<< "\t\tSHADER_LIST_COUNT 1\n"
+	<< "\t\tSHADER_LIST_LIST {\n"
+	<< "\t\t\tSHADER_LIST 0 {\n"
+		<< "\t\t\t\tSHADER_COUNT 1\n"
+		<< "\t\t\t\tSHADER_NAME_LIST {\n"
+		<< "\t\t\t\t\tSHADER 0 NAME: \"" << this->Graph->Materials[this->material].name << "\"\n"
+		<< "\t\t\t\t}\n"
+		<< "\t\t\t}\n"
+	<< "\t\t}\n"
+	<< "\t}\n"
+	<< "}\n"
+	<< "\n";
+}
+
 u3dPointSet::u3dPointSet ( const std::string& name, mglGraphIDTF *Graph ) :
 		u3dModel ( name, Graph, false )
 {
@@ -817,6 +858,7 @@ void mglGraphIDTF::Clf ( mglColor Back )
 	PointSets.clear();
 	LineSets.clear();
 	Meshes.clear();
+	Balls.clear();
 	Materials.clear();
 	points_finished = true;
 	lines_finished = true;
@@ -842,6 +884,9 @@ void mglGraphIDTF::StartGroup ( const char *name )
 void mglGraphIDTF::EndGroup()
 {
 	CurrentGroup.clear();
+	points_finished = true;
+	lines_finished = true;
+	mesh_finished = true;
 }
 const std::string& mglGraphIDTF::GetCurrentGroup()
 {
@@ -859,27 +904,21 @@ const std::string& mglGraphIDTF::GetName()
 	return CurrentName;
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::Ball ( float x,float y,float z,mglColor col,float alpha )
+void mglGraphIDTF::UnitBall ( )
 {
-	if ( alpha==0 || !ScalePoint ( x,y,z ) )	return;
-	if ( !col.Valid() )	col = mglColor ( 1.,0.,0. );
-	alpha = Transparent ? alpha : 1;
-
 	const size_t ThetaResolution = 10;
 	const size_t PhiResolution   = 10;
 	mglPoint pnt;
 	mglPoint nrm;
-	float p[3] = {x,y,z};
-	PostScale ( p,1 );
-	mglPoint Center = mglPoint ( p[0],p[1],p[2] );
-	float Radius = PenWidth/500;
-	u3dMesh& Mesh = AddMesh ( "Ball" );
+	mglPoint Center = mglPoint ( 0.5f, 0.5f, 0.5f );
+	float Radius = 0.5f;
+	u3dMesh& Mesh = AddMesh ( "UnitBall" );
 	Mesh.both_visible=false;
 	Mesh.vertex_color=false;
 
 	mesh_finished = true;
 
-	float color[4] = {col.r, col.g, col.b, alpha};
+	float color[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 	Mesh.AddModelMaterial ( color, false, false );
 
 	// Create north pole
@@ -961,15 +1000,48 @@ void mglGraphIDTF::Ball ( float x,float y,float z,mglColor col,float alpha )
 	}
 }
 //-----------------------------------------------------------------------------
+void mglGraphIDTF::Ball ( float x,float y,float z,mglColor col,float alpha )
+{
+	if ( alpha==0 || !ScalePoint ( x,y,z ) )	return;
+	if ( !col.Valid() )	col = mglColor ( 1.,0.,0. );
+	alpha = Transparent ? alpha : 1.0f;
+	alpha = UseAlpha ? alpha : 1.0f;
+	u3dBall ball;
+
+	float p[3] = {x,y,z};
+	PostScale ( p,1 );
+	if (PenWidth<0)
+	{
+		point_plot ( mglPoint ( p[0],p[1],p[2] ) );
+		return;
+	}
+	p[0] = (p[0] - 0.5f)*2.0f;
+	p[1] = (p[1] - 0.5f)*2.0f;
+	p[2] = (p[2] - 0.5f)*2.0f;
+	ball.center = mglPoint ( p[0],p[1],p[2] );
+	ball.radius = 2.0f*fabs(PenWidth)/500;
+	ball.Graph = this;
+	ball.parent = this->GetCurrentGroup();
+	ball.name = "Ball" + i2s(Balls.size()) ;
+
+	u3dMaterial Material;
+	Material.color = col;
+	Material.opacity = alpha;
+	Material.emissive = false;
+	Material.vertex_color = false;
+	ball.material = this->AddMaterial ( Material );
+
+	Balls.push_back(ball);
+}
+//-----------------------------------------------------------------------------
 void mglGraphIDTF::ball ( float *p,float *c )
 {
-	point_plot ( mglPoint ( p[0], p[1], p[2] ) );
+//	point_plot ( mglPoint ( p[0], p[1], p[2] ) );
 }
 //-----------------------------------------------------------------------------
 void mglGraphIDTF::mark_plot ( float *pp, char type )
 {
 	float x=pp[0],y=pp[1],z=pp[2];
-	Pen ( NC,'-',BaseLineWidth );
 #define pnt(x, y)  ( p + ss*mglPoint((float)x, (float)y, 0.0f))
 	mglPoint p = mglPoint ( x, y, z );
 	mglPoint p1;
@@ -981,6 +1053,8 @@ void mglGraphIDTF::mark_plot ( float *pp, char type )
 	}
 	else
 	{
+		float pw = PenWidth;	PenWidth = BaseLineWidth;
+		unsigned pd = PDef;	PDef = 0xffff;
 		switch ( type )
 		{
 			case '+':
@@ -1021,7 +1095,7 @@ void mglGraphIDTF::mark_plot ( float *pp, char type )
 				ss = ss*1.1;
 				line_plot ( pnt ( 0,  -1 ), pnt ( 0.7, 0.5 ) );
 				line_plot ( pnt ( 0.7, 0.5 ), pnt ( -0.7, 0.5 ) );
-				line_plot ( pnt ( -0.7, 0.5 ), pnt ( 0,   1 ) );
+				line_plot ( pnt ( -0.7, 0.5 ), pnt ( 0,  -1 ) );
 				break;
 			case 'o':
 				p1 = pnt ( 1, 0 );
@@ -1046,6 +1120,8 @@ void mglGraphIDTF::mark_plot ( float *pp, char type )
 				trig_plot ( p,p1,p2 );
 				break;
 		}
+		PDef = pd;
+		PenWidth = pw;
 	}
 #undef pnt
 }
@@ -1185,17 +1261,8 @@ void mglGraphIDTF::line_plot ( const mglPoint& p0, const mglPoint& p1 )
 void mglGraphIDTF::line_plot ( float *pp0,float *pp1,float *cc0,float *cc1,bool all )
 {
 	if ( !DrawFace )	{	line_plot_s ( pp0,pp1,cc0,cc1,all );	return;	}
-	mglPoint p0 = mglPoint ( pp0[0], pp0[1], pp0[2] );
-	mglPoint p1 = mglPoint ( pp1[0], pp1[1], pp1[2] );
-	float length = Norm ( p1-p0 );
-	if ( length == 0.0f )
-	{
-		float pp[4] = { ( pp0[0]+pp1[0] ) /2., ( pp0[1]+pp1[1] ) /2., ( pp0[2]+pp1[2] ) /2., ( pp0[3]+pp1[3] ) /2.};
-		float cc[4] = { ( cc0[0]+cc1[0] ) /2., ( cc0[1]+cc1[1] ) /2., ( cc0[2]+cc1[2] ) /2., ( cc0[3]+cc1[3] ) /2.};
-		ball ( pp, cc );
-		return;
-	}
 	if ( PDef == 0x0000 ) 	{	return;	}
+	if ( pp0[0] == pp1[0] && pp0[1] == pp1[1] && pp0[2] == pp1[2] ) 	{	return;	}
 	line_plot_s ( pp0,pp1,cc0,cc1,all );
 }
 //-----------------------------------------------------------------------------
@@ -1205,7 +1272,7 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 	float *c,*ns,d1[3],d2[3];
 	long k=3*n;
 	if ( !pp || n<2 || m<2 )	return;
-	PostScale ( pp,n*m );
+	PostScale ( pp,n*m );	LightScale();
 	if ( !DrawFace )	{	wire_plot ( n,m,pp,cc,tt );	return;	}
 	ns = new float[3*n*m];
 	for ( i=0;i<n-1;i++ )	for ( j=0;j<m-1;j++ )
@@ -1248,19 +1315,19 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 			}
 		}
 #define AddTri(i1, i2, i3)	\
-			if (Mesh.vertex_color)						\
-			{								\
-				Mesh.AddTriangle(i0+(i1), i0+(i2), i0+(i3), 0, i0+(i1), i0+(i2), i0+(i3));		\
-			}								\
-			else								\
-			{								\
-				float col [4];						\
-				size_t mid;						\
+			if (Mesh.vertex_color)							\
+			{									\
+				Mesh.AddTriangle(i0+(i1), i0+(i2), i0+(i3), 0, i0+(i1), i0+(i2), i0+(i3));	\
+			}									\
+			else									\
+			{									\
+				float col [4];							\
+				size_t mid;							\
 				col[0] = (c[4*(i1)+0] + c[4*(i2)+0] + c[4*(i3)+0])/3.0f;	\
 				col[1] = (c[4*(i1)+1] + c[4*(i2)+1] + c[4*(i3)+1])/3.0f;	\
 				col[2] = (c[4*(i1)+2] + c[4*(i2)+2] + c[4*(i3)+2])/3.0f;	\
 				col[3] = (c[4*(i1)+3] + c[4*(i2)+3] + c[4*(i3)+3])/3.0f;	\
-				mid = Mesh.AddModelMaterial(col, false, false);		\
+				mid = Mesh.AddModelMaterial(col, false, false);			\
 				Mesh.AddTriangle(i0+(i1), i0+(i2), i0+(i3), mid);		\
 			}
 		for ( i=0;i<n-1;i++ )	for ( j=0;j<m-1;j++ )
@@ -1272,14 +1339,14 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 					AddTri ( 1, n+1, n )
 				}
 				else if ( tt[i0] && tt[i0+1] && tt[i0+n] )
-					AddTri ( 0, 1, n )
-					else if ( tt[i0] && tt[i0+1] && tt[i0+n+1] )
-						AddTri ( 0, 1, n+1 )
-						else if ( tt[i0] && tt[i0+n+1] && tt[i0+n] )
-							AddTri ( 0, n+1, n )
-							else if ( tt[i0+n+1] && tt[i0+1] && tt[i0+n] )
-								AddTri ( n+1, 1, n )
-							}
+				{	AddTri ( 0, 1, n )	}
+				else if ( tt[i0] && tt[i0+1] && tt[i0+n+1] )
+				{	AddTri ( 0, 1, n+1 )	}
+				else if ( tt[i0] && tt[i0+n+1] && tt[i0+n] )
+				{	AddTri ( 0, n+1, n )	}
+				else if ( tt[i0+n+1] && tt[i0+1] && tt[i0+n] )
+				{	AddTri ( n+1, 1, n )	}
+			}
 #undef AddTri
 	}
 	else
@@ -1377,6 +1444,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 	if ( UseLight )
 	{
 		SetAmbientLight();
+		LightScale();
 		for ( int i=0; i<10; i++ )
 			if ( nLight[i] )
 				AddLight ( mglPoint ( pLight[3*i], pLight[3*i+1], pLight[3*i+2] ),
@@ -1440,6 +1508,10 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 	{
 		it->print_node ( ostr );
 	}
+	for ( u3dBall_list::iterator it = Balls.begin(); it != Balls.end(); ++it )
+	{
+		it->print_node ( ostr );
+	}
 	ostr
 	<< "\n"
 	<< "RESOURCE_LIST \"VIEW\" {\n"
@@ -1474,6 +1546,11 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 		<< "\n";
 	}
 
+	if ( Balls.size() != 0 )
+	{
+		UnitBall();
+	}
+
 	// Write models
 	ostr << "RESOURCE_LIST \"MODEL\" {\n"
 	<< "\tRESOURCE_COUNT " << ( PointSets.size() + LineSets.size() + Meshes.size() ) << "\n";
@@ -1498,6 +1575,11 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 	}
 	ostr << "}\n"
 	<< "\n";
+
+	if ( Balls.size() != 0 )
+	{
+		Meshes.pop_back();
+	}
 
 	// Write shaders
 	ostr << "RESOURCE_LIST \"SHADER\" {\n"
@@ -1535,6 +1617,10 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 		it->print_shading_modifier ( ostr );
 	}
 	for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
+	{
+		it->print_shading_modifier ( ostr );
+	}
+	for ( u3dBall_list::iterator it = Balls.begin(); it != Balls.end(); ++it )
 	{
 		it->print_shading_modifier ( ostr );
 	}

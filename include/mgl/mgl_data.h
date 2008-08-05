@@ -17,7 +17,6 @@
 #ifndef _MGL_DATA_H_
 #define _MGL_DATA_H_
 //-----------------------------------------------------------------------------
-#include <stdio.h>
 #ifdef _MSC_VER
 #define	_USE_MATH_DEFINES
 #include <float.h>
@@ -83,23 +82,25 @@ public:
 	void Set(const float ***A,int N1,int N2,int N3);
 	/// Allocate memory and copy the data from the (float ***) array
 	void Set(const double ***A,int N1,int N2,int N3);
+	/// Allocate memory and scanf the data from the string
+	void Set(const char *str,int NX,int NY=1,int NZ=1);
 	/// Copy the data from other mglData variable
-	inline void Set(mglData &dat)	{	Set(dat.a,dat.nx,dat.ny,dat.nz);	};
+	inline void Set(const mglData &dat)	{	Set(dat.a,dat.nx,dat.ny,dat.nz);	};
 	/// Rearange data dimensions
 	void Rearrange(int mx, int my=0, int mz=0);
-	
+
 	/// Read data array from HDF file
 	void ReadHDF(const char *fname,const char *data);
 	/// Save data to HDF file
-	void SaveHDF(const char *fname,const char *data,bool rewrite=false);
+	void SaveHDF(const char *fname,const char *data,bool rewrite=false) const;
 	/// Read data from tab-separated text file with auto determining size
 	bool Read(const char *fname);
 	/// Read data from text file with specifeid size
 	bool Read(const char *fname,int mx,int my=1,int mz=1);
 	/// Save whole data array (for ns=-1) or only ns-th slice to text file
-	void Save(const char *fname,int ns=-1);
+	void Save(const char *fname,int ns=-1) const;
 	/// Export data array (for ns=-1) or only ns-th slice to PNG file according color scheme
-	void Export(const char *fname,const char *scheme,float v1=0,float v2=0,int ns=0);
+	void Export(const char *fname,const char *scheme,float v1=0,float v2=0,int ns=0) const;
 	/// Import data array from PNG file according color scheme
 	void Import(const char *fname,const char *scheme,float v1=0,float v2=1);
 	/// Read data from tab-separated text files with auto determining size which filenames are result of sprintf(fname,templ,t) where t=from:step:to
@@ -124,9 +125,9 @@ public:
 	/// Modify the data by specified formula
 	void Modify(const char *eq,int dim=0);
 	/// Modify the data by specified formula
-	void Modify(const char *eq,mglData &v, mglData &w);
+	void Modify(const char *eq,const mglData &v, const mglData &w);
 	/// Modify the data by specified formula
-	void Modify(const char *eq,mglData &v);
+	void Modify(const char *eq,const mglData &v);
 	/// Get column (or slice) of the data filled by formulas of other named columns
 	mglData &Column(const char *eq);
 	/// Set names for columns (slices)
@@ -137,57 +138,57 @@ public:
 	void Crop(int n1, int n2,char dir='x');
 
 	/// Get maximal value of the data
-	float Maximal();
+	float Maximal() const;
 	/// Get minimal value of the data
-	float Minimal();
+	float Minimal() const;
 	/// Get maximal value of the data and its position
-	float Maximal(int &i,int &j,int &k);
+	float Maximal(int &i,int &j,int &k) const;
 	/// Get minimal value of the data and its position
-	float Minimal(int &i,int &j,int &k);
+	float Minimal(int &i,int &j,int &k) const;
 	/// Get maximal value of the data and its approximated position
-	float Maximal(float &x,float &y,float &z);
+	float Maximal(float &x,float &y,float &z) const;
 	/// Get minimal value of the data and its approximated position
-	float Minimal(float &x,float &y,float &z);
+	float Minimal(float &x,float &y,float &z) const;
 	/// Get "energy" and find first (median) and second (width) momentums of data
-	float Momentum(char dir,float &m,float &w);
+	float Momentum(char dir,float &m,float &w) const;
 	/// Get "energy and find 4 momentums of data: median, width, skewness, kurtosis
-	float Momentum(char dir,float &m,float &w,float &s,float &k);
+	float Momentum(char dir,float &m,float &w,float &s,float &k) const;
 	/// Get momentum (1D-array) of data along direction 'dir'. String looks like "x1" for median in x-direction, "x2" for width in x-dir and so on.
-	mglData &Momentum(char dir, const char *how);
+	mglData &Momentum(char dir, const char *how) const;
 	/// Print information about the data (sizes and momentum) to string
-	void PrintInfo(char *buf);
+	void PrintInfo(char *buf) const;
 	/// Print information about the data (sizes and momentum) to FILE (for example, stdout)
-	void PrintInfo(FILE *fp);
+	void PrintInfo(FILE *fp) const;
 	/// Find position (after specified in i,j,k) of first nonzero value of formula
-	float Find(const char *cond, int &i, int &j, int &k);
+	float Find(const char *cond, int &i, int &j, int &k) const;
 	/// Find position (before specified in i,j,k) of last nonzero value of formula
-	float Last(const char *cond, int &i, int &j, int &k);
+	float Last(const char *cond, int &i, int &j, int &k) const;
 	/// Find position of first in direction 'dir' nonzero value of formula
-	int Find(const char *cond, char dir, int i=0, int j=0, int k=0);
+	int Find(const char *cond, char dir, int i=0, int j=0, int k=0) const;
 	/// Find if any nonzero value of formula
-	bool FindAny(const char *cond);
+	bool FindAny(const char *cond) const;
 
 	/// Smooth the data on specified direction or directions
 	void Smooth(int Type,const char *dirs="xyz",float delta=0);
 	/// Smooth the data on specified direction or directions
 	void Smooth(const char *dirs="xyz");
 	/// Get sub-array of the data with given fixed indexes
-	mglData &SubData(int xx,int yy=-1,int zz=-1);
+	mglData &SubData(int xx,int yy=-1,int zz=-1) const;
 	/// Create n-th points distribution of this data values in range [v1, v2]
-	mglData &Hist(int n,float v1=0,float v2=1, int nsub=0);
+	mglData &Hist(int n,float v1=0,float v2=1, int nsub=0) const;
 	/// Create n-th points distribution of this data values in range [v1, v2] with weight \a w
-	mglData &Hist(mglData &w, int n,float v1=0,float v2=1, int nsub=0);
+	mglData &Hist(const mglData &w, int n,float v1=0,float v2=1, int nsub=0) const;
 	/// Get array which is result of summation in given direction or directions
-	mglData &Sum(const char *dir);
+	mglData &Sum(const char *dir) const;
 	/// Get array which is result of maximal values in given direction or directions
-	mglData &Max(const char *dir);
+	mglData &Max(const char *dir) const;
 	/// Get array which is result of minimal values in given direction or directions
-	mglData &Min(const char *dir);
+	mglData &Min(const char *dir) const;
 	/// Resize the data to new size of box [x1,x2]*[y1,y2]*[z1,z2]
 	mglData &Resize(int mx,int my=1,int mz=1,float x1=0,float x2=1,
-		float y1=0,float y2=1,float z1=0,float z2=1);
+		float y1=0,float y2=1,float z1=0,float z2=1) const;
 	/// Get the data which is tensor multiplication (d[i,j] = this[i]*a[j] and so on)
-	mglData &Combine(mglData &a);
+	mglData &Combine(const mglData &a) const;
 
 	/// Cumulative summation the data in given direction or directions
 	void CumSum(const char *dir);
@@ -203,14 +204,14 @@ public:
 	void Mirror(const char *dir);
 
 	/// Interpolate by qubic splain the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-	float Spline(float x,float y=0,float z=0);
+	float Spline(float x,float y=0,float z=0) const;
 	/// Interpolate by qubic splain the data to given point \a x,\a y,\a z which normalized in range [0, 1]
-	float Spline1(float x,float y=0,float z=0)
+	float Spline1(float x,float y=0,float z=0) const
 	{	return Spline(x*(nx-1),y*(ny-1),z*(nz-1));	};
 	/// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-	float Linear(float x,float y=0,float z=0);
+	float Linear(float x,float y=0,float z=0) const;
 	/// Interpolate by line the data to given point \a x,\a y,\a z which normalized in range [0, 1]
-	float Linear1(float x,float y=0,float z=0)
+	float Linear1(float x,float y=0,float z=0) const
 	{	return Linear(x*(nx-1),y*(ny-1),z*(nz-1));	};
 
 	/// Insert \a num rows after \a at and fill it by formula \a eq
@@ -229,12 +230,12 @@ public:
 	void Insert(char dir, int at=0, int num=1);
 	/// Delete data
 	void Delete(char dir, int at=0, int num=1);
-	
+
 	/// Get the value in given cell of the data with border checking
-	float v(int i,int j=0,int k=0);
+	float v(int i,int j=0,int k=0) const;
 
 	/// Initiate by other mglData variable
-	mglData(mglData &d)		{	a=0;	Set(d);		};
+	mglData(const mglData &d)		{	a=0;	Set(d);		};
 	/// Read data from file
 	mglData(const char *fname)	{	a=0;	Read(fname);	}
 	/// Allocate the memory for data array and initialize it zero
@@ -242,15 +243,15 @@ public:
 	/// Delete the array
 	~mglData()			{	if(a)	{	delete []a;	delete []id;	}	};
 	/// Copy data from other mglData variable
-	void operator=(mglData &d)	{	Set(d.a,d.nx,d.ny,d.nz);	};
+	void operator=(const mglData &d)	{	Set(d.a,d.nx,d.ny,d.nz);	};
 	/// Multiplicate the data by other one for each element
-	void operator*=(mglData &d);
+	void operator*=(const mglData &d);
 	/// Divide the data by other one for each element
-	void operator/=(mglData &d);
+	void operator/=(const mglData &d);
 	/// Add the other data
-	void operator+=(mglData &d);
+	void operator+=(const mglData &d);
 	/// Substract the other data
-	void operator-=(mglData &d);
+	void operator-=(const mglData &d);
 	/// Multiplicate each element by the number
 	void operator*=(float d);
 	/// Divide each element by the number
@@ -259,17 +260,15 @@ public:
 	void operator+=(float d);
 	/// Substract the number
 	void operator-=(float d);
-private:
-	float _p[4][4];
 };
 //-----------------------------------------------------------------------------
 double mgl_rnd();
 double ipow_mgl(double x,int n);
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase
-mglData &TransformA(mglData &am, mglData &ph, const char *tr);
+mglData &TransformA(const mglData &am, const mglData &ph, const char *tr);
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for real and imaginary parts
-mglData &Transform(mglData &re, mglData &im, const char *tr);
+mglData &Transform(const mglData &re, const mglData &im, const char *tr);
 /// Short time fourier analysis for real and imaginary parts. Output is amplitude of partial fourier (result will have size {dn, floor(nx/dn), ny} for dir='x'
-mglData &STFA(mglData &re, mglData &im, int dn, char dir='x');
+mglData &STFA(const mglData &re, const mglData &im, int dn, char dir='x');
 //-----------------------------------------------------------------------------
 #endif

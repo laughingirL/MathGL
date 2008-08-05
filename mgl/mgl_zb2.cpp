@@ -14,12 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
 #include "mgl/mgl_ab.h"
-//-----------------------------------------------------------------------------
-float mgl_cos_pp(float *pp,long i0,long i1,long i2);
 //-----------------------------------------------------------------------------
 //
 //	Low level plot functions for ZBuffer
@@ -317,11 +312,23 @@ void mglGraphAB::boxs_plot(long n, long m, float *pp, mglColor *cc, bool *tt,
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky2,
-					long *kz,float *pp,float *cc,float *kk,float *nn,bool wire)
+float mgl_cos_pp(float *pp,long i0,long i1,long i2)
 {
-	if(!DrawFace)	return;	//wire=true;
-	register long i,j,k,i0,ii,jj=0;
+	float p1=0,p2=0,pc=0,dp1,dp2;
+	dp1 = pp[3*i1]-pp[3*i0];		dp2 = pp[3*i2]-pp[3*i0];
+	p1 = dp1*dp1;	p2 = dp2*dp2;	pc = dp1*dp2;
+	dp1 = pp[3*i1+1]-pp[3*i0+1];	dp2 = pp[3*i2+1]-pp[3*i0+1];
+	p1 += dp1*dp1;	p2 += dp2*dp2;	pc += dp1*dp2;
+	dp1 = pp[3*i1+2]-pp[3*i0+2];	dp2 = pp[3*i2+2]-pp[3*i0+2];
+	p1 += dp1*dp1;	p2 += dp2*dp2;	pc += dp1*dp2;
+
+	return p1*p2>1e-10 ? pc/sqrt(p1*p2) : NAN;
+}
+//-----------------------------------------------------------------------------
+void mglGraphAB::surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky2, long *kz,float *pp,float *cc,float *kk,float *nn,bool wire)
+{
+	if(!DrawFace)	wire=true;	//return;	//wire=true;
+	register long i,j,k,i0,ii,jj;
 	long id[12],us[12],ni;
 	float d,d0,p[9],s[9],*c0,*c1,*c2=cc;
 	LightScale();	// set up light source
@@ -329,8 +336,8 @@ void mglGraphAB::surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky
 	for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
 	{
 		i0 = i+n*j;
+		// find ID of points of Surf3 intersection with cell i0
 		memset(id,-1,12*sizeof(long));	ni = 0;
-		memset(us,0,12*sizeof(long));
 		if(kx1[i0]>=0)		id[ni++] = kx1[i0];
 		if(ky1[i0]>=0)		id[ni++] = ky1[i0];
 		if(kx1[i0+n]>=0)	id[ni++] = kx1[i0+n];
@@ -343,48 +350,74 @@ void mglGraphAB::surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky
 		if(ky2[i0]>=0)		id[ni++] = ky2[i0];
 		if(kx2[i0+n]>=0)	id[ni++] = kx2[i0+n];
 		if(ky2[i0+1]>=0)	id[ni++] = ky2[i0+1];
-
-		if(ni>2)
+		if(ni<3)	continue;
+		// remove points which is too close to first one
+		for(jj=1;jj<ni;)
 		{
-			memcpy(p,pp+3*id[0],3*sizeof(float));
-			memcpy(p+3,pp+3*id[1],3*sizeof(float));
-			memcpy(s,nn+3*id[0],3*sizeof(float));
-			memcpy(s+3,nn+3*id[1],3*sizeof(float));
-			PostScale(p,2);
-			NormScale(s,2);
-			us[0]=1;
-			c0 = cc ? cc+4*id[0] : CDef;
-			c1 = cc ? cc+4*id[1] : CDef;
-			for(k=1;k<ni;k++)
-			{
-				i0 = -1;	d0 = -2;
-				for(ii=1;ii<ni;ii++)
-				{
-					if(us[ii])	continue;
-					d = k>1 ? mgl_cos_pp(kk,id[0],id[ii],id[jj]) :
-							-mgl_cos_pp(kk,id[0],id[ii],id[1]);
-					if(d>d0)	{	d0=d;	i0=ii;	}
-				}
-				if(i0<0)	break;
-				jj = i0;	us[jj]=1;
-				memcpy(p+6,pp+3*id[jj],3*sizeof(float));
-				memcpy(s+6,nn+3*id[jj],3*sizeof(float));
-				PostScale(p+6,1);
-				NormScale(s+6,1);
-				c2 = cc ? cc+4*id[jj] : CDef;
-				if(wire)	line_plot(p+3,p+6,c1,c2,true);
-				else if(k>1)
-				{
-					if((!fx && !fy && !fz))	// сглаживание только для декартовой с.к.
-						trig_plot_n(p,p+3,p+6,c0,c1,c2,s,s+3,s+6);
-					else
-						trig_plot(p,p+3,p+6,c0,c1,c2);
-				}
-				memcpy(p+3,p+6,3*sizeof(float));	c1=c2;
-				memcpy(s+3,s+6,3*sizeof(float));
-			}
-			if(wire)	line_plot(p,p+6,c0,c2,true);
+			d = fabs(kk[3*id[jj]]-kk[3*id[0]]) + fabs(kk[3*id[jj]+1]-kk[3*id[0]+1]) + fabs(kk[3*id[jj]+2]-kk[3*id[0]+2]);
+			if(d>1e-5)	jj++;
+			else
+			{	ni--;	for(ii=jj;ii<ni;ii++)	id[ii]=id[ii+1];	}
 		}
+		// continue if number of points <3 i.e. there is no triangle
+		if(ni<3)	continue;
+		memset(us,0,12*sizeof(long));
+		// firstly let find most outstanding point
+		for(jj=1,ii=2,d0=2;ii<ni;ii++)
+		{
+			d = mgl_cos_pp(kk,id[0],id[ii],id[1]);
+			if(d<d0)	{	d0=d;	jj=ii;	}
+		}
+		// copy first 2 points as base
+		memcpy(p,pp+3*id[0],3*sizeof(float));
+		memcpy(p+3,pp+3*id[jj],3*sizeof(float));
+		memcpy(p+6,pp+3*id[1],3*sizeof(float));	// for correct orientation of triangles (in IDTF)
+		memcpy(s,nn+3*id[0],3*sizeof(float));
+		memcpy(s+3,nn+3*id[jj],3*sizeof(float));
+		PostScale(p,3);		NormScale(s,2);
+		// select the same orientation of all triangles of the surface
+		bool proj = (s[0]*((p[4]-p[1])*(p[8]-p[2])-(p[5]-p[2])*(p[7]-p[1])) +
+				s[1]*((p[5]-p[2])*(p[6]-p[0])-(p[3]-p[0])*(p[8]-p[2])) +
+				s[2]*((p[3]-p[0])*(p[7]-p[1])-(p[4]-p[1])*(p[6]-p[0])))<0;
+		us[0] = us[jj] = 1;
+		c0 = cc ? cc+4*id[0] : CDef;
+		c1 = cc ? cc+4*id[jj] : CDef;
+		if(wire)	line_plot(p,p+3,c0,c1,true);
+		// find all triangles
+		for(k=2;k<ni;k++)
+		{
+			// find closest point in sence cosine of angle
+			for(i0=-1,ii=1,d0=-2;ii<ni;ii++)
+			{
+				if(us[ii])	continue;
+				d = mgl_cos_pp(kk,id[0],id[ii],id[jj]);
+				if(d>d0)	{	d0=d;	i0=ii;	}
+			}
+			if(i0<0)	break;	// no more triangles. NOTE: should be never here
+			jj = i0;	us[jj]=1;
+			memcpy(p+6,pp+3*id[jj],3*sizeof(float));
+			memcpy(s+6,nn+3*id[jj],3*sizeof(float));
+			PostScale(p+6,1);	NormScale(s+6,1);
+			c2 = cc ? cc+4*id[jj] : CDef;
+			if(!wire)
+			{
+				// smoothing only for Cartesian
+				if(!fx && !fy && !fz)
+				{
+					if(proj)	trig_plot_n(p,p+6,p+3,c0,c1,c2,s,s+6,s+3);
+					else		trig_plot_n(p,p+3,p+6,c0,c1,c2,s,s+3,s+6);
+				}
+				else
+				{
+					if(proj)	trig_plot(p,p+6,p+3,c0,c1,c2);
+					else		trig_plot(p,p+3,p+6,c0,c1,c2);
+				}
+			}
+			else	line_plot(p+3,p+6,c1,c2,true);
+			memcpy(p+3,p+6,3*sizeof(float));	c1=c2;
+			memcpy(s+3,s+6,3*sizeof(float));
+		}
+		if(wire)	line_plot(p,p+6,c0,c2,true);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -482,7 +515,7 @@ void mglGraphAB::quads_plot(long n,float *pp,float *cc,bool *tt)
 //				quad_plot(p,p+3,p+9,p+6,CDef,CDef,CDef,CDef);
 			{
 				trig_plot(p,p+3,p+9,CDef,CDef,CDef);
-				trig_plot(p+3,p+9,p+6,CDef,CDef,CDef);
+				trig_plot(p+3,p+6,p+9,CDef,CDef,CDef);
 			}
 			else
 			{

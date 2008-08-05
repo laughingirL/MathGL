@@ -38,7 +38,8 @@ bin_PROGRAMS = mgl2png$(EXEEXT) mgl2eps$(EXEEXT) mgl2svg$(EXEEXT) \
 subdir = utils
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/config/autotroll.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -63,7 +64,10 @@ am__mglview_SOURCES_DIST = mglview.cpp
 @USE_FLTK_TRUE@am_mglview_OBJECTS = mglview-mglview.$(OBJEXT)
 mglview_OBJECTS = $(am_mglview_OBJECTS)
 @USE_FLTK_TRUE@mglview_DEPENDENCIES =  \
-@USE_FLTK_TRUE@	$(top_builddir)/mgl/libmgl-fltk.la
+@USE_FLTK_TRUE@	$(top_builddir)/widgets/libmgl-fltk.la
+mglview_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CXXLD) $(mglview_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -86,7 +90,9 @@ CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
+AM_CXXFLAGS = @AM_CXXFLAGS@
 AR = @AR@
+AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -103,6 +109,7 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
@@ -118,7 +125,9 @@ GLUT_FLAGS = @GLUT_FLAGS@
 GLUT_LIBS = @GLUT_LIBS@
 GL_LIBS = @GL_LIBS@
 GREP = @GREP@
+GSL_FLAGS = @GSL_FLAGS@
 GSL_LIBS = @GSL_LIBS@
+HAVE_SWIG = @HAVE_SWIG@
 HDF5_FLAGS = @HDF5_FLAGS@
 HDF5_LIBS = @HDF5_LIBS@
 INCLTDL = @INCLTDL@
@@ -141,7 +150,9 @@ MGL_AGE = @MGL_AGE@
 MGL_CURRENT = @MGL_CURRENT@
 MGL_REVISION = @MGL_REVISION@
 MKDIR_P = @MKDIR_P@
+MOC = @MOC@
 NMEDIT = @NMEDIT@
+OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -151,14 +162,37 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PNG_LIBS = @PNG_LIBS@
+PYTHON = @PYTHON@
+PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
+PYTHON_HEADERS = @PYTHON_HEADERS@
+PYTHON_PLATFORM = @PYTHON_PLATFORM@
+PYTHON_PREFIX = @PYTHON_PREFIX@
+PYTHON_VERSION = @PYTHON_VERSION@
+QMAKE = @QMAKE@
+QT_CFLAGS = @QT_CFLAGS@
+QT_CPPFLAGS = @QT_CPPFLAGS@
+QT_CXXFLAGS = @QT_CXXFLAGS@
+QT_DEFINES = @QT_DEFINES@
+QT_INCPATH = @QT_INCPATH@
+QT_LDFLAGS = @QT_LDFLAGS@
+QT_LFLAGS = @QT_LFLAGS@
+QT_LIBS = @QT_LIBS@
+QT_PATH = @QT_PATH@
+QT_VERSION = @QT_VERSION@
+QT_VERSION_MAJOR = @QT_VERSION_MAJOR@
 RANLIB = @RANLIB@
+RCC = @RCC@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 TIFF_FLAGS = @TIFF_FLAGS@
 TIFF_LIBS = @TIFF_LIBS@
+TMPDIR = @TMPDIR@
+UIC = @UIC@
 VERSION = @VERSION@
+WX_FLAGS = @WX_FLAGS@
+WX_LIBS = @WX_LIBS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -200,9 +234,13 @@ mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
+pkgpyexecdir = @pkgpyexecdir@
+pkgpythondir = @pkgpythondir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+pyexecdir = @pyexecdir@
+pythondir = @pythondir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -214,24 +252,15 @@ top_srcdir = @top_srcdir@
 INCLUDES = -I$(top_builddir)/include
 mgl2png_SOURCES = mgl2png.cpp
 mgl2png_LDADD = $(top_builddir)/mgl/libmgl.la
-#mgl2png_CFLAGS = -O3 -mfpmath=sse $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFFFLAGS) $(PNGFLAGS)
-#mgl2png_CPPFLAGS = $(libmgl_la_CFLAGS)
 mgl2cpp_SOURCES = mgl2cpp.cpp
 mgl2cpp_LDADD = $(top_builddir)/mgl/libmgl.la
-#mgl2cpp_CFLAGS = -O3 -mfpmath=sse $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFFFLAGS) $(PN
-#mgl2cpp_CPPFLAGS = $(libmgl_la_CFLAGS)
 mgl2eps_SOURCES = mgl2eps.cpp
 mgl2eps_LDADD = $(top_builddir)/mgl/libmgl.la
-#mgl2eps_CFLAGS = -O3 -mfpmath=sse $(HDF5FLAGS) $(JPEGFLAGS) $(TIFF_FLAGS) $(PNG_FLAGS)
-#mgl2eps_CPPFLAGS = $(libmgl_la_CFLAGS)
 mgl2svg_SOURCES = mgl2svg.cpp
 mgl2svg_LDADD = $(top_builddir)/mgl/libmgl.la
-#mgl2svg_CFLAGS = -O3 -mfpmath=sse $(HDF5FLAGS) $(JPEGFLAGS) $(TIFFFLAGS) $(PNGFLAGS)
-#mgl2svg_CPPFLAGS = $(libmgl_la_CFLAGS)
 @USE_FLTK_TRUE@mglview_SOURCES = mglview.cpp
-@USE_FLTK_TRUE@mglview_LDADD = $(top_builddir)/mgl/libmgl-fltk.la
-@USE_FLTK_TRUE@mglview_CFLAGS = $(FLTK_FLAGS)
-@USE_FLTK_TRUE@mglview_CPPFLAGS = $(mglview_CFLAGS)
+@USE_FLTK_TRUE@mglview_LDADD = $(top_builddir)/widgets/libmgl-fltk.la
+@USE_FLTK_TRUE@mglview_CXXFLAGS = $(FLTK_FLAGS) $(AM_CXXFLAGS)
 all: all-am
 
 .SUFFIXES:
@@ -307,7 +336,7 @@ mgl2svg$(EXEEXT): $(mgl2svg_OBJECTS) $(mgl2svg_DEPENDENCIES)
 	$(CXXLINK) $(mgl2svg_OBJECTS) $(mgl2svg_LDADD) $(LIBS)
 mglview$(EXEEXT): $(mglview_OBJECTS) $(mglview_DEPENDENCIES) 
 	@rm -f mglview$(EXEEXT)
-	$(CXXLINK) $(mglview_OBJECTS) $(mglview_LDADD) $(LIBS)
+	$(mglview_LINK) $(mglview_OBJECTS) $(mglview_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -343,18 +372,18 @@ distclean-compile:
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
 mglview-mglview.o: mglview.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mglview_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mglview-mglview.o -MD -MP -MF $(DEPDIR)/mglview-mglview.Tpo -c -o mglview-mglview.o `test -f 'mglview.cpp' || echo '$(srcdir)/'`mglview.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mglview_CXXFLAGS) $(CXXFLAGS) -MT mglview-mglview.o -MD -MP -MF $(DEPDIR)/mglview-mglview.Tpo -c -o mglview-mglview.o `test -f 'mglview.cpp' || echo '$(srcdir)/'`mglview.cpp
 @am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mglview-mglview.Tpo $(DEPDIR)/mglview-mglview.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mglview.cpp' object='mglview-mglview.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mglview_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mglview-mglview.o `test -f 'mglview.cpp' || echo '$(srcdir)/'`mglview.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mglview_CXXFLAGS) $(CXXFLAGS) -c -o mglview-mglview.o `test -f 'mglview.cpp' || echo '$(srcdir)/'`mglview.cpp
 
 mglview-mglview.obj: mglview.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mglview_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mglview-mglview.obj -MD -MP -MF $(DEPDIR)/mglview-mglview.Tpo -c -o mglview-mglview.obj `if test -f 'mglview.cpp'; then $(CYGPATH_W) 'mglview.cpp'; else $(CYGPATH_W) '$(srcdir)/mglview.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mglview_CXXFLAGS) $(CXXFLAGS) -MT mglview-mglview.obj -MD -MP -MF $(DEPDIR)/mglview-mglview.Tpo -c -o mglview-mglview.obj `if test -f 'mglview.cpp'; then $(CYGPATH_W) 'mglview.cpp'; else $(CYGPATH_W) '$(srcdir)/mglview.cpp'; fi`
 @am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mglview-mglview.Tpo $(DEPDIR)/mglview-mglview.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mglview.cpp' object='mglview-mglview.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mglview_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mglview-mglview.obj `if test -f 'mglview.cpp'; then $(CYGPATH_W) 'mglview.cpp'; else $(CYGPATH_W) '$(srcdir)/mglview.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mglview_CXXFLAGS) $(CXXFLAGS) -c -o mglview-mglview.obj `if test -f 'mglview.cpp'; then $(CYGPATH_W) 'mglview.cpp'; else $(CYGPATH_W) '$(srcdir)/mglview.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -540,9 +569,6 @@ uninstall-am: uninstall-binPROGRAMS
 	pdf pdf-am ps ps-am tags uninstall uninstall-am \
 	uninstall-binPROGRAMS
 
-
-#FLAGS = -O3 -march=opteron -mfpmath=sse -DNO_HDF5 -DNO_JPEG -DNO_TIFF
-#GLIBS = -L/usr/X11R6/lib -lgsl -lgslcblas -lm -lglut -lpng -lGL -lGLU -lXmu -lX11 -lXi -lXext
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -15,9 +15,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include <png.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include "mgl/mgl_zb.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"

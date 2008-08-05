@@ -11,7 +11,7 @@ AC_CONFIG_SUBDIRS(libltdl)
 #   (Interfaces added:      CURRENT++, AGE++, REVISION=0)
 #   (No interfaces changed:                   REVISION++)
 MGL_CURRENT=4
-MGL_REVISION=0
+MGL_REVISION=1
 MGL_AGE=2
 AC_SUBST(MGL_CURRENT)
 AC_SUBST(MGL_REVISION)
@@ -22,39 +22,27 @@ AM_INIT_AUTOMAKE(mathgl,MGL_RELEASE)
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_INSTALL
+
+AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_DLOPEN
-AC_LIBLTDL_CONVENIENCE
+AC_LIBLTDL_INSTALLABLE
+#AC_LIBLTDL_CONVENIENCE
 AC_PROG_LIBTOOL
+
 AC_SUBST(INCLTDL)
 AC_SUBST(LIBLTDL)
 
-AC_CHECK_HEADERS([math.h string.h sys/types.h stdarg.h time.h float.h stdio.h \
-stdlib.h ctype.h],,exit)
+AM_CXXFLAGS="-Wall"
+AC_SUBST(AM_CXXFLAGS)
 
-AC_CHECK_HEADERS([gsl/gsl_fft_complex.h gsl/gsl_fft_real.h gsl/gsl_sf.h],,\
-[echo "Please install gsl headers"; exit])
-AC_CHECK_LIB([gsl], [main], [GSL_LIBS="-lgsl -lgslcblas" AC_SUBST(GSL_LIBS)], 
-	[echo "Please install gsl library (libgsl, libgslcblas)"; exit],\
-	[-lgslcblas])
-
-case "${host}" in
-  *darwin*)
-       GL_LIBS="-framework OpenGL"
-       ;;
-
-  *w32*)
-	AC_CHECK_HEADERS([GL/gl.h],,[echo "Please install OpenGL headers (GL/gl.h)"; exit])
-	AC_CHECK_LIB([opengl32], [main], [GL_LIBS=-lopengl32 AC_SUBST(GL_LIBS)], 
-	    [echo "Please install OpenGL library (libopengl32.a)"; exit])
-       ;;
-
-       *)
-	AC_CHECK_HEADERS([GL/gl.h],,[echo "Please install OpenGL headers (GL/gl.h)"; exit])
-	AC_CHECK_LIB([GL], [main], [GL_LIBS=-lGL AC_SUBST(GL_LIBS)], 
-	    [echo "Please install OpenGL library (libGL.so)"; exit])
-       ;;
-
-esac
+GSL_PROG=gsl-config
+AC_CHECK_PROG(GSL_FLAGS,$GSL_PROG,`$GSL_PROG --cflags`)
+AC_CHECK_PROG(GSL_LIBS,$GSL_PROG,`$GSL_PROG --libs`)
+if !(test "$GSL_FLAGS" && test "$GSL_LIBS") ;then
+    echo "Please install gsl headers and libraries and make sure that \
+	path to $GSL_PROG exist in your PATH"
+    exit
+fi
 
 AC_ARG_ENABLE(all,
 [  --enable-all    Turn on all features],
@@ -64,6 +52,14 @@ AC_ARG_ENABLE(all,
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-all) ;;
 esac],[all=false])
 
+AC_ARG_ENABLE(langall,
+[  --enable-langall    Turn on all language interfaces],
+[case "${enableval}" in
+  yes) langall=true ;;
+  no)  langall=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-langall) ;;
+esac],[langall=false])
+
 AC_ARG_ENABLE(glut,
 [  --enable-glut    Turn on glut],
 [case "${enableval}" in
@@ -71,23 +67,39 @@ AC_ARG_ENABLE(glut,
   no)  glut=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-glut) ;;
 esac],[glut=false])
+
 case "${host}" in
   *darwin*)
-       GLUT_LIBS="-framework GLUT -framework OpenGL"
+	GL_LIBS="-framework OpenGL"
+	AC_SUBST(GL_LIBS)
+	if (test x$all = xtrue || test x$glut = xtrue) ;then
+	    GLUT_LIBS="-framework GLUT -framework OpenGL"
+	    AC_SUBST(GLUT_LIBS)
+	fi
        ;;
 
-  *win32*)
-	AC_CHECK_HEADERS([GL/glut.h],[(test x$all = xtrue || test x$glut = xtrue) && GLUT_FLAGS=-DHAVE_GLUT AC_SUBST(GLUT_FLAGS)],
-	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT headers (GL/glut.h)"; exit])
-	AC_CHECK_LIB([glut32], [main], [(test x$all = xtrue || test x$glut = xtrue) && GLUT_LIBS=glut32 AC_SUBST(GLUT_LIBS)],
-	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (glut32.dll)"; exit])
+  *w32*)
+	GL_LIBS=opengl32
+	AC_CHECK_HEADER([GL/gl.h],,[echo "Please install OpenGL headers (GL/gl.h)"; exit])
+	AC_CHECK_LIB([${GL_LIBS}], [main], [GL_LIBS=-l${GL_LIBS} AC_SUBST(GL_LIBS)], 
+	    [echo "Please install OpenGL library (lib${GL_LIBS}.a)"; exit])
+	GLUT_LIBS=glut32
+	AC_CHECK_HEADER([GL/glut.h],[(test x$all = xtrue || test x$glut = xtrue) && GLUT_FLAGS=-DHAVE_GLUT AC_SUBST(GLUT_FLAGS)],
+	    [(test x$all = xtrue || test x$glut = xtrue) && (echo "Please install FreeGLUT headers (GL/glut.h)"; exit)])
+	AC_CHECK_LIB([${GLUT_LIBS}], [main], [(test x$all = xtrue || test x$glut = xtrue) && GLUT_LIBS=-l${GLUT_LIBS} AC_SUBST(GLUT_LIBS)],
+	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (lib${GLUT_LIBS}.a)"; exit])
        ;;
-       
+
        *)
-	AC_CHECK_HEADERS([GL/glut.h],[(test x$all = xtrue || test x$glut = xtrue) && GLUT_FLAGS=-DHAVE_GLUT AC_SUBST(GLUT_FLAGS)],
-	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT headers (GL/glut.h)"; exit])
-	AC_CHECK_LIB([glut], [main], [(test x$all = xtrue || test x$glut = xtrue) && GLUT_LIBS=-lglut AC_SUBST(GLUT_LIBS)],
-	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (libglut.so)"; exit])
+	GL_LIBS=GL
+	AC_CHECK_HEADER(GL/gl.h,,[echo "Please install OpenGL headers (GL/gl.h)"; exit])
+	AC_CHECK_LIB([${GL_LIBS}], [main], [GL_LIBS=-l${GL_LIBS} AC_SUBST(GL_LIBS)], 
+	    [echo "Please install OpenGL library (lib${GL_LIBS}.a)"; exit])
+	GLUT_LIBS=glut
+	AC_CHECK_HEADER(GL/glut.h,[(test x$all = xtrue || test x$glut = xtrue) && GLUT_FLAGS=-DHAVE_GLUT AC_SUBST(GLUT_FLAGS)],
+	    [(test x$all = xtrue || test x$glut = xtrue) && (echo "Please install FreeGLUT headers (GL/glut.h)"; exit)])
+	AC_CHECK_LIB([${GLUT_LIBS}], [main], [(test x$all = xtrue || test x$glut = xtrue) && GLUT_LIBS=-l${GLUT_LIBS} AC_SUBST(GLUT_LIBS)],
+	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (lib${GLUT_LIBS}.a)"; exit])
        ;;
 
 esac
@@ -117,6 +129,7 @@ AC_CHECK_LIB([hdf5], [main], [(test x$all = xtrue || test x$hdf5 = xtrue) && HDF
 AM_CONDITIONAL(USE_HDF5, (test x$all = xtrue || test x$hdf5 = xtrue))
 
 AC_CHECK_HEADER(png.h,,[echo "Please install png headers" && exit])
+
 AC_CHECK_LIB([png], [main], [PNG_LIBS=-lpng AC_SUBST(PNG_LIBS)],
     [echo "Please install png library" && exit])
 
@@ -155,12 +168,82 @@ AC_ARG_ENABLE(fltk,
   no)  fltk=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-fltk) ;;
 esac],[fltk=false])
-AC_CHECK_HEADER(FL/Fl_Export.H,[(test x$all = xtrue || test x$fltk = xtrue) && FLTK_FLAGS=-DHAVE_FLTK AC_SUBST(FLTK_FLAGS)],
-    [(test x$all = xtrue || test x$fltk = xtrue) && echo "Please install fltk headers" && exit])
+FLTK_PROG=fltk-config
+AC_CHECK_PROG(FLTK_FLAGS,$FLTK_PROG,`$FLTK_PROG --cxxflags`)
+AC_CHECK_PROG(FLTK_LIBS,$FLTK_PROG,`$FLTK_PROG --ldflags`)
+if (test x$all = xtrue || test x$fltk = xtrue) ;then
+    if test "$FLTK_FLAGS" && test "$FLTK_LIBS" ;then
+	test_fltk=true
+    else
+	echo "Please install FLTK headers and libraries and make sure that \
+	            path to $FLTK_PROG exist in your PATH"
+	exit
+    fi 
+fi
+AM_CONDITIONAL(USE_FLTK, test x$test_fltk = xtrue)
 
-AC_CHECK_LIB([fltk], [main], [(test x$all = xtrue || test x$fltk = xtrue) && FLTK_LIBS="-lfltk -lfltk_images" AC_SUBST(FLTK_LIBS)],
-    [(test x$all = xtrue || test x$fltk = xtrue) && echo "Please install fltk library" && exit])
-AM_CONDITIONAL(USE_FLTK, (test x$all = xtrue || test x$fltk = xtrue))
+AC_ARG_ENABLE(wx,
+[  --enable-wx    Turn on wxWidget],
+[case "${enableval}" in
+  yes) wx=true ;;
+  no)  wx=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-wx) ;;
+esac],[wx=false])
+WX_PROG=wx-config
+AC_CHECK_PROG(WX_FLAGS,$WX_PROG,`$WX_PROG --cflags`)
+AC_CHECK_PROG(WX_LIBS,$WX_PROG,`$WX_PROG --libs`)
+if (test x$all = xtrue || test x$wx = xtrue) ;then
+    if test "$WX_FLAGS" && test "$WX_LIBS" ;then
+	test_wx=true
+    else
+	echo "Please install wxwidget headers and libraries and make sure that \
+	            path to $WX_PROG exist in your PATH"
+	exit
+    fi 
+fi
+AM_CONDITIONAL(USE_WX, test x$test_wx = xtrue)
 
+AC_ARG_ENABLE(qt,
+[  --enable-qt    Turn on Qt],
+[case "${enableval}" in
+  yes) qt=true ;;
+  no)  qt=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-qt) ;;
+esac],[qt=false])
+if (test x$all = xtrue || test x$qt = xtrue) ;then
+    AT_WITH_QT
+    AT_REQUIRE_QT_VERSION(4.3)
+    test_qt=true
+fi
+AM_CONDITIONAL(USE_QT, test x$test_qt = xtrue)
 
-AC_OUTPUT(Makefile mgl/Makefile utils/Makefile include/Makefile examples/Makefile)
+AC_ARG_ENABLE(python,
+[  --enable-python    Turn on interface to python],
+[case "${enableval}" in
+  yes) python=true ;;
+  no)  python=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-python) ;;
+esac],[python=false])
+AC_CHECK_PROG(PYTHON_HEADERS,python-config,`python-config --cflags`)
+AC_CHECK_PROG(HAVE_SWIG,swig$EXEEXT,true)
+if (test x$langall = xtrue || test x$python = xtrue) ;then
+    if (test "$PYTHON_HEADERS" && test "$HAVE_SWIG") ;then
+	test_python=true
+	AM_PATH_PYTHON()
+    else
+	echo Please install python-dev and swig packages
+	exit
+    fi 
+fi
+AM_CONDITIONAL(USE_PYTHON, test x$test_python = xtrue )
+
+AC_CONFIG_FILES([
+Makefile
+mgl/Makefile
+examples/Makefile
+include/Makefile
+lang/Makefile
+utils/Makefile
+widgets/Makefile
+])
+AC_OUTPUT

@@ -19,7 +19,6 @@
 #define _MGL_FONT_H_
 
 #include <stdio.h>
-#include <math.h>
 
 //-----------------------------------------------------------------------------
 #define MGL_FONT_BOLD		0x01000000

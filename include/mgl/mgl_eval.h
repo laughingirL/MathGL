@@ -42,9 +42,8 @@ public:
 	/// Clean up formula-tree
 	~mglFormula();
 protected:
-	static float a1['z'-'a'+1];
-	float CalcIn();
-	float CalcDIn(int id);
+	float CalcIn(const float *a1);
+	float CalcDIn(int id, const float *a1);
 	mglFormula *Left,*Right;	// first and second argument of the function
 	int Kod;					// the function ID
 	float Res;					// the number or the variable ID

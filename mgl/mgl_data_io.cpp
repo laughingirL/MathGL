@@ -16,7 +16,6 @@
  */
 #include <ctype.h>
 #include <math.h>
-#include <stdlib.h>
 #include <string.h>
 
 #ifndef WIN32
@@ -26,7 +25,22 @@
 
 #include "mgl/mgl_eval.h"
 #include "mgl/mgl_data.h"
-
+//-----------------------------------------------------------------------------
+void mglData::Set(const char *v,int NX,int NY,int NZ)
+{
+	if(NX<1 || NY <1 || NZ<1)	return;
+	register int i,j=0,m=NX*NY*NZ;
+	float *b = new float[m];	memset(b,0,m*sizeof(float));
+	for(i=0;i<m;i++)
+	{
+		while(isspace(v[j]) && v[j])	j++;
+		if(v[j]==0)	break;
+		b[i] = atof(v+j);
+		while(!isspace(v[j])&& v[j])	j++;
+	}
+	delete []a;
+	a=b;	nx=NX;	ny=NY;	nz=NZ;
+}
 //-----------------------------------------------------------------------------
 void mglData::Set(gsl_vector *v)
 {
@@ -93,7 +107,7 @@ void mglData::Set(const double ***A,int N1,int N2,int N3)
 		a[k+N3*(j+i*N2)] = A[i][j][k];
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::SubData(int xx,int yy,int zz)
+mglData &mglData::SubData(int xx,int yy,int zz) const
 {
 	register long i,j;
 	static mglData d;
@@ -155,7 +169,7 @@ void mglData::SetColumnId(const char *ids)
 	else	memset(id,0,nx*sizeof(char));
 }
 //-----------------------------------------------------------------------------
-void mglData::Save(const char *fname,int ns)
+void mglData::Save(const char *fname,int ns) const
 {
 	FILE *fp;
 	fp = fopen(fname,"w");
@@ -325,19 +339,19 @@ bool mglData::ReadMat(const char *fname,int dim)
 	}
 	if(dim==1)
 	{
-		sscanf(buf+j,"%d",&nx);
+		sscanf(buf+j,"%ld",&nx);
 		while(buf[j]>' ')	j++;
 	}
 	else if(dim==2)
 	{
-		sscanf(buf+j,"%d%d",&nx,&ny);
+		sscanf(buf+j,"%ld%ld",&nx,&ny);
 		while(buf[j]>' ' && j<nb)	j++;
 		while(buf[j]<=' ' && j<nb)	j++;
 		while(buf[j]>' ' && j<nb)	j++;
 	}
 	else if(dim==3)
 	{
-		sscanf(buf+j,"%d%d%d",&nx,&ny,&nz);
+		sscanf(buf+j,"%ld%ld%ld",&nx,&ny,&nz);
 		while(buf[j]>' ' && j<nb)	j++;
 		while(buf[j]<=' ' && j<nb)	j++;
 		while(buf[j]>' ' && j<nb)	j++;
@@ -361,7 +375,7 @@ bool mglData::ReadMat(const char *fname,int dim)
 	return true;
 }
 //-----------------------------------------------------------------------------
-float mglData::v(int i,int j,int k)
+float mglData::v(int i,int j,int k) const
 {
 	bool not_ok = i<0 || i>=nx || j<0 || j>=ny || k<0 || k>=nz;
 	if(not_ok)	return 0;
@@ -369,7 +383,7 @@ float mglData::v(int i,int j,int k)
 }
 //-----------------------------------------------------------------------------
 mglData &mglData::Resize(int mx, int my, int mz, float x1, float x2,
-	float y1, float y2, float z1, float z2)
+	float y1, float y2, float z1, float z2) const
 {
 	register long i,j,k;
 	static mglData d;
@@ -384,7 +398,7 @@ mglData &mglData::Resize(int mx, int my, int mz, float x1, float x2,
 	return d;
 }
 //-----------------------------------------------------------------------------
-void mglData::operator*=(mglData &d)
+void mglData::operator*=(const mglData &d)
 {
 	register long i,j;
 	if(d.nz==1 && d.ny==1 && nx==d.nx)
@@ -401,7 +415,7 @@ void mglData::operator*=(mglData &d)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglData::operator/=(mglData &d)
+void mglData::operator/=(const mglData &d)
 {
 	register long i,j;
 	if(d.nz==1 && d.ny==1 && nx==d.nx)
@@ -421,7 +435,7 @@ void mglData::operator/=(mglData &d)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglData::operator+=(mglData &d)
+void mglData::operator+=(const mglData &d)
 {
 	register long i,j;
 	if(d.nz==1 && d.ny==1 && nx==d.nx)
@@ -441,7 +455,7 @@ void mglData::operator+=(mglData &d)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglData::operator-=(mglData &d)
+void mglData::operator-=(const mglData &d)
 {
 	register long i,j;
 	if(d.nz==1 && d.ny==1 && nx==d.nx)
@@ -485,7 +499,7 @@ void mglData::operator/=(float d)
 	for(i=0;i<ny*nz*nx;i++)	a[i] = d ? a[i]/d : 0;
 }
 //-----------------------------------------------------------------------------
-float mglData::Maximal()
+float mglData::Maximal() const
 {
 	register float m=-1e10;
 	for(long i=0;i<nx*ny*nz;i++)
@@ -493,7 +507,7 @@ float mglData::Maximal()
 	return m;
 }
 //-----------------------------------------------------------------------------
-float mglData::Minimal()
+float mglData::Minimal() const
 {
 	register float m=1e10;
 	for(long i=0;i<nx*ny*nz;i++)
@@ -501,7 +515,7 @@ float mglData::Minimal()
 	return m;
 }
 //-----------------------------------------------------------------------------
-float mglData::Maximal(int &im,int &jm,int &km)
+float mglData::Maximal(int &im,int &jm,int &km) const
 {
 	register float m=-1e10;
 	for(long i=0;i<nx*ny*nz;i++)
@@ -510,7 +524,7 @@ float mglData::Maximal(int &im,int &jm,int &km)
 	return m;
 }
 //-----------------------------------------------------------------------------
-float mglData::Minimal(int &im,int &jm,int &km)
+float mglData::Minimal(int &im,int &jm,int &km) const
 {
 	register float m=1e10;
 	for(long i=0;i<nx*ny*nz;i++)
@@ -519,7 +533,7 @@ float mglData::Minimal(int &im,int &jm,int &km)
 	return m;
 }
 //-----------------------------------------------------------------------------
-float mglData::Maximal(float &x,float &y,float &z)
+float mglData::Maximal(float &x,float &y,float &z) const
 {
 	int im=-1,jm=-1,km=-1;
 	register long tm,i;
@@ -549,7 +563,7 @@ float mglData::Maximal(float &x,float &y,float &z)
 	return m;
 }
 //-----------------------------------------------------------------------------
-float mglData::Minimal(float &x,float &y,float &z)
+float mglData::Minimal(float &x,float &y,float &z) const
 {
 	int im=-1,jm=-1,km=-1;
 	register long tm,i;
@@ -677,7 +691,7 @@ void mglData::Squeeze(int rx,int ry,int rz,bool smooth)
 	nx = kx;  ny = ky;  nz = kz;
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Combine(mglData &b)
+mglData &mglData::Combine(const mglData &b) const
 {
 	static mglData d;
 	d.Create(1,1,1);
@@ -762,7 +776,7 @@ void mglData::Transpose(const char *dim)
 	delete []a;		a = b;
 }
 //-----------------------------------------------------------------------------
-void mglData::Modify(const char *eq,mglData &v, mglData &w)
+void mglData::Modify(const char *eq, const mglData &v, const mglData &w)
 {
 	if(v.nx*v.ny*v.nz!=nx*ny*nz || w.nx*w.ny*w.nz!=nx*ny*nz)
 		return;
@@ -777,7 +791,7 @@ void mglData::Modify(const char *eq,mglData &v, mglData &w)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglData::Modify(const char *eq,mglData &v)
+void mglData::Modify(const char *eq, const mglData &v)
 {
 	if(v.nx*v.ny*v.nz!=nx*ny*nz)	return;
 	long i,j,k,i0;
@@ -791,7 +805,7 @@ void mglData::Modify(const char *eq,mglData &v)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglData::SaveHDF(const char *fname,const char *data,bool rewrite)
+void mglData::SaveHDF(const char *fname,const char *data,bool rewrite) const
 {
 #ifndef WIN32
 	int (*mgl_save) (const char *fname,const char *data,bool rewrite,
@@ -906,7 +920,7 @@ bool mglData::ReadAll(const char *templ, bool as_slice)
 #ifndef WIN32
 	mglData d;
 	glob_t res;
-	long i;
+	unsigned long i;
 	float *b;
 	long kx,ky,kz;
 	char *fname = new char[256];

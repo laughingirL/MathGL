@@ -14,10 +14,53 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <string.h>
 #include "mgl/mgl.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
+#include "mgl/mgl_eval.h"
+//-----------------------------------------------------------------------------
+//
+//	Plot by formulas series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::Surf(const char *eqZ, const char *sch, int n)
+{
+	// TODO Add strong function variation analisys
+	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
+	mglData z(n,n);
+	mglFormula *eq = new mglFormula(eqZ);
+	register int i,j;
+	float dx = (Max.x - Min.x)/(n-1.), dy = (Max.x - Min.x)/(n-1.);
+	for(i=0;i<n;i++)	for(j=0;j<n;j++)
+	{
+		z.a[i+n*j] = eq->Calc(Min.x+i*dx, Min.y+i*dy);
+	}
+	Surf(z, sch);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Surf(const char *eqX, const char *eqY, const char *eqZ, const char *sch, int n)
+{
+	// TODO Add strong function variation analisys
+	mglData x(n,n), y(n,n), z(n,n);
+	mglFormula *ex, *ey, *ez;
+	ex = new mglFormula(eqX ? eqX : "u");
+	ey = new mglFormula(eqY ? eqY : "v");
+	ez = new mglFormula(eqZ ? eqZ : "0");
+	register int i,j;
+	register float u,v;
+	for(i=0;i<n;i++)	for(j=0;j<n;j++)
+	{
+		v = i/(n-1.);	u = j/(n-1.);
+		x.a[i+n*j] = ex->Calc(0,v,0,u);
+		y.a[i+n*j] = ey->Calc(0,v,0,u);
+		z.a[i+n*j] = ez->Calc(0,v,0,u);
+	}
+	Surf(x,y,z,sch);
+}
+//-----------------------------------------------------------------------------
+//
+//	Primitives
+//
 //-----------------------------------------------------------------------------
 void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl, int n)
 {
@@ -52,6 +95,7 @@ void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const ch
 	if(stl && strchr(stl,'#'))
 	{	SelectPen("k-");	memset(cc,0,4*n*n*sizeof(float));	mesh_plot(n,n,pp,cc,0,-3);	}
 	delete []pp;	delete []tt;	delete []cc;
+	Flush();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Sphere(mglPoint p, float r, const char *stl)
@@ -92,6 +136,7 @@ void mglGraph::Drop(mglPoint p, mglPoint q, float r, mglColor c, float sh, float
 	}
 	Cut = cut;
 	surf_plot(n,n,pp,0,0);
+	Flush();
 	delete []pp;
 }
 //-----------------------------------------------------------------------------
@@ -99,7 +144,7 @@ void mglGraph::Drop(mglPoint p, mglPoint q, float r, mglColor c, float sh, float
 //	Mesh series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Mesh(mglData &x, mglData &y, mglData &z, const char *sch)
+void mglGraph::Mesh(const mglData &x, const mglData &y, const mglData &z, const char *sch)
 {
 	register long i,j,i0,k,n=z.nx,m=z.ny;
 	mglColor c;
@@ -131,7 +176,7 @@ void mglGraph::Mesh(mglData &x, mglData &y, mglData &z, const char *sch)
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Mesh(mglData &z, const char *sch)
+void mglGraph::Mesh(const mglData &z, const char *sch)
 {
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Mesh");	return;	}
 	mglData x(z.nx), y(z.ny);
@@ -144,7 +189,7 @@ void mglGraph::Mesh(mglData &z, const char *sch)
 //	Fall series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Fall(mglData &x, mglData &y, mglData &z, const char *sch)
+void mglGraph::Fall(const mglData &x, const mglData &y, const mglData &z, const char *sch)
 {
 	register long i,j,i0,k,n=z.nx,m=z.ny;
 	mglColor c;
@@ -177,7 +222,7 @@ void mglGraph::Fall(mglData &x, mglData &y, mglData &z, const char *sch)
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Fall(mglData &z, const char *sch)
+void mglGraph::Fall(const mglData &z, const char *sch)
 {
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Fall");	return;	}
 	mglData x(z.nx), y(z.ny);
@@ -190,7 +235,7 @@ void mglGraph::Fall(mglData &z, const char *sch)
 //	Belt series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Belt(mglData &x, mglData &y, mglData &z, const char *sch)
+void mglGraph::Belt(const mglData &x, const mglData &y, const mglData &z, const char *sch)
 {
 	if(!DrawFace)	{	Fall(x,y,z,sch);	return;	}
 	register long i,j,k,n=z.nx,m=z.ny;
@@ -282,7 +327,7 @@ void mglGraph::Belt(mglData &x, mglData &y, mglData &z, const char *sch)
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Belt(mglData &z, const char *sch)
+void mglGraph::Belt(const mglData &z, const char *sch)
 {
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Belt");	return;	}
 	mglData x(z.nx), y(z.ny);
@@ -295,7 +340,7 @@ void mglGraph::Belt(mglData &z, const char *sch)
 //	Grid series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Grid(mglData &x, mglData &y, mglData &z, const char *sch, float zVal)
+void mglGraph::Grid(const mglData &x, const mglData &y, const mglData &z, const char *sch, float zVal)
 {
 	register long i,j,i0,k,n=z.nx,m=z.ny;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"Grid");	return;	}
@@ -326,7 +371,7 @@ void mglGraph::Grid(mglData &x, mglData &y, mglData &z, const char *sch, float z
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Grid(mglData &z, const char *sch, float zVal)
+void mglGraph::Grid(const mglData &z, const char *sch, float zVal)
 {
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Grid");	return;	}
 	mglData x(z.nx), y(z.ny);
@@ -339,7 +384,7 @@ void mglGraph::Grid(mglData &z, const char *sch, float zVal)
 //	Surf series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Surf(mglData &x, mglData &y, mglData &z, const char *sch)
+void mglGraph::Surf(const mglData &x, const mglData &y, const mglData &z, const char *sch)
 {
 	register long i,j,i0,k,n=z.nx,m=z.ny;
 	mglColor col;
@@ -367,13 +412,13 @@ void mglGraph::Surf(mglData &x, mglData &y, mglData &z, const char *sch)
 		}
 		surf_plot(n, m, pp, cc, tt);
 	}
+	if(sch && strchr(sch,'#'))
+	{	SelectPen("k-");	memset(cc,0,4*n*m*sizeof(float));	mesh_plot(n,m,pp,cc,tt,-3);	}
 	Flush();
 	delete []pp;	delete []cc;	delete []tt;
-	if(sch && strchr(sch,'#'))	Mesh(x,y,z,"k");
-	SetScheme(sch);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Surf(mglData &z, const char *sch)
+void mglGraph::Surf(const mglData &z, const char *sch)
 {
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Surf");	return;	}
 	mglData x(z.nx), y(z.ny);
@@ -386,7 +431,7 @@ void mglGraph::Surf(mglData &z, const char *sch)
 //	Dens series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Dens(mglData &x, mglData &y, mglData &z, const char *sch,float zVal)
+void mglGraph::Dens(const mglData &x, const mglData &y, const mglData &z, const char *sch,float zVal)
 {
 	register long i,j,i0,k,n=z.nx,m=z.ny;
 	mglColor col;
@@ -416,13 +461,13 @@ void mglGraph::Dens(mglData &x, mglData &y, mglData &z, const char *sch,float zV
 		}
 		surf_plot(n, m, pp, cc, tt);
 	}
+	if(sch && strchr(sch,'#'))
+	{	SelectPen("k-");	memset(cc,0,4*n*m*sizeof(float));	mesh_plot(n,m,pp,cc,tt,-3);	}
 	Flush();
 	delete []pp;	delete []cc;	delete []tt;
-	if(sch && strchr(sch,'#'))	Grid(x,y,z,"k");
-	SetScheme(sch);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Dens(mglData &z, const char *sch,float zVal)
+void mglGraph::Dens(const mglData &z, const char *sch,float zVal)
 {
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Dens");	return;	}
 	mglData x(z.nx), y(z.ny);
@@ -435,13 +480,13 @@ void mglGraph::Dens(mglData &z, const char *sch,float zVal)
 //	STFA series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::STFA(mglData &x, mglData &y, mglData &re, mglData &im, int dn, const char *sch,float zVal)
+void mglGraph::STFA(const mglData &x, const mglData &y, const mglData &re, const mglData &im, int dn, const char *sch,float zVal)
 {
 	mglData z = ::STFA(re,im,dn,'x');
 	Dens(x,y,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::STFA(mglData &re, mglData &im, int dn, const char *sch,float zVal)
+void mglGraph::STFA(const mglData &re, const mglData &im, int dn, const char *sch,float zVal)
 {
 	mglData z = ::STFA(re,im,dn,'x');
 	Dens(z,sch,zVal);
@@ -451,7 +496,7 @@ void mglGraph::STFA(mglData &re, mglData &im, int dn, const char *sch,float zVal
 //	SurfC series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::SurfC(mglData &x, mglData &y, mglData &z, mglData &c, const char *sch)
+void mglGraph::SurfC(const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *sch)
 {
 	register long i,j,i0,k,n=z.nx,m=z.ny;
 	mglColor col;
@@ -481,13 +526,13 @@ void mglGraph::SurfC(mglData &x, mglData &y, mglData &z, mglData &c, const char 
 		}
 		surf_plot(n, m, pp, cc, tt);
 	}
+	if(sch && strchr(sch,'#'))
+	{	SelectPen("k-");	memset(cc,0,4*n*m*sizeof(float));	mesh_plot(n,m,pp,cc,tt,-3);	}
 	Flush();
 	delete []pp;	delete []cc;	delete []tt;
-	if(sch && strchr(sch,'#'))	Mesh(x,y,z,"k");
-	SetScheme(sch);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SurfC(mglData &z, mglData &c,const char *sch)
+void mglGraph::SurfC(const mglData &z, const mglData &c,const char *sch)
 {
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"SurfC");	return;	}
 	mglData x(z.nx), y(z.ny);
@@ -500,7 +545,7 @@ void mglGraph::SurfC(mglData &z, mglData &c,const char *sch)
 //	SurfA series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::SurfA(mglData &x, mglData &y, mglData &z, mglData &c, const char *sch)
+void mglGraph::SurfA(const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *sch)
 {
 	register long i,j,i0,ii;
 	long k,n=z.nx,m=z.ny;
@@ -532,13 +577,13 @@ void mglGraph::SurfA(mglData &x, mglData &y, mglData &z, mglData &c, const char 
 		}
 		surf_plot(n, m, pp, cc, tt);
 	}
+	if(sch && strchr(sch,'#'))
+	{	SelectPen("k-");	memset(cc,0,4*n*m*sizeof(float));	mesh_plot(n,m,pp,cc,tt,-3);	}
 	Flush();
 	delete []pp;	delete []cc;	delete []tt;
-	if(sch && strchr(sch,'#'))	Mesh(x,y,z,"k");
-	SetScheme(sch);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SurfA(mglData &z, mglData &c,const char *sch)
+void mglGraph::SurfA(const mglData &z, const mglData &c,const char *sch)
 {
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"SurfA");	return;	}
 	mglData x(z.nx), y(z.ny);
@@ -551,7 +596,7 @@ void mglGraph::SurfA(mglData &z, mglData &c,const char *sch)
 //	Boxs series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Boxs(mglData &x, mglData &y, mglData &z, const char *sch,float zVal)
+void mglGraph::Boxs(const mglData &x, const mglData &y, const mglData &z, const char *sch,float zVal)
 {
 	register long i,j,k,n=z.nx,m=z.ny,i0,i1,jj;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"Boxs");	return;	}
@@ -595,7 +640,7 @@ void mglGraph::Boxs(mglData &x, mglData &y, mglData &z, const char *sch,float zV
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Boxs(mglData &z, const char *sch,float zVal)
+void mglGraph::Boxs(const mglData &z, const char *sch,float zVal)
 {
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Boxs");	return;	}
 	mglData x(z.nx), y(z.ny);
@@ -608,7 +653,7 @@ void mglGraph::Boxs(mglData &z, const char *sch,float zVal)
 //	Tile series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Tile(mglData &x, mglData &y, mglData &z, const char *sch)
+void mglGraph::Tile(const mglData &x, const mglData &y, const mglData &z, const char *sch)
 {
 	register long i,j,k,n=z.nx,m=z.ny,i0,i1;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"Tile");	return;	}
@@ -652,7 +697,7 @@ void mglGraph::Tile(mglData &x, mglData &y, mglData &z, const char *sch)
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Tile(mglData &z, const char *sch)
+void mglGraph::Tile(const mglData &z, const char *sch)
 {
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Tile");	return;	}
 	mglData x(z.nx), y(z.ny);
@@ -661,7 +706,7 @@ void mglGraph::Tile(mglData &z, const char *sch)
 	Tile(x,y,z,sch);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Tile(mglData &x, mglData &y, mglData &z, mglData &s, const char *sch)
+void mglGraph::TileS(const mglData &x, const mglData &y, const mglData &z, const mglData &s, const char *sch)
 {
 	register long i,j,k,n=z.nx,m=z.ny,i0,i1;
 	if(x.nx!=z.nx || s.nx*s.ny*s.nz!=z.nx*z.ny*z.nz)
@@ -718,89 +763,89 @@ void mglGraph::Tile(mglData &x, mglData &y, mglData &z, mglData &s, const char *
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Tile(mglData &z, mglData &s, const char *sch)
+void mglGraph::TileS(const mglData &z, const mglData &s, const char *sch)
 {
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Tile");	return;	}
 	mglData x(z.nx), y(z.ny);
 	x.Fill(Min.x,Max.x);
 	y.Fill(Min.y,Max.y);
-	Tile(x,y,z,s,sch);
+	TileS(x,y,z,s,sch);
 }
 //-----------------------------------------------------------------------------
 //		2D plotting functions
 //-----------------------------------------------------------------------------
 /// Draw grid lines for density plot of 2d data specified parametrically
-void mgl_grid_xy(HMGL gr, HMDT x, HMDT y, HMDT a, const char *sch,float zVal)
+void mgl_grid_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch,float zVal)
 {	if(gr && a && x && y)	gr->Grid(*x, *y, *a, sch, zVal);	}
 /// Draw grid lines for density plot of 2d data
-void mgl_grid(HMGL gr, HMDT a,const char *sch,float zVal)
+void mgl_grid(HMGL gr, const HMDT a,const char *sch,float zVal)
 {	if(gr && a)	gr->Grid(*a, sch, zVal);	}
 /// Draw mesh lines for 2d data specified parametrically
-void mgl_mesh_xy(HMGL gr, HMDT x, HMDT y, HMDT a, const char *sch)
+void mgl_mesh_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch)
 {	if(gr && a && x && y)	gr->Mesh(*x, *y, *a, sch);	}
 /// Draw mesh lines for 2d data
-void mgl_mesh(HMGL gr, HMDT a, const char *sch)
+void mgl_mesh(HMGL gr, const HMDT a, const char *sch)
 {	if(gr && a)	gr->Mesh(*a, sch);	}
 /// Draw fall lines for 2d data specified parametrically
-void mgl_fall_xy(HMGL gr, HMDT x, HMDT y, HMDT a, const char *sch)
+void mgl_fall_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch)
 {	if(gr && a && x && y)	gr->Fall(*x, *y, *a, sch);	}
 /// Draw fall lines for 2d data
-void mgl_fall(HMGL gr, HMDT a, const char *sch)
+void mgl_fall(HMGL gr, const HMDT a, const char *sch)
 {	if(gr && a)	gr->Fall(*a, sch);	}
 /// Draw belt lines for 2d data specified parametrically
-void mgl_belt_xy(HMGL gr, HMDT x, HMDT y, HMDT a, const char *sch)
+void mgl_belt_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch)
 {	if(gr && a && x && y)	gr->Belt(*x, *y, *a, sch);	}
 /// Draw belt lines for 2d data
-void mgl_belt(HMGL gr, HMDT a, const char *sch)
+void mgl_belt(HMGL gr, const HMDT a, const char *sch)
 {	if(gr && a)	gr->Belt(*a, sch);	}
 /// Draw surface for 2d data specified parametrically
-void mgl_surf_xy(HMGL gr, HMDT x, HMDT y, HMDT a, const char *sch)
+void mgl_surf_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch)
 {	if(gr && a && x && y)	gr->Surf(*x, *y, *a, sch);	}
 /// Draw surface for 2d data
-void mgl_surf(HMGL gr, HMDT a, const char *sch)
+void mgl_surf(HMGL gr, const HMDT a, const char *sch)
 {	if(gr && a)	gr->Surf(*a, sch);	}
 /// Draw density plot for surface specified parametrically
-void mgl_dens_xy(HMGL gr, HMDT x, HMDT y, HMDT a, const char *sch,float zVal)
+void mgl_dens_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch,float zVal)
 {	if(gr && a && x && y)	gr->Dens(*x, *y, *a, sch, zVal);	}
 /// Draw density plot for 2d data
-void mgl_dens(HMGL gr, HMDT a, const char *sch,float zVal)
+void mgl_dens(HMGL gr, const HMDT a, const char *sch,float zVal)
 {	if(gr && a)	gr->Dens(*a, sch, zVal);	}
 /// Draw vertical boxes for 2d data specified parametrically
-void mgl_boxs_xy(HMGL gr, HMDT x, HMDT y, HMDT a, const char *sch,float zVal)
+void mgl_boxs_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch,float zVal)
 {	if(gr && a && x && y)	gr->Boxs(*x, *y, *a, sch,zVal);	}
 /// Draw vertical boxes for 2d data
-void mgl_boxs(HMGL gr, HMDT a, const char *sch,float zVal)
+void mgl_boxs(HMGL gr, const HMDT a, const char *sch,float zVal)
 {	if(gr && a)	gr->Boxs(*a, sch,zVal);	}
 /// Draw tiles for 2d data specified parametrically
-void mgl_tile_xy(HMGL gr, HMDT x, HMDT y, HMDT a, const char *sch)
+void mgl_tile_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch)
 {	if(gr && a && x && y)	gr->Tile(*x, *y, *a, sch);	}
 /// Draw mesh lines for 2d data
-void mgl_tile(HMGL gr, HMDT a, const char *sch)
+void mgl_tile(HMGL gr, const HMDT a, const char *sch)
 {	if(gr && a)	gr->Tile(*a, sch);	}
 /// Draw variable-size tiles for 2d data specified parametrically
-void mgl_tile_rxy(HMGL gr, HMDT x, HMDT y, HMDT a, HMDT r, const char *sch)
-{	if(gr && a && x && y && r)	gr->Tile(*x, *y, *a, *r, sch);	}
+void mgl_tile_rxy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const HMDT r, const char *sch)
+{	if(gr && a && x && y && r)	gr->TileS(*x, *y, *a, *r, sch);	}
 /// Draw variable-size mesh lines for 2d data
-void mgl_tile_r(HMGL gr, HMDT a, HMDT r, const char *sch)
+void mgl_tile_r(HMGL gr, const HMDT a, const HMDT r, const char *sch)
 {	if(gr && a && r)	gr->Tile(*a, *r, sch);	}
 //-----------------------------------------------------------------------------
 /// Draw surface specified parametrically with coloring by other matrix
-void mgl_surfc_xy(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT a, const char *sch)
+void mgl_surfc_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch)
 {	if(gr && a && z && x && y)	gr->SurfC(*x, *y, *z, *a, sch);	}
 /// Draw surface specified by matrix with coloring by other matrix
-void mgl_surfc(HMGL gr, HMDT z, HMDT a, const char *sch)
+void mgl_surfc(HMGL gr, const HMDT z, const HMDT a, const char *sch)
 {	if(gr && a && z)	gr->SurfC(*z, *a, sch);	}
 /// Draw surface specified parametrically which transparency is determined by other matrix
-void mgl_surfa_xy(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT a, const char *sch)
+void mgl_surfa_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch)
 {	if(gr && a && z && x && y)	gr->SurfA(*x, *y, *z, *a, sch);	}
 /// Draw surface specified by matrix which transparency is determined by other matrix
-void mgl_surfa(HMGL gr, HMDT z, HMDT a, const char *sch)
+void mgl_surfa(HMGL gr, const HMDT z, const HMDT a, const char *sch)
 {	if(gr && a && z)	gr->SurfA(*z, *a, sch);	}
 /// Draw spectrogram for data specified parametrically which transparency is determined by other matrix
-void mgl_stfa_xy(HMGL gr, HMDT x, HMDT y, HMDT re, HMDT im, int dn, const char *sch, float zval)
+void mgl_stfa_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT re, const HMDT im, int dn, const char *sch, float zval)
 {	if(gr && re && im && x && y)	gr->STFA(*x, *y, *re, *im, dn, sch, zval);	}
 /// Draw spectrogram for data specified by matrix which transparency is determined by other matrix
-void mgl_stfa(HMGL gr, HMDT re, HMDT im, int dn, const char *sch, float zval)
+void mgl_stfa(HMGL gr, const HMDT re, const HMDT im, int dn, const char *sch, float zval)
 {	if(gr && re && im)	gr->STFA(*re, *im, dn, sch, zval);	}
 //-----------------------------------------------------------------------------
 //		2D plotting functions (Fortran)
@@ -922,7 +967,7 @@ void mgl_tile_rxy_(long *gr, long *x, long *y, long *a, long *r, const char *sch
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y && r)
-		_GR_->Tile(_D_(x), _D_(y), _D_(a), _D_(r), s);
+		_GR_->TileS(_D_(x), _D_(y), _D_(a), _D_(r), s);
 	delete []s;
 }
 /// Draw mesh lines for 2d data
@@ -975,5 +1020,27 @@ void mgl_stfa_(long *gr, long *re, long *im, int *dn, const char *sch, float *zV
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && re && im)	_GR_->STFA(_D_(re), _D_(im), *dn, s, *zVal);
 	delete []s;
+}
+//-----------------------------------------------------------------------------
+void mgl_fsurf(HMGL gr, const char *fy, const char *stl, int n)
+{	if(gr)	gr->Surf(fy, stl, n);	}
+void mgl_fsurf_xyz(HMGL gr, const char *fx, const char *fy, const char *fz, const char *stl, int n)
+{	if(gr)	gr->Surf(fx,fy,fz,stl,n);	}
+//-----------------------------------------------------------------------------
+void mgl_fsurf_(long *gr, const char *fy, const char *stl, int *n, int ly, int ls)
+{
+	char *s=new char[ly+1];	memcpy(s,fy,ly);	s[ly]=0;
+	char *p=new char[ls+1];	memcpy(p,stl,ls);	p[ls]=0;
+	if(gr)	_GR_->Surf(s, p, *n);
+	delete []s;		delete []p;
+}
+void mgl_fsurf_xyz_(long *gr, const char *fx, const char *fy, const char *fz, const char *stl, int *n, int lx, int ly, int lz, int ls)
+{
+	char *sx=new char[lx+1];	memcpy(sx,fx,lx);	sx[lx]=0;
+	char *sy=new char[ly+1];	memcpy(sy,fy,ly);	sy[ly]=0;
+	char *sz=new char[lz+1];	memcpy(sz,fz,lz);	sz[lz]=0;
+	char *p=new char[ls+1];	memcpy(p,stl,ls);	p[ls]=0;
+	if(gr)	_GR_->Plot(sx, sy, sz, p, *n);
+	delete []sx;	delete []sy;	delete []sz;	delete []p;
 }
 //-----------------------------------------------------------------------------

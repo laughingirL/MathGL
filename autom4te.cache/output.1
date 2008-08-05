@@ -702,6 +702,66 @@ fi
 tagnames=${tagnames+${tagnames},}CXX
 
 tagnames=${tagnames+${tagnames},}F77
+as_awk_strverscmp='
+  # Use only awk features that work with 7th edition Unix awk (1978).
+  # My, what an old awk you have, Mr. Solaris!
+  END {
+    while (length(v1) && length(v2)) {
+      # Set d1 to be the next thing to compare from v1, and likewise for d2.
+      # Normally this is a single character, but if v1 and v2 contain digits,
+      # compare them as integers and fractions as strverscmp does.
+      if (v1 ~ /^[0-9]/ && v2 ~ /^[0-9]/) {
+	# Split v1 and v2 into their leading digit string components d1 and d2,
+	# and advance v1 and v2 past the leading digit strings.
+	for (len1 = 1; substr(v1, len1 + 1) ~ /^[0-9]/; len1++) continue
+	for (len2 = 1; substr(v2, len2 + 1) ~ /^[0-9]/; len2++) continue
+	d1 = substr(v1, 1, len1); v1 = substr(v1, len1 + 1)
+	d2 = substr(v2, 1, len2); v2 = substr(v2, len2 + 1)
+	if (d1 ~ /^0/) {
+	  if (d2 ~ /^0/) {
+	    # Compare two fractions.
+	    while (d1 ~ /^0/ && d2 ~ /^0/) {
+	      d1 = substr(d1, 2); len1--
+	      d2 = substr(d2, 2); len2--
+	    }
+	    if (len1 != len2 && ! (len1 && len2 && substr(d1, 1, 1) == substr(d2, 1, 1))) {
+	      # The two components differ in length, and the common prefix
+	      # contains only leading zeros.  Consider the longer to be less.
+	      d1 = -len1
+	      d2 = -len2
+	    } else {
+	      # Otherwise, compare as strings.
+	      d1 = "x" d1
+	      d2 = "x" d2
+	    }
+	  } else {
+	    # A fraction is less than an integer.
+	    exit 1
+	  }
+	} else {
+	  if (d2 ~ /^0/) {
+	    # An integer is greater than a fraction.
+	    exit 2
+	  } else {
+	    # Compare two integers.
+	    d1 += 0
+	    d2 += 0
+	  }
+	}
+      } else {
+	# The normal case, without worrying about digits.
+	d1 = substr(v1, 1, 1); v1 = substr(v1, 2)
+	d2 = substr(v2, 1, 1); v2 = substr(v2, 2)
+      }
+      if (d1 < d2) exit 1
+      if (d1 > d2) exit 2
+    }
+    # Beware Solaris /usr/xgp4/bin/awk (at least through Solaris 10),
+    # which mishandles some comparisons of empty strings to integers.
+    if (length(v2)) exit 1
+    if (length(v1)) exit 2
+  }
+'
 
 exec 7<&0 </dev/null 6>&1
 
@@ -870,6 +930,9 @@ AR
 RANLIB
 DSYMUTIL
 NMEDIT
+DLLTOOL
+AS
+OBJDUMP
 CPP
 CXXCPP
 F77
@@ -878,10 +941,12 @@ ac_ct_F77
 LIBTOOL
 INCLTDL
 LIBLTDL
+AM_CXXFLAGS
+GSL_FLAGS
 GSL_LIBS
 GL_LIBS
-GLUT_FLAGS
 GLUT_LIBS
+GLUT_FLAGS
 USE_GLUT_TRUE
 USE_GLUT_FALSE
 HDF5_FLAGS
@@ -901,6 +966,41 @@ FLTK_FLAGS
 FLTK_LIBS
 USE_FLTK_TRUE
 USE_FLTK_FALSE
+WX_FLAGS
+WX_LIBS
+USE_WX_TRUE
+USE_WX_FALSE
+QMAKE
+MOC
+UIC
+RCC
+QT_PATH
+TMPDIR
+QT_VERSION_MAJOR
+QT_DEFINES
+QT_CFLAGS
+QT_CXXFLAGS
+QT_INCPATH
+QT_CPPFLAGS
+QT_LFLAGS
+QT_LDFLAGS
+QT_LIBS
+QT_VERSION
+USE_QT_TRUE
+USE_QT_FALSE
+PYTHON_HEADERS
+HAVE_SWIG
+PYTHON
+PYTHON_VERSION
+PYTHON_PREFIX
+PYTHON_EXEC_PREFIX
+PYTHON_PLATFORM
+pythondir
+pkgpythondir
+pyexecdir
+pkgpyexecdir
+USE_PYTHON_TRUE
+USE_PYTHON_FALSE
 LIB@&t@OBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -918,7 +1018,8 @@ CCC
 CPP
 CXXCPP
 F77
-FFLAGS'
+FFLAGS
+TMPDIR'
 ac_subdirs_all='libltdl'
 
 # Initialize some variables set by options.
@@ -1504,11 +1605,15 @@ Optional Features:
                           optimize for fast installation @<:@default=yes@:>@
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --enable-all    Turn on all features
+  --enable-langall    Turn on all language interfaces
   --enable-glut    Turn on glut
   --enable-hdf5    Turn on hdf5
   --enable-jpeg    Turn on jpeg
   --enable-tiff    Turn on tiff
   --enable-fltk    Turn on fltk
+  --enable-wx    Turn on wxWidget
+  --enable-qt    Turn on Qt
+  --enable-python    Turn on interface to python
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1517,6 +1622,7 @@ Optional Packages:
   --with-pic              try to use only PIC/non-PIC objects @<:@default=use
                           both@:>@
   --with-tags@<:@=TAGS@:>@      include additional configurations @<:@automatic@:>@
+  --with-qt               Path to Qt @<:@Look in PATH and /usr/local/Trolltech@:>@
 
 Some influential environment variables:
   CC          C compiler command
@@ -1532,6 +1638,7 @@ Some influential environment variables:
   CXXCPP      C++ preprocessor
   F77         Fortran 77 compiler command
   FFLAGS      Fortran 77 compiler flags
+  TMPDIR      A temporary directory with write access @<:@/tmp@:>@
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -1998,7 +2105,7 @@ subdirs="$subdirs libltdl"
 #   (Interfaces added:      CURRENT++, AGE++, REVISION=0)
 #   (No interfaces changed:                   REVISION++)
 MGL_CURRENT=4
-MGL_REVISION=0
+MGL_REVISION=1
 MGL_AGE=2
 
 
@@ -4100,18 +4207,96 @@ test -z "$INSTALL_DATA" && INSTALL_DATA='${INSTALL} -m 644'
 
 
 
-  case $enable_ltdl_convenience in
-  no) { { echo "$as_me:$LINENO: error: this package needs a convenience libltdl" >&5
-echo "$as_me: error: this package needs a convenience libltdl" >&2;}
-   { (exit 1); exit 1; }; } ;;
-  "") enable_ltdl_convenience=yes
-      ac_configure_args="$ac_configure_args --enable-ltdl-convenience" ;;
-  esac
-  LIBLTDL='${top_builddir}/''libltdl'/libltdlc.la
-  LTDLINCL='-I${top_srcdir}/''libltdl'
+
+
+
+
+  { echo "$as_me:$LINENO: checking for lt_dlinit in -lltdl" >&5
+echo $ECHO_N "checking for lt_dlinit in -lltdl... $ECHO_C" >&6; }
+if test "${ac_cv_lib_ltdl_lt_dlinit+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lltdl  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char lt_dlinit ();
+int
+main ()
+{
+return lt_dlinit ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext &&
+       $as_test_x conftest$ac_exeext; then
+  ac_cv_lib_ltdl_lt_dlinit=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_cv_lib_ltdl_lt_dlinit=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_lib_ltdl_lt_dlinit" >&5
+echo "${ECHO_T}$ac_cv_lib_ltdl_lt_dlinit" >&6; }
+if test $ac_cv_lib_ltdl_lt_dlinit = yes; then
+  test x"$enable_ltdl_install" != xyes && enable_ltdl_install=no
+else
+  if test x"$enable_ltdl_install" = xno; then
+     { echo "$as_me:$LINENO: WARNING: libltdl not installed, but installation disabled" >&5
+echo "$as_me: WARNING: libltdl not installed, but installation disabled" >&2;}
+   else
+     enable_ltdl_install=yes
+   fi
+  
+fi
+
+  if test x"$enable_ltdl_install" = x"yes"; then
+    ac_configure_args="$ac_configure_args --enable-ltdl-install"
+    LIBLTDL='${top_builddir}/''libltdl'/libltdl.la
+    LTDLINCL='-I${top_srcdir}/''libltdl'
+  else
+    ac_configure_args="$ac_configure_args --enable-ltdl-install=no"
+    LIBLTDL="-lltdl"
+    LTDLINCL=
+  fi
   # For backwards non-gettext consistent compatibility...
   INCLTDL="$LTDLINCL"
 
+#AC_LIBLTDL_CONVENIENCE
 # Check whether --enable-shared was given.
 if test "${enable_shared+set}" = set; then
   enableval=$enable_shared; p=${PACKAGE-default}
@@ -4888,7 +5073,6 @@ LTCFLAGS=${LTCFLAGS-"$CFLAGS"}
 # Allow CC to be a program name with arguments.
 compiler=$CC
 
-
 # Check whether --enable-libtool-lock was given.
 if test "${enable_libtool_lock+set}" = set; then
   enableval=$enable_libtool_lock; 
@@ -5104,7 +5288,297 @@ sparc*-*solaris*)
   rm -rf conftest*
   ;;
 
+*-*-cygwin* | *-*-mingw* | *-*-pw32*)
+  if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}dlltool", so it can be a program name with args.
+set dummy ${ac_tool_prefix}dlltool; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_DLLTOOL+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$DLLTOOL"; then
+  ac_cv_prog_DLLTOOL="$DLLTOOL" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_DLLTOOL="${ac_tool_prefix}dlltool"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
 
+fi
+fi
+DLLTOOL=$ac_cv_prog_DLLTOOL
+if test -n "$DLLTOOL"; then
+  { echo "$as_me:$LINENO: result: $DLLTOOL" >&5
+echo "${ECHO_T}$DLLTOOL" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_prog_DLLTOOL"; then
+  ac_ct_DLLTOOL=$DLLTOOL
+  # Extract the first word of "dlltool", so it can be a program name with args.
+set dummy dlltool; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_ac_ct_DLLTOOL+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$ac_ct_DLLTOOL"; then
+  ac_cv_prog_ac_ct_DLLTOOL="$ac_ct_DLLTOOL" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_ac_ct_DLLTOOL="dlltool"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+ac_ct_DLLTOOL=$ac_cv_prog_ac_ct_DLLTOOL
+if test -n "$ac_ct_DLLTOOL"; then
+  { echo "$as_me:$LINENO: result: $ac_ct_DLLTOOL" >&5
+echo "${ECHO_T}$ac_ct_DLLTOOL" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+  if test "x$ac_ct_DLLTOOL" = x; then
+    DLLTOOL="false"
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&5
+echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&2;}
+ac_tool_warned=yes ;;
+esac
+    DLLTOOL=$ac_ct_DLLTOOL
+  fi
+else
+  DLLTOOL="$ac_cv_prog_DLLTOOL"
+fi
+
+  if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}as", so it can be a program name with args.
+set dummy ${ac_tool_prefix}as; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_AS+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$AS"; then
+  ac_cv_prog_AS="$AS" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_AS="${ac_tool_prefix}as"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+AS=$ac_cv_prog_AS
+if test -n "$AS"; then
+  { echo "$as_me:$LINENO: result: $AS" >&5
+echo "${ECHO_T}$AS" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_prog_AS"; then
+  ac_ct_AS=$AS
+  # Extract the first word of "as", so it can be a program name with args.
+set dummy as; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_ac_ct_AS+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$ac_ct_AS"; then
+  ac_cv_prog_ac_ct_AS="$ac_ct_AS" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_ac_ct_AS="as"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+ac_ct_AS=$ac_cv_prog_ac_ct_AS
+if test -n "$ac_ct_AS"; then
+  { echo "$as_me:$LINENO: result: $ac_ct_AS" >&5
+echo "${ECHO_T}$ac_ct_AS" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+  if test "x$ac_ct_AS" = x; then
+    AS="false"
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&5
+echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&2;}
+ac_tool_warned=yes ;;
+esac
+    AS=$ac_ct_AS
+  fi
+else
+  AS="$ac_cv_prog_AS"
+fi
+
+  if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}objdump", so it can be a program name with args.
+set dummy ${ac_tool_prefix}objdump; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_OBJDUMP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$OBJDUMP"; then
+  ac_cv_prog_OBJDUMP="$OBJDUMP" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_OBJDUMP="${ac_tool_prefix}objdump"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+OBJDUMP=$ac_cv_prog_OBJDUMP
+if test -n "$OBJDUMP"; then
+  { echo "$as_me:$LINENO: result: $OBJDUMP" >&5
+echo "${ECHO_T}$OBJDUMP" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_prog_OBJDUMP"; then
+  ac_ct_OBJDUMP=$OBJDUMP
+  # Extract the first word of "objdump", so it can be a program name with args.
+set dummy objdump; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_ac_ct_OBJDUMP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$ac_ct_OBJDUMP"; then
+  ac_cv_prog_ac_ct_OBJDUMP="$ac_ct_OBJDUMP" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_ac_ct_OBJDUMP="objdump"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+ac_ct_OBJDUMP=$ac_cv_prog_ac_ct_OBJDUMP
+if test -n "$ac_ct_OBJDUMP"; then
+  { echo "$as_me:$LINENO: result: $ac_ct_OBJDUMP" >&5
+echo "${ECHO_T}$ac_ct_OBJDUMP" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+  if test "x$ac_ct_OBJDUMP" = x; then
+    OBJDUMP="false"
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&5
+echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&2;}
+ac_tool_warned=yes ;;
+esac
+    OBJDUMP=$ac_ct_OBJDUMP
+  fi
+else
+  OBJDUMP="$ac_cv_prog_OBJDUMP"
+fi
+
+  ;;
+  
 esac
 
 need_locks="$enable_libtool_lock"
@@ -7408,7 +7882,7 @@ echo "${ECHO_T}$lt_cv_ld_exported_symbols_list" >&6; }
 
 
 enable_dlopen=yes
-enable_win32_dll=no
+enable_win32_dll=yes
 
 # Check whether --enable-libtool-lock was given.
 if test "${enable_libtool_lock+set}" = set; then
@@ -19886,783 +20360,89 @@ LIBTOOL='$(SHELL) $(top_builddir)/libtool'
 
 
 
+AM_CXXFLAGS="-Wall"
 
 
-
-
-
-
-
-
-for ac_header in math.h string.h sys/types.h stdarg.h time.h float.h stdio.h \
-stdlib.h ctype.h
+GSL_PROG=gsl-config
+# Extract the first word of "$GSL_PROG", so it can be a program name with args.
+set dummy $GSL_PROG; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_GSL_FLAGS+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$GSL_FLAGS"; then
+  ac_cv_prog_GSL_FLAGS="$GSL_FLAGS" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
 do
-as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  { echo "$as_me:$LINENO: checking for $ac_header" >&5
-echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-fi
-ac_res=`eval echo '${'$as_ac_Header'}'`
-	       { echo "$as_me:$LINENO: result: $ac_res" >&5
-echo "${ECHO_T}$ac_res" >&6; }
-else
-  # Is the header compilable?
-{ echo "$as_me:$LINENO: checking $ac_header usability" >&5
-echo $ECHO_N "checking $ac_header usability... $ECHO_C" >&6; }
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-$ac_includes_default
-@%:@include <$ac_header>
-_ACEOF
-rm -f conftest.$ac_objext
-if { (ac_try="$ac_compile"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_compile") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest.$ac_objext; then
-  ac_header_compiler=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_header_compiler=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-{ echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
-echo "${ECHO_T}$ac_header_compiler" >&6; }
-
-# Is the header present?
-{ echo "$as_me:$LINENO: checking $ac_header presence" >&5
-echo $ECHO_N "checking $ac_header presence... $ECHO_C" >&6; }
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-@%:@include <$ac_header>
-_ACEOF
-if { (ac_try="$ac_cpp conftest.$ac_ext"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } >/dev/null && {
-	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       }; then
-  ac_header_preproc=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-  ac_header_preproc=no
-fi
-
-rm -f conftest.err conftest.$ac_ext
-{ echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
-echo "${ECHO_T}$ac_header_preproc" >&6; }
-
-# So?  What about this header?
-case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
-  yes:no: )
-    { echo "$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&5
-echo "$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the compiler's result" >&5
-echo "$as_me: WARNING: $ac_header: proceeding with the compiler's result" >&2;}
-    ac_header_preproc=yes
-    ;;
-  no:yes:* )
-    { echo "$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled" >&5
-echo "$as_me: WARNING: $ac_header: present but cannot be compiled" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?" >&5
-echo "$as_me: WARNING: $ac_header:     check for missing prerequisite headers?" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: see the Autoconf documentation" >&5
-echo "$as_me: WARNING: $ac_header: see the Autoconf documentation" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&5
-echo "$as_me: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result" >&5
-echo "$as_me: WARNING: $ac_header: proceeding with the preprocessor's result" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence" >&5
-echo "$as_me: WARNING: $ac_header: in the future, the compiler will take precedence" >&2;}
-    
-    ;;
-esac
-{ echo "$as_me:$LINENO: checking for $ac_header" >&5
-echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  eval "$as_ac_Header=\$ac_header_preproc"
-fi
-ac_res=`eval echo '${'$as_ac_Header'}'`
-	       { echo "$as_me:$LINENO: result: $ac_res" >&5
-echo "${ECHO_T}$ac_res" >&6; }
-
-fi
-if test `eval echo '${'$as_ac_Header'}'` = yes; then
-  cat >>confdefs.h <<_ACEOF
-@%:@define `echo "HAVE_$ac_header" | $as_tr_cpp` 1
-_ACEOF
- 
-else
-  exit
-fi
-
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_GSL_FLAGS="`$GSL_PROG --cflags`"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
 done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+GSL_FLAGS=$ac_cv_prog_GSL_FLAGS
+if test -n "$GSL_FLAGS"; then
+  { echo "$as_me:$LINENO: result: $GSL_FLAGS" >&5
+echo "${ECHO_T}$GSL_FLAGS" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
 
 
-
-
-
-for ac_header in gsl/gsl_fft_complex.h gsl/gsl_fft_real.h gsl/gsl_sf.h
+# Extract the first word of "$GSL_PROG", so it can be a program name with args.
+set dummy $GSL_PROG; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_GSL_LIBS+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$GSL_LIBS"; then
+  ac_cv_prog_GSL_LIBS="$GSL_LIBS" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
 do
-as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  { echo "$as_me:$LINENO: checking for $ac_header" >&5
-echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-fi
-ac_res=`eval echo '${'$as_ac_Header'}'`
-	       { echo "$as_me:$LINENO: result: $ac_res" >&5
-echo "${ECHO_T}$ac_res" >&6; }
-else
-  # Is the header compilable?
-{ echo "$as_me:$LINENO: checking $ac_header usability" >&5
-echo $ECHO_N "checking $ac_header usability... $ECHO_C" >&6; }
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-$ac_includes_default
-@%:@include <$ac_header>
-_ACEOF
-rm -f conftest.$ac_objext
-if { (ac_try="$ac_compile"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_compile") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest.$ac_objext; then
-  ac_header_compiler=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_header_compiler=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-{ echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
-echo "${ECHO_T}$ac_header_compiler" >&6; }
-
-# Is the header present?
-{ echo "$as_me:$LINENO: checking $ac_header presence" >&5
-echo $ECHO_N "checking $ac_header presence... $ECHO_C" >&6; }
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-@%:@include <$ac_header>
-_ACEOF
-if { (ac_try="$ac_cpp conftest.$ac_ext"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } >/dev/null && {
-	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       }; then
-  ac_header_preproc=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-  ac_header_preproc=no
-fi
-
-rm -f conftest.err conftest.$ac_ext
-{ echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
-echo "${ECHO_T}$ac_header_preproc" >&6; }
-
-# So?  What about this header?
-case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
-  yes:no: )
-    { echo "$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&5
-echo "$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the compiler's result" >&5
-echo "$as_me: WARNING: $ac_header: proceeding with the compiler's result" >&2;}
-    ac_header_preproc=yes
-    ;;
-  no:yes:* )
-    { echo "$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled" >&5
-echo "$as_me: WARNING: $ac_header: present but cannot be compiled" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?" >&5
-echo "$as_me: WARNING: $ac_header:     check for missing prerequisite headers?" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: see the Autoconf documentation" >&5
-echo "$as_me: WARNING: $ac_header: see the Autoconf documentation" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&5
-echo "$as_me: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result" >&5
-echo "$as_me: WARNING: $ac_header: proceeding with the preprocessor's result" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence" >&5
-echo "$as_me: WARNING: $ac_header: in the future, the compiler will take precedence" >&2;}
-    
-    ;;
-esac
-{ echo "$as_me:$LINENO: checking for $ac_header" >&5
-echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  eval "$as_ac_Header=\$ac_header_preproc"
-fi
-ac_res=`eval echo '${'$as_ac_Header'}'`
-	       { echo "$as_me:$LINENO: result: $ac_res" >&5
-echo "${ECHO_T}$ac_res" >&6; }
-
-fi
-if test `eval echo '${'$as_ac_Header'}'` = yes; then
-  cat >>confdefs.h <<_ACEOF
-@%:@define `echo "HAVE_$ac_header" | $as_tr_cpp` 1
-_ACEOF
- 
-else
-  \
-echo "Please install gsl headers"; exit
-fi
-
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_GSL_LIBS="`$GSL_PROG --libs`"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
 done
-
-{ echo "$as_me:$LINENO: checking for main in -lgsl" >&5
-echo $ECHO_N "checking for main in -lgsl... $ECHO_C" >&6; }
-if test "${ac_cv_lib_gsl_main+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lgsl \
-	-lgslcblas $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-return main ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_link") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext &&
-       $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_gsl_main=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_cv_lib_gsl_main=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
-      conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_gsl_main" >&5
-echo "${ECHO_T}$ac_cv_lib_gsl_main" >&6; }
-if test $ac_cv_lib_gsl_main = yes; then
-  GSL_LIBS="-lgsl -lgslcblas" 
-else
-  echo "Please install gsl library (libgsl, libgslcblas)"; exit
-fi
-
-
-case "${host}" in
-  *darwin*)
-       GL_LIBS="-framework OpenGL"
-       ;;
-
-  *w32*)
-	
-for ac_header in GL/gl.h
-do
-as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  { echo "$as_me:$LINENO: checking for $ac_header" >&5
-echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-fi
-ac_res=`eval echo '${'$as_ac_Header'}'`
-	       { echo "$as_me:$LINENO: result: $ac_res" >&5
-echo "${ECHO_T}$ac_res" >&6; }
-else
-  # Is the header compilable?
-{ echo "$as_me:$LINENO: checking $ac_header usability" >&5
-echo $ECHO_N "checking $ac_header usability... $ECHO_C" >&6; }
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-$ac_includes_default
-@%:@include <$ac_header>
-_ACEOF
-rm -f conftest.$ac_objext
-if { (ac_try="$ac_compile"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_compile") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest.$ac_objext; then
-  ac_header_compiler=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_header_compiler=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-{ echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
-echo "${ECHO_T}$ac_header_compiler" >&6; }
-
-# Is the header present?
-{ echo "$as_me:$LINENO: checking $ac_header presence" >&5
-echo $ECHO_N "checking $ac_header presence... $ECHO_C" >&6; }
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-@%:@include <$ac_header>
-_ACEOF
-if { (ac_try="$ac_cpp conftest.$ac_ext"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } >/dev/null && {
-	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       }; then
-  ac_header_preproc=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-  ac_header_preproc=no
-fi
-
-rm -f conftest.err conftest.$ac_ext
-{ echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
-echo "${ECHO_T}$ac_header_preproc" >&6; }
-
-# So?  What about this header?
-case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
-  yes:no: )
-    { echo "$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&5
-echo "$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the compiler's result" >&5
-echo "$as_me: WARNING: $ac_header: proceeding with the compiler's result" >&2;}
-    ac_header_preproc=yes
-    ;;
-  no:yes:* )
-    { echo "$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled" >&5
-echo "$as_me: WARNING: $ac_header: present but cannot be compiled" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?" >&5
-echo "$as_me: WARNING: $ac_header:     check for missing prerequisite headers?" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: see the Autoconf documentation" >&5
-echo "$as_me: WARNING: $ac_header: see the Autoconf documentation" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&5
-echo "$as_me: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result" >&5
-echo "$as_me: WARNING: $ac_header: proceeding with the preprocessor's result" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence" >&5
-echo "$as_me: WARNING: $ac_header: in the future, the compiler will take precedence" >&2;}
-    
-    ;;
-esac
-{ echo "$as_me:$LINENO: checking for $ac_header" >&5
-echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  eval "$as_ac_Header=\$ac_header_preproc"
-fi
-ac_res=`eval echo '${'$as_ac_Header'}'`
-	       { echo "$as_me:$LINENO: result: $ac_res" >&5
-echo "${ECHO_T}$ac_res" >&6; }
-
-fi
-if test `eval echo '${'$as_ac_Header'}'` = yes; then
-  cat >>confdefs.h <<_ACEOF
-@%:@define `echo "HAVE_$ac_header" | $as_tr_cpp` 1
-_ACEOF
- 
-else
-  echo "Please install OpenGL headers (GL/gl.h)"; exit
-fi
-
 done
+IFS=$as_save_IFS
 
-	{ echo "$as_me:$LINENO: checking for main in -lopengl32" >&5
-echo $ECHO_N "checking for main in -lopengl32... $ECHO_C" >&6; }
-if test "${ac_cv_lib_opengl32_main+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
+fi
+fi
+GSL_LIBS=$ac_cv_prog_GSL_LIBS
+if test -n "$GSL_LIBS"; then
+  { echo "$as_me:$LINENO: result: $GSL_LIBS" >&5
+echo "${ECHO_T}$GSL_LIBS" >&6; }
 else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lopengl32  $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-return main ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_link") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext &&
-       $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_opengl32_main=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_cv_lib_opengl32_main=no
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
 fi
 
-rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
-      conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
+
+if !(test "$GSL_FLAGS" && test "$GSL_LIBS") ;then
+    echo "Please install gsl headers and libraries and make sure that \
+	path to $GSL_PROG exist in your PATH"
+    exit
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_opengl32_main" >&5
-echo "${ECHO_T}$ac_cv_lib_opengl32_main" >&6; }
-if test $ac_cv_lib_opengl32_main = yes; then
-  GL_LIBS=-lopengl32 
-else
-  echo "Please install OpenGL library (libopengl32.a)"; exit
-fi
-
-       ;;
-
-       *)
-	
-for ac_header in GL/gl.h
-do
-as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  { echo "$as_me:$LINENO: checking for $ac_header" >&5
-echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-fi
-ac_res=`eval echo '${'$as_ac_Header'}'`
-	       { echo "$as_me:$LINENO: result: $ac_res" >&5
-echo "${ECHO_T}$ac_res" >&6; }
-else
-  # Is the header compilable?
-{ echo "$as_me:$LINENO: checking $ac_header usability" >&5
-echo $ECHO_N "checking $ac_header usability... $ECHO_C" >&6; }
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-$ac_includes_default
-@%:@include <$ac_header>
-_ACEOF
-rm -f conftest.$ac_objext
-if { (ac_try="$ac_compile"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_compile") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest.$ac_objext; then
-  ac_header_compiler=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_header_compiler=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-{ echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
-echo "${ECHO_T}$ac_header_compiler" >&6; }
-
-# Is the header present?
-{ echo "$as_me:$LINENO: checking $ac_header presence" >&5
-echo $ECHO_N "checking $ac_header presence... $ECHO_C" >&6; }
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-@%:@include <$ac_header>
-_ACEOF
-if { (ac_try="$ac_cpp conftest.$ac_ext"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } >/dev/null && {
-	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       }; then
-  ac_header_preproc=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-  ac_header_preproc=no
-fi
-
-rm -f conftest.err conftest.$ac_ext
-{ echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
-echo "${ECHO_T}$ac_header_preproc" >&6; }
-
-# So?  What about this header?
-case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
-  yes:no: )
-    { echo "$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&5
-echo "$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the compiler's result" >&5
-echo "$as_me: WARNING: $ac_header: proceeding with the compiler's result" >&2;}
-    ac_header_preproc=yes
-    ;;
-  no:yes:* )
-    { echo "$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled" >&5
-echo "$as_me: WARNING: $ac_header: present but cannot be compiled" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?" >&5
-echo "$as_me: WARNING: $ac_header:     check for missing prerequisite headers?" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: see the Autoconf documentation" >&5
-echo "$as_me: WARNING: $ac_header: see the Autoconf documentation" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&5
-echo "$as_me: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result" >&5
-echo "$as_me: WARNING: $ac_header: proceeding with the preprocessor's result" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence" >&5
-echo "$as_me: WARNING: $ac_header: in the future, the compiler will take precedence" >&2;}
-    
-    ;;
-esac
-{ echo "$as_me:$LINENO: checking for $ac_header" >&5
-echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  eval "$as_ac_Header=\$ac_header_preproc"
-fi
-ac_res=`eval echo '${'$as_ac_Header'}'`
-	       { echo "$as_me:$LINENO: result: $ac_res" >&5
-echo "${ECHO_T}$ac_res" >&6; }
-
-fi
-if test `eval echo '${'$as_ac_Header'}'` = yes; then
-  cat >>confdefs.h <<_ACEOF
-@%:@define `echo "HAVE_$ac_header" | $as_tr_cpp` 1
-_ACEOF
- 
-else
-  echo "Please install OpenGL headers (GL/gl.h)"; exit
-fi
-
-done
-
-	{ echo "$as_me:$LINENO: checking for main in -lGL" >&5
-echo $ECHO_N "checking for main in -lGL... $ECHO_C" >&6; }
-if test "${ac_cv_lib_GL_main+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lGL  $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-return main ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_link") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext &&
-       $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_GL_main=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_cv_lib_GL_main=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
-      conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_GL_main" >&5
-echo "${ECHO_T}$ac_cv_lib_GL_main" >&6; }
-if test $ac_cv_lib_GL_main = yes; then
-  GL_LIBS=-lGL 
-else
-  echo "Please install OpenGL library (libGL.so)"; exit
-fi
-
-       ;;
-
-esac
 
 # Check whether --enable-all was given.
 if test "${enable_all+set}" = set; then
@@ -20675,6 +20455,20 @@ echo "$as_me: error: bad value ${enableval} for --enable-all" >&2;}
 esac
 else
   all=false
+fi
+
+
+# Check whether --enable-langall was given.
+if test "${enable_langall+set}" = set; then
+  enableval=$enable_langall; case "${enableval}" in
+  yes) langall=true ;;
+  no)  langall=false ;;
+  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-langall" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-langall" >&2;}
+   { (exit 1); exit 1; }; } ;;
+esac
+else
+  langall=false
 fi
 
 
@@ -20691,29 +20485,31 @@ else
   glut=false
 fi
 
+
 case "${host}" in
   *darwin*)
-       GLUT_LIBS="-framework GLUT -framework OpenGL"
+	GL_LIBS="-framework OpenGL"
+	
+	if (test x$all = xtrue || test x$glut = xtrue) ;then
+	    GLUT_LIBS="-framework GLUT -framework OpenGL"
+	    
+	fi
        ;;
 
-  *win32*)
-	
-for ac_header in GL/glut.h
-do
-as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  { echo "$as_me:$LINENO: checking for $ac_header" >&5
-echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
+  *w32*)
+	GL_LIBS=opengl32
+	if test "${ac_cv_header_GL_gl_h+set}" = set; then
+  { echo "$as_me:$LINENO: checking for GL/gl.h" >&5
+echo $ECHO_N "checking for GL/gl.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_GL_gl_h+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 fi
-ac_res=`eval echo '${'$as_ac_Header'}'`
-	       { echo "$as_me:$LINENO: result: $ac_res" >&5
-echo "${ECHO_T}$ac_res" >&6; }
+{ echo "$as_me:$LINENO: result: $ac_cv_header_GL_gl_h" >&5
+echo "${ECHO_T}$ac_cv_header_GL_gl_h" >&6; }
 else
   # Is the header compilable?
-{ echo "$as_me:$LINENO: checking $ac_header usability" >&5
-echo $ECHO_N "checking $ac_header usability... $ECHO_C" >&6; }
+{ echo "$as_me:$LINENO: checking GL/gl.h usability" >&5
+echo $ECHO_N "checking GL/gl.h usability... $ECHO_C" >&6; }
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -20721,7 +20517,7 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 $ac_includes_default
-@%:@include <$ac_header>
+@%:@include <GL/gl.h>
 _ACEOF
 rm -f conftest.$ac_objext
 if { (ac_try="$ac_compile"
@@ -20753,15 +20549,15 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 echo "${ECHO_T}$ac_header_compiler" >&6; }
 
 # Is the header present?
-{ echo "$as_me:$LINENO: checking $ac_header presence" >&5
-echo $ECHO_N "checking $ac_header presence... $ECHO_C" >&6; }
+{ echo "$as_me:$LINENO: checking GL/gl.h presence" >&5
+echo $ECHO_N "checking GL/gl.h presence... $ECHO_C" >&6; }
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
-@%:@include <$ac_header>
+@%:@include <GL/gl.h>
 _ACEOF
 if { (ac_try="$ac_cpp conftest.$ac_ext"
 case "(($ac_try" in
@@ -20794,58 +20590,54 @@ echo "${ECHO_T}$ac_header_preproc" >&6; }
 # So?  What about this header?
 case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
   yes:no: )
-    { echo "$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&5
-echo "$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the compiler's result" >&5
-echo "$as_me: WARNING: $ac_header: proceeding with the compiler's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: GL/gl.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: GL/gl.h: proceeding with the compiler's result" >&2;}
     ac_header_preproc=yes
     ;;
   no:yes:* )
-    { echo "$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled" >&5
-echo "$as_me: WARNING: $ac_header: present but cannot be compiled" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?" >&5
-echo "$as_me: WARNING: $ac_header:     check for missing prerequisite headers?" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: see the Autoconf documentation" >&5
-echo "$as_me: WARNING: $ac_header: see the Autoconf documentation" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&5
-echo "$as_me: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result" >&5
-echo "$as_me: WARNING: $ac_header: proceeding with the preprocessor's result" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence" >&5
-echo "$as_me: WARNING: $ac_header: in the future, the compiler will take precedence" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h: present but cannot be compiled" >&5
+echo "$as_me: WARNING: GL/gl.h: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: GL/gl.h:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: GL/gl.h: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: GL/gl.h:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: GL/gl.h: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: GL/gl.h: in the future, the compiler will take precedence" >&2;}
     
     ;;
 esac
-{ echo "$as_me:$LINENO: checking for $ac_header" >&5
-echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
+{ echo "$as_me:$LINENO: checking for GL/gl.h" >&5
+echo $ECHO_N "checking for GL/gl.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_GL_gl_h+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  eval "$as_ac_Header=\$ac_header_preproc"
+  ac_cv_header_GL_gl_h=$ac_header_preproc
 fi
-ac_res=`eval echo '${'$as_ac_Header'}'`
-	       { echo "$as_me:$LINENO: result: $ac_res" >&5
-echo "${ECHO_T}$ac_res" >&6; }
+{ echo "$as_me:$LINENO: result: $ac_cv_header_GL_gl_h" >&5
+echo "${ECHO_T}$ac_cv_header_GL_gl_h" >&6; }
 
 fi
-if test `eval echo '${'$as_ac_Header'}'` = yes; then
-  cat >>confdefs.h <<_ACEOF
-@%:@define `echo "HAVE_$ac_header" | $as_tr_cpp` 1
-_ACEOF
- (test x$all = xtrue || test x$glut = xtrue) && GLUT_FLAGS=-DHAVE_GLUT 
+if test $ac_cv_header_GL_gl_h = yes; then
+  :
 else
-  (test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT headers (GL/glut.h)"; exit
+  echo "Please install OpenGL headers (GL/gl.h)"; exit
 fi
 
-done
 
-	{ echo "$as_me:$LINENO: checking for main in -lglut32" >&5
-echo $ECHO_N "checking for main in -lglut32... $ECHO_C" >&6; }
-if test "${ac_cv_lib_glut32_main+set}" = set; then
+	as_ac_Lib=`echo "ac_cv_lib_${GL_LIBS}''_main" | $as_tr_sh`
+{ echo "$as_me:$LINENO: checking for main in -l${GL_LIBS}" >&5
+echo $ECHO_N "checking for main in -l${GL_LIBS}... $ECHO_C" >&6; }
+if { as_var=$as_ac_Lib; eval "test \"\${$as_var+set}\" = set"; }; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lglut32  $LIBS"
+LIBS="-l${GL_LIBS}  $LIBS"
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -20880,46 +20672,239 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
 	 test ! -s conftest.err
        } && test -s conftest$ac_exeext &&
        $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_glut32_main=yes
+  eval "$as_ac_Lib=yes"
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-	ac_cv_lib_glut32_main=no
+	eval "$as_ac_Lib=no"
 fi
 
 rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
       conftest$ac_exeext conftest.$ac_ext
 LIBS=$ac_check_lib_save_LIBS
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_glut32_main" >&5
-echo "${ECHO_T}$ac_cv_lib_glut32_main" >&6; }
-if test $ac_cv_lib_glut32_main = yes; then
-  (test x$all = xtrue || test x$glut = xtrue) && GLUT_LIBS=glut32 
+ac_res=`eval echo '${'$as_ac_Lib'}'`
+	       { echo "$as_me:$LINENO: result: $ac_res" >&5
+echo "${ECHO_T}$ac_res" >&6; }
+if test `eval echo '${'$as_ac_Lib'}'` = yes; then
+  GL_LIBS=-l${GL_LIBS} 
 else
-  (test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (glut32.dll)"; exit
+  echo "Please install OpenGL library (lib${GL_LIBS}.a)"; exit
+fi
+
+	GLUT_LIBS=glut32
+	if test "${ac_cv_header_GL_glut_h+set}" = set; then
+  { echo "$as_me:$LINENO: checking for GL/glut.h" >&5
+echo $ECHO_N "checking for GL/glut.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_GL_glut_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_header_GL_glut_h" >&5
+echo "${ECHO_T}$ac_cv_header_GL_glut_h" >&6; }
+else
+  # Is the header compilable?
+{ echo "$as_me:$LINENO: checking GL/glut.h usability" >&5
+echo $ECHO_N "checking GL/glut.h usability... $ECHO_C" >&6; }
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+$ac_includes_default
+@%:@include <GL/glut.h>
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+  ac_header_compiler=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_header_compiler=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+{ echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
+echo "${ECHO_T}$ac_header_compiler" >&6; }
+
+# Is the header present?
+{ echo "$as_me:$LINENO: checking GL/glut.h presence" >&5
+echo $ECHO_N "checking GL/glut.h presence... $ECHO_C" >&6; }
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+@%:@include <GL/glut.h>
+_ACEOF
+if { (ac_try="$ac_cpp conftest.$ac_ext"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null && {
+	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       }; then
+  ac_header_preproc=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+  ac_header_preproc=no
+fi
+
+rm -f conftest.err conftest.$ac_ext
+{ echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
+echo "${ECHO_T}$ac_header_preproc" >&6; }
+
+# So?  What about this header?
+case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
+  yes:no: )
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: GL/glut.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: GL/glut.h: proceeding with the compiler's result" >&2;}
+    ac_header_preproc=yes
+    ;;
+  no:yes:* )
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h: present but cannot be compiled" >&5
+echo "$as_me: WARNING: GL/glut.h: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: GL/glut.h:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: GL/glut.h: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: GL/glut.h:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: GL/glut.h: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: GL/glut.h: in the future, the compiler will take precedence" >&2;}
+    
+    ;;
+esac
+{ echo "$as_me:$LINENO: checking for GL/glut.h" >&5
+echo $ECHO_N "checking for GL/glut.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_GL_glut_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_cv_header_GL_glut_h=$ac_header_preproc
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_header_GL_glut_h" >&5
+echo "${ECHO_T}$ac_cv_header_GL_glut_h" >&6; }
+
+fi
+if test $ac_cv_header_GL_glut_h = yes; then
+  (test x$all = xtrue || test x$glut = xtrue) && GLUT_FLAGS=-DHAVE_GLUT 
+else
+  (test x$all = xtrue || test x$glut = xtrue) && (echo "Please install FreeGLUT headers (GL/glut.h)"; exit)
+fi
+
+
+	as_ac_Lib=`echo "ac_cv_lib_${GLUT_LIBS}''_main" | $as_tr_sh`
+{ echo "$as_me:$LINENO: checking for main in -l${GLUT_LIBS}" >&5
+echo $ECHO_N "checking for main in -l${GLUT_LIBS}... $ECHO_C" >&6; }
+if { as_var=$as_ac_Lib; eval "test \"\${$as_var+set}\" = set"; }; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-l${GLUT_LIBS}  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext &&
+       $as_test_x conftest$ac_exeext; then
+  eval "$as_ac_Lib=yes"
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	eval "$as_ac_Lib=no"
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+ac_res=`eval echo '${'$as_ac_Lib'}'`
+	       { echo "$as_me:$LINENO: result: $ac_res" >&5
+echo "${ECHO_T}$ac_res" >&6; }
+if test `eval echo '${'$as_ac_Lib'}'` = yes; then
+  (test x$all = xtrue || test x$glut = xtrue) && GLUT_LIBS=-l${GLUT_LIBS} 
+else
+  (test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (lib${GLUT_LIBS}.a)"; exit
 fi
 
        ;;
-       
+
        *)
-	
-for ac_header in GL/glut.h
-do
-as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
-  { echo "$as_me:$LINENO: checking for $ac_header" >&5
-echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
+	GL_LIBS=GL
+	if test "${ac_cv_header_GL_gl_h+set}" = set; then
+  { echo "$as_me:$LINENO: checking for GL/gl.h" >&5
+echo $ECHO_N "checking for GL/gl.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_GL_gl_h+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 fi
-ac_res=`eval echo '${'$as_ac_Header'}'`
-	       { echo "$as_me:$LINENO: result: $ac_res" >&5
-echo "${ECHO_T}$ac_res" >&6; }
+{ echo "$as_me:$LINENO: result: $ac_cv_header_GL_gl_h" >&5
+echo "${ECHO_T}$ac_cv_header_GL_gl_h" >&6; }
 else
   # Is the header compilable?
-{ echo "$as_me:$LINENO: checking $ac_header usability" >&5
-echo $ECHO_N "checking $ac_header usability... $ECHO_C" >&6; }
+{ echo "$as_me:$LINENO: checking GL/gl.h usability" >&5
+echo $ECHO_N "checking GL/gl.h usability... $ECHO_C" >&6; }
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -20927,7 +20912,7 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 $ac_includes_default
-@%:@include <$ac_header>
+@%:@include <GL/gl.h>
 _ACEOF
 rm -f conftest.$ac_objext
 if { (ac_try="$ac_compile"
@@ -20959,15 +20944,15 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 echo "${ECHO_T}$ac_header_compiler" >&6; }
 
 # Is the header present?
-{ echo "$as_me:$LINENO: checking $ac_header presence" >&5
-echo $ECHO_N "checking $ac_header presence... $ECHO_C" >&6; }
+{ echo "$as_me:$LINENO: checking GL/gl.h presence" >&5
+echo $ECHO_N "checking GL/gl.h presence... $ECHO_C" >&6; }
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
-@%:@include <$ac_header>
+@%:@include <GL/gl.h>
 _ACEOF
 if { (ac_try="$ac_cpp conftest.$ac_ext"
 case "(($ac_try" in
@@ -21000,58 +20985,54 @@ echo "${ECHO_T}$ac_header_preproc" >&6; }
 # So?  What about this header?
 case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
   yes:no: )
-    { echo "$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&5
-echo "$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the compiler's result" >&5
-echo "$as_me: WARNING: $ac_header: proceeding with the compiler's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: GL/gl.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: GL/gl.h: proceeding with the compiler's result" >&2;}
     ac_header_preproc=yes
     ;;
   no:yes:* )
-    { echo "$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled" >&5
-echo "$as_me: WARNING: $ac_header: present but cannot be compiled" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?" >&5
-echo "$as_me: WARNING: $ac_header:     check for missing prerequisite headers?" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: see the Autoconf documentation" >&5
-echo "$as_me: WARNING: $ac_header: see the Autoconf documentation" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&5
-echo "$as_me: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result" >&5
-echo "$as_me: WARNING: $ac_header: proceeding with the preprocessor's result" >&2;}
-    { echo "$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence" >&5
-echo "$as_me: WARNING: $ac_header: in the future, the compiler will take precedence" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h: present but cannot be compiled" >&5
+echo "$as_me: WARNING: GL/gl.h: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: GL/gl.h:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: GL/gl.h: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: GL/gl.h:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: GL/gl.h: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/gl.h: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: GL/gl.h: in the future, the compiler will take precedence" >&2;}
     
     ;;
 esac
-{ echo "$as_me:$LINENO: checking for $ac_header" >&5
-echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6; }
-if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
+{ echo "$as_me:$LINENO: checking for GL/gl.h" >&5
+echo $ECHO_N "checking for GL/gl.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_GL_gl_h+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  eval "$as_ac_Header=\$ac_header_preproc"
+  ac_cv_header_GL_gl_h=$ac_header_preproc
 fi
-ac_res=`eval echo '${'$as_ac_Header'}'`
-	       { echo "$as_me:$LINENO: result: $ac_res" >&5
-echo "${ECHO_T}$ac_res" >&6; }
+{ echo "$as_me:$LINENO: result: $ac_cv_header_GL_gl_h" >&5
+echo "${ECHO_T}$ac_cv_header_GL_gl_h" >&6; }
 
 fi
-if test `eval echo '${'$as_ac_Header'}'` = yes; then
-  cat >>confdefs.h <<_ACEOF
-@%:@define `echo "HAVE_$ac_header" | $as_tr_cpp` 1
-_ACEOF
- (test x$all = xtrue || test x$glut = xtrue) && GLUT_FLAGS=-DHAVE_GLUT 
+if test $ac_cv_header_GL_gl_h = yes; then
+  :
 else
-  (test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT headers (GL/glut.h)"; exit
+  echo "Please install OpenGL headers (GL/gl.h)"; exit
 fi
 
-done
 
-	{ echo "$as_me:$LINENO: checking for main in -lglut" >&5
-echo $ECHO_N "checking for main in -lglut... $ECHO_C" >&6; }
-if test "${ac_cv_lib_glut_main+set}" = set; then
+	as_ac_Lib=`echo "ac_cv_lib_${GL_LIBS}''_main" | $as_tr_sh`
+{ echo "$as_me:$LINENO: checking for main in -l${GL_LIBS}" >&5
+echo $ECHO_N "checking for main in -l${GL_LIBS}... $ECHO_C" >&6; }
+if { as_var=$as_ac_Lib; eval "test \"\${$as_var+set}\" = set"; }; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lglut  $LIBS"
+LIBS="-l${GL_LIBS}  $LIBS"
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -21086,24 +21067,221 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
 	 test ! -s conftest.err
        } && test -s conftest$ac_exeext &&
        $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_glut_main=yes
+  eval "$as_ac_Lib=yes"
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-	ac_cv_lib_glut_main=no
+	eval "$as_ac_Lib=no"
 fi
 
 rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
       conftest$ac_exeext conftest.$ac_ext
 LIBS=$ac_check_lib_save_LIBS
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_glut_main" >&5
-echo "${ECHO_T}$ac_cv_lib_glut_main" >&6; }
-if test $ac_cv_lib_glut_main = yes; then
-  (test x$all = xtrue || test x$glut = xtrue) && GLUT_LIBS=-lglut 
+ac_res=`eval echo '${'$as_ac_Lib'}'`
+	       { echo "$as_me:$LINENO: result: $ac_res" >&5
+echo "${ECHO_T}$ac_res" >&6; }
+if test `eval echo '${'$as_ac_Lib'}'` = yes; then
+  GL_LIBS=-l${GL_LIBS} 
 else
-  (test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (libglut.so)"; exit
+  echo "Please install OpenGL library (lib${GL_LIBS}.a)"; exit
+fi
+
+	GLUT_LIBS=glut
+	if test "${ac_cv_header_GL_glut_h+set}" = set; then
+  { echo "$as_me:$LINENO: checking for GL/glut.h" >&5
+echo $ECHO_N "checking for GL/glut.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_GL_glut_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_header_GL_glut_h" >&5
+echo "${ECHO_T}$ac_cv_header_GL_glut_h" >&6; }
+else
+  # Is the header compilable?
+{ echo "$as_me:$LINENO: checking GL/glut.h usability" >&5
+echo $ECHO_N "checking GL/glut.h usability... $ECHO_C" >&6; }
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+$ac_includes_default
+@%:@include <GL/glut.h>
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+  ac_header_compiler=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_header_compiler=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+{ echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
+echo "${ECHO_T}$ac_header_compiler" >&6; }
+
+# Is the header present?
+{ echo "$as_me:$LINENO: checking GL/glut.h presence" >&5
+echo $ECHO_N "checking GL/glut.h presence... $ECHO_C" >&6; }
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+@%:@include <GL/glut.h>
+_ACEOF
+if { (ac_try="$ac_cpp conftest.$ac_ext"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null && {
+	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       }; then
+  ac_header_preproc=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+  ac_header_preproc=no
+fi
+
+rm -f conftest.err conftest.$ac_ext
+{ echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
+echo "${ECHO_T}$ac_header_preproc" >&6; }
+
+# So?  What about this header?
+case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
+  yes:no: )
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: GL/glut.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: GL/glut.h: proceeding with the compiler's result" >&2;}
+    ac_header_preproc=yes
+    ;;
+  no:yes:* )
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h: present but cannot be compiled" >&5
+echo "$as_me: WARNING: GL/glut.h: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: GL/glut.h:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: GL/glut.h: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: GL/glut.h:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: GL/glut.h: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: GL/glut.h: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: GL/glut.h: in the future, the compiler will take precedence" >&2;}
+    
+    ;;
+esac
+{ echo "$as_me:$LINENO: checking for GL/glut.h" >&5
+echo $ECHO_N "checking for GL/glut.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_GL_glut_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_cv_header_GL_glut_h=$ac_header_preproc
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_header_GL_glut_h" >&5
+echo "${ECHO_T}$ac_cv_header_GL_glut_h" >&6; }
+
+fi
+if test $ac_cv_header_GL_glut_h = yes; then
+  (test x$all = xtrue || test x$glut = xtrue) && GLUT_FLAGS=-DHAVE_GLUT 
+else
+  (test x$all = xtrue || test x$glut = xtrue) && (echo "Please install FreeGLUT headers (GL/glut.h)"; exit)
+fi
+
+
+	as_ac_Lib=`echo "ac_cv_lib_${GLUT_LIBS}''_main" | $as_tr_sh`
+{ echo "$as_me:$LINENO: checking for main in -l${GLUT_LIBS}" >&5
+echo $ECHO_N "checking for main in -l${GLUT_LIBS}... $ECHO_C" >&6; }
+if { as_var=$as_ac_Lib; eval "test \"\${$as_var+set}\" = set"; }; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-l${GLUT_LIBS}  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext &&
+       $as_test_x conftest$ac_exeext; then
+  eval "$as_ac_Lib=yes"
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	eval "$as_ac_Lib=no"
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+ac_res=`eval echo '${'$as_ac_Lib'}'`
+	       { echo "$as_me:$LINENO: result: $ac_res" >&5
+echo "${ECHO_T}$ac_res" >&6; }
+if test `eval echo '${'$as_ac_Lib'}'` = yes; then
+  (test x$all = xtrue || test x$glut = xtrue) && GLUT_LIBS=-l${GLUT_LIBS} 
+else
+  (test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (lib${GLUT_LIBS}.a)"; exit
 fi
 
        ;;
@@ -21473,6 +21651,7 @@ if test $ac_cv_header_png_h = yes; then
 else
   echo "Please install png headers" && exit
 fi
+
 
 
 { echo "$as_me:$LINENO: checking for main in -lpng" >&5
@@ -21982,201 +22161,91 @@ else
   fltk=false
 fi
 
-if test "${ac_cv_header_FL_Fl_Export_H+set}" = set; then
-  { echo "$as_me:$LINENO: checking for FL/Fl_Export.H" >&5
-echo $ECHO_N "checking for FL/Fl_Export.H... $ECHO_C" >&6; }
-if test "${ac_cv_header_FL_Fl_Export_H+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-fi
-{ echo "$as_me:$LINENO: result: $ac_cv_header_FL_Fl_Export_H" >&5
-echo "${ECHO_T}$ac_cv_header_FL_Fl_Export_H" >&6; }
-else
-  # Is the header compilable?
-{ echo "$as_me:$LINENO: checking FL/Fl_Export.H usability" >&5
-echo $ECHO_N "checking FL/Fl_Export.H usability... $ECHO_C" >&6; }
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-$ac_includes_default
-@%:@include <FL/Fl_Export.H>
-_ACEOF
-rm -f conftest.$ac_objext
-if { (ac_try="$ac_compile"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_compile") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest.$ac_objext; then
-  ac_header_compiler=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_header_compiler=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-{ echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
-echo "${ECHO_T}$ac_header_compiler" >&6; }
-
-# Is the header present?
-{ echo "$as_me:$LINENO: checking FL/Fl_Export.H presence" >&5
-echo $ECHO_N "checking FL/Fl_Export.H presence... $ECHO_C" >&6; }
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-@%:@include <FL/Fl_Export.H>
-_ACEOF
-if { (ac_try="$ac_cpp conftest.$ac_ext"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } >/dev/null && {
-	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       }; then
-  ac_header_preproc=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-  ac_header_preproc=no
-fi
-
-rm -f conftest.err conftest.$ac_ext
-{ echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
-echo "${ECHO_T}$ac_header_preproc" >&6; }
-
-# So?  What about this header?
-case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
-  yes:no: )
-    { echo "$as_me:$LINENO: WARNING: FL/Fl_Export.H: accepted by the compiler, rejected by the preprocessor!" >&5
-echo "$as_me: WARNING: FL/Fl_Export.H: accepted by the compiler, rejected by the preprocessor!" >&2;}
-    { echo "$as_me:$LINENO: WARNING: FL/Fl_Export.H: proceeding with the compiler's result" >&5
-echo "$as_me: WARNING: FL/Fl_Export.H: proceeding with the compiler's result" >&2;}
-    ac_header_preproc=yes
-    ;;
-  no:yes:* )
-    { echo "$as_me:$LINENO: WARNING: FL/Fl_Export.H: present but cannot be compiled" >&5
-echo "$as_me: WARNING: FL/Fl_Export.H: present but cannot be compiled" >&2;}
-    { echo "$as_me:$LINENO: WARNING: FL/Fl_Export.H:     check for missing prerequisite headers?" >&5
-echo "$as_me: WARNING: FL/Fl_Export.H:     check for missing prerequisite headers?" >&2;}
-    { echo "$as_me:$LINENO: WARNING: FL/Fl_Export.H: see the Autoconf documentation" >&5
-echo "$as_me: WARNING: FL/Fl_Export.H: see the Autoconf documentation" >&2;}
-    { echo "$as_me:$LINENO: WARNING: FL/Fl_Export.H:     section \"Present But Cannot Be Compiled\"" >&5
-echo "$as_me: WARNING: FL/Fl_Export.H:     section \"Present But Cannot Be Compiled\"" >&2;}
-    { echo "$as_me:$LINENO: WARNING: FL/Fl_Export.H: proceeding with the preprocessor's result" >&5
-echo "$as_me: WARNING: FL/Fl_Export.H: proceeding with the preprocessor's result" >&2;}
-    { echo "$as_me:$LINENO: WARNING: FL/Fl_Export.H: in the future, the compiler will take precedence" >&5
-echo "$as_me: WARNING: FL/Fl_Export.H: in the future, the compiler will take precedence" >&2;}
-    
-    ;;
-esac
-{ echo "$as_me:$LINENO: checking for FL/Fl_Export.H" >&5
-echo $ECHO_N "checking for FL/Fl_Export.H... $ECHO_C" >&6; }
-if test "${ac_cv_header_FL_Fl_Export_H+set}" = set; then
+FLTK_PROG=fltk-config
+# Extract the first word of "$FLTK_PROG", so it can be a program name with args.
+set dummy $FLTK_PROG; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_FLTK_FLAGS+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  ac_cv_header_FL_Fl_Export_H=$ac_header_preproc
-fi
-{ echo "$as_me:$LINENO: result: $ac_cv_header_FL_Fl_Export_H" >&5
-echo "${ECHO_T}$ac_cv_header_FL_Fl_Export_H" >&6; }
-
-fi
-if test $ac_cv_header_FL_Fl_Export_H = yes; then
-  (test x$all = xtrue || test x$fltk = xtrue) && FLTK_FLAGS=-DHAVE_FLTK 
+  if test -n "$FLTK_FLAGS"; then
+  ac_cv_prog_FLTK_FLAGS="$FLTK_FLAGS" # Let the user override the test.
 else
-  (test x$all = xtrue || test x$fltk = xtrue) && echo "Please install fltk headers" && exit
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_FLTK_FLAGS="`$FLTK_PROG --cxxflags`"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+FLTK_FLAGS=$ac_cv_prog_FLTK_FLAGS
+if test -n "$FLTK_FLAGS"; then
+  { echo "$as_me:$LINENO: result: $FLTK_FLAGS" >&5
+echo "${ECHO_T}$FLTK_FLAGS" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
 fi
 
 
-
-{ echo "$as_me:$LINENO: checking for main in -lfltk" >&5
-echo $ECHO_N "checking for main in -lfltk... $ECHO_C" >&6; }
-if test "${ac_cv_lib_fltk_main+set}" = set; then
+# Extract the first word of "$FLTK_PROG", so it can be a program name with args.
+set dummy $FLTK_PROG; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_FLTK_LIBS+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lfltk  $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-return main ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_link") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext &&
-       $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_fltk_main=yes
+  if test -n "$FLTK_LIBS"; then
+  ac_cv_prog_FLTK_LIBS="$FLTK_LIBS" # Let the user override the test.
 else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_FLTK_LIBS="`$FLTK_PROG --ldflags`"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
 
-	ac_cv_lib_fltk_main=no
 fi
-
-rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
-      conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_fltk_main" >&5
-echo "${ECHO_T}$ac_cv_lib_fltk_main" >&6; }
-if test $ac_cv_lib_fltk_main = yes; then
-  (test x$all = xtrue || test x$fltk = xtrue) && FLTK_LIBS="-lfltk -lfltk_images" 
+FLTK_LIBS=$ac_cv_prog_FLTK_LIBS
+if test -n "$FLTK_LIBS"; then
+  { echo "$as_me:$LINENO: result: $FLTK_LIBS" >&5
+echo "${ECHO_T}$FLTK_LIBS" >&6; }
 else
-  (test x$all = xtrue || test x$fltk = xtrue) && echo "Please install fltk library" && exit
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
 fi
 
- if (test x$all = xtrue || test x$fltk = xtrue); then
+
+if (test x$all = xtrue || test x$fltk = xtrue) ;then
+    if test "$FLTK_FLAGS" && test "$FLTK_LIBS" ;then
+	test_fltk=true
+    else
+	echo "Please install FLTK headers and libraries and make sure that \
+	            path to $FLTK_PROG exist in your PATH"
+	exit
+    fi 
+fi
+ if test x$test_fltk = xtrue; then
   USE_FLTK_TRUE=
   USE_FLTK_FALSE='#'
 else
@@ -22185,8 +22254,1159 @@ else
 fi
 
 
+# Check whether --enable-wx was given.
+if test "${enable_wx+set}" = set; then
+  enableval=$enable_wx; case "${enableval}" in
+  yes) wx=true ;;
+  no)  wx=false ;;
+  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-wx" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-wx" >&2;}
+   { (exit 1); exit 1; }; } ;;
+esac
+else
+  wx=false
+fi
 
-ac_config_files="$ac_config_files Makefile mgl/Makefile utils/Makefile include/Makefile examples/Makefile"
+WX_PROG=wx-config
+# Extract the first word of "$WX_PROG", so it can be a program name with args.
+set dummy $WX_PROG; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_WX_FLAGS+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$WX_FLAGS"; then
+  ac_cv_prog_WX_FLAGS="$WX_FLAGS" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_WX_FLAGS="`$WX_PROG --cflags`"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+WX_FLAGS=$ac_cv_prog_WX_FLAGS
+if test -n "$WX_FLAGS"; then
+  { echo "$as_me:$LINENO: result: $WX_FLAGS" >&5
+echo "${ECHO_T}$WX_FLAGS" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+# Extract the first word of "$WX_PROG", so it can be a program name with args.
+set dummy $WX_PROG; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_WX_LIBS+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$WX_LIBS"; then
+  ac_cv_prog_WX_LIBS="$WX_LIBS" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_WX_LIBS="`$WX_PROG --libs`"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+WX_LIBS=$ac_cv_prog_WX_LIBS
+if test -n "$WX_LIBS"; then
+  { echo "$as_me:$LINENO: result: $WX_LIBS" >&5
+echo "${ECHO_T}$WX_LIBS" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+if (test x$all = xtrue || test x$wx = xtrue) ;then
+    if test "$WX_FLAGS" && test "$WX_LIBS" ;then
+	test_wx=true
+    else
+	echo "Please install wxwidget headers and libraries and make sure that \
+	            path to $WX_PROG exist in your PATH"
+	exit
+    fi 
+fi
+ if test x$test_wx = xtrue; then
+  USE_WX_TRUE=
+  USE_WX_FALSE='#'
+else
+  USE_WX_TRUE='#'
+  USE_WX_FALSE=
+fi
+
+
+# Check whether --enable-qt was given.
+if test "${enable_qt+set}" = set; then
+  enableval=$enable_qt; case "${enableval}" in
+  yes) qt=true ;;
+  no)  qt=false ;;
+  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-qt" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-qt" >&2;}
+   { (exit 1); exit 1; }; } ;;
+esac
+else
+  qt=false
+fi
+
+if (test x$all = xtrue || test x$qt = xtrue) ;then
+     
+  
+  
+
+  test x"$TROLL" != x && echo 'ViM rox emacs.'
+
+  
+# Check whether --with-qt was given.
+if test "${with_qt+set}" = set; then
+  withval=$with_qt; QT_PATH=$withval
+else
+  QT_PATH=
+fi
+
+
+  # Find Qt.
+  if test -d /usr/local/Trolltech; then
+    # Try to find the latest version.
+    tmp_qt_paths=`echo /usr/local/Trolltech/*/bin | tr ' ' '\n' | sort -nr \
+                                              | xargs | sed 's/  */:/g'`
+  fi
+
+  # Find qmake.
+  for ac_prog in qmake-qt4${EXEEXT}
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_QMAKE+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $QMAKE in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_QMAKE="$QMAKE" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy="$QT_DIR:$QT_PATH:$PATH:$tmp_qt_paths"
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_QMAKE="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+QMAKE=$ac_cv_path_QMAKE
+if test -n "$QMAKE"; then
+  { echo "$as_me:$LINENO: result: $QMAKE" >&5
+echo "${ECHO_T}$QMAKE" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+  test -n "$QMAKE" && break
+done
+test -n "$QMAKE" || QMAKE="missing"
+
+  if test x"$QMAKE" = xmissing; then
+    for ac_prog in qmake${EXEEXT}
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_QMAKE+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $QMAKE in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_QMAKE="$QMAKE" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy="$QT_DIR:$QT_PATH:$PATH:$tmp_qt_paths"
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_QMAKE="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+QMAKE=$ac_cv_path_QMAKE
+if test -n "$QMAKE"; then
+  { echo "$as_me:$LINENO: result: $QMAKE" >&5
+echo "${ECHO_T}$QMAKE" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+  test -n "$QMAKE" && break
+done
+test -n "$QMAKE" || QMAKE="missing"
+
+    if test x"$QMAKE" = xmissing; then
+      { { echo "$as_me:$LINENO: error: Cannot find qmake in your PATH. Try using --with-qt." >&5
+echo "$as_me: error: Cannot find qmake in your PATH. Try using --with-qt." >&2;}
+   { (exit 1); exit 1; }; }
+    fi
+  fi
+
+  # Find moc (Meta Object Compiler).
+  for ac_prog in moc-qt4${EXEEXT}
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_MOC+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $MOC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_MOC="$MOC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy="$QT_PATH:$PATH:$tmp_qt_paths"
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_MOC="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+MOC=$ac_cv_path_MOC
+if test -n "$MOC"; then
+  { echo "$as_me:$LINENO: result: $MOC" >&5
+echo "${ECHO_T}$MOC" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+  test -n "$MOC" && break
+done
+test -n "$MOC" || MOC="missing"
+
+  if test x"$MOC" = xmissing; then
+    for ac_prog in moc${EXEEXT}
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_MOC+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $MOC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_MOC="$MOC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy="$QT_PATH:$PATH:$tmp_qt_paths"
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_MOC="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+MOC=$ac_cv_path_MOC
+if test -n "$MOC"; then
+  { echo "$as_me:$LINENO: result: $MOC" >&5
+echo "${ECHO_T}$MOC" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+  test -n "$MOC" && break
+done
+test -n "$MOC" || MOC="missing"
+
+    if test x"$MOC" = xmissing; then
+      { { echo "$as_me:$LINENO: error: Cannot find moc (Meta Object Compiler) in your PATH. Try using --with-qt." >&5
+echo "$as_me: error: Cannot find moc (Meta Object Compiler) in your PATH. Try using --with-qt." >&2;}
+   { (exit 1); exit 1; }; }
+    fi
+  fi
+
+  # Find uic (User Interface Compiler).
+  for ac_prog in uic-qt4${EXEEXT}
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_UIC+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $UIC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_UIC="$UIC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy="$QT_PATH:$PATH:$tmp_qt_paths"
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_UIC="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+UIC=$ac_cv_path_UIC
+if test -n "$UIC"; then
+  { echo "$as_me:$LINENO: result: $UIC" >&5
+echo "${ECHO_T}$UIC" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+  test -n "$UIC" && break
+done
+test -n "$UIC" || UIC="missing"
+
+  if test x"$UIC" = xmissing; then
+    for ac_prog in uic${EXEEXT}
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_UIC+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $UIC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_UIC="$UIC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy="$QT_PATH:$PATH:$tmp_qt_paths"
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_UIC="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+UIC=$ac_cv_path_UIC
+if test -n "$UIC"; then
+  { echo "$as_me:$LINENO: result: $UIC" >&5
+echo "${ECHO_T}$UIC" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+  test -n "$UIC" && break
+done
+test -n "$UIC" || UIC="missing"
+
+    if test x"$UIC" = xmissing; then
+      { { echo "$as_me:$LINENO: error: Cannot find uic (User Interface Compiler) in your PATH. Try using --with-qt." >&5
+echo "$as_me: error: Cannot find uic (User Interface Compiler) in your PATH. Try using --with-qt." >&2;}
+   { (exit 1); exit 1; }; }
+    fi
+  fi
+
+  # Find rcc (Qt Resource Compiler).
+  for ac_prog in rcc-qt4${EXEEXT}
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_RCC+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $RCC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_RCC="$RCC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy="$QT_PATH:$PATH:$tmp_qt_paths"
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_RCC="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+RCC=$ac_cv_path_RCC
+if test -n "$RCC"; then
+  { echo "$as_me:$LINENO: result: $RCC" >&5
+echo "${ECHO_T}$RCC" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+  test -n "$RCC" && break
+done
+test -n "$RCC" || RCC="false"
+
+  if test x"$RCC" = xfalse; then
+    for ac_prog in rcc${EXEEXT}
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_RCC+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $RCC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_RCC="$RCC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy="$QT_PATH:$PATH:$tmp_qt_paths"
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_RCC="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+RCC=$ac_cv_path_RCC
+if test -n "$RCC"; then
+  { echo "$as_me:$LINENO: result: $RCC" >&5
+echo "${ECHO_T}$RCC" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+  test -n "$RCC" && break
+done
+test -n "$RCC" || RCC="false"
+
+    if test x"$RCC" = xfalse; then
+      { echo "$as_me:$LINENO: WARNING: Cannot find rcc (Qt Resource Compiler) in your PATH. Try using --with-qt." >&5
+echo "$as_me: WARNING: Cannot find rcc (Qt Resource Compiler) in your PATH. Try using --with-qt." >&2;}
+    fi
+  fi
+
+  # If we don't know the path to Qt, guess it from the path to qmake.
+  if test x"$QT_PATH" = x; then
+    QT_PATH=`dirname "$QMAKE"`
+  fi
+  if test x"$QT_PATH" = x; then
+    { { echo "$as_me:$LINENO: error: Cannot find the path to your Qt install. Use --with-qt." >&5
+echo "$as_me: error: Cannot find the path to your Qt install. Use --with-qt." >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+  
+
+  # Get ready to build a test-app with Qt.
+
+  # Look for a writable temporary directory.
+  
+  if test x"$TMPDIR" = x || test ! -d "$TMPDIR" || test ! -w "$TMPDIR"; then
+    echo "$as_me:$LINENO: no TMPDIR or bad TMPDIR ($TMPDIR)" \
+      >&5
+    for i in /tmp /var/tmp; do
+      if test -d "$i" && test -w "$i"; then
+        TMPDIR=$i
+        export TMPDIR
+        echo "$as_me:$LINENO: setting TMPDIR=$TMPDIR" >&5
+        break
+      fi
+    done
+  fi
+
+  # Kludge!!  QMake has a very strange behavior.  For instance, if you
+  # install Qt under your $HOME and run QMake somewhere else under your
+  # $HOME, it will try to be clever and produce Makefiles with relative
+  # include paths.  In order to avoid this, we will test QMake from a
+  # temporary directory (usually /tmp).  Note that this problem was only
+  # observed with Qt 4.
+  my_configure_pwd=`pwd`
+  my_tmpdir="$TMPDIR/conftest$$.dir"
+  test -d "$my_tmpdir" || mkdir "$my_tmpdir"
+  if test -w "$my_tmpdir" && cd "$my_tmpdir"
+  then
+    :
+  else
+    { { echo "$as_me:$LINENO: error: Cannot cd to or write in $my_tmpdir" >&5
+echo "$as_me: error: Cannot cd to or write in $my_tmpdir" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+  cat >conftest.h <<_ASEOF
+#include <QObject>
+
+class Foo: public QObject
+{
+  Q_OBJECT;
+public:
+  Foo();
+  ~Foo() {}
+public slots:
+  void setValue(int value);
+signals:
+  void valueChanged(int newValue);
+private:
+  int value_;
+};
+_ASEOF
+
+  cat >conftest.cpp <<_ASEOF
+#include "conftest.h"
+Foo::Foo()
+  : value_ (42)
+{
+  connect(this, SIGNAL(valueChanged(int)), this, SLOT(setValue(int)));
+}
+
+void Foo::setValue(int value)
+{
+  value_ = value;
+}
+
+int main()
+{
+  Foo f;
+}
+_ASEOF
+  if $QMAKE -project; then :; else
+    { { echo "$as_me:$LINENO: error: Calling $QMAKE -project failed." >&5
+echo "$as_me: error: Calling $QMAKE -project failed." >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+
+  # Find the .pro file generated by qmake.
+  pro_file='conftest.dir.pro'
+  test -f $pro_file || pro_file=`echo *.pro`
+  if test -f "$pro_file"; then :; else
+    { { echo "$as_me:$LINENO: error: Can't find the .pro file generated by Qmake." >&5
+echo "$as_me: error: Can't find the .pro file generated by Qmake." >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+
+
+
+
+
+
+
+  echo "$as_me:$LINENO: Invoking $QMAKE on $pro_file" >&5
+  sed 's/^/| /' "$pro_file" >&5
+
+  if $QMAKE; then :; else
+    { { echo "$as_me:$LINENO: error: Calling $QMAKE failed." >&5
+echo "$as_me: error: Calling $QMAKE failed." >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+  # Try to compile a simple Qt app.
+  { echo "$as_me:$LINENO: checking whether we can build a simple Qt app" >&5
+echo $ECHO_N "checking whether we can build a simple Qt app... $ECHO_C" >&6; }
+if test "${at_cv_qt_build+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  at_cv_qt_build=ko
+  : ${MAKE=make}
+
+  if $MAKE >&5 2>&1; then
+    at_cv_qt_build='ok, looks like Qt 4'
+  else
+    echo "$as_me:$LINENO: Build failed, trying to #include <qobject.h> \
+instead" >&5
+    sed 's/<QObject>/<qobject.h>/' conftest.h > tmp.h && mv tmp.h conftest.h
+    if $MAKE >&5 2>&1; then
+      at_cv_qt_build='ok, looks like Qt 3'
+    else
+      # Sometimes (such as on Debian) build will fail because Qt hasn't been
+      # installed in debug mode and qmake tries (by default) to build apps in
+      # debug mode => Try again in release mode.
+      echo "$as_me:$LINENO: Build failed, trying to enforce release mode" \
+            >&5
+
+       # Tweak the value of CONFIG in the .pro file for +release.
+
+  qt_conf=''
+  for at_mod in +release; do
+    at_mod=`echo "$at_mod" | sed 's/^-//; tough
+                                  s/^+//; beef
+                                  :ough
+                                  s/^/CONFIG -= /;n
+                                  :eef
+                                  s/^/CONFIG += /'`
+    qt_conf="$qt_conf
+$at_mod"
+  done
+  echo "$qt_conf" | sed 1d >>"$pro_file"
+
+
+      sed 's/<qobject.h>/<QObject>/' conftest.h > tmp.h && mv tmp.h conftest.h
+      if $MAKE >&5 2>&1; then
+        at_cv_qt_build='ok, looks like Qt 4, release mode forced'
+      else
+        echo "$as_me:$LINENO: Build failed, trying to #include <qobject.h> \
+instead" >&5
+        sed 's/<QObject>/<qobject.h>/' conftest.h > tmp.h && mv tmp.h conftest.h
+        if $MAKE >&5 2>&1; then
+          at_cv_qt_build='ok, looks like Qt 3, release mode forced'
+        else
+          at_cv_qt_build=ko
+          echo "$as_me:$LINENO: failed program was:" >&5
+          sed 's/^/| /' conftest.h >&5
+          echo "$as_me:$LINENO: failed program was:" >&5
+          sed 's/^/| /' conftest.cpp >&5
+        fi # if make with Qt3-style #include and release mode forced.
+      fi # if make with Qt4-style #include and release mode forced.
+    fi # if make with Qt3-style #include.
+  fi # if make with Qt4-style #include.
+  
+fi
+{ echo "$as_me:$LINENO: result: $at_cv_qt_build" >&5
+echo "${ECHO_T}$at_cv_qt_build" >&6; }
+  if test x"$at_cv_qt_build" = xko; then
+    { { echo "$as_me:$LINENO: error: Cannot build a test Qt program" >&5
+echo "$as_me: error: Cannot build a test Qt program" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+  QT_VERSION_MAJOR=`echo "$at_cv_qt_build" | sed 's/^^0-9*//'`
+  
+
+  # This sed filter is applied after an expression of the form: /^FOO.*=/!d;
+  # It starts by removing the beginning of the line, removing references to
+  # SUBLIBS, removing unnecessary whitespaces at the beginning, and prefixes
+  # all variable uses by QT_.
+  qt_sed_filter='s///;
+                 s/$(SUBLIBS)//g;
+                 s/^ *//;
+                 s/\$(\(@<:@A-Z_@:>@@<:@A-Z_@:>@*\))/$(QT_\1)/g'
+
+  # Find the Makefile (qmake happens to generate a fake Makefile which invokes
+  # a Makefile.Debug or Makefile.Release). We we have both, we'll pick the
+  # Makefile.Release. The reason is that the main difference is that release
+  # uses -Os and debug -g. We can override -Os by passing another -O but we
+  # usually don't override -g.
+  if test -f Makefile.Release; then
+    at_mfile='Makefile.Release'
+  else
+    at_mfile='Makefile'
+  fi
+  if test -f $at_mfile; then :; else
+    cd "$my_configure_pwd"
+    { { echo "$as_me:$LINENO: error: Cannot find the Makefile generated by qmake." >&5
+echo "$as_me: error: Cannot find the Makefile generated by qmake." >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+
+  # Find the DEFINES of Qt (should have been named CPPFLAGS).
+  { echo "$as_me:$LINENO: checking for the DEFINES to use with Qt" >&5
+echo $ECHO_N "checking for the DEFINES to use with Qt... $ECHO_C" >&6; }
+if test "${at_cv_env_QT_DEFINES+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  at_cv_env_QT_DEFINES=`sed "/^DEFINES@<:@^A-Z@:>@*=/!d;$qt_sed_filter" $at_mfile`
+fi
+{ echo "$as_me:$LINENO: result: $at_cv_env_QT_DEFINES" >&5
+echo "${ECHO_T}$at_cv_env_QT_DEFINES" >&6; }
+  QT_DEFINES=$at_cv_env_QT_DEFINES
+
+
+  # Find the CFLAGS of Qt (We can use Qt in C?!)
+  { echo "$as_me:$LINENO: checking for the CFLAGS to use with Qt" >&5
+echo $ECHO_N "checking for the CFLAGS to use with Qt... $ECHO_C" >&6; }
+if test "${at_cv_env_QT_CFLAGS+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  at_cv_env_QT_CFLAGS=`sed "/^CFLAGS@<:@^A-Z@:>@*=/!d;$qt_sed_filter" $at_mfile`
+fi
+{ echo "$as_me:$LINENO: result: $at_cv_env_QT_CFLAGS" >&5
+echo "${ECHO_T}$at_cv_env_QT_CFLAGS" >&6; }
+  QT_CFLAGS=$at_cv_env_QT_CFLAGS
+
+
+  # Find the CXXFLAGS of Qt.
+  { echo "$as_me:$LINENO: checking for the CXXFLAGS to use with Qt" >&5
+echo $ECHO_N "checking for the CXXFLAGS to use with Qt... $ECHO_C" >&6; }
+if test "${at_cv_env_QT_CXXFLAGS+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  at_cv_env_QT_CXXFLAGS=`sed "/^CXXFLAGS@<:@^A-Z@:>@*=/!d;$qt_sed_filter" $at_mfile`
+fi
+{ echo "$as_me:$LINENO: result: $at_cv_env_QT_CXXFLAGS" >&5
+echo "${ECHO_T}$at_cv_env_QT_CXXFLAGS" >&6; }
+  QT_CXXFLAGS=$at_cv_env_QT_CXXFLAGS
+
+
+  # Find the INCPATH of Qt.
+  { echo "$as_me:$LINENO: checking for the INCPATH to use with Qt" >&5
+echo $ECHO_N "checking for the INCPATH to use with Qt... $ECHO_C" >&6; }
+if test "${at_cv_env_QT_INCPATH+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  at_cv_env_QT_INCPATH=`sed "/^INCPATH@<:@^A-Z@:>@*=/!d;$qt_sed_filter" $at_mfile`
+fi
+{ echo "$as_me:$LINENO: result: $at_cv_env_QT_INCPATH" >&5
+echo "${ECHO_T}$at_cv_env_QT_INCPATH" >&6; }
+  QT_INCPATH=$at_cv_env_QT_INCPATH
+
+
+  QT_CPPFLAGS="$at_cv_env_QT_DEFINES $at_cv_env_QT_INCPATH"
+
+
+  # Find the LFLAGS of Qt (Should have been named LDFLAGS)
+  { echo "$as_me:$LINENO: checking for the LDFLAGS to use with Qt" >&5
+echo $ECHO_N "checking for the LDFLAGS to use with Qt... $ECHO_C" >&6; }
+if test "${at_cv_env_QT_LDFLAGS+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  at_cv_env_QT_LDFLAGS=`sed "/^LFLAGS@<:@^A-Z@:>@*=/!d;$qt_sed_filter" $at_mfile`
+fi
+{ echo "$as_me:$LINENO: result: $at_cv_env_QT_LDFLAGS" >&5
+echo "${ECHO_T}$at_cv_env_QT_LDFLAGS" >&6; }
+  QT_LFLAGS=$at_cv_env_QT_LDFLAGS
+
+  QT_LDFLAGS=$at_cv_env_QT_LDFLAGS
+
+
+  { echo "$as_me:$LINENO: checking whether host operating system is Darwin" >&5
+echo $ECHO_N "checking whether host operating system is Darwin... $ECHO_C" >&6; }
+  at_darwin="no"
+  case $host_os in
+    darwin*)
+      at_darwin="yes"
+      ;;
+  esac
+  { echo "$as_me:$LINENO: result: $at_darwin" >&5
+echo "${ECHO_T}$at_darwin" >&6; }
+
+  # Find the LIBS of Qt.
+  { echo "$as_me:$LINENO: checking for the LIBS to use with Qt" >&5
+echo $ECHO_N "checking for the LIBS to use with Qt... $ECHO_C" >&6; }
+if test "${at_cv_env_QT_LIBS+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  at_cv_env_QT_LIBS=`sed "/^LIBS@<:@^A-Z@:>@*=/!d;$qt_sed_filter" $at_mfile`
+   if test x$at_darwin = xyes; then
+     # Fix QT_LIBS: as of today Libtool (GNU Libtool 1.5.23a) doesn't handle
+     # -F properly. The "bug" has been fixed on 22 October 2006
+     # by Peter O'Gorman but we provide backward compatibility here.
+     at_cv_env_QT_LIBS=`echo "$at_cv_env_QT_LIBS" \
+                             | sed 's/^-F/-Wl,-F/;s/ -F/ -Wl,-F/g'`
+   fi
+  
+fi
+{ echo "$as_me:$LINENO: result: $at_cv_env_QT_LIBS" >&5
+echo "${ECHO_T}$at_cv_env_QT_LIBS" >&6; }
+  QT_LIBS=$at_cv_env_QT_LIBS
+
+
+  cd "$my_configure_pwd" || echo 'WTF!'
+  rm -rf "$my_tmpdir"
+
+     
+  if test x"$QMAKE" = x; then
+    { { echo "$as_me:$LINENO: error: \$QMAKE is empty. \
+Did you invoke AT@&t@_WITH_QT before AT@&t@_REQUIRE_QT_VERSION?" >&5
+echo "$as_me: error: \$QMAKE is empty. \
+Did you invoke AT@&t@_WITH_QT before AT@&t@_REQUIRE_QT_VERSION?" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+  { echo "$as_me:$LINENO: checking for Qt's version" >&5
+echo $ECHO_N "checking for Qt's version... $ECHO_C" >&6; }
+if test "${at_cv_QT_VERSION+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  echo "$as_me:$LINENO: Running $QMAKE --version:" >&5
+  $QMAKE --version >&5 2>&1
+  qmake_version_sed='/^.*\([0-9]\.[0-9]\.[0-9]\).*$/!d;s//\1/'
+  at_cv_QT_VERSION=`$QMAKE --version 2>&1 | sed "$qmake_version_sed"`
+fi
+{ echo "$as_me:$LINENO: result: $at_cv_QT_VERSION" >&5
+echo "${ECHO_T}$at_cv_QT_VERSION" >&6; }
+  if test x"$at_cv_QT_VERSION" = x; then
+    { { echo "$as_me:$LINENO: error: Cannot detect Qt's version." >&5
+echo "$as_me: error: Cannot detect Qt's version." >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+  QT_VERSION=$at_cv_QT_VERSION
+
+  as_arg_v1=$QT_VERSION
+as_arg_v2=4.3
+awk "$as_awk_strverscmp" v1="$as_arg_v1" v2="$as_arg_v2" /dev/null
+case $? in
+1) { { echo "$as_me:$LINENO: error: This package requires Qt 4.3 or above." >&5
+echo "$as_me: error: This package requires Qt 4.3 or above." >&2;}
+   { (exit 1); exit 1; }; };;
+0) ;;
+2) ;;
+esac
+
+    test_qt=true
+fi
+ if test x$test_qt = xtrue; then
+  USE_QT_TRUE=
+  USE_QT_FALSE='#'
+else
+  USE_QT_TRUE='#'
+  USE_QT_FALSE=
+fi
+
+
+# Check whether --enable-python was given.
+if test "${enable_python+set}" = set; then
+  enableval=$enable_python; case "${enableval}" in
+  yes) python=true ;;
+  no)  python=false ;;
+  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-python" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-python" >&2;}
+   { (exit 1); exit 1; }; } ;;
+esac
+else
+  python=false
+fi
+
+# Extract the first word of "python-config", so it can be a program name with args.
+set dummy python-config; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_PYTHON_HEADERS+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$PYTHON_HEADERS"; then
+  ac_cv_prog_PYTHON_HEADERS="$PYTHON_HEADERS" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_PYTHON_HEADERS="`python-config --cflags`"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+PYTHON_HEADERS=$ac_cv_prog_PYTHON_HEADERS
+if test -n "$PYTHON_HEADERS"; then
+  { echo "$as_me:$LINENO: result: $PYTHON_HEADERS" >&5
+echo "${ECHO_T}$PYTHON_HEADERS" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+# Extract the first word of "swig$EXEEXT", so it can be a program name with args.
+set dummy swig$EXEEXT; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_HAVE_SWIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$HAVE_SWIG"; then
+  ac_cv_prog_HAVE_SWIG="$HAVE_SWIG" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_HAVE_SWIG="true"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+HAVE_SWIG=$ac_cv_prog_HAVE_SWIG
+if test -n "$HAVE_SWIG"; then
+  { echo "$as_me:$LINENO: result: $HAVE_SWIG" >&5
+echo "${ECHO_T}$HAVE_SWIG" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+if (test x$langall = xtrue || test x$python = xtrue) ;then
+    if (test "$PYTHON_HEADERS" && test "$HAVE_SWIG") ;then
+	test_python=true
+	
+          
+
+  
+        # Find any Python interpreter.
+    if test -z "$PYTHON"; then
+      for ac_prog in python python2 python2.5 python2.4 python2.3 python2.2 python2.1 python2.0 python1.6 python1.5
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_PYTHON+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $PYTHON in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PYTHON="$PYTHON" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_PYTHON="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+PYTHON=$ac_cv_path_PYTHON
+if test -n "$PYTHON"; then
+  { echo "$as_me:$LINENO: result: $PYTHON" >&5
+echo "${ECHO_T}$PYTHON" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+  test -n "$PYTHON" && break
+done
+test -n "$PYTHON" || PYTHON=":"
+
+    fi
+    am_display_PYTHON=python
+  
+
+  if test "$PYTHON" = :; then
+      { { echo "$as_me:$LINENO: error: no suitable Python interpreter found" >&5
+echo "$as_me: error: no suitable Python interpreter found" >&2;}
+   { (exit 1); exit 1; }; }
+  else
+
+      
+  { echo "$as_me:$LINENO: checking for $am_display_PYTHON version" >&5
+echo $ECHO_N "checking for $am_display_PYTHON version... $ECHO_C" >&6; }
+if test "${am_cv_python_version+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  am_cv_python_version=`$PYTHON -c "import sys; print sys.version[:3]"`
+fi
+{ echo "$as_me:$LINENO: result: $am_cv_python_version" >&5
+echo "${ECHO_T}$am_cv_python_version" >&6; }
+  PYTHON_VERSION=$am_cv_python_version
+
+
+        
+  PYTHON_PREFIX='${prefix}'
+
+  PYTHON_EXEC_PREFIX='${exec_prefix}'
+
+
+    
+  { echo "$as_me:$LINENO: checking for $am_display_PYTHON platform" >&5
+echo $ECHO_N "checking for $am_display_PYTHON platform... $ECHO_C" >&6; }
+if test "${am_cv_python_platform+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  am_cv_python_platform=`$PYTHON -c "import sys; print sys.platform"`
+fi
+{ echo "$as_me:$LINENO: result: $am_cv_python_platform" >&5
+echo "${ECHO_T}$am_cv_python_platform" >&6; }
+  PYTHON_PLATFORM=$am_cv_python_platform
+
+
+
+  
+                { echo "$as_me:$LINENO: checking for $am_display_PYTHON script directory" >&5
+echo $ECHO_N "checking for $am_display_PYTHON script directory... $ECHO_C" >&6; }
+if test "${am_cv_python_pythondir+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  am_cv_python_pythondir=`$PYTHON -c "from distutils import sysconfig; print sysconfig.get_python_lib(0,0,prefix='$PYTHON_PREFIX')" 2>/dev/null ||
+     echo "$PYTHON_PREFIX/lib/python$PYTHON_VERSION/site-packages"`
+fi
+{ echo "$as_me:$LINENO: result: $am_cv_python_pythondir" >&5
+echo "${ECHO_T}$am_cv_python_pythondir" >&6; }
+  pythondir=$am_cv_python_pythondir
+
+
+      
+  pkgpythondir=\${pythondir}/$PACKAGE
+
+
+            { echo "$as_me:$LINENO: checking for $am_display_PYTHON extension module directory" >&5
+echo $ECHO_N "checking for $am_display_PYTHON extension module directory... $ECHO_C" >&6; }
+if test "${am_cv_python_pyexecdir+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  am_cv_python_pyexecdir=`$PYTHON -c "from distutils import sysconfig; print sysconfig.get_python_lib(1,0,prefix='$PYTHON_EXEC_PREFIX')" 2>/dev/null ||
+     echo "${PYTHON_EXEC_PREFIX}/lib/python${PYTHON_VERSION}/site-packages"`
+fi
+{ echo "$as_me:$LINENO: result: $am_cv_python_pyexecdir" >&5
+echo "${ECHO_T}$am_cv_python_pyexecdir" >&6; }
+  pyexecdir=$am_cv_python_pyexecdir
+
+
+  
+  pkgpyexecdir=\${pyexecdir}/$PACKAGE
+
+
+    
+  fi
+
+
+    else
+	echo Please install python-dev and swig packages
+	exit
+    fi 
+fi
+ if test x$test_python = xtrue ; then
+  USE_PYTHON_TRUE=
+  USE_PYTHON_FALSE='#'
+else
+  USE_PYTHON_TRUE='#'
+  USE_PYTHON_FALSE=
+fi
+
+
+ac_config_files="$ac_config_files Makefile mgl/Makefile examples/Makefile include/Makefile lang/Makefile utils/Makefile widgets/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -22367,6 +23587,27 @@ if test -z "${USE_FLTK_TRUE}" && test -z "${USE_FLTK_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"USE_FLTK\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"USE_FLTK\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_WX_TRUE}" && test -z "${USE_WX_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_WX\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_WX\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_QT_TRUE}" && test -z "${USE_QT_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_QT\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_QT\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_PYTHON_TRUE}" && test -z "${USE_PYTHON_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_PYTHON\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_PYTHON\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -22825,9 +24066,11 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "mgl/Makefile") CONFIG_FILES="$CONFIG_FILES mgl/Makefile" ;;
-    "utils/Makefile") CONFIG_FILES="$CONFIG_FILES utils/Makefile" ;;
-    "include/Makefile") CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
+    "include/Makefile") CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
+    "lang/Makefile") CONFIG_FILES="$CONFIG_FILES lang/Makefile" ;;
+    "utils/Makefile") CONFIG_FILES="$CONFIG_FILES utils/Makefile" ;;
+    "widgets/Makefile") CONFIG_FILES="$CONFIG_FILES widgets/Makefile" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
@@ -23032,6 +24275,9 @@ AR!$AR$ac_delim
 RANLIB!$RANLIB$ac_delim
 DSYMUTIL!$DSYMUTIL$ac_delim
 NMEDIT!$NMEDIT$ac_delim
+DLLTOOL!$DLLTOOL$ac_delim
+AS!$AS$ac_delim
+OBJDUMP!$OBJDUMP$ac_delim
 CPP!$CPP$ac_delim
 CXXCPP!$CXXCPP$ac_delim
 F77!$F77$ac_delim
@@ -23040,10 +24286,12 @@ ac_ct_F77!$ac_ct_F77$ac_delim
 LIBTOOL!$LIBTOOL$ac_delim
 INCLTDL!$INCLTDL$ac_delim
 LIBLTDL!$LIBLTDL$ac_delim
+AM_CXXFLAGS!$AM_CXXFLAGS$ac_delim
+GSL_FLAGS!$GSL_FLAGS$ac_delim
 GSL_LIBS!$GSL_LIBS$ac_delim
 GL_LIBS!$GL_LIBS$ac_delim
-GLUT_FLAGS!$GLUT_FLAGS$ac_delim
 GLUT_LIBS!$GLUT_LIBS$ac_delim
+GLUT_FLAGS!$GLUT_FLAGS$ac_delim
 USE_GLUT_TRUE!$USE_GLUT_TRUE$ac_delim
 USE_GLUT_FALSE!$USE_GLUT_FALSE$ac_delim
 HDF5_FLAGS!$HDF5_FLAGS$ac_delim
@@ -23063,11 +24311,46 @@ FLTK_FLAGS!$FLTK_FLAGS$ac_delim
 FLTK_LIBS!$FLTK_LIBS$ac_delim
 USE_FLTK_TRUE!$USE_FLTK_TRUE$ac_delim
 USE_FLTK_FALSE!$USE_FLTK_FALSE$ac_delim
+WX_FLAGS!$WX_FLAGS$ac_delim
+WX_LIBS!$WX_LIBS$ac_delim
+USE_WX_TRUE!$USE_WX_TRUE$ac_delim
+USE_WX_FALSE!$USE_WX_FALSE$ac_delim
+QMAKE!$QMAKE$ac_delim
+MOC!$MOC$ac_delim
+UIC!$UIC$ac_delim
+RCC!$RCC$ac_delim
+QT_PATH!$QT_PATH$ac_delim
+TMPDIR!$TMPDIR$ac_delim
+QT_VERSION_MAJOR!$QT_VERSION_MAJOR$ac_delim
+QT_DEFINES!$QT_DEFINES$ac_delim
+QT_CFLAGS!$QT_CFLAGS$ac_delim
+QT_CXXFLAGS!$QT_CXXFLAGS$ac_delim
+QT_INCPATH!$QT_INCPATH$ac_delim
+QT_CPPFLAGS!$QT_CPPFLAGS$ac_delim
+QT_LFLAGS!$QT_LFLAGS$ac_delim
+QT_LDFLAGS!$QT_LDFLAGS$ac_delim
+QT_LIBS!$QT_LIBS$ac_delim
+QT_VERSION!$QT_VERSION$ac_delim
+USE_QT_TRUE!$USE_QT_TRUE$ac_delim
+USE_QT_FALSE!$USE_QT_FALSE$ac_delim
+PYTHON_HEADERS!$PYTHON_HEADERS$ac_delim
+HAVE_SWIG!$HAVE_SWIG$ac_delim
+PYTHON!$PYTHON$ac_delim
+PYTHON_VERSION!$PYTHON_VERSION$ac_delim
+PYTHON_PREFIX!$PYTHON_PREFIX$ac_delim
+PYTHON_EXEC_PREFIX!$PYTHON_EXEC_PREFIX$ac_delim
+PYTHON_PLATFORM!$PYTHON_PLATFORM$ac_delim
+pythondir!$pythondir$ac_delim
+pkgpythondir!$pkgpythondir$ac_delim
+pyexecdir!$pyexecdir$ac_delim
+pkgpyexecdir!$pkgpyexecdir$ac_delim
+USE_PYTHON_TRUE!$USE_PYTHON_TRUE$ac_delim
+USE_PYTHON_FALSE!$USE_PYTHON_FALSE$ac_delim
 LIB@&t@OBJS!$LIB@&t@OBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 38; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 78; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

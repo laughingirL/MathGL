@@ -14,10 +14,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "mgl/mgl.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
@@ -27,7 +23,7 @@
 //
 //-----------------------------------------------------------------------------
 void mglGraph::flow(bool simple, float zVal, float u, float v,
-					mglData &x, mglData &y, mglData &ax, mglData &ay)
+					const mglData &x, const mglData &y, const mglData &ax, const mglData &ay)
 {
 	long n=10*(ax.nx+ax.ny);
 	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
@@ -93,8 +89,7 @@ void mglGraph::flow(bool simple, float zVal, float u, float v,
 	free(pp);	free(cc);	free(tt);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Flow(mglData &x, mglData &y, mglData &ax, mglData &ay,
-					const char *sch, int num, bool cnt, float zVal)
+void mglGraph::Flow(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch, int num, bool cnt, float zVal)
 {
 	float u,v;
 	long n=ax.nx, m=ax.ny;
@@ -136,9 +131,10 @@ void mglGraph::Flow(mglData &x, mglData &y, mglData &ax, mglData &ay,
 			}
 		}
 	}
+	Flush();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Flow(mglData &ax, mglData &ay, const char *sch, int num,
+void mglGraph::Flow(const mglData &ax, const mglData &ay, const char *sch, int num,
 					bool cnt, float zVal)
 {
 	if(ax.nx*ax.ny!=ay.nx*ay.ny){	SetWarn(mglWarnDim,"Flow");	return;	}
@@ -150,8 +146,8 @@ void mglGraph::Flow(mglData &ax, mglData &ay, const char *sch, int num,
 }
 //-----------------------------------------------------------------------------
 void mglGraph::flow(bool simple, float u, float v, float w,
-					mglData &x, mglData &y, mglData &z,
-					mglData &ax, mglData &ay, mglData &az)
+					const mglData &x, const mglData &y, const mglData &z,
+					const mglData &ax, const mglData &ay, const mglData &az)
 {
 	static long n=10*(ax.nx+ax.ny);
 	long nn = ax.nx*ax.ny*ax.nz;
@@ -229,8 +225,8 @@ void mglGraph::flow(bool simple, float u, float v, float w,
 	free(pp);	free(cc);	free(tt);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Flow(mglData &x, mglData &y, mglData &z, mglData &ax, mglData &ay,
-					mglData &az, const char *sch, int num, bool cnt)
+void mglGraph::Flow(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay,
+					const mglData &az, const char *sch, int num, bool cnt)
 {
 	float u,v,w;
 	long i,j,n=ax.nx,m=ax.ny,l=ax.nz;
@@ -278,9 +274,10 @@ void mglGraph::Flow(mglData &x, mglData &y, mglData &z, mglData &ax, mglData &ay
 			flow(true,-u,-v,-w, x, y, z, ax, ay, az);
 		}
 	}
+	Flush();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Flow(mglData &ax, mglData &ay, mglData &az,
+void mglGraph::Flow(const mglData &ax, const mglData &ay, const mglData &az,
 					const char *sch, int num, bool cnt)
 {
 	if(ax.nx*ax.ny*ax.nz!=ay.nx*ay.ny*ay.nz || ax.nx*ax.ny*ax.nz!=az.nx*az.ny*az.nz)
@@ -298,13 +295,12 @@ void mglGraph::Flow(mglData &ax, mglData &ay, mglData &az,
 //	Pipe series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::flowr(bool simple, float zVal, float u, float v,
-					mglData &x, mglData &y, mglData &ax, mglData &ay, float r0)
+void mglGraph::flowr(bool simple, float zVal, float u, float v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, float r0)
 {
 	long n=10*(ax.nx+ax.ny);
 	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
 	float *pp, *cc, *rr;
-	
+
 	pp = (float *)malloc(3*n*sizeof(float));
 	cc = (float *)malloc(4*n*sizeof(float));
 	rr = (float *)malloc(n*sizeof(float));
@@ -367,8 +363,7 @@ void mglGraph::flowr(bool simple, float zVal, float u, float v,
 	free(pp);	free(cc);	free(rr);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Pipe(mglData &x, mglData &y, mglData &ax, mglData &ay,
-					const char *sch, float r0, int num, bool cnt, float zVal)
+void mglGraph::Pipe(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch, float r0, int num, bool cnt, float zVal)
 {
 	float u,v;
 	long n=ax.nx, m=ax.ny;
@@ -410,10 +405,10 @@ void mglGraph::Pipe(mglData &x, mglData &y, mglData &ax, mglData &ay,
 			}
 		}
 	}
+	Flush();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Pipe(mglData &ax, mglData &ay, const char *sch, float r0, int num,
-					bool cnt, float zVal)
+void mglGraph::Pipe(const mglData &ax, const mglData &ay, const char *sch, float r0, int num, bool cnt, float zVal)
 {
 	if(ax.nx*ax.ny!=ay.nx*ay.ny){	SetWarn(mglWarnDim,"Pipe");	return;	}
 	if(ax.nx<2 || ax.ny<2)		{	SetWarn(mglWarnLow,"Pipe");	return;	}
@@ -424,14 +419,14 @@ void mglGraph::Pipe(mglData &ax, mglData &ay, const char *sch, float r0, int num
 }
 //-----------------------------------------------------------------------------
 void mglGraph::flowr(bool simple, float u, float v, float w,
-					mglData &x, mglData &y, mglData &z,
-					mglData &ax, mglData &ay, mglData &az, float r0)
+					const mglData &x, const mglData &y, const mglData &z,
+					const mglData &ax, const mglData &ay, const mglData &az, float r0)
 {
 	static long n=10*(ax.nx+ax.ny);
 	long nn = ax.nx*ax.ny*ax.nz;
 	bool both = x.nx*x.ny*x.nz==nn && y.nx*y.ny*y.nz==nn && z.nx*z.ny*z.nz==nn;
 	float *pp, *cc, *rr;
-	
+
 	pp = (float *)malloc(3*n*sizeof(float));
 	cc = (float *)malloc(4*n*sizeof(float));
 	rr = (float *)malloc(n*sizeof(float));
@@ -504,8 +499,7 @@ void mglGraph::flowr(bool simple, float u, float v, float w,
 	free(pp);	free(cc);	free(rr);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Pipe(mglData &x, mglData &y, mglData &z, mglData &ax, mglData &ay,
-					mglData &az, const char *sch, float r0, int num, bool cnt)
+void mglGraph::Pipe(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch, float r0, int num, bool cnt)
 {
 	float u,v,w;
 	long i,j,n=ax.nx,m=ax.ny,l=ax.nz;
@@ -553,9 +547,10 @@ void mglGraph::Pipe(mglData &x, mglData &y, mglData &z, mglData &ax, mglData &ay
 			flowr(true,-u,-v,-w, x, y, z, ax, ay, az,r0);
 		}
 	}
+	Flush();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Pipe(mglData &ax, mglData &ay, mglData &az,
+void mglGraph::Pipe(const mglData &ax, const mglData &ay, const mglData &az,
 					const char *sch, float r0, int num, bool cnt)
 {
 	if(ax.nx*ax.ny*ax.nz!=ay.nx*ay.ny*ay.nz || ax.nx*ax.ny*ax.nz!=az.nx*az.ny*az.nz)
@@ -570,29 +565,29 @@ void mglGraph::Pipe(mglData &ax, mglData &ay, mglData &az,
 }
 //-----------------------------------------------------------------------------
 /// Plot flows for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
-void mgl_flow_xy(HMGL gr, HMDT x, HMDT y, HMDT ax, HMDT ay, const char *sch, int num, bool central, float zVal)
+void mgl_flow_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch, int num, int central, float zVal)
 {	if(gr && ay && ax && x && y)	gr->Flow(*x, *y, *ax, *ay, sch, num, central, zVal);	}
 /// Plot flows for vector field {ax,ay} with color proportional to value |a|
-void mgl_flow_2d(HMGL gr, HMDT ax, HMDT ay, const char *sch, int num, bool central, float zVal)
+void mgl_flow_2d(HMGL gr, const HMDT ax, const HMDT ay, const char *sch, int num, int central, float zVal)
 {	if(gr && ay && ax)	gr->Flow(*ax, *ay, sch, num, central, zVal);	}
 /// Plot flows for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
-void mgl_flow_xyz(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT ax, HMDT ay, HMDT az, const char *sch, int num, bool central)
+void mgl_flow_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, int num, int central)
 {	if(gr && ay && ax && az && x && y && z)	gr->Flow(*x, *y, *z, *ax, *ay, *az, sch, num, central);	}
 /// Plot flows for 3d vector field {ax,ay,ay} with color proportional to value |a|
-void mgl_flow_3d(HMGL gr, HMDT ax, HMDT ay, HMDT az, const char *sch, int num, bool central)
+void mgl_flow_3d(HMGL gr, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, int num, int central)
 {	if(gr && ay && ax && az)	gr->Flow(*ax, *ay, *az, sch, num, central);	}
 //-----------------------------------------------------------------------------
 /// Plot flow pipes for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
-void mgl_pipe_xy(HMGL gr, HMDT x, HMDT y, HMDT ax, HMDT ay, const char *sch, float r0, int num, bool central, float zVal)
+void mgl_pipe_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch, float r0, int num, int central, float zVal)
 {	if(gr && ay && ax && x && y)	gr->Pipe(*x, *y, *ax, *ay, sch, r0, num, central, zVal);	}
 /// Plot flow pipes for vector field {ax,ay} with color proportional to value |a|
-void mgl_pipe_2d(HMGL gr, HMDT ax, HMDT ay, const char *sch, float r0, int num, bool central, float zVal)
+void mgl_pipe_2d(HMGL gr, const HMDT ax, const HMDT ay, const char *sch, float r0, int num, int central, float zVal)
 {	if(gr && ay && ax)	gr->Pipe(*ax, *ay, sch, r0, num, central, zVal);	}
 /// Plot flow pipes for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
-void mgl_pipe_xyz(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT ax, HMDT ay, HMDT az, const char *sch, float r0, int num, bool central)
+void mgl_pipe_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, float r0, int num, int central)
 {	if(gr && ay && ax && az && x && y && z)	gr->Pipe(*x, *y, *z, *ax, *ay, *az, sch, r0, num, central);	}
 /// Plot flow pipes for 3d vector field {ax,ay,ay} with color proportional to value |a|
-void mgl_pipe_3d(HMGL gr, HMDT ax, HMDT ay, HMDT az, const char *sch, float r0, int num, bool central)
+void mgl_pipe_3d(HMGL gr, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, float r0, int num, int central)
 {	if(gr && ay && ax && az)	gr->Pipe(*ax, *ay, *az, sch, r0, num, central);	}
 //-----------------------------------------------------------------------------
 //	Fortran interface

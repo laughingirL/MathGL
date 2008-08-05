@@ -14,10 +14,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <stdlib.h>
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
 #include "mgl/mgl_zb.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
@@ -52,7 +48,7 @@ void mglGraphZB::Ball(float x,float y,float z,mglColor col,float alpha)
 
 	bool aa=UseAlpha;	UseAlpha = true;
 	register long i,j;
-	long w = long(5.5+PenWidth);
+	long w = long(5.5+fabs(PenWidth));
 	for(i=-w;i<=w;i++)	for(j=-w;j<=w;j++)
 	{
 		v = (i*i+j*j)*u;
@@ -73,7 +69,7 @@ void mglGraphZB::ball(float *p,float *c)
 
 	bool aa=UseAlpha;	UseAlpha = true;
 	register long i,j;
-	long w = long(5.5+PenWidth);
+	long w = long(5.5+fabs(PenWidth));
 	float v, u = 1./(4*PenWidth*PenWidth);
 	for(i=-w;i<=w;i++)	for(j=-w;j<=w;j++)
 	{
@@ -139,7 +135,7 @@ void mglGraphZB::pnt_plot(long x,long y,float z,unsigned char c[4])
 #else
 	unsigned char *cc = C+4*i0,*cf=cc+12*n;
 #endif
-	
+
 	float zf = FogDist*(z/Depth-0.5-FogDz);
 	if(zf<0)
 	{
@@ -479,7 +475,7 @@ void mglGraphZB::quad_plot_a(float *pp0,float *pp1,float *pp2,float *pp3,
 			g = u<0.f || u>1.f || v<0.f || v>1.f;
 			if(g)	continue;	// second root bad
 		}
-		
+
 		s = aa0 + a1*u + a2*v + a3*u*v;
 		r[3] = (unsigned char)(255.f*alpha*(alpha>0 ? (s+1.f)*(s+1.f) : (1.f-s)*(s-1.f)));
 		s = (s+1.f)/2.f;	s *= n;
@@ -626,14 +622,14 @@ void mglGraphZB::line_plot(float *pp0,float *pp1,float *cc0,float *cc1,bool all)
 	if(!DrawFace && FastNoFace)	{	line_plot_s(pp0,pp1,cc0,cc1,all);	return;	}
 	unsigned char r[4];
 	long y1,x1,y2,x2;
-	float dxu,dxv,dyu,dyv,dd;
+	float dxu,dxv,dyu,dyv,dd,pw = fabs(PenWidth);
 
 	float d10,d11,d12, c10,c11,c12, b;
 
 	d10 = pp1[0]-pp0[0];	d11 = pp1[1]-pp0[1];
 	dd = sqrt(d10*d10 + d11*d11);
 	if(dd<1e-5)	return;		// points lies on the vertical line
-	b = PenWidth*PenWidth;	//(PenWidth<1?1:PenWidth);
+	b = PenWidth*PenWidth;
 
 	d12 = pp1[2]-pp0[2];
 	c10 = cc1[0]-cc0[0];	c11 = cc1[1]-cc0[1];
@@ -646,8 +642,8 @@ void mglGraphZB::line_plot(float *pp0,float *pp1,float *cc0,float *cc1,bool all)
 	y1 = imin(long(pp0[1]),long(pp1[1]));
 	x2 = imax(long(pp0[0]),long(pp1[0]));
 	y2 = imax(long(pp0[1]),long(pp1[1]));
-	x1 -= int(PenWidth+3.5);	y1 -= int(PenWidth+3.5);
-	x2 += int(PenWidth+3.5);	y2 += int(PenWidth+3.5);
+	x1 -= int(pw+3.5);	y1 -= int(pw+3.5);
+	x2 += int(pw+3.5);	y2 += int(pw+3.5);
 
 	bool aa=UseAlpha;
 	register float u,v,xx,yy;
@@ -661,14 +657,14 @@ void mglGraphZB::line_plot(float *pp0,float *pp1,float *cc0,float *cc1,bool all)
 		if(u<0)			{	v += u*u;			u = 0;	}
 		else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
 		if(v>b)		continue;
-		tt = all || (PDef & (1<<long(fmod(pPos+u/PenWidth/1.5, 16))));
+		tt = all || (PDef & (1<<long(fmod(pPos+u/pw/1.5, 16))));
 		if(!tt)		continue;
 		u /= dd;
 		r[0] = (unsigned char)(255.f*(cc0[0]+c10*u));	r[1] = (unsigned char)(255.f*(cc0[1]+c11*u));
 		r[2] = (unsigned char)(255.f*(cc0[2]+c12*u));	r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
-		pnt_plot(i,j,pp0[2]+d12*u+PenWidth,r);
+		pnt_plot(i,j,pp0[2]+d12*u+pw,r);
 	}
-	pPos = fmod(pPos+dd/PenWidth/1.5, 16);
+	pPos = fmod(pPos+dd/pw/1.5, 16);
 	UseAlpha = aa;
 }
 //-----------------------------------------------------------------------------
@@ -682,7 +678,7 @@ void mglGraphZB::mark_plot(float *pp, char type)
 	if(type=='.' || ss==0)
 	{
 		bool aa=UseAlpha;	UseAlpha = true;
-		s = long(5.5+PenWidth);
+		s = long(5.5+fabs(PenWidth));
 		for(i=-s;i<=s;i++)	for(j=-s;j<=s;j++)
 		{
 			v = (i*i+j*j)/(9*PenWidth*PenWidth);
@@ -696,6 +692,7 @@ void mglGraphZB::mark_plot(float *pp, char type)
 	{
 		float pw = PenWidth;	PenWidth = BaseLineWidth;
 		int pd = PDef;	PDef = 0xffff;
+		register float zv = strchr("oOVDTS",type) ? pp[2]+BaseLineWidth : pp[2];
 		switch(type)
 		{
 		case '+':
@@ -761,36 +758,36 @@ void mglGraphZB::mark_plot(float *pp, char type)
 			break;
 		case 'S':
 			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
-				pnt_plot(long(pp[0])+i,long(pp[1])+j,pp[2],cs);
+				pnt_plot(long(pp[0])+i,long(pp[1])+j,zv,cs);
 			break;
 		case 'D':
 			ss = ss*1.1;
 			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
 				if(abs(i)+abs(j)<=long(ss))
-					pnt_plot(long(pp[0])+i,long(pp[1])+j,pp[2],cs);
+					pnt_plot(long(pp[0])+i,long(pp[1])+j,zv,cs);
 			break;
 		case 'T':
 			ss = ss*1.1;
 			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss/2);j<=long(ss);j++)
 				if(3*abs(i)+2*j<=2*long(ss))
-					pnt_plot(long(pp[0])+i,long(pp[1])+j,pp[2],cs);
+					pnt_plot(long(pp[0])+i,long(pp[1])+j,zv,cs);
 			break;
 		case 'V':
 			ss = ss*1.1;
 			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss/2);j++)
 				if(3*abs(i)-2*j<=2*long(ss))
-					pnt_plot(long(pp[0])+i,long(pp[1])+j,pp[2],cs);
+					pnt_plot(long(pp[0])+i,long(pp[1])+j,zv,cs);
 			break;
 		case 'o':
 			for(i=long(-4*ss);i<=long(4*ss);i++)
 				pnt_plot(long(pp[0]+ss*cos(i*M_PI_4/ss)),
-					long(pp[1]+ss*sin(i*M_PI_4/ss)),pp[2],cs);
+					long(pp[1]+ss*sin(i*M_PI_4/ss)),zv,cs);
 			break;
 		case 'O':
 			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
 			{
 				if(i*i+j*j>=ss*ss)	continue;
-				pnt_plot(long(pp[0])+i,long(pp[1])+j,pp[2],cs);
+				pnt_plot(long(pp[0])+i,long(pp[1])+j,zv,cs);
 			}
 			break;
 		}
@@ -837,7 +834,7 @@ void mglGraphZB::font_line(float *p, unsigned char *c,bool thin)
 
 	float d10,d11,d12, b = PenWidth*PenWidth;
 	long y1,x1,y2,x2;
-	float dxu,dxv,dyu,dyv,dd;
+	float dxu,dxv,dyu,dyv,dd, pw=fabs(PenWidth);
 	register float u,v,xx,yy;
 
 	d10 = p[3]-p[0];	d11 = p[4]-p[1];	d12 = p[5]-p[2];
@@ -849,8 +846,8 @@ void mglGraphZB::font_line(float *p, unsigned char *c,bool thin)
 	y1 = imin(long(p[1]),long(p[4]));
 	x2 = imax(long(p[0]),long(p[3]));
 	y2 = imax(long(p[1]),long(p[4]));
-	x1 -= int(PenWidth+3.5);	y1 -= int(PenWidth+3.5);
-	x2 += int(PenWidth+3.5);	y2 += int(PenWidth+3.5);
+	x1 -= int(pw+3.5);	y1 -= int(pw+3.5);
+	x2 += int(pw+3.5);	y2 += int(pw+3.5);
 
 	register long i,j;
 	if(!thin)	b*=4;
@@ -864,7 +861,7 @@ void mglGraphZB::font_line(float *p, unsigned char *c,bool thin)
 		if(v>b)		continue;
 		memcpy(r,c,4);
 		r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
-		pnt_plot(i,j,p[2]+d12*u+PenWidth,r);
+		pnt_plot(i,j,p[2]+d12*u+pw,r);
 	}
 	UseAlpha = aa;
 }
@@ -873,7 +870,7 @@ void mglGraphZB::Glyph(float x,float y, float f, int nt, const short *trig, int 
 {
 	long ik,ii,il;
 	unsigned char c[4]={int(255*CDef[0]),int(255*CDef[1]),int(255*CDef[2]),255}, r[4];
-	float dxu,dxv,dyu,dyv,dd, p[9];
+	float dxu,dxv,dyu,dyv, p[9];
 	register long i,j,g;
 	if(trig && nt>0)
 	{
@@ -884,8 +881,8 @@ void mglGraphZB::Glyph(float x,float y, float f, int nt, const short *trig, int 
 			ii+=2;		p[3]=f*trig[ii]+x;	p[4]=f*trig[ii+1]+y;	p[5]=0;
 			ii+=2;		p[6]=f*trig[ii]+x;	p[7]=f*trig[ii+1]+y;	p[8]=0;
 			PostScale(p,3);
-	
-			float d1[3],d2[3];		
+
+			float d1[3],d2[3];
 			d1[0] = p[3]-p[0];	d2[0] = p[6]-p[0];
 			d1[1] = p[4]-p[1];	d2[1] = p[7]-p[1];
 			dxu = d2[0]*d1[1] - d1[0]*d2[1];
@@ -898,7 +895,7 @@ void mglGraphZB::Glyph(float x,float y, float f, int nt, const short *trig, int 
 			y1 = imin(long(p[1]),imin(long(p[4]),long(p[7])));
 			x2 = imax(long(p[0]),imax(long(p[3]),long(p[6])));
 			y2 = imax(long(p[1]),imax(long(p[4]),long(p[7])));
-		
+
 			register float u,v,xx,yy;
 			for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 			{
@@ -907,7 +904,7 @@ void mglGraphZB::Glyph(float x,float y, float f, int nt, const short *trig, int 
 				g = u<0 || v<0 || u+v>1;
 				if(g)	continue;
 				memcpy(r,c,4);
-				pnt_plot(i,j,p[2]+d1[2]*u+d2[2]*v+PenWidth,r);
+				pnt_plot(i,j,p[2]+d1[2]*u+d2[2]*v+fabs(PenWidth),r);
 			}
 		}
 	}

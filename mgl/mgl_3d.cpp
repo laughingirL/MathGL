@@ -14,9 +14,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "mgl/mgl.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
@@ -25,7 +22,7 @@
 //	CloudQ series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::CloudQ(mglData &x, mglData &y, mglData &z, mglData &a,
+void mglGraph::CloudQ(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 					const char *sch, float alpha)
 {
 	long i,j,k,n=a.nx,m=a.ny,l=a.nz;
@@ -69,10 +66,11 @@ void mglGraph::CloudQ(mglData &x, mglData &y, mglData &z, mglData &a,
 		aa[i0] = a.a[i*tx+n*(j*ty+m*k*tz)];
 	}
 	cloud_plot(n/tx,m/ty,l/tz,pp,aa,alpha);
+	Flush();
 	delete []pp;	delete []aa;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::CloudQ(mglData &a, const char *sch, float alpha)
+void mglGraph::CloudQ(const mglData &a, const char *sch, float alpha)
 {
 	if(a.nx<2 || a.ny<2 || a.nz<2)
 	{	SetWarn(mglWarnLow,"CloudQ");	return;	}
@@ -121,41 +119,36 @@ long mglGraph::add_spoint(long &pc,float **p,float **k,float **b,float **n,
 	return pc-1;
 }
 //-----------------------------------------------------------------------------
-float mgl_cos_pp(float *pp,long i0,long i1,long i2)
-{
-	float p1=0,p2=0,pc=0,dp1,dp2;
-	dp1 = pp[3*i1]-pp[3*i0];		dp2 = pp[3*i2]-pp[3*i0];
-	p1 = dp1*dp1;	p2 = dp2*dp2;	pc = dp1*dp2;
-	dp1 = pp[3*i1+1]-pp[3*i0+1];	dp2 = pp[3*i2+1]-pp[3*i0+1];
-	p1 += dp1*dp1;	p2 += dp2*dp2;	pc += dp1*dp2;
-	dp1 = pp[3*i1+2]-pp[3*i0+2];	dp2 = pp[3*i2+2]-pp[3*i0+2];
-	p1 += dp1*dp1;	p2 += dp2*dp2;	pc += dp1*dp2;
-
-	return p1*p2==0 ? 1. : pc/sqrt(p1*p2);
-}
-//-----------------------------------------------------------------------------
-void normal_3d(mglData &a,float x,float y,float z,float *nx,float *ny,
+void normal_3d(const mglData &a,float x,float y,float z,float *nx,float *ny,
 			float *nz,bool inv)
 {
 	long n=a.nx, m=a.ny, l=a.nz, o=n*m;
 	register long i,j,k,i0;
 //	i=x<n-1?long(x):n-2;	j=y<m-1?long(y):m-2;
 //	k=z<l-1?long(z):l-2;	i0=i+n*(j+m*k);
-	i=long(x);	j=long(y);	k=long(z);	i0=i+n*(j+m*k);
-	x-=i;	y-=j;	z-=k;
+	i=long(x);	j=long(y);	k=long(z);
+	i = i<n-1 ? i:n-2;	j = j<m-1 ? j:m-2;	k = k<l-1 ? k:l-2;
+	x-=i;	y-=j;	z-=k;	i0=i+n*(j+m*k);
 
-	if(n==2 || i==0 || i>=n-2)	*nx = a.a[i0+1] - a.a[i0];
+
+	if(n==2)	*nx = a.a[i0+1] - a.a[i0];
+	else if(i==0)	*nx = (a.a[i0+1] - a.a[i0])*(1-x) + (a.a[i0+2] - a.a[i0])*x/2;
+	else if(i==n-2)	*nx = (a.a[i0+1] - a.a[i0-1])*(1-x)/2 + (a.a[i0+1] - a.a[i0])*x;
 	else	*nx = ((a.a[i0+1] - a.a[i0-1])*(1-x) + (a.a[i0+2] - a.a[i0])*x)/2;
 
-	if(m==2 || j==0 || j>=m-2)	*ny = a.a[i0+n] - a.a[i0];
+	if(m==2)	*ny = a.a[i0+n] - a.a[i0];
+	else if(j==0)	*ny = (a.a[i0+n] - a.a[i0])*(1-y) + (a.a[i0+2*n] - a.a[i0])*y/2;
+	else if(j==m-2)	*ny = (a.a[i0+n] - a.a[i0-n])*(1-y)/2 + (a.a[i0+n] - a.a[i0])*y;
 	else	*ny = ((a.a[i0+n] - a.a[i0-n])*(1-y) + (a.a[i0+2*n] - a.a[i0])*y)/2;
 
-	if(l==2 || k==0 || k>=l-2)	*nz = a.a[i0+o] - a.a[i0];
+	if(l==2)	*nz = a.a[i0+o] - a.a[i0];
+	else if(k==0)	*nz = (a.a[i0+o] - a.a[i0])*(1-z) + (a.a[i0+2*o] - a.a[i0])*z/2;
+	else if(k==l-2)	*nz = (a.a[i0+o] - a.a[i0-o])*(1-z)/2 + (a.a[i0+o] - a.a[i0])*z;
 	else	*nz = ((a.a[i0+o] - a.a[i0-o])*(1-z) + (a.a[i0+2*o] - a.a[i0])*z)/2;
 	if(!inv)	{	*nx = -*nx;	*ny = -*ny;	*nz = -*nz;		}
 }
 //-----------------------------------------------------------------------------
-void normal_1d(mglData &a,float x,float *nx,bool inv)
+void normal_1d(const mglData &a,float x,float *nx,bool inv)
 {
 	register long n=a.nx, i=long(x);
 
@@ -166,7 +159,7 @@ void normal_1d(mglData &a,float x,float *nx,bool inv)
 	if(*nx==0)	*nx=1;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Surf3(float val, mglData &x, mglData &y, mglData &z, mglData &a,
+void mglGraph::Surf3(float val, const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 					const char *sch)
 {
 	long i,j,k,i0,i1,n=a.nx,m=a.ny,l=a.nz;
@@ -287,7 +280,7 @@ void mglGraph::Surf3(float val, mglData &x, mglData &y, mglData &z, mglData &a,
 	if(pp)	{	free(pp);	free(kk);	free(cc);	free(nn);	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Surf3(float val, mglData &a, const char *sch)
+void mglGraph::Surf3(float val, const mglData &a, const char *sch)
 {
 	if(a.nx<2 || a.ny<2 || a.nz<2)	{	SetWarn(mglWarnLow,"Surf3");	return;	}
 	mglData x(a.nx), y(a.ny),z(a.nz);
@@ -297,7 +290,7 @@ void mglGraph::Surf3(float val, mglData &a, const char *sch)
 	Surf3(val,x,y,z,a,sch);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Surf3(mglData &x, mglData &y, mglData &z, mglData &a,
+void mglGraph::Surf3(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 					const char *stl, int num)
 {
 	float v;
@@ -309,7 +302,7 @@ void mglGraph::Surf3(mglData &x, mglData &y, mglData &z, mglData &a,
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Surf3(mglData &a, const char *stl, int num)
+void mglGraph::Surf3(const mglData &a, const char *stl, int num)
 {
 	float v;
 	num = num<=0 ? 1 : num;
@@ -324,8 +317,8 @@ void mglGraph::Surf3(mglData &a, const char *stl, int num)
 //	Surf3A series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Surf3A(float val, mglData &x, mglData &y, mglData &z, mglData &a,
-					mglData &b, const char *sch)
+void mglGraph::Surf3A(float val, const mglData &x, const mglData &y, const mglData &z, const mglData &a,
+					const mglData &b, const char *sch)
 {
 	long i,j,k,i0,i1,n=a.nx,m=a.ny,l=a.nz;
 	long *kx1,*kx2,*ky1,*ky2,*kz,pc;
@@ -449,7 +442,7 @@ void mglGraph::Surf3A(float val, mglData &x, mglData &y, mglData &z, mglData &a,
 	if(pp)	{	free(pp);	free(kk);	free(cc);	free(nn);	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Surf3A(float val, mglData &a, mglData &b, const char *sch)
+void mglGraph::Surf3A(float val, const mglData &a, const mglData &b, const char *sch)
 {
 	if(a.nx<2 || a.ny<2 || a.nz<2)	{	SetWarn(mglWarnLow,"Surf3A");	return;	}
 	mglData x(a.nx), y(a.ny),z(a.nz);
@@ -459,7 +452,7 @@ void mglGraph::Surf3A(float val, mglData &a, mglData &b, const char *sch)
 	Surf3A(val,x,y,z,a,b,sch);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Surf3A(mglData &x, mglData &y, mglData &z, mglData &a, mglData &b,
+void mglGraph::Surf3A(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &b,
 					const char *stl, int num)
 {
 	float v;
@@ -471,7 +464,7 @@ void mglGraph::Surf3A(mglData &x, mglData &y, mglData &z, mglData &a, mglData &b
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Surf3A(mglData &a, mglData &b, const char *stl, int num)
+void mglGraph::Surf3A(const mglData &a, const mglData &b, const char *stl, int num)
 {
 	float v;
 	num = num<=0 ? 1 : num;
@@ -486,8 +479,7 @@ void mglGraph::Surf3A(mglData &a, mglData &b, const char *stl, int num)
 //	Surf3C series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Surf3C(float val, mglData &x, mglData &y, mglData &z, mglData &a,
-					mglData &b, const char *sch)
+void mglGraph::Surf3C(float val, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &b, const char *sch)
 {
 	long i,j,k,i0,i1,n=a.nx,m=a.ny,l=a.nz;
 	long *kx1,*kx2,*ky1,*ky2,*kz,pc;
@@ -614,7 +606,7 @@ void mglGraph::Surf3C(float val, mglData &x, mglData &y, mglData &z, mglData &a,
 	if(pp)	{	free(pp);	free(kk);	free(cc);	free(nn);	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Surf3C(float val, mglData &a, mglData &b, const char *sch)
+void mglGraph::Surf3C(float val, const mglData &a, const mglData &b, const char *sch)
 {
 	if(a.nx<2 || a.ny<2 || a.nz<2)	{	SetWarn(mglWarnLow,"Surf3C");	return;	}
 	mglData x(a.nx), y(a.ny),z(a.nz);
@@ -624,7 +616,7 @@ void mglGraph::Surf3C(float val, mglData &a, mglData &b, const char *sch)
 	Surf3C(val,x,y,z,a,b,sch);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Surf3C(mglData &x, mglData &y, mglData &z, mglData &a, mglData &b,
+void mglGraph::Surf3C(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &b,
 				const char *stl, int num)
 {
 	float v;
@@ -636,7 +628,7 @@ void mglGraph::Surf3C(mglData &x, mglData &y, mglData &z, mglData &a, mglData &b
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Surf3C(mglData &a, mglData &b, const char *stl, int num)
+void mglGraph::Surf3C(const mglData &a, const mglData &b, const char *stl, int num)
 {
 	float v;
 	num = num<=0 ? 1 : num;
@@ -654,7 +646,7 @@ void mglGraph::Surf3C(mglData &a, mglData &b, const char *stl, int num)
 // flag & 0x1	--	accompanied coordinates
 // flag & 0x2	--	project to r*z
 // flag & 0x4	--	normalize field
-void mglGraph::Beam(float val,mglData &tr, mglData &g1, mglData &g2, mglData &a,
+void mglGraph::Beam(float val,const mglData &tr, const mglData &g1, const mglData &g2, const mglData &a,
 		float r, const char *stl, int flag)
 {
 	long n = a.nz,m=a.nx,l=a.ny;
@@ -664,7 +656,7 @@ void mglGraph::Beam(float val,mglData &tr, mglData &g1, mglData &g2, mglData &a,
 	{	SetWarn(mglWarnDim,"Beam");	return;	}
 	mglData x(a),y(a),z(a),b(a);
 	register long i,j,k,i0;
-	double asum=1, asum0=1, amax;
+	float asum=1, asum0=1, amax;
 	bool old = r<0;
 	r = fabs(r);
 	if(flag & 4)	for(j=0;j<m*l;j++)	asum0 += a.a[j]*a.a[j];
@@ -706,7 +698,7 @@ void mglGraph::Beam(float val,mglData &tr, mglData &g1, mglData &g2, mglData &a,
 	Surf3(val,x,y,z,b,stl);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Beam(mglData &tr, mglData &g1, mglData &g2, mglData &a, float r,
+void mglGraph::Beam(const mglData &tr, const mglData &g1, const mglData &g2, const mglData &a, float r,
 		const char *stl, int flag, int num)
 {
 	float v;
@@ -734,7 +726,7 @@ void mglGraph::AVertex(float x,float y,float z, float a,float alpha)
 	if(a)	Ball(x,y,z,c,-alpha*a);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::CloudP(mglData &x, mglData &y, mglData &z, mglData &a, const char *sch, float alpha)
+void mglGraph::CloudP(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch, float alpha)
 {
 	register long i,j,k,n=a.nx,m=a.ny,l=a.nz;
 	if(n<2 || m<2 || l<2)	{	SetWarn(mglWarnLow,"CloudP");	return;	}
@@ -759,9 +751,10 @@ void mglGraph::CloudP(mglData &x, mglData &y, mglData &z, mglData &a, const char
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
 			AVertex(x.a[i],y.a[j],z.a[k],a.a[i+n*(j+m*k)],alpha);
 	}
+	Flush();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::CloudP(mglData &a, const char *sch, float alpha)
+void mglGraph::CloudP(const mglData &a, const char *sch, float alpha)
 {
 	if(a.nx<2 || a.ny<2 || a.nz<2)
 	{	SetWarn(mglWarnLow,"CloudP");	return;	}
@@ -775,66 +768,61 @@ void mglGraph::CloudP(mglData &a, const char *sch, float alpha)
 //		3D plotting functions
 //-----------------------------------------------------------------------------
 /// Draw isosurface for 3d data specified parametrically
-void mgl_surf3_xyz_val(HMGL gr, float Val, HMDT x, HMDT y, HMDT z, HMDT a, const char *sch)
+void mgl_surf3_xyz_val(HMGL gr, float Val, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch)
 {	if(gr && a && x && y && z)	gr->Surf3(Val, *x, *y, *z, *a, sch);	}
 /// Draw isosurface for 3d data
-void mgl_surf3_val(HMGL gr, float Val, HMDT a, const char *sch)
+void mgl_surf3_val(HMGL gr, float Val, const HMDT a, const char *sch)
 {	if(gr && a)	gr->Surf3(Val, *a, sch);	}
 /// Draw several isosurface for 3d data specified parametrically
-void mgl_surf3_xyz(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT a, const char *sch, int num)
+void mgl_surf3_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch, int num)
 {	if(gr && a && x && y && z)	gr->Surf3(*x, *y, *z, *a, sch, num);	}
 /// Draw several isosurface for 3d data
-void mgl_surf3(HMGL gr, HMDT a, const char *sch, int num)
+void mgl_surf3(HMGL gr, const HMDT a, const char *sch, int num)
 {	if(gr && a)	gr->Surf3(*a, sch, num);	}
 /// Draw a cloud of points for 3d data specified parametrically
-void mgl_cloudp_xyz(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT a,
+void mgl_cloudp_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
 			const char *sch, float alpha)
 {	if(gr && a && x && y && z)	gr->CloudP(*x, *y, *z, *a, sch, alpha);	}
 /// Draw a cloud of points for 3d data
-void mgl_cloudp(HMGL gr, HMDT a, const char *sch, float alpha)
+void mgl_cloudp(HMGL gr, const HMDT a, const char *sch, float alpha)
 {	if(gr && a)	gr->CloudP(*a, sch, alpha);	}
 /// Draw a semi-transparent cloud for 3d data specified parametrically
-void mgl_cloudq_xyz(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT a,
+void mgl_cloudq_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
 			const char *sch, float alpha)
 {	if(gr && a && x && y && z)	gr->CloudQ(*x, *y, *z, *a, sch, alpha);	}
 /// Draw a semi-transparent cloud for 3d data
-void mgl_cloudq(HMGL gr, HMDT a, const char *sch, float alpha)
+void mgl_cloudq(HMGL gr, const HMDT a, const char *sch, float alpha)
 {	if(gr && a)	gr->CloudQ(*a, sch, alpha);	}
 //-----------------------------------------------------------------------------
 /// Draw isosurface for 3d data \a a specified parametrically with alpha proportional to \a b
-void mgl_surf3a_xyz_val(HMGL gr, float Val, HMDT x, HMDT y, HMDT z, HMDT a, HMDT b,
-			const char *sch)
+void mgl_surf3a_xyz_val(HMGL gr, float Val, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT b, const char *sch)
 {	if(gr && a && b && z && x && y)	gr->Surf3A(Val, *x, *y, *z, *a, *b, sch);	}
 /// Draw isosurface for 3d data \a a with alpha proportional to \a b
-void mgl_surf3a_val(HMGL gr, float Val, HMDT a, HMDT b, const char *sch)
+void mgl_surf3a_val(HMGL gr, float Val, const HMDT a, const HMDT b, const char *sch)
 {	if(gr && a && b)	gr->Surf3A(Val, *a, *b, sch);	}
 /// Draw several isosurface for 3d data \a a specified parametrically with alpha proportional to \a b
-void mgl_surf3a_xyz(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT a, HMDT b,
-			const char *sch, int num)
+void mgl_surf3a_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT b, const char *sch, int num)
 {	if(gr && a && b && z && x && y)	gr->Surf3A(*x, *y, *z, *a, *b, sch, num);	}
 /// Draw several isosurface for 3d data \a a with alpha proportional to \a b
-void mgl_surf3a(HMGL gr, HMDT a, HMDT b, const char *sch, int num)
+void mgl_surf3a(HMGL gr, const HMDT a, const HMDT b, const char *sch, int num)
 {	if(gr && a && b)	gr->Surf3A(*a, *b, sch, num);	}
 /// Draw isosurface for 3d data \a a specified parametrically with color proportional to \a b
-void mgl_surf3c_xyz_val(HMGL gr, float Val, HMDT x, HMDT y, HMDT z, HMDT a, HMDT b,
-			const char *sch)
+void mgl_surf3c_xyz_val(HMGL gr, float Val, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT b, const char *sch)
 {	if(gr && a && b && z && x && y)	gr->Surf3C(Val, *x, *y, *z, *a, *b, sch);	}
 /// Draw isosurface for 3d data \a a with color proportional to \a b
-void mgl_surf3c_val(HMGL gr, float Val, HMDT a, HMDT b, const char *sch)
+void mgl_surf3c_val(HMGL gr, float Val, const HMDT a, const HMDT b, const char *sch)
 {	if(gr && a && b)	gr->Surf3C(Val, *a, *b, sch);	}
 /// Draw several isosurface for 3d data \a a specified parametrically with color proportional to \a b
-void mgl_surf3c_xyz(HMGL gr, HMDT x, HMDT y, HMDT z, HMDT a, HMDT b,
-			const char *sch, int num)
+void mgl_surf3c_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT b, const char *sch, int num)
 {	if(gr && a && b && z && x && y)	gr->Surf3C(*x, *y, *z, *a, *b, sch, num);	}
 /// Draw several isosurface for 3d data \a a with color proportional to \a b
-void mgl_surf3c(HMGL gr, HMDT a, HMDT b, const char *sch, int num)
+void mgl_surf3c(HMGL gr, const HMDT a, const HMDT b, const char *sch, int num)
 {	if(gr && a && b)	gr->Surf3C(*a, *b, sch, num);	}
 /// Draw isosurface for 3d beam in curvilinear coordinates
-void mgl_beam_val(HMGL gr, float val, HMDT tr, HMDT g1, HMDT g2, HMDT a,
-		float r, const char *stl, int norm)
+void mgl_beam_val(HMGL gr, float val, const HMDT tr, const HMDT g1, const HMDT g2, const HMDT a, float r, const char *stl, int norm)
 {	if(gr && tr && g1 && g2 && a)	gr->Beam(val,*tr,*g1,*g2,*a,r,stl,norm);	}
 /// Draw several isosurfaces for 3d beam in curvilinear coordinates
-void mgl_beam(HMGL gr, HMDT tr, HMDT g1, HMDT g2, HMDT a, float r,
+void mgl_beam(HMGL gr, const HMDT tr, const HMDT g1, const HMDT g2, const HMDT a, float r,
 		const char *stl, int norm, int num)
 {	if(gr && tr && g1 && g2 && a)	gr->Beam(*tr,*g1,*g2,*a,r,stl,norm,num);	}
 //-----------------------------------------------------------------------------

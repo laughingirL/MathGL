@@ -15,7 +15,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <stdlib.h>
 #include <string.h>
 
 #include "mgl/mgl_data.h"
@@ -53,7 +52,7 @@ HMDT mgl_data_resize(HMDT d, int mx,int my,int mz,float x1,float x2,
 HMDT mgl_data_subdata(HMDT d, int xx,int yy,int zz)
 {	return new mglData(d->SubData(xx,yy,zz));	}
 /// Get column (or slice) of the data filled by formulas of other named columns
-HMDT mgl_data_subdata(HMDT d, const char *eq)
+HMDT mgl_data_column(HMDT d, const char *eq)
 {	return new mglData(d->Column(eq));	}
 /// Set names for columns (slices)
 void mgl_data_set_id(HMDT d, const char *id)
@@ -73,22 +72,18 @@ void mgl_data_create(HMDT d, int nx,int ny,int nz)
 /// Transpose the x<->y dimensions of the data
 void mgl_data_transpose(HMDT d, const char *dim)	{	d->Transpose(dim);	}
 /// Normalize the data to range [v1,v2]
-void mgl_data_norm(HMDT d, float v1,float v2,bool sym,int dim)
+void mgl_data_norm(HMDT d, float v1,float v2,int sym,int dim)
 {	d->Norm(v1,v2,sym,dim);	}
 /// Normalize the data to range [v1,v2] slice by slice
-void mgl_data_norm_slice(HMDT d, float v1,float v2,char dir,bool keep_en,bool sym)
+void mgl_data_norm_slice(HMDT d, float v1,float v2,char dir,int keep_en,int sym)
 {	d->NormSl(v1,v2,dir,keep_en,sym);	}
 /// Reduce size of the data
-void mgl_data_squeeze(HMDT d, int rx,int ry,int rz,bool smooth)
+void mgl_data_squeeze(HMDT d, int rx,int ry,int rz,int smooth)
 {	d->Squeeze(rx,ry,rz,smooth);	}
 /// Get maximal value of the data
 float mgl_data_max(HMDT d)	{	return d->Maximal();	}
 /// Get minimal value of the data
 float mgl_data_min(HMDT d)	{	return d->Minimal();	}
-//// Insert a slice to the data at begin and fill it by formula \a eq
-//void mgl_data_insert(HMDT d, const char *eq)	{	d->Insert(eq);	}
-//// Remove first slice of the data
-//void mgl_data_pullout(HMDT d)	{	d->PullOut();	}
 /// Get the value in given cell of the data with border checking
 float &mgl_data_value(HMDT d, int i,int j,int k)	{	return d->a[i+d->nx*(j+d->ny*k)];	}
 /// Swap left and right part of the data in given direction (useful for fourier spectrums)
@@ -119,12 +114,12 @@ void mgl_data_set_double3(HMDT d, const double ***A,int N1,int N2,int N3)
 /// Copy the data from other mglData variable
 void mgl_data_set(HMDT d, HMDT a)	{	d->Set(*a);	}
 /// Read data from tab-separated text file with auto determining size
-bool mgl_data_read(HMDT d, const char *fname)	{	return d->Read(fname);	}
+int mgl_data_read(HMDT d, const char *fname)	{	return d->Read(fname);	}
 /// Read data from tab-separated text file with built-in sizes
-bool mgl_data_read_mat(HMDT d, const char *fname, int dim)
+int mgl_data_read_mat(HMDT d, const char *fname, int dim)
 {	return d->ReadMat(fname,dim);	}
 /// Read data from text file with specifeid size
-bool mgl_data_read_dim(HMDT d, const char *fname,int mx,int my,int mz)
+int mgl_data_read_dim(HMDT d, const char *fname,int mx,int my,int mz)
 {	return d->Read(fname,mx,my,mz);	}
 /// Save whole data array (for ns=-1) or only ns-th slice to text file
 void mgl_data_save(HMDT d, const char *fname,int ns)
@@ -146,21 +141,21 @@ void mgl_data_set_matrix(HMDT dat, gsl_matrix *m)
 //		Data operations (Fortran)
 //-----------------------------------------------------------------------------
 /// Multiplicate the data by other one for each element
-void mgl_data_mul_dat_(long *d, long *b){	_D_(d) *= _D_(b);	}
+void mgl_data_mul_dat_(long *d, long *b){	_DM_(d) *= _D_(b);	}
 /// Divide the data by other one for each element
-void mgl_data_div_dat_(long *d, long *b) {	_D_(d) /= _D_(b);	}
+void mgl_data_div_dat_(long *d, long *b) {	_DM_(d) /= _D_(b);	}
 /// Add the other data
-void mgl_data_add_dat_(long *d, long *b) {	_D_(d) += _D_(b);	}
+void mgl_data_add_dat_(long *d, long *b) {	_DM_(d) += _D_(b);	}
 /// Substract the other data
-void mgl_data_sub_dat_(long *d, long *b) {	_D_(d) -= _D_(b);	}
+void mgl_data_sub_dat_(long *d, long *b) {	_DM_(d) -= _D_(b);	}
 /// Multiplicate each element by the number
-void mgl_data_mul_num_(long *d, float *b) {	_D_(d) *= *b;	}
+void mgl_data_mul_num_(long *d, float *b) {	_DM_(d) *= *b;	}
 /// Divide each element by the number
-void mgl_data_div_num_(long *d, float *b) {	_D_(d) /= *b;	}
+void mgl_data_div_num_(long *d, float *b) {	_DM_(d) /= *b;	}
 /// Add the number
-void mgl_data_add_num_(long *d, float *b) {	_D_(d) += *b;	}
+void mgl_data_add_num_(long *d, float *b) {	_DM_(d) += *b;	}
 /// Substract the number
-void mgl_data_sub_num_(long *d, float *b) {	_D_(d) -= *b;	}
+void mgl_data_sub_num_(long *d, float *b) {	_DM_(d) -= *b;	}
 //-----------------------------------------------------------------------------
 /// Rearrange data dimensions
 void mgl_data_rearrange_(long *d, int *mx, int *my, int *mz)
@@ -225,10 +220,6 @@ void mgl_data_squeeze_(long *d, int *rx,int *ry,int *rz,int *smooth)
 float mgl_data_max_(long *d)	{	return _DT_->Maximal();	}
 /// Get minimal value of the data
 float mgl_data_min_(long *d)	{	return _DT_->Minimal();	}
-//// Insert a slice to the data at begin and fill it by formula \a eq
-//void mgl_data_insert(long *d, const char *eq)	{	d->Insert(eq);	}
-//// Remove first slice of the data
-//void mgl_data_pullout(long *d)	{	d->PullOut();	}
 /// Get the value in given cell of the data with border checking
 //float mgl_data_value_(long *d, int *i,int *j,int *k)	{	return d->a[*i+d->nx*(*j+d->ny**k)];	}
 /// Swap left and right part of the data in given direction (useful for fourier spectrums)
@@ -279,7 +270,7 @@ int mgl_data_read_(long *d, const char *fname,int l)
 	int r = _DT_->Read(s);	delete []s;			return r;
 }
 /// Read data from tab-separated text file with buit-in sizes
-int mgl_data_read_(long *d, const char *fname,int *dim,int l)
+int mgl_data_read_mat_(long *d, const char *fname,int *dim,int l)
 {
 	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = _DT_->Read(s,*dim);	delete []s;			return r;
@@ -427,5 +418,16 @@ long mgl_data_min_dir_(long *d, const char *dir,int l)
 	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	long r = long(new mglData(_DT_->Min(s)));	delete []s;
 	return r;
+}
+//-----------------------------------------------------------------------------
+/// Set array values from the string
+void mgl_data_set_values(HMDT d, const char *val, int nx, int ny, int nz)
+{
+	d->Set(val,nx,ny,nz);
+}
+void mgl_data_set_values_(long *d, const char *val, int *nx, int *ny, int *nz, int l)
+{
+	char *s=new char[l+1];	memcpy(s,val,l);	s[l]=0;
+	_DT_->Set(s,*nx,*ny,*nz);	delete []s;
 }
 //-----------------------------------------------------------------------------

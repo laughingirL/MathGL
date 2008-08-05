@@ -14,10 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdarg.h>
-#include <string.h>
 #include <wchar.h>
 #include "mgl/mgl_eval.h"
 #include "mgl/mgl.h"
@@ -52,7 +49,7 @@ mglColorID mglColorIds[] = {{'k', mglColor(0,0,0)},
 	{'u', mglColor(0.5,0,1)},	{'U', mglColor(0.25,0,0.5)},
 	{'q', mglColor(1,0.5,0)},	{'Q', mglColor(0.5,0.25,0)},
 	{'p', mglColor(1,0,0.5)},	{'P', mglColor(0.5,0,0.25)},
-	{0, mglColor(0,0,0)}	// the last one MUST have id=0
+	{' ', mglColor(-1,-1,-1)},	{0, mglColor(0,0,0)}	// the last one MUST have id=0
 };
 //-----------------------------------------------------------------------------
 void mglGraph::RecalcBorder()
@@ -128,8 +125,8 @@ void mglGraph::Axis(mglPoint m1, mglPoint m2, mglPoint org)
 	if(m1.y>m2.y)	{	Min.y=m2.y;	Max.y = m1.y;	}
 	if(m1.z<m2.z)	{	Min.z=m1.z;	Max.z = m2.z;	}
 	if(m1.z>m2.z)	{	Min.z=m2.z;	Max.z = m1.z;	}
-	if(!isnan(org.x) || !isnan(org.y) || !isnan(org.z))	Org = org;
-	Cmin = Min.z;	Cmax = Max.z;	OrgT = mglPoint(NAN,NAN,NAN);
+	Cmin = Min.z;	Cmax = Max.z;	Org = org;
+	//OrgT = mglPoint(NAN,NAN,NAN);	// Let user set it up manually !
 	if(AutoOrg)
 	{
 		if(Org.x<Min.x && !isnan(Org.x))	Org.x = Min.x;
@@ -232,10 +229,11 @@ void mglGraph::SetScheme(const char *s)
 	NumCol = 0;
 	for(i=0;i<NUM_COLOR;i++)	cmap[i] = NC;
 	cmap[0] = mglColor(0,0,0);	cmap[1] = mglColor(1,1,1);
-	OnCoord = false;
+	OnCoord = false;	SmoothColorbar = true;
 	for(i=0;i<strlen(s);i++)
 	{
 		if(s[i]=='d')	OnCoord = true;
+		if(s[i]=='|')	SmoothColorbar = false;
 		else if(s[i]==':')	break;
 		else if(strchr(col,s[i]))
 		{
@@ -285,14 +283,14 @@ mglColor mglGraph::GetC(float z, bool scale)
 	register long n = NumCol-1;
 	if(scale)	z = GetA(z);
 	z = (z+1.f)/2.f;
-//	if(NumCol>0)
-//	{
+	if(SmoothColorbar)
+	{
 		z *= n;
 		long i = long(z);		z -= i;
 		if(i<n)	c = cmap[i]*(1.f-z)+cmap[i+1]*z;
 		else	c = cmap[n];
-//	}
-//	else	c.Set(z,z,z);
+	}
+	else	c = cmap[z<1 ? long(NumCol*z):NumCol-1];
 	return c;
 }
 //-----------------------------------------------------------------------------
@@ -321,7 +319,7 @@ mglColor mglGraph::GetC2(float x,float y)
 	return c;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::CRange(mglData &a,bool add)
+void mglGraph::CRange(const mglData &a,bool add)
 {
 	long n = a.nx*a.ny*a.nz;
 	register long i;
@@ -334,7 +332,7 @@ void mglGraph::CRange(mglData &a,bool add)
 	if(Cmin==Cmax)	Cmax += 1;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::XRange(mglData &a,bool add)
+void mglGraph::XRange(const mglData &a,bool add)
 {
 	long n = a.nx*a.ny*a.nz;
 	register long i;
@@ -349,7 +347,7 @@ void mglGraph::XRange(mglData &a,bool add)
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::YRange(mglData &a,bool add)
+void mglGraph::YRange(const mglData &a,bool add)
 {
 	long n = a.nx*a.ny*a.nz;
 	register long i;
@@ -364,7 +362,7 @@ void mglGraph::YRange(mglData &a,bool add)
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ZRange(mglData &a,bool add)
+void mglGraph::ZRange(const mglData &a,bool add)
 {
 	long n = a.nx*a.ny*a.nz;
 	register long i;
@@ -381,7 +379,6 @@ void mglGraph::ZRange(mglData &a,bool add)
 //-----------------------------------------------------------------------------
 char mglGraph::SelectPen(const char *p)
 {
-	const char *PalNames = "Hbgrcmyhlnqeup";	// default pallette
 	mglColor c = NC;
 	int w=1;
 	char st='-',mk=0;
@@ -422,8 +419,8 @@ char mglGraph::SelectPen(const char *p)
 		}
 	}
 	else
-	{	last_style[0] = PalNames[(CurrPal+1)%14];	last_style[1] = 0;	}
-	Pen(c,st,BaseLineWidth*w);
+	{	last_style[0] = PalNames[(CurrPal+1)%NumPal];	last_style[1] = 0;	}
+	Pen(c, st, BaseLineWidth*w);
 	return mk;
 }
 //-----------------------------------------------------------------------------
@@ -449,7 +446,7 @@ void mglGraph::Printf(mglPoint p,const char *str,...)
 	Puts(p,text,FontDef);
 }
 //-----------------------------------------------------------------------------
-float GetX(mglData &x, int i, int j, int k)
+float GetX(const mglData &x, int i, int j, int k)
 {
 	k = k<x.nz ? k : 0;
 	if(x.ny>j && x.nx>i && x.ny>1)	return x.v(i,j,k);
@@ -457,7 +454,7 @@ float GetX(mglData &x, int i, int j, int k)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-float GetY(mglData &y, int i, int j, int k)
+float GetY(const mglData &y, int i, int j, int k)
 {
 	k = k<y.nz ? k : 0;
 	if(y.ny>j && y.nx>i && y.ny>1)	return y.v(i,j,k);
@@ -465,7 +462,7 @@ float GetY(mglData &y, int i, int j, int k)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-float GetZ(mglData &z, int i, int j, int k)
+float GetZ(const mglData &z, int i, int j, int k)
 {
 	k = k<z.nz ? k : 0;
 	if(z.ny>j && z.nx>i && z.ny>1)	return z.v(i,j,k);
@@ -501,15 +498,36 @@ void mglGraph::ClearEq()
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
+void mglGraph::SetPalette(const char *colors)
+{
+	if(!colors || !colors[0])	return;	// do nothing if empty
+	memset(Pal,0,100*sizeof(mglColor));
+	memset(PalNames,0,101*sizeof(char));
+	int i,n = strlen(colors);
+	n = n<100? n:100;
+	for(i=0;i<n;i++)
+	{
+		PalNames[i] = colors[i];
+		Pal[i] = mglColor(colors[i]);
+	}
+	CurrPal = 0;	NumPal = n;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::SetTicks(char dir, float d, int ns, float org)
+{
+	if(dir=='x')	{	dx = d;	NSx = ns;	OrgT.x = org;	}
+	if(dir=='y')	{	dy = d;	NSy = ns;	OrgT.y = org;	}
+	if(dir=='z')	{	dz = d;	NSz = ns;	OrgT.z = org;	}
+}
+//-----------------------------------------------------------------------------
 void mglGraph::DefaultPlotParam()
 {
 	Cut = true;				OnCoord=false;
-	dx = dy = dz = -5;		NSx = NSy = NSz = 0;
+	SetTicks('x');	SetTicks('y');	SetTicks('z');
 	fx = fy = fz = fc = 0;	Cmin = -1;	Cmax = 1;
 	BarWidth = 0.7;			fit_res[0] = 0;
 	MarkSize = 0.02;		ArrowSize = 0.03;
 	AlphaDef = 0.5;			Transparent = true;
-	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1));
 	Org = mglPoint(NAN, NAN, NAN);
 	FontSize = 5;			BaseLineWidth = 1;
 	strcpy(FontDef,"rC");	AxialDir = 'y';
@@ -527,22 +545,16 @@ void mglGraph::DefaultPlotParam()
 	xtt=ytt=ztt=ctt=0;		FactorPos = 1.15;
 	AutoOrg = true;			CurFrameId = 0;
 	CirclePnts = 40;		FitPnts = 100;
-	AutoPlotFactor = true;	PlotFactor = AutoPlotFactor ? 1.55f :2.f;
+	AutoPlotFactor = true;
+	PlotFactor = AutoPlotFactor ? 1.55f :2.f;
+	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1));
 
-	memset(Pal,0,100*sizeof(mglColor));
-	Pal[0] = mglColor('H');		Pal[1] = mglColor('b');
-	Pal[2] = mglColor('g');		Pal[3] = mglColor('r');
-	Pal[4] = mglColor('c');		Pal[5] = mglColor('m');
-	Pal[6] = mglColor('y');		Pal[7] = mglColor('h');
-	Pal[8] = mglColor('l');		Pal[9] = mglColor('n');
-	Pal[10] = mglColor('q');	Pal[11] = mglColor('e');
-	Pal[12] = mglColor('u');	Pal[13] = mglColor('p');
-	CurrPal = 0;	NumPal = 14;PlotId = "frame";
-	SetScheme("BbcyrR");		SelectPen("k-1");
-	InPlot(0,1,0,1);			Clf();
+	PlotId = "frame";		SetPalette("Hbgrcmyhlnqeup");
+	SetScheme("BbcyrR");	SelectPen("k-1");
+	InPlot(0,1,0,1);		Clf();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SimplePlot(mglData &a, int type, const char *stl)
+void mglGraph::SimplePlot(const mglData &a, int type, const char *stl)
 {
 	if(a.nx<2)	{	SetWarn(mglWarnLow);	return;	}
 	if(a.ny<2)	switch(type)
@@ -617,8 +629,7 @@ bool same_chain(long f,long i,long *nn)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::string_curve(long f,long n,float *pp,long *nn,const wchar_t *text,
-				float size, int pos)
+void mglGraph::string_curve(long f,long n,float *pp,long *nn,const wchar_t *text, float size, int pos)
 {
 	wchar_t L[2]=L"a";
 	mglPoint p1,n1,p2;
@@ -747,8 +758,6 @@ int mglGraph::NewFrame(int ){	return 0;	}
 void mglGraph::EndFrame()	{	Finish();	}
 void mglGraph::Fog(float d, float dz)	{	FogDist=d;	FogDz = dz;	}
 //-----------------------------------------------------------------------------
-float Norm(mglPoint p)	{	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);	}
-//-----------------------------------------------------------------------------
 void mglGraph::Light(int n,mglPoint p, char c, float bright, bool infty)
 {	Light(n,p,mglColor(c),bright,infty);	}
 //-----------------------------------------------------------------------------
@@ -777,6 +786,7 @@ void mglGraph::SetWarn(int code, const char *who)
 	WarnCode = code;
 	if(Message && code>0 && code<mglWarnEnd)
 		sprintf(Message,mglWarn[code-1],who);
+	else if(Message)	Message[0]=0;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::SetFont(mglFont *f)
@@ -829,7 +839,7 @@ void mglGraph::Text(mglPoint p,const wchar_t *text,const char *font,float size,c
 	RotatedText = rt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Text(mglData &y,const char *str,const char *font,float size,float zVal)
+void mglGraph::Text(const mglData &y,const char *str,const char *font,float size,float zVal)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -838,7 +848,7 @@ void mglGraph::Text(mglData &y,const char *str,const char *font,float size,float
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Text(mglData &x,mglData &y,const char *str,const char *font,float size,float zVal)
+void mglGraph::Text(const mglData &x,const mglData &y,const char *str,const char *font,float size,float zVal)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -847,7 +857,7 @@ void mglGraph::Text(mglData &x,mglData &y,const char *str,const char *font,float
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Text(mglData &x,mglData &y,mglData &z,const char *str,const char *font,float size)
+void mglGraph::Text(const mglData &x,const mglData &y,const mglData &z,const char *str,const char *font,float size)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -856,7 +866,7 @@ void mglGraph::Text(mglData &x,mglData &y,mglData &z,const char *str,const char 
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::TextMark(mglData &x, mglData &y, mglData &z, mglData &r, const char *str, const char *fnt)
+void mglGraph::TextMark(const mglData &x, const mglData &y, const mglData &z, const mglData &r, const char *str, const char *fnt)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -865,7 +875,7 @@ void mglGraph::TextMark(mglData &x, mglData &y, mglData &z, mglData &r, const ch
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::TextMark(mglData &x, mglData &y, mglData &r, const char *str, const char *fnt, float zVal)
+void mglGraph::TextMark(const mglData &x, const mglData &y, const mglData &r, const char *str, const char *fnt, float zVal)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -874,7 +884,7 @@ void mglGraph::TextMark(mglData &x, mglData &y, mglData &r, const char *str, con
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::TextMark(mglData &y, mglData &r, const char *str, const char *fnt, float zVal)
+void mglGraph::TextMark(const mglData &y, const mglData &r, const char *str, const char *fnt, float zVal)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -883,7 +893,7 @@ void mglGraph::TextMark(mglData &y, mglData &r, const char *str, const char *fnt
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::TextMark(mglData &y, const char *str, const char *fnt, float zVal)
+void mglGraph::TextMark(const mglData &y, const char *str, const char *fnt, float zVal)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];

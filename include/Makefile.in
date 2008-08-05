@@ -36,7 +36,8 @@ subdir = include
 DIST_COMMON = $(am__nobase_include_HEADERS_DIST) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/config/autotroll.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -44,9 +45,10 @@ CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
 am__nobase_include_HEADERS_DIST = mgl/mgl_fltk.h mgl/mgl_glut.h \
-	mgl/mgl_ab.h mgl/mgl_data.h mgl/mgl_eval.h mgl/mgl_gl.h \
-	mgl/mgl.h mgl/mgl_parse.h mgl/mgl_c.h mgl/mgl_eps.h \
-	mgl/mgl_f.h mgl/mgl_font.h mgl/mgl_idtf.h mgl/mgl_zb.h
+	mgl/mgl_wx.h mgl/mgl_qt.h mgl/mgl_ab.h mgl/mgl_data.h \
+	mgl/mgl_eval.h mgl/mgl_gl.h mgl/mgl.h mgl/mgl_parse.h \
+	mgl/mgl_c.h mgl/mgl_eps.h mgl/mgl_f.h mgl/mgl_font.h \
+	mgl/mgl_idtf.h mgl/mgl_zb.h
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -61,7 +63,9 @@ CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
+AM_CXXFLAGS = @AM_CXXFLAGS@
 AR = @AR@
+AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -78,6 +82,7 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
@@ -93,7 +98,9 @@ GLUT_FLAGS = @GLUT_FLAGS@
 GLUT_LIBS = @GLUT_LIBS@
 GL_LIBS = @GL_LIBS@
 GREP = @GREP@
+GSL_FLAGS = @GSL_FLAGS@
 GSL_LIBS = @GSL_LIBS@
+HAVE_SWIG = @HAVE_SWIG@
 HDF5_FLAGS = @HDF5_FLAGS@
 HDF5_LIBS = @HDF5_LIBS@
 INCLTDL = @INCLTDL@
@@ -116,7 +123,9 @@ MGL_AGE = @MGL_AGE@
 MGL_CURRENT = @MGL_CURRENT@
 MGL_REVISION = @MGL_REVISION@
 MKDIR_P = @MKDIR_P@
+MOC = @MOC@
 NMEDIT = @NMEDIT@
+OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -126,14 +135,37 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PNG_LIBS = @PNG_LIBS@
+PYTHON = @PYTHON@
+PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
+PYTHON_HEADERS = @PYTHON_HEADERS@
+PYTHON_PLATFORM = @PYTHON_PLATFORM@
+PYTHON_PREFIX = @PYTHON_PREFIX@
+PYTHON_VERSION = @PYTHON_VERSION@
+QMAKE = @QMAKE@
+QT_CFLAGS = @QT_CFLAGS@
+QT_CPPFLAGS = @QT_CPPFLAGS@
+QT_CXXFLAGS = @QT_CXXFLAGS@
+QT_DEFINES = @QT_DEFINES@
+QT_INCPATH = @QT_INCPATH@
+QT_LDFLAGS = @QT_LDFLAGS@
+QT_LFLAGS = @QT_LFLAGS@
+QT_LIBS = @QT_LIBS@
+QT_PATH = @QT_PATH@
+QT_VERSION = @QT_VERSION@
+QT_VERSION_MAJOR = @QT_VERSION_MAJOR@
 RANLIB = @RANLIB@
+RCC = @RCC@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 TIFF_FLAGS = @TIFF_FLAGS@
 TIFF_LIBS = @TIFF_LIBS@
+TMPDIR = @TMPDIR@
+UIC = @UIC@
 VERSION = @VERSION@
+WX_FLAGS = @WX_FLAGS@
+WX_LIBS = @WX_LIBS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -175,9 +207,13 @@ mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
+pkgpyexecdir = @pkgpyexecdir@
+pkgpythondir = @pkgpythondir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+pyexecdir = @pyexecdir@
+pythondir = @pythondir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -188,7 +224,9 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 @USE_FLTK_TRUE@FLTK_INC = mgl/mgl_fltk.h
 @USE_GLUT_TRUE@GLUT_INC = mgl/mgl_glut.h
-nobase_include_HEADERS = $(FLTK_INC) $(GLUT_INC) \
+@USE_WX_TRUE@WX_INC = mgl/mgl_wx.h
+@USE_QT_TRUE@QT_INC = mgl/mgl_qt.h
+nobase_include_HEADERS = $(FLTK_INC) $(GLUT_INC) $(WX_INC) $(QT_INC) \
 mgl/mgl_ab.h  mgl/mgl_data.h  mgl/mgl_eval.h  mgl/mgl_gl.h    mgl/mgl.h       mgl/mgl_parse.h \
 mgl/mgl_c.h   mgl/mgl_eps.h   mgl/mgl_f.h     mgl/mgl_font.h  mgl/mgl_idtf.h  mgl/mgl_zb.h
 
@@ -424,7 +462,6 @@ uninstall-am: uninstall-local uninstall-nobase_includeHEADERS
 	maintainer-clean-generic mostlyclean mostlyclean-generic \
 	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-local uninstall-nobase_includeHEADERS
-
 
 install-data-local:
 	mkdir -p $(mgldest)

@@ -15,17 +15,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 //-----------------------------------------------------------------------------
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdarg.h>
 #include <wchar.h>
-#include "mgl/mgl_gl.h"
-#include "mgl/mgl_c.h"
-#include "mgl/mgl_f.h"
 #ifdef WIN32
 #define swprintf    _snwprintf
 #endif
+
+#include "mgl/mgl_gl.h"
+#include "mgl/mgl_c.h"
+#include "mgl/mgl_f.h"
 //-----------------------------------------------------------------------------
 /// Create mglGraph object in OpenGL mode.
 HMGL mgl_create_graph_gl()
@@ -254,26 +251,26 @@ void mglGraphGL::quad_plot_a(float *p0,float *p1,float *p2,float *p3,
 	register long k;
 	long n = NumCol-1;
 	mglColor c;
-	
+
 	glBegin(GL_QUADS);
 	s = a0;
 	t = alpha*(alpha>0 ? (s+1.f)*(s+1.f) : (1.f-s)*(s-1.f));
 	s = n*(s+1.f)/2.f;	k = long(s);	s -= k;
 	if(k<n)	c = cmap[k]*(1.f-s) + cmap[k+1]*s;	else	c = cmap[n];
 	glColor4f(c.r,c.g,c.b,t);	glVertex3f(p0[0],p0[1],p0[2]);
-	
+
 	s = a1;
 	t = alpha*(alpha>0 ? (s+1.f)*(s+1.f) : (1.f-s)*(s-1.f));
 	s = n*(s+1.f)/2.f;	k = long(s);	s -= k;
 	if(k<n)	c = cmap[k]*(1.f-s) + cmap[k+1]*s;	else	c = cmap[n];
 	glColor4f(c.r,c.g,c.b,t);	glVertex3f(p1[0],p1[1],p1[2]);
-	
+
 	s = a3;
 	t = alpha*(alpha>0 ? (s+1.f)*(s+1.f) : (1.f-s)*(s-1.f));
 	s = n*(s+1.f)/2.f;	k = long(s);	s -= k;
 	if(k<n)	c = cmap[k]*(1.f-s) + cmap[k+1]*s;	else	c = cmap[n];
 	glColor4f(c.r,c.g,c.b,t);	glVertex3f(p3[0],p3[1],p3[2]);
-	
+
 	s = a2;
 	t = alpha*(alpha>0 ? (s+1.f)*(s+1.f) : (1.f-s)*(s-1.f));
 	s = n*(s+1.f)/2.f;	k = long(s);	s -= k;
@@ -304,7 +301,6 @@ void mglGraphGL::line_plot(float *p1,float *p2,float *c1,float *c2,bool all)
 void mglGraphGL::mark_plot(float *pp, char type)
 {
 	register float x=pp[0],y=pp[1],z=pp[2], s=MarkSize*175*font_factor;	// 175 = 0.35*500
-	long j;
 	if(!ScalePoint(x,y,z))	return;
 	Pen(NC,'-',BaseLineWidth);
 	glColor3f(CDef[0],CDef[1],CDef[2]);

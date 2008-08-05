@@ -15,9 +15,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include <png.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include "mgl/mgl_data.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
@@ -139,7 +136,7 @@ void mglData::Import(const char *fname,const char *scheme,float v1,float v2)
 	fclose(fp);
 }
 //-----------------------------------------------------------------------------
-void mglData::Export(const char *fname,const char *scheme,float v1,float v2,int ns)
+void mglData::Export(const char *fname,const char *scheme,float v1,float v2,int ns) const
 {
 	register long i,j,i0,k;
 

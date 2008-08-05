@@ -14,7 +14,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <string.h>
 #include "mgl/mgl_f.h"
 #include "mgl/mgl.h"
 #include "mgl/mgl_ab.h"
@@ -42,6 +41,13 @@ void mgl_delete_data_(long *dat)
 //-----------------------------------------------------------------------------
 //		Setup mglGraph
 //-----------------------------------------------------------------------------
+/// Set color in mglGraph::Pal array at index \a n.
+void mgl_set_palette_(long *gr, const char *colors, int l)
+{
+	char *s=new char[l+1];	memcpy(s,colors,l);	s[l]=0;
+	if(gr)	_GR_->SetPalette(s);
+	delete []s;
+}
 /// Set color in mglGraph::Pal array at index \a n.
 void mgl_set_pal_color_(long *gr, int *n, float *r, float *g, float *b)
 {	if(gr && *n<100)	_GR_->Pal[*n] = mglColor(*r,*g,*b);	}
@@ -110,7 +116,7 @@ void mgl_set_font_(long *gr, char *name, char *path, int l,int n)
 void mgl_copy_font_(long *gr, long *gr_from)
 {	_GR_->GetFont()->Copy(((mglGraph *)(*gr_from))->GetFont());	}
 /// Restore font data
-void mgl_restore_font(long *gr)
+void mgl_restore_font_(long *gr)
 {	_GR_->GetFont()->Restore();	}
 //-----------------------------------------------------------------------------
 //		Export to file
@@ -190,7 +196,7 @@ void mgl_rotate_(long *gr, float *TetX,float *TetZ,float *TetY)
 /// Rotate a further plotting around vector {x,y,z}.
 void mgl_rotate_vector_(long *gr, float *Tet,float *x,float *y,float *z)
 {	_GR_->RotateN(*Tet,*x,*y,*z);	}
-void mgl_perspective(long *gr, float val)
+void mgl_perspective_(long *gr, float val)
 {	_GR_->Perspective(val);	}
 //-----------------------------------------------------------------------------
 //		Axis functions
@@ -276,7 +282,7 @@ void mgl_ball_rgb_(long *gr, float *x, float *y, float *z, float *r, float *g, f
 void mgl_ball_str_(long *gr, float *x, float *y, float *z, const char *col,int)
 {	_GR_->Ball(mglPoint(*x,*y,*z),*col);	}
 /// Draws the line between points with style \a sch.
-void mgl_line_(long *gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, 
+void mgl_line_(long *gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2,
 				const char *pen,int *n,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
@@ -309,6 +315,13 @@ void mgl_puts_(long *gr, float *x, float *y, float *z,const char *text,int l)
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	_GR_->Puts(mglPoint(*x,*y,*z),s);	delete []s;
 }
+/// Print string \a str in position \a p along direction \a d with font size \a size.
+void mgl_puts_dir_(long *gr, float *x, float *y, float *z, float *dx, float *dy, float *dz, const char *text, float *size, int l)
+{
+	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
+	_GR_->Puts(mglPoint(*x,*y,*z), mglPoint(*dx,*dy,*dz), s, 't', *size);
+	delete []s;
+}
 /// Print unrotated string \a str in position \a p with font size \a size.
 void mgl_text_(long *gr, float *x, float *y, float *z,const char *text,int l)
 {
@@ -316,7 +329,7 @@ void mgl_text_(long *gr, float *x, float *y, float *z,const char *text,int l)
 	_GR_->Text(mglPoint(*x,*y,*z),s);	delete []s;
 }
 /// Print string \a str in position \a p with font size \a size.
-void mgl_puts_ext_(long *gr, float *x, float *y, float *z,const char *text, 
+void mgl_puts_ext_(long *gr, float *x, float *y, float *z,const char *text,
 					const char *font, float *size, const char *dir,int l,int n,int)
 {
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
@@ -358,16 +371,16 @@ void mgl_add_legend_(long *gr, const char *text,const char *style,int l,int n)
 void mgl_clear_legend_(long *gr)
 {	if(gr)	_GR_->ClearLegend();	}
 /// Draw legend of accumulated strings at position (x, y) by \a font with \a size
-void mgl_legend_xy_(long *gr, float *x, float *y, const char *font, float *size,int l)
+void mgl_legend_xy_(long *gr, float *x, float *y, const char *font, float *size, float *llen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,font,l);	s[l]=0;
-	if(gr)	_GR_->Legend(*x, *y, s, *size);		delete []s;
+	if(gr)	_GR_->Legend(*x, *y, s, *size,*llen);		delete []s;
 }
 /// Draw legend of accumulated strings by \a font with \a size
-void mgl_legend_(long *gr, int *where, const char *font, float *size,int l)
+void mgl_legend_(long *gr, int *where, const char *font, float *size, float *llen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,font,l);	s[l]=0;
-	if(gr)	_GR_->Legend(*where, s, *size);	delete []s;
+	if(gr)	_GR_->Legend(*where, s, *size,*llen);	delete []s;
 }
 //-----------------------------------------------------------------------------
 const unsigned char *mgl_get_rgb_(long *graph)
@@ -393,13 +406,13 @@ int mgl_get_height_(long *graph)
 //-----------------------------------------------------------------------------
 float mgl_data_get_value_(long *d, int *i, int *j, int *k)
 {	return	_DT_->a[*i+_DT_->nx*(*j+*k*_DT_->ny)];	}
-void mgl_data_set_value_(long *d, int *i, int *j, int *k, float *v)
+void mgl_data_set_value_(long *d, float *v, int *i, int *j, int *k)
 {	_DT_->a[*i+_DT_->nx*(*j+*k*_DT_->ny)] = *v;	}
 //-----------------------------------------------------------------------------
 /// Zoom in/out a part of picture
 void mgl_set_zoom_(long *gr, float *x1, float *y1, float *x2, float *y2)
 {	_GR_->Zoom(*x1,*y1,*x2,*y2);	}
-void mgl_set_plotfactor(long *gr, float *val)
+void mgl_set_plotfactor_(long *gr, float *val)
 {	_GR_->PlotFactor = *val;	}
 void mgl_set_axis_3d_(long *gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2)
 {	_GR_->Axis(mglPoint(*x1,*y1,*z1),mglPoint(*x2,*y2,*z2));	}
@@ -409,82 +422,4 @@ void mgl_set_origin_(long *gr, float *x0, float *y0, float *z0)
 {	_GR_->Org = mglPoint(*x0,*y0,*z0);	}
 void mgl_set_tick_origin_(long *gr, float *x0, float *y0, float *z0)
 {	_GR_->OrgT = mglPoint(*x0,*y0,*z0);	}
-//-----------------------------------------------------------------------------
-float mgl_fit_1_(long* gr, long* fit, long* y, const char *eq, const char *var, float *ini, bool *print, int l, int n)
-{
-	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
-	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	_GR_->Fit(_D_(fit), _D_(y), s, d, ini, *print);
-	delete []s;		delete []d;
-}
-float mgl_fit_2_(long* gr, long* fit, long* z, const char *eq, const char *var, float *ini, bool *print, int l, int n)
-{
-	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
-	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	_GR_->Fit2(_D_(fit), _D_(z), s, d, ini, *print);
-	delete []s;		delete []d;
-}
-float mgl_fit_3_(long* gr, long* fit, long* a, const char *eq, const char *var, float *ini, bool *print, int l, int n)
-{
-	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
-	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	_GR_->Fit3(_D_(fit), _D_(a), s, d, ini, *print);
-	delete []s;		delete []d;
-}
-float mgl_fit_xy_(long* gr, long* fit, long* x, long* y, const char *eq, const char *var, float *ini, bool *print, int l, int n)
-{
-	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
-	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	_GR_->Fit(_D_(fit), _D_(x), _D_(y), s, d, ini, *print);
-	delete []s;		delete []d;
-}
-float mgl_fit_xyz_(long* gr, long* fit, long* x, long* y, long* z, const char *eq, const char *var, float *ini, bool *print, int l, int n)
-{
-	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
-	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	_GR_->Fit(_D_(fit), _D_(x), _D_(y), _D_(z), s, d, ini, *print);
-	delete []s;		delete []d;
-}
-float mgl_fit_xyza_(long* gr, long* fit, long* x, long* y, long* z, long* a, const char *eq, const char *var, float *ini, bool *print, int l, int n)
-{
-	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
-	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	_GR_->Fit(_D_(fit), _D_(x), _D_(y), _D_(z), _D_(a), s, d, ini, *print);
-	delete []s;		delete []d;
-}
-float mgl_fit_ys_(long* gr, long* fit, long* y, long* ss, const char *eq, const char *var, float *ini, bool *print, int l, int n)
-{
-	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
-	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	_GR_->FitS(_D_(fit), _D_(y), _D_(ss), s, d, ini, *print);
-	delete []s;		delete []d;
-}
-float mgl_fit_xys_(long* gr, long* fit, long* x, long* y, long* ss, const char *eq, const char *var, float *ini, bool *print, int l, int n)
-{
-	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
-	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	_GR_->FitS(_D_(fit), _D_(x), _D_(y), _D_(ss), s, d, ini, *print);
-	delete []s;		delete []d;
-}
-float mgl_fit_xyzs_(long* gr, long* fit, long* x, long* y, long* z, long* ss, const char *eq, const char *var, float *ini, bool *print, int l, int n)
-{
-	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
-	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	_GR_->FitS(_D_(fit), _D_(x), _D_(y), _D_(z), _D_(ss), s, d, ini, *print);
-	delete []s;		delete []d;
-}
-float mgl_fit_xyzas_(long* gr, long* fit, long* x, long* y, long* z, long* a, long* ss, const char *eq, const char *var, float *ini, bool *print, int l, int n)
-{
-	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
-	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	_GR_->FitS(_D_(fit), _D_(x), _D_(y), _D_(z), _D_(a), _D_(ss), s, d, ini, *print);
-	delete []s;		delete []d;
-}
-void mgl_puts_fit_(long* gr, float *x, float *y, float *z, const char *prefix, const char *font, float *size, int l, int n)
-{
-	char *s=new char[l+1];	memcpy(s,prefix,l);	s[l]=0;
-	char *d=new char[n+1];	memcpy(d,font,n);	d[n]=0;
-	_GR_->PutsFit(mglPoint(*x,*y,*z), s, d, *size);
-	delete []s;		delete []d;
-}
 //-----------------------------------------------------------------------------

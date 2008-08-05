@@ -1,30 +1,32 @@
 					MathGL (for v.1.7.1)
 
 1. Hankel transform
-2. Update documentation + add example of Fit()
-3. Ternary axis -- keep z-axis as normal one ???
-4. MGL commands 'fplot', 'fsurf' -- curve|surface specified by formula.
-5. MGL command 'ftext x y {z} 'fname' {i} ['stl' size]' for printing text from file.
-6. Change ticks drawing if RotatedText = false;
-7. Bug with mgl_example (installed ???)
-8. Check WriteBMP
-
-13. Add FLTK & GLUT to Fortran ??? How pass arguments ???
-14. Converter MGL->C (+ interface for MGL->Fortran by change HMDT->int, HMGL->int, "->');
-15. Save primitives for plotting (like EPS && OpenGL) ???
-16. Save curves (contour lines and flow threads) in file ???
+2. Ternary axis -- keep z-axis as normal one ???
+3. Change ticks labels drawing if RotatedText = false;
+4. mglGraph::Ellipse()
+6. Title() -- automatic text at top ?!
+7. WX window
+8. Information about mouse click position in StatusBar.
+9. Use Hershey as built-in font
+10. Add FLTK, QT & GLUT to Fortran ??? How pass arguments ???
+11. Converter MGL->C (+ interface for MGL->Fortran by change HMDT->int, HMGL->int, "->');
+12. Option '#' draw bounding box near the text ???
+13. Zip-compression of EPS + text by UTF codes?!?
+14. Example of Surf + '|'
+15. Example of Chart + ' '
+16. Update web-site
+17. Update documentation (English)
+18. Update documentation (Russian)
+20. Info that Text() is obsolute in v.2.*
+21. Example of Barh()
 
 					MathGL (for v.1.7.?) ???
 
-1. Interface for Python
-2. Interface for Java
-3. Interface for Gambas
-4. Interface for Scilab
-5. Interface for Octave ???
-6. GTK window ???
-7. Qt window ???
-8. Export to fortran (tool mgl2for) ???
-9. Try to evaluate to number if it contain only "+-/*^0123456789." in Parse() ??? + string concatenation ???
+1. GTK window ???
+2. Interface for Gambas
+3. Interface for Scilab
+4. Try to evaluate to number if it contain only "+-/*^0123456789." in Parse() ??? + string concatenation ???
+5. Save primitives for plotting (like EPS && OpenGL) ???
 
 					FAQ
 
@@ -34,4 +36,3 @@
 4. About unrotated text
 5. Extend colors in line style (pdf + MGL html)
 6. Add "Howto" section in web site.
-7. Question about mglGraphXX::Ball (overloaded function have the same name)

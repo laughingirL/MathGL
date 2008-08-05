@@ -1,35 +1,45 @@
 INCLUDES        = -I$(top_builddir)/include -I$(top_builddir)
 INCLUDES        += @INCLTDL@
 
+check_PROGRAMS =
 bin_PROGRAMS = mgl_example
-check_PROGRAMS = test
+mgl_example_SOURCES = full_test.cpp
+mgl_example_LDADD = $(top_builddir)/mgl/libmgl.la
 
 if USE_FLTK
 bin_PROGRAMS += mgl_fltk_example
+mgl_fltk_example_SOURCES = fltk_example.cpp
+mgl_fltk_example_LDADD = $(top_builddir)/widgets/libmgl-fltk.la
+
+check_PROGRAMS += test
+test_SOURCES = main.cpp
+test_LDADD = $(top_builddir)/widgets/libmgl-fltk.la
 endif
+
 if USE_GLUT
 bin_PROGRAMS += mgl_glut_example
-endif
-mgl_example_SOURCES = full_test.cpp
-mgl_example_LDADD = $(top_builddir)/mgl/libmgl.la
-mgl_example_CFLAGS = 
-mgl_example_CPPFLAGS = $(mgl_example_CFLAGS)
-
-if USE_FLTK
-mgl_fltk_example_SOURCES = fltk_example.cpp
-mgl_fltk_example_LDADD = $(top_builddir)/mgl/libmgl-fltk.la
-mgl_fltk_example_CFLAGS = 
-mgl_fltk_example_CPPFLAGS = $(mgl_fltk_example_CFLAGS)
-endif
-
-if USE_GLUT
 mgl_glut_example_SOURCES = glut_example.cpp
-mgl_glut_example_LDADD = $(top_builddir)/mgl/libmgl-glut.la
-mgl_glut_example_CFLAGS = 
-mgl_glut_example_CPPFLAGS = $(mgl_glut_example_CFLAGS)
+mgl_glut_example_LDADD = $(top_builddir)/widgets/libmgl-glut.la
 endif
 
-test_SOURCES = main.cpp
-test_LDADD = $(top_builddir)/mgl/libmgl-fltk.la
-test_CFLAGS = 
-test_CPPFLAGS = $(test_CFLAGS)
+if USE_WX
+bin_PROGRAMS += mgl_wx_example
+mgl_wx_example_LDADD = $(WX_LIBS) $(top_builddir)/widgets/libmgl-wx.la
+mgl_wx_example_CXXFLAGS = $(WX_FLAGS) $(AM_CXXFLAGS)
+mgl_wx_example_SOURCES = wx_example.cpp
+endif
+
+if USE_QT
+include $(top_srcdir)/config/autotroll.mk
+ACLOCAL_AMFLAGS = -I $(top_srcdir)/config/
+
+bin_PROGRAMS += mgl_qt_example
+mgl_qt_example_SOURCES = $(top_builddir)/include/mgl/mgl_qt.moc.cpp $(top_builddir)/include/mgl/mgl_qt.h qt_example.cpp
+mgl_qt_example_LDADD = $(QT_LIBS) $(top_builddir)/widgets/libmgl-qt.la
+mgl_qt_example_LDFLAGS = $(QT_LDFLAGS)
+mgl_qt_example_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS)
+mgl_qt_example_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
+
+BUILT_SOURCES = $(top_builddir)/include/mgl/mgl_qt.moc.cpp
+CLEANFILES = $(BUILT_SOURCES)
+endif

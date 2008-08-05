@@ -18,7 +18,7 @@
 #ifndef _MGL_H_
 #define _MGL_H_
 
-#define MGL_VERSION	6.2
+#define MGL_VERSION	7.1
 
 #include "mgl/mgl_data.h"
 #include "mgl/mgl_font.h"
@@ -75,20 +75,20 @@ struct mglColor
 	/// Set color from symbolic id
 	void Set(char p, float bright=1);
 	/// Copy color from other one
-	bool operator==(mglColor c)
+	bool operator==(const mglColor &c)
 	{	return (r==c.r && g==c.g && b==c.b);	};
 };
-inline mglColor operator+(mglColor a, mglColor b)
+inline mglColor operator+(const mglColor &a, const mglColor &b)
 {	return mglColor(a.r+b.r, a.g+b.g, a.b+b.b);	};
-inline mglColor operator-(mglColor a, mglColor b)
+inline mglColor operator-(const mglColor &a, const mglColor &b)
 {	return mglColor(a.r-b.r, a.g-b.g, a.b-b.b);	};
-inline mglColor operator*(mglColor a, float b)
+inline mglColor operator*(const mglColor &a, float b)
 {	return mglColor(a.r*b, a.g*b, a.b*b);	};
-inline mglColor operator*(float b, mglColor a)
+inline mglColor operator*(float b, const mglColor &a)
 {	return mglColor(a.r*b, a.g*b, a.b*b);	};
-inline mglColor operator/(mglColor a, float b)
+inline mglColor operator/(const mglColor &a, float b)
 {	return mglColor(a.r/b, a.g/b, a.b/b);	};
-inline mglColor operator!(mglColor a)
+inline mglColor operator!(const mglColor &a)
 {	return mglColor(1-a.r, 1-a.g, 1-a.b);	}
 //-----------------------------------------------------------------------------
 #define NC	mglColor(-1,-1,-1)
@@ -110,33 +110,36 @@ struct mglPoint
 	float x,y,z;
  	mglPoint(float X=0,float Y=0,float Z=0){x=X;y=Y;z=Z;};
 };
-inline mglPoint operator+(mglPoint a, mglPoint b)
+inline mglPoint operator+(const mglPoint &a, const mglPoint &b)
 {	return mglPoint(a.x+b.x, a.y+b.y, a.z+b.z);	};
-inline mglPoint operator-(mglPoint a, mglPoint b)
+inline mglPoint operator-(const mglPoint &a, const mglPoint &b)
 {	return mglPoint(a.x-b.x, a.y-b.y, a.z-b.z);	};
-inline mglPoint operator*(float b, mglPoint a)
+inline mglPoint operator*(float b, const mglPoint &a)
 {	return mglPoint(a.x*b, a.y*b, a.z*b);	};
-inline mglPoint operator*(mglPoint a, float b)
+inline mglPoint operator*(const mglPoint &a, float b)
 {	return mglPoint(a.x*b, a.y*b, a.z*b);	};
-inline mglPoint operator/(mglPoint a, float b)
+inline mglPoint operator/(const mglPoint &a, float b)
 {	return mglPoint(a.x/b, a.y/b, a.z/b);	};
-inline float operator*(mglPoint a, mglPoint b)
+inline float operator*(const mglPoint &a, const mglPoint &b)
 {	return a.x*b.x+a.y*b.y+a.z*b.z;	};
-inline mglPoint operator&(mglPoint a, mglPoint b)
+inline mglPoint operator&(const mglPoint &a, const mglPoint &b)
 {	return a - b*((a*b)/(b*b));	};
-inline mglPoint operator|(mglPoint a, mglPoint b)
+inline mglPoint operator|(const mglPoint &a, const mglPoint &b)
 {	return b*((a*b)/(b*b));	};
-inline mglPoint operator^(mglPoint a, mglPoint b)
+inline mglPoint operator^(const mglPoint &a, const mglPoint &b)
 {	return mglPoint(a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x);	};
-inline mglPoint operator!(mglPoint a)
+inline mglPoint operator!(const mglPoint &a)
 {	return (a.x==0 && a.y==0)?mglPoint(1,0,0):mglPoint(-a.y/hypot(a.x,a.y), a.x/hypot(a.x,a.y), 0);	};
-inline bool operator==(mglPoint a, mglPoint b)
+inline bool operator==(const mglPoint &a, const mglPoint &b)
 {	return !memcmp(&a, &b, sizeof(mglPoint));	}
-float Norm(mglPoint p);
+inline bool operator!=(const mglPoint &a, const mglPoint &b)
+{	return memcmp(&a, &b, sizeof(mglPoint));	}
+inline float Norm(const mglPoint &p)
+{	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);	};
 //-----------------------------------------------------------------------------
-float GetX(mglData &x, int i, int j, int k);
-float GetY(mglData &y, int i, int j, int k);
-float GetZ(mglData &z, int i, int j, int k);
+float GetX(const mglData &x, int i, int j, int k);
+float GetY(const mglData &y, int i, int j, int k);
+float GetZ(const mglData &z, int i, int j, int k);
 typedef int (*mgl_save) (const char *fname, int w, int h, unsigned char **);
 //-----------------------------------------------------------------------------
 /// Class contains base functionality for creating different mathematical plots
@@ -250,10 +253,14 @@ public:
 	virtual void Light(int n,mglPoint p, mglColor c, float bright=0.5, bool infty=true); //=0
 	/// Set ambient light brightness
 	virtual void Ambient(float bright=0.5);
+	/// Set palette
+	void SetPalette(const char *colors);
 	/// Set colormap scheme for surfaces (usualy called internaly)
 	void SetScheme(const char *sch);
 	/// Set the parameter of line (usualy called internaly)
 	char SelectPen(const char *pen);
+	/// Set the ticks parameters
+	void SetTicks(char dir, float d=-5, int ns=0, float org=NAN);
 	/// Set warning code ant fill Message
 	void SetWarn(int code, const char *who="");
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -309,13 +316,13 @@ public:
 	void Box(const char *col, bool ticks=true);
 
 	/// Safety set values of mglGraph::Cmin and mglGraph::Cmax as minimal and maximal values of data a
-	void CRange(mglData &a, bool add = false);
+	void CRange(const mglData &a, bool add = false);
 	/// Safety set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
-	void XRange(mglData &a, bool add = false);
+	void XRange(const mglData &a, bool add = false);
 	/// Safety set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
-	void YRange(mglData &a, bool add = false);
+	void YRange(const mglData &a, bool add = false);
 	/// Safety set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
-	void ZRange(mglData &a, bool add = false);
+	void ZRange(const mglData &a, bool add = false);
 
 	/// Safetly set the values of mglGraph::Cmin and mglGraph::Cmax
 	void inline CAxis(float C1,float C2)	{	Cmin=C1;	Cmax=C2;	};
@@ -368,7 +375,7 @@ public:
 	/// Draws the line between points with style \a stl.
 	void Cone(mglPoint p1, mglPoint p2, float r1, float r2=-1, const char *stl="B", bool edge=false);
 	/// draw mark with different type at position {x,y,z} (no scaling)
-	virtual void Mark(mglPoint p,char mark='.');
+	void Mark(mglPoint p,char mark='.');
 	/// Draw a set of triangles (or lines if trig==NULL) for glyph from point (0,0). Normally this function is used internally.
 	virtual void Glyph(float x,float y, float f,int nt, const short *trig, int nl, const short *line)=0;
 	//@}
@@ -377,35 +384,35 @@ public:
 	  * These functions fit data to formula (find formula parameters for best fitting the data points). This functions do not draw obtained curve itself.*/
 	//@{
 	/// Fit data along x-direction for each data row. Data 'fit' will contain values for found formula.
-	float Fit(mglData &fit, mglData &y, const char *eq, const char *var, float *ini, bool print=false);
-	float Fit(mglData &fit, mglData &y, const char *eq, const char *var, mglData &ini, bool print=false);
+	float Fit(mglData &fit, const mglData &y, const char *eq, const char *var, float *ini=0, bool print=false);
+	float Fit(mglData &fit, const mglData &y, const char *eq, const char *var, mglData &ini, bool print=false);
 	/// Fit data along x-,y-directions for each data slice. Data 'fit' will contain values for found formula.
-	float Fit2(mglData &fit, mglData &z, const char *eq, const char *var, float *ini, bool print=false);
-	float Fit2(mglData &fit, mglData &z, const char *eq, const char *var, mglData &ini, bool print=false);
+	float Fit2(mglData &fit, const mglData &z, const char *eq, const char *var, float *ini=0, bool print=false);
+	float Fit2(mglData &fit, const mglData &z, const char *eq, const char *var, mglData &ini, bool print=false);
 	/// Fit data along all directions. Data 'fit' will contain values for found formula.
-	float Fit3(mglData &fit, mglData &a, const char *eq, const char *var, float *ini, bool print=false);
-	float Fit3(mglData &fit, mglData &a, const char *eq, const char *var, mglData &ini, bool print=false);
+	float Fit3(mglData &fit, const mglData &a, const char *eq, const char *var, float *ini=0, bool print=false);
+	float Fit3(mglData &fit, const mglData &a, const char *eq, const char *var, mglData &ini, bool print=false);
 	/// Fit data along x-direction for each data row. Data 'fit' will contain values for found formula.
-	float Fit(mglData &fit, mglData &x, mglData &y, const char *eq, const char *var, float *ini, bool print=false);
-	float Fit(mglData &fit, mglData &x, mglData &y, const char *eq, const char *var, mglData &ini, bool print=false);
+	float Fit(mglData &fit, const mglData &x, const mglData &y, const char *eq, const char *var, float *ini=0, bool print=false);
+	float Fit(mglData &fit, const mglData &x, const mglData &y, const char *eq, const char *var, mglData &ini, bool print=false);
 	/// Fit data along x-,y-directions for each data slice. Data 'fit' will contain values for found formula.
-	float Fit(mglData &fit, mglData &x, mglData &y, mglData &z, const char *eq, const char *var, float *ini, bool print=false);
-	float Fit(mglData &fit, mglData &x, mglData &y, mglData &z, const char *eq, const char *var, mglData &ini, bool print=false);
+	float Fit(mglData &fit, const mglData &x, const mglData &y, const mglData &z, const char *eq, const char *var, float *ini=0, bool print=false);
+	float Fit(mglData &fit, const mglData &x, const mglData &y, const mglData &z, const char *eq, const char *var, mglData &ini, bool print=false);
 	/// Fit data along all directions. Data 'fit' will contain values for found formula.
-	float Fit(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &a, const char *eq, const char *var, float *ini, bool print=false);
-	float Fit(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &a, const char *eq, const char *var, mglData &ini, bool print=false);
+	float Fit(mglData &fit, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *eq, const char *var, float *ini=0, bool print=false);
+	float Fit(mglData &fit, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *eq, const char *var, mglData &ini, bool print=false);
 	/// Fit data with dispersion s along x-direction for each data row. Data 'fit' will contain values for found formula.
-	float FitS(mglData &fit, mglData &y, mglData &s, const char *eq, const char *var, float *ini, bool print=false);
-	float FitS(mglData &fit, mglData &y, mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
+	float FitS(mglData &fit, const mglData &y, const mglData &s, const char *eq, const char *var, float *ini=0, bool print=false);
+	float FitS(mglData &fit, const mglData &y, const mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
 	/// Fit data with dispersion s along x-direction for each data row. Data 'fit' will contain values for found formula.
-	float FitS(mglData &fit, mglData &x, mglData &y, mglData &s, const char *eq, const char *var, float *ini, bool print=false);
-	float FitS(mglData &fit, mglData &x, mglData &y, mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
+	float FitS(mglData &fit, const mglData &x, const mglData &y, const mglData &s, const char *eq, const char *var, float *ini=0, bool print=false);
+	float FitS(mglData &fit, const mglData &x, const mglData &y, const mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
 	/// Fit data with dispersion s along x-,y-directions for each data slice. Data 'fit' will contain values for found formula.
-	float FitS(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &s, const char *eq, const char *var, float *ini, bool print=false);
-	float FitS(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
+	float FitS(mglData &fit, const mglData &x, const mglData &y, const mglData &z, const mglData &s, const char *eq, const char *var, float *ini=0, bool print=false);
+	float FitS(mglData &fit, const mglData &x, const mglData &y, const mglData &z, const mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
 	/// Fit data with dispersion s along all directions. Data 'fit' will contain values for found formula.
-	float FitS(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &a, mglData &s, const char *eq, const char *var, float *ini, bool print=false);
-	float FitS(mglData &fit, mglData &x, mglData &y, mglData &z, mglData &a, mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
+	float FitS(mglData &fit, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &s, const char *eq, const char *var, float *ini=0, bool print=false);
+	float FitS(mglData &fit, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
 	/// Print fitted last formula (with coefficients)
 	void PutsFit(mglPoint p, const char *prefix=0, const char *font=0, float size=-1);
 	//@}
@@ -443,17 +450,17 @@ public:
 	/// Print formated output in position \a p.
 	void Printf(mglPoint p,const char *arg,...);
 	/// Print string \a str along curve with font size \a size.
-	void Text(mglData &y,const char *text,const char *font=0,float size=-1,float zVal=NAN);
+	void Text(const mglData &y,const char *text,const char *font=0,float size=-1,float zVal=NAN);
 	/// Print string \a str along parametrical curve with font size \a size.
-	void Text(mglData &x,mglData &y,const char *text,const char *font=0,float size=-1,float zVal=NAN);
+	void Text(const mglData &x,const mglData &y,const char *text,const char *font=0,float size=-1,float zVal=NAN);
 	/// Print string \a str along curve in 3D with font size \a size.
-	void Text(mglData &x,mglData &y,mglData &z,const char *text,const char *font=0,float size=-1);
+	void Text(const mglData &x,const mglData &y,const mglData &z,const char *text,const char *font=0,float size=-1);
 	/// Print string \a str along curve with font size \a size.
-	void Text(mglData &y,const wchar_t *text,const char *font=0,float size=-1,float zVal=NAN);
+	void Text(const mglData &y,const wchar_t *text,const char *font=0,float size=-1,float zVal=NAN);
 	/// Print string \a str along parametrical curve with font size \a size.
-	void Text(mglData &x,mglData &y,const wchar_t *text,const char *font=0,float size=-1,float zVal=NAN);
+	void Text(const mglData &x,const mglData &y,const wchar_t *text,const char *font=0,float size=-1,float zVal=NAN);
 	/// Print string \a str along curve in 3D with font size \a size.
-	void Text(mglData &x,mglData &y,mglData &z,const wchar_t *text,const char *font=0,float size=-1);
+	void Text(const mglData &x,const mglData &y,const mglData &z,const wchar_t *text,const char *font=0,float size=-1);
 
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -467,138 +474,148 @@ public:
 	/// Clear saved legend string
 	void ClearLegend();
 	/// Draw legend of accumulated strings at position (x, y) by \a font with \a size
-	void Legend(float x, float y, const char *font="rL", float size=-0.8);
+	void Legend(float x, float y, const char *font="rL", float size=-0.8, float llen=0.1);
 	/// Draw legend of accumulated strings by \a font with \a size
-	void Legend(int where=0x3, const char *font="rL", float size=-0.8);
+	void Legend(int where=0x3, const char *font="rL", float size=-0.8, float llen=0.1);
 	/// Draw legend strings \a text at position (x, y) by \a font with \a size
-	void Legend(int n, wchar_t **text, char **style, float x, float y, const char *font="rL", float size=-0.8);
+	void Legend(int n, wchar_t **text, char **style, float x, float y, const char *font="rL", float size=-0.8, float llen=0.1);
 	/// Draw legend of accumulated strings by \a font with \a size
-	void Legend(int n, wchar_t **text, char **style, int where=0x3, const char *font="rL", float size=-0.8);
+	void Legend(int n, wchar_t **text, char **style, int where=0x3, const char *font="rL", float size=-0.8, float llen=0.1);
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ������� ~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Plot data depending on its dimensions and \a type parameter
-	void SimplePlot(mglData &a, int type=0, const char *stl=0);
+	void SimplePlot(const mglData &a, int type=0, const char *stl=0);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name 1D plotting functions
 	  * These functions perform plotting of 1D data. 1D means that data
 	  * depended from only 1 parameter like parametric \b curve {x(i),y(i),z(i)},
 	  * i=1...n. There are 5 generally different types of data representations:
 	  * simple line plot (\c Plot), line plot with filling under it (\c Area),
-	  * stairs plot (\c Step), bar plot (\c Bars) and vertical lines (\c Stem).
+	  * stairs plot (\c Step), bar plot (\c Bars,\c Barh) and vertical lines (\c Stem).
 	  * Each type of plotting has similar interface. There are 3D version and
 	  * two 2D versions. One of last requires only one array.
 	  * The parameters of line and marks are specified by the string argument
 	  * (see mglGraph::SelectPen). If the string parameter is NULL
 	  * then solid line with color from palette is used. */
 	//@{
+	/// Draw curve for formula with x in range [Min.x, Max.x]
+	void Plot(const char *eqY, const char *pen=0, float zVal=NAN, int n=100);
+	/// Draw curve for formulas parametrically depended on t in range [0,1]
+	void Plot(const char *eqX, const char *eqY, const char *eqZ=0, const char *pen=0, int n=100);
+
 	/// Draw line plot for points in arrays \a x, \a y, \a z.
-	void Plot(mglData &x, mglData &y, mglData &z, const char *pen=0);
+	void Plot(const mglData &x, const mglData &y, const mglData &z, const char *pen=0);
 	/// Draw line plot for points in arrays \a x, \a y.
-	void Plot(mglData &x, mglData &y, const char *pen=0,float zVal=NAN);
+	void Plot(const mglData &x, const mglData &y, const char *pen=0,float zVal=NAN);
 	/// Draw line plot for points in arrays \a y.
-	void Plot(mglData &y, const char *pen=0,float zVal=NAN);
+	void Plot(const mglData &y, const char *pen=0,float zVal=NAN);
 	/// Draw line plot for points in arrays \a a(0,:),\a a(1,:).
-	void Plot2(mglData &a, const char *pen=0,float zVal=NAN);
+	void Plot2(const mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-	void Plot3(mglData &a, const char *pen=0);
+	void Plot3(const mglData &a, const char *pen=0);
 
 	/// Draw area plot for points in arrays \a x, \a y, \a z.
-	void Area(mglData &x, mglData &y, mglData &z, const char *pen=0);
+	void Area(const mglData &x, const mglData &y, const mglData &z, const char *pen=0);
 	/// Draw area plot for points in arrays \a x, \a y.
-	void Area(mglData &x, mglData &y, const char *pen=0,bool sum=false,float zVal=NAN);
+	void Area(const mglData &x, const mglData &y, const char *pen=0,bool sum=false,float zVal=NAN);
 	/// Draw area plot for points in arrays \a y.
-	void Area(mglData &y, const char *pen=0,bool sum=false,float zVal=NAN);
+	void Area(const mglData &y, const char *pen=0,bool sum=false,float zVal=NAN);
 	/// Draw area plot for points in arrays \a a(0,:),\a a(1,:).
-	void Area2(mglData &a, const char *pen=0,float zVal=NAN);
+	void Area2(const mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw area plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-	void Area3(mglData &a, const char *pen=0);
+	void Area3(const mglData &a, const char *pen=0);
 
 	/// Draw vertical lines from points in arrays \a x, \a y, \a z to mglGraph::Org.
-	void Stem(mglData &x, mglData &y, mglData &z, const char *pen=0);
+	void Stem(const mglData &x, const mglData &y, const mglData &z, const char *pen=0);
 	/// Draw vertical lines from points in arrays \a x, \a y to mglGraph::Org.
-	void Stem(mglData &x, mglData &y, const char *pen=0,float zVal=NAN);
+	void Stem(const mglData &x, const mglData &y, const char *pen=0,float zVal=NAN);
 	/// Draw vertical lines from points in arrays \a y to mglGraph::Org.
-	void Stem(mglData &y, const char *pen=0,float zVal=NAN);
+	void Stem(const mglData &y, const char *pen=0,float zVal=NAN);
 	/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-	void Stem2(mglData &a, const char *pen=0,float zVal=NAN);
+	void Stem2(const mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-	void Stem3(mglData &a, const char *pen=0);
+	void Stem3(const mglData &a, const char *pen=0);
 
 	/// Draw stairs for points in arrays \a x, \a y, \a z.
-	void Step(mglData &x, mglData &y, mglData &z, const char *pen=0);
+	void Step(const mglData &x, const mglData &y, const mglData &z, const char *pen=0);
 	/// Draw stairs for points in arrays \a x, \a y.
-	void Step(mglData &x, mglData &y, const char *pen=0,float zVal=NAN);
+	void Step(const mglData &x, const mglData &y, const char *pen=0,float zVal=NAN);
 	/// Draw line plot for points in arrays \a y.
-	void Step(mglData &y, const char *pen=0,float zVal=NAN);
+	void Step(const mglData &y, const char *pen=0,float zVal=NAN);
 	/// Draw stairs for points in arrays \a a(0,:),\a a(1,:).
-	void Step2(mglData &a, const char *pen=0,float zVal=NAN);
+	void Step2(const mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw stairs for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-	void Step3(mglData &a, const char *pen=0);
+	void Step3(const mglData &a, const char *pen=0);
 
 	/// Draw vertical bars from points in arrays \a x, \a y, \a z to mglGraph::Org.
-	void Bars(mglData &x, mglData &y, mglData &z, const char *pen=0, bool above=false);
+	void Bars(const mglData &x, const mglData &y, const mglData &z, const char *pen=0, bool above=false);
 	/// Draw vertical bars from points in arrays \a x, \a y to mglGraph::Org.
-	void Bars(mglData &x, mglData &y, const char *pen=0,float zVal=NAN, bool above=false);
+	void Bars(const mglData &x, const mglData &y, const char *pen=0,float zVal=NAN, bool above=false);
 	/// Draw vertical bars from points in arrays \a y to mglGraph::Org.
-	void Bars(mglData &y, const char *pen=0,float zVal=NAN, bool above=false);
+	void Bars(const mglData &y, const char *pen=0,float zVal=NAN, bool above=false);
 	/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-	void Bars2(mglData &a, const char *pen=0,float zVal=NAN, bool above=false);
+	void Bars2(const mglData &a, const char *pen=0,float zVal=NAN, bool above=false);
 	/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-	void Bars3(mglData &a, const char *pen=0, bool above=false);
+	void Bars3(const mglData &a, const char *pen=0, bool above=false);
+
+	/// Draw vertical bars from points in arrays \a x, \a y to mglGraph::Org.
+	void Barh(const mglData &y, const mglData &v, const char *pen=0,float zVal=NAN, bool above=false);
+	/// Draw vertical bars from points in arrays \a y to mglGraph::Org.
+	void Barh(const mglData &v, const char *pen=0,float zVal=NAN, bool above=false);
 
 	/// Draw surface of curve {\a r,\a z} rotatation around Z axis
-	void Torus(mglData &r, mglData &z, const char *pen=0);
+	void Torus(const mglData &r, const mglData &z, const char *pen=0);
 	/// Draw surface of curve rotatation around Z axis
-	void Torus(mglData &z, const char *pen=0);
+	void Torus(const mglData &z, const char *pen=0);
 	/// Draw surface of curve {\a a(0,:),\a a(1,:)} rotatation around Z axis for
-	void Torus2(mglData &a, const char *pen=0);
+	void Torus2(const mglData &a, const char *pen=0);
 
 	/// Draw chart for data a
-	void Chart(mglData &a, const char *col=0);
+	void Chart(const mglData &a, const char *col=0);
 
 	/// Draw error boxes ey for data y
-	void Error(mglData &y, mglData &ey, const char *pen=0,float zVal=NAN);
+	void Error(const mglData &y, const mglData &ey, const char *pen=0,float zVal=NAN);
 	/// Draw error boxes ey for data {x,y}
-	void Error(mglData &x, mglData &y, mglData &ey, const char *pen=0,float zVal=NAN);
+	void Error(const mglData &x, const mglData &y, const mglData &ey, const char *pen=0,float zVal=NAN);
 	/// Draw error boxes {ex,ey} for data {x,y}
-	void Error(mglData &x, mglData &y, mglData &ex, mglData &ey, const char *pen=0,float zVal=NAN);
+	void Error(const mglData &x, const mglData &y, const mglData &ex, const mglData &ey, const char *pen=0,float zVal=NAN);
 
 	/// Draw marks with diffenernt sizes \a r for points in arrays \a x, \a y, \a z.
-	void Mark(mglData &x, mglData &y, mglData &z, mglData &r, const char *pen=0);
+	void Mark(const mglData &x, const mglData &y, const mglData &z, const mglData &r, const char *pen=0);
 	/// Draw marks with diffenernt sizes \a r for points in arrays \a x, \a y.
-	void Mark(mglData &x, mglData &y, mglData &r, const char *pen=0,float zVal=NAN);
+	void Mark(const mglData &x, const mglData &y, const mglData &r, const char *pen=0,float zVal=NAN);
 	/// Draw marks with diffenernt sizes \a r for points in arrays \a y.
-	void Mark(mglData &y, mglData &r, const char *pen=0,float zVal=NAN);
+	void Mark(const mglData &y, const mglData &r, const char *pen=0,float zVal=NAN);
 
 	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a x, \a y, \a z.
-	void TextMark(mglData &x, mglData &y, mglData &z, mglData &r, const char *text, const char *fnt=0);
+	void TextMark(const mglData &x, const mglData &y, const mglData &z, const mglData &r, const char *text, const char *fnt=0);
 	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a x, \a y.
-	void TextMark(mglData &x, mglData &y, mglData &r, const char *text, const char *fnt=0,float zVal=NAN);
+	void TextMark(const mglData &x, const mglData &y, const mglData &r, const char *text, const char *fnt=0,float zVal=NAN);
 	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a y.
-	void TextMark(mglData &y, mglData &r, const char *text, const char *fnt=0,float zVal=NAN);
+	void TextMark(const mglData &y, const mglData &r, const char *text, const char *fnt=0,float zVal=NAN);
 	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a x, \a y, \a z.
-	void TextMark(mglData &x, mglData &y, mglData &z, mglData &r, const wchar_t *text, const char *fnt=0);
+	void TextMark(const mglData &x, const mglData &y, const mglData &z, const mglData &r, const wchar_t *text, const char *fnt=0);
 	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a x, \a y.
-	void TextMark(mglData &x, mglData &y, mglData &r, const wchar_t *text, const char *fnt=0,float zVal=NAN);
+	void TextMark(const mglData &x, const mglData &y, const mglData &r, const wchar_t *text, const char *fnt=0,float zVal=NAN);
 	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a y.
-	void TextMark(mglData &y, mglData &r, const wchar_t *text, const char *fnt=0,float zVal=NAN);
+	void TextMark(const mglData &y, const mglData &r, const wchar_t *text, const char *fnt=0,float zVal=NAN);
 	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a y.
-	void TextMark(mglData &y, const char *text, const char *fnt=0,float zVal=NAN);
+	void TextMark(const mglData &y, const char *text, const char *fnt=0,float zVal=NAN);
 	/// Draw textual marks with diffenernt sizes \a r for points in arrays \a y.
-	void TextMark(mglData &y, const wchar_t *text, const char *fnt=0,float zVal=NAN);
+	void TextMark(const mglData &y, const wchar_t *text, const char *fnt=0,float zVal=NAN);
 
 	/// Draw tube with radial sizes \a r for points in arrays \a x, \a y, \a z.
-	void Tube(mglData &x, mglData &y, mglData &z, mglData &r, const char *pen=0);
+	void Tube(const mglData &x, const mglData &y, const mglData &z, const mglData &r, const char *pen=0);
 	/// Draw tube with radial sizes \a r for points in arrays \a x, \a y.
-	void Tube(mglData &x, mglData &y, mglData &r, const char *pen=0,float zVal=NAN);
+	void Tube(const mglData &x, const mglData &y, const mglData &r, const char *pen=0,float zVal=NAN);
 	/// Draw tube with radial sizes \a r for points in arrays \a y.
-	void Tube(mglData &y, mglData &r, const char *pen=0,float zVal=NAN);
+	void Tube(const mglData &y, const mglData &r, const char *pen=0,float zVal=NAN);
 	/// Draw tube with constant radial sizes \a r for points in arrays \a x, \a y, \a z.
-	void Tube(mglData &x, mglData &y, mglData &z, float r, const char *pen=0);
+	void Tube(const mglData &x, const mglData &y, const mglData &z, float r, const char *pen=0);
 	/// Draw tube with constant radial sizes \a r for points in arrays \a x, \a y.
-	void Tube(mglData &x, mglData &y, float r, const char *pen=0,float zVal=NAN);
+	void Tube(const mglData &x, const mglData &y, float r, const char *pen=0,float zVal=NAN);
 	/// Draw tube with constant radial sizes \a r for points in arrays \a y.
-	void Tube(mglData &y, float r, const char *pen=0,float zVal=NAN);
+	void Tube(const mglData &y, float r, const char *pen=0,float zVal=NAN);
 
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -618,82 +635,84 @@ public:
 	  * Parameters of colouring are specified by the string argument
 	  * (see mglGraph::SetScheme). */
 	//@{
+	/// Draw curve for formula with x,y in range [Min, Max]
+	void Surf(const char *eqZ, const char *sch=0, int n=100);
+	/// Draw curve for formulas parametrically depended on u,v in range [0,1]
+	void Surf(const char *eqX, const char *eqY, const char *eqZ, const char *sch=0, int n=100);
+
+
 	/// Draw power crust for points in arrays \a x, \a y, \a z.
-	void Crust(mglData &x, mglData &y, mglData &z, const char *sch=0,float er=0);
+	void Crust(const mglData &x, const mglData &y, const mglData &z, const char *sch=0,float er=0);
 	/// Draw power crust for points in arrays \a tr.
-	void Crust(mglData &tr, const char *sch=0,float er=0);
+	void Crust(const mglData &tr, const char *sch=0,float er=0);
 	/// Draw dots in points \a x, \a y, \a z.
-	void Dots(mglData &x, mglData &y, mglData &z, const char *sch=0);
+	void Dots(const mglData &x, const mglData &y, const mglData &z, const char *sch=0);
 	/// Draw dots in points \a tr.
-	void Dots(mglData &tr, const char *sch=0);
+	void Dots(const mglData &tr, const char *sch=0);
 	/// Draw triangle mesh for points in arrays \a x, \a y, \a z.
-	void TriPlot(mglData &nums, mglData &x, mglData &y, mglData &z, const char *sch=0);
+	void TriPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch=0);
 	/// Draw triangle mesh for points in arrays \a x, \a y.
-	void TriPlot(mglData &nums, mglData &x, mglData &y, const char *sch=0, float zVal=NAN);
+	void TriPlot(const mglData &nums, const mglData &x, const mglData &y, const char *sch=0, float zVal=NAN);
 	/// Draw grid lines for density plot of 2d data specified parametrically
-	void Grid(mglData &x, mglData &y, mglData &z, const char *stl=0,float zVal=NAN);
+	void Grid(const mglData &x, const mglData &y, const mglData &z, const char *stl=0,float zVal=NAN);
 	/// Draw grid lines for density plot of 2d data
-	void Grid(mglData &a,const char *stl=0,float zVal=NAN);
+	void Grid(const mglData &a,const char *stl=0,float zVal=NAN);
 	/// Draw mesh lines for 2d data specified parametrically
-	void Mesh(mglData &x, mglData &y, mglData &z, const char *sch=0);
+	void Mesh(const mglData &x, const mglData &y, const mglData &z, const char *sch=0);
 	/// Draw mesh lines for 2d data
-	void Mesh(mglData &z, const char *sch=0);
+	void Mesh(const mglData &z, const char *sch=0);
 	/// Draw mesh lines for 2d data specified parametrically
-	void Fall(mglData &x, mglData &y, mglData &z, const char *sch=0);
+	void Fall(const mglData &x, const mglData &y, const mglData &z, const char *sch=0);
 	/// Draw mesh lines for 2d data
-	void Fall(mglData &z, const char *sch=0);
+	void Fall(const mglData &z, const char *sch=0);
 	/// Draw belts for 2d data specified parametrically
-	void Belt(mglData &x, mglData &y, mglData &z, const char *sch=0);
+	void Belt(const mglData &x, const mglData &y, const mglData &z, const char *sch=0);
 	/// Draw belts for 2d data
-	void Belt(mglData &z, const char *sch=0);
+	void Belt(const mglData &z, const char *sch=0);
 	/// Draw surface for 2d data specified parametrically
-	void Surf(mglData &x, mglData &y, mglData &z, const char *sch=0);
+	void Surf(const mglData &x, const mglData &y, const mglData &z, const char *sch=0);
 	/// Draw surface for 2d data
-	void Surf(mglData &z, const char *sch=0);
+	void Surf(const mglData &z, const char *sch=0);
 	/// Draw density plot for surface specified parametrically
-	void Dens(mglData &x, mglData &y, mglData &z, const char *sch=0,float zVal=NAN);
+	void Dens(const mglData &x, const mglData &y, const mglData &z, const char *sch=0,float zVal=NAN);
 	/// Draw density plot for 2d data
-	void Dens(mglData &z, const char *sch=0,float zVal=NAN);
+	void Dens(const mglData &z, const char *sch=0,float zVal=NAN);
 	/// Draw density plot for spectra-gramm specified parametrically
-	void STFA(mglData &x, mglData &y, mglData &re, mglData &im, int dn, const char *sch=0,float zVal=NAN);
+	void STFA(const mglData &x, const mglData &y, const mglData &re, const mglData &im, int dn, const char *sch=0,float zVal=NAN);
 	/// Draw density plot for spectra-gramm
-	void STFA(mglData &re, mglData &im, int dn, const char *sch=0,float zVal=NAN);
+	void STFA(const mglData &re, const mglData &im, int dn, const char *sch=0,float zVal=NAN);
 	/// Draw vertical boxes for 2d data specified parametrically
-	void Boxs(mglData &x, mglData &y, mglData &z, const char *sch=0,float zVal=NAN);
+	void Boxs(const mglData &x, const mglData &y, const mglData &z, const char *sch=0,float zVal=NAN);
 	/// Draw vertical boxes for 2d data
-	void Boxs(mglData &z, const char *sch=0,float zVal=NAN);
+	void Boxs(const mglData &z, const char *sch=0,float zVal=NAN);
 	/// Draw vertical tiles for 2d data specified parametrically
-	void Tile(mglData &x, mglData &y, mglData &z, const char *sch=0);
+	void Tile(const mglData &x, const mglData &y, const mglData &z, const char *sch=0);
 	/// Draw vertical tiles for 2d data
-	void Tile(mglData &z, const char *sch=0);
-	/// Draw vertical tiles with variable size for 2d data specified parametrically
-	void Tile(mglData &x, mglData &y, mglData &z, mglData &r, const char *sch=0);
-	/// Draw vertical tiles with variable size for 2d data
-	void Tile(mglData &z, mglData &r, const char *sch=0);
+	void Tile(const mglData &z, const char *sch=0);
 	/// Draw contour lines for 2d data specified parametrically
-	void Cont(mglData &v, mglData &x, mglData &y, mglData &z, const char *sch=0, float zVal=NAN);
+	void Cont(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const char *sch=0, float zVal=NAN);
 	/// Draw contour lines for 2d data
-	void Cont(mglData &v, mglData &z, const char *sch=0,float zVal=NAN);
+	void Cont(const mglData &v, const mglData &z, const char *sch=0,float zVal=NAN);
 	/// Draw several contour lines for 2d data specified parametrically
-	void Cont(mglData &x, mglData &y, mglData &z, const char *sch=0, int Num=7, float zVal=NAN);
+	void Cont(const mglData &x, const mglData &y, const mglData &z, const char *sch=0, int Num=7, float zVal=NAN);
 	/// Draw several contour lines for 2d data
-	void Cont(mglData &z, const char *sch=0, int Num=7, float zVal=NAN);
+	void Cont(const mglData &z, const char *sch=0, int Num=7, float zVal=NAN);
 	/// Draw axial-symmetric isosurfaces for 2d data specified parametrically
-	void Axial(mglData &v, mglData &x, mglData &y, mglData &a, const char *sch=0);
+	void Axial(const mglData &v, const mglData &x, const mglData &y, const mglData &a, const char *sch=0);
 	/// Draw axial-symmetric isosurfaces for 2d data
-	void Axial(mglData &v, mglData &a, const char *sch=0);
+	void Axial(const mglData &v, const mglData &a, const char *sch=0);
 	/// Draw several axial-symmetric isosurfaces for 2d data specified parametrically
-	void Axial(mglData &x, mglData &y, mglData &a, const char *sch=0, int Num=3);
+	void Axial(const mglData &x, const mglData &y, const mglData &a, const char *sch=0, int Num=3);
 	/// Draw several axial-symmetric isosurfaces for 2d data
-	void Axial(mglData &a, const char *sch=0, int Num=3);
+	void Axial(const mglData &a, const char *sch=0, int Num=3);
 	/// Draw solid contours for 2d data specified parametrically
-	void ContF(mglData &v, mglData &x, mglData &y, mglData &z, const char *sch=0, float zVal=NAN);
+	void ContF(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const char *sch=0, float zVal=NAN);
 	/// Draw solid contours for 2d data
-	void ContF(mglData &v, mglData &z, const char *sch=0,float zVal=NAN);
+	void ContF(const mglData &v, const mglData &z, const char *sch=0,float zVal=NAN);
 	/// Draw several solid contours for 2d data specified parametrically
-	void ContF(mglData &x, mglData &y, mglData &z, const char *sch=0, int Num=7, float zVal=NAN);
+	void ContF(const mglData &x, const mglData &y, const mglData &z, const char *sch=0, int Num=7, float zVal=NAN);
 	/// Draw several solid contours for 2d data
-	void ContF(mglData &z, const char *sch=0, int Num=7, float zVal=NAN);
+	void ContF(const mglData &z, const char *sch=0, int Num=7, float zVal=NAN);
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Dual plotting functions
@@ -708,73 +727,77 @@ public:
 	//@{
 
 	/// Plot dew drops for vector field {ax,ay} parametrically depended on coordinate {x,y}
-	void Dew(mglData &x, mglData &y, mglData &ax, mglData &ay, const char *sch=0,float zVal=NAN);
+	void Dew(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0,float zVal=NAN);
 	/// Plot dew drops for vector field {ax,ay}
-	void Dew(mglData &ax, mglData &ay, const char *sch=0,float zVal=NAN);
+	void Dew(const mglData &ax, const mglData &ay, const char *sch=0,float zVal=NAN);
 	/// Draw surface specified parametrically with coloring by other matrix
-	void SurfC(mglData &x, mglData &y, mglData &z, mglData &c, const char *sch=0);
+	void SurfC(const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *sch=0);
 	/// Draw surface specified by matrix with coloring by other matrix
-	void SurfC(mglData &z, mglData &c, const char *sch=0);
+	void SurfC(const mglData &z, const mglData &c, const char *sch=0);
 	/// Draw surface specified parametrically which transparency is determined by other matrix
-	void SurfA(mglData &x, mglData &y, mglData &z, mglData &c, const char *sch=0);
+	void SurfA(const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *sch=0);
 	/// Draw surface specified by matrix which transparency is determined by other matrix
-	void SurfA(mglData &z, mglData &c, const char *sch=0);
+	void SurfA(const mglData &z, const mglData &c, const char *sch=0);
+	/// Draw vertical tiles with variable size for 2d data specified parametrically
+	void TileS(const mglData &x, const mglData &y, const mglData &z, const mglData &r, const char *sch=0);
+	/// Draw vertical tiles with variable size for 2d data
+	void TileS(const mglData &z, const mglData &r, const char *sch=0);
 	/// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length proportional to value |a|
-	void Vect(mglData &x, mglData &y, mglData &ax, mglData &ay, const char *sch=0,float zVal=NAN);
+	void Vect(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0,float zVal=NAN);
 	/// Plot vector field {ax,ay} with length proportional to value |a|
-	void Vect(mglData &ax, mglData &ay, const char *sch=0,float zVal=NAN);
+	void Vect(const mglData &ax, const mglData &ay, const char *sch=0,float zVal=NAN);
 	/// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
-	void VectC(mglData &x, mglData &y, mglData &ax, mglData &ay, const char *sch=0,float zVal=NAN);
+	void VectC(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0,float zVal=NAN);
 	/// Plot vector field {ax,ay} with color proportional to value |a|
-	void VectC(mglData &ax, mglData &ay, const char *sch=0,float zVal=NAN);
+	void VectC(const mglData &ax, const mglData &ay, const char *sch=0,float zVal=NAN);
 	/// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with length proportional to value |a|
-	void Vect(mglData &x, mglData &y, mglData &z, mglData &ax, mglData &ay, mglData &az, const char *sch=0);
+	void Vect(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
 	/// Plot 3d vector field {ax,ay,ay} with length proportional to value |a|
-	void Vect(mglData &ax, mglData &ay, mglData &az, const char *sch=0);
+	void Vect(const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
 	/// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
-	void VectC(mglData &x, mglData &y, mglData &z, mglData &ax, mglData &ay, mglData &az, const char *sch=0);
+	void VectC(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
 	/// Plot 3d vector field {ax,ay,ay} with color proportional to value |a|
-	void VectC(mglData &ax, mglData &ay, mglData &az, const char *sch=0);
+	void VectC(const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
 	/// Color map of matrix a to matrix b, both matrix parametrically depend on coordinates
-	void Map(mglData &x, mglData &y, mglData &a, mglData &b, const char *sch=0, int ks=0, bool pnts=true);
+	void Map(const mglData &x, const mglData &y, const mglData &a, const mglData &b, const char *sch=0, int ks=0, bool pnts=true);
 	/// Color map of matrix a to matrix b
-	void Map(mglData &a, mglData &b, const char *sch=0, int ks=0, bool pnts=true);
+	void Map(const mglData &a, const mglData &b, const char *sch=0, int ks=0, bool pnts=true);
 	/// Draw isosurface for 3d data \a a specified parametrically with alpha proportional to \a b
-	void Surf3A(float Val, mglData &x, mglData &y, mglData &z, mglData &a, mglData &b,
+	void Surf3A(float Val, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &b,
 				const char *stl=0);
 	/// Draw isosurface for 3d data \a a with alpha proportional to \a b
-	void Surf3A(float Val, mglData &a, mglData &b, const char *stl=0);
+	void Surf3A(float Val, const mglData &a, const mglData &b, const char *stl=0);
 	/// Draw several isosurface for 3d data \a a specified parametrically with alpha proportional to \a b
-	void Surf3A(mglData &x, mglData &y, mglData &z, mglData &a, mglData &b,
+	void Surf3A(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &b,
 				const char *stl=0, int num=3);
 	/// Draw several isosurface for 3d data \a a with alpha proportional to \a b
-	void Surf3A(mglData &a, mglData &b, const char *stl=0, int num=3);
+	void Surf3A(const mglData &a, const mglData &b, const char *stl=0, int num=3);
 	/// Draw isosurface for 3d data \a a specified parametrically with color proportional to \a b
-	void Surf3C(float Val, mglData &x, mglData &y, mglData &z, mglData &a, mglData &b,
+	void Surf3C(float Val, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &b,
 				const char *stl=0);
 	/// Draw isosurface for 3d data \a a with color proportional to \a b
-	void Surf3C(float Val, mglData &a, mglData &b, const char *stl=0);
+	void Surf3C(float Val, const mglData &a, const mglData &b, const char *stl=0);
 	/// Draw several isosurface for 3d data \a a specified parametrically with color proportional to \a b
-	void Surf3C(mglData &x, mglData &y, mglData &z, mglData &a, mglData &b,
+	void Surf3C(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &b,
 				const char *stl=0, int num=3);
 	/// Draw several isosurface for 3d data \a a with color proportional to \a b
-	void Surf3C(mglData &a, mglData &b, const char *stl=0, int num=3);
+	void Surf3C(const mglData &a, const mglData &b, const char *stl=0, int num=3);
 	/// Plot flows for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
-	void Flow(mglData &x, mglData &y, mglData &ax, mglData &ay, const char *sch=0, int num=5, bool central=true, float zVal=NAN);
+	void Flow(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0, int num=5, bool central=true, float zVal=NAN);
 	/// Plot flows for vector field {ax,ay} with color proportional to value |a|
-	void Flow(mglData &ax, mglData &ay, const char *sch=0, int num=5, bool central=true, float zVal=NAN);
+	void Flow(const mglData &ax, const mglData &ay, const char *sch=0, int num=5, bool central=true, float zVal=NAN);
 	/// Plot flows for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
-	void Flow(mglData &x, mglData &y, mglData &z, mglData &ax, mglData &ay, mglData &az, const char *sch=0, int num=3, bool central=true);
+	void Flow(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0, int num=3, bool central=true);
 	/// Plot flows for 3d vector field {ax,ay,ay} with color proportional to value |a|
-	void Flow(mglData &ax, mglData &ay, mglData &az, const char *sch=0, int num=3, bool central=true);
+	void Flow(const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0, int num=3, bool central=true);
 	/// Plot flow pipes for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
-	void Pipe(mglData &x, mglData &y, mglData &ax, mglData &ay, const char *sch=0, float r0=0.05, int num=5, bool central=true, float zVal=NAN);
+	void Pipe(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0, float r0=0.05, int num=5, bool central=true, float zVal=NAN);
 	/// Plot flow pipes for vector field {ax,ay} with color proportional to value |a|
-	void Pipe(mglData &ax, mglData &ay, const char *sch=0, float r0=0.05, int num=5, bool central=true, float zVal=NAN);
+	void Pipe(const mglData &ax, const mglData &ay, const char *sch=0, float r0=0.05, int num=5, bool central=true, float zVal=NAN);
 	/// Plot flow pipes for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
-	void Pipe(mglData &x, mglData &y, mglData &z, mglData &ax, mglData &ay, mglData &az, const char *sch=0, float r0=0.05, int num=3, bool central=true);
+	void Pipe(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0, float r0=0.05, int num=3, bool central=true);
 	/// Plot flow pipes for 3d vector field {ax,ay,ay} with color proportional to value |a|
-	void Pipe(mglData &ax, mglData &ay, mglData &az, const char *sch=0, float r0=0.05, int num=3, bool central=true);
+	void Pipe(const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0, float r0=0.05, int num=3, bool central=true);
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name 3D plotting functions
@@ -789,75 +812,75 @@ public:
 	  */
 	//@{
 	/// Draw grid lines for density plot at slice for 3d data specified parametrically
-	void Grid3(mglData &x, mglData &y, mglData &z, mglData &a, char dir, int sVal=-1, const char *stl=0);
+	void Grid3(const mglData &x, const mglData &y, const mglData &z, const mglData &a, char dir, int sVal=-1, const char *stl=0);
 	/// Draw grid lines for density plot at slice for 3d data
-	void Grid3(mglData &a, char dir, int sVal=-1, const char *stl=0);
+	void Grid3(const mglData &a, char dir, int sVal=-1, const char *stl=0);
 	/// Draw grid lines for density plot at central slices for 3d data specified parametrically
-	void GridA(mglData &x, mglData &y, mglData &z, mglData &a, const char *stl=0);
+	void GridA(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *stl=0);
 	/// Draw grid lines for density plot at central slices for 3d data
-	void GridA(mglData &a, const char *stl=0);
+	void GridA(const mglData &a, const char *stl=0);
 	/// Draw density plot at slice for 3d data specified parametrically
-	void Dens3(mglData &x, mglData &y, mglData &z, mglData &a, char dir, int sVal=-1, const char *stl=0);
+	void Dens3(const mglData &x, const mglData &y, const mglData &z, const mglData &a, char dir, int sVal=-1, const char *stl=0);
 	/// Draw density plot at slice for 3d data
-	void Dens3(mglData &a, char dir, int sVal=-1, const char *stl=0);
+	void Dens3(const mglData &a, char dir, int sVal=-1, const char *stl=0);
 	/// Draw density plot at central slices for 3d data specified parametrically
-	void DensA(mglData &x, mglData &y, mglData &z, mglData &a, const char *stl=0);
+	void DensA(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *stl=0);
 	/// Draw density plot at central slices for 3d data
-	void DensA(mglData &a, const char *stl=0);
+	void DensA(const mglData &a, const char *stl=0);
 	/// Draw isosurface for 3d data specified parametrically
-	void Surf3(float Val, mglData &x, mglData &y, mglData &z, mglData &a, const char *stl=0);
+	void Surf3(float Val, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *stl=0);
 	/// Draw isosurface for 3d data
-	void Surf3(float Val, mglData &a, const char *stl=0);
+	void Surf3(float Val, const mglData &a, const char *stl=0);
 	/// Draw several isosurfaces for 3d data specified parametrically
-	void Surf3(mglData &x, mglData &y, mglData &z, mglData &a, const char *stl=0, int num=3);
+	void Surf3(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *stl=0, int num=3);
 	/// Draw several isosurfaces for 3d beam in curvilinear coordinates
-	void Beam(mglData &tr, mglData &g1, mglData &g2, mglData &a, float r,
+	void Beam(const mglData &tr, const mglData &g1, const mglData &g2, const mglData &a, float r,
 		const char *stl=0, int flag=0, int num=3);
 	/// Draw isosurface for 3d beam in curvilinear coordinates
-	void Beam(float val,mglData &tr, mglData &g1, mglData &g2, mglData &a, float r,
+	void Beam(float val,const mglData &tr, const mglData &g1, const mglData &g2, const mglData &a, float r,
 		const char *stl=0, int flag=0);
 	/// Draw several isosurface for 3d data
-	void Surf3(mglData &a, const char *stl=0, int num=3);
+	void Surf3(const mglData &a, const char *stl=0, int num=3);
 	/// Draw contour lines at slice for 3d data specified parametrically
-	void Cont3(mglData &v, mglData &x, mglData &y, mglData &z, mglData &a,
+	void Cont3(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 				char dir, int sVal=-1, const char *sch=0);
 	/// Draw contour lines at slice for 3d data
-	void Cont3(mglData &v, mglData &a, char dir, int sVal=-1, const char *sch=0);
+	void Cont3(const mglData &v, const mglData &a, char dir, int sVal=-1, const char *sch=0);
 	/// Draw several contour lines at slice for 3d data specified parametrically
-	void Cont3(mglData &x, mglData &y, mglData &z, mglData &a,
+	void Cont3(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 				char dir, int sVal=-1, const char *sch=0, int Num=7);
 	/// Draw several contour lines at slice for 3d data
-	void Cont3(mglData &a, char dir, int sVal=-1, const char *sch=0, int Num=7);
+	void Cont3(const mglData &a, char dir, int sVal=-1, const char *sch=0, int Num=7);
 	/// Draw contour lines at central slices for 3d data specified parametrically
-	void ContA(mglData &x, mglData &y, mglData &z, mglData &a,
+	void ContA(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 				const char *sch=0, int Num=7);
 	/// Draw contour lines at central slices for 3d data
-	void ContA(mglData &a, const char *sch=0, int Num=7);
+	void ContA(const mglData &a, const char *sch=0, int Num=7);
 	/// Draw solid contours at slice for 3d data specified parametrically
-	void ContF3(mglData &v, mglData &x, mglData &y, mglData &z, mglData &a,
+	void ContF3(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 				char dir, int sVal=-1, const char *sch=0);
 	/// Draw solid contours at slice for 3d data
-	void ContF3(mglData &v, mglData &a, char dir, int sVal=-1, const char *sch=0);
+	void ContF3(const mglData &v, const mglData &a, char dir, int sVal=-1, const char *sch=0);
 	/// Draw several solid contours at slice for 3d data specified parametrically
-	void ContF3(mglData &x, mglData &y, mglData &z, mglData &a,
+	void ContF3(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 				char dir, int sVal=-1, const char *sch=0, int Num=7);
 	/// Draw several solid contours at slice for 3d data
-	void ContF3(mglData &a, char dir, int sVal=-1, const char *sch=0, int Num=7);
+	void ContF3(const mglData &a, char dir, int sVal=-1, const char *sch=0, int Num=7);
 	/// Draw solid contours at central slices for 3d data specified parametrically
-	void ContFA(mglData &x, mglData &y, mglData &z, mglData &a,
+	void ContFA(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 				const char *sch=0, int Num=7);
 	/// Draw solid contours at central slices for 3d data
-	void ContFA(mglData &a, const char *sch=0, int Num=7);
+	void ContFA(const mglData &a, const char *sch=0, int Num=7);
 	/// Draw a cloud of points for 3d data specified parametrically
-	void CloudP(mglData &x, mglData &y, mglData &z, mglData &a,
+	void CloudP(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 				const char *stl=0, float alpha=1);
 	/// Draw a cloud of points for 3d data
-	void CloudP(mglData &a, const char *stl=0, float alpha=1);
+	void CloudP(const mglData &a, const char *stl=0, float alpha=1);
 	/// Draw a semi-transparent cloud for 3d data specified parametrically
-	void CloudQ(mglData &x, mglData &y, mglData &z, mglData &a,
+	void CloudQ(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 				const char *stl=0, float alpha=1);
 	/// Draw a semi-transparent cloud for 3d data
-	void CloudQ(mglData &a, const char *stl=0, float alpha=1);
+	void CloudQ(const mglData &a, const char *stl=0, float alpha=1);
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Combined plotting functions
@@ -866,35 +889,35 @@ public:
 	  * sVal is performed. */
 	//@{
 	/// Draw density plot for data a at x = sVal
-	void DensX(mglData &a, const char *stl=0, float sVal=NAN);
+	void DensX(const mglData &a, const char *stl=0, float sVal=NAN);
 	/// Draw density plot for data a at y = sVal
-	void DensY(mglData &a, const char *stl=0, float sVal=NAN);
+	void DensY(const mglData &a, const char *stl=0, float sVal=NAN);
 	/// Draw density plot for data a at z = sVal
-	void DensZ(mglData &a, const char *stl=0, float sVal=NAN);
+	void DensZ(const mglData &a, const char *stl=0, float sVal=NAN);
 	/// Draw several contour plots for data a at x = sVal
-	void ContX(mglData &a, const char *stl=0, float sVal=NAN, int Num=7);
+	void ContX(const mglData &a, const char *stl=0, float sVal=NAN, int Num=7);
 	/// Draw several contour plots for data a at y = sVal
-	void ContY(mglData &a, const char *stl=0, float sVal=NAN, int Num=7);
+	void ContY(const mglData &a, const char *stl=0, float sVal=NAN, int Num=7);
 	/// Draw several contour plots for data a at z = sVal
-	void ContZ(mglData &a, const char *stl=0, float sVal=NAN, int Num=7);
+	void ContZ(const mglData &a, const char *stl=0, float sVal=NAN, int Num=7);
 	/// Draw contour plots for data a at x = sVal
-	void ContX(mglData &v, mglData &a, const char *stl=0, float sVal=NAN);
+	void ContX(const mglData &v, const mglData &a, const char *stl=0, float sVal=NAN);
 	/// Draw contour plots for data a at y = sVal
-	void ContY(mglData &v, mglData &a, const char *stl=0, float sVal=NAN);
+	void ContY(const mglData &v, const mglData &a, const char *stl=0, float sVal=NAN);
 	/// Draw contour plots for data a at z = sVal
-	void ContZ(mglData &v, mglData &a, const char *stl=0, float sVal=NAN);
+	void ContZ(const mglData &v, const mglData &a, const char *stl=0, float sVal=NAN);
 	/// Draw several contour plots for data a at x = sVal
-	void ContFX(mglData &a, const char *stl=0, float sVal=NAN, int Num=7);
+	void ContFX(const mglData &a, const char *stl=0, float sVal=NAN, int Num=7);
 	/// Draw several contour plots for data a at y = sVal
-	void ContFY(mglData &a, const char *stl=0, float sVal=NAN, int Num=7);
+	void ContFY(const mglData &a, const char *stl=0, float sVal=NAN, int Num=7);
 	/// Draw several contour plots for data a at z = sVal
-	void ContFZ(mglData &a, const char *stl=0, float sVal=NAN, int Num=7);
+	void ContFZ(const mglData &a, const char *stl=0, float sVal=NAN, int Num=7);
 	/// Draw contour plots for data a at x = sVal
-	void ContFX(mglData &v, mglData &a, const char *stl=0, float sVal=NAN);
+	void ContFX(const mglData &v, const mglData &a, const char *stl=0, float sVal=NAN);
 	/// Draw contour plots for data a at y = sVal
-	void ContFY(mglData &v, mglData &a, const char *stl=0, float sVal=NAN);
+	void ContFY(const mglData &v, const mglData &a, const char *stl=0, float sVal=NAN);
 	/// Draw contour plots for data a at z = sVal
-	void ContFZ(mglData &v, mglData &a, const char *stl=0, float sVal=NAN);
+	void ContFZ(const mglData &v, const mglData &a, const char *stl=0, float sVal=NAN);
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 protected:
@@ -908,10 +931,12 @@ protected:
 	float font_factor;
 	bool UseAlpha;				///< Flag that Alpha is used
 	mglColor cmap[NUM_COLOR];	///< Colors for color scheme
+	char PalNames[101];			///< IDs of colors in the palette
 	int CurrPal;				///< Current index of palette mglGraph::Pal
 	int NumCol;					///< Actual number of colors in color scheme mglGraph::cmap
 	float CloudFactor;			///< Factor of transparency in mglGraph::CloudP and mglGraph::CloudQ
 	bool ScalePuts;				///< Enable/disable point positions scaling in puts
+	bool SmoothColorbar;		///< Use color interpolation in colorbar (default is true)
 
 	int NumLeg;					///< Number of used positions in LegStr and LegStl arrays
 	wchar_t *LegStr[100];			///< String array with legend text (see mglGraph::AddLegend)
@@ -974,6 +999,8 @@ protected:
 	virtual void trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool *tt,bool wire)=0;
 	/// Plot series of unconnected lines.
 	virtual void lines_plot(long n, float *pp, float *cc, bool *tt)=0;
+	/// Draw line between points \a p1,\a p2 with color \a c1, \a c2 at edges
+	virtual void line_plot(float *p1,float *p2,float *c1,float *c2,bool all=false)=0;
 
 	/// Scale coordinates of point for faster plotting also cut off some points
 	virtual bool ScalePoint(float &x,float &y,float &z);
@@ -1022,18 +1049,18 @@ private:
 				float zdef);
 	/// make single flow thread for 2D case
 	void flow(bool simple, float zVal, float u, float v,
-				mglData &x, mglData &y, mglData &ax, mglData &ay);
+				const mglData &x, const mglData &y, const mglData &ax, const mglData &ay);
 	/// make single flow thread for 3D case
 	void flow(bool simple, float u, float v, float w,
-				mglData &x, mglData &y, mglData &z,
-				mglData &ax, mglData &ay, mglData &az);
+				const mglData &x, const mglData &y, const mglData &z,
+				const mglData &ax, const mglData &ay, const mglData &az);
 	/// make single flow tube for 2D case
 	void flowr(bool simple, float zVal, float u, float v,
-				mglData &x, mglData &y, mglData &ax, mglData &ay, float r0);
+				const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, float r0);
 	/// make single flow tube for 3D case
 	void flowr(bool simple, float u, float v, float w,
-				mglData &x, mglData &y, mglData &z,
-				mglData &ax, mglData &ay, mglData &az, float r0);
+				const mglData &x, const mglData &y, const mglData &z,
+				const mglData &ax, const mglData &ay, const mglData &az, float r0);
 	/// Put alpha valued point for Cloud like plot
 	void AVertex(float x,float y,float z, float a,float alpha);
 	/// add point to isosurface chain

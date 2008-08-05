@@ -111,6 +111,21 @@ public:
 	size_t AddColor ( const float *c );
 };
 //-----------------------------------------------------------------------------
+class u3dBall
+{
+public:
+	mglPoint center;
+	float radius;
+	size_t material;
+
+	mglGraphIDTF *Graph;
+	std::string name;
+	std::string parent;
+	void print_node ( std::ostringstream& ostr );
+	void print_shading_modifier ( std::ostringstream& ostr );
+};
+typedef std::vector<u3dBall> u3dBall_list;
+//-----------------------------------------------------------------------------
 struct u3dLine
 {
 	size_t pid1;
@@ -192,6 +207,7 @@ class mglGraphIDTF : public mglGraphAB
 public:
 	mglGraphIDTF();
 	~mglGraphIDTF();
+	using mglGraph::Mark;
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Flush() finishes current PointSet, LineSet and Mesh. Use Flush() to separate objects in the scene. The name for the next object may be set with SetName()
 	void Flush() { points_finished = lines_finished = mesh_finished = true; };
@@ -204,6 +220,7 @@ public:
 	void WriteIDTF ( const char *fname,const char *descr=0 );
 	friend class u3dModel;
 	friend class u3dMesh;
+	friend class u3dBall;
 	bool vertex_color_flag;			///< use per-vertex color in meshes
 	bool disable_compression_flag;	///< disable mesh compression (normally is true). One don't need the number of polygons reduced automatically to save space, but you may have to unset it if you use unpatched (unfixed) U3D library.
 	/// Objects can belong to groups. StartGroup() and EndGroup() do what the names imply.
@@ -216,6 +233,7 @@ protected:
 	mglColor def_col;
 
 	void ball ( float *p,float *c );
+	void UnitBall ();
 
 	void point_plot ( const mglPoint& p );
 	void line_plot ( const mglPoint& p0, const mglPoint& p1 );
@@ -261,6 +279,8 @@ protected:
 	u3dMesh_list     Meshes;		///< global list of u3Meshes
 	u3dMesh& AddMesh ( std::string = "" );
 	u3dMesh& GetMesh();
+
+	u3dBall_list     Balls;		///< global list of u3Balls
 
 	u3dLight_list Lights;
 	void SetAmbientLight ( mglColor c=WC, float br=-1.0 );

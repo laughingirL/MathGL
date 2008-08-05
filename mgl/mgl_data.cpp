@@ -14,10 +14,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <ctype.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "mgl/mgl_eval.h"
 #include "mgl/mgl_data.h"
@@ -27,8 +23,8 @@
 #include <gsl/gsl_fft_real.h>
 #endif
 
-void mglFillP(int x,int y,float *a,int nx,int ny,float _p[4][4]);
-void mglFillP(int x,float *a,int nx,float _p[4]);
+void mglFillP(int x,int y, const float *a,int nx,int ny,float _p[4][4]);
+void mglFillP(int x, const float *a,int nx,float _p[4]);
 //-----------------------------------------------------------------------------
 double ipow_mgl(double x,int n)
 {
@@ -139,7 +135,7 @@ void mglData::Smooth(int Type,const char *dirs,float delta)
 	delete []b;
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Sum(const char *dir)
+mglData &mglData::Sum(const char *dir) const
 {
 	register long i,j,k,i0;
 	long kx=nx,ky=ny,kz=nz;
@@ -340,8 +336,9 @@ void mglData::Diff2(const char *dir)
 	delete []b;
 }
 //-----------------------------------------------------------------------------
-float mglData::Spline(float x,float y,float z)
+float mglData::Spline(float x,float y,float z) const
 {
+	float _p[4][4];
 	register long i,j;
 	register float fx=1, fy=1;
 	long kx=long(x),ky=long(y),kz=long(z);
@@ -398,7 +395,7 @@ float mglData::Spline(float x,float y,float z)
 	return b;
 }
 //-----------------------------------------------------------------------------
-float mglData::Linear(float x,float y,float z)
+float mglData::Linear(float x,float y,float z) const
 {
 	register long i0;
 	long kx,ky,kz;
@@ -438,7 +435,7 @@ float mglData::Linear(float x,float y,float z)
 	return b;
 }
 //-----------------------------------------------------------------------------
-void mglFillP(int x,int y,float *a,int nx,int ny,float _p[4][4])
+void mglFillP(int x,int y, const float *a,int nx,int ny,float _p[4][4])
 {
 	float sx[4]={0,0,0,0},sy[4]={0,0,0,0},f[4]={0,0,0,0},d[4]={0,0,0,0};
 	if(x<0 || y<0 || x>nx-2 || y>ny-2)
@@ -559,7 +556,7 @@ void mglFillP(int x,int y,float *a,int nx,int ny,float _p[4][4])
 		2*(sx[0]-sx[1]+sx[2]-sx[3]+sy[0]-sy[2]+sy[1]-sy[3]);
 }
 //-----------------------------------------------------------------------------
-void mglFillP(int x,float *a,int nx,float _p[4])
+void mglFillP(int x, const float *a,int nx,float _p[4])
 {
 	if(x<0 || x>nx-2)
 	{
@@ -612,7 +609,7 @@ void mglData::Crop(int n1,int n2,char dir)
 	}
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Hist(int n,float v1,float v2,int nsub)
+mglData &mglData::Hist(int n,float v1,float v2,int nsub) const
 {
 	static mglData b;
 	register long i,k;
@@ -637,7 +634,7 @@ mglData &mglData::Hist(int n,float v1,float v2,int nsub)
 	return b;
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Hist(mglData &w, int n,float v1,float v2,int nsub)
+mglData &mglData::Hist(const mglData &w, int n,float v1,float v2,int nsub) const
 {
 	static mglData b;
 	register long i,k;
@@ -665,7 +662,7 @@ mglData &mglData::Hist(mglData &w, int n,float v1,float v2,int nsub)
 	return b;
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Max(const char *dir)
+mglData &mglData::Max(const char *dir) const
 {
 	register long i,j,k,i0;
 	long kx=nx,ky=ny,kz=nz;
@@ -708,7 +705,7 @@ mglData &mglData::Max(const char *dir)
 	return d;
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Min(const char *dir)
+mglData &mglData::Min(const char *dir) const
 {
 	register long i,j,k,i0;
 	long kx=nx,ky=ny,kz=nz;
@@ -751,7 +748,7 @@ mglData &mglData::Min(const char *dir)
 	return d;
 }
 //-----------------------------------------------------------------------------
-float mglData::Last(const char *cond, int &i, int &j, int &k)
+float mglData::Last(const char *cond, int &i, int &j, int &k) const
 {
 	if(!cond)	cond = "u";
 	mglFormula eq(cond);
@@ -769,7 +766,7 @@ float mglData::Last(const char *cond, int &i, int &j, int &k)
 	return i0<nx*ny*nz ? a[i0] : 0;
 }
 //-----------------------------------------------------------------------------
-float mglData::Find(const char *cond, int &i, int &j, int &k)
+float mglData::Find(const char *cond, int &i, int &j, int &k) const
 {
 	if(!cond)	cond = "u";
 	mglFormula eq(cond);
@@ -787,7 +784,7 @@ float mglData::Find(const char *cond, int &i, int &j, int &k)
 	return i0<nx*ny*nz ? a[i0] : 0;
 }
 //-----------------------------------------------------------------------------
-int mglData::Find(const char *cond, char dir, int i, int j, int k)
+int mglData::Find(const char *cond, char dir, int i, int j, int k) const
 {
 	register int m=-1;
 	if(!cond)	cond = "u";
@@ -820,7 +817,7 @@ int mglData::Find(const char *cond, char dir, int i, int j, int k)
 	return m;
 }
 //-----------------------------------------------------------------------------
-bool mglData::FindAny(const char *cond)
+bool mglData::FindAny(const char *cond) const
 {
 	register long i,j,k;
 	register float x,y,z;
@@ -835,7 +832,7 @@ bool mglData::FindAny(const char *cond)
 	return cc;
 }
 //-----------------------------------------------------------------------------
-mglData &TransformA(mglData &am, mglData &ph, const char *tr)
+mglData &TransformA(const mglData &am, const mglData &ph, const char *tr)
 {
 	static mglData d;
 #ifndef NO_GSL
@@ -879,7 +876,7 @@ mglData &TransformA(mglData &am, mglData &ph, const char *tr)
 	return d;
 }
 //-----------------------------------------------------------------------------
-mglData &Transform(mglData &re, mglData &im, const char *tr)
+mglData &Transform(const mglData &re, const mglData &im, const char *tr)
 {
 	static mglData d;
 #ifndef NO_GSL
@@ -923,7 +920,7 @@ mglData &Transform(mglData &re, mglData &im, const char *tr)
 	return d;
 }
 //-----------------------------------------------------------------------------
-mglData &STFA(mglData &re, mglData &im, int dn, char dir)
+mglData &STFA(const mglData &re, const mglData &im, int dn, char dir)
 {
 	static mglData d;
 #ifndef NO_GSL
@@ -1012,7 +1009,7 @@ void mglData::Mirror(const char *dir)
 			j0 = i+nx*ny*k;
 			for(j=0;j<ny/2;j++)
 			{
-				i0 = j0+(ny-1-j)*nx;	b = a[j0+j*nx];	
+				i0 = j0+(ny-1-j)*nx;	b = a[j0+j*nx];
 				a[j0+j*nx] = a[i0];	a[i0] = b;
 			}
 		}
@@ -1028,7 +1025,7 @@ void mglData::Mirror(const char *dir)
 	}
 }
 //-----------------------------------------------------------------------------
-float mglData::Momentum(char dir,float &x,float &w)
+float mglData::Momentum(char dir,float &x,float &w) const
 {
 	float i0=0,i1=0,i2=0,d;
 	register long i;
@@ -1067,7 +1064,7 @@ float mglData::Momentum(char dir,float &x,float &w)
 	return i0;
 }
 //-----------------------------------------------------------------------------
-float mglData::Momentum(char dir,float &x,float &w,float &s,float &k)
+float mglData::Momentum(char dir,float &x,float &w,float &s,float &k) const
 {
 	float i0=0,i1=0,i2=0,d,t;
 	register long i;
@@ -1145,7 +1142,7 @@ void mglData::NormSl(float v1, float v2, char dir, bool keep_en, bool sym)
 				e += aa*aa;
 			}
 			if(m1==m2)	m2+=1;
-			if(keep_en && k)	e = sqrt(e/e0);
+			if(keep_en && j)	e = sqrt(e/e0);
 			else	{	e0 = e;	e=1;	}
 			for(i=0;i<nx;i++)	for(k=0;k<nz;k++)
 				b.a[i+nx*(j+ny*k)] = (v1 + (v2-v1)*(a[i+nx*(j+ny*k)]-m1)/(m2-m1))*e;
@@ -1164,7 +1161,7 @@ void mglData::NormSl(float v1, float v2, char dir, bool keep_en, bool sym)
 				e += aa*aa;
 			}
 			if(m1==m2)	m2+=1;
-			if(keep_en && k)	e = sqrt(e/e0);
+			if(keep_en && i)	e = sqrt(e/e0);
 			else	{	e0 = e;	e=1;	}
 			for(k=0;k<ny*nz;k++)
 				b.a[i+nx*k] = (v1 + (v2-v1)*(a[i+nx*k]-m1)/(m2-m1))*e;
@@ -1173,10 +1170,10 @@ void mglData::NormSl(float v1, float v2, char dir, bool keep_en, bool sym)
 	memcpy(a, b.a, nx*ny*nz*sizeof(float));
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Momentum(char dir, const char *how)
+mglData &mglData::Momentum(char dir, const char *how) const
 {
 	static mglData b;
-	float i0=0,i1=0,d,aa;
+	float i0=0,i1=0,d;
 	register long i,j,k;
 	int n=1;
 	char var = 0;
@@ -1232,7 +1229,7 @@ mglData &mglData::Momentum(char dir, const char *how)
 	return b;
 }
 //-----------------------------------------------------------------------------
-void mglData::PrintInfo(FILE *fp)
+void mglData::PrintInfo(FILE *fp) const
 {
 	if(fp==0)	return;
 	char *buf = new char[512];
@@ -1241,7 +1238,7 @@ void mglData::PrintInfo(FILE *fp)
 	delete []buf;
 }
 //-----------------------------------------------------------------------------
-void mglData::PrintInfo(char *buf)
+void mglData::PrintInfo(char *buf) const
 {
 	if(buf==0)	return;
 	char s[128];

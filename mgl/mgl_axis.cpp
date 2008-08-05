@@ -14,18 +14,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
-#include <wchar.h>
-#include <stdlib.h>
 #include <ctype.h>
-#include "mgl/mgl_eval.h"
-#include "mgl/mgl.h"
-#define FLT_EPS	(1.+1.2e-07)
+#include <wchar.h>
+
 #ifdef WIN32
 #define swprintf    _snwprintf
 #endif
+
+#include "mgl/mgl_eval.h"
+#include "mgl/mgl.h"
+#define FLT_EPS	(1.+1.2e-07)
 
 //-----------------------------------------------------------------------------
 wchar_t *mgl_wcsdup(const wchar_t *s)
@@ -237,6 +235,7 @@ void mglGraph::Grid(const char *dir, const char *pen)
 		}
 	}
 	SelectPen("k-1");
+	Flush();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Label(char dir,const wchar_t *text,int pos,float size,float shift)
@@ -652,6 +651,7 @@ void mglGraph::Axis(const char *dir)
 	{	_sz = 1;	if(TernAxis)	AxisTZ(text);	else	AxisZ(text);	}
 	if(strchr(dir,'Z'))
 	{	_sz = -1;	if(TernAxis)	AxisTZ(text);	else	AxisZ(text);	}
+	Flush();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::TickBox()
@@ -812,7 +812,7 @@ void mglGraph::Box(mglColor p,bool ticks)
 	Arrow1 = Arrow2 = '_';
 	if(p.Valid())	Pen(p,'-',BaseLineWidth);
 	else			Pen(TranspType!=2 ? BC:WC,'-',BaseLineWidth);
-	
+	mglFormula *tt = fc;	fc = 0;
 	Line(mglPoint(x1,y1,z1), mglPoint(x1,y1,z2), 0, 100);
 	Line(mglPoint(x1,y2,z1), mglPoint(x1,y2,z2), 0, 100);
 	Line(mglPoint(x2,y1,z1), mglPoint(x2,y1,z2), 0, 100);
@@ -834,6 +834,8 @@ void mglGraph::Box(mglColor p,bool ticks)
 		Line(mglPoint(x2,y2,z2), mglPoint(x2,y1,z2), 0, 100);
 	}
 	if(ticks && !TernAxis)	TickBox();
+	fc = tt;
+	Flush();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::AddLegend(const wchar_t *text,const char *style)
@@ -846,11 +848,11 @@ void mglGraph::AddLegend(const wchar_t *text,const char *style)
 	NumLeg++;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Legend(float x, float y, const char *font, float size)
-{	Legend(NumLeg,LegStr,LegStl,x,y,font,size);	}
+void mglGraph::Legend(float x, float y, const char *font, float size, float llen)
+{	Legend(NumLeg,LegStr,LegStl,x,y,font,size,llen);	}
 //-----------------------------------------------------------------------------
-void mglGraph::Legend(int where, const char *font, float size)
-{	Legend(NumLeg,LegStr,LegStl,where,font,size);	}
+void mglGraph::Legend(int where, const char *font, float size, float llen)
+{	Legend(NumLeg,LegStr,LegStl,where,font,size,llen);	}
 //-----------------------------------------------------------------------------
 void mglGraph::ClearLegend()
 {
@@ -859,7 +861,7 @@ void mglGraph::ClearLegend()
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Legend(int n, wchar_t **text,char **style, float x, float y,
-					const char *font, float size)
+					const char *font, float size, float llen)
 {
 	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
 	float pp[15], r=GetRatio(), rh, rw;
@@ -869,8 +871,13 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, float x, float y,
 	rw=(r>1?1./r:1.)*size/16.;
 	float w=0, h=fnt->Height(font)*rh, j, dx=Max.x-Min.x;
 	register long i;
-	for(i=0;i<n;i++)	{	j = fnt->Width(text[i],font)*rw;	w = w>j ? w:j;	}
-	w = (w + 0.11)*dx;	// запас на линию
+	for(i=0;i<n;i++)
+	{
+		j = fnt->Width(text[i],font)*rw;
+		if(style[i][0]==0)	j -= llen;
+		w = w>j ? w:j;
+	}
+	w = (w + llen*1.1f)*dx;	// запас на линию
 
 	if(LegendBox)
 	{
@@ -893,7 +900,7 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, float x, float y,
 		char m=SelectPen(style[i]);
 		pp[2] = pp[5] = pp[8] = Max.z;
 		pp[1] = pp[4] = pp[7] = y+i*h+0.45f*h;
-		pp[0] = x+0.01*dx;	pp[3] = x+0.09*dx;	pp[6] = x+0.05*dx;
+		pp[0] = x+0.1f*llen*dx;	pp[3] = x+0.9f*llen*dx;	pp[6] = x+0.5f*llen*dx;
 		ScalePoint(pp[0],pp[1],pp[2]);
 		ScalePoint(pp[3],pp[4],pp[5]);
 		ScalePoint(pp[6],pp[7],pp[8]);
@@ -901,12 +908,13 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, float x, float y,
 		curv_plot(2,pp,0);
 		if(m)	Mark(pp[6],pp[7],pp[8],m);
 		SelectPen(TranspType!=2 ? "k-1":"w-1");
-		Putsw(mglPoint(x+0.10*dx, y+i*h+0.3f*h, Max.z),text[i], font, size,'n');
+		Putsw(mglPoint(x+(style[i][0]!=0?llen:0)*dx, y+i*h+0.3f*h, Max.z),text[i], font, size,'n');
 	}
+	Flush();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
-					const char *font, float size)
+					const char *font, float size, float llen)
 {
 	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
 	if(size<0)	size = -size*FontSize;
@@ -915,8 +923,13 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
 	rh=(r<1?r:1.)*size/12.*(Max.y-Min.y);	// 12 = 16/1.4
 	rw=(r>1?1./r:1.)*size/16.;
 	float h=fnt->Height(font)*rh, x, y, dx = 0.03*(Max.x-Min.x), dy = 0.03*(Max.y-Min.y);
-	for(long i=0;i<n;i++)	{	x = fnt->Width(text[i],font)*rw;	w = w>x ? w:x;	}
-	w = (w + 0.11)*(Max.x-Min.x);	// запас на линию
+	for(long i=0;i<n;i++)
+	{
+		x = fnt->Width(text[i],font)*rw;
+		if(style[i][0]==0)	x -= llen;
+		w = w>x ? w:x;
+	}
+	w = (w + 1.1f*llen)*(Max.x-Min.x);	// запас на линию
 
 	switch(where)
 	{
@@ -925,7 +938,7 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
 	case 2:		x = Min.x+dx;	y = Max.y-h*n-dy;	break;
 	default:	x = Max.x-w-dx;	y = Max.y-h*n-dy;	break;
 	}
-	Legend(n,text,style,x,y,font,size);
+	Legend(n,text,style,x,y,font,size,llen);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Ternary(bool t)

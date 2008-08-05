@@ -14,18 +14,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <stdlib.h>
 #include <time.h>
-#include <stdio.h>
-#include <string.h>
 #include <wchar.h>
-#include "mgl/mgl_ab.h"
-#define imax(a,b)	(a)>(b) ? (a) : (b)
-#define imin(a,b)	(a)<(b) ? (a) : (b)
 
 #ifdef WIN32
 #define swprintf    _snwprintf
 #endif
+
+#include "mgl/mgl_ab.h"
+#define imax(a,b)	(a)>(b) ? (a) : (b)
+#define imin(a,b)	(a)<(b) ? (a) : (b)
+
 char *mgl_strdup(const char *s);
 //-----------------------------------------------------------------------------
 void strtrim_mgl(char *str);
@@ -37,7 +36,7 @@ mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 {
 	G = 0;	UseLight = false;	CloudFactor = 2.5;
 	SetSize(w,h);
-	AlphaDef=0.6;
+	AlphaDef=0.6;	AutoClf=true;	Delay = 100;
 	for(long i=0;i<10;i++)
 	{	Light(i,mglPoint(0,0,1));	nLight[i] = false;	}
 	nLight[0] = true;	NoAutoFactor = false;
@@ -72,7 +71,7 @@ void mglGraphAB::Pen(mglColor col, char style,float width)
 //	case 0:	  PDef = 0x0000;	break;
 //	default:  PDef = 0xffff;
 	}
-	PenWidth = width>0? width : 1;
+	PenWidth = width;
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::RotateN(float Tet,float x,float y,float z)
@@ -260,9 +259,9 @@ float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float
 void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font,
 					float size, char dir, float sh)
 {
-	bool upside = ( ((_sx==-1 ^ (Org.y==Max.y || Org.z==Max.z)) && (dir=='x' || dir=='X')) ||
-					((_sy==-1 ^ (Org.x==Max.x || Org.z==Max.z)) && (dir=='y' || dir=='Y')) ||
-					((_sz==-1 ^ (Org.y==Max.y || Org.x==Max.x)) && (dir=='z' || dir=='Z')) );
+	bool upside = ( (((_sx==-1) ^ (Org.y==Max.y || Org.z==Max.z)) && (dir=='x' || dir=='X')) ||
+					(((_sy==-1) ^ (Org.x==Max.x || Org.z==Max.z)) && (dir=='y' || dir=='Y')) ||
+					(((_sz==-1) ^ (Org.y==Max.y || Org.x==Max.x)) && (dir=='z' || dir=='Z')) );
 	float pp[6] = {p.x,p.y,p.z,p.x,p.y,p.z}, bb[9];
 	Arrow1 = Arrow2 = '_';
 	char *font1 = mgl_strdup(font ? font:FontDef),*f;
@@ -600,13 +599,15 @@ void mglGraphAB::EndFrame()
 void mglGraphAB::FindOptOrg(float ax[3], float ay[3], float az[3])
 {
 	static float px[3]={0,0,0}, py[3]={0,0,0}, pz[3]={0,0,0},
-				bb[9]={0,0,0, 0,0,0, 0,0,0};
+				bb[9]={1e30,0,0, 0,0,0, 0,0,0};
+	static mglPoint m1, m2;
 	float nn[24]={0,0,0, 0,0,1, 0,1,0, 0,1,1, 1,0,0, 1,0,1, 1,1,0, 1,1,1};
 	float pp[24];
 	memcpy(pp, nn, 24*sizeof(float));
 	// do nothing if transformation matrix the same
-	if(memcmp(B,bb,9*sizeof(float)))
+	if(memcmp(B,bb,9*sizeof(float)) || m1!=Min || m2!=Max)
 	{
+		m1 = Min;	m2 = Max;
 		memcpy(bb,B,9*sizeof(float));	PostScale(pp,8);
 		// find point with minimal y
 		register long i,j;
@@ -715,4 +716,16 @@ float mglGraphAB::GetOrgZ(char dir)
 	}
 	return res;
 }
+//-----------------------------------------------------------------------------
+void mglGraphAB::Update(){}
+void mglGraphAB::ToggleAlpha(){}
+void mglGraphAB::ToggleLight(){}
+void mglGraphAB::ToggleZoom(){}
+void mglGraphAB::ToggleRotate(){}
+void mglGraphAB::ToggleNo(){}
+void mglGraphAB::ReLoad(bool){}
+void mglGraphAB::Adjust(){}
+void mglGraphAB::NextFrame(){}
+void mglGraphAB::PrevFrame(){}
+void mglGraphAB::Animation(){}
 //-----------------------------------------------------------------------------

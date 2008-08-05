@@ -14,8 +14,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <stdlib.h>
-#include <stdio.h>
 #include <png.h>
 
 #ifndef WIN32
@@ -225,7 +223,14 @@ int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
 	fwrite(z,4,1,fp);	fwrite(z,4,1,fp);
 	fwrite(z,4,1,fp);	fwrite(z,4,1,fp);
 	// image
-	for(int i=0;i<h;i++)	fwrite(p[i],3*w,1,fp);
+//	for(int i=h-1;i>=0;i--)	fwrite(p[i],3*w,1,fp);
+	register int i,j;
+	for(i=h-1;i>=0;i--)	for(j=0;j<w;j++)
+	{
+		fwrite(p[i]+3*j+2,1,1,fp);
+		fwrite(p[i]+3*j+1,1,1,fp);
+		fwrite(p[i]+3*j+0,1,1,fp);
+	}
 	fclose(fp);
 	return 0;
 }

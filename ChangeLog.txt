@@ -1,6 +1,34 @@
 1.7.1 Released ?? September 2008
+	- Create Python interface using SWIG. Generally interfaces for a set of languages (Java, Lisp, Perl, PHP, Tcl, R, Ruby, Modula3, C#, Octave, and other SWIG supported) can be simply created by the same way.
 	- Default mglGraph::Org value now is mglPoint(NAN,NAN,NAN).
 	- Bug with wrong normales at boundary points in Surf3*() is corrected.
+
+	- Allow mglData::Resize() to have size=1.
+	- Add C interface for mgl_dew_*()
+	- Add const modifiers everywhere
+	- Clean up C/Fortran interface
+	- Add mgl_data_set_values(), mglData::Set(char *s, int, int, int), mgl_fit_*_d()
+	- Change the order of arguments in mgl_data_set_value()
+	- Replace 'bool' to 'int' in C interface
+	- Add mgl_update(), mgl_set_palette() function in C interface.
+	- Add Plot(), Surf() functions for plotting a curve by formula; Add mgl_fplot*(), mgl_fsurf*() functions.
+	- Add MGL commands 'fplot', 'fsurf', 'fgets', 'export', 'import', 'write'
+	- Class mglFormula now is thread safe.
+	- New class QMathGL is added. This is the Qt widget for drawing MathGL graphics.
+	- New class mglGraphQt is added for creating Qt window with MathGL plotting.
+	- Function Bars() now draw boounding box of the rectangle if its style contain '#' symbol.
+	- Color scheme will disable smoothing if its style contain '|' symbol.
+	- Function Chart() will not draw a peace if its color specification is ' '.
+	- Correct bug with colors in WriteBMP()
+	- Add function mgl_puts[w]_dir() + extend MGL command 'text'
+	- Add argument for line length in Legend()
+	- Legend entry with empty style (i.e. "" but not NULL) is printed without indent.
+	- Bug with non-visible marks into the legend is corrected.
+	- Add SetPalette() function for simplifing palette setting
+	- Add SetTicks() function for setting the ticks easely.
+	- Add default window functions in mglGraphAB (as base class) and in mglGraphGLUT.
+	- Add Barh() function for horizontal bars.
+
 
 1.7 Released 1 June 2008
 	- MGL parser is sufficiently rewritten:

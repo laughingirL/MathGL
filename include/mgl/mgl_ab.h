@@ -23,6 +23,7 @@
 class mglGraphAB : public mglGraph
 {
 public:
+using mglGraph::Mark;
 	/// Initialize ZBuffer drawing and allocate the memory for image with size [Width x Height].
 	mglGraphAB(int w=600, int h=400);
 	~mglGraphAB();
@@ -63,6 +64,27 @@ public:
 	/// Get height of the image
 	int GetHeight()	{	return Height;	};
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	/** @name Widget functions
+	  * These functions control window behaviar in classes mglGraphFLTK, mglGraphQT
+	  * and so on. They do nothing in "non-visual" classes like mglGraphZB,
+	  * mglGraphPS, mglGraphGL, mglGraphIDTF. */
+	//@{
+	bool AutoClf;	///< Clear canvas between drawing
+	float Delay;	///< Delay for animation in seconds
+	/// Switch on/off transparency (do not overwrite switches in user drawing function)
+	virtual void ToggleAlpha();
+	/// Switch on/off lighting (do not overwrite switches in user drawing function)
+	virtual void ToggleLight();
+	virtual void ToggleZoom();	///< Switch on/off zooming by mouse
+	virtual void ToggleRotate();///< Switch on/off rotation by mouse
+	virtual void ToggleNo();	///< Switch off all zooming and rotation
+	virtual void Update();		///< Update picture by calling user drawing function
+	virtual void ReLoad(bool o);///< Reload user data and update picture
+	virtual void Adjust();		///< Adjust size of bitmap to window size
+	virtual void NextFrame();	///< Show next frame (if one)
+	virtual void PrevFrame();	///< Show previous frame (if one)
+	virtual void Animation();	///< Run slideshow (animation) of frames
+	//@}
 protected:
 	unsigned char *G4;			///< Final picture in RGBA format. Prepared after calling mglGraphZB::Finish().
 	unsigned char *G;			///< Final picture in RGB format. Prepared after calling mglGraphZB::Finish().
@@ -103,8 +125,6 @@ protected:
 	/// Set default color
 	void DefColor(mglColor c, float alpha=-1);
 
-	/// Draw line between points \a p1,\a p2 with color \a c1, \a c2 at edges
-	virtual void line_plot(float *p1,float *p2,float *c1,float *c2,bool all=false)=0;
 	/// Draw triangle between points \a p0,\a p1,\a p2 with color \a c0, \a c1, \a c2 at edges
 	virtual void trig_plot(float *p0,float *p1,float *p2,float *c0,float *c1,float *c2)=0;
 	/// Draw triangle between points \a p0,\a p1,\a p2 with color \a c0, \a c1, \a c2 at edges

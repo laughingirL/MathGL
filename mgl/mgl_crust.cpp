@@ -15,14 +15,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <math.h>
-#include <stdio.h>
 #include <float.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <locale.h>
-#include <string.h>
-#include <ctype.h>
 #include "mgl/mgl.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
@@ -31,7 +24,7 @@
 //	TriPlot series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::TriPlot(mglData &nums, mglData &x, mglData &y, mglData &z, const char *sch)
+void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch)
 {
 	long n = x.nx, m = nums.ny;
 	if(y.nx!=n || z.nx!=n || nums.nx<3)	{	SetWarn(mglWarnLow,"TriPlot");	return;	}
@@ -57,10 +50,11 @@ void mglGraph::TriPlot(mglData &nums, mglData &x, mglData &y, mglData &z, const 
 		nn[3*j]=k1;	nn[3*j+1]=k2;	nn[3*j+2]=k3;	j++;
 	}
 	trigs_plot(j,nn,n,pp,cc,tt,sch && strchr(sch,'#'));
+	Flush();
 	delete []pp;	delete []tt;	delete []cc;	delete []nn;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::TriPlot(mglData &nums, mglData &x, mglData &y, const char *sch, float zVal)
+void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, const char *sch, float zVal)
 {
 	if(isnan(zVal))	zVal = Min.z;
 	mglData z(x.nx);
@@ -72,7 +66,7 @@ void mglGraph::TriPlot(mglData &nums, mglData &x, mglData &y, const char *sch, f
 //	Dots series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Dots(mglData &x, mglData &y, mglData &z, const char *sch)
+void mglGraph::Dots(const mglData &x, const mglData &y, const mglData &z, const char *sch)
 {
 	long n = x.nx;
 	if(y.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Dots");	return;	}
@@ -83,9 +77,10 @@ void mglGraph::Dots(mglData &x, mglData &y, mglData &z, const char *sch)
 		c = GetC(x.a[i], y.a[i], z.a[i]);
 		Ball(x.a[i], y.a[i], z.a[i], c);
 	}
+	Flush();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Dots(mglData &tr, const char *sch)
+void mglGraph::Dots(const mglData &tr, const char *sch)
 {
 	long n = tr.ny;
 	if(tr.nx<3)	{	SetWarn(mglWarnLow,"Dots");	return;	}
@@ -96,6 +91,7 @@ void mglGraph::Dots(mglData &tr, const char *sch)
 		c = GetC(tr.a[3*i], tr.a[3*i+1], tr.a[3*i+2]);
 		Ball(tr.a[3*i], tr.a[3*i+1], tr.a[3*i+2], c);
 	}
+	Flush();
 }
 //-----------------------------------------------------------------------------
 //
@@ -103,7 +99,7 @@ void mglGraph::Dots(mglData &tr, const char *sch)
 //
 //-----------------------------------------------------------------------------
 long mgl_crust(long n,float *pp,long **nn,float rs);
-void mglGraph::Crust(mglData &x, mglData &y, mglData &z, const char *sch,float er)
+void mglGraph::Crust(const mglData &x, const mglData &y, const mglData &z, const char *sch,float er)
 {
 	long n = x.nx, m;
 	if(y.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Crust");	return;	}
@@ -128,10 +124,11 @@ void mglGraph::Crust(mglData &x, mglData &y, mglData &z, const char *sch,float e
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	trigs_plot(m,nn,n,pp,cc,tt,sch && strchr(sch,'#'));
+	Flush();
 	delete []tt;	delete []cc;	delete []pp;	free(nn);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Crust(mglData &tr, const char *sch,float er)
+void mglGraph::Crust(const mglData &tr, const char *sch,float er)
 {
 	if(tr.nx<3)	{	SetWarn(mglWarnLow,"Crust");	return;	}
 	mglData x(tr.ny), y(tr.ny), z(tr.ny);
@@ -147,7 +144,6 @@ float mgl_mult(float *p1, float *p2, float *p0)
 {
 	return (p1[0]-p0[0])*(p2[0]-p0[0])+(p1[1]-p0[1])*(p2[1]-p0[1])+(p1[2]-p0[2])*(p2[2]-p0[2]);
 }
-float mgl_cos_pp(float *pp,long i0,long i1,long i2);
 //-----------------------------------------------------------------------------
 long mgl_insert_trig(long i1,long i2,long i3,long **n)
 {
@@ -244,22 +240,22 @@ long mgl_crust(long n,float *pp,long **nn,float ff)
 }
 //-----------------------------------------------------------------------------
 /// Draw triangle mesh for points in arrays \a x, \a y, \a z.
-void mgl_triplot_xyz(HMGL gr, HMDT nums, HMDT x, HMDT y, HMDT z, const char *sch)
+void mgl_triplot_xyz(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch)
 {	if(gr&&nums&&x&&y&&z)	gr->TriPlot(*nums, *x, *y, *z, sch);	}
 /// Draw triangle mesh for points in arrays \a x, \a y.
-void mgl_triplot_xy(HMGL gr, HMDT nums, HMDT x, HMDT y, const char *sch, float zVal)
+void mgl_triplot_xy(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const char *sch, float zVal)
 {	if(gr&&nums&&x&&y)	gr->TriPlot(*nums, *x, *y, sch, zVal);	}
 /// Draw dots in points \a x, \a y, \a z.
-void mgl_dots(HMGL gr, HMDT x, HMDT y, HMDT z, const char *sch)
+void mgl_dots(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *sch)
 {	if(gr&&x&&y&&z)	gr->Dots(*x,*y,*z,sch);	}
 /// Draw dots in points \a tr.
-void mgl_dots_tr(HMGL gr, HMDT tr, const char *sch)
+void mgl_dots_tr(HMGL gr, const HMDT tr, const char *sch)
 {	if(gr&&tr)	gr->Dots(*tr,sch);	}
 /// Draw power crust for points in arrays \a x, \a y, \a z.
-void mgl_crust(HMGL gr, HMDT x, HMDT y, HMDT z, const char *sch, float er)
+void mgl_crust(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *sch, float er)
 {	if(gr&&x&&y&&z)	gr->Crust(*x,*y,*z,sch,er);	}
 /// Draw power crust for points in arrays \a tr.
-void mgl_crust_tr(HMGL gr, HMDT tr, const char *sch, float er)
+void mgl_crust_tr(HMGL gr, const HMDT tr, const char *sch, float er)
 {	if(gr&&tr)	gr->Crust(*tr,sch,er);	}
 //-----------------------------------------------------------------------------
 //	Fortran interface

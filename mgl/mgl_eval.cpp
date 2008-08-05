@@ -17,8 +17,6 @@
 //-----------------------------------------------------------------------------
 #include <time.h>
 #include <math.h>
-//#include <ctype.h>
-#include <stdlib.h>
 #include <string.h>
 
 #ifdef _MSC_VER
@@ -39,7 +37,6 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #endif
 
 #include "mgl/mgl_eval.h"
-#include <stdio.h>
 //-----------------------------------------------------------------------------
 //	константы для распознования выражения
 enum{
@@ -184,7 +181,6 @@ double mgl_rnd()
 //-----------------------------------------------------------------------------
 double ipow_mgl(double x,int n);
 int mglFormula::Error=0;
-float mglFormula::a1['z'-'a'+1];
 bool mglCheck(char *str,int n);
 int mglFindInText(char *str,const char *lst);
 //-----------------------------------------------------------------------------
@@ -391,44 +387,44 @@ mglFormula::mglFormula(const char *string)
 	delete []str;
 }
 //-----------------------------------------------------------------------------
-// evaluate formula for 'x'='r', 'y'='n', 't'='z', 'u'='a' variables
+// evaluate formula for 'x'='r', 'y'='n'='v', 't'='z', 'u'='a' variables
 float mglFormula::Calc(float x,float y,float t,float u)
 {
 	Error=0;
+	float a1['z'-'a'+1];	memset(a1,0,('z'-'a'+1)*sizeof(float));
 	a1['a'-'a'] = a1['u'-'a'] = u;
 	a1['x'-'a'] = a1['r'-'a'] = x;
-	a1['y'-'a'] = a1['n'-'a'] = y;
+	a1['y'-'a'] = a1['n'-'a'] = a1['v'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
-	return CalcIn();
+	return CalcIn(a1);
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n', 't'='z', 'u'='a', 'v'='b', 'w'='c' variables
 float mglFormula::Calc(float x,float y,float t,float u,float v,float w)
 {
 	Error=0;
+	float a1['z'-'a'+1];	memset(a1,0,('z'-'a'+1)*sizeof(float));
 	a1['c'-'a'] = a1['w'-'a'] = w;
 	a1['b'-'a'] = a1['v'-'a'] = v;
 	a1['a'-'a'] = a1['u'-'a'] = u;
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;
-	return CalcIn();
+	return CalcIn(a1);
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for arbitrary set of variables
 float mglFormula::Calc(float var['z'-'a'+1])
 {
 	Error=0;
-	for(long i=0;i<='z'-'a';i++)	a1[i] = var[i];
-	return CalcIn();
+	return CalcIn(var);
 }
 //-----------------------------------------------------------------------------
 // evaluate derivate of formula respect to 'diff' variable for arbitrary set of other variables
 float mglFormula::CalcD(float var['z'-'a'+1], char diff)
 {
 	Error=0;
-	for(long i=0;i<='z'-'a';i++)	a1[i] = var[i];
-	return CalcDIn(diff-'a');
+	return CalcDIn(diff-'a', var);
 }
 //-----------------------------------------------------------------------------
 double cand(double a,double b)	{return a&&b?1:0;}
@@ -464,7 +460,7 @@ double atanh(double x)	{	return fabs(x)<1 ? log((1+x)/(1-x))/2 : NAN;	}
 typedef double (*func_1)(double);
 typedef double (*func_2)(double, double);
 // evaluation of embedded (included) expressions
-float mglFormula::CalcIn()
+float mglFormula::CalcIn(const float *a1)
 {
 	func_2 f2[20] = {clt,cgt,ceq,cor,cand,add,sub,mul,div,ipw,pow,fmod,llg
 #ifndef NO_GSL
@@ -492,12 +488,12 @@ float mglFormula::CalcIn()
 	if(Kod==EQ_RND)	return mgl_rnd();
 	if(Kod==EQ_NUM) return Res;
 
-	double a = Left->CalcIn();
+	double a = Left->CalcIn(a1);
 	if(isnan(a))	return NAN;
 
 	if(Kod<EQ_SIN)
 	{
-		double b = Right->CalcIn();
+		double b = Right->CalcIn(a1);
 		if(isnan(b))	return NAN;
 		if(Kod==EQ_POW && a<=0)		{ Error=MGL_ERR_LOG; return NAN; }
 		if(Kod==EQ_LOG && (a<=0 || b<=0))	{ Error=MGL_ERR_LOG; return NAN; }
@@ -513,7 +509,7 @@ float mglFormula::CalcIn()
 #ifndef NO_GSL
 	else if(Kod<=EQ_DC)
 	{
-		double sn=0,cn=0,dn=0,b = Right->CalcIn();
+		double sn=0,cn=0,dn=0,b = Right->CalcIn(a1);
 		if(isnan(b))	return NAN;
 		gsl_sf_elljac_e(a,b, &sn, &cn, &dn);
 		switch(Kod)
@@ -566,9 +562,9 @@ double si_d(double a)	{return a?sin(a)/a:1;}
 double ci_d(double a)	{return cos(a)/a;}
 double exp3_d(double a)	{return exp(-a*a*a);}
 double e1_d(double a)	{return exp(-a)/a;}
-double e2_d(double a)	{return -gsl_sf_expint_E1(a);}
 double sinc_d(double a)	{return a ? (cos(M_PI*a)/a-sin(M_PI*a)/(M_PI*a*a)) : 0;}
 #ifndef NO_GSL
+double e2_d(double a)	{return -gsl_sf_expint_E1(a);}
 double gslJnuD(double a,double b)	{return 0.5*(gsl_sf_bessel_Jnu(a-1,b)-gsl_sf_bessel_Jnu(a+1,b));}
 double gslYnuD(double a,double b)	{return 0.5*(gsl_sf_bessel_Ynu(a-1,b)-gsl_sf_bessel_Ynu(a+1,b));}
 double gslKnuD(double a,double b)	{return -(a*gsl_sf_bessel_Knu(a,b)/b +gsl_sf_bessel_Knu(a-1,b));}
@@ -585,7 +581,7 @@ double gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
 #endif
 //-----------------------------------------------------------------------------
 // evaluation of derivative of embedded (included) expressions
-float mglFormula::CalcDIn(int id)
+float mglFormula::CalcDIn(int id, const float *a1)
 {
 	func_2 f21[20] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgp,mul1,div1,ipw1,pow1,mgp,llg1
 #ifndef NO_GSL
@@ -615,16 +611,16 @@ float mglFormula::CalcDIn(int id)
 	if(Kod==EQ_A)	return id==(int)Res?1:0;
 	if(Kod==EQ_RND || Kod==EQ_NUM) return 0;
 
-	double a = Left->CalcIn(), d = Left->CalcDIn(id);
+	double a = Left->CalcIn(a1), d = Left->CalcDIn(id,a1);
 	if(isnan(a))	return NAN;
 
 	if(Kod<EQ_SIN)
 	{
-		double b = Right->CalcIn();
+		double b = Right->CalcIn(a1);
 		if(isnan(b))	return NAN;
 		if(Kod==EQ_POW && a<=0)		{ Error=MGL_ERR_LOG; return NAN; }
 		if(Kod==EQ_LOG && (a<=0 || b<=0))	{ Error=MGL_ERR_LOG; return NAN; }
-		return f21[Kod-EQ_LT](a,b)*d + f22[Kod-EQ_LT](a,b)*Right->CalcDIn(id);
+		return f21[Kod-EQ_LT](a,b)*d + f22[Kod-EQ_LT](a,b)*Right->CalcDIn(id,a1);
 	}
 	else if(Kod<EQ_SN)
 	{
@@ -636,7 +632,7 @@ float mglFormula::CalcDIn(int id)
 #ifndef NO_GSL
 	else if(Kod<=EQ_DC)
 	{
-		double sn=0,cn=0,dn=0,b = Right->CalcIn();
+		double sn=0,cn=0,dn=0,b = Right->CalcIn(a1);
 		if(isnan(b))	return NAN;
 		gsl_sf_elljac_e(a,b, &sn, &cn, &dn);
 		switch(Kod)	// At this moment parse only differentiation or argument NOT mu !!!

@@ -16,22 +16,17 @@
  */
 #include <ctype.h>
 #include <wchar.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#ifndef _MSC_VER
-#include <unistd.h>
-#else
-#include <direct.h>
-#endif
+
 #ifdef WIN32
+#include <io.h>
 wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim){
     wcstok(wcs,delim);
 }
 #define swprintf    _snwprintf
 #define wcstok(a,b,c) wcstokw32(a,b)
+#else
+#include <unistd.h>
 #endif
-//#include <unistd.h>
 #include "mgl/mgl_parse.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
@@ -41,7 +36,7 @@ wchar_t *mgl_str_copy(const char *s)
 {
 	wchar_t *str = new wchar_t[strlen(s)+1];
 	register long i;
-	for(i=0;i<strlen(s);i++)	str[i] = s[i];
+	for(i=0;i<int(strlen(s));i++)	str[i] = s[i];
 	str[i] = 0;
 	return str;
 }
@@ -56,7 +51,6 @@ int mgl_cmd_cmp(const void *a, const void *b)
 // return values : 0 -- OK, 1 -- wrong arguments, 2 -- wrong command
 int mglParse::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a)
 {
-	wchar_t ch = com[0];
 	int k[10], i;
 	for(i=0;i<10;i++)	k[i] = i<n ? a[i].type + 1 : 0;
 	for(i=0;i<n;i++)	wcstombs(a[i].s, a[i].w, 1024);
@@ -111,6 +105,7 @@ mglParse::~mglParse()
 	}
 	for(long i=0;i<10;i++)	if(par[i])	delete [] par[i];
 	delete []op1;	delete []op2;
+	if(Cmd!=mgls_base_cmd)	delete []Cmd;
 }
 //-----------------------------------------------------------------------------
 bool mglParse::AddParam(int n, const char *str, bool isstr)
@@ -118,8 +113,8 @@ bool mglParse::AddParam(int n, const char *str, bool isstr)
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
-	AddParam(n,wcs,isstr);
-	delete []wcs;
+	bool r = AddParam(n,wcs,isstr);
+	delete []wcs;	return r;
 }
 //-----------------------------------------------------------------------------
 int mglParse::Parse(mglGraph *gr, const char *str, long pos)
@@ -127,8 +122,8 @@ int mglParse::Parse(mglGraph *gr, const char *str, long pos)
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
-	Parse(gr,wcs,pos);
-	delete []wcs;
+	int r = Parse(gr,wcs,pos);
+	delete []wcs;	return r;
 }
 //-----------------------------------------------------------------------------
 mglVar *mglParse::AddVar(const char *str)
@@ -426,7 +421,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		while(*t && isspace(*t))	t++;
 		// if command have format 'for $N ...' then change it to 'for N ...'
 		if(*t=='$' && t[1]>='0' && t[1]<='9')	*t = ' ';
-	}	
+	}
 	// parse arguments (parameters $1, ..., $9)
 	if(parlen>0)
 	{
@@ -630,9 +625,9 @@ void mglParse::Execute(mglGraph *gr, FILE *fp, bool print)
 		if(print)
 		{
 			if(gr->Message && gr->Message[0])	printf("%s\n",gr->Message);
-			if(r==1)	printf("Wrong argument(s) in line %d -- %s\n", line, str);
-			if(r==2)	printf("Wrong command in line %d -- %s\n", line, str);
-			if(r==3)	printf("String too long line %d -- %s\n", line, str);
+			if(r==1)	printf("Wrong argument(s) in line %d -- %ls\n", line, str);
+			if(r==2)	printf("Wrong command in line %d -- %ls\n", line, str);
+			if(r==3)	printf("String too long line %d -- %ls\n", line, str);
 		}
 	}
 }
@@ -856,12 +851,12 @@ HMPR mgl_create_parser()		{	return new mglParse;	}
 void mgl_delete_parser(HMPR p)	{	delete p;	}
 void mgl_add_param(HMPR p, int id, const char *str)			{	p->AddParam(id,str);	}
 void mgl_add_paramw(HMPR p, int id, const wchar_t *str)		{	p->AddParam(id,str);	}
-HMDT mgl_add_var(HMPR p, const char *name)	{	mglVar *v=p->AddVar(name);	return &(v->d);	}
-HMDT mgl_find_var(HMPR p, const char *name)	{	mglVar *v=p->FindVar(name);	return &(v->d);	}
-int mgl_parse(HMGL gr, HMPR p, const char *str, int pos)	{	p->Parse(gr, str, pos);	}
-int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos){	p->Parse(gr, str, pos);	}
+const HMDT mgl_add_var(HMPR p, const char *name)	{	mglVar *v=p->AddVar(name);	return &(v->d);	}
+const HMDT mgl_find_var(HMPR p, const char *name)	{	mglVar *v=p->FindVar(name);	return &(v->d);	}
+int mgl_parse(HMGL gr, HMPR p, const char *str, int pos)	{	return p->Parse(gr, str, pos);	}
+int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos){	return p->Parse(gr, str, pos);	}
 void mgl_restore_once(HMPR p)	{	p->RestoreOnce();	}
-void mgl_parser_allow_setsize(HMPR p, bool a)	{	p->AllowSetSize = a;	}
+void mgl_parser_allow_setsize(HMPR p, int a)	{	p->AllowSetSize = a;	}
 //-----------------------------------------------------------------------------
 long mgl_create_parser_()	{	return long(new mglParse);	}
 void mgl_delete_parser_(long* p)	{	delete _PR_;	}
@@ -887,7 +882,7 @@ long mgl_find_var_(long* p, const char *name, int l)
 int mgl_parse_(long* gr, long* p, const char *str, int *pos, int l)
 {
 	char *s=new char[l+1];		memcpy(s,str,l);	s[l]=0;
-	_PR_->Parse(_GR_, s, *pos);	delete []s;
+	int r = _PR_->Parse(_GR_, s, *pos);	delete []s;	return r;
 }
 void mgl_restore_once_(long* p)	{	_PR_->RestoreOnce();	}
 void mgl_parser_allow_setsize_(long* p, int *a)

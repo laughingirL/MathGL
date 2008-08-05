@@ -14,8 +14,8 @@ int sample_font(mglGraph *gr, void *)
 	a.Modify("2*rnd-1");
 	//gr->PlotFactor = 1.6;	// SERGEY !!! HERE !!!
 //	gr->BaseLineWidth = 5;
-	
-	
+
+
 //	gr->SubPlot(2,2,3);
 //	gr->Rotate(40,60);
 //	gr->Alpha(true);
@@ -24,14 +24,14 @@ int sample_font(mglGraph *gr, void *)
 //	gr->Colorbar();
 //	setlocale(LC_ALL, "ru_RU.cp1251");
 //	gr->Puts(mglPoint(0,1.2,1),"привет, это тест");
-	
+
 //	gr->Perspective(0.3);
 	gr->Org = mglPoint(-1,-1,-1);
 	gr->Box();	gr->Grid();
 //	gr->Text(y,"This is very long string drawn along a curve",":k");
 	gr->Text(y,"Another string drawn above a curve","T:r");
 	gr->Plot(y);
-	
+
 /*	gr->Axis();
 	gr->Label('x',"\\xi  label",0);
 	gr->Label('y',"y label",0);
@@ -59,9 +59,8 @@ int sample_transp(mglGraph *gr, void *)	// flag #
 //-----------------------------------------------------------------------------
 int sample(mglGraph *gr, void *)
 {
-	mglData a(30,30);
-	a.Squeeze(3,1,1);
-	gr->Surf(a,"#");
+	mglData a(10);	a.Modify("rnd");
+	gr->Barh(a,"#");
 	return 0;
 }
 
@@ -85,7 +84,7 @@ int main(int argc,char **argv)
 	for(i=0;i<k;i++)
 		fprintf(fp,"\t{0x%x, L\"%ls\"},\n",mgl_tex_symb[i].kod, mgl_tex_symb[i].tex);
 	fclose(fp);*/
-	
+
 /*	long k,i;
 	for(k=0;mgls_base_cmd[k].name[0];k++);
 	qsort(mgls_base_cmd, k, sizeof(mglCommand), mgl_cmd_cmp);
@@ -96,13 +95,14 @@ int main(int argc,char **argv)
 
 //	setlocale(LC_ALL, "ru_RU.cp1251");
 //	setlocale(LC_CTYPE, "ru_RU.cp1251");
-//	mglGraphZB gr;//(1280,800);
+	mglGraphZB gr;//(1280,800);
 //	mglGraphPS gr;//(1280,800);
-//	sample(&gr,0);	gr.WritePNG("1.png",0,false);	return 0;
+	sample(&gr,0);	gr.WritePNG("1.png",0,false);	gr.WriteBMP("1.bmp");
 //	mglGraphIDTF gr;//(1280,800);
 //	sample(&gr,0);	gr.WriteIDTF("1.idtf");	return 0;
-	mglGraphFLTK gr;//(1280,800);
-	gr.Window(0,0,sample,"Test");	return mglFlRun();
+
+//	mglGraphFLTK gr;//(1280,800);
+//	gr.Window(0,0,sample,"Test");	return mglFlRun();
 //	mglGraphGLUT gr;//(1280,800);
 //	gr.Window(argc,argv,sample,"Test");	return 0;
 

@@ -985,6 +985,7 @@ int main(int argc,char **argv)
 	all_samples(&gr,suf);
 	sample_transp(&gr,suf);
 	sample_hint(&gr,suf);
+	gr.Org = mglPoint(0,0,0);
 	full_test(&gr,suf);
 
 /*	printf("\n\n\t\t mglGraphZB (600*400) \n");	fflush(stdout);

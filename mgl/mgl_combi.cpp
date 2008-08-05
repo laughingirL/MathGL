@@ -14,7 +14,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <string.h>
 #include "mgl/mgl.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
@@ -23,7 +22,7 @@
 //	DensX, DensY, DensZ series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::DensX(mglData &a, const char *sch,float sVal)
+void mglGraph::DensX(const mglData &a, const char *sch,float sVal)
 {
 	register long i,j,i0,k,n=a.nx,m=a.ny;
 	mglColor col;
@@ -62,7 +61,7 @@ void mglGraph::DensX(mglData &a, const char *sch,float sVal)
 	delete []pp;	delete []cc;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::DensY(mglData &a, const char *sch,float sVal)
+void mglGraph::DensY(const mglData &a, const char *sch,float sVal)
 {
 	register long i,j,i0,k,n=a.nx,m=a.ny;
 	mglColor col;
@@ -101,7 +100,7 @@ void mglGraph::DensY(mglData &a, const char *sch,float sVal)
 	delete []pp;	delete []cc;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::DensZ(mglData &a, const char *sch,float sVal)
+void mglGraph::DensZ(const mglData &a, const char *sch,float sVal)
 {
 	register long i,j,i0,k,n=a.nx,m=a.ny;
 	mglColor col;
@@ -143,7 +142,7 @@ void mglGraph::DensZ(mglData &a, const char *sch,float sVal)
 //	ContX, ContY, ContZ series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::ContX(mglData &z, const char *sch, float zVal, int Num)
+void mglGraph::ContX(const mglData &z, const char *sch, float zVal, int Num)
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"ContX");	return;	}
 	mglData v(Num);
@@ -151,7 +150,7 @@ void mglGraph::ContX(mglData &z, const char *sch, float zVal, int Num)
 	ContX(v,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContY(mglData &z, const char *sch, float zVal, int Num)
+void mglGraph::ContY(const mglData &z, const char *sch, float zVal, int Num)
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"ContY");	return;	}
 	mglData v(Num);
@@ -159,7 +158,7 @@ void mglGraph::ContY(mglData &z, const char *sch, float zVal, int Num)
 	ContY(v,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContZ(mglData &z, const char *sch, float zVal, int Num)
+void mglGraph::ContZ(const mglData &z, const char *sch, float zVal, int Num)
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"ContZ");	return;	}
 	mglData v(Num);
@@ -167,7 +166,7 @@ void mglGraph::ContZ(mglData &z, const char *sch, float zVal, int Num)
 	ContZ(v,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContX(mglData &v, mglData &a, const char *sch, float sVal)
+void mglGraph::ContX(const mglData &v, const mglData &a, const char *sch, float sVal)
 {
 	register long i,j,k,n=a.nx,m=a.ny;
 	mglColor col;
@@ -203,10 +202,11 @@ void mglGraph::ContX(mglData &v, mglData &a, const char *sch, float sVal)
 		Color(v.a[i]);
 		cont_plot(v.a[i],n,m,b,xx,yy,zz,sVal,false,false,text);
 	}
+	Flush();
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContY(mglData &v, mglData &a, const char *sch, float sVal)
+void mglGraph::ContY(const mglData &v, const mglData &a, const char *sch, float sVal)
 {
 	register long i,j,k,n=a.nx,m=a.ny;
 	mglColor col;
@@ -242,10 +242,11 @@ void mglGraph::ContY(mglData &v, mglData &a, const char *sch, float sVal)
 		Color(v.a[i]);
 		cont_plot(v.a[i],n,m,b,xx,yy,zz,sVal,false,false,text);
 	}
+	Flush();
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContZ(mglData &v, mglData &a, const char *sch, float sVal)
+void mglGraph::ContZ(const mglData &v, const mglData &a, const char *sch, float sVal)
 {
 	register long i,j,k,n=a.nx,m=a.ny;
 	mglColor col;
@@ -280,6 +281,7 @@ void mglGraph::ContZ(mglData &v, mglData &a, const char *sch, float sVal)
 		Color(v.a[i]);
 		cont_plot(v.a[i],n,m,b,xx,yy,zz,sVal,false,false,text);
 	}
+	Flush();
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -287,7 +289,7 @@ void mglGraph::ContZ(mglData &v, mglData &a, const char *sch, float sVal)
 //	ContFX, ContFY, ContFZ series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::ContFX(mglData &z, const char *sch, float zVal, int Num)
+void mglGraph::ContFX(const mglData &z, const char *sch, float zVal, int Num)
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"ContFX");	return;	}
 	mglData v(Num);
@@ -295,7 +297,7 @@ void mglGraph::ContFX(mglData &z, const char *sch, float zVal, int Num)
 	ContFX(v,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContFY(mglData &z, const char *sch, float zVal, int Num)
+void mglGraph::ContFY(const mglData &z, const char *sch, float zVal, int Num)
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"ContFYX");	return;	}
 	mglData v(Num);
@@ -303,7 +305,7 @@ void mglGraph::ContFY(mglData &z, const char *sch, float zVal, int Num)
 	ContFY(v,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContFZ(mglData &z, const char *sch, float zVal, int Num)
+void mglGraph::ContFZ(const mglData &z, const char *sch, float zVal, int Num)
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"ContFZ");	return;	}
 	mglData v(Num);
@@ -311,7 +313,7 @@ void mglGraph::ContFZ(mglData &z, const char *sch, float zVal, int Num)
 	ContZ(v,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContFX(mglData &v, mglData &a, const char *sch, float sVal)
+void mglGraph::ContFX(const mglData &v, const mglData &a, const char *sch, float sVal)
 {
 	register long i,j,k,n=a.nx,m=a.ny;
 	mglColor col;
@@ -347,10 +349,11 @@ void mglGraph::ContFX(mglData &v, mglData &a, const char *sch, float sVal)
 		Color(v.a[i]);
 		contf_plot(v.a[i],v.a[i+1],n,m,b,xx,yy,zz,sVal);
 	}
+	Flush();
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContFY(mglData &v, mglData &a, const char *sch, float sVal)
+void mglGraph::ContFY(const mglData &v, const mglData &a, const char *sch, float sVal)
 {
 	register long i,j,k,n=a.nx,m=a.ny;
 	mglColor col;
@@ -386,10 +389,11 @@ void mglGraph::ContFY(mglData &v, mglData &a, const char *sch, float sVal)
 		Color(v.a[i]);
 		contf_plot(v.a[i],v.a[i+1],n,m,b,xx,yy,zz,sVal);
 	}
+	Flush();
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContFZ(mglData &v, mglData &a, const char *sch, float sVal)
+void mglGraph::ContFZ(const mglData &v, const mglData &a, const char *sch, float sVal)
 {
 	register long i,j,k,n=a.nx,m=a.ny;
 	mglColor col;
@@ -424,55 +428,56 @@ void mglGraph::ContFZ(mglData &v, mglData &a, const char *sch, float sVal)
 		Color(v.a[i]);
 		contf_plot(v.a[i],v.a[i+1],n,m,b,xx,yy,zz,sVal);
 	}
+	Flush();
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
 //		Combined plotting functions
 //-----------------------------------------------------------------------------
 /// Draw density plot for data a at x = sVal
-void mgl_dens_x(HMGL gr, HMDT a, const char *sch, float sVal)
+void mgl_dens_x(HMGL gr, const HMDT a, const char *sch, float sVal)
 {	if(gr && a)	gr->DensX(*a, sch, sVal);	}
 /// Draw density plot for data a at y = sVal
-void mgl_dens_y(HMGL gr, HMDT a, const char *sch, float sVal)
+void mgl_dens_y(HMGL gr, const HMDT a, const char *sch, float sVal)
 {	if(gr && a)	gr->DensY(*a, sch, sVal);	}
 /// Draw density plot for data a at z = sVal
-void mgl_dens_z(HMGL gr, HMDT a, const char *sch, float sVal)
+void mgl_dens_z(HMGL gr, const HMDT a, const char *sch, float sVal)
 {	if(gr && a)	gr->DensZ(*a, sch, sVal);	}
 /// Draw several contour plots for data a at x = sVal
-void mgl_cont_x(HMGL gr, HMDT a, const char *sch, float sVal, int Num)
+void mgl_cont_x(HMGL gr, const HMDT a, const char *sch, float sVal, int Num)
 {	if(gr && a)	gr->ContX(*a, sch, sVal, Num);	}
 /// Draw several contour plots for data a at y = sVal
-void mgl_cont_y(HMGL gr, HMDT a, const char *sch, float sVal, int Num)
+void mgl_cont_y(HMGL gr, const HMDT a, const char *sch, float sVal, int Num)
 {	if(gr && a)	gr->ContY(*a, sch, sVal, Num);	}
 /// Draw several contour plots for data a at z = sVal
-void mgl_cont_z(HMGL gr, HMDT a, const char *sch, float sVal, int Num)
+void mgl_cont_z(HMGL gr, const HMDT a, const char *sch, float sVal, int Num)
 {	if(gr && a)	gr->ContZ(*a, sch, sVal, Num);	}
 /// Draw contour plots for data a at x = sVal
-void mgl_cont_x_val(HMGL gr, HMDT v, HMDT a, const char *sch, float sVal)
+void mgl_cont_x_val(HMGL gr, const HMDT v, const HMDT a, const char *sch, float sVal)
 {	if(gr && a && v)	gr->ContX(*v, *a, sch, sVal);	}
 /// Draw contour plots for data a at y = sVal
-void mgl_cont_y_val(HMGL gr, HMDT v, HMDT a, const char *sch, float sVal)
+void mgl_cont_y_val(HMGL gr, const HMDT v, const HMDT a, const char *sch, float sVal)
 {	if(gr && a && v)	gr->ContY(*v, *a, sch, sVal);	}
 /// Draw contour plots for data a at z = sVal
-void mgl_cont_z_val(HMGL gr, HMDT v, HMDT a, const char *sch, float sVal)
+void mgl_cont_z_val(HMGL gr, const HMDT v, const HMDT a, const char *sch, float sVal)
 {	if(gr && a && v)	gr->ContZ(*v, *a, sch, sVal);	}
 /// Draw several contour plots for data a at x = sVal
-void mgl_contf_x(HMGL gr, HMDT a, const char *sch, float sVal, int Num)
+void mgl_contf_x(HMGL gr, const HMDT a, const char *sch, float sVal, int Num)
 {	if(gr && a)	gr->ContFX(*a, sch, sVal, Num);	}
 /// Draw several contour plots for data a at y = sVal
-void mgl_contf_y(HMGL gr, HMDT a, const char *sch, float sVal, int Num)
+void mgl_contf_y(HMGL gr, const HMDT a, const char *sch, float sVal, int Num)
 {	if(gr && a)	gr->ContFY(*a, sch, sVal, Num);	}
 /// Draw several contour plots for data a at z = sVal
-void mgl_contf_z(HMGL gr, HMDT a, const char *sch, float sVal, int Num)
+void mgl_contf_z(HMGL gr, const HMDT a, const char *sch, float sVal, int Num)
 {	if(gr && a)	gr->ContFZ(*a, sch, sVal, Num);	}
 /// Draw contour plots for data a at x = sVal
-void mgl_contf_x_val(HMGL gr, HMDT v, HMDT a, const char *sch, float sVal)
+void mgl_contf_x_val(HMGL gr, const HMDT v, const HMDT a, const char *sch, float sVal)
 {	if(gr && a && v)	gr->ContFX(*v, *a, sch, sVal);	}
 /// Draw contour plots for data a at y = sVal
-void mgl_contf_y_val(HMGL gr, HMDT v, HMDT a, const char *sch, float sVal)
+void mgl_contf_y_val(HMGL gr, const HMDT v, const HMDT a, const char *sch, float sVal)
 {	if(gr && a && v)	gr->ContFY(*v, *a, sch, sVal);	}
 /// Draw contour plots for data a at z = sVal
-void mgl_contf_z_val(HMGL gr, HMDT v, HMDT a, const char *sch, float sVal)
+void mgl_contf_z_val(HMGL gr, const HMDT v, const HMDT a, const char *sch, float sVal)
 {	if(gr && a && v)	gr->ContFZ(*v, *a, sch, sVal);	}
 //-----------------------------------------------------------------------------
 //		Combined plotting functions (Fortran)

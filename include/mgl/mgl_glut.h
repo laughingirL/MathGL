@@ -26,9 +26,6 @@ friend void _mgl_display();
 friend void _mgl_key_up(unsigned char ch,int ,int );
 friend void _mgl_timer(int);
 public:
-	bool AutoClf;	///< Clear canvas between drawing
-	int Delay;		///< Delay for animation in ms
-
 	mglGraphGLUT();
 	~mglGraphGLUT();
 	//void WriteEPS(const char *fname,const char *descr=0);	// экспорт в EPS
@@ -36,12 +33,22 @@ public:
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	void Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
 						const char *title,void *par=NULL,
-			   			void (*reload)(bool next)=NULL);
+			   			void (*reload)(int next)=NULL);
+	/// Switch on/off transparency (do not overwrite switches in user drawing function)
+	void ToggleAlpha();
+	/// Switch on/off lighting (do not overwrite switches in user drawing function)
+	void ToggleLight();
+	void ToggleNo();	///< Switch off all zooming and rotation
+	void Update();		///< Update picture by calling user drawing function
+	void ReLoad(bool o);///< Reload user data and update picture
+	void NextFrame();	///< Show next frame (if one)
+	void PrevFrame();	///< Show previous frame (if one)
+	void Animation();	///< Run slideshow (animation) of frames
 private:
 	int nfig;		///< Number of figures in the list. If 0 then no list and mglGraph::DrawFunc will called for each drawing.
 	int curr_fig;	///< Current figure in the list.
 	int tt;			///< Temporal variable
-	void (*LoadFunc)(bool);
+	void (*LoadFunc)(int);
 	void *FuncPar;	///< Parameters for drawing function mglGraph::DrawFunc.
 	/// Drawing function for window procedure.
 	int (*DrawFunc)(mglGraph *gr, void *par);	//< It return the number

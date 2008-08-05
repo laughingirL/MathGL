@@ -41,6 +41,7 @@
 #include "mgl/mgl_c.h"
 
 mglGraphGLUT *_mgl_glwnd;
+void _mgl_key_up(unsigned char ch,int ,int );
 //-----------------------------------------------------------------------------
 void _mgl_timer(int)
 {
@@ -52,8 +53,17 @@ void _mgl_timer(int)
 			_mgl_glwnd->curr_fig = 1;
 		glutPostRedisplay();
 	}
-	glutTimerFunc(_mgl_glwnd->Delay,_mgl_timer,0);
+	glutTimerFunc(_mgl_glwnd->Delay*1000,_mgl_timer,0);
 }
+//-----------------------------------------------------------------------------
+void mglGraphGLUT::ToggleAlpha()	{	_mgl_key_up('r',0,0);	}
+void mglGraphGLUT::ToggleLight()	{	_mgl_key_up('f',0,0);	}
+void mglGraphGLUT::ToggleNo()		{	_mgl_key_up('n',0,0);	}
+void mglGraphGLUT::Update()			{	_mgl_key_up(' ',0,0);	}
+void mglGraphGLUT::ReLoad(bool o)	{	_mgl_key_up(o?']':'[',0,0);	}
+void mglGraphGLUT::NextFrame()		{	_mgl_key_up('.',0,0);	}
+void mglGraphGLUT::PrevFrame()		{	_mgl_key_up(',',0,0);	}
+void mglGraphGLUT::Animation()		{	_mgl_key_up('m',0,0);	}
 //-----------------------------------------------------------------------------
 void _mgl_key_up(unsigned char ch,int ,int )
 {
@@ -168,7 +178,7 @@ mglGraphGLUT::~mglGraphGLUT()
 	_mgl_glwnd = 0;
 }
 //-----------------------------------------------------------------------------
-void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *p),const char *title, void *par, void (*reload)(bool next))
+void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *p),const char *title, void *par, void (*reload)(int next))
 {
 	nfig=0;	curr_fig=1;	tt=0;
 	_mgl_glwnd = this;
@@ -195,14 +205,12 @@ void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *
 	glDeleteLists(1,nfig);
 }
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_glut(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
-						const char *title, void (*reload)(bool next), void *par)
+HMGL mgl_create_graph_glut(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void (*reload)(int next), void *par)
 {
 	mglGraphGLUT *g = new mglGraphGLUT;
 	g->Window(argc,argv,draw,title,par,reload);
 	return g;
 }
 //-----------------------------------------------------------------------------
-mglGraphGLUT::mglGraphGLUT() : mglGraphGL()
-{	AutoClf=true;	Delay = 100;	}
+mglGraphGLUT::mglGraphGLUT() : mglGraphGL()	{}
 //-----------------------------------------------------------------------------

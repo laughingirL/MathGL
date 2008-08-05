@@ -14,21 +14,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <ctype.h>
+
 #include <wchar.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#ifndef _MSC_VER
-#include <unistd.h>
-#else
-#include <direct.h>
-#endif
+
 #ifdef WIN32
+#include <io.h>
 #define swprintf    _snwprintf
+#else
+#include <unistd.h>
 #endif
-//#include <unistd.h>
+
 #include "mgl/mgl_parse.h"
+
 char *mgl_strdup(const char *s);
 wchar_t *mgl_str_copy(const char *s);
 //-----------------------------------------------------------------------------
@@ -157,14 +154,14 @@ int mgls_axis(mglGraph *gr, long n, mglArg *a, int k[10])
 	{
 		bool ok=true;
 		for(i=0;i<6;i++)	if(k[i]!=3)	ok = false;
-		if(ok)	gr->Axis(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v),gr->Org);
+		if(ok)	gr->Axis(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v));
 		else return 1;
 	}
 	else if(n==4)
 	{
 		bool ok=true;
 		for(i=0;i<4;i++)	if(k[i]!=3)	ok = false;
-		if(ok)	gr->Axis(mglPoint(a[0].v,a[1].v), mglPoint(a[2].v,a[3].v),gr->Org);
+		if(ok)	gr->Axis(mglPoint(a[0].v,a[1].v), mglPoint(a[2].v,a[3].v));
 		else return 1;
 	}
 	else if(k[0]==2)	gr->Axis(a[0].s);
@@ -181,13 +178,13 @@ void mglc_axis(wchar_t out[1024], long n, mglArg *a, int k[10])
 	{
 		bool ok=true;
 		for(i=0;i<6;i++)	if(k[i]!=3)	ok = false;
-		if(ok)	swprintf(out,1024,L"gr->Axis(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), gr->Org);", a[0].v,a[1].v,a[2].v,a[3].v,a[4].v,a[5].v);
+		if(ok)	swprintf(out,1024,L"gr->Axis(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g));", a[0].v,a[1].v,a[2].v,a[3].v,a[4].v,a[5].v);
 	}
 	else if(n==4)
 	{
 		bool ok=true;
 		for(i=0;i<4;i++)	if(k[i]!=3)	ok = false;
-		if(ok)	swprintf(out,1024,L"gr->Axis(mglPoint(%g, %g), mglPoint(%g, %g), gr->Org);", a[0].v,a[1].v,a[2].v,a[3].v);
+		if(ok)	swprintf(out,1024,L"gr->Axis(mglPoint(%g, %g), mglPoint(%g, %g));", a[0].v,a[1].v,a[2].v,a[3].v);
 	}
 	else if(k[0]==2)	swprintf(out,1024,L"gr->Axis(\"%s\");", a[0].s);
 	else if(k[0]==0)	swprintf(out,1024,L"gr->Axis(\"xyz\");");
@@ -240,6 +237,25 @@ void mglc_bars(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"gr->Bars(%s, %s, \"%s\", %g, %s);",a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN, (k[4]==3&&a[4].v!=0)?"true":"false");
 	else
 		swprintf(out,1024,L"gr->Bars(%s, %s, %s, \"%s\", %s);",a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"", (k[4]==3&&a[4].v!=0)?"true":"false");
+}
+//-----------------------------------------------------------------------------
+//	{"barh","Draw horizontal bars for 1D data","barh {xvar} yvar [fmt num num]", mgls_barh, mglc_barh}
+int mgls_barh(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]!=1)	return 1;
+	else if(k[1]!=1)
+		gr->Barh(*(a[0].d), k[1]==2?a[1].s:0, k[2]==3?a[2].v:NAN, k[3]==3?(a[3].v!=0):false);
+	else
+		gr->Barh(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:0, k[3]==3?a[3].v:NAN, k[4]==3?(a[4].v!=0):false);
+	return 0;
+}
+void mglc_barh(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]!=1)	return;
+	else if(k[1]!=1)
+		swprintf(out,1024,L"gr->Barh(%s, \"%s\", %g, %s);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:NAN, (k[3]==3&&a[3].v!=0)?"true":"false");
+	else
+		swprintf(out,1024,L"gr->Barh(%s, %s, \"%s\", %g, %s);",a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN, (k[4]==3&&a[4].v!=0)?"true":"false");
 }
 //-----------------------------------------------------------------------------
 //	{"belt","Draw belts","belt {xvar yvar} zvar [fmt]", mgls_belt, mglc_belt}
@@ -1241,21 +1257,21 @@ void mglc_line(wchar_t out[1024], long n, mglArg *a, int k[10])
 	}
 }
 //-----------------------------------------------------------------------------
-//	{"legend","Draw legend","legend {xpos ypos} | pos [fmt size]", mgls_legend, mglc_legend}
+//	{"legend","Draw legend","legend {xpos ypos} | pos [fmt size llen]", mgls_legend, mglc_legend}
 int mgls_legend(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==3)
-		gr->Legend(a[0].v, a[1].v, k[2]==2?a[2].s:"rL", k[3]==3?a[3].v:-1);
+		gr->Legend(a[0].v, a[1].v, k[2]==2?a[2].s:"rL", k[3]==3?a[3].v:-1, k[4]==3?a[4].v:0.1);
 	else
-		gr->Legend(k[0]==3?int(a[0].v):3, k[1]==2?a[1].s:"rL", k[2]==3?a[2].v:-1);
+		gr->Legend(k[0]==3?int(a[0].v):3, k[1]==2?a[1].s:"rL", k[2]==3?a[2].v:-1, k[4]==3?a[4].v:0.1);
 	return 0;
 }
 void mglc_legend(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==3)
-		swprintf(out,1024,L"gr->Legend(%g, %g, \"%s\", %g);", a[0].v, a[1].v, k[2]==2?a[2].s:"rL", k[3]==3?a[3].v:-1);
+		swprintf(out,1024,L"gr->Legend(%g, %g, \"%s\", %g, %g);", a[0].v, a[1].v, k[2]==2?a[2].s:"rL", k[3]==3?a[3].v:-1, k[4]==3?a[4].v:0.1);
 	else
-		swprintf(out,1024,L"gr->Legend(%d, \"%s\", %g);", k[0]==3?int(a[0].v):3, k[1]==2?a[1].s:"rL", k[2]==3?a[2].v:-1);
+		swprintf(out,1024,L"gr->Legend(%d, \"%s\", %g, %g);", k[0]==3?int(a[0].v):3, k[1]==2?a[1].s:"rL", k[2]==3?a[2].v:-1, k[4]==3?a[4].v:0.1);
 }
 //-----------------------------------------------------------------------------
 //	{"linewidth","Set default line width","linewidth val", mgls_linewidth, mglc_linewidth}
@@ -1902,9 +1918,9 @@ int mgls_tile(mglGraph *gr, long n, mglArg *a, int k[10])
 	else if(k[1]==1 && k[2]!=1)
 		gr->Tile(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0);
 	else if(k[1]==1 && k[2]==1 && k[3]==1)
-		gr->Tile(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2? a[4].s:0);
+		gr->TileS(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2? a[4].s:0);
 	else if(k[1]==1 && k[2]==1)
-		gr->Tile(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2? a[3].s:0);
+		gr->TileS(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2? a[3].s:0);
 	else	return 1;
 	return 0;
 }
@@ -1925,11 +1941,15 @@ void mglc_tile(wchar_t out[1024], long n, mglArg *a, int k[10])
 int mgls_text(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
-		gr->Text(mglPoint(a[0].v,a[1].v,a[2].v),a[3].w,
+		gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v),a[3].w,
 			(k[4]==2 && a[4].s[0]!=0)?a[4].s:gr->FontDef,k[5]==3?a[5].v:-1.4);
 	else if(k[0]==3 && k[1]==3 && k[2]==2)
-		gr->Text(mglPoint(a[0].v,a[1].v),a[2].w,
+		gr->Putsw(mglPoint(a[0].v,a[1].v),a[2].w,
 			(k[3]==2 && a[3].s[0]!=0)?a[3].s:gr->FontDef,k[4]==3?a[4].v:-1.4);
+	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3 && k[6]==2)
+		gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].w, 't', k[8]==3?a[8].v:-1.4);
+	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==2)
+		gr->Putsw(mglPoint(a[0].v,a[1].v), mglPoint(a[2].v,a[3].v), a[4].w, 't', k[6]==3?a[6].v:-1.4);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
 		gr->Text(*(a[0].d),*(a[1].d),*(a[2].d),a[3].w,k[4]==2?a[4].s:0,k[5]==3?a[5].v:-1);
 	else if(k[0]==1 && k[1]==1 && k[2]==2)
@@ -1943,9 +1963,13 @@ int mgls_text(mglGraph *gr, long n, mglArg *a, int k[10])
 void mglc_text(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
-		swprintf(out,1024,L"gr->Text(mglPoint(%g, %g, %g), \"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].v, a[3].w, (k[4]==2 && a[4].s[0]!=0)?a[4].s:"", k[5]==3?a[5].v:-1.4);
+		swprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), \"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].v, a[3].w, (k[4]==2 && a[4].s[0]!=0)?a[4].s:"", k[5]==3?a[5].v:-1.4);
 	else if(k[0]==3 && k[1]==3 && k[2]==2)
-		swprintf(out,1024,L"gr->Text(mglPoint(%g, %g), \"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].w, (k[3]==2 && a[3].s[0]!=0)?a[3].s:"", k[4]==3?a[4].v:-1.4);
+		swprintf(out,1024,L"gr->Puts(mglPoint(%g, %g), \"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].w, (k[3]==2 && a[3].s[0]!=0)?a[3].s:"", k[4]==3?a[4].v:-1.4);
+	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3 && k[6]==2)
+		swprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), \"%ls\", 't', %g);", a[0].v, a[1].v, a[2].v, a[3].v, a[4].v, a[5].v, a[6].w, k[8]==3?a[8].v:-1.4);
+	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==2)
+		swprintf(out,1024,L"gr->Puts(mglPoint(%g, %g), mglPoint(%g, %g), \"%ls\", 't', %g);", a[0].v, a[1].v, a[2].v, a[3].v, a[4].w, k[6]==3?a[6].v:-1.4);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
 		swprintf(out,1024,L"gr->Text(%s, %s, %s, \"%ls\", \"%s\", %g);",  a[0].s, a[1].s, a[2].s, a[3].w, k[4]==2?a[4].s:"", k[5]==3?a[5].v:-1);
 	else if(k[0]==1 && k[1]==1 && k[2]==2)
@@ -2473,7 +2497,7 @@ void mglc_pipe(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"origin","Set axis origin",0, mgls_origin, mglc_origin}
 int mgls_origin(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==3 && k[1]==3)	gr->Org = mglPoint(a[0].v,a[1].v,k[2]==3?a[2].v:gr->Min.z);
+	if(k[0]==3 && k[1]==3)	gr->Org = mglPoint(a[0].v,a[1].v,k[2]==3?a[2].v:NAN);
 	else	return 1;
 	return 0;
 }
@@ -2786,6 +2810,110 @@ void mglc_ctick(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"if(gr->ctt) delete []gr->ctt;\tgr->ctt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
 }
 //-----------------------------------------------------------------------------
+//	{L"fplot",L"Plot curve by formula",L"fplot 'func' ['stl'='' num=100]", mgls_fplot, mglc_fplot}
+int mgls_fplot(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)	gr->Plot(a[0].s, k[1]==2?a[1].s:0, k[2]==3?int(a[2].v):100);
+	else	return 1;
+	return 0;
+}
+void mglc_fplot(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)
+		swprintf(out,1024,L"gr->Plot(\"%s\", \"%s\", %d);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?int(a[2].v):100);
+}
+//-----------------------------------------------------------------------------
+//	{L"fsurf",L"Plot surface by formula",L"fsurf 'func' ['stl'='' num=100]", mgls_fsurf, mglc_fsurf}
+int mgls_fsurf(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)	gr->Surf(a[0].s, k[1]==2?a[1].s:0, k[2]==3?int(a[2].v):100);
+	else	return 1;
+	return 0;
+}
+void mglc_fsurf(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)
+		swprintf(out,1024,L"gr->Surf(\"%s\", \"%s\", %d);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?int(a[2].v):100);
+}
+//-----------------------------------------------------------------------------
+//	{L"fgets",L"Print string from file",L"fgets x y {z} 'fname' [pos=0 'stl'='' size=-1.4]", mgls_fgets, mglc_fgets}
+int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10])
+{
+	char buf[1024];
+	FILE *fp;
+	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
+	{
+		int i, n = (k[4]==3?int(a[4].v):0);
+		fp = fopen(a[3].s,"rt");
+		if(!fp)
+		{
+			if(gr->Message)	sprintf(gr->Message,"Wrong file %s",a[3].s);
+			return 0;
+		}
+		for(i=0;i<n;i++)	fgets(buf,1024,fp);
+		fgets(buf,1024,fp);
+		fclose(fp);
+	}
+	else if(k[0]==3 && k[1]==3 && k[2]==2)
+	{
+		int i, n = k[3]==3?int(a[3].v):0;
+		fp = fopen(a[2].s,"rt");
+		if(!fp)
+		{
+			if(gr->Message)	sprintf(gr->Message,"Wrong file %s",a[2].s);
+			return 0;
+		}
+		for(i=0;i<n;i++)	fgets(buf,1024,fp);
+		fgets(buf,1024,fp);
+		fclose(fp);
+		gr->Text(mglPoint(a[0].v,a[1].v,a[2].v),buf, (k[4]==2 && a[4].s[0]!=0)?a[4].s:gr->FontDef, k[5]==3?a[5].v:-1.4);
+	}
+	else	return 1;
+	return 0;
+}
+void mglc_fgets(wchar_t out[1024], long , mglArg *a, int k[10])	{}
+//-----------------------------------------------------------------------------
+//	{L"import",L"Import data from PNG picture",L"import dat 'fname' 'scheme' [v1=0 v2=1]", mgls_import, mglc_import}
+int mgls_import(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==2)
+		a[0].d->Import(a[1].s, a[2].s, k[3]==3?a[3].v:0, k[4]==3?a[4].v:1);
+	else	return 1;
+	return 0;
+}
+void mglc_import(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==2)
+		swprintf(out,1024,L"%s->Import(%s, %s, %g, %g);", a[0].s, a[1].s, a[2].s, k[3]==3?a[3].v:0, k[4]==3?a[4].v:1);
+}
+//-----------------------------------------------------------------------------
+//	{L"export",L"Export data to PNG picture",L"export dat 'fname' 'scheme' [v1=0 v2=0]", mgls_import, mglc_import}
+int mgls_export(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==2)
+		a[0].d->Export(a[1].s, a[2].s, k[3]==3?a[3].v:0, k[4]==3?a[4].v:1);
+	else	return 1;
+	return 0;
+}
+void mglc_export(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==2)
+		swprintf(out,1024,L"%s->Export(%s, %s, %g, %g);", a[0].s, a[1].s, a[2].s, k[3]==3?a[3].v:0, k[4]==3?a[4].v:1);
+}
+//-----------------------------------------------------------------------------
+//	{L"write",L"Write current image to PNG file",L"write 'fname' [solid=off]", mgls_write, mglc_writek}
+int mgls_write(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)	gr->WritePNG(a[0].s, "MathGL", k[1]!=3 || a[1].v!=0);
+	else	return 1;
+	return 0;
+}
+void mglc_write(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)
+		swprintf(out,1024,L"gr->WritePNG(\"%s\", \"MathGL\", %s);", a[0].s, k[1]!=3 || a[1].v!=0 ? "true" : "false");
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{L"addlegend",L"Add legend entry",L"addlegend txt fmt", mgls_addlegend, mglc_addlegend},
 	{L"addto",L"Add data or number",L"addto var|num", mgls_addto, mglc_addto},
@@ -2799,6 +2927,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"axialdir",L"Set axis of rotation",L"axialdir dir", mgls_axialdir, mglc_axialdir},
 	{L"axis",L"Setup or draw axis",L"", mgls_axis, mglc_axis},
 	{L"ball",L"Draw point (ball)",L"ball posx posy {posz} [fmt]", mgls_ball, mglc_ball},
+	{L"barh",L"Draw horizontal bars for 1D data", L"barh {xvar} yvar [fmt num num]", mgls_barh, mglc_barh},
 	{L"bars",L"Draw bars for 1D data",L"bars {xvar} yvar {{zvar}} [fmt num num]", mgls_bars, mglc_bars},
 	{L"beam",L"Draw quasioptical beam",L"", mgls_beam, mglc_beam},
 	{L"belt",L"Draw belts",L"belt {xvar yvar} zvar [fmt]", mgls_belt, mglc_belt},
@@ -2845,6 +2974,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"dots",L"Draw dots for arbitrary data points",L"dots {xvar yvar zvar} | var [fmt]", mgls_dots, mglc_dots},
 	{L"drop",L"Draw drop",L"", mgls_drop, mglc_drop},
 	{L"error",L"Draw error boxes",L"", mgls_error, mglc_error},
+	{L"export",L"Export data to PNG picture",L"export dat 'fname' 'scheme' [v1=0 v2=0]", mgls_import, mglc_import},
 	{L"extend",L"Extend data array",L"", mgls_extend, mglc_extend},
 	{L"facex",L"Draw face perpendicular to x-axis",L"facex x0 y0 z0 wy wz [fmt]", mgls_facex, mglc_facex},
 	{L"facey",L"Draw face perpendicular to y-axis",L"facex x0 y0 z0 wx wz [fmt]", mgls_facey, mglc_facey},
@@ -2853,13 +2983,17 @@ mglCommand mgls_base_cmd[] = {
 	{L"fill",L"Fill data linearly in range [v1, v2]",L"fill var v1 v2 [dir]", mgls_fill, mglc_fill},
 	{L"fit",L"Fit data to formula",L"fit res {x {y {z}}} a eq var [ini print]", mgls_fit, mglc_fit},
 	{L"fits",L"Fit data to formula",L"fits res {x {y {z}}} a s eq var [ini print]", mgls_fits, mglc_fits},
+	{L"fgets",L"Print string from file",L"fgets x y {z} 'fname' [pos=0 'stl'='' size=-1.4]", mgls_fgets, mglc_fgets},
 	{L"flow",L"Draw flow threads for vector field",L"", mgls_flow, mglc_flow},
 	{L"fog",L"Switch on/off fog",L"fog var val [pos]", mgls_fog, mglc_fog},
 	{L"font",L"Setup font",L"font fmt [size]", mgls_font, mglc_font},
+	{L"fplot",L"Plot curve by formula",L"fplot 'func' ['stl'='' num=100]", mgls_fplot, mglc_fplot},
+	{L"fsurf",L"Plot surface by formula",L"fsurf 'func' ['stl'='' num=100]", mgls_fsurf, mglc_fsurf},
 	{L"grid",L"Draw grid",L"", mgls_grid, mglc_grid},
 	{L"grid3",L"Draw grid at slices of 3D data",L"grid3 {xvar yvar zvar} avar dir [pos fmt]", mgls_grid3, mglc_grid3},
 	{L"grida",L"Draw grid at central slices of 3D data",L"grida {xvar yvar zvar} avar [fmt num]", mgls_grida, mglc_grida},
 	{L"hist",L"Create histogram (distribution) of data values",L"", mgls_hist, mglc_hist},
+	{L"import",L"Import data from PNG picture",L"import dat 'fname' 'scheme' [v1=0 v2=1]", mgls_import, mglc_import},
 	{L"info",L"Print information about data",L"info var", mgls_info, mglc_info},
 	{L"inplot",L"Set position of plot in picture",L"", mgls_inplot, mglc_inplot},
 	{L"integrate",L"Integrate data",L"integrate var dir", mgls_integrate, mglc_integrate},
@@ -2934,6 +3068,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"var",L"Create new 1D data and fill it in range",L"var var nx x1 x2", mgls_var, mglc_var},
 	{L"vect",L"Draw vector field",L"", mgls_vect, mglc_vect},
 	{L"vectc",L"Draw vector field with coloring",L"", mgls_vectc, mglc_vectc},
+	{L"write",L"Write current image to PNG file",L"write 'fname' [solid=off]", mgls_write, mglc_write},
 	{L"xlabel",L"Draw label for x-axis",L"xlabel txt [fnt pos]", mgls_xlabel, mglc_xlabel},
 	{L"xrange",L"Set range for x-axis",L"xrange {var [add]} | {x1 x2}", mgls_xrange, mglc_xrange},
 	{L"xtick",L"Set ticks for x-axis",L"xtick {val [sub]} | tmpl", mgls_xtick, mglc_xtick},

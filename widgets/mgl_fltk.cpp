@@ -123,7 +123,11 @@ int Fl_MathGL::handle(int code)
 		if(code==FL_KEYUP)
 		{
 			int key=Fl::event_key();
-			if(!strchr(".,wasdrfx",key))	return 0;
+			if(!strchr(" .,wasdrfx",key))	return 0;
+			if(key==' ')
+			{
+				update();	return 1;
+			}
 			if(key=='w')
 			{
 				tet += 10;
@@ -233,8 +237,8 @@ int Fl_MathGL::handle(int code)
 //-----------------------------------------------------------------------------
 mglGraphFLTK::mglGraphFLTK() : mglGraphZB()
 {
-	AutoClf=true;	GG = 0;	Wnd = 0;
-	Delay = 1.;	NumFig = 0;	CurFig = -1;
+	GG = 0;		Wnd = 0;
+	NumFig = 0;	CurFig = -1;
 	alpha = light = sshow = 0;
 }
 //-----------------------------------------------------------------------------
@@ -551,7 +555,7 @@ Fl_Menu_Item menuitems[] = {
 	{ 0,0,0,0,0,0,0,0,0 }
 };
 //-----------------------------------------------------------------------------
-void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(bool next))
+void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next))
 {
 	NumFig=0;	CurFig=0;
 	CurFrameId = 0;
@@ -649,14 +653,14 @@ void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void 
 	w1->end();
 	Wnd = w1;
 	w1->resizable(scroll);	//w->graph);
-	
+
 	char *tmp[1];	tmp[0]=new char[1];	tmp[0][0]=0;
-	w1->show(argc, argv ? argv:tmp);
+	w1->show(argv ? argc:0, argv ? argv:tmp);
 	delete []tmp[0];
 }
 //-----------------------------------------------------------------------------
 HMGL mgl_create_graph_fltk(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
-						const char *title, void (*reload)(bool next), void *par)
+						const char *title, void (*reload)(int next), void *par)
 {
 	mglGraphFLTK *g = new mglGraphFLTK;
 	g->Window(argc,argv,draw,title,par,reload);
