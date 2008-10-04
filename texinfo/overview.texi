@@ -154,7 +154,7 @@ One may specify to draw a special symbol (an arrow) at the beginning and at the 
 
 @cindex Color scheme
 
-The color scheme is used for determining the color of surfaces, isolines, isosurfaces and so on. The color scheme is defined by the string which may contain several characters that are color id (see class @ref{mglColor}) or characters @samp{d#:|}. Symbol @samp{d} denotes interpolation by 3d position instead of the coloring by amplitude. Symbol @samp{#} switch to mesh drawing or to wire plot. Symbol @samp{|} disable color interpolation in color scheme which can be usefull, for example, for sharp colors during matrix plotting. Symbol @samp{:} finishes the color scheme parsing. After it the user may put styles for text, rotation axis for curves/isolines and so on. Color scheme may contain up to 32 color values.
+The color scheme is used for determining the color of surfaces, isolines, isosurfaces and so on. The color scheme is defined by the string which may contain several characters that are color id (see class @ref{mglColor} or @ref{Line styles}) or characters @samp{d#:|}. Symbol @samp{d} denotes interpolation by 3d position instead of the coloring by amplitude. Symbol @samp{#} switch to mesh drawing or to wire plot. Symbol @samp{|} disable color interpolation in color scheme which can be usefull, for example, for sharp colors during matrix plotting. Symbol @samp{:} finishes the color scheme parsing. After it the user may put styles for text, rotation axis for curves/isolines and so on. Color scheme may contain up to 32 color values.
 
 For coloring by @emph{amplitude} (most common) the final color is linear interpolation of color array. The color array is constructed from the string ids. The argument is the amplitude normalized between @var{Cmin} -- @var{Cmax} (@pxref{Ranges (bounding box)}). For example, string containing 4 characters @samp{bcyr} corresponds to colorbar from blue (lowest value) through cyan (next value) through yellow (next value) to the red (highest value). String @samp{kw} corresponds to colorbar from black (lowest value) to white (highest value). String @samp{m} corresponds to a simple magenta color.
 
@@ -201,8 +201,8 @@ Examples of the most popular color schemes:
 @image{bcyr}
 @item bgr
 @image{bgr}
-@item br
-@image{br}
+@item BbcyrR
+@image{sharp}
 @end table
 
 For the coloring by @emph{coordinate} the final color is determined by position of the point in 3d space and is calculated by formula c=x*c[1] + y*c[2] + z*c[3]. Here c[1], c[2], c[3] are the first three elements of color array; x, y, z are normalized to @var{Min} -- @var{Max} coordinates of the point. This type of coloring is useful for isosurface plot when color may show the exact position of the peace of surface. For example, see @ref{Surf3}.

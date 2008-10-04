@@ -59,8 +59,12 @@ int sample_transp(mglGraph *gr, void *)	// flag #
 //-----------------------------------------------------------------------------
 int sample(mglGraph *gr, void *)
 {
+	mglParse par;
 	mglData a(10);	a.Modify("rnd");
-	gr->Barh(a,"#");
+//	gr->Barh(a,"#");
+	gr->Axis(mglPoint(-10,0), mglPoint(10,7));
+	//gr->Plot("1/sqrt(1+x^2)");
+	par.Parse(gr,"fplot '1/sqrt(1+x^2)' 'r'");
 	return 0;
 }
 
@@ -97,7 +101,7 @@ int main(int argc,char **argv)
 //	setlocale(LC_CTYPE, "ru_RU.cp1251");
 	mglGraphZB gr;//(1280,800);
 //	mglGraphPS gr;//(1280,800);
-	sample(&gr,0);	gr.WritePNG("1.png",0,false);	gr.WriteBMP("1.bmp");
+	sample(&gr,0);	gr.WritePNG("1.png",0,false);//	gr.WriteBMP("1.bmp");
 //	mglGraphIDTF gr;//(1280,800);
 //	sample(&gr,0);	gr.WriteIDTF("1.idtf");	return 0;
 

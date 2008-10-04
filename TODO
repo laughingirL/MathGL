@@ -1,24 +1,22 @@
-					MathGL (for v.1.7.1)
+					MathGL (for v.1.8)
 
 1. Hankel transform
 2. Ternary axis -- keep z-axis as normal one ???
 3. Change ticks labels drawing if RotatedText = false;
-4. mglGraph::Ellipse()
-6. Title() -- automatic text at top ?!
-7. WX window
-8. Information about mouse click position in StatusBar.
-9. Use Hershey as built-in font
-10. Add FLTK, QT & GLUT to Fortran ??? How pass arguments ???
-11. Converter MGL->C (+ interface for MGL->Fortran by change HMDT->int, HMGL->int, "->');
-12. Option '#' draw bounding box near the text ???
-13. Zip-compression of EPS + text by UTF codes?!?
-14. Example of Surf + '|'
-15. Example of Chart + ' '
-16. Update web-site
+4. WX window
+5. Use Hershey as built-in font
+6. Spline5 !!!
+8. Add FLTK, QT & GLUT to Fortran ??? How pass arguments ???
+9. Converter MGL->C (+ interface for MGL->Fortran by change HMDT->int, HMGL->int, "->');
+11. Zip-compression of EPS + text by UTF codes?!?
+
 17. Update documentation (English)
 18. Update documentation (Russian)
-20. Info that Text() is obsolute in v.2.*
-21. Example of Barh()
+19. Region(), Title() --> text in TeXinfo
+
+
+20. Check 'fill'
+
 
 					MathGL (for v.1.7.?) ???
 

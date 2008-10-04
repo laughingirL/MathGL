@@ -795,6 +795,22 @@ void mglGraph::SetFont(mglFont *f)
 	else	fnt->Load(MGL_DEF_FONT_NAME,0);	//	restore (reload) default typeface
 }
 //-----------------------------------------------------------------------------
+void mglGraph::Title(const wchar_t *str,const char *font,float size)
+{
+	Identity();
+	Text(mglPoint(0,1.3,0), str, font, size);
+	RestoreM();
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Title(const char *str,const char *font,float size)
+{
+	unsigned s = strlen(str)+1;
+	wchar_t *wcs = new wchar_t[s];
+	mbstowcs(wcs,str,s);
+	Title(wcs, font, size);
+	delete []wcs;
+}
+//-----------------------------------------------------------------------------
 void mglGraph::Label(char dir, const char *str, int pos, float size, float shift)
 {
 	unsigned s = strlen(str)+1;

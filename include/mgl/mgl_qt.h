@@ -174,6 +174,7 @@ protected:
 private:
 	int x0, y0, xe, ye;		///< Temporary variables for mouse
 	uchar *grBuf;
+	QString MousePos;
 };
 //-----------------------------------------------------------------------------
 /// Convert bitmap from mglGraphAB to QPixmap

@@ -279,6 +279,8 @@ public:
 	void Zoom(float x1, float y1, float x2, float y2);
 	/// Clear transformation matrix.
 	void Identity();
+	/// Restore transformation matrix after last InPlot()
+	virtual void RestoreM()=0;
 	/// Clear up the frame
 	virtual void Clf(mglColor Back=WC); //=0
 	/// Put further plotting in some region of whole frame surface.
@@ -368,6 +370,8 @@ public:
 	void FaceZ(float x0, float y0, float z0, float wx, float wy, const char *stl="w", float dx=0, float dy=0);
 	/// Draws the sphere at point \a p with color \a stl and radius \a r.
 	void Sphere(mglPoint p, float r, const char *stl="r");
+	/// Draws the ellipsoid at point \a p with color \a stl and radiuses \a r.
+	void Ellipse(mglPoint p, mglPoint r, const char *stl="r");
 	/// Draws the drop at point \a p in direction \a q with color \a stl and radius \a r.
 	void Drop(mglPoint p, mglPoint q, float r, const char *stl="r", float shift=1, float ap=1);
 	/// Draws the drop at point \a p in direction \a q with color \a stl and radius \a r.
@@ -447,6 +451,9 @@ public:
 	void Text(mglPoint p,const char *text,const char *font=0,float size=-1.4,char dir=0);
 	/// Print unrotated string \a str in position \a p with font size \a size.
 	void Text(mglPoint p,const wchar_t *text,const char *font=0,float size=-1.4,char dir=0);
+	/// Print the title text for the picture
+	void Title(const wchar_t *text,const char *font=0,float size=-2);
+	void Title(const char *text,const char *font=0,float size=-2);
 	/// Print formated output in position \a p.
 	void Printf(mglPoint p,const char *arg,...);
 	/// Print string \a str along curve with font size \a size.
@@ -513,6 +520,11 @@ public:
 	void Plot2(const mglData &a, const char *pen=0,float zVal=NAN);
 	/// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
 	void Plot3(const mglData &a, const char *pen=0);
+
+	/// Fill area between curves y1 and y2 (if inside=false) or area for y1<=y<=y2 (if inside=true).
+	void Region(const mglData &y1, const mglData &y2, const char *pen=0, float zVal=NAN, bool inside=true);
+	/// Fill area between curves y1 and y2 (if inside=false) or area for y1<=y<=y2 (if inside=true) for parametrically specified points.
+	void Region(const mglData &x, const mglData &y1, const mglData &y2, const char *pen=0, float zVal=NAN, bool inside=true);
 
 	/// Draw area plot for points in arrays \a x, \a y, \a z.
 	void Area(const mglData &x, const mglData &y, const mglData &z, const char *pen=0);

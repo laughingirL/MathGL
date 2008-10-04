@@ -276,6 +276,50 @@ void mglGraph::Area(const mglData &y, const char *pen,bool sum,float zVal)
 }
 //-----------------------------------------------------------------------------
 //
+//	Region series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, const char *pen, float zVal, bool inside)
+{
+	long i,j, n=y1.nx, m=y1.ny, mx;
+	char mk=0;
+	if(x.nx!=n || y2.nx!=n || y2.ny!=m)
+	{	SetWarn(mglWarnDim,"Region");	return;	}
+	if(n<2)	{	SetWarn(mglWarnLow,"Region");	return;	}
+	float *pp = new float[6*n], f1,f2;
+	bool *tt = new bool[2*n];
+	if(isnan(zVal))	zVal = Min.z;
+
+	for(j=0;j<m;j++)
+	{
+		if(pen && *pen)	mk=SelectPen(pen);
+		else	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
+		DefColor(NC, -1);
+		mx = j<x.ny ? j:0;
+		for(i=0;i<n;i++)
+		{
+			pp[6*i+3] = pp[6*i+0] = x.a[i+mx*n];
+			f1 = y1.a[i+j*n];	f2 = y2.a[i+j*n];
+			pp[6*i+1] = f1;		pp[6*i+2] = zVal;
+			tt[2*i+0] = ScalePoint(pp[6*i+0],pp[6*i+1],pp[6*i+2]);
+			pp[6*i+4] = f2;		pp[6*i+5] = zVal;
+			tt[2*i+1] = ScalePoint(pp[6*i+3],pp[6*i+4],pp[6*i+5]);
+			if(f1>f2 && inside)	{	tt[2*i] = tt[2*i+1] = false;	}
+		}
+		surf_plot(2,n,pp,0,tt);
+	}
+	Flush();
+	delete []pp;	delete []tt;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Region(const mglData &y1, const mglData &y2, const char *pen, float zVal, bool inside)
+{
+	mglData x(y1.nx);
+	x.Fill(Min.z, Max.z);
+	Region(x,y1,y2,pen,zVal,inside);
+}
+//-----------------------------------------------------------------------------
+//
 //	Step series
 //
 //-----------------------------------------------------------------------------
@@ -1209,6 +1253,12 @@ void mgl_area_2(HMGL gr, const HMDT a, const char *pen)
 /// Draw area plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
 void mgl_area_3(HMGL gr, const HMDT a, const char *pen)
 {	if(gr && a)	gr->Area3(*a,pen);	}
+/// Fill area between curves \a y1, \a y2 parametrically dependent on \a x.
+void mgl_region_xy(HMGL gr, const HMDT x, const HMDT y1, const HMDT y2, const char *pen, int inside)
+{	if(gr && x && y1 && y2)	gr->Region(*x,*y1,*y2,pen,NAN,inside);	}
+/// Fill area between curves \a y1, \a y2.
+void mgl_region(HMGL gr, const HMDT y1, const HMDT y2, const char *pen, int inside)
+{	if(gr && y1 && y2)	gr->Area(*y1,*y2,pen,NAN,inside);	}
 /// draw mark with different type at position {x,y,z}
 void mgl_mark(HMGL gr, float x,float y,float z,char mark)
 {	gr->Mark(mglPoint(x,y,z),mark);	}
@@ -1380,6 +1430,20 @@ void mgl_area_3_(long *gr, long *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Area3(_D_(a),s);
+	delete []s;
+}
+/// Fill area between the curves \a y1, \a y2 parametrically dependent on \a x.
+void mgl_region_xy_(long *gr, long *x, long *y1, long *y2, const char *pen, int *inside, int l)
+{
+	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	if(gr && x && y1 && y2)	_GR_->Region(_D_(x),_D_(y1),_D_(y2),s,NAN,*inside);
+	delete []s;
+}
+/// Fill area between the curves \a y1, \a y2.
+void mgl_region_(long *gr, long *y1, long *y2, const char *pen, int *inside, int l)
+{
+	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	if(gr && y1 && y2)	_GR_->Region(_D_(y1),_D_(y2),s,NAN,*inside);
 	delete []s;
 }
 /// draw mark with different type at position {x,y,z}

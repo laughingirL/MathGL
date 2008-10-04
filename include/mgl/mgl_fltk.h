@@ -129,6 +129,7 @@ protected:
 	bool zoom, rotate;			///< flag for handle mouse
 	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
 	int x0,y0,xe,ye;			///< mouse position
+	char pos[128];
 
 	void draw();				///< quick drawing function
 	int handle(int code);		///< handle mouse events

@@ -125,13 +125,38 @@ void mglGraph::Drop(mglPoint p, mglPoint q, float r, mglColor c, float sh, float
 	bool cut = Cut;	Cut = true;
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)
 	{
-		u = (i+1e-4)*M_PI/(n-1.);	v = 2*M_PI*j/(n-1.)-1;	i0 = i+n*j;
+		u = i*M_PI/(n-1.);	v = 2*M_PI*j/(n-1.)-1;	i0 = i+n*j;
 		x = r*cos(v)*a*sin(u)*(1.+sh*cos(u))/(1+sh);
 		y = r*sin(v)*a*sin(u)*(1.+sh*cos(u))/(1+sh);
 		z = r*(1+sh)*(cos(u)+sh);
 		pp[3*i0+0] = p.x + p1.x*x + p2.x*y + q.x*z;
 		pp[3*i0+1] = p.y + p1.y*x + p2.y*y + q.y*z;
 		pp[3*i0+2] = p.z + p1.z*x + p2.z*y + q.z*z;
+		ScalePoint(pp[3*i0+0],pp[3*i0+1],pp[3*i0+2]);
+	}
+	Cut = cut;
+	surf_plot(n,n,pp,0,0);
+	Flush();
+	delete []pp;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Ellipse(mglPoint p, mglPoint r, const char *stl)
+{
+	register long i,j,i0;
+	long n = CirclePnts;
+	n = (n<3) ? 3 : n;
+	float *pp = new float[3*n*n],u,v;
+
+	if(r.x==0 || r.y==0 || r.z==0)	return;
+	SetScheme(stl);
+
+	bool cut = Cut;	Cut = true;
+	for(i=0;i<n;i++)	for(j=0;j<n;j++)
+	{
+		u = i*M_PI/(n-1.);	v = 2*M_PI*j/(n-1.)-1;	i0 = i+n*j;
+		pp[3*i0+0] = p.x + r.x*cos(v)*sin(u);
+		pp[3*i0+1] = p.y + r.y*sin(v)*sin(u);
+		pp[3*i0+2] = p.z + r.z*cos(u);
 		ScalePoint(pp[3*i0+0],pp[3*i0+1],pp[3*i0+2]);
 	}
 	Cut = cut;

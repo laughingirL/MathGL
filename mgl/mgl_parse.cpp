@@ -235,14 +235,22 @@ bool mgls_suffix(const wchar_t *p, mglData *d, float *v)
 void mglParse::FillArg(int k, wchar_t **arg, mglArg *a)
 {
 	wchar_t *s, *t, *p=0, *b;
-	for(long n=1;n<k;n++)
+	register long n,ii;
+	for(n=1;n<k;n++)
 	{
 		mglVar *v, *u;
 		a[n-1].type = -1;
-		p = wcschr(arg[n],'.');
+		for(b=arg[n],ii=0,p=0;*b!=0;b++)
+		{
+			if(*b=='\'')	ii = 1-ii;
+			if(ii==0 && *b=='.')
+			{	p = b;	break;	}
+		}
+//		p = wcschr(arg[n],'.');
 		if(arg[n][0]!='\'' && (s=wcschr(arg[n],'(')))	// subdata or column in argument
 		{
-			p = wcschr(arg[n],'.');	if(p)	{	p[0]=0;	p++;	}
+			// separate suffix only HERE !!!
+			if(p)	{	p[0]=0;	p++;	}
 			s = mgl_wcsdup(arg[n]);
 			t = wcstok (s, L"(,)",&b);
 			v = FindVar(t);
@@ -251,6 +259,7 @@ void mglParse::FillArg(int k, wchar_t **arg, mglArg *a)
 			if(!wcschr(arg[n],'\''))	// this subdata
 			{
 				long k[3]={-1,-1,-1};
+				// continue parsing
 				t = wcstok (0, L"(,)",&b);	if(t)	k[0] = t[0]==':'?-1:wcstol(t,0,0);
 				t = wcstok (0, L"(,)",&b);	if(t)	k[1] = t[0]==':'?-1:wcstol(t,0,0);
 				t = wcstok (0, L"(,)",&b);	if(t)	k[2] = t[0]==':'?-1:wcstol(t,0,0);
@@ -316,7 +325,7 @@ int mglParse::PreExec(mglGraph *gr, long k, wchar_t **arg, mglArg *a)
 {
 	long n=0;
 	mglVar *v;
-	if(!wcsncmp(L"read",arg[0],4) || !wcscmp(L"new",arg[0]) || !wcscmp(L"copy",arg[0]) || !wcscmp(L"var",arg[0]) || !wcscmp(L"hist",arg[0]) || !wcscmp(L"max",arg[0]) || !wcscmp(L"min",arg[0]) || !wcscmp(L"sum",arg[0]) || !wcscmp(L"resize",arg[0]) || !wcscmp(L"subdata",arg[0]) || !wcscmp(L"momentum",arg[0]) || !wcscmp(L"fit",arg[0]))
+	if(!wcsncmp(L"read",arg[0],4) || !wcscmp(L"new",arg[0]) || !wcscmp(L"copy",arg[0]) || !wcscmp(L"var",arg[0]) || !wcscmp(L"hist",arg[0]) || !wcscmp(L"max",arg[0]) || !wcscmp(L"min",arg[0]) || !wcscmp(L"sum",arg[0]) || !wcscmp(L"resize",arg[0]) || !wcscmp(L"subdata",arg[0]) || !wcscmp(L"fit",arg[0]) || !wcscmp(L"momentum",arg[0]) || !wcscmp(L"import",arg[0]))
 	{
 		if(k<3 || check_for_name(arg[1]))	return 2;
 		v = AddVar(arg[1]);

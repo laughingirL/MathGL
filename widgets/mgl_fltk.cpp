@@ -117,6 +117,13 @@ int Fl_MathGL::handle(int code)
 		const Fl_Menu_Item *m = popup->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
 		if(m)	m->do_callback(wpar, vpar);
 	}
+	if(graph->ShowMousePos && !zoom && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
+	{
+		mglPoint p = graph->CalcXYZ(Fl::event_x()-x(), Fl::event_y()-y());
+		char s[128];
+		sprintf(s,"x=%g, y=%g, z=%g",p.x,p.y,p.z);
+		draw();	fl_color(FL_BLACK);		fl_draw(s,40,70);
+	}
 	if((!zoom && !rotate) || Fl::event_button()!=FL_LEFT_MOUSE)
 	{
 		if(code==FL_FOCUS || code==FL_UNFOCUS)	return 1;
@@ -668,6 +675,20 @@ HMGL mgl_create_graph_fltk(int argc, char **argv, int (*draw)(mglGraph *gr, void
 }
 //-----------------------------------------------------------------------------
 void mgl_fltk_run()
+{
+	mglFlRun();
+}
+//-----------------------------------------------------------------------------
+long mgl_create_graph_fltk_(int (*draw)(long *gr, void *p), const char *title, void *par, int l)
+{
+	mglGraphFLTK *g = new mglGraphFLTK;
+	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
+	g->Window(0,0,(int (*)(mglGraph *,void *))draw,s,par);
+	delete []s;
+	return (long)g;
+}
+//-----------------------------------------------------------------------------
+void mgl_fltk_run_()
 {
 	mglFlRun();
 }

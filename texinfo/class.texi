@@ -1,0 +1,118 @@
+
+@c ------------------------------------------------------------------
+@node Plotter classes, Widget classes, MathGL core, Top
+@chapter Plotter classes
+@cindex mglGraphAB
+@cindex mglGraphZB
+@cindex mglGraphPS
+@cindex mglGraphGL
+@cindex mglGraphIDTF
+
+The class mglGraph (@pxref{MathGL core}) provide the basic tools for creating scientific graphics but it is abstract class. The matter is that there are several possible way to draw a graphics: in bitmap, in vector file, using OpenGL and so on. As result, user should use some of derived classes to do actual drawing. In principle, it is possible to derive a class exactly from mglGraph (and it was in v.1.6). But I recomend to derive from mglGraphAB class for higher compatibility of produced graphics. Class mglGraphAB is another abstract class which provide basic coordinates transformation, plotting functions and export to bitmap picture. It still require a functions for drawing lines, triangles and quadrangles. So below a set of ``plotter'' classes with short comments.
+
+@deftp {Class} mglGraphAB
+Abstract class mglGraphAB implements plotting function for 1D, 2D and 3D plots using Z-ordering and provides base functionality for to screen coordinate transformation, bitmap creation and so on.
+@end deftp
+
+@deftp {Class} mglGraphZB
+Class mglGraphZB implements plotting function for 1D, 2D and 3D plots using Z-Buffer. It is useful for off-screen (for console or SSH terminal) programs. Also this class can be used in any other programs which may draw bitmap on the  screen (for example, by using FLTK, Qt, wxWidgets libraries and so on). Note that bitmap picture is saved while exporting to EPS format. The produced graphics have better quality but slower in comparison with graphics in the class mglGraphPS. 
+@end deftp
+
+@deftp {Class} mglGraphPS
+Class mglGraphPS implements plotting functions for 1D, 2D and 3D plots and exports them to PostScript or SVG file. It is useful for off-screen (for console or SSH terminal) programs. Note that there is no transparency support now and color interpolation and lightning support is limited (not so nice as in class mglGraphZB). As result the plots with transparency (SurfA, Surf3A, CloudP, CloudQ) may look not so good. However the speed of frawing is higher in comparison with one in the class mglGraphZB.
+@end deftp
+
+@deftp {Class} mglGraphGL
+Class mglGraphGL implements plotting function for 1D, 2D and 3D plots under OpenGL. This class can not be used in off-screen applications. Note, that several transparent overlapped surfaces are drawn not so correctly due to OpenGL limitations.
+@end deftp
+
+@deftp {Class} mglGraphIDTF
+Class mglGraphIDTF implements plotting function for 1D, 2D and 3D plots  and export it in IDTF format. Later this file can be converted in U3D format.
+@end deftp
+
+
+@node mglGraphAB class, , , Plotter classes
+@section mglGraphAB class
+@cindex mglGraphAB
+
+Generally this class is a bit less abstract class than mglGraph class (@pxref{MathGL core}). It provide many protected methods for handling intermidiate data from mglGraph methods and require a few methods to be defined by derived class. The developers of derived classes should look on file @samp{mgl_ab.h} and comments inside it or contact me.
+
+Here I just show new public methods for class mglGraphAB. There are functions returning the created picture (bitmap), its width and height. You may display it by yourself in any graphical library (see also, @ref{Widget classes}) or save in file (see also, @ref{Export to file}).
+
+@deftypemethod mglGraphAB @code{const unsigned char *} GetBits ()
+Gets RGB bitmap of the current state of the image. Format of each element of bits is: @{red, green, blue@}. Number of elements is Width*Height. Position of element @{i,j@} is [3*i + 3*Width*j].
+@end deftypemethod
+
+@deftypemethod mglGraphAB @code{const unsigned char *} GetRGBA ()
+Gets RGBA bitmap of the current state of the image. Format of each element of bits is: @{red, green, blue, alpha@}. Number of elements is Width*Height. Position of element @{i,j@} is [4*i + 4*Width*j].
+@end deftypemethod
+
+@deftypemethod mglGraphAB @code{int} GetWidth ()
+Gets width of the image.
+@end deftypemethod
+
+@deftypemethod mglGraphAB @code{int} GetHeight ()
+Gets height of the image.
+@end deftypemethod
+
+Class mglGraphAB is the base class for ``widget classes''. So there are set of functions for handling window behaviour. Most of them are applicable only for ``window'' classes (like mglGraphFLTK and so on, @pxref{Widget classes}). In all other classes these functions just do nothing. You should provide the corresponding interface in derived ``widget'' classes for user convenience.
+
+@deftypemethod mglGraphAB @code{void} ToggleAlpha ()
+Switch on/off transparency but do not overwrite switches in user drawing function.
+@end deftypemethod
+@deftypemethod mglGraphAB @code{void} ToggleLight ()
+Switch on/off lighting but do not overwrite switches in user drawing function.
+@end deftypemethod
+@deftypemethod mglGraphAB @code{void} ToggleZoom ()
+Switch on/off zooming by mouse as region selection.
+@end deftypemethod
+@deftypemethod mglGraphAB @code{void} ToggleRotate ()
+Switch on/off rotation by mouse. Usually, left button is used for rotation, middle button for shift, right button ffor zoom/perspective.
+@end deftypemethod
+@deftypemethod mglGraphAB @code{void} ToggleNo ()
+Switch off all zooming and rotation and restore initial state.
+@end deftypemethod
+@deftypemethod mglGraphAB @code{void} Update ()
+Update window contents.
+@end deftypemethod
+@deftypemethod mglGraphAB @code{void} ReLoad (@code{bool} o)
+Reload user data and update picture.
+@end deftypemethod
+@deftypemethod mglGraphAB @code{void} Adjust ()
+Adjust size of bitmap to window size.
+@end deftypemethod
+@deftypemethod mglGraphAB @code{void} NextFrame ()
+Show next frame (if one).
+@end deftypemethod
+@deftypemethod mglGraphAB @code{void} PrevFrame ()
+Show previous frame (if one).
+@end deftypemethod
+@deftypemethod mglGraphAB @code{void} Animation ()
+Run/stop slideshow (animation) of frames
+@end deftypemethod
+@deftypecv {Widget option} mglGraphAB @code{bool} AutoClf
+Clear canvas between drawing. You may switch it off for accumulate previous drawing (for example some points or parts of a picture).
+@end deftypecv
+@deftypecv {Widget option} mglGraphAB @code{float} Delay
+Delay for animation in seconds. Default value is 1 sec.
+@end deftypecv
+
+@c ------------------------------------------------------------------
+@node Widget classes, mglData class, Plotter classes, Top
+@chapter Widget classes
+
+
+
+
+
+
+
+
+@c ------------------------------------------------------------------
+@node mglData class, Other classes, Widget classes, Top
+@chapter mglData class
+
+@c ------------------------------------------------------------------
+@node Other classes, Interfaces, mglData class, Top
+@chapter Other classes
+

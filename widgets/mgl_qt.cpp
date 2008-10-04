@@ -87,6 +87,7 @@ void QMathGL::paintEvent(QPaintEvent *)
 	paint.begin(this);
 	paint.drawPixmap(0,0,pic);
 	if(zoom)	paint.drawRect(x0,y0,xe-x0,ye-y0);
+	if(!MousePos.isEmpty())	paint.drawText(0,12,MousePos);
 	paint.end();
 }
 //-----------------------------------------------------------------------------
@@ -184,7 +185,7 @@ void QMathGL::update(mglGraph *gr)
 	if(draw_func)	draw_func(gr, draw_par);
 	if(buf[0] != 0)	QMessageBox::warning(this, appName, buf);
 	gr->Message = 0;		delete []buf;
-
+	MousePos="";
 	if(gr==graph)	refresh();
 }
 //-----------------------------------------------------------------------------
@@ -196,7 +197,15 @@ void QMathGL::refresh()
 }
 //-----------------------------------------------------------------------------
 void QMathGL::mousePressEvent(QMouseEvent *ev)
-{	xe=x0=ev->x();	ye=y0=ev->y();	ev->accept();	}
+{
+	if(graph->ShowMousePos && !zoom && !rotate && ev->button()&Qt::LeftButton)
+	{
+		mglPoint p = graph->CalcXYZ(ev->x(), ev->y());
+		MousePos.sprintf("x=%g, y=%g, z=%g",p.x,p.y,p.z);
+		repaint();
+	}
+	xe=x0=ev->x();	ye=y0=ev->y();	ev->accept();
+}
 //-----------------------------------------------------------------------------
 void QMathGL::mouseReleaseEvent(QMouseEvent *ev)
 {
@@ -583,9 +592,20 @@ HMGL mgl_create_graph_qt(int argc, char **argv, int (*draw)(mglGraph *gr, void *
 	return g;
 }
 //-----------------------------------------------------------------------------
+long mgl_create_graph_qt_(int (*draw)(long *gr, void *p), const char *title, void *par, int l)
+{
+	mglGraphQT *g = new mglGraphQT;
+	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
+	g->Window(0,0,(int (*)(mglGraph *,void *))draw,s,par);
+	delete []s;
+	return (long)g;
+}
+//-----------------------------------------------------------------------------
 int mglQtRun()		{	return qApp ? qApp->exec():0;	}
 //-----------------------------------------------------------------------------
 void mgl_qt_run()	{	mglQtRun();	}
+//-----------------------------------------------------------------------------
+void mgl_qt_run_()	{	mglQtRun();	}
 //-----------------------------------------------------------------------------
 #define TR	QObject::tr
 void mglGraphQT::makeMenu()

@@ -25,6 +25,8 @@
 
 void mglFillP(int x,int y, const float *a,int nx,int ny,float _p[4][4]);
 void mglFillP(int x, const float *a,int nx,float _p[4]);
+void mglFillP5(int x,int y, const float *a,int nx,int ny,float _p[6][6]);
+void mglFillP5(int x, const float *a,int nx,float _p[6]);
 //-----------------------------------------------------------------------------
 double ipow_mgl(double x,int n)
 {
@@ -336,6 +338,46 @@ void mglData::Diff2(const char *dir)
 	delete []b;
 }
 //-----------------------------------------------------------------------------
+float mglData::Linear(float x,float y,float z) const
+{
+	register long i0;
+	long kx,ky,kz;
+	float b=0,dx,dy,dz,b1,b0;
+	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)
+		return 0;
+	if(nz>1 && z!=long(z))		// 3d interpolation
+	{
+		kx=long(x);	ky=long(y);	kz=long(z);
+		dx = x-kx;	dy = y-ky;	dz = z-kz;
+
+		i0 = kx+nx*(ky+ny*kz);
+		b0 = a[i0]*(1-dx-dy+dx*dy) + dx*(1-dy)*a[i0+1] +
+			dy*(1-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
+		i0 = kx+nx*(ky+ny*(kz+1));
+		b1 = a[i0]*(1-dx-dy+dx*dy) + dx*(1-dy)*a[i0+1] +
+			dy*(1-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
+		b = b0 + dz*(b1-b0);
+	}
+	else if(ny>1 && y!=long(y))	// 2d interpolation
+	{
+		kx=long(x);	ky=long(y);
+		dx = x-kx;	dy=y-ky;
+		i0 = kx+nx*ky;
+		b = a[i0]*(1-dx-dy+dx*dy) + dx*(1-dy)*a[i0+1] +
+			dy*(1-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
+	}
+	else if(nx>1 && x!=long(x))	// 1d interpolation
+	{
+		kx = long(x);
+		b = a[kx] + (x-kx)*(a[kx+1]-a[kx]);
+	}
+	else						// no interpolation
+	{
+		b = a[long(x+nx*(y+ny*z))];
+	}
+	return b;
+}
+//-----------------------------------------------------------------------------
 float mglData::Spline(float x,float y,float z) const
 {
 	float _p[4][4];
@@ -392,46 +434,6 @@ float mglData::Spline(float x,float y,float z) const
 	}
 	else					// no interpolation
 		b = a[kx+nx*(ky+ny*kz)];
-	return b;
-}
-//-----------------------------------------------------------------------------
-float mglData::Linear(float x,float y,float z) const
-{
-	register long i0;
-	long kx,ky,kz;
-	float b=0,dx,dy,dz,b1,b0;
-	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)
-		return 0;
-	if(nz>1 && z!=long(z))		// 3d interpolation
-	{
-		kx=long(x);	ky=long(y);	kz=long(z);
-		dx = x-kx;	dy = y-ky;	dz = z-kz;
-
-		i0 = kx+nx*(ky+ny*kz);
-		b0 = a[i0]*(1-dx-dy+dx*dy) + dx*(1-dy)*a[i0+1] +
-			dy*(1-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
-		i0 = kx+nx*(ky+ny*(kz+1));
-		b1 = a[i0]*(1-dx-dy+dx*dy) + dx*(1-dy)*a[i0+1] +
-			dy*(1-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
-		b = b0 + dz*(b1-b0);
-	}
-	else if(ny>1 && y!=long(y))	// 2d interpolation
-	{
-		kx=long(x);	ky=long(y);
-		dx = x-kx;	dy=y-ky;
-		i0 = kx+nx*ky;
-		b = a[i0]*(1-dx-dy+dx*dy) + dx*(1-dy)*a[i0+1] +
-			dy*(1-dx)*a[i0+nx] + dx*dy*a[i0+nx+1];
-	}
-	else if(nx>1 && x!=long(x))	// 1d interpolation
-	{
-		kx = long(x);
-		b = a[kx] + (x-kx)*(a[kx+1]-a[kx]);
-	}
-	else						// no interpolation
-	{
-		b = a[long(x+nx*(y+ny*z))];
-	}
 	return b;
 }
 //-----------------------------------------------------------------------------
@@ -1385,5 +1387,69 @@ void mglData::Delete(char dir, int at, int num)
 	if(dir=='x')	DeleteColumns(at,num);
 	if(dir=='y')	DeleteRows(at,num);
 	if(dir=='z')	DeleteSlices(at,num);
+}
+//-----------------------------------------------------------------------------
+float mgl_spline5(float y1[5], float y2[5], int n1, int n2, float d, float &dy)
+{
+	float a1[4], a2[4], f0,d0,t0,f1,d1,t1, b[6];
+	a1[0] = -(3*y1[4]-16*y1[3]+36*y1[2]-48*y1[1]+25*y1[0])/12;
+	a1[1] = (11*y1[4]-56*y1[3]+114*y1[2]-104*y1[1]+35*y1[0])/12;
+	a1[2] = -(3*y1[4]-14*y1[3]+24*y1[2]-18*y1[1]+5*y1[0])/4;
+	a1[3] = (y1[4]-4*y1[3]+6*y1[2]-4*y1[1]+y1[0])/6;
+	a2[0] = -(3*y2[4]-16*y2[3]+36*y2[2]-48*y2[1]+25*y2[0])/12;
+	a2[1] = (11*y2[4]-56*y2[3]+114*y2[2]-104*y2[1]+35*y2[0])/12;
+	a2[2] = -(3*y2[4]-14*y2[3]+24*y2[2]-18*y2[1]+5*y2[0])/4;
+	a2[3] = (y2[4]-4*y2[3]+6*y2[2]-4*y2[1]+y2[0])/6;
+	n2++;
+	f0 = y1[n1];	d0 = a1[0]+n1*(a1[1]+n1*(a1[2]+n1*a1[3]));	t0 = a1[1]/2+a1[2]*n1+1.5*n2*n2*a2[3];
+	f1 = y2[n2];	d1 = a2[0]+n2*(a2[1]+n2*(a2[2]+n2*a2[3]));	t1 = a2[1]/2+a2[2]*n2+1.5*n2*n2*a2[3];
+	b[0] = f0;	b[1] = d0;	b[2] = t0;
+	b[3] = 10*(f1-f0)+t1-3*t0-4*d1-6*d0;
+	b[4] = 15*(f0-f1)-2*t1+3*t0+7*d1+8*d0;
+	b[5] = 6*(f1-f0)+t1-t0-3*d1-3*d0;
+	dy = b[1] + d*(2*b[2]+d*(3*b[3]+d*(4*b[4]+d*(5*b[5]+d*6*b[6]))));
+	return b[0] + d*(b[1]+d*(b[2]+d*(b[3]+d*(b[4]+d*(b[5]+d*b[6])))));
+}
+//-----------------------------------------------------------------------------
+float mgl_spline3(float y1[3], float y2[3], int n1, int n2, float d, float &dy)
+{
+	float a1[2], a2[2], f0,d0,d1,f1, b[4];
+	a1[0] = -(y1[2]-4*y1[1]+3*y1[0])/2;
+	a1[1] = y1[2]-2*y1[1]+y1[0];
+	a2[0] = -(y2[2]-4*y2[1]+3*y2[0])/2;
+	a2[1] = y2[2]-2*y2[1]+y2[0];
+	n2++;
+	f0 = y1[n1];	d0 = a1[0]+a1[1]*n1;
+	f1 = y2[n2];	d1 = a2[0]+a2[1]*n2;
+	b[0] = f0;	b[1] = d0;
+	b[2] = 3*(f1-f0)-d1-2*d0;
+	b[3] = 2*(f0-f1)+d1+d0;
+	dy = b[1] + d*(2*b[2]+d*3*b[3]);
+	return b[0] + d*(b[1]+d*(b[2]+d*b[3]));
+}
+//-----------------------------------------------------------------------------
+float mglData::Spline5(float x,float y,float z,float &dx,float &dy,float &dz) const
+{
+	float res=0;
+	if(nx<5)	return 0;	// not interpolation for points < 5 !!!
+	dx = dy = dz = 0;	x*=nx-1;	y*=ny-1;	z*=nz-1;
+	if(ny==1 && nz==1)	// 1D case
+	{
+		int n = int(x), n1 = n>1 ? 2:n, n2 = n<nx-3 ? 1:5+n-nx;
+		res = mgl_spline5(a+n+n1-2, a+n-n2, n1, n2, x-n, dx);
+	}
+	else if(nz==1)		// 2D case
+	{
+		if(ny<6)	return 0;	// not interpolation for points < 5 !!!
+		int n = int(x), n1 = n>1 ? 2:n, n2 = n<nx-3 ? 1:5+n-nx;
+		int m = int(y), m1 = m>1 ? 2:m, m2 = m<ny-3 ? 1:5+m-ny;
+		float b[6],d[6],dd;
+/*		m += m1-2 < -m2 ? m1-2 : -m2;
+		for(int i=0;i<6;i++)
+			b[i] = mgl_spline5(a+n+n1-2+nx*(m+i), a+n-n2+nx*(m+i), n1, n2, x-n, d[i]);
+		res = mgl_spline5(b,b+1
+		*/
+	}
+	return res;
 }
 //-----------------------------------------------------------------------------

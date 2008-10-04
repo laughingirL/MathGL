@@ -85,7 +85,7 @@ float mgl_data_max(HMDT d)	{	return d->Maximal();	}
 /// Get minimal value of the data
 float mgl_data_min(HMDT d)	{	return d->Minimal();	}
 /// Get the value in given cell of the data with border checking
-float &mgl_data_value(HMDT d, int i,int j,int k)	{	return d->a[i+d->nx*(j+d->ny*k)];	}
+float *mgl_data_value(HMDT d, int i,int j,int k)	{	return d->a+i+d->nx*(j+d->ny*k);	}
 /// Swap left and right part of the data in given direction (useful for fourier spectrums)
 void mgl_data_swap(HMDT d, const char *dir)
 {	d->Swap(dir);	}

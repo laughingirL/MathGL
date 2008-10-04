@@ -41,6 +41,7 @@ mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 	{	Light(i,mglPoint(0,0,1));	nLight[i] = false;	}
 	nLight[0] = true;	NoAutoFactor = false;
 	BDef[0] = BDef[1] = BDef[2] = BDef[3] = 255;
+	InPlot(0,1,0,1);	ShowMousePos = true;
 }
 //-----------------------------------------------------------------------------
 mglGraphAB::~mglGraphAB()
@@ -112,8 +113,16 @@ void mglGraphAB::Perspective(float a)	// I'm too lazy for using 4*4 matrix
 	Persp = fabs(a)/Depth;
 }
 //-----------------------------------------------------------------------------
+void mglGraphAB::RestoreM()
+{
+	memcpy(B,BL,9*sizeof(float));
+	xPos = BL[9];	yPos = BL[10];	zPos = BL[11];
+}
+//-----------------------------------------------------------------------------
 void mglGraphAB::InPlot(float x1,float x2,float y1,float y2)
 {
+	memcpy(BL,B,9*sizeof(float));
+	BL[9] = xPos;	BL[10] = yPos;	BL[11] = zPos;
 	font_factor = Width*(x2-x1) < Height*(y2-y1) ? Width*(x2-x1) : Height*(y2-y1);
 	SelectPen("k-1");
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
@@ -173,6 +182,37 @@ void mglGraphAB::PostScale(float *p,long n)
 		}
 		memcpy(y,x,3*sizeof(float));
 	}
+}
+//-----------------------------------------------------------------------------
+mglPoint mglGraphAB::CalcXYZ(int xs, int ys)
+{
+	float s3 = 2*PlotFactor, x, y, z;
+	// NOTE: Perspective, transformation formulas and lists are not support just now !!! Also it use LAST InPlot parameters!!!
+	ys = Height - ys;
+	float xx = xs*zoomx2 - xPos + zoomx1*Width;
+	float yy = ys*zoomy2 - yPos + zoomy1*Height;
+	float d1=B[0]*B[4]-B[1]*B[3], d2=B[1]*B[5]-B[2]*B[4], d3=B[0]*B[5]-B[2]*B[3];
+	if(fabs(d1) > fabs(d2) && fabs(d1) > fabs(d3))	// x-y plane
+	{
+		z = 0;
+		x = s3*(B[4]*xx-B[1]*yy)/d1;
+		y = s3*(B[0]*yy-B[3]*xx)/d1;
+	}
+	else if(fabs(d2) > fabs(d3))	// y-z
+	{
+		x = 0;
+		y = s3*(B[5]*xx-B[2]*yy)/d2;
+		z = s3*(B[1]*yy-B[4]*xx)/d2;
+	}
+	else	// x-z
+	{
+		y = 0;
+		x = s3*(B[5]*xx-B[2]*yy)/d3;
+		z = s3*(B[0]*yy-B[3]*xx)/d3;
+	}
+	return mglPoint(Min.x + (Max.x-Min.x)*(x+1)/2,
+					Min.y + (Max.y-Min.y)*(y+1)/2,
+					Min.z + (Max.z-Min.z)*(z+1)/2);
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::LightScale()

@@ -203,6 +203,8 @@ public:
 	/// Mirror the data in given direction (useful for fourier spectrums)
 	void Mirror(const char *dir);
 
+	/// Interpolate by 5-th order splain the data to given point \a x,\a y,\a z which normalized in range [0, 1] and evaluate its derivatives
+	float Spline5(float x,float y,float z,float &dx,float &dy,float &dz) const;
 	/// Interpolate by qubic splain the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	float Spline(float x,float y=0,float z=0) const;
 	/// Interpolate by qubic splain the data to given point \a x,\a y,\a z which normalized in range [0, 1]

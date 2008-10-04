@@ -21,12 +21,18 @@
 extern "C" {
 #endif
 /*****************************************************************************/
+#ifdef __cplusplus
 struct mglGraph;
 typedef mglGraph *HMGL;
 struct mglData;
 typedef mglData *HMDT;
 struct mglParse;
 typedef mglParse *HMPR;
+#else
+#define HMGL void*
+#define HMDT void*
+#define HMPR void*
+#endif
 #ifndef NO_GSL
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_matrix.h>
@@ -179,6 +185,7 @@ void mgl_putsw(HMGL graph, float x, float y, float z,const wchar_t *text);
 void mgl_puts_dir(HMGL graph, float x, float y, float z, float dx, float dy, float dz, const char *text, float size);
 void mgl_putsw_dir(HMGL graph, float x, float y, float z, float dx, float dy, float dz, const wchar_t *text, float size);
 void mgl_text(HMGL graph, float x, float y, float z,const char *text);
+void mgl_title(HMGL graph, const char *text, const char *fnt);
 void mgl_putsw_ext(HMGL graph, float x, float y, float z,const wchar_t *text,const char *font,float size,char dir);
 void mgl_puts_ext(HMGL graph, float x, float y, float z,const char *text,const char *font,float size,char dir);
 void mgl_text_ext(HMGL graph, float x, float y, float z,const char *text,const char *font,float size,char dir);
@@ -204,6 +211,8 @@ void mgl_area_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
 void mgl_area(HMGL graph, const HMDT y, const char *pen);
 void mgl_area_2(HMGL graph, const HMDT a, const char *pen);
 void mgl_area_3(HMGL graph, const HMDT a, const char *pen);
+void mgl_region_xy(HMGL graph, const HMDT x, const HMDT y1, const HMDT y2, const char *pen, int inside);
+void mgl_region(HMGL graph, const HMDT y1, const HMDT y2, const char *pen, int inside);
 void mgl_mark(HMGL graph, float x,float y,float z,char mark);
 void mgl_stem_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
 void mgl_stem_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
@@ -431,7 +440,7 @@ void mgl_data_modify_vw(HMDT dat, const char *eq,const HMDT vdat,const HMDT wdat
 void mgl_data_squeeze(HMDT dat, int rx,int ry,int rz,int smooth);
 float mgl_data_max(HMDT dat);
 float mgl_data_min(HMDT dat);
-float &mgl_data_value(HMDT dat, int i,int j,int k);
+float *mgl_data_value(HMDT dat, int i,int j,int k);
 const float *mgl_data_data(HMDT dat);
 HMDT mgl_data_combine(const HMDT dat1, const HMDT dat2);
 void mgl_data_extend(HMDT dat, int n1, int n2);

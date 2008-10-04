@@ -31,6 +31,17 @@ HMGL mgl_create_graph_zb(int width, int height)
 long mgl_create_graph_zb_(int *width, int *height)
 {    return long(new mglGraphZB(*width,*height));	}
 //-----------------------------------------------------------------------------
+mglGraphZB::mglGraphZB(int w,int h) : mglGraphAB(w,h)
+{
+	C = 0;	FastNoFace = true;
+	SetSize(w,h);
+}
+//-----------------------------------------------------------------------------
+mglGraphZB::~mglGraphZB()
+{
+	if(C)	{	delete []C;	delete []Z;	}
+}
+//-----------------------------------------------------------------------------
 void mglGraphZB::Ball(float x,float y,float z,mglColor col,float alpha)
 {
 	if(alpha==0)	return;
@@ -299,19 +310,6 @@ void mglGraphZB::quad_plot(float *pp0,float *pp1,float *pp2,float *pp3,
 	float d1[3],d2[3],d3[3],c1[4],c2[4],c3[4];
 	float cs[4],ns[3],dd,dsx,dsy;
 
-/*	ps[0] = (pp0[0]+pp1[0]+pp2[0]+pp3[0])/4;
-	ps[1] = (pp0[1]+pp1[1]+pp2[1]+pp3[1])/4;
-	ps[2] = (pp0[2]+pp1[2]+pp2[2]+pp3[2])/4;
-	cs[0] = (cc0[0]+cc1[0]+cc2[0]+cc3[0])/4;
-	cs[1] = (cc0[1]+cc1[1]+cc2[1]+cc3[1])/4;
-	cs[2] = (cc0[2]+cc1[2]+cc2[2]+cc3[2])/4;
-	cs[3] = (cc0[3]+cc1[3]+cc2[3]+cc3[3])/4;
-	trig_plot(ps,pp0,pp1,cs,cc0,cc1);
-	trig_plot(ps,pp3,pp1,cs,cc3,cc1);
-	trig_plot(ps,pp2,pp3,cs,cc2,cc3);
-	trig_plot(ps,pp0,pp2,cs,cc0,cc3);
-	return;*/
-
 	d1[0] = pp1[0]-pp0[0];	d2[0] = pp2[0]-pp0[0];	d3[0] = pp3[0]+pp0[0]-pp1[0]-pp2[0];
 	d1[1] = pp1[1]-pp0[1];	d2[1] = pp2[1]-pp0[1];	d3[1] = pp3[1]+pp0[1]-pp1[1]-pp2[1];
 	d1[2] = pp1[2]-pp0[2];	d2[2] = pp2[2]-pp0[2];	d3[2] = pp3[2]+pp0[2]-pp1[2]-pp2[2];
@@ -328,6 +326,24 @@ void mglGraphZB::quad_plot(float *pp0,float *pp1,float *pp2,float *pp3,
 	dd=d1[0]*d2[1]-d1[1]*d2[0];
 	dsx =-4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[1];
 	dsy = 4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[0];
+
+//	if(dsx==0 && dsy==0)	// TODO: check it !!!
+	if((d1[0]==0 && d1[1]==0) || (d2[0]==0 && d2[1]==0) || (pp1[0]==pp3[0] && pp1[1]==pp3[1]) || (pp2[0]==pp3[0] && pp2[1]==pp3[1]))
+	{
+		float ps[3];
+		ps[0] = (pp0[0]+pp1[0]+pp2[0]+pp3[0])/4;
+		ps[1] = (pp0[1]+pp1[1]+pp2[1]+pp3[1])/4;
+		ps[2] = (pp0[2]+pp1[2]+pp2[2]+pp3[2])/4;
+		cs[0] = (cc0[0]+cc1[0]+cc2[0]+cc3[0])/4;
+		cs[1] = (cc0[1]+cc1[1]+cc2[1]+cc3[1])/4;
+		cs[2] = (cc0[2]+cc1[2]+cc2[2]+cc3[2])/4;
+		cs[3] = (cc0[3]+cc1[3]+cc2[3]+cc3[3])/4;
+		trig_plot(ps,pp0,pp1,cs,cc0,cc1);
+		trig_plot(ps,pp3,pp1,cs,cc3,cc1);
+		trig_plot(ps,pp2,pp3,cs,cc2,cc3);
+		trig_plot(ps,pp0,pp2,cs,cc0,cc2);
+		return;
+	}
 
 	register long i,j,g;
 	register float u,v,s,xx,yy,q;
@@ -392,6 +408,24 @@ void mglGraphZB::quad_plot_n(float *pp0,float *pp1,float *pp2,float *pp3,
 	dd=d1[0]*d2[1]-d1[1]*d2[0];
 	dsx =-4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[1];
 	dsy = 4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[0];
+
+//	if(dsx==0 && dsy==0)	// TODO: check it !!!
+	if((d1[0]==0 && d1[1]==0) || (d2[0]==0 && d2[1]==0) || (pp1[0]==pp3[0] && pp1[1]==pp3[1]) || (pp2[0]==pp3[0] && pp2[1]==pp3[1]))
+	{
+		float ps[3];
+		ps[0] = (pp0[0]+pp1[0]+pp2[0]+pp3[0])/4;
+		ps[1] = (pp0[1]+pp1[1]+pp2[1]+pp3[1])/4;
+		ps[2] = (pp0[2]+pp1[2]+pp2[2]+pp3[2])/4;
+		cs[0] = (cc0[0]+cc1[0]+cc2[0]+cc3[0])/4;
+		cs[1] = (cc0[1]+cc1[1]+cc2[1]+cc3[1])/4;
+		cs[2] = (cc0[2]+cc1[2]+cc2[2]+cc3[2])/4;
+		cs[3] = (cc0[3]+cc1[3]+cc2[3]+cc3[3])/4;
+		trig_plot(ps,pp0,pp1,cs,cc0,cc1);
+		trig_plot(ps,pp3,pp1,cs,cc3,cc1);
+		trig_plot(ps,pp2,pp3,cs,cc2,cc3);
+		trig_plot(ps,pp0,pp2,cs,cc0,cc2);
+		return;
+	}
 
 	register long i,j,g;
 	register float u,v,s,xx,yy,q;
@@ -623,7 +657,7 @@ void mglGraphZB::line_plot(float *pp0,float *pp1,float *cc0,float *cc1,bool all)
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 	float dxu,dxv,dyu,dyv,dd,pw = fabs(PenWidth);
-
+	bool hor = fabs(pp0[0]-pp1[0])>fabs(pp0[1]-pp1[1]);
 	float d10,d11,d12, c10,c11,c12, b;
 
 	d10 = pp1[0]-pp0[0];	d11 = pp1[1]-pp0[1];
@@ -650,19 +684,47 @@ void mglGraphZB::line_plot(float *pp0,float *pp1,float *cc0,float *cc1,bool all)
 	register long i,j;
 	register bool tt;
 	UseAlpha = true;
-	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
+	if(hor)	for(i=x1;i<=x2;i++)
 	{
-		xx = (i-pp0[0]);	yy = (j-pp0[1]);
-		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
-		if(u<0)			{	v += u*u;			u = 0;	}
-		else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
-		if(v>b)		continue;
-		tt = all || (PDef & (1<<long(fmod(pPos+u/pw/1.5, 16))));
-		if(!tt)		continue;
-		u /= dd;
-		r[0] = (unsigned char)(255.f*(cc0[0]+c10*u));	r[1] = (unsigned char)(255.f*(cc0[1]+c11*u));
-		r[2] = (unsigned char)(255.f*(cc0[2]+c12*u));	r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
-		pnt_plot(i,j,pp0[2]+d12*u+pw,r);
+		y1 = int(pp0[1]+(pp1[1]-pp0[1])*(i-pp0[0])/(pp1[0]-pp0[0]) - pw - 3.5);
+		y2 = int(pp0[1]+(pp1[1]-pp0[1])*(i-pp0[0])/(pp1[0]-pp0[0]) + pw + 3.5);
+		for(j=y1;j<=y2;j++)
+		{
+			xx = (i-pp0[0]);	yy = (j-pp0[1]);
+			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
+			if(u<0)			{	v += u*u;			u = 0;	}
+			else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
+			if(v>b)		continue;
+			tt = all || (PDef & (1<<long(fmod(pPos+u/pw/1.5, 16))));
+			if(!tt)		continue;
+			u /= dd;
+			r[0] = (unsigned char)(255.f*(cc0[0]+c10*u));
+			r[1] = (unsigned char)(255.f*(cc0[1]+c11*u));
+			r[2] = (unsigned char)(255.f*(cc0[2]+c12*u));
+			r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
+			pnt_plot(i,j,pp0[2]+d12*u+pw,r);
+		}
+	}
+	else	for(j=y1;j<=y2;j++)
+	{
+		x1 = int(pp0[0]+(pp1[0]-pp0[0])*(j-pp0[1])/(pp1[1]-pp0[1]) - pw - 3.5);
+		x2 = int(pp0[0]+(pp1[0]-pp0[0])*(j-pp0[1])/(pp1[1]-pp0[1]) + pw + 3.5);
+		for(i=x1;i<=x2;i++)
+		{
+			xx = (i-pp0[0]);	yy = (j-pp0[1]);
+			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
+			if(u<0)			{	v += u*u;			u = 0;	}
+			else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
+			if(v>b)		continue;
+			tt = all || (PDef & (1<<long(fmod(pPos+u/pw/1.5, 16))));
+			if(!tt)		continue;
+			u /= dd;
+			r[0] = (unsigned char)(255.f*(cc0[0]+c10*u));
+			r[1] = (unsigned char)(255.f*(cc0[1]+c11*u));
+			r[2] = (unsigned char)(255.f*(cc0[2]+c12*u));
+			r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
+			pnt_plot(i,j,pp0[2]+d12*u+pw,r);
+		}
 	}
 	pPos = fmod(pPos+dd/pw/1.5, 16);
 	UseAlpha = aa;
@@ -801,17 +863,6 @@ void mglGraphZB::SetSize(int w,int h)
 	C = new unsigned char[w*h*32];		// ����� *1 ��� TranspType>0 !!!
 	Z = new float[w*h*8];
 	mglGraphAB::SetSize(w,h);
-}
-//-----------------------------------------------------------------------------
-mglGraphZB::mglGraphZB(int w,int h) : mglGraphAB(w,h)
-{
-	C = 0;	FastNoFace = true;
-	SetSize(w,h);
-}
-//-----------------------------------------------------------------------------
-mglGraphZB::~mglGraphZB()
-{
-	if(C)	{	delete []C;	delete []Z;	}
 }
 //-----------------------------------------------------------------------------
 void mglGraphZB::WriteSlice(int n)

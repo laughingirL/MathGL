@@ -33,6 +33,12 @@ long mgl_create_graph_fltk_(int argc, char **argv, int _(*draw)_(mglGraph *gr, c
 long mgl_create_graph_zb_(int *width, int *height);
 long mgl_create_graph_ps_(int *width, int *height);
 void mgl_delete_graph_(long *graph);
+
+long mgl_create_graph_glut_(int (*draw)(long *gr, void *p), const char *title, void *par, int);
+long mgl_create_graph_fltk_(int (*draw)(long *gr, void *p), const char *title, void *par, int);
+long mgl_create_graph_qt_(int (*draw)(long *gr, void *p), const char *title, void *par, int);
+void mgl_fltk_run_();
+void mgl_qt_run_();
 /*****************************************************************************/
 long mgl_create_data_();
 long mgl_create_data_size_(int *nx, int *ny, int *nz);
@@ -145,6 +151,7 @@ void mgl_curve_(long* graph, float *x1, float *y1, float *z1, float *dx1, float 
 void mgl_puts_(long *graph, float *x, float *y, float *z,const char *text,int);
 void mgl_puts_dir_(long *graph, float *x, float *y, float *z, float *dx, float *dy, float *dz, const char *text, float size, int);
 void mgl_text_(long *graph, float *x, float *y, float *z,const char *text,int);
+void mgl_title_(long *graph, const char *text, const char *fnt,int,int);
 void mgl_puts_ext_(long *graph, float *x, float *y, float *z,const char *text,const char *font,float *size,const char *dir,int,int,int);
 void mgl_text_ext_(long *graph, float *x, float *y, float *z,const char *text,const char *font,float *size,const char *dir,int,int,int);
 void mgl_colorbar_(long *graph, const char *sch,int *where,int);
@@ -168,6 +175,8 @@ void mgl_area_xy_(long *graph, long *x, long *y, const char *pen,int);
 void mgl_area_(long *graph, long *y, const char *pen,int);
 void mgl_area_2_(long *graph, long *a, const char *pen,int);
 void mgl_area_3_(long *graph, long *a, const char *pen,int);
+void mgl_region_xy_(long *graph, long *x, long *y1, long *y2, const char *pen, int *inside, int);
+void mgl_region_(long *graph, long *y1, long *y2, const char *pen, int *inside, int);
 void mgl_mark_(long *graph, float *x,float *y,float *z,const char *mark,int);
 void mgl_stem_xyz_(long *graph, long *x, long *y, long *z, const char *pen,int);
 void mgl_stem_xy_(long *graph, long *x, long *y, const char *pen,int);

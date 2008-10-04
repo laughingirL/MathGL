@@ -423,3 +423,10 @@ void mgl_set_origin_(long *gr, float *x0, float *y0, float *z0)
 void mgl_set_tick_origin_(long *gr, float *x0, float *y0, float *z0)
 {	_GR_->OrgT = mglPoint(*x0,*y0,*z0);	}
 //-----------------------------------------------------------------------------
+void mgl_title_(long *gr, const char *text, const char *fnt,int l,int n)
+{
+	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
+	if(gr)	_GR_->Title(s,f);	delete []s;	delete []f;
+}
+//-----------------------------------------------------------------------------

@@ -1916,11 +1916,11 @@ int mgls_tile(mglGraph *gr, long n, mglArg *a, int k[10])
 	if(k[0]!=1)	return 1;
 	else if(k[1]!=1)	gr->Tile(*(a[0].d), k[1]==2? a[1].s:0);
 	else if(k[1]==1 && k[2]!=1)
-		gr->Tile(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0);
+		gr->TileS(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0);
 	else if(k[1]==1 && k[2]==1 && k[3]==1)
 		gr->TileS(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2? a[4].s:0);
 	else if(k[1]==1 && k[2]==1)
-		gr->TileS(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2? a[3].s:0);
+		gr->Tile(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2? a[3].s:0);
 	else	return 1;
 	return 0;
 }
@@ -2813,26 +2813,32 @@ void mglc_ctick(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{L"fplot",L"Plot curve by formula",L"fplot 'func' ['stl'='' num=100]", mgls_fplot, mglc_fplot}
 int mgls_fplot(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Plot(a[0].s, k[1]==2?a[1].s:0, k[2]==3?int(a[2].v):100);
+	if(k[0]==2 && k[1]==2 && k[2]==2)	gr->Plot(a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:0, k[4]==3?int(a[4].v):100);
+	else if(k[0]==2)	gr->Plot(a[0].s, k[1]==2?a[1].s:0, k[2]==3?a[2].v:NAN, k[3]==3?int(a[3].v):100);
 	else	return 1;
 	return 0;
 }
 void mglc_fplot(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)
-		swprintf(out,1024,L"gr->Plot(\"%s\", \"%s\", %d);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?int(a[2].v):100);
+	if(k[0]==2 && k[1]==2 && k[2]==2)
+		swprintf(out,1024,L"gr->Plot(\"%s\", \"%s\", \"%s\", \"%s\", %d);", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"", k[4]==3?int(a[4].v):100);
+	else if(k[0]==2)
+		swprintf(out,1024,L"gr->Plot(\"%s\", \"%s\", %g, %d);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:NAN, k[3]==3?int(a[3].v):100);
 }
 //-----------------------------------------------------------------------------
 //	{L"fsurf",L"Plot surface by formula",L"fsurf 'func' ['stl'='' num=100]", mgls_fsurf, mglc_fsurf}
 int mgls_fsurf(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Surf(a[0].s, k[1]==2?a[1].s:0, k[2]==3?int(a[2].v):100);
+	if(k[0]==2 && k[1]==2 && k[2]==2)	gr->Surf(a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:0, k[4]==3?int(a[4].v):100);
+	else if(k[0]==2)	gr->Surf(a[0].s, k[1]==2?a[1].s:0, k[2]==3?int(a[2].v):100);
 	else	return 1;
 	return 0;
 }
 void mglc_fsurf(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)
+	if(k[0]==2 && k[1]==2 && k[2]==2)
+		swprintf(out,1024,L"gr->Surf(\"%s\", \"%s\", \"%s\", \"%s\", %d);", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"", k[4]==3?int(a[4].v):100);
+	else if(k[0]==2)
 		swprintf(out,1024,L"gr->Surf(\"%s\", \"%s\", %d);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?int(a[2].v):100);
 }
 //-----------------------------------------------------------------------------
@@ -2853,6 +2859,7 @@ int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10])
 		for(i=0;i<n;i++)	fgets(buf,1024,fp);
 		fgets(buf,1024,fp);
 		fclose(fp);
+		gr->Text(mglPoint(a[0].v,a[1].v,a[2].v),buf, (k[5]==2 && a[5].s[0]!=0)?a[5].s:gr->FontDef, k[6]==3?a[6].v:-1.4);
 	}
 	else if(k[0]==3 && k[1]==3 && k[2]==2)
 	{
@@ -2866,7 +2873,7 @@ int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10])
 		for(i=0;i<n;i++)	fgets(buf,1024,fp);
 		fgets(buf,1024,fp);
 		fclose(fp);
-		gr->Text(mglPoint(a[0].v,a[1].v,a[2].v),buf, (k[4]==2 && a[4].s[0]!=0)?a[4].s:gr->FontDef, k[5]==3?a[5].v:-1.4);
+		gr->Text(mglPoint(a[0].v,a[1].v,gr->Min.z),buf, (k[4]==2 && a[4].s[0]!=0)?a[4].s:gr->FontDef, k[5]==3?a[5].v:-1.4);
 	}
 	else	return 1;
 	return 0;
@@ -2912,6 +2919,36 @@ void mglc_write(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==2)
 		swprintf(out,1024,L"gr->WritePNG(\"%s\", \"MathGL\", %s);", a[0].s, k[1]!=3 || a[1].v!=0 ? "true" : "false");
+}
+//-----------------------------------------------------------------------------
+//	{L"region",L"Draw filled region between 2 curves",L"region {x} y1 y2 ['sch'='' inside=off]", mgls_region, mglc_region}
+int mgls_region(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1)
+		gr->Region(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0, NAN, k[4]!=3 || a[4].v!=0);
+	else if(k[0]==1 && k[1]==1)
+		gr->Region(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0, NAN, k[3]!=3 || a[3].v!=0);
+	else	return 1;
+	return 0;
+}
+void mglc_region(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1)
+		swprintf(out,1024,L"gr->Region(%s, %s, %s, \"%s\", NAN, %s);", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"", k[4]!=3 || a[4].v!=0 ? "true" : "false");
+	else if(k[0]==1 && k[1]==1)
+		swprintf(out,1024,L"gr->Region(%s, %s, \"%s\", NAN, %s);", a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]!=3 || a[3].v!=0 ? "true" : "false");
+}
+//-----------------------------------------------------------------------------
+//	{L"title",L"Print title for the picture",L"title 'text' ['stl'='' size=-2]", mgls_title, mglc_title}
+int mgls_title(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)	gr->Title(a[0].s, k[1]==2?a[1].s:0, k[2]==3?a[2].v:-2);
+	else	return 1;
+	return 0;
+}
+void mglc_title(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)	swprintf(out,1024,L"gr->Title(%s, \"%s\", %g);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:-2);
 }
 //-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
@@ -3028,6 +3065,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"readmat",L"Read data from file with sizes specified in first row",L"readmat var file [dim=2]", mgls_readmat, mglc_readmat},
 	{L"rearrange",L"Rearrange data dimensions",L"rearrange mx [my mz]", mgls_rearrange, mglc_rearrange},
 	{L"rect",L"Draw rectangle",L"", mgls_rect, mglc_rect},
+	{L"region",L"Draw filled region between 2 curves",L"region {x} y1 y2 ['sch'='' inside=off]", mgls_region, mglc_region},
 	{L"resize",L"Resize data",L"resize ovar ivar [nx ny nz]", mgls_resize, mglc_resize},
 	{L"rotate",L"Rotate plot",L"", mgls_rotate, mglc_rotate},
 	{L"rotatetext",L"Set to auto rotate text or not",L"", mgls_rotatetext, mglc_rotatetext},
@@ -3057,6 +3095,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"text",L"Draw text at some position or along curve",L"", mgls_text, mglc_text},
 	{L"textmark",L"Draw TeX mark at point position",L"", mgls_textmark, mglc_textmark},
 	{L"tile",L"Draw horizontal tiles",L"tile {xvar yvar} zvar {rvar} [fmt]", mgls_tile, mglc_tile},
+	{L"title",L"Print title for the picture",L"title 'text' ['stl'='' size=-2]", mgls_title, mglc_title},
 	{L"torus",L"Draw surface of curve rotation",L"torus {zvar} rvar [fmt]", mgls_torus, mglc_torus},
 	{L"transform",L"Do integral transform of data",L"transform ovar how rvar ivar", mgls_transform, mglc_transform},
 	{L"transforma",L"Do integral transform of data",L"transforma ovar how avar fvar", mgls_transforma, mglc_transforma},

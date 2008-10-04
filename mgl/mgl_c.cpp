@@ -347,3 +347,6 @@ void mgl_set_origin(HMGL gr, float x0, float y0, float z0)
 void mgl_set_tick_origin(HMGL gr, float x0, float y0, float z0)
 {	gr->OrgT = mglPoint(x0,y0,z0);	}
 //-----------------------------------------------------------------------------
+void mgl_title(HMGL gr, const char *text, const char *fnt)
+{	gr->Title(text, fnt);	}
+//-----------------------------------------------------------------------------

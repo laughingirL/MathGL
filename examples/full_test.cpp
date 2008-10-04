@@ -388,24 +388,9 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	mglData pnts("hotdogs.pts");
 	pnts.Norm(-1,1,true);
 	mglData  a(50,40), b(50,40), c(60,50,40), d(60,50,40);
-	mglData y(50,3), x(50), x2(50), y1(50), y2(50), f(50,3);
+	mglData y(50,3), x(50), x2(50), y1(50), y2(50), f(50,3), ys(10,3);
 	mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-	
-/*	int i,j,k;
-	float xx,yy,zz,dd;
-	for(i=0;i<10;i++)	for(j=0;j<10;j++)	for(k=0;k<10;k++)
-{
-		xx = i*0.1-0.5;	yy = j*0.1-0.5;	zz = k*0.1-0.35;	dd = k*0.1-0.65;
-		ex.a[i+10*(j+10*k)] = 0.1*xx/pow(xx*xx+yy*yy+zz*zz,1.5) - 0.1*xx/pow(xx*xx+yy*yy+dd*dd,1.5);
-		ey.a[i+10*(j+10*k)] = 0.1*yy/pow(xx*xx+yy*yy+zz*zz,1.5) - 0.1*yy/pow(xx*xx+yy*yy+dd*dd,1.5);
-		ez.a[i+10*(j+10*k)] = 0.1*zz/pow(xx*xx+yy*yy+zz*zz,1.5) - 0.1*dd/pow(xx*xx+yy*yy+dd*dd,1.5);
-}
-	for(i=0;i<60;i++)	for(j=0;j<50;j++)	for(k=0;k<40;k++)
-{
-		xx = i/30.-1;	yy = j/25.-1;	zz = k/20.-1;
-		c.a[i+60*(j+50*k)] = -2*(xx*xx + yy*yy + zz*zz*zz*zz - zz*zz - 0.1);
-		d.a[i+60*(j+50*k)] = 1-2*tanh((xx+yy)*(xx+yy));
-}*/
+
 	ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2 + (y-0.5)^2+(z-0.65)^2,1.5)");
 	ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2 + (y-0.5)^2+(z-0.65)^2,1.5)");
 	ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.65)^2,1.5)");
@@ -413,10 +398,11 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 	c.Modify("(-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1))");
 	d.Modify("1-2*tanh(4*(x+y-1)^2)");
+	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
 	y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 	y.Modify("sin(2*pi*x)",1);	y.Modify("cos(2*pi*x)",2);
-	y1.Modify("0.5+0.3*cos(2*pi*x)");
-	y2.Modify("0.3*sin(2*pi*x)");
+	y1.Modify("0.3*sin(2*pi*x)");
+	y2.Modify("0.5+0.3*cos(2*pi*x)");
 	x.Fill(-1,1,'x');
 	x2.Modify("0.05+0.03*cos(2*pi*x)");
 
@@ -431,6 +417,7 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->MeshNum=10;	gr->Dew(a,b,"BbcyrR");	gr->MeshNum=0;	save(gr,"dew2",suf);
 	gr->Clf();	gr->Box();	gr->Pipe(a,b,"BbcyrR");		save(gr,"pipe",suf);
 	gr->Clf();	gr->Box();	gr->Surf(a,"BbcyrR");		save(gr,"surf",suf);
+	gr->Clf();	gr->Box();	gr->Surf(a,"BbcyrR|");		save(gr,"surf_sl",suf);
 	gr->Clf();	gr->Box();	gr->Tile(a,"BbcyrR");		save(gr,"tile",suf);
 	gr->Clf();	gr->Box();	gr->Belt(a,"BbcyrR");		save(gr,"belt",suf);
 	gr->Clf();	gr->Box();	gr->Mesh(a,"BbcyrR");		save(gr,"mesh",suf);
@@ -451,7 +438,7 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->Tube(y,0.05);	gr->Tube(y1,x,y2,x2);	save(gr,"tube",suf);
 	gr->Clf();	gr->Box();	gr->Chart(ch,"#");	save(gr,"chart",suf);
 	gr->Axis("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)",0);
-	gr->Clf();	gr->Box();	gr->Chart(ch,"#");	save(gr,"pie_chart",suf);	gr->Axis(0,0,0);
+	gr->Clf();	gr->Box();	gr->Chart(ch,"bgr cmy#");	save(gr,"pie_chart",suf);	gr->Axis(0,0,0);
 
 	gr->Alpha(true);
 	gr->Clf();	gr->Box();	gr->Surf(a,"BbcyrR");		save(gr,"surf_alpha",suf);
@@ -478,7 +465,9 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->Area(y);	save(gr,"area",suf);
 	gr->Clf();	gr->Box();	gr->Stem(y);	save(gr,"stem",suf);
 	gr->Clf();	gr->Box();	gr->Step(y);	save(gr,"step",suf);
-	gr->Clf();	gr->Box();	gr->Bars(y);	save(gr,"bars",suf);
+	gr->Clf();	gr->Box();	gr->Bars(ys);	save(gr,"bars",suf);
+	gr->Clf();	gr->Box();	gr->Barh(ys);	save(gr,"barh",suf);
+	gr->Clf();	gr->Box();	gr->Region(y1,y2,"r");	gr->Plot(y1,"k2");	gr->Plot(y2,"k2");	save(gr,"region",suf);
 	gr->Clf();	gr->Box();	gr->Mark(y,y1,"bs");	save(gr,"mark",suf);
 	gr->Clf();	gr->Box();	gr->TextMark(y,y1,"\\gamma");	save(gr,"textmark",suf);
 	gr->Clf();	gr->Box();	gr->Plot(y.SubData(-1,0));
@@ -487,7 +476,7 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ex0,ey0,"ko");	save(gr,"error",suf);
 
 	gr->Clf();	gr->Box();	gr->Dens(a,"BbcyrR");	gr->Colorbar();	save(gr,"dens",suf);
-	gr->Clf();	gr->Box();	gr->Tile(a,b,"BbcyrR");		save(gr,"tiler",suf);
+	gr->Clf();	gr->Box();	gr->TileS(a,b,"BbcyrR");		save(gr,"tiler",suf);
 	gr->Clf();	gr->Box();	gr->Cont(a,"BbcyrRt");		save(gr,"contt",suf);
 	gr->Clf();	gr->Box();	gr->Vect(a,b,"BbcyrR");		save(gr,"vect",suf);
 	gr->Clf();	gr->Box();	gr->VectC(a,b,"BbcyrR");	save(gr,"vectc",suf);
@@ -763,11 +752,11 @@ int sample_fit(mglGraph *gr, const void *s)	// flag #
 	mglData rnd(100), in(100), res;
 	rnd.Modify("0.4*rnd+0.1+sin(4*pi*x)", 0);
 	in.Modify("0.3+sin(4*pi*x)", 0);
-	
+
 	gr->Axis(mglPoint(-1,-2), mglPoint(1,2));
 	gr->Plot(rnd, ". ");
 	gr->Box();
-	
+
 	float ini[3] = {1,1,3};
 	gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", ini);
 	gr->Plot(res, "r");
@@ -816,7 +805,7 @@ int time_test(mglGraph *gr, const void *)	// full test (in PNG)
 	mglData  a(50,40), b(50,40), c(50,40,30), d(50,40,30);
 	mglData y(50,3), x(50), x2(50), y1(50), y2(50), f(50,3);
 	mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-	
+
 	ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2 + (y-0.5)^2+(z-0.65)^2,1.5)");
 	ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2 + (y-0.5)^2+(z-0.65)^2,1.5)");
 	ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2 + (z-0.65)^2,1.5)");
@@ -965,22 +954,37 @@ int time_test(mglGraph *gr, const void *)	// full test (in PNG)
 	return 0;
 }
 //-----------------------------------------------------------------------------
+#include "mgl/mgl_parse.h"
+int test(mglGraph *gr)
+{
+	gr->Box();	gr->Axis();
+//	mglParse par;
+//	FILE *fp=fopen("/home/balakin/tmp/mgl/region.mgl","rt");
+//	par.Execute(gr,fp);
+//	fclose(fp);
+//	gr->Axis(mglPoint(-10,0), mglPoint(10,7));
+	//gr->Plot("1/sqrt(1+x^2)");
+//	par.Parse(gr,"fplot '1/sqrt(1+x^2)' 'r'");
+	return 0;
+}
+//-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
 	const char *suf = "";
 	mglGraphZB zb;
+//test(&zb);	zb.WritePNG("1.png","",false);	zb.CalcXYZ(106,70);	return 0;
 	mglGraphPS ps;
 	mglGraph &gr = zb;
 	if(argc>1)
-{
+	{
 		if(!strcmp(argv[1],"mini"))
-{	gr.SetSize(200,133);	suf = "_sm";	}
+		{	gr.SetSize(200,133);	suf = "_sm";	}
 		if(!strcmp(argv[1],"big"))
-{
+		{
 			gr.SetSize(1200,800);	suf = "_lg";
 			gr.BaseLineWidth = 2;
-}
-}
+		}
+	}
 
 	all_samples(&gr,suf);
 	sample_transp(&gr,suf);
@@ -993,13 +997,13 @@ int main(int argc,char **argv)
 	printf("\n\n\t\t mglGraphZB (1200*800) \n");	fflush(stdout);
 	zb.BaseLineWidth = 2;
 	zb.SetSize(1200,800);	time_test(&zb,0);
-	
+
 	printf("\n\n\t\t mglGraphPS (600*400) \n");	fflush(stdout);
 	ps.SetSize(600,400);	time_test(&ps,0);
 	printf("\n\n\t\t mglGraphPS (1200*800) \n");	fflush(stdout);
 	ps.BaseLineWidth = 2;
 	ps.SetSize(1200,800);	time_test(&ps,0);
-*/	
+*/
 	return 0;
 }
 //-----------------------------------------------------------------------------

@@ -39,6 +39,7 @@ using mglGraph::Mark;
 	void Light(int n, bool enable);
 	void Light(int n,mglPoint p, mglColor c=WC, float br=0.5, bool infty=true);
 
+	void RestoreM();
 	void InPlot(float x1,float x2,float y1,float y2);
 	void Aspect(float Ax,float Ay,float Az);
 	void RotateN(float Tet,float x,float y,float z);
@@ -84,6 +85,9 @@ using mglGraph::Mark;
 	virtual void NextFrame();	///< Show next frame (if one)
 	virtual void PrevFrame();	///< Show previous frame (if one)
 	virtual void Animation();	///< Run slideshow (animation) of frames
+	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
+	mglPoint CalcXYZ(int xs, int ys);
+	bool ShowMousePos;			///< Switch to show or not mouse click position
 	//@}
 protected:
 	unsigned char *G4;			///< Final picture in RGBA format. Prepared after calling mglGraphZB::Finish().
@@ -99,6 +103,7 @@ protected:
 	int Depth;			///< Depth of the image
 	float B[9];			///< Transformation matrix (used by PostScale() function)
 	float B1[9];		///< Transformation matrix for colorbar
+	float BL[12];		///< Previous transformation matrix
 	unsigned PDef;		///< Pen bit mask
 	float pPos;			///< Current position in pen mask
 	bool UseLight;		///< Flag of using lightning

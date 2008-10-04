@@ -685,11 +685,11 @@ void mglGraph::Beam(float val,const mglData &tr, const mglData &g1, const mglDat
 			}
 			else
 			{
-				x.a[i0] = tr.a[tr.nx*i] + g2.a[g1.nx*i]*(2*j/(m-1.)-1)*r +
-								g1.a[g2.nx*i]*(2*k/(l-1.)-1)*r;
-				y.a[i0] = tr.a[tr.nx*i+(old?2:1)] + g2.a[g1.nx*i+1]*(2*j/(m-1.)-1)*r +
-								g1.a[g2.nx*i+1]*(2*k/(l-1.)-1)*r;
-				z.a[i0] = tr.a[tr.nx*i+(old?1:2)] + g2.a[g1.nx*i+2]*(2*j/(m-1.)-1)*r +
+				x.a[i0] = tr.a[tr.nx*i] + g1.a[g1.nx*i]*(2*j/(m-1.)-1)*r +
+								g2.a[g2.nx*i]*(2*k/(l-1.)-1)*r;
+				y.a[i0] = tr.a[tr.nx*i+(old?2:1)] + g1.a[g1.nx*i+1]*(2*j/(m-1.)-1)*r +
+								g2.a[g2.nx*i+1]*(2*k/(l-1.)-1)*r;
+				z.a[i0] = tr.a[tr.nx*i+(old?1:2)] + g1.a[g1.nx*i+2]*(2*j/(m-1.)-1)*r +
 								g2.a[g2.nx*i+2]*(2*k/(l-1.)-1)*r;
 			}
 			if(flag & 2)	x.a[i0] = hypot(x.a[i0],y.a[i0]);
