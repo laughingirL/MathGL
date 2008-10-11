@@ -768,4 +768,5 @@ void mglGraphAB::Adjust(){}
 void mglGraphAB::NextFrame(){}
 void mglGraphAB::PrevFrame(){}
 void mglGraphAB::Animation(){}
+void mglGraphAB::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next)){}
 //-----------------------------------------------------------------------------

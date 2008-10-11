@@ -36,6 +36,10 @@ const float pi = M_PI;
 const int on = 1;
 const int off = 0;
 
+#idef SWIGOCTAVE
+%feature("autodoc", 1);
+#end // SWIGOCTAVE
+
 %include mgl_base.i
 %include mgl_data.i
 %include mgl_graph.i

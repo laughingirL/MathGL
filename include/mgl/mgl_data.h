@@ -17,6 +17,7 @@
 #ifndef _MGL_DATA_H_
 #define _MGL_DATA_H_
 //-----------------------------------------------------------------------------
+#include <math.h>
 #ifdef _MSC_VER
 #define	_USE_MATH_DEFINES
 #include <float.h>
@@ -100,7 +101,7 @@ public:
 	/// Save whole data array (for ns=-1) or only ns-th slice to text file
 	void Save(const char *fname,int ns=-1) const;
 	/// Export data array (for ns=-1) or only ns-th slice to PNG file according color scheme
-	void Export(const char *fname,const char *scheme,float v1=0,float v2=0,int ns=0) const;
+	void Export(const char *fname,const char *scheme,float v1=0,float v2=0,int ns=-1) const;
 	/// Import data array from PNG file according color scheme
 	void Import(const char *fname,const char *scheme,float v1=0,float v2=1);
 	/// Read data from tab-separated text files with auto determining size which filenames are result of sprintf(fname,templ,t) where t=from:step:to
@@ -129,7 +130,7 @@ public:
 	/// Modify the data by specified formula
 	void Modify(const char *eq,const mglData &v);
 	/// Get column (or slice) of the data filled by formulas of other named columns
-	mglData &Column(const char *eq);
+	mglData Column(const char *eq);
 	/// Set names for columns (slices)
 	void SetColumnId(const char *ids);
 	/// Reduce size of the data
@@ -154,9 +155,9 @@ public:
 	/// Get "energy and find 4 momentums of data: median, width, skewness, kurtosis
 	float Momentum(char dir,float &m,float &w,float &s,float &k) const;
 	/// Get momentum (1D-array) of data along direction 'dir'. String looks like "x1" for median in x-direction, "x2" for width in x-dir and so on.
-	mglData &Momentum(char dir, const char *how) const;
+	mglData Momentum(char dir, const char *how) const;
 	/// Print information about the data (sizes and momentum) to string
-	void PrintInfo(char *buf) const;
+	void PrintInfo(char *buf, bool all=false) const;
 	/// Print information about the data (sizes and momentum) to FILE (for example, stdout)
 	void PrintInfo(FILE *fp) const;
 	/// Find position (after specified in i,j,k) of first nonzero value of formula
@@ -170,25 +171,33 @@ public:
 
 	/// Smooth the data on specified direction or directions
 	void Smooth(int Type,const char *dirs="xyz",float delta=0);
+	/// Set as the data envelop
+	void Envelop(char dir='x');
+	/// Remove phase jump
+	void Sew(const char *dirs="xyz", float da=2*M_PI);
 	/// Smooth the data on specified direction or directions
 	void Smooth(const char *dirs="xyz");
 	/// Get sub-array of the data with given fixed indexes
-	mglData &SubData(int xx,int yy=-1,int zz=-1) const;
+	mglData SubData(int xx,int yy=-1,int zz=-1) const;
 	/// Create n-th points distribution of this data values in range [v1, v2]
-	mglData &Hist(int n,float v1=0,float v2=1, int nsub=0) const;
+	mglData Hist(int n,float v1=0,float v2=1, int nsub=0) const;
 	/// Create n-th points distribution of this data values in range [v1, v2] with weight \a w
-	mglData &Hist(const mglData &w, int n,float v1=0,float v2=1, int nsub=0) const;
+	mglData Hist(const mglData &w, int n,float v1=0,float v2=1, int nsub=0) const;
 	/// Get array which is result of summation in given direction or directions
-	mglData &Sum(const char *dir) const;
+	mglData Sum(const char *dir) const;
 	/// Get array which is result of maximal values in given direction or directions
-	mglData &Max(const char *dir) const;
+	mglData Max(const char *dir) const;
 	/// Get array which is result of minimal values in given direction or directions
-	mglData &Min(const char *dir) const;
+	mglData Min(const char *dir) const;
 	/// Resize the data to new size of box [x1,x2]*[y1,y2]*[z1,z2]
-	mglData &Resize(int mx,int my=1,int mz=1,float x1=0,float x2=1,
+	mglData Resize(int mx,int my=1,int mz=1,float x1=0,float x2=1,
 		float y1=0,float y2=1,float z1=0,float z2=1) const;
-	/// Get the data which is tensor multiplication (d[i,j] = this[i]*a[j] and so on)
-	mglData &Combine(const mglData &a) const;
+	/// Get the data which is direct multiplication (like, d[i,j] = this[i]*a[j] and so on)
+	mglData Combine(const mglData &a) const;
+	/// Get array which values is result of interpolation this for coordinates from other arrays
+	mglData Evaluate(const mglData &idat, bool norm=true) const;
+	mglData Evaluate(const mglData &idat, const mglData &jdat, bool norm=true) const;
+	mglData Evaluate(const mglData &idat, const mglData &jdat, const mglData &kdat, bool norm=true) const;
 
 	/// Cumulative summation the data in given direction or directions
 	void CumSum(const char *dir);
@@ -267,10 +276,10 @@ public:
 double mgl_rnd();
 double ipow_mgl(double x,int n);
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase
-mglData &TransformA(const mglData &am, const mglData &ph, const char *tr);
+mglData TransformA(const mglData &am, const mglData &ph, const char *tr);
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for real and imaginary parts
-mglData &Transform(const mglData &re, const mglData &im, const char *tr);
+mglData Transform(const mglData &re, const mglData &im, const char *tr);
 /// Short time fourier analysis for real and imaginary parts. Output is amplitude of partial fourier (result will have size {dn, floor(nx/dn), ny} for dir='x'
-mglData &STFA(const mglData &re, const mglData &im, int dn, char dir='x');
+mglData STFA(const mglData &re, const mglData &im, int dn, char dir='x');
 //-----------------------------------------------------------------------------
 #endif

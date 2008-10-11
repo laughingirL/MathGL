@@ -70,8 +70,11 @@ using mglGraph::Mark;
 	  * and so on. They do nothing in "non-visual" classes like mglGraphZB,
 	  * mglGraphPS, mglGraphGL, mglGraphIDTF. */
 	//@{
-	bool AutoClf;	///< Clear canvas between drawing
-	float Delay;	///< Delay for animation in seconds
+	bool AutoClf;		///< Clear canvas between drawing
+	float Delay;		///< Delay for animation in seconds
+	bool ShowMousePos;	///< Switch to show or not mouse click position
+	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
+	mglPoint CalcXYZ(int xs, int ys);
 	/// Switch on/off transparency (do not overwrite switches in user drawing function)
 	virtual void ToggleAlpha();
 	/// Switch on/off lighting (do not overwrite switches in user drawing function)
@@ -85,9 +88,12 @@ using mglGraph::Mark;
 	virtual void NextFrame();	///< Show next frame (if one)
 	virtual void PrevFrame();	///< Show previous frame (if one)
 	virtual void Animation();	///< Run slideshow (animation) of frames
-	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
-	mglPoint CalcXYZ(int xs, int ys);
-	bool ShowMousePos;			///< Switch to show or not mouse click position
+	/// Create a window for plotting. Now implemeted only for GLUT.
+	virtual void Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
+						const char *title,void *par=NULL,
+	  					void (*reload)(int next)=NULL);
+	/// Show currently produced image by Qt or FLTK library
+	void ShowImage(const char *title, bool new_wnd=false);
 	//@}
 protected:
 	unsigned char *G4;			///< Final picture in RGBA format. Prepared after calling mglGraphZB::Finish().

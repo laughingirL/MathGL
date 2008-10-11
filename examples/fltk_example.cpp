@@ -45,7 +45,7 @@ int sample(mglGraph *gr, void *)
 	gr->Sphere(mglPoint(0.33,-0.57,0),0.25,"g");
 	gr->Drop(mglPoint(0,0,0),mglPoint(-0.65,0,0),0.32,"n",1,2);
 	gr->Sphere(mglPoint(-0.65,0,0),0.25,"g");
- 	return 2;
+ 	return 0;
 }
 
 int sample_1(mglGraph *gr, void *)

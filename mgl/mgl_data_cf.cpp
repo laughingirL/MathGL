@@ -431,3 +431,29 @@ void mgl_data_set_values_(long *d, const char *val, int *nx, int *ny, int *nz, i
 	_DT_->Set(s,*nx,*ny,*nz);	delete []s;
 }
 //-----------------------------------------------------------------------------
+HMDT mgl_data_evaluate_i(const HMDT dat, const HMDT idat, int norm)
+{	return new mglData(dat->Evaluate(*idat,norm));	}
+HMDT mgl_data_evaluate_ij(const HMDT dat, const HMDT idat, const HMDT jdat, int norm)
+{	return new mglData(dat->Evaluate(*idat,*jdat,norm));	}
+HMDT mgl_data_evaluate_ijk(const HMDT dat, const HMDT idat, const HMDT jdat, const HMDT kdat, int norm)
+{	return new mglData(dat->Evaluate(*idat,*jdat,*dat,norm));	}
+void mgl_data_envelop(HMDT dat, char dir)	{	dat->Envelop(dir);	}
+void mgl_data_sew(HMDT dat, const char *dirs, float da)
+{	dat->Sew(dirs,da);	}
+//-----------------------------------------------------------------------------
+long mgl_data_evaluate_i_(long *d, long *idat, int *norm)
+{	return long(new mglData(_DT_->Evaluate(_D_(idat),*norm)));	}
+long mgl_data_evaluate_ij_(long *d, long *idat, long *jdat, int *norm)
+{	return long(new mglData(_DT_->Evaluate(_D_(idat),_D_(jdat),*norm)));	}
+long mgl_data_evaluate_ijk_(long *d, long *idat, long *jdat, long *kdat, int *norm)
+{	return long(new mglData(_DT_->Evaluate(_D_(idat),_D_(jdat),_D_(kdat),*norm)));	}
+void mgl_data_envelop_(long *d, const char *dir, int)
+{	_DT_->Envelop(*dir);	}
+void mgl_data_sew_(long *d, const char *dirs, float *da, int l)
+{
+	char *s=new char[l+1];	memcpy(s,dirs,l);	s[l]=0;
+	_DT_->Sew(s,*da);	delete []s;
+}
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------

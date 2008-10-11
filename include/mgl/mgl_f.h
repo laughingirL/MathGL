@@ -425,6 +425,11 @@ float mgl_data_linear1_(long *dat, float *x,float *y,float *z);
 long mgl_data_resize_(long *dat, int *mx,int *my,int *mz,float *x1,float *x2,float *y1,float *y2,float *z1,float *z2);
 long mgl_data_hist_(long *dat, int *n, float *v1, float *v2, int *nsub);
 long mgl_data_hist_w_(long *dat, long *weight, int *n, float *v1, float *v2, int *nsub);
+long mgl_data_evaluate_i_(long *dat, long *idat, int *norm);
+long mgl_data_evaluate_ij_(long *dat, long *idat, long *jdat, int *norm);
+long mgl_data_evaluate_ijk_(long *dat, long *idat, long *jdat, long *kdat, int *norm);
+void mgl_data_envelop_(long *dat, const char *dir, int);
+void mgl_data_sew_(long *dat, const char *dirs, float *da, int);
 void mgl_data_crop_(long *dat, int *n1, int *n2, const char *dir,int);
 /*****************************************************************************/
 /*		Data operations														 */

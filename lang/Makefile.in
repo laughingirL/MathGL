@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -35,8 +36,8 @@ host_triplet = @host@
 @USE_PYTHON_TRUE@am__append_1 = mgl_python.cpp mathgl.py
 @USE_PYTHON_TRUE@am__append_2 = mathgl.py mgl_python.cpp
 subdir = lang
-DIST_COMMON = $(am__python_PYTHON_DIST) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+DIST_COMMON = $(am__python_PYTHON_DIST) $(dist_octave_DATA) \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/config/autotroll.m4 \
 	$(top_srcdir)/configure.ac
@@ -50,7 +51,8 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(pyexecdir)" "$(DESTDIR)$(pythondir)"
+am__installdirs = "$(DESTDIR)$(pyexecdir)" "$(DESTDIR)$(pythondir)" \
+	"$(DESTDIR)$(octavedir)"
 pyexecLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(pyexec_LTLIBRARIES)
 @USE_PYTHON_TRUE@_mathgl_la_DEPENDENCIES =  \
@@ -79,6 +81,8 @@ DIST_SOURCES = $(am___mathgl_la_SOURCES_DIST)
 am__python_PYTHON_DIST = mathgl.py
 pythonPYTHON_INSTALL = $(INSTALL_DATA)
 py_compile = $(top_srcdir)/config/py-compile
+dist_octaveDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(dist_octave_DATA)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -148,6 +152,7 @@ MOC = @MOC@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OCTAVE_ARCH = @OCTAVE_ARCH@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -252,6 +257,14 @@ BUILT_SOURCES = $(am__append_2)
 @USE_PYTHON_TRUE@_mathgl_la_CXXFLAGS = $(PYTHON_HEADERS) $(AM_CXXFLAGS)
 @USE_PYTHON_TRUE@_mathgl_la_LIBADD = $(top_builddir)/mgl/libmgl.la
 @USE_PYTHON_TRUE@_mathgl_la_LDFLAGS = -avoid-version -module
+
+#if USE_OCTAVE
+PKG_NAME = mathgl
+PKG_OCT_FILES = mathgl.oct
+PKG_OTHER_FILES = $(top_builddir)/COPYING $(srcdir)/DESCRIPTION $(srcdir)/INDEX $(srcdir)/PKG_ADD_template
+octavedir = $(pkgdatadir)/octave
+dist_octave_DATA = mathgl.tar.gz
+MY_MKOCTFILE = $(CXX) -O0 -g -shared $(OCTAVE_INCFLAGS)
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -385,6 +398,23 @@ uninstall-pythonPYTHON:
 	  rm -f "$(DESTDIR)$(pythondir)/$${f}c"; \
 	  rm -f "$(DESTDIR)$(pythondir)/$${f}o"; \
 	done
+install-dist_octaveDATA: $(dist_octave_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(octavedir)" || $(MKDIR_P) "$(DESTDIR)$(octavedir)"
+	@list='$(dist_octave_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dist_octaveDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(octavedir)/$$f'"; \
+	  $(dist_octaveDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(octavedir)/$$f"; \
+	done
+
+uninstall-dist_octaveDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_octave_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(octavedir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(octavedir)/$$f"; \
+	done
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -462,9 +492,9 @@ distdir: $(DISTFILES)
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(pyexecdir)" "$(DESTDIR)$(pythondir)"; do \
+	for dir in "$(DESTDIR)$(pyexecdir)" "$(DESTDIR)$(pythondir)" "$(DESTDIR)$(octavedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -515,7 +545,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-pythonPYTHON
+install-data-am: install-dist_octaveDATA install-pythonPYTHON
 
 install-dvi: install-dvi-am
 
@@ -551,7 +581,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-pyexecLTLIBRARIES uninstall-pythonPYTHON
+uninstall-am: uninstall-dist_octaveDATA uninstall-pyexecLTLIBRARIES \
+	uninstall-pythonPYTHON
 
 .MAKE: install-am install-strip
 
@@ -559,22 +590,37 @@ uninstall-am: uninstall-pyexecLTLIBRARIES uninstall-pythonPYTHON
 	clean-libtool clean-pyexecLTLIBRARIES ctags distclean \
 	distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
+	install install-am install-data install-data-am \
+	install-dist_octaveDATA install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-ps install-ps-am \
 	install-pyexecLTLIBRARIES install-pythonPYTHON install-strip \
 	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-pyexecLTLIBRARIES \
-	uninstall-pythonPYTHON
+	tags uninstall uninstall-am uninstall-dist_octaveDATA \
+	uninstall-pyexecLTLIBRARIES uninstall-pythonPYTHON
 
 
 @USE_PYTHON_TRUE@mgl_python.cpp: mgl.i mgl_base.i  mgl_data.i  mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h
 @USE_PYTHON_TRUE@	swig -python -classic -o mgl_python.cpp mgl.i 
 @USE_PYTHON_TRUE@mathgl.py: mgl.i mgl_base.i  mgl_data.i  mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h
 @USE_PYTHON_TRUE@	swig -python -classic -o mgl_python.cpp mgl.i
+mathgl.tar.gz: $(PKG_OCT_FILES) $(PKG_OTHER_FILES)
+	mkdir -p $(PKG_NAME)
+	mkdir -p $(PKG_NAME)/inst/$(OCTAVE_ARCH)
+	cp -rf $(PKG_OTHER_FILES) $(PKG_NAME)
+	mv $(PKG_NAME)/PKG_ADD_template $(PKG_NAME)/PKG_ADD
+	cp -rf $(PKG_OCT_FILES) $(PKG_NAME)/inst/$(OCTAVE_ARCH)
+	tar cpzvf $@ $(PKG_NAME)
+	rm -rf $(PKG_NAME)
+
+mgl_octave.cpp: mgl.i mgl_base.i  mgl_data.i  mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h
+	swig -octave -c++ -o mgl_octave.cpp mgl.i
+mathgl.oct: mgl_octave.cpp
+	$(MY_MKOCTFILE) -o $@ $^ -fPIC -I../include -L../mgl/ -lmgl
+#endif
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

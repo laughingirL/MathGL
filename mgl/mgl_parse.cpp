@@ -325,7 +325,7 @@ int mglParse::PreExec(mglGraph *gr, long k, wchar_t **arg, mglArg *a)
 {
 	long n=0;
 	mglVar *v;
-	if(!wcsncmp(L"read",arg[0],4) || !wcscmp(L"new",arg[0]) || !wcscmp(L"copy",arg[0]) || !wcscmp(L"var",arg[0]) || !wcscmp(L"hist",arg[0]) || !wcscmp(L"max",arg[0]) || !wcscmp(L"min",arg[0]) || !wcscmp(L"sum",arg[0]) || !wcscmp(L"resize",arg[0]) || !wcscmp(L"subdata",arg[0]) || !wcscmp(L"fit",arg[0]) || !wcscmp(L"momentum",arg[0]) || !wcscmp(L"import",arg[0]))
+	if(!wcsncmp(L"read",arg[0],4) || !wcscmp(L"new",arg[0]) || !wcscmp(L"copy",arg[0]) || !wcscmp(L"var",arg[0]) || !wcscmp(L"hist",arg[0]) || !wcscmp(L"max",arg[0]) || !wcscmp(L"min",arg[0]) || !wcscmp(L"sum",arg[0]) || !wcscmp(L"resize",arg[0]) || !wcscmp(L"subdata",arg[0]) || !wcscmp(L"fit",arg[0]) || !wcscmp(L"momentum",arg[0]) || !wcscmp(L"import",arg[0]) || !wcscmp(L"evaluate",arg[0]))
 	{
 		if(k<3 || check_for_name(arg[1]))	return 2;
 		v = AddVar(arg[1]);

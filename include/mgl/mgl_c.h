@@ -465,6 +465,11 @@ HMDT mgl_data_resize(const HMDT dat, int mx,int my,int mz,float x1,float x2,
 	float y1,float y2,float z1,float z2);
 HMDT mgl_data_hist(const HMDT dat, int n, float v1, float v2, int nsub);
 HMDT mgl_data_hist_w(const HMDT dat, const HMDT weight, int n, float v1, float v2, int nsub);
+HMDT mgl_data_evaluate_i(const HMDT dat, const HMDT idat, int norm);
+HMDT mgl_data_evaluate_ij(const HMDT dat, const HMDT idat, const HMDT jdat, int norm);
+HMDT mgl_data_evaluate_ijk(const HMDT dat, const HMDT idat, const HMDT jdat, const HMDT kdat, int norm);
+void mgl_data_envelop(HMDT dat, char dir);
+void mgl_data_sew(HMDT dat, const char *dirs, float da);
 void mgl_data_crop(HMDT dat, int n1, int n2, char dir);
 /*****************************************************************************/
 /*		Data operations														 */

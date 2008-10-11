@@ -15,10 +15,24 @@ if USE_TIFF
 mgllib_LTLIBRARIES += mgl-tiff.la
 endif
 
+WIDGETS =
+if USE_QT
+WIDGETS += -DWITH_QT
+endif
+if USE_WX
+WIDGETS += -DWITH_WX
+endif
+if USE_FLTK
+WIDGETS += -DWITH_FLTK
+endif
+if USE_GLUT
+WIDGETS += -DWITH_GLUT
+endif
+
 libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 libmgl_la_LIBADD = @LIBLTDL@ $(PNG_LIBS) $(GSL_LIBS) $(GL_LIBS)
 
-libmgl_la_CXXFLAGS = -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
+libmgl_la_CXXFLAGS = $(WIDGETS) -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
     -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFF_FLAGS) \
     $(PNG_FLAGS) $(FLTK_FLAGS) $(GSL_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS)
 

@@ -1001,6 +1001,7 @@ pyexecdir
 pkgpyexecdir
 USE_PYTHON_TRUE
 USE_PYTHON_FALSE
+OCTAVE_ARCH
 LIBOBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -5104,7 +5105,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5107 "configure"' > conftest.$ac_ext
+  echo '#line 5108 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7974,11 +7975,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7977: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7978: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7981: \$? = $ac_status" >&5
+   echo "$as_me:7982: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8264,11 +8265,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8267: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8268: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8271: \$? = $ac_status" >&5
+   echo "$as_me:8272: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8368,11 +8369,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8371: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8372: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8375: \$? = $ac_status" >&5
+   echo "$as_me:8376: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10745,7 +10746,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10748 "configure"
+#line 10749 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10845,7 +10846,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10848 "configure"
+#line 10849 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13246,11 +13247,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13249: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13250: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:13253: \$? = $ac_status" >&5
+   echo "$as_me:13254: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -13350,11 +13351,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13353: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13354: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:13357: \$? = $ac_status" >&5
+   echo "$as_me:13358: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14948,11 +14949,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14951: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14952: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14955: \$? = $ac_status" >&5
+   echo "$as_me:14956: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -15052,11 +15053,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15055: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15056: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15059: \$? = $ac_status" >&5
+   echo "$as_me:15060: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17272,11 +17273,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17275: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17276: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17279: \$? = $ac_status" >&5
+   echo "$as_me:17280: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17562,11 +17563,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17565: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17566: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17569: \$? = $ac_status" >&5
+   echo "$as_me:17570: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17666,11 +17667,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17669: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17670: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:17673: \$? = $ac_status" >&5
+   echo "$as_me:17674: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -23406,7 +23407,17 @@ else
 fi
 
 
-ac_config_files="$ac_config_files Makefile mgl/Makefile examples/Makefile include/Makefile lang/Makefile utils/Makefile widgets/Makefile"
+# find Octave arch
+OCTAVE=octave
+{ echo "$as_me:$LINENO: checking for Octave arch" >&5
+echo $ECHO_N "checking for Octave arch... $ECHO_C" >&6; }
+OCTAVE_ARCH=`$OCTAVE -q --eval 'strcat(octave_config_info("canonical_host_type"), "-", octave_config_info("api_version"))'|sed -e 's/ans = //'`
+{ echo "$as_me:$LINENO: result: $OCTAVE_ARCH" >&5
+echo "${ECHO_T}$OCTAVE_ARCH" >&6; }
+OCTAVE_ARCH=$OCTAVE_ARCH
+
+
+ac_config_files="$ac_config_files Makefile mgl/Makefile examples/Makefile include/Makefile lang/Makefile utils/Makefile widgets/Makefile texinfo/Makefile texinfo/png/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -24071,6 +24082,8 @@ do
     "lang/Makefile") CONFIG_FILES="$CONFIG_FILES lang/Makefile" ;;
     "utils/Makefile") CONFIG_FILES="$CONFIG_FILES utils/Makefile" ;;
     "widgets/Makefile") CONFIG_FILES="$CONFIG_FILES widgets/Makefile" ;;
+    "texinfo/Makefile") CONFIG_FILES="$CONFIG_FILES texinfo/Makefile" ;;
+    "texinfo/png/Makefile") CONFIG_FILES="$CONFIG_FILES texinfo/png/Makefile" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
@@ -24346,11 +24359,12 @@ pyexecdir!$pyexecdir$ac_delim
 pkgpyexecdir!$pkgpyexecdir$ac_delim
 USE_PYTHON_TRUE!$USE_PYTHON_TRUE$ac_delim
 USE_PYTHON_FALSE!$USE_PYTHON_FALSE$ac_delim
+OCTAVE_ARCH!$OCTAVE_ARCH$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 78; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 79; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

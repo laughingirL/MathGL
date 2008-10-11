@@ -137,12 +137,12 @@ void mglData::Smooth(int Type,const char *dirs,float delta)
 	delete []b;
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Sum(const char *dir) const
+mglData mglData::Sum(const char *dir) const
 {
 	register long i,j,k,i0;
 	long kx=nx,ky=ny,kz=nz;
 	float *b = new float[nx*ny*nz];
-	static mglData d;
+	mglData d;
 	memset(b,0,nx*ny*nz*sizeof(float));
 	if(strchr(dir,'z') && kz>1)
 	{
@@ -611,9 +611,9 @@ void mglData::Crop(int n1,int n2,char dir)
 	}
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Hist(int n,float v1,float v2,int nsub) const
+mglData mglData::Hist(int n,float v1,float v2,int nsub) const
 {
-	static mglData b;
+	mglData b;
 	register long i,k;
 	b.Create(n);
 	if(v1==v2)	return b;
@@ -636,9 +636,9 @@ mglData &mglData::Hist(int n,float v1,float v2,int nsub) const
 	return b;
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Hist(const mglData &w, int n,float v1,float v2,int nsub) const
+mglData mglData::Hist(const mglData &w, int n,float v1,float v2,int nsub) const
 {
-	static mglData b;
+	mglData b;
 	register long i,k;
 	b.Create(n);
 	if(v1==v2 || nx*ny*nz!=w.nx*w.ny*w.nz)	return b;
@@ -664,12 +664,12 @@ mglData &mglData::Hist(const mglData &w, int n,float v1,float v2,int nsub) const
 	return b;
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Max(const char *dir) const
+mglData mglData::Max(const char *dir) const
 {
 	register long i,j,k,i0;
 	long kx=nx,ky=ny,kz=nz;
 	float *b = new float[nx*ny*nz];
-	static mglData d;
+	mglData d;
 //	memset(b,0,nx*ny*nz*sizeof(float));
 	if(strchr(dir,'z') && kz>1)
 	{
@@ -707,12 +707,12 @@ mglData &mglData::Max(const char *dir) const
 	return d;
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Min(const char *dir) const
+mglData mglData::Min(const char *dir) const
 {
 	register long i,j,k,i0;
 	long kx=nx,ky=ny,kz=nz;
 	float *b = new float[nx*ny*nz];
-	static mglData d;
+	mglData d;
 //	memset(b,0,nx*ny*nz*sizeof(float));
 	if(strchr(dir,'z') && kz>1)
 	{
@@ -834,9 +834,9 @@ bool mglData::FindAny(const char *cond) const
 	return cc;
 }
 //-----------------------------------------------------------------------------
-mglData &TransformA(const mglData &am, const mglData &ph, const char *tr)
+mglData TransformA(const mglData &am, const mglData &ph, const char *tr)
 {
-	static mglData d;
+	mglData d;
 #ifndef NO_GSL
 	int nx = am.nx, ny = am.ny, nz = am.nz;
 	if(nx*ny*nz != ph.nx*ph.ny*ph.nz || !tr || tr[0]==0)
@@ -878,9 +878,9 @@ mglData &TransformA(const mglData &am, const mglData &ph, const char *tr)
 	return d;
 }
 //-----------------------------------------------------------------------------
-mglData &Transform(const mglData &re, const mglData &im, const char *tr)
+mglData Transform(const mglData &re, const mglData &im, const char *tr)
 {
-	static mglData d;
+	mglData d;
 #ifndef NO_GSL
 	int nx = re.nx, ny = re.ny, nz = re.nz;
 	if(nx*ny*nz != im.nx*im.ny*im.nz || !tr || tr[0]==0)
@@ -922,9 +922,9 @@ mglData &Transform(const mglData &re, const mglData &im, const char *tr)
 	return d;
 }
 //-----------------------------------------------------------------------------
-mglData &STFA(const mglData &re, const mglData &im, int dn, char dir)
+mglData STFA(const mglData &re, const mglData &im, int dn, char dir)
 {
-	static mglData d;
+	mglData d;
 #ifndef NO_GSL
 	long nx = re.nx, ny = re.ny;
 	if(nx*ny!=im.nx*im.ny)	return d;
@@ -1172,9 +1172,9 @@ void mglData::NormSl(float v1, float v2, char dir, bool keep_en, bool sym)
 	memcpy(a, b.a, nx*ny*nz*sizeof(float));
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Momentum(char dir, const char *how) const
+mglData mglData::Momentum(char dir, const char *how) const
 {
-	static mglData b;
+	mglData b;
 	float i0=0,i1=0,d;
 	register long i,j,k;
 	int n=1;
@@ -1240,7 +1240,7 @@ void mglData::PrintInfo(FILE *fp) const
 	delete []buf;
 }
 //-----------------------------------------------------------------------------
-void mglData::PrintInfo(char *buf) const
+void mglData::PrintInfo(char *buf, bool all) const
 {
 	if(buf==0)	return;
 	char s[128];
@@ -1252,12 +1252,15 @@ void mglData::PrintInfo(char *buf) const
 	sprintf(s,"Maximum is %g\t at coordinates x = %d\ty = %d\tz = %d\n", b,i,j,k);	strcat(buf,s);
 	b = Minimal(i,j,k);
 	sprintf(s,"Minimum is %g\t at coordinates x = %d\ty = %d\tz = %d\n", b,i,j,k);	strcat(buf,s);
-	float A=0,Wa=0,X=0,Y=0,Z=0,Wx=0,Wy=0,Wz=0;
-	Momentum('x',X,Wx);		Momentum('y',Y,Wy);
-	Momentum('z',Z,Wz);		Momentum(0,A,Wa);
-	sprintf(s,"Averages are:\n<a> = %g\t<x> = %g\t<y> = %g\t<z> = %g\n", A,X,Y,Z);	strcat(buf,s);
-	sprintf(s,"Widths (dispersions) are:\nWa = %g\tWx = %g\tWy = %g\tWz = %g\n",
-		Wa,Wx,Wy,Wz);	strcat(buf,s);
+	if(all)
+	{
+		float A=0,Wa=0,X=0,Y=0,Z=0,Wx=0,Wy=0,Wz=0;
+		Momentum('x',X,Wx);		Momentum('y',Y,Wy);
+		Momentum('z',Z,Wz);		Momentum(0,A,Wa);
+		sprintf(s,"Averages are:\n<a> = %g\t<x> = %g\t<y> = %g\t<z> = %g\n", A,X,Y,Z);	strcat(buf,s);
+		sprintf(s,"Widths (dispersions) are:\nWa = %g\tWx = %g\tWy = %g\tWz = %g\n",
+			Wa,Wx,Wy,Wz);	strcat(buf,s);
+	}
 }
 //-----------------------------------------------------------------------------
 void mglData::Rearrange(int mx, int my, int mz)
@@ -1451,5 +1454,126 @@ float mglData::Spline5(float x,float y,float z,float &dx,float &dy,float &dz) co
 		*/
 	}
 	return res;
+}
+//-----------------------------------------------------------------------------
+void mglData::Envelop(char dir)
+{
+	register int i,j,k,i0;
+	double *b = new double[2*nx*ny*nz];
+	for(i=0;i<nx*ny*nz;i++)	{	b[2*i] = a[i];	b[2*i+1] = 0;	}
+	if(dir=='x' && nx>1)
+	{
+		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(nx);
+		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(nx);
+		for(i=0;i<ny*nz;i++)
+		{
+			gsl_fft_complex_transform(b+2*i*nx, 1, nx, wt, ws, forward);
+			for(j=0;j<nx;j++)
+			{	b[j+2*i*nx] /= nx/2.;	b[j+nx+2*i*nx] = 0;	}
+			gsl_fft_complex_transform(b+2*i*nx, 1, nx, wt, ws, backward);
+		}
+		gsl_fft_complex_workspace_free(ws);
+		gsl_fft_complex_wavetable_free(wt);
+	}
+	if(dir=='y' && ny>1)
+	{
+		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(ny);
+		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(ny);
+		for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
+		{
+			i0 = 2*i+2*j*nx*ny;
+			gsl_fft_complex_transform(b+i0, nx, ny, wt, ws, forward);
+			for(k=0;k<ny;k++)
+			{	b[i0+k*2*nx] /= ny/2.;	b[i0+2*nx*k+2*nx*ny] = 0;	}
+			gsl_fft_complex_transform(b+i0, nx, ny, wt, ws, backward);
+		}
+		gsl_fft_complex_workspace_free(ws);
+		gsl_fft_complex_wavetable_free(wt);
+	}
+	if(dir=='z' && nz>1)
+	{
+		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(nz);
+		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(nz);
+		for(i=0;i<ny*nx;i++)
+		{
+			i0 = 2*nx*ny;
+			gsl_fft_complex_transform(b+2*i, nx*ny, nz, wt, ws, forward);
+			for(j=0;j<nz;j++)
+			{	b[i+j*i0] /= nz/2.;	b[i+j*i0+nz*i0] = 0;	}
+			gsl_fft_complex_transform(b+2*i, nx*ny, nz, wt, ws, backward);
+		}
+		gsl_fft_complex_workspace_free(ws);
+		gsl_fft_complex_wavetable_free(wt);
+	}
+	for(i=0;i<nx*ny*nz;i++)	a[i] = hypot(b[2*i], b[2*i+1]);
+}
+//-----------------------------------------------------------------------------
+#define omod(x,y)	(y)*((x)>0?int((x)/(y)+0.5):int((x)/(y)-0.5))
+void mglData::Sew(const char *dirs, float da)
+{
+	register int i,j,k,ii;
+	register float q;
+	if(strchr(dirs,'x') && nx>1)	for(j=0;j<nz*ny;j++)
+	{
+		ii = j*nx;
+		a[1+ii] += omod(a[ii]-a[1+ii], da);
+		for(i=2;i<nx;i++)
+		{
+			q = 2*a[i-1+ii]-a[i-2+ii];
+			a[i+ii] += omod(q-a[i+ii], da);
+		}
+	}
+	if(strchr(dirs,'y') && ny>1)	for(j=0;j<nx;j++)	for(k=0;k<nz;k++)
+	{
+		ii = j+k*nx*ny;
+		a[nx+ii] += omod(a[ii]-a[nx+ii], da);
+		for(i=2;i<nx;i++)
+		{
+			q = 2*a[i*nx-nx+ii]-a[i*nx-2*nx+ii];
+			a[i*nx+ii] += omod(q-a[i*nx+ii], da);
+		}
+	}
+	if(strchr(dirs,'z') && nz>1)	for(j=0;j<nx*ny;j++)
+	{
+		ii = nx*ny;
+		a[ii+j] += omod(a[j]-a[ii+j], da);
+		for(i=2;i<nz;i++)
+		{
+			q = 2*a[i*ii-ii+j]-a[i*ii-2*ii+j];
+			a[i*ii+j] += omod(q-a[i*ii+j], da);
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+mglData mglData::Evaluate(const mglData &idat, const mglData &jdat, const mglData &kdat, bool norm) const
+{
+	mglData b;
+	register int i,n=idat.nx*idat.ny*idat.nz;
+	if(jdat.nx*jdat.ny*jdat.nz!=n || kdat.nx*kdat.ny*kdat.nz!=n)	return b;
+	b.Create(idat.nx, idat.ny, idat.nz);
+	if(norm)	for(i=0;i<n;i++)	b.a[i] = Spline1(idat.a[i], jdat.a[i], kdat.a[i]);
+	else		for(i=0;i<n;i++)	b.a[i] = Spline(idat.a[i], jdat.a[i], kdat.a[i]);
+	return b;
+}
+//-----------------------------------------------------------------------------
+mglData mglData::Evaluate(const mglData &idat, const mglData &jdat, bool norm) const
+{
+	mglData b;
+	register int i,n=idat.nx*idat.ny*idat.nz;
+	if(jdat.nx*jdat.ny*jdat.nz!=n)	return b;
+	b.Create(idat.nx, idat.ny, idat.nz);
+	if(norm)	for(i=0;i<n;i++)	b.a[i] = Spline1(idat.a[i], jdat.a[i]);
+	else		for(i=0;i<n;i++)	b.a[i] = Spline(idat.a[i], jdat.a[i]);
+	return b;
+}
+//-----------------------------------------------------------------------------
+mglData mglData::Evaluate(const mglData &idat, bool norm) const
+{
+	mglData b;
+	register int i,n=idat.nx*idat.ny*idat.nz;
+	b.Create(idat.nx, idat.ny, idat.nz);
+	if(norm)	for(i=0;i<n;i++)	b.a[i] = Spline1(idat.a[i]);
+	else		for(i=0;i<n;i++)	b.a[i] = Spline(idat.a[i]);
+	return b;
 }
 //-----------------------------------------------------------------------------

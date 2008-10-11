@@ -65,15 +65,18 @@ void mglGraph::Surf(const char *eqX, const char *eqY, const char *eqZ, const cha
 void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl, int n)
 {
 	register long i,j,i0;
-	bool all = (stl && strlen(stl)>3);
 	n = (n<2) ? 2 : n;
 	mglColor c1('w'),c2,c3,c4;
 	float *pp = new float[3*n*n],u;
 	float *cc = new float[4*n*n],v;
 	bool *tt = new bool[n*n];
 
-	if(stl && stl[0])	c1.Set(stl[0]);
-	if(all)	{	c2.Set(stl[1]);	c3.Set(stl[2]);	c4.Set(stl[3]);	}
+	SetScheme(stl);
+	if(NumCol)	c1 = cmap[0];
+	bool all = NumCol>3;
+	if(all)	{	c2=cmap[1];	c3=cmap[2];	c4=cmap[3];	}
+//	if(stl && stl[0])	c1.Set(stl[0], isdigit(stl[1])?(stl[1]-'0')/5:1);
+//	if(all)	{	c2.Set(stl[1]);	c3.Set(stl[2]);	c4.Set(stl[3]);	}
 
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)
 	{

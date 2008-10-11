@@ -1,0 +1,306 @@
+@c ------------------------------------------------------------------
+@node MathGL core, Plotter classes, Overview, Top
+@chapter MathGL core
+
+The core of MathGL is mglGraph class. It contains a lot of plotting functions for 1D, 2D and 3D plots. It also encapsulates parameters for axes drawing. Moreover an arbitrary coordinate transformation may be used for each axis. All plotting functions use data encapsulated in mglData class (@pxref{mglData class}) that allows to check sizes of used arrays easily.
+
+Note that class mglGraph contains only interface functions for plotting but does not make it by itself. For plotting in specific device (screen, memory or file) one should use derived classes: mglGraphZB (for bitmap picture in file or in memory), mglGraphPS (for vector PostScript picture), mglGraphGL (for drawing using OpenGL, or for GLUT windows interface) and so on. @xref{Plotter classes}.
+
+@menu
+* Graphics setup::
+* Transformation matrix::
+* Primitive drawing::
+* Text printing::
+* Axis and Colorbar::
+* Legend::
+* 1D plotting::
+* 2D plotting::
+* 3D plotting::
+* Dual plotting::
+* Combined plotting::
+* Other plotting::
+* Nonlinear fitting::
+@end menu
+
+@c ##################################################################
+@node Graphics setup, Transformation matrix, , MathGL core
+@section Graphics setup
+@cindex MathGL setup
+
+Functions and variables in this group influences on overall graphics appearance. So all of them should be placed @emph{before} any actual plotting function calls.
+
+@menu
+* Transparency::
+* Lighting::
+* Fog::
+* Cutting::
+* Zooming::
+* Font settings::
+* Error handling::
+* Pallete::
+* Default sizes::
+* Other settings::
+@end menu
+
+@c ==================================================================
+@node Transparency, Lighting, , Graphics setup
+@subsection Transparency
+@cindex Alpha
+@cindex AlphaDef
+@cindex Transparent
+@cindex TranspType
+
+There are several functions and variables for setup transparency. The general function is @code{Alpha()} which switch on/off the transparency for overall plot. It influence only for graphics which created after @code{Alpha()} call (with one exeption, @pxref{mglGraphGL}). Variable @code{AlphaDef} specify the default value of alpha-channel. You may switch off transparency of selected plot by variable @code{Transparent}. Finally, variable @code{TranspType} set the kind of transparency.
+
+@deftypemethod mglGraph @code{void} Alpha (@code{bool} @var{enable})
+Sets the transparency on/off. It is recommended to call this function before any plotting command. In any case it must be called before  @code{Finish()} function if the last is used. Default value is transparency off. Unfortunately it switches the transparency on/off for all subplots. Use @code{Transparent = false} in particular plot to disable its transparency.
+@end deftypemethod
+
+@deftypecv {General option} mglGraph @code{float} AlphaDef
+Default value of alpha channel (transparency) for all plotting functions. Note, that OpenGL (@pxref{classmglGraphGL}) has incorrect drawing for large values of alpha in case of several overlapping surfaces.
+@end deftypecv
+
+@deftypecv {General option} mglGraph @code{bool} Transparent
+Flag which temporary switches transparency on/off for the plot.
+@end deftypecv
+
+@deftypecv {General option} mglGraph @code{float} TranspType
+This variable set the transparency type. Normal transparency (@samp{0}) -- below things is less visible than upper ones. It does not look well in OpenGL mode (@pxref{classmglGraphGL}) for several surfaces. Glass-like transparency (@samp{1}) -- below and upper things are commutable and just decrease intensity of light by RGB channel. Lamp-like transparency (@samp{2}) -- below and upper things are commutable and are the source of some additional light. I recommend to set @code{AlphaDef = 0.3} or less for lamp-like transparency.
+@end deftypecv
+
+@multitable @columnfractions .4 .6
+@item Example of transpared surface:
+@menu
+* C++ code for surf_alpha::
+* C code for surf_alpha::
+* MGL code for surf_alpha::
+* Python code for surf_alpha::
+@end menu
+@tab @image{png/surf_alpha, 7cm}
+@end multitable
+
+@c ------------------------------------------------------------------
+@node C++ code for surf_alpha, C code for surf_alpha, , Transparency
+@subsubsection C++ code for surf_alpha
+
+@example
+mglData a(50,40);  // create data
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+gr->Rotate(40,60); // prepare plot
+gr->Light(true);
+gr->Alpha(true);   // <-- Switch on transparency
+gr->Box();
+gr->Surf(a);       // plot data
+@end example
+
+@c ------------------------------------------------------------------
+@node C code for surf_alpha, MGL code for surf_alpha, C++ code for surf_alpha, Transparency
+@subsubsection C code for surf_alpha
+
+@example
+HMDT a = mgl_create_data_size(50,40,1);
+mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+mgl_rotate(gr,40.,60.,0.);
+mgl_set_light(gr,1);
+mgl_set_alpha(gr,1);   /* <-- Switch on transparency */
+mgl_box(gr,1);
+mgl_surf(gr,a,"");
+mgl_delete_data(a); 
+@end example
+
+@c ------------------------------------------------------------------
+@node MGL code for surf_alpha, Python code for surf_alpha, C code for surf_alpha, Transparency
+@subsubsection MGL code for surf_alpha
+
+@example
+new a 50 40
+modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
+rotate 40 60
+light on
+alpha on       # <-- Switch on transparency
+box
+surf a
+@end example
+
+@c ------------------------------------------------------------------
+@node Python code for surf_alpha, , MGL code for surf_alpha, Transparency
+@subsubsection Python code for surf_alpha
+
+@example
+a = mglData(50, 40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+g = mglGraph();
+g.Rotate(40, 60);
+g.Light(on);
+g.Alpha(on);   # <-- Switch on transparency
+g.Box();
+g.Surf(a);
+@end example
+
+@c ==================================================================
+@node Lighting, Fog, Transparency, Graphics setup
+@subsection Lighting
+@cindex Light
+@cindex Ambient
+
+There are several functions for setup lighting. The general function is @code{Light(bool)} which switch on/off the lighting for overall plot. It influence only for graphics which created after @code{Light()} call (with one exeption, @pxref{mglGraphGL}). Generally MathGL support up to 10 independend light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
+
+@deftypemethod mglGraph @code{void} Light (@code{bool} @var{enable})
+Sets the using of light on/off for overall plot. It is recommended to call this function before any plotting command. Default value is lightning off.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} Light (@code{int} @var{n}, @code{bool} @var{enable})
+Switch on/off @var{n}-th light source separately.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} Light (@code{int} @var{n}, @code{mglPoint} @var{p}, @code{mglColor} @var{c}, @code{float} @var{bright}=@code{0.5}, @code{bool} @var{infty}=@code{true})
+@end deftypemethod
+@deftypemethod mglGraph @code{void} Light (@code{int} @var{n}, @code{mglPoint} @var{p}, @code{char} @var{c}=@code{'w'}, @code{float} @var{bright}=@code{0.5}, @code{bool} @var{infty}=@code{true})
+The function adds a light source with identification @var{n} at position @var{p}. The color of light is @var{c} (white by default). The brightness of light is @var{bright} which must be in range [0,1]. Flag @var{infty}=@code{true} puts the source to infinite distance (for the faster drawing). It is recommended to call this function before any plotting command.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} Ambient (@code{float} @var{bright}=@code{0.5})
+Sets the brightness of ambient light. The value should be in range [0,1]. It is recommended to call this function before any plotting command.
+@end deftypemethod
+
+@c ==================================================================
+@node Fog, Default sizes, Lighting, Graphics setup
+@subsection Fog
+@cindex Fog
+
+@deftypemethod mglGraph @code{void} Fog (@code{float} @var{d}, @code{float} @var{dz}=@code{0.25})
+Function imitate a fog in the plot. Fog start from relative distance @var{dz} from view point and its density growths exponentially in depth. So that the fog influence is determined by law ~ 1-exp(-@emph{d*z}). Here @emph{z} is normalized to 1 depth of the plot. If value @var{d}=@code{0} then the fog is absent.
+@end deftypemethod
+
+@multitable @columnfractions .4 .6
+@item Example of surface in fog:
+@menu
+* C++ code for surf_fog::
+* C code for surf_fog::
+* MGL code for surf_fog::
+* Python code for surf_fog::
+@end menu
+@tab @image{png/surf_fog, 7cm}
+@end multitable
+
+@c ------------------------------------------------------------------
+@node C++ code for surf_fog, C code for surf_fog, , Transparency
+@subsubsection C++ code for surf_fog
+
+@example
+mglData a(50,40);  // create data
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+gr->Rotate(40,60); // prepare plot
+gr->Light(true);
+gr->Fog(1);        // <-- Switch on fog
+gr->Box();
+gr->Surf(a);       // plot data
+@end example
+
+@c ------------------------------------------------------------------
+@node C code for surf_fog, MGL code for surf_fog, C++ code for surf_fog, Transparency
+@subsubsection C code for surf_fog
+
+@example
+HMDT a = mgl_create_data_size(50,40,1);
+mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+mgl_rotate(gr,40.,60.,0.);
+mgl_set_light(gr,1);
+mgl_set_fog(gr,1.);    /* <-- Switch on fog */
+mgl_box(gr,1);
+mgl_surf(gr,a,"");
+mgl_delete_data(a); 
+@end example
+
+@c ------------------------------------------------------------------
+@node MGL code for surf_fog, Python code for surf_fog, C code for surf_fog, Transparency
+@subsubsection MGL code for surf_fog
+
+@example
+new a 50 40
+modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
+rotate 40 60
+light on
+fog 1          # <-- Switch on fog
+box
+surf a
+@end example
+
+@c ------------------------------------------------------------------
+@node Python code for surf_fog, , MGL code for surf_fog, Transparency
+@subsubsection Python code for surf_fog
+
+@example
+a = mglData(50, 40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+g = mglGraph();
+g.Rotate(40, 60);
+g.Light(on);
+g.Fog(1);      # <-- Switch on fog
+g.Box();
+g.Surf(a);
+@end example
+
+@c ==================================================================
+@node Default sizes, Zooming, Fog, Graphics setup
+@subsection Default sizes
+@cindex BarWidth
+@cindex MarkSize
+@cindex ArrowSize
+@cindex BaseLineWidth
+
+These variables control the default (initial) values for most graphics parameters including sizes of markers, arrows, linewidth and so on. As any other settings these ones will influence only on plots created after the settings change.
+
+@deftypecv {General option} mglGraph @code{float} BarWidth
+Relative width of rectangles in Bars() plot (@pxref{Bars}). Default value is @code{0.7}.
+@end deftypecv
+
+@deftypecv {General option} mglGraph @code{float} MarkSize
+The size of marks for 1D plots (@pxref{1D plots}). Default value is @code{0.02}.
+@end deftypecv
+
+@deftypecv {General option} mglGraph @code{float} ArrowSize
+The size of arrows for 1D plots (@pxref{1D plotting}), lines and curves (@pxref{Primitive drawing}). Default value is @code{0.03}.
+@end deftypecv
+
+@deftypecv {General option} mglGraph @code{float} BaseLineWidth
+The variable define the base width for all lines. The value @math{@leq{} 1} is ignored. For values @math{> 1} the real line width is result of multiplication of specified line width and the value of @var{BaseLineWidth}. Increase of this variables is actual for large bitmap pictures. Note that a ``step'' effect is possible: real line width in pixels increases step-by-step for smooth increase of this variable.  Default value is @code{1}.
+@end deftypecv
+
+@c ==================================================================
+@node Zooming, Cutting, Default sizes, Graphics setup
+@subsection Zooming
+@cindex BarWidth
+@cindex MarkSize
+@cindex ArrowSize
+@cindex BaseLineWidth
+
+These variables control the default (initial) values for most graphics parameters including sizes of markers, arrows, linewidth and so on. As any other settings these ones will influence only on plots created after the settings change.
+
+@deftypecv {General option} mglGraph @code{float} BarWidth
+Relative width of rectangles in Bars() plot (@pxref{Bars}). Default value is @code{0.7}.
+@end deftypecv
+
+@deftypecv {General option} mglGraph @code{float} MarkSize
+The size of marks for 1D plots (@pxref{1D plots}). Default value is @code{0.02}.
+@end deftypecv
+
+@deftypecv {General option} mglGraph @code{float} ArrowSize
+The size of arrows for 1D plots (@pxref{1D plotting}), lines and curves (@pxref{Primitive drawing}). Default value is @code{0.03}.
+@end deftypecv
+
+@deftypecv {General option} mglGraph @code{float} BaseLineWidth
+The variable define the base width for all lines. The value @math{@leq{} 1} is ignored. For values @math{> 1} the real line width is result of multiplication of specified line width and the value of @var{BaseLineWidth}. Increase of this variables is actual for large bitmap pictures. Note that a ``step'' effect is possible: real line width in pixels increases step-by-step for smooth increase of this variable.  Default value is @code{1}.
+@end deftypecv
+
+
+@c ------------------------------------------------------------------
+@c ------------------------------------------------------------------
+@c ------------------------------------------------------------------
+@c ------------------------------------------------------------------
+@c ------------------------------------------------------------------
+@c ------------------------------------------------------------------
+@c ------------------------------------------------------------------
+@c ------------------------------------------------------------------
+@c ------------------------------------------------------------------
+@c ------------------------------------------------------------------

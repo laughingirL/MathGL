@@ -1,6 +1,6 @@
 \input texinfo
 @setfilename mathgl.info
-@set VERSION 1.7.1
+@set VERSION 1.8
 @settitle MathGL @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
@@ -26,10 +26,10 @@ supports it in developing GNU and promoting software freedom.''
 @end quotation
 @end copying
 
-@dircategory MathGL documentation system
-@direntry
-* MathGL: (mathgl). The library for scientific graphics.
-@end direntry
+@c @dircategory MathGL documentation system
+@c @direntry
+@c * MathGL: (mathgl). The library for scientific graphics.
+@c @end direntry
 
 @titlepage
 @title MathGL
@@ -58,6 +58,7 @@ This manual is for MathGL (version @value{VERSION}).
 * Other classes::
 * Interfaces::
 * Examples::
+* Samples::
 * Copying This Manual::
 * Index::
 @end menu
@@ -68,14 +69,17 @@ This manual is for MathGL (version @value{VERSION}).
 
 @node Interfaces, Examples, Other classes, Top
 @chapter Interfaces
-@c @include c_for.texi
+
+
+
+@c @include cint.texi
 @c @include python.texi
 @c @include mgl.texi
 
-@c @include example.texi
-@c @include samples.texi
+@include example.texi
+@include samples.texi
 
-@node Copying This Manual, Index, Examples, Top
+@node Copying This Manual, Index, Samples, Top
 @appendix GNU Free Documentation License
 @include fdl.texi
 

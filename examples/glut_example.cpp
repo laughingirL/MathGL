@@ -1,4 +1,4 @@
-#include <stdio.h> 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -6,61 +6,47 @@
 
 int sample(mglGraph *gr, void *)
 {
-	float a=0.1,b=0.4,c=0.5;
-	gr->Line(mglPoint(a,1),mglPoint(b,1),"k-A");		gr->Puts(mglPoint(c,1),"Style 'A' or 'A\\_'","rL");
-	gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"k-V");	gr->Puts(mglPoint(c,0.8),"Style 'V' or 'V\\_'","rL");
-	gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"k-K");	gr->Puts(mglPoint(c,0.6),"Style 'K' or 'K\\_'","rL");
-	gr->Line(mglPoint(a,0.4),mglPoint(b,0.4),"k-I");	gr->Puts(mglPoint(c,0.4),"Style 'I' or 'I\\_'","rL");
-	gr->Line(mglPoint(a,0.2),mglPoint(b,0.2),"k-D");	gr->Puts(mglPoint(c,0.2),"Style 'D' or 'D\\_'","rL");
-	gr->Line(mglPoint(a,0),mglPoint(b,0),"k-S");		gr->Puts(mglPoint(c,0),"Style 'S' or 'S\\_'","rL");
-	gr->Line(mglPoint(a,-0.2),mglPoint(b,-0.2),"k-O");	gr->Puts(mglPoint(c,-0.2),"Style 'O' or 'O\\_'","rL");
-	gr->Line(mglPoint(a,-0.4),mglPoint(b,-0.4),"k-T");	gr->Puts(mglPoint(c,-0.4),"Style 'T' or 'T\\_'","rL");
-	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-_");	gr->Puts(mglPoint(c,-0.6),"Style '\\_' or none","rL");
-	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-AS");	gr->Puts(mglPoint(c,-0.8),"Style 'AS'","rL");
-	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-_A");		gr->Puts(mglPoint(c,-1),"Style '\\_A'","rL");
+//	gr->Rotate(0,0);	gr->Axis();	gr->Box();	return 0;
+//	gr->Alpha(true); gr->Light(true);
 
-	a=-1;	b=-0.7;	c=-0.6;
-	gr->Line(mglPoint(a,1),mglPoint(b,1),"kAA");		gr->Puts(mglPoint(c,1),"Style 'AA'","rL");
-	gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"kVV");	gr->Puts(mglPoint(c,0.8),"Style 'VV'","rL");
-	gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"kKK");	gr->Puts(mglPoint(c,0.6),"Style 'KK'","rL");
-	gr->Line(mglPoint(a,0.4),mglPoint(b,0.4),"kII");	gr->Puts(mglPoint(c,0.4),"Style 'II'","rL");
-	gr->Line(mglPoint(a,0.2),mglPoint(b,0.2),"kDD");	gr->Puts(mglPoint(c,0.2),"Style 'DD'","rL");
-	gr->Line(mglPoint(a,0),mglPoint(b,0),"kSS");		gr->Puts(mglPoint(c,0),"Style 'SS'","rL");
-	gr->Line(mglPoint(a,-0.2),mglPoint(b,-0.2),"kOO");	gr->Puts(mglPoint(c,-0.2),"Style 'OO'","rL");
-	gr->Line(mglPoint(a,-0.4),mglPoint(b,-0.4),"kTT");	gr->Puts(mglPoint(c,-0.4),"Style 'TT'","rL");
-	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-__");	gr->Puts(mglPoint(c,-0.6),"Style '\\_\\_'","rL");
-	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-VA");	gr->Puts(mglPoint(c,-0.8),"Style 'VA'","rL");
-	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-AV");		gr->Puts(mglPoint(c,-1),"Style 'AV'","rL");
+	gr->SubPlot(2,2,0);
+	gr->Text(mglPoint(0,1.1),"Methane, CH_4",0,-2); gr->Rotate(60,120);
+	gr->Sphere(mglPoint(0,0,0),0.25,"k");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0,0,1),0.35,"h",1,2);
+	gr->Sphere(mglPoint(0,0,0.7),0.25,"g");
+	gr->Drop(mglPoint(0,0,0),mglPoint(-0.94,0,-0.33),0.35,"h",1,2);
+	gr->Sphere(mglPoint(-0.66,0,-0.23),0.25,"g");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0.47,0.82,-0.33),0.35,"h",1,2);
+	gr->Sphere(mglPoint(0.33,0.57,-0.23),0.25,"g");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0.47,-0.82,-0.33),0.35,"h",1,2);
+	gr->Sphere(mglPoint(0.33,-0.57,-0.23),0.25,"g");
 
-	return 0;
+	gr->SubPlot(2,2,1);
+	gr->Text(mglPoint(0,1.1),"Water, H{_2}O",0,-2); gr->Rotate(60,100);
+	gr->Sphere(mglPoint(0,0,0),0.25,"r");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0.3,0.5,0),0.3,"m",1,2);
+	gr->Sphere(mglPoint(0.3,0.5,0),0.25,"g");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0.3,-0.5,0),0.3,"m",1,2);
+	gr->Sphere(mglPoint(0.3,-0.5,0),0.25,"g");
+
+	gr->SubPlot(2,2,2);
+	gr->Text(mglPoint(0,1.1),"Oxygen, O_2",0,-2); gr->Rotate(60,120);
+	gr->Drop(mglPoint(0,0.5,0),mglPoint(0,-0.3,0),0.3,"m",1,2);
+	gr->Sphere(mglPoint(0,0.5,0),0.25,"r");
+	gr->Drop(mglPoint(0,-0.5,0),mglPoint(0,0.3,0),0.3,"m",1,2);
+	gr->Sphere(mglPoint(0,-0.5,0),0.25,"r");
+
+	gr->SubPlot(2,2,3);
+	gr->Text(mglPoint(0,1.1),"Ammonia, NH_3",0,-2); gr->Rotate(60,120);
+	gr->Sphere(mglPoint(0,0,0),0.25,"b");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0.33,0.57,0),0.32,"n",1,2);
+	gr->Sphere(mglPoint(0.33,0.57,0),0.25,"g");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0.33,-0.57,0),0.32,"n",1,2);
+	gr->Sphere(mglPoint(0.33,-0.57,0),0.25,"g");
+	gr->Drop(mglPoint(0,0,0),mglPoint(-0.65,0,0),0.32,"n",1,2);
+	gr->Sphere(mglPoint(-0.65,0,0),0.25,"g");
+ 	return 0;
 }
-/*{
-	gr->NewFrame();				// first frame
-	gr->SubPlot(2,2,0);			// just new axis without rotation and aspects
-	gr->Box();
-	gr->SubPlot(2,2,1);			// new axis with aspect and rotation
-	gr->Aspect(1,1,2);
-	gr->Rotate(60,120);
-	gr->Box();
-	gr->SubPlot(2,2,2);			// aspect in other direction
-	gr->Aspect(1,2,2);
-	gr->Rotate(60,120);
-	gr->Box();
-	gr->SubPlot(2,2,3);			// rotation before aspect. INCORRECT !!!
-	gr->Rotate(60,120);
-	gr->Aspect(1,1,2);
-	gr->Box();
-	gr->EndFrame();				// end of first frame
-	gr->NewFrame();				// second frame
-	gr->Clf();					// clear all
-	gr->Rotate(60,120);
-	gr->Box();
-	gr->InPlot(0.6,1,0.6,1);	// new axis in upper right corner
-	gr->Rotate(60,120);
-	gr->Box();
-	gr->EndFrame();				// end of second frame
-	return 2;
-}*/
 
 int sample_1(mglGraph *gr, void *)
 {
@@ -69,13 +55,13 @@ int sample_1(mglGraph *gr, void *)
 	d1.Modify("cos(2*pi*x)");
 	d2.Modify("sin(2*pi*x)");
 	a.Modify("pow(x,4*y)");
-	
+
 	gr->NewFrame();
 	gr->Box();	gr->Axis("xy");	gr->Label('x',"x");	gr->Label('y',"y");
 	gr->Text(mglPoint(0,1.2,1),"Simple plot of one curve");
 	gr->Plot(d);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Box();	gr->Axis("xy");	gr->Label('x',"x");	gr->Label('y',"y");
 	gr->Text(mglPoint(0,1.2,1),"Three curves with manual styles");
@@ -84,7 +70,7 @@ int sample_1(mglGraph *gr, void *)
 	gr->Plot(d2,"m|^");
 	gr->Plot(d,"l o");
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Box();	gr->Axis("xy");	gr->Label('x',"x");	gr->Label('y',"y");
 	gr->Text(mglPoint(0,1.2,1),"Three curves with automatic styles");
@@ -92,27 +78,27 @@ int sample_1(mglGraph *gr, void *)
 	gr->Plot(d1);
 	gr->Plot(d2);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Box();	gr->Axis("xy");	gr->Label('x',"x");	gr->Label('y',"y");
 	gr->Text(mglPoint(0,1.2,1),"Curves from matrix");
 	gr->Plot(a);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Box();	gr->Axis("xy");	gr->Label('x',"x");	gr->Label('y',"y");
 	gr->Text(mglPoint(0,1.2,1),"Parametrical curves in 2D");
 	gr->Plot(d1,d2,"b");
 	gr->Plot(d1,d,"ri");
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Parametrical curves in 3D");
 	gr->Rotate(60,40);
 	gr->Box();	gr->Axis();	gr->Label('x',"x");	gr->Label('y',"y");	gr->Label('z',"z");
 	gr->Plot(d1,d2,d,"b");
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->SubPlot(2,2,0);
 	gr->Box();	gr->Axis("xy");	gr->Label('x',"x");	gr->Label('y',"y");
@@ -131,7 +117,7 @@ int sample_1(mglGraph *gr, void *)
 	gr->Text(mglPoint(0,1.2,1),"Bars plot");
 	gr->Bars(d);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->SubPlot(2,2,0);
 	gr->Text(mglPoint(0,1.2,1),"Area plot in 3D");
@@ -168,117 +154,117 @@ int sample_2(mglGraph *gr, void *)
 	d.Modify("cos(2*pi*x)");
 	m.Modify("cos(pi*x)");
 	c1.Modify("(2-z)*(2*x-1)^2 + (z+1)*(2*y-1)^2");
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Simple surface");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Surf(a,"BbcyrR");
 //	gr->Colorbar();
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->SubPlot(2,2,0);
 	gr->Text(mglPoint(0,1.2,1),"Gray color scheme 'kw'");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Surf(a,"kw");
 	gr->SubPlot(2,2,1);
 	gr->Text(mglPoint(0,1.2,1),"Hot color scheme 'wyrRk'");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Surf(a,"wyrRk");
-	gr->SubPlot(2,2,2);		
+	gr->SubPlot(2,2,2);
 	gr->Text(mglPoint(0,1.2,1),"Along coordiantes 'rgbd'");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Surf(a,"rgbd");
-	gr->SubPlot(2,2,3);		
+	gr->SubPlot(2,2,3);
 	gr->Text(mglPoint(0,1.2,1),"Bicolor scheme 'BbwrR'");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Surf(a,"BbwrR");
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Text(mglPoint(0,1.2,1),"Density plot");
 	gr->Dens(a,"BbcyrR");
 	gr->InPlot(0.6,1,0.6,1);	// new axis in upper right corner
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Text(mglPoint(0,1.2,1),"... with bicolor");
 	gr->Dens(a,"BbwrR");
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Mesh lines (previous scheme by default)");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Mesh(a);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Surface of boxes");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Boxs(a,"BbcyrR");
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Contour plot");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Cont(a);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Contour isosurface y-rotation");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Axial(a,":y");
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Contour isosurface x-rotation");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Axial(a,"x");
 	a.Transpose();
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Surface and contours");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Cont(a,"BbcyrR",7,gr->Min.z);
 	gr->Surf(a);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Parametrical surface (1)");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Mesh(d1,d2,b);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Parametrical surface (vase)");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Surf(b,c,m);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Parametrical surface (torus)");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Surf(b,c,d);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Contours for 3-tensor");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Cont(c1);
 	gr->EndFrame();
 	return gr->GetNumFrame();
@@ -299,49 +285,49 @@ int sample_3(mglGraph *gr, void *)
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Isosurface (try lightning!)");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Surf3(a);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Isosurface with 'rgbd' scheme");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Surf3(a,"rgbd");
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Cloud plot (switch alpha !!!)");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->CloudQ(a,"BbcyrR");
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Density at central slices");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->DensA(a);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->Text(mglPoint(0,1.2,1),"Contours at central slices");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->ContA(a);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
 	gr->SubPlot(2,1,0);
 	gr->Text(mglPoint(0,1.2,1),"Gauss difraction");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->CAxis(0,1);
 	gr->Surf3(0.5,c,"g");
 	gr->SubPlot(2,1,1);
 	gr->Text(mglPoint(0,1.2,1),"and its phase");
 	gr->Rotate(40,60);
-	gr->Box();	gr->Axis();	
+	gr->Box();	gr->Axis();
 	gr->Surf3A(sin(M_PI/4),d,c,"q");
 	gr->Surf3A(-sin(M_PI/4),d,c,"q");
 	gr->EndFrame();
@@ -360,19 +346,19 @@ int sample_d(mglGraph *gr, void *)
 	cz.Modify("0.01*(z-0.5)/pow((x-0.3)^2+(y-0.5)^2+(z-0.5)^2,1.5) - 0.01*(z-0.5)/pow((x-0.7)^2+(y-0.5)^2+(z-0.5)^2,1.5)");
 
 	gr->NewFrame();
-	gr->Box();	gr->Axis("xy");	
+	gr->Box();	gr->Axis("xy");
 	gr->Text(mglPoint(0,1.2,1),"Vector field (color ~ \\sqrt{a^2})","rC",8);
 	gr->VectC(a,b);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
-	gr->Box();	gr->Axis("xy");	
+	gr->Box();	gr->Axis("xy");
 	gr->Text(mglPoint(0,1.2,1),"Vector field (length ~ \\sqrt{a^2})","rC",8);
 	gr->Vect(a,b);
 	gr->EndFrame();
-	
+
 	gr->NewFrame();
-	gr->Box();	gr->Axis("xy");	
+	gr->Box();	gr->Axis("xy");
 	gr->Text(mglPoint(0,1.2,1),"Flow chart (blue - source)","rC",8);
 	gr->Flow(a,b);
 	gr->EndFrame();
@@ -392,7 +378,7 @@ int main(int argc,char **argv)
 	case '2':	gr.Window(0,0,sample_2,"2D plots",NULL);	break;
 	case '3':	gr.Window(0,0,sample_3,"3D plots",NULL);	break;
 	case 'd':	gr.Window(0,0,sample_d,"Dual plots",NULL);	break;
-	default:	gr.Window(0,0,sample,"Subplot, and rotations",NULL);	break;
+	default:	gr.Window(0,0,sample,"Example of molecules",NULL);	break;
 	}
 	return 0;
 }

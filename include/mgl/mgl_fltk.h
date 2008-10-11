@@ -87,7 +87,7 @@ protected:
 	bool zoom, rotate;
 };
 //-----------------------------------------------------------------------------
-/// Class for FLTK widget which display MathGL graphics
+/// Class is FLTK widget which display MathGL graphics
 class Fl_MathGL : public Fl_Widget
 {
 public:

@@ -2427,13 +2427,13 @@ void mglc_extend(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"info","Print information about data","info var", mgls_info, mglc_info}
 int mgls_info(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==1)	a[0].d->PrintInfo(gr->Message);
+	if(k[0]==1)	a[0].d->PrintInfo(gr->Message, k[1]==3 && a[1].v!=0);
 	else	return 1;
 	return 0;
 }
 void mglc_info(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==1)	swprintf(out,1024,L"%s.PrintInfo(gr->Message);", a[0].s);
+	if(k[0]==1)	swprintf(out,1024,L"%s.PrintInfo(gr->Message, %s);", a[0].s, k[1]==3 && a[1].v!=0 ? "true" : "false");
 }
 //-----------------------------------------------------------------------------
 //	{"integrate","Integrate data","integrate var dir", mgls_integrate, mglc_integrate}
@@ -2951,6 +2951,47 @@ void mglc_title(wchar_t out[1024], long n, mglArg *a, int k[10])
 	if(k[0]==2)	swprintf(out,1024,L"gr->Title(%s, \"%s\", %g);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:-2);
 }
 //-----------------------------------------------------------------------------
+//	{L"envelop",L"Find envelop for the data",L"envelop dat", mgls_envelop, mglc_envelop}
+int mgls_envelop(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1)		a[0].d->Envelop(k[1]==2 ? a[1].s[0] : 'x');
+	else	return 1;
+	return 0;
+}
+void mglc_envelop(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1)	swprintf(out,1024,L"%s.Envelop(%c);",a[0].s, k[1]==2?a[1].s[0]:'x');
+}
+//-----------------------------------------------------------------------------
+//	{L"sew",L"Remove jump into the data, like phase jumps",L"sew dat", mgls_sew, mglc_sew}
+int mgls_sew(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1)		a[0].d->Sew(k[1]==2?a[1].s:"xyz", k[2]==3 ? a[2].v : 2*M_PI);
+	else	return 1;
+	return 0;
+}
+void mglc_sew(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1)	swprintf(out,1024,L"%s.Sew(\"%s\", %g);", a[0].s, k[1]==2?a[1].s:"xyz", k[2]==3 ? a[2].v : 2*M_PI);
+}
+//-----------------------------------------------------------------------------
+//	{L"evaluate",L"Evaluate (interpolate) values of array fdat at points i=idat,j=jdat,k=kdat",L"evaluate dat fdat idat [jdat=0 kdat=0 norm=true]", mgls_evaluate, mglc_evaluate}
+int mgls_evaluate(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		*(a[0].d) = a[1].d->Evaluate(*(a[2].d), *(a[3].d), *(a[4].d), k[5]!=3 || a[5].v!=0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		*(a[0].d) = a[1].d->Evaluate(*(a[2].d), *(a[3].d), k[4]!=3 || a[4].v!=0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		*(a[0].d) = a[1].d->Evaluate(*(a[2].d), k[3]!=3 || a[3].v!=0);
+	else	return 1;
+	return 0;
+}
+void mglc_evaluate(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1)	swprintf(out,1024,L"%s.Sew(\"%s\", %g);", a[0].s, k[1]==2?a[1].s:"xyz", k[2]==3 ? a[2].v : 2*M_PI);
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{L"addlegend",L"Add legend entry",L"addlegend txt fmt", mgls_addlegend, mglc_addlegend},
 	{L"addto",L"Add data or number",L"addto var|num", mgls_addto, mglc_addto},
@@ -3010,17 +3051,19 @@ mglCommand mgls_base_cmd[] = {
 	{L"divto",L"Divide by data or number",L"divto var|num", mgls_divto, mglc_divto},
 	{L"dots",L"Draw dots for arbitrary data points",L"dots {xvar yvar zvar} | var [fmt]", mgls_dots, mglc_dots},
 	{L"drop",L"Draw drop",L"", mgls_drop, mglc_drop},
+	{L"envelop",L"Find envelop for the data",L"envelop dat", mgls_envelop, mglc_envelop},
 	{L"error",L"Draw error boxes",L"", mgls_error, mglc_error},
+	{L"evaluate",L"Evaluate (interpolate) values of array fdat at points i=idat,j=jdat,k=kdat",L"evaluate dat fdat idat [jdat=0 kdat=0 norm=true]", mgls_evaluate, mglc_evaluate},
 	{L"export",L"Export data to PNG picture",L"export dat 'fname' 'scheme' [v1=0 v2=0]", mgls_import, mglc_import},
 	{L"extend",L"Extend data array",L"", mgls_extend, mglc_extend},
 	{L"facex",L"Draw face perpendicular to x-axis",L"facex x0 y0 z0 wy wz [fmt]", mgls_facex, mglc_facex},
 	{L"facey",L"Draw face perpendicular to y-axis",L"facex x0 y0 z0 wx wz [fmt]", mgls_facey, mglc_facey},
 	{L"facez",L"Draw face perpendicular to z-axis",L"facex x0 y0 z0 wy wz [fmt]", mgls_facez, mglc_facez},
 	{L"fall",L"Draw waterfalls",L"fall {xvar yvar} zvar [fmt]", mgls_fall, mglc_fall},
+	{L"fgets",L"Print string from file",L"fgets x y {z} 'fname' [pos=0 'stl'='' size=-1.4]", mgls_fgets, mglc_fgets},
 	{L"fill",L"Fill data linearly in range [v1, v2]",L"fill var v1 v2 [dir]", mgls_fill, mglc_fill},
 	{L"fit",L"Fit data to formula",L"fit res {x {y {z}}} a eq var [ini print]", mgls_fit, mglc_fit},
 	{L"fits",L"Fit data to formula",L"fits res {x {y {z}}} a s eq var [ini print]", mgls_fits, mglc_fits},
-	{L"fgets",L"Print string from file",L"fgets x y {z} 'fname' [pos=0 'stl'='' size=-1.4]", mgls_fgets, mglc_fgets},
 	{L"flow",L"Draw flow threads for vector field",L"", mgls_flow, mglc_flow},
 	{L"fog",L"Switch on/off fog",L"fog var val [pos]", mgls_fog, mglc_fog},
 	{L"font",L"Setup font",L"font fmt [size]", mgls_font, mglc_font},
@@ -3073,6 +3116,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"savehdf",L"Save data to HDF5 file",L"savehdf var file id", mgls_savehdf, mglc_savehdf},
 	{L"set_id",L"Set column id for data",L"set_id var id", mgls_set_id, mglc_set_id},
 	{L"setsize",L"Set picture size",L"setsize wval hval", mgls_setsize, mglc_setsize},
+	{L"sew",L"Remove jump into the data, like phase jumps",L"sew dat", mgls_sew, mglc_sew},
 	{L"smooth",L"Smooth data",L"smooth var kind dir", mgls_smooth, mglc_smooth},
 	{L"sphere",L"Draw sphere",L"", mgls_sphere, mglc_sphere},
 	{L"squeeze",L"Squeeze data",L"squeeze var kx [ky kz]", mgls_squeeze, mglc_squeeze},

@@ -35,6 +35,10 @@ host_triplet = @host@
 @USE_JPEG_TRUE@am__append_1 = mgl-jpeg.la
 @USE_HDF5_TRUE@am__append_2 = mgl-hdf5.la
 @USE_TIFF_TRUE@am__append_3 = mgl-tiff.la
+@USE_QT_TRUE@am__append_4 = -DWITH_QT
+@USE_WX_TRUE@am__append_5 = -DWITH_WX
+@USE_FLTK_TRUE@am__append_6 = -DWITH_FLTK
+@USE_GLUT_TRUE@am__append_7 = -DWITH_GLUT
 subdir = mgl
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -185,6 +189,7 @@ MOC = @MOC@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OCTAVE_ARCH = @OCTAVE_ARCH@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -284,9 +289,11 @@ INCLUDES = -I$(top_builddir)/include -I$(top_builddir) @INCLTDL@
 lib_LTLIBRARIES = libmgl.la
 mgllib_LTLIBRARIES = $(am__append_1) $(am__append_2) $(am__append_3)
 mgllibdir = $(libdir)/mgl
+WIDGETS = $(am__append_4) $(am__append_5) $(am__append_6) \
+	$(am__append_7)
 libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 libmgl_la_LIBADD = @LIBLTDL@ $(PNG_LIBS) $(GSL_LIBS) $(GL_LIBS)
-libmgl_la_CXXFLAGS = -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
+libmgl_la_CXXFLAGS = $(WIDGETS) -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
     -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFF_FLAGS) \
     $(PNG_FLAGS) $(FLTK_FLAGS) $(GSL_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS)
 

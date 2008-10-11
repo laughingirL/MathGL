@@ -107,10 +107,10 @@ void mglData::Set(const double ***A,int N1,int N2,int N3)
 		a[k+N3*(j+i*N2)] = A[i][j][k];
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::SubData(int xx,int yy,int zz) const
+mglData mglData::SubData(int xx,int yy,int zz) const
 {
 	register long i,j;
-	static mglData d;
+	mglData d;
 	xx = xx<0 ? -1:xx;	yy = yy<0 ? -1:yy;	zz = zz<0 ? -1:zz;
 	if(xx==-1 && yy==-1 && zz==-1)	// сам массив
 		d.Set(*this);
@@ -145,10 +145,10 @@ mglData &mglData::SubData(int xx,int yy,int zz) const
 	return d;
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Column(const char *eq)
+mglData mglData::Column(const char *eq)
 {
 	mglFormula f(eq);
-	static mglData d;
+	mglData d;
 	d.Create(ny,nz);
 	float var['z'-'a'+1];
 	memset(var,0,('z'-'a')*sizeof(float));
@@ -382,11 +382,11 @@ float mglData::v(int i,int j,int k) const
 	return a[i+nx*(j+ny*k)];
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Resize(int mx, int my, int mz, float x1, float x2,
+mglData mglData::Resize(int mx, int my, int mz, float x1, float x2,
 	float y1, float y2, float z1, float z2) const
 {
 	register long i,j,k;
-	static mglData d;
+	mglData d;
 	mx = mx<1 ? 1:mx;	my = my<1 ? 1:my;	mz = mz<1 ? 1:mz;
 	d.Create(mx,my,mz);
 	float dx, dy, dz;
@@ -691,9 +691,9 @@ void mglData::Squeeze(int rx,int ry,int rz,bool smooth)
 	nx = kx;  ny = ky;  nz = kz;
 }
 //-----------------------------------------------------------------------------
-mglData &mglData::Combine(const mglData &b) const
+mglData mglData::Combine(const mglData &b) const
 {
-	static mglData d;
+	mglData d;
 	d.Create(1,1,1);
 	if(nz>1 || (ny>1 && b.ny>1) || b.nz>1)	return d;
 	long n1=ny,n2=b.nx;
@@ -725,15 +725,14 @@ void mglData::Extend(int n1, int n2)
 	else
 	{
 		mx = -n1;	my = n2<0 ? -n2 : nx;	mz = n2<0 ? nx : ny;
+		if(n2>0 && ny==1)	mz = n2;
+		b = new float[mx*my*mz];
 		if(n2<0)	for(i=0;i<mx*my;i++)	for(j=0;j<nx;j++)
 			b[i+mx*my*j] = a[j];
 		else		for(i=0;i<mx;i++)		for(j=0;j<nx*ny;j++)
 			b[i+mx*j] = a[j];
-		if(n2>0 && ny==1)
-		{
-			mz = n2;
-			for(i=0;i<n2;i++)	memcpy(b+i*mx*my, a, mx*my*sizeof(float));
-		}
+		if(n2>0 && ny==1)	for(i=0;i<n2;i++)
+			memcpy(b+i*mx*my, a, mx*my*sizeof(float));
 	}
 	if(b)	{	delete []a;	a = b;	nx = mx;	ny = my;	nz = mz;	}
 }

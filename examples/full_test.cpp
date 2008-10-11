@@ -31,6 +31,87 @@ void save(mglGraph *gr,const char *name,const char *suf="",int type=0)
 }
 }
 //-----------------------------------------------------------------------------
+int sample_colors(mglGraph *gr, const void *)	// arrow styles
+{
+	gr->Face(mglPoint(-1, -1), mglPoint(-1, -0.7), mglPoint(-0.6, -1), mglPoint(-0.6, -0.7), "L#");
+	gr->Puts(mglPoint(-0.8, -0.9), "L", "C:w", -1.4);
+	gr->Face(mglPoint(-0.6, -1), mglPoint(-0.6, -0.7), mglPoint(-0.2, -1), mglPoint(-0.2, -0.7), "E#");
+	gr->Puts(mglPoint(-0.4, -0.9), "E", "C:w", -1.4);
+	gr->Face(mglPoint(-0.2, -1), mglPoint(-0.2, -0.7), mglPoint(0.2, -1), mglPoint(0.2, -0.7), "N#");
+	gr->Puts(mglPoint(0, -0.9), "N", "C:w", -1.4);
+	gr->Face(mglPoint(0.2, -1), mglPoint(0.2, -0.7), mglPoint(0.6, -1), mglPoint(0.6, -0.7), "U#");
+	gr->Puts(mglPoint(0.4, -0.9), "U", "C:w", -1.4);
+	gr->Face(mglPoint(0.6, -1), mglPoint(0.6, -0.7), mglPoint(1, -1), mglPoint(1, -0.7), "Q#");
+	gr->Puts(mglPoint(0.8, -0.9), "Q", "C:w", -1.4);
+	//#lenuq
+	gr->Face(mglPoint(-1, -0.7), mglPoint(-1, -0.4), mglPoint(-0.6, -0.7), mglPoint(-0.6, -0.4), "l#");
+	gr->Puts(mglPoint(-0.8, -0.6), "l", "C:k", -1.4);
+	gr->Face(mglPoint(-0.6, -0.7), mglPoint(-0.6, -0.4), mglPoint(-0.2, -0.7), mglPoint(-0.2, -0.4), "e#");
+	gr->Puts(mglPoint(-0.4, -0.6), "e", "C:k", -1.4);
+	gr->Face(mglPoint(-0.2, -0.7), mglPoint(-0.2, -0.4), mglPoint(0.2, -0.7), mglPoint(0.2, -0.4), "n#");
+	gr->Puts(mglPoint(0, -0.6), "n", "C:k", -1.4);
+	gr->Face(mglPoint(0.2, -0.7), mglPoint(0.2, -0.4), mglPoint(0.6, -0.7), mglPoint(0.6, -0.4), "u#");
+	gr->Puts(mglPoint(0.4, -0.6), "u", "C:k", -1.4);
+	gr->Face(mglPoint(0.6, -0.7), mglPoint(0.6, -0.4), mglPoint(1, -0.7), mglPoint(1, -0.4), "q#");
+	gr->Puts(mglPoint(0.8, -0.6), "q", "C:k", -1.4);
+	//#CMYkP
+	gr->Face(mglPoint(-1, -0.4), mglPoint(-1, -0.1), mglPoint(-0.6, -0.4), mglPoint(-0.6, -0.1), "C#");
+	gr->Puts(mglPoint(-0.8, -0.3), "C", "C:w", -1.4);
+	gr->Face(mglPoint(-0.6, -0.4), mglPoint(-0.6, -0.1), mglPoint(-0.2, -0.4), mglPoint(-0.2, -0.1), "M#");
+	gr->Puts(mglPoint(-0.4, -0.3), "M", "C:w", -1.4);
+	gr->Face(mglPoint(-0.2, -0.4), mglPoint(-0.2, -0.1), mglPoint(0.2, -0.4), mglPoint(0.2, -0.1), "Y#");
+	gr->Puts(mglPoint(0, -0.3), "Y", "C:w", -1.4);
+	gr->Face(mglPoint(0.2, -0.4), mglPoint(0.2, -0.1), mglPoint(0.6, -0.4), mglPoint(0.6, -0.1), "k#");
+	gr->Puts(mglPoint(0.4, -0.3), "k", "C:w", -1.4);
+	gr->Face(mglPoint(0.6, -0.4), mglPoint(0.6, -0.1), mglPoint(1, -0.4), mglPoint(1, -0.1), "P#");
+	gr->Puts(mglPoint(0.8, -0.3), "P", "C:w", -1.4);
+	//#cmywp
+	gr->Face(mglPoint(-1, -0.1), mglPoint(-1, 0.2), mglPoint(-0.6, -0.1), mglPoint(-0.6, 0.2), "c#");
+	gr->Puts(mglPoint(-0.8, 0), "c", "C:k", -1.4);
+	gr->Face(mglPoint(-0.6, -0.1), mglPoint(-0.6, 0.2), mglPoint(-0.2, -0.1), mglPoint(-0.2, 0.2), "m#");
+	gr->Puts(mglPoint(-0.4, 0), "m", "C:k", -1.4);
+	gr->Face(mglPoint(-0.2, -0.1), mglPoint(-0.2, 0.2), mglPoint(0.2, -0.1), mglPoint(0.2, 0.2), "y#");
+	gr->Puts(mglPoint(0, 0), "y", "C:k", -1.4);
+	gr->Face(mglPoint(0.2, -0.1), mglPoint(0.2, 0.2), mglPoint(0.6, -0.1), mglPoint(0.6, 0.2), "w#");
+	gr->Puts(mglPoint(0.4, 0), "w", "C:k", -1.4);
+	gr->Face(mglPoint(0.6, -0.1), mglPoint(0.6, 0.2), mglPoint(1, -0.1), mglPoint(1, 0.2), "p#");
+	gr->Puts(mglPoint(0.8, 0), "p", "C:k", -1.4);
+	//#BGRHW
+	gr->Face(mglPoint(-1, 0.2), mglPoint(-1, 0.5), mglPoint(-0.6, 0.2), mglPoint(-0.6, 0.5), "B#");
+	gr->Puts(mglPoint(-0.8, 0.3), "B", "C:w", -1.4);
+	gr->Face(mglPoint(-0.6, 0.2), mglPoint(-0.6, 0.5), mglPoint(-0.2, 0.2), mglPoint(-0.2, 0.5), "G#");
+	gr->Puts(mglPoint(-0.4, 0.3), "G", "C:w", -1.4);
+	gr->Face(mglPoint(-0.2, 0.2), mglPoint(-0.2, 0.5), mglPoint(0.2, 0.2), mglPoint(0.2, 0.5), "R#");
+	gr->Puts(mglPoint(0, 0.3), "R", "C:w", -1.4);
+	gr->Face(mglPoint(0.2, 0.2), mglPoint(0.2, 0.5), mglPoint(0.6, 0.2), mglPoint(0.6, 0.5), "H#");
+	gr->Puts(mglPoint(0.4, 0.3), "H", "C:w", -1.4);
+	gr->Face(mglPoint(0.6, 0.2), mglPoint(0.6, 0.5), mglPoint(1, 0.2), mglPoint(1, 0.5), "W#");
+	gr->Puts(mglPoint(0.8, 0.3), "W", "C:w", -1.4);
+	//#bgrhw
+	gr->Face(mglPoint(-1, 0.5), mglPoint(-1, 0.8), mglPoint(-0.6, 0.5), mglPoint(-0.6, 0.8), "b#");
+	gr->Puts(mglPoint(-0.8, 0.6), "b", "C:k", -1.4);
+	gr->Face(mglPoint(-0.6, 0.5), mglPoint(-0.6, 0.8), mglPoint(-0.2, 0.5), mglPoint(-0.2, 0.8), "g#");
+	gr->Puts(mglPoint(-0.4, 0.6), "g", "C:k", -1.4);
+	gr->Face(mglPoint(-0.2, 0.5), mglPoint(-0.2, 0.8), mglPoint(0.2, 0.5), mglPoint(0.2, 0.8), "r#");
+	gr->Puts(mglPoint(0, 0.6), "r", "C:k", -1.4);
+	gr->Face(mglPoint(0.2, 0.5), mglPoint(0.2, 0.8), mglPoint(0.6, 0.5), mglPoint(0.6, 0.8), "h#");
+	gr->Puts(mglPoint(0.4, 0.6), "h", "C:k", -1.4);
+	gr->Face(mglPoint(0.6, 0.5), mglPoint(0.6, 0.8), mglPoint(1, 0.5), mglPoint(1, 0.8), "w#");
+	gr->Puts(mglPoint(0.8, 0.6), "w", "C:k", -1.4);
+	//#brighted
+	gr->Face(mglPoint(-1, 0.8), mglPoint(-1, 1.1), mglPoint(-0.6, 0.8), mglPoint(-0.6, 1.1), "r1#");
+	gr->Puts(mglPoint(-0.8, 0.9), "r1", "C:w", -1.4);
+	gr->Face(mglPoint(-0.6, 0.8), mglPoint(-0.6, 1.1), mglPoint(-0.2, 0.8), mglPoint(-0.2, 1.1), "r3#");
+	gr->Puts(mglPoint(-0.4, 0.9), "r3", "C:w", -1.4);
+	gr->Face(mglPoint(-0.2, 0.8), mglPoint(-0.2, 1.1), mglPoint(0.2, 0.8), mglPoint(0.2, 1.1), "r5#");
+	gr->Puts(mglPoint(0, 0.9), "r5", "C:k", -1.4);
+	gr->Face(mglPoint(0.2, 0.8), mglPoint(0.2, 1.1), mglPoint(0.6, 0.8), mglPoint(0.6, 1.1), "r7#");
+	gr->Puts(mglPoint(0.4, 0.9), "r7", "C:k", -1.4);
+	gr->Face(mglPoint(0.6, 0.8), mglPoint(0.6, 1.1), mglPoint(1, 0.8), mglPoint(1, 1.1), "r9#");
+	gr->Puts(mglPoint(0.8, 0.9), "r9", "C:k", -1.4);
+	return 0;
+}
+//-----------------------------------------------------------------------------
 int sample_ae(mglGraph *gr, const void *)	// arrow styles
 {
 	gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}",
@@ -316,43 +397,43 @@ int sample_a3(mglGraph *gr, const void *)	// curvilinear coordinates
 int sample_a2(mglGraph *gr, const void *)	// axis and grid
 {
 	gr->SubPlot(2,2,0);
-	gr->dx = gr->dy = 0.5;  // set tick step to 0.5
-	gr->NSx = gr->NSy = 3;  // and draw 3 subticks
-	gr->Box();              // should be after change dx,dy,dz
+	gr->SetTicks('x', 0.4, 3);  // sets tick step to 0.4
+	gr->SetTicks('y', 0.4, 3);  // and draws 3 subticks
+	gr->Box();                  // should be after the ticks change
 	gr->Axis("xy");
 	gr->Grid();
-	gr->Text(mglPoint(0,1.3,1),"Axis and grid","rC");
+	gr->Puts(mglPoint(0,1.3,1),"Axis and grid");
 
-	gr->dx = gr->dy = -5;   // restore back
-	gr->NSx = gr->NSy = 0;
+	gr->SetTicks('x');  gr->SetTicks('y'); // restore back
 	gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(0,0,0));
 
-	gr->dx = gr->dy = gr->dz = -5;   // restore back
 	gr->SubPlot(2,2,1);
 	gr->Rotate(60,40);
 	gr->Axis();
 	gr->Label('x',"x");
 	gr->Label('y',"y");
 	gr->Label('z',"z");
-	gr->Text(mglPoint(0,0,1.5),"Axis and labels");
+	gr->Puts(mglPoint(0,0,1.5),"Axis and labels");
 
-	gr->dx = gr->dy = gr->dz = 0.2;   // too low step of ticks
 	gr->SubPlot(2,2,2);
 	gr->Rotate(60,40);
+	gr->SetTicks('x', 0.2); gr->SetTicks('y', 0.2);
+	gr->SetTicks('z', 0.2); // too low step of ticks
 	gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,-1,-1));
 	gr->Axis();
 	gr->Grid();
-	gr->Text(mglPoint(0,0,1.5),"Shift origin and add grid");
-	gr->Text(mglPoint(0,0,1.2),"(note, too many ticks)");
+	gr->Puts(mglPoint(0,0,1.5),"Shift origin and add grid");
+	gr->Puts(mglPoint(0,0,1.2),"(note, too many ticks)");
 
 	gr->SubPlot(2,2,3);
 	gr->Rotate(60,40);
-	gr->dz = gr->dy = -5;   // decrease number of ticks
+	gr->SetTicks('x', -6);  // decrease the number of ticks
+	gr->SetTicks('y', -6);
 	gr->Axis("yz");
 	gr->Label('y',"Y axis",0);
 	gr->Label('z',"Z axis",0);
-	gr->Text(mglPoint(0,0,1.5),"Remove X axis, and","rC");
-	gr->Text(mglPoint(0,0,1.2),"decrease number of ticks");
+	gr->Puts(mglPoint(0,0,1.5),"Remove X axis, and");
+	gr->Puts(mglPoint(0,0,1.2),"decrease number of ticks");
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -401,8 +482,8 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
 	y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 	y.Modify("sin(2*pi*x)",1);	y.Modify("cos(2*pi*x)",2);
-	y1.Modify("0.3*sin(2*pi*x)");
-	y2.Modify("0.5+0.3*cos(2*pi*x)");
+	y1.Modify("0.5+0.3*cos(2*pi*x)");
+	y2.Modify("0.3*sin(2*pi*x)");
 	x.Fill(-1,1,'x');
 	x2.Modify("0.05+0.03*cos(2*pi*x)");
 
@@ -435,7 +516,8 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->Cont(a,"BbcyrR");		save(gr,"cont",suf);
 	gr->Clf();	gr->Box();	gr->ContFA(c,"BbcyrR");		save(gr,"contfa",suf);
 	gr->Clf();	gr->Fog(1);	gr->Box();	gr->Surf(a,"BbcyrR");	gr->Fog(0);	save(gr,"surf_fog",suf);
-	gr->Clf();	gr->Box();	gr->Tube(y,0.05);	gr->Tube(y1,x,y2,x2);	save(gr,"tube",suf);
+	gr->Clf();	gr->Box();	gr->Tube(y,0.05);	save(gr,"tube",suf);
+	gr->Clf();	gr->Box();	gr->Tube(y,0.05);	gr->Tube(y1,x,y2,x2);	save(gr,"tube_3d",suf);
 	gr->Clf();	gr->Box();	gr->Chart(ch,"#");	save(gr,"chart",suf);
 	gr->Axis("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)",0);
 	gr->Clf();	gr->Box();	gr->Chart(ch,"bgr cmy#");	save(gr,"pie_chart",suf);	gr->Axis(0,0,0);
@@ -467,7 +549,7 @@ int full_test(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->Step(y);	save(gr,"step",suf);
 	gr->Clf();	gr->Box();	gr->Bars(ys);	save(gr,"bars",suf);
 	gr->Clf();	gr->Box();	gr->Barh(ys);	save(gr,"barh",suf);
-	gr->Clf();	gr->Box();	gr->Region(y1,y2,"r");	gr->Plot(y1,"k2");	gr->Plot(y2,"k2");	save(gr,"region",suf);
+	gr->Clf();	gr->Box();	gr->Region(y2,y1,"r");	gr->Plot(y1,"k2");	gr->Plot(y2,"k2");	save(gr,"region",suf);
 	gr->Clf();	gr->Box();	gr->Mark(y,y1,"bs");	save(gr,"mark",suf);
 	gr->Clf();	gr->Box();	gr->TextMark(y,y1,"\\gamma");	save(gr,"textmark",suf);
 	gr->Clf();	gr->Box();	gr->Plot(y.SubData(-1,0));
@@ -771,6 +853,8 @@ int sample_fit(mglGraph *gr, const void *s)	// flag #
 int all_samples(mglGraph *gr, const void *s)
 {
 	const char *suf = (const char *)s;
+	gr->SubPlot(1,1,0);gr->Clf();sample_colors(gr,0);	save(gr,"colors",suf);
+	gr->SetScheme("BbcyrR");
 	gr->SubPlot(1,1,0);gr->Clf();sample_a1(gr,0);	save(gr,"sample1",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_a2(gr,0);	save(gr,"sample2",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_a3(gr,0);	save(gr,"sample3",suf);
@@ -957,11 +1041,11 @@ int time_test(mglGraph *gr, const void *)	// full test (in PNG)
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
-	gr->Box();	gr->Axis();
-//	mglParse par;
-//	FILE *fp=fopen("/home/balakin/tmp/mgl/region.mgl","rt");
-//	par.Execute(gr,fp);
-//	fclose(fp);
+//	gr->Box();	gr->Axis();
+	mglParse par;
+	FILE *fp=fopen("sew.mgl","rt");
+	par.Execute(gr,fp);
+	fclose(fp);
 //	gr->Axis(mglPoint(-10,0), mglPoint(10,7));
 	//gr->Plot("1/sqrt(1+x^2)");
 //	par.Parse(gr,"fplot '1/sqrt(1+x^2)' 'r'");
@@ -972,7 +1056,7 @@ int main(int argc,char **argv)
 {
 	const char *suf = "";
 	mglGraphZB zb;
-//test(&zb);	zb.WritePNG("1.png","",false);	zb.CalcXYZ(106,70);	return 0;
+//test(&zb);	zb.WritePNG("1.png","",false);	return 0;
 	mglGraphPS ps;
 	mglGraph &gr = zb;
 	if(argc>1)

@@ -237,6 +237,13 @@ if (test x$langall = xtrue || test x$python = xtrue) ;then
 fi
 AM_CONDITIONAL(USE_PYTHON, test x$test_python = xtrue )
 
+# find Octave arch
+OCTAVE=octave
+AC_MSG_CHECKING([for Octave arch])
+OCTAVE_ARCH=`$OCTAVE -q --eval 'strcat(octave_config_info("canonical_host_type"), "-", octave_config_info("api_version"))'|sed -e 's/ans = //'`
+AC_MSG_RESULT([$OCTAVE_ARCH])
+AC_SUBST(OCTAVE_ARCH,[$OCTAVE_ARCH])
+
 AC_CONFIG_FILES([
 Makefile
 mgl/Makefile
@@ -245,5 +252,7 @@ include/Makefile
 lang/Makefile
 utils/Makefile
 widgets/Makefile
+texinfo/Makefile
+texinfo/png/Makefile
 ])
 AC_OUTPUT

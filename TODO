@@ -3,28 +3,30 @@
 1. Hankel transform
 2. Ternary axis -- keep z-axis as normal one ???
 3. Change ticks labels drawing if RotatedText = false;
-4. WX window
+4. Zip-compression of EPS + text by UTF codes?!?
 5. Use Hershey as built-in font
 6. Spline5 !!!
 8. Add FLTK, QT & GLUT to Fortran ??? How pass arguments ???
 9. Converter MGL->C (+ interface for MGL->Fortran by change HMDT->int, HMGL->int, "->');
-11. Zip-compression of EPS + text by UTF codes?!?
+
+10 mglGraphAB::ShowImg()
 
 17. Update documentation (English)
 18. Update documentation (Russian)
-19. Region(), Title() --> text in TeXinfo
 
-
-20. Check 'fill'
+19. Axis in "Dens3 sample"
+21 New functions in Python
+22 Example of Sew, Envelop ?!?
 
 
 					MathGL (for v.1.7.?) ???
 
 1. GTK window ???
-2. Interface for Gambas
-3. Interface for Scilab
-4. Try to evaluate to number if it contain only "+-/*^0123456789." in Parse() ??? + string concatenation ???
-5. Save primitives for plotting (like EPS && OpenGL) ???
+2. WX window
+3. Interface for Gambas
+4. Interface for Scilab
+5. Try to evaluate to number if it contain only "+-/*^0123456789." in Parse() ??? + string concatenation ???
+6. Save primitives for plotting (like EPS && OpenGL) ???
 
 					FAQ
 

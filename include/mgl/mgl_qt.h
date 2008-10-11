@@ -81,7 +81,7 @@ protected:
 	void makeMenu();		///< Create menu, toolbar and popup menu
 };
 //-----------------------------------------------------------------------------
-/// Class for displaying the result of MGL script parsing
+/// Class is Qt widget which display MathGL graphics
 class QMathGL : public QWidget
 {
 Q_OBJECT
@@ -93,6 +93,7 @@ public:
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglGraph *gr, void *par);
 	int animDelay;		///< Animation delay in ms
+	QString mousePos;	///< Last mouse position
 
 	QMathGL(QWidget *parent = 0, Qt::WindowFlags f = 0);
 	~QMathGL();
@@ -174,11 +175,24 @@ protected:
 private:
 	int x0, y0, xe, ye;		///< Temporary variables for mouse
 	uchar *grBuf;
-	QString MousePos;
 };
 //-----------------------------------------------------------------------------
 /// Convert bitmap from mglGraphAB to QPixmap
 void convertFromGraph(QPixmap &pic, mglGraphAB *gr, uchar **buf);
+//-----------------------------------------------------------------------------
+/// Temporal class for showing image
+class mglQShowImg : public QWidget
+{
+Q_OBJECT
+public:
+	uchar *buf;			///< Temporal buffer
+	QPixmap pic;		///< Pixmap for drawing (changed by update)
+	mglQShowImg(QWidget *parent = 0, Qt::WindowFlags f = 0);
+	~mglQShowImg()	{	if(buf)	delete []buf;	};
+protected:
+	void paintEvent(QPaintEvent *);
+	void resizeEvent(QResizeEvent *);
+};
 //-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------

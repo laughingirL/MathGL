@@ -87,7 +87,8 @@ void QMathGL::paintEvent(QPaintEvent *)
 	paint.begin(this);
 	paint.drawPixmap(0,0,pic);
 	if(zoom)	paint.drawRect(x0,y0,xe-x0,ye-y0);
-	if(!MousePos.isEmpty())	paint.drawText(0,12,MousePos);
+	if(graph->ShowMousePos && !mousePos.isEmpty())
+		paint.drawText(0,12,mousePos);
 	paint.end();
 }
 //-----------------------------------------------------------------------------
@@ -185,7 +186,7 @@ void QMathGL::update(mglGraph *gr)
 	if(draw_func)	draw_func(gr, draw_par);
 	if(buf[0] != 0)	QMessageBox::warning(this, appName, buf);
 	gr->Message = 0;		delete []buf;
-	MousePos="";
+	mousePos="";
 	if(gr==graph)	refresh();
 }
 //-----------------------------------------------------------------------------
@@ -198,10 +199,10 @@ void QMathGL::refresh()
 //-----------------------------------------------------------------------------
 void QMathGL::mousePressEvent(QMouseEvent *ev)
 {
-	if(graph->ShowMousePos && !zoom && !rotate && ev->button()&Qt::LeftButton)
+	if(!zoom && !rotate && ev->button()&Qt::LeftButton)
 	{
 		mglPoint p = graph->CalcXYZ(ev->x(), ev->y());
-		MousePos.sprintf("x=%g, y=%g, z=%g",p.x,p.y,p.z);
+		mousePos.sprintf("x=%g, y=%g, z=%g",p.x,p.y,p.z);
 		repaint();
 	}
 	xe=x0=ev->x();	ye=y0=ev->y();	ev->accept();
@@ -758,4 +759,55 @@ void mglGraphQT::makeMenu()
 	o->addAction(TR("About"), QMGL, SLOT(about()));
 	o->addAction(TR("About &Qt"), QMGL, SLOT(aboutQt()));
 }
+//-----------------------------------------------------------------------------
+//
+//	Function for mglGraphAB::ShowImage()
+//
+//-----------------------------------------------------------------------------
+void mglQShowImg::paintEvent(QPaintEvent *)
+{
+	QPainter paint;
+	paint.begin(this);
+	paint.drawPixmap(0,0,pic);
+	paint.end();
+}
+//-----------------------------------------------------------------------------
+void mglQShowImg::resizeEvent(QResizeEvent *ev)
+{	resize(pic.width(), pic.height());	}
+//-----------------------------------------------------------------------------
+mglQShowImg::mglQShowImg(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
+{	buf=NULL;	}
+//-----------------------------------------------------------------------------
+void mgl_show_img_qt(const char *title, mglGraphAB *gr, bool same)
+{
+	static QMainWindow *Wnd=NULL;
+	static mglQShowImg *img=NULL;
+	if(same && Wnd)		// if prev window then show it
+	{
+		convertFromGraph(img->pic, gr, &(img->buf));
+		Wnd->setWindowTitle(title);
+		Wnd->show();	return;
+	}
+	if(!qApp)	// if no application then create it
+	{
+		QApplication *a;
+//		if(!argv)
+		{
+			static char tmp[2][1];
+			tmp[0][0]=tmp[1][0]=0;
+			int argc=1;
+			a = new QApplication(argc, (char **)tmp);
+		}
+//		else	a = new QApplication(argc, argv);
+		a->connect(a, SIGNAL(lastWindowClosed()), a, SLOT(quit()));
+	}
+
+	Wnd = new QMainWindow;	Wnd->resize(gr->GetWidth(),gr->GetHeight());
+	Wnd->setWindowTitle(title);
+	img = new mglQShowImg(Wnd);
+	convertFromGraph(img->pic, gr, &(img->buf));
+	Wnd->setCentralWidget(img);
+	Wnd->show();
+}
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
