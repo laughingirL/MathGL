@@ -123,6 +123,10 @@ public:
 	void NormSl(float v1=0,float v2=1,char dir='z',bool keep_en=true,bool sym=false);
 	/// Eqidistantly fill the data to range [x1,x2] in direction \a dir
 	void Fill(float x1,float x2,char dir='x');
+	/// Put value to data element(s)
+	void Put(float val, int i, int j=0, int k=0);
+	/// Put array to data element(s)
+	void Put(const mglData &val, int i, int j=-1, int k=-1);
 	/// Modify the data by specified formula
 	void Modify(const char *eq,int dim=0);
 	/// Modify the data by specified formula

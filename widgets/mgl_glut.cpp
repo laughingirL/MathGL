@@ -205,10 +205,10 @@ void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *
 	glDeleteLists(1,nfig);
 }
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_glut(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void (*reload)(int next), void *par)
+HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par)
 {
 	mglGraphGLUT *g = new mglGraphGLUT;
-	g->Window(argc,argv,draw,title,par,reload);
+	g->Window(0,0,draw,title,par);
 	return g;
 }
 //-----------------------------------------------------------------------------

@@ -369,119 +369,119 @@ void mglGraph::PutsFit(mglPoint p, const char *pre, const char *font, float size
 	delete []buf;
 }
 //-----------------------------------------------------------------------------
-float mgl_fit_1(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, float *ini, int print)
-{	return gr->Fit(*fit, *y, eq, var, ini, print);	}
-float mgl_fit_2(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, float *ini, int print)
-{	return gr->Fit2(*fit, *z, eq, var, ini, print);	}
-float mgl_fit_3(HMGL gr, HMDT fit, const HMDT a, const char *eq, const char *var, float *ini, int print)
-{	return gr->Fit3(*fit, *a, eq, var, ini, print);	}
-float mgl_fit_xy(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const char *eq, const char *var, float *ini, int print)
-{	return gr->Fit(*fit, *x, *y, eq, var, ini, print);	}
-float mgl_fit_xyz(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const char *eq, const char *var, float *ini, int print)
-{	return gr->Fit(*fit, *x, *y, *z, eq, var, ini, print);	}
-float mgl_fit_xyza(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *eq, const char *var, float *ini, int print)
-{	return gr->Fit(*fit, *x, *y, *z, *a, eq, var, ini, print);	}
-float mgl_fit_ys(HMGL gr, HMDT fit, const HMDT y, const HMDT s, const char *eq, const char *var, float *ini, int print)
-{	return gr->FitS(*fit, *y, *s, eq, var, ini, print);	}
-float mgl_fit_xys(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT s, const char *eq, const char *var, float *ini, int print)
-{	return gr->FitS(*fit, *x, *y, *s, eq, var, ini, print);	}
-float mgl_fit_xyzs(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT s, const char *eq, const char *var, float *ini, int print)
-{	return gr->FitS(*fit, *x, *y, *z, *s, eq, var, ini, print);	}
-float mgl_fit_xyzas(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, float *ini, int print)
-{	return gr->FitS(*fit, *x, *y, *z, *a, *s, eq, var, ini, print);	}
+float mgl_fit_1(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, float *ini)
+{	return gr->Fit(*fit, *y, eq, var, ini);	}
+float mgl_fit_2(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, float *ini)
+{	return gr->Fit2(*fit, *z, eq, var, ini);	}
+float mgl_fit_3(HMGL gr, HMDT fit, const HMDT a, const char *eq, const char *var, float *ini)
+{	return gr->Fit3(*fit, *a, eq, var, ini);	}
+float mgl_fit_xy(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const char *eq, const char *var, float *ini)
+{	return gr->Fit(*fit, *x, *y, eq, var, ini);	}
+float mgl_fit_xyz(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const char *eq, const char *var, float *ini)
+{	return gr->Fit(*fit, *x, *y, *z, eq, var, ini);	}
+float mgl_fit_xyza(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *eq, const char *var, float *ini)
+{	return gr->Fit(*fit, *x, *y, *z, *a, eq, var, ini);	}
+float mgl_fit_ys(HMGL gr, HMDT fit, const HMDT y, const HMDT s, const char *eq, const char *var, float *ini)
+{	return gr->FitS(*fit, *y, *s, eq, var, ini);	}
+float mgl_fit_xys(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT s, const char *eq, const char *var, float *ini)
+{	return gr->FitS(*fit, *x, *y, *s, eq, var, ini);	}
+float mgl_fit_xyzs(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT s, const char *eq, const char *var, float *ini)
+{	return gr->FitS(*fit, *x, *y, *z, *s, eq, var, ini);	}
+float mgl_fit_xyzas(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, float *ini)
+{	return gr->FitS(*fit, *x, *y, *z, *a, *s, eq, var, ini);	}
 
-float mgl_fit_1_d(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, HMDT ini, int print)
-{	return gr->Fit(*fit, *y, eq, var, *ini, print);	}
-float mgl_fit_2_d(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, HMDT ini, int print)
-{	return gr->Fit2(*fit, *z, eq, var, *ini, print);	}
-float mgl_fit_3_d(HMGL gr, HMDT fit, const HMDT a, const char *eq, const char *var, HMDT ini, int print)
-{	return gr->Fit3(*fit, *a, eq, var, *ini, print);	}
-float mgl_fit_xy_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const char *eq, const char *var, HMDT ini, int print)
-{	return gr->Fit(*fit, *x, *y, eq, var, *ini, print);	}
-float mgl_fit_xyz_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const char *eq, const char *var, HMDT ini, int print)
-{	return gr->Fit(*fit, *x, *y, *z, eq, var, *ini, print);	}
-float mgl_fit_xyza_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *eq, const char *var, HMDT ini, int print)
-{	return gr->Fit(*fit, *x, *y, *z, *a, eq, var, *ini, print);	}
-float mgl_fit_ys_d(HMGL gr, HMDT fit, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini, int print)
-{	return gr->FitS(*fit, *y, *s, eq, var, *ini, print);	}
-float mgl_fit_xys_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini, int print)
-{	return gr->FitS(*fit, *x, *y, *s, eq, var, *ini, print);	}
-float mgl_fit_xyzs_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT s, const char *eq, const char *var, HMDT ini, int print)
-{	return gr->FitS(*fit, *x, *y, *z, *s, eq, var, *ini, print);	}
-float mgl_fit_xyzas_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, HMDT ini, int print)
-{	return gr->FitS(*fit, *x, *y, *z, *a, *s, eq, var, *ini, print);	}
+float mgl_fit_1_d(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, HMDT ini)
+{	return gr->Fit(*fit, *y, eq, var, *ini);	}
+float mgl_fit_2_d(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, HMDT ini)
+{	return gr->Fit2(*fit, *z, eq, var, *ini);	}
+float mgl_fit_3_d(HMGL gr, HMDT fit, const HMDT a, const char *eq, const char *var, HMDT ini)
+{	return gr->Fit3(*fit, *a, eq, var, *ini);	}
+float mgl_fit_xy_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const char *eq, const char *var, HMDT ini)
+{	return gr->Fit(*fit, *x, *y, eq, var, *ini);	}
+float mgl_fit_xyz_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const char *eq, const char *var, HMDT ini)
+{	return gr->Fit(*fit, *x, *y, *z, eq, var, *ini);	}
+float mgl_fit_xyza_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *eq, const char *var, HMDT ini)
+{	return gr->Fit(*fit, *x, *y, *z, *a, eq, var, *ini);	}
+float mgl_fit_ys_d(HMGL gr, HMDT fit, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini)
+{	return gr->FitS(*fit, *y, *s, eq, var, *ini);	}
+float mgl_fit_xys_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini)
+{	return gr->FitS(*fit, *x, *y, *s, eq, var, *ini);	}
+float mgl_fit_xyzs_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT s, const char *eq, const char *var, HMDT ini)
+{	return gr->FitS(*fit, *x, *y, *z, *s, eq, var, *ini);	}
+float mgl_fit_xyzas_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, HMDT ini)
+{	return gr->FitS(*fit, *x, *y, *z, *a, *s, eq, var, *ini);	}
 
 void mgl_puts_fit(HMGL gr, float x, float y, float z, const char *prefix, const char *font, float size)
 {	gr->PutsFit(mglPoint(x,y,z), prefix, font, size);	}
 //-----------------------------------------------------------------------------
-float mgl_fit_1_(long* gr, long* fit, long* y, const char *eq, const char *var, float *ini, int *print, int l, int n)
+float mgl_fit_1_(long* gr, long* fit, long* y, const char *eq, const char *var, float *ini, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	float r = _GR_->Fit(_DM_(fit), _D_(y), s, d, ini, *print);
+	float r = _GR_->Fit(_DM_(fit), _D_(y), s, d, ini);
 	delete []s;		delete []d;	return r;
 }
-float mgl_fit_2_(long* gr, long* fit, long* z, const char *eq, const char *var, float *ini, int *print, int l, int n)
+float mgl_fit_2_(long* gr, long* fit, long* z, const char *eq, const char *var, float *ini, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	float r = _GR_->Fit2(_DM_(fit), _D_(z), s, d, ini, *print);
+	float r = _GR_->Fit2(_DM_(fit), _D_(z), s, d, ini);
 	delete []s;		delete []d;	return r;
 }
-float mgl_fit_3_(long* gr, long* fit, long* a, const char *eq, const char *var, float *ini, int *print, int l, int n)
+float mgl_fit_3_(long* gr, long* fit, long* a, const char *eq, const char *var, float *ini, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	float r = _GR_->Fit3(_DM_(fit), _D_(a), s, d, ini, *print);
+	float r = _GR_->Fit3(_DM_(fit), _D_(a), s, d, ini);
 	delete []s;		delete []d;	return r;
 }
-float mgl_fit_xy_(long* gr, long* fit, long* x, long* y, const char *eq, const char *var, float *ini, int *print, int l, int n)
+float mgl_fit_xy_(long* gr, long* fit, long* x, long* y, const char *eq, const char *var, float *ini, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	float r = _GR_->Fit(_DM_(fit), _D_(x), _D_(y), s, d, ini, *print);
+	float r = _GR_->Fit(_DM_(fit), _D_(x), _D_(y), s, d, ini);
 	delete []s;		delete []d;	return r;
 }
-float mgl_fit_xyz_(long* gr, long* fit, long* x, long* y, long* z, const char *eq, const char *var, float *ini, int *print, int l, int n)
+float mgl_fit_xyz_(long* gr, long* fit, long* x, long* y, long* z, const char *eq, const char *var, float *ini, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	float r = _GR_->Fit(_DM_(fit), _D_(x), _D_(y), _D_(z), s, d, ini, *print);
+	float r = _GR_->Fit(_DM_(fit), _D_(x), _D_(y), _D_(z), s, d, ini);
 	delete []s;		delete []d;	return r;
 }
-float mgl_fit_xyza_(long* gr, long* fit, long* x, long* y, long* z, long* a, const char *eq, const char *var, float *ini, int *print, int l, int n)
+float mgl_fit_xyza_(long* gr, long* fit, long* x, long* y, long* z, long* a, const char *eq, const char *var, float *ini, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	float r = _GR_->Fit(_DM_(fit), _D_(x), _D_(y), _D_(z), _D_(a), s, d, ini, *print);
+	float r = _GR_->Fit(_DM_(fit), _D_(x), _D_(y), _D_(z), _D_(a), s, d, ini);
 	delete []s;		delete []d;	return r;
 }
-float mgl_fit_ys_(long* gr, long* fit, long* y, long* ss, const char *eq, const char *var, float *ini, int *print, int l, int n)
+float mgl_fit_ys_(long* gr, long* fit, long* y, long* ss, const char *eq, const char *var, float *ini, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	float r = _GR_->FitS(_DM_(fit), _D_(y), _D_(ss), s, d, ini, *print);
+	float r = _GR_->FitS(_DM_(fit), _D_(y), _D_(ss), s, d, ini);
 	delete []s;		delete []d;	return r;
 }
-float mgl_fit_xys_(long* gr, long* fit, long* x, long* y, long* ss, const char *eq, const char *var, float *ini, int *print, int l, int n)
+float mgl_fit_xys_(long* gr, long* fit, long* x, long* y, long* ss, const char *eq, const char *var, float *ini, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	float r = _GR_->FitS(_DM_(fit), _D_(x), _D_(y), _D_(ss), s, d, ini, *print);
+	float r = _GR_->FitS(_DM_(fit), _D_(x), _D_(y), _D_(ss), s, d, ini);
 	delete []s;		delete []d;	return r;
 }
-float mgl_fit_xyzs_(long* gr, long* fit, long* x, long* y, long* z, long* ss, const char *eq, const char *var, float *ini, int *print, int l, int n)
+float mgl_fit_xyzs_(long* gr, long* fit, long* x, long* y, long* z, long* ss, const char *eq, const char *var, float *ini, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	float r = _GR_->FitS(_DM_(fit), _D_(x), _D_(y), _D_(z), _D_(ss), s, d, ini, *print);
+	float r = _GR_->FitS(_DM_(fit), _D_(x), _D_(y), _D_(z), _D_(ss), s, d, ini);
 	delete []s;		delete []d;	return r;
 }
-float mgl_fit_xyzas_(long* gr, long* fit, long* x, long* y, long* z, long* a, long* ss, const char *eq, const char *var, float *ini, int *print, int l, int n)
+float mgl_fit_xyzas_(long* gr, long* fit, long* x, long* y, long* z, long* a, long* ss, const char *eq, const char *var, float *ini, int l, int n)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);		s[l]=0;
 	char *d=new char[n+1];	memcpy(d,var,n);	d[n]=0;
-	float r = _GR_->FitS(_DM_(fit), _D_(x), _D_(y), _D_(z), _D_(a), _D_(ss), s, d, ini, *print);
+	float r = _GR_->FitS(_DM_(fit), _D_(x), _D_(y), _D_(z), _D_(a), _D_(ss), s, d, ini);
 	delete []s;		delete []d;	return r;
 }
 void mgl_puts_fit_(long* gr, float *x, float *y, float *z, const char *prefix, const char *font, float *size, int l, int n)

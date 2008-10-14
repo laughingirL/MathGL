@@ -129,11 +129,13 @@ struct mglData{};
 	{	return mgl_data_linear1(self, x, y, z);	}
 
 	mglData *Resize(int mx, int my=1, int mz=1, float x1=0, float x2=1, float y1=0, float y2=1, float z1=0, float z2=1)
-	{	return mgl_data_resize(self, mx, my, mz, x1, x2, y1, y2, z1, z2);	}
+	{	return mgl_data_resize_box(self, mx, my, mz, x1, x2, y1, y2, z1, z2);	}
 	mglData *Hist(int n, float v1=0, float v2=1, int nsub=0)
 	{	return mgl_data_hist(self, n, v1, v2, nsub);	}
 	mglData *Hist(mglData *weight, int n, float v1=0, float v2=1, int nsub=0)
 	{	return mgl_data_hist_w(self, weight, n, v1, v2, nsub);	}
+	mglData *Momentum(char dir, const char *how)
+	{	return mgl_data_momentum(self, dir, how);	}
 
 /*	void operator=(mglData a)
 	{	return mgl_data_set(a);	}

@@ -666,11 +666,10 @@ void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void 
 	delete []tmp[0];
 }
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_fltk(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
-						const char *title, void (*reload)(int next), void *par)
+HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par)
 {
 	mglGraphFLTK *g = new mglGraphFLTK;
-	g->Window(argc,argv,draw,title,par,reload);
+	g->Window(0,0,draw,title,par);
 	return g;
 }
 //-----------------------------------------------------------------------------

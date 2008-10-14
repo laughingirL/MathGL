@@ -2580,18 +2580,18 @@ void mglc_new(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"%s.Create(%d, %d, %d);", a[0].s, int(a[1].v), k[2]==3?int(a[2].v):1, k[3]==3?int(a[3].v):1);
 }
 //-----------------------------------------------------------------------------
-//	{"var","Create new 1D data and fill it in range","var var nx x1 x2", mgls_var, mglc_var}
+//	{"var","Create new 1D data and fill it in range","var var nx x1 [x2=nan]", mgls_var, mglc_var}
 int mgls_var(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==1 && k[1]==3 && k[2]==3 && k[3]==3)
-	{	a[0].d->Create(int(a[1].v));	a[0].d->Fill(a[2].v, a[3].v);	}
+	if(k[0]==1 && k[1]==3 && k[2]==3)
+	{	a[0].d->Create(int(a[1].v));	a[0].d->Fill(a[2].v, k[3]==3?a[3].v:NAN);	}
 	else	return 1;
 	return 0;
 }
 void mglc_var(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==1 && k[1]==3 && k[2]==3 && k[3]==3)
-	swprintf(out,1024,L"%s.Create(%d);\t%s.Fill(%g,%g);",a[0].s, int(a[1].v), a[0].s, a[2].v, a[3].v);
+	if(k[0]==1 && k[1]==3 && k[2]==3)
+	swprintf(out,1024,L"%s.Create(%d);\t%s.Fill(%g,%g);",a[0].s, int(a[1].v), a[0].s, a[2].v, k[3]==3?a[3].v:NAN);
 }
 //-----------------------------------------------------------------------------
 //	{"chdir","Change current directory","chdir dir", mgls_chdir, mglc_chdir}
@@ -2992,6 +2992,26 @@ void mglc_evaluate(wchar_t out[1024], long n, mglArg *a, int k[10])
 	if(k[0]==1)	swprintf(out,1024,L"%s.Sew(\"%s\", %g);", a[0].s, k[1]==2?a[1].s:"xyz", k[2]==3 ? a[2].v : 2*M_PI);
 }
 //-----------------------------------------------------------------------------
+//	{"put","Put value (numeric or array) to given data element","put val dat i [j=0 k=0]", mgls_put, mglc_put}
+int mgls_put(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==3 && k[1]==1 && k[2]==3)
+		a[1].d->Put(a[0].v, int(a[2].v), k[3]==3?int(a[3].v):0, k[4]==3?int(a[4].v):0);
+	else if(k[0]==1 && k[1]==1 && k[2]==3)
+		a[1].d->Put(*(a[0].d), int(a[2].v), k[3]==3?int(a[3].v):0, k[4]==3?int(a[4].v):0);
+	else	return 1;
+	return 0;
+}
+void mglc_put(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==3 && k[1]==1 && k[2]==3)
+		swprintf(out,1024,L"%s.Put(%g, %d, %d, %d);", a[1].s, a[0].v, int(a[2].v), k[3]==3?int(a[3].v):0, k[4]==3?int(a[4].v):0);
+	else if(k[0]==1 && k[1]==1 && k[2]==3)
+		swprintf(out,1024,L"%s.Put(%s, %d, %d, %d);", a[1].s, a[0].s, int(a[2].v), k[3]==3?int(a[3].v):0, k[4]==3?int(a[4].v):0);
+	if(k[0]==1 && k[1]==3 && k[2]==3)
+	swprintf(out,1024,L"%s.Create(%d);\t%s.Fill(%g,%g);",a[0].s, int(a[1].v), a[0].s, a[2].v, k[3]==3?a[3].v:NAN);
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{L"addlegend",L"Add legend entry",L"addlegend txt fmt", mgls_addlegend, mglc_addlegend},
 	{L"addto",L"Add data or number",L"addto var|num", mgls_addto, mglc_addto},
@@ -3101,6 +3121,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"pipe",L"Draw flow pipes for vector field",L"", mgls_pipe, mglc_pipe},
 	{L"plot",L"Draw usual plot for 1D data",L"plot {xvar} yvar {{zvar}} [fmt num]", mgls_plot, mglc_plot},
 	{L"plotfactor",L"Set plotfactor",L"plotfactor val", mgls_plotfactor, mglc_plotfactor},
+	{L"put",L"Put value (numeric or array) to given data element",L"put val dat i [j=0 k=0]", mgls_put, mglc_put},
 	{L"putsfit",L"Print fitted formula",L"putsfit x y {z} [pre font size]", mgls_putsfit, mglc_putsfit},
 	{L"read",L"Read data from file",L"read var file [nx ny nz]", mgls_read, mglc_read},
 	{L"readall",L"Read and join data from several files",L"", mgls_readall, mglc_readall},

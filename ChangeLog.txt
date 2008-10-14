@@ -35,7 +35,10 @@
 	- New function mglData::Envelop() for the data envelop
 	- New function mglData::Sew() for sewing (removing phase jumps) the data
 	- New function mglData::Evaluate() for producing array interpolated by coordinates from other array(s)
-	- New MGL command 'sew', 'envelop', 'evaluate'
+	- New functions mglData::Put() for setting a value (number or array) for range of data
+	- New MGL command 'sew', 'envelop', 'evaluate', 'put'
+	- Functions mgl_tile_r*() are renamed to mgl_tiles*()
+
 
 1.7 Released 1 June 2008
 	- MGL parser is sufficiently rewritten:

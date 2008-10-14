@@ -342,10 +342,10 @@ struct mglParse{};
 	{	mgl_tile_xy(self, x, y, z, stl);	}
 	void Tile(mglData *z, const char *stl="")
 	{	mgl_tile(self, z, stl);	}
-	void Tile(mglData *x, mglData *y, mglData *z, mglData *r, const char *stl="")
-	{	mgl_tile_rxy(self, x, y, z, r, stl);	}
-	void Tile(mglData *z, mglData *r, const char *stl="")
-	{	mgl_tile_r(self, z, r, stl);	}
+	void TileS(mglData *x, mglData *y, mglData *z, mglData *r, const char *stl="")
+	{	mgl_tiles_xy(self, x, y, z, r, stl);	}
+	void TileS(mglData *z, mglData *r, const char *stl="")
+	{	mgl_tiles(self, z, r, stl);	}
 	void Dens(mglData *x, mglData *y, mglData *z, const char *stl="", float zVal=NaN)
 	{	mgl_dens_xy(self, x, y, z, stl, zVal);	}
 	void Dens(mglData *z, const char *stl="", float zVal=NaN)

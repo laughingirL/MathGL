@@ -6,11 +6,11 @@ Class for working with data array. This class is defined in @code{#include <mgl/
 
 @menu
 * Public variables::            
-* Creating and deleting::       
-* Filling::                     
-* Rearranging::                 
+* Create and delete::       
+* Fill::                     
+* Rearrange::                 
 * File I/O::                    
-* Making another data::         
+* Make another data::         
 * Functions on direction::      
 * Interpolation::               
 * Informational functions::     
@@ -18,7 +18,7 @@ Class for working with data array. This class is defined in @code{#include <mgl/
 @end menu
 
 @c ------------------------------------------------------------------
-@node Public variables, Creating and deleting, , mglData class
+@node Public variables, Create and delete, , mglData class
 @section Public variables
 
 @deftypecv {Variable} mglData @code{float *} a
@@ -39,8 +39,8 @@ Column (or slice if nz>1) names -- one character per column.
 
 
 @c ------------------------------------------------------------------
-@node Creating and deleting, Filling, Public variables, mglData class
-@section Creating and deleting
+@node Create and delete, Fill, Public variables, mglData class
+@section Create and delete
 
 @defop Constructor mglData @code{} mglData (@code{int} mx=@code{1}, @code{int} my=@code{1}, @code{int} mz=@code{1})
 Default constructor. Allocates the memory for data array and initializes it by zero.
@@ -84,9 +84,13 @@ Allocates memory and copies the data from the @code{gsl_matrix *} structure.
 Copies the data from mglData instance @var{dat}.
 @end deftypemethod
 
+@deftypemethod mglData @code{void} Set (@code{const char *}str, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
+Allocates memory and scanf the data from the string.
+@end deftypemethod
+
 @c ------------------------------------------------------------------
-@node Filling, Rearranging, Creating and deleting, mglData class
-@section Filling
+@node Fill, Rearrange, Create and delete, mglData class
+@section Fill
 
 @deftypemethod mglData @code{void} Fill (@code{float} x1, @code{float} x2, @code{char} dir=@code{'x'})
 Equidistantly fills the data values to range [@var{x1}, @var{x2}] in direction @var{dir}=@{@samp{x},@samp{y},@samp{z}@}.
@@ -102,8 +106,8 @@ Function fills the value of array according to the formula in string @var{eq}. F
 @end deftypemethod
 
 @c ------------------------------------------------------------------
-@node Rearranging, File I/O, Filling, mglData class
-@section Rearranging
+@node Rearrange, File I/O, Fill, mglData class
+@section Rearrange
 
 @deftypemethod mglData @code{void} Rearrange (@code{int} mx, @code{int} my=@code{0}, @code{int} mz=@code{0})
 Rearrange dimensions without changing data array so that resulting sizes should  be @var{mx}*@var{my}*@var{mz} < nx*ny*nz. If some of parameter @var{my} or @var{mz} are zero then it will be selected to optimal fill of data array. For example, if @var{my}=0 then it will be change to @var{my}=nx*ny*nz/@var{mx} and @var{mz} will be 1.
@@ -124,7 +128,7 @@ Transposes (shift order of) dimensions of the data. New order of dimensions is s
 Reduces the data size by excluding data elements which indexes are not divisible by @var{rx}, @var{ry}, @var{rz} correspondingly.
 @end deftypemethod
 @deftypemethod mglData @code{void} Crop (@code{int} n1, @code{int} n2, @code{char} dir=@code{'x'})
-Cuts off edges n<@var{n1} and n>@var{n2} of the data along direction @var{dir}.
+Cuts off edges @var{i}<@var{n1} and @var{i}>@var{n2} of the data along direction @var{dir}.
 @end deftypemethod
 
 @deftypemethod mglData @code{void} InsertRows (@code{int} at, @code{int} num=@code{1}, @code{const char *}eq=@code{NULL})
@@ -155,13 +159,13 @@ Delete @var{num} slices along @var{dir}-direction at position @var{at}.
 @end deftypemethod
 
 @c ------------------------------------------------------------------
-@node File I/O, Making another data, Rearranging, mglData class
+@node File I/O, Make another data, Rearrange, mglData class
 @section File I/O
 
 @deftypemethod mglData @code{void} Read (@code{const char *}fname)
 Reads data from tab-separated text file with auto determining sizes of the data.
 @end deftypemethod
-@deftypemethod mglData @code{void} Read (@code{const char *}fname, @code{int} mx, @code{int} my=@code{1, @code{int} mz=@code{1}})
+@deftypemethod mglData @code{void} Read (@code{const char *}fname, @code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1})
 Reads data from text file with specified data sizes. This function does nothing if one of parameters @var{mx}, @var{my} or @var{mz} is zero or negative.
 @end deftypemethod
 @deftypemethod mglData @code{void} ReadMat (@code{const char *}fname, @code{int} dim=@code{2})
@@ -194,17 +198,17 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @end deftypemethod
 
 @c ------------------------------------------------------------------
-@node Making another data, Functions on direction, File I/O, mglData class
-@section Making another data
+@node Make another data, Functions on direction, File I/O, mglData class
+@section Make another data
 
-@deftypemethod mglData @code{mglData} SubData (int xx,int yy=-1,int zz=-1) @code{const}
+@deftypemethod mglData @code{mglData} SubData (@code{int} xx, @code{int} yy=@code{-1}, @code{int} zz=@code{-1}) @code{const}
 Extracts sub-array data from the original data array keeping fixed positive index. For example @code{SubData(-1,2)} extracts 3d row (indexes are zero based), @code{SubData(4,-1)} extracts 5th column, @code{SubData(-1,-1,3)} extracts 4th slice and so on. The most convenient way is to use this function as initialization of other @code{mglData} variable like @code{mglData a1(a.SubData(-1,-1,3))}.
 @end deftypemethod
 @deftypemethod mglData @code{mglData} Column (@code{const char *}eq) @code{const}
 Get column (or slice) of the data filled by formula @var{eq} of other named columns. For example, @code{Column("n*w^2/exp(t)");}. The column ids must be defined first by @code{SetColumnId()} function.
 @end deftypemethod
-@deftypemethod mglData @code{mglData} SetColumnId (@code{const char *}ids)
-Set the symbol id for data columns. The string must contain one symbol 'a'…'z' per column (without spaces).
+@deftypemethod mglData @code{void} SetColumnId (@code{const char *}ids)
+Set the symbol id for data columns. The string must contain one symbol 'a'...'z' per column (without spaces).
 @end deftypemethod
 
 @deftypemethod mglData @code{mglData} Hist (@code{int} n, @code{float} v1=@code{0}, @code{float} v2=@code{1}, @code{int} nsub=@code{0}) @code{const}
@@ -238,10 +242,8 @@ Gets array which is the maximal data values in given direction or direction(s).
 Return direct multiplication of arrays (like, res[i,j] = this[i]*a[j] and so on).
 @end deftypemethod
 @deftypemethod mglData @code{mglData} Evaluate (@code{const mglData &}idat, @code{bool} norm=@code{true}) @code{const}
-@end deftypemethod
-@deftypemethod mglData @code{mglData} Evaluate (@code{const mglData &}idat, @code{const mglData &}jdat, @code{bool} norm=@code{true}) @code{const}
-@end deftypemethod
-@deftypemethod mglData @code{mglData} Evaluate (@code{const mglData &}idat, @code{const mglData &}jdat, @code{const mglData &}kdat, @code{bool} norm=@code{true}) @code{const}
+@deftypemethodx mglData @code{mglData} Evaluate (@code{const mglData &}idat, @code{const mglData &}jdat, @code{bool} norm=@code{true}) @code{const}
+@deftypemethodx mglData @code{mglData} Evaluate (@code{const mglData &}idat, @code{const mglData &}jdat, @code{const mglData &}kdat, @code{bool} norm=@code{true}) @code{const}
 Get array which values is result of interpolation of original array for coordinates from other arrays. All dimensions must be the same for data @var{idat}, @var{jdat}, @var{kdat}. Coordinates from @var{idat}, @var{jdat}, @var{kdat} are supposed to be normalized in range [0,1] (if @var{norm}=@code{true}) or in range [0,nx], [0,ny], [0,nz] correspondingly.
 @end deftypemethod
 @deftypemethod mglData @code{mglData} Resize (@code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1}, @code{float} x1=@code{0}, @code{float} x2=@code{1}, @code{float} y1=@code{0}, @code{float} y2=@code{1}, @code{float} z1=@code{0}, @code{float} z2=@code{1}) @code{const}
@@ -249,7 +251,7 @@ Resizes the data to new size @var{mx}, @var{my}, @var{mz} from box (part) [@var{
 @end deftypemethod
 
 @c ------------------------------------------------------------------
-@node Functions on direction, Interpolation, Making another data, mglData class
+@node Functions on direction, Interpolation, Make another data, mglData class
 @section Functions on direction
 
 These functions change the data in some direction like differentiations, integrations and so on. The direction in which the change will applied is specified by the string parameter, which may contain @samp{x}, @samp{y} or @samp{z} characters for 1-st, 2-nd and 3-d dimension correspondengly.
@@ -325,7 +327,7 @@ Interpolate by 5-th order splain the data to given point @var{x}, @var{y}, @var{
 @node Informational functions, Operators, Interpolation, mglData class
 @section Informational functions
 
-@deftypemethod mglData @code{void} PrintInfo (char *buf, bool all=false) @code{const}
+@deftypemethod mglData @code{void} PrintInfo (@code{char *}buf, @code{bool} all=@code{false}) @code{const}
 Print information about the data (sizes and momentum) to string @var{buf}. Parameter @var{all} set to print most of information (if @code{true}) or just basic one like dimensions, maximal an minimal values.
 @end deftypemethod
 @deftypemethod mglData @code{void} PrintInfo (@code{FILE *}fp) @code{const}

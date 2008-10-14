@@ -1577,3 +1577,85 @@ mglData mglData::Evaluate(const mglData &idat, bool norm) const
 	return b;
 }
 //-----------------------------------------------------------------------------
+void mglData::Put(float val, int xx, int yy, int zz)
+{
+	if(xx>=nx || yy>=ny || zz>=nz)	return;
+	register long i,j;
+	if(xx<0 && yy<0 && zz<0)	// сам массив
+		for(i=0;i<nx*ny*nz;i++)	a[i] = val;
+	else if(xx<0 && yy<0)	// 2d
+		for(i=0;i<nx*ny;i++)	a[i+zz*nx*ny] = val;
+	else if(yy<0 && zz<0)	// 2d
+		for(i=0;i<nz*ny;i++)	a[xx+i*nx] = val;
+	else if(xx<0 && zz<0)	// 2d
+		for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
+			a[i+nx*(yy+j*ny)] = val;
+	else if(xx<0)
+		for(i=0;i<nx;i++)	a[i+nx*(yy+zz*ny)] = val;
+	else if(yy<0)
+		for(i=0;i<ny;i++)	a[xx+nx*(i+zz*ny)] = val;
+	else if(zz<0)
+		for(i=0;i<nz;i++)	a[xx+nx*(yy+i*ny)] = val;
+	else	a[xx+nx*(yy+zz*ny)] = val;
+}
+//-----------------------------------------------------------------------------
+void mglData::Put(const mglData &val, int xx, int yy, int zz)
+{
+	if(xx>=nx || yy>=ny || zz>=nz)	return;
+	register long i,j,k;
+	if(xx<0 && yy<0 && zz<0)	// сам массив
+	{
+		if(val.nx>=nx && val.ny>=ny && val.nz>=nz)
+			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+				a[i+nx*(j+k*ny)] = val.a[i+val.nx*(j+val.ny*k)];
+		else if(val.nx>=nx && val.ny>=ny)
+			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+				a[i+nx*(j+k*ny)] = val.a[i+val.nx*j];
+		else if(val.nx>=nx)
+			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+				a[i+nx*(j+k*ny)] = val.a[i];
+	}
+	else if(xx<0 && yy<0)	// 2d
+	{
+		if(val.nx>=nx && val.ny>=ny)
+			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+				a[i+nx*(j+zz*ny)] = val.a[i+val.nx*j];
+		else if(val.nx>=nx)
+			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+				a[i+nx*(j+zz*ny)] = val.a[i];
+	}
+	else if(yy<0 && zz<0)	// 2d
+	{
+		if(val.nx>=ny && val.ny>=nz)
+			for(i=0;i<ny;i++)	for(j=0;j<nz;j++)
+				a[xx+nx*(i+j*ny)] = val.a[i+val.nx*j];
+		else if(val.nx>=ny)
+			for(i=0;i<ny;i++)	for(j=0;j<nz;j++)
+				a[xx+nx*(i+j*ny)] = val.a[i];
+	}
+	else if(xx<0 && zz<0)	// 2d
+	{
+		if(val.nx>=nx && val.ny>=nz)
+			for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
+				a[i+nx*(yy+j*ny)] = val.a[i+val.nx*j];
+		else if(val.nx>=ny)
+			for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
+				a[i+nx*(yy+j*ny)] = val.a[i];
+	}
+	else if(xx<0)
+	{
+		if(val.nx>=nx)	for(i=0;i<nx;i++)
+			a[i+nx*(yy+zz*ny)] = val.a[i];
+	}
+	else if(yy<0)
+	{
+		if(val.nx>=ny)	for(i=0;i<ny;i++)
+			a[xx+nx*(i+zz*ny)] = val.a[i];
+	}
+	else if(zz<0)
+	{
+		if(val.nx>=nz)	for(i=0;i<nz;i++)
+			a[xx+nx*(yy+i*ny)] = val.a[i];
+	}
+}
+//-----------------------------------------------------------------------------

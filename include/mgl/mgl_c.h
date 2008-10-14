@@ -44,12 +44,15 @@ struct gsl_matrix;
 HMGL mgl_create_graph_gl();
 HMGL mgl_create_graph_zb(int width, int height);
 HMGL mgl_create_graph_ps(int width, int height);
-HMGL mgl_create_graph_glut(int argc, char **argv, int (*draw)(HMGL gr, void *p),
+/*HMGL mgl_create_graph_glut(int argc, char **argv, int (*draw)(HMGL gr, void *p),
 						const char *title, void (*reload)(int next), void *par);
 HMGL mgl_create_graph_fltk(int argc, char **argv, int (*draw)(HMGL gr, void *p),
 						const char *title, void (*reload)(int next), void *par);
 HMGL mgl_create_graph_qt(int argc, char **argv, int (*draw)(HMGL gr, void *p),
-						const char *title, void (*reload)(int next), void *par);
+						const char *title, void (*reload)(int next), void *par);*/
+HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par);
+HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par);
+HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par);
 HMGL mgl_create_graph_idtf();
 void mgl_fltk_run();
 void mgl_qt_run();
@@ -101,6 +104,7 @@ void mgl_restore_font(HMGL gr);
 /*****************************************************************************/
 /*		Export to file or to memory											 */
 /*****************************************************************************/
+void mgl_write_bmp(HMGL graph, const char *fname,const char *descr);
 void mgl_write_tif(HMGL graph, const char *fname,const char *descr);
 void mgl_write_jpg(HMGL graph, const char *fname,const char *descr);
 void mgl_write_png(HMGL graph, const char *fname,const char *descr);
@@ -155,6 +159,7 @@ void mgl_set_xrange(HMGL graph, const HMDT a, int add);
 void mgl_set_yrange(HMGL graph, const HMDT a, int add);
 void mgl_set_zrange(HMGL graph, const HMDT a, int add);
 void mgl_set_func(HMGL graph, const char *EqX,const char *EqY,const char *EqZ);
+void mgl_set_ternary(HMGL gr, int enable);
 void mgl_set_cutoff(HMGL graph, const char *EqC);
 void mgl_box(HMGL graph, int ticks);
 void mgl_box_str(HMGL graph, const char *col, int ticks);
@@ -186,6 +191,7 @@ void mgl_puts_dir(HMGL graph, float x, float y, float z, float dx, float dy, flo
 void mgl_putsw_dir(HMGL graph, float x, float y, float z, float dx, float dy, float dz, const wchar_t *text, float size);
 void mgl_text(HMGL graph, float x, float y, float z,const char *text);
 void mgl_title(HMGL graph, const char *text, const char *fnt);
+void mgl_titlew(HMGL graph, const wchar_t *text, const char *fnt);
 void mgl_putsw_ext(HMGL graph, float x, float y, float z,const wchar_t *text,const char *font,float size,char dir);
 void mgl_puts_ext(HMGL graph, float x, float y, float z,const char *text,const char *font,float size,char dir);
 void mgl_text_ext(HMGL graph, float x, float y, float z,const char *text,const char *font,float size,char dir);
@@ -282,8 +288,8 @@ void mgl_boxs_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const cha
 void mgl_boxs(HMGL graph, const HMDT z, const char *sch,float zVal);
 void mgl_tile_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch);
 void mgl_tile(HMGL graph, const HMDT z, const char *sch);
-void mgl_tile_rxy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT r, const char *sch);
-void mgl_tile_r(HMGL graph, const HMDT z, const HMDT r, const char *sch);
+void mgl_tiles_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT r, const char *sch);
+void mgl_tiles(HMGL graph, const HMDT z, const HMDT r, const char *sch);
 void mgl_cont_xy_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const char *sch, float zVal);
 void mgl_cont_val(HMGL graph, const HMDT v, const HMDT z, const char *sch,float zVal);
 void mgl_cont_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch, int Num, float zVal);
@@ -435,13 +441,15 @@ HMDT mgl_data_subdata(const HMDT dat, int xx,int yy,int zz);
 HMDT mgl_data_column(const HMDT dat, const char *eq);
 void mgl_data_set_id(HMDT d, const char *id);
 void mgl_data_fill(HMDT dat, float x1,float x2,char dir);
+void mgl_data_put_val(HMDT dat, float val, int i, int j, int k);
+void mgl_data_put_dat(HMDT dat, const HMDT val, int i, int j, int k);
 void mgl_data_modify(HMDT dat, const char *eq,int dim);
 void mgl_data_modify_vw(HMDT dat, const char *eq,const HMDT vdat,const HMDT wdat);
 void mgl_data_squeeze(HMDT dat, int rx,int ry,int rz,int smooth);
-float mgl_data_max(HMDT dat);
-float mgl_data_min(HMDT dat);
+float mgl_data_max(const HMDT dat);
+float mgl_data_min(const HMDT dat);
 float *mgl_data_value(HMDT dat, int i,int j,int k);
-const float *mgl_data_data(HMDT dat);
+const float *mgl_data_data(const HMDT dat);
 HMDT mgl_data_combine(const HMDT dat1, const HMDT dat2);
 void mgl_data_extend(HMDT dat, int n1, int n2);
 /*****************************************************************************/
@@ -457,14 +465,16 @@ void mgl_data_diff(HMDT dat, const char *dir);
 void mgl_data_diff2(HMDT dat, const char *dir);
 void mgl_data_swap(HMDT dat, const char *dir);
 void mgl_data_mirror(HMDT dat, const char *dir);
-float mgl_data_spline(HMDT dat, float x,float y,float z);
-float mgl_data_spline1(HMDT dat, float x,float y,float z);
-float mgl_data_linear(HMDT dat, float x,float y,float z);
-float mgl_data_linear1(HMDT dat, float x,float y,float z);
-HMDT mgl_data_resize(const HMDT dat, int mx,int my,int mz,float x1,float x2,
+float mgl_data_spline(const HMDT dat, float x,float y,float z);
+float mgl_data_spline1(const HMDT dat, float x,float y,float z);
+float mgl_data_linear(const HMDT dat, float x,float y,float z);
+float mgl_data_linear1(const HMDT dat, float x,float y,float z);
+HMDT mgl_data_resize(const HMDT dat, int mx,int my,int mz);
+HMDT mgl_data_resize_box(const HMDT dat, int mx,int my,int mz,float x1,float x2,
 	float y1,float y2,float z1,float z2);
 HMDT mgl_data_hist(const HMDT dat, int n, float v1, float v2, int nsub);
 HMDT mgl_data_hist_w(const HMDT dat, const HMDT weight, int n, float v1, float v2, int nsub);
+HMDT mgl_data_momentum(const HMDT dat, char dir, const char *how);
 HMDT mgl_data_evaluate_i(const HMDT dat, const HMDT idat, int norm);
 HMDT mgl_data_evaluate_ij(const HMDT dat, const HMDT idat, const HMDT jdat, int norm);
 HMDT mgl_data_evaluate_ijk(const HMDT dat, const HMDT idat, const HMDT jdat, const HMDT kdat, int norm);
@@ -485,30 +495,35 @@ void mgl_data_sub_num(HMDT dat, float d);
 /*****************************************************************************/
 /*		Nonlinear fitting													 */
 /*****************************************************************************/
-float mgl_fit_1(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, float *ini, int print);
-float mgl_fit_2(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, float *ini, int print);
-float mgl_fit_3(HMGL gr, HMDT fit, const HMDT a, const char *eq, const char *var, float *ini, int print);
-float mgl_fit_xy(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const char *eq, const char *var, float *ini, int print);
-float mgl_fit_xyz(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const char *eq, const char *var, float *ini, int print);
-float mgl_fit_xyza(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *eq, const char *var, float *ini, int print);
-float mgl_fit_ys(HMGL gr, HMDT fit, const HMDT y, const HMDT s, const char *eq, const char *var, float *ini, int print);
-float mgl_fit_xys(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT s, const char *eq, const char *var, float *ini, int print);
-float mgl_fit_xyzs(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT s, const char *eq, const char *var, float *ini, int print);
-float mgl_fit_xyzas(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, float *ini, int print);
+float mgl_fit_1(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, float *ini);
+float mgl_fit_2(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, float *ini);
+float mgl_fit_3(HMGL gr, HMDT fit, const HMDT a, const char *eq, const char *var, float *ini);
+float mgl_fit_xy(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const char *eq, const char *var, float *ini);
+float mgl_fit_xyz(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const char *eq, const char *var, float *ini);
+float mgl_fit_xyza(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *eq, const char *var, float *ini);
+float mgl_fit_ys(HMGL gr, HMDT fit, const HMDT y, const HMDT s, const char *eq, const char *var, float *ini);
+float mgl_fit_xys(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT s, const char *eq, const char *var, float *ini);
+float mgl_fit_xyzs(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT s, const char *eq, const char *var, float *ini);
+float mgl_fit_xyzas(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, float *ini);
 
-float mgl_fit_1_d(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, HMDT ini, int print);
-float mgl_fit_2_d(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, HMDT ini, int print);
-float mgl_fit_3_d(HMGL gr, HMDT fit, const HMDT a, const char *eq, const char *var, HMDT ini, int print);
-float mgl_fit_xy_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const char *eq, const char *var, HMDT ini, int print);
-float mgl_fit_xyz_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const char *eq, const char *var, HMDT ini, int print);
-float mgl_fit_xyza_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *eq, const char *var, HMDT ini, int print);
-float mgl_fit_ys_d(HMGL gr, HMDT fit, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini, int print);
-float mgl_fit_xys_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini, int print);
-float mgl_fit_xyzs_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT s, const char *eq, const char *var, HMDT ini, int print);
-float mgl_fit_xyzas_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, HMDT ini, int print);
+float mgl_fit_1_d(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, HMDT ini);
+float mgl_fit_2_d(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, HMDT ini);
+float mgl_fit_3_d(HMGL gr, HMDT fit, const HMDT a, const char *eq, const char *var, HMDT ini);
+float mgl_fit_xy_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const char *eq, const char *var, HMDT ini);
+float mgl_fit_xyz_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const char *eq, const char *var, HMDT ini);
+float mgl_fit_xyza_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *eq, const char *var, HMDT ini);
+float mgl_fit_ys_d(HMGL gr, HMDT fit, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini);
+float mgl_fit_xys_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini);
+float mgl_fit_xyzs_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT s, const char *eq, const char *var, HMDT ini);
+float mgl_fit_xyzas_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, HMDT ini);
 
 void mgl_puts_fit(HMGL gr, float x, float y, float z, const char *prefix, const char *font, float size);
 /*****************************************************************************/
+void mgl_sphere(HMGL graph, float x, float y, float z, float r, const char *stl);
+void mgl_drop(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl, float shift, float ap);
+void mgl_cone(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl, int edge);
+
+
 #ifdef __cplusplus
 }
 #endif

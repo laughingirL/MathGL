@@ -109,39 +109,41 @@ void mglData::Set(const double ***A,int N1,int N2,int N3)
 //-----------------------------------------------------------------------------
 mglData mglData::SubData(int xx,int yy,int zz) const
 {
-	register long i,j;
+	long i,j;
 	mglData d;
-	xx = xx<0 ? -1:xx;	yy = yy<0 ? -1:yy;	zz = zz<0 ? -1:zz;
-	if(xx==-1 && yy==-1 && zz==-1)	// сам массив
+	if(xx>=nx || yy>=ny || zz>=nz)	return d;
+//	xx = xx<0 ? -1:xx;	yy = yy<0 ? -1:yy;	zz = zz<0 ? -1:zz;
+	if(xx<0 && yy<0 && zz<0)	// сам массив
 		d.Set(*this);
-	else if(xx==-1 && yy==-1 && zz<nz)	// 2d
+	else if(xx<0 && yy<0)	// 2d
 		d.Set(a+zz*nx*ny,nx,ny,1);
-	else if(xx<nx && yy==-1 && zz==-1)	// 2d
+	else if(yy<0 && zz<0)	// 2d
 	{
 		d.Create(ny,nz);
 		for(i=0;i<ny*nz;i++)
 			d.a[i] = a[xx+i*nx];
 	}
-	else if(xx==-1 && yy<ny && zz==-1)	// 2d
+	else if(xx<0 && zz<0)	// 2d
 	{
 		d.Create(nx,nz);
 		for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
 			d.a[i+nx*j] = a[i+nx*(yy+j*ny)];
 	}
-	else if(xx==-1 && yy<ny && zz<nz)
+	else if(xx<0)
 		d.Set(a+nx*(yy+ny*zz),nx,1,1);
-	else if(xx<nx && yy==-1 && zz<nz)
+	else if(yy<0)
 	{
 		d.Create(ny);
 		for(i=0;i<ny;i++)
 			d.a[i] = a[xx+nx*(i+zz*ny)];
 	}
-	else if(xx<nx && yy<ny && zz==-1)
+	else if(zz<0)
 	{
 		d.Create(nz);
 		for(i=0;i<nz;i++)
 			d.a[i] = a[xx+nx*(yy+i*ny)];
 	}
+	else	d.a[0] = a[xx+nx*(yy+zz*ny)];
 	return d;
 }
 //-----------------------------------------------------------------------------
@@ -629,6 +631,7 @@ void mglData::Fill(float x1,float x2,char dir)
 {
 	long i,j,k;
 	register float x;
+	if(isnan(x2))	x2=x1;
 	if(dir<'x' || dir>'z')	dir='x';
 	for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 	{

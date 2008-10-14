@@ -237,12 +237,21 @@ if (test x$langall = xtrue || test x$python = xtrue) ;then
 fi
 AM_CONDITIONAL(USE_PYTHON, test x$test_python = xtrue )
 
+AC_ARG_ENABLE(octave,
+[  --enable-octave    Turn on interface to octave],
+[case "${enableval}" in
+  yes) octave=true ;;
+  no)  octave=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-octave) ;;
+esac],[octave=false])
 # find Octave arch
-OCTAVE=octave
-AC_MSG_CHECKING([for Octave arch])
-OCTAVE_ARCH=`$OCTAVE -q --eval 'strcat(octave_config_info("canonical_host_type"), "-", octave_config_info("api_version"))'|sed -e 's/ans = //'`
-AC_MSG_RESULT([$OCTAVE_ARCH])
-AC_SUBST(OCTAVE_ARCH,[$OCTAVE_ARCH])
+if (test x$langall = xtrue || test x$octave = xtrue) ;then
+    OCTAVE=octave
+    AC_MSG_CHECKING([for Octave arch])
+    OCTAVE_ARCH=`$OCTAVE -q --eval 'strcat(octave_config_info("canonical_host_type"), "-", octave_config_info("api_version"))'|sed -e 's/ans = //'`
+    AC_MSG_RESULT([$OCTAVE_ARCH])
+    AC_SUBST(OCTAVE_ARCH,[$OCTAVE_ARCH])
+fi
 
 AC_CONFIG_FILES([
 Makefile

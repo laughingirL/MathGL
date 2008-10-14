@@ -413,7 +413,10 @@ void mgl_data_set_value_(long *d, float *v, int *i, int *j, int *k)
 void mgl_set_zoom_(long *gr, float *x1, float *y1, float *x2, float *y2)
 {	_GR_->Zoom(*x1,*y1,*x2,*y2);	}
 void mgl_set_plotfactor_(long *gr, float *val)
-{	_GR_->PlotFactor = *val;	}
+{
+	if(*val>0)	{	_GR_->PlotFactor = *val;	_GR_->AutoPlotFactor=false;	}
+	else	_GR_->AutoPlotFactor=true;
+}
 void mgl_set_axis_3d_(long *gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2)
 {	_GR_->Axis(mglPoint(*x1,*y1,*z1),mglPoint(*x2,*y2,*z2));	}
 void mgl_set_axis_2d_(long *gr, float *x1, float *y1, float *x2, float *y2)
@@ -429,4 +432,25 @@ void mgl_title_(long *gr, const char *text, const char *fnt,int l,int n)
 	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
 	if(gr)	_GR_->Title(s,f);	delete []s;	delete []f;
 }
+//-----------------------------------------------------------------------------
+void mgl_set_ternary_(long *gr, int *enable)
+{	_GR_->Ternary(*enable);	}
+void mgl_sphere_(long* gr, float *x, float *y, float *z, float *r, const char *stl,int l)
+{
+	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	_GR_->Sphere(mglPoint(*x,*y,*z),*r,s);	delete []s;
+}
+void mgl_drop_(long* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r, const char *stl, float *shift, float *ap, int l)
+{
+	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	_GR_->Drop(mglPoint(*x1,*y1,*z1),mglPoint(*x2,*y2,*z2),*r,s,*shift,*ap);
+	delete []s;
+}
+void mgl_cone_(long* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r1, float *r2, const char *stl, int *edge, int l)
+{
+	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	_GR_->Cone(mglPoint(*x1,*y1,*z1),mglPoint(*x2,*y2,*z2),*r1,*r2,s,*edge);
+	delete []s;
+}
+
 //-----------------------------------------------------------------------------

@@ -254,8 +254,8 @@ void mgl_boxs_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const cha
 void mgl_boxs(HMGL graph, const HMDT z, const char *sch, float zVal);
 void mgl_tile_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch);
 void mgl_tile(HMGL graph, const HMDT z, const char *sch);
-void mgl_tile_rxy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT r, const char *sch);
-void mgl_tile_r(HMGL graph, const HMDT z, const HMDT r, const char *sch);
+void mgl_tiles_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT r, const char *sch);
+void mgl_tiles(HMGL graph, const HMDT z, const HMDT r, const char *sch);
 void mgl_cont_xy_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const char *sch, float zVal);
 void mgl_cont_val(HMGL graph, const HMDT v, const HMDT z, const char *sch, float zVal);
 void mgl_cont_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch, int Num, float zVal);
@@ -423,9 +423,11 @@ float mgl_data_spline(HMDT dat, float x,float y,float z);
 float mgl_data_spline1(HMDT dat, float x,float y,float z);
 float mgl_data_linear(HMDT dat, float x,float y,float z);
 float mgl_data_linear1(HMDT dat, float x,float y,float z);
-HMDT mgl_data_resize(const HMDT dat, int mx,int my,int mz,float x1,float x2, float y1,float y2,float z1,float z2);
+HMDT mgl_data_resize(const HMDT dat, int mx,int my,int mz);
+HMDT mgl_data_resize_box(const HMDT dat, int mx,int my,int mz,float x1,float x2, float y1,float y2,float z1,float z2);
 HMDT mgl_data_hist(const HMDT dat, int n, float v1, float v2, int nsub);
 HMDT mgl_data_hist_w(const HMDT dat, const HMDT weight, int n, float v1, float v2, int nsub);
+HMDT mgl_data_momentum(const HMDT dat, char dir, const char *how);
 void mgl_data_crop(HMDT dat, int n1, int n2, char dir);
 
 //-----------------------------------------------------------------------------
@@ -443,16 +445,16 @@ void mgl_data_sub_num(HMDT dat, float d);
 //-----------------------------------------------------------------------------
 /*		Nonlinear fitting													 */
 //-----------------------------------------------------------------------------
-float mgl_fit_1_d(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, HMDT ini, bool print);
-float mgl_fit_2_d(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, HMDT ini, bool print);
-float mgl_fit_3_d(HMGL gr, HMDT fit, const HMDT a, const char *eq, const char *var, HMDT ini, bool print);
-float mgl_fit_xy_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const char *eq, const char *var, HMDT ini, bool print);
-float mgl_fit_xyz_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const char *eq, const char *var, HMDT ini, bool print);
-float mgl_fit_xyza_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *eq, const char *var, HMDT ini, bool print);
-float mgl_fit_ys_d(HMGL gr, HMDT fit, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini, bool print);
-float mgl_fit_xys_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini, bool print);
-float mgl_fit_xyzs_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT s, const char *eq, const char *var, HMDT ini, bool print);
-float mgl_fit_xyzas_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, HMDT ini, bool print);
+float mgl_fit_1_d(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, HMDT ini);
+float mgl_fit_2_d(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, HMDT ini);
+float mgl_fit_3_d(HMGL gr, HMDT fit, const HMDT a, const char *eq, const char *var, HMDT ini);
+float mgl_fit_xy_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const char *eq, const char *var, HMDT ini);
+float mgl_fit_xyz_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const char *eq, const char *var, HMDT ini);
+float mgl_fit_xyza_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *eq, const char *var, HMDT ini);
+float mgl_fit_ys_d(HMGL gr, HMDT fit, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini);
+float mgl_fit_xys_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT s, const char *eq, const char *var, HMDT ini);
+float mgl_fit_xyzs_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT s, const char *eq, const char *var, HMDT ini);
+float mgl_fit_xyzas_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, HMDT ini);
 
 void mgl_puts_fit(HMGL gr, float x, float y, float z, const char *prefix, const char *font, float size);
 //-----------------------------------------------------------------------------

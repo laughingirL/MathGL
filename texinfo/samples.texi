@@ -1053,7 +1053,7 @@ TO BE DONE
 
 @c ------------------------------------------------------------------
 @node Surface in fog sample, Sharp colors sample, Transparent surface sample, 2D plotting samples
-@subsection Surf in fog sample
+@subsection Surface in fog sample
 
 @float
 @image{png/surf_fog, 7cm}

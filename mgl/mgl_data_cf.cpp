@@ -45,14 +45,16 @@ void mgl_data_sub_num(HMDT d, float b) {	*d -= b;	}
 void mgl_data_rearrange(HMDT d, int mx, int my, int mz)
 {	d->Rearrange(mx,my,mz);	}
 /// Resize the data to new size of box [x1,x2]*[y1,y2]*[z1,z2]
-HMDT mgl_data_resize(HMDT d, int mx,int my,int mz,float x1,float x2,
+HMDT mgl_data_resize(const HMDT d, int mx,int my,int mz)
+{	return new mglData(d->Resize(mx,my,mz));	}
+HMDT mgl_data_resize_box(const HMDT d, int mx,int my,int mz,float x1,float x2,
 	float y1,float y2,float z1,float z2)
 {	return new mglData(d->Resize(mx,my,mz,x1,x2,y1,y2,z1,z2));	}
 /// Get sub-array of the data with given fixed indexes
-HMDT mgl_data_subdata(HMDT d, int xx,int yy,int zz)
+HMDT mgl_data_subdata(const HMDT d, int xx,int yy,int zz)
 {	return new mglData(d->SubData(xx,yy,zz));	}
 /// Get column (or slice) of the data filled by formulas of other named columns
-HMDT mgl_data_column(HMDT d, const char *eq)
+HMDT mgl_data_column(const HMDT d, const char *eq)
 {	return new mglData(d->Column(eq));	}
 /// Set names for columns (slices)
 void mgl_data_set_id(HMDT d, const char *id)
@@ -81,11 +83,12 @@ void mgl_data_norm_slice(HMDT d, float v1,float v2,char dir,int keep_en,int sym)
 void mgl_data_squeeze(HMDT d, int rx,int ry,int rz,int smooth)
 {	d->Squeeze(rx,ry,rz,smooth);	}
 /// Get maximal value of the data
-float mgl_data_max(HMDT d)	{	return d->Maximal();	}
+float mgl_data_max(const HMDT d)	{	return d->Maximal();	}
 /// Get minimal value of the data
-float mgl_data_min(HMDT d)	{	return d->Minimal();	}
-/// Get the value in given cell of the data with border checking
-float *mgl_data_value(HMDT d, int i,int j,int k)	{	return d->a+i+d->nx*(j+d->ny*k);	}
+float mgl_data_min(const HMDT d)	{	return d->Minimal();	}
+/// Get the value in given cell of the data
+float *mgl_data_value(HMDT d, int i,int j,int k)
+{	return d->a+i+d->nx*(j+d->ny*k);	}
 /// Swap left and right part of the data in given direction (useful for fourier spectrums)
 void mgl_data_swap(HMDT d, const char *dir)
 {	d->Swap(dir);	}
@@ -124,7 +127,7 @@ int mgl_data_read_dim(HMDT d, const char *fname,int mx,int my,int mz)
 /// Save whole data array (for ns=-1) or only ns-th slice to text file
 void mgl_data_save(HMDT d, const char *fname,int ns)
 {	d->Save(fname,ns);	}
-const float *mgl_data_data(HMDT d)
+const float *mgl_data_data(const HMDT d)
 {	return d->a;	}
 /// Get the data which is tensor multiplication (d[i,j] = a[i]*b[j] and so on)
 HMDT mgl_data_combine(HMDT a, HMDT b)
@@ -161,7 +164,9 @@ void mgl_data_sub_num_(long *d, float *b) {	_DM_(d) -= *b;	}
 void mgl_data_rearrange_(long *d, int *mx, int *my, int *mz)
 {	_DT_->Rearrange(*mx,*my,*mz);	}
 /// Resize the data to new size of box [x1,x2]*[y1,y2]*[z1,z2]
-long mgl_data_resize_(long *d, int *mx,int *my,int *mz,float *x1,float *x2,
+long mgl_data_resize_(long *d, int *mx,int *my,int *mz)
+{	return long(new mglData(_DT_->Resize(*mx,*my,*mz)));	}
+long mgl_data_resize_box_(long *d, int *mx,int *my,int *mz,float *x1,float *x2,
 						float *y1,float *y2,float *z1,float *z2)
 {	return long(new mglData(_DT_->Resize(*mx,*my,*mz,*x1,*x2,*y1,*y2,*z1,*z2)));	}
 /// Get sub-array of the data with given fixed indexes
@@ -303,7 +308,7 @@ void mgl_data_extend_(long *d, int *n1, int *n2)
 void mgl_data_smooth(HMDT d, int Type,float delta,const char *dirs)
 {	d->Smooth(Type,dirs,delta);	}
 /// Get array which is result of summation in given direction or directions
-HMDT mgl_data_sum(HMDT d, const char *dir)
+HMDT mgl_data_sum(const HMDT d, const char *dir)
 {	return new mglData(d->Sum(dir));	}
 /// Integrate (cumulative summation) the data in given direction or directions
 void mgl_data_integral(HMDT d, const char *dir)
@@ -315,22 +320,24 @@ void mgl_data_diff(HMDT d, const char *dir)
 void mgl_data_diff2(HMDT d, const char *dir)
 {	d->Diff2(dir);	}
 /// Interpolate by qubic splain the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-float mgl_data_spline(HMDT d, float x,float y,float z)
+float mgl_data_spline(const HMDT d, float x,float y,float z)
 {	return d->Spline(x,y,z);	}
 /// Interpolate by qubic splain the data to given point \a x,\a y,\a z which normalized in range [0, 1]
-float mgl_data_spline1(HMDT d, float x,float y,float z)
+float mgl_data_spline1(const HMDT d, float x,float y,float z)
 {	return d->Spline1(x,y,z);	}
 /// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
-float mgl_data_linear(HMDT d, float x,float y,float z)
+float mgl_data_linear(const HMDT d, float x,float y,float z)
 {	return d->Linear(x,y,z);	}
 /// Interpolate by line the data to given point \a x,\a y,\a z which normalized in range [0, 1]
-float mgl_data_linear1(HMDT d, float x,float y,float z)
+float mgl_data_linear1(const HMDT d, float x,float y,float z)
 {	return d->Linear1(x,y,z);	}
+HMDT mgl_data_momentum(const HMDT d, char dir, const char *how)
+{	return new mglData(d->Momentum(dir,how));	}
 /// Create n-th points distribution of this data values in range [v1, v2]
-HMDT mgl_data_hist(HMDT d, int n, float v1, float v2, int nsub)
+HMDT mgl_data_hist(const HMDT d, int n, float v1, float v2, int nsub)
 {	return new mglData(d->Hist(n,v1,v2,nsub));	}
 /// Create n-th points distribution of this data values in range [v1, v2] with weight \a w
-HMDT mgl_data_hist_w(HMDT d, HMDT w, int n, float v1, float v2, int nsub)
+HMDT mgl_data_hist_w(const HMDT d, HMDT w, int n, float v1, float v2, int nsub)
 {	return new mglData(d->Hist(*w,n,v1,v2,nsub));	}
 /// Cumulative summation the data in given direction or directions
 void mgl_data_cumsum(HMDT d, const char *dir)
@@ -339,10 +346,10 @@ void mgl_data_cumsum(HMDT d, const char *dir)
 void mgl_data_crop(HMDT d, int n1, int n2, char dir)
 {	d->Crop(n1,n2,dir);	}
 /// Get array which is result of maximal values in given direction or directions
-HMDT mgl_data_max_dir(HMDT d, const char *dir)
+HMDT mgl_data_max_dir(const HMDT d, const char *dir)
 {	return new mglData(d->Max(dir));	}
 /// Get array which is result of minimal values in given direction or directions
-HMDT mgl_data_min_dir(HMDT d, const char *dir)
+HMDT mgl_data_min_dir(const HMDT d, const char *dir)
 {	return new mglData(d->Min(dir));	}
 //-----------------------------------------------------------------------------
 //		Data manipulation functions (Fortran)
@@ -390,6 +397,12 @@ float mgl_data_linear_(long *d, float *x,float *y,float *z)
 /// Interpolate by line the data to given point \a x,\a y,\a z which normalized in range [0, 1]
 float mgl_data_linear1_(long *d, float *x,float *y,float *z)
 {	return _DT_->Linear1(*x,*y,*z);	}
+long mgl_data_momentum_(long *d, char *dir, const char *how, int,int l)
+{
+	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
+	long r=(long)(new mglData(_DT_->Momentum(*dir, s)));
+	delete []s;	return r;
+}
 /// Create n-th points distribution of this data values in range [v1, v2]
 long mgl_data_hist_(long *d, int *n, float *v1, float *v2, int *nsub)
 {	return (long)(new mglData(_DT_->Hist(*n,*v1,*v2,*nsub)));	}
@@ -455,5 +468,13 @@ void mgl_data_sew_(long *d, const char *dirs, float *da, int l)
 	_DT_->Sew(s,*da);	delete []s;
 }
 //-----------------------------------------------------------------------------
+void mgl_data_put_val(HMDT dat, float val, int i, int j, int k)
+{	dat->Put(val, i,j,k);	}
+void mgl_data_put_dat(HMDT dat, const HMDT val, int i, int j, int k)
+{	dat->Put(*val, i,j,k);	}
+void mgl_data_put_val_(long *d, float *val, int *i, int *j, int *k)
+{	_DT_->Put(*val, *i,*j,*k);	}
+void mgl_data_put_dat_(long *d, long *val, int *i, int *j, int *k)
+{	_DT_->Put(_D_(val), *i,*j,*k);	}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

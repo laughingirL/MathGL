@@ -33,7 +33,7 @@ void mglGraph::Surf(const char *eqZ, const char *sch, int n)
 	float dx = (Max.x - Min.x)/(n-1.), dy = (Max.x - Min.x)/(n-1.);
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)
 	{
-		z.a[i+n*j] = eq->Calc(Min.x+i*dx, Min.y+i*dy);
+		z.a[i+n*j] = eq->Calc(Min.x+i*dx, Min.y+j*dy);
 	}
 	Surf(z, sch);
 }
@@ -851,11 +851,11 @@ void mgl_tile_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *
 void mgl_tile(HMGL gr, const HMDT a, const char *sch)
 {	if(gr && a)	gr->Tile(*a, sch);	}
 /// Draw variable-size tiles for 2d data specified parametrically
-void mgl_tile_rxy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const HMDT r, const char *sch)
+void mgl_tiles_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const HMDT r, const char *sch)
 {	if(gr && a && x && y && r)	gr->TileS(*x, *y, *a, *r, sch);	}
 /// Draw variable-size mesh lines for 2d data
-void mgl_tile_r(HMGL gr, const HMDT a, const HMDT r, const char *sch)
-{	if(gr && a && r)	gr->Tile(*a, *r, sch);	}
+void mgl_tiles(HMGL gr, const HMDT a, const HMDT r, const char *sch)
+{	if(gr && a && r)	gr->TileS(*a, *r, sch);	}
 //-----------------------------------------------------------------------------
 /// Draw surface specified parametrically with coloring by other matrix
 void mgl_surfc_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch)
@@ -991,7 +991,7 @@ void mgl_tile_(long *gr, long *a, const char *sch,int l)
 	delete []s;
 }
 /// Draw tiles for 2d data specified parametrically
-void mgl_tile_rxy_(long *gr, long *x, long *y, long *a, long *r, const char *sch,int l)
+void mgl_tiles_xy_(long *gr, long *x, long *y, long *a, long *r, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y && r)
@@ -999,10 +999,10 @@ void mgl_tile_rxy_(long *gr, long *x, long *y, long *a, long *r, const char *sch
 	delete []s;
 }
 /// Draw mesh lines for 2d data
-void mgl_tile_r_(long *gr, long *a, long *r, const char *sch,int l)
+void mgl_tiles_(long *gr, long *a, long *r, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	if(gr && a && r)	_GR_->Tile(_D_(a), _D_(r), s);
+	if(gr && a && r)	_GR_->TileS(_D_(a), _D_(r), s);
 	delete []s;
 }
 //-----------------------------------------------------------------------------

@@ -256,6 +256,18 @@ void mgl_write_png_solid_(long *gr, const char *fname,const char *descr,int l,in
 	_GR_->WritePNG(s,f,false);	delete []s;		delete []f;
 }
 //-----------------------------------------------------------------------------
+/// Write the frame in file using JPEG format
+void mgl_write_jpg(HMGL gr, const char *fname,const char *descr)
+{	gr->WriteJPEG(fname,descr);	}
+#include <string.h>
+/// Write the frame in file using JPEG format
+void mgl_write_jpg_(long *gr, const char *fname,const char *descr,int l,int n)
+{
+	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
+	_GR_->WriteJPEG(s,f);	delete []s;		delete []f;
+}
+//-----------------------------------------------------------------------------
 /// Write the frame in file using TIFF format
 void mgl_write_tif(HMGL gr, const char *fname,const char *descr)
 {	gr->WriteTIFF(fname,descr);	}
@@ -268,15 +280,15 @@ void mgl_write_tif_(long *gr, const char *fname,const char *descr,int l,int n)
 	_GR_->WriteTIFF(s,f);	delete []s;		delete []f;
 }
 //-----------------------------------------------------------------------------
-/// Write the frame in file using JPEG format
-void mgl_write_jpg(HMGL gr, const char *fname,const char *descr)
-{	gr->WriteJPEG(fname,descr);	}
+/// Write the frame in file using TIFF format
+void mgl_write_bmp(HMGL gr, const char *fname,const char *descr)
+{	gr->WriteBMP(fname,descr);	}
 #include <string.h>
-/// Write the frame in file using JPEG format
-void mgl_write_jpg_(long *gr, const char *fname,const char *descr,int l,int n)
+/// Write the frame in file using TIFF format
+void mgl_write_bmp_(long *gr, const char *fname,const char *descr,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-	_GR_->WriteJPEG(s,f);	delete []s;		delete []f;
+	_GR_->WriteBMP(s,f);	delete []s;		delete []f;
 }
 //-----------------------------------------------------------------------------

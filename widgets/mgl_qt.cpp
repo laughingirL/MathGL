@@ -586,10 +586,10 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 	Wnd->show();
 }
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_qt(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void (*reload)(int next), void *par)
+HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par)
 {
 	mglGraphQT *g = new mglGraphQT;
-	g->Window(argc,argv,draw,title,par,reload);
+	g->Window(0,0,draw,title,par);
 	return g;
 }
 //-----------------------------------------------------------------------------

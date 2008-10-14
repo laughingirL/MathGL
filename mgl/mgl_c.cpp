@@ -337,7 +337,10 @@ void mgl_data_set_value(HMDT d, float v, int i, int j, int k)
 void mgl_set_zoom(HMGL gr, float x1, float y1, float x2, float y2)
 {	gr->Zoom(x1,y1,x2,y2);	}
 void mgl_set_plotfactor(HMGL gr, float val)
-{	gr->PlotFactor = val;	}
+{
+	if(val>0)	{	gr->PlotFactor = val;	gr->AutoPlotFactor=false;	}
+	else	gr->AutoPlotFactor=true;
+}
 void mgl_set_axis_3d(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2)
 {	gr->Axis(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2));	}
 void mgl_set_axis_2d(HMGL gr, float x1, float y1, float x2, float y2)
@@ -349,4 +352,15 @@ void mgl_set_tick_origin(HMGL gr, float x0, float y0, float z0)
 //-----------------------------------------------------------------------------
 void mgl_title(HMGL gr, const char *text, const char *fnt)
 {	gr->Title(text, fnt);	}
+void mgl_titlew(HMGL gr, const wchar_t *text, const char *fnt)
+{	gr->Title(text, fnt);	}
+//-----------------------------------------------------------------------------
+void mgl_set_ternary(HMGL gr, int enable)
+{	gr->Ternary(enable);	}
+void mgl_sphere(HMGL gr, float x, float y, float z, float r, const char *stl)
+{	gr->Sphere(mglPoint(x,y,z),r,stl);	}
+void mgl_drop(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl, float shift, float ap)
+{	gr->Drop(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2),r,stl,shift,ap);	}
+void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl, int edge)
+{	gr->Cone(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2),r1,r2,stl,edge);	}
 //-----------------------------------------------------------------------------

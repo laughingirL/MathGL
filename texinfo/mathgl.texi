@@ -63,6 +63,10 @@ This manual is for MathGL (version @value{VERSION}).
 * Index::
 @end menu
 
+@rmacro sref {arg}
+@xref{\arg\}, for sample code and picture.
+@end rmacro
+
 @include overview.texi
 @include core.texi
 @include class.texi
@@ -70,9 +74,19 @@ This manual is for MathGL (version @value{VERSION}).
 @node Interfaces, Examples, Other classes, Top
 @chapter Interfaces
 
+MathGL library have interface for a set of languages. Most of them are based on C interface via SWIG tool. There are Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, Tcl. Also there is Fortran interface which have similar set of functions but slightly different type of arguments (integers instead of pointers). The C interface functions are described in @ref{C interface}.
+@c ++++++++++
+Some of languages listed above support classes (like Python). So for them the special wrapper was written. These classes and functions are described in @ref{Python interface}.
+@c ++++++++++
+Finally the special command language MGL was written for faster access to C++ plotting functions. Corresponding scripts can be executed separately (by UDAV, mgl2png, mgl2eps and so on) or from the C++ code (@pxref{mglParse class}). These commands are described in @ref{MGL interface}.
 
+@menu
+* C interface::
+* Python interface::
+* MGL interface::
+@end menu
 
-@c @include cint.texi
+@include cint.texi
 @c @include python.texi
 @c @include mgl.texi
 
