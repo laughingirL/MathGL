@@ -59,7 +59,7 @@ using mglGraph::Mark;
 	/// Get RGB bitmap of current state image.
 	virtual const unsigned char *GetBits();
 	/// Get RGBA bitmap of current state image.
-	const unsigned char *GetRGBA(){	Finish();	return G4;	};
+	const unsigned char *GetRGBA();
 	/// Get width of the image
 	int GetWidth()	{	return Width;	};
 	/// Get height of the image

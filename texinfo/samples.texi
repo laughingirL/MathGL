@@ -37,6 +37,7 @@ This chapter contain a lot of sample codes for all types of plots and for most i
 @c ------------------------------------------------------------------
 @node Plot sample, Area sample, , 1D plotting samples
 @subsection Plot sample
+@cindex Plot
 
 @float
 @image{png/plot, 7cm}
@@ -90,6 +91,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Area sample, Bars sample, Plot sample, 1D plotting samples
 @subsection Area sample
+@cindex Area
 
 @float
 @image{png/area, 7cm}
@@ -143,6 +145,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Bars sample, Barh sample, Area sample, 1D plotting samples
 @subsection Bars sample
+@cindex Bars
 
 @float
 @image{png/bars, 7cm}
@@ -188,6 +191,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Barh sample, Step sample, Bars sample, 1D plotting samples
 @subsection Barh sample
+@cindex Barh
 
 @float
 @image{png/barh, 7cm}
@@ -233,6 +237,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Step sample, Stem sample, Barh sample, 1D plotting samples
 @subsection Step sample
+@cindex Step
 
 @float
 @image{png/step, 7cm}
@@ -286,6 +291,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Stem sample, Region sample, Step sample, 1D plotting samples
 @subsection Stem sample
+@cindex Stem
 
 @float
 @image{png/stem, 7cm}
@@ -339,6 +345,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Region sample, Error sample, Stem sample, 1D plotting samples
 @subsection Region sample
+@cindex Region
 
 @float
 @image{png/region, 7cm}
@@ -400,6 +407,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Error sample, Mark sample, Region sample, 1D plotting samples
 @subsection Error sample
+@cindex Error
 
 @float
 @image{png/error, 7cm}
@@ -483,6 +491,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Mark sample, TextMark sample, Error sample, 1D plotting samples
 @subsection Mark sample
+@cindex Mark
 
 @float
 @image{png/mark, 7cm}
@@ -546,6 +555,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node TextMark sample, Tube sample, Mark sample, 1D plotting samples
 @subsection TextMark sample
+@cindex TextMark
 
 @float
 @image{png/textmark, 7cm}
@@ -609,6 +619,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Tube sample, Text sample, TextMark sample, 1D plotting samples
 @subsection Tube sample
+@cindex Tube
 
 @float
 @image{png/tube, 7cm}
@@ -674,6 +685,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Text sample, Torus sample, Tube sample, 1D plotting samples
 @subsection Text sample
+@cindex Text
 
 @float
 @image{png/text, 7cm}
@@ -731,6 +743,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Torus sample, Chart sample, Text sample, 1D plotting samples
 @subsection Torus sample
+@cindex Torus
 
 @float
 @image{png/torus, 7cm}
@@ -798,6 +811,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Chart sample, Pie chart sample, Torus sample, 1D plotting samples
 @subsection Chart sample
+@cindex Chart
 
 @float
 @image{png/chart, 7cm}
@@ -855,6 +869,8 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Pie chart sample, , Chart sample, 1D plotting samples
 @subsection Pie chart sample
+@cindex Chart
+@cindex Axis
 
 @float
 @image{png/pie_chart, 7cm}
@@ -936,6 +952,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Surf sample, Transparent surface sample, , 2D plotting samples
 @subsection Surf sample
+@cindex Surf
 
 @float
 @image{png/surf, 7cm}
@@ -993,6 +1010,8 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Transparent surface sample, Surface in fog sample, Surf sample, 2D plotting samples
 @subsection Transparent surface sample
+@cindex Surf
+@cindex Alpha
 
 @float
 @image{png/surf_alpha, 7cm}
@@ -1054,6 +1073,8 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Surface in fog sample, Sharp colors sample, Transparent surface sample, 2D plotting samples
 @subsection Surface in fog sample
+@cindex Surf
+@cindex Fog
 
 @float
 @image{png/surf_fog, 7cm}
@@ -1115,6 +1136,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Sharp colors sample, Mesh sample, Surface in fog sample, 2D plotting samples
 @subsection Sharp colors sample
+@cindex Surf
 
 @float
 @image{png/surf_sl, 7cm}
@@ -1172,6 +1194,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Mesh sample, Fall sample, Sharp colors sample, 2D plotting samples
 @subsection Mesh sample
+@cindex Mesh
 
 @float
 @image{png/mesh, 7cm}
@@ -1225,6 +1248,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Fall sample, Belt sample, Mesh sample, 2D plotting samples
 @subsection Fall sample
+@cindex Fall
 
 @float
 @image{png/fall, 7cm}
@@ -1278,6 +1302,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Belt sample, Tile sample, Fall sample, 2D plotting samples
 @subsection Belt sample
+@cindex Belt
 
 @float
 @image{png/belt, 7cm}
@@ -1335,6 +1360,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Tile sample, Boxs sample, Belt sample, 2D plotting samples
 @subsection Tile sample
+@cindex Tile
 
 @float
 @image{png/tile, 7cm}
@@ -1392,6 +1418,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Boxs sample, Dens sample, Tile sample, 2D plotting samples
 @subsection Boxs sample
+@cindex Boxs
 
 @float
 @image{png/boxs, 7cm}
@@ -1449,6 +1476,8 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Dens sample, Cont sample, Boxs sample, 2D plotting samples
 @subsection Dens sample
+@cindex Dens
+@cindex Colorbar
 
 @float
 @image{png/dens, 7cm}
@@ -1498,6 +1527,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Cont sample, ContF sample, Dens sample, 2D plotting samples
 @subsection Cont sample
+@cindex Cont
 
 @float
 @image{png/cont, 7cm}
@@ -1553,6 +1583,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node ContF sample, Axial sample, Cont sample, 2D plotting samples
 @subsection ContF sample
+@cindex ContF
 
 @float
 @image{png/contf, 7cm}
@@ -1608,6 +1639,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Axial sample, , ContF sample, 2D plotting samples
 @subsection Axial sample
+@cindex Axial
 
 @float
 @image{png/axial, 7cm}
@@ -1687,6 +1719,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Surf3 sample, CloudQ sample, , 3D plotting samples
 @subsection Surf3 sample
+@cindex Surf3
 
 @float
 @image{png/surf3, 7cm}
@@ -1748,6 +1781,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node CloudQ sample, CloudP sample, Surf3 sample, 3D plotting samples
 @subsection CloudQ sample
+@cindex CloudQ
 
 @float
 @image{png/cloudq, 7cm}
@@ -1805,6 +1839,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node CloudP sample, Dens3 sample, CloudQ sample, 3D plotting samples
 @subsection CloudP sample
+@cindex CloudP
 
 @float
 @image{png/cloudp, 7cm}
@@ -1857,6 +1892,8 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Dens3 sample, Cont3 sample, CloudP sample, 3D plotting samples
 @subsection Dens3 sample
+@cindex Dens3
+@cindex Axis
 
 @float
 @image{png/densa, 7cm}
@@ -1918,6 +1955,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Cont3 sample, ContF3 sample, Dens3 sample, 3D plotting samples
 @subsection Cont3 sample
+@cindex Cont3
 
 @float
 @image{png/conta, 7cm}
@@ -1971,6 +2009,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node ContF3 sample, Cont projection sample, Cont3 sample, 3D plotting samples
 @subsection ContF3 sample
+@cindex ContF3
 
 @float
 @image{png/contfa, 7cm}
@@ -2024,6 +2063,9 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Cont projection sample, Dens projection sample, ContF3 sample, 3D plotting samples
 @subsection Cont projection sample
+@cindex ContX
+@cindex ContY
+@cindex ContZ
 
 @float
 @image{png/cont_xyz, 7cm}
@@ -2094,6 +2136,9 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Dens projection sample, CutMinMax sample, Cont projection sample, 3D plotting samples
 @subsection Dens projection sample
+@cindex DensX
+@cindex DensY
+@cindex DensZ
 
 @float
 @image{png/dens_xyz, 7cm}
@@ -2164,6 +2209,9 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node CutMinMax sample, ``Isocaps'' sample, Dens projection sample, 3D plotting samples
 @subsection CutMinMax sample
+@cindex Surf3
+@cindex CutMin
+@cindex CutMax
 
 @float
 @image{png/cutminmax, 7cm}
@@ -2229,6 +2277,10 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node ``Isocaps'' sample, CutOff sample, CutMinMax sample, 3D plotting samples
 @subsection ``Isocaps'' sample
+@cindex Surf3
+@cindex ContF3
+@cindex CutMin
+@cindex CutMax
 
 @float
 @image{png/cutminmax2, 7cm}
@@ -2279,6 +2331,8 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node CutOff sample, , ``Isocaps'' sample, 3D plotting samples
 @subsection CutOff sample
+@cindex Surf3
+@cindex CutOff
 
 @float
 @image{png/surf3_cutoff, 7cm}
@@ -2369,6 +2423,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node SurfC sample, SurfA sample, , Dual plotting samples
 @subsection SurfC sample
+@cindex SurfC
 
 @float
 @image{png/surfc, 7cm}
@@ -2435,6 +2490,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node SurfA sample, TileS sample, SurfC sample, Dual plotting samples
 @subsection SurfA sample
+@cindex SurfA
 
 @float
 @image{png/surfa, 7cm}
@@ -2501,6 +2557,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node TileS sample, Map sample, SurfA sample, Dual plotting samples
 @subsection Tiles sample
+@cindex TileS
 
 @float
 @image{png/tiler, 7cm}
@@ -2559,6 +2616,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Map sample, Vect sample, TileS sample, Dual plotting samples
 @subsection Map sample
+@cindex Map
 
 @float
 @image{png/map, 7cm}
@@ -2616,6 +2674,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Vect sample, VectC sample, Map sample, Dual plotting samples
 @subsection Vect sample
+@cindex Vect
 
 @float
 @image{png/vect, 7cm}
@@ -2674,6 +2733,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node VectC sample, Flow sample, Vect sample, Dual plotting samples
 @subsection VectC sample
+@cindex VectC
 
 @float
 @image{png/vectc, 7cm}
@@ -2732,6 +2792,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Flow sample, Pipe sample, VectC sample, Dual plotting samples
 @subsection Flow sample
+@cindex Flow
 
 @float
 @image{png/flow, 7cm}
@@ -2789,6 +2850,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Pipe sample, Dew sample, Flow sample, Dual plotting samples
 @subsection Pipe sample
+@cindex Pipe
 
 @float
 @image{png/pipe, 7cm}
@@ -2854,6 +2916,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Dew sample, Surf3C sample, Pipe sample, Dual plotting samples
 @subsection Dew sample
+@cindex Dew
 
 @float
 @image{png/dew, 7cm}
@@ -2918,6 +2981,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Surf3C sample, Surf3A sample, Dew sample, Dual plotting samples
 @subsection Surf3C sample
+@cindex Surf3C
 
 @float
 @image{png/surf3c, 7cm}
@@ -2988,6 +3052,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Surf3A sample, Vect 3D sample, Surf3C sample, Dual plotting samples
 @subsection Surf3A sample
+@cindex Surf3A
 
 @float
 @image{png/surf3a, 7cm}
@@ -3057,6 +3122,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Vect 3D sample, VectC 3D sample, Surf3A sample, Dual plotting samples
 @subsection Vect 3D sample
+@cindex Vect
 
 @float
 @image{png/vect3, 7cm}
@@ -3129,6 +3195,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node VectC 3D sample, Flow 3D sample, Vect 3D sample, Dual plotting samples
 @subsection VectC 3D sample
+@cindex VectC
 
 @float
 @image{png/vectc3, 7cm}
@@ -3201,6 +3268,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Flow 3D sample, Pipe 3D sample, VectC 3D sample, Dual plotting samples
 @subsection Flow 3D sample
+@cindex Flow
 
 @float
 @image{png/flow3, 7cm}
@@ -3273,6 +3341,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Pipe 3D sample, Crust sample, Flow 3D sample, Dual plotting samples
 @subsection Pipe 3D sample
+@cindex Pipe
 
 @float
 @image{png/pipe3, 7cm}
@@ -3349,6 +3418,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Crust sample, Dots sample, Pipe 3D sample, Dual plotting samples
 @subsection Crust sample
+@cindex Crust
 
 @float
 @image{png/crust, 7cm}
@@ -3402,6 +3472,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Dots sample, , Crust sample, Dual plotting samples
 @subsection Dots sample
+@cindex Dots
 
 @float
 @image{png/dots, 7cm}
@@ -3476,6 +3547,8 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Legend sample, Adding mesh sample, , Additional features
 @subsection Legend sample
+@cindex Plot
+@cindex Legend
 
 @float
 @image{png/legend, 7cm}
@@ -3551,6 +3624,11 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Adding mesh sample, Curvelinear coorinates sample, Legend sample, Additional features
 @subsection Adding mesh sample
+@cindex SubPlot
+@cindex Surf
+@cindex Dens
+@cindex Cont
+@cindex Axial
 
 @float
 @image{png/samplea, 7cm}
@@ -3650,6 +3728,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Curvelinear coorinates sample, 2-axes sample, Adding mesh sample, Additional features
 @subsection Curvelinear coorinates sample
+@cindex Axis
 
 @float
 @image{png/sample3, 7cm}
@@ -3790,6 +3869,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node 2-axes sample, Surf & Cont sample, Curvelinear coorinates sample, Additional features
 @subsection 2-axes sample
+@cindex Axis
 
 @float
 @image{png/2_axis, 7cm}
@@ -3840,6 +3920,8 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Surf & Cont sample, Flow & Dens sample, 2-axes sample, Additional features
 @subsection Surf & Cont sample
+@cindex Surf
+@cindex Cont
 
 @float
 @image{png/surf_cont_y, 7cm}
@@ -3903,6 +3985,8 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Flow & Dens sample, Several light sample, Surf & Cont sample, Additional features
 @subsection Flow & Dens sample
+@cindex Flow
+@cindex Dens
 
 @float
 @image{png/flow_dens, 7cm}
@@ -3970,6 +4054,8 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Several light sample, Mirrored surface sample, Flow & Dens sample, Additional features
 @subsection Several light sample
+@cindex Surf
+@cindex Light
 
 @float
 @image{png/several_light, 7cm}
@@ -4042,6 +4128,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Mirrored surface sample, Cont with labels sample, Several light sample, Additional features
 @subsection Mirrored surface sample
+@cindex Surf
 
 @float
 @image{png/mirror, 7cm}
@@ -4132,6 +4219,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Cont with labels sample, Semi-log sample, Mirrored surface sample, Additional features
 @subsection Cont with labels sample
+@cindex Cont
 
 @float
 @image{png/contt, 7cm}
@@ -4180,6 +4268,9 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Semi-log sample, Log-log sample, Cont with labels sample, Additional features
 @subsection Semi-log sample
+@cindex Axis
+@cindex SetTicks
+@cindex Plot
 
 @float
 @image{png/semilog, 7cm}
@@ -4265,6 +4356,9 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Log-log sample, Fitting sample, Semi-log sample, Additional features
 @subsection Log-log sample
+@cindex Axis
+@cindex SetTicks
+@cindex Plot
 
 @float
 @image{png/loglog, 7cm}
@@ -4352,6 +4446,8 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Fitting sample, Ternary plot sample, Log-log sample, Additional features
 @subsection Fitting sample
+@cindex Fit
+@cindex PutsFit
 
 @float
 @image{png/fit, 7cm}
@@ -4411,6 +4507,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Ternary plot sample, Coloring by coordinates sample, Fitting sample, Additional features
 @subsection Ternary plot sample
+@cindex Ternary
 
 @float
 @image{png/ternary, 7cm}
@@ -4476,6 +4573,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Coloring by coordinates sample, Drops sample, Ternary plot sample, Additional features
 @subsection Coloring by coordinates sample
+@cindex Surf3
 
 @float
 @image{png/surf3_rgbd, 7cm}
@@ -4529,6 +4627,7 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Drops sample, Molecules drawing sample, Coloring by coordinates sample, Additional features
 @subsection Drops sample
+@cindex Drop
 
 @float
 @image{png/drops, 7cm}
@@ -4590,6 +4689,8 @@ TO BE DONE
 @c ------------------------------------------------------------------
 @node Molecules drawing sample, , Drops sample, Additional features
 @subsection Molecules drawing sample
+@cindex Drop
+@cindex Sphere
 
 @float
 @image{png/molecule, 7cm}

@@ -47,7 +47,11 @@ mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 mglGraphAB::~mglGraphAB()
 {	if(G)	{	delete []G;	delete []G4;	}	}
 //-----------------------------------------------------------------------------
-const unsigned char *mglGraphAB::GetBits()	{	Finish();	return G;	};
+const unsigned char *mglGraphAB::GetBits()
+{	if(!Finished)	Finish();	return G;	}
+//-----------------------------------------------------------------------------
+const unsigned char *mglGraphAB::GetRGBA()
+{	if(!Finished)	Finish();	return G4;	}
 //-----------------------------------------------------------------------------
 void mglGraphAB::DefColor(mglColor c, float alpha)
 {
@@ -519,7 +523,7 @@ void mglGraphAB::WriteEPS(const char *fname, const char *descr)
 	time_t now;
 	time(&now);
 	register long i,j,k;
-	Finish();
+	if(!Finished)	Finish();
 
 	FILE *fp = fopen(fname,"wt");
 	fprintf(fp,"%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",Width,Height);
@@ -619,7 +623,7 @@ unsigned char **mglGraphAB::GetRGBLines(long &w, long &h, unsigned char *&f, boo
 {
 	long d = alpha ? 4:3;
 	unsigned char **p;
-	Finish();
+	if(!Finished)	Finish();
 	p = (unsigned char **)malloc(Height * sizeof(unsigned char *));
 	for(long i=0;i<Height;i++)	p[i] = (alpha?G4:G)+d*Width*i;
 	w = Width;	h = Height;		f = 0;

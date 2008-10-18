@@ -40,6 +40,7 @@ const int off = 0;
 %feature("autodoc", 1);
 #end // SWIGOCTAVE
 
-%include mgl_base.i
+#include "mgl/mgl_c.h"
+/* %include mgl_base.i */
 %include mgl_data.i
 %include mgl_graph.i

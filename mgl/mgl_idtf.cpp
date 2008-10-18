@@ -26,14 +26,14 @@
 #define MAXFLOAT	1e30
 #endif
 
-const static bool dbg = true;
+const bool dbg = true;
 //-----------------------------------------------------------------------------
 /// Create mglGraph object in OpenGL mode.
 HMGL mgl_create_graph_idtf()
 {	return new mglGraphIDTF;	}
 /// Create mglGraph object in OpenGL mode.
-long mgl_create_graph_idtf_()
-{	return long(new mglGraphIDTF);	}
+uintptr_t mgl_create_graph_idtf_()
+{	return uintptr_t(new mglGraphIDTF);	}
 //-----------------------------------------------------------------------------
 // helper output routines
 //-----------------------------------------------------------------------------

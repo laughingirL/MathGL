@@ -325,7 +325,8 @@ int mglParse::PreExec(mglGraph *gr, long k, wchar_t **arg, mglArg *a)
 {
 	long n=0;
 	mglVar *v;
-	if(!wcsncmp(L"read",arg[0],4) || !wcscmp(L"new",arg[0]) || !wcscmp(L"copy",arg[0]) || !wcscmp(L"var",arg[0]) || !wcscmp(L"hist",arg[0]) || !wcscmp(L"max",arg[0]) || !wcscmp(L"min",arg[0]) || !wcscmp(L"sum",arg[0]) || !wcscmp(L"resize",arg[0]) || !wcscmp(L"subdata",arg[0]) || !wcscmp(L"fit",arg[0]) || !wcscmp(L"momentum",arg[0]) || !wcscmp(L"import",arg[0]) || !wcscmp(L"evaluate",arg[0]))
+	// TODO: optimize comparison !!!
+	if(!wcsncmp(L"read",arg[0],4) || !wcscmp(L"new",arg[0]) || !wcscmp(L"copy",arg[0]) || !wcscmp(L"var",arg[0]) || !wcscmp(L"hist",arg[0]) || !wcscmp(L"max",arg[0]) || !wcscmp(L"min",arg[0]) || !wcscmp(L"sum",arg[0]) || !wcscmp(L"resize",arg[0]) || !wcscmp(L"subdata",arg[0]) || !wcscmp(L"fit",arg[0]) || !wcscmp(L"momentum",arg[0]) || !wcscmp(L"import",arg[0]) || !wcscmp(L"evaluate",arg[0]) || !wcscmp(L"transform",arg[0]) || !wcscmp(L"transforma",arg[0]) || !wcscmp(L"stfad",arg[0]))
 	{
 		if(k<3 || check_for_name(arg[1]))	return 2;
 		v = AddVar(arg[1]);
@@ -867,7 +868,7 @@ int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos){	return p->Parse(gr
 void mgl_restore_once(HMPR p)	{	p->RestoreOnce();	}
 void mgl_parser_allow_setsize(HMPR p, int a)	{	p->AllowSetSize = a;	}
 //-----------------------------------------------------------------------------
-long mgl_create_parser_()	{	return long(new mglParse);	}
+uintptr_t mgl_create_parser_()	{	return uintptr_t(new mglParse);	}
 void mgl_delete_parser_(long* p)	{	delete _PR_;	}
 void mgl_add_param_(long* p, int *id, const char *str, int l)
 {
@@ -875,18 +876,18 @@ void mgl_add_param_(long* p, int *id, const char *str, int l)
 	_PR_->AddParam(*id, s);		delete []s;
 }
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-long mgl_add_var_(long* p, const char *name, int l)
+uintptr_t mgl_add_var_(long* p, const char *name, int l)
 {
 	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
 	mglVar *v=_PR_->AddVar(s);	delete []s;
-	return long(&(v->d));
+	return uintptr_t(&(v->d));
 }
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-long mgl_find_var_(long* p, const char *name, int l)
+uintptr_t mgl_find_var_(long* p, const char *name, int l)
 {
 	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
 	mglVar *v=_PR_->FindVar(s);	delete []s;
-	return long(&(v->d));
+	return uintptr_t(&(v->d));
 }
 int mgl_parse_(long* gr, long* p, const char *str, int *pos, int l)
 {

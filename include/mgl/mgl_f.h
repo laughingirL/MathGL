@@ -17,6 +17,7 @@
 #ifndef _MGL_F_H_
 #define _MGL_F_H_
 
+#include<stdint.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -26,23 +27,23 @@ extern "C" {
 #define _D_(d)	*((const mglData *)*(d))
 #define _DM_(d)	*((mglData *)*(d))
 /*****************************************************************************/
-long mgl_create_graph_gl_();
-long mgl_create_graph_idtf_();
+uintptr_t mgl_create_graph_gl_();
+uintptr_t mgl_create_graph_idtf_();
 /*long mgl_create_graph_glut_(int argc, char **argv, int _(*draw)_(mglGraph *gr, const void *p), const char *title, void _(*reload)_(int *next), const void *par);
 long mgl_create_graph_fltk_(int argc, char **argv, int _(*draw)_(mglGraph *gr, const void *p), const char *title, void _(*reload)_(int *next), const void *par);*/
-long mgl_create_graph_zb_(int *width, int *height);
-long mgl_create_graph_ps_(int *width, int *height);
+uintptr_t mgl_create_graph_zb_(int *width, int *height);
+uintptr_t mgl_create_graph_ps_(int *width, int *height);
 void mgl_delete_graph_(long *graph);
 
-long mgl_create_graph_glut_(int (*draw)(long *gr, void *p), const char *title, void *par, int);
-long mgl_create_graph_fltk_(int (*draw)(long *gr, void *p), const char *title, void *par, int);
-long mgl_create_graph_qt_(int (*draw)(long *gr, void *p), const char *title, void *par, int);
+uintptr_t mgl_create_graph_glut_(int (*draw)(long *gr, void *p), const char *title, void *par, int);
+uintptr_t mgl_create_graph_fltk_(int (*draw)(long *gr, void *p), const char *title, void *par, int);
+uintptr_t mgl_create_graph_qt_(int (*draw)(long *gr, void *p), const char *title, void *par, int);
 void mgl_fltk_run_();
 void mgl_qt_run_();
 /*****************************************************************************/
-long mgl_create_data_();
-long mgl_create_data_size_(int *nx, int *ny, int *nz);
-long mgl_create_data_file_(const char *fname, int len);
+uintptr_t mgl_create_data_();
+uintptr_t mgl_create_data_size_(int *nx, int *ny, int *nz);
+uintptr_t mgl_create_data_file_(const char *fname, int len);
 void mgl_delete_data_(long *dat);
 /*****************************************************************************/
 /*		Setup mglGraph														 */
@@ -395,8 +396,8 @@ void mgl_data_create_(long *dat, int *nx,int *ny,int *nz);
 void mgl_data_transpose_(long *dat, const char *dim,int);
 void mgl_data_norm_(long *dat, float *v1,float *v2,int *sym,int *dim);
 void mgl_data_norm_slice_(long *dat, float *v1,float *v2,char *dir,int *keep_en,int *sym,int l);
-long mgl_data_subdata_(long *dat, int *xx,int *yy,int *zz);
-long mgl_data_column_(long *dat, const char *eq,int l);
+uintptr_t mgl_data_subdata_(long *dat, int *xx,int *yy,int *zz);
+uintptr_t mgl_data_column_(long *dat, const char *eq,int l);
 void mgl_data_set_id_(long *dat, const char *id,int l);
 void mgl_data_fill_(long *dat, float *x1,float *x2,const char *dir,int);
 void mgl_data_put_val_(long *dat, float *val, int *i, int *j, int *k);
@@ -407,15 +408,15 @@ void mgl_data_squeeze_(long *dat, int *rx,int *ry,int *rz,int *smooth);
 float mgl_data_max_(long *dat);
 float mgl_data_min_(long *dat);
 const float *mgl_data_data_(long *dat);
-long mgl_data_combine_(long *dat1, long *dat2);
+uintptr_t mgl_data_combine_(long *dat1, long *dat2);
 void mgl_data_extend_(long *dat, int *n1, int *n2);
 /*****************************************************************************/
 /*		Data manipulation functions											 */
 /*****************************************************************************/
 void mgl_data_smooth_(long *dat, int *Type,float *delta,const char *dirs,int);
-long mgl_data_sum_(long *dat, const char *dir,int);
-long mgl_data_max_dir_(long *dat, const char *dir,int);
-long mgl_data_min_dir_(long *dat, const char *dir,int);
+uintptr_t mgl_data_sum_(long *dat, const char *dir,int);
+uintptr_t mgl_data_max_dir_(long *dat, const char *dir,int);
+uintptr_t mgl_data_min_dir_(long *dat, const char *dir,int);
 void mgl_data_cumsum_(long *dat, const char *dir,int);
 void mgl_data_integral_(long *dat, const char *dir,int);
 void mgl_data_diff_(long *dat, const char *dir,int);
@@ -426,14 +427,14 @@ float mgl_data_spline_(long *dat, float *x,float *y,float *z);
 float mgl_data_spline1_(long *dat, float *x,float *y,float *z);
 float mgl_data_linear_(long *dat, float *x,float *y,float *z);
 float mgl_data_linear1_(long *dat, float *x,float *y,float *z);
-long mgl_data_resize_(long *dat, int *mx,int *my,int *mz);
-long mgl_data_resize_box_(long *dat, int *mx,int *my,int *mz,float *x1,float *x2,float *y1,float *y2,float *z1,float *z2);
-long mgl_data_momentum_(long *dat, char *dir, const char *how, int,int);
-long mgl_data_hist_(long *dat, int *n, float *v1, float *v2, int *nsub);
-long mgl_data_hist_w_(long *dat, long *weight, int *n, float *v1, float *v2, int *nsub);
-long mgl_data_evaluate_i_(long *dat, long *idat, int *norm);
-long mgl_data_evaluate_ij_(long *dat, long *idat, long *jdat, int *norm);
-long mgl_data_evaluate_ijk_(long *dat, long *idat, long *jdat, long *kdat, int *norm);
+uintptr_t mgl_data_resize_(long *dat, int *mx,int *my,int *mz);
+uintptr_t mgl_data_resize_box_(long *dat, int *mx,int *my,int *mz,float *x1,float *x2,float *y1,float *y2,float *z1,float *z2);
+uintptr_t mgl_data_momentum_(long *dat, char *dir, const char *how, int,int);
+uintptr_t mgl_data_hist_(long *dat, int *n, float *v1, float *v2, int *nsub);
+uintptr_t mgl_data_hist_w_(long *dat, long *weight, int *n, float *v1, float *v2, int *nsub);
+uintptr_t mgl_data_evaluate_i_(long *dat, long *idat, int *norm);
+uintptr_t mgl_data_evaluate_ij_(long *dat, long *idat, long *jdat, int *norm);
+uintptr_t mgl_data_evaluate_ijk_(long *dat, long *idat, long *jdat, long *kdat, int *norm);
 void mgl_data_envelop_(long *dat, const char *dir, int);
 void mgl_data_sew_(long *dat, const char *dirs, float *da, int);
 void mgl_data_crop_(long *dat, int *n1, int *n2, const char *dir,int);
@@ -463,13 +464,13 @@ float mgl_fit_xyzs_(long* gr, long* fit, long* x, long* y, long* z, long* ss, co
 float mgl_fit_xyzas_(long* gr, long* fit, long* x, long* y, long* z, long* a, long* ss, const char *eq, const char *var, float *ini, int l, int n);
 void mgl_puts_fit_(long* gr, float *x, float *y, float *z, const char *prefix, const char *font, float *size, int l, int n);
 /*****************************************************************************/
-long mgl_create_parser_();
+uintptr_t mgl_create_parser_();
 void mgl_delete_parser_(long* p);
 void mgl_add_param_(long* p, int *id, const char *str, int l);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-long mgl_add_var_(long* p, const char *name, int l);
+uintptr_t mgl_add_var_(long* p, const char *name, int l);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-long mgl_find_var_(long* p, const char *name, int l);
+uintptr_t mgl_find_var_(long* p, const char *name, int l);
 int mgl_parse_(long* gr, long* p, const char *str, int *pos, int l);
 void mgl_restore_once_(long* p);
 void mgl_parser_allow_setsize_(long* p, int *a);

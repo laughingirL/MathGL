@@ -132,7 +132,7 @@ The size of arrows for @ref{1D plotting}, lines and curves (@pxref{Primitives dr
 @end deftypecv
 
 @deftypecv {General option} mglGraph @code{float} BaseLineWidth
-The variable define the base width for all lines. The value <=1 is ignored. For values > 1 the real line width is result of multiplication of specified line width and the value of @var{BaseLineWidth}. Increase of this variables is actual for large bitmap pictures. Default value is @code{1}.
+The variable define the base width for all lines. The value <1 is ignored. For values > 1 the real line width is result of multiplication of specified line width and the value of @var{BaseLineWidth}. Increase of this variables is actual for large bitmap pictures. Default value is @code{1}.
 @end deftypecv
 
 @c ==================================================================
@@ -324,7 +324,7 @@ Set warning code and corresponding message from function @var{who}. Normally you
 @subsection Other settings
 
 @deftypecv {General option} mglGraph @code{int} MeshNum
-Sets approximate number of lines in Mesh(), Fall(), Grid() and also the number of hachures in Vect, VectC(), Vect(), VectC(), Dew() and the number of cells in Cloud(). By default (=0) it draws all lines/hachures/cells.
+Sets approximate number of lines in Mesh(), Fall(), Grid() and also the number of hachures in Vect(), VectC(), Dew() and the number of cells in Cloud*(). By default (=0) it draws all lines/hachures/cells.
 @end deftypecv
 
 @deftypecv {General option} mglGraph @code{char} AxialDir
@@ -1115,7 +1115,7 @@ These functions perform plotting of 2D data. 2D means that data depend from 2 in
 @cindex Mesh
 
 @deftypemethod mglGraph @code{void} Mesh (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
-The function draws mesh lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Mesh lines are plotted for each z slice of the data. See also @ref{Surf}, @ref{Fall}, NeshNum (@pxref{Other settings}), @ref{Cont}, @ref{Color scheme}. @sref{Mesh sample}
+The function draws mesh lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Mesh lines are plotted for each z slice of the data. See also @ref{Surf}, @ref{Fall}, NeshNum (@pxref{Other settings}), @ref{Cont}. @sref{Mesh sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Mesh (@code{const mglData &}z, @code{const char *}sch=@code{NULL})
@@ -1128,7 +1128,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Fall
 
 @deftypemethod mglGraph @code{void} Fall (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
-The function draws fall lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If @var{sch} contain @samp{x} then lines are drawn along x-direction else (by default) lines are drawn along y-direction. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Fall lines are plotted for each z slice of the data. See also @ref{Belt}, @ref{Mesh}, NeshNum (@pxref{Other settings}), @ref{Color scheme}. @sref{Fall sample}
+The function draws fall lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If @var{sch} contain @samp{x} then lines are drawn along x-direction else (by default) lines are drawn along y-direction. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Fall lines are plotted for each z slice of the data. See also @ref{Belt}, @ref{Mesh}, NeshNum (@pxref{Other settings}). @sref{Fall sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Fall (@code{const mglData &}z, @code{const char *}sch=@code{NULL})
@@ -1141,7 +1141,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Belt
 
 @deftypemethod mglGraph @code{void} Belt (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
-The function draws belts for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. This plot can be used as 3d generalization of Plot (@pxref{Plot}). String @var{sch} sets the color scheme. Previous color scheme is used by default. If @var{sch} contain @samp{x} then belts are drawn along x-direction else (by default) belts are drawn along y-direction. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Belts are plotted for each z slice of the data. See also @ref{Fall}, @ref{Surf}, @ref{Plot}, NeshNum (@pxref{Other settings}), @ref{Color scheme}. @sref{Belt sample}
+The function draws belts for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. This plot can be used as 3d generalization of Plot (@pxref{Plot}). String @var{sch} sets the color scheme. Previous color scheme is used by default. If @var{sch} contain @samp{x} then belts are drawn along x-direction else (by default) belts are drawn along y-direction. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Belts are plotted for each z slice of the data. See also @ref{Fall}, @ref{Surf}, @ref{Plot}, NeshNum (@pxref{Other settings}). @sref{Belt sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Belt (@code{const mglData &}z, @code{const char *}sch=@code{NULL})
@@ -1154,7 +1154,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Surf
 
 @deftypemethod mglGraph @code{void} Surf (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
-The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Mesh}, @ref{Dens}, @ref{Belt}, @ref{Tile}, @ref{Boxs}, @ref{SurfC}, @ref{SurfA}, @ref{Color scheme}. @sref{Surf sample}
+The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Mesh}, @ref{Dens}, @ref{Belt}, @ref{Tile}, @ref{Boxs}, @ref{SurfC}, @ref{SurfA}. @sref{Surf sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Surf (@code{const mglData &}z, @code{const char *}sch=@code{NULL})
@@ -1167,7 +1167,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Boxs
 
 @deftypemethod mglGraph @code{void} Boxs (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
-The function draws vertical boxes for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Surf}, @ref{Tile}, @ref{Step}, @ref{Color scheme}. @sref{Boxs sample}
+The function draws vertical boxes for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Surf}, @ref{Tile}, @ref{Step}. @sref{Boxs sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Boxs (@code{const mglData &}z, @code{const char *}sch=@code{NULL})
@@ -1180,7 +1180,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Tile
 
 @deftypemethod mglGraph @code{void} Tile (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
-The function draws horizontal tiles for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Such plot can be used as 3d generalization of Step (@pxref{Step}). String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Surf}, @ref{Boxs}, @ref{Step}, @ref{TileS}, @ref{Color scheme}. @sref{Tile sample}
+The function draws horizontal tiles for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Such plot can be used as 3d generalization of Step (@pxref{Step}). String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Surf}, @ref{Boxs}, @ref{Step}, @ref{TileS}. @sref{Tile sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Tile (@code{const mglData &}z, @code{const char *}sch=@code{NULL})
@@ -1193,7 +1193,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Dens
 
 @deftypemethod mglGraph @code{void} Dens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws density plot for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Surf}, @ref{Cont}, @ref{ContF}, @ref{DensXYZ}, @ref{Color scheme}. @sref{Dens sample}
+The function draws density plot for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Surf}, @ref{Cont}, @ref{ContF}, @ref{DensXYZ}. @sref{Dens sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Dens (@code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1206,7 +1206,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Cont
 
 @deftypemethod mglGraph @code{void} Cont (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal} (or for @var{z=v}[k] if @code{zVal==NAN}). Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Dens}, @ref{ContF}, @ref{Axial}, @ref{ContXYZ}, @ref{Color scheme}. @sref{Cont sample}
+The function draws contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal} (or for @var{z=v}[k] if @code{zVal==NAN}). Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Dens}, @ref{ContF}, @ref{Axial}, @ref{ContXYZ}. @sref{Cont sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Cont (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1227,7 +1227,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex ContF
 
 @deftypemethod mglGraph @code{void} ContF (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws solid (or filled) contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal} (or for @var{z=v}[k] if @code{zVal==NAN}). Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Dens}, @ref{Cont}, @ref{Axial}, @ref{ContFXYZ}, @ref{Color scheme}. @sref{ContF sample}
+The function draws solid (or filled) contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal} (or for @var{z=v}[k] if @code{zVal==NAN}). Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Dens}, @ref{Cont}, @ref{Axial}, @ref{ContFXYZ}. @sref{ContF sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} ContF (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1248,7 +1248,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Axial
 
 @deftypemethod mglGraph @code{void} Axial (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
-The function draws surface which is result of contour plot rotation for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then wire plot is produced. If string contain symbols @samp{x}, @samp{y} or @samp{z} then rotation axis @var{AxialDir} (@pxref{Other settings}) will be set to specified direction. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Cont}, @ref{ContF}, @ref{Torus}, @ref{Surf3}, @ref{Color scheme}. @sref{Axial sample}
+The function draws surface which is result of contour plot rotation for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then wire plot is produced. If string contain symbols @samp{x}, @samp{y} or @samp{z} then rotation axis @var{AxialDir} (@pxref{Other settings}) will be set to specified direction. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Cont}, @ref{ContF}, @ref{Torus}, @ref{Surf3}. @sref{Axial sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Axial (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
@@ -1269,7 +1269,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Grid
 
 @deftypemethod mglGraph @code{void} Grid (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws grid lines for density plot of surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal}. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Grid is plotted for each z slice of the data. See also @ref{Dens}, @ref{Cont}, @ref{ContF}, @ref{Color scheme}.
+The function draws grid lines for density plot of surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal}. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Grid is plotted for each z slice of the data. See also @ref{Dens}, @ref{Cont}, @ref{ContF}.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Grid (@code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1299,7 +1299,7 @@ These functions perform plotting of 3D data. 3D means that data depend from 3 in
 @cindex Surf3
 
 @deftypemethod mglGraph @code{void} Surf3 (@code{float} val, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}stl=@code{NULL})
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{Cloud}, @ref{Dens3}, @ref{Surf3C}, @ref{Surf3A}, @ref{Axial}, @ref{Color scheme}. @sref{Surf3 sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{Cloud}, @ref{Dens3}, @ref{Surf3C}, @ref{Surf3A}, @ref{Axial}. @sref{Surf3 sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Surf3 (@code{float} val, @code{const mglData &}a, @code{const char *}sch=@code{NULL})
@@ -1321,7 +1321,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 @cindex DensA
 
 @deftypemethod mglGraph @code{void} Dens3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{char} dir, @code{int} sVal=@code{-1}, @code{const char *}stl=@code{NULL})
-The function draws density plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Density is plotted at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{stl} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Cont3}, @ref{ContF3}, @ref{Dens}, @ref{Grid3}, @ref{Color scheme}. @sref{Dens3 sample}
+The function draws density plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Density is plotted at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{stl} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Cont3}, @ref{ContF3}, @ref{Dens}, @ref{Grid3}. @sref{Dens3 sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Dens3 (@code{const mglData &}a, @code{char} dir, @code{int} sVal=@code{-1}, @code{const char *}sch=@code{NULL})
@@ -1343,7 +1343,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 @cindex ContA
 
 @deftypemethod mglGraph @code{void} Cont3 (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{char} dir, @code{int} sVal=@code{-1}, @code{const char *}stl=@code{NULL})
-The function draws contour plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Contours are plotted for values specified in array @var{v} at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{stl} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Dens3}, @ref{ContF3}, @ref{Cont}, @ref{Grid3}, @ref{Color scheme}. @sref{Cont3 sample}
+The function draws contour plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Contours are plotted for values specified in array @var{v} at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{stl} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Dens3}, @ref{ContF3}, @ref{Cont}, @ref{Grid3}. @sref{Cont3 sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Cont3 (@code{const mglData &}v, @code{const mglData &}a, @code{char} dir, @code{int} sVal=@code{-1}, @code{const char *}sch=@code{NULL})
@@ -1373,7 +1373,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 @cindex ContFA
 
 @deftypemethod mglGraph @code{void} ContF3 (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{char} dir, @code{int} sVal=@code{-1}, @code{const char *}stl=@code{NULL})
-The function draws solid (or filled) contour plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Contours are plotted for values specified in array @var{v} at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{stl} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Dens3}, @ref{Cont3}, @ref{ContF}, @ref{Grid3}, @ref{Color scheme}. @sref{ContF3 sample}
+The function draws solid (or filled) contour plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Contours are plotted for values specified in array @var{v} at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{stl} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Dens3}, @ref{Cont3}, @ref{ContF}, @ref{Grid3}. @sref{ContF3 sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} ContF3 (@code{const mglData &}v, @code{const mglData &}a, @code{char} dir, @code{int} sVal=@code{-1}, @code{const char *}sch=@code{NULL})
@@ -1403,7 +1403,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 @cindex GridA
 
 @deftypemethod mglGraph @code{void} Grid3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{char} dir, @code{int} sVal=@code{-1}, @code{const char *}stl=@code{NULL})
-The function draws grid for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Density is plotted at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{stl} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Cont3}, @ref{ContF3}, @ref{Dens3}, @ref{Grid}, @ref{Color scheme}.
+The function draws grid for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Density is plotted at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{stl} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Cont3}, @ref{ContF3}, @ref{Dens3}, @ref{Grid}.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Grid3 (@code{const mglData &}a, @code{char} dir, @code{int} sVal=@code{-1}, @code{const char *}sch=@code{NULL})
@@ -1425,7 +1425,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 @cindex CloudQ
 
 @deftypemethod mglGraph @code{void} CloudQ (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}stl=@code{NULL}, @code{float} alpha=@code{1})
-The function draws cloud plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). This plot is a set of cubes with color and transparency proportional to value of @var{a}. The resulting plot is like cloud -- low value is transparent but higher ones are not. The number of plotting cells depend on MeshNum (@pxref{Other settings}). String @var{sch} sets the color scheme. Previous color scheme is used by default. Parameter @var{alpha} changes the overall transparency of plot. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Surf3}, @ref{Color scheme}. @sref{CloudQ sample}
+The function draws cloud plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). This plot is a set of cubes with color and transparency proportional to value of @var{a}. The resulting plot is like cloud -- low value is transparent but higher ones are not. The number of plotting cells depend on MeshNum (@pxref{Other settings}). String @var{sch} sets the color scheme. Previous color scheme is used by default. Parameter @var{alpha} changes the overall transparency of plot. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Surf3}. @sref{CloudQ sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} CloudQ (@code{const mglData &}a, @code{const char *}stl=@code{NULL}, @code{float} alpha=@code{1})
@@ -1478,7 +1478,7 @@ These plotting functions draw @emph{two matrix} simultaneously. There are 5 gene
 @cindex SurfC
 
 @deftypemethod mglGraph @code{void} SurfC (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{NULL})
-The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and color it by matrix @var{c}[i,j]. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. All dimensions of arrays @var{z} and @var{c} must be equal. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Surf}, @ref{SurfA}, @ref{Surf3C}, @ref{Color scheme}. @sref{SurfC sample}
+The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and color it by matrix @var{c}[i,j]. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. All dimensions of arrays @var{z} and @var{c} must be equal. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Surf}, @ref{SurfA}, @ref{Surf3C}. @sref{SurfC sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} SurfC (@code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{NULL})
@@ -1492,7 +1492,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Surf3C
 
 @deftypemethod mglGraph @code{void} Surf3C (@code{float} val, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}stl=@code{NULL})
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as Surf3() function but the color of isosurface depends on values of array @var{c}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{Surf3}, @ref{SurfC}, @ref{Surf3A}, @ref{Color scheme}. @sref{Surf3C sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as Surf3() function but the color of isosurface depends on values of array @var{c}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{Surf3}, @ref{SurfC}, @ref{Surf3A}. @sref{Surf3C sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Surf3C (@code{float} val, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{NULL})
@@ -1514,7 +1514,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 @cindex SurfA
 
 @deftypemethod mglGraph @code{void} SurfA (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{NULL})
-The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and transparent it by matrix @var{c}[i,j]. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. All dimensions of arrays @var{z} and @var{c} must be equal. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Surf}, @ref{SurfC}, @ref{Surf3A}, @ref{TileS}, @ref{Color scheme}. @sref{SurfA sample}
+The function draws surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} and transparent it by matrix @var{c}[i,j]. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. All dimensions of arrays @var{z} and @var{c} must be equal. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Surf}, @ref{SurfC}, @ref{Surf3A}, @ref{TileS}. @sref{SurfA sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} SurfA (@code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{NULL})
@@ -1528,7 +1528,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Surf3A
 
 @deftypemethod mglGraph @code{void} Surf3A (@code{float} val, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}stl=@code{NULL})
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as Surf3() function but the transparency of isosurface depends on values of  @var{b} array. This allows one to remove the part of isosurface where @var{b} is negligibly small (useful for phase plotting of a beam or a pulse). String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{Surf3}, @ref{SurfA}, @ref{Surf3C}, @ref{Color scheme}. @sref{Surf3A sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as Surf3() function but the transparency of isosurface depends on values of  @var{b} array. This allows one to remove the part of isosurface where @var{b} is negligibly small (useful for phase plotting of a beam or a pulse). String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{Surf3}, @ref{SurfA}, @ref{Surf3C}. @sref{Surf3A sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Surf3A (@code{float} val, @code{const mglData &}a, @code{const mglData &}c, @code{const char *}sch=@code{NULL})
@@ -1549,7 +1549,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 @cindex TileS
 
 @deftypemethod mglGraph @code{void} TileS (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}r, @code{const char *}sch=@code{NULL})
-The function draws horizontal tiles for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. It is mostly the same as Tile() but the size of tiles is determined by @var{r} array. This is some kind of ``transparency'' useful for exporting to EPS files. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{SurfA}, @ref{Tile}, @ref{Color scheme}. @sref{TileS sample}
+The function draws horizontal tiles for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. It is mostly the same as Tile() but the size of tiles is determined by @var{r} array. This is some kind of ``transparency'' useful for exporting to EPS files. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{SurfA}, @ref{Tile}. @sref{TileS sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} TileS (@code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{NULL})
@@ -1603,7 +1603,7 @@ These functions perform plotting of 2D and 3D vector fields. There are 5 general
 @cindex Vect
 
 @deftypemethod mglGraph @code{void} Vect (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The length of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{VectC}, @ref{Flow}, @ref{Dew}, @ref{Color scheme}. @sref{Vect sample}
+The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The length of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{VectC}, @ref{Flow}, @ref{Dew}. @sref{Vect sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Vect (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1624,7 +1624,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex VectC
 
 @deftypemethod mglGraph @code{void} VectC (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The color of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Vect}, @ref{Flow}, @ref{Dew}, @ref{Color scheme}.  @sref{VectC sample}
+The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The color of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Vect}, @ref{Flow}, @ref{Dew}.  @sref{VectC sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} VectC (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1645,7 +1645,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Dew
 
 @deftypemethod mglGraph @code{void} Dew (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws dew-drops for plane vector field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. Note that this is very expensive plot in memory usage and creation time! The color of drops is proportional to @math{\sqrt@{ax^2+ay^2@}}. The numer of drops depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Vect}, @ref{VectC}, @ref{Color scheme}. @sref{Dew sample}
+The function draws dew-drops for plane vector field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. Note that this is very expensive plot in memory usage and creation time! The color of drops is proportional to @math{\sqrt@{ax^2+ay^2@}}. The numer of drops depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Vect}, @ref{VectC}. @sref{Dew sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Dew (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1659,7 +1659,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Flow
 
 @deftypemethod mglGraph @code{void} Flow (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{int} num=@code{5}, @code{bool} central=@code{true}, @code{float} zVal=@code{NAN})
-The function draws flow threads for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level z = @var{zVal}. Number of threads is proportional to @var{num}. Parameter @var{central} sets the thread start from center (if true) or only from edges (if false). The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). String @var{sch} sets the color scheme. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Pipe}, @ref{VectC}, @ref{Vect}, @ref{Color scheme}. @sref{Flow sample}
+The function draws flow threads for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level z = @var{zVal}. Number of threads is proportional to @var{num}. Parameter @var{central} sets the thread start from center (if true) or only from edges (if false). The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). String @var{sch} sets the color scheme. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Pipe}, @ref{VectC}, @ref{Vect}. @sref{Flow sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Flow (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{int} num=@code{5}, @code{bool} central=@code{true}, @code{float} zVal=@code{NAN})
@@ -1681,7 +1681,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Pipe
 
 @deftypemethod mglGraph @code{void} Pipe (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} r0=@code{0.05}, @code{int} num=@code{5}, @code{bool} central=@code{true}, @code{float} zVal=@code{NAN})
-The function draws flow pipes for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level z = @var{zVal}. Number of pipes is proportional to @var{num}. Parameter @var{central} sets the pipe start from center (if true) or only from edges (if false). The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). String @var{sch} sets the color scheme. Previous color scheme is used by default. Parameter @var{r0} set the base pipe radius. If @var{r0}<0 then pipe radius is inverse proportional to amplitude. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Pipe}, @ref{VectC}, @ref{Vect}, @ref{Color scheme}. @sref{Pipe sample}
+The function draws flow pipes for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level z = @var{zVal}. Number of pipes is proportional to @var{num}. Parameter @var{central} sets the pipe start from center (if true) or only from edges (if false). The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). String @var{sch} sets the color scheme. Previous color scheme is used by default. Parameter @var{r0} set the base pipe radius. If @var{r0}<0 then pipe radius is inverse proportional to amplitude. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Pipe}, @ref{VectC}, @ref{Vect}. @sref{Pipe sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Pipe (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} r0=@code{0.05}, @code{int} num=@code{5}, @code{bool} central=@code{true}, @code{float} zVal=@code{NAN})
@@ -1727,7 +1727,7 @@ gr->DensX(c.Sum("x"),"BbcyrR",-1);
 gr->DensY(c.Sum("y"),0,1);
 gr->DensZ(c.Sum("z"),0,-1);
 @end example
-will produce the following picture. See also @ref{ContXYZ}, @ref{ContFXYZ}, @ref{Dens}, @ref{Color scheme}. @sref{Dens projection sample}
+will produce the following picture. See also @ref{ContXYZ}, @ref{ContFXYZ}, @ref{Dens}. @sref{Dens projection sample}
 
 @deftypemethod mglGraph @code{void} DensX (@code{const mglData &}a, @code{const char *}stl=@code{NULL}, @code{float} sVal=@code{NAN})
 Draws density plot for data @var{a} at x = @var{sVal}.
@@ -1754,7 +1754,7 @@ gr->ContX(c.Sum("x"),"BbcyrR",-1);
 gr->ContY(c.Sum("y"),0,1);
 gr->ContZ(c.Sum("z"),0,-1);
 @end example
-will produce the following picture. See also @ref{ContFXYZ}, @ref{DensXYZ}, @ref{Cont}, @ref{Color scheme}. @sref{Cont projection sample}
+will produce the following picture. See also @ref{ContFXYZ}, @ref{DensXYZ}, @ref{Cont}. @sref{Cont projection sample}
 
 @deftypemethod mglGraph @code{void} ContX (@code{const mglData &}a, @code{const char *}stl=@code{NULL}, @code{float} sVal=@code{NAN}, @code{int} num=@code{7})
 Draws @var{num}-th contour lines for data @var{a} at x = @var{sVal}.
@@ -1787,7 +1787,7 @@ Draws contour lines for data @var{a}=@var{v}[i] at z = @var{sVal}.
 @cindex ContFY
 @cindex ContFZ
 
-These plotting functions draw density plot in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. See also @ref{ContXYZ}, @ref{DensXYZ}, @ref{ContF}, @ref{Color scheme}.
+These plotting functions draw density plot in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. See also @ref{ContXYZ}, @ref{DensXYZ}, @ref{ContF}.
 
 @deftypemethod mglGraph @code{void} ContFX (@code{const mglData &}a, @code{const char *}stl=@code{NULL}, @code{float} sVal=@code{NAN}, @code{int} num=@code{7})
 Draws @var{num}-th solid contours for data @var{a} at x = @var{sVal}.
@@ -1819,7 +1819,7 @@ Draws solid contours for data @var{a}=@var{v}[i] at z = @var{sVal}.
 @cindex Dots
 
 @deftypemethod mglGraph @code{void} Dots (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
-The function draws the arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also @ref{Crust}, @ref{Mark}, @ref{Plot}, @ref{Color scheme}. @sref{Dots sample}
+The function draws the arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also @ref{Crust}, @ref{Mark}, @ref{Plot}. @sref{Dots sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Dots (@code{const mglData &}tr, @code{const char *}sch=@code{NULL})
@@ -1832,7 +1832,7 @@ The same as previous with @var{x=tr}(0,:), @var{y=tr}(1,:), @var{z=tr}(2,:).
 @cindex Crust
 
 @deftypemethod mglGraph @code{void} Crust (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} er=@code{0})
-The function reconstruct and draws the surface for arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Parameter @var{er} set relative radius for (increase it for removing holes). String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also @ref{Dots}, @ref{TriPlot}, @ref{Color scheme}. @sref{Crust sample}
+The function reconstruct and draws the surface for arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Parameter @var{er} set relative radius for (increase it for removing holes). String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also @ref{Dots}, @ref{TriPlot}. @sref{Crust sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Crust (@code{const mglData &}tr, @code{const char *}sch=@code{NULL}, @code{float} er=@code{0})
@@ -1845,7 +1845,7 @@ The same as previous with @var{x=tr}(0,:), @var{y=tr}(1,:), @var{z=tr}(2,:).
 @cindex TriPlot
 
 @deftypemethod mglGraph @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
-The function draws the surface of triangles. Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also @ref{Dots}, @ref{Crust}, @ref{Color scheme}.
+The function draws the surface of triangles. Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also @ref{Dots}, @ref{Crust}.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1888,6 +1888,12 @@ Plots the array @var{a} depending on it's dimensions and @var{type} parameter. S
 @c ##################################################################
 @node Nonlinear fitting, Frames, Other plotting, MathGL core
 @section Nonlinear fitting
+@cindex Fit
+@cindex FitS
+@cindex PutsFit
+@cindex FitPnts
+@cindex Fit2
+@cindex Fit3
 
 These functions fit data to formula. Fitting goal is to find formula parameters for the best fit the data points, i.e. to minimize the sum @math{\sum_i (f(x_i, y_i, z_i) - a_i)^2/s_i^2}. At this, approximation function @samp{f} can depend only on one argument @samp{x} (1D case), on two arguments @samp{x,y} (2D case) and on three arguments @samp{x,y,z} (3D case). The function @samp{f} also may depend on parameters. Normally the list of fitted parameters is specified by @var{var} string (like, @samp{abcd}). Usually user should supply initial values for fitted parameters by @var{ini} variable. But if he/she don't supply it then the zeros are used. Parameter @var{print}=@code{true} switch on printing the found coefficients to @var{Message} (@pxref{Error handling}).
 
@@ -1943,7 +1949,7 @@ Fit data along x-, and y-directions for 2d array @var{a} with @var{s}=1 and @var
 Fit data along x-, y- and z-directions for 3d array @var{a} with @var{s}=1 and @var{x}, @var{y}, @var{z} equidistantly distributed in interval [@var{Min}, @var{Max}].
 @end deftypemethod
 
-@deftypemethod mglGraph @code{float} PutsFit (@code{mglPoint} p, @code{const char *}prefix=@code{NULL}, @code{const char *}font=@code{NULL}, @code{float} size=@code{-1})
+@deftypemethod mglGraph @code{void} PutsFit (@code{mglPoint} p, @code{const char *}prefix=@code{NULL}, @code{const char *}font=@code{NULL}, @code{float} size=@code{-1})
 Print last fitted formula with found coefficients (as numbers) at position @var{p0}. The string @var{prefix} will be printed before formula. All other parameters are the same as in @ref{Text printing}.
 @end deftypemethod
 

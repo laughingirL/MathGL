@@ -28,8 +28,8 @@
 HMGL mgl_create_graph_zb(int width, int height)
 {    return new mglGraphZB(width,height);	}
 /// Create mglGraph object in ZBuffer mode.
-long mgl_create_graph_zb_(int *width, int *height)
-{    return long(new mglGraphZB(*width,*height));	}
+uintptr_t mgl_create_graph_zb_(int *width, int *height)
+{    return uintptr_t(new mglGraphZB(*width,*height));	}
 //-----------------------------------------------------------------------------
 mglGraphZB::mglGraphZB(int w,int h) : mglGraphAB(w,h)
 {

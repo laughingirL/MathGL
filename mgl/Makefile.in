@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -35,10 +36,12 @@ host_triplet = @host@
 @USE_JPEG_TRUE@am__append_1 = mgl-jpeg.la
 @USE_HDF5_TRUE@am__append_2 = mgl-hdf5.la
 @USE_TIFF_TRUE@am__append_3 = mgl-tiff.la
-@USE_QT_TRUE@am__append_4 = -DWITH_QT
-@USE_WX_TRUE@am__append_5 = -DWITH_WX
-@USE_FLTK_TRUE@am__append_6 = -DWITH_FLTK
-@USE_GLUT_TRUE@am__append_7 = -DWITH_GLUT
+@USE_TESTIO_TRUE@bin_PROGRAMS = test-io$(EXEEXT)
+@USE_TESTIO_TRUE@am__append_4 = test-mod.la
+@USE_QT_TRUE@am__append_5 = -DWITH_QT
+@USE_WX_TRUE@am__append_6 = -DWITH_WX
+@USE_FLTK_TRUE@am__append_7 = -DWITH_FLTK
+@USE_GLUT_TRUE@am__append_8 = -DWITH_GLUT
 subdir = mgl
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -54,7 +57,8 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(mgllibdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(mgllibdir)" \
+	"$(DESTDIR)$(bindir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 mgllibLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES) $(mgllib_LTLIBRARIES)
@@ -103,6 +107,21 @@ mgl_tiff_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(mgl_tiff_la_CXXFLAGS) \
 	$(CXXFLAGS) $(mgl_tiff_la_LDFLAGS) $(LDFLAGS) -o $@
 @USE_TIFF_TRUE@am_mgl_tiff_la_rpath = -rpath $(mgllibdir)
+test_mod_la_LIBADD =
+am__test_mod_la_SOURCES_DIST = test_mod.cpp
+@USE_TESTIO_TRUE@am_test_mod_la_OBJECTS = test_mod.lo
+test_mod_la_OBJECTS = $(am_test_mod_la_OBJECTS)
+test_mod_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(test_mod_la_LDFLAGS) $(LDFLAGS) -o $@
+@USE_TESTIO_TRUE@am_test_mod_la_rpath = -rpath $(mgllibdir)
+binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
+PROGRAMS = $(bin_PROGRAMS)
+am__test_io_SOURCES_DIST = test_io.cpp mgl_io.cpp
+@USE_TESTIO_TRUE@am_test_io_OBJECTS = test_io.$(OBJEXT) \
+@USE_TESTIO_TRUE@	mgl_io.$(OBJEXT)
+test_io_OBJECTS = $(am_test_io_OBJECTS)
+test_io_DEPENDENCIES =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -116,10 +135,12 @@ CXXLINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(libmgl_la_SOURCES) $(mgl_hdf5_la_SOURCES) \
-	$(mgl_jpeg_la_SOURCES) $(mgl_tiff_la_SOURCES)
+	$(mgl_jpeg_la_SOURCES) $(mgl_tiff_la_SOURCES) \
+	$(test_mod_la_SOURCES) $(test_io_SOURCES)
 DIST_SOURCES = $(libmgl_la_SOURCES) $(am__mgl_hdf5_la_SOURCES_DIST) \
 	$(am__mgl_jpeg_la_SOURCES_DIST) \
-	$(am__mgl_tiff_la_SOURCES_DIST)
+	$(am__mgl_tiff_la_SOURCES_DIST) \
+	$(am__test_mod_la_SOURCES_DIST) $(am__test_io_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -287,10 +308,11 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = -I$(top_builddir)/include -I$(top_builddir) @INCLTDL@
 lib_LTLIBRARIES = libmgl.la
-mgllib_LTLIBRARIES = $(am__append_1) $(am__append_2) $(am__append_3)
+mgllib_LTLIBRARIES = $(am__append_1) $(am__append_2) $(am__append_3) \
+	$(am__append_4)
 mgllibdir = $(libdir)/mgl
-WIDGETS = $(am__append_4) $(am__append_5) $(am__append_6) \
-	$(am__append_7)
+WIDGETS = $(am__append_5) $(am__append_6) $(am__append_7) \
+	$(am__append_8)
 libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 libmgl_la_LIBADD = @LIBLTDL@ $(PNG_LIBS) $(GSL_LIBS) $(GL_LIBS)
 libmgl_la_CXXFLAGS = $(WIDGETS) -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
@@ -319,6 +341,10 @@ mgl_parse.cpp      mgl_fit.cpp
 @USE_TIFF_TRUE@mgl_tiff_la_LIBADD = $(TIFF_LIBS)
 @USE_TIFF_TRUE@mgl_tiff_la_CXXFLAGS = $(TIFF_FLAGS) $(AM_CXXFLAGS)
 @USE_TIFF_TRUE@mgl_tiff_la_SOURCES = mgl_zb_tiff.cpp
+@USE_TESTIO_TRUE@test_io_SOURCES = test_io.cpp mgl_io.cpp
+@USE_TESTIO_TRUE@test_mod_la_LDFLAGS = -no-undefined -module -avoid-version -shared
+@USE_TESTIO_TRUE@test_mod_la_SOURCES = test_mod.cpp
+@USE_TESTIO_TRUE@test_io_LDADD = @LIBLTDL@
 all: all-am
 
 .SUFFIXES:
@@ -414,6 +440,39 @@ mgl-jpeg.la: $(mgl_jpeg_la_OBJECTS) $(mgl_jpeg_la_DEPENDENCIES)
 	$(mgl_jpeg_la_LINK) $(am_mgl_jpeg_la_rpath) $(mgl_jpeg_la_OBJECTS) $(mgl_jpeg_la_LIBADD) $(LIBS)
 mgl-tiff.la: $(mgl_tiff_la_OBJECTS) $(mgl_tiff_la_DEPENDENCIES) 
 	$(mgl_tiff_la_LINK) $(am_mgl_tiff_la_rpath) $(mgl_tiff_la_OBJECTS) $(mgl_tiff_la_LIBADD) $(LIBS)
+test-mod.la: $(test_mod_la_OBJECTS) $(test_mod_la_DEPENDENCIES) 
+	$(test_mod_la_LINK) $(am_test_mod_la_rpath) $(test_mod_la_OBJECTS) $(test_mod_la_LIBADD) $(LIBS)
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  if test -f $$p \
+	     || test -f $$p1 \
+	  ; then \
+	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
+	   echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(binPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(bindir)/$$f'"; \
+	   $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(binPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(bindir)/$$f" || exit 1; \
+	  else :; fi; \
+	done
+
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  f=`echo "$$p" | sed 's,^.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+	  echo " rm -f '$(DESTDIR)$(bindir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(bindir)/$$f"; \
+	done
+
+clean-binPROGRAMS:
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  f=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  echo " rm -f $$p $$f"; \
+	  rm -f $$p $$f ; \
+	done
+test-io$(EXEEXT): $(test_io_OBJECTS) $(test_io_DEPENDENCIES) 
+	@rm -f test-io$(EXEEXT)
+	$(CXXLINK) $(test_io_OBJECTS) $(test_io_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -452,8 +511,11 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_zb.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_zb2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_hdf5_la-data_hdf.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_io.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_jpeg_la-mgl_zb_jpg.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_tiff_la-mgl_zb_tiff.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_io.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_mod.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -788,9 +850,11 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS)
+install-binPROGRAMS: install-libLTLIBRARIES
+
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(mgllibdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(mgllibdir)" "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -819,8 +883,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
-	clean-mgllibLTLIBRARIES mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
+	clean-libtool clean-mgllibLTLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -842,7 +906,7 @@ install-data-am: install-mgllibLTLIBRARIES
 
 install-dvi: install-dvi-am
 
-install-exec-am: install-libLTLIBRARIES
+install-exec-am: install-binPROGRAMS install-libLTLIBRARIES
 
 install-html: install-html-am
 
@@ -874,24 +938,26 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLTLIBRARIES uninstall-mgllibLTLIBRARIES
+uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
+	uninstall-mgllibLTLIBRARIES
 
 .MAKE: install-am install-strip
 
-.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libLTLIBRARIES clean-libtool clean-mgllibLTLIBRARIES \
-	ctags distclean distclean-compile distclean-generic \
-	distclean-libtool distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-libLTLIBRARIES install-man \
-	install-mgllibLTLIBRARIES install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-libLTLIBRARIES \
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
+	clean-generic clean-libLTLIBRARIES clean-libtool \
+	clean-mgllibLTLIBRARIES ctags distclean distclean-compile \
+	distclean-generic distclean-libtool distclean-tags distdir dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-binPROGRAMS install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am \
+	install-libLTLIBRARIES install-man install-mgllibLTLIBRARIES \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags uninstall uninstall-am \
+	uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	uninstall-mgllibLTLIBRARIES
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

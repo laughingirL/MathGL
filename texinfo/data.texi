@@ -41,6 +41,8 @@ Column (or slice if nz>1) names -- one character per column.
 @c ------------------------------------------------------------------
 @node Create and delete, Fill, Public variables, mglData class
 @section Create and delete
+@cindex mglData
+@cindex Set
 
 @defop Constructor mglData @code{} mglData (@code{int} mx=@code{1}, @code{int} my=@code{1}, @code{int} mz=@code{1})
 Default constructor. Allocates the memory for data array and initializes it by zero.
@@ -91,6 +93,8 @@ Allocates memory and scanf the data from the string.
 @c ------------------------------------------------------------------
 @node Fill, Rearrange, Create and delete, mglData class
 @section Fill
+@cindex Fill
+@cindex Modify
 
 @deftypemethod mglData @code{void} Fill (@code{float} x1, @code{float} x2, @code{char} dir=@code{'x'})
 Equidistantly fills the data values to range [@var{x1}, @var{x2}] in direction @var{dir}=@{@samp{x},@samp{y},@samp{z}@}.
@@ -108,6 +112,19 @@ Function fills the value of array according to the formula in string @var{eq}. F
 @c ------------------------------------------------------------------
 @node Rearrange, File I/O, Fill, mglData class
 @section Rearrange
+@cindex Rearrange
+@cindex Extend
+@cindex Transpose
+@cindex Squeeze
+@cindex Crop
+@cindex InsertRows
+@cindex InsertColumns
+@cindex InsertSlices
+@cindex DeleteRows
+@cindex DeleteColumns
+@cindex DeleteSlices
+@cindex Insert
+@cindex Delete
 
 @deftypemethod mglData @code{void} Rearrange (@code{int} mx, @code{int} my=@code{0}, @code{int} mz=@code{0})
 Rearrange dimensions without changing data array so that resulting sizes should  be @var{mx}*@var{my}*@var{mz} < nx*ny*nz. If some of parameter @var{my} or @var{mz} are zero then it will be selected to optimal fill of data array. For example, if @var{my}=0 then it will be change to @var{my}=nx*ny*nz/@var{mx} and @var{mz} will be 1.
@@ -161,6 +178,15 @@ Delete @var{num} slices along @var{dir}-direction at position @var{at}.
 @c ------------------------------------------------------------------
 @node File I/O, Make another data, Rearrange, mglData class
 @section File I/O
+@cindex Read
+@cindex ReadMat
+@cindex ReadAll
+@cindex ReadRange
+@cindex ReadHDF
+@cindex Save
+@cindex SaveHDF
+@cindex Export
+@cindex Import
 
 @deftypemethod mglData @code{void} Read (@code{const char *}fname)
 Reads data from tab-separated text file with auto determining sizes of the data.
@@ -176,7 +202,7 @@ Read data from text file with size specified at beginning of the file by first @
 Join data arrays from several text files. The file names are determined by function call @code{sprintf(fname,templ,val);}, where @var{val} changes from @var{from} to @var{to} with step @var{step}. The data load one-by-one in the same slice if @var{as_slice}=@code{false} or as slice-by-slice if @var{as_slice}=@code{true}.
 @end deftypemethod
 @deftypemethod mglData @code{void} ReadAll (@code{const char *}templ, @code{bool} as_slice=@code{false})
-Join data arrays from several text files which filenames satisfied the template @var{templ} (for example, @code{templ}=@code{"t_*.dat"}). The data load one-by-one in the same slice if @var{as_slice}=@code{false} or as slice-by-slice if @var{as_slice}=@code{true}.
+Join data arrays from several text files which filenames satisfied the template @var{templ} (for example, @var{templ}=@code{"t_*.dat"}). The data load one-by-one in the same slice if @var{as_slice}=@code{false} or as slice-by-slice if @var{as_slice}=@code{true}.
 @end deftypemethod
 
 @deftypemethod mglData @code{void} Save (@code{const char *}fname, @code{int} ns=@code{-1}) @code{const}
@@ -200,6 +226,17 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @c ------------------------------------------------------------------
 @node Make another data, Functions on direction, File I/O, mglData class
 @section Make another data
+@cindex SubData
+@cindex Column
+@cindex SetColumnId
+@cindex Hist
+@cindex Momentum
+@cindex Sum
+@cindex Max
+@cindex Min
+@cindex Combine
+@cindex Evaluate
+@cindex Resize
 
 @deftypemethod mglData @code{mglData} SubData (@code{int} xx, @code{int} yy=@code{-1}, @code{int} zz=@code{-1}) @code{const}
 Extracts sub-array data from the original data array keeping fixed positive index. For example @code{SubData(-1,2)} extracts 3d row (indexes are zero based), @code{SubData(4,-1)} extracts 5th column, @code{SubData(-1,-1,3)} extracts 4th slice and so on. The most convenient way is to use this function as initialization of other @code{mglData} variable like @code{mglData a1(a.SubData(-1,-1,3))}.
@@ -253,6 +290,17 @@ Resizes the data to new size @var{mx}, @var{my}, @var{mz} from box (part) [@var{
 @c ------------------------------------------------------------------
 @node Functions on direction, Interpolation, Make another data, mglData class
 @section Functions on direction
+@cindex CumSum
+@cindex Integral
+@cindex Diff
+@cindex Diff2
+@cindex Swap
+@cindex Mirror
+@cindex Sew
+@cindex Smooth
+@cindex Envelop
+@cindex Norm
+@cindex NormSl
 
 These functions change the data in some direction like differentiations, integrations and so on. The direction in which the change will applied is specified by the string parameter, which may contain @samp{x}, @samp{y} or @samp{z} characters for 1-st, 2-nd and 3-d dimension correspondengly.
 
@@ -303,6 +351,12 @@ Normalizes the data to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} 
 @c ------------------------------------------------------------------
 @node Interpolation, Informational functions, Functions on direction, mglData class
 @section Interpolation
+@cindex Spline
+@cindex Spline1
+@cindex Linear
+@cindex Linear1
+@cindex Spline5
+@cindex v
 
 @deftypemethod mglData @code{float} Spline (@code{float} x, @code{float} y=@code{0}, @code{float} z=@code{0}) @code{const}
 Interpolates data by cubic spline to the given point @var{x} in [0...nx-1], @var{y} in [0...ny-1], @var{z} in [0...nz-1].
@@ -326,6 +380,13 @@ Interpolate by 5-th order splain the data to given point @var{x}, @var{y}, @var{
 @c ------------------------------------------------------------------
 @node Informational functions, Operators, Interpolation, mglData class
 @section Informational functions
+@cindex PrintInfo
+@cindex Maximal
+@cindex Minimal
+@cindex Momentum
+@cindex Find
+@cindex Last
+@cindex FindAny
 
 @deftypemethod mglData @code{void} PrintInfo (@code{char *}buf, @code{bool} all=@code{false}) @code{const}
 Print information about the data (sizes and momentum) to string @var{buf}. Parameter @var{all} set to print most of information (if @code{true}) or just basic one like dimensions, maximal an minimal values.

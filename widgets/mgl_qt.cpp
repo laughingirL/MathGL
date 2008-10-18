@@ -593,13 +593,13 @@ HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void 
 	return g;
 }
 //-----------------------------------------------------------------------------
-long mgl_create_graph_qt_(int (*draw)(long *gr, void *p), const char *title, void *par, int l)
+uintptr_t mgl_create_graph_qt_(int (*draw)(long *gr, void *p), const char *title, void *par, int l)
 {
 	mglGraphQT *g = new mglGraphQT;
 	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
 	g->Window(0,0,(int (*)(mglGraph *,void *))draw,s,par);
 	delete []s;
-	return (long)g;
+	return uintptr_t(g);
 }
 //-----------------------------------------------------------------------------
 int mglQtRun()		{	return qApp ? qApp->exec():0;	}

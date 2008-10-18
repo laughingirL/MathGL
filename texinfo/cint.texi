@@ -42,7 +42,7 @@ Fortran functions/subroutines have the same names as C functions. However, there
 * Rearrange data (Pure C)::     
 * File I/O (Pure C)::           
 * Make another data (Pure C)::  
-* Functions on direction::      
+* Functions on direction (Pure C)::  
 * Interpolation (Pure C)::      
 * Informational functions (Pure C)::  
 * Operators (Pure C)::          
@@ -146,7 +146,7 @@ Allow to parse 'setsize' command or not.
 @node Graphics setup (Pure C), Transformation matrix (Pure C), MGL parsing (Pure C), C interface
 @subsection Graphics setup (Pure C)
 
-Functions and variables in this group influences on overall graphics appearance. So all of them should be placed @emph{before} any actual plotting function calls. @xref{Graphics setup}, for more details.
+Functions and variables in this group influences on overall graphics appearance. So all of them should be placed @emph{before} any actual plotting function calls.
 
 @menu
 * Transparency (Pure C)::       
@@ -171,7 +171,7 @@ Functions and variables in this group influences on overall graphics appearance.
 There are several functions for setup transparency. The general function is @code{Alpha()} which switch on/off the transparency for overall plot. It influence only for graphics which created after @code{Alpha()} call (with one exeption, mglGraphGL). Variable @code{AlphaDef} specify the default value of alpha-channel. You may switch off transparency of selected plot by variable @code{Transparent}. Finally, variable @code{TranspType} set the kind of transparency. @sref{Transparent surface sample}
 
 @deftypefn {C function} @code{void} mgl_set_alpha (@code{HMGL} gr, @code{int} enable)
-Sets the transparency on/off. It is recommended to call this function before any plotting command.Default value is transparency off. Use @code{mgl_set_transp(false)} in particular plot to disable its transparency.
+Sets the transparency on/off. It is recommended to call this function before any plotting command. Default value is transparency off. Use @code{mgl_set_transp(false)} in particular plot to disable its transparency.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_alpha_default (@code{HMGL} gr, @code{float} alpha)
@@ -204,7 +204,7 @@ The function adds a light source with identification @var{n} at position @{@var{
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_ambbr (@code{HMGL} gr, @code{float} bright)
-Sets the brightness of ambient light. The value should be in range [0,1]. It is recommended to call this function before any plotting command.
+Sets the brightness of ambient light. The value should be in range [0,1]. Initial value is @code{0.5}. It is recommended to call this function before any plotting command.
 @end deftypefn
 
 @c ==================================================================
@@ -239,7 +239,7 @@ The size of arrows for @ref{1D plotting (Pure C)}, lines and curves. Default val
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_base_line_width (@code{HMGL} gr, @code{float} val)
-The variable define the base width for all lines. The value <=1 is ignored. Increase of this variables is actual for large bitmap pictures. Default value is @code{1}.
+The variable define the base width for all lines. The value <1 is ignored. Increase of this variables is actual for large bitmap pictures. Default value is @code{1}.
 @end deftypefn
 
 @c ==================================================================
@@ -344,7 +344,7 @@ Set the color scheme for following plots. Usually this function is used internal
 @subsubsection Other settings (Pure C)
 
 @deftypefn {C function} @code{void} mgl_set_meshnum (@code{HMGL} gr, @code{int} num)
-Sets approximate number of lines in Mesh(), Fall(), Grid() and also the number of hachures in Vect, VectC(), Vect(), VectC(), Dew() and the number of cells in Cloud(). By default (=0) it draws all lines/hachures/cells.
+Sets approximate number of lines in Mesh(), Fall(), Grid() and also the number of hachures in Vect(), VectC(), Dew() and the number of cells in Cloud*(). By default (=0) it draws all lines/hachures/cells.
 @end deftypefn
 
 @deftypefn {C function} @code{} mgl_set_axial_dir (@code{HMGL} gr, @code{char} dir)
@@ -561,10 +561,7 @@ Gets RGBA bitmap of the current state of the image. Format of each element of bi
 @cindex Clf
 @cindex Line
 @cindex Curve
-@cindex Glyph
 @cindex Mark
-@cindex Error
-@cindex Face
 @cindex FaceX
 @cindex FaceY
 @cindex FaceZ
@@ -594,8 +591,8 @@ Draws Bezier-like curve from point @{@var{x1},@var{y1},@var{z1}@} to @{@var{x2},
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_facex (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} wy, @code{float} wz, @code{const char *}stl, @code{float} d1, @code{float} d2)
-@deftypefnx {C function} @code{void} mgl_facey (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} wy, @code{float} wz, @code{const char *}stl, @code{float} d1, @code{float} d2)
-@deftypefnx {C function} @code{void} mgl_facez (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} wy, @code{float} wz, @code{const char *}stl, @code{float} d1, @code{float} d2)
+@deftypefnx {C function} @code{void} mgl_facey (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} wx, @code{float} wz, @code{const char *}stl, @code{float} d1, @code{float} d2)
+@deftypefnx {C function} @code{void} mgl_facez (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} wx, @code{float} wy, @code{const char *}stl, @code{float} d1, @code{float} d2)
 Draws the solid rectangle (face) perpendicular to [x,y,z]-axis correspondingly at position @{@var{x0}, @var{y0}, @var{z0}@} with color @var{stl} and with widths @var{wx}, @var{wy}, @var{wz} along corresponding directions. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. Parameters @var{d1}!=0, @var{d2}!=0 set additional shift of the last vertex (i.e. to draw quadrangle).
 @end deftypefn
 
@@ -779,18 +776,12 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in
 These functions fill area between 2 curves. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y1.nx=y2.nx} and all dimensions of arrays @var{y1} and @var{y2} must be equal too. String @var{pen} specifies the color (@pxref{Line styles}). By default (@code{pen=NULL}) color from palette is used (@pxref{Palette and colors}). See also Area(), Bars(), Stem(). @sref{Region sample}
 
 @deftypefn {C function} @code{void} mgl_region_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y1, @code{const HMDT} y2, @code{const char *}pen)
-The function fills area between curves @{@var{x}[i], @var{y}[i]@} and @{@var{x}[i], @var{y2}[i]@}.
+The function fills area between curves @{@var{x}[i], @var{y1}[i]@} and @{@var{x}[i], @var{y2}[i]@}.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_region (@code{HMGL} gr, @code{const HMDT} y1, @code{const HMDT} y2, @code{const char *}pen)
-The function fills area between curves @{@var{x}[i], @var{y}[i]@} and @{@var{x}[i], @var{y2}[i]@}, where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
+The function fills area between curves @{@var{x}[i], @var{y1}[i]@} and @{@var{x}[i], @var{y2}[i]@}, where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
 @end deftypefn
-
-@float
-@image{png/region, 7cm}
-@caption{Example of Region.}
-@end float
-
 
 @c ==================================================================
 @node Bars (Pure C), Barh (Pure C), Region (Pure C), 1D plotting (Pure C)
@@ -1313,7 +1304,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 @cindex CloudQ
 
 @deftypefn {C function} @code{void} mgl_cloudq_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a, @code{const char *}stl, @code{float} alpha=@code{1})
-The function draws cloud plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). This plot is a set of cubes with color and transparency proportional to value of @var{a}. The resulting plot is like cloud -- low value is transparent but higher ones are not. The number of plotting cells depend on MeshNum (@pxref{Other settings}). String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. Parameter @var{alpha} changes the overall transparency of plot. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Surf3}, @ref{Color scheme}. @sref{CloudQ sample}
+The function draws cloud plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). This plot is a set of cubes with color and transparency proportional to value of @var{a}. The resulting plot is like cloud -- low value is transparent but higher ones are not. The number of plotting cells depend on MeshNum (@pxref{Other settings}). String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. Parameter @var{alpha} changes the overall transparency of plot. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Surf3}. @sref{CloudQ sample}
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_cloudq (@code{HMGL} gr, @code{const HMDT} a, @code{const char *}stl, @code{float} alpha=@code{1})
@@ -1414,7 +1405,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Surf3A
 
 @deftypefn {C function} @code{void} mgl_surf3a_xyz_val (@code{HMGL} gr, @code{float} val, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a, @code{const HMDT} c, @code{const char *}stl)
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as Surf3() function but the transparency of isosurface depends on values of  @var{b} array. This allows one to remove the part of isosurface where @var{b} is negligibly small (useful for phase plotting of a beam or a pulse). String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{Surf3}, @ref{SurfA}, @ref{Surf3C}, @ref{Color scheme}. @sref{Surf3A sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as Surf3() function but the transparency of isosurface depends on values of  @var{b} array. This allows one to remove the part of isosurface where @var{b} is negligibly small (useful for phase plotting of a beam or a pulse). String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{Surf3}, @ref{SurfA}, @ref{Surf3C}. @sref{Surf3A sample}
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_surf3a_val (@code{HMGL} gr, @code{float} val, @code{const HMDT} a, @code{const HMDT} c, @code{const char *}sch)
@@ -1435,7 +1426,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 @cindex TileS
 
 @deftypefn {C function} @code{void} mgl_tiles_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} r, @code{const char *}sch)
-The function draws horizontal tiles for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. It is mostly the same as Tile() but the size of tiles is determined by @var{r} array. This is some kind of ``transparency'' useful for exporting to EPS files. String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{SurfA}, @ref{Tile}, @ref{Color scheme}. @sref{TileS sample}
+The function draws horizontal tiles for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. It is mostly the same as Tile() but the size of tiles is determined by @var{r} array. This is some kind of ``transparency'' useful for exporting to EPS files. String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{SurfA}, @ref{Tile}. @sref{TileS sample}
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_tiles (@code{HMGL} gr, @code{const HMDT} z, @code{const HMDT} c, @code{const char *}sch)
@@ -1827,12 +1818,12 @@ Fit data along x-, and y-directions for 2d array @var{a} with @var{s}=1 and @var
 Fit data along x-, y- and z-directions for 3d array @var{a} with @var{s}=1 and @var{x}, @var{y}, @var{z} equidistantly distributed in interval [@var{Min}, @var{Max}].
 @end deftypefn
 
-@deftypefn {C function} @code{float} mgl_puts_fit (@code{HMGL} gr, @code{mglPoint} p, @code{const char *}prefix, @code{const char *}font, @code{float} size=@code{-1})
-Print last fitted formula with found coefficients (as numbers) at position @var{p0}. The string @var{prefix} will be printed before formula. All other parameters are the same as in @ref{Text printing}.
+@deftypefn {C function} @code{void} mgl_puts_fit (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{const char *}prefix, @code{const char *}font, @code{float} size=@code{-1})
+Print last fitted formula with found coefficients (as numbers) at position @{@var{x}, @var{y}, @var{z}@}. The string @var{prefix} will be printed before formula. All other parameters are the same as in @ref{Text printing (Pure C)}.
 @end deftypefn
 
 @c ##################################################################
-@node Frames (Pure C), Data creation (Pure C), Nonlinear fitting (Pure C), C interface
+@node Frames (Pure C), Data import (Pure C), Nonlinear fitting (Pure C), C interface
 @subsection Frames (Pure C)
 @cindex NewFrame
 @cindex EndFrame
@@ -1856,6 +1847,7 @@ Gets the number of created frames.
 @c ##################################################################
 @node Data import (Pure C), Data filling (Pure C), Frames (Pure C), C interface
 @subsection Data import (Pure C)
+@cindex Set
 
 @deftypemethod {C function} @code{void} mgl_data_create (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
 Creates or recreates the array with specified size and fills it by zero. This function does nothing if one of parameters @var{mx}, @var{my}, @var{mz} is zero or negative.
@@ -1894,6 +1886,8 @@ Allocates memory and scanf the data from the string.
 @c ------------------------------------------------------------------
 @node Data filling (Pure C), Rearrange data (Pure C), Data import (Pure C), C interface
 @subsection Data filling (Pure C)
+@cindex Fill
+@cindex Modify
 
 @deftypemethod {C function} @code{void} mgl_data_fill (@code{HMDT} dat, @code{float} x1, @code{float} x2, @code{char} dir)
 Equidistantly fills the data values to range [@var{x1}, @var{x2}] in direction @var{dir}=@{@samp{x},@samp{y},@samp{z}@}.
@@ -1913,6 +1907,11 @@ Gets the value in specified cell of the data with border checking.
 @c ------------------------------------------------------------------
 @node Rearrange data (Pure C), File I/O (Pure C), Data filling (Pure C), C interface
 @subsection Rearrange data (Pure C)
+@cindex Rearrange
+@cindex Extend
+@cindex Transpose
+@cindex Squeeze
+@cindex Crop
 
 @deftypemethod {C function} @code{void} mgl_data_rearrange (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
 Rearrange dimensions without changing data array so that resulting sizes should  be @var{mx}*@var{my}*@var{mz} < nx*ny*nz. If some of parameter @var{my} or @var{mz} are zero then it will be selected to optimal fill of data array. For example, if @var{my}=0 then it will be change to @var{my}=nx*ny*nz/@var{mx} and @var{mz} will be 1.
@@ -1939,6 +1938,11 @@ Cuts off edges @var{i}<@var{n1} and @var{i}>@var{n2} of the data along direction
 @c ------------------------------------------------------------------
 @node File I/O (Pure C), Make another data (Pure C), Rearrange data (Pure C), C interface
 @subsection File I/O (Pure C)
+@cindex Read
+@cindex ReadMat
+@cindex Save
+@cindex Export
+@cindex Import
 
 @deftypemethod {C function} @code{void} mgl_data_read (@code{HMDT} dat, @code{const char *}fname)
 Reads data from tab-separated text file with auto determining sizes of the data.
@@ -1964,6 +1968,17 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @c ------------------------------------------------------------------
 @node Make another data (Pure C), Functions on direction (Pure C), File I/O (Pure C), C interface
 @subsection Make another data (Pure C)
+@cindex SubData
+@cindex Column
+@cindex SetColumnId
+@cindex Hist
+@cindex Momentum
+@cindex Sum
+@cindex Max
+@cindex Min
+@cindex Combine
+@cindex Evaluate
+@cindex Resize
 
 @deftypemethod {C function} @code{HMDT} mgl_data_subdata (@code{const HMDT} dat, @code{int} xx, @code{int} yy, @code{int} zz)
 Extracts sub-array data from the original data array keeping fixed positive index. For example @code{SubData(-1,2)} extracts 3d row (indexes are zero based), @code{SubData(4,-1)} extracts 5th column, @code{SubData(-1,-1,3)} extracts 4th slice and so on.
@@ -1999,11 +2014,11 @@ Gets array which is the result of summation in given direction or direction(s).
 Gets array which is the maximal data values in given direction or direction(s).
 @end deftypemethod
 @deftypemethod {C function} @code{HMDT} mgl_data_min_dir (@code{const HMDT} dat, @code{const char *}dir)
-Gets array which is the maximal data values in given direction or direction(s).
+Gets array which is the minimal data values in given direction or direction(s).
 @end deftypemethod
 
 @deftypemethod {C function} @code{HMDT} mgl_data_combine (@code{const HMDT} dat, @code{const HMDT} a)
-Return direct multiplication of arrays (like, res[i,j] = this[i]*a[j] and so on).
+Returns direct multiplication of arrays (like, res[i,j] = this[i]*a[j] and so on).
 @end deftypemethod
 
 @deftypemethod {C function} @code{HMDT} mgl_data_evaluate_i (@code{const HMDT} dat, @code{const HMDT} idat, @code{int} norm)
@@ -2018,8 +2033,19 @@ Resizes the data to new size @var{mx}, @var{my}, @var{mz} from box (part) [@var{
 @end deftypemethod
 
 @c ------------------------------------------------------------------
-@node Functions on direction, Interpolation, Make another data, C interface
-@subsection Functions on direction
+@node Functions on direction (Pure C), Interpolation (Pure C), Make another data (Pure C), C interface
+@subsection Functions on direction (Pure C)
+@cindex CumSum
+@cindex Integral
+@cindex Diff
+@cindex Diff2
+@cindex Swap
+@cindex Mirror
+@cindex Sew
+@cindex Smooth
+@cindex Envelop
+@cindex Norm
+@cindex NormSl
 
 These functions change the data in some direction like differentiations, integrations and so on. The direction in which the change will applied is specified by the string parameter, which may contain @samp{x}, @samp{y} or @samp{z} characters for 1-st, 2-nd and 3-d dimension correspondengly.
 
@@ -2069,6 +2095,12 @@ Normalizes the data to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} 
 @c ------------------------------------------------------------------
 @node Interpolation (Pure C), Informational functions (Pure C), Functions on direction (Pure C), C interface
 @subsection Interpolation (Pure C)
+@cindex Spline
+@cindex Spline1
+@cindex Linear
+@cindex Linear1
+@cindex Spline5
+@cindex v
 
 @deftypemethod {C function} @code{float} mgl_data_spline (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
 Interpolates data by cubic spline to the given point @var{x} in [0...nx-1], @var{y} in [0...ny-1], @var{z} in [0...nz-1].
@@ -2097,6 +2129,13 @@ Gets the pointer to internal data array.
 @c ------------------------------------------------------------------
 @node Informational functions (Pure C), Operators (Pure C), Interpolation (Pure C), C interface
 @subsection Informational functions (Pure C)
+@cindex PrintInfo
+@cindex Maximal
+@cindex Minimal
+@cindex Momentum
+@cindex Find
+@cindex Last
+@cindex FindAny
 
 @deftypemethod {C function} @code{float} mgl_data_max (@code{const HMDT} dat)
 Gets maximal value of the data.

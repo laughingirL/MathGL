@@ -1001,6 +1001,7 @@ pyexecdir
 pkgpyexecdir
 USE_PYTHON_TRUE
 USE_PYTHON_FALSE
+OCTAVE_ARCH
 LIB@&t@OBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -1614,6 +1615,7 @@ Optional Features:
   --enable-wx    Turn on wxWidget
   --enable-qt    Turn on Qt
   --enable-python    Turn on interface to python
+  --enable-octave    Turn on interface to octave
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -23406,7 +23408,32 @@ else
 fi
 
 
-ac_config_files="$ac_config_files Makefile mgl/Makefile examples/Makefile include/Makefile lang/Makefile utils/Makefile widgets/Makefile"
+# Check whether --enable-octave was given.
+if test "${enable_octave+set}" = set; then
+  enableval=$enable_octave; case "${enableval}" in
+  yes) octave=true ;;
+  no)  octave=false ;;
+  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-octave" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-octave" >&2;}
+   { (exit 1); exit 1; }; } ;;
+esac
+else
+  octave=false
+fi
+
+# find Octave arch
+if (test x$langall = xtrue || test x$octave = xtrue) ;then
+    OCTAVE=octave
+    { echo "$as_me:$LINENO: checking for Octave arch" >&5
+echo $ECHO_N "checking for Octave arch... $ECHO_C" >&6; }
+    OCTAVE_ARCH=`$OCTAVE -q --eval 'strcat(octave_config_info("canonical_host_type"), "-", octave_config_info("api_version"))'|sed -e 's/ans = //'`
+    { echo "$as_me:$LINENO: result: $OCTAVE_ARCH" >&5
+echo "${ECHO_T}$OCTAVE_ARCH" >&6; }
+    OCTAVE_ARCH=$OCTAVE_ARCH
+
+fi
+
+ac_config_files="$ac_config_files Makefile mgl/Makefile examples/Makefile include/Makefile lang/Makefile utils/Makefile widgets/Makefile texinfo/Makefile texinfo/png/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -24071,6 +24098,8 @@ do
     "lang/Makefile") CONFIG_FILES="$CONFIG_FILES lang/Makefile" ;;
     "utils/Makefile") CONFIG_FILES="$CONFIG_FILES utils/Makefile" ;;
     "widgets/Makefile") CONFIG_FILES="$CONFIG_FILES widgets/Makefile" ;;
+    "texinfo/Makefile") CONFIG_FILES="$CONFIG_FILES texinfo/Makefile" ;;
+    "texinfo/png/Makefile") CONFIG_FILES="$CONFIG_FILES texinfo/png/Makefile" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
@@ -24346,11 +24375,12 @@ pyexecdir!$pyexecdir$ac_delim
 pkgpyexecdir!$pkgpyexecdir$ac_delim
 USE_PYTHON_TRUE!$USE_PYTHON_TRUE$ac_delim
 USE_PYTHON_FALSE!$USE_PYTHON_FALSE$ac_delim
+OCTAVE_ARCH!$OCTAVE_ARCH$ac_delim
 LIB@&t@OBJS!$LIB@&t@OBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 78; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 79; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

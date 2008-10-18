@@ -105,14 +105,14 @@ void mglc_area(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"aspect","Set aspect ration","aspect numx numy numz", mgls_aspect, mglc_aspect}
 int mgls_aspect(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==3 && k[1]==3 && k[2]==3)	gr->Aspect(a[0].v,a[1].v,a[2].v);
+	if(k[0]==3 && k[1]==3)	gr->Aspect(a[0].v, a[1].v, k[2]==3?a[2].v:1);
 	else	return 1;
 	return 0;
 }
 void mglc_aspect(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==3 && k[1]==3 && k[2]==3)
-		swprintf(out,1024,L"gr->Aspect(%g, %g, %g);",a[0].v,a[1].v,a[2].v);
+	if(k[0]==3 && k[1]==3)
+		swprintf(out,1024,L"gr->Aspect(%g, %g, %g);", a[0].v, a[1].v, k[2]==3?a[2].v:1);
 }
 //-----------------------------------------------------------------------------
 //	{"axial","Draw surfaces of contour lines rotation","axial {xvar yvar} zvar [fmt num]", mgls_axial, mglc_axial}
@@ -2995,21 +2995,47 @@ void mglc_evaluate(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"put","Put value (numeric or array) to given data element","put val dat i [j=0 k=0]", mgls_put, mglc_put}
 int mgls_put(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==3 && k[1]==1 && k[2]==3)
-		a[1].d->Put(a[0].v, int(a[2].v), k[3]==3?int(a[3].v):0, k[4]==3?int(a[4].v):0);
-	else if(k[0]==1 && k[1]==1 && k[2]==3)
-		a[1].d->Put(*(a[0].d), int(a[2].v), k[3]==3?int(a[3].v):0, k[4]==3?int(a[4].v):0);
+	if(k[0]==3 && k[1]==1)
+		a[1].d->Put(a[0].v, k[2]==3?int(a[2].v):-1, k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
+	else if(k[0]==1 && k[1]==1)
+		a[1].d->Put(*(a[0].d), k[2]==3?int(a[2].v):-1, k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
 	else	return 1;
 	return 0;
 }
 void mglc_put(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==1 && k[2]==3)
-		swprintf(out,1024,L"%s.Put(%g, %d, %d, %d);", a[1].s, a[0].v, int(a[2].v), k[3]==3?int(a[3].v):0, k[4]==3?int(a[4].v):0);
+		swprintf(out,1024,L"%s.Put(%g, %d, %d, %d);", a[1].s, a[0].v, k[2]==3?int(a[2].v):-1, k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
 	else if(k[0]==1 && k[1]==1 && k[2]==3)
-		swprintf(out,1024,L"%s.Put(%s, %d, %d, %d);", a[1].s, a[0].s, int(a[2].v), k[3]==3?int(a[3].v):0, k[4]==3?int(a[4].v):0);
+		swprintf(out,1024,L"%s.Put(%s, %d, %d, %d);", a[1].s, a[0].s, k[2]==3?int(a[2].v):-1, k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
 	if(k[0]==1 && k[1]==3 && k[2]==3)
 	swprintf(out,1024,L"%s.Create(%d);\t%s.Fill(%g,%g);",a[0].s, int(a[1].v), a[0].s, a[2].v, k[3]==3?a[3].v:NAN);
+}
+//-----------------------------------------------------------------------------
+//	{L"palette",L"Set palette for 1D plots",L"palette 'colors'", mgls_palette, mglc_palette}
+int mgls_palette(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)	gr->SetPalette(a[0].s);
+	else	return 1;
+	return 0;
+}
+void mglc_palette(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)	swprintf(out,1024,L"gr->SetPalette(\"%s\");", a[0].s);
+}
+//-----------------------------------------------------------------------------
+//	{L"combine", L"Direct multiplication of arrays", L"combine res adat bdat", mgls_combine, mglc_combine}
+int mgls_combine(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1)
+		*(a[0].d) = a[1].d->Combine(*(a[2].d));
+	else	return 1;
+	return 0;
+}
+void mglc_combine(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1)
+		swprintf(out,1024,L"%s = %s.Combine(%s);",a[0].s, a[1].s, a[2].s);
 }
 //-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
@@ -3038,6 +3064,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"clf",L"Clear picture",L"clf", mgls_clf, mglc_clf},
 	{L"cloud",L"Draw cloud",L"cloud {xvar yvar zvar} avar [fmt]", mgls_cloud, mglc_cloud},
 	{L"colorbar",L"Draw colorbar",L"colorbar [fmt pos]", mgls_colorbar, mglc_colorbar},
+	{L"combine", L"Direct multiplication of arrays", L"combine res adat bdat", mgls_combine, mglc_combine},
 	{L"cone",L"Draw cone",L"cone avar [fmt pos num]", mgls_cone, mglc_cone},
 	{L"cont",L"Draw contour lines",L"cont {vvar} {xvar yvar} zvar [fmt num zpos]", mgls_cont, mglc_cont},
 	{L"cont3",L"Draw contour lines for 3D data",L"cont3 {xvar yvar zvar} avar dir [pos fmt num]", mgls_cont3, mglc_cont3},
@@ -3047,7 +3074,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"contfa",L"Draw solid contour lines at central slices of 3D data",L"contfa {xvar yvar zvar} avar [fmt num]", mgls_contfa, mglc_contfa},
 	{L"contfx",L"Draw solid contour lines at x-slice (or x-plane)",L"contfx avar [fmt pos num]", mgls_contfx, mglc_contfx},
 	{L"contfy",L"Draw solid contour lines at y-slice (or y-plane)",L"contfy avar [fmt pos num]", mgls_contfy, mglc_contfy},
-	{L"contfy",L"Draw solid contour lines at z-slice (or z-plane)",L"contfz avar [fmt pos num]", mgls_contfz, mglc_contfz},
+	{L"contfz",L"Draw solid contour lines at z-slice (or z-plane)",L"contfz avar [fmt pos num]", mgls_contfz, mglc_contfz},
 	{L"contx",L"Draw contour lines at x-slice (or x-plane)",L"contx avar [fmt pos num]", mgls_contx, mglc_contx},
 	{L"conty",L"Draw contour lines at y-slice (or y-plane)",L"conty avar [fmt pos num]", mgls_conty, mglc_conty},
 	{L"contz",L"Draw contour lines at z-slice (or z-plane)",L"contz avar [fmt pos num]", mgls_contz, mglc_contz},
@@ -3117,6 +3144,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"norm",L"Normalize data",L"", mgls_norm, mglc_norm},
 	{L"normsl",L"Normalize data slice by slice",L"", mgls_normsl, mglc_normsl},
 	{L"origin",L"Set axis origin",L"", mgls_origin, mglc_origin},
+	{L"palette",L"Set palette for 1D plots",L"palette 'colors'", mgls_palette, mglc_palette},
 	{L"perspective",L"Set perspective",L"perspective val", mgls_perspective, mglc_perspective},
 	{L"pipe",L"Draw flow pipes for vector field",L"", mgls_pipe, mglc_pipe},
 	{L"plot",L"Draw usual plot for 1D data",L"plot {xvar} yvar {{zvar}} [fmt num]", mgls_plot, mglc_plot},

@@ -31,6 +31,7 @@
 #include "mgl/mgl_fltk.h"
 #include "mgl/mgl_eps.h"
 #include "mgl/mgl_c.h"
+#include "mgl/mgl_f.h"
 //-----------------------------------------------------------------------------
 #include "xpm/alpha_on.xpm"
 #include "xpm/light_on.xpm"
@@ -678,13 +679,13 @@ void mgl_fltk_run()
 	mglFlRun();
 }
 //-----------------------------------------------------------------------------
-long mgl_create_graph_fltk_(int (*draw)(long *gr, void *p), const char *title, void *par, int l)
+uintptr_t mgl_create_graph_fltk_(int (*draw)(long *gr, void *p), const char *title, void *par, int l)
 {
 	mglGraphFLTK *g = new mglGraphFLTK;
 	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
 	g->Window(0,0,(int (*)(mglGraph *,void *))draw,s,par);
 	delete []s;
-	return (long)g;
+	return uintptr_t(g);
 }
 //-----------------------------------------------------------------------------
 void mgl_fltk_run_()

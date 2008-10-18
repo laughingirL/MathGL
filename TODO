@@ -6,23 +6,25 @@
 4. Zip-compression of EPS + text by UTF codes?!?
 5. Use Hershey as built-in font
 6. Spline5 !!!
-8. Add FLTK, QT & GLUT to Fortran ??? How pass arguments ???
-9. Converter MGL->C (+ interface for MGL->Fortran by change HMDT->int, HMGL->int, "->');
+7. Add FLTK, QT & GLUT to Fortran ??? How pass arguments ???
+8. mglGraphAB::ShowImg()
+9. Warning about absent directory (in 'chdir')
 
-10 mglGraphAB::ShowImg()
+11. Update documentation (English)
+	* Python classes
+	* Python classes update (code)
+	* MGL commands --> update UDAV help
+	* remove obsolete from  Samples
+	* Documentation about Put -- texi (mglData,Pure C,Python,MGL)
+	* Spellchecking
+12. Update documentation (Russian)
 
-17. Update documentation (English)
-18. Update documentation (Russian)
-
-19. Axis in "Dens3 sample"
-21 New functions in Python
-22 Example of Sew, Envelop ?!?
-23 Example of STFA (plot)
-24 Check SubData, Put
-25. Documentation about Put -- texi + MGL html
+13. Axis in "Dens3 sample" ?!?
+14. Example of Sew, Envelop, STFA ?!?
+15. Check Put
 
 
-					MathGL (for v.1.7.?) ???
+					MathGL (for v.1.8.?) ???
 
 1. GTK window ???
 2. WX window
@@ -30,6 +32,7 @@
 4. Interface for Scilab
 5. Try to evaluate to number if it contain only "+-/*^0123456789." in Parse() ??? + string concatenation ???
 6. Save primitives for plotting (like EPS && OpenGL) ???
+7. Converter MGL->C (+ interface for MGL->Fortran by change HMDT->int, HMGL->int, "->');
 
 					FAQ
 

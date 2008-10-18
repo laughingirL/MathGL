@@ -23,16 +23,16 @@ void mgl_delete_graph_(long *gr)
 {	if(gr)	delete (mglGraph *)(*gr);	}
 //-----------------------------------------------------------------------------
 /// Create mglData object.
-long mgl_create_data_()
-{	return (long)(new mglData());	};
+uintptr_t mgl_create_data_()
+{	return uintptr_t(new mglData());	};
 /// Create mglData object with specified sizes.
-long mgl_create_data_size_(int *nx, int *ny, int *nz)
-{	return (long)(new mglData(*nx,*ny,*nz));	};
+uintptr_t mgl_create_data_size_(int *nx, int *ny, int *nz)
+{	return uintptr_t(new mglData(*nx,*ny,*nz));	};
 /// Create mglData object from data file.
-long mgl_create_data_file_(const char *fname,int l)
+uintptr_t mgl_create_data_file_(const char *fname,int l)
 {
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
-	long r = long(new mglData(s));	delete []s;
+	uintptr_t r = uintptr_t(new mglData(s));	delete []s;
 	return r;
 }
 /// Delete mglData object. MUST be called for each mgl_create_data_* call.

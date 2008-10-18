@@ -88,7 +88,7 @@ Finally the special command language MGL was written for faster access to C++ pl
 
 @include cint.texi
 @c @include python.texi
-@c @include mgl.texi
+@include mgl.texi
 
 @include example.texi
 @include samples.texi

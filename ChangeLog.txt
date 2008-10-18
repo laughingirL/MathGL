@@ -7,6 +7,11 @@
 	- Add new plot Barh() for horizontal bars.
 	- Add new plot Region() for filling the area between 2 curves
 	- Add Plot(), Surf() functions for plotting a curve or a surface by formula.
+	- Add new functions for data handling:
+		* Envelop() -- for finding data envelop
+		* Sew() -- for sewing data (removing phase jumps)
+		* Evaluate() -- for producing array interpolated by coordinates from other array(s)
+		* Put() -- for setting a value (number or array) for range of data
 	- Color scheme will disable interpolation (color smoothing) if its style contain '|' symbol.
 	- Function Bars() now draw boounding box of the rectangle if its style contain '#' symbol.
 	- Function Chart() will not draw a peace if its color specification is ' '.
@@ -21,23 +26,16 @@
 		* Restore() for restoring transformation matrix after last InPlot()
 	- Information about mouse click position is shown in widgets (if ShowMousePos=true)
 	- Clean up C/Fortran interface: replace 'bool' to 'int' in C interface; add a lot of new interface functions; change the order of arguments in mgl_data_set_value()
-	- Add MGL commands 'fplot', 'fsurf', 'fgets', 'export', 'import', 'write', 'region', 'title'
+	- Add MGL commands 'fplot', 'fsurf', 'fgets', 'export', 'import', 'write', 'region', 'title', 'sew', 'envelop', 'evaluate', 'put', 'palette', 'combine'
 	- Add const modifiers everywhere
 	- Add default window functions in mglGraphAB (as base class) and in mglGraphGLUT.
 	- Class mglFormula now is thread safe.
 	- Allow mglData::Resize() to have size=1.
-	- Bug with wrong normales at boundary points in Surf3*() is corrected.
+	- Functions mgl_tile_r*() are renamed to mgl_tiles*()
+	- Bug with wrong normales at points on bounding box in Surf3*() is corrected.
 	- Bug with non-visible marks into the legend is corrected.
 	- Bug of not-drawn quads with the same vertexes is corrected.
 	- Bug with colors in WriteBMP() is corrected.
-
-
-	- New function mglData::Envelop() for the data envelop
-	- New function mglData::Sew() for sewing (removing phase jumps) the data
-	- New function mglData::Evaluate() for producing array interpolated by coordinates from other array(s)
-	- New functions mglData::Put() for setting a value (number or array) for range of data
-	- New MGL command 'sew', 'envelop', 'evaluate', 'put'
-	- Functions mgl_tile_r*() are renamed to mgl_tiles*()
 
 
 1.7 Released 1 June 2008

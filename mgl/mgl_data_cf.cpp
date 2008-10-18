@@ -164,19 +164,19 @@ void mgl_data_sub_num_(long *d, float *b) {	_DM_(d) -= *b;	}
 void mgl_data_rearrange_(long *d, int *mx, int *my, int *mz)
 {	_DT_->Rearrange(*mx,*my,*mz);	}
 /// Resize the data to new size of box [x1,x2]*[y1,y2]*[z1,z2]
-long mgl_data_resize_(long *d, int *mx,int *my,int *mz)
-{	return long(new mglData(_DT_->Resize(*mx,*my,*mz)));	}
-long mgl_data_resize_box_(long *d, int *mx,int *my,int *mz,float *x1,float *x2,
+uintptr_t mgl_data_resize_(long *d, int *mx,int *my,int *mz)
+{	return uintptr_t(new mglData(_DT_->Resize(*mx,*my,*mz)));	}
+uintptr_t mgl_data_resize_box_(long *d, int *mx,int *my,int *mz,float *x1,float *x2,
 						float *y1,float *y2,float *z1,float *z2)
-{	return long(new mglData(_DT_->Resize(*mx,*my,*mz,*x1,*x2,*y1,*y2,*z1,*z2)));	}
+{	return uintptr_t(new mglData(_DT_->Resize(*mx,*my,*mz,*x1,*x2,*y1,*y2,*z1,*z2)));	}
 /// Get sub-array of the data with given fixed indexes
-long mgl_data_subdata_(long *d, int *xx,int *yy,int *zz)
-{	return long(new mglData(_DT_->SubData(*xx,*yy,*zz)));	}
+uintptr_t mgl_data_subdata_(long *d, int *xx,int *yy,int *zz)
+{	return uintptr_t(new mglData(_DT_->SubData(*xx,*yy,*zz)));	}
 /// Get column (or slice) of the data filled by formulas of other named columns
-long mgl_data_column_(long *d, const char *eq,int l)
+uintptr_t mgl_data_column_(long *d, const char *eq,int l)
 {
 	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
-	long r = long(new mglData(_DT_->Column(s)));
+	uintptr_t r = uintptr_t(new mglData(_DT_->Column(s)));
 	delete []s;	return r;
 }
 /// Set names for columns (slices)
@@ -296,8 +296,8 @@ void mgl_data_save_(long *d, const char *fname,int *ns,int l)
 const float *mgl_data_data_(long *d)
 {	return _DT_->a;	}
 /// Get the data which is tensor multiplication (d[i,j] = a[i]*b[j] and so on)
-long mgl_data_combine_(long *a, long *b)
-{	return (long)(new mglData(((mglData *)*a)->Combine(_D_(b))));	}
+uintptr_t mgl_data_combine_(long *a, long *b)
+{	return uintptr_t(new mglData(((mglData *)*a)->Combine(_D_(b))));	}
 /// Extend data dimensions
 void mgl_data_extend_(long *d, int *n1, int *n2)
 {	_DT_->Extend(*n1,*n2);	}
@@ -361,10 +361,10 @@ void mgl_data_smooth_(long *d, int *Type,float *delta,const char *dir,int l)
 	_DT_->Smooth(*Type,s,*delta);				delete []s;
 }
 /// Get array which is result of summation in given direction or directions
-long mgl_data_sum_(long *d, const char *dir,int l)
+uintptr_t mgl_data_sum_(long *d, const char *dir,int l)
 {
 	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
-	long r=long(new mglData(_DT_->Sum(s)));		delete []s;
+	long r=uintptr_t(new mglData(_DT_->Sum(s)));		delete []s;
 	return r;
 }
 /// Integrate (cumulative summation) the data in given direction or directions
@@ -397,18 +397,18 @@ float mgl_data_linear_(long *d, float *x,float *y,float *z)
 /// Interpolate by line the data to given point \a x,\a y,\a z which normalized in range [0, 1]
 float mgl_data_linear1_(long *d, float *x,float *y,float *z)
 {	return _DT_->Linear1(*x,*y,*z);	}
-long mgl_data_momentum_(long *d, char *dir, const char *how, int,int l)
+uintptr_t mgl_data_momentum_(long *d, char *dir, const char *how, int,int l)
 {
 	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
-	long r=(long)(new mglData(_DT_->Momentum(*dir, s)));
+	uintptr_t r=uintptr_t(new mglData(_DT_->Momentum(*dir, s)));
 	delete []s;	return r;
 }
 /// Create n-th points distribution of this data values in range [v1, v2]
-long mgl_data_hist_(long *d, int *n, float *v1, float *v2, int *nsub)
-{	return (long)(new mglData(_DT_->Hist(*n,*v1,*v2,*nsub)));	}
+uintptr_t mgl_data_hist_(long *d, int *n, float *v1, float *v2, int *nsub)
+{	return uintptr_t(new mglData(_DT_->Hist(*n,*v1,*v2,*nsub)));	}
 /// Create n-th points distribution of this data values in range [v1, v2] with weight \a w
-long mgl_data_hist_w_(long *d, long *w, int *n, float *v1, float *v2, int *nsub)
-{	return (long)(new mglData(_DT_->Hist(*((mglData *)*w),*n,*v1,*v2,*nsub)));	}
+uintptr_t mgl_data_hist_w_(long *d, long *w, int *n, float *v1, float *v2, int *nsub)
+{	return uintptr_t(new mglData(_DT_->Hist(*((mglData *)*w),*n,*v1,*v2,*nsub)));	}
 /// Cumulative summation the data in given direction or directions
 void mgl_data_cumsum_(long *d, const char *dir,int l)
 {
@@ -419,17 +419,17 @@ void mgl_data_cumsum_(long *d, const char *dir,int l)
 void mgl_data_crop_(long *d, int *n1, int *n2, const char *dir,int)
 {	_DT_->Crop(*n1,*n2,*dir);	}
 /// Get array which is result of maximal values in given direction or directions
-long mgl_data_max_dir_(long *d, const char *dir,int l)
+uintptr_t mgl_data_max_dir_(long *d, const char *dir,int l)
 {
 	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
-	long r = long(new mglData(_DT_->Max(s)));	delete []s;
+	long r = uintptr_t(new mglData(_DT_->Max(s)));	delete []s;
 	return r;
 }
 /// Get array which is result of minimal values in given direction or directions
-long mgl_data_min_dir_(long *d, const char *dir,int l)
+uintptr_t mgl_data_min_dir_(long *d, const char *dir,int l)
 {
 	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
-	long r = long(new mglData(_DT_->Min(s)));	delete []s;
+	long r = uintptr_t(new mglData(_DT_->Min(s)));	delete []s;
 	return r;
 }
 //-----------------------------------------------------------------------------
@@ -454,12 +454,12 @@ void mgl_data_envelop(HMDT dat, char dir)	{	dat->Envelop(dir);	}
 void mgl_data_sew(HMDT dat, const char *dirs, float da)
 {	dat->Sew(dirs,da);	}
 //-----------------------------------------------------------------------------
-long mgl_data_evaluate_i_(long *d, long *idat, int *norm)
-{	return long(new mglData(_DT_->Evaluate(_D_(idat),*norm)));	}
-long mgl_data_evaluate_ij_(long *d, long *idat, long *jdat, int *norm)
-{	return long(new mglData(_DT_->Evaluate(_D_(idat),_D_(jdat),*norm)));	}
-long mgl_data_evaluate_ijk_(long *d, long *idat, long *jdat, long *kdat, int *norm)
-{	return long(new mglData(_DT_->Evaluate(_D_(idat),_D_(jdat),_D_(kdat),*norm)));	}
+uintptr_t mgl_data_evaluate_i_(long *d, long *idat, int *norm)
+{	return uintptr_t(new mglData(_DT_->Evaluate(_D_(idat),*norm)));	}
+uintptr_t mgl_data_evaluate_ij_(long *d, long *idat, long *jdat, int *norm)
+{	return uintptr_t(new mglData(_DT_->Evaluate(_D_(idat),_D_(jdat),*norm)));	}
+uintptr_t mgl_data_evaluate_ijk_(long *d, long *idat, long *jdat, long *kdat, int *norm)
+{	return uintptr_t(new mglData(_DT_->Evaluate(_D_(idat),_D_(jdat),_D_(kdat),*norm)));	}
 void mgl_data_envelop_(long *d, const char *dir, int)
 {	_DT_->Envelop(*dir);	}
 void mgl_data_sew_(long *d, const char *dirs, float *da, int l)

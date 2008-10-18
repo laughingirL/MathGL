@@ -39,6 +39,7 @@
 
 #include "mgl/mgl_glut.h"
 #include "mgl/mgl_c.h"
+#include "mgl/mgl_f.h"
 
 mglGraphGLUT *_mgl_glwnd;
 void _mgl_key_up(unsigned char ch,int ,int );
@@ -214,12 +215,12 @@ HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, voi
 //-----------------------------------------------------------------------------
 mglGraphGLUT::mglGraphGLUT() : mglGraphGL()	{}
 //-----------------------------------------------------------------------------
-long mgl_create_graph_glut_(int (*draw)(long *gr, void *p), const char *title, void *par, int l)
+uintptr_t mgl_create_graph_glut_(int (*draw)(long *gr, void *p), const char *title, void *par, int l)
 {
 	mglGraphGLUT *g = new mglGraphGLUT;
 	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
 	g->Window(0,0,(int (*)(mglGraph *,void *))draw,s,par);
 	delete []s;
-	return (long)g;
+	return uintptr_t(g);
 }
 //-----------------------------------------------------------------------------

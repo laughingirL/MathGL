@@ -22,7 +22,9 @@ mathgl.py: mgl.i mgl_base.i  mgl_data.i  mgl_graph.i $(top_builddir)/include/mgl
 endif
 
 
-#if USE_OCTAVE
+if USE_OCTAVE
+
+CLEANFILES += mgl_octave.cpp mathgl.oct mathgl.tar.gz
 
 PKG_NAME = mathgl
 PKG_OCT_FILES = mathgl.oct
@@ -44,5 +46,5 @@ mgl_octave.cpp: mgl.i mgl_base.i  mgl_data.i  mgl_graph.i $(top_builddir)/includ
 	swig -octave -c++ -o mgl_octave.cpp mgl.i
 mathgl.oct: mgl_octave.cpp
 	$(MY_MKOCTFILE) -o $@ $^ -fPIC -I../include -L../mgl/ -lmgl
-#endif
+endif
 

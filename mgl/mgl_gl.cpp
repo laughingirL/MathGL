@@ -28,8 +28,8 @@
 HMGL mgl_create_graph_gl()
 {	return new mglGraphGL;	}
 /// Create mglGraph object in OpenGL mode.
-long mgl_create_graph_gl_()
-{	return long(new mglGraphGL);	}
+uintptr_t mgl_create_graph_gl_()
+{	return uintptr_t(new mglGraphGL);	}
 //-----------------------------------------------------------------------------
 mglGraphGL::mglGraphGL() : mglGraphAB(1,1)	{}
 //-----------------------------------------------------------------------------

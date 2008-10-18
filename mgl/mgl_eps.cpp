@@ -56,8 +56,8 @@ int mgl_compare_prim(const void *p1, const void *p2)
 HMGL mgl_create_graph_ps(int width, int height)
 {    return new mglGraphPS(width,height);	}
 /// Create mglGraph object in PostScript mode.
-long mgl_create_graph_ps_(int *width, int *height)
-{    return (long)(new mglGraphPS(*width,*height));	}
+uintptr_t mgl_create_graph_ps_(int *width, int *height)
+{    return uintptr_t(new mglGraphPS(*width,*height));	}
 //-----------------------------------------------------------------------------
 mglGraphPS::mglGraphPS(int w,int h) : mglGraphAB(w,h)
 {	P = 0;	pMax = pNum = 0;	}

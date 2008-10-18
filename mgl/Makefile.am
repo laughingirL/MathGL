@@ -15,6 +15,11 @@ if USE_TIFF
 mgllib_LTLIBRARIES += mgl-tiff.la
 endif
 
+if USE_TESTIO
+bin_PROGRAMS = test-io
+mgllib_LTLIBRARIES += test-mod.la
+endif
+
 WIDGETS =
 if USE_QT
 WIDGETS += -DWITH_QT
@@ -65,4 +70,11 @@ mgl_tiff_la_LDFLAGS = -no-undefined -module -avoid-version -shared
 mgl_tiff_la_LIBADD = $(TIFF_LIBS)
 mgl_tiff_la_CXXFLAGS = $(TIFF_FLAGS) $(AM_CXXFLAGS)
 mgl_tiff_la_SOURCES = mgl_zb_tiff.cpp
+endif
+
+if USE_TESTIO
+test_io_SOURCES = test_io.cpp mgl_io.cpp
+test_mod_la_LDFLAGS = -no-undefined -module -avoid-version -shared
+test_mod_la_SOURCES = test_mod.cpp
+test_io_LDADD = @LIBLTDL@
 endif

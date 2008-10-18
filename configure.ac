@@ -244,14 +244,26 @@ AC_ARG_ENABLE(octave,
   no)  octave=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-octave) ;;
 esac],[octave=false])
-# find Octave arch
 if (test x$langall = xtrue || test x$octave = xtrue) ;then
+# find Octave arch
     OCTAVE=octave
     AC_MSG_CHECKING([for Octave arch])
     OCTAVE_ARCH=`$OCTAVE -q --eval 'strcat(octave_config_info("canonical_host_type"), "-", octave_config_info("api_version"))'|sed -e 's/ans = //'`
     AC_MSG_RESULT([$OCTAVE_ARCH])
     AC_SUBST(OCTAVE_ARCH,[$OCTAVE_ARCH])
+    test_octave=true
 fi
+AM_CONDITIONAL(USE_OCTAVE, test x$test_octave = xtrue )
+
+AC_ARG_ENABLE(testio,
+[  --enable-testio    Turn on testio],
+[case "${enableval}" in
+  yes) testio=true ;;
+  no)  testio=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-testio) ;;
+esac],[testio=false])
+AM_CONDITIONAL(USE_TESTIO, test x$testio = xtrue )
+
 
 AC_CONFIG_FILES([
 Makefile
