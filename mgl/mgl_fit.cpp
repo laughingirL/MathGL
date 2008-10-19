@@ -14,8 +14,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#ifndef NO_GSL
 #include <gsl/gsl_multifit_nlin.h>
 #include <gsl/gsl_blas.h>
+#endif
 #include <ctype.h>
 #include "mgl/mgl_eval.h"
 #include "mgl/mgl.h"
@@ -36,6 +38,7 @@ struct mglFitData
 	const char *var;	///< variables for fitting
 };
 //-----------------------------------------------------------------------------
+#ifndef NO_GSL
 int	mgl_fit__f (const gsl_vector *x, void *data, gsl_vector *f)
 {
 	mglFitData *fd = (mglFitData *)data;
@@ -75,10 +78,12 @@ int mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f, gsl_matrix *
 	mgl_fit__df(x, data, J);
 	return GSL_SUCCESS;
 }
+#endif
 //-----------------------------------------------------------------------------
 /// GSL based fitting procedure for formula/arguments specified by string
 float mgl_fit_base(mglFitData *fd, float *ini)
 {
+#ifndef NO_GSL
 	register long i,m=fd->m,n=fd->n,iter=0;
 	if(n<1 || fd==0 || ini==0)	return -1;
 	// setup data
@@ -111,6 +116,7 @@ float mgl_fit_base(mglFitData *fd, float *ini)
 	gsl_matrix_free (covar);
 	delete []x_init;
 	return res;
+#endif
 }
 //-----------------------------------------------------------------------------
 float mglGraph::Fit(mglData &fit, const mglData &y, const char *eq, const char *var, float *ini, bool print)

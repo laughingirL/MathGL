@@ -1410,8 +1410,8 @@ float mgl_spline5(float y1[5], float y2[5], int n1, int n2, float d, float &dy)
 	b[3] = 10*(f1-f0)+t1-3*t0-4*d1-6*d0;
 	b[4] = 15*(f0-f1)-2*t1+3*t0+7*d1+8*d0;
 	b[5] = 6*(f1-f0)+t1-t0-3*d1-3*d0;
-	dy = b[1] + d*(2*b[2]+d*(3*b[3]+d*(4*b[4]+d*(5*b[5]+d*6*b[6]))));
-	return b[0] + d*(b[1]+d*(b[2]+d*(b[3]+d*(b[4]+d*(b[5]+d*b[6])))));
+	dy = b[1] + d*(2*b[2]+d*(3*b[3]+d*(4*b[4]+d*5*b[5])));
+	return b[0] + d*(b[1]+d*(b[2]+d*(b[3]+d*(b[4]+d*b[5]))));
 }
 //-----------------------------------------------------------------------------
 float mgl_spline3(float y1[3], float y2[3], int n1, int n2, float d, float &dy)
@@ -1458,6 +1458,7 @@ float mglData::Spline5(float x,float y,float z,float &dx,float &dy,float &dz) co
 //-----------------------------------------------------------------------------
 void mglData::Envelop(char dir)
 {
+#ifndef NO_GSL
 	register int i,j,k,i0;
 	double *b = new double[2*nx*ny*nz];
 	for(i=0;i<nx*ny*nz;i++)	{	b[2*i] = a[i];	b[2*i+1] = 0;	}
@@ -1506,6 +1507,7 @@ void mglData::Envelop(char dir)
 		gsl_fft_complex_wavetable_free(wt);
 	}
 	for(i=0;i<nx*ny*nz;i++)	a[i] = hypot(b[2*i], b[2*i+1]);
+#endif
 }
 //-----------------------------------------------------------------------------
 #define omod(x,y)	(y)*((x)>0?int((x)/(y)+0.5):int((x)/(y)-0.5))

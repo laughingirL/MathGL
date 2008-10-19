@@ -9,6 +9,8 @@
 7. Add FLTK, QT & GLUT to Fortran ??? How pass arguments ???
 8. mglGraphAB::ShowImg()
 9. Warning about absent directory (in 'chdir')
+10. Named ticks, SetTicks(char dir, float val1, const char *str1, ...) + command [xyz]ticks v1 's1' v2 's2' ...
+
 
 11. Update documentation (English)
 	* Python classes

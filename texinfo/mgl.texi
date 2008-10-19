@@ -198,7 +198,7 @@ Font style for text and labels (see text). Initial style is 'fnt'='rC' – Roman
 Set to use or not text rotation along axis. Initial value is @code{on}.
 @end deffn
 
-@deffn {MGL command} palette 'colors')
+@deffn {MGL command} palette 'colors'
 Set the palette as selected colors. Deafult value is @code{'Hbgrcmyhlnqeup'}. The palette is used mostly in 1D plots for curves which styles are not specified.
 @end deffn
 
@@ -221,6 +221,7 @@ Set direction around which curve rotated in @code{axial, torus}. Default value i
 @cindex xtick
 @cindex ytick
 @cindex ztick
+@cindex ctick
 @cindex crange
 @cindex ctick
 @cindex origin
@@ -272,13 +273,14 @@ Sets the range for x-,y-,z- coordinate or coloring. See also axis.
 @deffn {MGL command} xtick @code{val [sub=0 org=nan]}
 @deffnx {MGL command} ytick @code{val [sub=0 org=nan]}
 @deffnx {MGL command} ztick @code{val [sub=0 org=nan]}
-Step for x axis ticks (if @var{cal}>0) or it's number (if @var{val}<0) in x-direction. Zero value @var{val}=0 sets logarithmic ticks. Parameter @var{sub} sets the number of subticks. Parameter @var{org} set the starting points for ticks. If not @code{org=nan} then the value from @code{origin} is used.
+Step for x-, y-, z-axis ticks (if @var{cal}>0) or it's number (if @var{val}<0) in x-direction. Zero value @var{val}=0 sets logarithmic ticks. Parameter @var{sub} sets the number of subticks. Parameter @var{org} set the starting points for ticks. If not @code{org=nan} then the value from @code{origin} is used.
 @end deffn
 
 @deffn {MGL command} xtick 'templ'
 @deffnx {MGL command} ytick 'templ'
 @deffnx {MGL command} ztick 'templ'
-The template for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{templ}=@code{''} then default template is used (in simplest case it is @samp{%.2g}) with automatic detaching of common multiplier or common component.
+@deffnx {MGL command} ctick 'templ'
+The template for x-, y-, z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{templ}=@code{''} then default template is used (in simplest case it is @samp{%.2g}) with automatic detaching of common multiplier or common component.
 @end deffn
 
 @c ##################################################################
@@ -315,10 +317,6 @@ Defines aspect ratio for the plot. The viewable axes will be related one to anot
 
 @deffn {MGL command} perspective @code{val}
 Add (switch on) the perspective to plot. The parameter @math{val ~ 1/z_@{eff@} \in [0,1)}. By default (@code{val=0}) the perspective is off.
-@end deffn
-
-@deffn {MGL command} identity
-Clears transformation matrix. This command clears all previous effects of @code{aspect, subplot, inplot} or @code{Rotate} commands. It is equivalent to the call of  @code{inplot 0 1 0 1}.
 @end deffn
 
 @c ##################################################################
@@ -415,7 +413,7 @@ Draws unrotated text string @var{text} at position @{@var{x},@var{y},@var{z}@} w
 The command plots the string @var{text} at position @{@var{x},@var{y},@var{z}@} along direction @{@var{dx},@var{dy},@var{dz}@} with specified style @var{fnt} and @var{size}. By default parameters from @code{font} command are used.
 @end deffn
 
-@deffn {MGL command} title 'text' ['fnt'='' @code{size=2}]
+@deffn {MGL command} title 'text' ['fnt'='' @code{size=-2}]
 Print string @var{text} as title of the picture (at the top of the picture). Can be used at any place (even inside @code{subplot}).
 @end deffn
 
@@ -448,7 +446,7 @@ These commands draw the ``things for measuring'', like axis with ticks, colorbar
 Draws axes with ticks (@pxref{Axis settings (MGL)}) in directions determined by string parameter @var{dir}.If string contain the symbol @samp{_} then tick labels are not printed. Font for ticks labels is determined by command @code{font}.
 @end deffn
 
-@deffn {MGL command} colorbar ['sch'='' @code{pos=0}
+@deffn {MGL command} colorbar ['sch'='' @code{pos=0}]
 Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=''}) at edge of plot. Parameter @var{pos} specifies the position of colorbar: @samp{0} - at right (default), @samp{1} - at left, @samp{2} - at top, @samp{3} - at bottom. @sref{Dens sample}
 @end deffn
 
@@ -463,7 +461,7 @@ Draws bounding box outside the plotting volume with line style 'stl'.
 @deffn {MGL command} xlabel 'text' [@code{pos=1 shift=0}]
 @deffnx {MGL command} ylabel 'text' [@code{pos=1 shift=0}]
 @deffnx {MGL command} zlabel 'text' [@code{pos=1 shift=0}]
-Prints the label @var{text} for x-,y-,z-axis. The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis (default). If @var{pos}<0 then label is printed at the minimum of axis. The font size is 1.4 times larger than the one for ticks @code{font}. @xref{Text printing (MGL)}.
+Prints the label @var{text} for x-,y-,z-axis. The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis (default). If @var{pos}<0 then label is printed at the minimum of axis. The font size is 1.4 times larger than the one for ticks @code{font}. Parameter @code{shift} specify additional shifting of the label. @xref{Text printing (MGL)}.
 @end deffn
 
 @c ##################################################################
@@ -530,22 +528,23 @@ Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}
 Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} and fills it down to axis (to axis plane in 3D). If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). See also @code{plot, bars, stem, region}. @sref{Area sample}
 @end deffn
 
-@deffn {MGL command} region fdat gdat ['stl'='' @code{zval=nan}]
-@deffnx {MGL command} region xdat fdat gdat ['stl'='' @code{zval=nan}]
-Fills area between curves @{@var{xdat}[i], @var{fdat}[i]@} and @{@var{xdat}[i], @var{gdat}[i]@}. If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x.
+@deffn {MGL command} region fdat gdat ['stl'='' @code{inside=off}]
+@deffnx {MGL command} region xdat fdat gdat ['stl'='' @code{inside=off}]
+Fills area between curves @{@var{xdat}[i], @var{fdat}[i]@} and @{@var{xdat}[i], @var{gdat}[i]@}. If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x.  Parameter  @code{inside=off} set to fill are with y1<y<y2 else the area with y2<y<y1 will be also filled.
 @c If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). 
 See also @code{area, bars, stem}. @sref{Region sample}
 @end deffn
 
-@deffn {MGL command} bars ydat ['stl'='' @code{zval=nan}]
-@deffnx {MGL command} bars xdat ydat ['stl'='' @code{zval=nan}]
-@deffnx {MGL command} bars xdat ydat zdat ['stl'='']
-Draws vertical bars from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} to axis (to axis plane in 3D). If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). See also @code{area, barh, stem, chart}. @sref{Bars sample}
+@deffn {MGL command} bars ydat ['stl'='' @code{zval=nan above=off}]
+@deffnx {MGL command} bars xdat ydat ['stl'='' @code{zval=nan above=off}]
+@deffnx {MGL command} bars xdat ydat zdat ['stl'='' @code{above=off}]
+Draws vertical bars from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} to axis (to axis plane in 3D). If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). Bars are drawn side-by-side (if @code{above = off}) or one above another (if @code{above = on}). Marks at data points are not drawn. See also @code{area, barh, stem, chart}. @sref{Bars sample}
 @end deffn
 
-@deffn {MGL command} barh vdat ['stl'='' @code{zval=nan}]
-@deffnx {MGL command} bars ydat vdat ['stl'='' @code{zval=nan}]
-Draws horizontal bars from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} to y-axis. If array @var{ydat} is not specified then its an automatic array is used with values equidistantly distributed along y. @c If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). 
+@deffn {MGL command} barh vdat ['stl'='' @code{zval=nan above=off}]
+@deffnx {MGL command} bars ydat vdat ['stl'='' @code{zval=nan above=off}]
+Draws horizontal bars from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} to y-axis. If array @var{ydat} is not specified then its an automatic array is used with values equidistantly distributed along y. Bars are drawn side-by-side (if @code{above = off}) or one above another (if @code{above = on}). Marks at data points are not drawn.
+@c If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). 
 See also @code{bars}. @sref{Barh sample}
 @end deffn
 
@@ -655,7 +654,7 @@ Draws density plot for surface specified parametrically @{@var{xdat}[i,j], @var{
 
 @deffn {MGL command} cont vdat zdat ['sch'='' @code{zval=nan}]
 @deffnx {MGL command} cont vdat xdat ydat zdat ['sch'='' @code{zval=nan}]
-Draws contour lines for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} at @var{z} = @var{zVal} (or for @var{z}=@var{vdat}[k] if @code{zval=nan}). Contours are plotted for @var{zdat}[i,j]=@var{vdat}[k] for all k. See also @code{dens, contf, axial, cont[xyz]}. @sref{Cont sample}
+Draws contour lines for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} at @var{z} = @var{zVal} (or for @var{z}=@var{vdat}[k] if @code{zval=nan}). Contours are plotted for @var{zdat}[i,j]=@var{vdat}[k] for all k. If string @var{stl} contain 't' (or 'T') symbol then contour labels will be drawn below (or above) the contours. See also @code{dens, contf, axial, cont[xyz]}. @sref{Cont sample}
 @end deffn
 
 @deffn {MGL command} cont zdat ['sch'='' @code{num=7 zval=nan}]
@@ -709,8 +708,8 @@ These commands perform plotting of 3D data. 3D means that data depend from 3 ind
 String paramter @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). If array @var{xdat}, @var{ydat}, @var{zdat} is not specified then its an automatic arrays are used with values equidistantly distributed along x, y, z.
 
 
-@deffn {MGL command} surf3 adat ['sch'='' @code{num=5}]
-@deffnx {MGL command} surf3 xdat ydat zdat adat ['sch'='' @code{num=5}]
+@deffn {MGL command} surf3 adat @code{val} ['sch'='']
+@deffnx {MGL command} surf3 xdat ydat zdat adat @code{val} ['sch'='']
 Draws isosurface plot for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]) at @var{a}(x,y,z)=@var{val}. If string contain @samp{#} then wire plot is produced. See also @code{cloud, dens3, surf3c, surf3a, axial}. @sref{Surf3 sample}
 @end deffn
 
@@ -731,7 +730,7 @@ Draws density plots at all central slices of the 3d data specified parametricall
 
 @deffn {MGL command} cont3 vdat adat 'dir' [@code{sval=-1} 'sch'='']
 @deffnx {MGL command} cont3 vdat xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='']
-Draws contour plot for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]). Contours are plotted for values specified in array @var{vdat} at slice @var{sval} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. If string @var{stl} have symbol @samp{#} then grid lines are drawn. See also @code{dens3, contf3, cont, grid3}. @sref{Cont3 sample}
+Draws contour plot for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]). Contours are plotted for values specified in array @var{vdat} at slice @var{sval} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. If string @var{stl} have symbol @samp{#} then grid lines are drawn. If string @var{stl} contain 't' (or 'T') symbol then contour labels will be drawn below (or above) the contours. See also @code{dens3, contf3, cont, grid3}. @sref{Cont3 sample}
 @end deffn
 
 @deffn {MGL command} cont3 adat 'dir' [@code{sval=-1} 'sch'='' @code{num=7}]
@@ -799,8 +798,8 @@ String paramter @var{sch} sets the color scheme (@pxref{Color scheme}). Previous
 Draws surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} and color it by matrix @var{cdat}[i,j]. See also @code{surf, surfa, surf3c}. @sref{SurfC sample}
 @end deffn
 
-@deffn {MGL command} surf3c adat cdat ['sch'='' @code{num=5}]
-@deffnx {MGL command} surf3c xdat ydat zdat adat cdat ['sch'='' @code{num=5}]
+@deffn {MGL command} surf3c adat cdat @code{val} ['sch'='']
+@deffnx {MGL command} surf3c xdat ydat zdat adat cdat @code{val} ['sch'='']
 Draws isosurface plot for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @code{surf3} command but the color of isosurface depends on values of array @var{cdat}. If string contain @samp{#} then wire plot is produced. See also @code{surf3, sur3a, surfc}. @sref{Surf3C sample}
 @end deffn
 
@@ -814,8 +813,8 @@ Draws @var{num}-th uniformly distributed in color range (see @code{caxis}) isosu
 Draws surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} and transparent it by matrix @var{cdat}[i,j]. See also @code{surf, surfc, surf3a, tile}. @sref{SurfA sample}
 @end deffn
 
-@deffn {MGL command} surf3a adat cdat ['sch'='' @code{num=5}]
-@deffnx {MGL command} surf3a xdat ydat zdat adat cdat ['sch'='' @code{num=5}]
+@deffn {MGL command} surf3a adat cdat @code{val} ['sch'='']
+@deffnx {MGL command} surf3a xdat ydat zdat adat cdat @code{val} ['sch'='']
 Draws isosurface plot for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @code{surf3} command but the transparency of isosurface depends on values of array @var{cdat}. If string contain @samp{#} then wire plot is produced. See also @code{surf3, sur3c, surfa}. @sref{Surf3A sample}
 @end deffn
 
@@ -954,11 +953,11 @@ Draws command parametrical curve @{@samp{x(t)}, @samp{y(t)}, @samp{z(t)}@} where
 @end deffn
 
 @deffn {MGL command} fsurf 'z(x,y)' ['sch'='' @code{num=100}]
-Draws command surface for function @samp{z(x,y)} where @samp{x}, @samp{y} variable is changed in @code{xrange, yrange}. You do not need to create the data arrays to plot it. The parameter @var{num} set the minimal number of points along coordinate(s) for plots. See also @code{surf}.
+Draws command surface for function @samp{z(x,y)} where @samp{x}, @samp{y} variable are changed in @code{xrange, yrange}. You do not need to create the data arrays to plot it. The parameter @var{num} set the minimal number of points along coordinate(s) for plots. See also @code{surf}.
 @end deffn
 
-@deffn {MGL command} fsurf 'x(u,v)' 'y(u,v)' 'z(u,v)' ['pen'='' @code{num=100}]
-Draws command parametrical surface @{@samp{x(u,v)}, @samp{y(u,v)}, @samp{z(u,v)}@} where @samp{u}, @samp{v} variable is changed in range [0, 1]. You do not need to create the data arrays to plot it. The parameter @var{num} set the minimal number of points along coordinate(s) for plots. See also @code{surf}.
+@deffn {MGL command} fsurf 'x(u,v)' 'y(u,v)' 'z(u,v)' ['sch'='' @code{num=100}]
+Draws command parametrical surface @{@samp{x(u,v)}, @samp{y(u,v)}, @samp{z(u,v)}@} where @samp{u}, @samp{v} variable are changed in range [0, 1]. You do not need to create the data arrays to plot it. The parameter @var{num} set the minimal number of points along coordinate(s) for plots. See also @code{surf}.
 @end deffn
 
 
@@ -1208,7 +1207,7 @@ Do integral transformation of complex data @var{ampl}, @var{phase} on specified 
 @end deffn
 
 @deffn {MGL command} stfad res real imag @code{dn} ['dir'='x']
-Short time fourier analysis for real and imaginary parts. Output is amplitude of partial fourier (result will have size @{dn, int(nx/dn), ny@} for dir='x'.
+Short time fourier analysis for real and imaginary parts. Output is amplitude of partial fourier. For example, result will have size @{dn, int(nx/dn), ny@} for @var{dir}=@samp{x}.
 @end deffn
 
 @c ------------------------------------------------------------------
