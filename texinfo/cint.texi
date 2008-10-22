@@ -82,8 +82,14 @@ Create the instance of class mglGraphQT and connected Qt window. Several windows
 @deftypefn {C function} @code{void} mgl_fltk_run ()
 Start FLTK message handling cycle. A normal program will end main() function with @code{return mgl_fltk_run();}.
 @end deftypefn
+@deftypefn {C function} @code{void} mgl_fltk_thread ()
+Start FLTK message handling cycle. In difference of @code{mgl_fltk_run()} the loop is started in separate thread so that program continues immediately.
+@end deftypefn
 @deftypefn {C function} @code{void} mgl_qt_run ()
-Start Qt message handling cycle. A normal program will end main() function with @code{return mgl_fltk_run();}. Alternatively user may setup Qt application by direct Qt functions calls.
+Start Qt message handling cycle. A normal program will end main() function with @code{return mgl_qt_run();}. Alternatively user may setup Qt application by direct Qt functions calls.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_qt_thread ()
+Start Qt message handling cycle. In difference of @code{mgl_qt_run()} the loop is started in separate thread so that program continues immediately.
 @end deftypefn
 @deftypefn {C function} @code{void} mgl_update (@code{HMGL} graph)
 Manually update contents of the window.
@@ -148,6 +154,10 @@ Allow to parse 'setsize' command or not.
 
 Functions and variables in this group influences on overall graphics appearance. So all of them should be placed @emph{before} any actual plotting function calls.
 
+@deftypemethod {mglGraph (Python)} @code{void} mgl_set_def_param (@code{HMGL} gr)
+Restore initial values for all of parameters except described in @ref{Zooming}.
+@end deftypemethod
+
 @menu
 * Transparency (Pure C)::       
 * Lighting (Pure C)::           
@@ -197,10 +207,13 @@ There are several functions for setup lighting. The general function is @code{mg
 @deftypefn {C function} @code{void} mgl_set_light (@code{HMGL} gr, @code{int} enable)
 Sets the using of light on/off for overall plot. It is recommended to call this function before any plotting command. Default value is lightning off.
 @end deftypefn
+@deftypefn {C function} @code{void} mgl_set_light_n (@code{HMGL} gr, @code{int} n, @code{int} enable)
+Switch on/off @var{n}-th light source separately.
+@end deftypefn
 
-@deftypefn {C function} @code{void} mgl_add_light (@code{HMGL} gr, @code{int} n, @code{float} x, @code{float} y, @code{float} z, @code{int} infty=@code{true})
-@deftypefnx {C function} @code{void} mgl_add_light_rgb (@code{HMGL} gr, @code{int} n, @code{float} x, @code{float} y, @code{float} z, @code{int} infty=@code{true}, @code{float} r, @code{float} g, @code{float} b, @code{float} i)
-The function adds a light source with identification @var{n} at position @{@var{x}, @var{y}, @var{z}@}. The color of light is @{@var{r}, @var{g}, @var{b}@} (white by default). The brightness of light is @var{i} which must be in range [0,1]. Flag @var{infty}=@code{true} puts the source to infinite distance (for the faster drawing). It is recommended to call this function before any plotting command.
+@deftypefn {C function} @code{void} mgl_add_light (@code{HMGL} gr, @code{int} n, @code{float} x, @code{float} y, @code{float} z, @code{char} c)
+@deftypefnx {C function} @code{void} mgl_add_light_rgb (@code{HMGL} gr, @code{int} n, @code{float} x, @code{float} y, @code{float} z, @code{int} infty, @code{float} r, @code{float} g, @code{float} b, @code{float} i)
+The function adds a light source with identification @var{n} at position @{@var{x}, @var{y}, @var{z}@}. The color of light is defined by character @var{c} or by RGB values @{@var{r}, @var{g}, @var{b}@}. The brightness of light is @var{i} which must be in range [0,1]. Flag @var{infty}=@code{true} puts the source to infinite distance (for the faster drawing). It is recommended to call this function before any plotting command.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_ambbr (@code{HMGL} gr, @code{float} bright)
@@ -252,11 +265,11 @@ The variable define the base width for all lines. The value <1 is ignored. Incre
 These functions control the overall zooming of the picture or the sub-picture. Normally you can use these variables and functions for removing ``white'' spaces around a plot.
 
 @deftypefn {C function} @code{void} mgl_set_plotfactor (@code{HMGL} gr, @code{float} val)
-The factor of plot size. It is not recommended to set it lower then 1.6. This is some anlogue of function Zoom() but applied not to overall image but for each InPlot. Use negative value to enable automatic @code{PlotFactor} selection.
+Sets the factor of plot size. It is not recommended to set it lower then 1.6. This is some anlogue of function Zoom() but applied not to overall image but for each InPlot. Use negative value to enable automatic @code{PlotFactor} selection.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_zoom (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} x2, @code{float} y2)
-The function changes the scale of graphics that correspond to zoom in/out of the picture. After function call the current plot will be cleared and further the picture will contain plotting from its part [x1,x2]*[y1,y2]. Here picture coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} changes from 0 to 1. Use @code{Zoom(0,0,1,1)} to return default view.
+Changes the scale of graphics that correspond to zoom in/out of the picture. After function call the current plot will be cleared and further the picture will contain plotting from its part [x1,x2]*[y1,y2]. Here picture coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} changes from 0 to 1. Use @code{Zoom(0,0,1,1)} to return default view.
 @end deftypefn
 
 @c ==================================================================
@@ -287,21 +300,20 @@ Function set the cutting off condition by formula @var{EqC}. This condition dete
 @cindex FontSize (Pure C)
 @cindex FontDef
 @cindex RotatedText
-@cindex SetFontSizePT
-@cindex SetFontSizeCM
-@cindex SetFontSizeIN
-@cindex SetFont
-@cindex GetFont
 
 @deftypefn {C function} @code{void} mgl_set_font_size (@code{HMGL} gr, @code{float} val)
-The size of font for tick and axis labels. Default font size of axis labels is 1.4 times large than for tick labels.
+Sets the size of font for tick and axis labels. Default font size of axis labels is 1.4 times large than for tick labels.
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_set_font_def (@code{HMGL} gr, @code{const char *} val)
+Sets the font specification (@pxref{Text printing (Pure C)}). Default is ``rC'' -- Roman font centering.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_rotated_text (@code{HMGL} gr, @code{int} val)
-Set to use or not text rotation along axis.
+Sets to use or not text rotation along axis.
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_set_font (@code{HMGL} gr, @code{const char *}name, @code{const char *}path))
+@deftypefn {C function} @code{void} mgl_load_font (@code{HMGL} gr, @code{const char *}name, @code{const char *}path)
 Load font typeface from @var{path}/@var{name}.
 @end deftypefn
 
@@ -323,19 +335,19 @@ Restore font data to default typeface.
 @cindex SelectPen
 
 @deftypefn {C function} @code{void} mgl_set_palette (@code{HMGL} gr, @code{const char *}@var{colors})
-Set the palette as selected colors. Deafult value is @code{"Hbgrcmyhlnqeup"}. The palette is used mostly in 1D plots (@pxref{1D plotting (Pure C)}) for curves which styles are not specified.
+Sets the palette as selected colors. Deafult value is @code{"Hbgrcmyhlnqeup"}. The palette is used mostly in 1D plots (@pxref{1D plotting (Pure C)}) for curves which styles are not specified.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_pal_color (@code{HMGL} gr, @code{int} n, @code{float} r, @code{float} g, @code{float} b)
-Set color for individual palette entry. Look at @code{mgl_set_palette()} function for simplified palette setting.
+Sets color for individual palette entry. Look at @code{mgl_set_palette()} function for simplified palette setting.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_pal_num (@code{HMGL} gr, @code{int} num)
-Set the number of actual colors in palette. The value must be less then 100.
+Sets the number of actual colors in palette. The value must be less then 100.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_scheme (@code{HMGL} gr, @code{const char *}sch)
-Set the color scheme for following plots. Usually this function is used internaly. @xref{Color scheme}.
+Sets the color scheme for following plots. Usually this function is used internaly. @xref{Color scheme}.
 @end deftypefn
 
 
@@ -348,7 +360,7 @@ Sets approximate number of lines in Mesh(), Fall(), Grid() and also the number o
 @end deftypefn
 
 @deftypefn {C function} @code{} mgl_set_axial_dir (@code{HMGL} gr, @code{char} dir)
-Set direction around which curve rotated in Axial() and Torus(). Default value is 'z'.
+Sets direction around which curve rotated in Axial() and Torus(). Default value is 'z'.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_draw_face (@code{HMGL} gr, @code{int} val)
@@ -385,32 +397,32 @@ These large set of functions control how the axis and ticks will be drawn. Note 
 
 @deftypefn {C function} @code{void} mgl_set_axis_2d (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} x2, @code{float} y2)
 @deftypefnx {C function} @code{void} mgl_set_axis_3d (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2)
-@deftypefnx {C function} @code{void} mgl_set_axis (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} x0, @code{float} y0, @code{float} z0)
-Safely sets the value for @var{Min}=@{@var{x1},@var{y1},@var{z1}@}, @var{Max}=@{@var{x2},@var{y2},@var{z2}@} and @var{Org}=@{@var{x0},@var{y0},@var{z0}@} members (options) of the class. If minimal and maximal values of the coordinate are the same or a variable is absent in the list of arguments then they are ignored. This function also sets @var{Cmin}=@var{z1} and @var{Cmax}=@var{z2}. This is default color range for 2d plots.
+@c @deftypefnx {C function} @code{void} mgl_set_axis (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} x0, @code{float} y0, @code{float} z0)
+Sets maximal and minimal values for coordinate range (bounding box). If minimal and maximal values of the coordinate are the same or a variable is absent in the list of arguments then they are ignored. This function also sets @var{Cmin}=@var{z1} and @var{Cmax}=@var{z2}. This is default color range for 2d plots.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_caxis (@code{HMGL} gr, @code{float} c1, @code{float} c2)
-Safely sets the values of @var{Cmin}=@var{c1} and @var{Cmax}=@var{c2}. This values are used later for determining the color of the surface.
+Sets values for color range. This values are used later for determining the color of the surface.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_xrange (@code{HMGL} gr, @code{const HMDT} a, @code{int} add)
-Sets values of @code{Min.x} and @code{Max.x} as minimal and maximal values of data @var{a}. See also mgl_set_axis().
+Sets values of x-range as minimal and maximal values of data @var{a}. See also mgl_set_axis().
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_yrange (@code{HMGL} gr, @code{const HMDT} a, @code{int} add)
-Sets values of @code{Min.y} and @code{Max.y} as minimal and maximal values of data @var{a}. See also mgl_set_axis().
+Sets values of y-range as minimal and maximal values of data @var{a}. See also mgl_set_axis().
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_zrange (@code{HMGL} gr, @code{const HMDT} a, @code{int} add)
-Sets values of @code{Min.z} and @code{Max.z} as minimal and maximal values of data @var{a}. See also mgl_set_axis().
+Sets values of z-range as minimal and maximal values of data @var{a}. See also mgl_set_axis().
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_crange (@code{HMGL} gr, @code{const HMDT} a, @code{int} add)
-Sets values of @code{Cmin} and @code{Cmax} as minimal and maximal values of data @var{a}. See also  mgl_set_caxis().
+Sets values of color range as minimal and maximal values of data @var{a}. See also  mgl_set_caxis().
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_origin (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0)
-Center of axis cross section. If one of values is NAN then MathGL library try to select optimal axis position.
+Sets center of axis cross section. If one of values is NAN then MathGL library try to select optimal axis position.
 @end deftypefn
 
 @c ------------------------------------------------------------------
@@ -420,7 +432,7 @@ Center of axis cross section. If one of values is NAN then MathGL library try to
 @cindex Ternary
 
 @deftypefn {C function} @code{void} mgl_set_func (@code{HMGL} gr, @code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ)
-Safely sets the transformation formulas for curvilinear coordinate. Each string should contain mathematical expression for new (real) coordinate depending on old (input) coordinates x, y, z. For example, the cylindrical coordinates are introduced as @code{mgl_set_func("x*cos(y)", "x*sin(y)", "z");}. For removing of formulas the corresponding parameter should be @code{NULL}. Using transformation formulas will slightly slowing the program, i.e. @code{mgl_set_func(NULL, NULL, NULL)} is faster than @code{mgl_set_func("x", "y", "z")}. @xref{mglFormula class}.
+Sets the transformation formulas for curvilinear coordinate. Each string should contain mathematical expression for new (real) coordinate depending on old (input) coordinates x, y, z. For example, the cylindrical coordinates are introduced as @code{mgl_set_func("x*cos(y)", "x*sin(y)", "z");}. For removing of formulas the corresponding parameter should be @code{NULL}. Using transformation formulas will slightly slowing the program, i.e. @code{mgl_set_func(NULL, NULL, NULL)} is faster than @code{mgl_set_func("x", "y", "z")}. @xref{mglFormula class}.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_ternary (@code{HMGL} gr, @code{int} tern)
@@ -430,6 +442,11 @@ The function sets to draws Ternary plot. This special plot is for 3 dependent co
 @c ------------------------------------------------------------------
 @node Ticks (Pure C), , Transformation (Pure C), Axis settings (Pure C)
 @subsubsection Ticks (Pure C)
+
+@deftypefn {C function} @code{void} mgl_set_ticks_dir (@code{HMGL} gr, @code{char} dir, @code{float} d, @code{int} ns, @code{float} org)
+Set the ticks step @var{d}, number of subticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
+@end deftypefn
+
 
 @deftypefn {C function} @code{void} mgl_set_ticks (@code{HMGL} gr, @code{float} dx, @code{float} dy, @code{float} dz)
 Step for axis ticks (if positive) or it's number (if negative) in x-,y-,z- directions. Zero value set logarithmic ticks.
@@ -501,6 +518,7 @@ Clears transformation matrix. This function clears all previous effects of Aspec
 @node Export to file (Pure C), Primitives drawing (Pure C), Transformation matrix (Pure C), C interface
 @subsection Export to file (Pure C)
 @cindex WritePNG
+@cindex WriteIDTF
 @cindex WriteSVG
 @cindex WriteBMP
 @cindex WriteEPS
@@ -514,11 +532,11 @@ These functions export current view to a graphic file. The filename @var{fname} 
 
 @deftypefn {C function} @code{void} mgl_write_png (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
 @deftypefnx {C function} @code{void} mgl_write_png_solid (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
-Exports current frame to PNG file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (can be @code{NULL}).
+Exports current frame to PNG file with transparent background. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (can be @code{NULL}).
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_write_jpg (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
-Exports current frame to JPEG file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (can be @code{NULL}).
+Exports current frame to JPEG file with non-transparent background (usually white). Parameter @var{fname} specifies the file name, @var{descr} adds description to file (can be @code{NULL}).
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_write_bmp (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
@@ -537,8 +555,16 @@ Exports current frame to EPS file. The vector representation is used if possible
 Exports current frame to SVG (Scalable Vector Graphics) file. The vector representation is used. In difference of EPS format, SVG format support transparency that allows to correctly draw half-transparent plot (like SurfA(), Surf3A(), Cloud()). Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
 @end deftypefn
 
+@deftypefn {C function} @code{void} mgl_write_idtf (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
+Exports current frame to IDTF file. Later this file can be converted to U3D format. The vector representation is used. So, the output file may be too large for graphic of large data array (especially for surfaces). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
+@end deftypefn
+
 @deftypefn {C function} @code{void} mgl_set_size (@code{HMGL} gr, @code{int} width, @code{int} height)
 Sets size of picture in pixels. This function @strong{must be} called before any other plotting because it completely remove picture contents.
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_flush (@code{HMGL} gr)
+Flushes the plotting commands to frame. This function may be useful if one wants to remove array before the finishing of the plot (i.e. before calling @code{Finish()}). Also call of this function separate the objects in mglGraphIDTF. Most of plots call this function internally.
 @end deftypefn
 
 @deftypefn {C function} @code{int} mgl_get_width (@code{HMGL} gr)
@@ -600,8 +626,8 @@ Draws the solid rectangle (face) perpendicular to [x,y,z]-axis correspondingly a
 Draw the spehere with radius @var{r} and center at point @{@var{x0}, @var{y0}, @var{z0}@} and color @var{stl}.
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_drop (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} r, @code{const char *}col, @code{float} shift, @code{float} ap)
-Draw the drop with radius @var{r} at point @{@var{x1},@var{y1},@var{z1}@} elongated in direction @{@var{x2},@var{y2},@var{z2}@} and with color @var{col}. Parameter @var{shift} set the degree of drop oblongness: @samp{0} is sphere, @samp{1} is maximally oblongness drop. Parameter @var{ap} set relative width of the drop (this is analogue of ``ellipticity'' for the sphere). @sref{Drops sample}
+@deftypefn {C function} @code{void} mgl_drop (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} dx, @code{float} dy, @code{float} dz, @code{float} r, @code{const char *}col, @code{float} shift, @code{float} ap)
+Draw the drop with radius @var{r} at point @{@var{x0},@var{y0},@var{z0}@} elongated in direction @{@var{dx},@var{dy},@var{dz}@} and with color @var{col}. Parameter @var{shift} set the degree of drop oblongness: @samp{0} is sphere, @samp{1} is maximally oblongness drop. Parameter @var{ap} set relative width of the drop (this is analogue of ``ellipticity'' for the sphere). @sref{Drops sample}
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_cone (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} r1, @code{float} r2, @code{const char *}stl, @code{int} draw_edge)
@@ -620,7 +646,7 @@ Draws a marks of different type at position @{@var{x},@var{y},@var{z}@}.
 @cindex Text
 @cindex Title
 
-These functions draw the text. There are functions for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The class mglFont (@pxref{mglFont class}) is used for low-level string parsing and printing. It can use arbitrary fontfaces and parse many TeX commands. All these functions have 2 variant: for printing 8-bit text (@code{char *}) and for printing Unicode text (@code{wchar_t *}). In first case the conversion in current locale is used. So sometimes you need to specify it by @code{setlocale()} function. The size argument control the size of text: if positive it give the value, if negative it give the value relative to @var{FontSize}. The font type (STIX, arial, courier, times and so on) can be selected by function SetFont(), GetFont(). @xref{Font settings (Pure C)}.
+These functions draw the text. There are functions for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The class mglFont (@pxref{mglFont class}) is used for low-level string parsing and printing. It can use arbitrary fontfaces and parse many TeX commands. All these functions have 2 variant: for printing 8-bit text (@code{char *}) and for printing Unicode text (@code{wchar_t *}). In first case the conversion in current locale is used. So sometimes you need to specify it by @code{setlocale()} function. The size argument control the size of text: if positive it give the value, if negative it give the value relative to @var{FontSize}. The font type (STIX, arial, courier, times and so on) can be selected by function @code{mgl_load_font()}. @xref{Font settings (Pure C)}.
 
 The font parameters are described by string. This string may contain several characters of font type (@samp{rbiwou}) and/or align (@samp{LRC}) specification. Also it may contain the text color @samp{wkrgbcymhRGBCYMHW} (@pxref{mglColor class}) after symbol @samp{:}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style, @samp{w} -- wired style, @samp{o} -- overlined text, @samp{u} -- underlined text. By default roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Also a parsing of the LaTeX-like syntax is provided (for detail @pxref{mglFont class}). For example, string @samp{iC:b} correspond to italic font style for centered text which printed by blue color.
 
@@ -631,9 +657,9 @@ The font parameters are described by string. This string may contain several cha
 The function plots the string @var{text} at position @{@var{x},@var{y},@var{z}@} with fonts specifying by the criteria @var{how}. The size of font is set by @var{size} parameter (default is @var{FontSize}). Parameter @var{dir} specifies the additional string align. The aligns are: @samp{x} -- align as x-label, @samp{y} -- align as y-label, @samp{z} -- align as z-label, @samp{i} -- align as x-label but inverse writing direction, @samp{t} -- no align (default), @samp{n} -- align in x-y plane.
 @end deftypefn
 
-@deftypefn {C function} @code{float} mgl_puts_dir (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{float} dx, @code{float} dy, @code{float} dz, @code{const char *}text, @code{float} size)
-@deftypefnx {C function} @code{float} mgl_putsw_dir (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{float} dx, @code{float} dy, @code{float} dz, @code{const wchar_t *}text, @code{float} size)
-The function plots the string @var{text} at position @{@var{x},@var{y},@var{z}@} along direction @{@var{dx},@var{dy},@var{dz}@} with specified @var{size}. Function return the width of the string.
+@deftypefn {C function} @code{void} mgl_puts_dir (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{float} dx, @code{float} dy, @code{float} dz, @code{const char *}text, @code{float} size)
+@deftypefnx {C function} @code{void} mgl_putsw_dir (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{float} dx, @code{float} dy, @code{float} dz, @code{const wchar_t *}text, @code{float} size)
+The function plots the string @var{text} at position @{@var{x},@var{y},@var{z}@} along direction @{@var{dx},@var{dy},@var{dz}@} with specified @var{size}.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_title (@code{HMGL} gr, @code{const char *}text, @code{const char *}font)
@@ -775,11 +801,11 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in
 
 These functions fill area between 2 curves. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y1.nx=y2.nx} and all dimensions of arrays @var{y1} and @var{y2} must be equal too. String @var{pen} specifies the color (@pxref{Line styles}). By default (@code{pen=NULL}) color from palette is used (@pxref{Palette and colors}). See also Area(), Bars(), Stem(). @sref{Region sample}
 
-@deftypefn {C function} @code{void} mgl_region_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y1, @code{const HMDT} y2, @code{const char *}pen)
+@deftypefn {C function} @code{void} mgl_region_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y1, @code{const HMDT} y2, @code{const char *}pen, @code{int} inside)
 The function fills area between curves @{@var{x}[i], @var{y1}[i]@} and @{@var{x}[i], @var{y2}[i]@}.
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_region (@code{HMGL} gr, @code{const HMDT} y1, @code{const HMDT} y2, @code{const char *}pen)
+@deftypefn {C function} @code{void} mgl_region (@code{HMGL} gr, @code{const HMDT} y1, @code{const HMDT} y2, @code{const char *}pen, @code{int} inside)
 The function fills area between curves @{@var{x}[i], @var{y1}[i]@} and @{@var{x}[i], @var{y2}[i]@}, where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
 @end deftypefn
 
@@ -1452,7 +1478,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex STFA
 
 @deftypefn {C function} @code{void} mgl_stfa_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} re, @code{const HMDT} im, @code{int} dn, @code{const char *}sch, @code{float} zVal)
-Draws spectrogram of complex array @var{re}+i*@code{im} for Fourier size of @var{dn} points at plane @var{z=zVal}. At this array @var{re}, @var{im} parametrically depend on coordinates @var{x}, @var{y}. String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. The size of @var{re} and @var{im} must be the same. The minor dimensions of arrays @var{x}, @var{y}, @var{re} should be equal. Arrays @var{x}, @var{y} can be vectors (not matrix as @var{re}).
+Draws spectrogram of complex array @var{re}+i*@code{im} for Fourier size of @var{dn} points at plane @var{z=zVal}. Parameter @var{dn} is arbitrary even integer. For example in 1D case, result is density plot of data @math{res[i,j]=|\sum_d^dn exp(I*j*d)*(re[i*dn+d]+I*im[i*dn+d])|/dn} with size @{int(nx/dn), dn, ny@}. At this array @var{re}, @var{im} parametrically depend on coordinates @var{x}, @var{y}. String @var{sch} sets the color scheme. Previous color scheme is used by default. The size of @var{re} and @var{im} must be the same. The minor dimensions of arrays @var{x}, @var{y}, @var{re} should be equal. Arrays @var{x}, @var{y} can be vectors (not matrix as @var{re}). @xref{Color scheme}.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_stfa (@code{HMGL} gr, @code{const HMDT} re, @code{const HMDT} im, @code{int} dn, @code{const char *}sch, @code{float} zVal)
@@ -1987,7 +2013,7 @@ Extracts sub-array data from the original data array keeping fixed positive inde
 Get column (or slice) of the data filled by formula @var{eq} of other named columns. For example, @code{Column("n*w^2/exp(t)");}. The column ids must be defined first by @code{SetColumnId()} function.
 @end deftypemethod
 @deftypemethod {C function} @code{void} mgl_data_set_id (@code{HMDT} dat, @code{const char *}ids)
-Set the symbol id for data columns. The string must contain one symbol 'a'...'z' per column (without spaces).
+Sets the symbol id for data columns. The string must contain one symbol 'a'...'z' per column (without spaces).
 @end deftypemethod
 
 @deftypemethod {C function} @code{HMDT} mgl_data_hist (@code{const HMDT} dat, @code{int} n, @code{float} v1, @code{float} v2, @code{int} nsub)

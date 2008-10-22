@@ -833,10 +833,12 @@ Draws horizontal tiles for surface specified parametrically @{@var{xdat}[i,j], @
 Draws mapping plot for matrixes @{@var{udat}, @var{vdat} @} which parametrically depend on coordinates @var{xdat}, @var{ydat}. The previous position of the cell (point) is marked by color. Height is proportional to Jacobian(udat,vdat). This plot is like Arnold diagram ???. If @code{pnts=off} then face is drawn otherwise the color ball at matrix knots are drawn. The size of @var{udat} and @var{vdat} must be the same. @sref{Map sample}
 @end deffn
 
-@deffn {MGL command} map re im @code{dn} ['sch'='' @code{pnts=on}]
-@deffnx {MGL command} map xdat ydat re im @code{dn} ['sch'='' @code{pnts=on}]
-Draws spectrogram of complex array @var{re}+i*@code{im} for Fourier size of @var{dn} points. At this array @var{re}, @var{im} parametrically depend on coordinates @var{xdat}, @var{ydat}. The size of @var{re} and @var{im} must be the same.
+@deffn {MGL command} stfa re im @code{dn} ['sch'='' @code{pnts=on}]
+@deffnx {MGL command} stfa xdat ydat re im @code{dn} ['sch'='' @code{pnts=on}]
+Draws spectrogram of complex array @var{re}+i*@code{im} for Fourier size of @var{dn} points at plane @var{z=zVal}. Parameter @var{dn} is arbitrary even integer. For example in 1D case, result is density plot of data @math{res[i,j]=|\sum_d^dn exp(I*j*d)*(re[i*dn+d]+I*im[i*dn+d])|/dn} with size @{int(nx/dn), dn, ny@}.
 @end deffn
+
+
 
 
 @c ##################################################################
@@ -1047,6 +1049,10 @@ Display information (sizes, maximum/minimum, momentums and so on) about the data
 Equidistantly fills the data values to range [@var{x1}, @var{x2}] in direction @var{dir}=@{@samp{x},@samp{y},@samp{z}@}.
 @end deffn
 
+@deffn {MGL command} fill dat 'eq' [vdat=0 wdat=0]
+Command fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in @emph{bounding box} (in difference from @code{modify} coomand). Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat}.
+@end deffn
+
 @deffn {MGL command} modify dat 'eq' [@code{dim=0}]
 Command fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in interval [0,1]. Variable @samp{u} is the original value of the array. Modification will be fulfilled only for slices >=@var{dim}.
 @end deffn
@@ -1207,8 +1213,17 @@ Do integral transformation of complex data @var{ampl}, @var{phase} on specified 
 @end deffn
 
 @deffn {MGL command} stfad res real imag @code{dn} ['dir'='x']
-Short time fourier analysis for real and imaginary parts. Output is amplitude of partial fourier. For example, result will have size @{dn, int(nx/dn), ny@} for @var{dir}=@samp{x}.
+Short time fourier analysis for real and imaginary parts. Output  is amplitude of partial fourier of length @var{dn}. For example if @var{dir}=@samp{x}, result will have size @{int(nx/dn), dn, ny@} and it will contain @math{res[i,j,k]=|\sum_d^dn exp(I*j*d)*(real[i*dn+d,k]+I*imag[i*dn+d,k])|/dn}.
 @end deffn
+
+@deffn {MGL command} pde res 'ham' ini_re ini_im [@code{dz=0.1 k0=100}]
+Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudodifferential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Coordinates of the equation (and the solution) are supposed to be in the bounding box. Note that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham='p^2+q^2-u^2'}. You may specify imaginary part for wave absorption, like @code{ham = 'p^2+i*x*(x>0)'}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}).
+@end deffn
+
+@deffn {MGL command} ray res 'ham' @code{x0 y0 z0 p0 q0 v0 [dt=0.1 tmax=10]}
+Solves GO ray equation like d@emph{r}/dt = d @var{ham}/d@emph{p}, d@emph{p}/dt = -d @var{ham}/d@emph{r}. This is Hamiltonian equations for particle trajectory in 3D case. Here @var{ham} is Hamiltonian which may depend on coordiantes @samp{x}, @samp{y}, @samp{z}, momentums @samp{p}=px, @samp{q}=py, @samp{v}=pz and time @samp{t}: @math{ham = H(x,y,z,p,q,v,t)}. The starting point (at @code{t=0}) is defined by variables @{@var{x0}, @var{y0}, @var{z0}, @var{p0}, @var{q0}, @var{v0}@}. Parameters @var{dt} and @var{tmax} specify the integration step and maximal time for ray tracing. Result is array of @{x,y,z,p,q,v,t@} with dimensions @{7 * int(@var{tmax}/@var{dt}+1) @}.
+@end deffn
+
 
 @c ------------------------------------------------------------------
 @node Commands on direction (MGL), Operators (MGL), Make another data (MGL), MGL interface

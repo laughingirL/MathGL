@@ -63,8 +63,16 @@ struct mglParse{};
 	~mglGraph()
 	{	mgl_delete_graph(self);	}
 
+	void DefaultPlotParam()
+	{	mgl_set_def_param(self);	}
 	void SetPalColor(int n, float r, float g, float b)
 	{	if(n>=0 && n<100)	mgl_set_pal_color(self, n, r, g, b);	}
+	void SetPalNum(int n)
+	{	if(n>=0 && n<100)	mgl_set_pal_num(self, n);	}
+	void SetPalette(const char *colors)
+	{	mgl_set_palette(self, colors);	}
+	void SetScheme(const char *colors)
+	{	mgl_set_scheme(self, colors);	}
 	void SetRotatedText(bool rotated)
 	{	mgl_set_rotated_text(self, rotated);	}
 	void SetCut(bool cut)
@@ -81,6 +89,8 @@ struct mglParse{};
 	{	mgl_set_arrow_size(self, size);	}
 	void SetFontSize(float size)
 	{	mgl_set_font_size(self, size);	}
+	void SetFontDef(char *fnt)
+	{	mgl_set_font_def(self, fnt);	}
 	void SetAlphaDef(float alpha)
 	{	mgl_set_alpha_default(self, alpha);	}
 	void SetSize(int width, int height)
@@ -98,7 +108,7 @@ struct mglParse{};
 	void SetScheme(const char *sch)
 	{	mgl_set_scheme(self, sch);		}
 	void LoadFont(const char *name, const char *path=NULL)
-	{	mgl_set_font(self, name, path);	}
+	{	mgl_load_font(self, name, path);	}
 	void CopyFont(mglGraph *gr)
 	{	mgl_copy_font(self, gr);}
 	void RestoreFont()
@@ -106,6 +116,8 @@ struct mglParse{};
 
 	void WriteTIFF(const char *fname,const char *descr="")
 	{	mgl_write_tif(self, fname, descr);	}
+	void WriteIDTF(const char *fname,const char *descr="")
+	{	mgl_write_idtf(self, fname, descr);	}
 	void WriteJPEG(const char *fname,const char *descr="")
 	{	mgl_write_jpg(self, fname, descr);	}
 	void WritePNG(const char *fname,const char *descr="")
@@ -116,10 +128,12 @@ struct mglParse{};
 	{	mgl_write_eps(self, fname, descr);	}
 	void WriteSVG(const char *fname,const char *descr="")
 	{	mgl_write_svg(self, fname, descr);	}
-	const unsigned char *GetRGB()
-	{	return mgl_get_rgb(self);	}
-	const unsigned char *GetRGBA()
-	{	return mgl_get_rgba(self);	}
+	void Flush()
+	{	mgl_flush(self);	}
+	const char *GetRGB()
+	{	return (const char *)mgl_get_rgb(self);	}
+	const char *GetRGBA()
+	{	return (const char *)mgl_get_rgba(self);	}
 	int GetWidth()
 	{	return mgl_get_width(self);	}
 	int GetHeight()
@@ -127,14 +141,18 @@ struct mglParse{};
 
 	void SetTranspType(int type)
 	{	mgl_set_transp_type(self, type);}
+	void SetTransparent(bool enable)
+	{	mgl_set_transp(self, enable);}
 	void Alpha(bool enable)
 	{	mgl_set_alpha(self, enable);	}
 	void SetFog(float d, float dz=0.25)
 	{	mgl_set_fog(self, d, dz);		}
 	void Light(bool enable)
 	{	mgl_set_light(self, enable);	}
-	void AddLight(int n, float x, float y, float z, bool infty=true, float r=1, float g=1, float b=1, float i=0.5)
-	{	mgl_add_light_rgb(self, n, x, y, z, infty, r, g, b, i);	}
+	void Light(int n,bool enable)
+	{	mgl_set_light_n(self, n, enable);	}
+	void AddLight(int n, float x, float y, float z, char c='w')
+	{	mgl_add_light(self, n, x, y, z, c);	}
 	void SetAmbient(float i)
 	{	mgl_set_ambbr(self, i);	}
 
@@ -150,23 +168,19 @@ struct mglParse{};
 	{	mgl_aspect(self, Ax, Ay, Az);		}
 	void Rotate(float TetX,float TetZ=0,float TetY=0)
 	{	mgl_rotate(self, TetX, TetZ, TetY);	}
-	void Rotate(float Tet,float x,float y,float z)
+	void RotateN(float Tet,float x,float y,float z)
 	{	mgl_rotate_vector(self, Tet, x, y, z);	}
 	void Perspective(float val)
 	{	mgl_perspective(self, val);	}
 
-	void SetTicks(float dx, float dy, float dz)
-	{	mgl_set_ticks(self, dx, dy, dz);	}
-	void SetSubTicks(int nx, int ny, int nz)
-	{	mgl_set_subticks(self, nx, ny, nz);	}
+	void SetTicks(char dir, float d=-5, int ns=0, float org=NaN)
+	{	mgl_set_ticks_dir(self, dir, d, ns, org);	}
 	void SetCRange(float c1, float c2)
 	{	mgl_set_caxis(self, c1, c2);	}
-	void SetAxis(float x1, float x2, float y1, float y2, float z1=0, float z2=0)
+	void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0)
 	{	mgl_set_axis(self, x1, y1, z1, x2, y2, z2, NaN, NaN, NaN);	}
 	void SetOrigin(float x0, float y0, float z0=NaN)
 	{	mgl_set_origin(self, x0, y0, z0);	}
-	void SetTickOrigin(float x0, float y0, float z0)
-	{	mgl_set_tick_origin(self, x0, y0, z0);	}
 	void SetCRange(mglData *dat, bool add=false)
 	{	mgl_set_crange(self, dat, add);	}
 	void SetXRange(mglData *dat, bool add=false)
@@ -177,7 +191,9 @@ struct mglParse{};
 	{	mgl_set_zrange(self, dat, add);	}
 	void SetFunc(const char *EqX=NULL, const char *EqY=NULL, const char *EqZ=NULL)
 	{	mgl_set_func(self, EqX, EqY, EqZ);	}
-	void SetCutFunc(const char *EqC)
+	void Ternary(bool val)
+	{	mgl_set_ternary(self, val);	}
+	void CutOff(const char *EqC)
 	{	mgl_set_cutoff(self, EqC);	}
 
 	void Box(const char *col="k", bool ticks=true)
@@ -188,7 +204,7 @@ struct mglParse{};
 	{	mgl_axis_grid(self, dir, pen);	}
 	void Label(char dir, const char *text, int pos=+1, float size=-1.4, float shift=0)
 	{	mgl_label_ext(self, dir, text, pos, size, shift);	}
-	void SetTuneTicks(bool tune, float fact_pos)
+	void SetTuneTicks(bool tune, float fact_pos=1.15)
 	{	mgl_tune_ticks(self, tune, fact_pos);	}
 	void SetTickTemplX(const wchar_t *templ)
 	{	mgl_set_xtt(self, templ);	}
@@ -203,7 +219,7 @@ struct mglParse{};
 	{	mgl_ball_str(self, x, y, z, col);	}
 	void Mark(float x, float y, float z, char mark)
 	{	mgl_mark(self, x, y, z, mark);	}
-	void Line(float x1, float y1, float z1, float x2, float y2, float z2, const char *pen,int n=2)
+	void Line(float x1, float y1, float z1, float x2, float y2, float z2, const char *pen="B",int n=2)
 	{	mgl_line(self, x1, y1, z1, x2, y2, z2, pen, n);	}
 	void FaceX(float x0, float y0, float z0, float wy, float wz, const char *stl="w", float dx=0, float dy=0)
 	{	mgl_facex(self, x0, y0, z0, wy, wz, stl, dx, dy);	}
@@ -211,8 +227,15 @@ struct mglParse{};
 	{	mgl_facey(self, x0, y0, z0, wx, wz, stl, dx, dy);	}
 	void FaceZ(float x0, float y0, float z0, float wx, float wy, const char *stl="w", float dx=0, float dy=0)
 	{	mgl_facez(self, x0, y0, z0, wx, wy, stl, dx, dy);	}
-	void Curve(float x1, float y1, float z1, float dx1, float dy1, float dz1, float x2, float y2, float z2, float dx2, float dy2, float dz2, const char *pen,int n=100)
+	void Curve(float x1, float y1, float z1, float dx1, float dy1, float dz1, float x2, float y2, float z2, float dx2, float dy2, float dz2, const char *pen="B", int n=100)
 	{	mgl_curve(self, x1, y1, z1, dx1, dy1, dz1, x2, y2, z2, dx2, dy2, dz2, pen, n);	}
+	void Drop(float x0, float y0, float z0, float dx, float dy, float dz, float r, const char *col="r", float shift=1, float ap=1)
+	{	mgl_drop(self, x0, y0, z0, dx, dy, dz, r, col, shift, ap);	}
+	void Sphere(float x0, float y0, float z0, float r, const char *col="r")
+	{	mgl_sphere(self, x0, y0, z0, r, col);	}
+	void Cone (float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2=-1, const char *stl="B", bool edge=false)
+	{	mgl_cone(self, x1,y1,z1,x2,y2,z2,r1,r2,stl,edge);	}
+
 	void Putsw(float x, float y, float z,const wchar_t *text,const char *font="",float size=-1,char dir=0)
 	{	mgl_putsw_ext(self, x, y, z, text, font, size, dir);	}
 	void Puts(float x, float y, float z,const char *text,const char *font="",float size=-1,char dir=0)
@@ -221,6 +244,11 @@ struct mglParse{};
 	{	mgl_putsw_dir(self, x, y, z, dx, dy, dz, text, size);	}
 	void Puts(float x, float y, float z, float dx, float dy, float dz, const char *text,float size=-1)
 	{	mgl_puts_dir(self, x, y, z, dx, dy, dz, text, size);	}
+	void Title(const char *text, const char *font=NULL)
+	{	mgl_title(self, text, font);	}
+	void Title(const wchar_t *text, const char *font=NULL)
+	{	mgl_titlew(self, text, font);	}
+
 	void Colorbar(const char *sch="",int where=0)
 	{	mgl_colorbar(self, sch, where);	}
 	void SimplePlot(mglData *a, int type, const char *stl="")
@@ -238,7 +266,7 @@ struct mglParse{};
 
 	void Plot(const char *fy, const char *stl="", float zval=NaN, int n=100)
 	{	mgl_fplot(self, fy, stl, n);	}
-	void Plot(const char *fx, const char *fy, const char *fz="", const char *stl="", int n=100)
+	void Plot(const char *fx, const char *fy, const char *fz, const char *stl="", int n=100)
 	{	mgl_fplot_xyz(self, fx, fy, fz, stl, n);	}
 	void Plot(mglData *x, mglData *y, mglData *z, const char *pen="")
 	{	mgl_plot_xyz(self, x, y, z, pen);	}
@@ -271,8 +299,19 @@ struct mglParse{};
 	void Bars(mglData *y, const char *pen="")
 	{	mgl_bars(self, y, pen);	}
 
+	void Barh(mglData *y, mglData *v, const char *pen="")
+	{	mgl_barh_yx(self, y, v, pen);	}
+	void Barh(mglData *v, const char *pen="")
+	{	mgl_barh(self, v, pen);	}
+	void Region(mglData *y1, mglData *y2, const char *pen=NULL, bool inside=true)
+	{	mgl_region(self, y1,y2,pen,inside);	}
+	void Region(mglData *x, mglData *y1, mglData *y2, const char *pen=NULL, bool inside=true)
+	{	mgl_region_xy(self, x,y1,y2,pen,inside);	}
+
 	void Torus(mglData *r, mglData *z, const char *pen="")
 	{	mgl_torus(self, r, z, pen);	}
+	void Torus(mglData *z, const char *pen="")
+	{	mgl_torus_2(self, z, pen);	}
 	void Text(mglData *x, mglData *y, mglData *z, const char *text, const char *font="", float size=-1)
 	{	mgl_text_xyz(self, x, y, z, text, font, size);	}
 	void Text(mglData *x, mglData *y, const char *text, const char *font="", float size=-1)
@@ -508,6 +547,12 @@ struct mglParse{};
 	{	mgl_contf_all_xyz(self, x, y, z, a, sch, Num);	}
 	void ContFA(mglData *a, const char *sch="", int Num=7)
 	{	mgl_contf_all(self, a, sch, Num);	}
+
+	void Beam(mglData *tr, mglData *g1, mglData *g2, mglData *a, float r, const char *stl=0, int flag=0, int num=3)
+	{	mgl_beam(self, tr,g1,g2,a,r,stl,flag,num);	}
+	void Beam(float val, mglData *tr, mglData *g1, mglData *g2, mglData *a, float r, const char *stl=NULL, int flag=0)
+	{	mgl_beam_val(self,val,tr,g1,g2,a,r,stl,flag);	}
+
 
 	void TriPlot(mglData *nums, mglData *x, mglData *y, mglData *z, const char *sch="")
 	{	mgl_triplot_xyz(self, nums, x, y, z, sch);	}

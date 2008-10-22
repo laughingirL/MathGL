@@ -1,5 +1,4 @@
 INCLUDES        = -I$(top_builddir)/include -I$(top_builddir)
-INCLUDES        += @INCLTDL@
 
 lib_LTLIBRARIES = libmgl.la
 
@@ -13,11 +12,6 @@ mgllib_LTLIBRARIES += mgl-hdf5.la
 endif
 if USE_TIFF
 mgllib_LTLIBRARIES += mgl-tiff.la
-endif
-
-if USE_TESTIO
-bin_PROGRAMS = test-io
-mgllib_LTLIBRARIES += test-mod.la
 endif
 
 WIDGETS =
@@ -34,12 +28,18 @@ if USE_GLUT
 WIDGETS += -DWITH_GLUT
 endif
 
+libmgl_la_LIBADD = $(PNG_LIBS) $(GSL_LIBS) $(GL_LIBS)
 libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
-libmgl_la_LIBADD = @LIBLTDL@ $(PNG_LIBS) $(GSL_LIBS) $(GL_LIBS)
 
 libmgl_la_CXXFLAGS = $(WIDGETS) -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
     -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFF_FLAGS) \
     $(PNG_FLAGS) $(FLTK_FLAGS) $(GSL_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS)
+
+if USE_LTDL
+INCLUDES        += @INCLTDL@
+libmgl_la_LIBADD += @LIBLTDL@
+libmgl_la_CXXFLAGS += -DWITH_LTDL
+endif
 
 libmgl_la_SOURCES = \
 mgl_data_cf.cpp	   mgl_axis.cpp     mgl_data_png.cpp  mgl_zb2.cpp \
@@ -49,7 +49,7 @@ mgl_1d.cpp         mgl_cont.cpp     mgl_exec.cpp      mgl_tex_table.cpp\
 mgl_2d.cpp         mgl_crust.cpp    mgl_export.cpp    mgl_main.cpp  \
 mgl_3d.cpp         mgl_data.cpp     mgl_f.cpp         mgl_idtf.cpp \
 mgl_ab.cpp         mgl_data_io.cpp  mgl_flow.cpp      mgl_vect.cpp \
-mgl_parse.cpp      mgl_fit.cpp
+mgl_parse.cpp      mgl_fit.cpp      mgl_pde.cpp
 
 if USE_JPEG
 mgl_jpeg_la_LDFLAGS = -no-undefined -module -avoid-version -shared
@@ -73,8 +73,13 @@ mgl_tiff_la_SOURCES = mgl_zb_tiff.cpp
 endif
 
 if USE_TESTIO
+bin_PROGRAMS = test-io
 test_io_SOURCES = test_io.cpp mgl_io.cpp
+if USE_LTDL
+test_io_CXXFLAGS = -DWITH_LTDL $(AM_CXXFLAGS)
+test_io_LDADD = @LIBLTDL@
+mgllib_LTLIBRARIES += test-mod.la
 test_mod_la_LDFLAGS = -no-undefined -module -avoid-version -shared
 test_mod_la_SOURCES = test_mod.cpp
-test_io_LDADD = @LIBLTDL@
+endif
 endif

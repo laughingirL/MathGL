@@ -261,42 +261,42 @@ void mgl_crust_tr(HMGL gr, const HMDT tr, const char *sch, float er)
 //	Fortran interface
 //-----------------------------------------------------------------------------
 /// Draw triangle mesh for points in arrays \a x, \a y, \a z.
-void mgl_triplot_xyz_(long *gr, long *nums, long *x, long *y, long *z, const char *sch,int l)
+void mgl_triplot_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && nums && x && y && z)	_GR_->TriPlot(_D_(nums), _D_(x), _D_(y), _D_(z), s);
 	delete []s;
 }
 /// Draw triangle mesh for points in arrays \a x, \a y.
-void mgl_triplot_xy_(long *gr, long *nums, long *x, long *y, const char *sch, float *zVal,int l)
+void mgl_triplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, const char *sch, float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr&&nums&&x&&y)	_GR_->TriPlot(_D_(nums), _D_(x), _D_(y), s, *zVal);
 	delete []s;
 }
 /// Draw dots in points \a x, \a y, \a z.
-void mgl_dots_(long *gr, long *x, long *y, long *z, const char *sch,int l)
+void mgl_dots_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && x && y && z)	_GR_->Dots(_D_(x),_D_(y),_D_(z),s);
 	delete []s;
 }
 /// Draw dots in points \a tr.
-void mgl_dots_tr_(long *gr, long *tr, const char *sch,int l)
+void mgl_dots_tr_(uintptr_t *gr, uintptr_t *tr, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && tr)	_GR_->Dots(_D_(tr),s);
 	delete []s;
 }
 /// Draw power crust for points in arrays \a x, \a y, \a z.
-void mgl_crust_(long *gr, long *x, long *y, long *z, const char *sch, float *er,int l)
+void mgl_crust_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, float *er,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && x && y && z)	_GR_->Crust(_D_(x),_D_(y),_D_(z),s,*er);
 	delete []s;
 }
 /// Draw power crust for points in arrays \a tr.
-void mgl_crust_tr_(long *gr, long *tr, const char *sch, float *er,int l)
+void mgl_crust_tr_(uintptr_t *gr, uintptr_t *tr, const char *sch, float *er,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && tr)	_GR_->Crust(_D_(tr),s,*er);

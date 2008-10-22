@@ -32,9 +32,9 @@ public:
 	/// Evaluates the formula for 'x, y, z, u, v, w'
 	float Calc(float x,float y,float z,float u,float v,float w);
 	/// Evaluates the formula for variables \a var
-	float Calc(float var['z'-'a'+1]);
+	float Calc(const float var['z'-'a'+1]);
 	/// Evaluates the derivates of the formula for variables \a var respect to variable \a diff
-	float CalcD(float var['z'-'a'+1], char diff);
+	float CalcD(const float var['z'-'a'+1], char diff);
 	/// Return error code
 	int GetError();
 	/// Parse the formula \a str and create formula-tree

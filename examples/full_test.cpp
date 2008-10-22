@@ -31,7 +31,7 @@ void save(mglGraph *gr,const char *name,const char *suf="",int type=0)
 }
 }
 //-----------------------------------------------------------------------------
-int sample_colors(mglGraph *gr, const void *)	// arrow styles
+int sample_colors(mglGraph *gr, const void *)	// Color table
 {
 	gr->Face(mglPoint(-1, -1), mglPoint(-1, -0.7), mglPoint(-0.6, -1), mglPoint(-0.6, -0.7), "L#");
 	gr->Puts(mglPoint(-0.8, -0.9), "L", "C:w", -1.4);
@@ -112,7 +112,74 @@ int sample_colors(mglGraph *gr, const void *)	// arrow styles
 	return 0;
 }
 //-----------------------------------------------------------------------------
-int sample_ae(mglGraph *gr, const void *)	// arrow styles
+int sample_pde(mglGraph *gr, const void *)	// PDE and Ray sample
+{
+	mglData r,a,re(128),im(128);
+	r = mglRay("p^2+q^2+v^2-x-1", mglPoint(-0.7, 0, -1),
+			   mglPoint(0, 0, 0.5), 0.05, 10);
+	gr->Plot(r.SubData(0), r.SubData(2), "k");
+	gr->Axis();
+	gr->Label('x', "\\i x", 1, -1.4, 0);
+	gr->Label('y', "\\i z", 1, -1.4, 0);
+
+	re.Fill("exp(-48*(x+0.7)^2)", gr->Min, gr->Max);
+	a = mglPDE("p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)", re, im,
+			   gr->Min, gr->Max, 0.01, 30);
+	a.Transpose("yxz");
+	gr->CAxis(0, 1);
+	gr->Dens(a,"wyrRk");
+	gr->Plot("-x", "k|");
+	gr->Puts(mglPoint(-0.8, 0.85), "absorption: (x+z)/2 for x+z>0", "L", -1);
+	gr->Puts(mglPoint(0.5, -0.05), "central ray", "L", -1);
+	gr->Title("Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0", "iC", -1.5);
+	return 0;
+}
+//-----------------------------------------------------------------------------
+int sample_stfa(mglGraph *gr, const void *)	// STFA sample
+{
+	mglData a(2000), b(2000);
+	a.Fill("cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+\
+			cos(200*pi*x)*(x<.5)*(x>0)+cos(400*pi*x)*(x>.5)",
+			gr->Min, gr->Max);
+	gr->SubPlot(1, 2, 0);
+	gr->Plot(a);
+	gr->Axis();
+	gr->Label('x', "\\i t");
+
+	gr->SubPlot(1, 2, 1);
+	gr->STFA(a, b, 64, "BbcyrR");
+	gr->Axis();
+	gr->Label('x', "\\i t");
+	gr->Label('y', "\\omega", 0);
+	return 0;
+}
+//-----------------------------------------------------------------------------
+int sample_envelop(mglGraph *gr, const void *)	// Envelop reconstruction
+{
+	mglData a(1000);
+	a.Fill("exp(-8*x^2)*sin(10*pi*x)", gr->Min, gr->Max);
+	gr->Plot(a, "b");
+	a.Envelop('x');
+	gr->Plot(a, "r");
+	gr->Axis();
+	return 0;
+}
+//-----------------------------------------------------------------------------
+int sample_sew(mglGraph *gr, const void *)	// Phase reconstruction
+{
+	mglData a(100, 100);
+	a.Modify("mod((y^2-(1-x)^2)/2,0.1)");
+	gr->Rotate(40, 60);
+	gr->Light(true);
+	gr->Alpha(true);
+	gr->Surf(a, "b");
+	a.Sew("xy", 0.1);
+	gr->Surf(a, "r");
+	gr->Box();
+	return 0;
+}
+//-----------------------------------------------------------------------------
+int sample_ae(mglGraph *gr, const void *)	// TeX sample
 {
 	gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}",
 			 0, -4);
@@ -590,6 +657,7 @@ int sample_crust(mglGraph *gr, const void *)
 //-----------------------------------------------------------------------------
 int sample_transp(mglGraph *gr, const void *s)	// flag #
 {
+	gr->DefaultPlotParam();
 	const char *suf = (const char *)s;
 	gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
 	mglData a(30,20);
@@ -875,8 +943,12 @@ int all_samples(mglGraph *gr, const void *s)
 	gr->SubPlot(1,1,0);gr->Clf();sample_fit(gr,0);	save(gr,"fit",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_drops(gr,s);
 	gr->SubPlot(1,1,0);gr->Clf();sample_logaxis(gr,s);
+	gr->SubPlot(1,1,0);gr->Clf();sample_sew(gr,0);	save(gr,"sew",suf);
 	gr->SubPlot(1,1,0);gr->Clf();sample_mirror(gr,0);	save(gr,"mirror",suf);
-	gr->CAxis(-1,1);
+	gr->DefaultPlotParam();	gr->Light(false);
+	gr->SubPlot(1,1,0);gr->Clf();sample_envelop(gr,0);	save(gr,"envelop",suf);
+	gr->SubPlot(1,1,0);gr->Clf();sample_stfa(gr,0);	save(gr,"stfa",suf);
+	gr->SubPlot(1,1,0);gr->Clf();sample_pde(gr,0);	save(gr,"pde",suf);
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -1043,7 +1115,7 @@ int test(mglGraph *gr)
 {
 //	gr->Box();	gr->Axis();
 	mglParse par;
-	FILE *fp=fopen("sew.mgl","rt");
+	FILE *fp=fopen("ray.mgl","rt");
 	par.Execute(gr,fp);
 	fclose(fp);
 //	gr->Axis(mglPoint(-10,0), mglPoint(10,7));

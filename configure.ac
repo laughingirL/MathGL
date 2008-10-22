@@ -264,6 +264,19 @@ AC_ARG_ENABLE(testio,
 esac],[testio=false])
 AM_CONDITIONAL(USE_TESTIO, test x$testio = xtrue )
 
+AC_ARG_ENABLE(docs,
+[  --enable-docs    Turn on documentation building],
+[case "${enableval}" in
+  yes) docs=true ;;
+  no)  docs=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-docs) ;;
+esac],[docs=false])
+if (test x$docs = xtrue || test x$all = xtrue) ;then
+	AC_CONFIG_FILES([texinfo/Makefile texinfo/png/Makefile])
+fi
+AM_CONDITIONAL(USE_DOCS, (test x$docs = xtrue || test x$all = xtrue) )
+
+AM_CONDITIONAL(USE_LTDL, (test x$testio = xtrue || test x$hdf5 = xtrue || test x$jpeg = xtrue || test x$tiff = xtrue))
 
 AC_CONFIG_FILES([
 Makefile
@@ -273,7 +286,5 @@ include/Makefile
 lang/Makefile
 utils/Makefile
 widgets/Makefile
-texinfo/Makefile
-texinfo/png/Makefile
 ])
 AC_OUTPUT

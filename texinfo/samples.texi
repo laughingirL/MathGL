@@ -5,11 +5,12 @@
 This chapter contain a lot of sample codes for all types of plots and for most important examples and hints. The same sample (with pictures) you can find at @uref{http://mathgl.sf.net/pictures.html}. Most of examples have the sample code on 5 languages: C++, MGL, C, Fortran and Python. However, I put only C++ code for some of examples due to a lot of them and clearency how to write code for other languages. All samples are divided on 5 large categories.
 
 @menu
-* 1D plotting samples::
-* 2D plotting samples::
-* 3D plotting samples::
-* Dual plotting samples::
-* Additional features::
+* 1D plotting samples::         
+* 2D plotting samples::         
+* 3D plotting samples::         
+* Dual plotting samples::       
+* Additional features::         
+* Advanced features::           
 @end menu
 
 @c ------------------------------------------------------------------
@@ -17,21 +18,21 @@ This chapter contain a lot of sample codes for all types of plots and for most i
 @section 1D plotting samples
 
 @menu
-* Plot sample::
-* Area sample::
-* Bars sample::
-* Barh sample::
-* Step sample::
-* Stem sample::
-* Region sample::
-* Error sample::
-* Mark sample::
-* TextMark sample::
-* Tube sample::
-* Text sample::
-* Torus sample::
-* Chart sample::
-* Pie chart sample::
+* Plot sample::                 
+* Area sample::                 
+* Bars sample::                 
+* Barh sample::                 
+* Step sample::                 
+* Stem sample::                 
+* Region sample::               
+* Error sample::                
+* Mark sample::                 
+* TextMark sample::             
+* Tube sample::                 
+* Text sample::                 
+* Torus sample::                
+* Chart sample::                
+* Pie chart sample::            
 @end menu
 
 @c ------------------------------------------------------------------
@@ -41,7 +42,7 @@ This chapter contain a lot of sample codes for all types of plots and for most i
 
 @float
 @image{png/plot, 7cm}
-@caption{Example of Plot.}
+@caption{Example of Plot. @tdref{plot}}
 @end float
 
 @strong{C++ code}
@@ -95,7 +96,7 @@ TO BE DONE
 
 @float
 @image{png/area, 7cm}
-@caption{Example of Area.}
+@caption{Example of Area. @tdref{area}}
 @end float
 
 @strong{C++ code}
@@ -149,7 +150,7 @@ TO BE DONE
 
 @float
 @image{png/bars, 7cm}
-@caption{Example of Bars.}
+@caption{Example of Bars. @tdref{bars}}
 @end float
 
 @strong{C++ code}
@@ -195,7 +196,7 @@ TO BE DONE
 
 @float
 @image{png/barh, 7cm}
-@caption{Example of Barh.}
+@caption{Example of Barh. @tdref{barh}}
 @end float
 
 @strong{C++ code}
@@ -241,7 +242,7 @@ TO BE DONE
 
 @float
 @image{png/step, 7cm}
-@caption{Example of Step.}
+@caption{Example of Step. @tdref{step}}
 @end float
 
 @strong{C++ code}
@@ -295,7 +296,7 @@ TO BE DONE
 
 @float
 @image{png/stem, 7cm}
-@caption{Example of Stem.}
+@caption{Example of Stem. @tdref{stem}}
 @end float
 
 @strong{C++ code}
@@ -349,7 +350,7 @@ TO BE DONE
 
 @float
 @image{png/region, 7cm}
-@caption{Example of Region.}
+@caption{Example of Region. @tdref{region}}
 @end float
 
 @strong{C++ code}
@@ -411,7 +412,7 @@ TO BE DONE
 
 @float
 @image{png/error, 7cm}
-@caption{Example of Error.}
+@caption{Example of Error. @tdref{error}}
 @end float
 
 @strong{C++ code}
@@ -470,7 +471,8 @@ ex = mgl_create_data_size(10,1,1)
 ey = mgl_create_data_size(10,1,1)
 call mgl_data_modify(y,'0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)',0)
 call mgl_data_modify(x0,'2*x-1 + 0.1*rnd-0.05',0);
-call mgl_data_modify(y0,'0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x) + 0.2*rnd-0.1',0);
+call mgl_data_modify(y0,'0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + &
+                         0.2*sin(pi*x) + 0.2*rnd-0.1',0);
 call mgl_data_modify(ey,'0.2',0)
 call mgl_data_modify(ex,'0.1',0);
 
@@ -495,7 +497,7 @@ TO BE DONE
 
 @float
 @image{png/mark, 7cm}
-@caption{Example of Mark.}
+@caption{Example of Mark. @tdref{mark}}
 @end float
 
 @strong{C++ code}
@@ -559,7 +561,7 @@ TO BE DONE
 
 @float
 @image{png/textmark, 7cm}
-@caption{Example of TextMark.}
+@caption{Example of TextMark. @tdref{textmark}}
 @end float
 
 @strong{C++ code}
@@ -623,7 +625,7 @@ TO BE DONE
 
 @float
 @image{png/tube, 7cm}
-@caption{Example of Tube.}
+@caption{Example of Tube. @tdref{tube}}
 @end float
 
 @strong{C++ code}
@@ -689,7 +691,7 @@ TO BE DONE
 
 @float
 @image{png/text, 7cm}
-@caption{Example of Text.}
+@caption{Example of Text. @tdref{text}}
 @end float
 
 @strong{C++ code}
@@ -747,7 +749,7 @@ TO BE DONE
 
 @float
 @image{png/torus, 7cm}
-@caption{Example of Torus.}
+@caption{Example of Torus. @tdref{torus}}
 @end float
 
 @strong{C++ code}
@@ -815,7 +817,7 @@ TO BE DONE
 
 @float
 @image{png/chart, 7cm}
-@caption{Example of Chart.}
+@caption{Example of Chart. @tdref{chart}}
 @end float
 
 @strong{C++ code}
@@ -874,7 +876,7 @@ TO BE DONE
 
 @float
 @image{png/pie_chart, 7cm}
-@caption{Example of Chart in cylindrical coordinates.}
+@caption{Example of Chart in cylindrical coordinates. @tdref{pie_chart}}
 @end float
 
 @strong{C++ code}
@@ -934,19 +936,19 @@ TO BE DONE
 @section 2D plotting samples
 
 @menu
-* Surf sample::
-* Transparent surface sample::
-* Surface in fog sample::
-* Sharp colors sample::
-* Mesh sample::
-* Fall sample::
-* Belt sample::
-* Tile sample::
-* Boxs sample::
-* Dens sample::
-* Cont sample::
-* ContF sample::
-* Axial sample::
+* Surf sample::                 
+* Transparent surface sample::  
+* Surface in fog sample::       
+* Sharp colors sample::         
+* Mesh sample::                 
+* Fall sample::                 
+* Belt sample::                 
+* Tile sample::                 
+* Boxs sample::                 
+* Dens sample::                 
+* Cont sample::                 
+* ContF sample::                
+* Axial sample::                
 @end menu
 
 @c ------------------------------------------------------------------
@@ -956,7 +958,7 @@ TO BE DONE
 
 @float
 @image{png/surf, 7cm}
-@caption{Example of Surf.}
+@caption{Example of Surf. @tdref{surf}}
 @end float
 
 @strong{C++ code}
@@ -1015,7 +1017,7 @@ TO BE DONE
 
 @float
 @image{png/surf_alpha, 7cm}
-@caption{Example of Surf & Alpha.}
+@caption{Example of Surf & Alpha. @tdref{surf_alpha}}
 @end float
 
 @strong{C++ code}
@@ -1078,7 +1080,7 @@ TO BE DONE
 
 @float
 @image{png/surf_fog, 7cm}
-@caption{Example of Surf & Fog.}
+@caption{Example of Surf & Fog. @tdref{surf_fog}}
 @end float
 
 @strong{C++ code}
@@ -1140,7 +1142,7 @@ TO BE DONE
 
 @float
 @image{png/surf_sl, 7cm}
-@caption{Example of sharp color scheme.}
+@caption{Example of sharp color scheme. @tdref{surf_sl}}
 @end float
 
 @strong{C++ code}
@@ -1198,7 +1200,7 @@ TO BE DONE
 
 @float
 @image{png/mesh, 7cm}
-@caption{Example of Mesh.}
+@caption{Example of Mesh. @tdref{mesh}}
 @end float
 
 @strong{C++ code}
@@ -1252,7 +1254,7 @@ TO BE DONE
 
 @float
 @image{png/fall, 7cm}
-@caption{Example of Fall.}
+@caption{Example of Fall. @tdref{fall}}
 @end float
 
 @strong{C++ code}
@@ -1306,7 +1308,7 @@ TO BE DONE
 
 @float
 @image{png/belt, 7cm}
-@caption{Example of Belt.}
+@caption{Example of Belt. @tdref{belt}}
 @end float
 
 @strong{C++ code}
@@ -1364,7 +1366,7 @@ TO BE DONE
 
 @float
 @image{png/tile, 7cm}
-@caption{Example of Tile.}
+@caption{Example of Tile. @tdref{tile}}
 @end float
 
 @strong{C++ code}
@@ -1422,7 +1424,7 @@ TO BE DONE
 
 @float
 @image{png/boxs, 7cm}
-@caption{Example of Boxs.}
+@caption{Example of Boxs. @tdref{boxs}}
 @end float
 
 @strong{C++ code}
@@ -1481,7 +1483,7 @@ TO BE DONE
 
 @float
 @image{png/dens, 7cm}
-@caption{Example of Dens & Colorbar.}
+@caption{Example of Dens & Colorbar. @tdref{dens}}
 @end float
 
 @strong{C++ code}
@@ -1531,7 +1533,7 @@ TO BE DONE
 
 @float
 @image{png/cont, 7cm}
-@caption{Example of Cont.}
+@caption{Example of Cont. @tdref{cont}}
 @end float
 
 @strong{C++ code}
@@ -1566,7 +1568,8 @@ mgl_delete_data(a);
 @verbatim
 integer a, mgl_create_data_size
 real zero, nan
-zero = 0; nan = zero/zero ! I don't know the NaN symbol in Fortran. So I produce it as zero/zero
+! I don't know the NaN symbol in Fortran. So I produce it as zero/zero
+zero = 0; nan = zero/zero 
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
@@ -1587,7 +1590,7 @@ TO BE DONE
 
 @float
 @image{png/contf, 7cm}
-@caption{Example of ContF.}
+@caption{Example of ContF. @tdref{contf}}
 @end float
 
 @strong{C++ code}
@@ -1622,7 +1625,8 @@ mgl_delete_data(a);
 @verbatim
 integer a, mgl_create_data_size
 real zero, nan
-zero = 0; nan = zero/zero ! I don't know the NaN symbol in Fortran. So I produce it as zero/zero
+! I don't know the NaN symbol in Fortran. So I produce it as zero/zero
+zero = 0; nan = zero/zero
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
@@ -1643,7 +1647,7 @@ TO BE DONE
 
 @float
 @image{png/axial, 7cm}
-@caption{Example of Axial.}
+@caption{Example of Axial. @tdref{axial}}
 @end float
 
 @strong{C++ code}
@@ -1703,17 +1707,17 @@ TO BE DONE
 @section 3D plotting samples
 
 @menu
-* Surf3 sample::
-* CloudQ sample::
-* CloudP sample::
-* Dens3 sample::
-* Cont3 sample::
-* ContF3 sample::
-* Cont projection sample::
-* Dens projection sample::
-* CutMinMax sample::
-* ``Isocaps'' sample::
-* CutOff sample::
+* Surf3 sample::                
+* CloudQ sample::               
+* CloudP sample::               
+* Dens3 sample::                
+* Cont3 sample::                
+* ContF3 sample::               
+* Cont projection sample::      
+* Dens projection sample::      
+* CutMinMax sample::            
+* ``Isocaps'' sample::          
+* CutOff sample::               
 @end menu
 
 @c ------------------------------------------------------------------
@@ -1723,7 +1727,7 @@ TO BE DONE
 
 @float
 @image{png/surf3, 7cm}
-@caption{Example of Surf3.}
+@caption{Example of Surf3. @tdref{surf3}}
 @end float
 
 @strong{C++ code}
@@ -1785,7 +1789,7 @@ TO BE DONE
 
 @float
 @image{png/cloudq, 7cm}
-@caption{Example of CloudQ.}
+@caption{Example of CloudQ. @tdref{cloudq}}
 @end float
 
 @strong{C++ code}
@@ -1843,7 +1847,7 @@ TO BE DONE
 
 @float
 @image{png/cloudp, 7cm}
-@caption{Example of CloudP.}
+@caption{Example of CloudP. @tdref{cloudp}}
 @end float
 
 @strong{C++ code}
@@ -1897,7 +1901,7 @@ TO BE DONE
 
 @float
 @image{png/densa, 7cm}
-@caption{Example of Dens3.}
+@caption{Example of Dens3. @tdref{densa}}
 @end float
 
 @strong{C++ code}
@@ -1959,7 +1963,7 @@ TO BE DONE
 
 @float
 @image{png/conta, 7cm}
-@caption{Example of Cont3.}
+@caption{Example of Cont3. @tdref{conta}}
 @end float
 
 @strong{C++ code}
@@ -2013,7 +2017,7 @@ TO BE DONE
 
 @float
 @image{png/contfa, 7cm}
-@caption{Example of ContF3.}
+@caption{Example of ContF3. @tdref{contfa}}
 @end float
 
 @strong{C++ code}
@@ -2069,7 +2073,7 @@ TO BE DONE
 
 @float
 @image{png/cont_xyz, 7cm}
-@caption{Example of projection by Cont[XYZ].}
+@caption{Example of projection by Cont[XYZ]. @tdref{cont_xyz}}
 @end float
 
 @strong{C++ code}
@@ -2142,7 +2146,7 @@ TO BE DONE
 
 @float
 @image{png/dens_xyz, 7cm}
-@caption{Example of projection by Dens[XYZ].}
+@caption{Example of projection by Dens[XYZ]. @tdref{dens_xyz}}
 @end float
 
 @strong{C++ code}
@@ -2215,7 +2219,7 @@ TO BE DONE
 
 @float
 @image{png/cutminmax, 7cm}
-@caption{Example of Surf3 & CutMin, CutMax.}
+@caption{Example of Surf3 & CutMin, CutMax. @tdref{cutminmax}}
 @end float
 
 @strong{C++ code}
@@ -2284,7 +2288,7 @@ TO BE DONE
 
 @float
 @image{png/cutminmax2, 7cm}
-@caption{Example of ``Isocaps''.}
+@caption{Example of ``Isocaps''. @tdref{cutminmax2}}
 @end float
 
 @strong{C++ code}
@@ -2336,7 +2340,7 @@ TO BE DONE
 
 @float
 @image{png/surf3_cutoff, 7cm}
-@caption{Example of Surf3 & CutOff.}
+@caption{Example of Surf3 & CutOff. @tdref{surf3_cutoff}}
 @end float
 
 @strong{C++ code}
@@ -2401,23 +2405,23 @@ TO BE DONE
 @section Dual plotting samples
 
 @menu
-* SurfC sample::
-* SurfA sample::
-* TileS sample::
-* Map sample::
-* Vect sample::
-* VectC sample::
-* Flow sample::
-* Pipe sample::
-* Dew sample::
-* Surf3C sample::
-* Surf3A sample::
-* Vect 3D sample::
-* VectC 3D sample::
-* Flow 3D sample::
-* Pipe 3D sample::
-* Crust sample::
-* Dots sample::
+* SurfC sample::                
+* SurfA sample::                
+* TileS sample::                
+* Map sample::                  
+* Vect sample::                 
+* VectC sample::                
+* Flow sample::                 
+* Pipe sample::                 
+* Dew sample::                  
+* Surf3C sample::               
+* Surf3A sample::               
+* Vect 3D sample::              
+* VectC 3D sample::             
+* Flow 3D sample::              
+* Pipe 3D sample::              
+* Crust sample::                
+* Dots sample::                 
 @end menu
 
 @c ------------------------------------------------------------------
@@ -2427,7 +2431,7 @@ TO BE DONE
 
 @float
 @image{png/surfc, 7cm}
-@caption{Example of SurfC.}
+@caption{Example of SurfC. @tdref{surfc}}
 @end float
 
 @strong{C++ code}
@@ -2494,7 +2498,7 @@ TO BE DONE
 
 @float
 @image{png/surfa, 7cm}
-@caption{Example of SurfA.}
+@caption{Example of SurfA. @tdref{surfa}}
 @end float
 
 @strong{C++ code}
@@ -2561,7 +2565,7 @@ TO BE DONE
 
 @float
 @image{png/tiler, 7cm}
-@caption{Example of TileS.}
+@caption{Example of TileS. @tdref{tiler}}
 @end float
 
 @strong{C++ code}
@@ -2620,7 +2624,7 @@ TO BE DONE
 
 @float
 @image{png/map, 7cm}
-@caption{Example of Map.}
+@caption{Example of Map. @tdref{map}}
 @end float
 
 @strong{C++ code}
@@ -2678,7 +2682,7 @@ TO BE DONE
 
 @float
 @image{png/vect, 7cm}
-@caption{Example of Vect.}
+@caption{Example of Vect. @tdref{vect}}
 @end float
 
 @strong{C++ code}
@@ -2737,7 +2741,7 @@ TO BE DONE
 
 @float
 @image{png/vectc, 7cm}
-@caption{Example of VectC.}
+@caption{Example of VectC. @tdref{vectc}}
 @end float
 
 @strong{C++ code}
@@ -2796,7 +2800,7 @@ TO BE DONE
 
 @float
 @image{png/flow, 7cm}
-@caption{Example of Flow.}
+@caption{Example of Flow. @tdref{flow}}
 @end float
 
 @strong{C++ code}
@@ -2854,7 +2858,7 @@ TO BE DONE
 
 @float
 @image{png/pipe, 7cm}
-@caption{Example of Pipe.}
+@caption{Example of Pipe. @tdref{pipe}}
 @end float
 
 @strong{C++ code}
@@ -2920,7 +2924,7 @@ TO BE DONE
 
 @float
 @image{png/dew, 7cm}
-@caption{Example of Dew.}
+@caption{Example of Dew. @tdref{dew}}
 @end float
 
 @strong{C++ code}
@@ -2985,7 +2989,7 @@ TO BE DONE
 
 @float
 @image{png/surf3c, 7cm}
-@caption{Example of Surf3C.}
+@caption{Example of Surf3C. @tdref{surf3c}}
 @end float
 
 @strong{C++ code}
@@ -3056,7 +3060,7 @@ TO BE DONE
 
 @float
 @image{png/surf3a, 7cm}
-@caption{Example of Surf3A.}
+@caption{Example of Surf3A. @tdref{surf3a}}
 @end float
 
 @strong{C++ code}
@@ -3126,15 +3130,18 @@ TO BE DONE
 
 @float
 @image{png/vect3, 7cm}
-@caption{Example of Vect in 3D.}
+@caption{Example of Vect in 3D. @tdref{vect3}}
 @end float
 
 @strong{C++ code}
 @verbatim
 mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
 gr->Rotate(40,60);
 gr->Box();
 gr->Vect(ex, ey, ez, "bwr");
@@ -3144,9 +3151,12 @@ gr->Vect(ex, ey, ez, "bwr");
 new ex 10 10 10
 new ey 10 10 10
 new ez 10 10 10
-modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
 
 rotate 40 60
 box
@@ -3158,9 +3168,12 @@ HMDT ex, ey, ez;
 ex = mgl_create_data_size(10,10,10);
 ey = mgl_create_data_size(10,10,10);
 ez = mgl_create_data_size(10,10,10);
-mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
@@ -3174,11 +3187,11 @@ ex = mgl_create_data_size(10,10,10)
 ey = mgl_create_data_size(10,10,10)
 ez = mgl_create_data_size(10,10,10)
 call mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-- 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+                        - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
 call mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-- 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+                        - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
 call mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-- 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+                        - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1);
@@ -3199,15 +3212,18 @@ TO BE DONE
 
 @float
 @image{png/vectc3, 7cm}
-@caption{Example of VectC in 3D.}
+@caption{Example of VectC in 3D. @tdref{vectc3}}
 @end float
 
 @strong{C++ code}
 @verbatim
 mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
 gr->Rotate(40,60);
 gr->Box();
 gr->VectC(ex, ey, ez, "bwr");
@@ -3217,9 +3233,12 @@ gr->VectC(ex, ey, ez, "bwr");
 new ex 10 10 10
 new ey 10 10 10
 new ez 10 10 10
-modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
+           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
+           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
+           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
 
 rotate 40 60
 box
@@ -3231,9 +3250,12 @@ HMDT ex, ey, ez;
 ex = mgl_create_data_size(10,10,10);
 ey = mgl_create_data_size(10,10,10);
 ez = mgl_create_data_size(10,10,10);
-mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
@@ -3247,11 +3269,11 @@ ex = mgl_create_data_size(10,10,10)
 ey = mgl_create_data_size(10,10,10)
 ez = mgl_create_data_size(10,10,10)
 call mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-- 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+                        - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
 call mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-- 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+                        - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
 call mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-- 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+                        - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1);
@@ -3272,15 +3294,18 @@ TO BE DONE
 
 @float
 @image{png/flow3, 7cm}
-@caption{Example of Flow in 3D.}
+@caption{Example of Flow in 3D. @tdref{flow3}}
 @end float
 
 @strong{C++ code}
 @verbatim
 mglData ex(30,30,30), ey(30,30,30), ez(30,30,30);
-ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
 gr->Rotate(40,60);
 gr->Box();
 gr->Flow(ex, ey, ez, "bwr");
@@ -3290,9 +3315,12 @@ gr->Flow(ex, ey, ez, "bwr");
 new ex 30 30 30
 new ey 30 30 30
 new ez 30 30 30
-modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
+           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
+           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
+           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
 
 rotate 40 60
 box
@@ -3304,9 +3332,12 @@ HMDT ex, ey, ez;
 ex = mgl_create_data_size(30,30,30);
 ey = mgl_create_data_size(30,30,30);
 ez = mgl_create_data_size(30,30,30);
-mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
@@ -3320,11 +3351,11 @@ ex = mgl_create_data_size(30,30,30)
 ey = mgl_create_data_size(30,30,30)
 ez = mgl_create_data_size(30,30,30)
 call mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-- 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+                        - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
 call mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-- 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+                        - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
 call mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-- 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+                        - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1);
@@ -3345,15 +3376,18 @@ TO BE DONE
 
 @float
 @image{png/pipe3, 7cm}
-@caption{Example of Pipe in 3D.}
+@caption{Example of Pipe in 3D. @tdref{pipe3}}
 @end float
 
 @strong{C++ code}
 @verbatim
 mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
@@ -3364,9 +3398,12 @@ gr->Pipe(ex, ey, ez, "bwr");
 new ex 10 10 10
 new ey 10 10 10
 new ez 10 10 10
-modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
+           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
+           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
+           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
 
 rotate 40 60
 light on
@@ -3379,9 +3416,12 @@ HMDT ex, ey, ez;
 ex = mgl_create_data_size(10,10,10);
 ey = mgl_create_data_size(10,10,10);
 ez = mgl_create_data_size(10,10,10);
-mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
+                    0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
@@ -3396,11 +3436,11 @@ ex = mgl_create_data_size(10,10,10)
 ey = mgl_create_data_size(10,10,10)
 ez = mgl_create_data_size(10,10,10)
 call mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-- 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+                        - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
 call mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-- 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+                        - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
 call mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-- 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+                        - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1);
@@ -3422,7 +3462,7 @@ TO BE DONE
 
 @float
 @image{png/crust, 7cm}
-@caption{Example of Crust.}
+@caption{Example of Crust. @tdref{crust}}
 @end float
 
 @strong{C++ code}
@@ -3476,7 +3516,7 @@ TO BE DONE
 
 @float
 @image{png/dots, 7cm}
-@caption{Example of Dots.}
+@caption{Example of Dots. @tdref{dots}}
 @end float
 
 @strong{C++ code}
@@ -3522,26 +3562,21 @@ TO BE DONE
 
 
 @c ------------------------------------------------------------------
-@node Additional features, , Dual plotting samples, Samples
+@node Additional features, Advanced features, Dual plotting samples, Samples
 @section Additional features
 
 @menu
-* Legend sample::
-* Adding mesh sample::
-* Curvelinear coorinates sample::
-* 2-axes sample::
-* Surf & Cont sample::
-* Flow & Dens sample::
-* Several light sample::
-* Mirrored surface sample::
-* Cont with labels sample::
-* Semi-log sample::
-* Log-log sample::
-* Fitting sample::
-* Ternary plot sample::
-* Coloring by coordinates sample::
-* Drops sample::
-* Molecules drawing sample::
+* Legend sample::               
+* Adding mesh sample::          
+* Surf & Cont sample::          
+* Flow & Dens sample::          
+* Several light sample::        
+* Mirrored surface sample::     
+* Cont with labels sample::     
+* Ternary plot sample::         
+* Coloring by coordinates sample::  
+* Drops sample::                
+* Molecules drawing sample::    
 @end menu
 
 @c ------------------------------------------------------------------
@@ -3552,13 +3587,15 @@ TO BE DONE
 
 @float
 @image{png/legend, 7cm}
-@caption{Example of Legend usage.}
+@caption{Example of Legend usage. @tdref{legend}}
 @end float
 
 @strong{C++ code}
 @verbatim
 mglData f(50,3);
-f.Modify("sin(2*pi*x*x)",0); f.Modify("sin(2*pi*x)",1); f.Modify("sin(2*pi*sqrt(x))",2);
+f.Modify("sin(2*pi*x*x)",0);
+f.Modify("sin(2*pi*x)",1);
+f.Modify("sin(2*pi*sqrt(x))",2);
 gr->Axis(mglPoint(0,-1),mglPoint(1,1));
 gr->Box(); gr->Plot(f); gr->Axis();
 gr->AddLegend("sin(\\pi {x^2})","b");
@@ -3622,7 +3659,7 @@ TO BE DONE
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Adding mesh sample, Curvelinear coorinates sample, Legend sample, Additional features
+@node Adding mesh sample, Surf & Cont sample, Legend sample, Additional features
 @subsection Adding mesh sample
 @cindex SubPlot
 @cindex Surf
@@ -3632,7 +3669,7 @@ TO BE DONE
 
 @float
 @image{png/samplea, 7cm}
-@caption{Example of adding mesh.}
+@caption{Example of adding mesh. @tdref{samplea}}
 @end float
 
 @strong{C++ code}
@@ -3725,207 +3762,16 @@ call mgl_delete_data(a)
 TO BE DONE
 @end verbatim
 
-@c ------------------------------------------------------------------
-@node Curvelinear coorinates sample, 2-axes sample, Adding mesh sample, Additional features
-@subsection Curvelinear coorinates sample
-@cindex Axis
-
-@float
-@image{png/sample3, 7cm}
-@caption{Example of curvelinear coorinates usage.}
-@end float
-
-@strong{C++ code}
-@verbatim
-gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,1,-1));
-
-gr->SubPlot(2,2,0); gr->Rotate(60,40);
-gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
-gr->Axis(); gr->Grid();
-gr->Text(mglPoint(0,1.3,1),"Cartesian");
-
-gr->SubPlot(2,2,1); gr->Rotate(60,40);
-gr->Axis("y*sin(pi*x)","y*cos(pi*x)",0);
-gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
-gr->Axis(); gr->Grid();
-gr->Text(mglPoint(0,1.3,1),"Cylindrical");
-
-gr->SubPlot(2,2,2); gr->Rotate(60,40);
-gr->Axis("2*y*x","y*y - x*x",0);
-gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
-gr->Axis(); gr->Grid();
-gr->Text(mglPoint(0,1.3,1),"Parabolic");
-
-gr->SubPlot(2,2,3); gr->Rotate(60,40);
-gr->Axis("y*sin(pi*x)","y*cos(pi*x)","x+z");
-gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
-gr->Axis(); gr->Grid();
-gr->Text(mglPoint(0,1.3,1),"Spiral");
-gr->Axis(0,0,0); // set to default Cartesian
-@end verbatim
-@strong{MGL code}
-@verbatim
-origin -1 1 -1
-
-subplot 2 2 0
-rotate 60 40
-line -1 0.5 0 1 0.5 0 'r2'
-axis
-grid
-text 0 1.3 1 'Cartesian'
-
-subplot 2 2 1
-rotate 60 40
-axis 'y*sin(pi*x)' 'y*cos(pi*x)' ''
-line -1 0.5 0 1 0.5 0 'r2'
-axis
-grid
-text 0 1.3 1 'Cylindrical'
-
-subplot 2 2 2
-rotate 60 40
-axis '2*y*x' 'y*y - x*x' ''
-line -1 0.5 0 1 0.5 0 'r2'
-axis
-grid
-text 0 1.3 1 'Parabolic'
-
-subplot 2 2 3
-rotate 60 40
-axis 'y*sin(pi*x)' 'y*cos(pi*x)' 'x+z'
-line -1 0.5 0 1 0.5 0 'r2'
-axis
-grid
-text 0 1.3 1 'Spiral'
-axis '' '' '' # set to default Cartesian
-@end verbatim
-@strong{Pure C code}
-@verbatim
-mgl_set_axis(gr,-1,-1,-1,1,1,1,-1,1,-1); mgl_subplot(gr,2,2,0); mgl_rotate(gr,60,40,0);
-mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
-mgl_axis(gr,"xyz"); mgl_axis_grid(gr,"xyz","B");
-mgl_text(gr,0,1.3,1,"Cartesian");
-
-mgl_subplot(gr,2,2,1); mgl_rotate(gr,60,40,0);
-mgl_set_func(gr,"y*sin(pi*x)","y*cos(pi*x)",0);
-mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
-mgl_axis(gr,"xyz"); mgl_axis_grid(gr,"xyz","B");
-mgl_text(gr,0,1.3,1,"Cylindrical");
-
-mgl_subplot(gr,2,2,2); mgl_rotate(gr,60,40,0);
-mgl_set_func(gr,"2*y*x","y*y - x*x","");
-mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
-mgl_axis(gr,"xyz"); mgl_axis_grid(gr,"xyz","B");
-mgl_text(gr,0,1.3,1,"Parabolic");
-
-mgl_subplot(gr,2,2,3); mgl_rotate(gr,60,40,0);
-mgl_set_func(gr,"y*sin(pi*x)","y*cos(pi*x)","x+z");
-mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
-mgl_axis(gr,"xyz"); mgl_axis_grid(gr,"xyz","B");
-mgl_text(gr,0,1.3,1,"Spiral");
-mgl_set_func(gr,0,0,0); /* set to default Cartesian */
-@end verbatim
-@strong{Fortran code}
-@verbatim
-call mgl_set_axis(gr,-1.,-1.,-1.,1.,1.,1.,-1.,1.,-1.)
-
-call mgl_subplot(gr,2,2,0)
-call mgl_rotate(gr,60.,40.,0.)
-call mgl_line(gr,-1.,0.5,0.,1.,0.5,0.,'r2',100)
-call mgl_axis(gr,'xyz')
-call mgl_axis_grid(gr,'xyz','B')
-call mgl_text(gr,0.,1.3,1.,'Cartesian')
-
-call mgl_subplot(gr,2,2,1)
-call mgl_rotate(gr,60.,40.,0.)
-call mgl_set_func(gr,'y*sin(pi*x)','y*cos(pi*x)','')
-call mgl_line(gr,-1.,0.5,0.,1.,0.5,0.,'r2',100)
-call mgl_axis(gr,'xyz')
-call mgl_axis_grid(gr,'xyz','B')
-call mgl_text(gr,0.,1.3,1.,'Cylindrical')
-
-call mgl_subplot(gr,2,2,2)
-call mgl_rotate(gr,60.,40.,0.)
-call mgl_set_func(gr,'2*y*x','y*y - x*x','')
-call mgl_line(gr,-1.,0.5,0.,1.,0.5,0.,'r2',100)
-call mgl_axis(gr,'xyz')
-call mgl_axis_grid(gr,'xyz','B')
-call mgl_text(gr,0.,1.3,1.,"Parabolic")
-
-call mgl_subplot(gr,2,2,3)
-call mgl_rotate(gr,60.,40.,0.)
-call mgl_set_func(gr,'y*sin(pi*x)','y*cos(pi*x)','x+z')
-call mgl_line(gr,-1.,0.5,0.,1.,0.5,0.,'r2',100)
-call mgl_axis(gr,'xyz')
-call mgl_axis_grid(gr,'xyz','B')
-call mgl_text(gr,0.,1.3,1.,'Spiral')
-call mgl_set_func(gr,'','','') ! set to default Cartesian
-@end verbatim
-@strong{Python}
-@verbatim
-TO BE DONE
-@end verbatim
 
 @c ------------------------------------------------------------------
-@node 2-axes sample, Surf & Cont sample, Curvelinear coorinates sample, Additional features
-@subsection 2-axes sample
-@cindex Axis
-
-@float
-@image{png/2_axis, 7cm}
-@caption{Example of 2 axes on the plot.}
-@end float
-
-@strong{C++ code}
-@verbatim
-mglData y1(50), y2(50);
-y1.Modify("0.3*sin(2*pi*x)"); y2.Modify("0.5+0.3*cos(2*pi*x)");
-gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,-1,-1));
-gr->Axis(); gr->Label('y',"axis 1",0);
-gr->Plot(y1,"b");
-gr->Axis(mglPoint(0,0,0),mglPoint(1,1,1),mglPoint(1,1,1));
-gr->Axis(); gr->Label('y',"axis 2",0);
-gr->Stem(y2,"r");
-@end verbatim
-@strong{MGL code}
-@verbatim
-new y1 50
-new y2 50
-modify y1 '0.3*sin(2*pi*x)'
-modify y2 '0.5+0.3*cos(2*pi*x)'
-axis -1 -1 -1 1 1 1
-origin -1 -1 -1
-axis
-ylabel 'axis 1' 0
-plot y1 'b'
-axis 0 0 0 1 1 1
-origin 1 1 1
-axis
-ylabel 'axis 2' 0
-stem y2 'r'
-@end verbatim
-@strong{Pure C code}
-@verbatim
-TO BE DONE
-@end verbatim
-@strong{Fortran code}
-@verbatim
-TO BE DONE
-@end verbatim
-@strong{Python}
-@verbatim
-TO BE DONE
-@end verbatim
-
-@c ------------------------------------------------------------------
-@node Surf & Cont sample, Flow & Dens sample, 2-axes sample, Additional features
+@node Surf & Cont sample, Flow & Dens sample, Adding mesh sample, Additional features
 @subsection Surf & Cont sample
 @cindex Surf
 @cindex Cont
 
 @float
 @image{png/surf_cont_y, 7cm}
-@caption{Example of Surf & Cont.}
+@caption{Example of Surf & Cont. @tdref{surf_cont_y}}
 @end float
 
 @strong{C++ code}
@@ -3990,7 +3836,7 @@ TO BE DONE
 
 @float
 @image{png/flow_dens, 7cm}
-@caption{Example of Flow & Dens.}
+@caption{Example of Flow & Dens. @tdref{flow_dens}}
 @end float
 
 @strong{C++ code}
@@ -4059,7 +3905,7 @@ TO BE DONE
 
 @float
 @image{png/several_light, 7cm}
-@caption{Example of Surf with several light.}
+@caption{Example of Surf with several light. @tdref{several_light}}
 @end float
 
 @strong{C++ code}
@@ -4132,7 +3978,7 @@ TO BE DONE
 
 @float
 @image{png/mirror, 7cm}
-@caption{Example of mirrored surface.}
+@caption{Example of mirrored surface. @tdref{mirror}}
 @end float
 
 @strong{C++ code}
@@ -4217,13 +4063,13 @@ TO BE DONE
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Cont with labels sample, Semi-log sample, Mirrored surface sample, Additional features
+@node Cont with labels sample, Ternary plot sample, Mirrored surface sample, Additional features
 @subsection Cont with labels sample
 @cindex Cont
 
 @float
 @image{png/contt, 7cm}
-@caption{Example of Cont with labels.}
+@caption{Example of Cont with labels. @tdref{contt}}
 @end float
 
 @strong{C++ code}
@@ -4265,253 +4111,15 @@ call mgl_delete_data(a)
 TO BE DONE
 @end verbatim
 
-@c ------------------------------------------------------------------
-@node Semi-log sample, Log-log sample, Cont with labels sample, Additional features
-@subsection Semi-log sample
-@cindex Axis
-@cindex SetTicks
-@cindex Plot
-
-@float
-@image{png/semilog, 7cm}
-@caption{Example of semi-log plot.}
-@end float
-
-@strong{C++ code}
-@verbatim
-mglData x(2000), y(2000);
-x.Modify("0.01/(x+10^(-5))"); y.Modify("sin(1/v)",x);
-
-gr->Axis(mglPoint(0.01,-1),mglPoint(1000,1),mglPoint(0.01,-1));
-gr->Axis("lg(x)",0,0); gr->dx = 0;
-
-gr->Box();
-gr->Plot(x,y,"b2");
-gr->Axis(); gr->Grid("xy","g");
-gr->Label('x',"x",0); gr->Label('y', "y = sin 1/x",0);
-@end verbatim
-@strong{MGL code}
-@verbatim
-new x 2000
-new y 2000
-modify x '0.01/(x+10^(-5))'
-modify y 'sin(1/v)' x
-
-xrange 0.01 1000
-origin 0.01 -1 0
-xtick 0
-axis 'lg(x)' '' ''
-
-plot x y 'b2'
-axis
-grid 'xy' 'g'
-xlabel 'x' 0
-ylabel 'y = sin 1/x' 0
-box
-@end verbatim
-@strong{Pure C code}
-@verbatim
-HMDT x, y; x = mgl_create_data_size(2000,1,1);
-y = mgl_create_data_size(2000,1,1);
-mgl_data_modify(x,"0.01/(x+10^(-5))",0);
-mgl_data_modify_vw(y,"sin(1/v)",x,0);
-
-mgl_set_axis(gr,0.01,-1.,0.,1000.,1.,0.,0.01,-1.,0.);
-mgl_set_func(gr,"lg(x)",0,0);
-mgl_set_ticks(gr,0.,-5.,-5.);
-
-mgl_box(gr,1);
-mgl_plot_xy(gr,x,y,"b2");
-mgl_axis(gr,"xy"); mgl_axis_grid(gr,"xy","g");
-mgl_label_ext(gr,'x',"x",0,-1.4);
-mgl_label_ext(gr,'y', "y = sin 1/x",0,-1.4);
-mgl_delete_data(x); mgl_delete_data(y);
-@end verbatim
-@strong{Fortran code}
-@verbatim
-integer x,y, mgl_create_data_size
-x = mgl_create_data_size(2000,1,1)
-y = mgl_create_data_size(2000,1,1)
-call mgl_data_modify(x,'0.01/(x+10^(-5))',0)
-call mgl_data_modify_vw(y,'sin(1/v)',x,x)
-
-call mgl_set_axis(gr,0.01,-1.,0.,1000.,1.,0.,0.01,-1.,0.)
-call mgl_set_func(gr,'lg(x)','','')
-call mgl_set_ticks(gr,0.,-5.,-5.)
-
-call mgl_box(gr,1)
-call mgl_plot_xy(gr,x,y,'b2')
-call mgl_axis(gr,'xy')
-call mgl_axis_grid(gr,'xy','g')
-call mgl_label_ext(gr,'x','x',0,-1.4)
-call mgl_label_ext(gr,'y', 'y = sin 1/x',0,-1.4)
-call mgl_delete_data(x)
-call mgl_delete_data(y)
-@end verbatim
-@strong{Python}
-@verbatim
-TO BE DONE
-@end verbatim
 
 @c ------------------------------------------------------------------
-@node Log-log sample, Fitting sample, Semi-log sample, Additional features
-@subsection Log-log sample
-@cindex Axis
-@cindex SetTicks
-@cindex Plot
-
-@float
-@image{png/loglog, 7cm}
-@caption{Example of log-log plot.}
-@end float
-
-@strong{C++ code}
-@verbatim
-mglData x(100), y(100);
-x.Modify("pow(10,6*x-3)"); y.Modify("sqrt(1+v^2)",x);
-
-gr->Axis(mglPoint(0.001,0.1),mglPoint(1000,1000),mglPoint(0.001,0.1));
-gr->Axis("lg(x)","lg(y)",0); gr->dx = gr->dy = 0;
-
-gr->Box();
-gr->Plot(x,y,"b2");
-gr->Axis(); gr->Grid("xy","g;");
-gr->Label('x',"x",0); gr->Label('y', "y=\\sqrt{\\a 1+x^2}",0);
-@end verbatim
-@strong{MGL code}
-@verbatim
-new x 100
-new y 100
-modify x 'pow(10,6*x-3)'
-modify y 'sqrt(1+v^2)' x
-
-xrange 0.001 1000
-yrange 0.1 1000
-origin 0.001 0.1 0
-xtick 0
-ytick 0
-axis 'lg(x)' 'lg(y)' ''
-
-plot x y 'b2'
-axis
-grid 'xy' 'g;'
-xlabel 'x' 0
-ylabel 'y=\sqrt{\a 1+x^2}' 0
-box
-@end verbatim
-@strong{Pure C code}
-@verbatim
-HMDT x, y; x = mgl_create_data_size(100,1,1);
-y = mgl_create_data_size(100,1,1);
-mgl_data_modify(x,"pow(10,6*x-3)",0);
-mgl_data_modify_vw(y,"sqrt(1+v^2)",x,0);
-
-mgl_set_axis(gr,0.001,0.1,0.,1000.,1000.,0.,0.001,0.1,0.);
-mgl_set_func(gr,"lg(x)","lg(y)",0);
-mgl_set_ticks(gr,0.,0.,-5.);
-
-mgl_box(gr,1);
-mgl_plot_xy(gr,x,y,"b2");
-mgl_axis(gr,"xy"); mgl_axis_grid(gr,"xy","g;");
-mgl_label_ext(gr,'x',"x",0,-1.4);
-mgl_label_ext(gr,'y', "y=\\sqrt{\\a 1+x^2}",0,-1.4);
-mgl_delete_data(x); mgl_delete_data(y);
-@end verbatim
-@strong{Fortran code}
-@verbatim
-integer x,y, mgl_create_data_size
-x = mgl_create_data_size(100,1,1)
-y = mgl_create_data_size(100,1,1)
-call mgl_data_modify(x,'pow(10,6*x-3)',0)
-call mgl_data_modify_vw(y,'sqrt(1+v^2)',x,x)
-
-call mgl_set_axis(gr,0.001,0.1,0.,1000.,1000.,0.,0.001,0.1,0.)
-call mgl_set_func(gr,'lg(x)','lg(y)','')
-call mgl_set_ticks(gr,0.,0.,-5.)
-
-call mgl_box(gr,1)
-call mgl_plot_xy(gr,x,y,'b2')
-call mgl_axis(gr,'xy')
-call mgl_axis_grid(gr,'xy','g;')
-call mgl_label_ext(gr,'x','x',0,-1.4)
-call mgl_label_ext(gr,'y', 'y=\\sqrt{\\a 1+x^2}',0,-1.4)
-call mgl_delete_data(x)
-call mgl_delete_data(y)
-@end verbatim
-@strong{Python}
-@verbatim
-TO BE DONE
-@end verbatim
-
-@c ------------------------------------------------------------------
-@node Fitting sample, Ternary plot sample, Log-log sample, Additional features
-@subsection Fitting sample
-@cindex Fit
-@cindex PutsFit
-
-@float
-@image{png/fit, 7cm}
-@caption{Example of nonlinear fitting.}
-@end float
-
-@strong{C++ code}
-@verbatim
-mglData rnd(100), in(100), res;
-rnd.Modify("0.4*rnd+0.1+sin(4*pi*x)", 0);
-in.Modify("0.3+sin(4*pi*x)", 0);
-
-gr->Axis(mglPoint(-1,-2), mglPoint(1,2));
-gr->Plot(rnd, ". ");
-gr->Box();
-
-float ini[3] = {1,1,3};
-gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", ini);
-gr->Plot(res, "r");
-gr->Plot(in, "b");
-gr->Text(mglPoint(-1, -1.3), "fitted:", "L:r", -1);
-gr->PutsFit(mglPoint(0, -1.8), "y = ", "C:r", -1);
-gr->Text(mglPoint(0, 2.2), "initial: y = 0.3+sin(2\\pi x)", "C:b", -1);
-@end verbatim
-@strong{MGL code}
-@verbatim
-new rnd 100
-modify rnd '0.4*rnd+0.1+sin(4*pi*x)'
-new in 100
-modify in '0.3+sin(4*pi*x)'
-
-yrange -2 2
-plot rnd '. '
-box
-
-list ini 1 1 3
-fit res rnd 'a+b*sin(c*x)' 'abc' ini
-plot res 'r'
-plot in 'b'
-text -1 -1.3 'fitted:' 'L:r' -1
-putsfit 0 -1.8 'y = ' 'C:r'
-text 0 2.2 'initial: y = 0.3+sin(2\pi x)' 'C:b' -1
-@end verbatim
-@strong{Pure C code}
-@verbatim
-TO BE DONE
-@end verbatim
-@strong{Fortran code}
-@verbatim
-TO BE DONE
-@end verbatim
-@strong{Python}
-@verbatim
-TO BE DONE
-@end verbatim
-
-@c ------------------------------------------------------------------
-@node Ternary plot sample, Coloring by coordinates sample, Fitting sample, Additional features
+@node Ternary plot sample, Coloring by coordinates sample, Cont with labels sample, Additional features
 @subsection Ternary plot sample
 @cindex Ternary
 
 @float
 @image{png/ternary, 7cm}
-@caption{Example of Ternary plot.}
+@caption{Example of Ternary plot. @tdref{ternary}}
 @end float
 
 @strong{C++ code}
@@ -4577,7 +4185,7 @@ TO BE DONE
 
 @float
 @image{png/surf3_rgbd, 7cm}
-@caption{Example of Surf3 colored by coordinates.}
+@caption{Example of Surf3 colored by coordinates. @tdref{surf3_rgbd}}
 @end float
 
 @strong{C++ code}
@@ -4631,7 +4239,7 @@ TO BE DONE
 
 @float
 @image{png/drops, 7cm}
-@caption{Example of Drop(s).}
+@caption{Example of Drop(s). @tdref{drops}}
 @end float
 
 @strong{C++ code}
@@ -4694,7 +4302,7 @@ TO BE DONE
 
 @float
 @image{png/molecule, 7cm}
-@caption{Example of molecules drawing.}
+@caption{Example of molecules drawing. @tdref{molecule}}
 @end float
 
 @strong{C++ code}
@@ -4797,3 +4405,663 @@ TO BE DONE
 TO BE DONE
 @end verbatim
 
+@c ------------------------------------------------------------------
+@node Advanced features, , Additional features, Samples
+@section Advanced features
+
+@c ------------------------------------------------------------------
+@menu
+* Curvelinear coorinates sample::  
+* 2-axes sample::               
+* Semi-log sample::             
+* Log-log sample::              
+* Fitting sample::              
+* Envelop sample::              
+* Sew sample::                  
+* STFA sample::                 
+* PDE sample::                  
+@end menu
+
+@node Curvelinear coorinates sample, 2-axes sample, , Advanced features
+@subsection Curvelinear coorinates sample
+@cindex Axis
+
+@float
+@image{png/sample3, 7cm}
+@caption{Example of curvelinear coorinates usage. @tdref{sample3}}
+@end float
+
+@strong{C++ code}
+@verbatim
+gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,1,-1));
+
+gr->SubPlot(2,2,0); gr->Rotate(60,40);
+gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
+gr->Axis(); gr->Grid();
+gr->Text(mglPoint(0,1.3,1),"Cartesian");
+
+gr->SubPlot(2,2,1); gr->Rotate(60,40);
+gr->Axis("y*sin(pi*x)","y*cos(pi*x)",0);
+gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
+gr->Axis(); gr->Grid();
+gr->Text(mglPoint(0,1.3,1),"Cylindrical");
+
+gr->SubPlot(2,2,2); gr->Rotate(60,40);
+gr->Axis("2*y*x","y*y - x*x",0);
+gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
+gr->Axis(); gr->Grid();
+gr->Text(mglPoint(0,1.3,1),"Parabolic");
+
+gr->SubPlot(2,2,3); gr->Rotate(60,40);
+gr->Axis("y*sin(pi*x)","y*cos(pi*x)","x+z");
+gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
+gr->Axis(); gr->Grid();
+gr->Text(mglPoint(0,1.3,1),"Spiral");
+gr->Axis(0,0,0); // set to default Cartesian
+@end verbatim
+@strong{MGL code}
+@verbatim
+origin -1 1 -1
+
+subplot 2 2 0
+rotate 60 40
+line -1 0.5 0 1 0.5 0 'r2'
+axis
+grid
+text 0 1.3 1 'Cartesian'
+
+subplot 2 2 1
+rotate 60 40
+axis 'y*sin(pi*x)' 'y*cos(pi*x)' ''
+line -1 0.5 0 1 0.5 0 'r2'
+axis
+grid
+text 0 1.3 1 'Cylindrical'
+
+subplot 2 2 2
+rotate 60 40
+axis '2*y*x' 'y*y - x*x' ''
+line -1 0.5 0 1 0.5 0 'r2'
+axis
+grid
+text 0 1.3 1 'Parabolic'
+
+subplot 2 2 3
+rotate 60 40
+axis 'y*sin(pi*x)' 'y*cos(pi*x)' 'x+z'
+line -1 0.5 0 1 0.5 0 'r2'
+axis
+grid
+text 0 1.3 1 'Spiral'
+axis '' '' '' # set to default Cartesian
+@end verbatim
+@strong{Pure C code}
+@verbatim
+mgl_set_axis(gr,-1,-1,-1,1,1,1,-1,1,-1);
+mgl_subplot(gr,2,2,0); mgl_rotate(gr,60,40,0);
+mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
+mgl_axis(gr,"xyz"); mgl_axis_grid(gr,"xyz","B");
+mgl_text(gr,0,1.3,1,"Cartesian");
+
+mgl_subplot(gr,2,2,1); mgl_rotate(gr,60,40,0);
+mgl_set_func(gr,"y*sin(pi*x)","y*cos(pi*x)",0);
+mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
+mgl_axis(gr,"xyz"); mgl_axis_grid(gr,"xyz","B");
+mgl_text(gr,0,1.3,1,"Cylindrical");
+
+mgl_subplot(gr,2,2,2); mgl_rotate(gr,60,40,0);
+mgl_set_func(gr,"2*y*x","y*y - x*x","");
+mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
+mgl_axis(gr,"xyz"); mgl_axis_grid(gr,"xyz","B");
+mgl_text(gr,0,1.3,1,"Parabolic");
+
+mgl_subplot(gr,2,2,3); mgl_rotate(gr,60,40,0);
+mgl_set_func(gr,"y*sin(pi*x)","y*cos(pi*x)","x+z");
+mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
+mgl_axis(gr,"xyz"); mgl_axis_grid(gr,"xyz","B");
+mgl_text(gr,0,1.3,1,"Spiral");
+mgl_set_func(gr,0,0,0); /* set to default Cartesian */
+@end verbatim
+@strong{Fortran code}
+@verbatim
+call mgl_set_axis(gr,-1.,-1.,-1.,1.,1.,1.,-1.,1.,-1.)
+
+call mgl_subplot(gr,2,2,0)
+call mgl_rotate(gr,60.,40.,0.)
+call mgl_line(gr,-1.,0.5,0.,1.,0.5,0.,'r2',100)
+call mgl_axis(gr,'xyz')
+call mgl_axis_grid(gr,'xyz','B')
+call mgl_text(gr,0.,1.3,1.,'Cartesian')
+
+call mgl_subplot(gr,2,2,1)
+call mgl_rotate(gr,60.,40.,0.)
+call mgl_set_func(gr,'y*sin(pi*x)','y*cos(pi*x)','')
+call mgl_line(gr,-1.,0.5,0.,1.,0.5,0.,'r2',100)
+call mgl_axis(gr,'xyz')
+call mgl_axis_grid(gr,'xyz','B')
+call mgl_text(gr,0.,1.3,1.,'Cylindrical')
+
+call mgl_subplot(gr,2,2,2)
+call mgl_rotate(gr,60.,40.,0.)
+call mgl_set_func(gr,'2*y*x','y*y - x*x','')
+call mgl_line(gr,-1.,0.5,0.,1.,0.5,0.,'r2',100)
+call mgl_axis(gr,'xyz')
+call mgl_axis_grid(gr,'xyz','B')
+call mgl_text(gr,0.,1.3,1.,"Parabolic")
+
+call mgl_subplot(gr,2,2,3)
+call mgl_rotate(gr,60.,40.,0.)
+call mgl_set_func(gr,'y*sin(pi*x)','y*cos(pi*x)','x+z')
+call mgl_line(gr,-1.,0.5,0.,1.,0.5,0.,'r2',100)
+call mgl_axis(gr,'xyz')
+call mgl_axis_grid(gr,'xyz','B')
+call mgl_text(gr,0.,1.3,1.,'Spiral')
+call mgl_set_func(gr,'','','') ! set to default Cartesian
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node 2-axes sample, Semi-log sample, Curvelinear coorinates sample, Advanced features
+@subsection 2-axes sample
+@cindex Axis
+
+@float
+@image{png/2_axis, 7cm}
+@caption{Example of 2 axes on the plot. @tdref{2_axis}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData y1(50), y2(50);
+y1.Modify("0.3*sin(2*pi*x)"); y2.Modify("0.5+0.3*cos(2*pi*x)");
+gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,-1,-1));
+gr->Axis(); gr->Label('y',"axis 1",0);
+gr->Plot(y1,"b");
+gr->Axis(mglPoint(0,0,0),mglPoint(1,1,1),mglPoint(1,1,1));
+gr->Axis(); gr->Label('y',"axis 2",0);
+gr->Stem(y2,"r");
+@end verbatim
+@strong{MGL code}
+@verbatim
+new y1 50
+new y2 50
+modify y1 '0.3*sin(2*pi*x)'
+modify y2 '0.5+0.3*cos(2*pi*x)'
+axis -1 -1 -1 1 1 1
+origin -1 -1 -1
+axis
+ylabel 'axis 1' 0
+plot y1 'b'
+axis 0 0 0 1 1 1
+origin 1 1 1
+axis
+ylabel 'axis 2' 0
+stem y2 'r'
+@end verbatim
+@strong{Pure C code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Fortran code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node Semi-log sample, Log-log sample, 2-axes sample, Advanced features
+@subsection Semi-log sample
+@cindex Axis
+@cindex SetTicks
+@cindex Plot
+
+@float
+@image{png/semilog, 7cm}
+@caption{Example of semi-log plot. @tdref{semilog}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData x(2000), y(2000);
+x.Modify("0.01/(x+10^(-5))"); y.Modify("sin(1/v)",x);
+
+gr->Axis(mglPoint(0.01,-1),mglPoint(1000,1),mglPoint(0.01,-1));
+gr->Axis("lg(x)",0,0); gr->dx = 0;
+
+gr->Box();
+gr->Plot(x,y,"b2");
+gr->Axis(); gr->Grid("xy","g");
+gr->Label('x',"x",0); gr->Label('y', "y = sin 1/x",0);
+@end verbatim
+@strong{MGL code}
+@verbatim
+new x 2000
+new y 2000
+modify x '0.01/(x+10^(-5))'
+modify y 'sin(1/v)' x
+
+xrange 0.01 1000
+origin 0.01 -1 0
+xtick 0
+axis 'lg(x)' '' ''
+
+plot x y 'b2'
+axis
+grid 'xy' 'g'
+xlabel 'x' 0
+ylabel 'y = sin 1/x' 0
+box
+@end verbatim
+@strong{Pure C code}
+@verbatim
+HMDT x, y; x = mgl_create_data_size(2000,1,1);
+y = mgl_create_data_size(2000,1,1);
+mgl_data_modify(x,"0.01/(x+10^(-5))",0);
+mgl_data_modify_vw(y,"sin(1/v)",x,0);
+
+mgl_set_axis(gr,0.01,-1.,0.,1000.,1.,0.,0.01,-1.,0.);
+mgl_set_func(gr,"lg(x)",0,0);
+mgl_set_ticks(gr,0.,-5.,-5.);
+
+mgl_box(gr,1);
+mgl_plot_xy(gr,x,y,"b2");
+mgl_axis(gr,"xy"); mgl_axis_grid(gr,"xy","g");
+mgl_label_ext(gr,'x',"x",0,-1.4);
+mgl_label_ext(gr,'y', "y = sin 1/x",0,-1.4);
+mgl_delete_data(x); mgl_delete_data(y);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer x,y, mgl_create_data_size
+x = mgl_create_data_size(2000,1,1)
+y = mgl_create_data_size(2000,1,1)
+call mgl_data_modify(x,'0.01/(x+10^(-5))',0)
+call mgl_data_modify_vw(y,'sin(1/v)',x,x)
+
+call mgl_set_axis(gr,0.01,-1.,0.,1000.,1.,0.,0.01,-1.,0.)
+call mgl_set_func(gr,'lg(x)','','')
+call mgl_set_ticks(gr,0.,-5.,-5.)
+
+call mgl_box(gr,1)
+call mgl_plot_xy(gr,x,y,'b2')
+call mgl_axis(gr,'xy')
+call mgl_axis_grid(gr,'xy','g')
+call mgl_label_ext(gr,'x','x',0,-1.4)
+call mgl_label_ext(gr,'y', 'y = sin 1/x',0,-1.4)
+call mgl_delete_data(x)
+call mgl_delete_data(y)
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node Log-log sample, Fitting sample, Semi-log sample, Advanced features
+@subsection Log-log sample
+@cindex Axis
+@cindex SetTicks
+@cindex Plot
+
+@float
+@image{png/loglog, 7cm}
+@caption{Example of log-log plot. @tdref{loglog}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData x(100), y(100);
+x.Modify("pow(10,6*x-3)"); y.Modify("sqrt(1+v^2)",x);
+
+gr->Axis(mglPoint(0.001,0.1),mglPoint(1000,1000),mglPoint(0.001,0.1));
+gr->Axis("lg(x)","lg(y)",0); gr->dx = gr->dy = 0;
+
+gr->Box();
+gr->Plot(x,y,"b2");
+gr->Axis(); gr->Grid("xy","g;");
+gr->Label('x',"x",0); gr->Label('y', "y=\\sqrt{\\a 1+x^2}",0);
+@end verbatim
+@strong{MGL code}
+@verbatim
+new x 100
+new y 100
+modify x 'pow(10,6*x-3)'
+modify y 'sqrt(1+v^2)' x
+
+xrange 0.001 1000
+yrange 0.1 1000
+origin 0.001 0.1 0
+xtick 0
+ytick 0
+axis 'lg(x)' 'lg(y)' ''
+
+plot x y 'b2'
+axis
+grid 'xy' 'g;'
+xlabel 'x' 0
+ylabel 'y=\sqrt{\a 1+x^2}' 0
+box
+@end verbatim
+@strong{Pure C code}
+@verbatim
+HMDT x, y; x = mgl_create_data_size(100,1,1);
+y = mgl_create_data_size(100,1,1);
+mgl_data_modify(x,"pow(10,6*x-3)",0);
+mgl_data_modify_vw(y,"sqrt(1+v^2)",x,0);
+
+mgl_set_axis(gr,0.001,0.1,0.,1000.,1000.,0.,0.001,0.1,0.);
+mgl_set_func(gr,"lg(x)","lg(y)",0);
+mgl_set_ticks(gr,0.,0.,-5.);
+
+mgl_box(gr,1);
+mgl_plot_xy(gr,x,y,"b2");
+mgl_axis(gr,"xy"); mgl_axis_grid(gr,"xy","g;");
+mgl_label_ext(gr,'x',"x",0,-1.4);
+mgl_label_ext(gr,'y', "y=\\sqrt{\\a 1+x^2}",0,-1.4);
+mgl_delete_data(x); mgl_delete_data(y);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer x,y, mgl_create_data_size
+x = mgl_create_data_size(100,1,1)
+y = mgl_create_data_size(100,1,1)
+call mgl_data_modify(x,'pow(10,6*x-3)',0)
+call mgl_data_modify_vw(y,'sqrt(1+v^2)',x,x)
+
+call mgl_set_axis(gr,0.001,0.1,0.,1000.,1000.,0.,0.001,0.1,0.)
+call mgl_set_func(gr,'lg(x)','lg(y)','')
+call mgl_set_ticks(gr,0.,0.,-5.)
+
+call mgl_box(gr,1)
+call mgl_plot_xy(gr,x,y,'b2')
+call mgl_axis(gr,'xy')
+call mgl_axis_grid(gr,'xy','g;')
+call mgl_label_ext(gr,'x','x',0,-1.4)
+call mgl_label_ext(gr,'y', 'y=\\sqrt{\\a 1+x^2}',0,-1.4)
+call mgl_delete_data(x)
+call mgl_delete_data(y)
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node Fitting sample, Envelop sample, Log-log sample, Advanced features
+@subsection Fitting sample
+@cindex Fit
+@cindex PutsFit
+
+@float
+@image{png/fit, 7cm}
+@caption{Example of nonlinear fitting. @tdref{fit}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData rnd(100), in(100), res;
+rnd.Modify("0.4*rnd+0.1+sin(4*pi*x)", 0);
+in.Modify("0.3+sin(4*pi*x)", 0);
+
+gr->Axis(mglPoint(-1,-2), mglPoint(1,2));
+gr->Plot(rnd, ". ");
+gr->Box();
+
+float ini[3] = {1,1,3};
+gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", ini);
+gr->Plot(res, "r");
+gr->Plot(in, "b");
+gr->Text(mglPoint(-1, -1.3), "fitted:", "L:r", -1);
+gr->PutsFit(mglPoint(0, -1.8), "y = ", "C:r", -1);
+gr->Text(mglPoint(0, 2.2), "initial: y = 0.3+sin(2\\pi x)", "C:b", -1);
+@end verbatim
+@strong{MGL code}
+@verbatim
+new rnd 100
+modify rnd '0.4*rnd+0.1+sin(4*pi*x)'
+new in 100
+modify in '0.3+sin(4*pi*x)'
+
+yrange -2 2
+plot rnd '. '
+box
+
+list ini 1 1 3
+fit res rnd 'a+b*sin(c*x)' 'abc' ini
+plot res 'r'
+plot in 'b'
+text -1 -1.3 'fitted:' 'L:r' -1
+putsfit 0 -1.8 'y = ' 'C:r'
+text 0 2.2 'initial: y = 0.3+sin(2\pi x)' 'C:b' -1
+@end verbatim
+@strong{Pure C code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Fortran code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node Envelop sample, Sew sample, Fitting sample, Advanced features
+@subsection Envelop sample
+@cindex Envelop
+
+@float
+@image{png/envelop, 7cm}
+@caption{Example of envelop reconstruction.}@c @tdref{fit}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData a(1000);
+a.Fill("exp(-8*x^2)*sin(10*pi*x)", gr->Min, gr->Max);
+gr->Plot(a, "b");
+a.Envelop('x');
+gr->Plot(a, "r");
+gr->Axis();
+@end verbatim
+@strong{MGL code}
+@verbatim
+new a 1000
+fill a 'exp(-8*x^2)*sin(10*pi*x)'
+plot a 'b'
+envelop a
+plot a 'r'
+axis
+@end verbatim
+@strong{Pure C code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Fortran code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node Sew sample, STFA sample, Envelop sample, Advanced features
+@subsection Sew sample
+@cindex Sew
+
+@float
+@image{png/sew, 7cm}
+@caption{Example of phase ``sewing''.}@c @tdref{fit}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData a(100, 100);
+a.Modify("mod((y^2-(1-x)^2)/2,0.1)");
+gr->Rotate(40, 60);
+gr->Light(true);
+gr->Alpha(true);
+gr->Surf(a, "b");
+a.Sew("xy", 0.1);
+gr->Surf(a, "r");
+gr->Box();
+@end verbatim
+@strong{MGL code}
+@verbatim
+new a 100 100
+modify a 'mod((y^2-(1-x)^2)/2,0.1)'
+rotate 40 60
+light on
+alpha on
+surf a 'b'
+sew a 'xy' 0.1
+surf a 'r'
+box
+@end verbatim
+@strong{Pure C code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Fortran code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node STFA sample, PDE sample, Sew sample, Advanced features
+@subsection STFA sample
+@cindex STFA
+
+@float
+@image{png/stfa, 7cm}
+@caption{Example of Short Time Fourier Analysis.}@c @tdref{fit}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData a(2000), b(2000);
+a.Fill("cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+\
+        cos(200*pi*x)*(x<.5)*(x>0)+cos(400*pi*x)*(x>.5)", 
+        gr->Min, gr->Max);
+gr->SubPlot(1, 2, 0);
+gr->Plot(a);
+gr->Axis();
+gr->Label('x', "\\i t");
+
+gr->SubPlot(1, 2, 1);
+gr->STFA(a, b, 64);
+gr->Axis();
+gr->Label('x', "\\i t");
+gr->Label('y', "\\omega", 0);
+@end verbatim
+@strong{MGL code}
+@verbatim
+new a 2000
+new b 2000
+fill a 'cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+
+        cos(200*pi*x)*(x<.5)*(x>0)+cos(400*pi*x)*(x>.5)'
+subplot 1 2 0
+plot a
+axis
+xlabel '\i t'
+subplot 1 2 1
+stfa a b 64 ''
+axis
+ylabel '\omega' 0
+xlabel '\i t'
+@end verbatim
+@strong{Pure C code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Fortran code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node PDE sample, , STFA sample, Advanced features
+@subsection PDE sample
+@cindex mglPDE
+@cindex mglRay
+
+@float
+@image{png/pde, 7cm}
+@caption{Example of Partial Differential Eduation solving.}@c @tdref{fit}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData r,a,re(128),im(128);
+r = mglRay("p^2+q^2+v^2-x-1", mglPoint(-0.7, 0, -1), 
+           mglPoint(0, 0, 0.5), 0.05, 10);
+gr->Plot(r.SubData(0), r.SubData(2), "k");
+gr->Axis();
+gr->Label('x', "\\i x", 1, -1.4, 0);
+gr->Label('y', "\\i z", 1, -1.4, 0);
+	
+re.Fill("exp(-48*(x+0.7)^2)", gr->Min, gr->Max);
+a = mglPDE("p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)", re, im, 
+           gr->Min, gr->Max, 0.01, 30);
+a.Transpose("yxz");
+gr->CAxis(0, 1);
+gr->Dens(a,"wyrRk");
+gr->Plot("-x", "k|");
+gr->Puts(mglPoint(-0.8, 0.85), "absorption: (x+z)/2 for x+z>0",
+         "L", -1);
+gr->Puts(mglPoint(0.5, -0.05), "central ray", "L", -1);
+gr->Title("Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u +\
+           i \\frac{x+z}{2}\\cdot u = 0", "iC", -1.5);
+@end verbatim
+@strong{MGL code}
+@verbatim
+ray r 'p^2+q^2+v^2-x-1' -0.7 0 -1 0 0 0.5 0.05
+plot r(0) r(2) 'k'
+axis
+xlabel '\i x'
+ylabel '\i z'
+
+new re 128
+new im 128
+fill re 'exp(-48*(x+0.7)^2)'
+pde a 'p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)' re im 0.01 30
+transpose a
+
+crange 0 1
+dens a 'wyrRk'
+fplot '-x' 'k|'
+text -0.8 0.85 'absorption: (x+z)/2 for x+z>0' 'L' -1
+text 0.5 -0.05 'central ray' 'L' -1
+title 'Equation: ik_0\partial_zu + \Delta u + x\cdot u
+       + i \frac{x+z}{2}\cdot u = 0' 'iC' -1.5
+@end verbatim
+@strong{Pure C code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Fortran code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim

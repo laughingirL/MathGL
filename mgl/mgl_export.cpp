@@ -16,7 +16,7 @@
  */
 #include <png.h>
 
-#ifndef WIN32
+#ifdef WITH_LTDL
 #include <ltdl.h>
 #endif
 
@@ -40,7 +40,7 @@ void *mglGraph::tmodule = 0;
 void mglGraph::InitSaveFunc()
 {
 	NumUseSave++;
-#ifndef WIN32
+#ifdef WITH_LTDL
 	if(!JPEGSave)
 	{
 		jmodule = 0;
@@ -65,7 +65,7 @@ void mglGraph::FreeSaveFunc()
 	NumUseSave--;
 	if(NumUseSave<1)
 	{
-#ifndef WIN32
+#ifdef WITH_LTDL
 		if(JPEGSave)
 		{
 			if(jmodule)	lt_dlclose((lt_dlhandle) jmodule);
@@ -85,6 +85,12 @@ unsigned char **mglGraph::GetRGBLines(long &w, long &h, unsigned char *&f, bool 
 //-----------------------------------------------------------------------------
 void mglGraph::WriteEPS(const char *,const char *){}
 void mglGraph::WriteSVG(const char *,const char *){}
+void mglGraph::WriteIDTF(const char *,const char *){}
+void mglGraph::VertexColor(bool enable)  { };
+void mglGraph::Compression(bool enable)  { };
+void mglGraph::Unrotate(bool enable)  { };
+void mglGraph::StartGroup ( const char *name ) { };
+void mglGraph::EndGroup() { };
 //-----------------------------------------------------------------------------
 void mglGraph::WriteTIFF(const char *fname,const char *descr,int )
 {
@@ -239,7 +245,7 @@ int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
 void mgl_write_png(HMGL gr, const char *fname,const char *descr)
 {	gr->WritePNG(fname,descr);	}
 /// Write the frame in file using PNG format
-void mgl_write_png_(long *gr, const char *fname,const char *descr,int l,int n)
+void mgl_write_png_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
@@ -249,7 +255,7 @@ void mgl_write_png_(long *gr, const char *fname,const char *descr,int l,int n)
 void mgl_write_png_solid(HMGL gr, const char *fname,const char *descr)
 {	gr->WritePNG(fname,descr,false);	}
 /// Write the frame in file using PNG format
-void mgl_write_png_solid_(long *gr, const char *fname,const char *descr,int l,int n)
+void mgl_write_png_solid_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
@@ -261,7 +267,7 @@ void mgl_write_jpg(HMGL gr, const char *fname,const char *descr)
 {	gr->WriteJPEG(fname,descr);	}
 #include <string.h>
 /// Write the frame in file using JPEG format
-void mgl_write_jpg_(long *gr, const char *fname,const char *descr,int l,int n)
+void mgl_write_jpg_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
@@ -273,7 +279,7 @@ void mgl_write_tif(HMGL gr, const char *fname,const char *descr)
 {	gr->WriteTIFF(fname,descr);	}
 #include <string.h>
 /// Write the frame in file using TIFF format
-void mgl_write_tif_(long *gr, const char *fname,const char *descr,int l,int n)
+void mgl_write_tif_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
@@ -285,10 +291,22 @@ void mgl_write_bmp(HMGL gr, const char *fname,const char *descr)
 {	gr->WriteBMP(fname,descr);	}
 #include <string.h>
 /// Write the frame in file using TIFF format
-void mgl_write_bmp_(long *gr, const char *fname,const char *descr,int l,int n)
+void mgl_write_bmp_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	_GR_->WriteBMP(s,f);	delete []s;		delete []f;
+}
+//-----------------------------------------------------------------------------
+/// Write the frame in file using IDTF format
+void mgl_write_idtf(HMGL gr, const char *fname,const char *descr)
+{	gr->WriteIDTF(fname,descr);	}
+#include <string.h>
+/// Write the frame in file using IDTF format
+void mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{
+	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
+	_GR_->WriteIDTF(s,f);	delete []s;		delete []f;
 }
 //-----------------------------------------------------------------------------

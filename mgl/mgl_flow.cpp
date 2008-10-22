@@ -593,7 +593,7 @@ void mgl_pipe_3d(HMGL gr, const HMDT ax, const HMDT ay, const HMDT az, const cha
 //	Fortran interface
 //-----------------------------------------------------------------------------
 /// Plot flows for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
-void mgl_flow_xy_(long *gr, long *x, long *y, long *ax, long *ay, const char *sch,
+void mgl_flow_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch,
 					int *num, int *central, float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -601,14 +601,14 @@ void mgl_flow_xy_(long *gr, long *x, long *y, long *ax, long *ay, const char *sc
 	delete []s;
 }
 /// Plot flows for vector field {ax,ay} with color proportional to value |a|
-void mgl_flow_2d_(long *gr, long *ax, long *ay, const char *sch, int *num, int *central, float *zVal,int l)
+void mgl_flow_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, int *num, int *central, float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax)	_GR_->Flow(_D_(ax), _D_(ay), s, *num, *central, *zVal);
 	delete []s;
 }
 /// Plot flows for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
-void mgl_flow_xyz_(long *gr, long *x, long *y, long *z, long *ax, long *ay, long *az,
+void mgl_flow_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az,
 					const char *sch, int *num, int *central,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -617,7 +617,7 @@ void mgl_flow_xyz_(long *gr, long *x, long *y, long *z, long *ax, long *ay, long
 	delete []s;
 }
 /// Plot flows for 3d vector field {ax,ay,ay} with color proportional to value |a|
-void mgl_flow_3d_(long *gr, long *ax, long *ay, long *az, const char *sch, int *num, int *central,int l)
+void mgl_flow_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int *num, int *central,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && az)	_GR_->Flow(_D_(ax), _D_(ay), _D_(az), s, *num, *central);
@@ -625,7 +625,7 @@ void mgl_flow_3d_(long *gr, long *ax, long *ay, long *az, const char *sch, int *
 }
 //-----------------------------------------------------------------------------
 /// Plot flow pipes for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
-void mgl_pipe_xy_(long *gr, long *x, long *y, long *ax, long *ay, const char *sch, float *r0,
+void mgl_pipe_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, float *r0,
 					int *num, int *central, float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -634,14 +634,14 @@ void mgl_pipe_xy_(long *gr, long *x, long *y, long *ax, long *ay, const char *sc
 	delete []s;
 }
 /// Plot flow pipes for vector field {ax,ay} with color proportional to value |a|
-void mgl_pipe_2d_(long *gr, long *ax, long *ay, const char *sch, float *r0, int *num, int *central, float *zVal,int l)
+void mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, float *r0, int *num, int *central, float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax)	_GR_->Pipe(_D_(ax), _D_(ay), s, *r0, *num, *central, *zVal);
 	delete []s;
 }
 /// Plot flow pipes for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
-void mgl_pipe_xyz_(long *gr, long *x, long *y, long *z, long *ax, long *ay, long *az,
+void mgl_pipe_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az,
 					const char *sch, float *r0, int *num, int *central,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -650,7 +650,7 @@ void mgl_pipe_xyz_(long *gr, long *x, long *y, long *z, long *ax, long *ay, long
 	delete []s;
 }
 /// Plot flow pipes for 3d vector field {ax,ay,ay} with color proportional to value |a|
-void mgl_pipe_3d_(long *gr, long *ax, long *ay, long *az, const char *sch, float *r0, int *num, int *central,int l)
+void mgl_pipe_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, float *r0, int *num, int *central,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && az)	_GR_->Pipe(_D_(ax), _D_(ay), _D_(az), s, *r0, *num, *central);

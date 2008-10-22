@@ -1,5 +1,9 @@
 ACLOCAL_AMFLAGS = -I config
-SUBDIRS = libltdl mgl lang widgets utils examples include texinfo
+SUBDIRS = libltdl mgl lang widgets utils examples include
+
+if USE_DOCS
+SUBDIRS += texinfo
+endif
 
 mgldest=$(DESTDIR)$(datadir)/$(PACKAGE)/fonts
 

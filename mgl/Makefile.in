@@ -36,12 +36,15 @@ host_triplet = @host@
 @USE_JPEG_TRUE@am__append_1 = mgl-jpeg.la
 @USE_HDF5_TRUE@am__append_2 = mgl-hdf5.la
 @USE_TIFF_TRUE@am__append_3 = mgl-tiff.la
+@USE_QT_TRUE@am__append_4 = -DWITH_QT
+@USE_WX_TRUE@am__append_5 = -DWITH_WX
+@USE_FLTK_TRUE@am__append_6 = -DWITH_FLTK
+@USE_GLUT_TRUE@am__append_7 = -DWITH_GLUT
+@USE_LTDL_TRUE@am__append_8 = @INCLTDL@
+@USE_LTDL_TRUE@am__append_9 = @LIBLTDL@
+@USE_LTDL_TRUE@am__append_10 = -DWITH_LTDL
 @USE_TESTIO_TRUE@bin_PROGRAMS = test-io$(EXEEXT)
-@USE_TESTIO_TRUE@am__append_4 = test-mod.la
-@USE_QT_TRUE@am__append_5 = -DWITH_QT
-@USE_WX_TRUE@am__append_6 = -DWITH_WX
-@USE_FLTK_TRUE@am__append_7 = -DWITH_FLTK
-@USE_GLUT_TRUE@am__append_8 = -DWITH_GLUT
+@USE_LTDL_TRUE@@USE_TESTIO_TRUE@am__append_11 = test-mod.la
 subdir = mgl
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -64,7 +67,7 @@ mgllibLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES) $(mgllib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libmgl_la_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 am_libmgl_la_OBJECTS = libmgl_la-mgl_data_cf.lo libmgl_la-mgl_axis.lo \
 	libmgl_la-mgl_data_png.lo libmgl_la-mgl_zb2.lo \
 	libmgl_la-mgl_c.lo libmgl_la-mgl_eps.lo libmgl_la-mgl_font.lo \
@@ -78,7 +81,8 @@ am_libmgl_la_OBJECTS = libmgl_la-mgl_data_cf.lo libmgl_la-mgl_axis.lo \
 	libmgl_la-mgl_data.lo libmgl_la-mgl_f.lo libmgl_la-mgl_idtf.lo \
 	libmgl_la-mgl_ab.lo libmgl_la-mgl_data_io.lo \
 	libmgl_la-mgl_flow.lo libmgl_la-mgl_vect.lo \
-	libmgl_la-mgl_parse.lo libmgl_la-mgl_fit.lo
+	libmgl_la-mgl_parse.lo libmgl_la-mgl_fit.lo \
+	libmgl_la-mgl_pde.lo
 libmgl_la_OBJECTS = $(am_libmgl_la_OBJECTS)
 libmgl_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(libmgl_la_CXXFLAGS) \
@@ -109,19 +113,23 @@ mgl_tiff_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 @USE_TIFF_TRUE@am_mgl_tiff_la_rpath = -rpath $(mgllibdir)
 test_mod_la_LIBADD =
 am__test_mod_la_SOURCES_DIST = test_mod.cpp
-@USE_TESTIO_TRUE@am_test_mod_la_OBJECTS = test_mod.lo
+@USE_LTDL_TRUE@@USE_TESTIO_TRUE@am_test_mod_la_OBJECTS = test_mod.lo
 test_mod_la_OBJECTS = $(am_test_mod_la_OBJECTS)
 test_mod_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(test_mod_la_LDFLAGS) $(LDFLAGS) -o $@
-@USE_TESTIO_TRUE@am_test_mod_la_rpath = -rpath $(mgllibdir)
+@USE_LTDL_TRUE@@USE_TESTIO_TRUE@am_test_mod_la_rpath = -rpath \
+@USE_LTDL_TRUE@@USE_TESTIO_TRUE@	$(mgllibdir)
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am__test_io_SOURCES_DIST = test_io.cpp mgl_io.cpp
-@USE_TESTIO_TRUE@am_test_io_OBJECTS = test_io.$(OBJEXT) \
-@USE_TESTIO_TRUE@	mgl_io.$(OBJEXT)
+@USE_TESTIO_TRUE@am_test_io_OBJECTS = test_io-test_io.$(OBJEXT) \
+@USE_TESTIO_TRUE@	test_io-mgl_io.$(OBJEXT)
 test_io_OBJECTS = $(am_test_io_OBJECTS)
 test_io_DEPENDENCIES =
+test_io_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CXXLD) $(test_io_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -306,19 +314,20 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-INCLUDES = -I$(top_builddir)/include -I$(top_builddir) @INCLTDL@
+INCLUDES = -I$(top_builddir)/include -I$(top_builddir) $(am__append_8)
 lib_LTLIBRARIES = libmgl.la
 mgllib_LTLIBRARIES = $(am__append_1) $(am__append_2) $(am__append_3) \
-	$(am__append_4)
+	$(am__append_11)
 mgllibdir = $(libdir)/mgl
-WIDGETS = $(am__append_5) $(am__append_6) $(am__append_7) \
-	$(am__append_8)
+WIDGETS = $(am__append_4) $(am__append_5) $(am__append_6) \
+	$(am__append_7)
+libmgl_la_LIBADD = $(PNG_LIBS) $(GSL_LIBS) $(GL_LIBS) $(am__append_9)
 libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
-libmgl_la_LIBADD = @LIBLTDL@ $(PNG_LIBS) $(GSL_LIBS) $(GL_LIBS)
-libmgl_la_CXXFLAGS = $(WIDGETS) -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
-    -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFF_FLAGS) \
-    $(PNG_FLAGS) $(FLTK_FLAGS) $(GSL_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS)
-
+libmgl_la_CXXFLAGS = $(WIDGETS) \
+	-DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
+	-DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(JPEG_FLAGS) \
+	$(TIFF_FLAGS) $(PNG_FLAGS) $(FLTK_FLAGS) $(GSL_FLAGS) \
+	$(ADDON_FLAGS) $(AM_CXXFLAGS) $(am__append_10)
 libmgl_la_SOURCES = \
 mgl_data_cf.cpp	   mgl_axis.cpp     mgl_data_png.cpp  mgl_zb2.cpp \
 mgl_c.cpp          mgl_eps.cpp      mgl_font.cpp      mgl_zb.cpp \
@@ -327,7 +336,7 @@ mgl_1d.cpp         mgl_cont.cpp     mgl_exec.cpp      mgl_tex_table.cpp\
 mgl_2d.cpp         mgl_crust.cpp    mgl_export.cpp    mgl_main.cpp  \
 mgl_3d.cpp         mgl_data.cpp     mgl_f.cpp         mgl_idtf.cpp \
 mgl_ab.cpp         mgl_data_io.cpp  mgl_flow.cpp      mgl_vect.cpp \
-mgl_parse.cpp      mgl_fit.cpp
+mgl_parse.cpp      mgl_fit.cpp      mgl_pde.cpp
 
 @USE_JPEG_TRUE@mgl_jpeg_la_LDFLAGS = -no-undefined -module -avoid-version -shared
 @USE_JPEG_TRUE@mgl_jpeg_la_LIBADD = $(JPEG_LIBS)
@@ -342,9 +351,10 @@ mgl_parse.cpp      mgl_fit.cpp
 @USE_TIFF_TRUE@mgl_tiff_la_CXXFLAGS = $(TIFF_FLAGS) $(AM_CXXFLAGS)
 @USE_TIFF_TRUE@mgl_tiff_la_SOURCES = mgl_zb_tiff.cpp
 @USE_TESTIO_TRUE@test_io_SOURCES = test_io.cpp mgl_io.cpp
-@USE_TESTIO_TRUE@test_mod_la_LDFLAGS = -no-undefined -module -avoid-version -shared
-@USE_TESTIO_TRUE@test_mod_la_SOURCES = test_mod.cpp
-@USE_TESTIO_TRUE@test_io_LDADD = @LIBLTDL@
+@USE_LTDL_TRUE@@USE_TESTIO_TRUE@test_io_CXXFLAGS = -DWITH_LTDL $(AM_CXXFLAGS)
+@USE_LTDL_TRUE@@USE_TESTIO_TRUE@test_io_LDADD = @LIBLTDL@
+@USE_LTDL_TRUE@@USE_TESTIO_TRUE@test_mod_la_LDFLAGS = -no-undefined -module -avoid-version -shared
+@USE_LTDL_TRUE@@USE_TESTIO_TRUE@test_mod_la_SOURCES = test_mod.cpp
 all: all-am
 
 .SUFFIXES:
@@ -472,7 +482,7 @@ clean-binPROGRAMS:
 	done
 test-io$(EXEEXT): $(test_io_OBJECTS) $(test_io_DEPENDENCIES) 
 	@rm -f test-io$(EXEEXT)
-	$(CXXLINK) $(test_io_OBJECTS) $(test_io_LDADD) $(LIBS)
+	$(test_io_LINK) $(test_io_OBJECTS) $(test_io_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -506,15 +516,16 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_idtf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_main.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_parse.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_pde.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_tex_table.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_vect.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_zb.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmgl_la-mgl_zb2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_hdf5_la-data_hdf.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_io.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_jpeg_la-mgl_zb_jpg.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_tiff_la-mgl_zb_tiff.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_io.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_io-mgl_io.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_io-test_io.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_mod.Plo@am__quote@
 
 .cpp.o:
@@ -748,6 +759,13 @@ libmgl_la-mgl_fit.lo: mgl_fit.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmgl_la_CXXFLAGS) $(CXXFLAGS) -c -o libmgl_la-mgl_fit.lo `test -f 'mgl_fit.cpp' || echo '$(srcdir)/'`mgl_fit.cpp
 
+libmgl_la-mgl_pde.lo: mgl_pde.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmgl_la_CXXFLAGS) $(CXXFLAGS) -MT libmgl_la-mgl_pde.lo -MD -MP -MF $(DEPDIR)/libmgl_la-mgl_pde.Tpo -c -o libmgl_la-mgl_pde.lo `test -f 'mgl_pde.cpp' || echo '$(srcdir)/'`mgl_pde.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/libmgl_la-mgl_pde.Tpo $(DEPDIR)/libmgl_la-mgl_pde.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl_pde.cpp' object='libmgl_la-mgl_pde.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmgl_la_CXXFLAGS) $(CXXFLAGS) -c -o libmgl_la-mgl_pde.lo `test -f 'mgl_pde.cpp' || echo '$(srcdir)/'`mgl_pde.cpp
+
 mgl_hdf5_la-data_hdf.lo: data_hdf.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_hdf5_la_CXXFLAGS) $(CXXFLAGS) -MT mgl_hdf5_la-data_hdf.lo -MD -MP -MF $(DEPDIR)/mgl_hdf5_la-data_hdf.Tpo -c -o mgl_hdf5_la-data_hdf.lo `test -f 'data_hdf.cpp' || echo '$(srcdir)/'`data_hdf.cpp
 @am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl_hdf5_la-data_hdf.Tpo $(DEPDIR)/mgl_hdf5_la-data_hdf.Plo
@@ -768,6 +786,34 @@ mgl_tiff_la-mgl_zb_tiff.lo: mgl_zb_tiff.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl_zb_tiff.cpp' object='mgl_tiff_la-mgl_zb_tiff.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_tiff_la_CXXFLAGS) $(CXXFLAGS) -c -o mgl_tiff_la-mgl_zb_tiff.lo `test -f 'mgl_zb_tiff.cpp' || echo '$(srcdir)/'`mgl_zb_tiff.cpp
+
+test_io-test_io.o: test_io.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_io_CXXFLAGS) $(CXXFLAGS) -MT test_io-test_io.o -MD -MP -MF $(DEPDIR)/test_io-test_io.Tpo -c -o test_io-test_io.o `test -f 'test_io.cpp' || echo '$(srcdir)/'`test_io.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_io-test_io.Tpo $(DEPDIR)/test_io-test_io.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='test_io.cpp' object='test_io-test_io.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_io_CXXFLAGS) $(CXXFLAGS) -c -o test_io-test_io.o `test -f 'test_io.cpp' || echo '$(srcdir)/'`test_io.cpp
+
+test_io-test_io.obj: test_io.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_io_CXXFLAGS) $(CXXFLAGS) -MT test_io-test_io.obj -MD -MP -MF $(DEPDIR)/test_io-test_io.Tpo -c -o test_io-test_io.obj `if test -f 'test_io.cpp'; then $(CYGPATH_W) 'test_io.cpp'; else $(CYGPATH_W) '$(srcdir)/test_io.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_io-test_io.Tpo $(DEPDIR)/test_io-test_io.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='test_io.cpp' object='test_io-test_io.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_io_CXXFLAGS) $(CXXFLAGS) -c -o test_io-test_io.obj `if test -f 'test_io.cpp'; then $(CYGPATH_W) 'test_io.cpp'; else $(CYGPATH_W) '$(srcdir)/test_io.cpp'; fi`
+
+test_io-mgl_io.o: mgl_io.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_io_CXXFLAGS) $(CXXFLAGS) -MT test_io-mgl_io.o -MD -MP -MF $(DEPDIR)/test_io-mgl_io.Tpo -c -o test_io-mgl_io.o `test -f 'mgl_io.cpp' || echo '$(srcdir)/'`mgl_io.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_io-mgl_io.Tpo $(DEPDIR)/test_io-mgl_io.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl_io.cpp' object='test_io-mgl_io.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_io_CXXFLAGS) $(CXXFLAGS) -c -o test_io-mgl_io.o `test -f 'mgl_io.cpp' || echo '$(srcdir)/'`mgl_io.cpp
+
+test_io-mgl_io.obj: mgl_io.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_io_CXXFLAGS) $(CXXFLAGS) -MT test_io-mgl_io.obj -MD -MP -MF $(DEPDIR)/test_io-mgl_io.Tpo -c -o test_io-mgl_io.obj `if test -f 'mgl_io.cpp'; then $(CYGPATH_W) 'mgl_io.cpp'; else $(CYGPATH_W) '$(srcdir)/mgl_io.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test_io-mgl_io.Tpo $(DEPDIR)/test_io-mgl_io.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl_io.cpp' object='test_io-mgl_io.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_io_CXXFLAGS) $(CXXFLAGS) -c -o test_io-mgl_io.obj `if test -f 'mgl_io.cpp'; then $(CYGPATH_W) 'mgl_io.cpp'; else $(CYGPATH_W) '$(srcdir)/mgl_io.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

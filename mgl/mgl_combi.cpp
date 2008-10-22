@@ -483,105 +483,105 @@ void mgl_contf_z_val(HMGL gr, const HMDT v, const HMDT a, const char *sch, float
 //		Combined plotting functions (Fortran)
 //-----------------------------------------------------------------------------
 /// Draw density plot for data a at x = *sVal
-void mgl_dens_x_(long *gr, long *a, const char *sch, float *sVal,int l)
+void mgl_dens_x_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->DensX(_D_(a), s, *sVal);
 	delete []s;
 }
 /// Draw density plot for data a at y = *sVal
-void mgl_dens_y_(long *gr, long *a, const char *sch, float *sVal,int l)
+void mgl_dens_y_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->DensY(_D_(a), s, *sVal);
 	delete []s;
 }
 /// Draw density plot for data a at z = *sVal
-void mgl_dens_z_(long *gr, long *a, const char *sch, float *sVal,int l)
+void mgl_dens_z_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->DensZ(_D_(a), s, *sVal);
 	delete []s;
 }
 /// Draw several contour plots for data a at x = *sVal
-void mgl_cont_x_(long *gr, long *a, const char *sch, float *sVal, int *Num,int l)
+void mgl_cont_x_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sVal, int *Num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->ContX(_D_(a), s, *sVal, *Num);
 	delete []s;
 }
 /// Draw several contour plots for data a at y = *sVal
-void mgl_cont_y_(long *gr, long *a, const char *sch, float *sVal, int *Num,int l)
+void mgl_cont_y_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sVal, int *Num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->ContY(_D_(a), s, *sVal, *Num);
 	delete []s;
 }
 /// Draw several contour plots for data a at z = *sVal
-void mgl_cont_z_(long *gr, long *a, const char *sch, float *sVal, int *Num,int l)
+void mgl_cont_z_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sVal, int *Num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->ContZ(_D_(a), s, *sVal, *Num);
 	delete []s;
 }
 /// Draw contour plots for data a at x = *sVal
-void mgl_cont_x_val_(long *gr, long *v, long *a, const char *sch, float *sVal,int l)
+void mgl_cont_x_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, float *sVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && v)	_GR_->ContX(_D_(v), _D_(a), s, *sVal);
 	delete []s;
 }
 /// Draw contour plots for data a at y = *sVal
-void mgl_cont_y_val_(long *gr, long *v, long *a, const char *sch, float *sVal,int l)
+void mgl_cont_y_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, float *sVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && v)	_GR_->ContY(_D_(v), _D_(a), s, *sVal);
 	delete []s;
 }
 /// Draw contour plots for data a at z = *sVal
-void mgl_cont_z_val_(long *gr, long *v, long *a, const char *sch, float *sVal,int l)
+void mgl_cont_z_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, float *sVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && v)	_GR_->ContZ(_D_(v), _D_(a), s, *sVal);
 	delete []s;
 }
 /// Draw several contour plots for data a at x = *sVal
-void mgl_contf_x_(long *gr, long *a, const char *sch, float *sVal, int *Num,int l)
+void mgl_contf_x_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sVal, int *Num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->ContFX(_D_(a), s, *sVal, *Num);
 	delete []s;
 }
 /// Draw several contour plots for data a at y = *sVal
-void mgl_contf_y_(long *gr, long *a, const char *sch, float *sVal, int *Num,int l)
+void mgl_contf_y_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sVal, int *Num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->ContFY(_D_(a), s, *sVal, *Num);
 	delete []s;
 }
 /// Draw several contour plots for data a at z = *sVal
-void mgl_contf_z_(long *gr, long *a, const char *sch, float *sVal, int *Num,int l)
+void mgl_contf_z_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sVal, int *Num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->ContFZ(_D_(a), s, *sVal, *Num);
 	delete []s;
 }
 /// Draw contour plots for data a at x = *sVal
-void mgl_contf_x_val_(long *gr, long *v, long *a, const char *sch, float *sVal,int l)
+void mgl_contf_x_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, float *sVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && v)	_GR_->ContFX(_D_(v), _D_(a), s, *sVal);
 	delete []s;
 }
 /// Draw contour plots for data a at y = *sVal
-void mgl_contf_y_val_(long *gr, long *v, long *a, const char *sch, float *sVal,int l)
+void mgl_contf_y_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, float *sVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && v)	_GR_->ContFY(_D_(v), _D_(a), s, *sVal);
 	delete []s;
 }
 /// Draw contour plots for data a at z = *sVal
-void mgl_contf_z_val_(long *gr, long *v, long *a, const char *sch, float *sVal,int l)
+void mgl_contf_z_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, float *sVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && v)	_GR_->ContFZ(_D_(v), _D_(a), s, *sVal);

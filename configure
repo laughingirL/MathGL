@@ -1006,6 +1006,10 @@ USE_OCTAVE_TRUE
 USE_OCTAVE_FALSE
 USE_TESTIO_TRUE
 USE_TESTIO_FALSE
+USE_DOCS_TRUE
+USE_DOCS_FALSE
+USE_LTDL_TRUE
+USE_LTDL_FALSE
 LIBOBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -1621,6 +1625,7 @@ Optional Features:
   --enable-python    Turn on interface to python
   --enable-octave    Turn on interface to octave
   --enable-testio    Turn on testio
+  --enable-docs    Turn on documentation building
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -5111,7 +5116,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5114 "configure"' > conftest.$ac_ext
+  echo '#line 5119 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7981,11 +7986,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7984: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7989: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7988: \$? = $ac_status" >&5
+   echo "$as_me:7993: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8271,11 +8276,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8274: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8279: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8278: \$? = $ac_status" >&5
+   echo "$as_me:8283: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8375,11 +8380,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8378: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8383: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8382: \$? = $ac_status" >&5
+   echo "$as_me:8387: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10752,7 +10757,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10755 "configure"
+#line 10760 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10852,7 +10857,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10855 "configure"
+#line 10860 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13253,11 +13258,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13256: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13261: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:13260: \$? = $ac_status" >&5
+   echo "$as_me:13265: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -13357,11 +13362,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13360: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13365: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:13364: \$? = $ac_status" >&5
+   echo "$as_me:13369: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14955,11 +14960,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14958: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14963: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14962: \$? = $ac_status" >&5
+   echo "$as_me:14967: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -15059,11 +15064,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15062: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15067: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15066: \$? = $ac_status" >&5
+   echo "$as_me:15071: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17279,11 +17284,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17282: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17287: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17286: \$? = $ac_status" >&5
+   echo "$as_me:17291: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17569,11 +17574,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17572: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17577: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17576: \$? = $ac_status" >&5
+   echo "$as_me:17581: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17673,11 +17678,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17676: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17681: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:17680: \$? = $ac_status" >&5
+   echo "$as_me:17685: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -23469,8 +23474,42 @@ else
 fi
 
 
+# Check whether --enable-docs was given.
+if test "${enable_docs+set}" = set; then
+  enableval=$enable_docs; case "${enableval}" in
+  yes) docs=true ;;
+  no)  docs=false ;;
+  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-docs" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-docs" >&2;}
+   { (exit 1); exit 1; }; } ;;
+esac
+else
+  docs=false
+fi
 
-ac_config_files="$ac_config_files Makefile mgl/Makefile examples/Makefile include/Makefile lang/Makefile utils/Makefile widgets/Makefile texinfo/Makefile texinfo/png/Makefile"
+if (test x$docs = xtrue || test x$all = xtrue) ;then
+	ac_config_files="$ac_config_files texinfo/Makefile texinfo/png/Makefile"
+
+fi
+ if (test x$docs = xtrue || test x$all = xtrue) ; then
+  USE_DOCS_TRUE=
+  USE_DOCS_FALSE='#'
+else
+  USE_DOCS_TRUE='#'
+  USE_DOCS_FALSE=
+fi
+
+
+ if (test x$testio = xtrue || test x$hdf5 = xtrue || test x$jpeg = xtrue || test x$tiff = xtrue); then
+  USE_LTDL_TRUE=
+  USE_LTDL_FALSE='#'
+else
+  USE_LTDL_TRUE='#'
+  USE_LTDL_FALSE=
+fi
+
+
+ac_config_files="$ac_config_files Makefile mgl/Makefile examples/Makefile include/Makefile lang/Makefile utils/Makefile widgets/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -23686,6 +23725,20 @@ if test -z "${USE_TESTIO_TRUE}" && test -z "${USE_TESTIO_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"USE_TESTIO\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"USE_TESTIO\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_DOCS_TRUE}" && test -z "${USE_DOCS_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_DOCS\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_DOCS\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_LTDL_TRUE}" && test -z "${USE_LTDL_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_LTDL\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_LTDL\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -24142,6 +24195,8 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
+    "texinfo/Makefile") CONFIG_FILES="$CONFIG_FILES texinfo/Makefile" ;;
+    "texinfo/png/Makefile") CONFIG_FILES="$CONFIG_FILES texinfo/png/Makefile" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "mgl/Makefile") CONFIG_FILES="$CONFIG_FILES mgl/Makefile" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
@@ -24149,8 +24204,6 @@ do
     "lang/Makefile") CONFIG_FILES="$CONFIG_FILES lang/Makefile" ;;
     "utils/Makefile") CONFIG_FILES="$CONFIG_FILES utils/Makefile" ;;
     "widgets/Makefile") CONFIG_FILES="$CONFIG_FILES widgets/Makefile" ;;
-    "texinfo/Makefile") CONFIG_FILES="$CONFIG_FILES texinfo/Makefile" ;;
-    "texinfo/png/Makefile") CONFIG_FILES="$CONFIG_FILES texinfo/png/Makefile" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
@@ -24431,11 +24484,15 @@ USE_OCTAVE_TRUE!$USE_OCTAVE_TRUE$ac_delim
 USE_OCTAVE_FALSE!$USE_OCTAVE_FALSE$ac_delim
 USE_TESTIO_TRUE!$USE_TESTIO_TRUE$ac_delim
 USE_TESTIO_FALSE!$USE_TESTIO_FALSE$ac_delim
+USE_DOCS_TRUE!$USE_DOCS_TRUE$ac_delim
+USE_DOCS_FALSE!$USE_DOCS_FALSE$ac_delim
+USE_LTDL_TRUE!$USE_LTDL_TRUE$ac_delim
+USE_LTDL_FALSE!$USE_LTDL_FALSE$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 83; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 87; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

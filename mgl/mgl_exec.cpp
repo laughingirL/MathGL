@@ -373,8 +373,10 @@ int mgls_crange(mglGraph *gr, long n, mglArg *a, int k[10])
 }
 void mglc_crange(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==1)	swprintf(out,1024,L"gr->CRange(%s, %s);",a[0].s, (k[1]==3 && a[1].v!=0)?"true":"false");
-	else if(k[0]==3 && k[1]==3)	swprintf(out,1024,L"gr->Cmin = %g;\tgr->Cmax = %g;",a[0].v,a[1].v);
+	if(k[0]==1)
+		swprintf(out,1024,L"gr->CRange(%s, %s);",a[0].s, (k[1]==3 && a[1].v!=0)?"true":"false");
+	else if(k[0]==3 && k[1]==3)
+		swprintf(out,1024,L"gr->CAxis(%g, %g;", a[0].v, a[1].v);
 }
 //-----------------------------------------------------------------------------
 //	{"crop","Crop edge of data","crop var n1 n2 dir", mgls_crop, mglc_crop}
@@ -1093,13 +1095,18 @@ void mglc_flow(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"fill","Fill data linearly in range [v1, v2]","fill var v1 v2 [dir]", mgls_fill, mglc_fill}
 int mgls_fill(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==1 && k[1]==3 && k[2]==3)	a[0].d->Fill(a[1].v,a[2].v,k[3]==2?a[3].s[0]:'x');
+	if(k[0]==1 && k[1]==2)
+		a[0].d->Fill(a[1].s, gr->Min, gr->Max, k[2]==1?a[2].d:0, k[3]==1?a[3].d:0);
+	else if(k[0]==1 && k[1]==3 && k[2]==3)
+		a[0].d->Fill(a[1].v,a[2].v,k[3]==2?a[3].s[0]:'x');
 	else	return 1;
 	return 0;
 }
 void mglc_fill(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==1 && k[1]==3 && k[2]==3)
+	if(k[0]==1 && k[1]==2)
+		swprintf(out,1024,L"%s.Fill(\"%s\", gr->Min, gr->Max, %s, %s);", a[0].s, a[1].s, k[2]==1?a[2].s:"NULL", k[3]==1?a[3].s:"NULL");
+	else if(k[0]==1 && k[1]==3 && k[2]==3)
 		swprintf(out,1024,L"%s.Fill(%g, %g, '%c');", a[0].s, a[1].v,a[2].v, k[3]==2?a[3].s[0]:'x');
 }
 //-----------------------------------------------------------------------------
@@ -2256,7 +2263,7 @@ void mglc_xrange(wchar_t out[1024], long n, mglArg *a, int k[10])
 	if(k[0]==1)
 		swprintf(out,1024,L"gr->XRange(%s, %s);", a[0].s, (k[1]==3&&a[1].v!=0)?"true":"false");
 	else if(k[0]==3 && k[1]==3)
-		swprintf(out,1024,L"gr->Min.x = %g;\tgr->Max.x = %g;\tgr->RecalcBorder();", a[0].v, a[1].v);
+		swprintf(out,1024,L"gr->Axis(mglPoint(%g), mglPoint(%g));", a[0].v, a[1].v);
 }
 //-----------------------------------------------------------------------------
 //	{"yrange","Set range for y-axis","yrange {var [add]} | {x1 x2}", mgls_yrange, mglc_yrange}
@@ -2273,7 +2280,7 @@ void mglc_yrange(wchar_t out[1024], long n, mglArg *a, int k[10])
 	if(k[0]==1)
 		swprintf(out,1024,L"gr->YRange(%s, %s);", a[0].s, (k[1]==3&&a[1].v!=0)?"true":"false");
 	else if(k[0]==3 && k[1]==3)
-		swprintf(out,1024,L"gr->Min.y = %g;\tgr->Max.y = %g;\tgr->RecalcBorder();", a[0].v, a[1].v);
+		swprintf(out,1024,L"gr->Axis(mglPoint(0,%g), mglPoint(0,%g));", a[0].v, a[1].v);
 }
 //-----------------------------------------------------------------------------
 //	{"zrange","Set range for z-axis","yrange {var [add]} | {x1 x2}", mgls_zrange, mglc_zrange}
@@ -2290,7 +2297,7 @@ void mglc_zrange(wchar_t out[1024], long n, mglArg *a, int k[10])
 	if(k[0]==1)
 		swprintf(out,1024,L"gr->ZRange(%s, %s);", a[0].s, (k[1]==3&&a[1].v!=0)?"true":"false");
 	else if(k[0]==3 && k[1]==3)
-		swprintf(out,1024,L"gr->Min.z = %g;\tgr->Max.z = %g;\tgr->RecalcBorder();", a[0].v, a[1].v);
+		swprintf(out,1024,L"gr->Axis(mglPoint(0,0,%g), mglPoint(0,0,%g));", a[0].v, a[1].v);
 }
 //-----------------------------------------------------------------------------
 //	{"xtick","Set ticks for x-axis","xtick {val [sub]} | tmpl", mgls_xtick, mglc_xtick}
@@ -2313,9 +2320,10 @@ int mgls_xtick(mglGraph *gr, long n, mglArg *a, int k[10])
 void mglc_xtick(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3)
-		swprintf(out,1024,L"gr->dx = %g;\tgr->NSx = %d;\tgr->OrgT.x = %g;", a[0].v, int(a[1].v),a[2].v);
-	else if(k[0]==3 && k[1]==3)	swprintf(out,1024,L"gr->dx = %g;\tgr->NSx = %d;", a[0].v, int(a[1].v));
-	else if(k[0]==3)		swprintf(out,1024,L"gr->dx = %g;", a[0].v);
+		swprintf(out,1024,L"gr->SetTicks('x', %g, %d, %g);", a[0].v, int(a[1].v),a[2].v);
+	else if(k[0]==3 && k[1]==3)
+		swprintf(out,1024,L"gr->SetTicks('x', %g, %d);", a[0].v, int(a[1].v));
+	else if(k[0]==3)	swprintf(out,1024,L"gr->SetTicks('x', %g);", a[0].v);
 	else if(k[0]==2)
 		swprintf(out,1024,L"if(gr->xtt) delete []gr->xtt;\tgr->xtt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
 }
@@ -2340,9 +2348,10 @@ int mgls_ytick(mglGraph *gr, long n, mglArg *a, int k[10])
 void mglc_ytick(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3)
-		swprintf(out,1024,L"gr->dy = %g;\tgr->NSy = %d;\tgr->OrgT.y = %g;", a[0].v, int(a[1].v),a[2].v);
-	else if(k[0]==3 && k[1]==3)	swprintf(out,1024,L"gr->dy = %g;\tgr->NSy = %d;", a[0].v, int(a[1].v));
-	else if(k[0]==3)		swprintf(out,1024,L"gr->dy = %g;", a[0].v);
+		swprintf(out,1024,L"gr->SetTicks('y', %g, %d, %g);", a[0].v, int(a[1].v),a[2].v);
+	else if(k[0]==3 && k[1]==3)
+		swprintf(out,1024,L"gr->SetTicks('y', %g, %d);", a[0].v, int(a[1].v));
+	else if(k[0]==3)	swprintf(out,1024,L"gr->SetTicks('y', %g);", a[0].v);
 	else if(k[0]==2)
 		swprintf(out,1024,L"if(gr->ytt) delete []gr->ytt;\tgr->ytt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
 }
@@ -2367,9 +2376,10 @@ int mgls_ztick(mglGraph *gr, long n, mglArg *a, int k[10])
 void mglc_ztick(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3)
-		swprintf(out,1024,L"gr->dz = %g;\tgr->NSz = %d;\tgr->OrgT.z = %g;", a[0].v, int(a[1].v),a[2].v);
-	else if(k[0]==3 && k[1]==3)	swprintf(out,1024,L"gr->dz = %g;\tgr->NSz = %d;", a[0].v, int(a[1].v));
-	else if(k[0]==3)		swprintf(out,1024,L"gr->dz = %g;", a[0].v);
+		swprintf(out,1024,L"gr->SetTicks('z', %g, %d, %g);", a[0].v, int(a[1].v),a[2].v);
+	else if(k[0]==3 && k[1]==3)
+		swprintf(out,1024,L"gr->SetTicks('z', %g, %d);", a[0].v, int(a[1].v));
+	else if(k[0]==3)	swprintf(out,1024,L"gr->SetTicks('z', %g);", a[0].v);
 	else if(k[0]==2)
 		swprintf(out,1024,L"if(gr->ztt) delete []gr->ztt;\tgr->ztt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
 }
@@ -2948,7 +2958,7 @@ int mgls_title(mglGraph *gr, long n, mglArg *a, int k[10])
 }
 void mglc_title(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)	swprintf(out,1024,L"gr->Title(%s, \"%s\", %g);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:-2);
+	if(k[0]==2)	swprintf(out,1024,L"gr->Title(\"%s\", \"%s\", %g);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:-2);
 }
 //-----------------------------------------------------------------------------
 //	{L"envelop",L"Find envelop for the data",L"envelop dat", mgls_envelop, mglc_envelop}
@@ -2960,7 +2970,7 @@ int mgls_envelop(mglGraph *gr, long n, mglArg *a, int k[10])
 }
 void mglc_envelop(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==1)	swprintf(out,1024,L"%s.Envelop(%c);",a[0].s, k[1]==2?a[1].s[0]:'x');
+	if(k[0]==1)	swprintf(out,1024,L"%s.Envelop('%c');",a[0].s, k[1]==2?a[1].s[0]:'x');
 }
 //-----------------------------------------------------------------------------
 //	{L"sew",L"Remove jump into the data, like phase jumps",L"sew dat", mgls_sew, mglc_sew}
@@ -3036,6 +3046,34 @@ void mglc_combine(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1)
 		swprintf(out,1024,L"%s = %s.Combine(%s);",a[0].s, a[1].s, a[2].s);
+}
+//-----------------------------------------------------------------------------
+//	{L"pde",L"Solve PDE",L"pde res 'ham' ini_re ini_im [dz=0.1]", mgls_pde, mglc_pde}
+int mgls_pde(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==1 && k[3]==1)
+		*(a[0].d) = mglPDE(a[1].s, *(a[2].d), *(a[3].d), gr->Min, gr->Max, k[4]==3?a[4].v:0.1, k[5]==3?a[5].v:100);
+	else	return 1;
+	return 0;
+}
+void mglc_pde(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==1 && k[3]==1)
+		swprintf(out,1024,L"%s = mglPDE(\"%s\", %s, %s, gr->Min, gr->Max, %g, %g);",a[0].s, a[1].s, a[2].s, a[3].s, k[4]==3?a[4].v:0.1, k[5]==3?a[5].v:100);
+}
+//-----------------------------------------------------------------------------
+//	{L"ray",L"Solve Hamiltonian ODE (find GO ray or trajectory)",L"ray res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray, mglc_ray}
+int mgls_ray(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3 && k[6]==3 && k[7]==3)
+		*(a[0].d) = mglRay(a[1].s, mglPoint(a[2].v, a[3].v, a[4].v), mglPoint(a[5].v, a[6].v, a[7].v), k[8]==3?a[8].v:0.1, k[9]==3?a[9].v:10);
+	else	return 1;
+	return 0;
+}
+void mglc_ray(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3 && k[6]==3 && k[7]==3)
+		swprintf(out,1024,L"%s = mglRay(\"%s\", mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, %g);",a[0].s, a[1].s, a[2].v, a[3].v, a[4].v, a[5].v, a[6].v, a[7].v, k[8]==3?a[8].v:0.1, k[9]==3?a[9].v:10);
 }
 //-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
@@ -3145,12 +3183,14 @@ mglCommand mgls_base_cmd[] = {
 	{L"normsl",L"Normalize data slice by slice",L"", mgls_normsl, mglc_normsl},
 	{L"origin",L"Set axis origin",L"", mgls_origin, mglc_origin},
 	{L"palette",L"Set palette for 1D plots",L"palette 'colors'", mgls_palette, mglc_palette},
+	{L"pde",L"Solve PDE",L"pde res 'ham' ini_re ini_im [dz=0.1]", mgls_pde, mglc_pde},
 	{L"perspective",L"Set perspective",L"perspective val", mgls_perspective, mglc_perspective},
 	{L"pipe",L"Draw flow pipes for vector field",L"", mgls_pipe, mglc_pipe},
 	{L"plot",L"Draw usual plot for 1D data",L"plot {xvar} yvar {{zvar}} [fmt num]", mgls_plot, mglc_plot},
 	{L"plotfactor",L"Set plotfactor",L"plotfactor val", mgls_plotfactor, mglc_plotfactor},
 	{L"put",L"Put value (numeric or array) to given data element",L"put val dat i [j=0 k=0]", mgls_put, mglc_put},
 	{L"putsfit",L"Print fitted formula",L"putsfit x y {z} [pre font size]", mgls_putsfit, mglc_putsfit},
+	{L"ray",L"Solve Hamiltonian ODE (find GO ray or trajectory)",L"ray res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray, mglc_ray},
 	{L"read",L"Read data from file",L"read var file [nx ny nz]", mgls_read, mglc_read},
 	{L"readall",L"Read and join data from several files",L"", mgls_readall, mglc_readall},
 	{L"readhdf",L"Read data from HDF5 file",L"readhdf var file id", mgls_readhdf, mglc_readhdf},

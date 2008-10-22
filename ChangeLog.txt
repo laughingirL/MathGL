@@ -12,6 +12,8 @@
 		* Sew() -- for sewing data (removing phase jumps)
 		* Evaluate() -- for producing array interpolated by coordinates from other array(s)
 		* Put() -- for setting a value (number or array) for range of data
+		* mglPDE -- for solving PDE in more or less simple case.
+		* mglRay -- for ray tracing (for finding trajectory in 3D space).
 	- Color scheme will disable interpolation (color smoothing) if its style contain '|' symbol.
 	- Function Bars() now draw boounding box of the rectangle if its style contain '#' symbol.
 	- Function Chart() will not draw a peace if its color specification is ' '.
@@ -26,7 +28,8 @@
 		* Restore() for restoring transformation matrix after last InPlot()
 	- Information about mouse click position is shown in widgets (if ShowMousePos=true)
 	- Clean up C/Fortran interface: replace 'bool' to 'int' in C interface; add a lot of new interface functions; change the order of arguments in mgl_data_set_value()
-	- Add MGL commands 'fplot', 'fsurf', 'fgets', 'export', 'import', 'write', 'region', 'title', 'sew', 'envelop', 'evaluate', 'put', 'palette', 'combine'
+	- Add MGL commands 'fplot', 'fsurf', 'fgets', 'export', 'import', 'write', 'region', 'title', 'sew', 'envelop', 'evaluate', 'put', 'palette', 'combine', 'pde', 'ray'
+	- Extend MGL commands 'info', 'fill'
 	- Add const modifiers everywhere
 	- Add default window functions in mglGraphAB (as base class) and in mglGraphGLUT.
 	- Class mglFormula now is thread safe.

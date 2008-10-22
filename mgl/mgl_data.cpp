@@ -20,7 +20,6 @@
 
 #ifndef NO_GSL
 #include <gsl/gsl_fft_complex.h>
-#include <gsl/gsl_fft_real.h>
 #endif
 
 void mglFillP(int x,int y, const float *a,int nx,int ny,float _p[4][4]);
@@ -926,9 +925,11 @@ mglData STFA(const mglData &re, const mglData &im, int dn, char dir)
 {
 	mglData d;
 #ifndef NO_GSL
+	if(dn<2)	return d;
+	dn = 2*(dn/2);
 	long nx = re.nx, ny = re.ny;
 	if(nx*ny!=im.nx*im.ny)	return d;
-	register long i,j,k;
+	register long i,j,k,i0;
 	double *a = new double[2*nx*ny];
 	for(i=0;i<nx*ny;i++)	{	a[2*i] = re.a[i];	a[2*i+1] = im.a[i];	}
 	gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(dn);
@@ -939,17 +940,27 @@ mglData STFA(const mglData &re, const mglData &im, int dn, char dir)
 		mx = nx;	my = dn;	mz = ny/dn;
 		for(i=0;i<mx;i++)	for(j=0;j<mz;j++)
 			gsl_fft_complex_forward(a+2*(i+j*mx*my), mx, dn, wt, ws);
-		d.Create(mx, my, mz);
-		for(i=0;i<mx*my*mz;i++)		d.a[i] = hypot(a[2*i], a[2*i+1]);
+		d.Create(mx, mz, my);
+//		for(i=0;i<mx*my*mz;i++)		d.a[i] = hypot(a[2*i], a[2*i+1])/dn;
+		for(i=0;i<my/2;i++)	for(j=0;j<mx;j++)	for(k=0;k<mz;k++)
+		{
+			i0 = 2*(j+mx*(dn*i+k*mz));
+			d.a[j+mx*(k+mz*(i+my/2))] = hypot(a[i0],a[i0+1])/dn;
+			d.a[j+mx*(k+mz*(i))] = hypot(a[i0+mx*my],a[i0+mx*my+1])/dn;
+		}
 	}
 	else
 	{
 		mx = dn;	my = nx/dn;	mz = ny;
 		for(i=0;i<my;i++)	for(j=0;j<mz;j++)
-		gsl_fft_complex_forward(a+2*(i*dn+j*nx), 1, dn, wt, ws);
-		d.Create(mx, my, mz);
-		for(i=0;i<mx;i++)	for(j=0;j<my;j++)	for(k=0;k<mz;k++)
-			d.a[i+mx*(j+mz*k)] = hypot(a[2*(i+dn*j+k*nx)],a[2*(i+dn*j+k*nx)+1]);
+			gsl_fft_complex_forward(a+2*(i*dn+j*nx), 1, dn, wt, ws);
+		d.Create(my, mx, mz);
+		for(i=0;i<mx/2;i++)	for(j=0;j<my;j++)	for(k=0;k<mz;k++)
+		{
+			i0 = 2*(i+dn*j+k*nx);
+			d.a[j+my*(i+mx/2+mx*k)] = hypot(a[i0],a[i0+1])/dn;
+			d.a[j+my*(i+mx*k)] = hypot(a[i0+mx],a[i0+mx+1])/dn;
+		}
 	}
 	gsl_fft_complex_workspace_free(ws);
 	gsl_fft_complex_wavetable_free(wt);

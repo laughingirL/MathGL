@@ -829,35 +829,35 @@ void mgl_beam(HMGL gr, const HMDT tr, const HMDT g1, const HMDT g2, const HMDT a
 //		3D plotting functions (Fortran)
 //-----------------------------------------------------------------------------
 /// Draw isosurface for 3d data specified parametrically
-void mgl_surf3_xyz_val_(long *gr, float *Val, long *x, long *y, long *z, long *a, const char *sch,int l)
+void mgl_surf3_xyz_val_(uintptr_t *gr, float *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y && z)	_GR_->Surf3(*Val, _D_(x), _D_(y), _D_(z), _D_(a), s);
 	delete []s;
 }
 /// Draw isosurface for 3d data
-void mgl_surf3_val_(long *gr, float *Val, long *a, const char *sch,int l)
+void mgl_surf3_val_(uintptr_t *gr, float *Val, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->Surf3(*Val, _D_(a), s);
 	delete []s;
 }
 /// Draw several isosurface for 3d data specified parametrically
-void mgl_surf3_xyz_(long *gr, long *x, long *y, long *z, long *a, const char *sch, int *num,int l)
+void mgl_surf3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, int *num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y && z)	_GR_->Surf3(_D_(x), _D_(y), _D_(z), _D_(a), s, *num);
 	delete []s;
 }
 /// Draw several isosurface for 3d data
-void mgl_surf3_(long *gr, long *a, const char *sch, int *num,int l)
+void mgl_surf3_(uintptr_t *gr, uintptr_t *a, const char *sch, int *num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->Surf3(_D_(a), s, *num);
 	delete []s;
 }
 /// Draw a cloud of points for 3d data specified parametrically
-void mgl_cloudp_xyz_(long *gr, long *x, long *y, long *z, long *a,
+void mgl_cloudp_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a,
 			const char *sch, float *alpha,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -865,14 +865,14 @@ void mgl_cloudp_xyz_(long *gr, long *x, long *y, long *z, long *a,
 	delete []s;
 }
 /// Draw a cloud of points for 3d data
-void mgl_cloudp_(long *gr, long *a, const char *sch, float *alpha,int l)
+void mgl_cloudp_(uintptr_t *gr, uintptr_t *a, const char *sch, float *alpha,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->CloudP(_D_(a), s, *alpha);
 	delete []s;
 }
 /// Draw a semi-transparent cloud for 3d data specified parametrically
-void mgl_cloudq_xyz_(long *gr, long *x, long *y, long *z, long *a,
+void mgl_cloudq_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a,
 			const char *sch, float *alpha,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -880,7 +880,7 @@ void mgl_cloudq_xyz_(long *gr, long *x, long *y, long *z, long *a,
 	delete []s;
 }
 /// Draw a semi-transparent cloud for 3d data
-void mgl_cloudq_(long *gr, long *a, const char *sch, float *alpha,int l)
+void mgl_cloudq_(uintptr_t *gr, uintptr_t *a, const char *sch, float *alpha,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->CloudQ(_D_(a), s, *alpha);
@@ -888,7 +888,7 @@ void mgl_cloudq_(long *gr, long *a, const char *sch, float *alpha,int l)
 }
 //-----------------------------------------------------------------------------
 /// Draw isosurface for 3d data \a a specified parametrically with alpha proportional to \a b
-void mgl_surf3a_xyz_val_(long *gr, float *Val, long *x, long *y, long *z, long *a, long *b,
+void mgl_surf3a_xyz_val_(uintptr_t *gr, float *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b,
 			const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -896,14 +896,14 @@ void mgl_surf3a_xyz_val_(long *gr, float *Val, long *x, long *y, long *z, long *
 	delete []s;
 }
 /// Draw isosurface for 3d data \a a with alpha proportional to \a b
-void mgl_surf3a_val_(long *gr, float *Val, long *a, long *b, const char *sch,int l)
+void mgl_surf3a_val_(uintptr_t *gr, float *Val, uintptr_t *a, uintptr_t *b, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && b)	_GR_->Surf3A(*Val, _D_(a), _D_(b), s);
 	delete []s;
 }
 /// Draw several isosurface for 3d data \a a specified parametrically with alpha proportional to \a b
-void mgl_surf3a_xyz_(long *gr, long *x, long *y, long *z, long *a, long *b,
+void mgl_surf3a_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b,
 			const char *sch, int *num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -911,14 +911,14 @@ void mgl_surf3a_xyz_(long *gr, long *x, long *y, long *z, long *a, long *b,
 	delete []s;
 }
 /// Draw several isosurface for 3d data \a a with alpha proportional to \a b
-void mgl_surf3a_(long *gr, long *a, long *b, const char *sch, int *num,int l)
+void mgl_surf3a_(uintptr_t *gr, uintptr_t *a, uintptr_t *b, const char *sch, int *num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && b)	_GR_->Surf3A(_D_(a), _D_(b), s, *num);
 	delete []s;
 }
 /// Draw isosurface for 3d data \a a specified parametrically with color proportional to \a b
-void mgl_surf3c_xyz_val_(long *gr, float *Val, long *x, long *y, long *z, long *a, long *b,
+void mgl_surf3c_xyz_val_(uintptr_t *gr, float *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b,
 			const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -926,14 +926,14 @@ void mgl_surf3c_xyz_val_(long *gr, float *Val, long *x, long *y, long *z, long *
 	delete []s;
 }
 /// Draw isosurface for 3d data \a a with color proportional to \a b
-void mgl_surf3c_val_(long *gr, float *Val, long *a, long *b, const char *sch,int l)
+void mgl_surf3c_val_(uintptr_t *gr, float *Val, uintptr_t *a, uintptr_t *b, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && b)	_GR_->Surf3C(*Val, _D_(a), _D_(b), s);
 	delete []s;
 }
 /// Draw several isosurface for 3d data \a a specified parametrically with color proportional to \a b
-void mgl_surf3c_xyz_(long *gr, long *x, long *y, long *z, long *a, long *b,
+void mgl_surf3c_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b,
 			const char *sch, int *num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -941,14 +941,14 @@ void mgl_surf3c_xyz_(long *gr, long *x, long *y, long *z, long *a, long *b,
 	delete []s;
 }
 /// Draw several isosurface for 3d data \a a with color proportional to \a b
-void mgl_surf3c_(long *gr, long *a, long *b, const char *sch, int *num,int l)
+void mgl_surf3c_(uintptr_t *gr, uintptr_t *a, uintptr_t *b, const char *sch, int *num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && b)	_GR_->Surf3C(_D_(a), _D_(b), s, *num);
 	delete []s;
 }
 /// Draw isosurface for 3d beam in curvilinear coordinates
-void mgl_beam_val_(long *gr, float *val, long *tr, long *g1, long *g2, long *a,
+void mgl_beam_val_(uintptr_t *gr, float *val, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintptr_t *a,
 					float *r, const char *sch, int *norm,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -956,7 +956,7 @@ void mgl_beam_val_(long *gr, float *val, long *tr, long *g1, long *g2, long *a,
 	delete []s;
 }
 /// Draw several isosurfaces for 3d beam in curvilinear coordinates
-void mgl_beam_(long *gr, long *tr, long *g1, long *g2, long *a, float *r,
+void mgl_beam_(uintptr_t *gr, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintptr_t *a, float *r,
 				const char *sch, int *norm, int *num,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;

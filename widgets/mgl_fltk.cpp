@@ -27,6 +27,7 @@
 #include <FL/fl_draw.H>
 #include <FL/Fl_File_Chooser.H>
 #include <unistd.h>
+#include <pthread.h>
 
 #include "mgl/mgl_fltk.h"
 #include "mgl/mgl_eps.h"
@@ -667,6 +668,8 @@ void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void 
 	delete []tmp[0];
 }
 //-----------------------------------------------------------------------------
+int mglFlRun()	{	return Fl::run();	}
+//-----------------------------------------------------------------------------
 HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par)
 {
 	mglGraphFLTK *g = new mglGraphFLTK;
@@ -674,22 +677,24 @@ HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, voi
 	return g;
 }
 //-----------------------------------------------------------------------------
-void mgl_fltk_run()
+void *mgl_fl_tmp(void *)	{	mglFlRun();	return 0;	}
+void mgl_fltk_run()	{	mglFlRun();	}
+void mgl_fltk_thread()
 {
-	mglFlRun();
+	static pthread_t tmp;
+	pthread_create(&tmp, 0, mgl_fl_tmp, 0);
+	pthread_detach(tmp);
 }
 //-----------------------------------------------------------------------------
-uintptr_t mgl_create_graph_fltk_(int (*draw)(long *gr, void *p), const char *title, void *par, int l)
+uintptr_t mgl_create_graph_fltk_(int (*draw)(uintptr_t *gr), const char *title, int l)
 {
 	mglGraphFLTK *g = new mglGraphFLTK;
 	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
-	g->Window(0,0,(int (*)(mglGraph *,void *))draw,s,par);
+	g->Window(0,0,mgl_fortran_func,s,(void*)draw);
 	delete []s;
 	return uintptr_t(g);
 }
 //-----------------------------------------------------------------------------
-void mgl_fltk_run_()
-{
-	mglFlRun();
-}
+void mgl_fltk_run_()	{	mglFlRun();	}
+void mgl_fltk_thread_()	{	mgl_fltk_thread();	}
 //-----------------------------------------------------------------------------

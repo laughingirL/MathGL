@@ -96,7 +96,7 @@ void mgl_set_draw_face(HMGL gr, int enable)
 void mgl_set_scheme(HMGL gr, const char *sch)
 {	gr->SetScheme((sch && sch[0]) ? sch : "BbcyrR");	}
 /// Set font facename
-void mgl_set_font(HMGL gr, const char *name, const char *path)
+void mgl_load_font(HMGL gr, const char *name, const char *path)
 {	gr->GetFont()->Load(name,path);	}
 /// Copy font data from another HMGL object
 void mgl_copy_font(HMGL gr, HMGL gr_from)
@@ -134,9 +134,12 @@ void mgl_set_fog(HMGL gr, float d, float dz)
 /// Set the using of light on/off.
 void mgl_set_light(HMGL gr, int enable)
 {	gr->Light(enable);	}
+/// Set the using of n-th light on/off.
+void mgl_set_light_n(HMGL gr, int n, int enable)
+{	gr->Light(n, enable);	}
 /// Add white light source.
-void mgl_add_light(HMGL gr, int n, float x, float y, float z, int infty)
-{	gr->Light(n,mglPoint(x,y,z),'w',0.5,infty);	}
+void mgl_add_light(HMGL gr, int n, float x, float y, float z, char c)
+{	gr->Light(n,mglPoint(x,y,z),c,0.5);	}
 /// Add a light source with color {r,g,b}.
 void mgl_add_light_rgb(HMGL gr, int n, float x, float y, float z, int infty,
 						float r, float g, float b,float i)
@@ -182,6 +185,8 @@ void mgl_perspective(HMGL gr, float val)
 /// Switch on/off ticks tunning and set factor position for tunned ticks.
 void mgl_tune_ticks(HMGL gr, int tune, float fact_pos)
 {	gr->TuneTicks = tune;	gr->FactorPos = fact_pos;	}
+void mgl_set_ticks_dir(HMGL gr, char dir, float d, int ns, float org)
+{	gr->SetTicks(dir, d, ns, org);	}
 /// Set ticks interval mglGraph::dx, mglGraph::dy, mglGraph::dz.
 void mgl_set_ticks(HMGL gr, float DX, float DY, float DZ)
 {	gr->dx=DX;	gr->dy=DY;	gr->dz=DZ;	}
@@ -363,4 +368,18 @@ void mgl_drop(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 {	gr->Drop(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2),r,stl,shift,ap);	}
 void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl, int edge)
 {	gr->Cone(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2),r1,r2,stl,edge);	}
+void mgl_set_def_param(HMGL gr)	{	gr->DefaultPlotParam();	}
+void mgl_set_font_def(HMGL gr, const char *fnt)
+{	strncpy(gr->FontDef, fnt, 31);	}
+void mgl_flush(HMGL gr)	{	gr->Flush();	}
+
+//-----------------------------------------------------------------------------
+#include <stdint.h>
+int mgl_fortran_func(HMGL gr, void *f)
+{
+	typedef int (*func_draw)(uintptr_t *gr);
+	func_draw draw = func_draw(f);
+	uintptr_t p = uintptr_t(gr);
+	int res = draw(&p);	return res;
+}
 //-----------------------------------------------------------------------------

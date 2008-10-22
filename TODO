@@ -15,15 +15,14 @@
 11. Update documentation (English)
 	* Python classes
 	* Python classes update (code)
-	* MGL commands --> update UDAV help
 	* remove obsolete from  Samples
 	* Documentation about Put -- texi (mglData,Pure C,Python,MGL)
 	* Spellchecking
 12. Update documentation (Russian)
 
-13. Axis in "Dens3 sample" ?!?
-14. Example of Sew, Envelop, STFA ?!?
 15. Check Put
+16. mglGraph::WriteBitmap(fname,type="png",descr=0);
+17. skip empty lines in data files (at beginning)
 
 
 					MathGL (for v.1.8.?) ???

@@ -22,8 +22,6 @@
 
 #include "mgl/mgl_data.h"
 #include "mgl/mgl_font.h"
-#include <math.h>
-#include <string.h>
 
 #ifndef NUM_COLOR
 #define NUM_COLOR	32
@@ -103,39 +101,6 @@ struct mglColorID
 	mglColor col;
 };
 extern mglColorID mglColorIds[];
-//-----------------------------------------------------------------------------
-/// Class for incapsulating point in space
-struct mglPoint
-{
-	float x,y,z;
- 	mglPoint(float X=0,float Y=0,float Z=0){x=X;y=Y;z=Z;};
-};
-inline mglPoint operator+(const mglPoint &a, const mglPoint &b)
-{	return mglPoint(a.x+b.x, a.y+b.y, a.z+b.z);	};
-inline mglPoint operator-(const mglPoint &a, const mglPoint &b)
-{	return mglPoint(a.x-b.x, a.y-b.y, a.z-b.z);	};
-inline mglPoint operator*(float b, const mglPoint &a)
-{	return mglPoint(a.x*b, a.y*b, a.z*b);	};
-inline mglPoint operator*(const mglPoint &a, float b)
-{	return mglPoint(a.x*b, a.y*b, a.z*b);	};
-inline mglPoint operator/(const mglPoint &a, float b)
-{	return mglPoint(a.x/b, a.y/b, a.z/b);	};
-inline float operator*(const mglPoint &a, const mglPoint &b)
-{	return a.x*b.x+a.y*b.y+a.z*b.z;	};
-inline mglPoint operator&(const mglPoint &a, const mglPoint &b)
-{	return a - b*((a*b)/(b*b));	};
-inline mglPoint operator|(const mglPoint &a, const mglPoint &b)
-{	return b*((a*b)/(b*b));	};
-inline mglPoint operator^(const mglPoint &a, const mglPoint &b)
-{	return mglPoint(a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x);	};
-inline mglPoint operator!(const mglPoint &a)
-{	return (a.x==0 && a.y==0)?mglPoint(1,0,0):mglPoint(-a.y/hypot(a.x,a.y), a.x/hypot(a.x,a.y), 0);	};
-inline bool operator==(const mglPoint &a, const mglPoint &b)
-{	return !memcmp(&a, &b, sizeof(mglPoint));	}
-inline bool operator!=(const mglPoint &a, const mglPoint &b)
-{	return memcmp(&a, &b, sizeof(mglPoint));	}
-inline float Norm(const mglPoint &p)
-{	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);	};
 //-----------------------------------------------------------------------------
 float GetX(const mglData &x, int i, int j, int k);
 float GetY(const mglData &y, int i, int j, int k);
@@ -228,6 +193,8 @@ public:
 	virtual void WriteEPS(const char *fname,const char *descr=0);
 	/// Write the frame in file using SVG format
 	virtual void WriteSVG(const char *fname,const char *descr=0);
+	/// Write the frame in file using IDTF format
+	virtual void WriteIDTF(const char *fname,const char *descr=0);
 	//@}
 	/// Create new frame.
 	virtual int NewFrame(int id=0);
@@ -508,7 +475,7 @@ public:
 	/// Draw curve for formula with x in range [Min.x, Max.x]
 	void Plot(const char *eqY, const char *pen=0, float zVal=NAN, int n=100);
 	/// Draw curve for formulas parametrically depended on t in range [0,1]
-	void Plot(const char *eqX, const char *eqY, const char *eqZ=0, const char *pen=0, int n=100);
+	void Plot(const char *eqX, const char *eqY, const char *eqZ, const char *pen=0, int n=100);
 
 	/// Draw line plot for points in arrays \a x, \a y, \a z.
 	void Plot(const mglData &x, const mglData &y, const mglData &z, const char *pen=0);
@@ -846,11 +813,9 @@ public:
 	/// Draw several isosurfaces for 3d data specified parametrically
 	void Surf3(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *stl=0, int num=3);
 	/// Draw several isosurfaces for 3d beam in curvilinear coordinates
-	void Beam(const mglData &tr, const mglData &g1, const mglData &g2, const mglData &a, float r,
-		const char *stl=0, int flag=0, int num=3);
+	void Beam(const mglData &tr, const mglData &g1, const mglData &g2, const mglData &a, float r, const char *stl=0, int flag=0, int num=3);
 	/// Draw isosurface for 3d beam in curvilinear coordinates
-	void Beam(float val,const mglData &tr, const mglData &g1, const mglData &g2, const mglData &a, float r,
-		const char *stl=0, int flag=0);
+	void Beam(float val,const mglData &tr, const mglData &g1, const mglData &g2, const mglData &a, float r, const char *stl=0, int flag=0);
 	/// Draw several isosurface for 3d data
 	void Surf3(const mglData &a, const char *stl=0, int num=3);
 	/// Draw contour lines at slice for 3d data specified parametrically
@@ -930,6 +895,24 @@ public:
 	void ContFY(const mglData &v, const mglData &a, const char *stl=0, float sVal=NAN);
 	/// Draw contour plots for data a at z = sVal
 	void ContFZ(const mglData &v, const mglData &a, const char *stl=0, float sVal=NAN);
+	//@}
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	/** @name IDTF specific functions
+	  * These functions are useful only in IDTF mode
+	  * VertexColor enables smooth color change.
+	  * Compression gives smaller files, but quality degrades.
+	  * Unrotate reverses the current space transform before saving,
+	  * in an attempt to make MathGl axes similar to Adobe Reader axes
+	  * It makes positioning cameras and crossections easier
+	  * Groups contain objects and other groups, they are used to select a part of a model to
+	  * zoom to / make invizible / make transparent / etc.
+	  *  */
+	//@{
+	virtual void VertexColor(bool enable);
+	virtual void Compression(bool enable);
+	virtual void Unrotate(bool enable);
+	virtual void StartGroup (const char *name);
+	virtual void EndGroup();
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 protected:

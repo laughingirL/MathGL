@@ -14,9 +14,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "mgl/mgl_gl.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+#include <wchar.h>
 #ifdef WIN32
 #define bzero(a,b) memset(a,0,b)
 #endif
@@ -25,24 +29,18 @@
 #ifndef MAXFLOAT
 #define MAXFLOAT	1e30
 #endif
-
-const bool dbg = true;
+#define IDTFROUND(x) roundf((x)*1000000.0f)/1000000.0f
+// #define IDTFROUND(x) ldexpf(roundf(ldexpf((x),20)),-20)
+// const static bool dbg = true;
 //-----------------------------------------------------------------------------
-/// Create mglGraph object in OpenGL mode.
+/// Create mglGraph object in IDTF mode.
 HMGL mgl_create_graph_idtf()
 {	return new mglGraphIDTF;	}
-/// Create mglGraph object in OpenGL mode.
+/// Create mglGraph object in IDTF mode.
 uintptr_t mgl_create_graph_idtf_()
 {	return uintptr_t(new mglGraphIDTF);	}
 //-----------------------------------------------------------------------------
 // helper output routines
-//-----------------------------------------------------------------------------
-inline std::string f2s ( float x )
-{
-	std::ostringstream o;
-	o << x;
-	return o.str();
-};
 //-----------------------------------------------------------------------------
 inline std::string i2s ( int x )
 {
@@ -58,10 +56,16 @@ inline std::string i2s ( int x )
   (x)[0] << " " << (x)[1] << " " << (x)[2] << " " << (x)[3]
 //-----------------------------------------------------------------------------
 #define sign(x) ((x<0.0) ? (-1.0) : (1.0))
+
+static float mgl_globpos[4][4] = { {0.5, 0, 0, 0.5}, {0, 0.5, 0, 0.5}, {0, 0, 0.5, 0.5}, {0, 0, 0, 1} };
+static float mgl_globinv[4][4] = { {2, 0, 0, -1}, {0, 2, 0, -1}, {0, 0, 2, -1}, {0, 0, 0, 1} };
+const float mgl_definv[4][4] = { {2, 0, 0, -1}, {0, 2, 0, -1}, {0, 0, 2, -1}, {0, 0, 0, 1} };
+const float mgl_idtrans[4][4] = { {1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1} };
+
 //-----------------------------------------------------------------------------
 // u3d object methods
 //-----------------------------------------------------------------------------
-void u3dNode::print ( std::ostringstream& ostr )
+void u3dNode::print ( std::ofstream& ostr )
 {
 	ostr
 	<< "NODE \"" << this->type << "\" {\n"
@@ -72,9 +76,7 @@ void u3dNode::print ( std::ostringstream& ostr )
 	<< "\t\t\tPARENT_NAME \"" << ( this->parent.empty() ? "<NULL>" : this->parent ) << "\"\n"
 	<< "\t\t\tPARENT_TM {\n";
 	for ( int i=0; i<4;i++ )
-	{
-		ostr << "\t\t\t\t" << IDTFPrintVector4 ( this->position[i] ) << "\n";
-	}
+		ostr << "\t\t\t\t" << IDTFPrintVector4 ( position[i] ) << "\n";
 	ostr << "\t\t\t}\n"
 	<< "\t\t}\n"
 	<< "\t}\n";
@@ -90,7 +92,7 @@ void u3dNode::print ( std::ostringstream& ostr )
 	<< "\n";
 };
 
-void u3dLight::print_light_resource ( std::ostringstream& ostr )
+void u3dLight::print_light_resource ( std::ofstream& ostr )
 {
 	ostr
 	<< "\t\tRESOURCE_NAME \"" << this->name << "\"\n"
@@ -99,7 +101,7 @@ void u3dLight::print_light_resource ( std::ostringstream& ostr )
 	<< "\t\tLIGHT_ATTENUATION " << this->attenuation << " 0 0\n"
 	<< "\t\tLIGHT_INTENSITY " << this->intensity << "\n";
 };
-void u3dLight::print_node ( std::ostringstream& ostr )
+void u3dLight::print_node ( std::ofstream& ostr )
 {
 	u3dNode Node;
 	Node.name = name;
@@ -120,11 +122,7 @@ void mglGraphIDTF::SetAmbientLight ( mglColor c, float br )
 	Light.attenuation = 1.0;
 	Light.intensity = br >= 0.0 ? br : this->AmbBr;;
 	Light.color = c;
-	bzero ( Light.position, sizeof ( Light.position ) );
-	Light.position[0][0] = 1.0f;
-	Light.position[1][1] = 1.0f;
-	Light.position[2][2] = 1.0f;
-	Light.position[3][3] = 1.0f;
+	memcpy ( Light.position, mgl_idtrans, sizeof ( mgl_idtrans ) );
 	Lights.push_back ( Light );
 }
 void mglGraphIDTF::AddLight ( mglPoint p, mglColor color, float br, bool infty )
@@ -138,19 +136,12 @@ void mglGraphIDTF::AddLight ( mglPoint p, mglColor color, float br, bool infty )
 	{
 		Light.name = "Light" + i2s ( Lights.size() );
 	}
-	float pp[3] = {p.x, p.y, p.z};;
 
-	bzero ( Light.position, sizeof ( Light.position ) );
-	Light.position[0][0] = 1.0f;
-	Light.position[1][1] = 1.0f;
-	Light.position[2][2] = 1.0f;
-	Light.position[3][3] = 1.0f;
+	memcpy ( Light.position, mgl_idtrans, sizeof ( mgl_idtrans ) );
+	float a = p.x, b = p.y, c = p.z;
 	if ( infty )
 	{
 		Light.type = "DIRECTIONAL";
-//		NormScale ( pp, 1 );
-		float a, b, c;
-		a = pp[0]; b = pp[1]; c = pp[2];
 		float n = sqrt ( a*a+b*b+c*c );
 		if ( n != 0.0f )
 		{
@@ -183,16 +174,15 @@ void mglGraphIDTF::AddLight ( mglPoint p, mglColor color, float br, bool infty )
 	else
 	{
 		Light.type = "POINT";
-//		PostScale ( pp, 1 );
-		Light.position[3][0] = pp[0];
-		Light.position[3][1] = pp[1];
-		Light.position[3][2] = pp[2];
+		Light.position[3][0] = a;
+		Light.position[3][1] = b;
+		Light.position[3][2] = c;
 	}
 
 	Lights.push_back ( Light );
 };
 
-void u3dMaterial::print_material ( std::ostringstream& ostr )
+void u3dMaterial::print_material ( std::ofstream& ostr )
 {
 	ostr
 	<< "\t\tRESOURCE_NAME \"" << this->name << "\"\n"
@@ -212,7 +202,7 @@ void u3dMaterial::print_material ( std::ostringstream& ostr )
 	<< "\t\tMATERIAL_REFLECTIVITY 0.5\n"
 	<< "\t\tMATERIAL_OPACITY " << this->opacity << "\n";
 }
-void u3dMaterial::print_shader ( std::ostringstream& ostr )
+void u3dMaterial::print_shader ( std::ofstream& ostr )
 {
 	ostr << "\t\tRESOURCE_NAME \"" << this->name << "\"\n";
 	if ( this->vertex_color )
@@ -239,116 +229,54 @@ size_t mglGraphIDTF::AddMaterial ( const u3dMaterial& Material )
 	return ( mid );
 }
 
-u3dPointSet& mglGraphIDTF::AddPointSet ( std::string name )
-{
-	if ( name.empty() || name.size() == 0 )
-	{
-		if ( !CurrentName.empty() && CurrentName.size() != 0 )
-		{
-			name = CurrentName;
-			CurrentName.clear();
-		}
-		else if ( !CurrentGroup.empty() && CurrentGroup.size() != 0 )
-			name = CurrentGroup + "Points" + i2s ( PointSets.size() );
-		else
-			name = "Points" + i2s ( PointSets.size() );
-	}
-	for ( u3dNode_list::iterator it = this->Nodes.begin(); it != this->Nodes.end(); ++it )
-		if ( *it == name )
-			{	name = "Node" + i2s ( Nodes.size() ); break; }
-	u3dPointSet PointSet = u3dPointSet ( name, this );
-	PointSets.push_back ( PointSet );
-	Nodes.push_back ( name );
-	points_finished = false;
-	return ( PointSets.back() );
-}
 // Get the last point set or start a new one if things have changed
 u3dPointSet& mglGraphIDTF::GetPointSet()
 {
 	if ( points_finished )
-		return AddPointSet();
-	else
-		return PointSets.back();
+	{
+		u3dPointSet PointSet = u3dPointSet ( "PointSet" + i2s ( PointSets.size() ), this );
+		PointSets.push_back ( PointSet );
+		points_finished = false;
+	}
+	return PointSets.back();
 }
 
-// Add a new LineSet named name, if the name is duplicate - change it
-u3dLineSet& mglGraphIDTF::AddLineSet ( std::string name )
-{
-	if ( name.empty() || name.size() == 0 )
-	{
-		if ( !CurrentName.empty() && CurrentName.size() != 0 )
-		{
-			name = CurrentName;
-			CurrentName.clear();
-		}
-		else if ( !CurrentGroup.empty() && CurrentGroup.size() != 0 )
-			name = CurrentGroup + "Lines" + i2s ( LineSets.size() );
-		else
-			name = "Lines" + i2s ( LineSets.size() );
-	}
-	for ( u3dNode_list::iterator it = this->Nodes.begin(); it != this->Nodes.end(); ++it )
-		if ( *it == name )
-			{	name = "Node" + i2s ( Nodes.size() ); break; }
-	u3dLineSet LineSet = u3dLineSet ( name, this );
-	LineSets.push_back ( LineSet );
-	Nodes.push_back ( name );
-	lines_finished = false;
-	return ( LineSets.back() );
-}
 // Get the last line set or start a new one if things have changed
 u3dLineSet& mglGraphIDTF::GetLineSet()
 {
 	if ( lines_finished )
-		return AddLineSet();
-	else
-		return LineSets.back();
+	{
+		u3dLineSet LineSet = u3dLineSet ( "LineSet" + i2s ( LineSets.size() ), this );
+		LineSets.push_back ( LineSet );
+		lines_finished = false;
+	}
+	return LineSets.back();
 }
 
-// Add a new Mesh named name, if the name is duplicate - change it
-u3dMesh& mglGraphIDTF::AddMesh ( std::string name )
-{
-	if ( name.empty() || name.size() == 0 )
-	{
-		if ( !CurrentName.empty() && CurrentName.size() != 0 )
-		{
-			name = CurrentName;
-			CurrentName.clear();
-		}
-		else if ( !CurrentGroup.empty() && CurrentGroup.size() != 0 )
-			name = CurrentGroup + "Mesh" + i2s ( Meshes.size() );
-		else
-			name = "Mesh" + i2s ( Meshes.size() );
-	}
-	for ( u3dNode_list::iterator it = this->Nodes.begin(); it != this->Nodes.end(); ++it )
-		if ( *it == name )
-			{	name = "Node" + i2s ( Nodes.size() ); break; }
-	u3dMesh Mesh = u3dMesh ( name, this, this->vertex_color_flag, this->disable_compression_flag );
-	Meshes.push_back ( Mesh );
-	Nodes.push_back ( name );
-	mesh_finished = false;
-	return ( Meshes.back() );
-}
-// Get the last line set or start a new one if things have changed
+// Get the last mesh or start a new one if things have changed
 u3dMesh& mglGraphIDTF::GetMesh()
 {
 	if ( mesh_finished )
-		return AddMesh();
-	else
-		return Meshes.back();
+	{
+		u3dMesh Mesh = u3dMesh ( "Mesh" + i2s ( Meshes.size() ), this, this->vertex_color_flag, this->disable_compression_flag );
+		Meshes.push_back ( Mesh );
+		mesh_finished = false;
+	}
+	return Meshes.back();
 }
 
-size_t u3dModel::AddPoint ( float *p )
+size_t u3dModel::AddPoint ( const float *p )
 {
-	mglPoint point = mglPoint ( p[0], p[1], p[2] );
-	for ( size_t i=0; i< this->Points.size(); i++ )
-		if ( this->Points[i] == point )
-			return i;
-	this->Points.push_back ( point );
-	return ( this->Points.size()-1 );
+	return AddPoint( mglPoint ( p[0], p[1], p[2] ) );
 }
 
-size_t u3dModel::AddPoint ( mglPoint point )
+size_t u3dModel::AddPoint ( const mglPoint pnt )
 {
+	mglPoint point;
+	point.x = invpos[0][0]*pnt.x+invpos[0][1]*pnt.y+invpos[0][2]*pnt.z+invpos[0][3];
+	point.y = invpos[1][0]*pnt.x+invpos[1][1]*pnt.y+invpos[1][2]*pnt.z+invpos[1][3];
+	point.z = invpos[2][0]*pnt.x+invpos[2][1]*pnt.y+invpos[2][2]*pnt.z+invpos[2][3];
+// printf("%f %f %f - %f %f %f\n", pnt.x, pnt.y, pnt.z, point.x, point.y, point.z);
 	for ( size_t i=0; i< this->Points.size(); i++ )
 		if ( this->Points[i] == point )
 			return i;
@@ -358,7 +286,7 @@ size_t u3dModel::AddPoint ( mglPoint point )
 
 size_t u3dModel::AddColor ( const float *c )
 {
-	mglColor color = mglColor ( c[0], c[1], c[2] );
+	mglColor color = mglColor ( IDTFROUND(c[0]), IDTFROUND(c[1]), IDTFROUND(c[2]) );
 	for ( size_t i=0; i< this->PointColors.size(); i++ )
 		if ( this->PointColors[i] == color )
 			return i;
@@ -379,7 +307,143 @@ void u3dMesh::AddTriangle ( size_t pid0, size_t pid1, size_t pid2, size_t mid,
 	triangle.cid2 = cid2;
 	this->Triangles.push_back ( triangle );
 };
+//-----------------------------------------------------------------------------
+void mglGraphIDTF::MakeTransformMatrix( float position[4][4], float invpos[4][4] )
+{
+	const float s3=2*PlotFactor;
+	position[0][0]=B[0]					/(s3*zoomx2);
+	position[0][1]=B[1]					/(s3*zoomx2);
+	position[0][2]=B[2]					/(s3*zoomx2);
+	position[0][3]=(xPos - zoomx1*Width)/(zoomx2);
+	position[1][0]=B[3]					/(s3*zoomy2);
+	position[1][1]=B[4]					/(s3*zoomy2);
+	position[1][2]=B[5]					/(s3*zoomy2);
+	position[1][3]=(yPos - zoomy1*Height)/(zoomy2);
+	position[2][0]=B[6]		      /(s3*sqrt(zoomx2*zoomy2));
+	position[2][1]=B[7]		      /(s3*sqrt(zoomx2*zoomy2));
+	position[2][2]=B[8]		      /(s3*sqrt(zoomx2*zoomy2));
+	position[2][3]=(zPos)	      /(sqrt(zoomx2*zoomy2));
+	position[3][0]=0.0f;
+	position[3][1]=0.0f;
+	position[3][2]=0.0f;
+	position[3][3]=1.0f;
+//
+// From Mesa-2.2\src\glu\project.c
+//
 
+//
+// Invert matrix m.  This algorithm contributed by Stephane Rehel
+// <rehel@worldnet.fr>
+//
+
+/* Here's some shorthand converting standard (row,column) to index. */
+#define m11 position[0][0]
+#define m12 position[0][1]
+#define m13 position[0][2]
+#define m14 position[0][3]
+#define m21 position[1][0]
+#define m22 position[1][1]
+#define m23 position[1][2]
+#define m24 position[1][3]
+#define m31 position[2][0]
+#define m32 position[2][1]
+#define m33 position[2][2]
+#define m34 position[2][3]
+#define m41 position[3][0]
+#define m42 position[3][1]
+#define m43 position[3][2]
+#define m44 position[3][3]
+
+	register double det;
+	double tmp[16]; /* Allow out == in. */
+
+	/* Inverse = adjoint / det. (See linear algebra texts.)*/
+
+	tmp[0]= m22 * m33 - m23 * m32;
+	tmp[1]= m23 * m31 - m21 * m33;
+	tmp[2]= m21 * m32 - m22 * m31;
+
+	/* Compute determinant as early as possible using these cofactors. */
+	det= m11 * tmp[0] + m12 * tmp[1] + m13 * tmp[2];
+
+	/* Run singularity test. */
+	if (det == 0.0) {
+		printf("invert_matrix: Warning: Singular matrix.\n");
+		bzero ( invpos, sizeof ( invpos ) );
+	}
+	else {
+		double d12, d13, d23, d24, d34, d41;
+		register double im11, im12, im13, im14;
+
+		det= 1. / det;
+
+		/* Compute rest of inverse. */
+		tmp[0] *= det;
+		tmp[1] *= det;
+		tmp[2] *= det;
+		tmp[3]  = 0.;
+
+		im11= m11 * det;
+		im12= m12 * det;
+		im13= m13 * det;
+		im14= m14 * det;
+		tmp[4] = im13 * m32 - im12 * m33;
+		tmp[5] = im11 * m33 - im13 * m31;
+		tmp[6] = im12 * m31 - im11 * m32;
+		tmp[7] = 0.;
+
+		/* Pre-compute 2x2 dets for first two rows when computing */
+		/* cofactors of last two rows. */
+		d12 = im11*m22 - m21*im12;
+		d13 = im11*m23 - m21*im13;
+		d23 = im12*m23 - m22*im13;
+		d24 = im12*m24 - m22*im14;
+		d34 = im13*m24 - m23*im14;
+		d41 = im14*m21 - m24*im11;
+
+		tmp[8] =  d23;
+		tmp[9] = -d13;
+		tmp[10] = d12;
+		tmp[11] = 0.;
+
+		tmp[12] = -(m32 * d34 - m33 * d24 + m34 * d23);
+		tmp[13] =  (m31 * d34 + m33 * d41 + m34 * d13);
+		tmp[14] = -(m31 * d24 + m32 * d41 + m34 * d12);
+		tmp[15] =  1.;
+
+		for (int r=0; r<4; r++)
+			for (int c=0; c<4; c++)
+				invpos[r][c] = tmp[c*4+r];
+	}
+
+#undef m11
+#undef m12
+#undef m13
+#undef m14
+#undef m21
+#undef m22
+#undef m23
+#undef m24
+#undef m31
+#undef m32
+#undef m33
+#undef m34
+#undef m41
+#undef m42
+#undef m43
+#undef m44
+// puts("pos");
+// printf("%f %f %f %f\n", position[0][0], position[0][1], position[0][2], position[0][3]);
+// printf("%f %f %f %f\n", position[1][0], position[1][1], position[1][2], position[1][3]);
+// printf("%f %f %f %f\n", position[2][0], position[2][1], position[2][2], position[2][3]);
+// printf("%f %f %f %f\n", position[3][0], position[3][1], position[3][2], position[3][3]);
+// puts("invpos");
+// printf("%f %f %f %f\n", invpos[0][0], invpos[0][1], invpos[0][2], invpos[0][3]);
+// printf("%f %f %f %f\n", invpos[1][0], invpos[1][1], invpos[1][2], invpos[1][3]);
+// printf("%f %f %f %f\n", invpos[2][0], invpos[2][1], invpos[2][2], invpos[2][3]);
+// printf("%f %f %f %f\n", invpos[3][0], invpos[3][1], invpos[3][2], invpos[3][3]);
+}
+//-----------------------------------------------------------------------------
 u3dModel::u3dModel ( const std::string name, mglGraphIDTF *Graph, const bool& vertex_color )
 		: both_visible ( true )
 {
@@ -387,11 +451,14 @@ u3dModel::u3dModel ( const std::string name, mglGraphIDTF *Graph, const bool& ve
 	this->Graph = Graph;
 	this->vertex_color = vertex_color;
 	this->parent = Graph->GetCurrentGroup();
+	if (this->parent) this->parent->NumberOfChildren++;
+	Graph->MakeTransformMatrix(this->position, this->invpos);
 }
+//-----------------------------------------------------------------------------
 size_t u3dModel::AddModelMaterial ( const float *c, bool emissive, bool vertex_color )
 {
 	u3dMaterial Material;
-	Material.color = mglColor ( c[0], c[1], c[2] );
+	Material.color = mglColor ( IDTFROUND(c[0]), IDTFROUND(c[1]), IDTFROUND(c[2]) );
 //	Material.color = color;
 	Material.opacity = this->Graph->fixalpha ( c[3] );
 //	Material.opacity = alpha;
@@ -407,24 +474,26 @@ size_t u3dModel::AddModelMaterial ( const float *c, bool emissive, bool vertex_c
 	this->ModelMaterials.push_back ( Graph->AddMaterial ( Material ) );
 	return ( this->ModelMaterials.size()-1 );
 };
-void u3dModel::print_node ( std::ostringstream& ostr )
+void u3dModel::print_node ( std::ofstream& ostr )
 {
 	u3dNode Node;
 	Node.name = name;
-	bzero ( Node.position, sizeof ( Node.position ) );
-	Node.position[0][0] = 1.0f;
-	Node.position[1][1] = 1.0f;
-	Node.position[2][2] = 1.0f;
-	Node.position[3][3] = 1.0f;
-//	for(int i=0; i<4; i++)
-//		for(int j=0; j<4; j++)
-//			Node.position[i][j] = this->B[j][i];
+
+	for ( int i=0; i<4;i++ )
+		for ( int j=0; j<4;j++ )
+				Node.position[i][j]	= position[0][i]*mgl_globinv[j][0]
+							+ position[1][i]*mgl_globinv[j][1]
+							+ position[2][i]*mgl_globinv[j][2]
+							+ position[3][i]*mgl_globinv[j][3];
 	Node.type = "MODEL";
 	Node.both_visible = this->both_visible;
-	Node.parent = this->parent;
+	if ( this->parent == NULL)
+		Node.parent = "<NULL>";
+	else
+		Node.parent = this->parent->name;
 	Node.print ( ostr );
 }
-void u3dModel::print_shading_modifier ( std::ostringstream& ostr )
+void u3dModel::print_shading_modifier ( std::ofstream& ostr )
 {
 	ostr << "MODIFIER \"SHADING\" {\n"
 	<< "\tMODIFIER_NAME \"" << this->name << "\"\n"
@@ -446,32 +515,39 @@ void u3dModel::print_shading_modifier ( std::ostringstream& ostr )
 	<< "}\n"
 	<< "\n";
 }
-// typedef std::list<u3dModel>  u3dModel_list;
-// u3dModel_list Models;
 // void AddModel(u3dModel& Model)
 // {
 //   Models.push_back(Model);
 //}
-void u3dBall::print_node ( std::ostringstream& ostr )
+void u3dBall::print_node ( std::ofstream& ostr )
 {
 	u3dNode Node;
 	Node.name = name;
 	Node.resource = "UnitBall";
-	bzero ( Node.position, sizeof ( Node.position ) );
-	Node.position[0][0] = this->radius;
-	Node.position[1][1] = this->radius;
-	Node.position[2][2] = this->radius;
-	Node.position[3][0] = this->center.x;
-	Node.position[3][1] = this->center.y;
-	Node.position[3][2] = this->center.z;
-	Node.position[3][3] = 1.0f;
+	float position[4][4];
+	memcpy ( position, mgl_idtrans, sizeof ( mgl_idtrans ) );
+	position[0][0] = this->radius;
+	position[1][1] = this->radius;
+	position[2][2] = this->radius;
+	position[0][3] = this->center.x;
+	position[1][3] = this->center.y;
+	position[2][3] = this->center.z;
+	for ( int i=0; i<4;i++ )
+		for ( int j=0; j<4;j++ )
+				Node.position[i][j]	= position[0][i]*mgl_globinv[j][0]
+							+ position[1][i]*mgl_globinv[j][1]
+							+ position[2][i]*mgl_globinv[j][2]
+							+ position[3][i]*mgl_globinv[j][3];
 	Node.type = "MODEL";
 	Node.both_visible = false;
-	Node.parent = this->parent;
+	if ( this->parent == NULL)
+		Node.parent = "<NULL>";
+	else
+		Node.parent = this->parent->name;
 	Node.print ( ostr );
 }
 
-void u3dBall::print_shading_modifier ( std::ostringstream& ostr )
+void u3dBall::print_shading_modifier ( std::ofstream& ostr )
 {
 	ostr << "MODIFIER \"SHADING\" {\n"
 	<< "\tMODIFIER_NAME \"" << this->name << "\"\n"
@@ -502,7 +578,7 @@ void u3dPointSet::point_plot ( const mglPoint& p )
 	this->AddPoint ( p );
 }
 
-void u3dPointSet::print_model_resource ( std::ostringstream& ostrtmp )
+void u3dPointSet::print_model_resource ( std::ofstream& ostrtmp )
 {
 	size_t numMaterials = this->ModelMaterials.size();
 	size_t numPoints = this->Points.size();
@@ -549,13 +625,30 @@ void u3dPointSet::print_model_resource ( std::ostringstream& ostrtmp )
 	for ( size_t pid=0; pid < numPoints; pid++ )
 	{
 		ostrtmp << "\t\t\t\t"
-		<< ( this->Points[pid].x-0.5f ) *2.0f << " "
-		<< ( this->Points[pid].y-0.5f ) *2.0f << " "
-		<< ( this->Points[pid].z-0.5f ) *2.0f << "\n";
+		<< ( this->Points[pid].x )  << " "
+		<< ( this->Points[pid].y )  << " "
+		<< ( this->Points[pid].z )  << "\n";
 	}
 	ostrtmp << "\t\t\t}\n";
 
 	ostrtmp << "\t\t}\n";
+}
+
+void u3dLineSet::AddLine ( size_t pid1, size_t pid2, size_t mid )
+{
+	u3dLine line = {pid1, pid2, mid};
+	for ( size_t lid=0; lid < this->Lines.size(); lid++ )
+	{
+		if ( this->Lines[lid].mid == mid && (
+			( this->Lines[lid].pid1 == pid1 && this->Lines[lid].pid2 == pid2 )
+			||
+			( this->Lines[lid].pid1 == pid2 && this->Lines[lid].pid2 == pid1 )
+			) )
+		{
+			return;
+		}
+	}
+	this->Lines.push_back ( line );
 }
 
 void u3dLineSet::line_plot ( float *p1, float *p2, float *c1, float *c2 )
@@ -572,7 +665,7 @@ void u3dLineSet::line_plot ( float *p1, float *p2, float *c1, float *c2 )
 	this->Lines.push_back ( line );
 }
 
-void u3dLineSet::print_model_resource ( std::ostringstream& ostrtmp )
+void u3dLineSet::print_model_resource ( std::ofstream& ostrtmp )
 {
 	size_t numMaterials = this->ModelMaterials.size();
 	size_t numPoints = this->Points.size();
@@ -620,9 +713,9 @@ void u3dLineSet::print_model_resource ( std::ostringstream& ostrtmp )
 	for ( size_t pid=0; pid < numPoints; pid++ )
 	{
 		ostrtmp << "\t\t\t\t"
-		<< ( this->Points[pid].x-0.5f ) *2.0f << " "
-		<< ( this->Points[pid].y-0.5f ) *2.0f << " "
-		<< ( this->Points[pid].z-0.5f ) *2.0f << "\n";
+		<< ( this->Points[pid].x ) << " "
+		<< ( this->Points[pid].y ) << " "
+		<< ( this->Points[pid].z ) << "\n";
 	}
 	ostrtmp << "\t\t\t}\n";
 
@@ -718,7 +811,7 @@ void u3dMesh::trig_plot_n ( float *pp0,float *pp1,float *pp2,
 	}
 }
 //-----------------------------------------------------------------------------
-void u3dMesh::print_model_resource ( std::ostringstream& ostrtmp )
+void u3dMesh::print_model_resource ( std::ofstream& ostrtmp )
 {
 	size_t numMaterials   = this->ModelMaterials.size();
 	size_t numPoints      = this->Points.size();
@@ -729,7 +822,6 @@ void u3dMesh::print_model_resource ( std::ostringstream& ostrtmp )
 
 	if ( numPointColors == 1 ) // if there is just one color in the model - make the corresponding material
 	{
-// fprintf(stderr, "opa \n");
 		this->ModelMaterials.pop_back();
 		float c[4] = { this->PointColors[0].r, this->PointColors[0].g, this->PointColors[0].b, 1.0f };
 		this->AddModelMaterial ( c, false, false );
@@ -799,9 +891,9 @@ void u3dMesh::print_model_resource ( std::ostringstream& ostrtmp )
 	for ( size_t pid=0; pid < numPoints; pid++ )
 	{
 		ostrtmp << "\t\t\t\t"
-		<< ( this->Points[pid].x-0.5f ) *2.0f << " "
-		<< ( this->Points[pid].y-0.5f ) *2.0f << " "
-		<< ( this->Points[pid].z-0.5f ) *2.0f << "\n";
+		<< ( this->Points[pid].x ) << " "
+		<< ( this->Points[pid].y ) << " "
+		<< ( this->Points[pid].z ) << "\n";
 	}
 	ostrtmp << "\t\t\t}\n";
 
@@ -832,8 +924,9 @@ void u3dMesh::print_model_resource ( std::ostringstream& ostrtmp )
 }
 //-----------------------------------------------------------------------------
 mglGraphIDTF::mglGraphIDTF() : mglGraphAB ( 1,1 ),
-		vertex_color_flag ( false ), disable_compression_flag ( true ),
-		points_finished ( true ), lines_finished ( true ), mesh_finished ( true )
+		vertex_color_flag ( true ), disable_compression_flag ( true ), unrotate_flag ( false ),
+		points_finished ( true ), lines_finished ( true ), mesh_finished ( true ),
+		CurrentGroup ( NULL )
 {	Width = Height = Depth = 1;	}
 //-----------------------------------------------------------------------------
 mglGraphIDTF::~mglGraphIDTF() {}
@@ -852,11 +945,9 @@ void mglGraphIDTF::Clf ( mglColor Back )
 	CurrPal = 0;
 	if ( Back==NC )	Back=mglColor ( 1,1,1 );
 	Groups.clear();
-	Nodes.clear();
-	CurrentGroup.clear();
-	CurrentName.clear();
-	PointSets.clear();
+	CurrentGroup = NULL;
 	LineSets.clear();
+	PointSets.clear();
 	Meshes.clear();
 	Balls.clear();
 	Materials.clear();
@@ -864,44 +955,47 @@ void mglGraphIDTF::Clf ( mglColor Back )
 	lines_finished = true;
 	mesh_finished = true;
 }
+
 void mglGraphIDTF::StartGroup ( const char *name )
 {
-	CurrentGroup = name;
-	if ( CurrentGroup == "<NULL>" ) return;
-	for ( u3dGroup_list::iterator it = Groups.begin(); it != Groups.end(); ++it )
-	{
-		if ( CurrentGroup == *it ) return;
-	}
-	for ( u3dNode_list::iterator it = this->Nodes.begin(); it != this->Nodes.end(); ++it )
-		if ( *it == CurrentGroup )
-			{	CurrentGroup = "Node" + i2s ( Nodes.size() ); break; }
-	Groups.push_back ( CurrentGroup );
-	Nodes.push_back ( CurrentGroup );
 	points_finished = true;
 	lines_finished = true;
 	mesh_finished = true;
+	if ( name == NULL || strlen(name) == 0 || strcmp(name,"<NULL>") == 0 )
+	{
+		CurrentGroup = NULL;
+		return;
+	}
+	for ( u3dGroup_list::iterator it = Groups.begin(); it != Groups.end(); ++it )
+	{
+		if ( name == it->name )
+		{
+			CurrentGroup = &(*it);
+			return;
+		}
+	}
+	u3dGroup Group;
+	Group.name = name;
+	Group.parent = CurrentGroup;
+	if (Group.parent)
+	{
+		Group.parent->NumberOfChildren++;
+	}
+	Groups.push_back ( Group );
+	CurrentGroup = &Groups.back();
 }
 void mglGraphIDTF::EndGroup()
 {
-	CurrentGroup.clear();
 	points_finished = true;
 	lines_finished = true;
 	mesh_finished = true;
+	if (CurrentGroup == NULL )
+		return;
+	CurrentGroup = CurrentGroup->parent;
 }
-const std::string& mglGraphIDTF::GetCurrentGroup()
+u3dGroup* mglGraphIDTF::GetCurrentGroup()
 {
 	return CurrentGroup;
-}
-void mglGraphIDTF::SetName ( const char *name )
-{
-	if ( name != NULL && strlen ( name ) !=0 )
-		CurrentName = name;
-	else
-		CurrentName.clear();
-}
-const std::string& mglGraphIDTF::GetName()
-{
-	return CurrentName;
 }
 //-----------------------------------------------------------------------------
 void mglGraphIDTF::UnitBall ( )
@@ -910,13 +1004,10 @@ void mglGraphIDTF::UnitBall ( )
 	const size_t PhiResolution   = 10;
 	mglPoint pnt;
 	mglPoint nrm;
-	mglPoint Center = mglPoint ( 0.5f, 0.5f, 0.5f );
-	float Radius = 0.5f;
-	u3dMesh& Mesh = AddMesh ( "UnitBall" );
+	const mglPoint Center = mglPoint ( 0, 0, 0 );
+	const float Radius = 1.0f;
+	u3dMesh Mesh = u3dMesh ( "UnitBall" , this, false, true );
 	Mesh.both_visible=false;
-	Mesh.vertex_color=false;
-
-	mesh_finished = true;
 
 	float color[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 	Mesh.AddModelMaterial ( color, false, false );
@@ -998,11 +1089,14 @@ void mglGraphIDTF::UnitBall ( )
 			Mesh.Triangles.push_back ( triangle );
 		}
 	}
+	Meshes.push_back ( Mesh );
 }
 //-----------------------------------------------------------------------------
 void mglGraphIDTF::Ball ( float x,float y,float z,mglColor col,float alpha )
 {
-	if ( alpha==0 || !ScalePoint ( x,y,z ) )	return;
+	if(alpha==0)	return;
+	if(alpha<0)	{	alpha = -alpha;	}
+	else		{	if(!ScalePoint(x,y,z))	return;	}
 	if ( !col.Valid() )	col = mglColor ( 1.,0.,0. );
 	alpha = Transparent ? alpha : 1.0f;
 	alpha = UseAlpha ? alpha : 1.0f;
@@ -1015,13 +1109,11 @@ void mglGraphIDTF::Ball ( float x,float y,float z,mglColor col,float alpha )
 		point_plot ( mglPoint ( p[0],p[1],p[2] ) );
 		return;
 	}
-	p[0] = (p[0] - 0.5f)*2.0f;
-	p[1] = (p[1] - 0.5f)*2.0f;
-	p[2] = (p[2] - 0.5f)*2.0f;
 	ball.center = mglPoint ( p[0],p[1],p[2] );
-	ball.radius = 2.0f*fabs(PenWidth)/500;
+	ball.radius = fabs(PenWidth)/500;
 	ball.Graph = this;
 	ball.parent = this->GetCurrentGroup();
+	if (ball.parent) ball.parent->NumberOfChildren++;
 	ball.name = "Ball" + i2s(Balls.size()) ;
 
 	u3dMaterial Material;
@@ -1042,7 +1134,7 @@ void mglGraphIDTF::ball ( float *p,float *c )
 void mglGraphIDTF::mark_plot ( float *pp, char type )
 {
 	float x=pp[0],y=pp[1],z=pp[2];
-#define pnt(x, y)  ( p + ss*mglPoint((float)x, (float)y, 0.0f))
+#define pnt(x, y)  ( p + ss*mglPoint((float)(x), (float)(y), 0.0f))
 	mglPoint p = mglPoint ( x, y, z );
 	mglPoint p1;
 	mglPoint p2;
@@ -1203,8 +1295,8 @@ void mglGraphIDTF::quad_plot_a ( float *p0,float *p1,float *p2,float *p3,
 //-----------------------------------------------------------------------------
 void mglGraphIDTF::quad_plot ( const mglPoint& p0, const mglPoint& p1, const mglPoint& p2, const mglPoint& p3 )
 {
-	if ( dbg ) fprintf ( stderr, "quad_plot\n p0 %f %f %f\n p1 %f %f %f\n p2 %f %f %f\n p3 %f %f %f\n",
-		                     p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p3.x, p3.y, p3.z );
+//	if ( dbg ) fprintf ( stderr, "quad_plot\n p0 %f %f %f\n p1 %f %f %f\n p2 %f %f %f\n p3 %f %f %f\n",
+//		                     p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p3.x, p3.y, p3.z );
 	float pp0[3] = {p0.x, p0.y, p0.z};
 	float pp1[3] = {p1.x, p1.y, p1.z};
 	float pp2[3] = {p2.x, p2.y, p2.z};
@@ -1271,6 +1363,7 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 	register long i,j,i0;
 	float *c,*ns,d1[3],d2[3];
 	long k=3*n;
+	size_t *cid=NULL;
 	if ( !pp || n<2 || m<2 )	return;
 	PostScale ( pp,n*m );	LightScale();
 	if ( !DrawFace )	{	wire_plot ( n,m,pp,cc,tt );	return;	}
@@ -1293,33 +1386,53 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 		ns[i0+4]=ns[i0+1];
 		ns[i0+5]=ns[i0+2];
 	}
-	u3dMesh& Mesh = AddMesh();
+	mesh_finished = true;
+	u3dMesh& Mesh = GetMesh();
 	mesh_finished = true;
 	for ( i=0;i<n*m;i++ )
 	{
-		Mesh.Points.push_back ( mglPoint ( pp[3*i], pp[3*i+1], pp[3*i+2] ) );
+		mglPoint point;
+		point.x = Mesh.invpos[0][0]*pp[3*i]+Mesh.invpos[0][1]*pp[3*i+1]+Mesh.invpos[0][2]*pp[3*i+2]+Mesh.invpos[0][3];
+		point.y = Mesh.invpos[1][0]*pp[3*i]+Mesh.invpos[1][1]*pp[3*i+1]+Mesh.invpos[1][2]*pp[3*i+2]+Mesh.invpos[1][3];
+		point.z = Mesh.invpos[2][0]*pp[3*i]+Mesh.invpos[2][1]*pp[3*i+1]+Mesh.invpos[2][2]*pp[3*i+2]+Mesh.invpos[2][3];
+		Mesh.Points.push_back ( point );
 		float nn = sqrt ( ns[3*i]*ns[3*i]+ns[3*i+1]*ns[3*i+1]+ns[3*i+2]*ns[3*i+2] );
 		if ( nn != 0.0 ) {ns[3*i]/=nn; ns[3*i+1]/=nn; ns[3*i+2]/=nn; }
 	}
-	if ( cc )
+// Do lighting
+	if ( vertex_color_flag && (cc || UseLight) )
 	{
-		if ( vertex_color_flag )
+		cid = new size_t[n*m];
+		float color [4] = {1.0f, 1.0f, 1.0f, 1.0f};
+		Mesh.AddModelMaterial ( color, false, true );
+		for ( i=0;i<n*m;i++ )
 		{
-			float color [4] = {1.0f, 1.0f, 1.0f, 1.0f};
-			Mesh.AddModelMaterial ( color, false, true );
-			for ( i=0;i<n*m;i++ )
+			float col [4];
+			if (cc)
 			{
-				float col [4];
 				col2col ( cc+4*i, ns+3*i, col );
-				Mesh.PointColors.push_back ( mglColor ( col[0], col[1], col[2] ) );
 			}
+			else
+			{
+				col2col (   CDef, ns+3*i, col );
+			}
+			cid[i] = Mesh.AddColor ( col );
 		}
+	}
+// if only one color is used
+	if (!cc && !(vertex_color_flag && UseLight))
+	{
+		Mesh.AddModelMaterial ( CDef, false, false );
+		Mesh.vertex_color = false;
+	}
 #define AddTri(i1, i2, i3)	\
-			if (Mesh.vertex_color)							\
-			{									\
-				Mesh.AddTriangle(i0+(i1), i0+(i2), i0+(i3), 0, i0+(i1), i0+(i2), i0+(i3));	\
-			}									\
-			else									\
+		if ( Mesh.vertex_color && (cc || UseLight) )					\
+		{										\
+			Mesh.AddTriangle(i0+(i1), i0+(i2), i0+(i3), 0, cid[i0+(i1)], cid[i0+(i2)], cid[i0+(i3)]);	\
+		}										\
+		else										\
+		{										\
+			if (cc)									\
 			{									\
 				float col [4];							\
 				size_t mid;							\
@@ -1329,45 +1442,32 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 				col[3] = (c[4*(i1)+3] + c[4*(i2)+3] + c[4*(i3)+3])/3.0f;	\
 				mid = Mesh.AddModelMaterial(col, false, false);			\
 				Mesh.AddTriangle(i0+(i1), i0+(i2), i0+(i3), mid);		\
-			}
-		for ( i=0;i<n-1;i++ )	for ( j=0;j<m-1;j++ )
-			{
-				i0 = i+n*j;	c = cc+4*i0;
-				if ( !tt || ( tt[i0] && tt[i0+1] && tt[i0+n] && tt[i0+1+n] ) )
-				{
-					AddTri ( 0, 1, n )
-					AddTri ( 1, n+1, n )
-				}
-				else if ( tt[i0] && tt[i0+1] && tt[i0+n] )
-				{	AddTri ( 0, 1, n )	}
-				else if ( tt[i0] && tt[i0+1] && tt[i0+n+1] )
-				{	AddTri ( 0, 1, n+1 )	}
-				else if ( tt[i0] && tt[i0+n+1] && tt[i0+n] )
-				{	AddTri ( 0, n+1, n )	}
-				else if ( tt[i0+n+1] && tt[i0+1] && tt[i0+n] )
-				{	AddTri ( n+1, 1, n )	}
-			}
-#undef AddTri
-	}
-	else
+			}									\
+			else									\
+			{									\
+				Mesh.AddTriangle(i0+(i1), i0+(i2), i0+(i3), 0);			\
+			}									\
+		}
+	for ( i=0;i<n-1;i++ )	for ( j=0;j<m-1;j++ )
 	{
-		Mesh.AddModelMaterial ( CDef, false, false );
-		for ( i=0;i<n-1;i++ )	for ( j=0;j<m-1;j++ )
-			{
-				i0 = i+n*j;
-				if ( !tt || ( tt[i0] && tt[i0+1] && tt[i0+n] && tt[i0+1+n] ) )
-					{ Mesh.AddTriangle ( i0, i0+1, i0+n, 0 ); Mesh.AddTriangle ( i0+1, i0+n+1, i0+n, 0 ); }
-				else if ( tt[i0] && tt[i0+1] && tt[i0+n] )
-					Mesh.AddTriangle ( i0, i0+1, i0+n, 0 );
-				else if ( tt[i0] && tt[i0+1] && tt[i0+n+1] )
-					Mesh.AddTriangle ( i0, i0+1, i0+n+1, 0 );
-				else if ( tt[i0] && tt[i0+n+1] && tt[i0+n] )
-					Mesh.AddTriangle ( i0, i0+n+1, i0+n, 0 );
-				else if ( tt[i0+n+1] && tt[i0+1] && tt[i0+n] )
-					Mesh.AddTriangle ( i0+n+1, i0+1, i0+n, 0 );
-			}
+		i0 = i+n*j;	c = cc+4*i0;
+		if ( !tt || ( tt[i0] && tt[i0+1] && tt[i0+n] && tt[i0+1+n] ) )
+		{
+			AddTri ( 0, 1, n )
+			AddTri ( 1, n+1, n )
+		}
+		else if ( tt[i0] && tt[i0+1] && tt[i0+n] )
+		{	AddTri ( 0, 1, n )	}
+		else if ( tt[i0] && tt[i0+1] && tt[i0+n+1] )
+		{	AddTri ( 0, 1, n+1 )	}
+		else if ( tt[i0] && tt[i0+n+1] && tt[i0+n] )
+		{	AddTri ( 0, n+1, n )	}
+		else if ( tt[i0+n+1] && tt[i0+1] && tt[i0+n] )
+		{	AddTri ( n+1, 1, n )	}
 	}
+#undef AddTri
 	delete []ns;
+	if (cid) delete []cid;
 }
 //-----------------------------------------------------------------------------
 void mglGraphIDTF::arrow_plot ( float *p1,float *p2,char st )
@@ -1436,9 +1536,10 @@ void mglGraphIDTF::InPlot ( float x1,float x2,float y1,float y2 )
 //-----------------------------------------------------------------------------
 void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 {
-	time_t now;
-	time ( &now );
-	std::ostringstream ostr;
+//	time_t now;
+//	time ( &now );
+
+	std::ofstream ostr ( fname );
 
 	Lights.clear();
 	if ( UseLight )
@@ -1447,13 +1548,80 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 		LightScale();
 		for ( int i=0; i<10; i++ )
 			if ( nLight[i] )
-				AddLight ( mglPoint ( pLight[3*i], pLight[3*i+1], pLight[3*i+2] ),
+				if ( unrotate_flag )
+					AddLight ( mglPoint ( rLight[3*i], rLight[3*i+1], rLight[3*i+2] ),
+				           mglColor ( cLight[3*i], cLight[3*i+1], cLight[3*i+2] ),
+				           bLight[i], iLight[i] );
+				else
+					AddLight ( mglPoint ( pLight[3*i], pLight[3*i+1], pLight[3*i+2] ),
 				           mglColor ( cLight[3*i], cLight[3*i+1], cLight[3*i+2] ),
 				           bLight[i], iLight[i] );
 	}
+// Cleanup
+// Remove empty models
+	for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
+	{
+		if (it->Points.empty())
+		{
+			if ( it->parent )
+				it->parent->NumberOfChildren--;
+			PointSets.erase(it);
+		}
+	}
+	for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end(); ++it )
+	{
+		if (it->Points.empty() || it->Lines.empty())
+		{
+			if ( it->parent )
+				it->parent->NumberOfChildren--;
+			LineSets.erase(it);
+		}
+	}
+	for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
+	{
+		if (it->Points.empty() || it->Triangles.empty())
+		{
+			if ( it->parent )
+				it->parent->NumberOfChildren--;
+			Meshes.erase(it);
+		}
+	}
+// Reduce groups with just one model in them to just models
+	for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
+	{
+		if (it->parent && it->parent->NumberOfChildren == 1)
+		{
+			it->name = it->parent->name;
+			it->parent->NumberOfChildren = 0;
+			it->parent= it->parent->parent;
+		}
+	}
+	for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end(); ++it )
+	{
+		if (it->parent && it->parent->NumberOfChildren == 1)
+		{
+			it->name = it->parent->name;
+			it->parent->NumberOfChildren = 0;
+			it->parent= it->parent->parent;
+		}
+	}
+	for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
+	{
+		if (it->parent && it->parent->NumberOfChildren == 1)
+		{
+			it->name = it->parent->name;
+			it->parent->NumberOfChildren = 0;
+			it->parent= it->parent->parent;
+		}
+	}
 
-	FILE *fp = fopen ( fname,"wt" );
-	ostr
+// Make inverse coordinate transform with the model, if so desired
+	if (unrotate_flag)
+		MakeTransformMatrix( mgl_globpos, mgl_globinv);
+	else
+		memcpy( mgl_globinv, mgl_definv, sizeof(mgl_definv));
+
+	ostr << std::fixed << std::setprecision(6)
 	<< "FILE_FORMAT \"IDTF\"\n"
 	<< "FORMAT_VERSION 100\n"
 	<< "\n"
@@ -1480,27 +1648,29 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 	<< "	}\n"
 	<< "}\n"
 	<< "\n";
-	for ( u3dGroup_list::iterator it = this->Groups.begin(); it != this->Groups.end(); ++it )
+	for ( u3dGroup_list::iterator it = Groups.begin(); it != Groups.end(); ++it )
 	{
+		if ( it->name == "<NULL>" || it->NumberOfChildren == 0 )
+			continue;
 		u3dNode Node;
-		Node.name = *it;
-		bzero ( Node.position, sizeof ( Node.position ) );
-		Node.position[0][0] = 1.0f;
-		Node.position[1][1] = 1.0f;
-		Node.position[2][2] = 1.0f;
-		Node.position[3][3] = 1.0f;
+		Node.name = it->name;
+		if ( it->parent == NULL)
+			Node.parent = "<NULL>";
+		else
+			Node.parent = it->parent->name;
+		memcpy ( Node.position, mgl_idtrans, sizeof ( mgl_idtrans ) );
 		Node.type = "GROUP";
 		Node.print ( ostr );
 	}
-	for ( u3dLight_list::iterator it = this->Lights.begin(); it != this->Lights.end(); ++it )
+	for ( u3dLight_list::iterator it = Lights.begin(); it != Lights.end(); ++it )
 	{
 		it->print_node ( ostr );
 	}
-	for ( u3dPointSet_list::iterator it = this->PointSets.begin(); it != this->PointSets.end(); ++it )
+	for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
 	{
 		it->print_node ( ostr );
 	}
-	for ( u3dLineSet_list::iterator it = this->LineSets.begin(); it != this->LineSets.end(); ++it )
+	for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end(); ++it )
 	{
 		it->print_node ( ostr );
 	}
@@ -1625,11 +1795,181 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 		it->print_shading_modifier ( ostr );
 	}
 
-	fwrite ( ostr.str().c_str(), 1, strlen ( ostr.str().c_str() ), fp );
-	ostr.str ( "" );
+	ostr.close ();
 
-	fclose ( fp );
 }
 //-----------------------------------------------------------------------------
+void mglGraphIDTF::quads_plot(long n,float *pp,float *cc,bool *tt)
+{
+	register long i;
+	float *p=NULL, *c=NULL;
+	u3dMesh *pMesh = NULL;;
+	u3dModel *pModel = NULL;;
+	u3dLineSet *pLineSet = NULL;
+	if(DrawFace)
+	{
+		pModel = pMesh = &GetMesh();
+	}
+	else
+	{
+		pModel = pLineSet = &GetLineSet();
+	}
+	PostScale(pp,4*n);	LightScale();
+	if(cc)
+	{
+
+		size_t mid = SIZE_MAX;
+		if(DrawFace)
+		{
+			if ( pMesh->vertex_color )
+			{
+				const float color[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+				mid = pMesh->AddModelMaterial ( color, false, true );
+			}
+		}
+
+		for(i=0;i<n;i++)
+		{
+			if(tt && (!tt[4*i] || !tt[4*i+1] || !tt[4*i+2] || !tt[4*i+3]))
+				continue;
+			p = pp+12*i;	c = cc+16*i;
+
+			size_t pid0 = pModel->AddPoint ( p );
+			size_t pid1 = pModel->AddPoint ( p+3 );
+			size_t pid2 = pModel->AddPoint ( p+6 );
+			size_t pid3 = pModel->AddPoint ( p+9 );
+
+			if(DrawFace)
+			{
+				if ( pMesh->vertex_color )
+				{
+					size_t cid0 = pMesh->AddColor ( c );
+					size_t cid1 = pMesh->AddColor ( c+4 );
+					size_t cid2 = pMesh->AddColor ( c+8 );
+					size_t cid3 = pMesh->AddColor ( c+12 );
+					pMesh->AddTriangle ( pid0, pid1, pid3, mid, cid0, cid1, cid3 );
+					pMesh->AddTriangle ( pid1, pid2, pid3, mid, cid1, cid2, cid3 );
+				}
+				else
+				{
+					float color[4];
+					color[0] = ( c[0]+ c[4]+c[12] ) /3.0f;
+					color[1] = ( c[1]+ c[5]+c[13] ) /3.0f;
+					color[2] = ( c[2]+ c[6]+c[14] ) /3.0f;
+					color[3] = ( c[3]+ c[7]+c[15] ) /3.0f;
+					mid = pMesh->AddModelMaterial ( color, false, false );
+					pMesh->AddTriangle ( pid0, pid1, pid3, mid );
+					color[0] = ( c[4]+ c[8]+c[12] ) /3.0f;
+					color[1] = ( c[5]+ c[9]+c[13] ) /3.0f;
+					color[2] = ( c[6]+c[10]+c[14] ) /3.0f;
+					color[3] = ( c[7]+c[11]+c[15] ) /3.0f;
+					mid = pMesh->AddModelMaterial ( color, false, false );
+					pMesh->AddTriangle ( pid1, pid2, pid3, mid );
+				}
+			}
+			else
+			{
+				float color[4];
+				color[3] = 1.0f;
+				color[0] = ( c[ 0+0] + c[ 4+0] ) /2.0f;
+				color[1] = ( c[ 0+1] + c[ 4+1] ) /2.0f;
+				color[2] = ( c[ 0+2] + c[ 4+2] ) /2.0f;
+				mid =  pLineSet->AddModelMaterial ( color, true, false );
+				pLineSet->AddLine( pid0, pid1, mid );
+				color[0] = ( c[ 0+0] + c[12+0] ) /2.0f;
+				color[1] = ( c[ 0+1] + c[12+1] ) /2.0f;
+				color[2] = ( c[ 0+2] + c[12+2] ) /2.0f;
+				mid =  pLineSet->AddModelMaterial ( color, true, false );
+				pLineSet->AddLine( pid0, pid3, mid );
+				color[0] = ( c[12+0] + c[ 8+0] ) /2.0f;
+				color[1] = ( c[12+1] + c[ 8+1] ) /2.0f;
+				color[2] = ( c[12+2] + c[ 8+2] ) /2.0f;
+				mid =  pLineSet->AddModelMaterial ( color, true, false );
+				pLineSet->AddLine( pid3, pid2, mid );
+				color[0] = ( c[ 4+0] + c[ 8+0] ) /2.0f;
+				color[1] = ( c[ 4+1] + c[ 8+1] ) /2.0f;
+				color[2] = ( c[ 4+2] + c[ 8+2] ) /2.0f;
+				mid =  pLineSet->AddModelMaterial ( color, true, false );
+				pLineSet->AddLine( pid1, pid2, mid );
+			}
+		}
+	}
+	else
+	{
+
+		size_t mid = SIZE_MAX;
+		size_t cid = SIZE_MAX;
+		if(DrawFace)
+		{
+			if ( pMesh->vertex_color )
+			{
+				const float color[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+				mid = pMesh->AddModelMaterial ( color, false, true );
+				cid = pMesh->AddColor ( CDef );
+			}
+			else
+			{
+				mid = pMesh->AddModelMaterial ( CDef, false, false );
+			}
+		}
+		else
+		{
+			mid = pLineSet->AddModelMaterial ( CDef, true, false );
+		}
+
+		for(i=0;i<n;i++)
+		{
+			if(tt && (!tt[4*i] || !tt[4*i+1] || !tt[4*i+2] || !tt[4*i+3]))
+				continue;
+			p = pp+12*i;
+
+			size_t pid0 = pModel->AddPoint ( p );
+			size_t pid1 = pModel->AddPoint ( p+3 );
+			size_t pid2 = pModel->AddPoint ( p+6 );
+			size_t pid3 = pModel->AddPoint ( p+9 );
+
+			if(DrawFace)
+			{
+				if ( pMesh->vertex_color )
+				{
+					pMesh->AddTriangle ( pid0, pid1, pid3, mid, cid, cid, cid );
+					pMesh->AddTriangle ( pid1, pid2, pid3, mid, cid, cid, cid );
+				}
+				else
+				{
+					pMesh->AddTriangle ( pid0, pid1, pid3, mid );
+					pMesh->AddTriangle ( pid1, pid2, pid3, mid );
+				}
+			}
+			else
+			{
+				pLineSet->AddLine( pid0, pid1, mid );
+				pLineSet->AddLine( pid0, pid3, mid );
+				pLineSet->AddLine( pid3, pid2, mid );
+				pLineSet->AddLine( pid1, pid2, mid );
+			}
+		}
+	}
+}
 //-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
+// I do not remember what problem this workaround was initially for
+void mglGraphIDTF::Putsw(mglPoint p,const wchar_t *text,const char *font,float size,char dir,float shift)
+{
+	bool disable_compression_sav = disable_compression_flag;
+	bool vertex_color_sav = vertex_color_flag;
+	disable_compression_flag = true;
+	vertex_color_flag = false;
+	mglGraphAB::Putsw(p, text, font, size, dir, shift);
+	disable_compression_flag = disable_compression_sav;
+	vertex_color_flag = vertex_color_sav;
+}
+float mglGraphIDTF::Putsw(mglPoint p,mglPoint l,const wchar_t *text,char font,float size)
+{
+	bool disable_compression_sav = disable_compression_flag;
+	bool vertex_color_sav = vertex_color_flag;
+	disable_compression_flag = true;
+	vertex_color_flag = false;
+	return mglGraphAB::Putsw(p, l, text, font, size);
+	disable_compression_flag = disable_compression_sav;
+	vertex_color_flag = vertex_color_sav;
+}

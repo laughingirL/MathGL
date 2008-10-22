@@ -879,119 +879,119 @@ void mgl_stfa(HMGL gr, const HMDT re, const HMDT im, int dn, const char *sch, fl
 //		2D plotting functions (Fortran)
 //-----------------------------------------------------------------------------
 /// Draw grid lines for density plot of 2d data specified parametrically
-void mgl_grid_xy_(long *gr, long *x, long *y, long *a, const char *sch,float *zVal,int l)
+void mgl_grid_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch,float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y)	_GR_->Grid(_D_(x), _D_(y), _D_(a), s, *zVal);
 	delete []s;
 }
 /// Draw grid lines for density plot of 2d data
-void mgl_grid_(long *gr, long *a,const char *sch,float *zVal,int l)
+void mgl_grid_(uintptr_t *gr, uintptr_t *a,const char *sch,float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->Grid(_D_(a), s, *zVal);
 	delete []s;
 }
 /// Draw mesh lines for 2d data specified parametrically
-void mgl_mesh_xy_(long *gr, long *x, long *y, long *a, const char *sch,int l)
+void mgl_mesh_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y)	_GR_->Mesh(_D_(x), _D_(y), _D_(a), s);
 	delete []s;
 }
 /// Draw mesh lines for 2d data
-void mgl_mesh_(long *gr, long *a, const char *sch,int l)
+void mgl_mesh_(uintptr_t *gr, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->Mesh(_D_(a), s);
 	delete []s;
 }
 /// Draw fall lines for 2d data specified parametrically
-void mgl_fall_xy_(long *gr, long *x, long *y, long *a, const char *sch,int l)
+void mgl_fall_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y)	_GR_->Fall(_D_(x), _D_(y), _D_(a), s);
 	delete []s;
 }
 /// Draw fall lines for 2d data
-void mgl_fall_(long *gr, long *a, const char *sch,int l)
+void mgl_fall_(uintptr_t *gr, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->Fall(_D_(a), s);
 	delete []s;
 }
 /// Draw belt lines for 2d data specified parametrically
-void mgl_belt_xy_(long *gr, long *x, long *y, long *a, const char *sch,int l)
+void mgl_belt_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y)	_GR_->Belt(_D_(x), _D_(y), _D_(a), s);
 	delete []s;
 }
 /// Draw belt lines for 2d data
-void mgl_belt_(long *gr, long *a, const char *sch,int l)
+void mgl_belt_(uintptr_t *gr, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->Belt(_D_(a), s);
 	delete []s;
 }
 /// Draw surface for 2d data specified parametrically
-void mgl_surf_xy_(long *gr, long *x, long *y, long *a, const char *sch,int l)
+void mgl_surf_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y)	_GR_->Surf(_D_(x), _D_(y), _D_(a), s);
 	delete []s;
 }
 /// Draw surface for 2d data
-void mgl_surf_(long *gr, long *a, const char *sch,int l)
+void mgl_surf_(uintptr_t *gr, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->Surf(_D_(a), s);
 	delete []s;
 }
 /// Draw density plot for surface specified parametrically
-void mgl_dens_xy_(long *gr, long *x, long *y, long *a, const char *sch,float *zVal,int l)
+void mgl_dens_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch,float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y)	_GR_->Dens(_D_(x), _D_(y), _D_(a), s, *zVal);
 	delete []s;
 }
 /// Draw density plot for 2d data
-void mgl_dens_(long *gr, long *a, const char *sch,float *zVal,int l)
+void mgl_dens_(uintptr_t *gr, uintptr_t *a, const char *sch,float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->Dens(_D_(a), s, *zVal);
 	delete []s;
 }
 /// Draw vertical boxes for 2d data specified parametrically
-void mgl_boxs_xy_(long *gr, long *x, long *y, long *a, const char *sch,float *zVal,int l)
+void mgl_boxs_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch,float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y)	_GR_->Boxs(_D_(x), _D_(y), _D_(a), s,*zVal);
 	delete []s;
 }
 /// Draw vertical boxes for 2d data
-void mgl_boxs_(long *gr, long *a, const char *sch,float *zVal,int l)
+void mgl_boxs_(uintptr_t *gr, uintptr_t *a, const char *sch,float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->Boxs(_D_(a), s,*zVal);
 	delete []s;
 }
 /// Draw tiles for 2d data specified parametrically
-void mgl_tile_xy_(long *gr, long *x, long *y, long *a, const char *sch,int l)
+void mgl_tile_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y)	_GR_->Tile(_D_(x), _D_(y), _D_(a), s);
 	delete []s;
 }
 /// Draw mesh lines for 2d data
-void mgl_tile_(long *gr, long *a, const char *sch,int l)
+void mgl_tile_(uintptr_t *gr, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->Tile(_D_(a), s);
 	delete []s;
 }
 /// Draw tiles for 2d data specified parametrically
-void mgl_tiles_xy_(long *gr, long *x, long *y, long *a, long *r, const char *sch,int l)
+void mgl_tiles_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, uintptr_t *r, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y && r)
@@ -999,7 +999,7 @@ void mgl_tiles_xy_(long *gr, long *x, long *y, long *a, long *r, const char *sch
 	delete []s;
 }
 /// Draw mesh lines for 2d data
-void mgl_tiles_(long *gr, long *a, long *r, const char *sch,int l)
+void mgl_tiles_(uintptr_t *gr, uintptr_t *a, uintptr_t *r, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && r)	_GR_->TileS(_D_(a), _D_(r), s);
@@ -1007,35 +1007,35 @@ void mgl_tiles_(long *gr, long *a, long *r, const char *sch,int l)
 }
 //-----------------------------------------------------------------------------
 /// Draw surface specified parametrically with coloring by other matrix
-void mgl_surfc_xy_(long *gr, long *x, long *y, long *z, long *a, const char *sch,int l)
+void mgl_surfc_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && z && x && y)	_GR_->SurfC(_D_(x), _D_(y), _D_(z), _D_(a), s);
 	delete []s;
 }
 /// Draw surface specified by matrix with coloring by other matrix
-void mgl_surfc_(long *gr, long *z, long *a, const char *sch,int l)
+void mgl_surfc_(uintptr_t *gr, uintptr_t *z, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && z)	_GR_->SurfC(_D_(z), _D_(a), s);
 	delete []s;
 }
 /// Draw surface specified parametrically which transparency is determined by other matrix
-void mgl_surfa_xy_(long *gr, long *x, long *y, long *z, long *a, const char *sch,int l)
+void mgl_surfa_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && z && x && y)	_GR_->SurfA(_D_(x), _D_(y), _D_(z), _D_(a), s);
 	delete []s;
 }
 /// Draw surface specified by matrix which transparency is determined by other matrix
-void mgl_surfa_(long *gr, long *z, long *a, const char *sch,int l)
+void mgl_surfa_(uintptr_t *gr, uintptr_t *z, uintptr_t *a, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && z)	_GR_->SurfA(_D_(z), _D_(a), s);
 	delete []s;
 }
 /// Draw spectrogram for data specified parametrically which transparency is determined by other matrix
-void mgl_stfa_xy_(long *gr, long *x, long *y, long *re, long *im, int *dn, const char *sch, float *zVal, int l)
+void mgl_stfa_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *re, uintptr_t *im, int *dn, const char *sch, float *zVal, int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && re && im && x && y)
@@ -1043,7 +1043,7 @@ void mgl_stfa_xy_(long *gr, long *x, long *y, long *re, long *im, int *dn, const
 	delete []s;
 }
 /// Draw spectrogram for data specified by matrix which transparency is determined by other matrix
-void mgl_stfa_(long *gr, long *re, long *im, int *dn, const char *sch, float *zVal, int l)
+void mgl_stfa_(uintptr_t *gr, uintptr_t *re, uintptr_t *im, int *dn, const char *sch, float *zVal, int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && re && im)	_GR_->STFA(_D_(re), _D_(im), *dn, s, *zVal);
@@ -1055,14 +1055,14 @@ void mgl_fsurf(HMGL gr, const char *fy, const char *stl, int n)
 void mgl_fsurf_xyz(HMGL gr, const char *fx, const char *fy, const char *fz, const char *stl, int n)
 {	if(gr)	gr->Surf(fx,fy,fz,stl,n);	}
 //-----------------------------------------------------------------------------
-void mgl_fsurf_(long *gr, const char *fy, const char *stl, int *n, int ly, int ls)
+void mgl_fsurf_(uintptr_t *gr, const char *fy, const char *stl, int *n, int ly, int ls)
 {
 	char *s=new char[ly+1];	memcpy(s,fy,ly);	s[ly]=0;
 	char *p=new char[ls+1];	memcpy(p,stl,ls);	p[ls]=0;
 	if(gr)	_GR_->Surf(s, p, *n);
 	delete []s;		delete []p;
 }
-void mgl_fsurf_xyz_(long *gr, const char *fx, const char *fy, const char *fz, const char *stl, int *n, int lx, int ly, int lz, int ls)
+void mgl_fsurf_xyz_(uintptr_t *gr, const char *fx, const char *fy, const char *fz, const char *stl, int *n, int lx, int ly, int lz, int ls)
 {
 	char *sx=new char[lx+1];	memcpy(sx,fx,lx);	sx[lx]=0;
 	char *sy=new char[ly+1];	memcpy(sy,fy,ly);	sy[ly]=0;

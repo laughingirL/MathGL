@@ -18,6 +18,7 @@
 #define _MGL_DATA_H_
 //-----------------------------------------------------------------------------
 #include <math.h>
+#include <string.h>
 #ifdef _MSC_VER
 #define	_USE_MATH_DEFINES
 #include <float.h>
@@ -30,23 +31,23 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define copysignf	_copysign
 #define chdir	_chdir
 #endif
-
+//-----------------------------------------------------------------------------
 #define SMOOTH_NONE		0
 #define SMOOTH_LINE_3	1
 #define SMOOTH_LINE_5	2
 #define SMOOTH_QUAD_5	3
-
+//-----------------------------------------------------------------------------
 #define MGL_HIST_IN		0
 #define MGL_HIST_SUM	1
 #define MGL_HIST_UP		2
 #define MGL_HIST_DOWN	3
-
+//-----------------------------------------------------------------------------
 #ifndef ipow
 #define ipow	ipow_mgl
 #endif
 #define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
 #define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
-
+//-----------------------------------------------------------------------------
 #ifndef NO_GSL
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_matrix.h>
@@ -54,7 +55,40 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 struct gsl_vector;
 struct gsl_matrix;
 #endif
-
+//-----------------------------------------------------------------------------
+/// Class for incapsulating point in space
+struct mglPoint
+{
+	float x,y,z;
+ 	mglPoint(float X=0,float Y=0,float Z=0){x=X;y=Y;z=Z;};
+};
+inline mglPoint operator+(const mglPoint &a, const mglPoint &b)
+{	return mglPoint(a.x+b.x, a.y+b.y, a.z+b.z);	};
+inline mglPoint operator-(const mglPoint &a, const mglPoint &b)
+{	return mglPoint(a.x-b.x, a.y-b.y, a.z-b.z);	};
+inline mglPoint operator*(float b, const mglPoint &a)
+{	return mglPoint(a.x*b, a.y*b, a.z*b);	};
+inline mglPoint operator*(const mglPoint &a, float b)
+{	return mglPoint(a.x*b, a.y*b, a.z*b);	};
+inline mglPoint operator/(const mglPoint &a, float b)
+{	return mglPoint(a.x/b, a.y/b, a.z/b);	};
+inline float operator*(const mglPoint &a, const mglPoint &b)
+{	return a.x*b.x+a.y*b.y+a.z*b.z;	};
+inline mglPoint operator&(const mglPoint &a, const mglPoint &b)
+{	return a - b*((a*b)/(b*b));	};
+inline mglPoint operator|(const mglPoint &a, const mglPoint &b)
+{	return b*((a*b)/(b*b));	};
+inline mglPoint operator^(const mglPoint &a, const mglPoint &b)
+{	return mglPoint(a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x);	};
+inline mglPoint operator!(const mglPoint &a)
+{	return (a.x==0 && a.y==0)?mglPoint(1,0,0):mglPoint(-a.y/hypot(a.x,a.y), a.x/hypot(a.x,a.y), 0);	};
+inline bool operator==(const mglPoint &a, const mglPoint &b)
+{	return !memcmp(&a, &b, sizeof(mglPoint));	}
+inline bool operator!=(const mglPoint &a, const mglPoint &b)
+{	return memcmp(&a, &b, sizeof(mglPoint));	}
+inline float Norm(const mglPoint &p)
+{	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);	};
+//-----------------------------------------------------------------------------
 /// Class for working with data array
 class mglData
 {
@@ -121,8 +155,6 @@ public:
 	void Norm(float v1=0,float v2=1,bool sym=false,int dim=0);
 	/// Normalize the data to range [v1,v2] slice by slice
 	void NormSl(float v1=0,float v2=1,char dir='z',bool keep_en=true,bool sym=false);
-	/// Eqidistantly fill the data to range [x1,x2] in direction \a dir
-	void Fill(float x1,float x2,char dir='x');
 	/// Put value to data element(s)
 	void Put(float val, int i, int j=0, int k=0);
 	/// Put array to data element(s)
@@ -133,6 +165,10 @@ public:
 	void Modify(const char *eq,const mglData &v, const mglData &w);
 	/// Modify the data by specified formula
 	void Modify(const char *eq,const mglData &v);
+	/// Modify the data by specified formula assuming x,y,z in range [r1,r2]
+	void Fill(const char *eq, mglPoint r1, mglPoint r2, const mglData *v=0, const mglData *w=0);
+	/// Eqidistantly fill the data to range [x1,x2] in direction \a dir
+	void Fill(float x1,float x2,char dir='x');
 	/// Get column (or slice) of the data filled by formulas of other named columns
 	mglData Column(const char *eq);
 	/// Set names for columns (slices)
@@ -285,5 +321,11 @@ mglData TransformA(const mglData &am, const mglData &ph, const char *tr);
 mglData Transform(const mglData &re, const mglData &im, const char *tr);
 /// Short time fourier analysis for real and imaginary parts. Output is amplitude of partial fourier (result will have size {dn, floor(nx/dn), ny} for dir='x'
 mglData STFA(const mglData &re, const mglData &im, int dn, char dir='x');
+/// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini
+mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mglPoint Min, mglPoint Max, float dz=0.1, float k0=100);
+// /// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini along a curve \a ray (must have nx>=7 - x,y,z,px,py,pz,tau)
+//mglData mglQO_PDE(char *ham, const mglData &ini_re, const mglData &ini_im, mglData &ray, float r=1, float k0=100, const mglData *xx=0, const mglData *yy=0, const mglData *zz=0);
+/// Prepares ray data for mglQO_PDE with starting point \a r0, \a p0
+mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, float dt=0.1, float tmax=10);
 //-----------------------------------------------------------------------------
 #endif

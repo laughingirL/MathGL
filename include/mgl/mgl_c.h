@@ -50,12 +50,15 @@ HMGL mgl_create_graph_fltk(int argc, char **argv, int (*draw)(HMGL gr, void *p),
 						const char *title, void (*reload)(int next), void *par);
 HMGL mgl_create_graph_qt(int argc, char **argv, int (*draw)(HMGL gr, void *p),
 						const char *title, void (*reload)(int next), void *par);*/
+int mgl_fortran_func(HMGL gr, void *);
 HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par);
 HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par);
 HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par);
 HMGL mgl_create_graph_idtf();
 void mgl_fltk_run();
 void mgl_qt_run();
+void mgl_fltk_thread();
+void mgl_qt_thread();
 void mgl_update(HMGL graph);
 void mgl_delete_graph(HMGL graph);
 /*****************************************************************************/
@@ -79,6 +82,7 @@ void mgl_parser_allow_setsize(HMPR p, int a);
 /*****************************************************************************/
 /*		Setup mglGraph														 */
 /*****************************************************************************/
+void mgl_set_def_param(HMGL gr);
 void mgl_set_palette(HMGL gr, const char *colors);
 void mgl_set_pal_color(HMGL graph, int n, float r, float g, float b);
 void mgl_set_pal_num(HMGL graph, int num);
@@ -90,6 +94,7 @@ void mgl_set_base_line_width(HMGL gr, float size);
 void mgl_set_mark_size(HMGL graph, float size);
 void mgl_set_arrow_size(HMGL graph, float size);
 void mgl_set_font_size(HMGL graph, float size);
+void mgl_set_font_def(HMGL graph, const char *fnt);
 void mgl_set_alpha_default(HMGL graph, float alpha);
 void mgl_set_size(HMGL graph, int width, int height);
 void mgl_set_axial_dir(HMGL graph, char dir);
@@ -98,7 +103,7 @@ void mgl_set_zoom(HMGL gr, float x1, float y1, float x2, float y2);
 void mgl_set_plotfactor(HMGL gr, float val);
 void mgl_set_draw_face(HMGL gr, int enable);
 void mgl_set_scheme(HMGL gr, const char *sch);
-void mgl_set_font(HMGL gr, const char *name, const char *path);
+void mgl_load_font(HMGL gr, const char *name, const char *path);
 void mgl_copy_font(HMGL gr, HMGL gr_from);
 void mgl_restore_font(HMGL gr);
 /*****************************************************************************/
@@ -111,6 +116,7 @@ void mgl_write_png(HMGL graph, const char *fname,const char *descr);
 void mgl_write_png_solid(HMGL graph, const char *fname,const char *descr);
 void mgl_write_eps(HMGL graph, const char *fname,const char *descr);
 void mgl_write_svg(HMGL graph, const char *fname,const char *descr);
+void mgl_write_idtf(HMGL graph, const char *fname,const char *descr);
 const unsigned char *mgl_get_rgb(HMGL graph);
 const unsigned char *mgl_get_rgba(HMGL graph);
 int mgl_get_width(HMGL graph);
@@ -126,7 +132,8 @@ void mgl_set_transp(HMGL graph, int enable);
 void mgl_set_alpha(HMGL graph, int enable);
 void mgl_set_fog(HMGL graph, float d, float dz);
 void mgl_set_light(HMGL graph, int enable);
-void mgl_add_light(HMGL graph, int n, float x, float y, float z, int infty);
+void mgl_set_light_n(HMGL gr, int n, int enable);
+void mgl_add_light(HMGL graph, int n, float x, float y, float z, char c);
 void mgl_add_light_rgb(HMGL graph, int n, float x, float y, float z, int infty,
                         float r, float g, float b, float i);
 void mgl_set_ambbr(HMGL gr, float i);
@@ -135,6 +142,7 @@ void mgl_set_ambbr(HMGL gr, float i);
 /*****************************************************************************/
 void mgl_identity(HMGL graph);
 void mgl_clf(HMGL graph);
+void mgl_flush(HMGL gr);
 void mgl_clf_rgb(HMGL graph, float r, float g, float b);
 void mgl_subplot(HMGL graph, int nx,int ny,int m);
 void mgl_subplot_d(HMGL graph, int nx,int ny,int m, float dx, float dy);
@@ -148,6 +156,7 @@ void mgl_perspective(HMGL graph, float val);
 /*****************************************************************************/
 void mgl_set_ticks(HMGL graph, float DX, float DY, float DZ);
 void mgl_set_subticks(HMGL graph, int NX, int NY, int NZ);
+void mgl_set_ticks_dir(HMGL graph, char dir, float d, int ns, float org);
 void mgl_set_caxis(HMGL graph, float C1,float C2);
 void mgl_set_axis(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2, float x0, float y0, float z0);
 void mgl_set_axis_3d(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2);
@@ -379,10 +388,8 @@ void mgl_contf3(HMGL graph, const HMDT a, char dir, int sVal, const char *sch, i
 void mgl_contf_all_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
 			const char *sch, int Num);
 void mgl_contf_all(HMGL graph, const HMDT a, const char *sch, int Num);
-void mgl_beam_val(HMGL graph, float Val, const HMDT tr, const HMDT g1, const HMDT g2, const HMDT a,
-		float r, const char *stl, int norm);
-void mgl_beam(HMGL graph, const HMDT tr, const HMDT g1, const HMDT g2, const HMDT a, float r,
-		const char *stl, int norm, int num);
+void mgl_beam_val(HMGL graph, float Val, const HMDT tr, const HMDT g1, const HMDT g2, const HMDT a, float r, const char *stl, int norm);
+void mgl_beam(HMGL graph, const HMDT tr, const HMDT g1, const HMDT g2, const HMDT a, float r, const char *stl, int norm, int num);
 /*****************************************************************************/
 /*		Triangular plotting functions											 */
 /*****************************************************************************/
@@ -425,6 +432,9 @@ void mgl_data_set_vector(HMDT dat, gsl_vector *v);
 void mgl_data_set_matrix(HMDT dat, gsl_matrix *m);
 
 float mgl_data_get_value(const HMDT dat, int i, int j, int k);
+int mgl_data_get_nx(const HMDT dat);
+int mgl_data_get_ny(const HMDT dat);
+int mgl_data_get_nz(const HMDT dat);
 void mgl_data_set_value(HMDT dat, float v, int i, int j, int k);
 void mgl_data_set_values(HMDT dat, const char *val, int nx, int ny, int nz);
 int mgl_data_read(HMDT dat, const char *fname);

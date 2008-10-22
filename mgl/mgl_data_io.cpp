@@ -20,6 +20,8 @@
 
 #ifndef WIN32
 #include <glob.h>
+#endif
+#ifdef WITH_LTDL
 #include <ltdl.h>
 #endif
 
@@ -807,9 +809,26 @@ void mglData::Modify(const char *eq, const mglData &v)
 	}
 }
 //-----------------------------------------------------------------------------
+void mglData::Fill(const char *eq, mglPoint r1, mglPoint r2, const mglData *v, const mglData *w)
+{
+	if(v && v->nx*v->ny*v->nz!=nx*ny*nz)	return;
+	if(w && w->nx*w->ny*w->nz!=nx*ny*nz)	return;
+	long i,j,k,i0;
+	float x,y,z,dx=nx>1?(r2.x-r1.x)/(nx-1.):0;
+	float dy=ny>1?(r2.y-r1.y)/(ny-1.):0;
+	float dz=nz>1?(r2.z-r1.z)/(nz-1.):0;
+	mglFormula eqs(eq);
+	for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+	{
+		x = r1.x+dx*i;	y = r1.y+dy*j;	z = r1.z+dz*k;
+		i0 = i+nx*(j+ny*k);
+		a[i0] = eqs.Calc(x,y,z,a[i0], v?v->a[i0]:0, w?w->a[i0]:0);
+	}
+}
+//-----------------------------------------------------------------------------
 void mglData::SaveHDF(const char *fname,const char *data,bool rewrite) const
 {
-#ifndef WIN32
+#ifdef WITH_LTDL
 	int (*mgl_save) (const char *fname,const char *data,bool rewrite,
 	float *a, int nx, int ny, int nz);
 	lt_dlhandle module = NULL;
@@ -826,7 +845,7 @@ void mglData::SaveHDF(const char *fname,const char *data,bool rewrite) const
 //-----------------------------------------------------------------------------
 void mglData::ReadHDF(const char *fname,const char *data)
 {
-#ifndef WIN32
+#ifdef WITH_LTDL
 	float *(*mgl_read) (const char *fname,const char *data, long *nd);
 	lt_dlhandle module = NULL;
 	mgl_read=NULL;

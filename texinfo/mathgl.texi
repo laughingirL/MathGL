@@ -6,8 +6,7 @@
 @comment %**end of header
 
 @copying
-This manual is for MathGL (version @value{VERSION}),
-which is an the library for scientific graphics.
+This manual is for MathGL (version @value{VERSION}), a collection of classes and routines for scientific plotting. Please report any errors in this manual to @email{mathgl.abalakin@@gmail.org}.
 
 Copyright @copyright{} 2008 Alexey Balakin.
 
@@ -34,7 +33,7 @@ supports it in developing GNU and promoting software freedom.''
 @titlepage
 @title MathGL
 @subtitle for version @value{VERSION}
-@author A.A. Balakin (@email{mathgl.abalakin@@gmail.com})
+@author A.A. Balakin (@uref{http://mathgl.sourceforge.net/})
 @page
 @vskip 0pt plus 1filll
 @insertcopying
@@ -46,7 +45,24 @@ supports it in developing GNU and promoting software freedom.''
 @node Top
 @top MathGL
 
-This manual is for MathGL (version @value{VERSION}).
+This file documents the Mathematical Graphic Library (MathGL), a collection of classes and routines for scientific plotting. It corresponds to release @value{VERSION} of the library. Please report any errors in this manual to @email{mathgl.abalakin@@gmail.org}. More information about MathGL can be found at the project homepage, @uref{http://mathgl.sourceforge.net/}.
+
+Copyright @copyright{} 2008 Alexey A. Balakin. 
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with the Front-Cover Texts being ``A GNU Manual,''
+and with the Back-Cover Texts as in (a) below.  A copy of the
+license is included in the section entitled ``GNU Free Documentation
+License.''
+
+(a) The FSF's Back-Cover Text is: ``You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom.''
+@end quotation
+
 @end ifnottex
 
 @menu
@@ -66,6 +82,9 @@ This manual is for MathGL (version @value{VERSION}).
 @rmacro sref {arg}
 @xref{\arg\}, for sample code and picture.
 @end rmacro
+@macro tdref{nam}
+@uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
+@end macro
 
 @include overview.texi
 @include core.texi
@@ -87,7 +106,7 @@ Finally the special command language MGL was written for faster access to C++ pl
 @end menu
 
 @include cint.texi
-@c @include python.texi
+@include python.texi
 @include mgl.texi
 
 @include example.texi

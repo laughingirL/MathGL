@@ -5,13 +5,12 @@
 This chapter contain information about basic and advanced MathGL, hints and samples for all types of graphics. I recomend you read first 2 sections one after another and at least look on ``Hints'' section. Also I recomend you to look at @ref{General concepts} and @ref{FAQ}. Sample code for some of these examples can be found in @uref{http://mathgl.sf.net/pictures.html} and in @ref{Samples}.
 
 @menu
-* Basic usage::
-* Advanced usage::
-* Data handling::
-* Data plotting::
-* C/Fortran interface::
-* Hints::
-* Samples::
+* Basic usage::                 
+* Advanced usage::              
+* Data handling::               
+* Data plotting::               
+* C/Fortran interface::         
+* Hints::                       
 @end menu
 
 @c ------------------------------------------------------------------
@@ -37,9 +36,9 @@ In this case the programmer has more freedom in selecting the window libraries (
 Let me consider the aforesaid in more detail.
 
 @menu
-* Using FLTK/GLUT window::
-* Drawing to file::
-* Drawing in memory::
+* Using FLTK/GLUT window::      
+* Drawing to file::             
+* Drawing in memory::           
 @end menu
 
 
@@ -51,7 +50,7 @@ Let me consider the aforesaid in more detail.
 
 The ``interactive'' way of drawing in MathGL consists in window creation  with help of class @code{mglGraphGLUT} or @code{mglGraphGLUT} (@pxref{Widget classes}) and the following drawing in this window. There is a corresponding code:
 @verbatim
-    int sample(mglGraph *gr, const void *)
+    int sample(mglGraph *gr, void *)
     {
         gr->Rotate(60,40);
         gr->Box();
@@ -81,7 +80,7 @@ The rotation, shift, zooming, switching on/off transparency and lighting can be 
 
 In this example function @code{sample} rotates axes (@code{Rotate()}, @pxref{Transformation matrix}) and draws the bounding box (@code{Box()}). Drawing procedure is separated in a function since it will be used on demand when window canvas needs to be redrawn. Widget classes (@code{mglGraphFLTK}, @code{mglGraphGLUT} and so on) support a delayed drawing, when all plotting functions are called once at the beginning of writing to memory lists. Further program displays the saved lists faster. Resulting redrawing will be faster but it requires sufficient memory. Several lists (frames) can be displayed one after another (by pressing @samp{,}, @samp{.}) or run as cinema. To switch these feature on one needs to modify function @code{sample}:
 @verbatim
-    int sample1(mglGraph *gr, const void *)
+    int sample1(mglGraph *gr, void *)
     {
         gr->NewFrame();             // the first frame
         gr->Rotate(60,40);
@@ -162,10 +161,10 @@ The drawing in other libraries is most the same. Moreover, I excluded the suppor
 Now I show several non-obvious features of MathGL: several subplots in a single picture, curvilinear coordinates, text printing and so on. Generally you may miss this section at first reading, but I don't recomend it.
 
 @menu
-* Subplots::
-* Axis and grids::
-* Curvilinear coordinates::
-* Text printing example::
+* Subplots::                    
+* Axis and grids::              
+* Curvilinear coordinates::     
+* Text printing example::       
 @end menu
 
 @c ------------------------------------------------------------------
@@ -174,7 +173,7 @@ Now I show several non-obvious features of MathGL: several subplots in a single 
 
 Let me demonstrate possibilities of axes transformation. MathGL has the following functions: @code{SubPlot}, @code{InPlot}, @code{Aspect} and @code{Rotate} (@pxref{Transformation matrix}). The order of their calling is strictly determined. First, one changes the position of axes in image area (functions @code{SubPlot} and @code{InPlot}). After that one may rotate the plot (function @code{Rotate}). Finally, one may change aspects of axes (function @code{Aspect}). The following code illustrates the aforesaid it:
 @verbatim
-    int sample(mglGraph *gr, const void *)
+    int sample(mglGraph *gr, void *)
     {
         gr->SubPlot(2,2,0);
         gr->Box();
@@ -218,7 +217,7 @@ MathGL library can draw not only the bounding box but also the axes, grids, labe
 
 Function @code{Axis} draws axes. Its textual string shows in which directions the axis or axes will be drawn (by default @code{"xyz"}, function draws axes in all directions). Function @code{Grid} draws grid perpendicularly to specified directions. Example of axes and grid drawing is:
 @verbatim
-    int sample(mglGraph *gr, const void *)
+    int sample(mglGraph *gr, void *)
     {
         gr->SubPlot(2,2,0);
         gr->SetTicks('x', 0.4, 3);  // sets tick step to 0.5
@@ -276,7 +275,7 @@ This example shows the importance of the correct choosing of the number of ticks
 
 Now let use curvilinear coordinates. In difference from other systems of plot creation, MathGL uses textual formulas for connection of the old (data) and new (output) coordinates. This allows one to plot in arbitrary coordinates. The following code plots the line @var{y}=0, @var{z}=0 in Cartesian, polar, parabolic and spiral coordinates:
 @verbatim
-    int sample(mglGraph *gr, const void *)
+    int sample(mglGraph *gr, void *)
     {
         mglData x(50),y(50),z(50);
         y.Fill(0.5,0.5);
@@ -327,7 +326,7 @@ Now let use curvilinear coordinates. In difference from other systems of plot cr
 
 MathGL prints text by vector font. There are functions for manual specifying of text position (like @code{Puts}) and for its automatic selection (like @code{Label}, @code{Legend} and so on). MathGL prints text always in specified position even if it lies outside the bounding box. The default size of font is specified by variables @var{FontSize} (@pxref{Font settings}). However, the actual size of output string depends on position of axes (depends on functions @code{SubPlot}, @code{InPlot}). The switching of the font style (italic, bold, wire and so on) can be done for the whole string (by function parameter) or inside the string. By default MathGL parses TeX-like commands for symbols and indexes (see @pxref{mglFont class}). Example of MathGL font drawing is:
 @verbatim
-    int sample(mglGraph *gr, const void *)
+    int sample(mglGraph *gr, void *)
     {
         setlocale(LC_CTYPE, "ru_RU.cp1251");
         gr->Puts(mglPoint(0,1),"Text can be in english и на русском");
@@ -350,7 +349,7 @@ MathGL prints text by vector font. There are functions for manual specifying of 
 
 Another example demonstrate the features of TeX formula parsing.
 @verbatim
-    int sample(mglGraph *gr, const void *)
+    int sample(mglGraph *gr, void *)
     {
         gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", 0, -4);
         return 0;
@@ -370,8 +369,8 @@ Another example demonstrate the features of TeX formula parsing.
 Class @code{mglData} contains all functions for the data handling in MathGL (@pxref{mglData class}). There are several matters why I use class @code{mglData} but not a single array: it does not depend on type of data (float or double), sizes of data arrays are kept with data, memory working is simpler and safer.
 
 @menu
-* Array creation::
-* Data changing::
+* Array creation::              
+* Data changing::               
 @end menu
 
 @c ------------------------------------------------------------------
@@ -452,7 +451,7 @@ or by using @code{Modify()} function
 
 MathGL has functions for data processing: differentiating, integrating, smoothing and so on (for more detail, @pxref{mglData class}). Let us consider some examples. The simplest ones are integration and differentiation. The direction in which operation will be performed is specified by textual string, which may contain symbols @samp{x}, @samp{y} or @samp{z}. For example, the call of @code{Diff("x")} will differentiate data along @samp{x} direction; the call of @code{Integral("xy")} perform the double integration of data along @samp{x} and @samp{y} directions; the call of @code{Diff2("xyz")} will apply 3d Laplace operator to data and so on. Example of this operations on 2d array a=x*y is presented in code:
 @verbatim
-    int sample(mglGraph *gr, const void *)
+    int sample(mglGraph *gr, void *)
     {
         mglData a(30,40);   a.Modify("x*y");
         gr->Axis(mglPoint(0,0,0),mglPoint(1,1,1));
@@ -479,7 +478,7 @@ MathGL has functions for data processing: differentiating, integrating, smoothin
 
 Data smoothing (function @code{Smooth()}) is more interesting and important. This function has 2 main arguments: type of smoothing and its direction. Now 4 methods are supported: @code{SMOOTH_NONE} does nothing for delta=0 or approaches data to zero with the step delta, @code{SMOOTH_LINE_3} linear averaging by 3 points, @code{SMOOTH_LINE_5} linear averaging by 5 points, @code{SMOOTH_QUAD_5} quadratic averaging by 5 points. Let me demonstrate it for 1d case:
 @verbatim
-    int sample(mglGraph *gr, const void *)
+    int sample(mglGraph *gr, void *)
     {
         mglData y0(30),y1,y2,y3;
         y0.Modify("0.4*sin(2*pi*x)+0.3*cos(3*pi*x)-0.4*sin(4*pi*x)+0.2*rnd");
@@ -511,10 +510,10 @@ Finally one can create new data arrays on base of the existing one: extract slic
 Let me now show how to plot the data. MathGL generally has 2 types of plotting functions. Simple variant requires a single data array for plotting, other data (coordinates) are considered uniformly distributed in interval @var{Min}*@var{Max}. Second variant requires data arrays for all coordinates. It allows one to plot rather complex multivalent curves and surfaces (in case of parametric dependencies). Argument setting to default values allows one to plot data in standard form. Manual arguments setting gives possibility for fine tuning of colors, positions and view of graphics. Note, that the call of drawing function adds something to picture but does not clear the previous plots (as it does in Matlab). Another difference from Matlab is that all setup (like transparency, lightning, axis borders and so on) must be specified @strong{before} plotting functions.
 
 @menu
-* Plots for 1D data::
-* Plots for 2D data::
-* Plots for 3D data::
-* Surface transparency::
+* Plots for 1D data::           
+* Plots for 2D data::           
+* Plots for 3D data::           
+* Surface transparency::        
 @end menu
 
 @c ------------------------------------------------------------------
@@ -525,7 +524,7 @@ Term ``1D data'' means that data depend on single index (parameter) like curve i
 
 Below I shall show the features of 1D plotting on base of @code{Plot()} function (@pxref{Plot}). Let us start from sinus plot:
 @verbatim
-    int sample(mglGraph *gr, const void *)
+    int sample(mglGraph *gr, void *)
     {
         mglData y0(50);		y0.Modify("sin(pi*(2*x-1))");
         gr->SubPlot(2,2,0);
@@ -582,7 +581,7 @@ Surfaces @code{Surf()} and other 2D plots (@pxref{2D plotting}) are drown the sa
 
 Now I shall show the example of a surface drawing. At first let us switch lightning on
 @verbatim
-    int sample(mglGraph *gr, const void *)
+    int sample(mglGraph *gr, void *)
     {
         gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
 @end verbatim
@@ -630,7 +629,7 @@ Note, that the previous color scheme is used in last plots because there are no 
 
 Drawing of other 2D plots is analogous. The only peculiarity is the usage of flag @samp{#}. By default this flag switches on the drawing of a grid on plot (@code{Grid()} or @code{Mesh()} for plots in plain or in volume). However, for isosurfaces (including surfaces of rotation @code{Axial()}) this flag switches the  face drawing off. Figure becomes wired. The following code gives example of flag @samp{#} using (compare with normal function drawing as in its description):
 @verbatim
-    int sample(mglGraph *gr, const void *)
+    int sample(mglGraph *gr, void *)
     {
         gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
         mglData a(30,20);
@@ -659,7 +658,7 @@ Drawing of other 2D plots is analogous. The only peculiarity is the usage of fla
 
 Drawing procedures for 3D plot looks similarly to 1D and 2D plots described above. There are 3 general types of 3D plots (@pxref{3D plotting}): (i) plots on slices or on projections, (ii) isosurfaces, (iii) cloud-like plots. Plots on slice are clear enough -- one specifies a slice (as its index or as coordinate value) and MathGL draws contour lines or density plot on slice plane. Isosurface gives more information. Isosurface is 3D analogue of the contour line @code{Cont()}. It shows the region where data array values exceed specified isosurface level. Plot becomes more informative if one adds transparency, lightning or sets color scheme depending on coordinates. Generalization of isosurface is the cloud-like plot. For this plot the darker color and less transparent regions correspond to higher values of data. Contrary, the regions with low values are transparent. For plotting of the phase of fields (or beams or pulses) one can use isosurface which transparency depends on the other data array (see function @code{Surf3A()}). As example of 3D data plots let us draw the Gaussian beam diffraction in space. Beam propagates along @var{x} axis:
 @verbatim
-    int sample(mglGraph *gr, const void *)
+    int sample(mglGraph *gr, void *)
     {
         gr->Alpha(true);    gr->Light(true);
         gr->Light(0,mglPoint(0,0,1));
@@ -756,6 +755,40 @@ As an example of C function usage let me draw the plot from @ref{Plots for 2D da
     }
 @end verbatim
 
+Practically the same simple to create a window. For example let rewrite the code from for window creation (@pxref{Using FLTK/GLUT window}):
+@verbatim
+    int sample(HMGL gr, void *)
+    {
+        mgl_rotate(gr,60,40,0);
+        mgl_box(gr,1);
+        return 0;
+    }
+    //-----------------------------------------------------
+    int main(int argc,char **argv)
+    {
+        mgl_create_graph_fltk(sample, "MathGL examples", NULL);
+        mgl_fltk_run();
+        return 0;
+    }
+@end verbatim
+
+The fortran code have some perculiarities. Exactly it not allow one to send arbitrary parameter (which was @code{NULL} in previous example) to function. This is limitation of Fortran language. So, the corresponding code will be:
+@verbatim
+    program TEST
+    integer x,f,func
+        call mgl_create_graph_fltk(sample, 'MathGL examples');
+        call mgl_fltk_run();
+    end program TEST
+ 
+    integer function sample(gr)
+    integer*8 gr
+        call mgl_rotate(gr,60,40,0);
+        call mgl_box(gr,1);
+        sample=0
+    return
+    end
+@end verbatim
+
 @c ------------------------------------------------------------------
 @node Hints, , C/Fortran interface, Examples
 @section Hints
@@ -763,18 +796,18 @@ As an example of C function usage let me draw the plot from @ref{Plots for 2D da
 In this section I have included some small hints and advices for the improving of the quality of plots and for the demonstration of some non-trivial features of MathGL library. In contrast to previous examples I showed mostly the idea but not the whole drawing function. More examples with the source code can be find at @uref{http://mathgl.sf.net/} or in section @ref{Samples}.
 
 @menu
-* ``Compound'' graphics::
-* Two axes in one plot::
-* Titles for the plot::
-* Changing of the color range::
-* Management of the point cutting::
-* Vector field visualization::
-* Several light sources::
-* CutMin and CutMax features::
-* Mapping visualization::
-* Log-scaled plot::
-* ``Templates''::
-* Nonlinear fitting hints::
+* ``Compound'' graphics::       
+* Two axes in one plot::        
+* Titles for the plot::         
+* Changing of the color range::  
+* Management of the point cutting::  
+* Vector field visualization::  
+* Several light sources::       
+* CutMin and CutMax features::  
+* Mapping visualization::       
+* Log-scaled plot::             
+* ``Templates''::               
+* Nonlinear fitting hints::     
 @end menu
 
 @c ------------------------------------------------------------------

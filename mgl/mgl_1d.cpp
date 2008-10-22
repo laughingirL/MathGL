@@ -1363,220 +1363,220 @@ void mgl_tube(HMGL gr, const HMDT y, float r, const char *pen)
 //		1D plotting functions (Fortran)
 //-----------------------------------------------------------------------------
 /// Draw line plot for points in arrays \a x, \a y, \a z.
-void mgl_plot_xyz_(long *gr, long *x, long *y, long *z, const char *pen,int l)
+void mgl_plot_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && x && y && z)	_GR_->Plot(_D_(x),_D_(y),_D_(z),s);
 	delete []s;
 }
 /// Draw line plot for points in arrays \a x, \a y.
-void mgl_plot_xy_(long *gr, long *x, long *y, const char *pen,int l)
+void mgl_plot_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && x && y)	_GR_->Plot(_D_(x),_D_(y),s);
 	delete []s;
 }
 /// Draw line plot for points in arrays \a y.
-void mgl_plot_(long *gr, long *y,	const char *pen,int l)
+void mgl_plot_(uintptr_t *gr, uintptr_t *y,	const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && y)	_GR_->Plot(_D_(y),s);
 	delete []s;
 }
 /// Draw line plot for points in arrays \a a(0,:),\a a(1,:).
-void mgl_plot_2_(long *gr, long *a, const char *pen,int l)
+void mgl_plot_2_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Plot2(_D_(a),s);
 	delete []s;
 }
 /// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-void mgl_plot_3_(long *gr, long *a, const char *pen,int l)
+void mgl_plot_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Plot3(_D_(a),s);
 	delete []s;
 }
 /// Draw area plot for points in arrays \a x, \a y, \a z.
-void mgl_area_xyz_(long *gr, long *x, long *y, long *z, const char *pen,int l)
+void mgl_area_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && x && y && z)	_GR_->Area(_D_(x),_D_(y),_D_(z),s);
 	delete []s;
 }
 /// Draw area plot for points in arrays \a x, \a y.
-void mgl_area_xy_(long *gr, long *x, long *y, const char *pen,int l)
+void mgl_area_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && x && y)	_GR_->Area(_D_(x),_D_(y),s);
 	delete []s;
 }
 /// Draw area plot for points in arrays \a y.
-void mgl_area_(long *gr, long *y, const char *pen,int l)
+void mgl_area_(uintptr_t *gr, uintptr_t *y, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && y)	_GR_->Area(_D_(y),s);
 	delete []s;
 }
 /// Draw area plot for points in arrays \a a(0,:),\a a(1,:).
-void mgl_area_2_(long *gr, long *a, const char *pen,int l)
+void mgl_area_2_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Area2(_D_(a), s);
 	delete []s;
 }
 /// Draw area plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-void mgl_area_3_(long *gr, long *a, const char *pen,int l)
+void mgl_area_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Area3(_D_(a),s);
 	delete []s;
 }
 /// Fill area between the curves \a y1, \a y2 parametrically dependent on \a x.
-void mgl_region_xy_(long *gr, long *x, long *y1, long *y2, const char *pen, int *inside, int l)
+void mgl_region_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y1, uintptr_t *y2, const char *pen, int *inside, int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && x && y1 && y2)	_GR_->Region(_D_(x),_D_(y1),_D_(y2),s,NAN,*inside);
 	delete []s;
 }
 /// Fill area between the curves \a y1, \a y2.
-void mgl_region_(long *gr, long *y1, long *y2, const char *pen, int *inside, int l)
+void mgl_region_(uintptr_t *gr, uintptr_t *y1, uintptr_t *y2, const char *pen, int *inside, int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && y1 && y2)	_GR_->Region(_D_(y1),_D_(y2),s,NAN,*inside);
 	delete []s;
 }
 /// draw mark with different type at position {x,y,z}
-void mgl_mark_(long *gr, float *x,float *y,float *z,const char *mark,int)
+void mgl_mark_(uintptr_t *gr, float *x,float *y,float *z,const char *mark,int)
 {	_GR_->Mark(mglPoint(*x,*y,*z),*mark);	}
 /// Draw vertical lines from points in arrays \a x, \a y, \a z to mglGraph::Org.
-void mgl_stem_xyz_(long *gr, long *x, long *y, long *z, const char *pen,int l)
+void mgl_stem_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && x && y && z)	_GR_->Stem(_D_(x),_D_(y),_D_(z),s);
 	delete []s;
 }
 /// Draw vertical lines from points in arrays \a x, \a y to mglGraph::Org.
-void mgl_stem_xy_(long *gr, long *x, long *y, const char *pen,int l)
+void mgl_stem_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && x && y)	_GR_->Stem(_D_(x),_D_(y),s);
 	delete []s;
 }
 /// Draw vertical lines from points in arrays \a y to mglGraph::Org.
-void mgl_stem_(long *gr, long *y,	const char *pen,int l)
+void mgl_stem_(uintptr_t *gr, uintptr_t *y,	const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && y)	_GR_->Stem(_D_(y),s);
 	delete []s;
 }
 /// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-void mgl_stem_2_(long *gr, long *a, const char *pen,int l)
+void mgl_stem_2_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Stem2(_D_(a), s);
 	delete []s;
 }
 /// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-void mgl_stem_3_(long *gr, long *a, const char *pen,int l)
+void mgl_stem_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Stem3(_D_(a), s);
 	delete []s;
 }
 /// Draw stairs for points in arrays \a x, \a y, \a z.
-void mgl_step_xyz_(long *gr, long *x, long *y, long *z, const char *pen,int l)
+void mgl_step_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && x && y && z)	_GR_->Step(_D_(x),_D_(y),_D_(z),s);
 	delete []s;
 }
 /// Draw stairs for points in arrays \a x, \a y.
-void mgl_step_xy_(long *gr, long *x, long *y, const char *pen,int l)
+void mgl_step_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && x && y)	_GR_->Step(_D_(x),_D_(y),s);
 	delete []s;
 }
 /// Draw line plot for points in arrays \a y.
-void mgl_step_(long *gr, long *y,	const char *pen,int l)
+void mgl_step_(uintptr_t *gr, uintptr_t *y,	const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && y)	_GR_->Step(_D_(y),s);
 	delete []s;
 }
 /// Draw stairs for points in arrays \a a(0,:),\a a(1,:).
-void mgl_step_2_(long *gr, long *a, const char *pen,int l)
+void mgl_step_2_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Step2(_D_(a), s);
 	delete []s;
 }
 /// Draw stairs for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-void mgl_step_3_(long *gr, long *a, const char *pen,int l)
+void mgl_step_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Step3(_D_(a), s);
 	delete []s;
 }
 /// Draw vertical bars from points in arrays \a x, \a y, \a z to mglGraph::Org.
-void mgl_bars_xyz_(long *gr, long *x, long *y, long *z, const char *pen,int l)
+void mgl_bars_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && x && y && z)	_GR_->Bars(_D_(x),_D_(y),_D_(z),s);
 	delete []s;
 }
 /// Draw vertical bars from points in arrays \a x, \a y to mglGraph::Org.
-void mgl_bars_xy_(long *gr, long *x, long *y, const char *pen,int l)
+void mgl_bars_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && x && y)	_GR_->Bars(_D_(x),_D_(y),s);
 	delete []s;
 }
 /// Draw vertical bars from points in arrays \a y to mglGraph::Org.
-void mgl_bars_(long *gr, long *y,	const char *pen,int l)
+void mgl_bars_(uintptr_t *gr, uintptr_t *y,	const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && y)	_GR_->Bars(_D_(y),s);
 	delete []s;
 }
 /// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-void mgl_bars_2_(long *gr, long *a, const char *pen,int l)
+void mgl_bars_2_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Bars2(_D_(a), s);
 	delete []s;
 }
 /// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-void mgl_bars_3_(long *gr, long *a, const char *pen,int l)
+void mgl_bars_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Bars3(_D_(a), s);
 	delete []s;
 }
 /// Draw vertical bars from points in arrays \a x, \a y to mglGraph::Org.
-void mgl_barh_yx_(long *gr, long *y, long *v, const char *pen,int l)
+void mgl_barh_yx_(uintptr_t *gr, uintptr_t *y, uintptr_t *v, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && v && y)	_GR_->Barh(_D_(y),_D_(v),s);
 	delete []s;
 }
 /// Draw vertical bars from points in arrays \a y to mglGraph::Org.
-void mgl_barh_(long *gr, long *v,	const char *pen,int l)
+void mgl_barh_(uintptr_t *gr, uintptr_t *v,	const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && v)	_GR_->Barh(_D_(v),s);
 	delete []s;
 }
 /// Draw surface of curve {\a r,\a z} rotatation around Z axis
-void mgl_torus_(long *gr, long *r, long *z, const char *pen,int l)
+void mgl_torus_(uintptr_t *gr, uintptr_t *r, uintptr_t *z, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && r && z)	_GR_->Torus(_D_(r), _D_(z), s);
 	delete []s;
 }
 /// Draw surface of curve {\a a(0,:),\a a(1,:)} rotatation around Z axis for
-void mgl_torus_2_(long *gr, long *a, const char *pen,int l)
+void mgl_torus_2_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Torus2(_D_(a), s);
@@ -1584,91 +1584,91 @@ void mgl_torus_2_(long *gr, long *a, const char *pen,int l)
 }
 //-----------------------------------------------------------------------------
 /// Draw chart for data a
-void mgl_chart_(long *gr, long *a, const char *col,int l)
+void mgl_chart_(uintptr_t *gr, uintptr_t *a, const char *col,int l)
 {
 	char *s=new char[l+1];	memcpy(s,col,l);	s[l]=0;
 	if(gr&&a)	_GR_->Chart(_D_(a), s);
 	delete []s;
 }
 /// Draw error boxes ey for data y
-void mgl_error_(long *gr, long *y, long *ey, const char *pen,int l)
+void mgl_error_(uintptr_t *gr, uintptr_t *y, uintptr_t *ey, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&y&&ey)	_GR_->Error(_D_(y),_D_(ey),s);
 	delete []s;
 }
 /// Draw error boxes ey for data {x,y}
-void mgl_error_xy_(long *gr, long *x, long *y, long *ey, const char *pen,int l)
+void mgl_error_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ey, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&x&&y&&ey)	_GR_->Error(_D_(x),_D_(y),_D_(ey),s);
 	delete []s;
 }
 /// Draw error boxes {ex,ey} for data {x,y}
-void mgl_error_exy_(long *gr, long *x, long *y, long *ex, long *ey, const char *pen,int l)
+void mgl_error_exy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ex, uintptr_t *ey, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&x&&ex&&y&&ey)	_GR_->Error(_D_(x),_D_(y),_D_(ex),_D_(ey),s);
 	delete []s;
 }
 /// Draw marks with diffenernt sizes \a r for points in arrays \a x, \a y, \a z.
-void mgl_mark_xyz_(long *gr, long *x, long *y, long *z, long *r, const char *pen,int l)
+void mgl_mark_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&x&&y&&z&&r)	_GR_->Mark(_D_(x),_D_(y),_D_(z), _D_(r),s);
 	delete []s;
 }
 /// Draw marks with diffenernt sizes \a r for points in arrays \a x, \a y.
-void mgl_mark_xy_(long *gr, long *x, long *y, long *r, const char *pen,int l)
+void mgl_mark_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&x&&y&&r)	_GR_->Mark(_D_(x), _D_(y), _D_(r),s);
 	delete []s;
 }
 /// Draw marks with diffenernt sizes \a r for points in arrays \a y.
-void mgl_mark_y_(long *gr, long *y, long *r, const char *pen,int l)
+void mgl_mark_y_(uintptr_t *gr, uintptr_t *y, uintptr_t *r, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&y&&r)	_GR_->Mark(_D_(y),_D_(r),s);
 	delete []s;
 }
 /// Draw tube with radial sizes \a r for points in arrays \a x, \a y, \a z.
-void mgl_tube_xyzr_(long *gr, long *x, long *y, long *z, long *r, const char *pen,int l)
+void mgl_tube_xyzr_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&x&&y&&z&&r)	_GR_->Tube(_D_(x),_D_(y),_D_(z), _D_(r),s);
 	delete []s;
 }
 /// Draw tube with radial sizes \a r for points in arrays \a x, \a y.
-void mgl_tube_xyr_(long *gr, long *x, long *y, long *r, const char *pen,int l)
+void mgl_tube_xyr_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&x&&y&&r)	_GR_->Tube(_D_(x),_D_(y),_D_(r),s);
 	delete []s;
 }
 /// Draw tube with radial sizes \a r for points in arrays \a y.
-void mgl_tube_r_(long *gr, long *y, long *r, const char *pen,int l)
+void mgl_tube_r_(uintptr_t *gr, uintptr_t *y, uintptr_t *r, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&y&&r)	_GR_->Tube(_D_(y),_D_(r),s);
 	delete []s;
 }
 /// Draw tube with constant radial sizes \a r for points in arrays \a x, \a y, \a z.
-void mgl_tube_xyz_(long *gr, long *x, long *y, long *z, float *r, const char *pen,int l)
+void mgl_tube_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, float *r, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&x&&y&&z)	_GR_->Tube(_D_(x),_D_(y),_D_(z),*r,s);
 	delete []s;
 }
 /// Draw tube with constant radial sizes \a r for points in arrays \a x, \a y.
-void mgl_tube_xy_(long *gr, long *x, long *y, float *r, const char *pen,int l)
+void mgl_tube_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, float *r, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&x&&y)	_GR_->Tube(_D_(x),_D_(y),*r,s);
 	delete []s;
 }
 /// Draw tube with constant radial sizes \a r for points in arrays \a y.
-void mgl_tube_(long *gr, long *y, float *r, const char *pen,int l)
+void mgl_tube_(uintptr_t *gr, uintptr_t *y, float *r, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&y)	_GR_->Tube(_D_(y),*r,s);
@@ -1692,28 +1692,28 @@ void mgl_textmarkw_yr(HMGL gr, const HMDT y, const HMDT r, const wchar_t *text, 
 void mgl_textmarkw(HMGL gr, const HMDT y, const wchar_t *text, const char *fnt)
 {	if(gr&&y&&text)	gr->TextMark(*y,text,fnt);	}
 //-----------------------------------------------------------------------------
-void mgl_textmark_xyzr_(long *gr, long *x, long *y, long *z, long *r, const char *text, const char *fnt, int l,int n)
+void mgl_textmark_xyzr_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *r, const char *text, const char *fnt, int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(s,fnt,n);	f[n]=0;
 	if(gr&&y&&x&&z&&r)	_GR_->TextMark(_D_(x),_D_(y),_D_(z),_D_(r),s,f);
 	delete []s;		delete []f;
 }
-void mgl_textmark_xyr_(long *gr, long *x, long *y, long *r, const char *text, const char *fnt, int l,int n)
+void mgl_textmark_xyr_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *text, const char *fnt, int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(s,fnt,n);	f[n]=0;
 	if(gr&&y&&x&&r)	_GR_->TextMark(_D_(x),_D_(y),_D_(r),s,f);
 	delete []s;		delete []f;
 }
-void mgl_textmark_yr_(long *gr, long *y, long *r, const char *text, const char *fnt, int l,int n)
+void mgl_textmark_yr_(uintptr_t *gr, uintptr_t *y, uintptr_t *r, const char *text, const char *fnt, int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(s,fnt,n);	f[n]=0;
 	if(gr&&y&&r)	_GR_->TextMark(_D_(y),_D_(r),s,f);
 	delete []s;		delete []f;
 }
-void mgl_textmark_(long *gr, long *y, const char *text, const char *fnt, int l,int n)
+void mgl_textmark_(uintptr_t *gr, uintptr_t *y, const char *text, const char *fnt, int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(s,fnt,n);	f[n]=0;
@@ -1726,14 +1726,14 @@ void mgl_fplot(HMGL gr, const char *fy, const char *stl, int n)
 void mgl_fplot_xyz(HMGL gr, const char *fx, const char *fy, const char *fz, const char *stl, int n)
 {	if(gr)	gr->Plot(fx,fy,fz,stl,n);	}
 //-----------------------------------------------------------------------------
-void mgl_fplot_(long *gr, const char *fy, const char *stl, int *n, int ly, int ls)
+void mgl_fplot_(uintptr_t *gr, const char *fy, const char *stl, int *n, int ly, int ls)
 {
 	char *s=new char[ly+1];	memcpy(s,fy,ly);	s[ly]=0;
 	char *p=new char[ls+1];	memcpy(p,stl,ls);	p[ls]=0;
 	if(gr)	_GR_->Plot(s, p, *n);
 	delete []s;		delete []p;
 }
-void mgl_fplot_xyz_(long *gr, const char *fx, const char *fy, const char *fz, const char *stl, int *n, int lx, int ly, int lz, int ls)
+void mgl_fplot_xyz_(uintptr_t *gr, const char *fx, const char *fy, const char *fz, const char *stl, int *n, int lx, int ly, int lz, int ls)
 {
 	char *sx=new char[lx+1];	memcpy(sx,fx,lx);	sx[lx]=0;
 	char *sy=new char[ly+1];	memcpy(sy,fy,ly);	sy[ly]=0;

@@ -29,8 +29,8 @@
 #include <FL/Fl_Menu_Bar.H>
 #include "mgl/mgl_zb.h"
 //-----------------------------------------------------------------------------
-#define mglFlRun	Fl::run
 class Fl_MathGL;
+int mglFlRun();
 //-----------------------------------------------------------------------------
 /// Class allows the window creation for displaying plot bitmap with the help of FLTK library
 /** ATTENTION!!! All frames are saved in memory. So animation with many frames require a lot memory and CPU time (for example, for mouse rotation).*/

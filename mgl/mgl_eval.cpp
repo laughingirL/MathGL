@@ -414,14 +414,14 @@ float mglFormula::Calc(float x,float y,float t,float u,float v,float w)
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for arbitrary set of variables
-float mglFormula::Calc(float var['z'-'a'+1])
+float mglFormula::Calc(const float var['z'-'a'+1])
 {
 	Error=0;
 	return CalcIn(var);
 }
 //-----------------------------------------------------------------------------
 // evaluate derivate of formula respect to 'diff' variable for arbitrary set of other variables
-float mglFormula::CalcD(float var['z'-'a'+1], char diff)
+float mglFormula::CalcD(const float var['z'-'a'+1], char diff)
 {
 	Error=0;
 	return CalcDIn(diff-'a', var);

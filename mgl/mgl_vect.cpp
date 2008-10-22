@@ -469,84 +469,84 @@ void mgl_map(HMGL gr, const HMDT a, const HMDT b, const char *sch, int ks, int p
 //		Dual plotting functions (FORTRAN)
 //-----------------------------------------------------------------------------
 /// Plot dew drops for vector field {ax,ay} parametrically depended on coordinate {x,y}
-void mgl_dew_xy_(long *gr, long *x, long *y, long *ax, long *ay, const char *sch, float *zVal,int l)
+void mgl_dew_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && x && y)	_GR_->Dew(_D_(x), _D_(y), _D_(ax), _D_(ay), s, *zVal);
 	delete []s;
 }
 /// Plot dew drops for vector field {ax,ay}
-void mgl_dew_2d_(long *gr, long *ax, long *ay, const char *sch, float *zVal,int l)
+void mgl_dew_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax)	_GR_->Dew(_D_(ax), _D_(ay), s, *zVal);
 	delete []s;
 }
 /// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length proportional to value |a|
-void mgl_vect_xy_(long *gr, long *x, long *y, long *ax, long *ay, const char *sch, float *zVal,int l)
+void mgl_vect_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && x && y)	_GR_->Vect(_D_(x), _D_(y), _D_(ax), _D_(ay), s, *zVal);
 	delete []s;
 }
 /// Plot vector field {ax,ay} with length proportional to value |a|
-void mgl_vect_2d_(long *gr, long *ax, long *ay, const char *sch, float *zVal,int l)
+void mgl_vect_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax)	_GR_->Vect(_D_(ax), _D_(ay), s, *zVal);
 	delete []s;
 }
 /// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
-void mgl_vectc_xy_(long *gr, long *x, long *y, long *ax, long *ay, const char *sch, float *zVal,int l)
+void mgl_vectc_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && x && y)	_GR_->VectC(_D_(x), _D_(y), _D_(ax), _D_(ay), s, *zVal);
 	delete []s;
 }
 /// Plot vector field {ax,ay} with color proportional to value |a|
-void mgl_vectc_2d_(long *gr, long *ax, long *ay, const char *sch,float *zVal,int l)
+void mgl_vectc_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch,float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax)	_GR_->VectC(_D_(ax), _D_(ay), s, *zVal);
 	delete []s;
 }
 /// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with length proportional to value |a|
-void mgl_vect_xyz_(long *gr, long *x, long *y, long *z, long *ax, long *ay, long *az, const char *sch,int l)
+void mgl_vect_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && az && z && x && y)	_GR_->Vect(_D_(x), _D_(y), _D_(z), _D_(ax), _D_(ay), _D_(az), s);
 	delete []s;
 }
 /// Plot 3d vector field {ax,ay,ay} with length proportional to value |a|
-void mgl_vect_3d_(long *gr, long *ax, long *ay, long *az, const char *sch, int l)
+void mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && az)	_GR_->Vect(_D_(ax), _D_(ay), _D_(az), s);
 	delete []s;
 }
 /// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
-void mgl_vectc_xyz_(long *gr, long *x, long *y, long *z, long *ax, long *ay, long *az, const char *sch,int l)
+void mgl_vectc_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && az && z && x && y)	_GR_->VectC(_D_(x), _D_(y), _D_(z), _D_(ax), _D_(ay), _D_(az), s);
 	delete []s;
 }
 /// Plot 3d vector field {ax,ay,ay} with color proportional to value |a|
-void mgl_vectc_3d_(long *gr, long *ax, long *ay, long *az, const char *sch,int l)
+void mgl_vectc_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && az)	_GR_->VectC(_D_(ax), _D_(ay), _D_(az), s);
 	delete []s;
 }
 /// Color map of matrix a to matrix b, both matrix parametrically depend on coordinates
-void mgl_map_xy_(long *gr, long *x, long *y, long *a, long *b, const char *sch, int *ks, int *pnts,int l)
+void mgl_map_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, uintptr_t *b, const char *sch, int *ks, int *pnts,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && b && x && y)	_GR_->Map(_D_(x), _D_(y), _D_(a), _D_(b), s, *ks, *pnts);
 	delete []s;
 }
 /// Color map of matrix a to matrix b
-void mgl_map_(long *gr, long *a, long *b, const char *sch, int *ks, int *pnts,int l)
+void mgl_map_(uintptr_t *gr, uintptr_t *a, uintptr_t *b, const char *sch, int *ks, int *pnts,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && b)	_GR_->Map(_D_(a), _D_(b), s, *ks, *pnts);
