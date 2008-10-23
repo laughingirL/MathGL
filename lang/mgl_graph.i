@@ -593,4 +593,47 @@ struct mglParse{};
 	{	mgl_contf_y_val(self, v, a, stl, sVal);	}
 	void ContFZ(mglData *v, mglData *a, const char *stl="", float sVal=NaN)
 	{	mgl_contf_z_val(self, v, a, stl, sVal);	}
+
+	float Fit(mglData *fit, mglData *y, const char *eq, const char *var, float *ini=0)
+	{	return mgl_fit_1(self, fit, y,eq,var,ini);	}
+	float Fit(mglData *fit, mglData *y, const char *eq, const char *var, mglData *ini)
+	{	return mgl_fit_1_d(self, fit, y,eq,var,ini);	}
+	float Fit2(mglData *fit, mglData *z, const char *eq, const char *var, float *ini=0)
+	{	return mgl_fit_2(self, fit, z,eq,var,ini);	}
+	float Fit2(mglData *fit, mglData *z, const char *eq, const char *var, mglData *ini)
+	{	return mgl_fit_2_d(self, fit, z,eq,var,ini);	}
+	float Fit3(mglData *fit, mglData *a, const char *eq, const char *var, float *ini=0)
+	{	return mgl_fit_3(self, fit, a,eq,var,ini);	}
+	float Fit3(mglData *fit, mglData *a, const char *eq, const char *var, mglData *ini)
+	{	return mgl_fit_3_d(self, fit, a,eq,var,ini);	}
+	float Fit(mglData *fit, mglData *x, mglData *y, const char *eq, const char *var, float *ini=0)
+	{	return mgl_fit_xy(self, fit, x,y,eq,var,ini);	}
+	float Fit(mglData *fit, mglData *x, mglData *y, const char *eq, const char *var, mglData *ini)
+	{	return mgl_fit_xy_d(self, fit, x,y,eq,var,ini);	}
+	float Fit(mglData *fit, mglData *x, mglData *y, mglData *z, const char *eq, const char *var, float *ini=0)
+	{	return mgl_fit_xyz(self, fit, x,y,z,eq,var,ini);	}
+	float Fit(mglData *fit, mglData *x, mglData *y, mglData *z, const char *eq, const char *var, mglData *ini)
+	{	return mgl_fit_xyz_d(self, fit, x,y,z,eq,var,ini);	}
+	float Fit(mglData *fit, mglData *x, mglData *y, mglData *z, mglData *a, const char *eq, const char *var, float *ini=0)
+	{	return mgl_fit_xyza(self, fit, x,y,z,a,eq,var,ini);	}
+	float Fit(mglData *fit, mglData *x, mglData *y, mglData *z, mglData *a, const char *eq, const char *var, mglData *ini)
+	{	return mgl_fit_xyza_d(self, fit, x,y,z,a,eq,var,ini);	}
+	float FitS(mglData *fit, mglData *y, mglData *s, const char *eq, const char *var, float *ini=0)
+	{	return mgl_fit_ys(self, fit, y,s,eq,var,ini);	}
+	float FitS(mglData *fit, mglData *y, mglData *s, const char *eq, const char *var, mglData *ini)
+	{	return mgl_fit_ys_d(self, fit, y,s,eq,var,ini);	}
+	float FitS(mglData *fit, mglData *x, mglData *y, mglData *s, const char *eq, const char *var, float *ini=0)
+	{	return mgl_fit_xys(self, fit, x,y,s,eq,var,ini);	}
+	float FitS(mglData *fit, mglData *x, mglData *y, mglData *s, const char *eq, const char *var, mglData *ini)
+	{	return mgl_fit_xys_d(self, fit, x,y,s,eq,var,ini);	}
+	float FitS(mglData *fit, mglData *x, mglData *y, mglData *z, mglData *s, const char *eq, const char *var, float *ini=0)
+	{	return mgl_fit_xyzs(self, fit, x,y,z,s,eq,var,ini);	}
+	float FitS(mglData *fit, mglData *x, mglData *y, mglData *z, mglData *s, const char *eq, const char *var, mglData *ini)
+	{	return mgl_fit_xyzs_d(self, fit, x,y,z,s,eq,var,ini);	}
+	float FitS(mglData *fit, mglData *x, mglData *y, mglData *z, mglData *a, mglData *s, const char *eq, const char *var, float *ini=0)
+	{	return mgl_fit_xyzas(self, fit, x,y,z,a,s,eq,var,ini);	}
+	float FitS(mglData *fit, mglData *x, mglData *y, mglData *z, mglData *a, mglData *s, const char *eq, const char *var, mglData *ini)
+	{	return mgl_fit_xyzas_d(self, fit, x,y,z,a,s,eq,var,ini);	}
+	void PutsFit(float x, float y, float z, const char *prefix=0, const char *font=0, float size=-1)
+	{	mgl_puts_fit(self, x,y,z, prefix, font, size);	}
 };

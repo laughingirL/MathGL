@@ -1050,7 +1050,7 @@ Equidistantly fills the data values to range [@var{x1}, @var{x2}] in direction @
 @end deffn
 
 @deffn {MGL command} fill dat 'eq' [vdat=0 wdat=0]
-Command fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in @emph{bounding box} (in difference from @code{modify} coomand). Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat}.
+Command fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in @emph{bounding box} (in difference from @code{modify} commands). Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat}.
 @end deffn
 
 @deffn {MGL command} modify dat 'eq' [@code{dim=0}]

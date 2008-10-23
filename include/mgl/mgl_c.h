@@ -451,6 +451,7 @@ HMDT mgl_data_subdata(const HMDT dat, int xx,int yy,int zz);
 HMDT mgl_data_column(const HMDT dat, const char *eq);
 void mgl_data_set_id(HMDT d, const char *id);
 void mgl_data_fill(HMDT dat, float x1,float x2,char dir);
+void mgl_data_fill_eq(HMGL gr, HMDT dat, const char *eq, const HMDT vdat, const HMDT wdat);
 void mgl_data_put_val(HMDT dat, float val, int i, int j, int k);
 void mgl_data_put_dat(HMDT dat, const HMDT val, int i, int j, int k);
 void mgl_data_modify(HMDT dat, const char *eq,int dim);

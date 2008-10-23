@@ -67,7 +67,9 @@ void mgl_data_modify(HMDT d, const char *eq,int dim)
 {	d->Modify(eq,dim);	}
 /// Modify the data by specified formula
 void mgl_data_modify_vw(HMDT d, const char *eq, HMDT v, HMDT w)
-{	if(d&&v&&w)	d->Modify(eq,*v,*w);	else if(d&&v)	d->Modify(eq,*v);	}
+{	if(d)
+	{	if(v&&w)	d->Modify(eq,*v,*w);	else if(v)	d->Modify(eq,*v);	else	d->Modify(eq);	}
+}
 /// Create or recreate the array with specified size and fill it by zero
 void mgl_data_create(HMDT d, int nx,int ny,int nz)
 {	d->Create(nx,ny,nz);	}
@@ -200,6 +202,7 @@ void mgl_data_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *
 	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
 	if(d&&v&&w)		_DT_->Modify(s,_D_(v),_D_(w));
 	else if(d&&v)	_DT_->Modify(s,_D_(v));
+	else if(d)		_DT_->Modify(s);
 	delete []s;
 }
 /// Create or recreate the array with specified size and fill it by zero

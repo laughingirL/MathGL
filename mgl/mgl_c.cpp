@@ -372,6 +372,8 @@ void mgl_set_def_param(HMGL gr)	{	gr->DefaultPlotParam();	}
 void mgl_set_font_def(HMGL gr, const char *fnt)
 {	strncpy(gr->FontDef, fnt, 31);	}
 void mgl_flush(HMGL gr)	{	gr->Flush();	}
+void mgl_data_fill_eq(HMGL gr, HMDT dat, const char *eq, const HMDT vdat, const HMDT wdat)
+{	dat->Fill(eq, gr->Min, gr->Max, vdat, wdat);	}
 
 //-----------------------------------------------------------------------------
 #include <stdint.h>

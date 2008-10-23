@@ -461,3 +461,10 @@ void mgl_set_def_param_(uintptr_t* gr)	{	_GR_->DefaultPlotParam();	}
 void mgl_set_font_def_(uintptr_t *gr, const char *fnt, int l)
 {	l=l<31?l:31;	memcpy(_GR_->FontDef, fnt,l);	_GR_->FontDef[l]=0;	}
 void mgl_flush_(uintptr_t *gr)	{	_GR_->Flush();	}
+void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *vdat, uintptr_t *wdat, int l)
+{
+	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
+	_DT_->Fill(s,_GR_->Min,_GR_->Max,((mglData *)*vdat),((mglData *)*wdat));
+	delete []s;
+}
+//-----------------------------------------------------------------------------

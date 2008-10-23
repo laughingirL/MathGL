@@ -411,6 +411,7 @@ uintptr_t mgl_data_subdata_(uintptr_t *dat, int *xx,int *yy,int *zz);
 uintptr_t mgl_data_column_(uintptr_t *dat, const char *eq,int l);
 void mgl_data_set_id_(uintptr_t *dat, const char *id,int l);
 void mgl_data_fill_(uintptr_t *dat, float *x1,float *x2,const char *dir,int);
+void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *dat, const char *eq, uintptr_t *vdat, uintptr_t *wdat, int);
 void mgl_data_put_val_(uintptr_t *dat, float *val, int *i, int *j, int *k);
 void mgl_data_put_dat_(uintptr_t *dat, uintptr_t *val, int *i, int *j, int *k);
 void mgl_data_modify_(uintptr_t *dat, const char *eq,int *dim,int);
