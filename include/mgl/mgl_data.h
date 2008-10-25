@@ -313,6 +313,7 @@ public:
 	void operator-=(float d);
 };
 //-----------------------------------------------------------------------------
+void mgl_srnd(long seed);
 double mgl_rnd();
 double ipow_mgl(double x,int n);
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase

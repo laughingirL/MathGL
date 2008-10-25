@@ -105,6 +105,8 @@ struct mglParse{};
 	{	mgl_set_plotfactor(self, val);	}
 	void SetDrawFace(bool enable)
 	{	mgl_set_draw_face(self, enable);}
+	void SetLegendBox(bool enable)
+	{	mgl_set_legend_box(self, enable);	}
 	void SetScheme(const char *sch)
 	{	mgl_set_scheme(self, sch);		}
 	void LoadFont(const char *name, const char *path=NULL)
@@ -636,4 +638,11 @@ struct mglParse{};
 	{	return mgl_fit_xyzas_d(self, fit, x,y,z,a,s,eq,var,ini);	}
 	void PutsFit(float x, float y, float z, const char *prefix=0, const char *font=0, float size=-1)
 	{	mgl_puts_fit(self, x,y,z, prefix, font, size);	}
+
+	void PDE(mglData *res, const char *ham, mglData *ini_re, mglData *ini_im, float dz=0.1, float k0=100)
+	{	mgl_pde_solve(self,res,ham,ini_re,ini_im,dz,k0);	}
+	void Ray(mglData *res, const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt=0.1, float tmax=10)
+	{	mgl_ray_trace(self, res, ham, x0,y0,z0,px,py,pz,dt,tmax);	}
+	void Fill(mglData *u, const char *eq, mglData *v=NULL, mglData *w=NULL)
+	{	mgl_data_fill_eq(self, u,eq,v,w);	}
 };

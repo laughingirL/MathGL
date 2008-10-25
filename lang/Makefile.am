@@ -16,9 +16,9 @@ CLEANFILES += mgl_python.cpp mathgl.py
 BUILT_SOURCES += mathgl.py mgl_python.cpp
 
 mgl_python.cpp: mgl.i mgl_base.i  mgl_data.i  mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h
-	swig -python -classic -o mgl_python.cpp mgl.i 
+	swig -python -c++ -o mgl_python.cpp mgl.i 
 mathgl.py: mgl.i mgl_base.i  mgl_data.i  mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h
-	swig -python -classic -o mgl_python.cpp mgl.i
+	swig -python -c++ -o mgl_python.cpp mgl.i
 endif
 
 

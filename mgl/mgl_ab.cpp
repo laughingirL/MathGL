@@ -446,7 +446,7 @@ void mglGraphAB::Colorbar(const char *sch,int where)
 	float v=0,t;
 	int kind=0;
 	wchar_t s[32]=L"", str[64];
-	if(!ctt && !TickStr && TuneTicks) kind = _mgl_tick_ext(Cmax, Cmin, s, v);
+	if(!ctt && TuneTicks) kind = _mgl_tick_ext(Cmax, Cmin, s, v);
 
 	for(i=0;i<5;i++)
 	{
@@ -460,14 +460,9 @@ void mglGraphAB::Colorbar(const char *sch,int where)
 		default:p.x  = 0.87*s3;	break;
 		}
 		t = Cmin+i*(Cmax-Cmin)/4;
-		bool func = false;
-		if(TickStr)		func = TickStr('c', t, str);
-		if(!func)
-		{
-			if(ctt)	swprintf(str, 64, ctt, t);
-			else	_mgl_tick_text(t,Cmin,(Cmax-Cmin)/100,v,kind,str);
-			wcstrim_mgl(str);
-		}
+		if(ctt)	swprintf(str, 64, ctt, t);
+		else	_mgl_tick_text(t,Cmin,(Cmax-Cmin)/100,v,kind,str);
+		wcstrim_mgl(str);
 		Putsw(p,str,a,FontSize);
 	}
 	switch(where)

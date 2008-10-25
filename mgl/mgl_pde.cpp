@@ -16,6 +16,9 @@
  */
 #include "mgl/mgl_eval.h"
 #include "mgl/mgl_data.h"
+#include "mgl/mgl.h"
+#include "mgl/mgl_c.h"
+#include "mgl/mgl_f.h"
 #include <complex>
 #define dual	std::complex<double>
 #define GAMMA	0.1
@@ -180,5 +183,28 @@ mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, float dt, float tmax)
 	return res;
 }
 //-----------------------------------------------------------------------------
-mglData mglQO_PDE(char *ham, const mglData &ini_re, const mglData &ini_im, mglData &ray, float r, const mglData *xx, const mglData *yy, const mglData *zz);
+mglData mglQO_PDE(char *ham, const mglData &ini_re, const mglData &ini_im, mglData &ray, float r, const mglData *xx, const mglData *yy, const mglData *zz)
+{
+	mglData res;
+	// NOTE: NOT NOW !!!
+	return res;
+}
+//-----------------------------------------------------------------------------
+void mgl_pde_solve(HMGL gr, HMDT res, const char *ham, const HMDT ini_re, const HMDT ini_im, float dz, float k0)
+{	*(res) = mglPDE(ham, *ini_re, *ini_im, gr->Min, gr->Max, dz,k0);	}
+void mgl_ray_trace(HMGL , HMDT res, const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt, float tmax)
+{	*(res) = mglRay(ham, mglPoint(x0,y0,z0), mglPoint(px,py,pz), dt,tmax);	}
+//-----------------------------------------------------------------------------
+void mgl_pde_solve_(uintptr_t* gr, uintptr_t* d, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, float *dz, float *k0, int l)
+{
+	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
+	_DM_(d) = mglPDE(s, _D_(ini_re), _D_(ini_im), _GR_->Min, _GR_->Max, *dz, *k0);
+	delete []s;
+}
+void mgl_ray_trace_(uintptr_t* , uintptr_t* d, const char *ham, float *x0, float *y0, float *z0, float *px, float *py, float *pz, float *dt, float *tmax,int l)
+{
+	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
+	_DM_(d) = mglRay(s, mglPoint(*x0,*y0,*z0), mglPoint(*px,*py,*pz), *dt,*tmax);
+	delete []s;
+}
 //-----------------------------------------------------------------------------

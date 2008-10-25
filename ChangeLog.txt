@@ -24,6 +24,7 @@
 		* Title() for printing the title of the plot
 		* SetPalette() for simplifing palette setting
 		* SetTicks() for setting the ticks easely.
+		* SetTicksVal() for manual setting the position and the label of ticks
 		* Ellipse() for drawing ellipsoid
 		* Restore() for restoring transformation matrix after last InPlot()
 	- Information about mouse click position is shown in widgets (if ShowMousePos=true)
@@ -35,6 +36,7 @@
 	- Class mglFormula now is thread safe.
 	- Allow mglData::Resize() to have size=1.
 	- Functions mgl_tile_r*() are renamed to mgl_tiles*()
+	- Variable mglGraph::TickStr is removed. Use mglGraph::SetTicksVal()
 	- Bug with wrong normales at points on bounding box in Surf3*() is corrected.
 	- Bug with non-visible marks into the legend is corrected.
 	- Bug of not-drawn quads with the same vertexes is corrected.

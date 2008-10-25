@@ -1258,7 +1258,7 @@ void mgl_region_xy(HMGL gr, const HMDT x, const HMDT y1, const HMDT y2, const ch
 {	if(gr && x && y1 && y2)	gr->Region(*x,*y1,*y2,pen,NAN,inside);	}
 /// Fill area between curves \a y1, \a y2.
 void mgl_region(HMGL gr, const HMDT y1, const HMDT y2, const char *pen, int inside)
-{	if(gr && y1 && y2)	gr->Area(*y1,*y2,pen,NAN,inside);	}
+{	if(gr && y1 && y2)	gr->Region(*y1,*y2,pen,NAN,inside);	}
 /// draw mark with different type at position {x,y,z}
 void mgl_mark(HMGL gr, float x,float y,float z,char mark)
 {	gr->Mark(mglPoint(x,y,z),mark);	}

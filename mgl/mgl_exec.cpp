@@ -2303,7 +2303,18 @@ void mglc_zrange(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"xtick","Set ticks for x-axis","xtick {val [sub]} | tmpl", mgls_xtick, mglc_xtick}
 int mgls_xtick(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==3)
+	if(k[0]==3 && k[1]==2)
+	{
+		float v[50];	wchar_t *s[50];	int i;
+		for(i=0;i<50 && i<n/2;i++)
+		{
+			if(a[2*i].type==2 && a[2*i+1].type==1)
+			{	v[i] = a[2*i].v;	s[i] = a[2*i+1].w;	}
+			else	break;
+		}
+		gr->SetTicksVal('x',i,v,s);
+	}
+	else if(k[0]==3)
 	{
 		gr->dx = a[0].v;
 		if(k[1]==3)	gr->NSx = int(a[1].v);
@@ -2331,7 +2342,18 @@ void mglc_xtick(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"ytick","Set ticks for y-axis","ytick {val [sub]} | tmpl", mgls_ytick, mglc_ytick}
 int mgls_ytick(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==3)
+	if(k[0]==3 && k[1]==2)
+	{
+		float v[50];	wchar_t *s[50];	int i;
+		for(i=0;i<50 && i<n/2;i++)
+		{
+			if(a[2*i].type==2 && a[2*i+1].type==1)
+			{	v[i] = a[2*i].v;	s[i] = a[2*i+1].w;	}
+			else	break;
+		}
+		gr->SetTicksVal('y',i,v,s);
+	}
+	else if(k[0]==3)
 	{
 		gr->dy = a[0].v;
 		if(k[1]==3)	gr->NSy = int(a[1].v);
@@ -2359,7 +2381,18 @@ void mglc_ytick(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"ztick","Set ticks for z-axis","ztick {val [sub]} | tmpl", mgls_ztick, mglc_ztick}
 int mgls_ztick(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==3)
+	if(k[0]==3 && k[1]==2)
+	{
+		float v[50];	wchar_t *s[50]; int i;
+		for(i=0;i<50 && i<n/2;i++)
+		{
+			if(a[2*i].type==2 && a[2*i+1].type==1)
+			{	v[i] = a[2*i].v;	s[i] = a[2*i+1].w;	}
+			else	break;
+		}
+		gr->SetTicksVal('z',i,v,s);
+	}
+	else if(k[0]==3)
 	{
 		gr->dz = a[0].v;
 		if(k[1]==3)	gr->NSz = int(a[1].v);
@@ -2607,7 +2640,8 @@ void mglc_var(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"chdir","Change current directory","chdir dir", mgls_chdir, mglc_chdir}
 int mgls_chdir(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)	chdir(a[0].s);
+	if(k[0]==2)
+	{	int r=chdir(a[0].s);	if(r)	gr->SetWarn(mglWarnFile, "chdir");	}
 	else	return 1;
 	return 0;
 }

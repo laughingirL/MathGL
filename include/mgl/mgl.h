@@ -141,8 +141,6 @@ public:
 	const wchar_t *ytt;	///< Y-tick template (set NULL to use default one ("%.2g" in simplest case))
 	const wchar_t *ztt;	///< Z-tick template (set NULL to use default one ("%.2g" in simplest case))
 	const wchar_t *ctt;	///< Colorbar-tick template (set NULL to use default one ("%.2g" in simplest case))
-	/// Function for writting tick label to \a str for axis in direction \a dir for value \a val. Must return true if \a str should be used as tick label.
-	bool (*TickStr)(char dir, float val, wchar_t str[64]);
 	float PlotFactor;	///< Factor for sizing overall plot (should be >1.6, default is =2)
 	bool AutoPlotFactor;///< Enable autochange PlotFactor
 
@@ -228,6 +226,9 @@ public:
 	char SelectPen(const char *pen);
 	/// Set the ticks parameters
 	void SetTicks(char dir, float d=-5, int ns=0, float org=NAN);
+	/// Set ticks position and text (use n=0 to disable this feature)
+	void SetTicksVal(char dir, int n, float *val, char **lbl);
+	void SetTicksVal(char dir, int n, float *val, wchar_t **lbl);
 	/// Set warning code ant fill Message
 	void SetWarn(int code, const char *who="");
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1020,6 +1021,9 @@ private:
 	/// Actual upper edge of bounding box after applying transformation formulas.
 	mglPoint FMax;
 	char *fit_res;				///< Last fitted formula
+	wchar_t *xbuf, *xstr[50], *ybuf, *ystr[50], *zbuf, *zstr[50];
+	float xval[50], yval[50], zval[50];
+	int xnum,ynum,znum;
 
 	static void *jmodule;		///< Module for JPEG function
 	static void *tmodule;		///< Module for TIFF function
@@ -1081,6 +1085,14 @@ private:
 	void TickBox();
 	/// Draw tick
 	void DrawTick(float *pp,bool sub);
+	/// Draw X,Y,Z grid line
+	void DrawXGridLine(float t, float y0, float z0);
+	void DrawYGridLine(float t, float x0, float z0);
+	void DrawZGridLine(float t, float x0, float y0);
+	/// Draw X,Y,Z tick
+	void DrawXTick(float t, float y0, float z0, float dy, float dz, int fact=0);
+	void DrawYTick(float t, float x0, float z0, float dx, float dz, int fact=0);
+	void DrawZTick(float t, float x0, float y0, float dx, float dy, int fact=0);
 };
 //-----------------------------------------------------------------------------
 #endif

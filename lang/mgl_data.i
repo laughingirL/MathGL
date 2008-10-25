@@ -48,6 +48,12 @@ struct mglData{};
 	{	mgl_data_set_matrix(self, m);	}
 	float Get(int i, int j=0, int k=0)
 	{	return mgl_data_get_value(self, i, j, k);	}
+	int GetNx()
+	{	return mgl_data_get_nx(self);	}
+	int GetNy()
+	{	return mgl_data_get_ny(self);	}
+	int GetNz()
+	{	return mgl_data_get_nz(self);	}
 	void Set(float v, int i, int j=0, int k=0)
 	{	mgl_data_set_value(self, v, i, j, k);	}
 	void Set(const char *val, int nx, int ny=1, int nz=1)

@@ -59,7 +59,7 @@ Restore initial values for all of parameters except described in @ref{Zooming}.
 @cindex Transparent
 @cindex TranspType
 
-There are several functions and variables for setup transparency. The general function is @code{Alpha()} which switch on/off the transparency for overall plot. It influence only for graphics which created after @code{Alpha()} call (with one exeption, mglGraphGL). Variable @code{AlphaDef} specify the default value of alpha-channel. You may switch off transparency of selected plot by variable @code{Transparent}. Finally, variable @code{TranspType} set the kind of transparency. @sref{Transparent surface sample}
+There are several functions and variables for setup transparency. The general function is @code{Alpha()} which switch on/off the transparency for overall plot. It influence only for graphics which created after @code{Alpha()} call (with one exception, mglGraphGL). Variable @code{AlphaDef} specify the default value of alpha-channel. You may switch off transparency of selected plot by variable @code{Transparent}. Finally, variable @code{TranspType} set the kind of transparency. @sref{Transparent surface sample}
 
 @deftypemethod mglGraph @code{void} Alpha (@code{bool} enable)
 Sets the transparency on/off. It is recommended to call this function before any plotting command. In any case it must be called before  @code{Finish()} function if the last is used. Default value is transparency off. Unfortunately it switches the transparency on/off for all subplots. Use @code{Transparent = false} in particular plot to disable its transparency.
@@ -83,7 +83,7 @@ This variable set the transparency type. Normal transparency (@samp{0}) -- below
 @cindex Light
 @cindex Ambient
 
-There are several functions for setup lighting. The general function is @code{Light(bool)} which switch on/off the lighting for overall plot. It influence only for graphics which created after @code{Light()} call (with one exeption, mglGraphGL). Generally MathGL support up to 10 independend light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
+There are several functions for setup lighting. The general function is @code{Light(bool)} which switch on/off the lighting for overall plot. It influence only for graphics which created after @code{Light()} call (with one exception, mglGraphGL). Generally MathGL support up to 10 independent light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
 
 @deftypemethod mglGraph @code{void} Light (@code{bool} enable)
 Sets the using of light on/off for overall plot. It is recommended to call this function before any plotting command. Default value is lightning off.
@@ -147,7 +147,7 @@ The variable define the base width for all lines. The value <1 is ignored. For v
 These variables and functions control the overall zooming of the picture (see Zoom()) or the sub-picture (see PlotFactor). Normally you can use these variables and functions for removing ``white'' spaces around a plot.
 
 @deftypecv {General option} mglGraph @code{float} PlotFactor
-The factor of plot size. It is not recommended to set it lower then 1.6. This is some anlogue of function Zoom() but applied not to overall image but for each InPlot (@pxref{Transformation matrix}).
+The factor of plot size. It is not recommended to set it lower then 1.6. This is some analogue of function Zoom() but applied not to overall image but for each InPlot (@pxref{Transformation matrix}).
 @end deftypecv
 
 @deftypecv {General option} mglGraph @code{bool} AutoPlotFactor
@@ -183,7 +183,7 @@ Lower and upper edge of the box in which never points are drawn. If both edges a
 @end deftypecv
 
 @deftypecv {General option} mglGraph @code{mglFormula *} fc
-Formula for condition of point cutting. The point will be ommitted (``cut'') if function return non-zero value for point coordinates. This variable is obsolete -- use CutOff() function instead.
+Formula for condition of point cutting. The point will be omitted (``cut'') if function return non-zero value for point coordinates. This variable is obsolete -- use CutOff() function instead.
 @end deftypecv
 
 @deftypemethod mglGraph @code{void} CutOff (@code{const char *}EqC)
@@ -245,7 +245,7 @@ Gets current typeface. Note that this variable can be deleted at next SetFont() 
 @cindex SelectPen
 
 @deftypemethod mglGraph @code{void} SetPalette (@code{const char *}@var{colors})
-Sets the palette as selected colors. Deafult value is @code{"Hbgrcmyhlnqeup"} that corresponds to colors: dark gray @samp{H}, blue @samp{b}, green @samp{g}, red @samp{r}, cyan @samp{c}, magenta @samp{m}, yellow @samp{y}, gray @samp{h}, blue-green @samp{l}, sky-blue @samp{n}, orange @samp{q}, yellow-green @samp{e}, blue-violet @samp{u}, purple @samp{p}. The palette is used mostly in 1D plots (@pxref{1D plotting}) for curves which styles are not specified.
+Sets the palette as selected colors. Default value is @code{"Hbgrcmyhlnqeup"} that corresponds to colors: dark gray @samp{H}, blue @samp{b}, green @samp{g}, red @samp{r}, cyan @samp{c}, magenta @samp{m}, yellow @samp{y}, gray @samp{h}, blue-green @samp{l}, sky-blue @samp{n}, orange @samp{q}, yellow-green @samp{e}, blue-violet @samp{u}, purple @samp{p}. The palette is used mostly in 1D plots (@pxref{1D plotting}) for curves which styles are not specified.
 @end deftypemethod
 
 @deftypecv {General option} mglGraph @code{mglColor} Pal@code{[101]}
@@ -257,11 +257,11 @@ Number of actual colors in palette. The value must be less then 100. This variab
 @end deftypecv
 
 @deftypemethod mglGraph @code{void} SetScheme (@code{const char *}sch)
-Set the color scheme for following plots. Usually this function is used internaly. @xref{Color scheme}.
+Set the color scheme for following plots. Usually this function is used internally. @xref{Color scheme}.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} SelectPen (@code{const char *}sch)
-Set the line and mark styles for following plots. Usually this function is used internaly. @xref{Line styles}.
+Set the line and mark styles for following plots. Usually this function is used internally. @xref{Line styles}.
 @end deftypemethod
 
 
@@ -460,7 +460,7 @@ Transformation formula for x, y and z directions. These variables are obsolete -
 @cindex TickStr
 
 @deftypemethod mglGraph @code{void} SetTicks (@code{char} dir, @code{float} d=@code{-5}, @code{int} ns=@code{0}, @code{float} org=@code{NAN})
-Set the ticks step @var{d}, number of subticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
+Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
 @end deftypemethod
 
 @deftypecv {General option} mglGraph @code{float} {dx, dy, dz}
@@ -468,7 +468,7 @@ Step for axis ticks (if positive) or it's number (if negative) in x-,y-,z- direc
 @end deftypecv
 
 @deftypecv {General option} mglGraph @code{int} {NSx, NSy, NSz}
-Number of axis subticks in x-,y-,z- directions. These variables are obsolete -- use SetTicks() function instead.
+Number of axis sub-ticks in x-,y-,z- directions. These variables are obsolete -- use SetTicks() function instead.
 @end deftypecv
 
 @deftypecv {General option} mglGraph @code{mglPoint} OrgT
@@ -476,7 +476,7 @@ Starting point for ticks. If corresponding value is NAN then value from @var{Org
 @end deftypecv
 
 @deftypecv {General option} mglGraph @code{const wchar_t} {*xtt, *ytt, *ztt, *ctt}
-The template for x-,y-,z-axis ticks or colorvar ticks. It may contain TeX symbols also. If @var{xtt}, @var{ytt}, @var{ztt}, @var{ctt}=@code{NULL} then default template is used (in simplest case it is @samp{%.2g}) with automatic detaching of common multiplier or common component (see @var{TuneTicks}).
+The template for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{xtt}, @var{ytt}, @var{ztt}, @var{ctt}=@code{NULL} then default template is used (in simplest case it is @samp{%.2g}) with automatic detaching of common multiplier or common component (see @var{TuneTicks}).
 @end deftypecv
 
 @deftypecv {General option} mglGraph @code{bool} TuneTicks
@@ -536,7 +536,7 @@ Clears transformation matrix. This function clears all previous effects of Aspec
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} RestoreM ()
-Restore transformation matrix after last @code{InPlot()}. This function clears all previous effects of Aspect(), SubPlot(), InPlot() or Rotate() functions. It is useful to restore back the transormation matrix after @code{Identity()} call.
+Restore transformation matrix after last @code{InPlot()}. This function clears all previous effects of Aspect(), SubPlot(), InPlot() or Rotate() functions. It is useful to restore back the transformation matrix after @code{Identity()} call.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} View (@code{float} tetx,  @code{float} tetz,  @code{float} tety= @code{0})
@@ -638,11 +638,11 @@ Draws a 3d error box at position @var{p} with sizes @var{e} and style @var{pen}.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Line (@code{mglPoint} p1, @code{mglPoint} p2, @code{char *}stl=@code{"B"}, @code{int}num=@code{2})
-Draws a geodesic line (strightline in Cartesian coordinates) from point @var{p1} to @var{p2} using line style @var{stl}. Parameter @var{num} define the ``quality'' of the line. If @var{num}=@code{2} then the stright line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Transformation}). Contrary, for large values (for example, =@code{100}) the geodesic line will be drawn in corresponding coordiante system (stright line in Cartesian coordinates, circle in polar coordinates and so on).
+Draws a geodesic line (straight line in Cartesian coordinates) from point @var{p1} to @var{p2} using line style @var{stl}. Parameter @var{num} define the ``quality'' of the line. If @var{num}=@code{2} then the stright line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Transformation}). Contrary, for large values (for example, =@code{100}) the geodesic line will be drawn in corresponding coordinate system (straight line in Cartesian coordinates, circle in polar coordinates and so on).
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Curve (@code{mglPoint} p1, @code{mglPoint} d1, @code{mglPoint} p2, @code{mglPoint} d2, @code{const char *}stl=@code{"B"}, @code{int} num=@code{100})
-Draws Bezier-like curve from point @var{p1} to @var{p2} using line style @var{stl}. At this tangent is codirected with @var{d1}, @var{d2} and proportional to its amplitude. Parameter @var{num} define the ``quality'' of the curve. If @var{num}=@code{2} then the stright line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Transformation}). Contrary, for large values (for example, =@code{100}) the spline like Bezier curve will be drawn in corresponding coordiante system.
+Draws Bezier-like curve from point @var{p1} to @var{p2} using line style @var{stl}. At this tangent is codirected with @var{d1}, @var{d2} and proportional to its amplitude. Parameter @var{num} define the ``quality'' of the curve. If @var{num}=@code{2} then the straight line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Transformation}). Contrary, for large values (for example, =@code{100}) the spline like Bezier curve will be drawn in corresponding coordinate system.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Face (@code{mglPoint} p1, @code{mglPoint} p2, @code{mglPoint} p3, @code{mglPoint} p4, @code{const char *}stl=@code{"w"}, @code{int} num=@code{2})
@@ -662,7 +662,7 @@ Draws the solid rectangle (face) perpendicular to z-axis at position @{@var{x0},
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Sphere (@code{mglPoint} p, @code{float} r, @code{const char *}stl=@code{"r"})
-Draw the spehere with radius @var{r} and center at point @var{p} and color @var{stl}.
+Draw the sphere with radius @var{r} and center at point @var{p} and color @var{stl}.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Drop (@code{mglPoint} p, @code{mglPoint} q, @code{float} r, @code{mglColor} col, @code{float} shift=@code{1}, @code{float} ap=@code{1})
@@ -671,7 +671,7 @@ Draw the drop with radius @var{r} at point @var{p} elongated in direction @var{q
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Cone (@code{mglPoint} p1, @code{mglPoint} p2, @code{float} r1, @code{float} r2=@code{-1}, @code{const char *}stl=@code{"B"}, @code{bool} edge=@code{false})
-Draw tube (or truncated cone if @var{edge}=@code{false}) between points @var{p1}, @var{p2} with radiuses at the edges @var{r1}, @var{r2}. If @var{r2}<0 then it is suppsosed that @var{r2}=@var{r1}. The cone color is defined by string @var{stl}.
+Draw tube (or truncated cone if @var{edge}=@code{false}) between points @var{p1}, @var{p2} with radius at the edges @var{r1}, @var{r2}. If @var{r2}<0 then it is supposed that @var{r2}=@var{r1}. The cone color is defined by string @var{stl}.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Mark (@code{mglPoint} p, @code{char} mark=@code{'.'})
@@ -690,9 +690,9 @@ Draw a set of triangles (or lines if @var{trig}=@code{NULL}) for glyph which is 
 @cindex Text
 @cindex Title
 
-These functions draw the text. There are functions for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The class mglFont (@pxref{mglFont class}) is used for low-level string parsing and printing. It can use arbitrary fontfaces and parse many TeX commands. All these functions have 2 variant: for printing 8-bit text (@code{char *}) and for printing Unicode text (@code{wchar_t *}). In first case the conversion in current locale is used. So sometimes you need to specify it by @code{setlocale()} function. The size argument control the size of text: if positive it give the value, if negative it give the value relative to @var{FontSize}. The font type (STIX, arial, courier, times and so on) can be selected by function SetFont(), GetFont(). @xref{Font settings}.
+These functions draw the text. There are functions for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The class mglFont (@pxref{mglFont class}) is used for low-level string parsing and printing. It can use arbitrary font-faces and parse many TeX commands. All these functions have 2 variant: for printing 8-bit text (@code{char *}) and for printing Unicode text (@code{wchar_t *}). In first case the conversion in current locale is used. So sometimes you need to specify it by @code{setlocale()} function. The size argument control the size of text: if positive it give the value, if negative it give the value relative to @var{FontSize}. The font type (STIX, arial, courier, times and so on) can be selected by function SetFont(), GetFont(). @xref{Font settings}.
 
-The font parameters are described by string. This string may contain several characters of font type (@samp{rbiwou}) and/or align (@samp{LRC}) specification. Also it may contain the text color @samp{wkrgbcymhRGBCYMHW} (@pxref{mglColor class}) after symbol @samp{:}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style, @samp{w} -- wired style, @samp{o} -- overlined text, @samp{u} -- underlined text. By default roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Also a parsing of the LaTeX-like syntax is provided (for detail @pxref{mglFont class}). For example, string @samp{iC:b} correspond to italic font style for centered text which printed by blue color.
+The font parameters are described by string. This string may contain several characters of font type (@samp{rbiwou}) and/or align (@samp{LRC}) specification. Also it may contain the text color @samp{wkrgbcymhRGBCYMHW} (@pxref{mglColor class}) after symbol @samp{:}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style, @samp{w} -- wired style, @samp{o} -- over-lined text, @samp{u} -- underlined text. By default roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Also a parsing of the LaTeX-like syntax is provided (for detail @pxref{mglFont class}). For example, string @samp{iC:b} correspond to italic font style for centered text which printed by blue color.
 
 @deftypemethod mglGraph @code{void} Puts (@code{mglPoint} p, @code{const char *}text, @code{const char *}font=@code{NULL}, @code{float} size=@code{-1}, @code{char} dir=@code{0}, @code{float} shift=@code{0})
 @deftypemethodx mglGraph @code{void} Putsw (@code{mglPoint} p, @code{const wchar_t *}text, @code{const char *}font=@code{NULL}, @code{float} size=@code{-1}, @code{char} dir=@code{0}, @code{float} shift=@code{0})
@@ -743,7 +743,7 @@ Draws axes with ticks (@pxref{Axis settings}) in directions determined by string
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Colorbar (@code{const char *}sch=@code{NULL}, @code{int} where=@code{0})
-Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=NULL}) at edge of plot. Parameter @var{where} specifies the position of colorbar: @samp{0} - at right (default), @samp{1} - at left, @samp{2} - at top, @samp{3} - at bottom. @sref{Dens sample}
+Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=NULL}) at edge of plot. Parameter @var{where} specifies the position of the colorbar: @samp{0} - at right (default), @samp{1} - at left, @samp{2} - at top, @samp{3} - at bottom. @sref{Dens sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Grid (@code{const char *}dir=@code{"xyz"}, @code{const char *}pen=@code{"B-"})
@@ -1007,7 +1007,7 @@ The function draws surface which is result of curve @{@var{x}[i], @var{y}[i]@} r
 @cindex Chart
 
 @deftypemethod mglGraph @code{void} Chart (@code{const mglData &}a, @code{const char *}col=@code{NULL})
-The function draws colored stripes (boxes) for data in array @var{a}. The number of stripes is equal to the number of rows in @var{a} (equal to @var{a.ny}). The color of each next stripe is ciclically changed from colors specified in string @var{col} or in palette Pal (@pxref{Palette and colors}). Spaces in colors denote transparent ``color'', i.e. if @var{col} contain space(s) then corresponding stripe(s) are not drawn. The stripe width is proportional to value of element in @var{a}. Chart is plotted only for data with non-negative elements. If string @var{col} have symbol @samp{#} then black border lines are drawn. The most nice form the chart have in 3d (after rotation of coordiantes) or in cilindrical coordinates (becomes so called Pie chart). @sref{Chart sample}
+The function draws colored stripes (boxes) for data in array @var{a}. The number of stripes is equal to the number of rows in @var{a} (equal to @var{a.ny}). The color of each next stripe is cyclically changed from colors specified in string @var{col} or in palette Pal (@pxref{Palette and colors}). Spaces in colors denote transparent ``color'', i.e. if @var{col} contain space(s) then corresponding stripe(s) are not drawn. The stripe width is proportional to value of element in @var{a}. Chart is plotted only for data with non-negative elements. If string @var{col} have symbol @samp{#} then black border lines are drawn. The most nice form the chart have in 3d (after rotation of coordinates) or in cylindrical coordinates (becomes so called Pie chart). @sref{Chart sample}
 @end deftypemethod
 
 @c ==================================================================
@@ -1088,12 +1088,12 @@ The function draws tube with radius @var{r} between points @{@var{x}[i], @var{y}
 
 @deftypemethod mglGraph @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{NULL}, @code{float} zVal=@code{NAN})
 @deftypemethodx mglGraph @code{void} Tube (@code{const mglData &}x, @code{const mglData &}y, @code{float} r, @code{const char *}pen=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws tube with radius @var{r} beween points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}).
+The function draws tube with radius @var{r} between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}).
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Tube (@code{const mglData &}y, @code{const mglData &}r, @code{const char *}pen=@code{NULL}, @code{float} zVal=@code{NAN})
 @deftypemethodx mglGraph @code{void} Tube (@code{const mglData &}y, @code{float} r, @code{const char *}pen=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws tube with radius @var{r} beween points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}), where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
+The function draws tube with radius @var{r} between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}), where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
 @end deftypemethod
 
 @c ##################################################################
@@ -1454,7 +1454,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 @cindex Beam
 
 @deftypemethod mglGraph @code{void} Beam (@code{float} val, @code{const mglData &}tr, @code{const mglData &}g1, @code{const mglData &}g2, @code{const mglData &}a, @code{float} r, @code{const char *}stl=@code{NULL}, @code{int} flag=@code{0})
-Draws the isosurface for 3d array @var{a} at constatnt values of @var{a}=@var{val}. This is special kind of plot for @var{a} specified in accompanied coordinates along curve @var{tr} with orts @var{g1}, @var{g2} and with transverse scale @var{r}. Variable @var{flag} is bitwise: @samp{0x1} - draw in accompanied (not laboratory) coordinates; @samp{0x2} - draw projection to @math{\rho-z} plane; @samp{0x4} - draw normalized in each slice field. The x-size of data arrays @var{tr}, @var{g1}, @var{g2} must be nx>2. The y-size of data arrays @var{tr}, @var{g1}, @var{g2} and z-size of the data array @var{a} must be equal. @xref{Surf3}.
+Draws the isosurface for 3d array @var{a} at constant values of @var{a}=@var{val}. This is special kind of plot for @var{a} specified in accompanied coordinates along curve @var{tr} with orts @var{g1}, @var{g2} and with transverse scale @var{r}. Variable @var{flag} is bitwise: @samp{0x1} - draw in accompanied (not laboratory) coordinates; @samp{0x2} - draw projection to @math{\rho-z} plane; @samp{0x4} - draw normalized in each slice field. The x-size of data arrays @var{tr}, @var{g1}, @var{g2} must be nx>2. The y-size of data arrays @var{tr}, @var{g1}, @var{g2} and z-size of the data array @var{a} must be equal. @xref{Surf3}.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Beam (@code{const mglData &}tr, @code{const mglData &}g1, @code{const mglData &}g2, @code{const mglData &}a, @code{float} r, @code{const char *}stl=@code{NULL}, @code{int} flag=@code{0}, @code{int} num=@code{3})
@@ -1569,7 +1569,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Map
 
 @deftypemethod mglGraph @code{void} Map (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{int} ks=@code{0}, @code{bool} pnts=@code{true})
-The function draws mapping plot for matrixes @{@var{ax}, @var{ay} @} which parametrically depend on coordinates @var{x}, @var{y}. The previous position of the cell (point) is marked by color. Height is proportional to Jacobian(ax,ay). This plot is like Arnold diagram ???. If @code{pnts=false} then face is drawn otherwise the color ball at matrix knots are drawn. Parameter @var{ks} specifies the slice of matrixes which will be used. String @var{sch} sets the color scheme. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be the same. The minor dimensions of arrays @var{x}, @var{y}, @var{ax} should be equal. Arrays @var{x}, @var{y} can be vectors (not matrix as @var{ax}). @xref{Color scheme}. @sref{Map sample}
+The function draws mapping plot for matrices @{@var{ax}, @var{ay} @} which parametrically depend on coordinates @var{x}, @var{y}. The previous position of the cell (point) is marked by color. Height is proportional to Jacobian(ax,ay). This plot is like Arnold diagram ???. If @code{pnts=false} then face is drawn otherwise the color ball at matrix knots are drawn. Parameter @var{ks} specifies the slice of matrices which will be used. String @var{sch} sets the color scheme. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be the same. The minor dimensions of arrays @var{x}, @var{y}, @var{ax} should be equal. Arrays @var{x}, @var{y} can be vectors (not matrix as @var{ax}). @xref{Color scheme}. @sref{Map sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Map (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{int} ks=@code{0}, @code{bool} pnts=@code{true})
@@ -1652,7 +1652,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Dew
 
 @deftypemethod mglGraph @code{void} Dew (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws dew-drops for plane vector field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. Note that this is very expensive plot in memory usage and creation time! The color of drops is proportional to @math{\sqrt@{ax^2+ay^2@}}. The numer of drops depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Vect}, @ref{VectC}. @sref{Dew sample}
+The function draws dew-drops for plane vector field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. Note that this is very expensive plot in memory usage and creation time! The color of drops is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of drops depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Vect}, @ref{VectC}. @sref{Dew sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Dew (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1974,7 +1974,7 @@ Minimal number of points for output array after nonlinear fitting.
 These functions provide ability to create several pictures simultaneously. For most of cases it is useless but for widget classes (@pxref{Widget classes}) they can provide a way to show animation.
 
 @deftypemethod mglGraph @code{int} NewFrame (@code{int} id=@code{0})
-Creates new frame. Function returns current frame id. Zero or negative parameter @var{id} leads to automatic numbering frames. Positive one sets the new frame id directly. This is not thread safe function! Use direct list creation in multithreading drawing. The function @code{EndFrame()} @strong{must} be call after the  finishing of the frame drawing for each call of this function.
+Creates new frame. Function returns current frame id. Zero or negative parameter @var{id} leads to automatic numbering frames. Positive one sets the new frame id directly. This is not thread safe function! Use direct list creation in multi-threading drawing. The function @code{EndFrame()} @strong{must} be call after the  finishing of the frame drawing for each call of this function.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} EndFrame ()

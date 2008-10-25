@@ -178,7 +178,7 @@ Restore initial values for all of parameters except described in @ref{Zooming}.
 @cindex Transparent
 @cindex TranspType
 
-There are several functions for setup transparency. The general function is @code{Alpha()} which switch on/off the transparency for overall plot. It influence only for graphics which created after @code{Alpha()} call (with one exeption, mglGraphGL). Variable @code{AlphaDef} specify the default value of alpha-channel. You may switch off transparency of selected plot by variable @code{Transparent}. Finally, variable @code{TranspType} set the kind of transparency. @sref{Transparent surface sample}
+There are several functions for setup transparency. The general function is @code{Alpha()} which switch on/off the transparency for overall plot. It influence only for graphics which created after @code{Alpha()} call. Variable @code{AlphaDef} specify the default value of alpha-channel. You may switch off transparency of selected plot by variable @code{Transparent}. Finally, variable @code{TranspType} set the kind of transparency. @sref{Transparent surface sample}
 
 @deftypefn {C function} @code{void} mgl_set_alpha (@code{HMGL} gr, @code{int} enable)
 Sets the transparency on/off. It is recommended to call this function before any plotting command. Default value is transparency off. Use @code{mgl_set_transp(false)} in particular plot to disable its transparency.
@@ -202,7 +202,7 @@ This variable set the transparency type. Normal transparency (@samp{0}) -- below
 @cindex Light
 @cindex Ambient
 
-There are several functions for setup lighting. The general function is @code{mgl_set_light()} which switch on/off the lighting for overall plot. It influence only for graphics which created after @code{mgl_set_light()} call (with one exeption, mglGraphGL). Generally MathGL support up to 10 independend light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
+There are several functions for setup lighting. The general function is @code{mgl_set_light()} which switch on/off the lighting for overall plot. It influence only for graphics which created after @code{mgl_set_light()} call. Generally MathGL support up to 10 independent light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
 
 @deftypefn {C function} @code{void} mgl_set_light (@code{HMGL} gr, @code{int} enable)
 Sets the using of light on/off for overall plot. It is recommended to call this function before any plotting command. Default value is lightning off.
@@ -335,7 +335,7 @@ Restore font data to default typeface.
 @cindex SelectPen
 
 @deftypefn {C function} @code{void} mgl_set_palette (@code{HMGL} gr, @code{const char *}@var{colors})
-Sets the palette as selected colors. Deafult value is @code{"Hbgrcmyhlnqeup"}. The palette is used mostly in 1D plots (@pxref{1D plotting (Pure C)}) for curves which styles are not specified.
+Sets the palette as selected colors. Default value is @code{"Hbgrcmyhlnqeup"}. The palette is used mostly in 1D plots (@pxref{1D plotting (Pure C)}) for curves which styles are not specified.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_pal_color (@code{HMGL} gr, @code{int} n, @code{float} r, @code{float} g, @code{float} b)
@@ -347,7 +347,7 @@ Sets the number of actual colors in palette. The value must be less then 100.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_scheme (@code{HMGL} gr, @code{const char *}sch)
-Sets the color scheme for following plots. Usually this function is used internaly. @xref{Color scheme}.
+Sets the color scheme for following plots. Usually this function is used internally. @xref{Color scheme}.
 @end deftypefn
 
 
@@ -444,7 +444,7 @@ The function sets to draws Ternary plot. This special plot is for 3 dependent co
 @subsubsection Ticks (Pure C)
 
 @deftypefn {C function} @code{void} mgl_set_ticks_dir (@code{HMGL} gr, @code{char} dir, @code{float} d, @code{int} ns, @code{float} org)
-Set the ticks step @var{d}, number of subticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
+Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
 @end deftypefn
 
 
@@ -464,7 +464,7 @@ Starting point for ticks. If corresponding value is NAN then value from @var{Org
 @deftypefnx {C function} @code{void} mgl_set_ytt (@code{HMGL} gr, @code{const wchar_t *}templ)
 @deftypefnx {C function} @code{void} mgl_set_ztt (@code{HMGL} gr, @code{const wchar_t *}templ)
 @deftypefnx {C function} @code{void} mgl_set_ctt (@code{HMGL} gr, @code{const wchar_t *}templ)
-The template for x-,y-,z-axis ticks or colorvar ticks. It may contain TeX symbols also. If @var{templ}=@code{NULL} then default template is used (in simplest case it is @samp{%.2g}) with automatic detaching of common multiplier or common component (see @var{TuneTicks}).
+The template for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{templ}=@code{NULL} then default template is used (in simplest case it is @samp{%.2g}) with automatic detaching of common multiplier or common component (see @var{TuneTicks}).
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_tune_ticks (@code{HMGL} gr, @code{int} tune, @code{float} fact_pos)
@@ -605,15 +605,15 @@ Clear the picture and will it by color @{@var{r},@var{g},@var{b}@} or previous o
 @deftypefn {C function} @code{void} mgl_ball (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z)
 @deftypefnx {C function} @code{void} mgl_ball_rgb (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{float} r, @code{float} g, @code{float} b, @code{float} alpha)
 @deftypefnx {C function} @code{void} mgl_ball_str (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{const char *} col)
-Draws a point (ball) at position @{@var{x}, @var{y}, @var{z}@} with color defined by string @var{col} or by RGBA values @{@var{r}, @var{g}, @var{b}; @var{alpha}@}. Deafult color is red.
+Draws a point (ball) at position @{@var{x}, @var{y}, @var{z}@} with color defined by string @var{col} or by RGBA values @{@var{r}, @var{g}, @var{b}; @var{alpha}@}. Default color is red.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_line (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{char *}stl, @code{int}num)
-Draws a geodesic line (strightline in Cartesian coordinates) from point @{@var{x1},@var{y1},@var{z1}@} to @{@var{x2},@var{y2},@var{z2}@} using line style @var{stl}. Parameter @var{num} define the ``quality'' of the line. If @var{num}=@code{2} then the stright line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Transformation (Pure C)}). Contrary, for large values (for example, =@code{100}) the geodesic line will be drawn in corresponding coordiante system (stright line in Cartesian coordinates, circle in polar coordinates and so on).
+Draws a geodesic line (straight line in Cartesian coordinates) from point @{@var{x1},@var{y1},@var{z1}@} to @{@var{x2},@var{y2},@var{z2}@} using line style @var{stl}. Parameter @var{num} define the ``quality'' of the line. If @var{num}=@code{2} then the straight line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Transformation (Pure C)}). Contrary, for large values (for example, =@code{100}) the geodesic line will be drawn in corresponding coordinate system (straight line in Cartesian coordinates, circle in polar coordinates and so on).
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_curve (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} dx1, @code{float} dy1, @code{float} dz1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} dx2, @code{float} dy2, @code{float} dz2, @code{const char *}stl, @code{int} num)
-Draws Bezier-like curve from point @{@var{x1},@var{y1},@var{z1}@} to @{@var{x2},@var{y2},@var{z2}@} using line style @var{stl}. At this tangent is codirected with @{@var{dx1},@var{dy1},@var{dz1}@}, @{@var{dx2},@var{dy2},@var{dz2}@} and proportional to its amplitude. Parameter @var{num} define the number of points for the curve.
+Draws Bezier-like curve from point @{@var{x1},@var{y1},@var{z1}@} to @{@var{x2},@var{y2},@var{z2}@} using line style @var{stl}. At this tangent is co-directed with @{@var{dx1},@var{dy1},@var{dz1}@}, @{@var{dx2},@var{dy2},@var{dz2}@} and proportional to its amplitude. Parameter @var{num} define the number of points for the curve.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_facex (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} wy, @code{float} wz, @code{const char *}stl, @code{float} d1, @code{float} d2)
@@ -623,7 +623,7 @@ Draws the solid rectangle (face) perpendicular to [x,y,z]-axis correspondingly a
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_sphere (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} r, @code{const char *}stl)
-Draw the spehere with radius @var{r} and center at point @{@var{x0}, @var{y0}, @var{z0}@} and color @var{stl}.
+Draw the sphere with radius @var{r} and center at point @{@var{x0}, @var{y0}, @var{z0}@} and color @var{stl}.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_drop (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} dx, @code{float} dy, @code{float} dz, @code{float} r, @code{const char *}col, @code{float} shift, @code{float} ap)
@@ -631,7 +631,7 @@ Draw the drop with radius @var{r} at point @{@var{x0},@var{y0},@var{z0}@} elonga
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_cone (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} r1, @code{float} r2, @code{const char *}stl, @code{int} draw_edge)
-Draw tube (or truncated cone if @var{edge}=@code{false}) between points @{@var{x1},@var{y1},@var{z1}@}, @{@var{x2},@var{y2},@var{z2}@} with radiuses at the edges @var{r1}, @var{r2}. If @var{r2}<0 then it is suppsosed that @var{r2}=@var{r1}. The cone color is defined by string @var{stl}.
+Draw tube (or truncated cone if @var{edge}=@code{false}) between points @{@var{x1},@var{y1},@var{z1}@}, @{@var{x2},@var{y2},@var{z2}@} with radius at the edges @var{r1}, @var{r2}. If @var{r2}<0 then it is suppsosed that @var{r2}=@var{r1}. The cone color is defined by string @var{stl}.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_mark (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{char} mark)
@@ -646,9 +646,9 @@ Draws a marks of different type at position @{@var{x},@var{y},@var{z}@}.
 @cindex Text
 @cindex Title
 
-These functions draw the text. There are functions for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The class mglFont (@pxref{mglFont class}) is used for low-level string parsing and printing. It can use arbitrary fontfaces and parse many TeX commands. All these functions have 2 variant: for printing 8-bit text (@code{char *}) and for printing Unicode text (@code{wchar_t *}). In first case the conversion in current locale is used. So sometimes you need to specify it by @code{setlocale()} function. The size argument control the size of text: if positive it give the value, if negative it give the value relative to @var{FontSize}. The font type (STIX, arial, courier, times and so on) can be selected by function @code{mgl_load_font()}. @xref{Font settings (Pure C)}.
+These functions draw the text. There are functions for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The class mglFont (@pxref{mglFont class}) is used for low-level string parsing and printing. It can use arbitrary font-faces and parse many TeX commands. All these functions have 2 variant: for printing 8-bit text (@code{char *}) and for printing Unicode text (@code{wchar_t *}). In first case the conversion in current locale is used. So sometimes you need to specify it by @code{setlocale()} function. The size argument control the size of text: if positive it give the value, if negative it give the value relative to @var{FontSize}. The font type (STIX, arial, courier, times and so on) can be selected by function @code{mgl_load_font()}. @xref{Font settings (Pure C)}.
 
-The font parameters are described by string. This string may contain several characters of font type (@samp{rbiwou}) and/or align (@samp{LRC}) specification. Also it may contain the text color @samp{wkrgbcymhRGBCYMHW} (@pxref{mglColor class}) after symbol @samp{:}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style, @samp{w} -- wired style, @samp{o} -- overlined text, @samp{u} -- underlined text. By default roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Also a parsing of the LaTeX-like syntax is provided (for detail @pxref{mglFont class}). For example, string @samp{iC:b} correspond to italic font style for centered text which printed by blue color.
+The font parameters are described by string. This string may contain several characters of font type (@samp{rbiwou}) and/or align (@samp{LRC}) specification. Also it may contain the text color @samp{wkrgbcymhRGBCYMHW} (@pxref{mglColor class}) after symbol @samp{:}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style, @samp{w} -- wired style, @samp{o} -- over-lined text, @samp{u} -- underlined text. By default roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Also a parsing of the LaTeX-like syntax is provided (for detail @pxref{mglFont class}). For example, string @samp{iC:b} correspond to italic font style for centered text which printed by blue color.
 
 @deftypefn {C function} @code{void} mgl_puts (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{const char *}text)
 @deftypefnx {C function} @code{void} mgl_putsw (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{const wchar_t *}text)
@@ -685,7 +685,7 @@ The function draws @var{text} along the curve between points @{@var{x}[i], @var{
 These functions draw the ``things for measuring'', like axis with ticks, colorbar with ticks, grid along axis, bounding box and labels for axis. For more information @pxref{Axis settings (Pure C)}.
 
 @deftypefn {C function} @code{void} mgl_axis (@code{HMGL} gr, @code{const char *}dir)
-Draws axes with ticks (@pxref{Axis settings (Pure C)}) in directions determined by string parameter @var{dir}.If string contain the symbol @samp{_} then tick labels are not printed. Font for ticks labels is determined by @var{FontDef} (@pxref{Font settings (Pure C)}).
+Draws axes with ticks (@pxref{Axis settings (Pure C)}) in directions determined by string parameter @var{dir}.If string contain the symbol @samp{_} then tick labels are not printed. Font for ticks labels is determined by @code{mgl_set_font_def()} (@pxref{Font settings (Pure C)}).
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_colorbar (@code{HMGL} gr, @code{const char *}sch, @code{int} where)
@@ -731,6 +731,10 @@ Adds string @var{text} to internal legend accumulator. The style of described li
 
 @deftypefn {C function} @code{void} mgl_clear_legend (@code{HMGL} gr)
 Clears saved legend strings.
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_set_legend_box (@code{HMGL} gr, @code{int} enable)
+Switch on/off drawing box near legend. By default (=@code{true}) box is drawn.
 @end deftypefn
 
 @c ##################################################################
@@ -904,7 +908,7 @@ The function draws surface which is result of curve @{@var{r}[i], @var{z}[i]@} r
 @cindex Chart
 
 @deftypefn {C function} @code{void} mgl_chart (@code{HMGL} gr, @code{const HMDT} a, @code{const char *}col)
-The function draws colored stripes (boxes) for data in array @var{a}. The number of stripes is equal to the number of rows in @var{a} (equal to @var{a.ny}). The color of each next stripe is ciclically changed from colors specified in string @var{col} or in palette Pal (@pxref{Palette and colors}). Spaces in colors denote transparent ``color'', i.e. if @var{col} contain space(s) then corresponding stripe(s) are not drawn. The stripe width is proportional to value of element in @var{a}. Chart is plotted only for data with non-negative elements. If string @var{col} have symbol @samp{#} then black border lines are drawn. The most nice form the chart have in 3d (after rotation of coordiantes) or in cilindrical coordinates (becomes so called Pie chart). @sref{Chart sample}
+The function draws colored stripes (boxes) for data in array @var{a}. The number of stripes is equal to the number of rows in @var{a} (equal to @var{a.ny}). The color of each next stripe is cyclically changed from colors specified in string @var{col} or in palette Pal (@pxref{Palette and colors}). Spaces in colors denote transparent ``color'', i.e. if @var{col} contain space(s) then corresponding stripe(s) are not drawn. The stripe width is proportional to value of element in @var{a}. Chart is plotted only for data with non-negative elements. If string @var{col} have symbol @samp{#} then black border lines are drawn. The most nice form the chart have in 3d (after rotation of coordinates) or in cylindrical coordinates (becomes so called Pie chart). @sref{Chart sample}
 @end deftypefn
 
 @c ==================================================================
@@ -986,12 +990,12 @@ The function draws tube with radius @var{r} between points @{@var{x}[i], @var{y}
 
 @deftypefn {C function} @code{void} mgl_tube_xyr (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} r, @code{const char *}pen)
 @deftypefnx {C function} @code{void} mgl_tube_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{float} r, @code{const char *}pen)
-The function draws tube with radius @var{r} beween points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z}.
+The function draws tube with radius @var{r} between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z}.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_tube_r (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} r, @code{const char *}pen)
 @deftypefnx {C function} @code{void} mgl_tube (@code{HMGL} gr, @code{const HMDT} y, @code{float} r, @code{const char *}pen)
-The function draws tube with radius @var{r} beween points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z}, where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
+The function draws tube with radius @var{r} between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z}, where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
 @end deftypefn
 
 @c ##################################################################
@@ -1352,7 +1356,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 @cindex Beam
 
 @deftypefn {C function} @code{void} mgl_beam_val (@code{HMGL} gr, @code{float} val, @code{const HMDT} tr, @code{const HMDT} g1, @code{const HMDT} g2, @code{const HMDT} a, @code{float} r, @code{const char *}stl, @code{int} flag)
-Draws the isosurface for 3d array @var{a} at constatnt values of @var{a}=@var{val}. This is special kind of plot for @var{a} specified in accompanied coordinates along curve @var{tr} with orts @var{g1}, @var{g2} and with transverse scale @var{r}. Variable @var{flag} is bitwise: @samp{0x1} - draw in accompanied (not laboratory) coordinates; @samp{0x2} - draw projection to @math{\rho-z} plane; @samp{0x4} - draw normalized in each slice field. The x-size of data arrays @var{tr}, @var{g1}, @var{g2} must be nx>2. The y-size of data arrays @var{tr}, @var{g1}, @var{g2} and z-size of the data array @var{a} must be equal. @xref{Surf3}.
+Draws the isosurface for 3d array @var{a} at constant values of @var{a}=@var{val}. This is special kind of plot for @var{a} specified in accompanied coordinates along curve @var{tr} with orts @var{g1}, @var{g2} and with transverse scale @var{r}. Variable @var{flag} is bitwise: @samp{0x1} - draw in accompanied (not laboratory) coordinates; @samp{0x2} - draw projection to @math{\rho-z} plane; @samp{0x4} - draw normalized in each slice field. The x-size of data arrays @var{tr}, @var{g1}, @var{g2} must be nx>2. The y-size of data arrays @var{tr}, @var{g1}, @var{g2} and z-size of the data array @var{a} must be equal. @xref{Surf3}.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_beam (@code{HMGL} gr, @code{const HMDT} tr, @code{const HMDT} g1, @code{const HMDT} g2, @code{const HMDT} a, @code{float} r, @code{const char *}stl, @code{int} flag=@code{0}, @code{int} num=@code{3})
@@ -1465,7 +1469,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Map
 
 @deftypefn {C function} @code{void} mgl_map_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{int} ks, @code{int} pnts)
-The function draws mapping plot for matrixes @{@var{ax}, @var{ay} @} which parametrically depend on coordinates @var{x}, @var{y}. The previous position of the cell (point) is marked by color. Height is proportional to Jacobian(ax,ay). This plot is like Arnold diagram ???. If @code{pnts=false} then face is drawn otherwise the color ball at matrix knots are drawn. Parameter @var{ks} specifies the slice of matrixes which will be used. String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be the same. The minor dimensions of arrays @var{x}, @var{y}, @var{ax} should be equal. Arrays @var{x}, @var{y} can be vectors (not matrix as @var{ax}). @sref{Map sample}
+The function draws mapping plot for matrices @{@var{ax}, @var{ay} @} which parametrically depend on coordinates @var{x}, @var{y}. The previous position of the cell (point) is marked by color. Height is proportional to Jacobian(ax,ay). This plot is like Arnold diagram ???. If @code{pnts=false} then face is drawn otherwise the color ball at matrix knots are drawn. Parameter @var{ks} specifies the slice of matrices which will be used. String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be the same. The minor dimensions of arrays @var{x}, @var{y}, @var{ax} should be equal. Arrays @var{x}, @var{y} can be vectors (not matrix as @var{ax}). @sref{Map sample}
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_map (@code{HMGL} gr, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{int} ks, @code{int} pnts)
@@ -1548,7 +1552,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Dew
 
 @deftypefn {C function} @code{void} mgl_dew_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal)
-The function draws dew-drops for plane vector field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. Note that this is very expensive plot in memory usage and creation time! The color of drops is proportional to @math{\sqrt@{ax^2+ay^2@}}. The numer of drops depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also Vect(), VectC(). @sref{Dew sample}
+The function draws dew-drops for plane vector field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. Note that this is very expensive plot in memory usage and creation time! The color of drops is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of drops depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also Vect(), VectC(). @sref{Dew sample}
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_dew (@code{HMGL} gr, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal)
@@ -1920,7 +1924,7 @@ Equidistantly fills the data values to range [@var{x1}, @var{x2}] in direction @
 @end deftypemethod
 
 @deftypemethod {C function} @code{void} mgl_data_fill (@code{HMGL} gr, @code{HMDT} dat, @code{const char *}eq, @code{const HMDT *}vdat, @code{const HMDT *}wdat)
-Fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in @emph{bounding box} of @var{gr} (in difference from @code{Modify} functions). Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat} which can be @code{NULL} (i.e. can be ommited).
+Fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in @emph{bounding box} of @var{gr} (in difference from @code{Modify} functions). Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat} which can be @code{NULL} (i.e. can be omitted).
 @end deftypemethod
 
 @deftypemethod {C function} @code{void} mgl_data_modify (@code{HMDT} dat, @code{const char *}eq, @code{int} dim)
@@ -1937,6 +1941,18 @@ Sets the value in specified cell of the data with border checking.
 
 @deftypemethod {C function} @code{float} mgl_data_get_value (@code{HMDT} dat, @code{int} i, @code{int} j, @code{int} k)
 Gets the value in specified cell of the data with border checking.
+@end deftypemethod
+
+@deftypemethod {C function} @code{float} mgl_data_get_nx (@code{HMDT} dat)
+Gets the x-size of the data.
+@end deftypemethod
+
+@deftypemethod {C function} @code{float} mgl_data_get_ny (@code{HMDT} dat)
+Gets the y-size of the data.
+@end deftypemethod
+
+@deftypemethod {C function} @code{float} mgl_data_get_nz (@code{HMDT} dat)
+Gets the z-size of the data.
 @end deftypemethod
 
 @c ------------------------------------------------------------------

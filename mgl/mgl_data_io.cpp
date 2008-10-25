@@ -225,20 +225,17 @@ bool mglData::Read(const char *fname)
 	fread(buf,nb,1,fp);
 	fclose(fp);
 
-	bool first=false,sp,com=false;
+	bool first=false,com=false;
 	register char ch;
-	for(i=nb-1;i>=0;i--)
-	{
-		if(buf[i]>' ')	break;
-	}
+	for(i=nb-1;i>=0;i--)	if(buf[i]>' ')	break;
 	buf[i+1]=0;	nb = i;		// remove tailing spaces
 	for(i=0;i<nb-1 && buf[i]!='\n';i++)	// determine nx
 	{
 		ch = buf[i];
-		sp = (ch==' ' || ch=='\t');
+//		sp = (ch==' ' || ch=='\t');
 		if(ch=='#')		while(buf[i]!='\n' && i<nb)	i++;
-		if(!sp && !first)	first=true;
-		if(first && sp && !isspace(buf[i+1])) k++;
+		if(!isspace(ch) && !first)	first=true;
+		if(first && (ch==' ' || ch=='\t') && !isspace(buf[i+1])) k++;
 	}
 	first = false;
 	for(i=0;i<nb-1;i++)					// determine ny

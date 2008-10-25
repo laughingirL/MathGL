@@ -139,18 +139,20 @@ EQ_CL,		// Clausen function
 #ifndef M_PI
 #define M_PI       3.14159265358979323846
 #endif
+static long mgl_idum=0;
+void mgl_srnd(long seed)	{	mgl_idum = -abs(seed);	}
 double mgl_rnd()
 {
-	static long idum=0;
+	long &idum=mgl_idum;
 	long j;
 	long k;
 	static long idum2=123456789;
 	static long iy=0;
 	static long iv[NTAB];
 	double temp;
-	if(idum==0)
-		idum = -(long)(time(NULL));
-	if (idum <= 0) { 				// Initialize.
+	if(mgl_idum==0)
+		mgl_idum = -(long)(time(NULL));
+	if (mgl_idum <= 0) { 				// Initialize.
 		if (-(idum) < 1) idum=1;	// Be sure to prevent idum = 0.
 		else idum = -(idum);
 		idum2=(idum);

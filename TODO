@@ -1,23 +1,18 @@
 					MathGL (for v.1.8)
 
-1. Hankel transform
 2. Ternary axis -- keep z-axis as normal one ???
 3. Change ticks labels drawing if RotatedText = false;
-4. Zip-compression of EPS + text by UTF codes?!?
 5. Use Hershey as built-in font
 6. Spline5 !!!
-7. Add FLTK, QT & GLUT to Fortran ??? How pass arguments ???
+7. Add FLTK, QT & GLUT to Fortran ===> Popov Dmitry
 8. mglGraphAB::ShowImg()
-9. Warning about absent directory (in 'chdir')
-10. Named ticks, SetTicks(char dir, float val1, const char *str1, ...) + command [xyz]ticks v1 's1' v2 's2' ...
-
 
 11. Update documentation (English)
 	* remove obsolete from  Samples
-	* Documentation about Put -- texi (mglData,Pure C,Python,MGL)
-	* Spellchecking
-12. Update documentation (Russian)
+	* Documentation about Put -- texi (mglData,Pure C,Python,MGL) + MGL help
+	* Documentation about SetTicksVal -- texi (mglData,Pure C,Python,MGL) + MGL help
 
+14. PyQt
 15. Check Put
 16. mglGraph::WriteBitmap(fname,type="png",descr=0);
 17. skip empty lines in data files (at beginning)
@@ -32,6 +27,9 @@
 5. Try to evaluate to number if it contain only "+-/*^0123456789." in Parse() ??? + string concatenation ???
 6. Save primitives for plotting (like EPS && OpenGL) ???
 7. Converter MGL->C (+ interface for MGL->Fortran by change HMDT->int, HMGL->int, "->');
+8. Update documentation (Russian)
+9. Hankel transform
+10. Zip-compression of EPS + text by UTF codes?!?
 
 					FAQ
 

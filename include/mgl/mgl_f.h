@@ -171,6 +171,7 @@ void mgl_add_legend_(uintptr_t *graph, const char *text,const char *style,int,in
 void mgl_clear_legend_(uintptr_t *graph);
 void mgl_legend_xy_(uintptr_t *graph, float *x, float *y, const char *font, float *size, float *llen,int);
 void mgl_legend_(uintptr_t *graph, int *where, const char *font, float *size, float *llen,int);
+void mgl_set_legend_box_(uintptr_t *gr, int *enable);
 /*****************************************************************************/
 /*		1D plotting functions												 */
 /*****************************************************************************/
@@ -490,6 +491,10 @@ void mgl_parser_allow_setsize_(uintptr_t* p, int *a);
 void mgl_sphere_(uintptr_t* graph, float *x, float *y, float *z, float *r, const char *stl, int);
 void mgl_drop_(uintptr_t* graph, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r, const char *stl, float *shift, float *ap, int);
 void mgl_cone_(uintptr_t* graph, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r1, float *r2, const char *stl, int *edge, int);
+
+void mgl_pde_solve_(uintptr_t* gr, uintptr_t* res, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, float *dz, float *k0,int);
+void mgl_ray_trace_(uintptr_t* gr, uintptr_t* res, const char *ham, float *x0, float *y0, float *z0, float *px, float *py, float *pz, float *dt, float *tmax,int);
+void mgl_data_fill_eq_(uintptr_t* gr, uintptr_t* res, const char *eq, uintptr_t* vdat, uintptr_t* wdat,int);
 
 #ifdef __cplusplus
 }

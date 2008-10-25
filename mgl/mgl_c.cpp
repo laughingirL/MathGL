@@ -306,6 +306,8 @@ void mgl_legend_xy(HMGL gr, float x, float y, const char *font, float size, floa
 /// Draw legend of accumulated strings by \a font with \a size
 void mgl_legend(HMGL gr, int where, const char *font, float size, float llen)
 {	if(gr)	gr->Legend(where, font, size, llen);	}
+void mgl_set_legend_box(HMGL gr, int enable)
+{	gr->LegendBox = enable;	}
 //-----------------------------------------------------------------------------
 const unsigned char *mgl_get_rgb(HMGL graph)
 {
@@ -374,7 +376,8 @@ void mgl_set_font_def(HMGL gr, const char *fnt)
 void mgl_flush(HMGL gr)	{	gr->Flush();	}
 void mgl_data_fill_eq(HMGL gr, HMDT dat, const char *eq, const HMDT vdat, const HMDT wdat)
 {	dat->Fill(eq, gr->Min, gr->Max, vdat, wdat);	}
-
+void mgl_set_ticks_vals(HMGL gr, char dir, int n, float *val, char **lbl)
+{	gr->SetTicksVal(dir,n,val,lbl);	}
 //-----------------------------------------------------------------------------
 #include <stdint.h>
 int mgl_fortran_func(HMGL gr, void *f)

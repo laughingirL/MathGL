@@ -1548,6 +1548,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 		LightScale();
 		for ( int i=0; i<10; i++ )
 			if ( nLight[i] )
+			{
 				if ( unrotate_flag )
 					AddLight ( mglPoint ( rLight[3*i], rLight[3*i+1], rLight[3*i+2] ),
 				           mglColor ( cLight[3*i], cLight[3*i+1], cLight[3*i+2] ),
@@ -1556,6 +1557,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 					AddLight ( mglPoint ( pLight[3*i], pLight[3*i+1], pLight[3*i+2] ),
 				           mglColor ( cLight[3*i], cLight[3*i+1], cLight[3*i+2] ),
 				           bLight[i], iLight[i] );
+			}
 	}
 // Cleanup
 // Remove empty models

@@ -1,12 +1,12 @@
 @c ------------------------------------------------------------------
-@node MGL interface, Python interface, C interface, Interfaces
+@node MGL interface, , Python interface, Interfaces
 @section MGL interface
 
 MathGL library supports (from version 1.3) the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of mgl2png, mgl2eps, mgl2svg programs and others) or in the frame of the library using.
 
-MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is suficient, i.e. variables a and A are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when # is a part of some string. Also options can be specified at the end of string (after symbol @samp{;}, @pxref{Command options (MGL)}).
+MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is sufficient, i.e. variables a and A are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when # is a part of some string. Also options can be specified at the end of string (after symbol @samp{;}, @pxref{Command options (MGL)}).
 
-If string contain references to external parameters (substrings @samp{$0}, @samp{$1} ... @samp{$9}) then before execution the values of parameter will be substituted instaed of reference. It allows to use the same MGL script for different parameters (filenames, paths, condition and so on).
+If string contain references to external parameters (substrings @samp{$0}, @samp{$1} ... @samp{$9}) then before execution the values of parameter will be substituted instead of reference. It allows to use the same MGL script for different parameters (filenames, paths, condition and so on).
 
 Argument can be a string, a variable name or a number. 
 @itemize @bullet
@@ -14,14 +14,14 @@ Argument can be a string, a variable name or a number.
 The string is any symbols between ordinary marks @samp{'}.
 
 @item 
-Variable name is arbitrary combination of symbols (except spaces and @samp{'}) started from a letter and with length less than 64. It is possible to use subarrays (like in subdata command) as command argument. For example, @code{a(1)} or @code{a(1,:)} or @code{a(1,:,:)} is second row, @code{a(:,2)} or @code{a(:,2,:)} is third column, @code{a(:,:,0)} is first slice and so on.
+Variable name is arbitrary combination of symbols (except spaces and @samp{'}) started from a letter and with length less than 64. It is possible to use sub-arrays (like in @code{subdata} command) as command argument. For example, @code{a(1)} or @code{a(1,:)} or @code{a(1,:,:)} is second row, @code{a(:,2)} or @code{a(:,2,:)} is third column, @code{a(:,:,0)} is first slice and so on.
 
 If names for data columns was specified (by set_id command or in the file at string started with @code{##}) then it is possible to use any column combinations defined by formulas, like @code{a('n*w^2/exp(t)')}.
 
 @item 
 Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated as number if they were not redefined by user. Also variables with suffixes are treated as numbers (@pxref{Suffixes}).
 @end itemize
-Before the first using all variables must bedefined with the help of commands, like, @code{new, var, list, copy} or @code{read}. 
+Before the first using all variables must be defined with the help of commands, like, @code{new, var, list, copy} or @code{read}. 
 
 All MGL commands can be divided on several groups. I will use the following notation for a command description: command names are bold, strings are denoted by commas, variable names are italic, numbers are typewriter. Optional arguments are placed in square brackets and default values for them are shown. Detailed description of color, line styles, color schemes, font types, TeX-like symbols and formulas can be found in corresponding section.
 
@@ -99,7 +99,7 @@ This command set the transparency type. Normal transparency (@samp{0}) -- below 
 @cindex light
 @cindex ambient
 
-There are several commands for setup lighting. The general command is @code{mgl_set_light()} which switch on/off the lighting for overall plot. It influence only for graphics which created after @code{mgl_set_light()} call (with one exeption, mglGraphGL). Generally MathGL support up to 10 independend light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
+There are several commands for setup lighting. The general command is @code{mgl_set_light()} which switch on/off the lighting for overall plot. It influence only for graphics which created after @code{mgl_set_light()} call (with one exeption, mglGraphGL). Generally MathGL support up to 10 independent light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
 
 @deffn {MGL command} light @code{[val=on]}
 Sets the using of light on/off for overall plot. It is recommended to call this command before any plotting command. Default value is lightning off.
@@ -155,7 +155,7 @@ The variable define the base width for all lines. The value <1 is ignored. Incre
 These commands control the overall zooming of the picture or the sub-picture. Normally you can use these variables and commands for removing ``white'' spaces around a plot.
 
 @deffn {MGL command} plotfactor @code{val}
-The factor of plot size. It is not recommended to set it lower then 1.6. This is some anlogue of command @code{zoom} but applied not to overall image but for each @code{inplot}. Use negative value to enable automatic @code{plotfactor} selection.
+The factor of plot size. It is not recommended to set it lower then 1.6. This is some analogue of command @code{zoom} but applied not to overall image but for each @code{inplot}. Use negative value to enable automatic @code{plotfactor} selection.
 @end deffn
 
 @deffn {MGL command} zoom @code{x1 y1 x2 y2}
@@ -191,7 +191,7 @@ Command set the cutting off condition by formula @var{cond}. This condition dete
 @cindex axialdir
 
 @deffn {MGL command} font 'fnt' [@code{val=6}]
-Font style for text and labels (see text). Initial style is 'fnt'='rC' – Roman font with centerin. Parameter @code{val} sets the size of font for tick and axis labels. Default font size of axis labels is 1.4 times large than for tick labels. For more detail, @pxref{Font style}.
+Font style for text and labels (see text). Initial style is 'fnt'='rC' give Roman font with centering. Parameter @code{val} sets the size of font for tick and axis labels. Default font size of axis labels is 1.4 times large than for tick labels. For more detail, @pxref{Font style}.
 @end deffn
 
 @deffn {MGL command} rotatetext @code{val}
@@ -199,7 +199,7 @@ Set to use or not text rotation along axis. Initial value is @code{on}.
 @end deffn
 
 @deffn {MGL command} palette 'colors'
-Set the palette as selected colors. Deafult value is @code{'Hbgrcmyhlnqeup'}. The palette is used mostly in 1D plots for curves which styles are not specified.
+Set the palette as selected colors. Default value is @code{'Hbgrcmyhlnqeup'}. The palette is used mostly in 1D plots for curves which styles are not specified.
 @end deffn
 
 @deffn {MGL command} meshnum @code{num}
@@ -273,7 +273,7 @@ Sets the range for x-,y-,z- coordinate or coloring. See also axis.
 @deffn {MGL command} xtick @code{val [sub=0 org=nan]}
 @deffnx {MGL command} ytick @code{val [sub=0 org=nan]}
 @deffnx {MGL command} ztick @code{val [sub=0 org=nan]}
-Step for x-, y-, z-axis ticks (if @var{cal}>0) or it's number (if @var{val}<0) in x-direction. Zero value @var{val}=0 sets logarithmic ticks. Parameter @var{sub} sets the number of subticks. Parameter @var{org} set the starting points for ticks. If not @code{org=nan} then the value from @code{origin} is used.
+Step for x-, y-, z-axis ticks (if @var{cal}>0) or it's number (if @var{val}<0) in x-direction. Zero value @var{val}=0 sets logarithmic ticks. Parameter @var{sub} sets the number of sub-ticks. Parameter @var{org} set the starting points for ticks. If not @code{org=nan} then the value from @code{origin} is used.
 @end deffn
 
 @deffn {MGL command} xtick 'templ'
@@ -361,12 +361,12 @@ Draws a point (ball) at position @{@var{x}, @var{y}, @var{z}@} with color define
 
 @deffn {MGL command} line @code{x1 y1 x2 y2} ['stl'='']
 @deffnx {MGL command} line @code{x1 y1 z1 x2 y2 z2} ['stl'='']
-Draws a geodesic line (strightline in Cartesian coordinates) from point @{@var{x1},@var{y1},@var{z1}@} to @{@var{x2},@var{y2},@var{z2}@} using line style @var{stl}.
+Draws a geodesic line (straight line in Cartesian coordinates) from point @{@var{x1},@var{y1},@var{z1}@} to @{@var{x2},@var{y2},@var{z2}@} using line style @var{stl}.
 @end deffn
 
 @deffn {MGL command} curve @code{x1 y1 dx1 dy1 x2 y2 dx2 dy2} ['stl'='']
 @deffnx {MGL command} curve @code{x1 y1 z1 dx1 dy1 dz1 x2 y2 z2 dx2 dy2 dz2} ['stl'='']
-Draws Bezier-like curve from point @{@var{x1},@var{y1},@var{z1}@} to @{@var{x2},@var{y2},@var{z2}@} using line style @var{stl}. At this tangent is codirected with @{@var{dx1},@var{dy1},@var{dz1}@}, @{@var{dx2},@var{dy2},@var{dz2}@} and proportional to its amplitude.
+Draws Bezier-like curve from point @{@var{x1},@var{y1},@var{z1}@} to @{@var{x2},@var{y2},@var{z2}@} using line style @var{stl}. At this tangent is co-directed with @{@var{dx1},@var{dy1},@var{dz1}@}, @{@var{dx2},@var{dy2},@var{dz2}@} and proportional to its amplitude.
 @end deffn
 
 @deffn {MGL command} facex @code{x0 y0 z0 wy wz} ['stl'='' @code{d1=0 d2=0}]
@@ -377,7 +377,7 @@ Draws the solid rectangle (face) perpendicular to [x,y,z]-axis correspondingly a
 
 @deffn {MGL command} sphere @code{x0 y0 r} ['col'='r']
 @deffnx {MGL command} sphere @code{x0 y0 z0 r} ['col'='r']
-Draw the spehere with radius @var{r} and center at point @{@var{x0}, @var{y0}, @var{z0}@} and color @var{stl}.
+Draw the sphere with radius @var{r} and center at point @{@var{x0}, @var{y0}, @var{z0}@} and color @var{stl}.
 @end deffn
 
 @deffn {MGL command} drop @code{x0 y0 dx dy r} ['col'='b' @code{sh=1 asp=1}]
@@ -386,7 +386,7 @@ Draw the drop with radius @var{r} at point @{@var{x0},@var{y0},@var{z0}@} elonga
 @end deffn
 
 @deffn {MGL command} cone @code{x1 y1 z1 x2 y2 z2 r1} [@code{r2=-1} 'st'='' @code{edge=off}]
-Draw tube (or truncated cone if @var{edge}=@code{off}) between points @{@var{x1},@var{y1},@var{z1}@}, @{@var{x2},@var{y2},@var{z2}@} with radiuses at the edges @var{r1}, @var{r2}. If @var{r2}<0 then it is suppsosed that @var{r2}=@var{r1}. The cone color is defined by string @var{stl}.
+Draw tube (or truncated cone if @var{edge}=@code{off}) between points @{@var{x1},@var{y1},@var{z1}@}, @{@var{x2},@var{y2},@var{z2}@} with radiuses at the edges @var{r1}, @var{r2}. If @var{r2}<0 then it is supposed that @var{r2}=@var{r1}. The cone color is defined by string @var{stl}.
 @end deffn
 
 @deffn {MGL command} rect @code{x1 y1 x2 y2} ['st'='']
@@ -401,7 +401,7 @@ Draw rectangle from point @{@var{x1},@var{y1},@var{z1}@} to point @{@var{x2},@va
 @cindex text
 @cindex title
 
-These commands draw the text. There are commands for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. It is possible to use arbitrary fontfaces and parse many TeX commands. The Unicode text is supported. So sometimes you need to specify locale. The @code{size} argument control the size of text: if positive it give the value, if negative it give the value relative to defined by @code{font} command. @xref{Font style}.
+These commands draw the text. There are commands for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. It is possible to use arbitrary font-faces and parse many TeX commands. The Unicode text is supported. So sometimes you need to specify locale. The @code{size} argument control the size of text: if positive it give the value, if negative it give the value relative to defined by @code{font} command. @xref{Font style}.
 
 @deffn {MGL command} text @code{x y} 'text' ['fnt'='' @code{size=-1.4}]
 @deffnx {MGL command} text @code{x y z} 'text' ['fnt'='' @code{size=-1.4}]
@@ -471,7 +471,7 @@ Prints the label @var{text} for x-,y-,z-axis. The position of label is determine
 @cindex addlegend
 @cindex clearlegend
 
-These commands draw legend to the graph (useful for @ref{1D plotting (MGL)}). Legend entry is a pair of strings: one for style of the line, another one with description text (with included LaTeX parsing). The array of string are accumulated first to the internal arrays (by command AddLegend()) and are plotted later. The position of the legend can be selected automatic or manually. Parameters @var{fnt} and @var{size} specify the font style and size. Parameter @var{llen} set the relative width of the line sample and the text indent (default value is 0.1). If line style string for entry is empty then the corresponding text is printed without indent. @sref{Legend sample}
+These commands draw legend to the graph (useful for @ref{1D plotting (MGL)}). Legend entry is a pair of strings: one for style of the line, another one with description text (with included LaTeX parsing). The array of string are accumulated first to the internal arrays (by command @code{addlegend}) and are plotted later. The position of the legend can be selected automatic or manually. Parameters @var{fnt} and @var{size} specify the font style and size. Parameter @var{llen} set the relative width of the line sample and the text indent (default value is 0.1). If line style string for entry is empty then the corresponding text is printed without indent. @sref{Legend sample}
 
 @deffn {MGL command} legend [@code{pos=3} 'fnt'='rL' @code{size=-1 llen=0.1}]
 Draws legend of accumulated legend entries by font @var{fnt} with specified @var{size}. Parameter @var{pos} sets the position of the legend: @samp{0} is bottom left corner, @samp{1} is bottom right corner, @samp{2} is top left corner, @samp{3} is top right corner (is default).
@@ -566,7 +566,7 @@ Draws surface which is result of curve @{@var{rdat}[i], @var{zdat}[i], @var{zdat
 @end deffn
 
 @deffn {MGL command} chart adat ['col'='']
-The command draws colored stripes (boxes) for data in array @var{adat}. The number of stripes is equal to the number of rows in @var{adat} (equal to @var{a.ny}). The color of each next stripe is ciclically changed from colors specified in string @var{col} or in palette. Spaces in colors denote transparent ``color'', i.e. if @var{col} contain space(s) then corresponding stripe(s) are not drawn. The stripe width is proportional to value of element in @var{a}. Chart is plotted only for data with non-negative elements. If string @var{col} have symbol @samp{#} then black border lines are drawn. The most nice form the chart have in 3d (after rotation of coordiantes) or in cilindrical coordinates (becomes so called Pie chart). @sref{Chart sample}
+The command draws colored stripes (boxes) for data in array @var{adat}. The number of stripes is equal to the number of rows in @var{adat} (equal to @var{a.ny}). The color of each next stripe is cyclically changed from colors specified in string @var{col} or in palette. Spaces in colors denote transparent ``color'', i.e. if @var{col} contain space(s) then corresponding stripe(s) are not drawn. The stripe width is proportional to value of element in @var{a}. Chart is plotted only for data with non-negative elements. If string @var{col} have symbol @samp{#} then black border lines are drawn. The most nice form the chart have in 3d (after rotation of coordinates) or in cylindrical coordinates (becomes so called Pie chart). @sref{Chart sample}
 @end deffn
 
 @deffn {MGL command} mark ydat rdat ['stl'='' @code{zval=nan}]
@@ -1213,11 +1213,11 @@ Do integral transformation of complex data @var{ampl}, @var{phase} on specified 
 @end deffn
 
 @deffn {MGL command} stfad res real imag @code{dn} ['dir'='x']
-Short time fourier analysis for real and imaginary parts. Output  is amplitude of partial fourier of length @var{dn}. For example if @var{dir}=@samp{x}, result will have size @{int(nx/dn), dn, ny@} and it will contain @math{res[i,j,k]=|\sum_d^dn exp(I*j*d)*(real[i*dn+d,k]+I*imag[i*dn+d,k])|/dn}.
+Short time Fourier analysis for real and imaginary parts. Output  is amplitude of partial Fourier of length @var{dn}. For example if @var{dir}=@samp{x}, result will have size @{int(nx/dn), dn, ny@} and it will contain @math{res[i,j,k]=|\sum_d^dn exp(I*j*d)*(real[i*dn+d,k]+I*imag[i*dn+d,k])|/dn}.
 @end deffn
 
 @deffn {MGL command} pde res 'ham' ini_re ini_im [@code{dz=0.1 k0=100}]
-Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudodifferential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Coordinates of the equation (and the solution) are supposed to be in the bounding box. Note that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham='p^2+q^2-u^2'}. You may specify imaginary part for wave absorption, like @code{ham = 'p^2+i*x*(x>0)'}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}).
+Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Coordinates of the equation (and the solution) are supposed to be in the bounding box. Note that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham='p^2+q^2-u^2'}. You may specify imaginary part for wave absorption, like @code{ham = 'p^2+i*x*(x>0)'}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}).
 @end deffn
 
 @deffn {MGL command} ray res 'ham' @code{x0 y0 z0 p0 q0 v0 [dt=0.1 tmax=10]}
@@ -1240,7 +1240,7 @@ Solves GO ray equation like d@emph{r}/dt = d @var{ham}/d@emph{p}, d@emph{p}/dt =
 @cindex norm
 @cindex normsl
 
-These commands change the data in some direction like differentiations, integrations and so on. The direction in which the change will applied is specified by the string parameter, which may contain @samp{x}, @samp{y} or @samp{z} characters for 1-st, 2-nd and 3-d dimension correspondengly.
+These commands change the data in some direction like differentiations, integrations and so on. The direction in which the change will applied is specified by the string parameter, which may contain @samp{x}, @samp{y} or @samp{z} characters for 1-st, 2-nd and 3-d dimension correspondingly.
 
 @deffn {MGL command} cumsum dat 'dir'
 Cumulative summation of the data in given direction or directions.
@@ -1442,7 +1442,7 @@ Adds string 'txt' to internal legend accumulator. The style of described line an
 @node  Suffixes, , Command options (MGL), MGL interface
 @subsection Suffixes for variable
 
-Suffixes can get some numerical value (like its size, maximal or minimal value, the sum of elements and so on) of the data array in variable and use it later as usual number in command arguments. The suffixes start from point @samp{.} right after (without spaces) variable name or its subarray. For example, @code{a.nx} give the x-size of data a, @code{b(1).max} give maximal value of second row of variable b, @code{c(:,0).sum} give sum of element in first column of c and so on.
+Suffixes can get some numerical value (like its size, maximal or minimal value, the sum of elements and so on) of the data array in variable and use it later as usual number in command arguments. The suffixes start from point @samp{.} right after (without spaces) variable name or its sub-array. For example, @code{a.nx} give the x-size of data a, @code{b(1).max} give maximal value of second row of variable b, @code{c(:,0).sum} give sum of element in first column of c and so on.
 
 The full list of suffixes are:
 @table @strong

@@ -157,6 +157,8 @@ void mgl_perspective(HMGL graph, float val);
 void mgl_set_ticks(HMGL graph, float DX, float DY, float DZ);
 void mgl_set_subticks(HMGL graph, int NX, int NY, int NZ);
 void mgl_set_ticks_dir(HMGL graph, char dir, float d, int ns, float org);
+void mgl_set_ticks_val(HMGL graph, char dir, float val, const char *lbl, ...);
+void mgl_set_ticks_vals(HMGL graph, char dir, int n, float *val, char **lbl);
 void mgl_set_caxis(HMGL graph, float C1,float C2);
 void mgl_set_axis(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2, float x0, float y0, float z0);
 void mgl_set_axis_3d(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2);
@@ -211,6 +213,7 @@ void mgl_add_legendw(HMGL graph, const wchar_t *text,const char *style);
 void mgl_clear_legend(HMGL graph);
 void mgl_legend_xy(HMGL graph, float x, float y, const char *font, float size, float llen);
 void mgl_legend(HMGL graph, int where, const char *font, float size, float llen);
+void mgl_set_legend_box(HMGL gr, int enable);
 /*****************************************************************************/
 /*		1D plotting functions												 */
 /*****************************************************************************/
@@ -534,6 +537,9 @@ void mgl_sphere(HMGL graph, float x, float y, float z, float r, const char *stl)
 void mgl_drop(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl, float shift, float ap);
 void mgl_cone(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl, int edge);
 
+void mgl_pde_solve(HMGL gr, HMDT res, const char *ham, const HMDT ini_re, const HMDT ini_im, float dz, float k0);
+void mgl_ray_trace(HMGL gr, HMDT res, const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt, float tmax);
+void mgl_data_fill_eq(HMGL gr, HMDT res, const char *eq, const HMDT vdat, const HMDT wdat);
 
 #ifdef __cplusplus
 }

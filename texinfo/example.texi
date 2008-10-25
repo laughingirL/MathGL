@@ -2,7 +2,7 @@
 @node Examples, Samples, Interfaces, Top
 @chapter MathGL examples
 
-This chapter contain information about basic and advanced MathGL, hints and samples for all types of graphics. I recomend you read first 2 sections one after another and at least look on ``Hints'' section. Also I recomend you to look at @ref{General concepts} and @ref{FAQ}. Sample code for some of these examples can be found in @uref{http://mathgl.sf.net/pictures.html} and in @ref{Samples}.
+This chapter contain information about basic and advanced MathGL, hints and samples for all types of graphics. I recommend you read first 2 sections one after another and at least look on ``Hints'' section. Also I recommend you to look at @ref{General concepts} and @ref{FAQ}. Sample code for some of these examples can be found in @uref{http://mathgl.sf.net/pictures.html} and in @ref{Samples}.
 
 @menu
 * Basic usage::                 
@@ -76,7 +76,7 @@ The similar code can be written for @code{mglGraphGLUT} window (function @code{s
     }
 @end verbatim
 
-The rotation, shift, zooming, switching on/off transparency and lighting can be done with help of toolbuttons (for @code{mglGraphFLTK} and @code{mglGraphQT}) or by hotkeys: @samp{a}, @samp{d}, @samp{w}, @samp{s} for plot rotation, @samp{r} and @samp{f} switching on/off transparency and lighting. Press @samp{x} for exit (or closing the window).
+The rotation, shift, zooming, switching on/off transparency and lighting can be done with help of tool-buttons (for @code{mglGraphFLTK} and @code{mglGraphQT}) or by hot-keys: @samp{a}, @samp{d}, @samp{w}, @samp{s} for plot rotation, @samp{r} and @samp{f} switching on/off transparency and lighting. Press @samp{x} for exit (or closing the window).
 
 In this example function @code{sample} rotates axes (@code{Rotate()}, @pxref{Transformation matrix}) and draws the bounding box (@code{Box()}). Drawing procedure is separated in a function since it will be used on demand when window canvas needs to be redrawn. Widget classes (@code{mglGraphFLTK}, @code{mglGraphGLUT} and so on) support a delayed drawing, when all plotting functions are called once at the beginning of writing to memory lists. Further program displays the saved lists faster. Resulting redrawing will be faster but it requires sufficient memory. Several lists (frames) can be displayed one after another (by pressing @samp{,}, @samp{.}) or run as cinema. To switch these feature on one needs to modify function @code{sample}:
 @verbatim
@@ -158,7 +158,7 @@ The drawing in other libraries is most the same. Moreover, I excluded the suppor
 @node Advanced usage, Data handling, Basic usage, Examples
 @section Advanced usage
 
-Now I show several non-obvious features of MathGL: several subplots in a single picture, curvilinear coordinates, text printing and so on. Generally you may miss this section at first reading, but I don't recomend it.
+Now I show several non-obvious features of MathGL: several subplots in a single picture, curvilinear coordinates, text printing and so on. Generally you may miss this section at first reading, but I don't recommend it.
 
 @menu
 * Subplots::                    
@@ -213,7 +213,7 @@ Here I used function @code{Puts} for printing the text in arbitrary position of 
 @node Axis and grids, Curvilinear coordinates, Subplots, Advanced usage
 @subsection Axis and grids
 
-MathGL library can draw not only the bounding box but also the axes, grids, labels and so on. The limits of axes and their origin (the point of intersection) are determined by function @code{Axis()}. Also you can use @code{XRange(), YRange(), ZRange()} functions (@pxref{Ranges (bounding box)}). Ticks on axis are specified by function @code{SetTicks} (@pxref{Ticks}). First argument the direction for each change will be applied. Second argument gives the step between ticks (if positive) or gives the number of ticks on the axis (if negative) or set to use logarithmic ticks (if zero). Third argument gives numbers of subticks between ticks (default is zero). Last argument define the initial ticks position.
+MathGL library can draw not only the bounding box but also the axes, grids, labels and so on. The limits of axes and their origin (the point of intersection) are determined by function @code{Axis()}. Also you can use @code{XRange(), YRange(), ZRange()} functions (@pxref{Ranges (bounding box)}). Ticks on axis are specified by function @code{SetTicks} (@pxref{Ticks}). First argument the direction for each change will be applied. Second argument gives the step between ticks (if positive) or gives the number of ticks on the axis (if negative) or set to use logarithmic ticks (if zero). Third argument gives numbers of sub-ticks between ticks (default is zero). Last argument define the initial ticks position.
 
 Function @code{Axis} draws axes. Its textual string shows in which directions the axis or axes will be drawn (by default @code{"xyz"}, function draws axes in all directions). Function @code{Grid} draws grid perpendicularly to specified directions. Example of axes and grid drawing is:
 @verbatim
@@ -973,7 +973,7 @@ A template-function can also contain settings for font, transparency, lightning,
 @node Nonlinear fitting hints, , ``Templates'', Hints
 @subsection Nonlinear fitting hints
 
-Nonlinear fitting is rather simple. All that you need is the data to fit, the approxiamtion formula and the list of coefficients to fit (better with its initial guess values). Let me demonstrate it on the following simple example (@pxref{Fitting sample}). First, let us use sin function with some random noise:
+Nonlinear fitting is rather simple. All that you need is the data to fit, the approximation formula and the list of coefficients to fit (better with its initial guess values). Let me demonstrate it on the following simple example (@pxref{Fitting sample}). First, let us use sin function with some random noise:
 @verbatim
         mglData rnd(100), idl(50); //data to be fitted and ideal data
         rnd.Modify("0.4*rnd+0.1+sin(4*pi*x)");

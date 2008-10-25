@@ -8,7 +8,7 @@
 @cindex mglGraphGL
 @cindex mglGraphIDTF
 
-The class mglGraph (@pxref{MathGL core}) provide the basic tools for creating scientific graphics but it is abstract class. The matter is that there are several possible way to draw a graphics: in bitmap, in vector file, using OpenGL and so on. As result, user should use some of derived classes to do actual drawing. In principle, it is possible to derive a class exactly from mglGraph (and it was in v.1.6). But I recomend to derive from mglGraphAB class for higher compatibility of produced graphics from different classes. Class mglGraphAB is another abstract class which provide basic coordinates transformation, plotting functions and export to bitmap picture. It still require a functions for drawing lines, triangles and quadrangles. So below a set of ``plotter'' classes with short comments.
+The class mglGraph (@pxref{MathGL core}) provide the basic tools for creating scientific graphics but it is abstract class. The matter is that there are several possible way to draw a graphics: in bitmap, in vector file, using OpenGL and so on. As result, user should use some of derived classes to do actual drawing. In principle, it is possible to derive a class exactly from mglGraph (and it was in v.1.6). But I recommend to derive from mglGraphAB class for higher compatibility of produced graphics from different classes. Class mglGraphAB is another abstract class which provide basic coordinates transformation, plotting functions and export to bitmap picture. It still require a functions for drawing lines, triangles and quadrangles. So below a set of ``plotter'' classes with short comments.
 
 @deftp {Class} mglGraphAB
 Abstract class mglGraphAB implements plotting function for 1D, 2D and 3D plots using Z-ordering and provides base functionality for to screen coordinate transformation, bitmap creation and so on. Class is defined in @code{#include <mgl/mgl_ab.h>}.
@@ -19,7 +19,7 @@ Class mglGraphZB implements plotting function for 1D, 2D and 3D plots using Z-Bu
 @end deftp
 
 @deftp {Class} mglGraphPS
-Class mglGraphPS implements plotting functions for 1D, 2D and 3D plots and exports them to PostScript or SVG file. It is useful for off-screen (for console or SSH terminal) programs. Note that there is no transparency support now and color interpolation and lightning support is limited (not so nice as in class mglGraphZB). As result the plots with transparency (SurfA, Surf3A, CloudP, CloudQ) may look not so good. However the speed of frawing is higher in comparison with one in the class mglGraphZB. Class is defined in @code{#include <mgl/mgl_eps.h>}.
+Class mglGraphPS implements plotting functions for 1D, 2D and 3D plots and exports them to PostScript or SVG file. It is useful for off-screen (for console or SSH terminal) programs. Note that there is no transparency support now and color interpolation and lightning support is limited (not so nice as in class mglGraphZB). As result the plots with transparency (SurfA, Surf3A, CloudP, CloudQ) may look not so good. However the speed of drawing is higher in comparison with one in the class mglGraphZB. Class is defined in @code{#include <mgl/mgl_eps.h>}.
 @end deftp
 
 @deftp {Class} mglGraphGL
@@ -40,7 +40,7 @@ Class mglGraphIDTF implements plotting function for 1D, 2D and 3D plots  and exp
 @cindex mglGraphAB
 @cindex window
 
-Generally this class is a bit less abstract class than mglGraph class (@pxref{MathGL core}). It provide many protected methods for handling intermidiate data from mglGraph methods and require a few methods to be defined by derived class. The developers of derived classes should look on file @samp{mgl_ab.h} and comments inside it or contact me.
+Generally this class is a bit less abstract class than mglGraph class (@pxref{MathGL core}). It provide many protected methods for handling intermediate data from mglGraph methods and require a few methods to be defined by derived class. The developers of derived classes should look on file @samp{mgl_ab.h} and comments inside it or contact me.
 
 Here I just show new public methods for class mglGraphAB. There are functions returning the created picture (bitmap), its width and height. You may display it by yourself in any graphical library (see also, @ref{Widget classes}) or save in file (see also, @ref{Export to file}).
 
@@ -60,7 +60,7 @@ Gets width of the image.
 Gets height of the image.
 @end deftypemethod
 
-Class mglGraphAB is the base class for ``widget classes''. So there are set of functions for handling window behaviour. Most of them are applicable only for ``window'' classes (like mglGraphFLTK and so on, @pxref{Widget classes}). In all other classes these functions just do nothing. You should provide the corresponding interface in derived ``widget'' classes for user convenience.
+Class mglGraphAB is the base class for ``widget classes''. So there are set of functions for handling window behavior. Most of them are applicable only for ``window'' classes (like mglGraphFLTK and so on, @pxref{Widget classes}). In all other classes these functions just do nothing. You should provide the corresponding interface in derived ``widget'' classes for user convenience.
 
 @deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{int (*}draw)(@code{mglGraph *}gr, @code{void *}p), @code{const char *}title, @code{void *}par=@code{NULL}, @code{void (*}reload)(@code{int} next)=@code{NULL})
 This function creates a window for plotting. Parameters @var{argc}, @var{argv} contain OS specific information and should be the same as in function @code{main(int argc,char **argv)}. Parameter @var{draw} sets a pointer (this is the name of function) to drawing function. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Parameter @var{title} sets the title of the window. Parameter @var{par} contains pointer to data for the plotting function @var{draw}.
@@ -80,7 +80,7 @@ Switch on/off lighting but do not overwrite switches in user drawing function.
 Switch on/off zooming by mouse as region selection.
 @end deftypemethod
 @deftypemethod mglGraphAB @code{void} ToggleRotate ()
-Switch on/off rotation by mouse. Usually, left button is used for rotation, middle button for shift, right button ffor zoom/perspective.
+Switch on/off rotation by mouse. Usually, left button is used for rotation, middle button for shift, right button for zoom/perspective.
 @end deftypemethod
 @deftypemethod mglGraphAB @code{void} ToggleNo ()
 Switch off all zooming and rotation and restore initial state.
@@ -136,7 +136,7 @@ Class @code{mglGraphFLTK} adds the possibility to create plotting window with th
 @end deftp
 
 @deftp {Class} Fl_MathGL
-Class is FLTK widget for dysplaing the MathGL output. Class is defined in @code{#include <mgl/mgl_fltk.h>}.
+Class is FLTK widget for displaying the MathGL output. Class is defined in @code{#include <mgl/mgl_fltk.h>}.
 @end deftp
 
 @deftp {Class} mglGraphQT
@@ -545,11 +545,11 @@ Class for working with font: load, get metrics, parse and draw strings. This cla
 
 The class is based on loading and drawing of vector Hershey font. There are two styles of specifying of the font type and aligning: by integer parameters or by string.
 
-The string can be any combination of characters: @samp{rbiLCRwou}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style. By default roman font (that is @samp{} or @samp{r}) is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Additional font effects are: @samp{w} -- wire, @samp{o} -- overlined, @samp{u} -- underlined.
+The string can be any combination of characters: @samp{rbiLCRwou}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style. By default roman font (that is @samp{} or @samp{r}) is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Additional font effects are: @samp{w} -- wire, @samp{o} -- over-lined, @samp{u} -- underlined.
 
 The over way of font and alignment setting is the using of the integer constant. Integer font Id can be one of predefined constants: @code{MGL_FONT_ITAL, MGL_FONT_BOLD, MGL_FONT_BOLD_ITAL = MGL_FONT_ITAL+MGL_FONT_BOLD}. Default font is @code{MGL_FONT_ROMAN}. Also there are flags @code{MGL_FONT_ULINE, MGL_FONT_OLINE, MGL_FONT_WIRE} for additional font effects. Align parameter controls the text alignment: 0 -- align left, 1 -- align center, 2 -- align right.
 
-Parsing of the string to special (TeX-like) commands will be done if variable @var{parse} is true (it's default). There are commands for the font style changing inside the string (for example, use \b for bold font): \a or \overline -- overlined, \b or \textbf -- bold, \i or \textit -- italic, \r or \textrm -- roman (throw @strong{any other} attributes), \u or \underline -- underlined, \w or \wire -- wired, \big -- bigger size, \@@ -- smaller size. The lower and upper indexes are specified by @samp{_} and @samp{^} symbols. At this the changed font style is applied only on next symbol or symbols in braces @{@}. The text in braces @{@} are treated as single symbol that allow one to print the index of index. For example, compare the strings @samp{sin (x^@{2^3@})} and @samp{sin (x^2^3)}.
+Parsing of the string to special (TeX-like) commands will be done if variable @var{parse} is true (it's default). There are commands for the font style changing inside the string (for example, use \b for bold font): \a or \overline -- over-lined, \b or \textbf -- bold, \i or \textit -- italic, \r or \textrm -- roman (throw @strong{any other} attributes), \u or \underline -- underlined, \w or \wire -- wired, \big -- bigger size, \@@ -- smaller size. The lower and upper indexes are specified by @samp{_} and @samp{^} symbols. At this the changed font style is applied only on next symbol or symbols in braces @{@}. The text in braces @{@} are treated as single symbol that allow one to print the index of index. For example, compare the strings @samp{sin (x^@{2^3@})} and @samp{sin (x^2^3)}.
 
 The most of commands for special TeX or AMSTeX symbols, the commands for font style changing (\textrm, \textbf, \textit, \overline, \underline), accents (\hat, \tilde, \dot, \ddot, \acute, \check, \grave, \bar, \breve) and roots (\sqrt, \sqrt3, \sqrt4) are recognized. The full list contain approximately 2000 commands. Note that first space symbol after the command is ignored, but second one is printed as normal symbol (space). For example, the following strings produce the same result @math{\tilde@{a@}}: @samp{\tilde@{a@}}; @samp{\tilde a}; @samp{\tilde@{@}a}.
 
@@ -641,7 +641,7 @@ Structure for working with colors. This structure is defined in @code{#include <
 
 There are two ways to set the color in MathGL. First one is using of float values of red, green and blue channels for precise color definition. The second way is the using of character id. There are a set of characters specifying frequently used colors. Normally capital letter gives more dark color than lowercase one. The full list of characters is: @samp{k} -- black, @samp{r} -- red, @samp{R} -- dark red, @samp{g} -- green, @samp{G} -- dark green, @samp{b} -- blue, @samp{B} -- dark blue, @samp{c} -- cyan, @samp{C} -- dark cyan, @samp{m} -- magenta, @samp{M} -- dark magenta, @samp{y} -- yellow, @samp{Y} -- dark yellow (gold), @samp{h} -- gray, @samp{H} -- dark gray, @samp{w} -- white, @samp{W} -- bright gray, @samp{l} -- green-blue, @samp{L} -- dark green-blue, @samp{e} -- green-yellow, @samp{E} -- dark green-yellow, @samp{n} -- sky-blue, @samp{N} -- dark sky-blue, @samp{u} -- blue-violet, @samp{U} -- dark blue-violet, @samp{p} -- purple, @samp{P} -- dark purple, @samp{q} -- orange, @samp{Q} -- dark orange (brown).
 
-Also you may use ``brighted'' colors in color scheme specification (@emph{not in line style!}). The ``brighted'' color contain 2 symbols: first one is usual symbol for color specification, second one is digit for its brightness. The digit can be in range @samp{1}...@samp{9}. At this @samp{5} correspond to normal color, @samp{1} is very dark version of the color (practically black), @samp{9} is very bright version of the color (practically white).
+Also you may use ``lighted'' colors in color scheme specification (@emph{not in line style!}). The ``lighted'' color contain 2 symbols: first one is usual symbol for color specification, second one is digit for its brightness. The digit can be in range @samp{1}...@samp{9}. At this @samp{5} correspond to normal color, @samp{1} is very dark version of the color (practically black), @samp{9} is very bright version of the color (practically white).
 
 @float
 @image{png/colors, 7cm}
@@ -662,7 +662,7 @@ Constructor sets the color from character id. The black color is used by default
 Sets color from values of Red, Green and Blue channels. This values should be in interval [0,1].
 @end deftypemethod
 @deftypemethod mglColor @code{void} Set (@code{mglColor} c, @code{float} bright=@code{1})
-Sets color as ``brighted'' version of color @var{c}.
+Sets color as ``lighted'' version of color @var{c}.
 @end deftypemethod
 @deftypemethod mglColor @code{void} Set (@code{char} p)
 Sets color from symbolic id.

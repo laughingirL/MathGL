@@ -386,6 +386,8 @@ void mgl_legend_(uintptr_t *gr, int *where, const char *font, float *size, float
 	char *s=new char[l+1];	memcpy(s,font,l);	s[l]=0;
 	if(gr)	_GR_->Legend(*where, s, *size,*llen);	delete []s;
 }
+void mgl_set_legend_box_(uintptr_t *gr, int *enable)
+{	_GR_->LegendBox = *enable;	}
 //-----------------------------------------------------------------------------
 const unsigned char *mgl_get_rgb_(uintptr_t *graph)
 {

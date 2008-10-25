@@ -513,13 +513,6 @@ void mglGraph::SetPalette(const char *colors)
 	CurrPal = 0;	NumPal = n;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetTicks(char dir, float d, int ns, float org)
-{
-	if(dir=='x')	{	dx = d;	NSx = ns;	OrgT.x = org;	}
-	if(dir=='y')	{	dy = d;	NSy = ns;	OrgT.y = org;	}
-	if(dir=='z')	{	dz = d;	NSz = ns;	OrgT.z = org;	}
-}
-//-----------------------------------------------------------------------------
 void mglGraph::DefaultPlotParam()
 {
 	Cut = true;				OnCoord=false;
@@ -541,13 +534,15 @@ void mglGraph::DefaultPlotParam()
 	DrawFace = true;		_tetx=_tety=_tetz=0;
 	TuneTicks= true;		_sx=_sy=_sz = 1;
 	TernAxis = false;		WarnCode = 0;
-	ScalePuts = true;		TickStr = 0;
+	ScalePuts = true;
 	xtt=ytt=ztt=ctt=0;		FactorPos = 1.15;
 	AutoOrg = true;			CurFrameId = 0;
 	CirclePnts = 40;		FitPnts = 100;
 	AutoPlotFactor = true;
 	PlotFactor = AutoPlotFactor ? 1.55f :2.f;
 	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1));
+	xnum=ynum=znum=0;			if(xnum)	delete []xbuf;
+	if(ynum)	delete []ybuf;	if(znum)	delete []zbuf;
 
 	PlotId = "frame";		SetPalette("Hbgrcmyhlnqeup");
 	SetScheme("BbcyrR");	SelectPen("k-1");
@@ -765,6 +760,7 @@ void mglGraph::Ambient(float bright)	{	AmbBr = bright;	}
 //-----------------------------------------------------------------------------
 mglGraph::mglGraph()
 {
+	xnum=ynum=znum=0;
 	fit_res = new char[1024];
 	fnt = new mglFont;
 	CloudFactor=10;
@@ -774,6 +770,9 @@ mglGraph::mglGraph()
 //-----------------------------------------------------------------------------
 mglGraph::~mglGraph()
 {
+	if(xnum)	delete []xbuf;
+	if(ynum)	delete []ybuf;
+	if(znum)	delete []zbuf;
 	delete []fit_res;
 	ClearEq();
 	ClearLegend();
