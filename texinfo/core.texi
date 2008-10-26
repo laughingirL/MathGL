@@ -463,6 +463,12 @@ Transformation formula for x, y and z directions. These variables are obsolete -
 Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
 @end deftypemethod
 
+@deftypemethod mglGraph @code{void} SetTicksVal (@code{char} dir, @code{int} n, @code{float *}val, @code{const char **}lbl)
+@deftypemethodx mglGraph @code{void} SetTicksVal (@code{char} dir, @code{int} n, @code{float *}val, @code{const wchar_t **}lbl)
+@deftypemethodx mglGraph @code{void} SetTicksVal (@code{char} dir, @code{float} val1, @code{wchar_t *}lbl1, ...)
+Set the manual positions @var{val} and its labels @var{lbl} for @var{n}-th ticks along axis @var{dir}. The arrays @var{val} and @var{lbl} must contain @var{n} elements. Use @code{SetTicks()} to restore automatic ticks.
+@end deftypemethod
+
 @deftypecv {General option} mglGraph @code{float} {dx, dy, dz}
 Step for axis ticks (if positive) or it's number (if negative) in x-,y-,z- directions. Zero value set logarithmic ticks. These variables are obsolete -- use SetTicks() function instead.
 @end deftypecv
@@ -586,6 +592,10 @@ Exports current frame to SVG (Scalable Vector Graphics) file. The vector represe
 
 @deftypemethod mglGraph @code{void} WriteIDTF (@code{const char *}fname, @code{const char *}descr=@code{NULL})
 Exports current frame to IDTF file. Later this file can be converted to U3D format. The vector representation is used. So, the output file may be too large for graphic of large data array (especially for surfaces). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} ShowImage (@code{const char *}viewer=@code{"kuickshow"})
+Displays the current picture using external program @var{viewer} for viewing. The function save the picture to temporary file and call @var{viewer} to display it.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} SetSize (@code{int} width, @code{int} height)
@@ -858,12 +868,12 @@ These functions draw continuous lines between points and fills it to axis plane.
 The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} in 3D space and fills it down to @var{z} = Org.z.
 @end deftypemethod
 
-@deftypemethod mglGraph @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}) and fills it down to @var{y} = Org.y.
+@deftypemethod mglGraph @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{NULL}, @code{bool} sum=@code{false}, @code{float} zVal=@code{NAN})
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}) and fills it down to @var{y} = Org.y. Parameter @var{sum} set to draw a lines one above another (like summation). Note, you can reach the same effect if call @code{y.CumSum("y");} before plot.
 @end deftypemethod
 
-@deftypemethod mglGraph @code{void} Area (@code{const mglData &}y, @code{const char *}pen=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}) and fills it down to @var{y} = Org.y, where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
+@deftypemethod mglGraph @code{void} Area (@code{const mglData &}y, @code{const char *}pen=@code{NULL}, @code{bool} sum=@code{false}, @code{float} zVal=@code{NAN})
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}) and fills it down to @var{y} = Org.y, where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x]. Parameter @var{sum} set to draw a lines one above another (like summation). Note, you can reach the same effect if call @code{y.CumSum("y");} before plot.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Area2 (@code{const mglData &}a, @code{const char *}pen=@code{NULL}, @code{float} zVal=@code{NAN})

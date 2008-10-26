@@ -135,6 +135,11 @@ void mgl_write_svg_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	_GR_->WriteSVG(s,d);	delete []s;		delete []d;
 }
+void mgl_show_image_(uintptr_t *gr, const char *viewer, int l)
+{
+	char *s=new char[l+1];	memcpy(s,viewer,l);	s[l]=0;
+	_GR_->ShowImage(s);	delete []s;
+}
 //-----------------------------------------------------------------------------
 //		Setup frames transparency (alpha) and lightning
 //-----------------------------------------------------------------------------

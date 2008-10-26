@@ -113,6 +113,7 @@ public slots:
 	void refresh();
 	void update(mglGraph *gr=0);	///< Update picture
 	void copy();			///< copy graphics to clipboard
+	void print();			///< Print plot
 //	void stop();			///< Stop execution
 	void setPer(int p);		///< Set perspective value
 	void setPhi(int p);		///< Set Phi-angle value
@@ -138,7 +139,6 @@ public slots:
 	void exportSVG(QString fname="");	///< export to SVG file
 	void exportIDTF(QString fname="");	///< export to IDTF file
 	void setMGLFont(QString path);		///< restore/load font for graphics
-	void print();		///< Print plot
 	//----These functions are executed only if graph is mglGraphQT instance----
 	void adjust();		///< Adjust plot size to fill entire window
 	void nextSlide();	///< Show next slide
@@ -180,6 +180,7 @@ private:
 /// Convert bitmap from mglGraphAB to QPixmap
 void convertFromGraph(QPixmap &pic, mglGraphAB *gr, uchar **buf);
 //-----------------------------------------------------------------------------
+/*
 /// Temporal class for showing image
 class mglQShowImg : public QWidget
 {
@@ -189,10 +190,16 @@ public:
 	QPixmap pic;		///< Pixmap for drawing (changed by update)
 	mglQShowImg(QWidget *parent = 0, Qt::WindowFlags f = 0);
 	~mglQShowImg()	{	if(buf)	delete []buf;	};
+public slots:
+	void about();		///< Show about information
+	void aboutQt();		///< Show information about Qt version
+	void copy();		///< copy graphics to clipboard
+	void print();		///< Print plot
+	void save();		///< save graphics to file
 protected:
 	void paintEvent(QPaintEvent *);
 	void resizeEvent(QResizeEvent *);
-};
+};*/
 //-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------

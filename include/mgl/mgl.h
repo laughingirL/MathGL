@@ -193,6 +193,8 @@ public:
 	virtual void WriteSVG(const char *fname,const char *descr=0);
 	/// Write the frame in file using IDTF format
 	virtual void WriteIDTF(const char *fname,const char *descr=0);
+	/// Show currently produced image by Qt or FLTK library
+	void ShowImage(const char *viewer="kuickshow");
 	//@}
 	/// Create new frame.
 	virtual int NewFrame(int id=0);
@@ -227,8 +229,9 @@ public:
 	/// Set the ticks parameters
 	void SetTicks(char dir, float d=-5, int ns=0, float org=NAN);
 	/// Set ticks position and text (use n=0 to disable this feature)
-	void SetTicksVal(char dir, int n, float *val, char **lbl);
-	void SetTicksVal(char dir, int n, float *val, wchar_t **lbl);
+	void SetTicksVal(char dir, int n, float *val, const char **lbl);
+	void SetTicksVal(char dir, int n, float *val, const wchar_t **lbl);
+	void SetTicksVal(char dir, int n, double val, const char *lbl, ...);
 	/// Set warning code ant fill Message
 	void SetWarn(int code, const char *who="");
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

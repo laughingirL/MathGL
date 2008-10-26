@@ -32,6 +32,7 @@
 #include <QSpinBox>
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QFileDialog>
 #include <stdio.h>
 #include "mgl/mgl_idtf.h"
 #include "mgl/mgl_eps.h"
@@ -426,7 +427,7 @@ void QMathGL::animation(bool st)
 //-----------------------------------------------------------------------------
 void QMathGL::about()
 {
-	QString s = tr("MathGL v. 1.") + QString::number(MGL_VERSION) + tr("\n(c) Alexey Balakin, 2007\nhttp://mathgl.sf.net/");
+	QString s = tr("MathGL v. 1.") + QString::number(MGL_VERSION) + tr("\n(c) Alexey Balakin, 2007\nhttp://mathgl.sourceforge.net/");
 	QMessageBox::about(this, tr("MathGL - about"), s);
 }
 //-----------------------------------------------------------------------------
@@ -769,25 +770,11 @@ void mglGraphQT::makeMenu()
 	o->addAction(TR("About &Qt"), QMGL, SLOT(aboutQt()));
 }
 //-----------------------------------------------------------------------------
-//
+/*//
 //	Function for mglGraphAB::ShowImage()
 //
 //-----------------------------------------------------------------------------
-void mglQShowImg::paintEvent(QPaintEvent *)
-{
-	QPainter paint;
-	paint.begin(this);
-	paint.drawPixmap(0,0,pic);
-	paint.end();
-}
-//-----------------------------------------------------------------------------
-void mglQShowImg::resizeEvent(QResizeEvent *)
-{	resize(pic.width(), pic.height());	}
-//-----------------------------------------------------------------------------
-mglQShowImg::mglQShowImg(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
-{	buf=NULL;	}
-//-----------------------------------------------------------------------------
-void mgl_show_img_qt(const char *title, mglGraphAB *gr, bool same)
+void mgl_show_img_qt(const char *title, mglGraphAB *gr, bool same, bool thread)
 {
 	static QMainWindow *Wnd=NULL;
 	static mglQShowImg *img=NULL;
@@ -807,16 +794,76 @@ void mgl_show_img_qt(const char *title, mglGraphAB *gr, bool same)
 			int argc=1;
 			a = new QApplication(argc, (char **)tmp);
 		}
-//		else	a = new QApplication(argc, argv);
 		a->connect(a, SIGNAL(lastWindowClosed()), a, SLOT(quit()));
 	}
-
+	// create new window
 	Wnd = new QMainWindow;	Wnd->resize(gr->GetWidth(),gr->GetHeight());
 	Wnd->setWindowTitle(title);
 	img = new mglQShowImg(Wnd);
 	convertFromGraph(img->pic, gr, &(img->buf));
 	Wnd->setCentralWidget(img);
+	// setup menu
+	QMenu *o = Wnd->menuBar()->addMenu(TR("&File"));
+	o->addAction(TR("Save"), img, SLOT(save()), Qt::CTRL+Qt::Key_S);
+	o->addAction(TR("Copy"), img, SLOT(copy()), Qt::CTRL+Qt::Key_C);
+	o->addAction(TR("Print"), img, SLOT(print()), Qt::CTRL+Qt::Key_P);
+	o->addSeparator();
+	o->addAction(TR("&Close"), Wnd, SLOT(close()), Qt::CTRL+Qt::Key_W);
+	Wnd->menuBar()->addSeparator();
+	o = Wnd->menuBar()->addMenu(TR("&Help"));
+	o->addAction(TR("About"), img, SLOT(about()));
+	o->addAction(TR("About &Qt"), img, SLOT(aboutQt()));
+	// now show it
 	Wnd->show();
+	if(thread)	mgl_qt_thread();	else mgl_qt_run();
 }
 //-----------------------------------------------------------------------------
+mglQShowImg::mglQShowImg(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
+{	buf=NULL;	}
 //-----------------------------------------------------------------------------
+void mglQShowImg::paintEvent(QPaintEvent *)
+{
+	QPainter paint;
+	paint.begin(this);
+	paint.drawPixmap(0,0,pic);
+	paint.end();
+}
+//-----------------------------------------------------------------------------
+void mglQShowImg::resizeEvent(QResizeEvent *)
+{	resize(pic.width(), pic.height());	}
+//-----------------------------------------------------------------------------
+void mglQShowImg::about()
+{
+	QString s = tr("MathGL v. 1.") + QString::number(MGL_VERSION) +
+			tr("\n(c) Alexey Balakin, 2007\nhttp://mathgl.sourceforge.net/");
+	QMessageBox::about(this, tr("MathGL - about"), s);
+}
+//-----------------------------------------------------------------------------
+void mglQShowImg::aboutQt()	{	QMessageBox::aboutQt(this, tr("About Qt"));	}
+//-----------------------------------------------------------------------------
+void mglQShowImg::copy()
+{
+	QClipboard *cb = QApplication::clipboard();
+	cb->setPixmap(pic, QClipboard::Clipboard);
+}
+//-----------------------------------------------------------------------------
+void mglQShowImg::print()
+{
+	QPrinter *printer = new QPrinter;
+	QPrintDialog printDlg(printer, this);
+	if (printDlg.exec() == QDialog::Accepted)
+	{
+		QPainter p;
+		if(!p.begin(printer))	return;	// paint on printer
+		p.drawPixmap(0,0,pic);
+	}
+	delete printer;
+}
+//-----------------------------------------------------------------------------
+void mglQShowImg::save()
+{
+	QString fn = QFileDialog::getSaveFileName(this, tr("MathGL - save image"), "", tr("PNG files (*.png)\nJPEG files (*.jpg)\nAll files (*.*)"));
+	if(!fn.isEmpty())	pic.save(fn);
+}
+//-----------------------------------------------------------------------------
+*/

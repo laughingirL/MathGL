@@ -92,8 +92,6 @@ using mglGraph::Mark;
 	virtual void Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
 						const char *title,void *par=NULL,
 	  					void (*reload)(int next)=NULL);
-	/// Show currently produced image by Qt or FLTK library
-	void ShowImage(const char *title, bool new_wnd=false);
 	//@}
 protected:
 	unsigned char *G4;			///< Final picture in RGBA format. Prepared after calling mglGraphZB::Finish().

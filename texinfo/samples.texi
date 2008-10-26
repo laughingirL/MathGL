@@ -2509,6 +2509,7 @@ b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
 gr->Rotate(40,60);
 gr->Light(true);
+gr->Alpha(true);
 gr->Box();
 gr->SurfA(a,b);
 @end verbatim
@@ -2521,6 +2522,7 @@ modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 
 rotate 40 60
 light on
+alpha on
 box
 surfa a b
 @end verbatim
@@ -2534,6 +2536,7 @@ mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
+mgl_set_alpha(gr,1);
 mgl_box(gr,1);
 mgl_surfa(gr,a,b,0);
 mgl_delete_data(a); mgl_delete_data(b);
@@ -2548,6 +2551,7 @@ call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
+call mgl_set_alpha(gr,1);
 call mgl_box(gr,1)
 call mgl_surfa(gr,a,b,'')
 call mgl_delete_data(a)

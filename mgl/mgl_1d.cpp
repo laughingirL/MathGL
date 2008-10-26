@@ -1244,6 +1244,9 @@ void mgl_area_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char 
 /// Draw area plot for points in arrays \a x, \a y.
 void mgl_area_xy(HMGL gr, const HMDT x, const HMDT y, const char *pen)
 {	if(gr && x && y)	gr->Area(*x,*y,pen);	}
+/// Draw area plot for points in arrays \a x, \a y.
+void mgl_area_xys(HMGL gr, const HMDT x, const HMDT y, const char *pen)
+{	if(gr && x && y)	gr->Area(*x,*y,pen,true);	}
 /// Draw area plot for points in arrays \a y.
 void mgl_area(HMGL gr, const HMDT y, const char *pen)
 {	if(gr && y)	gr->Area(*y,pen);	}

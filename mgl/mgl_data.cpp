@@ -1651,7 +1651,7 @@ void mglData::Put(const mglData &val, int xx, int yy, int zz)
 		if(val.nx>=nx && val.ny>=nz)
 			for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
 				a[i+nx*(yy+j*ny)] = val.a[i+val.nx*j];
-		else if(val.nx>=ny)
+		else if(val.nx>=nx)
 			for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
 				a[i+nx*(yy+j*ny)] = val.a[i];
 	}

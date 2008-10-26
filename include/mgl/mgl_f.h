@@ -77,6 +77,7 @@ void mgl_restore_font_(uintptr_t *gr);
 /*****************************************************************************/
 /*		Export to file or to memory														 */
 /*****************************************************************************/
+void mgl_show_image_(uintptr_t *graph, const char *viewer, int);
 void mgl_write_bmp_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_tif_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_jpg_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);

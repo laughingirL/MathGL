@@ -1113,11 +1113,13 @@ int time_test(mglGraph *gr, const void *)	// full test (in PNG)
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
-//	gr->Box();	gr->Axis();
-	mglParse par;
-	FILE *fp=fopen("ray.mgl","rt");
-	par.Execute(gr,fp);
-	fclose(fp);
+	gr->SetTicksVal('x',3,-1.,"-\\pi",0.,"0",1.,"\\pi");
+	gr->Box();	gr->Axis();
+//	mglParse par;
+//	FILE *fp=fopen("ray.mgl","rt");
+//	par.Execute(gr,fp);
+//	fclose(fp);
+
 //	gr->Axis(mglPoint(-10,0), mglPoint(10,7));
 	//gr->Plot("1/sqrt(1+x^2)");
 //	par.Parse(gr,"fplot '1/sqrt(1+x^2)' 'r'");
@@ -1128,7 +1130,6 @@ int main(int argc,char **argv)
 {
 	const char *suf = "";
 	mglGraphZB zb;
-//test(&zb);	zb.WritePNG("1.png","",false);	return 0;
 	mglGraphPS ps;
 	mglGraph &gr = zb;
 	if(argc>1)
@@ -1140,6 +1141,8 @@ int main(int argc,char **argv)
 			gr.SetSize(1200,800);	suf = "_lg";
 			gr.BaseLineWidth = 2;
 		}
+		if(!strcmp(argv[1],"test"))
+		{	test(&zb);	zb.WritePNG("test.png","",false);	return 0;	}
 	}
 
 	all_samples(&gr,suf);

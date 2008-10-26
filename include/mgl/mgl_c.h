@@ -109,6 +109,7 @@ void mgl_restore_font(HMGL gr);
 /*****************************************************************************/
 /*		Export to file or to memory											 */
 /*****************************************************************************/
+void mgl_show_image(HMGL graph, const char *viewer);
 void mgl_write_bmp(HMGL graph, const char *fname,const char *descr);
 void mgl_write_tif(HMGL graph, const char *fname,const char *descr);
 void mgl_write_jpg(HMGL graph, const char *fname,const char *descr);
@@ -157,8 +158,8 @@ void mgl_perspective(HMGL graph, float val);
 void mgl_set_ticks(HMGL graph, float DX, float DY, float DZ);
 void mgl_set_subticks(HMGL graph, int NX, int NY, int NZ);
 void mgl_set_ticks_dir(HMGL graph, char dir, float d, int ns, float org);
-void mgl_set_ticks_val(HMGL graph, char dir, float val, const char *lbl, ...);
-void mgl_set_ticks_vals(HMGL graph, char dir, int n, float *val, char **lbl);
+void mgl_set_ticks_val(HMGL graph, char dir, int n, double val, const char *lbl, ...);
+void mgl_set_ticks_vals(HMGL graph, char dir, int n, float *val, const char **lbl);
 void mgl_set_caxis(HMGL graph, float C1,float C2);
 void mgl_set_axis(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2, float x0, float y0, float z0);
 void mgl_set_axis_3d(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2);
@@ -226,6 +227,7 @@ void mgl_plot_2(HMGL graph, const HMDT a, const char *pen);
 void mgl_plot_3(HMGL graph, const HMDT a, const char *pen);
 void mgl_area_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
 void mgl_area_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
+void mgl_area_xys(HMGL graph, const HMDT x, const HMDT y, const char *pen);
 void mgl_area(HMGL graph, const HMDT y, const char *pen);
 void mgl_area_2(HMGL graph, const HMDT a, const char *pen);
 void mgl_area_3(HMGL graph, const HMDT a, const char *pen);

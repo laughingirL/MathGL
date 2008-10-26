@@ -154,9 +154,9 @@ Allow to parse 'setsize' command or not.
 
 Functions and variables in this group influences on overall graphics appearance. So all of them should be placed @emph{before} any actual plotting function calls.
 
-@deftypemethod {mglGraph (Python)} @code{void} mgl_set_def_param (@code{HMGL} gr)
+@deftypefn {mglGraph (C function)} @code{void} mgl_set_def_param (@code{HMGL} gr)
 Restore initial values for all of parameters except described in @ref{Zooming}.
-@end deftypemethod
+@end deftypefn
 
 @menu
 * Transparency (Pure C)::       
@@ -447,17 +447,22 @@ The function sets to draws Ternary plot. This special plot is for 3 dependent co
 Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
 @end deftypefn
 
+@deftypefn {C function} @code{void} mgl_set_ticks_val (@code{HMGL} gr, @code{char} dir, @code{int} n, @code{float *}val, @code{const char **}lbl)
+@deftypefnx {C function} @code{void} mgl_set_ticks_val (@code{HMGL} gr, @code{char} dir, @code{int} n, @code{double} val, @code{const char *}lbl, ...)
+Set the manual positions @var{val} and its labels @var{lbl} for @var{n}-th ticks along axis @var{dir}. The arrays @var{val} and @var{lbl} have to contain @var{n} elements. Use @code{mgl_set_ticks_dir()} to restore automatic ticks. Note, these functions are not available in Fortran interface.
+@end deftypefn
+
 
 @deftypefn {C function} @code{void} mgl_set_ticks (@code{HMGL} gr, @code{float} dx, @code{float} dy, @code{float} dz)
-Step for axis ticks (if positive) or it's number (if negative) in x-,y-,z- directions. Zero value set logarithmic ticks.
+Step for axis ticks (if positive) or it's number (if negative) in x-,y-,z- directions. Zero value set logarithmic ticks. This function are obsolete -- use @code{mgl_set_ticks_dir()} function instead.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_subticks (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} nz)
-Number of axis subticks in x-,y-,z- directions.
+Number of axis subticks in x-,y-,z- directions. This function are obsolete -- use @code{mgl_set_ticks_dir()} function instead.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_tick_origin (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0)
-Starting point for ticks. If corresponding value is NAN then value from @var{Org} is used (it is default).
+Starting point for ticks. If corresponding value is NAN then value from @var{Org} is used (it is default). This function are obsolete -- use @code{mgl_set_ticks_dir()} function instead.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_xtt (@code{HMGL} gr, @code{const wchar_t *}templ)
@@ -557,6 +562,10 @@ Exports current frame to SVG (Scalable Vector Graphics) file. The vector represe
 
 @deftypefn {C function} @code{void} mgl_write_idtf (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
 Exports current frame to IDTF file. Later this file can be converted to U3D format. The vector representation is used. So, the output file may be too large for graphic of large data array (especially for surfaces). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_show_image (@code{const char *}viewer)
+Displays the current picture using external program @var{viewer} for viewing. The function save the picture to temporary file and call @var{viewer} to display it.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_size (@code{HMGL} gr, @code{int} width, @code{int} height)
@@ -792,6 +801,10 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @va
 
 @deftypefn {C function} @code{void} mgl_area_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}pen)
 The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z} and fills it down to @var{y} = @var{Org.y}.
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_area_xys (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}pen)
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z} and fills it down to @var{y} = @var{Org.y}. The lines are drawn one abover another (like summation). Note, you can reach the same effect if call @code{mgl_data_cumsum(y,"y");} before plot.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_area (@code{HMGL} gr, @code{const HMDT} y, @code{const char *}pen)
@@ -1879,39 +1892,39 @@ Gets the number of created frames.
 @subsection Data import (Pure C)
 @cindex Set
 
-@deftypemethod {C function} @code{void} mgl_data_create (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
+@deftypefn {C function} @code{void} mgl_data_create (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
 Creates or recreates the array with specified size and fills it by zero. This function does nothing if one of parameters @var{mx}, @var{my}, @var{mz} is zero or negative.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_set_float (@code{HMDT} dat, @code{const float *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
-@deftypemethodx {C function} @code{void} mgl_data_set_double (@code{HMDT} dat, @code{const double *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
+@deftypefn {C function} @code{void} mgl_data_set_float (@code{HMDT} dat, @code{const float *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
+@deftypefnx {C function} @code{void} mgl_data_set_double (@code{HMDT} dat, @code{const double *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
 Allocates memory and copies the data from the @strong{flat} array. 
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_set_float2 (@code{HMDT} dat, @code{const float **}A, @code{int} N1, @code{int} N2)
-@deftypemethodx {C function} @code{void} mgl_data_set_double2 (@code{HMDT} dat, @code{const double **}A, @code{int} N1, @code{int} N2)
+@deftypefn {C function} @code{void} mgl_data_set_float2 (@code{HMDT} dat, @code{const float **}A, @code{int} N1, @code{int} N2)
+@deftypefnx {C function} @code{void} mgl_data_set_double2 (@code{HMDT} dat, @code{const double **}A, @code{int} N1, @code{int} N2)
 Allocates memory and copies the data from the @code{float**} array with dimensions @var{N1}, @var{N2}, i.e. from array defined like as @code{float a[N1][N2];}.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_set_float3 (@code{HMDT} dat, @code{const float ***}A, @code{int} N1, @code{int} N2)
-@deftypemethodx {C function} @code{void} mgl_data_set_double3 (@code{HMDT} dat, @code{const double ***}A, @code{int} N1, @code{int} N2)
+@deftypefn {C function} @code{void} mgl_data_set_float3 (@code{HMDT} dat, @code{const float ***}A, @code{int} N1, @code{int} N2)
+@deftypefnx {C function} @code{void} mgl_data_set_double3 (@code{HMDT} dat, @code{const double ***}A, @code{int} N1, @code{int} N2)
 Allocates memory and copies the data from the @code{double***} array with dimensions @var{N1}, @var{N2}, @var{N3}, i.e. from array defined like as @code{float a[N1][N2][N3];}.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_set_vector (@code{HMDT} dat, @code{gsl_vector *}v)
+@deftypefn {C function} @code{void} mgl_data_set_vector (@code{HMDT} dat, @code{gsl_vector *}v)
 Allocates memory and copies the data from the @code{gsl_vector *} structure.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_set_matrix (@code{HMDT} dat, @code{gsl_matrix *}m)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_set_matrix (@code{HMDT} dat, @code{gsl_matrix *}m)
 Allocates memory and copies the data from the @code{gsl_matrix *} structure.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_set (@code{HMDT} dat, @code{const HMDT} d)
+@deftypefn {C function} @code{void} mgl_data_set (@code{HMDT} dat, @code{const HMDT} d)
 Copies the data from HMDT instance @var{d}.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_set_values (@code{const char *}str, @code{int} NX, @code{int} NY, @code{int} NZ)
+@deftypefn {C function} @code{void} mgl_data_set_values (@code{const char *}str, @code{int} NX, @code{int} NY, @code{int} NZ)
 Allocates memory and scanf the data from the string.
-@end deftypemethod
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node Data filling (Pure C), Rearrange data (Pure C), Data import (Pure C), C interface
@@ -1919,41 +1932,50 @@ Allocates memory and scanf the data from the string.
 @cindex Fill
 @cindex Modify
 
-@deftypemethod {C function} @code{void} mgl_data_fill (@code{HMDT} dat, @code{float} x1, @code{float} x2, @code{char} dir)
+@deftypefn {C function} @code{void} mgl_data_fill (@code{HMDT} dat, @code{float} x1, @code{float} x2, @code{char} dir)
 Equidistantly fills the data values to range [@var{x1}, @var{x2}] in direction @var{dir}=@{@samp{x},@samp{y},@samp{z}@}.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_fill (@code{HMGL} gr, @code{HMDT} dat, @code{const char *}eq, @code{const HMDT *}vdat, @code{const HMDT *}wdat)
+@deftypefn {C function} @code{void} mgl_data_fill (@code{HMGL} gr, @code{HMDT} dat, @code{const char *}eq, @code{const HMDT *}vdat, @code{const HMDT *}wdat)
 Fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in @emph{bounding box} of @var{gr} (in difference from @code{Modify} functions). Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat} which can be @code{NULL} (i.e. can be omitted).
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_modify (@code{HMDT} dat, @code{const char *}eq, @code{int} dim)
+@deftypefn {C function} @code{void} mgl_data_modify (@code{HMDT} dat, @code{const char *}eq, @code{int} dim)
 Function fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in interval [0,1]. Variable @samp{u} is the original value of the array. Modification will be fulfilled only for slices >=@var{dim}.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_modify_vw (@code{HMDT} dat, @code{const char *}eq, @code{const HMDT} v, @code{const HMDT} w)
+@deftypefn {C function} @code{void} mgl_data_modify_vw (@code{HMDT} dat, @code{const char *}eq, @code{const HMDT} v, @code{const HMDT} w)
 Function fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in interval [0,1]. Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat} which can be @code{NULL} (i.e. can be ommited).
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_set_value (@code{HMDT} dat, @code{float} v, @code{int} i, @code{int} j, @code{int} k)
+@deftypefn mglData @code{void} mgl_data_put_val (@code{HMDT} a, @code{float} val, @code{int} i, @code{int} j, @code{int} k)
+Function sets value(s) of array a[@var{i}, @var{j}, @var{k}] = @var{val}. Negative indexes @var{i}, @var{j}, @var{k}=-1 set the value @var{val} to whole range in corresponding direction(s). For example, @code{mgl_data_put_val(a,val,-1,0,-1);} sets a[i,0,j]=@var{val} for i=0...(a.nx-1), j=0...(a.nz-1).
+@end deftypefn
+
+@deftypefn mglData @code{void} mgl_data_put_dat (@code{HMDT} a, @code{const HMDT} v, @code{int} i, @code{int} j, @code{int} k)
+Function copies value(s) from array @var{v} to the range of array @var{a}. Negative indexes @var{i}, @var{j}, @var{k}=-1 set the range in corresponding direction(s). At this minor dimensions of array @var{v} should be large than corresponding dimensions of array @var{a}. For example, @code{mgl_data_put_dat(a,v,-1,0,-1);} sets a[i,0,j]=v.ny>nz ? v[i,j] : v[i], where i=0...(a.nx-1), j=0...(a.nz-1) and condition v.nx>=a.nx is true.
+@end deftypefn
+
+
+@deftypefn {C function} @code{void} mgl_data_set_value (@code{HMDT} dat, @code{float} v, @code{int} i, @code{int} j, @code{int} k)
 Sets the value in specified cell of the data with border checking.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{float} mgl_data_get_value (@code{HMDT} dat, @code{int} i, @code{int} j, @code{int} k)
+@deftypefn {C function} @code{float} mgl_data_get_value (@code{HMDT} dat, @code{int} i, @code{int} j, @code{int} k)
 Gets the value in specified cell of the data with border checking.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{float} mgl_data_get_nx (@code{HMDT} dat)
+@deftypefn {C function} @code{float} mgl_data_get_nx (@code{HMDT} dat)
 Gets the x-size of the data.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{float} mgl_data_get_ny (@code{HMDT} dat)
+@deftypefn {C function} @code{float} mgl_data_get_ny (@code{HMDT} dat)
 Gets the y-size of the data.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{float} mgl_data_get_nz (@code{HMDT} dat)
+@deftypefn {C function} @code{float} mgl_data_get_nz (@code{HMDT} dat)
 Gets the z-size of the data.
-@end deftypemethod
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node Rearrange data (Pure C), File I/O (Pure C), Data filling (Pure C), C interface
@@ -1964,10 +1986,10 @@ Gets the z-size of the data.
 @cindex Squeeze
 @cindex Crop
 
-@deftypemethod {C function} @code{void} mgl_data_rearrange (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
+@deftypefn {C function} @code{void} mgl_data_rearrange (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
 Rearrange dimensions without changing data array so that resulting sizes should  be @var{mx}*@var{my}*@var{mz} < nx*ny*nz. If some of parameter @var{my} or @var{mz} are zero then it will be selected to optimal fill of data array. For example, if @var{my}=0 then it will be change to @var{my}=nx*ny*nz/@var{mx} and @var{mz} will be 1.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_extend (@code{HMDT} dat, @code{int} n1, @code{int} n2)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_extend (@code{HMDT} dat, @code{int} n1, @code{int} n2)
 Increase the dimensions of the data by inserting new (|@var{n1}|+1)-th slices after (for @var{n1}>0) or before (for @var{n1}<0) of existed one. It is possible to insert 2 dimensions simultaneously for 1d data by using parameter @var{n2}. Data to new slices is copy from existed one. For example, for @var{n1}>0 new array will be 
 @iftex
 @math{a_{ij}^{new} = a_i^{old}} where j=0...@var{n1}. Correspondingly, for @var{n1}<0 new array will be @math{a_{ij}^{new} = a_j^{old}} where i=0...|@var{n1}|.
@@ -1975,16 +1997,16 @@ Increase the dimensions of the data by inserting new (|@var{n1}|+1)-th slices af
 @ifnottex
 a_ij^new = a_i^old where j=0...@var{n1}. Correspondingly, for @var{n1}<0 new array will be a_ij^new = a_j^old where i=0...|@var{n1}|.
 @end ifnottex
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_transpose (@code{const char *}dim)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_transpose (@code{const char *}dim)
 Transposes (shift order of) dimensions of the data. New order of dimensions is specified int string @var{dim}. This function may be useful also for the reading of one-dimensional data.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_squeeze (@code{HMDT} dat, @code{int} rx, @code{int} ry, @code{int} rz, @code{int} smooth)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_squeeze (@code{HMDT} dat, @code{int} rx, @code{int} ry, @code{int} rz, @code{int} smooth)
 Reduces the data size by excluding data elements which indexes are not divisible by @var{rx}, @var{ry}, @var{rz} correspondingly.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_crop (@code{HMDT} dat, @code{int} n1, @code{int} n2, @code{char} dir)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_crop (@code{HMDT} dat, @code{int} n1, @code{int} n2, @code{char} dir)
 Cuts off edges @var{i}<@var{n1} and @var{i}>@var{n2} of the data along direction @var{dir}.
-@end deftypemethod
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node File I/O (Pure C), Make another data (Pure C), Rearrange data (Pure C), C interface
@@ -1995,26 +2017,26 @@ Cuts off edges @var{i}<@var{n1} and @var{i}>@var{n2} of the data along direction
 @cindex Export
 @cindex Import
 
-@deftypemethod {C function} @code{void} mgl_data_read (@code{HMDT} dat, @code{const char *}fname)
+@deftypefn {C function} @code{void} mgl_data_read (@code{HMDT} dat, @code{const char *}fname)
 Reads data from tab-separated text file with auto determining sizes of the data.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_read_dim (@code{HMDT} dat, @code{const char *}fname, @code{int} mx, @code{int} my, @code{int} mz)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_read_dim (@code{HMDT} dat, @code{const char *}fname, @code{int} mx, @code{int} my, @code{int} mz)
 Reads data from text file with specified data sizes. This function does nothing if one of parameters @var{mx}, @var{my} or @var{mz} is zero or negative.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_read_mat (@code{HMDT} dat, @code{const char *}fname, @code{int} dim)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_read_mat (@code{HMDT} dat, @code{const char *}fname, @code{int} dim)
 Read data from text file with size specified at beginning of the file by first @var{dim} numbers. At this, variable @var{dim} set data dimensions.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_save (@code{const HMDT} dat, @code{const char *}fname, @code{int} ns)
+@deftypefn {C function} @code{void} mgl_data_save (@code{const HMDT} dat, @code{const char *}fname, @code{int} ns)
 Saves the whole data array (for @var{ns}=@code{-1}) or only ns-th slice to text file. If @var{ns}>0 then only @var{ns}-th slice (or column for 2D array) will be saved.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_import (@code{HMDT} dat, @code{const char *}fname, @code{const char *}scheme, @code{float} v1, float v2)
+@deftypefn {C function} @code{void} mgl_data_import (@code{HMDT} dat, @code{const char *}fname, @code{const char *}scheme, @code{float} v1, float v2)
 Reads data from bitmap file (now support only PNG format). The RGB values of bitmap pixels are transformed to float values in range [@var{v1}, @var{v2}] using color scheme @var{scheme} (@pxref{Color scheme}).
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_export (@code{HMDT} dat, @code{const char *}fname, @code{const char *}scheme, @code{float} v1, float v2, @code{int} ns) const
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_export (@code{HMDT} dat, @code{const char *}fname, @code{const char *}scheme, @code{float} v1, float v2, @code{int} ns) const
 Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now support only PNG format). The data values are transformed from range [@var{v1}, @var{v2}] to RGB pixels of bitmap using color scheme @var{scheme} (@pxref{Color scheme}). If @var{v1}>=@var{v2} then the values of @var{v1}, @var{v2} are automatically determined as minimal and maximal value of the data array.
-@end deftypemethod
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node Make another data (Pure C), Functions on direction (Pure C), File I/O (Pure C), C interface
@@ -2031,23 +2053,23 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @cindex Evaluate
 @cindex Resize
 
-@deftypemethod {C function} @code{HMDT} mgl_data_subdata (@code{const HMDT} dat, @code{int} xx, @code{int} yy, @code{int} zz)
+@deftypefn {C function} @code{HMDT} mgl_data_subdata (@code{const HMDT} dat, @code{int} xx, @code{int} yy, @code{int} zz)
 Extracts sub-array data from the original data array keeping fixed positive index. For example @code{SubData(-1,2)} extracts 3d row (indexes are zero based), @code{SubData(4,-1)} extracts 5th column, @code{SubData(-1,-1,3)} extracts 4th slice and so on.
-@end deftypemethod
-@deftypemethod {C function} @code{HMDT} mgl_data_column (@code{const HMDT} dat, @code{const char *}eq)
+@end deftypefn
+@deftypefn {C function} @code{HMDT} mgl_data_column (@code{const HMDT} dat, @code{const char *}eq)
 Get column (or slice) of the data filled by formula @var{eq} of other named columns. For example, @code{Column("n*w^2/exp(t)");}. The column ids must be defined first by @code{SetColumnId()} function.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_set_id (@code{HMDT} dat, @code{const char *}ids)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_set_id (@code{HMDT} dat, @code{const char *}ids)
 Sets the symbol id for data columns. The string must contain one symbol 'a'...'z' per column (without spaces).
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{HMDT} mgl_data_hist (@code{const HMDT} dat, @code{int} n, @code{float} v1, @code{float} v2, @code{int} nsub)
+@deftypefn {C function} @code{HMDT} mgl_data_hist (@code{const HMDT} dat, @code{int} n, @code{float} v1, @code{float} v2, @code{int} nsub)
 Creates @var{n}-th points distribution of the data values in range [@var{v1}, @var{v2}]. Parameter @var{nsub} define the number of additional interpolated points (for smoothness of histogram).
-@end deftypemethod
-@deftypemethod {C function} @code{HMDT} mgl_data_hist_w (@code{const HMDT} dat, @code{const HMDT} w, @code{int} n, @code{float} v1, @code{float} v2, @code{int} nsub)
+@end deftypefn
+@deftypefn {C function} @code{HMDT} mgl_data_hist_w (@code{const HMDT} dat, @code{const HMDT} w, @code{int} n, @code{float} v1, @code{float} v2, @code{int} nsub)
 Creates @var{n}-th points distribution of the data values in range [@var{v1}, @var{v2}]. Array @var{w} specifies weights of the data elements. Parameter @var{nsub} define the number of additional interpolated points (for smoothness of histogram).
-@end deftypemethod
-@deftypemethod {C function} @code{HMDT} mgl_data_momentum (@code{const HMDT} dat, @code{char} dir, @code{const char *}how)
+@end deftypefn
+@deftypefn {C function} @code{HMDT} mgl_data_momentum (@code{const HMDT} dat, @code{char} dir, @code{const char *}how)
 Get momentum (1D-array) of the data along direction @var{dir}. String @var{how} contain kind of momentum and may looks like @code{"x1"} for median 
 @iftex
 @math{\sum_{ij} x_i a_{ij}} in x-direction, @code{"y2"} for @math{\sum_{ij} y_j^2 a_{ij}}
@@ -2056,32 +2078,32 @@ Get momentum (1D-array) of the data along direction @var{dir}. String @var{how} 
 \sum_ij x_i a_ij in x-direction, @code{"y2"} for \sum_ij y_j^2 a_ij
 @end ifnottex
 in x-dir and so on. Mixed momentum (like @code{"xy"}) are not supported now.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{HMDT} mgl_data_sum (@code{const HMDT} dat, @code{const char *}dir)
+@deftypefn {C function} @code{HMDT} mgl_data_sum (@code{const HMDT} dat, @code{const char *}dir)
 Gets array which is the result of summation in given direction or direction(s).
-@end deftypemethod
-@deftypemethod {C function} @code{HMDT} mgl_data_max_dir (@code{const HMDT} dat, @code{const char *}dir)
+@end deftypefn
+@deftypefn {C function} @code{HMDT} mgl_data_max_dir (@code{const HMDT} dat, @code{const char *}dir)
 Gets array which is the maximal data values in given direction or direction(s).
-@end deftypemethod
-@deftypemethod {C function} @code{HMDT} mgl_data_min_dir (@code{const HMDT} dat, @code{const char *}dir)
+@end deftypefn
+@deftypefn {C function} @code{HMDT} mgl_data_min_dir (@code{const HMDT} dat, @code{const char *}dir)
 Gets array which is the minimal data values in given direction or direction(s).
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{HMDT} mgl_data_combine (@code{const HMDT} dat, @code{const HMDT} a)
+@deftypefn {C function} @code{HMDT} mgl_data_combine (@code{const HMDT} dat, @code{const HMDT} a)
 Returns direct multiplication of arrays (like, res[i,j] = this[i]*a[j] and so on).
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{HMDT} mgl_data_evaluate_i (@code{const HMDT} dat, @code{const HMDT} idat, @code{int} norm)
-@deftypemethodx {C function} @code{HMDT} mgl_data_evaluate_ij (@code{const HMDT} dat, @code{const HMDT} idat, @code{const HMDT} jdat, @code{int} norm)
-@deftypemethodx {C function} @code{HMDT} mgl_data_evaluate_ijk (@code{const HMDT} dat, @code{const HMDT} idat, @code{const HMDT} jdat, @code{const HMDT} kdat, @code{int} norm)
+@deftypefn {C function} @code{HMDT} mgl_data_evaluate_i (@code{const HMDT} dat, @code{const HMDT} idat, @code{int} norm)
+@deftypefnx {C function} @code{HMDT} mgl_data_evaluate_ij (@code{const HMDT} dat, @code{const HMDT} idat, @code{const HMDT} jdat, @code{int} norm)
+@deftypefnx {C function} @code{HMDT} mgl_data_evaluate_ijk (@code{const HMDT} dat, @code{const HMDT} idat, @code{const HMDT} jdat, @code{const HMDT} kdat, @code{int} norm)
 Get array which values is result of interpolation of original array for coordinates from other arrays. All dimensions must be the same for data @var{idat}, @var{jdat}, @var{kdat}. Coordinates from @var{idat}, @var{jdat}, @var{kdat} are supposed to be normalized in range [0,1] (if @var{norm}=@code{true}) or in range [0,nx], [0,ny], [0,nz] correspondingly.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{HMDT} mgl_data_resize (@code{const HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
-@deftypemethodx {C function} @code{HMDT} mgl_data_resize_box (@code{const HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{float} z1, @code{float} z2)
+@deftypefn {C function} @code{HMDT} mgl_data_resize (@code{const HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
+@deftypefnx {C function} @code{HMDT} mgl_data_resize_box (@code{const HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{float} z1, @code{float} z2)
 Resizes the data to new size @var{mx}, @var{my}, @var{mz} from box (part) [@var{x1},@var{x2}] x [@var{y1},@var{y2}] x [@var{z1},@var{z2}] of original array. Initially x,y,z coordinates are supposed to be in [0,1].
-@end deftypemethod
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node Functions on direction (Pure C), Interpolation (Pure C), Make another data (Pure C), C interface
@@ -2100,37 +2122,37 @@ Resizes the data to new size @var{mx}, @var{my}, @var{mz} from box (part) [@var{
 
 These functions change the data in some direction like differentiations, integrations and so on. The direction in which the change will applied is specified by the string parameter, which may contain @samp{x}, @samp{y} or @samp{z} characters for 1-st, 2-nd and 3-d dimension correspondengly.
 
-@deftypemethod {C function} @code{void} mgl_data_cumsum (@code{HMDT} dat, @code{const char *}dir)
+@deftypefn {C function} @code{void} mgl_data_cumsum (@code{HMDT} dat, @code{const char *}dir)
 Cumulative summation of the data in given direction or directions.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_integral (@code{HMDT} dat, @code{const char *}dir)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_integral (@code{HMDT} dat, @code{const char *}dir)
 Integrates (like cumulative summation) the data in given direction or directions.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_diff (@code{HMDT} dat, @code{const char *}dir)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_diff (@code{HMDT} dat, @code{const char *}dir)
 Differentiates the data in given direction or directions.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_diff2 (@code{const char *}dir)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_diff2 (@code{const char *}dir)
 Double-differentiates (like Laplace operator) the data in given direction.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_swap (@code{HMDT} dat, @code{const char *}dir)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_swap (@code{HMDT} dat, @code{const char *}dir)
 Swaps the left and right part of the data in given direction (useful for Fourier spectrum).
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_mirror (@code{HMDT} dat, @code{const char *}dir)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_mirror (@code{HMDT} dat, @code{const char *}dir)
 Mirror the left-to-right part of the data in given direction. Looks like change the value index @var{i}->@var{n-i}.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_sew (@code{HMDT} dat, @code{const char *}dir, @code{float} da)
+@deftypefn {C function} @code{void} mgl_data_sew (@code{HMDT} dat, @code{const char *}dir, @code{float} da)
 Remove value steps (like phase jumps after inverse trigonometric functions) with period @var{da} in given direction.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_smooth (@code{HMDT} dat, @code{int} Type, @code{float} delt, @code{const char *}dira)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_smooth (@code{HMDT} dat, @code{int} Type, @code{float} delt, @code{const char *}dira)
 Smooths the data on specified direction or directions by method @var{Type}. Now 4 methods are supported: @code{SMOOTH_NONE} does nothing for @var{delta}=0 or approaches data to zero with the step @var{delta}, @code{SMOOTH_LINE_3} linear averaging by 3 points, @code{SMOOTH_LINE_5} linear averaging by 5 points, @code{SMOOTH_QUAD_5} quadratic averaging by 5 points. Parameter @var{delta} forbids to change values of array more than @var{delta} from the original ones. String @var{dirs} specifies the dimensions which will be smoothed. It may contain characters: 'x' for 1st dimension, 'y' for 2nd dimension, 'z' for 3d dimension.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_envelop (@code{HMDT} dat, @code{char} dir)
+@deftypefn {C function} @code{void} mgl_data_envelop (@code{HMDT} dat, @code{char} dir)
 Find envelop for data values along direction @var{dir}.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{void} mgl_data_norm_slice (@code{HMDT} dat, @code{float} v1, @code{float} v2, @code{char} dir, @code{int} keep_en, @code{int} sym)
+@deftypefn {C function} @code{void} mgl_data_norm_slice (@code{HMDT} dat, @code{float} v1, @code{float} v2, @code{char} dir, @code{int} keep_en, @code{int} sym)
 Normalizes data slice-by-slice along direction @var{dir} the data in slices to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} then symmetrical interval [-max(|v1|,|v2|), max(|v1|,|v2|)] is used. If @var{keep_en} is set then maximal value of k-th slice will be limited by 
 @iftex
 @math{\sqrt{\sum a_{ij}(k)/\sum a_{ij}(0)}}.
@@ -2138,10 +2160,10 @@ Normalizes data slice-by-slice along direction @var{dir} the data in slices to r
 @ifnottex
 @math{\sqrt@{\sum a_ij(k)/\sum a_ij(0)@}}.
 @end ifnottex
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_norm (@code{HMDT} dat, @code{float} v1=@code{0}, @code{float} v2=@code{1}, @code{int} sym=@code{false}, @code{int} dim=@code{0})
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_norm (@code{HMDT} dat, @code{float} v1=@code{0}, @code{float} v2=@code{1}, @code{int} sym=@code{false}, @code{int} dim=@code{0})
 Normalizes the data to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} then symmetrical interval [-max(|v1|,|v2|), max(|v1|,|v2|)] is used. Modification will be applied only for slices >=@var{dim}.
-@end deftypemethod
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node Interpolation (Pure C), Informational functions (Pure C), Functions on direction (Pure C), C interface
@@ -2153,28 +2175,28 @@ Normalizes the data to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} 
 @cindex Spline5
 @cindex v
 
-@deftypemethod {C function} @code{float} mgl_data_spline (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
+@deftypefn {C function} @code{float} mgl_data_spline (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
 Interpolates data by cubic spline to the given point @var{x} in [0...nx-1], @var{y} in [0...ny-1], @var{z} in [0...nz-1].
-@end deftypemethod
-@deftypemethod {C function} @code{float} mgl_data_spline1 (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
+@end deftypefn
+@deftypefn {C function} @code{float} mgl_data_spline1 (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
 Interpolates data by cubic spline to the given point @var{x}, @var{y}, @var{z} which assumed to be normalized in range [0, 1].
-@end deftypemethod
-@deftypemethod {C function} @code{float} mgl_data_linear (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
+@end deftypefn
+@deftypefn {C function} @code{float} mgl_data_linear (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
 Interpolates data by linear function to the given point @var{x} in [0...nx-1], @var{y} in [0...ny-1], @var{z} in [0...nz-1].
-@end deftypemethod
-@deftypemethod {C function} @code{float} mgl_data_linear11 (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
+@end deftypefn
+@deftypefn {C function} @code{float} mgl_data_linear11 (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
 Interpolates data by linear function to the given point @var{x}, @var{y}, @var{z} which assumed to be normalized in range [0, 1].
-@end deftypemethod
-@deftypemethod {C function} @code{float} mgl_data_get_value (@code{const HMDT} dat, @code{int} i, @code{int} j, @code{int} k)
+@end deftypefn
+@deftypefn {C function} @code{float} mgl_data_get_value (@code{const HMDT} dat, @code{int} i, @code{int} j, @code{int} k)
 Gets the value in specified cell of the data with border checking.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod {C function} @code{float *} mgl_data_value (@code{HMDT} dat, @code{int} i, @code{int} j, @code{int} k)
+@deftypefn {C function} @code{float *} mgl_data_value (@code{HMDT} dat, @code{int} i, @code{int} j, @code{int} k)
 Gets the pointer to data element.
-@end deftypemethod
-@deftypemethod {C function} @code{const float *} mgl_data_data (@code{const HMDT} dat)
+@end deftypefn
+@deftypefn {C function} @code{const float *} mgl_data_data (@code{const HMDT} dat)
 Gets the pointer to internal data array.
-@end deftypemethod
+@end deftypefn
 
 
 @c ------------------------------------------------------------------
@@ -2183,39 +2205,39 @@ Gets the pointer to internal data array.
 @cindex Maximal
 @cindex Minimal
 
-@deftypemethod {C function} @code{float} mgl_data_max (@code{const HMDT} dat)
+@deftypefn {C function} @code{float} mgl_data_max (@code{const HMDT} dat)
 Gets maximal value of the data.
-@end deftypemethod
-@deftypemethod {C function} @code{float} mgl_data_min (@code{HMDT} dat) @code{const}
+@end deftypefn
+@deftypefn {C function} @code{float} mgl_data_min (@code{HMDT} dat) @code{const}
 Gets minimal value of the data.
-@end deftypemethod
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node Operators (Pure C), , Informational functions (Pure C), C interface
 @subsection Operators (Pure C)
 
-@deftypemethod {C function} @code{void} mgl_data_mul_dat (@code{HMDT} dat, @code{const HMDT} d)
+@deftypefn {C function} @code{void} mgl_data_mul_dat (@code{HMDT} dat, @code{const HMDT} d)
 Multiplies the data by the other one for each element.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_div_dat (@code{HMDT} dat, @code{const HMDT} d)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_div_dat (@code{HMDT} dat, @code{const HMDT} d)
 Divides the data by the other one for each element.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_add_dat (@code{HMDT} dat, @code{const HMDT} d)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_add_dat (@code{HMDT} dat, @code{const HMDT} d)
 Adds the other data.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_sub_dat (@code{HMDT} dat, @code{const HMDT} d)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_sub_dat (@code{HMDT} dat, @code{const HMDT} d)
 Subtracts the other data.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_mul_num (@code{HMDT} dat, @code{float} d)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_mul_num (@code{HMDT} dat, @code{float} d)
 Multiplies each element by the number.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_div_num (@code{HMDT} dat, @code{float} d)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_div_num (@code{HMDT} dat, @code{float} d)
 Divides each element by the number.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_add_num (@code{HMDT} dat, @code{float} d)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_add_num (@code{HMDT} dat, @code{float} d)
 Adds the number to each element.
-@end deftypemethod
-@deftypemethod {C function} @code{void} mgl_data_sub_num (@code{HMDT} dat, @code{float} d)
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_sub_num (@code{HMDT} dat, @code{float} d)
 Subtracts the number to each element.
-@end deftypemethod
+@end deftypefn
 

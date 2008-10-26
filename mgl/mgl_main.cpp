@@ -763,7 +763,6 @@ mglGraph::mglGraph()
 	xnum=ynum=znum=0;
 	fit_res = new char[1024];
 	fnt = new mglFont;
-	CloudFactor=10;
 	DefaultPlotParam();
 	InitSaveFunc();
 }
@@ -947,5 +946,15 @@ void mglGraph::FaceY(float x0, float y0, float z0, float wx, float wz, const cha
 void mglGraph::FaceZ(float x0, float y0, float z0, float wx, float wy, const char *stl, float d1, float d2)
 {
 	Face(mglPoint(x0,y0,z0), mglPoint(x0,y0+wy,z0), mglPoint(x0+wx,y0,z0), mglPoint(x0+wx+d1,y0+wy+d2,z0), stl, 2);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::ShowImage(const char *viewer)
+{
+	char fname[128], cmd[128];
+	sprintf(fname,"%s.png", tmpnam(NULL));
+	WritePNG(fname,"MathGL ShowImage file",false);
+	sprintf(cmd,"%s %s", viewer,fname);
+	system(cmd);
+	remove(fname);
 }
 //-----------------------------------------------------------------------------

@@ -362,6 +362,11 @@ The function sets to draws Ternary plot. This special plot is for 3 dependent co
 Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
 @end deftypemethod
 
+@deftypemethod mglGraph @code{void} SetTicksVal (@code{char} dir, @code{int} n, @code{float *}val, @code{char **}lbl)
+@deftypemethodx mglGraph @code{void} SetTicksVal (@code{char} dir, @code{int} n, @code{float *}val, @code{wchar_t **}lbl)
+Set the manual positions @var{val} and its labels @var{lbl} for @var{n}-th ticks along axis @var{dir}. The arrays @var{val} and @var{lbl} have to contain @var{n} elements. Use @code{SetTicks()} to restore automatic ticks.
+@end deftypemethod
+
 @deftypemethod {mglGraph (Python)} @code{void} SetTickTemplX (@code{const wchar_t *}xtt)
 @deftypemethodx {mglGraph (Python)} @code{void} SetTickTemplY (@code{const wchar_t *}ytt)
 @deftypemethodx {mglGraph (Python)} @code{void} SetTickTemplZ (@code{const wchar_t *}ztt)
@@ -464,6 +469,10 @@ Exports current frame to SVG (Scalable Vector Graphics) file. The vector represe
 
 @deftypemethod {mglGraph (Python)} @code{void} WriteIDTF (@code{const char *}fname, @code{const char *}descr=@code{NULL})
 Exports current frame to IDTF file. Later this file can be converted to U3D format. The vector representation is used. So, the output file may be too large for graphic of large data array (especially for surfaces). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
+@end deftypemethod
+
+@deftypemethod {mglGraph (Python)} @code{void} ShowImage (@code{const char *}viewer=@code{"kuickshow"})
+Displays the current picture using external program @var{viewer} for viewing. The function save the picture to temporary file and call @var{viewer} to display it.
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} SetSize (@code{int} width, @code{int} height)
@@ -707,6 +716,10 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in
 
 @deftypemethod {mglGraph (Python)} @code{void} Area (@code{mglData} y, @code{const char *}pen=@code{NULL})
 The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z} and fills it down to @var{y} = Org.y, where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
+@end deftypemethod
+
+@deftypemethod {mglGraph (Python)} @code{void} AreaSum (@code{mglData} x, @code{mglData} y, @code{const char *}pen=@code{NULL})
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z} and fills it down to @var{y} = Org.y. The lines are drawn one abover another (like summation). Note, you can reach the same effect if call @code{y.CumSum("y");} before @code{Area} plot.
 @end deftypemethod
 
 @c ==================================================================

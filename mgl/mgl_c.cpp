@@ -113,6 +113,8 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 /// Write the frame in file using ScalableVectorGraphics format
 void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 {	gr->WriteSVG(fname,descr);	}
+void mgl_show_image(HMGL gr, const char *viewer)
+{	gr->ShowImage(viewer);	}
 //-----------------------------------------------------------------------------
 //		Setup frames transparency (alpha) and lightning
 //-----------------------------------------------------------------------------
@@ -376,7 +378,7 @@ void mgl_set_font_def(HMGL gr, const char *fnt)
 void mgl_flush(HMGL gr)	{	gr->Flush();	}
 void mgl_data_fill_eq(HMGL gr, HMDT dat, const char *eq, const HMDT vdat, const HMDT wdat)
 {	dat->Fill(eq, gr->Min, gr->Max, vdat, wdat);	}
-void mgl_set_ticks_vals(HMGL gr, char dir, int n, float *val, char **lbl)
+void mgl_set_ticks_vals(HMGL gr, char dir, int n, float *val, const char **lbl)
 {	gr->SetTicksVal(dir,n,val,lbl);	}
 //-----------------------------------------------------------------------------
 #include <stdint.h>

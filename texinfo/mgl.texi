@@ -283,6 +283,12 @@ Step for x-, y-, z-axis ticks (if @var{cal}>0) or it's number (if @var{val}<0) i
 The template for x-, y-, z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{templ}=@code{''} then default template is used (in simplest case it is @samp{%.2g}) with automatic detaching of common multiplier or common component.
 @end deffn
 
+@deffn {MGL command} xtick val1 'lbl1' [val2 'lbl2' ...]
+@deffnx {MGL command} ytick val1 'lbl1' [val2 'lbl2' ...]
+@deffnx {MGL command} ztick val1 'lbl1' [val2 'lbl2' ...]
+Manual positions @var{val1},@var{val2},... and labels @var{lbl1},@var{lbl2},... for ticks along x-, y-, z-axis. Labels may contain TeX symbols also.
+@end deffn
+
 @c ##################################################################
 @node Transformation matrix (MGL), Export to file (MGL), Axis settings (MGL), MGL interface
 @subsection Transformation matrix (MGL)
@@ -1060,6 +1066,17 @@ Command fills the value of array according to the formula in string @var{eq}. Fo
 @deffn {MGL command} modify dat 'eq' vdat [wdat=0]
 Command fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in interval [0,1]. Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat}.
 @end deffn
+
+
+@deffn {MGL command} put a @code{val [i=: j=: k=:]}
+Function sets value(s) of array a[@var{i}, @var{j}, @var{k}] = @var{val}. Negative indexes @var{i}, @var{j}, @var{k}=@samp{:} set the value @var{val} to whole range in corresponding direction(s). For example, @code{put a val : 0 :} sets a[i,0,j]=@var{val} for i=0...(a.nx-1), j=0...(a.nz-1).
+@end deffn
+
+@deffn {MGL command} put a v [@code{i=: j=: k=:}]
+Function copies value(s) from array @var{v} to the range of array @var{a}. Negative indexes @var{i}, @var{j}, @var{k}=@samp{:} set the range in corresponding direction(s). At this minor dimensions of array @var{v} should be large than corresponding dimensions of array @var{a}. For example, @code{put a v : 0 :} sets a[i,0,j]=v.ny>nz ? v[i,j] : v[i], where i=0...(a.nx-1), j=0...(a.nz-1) and condition v.nx>=a.nx is true.
+@end deffn
+
+
 
 @c ------------------------------------------------------------------
 @node Rearrange data (MGL), File I/O (MGL), Data filling (MGL), MGL interface

@@ -1,22 +1,20 @@
 					MathGL (for v.1.8)
 
-2. Ternary axis -- keep z-axis as normal one ???
-3. Change ticks labels drawing if RotatedText = false;
-5. Use Hershey as built-in font
-6. Spline5 !!!
-7. Add FLTK, QT & GLUT to Fortran ===> Popov Dmitry
-8. mglGraphAB::ShowImg()
+1. Check Put
+2. Change ticks labels drawing if RotatedText = false;
+3. Spline5 !!!
 
-11. Update documentation (English)
+4. Update documentation (English)
 	* remove obsolete from  Samples
 	* Documentation about Put -- texi (mglData,Pure C,Python,MGL) + MGL help
-	* Documentation about SetTicksVal -- texi (mglData,Pure C,Python,MGL) + MGL help
+	* SampleC
 
-14. PyQt
-15. Check Put
-16. mglGraph::WriteBitmap(fname,type="png",descr=0);
-17. skip empty lines in data files (at beginning)
+5. mglGraph::WriteBitmap(fname,type="png",descr=0);
 
+6. Use Hershey as built-in font
+
+7. Add FLTK, QT & GLUT to Fortran ===> Popov Dmitry
+8. PyQt ===> Heino
 
 					MathGL (for v.1.8.?) ???
 

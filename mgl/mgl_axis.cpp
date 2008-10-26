@@ -16,6 +16,7 @@
  */
 #include <ctype.h>
 #include <wchar.h>
+#include <stdarg.h>
 
 #ifdef WIN32
 #define swprintf    _snwprintf
@@ -23,6 +24,7 @@
 
 #include "mgl/mgl_eval.h"
 #include "mgl/mgl.h"
+#include "mgl/mgl_c.h"
 #define FLT_EPS	(1.+1.2e-07)
 
 //-----------------------------------------------------------------------------
@@ -947,7 +949,7 @@ void mglGraph::SetTicks(char dir, float d, int ns, float org)
 	{	dz = d;	NSz = ns;	OrgT.z = org;	if(znum) delete []zbuf;	znum=0;	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetTicksVal(char dir, int n, float *val, wchar_t **lbl)
+void mglGraph::SetTicksVal(char dir, int n, float *val, const wchar_t **lbl)
 {
 	long len=0;
 	register int i;
@@ -992,7 +994,7 @@ void mglGraph::SetTicksVal(char dir, int n, float *val, wchar_t **lbl)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetTicksVal(char dir, int n, float *val, char **lbl)
+void mglGraph::SetTicksVal(char dir, int n, float *val, const char **lbl)
 {
 	long len=0;
 	register int i,ll;
@@ -1038,5 +1040,41 @@ void mglGraph::SetTicksVal(char dir, int n, float *val, char **lbl)
 			len += ll;
 		}
 	}
+}
+//-----------------------------------------------------------------------------
+void mglGraph::SetTicksVal(char dir, int n, double val, const char *lbl, ...)
+{
+	if(n<1)	return;
+	float *v = new float[n];
+	const char **l = (const char **)malloc(n*sizeof(const char *));
+	v[0] = val;	l[0] = lbl;
+	va_list ap;
+	va_start(ap, lbl);
+	for(int i=1;i<n;i++)
+	{
+		v[i] = va_arg(ap, double);
+		l[i] = va_arg(ap, char *);
+	}
+	va_end(ap);
+	SetTicksVal(dir,n,v,l);
+	delete []v;		free(l);
+}
+//-----------------------------------------------------------------------------
+void mgl_set_ticks_val(HMGL gr, char dir, int n, double val, const char *lbl, ...)
+{
+	if(n<1)	return;
+	float *v = new float[n];
+	const char **l = (const char **)malloc(n*sizeof(const char *));
+	v[0] = val;	l[0] = lbl;
+	va_list ap;
+	va_start(ap, lbl);
+	for(int i=1;i<n;i++)
+	{
+		v[i] = va_arg(ap, double);
+		l[i] = va_arg(ap, char *);
+	}
+	va_end(ap);
+	gr->SetTicksVal(dir,n,v,l);
+	delete []v;		free(l);
 }
 //-----------------------------------------------------------------------------

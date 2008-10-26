@@ -2305,7 +2305,7 @@ int mgls_xtick(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==2)
 	{
-		float v[50];	wchar_t *s[50];	int i;
+		float v[50];	const wchar_t *s[50];	int i;
 		for(i=0;i<50 && i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
@@ -2315,11 +2315,7 @@ int mgls_xtick(mglGraph *gr, long n, mglArg *a, int k[10])
 		gr->SetTicksVal('x',i,v,s);
 	}
 	else if(k[0]==3)
-	{
-		gr->dx = a[0].v;
-		if(k[1]==3)	gr->NSx = int(a[1].v);
-		if(k[2]==3)	gr->OrgT.x = a[2].v;
-	}
+		gr->SetTicks('x', a[0].v, k[1]==3?int(a[1].v):0, k[2]==3?a[2].v:NAN);
 	else if(k[0]==2)
 	{
 		if(gr->xtt)	delete []gr->xtt;
@@ -2344,7 +2340,7 @@ int mgls_ytick(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==2)
 	{
-		float v[50];	wchar_t *s[50];	int i;
+		float v[50];	const wchar_t *s[50];	int i;
 		for(i=0;i<50 && i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
@@ -2354,11 +2350,7 @@ int mgls_ytick(mglGraph *gr, long n, mglArg *a, int k[10])
 		gr->SetTicksVal('y',i,v,s);
 	}
 	else if(k[0]==3)
-	{
-		gr->dy = a[0].v;
-		if(k[1]==3)	gr->NSy = int(a[1].v);
-		if(k[2]==3)	gr->OrgT.y = a[2].v;
-	}
+		gr->SetTicks('y', a[0].v, k[1]==3?int(a[1].v):0, k[2]==3?a[2].v:NAN);
 	else if(k[0]==2)
 	{
 		if(gr->ytt)	delete []gr->ytt;
@@ -2383,7 +2375,7 @@ int mgls_ztick(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==2)
 	{
-		float v[50];	wchar_t *s[50]; int i;
+		float v[50];	const wchar_t *s[50]; int i;
 		for(i=0;i<50 && i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
@@ -2393,11 +2385,7 @@ int mgls_ztick(mglGraph *gr, long n, mglArg *a, int k[10])
 		gr->SetTicksVal('z',i,v,s);
 	}
 	else if(k[0]==3)
-	{
-		gr->dz = a[0].v;
-		if(k[1]==3)	gr->NSz = int(a[1].v);
-		if(k[2]==3)	gr->OrgT.z = a[2].v;
-	}
+		gr->SetTicks('z', a[0].v, k[1]==3?int(a[1].v):0, k[2]==3?a[2].v:NAN);
 	else if(k[0]==2)
 	{
 		if(gr->ztt)	delete []gr->ztt;
@@ -3039,21 +3027,19 @@ void mglc_evaluate(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"put","Put value (numeric or array) to given data element","put val dat i [j=0 k=0]", mgls_put, mglc_put}
 int mgls_put(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==3 && k[1]==1)
-		a[1].d->Put(a[0].v, k[2]==3?int(a[2].v):-1, k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
+	if(k[1]==3 && k[0]==1)
+		a[0].d->Put(a[1].v, k[2]==3?int(a[2].v):-1, k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
 	else if(k[0]==1 && k[1]==1)
-		a[1].d->Put(*(a[0].d), k[2]==3?int(a[2].v):-1, k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
+		a[0].d->Put(*(a[1].d), k[2]==3?int(a[2].v):-1, k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
 	else	return 1;
 	return 0;
 }
 void mglc_put(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==3 && k[1]==1 && k[2]==3)
-		swprintf(out,1024,L"%s.Put(%g, %d, %d, %d);", a[1].s, a[0].v, k[2]==3?int(a[2].v):-1, k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
-	else if(k[0]==1 && k[1]==1 && k[2]==3)
-		swprintf(out,1024,L"%s.Put(%s, %d, %d, %d);", a[1].s, a[0].s, k[2]==3?int(a[2].v):-1, k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
-	if(k[0]==1 && k[1]==3 && k[2]==3)
-	swprintf(out,1024,L"%s.Create(%d);\t%s.Fill(%g,%g);",a[0].s, int(a[1].v), a[0].s, a[2].v, k[3]==3?a[3].v:NAN);
+	if(k[0]==1 && k[1]==3)
+		swprintf(out,1024,L"%s.Put(%g, %d, %d, %d);", a[0].s, a[1].v, k[2]==3?int(a[2].v):-1, k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
+	else if(k[0]==1 && k[1]==1)
+		swprintf(out,1024,L"%s.Put(%s, %d, %d, %d);", a[0].s, a[1].s, k[2]==3?int(a[2].v):-1, k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
 }
 //-----------------------------------------------------------------------------
 //	{L"palette",L"Set palette for 1D plots",L"palette 'colors'", mgls_palette, mglc_palette}

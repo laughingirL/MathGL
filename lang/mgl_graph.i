@@ -116,6 +116,8 @@ struct mglParse{};
 	void RestoreFont()
 	{	mgl_restore_font(self);	}
 
+	void ShowImage(const char *viewer="kuickshow")
+	{	mgl_show_image(self, viewer);	}
 	void WriteTIFF(const char *fname,const char *descr="")
 	{	mgl_write_tif(self, fname, descr);	}
 	void WriteIDTF(const char *fname,const char *descr="")
@@ -147,7 +149,7 @@ struct mglParse{};
 	{	mgl_set_transp(self, enable);}
 	void Alpha(bool enable)
 	{	mgl_set_alpha(self, enable);	}
-	void SetFog(float d, float dz=0.25)
+	void Fog(float d, float dz=0.25)
 	{	mgl_set_fog(self, d, dz);		}
 	void Light(bool enable)
 	{	mgl_set_light(self, enable);	}
@@ -177,6 +179,8 @@ struct mglParse{};
 
 	void SetTicks(char dir, float d=-5, int ns=0, float org=NaN)
 	{	mgl_set_ticks_dir(self, dir, d, ns, org);	}
+	void SetTicks(char dir, int n, float *val, const char **lbl)
+	{	mgl_set_ticks_vals(self, dir, n, val, lbl);	}
 	void SetCRange(float c1, float c2)
 	{	mgl_set_caxis(self, c1, c2);	}
 	void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0)
@@ -282,6 +286,8 @@ struct mglParse{};
 	{	mgl_area_xy(self, x, y, pen);	}
 	void Area(mglData *y, const char *pen="")
 	{	mgl_area(self, y, pen);	}
+	void AreaSum(mglData *x, mglData *y, const char *pen="")
+	{	mgl_area_xys(self, x, y, pen);	}
 	void Stem(mglData *x, mglData *y, mglData *z, const char *pen="")
 	{	mgl_stem_xyz(self, x, y, z, pen);	}
 	void Stem(mglData *x, mglData *y, const char *pen="")

@@ -156,9 +156,9 @@ public:
 	/// Normalize the data to range [v1,v2] slice by slice
 	void NormSl(float v1=0,float v2=1,char dir='z',bool keep_en=true,bool sym=false);
 	/// Put value to data element(s)
-	void Put(float val, int i, int j=0, int k=0);
+	void Put(float val, int i=-1, int j=-1, int k=-1);
 	/// Put array to data element(s)
-	void Put(const mglData &val, int i, int j=-1, int k=-1);
+	void Put(const mglData &val, int i=-1, int j=-1, int k=-1);
 	/// Modify the data by specified formula
 	void Modify(const char *eq,int dim=0);
 	/// Modify the data by specified formula

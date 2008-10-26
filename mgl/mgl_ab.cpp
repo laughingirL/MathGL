@@ -34,9 +34,9 @@ void _mgl_tick_text(float z, float z0, float d, float v, int kind, wchar_t str[6
 //-----------------------------------------------------------------------------
 mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 {
-	G = 0;	UseLight = false;	CloudFactor = 2.5;
+	G = 0;	UseLight = false;
 	SetSize(w,h);
-	AlphaDef=0.6;	AutoClf=true;	Delay = 100;
+	AutoClf=true;	Delay = 100;
 	for(long i=0;i<10;i++)
 	{	Light(i,mglPoint(0,0,1));	nLight[i] = false;	}
 	nLight[0] = true;	NoAutoFactor = false;
