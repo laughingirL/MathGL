@@ -132,15 +132,23 @@ Delete parser
 Add script parameter @var{id} with value @var{val} (used in string as '\$0','\$1' \ldots '\$9').
 @end deftypefn
 @deftypefn {C function} @code{const HMDT} mgl_add_var (@code{HMPR} p, @code{const char *}name)
-Add variable with @var{name} if it is not exists. Return the created or found variable. @strong{NOTE!!!} You must not delete obtained data arrays.
+Add variable with @var{name} if it is not exists. Return the created or found variable. @strong{NOTE!!!} You must not delete obtained data arrays. Use this function to put external data array to the script or get the data from the script.
 @end deftypefn
 @deftypefn {C function} @code{const HMDT} mgl_find_var  (@code{HMPR} p, @code{const char *}name)
-Find variable with @var{name} and return it (or @code{NULL} if variable is absent). @strong{NOTE!!!} You must not delete obtained data arrays.
+Find variable with @var{name} and return it (or @code{NULL} if variable is absent). @strong{NOTE!!!} You must not delete obtained data arrays. Use this function to put external data array to the script or get the data from the script.
 @end deftypefn
 @deftypefn {C function} @code{int} mgl_parse (@code{HMGL} gr, @code{HMPR} p, @code{const char *}str, @code{int} pos)
 @deftypefnx {C function} @code{int} mgl_parsew (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}str, @code{int} pos)
 Parse and draw (using @var{gr}) the string @var{str} with MGL commands. Returns the value depending on an error presence in the string str: 0 - no error, 1 - wrong command argument(s), 2 - unknown command, 3 - string is too long. 
 @end deftypefn
+
+@deftypefn {C function} @code{void} mgl_parse_text (@code{HMGL} gr, @code{HMPR} p, @code{const char *}text)
+@deftypefnx {C function} @code{void} mgl_parsew_text (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}text)
+Function parse and execute line-by-line MGL script in string @var{text}. Lines are separated by @samp{\n} symbol as usual. If @var{error} is not @code{NULL} then this function will be called for all warnings, information and other messages. Also this function support the @code{for|next} MGL commands.
+@end deftypefn
+
+
+
 @deftypefn {C function} @code{void} mgl_restore_once (@code{HMPR} p)
 Restore 'once' state (for data reloading on next parsing).
 @end deftypefn
@@ -1941,11 +1949,11 @@ Fills the value of array according to the formula in string @var{eq}. Formula is
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_data_modify (@code{HMDT} dat, @code{const char *}eq, @code{int} dim)
-Function fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in interval [0,1]. Variable @samp{u} is the original value of the array. Modification will be fulfilled only for slices >=@var{dim}.
+Function fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in interval [0,1]. Variable @samp{u} is the original value of the array. Modification will be fulfilled only for slices >=@var{dim}.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_data_modify_vw (@code{HMDT} dat, @code{const char *}eq, @code{const HMDT} v, @code{const HMDT} w)
-Function fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in interval [0,1]. Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat} which can be @code{NULL} (i.e. can be ommited).
+Function fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in interval [0,1]. Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat} which can be @code{NULL} (i.e. can be ommited).
 @end deftypefn
 
 @deftypefn mglData @code{void} mgl_data_put_val (@code{HMDT} a, @code{float} val, @code{int} i, @code{int} j, @code{int} k)
@@ -2070,14 +2078,14 @@ Creates @var{n}-th points distribution of the data values in range [@var{v1}, @v
 Creates @var{n}-th points distribution of the data values in range [@var{v1}, @var{v2}]. Array @var{w} specifies weights of the data elements. Parameter @var{nsub} define the number of additional interpolated points (for smoothness of histogram).
 @end deftypefn
 @deftypefn {C function} @code{HMDT} mgl_data_momentum (@code{const HMDT} dat, @code{char} dir, @code{const char *}how)
-Get momentum (1D-array) of the data along direction @var{dir}. String @var{how} contain kind of momentum and may looks like @code{"x1"} for median 
+Get momentum (1D-array) of the data along direction @var{dir}. String @var{how} contain kind of momentum. The momentum is defined like as
 @iftex
-@math{\sum_{ij} x_i a_{ij}} in x-direction, @code{"y2"} for @math{\sum_{ij} y_j^2 a_{ij}}
+@math{res_k = \sum_{ij} how(x_i,y_j,z_k) a_{ij}/\sum_{ij} a_{ij}}
 @end iftex
 @ifnottex
-\sum_ij x_i a_ij in x-direction, @code{"y2"} for \sum_ij y_j^2 a_ij
+res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @end ifnottex
-in x-dir and so on. Mixed momentum (like @code{"xy"}) are not supported now.
+if @var{var}=@samp{z} and so on. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1].
 @end deftypefn
 
 @deftypefn {C function} @code{HMDT} mgl_data_sum (@code{const HMDT} dat, @code{const char *}dir)

@@ -374,11 +374,11 @@ int main(int argc,char **argv)
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting");
 	switch(key)
 	{
-	case '1':	gr.Window(0,0,sample_1,"1D plots",NULL);	break;
-	case '2':	gr.Window(0,0,sample_2,"2D plots",NULL);	break;
-	case '3':	gr.Window(0,0,sample_3,"3D plots",NULL);	break;
-	case 'd':	gr.Window(0,0,sample_d,"Dual plots",NULL);	break;
-	default:	gr.Window(0,0,sample,"Example of molecules",NULL);	break;
+	case '1':	gr.Window(0,0,sample_1,"1D plots");	break;
+	case '2':	gr.Window(0,0,sample_2,"2D plots");	break;
+	case '3':	gr.Window(0,0,sample_3,"3D plots");	break;
+	case 'd':	gr.Window(0,0,sample_d,"Dual plots");	break;
+	default:	gr.Window(0,0,sample,"Example of molecules");	break;
 	}
 	return 0;
 }

@@ -156,6 +156,13 @@ One may specify to draw a special symbol (an arrow) at the beginning and at the 
 
 The color scheme is used for determining the color of surfaces, isolines, isosurfaces and so on. The color scheme is defined by the string which may contain several characters that are color id (@pxref{mglColor class} or @pxref{Line styles}) or characters @samp{d#:|}. Symbol @samp{d} denotes interpolation by 3d position instead of the coloring by amplitude. Symbol @samp{#} switch to mesh drawing or to wire plot. Symbol @samp{|} disable color interpolation in color scheme which can be usefull, for example, for sharp colors during matrix plotting. Symbol @samp{:} finishes the color scheme parsing. After it the user may put styles for text, rotation axis for curves/isolines and so on. Color scheme may contain up to 32 color values.
 
+Also you may use ``lighted'' colors in color scheme specification (@emph{not in line style!}). The ``lighted'' color contain 2 symbols: first one is usual symbol for color specification, second one is digit for its brightness. The digit can be in range @samp{1}...@samp{9}. At this @samp{5} correspond to normal color, @samp{1} is very dark version of the color (practically black), @samp{9} is very bright version of the color (practically white).
+
+@float
+@image{png/colors, 7cm}
+@caption{Colors and its ids.}
+@end float
+
 For coloring by @emph{amplitude} (most common) the final color is linear interpolation of color array. The color array is constructed from the string ids. The argument is the amplitude normalized between @var{Cmin} -- @var{Cmax} (@pxref{Ranges (bounding box)}). For example, string containing 4 characters @samp{bcyr} corresponds to colorbar from blue (lowest value) through cyan (next value) through yellow (next value) to the red (highest value). String @samp{kw} corresponds to colorbar from black (lowest value) to white (highest value). String @samp{m} corresponds to a simple magenta color.
 
 There are several useful combinations. String @samp{kw} corresponds to the simplest gray color scheme when higher values are brighter. String @samp{wk} presents the inverse gray color scheme when higher value is darker. Strings @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} present  well-known @emph{hot}, @emph{summer} and @emph{winter} color schemes. Strings @samp{BbwrR} and @samp{bBkRr} allow to view bicolor figure on white or black background when negative values are blue and positive values are red. String @samp{BbcyrR} gives color scheme similar to well-known @emph{jet} color scheme.

@@ -62,13 +62,27 @@ Gets height of the image.
 
 Class mglGraphAB is the base class for ``widget classes''. So there are set of functions for handling window behavior. Most of them are applicable only for ``window'' classes (like mglGraphFLTK and so on, @pxref{Widget classes}). In all other classes these functions just do nothing. You should provide the corresponding interface in derived ``widget'' classes for user convenience.
 
-@deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{int (*}draw)(@code{mglGraph *}gr, @code{void *}p), @code{const char *}title, @code{void *}par=@code{NULL}, @code{void (*}reload)(@code{int} next)=@code{NULL})
+@deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{int (*}draw)(@code{mglGraph *}gr, @code{void *}p), @code{const char *}title, @code{void *}par=@code{NULL}, @code{void (*}reload)(@code{int} next, @code{void *}p)=@code{NULL})
 This function creates a window for plotting. Parameters @var{argc}, @var{argv} contain OS specific information and should be the same as in function @code{main(int argc,char **argv)}. Parameter @var{draw} sets a pointer (this is the name of function) to drawing function. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Parameter @var{title} sets the title of the window. Parameter @var{par} contains pointer to data for the plotting function @var{draw}.
 
 There are some keys handles for manipulating by the plot: 'a', 'd', 'w', 's' for the rotating; ',', '.' for viewing of the previous or next frames in the list; 'r' for the switching of transparency; 'f' for the switching of lightning; 'x' for hiding (closing) the window.
 
 @strong{IMPORTANT!!!} You need to add a call of Rotate() (@pxref{Transformation matrix}) function for having possibility of plot rotation. If plot should be unrotated by default just add @code{Rotate(0,0)} in drawing function.
 @end deftypemethod
+
+@deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{mglDraw *}draw, @code{const char *}title)
+This function is mostly the same as previous one. The only difference is that the drawing function and function for data reloading are specified as methods on a class inherited from class @code{mglDraw}. This class is defined in @code{#include <mgl/mgl_data.h>} and have only 2 methods:
+@verbatim
+class mglDraw
+{
+public:
+    virtual int Draw(mglGraph *) { return 0; };
+    virtual void Reload(int) {};
+};
+@end verbatim
+You should inherit yours class from @code{mglDraw} and reimplement one or both functions for using this function.
+@end deftypemethod
+
 
 @deftypemethod mglGraphAB @code{void} ToggleAlpha ()
 Switch on/off transparency but do not overwrite switches in user drawing function.
@@ -444,7 +458,12 @@ Function parses the string @var{str}, executes it by  using @var{gr} as a graphi
 Function parse and execute line-by-line MGL script in file @var{fp}. If @var{print}=@code{true} then all warnings and information will be printed in stdout. Also this function support the @code{for|next} MGL commands.
 @end deftypemethod
 @deftypemethod mglParse @code{void} Execute (@code{mglGraph *}gr, @code{int} num, @code{const wchar_t **}text, @code{void (*} error @code{)(int line, int kind)=NULL})
-Function parse and execute string-by-string MGL script in array @var{text}. If @var{error} is not @code{NULL} then this function will be called for all warnings, information and other messages. Also this function support the @code{for|next} MGL commands.
+Function parse and execute line-by-line MGL script in array @var{text}. If @var{error} is not @code{NULL} then this function will be called for all warnings, information and other messages. Also this function support the @code{for|next} MGL commands.
+@end deftypemethod
+
+@deftypemethod mglParse @code{void} Execute (@code{mglGraph *}gr, @code{const char *}text, @code{void (*} error @code{)(int line, int kind)=NULL})
+@deftypemethodx mglParse @code{void} Execute (@code{mglGraph *}gr, @code{const wchar_t *}text, @code{void (*} error @code{)(int line, int kind)=NULL})
+Function parse and execute line-by-line MGL script in string @var{text}. Lines are separated by @samp{\n} symbol as usual. If @var{error} is not @code{NULL} then this function will be called for all warnings, information and other messages. Also this function support the @code{for|next} MGL commands.
 @end deftypemethod
 
 @deftypemethod mglParse @code{bool} AddParam (@code{int} n, @code{const char *}str, @code{bool} isstr=@code{true})
@@ -454,11 +473,11 @@ Function set the value of @var{n}-th parameter as string @var{str} (@var{n}=0, 1
 
 @deftypemethod mglParse @code{mglVar *} FindVar (@code{const char *}name)
 @deftypemethodx mglParse @code{mglVar *} FindVar (@code{const wchar_t *}name)
-Function returns the pointer to variable with name @var{name} or zero if variable is absent.
+Function returns the pointer to variable with name @var{name} or zero if variable is absent. Use this function to put external data array to the script or get the data from the script.
 @end deftypemethod
 @deftypemethod mglParse @code{mglVar *} AddVar (@code{const char *}name)
 @deftypemethodx mglParse @code{mglVar *} AddVar (@code{const wchar_t *}name)
-Function returns the pointer to variable with name @var{name}. If variable is absent then new variable is created with name @var{name}.
+Function returns the pointer to variable with name @var{name}. If variable is absent then new variable is created with name @var{name}. Use this function to put external data array to the script or get the data from the script.
 @end deftypemethod
 
 @deftypemethod mglParse @code{void} DeleteVar (@code{mglVar *}v)

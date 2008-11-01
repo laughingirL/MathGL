@@ -50,7 +50,7 @@ void _mgl_timer(int)
 	if(_mgl_glwnd->tt)
 	{
 		_mgl_glwnd->curr_fig++;
-		if(_mgl_glwnd->curr_fig > _mgl_glwnd->nfig)
+		if(_mgl_glwnd->curr_fig > _mgl_glwnd->NumFig)
 			_mgl_glwnd->curr_fig = 1;
 		glutPostRedisplay();
 	}
@@ -97,11 +97,9 @@ void _mgl_key_up(unsigned char ch,int ,int )
 	if(ch=='e')	_mgl_glwnd->View(0,0,10);
 	if(ch=='n')	_mgl_glwnd->Identity();
 	if(ch==',')
-		_mgl_glwnd->curr_fig = _mgl_glwnd->curr_fig == 1 ?
-									_mgl_glwnd->nfig : _mgl_glwnd->curr_fig-1;
+		_mgl_glwnd->curr_fig = _mgl_glwnd->curr_fig == 1 ? _mgl_glwnd->NumFig : _mgl_glwnd->curr_fig-1;
 	if(ch=='.')
-		_mgl_glwnd->curr_fig = _mgl_glwnd->curr_fig == _mgl_glwnd->nfig ?
-													1 : _mgl_glwnd->curr_fig+1;
+		_mgl_glwnd->curr_fig = _mgl_glwnd->curr_fig == _mgl_glwnd->NumFig ? 1 : _mgl_glwnd->curr_fig+1;
 	if(ch=='r')	Alpha = !Alpha;
 	if(ch=='f')	Light = !Light;
 	if(ch=='u')	rL += 0.1;
@@ -112,14 +110,14 @@ void _mgl_key_up(unsigned char ch,int ,int )
 	if(ch=='j')	pL -= 2*M_PI*0.1;
 	if(ch=='[' && _mgl_glwnd->LoadFunc)
 	{
-		glDeleteLists(1,_mgl_glwnd->nfig);
-		_mgl_glwnd->LoadFunc(false);
+		glDeleteLists(1,_mgl_glwnd->NumFig);
+		_mgl_glwnd->LoadFunc(false, 0);
 		(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
 	}
 	if(ch==']' && _mgl_glwnd->LoadFunc)
 	{
-		glDeleteLists(1,_mgl_glwnd->nfig);
-		_mgl_glwnd->LoadFunc(true);
+		glDeleteLists(1,_mgl_glwnd->NumFig);
+		_mgl_glwnd->LoadFunc(true, 0);
 		(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
 	}
 	if(ch=='T')
@@ -168,7 +166,7 @@ void _mgl_display()
 	_mgl_glwnd->CurFrameId = 1;
 	if(_mgl_glwnd->AutoClf)	_mgl_glwnd->Clf();
 	_mgl_glwnd->SubPlot(1,1,0);
-	if(_mgl_glwnd->nfig>0)	glCallList(_mgl_glwnd->curr_fig);
+	if(_mgl_glwnd->NumFig>0)	glCallList(_mgl_glwnd->curr_fig);
 	else	(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
 	if(_mgl_glwnd->AutoClf)	glFinish();
 	if(_mgl_glwnd->AutoClf)	glutSwapBuffers();
@@ -179,9 +177,9 @@ mglGraphGLUT::~mglGraphGLUT()
 	_mgl_glwnd = 0;
 }
 //-----------------------------------------------------------------------------
-void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *p),const char *title, void *par, void (*reload)(int next))
+void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *p),const char *title, void *par, void (*reload)(int next, void *p))
 {
-	nfig=0;	curr_fig=1;	tt=0;
+	NumFig=0;	curr_fig=1;	tt=0;
 	_mgl_glwnd = this;
 	CurFrameId = 1;
 
@@ -193,7 +191,7 @@ void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *
 	glutCreateWindow("MathPlotLibrary");
 
 	Light(0,mglPoint(0,0,3),false);
-	nfig = draw(this,par);
+	NumFig = draw(this,par);
 	DrawFunc = draw;	FuncPar = par;
 	LoadFunc = reload;
 	glutSetWindowTitle(title);
@@ -203,7 +201,14 @@ void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *
 	glutTimerFunc(Delay,_mgl_timer,0);
 
 	glutMainLoop();
-	glDeleteLists(1,nfig);
+	glDeleteLists(1,NumFig);
+}
+//-----------------------------------------------------------------------------
+HMGL mgl_create_graph_glut(HMDR dr, const char *title)
+{
+	mglGraphGLUT *g = new mglGraphGLUT;
+	g->Window(0,0,dr,title);
+	return g;
 }
 //-----------------------------------------------------------------------------
 HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par)

@@ -38,6 +38,7 @@ class mglGraphFLTK : public mglGraphZB
 {
 friend class Fl_MathGL;
 public:
+using mglGraphAB::Window;
 	int sshow;		///< Current state of animation switch (toggle button)
 	Fl_MathGL *FMGL;///< Control which draw graphics
 	int CurFig;		///< Current figure in the list.
@@ -54,7 +55,7 @@ public:
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	void Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
 						const char *title,void *par=NULL,
-	  					void (*reload)(int next)=NULL);
+	  					void (*reload)(int next, void *p)=NULL);
 	/// Switch on/off transparency (do not overwrite switches in user drawing function)
 	void ToggleAlpha();
 	/// Switch on/off lighting (do not overwrite switches in user drawing function)
@@ -71,11 +72,6 @@ public:
 
 protected:
 	unsigned char *GG;	///< images for all frames (may be too LARGE !!!)
-	int NumFig;			///< Number of figures in the list. If 0 then no list and mglGraph::DrawFunc will called for each drawing.
-	void (*LoadFunc)(int);
-	void *FuncPar;		///< Parameters for drawing function mglGraph::DrawFunc.
-	/// Drawing function for window procedure. It should return the number of frames.
-	int (*DrawFunc)(mglGraph *gr, void *par);
 
 	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *zoom_bt, *anim_bt;
 	Fl_Counter *tet, *phi;

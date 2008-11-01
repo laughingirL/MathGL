@@ -725,18 +725,26 @@ public:
 	void TileS(const mglData &x, const mglData &y, const mglData &z, const mglData &r, const char *sch=0);
 	/// Draw vertical tiles with variable size for 2d data
 	void TileS(const mglData &z, const mglData &r, const char *sch=0);
-	/// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length proportional to value |a|
+	/// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length and color proportional to value |a|
 	void Vect(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0,float zVal=NAN);
-	/// Plot vector field {ax,ay} with length proportional to value |a|
+	/// Plot vector field {ax,ay} with length and color proportional to value |a|
 	void Vect(const mglData &ax, const mglData &ay, const char *sch=0,float zVal=NAN);
+	/// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length proportional to value |a|
+	void VectL(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0,float zVal=NAN);
+	/// Plot vector field {ax,ay} with length proportional to value |a|
+	void VectL(const mglData &ax, const mglData &ay, const char *sch=0,float zVal=NAN);
 	/// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
 	void VectC(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0,float zVal=NAN);
 	/// Plot vector field {ax,ay} with color proportional to value |a|
 	void VectC(const mglData &ax, const mglData &ay, const char *sch=0,float zVal=NAN);
-	/// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with length proportional to value |a|
+	/// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with length and color proportional to value |a|
 	void Vect(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
-	/// Plot 3d vector field {ax,ay,ay} with length proportional to value |a|
+	/// Plot 3d vector field {ax,ay,ay} with length and color proportional to value |a|
 	void Vect(const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
+	/// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with length proportional to value |a|
+	void VectL(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
+	/// Plot 3d vector field {ax,ay,ay} with length proportional to value |a|
+	void VectL(const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
 	/// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
 	void VectC(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
 	/// Plot 3d vector field {ax,ay,ay} with color proportional to value |a|
@@ -998,6 +1006,8 @@ protected:
 	virtual void trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool *tt,bool wire)=0;
 	/// Plot series of unconnected lines.
 	virtual void lines_plot(long n, float *pp, float *cc, bool *tt)=0;
+	/// Plot series of unconnected arrows.
+	virtual void vects_plot(long n, float *pp, float *cc, bool *tt)=0;
 	/// Draw line between points \a p1,\a p2 with color \a c1, \a c2 at edges
 	virtual void line_plot(float *p1,float *p2,float *c1,float *c2,bool all=false)=0;
 

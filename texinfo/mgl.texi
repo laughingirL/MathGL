@@ -273,20 +273,20 @@ Sets the range for x-,y-,z- coordinate or coloring. See also axis.
 @deffn {MGL command} xtick @code{val [sub=0 org=nan]}
 @deffnx {MGL command} ytick @code{val [sub=0 org=nan]}
 @deffnx {MGL command} ztick @code{val [sub=0 org=nan]}
-Step for x-, y-, z-axis ticks (if @var{cal}>0) or it's number (if @var{val}<0) in x-direction. Zero value @var{val}=0 sets logarithmic ticks. Parameter @var{sub} sets the number of sub-ticks. Parameter @var{org} set the starting points for ticks. If not @code{org=nan} then the value from @code{origin} is used.
+Sets step for x-, y-, z-axis ticks (if @var{cal}>0) or it's number (if @var{val}<0) in corresponding direction. Zero value @var{val}=0 sets logarithmic ticks. Parameter @var{sub} sets the number of sub-ticks. Parameter @var{org} set the starting points for ticks. If not @code{org=nan} then the value from @code{origin} is used.
 @end deffn
 
 @deffn {MGL command} xtick 'templ'
 @deffnx {MGL command} ytick 'templ'
 @deffnx {MGL command} ztick 'templ'
 @deffnx {MGL command} ctick 'templ'
-The template for x-, y-, z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{templ}=@code{''} then default template is used (in simplest case it is @samp{%.2g}) with automatic detaching of common multiplier or common component.
+Sets the template for x-, y-, z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{templ}=@code{''} then default template is used (in simplest case it is @samp{%.2g}) with automatic detaching of common multiplier or common component.
 @end deffn
 
-@deffn {MGL command} xtick val1 'lbl1' [val2 'lbl2' ...]
-@deffnx {MGL command} ytick val1 'lbl1' [val2 'lbl2' ...]
-@deffnx {MGL command} ztick val1 'lbl1' [val2 'lbl2' ...]
-Manual positions @var{val1},@var{val2},... and labels @var{lbl1},@var{lbl2},... for ticks along x-, y-, z-axis. Labels may contain TeX symbols also.
+@deffn {MGL command} xtick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
+@deffnx {MGL command} ytick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
+@deffnx {MGL command} ztick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
+Sets manual positions @var{val1},@var{val2},... and labels @var{lbl1},@var{lbl2},... for ticks along x-, y-, z-axis. Labels may contain TeX symbols also.
 @end deffn
 
 @c ##################################################################
@@ -1029,8 +1029,8 @@ Creates new variable with name @var{dat} and fills it by numeric values of comma
 Creates new variable with name @var{dat} and fills it by data values of arrays of command arguments @var{d1 ...}. Command can create two-dimensional or three-dimensional (if arrays in arguments are 2d arrays) arrays with arbitrary values. Minor dimensions of all arrays in arguments should be equal to dimensions of first array d1. In the opposite case the argument will be ignored. Note, that the maximal number of arguments is 1000. 
 @end deffn
 
-@deffn {MGL command} copy dat1 dat2
-Creates new variable with name @var{dat1} and fills it by data values of array @var{dat2}.
+@deffn {MGL command} copy dat1 dat2 ['eq'='' @code{on_axis=on}]
+Creates new variable with name @var{dat1} and fills it by data values of array @var{dat2}. At this, if parameter @var{eq} is specified then the data will be modified by corresponding formula by the same way as in @code{fill} command (for @code{on_axis=on}) or in @code{modify} command (for @code{on_axis=off}).
 @end deffn
 
 @deffn {MGL command} delete dat
@@ -1060,11 +1060,11 @@ Command fills the value of array according to the formula in string @var{eq}. Fo
 @end deffn
 
 @deffn {MGL command} modify dat 'eq' [@code{dim=0}]
-Command fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in interval [0,1]. Variable @samp{u} is the original value of the array. Modification will be fulfilled only for slices >=@var{dim}.
+Command fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1]. Variable @samp{u} is the original value of the array. Modification will be fulfilled only for slices >=@var{dim}.
 @end deffn
 
 @deffn {MGL command} modify dat 'eq' vdat [wdat=0]
-Command fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in interval [0,1]. Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat}.
+Command fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1]. Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat}. If optional data @var{vdat}, @var{wdat} (must be the same size as @var{dat}) are specified then variables @samp{v} and @samp{w} denote its values else they are zero.
 @end deffn
 
 
@@ -1187,8 +1187,8 @@ Returns direct multiplication of arrays (like, res[i,j] = adat[i]*bdat[j] and so
 Get array which values is result of interpolation of original array for coordinates from other arrays. All dimensions must be the same for data @var{idat}, @var{jdat}, @var{kdat}. Coordinates from @var{idat}, @var{jdat}, @var{kdat} are supposed to be normalized in range [0,1] (if @var{norm}=@code{true}) or in range [0,nx], [0,ny], [0,nz] correspondingly.
 @end deffn
 
-@deffn {MGL command} hist res dat @code{num v1 v2}
-@deffnx {MGL command} hist res dat wdat @code{num v1 v2}
+@deffn {MGL command} hist res dat @code{num v1 v2 [nsub=0]}
+@deffnx {MGL command} hist res dat wdat @code{num v1 v2 [nsub=0]}
 Creates @var{num}-th points distribution @var{res} of the data values of @var{dat} in range [@var{v1}, @var{v2}]. Array @var{wdat} specifies weights of the data elements (all weight is 1 if @var{wdat} is not specified).
 @end deffn
 

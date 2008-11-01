@@ -1,5 +1,5 @@
 @c ------------------------------------------------------------------
-@node MathGL core, Plotter classes, Overview, Top
+@node MathGL core, Plotter classes, Examples, Top
 @chapter MathGL core
 @cindex mglGraph
 
@@ -648,27 +648,27 @@ Draws a 3d error box at position @var{p} with sizes @var{e} and style @var{pen}.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Line (@code{mglPoint} p1, @code{mglPoint} p2, @code{char *}stl=@code{"B"}, @code{int}num=@code{2})
-Draws a geodesic line (straight line in Cartesian coordinates) from point @var{p1} to @var{p2} using line style @var{stl}. Parameter @var{num} define the ``quality'' of the line. If @var{num}=@code{2} then the stright line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Transformation}). Contrary, for large values (for example, =@code{100}) the geodesic line will be drawn in corresponding coordinate system (straight line in Cartesian coordinates, circle in polar coordinates and so on).
+Draws a geodesic line (straight line in Cartesian coordinates) from point @var{p1} to @var{p2} using line style @var{stl}. Parameter @var{num} define the ``quality'' of the line. If @var{num}=@code{2} then the stright line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Transformation}). Contrary, for large values (for example, =@code{100}) the geodesic line will be drawn in corresponding coordinate system (straight line in Cartesian coordinates, circle in polar coordinates and so on). Line will be drawn even if it lies out of bounding box.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Curve (@code{mglPoint} p1, @code{mglPoint} d1, @code{mglPoint} p2, @code{mglPoint} d2, @code{const char *}stl=@code{"B"}, @code{int} num=@code{100})
-Draws Bezier-like curve from point @var{p1} to @var{p2} using line style @var{stl}. At this tangent is codirected with @var{d1}, @var{d2} and proportional to its amplitude. Parameter @var{num} define the ``quality'' of the curve. If @var{num}=@code{2} then the straight line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Transformation}). Contrary, for large values (for example, =@code{100}) the spline like Bezier curve will be drawn in corresponding coordinate system.
+Draws Bezier-like curve from point @var{p1} to @var{p2} using line style @var{stl}. At this tangent is codirected with @var{d1}, @var{d2} and proportional to its amplitude. Parameter @var{num} define the ``quality'' of the curve. If @var{num}=@code{2} then the straight line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Transformation}). Contrary, for large values (for example, =@code{100}) the spline like Bezier curve will be drawn in corresponding coordinate system. Curve will be drawn even if it lies out of bounding box.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Face (@code{mglPoint} p1, @code{mglPoint} p2, @code{mglPoint} p3, @code{mglPoint} p4, @code{const char *}stl=@code{"w"}, @code{int} num=@code{2})
-Draws the solid quadrangle (face) with vertexes @var{p1}, @var{p2}, @var{p3}, @var{p4} and with color(s) @var{stl}. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex.
+Draws the solid quadrangle (face) with vertexes @var{p1}, @var{p2}, @var{p3}, @var{p4} and with color(s) @var{stl}. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. Face will be drawn even if it lies out of bounding box.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} FaceX (@code{float} x0, @code{float} y0, @code{float} z0, @code{float} wy, @code{float} wz, @code{const char *}stl=@code{"w"}, @code{float} dx=@code{0}, @code{float} dy=@code{0})
-Draws the solid rectangle (face) perpendicular to x-axis at position @{@var{x0}, @var{y0}, @var{z0}@} with widths @var{wy}, @var{wz} and with color @var{stl}. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. Parameters @var{d1}, @var{d2} set additional shift of the last vertex (i.e. to draw quadrangle).
+Draws the solid rectangle (face) perpendicular to x-axis at position @{@var{x0}, @var{y0}, @var{z0}@} with widths @var{wy}, @var{wz} and with color @var{stl}. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. Parameters @var{d1}, @var{d2} set additional shift of the last vertex (i.e. to draw quadrangle). Face will be drawn even if it lies out of bounding box.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} FaceY (@code{float} x0, @code{float} y0, @code{float} z0, @code{float} wx, @code{float} wz, @code{const char *}stl=@code{"w"}, @code{float} dx=@code{0}, @code{float} dy=@code{0})
-Draws the solid rectangle (face) perpendicular to y-axis at position @{@var{x0}, @var{y0}, @var{z0}@} with widths @var{wx}, @var{wz} and with color @var{stl}. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. Parameters @var{d1}, @var{d2} set additional shift of the last vertex (i.e. to draw quadrangle).
+Draws the solid rectangle (face) perpendicular to y-axis at position @{@var{x0}, @var{y0}, @var{z0}@} with widths @var{wx}, @var{wz} and with color @var{stl}. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. Parameters @var{d1}, @var{d2} set additional shift of the last vertex (i.e. to draw quadrangle). Face will be drawn even if it lies out of bounding box.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} FaceZ (@code{float} x0, @code{float} y0, @code{float} z0, @code{float} wx, @code{float} wy, @code{const char *}stl=@code{"w"}, @code{float} dx=@code{0}, @code{float} dy=@code{0})
-Draws the solid rectangle (face) perpendicular to z-axis at position @{@var{x0}, @var{y0}, @var{z0}@} with widths @var{wx}, @var{wy} and with color @var{stl}. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. Parameters @var{d1}, @var{d2} set additional shift of the last vertex (i.e. to draw quadrangle).
+Draws the solid rectangle (face) perpendicular to z-axis at position @{@var{x0}, @var{y0}, @var{z0}@} with widths @var{wx}, @var{wy} and with color @var{stl}. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. Parameters @var{d1}, @var{d2} set additional shift of the last vertex (i.e. to draw quadrangle). Face will be drawn even if it lies out of bounding box.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Sphere (@code{mglPoint} p, @code{float} r, @code{const char *}stl=@code{"r"})
@@ -1604,10 +1604,11 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @node Vector fields, Other plotting, Dual plotting, MathGL core
 @section Vector fields
 
-These functions perform plotting of 2D and 3D vector fields. There are 5 generally different types of vector fields representations: simple vector field (Vect), vector field with coloring (VectC), vector field by dew-drops (Dew), flow threads (Flow), flow pipes (Pipe). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
+These functions perform plotting of 2D and 3D vector fields. There are 5 generally different types of vector fields representations: simple vector field (Vect, VectL), vector field with coloring (VectC), vector field by dew-drops (Dew), flow threads (Flow), flow pipes (Pipe). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 @menu
 * Vect::                        
+* VectL::                       
 * VectC::                       
 * Dew::                         
 * Flow::                        
@@ -1615,12 +1616,12 @@ These functions perform plotting of 2D and 3D vector fields. There are 5 general
 @end menu
 
 @c ==================================================================
-@node Vect, VectC, , Vector fields
+@node Vect, VectL, , Vector fields
 @subsection Vect
 @cindex Vect
 
 @deftypemethod mglGraph @code{void} Vect (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The length of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{VectC}, @ref{Flow}, @ref{Dew}. @sref{Vect sample}
+The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The length and color of arrows are proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of arrows depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{VectL}, @ref{VectC}, @ref{Flow}, @ref{Dew}. @sref{Vect sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Vect (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1628,7 +1629,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Vect (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{NULL})
-This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the length of hachures is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. @sref{Vect 3D sample}
+This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the length and color of arrows is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. @sref{Vect 3D sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Vect (@code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{NULL})
@@ -1636,12 +1637,33 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @end deftypemethod
 
 @c ==================================================================
-@node VectC, Dew, Vect, Vector fields
+@node VectL, VectC, Vect, Vector fields
+@subsection VectL
+@cindex VectL
+
+@deftypemethod mglGraph @code{void} VectL (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
+The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The length of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). Points are denote the start of hachures. The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Vect}, @ref{VectC}, @ref{Flow}, @ref{Dew}. @sref{VectL sample}
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} VectL (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
+The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} VectL (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{NULL})
+This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the length of hachures is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. @sref{VectL 3D sample}
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} VectL (@code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{NULL})
+The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
+@end deftypemethod
+
+@c ==================================================================
+@node VectC, Dew, VectL, Vector fields
 @subsection VectC
 @cindex VectC
 
 @deftypemethod mglGraph @code{void} VectC (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The color of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Vect}, @ref{Flow}, @ref{Dew}.  @sref{VectC sample}
+The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The color of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). Points are denote the start of hachures. The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Vect}, @ref{VectL}, @ref{Flow}, @ref{Dew}.  @sref{VectC sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} VectC (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})

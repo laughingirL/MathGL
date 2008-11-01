@@ -1186,14 +1186,9 @@ void mglData::NormSl(float v1, float v2, char dir, bool keep_en, bool sym)
 mglData mglData::Momentum(char dir, const char *how) const
 {
 	mglData b;
-	float i0=0,i1=0,d;
-	register long i,j,k;
-	int n=1;
-	char var = 0;
-	if(strchr(how,'x'))	var = 'x';
-	if(strchr(how,'y'))	var = 'y';
-	if(strchr(how,'z'))	var = 'z';
-	for(i=0;i<10;i++)	if(strchr(how,'0'+i))	{	n = i;	break;	}
+	mglFormula eq(how);
+	register long i,j,k,ii;
+	float i0,i1,x,y,z;
 	switch(dir)
 	{
 	case 'x':
@@ -1203,11 +1198,12 @@ mglData mglData::Momentum(char dir, const char *how) const
 			i0 = i1 = 0;
 			for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
 			{
-				d = (var=='z') ? k:j;
-				i0+= a[i+nx*(j+ny*k)];
-				i1+= a[i+nx*(j+ny*k)]*ipow(d,n);
+				ii = i+nx*(j+ny*k);
+				x = i/(nx-1.);	y = j/(ny-1.);	z = k/(nz-1.);
+				i0+= a[ii];
+				i1+= a[ii]*eq.Calc(x,y,z,a[ii]);
 			}
-			b.a[i] = n>0 ? i1/i0 : i0;
+			b.a[i] = i0>0 ? i1/i0 : 0;
 		}
 		break;
 	case 'y':
@@ -1217,11 +1213,12 @@ mglData mglData::Momentum(char dir, const char *how) const
 			i0 = i1 = 0;
 			for(i=0;i<nx;i++)	for(k=0;k<nz;k++)
 			{
-				d = (var=='z') ? k:i;
-				i0+= a[i+nx*(j+ny*k)];
-				i1+= a[i+nx*(j+ny*k)]*ipow(d,n);
+				ii = i+nx*(j+ny*k);
+				x = i/(nx-1.);	y = j/(ny-1.);	z = k/(nz-1.);
+				i0+= a[ii];
+				i1+= a[ii]*eq.Calc(x,y,z,a[ii]);
 			}
-			b.a[j] = n>0 ? i1/i0 : i0;
+			b.a[i] = i0>0 ? i1/i0 : 0;
 		}
 		break;
 	case 'z':
@@ -1231,11 +1228,12 @@ mglData mglData::Momentum(char dir, const char *how) const
 			i0 = i1 = 0;
 			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
 			{
-				d = (var=='y') ? j:i;
-				i0+= a[i+nx*(j+ny*k)];
-				i1+= a[i+nx*(j+ny*k)]*ipow(d,n);
+				ii = i+nx*(j+ny*k);
+				x = i/(nx-1.);	y = j/(ny-1.);	z = k/(nz-1.);
+				i0+= a[ii];
+				i1+= a[ii]*eq.Calc(x,y,z,a[ii]);
 			}
-			b.a[k] = n>0 ? i1/i0 : i0;
+			b.a[i] = i0>0 ? i1/i0 : 0;
 		}
 		break;
 	}

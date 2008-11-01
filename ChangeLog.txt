@@ -1,25 +1,30 @@
-1.8 Released ?? October 2008
-	- Create Python interface using SWIG. Generally interfaces for a set of languages (Java, Lisp, Perl, PHP, Tcl, R, Ruby, Modula3, C#, Octave, and other SWIG supported) can be simply created by the same way.
+1.8 Released 25 November 2008
+	- Create Python and Octave interfaces using SWIG. Generally interfaces for a set of languages (Java, Lisp, Perl, PHP, Tcl, R, Ruby, Modula3, C# and other SWIG supported) can be simply created by the same way.
+	- MathGL documentation is completely rewritten for v.1.8. Now it is based on TeXinfo files and allows one to compile it in HTML, PDF and other formats. Also the structure of sections is sufficiently updated. New sections for Python, MGL and Samples are written.
 	- Add Qt interface:
 		* New class QMathGL is added. This is the Qt widget for drawing MathGL graphics.
 		* New class mglGraphQt is added for creating Qt window with MathGL plotting.
 	- Add functions to make FLTK, QT & GLUT windows from Fortran programs
 	- Add new plot Barh() for horizontal bars.
 	- Add new plot Region() for filling the area between 2 curves
-	- Add Plot(), Surf() functions for plotting a curve or a surface by formula.
+	- Add new plot Vect() for vector field by arrows which color and length depend on amplitude. At this old function Vect() (for vector field by hachures) was renamed to VectL().
+	- Add Plot(), Surf() functions for plotting a curve or a surface defined by formula(s).
+	- Add class mglDraw for simplification of setting drawing function for window creation
 	- Add new functions for data handling:
 		* Envelop() -- for finding data envelop
 		* Sew() -- for sewing data (removing phase jumps)
 		* Evaluate() -- for producing array interpolated by coordinates from other array(s)
-		* Put() -- for setting a value (number or array) for range of data
-		* mglPDE -- for solving PDE in more or less simple case.
-		* mglRay -- for ray tracing (for finding trajectory in 3D space).
-	- Color scheme will disable interpolation (color smoothing) if its style contain '|' symbol.
+		* Put() -- for setting a values (as number or from array) for range of data
+		* Fill() -- for filling by formula with coordinates x,y,z in specified range
+		* mglPDE() -- for solving PDE in more or less general case.
+		* mglRay() -- for ray tracing (for finding trajectory in 3D space).
+		* mglQO2d() -- for beam tracing in 2D case (PDE solving in accompanied coordinates)
+	- Color scheme will be without interpolation (color smoothing) if its style contain '|' symbol.
 	- Function Bars() now draw boounding box of the rectangle if its style contain '#' symbol.
 	- Function Chart() will not draw a peace if its color specification is ' '.
 	- Add argument for line length in Legend()
 	- Legend entry with empty style (i.e. "" but not NULL) is printed without indent.
-	- Default mglGraph::Org value now is mglPoint(NAN,NAN,NAN). I.e. MathGL library try to select optimal axis origin position by default.
+	- Default mglGraph::Org value now is mglPoint(NAN,NAN,NAN), i.e. MathGL library try to select optimal axis origin position by default.
 	- Add some utility functions:
 		* Title() for printing the title of the plot
 		* SetPalette() for simplifing palette setting
@@ -28,20 +33,20 @@
 		* Ellipse() for drawing ellipsoid
 		* Restore() for restoring transformation matrix after last InPlot()
 	- Information about mouse click position is shown in widgets (if ShowMousePos=true)
-	- Clean up C/Fortran interface: replace 'bool' to 'int' in C interface; add a lot of new interface functions; change the order of arguments in mgl_data_set_value()
-	- Add MGL commands 'fplot', 'fsurf', 'fgets', 'export', 'import', 'write', 'region', 'title', 'sew', 'envelop', 'evaluate', 'put', 'palette', 'combine', 'pde', 'ray'
-	- Extend MGL commands 'info', 'fill'
-	- Add const modifiers everywhere
-	- Add default window functions in mglGraphAB (as base class) and in mglGraphGLUT.
-	- Class mglFormula now is thread safe.
+	- Clean up C/Fortran interface: replace 'bool' to 'int' in C interface; add a lot of new interface functions; change the order of arguments in mgl_data_set_value().
+	- Add MGL commands 'fplot', 'fsurf', 'fgets', 'export', 'import', 'write', 'region', 'title', 'sew', 'envelop', 'evaluate', 'put', 'palette', 'combine', 'pde', 'ray', 'qo2d', 'jacobian'.
+	- Extend MGL commands 'info', 'fill', 'copy'.
+	- Add const modifiers everywhere.
+	- Add default window functions in mglGraphAB (as base class).
+	- Class mglFormula and functions for data extraction (like SubData, Hist and so on) now are thread safe.
 	- Allow mglData::Resize() to have size=1.
+	- Function STFA() now normalize array on dn (for amplitude independency on value of dn).
 	- Functions mgl_tile_r*() are renamed to mgl_tiles*()
-	- Variable mglGraph::TickStr is removed. Use mglGraph::SetTicksVal()
+	- Variable mglGraph::TickStr is removed. Use mglGraph::SetTicksVal() instead.
 	- Bug with wrong normales at points on bounding box in Surf3*() is corrected.
 	- Bug with non-visible marks into the legend is corrected.
 	- Bug of not-drawn quads with the same vertexes is corrected.
 	- Bug with colors in WriteBMP() is corrected.
-
 
 1.7 Released 1 June 2008
 	- MGL parser is sufficiently rewritten:

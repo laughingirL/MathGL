@@ -280,10 +280,14 @@ void mgl_stfa_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *re, u
 void mgl_stfa_(uintptr_t *graph, uintptr_t *re, uintptr_t *im, int *dn, const char *sch, float *zVal, int);
 void mgl_vect_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch,float *zVal,int);
 void mgl_vect_2d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, const char *sch,float *zVal,int);
+void mgl_vectl_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch,float *zVal,int);
+void mgl_vectl_2d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, const char *sch,float *zVal,int);
 void mgl_vectc_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch,float *zVal,int);
 void mgl_vectc_2d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, const char *sch,float *zVal,int);
 void mgl_vect_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int);
 void mgl_vect_3d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int);
+void mgl_vectl_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int);
+void mgl_vectl_3d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int);
 void mgl_vectc_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int);
 void mgl_vectc_3d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int);
 void mgl_map_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *a, uintptr_t *b, const char *sch, int *ks, int *pnts,int);
@@ -486,6 +490,7 @@ uintptr_t mgl_add_var_(uintptr_t* p, const char *name, int l);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
 uintptr_t mgl_find_var_(uintptr_t* p, const char *name, int l);
 int mgl_parse_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l);
+void mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, int l);
 void mgl_restore_once_(uintptr_t* p);
 void mgl_parser_allow_setsize_(uintptr_t* p, int *a);
 /*****************************************************************************/
@@ -494,8 +499,11 @@ void mgl_drop_(uintptr_t* graph, float *x1, float *y1, float *z1, float *x2, flo
 void mgl_cone_(uintptr_t* graph, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r1, float *r2, const char *stl, int *edge, int);
 
 void mgl_pde_solve_(uintptr_t* gr, uintptr_t* res, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, float *dz, float *k0,int);
-void mgl_ray_trace_(uintptr_t* gr, uintptr_t* res, const char *ham, float *x0, float *y0, float *z0, float *px, float *py, float *pz, float *dt, float *tmax,int);
+void mgl_qo2d_solve_(uintptr_t* res, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, float *r, float *k0, uintptr_t* xx, uintptr_t* yy, int);
+void mgl_ray_trace_(uintptr_t* res, const char *ham, float *x0, float *y0, float *z0, float *px, float *py, float *pz, float *dt, float *tmax,int);
 void mgl_data_fill_eq_(uintptr_t* gr, uintptr_t* res, const char *eq, uintptr_t* vdat, uintptr_t* wdat,int);
+void mgl_jacobian_2d_(uintptr_t* res, uintptr_t* x, uintptr_t* y);
+void mgl_jacobian_3d_(uintptr_t* res, uintptr_t* x, uintptr_t* y, uintptr_t* z);
 
 #ifdef __cplusplus
 }

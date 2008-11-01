@@ -23500,7 +23500,7 @@ else
 fi
 
 
- if (test x$testio = xtrue || test x$hdf5 = xtrue || test x$jpeg = xtrue || test x$tiff = xtrue); then
+ if (test x$all = xtrue || test x$testio = xtrue || test x$hdf5 = xtrue || test x$jpeg = xtrue || test x$tiff = xtrue); then
   USE_LTDL_TRUE=
   USE_LTDL_FALSE='#'
 else

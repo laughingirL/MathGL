@@ -102,12 +102,12 @@ Equidistantly fills the data values to range [@var{x1}, @var{x2}] in direction @
 @end deftypemethod
 
 @deftypemethod mglData @code{void} Modify (@code{const char *}eq, @code{int} dim=@code{0})
-Function fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in interval [0,1]. Variable @samp{u} is the original value of the array. Modification will be fulfilled only for slices >=@var{dim}.
+Function fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1]. Variable @samp{u} is the original value of the array. Modification will be fulfilled only for slices >=@var{dim}.
 @end deftypemethod
 
 @deftypemethod mglData @code{void} Modify (@code{const char *}eq, @code{const mglData &}v)
 @deftypemethodx mglData @code{void} Modify (@code{const char *}eq, @code{const mglData &}v, @code{const mglData &}w)
-Function fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in interval [0,1]. Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat}.
+Function fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1]. Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat}.
 @end deftypemethod
 
 @deftypemethod mglData @code{void} Put (@code{float} val, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
@@ -264,14 +264,14 @@ Creates @var{n}-th points distribution of the data values in range [@var{v1}, @v
 Creates @var{n}-th points distribution of the data values in range [@var{v1}, @var{v2}]. Array @var{w} specifies weights of the data elements. Parameter @var{nsub} define the number of additional interpolated points (for smoothness of histogram).
 @end deftypemethod
 @deftypemethod mglData @code{mglData} Momentum (@code{char} dir, @code{const char *}how) @code{const}
-Get momentum (1D-array) of the data along direction @var{dir}. String @var{how} contain kind of momentum and may looks like @code{"x1"} for median 
+Get momentum (1D-array) of the data along direction @var{dir}. String @var{how} contain kind of momentum. The momentum is defined like as
 @iftex
-@math{\sum_{ij} x_i a_{ij}} in x-direction, @code{"y2"} for @math{\sum_{ij} y_j^2 a_{ij}}
+@math{res_k = \sum_{ij} how(x_i,y_j,z_k) a_{ij}/\sum_{ij} a_{ij}}
 @end iftex
 @ifnottex
-\sum_ij x_i a_ij in x-direction, @code{"y2"} for \sum_ij y_j^2 a_ij
+res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @end ifnottex
-in x-dir and so on. Mixed momentum (like @code{"xy"}) are not supported now.
+if @var{var}=@samp{z} and so on. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1].
 @end deftypemethod
 
 @deftypemethod mglData @code{mglData} Sum (@code{const char *}dir) @code{const}
@@ -500,5 +500,10 @@ Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=
 
 @deftypefn {Global function} @code{mglData} mglRay (@code{const char *}ham, @code{mglPoint} r0, @code{mglPoint} p0, @code{float} dt=@code{0.1}, @code{float} tmax=@code{10})
 Solves GO ray equation like dr/dt = d @var{ham}/dp, dp/dt = -d @var{ham}/dr. This is Hamiltonian equations for particle trajectory in 3D case. Here @var{ham} is Hamiltonian which may depend on coordinates @samp{x}, @samp{y}, @samp{z}, momentums @samp{p}=px, @samp{q}=py, @samp{v}=pz and time @samp{t}: @math{ham = H(x,y,z,p,q,v,t)}. The starting point (at @code{t=0}) is defined by variables @var{r0}, @var{p0}. Parameters @var{dt} and @var{tmax} specify the integration step and maximal time for ray tracing. Result is array of @{x,y,z,p,q,v,t@} with dimensions @{7 * int(@var{tmax}/@var{dt}+1) @}.
+@end deftypefn
+
+@deftypefn {Global function} @code{mglData} mglJacobian (@code{const mglData &}x, @code{const mglData &}y)
+@deftypefnx {Global function} @code{mglData} mglJacobian (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z)
+Computates the Jacobian for transformation @{i,j,k@} to @{@var{x},@var{y},@var{z}@} where initial coordinates  @{i,j,k@} are data indexes normalized in range [0,1]. The Jacobian is determined by formula det||@math{dr_\alpha/d\xi_\beta}|| where @math{r}=@{@var{x},@var{y},@var{z}@} and @math{\xi}=@{i,j,k@}. All dimensions must be the same for all data arrays. Data must be 3D if all 3 arrays @{@var{x},@var{y},@var{z}@} are specified or 2D if only 2 arrays @{@var{x},@var{y}@} are specified.
 @end deftypefn
 

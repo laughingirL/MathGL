@@ -43,7 +43,7 @@ int	mgl_fit__f (const gsl_vector *x, void *data, gsl_vector *f)
 {
 	mglFitData *fd = (mglFitData *)data;
 	register long i;
-	float val['z'-'a'+1];
+	float val[MGL_VS];
 	for(i=0;i<fd->m;i++)	val[fd->var[i]-'a'] = gsl_vector_get(x,i);
 	for(i=0;i<fd->n;i++)
 	{
@@ -59,7 +59,7 @@ int mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
 {
 	mglFitData *fd = (mglFitData *)data;
 	register long i,j;
-	float val['z'-'a'+1],s;
+	float val[MGL_VS],s;
 	for(i=0;i<fd->m;i++)	val[fd->var[i]-'a'] = gsl_vector_get(x,i);
 	for(i=0;i<fd->n;i++)
 	{
@@ -181,7 +181,7 @@ float mglGraph::FitS(mglData &fit, const mglData &x, const mglData &y, const mgl
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m);
 	if(fit.nx<FitPnts)	fit.Create(FitPnts, y.ny, y.nz);
-	float val['z'-'a'+1],res=-1;
+	float val[MGL_VS],res=-1;
 	register long j;
 	for(long i=0;i<y.ny*y.nz && i<fit.nx*fit.ny;i++)
 	{
@@ -225,7 +225,7 @@ float mglGraph::FitS(mglData &fit, const mglData &xx, const mglData &yy, const m
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m);
 	if(fit.nx<FitPnts || fit.ny<FitPnts)	fit.Create(FitPnts, FitPnts, z.nz);
-	float val['z'-'a'+1], res = -1;
+	float val[MGL_VS], res = -1;
 	for(long i=0;i<z.nz && i<fit.nz;i++)
 	{
 		if(ini)	in.Set(ini,fd.m);	else in.Fill(0,0);
@@ -268,7 +268,7 @@ float mglGraph::FitS(mglData &fit, const mglData &xx, const mglData &yy, const m
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m);
 	if(fit.nx<FitPnts || fit.ny<FitPnts)	fit.Create(FitPnts, FitPnts, z.nz);
-	float val['z'-'a'+1], res = -1;
+	float val[MGL_VS], res = -1;
 	for(long i=0;i<z.nz && i<fit.nz;i++)
 	{
 		if(ini)	in.Set(ini,fd.m);	else in.Fill(0,0);

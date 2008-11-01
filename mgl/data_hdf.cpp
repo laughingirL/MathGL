@@ -19,9 +19,13 @@
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
 extern "C" {
-int mgl_save_hdf(const char *fname,const char *data,bool rewrite,
-	float *a, int nx, int ny, int nz)
+int mgl_save_hdf(const char *fname, const char *data, bool rewrite, float *a, int nx, int ny, int nz);
+float *mgl_read_hdf(const char *fname,const char *data, long *nd);
+}
+//-----------------------------------------------------------------------------
+int mgl_save_hdf(const char *fname, const char *data, bool rewrite, float *a, int nx, int ny, int nz)
 {
+	fflush(stdout);
 	hid_t hf,hd,hs;
 	hsize_t dims[3];
 	long rank = 3, res;
@@ -50,6 +54,8 @@ int mgl_save_hdf(const char *fname,const char *data,bool rewrite,
 //-----------------------------------------------------------------------------
 float *mgl_read_hdf(const char *fname,const char *data, long *nd)
 {
+//printf("qq\n");
+	fflush(stdout);
 	hid_t hf,hd,hs;
 	hsize_t dims[3];
 	long rank;
@@ -68,12 +74,11 @@ float *mgl_read_hdf(const char *fname,const char *data, long *nd)
 		case 2:	nd[0] = dims[1];	nd[1] = dims[0];	break;
 		case 3:	nd[0] = dims[2];	nd[1] = dims[1];	nd[2] = dims[0];	break;
 		}
-		a = (float *)malloc(nd[0]*nd[1]*nd[2]*sizeof(float));
+		a = new float[nd[0]*nd[1]*nd[2]];
 		H5Dread(hd, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, a);
 	}
 	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
 	return a;
 }
 //-----------------------------------------------------------------------------
-}
 #endif

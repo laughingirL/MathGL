@@ -69,14 +69,12 @@ void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const ch
 	mglColor c1('w'),c2,c3,c4;
 	float *pp = new float[3*n*n],u;
 	float *cc = new float[4*n*n],v;
-	bool *tt = new bool[n*n];
+	bool cut = Cut;	Cut = true;
 
 	SetScheme(stl);
 	if(NumCol)	c1 = cmap[0];
 	bool all = NumCol>3;
 	if(all)	{	c2=cmap[1];	c3=cmap[2];	c4=cmap[3];	}
-//	if(stl && stl[0])	c1.Set(stl[0], isdigit(stl[1])?(stl[1]-'0')/5:1);
-//	if(all)	{	c2.Set(stl[1]);	c3.Set(stl[2]);	c4.Set(stl[3]);	}
 
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)
 	{
@@ -84,7 +82,7 @@ void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const ch
 		pp[3*i0+0] = p1.x+u*(p2.x-p1.x)+v*(p3.x-p1.x)+u*v*(p4.x+p1.x-p2.x-p3.x);
 		pp[3*i0+1] = p1.y+u*(p2.y-p1.y)+v*(p3.y-p1.y)+u*v*(p4.y+p1.y-p2.y-p3.y);
 		pp[3*i0+2] = p1.z+u*(p2.z-p1.z)+v*(p3.z-p1.z)+u*v*(p4.z+p1.z-p2.z-p3.z);
-		tt[i] = ScalePoint(pp[3*i0+0],pp[3*i0+1],pp[3*i0+2]);
+		ScalePoint(pp[3*i0+0],pp[3*i0+1],pp[3*i0+2]);
 		if(all)
 		{
 			cc[4*i0+0] = c1.r+u*(c2.r-c1.r)+v*(c3.r-c1.r)+u*v*(c4.r+c1.r-c2.r-c3.r);
@@ -97,7 +95,8 @@ void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const ch
 	surf_plot(n,n,pp,cc,0);
 	if(stl && strchr(stl,'#'))
 	{	SelectPen("k-");	memset(cc,0,4*n*n*sizeof(float));	mesh_plot(n,n,pp,cc,0,-3);	}
-	delete []pp;	delete []tt;	delete []cc;
+	Cut = cut;
+	delete []pp;	delete []cc;
 	Flush();
 }
 //-----------------------------------------------------------------------------
@@ -486,6 +485,7 @@ void mglGraph::Dens(const mglData &x, const mglData &y, const mglData &z, const 
 			cc[4*i0+0] = col.r;	cc[4*i0+1] = col.g;
 			cc[4*i0+2] = col.b;	cc[4*i0+3] = Transparent ? AlphaDef : 1;
 			tt[i0] = ScalePoint(pp[3*i0+0],pp[3*i0+1],pp[3*i0+2]);
+			if(isnan(z.a[i+n*(j+m*k)]))	tt[i0] = false;
 		}
 		surf_plot(n, m, pp, cc, tt);
 	}
@@ -551,6 +551,7 @@ void mglGraph::SurfC(const mglData &x, const mglData &y, const mglData &z, const
 			cc[4*i0+0] = col.r;	cc[4*i0+1] = col.g;
 			cc[4*i0+2] = col.b;	cc[4*i0+3] = Transparent ? AlphaDef : 1;
 			tt[i0] = ScalePoint(pp[3*i0+0],pp[3*i0+1],pp[3*i0+2]);
+			if(isnan(c.a[i+n*(j+m*k)]))	tt[i0] = false;
 		}
 		surf_plot(n, m, pp, cc, tt);
 	}
@@ -602,6 +603,7 @@ void mglGraph::SurfA(const mglData &x, const mglData &y, const mglData &z, const
 			cc[4*i0+0] = col.r;	cc[4*i0+1] = col.g;
 			cc[4*i0+2] = col.b;	cc[4*i0+3] = (GetA(c.a[ii])+1)*(GetA(c.a[ii])+1)/4;
 			tt[i0] = ScalePoint(pp[3*i0+0],pp[3*i0+1],pp[3*i0+2]);
+			if(isnan(c.a[i+n*(j+m*k)]))	tt[i0] = false;
 		}
 		surf_plot(n, m, pp, cc, tt);
 	}

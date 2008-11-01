@@ -30,6 +30,72 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &ax, const
 	bool both = x.nx==n && y.nx==n && x.ny==m && y.ny==m;
 	if(!(both || (x.nx==n && y.nx==m)))	{	SetWarn(mglWarnDim,"Vect");	return;	}
 
+	float xm,ym,dx,dy,*pp=new float[6*n*m],*cc=new float[n*m];
+	bool *tt=new bool[2*n*m];
+	SetScheme(sch);
+	if(isnan(zVal))	zVal = Min.z;
+	Pen(cmap[0],'-',BaseLineWidth);
+	long tx=1,ty=1;
+	if(MeshNum>1)	{	tx=(n-1)/(MeshNum-1);	ty=(m-1)/(MeshNum-1);	}
+	if(tx<1)	tx=1;	if(ty<1)	ty=1;
+
+	for(i=0,xm=0;i<m*n*ax.nz;i++)
+	{
+		ym = (ax.a[i])*(ax.a[i])+(ay.a[i])*(ay.a[i]);
+		xm = xm>ym ? xm : ym;
+	}
+	xm = 1./(xm==0 ? 1:sqrt(xm));
+	long s = both ? n : 1;
+
+	for(k=0;k<ax.nz;k++)
+	{
+		if(ax.nz>1)	zVal = Min.z+(Max.z-Min.z)*float(k)/(ax.nz-1);
+		for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
+		{
+			jj = i+n*(j+m*k);	i0 = i+n*j;
+			if(both)
+			{	ix = x.nz>k ? jj : i+n*j;	iy = y.nz>k ? jj : i+n*j;	}
+			else
+			{	ix = x.ny>k ? i+n*k : i;	iy = y.ny>k ? j+m*k : j;	}
+			dx = i<n-1 ? (x.a[ix+1]-x.a[ix]) : (x.a[ix]-x.a[ix-1]);
+			dy = j<m-1 ? (y.a[iy+s]-y.a[iy]) : (y.a[iy]-y.a[iy-s]);
+			dx *= tx;	dy *= ty;
+			cc[i0] = hypot(ax.a[jj],ay.a[jj])*xm*1.5 - 0.5;
+
+			pp[6*i0+0] = x.a[ix];	pp[6*i0+1] = y.a[iy];
+			pp[6*i0+2] = pp[6*i0+5] = zVal;
+			pp[6*i0+3] = x.a[ix]+ax.a[jj]*xm*dx;
+			pp[6*i0+4] = y.a[iy]+ay.a[jj]*xm*dy;
+			tt[2*i0]  = ScalePoint(pp[6*i0],pp[6*i0+1],pp[6*i0+2]);
+			tt[2*i0+1]= ScalePoint(pp[6*i0+3],pp[6*i0+4],pp[6*i0+5]);
+		}
+		vects_plot(n*m,pp,cc,tt);
+	}
+	Flush();
+	delete []pp;	delete []tt;	delete []cc;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Vect(const mglData &ax, const mglData &ay, const char *sch, float zVal)
+{
+	if(ax.nx<2 || ax.ny<2)	{	SetWarn(mglWarnLow,"Vect");	return;	}
+	mglData x(ax.nx), y(ax.ny);
+	x.Fill(Min.x,Max.x);
+	y.Fill(Min.y,Max.y);
+	Vect(x,y,ax,ay,sch,zVal);
+}
+//-----------------------------------------------------------------------------
+//
+//	VectL series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::VectL(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch, float zVal)
+{
+	long i,j,n=ax.nx,m=ax.ny,k,ix,iy,jj,i0;
+	if(n*m*ax.nz!=ay.nx*ay.ny*ay.nz)	{	SetWarn(mglWarnDim,"VectL");	return;	}
+	if(n<2 || m<2)						{	SetWarn(mglWarnLow,"VectL");	return;	}
+	bool both = x.nx==n && y.nx==n && x.ny==m && y.ny==m;
+	if(!(both || (x.nx==n && y.nx==m)))	{	SetWarn(mglWarnDim,"VectL");	return;	}
+
 	float xm,ym,dx,dy,*pp=new float[6*n*m];
 	bool *tt=new bool[2*n*m];
 	SetScheme(sch);
@@ -74,13 +140,13 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &ax, const
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Vect(const mglData &ax, const mglData &ay, const char *sch, float zVal)
+void mglGraph::VectL(const mglData &ax, const mglData &ay, const char *sch, float zVal)
 {
 	if(ax.nx<2 || ax.ny<2)	{	SetWarn(mglWarnLow,"Vect");	return;	}
 	mglData x(ax.nx), y(ax.ny);
 	x.Fill(Min.x,Max.x);
 	y.Fill(Min.y,Max.y);
-	Vect(x,y,ax,ay,sch,zVal);
+	VectL(x,y,ax,ay,sch,zVal);
 }
 //-----------------------------------------------------------------------------
 //
@@ -97,7 +163,7 @@ void mglGraph::VectC(const mglData &x, const mglData &y, const mglData &ax, cons
 	if(!(both || (x.nx==n && y.nx==m)))	{	SetWarn(mglWarnDim,"VectC");	return;	}
 
 	float xm,ym,dx,dy,dd;
-	float *pp=new float[6*n*m],*cc=new float[n*m];
+	float *pp=new float[6*n*m],*cc=new float[n*m], dm=(fabs(Cmax)+fabs(Cmin))*1e-5;
 	bool *tt=new bool[2*n*m];
 	SetScheme(sch);
 	if(isnan(zVal))	zVal = Min.z;
@@ -131,8 +197,8 @@ void mglGraph::VectC(const mglData &x, const mglData &y, const mglData &ax, cons
 			dd = hypot(ax.a[jj],ay.a[jj]);	cc[i0] = dd*xm*1.5 - 0.5;
 			pp[6*i0+0] = x.a[ix];	pp[6*i0+1] = y.a[iy];
 			pp[6*i0+2] = pp[6*i0+5] = zVal;
-			pp[6*i0+3] = x.a[ix]+(dd==0 ? 1 : ax.a[jj]/dd)*dx;
-			pp[6*i0+4] = y.a[iy]+(dd==0 ? 1 : ay.a[jj]/dd)*dy;
+			pp[6*i0+3] = x.a[ix]+(dd<dm ? 0 : ax.a[jj]/dd)*dx;
+			pp[6*i0+4] = y.a[iy]+(dd<dm ? 0 : ay.a[jj]/dd)*dy;
 			tt[2*i0]  = ScalePoint(pp[6*i0],pp[6*i0+1],pp[6*i0+2]);
 			tt[2*i0+1]= ScalePoint(pp[6*i0+3],pp[6*i0+4],pp[6*i0+5]);
 		}
@@ -182,6 +248,79 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &z,
 	}
 	xm = 1./(xm==0 ? 1:sqrt(xm));
 
+	float *pp=new float[6*n*m*l],*cc=new float[n*m*l];
+	bool *tt=new bool[2*n*m*l];
+	long s = both ? n:1, t = both ? n*m : 1;
+
+	if(both || (x.nx==n && y.nx==m && z.nx==l))
+	{
+		for(k=0;k<l;k+=tz)	for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
+		{
+			jj = i+n*(j+m*k);
+			if(both)
+			{	ix = iy = iz = jj;	}
+			else
+			{	ix = i;	iy = j;	iz = k;	}
+			dx = i<n-1 ? (x.a[ix+1]-x.a[ix]) : (x.a[ix]-x.a[ix-1]);
+			dy = j<m-1 ? (y.a[iy+s]-y.a[iy]) : (y.a[iy]-y.a[iy-s]);
+			dz = k<l-1 ? (z.a[iz+t]-y.a[iz]) : (y.a[iz]-y.a[iz-t]);
+			dx *= tx;	dy *= ty;	dz *= tz;
+			cc[jj] = xm*1.5*sqrt(ax.a[jj]*ax.a[jj]+ay.a[jj]*ay.a[jj]+az.a[jj]*az.a[jj]) - 0.5;
+
+			pp[6*jj+0] = x.a[ix];	pp[6*jj+3] = x.a[ix]+ax.a[jj]*xm*dx;
+			pp[6*jj+1] = y.a[iy];	pp[6*jj+4] = y.a[iy]+ay.a[jj]*xm*dy;
+			pp[6*jj+2] = z.a[iz];	pp[6*jj+5] = z.a[iz]+az.a[jj]*xm*dz;
+			tt[2*jj]  = ScalePoint(pp[6*jj],pp[6*jj+1],pp[6*jj+2]);
+			tt[2*jj+1]= ScalePoint(pp[6*jj+3],pp[6*jj+4],pp[6*jj+5]);
+		}
+		vects_plot(n*m*l,pp,cc,tt);
+	}
+	Flush();
+	delete []pp;	delete []tt;	delete []cc;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Vect(const mglData &ax, const mglData &ay, const mglData &az, const char *sch)
+{
+	if(ax.nx<2 || ax.ny<2 || ax.nz<2)
+	{	SetWarn(mglWarnLow,"Vect");	return;	}
+	mglData x(ax.nx), y(ax.ny), z(ax.nz);
+	x.Fill(Min.x,Max.x);
+	y.Fill(Min.y,Max.y);
+	z.Fill(Min.z,Max.z);
+	Vect(x,y,z,ax,ay,az,sch);
+}
+//-----------------------------------------------------------------------------
+//
+//	VectL3 series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::VectL(const mglData &x, const mglData &y, const mglData &z,
+					const mglData &ax, const mglData &ay, const mglData &az, const char *sch)
+{
+	register long i,j,n=ax.nx,m=ax.ny,l=ax.nz,k,jj;
+	if(n*m*l!=ay.nx*ay.ny*ay.nz || ax.nx*ax.ny*ax.nz!=az.nx*az.ny*az.nz)
+	{	SetWarn(mglWarnDim,"VectL");	return;	}
+	if(n<2 || m<2 || l<2)	{	SetWarn(mglWarnLow,"VectL");	return;	}
+	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
+	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
+	{	SetWarn(mglWarnDim,"VectL");	return;	}
+
+	long ix,iy,iz;
+	float xm,ym,dx,dy,dz;
+	SetScheme(sch);
+	Pen(cmap[0],'-',BaseLineWidth);
+	long tx=1,ty=1,tz=1;
+	if(MeshNum>1)
+	{	tx=(n-1)/(MeshNum-1);	ty=(m-1)/(MeshNum-1);	tz=(l-1)/(MeshNum-1);}
+	if(tx<1)	tx=1;	if(ty<1)	ty=1;	if(tz<1)	tz=1;
+
+	for(i=0,xm=0;i<m*n*l;i++)
+	{
+		ym = (ax.a[i])*(ax.a[i])+(ay.a[i])*(ay.a[i])+(az.a[i])*(az.a[i]);
+		xm = xm>ym ? xm : ym;
+	}
+	xm = 1./(xm==0 ? 1:sqrt(xm));
+
 	float *pp=new float[6*n*m*l];
 	bool *tt=new bool[2*n*m*l];
 	long s = both ? n:1, t = both ? n*m : 1;
@@ -212,7 +351,7 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &z,
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Vect(const mglData &ax, const mglData &ay, const mglData &az, const char *sch)
+void mglGraph::VectL(const mglData &ax, const mglData &ay, const mglData &az, const char *sch)
 {
 	if(ax.nx<2 || ax.ny<2 || ax.nz<2)
 	{	SetWarn(mglWarnLow,"Vect");	return;	}
@@ -220,7 +359,7 @@ void mglGraph::Vect(const mglData &ax, const mglData &ay, const mglData &az, con
 	x.Fill(Min.x,Max.x);
 	y.Fill(Min.y,Max.y);
 	z.Fill(Min.z,Max.z);
-	Vect(x,y,z,ax,ay,az,sch);
+	VectL(x,y,z,ax,ay,az,sch);
 }
 //-----------------------------------------------------------------------------
 //
@@ -254,7 +393,7 @@ void mglGraph::VectC(const mglData &x, const mglData &y, const mglData &z,
 	}
 	xm = 1./(xm==0 ? 1:sqrt(xm));
 
-	float *pp=new float[6*n*m*l],*cc=new float[n*m*l];
+	float *pp=new float[6*n*m*l],*cc=new float[n*m*l], dm=(fabs(Cmax)+fabs(Cmin))*1e-5;
 	bool *tt=new bool[2*n*m*l];
 	long s = both ? n:1, t = both ? n*m : 1;
 
@@ -273,9 +412,9 @@ void mglGraph::VectC(const mglData &x, const mglData &y, const mglData &z,
 			dx *= tx;	dy *= ty;	dz *= tz;
 			dd = 1.1*sqrt(ax.a[jj]*ax.a[jj]+ay.a[jj]*ay.a[jj]+az.a[jj]*az.a[jj]);
 			cc[jj] = dd*xm*1.5 - 0.5;
-			pp[6*jj+0] = x.a[ix];	pp[6*jj+3] = x.a[ix]+(dd==0 ? 0 : ax.a[jj]/dd)*dx;
-			pp[6*jj+1] = y.a[iy];	pp[6*jj+4] = y.a[iy]+(dd==0 ? 0 : ay.a[jj]/dd)*dy;
-			pp[6*jj+2] = z.a[iz];	pp[6*jj+5] = z.a[iz]+(dd==0 ? 0 : az.a[jj]/dd)*dz;
+			pp[6*jj+0] = x.a[ix];	pp[6*jj+3] = x.a[ix]+(dd<dm ? 0 : ax.a[jj]/dd)*dx;
+			pp[6*jj+1] = y.a[iy];	pp[6*jj+4] = y.a[iy]+(dd<dm ? 0 : ay.a[jj]/dd)*dy;
+			pp[6*jj+2] = z.a[iz];	pp[6*jj+5] = z.a[iz]+(dd<dm ? 0 : az.a[jj]/dd)*dz;
 			tt[2*jj]  = ScalePoint(pp[6*jj],pp[6*jj+1],pp[6*jj+2]);
 			tt[2*jj+1]= ScalePoint(pp[6*jj+3],pp[6*jj+4],pp[6*jj+5]);
 		}
@@ -438,9 +577,13 @@ void mgl_dew_2d(HMGL gr, const HMDT ax, const HMDT ay, const char *sch,float zVa
 /// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length proportional to value |a|
 void mgl_vect_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,float zVal)
 {	if(gr && ay && ax && x && y)	gr->Vect(*x, *y, *ax, *ay, sch, zVal);	}
+void mgl_vectl_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,float zVal)
+{	if(gr && ay && ax && x && y)	gr->VectL(*x, *y, *ax, *ay, sch, zVal);	}
 /// Plot vector field {ax,ay} with length proportional to value |a|
 void mgl_vect_2d(HMGL gr, const HMDT ax, const HMDT ay, const char *sch,float zVal)
 {	if(gr && ay && ax)	gr->Vect(*ax, *ay, sch, zVal);	}
+void mgl_vectl_2d(HMGL gr, const HMDT ax, const HMDT ay, const char *sch,float zVal)
+{	if(gr && ay && ax)	gr->VectL(*ax, *ay, sch, zVal);	}
 /// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
 void mgl_vectc_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,float zVal)
 {	if(gr && ay && ax && x && y)	gr->VectC(*x, *y, *ax, *ay, sch, zVal);	}
@@ -450,9 +593,13 @@ void mgl_vectc_2d(HMGL gr, const HMDT ax, const HMDT ay, const char *sch,float z
 /// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with length proportional to value |a|
 void mgl_vect_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch)
 {	if(gr && ay && ax && az && z && x && y)	gr->Vect(*x, *y, *z, *ax, *ay, *az, sch);	}
+void mgl_vectl_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch)
+{	if(gr && ay && ax && az && z && x && y)	gr->VectL(*x, *y, *z, *ax, *ay, *az, sch);	}
 /// Plot 3d vector field {ax,ay,ay} with length proportional to value |a|
 void mgl_vect_3d(HMGL gr, const HMDT ax, const HMDT ay, const HMDT az, const char *sch)
 {	if(gr && ay && ax && az)	gr->Vect(*ax, *ay, *az, sch);	}
+void mgl_vectl_3d(HMGL gr, const HMDT ax, const HMDT ay, const HMDT az, const char *sch)
+{	if(gr && ay && ax && az)	gr->VectL(*ax, *ay, *az, sch);	}
 /// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
 void mgl_vectc_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch)
 {	if(gr && ay && ax && az && z && x && y)	gr->VectC(*x, *y, *z, *ax, *ay, *az, sch);	}
@@ -489,11 +636,23 @@ void mgl_vect_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uint
 	if(gr && ay && ax && x && y)	_GR_->Vect(_D_(x), _D_(y), _D_(ax), _D_(ay), s, *zVal);
 	delete []s;
 }
+void mgl_vectl_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, float *zVal,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ay && ax && x && y)	_GR_->VectL(_D_(x), _D_(y), _D_(ax), _D_(ay), s, *zVal);
+	delete []s;
+}
 /// Plot vector field {ax,ay} with length proportional to value |a|
 void mgl_vect_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, float *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax)	_GR_->Vect(_D_(ax), _D_(ay), s, *zVal);
+	delete []s;
+}
+void mgl_vectl_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, float *zVal,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ay && ax)	_GR_->VectL(_D_(ax), _D_(ay), s, *zVal);
 	delete []s;
 }
 /// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
@@ -517,11 +676,23 @@ void mgl_vect_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uint
 	if(gr && ay && ax && az && z && x && y)	_GR_->Vect(_D_(x), _D_(y), _D_(z), _D_(ax), _D_(ay), _D_(az), s);
 	delete []s;
 }
+void mgl_vectl_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ay && ax && az && z && x && y)	_GR_->VectL(_D_(x), _D_(y), _D_(z), _D_(ax), _D_(ay), _D_(az), s);
+	delete []s;
+}
 /// Plot 3d vector field {ax,ay,ay} with length proportional to value |a|
 void mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && az)	_GR_->Vect(_D_(ax), _D_(ay), _D_(az), s);
+	delete []s;
+}
+void mgl_vectl_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ay && ax && az)	_GR_->VectL(_D_(ax), _D_(ay), _D_(az), s);
 	delete []s;
 }
 /// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|

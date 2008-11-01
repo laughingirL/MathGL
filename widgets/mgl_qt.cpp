@@ -542,7 +542,7 @@ void mglGraphQT::ToggleRotate()	{	QMGL->setRotate(!QMGL->getRotate());}
 //-----------------------------------------------------------------------------
 void mglGraphQT::Update()		{	CurFig=0;	QMGL->restore();	}
 //-----------------------------------------------------------------------------
-void mglGraphQT::ReLoad(bool o)	{	if(LoadFunc){LoadFunc(o);Update();}	}
+void mglGraphQT::ReLoad(bool o)	{	if(LoadFunc){LoadFunc(o, FuncPar);Update();}	}
 //-----------------------------------------------------------------------------
 void mglGraphQT::Adjust()
 {
@@ -551,7 +551,7 @@ void mglGraphQT::Adjust()
 	Update();
 }
 //-----------------------------------------------------------------------------
-void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next))
+void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p))
 {
 	NumFig=0;	CurFig=0;
 	CurFrameId = 0;
@@ -585,6 +585,13 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 	scroll->setWidget(QMGL);
 	Wnd->setCentralWidget(scroll);
 	Wnd->show();
+}
+//-----------------------------------------------------------------------------
+HMGL mgl_create_graph_qt(HMDR dr, const char *title)
+{
+	mglGraphQT *g = new mglGraphQT;
+	g->Window(0,0,dr,title);
+	return g;
 }
 //-----------------------------------------------------------------------------
 HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par)

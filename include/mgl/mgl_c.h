@@ -22,6 +22,8 @@ extern "C" {
 #endif
 /*****************************************************************************/
 #ifdef __cplusplus
+struct mglDraw;
+typedef mglDraw *HMDR;
 struct mglGraph;
 typedef mglGraph *HMGL;
 struct mglData;
@@ -29,6 +31,7 @@ typedef mglData *HMDT;
 struct mglParse;
 typedef mglParse *HMPR;
 #else
+#define HMDR void*
 #define HMGL void*
 #define HMDT void*
 #define HMPR void*
@@ -54,6 +57,9 @@ int mgl_fortran_func(HMGL gr, void *);
 HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par);
 HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par);
 HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par);
+HMGL mgl_create_graph_glut_dr(HMDR dr, const char *title);
+HMGL mgl_create_graph_fltk_dr(HMDR dr, const char *title);
+HMGL mgl_create_graph_qt_dr(HMDR dr, const char *title);
 HMGL mgl_create_graph_idtf();
 void mgl_fltk_run();
 void mgl_qt_run();
@@ -72,11 +78,13 @@ void mgl_delete_parser(HMPR p);
 void mgl_add_param(HMPR p, int id, const char *str);
 void mgl_add_paramw(HMPR p, int id, const wchar_t *str);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-const HMDT mgl_add_var(HMPR, const char *name);
+HMDT mgl_add_var(HMPR, const char *name);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-const HMDT mgl_find_var(HMPR, const char *name);
+HMDT mgl_find_var(HMPR, const char *name);
 int mgl_parse(HMGL gr, HMPR p, const char *str, int pos);
 int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos);
+void mgl_parse_text(HMGL gr, HMPR p, const char *str);
+void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str);
 void mgl_restore_once(HMPR p);
 void mgl_parser_allow_setsize(HMPR p, int a);
 /*****************************************************************************/
@@ -327,10 +335,14 @@ void mgl_stfa_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT re, const HM
 void mgl_stfa(HMGL graph, const HMDT re, const HMDT im, int dn, const char *sch, float zVal);
 void mgl_vect_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,float zVal);
 void mgl_vect_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch,float zVal);
+void mgl_vectl_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,float zVal);
+void mgl_vectl_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch,float zVal);
 void mgl_vectc_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,float zVal);
 void mgl_vectc_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch,float zVal);
 void mgl_vect_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
 void mgl_vect_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
+void mgl_vectl_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
+void mgl_vectl_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
 void mgl_vectc_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
 void mgl_vectc_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
 void mgl_map_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT a, const HMDT b, const char *sch, int ks, int pnts);
@@ -540,8 +552,11 @@ void mgl_drop(HMGL graph, float x1, float y1, float z1, float x2, float y2, floa
 void mgl_cone(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl, int edge);
 
 void mgl_pde_solve(HMGL gr, HMDT res, const char *ham, const HMDT ini_re, const HMDT ini_im, float dz, float k0);
-void mgl_ray_trace(HMGL gr, HMDT res, const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt, float tmax);
+void mgl_qo2d_solve(HMDT res, const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, float r, float k0, HMDT xx, HMDT yy);
+void mgl_ray_trace(HMDT res, const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt, float tmax);
 void mgl_data_fill_eq(HMGL gr, HMDT res, const char *eq, const HMDT vdat, const HMDT wdat);
+void mgl_jacobian_2d(HMDT res, const HMDT x, const HMDT y);
+void mgl_jacobian_3d(HMDT res, const HMDT x, const HMDT y, const HMDT z);
 
 #ifdef __cplusplus
 }

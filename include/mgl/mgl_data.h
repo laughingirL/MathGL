@@ -56,6 +56,16 @@ struct gsl_vector;
 struct gsl_matrix;
 #endif
 //-----------------------------------------------------------------------------
+/// Class for drawing in windows (like, mglGraphFLTK, mglGraphQT and so on)
+/// Make inherited class and redefine Draw() function if you don't want to use function pointers.
+class mglGraph;
+class mglDraw
+{
+public:
+	virtual int Draw(mglGraph *)	{	return 0;	};
+	virtual void Reload(int)	{};
+};
+//-----------------------------------------------------------------------------
 /// Class for incapsulating point in space
 struct mglPoint
 {
@@ -324,9 +334,13 @@ mglData Transform(const mglData &re, const mglData &im, const char *tr);
 mglData STFA(const mglData &re, const mglData &im, int dn, char dir='x');
 /// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini
 mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mglPoint Min, mglPoint Max, float dz=0.1, float k0=100);
-// /// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini along a curve \a ray (must have nx>=7 - x,y,z,px,py,pz,tau)
-//mglData mglQO_PDE(char *ham, const mglData &ini_re, const mglData &ini_im, mglData &ray, float r=1, float k0=100, const mglData *xx=0, const mglData *yy=0, const mglData *zz=0);
+/// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini along a curve \a ray (must have nx>=7 - x,y,z,px,py,pz,tau)
+mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, float r=1, float k0=100, mglData *xx=0, mglData *yy=0, bool UseR=true);
 /// Prepares ray data for mglQO_PDE with starting point \a r0, \a p0
 mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, float dt=0.1, float tmax=10);
+/// Calculate Jacobian determinant for D{x(u,v), y(u,v)} = dx/du*dy/dv-dx/dv*dy/du
+mglData mglJacobian(const mglData &x, const mglData &y);
+/// Calculate Jacobian determinant for D{x(u,v,w), y(u,v,w), z(u,v,w)}
+mglData mglJacobian(const mglData &x, const mglData &y, const mglData &z);
 //-----------------------------------------------------------------------------
 #endif

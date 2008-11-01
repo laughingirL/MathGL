@@ -420,7 +420,7 @@ void export_eps_cb(Fl_Widget*, void* v)
 }
 //-----------------------------------------------------------------------------
 void mglGraphFLTK::ReLoad(bool o)
-{	if(LoadFunc)	{	LoadFunc(o);	Update();	}	}
+{	if(LoadFunc)	{	LoadFunc(o, FuncPar);	Update();	}	}
 void oncemore_cb(Fl_Widget*, void*v)	{	((mglGraphFLTK*)v)->ReLoad(true);	}
 //-----------------------------------------------------------------------------
 void su_cb(Fl_Widget*, void* v)
@@ -564,7 +564,7 @@ Fl_Menu_Item menuitems[] = {
 	{ 0,0,0,0,0,0,0,0,0 }
 };
 //-----------------------------------------------------------------------------
-void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next))
+void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p))
 {
 	NumFig=0;	CurFig=0;
 	CurFrameId = 0;
@@ -669,6 +669,13 @@ void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void 
 }
 //-----------------------------------------------------------------------------
 int mglFlRun()	{	return Fl::run();	}
+//-----------------------------------------------------------------------------
+HMGL mgl_create_graph_fltk(HMDR dr, const char *title)
+{
+	mglGraphFLTK *g = new mglGraphFLTK;
+	g->Window(0,0,dr,title);
+	return g;
+}
 //-----------------------------------------------------------------------------
 HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par)
 {

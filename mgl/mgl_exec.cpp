@@ -376,7 +376,7 @@ void mglc_crange(wchar_t out[1024], long n, mglArg *a, int k[10])
 	if(k[0]==1)
 		swprintf(out,1024,L"gr->CRange(%s, %s);",a[0].s, (k[1]==3 && a[1].v!=0)?"true":"false");
 	else if(k[0]==3 && k[1]==3)
-		swprintf(out,1024,L"gr->CAxis(%g, %g;", a[0].v, a[1].v);
+		swprintf(out,1024,L"gr->CAxis(%g, %g);", a[0].v, a[1].v);
 }
 //-----------------------------------------------------------------------------
 //	{"crop","Crop edge of data","crop var n1 n2 dir", mgls_crop, mglc_crop}
@@ -488,12 +488,24 @@ void mglc_colorbar(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"copy","Copy data from another variable","copy var1 var2", mgls_copy, mglc_copy}
 int mgls_copy(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==1 && k[1]==1)	a[0].d->Set(*(a[1].d));
+	if(k[0]==1 && k[1]==1)
+	{
+		a[0].d->Set(*(a[1].d));
+		if(k[2]==2 && (k[3]!=3 || a[3].v!=0))
+			a[0].d->Fill(a[2].s, gr->Min, gr->Max);
+		else if(k[2]==2)	a[0].d->Modify(a[2].s);
+	}
+	else	return 1;
 	return 0;
 }
 void mglc_copy(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==1 && k[1]==1)	swprintf(out,1024,L"%s.Set(%s);",a[0].s, a[1].s);
+	if(k[0]==1 && k[1]==1 && k[2]==2 && (k[3]!=3 || a[3].v!=0))
+		swprintf(out,1024,L"%s.Set(%s);\t%s.Fill(\"%s\", gr->Min, gr->Max);", a[0].s, a[1].s, a[2].s);
+	else if(k[0]==1 && k[1]==1 && k[2]==2)
+		swprintf(out,1024,L"%s.Set(%s);\t%s.Modify(\"%s\");", a[0].s, a[1].s, a[2].s);
+	else if(k[0]==1 && k[1]==1)
+		swprintf(out,1024,L"%s.Set(%s);", a[0].s, a[1].s);
 }
 //-----------------------------------------------------------------------------
 //	{"cont","Draw contour lines","cont {vvar} {xvar yvar} zvar [fmt num zpos]", mgls_cont, mglc_cont}
@@ -2213,6 +2225,36 @@ void mglc_vect(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"gr->Vect(%s, %s, %s, %s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, k[6]==2?a[6].s:"");
 }
 //-----------------------------------------------------------------------------
+//	{"vectl","Draw vector field",0, mgls_vectl, mglc_vectl}
+int mgls_vectl(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	int i;
+	for(i=0;i<7;i++)	if(k[i]!=1)	break;
+	if(i==2)
+		gr->VectL(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,k[3]==3?a[3].v:NAN);
+	else if(i==4)
+		gr->VectL(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,k[5]==3?a[5].v:NAN);
+	else if(i==3)
+		gr->VectL(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0);
+	else if(i==6)
+		gr->VectL(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:0);
+	else	return 1;
+	return 0;
+}
+void mglc_vectl(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	int i;
+	for(i=0;i<7;i++)	if(k[i]!=1)	break;
+	if(i==2)
+		swprintf(out,1024,L"gr->VectL(%s, %s, \"%s\", %g);", a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN);
+	else if(i==4)
+		swprintf(out,1024,L"gr->VectL(%s, %s, %s, %s, \"%s\", %g);", a[0].s, a[1].s, a[2].s, a[3].s, k[4]==2?a[4].s:"", k[5]==3?a[5].v:NAN);
+	else if(i==3)
+		swprintf(out,1024,L"gr->VectL(%s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:0);
+	else if(i==6)
+		swprintf(out,1024,L"gr->VectL(%s, %s, %s, %s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, k[6]==2?a[6].s:"");
+}
+//-----------------------------------------------------------------------------
 //	{"xlabel","Draw label for x-axis","xlabel txt [fnt pos shift]", mgls_xlabel, mglc_xlabel}
 int mgls_xlabel(mglGraph *gr, long n, mglArg *a, int k[10])
 {
@@ -2572,18 +2614,18 @@ void mglc_norm(wchar_t out[1024], long n, mglArg *a, int k[10])
 int mgls_hist(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==3 && k[4]==3 && k[5]==3)
-		*(a[0].d) = a[1].d->Hist(*(a[2].d),int(a[3].v),a[4].v,a[5].v);
+		*(a[0].d) = a[1].d->Hist(*(a[2].d), int(a[3].v), a[4].v, a[5].v, k[6]==3?int(a[6].v):0);
 	else if(k[0]==1 && k[1]==1 && k[2]==3 && k[3]==3 && k[4]==3)
-		*(a[0].d) = a[1].d->Hist(int(a[2].v),a[3].v,a[4].v);
+		*(a[0].d) = a[1].d->Hist(int(a[2].v), a[3].v, a[4].v, k[5]==3?int(a[5].v):0);
 	else	return 1;
 	return 0;
 }
 void mglc_hist(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==3 && k[4]==3 && k[5]==3)
-		swprintf(out,1024,L"%s = %s.Hist(%s, %d, %g, %g);", a[0].s, a[1].s, a[2].s, int(a[3].v), a[4].v, a[5].v);
+		swprintf(out,1024,L"%s = %s.Hist(%s, %d, %g, %g, %d);", a[0].s, a[1].s, a[2].s, int(a[3].v), a[4].v, a[5].v, k[6]==3?int(a[6].v):0);
 	else if(k[0]==1 && k[1]==1 && k[2]==3 && k[3]==3 && k[4]==3)
-		swprintf(out,1024,L"%s = %s.Hist(%d, %g, %g);", a[0].s, a[1].s, int(a[2].v), a[3].v, a[4].v);
+		swprintf(out,1024,L"%s = %s.Hist(%d, %g, %g, %d);", a[0].s, a[1].s, int(a[2].v), a[3].v, a[4].v, k[5]==3?int(a[5].v):0);
 }
 //-----------------------------------------------------------------------------
 //	{"mirror","Mirror data at some direction",0, mgls_mirror, mglc_mirror}
@@ -2601,14 +2643,14 @@ void mglc_mirror(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"new","Create new data","new var nx [ny nz]", mgls_new, mglc_new}
 int mgls_new(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==1 && k[1]==3)	a[0].d->Create(int(a[1].v), k[2]==3?int(a[2].v):1, k[3]==3?int(a[3].v):1);
+	if(k[0]==1)	a[0].d->Create(k[1]==3?int(a[1].v):1, k[2]==3?int(a[2].v):1, k[3]==3?int(a[3].v):1);
 	else	return 1;
 	return 0;
 }
 void mglc_new(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==1 && k[1]==3)
-		swprintf(out,1024,L"%s.Create(%d, %d, %d);", a[0].s, int(a[1].v), k[2]==3?int(a[2].v):1, k[3]==3?int(a[3].v):1);
+	if(k[0]==1)
+		swprintf(out,1024,L"%s.Create(%d, %d, %d);", a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?int(a[2].v):1, k[3]==3?int(a[3].v):1);
 }
 //-----------------------------------------------------------------------------
 //	{"var","Create new 1D data and fill it in range","var var nx x1 [x2=nan]", mgls_var, mglc_var}
@@ -3082,6 +3124,20 @@ void mglc_pde(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"%s = mglPDE(\"%s\", %s, %s, gr->Min, gr->Max, %g, %g);",a[0].s, a[1].s, a[2].s, a[3].s, k[4]==3?a[4].v:0.1, k[5]==3?a[5].v:100);
 }
 //-----------------------------------------------------------------------------
+//	{L"qo2d",L"Solve PDE in accompanied coordinates",L"qo2d res 'ham' ini_re ini_im ray [r=1 k0=100 xout=0 yout=0]", mgls_qo2d, mglc_qo2d}
+int mgls_qo2d(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==1 && k[3]==1 && k[4]==1)
+		*(a[0].d) = mglQO2d(a[1].s, *(a[2].d), *(a[3].d), *(a[4].d), k[5]==3?a[5].v:1, k[6]==3?a[6].v:100, k[7]==1?a[7].d:0, k[8]==1?a[8].d:0);
+	else	return 1;
+	return 0;
+}
+void mglc_qo2d(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==1 && k[3]==1)
+		swprintf(out,1024,L"%s = mglQO2d(\"%s\", %s, %s, %s, %g, %g, %s, %s);",a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, k[5]==3?a[5].v:1, k[6]==3?a[6].v:100, k[7]==1?a[7].s:"NULL", k[8]==1?a[8].s:"NULL");
+}
+//-----------------------------------------------------------------------------
 //	{L"ray",L"Solve Hamiltonian ODE (find GO ray or trajectory)",L"ray res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray, mglc_ray}
 int mgls_ray(mglGraph *gr, long n, mglArg *a, int k[10])
 {
@@ -3096,180 +3152,201 @@ void mglc_ray(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"%s = mglRay(\"%s\", mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, %g);",a[0].s, a[1].s, a[2].v, a[3].v, a[4].v, a[5].v, a[6].v, a[7].v, k[8]==3?a[8].v:0.1, k[9]==3?a[9].v:10);
 }
 //-----------------------------------------------------------------------------
+//	{L"jacobian",L"Get Jacobian",L"jacobian res xdat ydat [zdat=0]", mgls_jacobian, mglc_jacobian}
+int mgls_jacobian(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		*(a[0].d) = mglJacobian(*(a[1].d), *(a[2].d), *(a[3].d));
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		*(a[0].d) = mglJacobian(*(a[1].d), *(a[2].d));
+	else	return 1;
+	return 0;
+}
+void mglc_jacobian(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		swprintf(out,1024,L"%s = mglJacobian(%s, %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s);
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		swprintf(out,1024,L"%s = mglJacobian(%s, %s);", a[0].s, a[1].s, a[2].s);
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
-	{L"addlegend",L"Add legend entry",L"addlegend txt fmt", mgls_addlegend, mglc_addlegend},
-	{L"addto",L"Add data or number",L"addto var|num", mgls_addto, mglc_addto},
-	{L"alpha",L"Switch on/off transparency",L"addto [num]", mgls_alpha, mglc_alpha},
-	{L"alphadef",L"Set default transparency",L"alphadef num", mgls_alphadef, mglc_alphadef},
-	{L"ambient",L"Set ambient light brightness",L"ambient txt fmt", mgls_ambient, mglc_ambient},
-	{L"area",L"Draw area plot for 1D data",L"area {xvar} yvar {{zvar}} [fmt num]", mgls_area, mglc_area},
-	{L"arrowsize",L"Set size of arrows",L"arrowsize val", mgls_arrowsize, mglc_arrowsize},
-	{L"aspect",L"Set aspect ration",L"aspect numx numy numz", mgls_aspect, mglc_aspect},
-	{L"axial",L"Draw surfaces of contour lines rotation",L"axial {xvar yvar} zvar [fmt num]", mgls_axial, mglc_axial},
-	{L"axialdir",L"Set axis of rotation",L"axialdir dir", mgls_axialdir, mglc_axialdir},
-	{L"axis",L"Setup or draw axis",L"", mgls_axis, mglc_axis},
-	{L"ball",L"Draw point (ball)",L"ball posx posy {posz} [fmt]", mgls_ball, mglc_ball},
-	{L"barh",L"Draw horizontal bars for 1D data", L"barh {xvar} yvar [fmt num num]", mgls_barh, mglc_barh},
-	{L"bars",L"Draw bars for 1D data",L"bars {xvar} yvar {{zvar}} [fmt num num]", mgls_bars, mglc_bars},
-	{L"beam",L"Draw quasioptical beam",L"", mgls_beam, mglc_beam},
-	{L"belt",L"Draw belts",L"belt {xvar yvar} zvar [fmt]", mgls_belt, mglc_belt},
-	{L"box",L"Draw bounding box",L"box [fmt]", mgls_box, mglc_box},
-	{L"boxs",L"Draw boxes",L"boxs {xvar yvar} zvar [fmt]", mgls_boxs, mglc_boxs},
-	{L"caxis",L"Set color range",L"caxis c1 c2", mgls_caxis, mglc_caxis},
-	{L"chart",L"Draw chart",L"chart var [fmt]", mgls_chart, mglc_chart},
-	{L"chdir",L"Change current directory",L"chdir dir", mgls_chdir, mglc_chdir},
-	{L"clearlegend",L"Clear legend antries",L"clearlegend", mgls_clearlegend, mglc_clearlegend},
-	{L"clf",L"Clear picture",L"clf", mgls_clf, mglc_clf},
-	{L"cloud",L"Draw cloud",L"cloud {xvar yvar zvar} avar [fmt]", mgls_cloud, mglc_cloud},
-	{L"colorbar",L"Draw colorbar",L"colorbar [fmt pos]", mgls_colorbar, mglc_colorbar},
-	{L"combine", L"Direct multiplication of arrays", L"combine res adat bdat", mgls_combine, mglc_combine},
-	{L"cone",L"Draw cone",L"cone avar [fmt pos num]", mgls_cone, mglc_cone},
-	{L"cont",L"Draw contour lines",L"cont {vvar} {xvar yvar} zvar [fmt num zpos]", mgls_cont, mglc_cont},
-	{L"cont3",L"Draw contour lines for 3D data",L"cont3 {xvar yvar zvar} avar dir [pos fmt num]", mgls_cont3, mglc_cont3},
-	{L"conta",L"Draw contour lines at central slices of 3D data",L"conta {xvar yvar zvar} avar [fmt num]", mgls_conta, mglc_conta},
-	{L"contf",L"Draw solid contour lines",L"contf {vvar} {xvar yvar} zvar [fmt num zpos]", mgls_contf, mglc_contf},
-	{L"contf3",L"Draw solid contour lines for 3D data",L"contf3 {xvar yvar zvar} avar dir [pos fmt num]", mgls_contf3, mglc_contf3},
-	{L"contfa",L"Draw solid contour lines at central slices of 3D data",L"contfa {xvar yvar zvar} avar [fmt num]", mgls_contfa, mglc_contfa},
-	{L"contfx",L"Draw solid contour lines at x-slice (or x-plane)",L"contfx avar [fmt pos num]", mgls_contfx, mglc_contfx},
-	{L"contfy",L"Draw solid contour lines at y-slice (or y-plane)",L"contfy avar [fmt pos num]", mgls_contfy, mglc_contfy},
-	{L"contfz",L"Draw solid contour lines at z-slice (or z-plane)",L"contfz avar [fmt pos num]", mgls_contfz, mglc_contfz},
-	{L"contx",L"Draw contour lines at x-slice (or x-plane)",L"contx avar [fmt pos num]", mgls_contx, mglc_contx},
-	{L"conty",L"Draw contour lines at y-slice (or y-plane)",L"conty avar [fmt pos num]", mgls_conty, mglc_conty},
-	{L"contz",L"Draw contour lines at z-slice (or z-plane)",L"contz avar [fmt pos num]", mgls_contz, mglc_contz},
-	{L"copy",L"Copy data from another variable",L"copy var1 var2", mgls_copy, mglc_copy},
-	{L"crange",L"Set color range",L"crange {var [sym] | c1 c2}", mgls_crange, mglc_crange},
-	{L"crop",L"Crop edge of data",L"crop var n1 n2 dir", mgls_crop, mglc_crop},
-	{L"crust",L"Draw reconstructed surface for arbitrary data points",L"crust {xvar yvar zvar} | var [fmt]", mgls_crust, mglc_crust},
-	{L"ctick",L"Set ticks for colorbar",L"ctick tmpl", mgls_ctick, mglc_ctick},
-	{L"cumsum",L"Crop edge of data",L"cumsum var dir", mgls_cumsum, mglc_cumsum},
-	{L"curve",L"Draw curve",L"", mgls_curve, mglc_curve},
-	{L"cut",L"Setup plot points cutting",L"", mgls_cut, mglc_cut},
-	{L"dens",L"Draw density plot",L"dens {xvar yvar} zvar [fmt zpos]", mgls_dens, mglc_dens},
-	{L"dens3",L"Draw density plot at slices of 3D data",L"dens3 {xvar yvar zvar} avar dir [pos fmt]", mgls_dens3, mglc_dens3},
-	{L"densa",L"Draw density plot at central slices of 3D data",L"densa {xvar yvar zvar} avar [fmt num]", mgls_densa, mglc_densa},
-	{L"densx",L"Draw density plot at x-slice (or x-plane)",L"densx avar [fmt pos]", mgls_densx, mglc_densx},
-	{L"densy",L"Draw density plot at y-slice (or y-plane)",L"densy avar [fmt pos]", mgls_densy, mglc_densy},
-	{L"densz",L"Draw density plot at z-slice (or z-plane)",L"densz avar [fmt pos]", mgls_densz, mglc_densz},
-	{L"dew",L"Draw dew plot",L"dew {xvae yvar} uvar vvar [fmt]", mgls_dew, mglc_dew},
-	{L"diff",L"Numerically differentiate data",L"diff var dir", mgls_diff, mglc_diff},
-	{L"diff2",L"Numerically double differentiate data",L"diff2 var dir", mgls_diff2, mglc_diff2},
-	{L"divto",L"Divide by data or number",L"divto var|num", mgls_divto, mglc_divto},
-	{L"dots",L"Draw dots for arbitrary data points",L"dots {xvar yvar zvar} | var [fmt]", mgls_dots, mglc_dots},
-	{L"drop",L"Draw drop",L"", mgls_drop, mglc_drop},
-	{L"envelop",L"Find envelop for the data",L"envelop dat", mgls_envelop, mglc_envelop},
-	{L"error",L"Draw error boxes",L"", mgls_error, mglc_error},
-	{L"evaluate",L"Evaluate (interpolate) values of array fdat at points i=idat,j=jdat,k=kdat",L"evaluate dat fdat idat [jdat=0 kdat=0 norm=true]", mgls_evaluate, mglc_evaluate},
-	{L"export",L"Export data to PNG picture",L"export dat 'fname' 'scheme' [v1=0 v2=0]", mgls_import, mglc_import},
-	{L"extend",L"Extend data array",L"", mgls_extend, mglc_extend},
-	{L"facex",L"Draw face perpendicular to x-axis",L"facex x0 y0 z0 wy wz [fmt]", mgls_facex, mglc_facex},
-	{L"facey",L"Draw face perpendicular to y-axis",L"facex x0 y0 z0 wx wz [fmt]", mgls_facey, mglc_facey},
-	{L"facez",L"Draw face perpendicular to z-axis",L"facex x0 y0 z0 wy wz [fmt]", mgls_facez, mglc_facez},
-	{L"fall",L"Draw waterfalls",L"fall {xvar yvar} zvar [fmt]", mgls_fall, mglc_fall},
-	{L"fgets",L"Print string from file",L"fgets x y {z} 'fname' [pos=0 'stl'='' size=-1.4]", mgls_fgets, mglc_fgets},
-	{L"fill",L"Fill data linearly in range [v1, v2]",L"fill var v1 v2 [dir]", mgls_fill, mglc_fill},
-	{L"fit",L"Fit data to formula",L"fit res {x {y {z}}} a eq var [ini print]", mgls_fit, mglc_fit},
-	{L"fits",L"Fit data to formula",L"fits res {x {y {z}}} a s eq var [ini print]", mgls_fits, mglc_fits},
-	{L"flow",L"Draw flow threads for vector field",L"", mgls_flow, mglc_flow},
-	{L"fog",L"Switch on/off fog",L"fog var val [pos]", mgls_fog, mglc_fog},
-	{L"font",L"Setup font",L"font fmt [size]", mgls_font, mglc_font},
-	{L"fplot",L"Plot curve by formula",L"fplot 'func' ['stl'='' num=100]", mgls_fplot, mglc_fplot},
-	{L"fsurf",L"Plot surface by formula",L"fsurf 'func' ['stl'='' num=100]", mgls_fsurf, mglc_fsurf},
-	{L"grid",L"Draw grid",L"", mgls_grid, mglc_grid},
-	{L"grid3",L"Draw grid at slices of 3D data",L"grid3 {xvar yvar zvar} avar dir [pos fmt]", mgls_grid3, mglc_grid3},
-	{L"grida",L"Draw grid at central slices of 3D data",L"grida {xvar yvar zvar} avar [fmt num]", mgls_grida, mglc_grida},
-	{L"hist",L"Create histogram (distribution) of data values",L"", mgls_hist, mglc_hist},
-	{L"import",L"Import data from PNG picture",L"import dat 'fname' 'scheme' [v1=0 v2=1]", mgls_import, mglc_import},
-	{L"info",L"Print information about data",L"info var", mgls_info, mglc_info},
-	{L"inplot",L"Set position of plot in picture",L"", mgls_inplot, mglc_inplot},
-	{L"integrate",L"Integrate data",L"integrate var dir", mgls_integrate, mglc_integrate},
-	{L"legend",L"Draw legend",L"legend {xpos ypos} | pos [fmt size]", mgls_legend, mglc_legend},
-	{L"legendbox",L"Switch on/off drawing box in legend",L"legendbox val", mgls_legendbox, mglc_legendbox},
-	{L"light",L"Setup light",L"", mgls_light, mglc_light},
-	{L"line",L"Draw line",L"", mgls_line, mglc_line},
-	{L"linewidth",L"Set default line width",L"linewidth val", mgls_linewidth, mglc_linewidth},
-	{L"map",L"Draw mapping plot",L"map {xvar yvar} uvar vvar [fmt]", mgls_map, mglc_map},
-	{L"mark",L"Draw mark plot for 1D data",L"mark {xvar} yvar {{zvar}} rvar [fmt num]", mgls_mark, mglc_mark},
-	{L"marksize",L"Set size of markers",L"marksize val", mgls_marksize, mglc_marksize},
-	{L"max",L"Find maximal value over direction",L"max ovar ivar dir", mgls_max, mglc_max},
-	{L"mesh",L"Draw mesh surface",L"mesh {xvar yvar} zvar [fmt]", mgls_mesh, mglc_mesh},
-	{L"meshnum",L"Set number of lines in mesh/fall/vect and so on",L"meshnum val", mgls_meshnum, mglc_meshnum},
-	{L"min",L"Find minimal value over direction",L"min ovar ivar dir", mgls_min, mglc_min},
-	{L"mirror",L"Mirror data at some direction",L"", mgls_mirror, mglc_mirror},
-	{L"modify",L"Modify data values by formula",L"modify var formula [var1 var2]", mgls_modify, mglc_modify},
-	{L"momentum",L"Get momentum along direction",L"momentum odat idat dir how", mgls_momentum, mglc_momentum},
-	{L"multo",L"Multiply by data or number",L"multo var|num", mgls_multo, mglc_multo},
-	{L"new",L"Create new data",L"new var nx [ny nz]", mgls_new, mglc_new},
-	{L"norm",L"Normalize data",L"", mgls_norm, mglc_norm},
-	{L"normsl",L"Normalize data slice by slice",L"", mgls_normsl, mglc_normsl},
-	{L"origin",L"Set axis origin",L"", mgls_origin, mglc_origin},
-	{L"palette",L"Set palette for 1D plots",L"palette 'colors'", mgls_palette, mglc_palette},
-	{L"pde",L"Solve PDE",L"pde res 'ham' ini_re ini_im [dz=0.1]", mgls_pde, mglc_pde},
-	{L"perspective",L"Set perspective",L"perspective val", mgls_perspective, mglc_perspective},
-	{L"pipe",L"Draw flow pipes for vector field",L"", mgls_pipe, mglc_pipe},
-	{L"plot",L"Draw usual plot for 1D data",L"plot {xvar} yvar {{zvar}} [fmt num]", mgls_plot, mglc_plot},
-	{L"plotfactor",L"Set plotfactor",L"plotfactor val", mgls_plotfactor, mglc_plotfactor},
-	{L"put",L"Put value (numeric or array) to given data element",L"put val dat i [j=0 k=0]", mgls_put, mglc_put},
-	{L"putsfit",L"Print fitted formula",L"putsfit x y {z} [pre font size]", mgls_putsfit, mglc_putsfit},
-	{L"ray",L"Solve Hamiltonian ODE (find GO ray or trajectory)",L"ray res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray, mglc_ray},
-	{L"read",L"Read data from file",L"read var file [nx ny nz]", mgls_read, mglc_read},
-	{L"readall",L"Read and join data from several files",L"", mgls_readall, mglc_readall},
-	{L"readhdf",L"Read data from HDF5 file",L"readhdf var file id", mgls_readhdf, mglc_readhdf},
-	{L"readmat",L"Read data from file with sizes specified in first row",L"readmat var file [dim=2]", mgls_readmat, mglc_readmat},
-	{L"rearrange",L"Rearrange data dimensions",L"rearrange mx [my mz]", mgls_rearrange, mglc_rearrange},
-	{L"rect",L"Draw rectangle",L"", mgls_rect, mglc_rect},
-	{L"region",L"Draw filled region between 2 curves",L"region {x} y1 y2 ['sch'='' inside=off]", mgls_region, mglc_region},
-	{L"resize",L"Resize data",L"resize ovar ivar [nx ny nz]", mgls_resize, mglc_resize},
-	{L"rotate",L"Rotate plot",L"", mgls_rotate, mglc_rotate},
-	{L"rotatetext",L"Set to auto rotate text or not",L"", mgls_rotatetext, mglc_rotatetext},
-	{L"save",L"Save data to file",L"save var file", mgls_save, mglc_save},
-	{L"savehdf",L"Save data to HDF5 file",L"savehdf var file id", mgls_savehdf, mglc_savehdf},
-	{L"set_id",L"Set column id for data",L"set_id var id", mgls_set_id, mglc_set_id},
-	{L"setsize",L"Set picture size",L"setsize wval hval", mgls_setsize, mglc_setsize},
-	{L"sew",L"Remove jump into the data, like phase jumps",L"sew dat", mgls_sew, mglc_sew},
-	{L"smooth",L"Smooth data",L"smooth var kind dir", mgls_smooth, mglc_smooth},
-	{L"sphere",L"Draw sphere",L"", mgls_sphere, mglc_sphere},
-	{L"squeeze",L"Squeeze data",L"squeeze var kx [ky kz]", mgls_squeeze, mglc_squeeze},
-	{L"stem",L"Draw stem plot for 1D data",L"stem {xvar} yvar {{zvar}} [fmt num]", mgls_stem, mglc_stem},
-	{L"step",L"Draw step plot for 1D data",L"step {xvar} yvar {{zvar}} [fmt num]", mgls_step, mglc_step},
-	{L"stfa",L"Draw STFA diagram",L"stfa {xvar yvar} uvar vvar num [fmt]", mgls_stfa, mglc_stfa},
-	{L"stfad",L"Do STFA transform",L"", mgls_stfad, mglc_stfad},
-	{L"subdata",L"Extract sub-array",L"subdata ovar ivar nx [ny nz]", mgls_subdata, mglc_subdata},
-	{L"subplot",L"Set position of plot",L"subplot mval nval ival", mgls_subplot, mglc_subplot},
-	{L"subto",L"Subtract data or number",L"subto var|num", mgls_subto, mglc_subto},
-	{L"sum",L"Find summation over direction",L"sum ovar ivar dir", mgls_sum, mglc_sum},
-	{L"surf",L"Draw solid surface",L"surf {xvar yvar} zvar [fmt]", mgls_surf, mglc_surf},
-	{L"surf3",L"Draw isosurface for 3D data",L"surf3 {xvar yvar zvar} avar {num} [fmt]", mgls_surf3, mglc_surf3},
-	{L"surf3a",L"Draw isosurface for 3D data transpared by other data",L"surf3a {xvar yvar zvar} avar cvar {num} [fmt]", mgls_surf3a, mglc_surf3a},
-	{L"surf3c",L"Draw isosurface for 3D data colored by other data",L"surf3c {xvar yvar zvar} avar cvar {num} [fmt]", mgls_surf3c, mglc_surf3c},
-	{L"surfa",L"Draw solid surface transpared by other data",L"surfa {xvar yvar} zvar cvar [fmt]", mgls_surfa, mglc_surfa},
-	{L"surfc",L"Draw solid surface colored by other data",L"surfc {xvar yvar} zvar cvar [fmt]", mgls_surfc, mglc_surfc},
-	{L"swap",L"Swap data (usefull after Fourier transform)",L"swap var dir", mgls_swap, mglc_swap},
-	{L"ternary",L"Switch on/off to use ternary axis",L"ternary val", mgls_ternary, mglc_ternary},
-	{L"text",L"Draw text at some position or along curve",L"", mgls_text, mglc_text},
-	{L"textmark",L"Draw TeX mark at point position",L"", mgls_textmark, mglc_textmark},
-	{L"tile",L"Draw horizontal tiles",L"tile {xvar yvar} zvar {rvar} [fmt]", mgls_tile, mglc_tile},
-	{L"title",L"Print title for the picture",L"title 'text' ['stl'='' size=-2]", mgls_title, mglc_title},
-	{L"torus",L"Draw surface of curve rotation",L"torus {zvar} rvar [fmt]", mgls_torus, mglc_torus},
-	{L"transform",L"Do integral transform of data",L"transform ovar how rvar ivar", mgls_transform, mglc_transform},
-	{L"transforma",L"Do integral transform of data",L"transforma ovar how avar fvar", mgls_transforma, mglc_transforma},
-	{L"transparent",L"Switch off transparency",L"transparent val", mgls_transparent, mglc_transparent}, //!!! OLD !!!
-	{L"transpose",L"Transpose data array",L"transpose var [dir]", mgls_transpose, mglc_transpose},
-	{L"transptype",L"Set type transparency",L"transptype val", mgls_transptype, mglc_transptype},
-	{L"triplot",L"Draw surface of triangles",L"", mgls_triplot, mglc_triplot},
-	{L"tube",L"Draw curve by tube",L"", mgls_tube, mglc_tube},
-	{L"var",L"Create new 1D data and fill it in range",L"var var nx x1 x2", mgls_var, mglc_var},
-	{L"vect",L"Draw vector field",L"", mgls_vect, mglc_vect},
-	{L"vectc",L"Draw vector field with coloring",L"", mgls_vectc, mglc_vectc},
-	{L"write",L"Write current image to PNG file",L"write 'fname' [solid=off]", mgls_write, mglc_write},
-	{L"xlabel",L"Draw label for x-axis",L"xlabel txt [fnt pos]", mgls_xlabel, mglc_xlabel},
-	{L"xrange",L"Set range for x-axis",L"xrange {var [add]} | {x1 x2}", mgls_xrange, mglc_xrange},
-	{L"xtick",L"Set ticks for x-axis",L"xtick {val [sub]} | tmpl", mgls_xtick, mglc_xtick},
-	{L"ylabel",L"Draw label for y-axis",L"ylabel txt [fnt pos]", mgls_ylabel, mglc_ylabel},
-	{L"yrange",L"Set range for y-axis",L"yrange {var [add]} | {x1 x2}", mgls_yrange, mglc_yrange},
-	{L"ytick",L"Set ticks for y-axis",L"ytick {val [sub]} | tmpl", mgls_ytick, mglc_ytick},
-	{L"zlabel",L"Draw label for z-axis",L"zlabel txt [fnt pos]", mgls_zlabel, mglc_zlabel},
-	{L"zoom",L"Zoom in/out plot",L"zoom x1 y1 x2 y2", mgls_zoom, mglc_zoom},
-	{L"zrange",L"Set range for z-axis",L"yrange {var [add]} | {x1 x2}", mgls_zrange, mglc_zrange},
-	{L"ztick",L"Set ticks for z-axis",L"ztick {val [sub]} | tmpl", mgls_ztick, mglc_ztick},
-{L"",0,0,0,0}};
+	{L"addlegend",L"Add legend entry",L"addlegend txt fmt", mgls_addlegend, mglc_addlegend, false},
+	{L"addto",L"Add data or number",L"addto var|num", mgls_addto, mglc_addto, false},
+	{L"alpha",L"Switch on/off transparency",L"addto [num]", mgls_alpha, mglc_alpha, false},
+	{L"alphadef",L"Set default transparency",L"alphadef num", mgls_alphadef, mglc_alphadef, false},
+	{L"ambient",L"Set ambient light brightness",L"ambient txt fmt", mgls_ambient, mglc_ambient, false},
+	{L"area",L"Draw area plot for 1D data",L"area {xvar} yvar {{zvar}} [fmt num]", mgls_area, mglc_area, false},
+	{L"arrowsize",L"Set size of arrows",L"arrowsize val", mgls_arrowsize, mglc_arrowsize, false},
+	{L"aspect",L"Set aspect ration",L"aspect numx numy numz", mgls_aspect, mglc_aspect, false},
+	{L"axial",L"Draw surfaces of contour lines rotation",L"axial {xvar yvar} zvar [fmt num]", mgls_axial, mglc_axial, false},
+	{L"axialdir",L"Set axis of rotation",L"axialdir dir", mgls_axialdir, mglc_axialdir, false},
+	{L"axis",L"Setup or draw axis",L"", mgls_axis, mglc_axis, false},
+	{L"ball",L"Draw point (ball)",L"ball posx posy {posz} [fmt]", mgls_ball, mglc_ball, false},
+	{L"barh",L"Draw horizontal bars for 1D data", L"barh {xvar} yvar [fmt num num]", mgls_barh, mglc_barh, false},
+	{L"bars",L"Draw bars for 1D data",L"bars {xvar} yvar {{zvar}} [fmt num num]", mgls_bars, mglc_bars, false},
+	{L"beam",L"Draw quasioptical beam",L"", mgls_beam, mglc_beam, false},
+	{L"belt",L"Draw belts",L"belt {xvar yvar} zvar [fmt]", mgls_belt, mglc_belt, false},
+	{L"box",L"Draw bounding box",L"box [fmt]", mgls_box, mglc_box, false},
+	{L"boxs",L"Draw boxes",L"boxs {xvar yvar} zvar [fmt]", mgls_boxs, mglc_boxs, false},
+	{L"caxis",L"Set color range",L"caxis c1 c2", mgls_caxis, mglc_caxis, false},
+	{L"chart",L"Draw chart",L"chart var [fmt]", mgls_chart, mglc_chart, false},
+	{L"chdir",L"Change current directory",L"chdir dir", mgls_chdir, mglc_chdir, false},
+	{L"clearlegend",L"Clear legend antries",L"clearlegend", mgls_clearlegend, mglc_clearlegend, false},
+	{L"clf",L"Clear picture",L"clf", mgls_clf, mglc_clf, false},
+	{L"cloud",L"Draw cloud",L"cloud {xvar yvar zvar} avar [fmt]", mgls_cloud, mglc_cloud, false},
+	{L"colorbar",L"Draw colorbar",L"colorbar [fmt pos]", mgls_colorbar, mglc_colorbar, false},
+	{L"combine", L"Direct multiplication of arrays", L"combine res adat bdat", mgls_combine, mglc_combine, false},
+	{L"cone",L"Draw cone",L"cone avar [fmt pos num]", mgls_cone, mglc_cone, false},
+	{L"cont",L"Draw contour lines",L"cont {vvar} {xvar yvar} zvar [fmt num zpos]", mgls_cont, mglc_cont, false},
+	{L"cont3",L"Draw contour lines for 3D data",L"cont3 {xvar yvar zvar} avar dir [pos fmt num]", mgls_cont3, mglc_cont3, false},
+	{L"conta",L"Draw contour lines at central slices of 3D data",L"conta {xvar yvar zvar} avar [fmt num]", mgls_conta, mglc_conta, false},
+	{L"contf",L"Draw solid contour lines",L"contf {vvar} {xvar yvar} zvar [fmt num zpos]", mgls_contf, mglc_contf, false},
+	{L"contf3",L"Draw solid contour lines for 3D data",L"contf3 {xvar yvar zvar} avar dir [pos fmt num]", mgls_contf3, mglc_contf3, false},
+	{L"contfa",L"Draw solid contour lines at central slices of 3D data",L"contfa {xvar yvar zvar} avar [fmt num]", mgls_contfa, mglc_contfa, false},
+	{L"contfx",L"Draw solid contour lines at x-slice (or x-plane)",L"contfx avar [fmt pos num]", mgls_contfx, mglc_contfx, false},
+	{L"contfy",L"Draw solid contour lines at y-slice (or y-plane)",L"contfy avar [fmt pos num]", mgls_contfy, mglc_contfy, false},
+	{L"contfz",L"Draw solid contour lines at z-slice (or z-plane)",L"contfz avar [fmt pos num]", mgls_contfz, mglc_contfz, false},
+	{L"contx",L"Draw contour lines at x-slice (or x-plane)",L"contx avar [fmt pos num]", mgls_contx, mglc_contx, false},
+	{L"conty",L"Draw contour lines at y-slice (or y-plane)",L"conty avar [fmt pos num]", mgls_conty, mglc_conty, false},
+	{L"contz",L"Draw contour lines at z-slice (or z-plane)",L"contz avar [fmt pos num]", mgls_contz, mglc_contz, false},
+	{L"copy",L"Copy data from another variable",L"copy var1 var2 ['eq'='' on_axis=on]", mgls_copy, mglc_copy, true},
+	{L"crange",L"Set color range",L"crange {var [sym] | c1 c2}", mgls_crange, mglc_crange, false},
+	{L"crop",L"Crop edge of data",L"crop var n1 n2 dir", mgls_crop, mglc_crop, false},
+	{L"crust",L"Draw reconstructed surface for arbitrary data points",L"crust {xvar yvar zvar} | var [fmt]", mgls_crust, mglc_crust, false},
+	{L"ctick",L"Set ticks for colorbar",L"ctick tmpl", mgls_ctick, mglc_ctick, false},
+	{L"cumsum",L"Crop edge of data",L"cumsum var dir", mgls_cumsum, mglc_cumsum, false},
+	{L"curve",L"Draw curve",L"", mgls_curve, mglc_curve, false},
+	{L"cut",L"Setup plot points cutting",L"", mgls_cut, mglc_cut, false},
+	{L"dens",L"Draw density plot",L"dens {xvar yvar} zvar [fmt zpos]", mgls_dens, mglc_dens, false},
+	{L"dens3",L"Draw density plot at slices of 3D data",L"dens3 {xvar yvar zvar} avar dir [pos fmt]", mgls_dens3, mglc_dens3, false},
+	{L"densa",L"Draw density plot at central slices of 3D data",L"densa {xvar yvar zvar} avar [fmt num]", mgls_densa, mglc_densa, false},
+	{L"densx",L"Draw density plot at x-slice (or x-plane)",L"densx avar [fmt pos]", mgls_densx, mglc_densx, false},
+	{L"densy",L"Draw density plot at y-slice (or y-plane)",L"densy avar [fmt pos]", mgls_densy, mglc_densy, false},
+	{L"densz",L"Draw density plot at z-slice (or z-plane)",L"densz avar [fmt pos]", mgls_densz, mglc_densz, false},
+	{L"dew",L"Draw dew plot",L"dew {xvae yvar} uvar vvar [fmt]", mgls_dew, mglc_dew, false},
+	{L"diff",L"Numerically differentiate data",L"diff var dir", mgls_diff, mglc_diff, false},
+	{L"diff2",L"Numerically double differentiate data",L"diff2 var dir", mgls_diff2, mglc_diff2, false},
+	{L"divto",L"Divide by data or number",L"divto var|num", mgls_divto, mglc_divto, false},
+	{L"dots",L"Draw dots for arbitrary data points",L"dots {xvar yvar zvar} | var [fmt]", mgls_dots, mglc_dots, false},
+	{L"drop",L"Draw drop",L"", mgls_drop, mglc_drop, false},
+	{L"envelop",L"Find envelop for the data",L"envelop dat", mgls_envelop, mglc_envelop, false},
+	{L"error",L"Draw error boxes",L"", mgls_error, mglc_error, false},
+	{L"evaluate",L"Evaluate (interpolate) values of array fdat at points i=idat,j=jdat,k=kdat",L"evaluate dat fdat idat [jdat=0 kdat=0 norm=true]", mgls_evaluate, mglc_evaluate, true},
+	{L"export",L"Export data to PNG picture",L"export dat 'fname' 'scheme' [v1=0 v2=0]", mgls_import, mglc_import, false},
+	{L"extend",L"Extend data array",L"", mgls_extend, mglc_extend, false},
+	{L"facex",L"Draw face perpendicular to x-axis",L"facex x0 y0 z0 wy wz [fmt]", mgls_facex, mglc_facex, false},
+	{L"facey",L"Draw face perpendicular to y-axis",L"facex x0 y0 z0 wx wz [fmt]", mgls_facey, mglc_facey, false},
+	{L"facez",L"Draw face perpendicular to z-axis",L"facex x0 y0 z0 wy wz [fmt]", mgls_facez, mglc_facez, false},
+	{L"fall",L"Draw waterfalls",L"fall {xvar yvar} zvar [fmt]", mgls_fall, mglc_fall, false},
+	{L"fgets",L"Print string from file",L"fgets x y {z} 'fname' [pos=0 'stl'='' size=-1.4]", mgls_fgets, mglc_fgets, false},
+	{L"fill",L"Fill data linearly in range [v1, v2]",L"fill var v1 v2 [dir]", mgls_fill, mglc_fill, false},
+	{L"fit",L"Fit data to formula",L"fit res {x {y {z}}} a eq var [ini print]", mgls_fit, mglc_fit, true},
+	{L"fits",L"Fit data to formula",L"fits res {x {y {z}}} a s eq var [ini print]", mgls_fits, mglc_fits, true},
+	{L"flow",L"Draw flow threads for vector field",L"", mgls_flow, mglc_flow, false},
+	{L"fog",L"Switch on/off fog",L"fog var val [pos]", mgls_fog, mglc_fog, false},
+	{L"font",L"Setup font",L"font fmt [size]", mgls_font, mglc_font, false},
+	{L"fplot",L"Plot curve by formula",L"fplot 'func' ['stl'='' num=100]", mgls_fplot, mglc_fplot, false},
+	{L"fsurf",L"Plot surface by formula",L"fsurf 'func' ['stl'='' num=100]", mgls_fsurf, mglc_fsurf, false},
+	{L"grid",L"Draw grid",L"", mgls_grid, mglc_grid, false},
+	{L"grid3",L"Draw grid at slices of 3D data",L"grid3 {xvar yvar zvar} avar dir [pos fmt]", mgls_grid3, mglc_grid3, false},
+	{L"grida",L"Draw grid at central slices of 3D data",L"grida {xvar yvar zvar} avar [fmt num]", mgls_grida, mglc_grida, false},
+	{L"hist",L"Create histogram (distribution) of data values",L"", mgls_hist, mglc_hist, true},
+	{L"import",L"Import data from PNG picture",L"import dat 'fname' 'scheme' [v1=0 v2=1]", mgls_import, mglc_import, true},
+	{L"info",L"Print information about data",L"info var", mgls_info, mglc_info, false},
+	{L"inplot",L"Set position of plot in picture",L"", mgls_inplot, mglc_inplot, false},
+	{L"integrate",L"Integrate data",L"integrate var dir", mgls_integrate, mglc_integrate, false},
+	{L"jacobian",L"Get Jacobian",L"jacobian res xdat ydat [zdat=0]", mgls_jacobian, mglc_jacobian, false},
+	{L"legend",L"Draw legend",L"legend {xpos ypos} | pos [fmt size]", mgls_legend, mglc_legend, false},
+	{L"legendbox",L"Switch on/off drawing box in legend",L"legendbox val", mgls_legendbox, mglc_legendbox, false},
+	{L"light",L"Setup light",L"", mgls_light, mglc_light, false},
+	{L"line",L"Draw line",L"", mgls_line, mglc_line, false},
+	{L"linewidth",L"Set default line width",L"linewidth val", mgls_linewidth, mglc_linewidth, false},
+	{L"map",L"Draw mapping plot",L"map {xvar yvar} uvar vvar [fmt]", mgls_map, mglc_map, false},
+	{L"mark",L"Draw mark plot for 1D data",L"mark {xvar} yvar {{zvar}} rvar [fmt num]", mgls_mark, mglc_mark, false},
+	{L"marksize",L"Set size of markers",L"marksize val", mgls_marksize, mglc_marksize, false},
+	{L"max",L"Find maximal value over direction",L"max ovar ivar dir", mgls_max, mglc_max, true},
+	{L"mesh",L"Draw mesh surface",L"mesh {xvar yvar} zvar [fmt]", mgls_mesh, mglc_mesh, false},
+	{L"meshnum",L"Set number of lines in mesh/fall/vect and so on",L"meshnum val", mgls_meshnum, mglc_meshnum, false},
+	{L"min",L"Find minimal value over direction",L"min ovar ivar dir", mgls_min, mglc_min, true},
+	{L"mirror",L"Mirror data at some direction",L"", mgls_mirror, mglc_mirror, false},
+	{L"modify",L"Modify data values by formula",L"modify var formula [var1 var2]", mgls_modify, mglc_modify, false},
+	{L"momentum",L"Get momentum along direction",L"momentum odat idat dir how", mgls_momentum, mglc_momentum, true},
+	{L"multo",L"Multiply by data or number",L"multo var|num", mgls_multo, mglc_multo, false},
+	{L"new",L"Create new data",L"new var nx [ny nz]", mgls_new, mglc_new, true},
+	{L"norm",L"Normalize data",L"", mgls_norm, mglc_norm, false},
+	{L"normsl",L"Normalize data slice by slice",L"", mgls_normsl, mglc_normsl, false},
+	{L"origin",L"Set axis origin",L"", mgls_origin, mglc_origin, false},
+	{L"palette",L"Set palette for 1D plots",L"palette 'colors'", mgls_palette, mglc_palette, false},
+	{L"pde",L"Solve PDE",L"pde res 'ham' ini_re ini_im [dz=0.1]", mgls_pde, mglc_pde, true},
+	{L"perspective",L"Set perspective",L"perspective val", mgls_perspective, mglc_perspective, false},
+	{L"pipe",L"Draw flow pipes for vector field",L"", mgls_pipe, mglc_pipe, false},
+	{L"plot",L"Draw usual plot for 1D data",L"plot {xvar} yvar {{zvar}} [fmt num]", mgls_plot, mglc_plot, false},
+	{L"plotfactor",L"Set plotfactor",L"plotfactor val", mgls_plotfactor, mglc_plotfactor, false},
+	{L"put",L"Put value (numeric or array) to given data element",L"put val dat i [j=0 k=0]", mgls_put, mglc_put, false},
+	{L"putsfit",L"Print fitted formula",L"putsfit x y {z} [pre font size]", mgls_putsfit, mglc_putsfit, false},
+	{L"qo2d",L"Solve PDE in accompanied coordinates",L"qo2d res 'ham' ini_re ini_im ray [r=1 k0=100 xout=0 yout=0]", mgls_qo2d, mglc_qo2d, true},
+	{L"ray",L"Solve Hamiltonian ODE (find GO ray or trajectory)",L"ray res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray, mglc_ray, true},
+	{L"read",L"Read data from file",L"read var file [nx ny nz]", mgls_read, mglc_read, true},
+	{L"readall",L"Read and join data from several files",L"", mgls_readall, mglc_readall, true},
+	{L"readhdf",L"Read data from HDF5 file",L"readhdf var file id", mgls_readhdf, mglc_readhdf, true},
+	{L"readmat",L"Read data from file with sizes specified in first row",L"readmat var file [dim=2]", mgls_readmat, mglc_readmat, true},
+	{L"rearrange",L"Rearrange data dimensions",L"rearrange mx [my mz]", mgls_rearrange, mglc_rearrange, false},
+	{L"rect",L"Draw rectangle",L"", mgls_rect, mglc_rect, false},
+	{L"region",L"Draw filled region between 2 curves",L"region {x} y1 y2 ['sch'='' inside=off]", mgls_region, mglc_region, false},
+	{L"resize",L"Resize data",L"resize ovar ivar [nx ny nz]", mgls_resize, mglc_resize, true},
+	{L"rotate",L"Rotate plot",L"", mgls_rotate, mglc_rotate, false},
+	{L"rotatetext",L"Set to auto rotate text or not",L"", mgls_rotatetext, mglc_rotatetext, false},
+	{L"save",L"Save data to file",L"save var file", mgls_save, mglc_save, false},
+	{L"savehdf",L"Save data to HDF5 file",L"savehdf var file id", mgls_savehdf, mglc_savehdf, false},
+	{L"set_id",L"Set column id for data",L"set_id var id", mgls_set_id, mglc_set_id, false},
+	{L"setsize",L"Set picture size",L"setsize wval hval", mgls_setsize, mglc_setsize, false},
+	{L"sew",L"Remove jump into the data, like phase jumps",L"sew dat", mgls_sew, mglc_sew, false},
+	{L"smooth",L"Smooth data",L"smooth var kind dir", mgls_smooth, mglc_smooth, false},
+	{L"sphere",L"Draw sphere",L"", mgls_sphere, mglc_sphere, false},
+	{L"squeeze",L"Squeeze data",L"squeeze var kx [ky kz]", mgls_squeeze, mglc_squeeze, false},
+	{L"stem",L"Draw stem plot for 1D data",L"stem {xvar} yvar {{zvar}} [fmt num]", mgls_stem, mglc_stem, false},
+	{L"step",L"Draw step plot for 1D data",L"step {xvar} yvar {{zvar}} [fmt num]", mgls_step, mglc_step, false},
+	{L"stfa",L"Draw STFA diagram",L"stfa {xvar yvar} uvar vvar num [fmt]", mgls_stfa, mglc_stfa, false},
+	{L"stfad",L"Do STFA transform",L"", mgls_stfad, mglc_stfad, true},
+	{L"subdata",L"Extract sub-array",L"subdata ovar ivar nx [ny nz]", mgls_subdata, mglc_subdata, true},
+	{L"subplot",L"Set position of plot",L"subplot mval nval ival", mgls_subplot, mglc_subplot, false},
+	{L"subto",L"Subtract data or number",L"subto var|num", mgls_subto, mglc_subto, false},
+	{L"sum",L"Find summation over direction",L"sum ovar ivar dir", mgls_sum, mglc_sum, true},
+	{L"surf",L"Draw solid surface",L"surf {xvar yvar} zvar [fmt]", mgls_surf, mglc_surf, false},
+	{L"surf3",L"Draw isosurface for 3D data",L"surf3 {xvar yvar zvar} avar {num} [fmt]", mgls_surf3, mglc_surf3, false},
+	{L"surf3a",L"Draw isosurface for 3D data transpared by other data",L"surf3a {xvar yvar zvar} avar cvar {num} [fmt]", mgls_surf3a, mglc_surf3a, false},
+	{L"surf3c",L"Draw isosurface for 3D data colored by other data",L"surf3c {xvar yvar zvar} avar cvar {num} [fmt]", mgls_surf3c, mglc_surf3c, false},
+	{L"surfa",L"Draw solid surface transpared by other data",L"surfa {xvar yvar} zvar cvar [fmt]", mgls_surfa, mglc_surfa, false},
+	{L"surfc",L"Draw solid surface colored by other data",L"surfc {xvar yvar} zvar cvar [fmt]", mgls_surfc, mglc_surfc, false},
+	{L"swap",L"Swap data (usefull after Fourier transform)",L"swap var dir", mgls_swap, mglc_swap, false},
+	{L"ternary",L"Switch on/off to use ternary axis",L"ternary val", mgls_ternary, mglc_ternary, false},
+	{L"text",L"Draw text at some position or along curve",L"", mgls_text, mglc_text, false},
+	{L"textmark",L"Draw TeX mark at point position",L"", mgls_textmark, mglc_textmark, false},
+	{L"tile",L"Draw horizontal tiles",L"tile {xvar yvar} zvar {rvar} [fmt]", mgls_tile, mglc_tile, false},
+	{L"title",L"Print title for the picture",L"title 'text' ['stl'='' size=-2]", mgls_title, mglc_title, false},
+	{L"torus",L"Draw surface of curve rotation",L"torus {zvar} rvar [fmt]", mgls_torus, mglc_torus, false},
+	{L"transform",L"Do integral transform of data",L"transform ovar how rvar ivar", mgls_transform, mglc_transform, true},
+	{L"transforma",L"Do integral transform of data",L"transforma ovar how avar fvar", mgls_transforma, mglc_transforma, true},
+	{L"transparent",L"Switch off transparency",L"transparent val", mgls_transparent, mglc_transparent, false}, //!!! OLD !!!
+	{L"transpose",L"Transpose data array",L"transpose var [dir]", mgls_transpose, mglc_transpose, false},
+	{L"transptype",L"Set type transparency",L"transptype val", mgls_transptype, mglc_transptype, false},
+	{L"triplot",L"Draw surface of triangles",L"", mgls_triplot, mglc_triplot, false},
+	{L"tube",L"Draw curve by tube",L"", mgls_tube, mglc_tube, false},
+	{L"var",L"Create new 1D data and fill it in range",L"var var nx x1 x2", mgls_var, mglc_var, true},
+	{L"vect",L"Draw vector field",L"", mgls_vect, mglc_vect, false},
+	{L"vectc",L"Draw vector field with coloring",L"", mgls_vectc, mglc_vectc, false},
+	{L"vectl",L"Draw vector field",L"", mgls_vect, mglc_vect, false},
+	{L"write",L"Write current image to PNG file",L"write 'fname' [solid=off]", mgls_write, mglc_write, false},
+	{L"xlabel",L"Draw label for x-axis",L"xlabel txt [fnt pos]", mgls_xlabel, mglc_xlabel, false},
+	{L"xrange",L"Set range for x-axis",L"xrange {var [add]} | {x1 x2}", mgls_xrange, mglc_xrange, false},
+	{L"xtick",L"Set ticks for x-axis",L"xtick {val [sub]} | tmpl", mgls_xtick, mglc_xtick, false},
+	{L"ylabel",L"Draw label for y-axis",L"ylabel txt [fnt pos]", mgls_ylabel, mglc_ylabel, false},
+	{L"yrange",L"Set range for y-axis",L"yrange {var [add]} | {x1 x2}", mgls_yrange, mglc_yrange, false},
+	{L"ytick",L"Set ticks for y-axis",L"ytick {val [sub]} | tmpl", mgls_ytick, mglc_ytick, false},
+	{L"zlabel",L"Draw label for z-axis",L"zlabel txt [fnt pos]", mgls_zlabel, mglc_zlabel, false},
+	{L"zoom",L"Zoom in/out plot",L"zoom x1 y1 x2 y2", mgls_zoom, mglc_zoom, false},
+	{L"zrange",L"Set range for z-axis",L"yrange {var [add]} | {x1 x2}", mgls_zrange, mglc_zrange, false},
+	{L"ztick",L"Set ticks for z-axis",L"ztick {val [sub]} | tmpl", mgls_ztick, mglc_ztick, false},
+{L"",0,0,0,0,0}};
 //-----------------------------------------------------------------------------

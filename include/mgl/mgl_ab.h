@@ -34,8 +34,8 @@ using mglGraph::Mark;
 	virtual void EndFrame();
 
 	void SetFontSizePT(float pt, int dpi=72);
-	void Alpha(bool enable)	{UseAlpha=enable;};
-	void Light(bool enable)	{UseLight=enable;};
+	void Alpha(bool enable);
+	void Light(bool enable);
 	void Light(int n, bool enable);
 	void Light(int n,mglPoint p, mglColor c=WC, float br=0.5, bool infty=true);
 
@@ -91,7 +91,8 @@ using mglGraph::Mark;
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	virtual void Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
 						const char *title,void *par=NULL,
-	  					void (*reload)(int next)=NULL);
+	  					void (*reload)(int next, void *p)=NULL);
+	void Window(int argc, char **argv, mglDraw *draw, const char *title);
 	//@}
 protected:
 	unsigned char *G4;			///< Final picture in RGBA format. Prepared after calling mglGraphZB::Finish().
@@ -122,6 +123,12 @@ protected:
 	float PenWidth;		///< Pen width for further line plotting (must be >0 !!!)
 	bool NoAutoFactor;	///< Temporary variable
 	float f_size;		///< font size for glyph lines
+
+	int NumFig;			///< Number of figures in the list. If 0 then no list and mglGraph::DrawFunc will called for each drawing.
+	void (*LoadFunc)(int next, void *par);
+	void *FuncPar;		///< Parameters for drawing function mglGraph::DrawFunc.
+	/// Drawing function for window procedure. It should return the number of frames.
+	int (*DrawFunc)(mglGraph *gr, void *par);
 
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 	virtual void ball(float *p,float *c)=0;
@@ -170,6 +177,7 @@ protected:
 	void trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool *tt,bool wire);
 	void quads_plot(long n, float *pp, float *cc, bool *tt);
 	void lines_plot(long n, float *pp, float *cc, bool *tt);
+	void vects_plot(long n, float *pp, float *cc, bool *tt);
 	void FindOptOrg(float ax[3], float ay[3], float az[3]);
 	float GetOrgX(char dir);
 	float GetOrgY(char dir);

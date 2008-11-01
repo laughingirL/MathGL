@@ -154,7 +154,7 @@ mglData mglData::Column(const char *eq)
 	mglFormula f(eq);
 	mglData d;
 	d.Create(ny,nz);
-	float var['z'-'a'+1];
+	float var[MGL_VS];
 	memset(var,0,('z'-'a')*sizeof(float));
 	register long i,j;
 	for(i=0;i<ny*nz;i++)

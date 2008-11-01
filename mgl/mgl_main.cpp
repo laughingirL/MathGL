@@ -54,41 +54,28 @@ mglColorID mglColorIds[] = {{'k', mglColor(0,0,0)},
 //-----------------------------------------------------------------------------
 void mglGraph::RecalcBorder()
 {
-	float x,y,z;
 	if(!fx &&	!fy &&	!fz)
 	{	FMin = Min;	FMax = Max;	}
 	else
 	{
-		FMin = mglPoint( 1e20, 1e20, 1e20);
-		FMax = mglPoint(-1e20,-1e20,-1e20);
-		// x �����
-		x = Min.x;
-		for(y=Min.y;y<=Max.y;y+=(Max.y-Min.y)/50.)
-			for(z=Min.z;z<=Max.z;z+=(Max.z-Min.z)/50.)
-				SetFBord(x,y,z);
-		x = Max.x;
-		for(y=Min.y;y<=Max.y;y+=(Max.y-Min.y)/50.)
-			for(z=Min.z;z<=Max.z;z+=(Max.z-Min.z)/50.)
-				SetFBord(x,y,z);
-		// y �����
-		y = Min.y;
-		for(x=Min.x;x<=Max.x;x+=(Max.x-Min.x)/50.)
-			for(z=Min.z;z<=Max.z;z+=(Max.z-Min.z)/50.)
-				SetFBord(x,y,z);
-		y = Max.y;
-		for(x=Min.x;x<=Max.x;x+=(Max.x-Min.x)/50.)
-			for(z=Min.z;z<=Max.z;z+=(Max.z-Min.z)/50.)
-				SetFBord(x,y,z);
-		// z �����
-		z = Min.z;
-		for(x=Min.x;x<=Max.x;x+=(Max.x-Min.x)/50.)
-			for(y=Min.y;y<=Max.y;y+=(Max.y-Min.y)/50.)
-				SetFBord(x,y,z);
-		z = Max.z;
-		for(x=Min.x;x<=Max.x;x+=(Max.x-Min.x)/50.)
-			for(y=Min.y;y<=Max.y;y+=(Max.y-Min.y)/50.)
-				SetFBord(x,y,z);
-
+		FMin = mglPoint( 1e30, 1e30, 1e30);
+		FMax = mglPoint(-1e30,-1e30,-1e30);
+		register int i,j;
+		for(i=0;i<51;i++)	for(j=0;j<51;j++)	// x range
+		{
+			SetFBord(Min.x, Min.y+i*(Max.y-Min.y)/50, Min.z+j*(Max.z-Min.z)/50);
+			SetFBord(Max.x, Min.y+i*(Max.y-Min.y)/50, Min.z+j*(Max.z-Min.z)/50);
+		}
+		for(i=0;i<51;i++)	for(j=0;j<51;j++)	// y range
+		{
+			SetFBord(Min.x+i*(Max.x-Min.x)/50, Min.y, Min.z+j*(Max.z-Min.z)/50);
+			SetFBord(Min.x+i*(Max.x-Min.x)/50, Max.y, Min.z+j*(Max.z-Min.z)/50);
+		}
+		for(i=0;i<51;i++)	for(j=0;j<51;j++)	// x range
+		{
+			SetFBord(Min.x+i*(Max.x-Min.x)/50, Min.y+j*(Max.y-Min.y)/50, Min.x);
+			SetFBord(Min.x+i*(Max.x-Min.x)/50, Min.y+j*(Max.y-Min.y)/50, Max.z);
+		}
 		if(!fx)	{	FMin.x = Min.x;	FMax.x = Max.x;	}
 		if(!fy)	{	FMin.y = Min.y;	FMax.y = Max.y;	}
 		if(!fz)	{	FMin.z = Min.z;	FMax.z = Max.z;	}
@@ -162,12 +149,12 @@ void mglGraph::CutOff(const char *EqC)
 bool mglGraph::ScalePoint(float &x,float &y,float &z)
 {
 //	float x1=x,y1=y,z1=z;
+	if(isnan(x) || isnan(y) || isnan(z))	return false;
 	float x1,y1,z1,x2,y2,z2;
 	x1 = x>0?x*FLT_EPS:x/FLT_EPS;	x2 = x<0?x*FLT_EPS:x/FLT_EPS;
 	y1 = y>0?y*FLT_EPS:y/FLT_EPS;	y2 = y<0?y*FLT_EPS:y/FLT_EPS;
 	z1 = z>0?z*FLT_EPS:z/FLT_EPS;	z2 = z<0?z*FLT_EPS:z/FLT_EPS;
 	bool res = true;
-	if(isnan(x) || isnan(y) || isnan(z))	return false;
 	if(x2>CutMin.x && x1<CutMax.x && y2>CutMin.y && y1<CutMax.y &&
 		z2>CutMin.z && z1<CutMax.z)	res = false;
 	if(fc && fc->Calc(x,y,z))	res = false;
@@ -203,9 +190,9 @@ bool mglGraph::ScalePoint(float &x,float &y,float &z)
 		}
 		x = x + (y+1)/2;
 	}
-	if(fabs(x)>FLT_EPS)	res = false;
-	if(fabs(y)>FLT_EPS)	res = false;
-	if(fabs(z)>FLT_EPS)	res = false;
+//	if(fabs(x)>FLT_EPS)	res = false;
+//	if(fabs(y)>FLT_EPS)	res = false;
+//	if(fabs(z)>FLT_EPS)	res = false;
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -515,38 +502,35 @@ void mglGraph::SetPalette(const char *colors)
 //-----------------------------------------------------------------------------
 void mglGraph::DefaultPlotParam()
 {
-	Cut = true;				OnCoord=false;
+	Ambient();				Ternary(false);
+	PlotId = "frame";		SetPalette("Hbgrcmyhlnqeup");
+	SetScheme("BbcyrR");	SelectPen("k-1");
+	Cut = true;				InPlot(0,1,0,1);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');
-	fx = fy = fz = fc = 0;	Cmin = -1;	Cmax = 1;
+	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1));
+	Axis(0,0,0);	CutOff(0);		Zoom(0,0,1,1);
+	SetWarn(mglWarnNone);	Message = 0;
 	BarWidth = 0.7;			fit_res[0] = 0;
 	MarkSize = 0.02;		ArrowSize = 0.03;
 	AlphaDef = 0.5;			Transparent = true;
-	Org = mglPoint(NAN, NAN, NAN);
 	FontSize = 5;			BaseLineWidth = 1;
 	strcpy(FontDef,"rC");	AxialDir = 'y';
 	UseAlpha = false;		TranspType = 0;
 	RotatedText = true;		fnt->gr = this;
 	CloudFactor = 1;		MeshNum = 0;
-	NumLeg = 0;				LegendBox = true;
-	zoomx1=zoomy1=0;		zoomx2=zoomy2=1;
-	Ambient();				Message = 0;
+	ClearLegend();			LegendBox = true;
 	CutMin=mglPoint(0,0,0);	CutMax=mglPoint(0,0,0);
-	DrawFace = true;		_tetx=_tety=_tetz=0;
-	TuneTicks= true;		_sx=_sy=_sz = 1;
-	TernAxis = false;		WarnCode = 0;
-	ScalePuts = true;
-	xtt=ytt=ztt=ctt=0;		FactorPos = 1.15;
 	AutoOrg = true;			CurFrameId = 0;
 	CirclePnts = 40;		FitPnts = 100;
-	AutoPlotFactor = true;
+	DrawFace = true;		_tetx=_tety=_tetz=0;
+	TuneTicks= true;		_sx=_sy=_sz = 1;
+	Alpha(false);			Fog(0);
+	xtt=ytt=ztt=ctt=0;		FactorPos = 1.15;
+	AutoPlotFactor = true;	ScalePuts = true;
 	PlotFactor = AutoPlotFactor ? 1.55f :2.f;
-	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1));
-	xnum=ynum=znum=0;			if(xnum)	delete []xbuf;
-	if(ynum)	delete []ybuf;	if(znum)	delete []zbuf;
-
-	PlotId = "frame";		SetPalette("Hbgrcmyhlnqeup");
-	SetScheme("BbcyrR");	SelectPen("k-1");
-	InPlot(0,1,0,1);		Clf();
+	for(int i=0;i<10;i++)
+	{	Light(i, mglPoint(0,0,1));	Light(i,false);	}
+	Light(0,true);			Light(false);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::SimplePlot(const mglData &a, int type, const char *stl)
@@ -760,10 +744,11 @@ void mglGraph::Ambient(float bright)	{	AmbBr = bright;	}
 //-----------------------------------------------------------------------------
 mglGraph::mglGraph()
 {
-	xnum=ynum=znum=0;
+	memset(this,0,sizeof(mglGraph));
+//	xnum=ynum=znum=0;
 	fit_res = new char[1024];
 	fnt = new mglFont;
-	DefaultPlotParam();
+//	DefaultPlotParam();
 	InitSaveFunc();
 }
 //-----------------------------------------------------------------------------

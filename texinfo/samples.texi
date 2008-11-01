@@ -1,5 +1,5 @@
 @c ------------------------------------------------------------------
-@node Samples, Copying This Manual, Examples, Top
+@node Samples, Copying This Manual, Interfaces, Top
 @chapter Samples
 
 This chapter contain a lot of sample codes for all types of plots and for most important examples and hints. The same sample (with pictures) you can find at @uref{http://mathgl.sf.net/pictures.html}. Most of examples have the sample code on 5 languages: C++, MGL, C, Fortran and Python. However, I put only C++ code for some of examples due to a lot of them and clearency how to write code for other languages. All samples are divided on 5 large categories.
@@ -2410,6 +2410,7 @@ TO BE DONE
 * TileS sample::                
 * Map sample::                  
 * Vect sample::                 
+* VectL sample::                
 * VectC sample::                
 * Flow sample::                 
 * Pipe sample::                 
@@ -2417,6 +2418,7 @@ TO BE DONE
 * Surf3C sample::               
 * Surf3A sample::               
 * Vect 3D sample::              
+* VectL 3D sample::             
 * VectC 3D sample::             
 * Flow 3D sample::              
 * Pipe 3D sample::              
@@ -2680,7 +2682,7 @@ TO BE DONE
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Vect sample, VectC sample, Map sample, Dual plotting samples
+@node Vect sample, VectL sample, Map sample, Dual plotting samples
 @subsection Vect sample
 @cindex Vect
 
@@ -2737,9 +2739,67 @@ call mgl_delete_data(b)
 TO BE DONE
 @end verbatim
 
+@c ------------------------------------------------------------------
+@node VectL sample, VectC sample, Vect sample, Dual plotting samples
+@subsection VectL sample
+@cindex VectL
+
+@float
+@image{png/vectl, 7cm}
+@caption{Example of VectL. @tdref{vectl}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData a(50,40), b(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+
+gr->Box();
+gr->VectL(a,b);
+@end verbatim
+@strong{MGL code}
+@verbatim
+new a 50 40
+new b 50 40
+modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
+modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
+box
+vectl a b
+@end verbatim
+@strong{Pure C code}
+@verbatim
+HMDT a, b;
+a = mgl_create_data_size(50,40,1);
+b = mgl_create_data_size(50,40,1);
+mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+
+mgl_box(gr,1);
+mgl_vectl_2d(gr,a,b,0,0.);
+mgl_delete_data(a); mgl_delete_data(b);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer a,b, mgl_create_data_size
+a = mgl_create_data_size(50,40,1);
+b = mgl_create_data_size(50,40,1);
+call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+
+call mgl_box(gr,1)
+call mgl_vectl_2d(gr,a,b,'',0.)
+call mgl_delete_data(a)
+call mgl_delete_data(b)
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim
+
 
 @c ------------------------------------------------------------------
-@node VectC sample, Flow sample, Vect sample, Dual plotting samples
+@node VectC sample, Flow sample, VectL sample, Dual plotting samples
 @subsection VectC sample
 @cindex VectC
 
@@ -3128,7 +3188,7 @@ TO BE DONE
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Vect 3D sample, VectC 3D sample, Surf3A sample, Dual plotting samples
+@node Vect 3D sample, VectL 3D sample, Surf3A sample, Dual plotting samples
 @subsection Vect 3D sample
 @cindex Vect
 
@@ -3210,7 +3270,89 @@ TO BE DONE
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node VectC 3D sample, Flow 3D sample, Vect 3D sample, Dual plotting samples
+@node VectL 3D sample, VectC 3D sample, Vect 3D sample, Dual plotting samples
+@subsection VectL 3D sample
+@cindex VectL
+
+@float
+@image{png/vectl3, 7cm}
+@caption{Example of VectL in 3D. @tdref{vectl3}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
+ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+gr->Rotate(40,60);
+gr->Box();
+gr->VectL(ex, ey, ez, "bwr");
+@end verbatim
+@strong{MGL code}
+@verbatim
+new ex 10 10 10
+new ey 10 10 10
+new ez 10 10 10
+modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+
+rotate 40 60
+box
+vectl ex ey ez 'bwr'
+@end verbatim
+@strong{Pure C code}
+@verbatim
+HMDT ex, ey, ez;
+ex = mgl_create_data_size(10,10,10);
+ey = mgl_create_data_size(10,10,10);
+ez = mgl_create_data_size(10,10,10);
+mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
+                    0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+
+mgl_rotate(gr,40.,60.,0.);
+mgl_box(gr,1);
+mgl_vectl_3d(gr,ex,ey,ez,"bwr");
+mgl_delete_data(ex); mgl_delete_data(ey); mgl_delete_data(ez);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer ex,ey,ez, mgl_create_data_size
+ex = mgl_create_data_size(10,10,10)
+ey = mgl_create_data_size(10,10,10)
+ez = mgl_create_data_size(10,10,10)
+call mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
+                        - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+call mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
+                        - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+call mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
+                        - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+
+call mgl_rotate(gr,40.,60.,0.)
+call mgl_box(gr,1);
+call mgl_vectl_3d(gr,ex,ey,ez,'bwr')
+call mgl_delete_data(ex)
+call mgl_delete_data(ey)
+call mgl_delete_data(ez)
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node VectC 3D sample, Flow 3D sample, VectL 3D sample, Dual plotting samples
 @subsection VectC 3D sample
 @cindex VectC
 
@@ -4424,6 +4566,8 @@ TO BE DONE
 * Sew sample::                  
 * STFA sample::                 
 * PDE sample::                  
+* Beam tracing sample::         
+* Parser sample::               
 @end menu
 
 @node Curvelinear coorinates sample, 2-axes sample, , Advanced features
@@ -5002,7 +5146,7 @@ TO BE DONE
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node PDE sample, , STFA sample, Advanced features
+@node PDE sample, Beam tracing sample, STFA sample, Advanced features
 @subsection PDE sample
 @cindex mglPDE
 @cindex mglRay
@@ -5060,6 +5204,123 @@ title 'Equation: ik_0\partial_zu + \Delta u + x\cdot u
 @strong{Pure C code}
 @verbatim
 TO BE DONE
+@end verbatim
+@strong{Fortran code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node Beam tracing sample, Parser sample, PDE sample, Advanced features
+@subsection Beam tracing sample
+@cindex mglQO2d
+@cindex mglRay
+
+@float
+@image{png/qo2d, 7cm}
+@caption{Example of ray and beam tracing. Compare with @ref{PDE sample}.}@c @tdref{fit}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData r, xx, yy, a, im, re;
+const char *ham = "p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)";
+r = mglRay(ham, mglPoint(-0.7, -1), mglPoint(0, 0.5), 0.02, 10);
+gr->Plot(r.SubData(0), r.SubData(1), "k");
+gr->Axis();	gr->Label('x', "\\i x");	gr->Label('y', "\\i z");
+// now start bema tracing
+re.Fill("exp(-48*x^2)", gr->Min, gr->Max);
+a = mglQO2d(ham, re, im, r, 1, 30, &xx, &yy);
+gr->CAxis(0, 1);
+gr->Dens(xx, yy, a, "wyrRk");
+gr->Plot("-x", "k|");
+gr->Puts(mglPoint(-0.8, 0.85), "absorption: (x+y)/2 for x+y>0", "L");
+gr->Puts(mglPoint(0.5, -0.05), "central ray", "L");
+gr->Title("Beam and ray tracing", "C", -1.5);
+@end verbatim
+@strong{MGL code}
+@verbatim
+define $1 'p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)'
+ray r $1 -0.7 -1 0 0 0.5 0 0.02
+plot r(0) r(1) 'k'
+axis
+xlabel '\i x'
+ylabel '\i z'
+
+new re 128
+new im 128
+new xx 128
+new yy 128
+fill re 'exp(-48*x^2)'
+qo2d a $1 re im r 1 30 xx yy 
+
+crange 0 1
+dens xx yy a 'wyrRk'
+fplot '-x' 'k|'
+text -0.8 0.85 'absorption: (x+y)/2 for x+y>0' 'L' -1
+text 0.5 -0.05 'central ray' 'L' -1
+title 'Beam and ray tracing' 'C' -1.5
+
+@end verbatim
+@strong{Pure C code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Fortran code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Python}
+@verbatim
+TO BE DONE
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node Parser sample, , Beam tracing sample, Advanced features
+@subsection Parser sample
+@cindex mglParse
+
+@float
+@image{png/parser, 7cm}
+@caption{Example of MGL parsing.}@c @tdref{fit}}
+@end float
+
+@strong{C++ code}
+@verbatim
+float a[100];   // let a_i = sin(4*pi*x), x=0...1
+for(int i=0;i<100;i++) a[i]=sin(4*M_PI*i/99);
+mglParse *parser = new mglParse;
+mglData &d = (parser->AddVar("dat"))->d;
+d.Set(a,100);   // set data to variable
+parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
+// you may break script at any line do something
+// and continue after that
+parser->Execute(gr, "xlabel 'x'\nylabel 'y'\nbox");
+// also you may use cycles or conditions in script
+parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+@end verbatim
+@strong{MGL code}
+@verbatim
+NOT AVAILABLE
+@end verbatim
+@strong{Pure C code}
+@verbatim
+float a[100];   /* let a_i = sin(4*pi*x), x=0...1 */
+int i;
+for(i=0;i<100;i++)  a[i]=sin(4*M_PI*i/99);
+HMPR parser = mgl_create_parser();
+HMDT d = mgl_add_var(parser, "dat");
+mgl_data_set_float(d,a,100,1,1);    /* set data to variable */
+mgl_parse_text(gr, parser, "plot dat; xrange 0 1\nbox\naxis");
+/* you may break script at any line do something 
+   and continue after that */
+mgl_parse_text(gr, parser, "xlabel 'x'\nylabel 'y'");
+/* also you may use cycles or conditions in script */
+mgl_parse_text(gr, parser, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
 @end verbatim
 @strong{Fortran code}
 @verbatim

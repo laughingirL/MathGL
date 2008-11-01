@@ -40,6 +40,7 @@ struct mglCommand
 	int (*exec)(mglGraph *gr, long n, mglArg *a, int k[10]);
 	/// Function for exporting in C++ (can be NULL)
 	void (*save)(wchar_t out[1024], long n, mglArg *a, int k[10]);
+	bool create;	///< Should parser create 1st the array automatically
 };
 extern mglCommand mgls_base_cmd[];
 //-----------------------------------------------------------------------------
@@ -81,8 +82,12 @@ public:
 	int Export(wchar_t cpp_out[1024], mglGraph *gr, const wchar_t *str);
 	/// Execute MGL script file \a fname
 	void Execute(mglGraph *gr, FILE *fp, bool print=false);
-	/// Execute MGL script file \a fname
+	/// Execute MGL script from array of lines
 	void Execute(mglGraph *gr, int num, const wchar_t **text, void (*error)(int line, int kind)=NULL);
+	/// Execute MGL script text with '\n' separated lines
+	void Execute(mglGraph *gr, const wchar_t *text, void (*error)(int line, int kind)=NULL);
+	/// Execute MGL script text with '\n' separated lines
+	void Execute(mglGraph *gr, const char *text, void (*error)(int line, int kind)=NULL);
 	/// Find variable or return 0 if absent
 	mglVar *FindVar(const char *name);
 	/// Find variable or return 0 if absent
@@ -95,6 +100,8 @@ public:
 	bool AddParam(int n, const char *str, bool isstr=true);
 	/// Add unicode string for parameter $1, ..., $9
 	bool AddParam(int n, const wchar_t *str, bool isstr=true);
+	/// Add new MGL command(s) (last command MUST HAVE name[0]=0 !!!)
+	void AddCommand(mglCommand *cmd);
 	/// Restore Once flag
 	inline void RestoreOnce()	{	Once = true;	};
 	/// Delete variable
@@ -119,7 +126,7 @@ private:
 	int for_addr;			///< Flag for saving address in variable (for_addr-1)
 
 	/// Parse command
-	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a);
+	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var);
 	/// Fill arguments \a a from strings
 	void FillArg(int n, wchar_t **arg, mglArg *a);
 	/// PreExecute stage -- parse some commands and create variables

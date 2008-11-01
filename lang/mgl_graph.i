@@ -46,6 +46,10 @@ struct mglParse{};
 	{	return mgl_parse(gr, self, str, pos);	}
 	int Parse(mglGraph *gr, const wchar_t *str, int pos)
 	{	return mgl_parsew(gr, self, str, pos);	}
+	void Execute(mglGraph *gr, const char *str)
+	{	return mgl_parse_text(gr, self, str);	}
+	void Execute(mglGraph *gr, const wchar_t *str)
+	{	return mgl_parsew_text(gr, self, str);	}
 	void RestoreOnce()
 	{	return mgl_restore_once(self);	}
 	void AllowSetSize(bool allow)
@@ -60,6 +64,12 @@ struct mglParse{};
 		else if(kind==3)	return mgl_create_graph_idtf();
 		return mgl_create_graph_zb(width, height);
 	}
+/*	mglGraph(mglDraw *dr, const char *title="MathGL window", int kind=0)
+	{
+		if(kind==1)	return mgl_create_graph_fltk_dr(dr, title);
+		if(kind==2)	return mgl_create_graph_glut_dr(dr, title);
+		return mgl_create_graph_qt_dr(dr, title);
+	}*/
 	~mglGraph()
 	{	mgl_delete_graph(self);	}
 
@@ -134,10 +144,15 @@ struct mglParse{};
 	{	mgl_write_svg(self, fname, descr);	}
 	void Flush()
 	{	mgl_flush(self);	}
+
+	/* TODO: %apply (char *STRING, int LENGTH) { (char *str, int len) };*/
+	/*%cstring_output_withsize(parm, maxparm)*/
 	const char *GetRGB()
 	{	return (const char *)mgl_get_rgb(self);	}
 	const char *GetRGBA()
 	{	return (const char *)mgl_get_rgba(self);	}
+
+
 	int GetWidth()
 	{	return mgl_get_width(self);	}
 	int GetHeight()
@@ -181,6 +196,11 @@ struct mglParse{};
 	{	mgl_set_ticks_dir(self, dir, d, ns, org);	}
 	void SetTicks(char dir, int n, float *val, const char **lbl)
 	{	mgl_set_ticks_vals(self, dir, n, val, lbl);	}
+
+/*	TODO: %varargs
+	void mgl_set_ticks_val(HMGL graph, char dir, int n, double val, const char *lbl, ...);*/
+
+
 	void SetCRange(float c1, float c2)
 	{	mgl_set_caxis(self, c1, c2);	}
 	void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0)
@@ -448,6 +468,10 @@ struct mglParse{};
 	{	mgl_vect_xy(self, x, y, ax, ay, sch, zVal);	}
 	void Vect(mglData *ax, mglData *ay, const char *sch="", float zVal=NaN)
 	{	mgl_vect_2d(self, ax, ay, sch, zVal);	}
+	void VectL(mglData *x, mglData *y, mglData *ax, mglData *ay, const char *sch="", float zVal=NaN)
+	{	mgl_vectl_xy(self, x, y, ax, ay, sch, zVal);	}
+	void VectL(mglData *ax, mglData *ay, const char *sch="", float zVal=NaN)
+	{	mgl_vectl_2d(self, ax, ay, sch, zVal);	}
 	void VectC(mglData *x, mglData *y, mglData *ax, mglData *ay, const char *sch="", float zVal=NaN)
 	{	mgl_vectc_xy(self, x, y, ax, ay, sch, zVal);	}
 	void VectC(mglData *ax, mglData *ay, const char *sch="", float zVal=NaN)
@@ -647,8 +671,6 @@ struct mglParse{};
 
 	void PDE(mglData *res, const char *ham, mglData *ini_re, mglData *ini_im, float dz=0.1, float k0=100)
 	{	mgl_pde_solve(self,res,ham,ini_re,ini_im,dz,k0);	}
-	void Ray(mglData *res, const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt=0.1, float tmax=10)
-	{	mgl_ray_trace(self, res, ham, x0,y0,z0,px,py,pz,dt,tmax);	}
 	void Fill(mglData *u, const char *eq, mglData *v=NULL, mglData *w=NULL)
 	{	mgl_data_fill_eq(self, u,eq,v,w);	}
 };

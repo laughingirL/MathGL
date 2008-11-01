@@ -18,10 +18,12 @@
 #ifndef _MGL_EVAL_H_
 #define _MGL_EVAL_H_
 //---------------------------------------------------------------------------
-// типы ошибок
+/// types of errors
 #define MGL_ERR_LOG		1
 #define MGL_ERR_ARC		2
 #define MGL_ERR_SQRT	3
+/// size of \a var array
+const int MGL_VS = 'z'-'a'+1;
 //---------------------------------------------------------------------------
 /// Class for evaluating formula specified by the string
 class mglFormula					// объект для ввода и вычисления формул
@@ -32,9 +34,9 @@ public:
 	/// Evaluates the formula for 'x, y, z, u, v, w'
 	float Calc(float x,float y,float z,float u,float v,float w);
 	/// Evaluates the formula for variables \a var
-	float Calc(const float var['z'-'a'+1]);
+	float Calc(const float var[MGL_VS]);
 	/// Evaluates the derivates of the formula for variables \a var respect to variable \a diff
-	float CalcD(const float var['z'-'a'+1], char diff);
+	float CalcD(const float var[MGL_VS], char diff);
 	/// Return error code
 	int GetError();
 	/// Parse the formula \a str and create formula-tree

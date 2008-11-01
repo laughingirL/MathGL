@@ -68,7 +68,7 @@ int main(int narg, char **arg)
 					narg--;
 				}
 			}
-			gr.Window(narg,arg,show,fname,NULL);
+			gr.Window(narg,arg,show,fname);
 			return mglFlRun();
 		}
 	}

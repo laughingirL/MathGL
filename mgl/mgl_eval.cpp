@@ -393,7 +393,7 @@ mglFormula::mglFormula(const char *string)
 float mglFormula::Calc(float x,float y,float t,float u)
 {
 	Error=0;
-	float a1['z'-'a'+1];	memset(a1,0,('z'-'a'+1)*sizeof(float));
+	float a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(float));
 	a1['a'-'a'] = a1['u'-'a'] = u;
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = a1['v'-'a'] = y;
@@ -405,7 +405,7 @@ float mglFormula::Calc(float x,float y,float t,float u)
 float mglFormula::Calc(float x,float y,float t,float u,float v,float w)
 {
 	Error=0;
-	float a1['z'-'a'+1];	memset(a1,0,('z'-'a'+1)*sizeof(float));
+	float a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(float));
 	a1['c'-'a'] = a1['w'-'a'] = w;
 	a1['b'-'a'] = a1['v'-'a'] = v;
 	a1['a'-'a'] = a1['u'-'a'] = u;
@@ -416,14 +416,14 @@ float mglFormula::Calc(float x,float y,float t,float u,float v,float w)
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for arbitrary set of variables
-float mglFormula::Calc(const float var['z'-'a'+1])
+float mglFormula::Calc(const float var[MGL_VS])
 {
 	Error=0;
 	return CalcIn(var);
 }
 //-----------------------------------------------------------------------------
 // evaluate derivate of formula respect to 'diff' variable for arbitrary set of other variables
-float mglFormula::CalcD(const float var['z'-'a'+1], char diff)
+float mglFormula::CalcD(const float var[MGL_VS], char diff)
 {
 	Error=0;
 	return CalcDIn(diff-'a', var);

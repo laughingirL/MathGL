@@ -276,7 +276,7 @@ if (test x$docs = xtrue || test x$all = xtrue) ;then
 fi
 AM_CONDITIONAL(USE_DOCS, (test x$docs = xtrue || test x$all = xtrue) )
 
-AM_CONDITIONAL(USE_LTDL, (test x$testio = xtrue || test x$hdf5 = xtrue || test x$jpeg = xtrue || test x$tiff = xtrue))
+AM_CONDITIONAL(USE_LTDL, (test x$all = xtrue || test x$testio = xtrue || test x$hdf5 = xtrue || test x$jpeg = xtrue || test x$tiff = xtrue))
 
 AC_CONFIG_FILES([
 Makefile

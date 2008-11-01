@@ -601,6 +601,49 @@ void mglGraphAB::lines_plot(long n,float *pp,float *cc,bool *tt)
 	PDef = pOld;
 }
 //-----------------------------------------------------------------------------
+void mglGraphAB::vects_plot(long n,float *pp,float *cc,bool *tt)
+{
+	register long i;
+	float s1[4],s2[4],*p,q[6],d;
+	mglColor col,c1=cmap[0],c2=NumCol>1?cmap[1]:cmap[0];
+	s1[3] = s2[3] = AlphaDef;
+	PostScale(pp,2*n);
+	long pOld = PDef;
+	PDef = 0xffff;
+	for(i=0;i<n;i++)
+	{
+		p = pp+6*i;
+		if(tt && (!tt[2*i] || !tt[2*i+1]))	continue;
+		if(cc)
+		{
+			if(cc[i])
+			{
+				col = GetC(cc[i]-0.5,false);
+				s1[0] = col.r;	s1[1] = col.g;	s1[2] = col.b;
+				col = GetC(cc[i],false);
+				s2[0] = col.r;	s2[1] = col.g;	s2[2] = col.b;
+			}
+		}
+		else
+		{
+			s1[0] = c1.r;	s1[1] = c1.g;	s1[2] = c1.b;
+			s2[0] = c2.r;	s2[1] = c2.g;	s2[2] = c2.b;
+		}
+		memcpy(CDef,s1,4*sizeof(float));
+
+		d = hypot(p[3]-p[0],p[4]-p[1]);	// make arrow
+		q[0] = p[0]+0.8*(p[3]-p[0]) + 0.1*(p[4]-p[1]);
+		q[3] = p[0]+0.8*(p[3]-p[0]) - 0.1*(p[4]-p[1]);
+		q[1] = p[1]+0.8*(p[4]-p[1]) - 0.1*(p[3]-p[0]);
+		q[4] = p[1]+0.8*(p[4]-p[1]) + 0.1*(p[3]-p[0]);
+		q[2] = q[5] = p[2]+0.8*(p[5]-p[2]);
+		line_plot(p,p+3,s1,s2);
+		line_plot(q,p+3,s1,s2);
+		line_plot(q+3,p+3,s1,s2);
+	}
+	PDef = pOld;
+}
+//-----------------------------------------------------------------------------
 void mglGraphAB::cloud_plot(long nx,long ny,long nz,float *pp,float *a,float alpha)
 {
 	register long i,j,k,i0;

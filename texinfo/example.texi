@@ -66,7 +66,30 @@ The ``interactive'' way of drawing in MathGL consists in window creation  with h
 @end verbatim
 Here function @code{sample} is defined. This function does all drawing. Other function @code{main} is entry point function for console program. Arguments of @code{main} should be transfered to @code{Window()} since it may contain OS specific information (@pxref{mglGraphAB class}).
 
-The similar code can be written for @code{mglGraphGLUT} window (function @code{sample()} is the same):
+Alternatively you can create yours own class inherited from class @code{mglDraw} and reimplement the function @code{Draw()} in it:
+@verbatim
+    class Foo : public mglDraw
+    {
+    public:
+        int Draw(mglGraph *gr);
+    } foo;
+    //-----------------------------------------------------
+    int Foo::Draw(mglGraph *gr)
+    {
+        gr->Rotate(60,40);
+        gr->Box();
+        return 0;
+    }
+    //-----------------------------------------------------
+    int main(int argc,char **argv)
+    {
+        mglGraphFLTK gr;
+        gr.Window(argc,argv,foo,"MathGL examples");
+        return mglFlRun();
+    }
+@end verbatim
+
+The similar code can be written for @code{mglGraphGLUT} or for @code{mglGraphQT} window (function @code{sample()} is the same):
 @verbatim
     int main(int argc,char **argv)
     {
@@ -772,7 +795,7 @@ Practically the same simple to create a window. For example let rewrite the code
     }
 @end verbatim
 
-The fortran code have some perculiarities. Exactly it not allow one to send arbitrary parameter (which was @code{NULL} in previous example) to function. This is limitation of Fortran language. So, the corresponding code will be:
+The fortran code have some perculiarities. Exactly it not allow one to send arbitrary parameter (which was @code{NULL} in previous example) to function. This is limitation of Fortran language. So, the corresponding code will be @strong{NOT TESTED NOW!!!}:
 @verbatim
     program TEST
     integer x,f,func
@@ -808,6 +831,8 @@ In this section I have included some small hints and advices for the improving o
 * Log-scaled plot::             
 * ``Templates''::               
 * Nonlinear fitting hints::     
+* PDE solving hints::           
+* MGL parser using::            
 @end menu
 
 @c ------------------------------------------------------------------
@@ -816,26 +841,26 @@ In this section I have included some small hints and advices for the improving o
 
 As I noted above, MathGL functions (except the special one, like Clf()) do  not erase the previous plotting but just add the new one. It allows one to draw ``compound'' plots easily. For example, popular Matlab command @code{surfc} can be emulated in MathGL by 2 calls:
 @verbatim
-        Surf(a);
-        Cont(a, 0, 7, -1);     // draw contours at z = -1
+    Surf(a);
+    Cont(a, 0, 7, -1);     // draw contours at z = -1
 @end verbatim
 Here @var{a} is 2-dimensional data for the plotting, @code{-1} is the value of z-coordinate at which the contour should be plotted (at the bottom in this example). Analogously, one can draw density plot instead of contour lines and so on.
 
 Another nice plot is contour lines plotted directly on the surface:
 @verbatim
-        Light(true);       // switch on light for the surface
-        Surf(a, "BbcyrR"); // select 'jet' colormap for the surface
-        Cont(a, "y");      // and yellow color for contours
+    Light(true);       // switch on light for the surface
+    Surf(a, "BbcyrR"); // select 'jet' colormap for the surface
+    Cont(a, "y");      // and yellow color for contours
 @end verbatim
 The possible difficulties arise in black&white case, when the color of the surface can be close to the color of a contour line. In that case I may suggest the following code:
 @verbatim
-        Light(true);       // switch on light for the surface
-        Surf(a, "kw");     // select 'gray' colormap for the surface
-        CAxis(-1,0);       // first draw for darker surface colors
-        Cont(a, "w");      // white contours
-        CAxis(0,1);        // now draw for brighter surface colors
-        Cont(a, "k");      // black contours
-        CAxis(-1,1);       // return color range to original state
+    Light(true);       // switch on light for the surface
+    Surf(a, "kw");     // select 'gray' colormap for the surface
+    CAxis(-1,0);       // first draw for darker surface colors
+    Cont(a, "w");      // white contours
+    CAxis(0,1);        // now draw for brighter surface colors
+    Cont(a, "k");      // black contours
+    CAxis(-1,1);       // return color range to original state
 @end verbatim
 The idea is to divide the color range on 2 parts (dark and bright) and to select the contrasting color for contour lines for each of part.
 
@@ -847,14 +872,14 @@ Similarly, one can plot flow thread over density plot of vector field amplitude 
 
 Developing the previous hint one can make a plot with 2 or more axes. The idea is that the change of settings does not influence on the already drawn graphics. So, for 2-axes plot let us set the first axis and draw everything concerning it. Then let us setup the second axis and draw things for the second axis. The corresponding code is (@pxref{2-axes sample}):
 @verbatim
-        // set up first axis
-        Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,-1,-1));
-        Axis();            // draw it
-        Plot(y1,"b");      // draw something in first axis
-        // set up second axis
-        Axis(mglPoint(0,0,0),mglPoint(1,1,1),mglPoint(1,1,1));
-        Axis();            // draw it
-        Stem(y2,"r");      // draw something in second axis
+    // set up first axis
+    Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,-1,-1));
+    Axis();            // draw it
+    Plot(y1,"b");      // draw something in first axis
+    // set up second axis
+    Axis(mglPoint(0,0,0),mglPoint(1,1,1),mglPoint(1,1,1));
+    Axis();            // draw it
+    Stem(y2,"r");      // draw something in second axis
 @end verbatim
 Note, that the first and the second axes look better if being placed in different corners. In the code presented above the first axis is placed in the left-bottom corner, and the second one is placed in the right-top corner.
 
@@ -872,12 +897,12 @@ By default (for the user comfort), the color range is set equal to z-range of th
 
 For example, compare 2 surfaces:
 @verbatim
-        SubPlot(2,1,0)
-        Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,-1,-1));
-        Surf(a);           // usual coloring range
-        SubPlot(2,1,1)
-        CAxis(0,1);
-        Surf(a);           // bottom of the surface have one-colour filling
+    SubPlot(2,1,0)
+    Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,-1,-1));
+    Surf(a);           // usual coloring range
+    SubPlot(2,1,1)
+    CAxis(0,1);
+    Surf(a);           // bottom of the surface have one-colour filling
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -916,13 +941,13 @@ In contrast to the most of other programs, MathGL supports several (up to 10) li
 MathGL library has a feature for cutting of points in some region @var{CutMin*CutMax}. Such an excision can be used to improve the look of the graphics. Moreover, this cutting may help to show an internal structure of an object (like @code{isocaps} plot in Matlab). For example, let us use the standard 3D data array and show its interior (@pxref{CutMinMax sample}).
 
 @verbatim
-        mglData  c(61,51,40);      // create the data
-        mglData v(10);	v.Fill(-0.5,1);
-        c.Modify("(-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1))");
-        gr->CutMin = mglPoint(0,-1,-1);	gr->CutMax = mglPoint(1,0,1.1);
-        gr->Surf3(-0.5,c,"BbcyrR");
-        gr->ContF3(v,c,'x',-1,"BbcyrR");	gr->ContF3(v,c,'y',-1,"BbcyrR");
-        gr->ContF3(v,c,'z',0,"BbcyrR");		gr->ContF3(v,c,'z',39,"BbcyrR");
+    mglData  c(61,51,40);      // create the data
+    mglData v(10);	v.Fill(-0.5,1);
+    c.Modify("(-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1))");
+    gr->CutMin = mglPoint(0,-1,-1);     gr->CutMax = mglPoint(1,0,1.1);
+    gr->Surf3(-0.5,c,"BbcyrR");
+    gr->ContF3(v,c,'x',-1,"BbcyrR");    gr->ContF3(v,c,'y',-1,"BbcyrR");
+    gr->ContF3(v,c,'z',0,"BbcyrR");     gr->ContF3(v,c,'z',39,"BbcyrR");
 @end verbatim
 
 One can also exclude points from arbitrary area in space. This area defined by textual formula @code{CutOff()} (@pxref{Cutting}). The algorithm is the same as shown for ``rectangular cutting''.
@@ -963,9 +988,10 @@ For example, let one has a set of points (experimental or numerical) and wants t
 @end verbatim
 At this, one will only write a few lines for data drawing:
 @verbatim
-template(gr);             // apply settings and default drawing from template
-mglData dat("fname.dat"); // load the data
-gr->Plot2(dat,"bx ");     // and draw it (suppose that data file have 2 columns)
+    template(gr);     // apply settings and default drawing from template
+    mglData dat("fname.dat"); // load the data
+    // and draw it (suppose that data file have 2 columns)
+    gr->Plot(dat.SubData(0),dat.SubData(1),"bx ");
 @end verbatim
 A template-function can also contain settings for font, transparency, lightning, color scheme and so on.
 
@@ -975,30 +1001,110 @@ A template-function can also contain settings for font, transparency, lightning,
 
 Nonlinear fitting is rather simple. All that you need is the data to fit, the approximation formula and the list of coefficients to fit (better with its initial guess values). Let me demonstrate it on the following simple example (@pxref{Fitting sample}). First, let us use sin function with some random noise:
 @verbatim
-        mglData rnd(100), idl(50); //data to be fitted and ideal data
-        rnd.Modify("0.4*rnd+0.1+sin(4*pi*x)");
-        idl.Modify("0.3+sin(4*pi*x)");
+    mglData rnd(100), idl(50); //data to be fitted and ideal data
+    rnd.Modify("0.4*rnd+0.1+sin(4*pi*x)");
+    idl.Modify("0.3+sin(4*pi*x)");
 @end verbatim
 and plot it to see that data we will fit
 @verbatim
-        gr->Axis(mglPoint(-1,-2), mglPoint(1,2));
-        gr->Plot(rnd, ". "); gr->Plot(idl, "b");
-        gr->Box();
-        gr->Text(mglPoint(0,2.2), "initial: y = 0.3+sin(2\pi x)", "C:b", -1);
+    gr->Axis(mglPoint(-1,-2), mglPoint(1,2));
+    gr->Plot(rnd, ". "); gr->Plot(idl, "b");
+    gr->Box();
+    gr->Text(mglPoint(0,2.2), "initial: y = 0.3+sin(2\pi x)", "C:b", -1);
 @end verbatim
 
 The next step is the fitting itself. For that let me specify an initial values @var{ini} for coefficients @samp{abc} and do the fitting for approximation formula @samp{a+b*sin(c*x)}
 @verbatim
-        mglData res;   // The data for found formula
-        float ini[3] = {1, 1, 3};
-        gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", ini);
+    mglData res;   // The data for found formula
+    float ini[3] = {1, 1, 3};
+    gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", ini);
 @end verbatim
 Now display it
 @verbatim
-        gr->Plot(res, "r");
-        gr->Text(mglPoint(-1,-1.3), "fitted:", "L:r", -1);
-        gr->PutsFit(mglPoint(0,-1.8), "y = ", "C:r", -1);
+    gr->Plot(res, "r");
+    gr->Text(mglPoint(-1,-1.3), "fitted:", "L:r", -1);
+    gr->PutsFit(mglPoint(0,-1.8), "y = ", "C:r", -1);
 @end verbatim
 
 NOTE! the fitting results may have strong dependence on initial values for coefficients due to algorithm features. The problem is that in general case there are several local "optimums" for coefficients and the program returns only first found one! There are no guaranties that it will be the best. Try for example to set @code{ini[3] = @{0, 0, 0@}} in the code above.
 
+@c ------------------------------------------------------------------
+@node PDE solving hints, MGL parser using, Nonlinear fitting hints, Hints
+@subsection PDE solving hints
+
+Solving of Partial Differential Equations (PDE, including beam tracing) and ray tracing (or finding particle trajectory) are more or less common task. So, MathGL have several functions for that. There are @code{mglRay()} for ray tracing, @code{mglPDE()} for PDE solving, @code{mglQO2d()} for beam tracing in 2D case (@pxref{Global functions}). Note, that these functions take ``Hamiltonian'' or equations as string values. And I don't plan now to allow one to use user-defined functions. There are 2 reasons: the complexity of corresponding interface; and the basic nature of used methods which are good for samples but may not good for serious scientific calculations.
+
+The ray tracing can be done by @code{mglRay()} function. Really ray tracing equation is Hamiltonian equation for 3D space. So, the function can be also used for finding a particle trajectory (i.e. solve Hamiltonian ODE) for 1D, 2D or 3D cases. The function have a set of arguments. First of all, it is Hamiltonian which defined the media (or the equation) you are planning to use. The Hamiltonian is defined by string which may depend on coordinates @samp{x}, @samp{y}, @samp{z}, time @samp{t} (for particle dynamics) and momentums @samp{p}=@math{p_x}, @samp{q}=@math{p_y}, @samp{v}=@math{p_z}. Next, you have to define the initial conditions for coordinates and momentums at @samp{t}=0 and set the integrations step (default is 0.1) and its duration (default is 10). The Runge-Kutta method of 4-th order is used for integration.
+@verbatim
+    mglData r,a,re(128),im(128);
+    r = mglRay("p^2+q^2-x-1", mglPoint(-0.7, -1), mglPoint(0, 0.5));
+    gr->Plot(r.SubData(0), r.SubData(1));
+@end verbatim
+This example calculate the reflection from linear layer (media with Hamiltonian @samp{p^2+q^2-x-1}=@math{p_x^2+p_y^2-x-1}). This is parabolic curve. The resulting array have 7 columns which contain data for @{x,y,z,p,q,v,t@}.
+
+The solution of PDE is a bit more complicated. As previous you have to specify the equation as pseudo-differential operator @math{\hat H(x, \nabla)} which is called sometime as ``Hamiltonian'' (for example, in beam tracing). As previously, it is defined by string which may depend on coordinates @samp{x}, @samp{y}, @samp{z} (but not time!), momentums @samp{p}=@math{(d/dx)/i k_0}, @samp{q}=@math{(d/dy)/i k_0} and field amplitude @samp{u}=@math{|u|}. The evolutionary coordinate is @samp{z} in all cases. So that, the equation look like @math{du/dz = ik_0 H(x,y,\hat p, \hat q, |u|)[u]}. Dependence on field amplitude @samp{u}=@math{|u|} allows one to solve nonlinear problems too. For example, for nonlinear Shrodinger equation you may set @code{ham="p^2 + q^2 - u^2"}. Also you may specify imaginary part for wave absorption, like @code{ham = "p^2 + i*x*(x>0)"}, but only if dependence on variable @samp{i} is linear (i.e. @math{H = Hre+i*Him}).
+
+Next step is specifing the initial conditions at @samp{z}=@code{Min.z}. The function need 2 arrays for real and for imaginary part. Note, that coordinates x,y,z are supposed to be in specified range [Min, Max]. So, the data arrays should have corresponding scales. Finally, you may set the integration step and paramter k0=@math{k_0}. Also keep in mind, that internally the 2 times large box is used (for suppressing numerical reflection from boundaries) and the equation should well defined even in this extended range.
+
+Final comment is concerning the possible form of pseudo-differential operator @math{H}. At this moment, simplified form of operator @math{H} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this operator is effectively @math{H = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed for 3D case. 
+
+So, for example let solve the equation for beam deflected from linear layer and absorbed later. The operator will have the form @samp{"p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)"} that correspond to equation @math{ik_0 \partial_z u + \Delta u + x \cdot u + i (x+z)/2 \cdot u = 0}. This is typical equation for Electron Cyclotron (EC) absorption in magnetized plasmas. For initial conditions let me select the beam with plane phase front @math{exp(-48*(x+0.7)^2)}. The corresponding code looks like this (@pxref{PDE sample}):
+@verbatim
+    mglData a,re(128),im(128);
+    re.Fill("exp(-48*(x+0.7)^2)", gr->Min, gr->Max);
+    a = mglPDE("p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)", re, im,
+                gr->Min, gr->Max, 0.01, 30);
+    a.Transpose("yxz");
+    gr->CAxis(0, 1);
+    gr->Dens(a,"wyrRk");
+@end verbatim
+
+The last example is example of beam tracing. Beam tracing equation is special kind of PDE equation written in coordinates accompanied to a ray. Generally this is the same parameters and limitation as for PDE solving but the coordinates are defined by the ray and by parameter of grid width @var{w} in direction transverse the ray. So, you don't need to specify the range of coordinates. @strong{BUT} there is limitation. The accompanied coordinates are well defined only for smooth enough rays, i.e. then the ray curvature @math{K} (which is defined as @math{1/K^2 = (|\ddot r|^2 |\dot r|^2 - (\ddot r, \dot r)^2)/|\dot r|^6}) is much large then the grid width: @math{K>>w}. So, you may receive incorrect results if this condition will be broken.
+
+You may use following code for obtaining the same solution as in previous example:
+@verbatim
+
+@end verbatim
+
+
+@c ------------------------------------------------------------------
+@node MGL parser using, , PDE solving hints, Hints
+@subsection MGL parser using
+
+Sometimes you may prefer to use MGL scripts in yours code. It is simpler (especcially in comparison with C/Fortran interfaces) and fast way to plot the data with annotations, labels and so on. Class @code{mglParse} (@pxref{mglParse class} parse MGL scripts in C++. It have also the corresponding interface for C/Fortran (@pxref{MGL parsing (Pure C)}).
+
+The key function here is @code{mglParse::Parse()} (or @code{mgl_parse()} for C/Fortran) which execute one command per string. At this the detailed information about the possible errors or warnings is passed as function value. Or you may execute the whole script as long string with lines separated by @samp{\n}. Functions @code{mglParse::Execute()} and @code{mgl_parse_text()} perform it. Also you may set the values of paramters @samp{$0}...@samp{$9} for the script by functions @code{mglParse::AddParam()} or @code{mgl_add_param()}, allow/disable picture resizing, check ``once'' status and so on. The usage is rather stright-forward.
+
+The only non-obvious thing is data transition between script and yours program. There are 2 stages: add or find variable; and set data to variable. In C++ you may use functions @code{mglParse::AddVar()} and @code{mglParse::FindVar()} which return pointer to @code{mglVar} structure. This structure contain data itself, the variable name and callback function which will be called if variable destroied. Last feature allows you to control the presence of the variable and, for example, close a window with data if this variable is destroyed. In C/Fortran the corresponding functions are @code{mgl_add_var()}, @code{mgl_find_var()}. But these functions return the data array only. Note, you @strong{must not delete or free} the data obtained from these functions!
+
+So, some simple example at the end. Here I define a data array, create variable, put data into it and plot it. The C++ code looks like this:
+@verbatim
+    float a[100];   // let a_i = sin(4*pi*x), x=0...1
+    for(int i=0;i<100;i++)  a[i]=sin(4*M_PI*i/99);
+    mglParse *parser = new mglParse;
+    mglData &d = (parser->AddVar("dat"))->d;
+    d.Set(a,100); // set data to variable
+    parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
+    // you may break script at any line do something 
+    // and continue after that
+    parser->Execute(gr, "xlabel 'x'\nylabel 'y'");
+    // also you may use cycles or conditions in script
+    parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+    gr->WritePNG("test.png");   // don't forgot to save picture
+@end verbatim
+The code in C/Fortran looks practically the same:
+@verbatim
+    float a[100];   // let a_i = sin(4*pi*x), x=0...1
+    int i;
+    for(i=0;i<100;i++)  a[i]=sin(4*M_PI*i/99);
+    HMPR parser = mgl_create_parser();
+    HMDT d = mgl_add_var(parser, "dat");
+    mgl_data_set_float(d,a,100,1,1);    // set data to variable
+    mgl_parse_text(gr, parser, "plot dat; xrange 0 1\nbox\naxis");
+    // you may break script at any line do something 
+    // and continue after that
+    mgl_parse_text(gr, parser, "xlabel 'x'\nylabel 'y'");
+    // also you may use cycles or conditions in script
+    mgl_parse_text(gr, parser, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+    mgl_write_png(gr, "test.png", "");  // don't forgot to save picture
+@end verbatim

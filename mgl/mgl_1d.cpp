@@ -53,7 +53,7 @@ void mglGraph::Curve(mglPoint p1, mglPoint d1, mglPoint p2, mglPoint d2,
 	register long i;
 	n = (n<2) ? 2 : n;
 	float *pp = new float[3*n],a[3],b[3],s;
-	bool *tt = new bool[n];
+	bool cut = Cut;	Cut = true;
 	SelectPen(stl);
 	a[0] = 3*(p2.x-p1.x) - (d2.x+2*d1.x);	b[0] = d1.x+d2.x - 2*(p2.x-p1.x);
 	a[1] = 3*(p2.y-p1.y) - (d2.y+2*d1.y);	b[1] = d1.y+d2.y - 2*(p2.y-p1.y);
@@ -65,11 +65,12 @@ void mglGraph::Curve(mglPoint p1, mglPoint d1, mglPoint p2, mglPoint d2,
 		pp[3*i+0] = p1.x+s*(d1.x+s*(a[0]+s*b[0]));
 		pp[3*i+1] = p1.y+s*(d1.y+s*(a[1]+s*b[1]));
 		pp[3*i+2] = p1.z+s*(d1.z+s*(a[2]+s*b[2]));
-		tt[i] = ScalePoint(pp[3*i+0],pp[3*i+1],pp[3*i+2]);
+		ScalePoint(pp[3*i+0],pp[3*i+1],pp[3*i+2]);
 	}
-	curv_plot(n,pp,tt);
+	curv_plot(n,pp,0);
+	Cut = cut;
 	Flush();
-	delete []tt;	delete []pp;
+	delete []pp;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Line(mglPoint p1, mglPoint p2, const char *stl, int n)
@@ -77,21 +78,21 @@ void mglGraph::Line(mglPoint p1, mglPoint p2, const char *stl, int n)
 	register long i;
 	n = (n<2) ? 2 : n;
 	float *pp = new float[3*n],s;
-	bool *tt = new bool[n];
+	bool cut = Cut;	Cut = true;
 	SelectPen(stl);
 
 	for(i=0;i<n;i++)
 	{
-		s = i/(n-1.);
+		s = i/float(n-1);
 		pp[3*i+0] = p1.x+s*(p2.x-p1.x);
 		pp[3*i+1] = p1.y+s*(p2.y-p1.y);
 		pp[3*i+2] = p1.z+s*(p2.z-p1.z);
-		tt[i] = ScalePoint(pp[3*i+0],pp[3*i+1],pp[3*i+2]);
+		ScalePoint(pp[3*i+0],pp[3*i+1],pp[3*i+2]);
 	}
-	if(tt[0] && tt[n-1])	memset(tt,true,n*sizeof(bool));
-	curv_plot(n,pp,tt);
+	curv_plot(n,pp,0);
+	Cut = cut;
 //	Flush();
-	delete []pp;	delete []tt;
+	delete []pp;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Error(mglPoint p,mglPoint e,const char *pen)

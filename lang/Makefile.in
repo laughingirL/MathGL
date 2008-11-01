@@ -258,6 +258,7 @@ BUILT_SOURCES = $(am__append_2)
 @USE_PYTHON_TRUE@_mathgl_la_SOURCES = mgl_python.cpp
 @USE_PYTHON_TRUE@_mathgl_la_CXXFLAGS = $(PYTHON_HEADERS) $(AM_CXXFLAGS)
 @USE_PYTHON_TRUE@_mathgl_la_LIBADD = $(top_builddir)/mgl/libmgl.la
+#_mathgl_la_LIBADD = $(top_builddir)/widgets/libmgl-qt.la
 @USE_PYTHON_TRUE@_mathgl_la_LDFLAGS = -avoid-version -module
 @USE_OCTAVE_TRUE@PKG_NAME = mathgl
 @USE_OCTAVE_TRUE@PKG_OCT_FILES = mathgl.oct
@@ -603,9 +604,9 @@ uninstall-am: uninstall-dist_octaveDATA uninstall-pyexecLTLIBRARIES \
 	uninstall-pyexecLTLIBRARIES uninstall-pythonPYTHON
 
 
-@USE_PYTHON_TRUE@mgl_python.cpp: mgl.i mgl_base.i  mgl_data.i  mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h
-@USE_PYTHON_TRUE@	swig -python -c++ -o mgl_python.cpp mgl.i 
-@USE_PYTHON_TRUE@mathgl.py: mgl.i mgl_base.i  mgl_data.i  mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h
+@USE_PYTHON_TRUE@mgl_python.cpp: mgl.i mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h $(top_builddir)/include/mgl/mgl_data.h
+@USE_PYTHON_TRUE@	swig -python -c++ -o mgl_python.cpp mgl.i
+@USE_PYTHON_TRUE@mathgl.py: mgl.i mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h $(top_builddir)/include/mgl/mgl_data.h
 @USE_PYTHON_TRUE@	swig -python -c++ -o mgl_python.cpp mgl.i
 @USE_OCTAVE_TRUE@mathgl.tar.gz: $(PKG_OCT_FILES) $(PKG_OTHER_FILES)
 @USE_OCTAVE_TRUE@	mkdir -p $(PKG_NAME)
@@ -616,10 +617,10 @@ uninstall-am: uninstall-dist_octaveDATA uninstall-pyexecLTLIBRARIES \
 @USE_OCTAVE_TRUE@	tar cpzvf $@ $(PKG_NAME)
 @USE_OCTAVE_TRUE@	rm -rf $(PKG_NAME)
 
-@USE_OCTAVE_TRUE@mgl_octave.cpp: mgl.i mgl_base.i  mgl_data.i  mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h
+@USE_OCTAVE_TRUE@mgl_octave.cpp: mgl.i mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h $(top_builddir)/include/mgl/mgl_data.h
 @USE_OCTAVE_TRUE@	swig -octave -c++ -o mgl_octave.cpp mgl.i
 @USE_OCTAVE_TRUE@mathgl.oct: mgl_octave.cpp
-@USE_OCTAVE_TRUE@	$(MY_MKOCTFILE) -o $@ $^ -fPIC -I../include -L../mgl/ -lmgl
+@USE_OCTAVE_TRUE@	$(MY_MKOCTFILE) -o $@ $^ -fPIC -I../include -L../mgl/.libs/ -lmgl
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

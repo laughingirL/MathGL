@@ -465,7 +465,7 @@ void mglGraph::AxisY(bool text)
 				cur++;
 			}
 			// subticks drawing
-			for(v=y;v<10*y;v+=y)	if(v>Min.y || v<Max.y)
+			for(v=y;v<10*y;v+=y)	if(v>Min.y && v<Max.y)
 				DrawYTick(v,x0,z0,ddx,ddz,1);
 		}
 	}
@@ -553,7 +553,7 @@ void mglGraph::AxisZ(bool text)
 				cur++;
 			}
 			// subticks drawing
-			for(v=z;v<10*z;v+=z)	if(v>Min.z || v<Max.z)
+			for(v=z;v<10*z;v+=z)	if(v>Min.z && v<Max.z)
 				DrawZTick(v,x0,y0,ddx,ddy,1);
 
 		}
@@ -828,11 +828,12 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
 //-----------------------------------------------------------------------------
 void mglGraph::Ternary(bool t)
 {
-	static mglPoint x1(-1,-1,-1),x2(1,1,1),o(0,0,0);
-	TernAxis = t;	Cut = false;	OrgT = mglPoint(NAN,NAN,NAN);
+	static mglPoint x1(-1,-1,-1),x2(1,1,1),o(NAN,NAN,NAN);
+	TernAxis = t;
 	if(t)
 	{
 		x1 = Min;	x2 = Max;	o = Org;
+		Cut = false;	OrgT = mglPoint(NAN,NAN,NAN);
 		Axis(mglPoint(0,0,0),mglPoint(1,1,1),mglPoint(0,0,0));
 	}
 	else	Axis(x1,x2,o);

@@ -33,8 +33,8 @@ uintptr_t mgl_create_graph_zb_(int *width, int *height)
 //-----------------------------------------------------------------------------
 mglGraphZB::mglGraphZB(int w,int h) : mglGraphAB(w,h)
 {
-	C = 0;	FastNoFace = true;
-	SetSize(w,h);
+	FastNoFace = true;
+	C = 0;	SetSize(w,h);
 }
 //-----------------------------------------------------------------------------
 mglGraphZB::~mglGraphZB()

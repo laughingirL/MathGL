@@ -37,11 +37,9 @@ mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 	G = 0;	UseLight = false;
 	SetSize(w,h);
 	AutoClf=true;	Delay = 100;
-	for(long i=0;i<10;i++)
-	{	Light(i,mglPoint(0,0,1));	nLight[i] = false;	}
-	nLight[0] = true;	NoAutoFactor = false;
+	NoAutoFactor = false;	ShowMousePos = true;
 	BDef[0] = BDef[1] = BDef[2] = BDef[3] = 255;
-	InPlot(0,1,0,1);	ShowMousePos = true;
+	DefaultPlotParam();
 }
 //-----------------------------------------------------------------------------
 mglGraphAB::~mglGraphAB()
@@ -756,6 +754,9 @@ float mglGraphAB::GetOrgZ(char dir)
 	return res;
 }
 //-----------------------------------------------------------------------------
+void mglGraphAB::Alpha(bool enable)	{	UseAlpha=enable;	}
+void mglGraphAB::Light(bool enable)	{	UseLight=enable;	}
+//-----------------------------------------------------------------------------
 void mglGraphAB::Update(){}
 void mglGraphAB::ToggleAlpha(){}
 void mglGraphAB::ToggleLight(){}
@@ -767,5 +768,15 @@ void mglGraphAB::Adjust(){}
 void mglGraphAB::NextFrame(){}
 void mglGraphAB::PrevFrame(){}
 void mglGraphAB::Animation(){}
-void mglGraphAB::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next)){}
+void mglGraphAB::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p)){}
 //-----------------------------------------------------------------------------
+int mgl_draw_class(mglGraph *gr, void *p)
+{	return p ? ((mglDraw *)p)->Draw(gr) : 0;	}
+void mgl_reload_class(int next, void *p)
+{	if(p)	((mglDraw *)p)->Reload(next);	}
+void mglGraphAB::Window(int argc, char **argv, mglDraw *draw, const char *title)
+{
+	Window(argc, argv, mgl_draw_class, title, draw, mgl_reload_class);
+}
+//-----------------------------------------------------------------------------
+
