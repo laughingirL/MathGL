@@ -29,6 +29,7 @@ void mglGraph::DensX(const mglData &a, const char *sch,float sVal)
 	if(isnan(sVal))	sVal = GetOrgX('x');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"DensX");	return;	}
 	if(sVal<Min.x || sVal>Max.x){	SetWarn(mglWarnSlc,"DensX");	return;	}
+	static int cgid=1;	StartGroup("DensX",cgid++);
 	SetScheme(sch);
 	float *b = a.a, d;
 	bool bb = false;
@@ -57,7 +58,7 @@ void mglGraph::DensX(const mglData &a, const char *sch,float sVal)
 		cc[4*i0+2] = col.b;	cc[4*i0+3] = Transparent ? AlphaDef : 1;
 	}
 	surf_plot(n, m, pp, cc, 0);
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -68,6 +69,7 @@ void mglGraph::DensY(const mglData &a, const char *sch,float sVal)
 	if(isnan(sVal))	sVal = GetOrgY('y');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"DensY");	return;	}
 	if(sVal<Min.y || sVal>Max.y){	SetWarn(mglWarnSlc,"DensY");	return;	}
+	static int cgid=1;	StartGroup("DensY",cgid++);
 	SetScheme(sch);
 	float *b = a.a, d;
 	bool bb = false;
@@ -96,7 +98,7 @@ void mglGraph::DensY(const mglData &a, const char *sch,float sVal)
 		cc[4*i0+2] = col.b;	cc[4*i0+3] = Transparent ? AlphaDef : 1;
 	}
 	surf_plot(n, m, pp, cc, 0);
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -107,6 +109,7 @@ void mglGraph::DensZ(const mglData &a, const char *sch,float sVal)
 	if(isnan(sVal))	sVal = GetOrgZ('z');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"DensZ");	return;	}
 	if(sVal<Min.z || sVal>Max.z){	SetWarn(mglWarnSlc,"DensZ");	return;	}
+	static int cgid=1;	StartGroup("DensZ",cgid++);
 	SetScheme(sch);
 	float *b = a.a, d;
 	bool bb = false;
@@ -134,7 +137,7 @@ void mglGraph::DensZ(const mglData &a, const char *sch,float sVal)
 		cc[4*i0+2] = col.b;	cc[4*i0+3] = Transparent ? AlphaDef : 1;
 	}
 	surf_plot(n, m, pp, cc, 0);
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -173,6 +176,7 @@ void mglGraph::ContX(const mglData &v, const mglData &a, const char *sch, float 
 	if(isnan(sVal))	sVal = GetOrgX('x');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContX");	return;	}
 	if(sVal<Min.x || sVal>Max.x){	SetWarn(mglWarnSlc,"ContX");	return;	}
+	static int cgid=1;	StartGroup("ContX",cgid++);
 	long text=0;
 	if(sch && strchr(sch,'t'))	text=-1;
 	if(sch && strchr(sch,'T'))	text=+1;
@@ -202,7 +206,7 @@ void mglGraph::ContX(const mglData &v, const mglData &a, const char *sch, float 
 		Color(v.a[i]);
 		cont_plot(v.a[i],n,m,b,xx,yy,zz,sVal,false,false,text);
 	}
-	Flush();
+	EndGroup();
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -213,6 +217,7 @@ void mglGraph::ContY(const mglData &v, const mglData &a, const char *sch, float 
 	if(isnan(sVal))	sVal = GetOrgY('y');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContY");	return;	}
 	if(sVal<Min.y || sVal>Max.y){	SetWarn(mglWarnSlc,"ContY");	return;	}
+	static int cgid=1;	StartGroup("ContY",cgid++);
 	long text=0;
 	if(sch && strchr(sch,'t'))	text=-1;
 	if(sch && strchr(sch,'T'))	text=+1;
@@ -242,7 +247,7 @@ void mglGraph::ContY(const mglData &v, const mglData &a, const char *sch, float 
 		Color(v.a[i]);
 		cont_plot(v.a[i],n,m,b,xx,yy,zz,sVal,false,false,text);
 	}
-	Flush();
+	EndGroup();
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -253,6 +258,7 @@ void mglGraph::ContZ(const mglData &v, const mglData &a, const char *sch, float 
 	if(isnan(sVal))	sVal = GetOrgZ('z');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContZ");	return;	}
 	if(sVal<Min.z || sVal>Max.z){	SetWarn(mglWarnSlc,"ContZ");	return;	}
+	static int cgid=1;	StartGroup("ContZ",cgid++);
 	long text=0;
 	if(sch && strchr(sch,'t'))	text=-1;
 	if(sch && strchr(sch,'T'))	text=+1;
@@ -281,7 +287,7 @@ void mglGraph::ContZ(const mglData &v, const mglData &a, const char *sch, float 
 		Color(v.a[i]);
 		cont_plot(v.a[i],n,m,b,xx,yy,zz,sVal,false,false,text);
 	}
-	Flush();
+	EndGroup();
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -310,7 +316,7 @@ void mglGraph::ContFZ(const mglData &z, const char *sch, float zVal, int Num)
 	if(Num<1)	{	SetWarn(mglWarnCnt,"ContFZ");	return;	}
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*float(i+1)/(Num+1);
-	ContZ(v,z,sch,zVal);
+	ContFZ(v,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::ContFX(const mglData &v, const mglData &a, const char *sch, float sVal)
@@ -320,6 +326,7 @@ void mglGraph::ContFX(const mglData &v, const mglData &a, const char *sch, float
 	if(isnan(sVal))	sVal = GetOrgX('x');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContFX");	return;	}
 	if(sVal<Min.x || sVal>Max.x){	SetWarn(mglWarnSlc,"ContFX");	return;	}
+	static int cgid=1;	StartGroup("ContFX",cgid++);
 	long text=0;
 	if(sch && strchr(sch,'t'))	text=-1;
 	if(sch && strchr(sch,'T'))	text=+1;
@@ -349,7 +356,7 @@ void mglGraph::ContFX(const mglData &v, const mglData &a, const char *sch, float
 		Color(v.a[i]);
 		contf_plot(v.a[i],v.a[i+1],n,m,b,xx,yy,zz,sVal);
 	}
-	Flush();
+	EndGroup();
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -360,6 +367,7 @@ void mglGraph::ContFY(const mglData &v, const mglData &a, const char *sch, float
 	if(isnan(sVal))	sVal = GetOrgY('y');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContFY");	return;	}
 	if(sVal<Min.y || sVal>Max.y){	SetWarn(mglWarnSlc,"ContFY");	return;	}
+	static int cgid=1;	StartGroup("ContFY",cgid++);
 	long text=0;
 	if(sch && strchr(sch,'t'))	text=-1;
 	if(sch && strchr(sch,'T'))	text=+1;
@@ -389,7 +397,7 @@ void mglGraph::ContFY(const mglData &v, const mglData &a, const char *sch, float
 		Color(v.a[i]);
 		contf_plot(v.a[i],v.a[i+1],n,m,b,xx,yy,zz,sVal);
 	}
-	Flush();
+	EndGroup();
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -400,6 +408,7 @@ void mglGraph::ContFZ(const mglData &v, const mglData &a, const char *sch, float
 	if(isnan(sVal))	sVal = GetOrgZ('z');
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContFZ");	return;	}
 	if(sVal<Min.z || sVal>Max.z){	SetWarn(mglWarnSlc,"ContFZ");	return;	}
+	static int cgid=1;	StartGroup("ContFZ",cgid++);
 	long text=0;
 	if(sch && strchr(sch,'t'))	text=-1;
 	if(sch && strchr(sch,'T'))	text=+1;
@@ -428,7 +437,7 @@ void mglGraph::ContFZ(const mglData &v, const mglData &a, const char *sch, float
 		Color(v.a[i]);
 		contf_plot(v.a[i],v.a[i+1],n,m,b,xx,yy,zz,sVal);
 	}
-	Flush();
+	EndGroup();
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------

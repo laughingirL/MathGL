@@ -64,6 +64,7 @@ void mglGraph::Surf(const char *eqX, const char *eqY, const char *eqZ, const cha
 //-----------------------------------------------------------------------------
 void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl, int n)
 {
+	static int cgid=1;	StartGroup("Face",cgid++);
 	register long i,j,i0;
 	n = (n<2) ? 2 : n;
 	mglColor c1('w'),c2,c3,c4;
@@ -97,7 +98,7 @@ void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const ch
 	{	SelectPen("k-");	memset(cc,0,4*n*n*sizeof(float));	mesh_plot(n,n,pp,cc,0,-3);	}
 	Cut = cut;
 	delete []pp;	delete []cc;
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Sphere(mglPoint p, float r, const char *stl)
@@ -114,6 +115,7 @@ void mglGraph::Drop(mglPoint p, mglPoint q, float r, const char *stl, float sh, 
 //-----------------------------------------------------------------------------
 void mglGraph::Drop(mglPoint p, mglPoint q, float r, mglColor c, float sh, float a)
 {
+	static int cgid=1;	StartGroup("Drop",cgid++);
 	register long i,j,i0;
 	long n = CirclePnts;
 	n = (n<3) ? 3 : n;
@@ -138,18 +140,19 @@ void mglGraph::Drop(mglPoint p, mglPoint q, float r, mglColor c, float sh, float
 	}
 	Cut = cut;
 	surf_plot(n,n,pp,0,0);
-	Flush();
+	EndGroup();
 	delete []pp;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Ellipse(mglPoint p, mglPoint r, const char *stl)
 {
+	if(r.x==0 || r.y==0 || r.z==0)	return;
+	static int cgid=1;	StartGroup("Ellipse",cgid++);
 	register long i,j,i0;
 	long n = CirclePnts;
 	n = (n<3) ? 3 : n;
 	float *pp = new float[3*n*n],u,v;
 
-	if(r.x==0 || r.y==0 || r.z==0)	return;
 	SetScheme(stl);
 
 	bool cut = Cut;	Cut = true;
@@ -163,7 +166,7 @@ void mglGraph::Ellipse(mglPoint p, mglPoint r, const char *stl)
 	}
 	Cut = cut;
 	surf_plot(n,n,pp,0,0);
-	Flush();
+	EndGroup();
 	delete []pp;
 }
 //-----------------------------------------------------------------------------
@@ -177,9 +180,9 @@ void mglGraph::Mesh(const mglData &x, const mglData &y, const mglData &z, const 
 	mglColor c;
 	if(x.nx!=n)		{	SetWarn(mglWarnDim,"Mesh");	return;	}
 	if(n<2 || m<2)	{	SetWarn(mglWarnLow,"Mesh");	return;	}
-	// x, y -- не подходят по размерам
 	if(y.nx!=m && (x.ny!=m || y.nx!=n || y.ny!=m))
 	{	SetWarn(mglWarnDim);	return;	};
+	static int cgid=1;	StartGroup("Mesh",cgid++);
 	SelectPen("k-");
 	SetScheme(sch);
 
@@ -199,7 +202,7 @@ void mglGraph::Mesh(const mglData &x, const mglData &y, const mglData &z, const 
 		}
 		mesh_plot(n, m, pp, cc, tt,3);
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -222,9 +225,9 @@ void mglGraph::Fall(const mglData &x, const mglData &y, const mglData &z, const 
 	mglColor c;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"Fall");	return;	}
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Fall");	return;	}
-	// x, y -- не подходят по размерам
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("Fall",cgid++);
 	SelectPen("k-");
 	SetScheme(sch);
 
@@ -245,7 +248,7 @@ void mglGraph::Fall(const mglData &x, const mglData &y, const mglData &z, const 
 		}
 		mesh_plot(n, m, pp, cc, tt,how);
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -264,14 +267,14 @@ void mglGraph::Fall(const mglData &z, const char *sch)
 //-----------------------------------------------------------------------------
 void mglGraph::Belt(const mglData &x, const mglData &y, const mglData &z, const char *sch)
 {
-	if(!DrawFace)	{	Fall(x,y,z,sch);	return;	}
 	register long i,j,k,n=z.nx,m=z.ny;
 	mglColor c;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"Belt");	return;	}
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Belt");	return;	}
-	// x, y -- не подходят по размерам
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	if(!DrawFace)	{	Fall(x,y,z,sch);	return;	}
+	static int cgid=1;	StartGroup("Belt",cgid++);
 	SetScheme(sch);
 
 	bool how = !(sch && strchr(sch,'x'));
@@ -350,7 +353,7 @@ void mglGraph::Belt(const mglData &x, const mglData &y, const mglData &z, const 
 			surf_plot(2,n,pp,cc,tt);
 		}
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -372,9 +375,9 @@ void mglGraph::Grid(const mglData &x, const mglData &y, const mglData &z, const 
 	register long i,j,i0,k,n=z.nx,m=z.ny;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"Grid");	return;	}
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Grid");	return;	}
-	// x, y -- не подходят по размерам
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("Grid",cgid++);
 	if(isnan(zVal))	zVal = Min.z;
 	if(sch)	SelectPen(sch);
 	else	SelectPen("k-");
@@ -394,7 +397,7 @@ void mglGraph::Grid(const mglData &x, const mglData &y, const mglData &z, const 
 		}
 		mesh_plot(n, m, pp, 0, tt,3);
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -417,9 +420,9 @@ void mglGraph::Surf(const mglData &x, const mglData &y, const mglData &z, const 
 	mglColor col;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"Surf");	return;	}
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Surf");	return;	}
-	// x, y -- не подходят по размерам
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("Surf",cgid++);
 	SetScheme(sch);
 
 	float *pp = new float[3*n*m], *cc = new float[4*n*m];
@@ -441,7 +444,7 @@ void mglGraph::Surf(const mglData &x, const mglData &y, const mglData &z, const 
 	}
 	if(sch && strchr(sch,'#'))
 	{	SelectPen("k-");	memset(cc,0,4*n*m*sizeof(float));	mesh_plot(n,m,pp,cc,tt,-3);	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -464,9 +467,9 @@ void mglGraph::Dens(const mglData &x, const mglData &y, const mglData &z, const 
 	mglColor col;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"Dens");	return;	}
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Dens");	return;	}
-	// x, y -- не подходят по размерам
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("Dens",cgid++);
 	if(isnan(zVal))	zVal = Min.z;
 	SetScheme(sch);
 
@@ -491,7 +494,7 @@ void mglGraph::Dens(const mglData &x, const mglData &y, const mglData &z, const 
 	}
 	if(sch && strchr(sch,'#'))
 	{	SelectPen("k-");	memset(cc,0,4*n*m*sizeof(float));	mesh_plot(n,m,pp,cc,tt,-3);	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -510,13 +513,13 @@ void mglGraph::Dens(const mglData &z, const char *sch,float zVal)
 //-----------------------------------------------------------------------------
 void mglGraph::STFA(const mglData &x, const mglData &y, const mglData &re, const mglData &im, int dn, const char *sch,float zVal)
 {
-	mglData z = ::STFA(re,im,dn,'x');
+	mglData z = mglSTFA(re,im,dn,'x');
 	Dens(x,y,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::STFA(const mglData &re, const mglData &im, int dn, const char *sch,float zVal)
 {
-	mglData z = ::STFA(re,im,dn,'x');
+	mglData z = mglSTFA(re,im,dn,'x');
 	Dens(z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
@@ -532,9 +535,9 @@ void mglGraph::SurfC(const mglData &x, const mglData &y, const mglData &z, const
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"SurfC");	return;	}
 	if(z.nx*z.ny*z.nz!=c.nx*c.ny*c.nz)
 	{	SetWarn(mglWarnDim);	return;	}
-	// x, y -- не подходят по размерам
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("SurfC",cgid++);
 	SetScheme(sch);
 
 	float *pp = new float[3*n*m], *cc = new float[4*n*m];
@@ -557,7 +560,7 @@ void mglGraph::SurfC(const mglData &x, const mglData &y, const mglData &z, const
 	}
 	if(sch && strchr(sch,'#'))
 	{	SelectPen("k-");	memset(cc,0,4*n*m*sizeof(float));	mesh_plot(n,m,pp,cc,tt,-3);	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -583,9 +586,9 @@ void mglGraph::SurfA(const mglData &x, const mglData &y, const mglData &z, const
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"SurfA");	return;	}
 	if(z.nx*z.ny*z.nz!=c.nx*c.ny*c.nz)
 	{	SetWarn(mglWarnDim);	return;	}
-	// x, y -- не подходят по размерам
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("SurfA",cgid++);
 	SetScheme(sch);
 
 	float *pp = new float[3*n*m], *cc = new float[4*n*m];
@@ -609,7 +612,7 @@ void mglGraph::SurfA(const mglData &x, const mglData &y, const mglData &z, const
 	}
 	if(sch && strchr(sch,'#'))
 	{	SelectPen("k-");	memset(cc,0,4*n*m*sizeof(float));	mesh_plot(n,m,pp,cc,tt,-3);	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -633,6 +636,7 @@ void mglGraph::Boxs(const mglData &x, const mglData &y, const mglData &z, const 
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Boxs");	return;	}
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("Boxs",cgid++);
 	if(isnan(zVal))	zVal = GetOrgZ('x');
 	SetScheme(sch);
 
@@ -666,7 +670,7 @@ void mglGraph::Boxs(const mglData &x, const mglData &y, const mglData &z, const 
 		}
 		boxs_plot(n, m, pp, cc, tt, Transparent ? AlphaDef : 1,	sch && strchr(sch,'#'));
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -690,6 +694,7 @@ void mglGraph::Tile(const mglData &x, const mglData &y, const mglData &z, const 
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Tile");	return;	}
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("Tile",cgid++);
 	SetScheme(sch);
 
 	float *pp = new float[12*(n-1)*(m-1)];
@@ -723,7 +728,7 @@ void mglGraph::Tile(const mglData &x, const mglData &y, const mglData &z, const 
 		}
 		quads_plot((n-1)*(m-1), pp, cc, tt);
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -744,6 +749,7 @@ void mglGraph::TileS(const mglData &x, const mglData &y, const mglData &z, const
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Tile");	return;	}
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("TileS",cgid++);
 	SetScheme(sch);
 
 	float *pp = new float[12*(n-1)*(m-1)], ss;
@@ -789,7 +795,7 @@ void mglGraph::TileS(const mglData &x, const mglData &y, const mglData &z, const
 		}
 		quads_plot((n-1)*(m-1), pp, cc, tt);
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	delete []tt;
 }
 //-----------------------------------------------------------------------------

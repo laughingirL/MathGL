@@ -19,23 +19,6 @@
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
 //-----------------------------------------------------------------------------
-struct mglPrim
-{
-	float x[4], y[4];	// coordinates of corners
-	float z;			// z-position
-	float s;			// size (if applicable)
-	float w;			// width (if applicable)
-	float c[4];			// color
-	char m;				// mark (if applicable)
-	int type;			// type of primitive (0 - point, 1 - line, 2 - trig, 3 - quad)
-	int style;			// style of pen
-	unsigned short dash;// real pen dashing
-	void Draw(mglGraphPS *gr);
-	bool IsSame(float wp,float *cp,int st);
-	void SetStyle(unsigned PDef, int pPos);
-	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	c[3]=1;	};
-};
-//-----------------------------------------------------------------------------
 int mgl_compare_prim(const void *p1, const void *p2)
 {
 	mglPrim *a1=(mglPrim *)p1, *a2=(mglPrim *)p2;
@@ -72,7 +55,7 @@ void mglGraphPS::Ball(float x,float y,float z,mglColor col,float alpha)
 	if(!col.Valid())	col = mglColor(1.,0.,0.);
 	float p[3] = {x,y,z};	PostScale(p,1);
 	mglPrim a;		a.m = '.';
-	a.x[0] = p[0];	a.y[0] = p[1];	a.z = p[2];
+	a.x[0] = p[0];	a.y[0] = p[1];	a.z = a.zz[0]=p[2];
 	a.c[0] = col.r;	a.c[1] = col.g;	a.c[2] = col.b;
 	add_prim(&a);
 }
@@ -80,15 +63,15 @@ void mglGraphPS::Ball(float x,float y,float z,mglColor col,float alpha)
 void mglGraphPS::ball(float *p,float *c)
 {
 	mglPrim a;	PostScale(p,1);		a.m = '.';
-	a.x[0] = p[0];	a.y[0] = p[1];	a.z = p[2];
+	a.x[0] = p[0];	a.y[0] = p[1];	a.z = a.zz[0]=p[2];
 	memcpy(a.c,c,3*sizeof(float));
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
 void mglGraphPS::mark_plot(float *p, char type)
 {
-	mglPrim a;		a.m = type;		a.s = MarkSize;
-	a.x[0] = p[0];	a.y[0] = p[1];	a.z = p[2];
+	mglPrim a;		a.m = type;		a.s = MarkSize*175*font_factor;
+	a.x[0] = p[0];	a.y[0] = p[1];	a.z = a.zz[0]=p[2];
 	memcpy(a.c,CDef,3*sizeof(float));
 	add_prim(&a);
 }
@@ -101,6 +84,7 @@ void mglGraphPS::line_plot(float *p1,float *p2,float *c1,float *,bool all)
 	a.z = (p1[2]+p2[2])/2;	a.w = pw;
 	if(pw>1)	a.z += pw-1;
 	a.x[0]=p1[0];	a.y[0]=p1[1];	a.x[1]=p2[0];	a.y[1]=p2[1];
+	a.zz[0]=p1[2];	a.zz[1]=p2[2];
 //	a.c[0]=(c1[0]+c2[0])/2;	a.c[1]=(c1[1]+c2[1])/2;	a.c[2]=(c1[2]+c2[2])/2;
 	a.c[0]=c1[0];	a.c[1]=c1[1];	a.c[2]=c1[2];
 	a.SetStyle(all? 0xffff:PDef,int(pPos));
@@ -115,7 +99,9 @@ void mglGraphPS::trig_plot(float *p3,float *p1,float *p2,float *c3,float *c1,flo
 	if(pnt)	return;
 	mglPrim a(2);
 	a.z = (p1[2]+p2[2]+p3[2])/3;
-	a.x[0]=p1[0];	a.y[0]=p1[1];	a.x[1]=p2[0];	a.y[1]=p2[1];	a.x[2]=p3[0];	a.y[2]=p3[1];
+	a.x[0]=p1[0];	a.y[0]=p1[1];	a.zz[0]=p1[2];
+	a.x[1]=p2[0];	a.y[1]=p2[1];	a.zz[1]=p2[2];
+	a.x[2]=p3[0];	a.y[2]=p3[1];	a.zz[2]=p3[2];
 
 	float d1[3],d2[3];
 	d1[0] = p1[0]-p3[0];	d2[0] = p2[0]-p3[0];	d1[1] = p1[1]-p3[1];
@@ -134,8 +120,9 @@ void mglGraphPS::trig_plot_n(float *p3,float *p1,float *p2,
 	if(pnt)	return;
 	mglPrim a(2);
 	a.z = (p1[2]+p2[2]+p3[2])/3;
-	a.x[0]=p1[0];	a.y[0]=p1[1];	a.x[1]=p2[0];
-	a.y[1]=p2[1];	a.x[2]=p3[0];	a.y[2]=p3[1];
+	a.x[0]=p1[0];	a.y[0]=p1[1];	a.zz[0]=p1[2];
+	a.x[1]=p2[0];	a.y[1]=p2[1];	a.zz[1]=p2[2];
+	a.x[2]=p3[0];	a.y[2]=p3[1];	a.zz[2]=p3[2];
 	a.c[0]=(c1[0]+c2[0]+c3[0])/3;	a.c[1]=(c1[1]+c2[1]+c3[1])/3;
 	a.c[2]=(c1[2]+c2[2]+c3[2])/3;	a.c[3]=(c1[3]+c2[3]+c3[3])/3;
 	add_light(a.c, (n1[0]+n2[0]+n3[0])/3, (n1[1]+n2[1]+n3[1])/3, (n1[2]+n2[2]+n3[2])/3);
@@ -151,8 +138,10 @@ void mglGraphPS::quad_plot(float *p0,float *p1,float *p2,float *p3,
 	if(pnt)	return;
 	mglPrim a(3);
 	a.z = (p1[2]+p2[2]+p3[2]+p0[2])/4;
-	a.x[0]=p0[0];	a.y[0]=p0[1];	a.x[1]=p1[0];	a.y[1]=p1[1];
-	a.x[2]=p2[0];	a.y[2]=p2[1];	a.x[3]=p3[0];	a.y[3]=p3[1];
+	a.x[0]=p0[0];	a.y[0]=p0[1];	a.zz[0]=p0[2];
+	a.x[1]=p1[0];	a.y[1]=p1[1];	a.zz[1]=p1[2];
+	a.x[2]=p2[0];	a.y[2]=p2[1];	a.zz[2]=p2[2];
+	a.x[3]=p3[0];	a.y[3]=p3[1];	a.zz[3]=p3[2];
 	float d1[3];
 	d1[0]=-p0[2]*p1[1]+p0[1]*p1[2]+p0[2]*p2[1]-p0[1]*p2[2]-p1[2]*p3[1]+
 			p2[2]*p3[1]+p1[1]*p3[2]-p2[1]*p3[2];
@@ -175,8 +164,10 @@ void mglGraphPS::quad_plot_n(float *p0,float *p1,float *p2,float *p3,
 	if(pnt)	return;
 	mglPrim a(3);
 	a.z = (p1[2]+p2[2]+p3[2]+p0[2])/4;
-	a.x[0]=p0[0];	a.y[0]=p0[1];	a.x[1]=p1[0];	a.y[1]=p1[1];
-	a.x[2]=p2[0];	a.y[2]=p2[1];	a.x[3]=p3[0];	a.y[3]=p3[1];
+	a.x[0]=p0[0];	a.y[0]=p0[1];	a.zz[0]=p0[2];
+	a.x[1]=p1[0];	a.y[1]=p1[1];	a.zz[1]=p1[2];
+	a.x[2]=p2[0];	a.y[2]=p2[1];	a.zz[2]=p2[2];
+	a.x[3]=p3[0];	a.y[3]=p3[1];	a.zz[3]=p3[2];
 	a.c[0]=(c1[0]+c2[0]+c3[0]+c0[0])/4;	a.c[1]=(c1[1]+c2[1]+c3[1]+c0[1])/4;
 	a.c[2]=(c1[2]+c2[2]+c3[2]+c0[2])/4;	a.c[3]=(c1[3]+c2[3]+c3[3]+c0[3])/4;
 	add_light(a.c, n1[0]+n2[0]+n3[0]+n0[0], n1[1]+n2[1]+n3[1]+n0[1], n1[2]+n2[2]+n3[2]+n0[2]);
@@ -192,8 +183,10 @@ void mglGraphPS::quad_plot_a(float *p0,float *p1,float *p2,float *p3,
 	if(pnt)	return;
 	mglPrim a(3);
 	a.z = (p1[2]+p2[2]+p3[2]+p0[2])/4;
-	a.x[0]=p0[0];	a.y[0]=p0[1];	a.x[1]=p1[0];	a.y[1]=p1[1];
-	a.x[2]=p2[0];	a.y[2]=p2[1];	a.x[3]=p3[0];	a.y[3]=p3[1];
+	a.x[0]=p0[0];	a.y[0]=p0[1];	a.zz[0]=p0[2];
+	a.x[1]=p1[0];	a.y[1]=p1[1];	a.zz[1]=p1[2];
+	a.x[2]=p2[0];	a.y[2]=p2[1];	a.zz[2]=p2[2];
+	a.x[3]=p3[0];	a.y[3]=p3[1];	a.zz[3]=p3[2];
 	float v = (a0+a1+a2+a3)/4;
 	mglColor c(GetC(v,false));
 	a.c[0]=c.r;		a.c[1]=c.g;		a.c[2]=c.b;

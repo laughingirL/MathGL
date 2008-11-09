@@ -487,3 +487,24 @@ int mgl_data_get_nx_(uintptr_t *d)	{	return	_DT_->nx;	}
 int mgl_data_get_ny_(uintptr_t *d)	{	return	_DT_->ny;	}
 int mgl_data_get_nz_(uintptr_t *d)	{	return	_DT_->nz;	}
 //-----------------------------------------------------------------------------
+HMDT mgl_transform_a(const HMDT am, const HMDT ph, const char *tr)
+{	return new mglData(mglTransformA(*am,*ph,tr));	}
+HMDT mgl_transform(const HMDT re, const HMDT im, const char *tr)
+{	return new mglData(mglTransform(*re,*im,tr));	}
+HMDT mgl_data_stfa(const HMDT re, const HMDT im, int dn, char dir)
+{	return new mglData(mglSTFA(*re,*im,dn,dir));	}
+uintptr_t mgl_transform_a_(uintptr_t *am, uintptr_t *ph, const char *tr, int l)
+{
+	char *s=new char[l+1];	memcpy(s,tr,l);	s[l]=0;
+	uintptr_t res = uintptr_t(new mglData(mglTransformA(_D_(am),_D_(ph),s)));
+	delete []s;		return res;
+}
+uintptr_t mgl_transform_(uintptr_t *re, uintptr_t *im, const char *tr, int l)
+{
+	char *s=new char[l+1];	memcpy(s,tr,l);	s[l]=0;
+	uintptr_t res = uintptr_t(new mglData(mglTransform(_D_(re),_D_(im),s)));
+	delete []s;		return res;
+}
+uintptr_t mgl_data_stfa_(uintptr_t *re, uintptr_t *im, int *dn, char *dir, int)
+{	return uintptr_t(new mglData(mglSTFA(*re,*im,*dn,*dir)));	}
+//-----------------------------------------------------------------------------

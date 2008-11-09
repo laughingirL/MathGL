@@ -301,13 +301,6 @@ void QMathGL::exportJPG(QString fname)
 	else	graph->WriteJPEG(setExtension(fname,"jpg").toAscii(), appName.toAscii());
 }
 //-----------------------------------------------------------------------------
-void QMathGL::exportTIF(QString fname)
-{
-	if(fname.isEmpty())	fname = scriptName;
-	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	graph->WriteTIFF(setExtension(fname,"tif").toAscii(), appName.toAscii());
-}
-//-----------------------------------------------------------------------------
 void QMathGL::exportBPS(QString fname)
 {
 	if(fname.isEmpty())	fname = scriptName;
@@ -402,20 +395,17 @@ void QMathGL::setSize(int w, int h)
 //-----------------------------------------------------------------------------
 void QMathGL::adjust()
 {
-	mglGraphQT *gr = dynamic_cast<mglGraphQT *>(graph);
-	if(gr)	gr->Adjust();
+	graph->Adjust();
 }
 //-----------------------------------------------------------------------------
 void QMathGL::nextSlide()
 {
-	mglGraphQT *gr = dynamic_cast<mglGraphQT *>(graph);
-	if(gr)	gr->NextFrame();
+	graph->NextFrame();
 }
 //-----------------------------------------------------------------------------
 void QMathGL::prevSlide()
 {
-	mglGraphQT *gr = dynamic_cast<mglGraphQT *>(graph);
-	if(gr)	gr->PrevFrame();
+	graph->PrevFrame();
 }
 //-----------------------------------------------------------------------------
 void QMathGL::animation(bool st)

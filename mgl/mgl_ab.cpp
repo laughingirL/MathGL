@@ -259,6 +259,7 @@ int mglGraphAB::NewFrame(int id)
 //-----------------------------------------------------------------------------
 float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float size)
 {
+	static int cgid=1;	StartGroup("PutswL",cgid++);
 	float pp[6] = {p.x,p.y,p.z,p.x+n.x,p.y+n.y,p.z+n.z}, bb[9];
 	Arrow1 = Arrow2 = '_';
 
@@ -293,24 +294,24 @@ float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float
 	yPos = pp[1]-shift*(pp[3]-pp[0])/sqrt(ll) - B[4]*0.02f;
 	zPos = pp[2];
 
-	fsize = fnt->Puts(str,"rL")*size/8.;
+	fsize = fnt->Puts(str,"rL",0)*size/8.;
 	xPos=xx;	yPos=yy;	zPos=zz;	memcpy(B,bb,9*sizeof(float));	Persp=_p;
+	EndGroup();
 	return fsize;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font,
-					float size, char dir, float sh)
+void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, float size, char dir, float sh)
 {
+	static int cgid=1;	StartGroup("Putsw",cgid++);
 	bool upside = ( (((_sx==-1) ^ (Org.y==Max.y || Org.z==Max.z)) && (dir=='x' || dir=='X')) ||
 					(((_sy==-1) ^ (Org.x==Max.x || Org.z==Max.z)) && (dir=='y' || dir=='Y')) ||
 					(((_sz==-1) ^ (Org.y==Max.y || Org.x==Max.x)) && (dir=='z' || dir=='Z')) );
 	float pp[6] = {p.x,p.y,p.z,p.x,p.y,p.z}, bb[9];
 	Arrow1 = Arrow2 = '_';
 	char *font1 = mgl_strdup(font ? font:FontDef),*f;
-	char col=TranspType!=2 ? 'k':'w',stl[3]="-k";
+	char col=TranspType!=2 ? 'k':'w';
 	f = strchr(font1,':');	if(f)	{	f[0]=0;	col=f[1];	}
-	stl[1] = col;
-	SelectPen(stl);
+//	stl[1] = col;	SelectPen(stl);
 
 	if(size<0)	size = -size*FontSize;
 	f_size = size;
@@ -395,13 +396,15 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font,
 	}
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
 
-	fnt->Puts(wcs,font1);
+	fnt->Puts(wcs,font1,col);
 	xPos=xx;	yPos=yy;	zPos=zz;	memcpy(B,bb,9*sizeof(float));	Persp=_p;
 	free(font1);
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::Colorbar(const char *sch,int where)
 {
+	static int cgid=1;	StartGroup("Colorbar",cgid++);
 	register long i;
 	float bb[9],*pp,*cc,d,s3=PlotFactor,ss=s3*0.9;
 	mglColor c;
@@ -473,6 +476,7 @@ void mglGraphAB::Colorbar(const char *sch,int where)
 	if(kind&2)	Putsw(p,s,a,FontSize);
 	ScalePuts = true;
 	memcpy(B,bb,9*sizeof(float));
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::SetSize(int w,int h)
@@ -511,7 +515,7 @@ void mglGraphAB::WriteSVG(const char *fname, const char *descr)
 	delete []pname;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::WriteEPS(const char *fname, const char *descr)
+/*void mglGraphAB::WriteEPS(const char *fname, const char *descr)
 {
 	time_t now;
 	time(&now);
@@ -533,7 +537,7 @@ void mglGraphAB::WriteEPS(const char *fname, const char *descr)
 	}
 	fprintf(fp,"\n\nshowpage\n%%%%EOF\n");
 	fclose(fp);
-}
+}*/
 //-----------------------------------------------------------------------------
 void mglGraphAB::arrow_plot(float *p1,float *p2,char st)
 {

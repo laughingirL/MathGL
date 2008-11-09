@@ -19,7 +19,9 @@
 		* mglPDE() -- for solving PDE in more or less general case.
 		* mglRay() -- for ray tracing (for finding trajectory in 3D space).
 		* mglQO2d() -- for beam tracing in 2D case (PDE solving in accompanied coordinates)
+	- Add new function ShowImage() for displaying the current picture
 	- Color scheme will be without interpolation (color smoothing) if its style contain '|' symbol.
+	- Color inside string can be changed by TeX-like commands \color? or #? where ? is color id.
 	- Function Bars() now draw boounding box of the rectangle if its style contain '#' symbol.
 	- Function Chart() will not draw a peace if its color specification is ' '.
 	- Add argument for line length in Legend()
@@ -43,6 +45,7 @@
 	- Function STFA() now normalize array on dn (for amplitude independency on value of dn).
 	- Functions mgl_tile_r*() are renamed to mgl_tiles*()
 	- Variable mglGraph::TickStr is removed. Use mglGraph::SetTicksVal() instead.
+	- Function mglGraph::WriteTIFF() is removed.
 	- Bug with wrong normales at points on bounding box in Surf3*() is corrected.
 	- Bug with non-visible marks into the legend is corrected.
 	- Bug of not-drawn quads with the same vertexes is corrected.

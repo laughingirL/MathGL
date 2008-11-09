@@ -129,7 +129,6 @@ public slots:
 	void exportPNG(QString fname="");	///< export to PNG file
 	void exportPNGs(QString fname="");	///< export to PNG file (no transparency)
 	void exportJPG(QString fname="");	///< export to JPEG file
-	void exportTIF(QString fname="");	///< export to TIFF file
 	void exportBPS(QString fname="");	///< export to bitmap EPS file
 	void exportEPS(QString fname="");	///< export to vector EPS file
 	void exportSVG(QString fname="");	///< export to SVG file

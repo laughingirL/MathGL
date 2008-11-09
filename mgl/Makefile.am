@@ -2,18 +2,6 @@ INCLUDES        = -I$(top_builddir)/include -I$(top_builddir)
 
 lib_LTLIBRARIES = libmgl.la
 
-mgllib_LTLIBRARIES = 
-mgllibdir = $(libdir)/mgl
-if USE_JPEG
-mgllib_LTLIBRARIES += mgl-jpeg.la
-endif
-if USE_HDF5
-mgllib_LTLIBRARIES += mgl-hdf5.la
-endif
-if USE_TIFF
-mgllib_LTLIBRARIES += mgl-tiff.la
-endif
-
 WIDGETS =
 if USE_QT
 WIDGETS += -DWITH_QT
@@ -35,6 +23,14 @@ libmgl_la_CXXFLAGS = $(WIDGETS) -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\"
     -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFF_FLAGS) \
     $(PNG_FLAGS) $(FLTK_FLAGS) $(GSL_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS)
 
+if USE_HDF5
+libmgl_la_LIBADD += $(HDF5_LIBS)
+endif
+
+if USE_JPEG
+libmgl_la_LIBADD += $(JPEG_LIBS)
+endif
+
 if USE_LTDL
 INCLUDES        += @INCLTDL@
 libmgl_la_LIBADD += @LIBLTDL@
@@ -51,34 +47,14 @@ mgl_3d.cpp         mgl_data.cpp     mgl_f.cpp         mgl_idtf.cpp \
 mgl_ab.cpp         mgl_data_io.cpp  mgl_flow.cpp      mgl_vect.cpp \
 mgl_parse.cpp      mgl_fit.cpp      mgl_pde.cpp
 
-if USE_JPEG
-mgl_jpeg_la_LDFLAGS = -no-undefined -module -avoid-version -shared
-mgl_jpeg_la_LIBADD = $(JPEG_LIBS)
-mgl_jpeg_la_CXXFLAGS = $(JPEG_FLAGS) $(AM_CXXFLAGS)
-mgl_jpeg_la_SOURCES = mgl_zb_jpg.cpp
-endif
-
-if USE_HDF5
-mgl_hdf5_la_LDFLAGS = -no-undefined -module -avoid-version -shared
-mgl_hdf5_la_LIBADD = $(HDF5_LIBS)
-mgl_hdf5_la_CXXFLAGS = $(HDF5_FLAGS) $(AM_CXXFLAGS)
-mgl_hdf5_la_SOURCES = data_hdf.cpp
-endif
-
-if USE_TIFF
-mgl_tiff_la_LDFLAGS = -no-undefined -module -avoid-version -shared
-mgl_tiff_la_LIBADD = $(TIFF_LIBS)
-mgl_tiff_la_CXXFLAGS = $(TIFF_FLAGS) $(AM_CXXFLAGS)
-mgl_tiff_la_SOURCES = mgl_zb_tiff.cpp
-endif
-
 if USE_TESTIO
 bin_PROGRAMS = test-io
 test_io_SOURCES = test_io.cpp mgl_io.cpp
 if USE_LTDL
 test_io_CXXFLAGS = -DWITH_LTDL $(AM_CXXFLAGS)
 test_io_LDADD = @LIBLTDL@
-mgllib_LTLIBRARIES += test-mod.la
+mgllib_LTLIBRARIES = test-mod.la
+mgllibdir = $(libdir)/mgl
 test_mod_la_LDFLAGS = -no-undefined -module -avoid-version -shared
 test_mod_la_SOURCES = test_mod.cpp
 endif

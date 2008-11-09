@@ -1,32 +1,17 @@
 					MathGL (for v.1.8)
 
 1. Change ticks labels drawing if RotatedText = false;
-2. Spline5 !!!
 3. Update documentation (English)
-	* Update all samples (including SampleC)
-	* Sample with mglQO2d
-	* sample with parser
-	* describe mglDraw --> Python
-	* momentum text in MGL
-	* help about mglParse::AddCommand
+	* describe mglDraw --> Python ???
 
-5. Symbol '#' in text string define new color (create second string int* with colors & styles + change all interfaces)
+5. Spline5 !!!
+
+7. New font-faces !!!
 
 10. Use Hershey as built-in font
 
 4. mglGraph::WriteBitmap(fname,type="png",descr=0) ==> Dima
 11. Add FLTK, QT & GLUT to Fortran ===> Popov Dmitry
-12. PyQt ===> Heino + Dima ???
-
->>modify dat 'eqs' [vdat wdat]
->>Fills the value of dat array according to the formula in string 'eqs'.
->>Formula is an arbitrary expression depending on variables x, y, z, u,
->>v, w. Coordinates x, y, z are supposed to be normalized in interval
->>[0,1]. Variable u is the original value of the array (see also Sec.
->>18). If optional data vdat, wdat (must be the same size as dat) is
->>specified then variables v and w denote its values else it are zero.
-
-
 
 
 					MathGL (for v.1.8.?) ???
@@ -41,6 +26,9 @@
 8. Update documentation (Russian)
 9. Hankel transform
 10. Zip-compression of EPS + text by UTF codes?!?
+11. Derive mglGraphGL from mglGraphPS ??? (see mgl_gl_new.*)
+
+
 
 					FAQ
 

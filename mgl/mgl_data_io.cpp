@@ -17,12 +17,12 @@
 #include <ctype.h>
 #include <math.h>
 #include <string.h>
+#ifdef HAVE_HDF5
+#include <hdf5.h>
+#endif
 
 #ifndef WIN32
 #include <glob.h>
-#endif
-#ifdef WITH_LTDL
-#include <ltdl.h>
 #endif
 
 #include "mgl/mgl_eval.h"
@@ -823,49 +823,54 @@ void mglData::Fill(const char *eq, mglPoint r1, mglPoint r2, const mglData *v, c
 	}
 }
 //-----------------------------------------------------------------------------
+#ifdef HAVE_HDF5
 void mglData::SaveHDF(const char *fname,const char *data,bool rewrite) const
 {
-#ifdef WITH_LTDL
-	int (*mgl_save) (const char *fname,const char *data,bool rewrite,
-	float *a, int nx, int ny, int nz);
-	lt_dlhandle module = NULL;
-	mgl_save=NULL;
-	int errors=lt_dlinit();
-	if(!errors)		errors=lt_dlsetsearchpath(MOD_LIB_DIR);
-	if(!errors)		module=lt_dlopenext("mgl-hdf5.so");
-	if(module)		*(void **) (&mgl_save)  = lt_dlsym(module, "mgl_save_hdf");
-	if(mgl_save)	(*mgl_save)(fname,data,rewrite,a,nx,ny,nz);
-	if(module)		lt_dlclose(module);
-	if(!errors)		lt_dlexit();
-#endif
+	hid_t hf,hd,hs;
+	hsize_t dims[3];
+	long rank = 3, res;
+	H5Eset_auto(0,0);
+	res=H5Fis_hdf5(fname);
+	if(res>0 && !rewrite)	hf = H5Fopen(fname, H5F_ACC_RDWR, H5P_DEFAULT);
+	else	hf = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+	if(hf<0)	return;
+	if(nz==1 && ny == 1)	{	rank = 1;	dims[0] = nx;	}
+	else if(nz==1)	{	rank = 2;	dims[0] = ny;	dims[1] = nx;	}
+	else	{	rank = 3;	dims[0] = nz;	dims[1] = ny;	dims[2] = nx;	}
+	hs = H5Screate_simple(rank, dims, 0);
+	hd = H5Dcreate(hf, data, H5T_IEEE_F32LE, hs, H5P_DEFAULT);
+	H5Dwrite(hd, H5T_NATIVE_FLOAT, hs, hs, H5P_DEFAULT, a);
+	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
 }
 //-----------------------------------------------------------------------------
 void mglData::ReadHDF(const char *fname,const char *data)
 {
-#ifdef WITH_LTDL
-	float *(*mgl_read) (const char *fname,const char *data, long *nd);
-	lt_dlhandle module = NULL;
-	mgl_read=NULL;
-	int errors=lt_dlinit();
-	if(!errors)	errors=lt_dlsetsearchpath(MOD_LIB_DIR);
-	if(!errors)	module=lt_dlopenext("mgl-hdf5.so");
-	if(module)	*(void **) (&mgl_read)  = lt_dlsym(module, "mgl_read_hdf");
-	if(mgl_read)
+	hid_t hf,hd,hs;
+	hsize_t dims[3];
+	long rank;
+	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
+	hd = H5Dopen(hf,data);
+	hs = H5Dget_space(hd);
+	rank = H5Sget_simple_extent_ndims(hs);
+	if(rank>0 && rank<=3)
 	{
-		long dim[3];
-		float *b = (*mgl_read)(fname,data,dim);
-		if(b)
+		H5Sget_simple_extent_dims(hs,dims,0);
+		nx = ny = nz = 1;
+		switch(rank)
 		{
-			Create(dim[0],dim[1],dim[2]);
-			memcpy(a,b,nx*ny*nz*sizeof(float));
-			free(b);
+		case 1:	nx = dims[0];	break;
+		case 2:	nx = dims[1];	ny = dims[0];	break;
+		case 3:	nx = dims[2];	ny = dims[1];	nz = dims[0];	break;
 		}
-//		else	SetWarn(mglWarnOpen,fname);
+		delete []a;		a = new float[nx*ny*nz];
+		H5Dread(hd, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, a);
 	}
-	if(module)	lt_dlclose(module);
-	if(!errors)	lt_dlexit();
-#endif
+	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
 }
+#else
+void mglData::SaveHDF(const char *fname,const char *data,bool rewrite) const {}
+void mglData::ReadHDF(const char *fname,const char *data)	{}
+#endif
 //-----------------------------------------------------------------------------
 bool mgl_add_file(long &kx,long &ky, long &kz, float *&b, mglData &d,bool as_slice)
 {

@@ -120,7 +120,7 @@ Sets the using of light on/off for overall plot. It is recommended to call this 
 Switch on/off @var{n}-th light source separately.
 @end deftypemethod
 
-@deftypemethod mglGraph @code{void} Light (@code{int} n, @code{float} x, @code{float} y, @code{float} z, @code{char} c=@code{'w'})
+@deftypemethod mglGraph @code{void} AddLight (@code{int} n, @code{float} x, @code{float} y, @code{float} z, @code{char} c=@code{'w'})
 The function adds a light source with identification @var{n} at position @{@var{x}, @var{y}, @var{z}@}. The color of light is defined by character @var{c} or by RGB values @{@var{r}, @var{g}, @var{b}@} (white by default). The brightness of light is @var{br} which must be in range [0,1]. Flag @var{infty}=@code{true} puts the source to infinite distance (for the faster drawing). It is recommended to call this function before any plotting command.
 @end deftypemethod
 
@@ -430,14 +430,13 @@ Clears transformation matrix. This function clears all previous effects of Aspec
 @cindex WriteSVG
 @cindex WriteBMP
 @cindex WriteEPS
-@cindex WriteTIFF
 @cindex WriteJPEG
 @cindex WriteIDTF
 @cindex SetSize
 @cindex Flush
 @cindex Finish
 
-These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the compression of TIFF files and transparency in EPS files are not supported.
+These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the transparency in EPS files are not supported.
 
 @deftypemethod {mglGraph (Python)} @code{void} WritePNG (@code{const char *}fname, @code{const char *}descr=@code{NULL})
 Exports current frame to PNG file with transparent background. Parameter @var{fname} specifies the file name, @var{descr} adds description to file. By default there are no description added. This function does nothing if NO_PNG is defined during compilation of MathGL library.
@@ -455,10 +454,6 @@ Exports current frame to JPEG file. Parameter @var{fname} specifies the file nam
 Exports current frame to BMP file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file. There is no compression used.
 @end deftypemethod
 
-@deftypemethod {mglGraph (Python)} @code{void} WriteTIFF (@code{const char *}fname, @code{const char *}descr=@code{NULL}, @code{int} compr=@code{NULL})
-Exports current frame to TIFF file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file, @var{compr} gives compression type. By default there are no description added and no compression used. This function does nothing if NO_TIFF is defined during compilation of MathGL library.
-@end deftypemethod
-
 @deftypemethod {mglGraph (Python)} @code{void} WriteEPS (@code{const char *}fname, @code{const char *}descr=@code{NULL})
 Exports current frame to EPS file. The vector representation is used if possible. So it is not recommended for the export of large data plot. It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file. By default there is no description added.
 @end deftypemethod
@@ -471,8 +466,8 @@ Exports current frame to SVG (Scalable Vector Graphics) file. The vector represe
 Exports current frame to IDTF file. Later this file can be converted to U3D format. The vector representation is used. So, the output file may be too large for graphic of large data array (especially for surfaces). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
 @end deftypemethod
 
-@deftypemethod {mglGraph (Python)} @code{void} ShowImage (@code{const char *}viewer=@code{"kuickshow"})
-Displays the current picture using external program @var{viewer} for viewing. The function save the picture to temporary file and call @var{viewer} to display it.
+@deftypemethod {mglGraph (Python)} @code{void} ShowImage (@code{const char *}viewer=@code{"kuickshow"}, @code{bool} nowait=@code{False})
+Displays the current picture using external program @var{viewer} for viewing. The function save the picture to temporary file and call @var{viewer} to display it. If @var{nowait}=@code{true} then the function return immediately (it will not wait while window will be closed).
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} SetSize (@code{int} width, @code{int} height)
@@ -488,12 +483,16 @@ Flushes the plotting commands to frame. This function may be useful if one wants
 Gets width or height of the image.
 @end deftypemethod
 
-@deftypemethod {mglGraph (Python)} @code{const char *} GetRGB ()
-Gets RGB bitmap of the current state of the image. Format of each element of bits is: @{red, green, blue@}. Number of elements is Width*Height. Position of element @{i,j@} is [3*i + 3*Width*j].
+@deftypemethod {mglGraph (Python)} @code{void} GetRGB (@code{char *}buf, @code{int} size)
+Gets RGB bitmap of the current state of the image to the buffer @var{buf} of size @var{size}. Function do nothing if @var{size}<3*Width*Height. Format of each element of bits is: @{red, green, blue@}. Number of elements is Width*Height. Position of element @{i,j@} is [3*i + 3*Width*j].
 @end deftypemethod
 
-@deftypemethod {mglGraph (Python)} @code{const char *} GetRGBA ()
-Gets RGBA bitmap of the current state of the image. Format of each element of bits is: @{red, green, blue, alpha@}. Number of elements is Width*Height. Position of element @{i,j@} is [4*i + 4*Width*j].
+@deftypemethod {mglGraph (Python)} @code{void} GetRGBA (@code{char *}buf, @code{int} size)
+Gets RGBA bitmap of the current state of the image to the buffer @var{buf} of size @var{size}. Function do nothing if @var{size}<4*Width*Height. Format of each element of bits is: @{red, green, blue, alpha@}. Number of elements is Width*Height. Position of element @{i,j@} is [4*i + 4*Width*j].
+@end deftypemethod
+
+@deftypemethod {mglGraph (Python)} @code{void} GetBGRN (@code{char *}buf, @code{int} size)
+Gets RGB bitmap of the current state of the image to the buffer @var{buf} of size @var{size}. Function do nothing if @var{size}<4*Width*Height. Format of each element of bits is: @{blue, green, red, 255@}. Number of elements is Width*Height. Position of element @{i,j@} is [4*i + 4*Width*j]. This format is useful for some widget libraries like Qt.
 @end deftypemethod
 
 
@@ -581,8 +580,8 @@ The function plots the string @var{text} at position @{@var{x},@var{y},@var{z}@}
 The function plots the string @var{text} at position @{@var{x},@var{y},@var{z}@} along direction @{@var{dx},@var{dy},@var{dz}@} with specified @var{size}.
 @end deftypemethod
 
-@deftypemethod {mglGraph (Python)} @code{void} Title (@code{const char *}text, @code{const char *}font=@code{0})
-@deftypemethodx {mglGraph (Python)} @code{void} Title (@code{const wchar_t *}text, @code{const char *}font=@code{0})
+@deftypemethod {mglGraph (Python)} @code{void} Title (@code{const char *}text, @code{const char *}font=@code{0}, @code{int} size=@code{-2})
+@deftypemethodx {mglGraph (Python)} @code{void} Title (@code{const wchar_t *}text, @code{const char *}font=@code{0}, @code{int} size=@code{-2})
 Print string @var{text} as title of the picture (at the top of the picture). Can be used at any place (even inside SubPlot()).
 @end deftypemethod
 

@@ -4,6 +4,69 @@
 
 This chapter contain a lot of sample codes for all types of plots and for most important examples and hints. The same sample (with pictures) you can find at @uref{http://mathgl.sf.net/pictures.html}. Most of examples have the sample code on 5 languages: C++, MGL, C, Fortran and Python. However, I put only C++ code for some of examples due to a lot of them and clearency how to write code for other languages. All samples are divided on 5 large categories.
 
+The minimal code to view the samples for different languages are following.
+
+@strong{C++ code}
+For compilation use: @code{g++ -o sample sample.cpp -lmgl}.
+@verbatim
+#include <mgl/mgl_zb.h>
+int main()
+{
+    mglGraph *gr = new mglGraphZB;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // put sample code here
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    gr->ShowImage();    delete gr;
+    return 0;
+}
+@end verbatim
+@strong{MGL code}
+For preview use: @code{mglview sample.mgl}.
+@verbatim
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# put sample code here
+#   -->   you may use sample as is :)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@end verbatim
+@strong{Pure C code}
+For compilation use: @code{gcc -o sample sample.c -lmgl}.
+@verbatim
+#include <mgl/mgl_c.h>
+int main()
+{
+    HMGL gr = mgl_create_graph_zb(600,400);
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    /* put sample code here              */
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    mgl_show_image(gr,"",0);
+    mgl_delete_graph(gr);
+    return 0;
+}
+@end verbatim
+@strong{Fortran code}
+For compilation use: @code{gfortran -o sample sample.f90 -lmgl}. Note, fortran don't have argument checking. So you have to take special attention to pass real variables to real arguments of functions and integer variables to integer arguments of functions. There is no other special checking for that!!!
+@verbatim
+integer gr, mgl_create_graph_zb
+gr = mgl_create_graph_zb(600,400)
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+! put sample code here
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+call mgl_show_image(gr,'',0)
+call mgl_delete_graph(gr)
+end
+@end verbatim
+@strong{Python}
+For preview use: @code{python sample.py}.
+@verbatim
+from mathgl import *
+gr = mglGraph();
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# put sample code here
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gr.ShowImage();
+@end verbatim
+
+
 @menu
 * 1D plotting samples::         
 * 2D plotting samples::         
@@ -86,7 +149,12 @@ call mgl_delete_data(y)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y = mglData(50,3);
+y.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);
+y.Modify("cos(2*pi*x)",2);
+gr.Box();
+gr.Plot(y);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -105,6 +173,7 @@ mglData y(50,3);
 y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 y.Modify("sin(2*pi*x)",1);
 y.Modify("cos(2*pi*x)",2);
+gr->Org=mglPoint(0,0);
 gr->Box();
 gr->Area(y);
 @end verbatim
@@ -114,6 +183,7 @@ new y 50 3
 modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
 modify y 'sin(2*pi*x)' 1
 modify y 'cos(2*pi*x)' 2
+origin 0 0
 box
 area y
 @end verbatim
@@ -123,6 +193,7 @@ HMDT y = mgl_create_data_size(50,3,1);
 mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 mgl_data_modify(y,"sin(2*pi*x)",1);
 mgl_data_modify(y,"cos(2*pi*x)",2);
+mgl_set_origin(gr,0.,0.,0.);
 mgl_box(gr,1);
 mgl_area(gr,y,NULL);
 mgl_delete_data(y);
@@ -134,13 +205,20 @@ y = mgl_create_data_size(50,3,1)
 call mgl_data_modify(y,'0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)',0)
 call mgl_data_modify(y,'sin(2*pi*x)',1)
 call mgl_data_modify(y,'cos(2*pi*x)',2)
+call mgl_set_origin(gr,0.,0.,0.)
 call mgl_box(gr,1)
 call mgl_area(gr,y,'')
 call mgl_delete_data(y)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y = mglData(50,3);
+y.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);
+y.Modify("cos(2*pi*x)",2);
+gr.SetOrigin(0.,0.);
+gr.Box();
+gr.Area(y);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -157,6 +235,7 @@ TO BE DONE
 @verbatim
 mglData y(10,3);
 y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+gr->Org=mglPoint(0,0);
 gr->Box();
 gr->Bars(y);
 @end verbatim
@@ -164,6 +243,7 @@ gr->Bars(y);
 @verbatim
 new y 10 3
 modify y '0.8*sin(pi*(2*x+y/2))+0.2*rnd'
+origin 0 0
 box
 bars y
 @end verbatim
@@ -171,6 +251,7 @@ bars y
 @verbatim
 HMDT y = mgl_create_data_size(10,3,1);
 mgl_data_modify(y,"0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+mgl_set_origin(gr,0.,0.,0.);
 mgl_box(gr,1);
 mgl_bars(gr,y,NULL);
 mgl_delete_data(y);
@@ -180,13 +261,18 @@ mgl_delete_data(y);
 integer y, mgl_create_data_size
 y = mgl_create_data_size(10,3,1)
 call mgl_data_modify(y,'0.8*sin(pi*(2*x+y/2))+0.2*rnd')
+call mgl_set_origin(gr,0.,0.,0.)
 call mgl_box(gr,1)
 call mgl_bars(gr,y,'')
 call mgl_delete_data(y)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y = mglData(10,3);
+y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+gr.SetOrigin(0.,0.);
+gr.Box();
+gr.Bars(y);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -203,6 +289,7 @@ TO BE DONE
 @verbatim
 mglData y(10,3);
 y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+gr->Org=mglPoint(0,0);
 gr->Box();
 gr->Barh(y);
 @end verbatim
@@ -210,6 +297,7 @@ gr->Barh(y);
 @verbatim
 new y 10 3
 modify y '0.8*sin(pi*(2*x+y/2))+0.2*rnd'
+origin 0 0
 box
 barh y
 @end verbatim
@@ -217,6 +305,7 @@ barh y
 @verbatim
 HMDT y = mgl_create_data_size(10,3,1);
 mgl_data_modify(y,"0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+mgl_set_origin(gr,0.,0.,0.);
 mgl_box(gr,1);
 mgl_barh(gr,y,NULL);
 mgl_delete_data(y);
@@ -226,13 +315,18 @@ mgl_delete_data(y);
 integer y, mgl_create_data_size
 y = mgl_create_data_size(10,3,1)
 call mgl_data_modify(y,'0.8*sin(pi*(2*x+y/2))+0.2*rnd')
+call mgl_set_origin(gr,0.,0.,0.)
 call mgl_box(gr,1)
 call mgl_barh(gr,y,'')
 call mgl_delete_data(y)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y = mglData(10,3);
+y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+gr.SetOrigin(0.,0.);
+gr.Box();
+gr.Barh(y);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -286,7 +380,12 @@ call mgl_delete_data(y)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y = mglData(50,3);
+y.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);
+y.Modify("cos(2*pi*x)",2);
+gr.Box();
+gr.Step(y);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -305,6 +404,7 @@ mglData y(50,3);
 y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 y.Modify("sin(2*pi*x)",1);
 y.Modify("cos(2*pi*x)",2);
+gr->Org=mglPoint(0,0);
 gr->Box();
 gr->Stem(y);
 @end verbatim
@@ -314,6 +414,7 @@ new y 50 3
 modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
 modify y 'sin(2*pi*x)' 1
 modify y 'cos(2*pi*x)' 2
+origin 0 0
 box
 stem y
 @end verbatim
@@ -323,6 +424,7 @@ HMDT y = mgl_create_data_size(50,3,1);
 mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 mgl_data_modify(y,"sin(2*pi*x)",1);
 mgl_data_modify(y,"cos(2*pi*x)",2);
+mgl_set_origin(gr,0.,0.,0.);
 mgl_box(gr,1);
 mgl_stem(gr,y,NULL);
 mgl_delete_data(y);
@@ -334,13 +436,20 @@ y = mgl_create_data_size(50,3,1)
 call mgl_data_modify(y,'0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)',0)
 call mgl_data_modify(y,'sin(2*pi*x)',1)
 call mgl_data_modify(y,'cos(2*pi*x)',2)
+call mgl_set_origin(gr,0.,0.,0.)
 call mgl_box(gr,1)
 call mgl_stem(gr,y,'')
 call mgl_delete_data(y)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y = mglData(50,3);
+y.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);
+y.Modify("cos(2*pi*x)",2);
+gr.SetOrigin(0.,0.);
+gr.Box();
+gr.Stem(y);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -376,11 +485,12 @@ plot y2 'k2'
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT y1 = mgl_create_data_size(50,1,1), y2 = mgl_create_data_size(50,1,1);
+HMDT y1 = mgl_create_data_size(50,1,1);
+HMDT y2 = mgl_create_data_size(50,1,1);
 mgl_data_modify(y1,"0.3*sin(2*pi*x)",0);
 mgl_data_modify(y2,"0.5+0.3*cos(2*pi*x)",0);
 mgl_box(gr,1);
-mgl_region(gr,y1,y2,"r");
+mgl_region(gr,y1,y2,"r",1);
 mgl_plot(gr,y1,"k2");
 mgl_plot(gr,y2,"k2");
 mgl_delete_data(y1);
@@ -394,7 +504,7 @@ y2 = mgl_create_data_size(50,1,1);
 call mgl_data_modify(y1,'0.3*sin(2*pi*x)',0);
 call mgl_data_modify(y2,'0.5+0.3*cos(2*pi*x)',0);
 call mgl_box(gr,1);
-call mgl_region(gr,y1,y2,'r');
+call mgl_region(gr,y1,y2,'r',1);
 call mgl_plot(gr,y1,'k2');
 call mgl_plot(gr,y2,'k2');
 call mgl_delete_data(y1);
@@ -402,7 +512,13 @@ call mgl_delete_data(y2);
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y1, y2, x = mglData(50), mglData(50), mglData(50);
+y1.Modify("0.3*sin(2*pi*x)");
+y2.Modify("0.5+0.3*cos(2*pi*x)");
+gr.Box();
+gr.Region(y1,y2,"r");
+gr.Plot(y1,"k2");
+gr.Plot(y2,"k2");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -440,15 +556,15 @@ modify ey '0.2'
 modify ex '0.1'
 box
 plot y
-error x0 y0 ex0 ey0 'ko'
+error x0 y0 ex ey 'ko'
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT y, x0, y0, ex, ey; y = mgl_create_data_size(50,1,1);
-x0 = mgl_create_data_size(10,1,1);
-y0 = mgl_create_data_size(10,1,1);
-ex = mgl_create_data_size(10,1,1);
-ey = mgl_create_data_size(10,1,1);
+HMDT y = mgl_create_data_size(50,1,1);
+HMDT x0 = mgl_create_data_size(10,1,1);
+HMDT y0 = mgl_create_data_size(10,1,1);
+HMDT ex = mgl_create_data_size(10,1,1);
+HMDT ey = mgl_create_data_size(10,1,1);
 mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 mgl_data_modify(x0,"2*x-1 + 0.1*rnd-0.05",0);
 mgl_data_modify(y0,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x) + 0.2*rnd-0.1",0);
@@ -456,7 +572,7 @@ mgl_data_modify(ey,"0.2",0); mgl_data_modify(ex,"0.1",0);
 
 mgl_box(gr,1);
 mgl_plot(gr,y,NULL);
-mgl_error_exy(gr,x0,y0,ex,ey,'ko');
+mgl_error_exy(gr,x0,y0,ex,ey,"ko");
 mgl_delete_data(x0); mgl_delete_data(y0);
 mgl_delete_data(ex); mgl_delete_data(ey);
 mgl_delete_data(y);
@@ -487,7 +603,13 @@ call mgl_delete_data(y)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y, x0, y0, ex, ey = mglData(50,1), mglData(10), mglData(10), mglData(10), mglData(10);
+y.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)",0);
+x0.Modify("2*x-1+0.1*rnd-0.05");
+y0.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)+0.2*rnd-0.1");
+ey.Modify("0.2");   ex.Modify("0.1");
+gr.Box();           gr.Plot(y);
+gr.Error(x0,y0,ex,ey,"ko");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -523,15 +645,14 @@ mark y y1 'bs'
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT y, y1;
-y = mgl_create_data_size(50,3,1);
-y1 = mgl_create_data_size(50,1,1);
+HMDT y = mgl_create_data_size(50,3,1);
+HMDT y1 = mgl_create_data_size(50,1,1);
 mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 mgl_data_modify(y,"sin(2*pi*x)",1);
 mgl_data_modify(y,"cos(2*pi*x)",2);
 mgl_data_modify(y1,"0.5+0.3*cos(2*pi*x)",0);
 mgl_box(gr,1);
-mgl_mark(gr,y,y1,"bs");
+mgl_mark_y(gr,y,y1,"bs");
 mgl_delete_data(y);
 mgl_delete_data(y1);
 @end verbatim
@@ -551,7 +672,12 @@ call mgl_delete_data(y1)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y, y1 = mglData(50,3), mglData(50);
+y.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);     y.Modify("cos(2*pi*x)",2);
+y1.Modify("0.5+0.3*cos(2*pi*x)");
+gr.Box();
+gr.Mark(y,y1,"bs");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -595,7 +721,7 @@ mgl_data_modify(y,"sin(2*pi*x)",1);
 mgl_data_modify(y,"cos(2*pi*x)",2);
 mgl_data_modify(y1,"0.5+0.3*cos(2*pi*x)",0);
 mgl_box(gr,1);
-mgl_textmark_yr(gr,y,y1,"\\gamma",NULL);
+mgl_textmark_yr(gr,y,y1,"\\gamma","");
 mgl_delete_data(y);
 mgl_delete_data(y1);
 @end verbatim
@@ -615,7 +741,12 @@ call mgl_delete_data(y1)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y, y1 = mglData(50,3), mglData(50);
+y.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);     y.Modify("cos(2*pi*x)",2);
+y1.Modify("0.5+0.3*cos(2*pi*x)");
+gr.Box();
+gr.TextMark(y,y1,"\\gamma");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -681,7 +812,11 @@ call mgl_delete_data(y)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y = mglData(50,3);
+y.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);  y.Modify("cos(2*pi*x)",2);
+gr.Rotate(40,60);   gr.Light(True);    gr.Box();
+gr.Tube(y,0.05);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -739,7 +874,13 @@ call mgl_delete_data(y)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y = mglData(50,3);
+y.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);     y.Modify("cos(2*pi*x)",2);
+gr.Box();
+gr.Plot(y.SubData(-1,0));
+gr.Text(y,"This is very long string drawn along a curve",":k");
+gr.Text(y,"Another string drawn above a curve","T:r");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -777,9 +918,8 @@ torus y1 y2 'pz'
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT y1,y2;
-y1 = mgl_create_data_size(50,1,1);
-y2 = mgl_create_data_size(50,1,1);
+HMDT y1 = mgl_create_data_size(50,1,1);
+HMDT y2 = mgl_create_data_size(50,1,1);
 mgl_data_modify(y1,"0.5+0.3*cos(2*pi*x)",0);
 mgl_data_modify(y2,"0.3*sin(2*pi*x)",0);
 
@@ -807,7 +947,12 @@ call mgl_delete_data(y2)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y1, y2 = mglData(50), mglData(50);
+y1.Modify("0.5+0.3*cos(2*pi*x)");
+y2.Modify("0.3*sin(2*pi*x)");
+gr.Rotate(40,60);    gr.Light(True);
+gr.Box();
+gr.Torus(y1,y2,"pz");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -865,7 +1010,10 @@ call mgl_delete_data(ch)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+ch = mglData(7,2);  ch.Modify("rnd+0.1");
+gr.Rotate(40,60);   gr.Light(True);
+gr.Box();
+gr.Chart(ch,"#");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -928,7 +1076,11 @@ call mgl_delete_data(ch)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+ch = mglData(7,2);  ch.Modify("rnd+0.1");
+gr.Rotate(40,60);   gr.Light(True);
+gr.SetFunc("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)");
+gr.Box();
+gr.Chart(ch,"bgr cmy#");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1006,7 +1158,10 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);    gr.Box();
+gr.Surf(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1069,7 +1224,11 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);    gr.Box();
+gr.Alpha(True);
+gr.Surf(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1132,7 +1291,11 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);    gr.Box();
+gr.Fog(1);
+gr.Surf(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1190,7 +1353,10 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);    gr.Box();
+gr.Surf(a,"BbcyrR|");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1244,7 +1410,10 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);    gr.Box();
+gr.Mesh(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1298,7 +1467,10 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);    gr.Box();
+gr.Fall(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1356,7 +1528,10 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);    gr.Box();
+gr.Belt(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1414,7 +1589,10 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);    gr.Box();
+gr.Tile(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1431,9 +1609,8 @@ TO BE DONE
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
-gr->Rotate(40,60);
-gr->Light(true);
+gr->Rotate(40,60);  gr->Light(true);
+gr->Org = mglPoint(0,0,0);
 gr->Box();
 gr->Boxs(a);
 @end verbatim
@@ -1441,9 +1618,9 @@ gr->Boxs(a);
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
+origin 0 0 0
 box
 boxs a
 @end verbatim
@@ -1454,6 +1631,7 @@ mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
+mgl_set_origin(gr,0.,0.,0.);
 mgl_box(gr,1);
 mgl_boxs(gr,a,0,0.);
 mgl_delete_data(a);
@@ -1466,13 +1644,18 @@ call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
+call mgl_set_origin(gr,0.,0.,0.);
 call mgl_box(gr,1)
 call mgl_boxs(gr,a,'',0.)
 call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);       gr.Light(True);
+gr.SetOrigin(0.,0.,0.); gr.Box();
+gr.Boxs(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1508,7 +1691,7 @@ HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_box(gr,1);
 mgl_dens(gr,a,0,0);
-mgl_colorbar(gr,'',0);
+mgl_colorbar(gr,"",0);
 mgl_delete_data(a);
 @end verbatim
 @strong{Fortran code}
@@ -1523,7 +1706,11 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Box();
+gr.Dens(a);
+gr.Colorbar();
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1540,7 +1727,6 @@ TO BE DONE
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Box();
 gr->Cont(a);
@@ -1549,7 +1735,6 @@ gr->Cont(a);
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 box
 cont a
@@ -1580,7 +1765,11 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);
+gr.Box();
+gr.Cont(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1598,7 +1787,7 @@ TO BE DONE
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
-gr->Rotate(40,60);
+gr->Rotate(40,60);  gr->Light(true);
 gr->Box();
 gr->ContF(a);
 @end verbatim
@@ -1608,6 +1797,7 @@ new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 
 rotate 40 60
+light on
 box
 contf a
 @end verbatim
@@ -1617,6 +1807,7 @@ HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
 mgl_rotate(gr,40.,60.,0.);
+mgl_set_light(gr,1);
 mgl_box(gr,1);
 mgl_contf(gr,a,0,7,NAN);
 mgl_delete_data(a);
@@ -1631,13 +1822,18 @@ a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
 call mgl_rotate(gr,40.,60.,0.)
+call mgl_set_light(gr,1)
 call mgl_box(gr,1)
 call mgl_contf(gr,a,'',7,nan)
 call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);
+gr.Box();
+gr.ContF(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1659,7 +1855,7 @@ gr->Rotate(40,60);
 gr->Light(true);
 gr->Alpha(true);
 gr->Box();
-gr->Axial(a,":y");
+gr->Axial(a);
 @end verbatim
 @strong{MGL code}
 @verbatim
@@ -1670,7 +1866,7 @@ rotate 40 60
 light on
 alpha on
 box
-axial a ':y'
+axial a
 @end verbatim
 @strong{Pure C code}
 @verbatim
@@ -1681,7 +1877,7 @@ mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_alpha(gr,1);
 mgl_box(gr,1);
-mgl_axial(gr,a,":y",3);
+mgl_axial(gr,a,"",3);
 mgl_delete_data(a);
 @end verbatim
 @strong{Fortran code}
@@ -1694,12 +1890,16 @@ call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_alpha(gr,1)
 call mgl_box(gr,1)
-call mgl_axial(gr,a,':y',3)
+call mgl_axial(gr,a,'',3)
 call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);    gr.Alpha(True);
+gr.Box();
+gr.Axial(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1779,7 +1979,11 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(60,50,40);
+a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
+gr.Rotate(40,60);   gr.Light(True);    gr.Alpha(True);
+gr.Box();
+gr.Surf3(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1837,7 +2041,11 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(60,50,40);
+a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
+gr.Rotate(40,60);   gr.Alpha(True);
+gr.Box();
+gr.Cloud(a,"wyrRk");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -1888,9 +2096,8 @@ call mgl_cloudp(gr,a,'wyrRk',1.)
 call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
-@verbatim
-TO BE DONE
-@end verbatim
+
+Not available.
 
 
 @c ------------------------------------------------------------------
@@ -1909,8 +2116,7 @@ TO BE DONE
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
 
-gr->Rotate(40,60);
-gr->Alpha(true);
+gr->Rotate(40,60);  gr->Alpha(true);    gr->Org = mglPoint(0,0,0);
 gr->Box();
 gr->DensA(a);
 gr->Axis();
@@ -1922,6 +2128,7 @@ modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
 
 rotate 40 60
 alpha on
+origin 0 0 0
 box
 densa a
 axis
@@ -1933,6 +2140,7 @@ mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_alpha(gr,1);
+mgl_set_origin(gr,0.,0.,0.);
 mgl_box(gr,1);
 mgl_dens3_all(gr,a,0);
 mgl_axis(gr,"xyz");
@@ -1946,6 +2154,7 @@ call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_alpha(gr,1)
+call mgl_set_origin(gr,0.,0.,0.);
 call mgl_box(gr,1)
 call mgl_dens3_all(gr,a,'')
 call mgl_axis(gr,"xyz")
@@ -1953,7 +2162,12 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(60,50,40);
+a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
+gr.Rotate(40,60);       gr.Alpha(True);
+gr.SetOrigin(0,0,0);    gr.Box();
+gr.Axis();
+gr.DensA(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2007,7 +2221,11 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(60,50,40);
+a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
+gr.Rotate(40,60);
+gr.Box();
+gr.ContA(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2025,7 +2243,7 @@ TO BE DONE
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
 
-gr->Rotate(40,60);
+gr->Rotate(40,60);  gr->Light(true);
 gr->Box();
 gr->ContFA(a);
 @end verbatim
@@ -2035,6 +2253,7 @@ new a 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
 
 rotate 40 60
+light on
 box
 contfa a
 @end verbatim
@@ -2044,6 +2263,7 @@ HMDT a = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
 
 mgl_rotate(gr,40.,60.,0.);
+mgl_set_light(gr,1);
 mgl_box(gr,1);
 mgl_contf_all(gr,a,0,7);
 mgl_delete_data(a);
@@ -2055,13 +2275,18 @@ a = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
 
 call mgl_rotate(gr,40.,60.,0.)
+call mgl_set_light(gr,1)
 call mgl_box(gr,1)
 call mgl_contf_all(gr,a,'',7)
 call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(60,50,40);
+a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
+gr.Rotate(40,60);   gr.Light(True);
+gr.Box();
+gr.ContFA(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2103,14 +2328,14 @@ contz s '' -1
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT a, s; a = mgl_create_data_size(60,50,40);
+HMDT a = mgl_create_data_size(60,50,40), s;
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
-s=mgl_data_sum(a,"x"); mgl_cont_x(gr,s,0,-1.); mgl_delete_data(s);
-s=mgl_data_sum(a,"y"); mgl_cont_y(gr,s,0,1.); mgl_delete_data(s);
-s=mgl_data_sum(a,"z"); mgl_cont_z(gr,s,0,-1.); mgl_delete_data(s);
+s=mgl_data_sum(a,"x"); mgl_cont_x(gr,s,0,-1.,7); mgl_delete_data(s);
+s=mgl_data_sum(a,"y"); mgl_cont_y(gr,s,0,1.,7); mgl_delete_data(s);
+s=mgl_data_sum(a,"z"); mgl_cont_z(gr,s,0,-1.,7); mgl_delete_data(s);
 mgl_delete_data(a);
 @end verbatim
 @strong{Fortran code}
@@ -2122,19 +2347,24 @@ call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1)
 s=mgl_data_sum(a,'x')
-call mgl_cont_x(gr,s,'',-1.)
+call mgl_cont_x(gr,s,'',-1.,7)
 call mgl_delete_data(s)
 s=mgl_data_sum(a,'y')
-call mgl_cont_y(gr,s,'',1.)
+call mgl_cont_y(gr,s,'',1.,7)
 call mgl_delete_data(s)
 s=mgl_data_sum(a,'z')
-call mgl_cont_z(gr,s,'',-1.)
+call mgl_cont_z(gr,s,'',-1.,7)
 call mgl_delete_data(s)
 call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(60,50,40);
+a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
+gr.Rotate(40,60);               gr.Box();
+gr.ContX(a.Sum("x"),"",-1);
+gr.ContY(a.Sum("y"),"",1);
+gr.ContZ(a.Sum("z"),"",-1);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2207,7 +2437,12 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(60,50,40);
+a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
+gr.Rotate(40,60);               gr.Box();
+gr.DensX(a.Sum("x"),"",-1);
+gr.DensY(a.Sum("y"),"",1);
+gr.DensZ(a.Sum("z"),"",-1);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2275,7 +2510,11 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(60,50,40);
+a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
+gr.Rotate(40,60);   gr.Light(True);    gr.Alpha(True);
+gr.SetCutBox(0,-1,-1,1,0,1);    gr.Box();
+gr.Surf3(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2321,15 +2560,45 @@ contf3 a 'z' 39
 @end verbatim
 @strong{Pure C code}
 @verbatim
-TO BE DONE
+HMDT a = mgl_create_data_size(61,51,40);
+mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
+
+mgl_rotate(gr,40.,60.,0.);
+mgl_set_light(gr,1);
+mgl_set_cut_box(gr,0.,-1.,-1.,1.,0.,1.1);
+mgl_box(gr,1);
+mgl_surf3_val(gr,-1.,a,0);
+mgl_contf3(gr,a,'x',-1, "", 7);
+mgl_contf3(gr,a,'y',-1, "", 7);
+mgl_contf3(gr,a,'z', 0, "", 7);
+mgl_contf3(gr,a,'z',39, "", 7);
+mgl_delete_data(a);
 @end verbatim
 @strong{Fortran code}
 @verbatim
-TO BE DONE
+a = mgl_create_data_size(61,51,40);
+call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
+
+call mgl_rotate(gr,40.,60.,0.)
+call mgl_set_light(gr,1)
+call mgl_set_cut_box(gr,0.,-1.,-1.,1.,0.,1.1);
+call mgl_box(gr,1)
+call mgl_surf3_val(gr,-1.,a,'')
+call mgl_contf3(gr,a,'x',-1, '', 7);
+call mgl_contf3(gr,a,'y',-1, '', 7);
+call mgl_contf3(gr,a,'z', 0, '', 7);
+call mgl_contf3(gr,a,'z',39, '', 7);
+call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(61,51,40);
+a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
+gr.Rotate(40,60);   gr.Light(True);
+gr.SetCutBox(0,-1,-1,1,0,1.1);    gr.Box();
+gr.Surf3(-1,a);
+gr.ContF3(a,"x",-1);    gr.ContF3(a,"y",-1);
+gr.ContF3(a,"z",0);     gr.ContF3(a,"z",39);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2396,7 +2665,12 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(61,51,40);
+a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
+gr.Rotate(40,60);   gr.Light(True);    gr.Alpha(True);
+gr.CutOff("(z>(x+0.5*y-1)^2-1) & (z>(x-0.5*y-1)^2-1)");
+gr.Box();
+gr.Surf3(a);
 @end verbatim
 
 
@@ -2461,9 +2735,8 @@ surfc a b
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT a, b;
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+HMDT a = mgl_create_data_size(50,40,1);
+HMDT b = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
@@ -2490,7 +2763,12 @@ call mgl_delete_data(b)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(50,40), mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);
+gr.Box();
+gr.SurfC(a,b);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2561,7 +2839,12 @@ call mgl_delete_data(b)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(50,40), mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);    gr.Alpha(True);
+gr.Box();
+gr.SurfC(a,b);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2602,7 +2885,7 @@ mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
 mgl_box(gr,1);
-mgl_tile_r(gr,a,b,0);
+mgl_tiles(gr,a,b,0);
 mgl_delete_data(a); mgl_delete_data(b);
 @end verbatim
 @strong{Fortran code}
@@ -2614,13 +2897,17 @@ call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
 call mgl_box(gr,1)
-call mgl_tile_r(gr,a,b,'')
+call mgl_tiles(gr,a,b,'')
 call mgl_delete_data(a)
 call mgl_delete_data(b)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(50,40), mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Box();
+gr.TileS(a,b);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2635,32 +2922,66 @@ TO BE DONE
 
 @strong{C++ code}
 @verbatim
-mglData a(50,40), b(50,40);
-a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+mglData a(50, 40), b(50, 40);
+gr->Puts(mglPoint(0, 0), "\\to", "", -1.4);
+gr->Axis(mglPoint(-1,-1,-2),mglPoint(1,1,2));
 
+gr->SubPlot(2, 1, 0);
+a.Fill("x", gr->Min, gr->Max);	b.Fill("y", gr->Min, gr->Max);
+gr->Puts(mglPoint(0, 1.1), "\\{x, y\\}", "C", -2);		gr->Box();
+gr->Map(a, b, "brgk", 0, false);
+
+gr->SubPlot(2, 1, 1);
+a.Fill("(x^3+y^3)/2", gr->Min, gr->Max);
+b.Fill("(x-y)/2", gr->Min, gr->Max);
+gr->Puts(mglPoint(0, 1.1), "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", "C", -2);
 gr->Box();
-gr->Map(a,b,"brg");
+gr->Map(a, b, "brgk", 0, false);
 @end verbatim
 @strong{MGL code}
 @verbatim
 new a 50 40
 new b 50 40
-modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
+text 0 0 '\to'
+zrange -2 2
+
+subplot 2 1 0
+text 0 1.1 '\{x, y\}' '' -2
 box
-map a b 'brg'
+fill a 'x'
+fill b 'y'
+map a b 'brgk' 0 0
+
+subplot 2 1 1
+text 0 1.1 '\{\frac{x^3+y^3}{2}, \frac{x-y}{2}\}' '' -2
+box
+fill a '(x^3+y^3)/2'
+fill b '(x-y)/2'
+map a b 'brgk' 0 0
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT a, b;
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
-mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+HMDT a = mgl_create_data_size(50,40,1);
+HMDT b = mgl_create_data_size(50,40,1);
+mgl_puts_ext(gr, 0.,0.,0., "\\to", "", -1.4, 't');
+mgl_set_axis_3d(gr,-1.,-1.,-2.,1.,1.,2.);
+
+mgl_subplot(gr, 2, 1, 0);
+mgl_data_fill_eq(gr, a, "x", 0, 0);
+mgl_data_fill_eq(gr, b, "y", 0, 0);
+mgl_puts_ext(gr, 0.,1.1,0., "\\{x, y\\}", "C", -2., 't');
+mgl_box(gr,1);
+mgl_map(gr, a, b, "brgk", 0, 0);
+
+mgl_subplot(gr, 2, 1, 1);
+mgl_data_fill_eq(gr, a, "(x^3+y^3)/2", 0, 0);
+mgl_data_fill_eq(gr, b, "(x-y)/2", 0, 0);
+mgl_puts_ext(gr, 0.,1.1,0., "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", "C", -2., 't');
+mgl_box(gr,1);
+mgl_map(gr, a, b, "brgk", 0, 0);
 
 mgl_box(gr,1);
-mgl_map(gr,a,b,"brg",0,1);
+mgl_map(gr,a,b,0,0,1);
 mgl_delete_data(a); mgl_delete_data(b);
 @end verbatim
 @strong{Fortran code}
@@ -2668,17 +2989,44 @@ mgl_delete_data(a); mgl_delete_data(b);
 integer a,b, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 b = mgl_create_data_size(50,40,1);
-call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+call mgl_puts_ext(gr, 0.,0.,0., '\to', '', -1.4, 't');
+call mgl_set_axis_3d(gr,-1.,-1.,-2.,1.,1.,2.);
 
-call mgl_box(gr,1)
-call mgl_map(gr,a,b,'brg',0,1)
+call mgl_subplot(gr, 2, 1, 0);
+call mgl_data_fill_eq(gr, a, 'x', 0, 0);
+call mgl_data_fill_eq(gr, b, 'y', 0, 0);
+call mgl_puts_ext(gr, 0.,1.1,0., '\{x, y\}', 'C', -2., 't');
+call mgl_box(gr,1);
+call mgl_map(gr, a, b, 'brgk', 0, 0);
+
+call mgl_subplot(gr, 2, 1, 1);
+call mgl_data_fill_eq(gr, a, '(x^3+y^3)/2', 0, 0);
+call mgl_data_fill_eq(gr, b, '(x-y)/2', 0, 0);
+call mgl_puts_ext(gr, 0.,1.1,0., '\{\frac{x^3+y^3}{2}, \frac{x-y}{2}\}', 'C', -2., 't');
+call mgl_box(gr,1);
+call mgl_map(gr, a, b, 'brgk', 0, 0);
+call mgl_box(gr,1);
+call mgl_map(gr,a,b,0,0,1);
 call mgl_delete_data(a)
 call mgl_delete_data(b)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(50,40), mglData(50,40);
+gr.Puts(0, 0, 0, "\\to", "", -1.4);
+gr.SetRanges(-1,1,-1,1,-2,2);
+
+gr.SubPlot(2, 1, 0);
+gr.Fill(a, "x");    gr.Fill(b, "y");
+gr.Puts(0, 1.1, 0, "\\{x, y\\}", "C", -2);
+gr.Box();
+gr.Map(a, b, "brgk", 0, 0);
+
+gr.SubPlot(2, 1, 1);
+gr.Fill(a, "(x^3+y^3)/2");   gr.Fill(b, "(x-y)/2");
+gr.Puts(0, 1.1, 0, "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", "C", -2);
+gr.Box();
+gr.Map(a, b, "brgk", 0, 0);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2693,7 +3041,7 @@ TO BE DONE
 
 @strong{C++ code}
 @verbatim
-mglData a(50,40), b(50,40);
+mglData a(20,30), b(20,30);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
@@ -2702,8 +3050,8 @@ gr->Vect(a,b);
 @end verbatim
 @strong{MGL code}
 @verbatim
-new a 50 40
-new b 50 40
+new a 20 30
+new b 20 30
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 box
@@ -2711,9 +3059,8 @@ vect a b
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT a, b;
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+HMDT a = mgl_create_data_size(20,30,1);
+HMDT b = mgl_create_data_size(20,30,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
@@ -2724,8 +3071,8 @@ mgl_delete_data(a); mgl_delete_data(b);
 @strong{Fortran code}
 @verbatim
 integer a,b, mgl_create_data_size
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+a = mgl_create_data_size(20,30,1);
+b = mgl_create_data_size(20,30,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
@@ -2736,7 +3083,11 @@ call mgl_delete_data(b)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(20,30), mglData(20,30);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Box();
+gr.Vect(a,b);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2751,7 +3102,7 @@ TO BE DONE
 
 @strong{C++ code}
 @verbatim
-mglData a(50,40), b(50,40);
+mglData a(20,30), b(20,30);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
@@ -2760,8 +3111,8 @@ gr->VectL(a,b);
 @end verbatim
 @strong{MGL code}
 @verbatim
-new a 50 40
-new b 50 40
+new a 20 30
+new b 20 30
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 box
@@ -2770,8 +3121,8 @@ vectl a b
 @strong{Pure C code}
 @verbatim
 HMDT a, b;
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+a = mgl_create_data_size(20,30,1);
+b = mgl_create_data_size(20,30,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
@@ -2782,8 +3133,8 @@ mgl_delete_data(a); mgl_delete_data(b);
 @strong{Fortran code}
 @verbatim
 integer a,b, mgl_create_data_size
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+a = mgl_create_data_size(20,30,1);
+b = mgl_create_data_size(20,30,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
@@ -2794,7 +3145,11 @@ call mgl_delete_data(b)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(20,30), mglData(20,30);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Box();
+gr.VectL(a,b);
 @end verbatim
 
 
@@ -2810,7 +3165,7 @@ TO BE DONE
 
 @strong{C++ code}
 @verbatim
-mglData a(50,40), b(50,40);
+mglData a(20,30), b(20,30);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
@@ -2819,8 +3174,8 @@ gr->VectC(a,b);
 @end verbatim
 @strong{MGL code}
 @verbatim
-new a 50 40
-new b 50 40
+new a 20 30
+new b 20 30
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 box
@@ -2829,8 +3184,8 @@ vectc a b
 @strong{Pure C code}
 @verbatim
 HMDT a, b;
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+a = mgl_create_data_size(20,30,1);
+b = mgl_create_data_size(20,30,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
@@ -2841,8 +3196,8 @@ mgl_delete_data(a); mgl_delete_data(b);
 @strong{Fortran code}
 @verbatim
 integer a,b, mgl_create_data_size
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+a = mgl_create_data_size(20,30,1);
+b = mgl_create_data_size(20,30,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
@@ -2853,7 +3208,11 @@ call mgl_delete_data(b)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(20,30), mglData(20,30);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Box();
+gr.VectC(a,b);
 @end verbatim
 
 
@@ -2869,7 +3228,7 @@ TO BE DONE
 
 @strong{C++ code}
 @verbatim
-mglData a(50,40), b(50,40);
+mglData a(20,30), b(20,30);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
@@ -2878,8 +3237,8 @@ gr->Flow(a,b);
 @end verbatim
 @strong{MGL code}
 @verbatim
-new a 50 40
-new b 50 40
+new a 20 30
+new b 20 30
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 box
@@ -2887,9 +3246,8 @@ flow a b
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT a, b;
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+HMDT a = mgl_create_data_size(20,30,1);
+HMDT b = mgl_create_data_size(20,30,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
@@ -2900,8 +3258,8 @@ mgl_delete_data(a); mgl_delete_data(b);
 @strong{Fortran code}
 @verbatim
 integer a,b, mgl_create_data_size
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+a = mgl_create_data_size(20,30,1);
+b = mgl_create_data_size(20,30,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
@@ -2912,7 +3270,11 @@ call mgl_delete_data(b)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(20,30), mglData(20,30);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Box();
+gr.Flow(a,b);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2927,36 +3289,30 @@ TO BE DONE
 
 @strong{C++ code}
 @verbatim
-mglData a(50,40), b(50,40);
+mglData a(20,30), b(20,30);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
-gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
 gr->Pipe(a,b);
 @end verbatim
 @strong{MGL code}
 @verbatim
-new a 50 40
-new b 50 40
+new a 20 30
+new b 20 30
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 light on
-rotate 40 60
 box
 pipe a b
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT a, b;
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+HMDT a = mgl_create_data_size(20,30,1);
+HMDT b = mgl_create_data_size(20,30,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
-mgl_rotate(gr,40.,60.,0.)
-mgl_set_light(gr,1)
+mgl_set_light(gr,1);
 mgl_box(gr,1);
 mgl_pipe_2d(gr,a,b,0,0.05,5,1,0.);
 mgl_delete_data(a); mgl_delete_data(b);
@@ -2964,12 +3320,10 @@ mgl_delete_data(a); mgl_delete_data(b);
 @strong{Fortran code}
 @verbatim
 integer a,b, mgl_create_data_size
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+a = mgl_create_data_size(20,30,1);
+b = mgl_create_data_size(20,30,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
-call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
 call mgl_pipe_2d(gr,a,b,'',0.05,5,1,0.)
@@ -2978,7 +3332,11 @@ call mgl_delete_data(b)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(20,30), mglData(20,30);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Light(True);    gr.Box();
+gr.Pipe(a,b);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -2993,35 +3351,30 @@ TO BE DONE
 
 @strong{C++ code}
 @verbatim
-mglData a(50,40), b(50,40);
+mglData a(20,30), b(20,30);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Box();
-gr->MeshNum = 15;
 gr->Light(true);
 gr->Dew(a,b);
 @end verbatim
 @strong{MGL code}
 @verbatim
-new a 50 40
-new b 50 40
+new a 20 30
+new b 20 30
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 box
 light on
-dew a b; meshnum 15
+dew a b
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT a, b;
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+HMDT a = mgl_create_data_size(20,30,1);
+HMDT b = mgl_create_data_size(20,30,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_box(gr,1);
-mgl_set_meshnum(gr,15);
 mgl_set_light(gr,1);
 mgl_dew_2d(gr,a,b,0,0.);
 mgl_delete_data(a); mgl_delete_data(b);
@@ -3029,13 +3382,11 @@ mgl_delete_data(a); mgl_delete_data(b);
 @strong{Fortran code}
 @verbatim
 integer a,b, mgl_create_data_size
-a = mgl_create_data_size(50,40,1);
-b = mgl_create_data_size(50,40,1);
+a = mgl_create_data_size(20,30,1);
+b = mgl_create_data_size(20,30,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_box(gr,1)
-call mgl_set_meshnum(gr,15);
 call mgl_set_light(gr,1);
 call mgl_dew_2d(gr,a,b,'',0.)
 call mgl_delete_data(a)
@@ -3043,7 +3394,11 @@ call mgl_delete_data(b)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(20,30), mglData(20,30);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Light(True);    gr.Box();
+gr.Dew(a,b);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -3083,8 +3438,8 @@ surf3c a b
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT a, b; a = mgl_create_data_size(60,50,40);
-b = mgl_create_data_size(60,50,40);
+HMDT a = mgl_create_data_size(60,50,40);
+HMDT b = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
 mgl_data_modify(b,"1-2*tanh(4*(x+y-1)^2)",0);
 
@@ -3113,7 +3468,12 @@ call mgl_delete_data(b)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(60,50,40), mglData(60,50,40);
+a.Modify("-2*((2*x-1)^2+(2*y-1)^2+(2*z-1)^4-(2*z-1)^2-0.1)");
+b.Modify("1-2*tanh(4*(x+y-1)^2)");
+gr.Rotate(40,60);   gr.Light(True);     gr.Alpha(True);
+gr.Box();
+gr.Surf3C(a,b);
 @end verbatim
 
 
@@ -3184,7 +3544,12 @@ call mgl_delete_data(b)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(60,50,40), mglData(60,50,40);
+a.Modify("-2*((2*x-1)^2+(2*y-1)^2+(2*z-1)^4-(2*z-1)^2-0.1)");
+b.Modify("1-2*tanh(4*(x+y-1)^2)");
+gr.Rotate(40,60);   gr.Light(True);     gr.Alpha(True);
+gr.Box();
+gr.Surf3A(a,b);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -3200,12 +3565,12 @@ TO BE DONE
 @strong{C++ code}
 @verbatim
 mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ex.Fill("0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
+ey.Fill("0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
+ez.Fill("0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
 gr->Rotate(40,60);
 gr->Box();
 gr->Vect(ex, ey, ez, "bwr");
@@ -3215,12 +3580,9 @@ gr->Vect(ex, ey, ez, "bwr");
 new ex 10 10 10
 new ey 10 10 10
 new ez 10 10 10
-modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
+fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
+fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
 
 rotate 40 60
 box
@@ -3232,12 +3594,12 @@ HMDT ex, ey, ez;
 ex = mgl_create_data_size(10,10,10);
 ey = mgl_create_data_size(10,10,10);
 ez = mgl_create_data_size(10,10,10);
-mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_fill_eq(gr, ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
+mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
+mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
@@ -3250,12 +3612,12 @@ integer ex,ey,ez, mgl_create_data_size
 ex = mgl_create_data_size(10,10,10)
 ey = mgl_create_data_size(10,10,10)
 ez = mgl_create_data_size(10,10,10)
-call mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
-call mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
-call mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+call mgl_data_fill_eq(gr, ex, '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
+call mgl_data_fill_eq(gr, ey, '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
+call mgl_data_fill_eq(gr, ez, '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1);
@@ -3266,7 +3628,15 @@ call mgl_delete_data(ez)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+ex, ey, ez = mglData(10,10,10), mglData(10,10,10), mglData(10,10,10);
+gr.Fill(ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Fill(ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Fill(ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Rotate(40,60);       gr.Box();
+gr.Vect(ex,ey,ez,"bwr");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -3282,12 +3652,12 @@ TO BE DONE
 @strong{C++ code}
 @verbatim
 mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ex.Fill("0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
+ey.Fill("0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
+ez.Fill("0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
 gr->Rotate(40,60);
 gr->Box();
 gr->VectL(ex, ey, ez, "bwr");
@@ -3297,12 +3667,9 @@ gr->VectL(ex, ey, ez, "bwr");
 new ex 10 10 10
 new ey 10 10 10
 new ez 10 10 10
-modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
+fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
+fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
 
 rotate 40 60
 box
@@ -3314,12 +3681,12 @@ HMDT ex, ey, ez;
 ex = mgl_create_data_size(10,10,10);
 ey = mgl_create_data_size(10,10,10);
 ez = mgl_create_data_size(10,10,10);
-mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_fill_eq(gr, ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
+mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
+mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
@@ -3332,12 +3699,12 @@ integer ex,ey,ez, mgl_create_data_size
 ex = mgl_create_data_size(10,10,10)
 ey = mgl_create_data_size(10,10,10)
 ez = mgl_create_data_size(10,10,10)
-call mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
-call mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
-call mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+call mgl_data_fill_eq(gr, ex, '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
+call mgl_data_fill_eq(gr, ey, '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
+call mgl_data_fill_eq(gr, ez, '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1);
@@ -3348,7 +3715,15 @@ call mgl_delete_data(ez)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+ex, ey, ez = mglData(10,10,10), mglData(10,10,10), mglData(10,10,10);
+gr.Fill(ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Fill(ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Fill(ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Rotate(40,60);       gr.Box();
+gr.VectL(ex,ey,ez,"bwr");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -3364,12 +3739,12 @@ TO BE DONE
 @strong{C++ code}
 @verbatim
 mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ex.Fill("0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
+ey.Fill("0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
+ez.Fill("0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
 gr->Rotate(40,60);
 gr->Box();
 gr->VectC(ex, ey, ez, "bwr");
@@ -3379,12 +3754,9 @@ gr->VectC(ex, ey, ez, "bwr");
 new ex 10 10 10
 new ey 10 10 10
 new ez 10 10 10
-modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
-           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
-           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
-           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
+fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
+fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
 
 rotate 40 60
 box
@@ -3396,12 +3768,12 @@ HMDT ex, ey, ez;
 ex = mgl_create_data_size(10,10,10);
 ey = mgl_create_data_size(10,10,10);
 ez = mgl_create_data_size(10,10,10);
-mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_fill_eq(gr, ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
+mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
+mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
@@ -3414,12 +3786,12 @@ integer ex,ey,ez, mgl_create_data_size
 ex = mgl_create_data_size(10,10,10)
 ey = mgl_create_data_size(10,10,10)
 ez = mgl_create_data_size(10,10,10)
-call mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
-call mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
-call mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+call mgl_data_fill_eq(gr, ex, '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
+call mgl_data_fill_eq(gr, ey, '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
+call mgl_data_fill_eq(gr, ez, '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1);
@@ -3430,7 +3802,15 @@ call mgl_delete_data(ez)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+ex, ey, ez = mglData(10,10,10), mglData(10,10,10), mglData(10,10,10);
+gr.Fill(ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Fill(ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Fill(ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Rotate(40,60);       gr.Box();
+gr.VectC(ex,ey,ez,"bwr");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -3446,12 +3826,12 @@ TO BE DONE
 @strong{C++ code}
 @verbatim
 mglData ex(30,30,30), ey(30,30,30), ez(30,30,30);
-ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ex.Fill("0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
+ey.Fill("0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
+ez.Fill("0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
 gr->Rotate(40,60);
 gr->Box();
 gr->Flow(ex, ey, ez, "bwr");
@@ -3461,12 +3841,9 @@ gr->Flow(ex, ey, ez, "bwr");
 new ex 30 30 30
 new ey 30 30 30
 new ez 30 30 30
-modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
-           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
-           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
-           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
+fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
+fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
 
 rotate 40 60
 box
@@ -3478,12 +3855,12 @@ HMDT ex, ey, ez;
 ex = mgl_create_data_size(30,30,30);
 ey = mgl_create_data_size(30,30,30);
 ez = mgl_create_data_size(30,30,30);
-mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_fill_eq(gr, ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
+mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
+mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
@@ -3496,12 +3873,12 @@ integer ex,ey,ez, mgl_create_data_size
 ex = mgl_create_data_size(30,30,30)
 ey = mgl_create_data_size(30,30,30)
 ez = mgl_create_data_size(30,30,30)
-call mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
-call mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
-call mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+call mgl_data_fill_eq(gr, ex, '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
+call mgl_data_fill_eq(gr, ey, '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
+call mgl_data_fill_eq(gr, ez, '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1);
@@ -3512,7 +3889,15 @@ call mgl_delete_data(ez)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+ex, ey, ez = mglData(10,10,10), mglData(10,10,10), mglData(10,10,10);
+gr.Fill(ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Fill(ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Fill(ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Rotate(40,60);       gr.Box();
+gr.Flow(ex,ey,ez,"bwr");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -3528,12 +3913,12 @@ TO BE DONE
 @strong{C++ code}
 @verbatim
 mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-ex.Modify("0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ey.Modify("0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
-ez.Modify("0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)");
+ex.Fill("0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
+ey.Fill("0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
+ez.Fill("0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)", gr->Min, gr->Max);
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
@@ -3544,12 +3929,9 @@ gr->Pipe(ex, ey, ez, "bwr");
 new ex 10 10 10
 new ey 10 10 10
 new ez 10 10 10
-modify ex '0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
-           0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ey '0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
-           0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
-modify ez '0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
-           0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)'
+fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
+fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
+fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
 
 rotate 40 60
 light on
@@ -3562,12 +3944,12 @@ HMDT ex, ey, ez;
 ex = mgl_create_data_size(10,10,10);
 ey = mgl_create_data_size(10,10,10);
 ez = mgl_create_data_size(10,10,10);
-mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - \
-                    0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
-mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) - 
-                    0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0);
+mgl_data_fill_eq(gr, ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
+mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
+mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
 
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
@@ -3581,12 +3963,12 @@ integer ex,ey,ez, mgl_create_data_size
 ex = mgl_create_data_size(10,10,10)
 ey = mgl_create_data_size(10,10,10)
 ez = mgl_create_data_size(10,10,10)
-call mgl_data_modify(ex,"0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(x-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
-call mgl_data_modify(ey,"0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(y-0.5)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
-call mgl_data_modify(ez,"0.1*(z-0.35)/pow((x-0.5)^2+(y-0.5)^2+(z-0.35)^2,1.5) &
-                        - 0.1*(z-0.65)/pow((x-0.5)^2+(y-0.5)^2+(z-0.65)^2,1.5)",0)
+call mgl_data_fill_eq(gr, ex, '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
+call mgl_data_fill_eq(gr, ey, '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
+call mgl_data_fill_eq(gr, ez, '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - &
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1);
@@ -3598,7 +3980,15 @@ call mgl_delete_data(ez)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+ex, ey, ez = mglData(10,10,10), mglData(10,10,10), mglData(10,10,10);
+gr.Fill(ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Fill(ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Fill(ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
+         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)");
+gr.Rotate(40,60);   gr.Light(True);    gr.Box();
+gr.Pipe(ex,ey,ez,"bwr");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -3652,7 +4042,11 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData("hotdogs.pts");
+a.Norm(-1,1,True);
+gr.Rotate(40,60);   gr.Light(True);
+gr.Box();
+gr.Crust(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -3702,7 +4096,11 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData("hotdogs.pts");
+a.Norm(-1,1,True);
+gr.Rotate(40,60);   gr.Light(True);
+gr.Box();
+gr.Dots(a);
 @end verbatim
 
 
@@ -3730,6 +4128,7 @@ TO BE DONE
 @subsection Legend sample
 @cindex Plot
 @cindex Legend
+@cindex AddLegend
 
 @float
 @image{png/legend, 7cm}
@@ -3778,7 +4177,7 @@ mgl_axis(gr,"xy");
 mgl_add_legend(gr,"sin(\\pi {x^2})","b");
 mgl_add_legend(gr,"sin(\\pi x)","g*");
 mgl_add_legend(gr,"sin(\\pi \\sqrt{\\a x})","r+");
-mgl_legend(gr,3,"rL",-1.);
+mgl_legend(gr,3,"rL",-1.,0.1);
 mgl_delete_data(f);
 @end verbatim
 @strong{Fortran code}
@@ -3793,15 +4192,21 @@ call mgl_set_axis(gr, 0.,-1.,0., 1.,1.,1., 0.,0.,0.)
 call mgl_box(gr,1)
 call mgl_plot(gr,f,'')
 call mgl_axis(gr,'xy')
-call mgl_add_legend(gr,'sin(\\pi {x^2})','b');
-call mgl_add_legend(gr,'sin(\\pi x)','g*');
-call mgl_add_legend(gr,'sin(\\pi \\sqrt{\\a x})','r+');
-call mgl_legend(gr,3,'rL',-1.);
+call mgl_add_legend(gr,'sin(\pi {x^2})','b');
+call mgl_add_legend(gr,'sin(\pi x)','g*');
+call mgl_add_legend(gr,'sin(\pi \sqrt{\a x})','r+');
+call mgl_legend(gr,3,'rL',-1.,0.1);
 call mgl_delete_data(f)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+f = mglData(50,3);
+f.Modify("sin(2*pi*x*x)",0);    f.Modify("sin(2*pi*x)",1);      f.Modify("sin(2*pi*sqrt(x))",2);
+gr.SetRanges(0,1,-1,1);     gr.Box();   gr.Axis();  gr.Plot(f);
+gr.AddLegend("sin(\\pi x^2)","b");
+gr.AddLegend("sin(\\pi x)","g*");
+gr.AddLegend("sin(\\pi\\sqrt{\\a x})","r+");
+gr.Legend();
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -3826,11 +4231,11 @@ gr->Light(true);
 gr->Alpha(true);
 
 gr->SubPlot(2,2,0); gr->Rotate(40,60);
-gr->Surf(a,"BbcyrR#"); gr->Box();
+gr->Surf(a,"BbcyrR#");  gr->Box();
 gr->SubPlot(2,2,1); gr->Rotate(40,60);
-gr->Dens(a,"BbcyrR#"); gr->Box();
+gr->Dens(a,"BbcyrR#");  gr->Box();
 gr->SubPlot(2,2,2); gr->Rotate(40,60);
-gr->Cont(a,"BbcyrR#"); gr->Box();
+gr->Cont(a,"BbcyrR#");  gr->Box();
 gr->SubPlot(2,2,3); gr->Rotate(40,60);
 gr->Axial(a,"BbcyrR#"); gr->Box();
 @end verbatim
@@ -3867,19 +4272,20 @@ mgl_set_alpha(gr,1);
 mgl_set_light(gr,1);
 
 mgl_subplot(gr,2,2,0); mgl_rotate(gr,40.,60.,0.);
-mgl_surf(gr,a,"BbcyrR#"); mgl_box(gr,1);
+mgl_surf(gr,a,"BbcyrR#");       mgl_box(gr,1);
 mgl_subplot(gr,2,2,1); mgl_rotate(gr,40.,60.,0.);
-mgl_dens(gr,a,"BbcyrR#",-1.); mgl_box(gr,1);
+mgl_dens(gr,a,"BbcyrR#",-1.);   mgl_box(gr,1);
 mgl_subplot(gr,2,2,2); mgl_rotate(gr,40.,60.,0.);
 mgl_cont(gr,a,"BbcyrR#",7,NAN); mgl_box(gr,1);
 mgl_subplot(gr,2,2,3); mgl_rotate(gr,40.,60.,0.);
-mgl_axial(gr,a,"BbcyrR#",3); mgl_box(gr,1);
+mgl_axial(gr,a,"BbcyrR#",3);    mgl_box(gr,1);
 mgl_delete_data(a);
 @end verbatim
 @strong{Fortran code}
 @verbatim
 integer a, mgl_create_data_size
-real zero, nan zero=0; nan=zero/zero
+real zero, nan
+zero=0; nan=zero/zero
 a = mgl_create_data_size(50,40,1)
 call mgl_data_modify(a,'0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))',0)
 call mgl_set_alpha(gr,1)
@@ -3905,7 +4311,17 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Light(True);     gr.Alpha(True);
+gr.SubPlot(2,2,0);
+gr.Rotate(40,60);   gr.Surf(a,"BbcyrR#");   gr.Box();
+gr.SubPlot(2,2,1);
+gr.Rotate(40,60);   gr.Dens(a,"BbcyrR#");   gr.Box();
+gr.SubPlot(2,2,2);
+gr.Rotate(40,60);   gr.Cont(a,"BbcyrR#");   gr.Box();
+gr.SubPlot(2,2,3);
+gr.Rotate(40,60);   gr.Axial(a,"BbcyrR#");  gr.Box();
 @end verbatim
 
 
@@ -3959,8 +4375,8 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 real zero, nan
 zero = 0; nan = zero/zero
-a = mgl_create_data_size(50,40,1);
-call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+a = mgl_create_data_size(50,40,1)
+call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0)
 
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
@@ -3971,7 +4387,11 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);   gr.Light(True);
+gr.Box();
+gr.Surf(a);         gr.Cont(a,"y");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -4018,7 +4438,7 @@ mgl_data_modify(d,"sqrt(v^2+w^2)",a,b);
 
 mgl_box(gr,1);
 mgl_flow_2d(gr,a,b,"br",5,1,0.);
-mgl_dens(gr,d,"BbcyrR");
+mgl_dens(gr,d,"BbcyrR",-1.);
 mgl_delete_data(a); mgl_delete_data(b); mgl_delete_data(d);
 @end verbatim
 @strong{Fortran code}
@@ -4032,15 +4452,20 @@ call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(d,"sqrt(v^2+w^2)",a,b);
 
 call mgl_box(gr,1)
-call mgl_flow_2d(gr,a,b,'',5,1,0.)
-call mgl_dens(gr,d,"BbcyrR");
+call mgl_flow_2d(gr,a,b,'br',5,1,0.)
+call mgl_dens(gr,d,'BbcyrR',-1.);
 call mgl_delete_data(a)
 call mgl_delete_data(b)
 call mgl_delete_data(d)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b= mglData(50,40), mglData(50,40);   d = mglData(a)
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
+d.Modify("sqrt(v^2+w^2)",a,b);
+gr.Box();
+gr.Flow(a,b,"br");      gr.Dens(d,"BbcyrR");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -4114,7 +4539,14 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);       gr.Light(True);
+gr.AddLight(1,0,1,0,"c");
+gr.AddLight(2,1,0,0,"y");
+gr.AddLight(3,0,-1,0,"m");
+gr.Box();
+gr.Surf(a,"h")
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -4165,7 +4597,8 @@ box
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT a,x,y1,y2; a = mgl_create_data_size(30,40,1);
+HMDT a,x,y1,y2;
+a = mgl_create_data_size(30,40,1);
 x = mgl_create_data_size(30,1,1);
 y1 = mgl_create_data_size(40,1,1);
 y2 = mgl_create_data_size(40,1,1);
@@ -4205,7 +4638,11 @@ call mgl_delete_data(y2)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, x, y1, y2 = mglData(30,40), mglData(30), mglData(40), mglData(40);
+a.Modify("pi*(1-2*x)*exp(-4*y^2-4*(2*x-1)^2)");
+x.Fill(-1,1);   y1.Fill(0,1);   y2.Fill(0,-1);
+gr.Rotate(40,60);       gr.Light(True);         gr.Box();
+gr.Surf(x,y1,a,"r");    gr.Surf(x,y2,a,"b");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -4246,15 +4683,16 @@ integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 
-call mgl_rotate(gr,40.,60.,0.)
-call mgl_set_light(gr,1)
 call mgl_box(gr,1)
 call mgl_cont(gr,a,'BbcyrRt',7,0)
 call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Box();
+gr.Cont(a,"BbcyrRt");
 @end verbatim
 
 
@@ -4276,16 +4714,16 @@ x.Modify("0.25*(1+cos(2*pi*x))");
 y.Modify("0.25*(1+sin(2*pi*x))");
 rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
 
-gr->Text(mglPoint(0,1.3), "Ternary plot (x+y+z=1)");
+gr->Text(mglPoint(-0.8,1.3), "Ternary plot (x+y+t=1)");
 gr->Ternary(true);
-gr->Plot(x,y,"r2")
+gr->Plot(x,y,"r2");
 gr->Plot(rx,ry,"q^ ");
 gr->Cont(a);
 gr->Line(mglPoint(0.5,0), mglPoint(0,0.75), "g2");
 gr->Axis(); gr->Grid("xyz","B;");
-gr->Label('x',"x comp.", 0);
-gr->Label('y',"y comp.", 0);
-gr->Label('z',"z comp.", 0);
+gr->Label('x',"x comp.");
+gr->Label('y',"y comp.");
+gr->Label('z',"t comp.");
 @end verbatim
 @strong{MGL code}
 @verbatim
@@ -4299,7 +4737,7 @@ modify x '0.25*(1+cos(2*pi*x))'
 modify y '0.25*(1+sin(2*pi*x))'
 modify rx 'rnd'
 modify ry 'rnd*(1-v)' rx
-text 0 1.3 0 'Ternary plot (x+y+z=1)'
+text -0.8 1.3 'Ternary plot (x+y+t=1)'
 ternary on
 plot x y 'r2'
 plot rx ry 'q^ '
@@ -4307,21 +4745,86 @@ cont a
 line 0.5 0 0 0.75 'g2'
 axis
 grid 'xyz' 'B;'
-xlabel 'x comp.' 0
-ylabel 'y comp.' 0
-zlabel 'z comp.' 0
+xlabel 'x comp.'
+ylabel 'y comp.'
+zlabel 't comp.'
 @end verbatim
 @strong{Pure C code}
 @verbatim
-TO BE DONE
+HMDT x,y,rx,ry,a;
+x = mgl_create_data_size(50,1,1);
+y = mgl_create_data_size(50,1,1);
+rx = mgl_create_data_size(50,1,1);
+ry = mgl_create_data_size(50,1,1);
+a = mgl_create_data_size(20,30,1);
+mgl_data_modify(x,"0.25*(1+cos(2*pi*x))",0);
+mgl_data_modify(y,"0.25*(1+sin(2*pi*x))",0);
+mgl_data_modify(rx,"rnd",0);
+mgl_data_modify_vw(ry,"(1-v)*rnd",rx,0);
+mgl_data_modify(a,"4*x*y",0);
+
+mgl_puts_ext(gr,-0.8,1.3,0.,"Ternary plot (x+y+t=1)","C",-1.4,'t');
+mgl_set_ternary(gr,1);
+mgl_plot_xy(gr,x,y,"r2");
+mgl_plot_xy(gr,rx,ry,"q^ ");
+mgl_cont(gr,a,"",7,0.);
+
+mgl_line(gr,0.5,0.,0.,0.,0.75,0.,"g2",2);
+mgl_axis(gr,"xyz");
+mgl_axis_grid(gr,"xyz","B:");
+mgl_label(gr,'x',"x comp");
+mgl_label(gr,'y',"y comp");
+mgl_label(gr,'z',"t comp");
+mgl_delete_data(a);
+mgl_delete_data(x);     mgl_delete_data(y);
+mgl_delete_data(rx);    mgl_delete_data(ry);
 @end verbatim
 @strong{Fortran code}
 @verbatim
-TO BE DONE
+integer a,x,y,rx,ry, mgl_create_data_size
+x = mgl_create_data_size(50,1,1)
+y = mgl_create_data_size(50,1,1)
+rx = mgl_create_data_size(50,1,1)
+ry = mgl_create_data_size(50,1,1)
+a = mgl_create_data_size(20,30,1)
+call mgl_data_modify(x,'0.25*(1+cos(2*pi*x))',0)
+call mgl_data_modify(y,'0.25*(1+sin(2*pi*x))',0)
+call mgl_data_modify(rx,'rnd',0)
+call mgl_data_modify_vw(ry,'(1-v)*rnd',rx,rx)
+call mgl_data_modify(a,'4*x*y',0)
+
+call mgl_puts_ext(gr,-0.8,1.3,0.,'Ternary plot (x+y+t=1)','C',-1.4,'t')
+call mgl_set_ternary(gr,1)
+call mgl_plot_xy(gr,x,y,'r2')
+call mgl_plot_xy(gr,rx,ry,'q^ ')
+call mgl_cont(gr,a,'',7,0.)
+
+call mgl_line(gr,0.5,0.,0.,0.,0.75,0.,'g2',2)
+call mgl_axis(gr,'xyz')
+call mgl_axis_grid(gr,'xyz','B:')
+call mgl_label(gr,'x','x comp')
+call mgl_label(gr,'y','y comp')
+call mgl_label(gr,'z','t comp')
+call mgl_delete_data(a)
+call mgl_delete_data(x)
+call mgl_delete_data(y)
+call mgl_delete_data(rx)
+call mgl_delete_data(ry)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+x, y, rx, ry, a = mglData(50), mglData(50), mglData(10), mglData(10), mglData(20,30);
+a.Modify("4*x*y");
+x.Modify("0.25*(1+cos(2*pi*x))");   y.Modify("0.25*(1+sin(2*pi*x))");
+rx.Modify("rnd");   ry.Modify("(1-v)*rnd",rx);
+gr.Puts(-0.8,1.3,0,"Ternary plot (x+y+t=1)","C",-1.4);
+gr.Ternary(True);
+gr.Plot(x,y,"r2");  gr.Plot(rx,ry,"q^ ");   gr.Cont(a);
+gr.Line(0.5,0,0,0,0.75,0,"g2");
+gr.Axis();          gr.Grid("xyz","B;");
+gr.Label("x","x comp.");
+gr.Label("y","y comp.");
+gr.Label("z","t comp.");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -4375,7 +4878,10 @@ call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(60,50,40);
+a.Modify("-2*((2*x-1)^2+(2*y-1)^2+(2*z-1)^4-(2*z-1)^2-0.1)");
+gr.Rotate(40,60);       gr.Box();
+gr.Surf3(a,"bgrd");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -4391,13 +4897,13 @@ TO BE DONE
 @strong{C++ code}
 @verbatim
 gr->Light(true);
-gr->Text(mglPoint(-1,1.2),"sh=0");
+gr->Puts(mglPoint(-1,1.2),"sh=0");
 gr->Drop(mglPoint(-1,0),mglPoint(0,1),0.5,"r",0);
-gr->Text(mglPoint(-0.33,1.2),"sh=0.33");
+gr->Puts(mglPoint(-0.33,1.2),"sh=0.33");
 gr->Drop(mglPoint(-0.33,0),mglPoint(0,1),0.5,"r",0.33);
-gr->Text(mglPoint(0.33,1.2),"sh=0.67");
+gr->Puts(mglPoint(0.33,1.2),"sh=0.67");
 gr->Drop(mglPoint(0.33,0),mglPoint(0,1),0.5,"r",0.67);
-gr->Text(mglPoint(1,1.2),"sh=1");
+gr->Puts(mglPoint(1,1.2),"sh=1");
 gr->Drop(mglPoint(1,0),mglPoint(0,1),0.5,"r",1);
 gr->Ball(mglPoint(-1,0,1),'k');
 gr->Ball(mglPoint(-0.33,0,1),'k');
@@ -4429,15 +4935,51 @@ text -1 0.6 'h\sim(1+sh)^2' 'rL'
 @end verbatim
 @strong{Pure C code}
 @verbatim
-TO BE DONE
+mgl_set_light(gr,1);
+mgl_puts(gr,-1.,1.2,0.,"sh=0"); 
+mgl_drop(gr,-1.,0.,0.,0.,1.,0.,0.5,"r",0.,1.);
+mgl_puts(gr,-0.33,1.2,0.,"sh=0.33"); 
+mgl_drop(gr,-0.33,0.,0.,0.,1.,0.,0.5,"r",0.33,1.);
+mgl_puts(gr,0.33,1.2,0.,"sh=0.67"); 
+mgl_drop(gr,0.33,0.,0.,0.,1.,0.,0.5,"r",0.67,1.);
+mgl_puts(gr,1.,1.2,0.,"sh=1"); 
+mgl_drop(gr,1.,0.,0.,0.,1.,0.,0.5,"r",1.,1.);
+mgl_ball_str(gr,-1.,0.,1.,"k");
+mgl_ball_str(gr,-0.33,0.,1.,"k");
+mgl_ball_str(gr,0.33,0.,1.,"k");
+mgl_ball_str(gr,1.,0.,1.,"k");
+mgl_line(gr,-1.,0.,1.,1.,0.,1.,"b",2);
 @end verbatim
 @strong{Fortran code}
 @verbatim
-TO BE DONE
+call mgl_set_light(gr,1);
+call mgl_puts(gr,-1.,1.2,0.,"sh=0"); 
+call mgl_drop(gr,-1.,0.,0.,0.,1.,0.,0.5,"r",0.,1.);
+call mgl_puts(gr,-0.33,1.2,0.,"sh=0.33"); 
+call mgl_drop(gr,-0.33,0.,0.,0.,1.,0.,0.5,"r",0.33,1.);
+call mgl_puts(gr,0.33,1.2,0.,"sh=0.67"); 
+call mgl_drop(gr,0.33,0.,0.,0.,1.,0.,0.5,"r",0.67,1.);
+call mgl_puts(gr,1.,1.2,0.,"sh=1"); 
+call mgl_drop(gr,1.,0.,0.,0.,1.,0.,0.5,"r",1.,1.);
+call mgl_ball_str(gr,-1.,0.,1.,"k");
+call mgl_ball_str(gr,-0.33,0.,1.,"k");
+call mgl_ball_str(gr,0.33,0.,1.,"k");
+call mgl_ball_str(gr,1.,0.,1.,"k");
+call mgl_line(gr,-1.,0.,1.,1.,0.,1.,"b",2);
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+gr.Light(True);
+gr.Puts(-1,1.2,0,"sh=0","rC");
+gr.Drop(-1,0,0,0,1,0,0.5,"r",0);
+gr.Puts(-0.33,1.2,0,"sh=0.33","rC");
+gr.Drop(-0.33,0,0,0,1,0,0.5,"r",0.33);
+gr.Puts(0.33,1.2,0,"sh=0.67","rC");             gr.Drop(0.33,0,0,0,1,0,0.5,"r",0.67);
+gr.Puts(1,1.2,0,"sh=1","rC");
+gr.Drop(1,0,0,0,1,0,0.5,"r",1);
+gr.Ball(-1,0,1,"k");    gr.Ball(-0.33,0,1,"k");
+gr.Ball(0.33,0,1,"k");  gr.Ball(1,0,1,"k");
+gr.Line(-1,0,1,1,0,1,"b");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -4538,18 +5080,18 @@ sphere 0.33 -0.57 0 0.25 'g'
 drop 0 0 0 -0.65 0 0 0.32 'n' 1 2
 sphere -0.65 0 0 0.25 'g'
 @end verbatim
-@strong{Pure C code}
-@verbatim
-TO BE DONE
-@end verbatim
-@strong{Fortran code}
-@verbatim
-TO BE DONE
-@end verbatim
-@strong{Python}
-@verbatim
-TO BE DONE
-@end verbatim
+@c @strong{Pure C code}
+@c @verbatim
+@c TO BE DONE
+@c @end verbatim
+@c @strong{Fortran code}
+@c @verbatim
+@c TO BE DONE
+@c @end verbatim
+@c @strong{Python}
+@c @verbatim
+@c TO BE DONE
+@c @end verbatim
 
 @c ------------------------------------------------------------------
 @node Advanced features, , Additional features, Samples
@@ -4581,7 +5123,7 @@ TO BE DONE
 
 @strong{C++ code}
 @verbatim
-gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,1,-1));
+gr->Org = mglPoint(-1,1,-1);
 
 gr->SubPlot(2,2,0); gr->Rotate(60,40);
 gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
@@ -4645,7 +5187,7 @@ axis '' '' '' # set to default Cartesian
 @end verbatim
 @strong{Pure C code}
 @verbatim
-mgl_set_axis(gr,-1,-1,-1,1,1,1,-1,1,-1);
+mgl_set_origin(gr,-1,1,-1);
 mgl_subplot(gr,2,2,0); mgl_rotate(gr,60,40,0);
 mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
 mgl_axis(gr,"xyz"); mgl_axis_grid(gr,"xyz","B");
@@ -4672,7 +5214,7 @@ mgl_set_func(gr,0,0,0); /* set to default Cartesian */
 @end verbatim
 @strong{Fortran code}
 @verbatim
-call mgl_set_axis(gr,-1.,-1.,-1.,1.,1.,1.,-1.,1.,-1.)
+call mgl_set_origin(gr,-1.,1.,-1.)
 
 call mgl_subplot(gr,2,2,0)
 call mgl_rotate(gr,60.,40.,0.)
@@ -4708,7 +5250,31 @@ call mgl_set_func(gr,'','','') ! set to default Cartesian
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+gr.SetOrigin(-1,1,-1);
+
+gr.SubPlot(2,2,0);              gr.Rotate(60,40);
+gr.Line(-1,0.5,0,1,0.5,0,"r2",100);
+gr.Axis();              gr.Grid();
+gr.Puts(0,1.3,1,"Gartesian","rC",-1.5);
+
+gr.SubPlot(2,2,1);  gr.Rotate(60,40);
+gr.SetFunc("y*sin(pi*x)","y*cos(pi*x)","");
+gr.Line(-1,0.5,0,1,0.5,0,"r2",100);
+gr.Axis();          gr.Grid();
+gr.Puts(0,1.3,1,"Cylindrical","rC",-1.5);
+
+gr.SubPlot(2,2,2);  gr.Rotate(60,40);
+gr.SetFunc("2*y*x","y*y-x*x","");
+gr.Line(-1,0.5,0,1,0.5,0,"r2",100);
+gr.Axis();          gr.Grid();
+gr.Puts(0,1.3,1,"Parabolic","rC",-1.5);
+
+gr.SubPlot(2,2,3);  gr.Rotate(60,40);
+gr.SetFunc("y*sin(pi*x)","y*cos(pi*x)","x+z");
+gr.Line(-1,0.5,0,1,0.5,0,"r2",100);
+gr.Axis();          gr.Grid();
+gr.Puts(0,1.3,1,"Spiral","rC",-1.5);
+gr.SetFunc("","","");   # set to default Gartesian
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -4751,15 +5317,52 @@ stem y2 'r'
 @end verbatim
 @strong{Pure C code}
 @verbatim
-TO BE DONE
+HMDT y1 = mgl_create_data_size(50,1,1);
+HMDT y2 = mgl_create_data_size(50,1,1);
+mgl_data_modify(y1,"0.3*sin(2*pi*x)",0);
+mgl_data_modify(y2,"0.5+0.3*cos(2*pi*x)",0);
+mgl_set_axis_2d(gr,-1.,1.,-1.,1.);
+mgl_set_origin(gr,-1.,-1.,-1.);
+mgl_axis(gr,"xyz");
+mgl_label_ext(gr,'y',"axis 1",0,-1.4,0.);
+mgl_plot(gr,y1,"b");
+
+mgl_set_axis_2d(gr,0.,0.,1.,1.);
+mgl_set_origin(gr,1.,1.,1.);
+mgl_axis(gr,"xyz");
+mgl_label_ext(gr,'y',"axis 2",0,-1.4,0.);
+mgl_stem(gr,y2,"r");
 @end verbatim
 @strong{Fortran code}
 @verbatim
-TO BE DONE
+integer y1,y2, mgl_create_data_size
+y1 = mgl_create_data_size(50,1,1)
+y2 = mgl_create_data_size(50,1,1)
+call mgl_data_modify(y1,'0.3*sin(2*pi*x)',0)
+call mgl_data_modify(y2,'0.5+0.3*cos(2*pi*x)',0)
+call mgl_set_axis_2d(gr,-1.,1.,-1.,1.)
+call mgl_set_origin(gr,-1.,-1.,-1.)
+call mgl_axis(gr,'xyz')
+call mgl_label_ext(gr,'y','axis 1',0,-1.4,0.)
+call mgl_plot(gr,y1,'b')
+
+call mgl_set_axis_2d(gr,0.,0.,1.,1.)
+call mgl_set_origin(gr,1.,1.,1.)
+call mgl_axis(gr,'xyz')
+call mgl_label_ext(gr,'y','axis 2',0,-1.4,0.)
+call mgl_stem(gr,y2,'r')
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+y1, y2 = mglData(50), mglData(50);
+y1.Modify("0.3*sin(2*pi*x)");   y2.Modify("0.5+0.3*cos(2*pi*x)");
+gr.SetRanges(-1,1,-1,1);   gr.SetOrigin(-1,-1);
+gr.Axis();      gr.Label("y","axis 1",0);
+gr.Plot(y1,"b");
+
+gr.SetRanges(0,1,0,1);      gr.SetOrigin(1,1);
+gr.Axis();      gr.Label("y","axis 2",0);
+gr.Stem(y2,"r");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -4780,12 +5383,12 @@ mglData x(2000), y(2000);
 x.Modify("0.01/(x+10^(-5))"); y.Modify("sin(1/v)",x);
 
 gr->Axis(mglPoint(0.01,-1),mglPoint(1000,1),mglPoint(0.01,-1));
-gr->Axis("lg(x)",0,0); gr->dx = 0;
+gr->Axis("lg(x)",0,0);  gr->SetTicks('x',0);
 
 gr->Box();
 gr->Plot(x,y,"b2");
 gr->Axis(); gr->Grid("xy","g");
-gr->Label('x',"x",0); gr->Label('y', "y = sin 1/x",0);
+gr->Label('x',"x",0);   gr->Label('y', "y = sin 1/x",0);
 @end verbatim
 @strong{MGL code}
 @verbatim
@@ -4808,8 +5411,8 @@ box
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT x, y; x = mgl_create_data_size(2000,1,1);
-y = mgl_create_data_size(2000,1,1);
+HMDT x = mgl_create_data_size(2000,1,1);
+HMDT y = mgl_create_data_size(2000,1,1);
 mgl_data_modify(x,"0.01/(x+10^(-5))",0);
 mgl_data_modify_vw(y,"sin(1/v)",x,0);
 
@@ -4820,8 +5423,8 @@ mgl_set_ticks(gr,0.,-5.,-5.);
 mgl_box(gr,1);
 mgl_plot_xy(gr,x,y,"b2");
 mgl_axis(gr,"xy"); mgl_axis_grid(gr,"xy","g");
-mgl_label_ext(gr,'x',"x",0,-1.4);
-mgl_label_ext(gr,'y', "y = sin 1/x",0,-1.4);
+mgl_label_ext(gr,'x',"x",0,-1.4,0);
+mgl_label_ext(gr,'y', "y = sin 1/x",0,-1.4,0);
 mgl_delete_data(x); mgl_delete_data(y);
 @end verbatim
 @strong{Fortran code}
@@ -4840,8 +5443,8 @@ call mgl_box(gr,1)
 call mgl_plot_xy(gr,x,y,'b2')
 call mgl_axis(gr,'xy')
 call mgl_axis_grid(gr,'xy','g')
-call mgl_label_ext(gr,'x','x',0,-1.4)
-call mgl_label_ext(gr,'y', 'y = sin 1/x',0,-1.4)
+call mgl_label_ext(gr,'x','x',0.,-1.4,0.)
+call mgl_label_ext(gr,'y', 'y = sin 1/x',0.,-1.4,0.)
 call mgl_delete_data(x)
 call mgl_delete_data(y)
 @end verbatim
@@ -4868,12 +5471,13 @@ mglData x(100), y(100);
 x.Modify("pow(10,6*x-3)"); y.Modify("sqrt(1+v^2)",x);
 
 gr->Axis(mglPoint(0.001,0.1),mglPoint(1000,1000),mglPoint(0.001,0.1));
-gr->Axis("lg(x)","lg(y)",0); gr->dx = gr->dy = 0;
+gr->Axis("lg(x)","lg(y)",0);
+gr->SetTicks('x',0);    gr->SetTicks('y',0);
 
 gr->Box();
 gr->Plot(x,y,"b2");
 gr->Axis(); gr->Grid("xy","g;");
-gr->Label('x',"x",0); gr->Label('y', "y=\\sqrt{\\a 1+x^2}",0);
+gr->Label('x',"x",0); gr->Label('y', "y=\\sqrt{1+x^2}",0);
 @end verbatim
 @strong{MGL code}
 @verbatim
@@ -4893,13 +5497,13 @@ plot x y 'b2'
 axis
 grid 'xy' 'g;'
 xlabel 'x' 0
-ylabel 'y=\sqrt{\a 1+x^2}' 0
+ylabel 'y=\sqrt{1+x^2}' 0
 box
 @end verbatim
 @strong{Pure C code}
 @verbatim
-HMDT x, y; x = mgl_create_data_size(100,1,1);
-y = mgl_create_data_size(100,1,1);
+HMDT x = mgl_create_data_size(100,1,1);
+HMDT y = mgl_create_data_size(100,1,1);
 mgl_data_modify(x,"pow(10,6*x-3)",0);
 mgl_data_modify_vw(y,"sqrt(1+v^2)",x,0);
 
@@ -4910,8 +5514,8 @@ mgl_set_ticks(gr,0.,0.,-5.);
 mgl_box(gr,1);
 mgl_plot_xy(gr,x,y,"b2");
 mgl_axis(gr,"xy"); mgl_axis_grid(gr,"xy","g;");
-mgl_label_ext(gr,'x',"x",0,-1.4);
-mgl_label_ext(gr,'y', "y=\\sqrt{\\a 1+x^2}",0,-1.4);
+mgl_label_ext(gr,'x',"x",0,-1.4,0);
+mgl_label_ext(gr,'y', "y=\\sqrt{1+x^2}",0,-1.4,0);
 mgl_delete_data(x); mgl_delete_data(y);
 @end verbatim
 @strong{Fortran code}
@@ -4930,14 +5534,21 @@ call mgl_box(gr,1)
 call mgl_plot_xy(gr,x,y,'b2')
 call mgl_axis(gr,'xy')
 call mgl_axis_grid(gr,'xy','g;')
-call mgl_label_ext(gr,'x','x',0,-1.4)
-call mgl_label_ext(gr,'y', 'y=\\sqrt{\\a 1+x^2}',0,-1.4)
+call mgl_label_ext(gr,'x','x',0.,-1.4,0)
+call mgl_label_ext(gr,'y', 'y=\sqrt{1+x^2}',0.,-1.4,0)
 call mgl_delete_data(x)
 call mgl_delete_data(y)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+x, y = mglData(100), mglData(100);
+x.Modify("pow(10,6*x-3)");          y.Modify("sqrt(1+v^2)",x);
+gr.SetRanges(0.001,1000,0.1,1000);  gr.SetOrigin(0.001,0.1);
+gr.SetFunc("lg(x)","lg(y)","");
+gr.SetTicks("x",0);     gr.SetTicks("y",0);
+gr.Box();               gr.Plot(x,y,"b2");
+gr.Axis();              gr.Grid("xy","g;");
+gr.Label("x","x",0);    gr.Label("y","y=\\sqrt{1+x^2}",0);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -4954,8 +5565,8 @@ TO BE DONE
 @strong{C++ code}
 @verbatim
 mglData rnd(100), in(100), res;
-rnd.Modify("0.4*rnd+0.1+sin(4*pi*x)", 0);
-in.Modify("0.3+sin(4*pi*x)", 0);
+rnd.Fill("0.4*rnd+0.1+sin(2*pi*x)", gr->Min, gr->Max);
+in.Fill("0.3+sin(2*pi*x)", gr->Min, gr->Max);
 
 gr->Axis(mglPoint(-1,-2), mglPoint(1,2));
 gr->Plot(rnd, ". ");
@@ -4972,9 +5583,9 @@ gr->Text(mglPoint(0, 2.2), "initial: y = 0.3+sin(2\\pi x)", "C:b", -1);
 @strong{MGL code}
 @verbatim
 new rnd 100
-modify rnd '0.4*rnd+0.1+sin(4*pi*x)'
+fill rnd '0.4*rnd+0.1+sin(2*pi*x)'
 new in 100
-modify in '0.3+sin(4*pi*x)'
+fill in '0.3+sin(2*pi*x)'
 
 yrange -2 2
 plot rnd '. '
@@ -4990,15 +5601,59 @@ text 0 2.2 'initial: y = 0.3+sin(2\pi x)' 'C:b' -1
 @end verbatim
 @strong{Pure C code}
 @verbatim
-TO BE DONE
+HMDT rnd,in,res;
+float ini[3] = {1,1,3};
+rnd = mgl_create_data_size(100,1,1);
+in = mgl_create_data_size(100,1,1);
+res = mgl_create_data();
+mgl_data_modify(rnd,"0.4*rnd+0.1+sin(4*pi*x)",0);
+mgl_data_modify(in,"0.3+sin(4*pi*x)",0);
+mgl_set_axis_2d(gr,-1.,-2.,1.,2.);
+mgl_plot(gr,rnd,". ");
+mgl_box(gr,1);
+
+mgl_fit_1(gr,res,rnd,"a+b*sin(c*x)","abc",ini);
+mgl_plot(gr,res,"r");   mgl_plot(gr,in,"b");
+mgl_puts_ext(gr,-1.,-1.3,0.,"fitted:","L:r",-1.,'t');
+mgl_puts_fit(gr,0.,-1.8,0.,"y = ","C:r",-1.);
+mgl_puts_ext(gr,0.,2.2,0.,"initial: y = 0.3+sin(2\\pi x)","C:b", -1., 't');
 @end verbatim
 @strong{Fortran code}
 @verbatim
-TO BE DONE
+integer rnd,in,res, mgl_create_data_size
+real ini(3)
+ini(1)=1;   ini(2)=1;   ini(3)=3;
+rnd = mgl_create_data_size(100,1,1);
+in = mgl_create_data_size(100,1,1);
+res = mgl_create_data();
+call mgl_data_modify(rnd,"0.4*rnd+0.1+sin(4*pi*x)",0);
+call mgl_data_modify(in,"0.3+sin(4*pi*x)",0);
+call mgl_set_axis_2d(gr,-1.,-2.,1.,2.);
+call mgl_plot(gr,rnd,". ");
+call mgl_box(gr,1);
+
+call mgl_fit_1(gr,res,rnd,"a+b*sin(c*x)","abc",ini);
+call mgl_plot(gr,res,"r");
+call mgl_plot(gr,in,"b");
+call mgl_puts_ext(gr,-1.,-1.3,0.,"fitted:","L:r",-1.,'t');
+call mgl_puts_fit(gr,0.,-1.8,0.,"y = ","C:r",-1.);
+call mgl_puts_ext(gr,0.,2.2,0.,"initial: y = 0.3+sin(2\\pi x)","C:b", -1., 't');
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+rnd, In, res, ini = mglData(100), mglData(100), mglData(), mglData(3);
+rnd.Modify("0.4*rnd+0.1+sin(4*pi*x)");
+In.Modify("0.3+sin(4*pi*x)");
+gr.SetRanges(-1,1,-2,2);
+gr.Plot(rnd,". ");
+gr.Box();
+
+ini[0], ini[1], ini[2] = 1, 1, 3;
+gr.Fit(res,rnd,"a+b*sin(c*x)","abc",ini);
+gr.Plot(res,"r");   gr.Plot(In,"b");
+gr.Puts(-1,-1.3,0,"fitted:","L:r",-1);
+gr.PutsFit(0,-1.8,0,"y = ","C:r",-1);
+gr.Puts(0,2.2,0,"initial: y = 0.3+sin(2\\pi x)","C:b",-1);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -5031,15 +5686,31 @@ axis
 @end verbatim
 @strong{Pure C code}
 @verbatim
-TO BE DONE
+HMDT a = mgl_create_data_size(1000,1,1);
+mgl_data_fill_eq(gr,a, "exp(-8*x^2)*sin(10*pi*x)", 0,0);
+mgl_plot(gr,a,"b");
+mgl_data_envelop(a,'x');
+mgl_plot(gr,a,"r");
+mgl_axis(gr,"xyz");
 @end verbatim
 @strong{Fortran code}
 @verbatim
-TO BE DONE
+integer a, mgl_create_data_size
+a = mgl_create_data_size(1000,1,1)
+call mgl_data_fill_eq(gr,a, 'exp(-8*x^2)*sin(10*pi*x)', 0,0)
+call mgl_plot(gr,a,'b')
+call mgl_data_envelop(a,'x')
+call mgl_plot(gr,a,'r')
+call mgl_axis(gr,'xyz')
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(1000);
+gr.Fill(a, "exp(-8*x^2)*sin(10*pi*x)");
+gr.Plot(a,"b");
+a.Envelop("x");
+gr.Plot(a,"r");
+gr.Axis();
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -5078,15 +5749,40 @@ box
 @end verbatim
 @strong{Pure C code}
 @verbatim
-TO BE DONE
+HMDT a = mgl_create_data_size(100,100,1);
+mgl_data_modify(a, "mod((y^2-(1-x)^2)/2, 0.1)", 0);
+mgl_rotate(gr,40.,60.,0.);
+mgl_set_light(gr,1);
+mgl_set_alpha(gr,1);
+
+mgl_surf(gr,a,"b");
+mgl_data_sew(a,"xy",0.1);
+mgl_surf(gr,a,"r");
+mgl_box(gr,1);
 @end verbatim
 @strong{Fortran code}
 @verbatim
-TO BE DONE
+integer a, mgl_create_data_size
+a = mgl_create_data_size(100,100,1)
+call mgl_data_modify(a, 'mod((y^2-(1-x)^2)/2, 0.1)', 0)
+call mgl_rotate(gr,40.,60.,0.)
+call mgl_set_light(gr,1)
+call mgl_set_alpha(gr,1)
+
+call mgl_surf(gr,a,'b')
+call mgl_data_sew(a,'xy',0.1)
+call mgl_surf(gr,a,'r')
+call mgl_box(gr,1)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a = mglData(100, 100);
+a.Modify("mod((y^2-(1-x)^2)/2, 0.1)");
+gr.Rotate(40, 60);  gr.Light(True);     gr.Alpha(True);
+gr.Surf(a, "b");
+a.Sew("xy", 0.1);
+gr.Surf(a, "r");
+gr.Box();
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -5102,7 +5798,7 @@ TO BE DONE
 @strong{C++ code}
 @verbatim
 mglData a(2000), b(2000);
-a.Fill("cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+\
+a.Fill("cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+ \
         cos(200*pi*x)*(x<.5)*(x>0)+cos(400*pi*x)*(x>.5)", 
         gr->Min, gr->Max);
 gr->SubPlot(1, 2, 0);
@@ -5134,15 +5830,54 @@ xlabel '\i t'
 @end verbatim
 @strong{Pure C code}
 @verbatim
-TO BE DONE
+HMDT a = mgl_create_data_size(2000,1,1);
+HMDT b = mgl_create_data_size(2000,1,1);
+mgl_data_fill_eq(gr, a, "cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+ \
+        cos(200*pi*x)*(x<.5)*(x>0)+cos(400*pi*x)*(x>.5)",0,0);
+mgl_subplot(gr,1,2,0);
+mgl_plot(gr,a,"");
+mgl_axis(gr,"xy");
+mgl_label(gr,'x', "\\i t");
+
+mgl_subplot(gr,1,2,1);
+mgl_stfa(gr,a,b,64,"",0.);
+mgl_axis(gr,"xy");
+mgl_label(gr,'x', "\\i t");
+mgl_label(gr,'y', "\\omega");
 @end verbatim
 @strong{Fortran code}
 @verbatim
-TO BE DONE
+integer a,b, mgl_create_data_size
+a = mgl_create_data_size(2000,1,1)
+b = mgl_create_data_size(2000,1,1)
+call mgl_data_fill_eq(gr, a, 'cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+ &
+        cos(200*pi*x)*(x<.5)*(x>0)+cos(400*pi*x)*(x>.5)',0,0)
+call mgl_subplot(gr,1,2,0)
+call mgl_plot(gr,a,'')
+call mgl_axis(gr,'xy')
+call mgl_label(gr,'x', '\i t')
+
+call mgl_subplot(gr,1,2,1)
+call mgl_stfa(gr,a,b,64,'',0.)
+call mgl_axis(gr,'xy')
+call mgl_label(gr,'x', '\i t')
+call mgl_label(gr,'y', '\omega')
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, b = mglData(2000), mglData(2000);
+gr.Fill(a,"cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+ \
+        cos(200*pi*x)*(x<.5)*(x>0)+cos(400*pi*x)*(x>.5)");
+gr.SubPlot(1, 2, 0);
+gr.Plot(a);
+gr.Axis();
+gr.Label('x', "\\i t");
+
+gr.SubPlot(1, 2, 1);
+gr.STFA(a, b, 64);
+gr.Axis();
+gr.Label('x', "\\i t");
+gr.Label('y', "\\omega", 0);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -5158,31 +5893,23 @@ TO BE DONE
 
 @strong{C++ code}
 @verbatim
-mglData r,a,re(128),im(128);
-r = mglRay("p^2+q^2+v^2-x-1", mglPoint(-0.7, 0, -1), 
-           mglPoint(0, 0, 0.5), 0.05, 10);
-gr->Plot(r.SubData(0), r.SubData(2), "k");
+mglData a,re(128),im(128);
 gr->Axis();
-gr->Label('x', "\\i x", 1, -1.4, 0);
-gr->Label('y', "\\i z", 1, -1.4, 0);
+gr->Label('x', "\\i x");
+gr->Label('y', "\\i z");
 	
 re.Fill("exp(-48*(x+0.7)^2)", gr->Min, gr->Max);
-a = mglPDE("p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)", re, im, 
-           gr->Min, gr->Max, 0.01, 30);
+a = mglPDE("p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)", re, im, gr->Min, gr->Max, 0.01, 30);
 a.Transpose("yxz");
 gr->CAxis(0, 1);
 gr->Dens(a,"wyrRk");
 gr->Plot("-x", "k|");
-gr->Puts(mglPoint(-0.8, 0.85), "absorption: (x+z)/2 for x+z>0",
-         "L", -1);
-gr->Puts(mglPoint(0.5, -0.05), "central ray", "L", -1);
-gr->Title("Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u +\
-           i \\frac{x+z}{2}\\cdot u = 0", "iC", -1.5);
+gr->Puts(mglPoint(0, 0.85), "absorption: (x+z)/2 for x+z>0");
+gr->Title("\\r{Equation:} ik_0\\partial_zu + \\Delta u + x\\cdot u + \
+i \\frac{x+z}{2}\\cdot u = 0", "iC", -1.5);
 @end verbatim
 @strong{MGL code}
 @verbatim
-ray r 'p^2+q^2+v^2-x-1' -0.7 0 -1 0 0 0.5 0.05
-plot r(0) r(2) 'k'
 axis
 xlabel '\i x'
 ylabel '\i z'
@@ -5196,22 +5923,70 @@ transpose a
 crange 0 1
 dens a 'wyrRk'
 fplot '-x' 'k|'
-text -0.8 0.85 'absorption: (x+z)/2 for x+z>0' 'L' -1
-text 0.5 -0.05 'central ray' 'L' -1
-title 'Equation: ik_0\partial_zu + \Delta u + x\cdot u
-       + i \frac{x+z}{2}\cdot u = 0' 'iC' -1.5
+text 0 0.85 'absorption: (x+z)/2 for x+z>0' '' -1
+title 'Equation: ik_0\partial_zu + \Delta u + x\cdot u + i \frac{x+z}{2}\cdot u = 0' 'iC' -1.5
 @end verbatim
 @strong{Pure C code}
 @verbatim
-TO BE DONE
+HMDT a = mgl_create_data();
+HMDT re = mgl_create_data_size(128,1,1);
+HMDT im = mgl_create_data_size(128,1,1);
+mgl_axis(gr,"xyz");
+mgl_label(gr,'x', "\\i x");
+mgl_label(gr,'y', "\\i z");
+
+mgl_data_fill_eq(gr,re,"exp(-48*(x+0.7)^2)", 0, 0);
+a = mgl_pde_solve(gr, "p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)", re, im, 0.01, 30.);
+mgl_data_transpose(a, "yxz");
+mgl_set_caxis(gr, 0, 1);
+mgl_dens(gr, a,"wyrRk", -1.);
+mgl_fplot(gr, "-x", "k|", 100);
+mgl_puts(gr, 0., 0.85, 0., "absorption: (x+z)/2 for x+z>0");
+mgl_title(gr, "\\r{Equation:} ik_0\\partial_zu + \\Delta u + x\\cdot u + \
+i \\frac{x+z}{2}\\cdot u = 0", "iC", -1.5);
+mgl_delete_data(a);
+mgl_delete_data(im);
+mgl_delete_data(re);
 @end verbatim
 @strong{Fortran code}
 @verbatim
-TO BE DONE
+integer a,re,im, mgl_create_data_size
+a = mgl_create_data()
+re = mgl_create_data_size(128,1,1)
+im = mgl_create_data_size(128,1,1)
+call mgl_axis(gr,'xyz')
+call mgl_label(gr,'x', '\i x')
+call mgl_label(gr,'y', '\i z')
+
+call mgl_data_fill_eq(gr,re,'exp(-48*(x+0.7)^2)', 0, 0)
+a = mgl_pde_solve(gr, 'p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)', re, im, 0.01, 30.)
+call mgl_data_transpose(a, 'yxz')
+call mgl_set_caxis(gr, 0., 1.)
+call mgl_dens(gr, a,'wyrRk', -1.)
+call mgl_fplot(gr, '-x', 'k|', 100)
+call mgl_puts(gr, 0., 0.85, 0., 'absorption: (x+z)/2 for x+z>0')
+call mgl_title(gr, '\r{Equation:} ik_0\partial_zu + \Delta u + x\cdot u + &
+i \frac{x+z}{2}\cdot u = 0', 'iC', -1.5)
+call mgl_delete_data(a)
+call mgl_delete_data(im)
+call mgl_delete_data(re)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+a, re, im = mglData(), mglData(128), mglData(128);
+gr.Axis();
+gr.Label('x', "\\i x");
+gr.Label('y', "\\i z");
+	
+gr.Fill(re,"exp(-48*(x+0.7)^2)");
+a = gr.PDE("p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)", re, im, 0.01, 30);
+a.Transpose("yxz");
+gr.SetCRange(0, 1);
+gr.Dens(a,"wyrRk");
+gr.Plot("-x", "k|");
+gr.Puts(0, 0.85, 0., "absorption: (x+z)/2 for x+z>0");
+gr.Title("\\r{Equation:} ik_0\\partial_zu + \\Delta u + x\\cdot u + \
+i \\frac{x+z}{2}\\cdot u = 0", "iC", -1.5);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -5227,25 +6002,25 @@ TO BE DONE
 
 @strong{C++ code}
 @verbatim
-mglData r, xx, yy, a, im, re;
+mglData r, xx, yy, a, im(128), re(128);
 const char *ham = "p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)";
-r = mglRay(ham, mglPoint(-0.7, -1), mglPoint(0, 0.5), 0.02, 10);
+r = mglRay(ham, mglPoint(-0.7, -1), mglPoint(0, 0.5), 0.02, 2);
 gr->Plot(r.SubData(0), r.SubData(1), "k");
 gr->Axis();	gr->Label('x', "\\i x");	gr->Label('y', "\\i z");
-// now start bema tracing
+// now start beam tracing
 re.Fill("exp(-48*x^2)", gr->Min, gr->Max);
 a = mglQO2d(ham, re, im, r, 1, 30, &xx, &yy);
 gr->CAxis(0, 1);
 gr->Dens(xx, yy, a, "wyrRk");
 gr->Plot("-x", "k|");
-gr->Puts(mglPoint(-0.8, 0.85), "absorption: (x+y)/2 for x+y>0", "L");
-gr->Puts(mglPoint(0.5, -0.05), "central ray", "L");
+gr->Puts(mglPoint(0, 0.85), "absorption: (x+y)/2 for x+y>0");
+gr->Puts(mglPoint(0.7, -0.05), "central ray");
 gr->Title("Beam and ray tracing", "C", -1.5);
 @end verbatim
 @strong{MGL code}
 @verbatim
 define $1 'p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)'
-ray r $1 -0.7 -1 0 0 0.5 0 0.02
+ray r $1 -0.7 -1 0 0 0.5 0 0.02 2
 plot r(0) r(1) 'k'
 axis
 xlabel '\i x'
@@ -5253,8 +6028,8 @@ ylabel '\i z'
 
 new re 128
 new im 128
-new xx 128
-new yy 128
+new xx
+new yy
 fill re 'exp(-48*x^2)'
 qo2d a $1 re im r 1 30 xx yy 
 
@@ -5264,19 +6039,83 @@ fplot '-x' 'k|'
 text -0.8 0.85 'absorption: (x+y)/2 for x+y>0' 'L' -1
 text 0.5 -0.05 'central ray' 'L' -1
 title 'Beam and ray tracing' 'C' -1.5
-
 @end verbatim
 @strong{Pure C code}
 @verbatim
-TO BE DONE
+const char *ham = "p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)";
+HMDT r, xx, yy, a, im, re;
+im = mgl_create_data_size(128,1,1);
+re = mgl_create_data_size(128,1,1);
+r = mgl_ray_trace(ham, -0.7, -1., 0., 0., 0.5, 0., 0.02, 2.);
+xx = mgl_data_subdata(r,0,-1,-1);
+yy = mgl_data_subdata(r,1,-1,-1);
+mgl_plot_xy(gr, xx, yy, "k");
+mgl_axis(gr,"xyz");
+mgl_label(gr,'x',"\\i x");
+mgl_label(gr,'y',"\\i z");
+
+mgl_data_fill_eq(gr,re,"exp(-48*x^2)", 0, 0);
+a = mgl_qo2d_solve(ham, re, im, r, 1, 30, xx, yy);
+mgl_set_caxis(gr,0.,1.);
+mgl_dens_xy(gr,xx, yy, a, "wyrRk", -1.);
+mgl_fplot(gr,"-x", "k|",100);
+mgl_puts(gr, 0., 0.85, 0., "absorption: (x+y)/2 for x+y>0");
+mgl_puts(gr, 0.7, -0.05, 0., "central ray");
+mgl_title(gr, "Beam and ray tracing", "C", -1.5);
+mgl_delete_data(a);     mgl_delete_data(r);
+mgl_delete_data(xx);    mgl_delete_data(yy);
+mgl_delete_data(im);    mgl_delete_data(re);
 @end verbatim
 @strong{Fortran code}
 @verbatim
-TO BE DONE
+integer r, xx, yy, a, im, re, mgl_create_data_size
+integer mgl_data_subdata, mgl_ray_trace, mgl_qo2d_solve
+character*64 ham
+ham = 'p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)'
+
+im = mgl_create_data_size(128,1,1)
+re = mgl_create_data_size(128,1,1)
+r = mgl_ray_trace(ham, -0.7, -1., 0., 0., 0.5, 0., 0.02, 2.)
+xx = mgl_data_subdata(r,0,-1,-1)
+yy = mgl_data_subdata(r,1,-1,-1)
+call mgl_plot_xy(gr, xx, yy, 'k')
+call mgl_axis(gr,'xyz')
+call mgl_label(gr,'x','\i x')
+call mgl_label(gr,'y','\i z')
+
+call mgl_data_fill_eq(gr,re,'exp(-48*x^2)', 0, 0)
+a = mgl_qo2d_solve(ham, re, im, r, 1., 30., xx, yy)
+call mgl_set_caxis(gr,0.,1.)
+call mgl_dens_xy(gr,xx, yy, a, 'wyrRk', -1.)
+call mgl_fplot(gr,'-x', 'k|',100)
+call mgl_puts(gr, 0., 0.85, 0., 'absorption: (x+y)/2 for x+y>0')
+call mgl_puts(gr, 0.7, -0.05, 0., 'central ray')
+call mgl_title(gr, 'Beam and ray tracing', 'C', -1.5)
+call mgl_delete_data(a)
+call mgl_delete_data(r)
+call mgl_delete_data(xx)
+call mgl_delete_data(yy)
+call mgl_delete_data(im)
+call mgl_delete_data(re)
 @end verbatim
 @strong{Python}
 @verbatim
-TO BE DONE
+ham = "p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)";
+r, xx, yy, a = mglData(), mglData(), mglData(), mglData();
+im, re = mglData(128), mglData(128);
+r = mglRay(ham, mglPoint(-0.7, -1), mglPoint(0, 0.5), 0.02, 2);
+
+gr.Plot(r.SubData(0), r.SubData(1), "k");
+gr.Axis();	gr.Label('x', "\\i x");	gr.Label('y', "\\i z");
+
+gr.Fill(re,"exp(-48*x^2)");
+a = mglQO2d(ham, re, im, r, 1, 30, xx, yy);
+gr.SetCRange(0, 1);
+gr.Dens(xx, yy, a, "wyrRk");
+gr.Plot("-x", "k|");
+gr.Puts(0, 0.85, 0, "absorption: (x+y)/2 for x+y>0");
+gr.Puts(0.7, -0.05, 0, "central ray");
+gr.Title("Beam and ray tracing", "C", -1.5);
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -5324,9 +6163,41 @@ mgl_parse_text(gr, parser, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
 @end verbatim
 @strong{Fortran code}
 @verbatim
-TO BE DONE
+integer i,parser,d, mgl_create_data_size, mgl_create_parser
+real a(100)
+! let a_i = sin(4*pi*x), x=0...1
+do i = 1,100
+    a(i)=sin(4*3.1415926*(i-1)/99)
+end do
+parser = mgl_create_parser()
+d = mgl_add_var(parser, "dat")
+call mgl_data_set_real(d,a,100,1,1)    ! set data to variable
+! I don't know how put new line ('\n') into fortran string
+! So call mgl_parse_text() for each string :(
+call mgl_parse_text(gr, parser, "plot dat; xrange 0 1")
+call mgl_parse_text(gr, parser, "box")
+call mgl_parse_text(gr, parser, "axis")
+! you may break script at any line do something 
+! and continue after that
+call mgl_parse_text(gr, parser, "xlabel 'x'")
+call mgl_parse_text(gr, parser, "ylabel 'y'")
+! there is now conditions because I don't know 
+! how to send several string into parser at once :(
+!! also you may use cycles or conditions in script
+!call mgl_parse_text(gr, parser, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext")
 @end verbatim
 @strong{Python}
+You may need to use @code{from numpy import *} for defining functions like @code{sin()}.
 @verbatim
-TO BE DONE
+parser = mglParse();
+dat = parser.AddVar("dat");
+dat.Create(100);
+for i in range(100):
+  dat[i] = sin(4*pi*i/99);
+parser.Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
+# you may break script at any line do something 
+# and continue after that
+parser.Execute(gr, "xlabel 'x'\nylabel 'y'");
+# also you may use cycles or conditions in script
+parser.Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
 @end verbatim

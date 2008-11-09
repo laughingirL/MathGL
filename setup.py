@@ -3,7 +3,7 @@ from distutils.core import setup, Extension
 mgl_module = Extension('_mathgl',
     sources=['lang/mgl_python.cpp'],
     include_dirs=['./include'],
-    extra_objects=['./mgl/.libs/libmgl.so']
+    extra_objects=['./mgl/libmgl.so']
     )
 
 setup (

@@ -31,6 +31,7 @@ void mglGraph::CloudQ(const mglData &x, const mglData &y, const mglData &z, cons
 	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("CloudQ",cgid++);
 
 	int tx=1,ty=1,tz=1;
 	if(MeshNum>1)
@@ -66,7 +67,7 @@ void mglGraph::CloudQ(const mglData &x, const mglData &y, const mglData &z, cons
 		aa[i0] = a.a[i*tx+n*(j*ty+m*k*tz)];
 	}
 	cloud_plot(n/tx,m/ty,l/tz,pp,aa,alpha);
-	Flush();
+	EndGroup();
 	delete []pp;	delete []aa;
 }
 //-----------------------------------------------------------------------------
@@ -171,6 +172,7 @@ void mglGraph::Surf3(float val, const mglData &x, const mglData &y, const mglDat
 	both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"Surf3");	return;	}
+	static int cgid=1;	StartGroup("Surf3",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
 	SetScheme(sch);
@@ -275,7 +277,7 @@ void mglGraph::Surf3(float val, const mglData &x, const mglData &y, const mglDat
 		}
 		if(k>0)	surf3_plot(n,m,kx1,kx2,ky1,ky2,kz,pp,cc,kk,nn,wire);
 	}
-	Flush();
+	EndGroup();
 	delete []kx1;	delete []kx2;	delete []ky1;	delete []ky2;	delete []kz;
 	if(pp)	{	free(pp);	free(kk);	free(cc);	free(nn);	}
 }
@@ -330,6 +332,7 @@ void mglGraph::Surf3A(float val, const mglData &x, const mglData &y, const mglDa
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"Surf3A");	return;	}
 	if(b.nx*b.ny*b.nz!=n*m*l)	{	SetWarn(mglWarnDim,"Surf3C");	return;	}
+	static int cgid=1;	StartGroup("Surf3A",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
 	SetScheme(sch);
@@ -437,7 +440,7 @@ void mglGraph::Surf3A(float val, const mglData &x, const mglData &y, const mglDa
 		}
 		if(k>0)	surf3_plot(n,m,kx1,kx2,ky1,ky2,kz,pp,cc,kk,nn,wire);
 	}
-	Flush();
+	EndGroup();
 	delete []kx1;	delete []kx2;	delete []ky1;	delete []ky2;	delete []kz;
 	if(pp)	{	free(pp);	free(kk);	free(cc);	free(nn);	}
 }
@@ -491,6 +494,7 @@ void mglGraph::Surf3C(float val, const mglData &x, const mglData &y, const mglDa
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"Surf3C");	return;	}
 	if(b.nx*b.ny*b.nz!=n*m*l)	{	SetWarn(mglWarnDim,"Surf3C");	return;	}
+	static int cgid=1;	StartGroup("Surf3C",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
 	SetScheme(sch);
@@ -601,7 +605,7 @@ void mglGraph::Surf3C(float val, const mglData &x, const mglData &y, const mglDa
 		}
 		if(k>0)	surf3_plot(n,m,kx1,kx2,ky1,ky2,kz,pp,cc,kk,nn,wire);
 	}
-	Flush();
+	EndGroup();
 	delete []kx1;	delete []kx2;	delete []ky1;	delete []ky2;	delete []kz;
 	if(pp)	{	free(pp);	free(kk);	free(cc);	free(nn);	}
 }
@@ -733,6 +737,7 @@ void mglGraph::CloudP(const mglData &x, const mglData &y, const mglData &z, cons
 	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"CloudP");	return;	}
+	static int cgid=1;	StartGroup("CloudP",cgid++);
 
 	if(alpha<0)	alpha = AlphaDef;
 	if(sch && strchr(sch,'-'))	alpha = -alpha;
@@ -751,7 +756,7 @@ void mglGraph::CloudP(const mglData &x, const mglData &y, const mglData &z, cons
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
 			AVertex(x.a[i],y.a[j],z.a[k],a.a[i+n*(j+m*k)],alpha);
 	}
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::CloudP(const mglData &a, const char *sch, float alpha)

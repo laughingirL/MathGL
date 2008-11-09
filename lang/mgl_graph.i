@@ -126,10 +126,8 @@ struct mglParse{};
 	void RestoreFont()
 	{	mgl_restore_font(self);	}
 
-	void ShowImage(const char *viewer="kuickshow")
-	{	mgl_show_image(self, viewer);	}
-	void WriteTIFF(const char *fname,const char *descr="")
-	{	mgl_write_tif(self, fname, descr);	}
+	void ShowImage(const char *viewer="kuickshow", bool keep=0)
+	{	mgl_show_image(self, viewer, keep);	}
 	void WriteIDTF(const char *fname,const char *descr="")
 	{	mgl_write_idtf(self, fname, descr);	}
 	void WriteJPEG(const char *fname,const char *descr="")
@@ -145,12 +143,49 @@ struct mglParse{};
 	void Flush()
 	{	mgl_flush(self);	}
 
-	/* TODO: %apply (char *STRING, int LENGTH) { (char *str, int len) };*/
-	/*%cstring_output_withsize(parm, maxparm)*/
-	const char *GetRGB()
+	/*TODO: %cstring_output_withsize(parm, maxparm)*/
+	void GetRGB(char *imgdata, int imglen)
+	{
+		int w=mgl_get_width(self);
+		int h=mgl_get_height(self);
+		if(imglen>=3*w*h)
+		{
+			imglen=3*w*h;
+			memcpy(imgdata, mgl_get_rgb(self),imglen);
+		}
+	}
+	void GetRGBA(char *imgdata, int imglen)
+	{
+		int w=mgl_get_width(self);
+		int h=mgl_get_height(self);
+		if(imglen>=4*w*h)
+		{
+			imglen=4*w*h;
+			memcpy(imgdata, mgl_get_rgba(self),imglen);
+		}
+	}
+	void GetBGRN(char *imgdata, int imglen)
+	{
+		int w,h,i;
+		w=mgl_get_width(self);
+		h=mgl_get_height(self);
+		const char *buf=(const char *)mgl_get_rgba(self);
+		if(imglen>=4*w*h)
+		{
+			imglen=4*w*h;
+			for(i=0;i<w*h;i++)
+			{
+				imgdata[4*i]   = buf[4*i+2];
+				imgdata[4*i+1] = buf[4*i+1];
+				imgdata[4*i+2] = buf[4*i];
+				imgdata[4*i+3] = 255;
+			}
+		}
+	}
+/*	const char *GetRGB()
 	{	return (const char *)mgl_get_rgb(self);	}
 	const char *GetRGBA()
-	{	return (const char *)mgl_get_rgba(self);	}
+	{	return (const char *)mgl_get_rgba(self);	}*/
 
 
 	int GetWidth()
@@ -262,18 +297,18 @@ struct mglParse{};
 	void Cone (float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2=-1, const char *stl="B", bool edge=false)
 	{	mgl_cone(self, x1,y1,z1,x2,y2,z2,r1,r2,stl,edge);	}
 
-	void Putsw(float x, float y, float z,const wchar_t *text,const char *font="",float size=-1,char dir=0)
+	void Putsw(float x, float y, float z,const wchar_t *text,const char *font="C",float size=-1,char dir=0)
 	{	mgl_putsw_ext(self, x, y, z, text, font, size, dir);	}
-	void Puts(float x, float y, float z,const char *text,const char *font="",float size=-1,char dir=0)
+	void Puts(float x, float y, float z,const char *text,const char *font="C",float size=-1,char dir=0)
 	{	mgl_puts_ext(self, x, y, z, text, font, size, dir);	}
 	void Putsw(float x, float y, float z, float dx, float dy, float dz, const wchar_t *text, float size=-1)
 	{	mgl_putsw_dir(self, x, y, z, dx, dy, dz, text, size);	}
 	void Puts(float x, float y, float z, float dx, float dy, float dz, const char *text,float size=-1)
 	{	mgl_puts_dir(self, x, y, z, dx, dy, dz, text, size);	}
-	void Title(const char *text, const char *font=NULL)
-	{	mgl_title(self, text, font);	}
-	void Title(const wchar_t *text, const char *font=NULL)
-	{	mgl_titlew(self, text, font);	}
+	void Title(const char *text, const char *font="C", float size=-2)
+	{	mgl_title(self, text, font, size);	}
+	void Title(const wchar_t *text, const char *font="C", float size=-2)
+	{	mgl_titlew(self, text, font, size);	}
 
 	void Colorbar(const char *sch="",int where=0)
 	{	mgl_colorbar(self, sch, where);	}
@@ -290,7 +325,7 @@ struct mglParse{};
 	void Legend(int where=3, const char *font="L", float size=-0.8, float llen=0.1)
 	{	mgl_legend(self, where, font, size, llen);	}
 
-	void Plot(const char *fy, const char *stl="", float zval=NaN, int n=100)
+	void Plot(const char *fy, const char *stl="", int n=100)
 	{	mgl_fplot(self, fy, stl, n);	}
 	void Plot(const char *fx, const char *fy, const char *fz, const char *stl="", int n=100)
 	{	mgl_fplot_xyz(self, fx, fy, fz, stl, n);	}
@@ -450,9 +485,9 @@ struct mglParse{};
 	void SurfC(mglData *x, mglData *y, mglData *z, mglData *c, const char *sch="")
 	{	mgl_surfc_xy(self, x, y, z, c, sch);	}
 	void SurfC(mglData *z, mglData *c, const char *sch="")
-	{	mgl_surfa(self, z, c, sch);	}
+	{	mgl_surfc(self, z, c, sch);	}
 	void SurfA(mglData *x, mglData *y, mglData *z, mglData *c, const char *sch="")
-	{	mgl_surfc_xy(self, x, y, z, c, sch);	}
+	{	mgl_surfa_xy(self, x, y, z, c, sch);	}
 	void SurfA(mglData *z, mglData *c, const char *sch="")
 	{	mgl_surfa(self, z, c, sch);	}
 	void STFA(mglData *x, mglData *y, mglData *re, mglData *im, int dn, const char *sch="", float zVal=NaN)
@@ -480,6 +515,10 @@ struct mglParse{};
 	{	mgl_vect_xyz(self, x, y, z, ax, ay, az, sch);	}
 	void Vect(mglData *ax, mglData *ay, mglData *az, const char *sch="")
 	{	mgl_vect_3d(self, ax, ay, az, sch);	}
+	void VectL(mglData *x, mglData *y, mglData *z, mglData *ax, mglData *ay, mglData *az, const char *sch="")
+	{	mgl_vectl_xyz(self, x, y, z, ax, ay, az, sch);	}
+	void VectL(mglData *ax, mglData *ay, mglData *az, const char *sch="")
+	{	mgl_vectl_3d(self, ax, ay, az, sch);	}
 	void VectC(mglData *x, mglData *y, mglData *z, mglData *ax, mglData *ay, mglData *az, const char *sch="")
 	{	mgl_vectc_xyz(self, x, y, z, ax, ay, az, sch);	}
 	void VectC(mglData *ax, mglData *ay, mglData *az, const char *sch="")
@@ -669,8 +708,8 @@ struct mglParse{};
 	void PutsFit(float x, float y, float z, const char *prefix=0, const char *font=0, float size=-1)
 	{	mgl_puts_fit(self, x,y,z, prefix, font, size);	}
 
-	void PDE(mglData *res, const char *ham, mglData *ini_re, mglData *ini_im, float dz=0.1, float k0=100)
-	{	mgl_pde_solve(self,res,ham,ini_re,ini_im,dz,k0);	}
+	mglData *PDE(const char *ham, mglData *ini_re, mglData *ini_im, float dz=0.1, float k0=100)
+	{	return mgl_pde_solve(self,ham,ini_re,ini_im,dz,k0);	}
 	void Fill(mglData *u, const char *eq, mglData *v=NULL, mglData *w=NULL)
 	{	mgl_data_fill_eq(self, u,eq,v,w);	}
 };

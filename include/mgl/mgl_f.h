@@ -77,9 +77,8 @@ void mgl_restore_font_(uintptr_t *gr);
 /*****************************************************************************/
 /*		Export to file or to memory														 */
 /*****************************************************************************/
-void mgl_show_image_(uintptr_t *graph, const char *viewer, int);
+void mgl_show_image_(uintptr_t *graph, const char *viewer, int *keep, int);
 void mgl_write_bmp_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
-void mgl_write_tif_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_jpg_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_png_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_png_solid_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
@@ -163,7 +162,7 @@ void mgl_curve_(uintptr_t* graph, float *x1, float *y1, float *z1, float *dx1, f
 void mgl_puts_(uintptr_t *graph, float *x, float *y, float *z,const char *text,int);
 void mgl_puts_dir_(uintptr_t *graph, float *x, float *y, float *z, float *dx, float *dy, float *dz, const char *text, float size, int);
 void mgl_text_(uintptr_t *graph, float *x, float *y, float *z,const char *text,int);
-void mgl_title_(uintptr_t *graph, const char *text, const char *fnt,int,int);
+void mgl_title_(uintptr_t *graph, const char *text, const char *fnt, float *size, int,int);
 void mgl_puts_ext_(uintptr_t *graph, float *x, float *y, float *z,const char *text,const char *font,float *size,const char *dir,int,int,int);
 void mgl_text_ext_(uintptr_t *graph, float *x, float *y, float *z,const char *text,const char *font,float *size,const char *dir,int,int,int);
 void mgl_colorbar_(uintptr_t *graph, const char *sch,int *where,int);
@@ -176,7 +175,7 @@ void mgl_set_legend_box_(uintptr_t *gr, int *enable);
 /*****************************************************************************/
 /*		1D plotting functions												 */
 /*****************************************************************************/
-void mgl_fplot_(uintptr_t *graph, const char *fy, const char *stl, float *zval, int *n, int ly, int ls);
+void mgl_fplot_(uintptr_t *graph, const char *fy, const char *stl, int *n, int ly, int ls);
 void mgl_fplot_xyz_(uintptr_t *graph, const char *fx, const char *fy, const char *fz, const char *stl, int *n, int lx, int ly, int lz, int ls);
 void mgl_plot_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int);
 void mgl_plot_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen,int);
@@ -498,12 +497,16 @@ void mgl_sphere_(uintptr_t* graph, float *x, float *y, float *z, float *r, const
 void mgl_drop_(uintptr_t* graph, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r, const char *stl, float *shift, float *ap, int);
 void mgl_cone_(uintptr_t* graph, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r1, float *r2, const char *stl, int *edge, int);
 
-void mgl_pde_solve_(uintptr_t* gr, uintptr_t* res, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, float *dz, float *k0,int);
-void mgl_qo2d_solve_(uintptr_t* res, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, float *r, float *k0, uintptr_t* xx, uintptr_t* yy, int);
-void mgl_ray_trace_(uintptr_t* res, const char *ham, float *x0, float *y0, float *z0, float *px, float *py, float *pz, float *dt, float *tmax,int);
+uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, float *dz, float *k0,int);
+uintptr_t mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, float *r, float *k0, uintptr_t* xx, uintptr_t* yy, int);
+uintptr_t mgl_ray_trace_(const char *ham, float *x0, float *y0, float *z0, float *px, float *py, float *pz, float *dt, float *tmax,int);
 void mgl_data_fill_eq_(uintptr_t* gr, uintptr_t* res, const char *eq, uintptr_t* vdat, uintptr_t* wdat,int);
-void mgl_jacobian_2d_(uintptr_t* res, uintptr_t* x, uintptr_t* y);
-void mgl_jacobian_3d_(uintptr_t* res, uintptr_t* x, uintptr_t* y, uintptr_t* z);
+uintptr_t mgl_jacobian_2d_(uintptr_t* x, uintptr_t* y);
+uintptr_t mgl_jacobian_3d_(uintptr_t* x, uintptr_t* y, uintptr_t* z);
+
+uintptr_t mgl_transform_a_(uintptr_t *am, uintptr_t *ph, const char *tr, int);
+uintptr_t mgl_transform_(uintptr_t *re, uintptr_t *im, const char *tr, int);
+uintptr_t mgl_data_stfa_(uintptr_t *re, uintptr_t *im, int *dn, char *dir, int);
 
 #ifdef __cplusplus
 }

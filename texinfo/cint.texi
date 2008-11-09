@@ -46,6 +46,7 @@ Fortran functions/subroutines have the same names as C functions. However, there
 * Interpolation (Pure C)::      
 * Informational functions (Pure C)::  
 * Operators (Pure C)::          
+* Global functions (Pure C)::   
 @end menu
 
 @c ##################################################################
@@ -535,13 +536,12 @@ Clears transformation matrix. This function clears all previous effects of Aspec
 @cindex WriteSVG
 @cindex WriteBMP
 @cindex WriteEPS
-@cindex WriteTIFF
 @cindex WriteJPEG
 @cindex SetSize
 @cindex GetRGBA
 @cindex GetBits
 
-These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the compression of TIFF files and transparency in EPS files are not supported.
+These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the transparency in EPS files are not supported.
 
 @deftypefn {C function} @code{void} mgl_write_png (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
 @deftypefnx {C function} @code{void} mgl_write_png_solid (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
@@ -556,10 +556,6 @@ Exports current frame to JPEG file with non-transparent background (usually whit
 Exports current frame to BMP file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (can be @code{NULL}). There is no compression used.
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_write_tif (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
-Exports current frame to TIFF file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (can be @code{NULL}). There is no compression used.
-@end deftypefn
-
 @deftypefn {C function} @code{void} mgl_write_eps (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
 Exports current frame to EPS file. The vector representation is used if possible. So it is not recommended for the export of large data plot. It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (can be @code{NULL}).
 @end deftypefn
@@ -572,8 +568,8 @@ Exports current frame to SVG (Scalable Vector Graphics) file. The vector represe
 Exports current frame to IDTF file. Later this file can be converted to U3D format. The vector representation is used. So, the output file may be too large for graphic of large data array (especially for surfaces). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_show_image (@code{const char *}viewer)
-Displays the current picture using external program @var{viewer} for viewing. The function save the picture to temporary file and call @var{viewer} to display it.
+@deftypefn {C function} @code{void} mgl_show_image (@code{const char *}viewer, @code{int} nowait)
+Displays the current picture using external program @var{viewer} for viewing. The function save the picture to temporary file and call @var{viewer} to display it. If @var{nowait}=@code{true} then the function return immediately (it will not wait while window will be closed).
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_size (@code{HMGL} gr, @code{int} width, @code{int} height)
@@ -679,8 +675,8 @@ The function plots the string @var{text} at position @{@var{x},@var{y},@var{z}@}
 The function plots the string @var{text} at position @{@var{x},@var{y},@var{z}@} along direction @{@var{dx},@var{dy},@var{dz}@} with specified @var{size}.
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_title (@code{HMGL} gr, @code{const char *}text, @code{const char *}font)
-@deftypefnx {C function} @code{void} mgl_titlew (@code{HMGL} gr, @code{const wchar_t *}text, @code{const char *}font)
+@deftypefn {C function} @code{void} mgl_title (@code{HMGL} gr, @code{const char *}text, @code{const char *}font, @code{int} size)
+@deftypefnx {C function} @code{void} mgl_titlew (@code{HMGL} gr, @code{const wchar_t *}text, @code{const char *}font, @code{int} size)
 Print string @var{text} as title of the picture (at the top of the picture). Can be used at any place (even inside SubPlot()).
 @end deftypefn
 
@@ -2221,7 +2217,7 @@ Gets minimal value of the data.
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Operators (Pure C), , Informational functions (Pure C), C interface
+@node Operators (Pure C), Global functions (Pure C), Informational functions (Pure C), C interface
 @subsection Operators (Pure C)
 
 @deftypefn {C function} @code{void} mgl_data_mul_dat (@code{HMDT} dat, @code{const HMDT} d)
@@ -2247,5 +2243,40 @@ Adds the number to each element.
 @end deftypefn
 @deftypefn {C function} @code{void} mgl_data_sub_num (@code{HMDT} dat, @code{float} d)
 Subtracts the number to each element.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node Global functions (Pure C), , Operators (Pure C), C interface
+@subsection Global functions (Pure C)
+
+These functions are not so common. So I put it in this chapter.
+
+@deftypefn {C function} @code{HMDT} mgl_transform (@code{const HMDT} real, @code{const HMDT} imag, @code{const char *}type)
+Do integral transformation of complex data @var{real}, @var{imag} on specified direction. Now only Fourier transformation is supported. The order of transformations is specified in string @var{type}: first character for x-dimension, second one for y-dimension, third one for z-dimension. The possible character are: @samp{f} is forward Fourier transformation, @samp{i} is inverse Fourier transformation, @samp{n} or @samp{ } is no transformation.
+@end deftypefn
+
+@deftypefn {C function} @code{HMDT} mgl_transform_a @code{const HMDT} ampl, @code{const HMDT} phase, @code{const char *}type)
+Do integral transformation of complex data @var{ampl}, @var{phase} on specified direction. Now only Fourier transformation is supported. The order of transformations is specified in string @var{type}: first character for x-dimension, second one for y-dimension, third one for z-dimension. The possible character are: @samp{f} is forward Fourier transformation, @samp{i} is inverse Fourier transformation, @samp{n} or @samp{ } is no transformation.
+@end deftypefn
+
+@deftypefn {C function} @code{HMDT} mgl_data_stfa (@code{const HMDT} real, @code{const HMDT} imag, @code{int dn, }@code{char} dir=@code{'x'})
+Short time Fourier analysis for real and imaginary parts. Output  is amplitude of partial Fourier of length @var{dn}. For example if @var{dir}=@samp{x}, result will have size @{int(nx/dn), dn, ny@} and it will contain @math{res[i,j,k]=|\sum_d^dn exp(I*j*d)*(real[i*dn+d,k]+I*imag[i*dn+d,k])|/dn}.
+@end deftypefn
+
+@deftypefn {C function} @code{HMDT} mgl_pde_solve (@code{const char *}ham, @code{const HMDT} ini_re, @code{const HMDT} ini_im, @code{mglPoint} Min, @code{mglPoint} Max, @code{float} dz=@code{0.1}, @code{float} k0=@code{100})
+Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{Min}, @var{Max} set the bounding box for the solution. Note that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham="p^2 + q^2 - u^2"}. You may specify imaginary part for wave absorption, like @code{ham = "p^2 + i*x*(x>0)"}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}). @sref{PDE sample} 
+@end deftypefn
+
+@deftypefn {C function} @code{HMDT} mgl_ray_trace (@code{const char *}ham, @code{mglPoint} r0, @code{mglPoint} p0, @code{float} dt=@code{0.1}, @code{float} tmax=@code{10})
+Solves GO ray equation like dr/dt = d @var{ham}/dp, dp/dt = -d @var{ham}/dr. This is Hamiltonian equations for particle trajectory in 3D case. Here @var{ham} is Hamiltonian which may depend on coordinates @samp{x}, @samp{y}, @samp{z}, momentums @samp{p}=px, @samp{q}=py, @samp{v}=pz and time @samp{t}: @math{ham = H(x,y,z,p,q,v,t)}. The starting point (at @code{t=0}) is defined by variables @var{r0}, @var{p0}. Parameters @var{dt} and @var{tmax} specify the integration step and maximal time for ray tracing. Result is array of @{x,y,z,p,q,v,t@} with dimensions @{7 * int(@var{tmax}/@var{dt}+1) @}.
+@end deftypefn
+
+@deftypefn {C function} @code{HMDT} mgl_qo2d_solve (@code{const char *}ham, @code{const HMDT} ini_re, @code{const HMDT} ini_im, @code{const HMDT} ray, @code{float} r, @code{float} k0, @code{HMDT} xx, @code{HMDT} yy)
+Solves equation du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators (see @code{mglPDE()} for details). Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{ray} set the reference ray, i.e. the ray around which the accompanied coordinate system will be maked. You may use, for example, the array created by @code{mglRay()} function. Note, that the reference ray @strong{must be} smooth enough to make accompanied coodrinates unambiguity. Otherwise errors in the solution may appear. If @var{xx} and @var{yy} are non-zero then Cartesian coordinates for each point will be written into them. @sref{Beam tracing sample} 
+@end deftypefn
+
+@deftypefn {C function} @code{HMDT} mgl_jacobian_2d (@code{const HMDT} x, @code{const HMDT} y)
+@deftypefnx {C function} @code{HMDT} mgl_jacobian_3d (@code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z)
+Computates the Jacobian for transformation @{i,j,k@} to @{@var{x},@var{y},@var{z}@} where initial coordinates  @{i,j,k@} are data indexes normalized in range [0,1]. The Jacobian is determined by formula det||@math{dr_\alpha/d\xi_\beta}|| where @math{r}=@{@var{x},@var{y},@var{z}@} and @math{\xi}=@{i,j,k@}. All dimensions must be the same for all data arrays. Data must be 3D if all 3 arrays @{@var{x},@var{y},@var{z}@} are specified or 2D if only 2 arrays @{@var{x},@var{y}@} are specified.
 @end deftypefn
 

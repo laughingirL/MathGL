@@ -490,6 +490,10 @@ Function delete the variable specified by its name or by its pointer.
 Restore Once flag.
 @end deftypemethod
 
+@deftypemethod mglParse @code{void} AddCommand (@code{mglCommand *}cmd, @code{int} num=@code{0})
+Add @var{num} commands @var{cmd} to the defined MGL commands list. Parameter @var{cmd} is array of @code{mglCommand} structures. If parameter @var{num}=0 then it will be determined automatically. At this, array @var{cmd} @strong{must have} last element with @code{name=L""}
+@end deftypemethod
+
 @deftypecv {Option} mglParse @code{mglVar *} DataList
 List of variables defined in script.
 @end deftypecv
@@ -568,9 +572,9 @@ The string can be any combination of characters: @samp{rbiLCRwou}. The font type
 
 The over way of font and alignment setting is the using of the integer constant. Integer font Id can be one of predefined constants: @code{MGL_FONT_ITAL, MGL_FONT_BOLD, MGL_FONT_BOLD_ITAL = MGL_FONT_ITAL+MGL_FONT_BOLD}. Default font is @code{MGL_FONT_ROMAN}. Also there are flags @code{MGL_FONT_ULINE, MGL_FONT_OLINE, MGL_FONT_WIRE} for additional font effects. Align parameter controls the text alignment: 0 -- align left, 1 -- align center, 2 -- align right.
 
-Parsing of the string to special (TeX-like) commands will be done if variable @var{parse} is true (it's default). There are commands for the font style changing inside the string (for example, use \b for bold font): \a or \overline -- over-lined, \b or \textbf -- bold, \i or \textit -- italic, \r or \textrm -- roman (throw @strong{any other} attributes), \u or \underline -- underlined, \w or \wire -- wired, \big -- bigger size, \@@ -- smaller size. The lower and upper indexes are specified by @samp{_} and @samp{^} symbols. At this the changed font style is applied only on next symbol or symbols in braces @{@}. The text in braces @{@} are treated as single symbol that allow one to print the index of index. For example, compare the strings @samp{sin (x^@{2^3@})} and @samp{sin (x^2^3)}.
+Parsing of the string to special (TeX-like) commands will be done if variable @var{parse} is true (it's default). There are commands for the font style changing inside the string (for example, use \b for bold font): \a or \overline -- over-lined, \b or \textbf -- bold, \i or \textit -- italic, \r or \textrm -- roman (disable bold and italic attributes), \u or \underline -- underlined, \w or \wire -- wired, \big -- bigger size, @@ -- smaller size. The lower and upper indexes are specified by @samp{_} and @samp{^} symbols. At this the changed font style is applied only on next symbol or symbols in braces @{@}. The text in braces @{@} are treated as single symbol that allow one to print the index of index. For example, compare the strings @samp{sin (x^@{2^3@})} and @samp{sin (x^2^3)}. You may also change text color inside string by command #? or by \color? where @samp{?} is symbolic id of the color (@pxref{mglColor class}). For example, words @samp{Blue} and @samp{red} will be colored in the string @samp{#b@{Blue@} and \colorr@{red@} text}.
 
-The most of commands for special TeX or AMSTeX symbols, the commands for font style changing (\textrm, \textbf, \textit, \overline, \underline), accents (\hat, \tilde, \dot, \ddot, \acute, \check, \grave, \bar, \breve) and roots (\sqrt, \sqrt3, \sqrt4) are recognized. The full list contain approximately 2000 commands. Note that first space symbol after the command is ignored, but second one is printed as normal symbol (space). For example, the following strings produce the same result @math{\tilde@{a@}}: @samp{\tilde@{a@}}; @samp{\tilde a}; @samp{\tilde@{@}a}.
+The most of commands for special TeX or AMSTeX symbols, the commands for font style changing (\textrm, \textbf, \textit, \overline, \underline), accents (\hat, \tilde, \dot, \ddot, \acute, \check, \grave, \bar, \breve) and roots (\sqrt, \sqrt3, \sqrt4) are recognized. The full list contain approximately 2000 commands. Note that first space symbol after the command is ignored, but second one is printed as normal symbol (space). For example, the following strings produce the same result @math{\tilde a}: @samp{\tilde@{a@}}; @samp{\tilde a}; @samp{\tilde@{@}a}.
 
 @ifhtml
 @html

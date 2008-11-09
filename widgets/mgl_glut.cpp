@@ -113,18 +113,14 @@ void _mgl_key_up(unsigned char ch,int ,int )
 		glDeleteLists(1,_mgl_glwnd->NumFig);
 		_mgl_glwnd->LoadFunc(false, 0);
 		(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
+		_mgl_glwnd->Finish();
 	}
 	if(ch==']' && _mgl_glwnd->LoadFunc)
 	{
 		glDeleteLists(1,_mgl_glwnd->NumFig);
 		_mgl_glwnd->LoadFunc(true, 0);
 		(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
-	}
-	if(ch=='T')
-	{
-		char str[128];
-		sprintf(str,"%s_%d.tif",_mgl_glwnd->PlotId,_mgl_glwnd->curr_fig);
-		_mgl_glwnd->WriteTIFF(str, "Math GL");
+		_mgl_glwnd->Finish();
 	}
 	if(ch=='P')
 	{
@@ -167,7 +163,11 @@ void _mgl_display()
 	if(_mgl_glwnd->AutoClf)	_mgl_glwnd->Clf();
 	_mgl_glwnd->SubPlot(1,1,0);
 	if(_mgl_glwnd->NumFig>0)	glCallList(_mgl_glwnd->curr_fig);
-	else	(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
+	else
+	{
+		(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
+		_mgl_glwnd->Finish();
+	}
 	if(_mgl_glwnd->AutoClf)	glFinish();
 	if(_mgl_glwnd->AutoClf)	glutSwapBuffers();
 }
@@ -191,7 +191,7 @@ void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *
 	glutCreateWindow("MathPlotLibrary");
 
 	Light(0,mglPoint(0,0,3),false);
-	NumFig = draw(this,par);
+	NumFig = draw(this,par);	Finish();
 	DrawFunc = draw;	FuncPar = par;
 	LoadFunc = reload;
 	glutSetWindowTitle(title);

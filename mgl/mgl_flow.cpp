@@ -95,6 +95,7 @@ void mglGraph::Flow(const mglData &x, const mglData &y, const mglData &ax, const
 	long n=ax.nx, m=ax.ny;
 	if(n*m*ax.nz!=ay.nx*ay.ny*ay.nz)	{	SetWarn(mglWarnDim,"Flow");	return;	}
 	if(n<2 || m<2)						{	SetWarn(mglWarnLow,"Flow");	return;	}
+	static int cgid=1;	StartGroup("Flow",cgid++);
 	bool both = x.nx==n && y.nx==n && x.ny==m && y.ny==m;
 	if(!(both || (x.nx==n && y.nx==m)))	{	SetWarn(mglWarnDim,"Flow");	return;	}
 
@@ -131,7 +132,7 @@ void mglGraph::Flow(const mglData &x, const mglData &y, const mglData &ax, const
 			}
 		}
 	}
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Flow(const mglData &ax, const mglData &ay, const char *sch, int num,
@@ -237,6 +238,7 @@ void mglGraph::Flow(const mglData &x, const mglData &y, const mglData &z, const 
 	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"Flow");	return;	}
+	static int cgid=1;	StartGroup("Flow3",cgid++);
 
 	Arrow1 = Arrow2 = '_';
 	SetScheme(sch);
@@ -274,7 +276,7 @@ void mglGraph::Flow(const mglData &x, const mglData &y, const mglData &z, const 
 			flow(true,-u,-v,-w, x, y, z, ax, ay, az);
 		}
 	}
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Flow(const mglData &ax, const mglData &ay, const mglData &az,
@@ -371,6 +373,7 @@ void mglGraph::Pipe(const mglData &x, const mglData &y, const mglData &ax, const
 	if(n<2 || m<2)						{	SetWarn(mglWarnLow,"Pipe");	return;	}
 	bool both = x.nx==n && y.nx==n && x.ny==m && y.ny==m;
 	if(!(both || (x.nx==n && y.nx==m)))	{	SetWarn(mglWarnDim,"Pipe");	return;	}
+	static int cgid=1;	StartGroup("Pipe",cgid++);
 
 	Arrow1 = Arrow2 = '_';
 	SetScheme(sch);
@@ -405,7 +408,7 @@ void mglGraph::Pipe(const mglData &x, const mglData &y, const mglData &ax, const
 			}
 		}
 	}
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Pipe(const mglData &ax, const mglData &ay, const char *sch, float r0, int num, bool cnt, float zVal)
@@ -445,7 +448,7 @@ void mglGraph::flowr(bool simple, float u, float v, float w,
 			n += 10*(ax.nx+ax.ny);
 			pp = (float *)realloc(pp,3*n*sizeof(float));
 			cc = (float *)realloc(cc,4*n*sizeof(float));
-			rr = (float *)realloc(rr,n*sizeof(bool));
+			rr = (float *)realloc(rr,n*sizeof(float));
 		}
 		// insert point
 		pp[3*k] = simple ? Min.x + (Max.x-Min.x)*u : (both ? x.Spline1(u,v,w):x.Spline1(u,0,0));
@@ -510,6 +513,7 @@ void mglGraph::Pipe(const mglData &x, const mglData &y, const mglData &z, const 
 	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"Pipe");	return;	}
+	static int cgid=1;	StartGroup("Pipe3",cgid++);
 
 	Arrow1 = Arrow2 = '_';
 	SetScheme(sch);
@@ -547,7 +551,7 @@ void mglGraph::Pipe(const mglData &x, const mglData &y, const mglData &z, const 
 			flowr(true,-u,-v,-w, x, y, z, ax, ay, az,r0);
 		}
 	}
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Pipe(const mglData &ax, const mglData &ay, const mglData &az,

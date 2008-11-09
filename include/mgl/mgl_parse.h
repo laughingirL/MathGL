@@ -101,7 +101,7 @@ public:
 	/// Add unicode string for parameter $1, ..., $9
 	bool AddParam(int n, const wchar_t *str, bool isstr=true);
 	/// Add new MGL command(s) (last command MUST HAVE name[0]=0 !!!)
-	void AddCommand(mglCommand *cmd);
+	void AddCommand(mglCommand *cmd, int num=0);
 	/// Restore Once flag
 	inline void RestoreOnce()	{	Once = true;	};
 	/// Delete variable

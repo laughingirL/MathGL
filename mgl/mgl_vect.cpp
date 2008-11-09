@@ -29,6 +29,7 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &ax, const
 	if(n<2 || m<2)						{	SetWarn(mglWarnLow,"Vect");	return;	}
 	bool both = x.nx==n && y.nx==n && x.ny==m && y.ny==m;
 	if(!(both || (x.nx==n && y.nx==m)))	{	SetWarn(mglWarnDim,"Vect");	return;	}
+	static int cgid=1;	StartGroup("Vect",cgid++);
 
 	float xm,ym,dx,dy,*pp=new float[6*n*m],*cc=new float[n*m];
 	bool *tt=new bool[2*n*m];
@@ -71,7 +72,7 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &ax, const
 		}
 		vects_plot(n*m,pp,cc,tt);
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;
 }
 //-----------------------------------------------------------------------------
@@ -95,6 +96,7 @@ void mglGraph::VectL(const mglData &x, const mglData &y, const mglData &ax, cons
 	if(n<2 || m<2)						{	SetWarn(mglWarnLow,"VectL");	return;	}
 	bool both = x.nx==n && y.nx==n && x.ny==m && y.ny==m;
 	if(!(both || (x.nx==n && y.nx==m)))	{	SetWarn(mglWarnDim,"VectL");	return;	}
+	static int cgid=1;	StartGroup("VectL",cgid++);
 
 	float xm,ym,dx,dy,*pp=new float[6*n*m];
 	bool *tt=new bool[2*n*m];
@@ -136,7 +138,7 @@ void mglGraph::VectL(const mglData &x, const mglData &y, const mglData &ax, cons
 		}
 		lines_plot(n*m,pp,0,tt);
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -161,6 +163,7 @@ void mglGraph::VectC(const mglData &x, const mglData &y, const mglData &ax, cons
 	if(n<2 || m<2)						{	SetWarn(mglWarnLow,"VectC");	return;	}
 	bool both = x.nx==n && y.nx==n && x.ny==m && y.ny==m;
 	if(!(both || (x.nx==n && y.nx==m)))	{	SetWarn(mglWarnDim,"VectC");	return;	}
+	static int cgid=1;	StartGroup("VectC",cgid++);
 
 	float xm,ym,dx,dy,dd;
 	float *pp=new float[6*n*m],*cc=new float[n*m], dm=(fabs(Cmax)+fabs(Cmin))*1e-5;
@@ -197,14 +200,14 @@ void mglGraph::VectC(const mglData &x, const mglData &y, const mglData &ax, cons
 			dd = hypot(ax.a[jj],ay.a[jj]);	cc[i0] = dd*xm*1.5 - 0.5;
 			pp[6*i0+0] = x.a[ix];	pp[6*i0+1] = y.a[iy];
 			pp[6*i0+2] = pp[6*i0+5] = zVal;
-			pp[6*i0+3] = x.a[ix]+(dd<dm ? 0 : ax.a[jj]/dd)*dx;
-			pp[6*i0+4] = y.a[iy]+(dd<dm ? 0 : ay.a[jj]/dd)*dy;
+			pp[6*i0+3] = x.a[ix]+(dd>dm ? ax.a[jj]/dd : 0)*dx;
+			pp[6*i0+4] = y.a[iy]+(dd>dm ? ay.a[jj]/dd : 0)*dy;
 			tt[2*i0]  = ScalePoint(pp[6*i0],pp[6*i0+1],pp[6*i0+2]);
 			tt[2*i0+1]= ScalePoint(pp[6*i0+3],pp[6*i0+4],pp[6*i0+5]);
 		}
 		lines_plot(n*m,pp,cc,tt);
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;
 }
 //-----------------------------------------------------------------------------
@@ -231,6 +234,7 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &z,
 	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"Vect");	return;	}
+	static int cgid=1;	StartGroup("Vect3",cgid++);
 
 	long ix,iy,iz;
 	float xm,ym,dx,dy,dz;
@@ -275,7 +279,7 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &z,
 		}
 		vects_plot(n*m*l,pp,cc,tt);
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;
 }
 //-----------------------------------------------------------------------------
@@ -287,7 +291,7 @@ void mglGraph::Vect(const mglData &ax, const mglData &ay, const mglData &az, con
 	x.Fill(Min.x,Max.x);
 	y.Fill(Min.y,Max.y);
 	z.Fill(Min.z,Max.z);
-	Vect(x,y,z,ax,ay,az,sch);
+	VectL(x,y,z,ax,ay,az,sch);
 }
 //-----------------------------------------------------------------------------
 //
@@ -304,6 +308,7 @@ void mglGraph::VectL(const mglData &x, const mglData &y, const mglData &z,
 	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"VectL");	return;	}
+	static int cgid=1;	StartGroup("VectL3",cgid++);
 
 	long ix,iy,iz;
 	float xm,ym,dx,dy,dz;
@@ -347,7 +352,7 @@ void mglGraph::VectL(const mglData &x, const mglData &y, const mglData &z,
 		}
 		lines_plot(n*m*l,pp,0,tt);
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -376,6 +381,7 @@ void mglGraph::VectC(const mglData &x, const mglData &y, const mglData &z,
 	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"VectC");	return;	}
+	static int cgid=1;	StartGroup("VectC3",cgid++);
 
 	long ix,iy,iz;
 	float xm,ym,dx,dy,dz,dd;
@@ -420,7 +426,7 @@ void mglGraph::VectC(const mglData &x, const mglData &y, const mglData &z,
 		}
 		lines_plot(n*m*l,pp,cc,tt);
 	}
-	Flush();
+	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;
 }
 //-----------------------------------------------------------------------------
@@ -448,11 +454,12 @@ void mglGraph::Map(const mglData &x, const mglData &y, const mglData &ax, const 
 	bool both = x.nx==n && y.nx==n && x.ny==m && y.ny==m;
 	if(!(both || (x.nx==n && y.nx==m)))
 	{	SetWarn(mglWarnDim,"Map");	return;	}
+	static int cgid=1;	StartGroup("Map",cgid++);
 
 	SetScheme(sch);
 	mglColor c;
 	if(ks<0 || ks>=ay.nz || ks>=ax.nz)	ks = 0;
-	long s = both ? n:1, s1, s2;
+	long s = both ? n:1, s1, s2, n1, n2;
 
 	float *pp = new float[3*n*m],*cc = new float[4*n*m];
 	bool *tt = new bool[n*m];
@@ -469,8 +476,9 @@ void mglGraph::Map(const mglData &x, const mglData &y, const mglData &ax, const 
 		xdx = (ax.a[jj+s2]-ax.a[jj-s1])/(x.a[ix+s2]-x.a[ix-s1]);
 		ydx = (ay.a[jj+s2]-ay.a[jj-s1])/(x.a[ix+s2]-x.a[ix-s1]);
 		s1 = j>0 ? s:0;		s2 = j<m-1 ? s:0;
-		xdy = (ax.a[jj+s2]-ax.a[jj-s1])/(y.a[iy+s2]-y.a[iy-s1]);
-		ydy = (ay.a[jj+s2]-ay.a[jj-s1])/(y.a[iy+s2]-y.a[iy-s1]);
+		n1 = j>0 ? n:0;		n2 = j<m-1 ? n:0;
+		xdy = (ax.a[jj+n2]-ax.a[jj-n1])/(y.a[iy+s2]-y.a[iy-s1]);
+		ydy = (ay.a[jj+n2]-ay.a[jj-n1])/(y.a[iy+s2]-y.a[iy-s1]);
 		xdx = xdx*ydy - xdy*ydx;	// якобиан-1
 		pp[3*i0+0] = ax.a[jj];	pp[3*i0+1] = ay.a[jj];	pp[3*i0+2] = xdx;
 		tt[i0] = ScalePoint(pp[3*i0],pp[3*i0+1],pp[3*i0+2]);
@@ -489,7 +497,7 @@ void mglGraph::Map(const mglData &x, const mglData &y, const mglData &ax, const 
 						mglColor(cc[4*i],cc[4*i+1],cc[4*i+2]),-cc[4*i+3]);
 	}
 	else	surf_plot(n, m, pp, cc, tt);
-	Flush();
+	EndGroup();
 	delete []pp;	delete []cc;	delete[]tt;
 }
 //-----------------------------------------------------------------------------
@@ -513,6 +521,7 @@ void mglGraph::Dew(const mglData &x, const mglData &y, const mglData &ax, const 
 	if(n<2 || m<2)						{	SetWarn(mglWarnLow,"Dew");	return;	}
 	bool both = x.nx==n && y.nx==n && x.ny==m && y.ny==m;
 	if(!(both || (x.nx==n && y.nx==m)))	{	SetWarn(mglWarnDim,"Dew");	return;	}
+	static int cgid=1;	StartGroup("Dew",cgid++);
 
 	float xm,ym,dx,dy,dd,x_,y_,z_;
 	SetScheme(sch);
@@ -554,7 +563,7 @@ void mglGraph::Dew(const mglData &x, const mglData &y, const mglData &ax, const 
 			Drop(p,q,(dx<dy?dx:dy)/2,GetC(2*dd*xm-1,false),dd*xm);
 		}
 	}
-//	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Dew(const mglData &ax, const mglData &ay, const char *sch, float zVal)

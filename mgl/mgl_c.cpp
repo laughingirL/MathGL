@@ -113,8 +113,8 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 /// Write the frame in file using ScalableVectorGraphics format
 void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 {	gr->WriteSVG(fname,descr);	}
-void mgl_show_image(HMGL gr, const char *viewer)
-{	gr->ShowImage(viewer);	}
+void mgl_show_image(HMGL gr, const char *viewer, int keep)
+{	gr->ShowImage(viewer,keep);	}
 //-----------------------------------------------------------------------------
 //		Setup frames transparency (alpha) and lightning
 //-----------------------------------------------------------------------------
@@ -359,10 +359,10 @@ void mgl_set_origin(HMGL gr, float x0, float y0, float z0)
 void mgl_set_tick_origin(HMGL gr, float x0, float y0, float z0)
 {	gr->OrgT = mglPoint(x0,y0,z0);	}
 //-----------------------------------------------------------------------------
-void mgl_title(HMGL gr, const char *text, const char *fnt)
-{	gr->Title(text, fnt);	}
-void mgl_titlew(HMGL gr, const wchar_t *text, const char *fnt)
-{	gr->Title(text, fnt);	}
+void mgl_title(HMGL gr, const char *text, const char *fnt, float size)
+{	gr->Title(text, fnt,size);	}
+void mgl_titlew(HMGL gr, const wchar_t *text, const char *fnt, float size)
+{	gr->Title(text, fnt,size);	}
 //-----------------------------------------------------------------------------
 void mgl_set_ternary(HMGL gr, int enable)
 {	gr->Ternary(enable);	}

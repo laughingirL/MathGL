@@ -49,7 +49,7 @@ mglColorID mglColorIds[] = {{'k', mglColor(0,0,0)},
 	{'u', mglColor(0.5,0,1)},	{'U', mglColor(0.25,0,0.5)},
 	{'q', mglColor(1,0.5,0)},	{'Q', mglColor(0.5,0.25,0)},
 	{'p', mglColor(1,0,0.5)},	{'P', mglColor(0.5,0,0.25)},
-	{' ', mglColor(-1,-1,-1)},	{0, mglColor(0,0,0)}	// the last one MUST have id=0
+	{' ', mglColor(-1,-1,-1)},	{0, mglColor(-1,-1,-1)}	// the last one MUST have id=0
 };
 //-----------------------------------------------------------------------------
 void mglGraph::RecalcBorder()
@@ -145,7 +145,7 @@ void mglGraph::CutOff(const char *EqC)
 }
 //-----------------------------------------------------------------------------
 //#define FLT_EPS	1.1920928955078125e-07
-#define FLT_EPS	(1.+1.2e-07)
+#define FLT_EPS	(1.+2e-07)
 bool mglGraph::ScalePoint(float &x,float &y,float &z)
 {
 //	float x1=x,y1=y,z1=z;
@@ -749,7 +749,6 @@ mglGraph::mglGraph()
 	fit_res = new char[1024];
 	fnt = new mglFont;
 //	DefaultPlotParam();
-	InitSaveFunc();
 }
 //-----------------------------------------------------------------------------
 mglGraph::~mglGraph()
@@ -760,7 +759,6 @@ mglGraph::~mglGraph()
 	delete []fit_res;
 	ClearEq();
 	ClearLegend();
-	FreeSaveFunc();
 	delete fnt;
 }
 //-----------------------------------------------------------------------------
@@ -933,13 +931,33 @@ void mglGraph::FaceZ(float x0, float y0, float z0, float wx, float wy, const cha
 	Face(mglPoint(x0,y0,z0), mglPoint(x0,y0+wy,z0), mglPoint(x0+wx,y0,z0), mglPoint(x0+wx+d1,y0+wy+d2,z0), stl, 2);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ShowImage(const char *viewer)
+#include <pthread.h>
+void *mgl_show_tmp(void *par)
 {
-	char fname[128], cmd[128];
+	system((char *)par);
+	delete []((char *)par);
+	return 0;
+}
+void mglGraph::ShowImage(const char *viewer, bool keep)
+{
+	char fname[128], *cmd = new char [128];
 	sprintf(fname,"%s.png", tmpnam(NULL));
 	WritePNG(fname,"MathGL ShowImage file",false);
-	sprintf(cmd,"%s %s", viewer,fname);
-	system(cmd);
-	remove(fname);
+	viewer = (viewer && viewer[0]) ? viewer : "kuickshow";
+	sprintf(cmd,"%s %s; rm %s", viewer,fname,fname);
+	if(keep)
+	{
+		static pthread_t ptmp;
+		pthread_create(&ptmp, 0, mgl_show_tmp, cmd);
+		pthread_detach(ptmp);
+	}
+	else	mgl_show_tmp(cmd);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::StartGroup(const char *name, int id)
+{
+	char buf[128];
+	sprintf(buf,"%s_%d",name,id);
+	StartAutoGroup(buf);
 }
 //-----------------------------------------------------------------------------

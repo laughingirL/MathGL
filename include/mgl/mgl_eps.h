@@ -19,7 +19,25 @@
 #define _MGL_PS_H_
 #include "mgl/mgl_ab.h"
 //-----------------------------------------------------------------------------
-struct mglPrim;
+struct mglGraphPS;
+struct mglPrim
+{
+	float x[4], y[4], zz[4];	// coordinates of corners
+	float z;			// z-position
+	float s;			// size (if applicable)
+	float w;			// width (if applicable)
+	float c[4];			// color (RGBA)
+	char m;				// mark (if applicable)
+	int type;			// type of primitive (0 - point, 1 - line, 2 - trig, 3 - quad)
+	int style;			// style of pen
+	unsigned short dash;// real pen dashing
+	void Draw(mglGraphPS *gr);
+	void DrawGL();
+	bool IsSame(float wp,float *cp,int st);
+	void SetStyle(unsigned PDef, int pPos);
+	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	c[3]=1;	};
+};
+//-----------------------------------------------------------------------------
 /// Class implement the creation of different mathematical plots for exporting in PostScript format
 class mglGraphPS : public mglGraphAB
 {
@@ -29,7 +47,7 @@ public:
 	~mglGraphPS();
 	void WriteEPS(const char *fname,const char *descr=0);
 	void WriteSVG(const char *fname,const char *descr=0);
-	void Finish();
+	virtual void Finish();
 	void Clf(mglColor  Back=WC);
 	void Ball(float x,float y,float z,mglColor col=RC,float alpha=1);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

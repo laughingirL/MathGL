@@ -984,6 +984,22 @@ void mglGraphIDTF::StartGroup ( const char *name )
 	Groups.push_back ( Group );
 	CurrentGroup = &Groups.back();
 }
+void mglGraphIDTF::StartAutoGroup ( const char *name )
+{
+	points_finished = true;
+	lines_finished = true;
+	mesh_finished = true;
+	u3dGroup Group;
+	Group.name = name;
+	Group.parent = CurrentGroup;
+	if (Group.parent)
+	{
+		Group.parent->NumberOfChildren++;
+	}
+	Group.isauto = true;
+	Groups.push_back ( Group );
+	CurrentGroup = &Groups.back();
+}
 void mglGraphIDTF::EndGroup()
 {
 	points_finished = true;
@@ -1588,6 +1604,17 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 			Meshes.erase(it);
 		}
 	}
+// Remove automatically created groups that are the only object in manually created ones
+	for ( u3dGroup_list::iterator it = Groups.begin(); it != Groups.end(); ++it )
+	{
+		if (it->isauto && it->parent && !it->parent->isauto && it->parent->NumberOfChildren == 1)
+		{
+			it->name = it->parent->name;
+			it->parent->NumberOfChildren = 0;
+			it->parent = it->parent->parent;
+			it->isauto = false;
+		}
+	}
 // Reduce groups with just one model in them to just models
 	for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
 	{
@@ -1595,7 +1622,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 		{
 			it->name = it->parent->name;
 			it->parent->NumberOfChildren = 0;
-			it->parent= it->parent->parent;
+			it->parent = it->parent->parent;
 		}
 	}
 	for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end(); ++it )
@@ -1604,7 +1631,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 		{
 			it->name = it->parent->name;
 			it->parent->NumberOfChildren = 0;
-			it->parent= it->parent->parent;
+			it->parent = it->parent->parent;
 		}
 	}
 	for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
@@ -1613,7 +1640,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 		{
 			it->name = it->parent->name;
 			it->parent->NumberOfChildren = 0;
-			it->parent= it->parent->parent;
+			it->parent = it->parent->parent;
 		}
 	}
 
@@ -1971,7 +1998,8 @@ float mglGraphIDTF::Putsw(mglPoint p,mglPoint l,const wchar_t *text,char font,fl
 	bool vertex_color_sav = vertex_color_flag;
 	disable_compression_flag = true;
 	vertex_color_flag = false;
-	return mglGraphAB::Putsw(p, l, text, font, size);
+	float ret = mglGraphAB::Putsw(p, l, text, font, size);
 	disable_compression_flag = disable_compression_sav;
 	vertex_color_flag = vertex_color_sav;
+	return ret;
 }

@@ -1504,6 +1504,19 @@ void mglc_readhdf(wchar_t out[1024], long n, mglArg *a, int k[10])
 	if(k[0]==1 && k[1]==2 && k[2]==2)	swprintf(out,1024,L"%s.ReadHDF(\"%s\", \"%s\");", a[0].s, a[1].s, a[2].s);
 }
 //-----------------------------------------------------------------------------
+//	{"savehdf","Save data to HDF5 file","savehdf var file id", mgls_savehdf, mglc_savehdf}
+int mgls_savehdf(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==2)	a[0].d->SaveHDF(a[1].s, a[2].s);
+	else	return 1;
+	return 0;
+}
+void mglc_savehdf(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==2)
+		swprintf(out,1024,L"%s.SaveHDF(\"%s\", \"%s\");", a[0].s, a[1].s, a[2].s);
+}
+//-----------------------------------------------------------------------------
 //	{"rect","Draw rectangle",0, mgls_rect, mglc_rect}
 int mgls_rect(mglGraph *gr, long n, mglArg *a, int k[10])
 {
@@ -1622,19 +1635,6 @@ void mglc_save(wchar_t out[1024], long n, mglArg *a, int k[10])
 	if(k[0]==1 && k[1]==2)	swprintf(out,1024,L"%s.Save(\"%s\");", a[0].s, a[1].s);
 }
 //-----------------------------------------------------------------------------
-//	{"savehdf","Save data to HDF5 file","savehdf var file id", mgls_savehdf, mglc_savehdf}
-int mgls_savehdf(mglGraph *gr, long n, mglArg *a, int k[10])
-{
-	if(k[0]==1 && k[1]==2 && k[2]==2)	a[0].d->SaveHDF(a[1].s, a[2].s);
-	else	return 1;
-	return 0;
-}
-void mglc_savehdf(wchar_t out[1024], long n, mglArg *a, int k[10])
-{
-	if(k[0]==1 && k[1]==2 && k[2]==2)
-		swprintf(out,1024,L"%s.SaveHDF(\"%s\", \"%s\");", a[0].s, a[1].s, a[2].s);
-}
-//-----------------------------------------------------------------------------
 //	{"smooth","Smooth data","smooth var kind dir", mgls_smooth, mglc_smooth}
 int mgls_smooth(mglGraph *gr, long n, mglArg *a, int k[10])
 {
@@ -1747,14 +1747,14 @@ void mglc_squeeze(wchar_t out[1024], long n, mglArg *a, int k[10])
 int mgls_stfad(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==3)
-		*(a[0].d) = ::STFA(*(a[1].d),*(a[2].d), int(a[3].v), k[4]==2?a[4].s[0]:'x');
+		*(a[0].d) = mglSTFA(*(a[1].d),*(a[2].d), int(a[3].v), k[4]==2?a[4].s[0]:'x');
 	else	return 1;
 	return 0;
 }
 void mglc_stfad(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==3)
-		swprintf(out,1024,L"%s = ::STFA(%s, %s, %d, '%c');", a[0].s, a[1].s, a[2].s, int(a[3].v), k[4]==2?a[4].s[0]:'x');
+		swprintf(out,1024,L"%s = mglSTFA(%s, %s, %d, '%c');", a[0].s, a[1].s, a[2].s, int(a[3].v), k[4]==2?a[4].s[0]:'x');
 }
 //-----------------------------------------------------------------------------
 //	{"setsize","Set picture size","setsize wval hval", mgls_setsize, mglc_setsize}
@@ -1982,9 +1982,9 @@ int mgls_text(mglGraph *gr, long n, mglArg *a, int k[10])
 void mglc_text(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
-		swprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), \"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].v, a[3].w, (k[4]==2 && a[4].s[0]!=0)?a[4].s:"", k[5]==3?a[5].v:-1.4);
+		swprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), \"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].v, a[3].w, (k[4]==2 && a[4].s[0]!=0)?a[4].s:"C", k[5]==3?a[5].v:-1.4);
 	else if(k[0]==3 && k[1]==3 && k[2]==2)
-		swprintf(out,1024,L"gr->Puts(mglPoint(%g, %g), \"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].w, (k[3]==2 && a[3].s[0]!=0)?a[3].s:"", k[4]==3?a[4].v:-1.4);
+		swprintf(out,1024,L"gr->Puts(mglPoint(%g, %g), \"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].w, (k[3]==2 && a[3].s[0]!=0)?a[3].s:"C", k[4]==3?a[4].v:-1.4);
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3 && k[6]==2)
 		swprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), \"%ls\", 't', %g);", a[0].v, a[1].v, a[2].v, a[3].v, a[4].v, a[5].v, a[6].w, k[8]==3?a[8].v:-1.4);
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==2)
@@ -2039,28 +2039,28 @@ void mglc_transptype(wchar_t out[1024], long n, mglArg *a, int k[10])
 int mgls_transform(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==2 && k[2]==1 && k[3]==1)
-		*(a[0].d) = Transform(*(a[2].d),*(a[3].d),a[1].s);
+		*(a[0].d) = mglTransform(*(a[2].d),*(a[3].d),a[1].s);
 	else	return 1;
 	return 0;
 }
 void mglc_transform(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==2 && k[2]==1 && k[3]==1)
-		swprintf(out,1024,L"%s = Transform(%s, %s, \"%s\");",a[0].s,  a[2].s, a[3].s, a[1].s);
+		swprintf(out,1024,L"%s = mglTransform(%s, %s, \"%s\");",a[0].s,  a[2].s, a[3].s, a[1].s);
 }
 //-----------------------------------------------------------------------------
 //	{"transforma","Do integral transform of data","transforma ovar how avar fvar", mgls_transforma, mglc_transforma}
 int mgls_transforma(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==2 && k[2]==1 && k[3]==1)
-		*(a[0].d) = TransformA(*(a[2].d),*(a[3].d),a[1].s);
+		*(a[0].d) = mglTransformA(*(a[2].d),*(a[3].d),a[1].s);
 	else	return 1;
 	return 0;
 }
 void mglc_transforma(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==2 && k[2]==1 && k[3]==1)
-		swprintf(out,1024,L"%s = TransformA(%s, %s, \"%s\");",a[0].s,  a[2].s, a[3].s, a[1].s);
+		swprintf(out,1024,L"%s = mglTransformA(%s, %s, \"%s\");",a[0].s,  a[2].s, a[3].s, a[1].s);
 }
 //-----------------------------------------------------------------------------
 //	{"tube","Draw curve by tube",0, mgls_tube, mglc_tube}

@@ -32,7 +32,7 @@ public:
 	virtual void Clf(mglColor Back=NC);
 	virtual void SetSize(int w,int h);
 	void Ball(float x,float y,float z,mglColor col=RC,float alpha=1);
-	void Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line);
+	void Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line, char col);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	bool FastNoFace;	/// Use fastest (but less accurate) scheme for drawing (without faces)
 protected:
@@ -61,8 +61,6 @@ protected:
 					float *c0,float *c1,float *c2,float *c3,
 					float *n0,float *n1,float *n2,float *n3);
 	void mark_plot(float *pp, char type);
-	void font_line(float *p, unsigned char *r,bool thin=true);
-//	void cloud_plot(int nx,int ny,int nz,float *pp,float *a,float alpha);
 };
 //-----------------------------------------------------------------------------
 #endif

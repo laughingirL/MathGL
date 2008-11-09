@@ -81,9 +81,9 @@ void mglGraph::cont_plot(float val,long n,long m,float *a,
 		if(d>=0 && d<1)
 		{
 			kx = i+d;	ky = j;
-			xx = x[i0]*(1.f-d)+x[i0+1]*d;
-			yy = y[i0]*(1.f-d)+y[i0+1]*d;
-			zz = z ? z[i0]*(1.f-d)+z[i0+1]*d : zdef;
+			xx = x[i0]+(x[i0+1]-x[i0])*d;
+			yy = y[i0]+(y[i0+1]-y[i0])*d;
+			zz = z ? z[i0]+(z[i0+1]-z[i0])*d : zdef;
 			add_cpoint(pc,&pp,&kk,&tt,xx,yy,zz,kx,ky,!axial);
 		}
 	}
@@ -95,9 +95,9 @@ void mglGraph::cont_plot(float val,long n,long m,float *a,
 		if(d>0 && d<1)
 		{
 			kx = i;		ky = j+d;
-			xx = x[i0]*(1.f-d)+x[i0+n]*d;
-			yy = y[i0]*(1.f-d)+y[i0+n]*d;
-			zz = z ? z[i0]*(1.f-d)+z[i0+n]*d : zdef;
+			xx = x[i0]+(x[i0+n]-x[i0])*d;
+			yy = y[i0]+(y[i0+n]-y[i0])*d;
+			zz = z ? z[i0]+(z[i0+n]-z[i0])*d : zdef;
 			add_cpoint(pc,&pp,&kk,&tt,xx,yy,zz,kx,ky,!axial);
 		}
 	}
@@ -152,15 +152,14 @@ void mglGraph::cont_plot(float val,long n,long m,float *a,
 	delete []nn;	delete []ff;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Cont(const mglData &v, const mglData &x, const mglData &y, const mglData &z,
-					const char *sch, float zVal)
+void mglGraph::Cont(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const char *sch, float zVal)
 {
 	register long i,j,n=z.nx,m=z.ny;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"Cont");	return;	}
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Cont");	return;	}
-	// x, y -- не подходят по размерам
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("Cont",cgid++);
 
 	long text=0;
 	if(sch && strchr(sch,'t'))	text=-1;
@@ -196,7 +195,7 @@ void mglGraph::Cont(const mglData &v, const mglData &x, const mglData &y, const 
 		}
 		delete []xx;	delete []yy;
 	}
-	Flush();
+	EndGroup();
 	if(sch && strchr(sch,'#'))
 	{
 		if(isfinite(zVal))	Grid(x,y,z,"k",zVal);
@@ -214,8 +213,7 @@ void mglGraph::Cont(const mglData &v, const mglData &z, const char *sch, float z
 	Cont(v,x,y,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Cont(const mglData &x, const mglData &y, const mglData &z, const char *sch,
-					int Num, float zVal)
+void mglGraph::Cont(const mglData &x, const mglData &y, const mglData &z, const char *sch, int Num, float zVal)
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"Cont");	return;	}
 	mglData v(Num);
@@ -256,6 +254,7 @@ long mgl_add_quad(float **p, float *pq)
 float mgl_get(long i0,long n,float *x,float px,float py)
 {
 	return x[i0]*(1+py*px-py-px)+x[i0+n]*py*(1-px)+x[i0+1]*px*(1-py)+x[i0+n+1]*py*px;
+//	return x[i0] + px*py*(x[i0]-x[i0+1]+x[i0+n+1]-x[i0+n]) + px*(x[i0+1]-x[i0]) + py*(x[i0+n]-x[i0]);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::contf_plot(float v1, float v2,long n,long m,float *a,
@@ -291,7 +290,7 @@ void mglGraph::contf_plot(float v1, float v2,long n,long m,float *a,
 		{
 		case 3:
 			memcpy(ps+9,ps+6,3*sizeof(float));
-			ps[9] *= 1+1e-4;
+//			ps[9] *= 1+1e-4;
 			h=mgl_add_quad(&pp,ps);	break;
 		case 4:
 			h=mgl_add_quad(&pp,ps);	break;
@@ -299,7 +298,7 @@ void mglGraph::contf_plot(float v1, float v2,long n,long m,float *a,
 			h=mgl_add_quad(&pp,ps);
 			memcpy(ps+3,ps,3*sizeof(float));
 			memcpy(ps+6,ps,3*sizeof(float));
-			ps[3] = ps[3]*(1+1e-5);
+//			ps[3] = ps[3]*(1+1e-5);
 			h=mgl_add_quad(&pp,ps+3);
 			break;
 		case 6:
@@ -322,15 +321,14 @@ void mglGraph::contf_plot(float v1, float v2,long n,long m,float *a,
 	free(pp);	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContF(const mglData &v, const mglData &x, const mglData &y, const mglData &z,
-					const char *sch, float zVal)
+void mglGraph::ContF(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const char *sch, float zVal)
 {
 	register long i,j,n=z.nx,m=z.ny;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"ContF");	return;	}
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"ContF");	return;	}
-	// x, y -- не подходят по размерам
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("ContF",cgid++);
 
 	SetScheme(sch);
 	// x, y -- матрицы как и z
@@ -362,7 +360,7 @@ void mglGraph::ContF(const mglData &v, const mglData &x, const mglData &y, const
 		}
 		delete []xx;	delete []yy;
 	}
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::ContF(const mglData &v, const mglData &z, const char *sch, float zVal)
@@ -401,9 +399,9 @@ void mglGraph::Axial(const mglData &v, const mglData &x, const mglData &y, const
 	register long i,j,k,n=z.nx,m=z.ny;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"Axial");	return;	}
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Axial");	return;	}
-	// x, y -- не подходят по размерам
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim);	return;	}
+	static int cgid=1;	StartGroup("Axial",cgid++);
 
 	SetScheme(sch);
 	if(sch)
@@ -437,7 +435,7 @@ void mglGraph::Axial(const mglData &v, const mglData &x, const mglData &y, const
 		}
 		delete []xx;	delete []yy;
 	}
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Axial(const mglData &v, const mglData &z, const char *sch)
@@ -600,6 +598,7 @@ void mglGraph::Cont3(const mglData &v, const mglData &x, const mglData &y, const
 	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"Cont3");	return;	}
+	static int cgid=1;	StartGroup("Cont3",cgid++);
 
 	long text=0;
 	if(sch && strchr(sch,'t'))	text=-1;
@@ -613,7 +612,7 @@ void mglGraph::Cont3(const mglData &v, const mglData &x, const mglData &y, const
 		Color(v.a[i]);
 		cont_plot(v.a[i],s.nx,s.ny,s.a,s.x,s.y,s.z,0,false,false,text);
 	}
-	Flush();
+	EndGroup();
 	if(sch && strchr(sch,'#'))	Grid3(x,y,z,a,dir,sVal,"k");
 	SetScheme(sch);
 }
@@ -660,6 +659,7 @@ void mglGraph::Dens3(const mglData &x, const mglData &y, const mglData &z, const
 	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"Dens3");	return;	}
+	static int cgid=1;	StartGroup("Dens3",cgid++);
 
 	SetScheme(sch);
 	get_slice(s,x,y,z,a,dir,sVal);	// готовим память
@@ -680,7 +680,7 @@ void mglGraph::Dens3(const mglData &x, const mglData &y, const mglData &z, const
 		if(isnan(s.a[i0]))	tt[i0] = false;
 	}
 	surf_plot(s.nx, s.ny, pp, cc, tt);
-	Flush();
+	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;
 	if(sch && strchr(sch,'#'))	Grid3(x,y,z,a,dir,sVal,"k");
 	SetScheme(sch);
@@ -711,6 +711,7 @@ void mglGraph::Grid3(const mglData &x, const mglData &y, const mglData &z, const
 	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"Grid3");	return;	}
+	static int cgid=1;	StartGroup("Grid3",cgid++);
 
 	bool sm = dir < 'x';
 	if(sm)	dir += 'x'-'X';
@@ -745,7 +746,7 @@ void mglGraph::Grid3(const mglData &x, const mglData &y, const mglData &z, const
 		}
 	}
 	mesh_plot(s.nx, s.ny, pp, NULL, tt,3);
-	Flush();
+	EndGroup();
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -761,7 +762,7 @@ void mglGraph::Grid3(const mglData &a, char dir, int sVal, const char *sch)
 }
 //-----------------------------------------------------------------------------
 //
-//	Text printing along some curve
+//	ContF3 series
 //
 //-----------------------------------------------------------------------------
 void mglGraph::ContF3(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const mglData &a,
@@ -774,6 +775,7 @@ void mglGraph::ContF3(const mglData &v, const mglData &x, const mglData &y, cons
 	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"ContF3");	return;	}
+	static int cgid=1;	StartGroup("ContF3",cgid++);
 
 	SetScheme(sch);
 	get_slice(s,x,y,z,a,dir,sVal);	// готовим память
@@ -783,7 +785,7 @@ void mglGraph::ContF3(const mglData &v, const mglData &x, const mglData &y, cons
 		Color(v.a[i]);
 		contf_plot(v.a[i],v.a[i+1],s.nx,s.ny,s.a,s.x,s.y,s.z,0);
 	}
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::ContF3(const mglData &v, const mglData &a, char dir, int sVal, const char *sch)
@@ -839,6 +841,7 @@ void mglGraph::Text(const mglData &x,const mglData &y,const mglData &z,const wch
 	long n=y.nx;
 	if(x.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Text");	return;	}
 	if(n<2)					{	SetWarn(mglWarnLow,"Text");	return;	}
+	static int cgid=1;	StartGroup("TextC",cgid++);
 
 	char col=TranspType!=2 ? 'k':'w', stl[3]="-k";
 	const char *f = strchr(font,':');	if(f)	col=f[1];
@@ -857,7 +860,7 @@ void mglGraph::Text(const mglData &x,const mglData &y,const mglData &z,const wch
 	}
 	nn[n-1]=-1;
 	font_curve(n,pp,tt,nn,text,strchr(font,'T')?1:-1,size);
-	Flush();
+	EndGroup();
 	delete []tt;	delete []pp;	delete []nn;
 }
 //-----------------------------------------------------------------------------

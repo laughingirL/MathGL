@@ -55,7 +55,7 @@ int mgl_save_hdf(const char *fname, const char *data, bool rewrite, float *a, in
 float *mgl_read_hdf(const char *fname,const char *data, long *nd)
 {
 //printf("qq\n");
-	fflush(stdout);
+//	fflush(stdout);
 	hid_t hf,hd,hs;
 	hsize_t dims[3];
 	long rank;

@@ -557,14 +557,13 @@ Sets angle of view independently from Rotate() but usually don't rotate actually
 @cindex WriteSVG
 @cindex WriteBMP
 @cindex WriteEPS
-@cindex WriteTIFF
 @cindex WriteJPEG
 @cindex WriteIDTF
 @cindex SetSize
 @cindex Flush
 @cindex Finish
 
-These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the compression of TIFF files and transparency in EPS files are not supported.
+These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the transparency in EPS files are not supported.
 
 @deftypemethod mglGraph @code{void} WritePNG (@code{const char *}fname, @code{const char *}descr=@code{NULL}, @code{int} compr=@code{NULL}, @code{bool} alpha=@code{true})
 Exports current frame to PNG file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file, @var{alpha} gives the transparency type. By default there are no description added and transparent image used. This function does nothing if NO_PNG is defined during compilation of MathGL library.
@@ -576,10 +575,6 @@ Exports current frame to JPEG file. Parameter @var{fname} specifies the file nam
 
 @deftypemethod mglGraph @code{void} WriteBMP (@code{const char *}fname, @code{const char *}descr=@code{NULL})
 Exports current frame to BMP file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file. There is no compression used.
-@end deftypemethod
-
-@deftypemethod mglGraph @code{void} WriteTIFF (@code{const char *}fname, @code{const char *}descr=@code{NULL}, @code{int} compr=@code{NULL})
-Exports current frame to TIFF file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file, @var{compr} gives compression type. By default there are no description added and no compression used. This function does nothing if NO_TIFF is defined during compilation of MathGL library.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} WriteEPS (@code{const char *}fname, @code{const char *}descr=@code{NULL})
@@ -594,8 +589,8 @@ Exports current frame to SVG (Scalable Vector Graphics) file. The vector represe
 Exports current frame to IDTF file. Later this file can be converted to U3D format. The vector representation is used. So, the output file may be too large for graphic of large data array (especially for surfaces). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
 @end deftypemethod
 
-@deftypemethod mglGraph @code{void} ShowImage (@code{const char *}viewer=@code{"kuickshow"})
-Displays the current picture using external program @var{viewer} for viewing. The function save the picture to temporary file and call @var{viewer} to display it.
+@deftypemethod mglGraph @code{void} ShowImage (@code{const char *}viewer=@code{"kuickshow"}, @code{bool} nowait=@code{false})
+Displays the current picture using external program @var{viewer} for viewing. The function save the picture to temporary file and call @var{viewer} to display it. If @var{nowait}=@code{true} then the function return immediately (it will not wait while window will be closed).
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} SetSize (@code{int} width, @code{int} height)

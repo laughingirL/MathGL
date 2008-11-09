@@ -147,20 +147,6 @@ AC_CHECK_LIB([jpeg], [main], [(test x$all = xtrue || test x$jpeg = xtrue) && JPE
     [(test x$all = xtrue || test x$jpeg = xtrue) && echo "Please install jpeg library" && exit])
 AM_CONDITIONAL(USE_JPEG, (test x$all = xtrue || test x$jpeg = xtrue))
 
-AC_ARG_ENABLE(tiff,
-[  --enable-tiff    Turn on tiff],
-[case "${enableval}" in
-  yes) tiff=true ;;
-  no)  tiff=false ;;
-  *) AC_MSG_ERROR(bad value ${enableval} for --enable-tiff) ;;
-esac],[tiff=false])
-AC_CHECK_HEADER(tiffio.h,[(test x$all = xtrue || test x$tiff = xtrue) && TIFF_FLAGS=-DHAVE_TIFF AC_SUBST(TIFF_FLAGS)],
-    [(test x$all = xtrue || test x$tiff = xtrue) && echo "Please install tiff headers" && exit])
-
-AC_CHECK_LIB([tiff], [main], [(test x$all = xtrue || test x$tiff = xtrue) && TIFF_LIBS=-ltiff AC_SUBST(TIFF_LIBS)], 
-    [(test x$all = xtrue || test x$tiff = xtrue) && echo "Please install tiff library" && exit])
-AM_CONDITIONAL(USE_TIFF, (test x$all = xtrue || test x$tiff = xtrue))
-
 AC_ARG_ENABLE(fltk,
 [  --enable-fltk    Turn on fltk],
 [case "${enableval}" in
@@ -276,7 +262,7 @@ if (test x$docs = xtrue || test x$all = xtrue) ;then
 fi
 AM_CONDITIONAL(USE_DOCS, (test x$docs = xtrue || test x$all = xtrue) )
 
-AM_CONDITIONAL(USE_LTDL, (test x$all = xtrue || test x$testio = xtrue || test x$hdf5 = xtrue || test x$jpeg = xtrue || test x$tiff = xtrue))
+AM_CONDITIONAL(USE_LTDL, (test x$all = xtrue || test x$testio = xtrue || test x$hdf5 = xtrue || test x$jpeg = xtrue ))
 
 AC_CONFIG_FILES([
 Makefile

@@ -95,7 +95,8 @@ struct u3dGroup
 	std::string name;
 	u3dGroup* parent;
 	size_t NumberOfChildren;
-	u3dGroup(): parent ( NULL ), NumberOfChildren ( 0 ) {};
+	bool isauto;
+	u3dGroup(): parent ( NULL ), NumberOfChildren ( 0 ), isauto ( false ) {};
 };
 //-----------------------------------------------------------------------------
 typedef std::list<u3dGroup>  u3dGroup_list;
@@ -250,6 +251,7 @@ public:
 	bool unrotate_flag;			///< do not rotate the scene as a whole, in this case you have to set camera position externally.
 	/// Objects can belong to groups. StartGroup() and EndGroup() do what the names imply.
 	void StartGroup ( const char *name );
+	void StartAutoGroup ( const char *name );
 	void EndGroup();
 	u3dGroup* GetCurrentGroup();
 protected:

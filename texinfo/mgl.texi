@@ -1241,6 +1241,9 @@ Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=
 Solves GO ray equation like d@emph{r}/dt = d @var{ham}/d@emph{p}, d@emph{p}/dt = -d @var{ham}/d@emph{r}. This is Hamiltonian equations for particle trajectory in 3D case. Here @var{ham} is Hamiltonian which may depend on coordiantes @samp{x}, @samp{y}, @samp{z}, momentums @samp{p}=px, @samp{q}=py, @samp{v}=pz and time @samp{t}: @math{ham = H(x,y,z,p,q,v,t)}. The starting point (at @code{t=0}) is defined by variables @{@var{x0}, @var{y0}, @var{z0}, @var{p0}, @var{q0}, @var{v0}@}. Parameters @var{dt} and @var{tmax} specify the integration step and maximal time for ray tracing. Result is array of @{x,y,z,p,q,v,t@} with dimensions @{7 * int(@var{tmax}/@var{dt}+1) @}.
 @end deffn
 
+@deffn {MGL command} qo2d res 'ham' ini_re ini_im ray [@code{r=1 k0=100} xx=0 yy=0]
+Solves equation du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators (see @code{mglPDE()} for details). Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{ray} set the reference ray, i.e. the ray around which the accompanied coordinate system will be maked. You may use, for example, the array created by @code{mglRay()} function. Note, that the reference ray @strong{must be} smooth enough to make accompanied coodrinates unambiguity. Otherwise errors in the solution may appear. If @var{xx} and @var{yy} are non-zero then Cartesian coordinates for each point will be written into them. @sref{Beam tracing sample} 
+@end deffn
 
 @c ------------------------------------------------------------------
 @node Commands on direction (MGL), Operators (MGL), Make another data (MGL), MGL interface

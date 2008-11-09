@@ -30,8 +30,9 @@
 #define MGL_FONT_ZEROW		0x20000000		// internal codes
 #define MGL_FONT_UPPER		0x40000000
 #define MGL_FONT_LOWER		0x80000000
-#define MGL_FONT_ROMAN		0xfc000000
+#define MGL_FONT_ROMAN		0xfcffffff
 #define MGL_FONT_MASK		0x00ffffff
+#define MGL_COLOR_MASK		0xffffff00
 #define MGL_FONT_STYLE		0x3f000000
 //-----------------------------------------------------------------------------
 #ifdef WIN32	// a man ask to use built-in font under Windows
@@ -61,20 +62,20 @@ public:
 	/// Get height of text
 	float Height(const char *how);
 	/// Print text string for font specified by string
-	float Puts(const char *str,const char *how);
+	float Puts(const char *str,const char *how, char col);
 	/// Get width of text string for font specified by string
 	float Width(const char *str,const char *how);
 	/// Print text string for font specified by integer constant
-	float Puts(const char *str,int font=0,int align=0);
+	float Puts(const char *str,int font=0,int align=0, char col='k');
 	/// Get width of text string for font specified by integer constant
 	float Width(const char *str,int font=0);
 
 	/// Print text string for font specified by string
-	float Puts(const wchar_t *str,const char *how);
+	float Puts(const wchar_t *str,const char *how, char col);
 	/// Get width of text string for font specified by string
 	float Width(const wchar_t *str,const char *how);
 	/// Print text string for font specified by integer constant
-	float Puts(const wchar_t *str,int font=0,int align=0);
+	float Puts(const wchar_t *str,int font=0,int align=0, char col='k');
 	/// Get width of text string for font specified by integer constant
 	float Width(const wchar_t *str,int font=0);
 	/// Return number of glyphs
@@ -99,7 +100,7 @@ protected:
 
 	/// Draw string recursively
 	/* x,y - position, f - factor, style: 0x1 - italic, 0x2 - bold, 0x4 - overline, 0x8 - underline, 0x10 - empty (not draw) */
-	float Puts(const unsigned *str, float x,float y,float f,int style);
+	float Puts(const unsigned *str, float x,float y,float f,int style,char col);
 	/// Replace TeX symbols by its UTF code and add font styles
 	void Convert(const wchar_t *str, unsigned *res);
 	/// Parse LaTeX command

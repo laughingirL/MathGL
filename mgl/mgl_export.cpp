@@ -16,144 +16,84 @@
  */
 #include <png.h>
 
-#ifdef WITH_LTDL
-#include <ltdl.h>
+#ifdef HAVE_JPEG
+extern "C" {
+#include <jpeglib.h>
+}
+int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p);
 #endif
 
 #include "mgl/mgl.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
 
+int mgl_bps_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_png_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
-
-int mglGraph::NumUseSave = 0;
-mgl_save mglGraph::JPEGSave = 0;
-mgl_save mglGraph::TIFFSave = 0;
-mgl_save mglGraph::PNGASave = mgl_pnga_save;
-mgl_save mglGraph::PNGSave = mgl_png_save;
-mgl_save mglGraph::BMPSave = mgl_bmp_save;
-void *mglGraph::jmodule = 0;
-void *mglGraph::tmodule = 0;
-//-----------------------------------------------------------------------------
-void mglGraph::InitSaveFunc()
-{
-	NumUseSave++;
-#ifdef WITH_LTDL
-	if(!JPEGSave)
-	{
-		jmodule = 0;
-		int errors=lt_dlinit();
-		if(!errors)	errors=lt_dlsetsearchpath(MOD_LIB_DIR);
-		if(!errors)	jmodule=lt_dlopenext("mgl-jpeg.so");
-		if(jmodule)	JPEGSave = (mgl_save) lt_dlsym((lt_dlhandle) jmodule, "mgl_jpeg_save");
-	}
-	if(!TIFFSave)
-	{
-		tmodule = 0;
-		int errors=lt_dlinit();
-		if(!errors)	errors=lt_dlsetsearchpath(MOD_LIB_DIR);
-		if(!errors)	tmodule=lt_dlopenext("mgl-tiff.so");
-		if(tmodule)	TIFFSave = (mgl_save) lt_dlsym((lt_dlhandle) tmodule, "mgl_tiff_save");
-	}
-#endif
-}
-//-----------------------------------------------------------------------------
-void mglGraph::FreeSaveFunc()
-{
-	NumUseSave--;
-	if(NumUseSave<1)
-	{
-#ifdef WITH_LTDL
-		if(JPEGSave)
-		{
-			if(jmodule)	lt_dlclose((lt_dlhandle) jmodule);
-			lt_dlexit();	JPEGSave = 0;	jmodule = 0;
-		}
-		if(TIFFSave)
-		{
-			if(tmodule)	lt_dlclose((lt_dlhandle) tmodule);
-			lt_dlexit();	TIFFSave = 0;	tmodule = 0;
-		}
-#endif
-	}
-}
 //-----------------------------------------------------------------------------
 unsigned char **mglGraph::GetRGBLines(long &w, long &h, unsigned char *&f, bool )
 {	f=0;	return 0;	}
 //-----------------------------------------------------------------------------
-void mglGraph::WriteEPS(const char *,const char *){}
 void mglGraph::WriteSVG(const char *,const char *){}
 void mglGraph::WriteIDTF(const char *,const char *){}
 void mglGraph::VertexColor(bool enable)  { };
 void mglGraph::Compression(bool enable)  { };
 void mglGraph::Unrotate(bool enable)  { };
 void mglGraph::StartGroup ( const char *name ) { };
+void mglGraph::StartAutoGroup ( const char *name ) { };
 void mglGraph::EndGroup() { };
-//-----------------------------------------------------------------------------
-void mglGraph::WriteTIFF(const char *fname,const char *descr,int )
-{
-	if(!TIFFSave)	SetWarn(mglWarnFmt,"TIFF");
-	else
-	{
-		long w,h;
-		unsigned char *f=0, **p=0;
-		p = GetRGBLines(w,h,f);
-		if(p)
-		{
-			if(TIFFSave(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
-			free(p);	if(f)	free(f);
-		}
-	}
-}
 //-----------------------------------------------------------------------------
 void mglGraph::WriteJPEG(const char *fname,const char *)
 {
-	if(!JPEGSave)	SetWarn(mglWarnFmt,"JPEG");
-	else
+#ifdef HAVE_JPEG
+	long w,h;
+	unsigned char *f=0, **p=0;
+	p = GetRGBLines(w,h,f);
+	if(p)
 	{
-		long w,h;
-		unsigned char *f=0, **p=0;
-		p = GetRGBLines(w,h,f);
-		if(p)
-		{
-			if(JPEGSave(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
-			free(p);	if(f)	free(f);
-		}
+		if(mgl_jpeg_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
+		free(p);	if(f)	free(f);
 	}
+#else
+	SetWarn(mglWarnFmt,"JPEG");
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglGraph::WritePNG(const char *fname,const char *,bool alpha)
 {
-	mgl_save func = alpha ? PNGASave : PNGSave;
-	if(!func)	SetWarn(mglWarnFmt,"PNG");
-	else
+	long w,h;
+	unsigned char *f=0, **p=0;
+	p = GetRGBLines(w,h,f,alpha);
+	if(p)
 	{
-		long w,h;
-		unsigned char *f=0, **p=0;
-		p = GetRGBLines(w,h,f,alpha);
-		if(p)
-		{
-			if(func(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
-			free(p);	if(f)	free(f);
-		}
+		if(alpha && mgl_pnga_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
+		if(!alpha && mgl_png_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
+		free(p);	if(f)	free(f);
 	}
 }
 //-----------------------------------------------------------------------------
 void mglGraph::WriteBMP(const char *fname,const char *)
 {
-	if(!BMPSave)	SetWarn(mglWarnFmt,"BMP");
-	else
+	long w,h;
+	unsigned char *f=0, **p=0;
+	p = GetRGBLines(w,h,f);
+	if(p)
 	{
-		long w,h;
-		unsigned char *f=0, **p=0;
-		p = GetRGBLines(w,h,f);
-		if(p)
-		{
-			if(BMPSave(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
-			free(p);	if(f)	free(f);
-		}
+		if(mgl_bmp_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
+		free(p);	if(f)	free(f);
+	}
+}
+//-----------------------------------------------------------------------------
+void mglGraph::WriteEPS(const char *fname,const char *)
+{
+	long w,h;
+	unsigned char *f=0, **p=0;
+	p = GetRGBLines(w,h,f);
+	if(p)
+	{
+		if(mgl_bps_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
+		free(p);	if(f)	free(f);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -241,6 +181,56 @@ int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
 	return 0;
 }
 //-----------------------------------------------------------------------------
+#ifdef HAVE_JPEG
+int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
+{
+	struct jpeg_compress_struct cinfo;
+	struct jpeg_error_mgr jerr;
+	FILE * outfile;
+
+	cinfo.err = jpeg_std_error(&jerr);
+	jpeg_create_compress(&cinfo);
+	if((outfile = fopen(fname, "wb")) == 0)	return 1;
+	jpeg_stdio_dest(&cinfo, outfile);
+	cinfo.image_width = w;
+	cinfo.image_height = h;
+	cinfo.input_components = 3;
+	cinfo.in_color_space = JCS_RGB;
+	jpeg_set_defaults(&cinfo);
+	jpeg_start_compress(&cinfo, TRUE);
+
+    jpeg_write_scanlines(&cinfo, p, h);
+
+	jpeg_finish_compress(&cinfo);
+	jpeg_destroy_compress(&cinfo);
+	fclose(outfile);
+	return 0;
+}
+#endif
+//-----------------------------------------------------------------------------
+int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
+{
+	time_t now;
+	time(&now);
+	register long i,j;
+
+	FILE *fp = fopen(fname,"wt");
+	fprintf(fp,"%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",w,h);
+	fprintf(fp,"%%%%Creator: MathGL library\n%%%%Title: %s\n", fname);
+	fprintf(fp,"%%%%CreationDate: %s\n",ctime(&now));
+//	fprintf(fp,"%%%%EndComments\n\n");
+	fprintf(fp,"%d %d 8 [1 0 0 1 0 0] {currentfile %d string readhexstring pop} false 3 colorimage\n",
+			w,h,1+w*h/40);
+	for(j=0;j<h;j++)	for(i=0;i<w;i++)
+	{
+		if((i+w*(h-j-1))%40==0 && i+j>0)	fprintf(fp,"\n");
+		fprintf(fp,"%02x%02x%02x",p[j][3*i],p[j][3*i+1],p[j][3*i+2]);
+	}
+	fprintf(fp,"\n\nshowpage\n%%%%EOF\n");
+	fclose(fp);
+	return 0;
+}
+//-----------------------------------------------------------------------------
 /// Write the frame in file using PNG format
 void mgl_write_png(HMGL gr, const char *fname,const char *descr)
 {	gr->WritePNG(fname,descr);	}
@@ -272,18 +262,6 @@ void mgl_write_jpg_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	_GR_->WriteJPEG(s,f);	delete []s;		delete []f;
-}
-//-----------------------------------------------------------------------------
-/// Write the frame in file using TIFF format
-void mgl_write_tif(HMGL gr, const char *fname,const char *descr)
-{	gr->WriteTIFF(fname,descr);	}
-#include <string.h>
-/// Write the frame in file using TIFF format
-void mgl_write_tif_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
-{
-	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
-	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-	_GR_->WriteTIFF(s,f);	delete []s;		delete []f;
 }
 //-----------------------------------------------------------------------------
 /// Write the frame in file using TIFF format

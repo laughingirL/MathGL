@@ -833,51 +833,18 @@ bool mglData::FindAny(const char *cond) const
 	return cc;
 }
 //-----------------------------------------------------------------------------
-mglData TransformA(const mglData &am, const mglData &ph, const char *tr)
+mglData mglTransformA(const mglData &am, const mglData &ph, const char *tr)
 {
-	mglData d;
-#ifndef NO_GSL
 	int nx = am.nx, ny = am.ny, nz = am.nz;
 	if(nx*ny*nz != ph.nx*ph.ny*ph.nz || !tr || tr[0]==0)
-	{	d.Create(1,1,1);	return d;	}
-	double *a = new double[2*nx*ny*nz];
-	register long i,j;
-	for(i=0;i<nx*ny*nz;i++)
-	{	a[2*i] = am.a[i]*cos(ph.a[i]);	a[2*i+1] = am.a[i]*sin(ph.a[i]);	}
-	if((tr[0]=='f' || tr[0]=='i') && nx>1)
-	{
-		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(nx);
-		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(nx);
-		for(i=0;i<ny*nz;i++)
-			gsl_fft_complex_transform(a+2*i*nx, 1, nx, wt, ws, tr[0]=='f'?forward:backward);
-		gsl_fft_complex_workspace_free(ws);
-		gsl_fft_complex_wavetable_free(wt);
-	}
-	if((tr[1]=='f' || tr[1]=='i') && ny>1)
-	{
-		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(ny);
-		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(ny);
-		for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
-			gsl_fft_complex_transform(a+2*i+2*j*nx*ny, nx, ny, wt, ws, tr[1]=='f'?forward:backward);
-		gsl_fft_complex_workspace_free(ws);
-		gsl_fft_complex_wavetable_free(wt);
-	}
-	if((tr[2]=='f' || tr[2]=='i') && nz>1)
-	{
-		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(nz);
-		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(nz);
-		for(i=0;i<ny*nx;i++)
-			gsl_fft_complex_transform(a+2*i, nx*ny, nz, wt, ws, tr[2]=='f'?forward:backward);
-		gsl_fft_complex_workspace_free(ws);
-		gsl_fft_complex_wavetable_free(wt);
-	}
-	d.Create(nx, ny, nz);
-	for(i=0;i<nx*ny*nz;i++)		d.a[i] = hypot(a[2*i],a[2*i+1]);
-#endif
-	return d;
+		return mglData();
+	mglData re(am), im(am);
+	for(long i=0;i<nx*ny*nz;i++)
+	{	re.a[i] = am.a[i]*cos(ph.a[i]);	im.a[i] = am.a[i]*sin(ph.a[i]);	}
+	return mglTransform(re, im, tr);
 }
 //-----------------------------------------------------------------------------
-mglData Transform(const mglData &re, const mglData &im, const char *tr)
+mglData mglTransform(const mglData &re, const mglData &im, const char *tr)
 {
 	mglData d;
 #ifndef NO_GSL
@@ -921,7 +888,7 @@ mglData Transform(const mglData &re, const mglData &im, const char *tr)
 	return d;
 }
 //-----------------------------------------------------------------------------
-mglData STFA(const mglData &re, const mglData &im, int dn, char dir)
+mglData mglSTFA(const mglData &re, const mglData &im, int dn, char dir)
 {
 	mglData d;
 #ifndef NO_GSL
@@ -1450,7 +1417,7 @@ float mglData::Spline5(float x,float y,float z,float &dx,float &dy,float &dz) co
 		int n = int(x), n1 = n>1 ? 2:n, n2 = n<nx-3 ? 1:5+n-nx;
 		res = mgl_spline5(a+n+n1-2, a+n-n2, n1, n2, x-n, dx);
 	}
-	else if(nz==1)		// 2D case
+/*	else if(nz==1)		// 2D case
 	{
 		if(ny<6)	return 0;	// not interpolation for points < 5 !!!
 		int n = int(x), n1 = n>1 ? 2:n, n2 = n<nx-3 ? 1:5+n-nx;
@@ -1460,8 +1427,8 @@ float mglData::Spline5(float x,float y,float z,float &dx,float &dy,float &dz) co
 		for(int i=0;i<6;i++)
 			b[i] = mgl_spline5(a+n+n1-2+nx*(m+i), a+n-n2+nx*(m+i), n1, n2, x-n, d[i]);
 		res = mgl_spline5(b,b+1
-		*/
-	}
+
+	}*/
 	return res;
 }
 //-----------------------------------------------------------------------------

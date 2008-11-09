@@ -1,0 +1,43 @@
+add_executable(mgl_example full_test.cpp)
+target_link_libraries(mgl_example mgl)
+
+if(use_fltk)
+	add_executable(mgl_fltk_example fltk_example.cpp)
+	target_link_libraries(mgl_fltk_example mgl-fltk)
+	add_executable(test main.cpp)
+	target_link_libraries(test mgl-fltk)
+	install(
+		TARGETS mgl_fltk_example
+		RUNTIME DESTINATION bin
+	)
+endif(use_fltk)
+
+if(use_glut)
+	add_executable(mgl_glut_example glut_example.cpp)
+	target_link_libraries(mgl_glut_example mgl-glut)
+	install(
+		TARGETS mgl_glut_example
+		RUNTIME DESTINATION bin
+	)
+endif(use_glut)
+
+if(use_wx)
+	include(${wxWidgets_USE_FILE})
+	add_executable(mgl_wx_example wx_example.cpp)
+	target_link_libraries(mgl_wx_example ${wxWidgets_LIBRARIES} mgl-wx)
+	install(
+		TARGETS mgl_wx_example
+		RUNTIME DESTINATION bin
+	)
+endif(use_wx)
+
+if(use_qt)
+	include(${QT_USE_FILE})
+	QT4_GENERATE_MOC(../include/mgl/mgl_qt.h mgl_qt.moc.cpp)
+	add_executable(mgl_qt_example qt_example.cpp mgl_qt.moc.cpp)
+	target_link_libraries(mgl_qt_example ${QT_LIBRARIES} mgl-qt)
+	install(
+		TARGETS mgl_qt_example
+		RUNTIME DESTINATION bin
+	)
+endif(use_qt)

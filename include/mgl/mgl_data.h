@@ -59,11 +59,11 @@ struct gsl_matrix;
 /// Class for drawing in windows (like, mglGraphFLTK, mglGraphQT and so on)
 /// Make inherited class and redefine Draw() function if you don't want to use function pointers.
 class mglGraph;
-class mglDraw
+struct mglDraw
 {
-public:
 	virtual int Draw(mglGraph *)	{	return 0;	};
 	virtual void Reload(int)	{};
+	virtual ~mglDraw()	{};
 };
 //-----------------------------------------------------------------------------
 /// Class for incapsulating point in space
@@ -327,11 +327,11 @@ void mgl_srnd(long seed);
 double mgl_rnd();
 double ipow_mgl(double x,int n);
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase
-mglData TransformA(const mglData &am, const mglData &ph, const char *tr);
+mglData mglTransformA(const mglData &am, const mglData &ph, const char *tr);
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for real and imaginary parts
-mglData Transform(const mglData &re, const mglData &im, const char *tr);
+mglData mglTransform(const mglData &re, const mglData &im, const char *tr);
 /// Short time fourier analysis for real and imaginary parts. Output is amplitude of partial fourier (result will have size {dn, floor(nx/dn), ny} for dir='x'
-mglData STFA(const mglData &re, const mglData &im, int dn, char dir='x');
+mglData mglSTFA(const mglData &re, const mglData &im, int dn, char dir='x');
 /// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini
 mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mglPoint Min, mglPoint Max, float dz=0.1, float k0=100);
 /// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini along a curve \a ray (must have nx>=7 - x,y,z,px,py,pz,tau)

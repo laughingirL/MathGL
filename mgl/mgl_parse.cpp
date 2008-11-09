@@ -891,15 +891,16 @@ void mglParse::DeleteVar(const wchar_t *name)
 	DeleteVar(v);
 }
 //-----------------------------------------------------------------------------
-void mglParse::AddCommand(mglCommand *cmd)
+void mglParse::AddCommand(mglCommand *cmd, int mc)
 {
-	int i, mp, mc;
+	int i, mp;
+	if(mc<1)
+	{	for(i=0;cmd[i].name[0];i++){};	mc = i;	}
 	// determine the number of symbols
 	for(i=0;Cmd[i].name[0];i++){};	mp = i;
-	for(i=0;cmd[i].name[0];i++){};	mc = i;
 	mglCommand *buf = new mglCommand[mp+mc+1];
-	memcpy(buf, Cmd, mp*sizeof(mglCommand));
-	memcpy(buf+mp, cmd, (mc+1)*sizeof(mglCommand));
+	memcpy(buf, cmd, mc*sizeof(mglCommand));
+	memcpy(buf+mc, Cmd, (mp+1)*sizeof(mglCommand));
 	qsort(buf, mp+mc, sizeof(mglCommand), mgl_cmd_cmp);
 	if(Cmd!=mgls_base_cmd)   delete []Cmd;
 	Cmd = buf;

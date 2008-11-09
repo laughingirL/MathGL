@@ -28,7 +28,7 @@ using mglGraph::Mark;
 	mglGraphAB(int w=600, int h=400);
 	~mglGraphAB();
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Служебные ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	virtual void WriteEPS(const char *fname,const char *descr=0);
+//	virtual void WriteEPS(const char *fname,const char *descr=0);
 	virtual void WriteSVG(const char *fname,const char *descr=0);
 	virtual int NewFrame(int id=0);
 	virtual void EndFrame();
@@ -49,7 +49,7 @@ using mglGraph::Mark;
 	virtual void SetSize(int w,int h);
 
 	void Mark(float x,float y,float z,char mark='.');
-	void Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line);
+	void Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line, char col);
 	float GetRatio()	{	return B1[0]/B1[4];	};
 	void Putsw(mglPoint p,const wchar_t *text,const char *font=0,float size=-1,char dir=0,float shift=0);
 	float Putsw(mglPoint p,mglPoint l,const wchar_t *text,char font='t',float size=-1);

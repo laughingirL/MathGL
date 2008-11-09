@@ -105,7 +105,6 @@ extern mglColorID mglColorIds[];
 float GetX(const mglData &x, int i, int j, int k);
 float GetY(const mglData &y, int i, int j, int k);
 float GetZ(const mglData &z, int i, int j, int k);
-typedef int (*mgl_save) (const char *fname, int w, int h, unsigned char **);
 //-----------------------------------------------------------------------------
 /// Class contains base functionality for creating different mathematical plots
 class mglGraph
@@ -179,8 +178,6 @@ public:
 	  * EPS files are not supported.
 	  */
 	//@{
-	/// Write the frame in file using TIFF format
-	virtual void WriteTIFF(const char *fname,const char *descr=0,int compr=0);
 	/// Write the frame in file using JPEG format
 	virtual void WriteJPEG(const char *fname,const char *descr=0);
 	/// Write the frame in file using BMP format
@@ -194,7 +191,7 @@ public:
 	/// Write the frame in file using IDTF format
 	virtual void WriteIDTF(const char *fname,const char *descr=0);
 	/// Show currently produced image by Qt or FLTK library
-	void ShowImage(const char *viewer="kuickshow");
+	void ShowImage(const char *viewer="kuickshow", bool keep=false);
 	//@}
 	/// Create new frame.
 	virtual int NewFrame(int id=0);
@@ -352,7 +349,7 @@ public:
 	/// draw mark with different type at position {x,y,z} (no scaling)
 	void Mark(mglPoint p,char mark='.');
 	/// Draw a set of triangles (or lines if trig==NULL) for glyph from point (0,0). Normally this function is used internally.
-	virtual void Glyph(float x,float y, float f,int nt, const short *trig, int nl, const short *line)=0;
+	virtual void Glyph(float x,float y, float f,int nt, const short *trig, int nl, const short *line, char col)=0;
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Fitting functions
@@ -487,10 +484,6 @@ public:
 	void Plot(const mglData &x, const mglData &y, const char *pen=0,float zVal=NAN);
 	/// Draw line plot for points in arrays \a y.
 	void Plot(const mglData &y, const char *pen=0,float zVal=NAN);
-	/// Draw line plot for points in arrays \a a(0,:),\a a(1,:).
-	void Plot2(const mglData &a, const char *pen=0,float zVal=NAN);
-	/// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-	void Plot3(const mglData &a, const char *pen=0);
 
 	/// Fill area between curves y1 and y2 (if inside=false) or area for y1<=y<=y2 (if inside=true).
 	void Region(const mglData &y1, const mglData &y2, const char *pen=0, float zVal=NAN, bool inside=true);
@@ -503,10 +496,6 @@ public:
 	void Area(const mglData &x, const mglData &y, const char *pen=0,bool sum=false,float zVal=NAN);
 	/// Draw area plot for points in arrays \a y.
 	void Area(const mglData &y, const char *pen=0,bool sum=false,float zVal=NAN);
-	/// Draw area plot for points in arrays \a a(0,:),\a a(1,:).
-	void Area2(const mglData &a, const char *pen=0,float zVal=NAN);
-	/// Draw area plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-	void Area3(const mglData &a, const char *pen=0);
 
 	/// Draw vertical lines from points in arrays \a x, \a y, \a z to mglGraph::Org.
 	void Stem(const mglData &x, const mglData &y, const mglData &z, const char *pen=0);
@@ -514,10 +503,6 @@ public:
 	void Stem(const mglData &x, const mglData &y, const char *pen=0,float zVal=NAN);
 	/// Draw vertical lines from points in arrays \a y to mglGraph::Org.
 	void Stem(const mglData &y, const char *pen=0,float zVal=NAN);
-	/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-	void Stem2(const mglData &a, const char *pen=0,float zVal=NAN);
-	/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-	void Stem3(const mglData &a, const char *pen=0);
 
 	/// Draw stairs for points in arrays \a x, \a y, \a z.
 	void Step(const mglData &x, const mglData &y, const mglData &z, const char *pen=0);
@@ -525,10 +510,6 @@ public:
 	void Step(const mglData &x, const mglData &y, const char *pen=0,float zVal=NAN);
 	/// Draw line plot for points in arrays \a y.
 	void Step(const mglData &y, const char *pen=0,float zVal=NAN);
-	/// Draw stairs for points in arrays \a a(0,:),\a a(1,:).
-	void Step2(const mglData &a, const char *pen=0,float zVal=NAN);
-	/// Draw stairs for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-	void Step3(const mglData &a, const char *pen=0);
 
 	/// Draw vertical bars from points in arrays \a x, \a y, \a z to mglGraph::Org.
 	void Bars(const mglData &x, const mglData &y, const mglData &z, const char *pen=0, bool above=false);
@@ -536,10 +517,6 @@ public:
 	void Bars(const mglData &x, const mglData &y, const char *pen=0,float zVal=NAN, bool above=false);
 	/// Draw vertical bars from points in arrays \a y to mglGraph::Org.
 	void Bars(const mglData &y, const char *pen=0,float zVal=NAN, bool above=false);
-	/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-	void Bars2(const mglData &a, const char *pen=0,float zVal=NAN, bool above=false);
-	/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-	void Bars3(const mglData &a, const char *pen=0, bool above=false);
 
 	/// Draw vertical bars from points in arrays \a x, \a y to mglGraph::Org.
 	void Barh(const mglData &y, const mglData &v, const char *pen=0,float zVal=NAN, bool above=false);
@@ -550,8 +527,6 @@ public:
 	void Torus(const mglData &r, const mglData &z, const char *pen=0);
 	/// Draw surface of curve rotatation around Z axis
 	void Torus(const mglData &z, const char *pen=0);
-	/// Draw surface of curve {\a a(0,:),\a a(1,:)} rotatation around Z axis for
-	void Torus2(const mglData &a, const char *pen=0);
 
 	/// Draw chart for data a
 	void Chart(const mglData &a, const char *col=0);
@@ -600,6 +575,29 @@ public:
 	/// Draw tube with constant radial sizes \a r for points in arrays \a y.
 	void Tube(const mglData &y, float r, const char *pen=0,float zVal=NAN);
 
+	/// Draw line plot for points in arrays \a a(0,:),\a a(1,:).
+	void Plot2(const mglData &a, const char *pen=0,float zVal=NAN);
+	/// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
+	void Plot3(const mglData &a, const char *pen=0);
+	/// Draw area plot for points in arrays \a a(0,:),\a a(1,:).
+	void Area2(const mglData &a, const char *pen=0,float zVal=NAN);
+	/// Draw area plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
+	void Area3(const mglData &a, const char *pen=0);
+	/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
+	void Bars2(const mglData &a, const char *pen=0,float zVal=NAN, bool above=false);
+	/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
+	void Bars3(const mglData &a, const char *pen=0, bool above=false);
+	/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
+	void Stem2(const mglData &a, const char *pen=0,float zVal=NAN);
+	/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
+	void Stem3(const mglData &a, const char *pen=0);
+	/// Draw stairs for points in arrays \a a(0,:),\a a(1,:).
+	void Step2(const mglData &a, const char *pen=0,float zVal=NAN);
+	/// Draw stairs for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
+	void Step3(const mglData &a, const char *pen=0);
+	/// Draw surface of curve {\a a(0,:),\a a(1,:)} rotatation around Z axis for
+	void Torus2(const mglData &a, const char *pen=0);
+
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name 2D plotting functions
@@ -622,7 +620,6 @@ public:
 	void Surf(const char *eqZ, const char *sch=0, int n=100);
 	/// Draw curve for formulas parametrically depended on u,v in range [0,1]
 	void Surf(const char *eqX, const char *eqY, const char *eqZ, const char *sch=0, int n=100);
-
 
 	/// Draw power crust for points in arrays \a x, \a y, \a z.
 	void Crust(const mglData &x, const mglData &y, const mglData &z, const char *sch=0,float er=0);
@@ -764,13 +761,11 @@ public:
 	/// Draw several isosurface for 3d data \a a with alpha proportional to \a b
 	void Surf3A(const mglData &a, const mglData &b, const char *stl=0, int num=3);
 	/// Draw isosurface for 3d data \a a specified parametrically with color proportional to \a b
-	void Surf3C(float Val, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &b,
-				const char *stl=0);
+	void Surf3C(float Val, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &b, const char *stl=0);
 	/// Draw isosurface for 3d data \a a with color proportional to \a b
 	void Surf3C(float Val, const mglData &a, const mglData &b, const char *stl=0);
 	/// Draw several isosurface for 3d data \a a specified parametrically with color proportional to \a b
-	void Surf3C(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &b,
-				const char *stl=0, int num=3);
+	void Surf3C(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &b, const char *stl=0, int num=3);
 	/// Draw several isosurface for 3d data \a a with color proportional to \a b
 	void Surf3C(const mglData &a, const mglData &b, const char *stl=0, int num=3);
 	/// Plot flows for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
@@ -831,43 +826,35 @@ public:
 	/// Draw several isosurface for 3d data
 	void Surf3(const mglData &a, const char *stl=0, int num=3);
 	/// Draw contour lines at slice for 3d data specified parametrically
-	void Cont3(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const mglData &a,
-				char dir, int sVal=-1, const char *sch=0);
+	void Cont3(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const mglData &a, char dir, int sVal=-1, const char *sch=0);
 	/// Draw contour lines at slice for 3d data
 	void Cont3(const mglData &v, const mglData &a, char dir, int sVal=-1, const char *sch=0);
 	/// Draw several contour lines at slice for 3d data specified parametrically
-	void Cont3(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
-				char dir, int sVal=-1, const char *sch=0, int Num=7);
+	void Cont3(const mglData &x, const mglData &y, const mglData &z, const mglData &a, char dir, int sVal=-1, const char *sch=0, int Num=7);
 	/// Draw several contour lines at slice for 3d data
 	void Cont3(const mglData &a, char dir, int sVal=-1, const char *sch=0, int Num=7);
 	/// Draw contour lines at central slices for 3d data specified parametrically
-	void ContA(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
-				const char *sch=0, int Num=7);
+	void ContA(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch=0, int Num=7);
 	/// Draw contour lines at central slices for 3d data
 	void ContA(const mglData &a, const char *sch=0, int Num=7);
 	/// Draw solid contours at slice for 3d data specified parametrically
-	void ContF3(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const mglData &a,
-				char dir, int sVal=-1, const char *sch=0);
+	void ContF3(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const mglData &a, char dir, int sVal=-1, const char *sch=0);
 	/// Draw solid contours at slice for 3d data
 	void ContF3(const mglData &v, const mglData &a, char dir, int sVal=-1, const char *sch=0);
 	/// Draw several solid contours at slice for 3d data specified parametrically
-	void ContF3(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
-				char dir, int sVal=-1, const char *sch=0, int Num=7);
+	void ContF3(const mglData &x, const mglData &y, const mglData &z, const mglData &a, char dir, int sVal=-1, const char *sch=0, int Num=7);
 	/// Draw several solid contours at slice for 3d data
 	void ContF3(const mglData &a, char dir, int sVal=-1, const char *sch=0, int Num=7);
 	/// Draw solid contours at central slices for 3d data specified parametrically
-	void ContFA(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
-				const char *sch=0, int Num=7);
+	void ContFA(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch=0, int Num=7);
 	/// Draw solid contours at central slices for 3d data
 	void ContFA(const mglData &a, const char *sch=0, int Num=7);
 	/// Draw a cloud of points for 3d data specified parametrically
-	void CloudP(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
-				const char *stl=0, float alpha=1);
+	void CloudP(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *stl=0, float alpha=1);
 	/// Draw a cloud of points for 3d data
 	void CloudP(const mglData &a, const char *stl=0, float alpha=1);
 	/// Draw a semi-transparent cloud for 3d data specified parametrically
-	void CloudQ(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
-				const char *stl=0, float alpha=1);
+	void CloudQ(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *stl=0, float alpha=1);
 	/// Draw a semi-transparent cloud for 3d data
 	void CloudQ(const mglData &a, const char *stl=0, float alpha=1);
 	//@}
@@ -924,6 +911,8 @@ public:
 	virtual void Compression(bool enable);
 	virtual void Unrotate(bool enable);
 	virtual void StartGroup (const char *name);
+	virtual void StartAutoGroup (const char *name);
+	void StartGroup(const char *name, int id);
 	virtual void EndGroup();
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -954,12 +943,6 @@ protected:
 	bool OnCoord;
 	int CurFrameId;	///< Number of automaticle created frames
 
-	static mgl_save JPEGSave;	///< Function for saving in JPEG
-	static mgl_save TIFFSave;	///< Function for saving in TIFF
-	static mgl_save PNGASave;	///< Function for saving in PNG with transparency
-	static mgl_save PNGSave;	///< Function for saving in PNG
-	static mgl_save BMPSave;	///< Function for saving in BMP
-	static int NumUseSave;		///< Number of instances that use mgl_save functions
 	/// Get RGB(A) lines for saving in file
 	virtual unsigned char **GetRGBLines(long &width, long &height, unsigned char *&f, bool alpha=false);
 
@@ -1038,10 +1021,6 @@ private:
 	float xval[50], yval[50], zval[50];
 	int xnum,ynum,znum;
 
-	static void *jmodule;		///< Module for JPEG function
-	static void *tmodule;		///< Module for TIFF function
-	void InitSaveFunc();		///< Load modules for JPEG, TIFF functions (first times)
-	void FreeSaveFunc();		///< Free modules for JPEG, TIFF functions (last times)
 	void ClearEq();				///< Clear the used variables for axis transformation
 	mglColor GetC2(float x,float y);
 

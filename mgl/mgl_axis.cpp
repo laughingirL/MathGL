@@ -155,6 +155,7 @@ void mglGraph::DrawZGridLine(float t, float x0, float y0)
 //-----------------------------------------------------------------------------
 void mglGraph::Grid(const char *dir, const char *pen)
 {
+	static int cgid=1;	StartGroup("AxisGrid",cgid++);
 	float x0,y0,z0,ddx,ddy,ddz,t;
 	if(pen)	SelectPen(pen);
 	else	SelectPen(TranspType!=2 ? "B;1" : "b;1");
@@ -201,7 +202,7 @@ void mglGraph::Grid(const char *dir, const char *pen)
 		}
 	}
 	SelectPen("k-1");
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Label(char dir,const wchar_t *text,int pos,float size,float shift)
@@ -562,6 +563,7 @@ void mglGraph::AxisZ(bool text)
 //-----------------------------------------------------------------------------
 void mglGraph::Axis(const char *dir)
 {
+	static int cgid=1;	StartGroup("Axis",cgid++);
 	bool text = strchr(dir,'_')==NULL;
 	if(strchr(dir,'x'))	{	_sx = 1;	AxisX(text);	}
 	if(strchr(dir,'X'))	{	_sx = -1;	AxisX(text);	}
@@ -573,7 +575,7 @@ void mglGraph::Axis(const char *dir)
 	{	_sz = 1;	if(TernAxis)	AxisTZ(text);	else	AxisZ(text);	}
 	if(strchr(dir,'Z'))
 	{	_sz = -1;	if(TernAxis)	AxisTZ(text);	else	AxisZ(text);	}
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::TickBox()
@@ -693,6 +695,7 @@ void mglGraph::Box(const char *col,bool ticks)
 //-----------------------------------------------------------------------------
 void mglGraph::Box(mglColor p,bool ticks)
 {
+	static int cgid=1;	StartGroup("Box",cgid++);
 	float x1=Min.x,x2=Max.x,y1=Min.y,y2=Max.y,z1=Min.z,z2=Max.z;
 	Arrow1 = Arrow2 = '_';
 	if(p.Valid())	Pen(p,'-',BaseLineWidth);
@@ -720,7 +723,7 @@ void mglGraph::Box(mglColor p,bool ticks)
 	}
 	if(ticks && !TernAxis)	TickBox();
 	fc = tt;
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::AddLegend(const wchar_t *text,const char *style)
@@ -749,6 +752,8 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, float x, float y,
 					const char *font, float size, float llen)
 {
 	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
+	if(isnan(llen))	llen=0.1;
+	static int cgid=1;	StartGroup("Legend",cgid++);
 	float pp[15], r=GetRatio(), rh, rw;
 	if(size<=0)	size = -size*FontSize;
 
@@ -795,13 +800,14 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, float x, float y,
 		SelectPen(TranspType!=2 ? "k-1":"w-1");
 		Putsw(mglPoint(x+(style[i][0]!=0?llen:0)*dx, y+i*h+0.3f*h, Max.z),text[i], font, size,'n');
 	}
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
 					const char *font, float size, float llen)
 {
 	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
+	if(isnan(llen))	llen=0.1;
 	if(size<0)	size = -size*FontSize;
 	float w=0, r=GetRatio(), rh, rw;
 

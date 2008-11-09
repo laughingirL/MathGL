@@ -135,10 +135,10 @@ void mgl_write_svg_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	_GR_->WriteSVG(s,d);	delete []s;		delete []d;
 }
-void mgl_show_image_(uintptr_t *gr, const char *viewer, int l)
+void mgl_show_image_(uintptr_t *gr, const char *viewer, int *keep, int l)
 {
 	char *s=new char[l+1];	memcpy(s,viewer,l);	s[l]=0;
-	_GR_->ShowImage(s);	delete []s;
+	_GR_->ShowImage(s,*keep);	delete []s;
 }
 //-----------------------------------------------------------------------------
 //		Setup frames transparency (alpha) and lightning
@@ -437,11 +437,12 @@ void mgl_set_origin_(uintptr_t *gr, float *x0, float *y0, float *z0)
 void mgl_set_tick_origin_(uintptr_t *gr, float *x0, float *y0, float *z0)
 {	_GR_->OrgT = mglPoint(*x0,*y0,*z0);	}
 //-----------------------------------------------------------------------------
-void mgl_title_(uintptr_t *gr, const char *text, const char *fnt,int l,int n)
+void mgl_title_(uintptr_t *gr, const char *text, const char *fnt, float *size,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
-	if(gr)	_GR_->Title(s,f);	delete []s;	delete []f;
+	if(gr)	_GR_->Title(s,f, *size);
+	delete []s;	delete []f;
 }
 //-----------------------------------------------------------------------------
 void mgl_set_ternary_(uintptr_t *gr, int *enable)

@@ -865,6 +865,7 @@ void mglGraphZB::SetSize(int w,int h)
 	mglGraphAB::SetSize(w,h);
 }
 //-----------------------------------------------------------------------------
+int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
 void mglGraphZB::WriteSlice(int n)
 {
 	unsigned char **p;
@@ -874,119 +875,14 @@ void mglGraphZB::WriteSlice(int n)
 	p = (unsigned char **)malloc(Height * sizeof(unsigned char *));
 	for(long i=0;i<Height;i++)	p[i] = C+4*Width*i + n*4*Width*Height;
 
-	PNGASave(fname, Width, Height, p);
+	mgl_pnga_save(fname, Width, Height, p);
 	free(p);
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::font_line(float *p, unsigned char *c,bool thin)
+void mglGraphZB::Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line, char col)
 {
-	unsigned char r[4];
-	PostScale(p,2);
-
-	float d10,d11,d12, b = PenWidth*PenWidth;
-	long y1,x1,y2,x2;
-	float dxu,dxv,dyu,dyv,dd, pw=fabs(PenWidth);
-	register float u,v,xx,yy;
-
-	d10 = p[3]-p[0];	d11 = p[4]-p[1];	d12 = p[5]-p[2];
-	dd = sqrt(d10*d10 + d11*d11);
-	if(dd<1e-5)	return;		// points lies on the vertical line
-	dxv = d11/dd;	dyv =-d10/dd;	dxu = d10/dd;	dyu = d11/dd;	d12 /= dd;
-
-	x1 = imin(long(p[0]),long(p[3]));	// bounding box
-	y1 = imin(long(p[1]),long(p[4]));
-	x2 = imax(long(p[0]),long(p[3]));
-	y2 = imax(long(p[1]),long(p[4]));
-	x1 -= int(pw+3.5);	y1 -= int(pw+3.5);
-	x2 += int(pw+3.5);	y2 += int(pw+3.5);
-
-	register long i,j;
-	if(!thin)	b*=4;
-	bool aa=UseAlpha;	UseAlpha = true;
-	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
-	{
-		xx = (i-p[0]);	yy = (j-p[1]);
-		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
-		if(u<0)			{	v += u*u;			u = 0;	}
-		else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
-		if(v>b)		continue;
-		memcpy(r,c,4);
-		r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
-		pnt_plot(i,j,p[2]+d12*u+pw,r);
-	}
-	UseAlpha = aa;
-}
-//-----------------------------------------------------------------------------
-void mglGraphZB::Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line)
-{
-	long ik,ii,il;
-	unsigned char c[4]={int(255*CDef[0]),int(255*CDef[1]),int(255*CDef[2]),255}, r[4];
-	float dxu,dxv,dyu,dyv, p[9];
-	register long i,j,g;
-	if(trig && nt>0)
-	{
-		long y1,x1,y2,x2;
-		for(ik=0;ik<nt;ik++)
-		{
-			ii = 6*ik;	p[0]=f*trig[ii]+x;	p[1]=f*trig[ii+1]+y;	p[2]=0;
-			ii+=2;		p[3]=f*trig[ii]+x;	p[4]=f*trig[ii+1]+y;	p[5]=0;
-			ii+=2;		p[6]=f*trig[ii]+x;	p[7]=f*trig[ii+1]+y;	p[8]=0;
-			PostScale(p,3);
-
-			float d1[3],d2[3];
-			d1[0] = p[3]-p[0];	d2[0] = p[6]-p[0];
-			d1[1] = p[4]-p[1];	d2[1] = p[7]-p[1];
-			dxu = d2[0]*d1[1] - d1[0]*d2[1];
-			if(fabs(dxu)<1e-5)	continue;		// points lies on the same line
-			d1[2] = p[5]-p[2];	d2[2] = p[8]-p[2];
-			dyv =-d1[0]/dxu;	dxv = d1[1]/dxu;
-			dyu = d2[0]/dxu;	dxu =-d2[1]/dxu;
-
-			x1 = imin(long(p[0]),imin(long(p[3]),long(p[6])));	// bounding box
-			y1 = imin(long(p[1]),imin(long(p[4]),long(p[7])));
-			x2 = imax(long(p[0]),imax(long(p[3]),long(p[6])));
-			y2 = imax(long(p[1]),imax(long(p[4]),long(p[7])));
-
-			register float u,v,xx,yy;
-			for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
-			{
-				xx = (i-p[0]);	yy = (j-p[1]);
-				u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
-				g = u<0 || v<0 || u+v>1;
-				if(g)	continue;
-				memcpy(r,c,4);
-				pnt_plot(i,j,p[2]+d1[2]*u+d2[2]*v+fabs(PenWidth),r);
-			}
-		}
-	}
-	if(line && nl>0)	// draw even for solid font for smoothing
-	{
-		il = 0;
-		for(ik=0;ik<nl;ik++)
-		{
-			ii = 2*ik;
-			if(line[ii]==0x3fff && line[ii+1]==0x3fff)	// line breakthrough
-			{	il = ik+1;	continue;	}
-			else if(ik==nl-1 || (line[ii+2]==0x3fff && line[ii+3]==0x3fff))
-			{	// enclose the circle. May be in future this block should be commented
-				p[0]=f*line[ii]+x;	p[1]=f*line[ii+1]+y;	p[2]=0;	ii=2*il;
-				p[3]=f*line[ii]+x;	p[4]=f*line[ii+1]+y;	p[5]=0;
-			}
-			else
-			{	// normal line
-				p[0]=f*line[ii]+x;	p[1]=f*line[ii+1]+y;	p[2]=0;	ii+=2;
-				p[3]=f*line[ii]+x;	p[4]=f*line[ii+1]+y;	p[5]=0;
-			}
-			font_line(p,c);
-		}
-	}
-	if(nl<0)	// overline or underline
-	{
-		p[0]=x;		p[1]=y;	p[2]=0;
-		p[3]=fabs(f)+x;	p[4]=y;	p[5]=0;
-//		float pw = PenWidth, ff = -0.01*f_size*nl/6;	PenWidth = ff;
-		font_line(p,c,false);
-//		PenWidth = pw;
-	}
+	mglGraphAB::Glyph(x, y,  f, nt, trig, nl, line, col);
+	// add for smoothing
+	if(nt)	mglGraphAB::Glyph(x, y,  f, 0, 0, nl, line, col);
 }
 //-----------------------------------------------------------------------------

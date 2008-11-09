@@ -23,18 +23,18 @@ extern "C" {
 /*****************************************************************************/
 #ifdef __cplusplus
 struct mglDraw;
-typedef mglDraw *HMDR;
+typedef mglDraw* HMDR;
 struct mglGraph;
-typedef mglGraph *HMGL;
+typedef mglGraph* HMGL;
 struct mglData;
-typedef mglData *HMDT;
+typedef mglData* HMDT;
 struct mglParse;
-typedef mglParse *HMPR;
+typedef mglParse* HMPR;
 #else
-#define HMDR void*
-#define HMGL void*
-#define HMDT void*
-#define HMPR void*
+typedef void* HMDR;
+typedef void* HMGL;
+typedef void* HMDT;
+typedef void* HMPR;
 #endif
 #ifndef NO_GSL
 #include <gsl/gsl_vector.h>
@@ -117,9 +117,8 @@ void mgl_restore_font(HMGL gr);
 /*****************************************************************************/
 /*		Export to file or to memory											 */
 /*****************************************************************************/
-void mgl_show_image(HMGL graph, const char *viewer);
+void mgl_show_image(HMGL graph, const char *viewer, int keep);
 void mgl_write_bmp(HMGL graph, const char *fname,const char *descr);
-void mgl_write_tif(HMGL graph, const char *fname,const char *descr);
 void mgl_write_jpg(HMGL graph, const char *fname,const char *descr);
 void mgl_write_png(HMGL graph, const char *fname,const char *descr);
 void mgl_write_png_solid(HMGL graph, const char *fname,const char *descr);
@@ -210,8 +209,8 @@ void mgl_putsw(HMGL graph, float x, float y, float z,const wchar_t *text);
 void mgl_puts_dir(HMGL graph, float x, float y, float z, float dx, float dy, float dz, const char *text, float size);
 void mgl_putsw_dir(HMGL graph, float x, float y, float z, float dx, float dy, float dz, const wchar_t *text, float size);
 void mgl_text(HMGL graph, float x, float y, float z,const char *text);
-void mgl_title(HMGL graph, const char *text, const char *fnt);
-void mgl_titlew(HMGL graph, const wchar_t *text, const char *fnt);
+void mgl_title(HMGL graph, const char *text, const char *fnt, float size);
+void mgl_titlew(HMGL graph, const wchar_t *text, const char *fnt, float size);
 void mgl_putsw_ext(HMGL graph, float x, float y, float z,const wchar_t *text,const char *font,float size,char dir);
 void mgl_puts_ext(HMGL graph, float x, float y, float z,const char *text,const char *font,float size,char dir);
 void mgl_text_ext(HMGL graph, float x, float y, float z,const char *text,const char *font,float size,char dir);
@@ -381,29 +380,21 @@ void mgl_surf3_xyz_val(HMGL graph, float Val, const HMDT x, const HMDT y, const 
 void mgl_surf3_val(HMGL graph, float Val, const HMDT a, const char *stl);
 void mgl_surf3_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl, int num);
 void mgl_surf3(HMGL graph, const HMDT a, const char *stl, int num);
-void mgl_cont3_xyz_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			char dir, int sVal, const char *sch);
+void mgl_cont3_xyz_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch);
 void mgl_cont3_val(HMGL graph, const HMDT v, const HMDT a, char dir, int sVal, const char *sch);
-void mgl_cont3_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			char dir, int sVal, const char *sch, int Num);
+void mgl_cont3_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch, int Num);
 void mgl_cont3(HMGL graph, const HMDT a, char dir, int sVal, const char *sch, int Num);
-void mgl_cont_all_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			const char *sch, int Num);
+void mgl_cont_all_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch, int Num);
 void mgl_cont_all(HMGL graph, const HMDT a, const char *sch, int Num);
-void mgl_cloudp_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			const char *stl, float alpha);
+void mgl_cloudp_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl, float alpha);
 void mgl_cloudp(HMGL graph, const HMDT a, const char *stl, float alpha);
-void mgl_cloudq_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			const char *stl, float alpha);
+void mgl_cloudq_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl, float alpha);
 void mgl_cloudq(HMGL graph, const HMDT a, const char *stl, float alpha);
-void mgl_contf3_xyz_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			char dir, int sVal, const char *sch);
+void mgl_contf3_xyz_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch);
 void mgl_contf3_val(HMGL graph, const HMDT v, const HMDT a, char dir, int sVal, const char *sch);
-void mgl_contf3_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			char dir, int sVal, const char *sch, int Num);
+void mgl_contf3_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch, int Num);
 void mgl_contf3(HMGL graph, const HMDT a, char dir, int sVal, const char *sch, int Num);
-void mgl_contf_all_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			const char *sch, int Num);
+void mgl_contf_all_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch, int Num);
 void mgl_contf_all(HMGL graph, const HMDT a, const char *sch, int Num);
 void mgl_beam_val(HMGL graph, float Val, const HMDT tr, const HMDT g1, const HMDT g2, const HMDT a, float r, const char *stl, int norm);
 void mgl_beam(HMGL graph, const HMDT tr, const HMDT g1, const HMDT g2, const HMDT a, float r, const char *stl, int norm, int num);
@@ -551,12 +542,15 @@ void mgl_sphere(HMGL graph, float x, float y, float z, float r, const char *stl)
 void mgl_drop(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl, float shift, float ap);
 void mgl_cone(HMGL graph, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl, int edge);
 
-void mgl_pde_solve(HMGL gr, HMDT res, const char *ham, const HMDT ini_re, const HMDT ini_im, float dz, float k0);
-void mgl_qo2d_solve(HMDT res, const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, float r, float k0, HMDT xx, HMDT yy);
-void mgl_ray_trace(HMDT res, const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt, float tmax);
+HMDT mgl_pde_solve(HMGL gr, const char *ham, const HMDT ini_re, const HMDT ini_im, float dz, float k0);
+HMDT mgl_qo2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, float r, float k0, HMDT xx, HMDT yy);
+HMDT mgl_ray_trace(const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt, float tmax);
 void mgl_data_fill_eq(HMGL gr, HMDT res, const char *eq, const HMDT vdat, const HMDT wdat);
-void mgl_jacobian_2d(HMDT res, const HMDT x, const HMDT y);
-void mgl_jacobian_3d(HMDT res, const HMDT x, const HMDT y, const HMDT z);
+HMDT mgl_jacobian_2d(const HMDT x, const HMDT y);
+HMDT mgl_jacobian_3d(const HMDT x, const HMDT y, const HMDT z);
+HMDT mgl_transform_a(const HMDT am, const HMDT ph, const char *tr);
+HMDT mgl_transform(const HMDT re, const HMDT im, const char *tr);
+HMDT mgl_data_stfa(const HMDT re, const HMDT im, int dn, char dir);
 
 #ifdef __cplusplus
 }

@@ -704,10 +704,14 @@ void mglGraphAB::combine(unsigned char *c1,unsigned char *c2)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line)
+void mglGraphAB::Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line, char col)
 {
 	long ik,ii,il;
-	float p[9],n[3]={0,0,0};
+	float p[12], n[3]={0,0,0}, pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
+	float c[4]={CDef[0],CDef[1],CDef[2],CDef[3]};
+	mglColor cc = mglColor(col);
+	unsigned pdef=PDef;	PDef = 0xffff;
+	if(cc.Valid())	{	c[0]=cc.r;	c[1]=cc.g;	c[2]=cc.b;	}
 	if(trig && nt>0)
 	{
 		for(ik=0;ik<nt;ik++)
@@ -716,13 +720,14 @@ void mglGraphAB::Glyph(float x,float y, float f, int nt, const short *trig, int 
 			ii+=2;		p[3]=f*trig[ii]+x;	p[4]=f*trig[ii+1]+y;	p[5]=0;
 			ii+=2;		p[6]=f*trig[ii]+x;	p[7]=f*trig[ii+1]+y;	p[8]=0;
 			PostScale(p,3);
-			trig_plot_n(p,p+3,p+6,CDef,CDef,CDef,n,n,n);
+			p[2]+=pw;	p[5]+=pw;	p[8]+=pw;
+			trig_plot_n(p,p+3,p+6,c,c,c,n,n,n);
 		}
 	}
 	else if(line && nl>0)
 	{
 		il = 0;
-		for(ik=0;ik<nl-1;ik++)
+		for(ik=0;ik<nl;ik++)
 		{
 			ii = 2*ik;
 			if(line[ii]==0x3fff && line[ii+1]==0x3fff)	// line breakthrough
@@ -738,15 +743,28 @@ void mglGraphAB::Glyph(float x,float y, float f, int nt, const short *trig, int 
 				p[3]=f*line[ii]+x;	p[4]=f*line[ii+1]+y;	p[5]=0;
 			}
 			PostScale(p,2);
-			line_plot(p,p+3,CDef,CDef);
+			line_plot(p,p+3,c,c);
 		}
 	}
 	if(nl<0)	// overline or underline
 	{
-		p[0]=x;		p[1]=y;	p[2]=0;
-		p[3]=fabs(f)+x;	p[4]=y;	p[5]=0;
-		PostScale(p,2);
-		line_plot(p,p+3,CDef,CDef);
+		float dy = 0.004;
+		p[0]=x;			p[1]=y+dy;	p[2]=0;
+		p[3]=fabs(f)+x;	p[4]=y+dy;	p[5]=0;
+		p[6]=x;			p[7]=y-dy;	p[8]=0;
+		p[9]=fabs(f)+x;	p[10]=y-dy;	p[11]=0;
+		PostScale(p,4);
+		if(nt)
+		{
+			p[2]+=pw;	p[5]+=pw;	p[8]+=pw;	p[11]+=pw;
+			quad_plot(p,p+3,p+6,p+9,c,c,c,c);
+		}
+		else
+		{
+			line_plot(p,p+3,c,c);	line_plot(p+9,p+3,c,c);
+			line_plot(p,p+6,c,c);	line_plot(p+9,p+6,c,c);
+		}
 	}
+	PDef = pdef;
 }
 //-----------------------------------------------------------------------------

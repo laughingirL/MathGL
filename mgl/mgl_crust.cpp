@@ -29,6 +29,7 @@ void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, 
 	long n = x.nx, m = nums.ny;
 	if(y.nx!=n || z.nx!=n || nums.nx<3)	{	SetWarn(mglWarnLow,"TriPlot");	return;	}
 	SetScheme(sch);
+	static int cgid=1;	StartGroup("TriPlot",cgid++);
 	float *pp = new float[3*n], *cc = new float[4*n];
 	bool *tt = new bool[n];
 	long *nn = new long[3*m];
@@ -50,7 +51,7 @@ void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, 
 		nn[3*j]=k1;	nn[3*j+1]=k2;	nn[3*j+2]=k3;	j++;
 	}
 	trigs_plot(j,nn,n,pp,cc,tt,sch && strchr(sch,'#'));
-	Flush();
+	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;	delete []nn;
 }
 //-----------------------------------------------------------------------------
@@ -70,6 +71,7 @@ void mglGraph::Dots(const mglData &x, const mglData &y, const mglData &z, const 
 {
 	long n = x.nx;
 	if(y.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Dots");	return;	}
+	static int cgid=1;	StartGroup("Dots",cgid++);
 	SetScheme(sch);
 	mglColor c;
 	for(long i=0;i<n;i++)
@@ -77,13 +79,14 @@ void mglGraph::Dots(const mglData &x, const mglData &y, const mglData &z, const 
 		c = GetC(x.a[i], y.a[i], z.a[i]);
 		Ball(x.a[i], y.a[i], z.a[i], c);
 	}
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Dots(const mglData &tr, const char *sch)
 {
 	long n = tr.ny;
 	if(tr.nx<3)	{	SetWarn(mglWarnLow,"Dots");	return;	}
+	static int cgid=1;	StartGroup("Dots",cgid++);
 	SetScheme(sch);
 	mglColor c;
 	for(long i=0;i<n;i++)
@@ -91,7 +94,7 @@ void mglGraph::Dots(const mglData &tr, const char *sch)
 		c = GetC(tr.a[3*i], tr.a[3*i+1], tr.a[3*i+2]);
 		Ball(tr.a[3*i], tr.a[3*i+1], tr.a[3*i+2], c);
 	}
-	Flush();
+	EndGroup();
 }
 //-----------------------------------------------------------------------------
 //
@@ -103,6 +106,7 @@ void mglGraph::Crust(const mglData &x, const mglData &y, const mglData &z, const
 {
 	long n = x.nx, m;
 	if(y.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Crust");	return;	}
+	static int cgid=1;	StartGroup("Crust",cgid++);
 	register long i;
 	float *pp = new float[3*n];
 	long *nn=0;
@@ -124,16 +128,14 @@ void mglGraph::Crust(const mglData &x, const mglData &y, const mglData &z, const
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	trigs_plot(m,nn,n,pp,cc,tt,sch && strchr(sch,'#'));
-	Flush();
+	EndGroup();
 	delete []tt;	delete []cc;	delete []pp;	free(nn);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Crust(const mglData &tr, const char *sch,float er)
 {
 	if(tr.nx<3)	{	SetWarn(mglWarnLow,"Crust");	return;	}
-	mglData x(tr.ny), y(tr.ny), z(tr.ny);
-	x = tr.SubData(0);	y = tr.SubData(1);	z = tr.SubData(2);
-	Crust(x,y,z,sch,er);
+	Crust(tr.SubData(0), tr.SubData(1), tr.SubData(2),sch,er);
 }
 //-----------------------------------------------------------------------------
 float mgl_dist(float *p1, float *p2)
