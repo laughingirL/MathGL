@@ -39,6 +39,7 @@ Class mglGraphIDTF implements plotting function for 1D, 2D and 3D plots  and exp
 @section mglGraphAB class
 @cindex mglGraphAB
 @cindex window
+#cindex mglDraw
 
 Generally this class is a bit less abstract class than mglGraph class (@pxref{MathGL core}). It provide many protected methods for handling intermediate data from mglGraph methods and require a few methods to be defined by derived class. The developers of derived classes should look on file @samp{mgl_ab.h} and comments inside it or contact me.
 
@@ -230,15 +231,28 @@ Class is Qt widget which display MathGL graphics (defined in @code{#include <mgl
 @deftypemethod QMathGL @code{double} getRatio ()
 Return aspect ratio of the picture.
 @end deftypemethod
+
+@deftypemethod QMathGL @code{void} setDraw (@code{mglDraw *}dr)
+Sets drawing functions from a class inherited from @code{mglDraw}.
+@end deftypemethod
+@deftypemethod QMathGL @code{void} setDraw (@code{int (*}draw)(@code{mglGraph *}gr, @code{void *}p), @code{void *}par=@code{NULL})
+Sets the drawing function @var{draw}. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Parameter @var{par} contains pointer to data for the plotting function @var{draw}.
+@end deftypemethod
+
 @deftypemethod QMathGL @code{void} setGraph (@code{mglGraphAB *}gr)
 Set pointer to external grapher (instead of built-in @code{mglGraphZB}). Note that QMathGL will automatically delete this object at destruction or at new @code{setGraph()} call.
 @end deftypemethod
+
 @deftypemethod QMathGL @code{void} setPopup (@code{QMenu *}p)
 Set popup menu pointer.
 @end deftypemethod
 @deftypemethod QMathGL @code{void} setSize (@code{int} w, @code{int} h)
 Set widget/picture sizes
 @end deftypemethod
+@deftypemethod QMathGL @code{double} getRatio ()
+Return aspect ratio of the picture.
+@end deftypemethod
+
 @deftypemethod QMathGL @code{int} getPer ()
 Get perspective value in percents.
 @end deftypemethod
@@ -324,9 +338,6 @@ Export current picture to PNG file (no transparency).
 @defop Slot QMathGL @code{void} exportJPG (@code{QString} fname=@code{""})
 Export current picture to JPEG file.
 @end defop
-@defop Slot QMathGL @code{void} exportTIF (@code{QString} fname=@code{""})
-Export current picture to TIFF file.
-@end defop
 @defop Slot QMathGL @code{void} exportBPS (@code{QString} fname=@code{""})
 Export current picture to bitmap EPS file.
 @end defop
@@ -394,15 +405,6 @@ Allow auto resizing (default is false).
 @end deftypecv
 @deftypecv {Widget option} QMathGL @code{int} animDelay
 Animation delay in ms.
-@end deftypecv
-@deftypecv {Widget option} QMathGL @code{QString} mousePos
-Last mouse position
-@end deftypecv
-@deftypecv {Widget option} QMathGL @code{void *} draw_par
-Parameters for drawing function mglGraph::DrawFunc
-@end deftypecv
-@deftypecv {Widget option} Fl_MathGL @code{int (*} draw_func @code{)(mglGraph *gr, void *par)}
-Drawing function for window procedure. It should return the number of frames (for animation) or @code{0} if none.
 @end deftypecv
 
 

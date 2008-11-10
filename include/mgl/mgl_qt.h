@@ -84,11 +84,7 @@ Q_OBJECT
 public:
 	QString appName;	///< Application name for message boxes
 	bool autoResize;	///< Allow auto resizing (default is false)
-	void *draw_par;		///< Parameters for drawing function mglGraph::DrawFunc.
-	/// Drawing function for window procedure. It should return the number of frames.
-	int (*draw_func)(mglGraph *gr, void *par);
 	int animDelay;		///< Animation delay in ms
-	QString mousePos;	///< Last mouse position
 
 	QMathGL(QWidget *parent = 0, Qt::WindowFlags f = 0);
 	~QMathGL();
@@ -96,6 +92,10 @@ public:
 	void setPopup(QMenu *p)	{	popup = p;	};	///< Set popup menu pointer
 	void setSize(int w, int h);		///< Set window/picture sizes
 	void setGraph(mglGraphAB *gr);	///< Set grapher object
+	/// Set drawing functions and its parameter
+	void setDraw(int (*func)(mglGraph *gr, void *par),	void *par=0);
+	void setDraw(mglDraw *dr);		///< Set drawing functions from mglDraw class
+
 
 	int getPer()	{return per;};		///< Get perspective value
 	int getPhi()	{return phi;};		///< Get Phi-angle value
@@ -157,6 +157,10 @@ protected:
 	void mouseMoveEvent(QMouseEvent *);
 
 	mglGraphAB *graph;	///< Built-in mglGraph-er instance (used by default)
+	void *draw_par;		///< Parameters for drawing function mglGraph::DrawFunc.
+	/// Drawing function for window procedure. It should return the number of frames.
+	int (*draw_func)(mglGraph *gr, void *par);
+	QString mousePos;	///< Last mouse position
 	QPixmap pic;		///< Pixmap for drawing (changed by update)
 	double tet, phi;	///< Rotation angles
 	double per;			///< Value of perspective ( must be in [0,1) )

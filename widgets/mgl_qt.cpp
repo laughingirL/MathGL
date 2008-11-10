@@ -88,6 +88,13 @@ void QMathGL::setGraph(mglGraphAB *gr)
 	delete graph;	graph=gr;
 }
 //-----------------------------------------------------------------------------
+void QMathGL::setDraw(int (*func)(mglGraph *gr, void *par), void *par)
+{	draw_func = func;	draw_par = par;	}
+//-----------------------------------------------------------------------------
+int mgl_draw_class(mglGraph *gr, void *p);
+void QMathGL::setDraw(mglDraw *dr)
+{	draw_func = mgl_draw_class;	draw_par = dr;	}
+//-----------------------------------------------------------------------------
 void QMathGL::paintEvent(QPaintEvent *)
 {
 	QPainter paint;
@@ -576,7 +583,7 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 	scroll = new QScrollArea(Wnd);
 	QMGL = new QMathGL(Wnd);
 	QMGL->setPopup(popup);	QMGL->setGraph(this);
-	QMGL->draw_func = draw;	QMGL->draw_par = par;
+	QMGL->setDraw(draw, par);
 	QMGL->update();			makeMenu();
 	scroll->setWidget(QMGL);
 	Wnd->setCentralWidget(scroll);
