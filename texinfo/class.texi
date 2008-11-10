@@ -31,7 +31,7 @@ Class mglGraphIDTF implements plotting function for 1D, 2D and 3D plots  and exp
 @end deftp
 
 @menu
-* mglGraphAB class::
+* mglGraphAB class::            
 @end menu
 
 @c ------------------------------------------------------------------
@@ -166,8 +166,8 @@ Class @code{mglGraphGLUT} adds the possibility to create plotting window with th
 @end deftp
 
 @menu
-* Fl_MathGL class::
-* QMathGL class::
+* Fl_MathGL class::             
+* QMathGL class::               
 @end menu
 
 @c ------------------------------------------------------------------
@@ -229,6 +229,9 @@ Class is Qt widget which display MathGL graphics (defined in @code{#include <mgl
 
 @deftypemethod QMathGL @code{double} getRatio ()
 Return aspect ratio of the picture.
+@end deftypemethod
+@deftypemethod QMathGL @code{void} setGraph (@code{mglGraphAB *}gr)
+Set pointer to external grapher (instead of built-in @code{mglGraphZB}). Note that QMathGL will automatically delete this object at destruction or at new @code{setGraph()} call.
 @end deftypemethod
 @deftypemethod QMathGL @code{void} setPopup (@code{QMenu *}p)
 Set popup menu pointer.
@@ -383,10 +386,6 @@ Zooming changed (by toolbar).
 Rotation changed (by toolbar).
 @end defop
 
-
-@deftypecv {Widget option} QMathGL @code{mglGraphAB *} graph
-Built-in mglGraph-er instance (used by default).
-@end deftypecv
 @deftypecv {Widget option} QMathGL @code{QString} appName
 Application name for message boxes.
 @end deftypecv
@@ -403,7 +402,7 @@ Last mouse position
 Parameters for drawing function mglGraph::DrawFunc
 @end deftypecv
 @deftypecv {Widget option} Fl_MathGL @code{int (*} draw_func @code{)(mglGraph *gr, void *par)}
-Drawing function for window procedure. It should return the number of frames.
+Drawing function for window procedure. It should return the number of frames (for animation) or @code{0} if none.
 @end deftypecv
 
 
@@ -421,14 +420,14 @@ Drawing function for window procedure. It should return the number of frames.
 @chapter Other classes
 
 @menu
-* mglParse class::
-* mglFormula class::
-* mglFont class::
-* mglColor class::
-* mglPoint class::
-* mglArg class::
-* mglVar class::
-* mglCommand class::
+* mglParse class::              
+* mglFormula class::            
+* mglFont class::               
+* mglColor class::              
+* mglPoint class::              
+* mglVar class::                
+* mglCommand class::            
+* mglArg class::                
 @end menu
 
 @c ------------------------------------------------------------------
@@ -591,6 +590,10 @@ The Greek letters are recognizable special symbols: @math{\alpha} -- \alpha, @ma
 The small part of most common special TeX symbols are: @math{\angle} -- \angle, @math{\aleph} -- \aleph, @math{\cdot} -- \cdot, @math{\clubsuit} -- \clubsuit, @math{\cup} -- \cup, @math{\cap} -- \cap, @math{\diamondsuit} -- \diamondsuit, @math{\diamond} -- \diamond, @math{\div} -- \div, @math{\downarrow} -- \downarrow, @math{\dag} -- \dag, @math{\ddag} -- \ddag, @math{\equiv} -- \equiv, @math{\exists} -- \exists, @math{\frown} -- \frown, @math{\flat} -- \flat, @math{\ge} -- \ge, @math{\geq} -- \geq, @math{\gets} -- \gets, @math{\heartsuit} -- \heartsuit, @math{\infty} -- \infty, @math{\in} -- \in, @math{\int} -- \int, @math{\Im} -- \Im, @math{\langle} -- \langle, @math{\le} -- \le, @math{\leq} -- \leq, @math{\leftarrow} -- \leftarrow, @math{\mp} -- \mp, @math{\nabla} -- \nabla, @math{\ne} -- \ne, @math{\neq} -- \neq, @math{\natural} -- \natural, @math{\oint} -- \oint, @math{\odot} -- \odot, @math{\oplus} -- \oplus, @math{\partial} -- \partial, @math{\parallel} -- \parallel, @math{\perp} -- \perp, @math{\pm} -- \pm, @math{\propto} -- \propto, @math{\prod} -- \prod, @math{\Re} -- \Re, @math{\rightarrow} -- \rightarrow, @math{\rangle} -- \rangle, @math{\spadesuit} -- \spadesuit, @math{\sim} -- \sim, @math{\smile} -- \smile, @math{\subset} -- \subset, @math{\supset} -- \supset, @math{\surd} -- \sqrt or \surd, @math{\S} -- \S, @math{\sharp} -- \sharp, @math{\sum} -- \sum, @math{\times} -- \times, @math{\to} -- \to, @math{\uparrow} -- \uparrow, @math{\wp} -- \wp and so on. 
 @end ifnothtml
 
+@menu
+* Format of font files::        
+@end menu
+
 
 @deftypemethod mglFont @code{} mglFont (@code{const char *}name=@code{MGL_DEF_FONT_NAME}, @code{const char *}path=@code{NULL})
 Initialize the font and load data from file @var{name} (default name is "STIX" for Linux and MacOS) or if  @var{name}=@code{NULL} limited data from memory (default for Windows).
@@ -654,6 +657,27 @@ Instance of mglGraph class which is used for character drawing.
 @deftypecv {Parameter} mglFont @code{bool} parse
 Flag for switching on/off the parsing of TeX commands. Default value is @code{true}.
 @end deftypecv
+
+@c ------------------------------------------------------------------
+@node Format of font files, , , mglFont class
+@subsection Format of font files
+
+Starting from v.1.6 the MathGL library uses new font files. The font is defined in 4 files with suffixes @samp{*.vfm}, @samp{*_b.vfm}, @samp{*_i.vfm}, @samp{*_bi.vfm}. These files are text files containing the data for roman font, bold font, italic font and bold italic font. The files (or some symbols in the files) for bold, italic or bold italic fonts can be absent. In this case the roman glyph will be used for them. By analogy, if the bold italic font is absent but the bold font is present then bold glyph will be used for bold italic. You may create these font files by yourself from *.ttf, *.otf files with the help of program @code{font_tools}. This program can be found at MathGL home site.
+
+The format of font files (*.vfm -- vector font for MathGL) is the following.
+@enumerate
+@item
+First string contains human readable comment and is always ignored.
+@item
+Second string contains 3 numbers, delimited by space or tabulation. The order of numbers is the following: @var{numg} -- the number of glyphs in the file (integer), @var{fact} -- the factor for glyph sizing (float), @var{size} -- the size of buffer for glyph description (integer).
+@item
+After it @var{numg}-th strings with glyphs description are placed. Each string contains 6 positive numbers, delimited by space of tabulation. The order of numbers is the following: Unicode glyph ID, glyph width, number of lines in glyph, position of lines coordinates in the buffer (length is 2*number of lines), number of triangles in glyph, position of triangles coordinates in the buffer (length is 6*number of triangles).
+@item
+The end of file contains the buffer with point coordinates at lines or triangles vertexes. The size of buffer (the number of integer) is @var{size}.
+@end enumerate
+
+Note: the closing contour line  is done automatically (so the last segment may be absent). For starting new contour use a point with coordinates @code{@{0x3fff, 0x3fff@}}.
+
 
 @c ------------------------------------------------------------------
 @node mglColor class, mglPoint class, mglFont class, Other classes

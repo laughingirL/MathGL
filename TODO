@@ -3,10 +3,9 @@
 1. Change ticks labels drawing if RotatedText = false;
 3. Update documentation (English)
 	* describe mglDraw --> Python ???
+	* html doc for UDAV :(
 
 5. Spline5 !!!
-
-7. New font-faces !!!
 
 10. Use Hershey as built-in font
 

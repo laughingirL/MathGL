@@ -61,6 +61,16 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 	}
 }
 //-----------------------------------------------------------------------------
+int sample_tval(mglGraph *gr, const void *)	// font features
+{
+	gr->Axis(mglPoint(-M_PI, 0), mglPoint(M_PI, 2));
+	gr->SetTicksVal('x', 6, -M_PI, "-\\pi", -M_PI/2, "-\\pi/2", 0., "0",
+				 0.886, "x^*", M_PI/2, "\\pi/2", M_PI, "\\pi");
+	gr->Axis();	gr->Grid();
+	gr->Plot("2*cos(x^2)^2", "r2", NAN, 300);
+	return 0;
+}
+//-----------------------------------------------------------------------------
 int sample_map(mglGraph *gr, const void *s)	// full test (in PNG)
 {
 	mglData a(50, 40), b(50, 40);
@@ -1164,6 +1174,7 @@ int all_samples(mglGraph *gr, const void *s)
 	gr->DefaultPlotParam();	sample_loglog(gr,0);	save(gr,"loglog",  suf);
 	gr->DefaultPlotParam();	sample_semilog(gr,0);	save(gr,"semilog", suf);
 	gr->DefaultPlotParam();	sample_map(gr,0);		save(gr,"map", suf);
+	gr->DefaultPlotParam();	sample_tval(gr,0);		save(gr,"tval", suf);
 	printf("\n");	fflush(stdout);
 	return 0;
 }
@@ -1210,6 +1221,7 @@ int test(mglGraph *gr)
 
 //	gr->Box();	gr->Axis();
 
+	gr->GetFont()->Load("/home/balakin/progr/mgl/ris/adventor");
 	mglParse par;
 	FILE *fp=fopen("test.mgl","rt");
 	par.Execute(gr,fp);
@@ -1239,8 +1251,8 @@ int main(int argc,char **argv)
 
 	if(dotest)
 	{
-		//test(&zb);
-		sample_qo2d(&zb,0);
+		test(&zb);
+		//sample_tval(&zb,0);
 		zb.WritePNG("test.png","",false);
 		return 0;
 	}

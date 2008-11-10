@@ -75,6 +75,7 @@ supports it in developing GNU and promoting software freedom.''
 * Other classes::
 * Interfaces::
 * Samples::
+* TeX-like symbols::
 * Copying This Manual::
 * Index::
 @end menu
@@ -112,7 +113,11 @@ Finally the special command language MGL was written for faster access to C++ pl
 
 @include samples.texi
 
-@node Copying This Manual, Index, Samples, Top
+@node TeX-like symbols, Copying This Manual, Samples, Top
+@appendix TeX-like symbols
+@include appendix.texi
+
+@node Copying This Manual, Index, TeX-like symbols, Top
 @appendix GNU Free Documentation License
 @include fdl.texi
 

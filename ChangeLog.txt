@@ -11,15 +11,16 @@
 	- Add Plot(), Surf() functions for plotting a curve or a surface defined by formula(s).
 	- Add class mglDraw for simplification of setting drawing function for window creation
 	- Add new functions for data handling:
-		* Envelop() -- for finding data envelop
-		* Sew() -- for sewing data (removing phase jumps)
-		* Evaluate() -- for producing array interpolated by coordinates from other array(s)
-		* Put() -- for setting a values (as number or from array) for range of data
+		* Envelop() -- for finding data envelop.
+		* Sew() -- for sewing data (removing phase jumps).
+		* Evaluate() -- for producing array interpolated by coordinates from other array(s).
+		* Put() -- for setting a values (as number or from array) for range of data.
 		* Fill() -- for filling by formula with coordinates x,y,z in specified range
 		* mglPDE() -- for solving PDE in more or less general case.
 		* mglRay() -- for ray tracing (for finding trajectory in 3D space).
-		* mglQO2d() -- for beam tracing in 2D case (PDE solving in accompanied coordinates)
-	- Add new function ShowImage() for displaying the current picture
+		* mglQO2d() -- for beam tracing in 2D case (PDE solving in accompanied coordinates).
+		* mglJacobian() -- for evaluating Jacobian of coordinates transformation.
+	- Add new function ShowImage() for displaying the current picture.
 	- Color scheme will be without interpolation (color smoothing) if its style contain '|' symbol.
 	- Color inside string can be changed by TeX-like commands \color? or #? where ? is color id.
 	- Function Bars() now draw boounding box of the rectangle if its style contain '#' symbol.
@@ -50,6 +51,7 @@
 	- Bug with non-visible marks into the legend is corrected.
 	- Bug of not-drawn quads with the same vertexes is corrected.
 	- Bug with colors in WriteBMP() is corrected.
+	- Some other minor bugs are corrected.
 
 1.7 Released 1 June 2008
 	- MGL parser is sufficiently rewritten:

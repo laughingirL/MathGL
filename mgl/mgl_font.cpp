@@ -651,10 +651,20 @@ bool mglFont::Load(const char *base, const char *path)
 {
 //	base = 0;
 	FILE *fp;
-	char str[256];
+	char str[256], *buf = new char[strlen(base)+1],sep='/';
+#ifdef WIN32
+	sep='\\';
+#endif
 	setlocale(LC_NUMERIC,"C");
 	unsigned cur=0;
 	if(!path)	path = MGL_FONT_PATH;
+	strcpy(buf,base);
+	if(strchr(buf,sep))
+	{
+		int i;
+		for(i=strlen(buf);i>=0 && buf[i]!=sep;i--);
+		path = buf;		buf[i]=0;	base = buf+i+1;
+	}
 	Clear();							// first clear old
 
 	if(!base || !read_main(base,path,cur))	{	read_def(cur);	return true;	}

@@ -129,7 +129,7 @@ The form (appearence) of tick labels is controlled by @code{SetTicks()} function
 @cindex Mark style
 @cindex Arrows
 
-The line style is defined by the string which may contain specifications for color (@samp{wkrgbcymhRGBCYMHW}), dashing style (@samp{-|;:ji} or space), width (@samp{0123456789}) and marks (@samp{o+xsd.^v} and @samp{#} modifier). If one of type of information is omitted then default values with the previous color are used.
+The line style is defined by the string which may contain specifications for color (@samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}), dashing style (@samp{-|;:ji} or space), width (@samp{0123456789}) and marks (@samp{o+xsd.^v} and @samp{#} modifier). If one of type of information is omitted then default values with the previous color are used.
 
 The color types are the same as described in mglColor class (@pxref{mglColor class}): @samp{k} -- black, @samp{r} -- red, @samp{R} -- dark red, @samp{g} -- green, @samp{G} -- dark green, @samp{b} -- blue, @samp{B} -- dark blue, @samp{c} -- cyan, @samp{C} -- dark cyan, @samp{m} -- magenta, @samp{M} -- dark magenta, @samp{y} -- yellow, @samp{Y} -- dark yellow (gold), @samp{h} -- gray, @samp{H} -- dark gray, @samp{w} -- white, @samp{W} -- bright gray, @samp{l} -- green-blue, @samp{L} -- dark green-blue, @samp{e} -- green-yellow, @samp{E} -- dark green-yellow, @samp{n} -- sky-blue, @samp{N} -- dark sky-blue, @samp{u} -- blue-violet, @samp{U} -- dark blue-violet, @samp{p} -- purple, @samp{P} -- dark purple, @samp{q} -- orange, @samp{Q} -- dark orange (brown).
 
@@ -241,7 +241,7 @@ Most of ``new'' type of plot can be created by using of the existing drawing fun
 No. The MathGL library is self-consistent and does not require the knowledge of external libraries.
 
 @item In which language the library is written? For which languages the library has interface?
-The core of MathGL library is written on C++. But there are interfaces for pure C, Fortran, Pascal, Forth languages and its own command language MGL. Also there are a large set of interpreter languages support (Python, Java,  ALLEGROCL, CHICKEN, Lisp, CFFI, C#, Guile, Lua, Modula 3, Mzscheme, Ocaml, Octave, Perl, PHP, Pike, R, Ruby, Tcl). These interfaces are written via SWIG (both pure C functions and classes) but only interface for Python is included in autoconf/automake script. The matter that I don't know any other interpreter languages :(. Note, the most of other languages can use (can link) pure C functions.
+The core of MathGL library is written on C++. But there are interfaces for pure C, Fortran, Pascal, Forth languages and its own command language MGL. Also there are a large set of interpreter languages support (Python, Java,  ALLEGROCL, CHICKEN, Lisp, CFFI, C#, Guile, Lua, Modula 3, Mzscheme, Ocaml, Octave, Perl, PHP, Pike, R, Ruby, Tcl). These interfaces are written via SWIG (both pure C functions and classes) but only interface for Python and Octave is included in autoconf/automake script. The matter that I don't know any other interpreter languages :(. Note, the most of other languages can use (can link) pure C functions.
 
 @item I have class Foo and drawing method Foo::draw(mglGraph *gr). How I can use it in FLTK or GLUT window?
 The member-functions of classes have hidden parameter (the pointer to a class instance) in C++. So, their direct usage is impossible. The solution is to write interface function:
@@ -253,6 +253,8 @@ and to use it in the call of @code{Window()} function:
 @example
 gr->Window(argc,argv,foo_draw,"Title",this);
 @end example
+
+Alternatively you can inherit yours class from @code{mglDraw} class and use functions like @code{gr->Window(argc, argv, foo, "Title");}.
 
 @item How can I print in Russia/Spanish/Arabian/Japanese and so on?
 The standard way is the using of Unicode encoding for the text output. But MathGL library also has interface for 8-bit (char *) strings with internal conversion to Unicode. This conversion depends on the current locale OS. You may change it by @code{setlocale()} function. For example, for Russian text in CP1251 encoding you may use @code{setlocale(LC_CTYPE, "ru_RU.cp1251");} (under MS Windows the name of locale may differ -- @code{setlocale(LC_CTYPE, "russian_russia.1251")}). I strongly recommend not to use the constant @code{LC_ALL} in conversion. Because it also changes the number format that may lead to mistakes in formulas writing and reading textual data files. For example, the program will await a @samp{,} as a decimal point but the user will enter @samp{.}.

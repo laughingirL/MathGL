@@ -82,7 +82,6 @@ class QMathGL : public QWidget
 {
 Q_OBJECT
 public:
-	mglGraphAB *graph;	///< Built-in mglGraph-er instance (used by default)
 	QString appName;	///< Application name for message boxes
 	bool autoResize;	///< Allow auto resizing (default is false)
 	void *draw_par;		///< Parameters for drawing function mglGraph::DrawFunc.
@@ -96,6 +95,7 @@ public:
 	double getRatio()	{	return double(graph->GetWidth())/graph->GetHeight();	};
 	void setPopup(QMenu *p)	{	popup = p;	};	///< Set popup menu pointer
 	void setSize(int w, int h);		///< Set window/picture sizes
+	void setGraph(mglGraphAB *gr);	///< Set grapher object
 
 	int getPer()	{return per;};		///< Get perspective value
 	int getPhi()	{return phi;};		///< Get Phi-angle value
@@ -156,6 +156,7 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *);
 	void mouseMoveEvent(QMouseEvent *);
 
+	mglGraphAB *graph;	///< Built-in mglGraph-er instance (used by default)
 	QPixmap pic;		///< Pixmap for drawing (changed by update)
 	double tet, phi;	///< Rotation angles
 	double per;			///< Value of perspective ( must be in [0,1) )

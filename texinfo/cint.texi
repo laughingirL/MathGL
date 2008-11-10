@@ -451,14 +451,22 @@ The function sets to draws Ternary plot. This special plot is for 3 dependent co
 @c ------------------------------------------------------------------
 @node Ticks (Pure C), , Transformation (Pure C), Axis settings (Pure C)
 @subsubsection Ticks (Pure C)
+@cindex SetTicks
+@cindex SetTicksVal
+@cindex xtt
+@cindex ytt
+@cindex ztt
+@cindex ctt
+@cindex OrgT
+@cindex TuneTicks
 
 @deftypefn {C function} @code{void} mgl_set_ticks_dir (@code{HMGL} gr, @code{char} dir, @code{float} d, @code{int} ns, @code{float} org)
 Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_set_ticks_val (@code{HMGL} gr, @code{char} dir, @code{int} n, @code{float *}val, @code{const char **}lbl)
+@deftypefn {C function} @code{void} mgl_set_ticks_vals (@code{HMGL} gr, @code{char} dir, @code{int} n, @code{float *}val, @code{const char **}lbl)
 @deftypefnx {C function} @code{void} mgl_set_ticks_val (@code{HMGL} gr, @code{char} dir, @code{int} n, @code{double} val, @code{const char *}lbl, ...)
-Set the manual positions @var{val} and its labels @var{lbl} for @var{n}-th ticks along axis @var{dir}. The arrays @var{val} and @var{lbl} have to contain @var{n} elements. Use @code{mgl_set_ticks_dir()} to restore automatic ticks. Note, these functions are not available in Fortran interface.
+Set the manual positions @var{val} and its labels @var{lbl} for @var{n}-th ticks along axis @var{dir}. The arrays @var{val} and @var{lbl} have to contain @var{n} elements. Use @code{mgl_set_ticks_dir()} to restore automatic ticks. Note, these functions are not available in Fortran interface. Note, you @strong{have to be} very careful to use floating-point (not integer!!!) values as ticks position due to limitations of stdarg library (argument transfer). @sref{Manual ticks sample}
 @end deftypefn
 
 

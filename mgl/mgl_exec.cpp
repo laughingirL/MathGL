@@ -2372,7 +2372,7 @@ void mglc_xtick(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"gr->SetTicks('x', %g, %d, %g);", a[0].v, int(a[1].v),a[2].v);
 	else if(k[0]==3 && k[1]==3)
 		swprintf(out,1024,L"gr->SetTicks('x', %g, %d);", a[0].v, int(a[1].v));
-	else if(k[0]==3)	swprintf(out,1024,L"gr->SetTicks('x', %g);", a[0].v);
+	else if(k[0]==3)	swprintf(out,1024,L"gr->SetTicksVal('x', %g, \"%s\");", a[0].v, a[1].s);
 	else if(k[0]==2)
 		swprintf(out,1024,L"if(gr->xtt) delete []gr->xtt;\tgr->xtt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
 }

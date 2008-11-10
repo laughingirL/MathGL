@@ -1,12 +1,13 @@
 @c ------------------------------------------------------------------
-@node Samples, Copying This Manual, Interfaces, Top
+@node Samples, TeX-like symbols, Interfaces, Top
 @chapter Samples
 
-This chapter contain a lot of sample codes for all types of plots and for most important examples and hints. The same sample (with pictures) you can find at @uref{http://mathgl.sf.net/pictures.html}. Most of examples have the sample code on 5 languages: C++, MGL, C, Fortran and Python. However, I put only C++ code for some of examples due to a lot of them and clearency how to write code for other languages. All samples are divided on 5 large categories.
+This chapter contain a lot of sample codes for all types of plots and for most important examples and hints. The same sample (with pictures) you can find at @uref{http://mathgl.sf.net/pictures.html}. Most of examples have the sample code on 5 languages: C++, MGL, C, Fortran and Python. However, I put only C++ code for some of examples due to a lot of them and clearency how to write code for other languages. All samples are divided on 6 large categories.
 
 The minimal code to view the samples for different languages are following.
 
 @strong{C++ code}
+
 For compilation use: @code{g++ -o sample sample.cpp -lmgl}.
 @verbatim
 #include <mgl/mgl_zb.h>
@@ -21,6 +22,7 @@ int main()
 }
 @end verbatim
 @strong{MGL code}
+
 For preview use: @code{mglview sample.mgl}.
 @verbatim
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,6 +31,7 @@ For preview use: @code{mglview sample.mgl}.
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @end verbatim
 @strong{Pure C code}
+
 For compilation use: @code{gcc -o sample sample.c -lmgl}.
 @verbatim
 #include <mgl/mgl_c.h>
@@ -44,6 +47,7 @@ int main()
 }
 @end verbatim
 @strong{Fortran code}
+
 For compilation use: @code{gfortran -o sample sample.f90 -lmgl}. Note, fortran don't have argument checking. So you have to take special attention to pass real variables to real arguments of functions and integer variables to integer arguments of functions. There is no other special checking for that!!!
 @verbatim
 integer gr, mgl_create_graph_zb
@@ -56,6 +60,7 @@ call mgl_delete_graph(gr)
 end
 @end verbatim
 @strong{Python}
+
 For preview use: @code{python sample.py}.
 @verbatim
 from mathgl import *
@@ -4974,7 +4979,8 @@ gr.Puts(-1,1.2,0,"sh=0","rC");
 gr.Drop(-1,0,0,0,1,0,0.5,"r",0);
 gr.Puts(-0.33,1.2,0,"sh=0.33","rC");
 gr.Drop(-0.33,0,0,0,1,0,0.5,"r",0.33);
-gr.Puts(0.33,1.2,0,"sh=0.67","rC");             gr.Drop(0.33,0,0,0,1,0,0.5,"r",0.67);
+gr.Puts(0.33,1.2,0,"sh=0.67","rC");
+gr.Drop(0.33,0,0,0,1,0,0.5,"r",0.67);
 gr.Puts(1,1.2,0,"sh=1","rC");
 gr.Drop(1,0,0,0,1,0,0.5,"r",1);
 gr.Ball(-1,0,1,"k");    gr.Ball(-0.33,0,1,"k");
@@ -5110,6 +5116,7 @@ sphere -0.65 0 0 0.25 'g'
 * PDE sample::                  
 * Beam tracing sample::         
 * Parser sample::               
+* Manual ticks sample::         
 @end menu
 
 @node Curvelinear coorinates sample, 2-axes sample, , Advanced features
@@ -5663,7 +5670,7 @@ gr.Puts(0,2.2,0,"initial: y = 0.3+sin(2\\pi x)","C:b",-1);
 
 @float
 @image{png/envelop, 7cm}
-@caption{Example of envelop reconstruction.}@c @tdref{fit}}
+@caption{Example of envelop reconstruction.}@c @tdref{envelop}}
 @end float
 
 @strong{C++ code}
@@ -5720,7 +5727,7 @@ gr.Axis();
 
 @float
 @image{png/sew, 7cm}
-@caption{Example of phase ``sewing''.}@c @tdref{fit}}
+@caption{Example of phase ``sewing''.}@c @tdref{sew}}
 @end float
 
 @strong{C++ code}
@@ -5792,7 +5799,7 @@ gr.Box();
 
 @float
 @image{png/stfa, 7cm}
-@caption{Example of Short Time Fourier Analysis.}@c @tdref{fit}}
+@caption{Example of Short Time Fourier Analysis.}@c @tdref{stfa}}
 @end float
 
 @strong{C++ code}
@@ -5888,7 +5895,7 @@ gr.Label('y', "\\omega", 0);
 
 @float
 @image{png/pde, 7cm}
-@caption{Example of Partial Differential Eduation solving.}@c @tdref{fit}}
+@caption{Example of Partial Differential Eduation solving.}@c @tdref{pde}}
 @end float
 
 @strong{C++ code}
@@ -5997,7 +6004,7 @@ i \\frac{x+z}{2}\\cdot u = 0", "iC", -1.5);
 
 @float
 @image{png/qo2d, 7cm}
-@caption{Example of ray and beam tracing. Compare with @ref{PDE sample}.}@c @tdref{fit}}
+@caption{Example of ray and beam tracing. Compare with @ref{PDE sample}.}@c @tdref{qo2d}}
 @end float
 
 @strong{C++ code}
@@ -6119,13 +6126,13 @@ gr.Title("Beam and ray tracing", "C", -1.5);
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Parser sample, , Beam tracing sample, Advanced features
+@node Parser sample, Manual ticks sample, Beam tracing sample, Advanced features
 @subsection Parser sample
 @cindex mglParse
 
 @float
 @image{png/parser, 7cm}
-@caption{Example of MGL parsing.}@c @tdref{fit}}
+@caption{Example of MGL parsing.}@c @tdref{parser}}
 @end float
 
 @strong{C++ code}
@@ -6200,4 +6207,54 @@ parser.Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
 parser.Execute(gr, "xlabel 'x'\nylabel 'y'");
 # also you may use cycles or conditions in script
 parser.Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node Manual ticks sample, , Parser sample, Advanced features
+@subsection Tick values sample
+@cindex SetTicksVal
+
+@float
+@image{png/tval, 7cm}
+@caption{Example of MGL parsing.}@c @tdref{tval}}
+@end float
+
+@strong{C++ code}
+@verbatim
+gr->Axis(mglPoint(-M_PI, 0), mglPoint(M_PI, 2));
+gr->SetTicksVal('x', 6, -M_PI, "-\\pi", -M_PI/2, "-\\pi/2", 0., "0", 
+                0.886, "x^*", M_PI/2, "\\pi/2", M_PI, "\\pi");
+gr->Axis();     gr->Grid();
+gr->Plot("2*cos(x^2)^2", "r2", NAN, 300);
+@end verbatim
+@strong{MGL code}
+@verbatim
+axis -pi 0 pi 2
+xtick -pi '-\pi' -1.571 '-\pi/2' 0 '0' 0.886 'x^*' 1.571 '\pi/2' pi '\pi'
+axis 
+grid
+fplot '2*cos(x^2)^2' 'r2' nan 300
+@end verbatim
+@strong{Pure C code}
+@verbatim
+mgl_set_axis_2d(gr, -M_PI, 0, M_PI, 2);
+mgl_set_ticks_val(gr, 'x', 6, -M_PI, "-\\pi", -M_PI/2, "-\\pi/2",
+            0., "0", 0.886, "x^*", M_PI/2, "\\pi/2", M_PI, "\\pi");
+mgl_axis(gr,"xyz");
+mgl_axis_grid(gr,"xyz", "B-");
+mgl_fplot(gr, "2*cos(x^2)^2", "r2", 300);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+NOT AVAILABLE
+@end verbatim
+@strong{Python}
+@verbatim
+gr.SetRanges(-pi, pi, 0, 2);
+parser = mglParse();
+# very "stupid" way because SWIG not support variable arguments
+parser.Execute(gr, "xtick -pi '-\pi' -1.571 '-\pi/2' 0 '0' "
+                    "0.886 'x^*' 1.571 '\pi/2' pi '\pi'");
+gr.Axis();     gr.Grid();
+gr.Plot("2*cos(x^2)^2", "r2", 300);
 @end verbatim

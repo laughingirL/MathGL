@@ -67,7 +67,7 @@ const QString scriptName("default");
 QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 {
 	autoResize = false;	draw_par = 0;	draw_func = 0;
-	graph = 0;	//new mglGraphZB;
+	graph = new mglGraphZB;
 	popup = 0;		grBuf = 0;
 	phi = tet = per = 0;
 	x1 = y1 = 0;	x2 = y2 = 1;
@@ -81,6 +81,12 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 }
 //-----------------------------------------------------------------------------
 QMathGL::~QMathGL()	{	delete graph;	if(grBuf)	delete []grBuf;	}
+//-----------------------------------------------------------------------------
+void QMathGL::setGraph(mglGraphAB *gr)
+{
+	if(!gr)	return;
+	delete graph;	graph=gr;
+}
 //-----------------------------------------------------------------------------
 void QMathGL::paintEvent(QPaintEvent *)
 {
@@ -569,7 +575,7 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 	Wnd->setWindowTitle(title);
 	scroll = new QScrollArea(Wnd);
 	QMGL = new QMathGL(Wnd);
-	QMGL->setPopup(popup);	QMGL->graph = this;
+	QMGL->setPopup(popup);	QMGL->setGraph(this);
 	QMGL->draw_func = draw;	QMGL->draw_par = par;
 	QMGL->update();			makeMenu();
 	scroll->setWidget(QMGL);

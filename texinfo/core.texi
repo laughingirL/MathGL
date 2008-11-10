@@ -444,6 +444,7 @@ Transformation formula for x, y and z directions. These variables are obsolete -
 @subsection Ticks
 
 @cindex SetTicks
+@cindex SetTicksVal
 @cindex dx
 @cindex dy
 @cindex dx
@@ -457,7 +458,6 @@ Transformation formula for x, y and z directions. These variables are obsolete -
 @cindex OrgT
 @cindex FactorPos
 @cindex TuneTicks
-@cindex TickStr
 
 @deftypemethod mglGraph @code{void} SetTicks (@code{char} dir, @code{float} d=@code{-5}, @code{int} ns=@code{0}, @code{float} org=@code{NAN})
 Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
@@ -466,7 +466,7 @@ Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks posit
 @deftypemethod mglGraph @code{void} SetTicksVal (@code{char} dir, @code{int} n, @code{float *}val, @code{const char **}lbl)
 @deftypemethodx mglGraph @code{void} SetTicksVal (@code{char} dir, @code{int} n, @code{float *}val, @code{const wchar_t **}lbl)
 @deftypemethodx mglGraph @code{void} SetTicksVal (@code{char} dir, @code{float} val1, @code{wchar_t *}lbl1, ...)
-Set the manual positions @var{val} and its labels @var{lbl} for @var{n}-th ticks along axis @var{dir}. The arrays @var{val} and @var{lbl} must contain @var{n} elements. Use @code{SetTicks()} to restore automatic ticks.
+Set the manual positions @var{val} and its labels @var{lbl} for @var{n}-th ticks along axis @var{dir}. The arrays @var{val} and @var{lbl} must contain @var{n} elements. Use @code{SetTicks()} to restore automatic ticks. Note, you @strong{have to be} very careful to use floating-point (not integer!!!) values as ticks position due to limitations of stdarg library (argument transfer). @sref{Manual ticks sample}
 @end deftypemethod
 
 @deftypecv {General option} mglGraph @code{float} {dx, dy, dz}
@@ -491,10 +491,6 @@ Switch on/off ticks enhancing by factoring common multiplier (for small, like fr
 
 @deftypecv {General option} mglGraph @code{float} FactorPos
 The position of common multiplier/component on the axis: =0 at minimal axis value, =1 at maximal axis value. Default value is 1.15.
-@end deftypecv
-
-@deftypecv {General option} mglGraph @code{void} {(*TickStr)} (char dir, float val, wchar_t str[64])
-The pointer to user function (name of function) which return the tick label @var{str} for tick value @var{val} along axis @var{dir}. If @var{val}=@code{NAN} then the common multiplier/component is asked. Function must return @code{true} if the string @var{str} is correct.
 @end deftypecv
 
 

@@ -419,7 +419,7 @@ void mglGraph::AxisY(bool text)
 	if(ynum)	for(int i=0;i<ynum;i++)
 	{
 		DrawYTick(yval[i],x0,z0,ddx,ddz);
-		if(text)	Putsw(mglPoint(x0,yval[i],z0),ystr[i],FontDef,-1,'x');
+		if(text)	Putsw(mglPoint(x0,yval[i],z0),ystr[i],FontDef,-1,'y');
 	}
 	else if(ddy>0)	// ticks drawing
 	{
@@ -1062,13 +1062,13 @@ void mglGraph::SetTicksVal(char dir, int n, double val, const char *lbl, ...)
 		v[i] = va_arg(ap, double);
 		l[i] = va_arg(ap, char *);
 	}
-	va_end(ap);
 	SetTicksVal(dir,n,v,l);
+	va_end(ap);
 	delete []v;		free(l);
 }
 //-----------------------------------------------------------------------------
 void mgl_set_ticks_val(HMGL gr, char dir, int n, double val, const char *lbl, ...)
-{
+{	// NOTE: I have to repeat the function because I don't know how to pass variable arguments to C++ function
 	if(n<1)	return;
 	float *v = new float[n];
 	const char **l = (const char **)malloc(n*sizeof(const char *));
@@ -1080,8 +1080,8 @@ void mgl_set_ticks_val(HMGL gr, char dir, int n, double val, const char *lbl, ..
 		v[i] = va_arg(ap, double);
 		l[i] = va_arg(ap, char *);
 	}
-	va_end(ap);
 	gr->SetTicksVal(dir,n,v,l);
+	va_end(ap);
 	delete []v;		free(l);
 }
 //-----------------------------------------------------------------------------

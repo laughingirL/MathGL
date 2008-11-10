@@ -291,7 +291,7 @@ void mglGraph::Vect(const mglData &ax, const mglData &ay, const mglData &az, con
 	x.Fill(Min.x,Max.x);
 	y.Fill(Min.y,Max.y);
 	z.Fill(Min.z,Max.z);
-	VectL(x,y,z,ax,ay,az,sch);
+	Vect(x,y,z,ax,ay,az,sch);
 }
 //-----------------------------------------------------------------------------
 //
