@@ -508,3 +508,11 @@ uintptr_t mgl_transform_(uintptr_t *re, uintptr_t *im, const char *tr, int l)
 uintptr_t mgl_data_stfa_(uintptr_t *re, uintptr_t *im, int *dn, char *dir, int)
 {	return uintptr_t(new mglData(mglSTFA(*re,*im,*dn,*dir)));	}
 //-----------------------------------------------------------------------------
+void mgl_data_diff_par(HMDT d, const HMDT v1, const HMDT v2, const HMDT v3)
+{	if(v3)	d->Diff(*v1,*v2,*v3);	else	d->Diff(*v1,*v2);	}
+void mgl_data_diff_par_(uintptr_t *d, uintptr_t *v1, uintptr_t *v2, uintptr_t *v3)
+{
+	if(v3)	_DT_->Diff(_D_(v1),_D_(v2),_D_(v3));
+	else	_DT_->Diff(_D_(v1),_D_(v2));
+}
+//-----------------------------------------------------------------------------

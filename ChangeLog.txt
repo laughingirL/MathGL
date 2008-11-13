@@ -16,6 +16,7 @@
 		* Evaluate() -- for producing array interpolated by coordinates from other array(s).
 		* Put() -- for setting a values (as number or from array) for range of data.
 		* Fill() -- for filling by formula with coordinates x,y,z in specified range
+		* Diff() -- for finding derivative of parametrically specified data.
 		* mglPDE() -- for solving PDE in more or less general case.
 		* mglRay() -- for ray tracing (for finding trajectory in 3D space).
 		* mglQO2d() -- for beam tracing in 2D case (PDE solving in accompanied coordinates).
@@ -38,7 +39,7 @@
 	- Information about mouse click position is shown in widgets (if ShowMousePos=true)
 	- Clean up C/Fortran interface: replace 'bool' to 'int' in C interface; add a lot of new interface functions; change the order of arguments in mgl_data_set_value().
 	- Add MGL commands 'fplot', 'fsurf', 'fgets', 'export', 'import', 'write', 'region', 'title', 'sew', 'envelop', 'evaluate', 'put', 'palette', 'combine', 'pde', 'ray', 'qo2d', 'jacobian'.
-	- Extend MGL commands 'info', 'fill', 'copy'.
+	- Extend MGL commands 'info', 'fill', 'copy', 'diff'.
 	- Add const modifiers everywhere.
 	- Add default window functions in mglGraphAB (as base class).
 	- Class mglFormula and functions for data extraction (like SubData, Hist and so on) now are thread safe.

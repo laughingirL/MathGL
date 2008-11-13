@@ -481,6 +481,7 @@ HMDT mgl_data_min_dir(const HMDT dat, const char *dir);
 void mgl_data_cumsum(HMDT dat, const char *dir);
 void mgl_data_integral(HMDT dat, const char *dir);
 void mgl_data_diff(HMDT dat, const char *dir);
+void mgl_data_diff_par(HMDT dat, const HMDT v1, const HMDT v2, const HMDT v3);
 void mgl_data_diff2(HMDT dat, const char *dir);
 void mgl_data_swap(HMDT dat, const char *dir);
 void mgl_data_mirror(HMDT dat, const char *dir);

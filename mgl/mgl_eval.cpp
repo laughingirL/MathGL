@@ -497,7 +497,8 @@ float mglFormula::CalcIn(const float *a1)
 	{
 		double b = Right->CalcIn(a1);
 		if(isnan(b))	return NAN;
-		if(Kod==EQ_POW && a<=0)		{ Error=MGL_ERR_LOG; return NAN; }
+		if(Kod==EQ_POW && ((a<0 && b>0) || (a<=0 && b<=0)))
+		{ Error=MGL_ERR_LOG; return NAN; }
 		if(Kod==EQ_LOG && (a<=0 || b<=0))	{ Error=MGL_ERR_LOG; return NAN; }
 		return f2[Kod-EQ_LT](a,b);
 	}

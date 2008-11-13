@@ -190,9 +190,9 @@ bool mglGraph::ScalePoint(float &x,float &y,float &z)
 		}
 		x = x + (y+1)/2;
 	}
-//	if(fabs(x)>FLT_EPS)	res = false;
-//	if(fabs(y)>FLT_EPS)	res = false;
-//	if(fabs(z)>FLT_EPS)	res = false;
+	if(fabs(x)>FLT_EPS)	res = false;
+	if(fabs(y)>FLT_EPS)	res = false;
+	if(fabs(z)>FLT_EPS)	res = false;
 	return res;
 }
 //-----------------------------------------------------------------------------

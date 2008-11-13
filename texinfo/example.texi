@@ -1,5 +1,5 @@
 @c ------------------------------------------------------------------
-@node Examples, Samples, Interfaces, Top
+@node Examples, MathGL core, Overview, Top
 @chapter MathGL examples
 
 This chapter contain information about basic and advanced MathGL, hints and samples for all types of graphics. I recommend you read first 2 sections one after another and at least look on ``Hints'' section. Also I recommend you to look at @ref{General concepts} and @ref{FAQ}. Sample code for some of these examples can be found in @uref{http://mathgl.sf.net/pictures.html} and in @ref{Samples}.
@@ -39,6 +39,7 @@ Let me consider the aforesaid in more detail.
 * Using FLTK/GLUT window::      
 * Drawing to file::             
 * Drawing in memory::           
+* Using QMathGL::               
 @end menu
 
 
@@ -154,7 +155,7 @@ The differences from the using of bitmap picture are: applying of the other clas
 Classes @code{mglGraphZB} and @code{mglGraphPS} have some merits and demerits. Class @code{mglGraphZB} draws beautiful surface with transparency, smoothed colors and lightning, but the output picture is @emph{bitmap}, that leads to a bad scalability. On the contrary, class @code{mglGraphPS} creates vector file with excellent scalability. But file has large size (especially for surfaces), it does not support transparency and color smoothing. So, vector picture looks stylish but a bit angularly.
 
 @c ------------------------------------------------------------------
-@node Drawing in memory, , Drawing to file, Basic usage
+@node Drawing in memory, Using QMathGL, Drawing to file, Basic usage
 @subsection Drawing in memory
 
 The last way of MathGL using is the drawing in memory. Class @code{mglGraphZB} allows one  to create a bitmap picture in memory. Further this picture can be displayed in window by some window libraries (like wxWidgets, FLTK, Windows GDI and so on). For example, the code for drawing in wxWidget library looks like:
@@ -176,6 +177,41 @@ The last way of MathGL using is the drawing in memory. Class @code{mglGraphZB} a
     }
 @end verbatim
 The drawing in other libraries is most the same. Moreover, I excluded the support of TIFF and JPEG files from MathGL by default for compatibility with wxWidgets library.
+
+@c ------------------------------------------------------------------
+@node Using QMathGL, , Drawing in memory, Basic usage
+@subsection Using QMathGL
+
+MathGL have several interface widgets for different widget libraries. There are QMathGL for Qt, Fl_MathGL for FLTK in MathGL v.1.8. These classes provide control which display MathGL graphics. Unfortunately there is no uniform interface for widget classes because all libraries have slightly different set of functions, features and so on. However the usage of MathGL widgets is rather simple. Let me show it on the example of QMathGL.
+
+First of all you have to define the drawing function or inherit a class from @code{mglDraw} class. After it just create a window and setup QMathGL instance as any other Qt widget:
+@verbatim
+    int main(int argc,char **argv)
+    {
+        QApplication a(argc,argv);
+        QMainWindow *Wnd = new QMainWindow;
+        Wnd->resize(650,480);  // for fill up the QMGL, menu and toolbars
+        Wnd->setWindowTitle(title);
+        // here I allow to scroll QMathGL -- the case 
+        // then user want to prepare huge picture
+        QScrollArea *scroll = new QScrollArea(Wnd);
+
+        // Create and setup QMathGL
+        QMathGL *QMGL = new QMathGL(Wnd);
+        QMGL->setPopup(popup); // if you want to setup popup menu for QMGL
+        QMGL->setDraw(sample, NULL);
+        // or use QMGL->setDraw(foo); for instance of class Foo:public mglDraw
+        QMGL->update();
+
+        // continue other setup (menu, toolbar and so on)
+        makeMenu();
+        scroll->setWidget(QMGL);
+        Wnd->setCentralWidget(scroll);
+        Wnd->show();
+        return a.exec();
+    }
+@end verbatim
+
 
 @c ------------------------------------------------------------------
 @node Advanced usage, Data handling, Basic usage, Examples
@@ -467,6 +503,8 @@ or by using @code{Modify()} function
     mglData z(30,40);
     z.Modify("sin(pi*x)*cos(pi*y)");
 @end verbatim
+
+The only non-obvious thing here is using multidimensional arrays in C/C++, i.e. arrays defined like @code{float dat[40][30];}. Since, formaly this arrays element @code{dat[i]} can address the memory in arbitrary place you should use the proper function to convert such arrays to @code{mglData} object. For C++ this is functions like @code{mglData::Set(float **dat, int N1, int N2);}. For C this is functions like @code{mgl_data_set_float2(HMDT d, const float **dat, int N1, int N2);}. At this, you should keep in mind that @code{nx=N2} and @code{ny=N1} after conversion.
 
 @c ------------------------------------------------------------------
 @node Data changing, , Array creation, Data handling

@@ -920,12 +920,20 @@ void mglc_dots(wchar_t out[1024], long n, mglArg *a, int k[10])
 int mgls_diff(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==2)	a[0].d->Diff(a[1].s);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		a[0].d->Diff(*(a[1].d), *(a[2].d), *(a[3].d));
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		a[0].d->Diff(*(a[1].d), *(a[2].d));
 	else	return 1;
 	return 0;
 }
 void mglc_diff(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==2)	swprintf(out,1024,L"%s.Diff(\"%s\");", a[0].s, a[1].s);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		swprintf(out,1024,L"%s.Diff(%s, %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s);
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		swprintf(out,1024,L"%s.Diff(%s, %s);", a[0].s, a[1].s, a[2].s);
 }
 //-----------------------------------------------------------------------------
 //	{"diff2","Numerically double differentiate data","diff2 var dir", mgls_diff2, mglc_diff2}
@@ -3256,7 +3264,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"info",L"Print information about data",L"info var", mgls_info, mglc_info, false},
 	{L"inplot",L"Set position of plot in picture",L"", mgls_inplot, mglc_inplot, false},
 	{L"integrate",L"Integrate data",L"integrate var dir", mgls_integrate, mglc_integrate, false},
-	{L"jacobian",L"Get Jacobian",L"jacobian res xdat ydat [zdat=0]", mgls_jacobian, mglc_jacobian, false},
+	{L"jacobian",L"Get Jacobian",L"jacobian res xdat ydat [zdat=0]", mgls_jacobian, mglc_jacobian, true},
 	{L"legend",L"Draw legend",L"legend {xpos ypos} | pos [fmt size]", mgls_legend, mglc_legend, false},
 	{L"legendbox",L"Switch on/off drawing box in legend",L"legendbox val", mgls_legendbox, mglc_legendbox, false},
 	{L"light",L"Setup light",L"", mgls_light, mglc_light, false},

@@ -437,6 +437,7 @@ uintptr_t mgl_data_min_dir_(uintptr_t *dat, const char *dir,int);
 void mgl_data_cumsum_(uintptr_t *dat, const char *dir,int);
 void mgl_data_integral_(uintptr_t *dat, const char *dir,int);
 void mgl_data_diff_(uintptr_t *dat, const char *dir,int);
+void mgl_data_diff_par_(uintptr_t *dat, uintptr_t *v1, uintptr_t *v2, uintptr_t *v3);
 void mgl_data_diff2_(uintptr_t *dat, const char *dir,int);
 void mgl_data_swap_(uintptr_t *dat, const char *dir,int);
 void mgl_data_mirror_(uintptr_t *dat, const char *dir,int);

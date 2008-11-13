@@ -623,7 +623,7 @@ mglData mglData::Hist(int n,float v1,float v2,int nsub) const
 	}
 	else
 	{
-		register float x,y,z,d=1./(abs(n)+1),f;
+		register float x,y,z,d=1./(abs(nsub)+1),f;
 		bool sp = n>0;
 		for(x=0;x<nx;x+=d)	for(y=0;y<ny;y+=d)	for(z=0;z<nz;z+=d)
 		{
@@ -648,7 +648,7 @@ mglData mglData::Hist(const mglData &w, int n,float v1,float v2,int nsub) const
 	}
 	else
 	{
-		register float x,y,z,d=1./(abs(n)+1),f,g;
+		register float x,y,z,d=1./(abs(nsub)+1),f,g;
 		bool sp = n>0;
 		for(x=0;x<nx;x+=d)	for(y=0;y<ny;y+=d)	for(z=0;z<nz;z+=d)
 		{
@@ -1636,4 +1636,137 @@ void mglData::Put(const mglData &val, int xx, int yy, int zz)
 			a[xx+nx*(yy+i*ny)] = val.a[i];
 	}
 }
+//-----------------------------------------------------------------------------
+void mglData::Diff(const mglData &x, const mglData &y)
+{
+	if(nx<2 || ny<2)	return;
+	if(x.nx*x.ny!=nx*ny || y.nx*y.ny!=nx*ny)	return;
+	bool same = (x.nz==nz && y.nz==nz);
+	float *b = new float[nx*ny*nz],au,av,xu,xv,yu,yv;
+	register long i,j,k,i0,i1;
+	for(k=0;k<nz;k++)
+	{
+		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+		{
+			i0 = i+nx*(j+ny*k);
+			i1 = same ? i0 : i+nx*j;
+			if(i==0)
+			{
+				au = 3*a[i0]-4*a[i0+1]+a[i0+2];
+				xu = 3*x.a[i1]-4*x.a[i1+1]+x.a[i1+2];
+				yu = 3*y.a[i1]-4*y.a[i1+1]+y.a[i1+2];
+			}
+			else if(i==nx-1)
+			{
+				au = 3*a[i0+nx-1]-4*a[i0+nx-2]+a[i0+nx-3];
+				xu = 3*x.a[i1+nx-1]-4*x.a[i1+nx-2]+x.a[i1+nx-3];
+				yu = 3*y.a[i1+nx-1]-4*y.a[i1+nx-2]+y.a[i1+nx-3];
+			}
+			else
+			{
+				au = a[i+i0+1]-a[i+i0-1];
+				xu = x.a[i+i1+1]-x.a[i+i1-1];
+				yu = y.a[i+i1+1]-y.a[i+i1-1];
+			}
+			if(j==0)
+			{
+				av = 3*a[i0]-4*a[i0+nx]+a[i0+2*nx];
+				xv = 3*x.a[i1]-4*x.a[i1+nx]+x.a[i1+2*nx];
+				yv = 3*y.a[i1]-4*y.a[i1+nx]+y.a[i1+2*nx];
+			}
+			else if(j==nx-1)
+			{
+				av = 3*a[i0+(ny-1)*nx]-4*a[i0+(ny-2)*nx]+a[i0+(ny-3)*nx];
+				xv = 3*x.a[i1+(ny-1)*nx]-4*x.a[i1+(ny-2)*nx]+x.a[i1+(ny-3)*nx];
+				yv = 3*y.a[i1+(ny-1)*nx]-4*y.a[i1+(ny-2)*nx]+y.a[i1+(ny-3)*nx];
+			}
+			else
+			{
+				av = a[i0+nx]-a[i0-nx];
+				xv = x.a[i1+nx]-x.a[i1-nx];
+				yv = y.a[i1+nx]-y.a[i1-nx];
+			}
+			b[i0] = (av*yu-au*yv)/(xv*yu-xu*yv);
+		}
+	}
+	delete []a;	a=b;
+}
+//-----------------------------------------------------------------------------
+void mglData::Diff(const mglData &x, const mglData &y, const mglData &z)
+{
+	if(nx<2 || ny<2)	return;
+	if(x.nx*x.ny*x.nz!=nx*ny*nz || y.nx*y.ny*y.nz!=nx*ny*nz || z.nx*z.ny*z.nz!=nx*ny*nz)	return;
+	float *b = new float[nx*ny*nz],au,av,aw,xu,xv,xw,yu,yv,yw,zu,zv,zw;
+	register long i,j,k,i0;
+	for(k=0;k<nz;k++)	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+	{
+		i0 = i+nx*(j+ny*k);
+		if(i==0)
+		{
+			au = 3*a[i0]-4*a[i0+1]+a[i0+2];
+			xu = 3*x.a[i0]-4*x.a[i0+1]+x.a[i0+2];
+			yu = 3*y.a[i0]-4*y.a[i0+1]+y.a[i0+2];
+			zu = 3*z.a[i0]-4*z.a[i0+1]+z.a[i0+2];
+		}
+		else if(i==nx-1)
+		{
+			au = 3*a[i0+nx-1]-4*a[i0+nx-2]+a[i0+nx-3];
+			xu = 3*x.a[i0+nx-1]-4*x.a[i0+nx-2]+x.a[i0+nx-3];
+			yu = 3*y.a[i0+nx-1]-4*y.a[i0+nx-2]+y.a[i0+nx-3];
+			zu = 3*z.a[i0+nx-1]-4*z.a[i0+nx-2]+z.a[i0+nx-3];
+		}
+		else
+		{
+			au = a[i+i0+1]-a[i+i0-1];
+			xu = x.a[i+i0+1]-x.a[i+i0-1];
+			yu = y.a[i+i0+1]-y.a[i+i0-1];
+			zu = z.a[i+i0+1]-z.a[i+i0-1];
+		}
+		if(j==0)
+		{
+			av = 3*a[i0]-4*a[i0+nx]+a[i0+2*nx];
+			xv = 3*x.a[i0]-4*x.a[i0+nx]+x.a[i0+2*nx];
+			yv = 3*y.a[i0]-4*y.a[i0+nx]+y.a[i0+2*nx];
+			zv = 3*z.a[i0]-4*z.a[i0+nx]+z.a[i0+2*nx];
+		}
+		else if(j==nx-1)
+		{
+			av = 3*a[i0+(ny-1)*nx]-4*a[i0+(ny-2)*nx]+a[i0+(ny-3)*nx];
+			xv = 3*x.a[i0+(ny-1)*nx]-4*x.a[i0+(ny-2)*nx]+x.a[i0+(ny-3)*nx];
+			yv = 3*y.a[i0+(ny-1)*nx]-4*y.a[i0+(ny-2)*nx]+y.a[i0+(ny-3)*nx];
+			zv = 3*z.a[i0+(ny-1)*nx]-4*z.a[i0+(ny-2)*nx]+z.a[i0+(ny-3)*nx];
+		}
+		else
+		{
+			av = a[i0+nx]-a[i0-nx];
+			xv = x.a[i0+nx]-x.a[i0-nx];
+			yv = y.a[i0+nx]-y.a[i0-nx];
+			zv = z.a[i0+nx]-z.a[i0-nx];
+		}
+		if(k==0)
+		{
+			aw = 3*a[i0]-4*a[i0+nx*ny]+a[i0+2*nx*ny];
+			xw = 3*x.a[i0]-4*x.a[i0+nx*ny]+x.a[i0+2*nx*ny];
+			yw = 3*y.a[i0]-4*y.a[i0+nx*ny]+y.a[i0+2*nx*ny];
+			zw = 3*z.a[i0]-4*z.a[i0+nx*ny]+z.a[i0+2*nx*ny];
+		}
+		else if(k==nz-1)
+		{
+			aw = 3*a[i+(nz-1)*nx*ny]-4*a[i+(nz-2)*nx*ny]+a[i+(nz-3)*nx*ny];
+			xw = 3*x.a[i+(nz-1)*nx*ny]-4*x.a[i+(nz-2)*nx*ny]+x.a[i+(nz-3)*nx*ny];
+			yw = 3*y.a[i+(nz-1)*nx*ny]-4*y.a[i+(nz-2)*nx*ny]+y.a[i+(nz-3)*nx*ny];
+			zw = 3*z.a[i+(nz-1)*nx*ny]-4*z.a[i+(nz-2)*nx*ny]+z.a[i+(nz-3)*nx*ny];
+		}
+		else
+		{
+			aw = a[i0+nx*ny]-a[i0-nx*ny];
+			xw = x.a[i0+nx*ny]-x.a[i0-nx*ny];
+			yw = y.a[i0+nx*ny]-y.a[i0-nx*ny];
+			zw = z.a[i0+nx*ny]-z.a[i0-nx*ny];
+		}
+		b[i0] = (au*yv*zw-av*yu*zw-au*yw*zv+aw*yu*zv+av*yw*zu-aw*yv*zu) / (xu*yv*zw-xv*yu*zw-xu*yw*zv+xw*yu*zv+xv*yw*zu-xw*yv*zu);
+	}
+	delete []a;	a=b;
+}
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

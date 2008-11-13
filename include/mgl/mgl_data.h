@@ -255,6 +255,10 @@ public:
 	void Integral(const char *dir);
 	/// Differentiate the data in given direction or directions
 	void Diff(const char *dir);
+	/// Differentiate the parametrically specified data along direction v1 with v2=const
+	void Diff(const mglData &v1, const mglData &v2);
+	/// Differentiate the parametrically specified data along direction v1 with v2,v3=const
+	void Diff(const mglData &v1, const mglData &v2, const mglData &v3);
 	/// Double-differentiate (like laplace operator) the data in given direction
 	void Diff2(const char *dir);
 	/// Swap left and right part of the data in given direction (useful for fourier spectrums)

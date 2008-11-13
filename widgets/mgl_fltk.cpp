@@ -77,6 +77,9 @@ Fl_MathGL::Fl_MathGL(int x, int y, int w, int h, char *label) : Fl_Widget(x,y,w,
 //-----------------------------------------------------------------------------
 Fl_MathGL::~Fl_MathGL()	{}
 //-----------------------------------------------------------------------------
+int mgl_draw_class(mglGraph *gr, void *p);
+void Fl_MathGL::set_draw(mglDraw *dr)
+{	draw_func = mgl_draw_class;	draw_par = dr;	}
 void Fl_MathGL::draw()
 {
 	if(zoom && x0!=xe && y0!=ye)

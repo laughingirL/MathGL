@@ -1245,6 +1245,12 @@ Solves GO ray equation like d@emph{r}/dt = d @var{ham}/d@emph{p}, d@emph{p}/dt =
 Solves equation du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators (see @code{mglPDE()} for details). Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{ray} set the reference ray, i.e. the ray around which the accompanied coordinate system will be maked. You may use, for example, the array created by @code{mglRay()} function. Note, that the reference ray @strong{must be} smooth enough to make accompanied coodrinates unambiguity. Otherwise errors in the solution may appear. If @var{xx} and @var{yy} are non-zero then Cartesian coordinates for each point will be written into them. @sref{Beam tracing sample} 
 @end deffn
 
+@deffn {MGL command} jacobian res xdat ydat [zdat=0]
+Computates the Jacobian for transformation @{i,j,k@} to @{@var{xdat},@var{ydat},@var{zdat}@} where initial coordinates  @{i,j,k@} are data indexes normalized in range [0,1]. The Jacobian is determined by formula det||@math{dr_\alpha/d\xi_\beta}|| where @math{r}=@{@var{xdat},@var{ydat},@var{zdat}@} and @math{\xi}=@{i,j,k@}. All dimensions must be the same for all data arrays. Data must be 3D if all 3 arrays @{@var{xdat},@var{ydat},@var{zdat}@} are specified or 2D if only 2 arrays @{@var{xdat},@var{ydat}@} are specified.
+@end deffn
+
+
+
 @c ------------------------------------------------------------------
 @node Commands on direction (MGL), Operators (MGL), Make another data (MGL), MGL interface
 @subsection Commands on direction (MGL)
@@ -1271,6 +1277,10 @@ Integrates (like cumulative summation) the data in given direction or directions
 @deffn {MGL command} diff dat 'dir'
 Differentiates the data in given direction or directions.
 @end deffn
+@deffn {MGL command} diff dat xdat ydat [zdat=0]
+Differentiates the data @var{dat} specified parametrically in direction @var{xdat} with @var{ydat}, @var{zdat}=constant. Parameter @var{zdat} can be omitted that correspond to 2D case. Parametrical differentiation uses the formula (for 2D case): @math{da/dx = (a_j*y_i-a_i*y_j)/(x_j*y_i-x_i*y_j)} where @math{a_i=da/di, a_j=da/dj} denotes usual differentiation along 1st and 2nd dimensions. The similar formula is used for 3D case. Note, that you may change the order of arguments -- for example, if you have 2D data a(i,j) which depend on coordinates @{x(i,j), y(i,j)@} then usual derivative along @samp{x} will be @code{diff a x y} and usual derivative along @samp{y} will be @code{diff a y x}.
+@end deffn
+
 @deffn {MGL command} diff2 dat 'dir'
 Double-differentiates (like Laplace operator) the data in given direction.
 @end deffn

@@ -1,5 +1,5 @@
 
-@node Overview, MathGL core, , Top
+@node Overview, Examples, , Top
 @chapter Overview
 
 @cindex MathGL overview
@@ -17,12 +17,12 @@ a library with large and growing set of graphics.
 @end itemize
 
 @menu
-* Why I have written MathGL?::
-* MathGL features::
-* Installation adn using::
-* General concepts::
-* FAQ::
-* Thanks::
+* Why I have written MathGL?::  
+* MathGL features::             
+* Installation and using::      
+* General concepts::            
+* FAQ::                         
+* Thanks::                      
 @end menu
 
 @node Why I have written MathGL?, MathGL features, , Overview
@@ -32,7 +32,7 @@ The code for making high-quality scientific graphics under Linux and Windows. Th
 
 At this version (@value{VERSION}) MathGL has more than 20000 code strings, more than 40 general types of graphics for 1d, 2d and 3d data arrays. It can export graphics to bitmap and vector (EPS or SVG) files. It has OpenGL interface and can be used from console programs. It has functions for data handling and script MGL language for simplification of data plotting. Also it has several types of transparency and smoothed lightning, vector fonts and TeX-like symbol parsing, arbitrary curvilinear coordinate system and many over useful things (see pictures section at @uref{http://mathgl.sf.net/, homepage}). Finally it is a platform independent and free (under GPL v.2.0 or later license).
 
-@node MathGL features, Installation adn using, Why I have written MathGL?, Overview
+@node MathGL features, Installation and using, Why I have written MathGL?, Overview
 @section MathGL features
 
 MathGL can plot wide range of graphics. It includes:
@@ -63,7 +63,7 @@ Special mglData class is used for data encapsulation (@pxref{mglData class}). Ex
 
 Class mglFormula class allows the fast evaluation of a textual mathematical expression (@pxref{mglFormula class}). It is based on string precompilation to tree-like code at creation of class instance. At evaluation stage code performs only fast tree-walk and returns the value of the expression. Except changing data values, textual formulas are used for drawing in @emph{arbitrary} curvilinear coordinates. A set of such curvilinear coordinates is limited only by user imagination but not a fixed list like polar, parabolic, spherical and so on.
 
-@node Installation adn using, General concepts, MathGL features, Overview
+@node Installation and using, General concepts, MathGL features, Overview
 @section Installation and using
 
 MathGL can be installed by 3 ways.
@@ -78,7 +78,7 @@ Install precompiled versions from standard packages (RPM, deb, DevPak and so on,
 
 At the own program compilation one needs to specify the linker key @code{-lmgl} for compilation in console program or with the external (not MathGL) window library. If one wants to use FLTK or GLUT windows then he needs to add the keys @code{-lmgl-fltk} or @code{-lmgl-glut}. Fortran users also must add C++ library by option @code{-lstdc++}.
 
-@node General concepts, FAQ, Installation adn using, Overview
+@node General concepts, FAQ, Installation and using, Overview
 @section General concepts
 
 The set of MathGL features is rather reach -- just the number of basic graphics types is more than 40. Also there are functions for data handling, plot setup and so on. In spite of it I tried to keep the similar style in function names and in the order of arguments. Mostly it is regarded for different drawing functions.
@@ -102,10 +102,10 @@ There are six most general (base) concepts:
 Except general concept I want consider on some non-trivial or non-usual general ideas -- plot positioning, axis specification and curvilinear coordinates, styles for lines, text and color scheme.
 
 @menu
-* Coordinate axes::
-* Line styles::
-* Color scheme::
-* Font style::
+* Coordinate axes::             
+* Line styles::                 
+* Color scheme::                
+* Font style::                  
 @end menu
 
 

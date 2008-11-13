@@ -322,6 +322,13 @@ Integrates (like cumulative summation) the data in given direction or directions
 @deftypemethod mglData @code{void} Diff (@code{const char *}dir)
 Differentiates the data in given direction or directions.
 @end deftypemethod
+
+@deftypemethod mglData @code{void} Diff (@code{const mglData &}x, @code{const mglData &}y)
+@deftypemethodx mglData @code{void} Diff (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z)
+Differentiates the data specified parametrically in direction @var{x} with @var{y}, @var{z}=constant. Parametrical differentiation uses the formula (for 2D case): @math{da/dx = (a_j*y_i-a_i*y_j)/(x_j*y_i-x_i*y_j)} where @math{a_i=da/di, a_j=da/dj} denotes usual differentiation along 1st and 2nd dimensions. The similar formula is used for 3D case. Note, that you may change the order of arguments -- for example, if you have 2D data a(i,j) which depend on coordinates @{x(i,j), y(i,j)@} then usual derivative along @samp{x} will be @code{Diff(x,y);} and usual derivative along @samp{y} will be @code{Diff(y,x);}.
+@end deftypemethod
+
+
 @deftypemethod mglData @code{void} Diff2 (@code{const char *}dir)
 Double-differentiates (like Laplace operator) the data in given direction.
 @end deftypemethod

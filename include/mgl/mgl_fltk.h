@@ -99,6 +99,8 @@ public:
 
 	/// Update (redraw) plot
 	void update(mglGraph *gr=0);
+	/// Set drawing functions from the class
+	void set_draw(mglDraw *dr);
 	/// Set angles for additional plot rotation
 	inline void set_angle(float t, float p){	tet = t;	phi = p;	};
 	/// Set bitwise flags for general state (1-Alpha, 2-Light)

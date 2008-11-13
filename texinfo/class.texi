@@ -179,6 +179,9 @@ Class @code{mglGraphGLUT} adds the possibility to create plotting window with th
 
 Class is FLTK widget which display MathGL graphics (defined in @code{#include <mgl/mgl_fltk.h>}
 
+@deftypemethod Fl_MathGL @code{void} set_draw (@code{mglDraw *}dr)
+Sets drawing function from a class inherited from @code{mglDraw}.
+@end deftypemethod
 @deftypemethod Fl_MathGL @code{void} update (@code{mglGraph *}gr=@code{NULL})
 Update (redraw) plot using grapher @var{gr} (built-in by default).
 @end deftypemethod
