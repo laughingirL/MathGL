@@ -698,32 +698,60 @@ void mglPrim::Draw(mglGraphPS *gr)
 	{
 		float b=(w<1?1:w), dd;
 
+		bool hor = fabs(x[1]-x[0])>fabs(y[1]-y[0]), tt;
 		d1[0] = x[1]-x[0];	d1[1] = y[1]-y[0];
 		dd = sqrt(d1[0]*d1[0] + d1[1]*d1[1]);
 		if(dd<1e-5)	return;		// points lies on the vertical line
 
 		dxv = d1[1]/dd;	dyv =-d1[0]/dd;
 		dxu = d1[0]/dd;	dyu = d1[1]/dd;
+		long dp = int(w+3.5);
 
-		x1 = imin(long(x[0]),long(x[1]));	// bounding box
-		y1 = imin(long(y[0]),long(y[1]));
-		x2 = imax(long(x[0]),long(x[1]));
-		y2 = imax(long(y[0]),long(y[1]));
-		x1 -= int(w+3.5);	y1 -= int(w+3.5);
-		x2 += int(w+3.5);	y2 += int(w+3.5);
-
-		for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
+		if(hor)
 		{
-			xx = (i-x[0]);	yy = (j-y[0]);
-			u = dxu*xx+dyu*yy;	v = fabs(dxv*xx+dyv*yy);
-			if(u<0)		{	v = hypot(u,v);		u = 0;	}
-			if(u>dd)	{	v = hypot(u-dd,v);	u = dd;	}
-			if(v>b)		continue;
-			bool tt = dash & (1<<long(fmod(u/w, 16)));
-			if(!tt)		continue;
-			u /= dd;
-			r[3] = (unsigned char)(255*exp(-6*ipow_mgl(v/b,2)));
-			gr->pnt_plot(i,j,r);
+			x1 = imin(long(x[0]),long(x[1])) - dp;	// bounding box
+			x2 = imax(long(x[0]),long(x[1])) + dp;
+			for(i=x1;i<=x2;i++)
+			{
+				y1 = int(y[0]+(y[1]-y[0])*(i-x[0])/(x[1]-x[0])) - dp;
+				y2 = int(y[0]+(y[1]-y[0])*(i-x[0])/(x[1]-x[0])) + dp;
+				for(j=y1;j<=y2;j++)
+				{
+					xx = (i-x[0]);	yy = (j-y[0]);
+					u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
+					if(u<0)			{	v += u*u;			u = 0;	}
+					else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
+					if(v>b)		continue;
+					tt = dash & (1<<long(fmod(u/w, 16)));
+					if(!tt)		continue;
+					u /= dd;
+					r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
+					gr->pnt_plot(i,j,r);
+				}
+			}
+		}
+		else
+		{
+			y1 = imin(long(y[0]),long(y[1])) - dp;
+			y2 = imax(long(y[0]),long(y[1])) + dp;
+			for(j=y1;j<=y2;j++)
+			{
+				x1 = int(x[0]+(x[1]-x[0])*(j-y[0])/(y[1]-y[0])) - dp;
+				x2 = int(x[0]+(x[1]-x[0])*(j-y[0])/(y[1]-y[0])) + dp;
+				for(i=x1;i<=x2;i++)
+				{
+					xx = (i-x[0]);	yy = (j-y[0]);
+					u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
+					if(u<0)			{	v += u*u;			u = 0;	}
+					else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
+					if(v>b)		continue;
+					tt = dash & (1<<long(fmod(u/w, 16)));
+					if(!tt)		continue;
+					u /= dd;
+					r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
+					gr->pnt_plot(i,j,r);
+				}
+			}
 		}
 	}
 }

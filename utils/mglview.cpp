@@ -16,6 +16,7 @@
  */
 #include <stdio.h>
 #include <string.h>
+#include <locale.h>
 #include "mgl/mgl_fltk.h"
 #include "mgl/mgl_parse.h"
 //-----------------------------------------------------------------------------
@@ -26,7 +27,7 @@ char buf[2048];
 //-----------------------------------------------------------------------------
 int show(mglGraph *gr, void *)
 {
-	FILE *fp = fopen(fname,"rt");
+	FILE *fp = fopen(fname,"rb");
 	p.Execute(gr, fp, true);
 	fclose(fp);
 	return 0;
@@ -43,20 +44,22 @@ int main(int narg, char **arg)
 		printf("Usage:\tmglview scriptfile [parameter(s)]\n");
 		printf("\tParameters have format \"-Nval\".\n");
 		printf("\tHere N=0,1...9 is parameter ID and val is its value\n");
+		printf("\tOption -Lval set locale to val.\n");
 	}
 	else
 	{
-		FILE *fp = fopen(arg[1],"rt");
+		FILE *fp = fopen(arg[1],"rb");
 		if(fp==0)	printf("Couldn't open file %s\n",arg[1]);
 		else
 		{
 			register long i,j;
 			for(i=2;i<narg;i++)	// add arguments for the script
+			{
 				if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
-				{
-					p.AddParam(arg[i][1]-'0',arg[i]+2);
-					arg[i][0]=0;
-				}
+				{	p.AddParam(arg[i][1]-'0',arg[i]+2);	arg[i][0]=0;	}
+				if(arg[i][0]=='-' && arg[i][1]=='L')
+				{	setlocale(LC_CTYPE, arg[i]+2);		arg[i][0]=0;	}
+			}
 			strncpy(fname,arg[1],256);
 			fclose(fp);
 			arg[1][0] = 0;

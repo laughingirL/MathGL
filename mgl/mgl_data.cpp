@@ -587,21 +587,24 @@ void mglData::Crop(int n1,int n2,char dir)
 	switch(dir)
 	{
 	case 'x':
-		if(n2<0 || n2>=nx)	n2 = nx;
+		n2 = n2>0 ? n2 : nx+n2;
+		if(n2<0 || n2>=nx || n2<n1)	n2 = nx;
 		nn = n2-n1;	b = new float[nn*ny*nz];
 		for(i=0;i<ny*nz;i++)
 			memcpy(b+nn*i,a+nx*i+n1,nn*sizeof(float));
 		nx = nn;	delete []a;		a = b;
 		break;
 	case 'y':
-		if(n2<0 || n2>=ny)	n2 = ny;
-		nn = n2-n1;	b = new float[nn*ny*nz];
+		n2 = n2>0 ? n2 : ny+n2;
+		if(n2<0 || n2>=ny || n2<n1)	n2 = ny;
+		nn = n2-n1;	b = new float[nn*nx*nz];
 		for(i=0;i<nx;i++)	for(long j=0;j<nz;j++)	for(k=0;k<nn;k++)
 			b[i+nx*(k+nn*j)] = a[i+nx*(n1+k+ny*j)];
 		ny = nn;	delete []a;		a = b;
 		break;
 	case 'z':
-		if(n2<0 || n2>=nz)	n2 = nz;
+		n2 = n2>0 ? n2 : nz+n2;
+		if(n2<0 || n2>=nz || n2<n1)	n2 = nz;
 		nn = n2-n1;	b = new float[nn*nx*ny];
 		for(i=0;i<nx*ny;i++)	for(k=0;k<nn;k++)
 			b[i+nx*ny*k] = a[i+nx*ny*(n1+k)];
@@ -1644,12 +1647,13 @@ void mglData::Diff(const mglData &x, const mglData &y)
 	bool same = (x.nz==nz && y.nz==nz);
 	float *b = new float[nx*ny*nz],au,av,xu,xv,yu,yv;
 	register long i,j,k,i0,i1;
+	long kk;
 	for(k=0;k<nz;k++)
 	{
+		kk = same ? 0:-nx*ny*k;
 		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
 		{
-			i0 = i+nx*(j+ny*k);
-			i1 = same ? i0 : i+nx*j;
+			i0 = i+nx*(j+ny*k);		i1 = i0 + kk;
 			if(i==0)
 			{
 				au = 3*a[i0]-4*a[i0+1]+a[i0+2];
@@ -1658,15 +1662,15 @@ void mglData::Diff(const mglData &x, const mglData &y)
 			}
 			else if(i==nx-1)
 			{
-				au = 3*a[i0+nx-1]-4*a[i0+nx-2]+a[i0+nx-3];
-				xu = 3*x.a[i1+nx-1]-4*x.a[i1+nx-2]+x.a[i1+nx-3];
-				yu = 3*y.a[i1+nx-1]-4*y.a[i1+nx-2]+y.a[i1+nx-3];
+				au = 3*a[i0]-4*a[i0-1]+a[i0-2];
+				xu = 3*x.a[i1]-4*x.a[i1-1]+x.a[i1-2];
+				yu = 3*y.a[i1]-4*y.a[i1-1]+y.a[i1-2];
 			}
 			else
 			{
-				au = a[i+i0+1]-a[i+i0-1];
-				xu = x.a[i+i1+1]-x.a[i+i1-1];
-				yu = y.a[i+i1+1]-y.a[i+i1-1];
+				au = a[i0+1]-a[i0-1];
+				xu = x.a[i1+1]-x.a[i1-1];
+				yu = y.a[i1+1]-y.a[i1-1];
 			}
 			if(j==0)
 			{
@@ -1674,11 +1678,11 @@ void mglData::Diff(const mglData &x, const mglData &y)
 				xv = 3*x.a[i1]-4*x.a[i1+nx]+x.a[i1+2*nx];
 				yv = 3*y.a[i1]-4*y.a[i1+nx]+y.a[i1+2*nx];
 			}
-			else if(j==nx-1)
+			else if(j==ny-1)
 			{
-				av = 3*a[i0+(ny-1)*nx]-4*a[i0+(ny-2)*nx]+a[i0+(ny-3)*nx];
-				xv = 3*x.a[i1+(ny-1)*nx]-4*x.a[i1+(ny-2)*nx]+x.a[i1+(ny-3)*nx];
-				yv = 3*y.a[i1+(ny-1)*nx]-4*y.a[i1+(ny-2)*nx]+y.a[i1+(ny-3)*nx];
+				av = 3*a[i0]-4*a[i0-nx]+a[i0-2*nx];
+				xv = 3*x.a[i1]-4*x.a[i1-nx]+x.a[i1-2*nx];
+				yv = 3*y.a[i1]-4*y.a[i1-nx]+y.a[i1-2*nx];
 			}
 			else
 			{
@@ -1697,7 +1701,7 @@ void mglData::Diff(const mglData &x, const mglData &y, const mglData &z)
 	if(nx<2 || ny<2)	return;
 	if(x.nx*x.ny*x.nz!=nx*ny*nz || y.nx*y.ny*y.nz!=nx*ny*nz || z.nx*z.ny*z.nz!=nx*ny*nz)	return;
 	float *b = new float[nx*ny*nz],au,av,aw,xu,xv,xw,yu,yv,yw,zu,zv,zw;
-	register long i,j,k,i0;
+	register long i,j,k,i0,nn=nx*ny;
 	for(k=0;k<nz;k++)	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
 	{
 		i0 = i+nx*(j+ny*k);
@@ -1710,17 +1714,17 @@ void mglData::Diff(const mglData &x, const mglData &y, const mglData &z)
 		}
 		else if(i==nx-1)
 		{
-			au = 3*a[i0+nx-1]-4*a[i0+nx-2]+a[i0+nx-3];
-			xu = 3*x.a[i0+nx-1]-4*x.a[i0+nx-2]+x.a[i0+nx-3];
-			yu = 3*y.a[i0+nx-1]-4*y.a[i0+nx-2]+y.a[i0+nx-3];
-			zu = 3*z.a[i0+nx-1]-4*z.a[i0+nx-2]+z.a[i0+nx-3];
+			au = 3*a[i0]-4*a[i0-1]+a[i0-2];
+			xu = 3*x.a[i0]-4*x.a[i0-1]+x.a[i0-2];
+			yu = 3*y.a[i0]-4*y.a[i0-1]+y.a[i0-2];
+			zu = 3*z.a[i0]-4*z.a[i0-1]+z.a[i0-2];
 		}
 		else
 		{
-			au = a[i+i0+1]-a[i+i0-1];
-			xu = x.a[i+i0+1]-x.a[i+i0-1];
-			yu = y.a[i+i0+1]-y.a[i+i0-1];
-			zu = z.a[i+i0+1]-z.a[i+i0-1];
+			au = a[i0+1]-a[i0-1];
+			xu = x.a[i0+1]-x.a[i0-1];
+			yu = y.a[i0+1]-y.a[i0-1];
+			zu = z.a[i0+1]-z.a[i0-1];
 		}
 		if(j==0)
 		{
@@ -1729,12 +1733,12 @@ void mglData::Diff(const mglData &x, const mglData &y, const mglData &z)
 			yv = 3*y.a[i0]-4*y.a[i0+nx]+y.a[i0+2*nx];
 			zv = 3*z.a[i0]-4*z.a[i0+nx]+z.a[i0+2*nx];
 		}
-		else if(j==nx-1)
+		else if(j==ny-1)
 		{
-			av = 3*a[i0+(ny-1)*nx]-4*a[i0+(ny-2)*nx]+a[i0+(ny-3)*nx];
-			xv = 3*x.a[i0+(ny-1)*nx]-4*x.a[i0+(ny-2)*nx]+x.a[i0+(ny-3)*nx];
-			yv = 3*y.a[i0+(ny-1)*nx]-4*y.a[i0+(ny-2)*nx]+y.a[i0+(ny-3)*nx];
-			zv = 3*z.a[i0+(ny-1)*nx]-4*z.a[i0+(ny-2)*nx]+z.a[i0+(ny-3)*nx];
+			av = 3*a[i0]-4*a[i0-nx]+a[i0+(ny-3)*nx];
+			xv = 3*x.a[i0]-4*x.a[i0-nx]+x.a[i0-2*nx];
+			yv = 3*y.a[i0]-4*y.a[i0-nx]+y.a[i0-2*nx];
+			zv = 3*z.a[i0]-4*z.a[i0-nx]+z.a[i0-2*nx];
 		}
 		else
 		{
@@ -1745,24 +1749,24 @@ void mglData::Diff(const mglData &x, const mglData &y, const mglData &z)
 		}
 		if(k==0)
 		{
-			aw = 3*a[i0]-4*a[i0+nx*ny]+a[i0+2*nx*ny];
-			xw = 3*x.a[i0]-4*x.a[i0+nx*ny]+x.a[i0+2*nx*ny];
-			yw = 3*y.a[i0]-4*y.a[i0+nx*ny]+y.a[i0+2*nx*ny];
-			zw = 3*z.a[i0]-4*z.a[i0+nx*ny]+z.a[i0+2*nx*ny];
+			aw = 3*a[i0]-4*a[i0+nn]+a[i0+2*nn];
+			xw = 3*x.a[i0]-4*x.a[i0+nn]+x.a[i0+2*nn];
+			yw = 3*y.a[i0]-4*y.a[i0+nn]+y.a[i0+2*nn];
+			zw = 3*z.a[i0]-4*z.a[i0+nn]+z.a[i0+2*nn];
 		}
 		else if(k==nz-1)
 		{
-			aw = 3*a[i+(nz-1)*nx*ny]-4*a[i+(nz-2)*nx*ny]+a[i+(nz-3)*nx*ny];
-			xw = 3*x.a[i+(nz-1)*nx*ny]-4*x.a[i+(nz-2)*nx*ny]+x.a[i+(nz-3)*nx*ny];
-			yw = 3*y.a[i+(nz-1)*nx*ny]-4*y.a[i+(nz-2)*nx*ny]+y.a[i+(nz-3)*nx*ny];
-			zw = 3*z.a[i+(nz-1)*nx*ny]-4*z.a[i+(nz-2)*nx*ny]+z.a[i+(nz-3)*nx*ny];
+			aw = 3*a[i0]-4*a[i+(nz-2)*nx*ny]+a[i-2*nn];
+			xw = 3*x.a[i0]-4*x.a[i-nn]+x.a[i-2*nn];
+			yw = 3*y.a[i0]-4*y.a[i-nn]+y.a[i-2*nn];
+			zw = 3*z.a[i0]-4*z.a[i-nn]+z.a[i-2*nn];
 		}
 		else
 		{
-			aw = a[i0+nx*ny]-a[i0-nx*ny];
-			xw = x.a[i0+nx*ny]-x.a[i0-nx*ny];
-			yw = y.a[i0+nx*ny]-y.a[i0-nx*ny];
-			zw = z.a[i0+nx*ny]-z.a[i0-nx*ny];
+			aw = a[i0+nn]-a[i0-nn];
+			xw = x.a[i0+nn]-x.a[i0-nn];
+			yw = y.a[i0+nn]-y.a[i0-nn];
+			zw = z.a[i0+nn]-z.a[i0-nn];
 		}
 		b[i0] = (au*yv*zw-av*yu*zw-au*yw*zv+aw*yu*zv+av*yw*zu-aw*yv*zu) / (xu*yv*zw-xv*yu*zw-xu*yw*zv+xw*yu*zv+xv*yw*zu-xw*yv*zu);
 	}

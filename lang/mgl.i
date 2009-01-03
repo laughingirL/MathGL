@@ -41,7 +41,7 @@ const int off = 0;
 %feature("autodoc", 1);
 #end // SWIGOCTAVE
 
-#include "../include/mgl/mgl_c.h"
+#include "mgl/mgl_c.h"
 /* %include mgl_base.i */
 /* %include mgl_data.i */
 
@@ -63,11 +63,11 @@ const int off = 0;
 %rename(__rxor__) operator^(const mglPoint &, const mglPoint &);
 
 %{
-#include "../include/mgl/mgl_data.h"
+#include "mgl/mgl_data.h"
 %}
 
 
-%include ../include/mgl/mgl_data.h
+%include mgl/mgl_data.h
 
 %extend mglData
 {

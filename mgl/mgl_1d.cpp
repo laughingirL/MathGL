@@ -201,6 +201,60 @@ void mglGraph::Plot(const mglData &y, const char *pen,float zVal)
 }
 //-----------------------------------------------------------------------------
 //
+//	Plot series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::Tens(const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *pen)
+{
+	long j,m,mx,my,mz,n=y.nx;
+	Arrow1 = Arrow2 = '_';
+	char mk=0;
+	if(x.nx!=n || z.nx!=n || c.nx!=n)
+	{	SetWarn(mglWarnDim,"Tens");	return;	}
+	if(n<2)					{	SetWarn(mglWarnLow,"Tens");	return;	}
+	static int cgid=1;	StartGroup("Tens",cgid++);
+	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
+	float *pp = new float[3*n], *cc = new float[n];
+	bool *tt = new bool[n];
+	if(pen && *pen)	SetScheme(pen);
+	if(pen && *pen)	mk=SelectPen(pen);
+	for(j=0;j<m;j++)
+	{
+		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
+		register long i,k;
+		for(i=0;i<n;i++)
+		{
+			k = 3*i;
+			pp[k+0] = x.a[i+mx*n];
+			pp[k+1] = y.a[i+my*n];
+			pp[k+2] = z.a[i+mz*n];
+			tt[i] = ScalePoint(pp[k],pp[k+1],pp[k+2]);
+//			if(mk && tt[i])	Mark(pp[k],pp[k+1],pp[k+2],mk);
+		}
+		memcpy(cc,c.a+(j<c.ny?j:0)*n,n*sizeof(float));
+		curv_plot(n,pp,cc,tt);
+	}
+	EndGroup();
+	delete []tt;	delete []pp;	delete []cc;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Tens(const mglData &x, const mglData &y, const mglData &c, const char *pen,float zVal)
+{
+	mglData z(y.nx);
+	if(isnan(zVal))	zVal = Min.z;
+	z.Fill(zVal,zVal);
+	Tens(x,y,z,c,pen);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Tens(const mglData &y, const mglData &c, const char *pen,float zVal)
+{
+	if(y.nx<2)	{	SetWarn(mglWarnLow,"Tens");	return;	}
+	mglData x(y.nx);
+	x.Fill(Min.x,Max.x);
+	Tens(x,y,c,pen,zVal);
+}
+//-----------------------------------------------------------------------------
+//
 //	Area series
 //
 //-----------------------------------------------------------------------------
@@ -1252,7 +1306,7 @@ void mgl_plot_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char 
 void mgl_plot_xy(HMGL gr, const HMDT x, const HMDT y, const char *pen)
 {	if(gr && x && y)	gr->Plot(*x,*y,pen);	}
 /// Draw line plot for points in arrays \a y.
-void mgl_plot(HMGL gr, const HMDT y,	const char *pen)
+void mgl_plot(HMGL gr, const HMDT y, const char *pen)
 {	if(gr && y)	gr->Plot(*y,pen);	}
 /// Draw line plot for points in arrays \a a(0,:),\a a(1,:).
 void mgl_plot_2(HMGL gr, const HMDT a, const char *pen)
@@ -1260,6 +1314,15 @@ void mgl_plot_2(HMGL gr, const HMDT a, const char *pen)
 /// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
 void mgl_plot_3(HMGL gr, const HMDT a, const char *pen)
 {	if(gr && a)	gr->Plot3(*a,pen);	}
+/// Draw line plot for points in arrays \a x, \a y, \a z.
+void mgl_tens_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *pen)
+{	if(gr && x && y && z)	gr->Tens(*x,*y,*z,*c,pen);	}
+/// Draw line plot for points in arrays \a x, \a y.
+void mgl_tens_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT c, const char *pen)
+{	if(gr && x && y)	gr->Tens(*x,*y,*c,pen);	}
+/// Draw line plot for points in arrays \a y.
+void mgl_tens(HMGL gr, const HMDT y, const HMDT c, const char *pen)
+{	if(gr && y)	gr->Tens(*y,*c,pen);	}
 /// Draw area plot for points in arrays \a x, \a y, \a z.
 void mgl_area_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *pen)
 {	if(gr && x && y && z)	gr->Area(*x,*y,*z,pen);	}
@@ -1422,6 +1485,28 @@ void mgl_plot_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 	if(gr && a)	_GR_->Plot3(_D_(a),s);
 	delete []s;
 }
+/// Draw line plot for points in arrays \a x, \a y, \a z.
+void mgl_tens_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *pen,int l)
+{
+	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	if(gr && x && y && z)	_GR_->Tens(_D_(x),_D_(y),_D_(z),_D_(c),s);
+	delete []s;
+}
+/// Draw line plot for points in arrays \a x, \a y.
+void mgl_tens_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *c, const char *pen,int l)
+{
+	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	if(gr && x && y)	_GR_->Tens(_D_(x),_D_(y),_D_(c),s);
+	delete []s;
+}
+/// Draw line plot for points in arrays \a y.
+void mgl_tens_(uintptr_t *gr, uintptr_t *y, uintptr_t *c, const char *pen,int l)
+{
+	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	if(gr && y)	_GR_->Tens(_D_(y),_D_(c),s);
+	delete []s;
+}
+
 /// Draw area plot for points in arrays \a x, \a y, \a z.
 void mgl_area_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int l)
 {

@@ -286,13 +286,13 @@ public:
 	void Box(const char *col, bool ticks=true);
 
 	/// Safety set values of mglGraph::Cmin and mglGraph::Cmax as minimal and maximal values of data a
-	void CRange(const mglData &a, bool add = false);
+	void CRange(const mglData &a, bool add = false, float fact=0);
 	/// Safety set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
-	void XRange(const mglData &a, bool add = false);
+	void XRange(const mglData &a, bool add = false, float fact=0);
 	/// Safety set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
-	void YRange(const mglData &a, bool add = false);
+	void YRange(const mglData &a, bool add = false, float fact=0);
 	/// Safety set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
-	void ZRange(const mglData &a, bool add = false);
+	void ZRange(const mglData &a, bool add = false, float fact=0);
 
 	/// Safetly set the values of mglGraph::Cmin and mglGraph::Cmax
 	void inline CAxis(float C1,float C2)	{	Cmin=C1;	Cmax=C2;	};
@@ -484,6 +484,13 @@ public:
 	void Plot(const mglData &x, const mglData &y, const char *pen=0,float zVal=NAN);
 	/// Draw line plot for points in arrays \a y.
 	void Plot(const mglData &y, const char *pen=0,float zVal=NAN);
+
+	/// Draw line plot for points in arrays \a x, \a y, \a z which is colored by \a c (like tension plot). Parameter \a pen set color scheme and line styles (dashing and width).
+	void Tens(const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *pen=0);
+	/// Draw line plot for points in arrays \a x, \a y.
+	void Tens(const mglData &x, const mglData &y, const mglData &c, const char *pen=0,float zVal=NAN);
+	/// Draw line plot for points in arrays \a y.
+	void Tens(const mglData &y, const mglData &c, const char *pen=0,float zVal=NAN);
 
 	/// Fill area between curves y1 and y2 (if inside=false) or area for y1<=y<=y2 (if inside=true).
 	void Region(const mglData &y1, const mglData &y2, const char *pen=0, float zVal=NAN, bool inside=true);

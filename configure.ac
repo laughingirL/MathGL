@@ -10,9 +10,9 @@ AC_CONFIG_SUBDIRS(libltdl)
 #   (Interfaces removed:    CURRENT++, AGE=0, REVISION=0)
 #   (Interfaces added:      CURRENT++, AGE++, REVISION=0)
 #   (No interfaces changed:                   REVISION++)
-MGL_CURRENT=4
-MGL_REVISION=1
-MGL_AGE=2
+MGL_CURRENT=5
+MGL_REVISION=0
+MGL_AGE=0
 AC_SUBST(MGL_CURRENT)
 AC_SUBST(MGL_REVISION)
 AC_SUBST(MGL_AGE)
@@ -32,17 +32,18 @@ AC_PROG_LIBTOOL
 AC_SUBST(INCLTDL)
 AC_SUBST(LIBLTDL)
 
-AM_CXXFLAGS="-Wall"
-AC_SUBST(AM_CXXFLAGS)
 
 GSL_PROG=gsl-config
 AC_CHECK_PROG(GSL_FLAGS,$GSL_PROG,`$GSL_PROG --cflags`)
 AC_CHECK_PROG(GSL_LIBS,$GSL_PROG,`$GSL_PROG --libs`)
-if !(test "$GSL_FLAGS" && test "$GSL_LIBS") ;then
+if !(test "$GSL_LIBS") ;then
     echo "Please install gsl headers and libraries and make sure that \
 	path to $GSL_PROG exist in your PATH"
     exit
 fi
+
+AM_CXXFLAGS="-Wall $GSL_FLAGS"
+AC_SUBST(AM_CXXFLAGS)
 
 AC_ARG_ENABLE(all,
 [  --enable-all    Turn on all features],
@@ -231,12 +232,14 @@ AC_ARG_ENABLE(octave,
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-octave) ;;
 esac],[octave=false])
 if (test x$langall = xtrue || test x$octave = xtrue) ;then
+    AC_CHECK_PROG([OCTAVE],[octave-config],[octave-config])
 # find Octave arch
-    OCTAVE=octave
     AC_MSG_CHECKING([for Octave arch])
-    OCTAVE_ARCH=`$OCTAVE -q --eval 'strcat(octave_config_info("canonical_host_type"), "-", octave_config_info("api_version"))'|sed -e 's/ans = //'`
+    OCTAVE_ARCH=`$OCTAVE -p CANONICAL_HOST_TYPE`-`$OCTAVE -p API_VERSION`
+    OCTAVE_INCFLAGS="-I`$OCTAVE -p OCTINCLUDEDIR`"
     AC_MSG_RESULT([$OCTAVE_ARCH])
     AC_SUBST(OCTAVE_ARCH,[$OCTAVE_ARCH])
+    AC_SUBST(OCTAVE_INCFLAGS,[$OCTAVE_INCFLAGS])
     test_octave=true
 fi
 AM_CONDITIONAL(USE_OCTAVE, test x$test_octave = xtrue )

@@ -11,6 +11,7 @@ option(enable-fltk "Enable fltk widget")
 option(enable-wx "Enable wxWidget widget")
 option(enable-qt "Enable Qt4 widget")
 option(enable-python "Enable python interface")
+option(enable-octave "Enable octave interface")
 option(enable-doc "Enable documentation building")
 if(enable-all OR enable-jpeg)
     set(use_jpeg 1)
@@ -36,6 +37,9 @@ endif(enable-all OR enable-doc)
 if(enable-langall OR enable-python)
     set(use_python 1)
 endif(enable-langall OR enable-python)
+if(enable-langall OR enable-octave)
+    set(use_octave 1)
+endif(enable-langall OR enable-octave)
 
 include_directories( ${MathGL_SOURCE_DIR}/include )
 
@@ -125,6 +129,32 @@ if(NOT SWIG_FOUND)
 	endif(use_python)
 endif(NOT SWIG_FOUND)
 
+find_path(OCTAVE_INCLUDE_DIR octave/oct.h)
+if(NOT OCTAVE_INCLUDE_DIR)
+	if(use_octave)
+		message(SEND_ERROR "Couldn't find octave/oct.h needed for octave interfaces compiling.")
+	endif(use_octave)
+endif(NOT OCTAVE_INCLUDE_DIR)
+
+find_program(oct_prog octave)
+if(NOT oct_prog)
+	if(use_octave)
+		message(SEND_ERROR "Couldn't find octave needed for octave interfaces compiling.")
+	endif(use_octave)
+endif(NOT oct_prog)
+
+find_program(oct_mk mkoctfile)
+if(NOT oct_mk)
+	if(use_octave)
+		message(SEND_ERROR "Couldn't find mkoctfile needed for octave interfaces compiling.")
+	endif(use_octave)
+endif(NOT oct_mk)
+#execute_process(
+#	COMMAND ${oct_prog} -q --eval \'strcat\(octave_config_info\("canonical_host_type"\), "-", octave_config_info\("api_version"\)\)'|sed -e 's/ans = //'
+#	OUTPUT_VARIABLE OCTAVE_ARCH
+#	)
+#message(SEND_ERROR "${OCTAVE_ARCH}")
+
 find_program(findmi makeinfo)
 if(NOT findmi)
 	if(use_doc)
@@ -144,8 +174,8 @@ if(NOT findtp)
 	endif(use_doc)
 endif(NOT findtp)
 
-set(MGL_DATA_PATH "${CMAKE_INSTALL_PREFIX}/share/mgl")
-set(MGL_DOC_PATH "${CMAKE_INSTALL_PREFIX}/share/doc/mgl")
+set(MGL_DATA_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl")
+set(MGL_DOC_PATH "${CMAKE_INSTALL_PREFIX}/share/doc/mathgl")
 set(MGL_FONT_PATH "${MGL_DATA_PATH}/fonts")
 install(DIRECTORY fonts/ DESTINATION ${MGL_FONT_PATH}
                         PATTERN ".svn" EXCLUDE

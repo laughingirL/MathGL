@@ -381,20 +381,20 @@ Safely sets the value for @var{Min}, @var{Max} and @var{Org} members (options) o
 Safely sets the values of @var{Cmin} and @var{Cmax}. This values are used later for determining the color of the surface.
 @end deftypemethod
 
-@deftypemethod mglGraph @code{void} XRange (@code{const mglData &} dat, @code{bool} add=@code{false})
-Sets values of @code{Min.x} and @code{Max.x} as minimal and maximal values of data @var{a}. See also Axis().
+@deftypemethod mglGraph @code{void} XRange (@code{const mglData &} dat, @code{bool} add=@code{false}, @code{float} fact=@code{0})
+Sets values of @code{Min.x} and @code{Max.x} as minimal and maximal values of data @var{a}. Parameter @var{fact} add additional range increase on value (@var{Max}-@var{Min})*@var{fact}. See also Axis().
 @end deftypemethod
 
-@deftypemethod mglGraph @code{void} YRange (@code{const mglData &} dat, @code{bool} add=@code{false})
-Sets values of @code{Min.y} and @code{Max.y} as minimal and maximal values of data @var{a}. See also Axis().
+@deftypemethod mglGraph @code{void} YRange (@code{const mglData &} dat, @code{bool} add=@code{false}, @code{float} fact=@code{0})
+Sets values of @code{Min.y} and @code{Max.y} as minimal and maximal values of data @var{a}. Parameter @var{fact} add additional range increase on value (@var{Max}-@var{Min})*@var{fact}. See also Axis().
 @end deftypemethod
 
-@deftypemethod mglGraph @code{void} ZRange (@code{const mglData &} dat, @code{bool} add=@code{false})
-Sets values of @code{Min.z} and @code{Max.z} as minimal and maximal values of data @var{a}. See also Axis().
+@deftypemethod mglGraph @code{void} ZRange (@code{const mglData &} dat, @code{bool} add=@code{false}, @code{float} fact=@code{0})
+Sets values of @code{Min.z} and @code{Max.z} as minimal and maximal values of data @var{a}. Parameter @var{fact} add additional range increase on value (@var{Max}-@var{Min})*@var{fact}. See also Axis().
 @end deftypemethod
 
-@deftypemethod mglGraph @code{void} CRange (@code{const mglData &} dat, @code{bool} add=@code{false})
-Sets values of @code{Cmin} and @code{Cmax} as minimal and maximal values of data @var{a}. See also CAxis().
+@deftypemethod mglGraph @code{void} CRange (@code{const mglData &} dat, @code{bool} add=@code{false}, @code{float} fact=@code{0})
+Sets values of @code{Cmin} and @code{Cmax} as minimal and maximal values of data @var{a}. Parameter @var{fact} add additional range increase on value (@var{Cmax}-@var{Cmin})*@var{fact}. See also CAxis().
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} RecalcBorder ()

@@ -27,7 +27,7 @@
 #include <FL/fl_draw.H>
 #include <FL/Fl_File_Chooser.H>
 #include <unistd.h>
-#include <pthread.h>
+//#include <pthread.h>
 
 #include "mgl/mgl_fltk.h"
 #include "mgl/mgl_eps.h"
@@ -689,12 +689,12 @@ HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, voi
 //-----------------------------------------------------------------------------
 void *mgl_fl_tmp(void *)	{	mglFlRun();	return 0;	}
 void mgl_fltk_run()	{	mglFlRun();	}
-void mgl_fltk_thread()
+/*void mgl_fltk_thread()
 {
 	static pthread_t tmp;
 	pthread_create(&tmp, 0, mgl_fl_tmp, 0);
 	pthread_detach(tmp);
-}
+}*/
 //-----------------------------------------------------------------------------
 uintptr_t mgl_create_graph_fltk_(int (*draw)(uintptr_t *gr), const char *title, int l)
 {
@@ -706,5 +706,5 @@ uintptr_t mgl_create_graph_fltk_(int (*draw)(uintptr_t *gr), const char *title, 
 }
 //-----------------------------------------------------------------------------
 void mgl_fltk_run_()	{	mglFlRun();	}
-void mgl_fltk_thread_()	{	mgl_fltk_thread();	}
+//void mgl_fltk_thread_()	{	mgl_fltk_thread();	}
 //-----------------------------------------------------------------------------

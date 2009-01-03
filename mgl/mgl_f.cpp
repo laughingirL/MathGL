@@ -278,6 +278,34 @@ void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, int *pos, 
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	_GR_->Label(*dir, s, *pos, *size, *shift);	delete []s;
 }
+void mgl_set_xtt_(uintptr_t * gr, const char *templ, int n)
+{
+	static wchar_t t[256];
+	memset(t,0,256*sizeof(wchar_t));
+	if(n<256)
+	{	mbstowcs(t,templ,n);	_GR_->xtt = t;	}
+}
+void mgl_set_ytt_(uintptr_t * gr, const char *templ, int n)
+{
+	static wchar_t t[256];
+	memset(t,0,256*sizeof(wchar_t));
+	if(n<256)
+	{	mbstowcs(t,templ,n);	_GR_->ytt = t;	}
+}
+void mgl_set_ztt_(uintptr_t * gr, const char *templ, int n)
+{
+	static wchar_t t[256];
+	memset(t,0,256*sizeof(wchar_t));
+	if(n<256)
+	{	mbstowcs(t,templ,n);	_GR_->ztt = t;	}
+}
+void mgl_set_ctt_(uintptr_t * gr, const char *templ, int n)
+{
+	static wchar_t t[256];
+	memset(t,0,256*sizeof(wchar_t));
+	if(n<256)
+	{	mbstowcs(t,templ,n);	_GR_->ctt = t;	}
+}
 //-----------------------------------------------------------------------------
 //		Simple drawing
 //-----------------------------------------------------------------------------

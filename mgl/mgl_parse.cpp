@@ -53,12 +53,22 @@ bool check_for_name(const wchar_t *s)
 	return !isalpha(s[0])||wcschr(s,'.')||wcschr(s,':')||wcschr(s,'(')||wcschr(s,')');
 }
 //-----------------------------------------------------------------------------
+// It seems that standard wcstombs() have a bug. So, I replace by my own.
+void mgl_wcstombs(char *dst, const wchar_t *src, int size)
+{
+	register int j;
+	for(j=0;src[j] && j<size-1;j++)
+		dst[j] = src[j]<0x7f ? src[j] : ' ';
+	dst[j] = 0;
+}
+//-----------------------------------------------------------------------------
 // return values : 0 -- OK, 1 -- wrong arguments, 2 -- wrong command
 int mglParse::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var)
 {
 	int k[10], i;
 	for(i=0;i<10;i++)	k[i] = i<n ? a[i].type + 1 : 0;
-	for(i=0;i<n;i++)	wcstombs(a[i].s, a[i].w, 1024);
+//	for(i=0;i<n;i++)	wcstombs(a[i].s, a[i].w, 1024);
+	for(i=0;i<n;i++)	mgl_wcstombs(a[i].s, a[i].w, 1024);
 	mglCommand tst, *rts;
 	for(i=0;Cmd[i].name[0];i++);	// determine the number of symbols
 	tst.name = com;
@@ -71,7 +81,8 @@ int mglParse::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wc
 		v->d.Create(1,1,1);
 		a[0].type = 0;	a[0].d = &(v->d);
 		wcscpy(a[0].w, var);	k[0] = 1;
-		wcstombs(a[0].s, a[0].w, 1024);
+		mgl_wcstombs(a[0].s, a[0].w, 1024);
+//		wcstombs(a[0].s, a[0].w, 1024);
 	}
 	if(out)	rts->save(out, n, a, k);
 	return rts->exec(gr, n, a, k);
@@ -287,7 +298,8 @@ void mglParse::FillArg(int k, wchar_t **arg, mglArg *a)
 				t = wcstok(0,L"'",&b);	t[-1]=0;
 				u = new mglVar;		u->temp = true;
 				char *cc = new char[wcslen(tt)+1];
-				wcstombs(cc,tt,wcslen(tt)+1);
+//				wcstombs(cc,tt,wcslen(tt)+1);
+				mgl_wcstombs(cc,tt,wcslen(tt)+1);
 				swprintf(a[n-1].w,2048,L"%ls.Column(\"%s\")",v->s,cc);
 				u->d = v->d.Column(cc);
 				delete []cc;
@@ -487,7 +499,10 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		{
 			n = 1;
 			if(a[0].type==1)
-			{	n=0;	FILE *fp = fopen(a[0].s,"rt");	Execute(gr,fp);	fclose(fp);	}
+			{
+				n=0;	mgl_wcstombs(a[0].s, a[0].w, 1024);
+				FILE *fp = fopen(a[0].s,"rt");	Execute(gr,fp);	fclose(fp);
+			}
 			delete []s;	delete []a;	return n;
 		}
 		if(!wcscmp(arg[0],L"for"))
@@ -566,8 +581,9 @@ int mglParse::FlowExec(mglGraph *gr, const wchar_t *com, long m, mglArg *a)
 		}
 		else if(m>1 && a[0].type==0 && a[1].type==1)
 		{
-			n = 0;	cond = a[0].d->FindAny(a[1].s)?3:0;
-			if(out)	swprintf(out,1024,L"if(%s.FindAny(\"%s\"))\t{", a[0].s, a[1].s);
+			n = 0;	mgl_wcstombs(a[1].s, a[1].w, 1024);
+			cond = a[0].d->FindAny(a[1].s)?3:0;
+			if(out)	swprintf(out,1024,L"if(%ls.FindAny(\"%s\"))\t{", a[0].w, a[1].s);
 		}
 		else n = 1;
 		if(n==0)
@@ -594,7 +610,7 @@ int mglParse::FlowExec(mglGraph *gr, const wchar_t *com, long m, mglArg *a)
 		else if(if_stack[if_pos-1]&2)	{	n = 0;	cond = 2;	}
 		else if(a[0].type==2)	{	n = 0;	cond = (a[0].v!=0)?3:0;	}
 		else if(m>1 && a[0].type==0 && a[1].type==1)
-		{	n = 0;	cond = a[0].d->FindAny(a[1].s)?3:0;	}
+		{	n = 0;	mgl_wcstombs(a[1].s, a[1].w, 1024);	cond = a[0].d->FindAny(a[1].s)?3:0;	}
 		else n = 1;
 		if(n==0)
 		{
@@ -602,7 +618,7 @@ int mglParse::FlowExec(mglGraph *gr, const wchar_t *com, long m, mglArg *a)
 			if(out && a[0].type==2)
 				swprintf(out,1024,L"else if(%g!=0)\t{", a[0].v);
 			if(out && m>1 && a[0].type==0 && a[1].type==1)
-				swprintf(out,1024,L"else if(%s.FindAny(\"%s\"))\t{", a[0].s, a[1].s);
+				swprintf(out,1024,L"else if(%ls.FindAny(\"%ls\"))\t{", a[0].w, a[1].w);
 		}
 	}
 	else if(!wcscmp(com,L"next"))

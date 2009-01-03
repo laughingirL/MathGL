@@ -226,7 +226,7 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 	int nx=ini_re.nx, nt=ray.ny;
 	if(nx<2 || ini_im.nx!=nx || nt<2)	return res;
 	res.Create(nx,nt);
-	dual *a=new dual[2*nx], *hu=new dual[2*nx],  *hx=new dual[2*nx];
+	dual *a=new dual[2*nx], *hu=new dual[2*nx],  *hx=new dual[2*nx], h0;
 	double *ru=new double[2*nx],  *rx=new double[2*nx],
 			*pu=new double[2*nx],  *px=new double[2*nx];
 	mgl_ap *ra = new mgl_ap[nt];	mgl_init_ra(ray.ny, ray.a, ra);	// ray
@@ -252,12 +252,18 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 		}
 		memcpy(px,rx,2*nx*sizeof(double));
 		memcpy(pu,ru,2*nx*sizeof(double));
+		hh = ra[k].pt*(1/sqrt(sqrt(1.041))-1);
 		var['x'-'a'] = ray.a[7*k];	var['y'-'a'] = ray.a[7*k+1];
-		var['p'-'a'] = ray.a[7*k+3];var['q'-'a'] = ray.a[7*k+4];
-		var['u'-'a'] = abs(a[nx]);
+		var['p'-'a'] = ray.a[7*k+3] + ra[k].x0*hh;
+		var['q'-'a'] = ray.a[7*k+4] + ra[k].y0*hh;	var['u'-'a'] = 0;
 		pt0 = (h.CalcD(var,'p')*ra[k].x0 + h.CalcD(var,'q')*ra[k].y0)/ra[k].ch;
 		for(i=0;i<2*nx;i++)	// prepare hamiltonian
 		{
+			hh = ra[k].pt*(1/sqrt(sqrt(1.041))-1);
+			var['x'-'a'] = ray.a[7*k];	var['y'-'a'] = ray.a[7*k+1];
+			var['p'-'a'] = ray.a[7*k+3] + ra[k].x0*hh;
+			var['q'-'a'] = ray.a[7*k+4] + ra[k].y0*hh;	var['u'-'a'] = 0;
+			h0 = dual(h.Calc(var), -h.CalcD(var,'i'));
 			// x terms
 			x1 = 2*(i-nx)*dr;
 			var['x'-'a'] = ray.a[7*k] + ra[k].x1*x1;	// new coordiantes
@@ -268,7 +274,8 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 			var['q'-'a'] = ray.a[7*k+4] + ra[k].y0*tt;	var['u'-'a'] = abs(a[i]);
 			rx[i] = (h.CalcD(var,'p')*ra[k].x0 + h.CalcD(var,'q')*ra[k].y0)/ra[k].ch;
 			rx[i] = rx[i]>0.3*pt0 ? rx[i] : 0.3*pt0;
-			hx[i] = dual(h.Calc(var), -h.CalcD(var,'i'))/rx[i];
+			hx[i] = (dual(h.Calc(var), -h.CalcD(var,'i'))-h0/2.)/rx[i];
+			if(imag(hx[i])>0)	hx[i] = real(hx[i]);
 			// u-y terms
 			x1 = dk/2*(i<nx ? i:i-2*nx);
 			var['x'-'a'] = ray.a[7*k];	var['y'-'a'] = ray.a[7*k+1];
@@ -276,7 +283,8 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 			var['q'-'a'] = ray.a[7*k+4] + ra[k].y1*x1;	var['u'-'a'] = 0;
 			ru[i] = (h.CalcD(var,'p')*ra[k].x0 + h.CalcD(var,'q')*ra[k].y0)/ra[k].ch;
 			ru[i] = ru[i]>0.3*pt0 ? ru[i] : 0.3*pt0;
-			hu[i] = dual(h.Calc(var), -h.CalcD(var,'i'))/ru[i];
+			hu[i] = (dual(h.Calc(var), -h.CalcD(var,'i'))-h0/2.)/ru[i];
+			if(imag(hu[i])>0)	hu[i] = real(hu[i]);
 			// add boundary conditions for x-direction
 			if(i<nx/2)
 			{
@@ -290,10 +298,11 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 			}
 		}
 		// Calculate B1
+		hh = ra[k].pt*(1/sqrt(sqrt(1.041))-1);
 		var['x'-'a'] = ray.a[7*k];	// new coordiantes
 		var['y'-'a'] = ray.a[7*k+1];
-		var['p'-'a'] = ray.a[7*k+3];	// new momentums
-		var['q'-'a'] = ray.a[7*k+4];
+		var['p'-'a'] = ray.a[7*k+3] + ra[k].x0*hh;	// new momentums
+		var['q'-'a'] = ray.a[7*k+4] + ra[k].y0*hh;
 		tt = h.CalcD(var,'p')*ra[k].x1 + h.CalcD(var,'q')*ra[k].y1;
 		var['x'-'a'] = ray.a[7*k] + ra[k].x1*dr;	// new coordiantes
 		var['y'-'a'] = ray.a[7*k+1] + ra[k].y1*dr;
@@ -306,10 +315,10 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 		// Step for field
 		dual dt = dual(0, -ra[k].dt*k0);
 		for(i=0;i<2*nx;i++)
-			a[i] *= exp(hx[i]*dt)/(2.*nx)*((UseR && k>0)?sqrt(px[i]/rx[i]):1.);
+			a[i] *= exp(hx[i]*dt)*((UseR && k>0)?sqrt(px[i]/rx[i]):1.);
 		gsl_fft_complex_transform((double *)a, 1, 2*nx, wtx, wsx, forward);
 		for(i=0;i<2*nx;i++)
-			a[i] *= exp((hu[i]-hu[0])*dt)*((UseR && k>0)?sqrt(pu[i]/ru[i]):1.);
+			a[i] *= exp(hu[i]*dt)*((UseR && k>0)?sqrt(pu[i]/ru[i]):1.)/(2.*nx);
 		gsl_fft_complex_transform((double *)a, 1, 2*nx, wtx, wsx, backward);
 		double a1=0, a2=0;
 		for(i=0;i<2*nx;i++)	a1 += norm(a[i]);
@@ -323,6 +332,97 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 	gsl_fft_complex_wavetable_free(wtx);
 	delete []a;		delete []hu;	delete []hx;	delete []ra;
 	delete []rx;	delete []ru;	delete []px;	delete []pu;
+	return res;
+}
+//-----------------------------------------------------------------------------
+mglData mglAF2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, float r, float k0, mglData *xx, mglData *yy, bool UseR)
+{
+	mglData res;
+	int nx=ini_re.nx, nt=ray.ny;
+	if(nx<2 || ini_im.nx!=nx || nt<2)	return res;
+	res.Create(nx,nt);
+	dual *a=new dual[2*nx], *hu=new dual[2*nx],  *hx=new dual[2*nx];
+	mgl_ap *ra = new mgl_ap[nt];	mgl_init_ra(ray.ny, ray.a, ra);	// ray
+	register int i;
+	for(i=0;i<nx;i++)	a[i+nx/2] = dual(ini_re.a[i],ini_im.a[i]);	// ini
+	mglFormula h(ham);
+	float var[MGL_VS], dr = r/nx, dk = M_PI/(k0*r), tt, x1, hh, B1;
+	memset(var,0,MGL_VS*sizeof(float));
+	gsl_fft_complex_wavetable *wtx = gsl_fft_complex_wavetable_alloc(2*nx);
+	gsl_fft_complex_workspace *wsx = gsl_fft_complex_workspace_alloc(2*nx);
+	if(xx && yy)	{	xx->Create(nx,nt);	yy->Create(nx,nt);	}
+	// start calculation
+	for(int k=0;k<nt;k++)
+	{
+		for(i=0;i<nx;i++)	// "save"
+			res.a[i+k*nx]=abs(a[i+nx/2])*sqrt(ra[0].ch/ra[k].ch);
+		if(xx && yy)	for(i=0;i<nx;i++)	// prepare xx, yy
+		{
+			x1 = (2*i-nx)*dr;
+			xx->a[i+k*nx] = ray.a[7*k] + ra[k].x1*x1;	// new coordiantes
+			yy->a[i+k*nx] = ray.a[7*k+1] + ra[k].y1*x1;
+		}
+		var['x'-'a'] = ray.a[7*k];	var['y'-'a'] = ray.a[7*k+1];
+		var['p'-'a'] = ray.a[7*k+3];var['q'-'a'] = ray.a[7*k+4];
+		var['u'-'a'] = 0;
+		double p01 = h.CalcD(var,'p'), p02 = h.CalcD(var,'q'),
+				h0 = h.Calc(var), g0 = h.CalcD(var,'i'), hpp, hxx;
+		// derivative along momentum
+		var['p'-'a'] = ray.a[7*k+3] + ra[k].x1*dk;	// new momentums
+		var['q'-'a'] = ray.a[7*k+4] + ra[k].y1*dk;
+		hpp = ((h.CalcD(var,'p')-p01)*ra[k].x1 + (h.CalcD(var,'q')-p02)*ra[k].y1)/dk;
+		// derivative along coordinates
+		var['x'-'a'] = ray.a[7*k] + ra[k].x1*dr;	// new coordiantes
+		var['y'-'a'] = ray.a[7*k+1] + ra[k].y1*dr;
+		hh = 1 - ra[k].t1*dr;	tt = (ra[k].pt + ra[k].d1*dr)/hh - ra[k].pt;
+		var['p'-'a'] = ray.a[7*k+3] + ra[k].x0*tt;	// new momentums
+		var['q'-'a'] = ray.a[7*k+4] + ra[k].y0*tt;
+		B1 = ((h.CalcD(var,'p')-p01)*ra[k].x1 + (h.CalcD(var,'q')-p02)*ra[k].y1)/dr;
+		hxx = h.Calc(var)*hh;
+		var['x'-'a'] = ray.a[7*k] - ra[k].x1*dr;	// new coordiantes
+		var['y'-'a'] = ray.a[7*k+1] - ra[k].y1*dr;
+		hh = 1 + ra[k].t1*dr;	tt = (ra[k].pt - ra[k].d1*dr)/hh - ra[k].pt;
+		var['p'-'a'] = ray.a[7*k+3] + ra[k].x0*tt;	// new momentums
+		var['q'-'a'] = ray.a[7*k+4] + ra[k].y0*tt;
+		hxx = (hxx+h.Calc(var)*hh-2*h0)/(dr*dr);
+
+		for(i=0;i<2*nx;i++)	// prepare hamiltonian
+		{
+			// x terms
+			x1 = 2*(i-nx)*dr;	hx[i] = dual(hxx*x1*x1/2, -g0);
+			// u-y terms
+			x1 = dk/2*(i<nx ? i:i-2*nx);	hu[i] = hpp*x1*x1/2;
+			// add boundary conditions for x-direction
+			if(i<nx/2)
+			{
+				x1 = (nx/2-i)/(nx/2.);
+				hx[i] -= dual(0,30*GAMMA*x1*x1/k0);
+			}
+			if(i>=3*nx/2)
+			{
+				x1 = (i-3*nx/2-1)/(nx/2.);
+				hx[i] -= dual(0,30*GAMMA*x1*x1/k0);
+			}
+		}
+		// Step for field
+		dual dt = dual(0, -ra[k].dt*k0);
+		for(i=0;i<2*nx;i++)
+			a[i] *= exp(hx[i]*dt)/(2.*nx);
+		gsl_fft_complex_transform((double *)a, 1, 2*nx, wtx, wsx, forward);
+		for(i=0;i<2*nx;i++)
+			a[i] *= exp((hu[i]-hu[0])*dt);
+		gsl_fft_complex_transform((double *)a, 1, 2*nx, wtx, wsx, backward);
+		double a1=0, a2=0;
+		for(i=0;i<2*nx;i++)	a1 += norm(a[i]);
+		hx[0] = hx[2*nx-1] = 0.;
+		for(i=1;i<2*nx-1;i++)	hx[i] = (B1*ra[k].dt*(i-nx))*(a[i+1]-a[i-1]);
+		for(i=0;i<2*nx;i++)	{	a[i] += hx[i];	a2 += norm(a[i]);	}
+		a1 = sqrt(a1/a2);
+		for(i=0;i<2*nx;i++)	a[i] *= a1;
+	}
+	gsl_fft_complex_workspace_free(wsx);
+	gsl_fft_complex_wavetable_free(wtx);
+	delete []a;		delete []hu;	delete []hx;	delete []ra;
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -375,6 +475,8 @@ HMDT mgl_ray_trace(const char *ham, float x0, float y0, float z0, float px, floa
 {	return new mglData(mglRay(ham, mglPoint(x0,y0,z0), mglPoint(px,py,pz), dt,tmax));	}
 HMDT mgl_qo2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, float r, float k0, HMDT xx, HMDT yy)
 {	return new mglData(mglQO2d(ham, *ini_re, *ini_im, *ray, r, k0, xx, yy));	}
+HMDT mgl_af2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, float r, float k0, HMDT xx, HMDT yy)
+{	return new mglData(mglAF2d(ham, *ini_re, *ini_im, *ray, r, k0, xx, yy));	}
 HMDT mgl_jacobian_2d(const HMDT x, const HMDT y)
 {	return new mglData(mglJacobian(*x, *y));	}
 HMDT mgl_jacobian_3d(const HMDT x, const HMDT y, const HMDT z)
@@ -396,6 +498,12 @@ uintptr_t mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im,
 {
 	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
 	uintptr_t res = uintptr_t(new mglData(mglQO2d(s, _D_(ini_re), _D_(ini_im), _D_(ray), *r, *k0, ((mglData *)*xx), ((mglData *)*yy))));
+	delete []s;	return res;
+}
+uintptr_t mgl_af2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, float *r, float *k0, uintptr_t* xx, uintptr_t* yy, int l)
+{
+	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
+	uintptr_t res = uintptr_t(new mglData(mglAF2d(s, _D_(ini_re), _D_(ini_im), _D_(ray), *r, *k0, ((mglData *)*xx), ((mglData *)*yy))));
 	delete []s;	return res;
 }
 uintptr_t mgl_jacobian_2d_(uintptr_t* x, uintptr_t* y)

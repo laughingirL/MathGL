@@ -1,6 +1,12 @@
 @c ------------------------------------------------------------------
-@node C interface, Python interface, , Interfaces
-@section C interface
+@node C interface, Python interface, Other classes, Top
+@chapter C interface
+
+MathGL library have interface for a set of languages. Most of them are based on C interface via SWIG tool. There are Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, Tcl. Also there is Fortran interface which have similar set of functions but slightly different type of arguments (integers instead of pointers). The C interface functions are described in @ref{C interface}.
+@c ++++++++++
+Some of languages listed above support classes (like Python). So for them the special wrapper was written. These classes and functions are described in @ref{Python interface}.
+@c ++++++++++
+Finally the special command language MGL was written for faster access to C++ plotting functions. Corresponding scripts can be executed separately (by UDAV, mgl2png, mgl2eps and so on) or from the C++ code (@pxref{mglParse class}). These commands are described in @ref{MGL interface}.
 
 C interface is base for many other interfaces. It contain pure C functions for most of methods of MathGL classes. In difference from C++ classes, C functions must have argument HMGL (for graphics) and/or HMDT (for data arrays) which specify the object for drawing or manipulating (changing). So, firstly user have to create this object by function @code{mgl_create_*()} and have to delete it after using by function @code{mgl_delete_*()}.
 
@@ -51,7 +57,7 @@ Fortran functions/subroutines have the same names as C functions. However, there
 
 @c ##################################################################
 @node Create and delete objects, MGL parsing (Pure C), , C interface
-@subsection Create and delete objects
+@section Create and delete objects
 
 There are several group of functions.
 
@@ -118,7 +124,7 @@ Delete the instance of class. Must be used after using for every created data ob
 
 @c ##################################################################
 @node MGL parsing (Pure C), Graphics setup (Pure C), Create and delete objects, C interface
-@subsection MGL parsing (Pure C)
+@section MGL parsing (Pure C)
 
 These functions allow one to parse MGL script from the program.
 
@@ -159,7 +165,7 @@ Allow to parse 'setsize' command or not.
 
 @c ##################################################################
 @node Graphics setup (Pure C), Transformation matrix (Pure C), MGL parsing (Pure C), C interface
-@subsection Graphics setup (Pure C)
+@section Graphics setup (Pure C)
 
 Functions and variables in this group influences on overall graphics appearance. So all of them should be placed @emph{before} any actual plotting function calls.
 
@@ -181,7 +187,7 @@ Restore initial values for all of parameters except described in @ref{Zooming}.
 
 @c ==================================================================
 @node Transparency (Pure C), Lighting (Pure C), , Graphics setup (Pure C)
-@subsubsection Transparency (Pure C)
+@subsection Transparency (Pure C)
 @cindex Alpha
 @cindex AlphaDef
 @cindex Transparent
@@ -207,7 +213,7 @@ This variable set the transparency type. Normal transparency (@samp{0}) -- below
 
 @c ==================================================================
 @node Lighting (Pure C), Fog (Pure C), Transparency (Pure C), Graphics setup (Pure C)
-@subsubsection Lighting (Pure C)
+@subsection Lighting (Pure C)
 @cindex Light
 @cindex Ambient
 
@@ -231,7 +237,7 @@ Sets the brightness of ambient light. The value should be in range [0,1]. Initia
 
 @c ==================================================================
 @node Fog (Pure C), Default sizes (Pure C), Lighting (Pure C), Graphics setup (Pure C)
-@subsubsection Fog (Pure C)
+@subsection Fog (Pure C)
 @cindex Fog
 
 @deftypefn {C function} @code{void} mgl_set_fog (@code{HMGL} gr, @code{float} d, @code{float} dz)
@@ -240,7 +246,7 @@ Function imitate a fog in the plot. Fog start from relative distance @var{dz} fr
 
 @c ==================================================================
 @node Default sizes (Pure C), Zooming (Pure C), Fog (Pure C), Graphics setup (Pure C)
-@subsubsection Default sizes (Pure C)
+@subsection Default sizes (Pure C)
 @cindex BarWidth
 @cindex MarkSize
 @cindex ArrowSize
@@ -266,7 +272,7 @@ The variable define the base width for all lines. The value <1 is ignored. Incre
 
 @c ==================================================================
 @node Zooming (Pure C), Cutting (Pure C), Default sizes (Pure C), Graphics setup (Pure C)
-@subsubsection Zooming (Pure C)
+@subsection Zooming (Pure C)
 @cindex PlotFactor
 @cindex AutoPlotFactor
 @cindex Zoom
@@ -283,7 +289,7 @@ Changes the scale of graphics that correspond to zoom in/out of the picture. Aft
 
 @c ==================================================================
 @node Cutting (Pure C), Font settings (Pure C), Zooming (Pure C), Graphics setup (Pure C)
-@subsubsection Cutting (Pure C)
+@subsection Cutting (Pure C)
 @cindex Cut
 @cindex CutMin
 @cindex CutMax
@@ -305,7 +311,7 @@ Function set the cutting off condition by formula @var{EqC}. This condition dete
 
 @c ==================================================================
 @node Font settings (Pure C), Palette and colors (Pure C), Cutting (Pure C), Graphics setup (Pure C)
-@subsubsection Font settings
+@subsection Font settings
 @cindex FontSize (Pure C)
 @cindex FontDef
 @cindex RotatedText
@@ -336,7 +342,7 @@ Restore font data to default typeface.
 
 @c ==================================================================
 @node Palette and colors (Pure C), Other settings (Pure C), Font settings (Pure C), Graphics setup (Pure C)
-@subsubsection Pallete (Pure C)
+@subsection Pallete (Pure C)
 @cindex Pal
 @cindex NumPal
 @cindex SetPalette
@@ -362,7 +368,7 @@ Sets the color scheme for following plots. Usually this function is used interna
 
 @c ==================================================================
 @node Other settings (Pure C), , Palette and colors (Pure C), Graphics setup (Pure C)
-@subsubsection Other settings (Pure C)
+@subsection Other settings (Pure C)
 
 @deftypefn {C function} @code{void} mgl_set_meshnum (@code{HMGL} gr, @code{int} num)
 Sets approximate number of lines in Mesh(), Fall(), Grid() and also the number of hachures in Vect(), VectC(), Dew() and the number of cells in Cloud*(). By default (=0) it draws all lines/hachures/cells.
@@ -379,7 +385,7 @@ If set to @code{true} then it prevent faces drawing. It is useful for speeding u
 
 @c ==================================================================
 @node Axis settings (Pure C), Transformation matrix (Pure C), Graphics setup (Pure C), C interface
-@subsection Axis settings (Pure C)
+@section Axis settings (Pure C)
 
 These large set of functions control how the axis and ticks will be drawn. Note that there is 3-step transformation of data coordinates are performed. Firstly, coordinates are projected if @code{Cut=true} (@pxref{Cutting (Pure C)}), after it transformation formulas are applied, and finally the data was normalized in bounding box.
 
@@ -391,7 +397,7 @@ These large set of functions control how the axis and ticks will be drawn. Note 
 
 @c ------------------------------------------------------------------
 @node Ranges (bounding box) (Pure C), Transformation (Pure C), , Axis settings (Pure C)
-@subsubsection Ranges (bounding box) (Pure C)
+@subsection Ranges (bounding box) (Pure C)
 @cindex Axis
 @cindex CAxis
 @cindex XRange
@@ -436,7 +442,7 @@ Sets center of axis cross section. If one of values is NAN then MathGL library t
 
 @c ------------------------------------------------------------------
 @node Transformation (Pure C), Ticks (Pure C), Ranges (bounding box) (Pure C), Axis settings (Pure C)
-@subsubsection Transformation (curved coordinates, Pure C)
+@subsection Transformation (curved coordinates, Pure C)
 @cindex Axis
 @cindex Ternary
 
@@ -450,7 +456,7 @@ The function sets to draws Ternary plot. This special plot is for 3 dependent co
 
 @c ------------------------------------------------------------------
 @node Ticks (Pure C), , Transformation (Pure C), Axis settings (Pure C)
-@subsubsection Ticks (Pure C)
+@subsection Ticks (Pure C)
 @cindex SetTicks
 @cindex SetTicksVal
 @cindex xtt
@@ -496,7 +502,7 @@ Switch on/off ticks enhancing by factoring common multiplier (for small, like fr
 
 @c ##################################################################
 @node Transformation matrix (Pure C), Export to file (Pure C), Axis settings (Pure C), C interface
-@subsection Transformation matrix (Pure C)
+@section Transformation matrix (Pure C)
 @cindex Aspect
 @cindex Rotate
 @cindex RotateN
@@ -538,7 +544,7 @@ Clears transformation matrix. This function clears all previous effects of Aspec
 
 @c ##################################################################
 @node Export to file (Pure C), Primitives drawing (Pure C), Transformation matrix (Pure C), C interface
-@subsection Export to file (Pure C)
+@section Export to file (Pure C)
 @cindex WritePNG
 @cindex WriteIDTF
 @cindex WriteSVG
@@ -603,7 +609,7 @@ Gets RGBA bitmap of the current state of the image. Format of each element of bi
 
 @c ##################################################################
 @node Primitives drawing (Pure C), Text printing (Pure C), Export to file (Pure C), C interface
-@subsection Primitives drawing
+@section Primitives drawing
 @cindex Ball
 @cindex Clf
 @cindex Line
@@ -661,7 +667,7 @@ Draws a marks of different type at position @{@var{x},@var{y},@var{z}@}.
 
 @c ##################################################################
 @node Text printing (Pure C), Axis and Colorbar (Pure C), Primitives drawing (Pure C), C interface
-@subsection Text printing (Pure C)
+@section Text printing (Pure C)
 @cindex Puts
 @cindex Putsw
 @cindex Text
@@ -696,7 +702,7 @@ The function draws @var{text} along the curve between points @{@var{x}[i], @var{
 
 @c ##################################################################
 @node Axis and Colorbar (Pure C), Legend (Pure C), Text printing (Pure C), C interface
-@subsection Axis and Colorbar (Pure C)
+@section Axis and Colorbar (Pure C)
 @cindex Axis
 @cindex Box
 @cindex Grid
@@ -730,7 +736,7 @@ Prints the label @var{text} for axis @var{dir}. The position of label is determi
 
 @c ##################################################################
 @node Legend (Pure C), 1D plotting (Pure C), Axis and Colorbar (Pure C), C interface
-@subsection Legend (Pure C)
+@section Legend (Pure C)
 @cindex Legend
 @cindex AddLegend
 @cindex ClearLegend
@@ -760,7 +766,7 @@ Switch on/off drawing box near legend. By default (=@code{true}) box is drawn.
 
 @c ##################################################################
 @node 1D plotting (Pure C), 2D plotting (Pure C), Legend (Pure C), C interface
-@subsection 1D plotting (Pure C)
+@section 1D plotting (Pure C)
 
 These functions perform plotting of 1D data. 1D means that data depended from only 1 parameter like parametric curve @{x(i),y(i),z(i)@}, i=1...n. There are 5 generally different types of data representations: simple line plot (Plot), line plot with filling under it (Area), stairs plot (Step), bar plot (Bars, Barh) and vertical lines (Stem). Each type of plotting has similar interface. There are 3D version and two 2D versions. One of last requires single array. The parameters of line and marks are specified by the string argument. If the string parameter is NULL then solid line with color from palette Pal is used (@pxref{Palette and colors}). Also there are some special 1d plots having slightly different interface: surface of curve rotation (Torus), chart (Chart) and error boxes (Error), marks with variable size (Mark), tubes (Tube) and so on. @xref{Line styles}.
 
@@ -783,7 +789,7 @@ These functions perform plotting of 1D data. 1D means that data depended from on
 
 @c ==================================================================
 @node Plot (Pure C), Area (Pure C), , 1D plotting (Pure C)
-@subsubsection Plot (Pure C)
+@subsection Plot (Pure C)
 @cindex Plot
 
 These functions draw continuous lines between points. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also Area(), Step(), Stem, Tube(), Mark(), Error(), Belt(). @sref{Plot sample}
@@ -802,7 +808,7 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in
 
 @c ==================================================================
 @node Area (Pure C), Region (Pure C), Plot (Pure C), 1D plotting (Pure C)
-@subsubsection Area (Pure C)
+@subsection Area (Pure C)
 @cindex Area
 
 These functions draw continuous lines between points and fills it to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also Plot(), Bars(), Stem(). @sref{Area sample}
@@ -825,7 +831,7 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in
 
 @c ==================================================================
 @node Region (Pure C), Bars (Pure C), Area (Pure C), 1D plotting (Pure C)
-@subsubsection Region (Pure C)
+@subsection Region (Pure C)
 @cindex Region
 
 These functions fill area between 2 curves. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y1.nx=y2.nx} and all dimensions of arrays @var{y1} and @var{y2} must be equal too. String @var{pen} specifies the color (@pxref{Line styles}). By default (@code{pen=NULL}) color from palette is used (@pxref{Palette and colors}). See also Area(), Bars(), Stem(). @sref{Region sample}
@@ -840,7 +846,7 @@ The function fills area between curves @{@var{x}[i], @var{y1}[i]@} and @{@var{x}
 
 @c ==================================================================
 @node Bars (Pure C), Barh (Pure C), Region (Pure C), 1D plotting (Pure C)
-@subsubsection Bars (Pure C)
+@subsection Bars (Pure C)
 @cindex Bars
 
 These functions draw vertical bars from points to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also Barh(), Area(), Stem(), Chart(). @sref{Bars sample}
@@ -859,7 +865,7 @@ The function draws vertical bars from points @{@var{x}[i], @var{y}[i]@} down to 
 
 @c ==================================================================
 @node Barh (Pure C), Stem (Pure C), Bars (Pure C), 1D plotting (Pure C)
-@subsubsection Barh (Pure C)
+@subsection Barh (Pure C)
 @cindex Barh
 
 These functions draw horizontal bars from points to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also Bars(). @sref{Barh sample}
@@ -874,7 +880,7 @@ The function draws horizontal bars from points @{@var{v}[i], @var{y}[i]@} down t
 
 @c ==================================================================
 @node Stem (Pure C), Step (Pure C), Barh (Pure C), 1D plotting (Pure C)
-@subsubsection Stem (Pure C)
+@subsection Stem (Pure C)
 @cindex Stem
 
 These functions draw vertical lines from points to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also Area(), Bars(), Plot(). @sref{Stem sample}
@@ -894,7 +900,7 @@ The function draws vertical lines from points @{@var{x}[i], @var{y}[i]@} down to
 
 @c ==================================================================
 @node Step (Pure C), Torus (Pure C), Stem (Pure C), 1D plotting (Pure C)
-@subsubsection Step (Pure C)
+@subsection Step (Pure C)
 @cindex Step
 
 These functions draw continuous stairs for points to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also Plot(), Stem(), Tile(), Boxs(). @sref{Step sample}
@@ -913,7 +919,7 @@ The function draws continuous stairs for points @{@var{x}[i], @var{y}[i]@} in pl
 
 @c ==================================================================
 @node Torus (Pure C), Chart (Pure C), Step (Pure C), 1D plotting (Pure C)
-@subsubsection Torus (Pure C)
+@subsection Torus (Pure C)
 @cindex Torus
 
 These functions draw surface which is result of curve @{@var{r}, @var{z}@} rotation around @var{AxialDir} axis (@pxref{Other settings}). The sizes of 1st dimension @strong{must be equal} for all arrays @var{r.nx=z.nx}. String @var{pen} specifies the color (@pxref{Line styles}). By default (@code{pen=NULL}) color from palette is used (@pxref{Palette and colors}). See also Plot(), Axial(). @sref{Torus sample}
@@ -929,7 +935,7 @@ The function draws surface which is result of curve @{@var{r}[i], @var{z}[i]@} r
 
 @c ==================================================================
 @node Chart (Pure C), Mark (Pure C), Torus (Pure C), 1D plotting (Pure C)
-@subsubsection Chart (Pure C)
+@subsection Chart (Pure C)
 @cindex Chart
 
 @deftypefn {C function} @code{void} mgl_chart (@code{HMGL} gr, @code{const HMDT} a, @code{const char *}col)
@@ -938,7 +944,7 @@ The function draws colored stripes (boxes) for data in array @var{a}. The number
 
 @c ==================================================================
 @node Mark (Pure C), TextMark (Pure C), Chart (Pure C), 1D plotting (Pure C)
-@subsubsection Mark (Pure C)
+@subsection Mark (Pure C)
 @cindex Mark
 
 These functions draw marks with size @var{r}*@var{MarkSize} (@pxref{Default sizes}) at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx=r.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). If you need to draw markers of the same size then you may use Plot() function. See also Plot(), TextMark(), Stem(), Error(). @sref{Mark sample}
@@ -957,7 +963,7 @@ The function draws marks for points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=
 
 @c ==================================================================
 @node TextMark (Pure C), Error (Pure C), Mark (Pure C), 1D plotting (Pure C)
-@subsubsection TextMark (Pure C)
+@subsection TextMark (Pure C)
 @cindex TextMark
 
 These functions draw string @var{text} as marks with size proportional to @var{r}*@var{MarkSize} (@pxref{Default sizes}) at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx=r.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also Plot(), Mark(), Stem(). @sref{TextMark sample}
@@ -985,7 +991,7 @@ The function draws textual marks for points @{@var{x}[i], @var{y}[i]@} in plane 
 
 @c ==================================================================
 @node Error (Pure C), Tube (Pure C), TextMark (Pure C), 1D plotting (Pure C)
-@subsubsection Error (Pure C)
+@subsection Error (Pure C)
 @cindex Error
 
 These functions draw error boxes at points @{@var{x}[i], @var{y}[i]@}  on plane @var{z} = @var{zVal} (by default @var{z}=@var{Min.z}). This can be useful, for example, in experimental points, or to show numeric error or some estimations and so on. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx=r.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also Plot(). @sref{Error sample}
@@ -1003,7 +1009,7 @@ Draws a error box @var{ey} (along only one direction) in point position @{@var{x
 
 @c ==================================================================
 @node Tube (Pure C), , Error (Pure C), 1D plotting (Pure C)
-@subsubsection Tube (Pure C)
+@subsection Tube (Pure C)
 @cindex Tube
 
 These functions draw the tube with variable radius @var{r} along the curve between points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx=r.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also Plot(). @sref{Tube sample}
@@ -1025,7 +1031,7 @@ The function draws tube with radius @var{r} between points @{@var{x}[i], @var{y}
 
 @c ##################################################################
 @node 2D plotting (Pure C), 3D plotting (Pure C), 1D plotting (Pure C), C interface
-@subsection 2D plotting (Pure C)
+@section 2D plotting (Pure C)
 
 These functions perform plotting of 2D data. 2D means that data depend from 2 independent parameters like matrix @math{f(x_i,y_j), i=1...n, j=1...m}. There are 6 generally different types of data representations: simple mesh lines plot (Mesh), surface plot (Surf), surface plot by boxes (Boxs), surface plot by tiles (Tile), waterfall-like plot (Fall), belt plot (Belt), density plot (Dens), contour lines plot (Cont), solid contours plot (ContF) and its rotational figure (Axial). Cont, ContF and Axial functions have variants for automatic and manual selection of level values for contours. Also there are functions for plotting data grid lines according to the data format (Grid) for enhancing density or contour plots. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
@@ -1045,7 +1051,7 @@ These functions perform plotting of 2D data. 2D means that data depend from 2 in
 
 @c ==================================================================
 @node Mesh (Pure C), Fall (Pure C), , 2D plotting (Pure C)
-@subsubsection Mesh (Pure C)
+@subsection Mesh (Pure C)
 @cindex Mesh
 
 @deftypefn {C function} @code{void} mgl_mesh_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
@@ -1058,7 +1064,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Fall (Pure C), Belt (Pure C), Mesh (Pure C), 2D plotting (Pure C)
-@subsubsection Fall (Pure C)
+@subsection Fall (Pure C)
 @cindex Fall
 
 @deftypefn {C function} @code{void} mgl_fall_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch=@code{NULL})
@@ -1071,7 +1077,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Belt (Pure C), Surf (Pure C), Fall (Pure C), 2D plotting (Pure C)
-@subsubsection Belt (Pure C)
+@subsection Belt (Pure C)
 @cindex Belt
 
 @deftypefn {C function} @code{void} mgl_belt_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
@@ -1084,7 +1090,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Surf (Pure C), Boxs (Pure C), Belt (Pure C), 2D plotting (Pure C)
-@subsubsection Surf (Pure C)
+@subsection Surf (Pure C)
 @cindex Surf
 
 @deftypefn {C function} @code{void} mgl_surf_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
@@ -1097,7 +1103,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Boxs (Pure C), Tile (Pure C), Surf (Pure C), 2D plotting (Pure C)
-@subsubsection Boxs (Pure C)
+@subsection Boxs (Pure C)
 @cindex Boxs
 
 @deftypefn {C function} @code{void} mgl_boxs_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
@@ -1110,7 +1116,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Tile (Pure C), Dens (Pure C), Boxs (Pure C), 2D plotting (Pure C)
-@subsubsection Tile (Pure C)
+@subsection Tile (Pure C)
 @cindex Tile
 
 @deftypefn {C function} @code{void} mgl_tile_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
@@ -1123,7 +1129,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Dens (Pure C), Cont (Pure C), Tile (Pure C), 2D plotting (Pure C)
-@subsubsection Dens (Pure C)
+@subsection Dens (Pure C)
 @cindex Dens
 
 @deftypefn {C function} @code{void} mgl_dens_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
@@ -1136,7 +1142,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Cont (Pure C), ContF (Pure C), Dens (Pure C), 2D plotting (Pure C)
-@subsubsection Cont (Pure C)
+@subsection Cont (Pure C)
 @cindex Cont
 
 @deftypefn {C function} @code{void} mgl_cont_xy_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
@@ -1157,7 +1163,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node ContF (Pure C), Axial (Pure C), Cont (Pure C), 2D plotting (Pure C)
-@subsubsection ContF (Pure C)
+@subsection ContF (Pure C)
 @cindex ContF
 
 @deftypefn {C function} @code{void} mgl_contf_xy_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
@@ -1178,7 +1184,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Axial (Pure C), Grid (Pure C), ContF (Pure C), 2D plotting (Pure C)
-@subsubsection Axial (Pure C)
+@subsection Axial (Pure C)
 @cindex Axial
 
 @deftypefn {C function} @code{void} mgl_axial_xy_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
@@ -1199,7 +1205,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Grid (Pure C), , Axial (Pure C), 2D plotting (Pure C)
-@subsubsection Grid (Pure C)
+@subsection Grid (Pure C)
 @cindex Grid
 
 @deftypefn {C function} @code{void} mgl_grid_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
@@ -1213,7 +1219,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ##################################################################
 @node 3D plotting (Pure C), Dual plotting (Pure C), 2D plotting (Pure C), C interface
-@subsection 3D plotting (Pure C)
+@section 3D plotting (Pure C)
 
 These functions perform plotting of 3D data. 3D means that data depend from 3 independent parameters like matrix @math{f(x_i,y_j,z_k), i=1...n, j=1...m, k=1...l}. There are 4 generally different types of data representations: isosurface or surface of constant value (Surf3), density plot at slices (Dens3), contour lines plot at slices (Cont3), solid contours plot at slices (ContF3) and cloud-like plot (Cloud). Surf3, Cont3 and ContF3 functions have variants for automatic and manual selection of level values for surfaces/contours. Also there are functions for plotting data grid lines according to the data format (Grid3) for enhancing density or contour plots. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
@@ -1229,7 +1235,7 @@ These functions perform plotting of 3D data. 3D means that data depend from 3 in
 
 @c ==================================================================
 @node Surf3 (Pure C), Dens3 (Pure C), , 3D plotting (Pure C)
-@subsubsection Surf3 (Pure C)
+@subsection Surf3 (Pure C)
 @cindex Surf3
 
 @deftypefn {C function} @code{void} mgl_surf3_xyz_val (@code{HMGL} gr, @code{float} val, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a, @code{const char *}stl)
@@ -1250,7 +1256,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node Dens3 (Pure C), Cont3 (Pure C), Surf3 (Pure C), 3D plotting (Pure C)
-@subsubsection Dens3 (Pure C)
+@subsection Dens3 (Pure C)
 @cindex Dens3
 @cindex DensA
 
@@ -1272,7 +1278,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node Cont3 (Pure C), ContF3 (Pure C), Dens3 (Pure C), 3D plotting (Pure C)
-@subsubsection Cont3 (Pure C)
+@subsection Cont3 (Pure C)
 @cindex Cont3
 @cindex ContA
 
@@ -1302,7 +1308,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node ContF3 (Pure C), Grid3 (Pure C), Cont3 (Pure C), 3D plotting (Pure C)
-@subsubsection ContF3 (Pure C)
+@subsection ContF3 (Pure C)
 @cindex ContF3
 @cindex ContFA
 
@@ -1332,7 +1338,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node Grid3 (Pure C), Cloud (Pure C), ContF3 (Pure C), 3D plotting (Pure C)
-@subsubsection Grid3 (Pure C)
+@subsection Grid3 (Pure C)
 @cindex Grid3
 @cindex GridA
 
@@ -1354,7 +1360,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node Cloud (Pure C), Beam (Pure C), Grid3 (Pure C), 3D plotting (Pure C)
-@subsubsection Cloud (Pure C)
+@subsection Cloud (Pure C)
 @cindex CloudP
 @cindex CloudQ
 
@@ -1377,7 +1383,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node Beam (Pure C), , Cloud (Pure C), 3D plotting (Pure C)
-@subsubsection Beam
+@subsection Beam
 @cindex Beam
 
 @deftypefn {C function} @code{void} mgl_beam_val (@code{HMGL} gr, @code{float} val, @code{const HMDT} tr, @code{const HMDT} g1, @code{const HMDT} g2, @code{const HMDT} a, @code{float} r, @code{const char *}stl, @code{int} flag)
@@ -1392,7 +1398,7 @@ Draws @var{num}-th uniformly distributed in range [@var{Cmin}, @var{Cmax}] isosu
 
 @c ##################################################################
 @node Dual plotting (Pure C), Vector fields (Pure C), 3D plotting (Pure C), C interface
-@subsection Dual plotting (Pure C)
+@section Dual plotting (Pure C)
 
 These plotting functions draw @emph{two matrix} simultaneously. There are 5 generally different types of data representations: surface or isosurface colored by other data (SurfC, Surf3C), surface or isosurface transpared by other data (SurfA, Surf3A), tiles with variable size (TileS), mapping diagram (Map), STFA diagram (STFA). Surf3A and Surf3C have variants for automatic and manual selection of level values for isosurfaces. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
@@ -1408,7 +1414,7 @@ These plotting functions draw @emph{two matrix} simultaneously. There are 5 gene
 
 @c ==================================================================
 @node SurfC (Pure C), Surf3C (Pure C), , Dual plotting (Pure C)
-@subsubsection SurfC (Pure C)
+@subsection SurfC (Pure C)
 @cindex SurfC
 
 @deftypefn {C function} @code{void} mgl_surfc_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} c, @code{const char *}sch)
@@ -1421,7 +1427,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Surf3C (Pure C), SurfA (Pure C), SurfC (Pure C), Dual plotting (Pure C)
-@subsubsection Surf3C (Pure C)
+@subsection Surf3C (Pure C)
 @cindex Surf3C
 
 @deftypefn {C function} @code{void} mgl_surf3c_xyz_val (@code{HMGL} gr, @code{float} val, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a, @code{const HMDT} c, @code{const char *}stl)
@@ -1442,7 +1448,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node SurfA (Pure C), Surf3A (Pure C), Surf3C (Pure C), Dual plotting (Pure C)
-@subsubsection SurfA (Pure C)
+@subsection SurfA (Pure C)
 @cindex SurfA
 
 @deftypefn {C function} @code{void} mgl_surfa_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} c, @code{const char *}sch)
@@ -1456,7 +1462,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Surf3A (Pure C), TileS (Pure C), SurfA (Pure C), Dual plotting (Pure C)
-@subsubsection Surf3A (Pure C)
+@subsection Surf3A (Pure C)
 @cindex Surf3A
 
 @deftypefn {C function} @code{void} mgl_surf3a_xyz_val (@code{HMGL} gr, @code{float} val, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a, @code{const HMDT} c, @code{const char *}stl)
@@ -1477,7 +1483,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node TileS (Pure C), Map (Pure C), Surf3A (Pure C), Dual plotting (Pure C)
-@subsubsection TileS (Pure C)
+@subsection TileS (Pure C)
 @cindex TileS
 
 @deftypefn {C function} @code{void} mgl_tiles_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} r, @code{const char *}sch)
@@ -1490,7 +1496,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Map (Pure C), STFA (Pure C), TileS (Pure C), Dual plotting (Pure C)
-@subsubsection Map (Pure C)
+@subsection Map (Pure C)
 @cindex Map
 
 @deftypefn {C function} @code{void} mgl_map_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{int} ks, @code{int} pnts)
@@ -1503,7 +1509,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node STFA (Pure C), , Map (Pure C), Dual plotting (Pure C)
-@subsubsection STFA (Pure C)
+@subsection STFA (Pure C)
 @cindex STFA
 
 @deftypefn {C function} @code{void} mgl_stfa_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} re, @code{const HMDT} im, @code{int} dn, @code{const char *}sch, @code{float} zVal)
@@ -1517,7 +1523,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ##################################################################
 @node Vector fields (Pure C), Other plotting (Pure C), Dual plotting (Pure C), C interface
-@subsection Vector fields (Pure C)
+@section Vector fields (Pure C)
 
 These functions perform plotting of 2D and 3D vector fields. There are 5 generally different types of vector fields representations: simple vector field (Vect), vector field with coloring (VectC), vector field by dew-drops (Dew), flow threads (Flow), flow pipes (Pipe). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
@@ -1531,7 +1537,7 @@ These functions perform plotting of 2D and 3D vector fields. There are 5 general
 
 @c ==================================================================
 @node Vect (Pure C), VectC (Pure C), , Vector fields (Pure C)
-@subsubsection Vect (Pure C)
+@subsection Vect (Pure C)
 @cindex Vect
 
 @deftypefn {C function} @code{void} mgl_vect_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal)
@@ -1552,7 +1558,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node VectC (Pure C), Dew (Pure C), Vect (Pure C), Vector fields (Pure C)
-@subsubsection VectC (Pure C)
+@subsection VectC (Pure C)
 @cindex VectC
 
 @deftypefn {C function} @code{void} mgl_vectc_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal)
@@ -1573,7 +1579,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Dew (Pure C), Flow (Pure C), VectC (Pure C), Vector fields (Pure C)
-@subsubsection Dew (Pure C)
+@subsection Dew (Pure C)
 @cindex Dew
 
 @deftypefn {C function} @code{void} mgl_dew_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal)
@@ -1586,7 +1592,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Flow (Pure C), Pipe (Pure C), Dew (Pure C), Vector fields (Pure C)
-@subsubsection Flow (Pure C)
+@subsection Flow (Pure C)
 @cindex Flow
 
 @deftypefn {C function} @code{void} mgl_flow_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{int} num, @code{int} central, @code{float} zVal)
@@ -1607,7 +1613,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Pipe (Pure C), , Flow (Pure C), Vector fields (Pure C)
-@subsubsection Pipe (Pure C)
+@subsection Pipe (Pure C)
 @cindex Pipe
 
 @deftypefn {C function} @code{void} mgl_pipe_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} r0, @code{int} num, @code{int} central, @code{float} zVal)
@@ -1629,7 +1635,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ##################################################################
 @node Other plotting (Pure C), Nonlinear fitting (Pure C), Vector fields (Pure C), C interface
-@subsection Other plotting (Pure C)
+@section Other plotting (Pure C)
 
 These functions perform miscelaneous plotting. There is unstructured data points plots (Dots), surface reconstruction (Crust), surfaces on the triangular mesh (TriPlot), textual formula plotting (Plots by formula), data plots at edges (Dens[XYZ], Cont[XYZ], ContF[XYZ]), simple plot (SimplePlot). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
@@ -1646,7 +1652,7 @@ These functions perform miscelaneous plotting. There is unstructured data points
 
 @c ==================================================================
 @node DensXYZ (Pure C), ContXYZ (Pure C), , Other plotting (Pure C)
-@subsubsection DensXYZ (Pure C)
+@subsection DensXYZ (Pure C)
 @cindex DensX
 @cindex DensY
 @cindex DensZ
@@ -1673,7 +1679,7 @@ Draws density plot for data @var{a} at z = @var{sVal}.
 
 @c ==================================================================
 @node ContXYZ (Pure C), ContFXYZ (Pure C), DensXYZ (Pure C), Other plotting (Pure C)
-@subsubsection ContXYZ (Pure C)
+@subsection ContXYZ (Pure C)
 @cindex ContX
 @cindex ContY
 @cindex ContZ
@@ -1712,7 +1718,7 @@ Draws contour lines for data @var{a}=@var{v}[i] at z = @var{sVal}.
 
 @c ==================================================================
 @node ContFXYZ (Pure C), Dots (Pure C), ContXYZ (Pure C), Other plotting (Pure C)
-@subsubsection ContFXYZ (Pure C)
+@subsection ContFXYZ (Pure C)
 @cindex ContFX
 @cindex ContFY
 @cindex ContFZ
@@ -1745,7 +1751,7 @@ Draws solid contours for data @var{a}=@var{v}[i] at z = @var{sVal}.
 
 @c ==================================================================
 @node Dots (Pure C), Crust (Pure C), ContFXYZ (Pure C), Other plotting (Pure C)
-@subsubsection Dots (Pure C)
+@subsection Dots (Pure C)
 @cindex Dots
 
 @deftypefn {C function} @code{void} mgl_dots (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
@@ -1758,7 +1764,7 @@ The same as previous with @var{x=tr}(0,:), @var{y=tr}(1,:), @var{z=tr}(2,:).
 
 @c ==================================================================
 @node Crust (Pure C), TriPlot (Pure C), Dots (Pure C), Other plotting (Pure C)
-@subsubsection Crust (Pure C)
+@subsection Crust (Pure C)
 @cindex Crust
 
 @deftypefn {C function} @code{void} mgl_crust (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} er)
@@ -1771,7 +1777,7 @@ The same as previous with @var{x=tr}(0,:), @var{y=tr}(1,:), @var{z=tr}(2,:).
 
 @c ==================================================================
 @node TriPlot (Pure C), Plots by formula (Pure C), Crust (Pure C), Other plotting (Pure C)
-@subsubsection TriPlot (Pure C)
+@subsection TriPlot (Pure C)
 @cindex TriPlot
 
 @deftypefn {C function} @code{void} mgl_triplot_xyz (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
@@ -1784,7 +1790,7 @@ The same as previous with @var{z}[i]=@var{zVal}.
 
 @c ==================================================================
 @node Plots by formula (Pure C), SimplePlot (Pure C), TriPlot (Pure C), Other plotting (Pure C)
-@subsubsection Plots by formula (Pure C)
+@subsection Plots by formula (Pure C)
 @cindex Plot
 @cindex Surf
 
@@ -1808,7 +1814,7 @@ The function draws parametrical surface @{@samp{eqX(u,v)}, @samp{eqY(u,v)}, @sam
 
 @c ==================================================================
 @node SimplePlot (Pure C), , Plots by formula (Pure C), Other plotting (Pure C)
-@subsubsection SimplePlot (Pure C)
+@subsection SimplePlot (Pure C)
 @cindex SimplePlot
 
 @deftypefn {C function} @code{void} mgl_simple_plot (@code{HMGL} gr, @code{const HMDT} a, @code{int} type, @code{const char *}stl)
@@ -1817,7 +1823,7 @@ Plots the array @var{a} depending on it's dimensions and @var{type} parameter. S
 
 @c ##################################################################
 @node Nonlinear fitting (Pure C), Frames (Pure C), Other plotting (Pure C), C interface
-@subsection Nonlinear fitting (Pure C)
+@section Nonlinear fitting (Pure C)
 
 These functions fit data to formula. Fitting goal is to find formula parameters for the best fit the data points, i.e. to minimize the sum @math{\sum_i (f(x_i, y_i, z_i) - a_i)^2/s_i^2}. At this, approximation function @samp{f} can depend only on one argument @samp{x} (1D case), on two arguments @samp{x,y} (2D case) and on three arguments @samp{x,y,z} (3D case). The function @samp{f} also may depend on parameters. Normally the list of fitted parameters is specified by @var{var} string (like, @samp{abcd}). Usually user should supply initial values for fitted parameters by @var{ini} variable. But if he/she don't supply it then the zeros are used.
 
@@ -1879,7 +1885,7 @@ Print last fitted formula with found coefficients (as numbers) at position @{@va
 
 @c ##################################################################
 @node Frames (Pure C), Data import (Pure C), Nonlinear fitting (Pure C), C interface
-@subsection Frames (Pure C)
+@section Frames (Pure C)
 @cindex NewFrame
 @cindex EndFrame
 @cindex GetNumFrame
@@ -1901,7 +1907,7 @@ Gets the number of created frames.
 
 @c ##################################################################
 @node Data import (Pure C), Data filling (Pure C), Frames (Pure C), C interface
-@subsection Data import (Pure C)
+@section Data import (Pure C)
 @cindex Set
 
 @deftypefn {C function} @code{void} mgl_data_create (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
@@ -1940,7 +1946,7 @@ Allocates memory and scanf the data from the string.
 
 @c ------------------------------------------------------------------
 @node Data filling (Pure C), Rearrange data (Pure C), Data import (Pure C), C interface
-@subsection Data filling (Pure C)
+@section Data filling (Pure C)
 @cindex Fill
 @cindex Modify
 
@@ -1991,7 +1997,7 @@ Gets the z-size of the data.
 
 @c ------------------------------------------------------------------
 @node Rearrange data (Pure C), File I/O (Pure C), Data filling (Pure C), C interface
-@subsection Rearrange data (Pure C)
+@section Rearrange data (Pure C)
 @cindex Rearrange
 @cindex Extend
 @cindex Transpose
@@ -2017,12 +2023,12 @@ Transposes (shift order of) dimensions of the data. New order of dimensions is s
 Reduces the data size by excluding data elements which indexes are not divisible by @var{rx}, @var{ry}, @var{rz} correspondingly.
 @end deftypefn
 @deftypefn {C function} @code{void} mgl_data_crop (@code{HMDT} dat, @code{int} n1, @code{int} n2, @code{char} dir)
-Cuts off edges @var{i}<@var{n1} and @var{i}>@var{n2} of the data along direction @var{dir}.
+Cuts off edges of the data @var{i}<@var{n1} and @var{i}>@var{n2} if @var{n2}>0 or @var{i}>@code{n[xyz]}-@var{n2} if @var{n2}<=0 along direction @var{dir}.
 @end deftypefn
 
 @c ------------------------------------------------------------------
 @node File I/O (Pure C), Make another data (Pure C), Rearrange data (Pure C), C interface
-@subsection File I/O (Pure C)
+@section File I/O (Pure C)
 @cindex Read
 @cindex ReadMat
 @cindex Save
@@ -2052,7 +2058,7 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 
 @c ------------------------------------------------------------------
 @node Make another data (Pure C), Functions on direction (Pure C), File I/O (Pure C), C interface
-@subsection Make another data (Pure C)
+@section Make another data (Pure C)
 @cindex SubData
 @cindex Column
 @cindex SetColumnId
@@ -2119,7 +2125,7 @@ Resizes the data to new size @var{mx}, @var{my}, @var{mz} from box (part) [@var{
 
 @c ------------------------------------------------------------------
 @node Functions on direction (Pure C), Interpolation (Pure C), Make another data (Pure C), C interface
-@subsection Functions on direction (Pure C)
+@section Functions on direction (Pure C)
 @cindex CumSum
 @cindex Integral
 @cindex Diff
@@ -2184,7 +2190,7 @@ Normalizes the data to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} 
 
 @c ------------------------------------------------------------------
 @node Interpolation (Pure C), Informational functions (Pure C), Functions on direction (Pure C), C interface
-@subsection Interpolation (Pure C)
+@section Interpolation (Pure C)
 @cindex Spline
 @cindex Spline1
 @cindex Linear
@@ -2218,7 +2224,7 @@ Gets the pointer to internal data array.
 
 @c ------------------------------------------------------------------
 @node Informational functions (Pure C), Operators (Pure C), Interpolation (Pure C), C interface
-@subsection Informational functions (Pure C)
+@section Informational functions (Pure C)
 @cindex Maximal
 @cindex Minimal
 
@@ -2231,7 +2237,7 @@ Gets minimal value of the data.
 
 @c ------------------------------------------------------------------
 @node Operators (Pure C), Global functions (Pure C), Informational functions (Pure C), C interface
-@subsection Operators (Pure C)
+@section Operators (Pure C)
 
 @deftypefn {C function} @code{void} mgl_data_mul_dat (@code{HMDT} dat, @code{const HMDT} d)
 Multiplies the data by the other one for each element.
@@ -2260,7 +2266,7 @@ Subtracts the number to each element.
 
 @c ------------------------------------------------------------------
 @node Global functions (Pure C), , Operators (Pure C), C interface
-@subsection Global functions (Pure C)
+@section Global functions (Pure C)
 
 These functions are not so common. So I put it in this chapter.
 
@@ -2277,7 +2283,7 @@ Short time Fourier analysis for real and imaginary parts. Output  is amplitude o
 @end deftypefn
 
 @deftypefn {C function} @code{HMDT} mgl_pde_solve (@code{const char *}ham, @code{const HMDT} ini_re, @code{const HMDT} ini_im, @code{mglPoint} Min, @code{mglPoint} Max, @code{float} dz=@code{0.1}, @code{float} k0=@code{100})
-Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{Min}, @var{Max} set the bounding box for the solution. Note that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham="p^2 + q^2 - u^2"}. You may specify imaginary part for wave absorption, like @code{ham = "p^2 + i*x*(x>0)"}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}). @sref{PDE sample} 
+Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{Min}, @var{Max} set the bounding box for the solution. Note, that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for field amplitude |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham="p^2 + q^2 - u^2"}. You may specify imaginary part for wave absorption, like @code{ham = "p^2 + i*x*(x>0)"}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}). @sref{PDE sample} 
 @end deftypefn
 
 @deftypefn {C function} @code{HMDT} mgl_ray_trace (@code{const char *}ham, @code{mglPoint} r0, @code{mglPoint} p0, @code{float} dt=@code{0.1}, @code{float} tmax=@code{10})

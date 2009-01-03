@@ -2,7 +2,7 @@ Source: mathgl
 Section: libs
 Priority: extra
 Maintainer: Dmitry I. Kulagin <dik@kulagin.nnov.ru>
-Build-Depends: cdbs, debhelper (>= 5), autotools-dev, libtool, autoconf, automake, libgsl0-dev, freeglut3-dev, libgl-dev, libpng-dev, libhdf5-dev, libjpeg-dev, libtiff-dev, libfltk-dev, g++, libqt4-dev, libwxbase2.6-dev, python-all-dev, swig
+Build-Depends: cdbs, debhelper (>= 5), autotools-dev, libtool, autoconf, automake, libgsl0-dev, freeglut3-dev, libgl-dev, libpng-dev, libhdf5-dev, libjpeg-dev, libtiff-dev, libfltk-dev, g++, libqt4-dev, libwxbase2.6-dev, python-all-dev, swig, texinfo, texi2html
 Standards-Version: 3.7.2
 
 Package: mathgl
@@ -19,6 +19,48 @@ Description: MathGL is a library for the plotting of the data
  any operating system (really any which has OpenGL-like libraries).
  .
  MathGL utilities and examples.
+
+Package: mathgl-doc-html
+Architecture: all
+Section: doc
+Priority: extra
+Suggests: libmgl
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ MathGL HTML documentation
+
+Package: mathgl-doc-pdf
+Architecture: all
+Section: doc
+Priority: extra
+Suggests: libmgl
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ MathGL PDF documentation
+
+Package: mathgl-doc-info
+Architecture: all
+Section: doc
+Priority: extra
+Suggests: libmgl
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ MathGL INFO documentation
 
 Package: libmgl
 Architecture: any
@@ -129,7 +171,7 @@ Package: libmgl-wx2.6-dev
 Architecture: any
 Section: libdevel
 Priority: extra
-Depends: libmgl (= ${binary:Version}), libmgl-wx2.6 (= ${binary:Version}), libwxbase2.6-dev, libmgl-dev
+Depends: libmgl (= ${binary:Version}), libmgl-wx2.6 (= ${binary:Version}), libwx
 Suggests: mathgl
 Description: MathGL is a library for the plotting of the data
  MathGL is a free library of fast C++ routines for the plotting
@@ -169,21 +211,6 @@ Description: MathGL is a library for the plotting of the data
  any operating system (really any which has OpenGL-like libraries).
  .
  MathGL GLUT development files.
-
-Package: libmgl-addon
-Architecture: any
-Section: libs
-Priority: extra
-Suggests: libmgl-dev, mathgl
-Depends: ${shlibs:Depends}, libmgl (= ${binary:Version})
-Description: MathGL is a library for the plotting of the data
- MathGL is a free library of fast C++ routines for the plotting
- of the data varied in one or more dimensions. It uses OpenGL
- (www.opengl.org) for the plotting. Also there is a simple window
- interface based on GLUT. This provides high compatibility with
- any operating system (really any which has OpenGL-like libraries).
- .
- Export and import of HDF5 data, export as JPEG and TIFF images.
 
 Package: python-mathgl
 Architecture: any

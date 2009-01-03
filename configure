@@ -941,9 +941,9 @@ ac_ct_F77
 LIBTOOL
 INCLTDL
 LIBLTDL
-AM_CXXFLAGS
 GSL_FLAGS
 GSL_LIBS
+AM_CXXFLAGS
 GL_LIBS
 GLUT_LIBS
 GLUT_FLAGS
@@ -997,7 +997,9 @@ pyexecdir
 pkgpyexecdir
 USE_PYTHON_TRUE
 USE_PYTHON_FALSE
+OCTAVE
 OCTAVE_ARCH
+OCTAVE_INCFLAGS
 USE_OCTAVE_TRUE
 USE_OCTAVE_FALSE
 USE_TESTIO_TRUE
@@ -2111,9 +2113,9 @@ subdirs="$subdirs libltdl"
 #   (Interfaces removed:    CURRENT++, AGE=0, REVISION=0)
 #   (Interfaces added:      CURRENT++, AGE++, REVISION=0)
 #   (No interfaces changed:                   REVISION++)
-MGL_CURRENT=4
-MGL_REVISION=1
-MGL_AGE=2
+MGL_CURRENT=5
+MGL_REVISION=0
+MGL_AGE=0
 
 
 
@@ -5111,7 +5113,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5114 "configure"' > conftest.$ac_ext
+  echo '#line 5116 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7981,11 +7983,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7984: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7986: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7988: \$? = $ac_status" >&5
+   echo "$as_me:7990: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8271,11 +8273,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8274: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8276: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8278: \$? = $ac_status" >&5
+   echo "$as_me:8280: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8375,11 +8377,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8378: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8380: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8382: \$? = $ac_status" >&5
+   echo "$as_me:8384: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10752,7 +10754,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10755 "configure"
+#line 10757 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10852,7 +10854,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10855 "configure"
+#line 10857 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13253,11 +13255,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13256: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13258: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:13260: \$? = $ac_status" >&5
+   echo "$as_me:13262: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -13357,11 +13359,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13360: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13362: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:13364: \$? = $ac_status" >&5
+   echo "$as_me:13366: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14955,11 +14957,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14958: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14960: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14962: \$? = $ac_status" >&5
+   echo "$as_me:14964: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -15059,11 +15061,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15062: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15064: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15066: \$? = $ac_status" >&5
+   echo "$as_me:15068: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17279,11 +17281,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17282: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17284: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17286: \$? = $ac_status" >&5
+   echo "$as_me:17288: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17569,11 +17571,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17572: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17574: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17576: \$? = $ac_status" >&5
+   echo "$as_me:17578: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17673,11 +17675,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17676: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17678: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:17680: \$? = $ac_status" >&5
+   echo "$as_me:17682: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -20367,8 +20369,6 @@ LIBTOOL='$(SHELL) $(top_builddir)/libtool'
 
 
 
-AM_CXXFLAGS="-Wall"
-
 
 GSL_PROG=gsl-config
 # Extract the first word of "$GSL_PROG", so it can be a program name with args.
@@ -20445,11 +20445,14 @@ echo "${ECHO_T}no" >&6; }
 fi
 
 
-if !(test "$GSL_FLAGS" && test "$GSL_LIBS") ;then
+if !(test "$GSL_LIBS") ;then
     echo "Please install gsl headers and libraries and make sure that \
 	path to $GSL_PROG exist in your PATH"
     exit
 fi
+
+AM_CXXFLAGS="-Wall $GSL_FLAGS"
+
 
 # Check whether --enable-all was given.
 if test "${enable_all+set}" = set; then
@@ -22811,7 +22814,7 @@ echo $ECHO_N "checking for the DEFINES to use with Qt... $ECHO_C" >&6; }
 if test "${at_cv_env_QT_DEFINES+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  at_cv_env_QT_DEFINES=`sed "/^DEFINES[^A-Z]*=/!d;$qt_sed_filter" $at_mfile`
+  at_cv_env_QT_DEFINES=`sed "/^DEFINES[ ]*=/!d;$qt_sed_filter" $at_mfile`
 fi
 { echo "$as_me:$LINENO: result: $at_cv_env_QT_DEFINES" >&5
 echo "${ECHO_T}$at_cv_env_QT_DEFINES" >&6; }
@@ -22824,7 +22827,7 @@ echo $ECHO_N "checking for the CFLAGS to use with Qt... $ECHO_C" >&6; }
 if test "${at_cv_env_QT_CFLAGS+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  at_cv_env_QT_CFLAGS=`sed "/^CFLAGS[^A-Z]*=/!d;$qt_sed_filter" $at_mfile`
+  at_cv_env_QT_CFLAGS=`sed "/^CFLAGS[ ]*=/!d;$qt_sed_filter" $at_mfile`
 fi
 { echo "$as_me:$LINENO: result: $at_cv_env_QT_CFLAGS" >&5
 echo "${ECHO_T}$at_cv_env_QT_CFLAGS" >&6; }
@@ -22837,7 +22840,7 @@ echo $ECHO_N "checking for the CXXFLAGS to use with Qt... $ECHO_C" >&6; }
 if test "${at_cv_env_QT_CXXFLAGS+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  at_cv_env_QT_CXXFLAGS=`sed "/^CXXFLAGS[^A-Z]*=/!d;$qt_sed_filter" $at_mfile`
+  at_cv_env_QT_CXXFLAGS=`sed "/^CXXFLAGS[ ]*=/!d;$qt_sed_filter" $at_mfile`
 fi
 { echo "$as_me:$LINENO: result: $at_cv_env_QT_CXXFLAGS" >&5
 echo "${ECHO_T}$at_cv_env_QT_CXXFLAGS" >&6; }
@@ -22850,7 +22853,7 @@ echo $ECHO_N "checking for the INCPATH to use with Qt... $ECHO_C" >&6; }
 if test "${at_cv_env_QT_INCPATH+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  at_cv_env_QT_INCPATH=`sed "/^INCPATH[^A-Z]*=/!d;$qt_sed_filter" $at_mfile`
+  at_cv_env_QT_INCPATH=`sed "/^INCPATH[ ]*=/!d;$qt_sed_filter" $at_mfile`
 fi
 { echo "$as_me:$LINENO: result: $at_cv_env_QT_INCPATH" >&5
 echo "${ECHO_T}$at_cv_env_QT_INCPATH" >&6; }
@@ -22866,7 +22869,7 @@ echo $ECHO_N "checking for the LDFLAGS to use with Qt... $ECHO_C" >&6; }
 if test "${at_cv_env_QT_LDFLAGS+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  at_cv_env_QT_LDFLAGS=`sed "/^LFLAGS[^A-Z]*=/!d;$qt_sed_filter" $at_mfile`
+  at_cv_env_QT_LDFLAGS=`sed "/^LDFLAGS[ ]*=/!d;$qt_sed_filter" $at_mfile`
 fi
 { echo "$as_me:$LINENO: result: $at_cv_env_QT_LDFLAGS" >&5
 echo "${ECHO_T}$at_cv_env_QT_LDFLAGS" >&6; }
@@ -22892,7 +22895,7 @@ echo $ECHO_N "checking for the LIBS to use with Qt... $ECHO_C" >&6; }
 if test "${at_cv_env_QT_LIBS+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  at_cv_env_QT_LIBS=`sed "/^LIBS[^A-Z]*=/!d;$qt_sed_filter" $at_mfile`
+  at_cv_env_QT_LIBS=`sed "/^LIBS[ ]*=/!d;$qt_sed_filter" $at_mfile`
    if test x$at_darwin = xyes; then
      # Fix QT_LIBS: as of today Libtool (GNU Libtool 1.5.23a) doesn't handle
      # -F properly. The "bug" has been fixed on 22 October 2006
@@ -23211,14 +23214,53 @@ else
 fi
 
 if (test x$langall = xtrue || test x$octave = xtrue) ;then
+    # Extract the first word of "octave-config", so it can be a program name with args.
+set dummy octave-config; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_OCTAVE+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$OCTAVE"; then
+  ac_cv_prog_OCTAVE="$OCTAVE" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_OCTAVE="octave-config"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+OCTAVE=$ac_cv_prog_OCTAVE
+if test -n "$OCTAVE"; then
+  { echo "$as_me:$LINENO: result: $OCTAVE" >&5
+echo "${ECHO_T}$OCTAVE" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
 # find Octave arch
-    OCTAVE=octave
     { echo "$as_me:$LINENO: checking for Octave arch" >&5
 echo $ECHO_N "checking for Octave arch... $ECHO_C" >&6; }
-    OCTAVE_ARCH=`$OCTAVE -q --eval 'strcat(octave_config_info("canonical_host_type"), "-", octave_config_info("api_version"))'|sed -e 's/ans = //'`
+    OCTAVE_ARCH=`$OCTAVE -p CANONICAL_HOST_TYPE`-`$OCTAVE -p API_VERSION`
+    OCTAVE_INCFLAGS="-I`$OCTAVE -p OCTINCLUDEDIR`"
     { echo "$as_me:$LINENO: result: $OCTAVE_ARCH" >&5
 echo "${ECHO_T}$OCTAVE_ARCH" >&6; }
     OCTAVE_ARCH=$OCTAVE_ARCH
+
+    OCTAVE_INCFLAGS=$OCTAVE_INCFLAGS
 
     test_octave=true
 fi
@@ -24191,9 +24233,9 @@ ac_ct_F77!$ac_ct_F77$ac_delim
 LIBTOOL!$LIBTOOL$ac_delim
 INCLTDL!$INCLTDL$ac_delim
 LIBLTDL!$LIBLTDL$ac_delim
-AM_CXXFLAGS!$AM_CXXFLAGS$ac_delim
 GSL_FLAGS!$GSL_FLAGS$ac_delim
 GSL_LIBS!$GSL_LIBS$ac_delim
+AM_CXXFLAGS!$AM_CXXFLAGS$ac_delim
 GL_LIBS!$GL_LIBS$ac_delim
 GLUT_LIBS!$GLUT_LIBS$ac_delim
 GLUT_FLAGS!$GLUT_FLAGS$ac_delim
@@ -24247,7 +24289,9 @@ pyexecdir!$pyexecdir$ac_delim
 pkgpyexecdir!$pkgpyexecdir$ac_delim
 USE_PYTHON_TRUE!$USE_PYTHON_TRUE$ac_delim
 USE_PYTHON_FALSE!$USE_PYTHON_FALSE$ac_delim
+OCTAVE!$OCTAVE$ac_delim
 OCTAVE_ARCH!$OCTAVE_ARCH$ac_delim
+OCTAVE_INCFLAGS!$OCTAVE_INCFLAGS$ac_delim
 USE_OCTAVE_TRUE!$USE_OCTAVE_TRUE$ac_delim
 USE_OCTAVE_FALSE!$USE_OCTAVE_FALSE$ac_delim
 USE_TESTIO_TRUE!$USE_TESTIO_TRUE$ac_delim
@@ -24260,7 +24304,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 83; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 85; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

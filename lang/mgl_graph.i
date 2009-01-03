@@ -268,12 +268,20 @@ struct mglParse{};
 	void SetTuneTicks(bool tune, float fact_pos=1.15)
 	{	mgl_tune_ticks(self, tune, fact_pos);	}
 	void SetTickTemplX(const wchar_t *templ)
-	{	mgl_set_xtt(self, templ);	}
+	{	mgl_set_xttw(self, templ);	}
 	void SetTickTemplY(const wchar_t *templ)
-	{	mgl_set_ytt(self, templ);	}
+	{	mgl_set_yttw(self, templ);	}
 	void SetTickTemplZ(const wchar_t *templ)
-	{	mgl_set_ztt(self, templ);	}
+	{	mgl_set_zttw(self, templ);	}
 	void SetTickTemplC(const wchar_t *templ)
+	{	mgl_set_cttw(self, templ);	}
+	void SetTickTemplX(const char *templ)
+	{	mgl_set_xtt(self, templ);	}
+	void SetTickTemplY(const char *templ)
+	{	mgl_set_ytt(self, templ);	}
+	void SetTickTemplZ(const char *templ)
+	{	mgl_set_ztt(self, templ);	}
+	void SetTickTemplC(const char *templ)
 	{	mgl_set_ctt(self, templ);	}
 
 	void Ball(float x, float y, float z, const char *col="r")
@@ -335,6 +343,12 @@ struct mglParse{};
 	{	mgl_plot_xy(self, x, y, pen);	}
 	void Plot(mglData *y, const char *pen="")
 	{	mgl_plot(self, y, pen);	}
+	void Tens(mglData *x, mglData *y, mglData *z, mglData *c, const char *pen="")
+	{	mgl_tens_xyz(self, x, y, z, c, pen);	}
+	void Tens(mglData *x, mglData *y, mglData *c, const char *pen="")
+	{	mgl_tens_xy(self, x, y, c, pen);	}
+	void Tens(mglData *y, mglData *c, const char *pen="")
+	{	mgl_tens(self, y, c, pen);	}
 	void Area(mglData *x, mglData *y, mglData *z, const char *pen="")
 	{	mgl_area_xyz(self, x, y, z, pen);	}
 	void Area(mglData *x, mglData *y, const char *pen="")

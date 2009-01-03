@@ -63,8 +63,8 @@ HMGL mgl_create_graph_qt_dr(HMDR dr, const char *title);
 HMGL mgl_create_graph_idtf();
 void mgl_fltk_run();
 void mgl_qt_run();
-void mgl_fltk_thread();
-void mgl_qt_thread();
+//void mgl_fltk_thread();
+//void mgl_qt_thread();
 void mgl_update(HMGL graph);
 void mgl_delete_graph(HMGL graph);
 /*****************************************************************************/
@@ -188,10 +188,14 @@ void mgl_axis_grid(HMGL graph, const char *dir,const char *pen);
 void mgl_label(HMGL graph, char dir, const char *text);
 void mgl_label_ext(HMGL graph, char dir, const char *text, int pos, float size, float shift);
 void mgl_tune_ticks(HMGL graph, int tune, float fact_pos);
-void mgl_set_xtt(HMGL graph, const wchar_t *templ);
-void mgl_set_ytt(HMGL graph, const wchar_t *templ);
-void mgl_set_ztt(HMGL graph, const wchar_t *templ);
-void mgl_set_ctt(HMGL graph, const wchar_t *templ);
+void mgl_set_xttw(HMGL graph, const wchar_t *templ);
+void mgl_set_yttw(HMGL graph, const wchar_t *templ);
+void mgl_set_zttw(HMGL graph, const wchar_t *templ);
+void mgl_set_cttw(HMGL graph, const wchar_t *templ);
+void mgl_set_xtt(HMGL graph, const char *templ);
+void mgl_set_ytt(HMGL graph, const char *templ);
+void mgl_set_ztt(HMGL graph, const char *templ);
+void mgl_set_ctt(HMGL graph, const char *templ);
 /*****************************************************************************/
 /*		Simple drawing														 */
 /*****************************************************************************/
@@ -232,6 +236,9 @@ void mgl_plot_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
 void mgl_plot(HMGL graph, const HMDT y,	const char *pen);
 void mgl_plot_2(HMGL graph, const HMDT a, const char *pen);
 void mgl_plot_3(HMGL graph, const HMDT a, const char *pen);
+void mgl_tens_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *pen);
+void mgl_tens_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT c, const char *pen);
+void mgl_tens(HMGL graph, const HMDT y, const HMDT c,	const char *pen);
 void mgl_area_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
 void mgl_area_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
 void mgl_area_xys(HMGL graph, const HMDT x, const HMDT y, const char *pen);
@@ -545,6 +552,7 @@ void mgl_cone(HMGL graph, float x1, float y1, float z1, float x2, float y2, floa
 
 HMDT mgl_pde_solve(HMGL gr, const char *ham, const HMDT ini_re, const HMDT ini_im, float dz, float k0);
 HMDT mgl_qo2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, float r, float k0, HMDT xx, HMDT yy);
+HMDT mgl_af2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, float r, float k0, HMDT xx, HMDT yy);
 HMDT mgl_ray_trace(const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt, float tmax);
 void mgl_data_fill_eq(HMGL gr, HMDT res, const char *eq, const HMDT vdat, const HMDT wdat);
 HMDT mgl_jacobian_2d(const HMDT x, const HMDT y);

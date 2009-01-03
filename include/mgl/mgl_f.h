@@ -40,8 +40,8 @@ uintptr_t mgl_create_graph_fltk_(int (*draw)(uintptr_t *gr), const char *title, 
 uintptr_t mgl_create_graph_qt_(int (*draw)(uintptr_t *gr), const char *title, int);
 void mgl_fltk_run_();
 void mgl_qt_run_();
-void mgl_fltk_thread_();
-void mgl_qt_thread_();
+//void mgl_fltk_thread_();
+//void mgl_qt_thread_();
 /*****************************************************************************/
 uintptr_t mgl_create_data_();
 uintptr_t mgl_create_data_size_(int *nx, int *ny, int *nz);
@@ -146,6 +146,10 @@ void mgl_axis_(uintptr_t *graph, const char *dir,int);
 void mgl_axis_grid_(uintptr_t *graph, const char *dir,const char *pen,int,int);
 void mgl_label_(uintptr_t *graph, const char *dir, const char *text,int,int);
 void mgl_label_ext_(uintptr_t *graph, const char *dir, const char *text, int *pos, float *size, float *shift,int,int);
+void mgl_set_xtt_(uintptr_t * graph, const char *templ,int);
+void mgl_set_ytt_(uintptr_t * graph, const char *templ,int);
+void mgl_set_ztt_(uintptr_t * graph, const char *templ,int);
+void mgl_set_ctt_(uintptr_t * graph, const char *templ,int);
 /*****************************************************************************/
 /*		Simple drawing														 */
 /*****************************************************************************/
@@ -183,6 +187,9 @@ void mgl_plot_(uintptr_t *graph, uintptr_t *y,	const char *pen,int);
 void mgl_plot_2_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
 void mgl_plot_3_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
 void mgl_area_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int);
+void mgl_tens_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *pen,int);
+void mgl_tens_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *c, const char *pen,int);
+void mgl_tens_(uintptr_t *graph, uintptr_t *y, uintptr_t *c, const char *pen,int);
 void mgl_area_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen,int);
 void mgl_area_(uintptr_t *graph, uintptr_t *y, const char *pen,int);
 void mgl_area_2_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
@@ -500,6 +507,7 @@ void mgl_cone_(uintptr_t* graph, float *x1, float *y1, float *z1, float *x2, flo
 
 uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, float *dz, float *k0,int);
 uintptr_t mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, float *r, float *k0, uintptr_t* xx, uintptr_t* yy, int);
+uintptr_t mgl_af2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, float *r, float *k0, uintptr_t* xx, uintptr_t* yy, int);
 uintptr_t mgl_ray_trace_(const char *ham, float *x0, float *y0, float *z0, float *px, float *py, float *pz, float *dt, float *tmax,int);
 void mgl_data_fill_eq_(uintptr_t* gr, uintptr_t* res, const char *eq, uintptr_t* vdat, uintptr_t* wdat,int);
 uintptr_t mgl_jacobian_2d_(uintptr_t* x, uintptr_t* y);

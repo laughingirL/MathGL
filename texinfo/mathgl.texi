@@ -73,7 +73,9 @@ supports it in developing GNU and promoting software freedom.''
 * Widget classes::
 * mglData class::
 * Other classes::
-* Interfaces::
+* C interface::
+* Python interface::
+* MGL interface::
 * Samples::
 * TeX-like symbols::
 * Copying This Manual::
@@ -91,22 +93,6 @@ supports it in developing GNU and promoting software freedom.''
 @include example.texi
 @include core.texi
 @include class.texi
-
-@node Interfaces, Samples, Other classes, Top
-@chapter Interfaces
-
-MathGL library have interface for a set of languages. Most of them are based on C interface via SWIG tool. There are Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, Tcl. Also there is Fortran interface which have similar set of functions but slightly different type of arguments (integers instead of pointers). The C interface functions are described in @ref{C interface}.
-@c ++++++++++
-Some of languages listed above support classes (like Python). So for them the special wrapper was written. These classes and functions are described in @ref{Python interface}.
-@c ++++++++++
-Finally the special command language MGL was written for faster access to C++ plotting functions. Corresponding scripts can be executed separately (by UDAV, mgl2png, mgl2eps and so on) or from the C++ code (@pxref{mglParse class}). These commands are described in @ref{MGL interface}.
-
-@menu
-* C interface::
-* Python interface::
-* MGL interface::
-@end menu
-
 @include cint.texi
 @include python.texi
 @include mgl.texi

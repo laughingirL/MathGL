@@ -42,7 +42,9 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 	{
 		case 1:	// EPS
 			sprintf(buf,"%s%s.eps",name,suf);
-			gr->WriteEPS(buf);	break;
+			gr->WriteEPS(buf);
+			sprintf(buf,"%s%s.png",name,suf);
+			gr->WritePNG(buf,0,false);	break;
 		case 2:	// SVG
 			sprintf(buf,"%s%s.svg",name,suf);
 			gr->WriteSVG(buf);	break;
@@ -1213,16 +1215,20 @@ void usage()
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
-/*	mglData y(50,3);
-	y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
-	y.Modify("sin(2*pi*x)",1);	y.Modify("cos(2*pi*x)",2);
-
-	gr->Clf();	gr->Box();	gr->Tube(y,0.05);*/
+/*	mglData a("/home/balakin/download/datafile");
+	gr->Axis(mglPoint(1e-11, 1.00053e-42), mglPoint(1e-07, 9.99967e-42));
+	gr->Axis("lg(x)", "lg(y)", "");
+	gr->SetTicks('x', 0);
+	gr->SetTicks('y', 0);
+	gr->Plot(a.SubData(0), a.SubData(1));
+	gr->Axis();
+	gr->Box();*/
 
 //	gr->Box();	gr->Axis();
 
-	gr->GetFont()->Load("/home/balakin/progr/mgl/ris/adventor");
+//	gr->GetFont()->Load("/home/balakin/progr/mgl/ris/adventor");
 	mglParse par;
+	par.AllowSetSize = true;
 	FILE *fp=fopen("test.mgl","rt");
 	par.Execute(gr,fp);
 	fclose(fp);

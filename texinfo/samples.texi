@@ -1,5 +1,5 @@
 @c ------------------------------------------------------------------
-@node Samples, TeX-like symbols, Interfaces, Top
+@node Samples, TeX-like symbols, MGL interface, Top
 @chapter Samples
 
 This chapter contain a lot of sample codes for all types of plots and for most important examples and hints. The same sample (with pictures) you can find at @uref{http://mathgl.sf.net/pictures.html}. Most of examples have the sample code on 5 languages: C++, MGL, C, Fortran and Python. However, I put only C++ code for some of examples due to a lot of them and clearency how to write code for other languages. All samples are divided on 6 large categories.

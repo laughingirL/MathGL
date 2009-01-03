@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <wchar.h>
 #include <string.h>
+#include <locale.h>
 #include "mgl/mgl_eps.h"
 #include "mgl/mgl_parse.h"
 void wcstrim_mgl(wchar_t *str);
@@ -25,6 +26,7 @@ int main(int narg, char **arg)
 {
 	mglGraphPS gr;
 	mglParse p(true);
+//	setlocale(LC_CTYPE,"C");
 
 	if(narg==1)
 	{
@@ -33,16 +35,21 @@ int main(int narg, char **arg)
 		printf("Usage:\tmgl2cpp scriptfile [outputfile parameter(s)]\n");
 		printf("\tParameters have format \"-Nval\".\n");
 		printf("\tHere N=0,1...9 is parameter ID and val is its value\n");
+		printf("\tOption -Lval set locale to val.\n");
 	}
 	else
 	{
-		FILE *fp = fopen(arg[1],"rt"), *fo;
+		FILE *fp = fopen(arg[1],"rb"), *fo;
 		if(fp==0)	{	printf("Couldn't open file %s\n",arg[1]);	return 1;	}
 		wchar_t str[8192], out[1024];
 		char fname[256];
 		for(long i=2;i<narg;i++)	// add arguments for the script
+		{
 			if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
 				p.AddParam(arg[i][1]-'0',arg[i]+2);
+			if(arg[i][0]=='-' && arg[i][1]=='L')
+				setlocale(LC_CTYPE, arg[i]+2);
+		}
 		if(narg>2 && arg[2][0]!='-')	strcpy(fname,arg[2]);
 		else
 		{

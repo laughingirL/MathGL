@@ -154,7 +154,9 @@ MOC = @MOC@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OCTAVE = @OCTAVE@
 OCTAVE_ARCH = @OCTAVE_ARCH@
+OCTAVE_INCFLAGS = @OCTAVE_INCFLAGS@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -603,9 +605,9 @@ uninstall-am: uninstall-dist_octaveDATA uninstall-pyexecLTLIBRARIES \
 
 
 @USE_PYTHON_TRUE@mgl_python.cpp: mgl.i mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h $(top_builddir)/include/mgl/mgl_data.h
-@USE_PYTHON_TRUE@	swig -python -c++ -o mgl_python.cpp mgl.i
+@USE_PYTHON_TRUE@	swig -python -c++ -I$(top_builddir)/include -o mgl_python.cpp mgl.i
 @USE_PYTHON_TRUE@mathgl.py: mgl.i mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h $(top_builddir)/include/mgl/mgl_data.h
-@USE_PYTHON_TRUE@	swig -python -c++ -o mgl_python.cpp mgl.i
+@USE_PYTHON_TRUE@	swig -python -c++ -I$(top_builddir)/include -o mgl_python.cpp mgl.i
 @USE_OCTAVE_TRUE@mathgl.tar.gz: $(PKG_OCT_FILES) $(PKG_OTHER_FILES)
 @USE_OCTAVE_TRUE@	mkdir -p $(PKG_NAME)
 @USE_OCTAVE_TRUE@	mkdir -p $(PKG_NAME)/inst/$(OCTAVE_ARCH)
@@ -616,7 +618,7 @@ uninstall-am: uninstall-dist_octaveDATA uninstall-pyexecLTLIBRARIES \
 @USE_OCTAVE_TRUE@	rm -rf $(PKG_NAME)
 
 @USE_OCTAVE_TRUE@mgl_octave.cpp: mgl.i mgl_graph.i $(top_builddir)/include/mgl/mgl_c.h $(top_builddir)/include/mgl/mgl_data.h
-@USE_OCTAVE_TRUE@	swig -octave -c++ -o mgl_octave.cpp mgl.i
+@USE_OCTAVE_TRUE@	swig -octave -c++ -I$(top_builddir)/include -o mgl_octave.cpp mgl.i
 @USE_OCTAVE_TRUE@mathgl.oct: mgl_octave.cpp
 @USE_OCTAVE_TRUE@	$(MY_MKOCTFILE) -o $@ $^ -fPIC -I../include -L../mgl/.libs/ -lmgl
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

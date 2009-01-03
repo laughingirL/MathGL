@@ -648,7 +648,10 @@ void mglData::Norm(float v1,float v2,bool sym,int dim)
 	if(nz>1)	s = dim*nx*ny;
 	else		s = dim*ny;
 	for(i=s;i<nn;i++)	// determines borders of existing data
-	{	a1 = (a1<a[i] ? a1 : a[i]);	a2 = (a2>a[i] ? a2 : a[i]);	}
+	{
+		if(isnan(a[i]))	continue;
+		a1 = (a1<a[i] ? a1 : a[i]);	a2 = (a2>a[i] ? a2 : a[i]);
+	}
 	if(a1==a2)  {  if(a1!=0)	a1=0.;  else a2=1;  }
 	if(v1>v2)	{	v=v1;	v1=v2;	v2=v;	}	// swap if uncorrect
 	if(sym)				// use symmetric

@@ -616,17 +616,17 @@ uintptr_t mgl_create_graph_qt_(int (*draw)(uintptr_t *gr), const char *title, in
 int mglQtRun()		{	return qApp ? qApp->exec():0;	}
 //-----------------------------------------------------------------------------
 void *mgl_qt_tmp(void *)	{	mglQtRun();	return 0;	}
-void mgl_qt_thread()
+/*void mgl_qt_thread()
 {
 	static pthread_t tmp;
 	pthread_create(&tmp, 0, mgl_qt_tmp, 0);
 	pthread_detach(tmp);
-}
+}*/
 void mgl_qt_run()	{	mglQtRun();	}
 //-----------------------------------------------------------------------------
 void mgl_qt_run_()	{	mglQtRun();	}
 //-----------------------------------------------------------------------------
-void mgl_qt_thread_()	{	mgl_qt_thread();	}
+//void mgl_qt_thread_()	{	mgl_qt_thread();	}
 //-----------------------------------------------------------------------------
 #define TR	QObject::tr
 void mglGraphQT::makeMenu()

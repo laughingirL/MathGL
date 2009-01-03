@@ -101,6 +101,10 @@ Allocates memory and scanf the data from the string.
 Equidistantly fills the data values to range [@var{x1}, @var{x2}] in direction @var{dir}=@{@samp{x},@samp{y},@samp{z}@}.
 @end deftypemethod
 
+@deftypemethod mglData @code{void} Fill (@code{const char *}eq, @code{mglPoint} Min, @code{mglPoint} Max, @code{const mglData *}vdat=0, @code{const mglData *}wdat=0)
+Fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in range @var{Min} x @var{Max} (in difference from @code{Modify} functions). Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat} which can be @code{NULL} (i.e. can be omitted).
+@end deftypemethod
+
 @deftypemethod mglData @code{void} Modify (@code{const char *}eq, @code{int} dim=@code{0})
 Function fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1]. Variable @samp{u} is the original value of the array. Modification will be fulfilled only for slices >=@var{dim}.
 @end deftypemethod
@@ -111,11 +115,11 @@ Function fills the value of array according to the formula in string @var{eq}. F
 @end deftypemethod
 
 @deftypemethod mglData @code{void} Put (@code{float} val, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
-Function sets value(s) of array a[@var{i}, @var{j}, @var{k}] = @var{val}. Negative indexes @var{i}, @var{j}, @var{k}=-1 set the value @var{val} to whole range in corresponding direction(s). For example, @code{Fill(val,-1,0,-1);} sets a[i,0,j]=@var{val} for i=0...(nx-1), j=0...(nz-1).
+Function sets value(s) of array a[@var{i}, @var{j}, @var{k}] = @var{val}. Negative indexes @var{i}, @var{j}, @var{k}=-1 set the value @var{val} to whole range in corresponding direction(s). For example, @code{Put(val,-1,0,-1);} sets a[i,0,j]=@var{val} for i=0...(nx-1), j=0...(nz-1).
 @end deftypemethod
 
 @deftypemethod mglData @code{void} Put (@code{const mglData &}v, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
-Function copies value(s) from array @var{v} to the range of original array. Negative indexes @var{i}, @var{j}, @var{k}=-1 set the range in corresponding direction(s). At this minor dimensions of array @var{v} should be large than corresponding dimensions of this array. For example, @code{Fill(v,-1,0,-1);} sets a[i,0,j]=v.ny>nz ? v[i,j] : v[i], where i=0...(nx-1), j=0...(nz-1) and condition v.nx>=nx is true.
+Function copies value(s) from array @var{v} to the range of original array. Negative indexes @var{i}, @var{j}, @var{k}=-1 set the range in corresponding direction(s). At this minor dimensions of array @var{v} should be large than corresponding dimensions of this array. For example, @code{Put(v,-1,0,-1);} sets a[i,0,j]=v.ny>nz ? v[i,j] : v[i], where i=0...(nx-1), j=0...(nz-1) and condition v.nx>=nx is true.
 @end deftypemethod
 
 @c ------------------------------------------------------------------
@@ -154,7 +158,7 @@ Transposes (shift order of) dimensions of the data. New order of dimensions is s
 Reduces the data size by excluding data elements which indexes are not divisible by @var{rx}, @var{ry}, @var{rz} correspondingly.
 @end deftypemethod
 @deftypemethod mglData @code{void} Crop (@code{int} n1, @code{int} n2, @code{char} dir=@code{'x'})
-Cuts off edges @var{i}<@var{n1} and @var{i}>@var{n2} of the data along direction @var{dir}.
+		Cuts off edges of the data @var{i}<@var{n1} and @var{i}>@var{n2} if @var{n2}>0 or @var{i}>@code{n[xyz]}-@var{n2} if @var{n2}<=0 along direction @var{dir}.
 @end deftypemethod
 
 @deftypemethod mglData @code{void} InsertRows (@code{int} at, @code{int} num=@code{1}, @code{const char *}eq=@code{NULL})
@@ -502,7 +506,7 @@ Short time Fourier analysis for real and imaginary parts. Output  is amplitude o
 @end deftypefn
 
 @deftypefn {Global function} @code{mglData} mglPDE (@code{const char *}ham, @code{const mglData &}ini_re, @code{const mglData &}ini_im, @code{mglPoint} Min, @code{mglPoint} Max, @code{float} dz=@code{0.1}, @code{float} k0=@code{100})
-Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{Min}, @var{Max} set the bounding box for the solution. Note that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham="p^2 + q^2 - u^2"}. You may specify imaginary part for wave absorption, like @code{ham = "p^2 + i*x*(x>0)"}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}). @sref{PDE sample} 
+Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{Min}, @var{Max} set the bounding box for the solution. Note, that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for field amplitude |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham="p^2 + q^2 - u^2"}. You may specify imaginary part for wave absorption, like @code{ham = "p^2 + i*x*(x>0)"}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}). @sref{PDE sample} 
 @end deftypefn
 
 @deftypefn {Global function} @code{mglData} mglRay (@code{const char *}ham, @code{mglPoint} r0, @code{mglPoint} p0, @code{float} dt=@code{0.1}, @code{float} tmax=@code{10})

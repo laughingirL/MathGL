@@ -1,6 +1,6 @@
 @c ------------------------------------------------------------------
-@node Python interface, MGL interface, C interface, Interfaces
-@section Python interface
+@node Python interface, MGL interface, C interface, Top
+@chapter Python interface
 @cindex mglGraph
 
 MathGL provide the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is denoted in the chapter title.
@@ -12,14 +12,14 @@ a=mathgl.mglGraph()
 a.Box()
 a.WritePNG('test.png')
 @end verbatim
-Alternatively you can import all classes from @code{mathgl} module and easely access MathGL classes: 
+Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes: 
 @verbatim
 from mathgl import *
 a=mglGraph()
 a.Box()
 a.WritePNG('test.png')
 @end verbatim
-It become aloud if you will create many @code{mglData} object.
+It become useful if you will create many @code{mglData} object, for example.
 
 There are 2 classes in Python interface:
 @itemize 
@@ -31,7 +31,7 @@ There are 2 classes in Python interface:
 @end itemize
 
 There is main difference from C++ classes -- Python class @code{mglGraph} don't have variables (options). All corresponding features are moved to methods.
-The core of MathGL Python class is @strong{mglGraph} class. It contains a lot of plotting functions for 1D, 2D and 3D plots. So most of subsections is describe its methods. Its constructor have following arguments:
+The core of MathGL Python class is @strong{mglGraph} class. It contains a lot of plotting functions for 1D, 2D and 3D plots. So most of sections is describe its methods. Its constructor have following arguments:
 
 @defop Constructor {mglGraph (Python)} @code{} mglGraph (@code{int} kind=@code{0}, @code{int} width=@code{600}, @code{int} height=@code{400})
 Create the instance of class mglGraph with specified sizes @var{width} and @var{height}. Parameter @var{type} may have following values: @samp{0} -- use @code{mglGraphZB} plotter (default), @samp{1} -- use @code{mglGraphPS} plotter, @samp{2} -- use @code{mglGraphGL} plotter, @samp{3} -- use @code{mglGraphIDTF} plotter.
@@ -57,7 +57,7 @@ Create the instance of class mglGraph with specified sizes @var{width} and @var{
 
 @c ##################################################################
 @node Graphics setup (Python), Transformation matrix (Python), , Python interface
-@subsection Graphics setup (Python)
+@section Graphics setup (Python)
 @cindex MathGL setup
 
 Functions in this group influences on overall graphics appearance. So all of them should be placed @emph{before} any actual plotting function calls.
@@ -80,7 +80,7 @@ Restore initial values for all of parameters except described in @ref{Zooming (P
 
 @c ==================================================================
 @node Transparency (Python), Lighting (Python), , Graphics setup (Python)
-@subsubsection Transparency (Python)
+@subsection Transparency (Python)
 @cindex Alpha
 @cindex AlphaDef
 @cindex Transparent
@@ -106,7 +106,7 @@ This variable set the transparency type. Normal transparency (@samp{0}) -- below
 
 @c ==================================================================
 @node Lighting (Python), Fog (Python), Transparency (Python), Graphics setup (Python)
-@subsubsection Lighting (Python)
+@subsection Lighting (Python)
 @cindex Light
 @cindex Ambient
 
@@ -130,7 +130,7 @@ Sets the brightness of ambient light. The value should be in range [0,1]. It is 
 
 @c ==================================================================
 @node Fog (Python), Default sizes (Python), Lighting (Python), Graphics setup (Python)
-@subsubsection Fog (Python)
+@subsection Fog (Python)
 @cindex Fog
 
 @deftypemethod {mglGraph (Python)} @code{void} Fog (@code{float} d, @code{float} dz=@code{0.25})
@@ -139,7 +139,7 @@ Function imitate a fog in the plot. Fog start from relative distance @var{dz} fr
 
 @c ==================================================================
 @node Default sizes (Python), Zooming (Python), Fog (Python), Graphics setup (Python)
-@subsubsection Default sizes (Python)
+@subsection Default sizes (Python)
 @cindex BarWidth
 @cindex MarkSize
 @cindex ArrowSize
@@ -165,7 +165,7 @@ The variable define the base width for all lines. The value <1 is ignored. For v
 
 @c ==================================================================
 @node Zooming (Python), Cutting (Python), Default sizes (Python), Graphics setup (Python)
-@subsubsection Zooming (Python)
+@subsection Zooming (Python)
 @cindex PlotFactor
 @cindex Zoom
 
@@ -181,7 +181,7 @@ Changes the scale of graphics that correspond to zoom in/out of the picture. Aft
 
 @c ==================================================================
 @node Cutting (Python), Font settings (Python), Zooming (Python), Graphics setup (Python)
-@subsubsection Cutting (Python)
+@subsection Cutting (Python)
 @cindex Cut
 @cindex CutMin
 @cindex CutMax
@@ -204,7 +204,7 @@ Function set the cutting off condition by formula @var{EqC}. This condition dete
 
 @c ==================================================================
 @node Font settings (Python), Palette and colors (Python), Cutting (Python), Graphics setup (Python)
-@subsubsection Font settings (Python)
+@subsection Font settings (Python)
 @cindex FontSize
 @cindex FontDef
 @cindex RotatedText
@@ -237,7 +237,7 @@ Restore font data to default typeface.
 
 @c ==================================================================
 @node Palette and colors (Python), Other settings (Python), Font settings (Python), Graphics setup (Python)
-@subsubsection Pallete and colors (Python)
+@subsection Pallete and colors (Python)
 @cindex Pal
 @cindex NumPal
 @cindex SetPalette
@@ -262,7 +262,7 @@ Set the color scheme for following plots. Usually this function is used internal
 
 @c ==================================================================
 @node Other settings (Python), , Palette and colors (Python), Graphics setup (Python)
-@subsubsection Other settings (Python)
+@subsection Other settings (Python)
 
 @deftypemethod {mglGraph (Python)} @code{void} SetMeshNum (@code{int} val)
 Sets approximate number of lines in Mesh(), Fall(), Grid() and also the number of hachures in Vect(), VectC(), Dew() and the number of cells in Cloud*(). By default (=0) it draws all lines/hachures/cells.
@@ -278,7 +278,7 @@ If set to @code{true} then it prevent faces drawing. It is useful for speeding u
 
 @c ==================================================================
 @node Axis settings (Python), Transformation matrix (Python), Graphics setup (Python), Python interface
-@subsection Axis settings (Python)
+@section Axis settings (Python)
 
 These large set of functions control how the axis and ticks will be drawn. Note that there is 3-step transformation of data coordinates are performed. Firstly, coordinates are projected if @code{Cut=true} (@pxref{Cutting}), after it transformation formulas are applied, and finally the data was normalized in bounding box.
 
@@ -290,7 +290,7 @@ These large set of functions control how the axis and ticks will be drawn. Note 
 
 @c ------------------------------------------------------------------
 @node Ranges (Python), Transformation (Python), , Axis settings (Python)
-@subsubsection Ranges (Python)
+@subsection Ranges (Python)
 @cindex Axis
 @cindex CAxis
 @cindex XRange
@@ -334,7 +334,7 @@ Sets center of axis cross section. If one of values is NAN then MathGL library t
 
 @c ------------------------------------------------------------------
 @node Transformation (Python), Ticks (Python), Ranges (Python), Axis settings (Python)
-@subsubsection Transformation (Python)
+@subsection Transformation (Python)
 @cindex Axis
 @cindex Ternary
 @cindex fx
@@ -351,7 +351,7 @@ The function sets to draws Ternary plot. This special plot is for 3 dependent co
 
 @c ------------------------------------------------------------------
 @node Ticks (Python), , Transformation (Python), Axis settings (Python)
-@subsubsection Ticks (Python)
+@subsection Ticks (Python)
 
 @cindex SetTicks
 @cindex FactorPos
@@ -381,7 +381,7 @@ Switch on/off ticks enhancing by factoring common multiplier (for small, like fr
 
 @c ##################################################################
 @node Transformation matrix (Python), Export to file (Python), Axis settings (Python), Python interface
-@subsection Transformation matrix (Python)
+@section Transformation matrix (Python)
 @cindex Aspect
 @cindex Rotate
 @cindex RotateN
@@ -425,7 +425,7 @@ Clears transformation matrix. This function clears all previous effects of Aspec
 
 @c ##################################################################
 @node Export to file (Python), Primitives drawing (Python), Transformation matrix (Python), Python interface
-@subsection Export to file (Python)
+@section Export to file (Python)
 @cindex WritePNG
 @cindex WriteSVG
 @cindex WriteBMP
@@ -498,7 +498,7 @@ Gets RGB bitmap of the current state of the image to the buffer @var{buf} of siz
 
 @c ##################################################################
 @node Primitives drawing (Python), Text printing (Python), Export to file (Python), Python interface
-@subsection Primitives drawing (Python)
+@section Primitives drawing (Python)
 @cindex Ball
 @cindex Clf
 @cindex Line
@@ -560,7 +560,7 @@ Draws a marks of different type at position @{@var{x},@var{y},@var{z}@}.
 
 @c ##################################################################
 @node Text printing (Python), Axis and Colorbar (Python), Primitives drawing (Python), Python interface
-@subsection Text printing (Python)
+@section Text printing (Python)
 @cindex Puts
 @cindex Putsw
 @cindex Text
@@ -596,7 +596,7 @@ The function draws @var{text} along the curve between points @{@var{x}[i], @var{
 
 @c ##################################################################
 @node Axis and Colorbar (Python), Legend (Python), Text printing (Python), Python interface
-@subsection Axis and Colorbar (Python)
+@section Axis and Colorbar (Python)
 @cindex Axis
 @cindex Box
 @cindex Grid
@@ -627,7 +627,7 @@ Prints the label @var{text} for axis @var{dir}. The position of label is determi
 
 @c ##################################################################
 @node Legend (Python), 1D plotting (Python), Axis and Colorbar (Python), Python interface
-@subsection Legend (Python)
+@section Legend (Python)
 @cindex Legend
 @cindex AddLegend
 @cindex ClearLegend
@@ -657,7 +657,7 @@ Switch on/off drawing box near legend. By default (=@code{true}) box is drawn.
 
 @c ##################################################################
 @node 1D plotting (Python), 2D plotting (Python), Legend (Python), Python interface
-@subsection 1D plotting (Python)
+@section 1D plotting (Python)
 
 These functions perform plotting of 1D data. 1D means that data depended from only 1 parameter like parametric curve @{x(i),y(i),z(i)@}, i=1...n. There are 5 generally different types of data representations: simple line plot (Plot), line plot with filling under it (Area), stairs plot (Step), bar plot (Bars, Barh) and vertical lines (Stem). Each type of plotting has similar interface. There are 3D version and two 2D versions. One of last requires single array. The parameters of line and marks are specified by the string argument. If the string parameter is NULL then solid line with color from palette Pal is used (@pxref{Palette and colors (Python)}). Also there are some special 1d plots having slightly different interface: surface of curve rotation (Torus), chart (Chart) and error boxes (Error), marks with variable size (Mark), tubes (Tube) and so on. @xref{Line styles}.
 
@@ -681,7 +681,7 @@ These functions perform plotting of 1D data. 1D means that data depended from on
 
 @c ==================================================================
 @node Plot (Python), Area (Python), , 1D plotting (Python)
-@subsubsection Plot (Python)
+@subsection Plot (Python)
 @cindex Plot
 
 These functions draw continuous lines between points. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Area}, @ref{Step}, @ref{Stem}, @ref{Tube}, @ref{Mark}, @ref{Error}, @ref{Belt}. @sref{Plot sample}
@@ -700,7 +700,7 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in
 
 @c ==================================================================
 @node Area (Python), Region (Python), Plot (Python), 1D plotting (Python)
-@subsubsection Area (Python)
+@subsection Area (Python)
 @cindex Area
 
 These functions draw continuous lines between points and fills it to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Plot}, @ref{Bars}, @ref{Stem}. @sref{Area sample}
@@ -723,7 +723,7 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in
 
 @c ==================================================================
 @node Region (Python), Bars (Python), Area (Python), 1D plotting (Python)
-@subsubsection Region (Python)
+@subsection Region (Python)
 @cindex Region
 
 These functions fill area between 2 curves. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y1.nx=y2.nx} and all dimensions of arrays @var{y1} and @var{y2} must be equal too. String @var{pen} specifies the color (@pxref{Line styles}). By default (@code{pen=NULL}) color from palette is used (@pxref{Palette and colors (Python)}). See also @ref{Area}, @ref{Bars}, @ref{Stem}. @sref{Region sample}
@@ -739,7 +739,7 @@ The function fills area between curves @{@var{x}[i], @var{y}[i]@} and @{@var{x}[
 
 @c ==================================================================
 @node Bars (Python), Barh (Python), Region (Python), 1D plotting (Python)
-@subsubsection Bars (Python)
+@subsection Bars (Python)
 @cindex Bars
 
 These functions draw vertical bars from points to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Barh}, @ref{Area}, @ref{Stem}, @ref{Chart}, @ref{Default sizes}. @sref{Bars sample}
@@ -758,7 +758,7 @@ The function draws vertical bars from points @{@var{x}[i], @var{y}[i]@} down to 
 
 @c ==================================================================
 @node Barh (Python), Stem (Python), Bars (Python), 1D plotting (Python)
-@subsubsection Barh (Python)
+@subsection Barh (Python)
 @cindex Barh
 
 These functions draw horizontal bars from points to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Barh}, @ref{Default sizes}. @sref{Barh sample}
@@ -773,7 +773,7 @@ The function draws horizontal bars from points @{@var{v}[i], @var{y}[i]@} down t
 
 @c ==================================================================
 @node Stem (Python), Step (Python), Barh (Python), 1D plotting (Python)
-@subsubsection Stem (Python)
+@subsection Stem (Python)
 @cindex Stem
 
 These functions draw vertical lines from points to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Area}, @ref{Bars}, @ref{Plot}. @sref{Stem sample}
@@ -792,7 +792,7 @@ The function draws vertical lines from points @{@var{x}[i], @var{y}[i]@} down to
 
 @c ==================================================================
 @node Step (Python), Torus (Python), Stem (Python), 1D plotting (Python)
-@subsubsection Step (Python)
+@subsection Step (Python)
 @cindex Step
 
 These functions draw continuous stairs for points to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Plot}, @ref{Stem}, @ref{Tile}, @ref{Boxs}. @sref{Step sample}
@@ -811,7 +811,7 @@ The function draws continuous stairs for points @{@var{x}[i], @var{y}[i]@} in pl
 
 @c ==================================================================
 @node Torus (Python), Chart (Python), Step (Python), 1D plotting (Python)
-@subsubsection Torus (Python)
+@subsection Torus (Python)
 @cindex Torus
 
 These functions draw surface which is result of curve @{@var{r}, @var{z}@} rotation around @var{AxialDir} axis (@pxref{Other settings}). The sizes of 1st dimension @strong{must be equal} for all arrays @var{r.nx=z.nx}. String @var{pen} specifies the color (@pxref{Line styles}). By default (@code{pen=NULL}) color from palette is used (@pxref{Palette and colors}). See also @ref{Plot}, @ref{Axial}. @sref{Torus sample}
@@ -826,7 +826,7 @@ The function draws surface which is result of curve @{@var{r}[i], @var{z}[i]@} r
 
 @c ==================================================================
 @node Chart (Python), Mark (Python), Torus (Python), 1D plotting (Python)
-@subsubsection Chart (Python)
+@subsection Chart (Python)
 @cindex Chart
 
 @deftypemethod {mglGraph (Python)} @code{void} Chart (@code{mglData} a, @code{const char *}col=@code{NULL})
@@ -835,7 +835,7 @@ The function draws colored stripes (boxes) for data in array @var{a}. The number
 
 @c ==================================================================
 @node Mark (Python), TextMark (Python), Chart (Python), 1D plotting (Python)
-@subsubsection Mark (Python)
+@subsection Mark (Python)
 @cindex Mark
 
 These functions draw marks with size @var{r}*@var{MarkSize} (@pxref{Default sizes}) at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx=r.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). If you need to draw markers of the same size then you may use @ref{Plot} function. See also @ref{Plot}, @ref{TextMark}, @ref{Stem}, @ref{Error}. @sref{Mark sample}
@@ -854,7 +854,7 @@ The function draws marks for points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=
 
 @c ==================================================================
 @node TextMark (Python), Error (Python), Mark (Python), 1D plotting (Python)
-@subsubsection TextMark (Python)
+@subsection TextMark (Python)
 @cindex TextMark
 
 These functions draw string @var{text} as marks with size proportional to @var{r}*@var{MarkSize} (@pxref{Default sizes}) at points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx=r.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Plot}, @ref{Mark}, @ref{Stem}. @sref{TextMark sample}
@@ -881,7 +881,7 @@ The function draws textual marks for points @{@var{x}[i], @var{y}[i]@} in plane 
 
 @c ==================================================================
 @node Error (Python), Tube (Python), TextMark (Python), 1D plotting (Python)
-@subsubsection Error (Python)
+@subsection Error (Python)
 @cindex Error
 
 These functions draw error boxes at points @{@var{x}[i], @var{y}[i]@} on plane @var{z} = @var{Min.z}. This can be useful, for example, in experimental points, or to show numeric error or some estimations and so on. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx=r.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Plot}. @sref{Error sample}
@@ -899,7 +899,7 @@ Draws a error box @var{ey} (along only one direction) in point position @{@var{x
 
 @c ==================================================================
 @node Tube (Python), , Error (Python), 1D plotting (Python)
-@subsubsection Tube (Python)
+@subsection Tube (Python)
 @cindex Tube
 
 These functions draw the tube with variable radius @var{r}[i] along the curve between points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx=r.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Plot}. @sref{Tube sample}
@@ -921,7 +921,7 @@ The function draws tube with radius @var{r} between points @{@var{x}[i], @var{y}
 
 @c ##################################################################
 @node 2D plotting (Python), 3D plotting (Python), 1D plotting (Python), Python interface
-@subsection 2D plotting (Python)
+@section 2D plotting (Python)
 
 These functions perform plotting of 2D data. 2D means that data depend from 2 independent parameters like matrix @math{f(x_i,y_j), i=1...n, j=1...m}. There are 6 generally different types of data representations: simple mesh lines plot (Mesh), surface plot (Surf), surface plot by boxes (Boxs), surface plot by tiles (Tile), waterfall-like plot (Fall), belt plot (Belt), density plot (Dens), contour lines plot (Cont), solid contours plot (ContF) and its rotational figure (Axial). Cont, ContF and Axial functions have variants for automatic and manual selection of level values for contours. Also there are functions for plotting data grid lines according to the data format (Grid) for enhancing density or contour plots. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
@@ -941,7 +941,7 @@ These functions perform plotting of 2D data. 2D means that data depend from 2 in
 
 @c ==================================================================
 @node Mesh (Python), Fall (Python), , 2D plotting (Python)
-@subsubsection Mesh (Python)
+@subsection Mesh (Python)
 @cindex Mesh
 
 @deftypemethod {mglGraph (Python)} @code{void} Mesh (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
@@ -954,7 +954,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Fall (Python), Belt (Python), Mesh (Python), 2D plotting (Python)
-@subsubsection Fall (Python)
+@subsection Fall (Python)
 @cindex Fall
 
 @deftypemethod {mglGraph (Python)} @code{void} Fall (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
@@ -967,7 +967,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Belt (Python), Surf (Python), Fall (Python), 2D plotting (Python)
-@subsubsection Belt (Python)
+@subsection Belt (Python)
 @cindex Belt
 
 @deftypemethod {mglGraph (Python)} @code{void} Belt (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
@@ -980,7 +980,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Surf (Python), Boxs (Python), Belt (Python), 2D plotting (Python)
-@subsubsection Surf (Python)
+@subsection Surf (Python)
 @cindex Surf
 
 @deftypemethod {mglGraph (Python)} @code{void} Surf (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
@@ -993,7 +993,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Boxs (Python), Tile (Python), Surf (Python), 2D plotting (Python)
-@subsubsection Boxs (Python)
+@subsection Boxs (Python)
 @cindex Boxs
 
 @deftypemethod {mglGraph (Python)} @code{void} Boxs (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
@@ -1006,7 +1006,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Tile (Python), Dens (Python), Boxs (Python), 2D plotting (Python)
-@subsubsection Tile (Python)
+@subsection Tile (Python)
 @cindex Tile
 
 @deftypemethod {mglGraph (Python)} @code{void} Tile (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
@@ -1019,7 +1019,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Dens (Python), Cont (Python), Tile (Python), 2D plotting (Python)
-@subsubsection Dens (Python)
+@subsection Dens (Python)
 @cindex Dens
 
 @deftypemethod {mglGraph (Python)} @code{void} Dens (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1032,7 +1032,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Cont (Python), ContF (Python), Dens (Python), 2D plotting (Python)
-@subsubsection Cont (Python)
+@subsection Cont (Python)
 @cindex Cont
 
 @deftypemethod {mglGraph (Python)} @code{void} Cont (@code{mglData} v, @code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1053,7 +1053,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node ContF (Python), Axial (Python), Cont (Python), 2D plotting (Python)
-@subsubsection ContF (Python)
+@subsection ContF (Python)
 @cindex ContF
 
 @deftypemethod {mglGraph (Python)} @code{void} ContF (@code{mglData} v, @code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1074,7 +1074,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Axial (Python), Grid (Python), ContF (Python), 2D plotting (Python)
-@subsubsection Axial (Python)
+@subsection Axial (Python)
 @cindex Axial
 
 @deftypemethod {mglGraph (Python)} @code{void} Axial (@code{mglData} v, @code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
@@ -1095,7 +1095,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Grid (Python), , Axial (Python), 2D plotting (Python)
-@subsubsection Grid (Python)
+@subsection Grid (Python)
 @cindex Grid
 
 @deftypemethod {mglGraph (Python)} @code{void} Grid (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1109,7 +1109,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ##################################################################
 @node 3D plotting (Python), Dual plotting (Python), 2D plotting (Python), Python interface
-@subsection 3D plotting (Python)
+@section 3D plotting (Python)
 
 These functions perform plotting of 3D data. 3D means that data depend from 3 independent parameters like matrix @math{f(x_i,y_j,z_k), i=1...n, j=1...m, k=1...l}. There are 4 generally different types of data representations: isosurface or surface of constant value (Surf3), density plot at slices (Dens3), contour lines plot at slices (Cont3), solid contours plot at slices (ContF3) and cloud-like plot (Cloud). Surf3, Cont3 and ContF3 functions have variants for automatic and manual selection of level values for surfaces/contours. Also there are functions for plotting data grid lines according to the data format (Grid3) for enhancing density or contour plots. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
@@ -1125,11 +1125,11 @@ These functions perform plotting of 3D data. 3D means that data depend from 3 in
 
 @c ==================================================================
 @node Surf3 (Python), Dens3 (Python), , 3D plotting (Python)
-@subsubsection Surf3 (Python)
+@subsection Surf3 (Python)
 @cindex Surf3
 
 @deftypemethod {mglGraph (Python)} @code{void} Surf3 (@code{float} val, @code{mglData} x, @code{mglData} y, @code{mglData} z, @code{mglData} a, @code{const char *}stl=@code{NULL})
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-subsection defining if there are two or more isosurface intersections inside one cell. See also @ref{Cloud}, @ref{Dens3}, @ref{Surf3C}, @ref{Surf3A}, @ref{Axial}. @sref{Surf3 sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{Cloud}, @ref{Dens3}, @ref{Surf3C}, @ref{Surf3A}, @ref{Axial}. @sref{Surf3 sample}
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} Surf3 (@code{float} val, @code{mglData} a, @code{const char *}sch=@code{NULL})
@@ -1146,7 +1146,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node Dens3 (Python), Cont3 (Python), Surf3 (Python), 3D plotting (Python)
-@subsubsection Dens3 (Python)
+@subsection Dens3 (Python)
 @cindex Dens3
 @cindex DensA
 
@@ -1168,7 +1168,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node Cont3 (Python), ContF3 (Python), Dens3 (Python), 3D plotting (Python)
-@subsubsection Cont3 (Python)
+@subsection Cont3 (Python)
 @cindex Cont3
 @cindex ContA
 
@@ -1198,7 +1198,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node ContF3 (Python), Grid3 (Python), Cont3 (Python), 3D plotting (Python)
-@subsubsection ContF3 (Python)
+@subsection ContF3 (Python)
 @cindex ContF3
 @cindex ContFA
 
@@ -1228,7 +1228,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node Grid3 (Python), Cloud (Python), ContF3 (Python), 3D plotting (Python)
-@subsubsection Grid3 (Python)
+@subsection Grid3 (Python)
 @cindex Grid3
 @cindex GridA
 
@@ -1250,7 +1250,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node Cloud (Python), Beam (Python), Grid3 (Python), 3D plotting (Python)
-@subsubsection Cloud (Python)
+@subsection Cloud (Python)
 @cindex CloudP
 @cindex CloudQ
 
@@ -1264,7 +1264,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node Beam (Python), , Cloud (Python), 3D plotting (Python)
-@subsubsection Beam (Python)
+@subsection Beam (Python)
 @cindex Beam
 
 @deftypemethod {mglGraph (Python)} @code{void} Beam (@code{float} val, @code{mglData} tr, @code{mglData} g1, @code{mglData} g2, @code{mglData} a, @code{float} r, @code{const char *}stl=@code{NULL}, @code{int} flag=@code{0})
@@ -1279,7 +1279,7 @@ Draws @var{num}-th uniformly distributed in range [@var{Cmin}, @var{Cmax}] isosu
 
 @c ##################################################################
 @node Dual plotting (Python), Vector fields (Python), 3D plotting (Python), Python interface
-@subsection Dual plotting (Python)
+@section Dual plotting (Python)
 
 These plotting functions draw @emph{two matrix} simultaneously. There are 5 generally different types of data representations: surface or isosurface colored by other data (SurfC, Surf3C), surface or isosurface transpared by other data (SurfA, Surf3A), tiles with variable size (TileS), mapping diagram (Map), STFA diagram (STFA). Surf3A and Surf3C have variants for automatic and manual selection of level values for isosurfaces. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
@@ -1295,7 +1295,7 @@ These plotting functions draw @emph{two matrix} simultaneously. There are 5 gene
 
 @c ==================================================================
 @node SurfC (Python), Surf3C (Python), , Dual plotting (Python)
-@subsubsection SurfC (Python)
+@subsection SurfC (Python)
 @cindex SurfC
 
 @deftypemethod {mglGraph (Python)} @code{void} SurfC (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{mglData} c, @code{const char *}sch=@code{NULL})
@@ -1309,11 +1309,11 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Surf3C (Python), SurfA (Python), SurfC (Python), Dual plotting (Python)
-@subsubsection Surf3C (Python)
+@subsection Surf3C (Python)
 @cindex Surf3C
 
 @deftypemethod {mglGraph (Python)} @code{void} Surf3C (@code{float} val, @code{mglData} x, @code{mglData} y, @code{mglData} z, @code{mglData} a, @code{mglData} c, @code{const char *}stl=@code{NULL})
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as Surf3() function but the color of isosurface depends on values of array @var{c}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-subsection defining if there are two or more isosurface intersections inside one cell. See also @ref{Surf3}, @ref{SurfC}, @ref{Surf3A}. @sref{Surf3C sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as Surf3() function but the color of isosurface depends on values of array @var{c}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{Surf3}, @ref{SurfC}, @ref{Surf3A}. @sref{Surf3C sample}
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} Surf3C (@code{float} val, @code{mglData} a, @code{mglData} c, @code{const char *}sch=@code{NULL})
@@ -1331,7 +1331,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node SurfA (Python), Surf3A (Python), Surf3C (Python), Dual plotting (Python)
-@subsubsection SurfA (Python)
+@subsection SurfA (Python)
 @cindex SurfA
 
 @deftypemethod {mglGraph (Python)} @code{void} SurfA (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{mglData} c, @code{const char *}sch=@code{NULL})
@@ -1345,11 +1345,11 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Surf3A (Python), TileS (Python), SurfA (Python), Dual plotting (Python)
-@subsubsection Surf3A (Python)
+@subsection Surf3A (Python)
 @cindex Surf3A
 
 @deftypemethod {mglGraph (Python)} @code{void} Surf3A (@code{float} val, @code{mglData} x, @code{mglData} y, @code{mglData} z, @code{mglData} a, @code{mglData} c, @code{const char *}stl=@code{NULL})
-The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as Surf3() function but the transparency of isosurface depends on values of @var{b} array. This allows one to remove the part of isosurface where @var{b} is negligibly small (useful for phase plotting of a beam or a pulse). String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-subsection defining if there are two or more isosurface intersections inside one cell. See also @ref{Surf3}, @ref{SurfA}, @ref{Surf3C}. @sref{Surf3A sample}
+The function draws isosurface plot for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as Surf3() function but the transparency of isosurface depends on values of @var{b} array. This allows one to remove the part of isosurface where @var{b} is negligibly small (useful for phase plotting of a beam or a pulse). String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. All dimensions of arrays @var{z} and @var{c} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). Note, that there is possibility of incorrect plotting due to uncertainty of cross-section defining if there are two or more isosurface intersections inside one cell. See also @ref{Surf3}, @ref{SurfA}, @ref{Surf3C}. @sref{Surf3A sample}
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} Surf3A (@code{float} val, @code{mglData} a, @code{mglData} c, @code{const char *}sch=@code{NULL})
@@ -1366,7 +1366,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @c ==================================================================
 @node TileS (Python), Map (Python), Surf3A (Python), Dual plotting (Python)
-@subsubsection TileS (Python)
+@subsection TileS (Python)
 @cindex TileS
 
 @deftypemethod {mglGraph (Python)} @code{void} TileS (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{mglData} r, @code{const char *}sch=@code{NULL})
@@ -1379,7 +1379,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Map (Python), STFA (Python), TileS (Python), Dual plotting (Python)
-@subsubsection Map (Python)
+@subsection Map (Python)
 @cindex Map
 
 @deftypemethod {mglGraph (Python)} @code{void} Map (@code{mglData} x, @code{mglData} y, @code{mglData} ax, @code{mglData} ay, @code{const char *}sch=@code{NULL}, @code{int} ks=@code{0}, @code{bool} pnts=@code{true})
@@ -1392,7 +1392,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node STFA (Python), , Map (Python), Dual plotting (Python)
-@subsubsection STFA (Python)
+@subsection STFA (Python)
 @cindex STFA
 
 @deftypemethod {mglGraph (Python)} @code{void} STFA (@code{mglData} x, @code{mglData} y, @code{mglData} re, @code{mglData} im, @code{int} dn, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1406,7 +1406,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ##################################################################
 @node Vector fields (Python), Other plotting (Python), Dual plotting (Python), Python interface
-@subsection Vector fields (Python)
+@section Vector fields (Python)
 
 These functions perform plotting of 2D and 3D vector fields. There are 5 generally different types of vector fields representations: simple vector field (Vect), vector field with coloring (VectC), vector field by dew-drops (Dew), flow threads (Flow), flow pipes (Pipe). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
@@ -1420,7 +1420,7 @@ These functions perform plotting of 2D and 3D vector fields. There are 5 general
 
 @c ==================================================================
 @node Vect (Python), VectC (Python), , Vector fields (Python)
-@subsubsection Vect (Python)
+@subsection Vect (Python)
 @cindex Vect
 
 @deftypemethod {mglGraph (Python)} @code{void} Vect (@code{mglData} x, @code{mglData} y, @code{mglData} ax, @code{mglData} ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1441,7 +1441,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node VectC (Python), Dew (Python), Vect (Python), Vector fields (Python)
-@subsubsection VectC (Python)
+@subsection VectC (Python)
 @cindex VectC
 
 @deftypemethod {mglGraph (Python)} @code{void} VectC (@code{mglData} x, @code{mglData} y, @code{mglData} ax, @code{mglData} ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1462,7 +1462,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Dew (Python), Flow (Python), VectC (Python), Vector fields (Python)
-@subsubsection Dew (Python)
+@subsection Dew (Python)
 @cindex Dew
 
 @deftypemethod {mglGraph (Python)} @code{void} Dew (@code{mglData} x, @code{mglData} y, @code{mglData} ax, @code{mglData} ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1476,7 +1476,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Flow (Python), Pipe (Python), Dew (Python), Vector fields (Python)
-@subsubsection Flow (Python)
+@subsection Flow (Python)
 @cindex Flow
 
 @deftypemethod {mglGraph (Python)} @code{void} Flow (@code{mglData} x, @code{mglData} y, @code{mglData} ax, @code{mglData} ay, @code{const char *}sch=@code{NULL}, @code{int} num=@code{5}, @code{bool} central=@code{true}, @code{float} zVal=@code{NAN})
@@ -1498,7 +1498,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ==================================================================
 @node Pipe (Python), , Flow (Python), Vector fields (Python)
-@subsubsection Pipe (Python)
+@subsection Pipe (Python)
 @cindex Pipe
 
 @deftypemethod {mglGraph (Python)} @code{void} Pipe (@code{mglData} x, @code{mglData} y, @code{mglData} ax, @code{mglData} ay, @code{const char *}sch=@code{NULL}, @code{float} r0=@code{0.05}, @code{int} num=@code{5}, @code{bool} central=@code{true}, @code{float} zVal=@code{NAN})
@@ -1520,7 +1520,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @c ##################################################################
 @node Other plotting (Python), Nonlinear fitting (Python), Vector fields (Python), Python interface
-@subsection Other plotting (Python)
+@section Other plotting (Python)
 
 These functions perform miscelaneous plotting. There is unstructured data points plots (Dots), surface reconstruction (Crust), surfaces on the triangular mesh (TriPlot), textual formula plotting (Plots by formula), data plots at edges (Dens[XYZ], Cont[XYZ], ContF[XYZ]), simple plot (SimplePlot). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
@@ -1537,7 +1537,7 @@ These functions perform miscelaneous plotting. There is unstructured data points
 
 @c ==================================================================
 @node DensXYZ (Python), ContXYZ (Python), , Other plotting (Python)
-@subsubsection DensXYZ (Python)
+@subsection DensXYZ (Python)
 @cindex DensX
 @cindex DensY
 @cindex DensZ
@@ -1558,7 +1558,7 @@ Draws density plot for data @var{a} at z = @var{sVal}.
 
 @c ==================================================================
 @node ContXYZ (Python), ContFXYZ (Python), DensXYZ (Python), Other plotting (Python)
-@subsubsection ContXYZ (Python)
+@subsection ContXYZ (Python)
 @cindex ContX
 @cindex ContY
 @cindex ContZ
@@ -1591,7 +1591,7 @@ Draws contour lines for data @var{a}=@var{v}[i] at z = @var{sVal}.
 
 @c ==================================================================
 @node ContFXYZ (Python), Dots (Python), ContXYZ (Python), Other plotting (Python)
-@subsubsection ContFXYZ (Python)
+@subsection ContFXYZ (Python)
 @cindex ContFX
 @cindex ContFY
 @cindex ContFZ
@@ -1624,7 +1624,7 @@ Draws solid contours for data @var{a}=@var{v}[i] at z = @var{sVal}.
 
 @c ==================================================================
 @node Dots (Python), Crust (Python), ContFXYZ (Python), Other plotting (Python)
-@subsubsection Dots (Python)
+@subsection Dots (Python)
 @cindex Dots
 
 @deftypemethod {mglGraph (Python)} @code{void} Dots (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
@@ -1633,7 +1633,7 @@ The function draws the arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}
 
 @c ==================================================================
 @node Crust (Python), TriPlot (Python), Dots (Python), Other plotting (Python)
-@subsubsection Crust (Python)
+@subsection Crust (Python)
 @cindex Crust
 
 @deftypemethod {mglGraph (Python)} @code{void} Crust (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL}, @code{float} er=@code{0})
@@ -1642,7 +1642,7 @@ The function reconstruct and draws the surface for arbitrary placed points @{@va
 
 @c ==================================================================
 @node TriPlot (Python), Plots by formula (Python), Crust (Python), Other plotting (Python)
-@subsubsection TriPlot (Python)
+@subsection TriPlot (Python)
 @cindex TriPlot
 
 @deftypemethod {mglGraph (Python)} @code{void} TriPlot (@code{mglData} id, @code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
@@ -1655,7 +1655,7 @@ The same as previous with @var{z}[i]=@var{zVal}.
 
 @c ==================================================================
 @node Plots by formula (Python), SimplePlot (Python), TriPlot (Python), Other plotting (Python)
-@subsubsection Plots by formula (Python)
+@subsection Plots by formula (Python)
 @cindex Plot
 @cindex Surf
 
@@ -1679,7 +1679,7 @@ The function draws parametrical surface @{@samp{eqX(u,v)}, @samp{eqY(u,v)}, @sam
 
 @c ==================================================================
 @node SimplePlot (Python), , Plots by formula (Python), Other plotting (Python)
-@subsubsection SimplePlot (Python)
+@subsection SimplePlot (Python)
 @cindex SimplePlot
 
 @deftypemethod {mglGraph (Python)} @code{void} SimplePlot (@code{mglData} a, @code{int} type=@code{0}, @code{const char *}stl=@code{NULL})
@@ -1688,7 +1688,7 @@ Plots the array @var{a} depending on it's dimensions and @var{type} parameter. S
 
 @c ##################################################################
 @node Nonlinear fitting (Python), , Other plotting (Python), Python interface
-@subsection Nonlinear fitting (Python)
+@section Nonlinear fitting (Python)
 @cindex Fit
 @cindex FitS
 @cindex PutsFit

@@ -81,10 +81,16 @@ am_mgl_example_OBJECTS = full_test.$(OBJEXT)
 mgl_example_OBJECTS = $(am_mgl_example_OBJECTS)
 mgl_example_DEPENDENCIES = $(top_builddir)/mgl/libmgl.la
 am__mgl_fltk_example_SOURCES_DIST = fltk_example.cpp
-@USE_FLTK_TRUE@am_mgl_fltk_example_OBJECTS = fltk_example.$(OBJEXT)
+@USE_FLTK_TRUE@am_mgl_fltk_example_OBJECTS =  \
+@USE_FLTK_TRUE@	mgl_fltk_example-fltk_example.$(OBJEXT)
 mgl_fltk_example_OBJECTS = $(am_mgl_fltk_example_OBJECTS)
-@USE_FLTK_TRUE@mgl_fltk_example_DEPENDENCIES =  \
+am__DEPENDENCIES_1 =
+@USE_FLTK_TRUE@mgl_fltk_example_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 @USE_FLTK_TRUE@	$(top_builddir)/widgets/libmgl-fltk.la
+mgl_fltk_example_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am__mgl_glut_example_SOURCES_DIST = glut_example.cpp
 @USE_GLUT_TRUE@am_mgl_glut_example_OBJECTS = glut_example.$(OBJEXT)
 mgl_glut_example_OBJECTS = $(am_mgl_glut_example_OBJECTS)
@@ -97,7 +103,6 @@ am__mgl_qt_example_SOURCES_DIST =  \
 @USE_QT_TRUE@	mgl_qt_example-mgl_qt.moc.$(OBJEXT) \
 @USE_QT_TRUE@	mgl_qt_example-qt_example.$(OBJEXT)
 mgl_qt_example_OBJECTS = $(am_mgl_qt_example_OBJECTS)
-am__DEPENDENCIES_1 =
 @USE_QT_TRUE@mgl_qt_example_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 @USE_QT_TRUE@	$(top_builddir)/widgets/libmgl-qt.la
 mgl_qt_example_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -115,10 +120,13 @@ mgl_wx_example_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(mgl_wx_example_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am__test_SOURCES_DIST = main.cpp
-@USE_FLTK_TRUE@am_test_OBJECTS = main.$(OBJEXT)
+@USE_FLTK_TRUE@am_test_OBJECTS = test-main.$(OBJEXT)
 test_OBJECTS = $(am_test_OBJECTS)
-@USE_FLTK_TRUE@test_DEPENDENCIES =  \
+@USE_FLTK_TRUE@test_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 @USE_FLTK_TRUE@	$(top_builddir)/widgets/libmgl-fltk.la
+test_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CXXLD) $(test_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -217,7 +225,9 @@ MOC = @MOC@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OCTAVE = @OCTAVE@
 OCTAVE_ARCH = @OCTAVE_ARCH@
+OCTAVE_INCFLAGS = @OCTAVE_INCFLAGS@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -315,9 +325,11 @@ INCLUDES = -I$(top_builddir)/include -I$(top_builddir) @INCLTDL@
 mgl_example_SOURCES = full_test.cpp
 mgl_example_LDADD = $(top_builddir)/mgl/libmgl.la
 @USE_FLTK_TRUE@mgl_fltk_example_SOURCES = fltk_example.cpp
-@USE_FLTK_TRUE@mgl_fltk_example_LDADD = $(top_builddir)/widgets/libmgl-fltk.la
+@USE_FLTK_TRUE@mgl_fltk_example_LDADD = $(FLTK_LIBS) $(top_builddir)/widgets/libmgl-fltk.la
+@USE_FLTK_TRUE@mgl_fltk_example_CXXFLAGS = $(FLTK_FLAGS) $(AM_CXXFLAGS)
 @USE_FLTK_TRUE@test_SOURCES = main.cpp
-@USE_FLTK_TRUE@test_LDADD = $(top_builddir)/widgets/libmgl-fltk.la
+@USE_FLTK_TRUE@test_LDADD = $(FLTK_LIBS) $(top_builddir)/widgets/libmgl-fltk.la
+@USE_FLTK_TRUE@test_CXXFLAGS = $(FLTK_FLAGS) $(AM_CXXFLAGS)
 @USE_GLUT_TRUE@mgl_glut_example_SOURCES = glut_example.cpp
 @USE_GLUT_TRUE@mgl_glut_example_LDADD = $(top_builddir)/widgets/libmgl-glut.la
 @USE_WX_TRUE@mgl_wx_example_LDADD = $(WX_LIBS) $(top_builddir)/widgets/libmgl-wx.la
@@ -412,7 +424,7 @@ mgl_example$(EXEEXT): $(mgl_example_OBJECTS) $(mgl_example_DEPENDENCIES)
 	$(CXXLINK) $(mgl_example_OBJECTS) $(mgl_example_LDADD) $(LIBS)
 mgl_fltk_example$(EXEEXT): $(mgl_fltk_example_OBJECTS) $(mgl_fltk_example_DEPENDENCIES) 
 	@rm -f mgl_fltk_example$(EXEEXT)
-	$(CXXLINK) $(mgl_fltk_example_OBJECTS) $(mgl_fltk_example_LDADD) $(LIBS)
+	$(mgl_fltk_example_LINK) $(mgl_fltk_example_OBJECTS) $(mgl_fltk_example_LDADD) $(LIBS)
 mgl_glut_example$(EXEEXT): $(mgl_glut_example_OBJECTS) $(mgl_glut_example_DEPENDENCIES) 
 	@rm -f mgl_glut_example$(EXEEXT)
 	$(CXXLINK) $(mgl_glut_example_OBJECTS) $(mgl_glut_example_LDADD) $(LIBS)
@@ -424,7 +436,7 @@ mgl_wx_example$(EXEEXT): $(mgl_wx_example_OBJECTS) $(mgl_wx_example_DEPENDENCIES
 	$(mgl_wx_example_LINK) $(mgl_wx_example_OBJECTS) $(mgl_wx_example_LDADD) $(LIBS)
 test$(EXEEXT): $(test_OBJECTS) $(test_DEPENDENCIES) 
 	@rm -f test$(EXEEXT)
-	$(CXXLINK) $(test_OBJECTS) $(test_LDADD) $(LIBS)
+	$(test_LINK) $(test_OBJECTS) $(test_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -432,13 +444,13 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fltk_example.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/glut_example.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_fltk_example-fltk_example.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_qt_example-mgl_qt.moc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_qt_example-qt_example.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_wx_example-wx_example.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-main.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -460,6 +472,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
+
+mgl_fltk_example-fltk_example.o: fltk_example.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) -MT mgl_fltk_example-fltk_example.o -MD -MP -MF $(DEPDIR)/mgl_fltk_example-fltk_example.Tpo -c -o mgl_fltk_example-fltk_example.o `test -f 'fltk_example.cpp' || echo '$(srcdir)/'`fltk_example.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl_fltk_example-fltk_example.Tpo $(DEPDIR)/mgl_fltk_example-fltk_example.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='fltk_example.cpp' object='mgl_fltk_example-fltk_example.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) -c -o mgl_fltk_example-fltk_example.o `test -f 'fltk_example.cpp' || echo '$(srcdir)/'`fltk_example.cpp
+
+mgl_fltk_example-fltk_example.obj: fltk_example.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) -MT mgl_fltk_example-fltk_example.obj -MD -MP -MF $(DEPDIR)/mgl_fltk_example-fltk_example.Tpo -c -o mgl_fltk_example-fltk_example.obj `if test -f 'fltk_example.cpp'; then $(CYGPATH_W) 'fltk_example.cpp'; else $(CYGPATH_W) '$(srcdir)/fltk_example.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl_fltk_example-fltk_example.Tpo $(DEPDIR)/mgl_fltk_example-fltk_example.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='fltk_example.cpp' object='mgl_fltk_example-fltk_example.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) -c -o mgl_fltk_example-fltk_example.obj `if test -f 'fltk_example.cpp'; then $(CYGPATH_W) 'fltk_example.cpp'; else $(CYGPATH_W) '$(srcdir)/fltk_example.cpp'; fi`
 
 mgl_qt_example-mgl_qt.moc.o: $(top_builddir)/include/mgl/mgl_qt.moc.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl_qt_example_CPPFLAGS) $(CPPFLAGS) $(mgl_qt_example_CXXFLAGS) $(CXXFLAGS) -MT mgl_qt_example-mgl_qt.moc.o -MD -MP -MF $(DEPDIR)/mgl_qt_example-mgl_qt.moc.Tpo -c -o mgl_qt_example-mgl_qt.moc.o `test -f '$(top_builddir)/include/mgl/mgl_qt.moc.cpp' || echo '$(srcdir)/'`$(top_builddir)/include/mgl/mgl_qt.moc.cpp
@@ -502,6 +528,20 @@ mgl_wx_example-wx_example.obj: wx_example.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wx_example.cpp' object='mgl_wx_example-wx_example.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_wx_example_CXXFLAGS) $(CXXFLAGS) -c -o mgl_wx_example-wx_example.obj `if test -f 'wx_example.cpp'; then $(CYGPATH_W) 'wx_example.cpp'; else $(CYGPATH_W) '$(srcdir)/wx_example.cpp'; fi`
+
+test-main.o: main.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_CXXFLAGS) $(CXXFLAGS) -MT test-main.o -MD -MP -MF $(DEPDIR)/test-main.Tpo -c -o test-main.o `test -f 'main.cpp' || echo '$(srcdir)/'`main.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test-main.Tpo $(DEPDIR)/test-main.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='main.cpp' object='test-main.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_CXXFLAGS) $(CXXFLAGS) -c -o test-main.o `test -f 'main.cpp' || echo '$(srcdir)/'`main.cpp
+
+test-main.obj: main.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_CXXFLAGS) $(CXXFLAGS) -MT test-main.obj -MD -MP -MF $(DEPDIR)/test-main.Tpo -c -o test-main.obj `if test -f 'main.cpp'; then $(CYGPATH_W) 'main.cpp'; else $(CYGPATH_W) '$(srcdir)/main.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test-main.Tpo $(DEPDIR)/test-main.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='main.cpp' object='test-main.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_CXXFLAGS) $(CXXFLAGS) -c -o test-main.obj `if test -f 'main.cpp'; then $(CYGPATH_W) 'main.cpp'; else $(CYGPATH_W) '$(srcdir)/main.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

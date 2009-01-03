@@ -366,7 +366,7 @@ void mglc_cloud(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"crange","Set color range","crange {var [sym] | c1 c2}", mgls_crange, mglc_crange}
 int mgls_crange(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==1)	gr->CRange(*(a[0].d),k[1]==3?(a[1].v!=0):false);
+	if(k[0]==1)	gr->CRange(*(a[0].d),k[1]==3?(a[1].v!=0):false,k[2]==3?a[2].v:0);
 	else if(k[0]==3 && k[1]==3)	{	gr->Cmin = a[0].v;	gr->Cmax = a[1].v;	}
 	else	return 1;
 	return 0;
@@ -374,7 +374,7 @@ int mgls_crange(mglGraph *gr, long n, mglArg *a, int k[10])
 void mglc_crange(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1)
-		swprintf(out,1024,L"gr->CRange(%s, %s);",a[0].s, (k[1]==3 && a[1].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->CRange(%s, %s, %g);",a[0].s, (k[1]==3 && a[1].v!=0)?"true":"false", k[2]==3?a[2].v:0);
 	else if(k[0]==3 && k[1]==3)
 		swprintf(out,1024,L"gr->CAxis(%g, %g);", a[0].v, a[1].v);
 }
@@ -2302,7 +2302,7 @@ void mglc_zlabel(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"xrange","Set range for x-axis","xrange {var [add]} | {x1 x2}", mgls_xrange, mglc_xrange}
 int mgls_xrange(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==1)	gr->XRange(*(a[0].d),k[1]==3?(a[1].v!=0):false);
+	if(k[0]==1)	gr->XRange(*(a[0].d),k[1]==3?(a[1].v!=0):false,k[2]==3?a[2].v:0);
 	else if(k[0]==3 && k[1]==3)
 	{	gr->Min.x = a[0].v;	gr->Max.x = a[1].v;	gr->RecalcBorder();	}
 	else	return 1;
@@ -2311,7 +2311,7 @@ int mgls_xrange(mglGraph *gr, long n, mglArg *a, int k[10])
 void mglc_xrange(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1)
-		swprintf(out,1024,L"gr->XRange(%s, %s);", a[0].s, (k[1]==3&&a[1].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->XRange(%s, %s, %g);", a[0].s, (k[1]==3&&a[1].v!=0)?"true":"false", k[2]==3?a[2].v:0);
 	else if(k[0]==3 && k[1]==3)
 		swprintf(out,1024,L"gr->Axis(mglPoint(%g), mglPoint(%g));", a[0].v, a[1].v);
 }
@@ -2319,7 +2319,7 @@ void mglc_xrange(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"yrange","Set range for y-axis","yrange {var [add]} | {x1 x2}", mgls_yrange, mglc_yrange}
 int mgls_yrange(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==1)	gr->YRange(*(a[0].d),k[1]==3?(a[1].v!=0):false);
+	if(k[0]==1)	gr->YRange(*(a[0].d),k[1]==3?(a[1].v!=0):false,k[2]==3?a[2].v:0);
 	else if(k[0]==3 && k[1]==3)
 	{	gr->Min.y = a[0].v;	gr->Max.y = a[1].v;	gr->RecalcBorder();	}
 	else	return 1;
@@ -2328,7 +2328,7 @@ int mgls_yrange(mglGraph *gr, long n, mglArg *a, int k[10])
 void mglc_yrange(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1)
-		swprintf(out,1024,L"gr->YRange(%s, %s);", a[0].s, (k[1]==3&&a[1].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->YRange(%s, %s, %g);", a[0].s, (k[1]==3&&a[1].v!=0)?"true":"false", k[2]==3?a[2].v:0);
 	else if(k[0]==3 && k[1]==3)
 		swprintf(out,1024,L"gr->Axis(mglPoint(0,%g), mglPoint(0,%g));", a[0].v, a[1].v);
 }
@@ -2336,7 +2336,7 @@ void mglc_yrange(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"zrange","Set range for z-axis","yrange {var [add]} | {x1 x2}", mgls_zrange, mglc_zrange}
 int mgls_zrange(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==1)	gr->ZRange(*(a[0].d),k[1]==3?(a[1].v!=0):false);
+	if(k[0]==1)	gr->ZRange(*(a[0].d),k[1]==3?(a[1].v!=0):false,k[2]==3?a[2].v:0);
 	else if(k[0]==3 && k[1]==3)
 	{	gr->Min.z = a[0].v;	gr->Max.z = a[1].v;	gr->RecalcBorder();	}
 	else	return 1;
@@ -2345,7 +2345,7 @@ int mgls_zrange(mglGraph *gr, long n, mglArg *a, int k[10])
 void mglc_zrange(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1)
-		swprintf(out,1024,L"gr->ZRange(%s, %s);", a[0].s, (k[1]==3&&a[1].v!=0)?"true":"false");
+		swprintf(out,1024,L"gr->ZRange(%s, %s, %g);", a[0].s, (k[1]==3&&a[1].v!=0)?"true":"false", k[2]==3?a[2].v:0);
 	else if(k[0]==3 && k[1]==3)
 		swprintf(out,1024,L"gr->Axis(mglPoint(0,0,%g), mglPoint(0,0,%g));", a[0].v, a[1].v);
 }
@@ -2380,7 +2380,9 @@ void mglc_xtick(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"gr->SetTicks('x', %g, %d, %g);", a[0].v, int(a[1].v),a[2].v);
 	else if(k[0]==3 && k[1]==3)
 		swprintf(out,1024,L"gr->SetTicks('x', %g, %d);", a[0].v, int(a[1].v));
-	else if(k[0]==3)	swprintf(out,1024,L"gr->SetTicksVal('x', %g, \"%s\");", a[0].v, a[1].s);
+	else if(k[0]==3 && k[1]==2)
+		swprintf(out,1024,L"gr->SetTicksVal('x', %g, \"%s\");", a[0].v, a[1].s);
+	else if(k[0]==3)	swprintf(out,1024,L"gr->SetTicks('x', %g);", a[0].v);
 	else if(k[0]==2)
 		swprintf(out,1024,L"if(gr->xtt) delete []gr->xtt;\tgr->xtt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
 }
@@ -2415,6 +2417,8 @@ void mglc_ytick(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"gr->SetTicks('y', %g, %d, %g);", a[0].v, int(a[1].v),a[2].v);
 	else if(k[0]==3 && k[1]==3)
 		swprintf(out,1024,L"gr->SetTicks('y', %g, %d);", a[0].v, int(a[1].v));
+	else if(k[0]==3 && k[1]==2)
+		swprintf(out,1024,L"gr->SetTicksVal('y', %g, \"%s\");", a[0].v, a[1].s);
 	else if(k[0]==3)	swprintf(out,1024,L"gr->SetTicks('y', %g);", a[0].v);
 	else if(k[0]==2)
 		swprintf(out,1024,L"if(gr->ytt) delete []gr->ytt;\tgr->ytt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
@@ -2450,6 +2454,8 @@ void mglc_ztick(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"gr->SetTicks('z', %g, %d, %g);", a[0].v, int(a[1].v),a[2].v);
 	else if(k[0]==3 && k[1]==3)
 		swprintf(out,1024,L"gr->SetTicks('z', %g, %d);", a[0].v, int(a[1].v));
+	else if(k[0]==3 && k[1]==2)
+		swprintf(out,1024,L"gr->SetTicksVal('z', %g, \"%s\");", a[0].v, a[1].s);
 	else if(k[0]==3)	swprintf(out,1024,L"gr->SetTicks('z', %g);", a[0].v);
 	else if(k[0]==2)
 		swprintf(out,1024,L"if(gr->ztt) delete []gr->ztt;\tgr->ztt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
@@ -3146,6 +3152,20 @@ void mglc_qo2d(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"%s = mglQO2d(\"%s\", %s, %s, %s, %g, %g, %s, %s);",a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, k[5]==3?a[5].v:1, k[6]==3?a[6].v:100, k[7]==1?a[7].s:"NULL", k[8]==1?a[8].s:"NULL");
 }
 //-----------------------------------------------------------------------------
+//	{L"af2d",L"Solve PDE in accompanied coordinates",L"af2d res 'ham' ini_re ini_im ray [r=1 k0=100 xout=0 yout=0]", mgls_qo2d, mglc_qo2d}
+int mgls_af2d(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==1 && k[3]==1 && k[4]==1)
+		*(a[0].d) = mglAF2d(a[1].s, *(a[2].d), *(a[3].d), *(a[4].d), k[5]==3?a[5].v:1, k[6]==3?a[6].v:100, k[7]==1?a[7].d:0, k[8]==1?a[8].d:0);
+	else	return 1;
+	return 0;
+}
+void mglc_af2d(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==1 && k[3]==1)
+		swprintf(out,1024,L"%s = mglAF2d(\"%s\", %s, %s, %s, %g, %g, %s, %s);",a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, k[5]==3?a[5].v:1, k[6]==3?a[6].v:100, k[7]==1?a[7].s:"NULL", k[8]==1?a[8].s:"NULL");
+}
+//-----------------------------------------------------------------------------
 //	{L"ray",L"Solve Hamiltonian ODE (find GO ray or trajectory)",L"ray res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray, mglc_ray}
 int mgls_ray(mglGraph *gr, long n, mglArg *a, int k[10])
 {
@@ -3178,9 +3198,29 @@ void mglc_jacobian(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"%s = mglJacobian(%s, %s);", a[0].s, a[1].s, a[2].s);
 }
 //-----------------------------------------------------------------------------
+//	{"tens","Draw tension plot for 1D data","tens {xvar} yvar {{zvar}} cvar [fmt num]", mgls_tens, mglc_tens}
+int mgls_tens(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]!=1 || k[1]!=1)	return 1;
+	else if(k[2]!=1)	gr->Tens(*(a[0].d),*(a[1].d), k[2]==2?a[2].s:0, k[3]==3 ? a[3].v : NAN);
+	else if(k[3]!=1)	gr->Tens(*(a[0].d),*(a[1].d),*(a[2].d), k[3]==2?a[3].s:0, k[4]==3 ? a[4].v : NAN);
+	else 				gr->Tens(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), k[4]==2?a[4].s:0);
+	return 0;
+}
+void mglc_tens(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]!=1 || k[1]!=1)	return;
+	else if(k[2]!=1)
+		swprintf(out,1024,L"gr->Tens(%s, %s, \"%s\", %g);",a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN);
+	else if(k[3]!=1)
+		swprintf(out,1024,L"gr->Tens(%s, %s, %s, \"%s\", %g);", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"", k[4]==3?a[4].v:NAN);
+	else 	swprintf(out,1024,L"gr->Plot(%s, %s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, k[4]==2?a[4].s:"");
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{L"addlegend",L"Add legend entry",L"addlegend txt fmt", mgls_addlegend, mglc_addlegend, false},
 	{L"addto",L"Add data or number",L"addto var|num", mgls_addto, mglc_addto, false},
+	{L"af2d",L"Solve PDE in accompanied coordinates",L"qo2d res 'ham' ini_re ini_im ray [r=1 k0=100 xout=0 yout=0]", mgls_af2d, mglc_af2d, true},
 	{L"alpha",L"Switch on/off transparency",L"addto [num]", mgls_alpha, mglc_alpha, false},
 	{L"alphadef",L"Set default transparency",L"alphadef num", mgls_alphadef, mglc_alphadef, false},
 	{L"ambient",L"Set ambient light brightness",L"ambient txt fmt", mgls_ambient, mglc_ambient, false},
@@ -3328,6 +3368,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"surfa",L"Draw solid surface transpared by other data",L"surfa {xvar yvar} zvar cvar [fmt]", mgls_surfa, mglc_surfa, false},
 	{L"surfc",L"Draw solid surface colored by other data",L"surfc {xvar yvar} zvar cvar [fmt]", mgls_surfc, mglc_surfc, false},
 	{L"swap",L"Swap data (usefull after Fourier transform)",L"swap var dir", mgls_swap, mglc_swap, false},
+	{L"tens",L"Draw tension plot for 1D data",L"tens {xvar} yvar {{zvar}} cvar [fmt num]", mgls_tens, mglc_tens},
 	{L"ternary",L"Switch on/off to use ternary axis",L"ternary val", mgls_ternary, mglc_ternary, false},
 	{L"text",L"Draw text at some position or along curve",L"", mgls_text, mglc_text, false},
 	{L"textmark",L"Draw TeX mark at point position",L"", mgls_textmark, mglc_textmark, false},

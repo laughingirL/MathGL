@@ -16,12 +16,12 @@ if USE_GLUT
 WIDGETS += -DWITH_GLUT
 endif
 
-libmgl_la_LIBADD = $(PNG_LIBS) $(GSL_LIBS) $(GL_LIBS)
+libmgl_la_LIBADD = $(PNG_LIBS) $(GSL_LIBS) $(GL_LIBS) -lgomp
 libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 
 libmgl_la_CXXFLAGS = $(WIDGETS) -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
     -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(JPEG_FLAGS) $(TIFF_FLAGS) \
-    $(PNG_FLAGS) $(FLTK_FLAGS) $(GSL_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS)
+    $(PNG_FLAGS) $(FLTK_FLAGS) $(GSL_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS) -fopenmp
 
 if USE_HDF5
 libmgl_la_LIBADD += $(HDF5_LIBS)

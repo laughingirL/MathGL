@@ -778,7 +778,7 @@ As example I shall show the variant of plot from @ref{Plots for 2D data} (grid d
 @node C/Fortran interface, Hints, Data plotting, Examples
 @section C/Fortran interface
 
-The usage of pure C or Fortran or any similar interfaces (@pxref{Interfaces}) is practically identical to classes usage. But there are some differences. C functions must have argument HMGL (for graphics) and/or HMDT (for data arrays) which specifies the object for drawing or manipulating (changing). Fortran users may regard these variables as integer. So, firstly the user has to create this object by function mgl_create_*() and has to delete it after the using by function mgl_delete_*().
+The usage of pure C or Fortran or any similar interfaces (@pxref{C interface}) is practically identical to classes usage. But there are some differences. C functions must have argument HMGL (for graphics) and/or HMDT (for data arrays) which specifies the object for drawing or manipulating (changing). Fortran users may regard these variables as integer. So, firstly the user has to create this object by function mgl_create_*() and has to delete it after the using by function mgl_delete_*().
 
 Also, all arguments of C function have to be defined. So there are several functions with practically identical names doing practically the same. But some of them have simplified interface for the quick plotting and some of them have access to all plotting parameters for manual tunning.
 
@@ -1101,7 +1101,14 @@ The last example is example of beam tracing. Beam tracing equation is special ki
 
 You may use following code for obtaining the same solution as in previous example:
 @verbatim
-
+    mglData r, xx, yy, a, im(128), re(128);
+    const char *ham = "p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)";
+    r = mglRay(ham, mglPoint(-0.7, -1), mglPoint(0, 0.5), 0.02, 2);
+    // now start beam tracing
+    re.Fill("exp(-48*x^2)", gr->Min, gr->Max);
+    a = mglQO2d(ham, re, im, r, 1, 30, &xx, &yy);
+    gr->CAxis(0, 1);
+    gr->Dens(xx, yy, a, "wyrRk");
 @end verbatim
 
 

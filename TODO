@@ -1,9 +1,12 @@
 					MathGL (for v.1.8)
 
 1. Change ticks labels drawing if RotatedText = false;
+2. Add setlocale() into utils !!!
 3. Update documentation (English)
 	* describe mglDraw --> Python ???
-	* html doc for UDAV :(
+	* Tens()
+	* mgl_set_[xyzc]ttw() and mgl_set_[xyzc]tt()
+	* section about utils
 
 5. Spline5 !!!
 

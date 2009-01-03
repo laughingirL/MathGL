@@ -1,6 +1,6 @@
 @c ------------------------------------------------------------------
-@node MGL interface, , Python interface, Interfaces
-@section MGL interface
+@node MGL interface, Samples, Python interface, Top
+@chapter MGL interface
 
 MathGL library supports (from version 1.3) the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of mgl2png, mgl2eps, mgl2svg programs and others) or in the frame of the library using.
 
@@ -56,7 +56,7 @@ All MGL commands can be divided on several groups. I will use the following nota
 
 @c ##################################################################
 @node Graphics setup (MGL), Transformation matrix (MGL), , MGL interface
-@subsection Graphics setup (MGL)
+@section Graphics setup (MGL)
 
 Coomands in this group influences on overall graphics appearance. So all of them should be placed @emph{before} any actual plotting commands. 
 
@@ -72,7 +72,7 @@ Coomands in this group influences on overall graphics appearance. So all of them
 
 @c ==================================================================
 @node Transparency (MGL), Lighting (MGL), , Graphics setup (MGL)
-@subsubsection Transparency (MGL)
+@subsection Transparency (MGL)
 @cindex alpha
 @cindex alphadef
 @cindex transparent
@@ -95,7 +95,7 @@ This command set the transparency type. Normal transparency (@samp{0}) -- below 
 
 @c ==================================================================
 @node Lighting (MGL), Fog (MGL), Transparency (MGL), Graphics setup (MGL)
-@subsubsection Lighting (MGL)
+@subsection Lighting (MGL)
 @cindex light
 @cindex ambient
 
@@ -118,7 +118,7 @@ Sets the brightness of ambient light. The value should be in range [0,1]. Initia
 
 @c ==================================================================
 @node Fog (MGL), Default sizes (MGL), Lighting (MGL), Graphics setup (MGL)
-@subsubsection Fog (MGL)
+@subsection Fog (MGL)
 @cindex fog
 
 @deffn {MGL command} fog @code{val [dz=0.25]}
@@ -127,7 +127,7 @@ Command imitate a fog in the plot. Fog start from relative distance @var{dz} fro
 
 @c ==================================================================
 @node Default sizes (MGL), Zooming (MGL), Fog (MGL), Graphics setup (MGL)
-@subsubsection Default sizes (MGL)
+@subsection Default sizes (MGL)
 @cindex marksize
 @cindex arrowsize
 @cindex linewidth
@@ -148,7 +148,7 @@ The variable define the base width for all lines. The value <1 is ignored. Incre
 
 @c ==================================================================
 @node Zooming (MGL), Cutting (MGL), Default sizes (MGL), Graphics setup (MGL)
-@subsubsection Zooming (MGL)
+@subsection Zooming (MGL)
 @cindex plotfactor
 @cindex zoom
 
@@ -164,7 +164,7 @@ The command changes the scale of graphics that correspond to zoom in/out of the 
 
 @c ==================================================================
 @node Cutting (MGL), Other settings (MGL), Zooming (MGL), Graphics setup (MGL)
-@subsubsection Cutting (MGL)
+@subsection Cutting (MGL)
 @cindex cut
 
 These commands set the condition when the points are excluded (cutted) from the drawing.
@@ -183,7 +183,7 @@ Command set the cutting off condition by formula @var{cond}. This condition dete
 
 @c ==================================================================
 @node Other settings (MGL), , Cutting (MGL), Graphics setup (MGL)
-@subsubsection Other settings (MGL)
+@subsection Other settings (MGL)
 @cindex font
 @cindex rotatetext
 @cindex palette
@@ -212,7 +212,7 @@ Set direction around which curve rotated in @code{axial, torus}. Default value i
 
 @c ==================================================================
 @node Axis settings (MGL), Transformation matrix (MGL), Graphics setup (MGL), MGL interface
-@subsection Axis settings (MGL)
+@section Axis settings (MGL)
 @cindex axis
 @cindex caxis
 @cindex xrange
@@ -241,13 +241,6 @@ Sets the transformation formulas for curvilinear coordinates. Each string should
 Sets the range for surface coloring. Initial range is [-1, 1].
 @end deffn
 
-@deffn {MGL command} crange dat [@code{add=off}]
-Sets the range for surface coloring as minimal and maximal values of data @var{dat}. Parameter @code{add=on} shows that the new range will be joined to existed one (nut will not replace it).
-@end deffn
-@deffn {MGL command} crange @code{c1 c2}
-Sets the range for surface coloring. See also caxis.
-@end deffn
-
 @deffn {MGL command} origin @code{x0 y0 [z0=nan]}
 Center of axis cross section. If one of values is @code{nan} then MathGL library try to select optimal axis position.
 @end deffn
@@ -256,11 +249,11 @@ Center of axis cross section. If one of values is @code{nan} then MathGL library
 The command sets to draws Ternary plot. This special plot is for 3 dependent coordinates (components) @var{a}, @var{b}, @var{c} so that @var{a}+@var{b}+@var{c}=1. MathGL uses only 2 independent coordinates @var{a}=x and @var{b}=y since it is enough to plot everything. At this third coordinate z act as another parameter to produce contour lines, surfaces and so on. @sref{Ternary plot sample}
 @end deffn
 
-@deffn {MGL command} xrange dat [@code{add=off}]
-@deffnx {MGL command} yrange dat [@code{add=off}]
-@deffnx {MGL command} zrange dat [@code{add=off}]
-@deffnx {MGL command} crange dat [@code{add=off}]
-Sets the range for x-,y-,z- coordinate or coloring as minimal and maximal values of data @var{dat}. Parameter @code{add=on} shows that the new range will be joined to existed one (nut will not replace it).
+@deffn {MGL command} xrange dat [@code{add=off fact=0}]
+@deffnx {MGL command} yrange dat [@code{add=off fact=0}]
+@deffnx {MGL command} zrange dat [@code{add=off fact=0}]
+@deffnx {MGL command} crange dat [@code{add=off fact=0}]
+Sets the range for x-,y-,z- coordinate or coloring as minimal and maximal values of data @var{dat}. Parameter @code{add=on} shows that the new range will be joined to existed one (nut will not replace it). Parameter @var{fact} add additional range increase on value (@var{Max}-@var{Min})*@var{fact}.
 @end deffn
 
 @deffn {MGL command} xrange @code{x1 x2}
@@ -291,7 +284,7 @@ Sets manual positions @var{val1},@var{val2},... and labels @var{lbl1},@var{lbl2}
 
 @c ##################################################################
 @node Transformation matrix (MGL), Export to file (MGL), Axis settings (MGL), MGL interface
-@subsection Transformation matrix (MGL)
+@section Transformation matrix (MGL)
 @cindex aspect
 @cindex rotate
 @cindex subplot
@@ -327,7 +320,7 @@ Add (switch on) the perspective to plot. The parameter @math{val ~ 1/z_@{eff@} \
 
 @c ##################################################################
 @node Export to file (MGL), Primitives drawing (MGL), Transformation matrix (MGL), MGL interface
-@subsection Export to file (MGL)
+@section Export to file (MGL)
 @cindex write
 @cindex setsize
 
@@ -342,7 +335,7 @@ Sets size of picture in pixels. This function call @strong{must be} placed befor
 
 @c ##################################################################
 @node Primitives drawing (MGL), Text printing (MGL), Export to file (MGL), MGL interface
-@subsection Primitives drawing
+@section Primitives drawing
 @cindex ball
 @cindex clf
 @cindex line
@@ -402,7 +395,7 @@ Draw rectangle from point @{@var{x1},@var{y1},@var{z1}@} to point @{@var{x2},@va
 
 @c ##################################################################
 @node Text printing (MGL), Axis and Colorbar (MGL), Primitives drawing (MGL), MGL interface
-@subsection Text printing (MGL)
+@section Text printing (MGL)
 @cindex fgets
 @cindex text
 @cindex title
@@ -414,8 +407,8 @@ These commands draw the text. There are commands for drawing text in arbitrary p
 Draws unrotated text string @var{text} at position @{@var{x},@var{y},@var{z}@} with specified style @var{fnt} and @var{size}. By default parameters from @code{font} command are used.
 @end deffn
 
-@deffn {MGL command} text @code{x y dx dy} 'text' ['fnt'='' @code{size=-1.4}]
-@deffnx {MGL command} text @code{x y z dx dy dz} 'text' ['fnt'='' @code{size=-1.4}]
+@deffn {MGL command} text @code{x y dx dy} 'text' [@code{size=-1.4}]
+@deffnx {MGL command} text @code{x y z dx dy dz} 'text' [@code{size=-1.4}]
 The command plots the string @var{text} at position @{@var{x},@var{y},@var{z}@} along direction @{@var{dx},@var{dy},@var{dz}@} with specified style @var{fnt} and @var{size}. By default parameters from @code{font} command are used.
 @end deffn
 
@@ -425,7 +418,7 @@ Print string @var{text} as title of the picture (at the top of the picture). Can
 
 @deffn {MGL command} fgets @code{x y} 'fname' [@code{n=0} 'fnt'='' @code{size=-1.4}]
 @deffnx {MGL command} fgets @code{x y z} 'fname' [@code{n=0} 'fnt'='' @code{size=-1.4}]
-Draws unrotated @var{n}-th line of file @var{fname} at position @{@var{x},@var{y},@var{z}@} with specified style @var{fnt} and @var{size}. By default parameters from @code{font} command are used.
+Draws unrotated @var{n}-th line of file @var{fname} at position @{@var{x},@var{y},@var{z}@} with specified @var{size}. By default parameters from @code{font} command are used.
 @end deffn
 
 
@@ -437,7 +430,7 @@ The command draws @var{text} along the curve between points @{@var{xdat}[i], @va
 
 @c ##################################################################
 @node Axis and Colorbar (MGL), Legend (MGL), Text printing (MGL), MGL interface
-@subsection Axis and Colorbar (MGL)
+@section Axis and Colorbar (MGL)
 @cindex axis
 @cindex box
 @cindex grid
@@ -472,7 +465,7 @@ Prints the label @var{text} for x-,y-,z-axis. The position of label is determine
 
 @c ##################################################################
 @node Legend (MGL), 1D plotting (MGL), Axis and Colorbar (MGL), MGL interface
-@subsection Legend (MGL)
+@section Legend (MGL)
 @cindex legend
 @cindex addlegend
 @cindex clearlegend
@@ -503,7 +496,7 @@ Switches on/off the drawing of a box near legend. By default, the box is drawn.
 
 @c ##################################################################
 @node 1D plotting (MGL), 2D plotting (MGL), Legend (MGL), MGL interface
-@subsection 1D plotting (MGL)
+@section 1D plotting (MGL)
 @cindex plot
 @cindex area
 @cindex bars
@@ -606,7 +599,7 @@ Draws tube with variable radius @var{rdat}[i] (or @var{rval}) at points @{@var{x
 
 @c ##################################################################
 @node 2D plotting (MGL), 3D plotting (MGL), 1D plotting (MGL), MGL interface
-@subsection 2D plotting (MGL)
+@section 2D plotting (MGL)
 @cindex mesh
 @cindex fall
 @cindex belt
@@ -696,7 +689,7 @@ Draws grid lines for density plot of surface specified parametrically @{@var{xda
 
 @c ##################################################################
 @node 3D plotting (MGL), Dual plotting (MGL), 2D plotting (MGL), MGL interface
-@subsection 3D plotting (MGL)
+@section 3D plotting (MGL)
 @cindex surf3
 @cindex dens3
 @cindex cont3
@@ -786,7 +779,7 @@ Draws  @var{num}-th uniformly distributed in color range (see @code{caxis}) isos
 
 @c ##################################################################
 @node Dual plotting (MGL), Vector fields (MGL), 3D plotting (MGL), MGL interface
-@subsection Dual plotting (MGL)
+@section Dual plotting (MGL)
 @cindex surfc
 @cindex surf3c
 @cindex surfa
@@ -849,7 +842,7 @@ Draws spectrogram of complex array @var{re}+i*@code{im} for Fourier size of @var
 
 @c ##################################################################
 @node Vector fields (MGL), Other plotting (MGL), Dual plotting (MGL), MGL interface
-@subsection Vector fields (MGL)
+@section Vector fields (MGL)
 @cindex vectc
 @cindex vect
 @cindex flow
@@ -862,12 +855,12 @@ The color is specified by the string argument @var{sch}. Previous color scheme i
 
 @deffn {MGL command} vect udat vdat ['sch'='' @code{zval=nan}]
 @deffnx {MGL command} vect xdat ydat udat vdat ['sch'='' @code{zval=nan}]
-Draws plane vector field plot for the field @{@var{udat}, @var{vdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat} at level @var{z=zVal}. The length of hachures is proportional to @math{\sqrt@{udat^2+vdat^2@}}. The number of hachures depend on @var{meshnum}. See also @code{vectc, flow, pipe, dew}. @sref{Vect sample}
+Draws plane vector field plot for the field @{@var{udat}, @var{vdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat} at level @var{z=zVal}. The length and color of arrows are proportional to @math{\sqrt@{udat^2+vdat^2@}}. The number of hachures depend on @var{meshnum}. See also @code{vectc, flow, pipe, dew}. @sref{Vect sample}
 @end deffn
 
 @deffn {MGL command} vect udat vdat wdat ['sch'='']
 @deffnx {MGL command} vect xdat ydat zdat udat vdat wdat ['sch'='']
-This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the length of hachures is proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{Vect 3D sample}
+This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the length and color of arrows are proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{Vect 3D sample}
 @end deffn
 
 @deffn {MGL command} vectc udat vdat ['sch'='' @code{zval=nan}]
@@ -878,6 +871,16 @@ Draws plane vector field plot for the field @{@var{udat}, @var{vdat}@} depending
 @deffn {MGL command} vectc udat vdat wdat ['sch'='']
 @deffnx {MGL command} vectc xdat ydat zdat udat vdat wdat ['sch'='']
 This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the color of hachures is proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{VectC 3D sample}
+@end deffn
+
+@deffn {MGL command} vectl udat vdat ['sch'='' @code{zval=nan}]
+@deffnx {MGL command} vectl xdat ydat udat vdat ['sch'='' @code{zval=nan}]
+Draws plane vector field plot for the field @{@var{udat}, @var{vdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat} at level @var{z=zVal}. The length of hachures is proportional to @math{\sqrt@{udat^2+vdat^2@}}. The number of hachures depend on @var{meshnum}. See also @code{vectc, flow, pipe, dew}. @sref{Vect sample}
+@end deffn
+
+@deffn {MGL command} vectl udat vdat wdat ['sch'='']
+@deffnx {MGL command} vectl xdat ydat zdat udat vdat wdat ['sch'='']
+This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the length of hachures is proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{Vect 3D sample}
 @end deffn
 
 @deffn {MGL command} dew udat vdat ['sch'='' @code{zval=nan}]
@@ -908,7 +911,7 @@ This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, 
 
 @c ##################################################################
 @node Other plotting (MGL), Nonlinear fitting (MGL), Vector fields (MGL), MGL interface
-@subsection Other plotting (MGL)
+@section Other plotting (MGL)
 @cindex cont[xyz]
 @cindex dens[xyz]
 @cindex contf[xyz]
@@ -971,7 +974,7 @@ Draws command parametrical surface @{@samp{x(u,v)}, @samp{y(u,v)}, @samp{z(u,v)}
 
 @c ##################################################################
 @node Nonlinear fitting (MGL), Data create (MGL), Other plotting (MGL), MGL interface
-@subsection Nonlinear fitting (MGL)
+@section Nonlinear fitting (MGL)
 @cindex fit
 @cindex fits
 @cindex putsfit
@@ -1004,7 +1007,7 @@ Print last fitted formula with found coefficients (as numbers) at position @{@va
 
 @c ##################################################################
 @node Data create (MGL), Data filling (MGL), Nonlinear fitting (MGL), MGL interface
-@subsection Data create (MGL)
+@section Data create (MGL)
 @cindex new
 @cindex var
 @cindex list
@@ -1047,7 +1050,7 @@ Display information (sizes, maximum/minimum, momentums and so on) about the data
 
 @c ------------------------------------------------------------------
 @node Data filling (MGL), Rearrange data (MGL), Data create (MGL), MGL interface
-@subsection Data filling (MGL)
+@section Data filling (MGL)
 @cindex fill
 @cindex modify
 
@@ -1080,7 +1083,7 @@ Function copies value(s) from array @var{v} to the range of array @var{a}. Negat
 
 @c ------------------------------------------------------------------
 @node Rearrange data (MGL), File I/O (MGL), Data filling (MGL), MGL interface
-@subsection Rearrange data (MGL)
+@section Rearrange data (MGL)
 @cindex rearrange
 @cindex extend
 @cindex transpose
@@ -1110,12 +1113,12 @@ Reduces the data size by excluding data elements which indexes are not divisible
 @end deffn
 
 @deffn {MGL command} crop dat @code{n1 n2} 'dir'
-Cuts off edges @var{i}<@var{n1} and @var{i}>@var{n2} of the data along direction @var{dir}.
+Cuts off edges of the data @var{i}<@var{n1} and @var{i}>@var{n2} if @var{n2}>0 or @var{i}>@code{n[xyz]}-@var{n2} if @var{n2}<=0 along direction @var{dir}.
 @end deffn
 
 @c ------------------------------------------------------------------
 @node File I/O (MGL), Make another data (MGL), Rearrange data (MGL), MGL interface
-@subsection File I/O (MGL)
+@section File I/O (MGL)
 @cindex read
 @cindex readhdf
 @cindex readmat
@@ -1166,7 +1169,7 @@ Saves data matrix to bitmap file. The data values are transformed from range [@v
 
 @c ------------------------------------------------------------------
 @node Make another data (MGL), Commands on direction (MGL), File I/O (MGL), MGL interface
-@subsection Make another data (MGL)
+@section Make another data (MGL)
 @cindex subdata
 @cindex hist
 @cindex momentum
@@ -1189,18 +1192,18 @@ Get array which values is result of interpolation of original array for coordina
 
 @deffn {MGL command} hist res dat @code{num v1 v2 [nsub=0]}
 @deffnx {MGL command} hist res dat wdat @code{num v1 v2 [nsub=0]}
-Creates @var{num}-th points distribution @var{res} of the data values of @var{dat} in range [@var{v1}, @var{v2}]. Array @var{wdat} specifies weights of the data elements (all weight is 1 if @var{wdat} is not specified).
+Creates @var{num}-th points distribution @var{res} of the data values of @var{dat} in range [@var{v1}, @var{v2}]. Array @var{wdat} specifies weights of the data elements (all weight is 1 if @var{wdat} is not specified). Parameter @var{nsub} define the number of additional interpolated points (for smoothness of histogram).
 @end deffn
 
 @deffn {MGL command} momentum res dat 'how' ['dir'='z']
-Get momentum (1D-array) of the data along direction @var{dir}. String @var{how} contain kind of momentum and may looks like @code{"x1"} for median 
+Get momentum (1D-array) of the data along direction @var{dir}. String @var{how} contain kind of momentum. The momentum is defined like as
 @iftex
-@math{\sum_{ij} x_i a_{ij}} in x-direction, @code{"y2"} for @math{\sum_{ij} y_j^2 a_{ij}}
+@math{res_k = \sum_{ij} how(x_i,y_j,z_k) a_{ij}/\sum_{ij} a_{ij}}
 @end iftex
 @ifnottex
-\sum_ij x_i a_ij in x-direction, @code{"y2"} for \sum_ij y_j^2 a_ij
+res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @end ifnottex
-in x-dir and so on. Mixed momentum (like @code{"xy"}) are not supported now.
+if @var{var}=@samp{z} and so on. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1].
 @end deffn
 
 @deffn {MGL command} sum res dat 'dir'
@@ -1234,7 +1237,7 @@ Short time Fourier analysis for real and imaginary parts. Output  is amplitude o
 @end deffn
 
 @deffn {MGL command} pde res 'ham' ini_re ini_im [@code{dz=0.1 k0=100}]
-Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Coordinates of the equation (and the solution) are supposed to be in the bounding box. Note that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham='p^2+q^2-u^2'}. You may specify imaginary part for wave absorption, like @code{ham = 'p^2+i*x*(x>0)'}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}).
+Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Coordinates of the equation (and the solution) are supposed to be in the bounding box. Note, that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for field amplitude |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham='p^2+q^2-u^2'}. You may specify imaginary part for wave absorption, like @code{ham = 'p^2+i*x*(x>0)'}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}).
 @end deffn
 
 @deffn {MGL command} ray res 'ham' @code{x0 y0 z0 p0 q0 v0 [dt=0.1 tmax=10]}
@@ -1253,7 +1256,7 @@ Computates the Jacobian for transformation @{i,j,k@} to @{@var{xdat},@var{ydat},
 
 @c ------------------------------------------------------------------
 @node Commands on direction (MGL), Operators (MGL), Make another data (MGL), MGL interface
-@subsection Commands on direction (MGL)
+@section Commands on direction (MGL)
 @cindex cumsum
 @cindex integral
 @cindex diff
@@ -1319,7 +1322,7 @@ Normalizes the data to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{on} th
 
 @c ------------------------------------------------------------------
 @node Operators (MGL), Program flow (MGL), Commands on direction (MGL), MGL interface
-@subsection Operators (MGL)
+@section Operators (MGL)
 @cindex multo
 @cindex addto
 @cindex divto
@@ -1352,7 +1355,7 @@ Subtracts the number to each element.
 
 @c ------------------------------------------------------------------
 @node Program flow (MGL), Command options (MGL), Operators (MGL), MGL interface
-@subsection Program flow (MGL)
+@section Program flow (MGL)
 @cindex call
 @cindex chdir
 @cindex define
@@ -1412,7 +1415,7 @@ Terminate execution.
 
 @c ------------------------------------------------------------------
 @node  Command options (MGL), Suffixes, Program flow (MGL), MGL interface
-@subsection Command options (MGL)
+@section Command options (MGL)
 @cindex alpha
 @cindex alphadef
 @cindex xrange
@@ -1470,7 +1473,7 @@ Adds string 'txt' to internal legend accumulator. The style of described line an
 
 @c ------------------------------------------------------------------
 @node  Suffixes, , Command options (MGL), MGL interface
-@subsection Suffixes for variable
+@section Suffixes for variable
 
 Suffixes can get some numerical value (like its size, maximal or minimal value, the sum of elements and so on) of the data array in variable and use it later as usual number in command arguments. The suffixes start from point @samp{.} right after (without spaces) variable name or its sub-array. For example, @code{a.nx} give the x-size of data a, @code{b(1).max} give maximal value of second row of variable b, @code{c(:,0).sum} give sum of element in first column of c and so on.
 

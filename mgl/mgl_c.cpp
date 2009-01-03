@@ -231,10 +231,42 @@ void mgl_label(HMGL gr, char dir, const char *text)
 /// Print the label \a text for axis \a dir.
 void mgl_label_ext(HMGL gr, char dir, const char *text, int pos, float size, float shift)
 {	gr->Label(dir, text, pos, size, shift);	}
-void mgl_set_xtt(HMGL gr, const wchar_t *templ)	{gr->xtt = templ;}
-void mgl_set_ytt(HMGL gr, const wchar_t *templ)	{gr->ytt = templ;}
-void mgl_set_ztt(HMGL gr, const wchar_t *templ)	{gr->ztt = templ;}
-void mgl_set_ctt(HMGL gr, const wchar_t *templ)	{gr->ctt = templ;}
+void mgl_set_xttw(HMGL gr, const wchar_t *templ)	{gr->xtt = templ;}
+void mgl_set_yttw(HMGL gr, const wchar_t *templ)	{gr->ytt = templ;}
+void mgl_set_zttw(HMGL gr, const wchar_t *templ)	{gr->ztt = templ;}
+void mgl_set_cttw(HMGL gr, const wchar_t *templ)	{gr->ctt = templ;}
+void mgl_set_xtt(HMGL gr, const char *templ)
+{
+	int n = strlen(templ)+1;
+	static wchar_t t[256];
+	memset(t,0,256*sizeof(wchar_t));
+	if(n<256)
+	{	mbstowcs(t,templ,n);	gr->xtt = t;	}
+}
+void mgl_set_ytt(HMGL gr, const char *templ)
+{
+	int n = strlen(templ)+1;
+	static wchar_t t[256];
+	memset(t,0,256*sizeof(wchar_t));
+	if(n<256)
+	{	mbstowcs(t,templ,n);	gr->ytt = t;	}
+}
+void mgl_set_ztt(HMGL gr, const char *templ)
+{
+	int n = strlen(templ)+1;
+	static wchar_t t[256];
+	memset(t,0,256*sizeof(wchar_t));
+	if(n<256)
+	{	mbstowcs(t,templ,n);	gr->ztt = t;	}
+}
+void mgl_set_ctt(HMGL gr, const char *templ)
+{
+	int n = strlen(templ)+1;
+	static wchar_t t[256];
+	memset(t,0,256*sizeof(wchar_t));
+	if(n<256)
+	{	mbstowcs(t,templ,n);	gr->ctt = t;	}
+}
 //-----------------------------------------------------------------------------
 //		Simple drawing
 //-----------------------------------------------------------------------------

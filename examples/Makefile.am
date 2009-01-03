@@ -9,11 +9,13 @@ mgl_example_LDADD = $(top_builddir)/mgl/libmgl.la
 if USE_FLTK
 bin_PROGRAMS += mgl_fltk_example
 mgl_fltk_example_SOURCES = fltk_example.cpp
-mgl_fltk_example_LDADD = $(top_builddir)/widgets/libmgl-fltk.la
+mgl_fltk_example_LDADD = $(FLTK_LIBS) $(top_builddir)/widgets/libmgl-fltk.la
+mgl_fltk_example_CXXFLAGS = $(FLTK_FLAGS) $(AM_CXXFLAGS)
 
 check_PROGRAMS += test
 test_SOURCES = main.cpp
-test_LDADD = $(top_builddir)/widgets/libmgl-fltk.la
+test_LDADD = $(FLTK_LIBS) $(top_builddir)/widgets/libmgl-fltk.la
+test_CXXFLAGS = $(FLTK_FLAGS) $(AM_CXXFLAGS)
 endif
 
 if USE_GLUT

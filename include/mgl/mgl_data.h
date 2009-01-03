@@ -338,8 +338,10 @@ mglData mglTransform(const mglData &re, const mglData &im, const char *tr);
 mglData mglSTFA(const mglData &re, const mglData &im, int dn, char dir='x');
 /// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini
 mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mglPoint Min, mglPoint Max, float dz=0.1, float k0=100);
-/// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini along a curve \a ray (must have nx>=7 - x,y,z,px,py,pz,tau)
+/// Saves result of PDE solving for "Hamiltonian" \a ham with initial conditions \a ini along a curve \a ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
 mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, float r=1, float k0=100, mglData *xx=0, mglData *yy=0, bool UseR=true);
+/// Saves result of PDE solving in aberration-free approxiamtion for "Hamiltonian" \a ham with initial conditions \a ini along a curve \a ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
+mglData mglAF2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, float r=1, float k0=100, mglData *xx=0, mglData *yy=0, bool UseR=true);
 /// Prepares ray data for mglQO_PDE with starting point \a r0, \a p0
 mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, float dt=0.1, float tmax=10);
 /// Calculate Jacobian determinant for D{x(u,v), y(u,v)} = dx/du*dy/dv-dx/dv*dy/du

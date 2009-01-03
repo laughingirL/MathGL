@@ -14,6 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <unistd.h>
 #include <stdarg.h>
 #include <wchar.h>
 #include "mgl/mgl_eval.h"
@@ -306,59 +307,71 @@ mglColor mglGraph::GetC2(float x,float y)
 	return c;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::CRange(const mglData &a,bool add)
+void mglGraph::CRange(const mglData &a,bool add, float fact)
 {
 	long n = a.nx*a.ny*a.nz;
 	register long i;
 	if(!add)	{	Cmin = 1e20;	Cmax = -1e20;	}
 	for(i=0;i<n;i++)
 	{
+		if(isnan(a.a[i]))	continue;
 		Cmin = Cmin<a.a[i] ? Cmin : a.a[i];
 		Cmax = Cmax>a.a[i] ? Cmax : a.a[i];
 	}
 	if(Cmin==Cmax)	Cmax += 1;
+	float dc = (Cmax-Cmin)*fact;
+	Cmax+=dc;	Cmin-=dc;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::XRange(const mglData &a,bool add)
+void mglGraph::XRange(const mglData &a,bool add,float fact)
 {
 	long n = a.nx*a.ny*a.nz;
 	register long i;
 	if(!add)	{	Min.x = 1e20;	Max.x = -1e20;	}
 	for(i=0;i<n;i++)
 	{
+		if(isnan(a.a[i]))	continue;
 		Min.x = Min.x<a.a[i] ? Min.x : a.a[i];
 		Max.x = Max.x>a.a[i] ? Max.x : a.a[i];
 	}
+	float dc = (Max.x-Min.x)*fact;
+	Max.x+=dc;	Min.x-=dc;
 	if(AutoOrg && Org.x<Min.x && !isnan(Org.x))	Org.x = Min.x;
 	if(AutoOrg && Org.x>Max.x && !isnan(Org.x))	Org.x = Max.x;
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::YRange(const mglData &a,bool add)
+void mglGraph::YRange(const mglData &a,bool add,float fact)
 {
 	long n = a.nx*a.ny*a.nz;
 	register long i;
 	if(!add)	{	Min.y = 1e20;	Max.y = -1e20;	}
 	for(i=0;i<n;i++)
 	{
+		if(isnan(a.a[i]))	continue;
 		Min.y = Min.y<a.a[i] ? Min.y : a.a[i];
 		Max.y = Max.y>a.a[i] ? Max.y : a.a[i];
 	}
+	float dc = (Max.y-Min.y)*fact;
+	Max.y+=dc;	Min.y-=dc;
 	if(AutoOrg && Org.y<Min.y && !isnan(Org.y))	Org.y = Min.y;
 	if(AutoOrg && Org.y>Max.y && !isnan(Org.y))	Org.y = Max.y;
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ZRange(const mglData &a,bool add)
+void mglGraph::ZRange(const mglData &a,bool add,float fact)
 {
 	long n = a.nx*a.ny*a.nz;
 	register long i;
 	if(!add)	{	Min.z = 1e20;	Max.z = -1e20;	}
 	for(i=0;i<n;i++)
 	{
+		if(isnan(a.a[i]))	continue;
 		Min.z = Min.z<a.a[i] ? Min.z : a.a[i];
 		Max.z = Max.z>a.a[i] ? Max.z : a.a[i];
 	}
+	float dc = (Max.z-Min.z)*fact;
+	Max.z+=dc;	Min.z-=dc;
 	if(AutoOrg && Org.z<Min.z && !isnan(Org.z))	Org.z = Min.z;
 	if(AutoOrg && Org.z>Max.z && !isnan(Org.z))	Org.z = Max.z;
 	RecalcBorder();
@@ -931,27 +944,31 @@ void mglGraph::FaceZ(float x0, float y0, float z0, float wx, float wy, const cha
 	Face(mglPoint(x0,y0,z0), mglPoint(x0,y0+wy,z0), mglPoint(x0+wx,y0,z0), mglPoint(x0+wx+d1,y0+wy+d2,z0), stl, 2);
 }
 //-----------------------------------------------------------------------------
-#include <pthread.h>
-void *mgl_show_tmp(void *par)
-{
-	system((char *)par);
-	delete []((char *)par);
-	return 0;
-}
 void mglGraph::ShowImage(const char *viewer, bool keep)
 {
 	char fname[128], *cmd = new char [128];
 	sprintf(fname,"%s.png", tmpnam(NULL));
 	WritePNG(fname,"MathGL ShowImage file",false);
 	viewer = (viewer && viewer[0]) ? viewer : "kuickshow";
-	sprintf(cmd,"%s %s; rm %s", viewer,fname,fname);
 	if(keep)
 	{
-		static pthread_t ptmp;
-		pthread_create(&ptmp, 0, mgl_show_tmp, cmd);
-		pthread_detach(ptmp);
+		sprintf(cmd,"%s %s &", viewer,fname);
+		system(cmd);
+#ifdef WIN32
+//		sleep(2);
+		sprintf(cmd,"del %s", fname);
 	}
-	else	mgl_show_tmp(cmd);
+	else
+		sprintf(cmd,"%s %s; del %s", viewer,fname,fname);
+#else
+		sleep(2);
+		sprintf(cmd,"rm %s", fname);
+	}
+	else
+		sprintf(cmd,"%s %s; rm %s", viewer,fname,fname);
+#endif
+	system(cmd);
+	delete []cmd;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::StartGroup(const char *name, int id)

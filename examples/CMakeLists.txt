@@ -33,8 +33,8 @@ endif(use_wx)
 
 if(use_qt)
 	include(${QT_USE_FILE})
-	QT4_GENERATE_MOC(../include/mgl/mgl_qt.h mgl_qt.moc.cpp)
-	add_executable(mgl_qt_example qt_example.cpp mgl_qt.moc.cpp)
+	qt_wrap_cpp(mgl_qt_example MGL_MOC_EX_FILES ../include/mgl/mgl_qt.h)
+	add_executable(mgl_qt_example qt_example.cpp ${MGL_MOC_EX_FILES})
 	target_link_libraries(mgl_qt_example ${QT_LIBRARIES} mgl-qt)
 	install(
 		TARGETS mgl_qt_example

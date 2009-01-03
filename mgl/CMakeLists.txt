@@ -43,8 +43,9 @@ if(UNIX)
 	add_definitions(-DNO_COLOR_ARRAY)
 endif(UNIX)
 
-#set_target_properties(mgl PROPERTIES SOVERSION 4.2.1)
+set_target_properties(mgl PROPERTIES SOVERSION 5.0.0)
 install(
 	TARGETS mgl
+	RUNTIME DESTINATION bin
 	LIBRARY DESTINATION lib
 )

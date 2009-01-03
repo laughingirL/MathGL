@@ -69,12 +69,12 @@ float mgl_okrugl(float x,int k)
 //-----------------------------------------------------------------------------
 void mglGraph::DrawTick(float *pp,bool sub)
 {
-	bool tt[3];
-	float d1,d2,f=sub?0.02:0.04;
-	tt[0]=ScalePoint(pp[0],pp[1],pp[2]);
-	tt[1]=ScalePoint(pp[3],pp[4],pp[5]);
-	tt[2]=ScalePoint(pp[6],pp[7],pp[8]);
-	pp[0] -= pp[3];		pp[1] -= pp[4];		pp[2] -= pp[5];
+//	bool tt[3];
+//	float d1,d2,f=sub?0.02:0.04;
+	ScalePoint(pp[0],pp[1],pp[2]);
+	ScalePoint(pp[3],pp[4],pp[5]);
+	ScalePoint(pp[6],pp[7],pp[8]);
+/*	pp[0] -= pp[3];		pp[1] -= pp[4];		pp[2] -= pp[5];
 	pp[6] -= pp[3];		pp[7] -= pp[4];		pp[8] -= pp[5];
 	d1 = sqrt(pp[0]*pp[0] + pp[1]*pp[1] + pp[2]*pp[2]);
 	d2 = sqrt(pp[6]*pp[6] + pp[7]*pp[7] + pp[8]*pp[8]);
@@ -84,7 +84,7 @@ void mglGraph::DrawTick(float *pp,bool sub)
 	pp[2] = pp[5] + pp[2]/d1;
 	pp[6] = pp[3] + pp[6]/d2;
 	pp[7] = pp[4] + pp[7]/d2;
-	pp[8] = pp[5] + pp[8]/d2;
+	pp[8] = pp[5] + pp[8]/d2;*/
 	curv_plot(3,pp,0);
 }
 //-----------------------------------------------------------------------------
@@ -298,10 +298,10 @@ void _mgl_tick_text(float z, float z0, float d, float v, int kind, wchar_t str[6
 //-----------------------------------------------------------------------------
 void mglGraph::DrawXTick(float x, float y0, float z0, float dy, float dz, int f)
 {
-	float pp[9];
-	pp[0]=x;	pp[1]=y0+dy/(7*(1+f));	pp[2]=z0;
+	float pp[9],ff=10*sqrt(1+f);
+	pp[0]=x;	pp[1]=y0+dy/ff;	pp[2]=z0;
 	pp[3]=x;	pp[4]=y0;	pp[5]=z0;
-	pp[6]=x;	pp[7]=y0;	pp[8]=z0+dz/(7*(1+f));
+	pp[6]=x;	pp[7]=y0;	pp[8]=z0+dz/ff;
 	DrawTick(pp,false);
 }
 void mglGraph::AxisX(bool text)
@@ -359,7 +359,8 @@ void mglGraph::AxisX(bool text)
 		if(NSx>0)
 		{
 			ddx /= (NSx+1);	// subticks drawing
-			x0 = GetOrgX('x');	x0 = x0 - ddx*floor((x0-Min.x)/ddx);
+			x0 = GetOrgX('x');	x0 = isnan(OrgT.x) ? x0 : OrgT.x;
+			x0 = x0 - ddx*floor((x0-Min.x)/ddx+1e-3);
 			for(x=x0;x<=Max.x;x+=ddx)	DrawXTick(x,y0,z0,ddy,ddz,1);
 		}
 	}
@@ -386,10 +387,10 @@ void mglGraph::AxisX(bool text)
 //-----------------------------------------------------------------------------
 void mglGraph::DrawYTick(float y, float x0, float z0, float dx, float dz, int f)
 {
-	float pp[9];
-	pp[0]=x0+dx/(7*(1+f));	pp[1]=y;	pp[2]=z0;
+	float pp[9],ff=10*sqrt(1+f);
+	pp[0]=x0+dx/ff;	pp[1]=y;	pp[2]=z0;
 	pp[3]=x0;		pp[4]=y;	pp[5]=z0;
-	pp[6]=x0;		pp[7]=y;	pp[8]=z0+dz/(7*(1+f));
+	pp[6]=x0;		pp[7]=y;	pp[8]=z0+dz/ff;
 	DrawTick(pp,false);
 }
 void mglGraph::AxisY(bool text)
@@ -447,7 +448,8 @@ void mglGraph::AxisY(bool text)
 		if(NSy>0)
 		{
 			ddy /= (NSy+1);	// subticks drawing
-			y0 = GetOrgY('y');	y0 = y0 - ddy*floor((y0-Min.y)/ddy);
+			y0 = GetOrgY('y');	y0 = isnan(OrgT.y) ? y0 : OrgT.y;
+			y0 = y0 - ddy*floor((y0-Min.y)/ddy+1e-3);
 			for(y=y0;y<=Max.y;y+=ddy)	DrawYTick(y,x0,z0,ddx,ddz,1);
 		}
 	}
@@ -474,10 +476,10 @@ void mglGraph::AxisY(bool text)
 //-----------------------------------------------------------------------------
 void mglGraph::DrawZTick(float z, float x0, float y0, float dx, float dy, int f)
 {
-	float pp[9];
-	pp[0]=x0;	pp[1]=y0+dy/(7*(1+f));	pp[2]=z;
+	float pp[9],ff=10*sqrt(1+f);
+	pp[0]=x0;	pp[1]=y0+dy/ff;	pp[2]=z;
 	pp[3]=x0;	pp[4]=y0;		pp[5]=z;
-	pp[6]=x0+dx/(7*(1+f));	pp[7]=y0;	pp[8]=z;
+	pp[6]=x0+dx/ff;	pp[7]=y0;	pp[8]=z;
 	DrawTick(pp,false);
 }
 void mglGraph::AxisZ(bool text)
@@ -535,7 +537,8 @@ void mglGraph::AxisZ(bool text)
 		if(NSz>0)
 		{
 			ddz /= (NSz+1);	// subticks drawing
-			z0 = GetOrgZ('z');	z0 = z0 - ddz*floor((z0-Min.z)/ddz);
+			z0 = GetOrgZ('z');	z0 = isnan(OrgT.z) ? z0 : OrgT.z;
+			z0 = z0 - ddz*floor((z0-Min.z)/ddz+1e-3);
 			for(z=z0;z<=Max.z;z+=ddz)	DrawZTick(z,x0,y0,ddx,ddy,1);
 		}
 	}
@@ -716,10 +719,10 @@ void mglGraph::Box(mglColor p,bool ticks)
 	else
 	{
 		Line(mglPoint(x2,y2,z1), mglPoint(x2,y2,z2), 0, 100);
-		Line(mglPoint(x2,y2,z1), mglPoint(x1,y2,z1), 0, 100);
-		Line(mglPoint(x2,y2,z1), mglPoint(x2,y1,z1), 0, 100);
-		Line(mglPoint(x2,y2,z2), mglPoint(x1,y2,z2), 0, 100);
-		Line(mglPoint(x2,y2,z2), mglPoint(x2,y1,z2), 0, 100);
+		Line(mglPoint(x1,y2,z1), mglPoint(x2,y2,z1), 0, 100);
+		Line(mglPoint(x2,y1,z1), mglPoint(x2,y2,z1), 0, 100);
+		Line(mglPoint(x1,y2,z2), mglPoint(x2,y2,z2), 0, 100);
+		Line(mglPoint(x2,y1,z2), mglPoint(x2,y2,z2), 0, 100);
 	}
 	if(ticks && !TernAxis)	TickBox();
 	fc = tt;
@@ -874,9 +877,9 @@ void mglGraph::AxisTY(bool text)
 		NSy = NSy<0 ? 0 : NSy;
 		for(y=0;y<=Max.y+(Max.y-Min.y)*1e-6;y+=ddy)
 		{
-			pp[0]=Max.x-y-ddx/7;pp[1]=y;	pp[2]=z0;
+			pp[0]=Max.x-y-ddx/10;pp[1]=y;	pp[2]=z0;
 			pp[3]=Max.x-y;		pp[4]=y;	pp[5]=z0;
-			pp[6]=Max.x-y;		pp[7]=y;	pp[8]=z0+ddz/7;
+			pp[6]=Max.x-y;		pp[7]=y;	pp[8]=z0+ddz/10;
 			if(y>Min.y && y<Max.y)	DrawTick(pp,false);
 			swprintf(str,64,L"%.2g",y);		wcstrim_mgl(str);
 			if(text)	Putsw(mglPoint(Max.x-y,y,z0),str,FontDef,FontSize,'y');
@@ -925,9 +928,9 @@ void mglGraph::AxisTZ(bool text)
 //		z0 = z0 - ddz*floor((z0-Min.z)/ddz+1e-3);
 		for(z=0;z<=Max.z+(Max.z-Min.z)*1e-6;z+=ddz)
 		{
-			pp[0]=x0+ddx/7;	pp[1]=Max.y-z-ddy/7;pp[2]=z0;
-			pp[3]=x0;	pp[4]=Max.y-z;		pp[5]=z0;
-			pp[6]=x0+ddx/7;	pp[7]=Max.y-z;	pp[8]=z0;
+			pp[0]=x0+ddx/10;	pp[1]=Max.y-z-ddy/10;pp[2]=z0;
+			pp[3]=x0;			pp[4]=Max.y-z;		pp[5]=z0;
+			pp[6]=x0+ddx/10;	pp[7]=Max.y-z;		pp[8]=z0;
 			if(z>Min.z && z<Max.z)	DrawTick(pp,false);
 			swprintf(str, 64, L"%.2g",z);	wcstrim_mgl(str);
 			if(text)	Putsw(mglPoint(x0,Max.y-z,z0),str,FontDef,FontSize,'z');
