@@ -1,19 +1,22 @@
-/* mgl_ab.h is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_ab.h is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 //-----------------------------------------------------------------------------
 #ifndef _MGL_AB_H_
 #define _MGL_AB_H_
@@ -24,14 +27,15 @@ class mglGraphAB : public mglGraph
 {
 public:
 using mglGraph::Mark;
+using mglGraph::Colorbar;
 	/// Initialize ZBuffer drawing and allocate the memory for image with size [Width x Height].
 	mglGraphAB(int w=600, int h=400);
 	~mglGraphAB();
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Служебные ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //	virtual void WriteEPS(const char *fname,const char *descr=0);
 	virtual void WriteSVG(const char *fname,const char *descr=0);
-	virtual int NewFrame(int id=0);
-	virtual void EndFrame();
+	virtual int NewFrame();
+//	virtual void EndFrame();
 
 	void SetFontSizePT(float pt, int dpi=72);
 	void Alpha(bool enable);
@@ -40,7 +44,7 @@ using mglGraph::Mark;
 	void Light(int n,mglPoint p, mglColor c=WC, float br=0.5, bool infty=true);
 
 	void RestoreM();
-	void InPlot(float x1,float x2,float y1,float y2);
+	void InPlot(float x1,float x2,float y1,float y2, bool rel=false);
 	void Aspect(float Ax,float Ay,float Az);
 	void RotateN(float Tet,float x,float y,float z);
 	void Perspective(float a);
@@ -55,7 +59,7 @@ using mglGraph::Mark;
 	float Putsw(mglPoint p,mglPoint l,const wchar_t *text,char font='t',float size=-1);
 	void Pen(mglColor col, char style,float width);
 
-	void Colorbar(const char *sch=0,int where=0);
+	void Colorbar(int where, float x, float y, float w, float h);
 	/// Get RGB bitmap of current state image.
 	virtual const unsigned char *GetBits();
 	/// Get RGBA bitmap of current state image.
@@ -73,6 +77,7 @@ using mglGraph::Mark;
 	bool AutoClf;		///< Clear canvas between drawing
 	float Delay;		///< Delay for animation in seconds
 	bool ShowMousePos;	///< Switch to show or not mouse click position
+	mglPoint LastMousePos;	///< Last mouse position
 	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
 	mglPoint CalcXYZ(int xs, int ys);
 	/// Switch on/off transparency (do not overwrite switches in user drawing function)
@@ -90,9 +95,9 @@ using mglGraph::Mark;
 	virtual void Animation();	///< Run slideshow (animation) of frames
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	virtual void Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
-						const char *title,void *par=NULL,
-	  					void (*reload)(int next, void *p)=NULL);
-	void Window(int argc, char **argv, mglDraw *draw, const char *title);
+						const char *title, void *par=NULL,
+	  					void (*reload)(int next, void *p)=NULL, bool maximize=false);
+	void Window(int argc, char **argv, mglDraw *draw, const char *title, bool maximize=false);
 	//@}
 protected:
 	unsigned char *G4;			///< Final picture in RGBA format. Prepared after calling mglGraphZB::Finish().
@@ -107,7 +112,7 @@ protected:
 	int Height;			///< Height of the image
 	int Depth;			///< Depth of the image
 	float B[9];			///< Transformation matrix (used by PostScale() function)
-	float B1[9];		///< Transformation matrix for colorbar
+	float B1[12];		///< Transformation matrix for colorbar
 	float BL[12];		///< Previous transformation matrix
 	unsigned PDef;		///< Pen bit mask
 	float pPos;			///< Current position in pen mask
@@ -174,7 +179,7 @@ protected:
 				bool *tt,float Alpha, bool line);
 	void surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky2,long *kz,
 							float *pp,float *cc,float *kk,float *nn,bool wire);
-	void trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool *tt,bool wire);
+	void trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool *tt,bool wire, bool bytrig=false);
 	void quads_plot(long n, float *pp, float *cc, bool *tt);
 	void lines_plot(long n, float *pp, float *cc, bool *tt);
 	void vects_plot(long n, float *pp, float *cc, bool *tt);

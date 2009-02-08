@@ -1,20 +1,22 @@
-/* mgl_exec.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
+/***************************************************************************
+ * mgl_exec.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #include <wchar.h>
 
 #ifdef WIN32
@@ -477,12 +479,17 @@ void mglc_crust(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"colorbar","Draw colorbar","colorbar [fmt pos]", mgls_colorbar, mglc_colorbar}
 int mgls_colorbar(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	gr->Colorbar(k[0]==2 ? a[0].s:0, k[1]==3 ? int(a[1].v):0);
+	if(k[0]==2 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3)
+		gr->Colorbar(a[0].s, int(a[1].v), a[2].v, a[3].v, a[4].v, a[5].v);
+	else	gr->Colorbar(k[0]==2 ? a[0].s:0, k[1]==3 ? int(a[1].v):0);
 	return 0;
 }
 void mglc_colorbar(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	swprintf(out,1024,L"gr->Colorbar(\"%s\", %d);",k[0]==2 ? a[0].s:"", k[1]==3 ? int(a[1].v):0);
+	if(k[0]==2 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3)
+		swprintf(out,1024,L"gr->Colorbar(\"%s\", %d, %g, %g, %g, %g);",a[0].s, int(a[1].v), a[2].v, a[3].v, a[4].v, a[5].v);
+	else
+		swprintf(out,1024,L"gr->Colorbar(\"%s\", %d);",k[0]==2 ? a[0].s:"", k[1]==3 ? int(a[1].v):0);
 }
 //-----------------------------------------------------------------------------
 //	{"copy","Copy data from another variable","copy var1 var2", mgls_copy, mglc_copy}
@@ -2134,7 +2141,9 @@ void mglc_textmark(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"triplot","Draw surface of triangles",0, mgls_triplot, mglc_triplot}
 int mgls_triplot(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		gr->TriPlot(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),k[5]==2?a[5].s:0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
 		gr->TriPlot(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0);
 	else if(k[0]==1 && k[1]==1 && k[2]==1)
 		gr->TriPlot(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,k[4]==3?a[4].v:NAN);
@@ -2143,7 +2152,9 @@ int mgls_triplot(mglGraph *gr, long n, mglArg *a, int k[10])
 }
 void mglc_triplot(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[3]==1)
+		swprintf(out,1024,L"gr->TriPlot(%s, %s, %s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, k[5]==2?a[5].s:"");
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
 		swprintf(out,1024,L"gr->TriPlot(%s, %s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, k[4]==2?a[4].s:"");
 	else if(k[0]==1 && k[1]==1 && k[2]==1)
 		swprintf(out,1024,L"gr->TriPlot(%s, %s, %s, \"%s\", %g);", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"", k[4]==3?a[4].v:NAN);
@@ -2538,14 +2549,28 @@ void mglc_integrate(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"inplot","Set position of plot in picture",0, mgls_inplot, mglc_inplot}
 int mgls_inplot(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)	gr->InPlot(a[0].v,a[1].v,a[2].v,a[3].v);
+	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
+		gr->InPlot(a[0].v, a[1].v, a[2].v, a[3].v, k[4]==3&&a[4].v!=0);
 	else	return 1;
 	return 0;
 }
 void mglc_inplot(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
-		swprintf(out,1024,L"gr->InPlot(%g, %g, %g, %g);", a[0].v, a[1].v, a[2].v, a[3].v);
+		swprintf(out,1024,L"gr->InPlot(%g, %g, %g, %g, %s);", a[0].v, a[1].v, a[2].v, a[3].v, k[4]==3&&a[4].v!=0 ? "true":"false");
+}
+//-----------------------------------------------------------------------------
+//	{L"columnplot",L"Set position of plot inside cell of column", L"columnplot num ind", mgls_columnplot, mglc_columnplot}
+int mgls_columnplot(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==3 && k[1]==3)	gr->ColumnPlot(int(a[0].v), int(a[1].v));
+	else	return 1;
+	return 0;
+}
+void mglc_columnplot(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==3 && k[1]==3)
+		swprintf(out,1024,L"gr->ColumnPlot(%d, %d);", int(a[0].v), int(a[1].v));
 }
 //-----------------------------------------------------------------------------
 //	{"pipe","Draw flow pipes for vector field",0, mgls_pipe, mglc_pipe}
@@ -2999,14 +3024,14 @@ void mglc_export(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{L"write",L"Write current image to PNG file",L"write 'fname' [solid=off]", mgls_write, mglc_writek}
 int mgls_write(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->WritePNG(a[0].s, "MathGL", k[1]!=3 || a[1].v!=0);
+	if(k[0]==2)	gr->WriteFrame(a[0].s, "MathGL");
 	else	return 1;
 	return 0;
 }
 void mglc_write(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==2)
-		swprintf(out,1024,L"gr->WritePNG(\"%s\", \"MathGL\", %s);", a[0].s, k[1]!=3 || a[1].v!=0 ? "true" : "false");
+		swprintf(out,1024,L"gr->WriteFrame(\"%s\", \"MathGL\");", a[0].s);
 }
 //-----------------------------------------------------------------------------
 //	{L"region",L"Draw filled region between 2 curves",L"region {x} y1 y2 ['sch'='' inside=off]", mgls_region, mglc_region}
@@ -3217,6 +3242,19 @@ void mglc_tens(wchar_t out[1024], long n, mglArg *a, int k[10])
 	else 	swprintf(out,1024,L"gr->Plot(%s, %s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, k[4]==2?a[4].s:"");
 }
 //-----------------------------------------------------------------------------
+//	{"ticklen","Set tick len","ticklen val", mgls_ticklen, mglc_ticklen}
+int mgls_ticklen(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==3)	gr->TickLen = a[0].v>0 ? a[0].v : 0.1;
+	else	return 1;
+	return 0;
+}
+void mglc_ticklen(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==3)
+		swprintf(out,1024,L"gr->TickLen = %g;", a[0].v>0 ? a[0].v : 0.1);
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{L"addlegend",L"Add legend entry",L"addlegend txt fmt", mgls_addlegend, mglc_addlegend, false},
 	{L"addto",L"Add data or number",L"addto var|num", mgls_addto, mglc_addto, false},
@@ -3244,6 +3282,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"clf",L"Clear picture",L"clf", mgls_clf, mglc_clf, false},
 	{L"cloud",L"Draw cloud",L"cloud {xvar yvar zvar} avar [fmt]", mgls_cloud, mglc_cloud, false},
 	{L"colorbar",L"Draw colorbar",L"colorbar [fmt pos]", mgls_colorbar, mglc_colorbar, false},
+	{L"columnplot",L"Set position of plot inside cell of column", L"columnplot num ind", mgls_columnplot, mglc_columnplot},
 	{L"combine", L"Direct multiplication of arrays", L"combine res adat bdat", mgls_combine, mglc_combine, false},
 	{L"cone",L"Draw cone",L"cone avar [fmt pos num]", mgls_cone, mglc_cone, false},
 	{L"cont",L"Draw contour lines",L"cont {vvar} {xvar yvar} zvar [fmt num zpos]", mgls_cont, mglc_cont, false},
@@ -3372,6 +3411,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"ternary",L"Switch on/off to use ternary axis",L"ternary val", mgls_ternary, mglc_ternary, false},
 	{L"text",L"Draw text at some position or along curve",L"", mgls_text, mglc_text, false},
 	{L"textmark",L"Draw TeX mark at point position",L"", mgls_textmark, mglc_textmark, false},
+	{L"ticklen",L"Set tick len",L"ticklen val", mgls_ticklen, mglc_ticklen, false},
 	{L"tile",L"Draw horizontal tiles",L"tile {xvar yvar} zvar {rvar} [fmt]", mgls_tile, mglc_tile, false},
 	{L"title",L"Print title for the picture",L"title 'text' ['stl'='' size=-2]", mgls_title, mglc_title, false},
 	{L"torus",L"Draw surface of curve rotation",L"torus {zvar} rvar [fmt]", mgls_torus, mglc_torus, false},

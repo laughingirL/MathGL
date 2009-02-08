@@ -1,5 +1,5 @@
 /***************************************************************************
- * mgl2svg.cpp is part of Math Graphic Library
+ * mgl2gif.cpp is part of Math Graphic Library
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -20,45 +20,115 @@
 #include <stdio.h>
 #include <string.h>
 #include <locale.h>
-#include "mgl/mgl_eps.h"
+#include <wchar.h>
+#include "mgl/mgl_zb.h"
 #include "mgl/mgl_parse.h"
+struct Str
+{
+	wchar_t *str;
+	Str *next;
+	Str(Str *prev, const char *s);
+	Str(Str *prev, const wchar_t *s);
+	Str(Str *prev=0)
+	{	str=0;	next=0;	if(prev)	prev->next=this;	}
+	~Str()
+	{	if(str)	delete []str;	if(next)	delete next;	}
+};
+void wcstrim_mgl(wchar_t *str);
+//-----------------------------------------------------------------------------
+Str::Str(Str *prev, const wchar_t *s)
+{
+	str=0;	next=0;	if(prev)	prev->next=this;
+	if(s)
+	{
+		str = new wchar_t[wcslen(s)+1];
+		wcscpy(str,s);
+	}
+}
+//-----------------------------------------------------------------------------
+Str::Str(Str *prev, const char *s)
+{
+	str=0;	next=0;	if(prev)	prev->next=this;
+	if(s)
+	{
+		str = new wchar_t[strlen(s)+1];
+		mbstowcs(str,s,strlen(s));
+	}
+}
 //-----------------------------------------------------------------------------
 int main(int narg, char **arg)
 {
-	mglGraphPS gr;
+	mglGraphZB gr;
 	mglParse p(true);
 
 	if(narg==1)
 	{
-		printf("mgl2svg convert mgl script to vector svg file.\n");
+		printf("mgl2gif convert mgl script to bitmap gif file.\n");
 		printf("Current version is 1.%g\n",MGL_VERSION);
-		printf("Usage:\tmgl2svg scriptfile [outputfile parameter(s)]\n");
+		printf("Usage:\tmgl2gif scriptfile [outputfile parameter(s)]\n");
 		printf("\tParameters have format \"-Nval\".\n");
 		printf("\tHere N=0,1...9 is parameter ID and val is its value.\n");
 		printf("\tOption -Lval set locale to val.\n");
+		printf("\tOption -Aval add value of $0 for making animation.\n");
 	}
 	else
 	{
+		Str *head=0, *cur=0;
 		FILE *fp = fopen(arg[1],"rb");
 		if(fp==0)	{	printf("Couldn't open file %s\n",arg[1]);	return 1;	}
-		char str[8192], buf[2048];
+		wchar_t str[8192];
+		char fname[2048], buf[2048];
 		for(long i=2;i<narg;i++)	// add arguments for the script
 		{
 			if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
 				p.AddParam(arg[i][1]-'0',arg[i]+2);
 			if(arg[i][0]=='-' && arg[i][1]=='L')
 				setlocale(LC_CTYPE, arg[i]+2);
+			if(arg[i][0]=='-' && arg[i][1]=='A')
+			{
+				if(cur)	cur = new Str(cur,arg[i]+2);
+				else	head = cur = new Str(0,arg[i]+2);
+			}
 		}
-		gr.Message = buf;
-		p.Execute(&gr,fp,true);
-		fclose(fp);
-		if(narg>2 && arg[2][0]!='-')	strcpy(str,arg[2]);
+		if(narg>2 && arg[2][0]!='-')	strcpy(fname,arg[2]);
 		else
 		{
-			strcpy(str,arg[1]);	strcat(str,".svg");
-			printf("Write output to %s\n",str);
+			strcpy(fname,arg[1]);	strcat(fname,".gif");
+			printf("Write output to %s\n",fname);
 		}
-		gr.WriteSVG(str);
+		// first read animation parameters from file
+		while(!feof(fp))
+		{
+			fgetws(str,8192,fp);
+			wcstrim_mgl(str);
+			if(str[0]=='#' && str[1]=='#' && str[2]=='a' && str[3]==' ')
+			{
+				if(cur)	cur = new Str(cur,str+4);
+				else	head = cur = new Str(0,str+4);
+			}
+		}
+		// now execute it and save
+		gr.Message = buf;
+		if(head)	// as animated gif
+		{
+			gr.StartGIF(fname);
+			for(cur = head;cur!=0;cur=cur->next)
+			{
+				fseek(fp,0,SEEK_SET);
+				gr.NewFrame();
+				p.AddParam(0,cur->str);
+				p.Execute(&gr,fp,true);
+				gr.EndFrame();
+			}
+			gr.CloseGIF();
+		}
+		else	// simple gif
+		{
+			fseek(fp,0,SEEK_SET);
+			p.Execute(&gr,fp,true);
+			gr.WriteGIF(fname);
+		}
+		fclose(fp);
 	}
 	return 0;
 }

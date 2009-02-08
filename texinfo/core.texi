@@ -23,7 +23,7 @@ Note that class mglGraph is abstract and contains only interface functions for p
 * Vector fields::               
 * Other plotting::              
 * Nonlinear fitting::           
-* Frames::                      
+* Frames/Animation::            
 * IDTF functions::              
 @end menu
 
@@ -118,6 +118,7 @@ Function imitate a fog in the plot. Fog start from relative distance @var{dz} fr
 @cindex MarkSize
 @cindex ArrowSize
 @cindex BaseLineWidth
+@cindex TickLen
 
 These variables control the default (initial) values for most graphics parameters including sizes of markers, arrows, linewidth and so on. As any other settings these ones will influence only on plots created after the settings change.
 
@@ -135,6 +136,10 @@ The size of arrows for @ref{1D plotting}, lines and curves (@pxref{Primitives dr
 
 @deftypecv {General option} mglGraph @code{float} BaseLineWidth
 The variable define the base width for all lines. The value <1 is ignored. For values > 1 the real line width is result of multiplication of specified line width and the value of @var{BaseLineWidth}. Increase of this variables is actual for large bitmap pictures. Default value is @code{1}.
+@end deftypecv
+
+@deftypecv {General option} mglGraph @code{float} TickLen
+The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt(2)=1.41...} times smaller.
 @end deftypecv
 
 @c ==================================================================
@@ -372,9 +377,15 @@ These large set of variables and functions control how the axis and ticks will b
 @cindex RecalcBorder
 @cindex Org
 @cindex AutoOrg
+@cindex SetRanges
+@cindex SetAutoRanges
 
 @deftypemethod mglGraph @code{void} Axis (@code{mglPoint} min, @code{mglPoint} max, @code{mglPoint} org=@code{mglPoint(NAN,NAN,NAN)})
 Safely sets the value for @var{Min}, @var{Max} and @var{Org} members (options) of the class. If minimal and maximal values of the coordinate are the same then they are ignored. This function also sets @var{Cmin}=@code{Min.z} and @var{Cmax}=@code{Max.z}. This is default color range for 2d plots.
+@end deftypemethod
+
+@deftypemethod {mglGraph} @code{void} SetRanges (@code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{float} z1=@code{0}, @code{float} z2=@code{0})
+Sets maximal and minimal values for coordinate range (bounding box). If minimal and maximal values of the coordinate are the same then they are ignored. This function also sets @var{Cmin}=@code{Min.z} and @var{Cmax}=@code{Max.z}. This is default color range for 2d plots.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} CAxis (@code{float} min, @code{float} max)
@@ -399,6 +410,10 @@ Sets values of @code{Cmin} and @code{Cmax} as minimal and maximal values of data
 
 @deftypemethod mglGraph @code{void} RecalcBorder ()
 Recalculates internal parameter for correct apply of transformation rules. @strong{Must be called} after any direct change of members @var{Min}, @var{Max}, @var{fx}, @var{fy}, @var{fz} if its changes should be seen on the plot.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} SetAutoRanges (@code{float} x1, @code{float} x2, @code{float} y1=@code{0}, @code{float} y2=@code{0}, @code{float} z1=@code{0}, @code{float} z2=@code{0})
+Sets ranges for automatic variables of plots. It act as changing of @var{Min}, @var{Max} proprties without calling of RecalcBorder(). Function don't change the direction if minimal and maximal values are the same. For example, if y@var{y1}=@var{y2} then ranges along y-direction will not be changed (will be used previous one). Note that the automatic range become axis range after next call of [XYZ]Range() function(s).
 @end deftypemethod
 
 @deftypecv {General option} mglGraph @code{mglPoint} {Min, Max}
@@ -506,15 +521,20 @@ The position of common multiplier/component on the axis: =0 at minimal axis valu
 @cindex Perspective
 @cindex RestoreM
 @cindex View
+@cindex ColumnPlot
 
-These functions control how and where further plotting will be placed. There is a curtain order of calling of these functions for the better plot view. First one should be SubPlot() or InPlot() for specifying the place. After it a Rotate() and Aspect(). And finally any other plotting functions may be called.
+These functions control how and where further plotting will be placed. There is a curtain order of calling of these functions for the better plot view. First one should be SubPlot() or InPlot() for specifying the place. After it a Rotate() and Aspect(). And finally any other plotting functions may be called. Alternatevely you can use ColumnPlot() for position plots in the column one by another without gap between plot axis (bounding boxes).
 
 @deftypemethod mglGraph @code{void} SubPlot (@code{int} nx, @code{int} ny, @code{int} m, @code{float} dx=@code{0}, @code{float} dy=@code{0})
 Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. This function set off any aspects or rotations. So it should be used first for creating the subplot. From the aesthetical point of view it is not recommended to use this function with different matrices in the same frame. The position of the cell can be shifted from its default position by relative size @var{dx}, @var{dy}.
 @end deftypemethod
 
-@deftypemethod mglGraph @code{void} InPlot (@code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2)
-Puts further plotting in some region of the whole frame surface. This function allows one to create a plot in arbitrary place of the screen. The position is defined by rectangular coordinates [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}]. The coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} are normalized to interval [0, 1]. This function set off any aspects or rotations. So it should be used first for creating subplot.
+@deftypemethod mglGraph @code{void} InPlot (@code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{bool} rel=@code{false})
+Puts further plotting in some region of the whole frame surface. This function allows one to create a plot in arbitrary place of the screen. The position is defined by rectangular coordinates [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}]. The coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} are normalized to interval [0, 1]. If parameter @var{rel}=@code{true} then the relative position to current SubPlot() (or last InPlot() with @var{rel}=@code{false}) is used. This function set off any aspects or rotations. So it should be used first for creating subplot.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} ColumnPlot (@code{int} num, @code{int} ind)
+Puts further plotting in @var{ind}-th cell of column with @var{num} cells. The position is relative to previous SubPlot() call (or InPlot() with @var{rel}=@code{false}).
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Rotate (@code{float} TetX, @code{float} TetZ, @code{float} TetY=@code{0})
@@ -549,17 +569,24 @@ Sets angle of view independently from Rotate() but usually don't rotate actually
 @c ##################################################################
 @node Export to file, Primitives drawing, Transformation matrix, MathGL core
 @section Export to file
+@cindex WriteFrame
 @cindex WritePNG
+@cindex WriteGIF
+@cindex WriteIDTF
 @cindex WriteSVG
 @cindex WriteBMP
 @cindex WriteEPS
 @cindex WriteJPEG
-@cindex WriteIDTF
 @cindex SetSize
 @cindex Flush
 @cindex Finish
+@cindex ShowImage
 
-These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the transparency in EPS files are not supported.
+These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the transparency is supported in PNG and SVG files.
+
+@deftypemethod mglGraph @code{void} WriteFrame (@code{const char *}fname=@code{NULL}, @code{const char *}descr=@code{NULL})
+Exports current frame to a file @var{fname} which type is determined by the extension. Parameter @var{descr} adds description to file (can be @code{NULL}). If @var{fname}=@code{NULL} then the file @samp{frame####.jpg} is used, where @samp{####} is current frame id and name @samp{frame} is defined by @var{PlotId} class property.
+@end deftypemethod
 
 @deftypemethod mglGraph @code{void} WritePNG (@code{const char *}fname, @code{const char *}descr=@code{NULL}, @code{int} compr=@code{NULL}, @code{bool} alpha=@code{true})
 Exports current frame to PNG file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file, @var{alpha} gives the transparency type. By default there are no description added and transparent image used. This function does nothing if NO_PNG is defined during compilation of MathGL library.
@@ -567,6 +594,10 @@ Exports current frame to PNG file. Parameter @var{fname} specifies the file name
 
 @deftypemethod mglGraph @code{void} WriteJPEG (@code{const char *}fname, @code{const char *}descr=@code{NULL})
 Exports current frame to JPEG file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file. By default there is no description added. This function does nothing if NO_JPEG is defined during compilation of MathGL library.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} WriteGIF (@code{const char *}fname, @code{const char *}descr=@code{NULL})
+Exports current frame to GIF file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file. By default there is no description added.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} WriteBMP (@code{const char *}fname, @code{const char *}descr=@code{NULL})
@@ -747,6 +778,11 @@ Draws axes with ticks (@pxref{Axis settings}) in directions determined by string
 Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=NULL}) at edge of plot. Parameter @var{where} specifies the position of the colorbar: @samp{0} - at right (default), @samp{1} - at left, @samp{2} - at top, @samp{3} - at bottom. @sref{Dens sample}
 @end deftypemethod
 
+@deftypemethod mglGraph @code{void} Colorbar (@code{const char *}sch, @code{int} where, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+@deftypemethodx mglGraph @code{void} Colorbar (@code{int} where, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+Draws colorbar with color scheme @var{sch} (current scheme if not specified) at arbitrary position of subplot @{@var{x}, @var{y}@} (supposed to be in range [0,1]). Parameter @var{where} specifies the position of colorbar labels: @samp{0} - at left, @samp{1} - at right, @samp{2} - at bottom, @samp{3} - at top. Parameters @var{w}, @var{h} set the relative width and height of the colorbar.
+@end deftypemethod
+
 @deftypemethod mglGraph @code{void} Grid (@code{const char *}dir=@code{"xyz"}, @code{const char *}pen=@code{"B-"})
 Draws grid lines perpendicular to direction determined by string parameter @var{dir}. The step of grid lines is the same as tick step for an Axis(). The style of lines is determined by @var{pen} parameter (default value is dark blue solid line (@samp{B-}).
 @end deftypemethod
@@ -807,6 +843,7 @@ These functions perform plotting of 1D data. 1D means that data depended from on
 
 @menu
 * Plot::                        
+* Tens::                        
 * Area::                        
 * Region::                      
 * Bars::                        
@@ -823,11 +860,11 @@ These functions perform plotting of 1D data. 1D means that data depended from on
 
 
 @c ==================================================================
-@node Plot, Area, , 1D plotting
+@node Plot, Tens, , 1D plotting
 @subsection Plot
 @cindex Plot
 
-These functions draw continuous lines between points. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Area}, @ref{Step}, @ref{Stem}, @ref{Tube}, @ref{Mark}, @ref{Error}, @ref{Belt}. @sref{Plot sample}
+These functions draw continuous lines between points. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Area}, @ref{Step}, @ref{Stem}, @ref{Tube}, @ref{Mark}, @ref{Error}, @ref{Belt}, @ref{Tens}. @sref{Plot sample}
 
 @deftypemethod mglGraph @code{void} Plot (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{NULL})
 The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} in 3D space.
@@ -849,7 +886,26 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @va
 @end deftypemethod
 
 @c ==================================================================
-@node Area, Region, Plot, 1D plotting
+@node Tens, Area, Plot, 1D plotting
+@subsection Tens
+@cindex Tens
+
+These functions draw continuous lines between points with color defined by the special array (look like tension plot). The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color scheme (@pxref{Color scheme}) and style and/or width of line (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with current color scheme is used. See also @ref{Plot}, @ref{Mesh}, @ref{Fall}. @sref{Tens sample}
+
+@deftypemethod mglGraph @code{void} Tens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}pen=@code{NULL})
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} in 3D space with color defined by @var{c}[i].
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} Tens (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}c, @code{const char *}pen=@code{NULL}, @code{float} zVal=@code{NAN})
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}) with color defined by @var{c}[i].
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} Tens (@code{const mglData &}y, @code{const mglData &}c, @code{const char *}pen=@code{NULL}, @code{float} zVal=@code{NAN})
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}) with color defined by @var{c}[i], where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
+@end deftypemethod
+
+@c ==================================================================
+@node Area, Region, Tens, 1D plotting
 @subsection Area
 @cindex Area
 
@@ -1123,7 +1179,7 @@ These functions perform plotting of 2D data. 2D means that data depend from 2 in
 @cindex Mesh
 
 @deftypemethod mglGraph @code{void} Mesh (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
-The function draws mesh lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Mesh lines are plotted for each z slice of the data. See also @ref{Surf}, @ref{Fall}, NeshNum (@pxref{Other settings}), @ref{Cont}. @sref{Mesh sample}
+The function draws mesh lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Mesh lines are plotted for each z slice of the data. See also @ref{Surf}, @ref{Fall}, NeshNum (@pxref{Other settings}), @ref{Cont}, @ref{Tens}. @sref{Mesh sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Mesh (@code{const mglData &}z, @code{const char *}sch=@code{NULL})
@@ -1136,7 +1192,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Fall
 
 @deftypemethod mglGraph @code{void} Fall (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
-The function draws fall lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If @var{sch} contain @samp{x} then lines are drawn along x-direction else (by default) lines are drawn along y-direction. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Fall lines are plotted for each z slice of the data. See also @ref{Belt}, @ref{Mesh}, NeshNum (@pxref{Other settings}). @sref{Fall sample}
+The function draws fall lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If @var{sch} contain @samp{x} then lines are drawn along x-direction else (by default) lines are drawn along y-direction. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Fall lines are plotted for each z slice of the data. See also @ref{Belt}, @ref{Mesh}, @ref{Tens}, NeshNum (@pxref{Other settings}). @sref{Fall sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Fall (@code{const mglData &}z, @code{const char *}sch=@code{NULL})
@@ -1874,8 +1930,9 @@ The same as previous with @var{x=tr}(0,:), @var{y=tr}(1,:), @var{z=tr}(2,:).
 @subsection TriPlot
 @cindex TriPlot
 
-@deftypemethod mglGraph @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
-The function draws the surface of triangles. Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also @ref{Dots}, @ref{Crust}.
+@deftypemethod mglGraph @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{NULL})
+@deftypemethodx mglGraph @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
+The function draws the surface of triangles. Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. Parameter @var{c} set the colors of triangles (if @var{id}.ny=@var{c}.nx) or colors of vertexes (if @var{x}.nx=@var{c}.nx). See also @ref{Dots}, @ref{Crust}.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1916,7 +1973,7 @@ Plots the array @var{a} depending on it's dimensions and @var{type} parameter. S
 @end deftypemethod
 
 @c ##################################################################
-@node Nonlinear fitting, Frames, Other plotting, MathGL core
+@node Nonlinear fitting, Frames/Animation, Other plotting, MathGL core
 @section Nonlinear fitting
 @cindex Fit
 @cindex FitS
@@ -1988,16 +2045,16 @@ Minimal number of points for output array after nonlinear fitting.
 @end deftypecv
 
 @c ##################################################################
-@node Frames, IDTF functions, Nonlinear fitting, MathGL core
-@section Frames
+@node Frames/Animation, IDTF functions, Nonlinear fitting, MathGL core
+@section Frames/Animation
 @cindex NewFrame
 @cindex EndFrame
 @cindex GetNumFrame
 
-These functions provide ability to create several pictures simultaneously. For most of cases it is useless but for widget classes (@pxref{Widget classes}) they can provide a way to show animation.
+These functions provide ability to create several pictures simultaneously. For most of cases it is useless but for widget classes (@pxref{Widget classes}) they can provide a way to show animation. Also you can write several frames into animated GIF file.
 
-@deftypemethod mglGraph @code{int} NewFrame (@code{int} id=@code{0})
-Creates new frame. Function returns current frame id. Zero or negative parameter @var{id} leads to automatic numbering frames. Positive one sets the new frame id directly. This is not thread safe function! Use direct list creation in multi-threading drawing. The function @code{EndFrame()} @strong{must} be call after the  finishing of the frame drawing for each call of this function.
+@deftypemethod mglGraph @code{int} NewFrame ()
+Creates new frame. Function returns current frame id. This is not thread safe function in OpenGL mode! Use direct list creation in multi-threading drawing. The function @code{EndFrame()} @strong{must} be call after the  finishing of the frame drawing for each call of this function.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} EndFrame ()
@@ -2008,8 +2065,20 @@ Finishes the frame drawing.
 Gets the number of created frames.
 @end deftypemethod
 
+@deftypemethod mglGraph @code{void} ResetFrames ()
+Reset frames counter (start it from zero).
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} StartGIF (@code{const char *}fname, @code{int} ms=@code{100})
+Start writing frames into animated GIF file @var{fname}. Parameter @var{ms} set the delay between frames in milliseconds. You @strong{should not} change the picture size during writing the cinema. Use CloseGIF() to finalize writing. Note, that this function is disabled in OpenGL mode.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{int} CloseGIF ()
+Finish writing animated GIF and close connected pointers.
+@end deftypemethod
+
 @c ##################################################################
-@node IDTF functions, , Frames, MathGL core
+@node IDTF functions, , Frames/Animation, MathGL core
 @section IDTF functions
 @cindex NewFrame
 @cindex EndFrame

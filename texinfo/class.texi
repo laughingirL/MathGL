@@ -63,15 +63,15 @@ Gets height of the image.
 
 Class mglGraphAB is the base class for ``widget classes''. So there are set of functions for handling window behavior. Most of them are applicable only for ``window'' classes (like mglGraphFLTK and so on, @pxref{Widget classes}). In all other classes these functions just do nothing. You should provide the corresponding interface in derived ``widget'' classes for user convenience.
 
-@deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{int (*}draw)(@code{mglGraph *}gr, @code{void *}p), @code{const char *}title, @code{void *}par=@code{NULL}, @code{void (*}reload)(@code{int} next, @code{void *}p)=@code{NULL})
-This function creates a window for plotting. Parameters @var{argc}, @var{argv} contain OS specific information and should be the same as in function @code{main(int argc,char **argv)}. Parameter @var{draw} sets a pointer (this is the name of function) to drawing function. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Parameter @var{title} sets the title of the window. Parameter @var{par} contains pointer to data for the plotting function @var{draw}.
+@deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{int (*}draw)(@code{mglGraph *}gr, @code{void *}p), @code{const char *}title, @code{void *}par=@code{NULL}, @code{void (*}reload)(@code{int} next, @code{void *}p)=@code{NULL}, @code{bool} maximize=@code{false})
+This function creates a window for plotting. Parameters @var{argc}, @var{argv} contain OS specific information and should be the same as in function @code{main(int argc,char **argv)}. Parameter @var{draw} sets a pointer (this is the name of function) to drawing function. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Parameter @var{title} sets the title of the window. Parameter @var{par} contains pointer to data for the plotting function @var{draw}. Parameter @var{maximize}=@code{true} open maximized window.
 
 There are some keys handles for manipulating by the plot: 'a', 'd', 'w', 's' for the rotating; ',', '.' for viewing of the previous or next frames in the list; 'r' for the switching of transparency; 'f' for the switching of lightning; 'x' for hiding (closing) the window.
 
 @strong{IMPORTANT!!!} You need to add a call of Rotate() (@pxref{Transformation matrix}) function for having possibility of plot rotation. If plot should be unrotated by default just add @code{Rotate(0,0)} in drawing function.
 @end deftypemethod
 
-@deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{mglDraw *}draw, @code{const char *}title)
+@deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{mglDraw *}draw, @code{const char *}title, @code{bool} maximize=@code{false})
 This function is mostly the same as previous one. The only difference is that the drawing function and function for data reloading are specified as methods on a class inherited from class @code{mglDraw}. This class is defined in @code{#include <mgl/mgl_data.h>} and have only 2 methods:
 @verbatim
 class mglDraw
@@ -131,6 +131,9 @@ Calculate 3D coordinate @{x,y,z@} for screen point @{xs,ys@}. At this moment it 
 @end deftypemethod
 @deftypecv {Widget option} mglGraphAB @code{float} ShowMousePos
 Switch to show or not in the widget the last mouse click position.
+@end deftypecv
+@deftypecv {Widget option} mglGraphAB @code{mglPoint} LastMousePos
+Last position of mouse click.
 @end deftypecv
 
 @c ------------------------------------------------------------------

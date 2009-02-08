@@ -1,19 +1,23 @@
-/* mgl_f.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_f.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+#include <stdlib.h>
 #include "mgl/mgl_f.h"
 #include "mgl/mgl.h"
 #include "mgl/mgl_ab.h"
@@ -144,14 +148,17 @@ void mgl_show_image_(uintptr_t *gr, const char *viewer, int *keep, int l)
 //		Setup frames transparency (alpha) and lightning
 //-----------------------------------------------------------------------------
 /// Create new frame.
-int mgl_new_frame_(uintptr_t *gr, int *id)
-{	return _GR_->NewFrame(*id);	}
+int mgl_new_frame_(uintptr_t *gr)
+{	return _GR_->NewFrame();	}
 /// Finish frame drawing
 void mgl_end_frame_(uintptr_t *gr)
 {	_GR_->EndFrame();	}
 /// Get the number of created frames
 int mgl_get_num_frame_(uintptr_t *gr)
 {	return _GR_->GetNumFrame();	}
+/// Reset frames counter
+void mgl_reset_frames_(uintptr_t *gr)
+{	_GR_->ResetFrames();	}
 /// Set the transparency on/off.
 void mgl_set_alpha_(uintptr_t *gr, int *enable)
 {	_GR_->Alpha(*enable);	}
@@ -194,6 +201,10 @@ void mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,float *dx,float *dy)
 /// Put further plotting in some region of whole frame surface.
 void mgl_inplot_(uintptr_t *gr, float *x1,float *x2,float *y1,float *y2)
 {	_GR_->InPlot(*x1,*x2,*y1,*y2);	}
+void mgl_relplot_(uintptr_t *gr, float *x1,float *x2,float *y1,float *y2)
+{	_GR_->InPlot(*x1,*x2,*y1,*y2,true);	}
+void mgl_columnplot_(uintptr_t *gr, int *num, int *i)
+{	_GR_->ColumnPlot(*num,*i);	}
 /// Set aspect ratio for further plotting.
 void mgl_aspect_(uintptr_t *gr, float *Ax,float *Ay,float *Az)
 {	_GR_->Aspect(*Ax,*Ay,*Az);	}
@@ -387,6 +398,11 @@ void mgl_colorbar_(uintptr_t *gr, const char *sch,int *where,int l)
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	_GR_->Colorbar(s,*where);	delete []s;
 }
+void mgl_colorbar_ext_(uintptr_t *gr, const char *sch,int *where, float *x, float *y, float *w, float *h, int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	_GR_->Colorbar(s,*where,*x,*y,*w,*h);	delete []s;
+}
 /// Plot data depending on its dimensions and \a type parameter
 void mgl_simple_plot_(uintptr_t *gr, uintptr_t *a, int *type, const char *sch,int l)
 {
@@ -441,6 +457,17 @@ int mgl_get_height_(uintptr_t *graph)
 {
 	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*graph));
 	return g ? g->GetHeight():0;
+}
+void mgl_set_show_mouse_pos_(uintptr_t *gr, int *enable)
+{
+	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g) g->ShowMousePos=*enable;
+}
+void mgl_get_last_mouse_pos_(uintptr_t *gr, float *x, float *y, float *z)
+{
+	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)
+	{	*x=g->LastMousePos.x;	*y=g->LastMousePos.y;	*y=g->LastMousePos.y;}
 }
 //-----------------------------------------------------------------------------
 float mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k)
@@ -503,4 +530,11 @@ void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v
 	_DT_->Fill(s,_GR_->Min,_GR_->Max,((mglData *)*vdat),((mglData *)*wdat));
 	delete []s;
 }
+//-----------------------------------------------------------------------------
+void mgl_set_auto_(uintptr_t *gr, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2)
+{
+	_GR_->SetAutoRanges(*x1,*x2,*y1,*y2,*z1,*z2);
+}
+void mgl_set_tick_len_(uintptr_t *gr, float *len)
+{	_GR_->TickLen = *len>0 ? *len : 0.1;	}
 //-----------------------------------------------------------------------------

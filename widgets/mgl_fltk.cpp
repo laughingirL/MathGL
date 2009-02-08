@@ -1,20 +1,22 @@
-/* mgl_fltk.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-//-----------------------------------------------------------------------------
+/***************************************************************************
+ * mgl_fltk.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #ifdef USE_GETTEXT
 	#include <libintl.h>
 #else
@@ -77,9 +79,6 @@ Fl_MathGL::Fl_MathGL(int x, int y, int w, int h, char *label) : Fl_Widget(x,y,w,
 //-----------------------------------------------------------------------------
 Fl_MathGL::~Fl_MathGL()	{}
 //-----------------------------------------------------------------------------
-int mgl_draw_class(mglGraph *gr, void *p);
-void Fl_MathGL::set_draw(mglDraw *dr)
-{	draw_func = mgl_draw_class;	draw_par = dr;	}
 void Fl_MathGL::draw()
 {
 	if(zoom && x0!=xe && y0!=ye)
@@ -276,7 +275,7 @@ void mglGraphFLTK::EndFrame()
 		GG = (unsigned char *)realloc(GG,3*(NumFig+1)*Width*Height);
 		NumFig++;
 	}
-	Finish();
+	mglGraph::EndFrame();
 	memcpy(GG + CurFig*Width*Height*3,G,3*Width*Height);
 	CurFig++;
 }
@@ -567,7 +566,7 @@ Fl_Menu_Item menuitems[] = {
 	{ 0,0,0,0,0,0,0,0,0 }
 };
 //-----------------------------------------------------------------------------
-void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p))
+void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p), bool maximize)
 {
 	NumFig=0;	CurFig=0;
 	CurFrameId = 0;
@@ -575,6 +574,7 @@ void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void 
 	if(n<NumFig && n>=0)	NumFig = n;
 	DrawFunc = draw;		FuncPar = par;
 	LoadFunc = reload;
+
 	if(Wnd)	{	Wnd->label(title);	Wnd->show();	return;	}
 
 	Fl_Window *w1=new Fl_Double_Window(0,0,630,460,title);
@@ -665,6 +665,14 @@ void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void 
 	w1->end();
 	Wnd = w1;
 	w1->resizable(scroll);	//w->graph);
+
+	if(maximize)
+	{
+		int x,y,w,h;
+		Fl::screen_xywh(x,y,w,h);
+		w1->resize(x,y,w,h);
+		Adjust();
+	}
 
 	char *tmp[1];	tmp[0]=new char[1];	tmp[0][0]=0;
 	w1->show(argv ? argc:0, argv ? argv:tmp);

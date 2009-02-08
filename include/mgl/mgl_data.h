@@ -1,22 +1,26 @@
-/* mgl_data.h is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_data.h is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #ifndef _MGL_DATA_H_
 #define _MGL_DATA_H_
 //-----------------------------------------------------------------------------
+#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #ifdef _MSC_VER
@@ -42,9 +46,6 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define MGL_HIST_UP		2
 #define MGL_HIST_DOWN	3
 //-----------------------------------------------------------------------------
-#ifndef ipow
-#define ipow	ipow_mgl
-#endif
 #define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
 #define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
 //-----------------------------------------------------------------------------
@@ -329,7 +330,7 @@ public:
 //-----------------------------------------------------------------------------
 void mgl_srnd(long seed);
 double mgl_rnd();
-double ipow_mgl(double x,int n);
+double mgl_ipow(double x,int n);
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase
 mglData mglTransformA(const mglData &am, const mglData &ph, const char *tr);
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for real and imaginary parts

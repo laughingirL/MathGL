@@ -1,24 +1,20 @@
-/***************************************************************************
- * mgl_gl.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+/* mgl_gl.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License
+ * as published by the Free Software Foundation
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 //-----------------------------------------------------------------------------
-#include <stdlib.h>
 #include <wchar.h>
 #ifdef WIN32
 #define swprintf    _snwprintf
@@ -27,6 +23,8 @@
 #include "mgl/mgl_gl.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
+#define ff	1000
+int mgl_compare_prim(const void *p1, const void *p2);
 //-----------------------------------------------------------------------------
 /// Create mglGraph object in OpenGL mode.
 HMGL mgl_create_graph_gl()
@@ -35,7 +33,7 @@ HMGL mgl_create_graph_gl()
 uintptr_t mgl_create_graph_gl_()
 {	return uintptr_t(new mglGraphGL);	}
 //-----------------------------------------------------------------------------
-mglGraphGL::mglGraphGL() : mglGraphAB(1,1)	{}
+mglGraphGL::mglGraphGL() : mglGraphPS(ff,ff)	{}
 //-----------------------------------------------------------------------------
 mglGraphGL::~mglGraphGL(){}
 //-----------------------------------------------------------------------------
@@ -125,20 +123,9 @@ void mglGraphGL::View(float TetX,float TetY,float TetZ)
 	glRotated(TetZ,0.,0.,1.);
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::Fog(float d, float)
-{
-/*	if(d>0)
-	{
-		glFogf(GL_FOG_MODE,GL_EXP);
-		glFogf(GL_FOG_DENSITY,5*d);
-		glFogfv(GL_FOG_COLOR,back);
-		glEnable(GL_FOG);
-	}
-	else	glDisable(GL_FOG);*/
-}
-//-----------------------------------------------------------------------------
 void mglGraphGL::Clf(mglColor Back)
 {
+	pNum=0;
 	Fog(0);
 	CurrPal = 0;
 	if(Back==NC)	Back=mglColor(1,1,1);
@@ -149,28 +136,6 @@ void mglGraphGL::Clf(mglColor Back)
 	glClearDepth(-10.);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_COLOR_MATERIAL);
-}
-//-----------------------------------------------------------------------------
-void mglGraphGL::Ball(float x,float y,float z,mglColor col,float alpha)
-{
-	if(alpha==0)	return;
-	if(alpha<0)	{	alpha = -alpha;	}
-	else		{	if(!ScalePoint(x,y,z))	return;	}
-	if(!col.Valid())	col = mglColor(1.,0.,0.);
-	alpha = Transparent ? alpha : 1;
-	float p[3] = {x,y,z};	PostScale(p,1);
-	glBegin(GL_POINTS);
-	glColor4f(col.r,col.g,col.b,alpha);
-	glVertex3f(p[0],p[1],p[2]);
-	glEnd();
-}
-//-----------------------------------------------------------------------------
-void mglGraphGL::ball(float *p,float *c)
-{
-	glBegin(GL_POINTS);
-	glColor4fv(c);
-	glVertex3fv(p);
-	glEnd();
 }
 //-----------------------------------------------------------------------------
 void mglGraphGL::Pen(mglColor col, char style,float width)
@@ -192,16 +157,13 @@ void mglGraphGL::Pen(mglColor col, char style,float width)
 	else			glEnable(GL_LINE_STIPPLE);
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::EndFrame()
-{
-//	mglGraph::EndFrame();
-	glEndList();
-}
+void mglGraphGL::EndFrame()	{	Finish();	glEndList();	}
 //-----------------------------------------------------------------------------
-int mglGraphGL::NewFrame()
+int mglGraphGL::NewFrame(int id)
 {
 	Clf();
 	Identity();
+	CurFrameId = id<=0 ? CurFrameId : id;
 	glNewList(CurFrameId,GL_COMPILE);
 	CurFrameId++;
 	return CurFrameId-1;
@@ -209,6 +171,7 @@ int mglGraphGL::NewFrame()
 //-----------------------------------------------------------------------------
 unsigned char **mglGraphGL::GetRGBLines(long &width, long &height, unsigned char *&f, bool alpha)
 {
+	Finish();
 	long x, y, d = alpha ? 4:3;
 	GLint w[4];
 	glGetIntegerv(GL_VIEWPORT,w);
@@ -223,94 +186,20 @@ unsigned char **mglGraphGL::GetRGBLines(long &width, long &height, unsigned char
 	return p;
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::trig_plot(float *p0,float *p1,float *p2,float *c0,float *c1,float *c2)
+void mglGraphGL::Finish()
 {
-	glBegin(GL_TRIANGLES);
-	glColor4f(c0[0],c0[1],c0[2],c0[3]);	glVertex3f(p0[0],p0[1],p0[2]);
-	glColor4f(c1[1],c1[1],c1[2],c1[3]);	glVertex3f(p1[0],p1[1],p1[2]);
-	glColor4f(c2[0],c2[1],c2[2],c2[3]);	glVertex3f(p2[0],p2[1],p2[2]);
-	glEnd();
+	register long i;
+	if(P && pNum>0)
+	{
+		qsort(P,pNum,sizeof(mglPrim),mgl_compare_prim);
+		for(i=0;i<pNum;i++)	P[i].DrawGL();
+	}
+//	glFinish();
+	Finished = true;
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::trig_plot_n(float *p0,float *p1,float *p2,float *c0,float *c1,float *c2,float *n0,float *n1,float *n2)
+void mgl_mark_plot(float x, float y, float z, char type, float s)
 {
-	glBegin(GL_TRIANGLES);
-	glColor4f(c0[0],c0[1],c0[2],c0[3]);	glNormal3f(n0[0],n0[1],n0[2]);	glVertex3f(p0[0],p0[1],p0[2]);
-	glColor4f(c1[1],c1[1],c1[2],c1[3]);	glNormal3f(n1[0],n1[1],n1[2]);	glVertex3f(p1[0],p1[1],p1[2]);
-	glColor4f(c2[0],c2[1],c2[2],c2[3]);	glNormal3f(n2[0],n2[1],n2[2]);	glVertex3f(p2[0],p2[1],p2[2]);
-	glEnd();
-}
-//-----------------------------------------------------------------------------
-void mglGraphGL::quad_plot(float *p0,float *p1,float *p2,float *p3, float *c0,float *c1,float *c2,float *c3)
-{
-	glBegin(GL_QUADS);
-	glColor4f(c0[0],c0[1],c0[2],c0[3]);	glVertex3f(p0[0],p0[1],p0[2]);
-	glColor4f(c1[0],c1[1],c1[2],c1[3]);	glVertex3f(p1[0],p1[1],p1[2]);
-	glColor4f(c3[0],c3[1],c3[2],c3[3]);	glVertex3f(p3[0],p3[1],p3[2]);
-	glColor4f(c2[0],c2[1],c2[2],c2[3]);	glVertex3f(p2[0],p2[1],p2[2]);
-	glEnd();
-}
-//-----------------------------------------------------------------------------
-void mglGraphGL::quad_plot_a(float *p0,float *p1,float *p2,float *p3,
-				float a0,float a1,float a2,float a3,float alpha)
-{
-	register float t,s;
-	register long k;
-	long n = NumCol-1;
-	mglColor c;
-
-	glBegin(GL_QUADS);
-	s = a0;
-	t = alpha*(alpha>0 ? (s+1.f)*(s+1.f) : (1.f-s)*(s-1.f));
-	s = n*(s+1.f)/2.f;	k = long(s);	s -= k;
-	if(k<n)	c = cmap[k]*(1.f-s) + cmap[k+1]*s;	else	c = cmap[n];
-	glColor4f(c.r,c.g,c.b,t);	glVertex3f(p0[0],p0[1],p0[2]);
-
-	s = a1;
-	t = alpha*(alpha>0 ? (s+1.f)*(s+1.f) : (1.f-s)*(s-1.f));
-	s = n*(s+1.f)/2.f;	k = long(s);	s -= k;
-	if(k<n)	c = cmap[k]*(1.f-s) + cmap[k+1]*s;	else	c = cmap[n];
-	glColor4f(c.r,c.g,c.b,t);	glVertex3f(p1[0],p1[1],p1[2]);
-
-	s = a3;
-	t = alpha*(alpha>0 ? (s+1.f)*(s+1.f) : (1.f-s)*(s-1.f));
-	s = n*(s+1.f)/2.f;	k = long(s);	s -= k;
-	if(k<n)	c = cmap[k]*(1.f-s) + cmap[k+1]*s;	else	c = cmap[n];
-	glColor4f(c.r,c.g,c.b,t);	glVertex3f(p3[0],p3[1],p3[2]);
-
-	s = a2;
-	t = alpha*(alpha>0 ? (s+1.f)*(s+1.f) : (1.f-s)*(s-1.f));
-	s = n*(s+1.f)/2.f;	k = long(s);	s -= k;
-	if(k<n)	c = cmap[k]*(1.f-s) + cmap[k+1]*s;	else	c = cmap[n];
-	glColor4f(c.r,c.g,c.b,t);	glVertex3f(p2[0],p2[1],p2[2]);
-	glEnd();
-}
-//-----------------------------------------------------------------------------
-void mglGraphGL::quad_plot_n(float *p0,float *p1,float *p2,float *p3,float *c0,float *c1,float *c2,float *c3,float *n0,float *n1,float *n2,float *n3)
-{
-	glBegin(GL_QUADS);
-	glColor4f(c0[0],c0[1],c0[2],c0[3]);	glNormal3f(n0[0],n0[1],n0[2]);	glVertex3f(p0[0],p0[1],p0[2]);
-	glColor4f(c1[0],c1[1],c1[2],c1[3]);	glNormal3f(n1[0],n1[1],n1[2]);	glVertex3f(p1[0],p1[1],p1[2]);
-	glColor4f(c3[0],c3[1],c3[2],c3[3]);	glNormal3f(n3[0],n3[1],n3[2]);	glVertex3f(p3[0],p3[1],p3[2]);
-	glColor4f(c2[0],c2[1],c2[2],c2[3]);	glNormal3f(n2[0],n2[1],n2[2]);	glVertex3f(p2[0],p2[1],p2[2]);
-	glEnd();
-}
-//-----------------------------------------------------------------------------
-void mglGraphGL::line_plot(float *p1,float *p2,float *c1,float *c2,bool all)
-{
-	if(all)		Pen(NC,'-',BaseLineWidth);
-	glBegin(GL_LINES);
-	glColor3f(c1[0],c1[1],c1[2]);	glVertex3f(p1[0],p1[1],p1[2]);
-	glColor3f(c2[0],c2[1],c2[2]);	glVertex3f(p2[0],p2[1],p2[2]);
-	glEnd();
-}
-//-----------------------------------------------------------------------------
-void mglGraphGL::mark_plot(float *pp, char type)
-{
-	register float x=pp[0],y=pp[1],z=pp[2], s=MarkSize*175*font_factor;	// 175 = 0.35*500
-	if(!ScalePoint(x,y,z))	return;
-	Pen(NC,'-',BaseLineWidth);
-	glColor3f(CDef[0],CDef[1],CDef[2]);
 	if(type=='.')
 	{
 		glBegin(GL_POINTS);
@@ -396,9 +285,47 @@ void mglGraphGL::mark_plot(float *pp, char type)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::InPlot(float x1,float x2,float y1,float y2,bool rel)
+void mglPrim::DrawGL()
 {
-	mglGraphAB::InPlot(x1,x2,y1,y2,rel);
+	if(type==0)
+	{
+//		Pen(NC,'-',BaseLineWidth);
+		glColor4f(c[0],c[1],c[2],c[3]);
+		mgl_mark_plot(x[0]/ff,y[0]/ff,zz[0]/ff,m,s);
+	}
+	else if(type==2 && c[3]>0)
+	{
+		glBegin(GL_TRIANGLES);
+		glColor4f(c[0],c[1],c[2],c[3]);
+		glVertex3f(x[0]/ff,y[0]/ff,zz[0]/ff);
+		glVertex3f(x[1]/ff,y[1]/ff,zz[1]/ff);
+		glVertex3f(x[2]/ff,y[2]/ff,zz[2]/ff);
+		glEnd();
+	}
+	else if(type==3 && c[3]>0)
+	{
+		glBegin(GL_QUADS);
+		glColor4f(c[0],c[1],c[2],c[3]);
+		glVertex3f(x[0]/ff,y[0]/ff,zz[0]/ff);
+		glVertex3f(x[1]/ff,y[1]/ff,zz[1]/ff);
+		glVertex3f(x[3]/ff,y[3]/ff,zz[3]/ff);
+		glVertex3f(x[2]/ff,y[2]/ff,zz[2]/ff);
+		glEnd();
+	}
+	else if(type==1)
+	{
+//		Pen(NC,'-',BaseLineWidth);
+		glBegin(GL_LINES);
+		glColor4f(c[0],c[1],c[2],c[3]);
+		glVertex3f(x[0]/ff,y[0]/ff,zz[0]/ff);
+		glVertex3f(x[1]/ff,y[1]/ff,zz[1]/ff);
+		glEnd();
+	}
+}
+//-----------------------------------------------------------------------------
+void mglGraphGL::InPlot(float x1,float x2,float y1,float y2)
+{
+	mglGraphAB::InPlot(x1,x2,y1,y2);
 	glMatrixMode(GL_MODELVIEW);//GL_MODELVIEW GL_VIEWPORT GL_PROJECTION
 	glLoadIdentity();
 	glScaled(2,2,1.5);

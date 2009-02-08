@@ -1,22 +1,26 @@
-/* mgl_axis.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_axis.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #include <ctype.h>
 #include <wchar.h>
 #include <stdarg.h>
+#include <stdlib.h>
 
 #ifdef WIN32
 #define swprintf    _snwprintf
@@ -244,13 +248,13 @@ int _mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
 		if(v>100.f)
 		{
 			int k=int(log10(v)-0.01);
-			kind=3;		v=ipow(10,k);
+			kind=3;		v=mgl_ipow(10,k);
 			swprintf(s, 32, L"(@{\\times{}10^{%d}})", k);
 		}
 		if(v<1e-2f)
 		{
 			int k=int(log10(v)-0.01)-1;
-			kind=3;		v=ipow(10,k);
+			kind=3;		v=mgl_ipow(10,k);
 			swprintf(s, 32, L"(@{\\times{}10^{%d}})", k);
 		}
 	}
@@ -261,14 +265,14 @@ int _mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
 		{
 			kind = 2;
 			int k=int(log10(v)-0.01);
-			v=ipow(10,k);
+			v=mgl_ipow(10,k);
 			swprintf(s, 32, L"\\times 10^{%d}", k);
 		}
 		if(v<1e-2f)
 		{
 			kind = 2;
 			int k=int(log10(v)-0.01)-1;
-			v=ipow(10,k);
+			v=mgl_ipow(10,k);
 			swprintf(s, 32, L"\\times 10^{%d}", k);
 		}
 	}
@@ -298,10 +302,10 @@ void _mgl_tick_text(float z, float z0, float d, float v, int kind, wchar_t str[6
 //-----------------------------------------------------------------------------
 void mglGraph::DrawXTick(float x, float y0, float z0, float dy, float dz, int f)
 {
-	float pp[9],ff=10*sqrt(1+f);
-	pp[0]=x;	pp[1]=y0+dy/ff;	pp[2]=z0;
+	float pp[9],ff=TickLen/sqrt(1.+f);
+	pp[0]=x;	pp[1]=y0+dy*ff;	pp[2]=z0;
 	pp[3]=x;	pp[4]=y0;	pp[5]=z0;
-	pp[6]=x;	pp[7]=y0;	pp[8]=z0+dz/ff;
+	pp[6]=x;	pp[7]=y0;	pp[8]=z0+dz*ff;
 	DrawTick(pp,false);
 }
 void mglGraph::AxisX(bool text)
@@ -315,8 +319,8 @@ void mglGraph::AxisX(bool text)
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
-	if(ddy==0)	ddy=(Max.y-Min.y)/2;
-	if(ddz==0)	ddz=(Max.z-Min.z)/2;
+	if(ddy==0)	ddy=y0*3;//(Max.y-Min.y)/2;
+ 	if(ddz==0)	ddz=z0*3;//(Max.z-Min.z)/2;
 	if(y0>(Max.y+Min.y)/2)	ddy = -ddy;
 	if(z0>(Max.z+Min.z)/2)	ddz = -ddz;
 	SelectPen(TranspType!=2 ? "k-1":"w-1");
@@ -387,10 +391,10 @@ void mglGraph::AxisX(bool text)
 //-----------------------------------------------------------------------------
 void mglGraph::DrawYTick(float y, float x0, float z0, float dx, float dz, int f)
 {
-	float pp[9],ff=10*sqrt(1+f);
-	pp[0]=x0+dx/ff;	pp[1]=y;	pp[2]=z0;
+	float pp[9],ff=TickLen/sqrt(1.+f);
+	pp[0]=x0+dx*ff;	pp[1]=y;	pp[2]=z0;
 	pp[3]=x0;		pp[4]=y;	pp[5]=z0;
-	pp[6]=x0;		pp[7]=y;	pp[8]=z0+dz/ff;
+	pp[6]=x0;		pp[7]=y;	pp[8]=z0+dz*ff;
 	DrawTick(pp,false);
 }
 void mglGraph::AxisY(bool text)
@@ -404,8 +408,8 @@ void mglGraph::AxisY(bool text)
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
-	if(ddx==0)	ddx=(Max.x-Min.x)/2;
-	if(ddz==0)	ddz=(Max.z-Min.z)/2;
+	if(ddx==0)	ddx=x0*3;//(Max.x-Min.x)/2;
+	if(ddz==0)	ddz=z0*3;//(Max.z-Min.z)/2;
 	if(x0>(Max.x+Min.x)/2)	ddx = -ddx;
 	if(z0>(Max.z+Min.z)/2)	ddz = -ddz;
 	SelectPen(TranspType!=2 ? "k-1":"w-1");
@@ -476,10 +480,10 @@ void mglGraph::AxisY(bool text)
 //-----------------------------------------------------------------------------
 void mglGraph::DrawZTick(float z, float x0, float y0, float dx, float dy, int f)
 {
-	float pp[9],ff=10*sqrt(1+f);
-	pp[0]=x0;	pp[1]=y0+dy/ff;	pp[2]=z;
+	float pp[9],ff=TickLen/sqrt(1.+f);
+	pp[0]=x0;	pp[1]=y0+dy*ff;	pp[2]=z;
 	pp[3]=x0;	pp[4]=y0;		pp[5]=z;
-	pp[6]=x0+dx/ff;	pp[7]=y0;	pp[8]=z;
+	pp[6]=x0+dx*ff;	pp[7]=y0;	pp[8]=z;
 	DrawTick(pp,false);
 }
 void mglGraph::AxisZ(bool text)
@@ -493,8 +497,8 @@ void mglGraph::AxisZ(bool text)
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
-	if(ddx==0)	ddx=(Max.x-Min.x)/2;
-	if(ddy==0)	ddy=(Max.y-Min.y)/2;
+	if(ddx==0)	ddx=x0*3;//(Max.x-Min.x)/2;
+	if(ddy==0)	ddy=y0*3;//(Max.y-Min.y)/2;
 	if(x0>(Max.x+Min.x)/2)	ddx = -ddx;
 	if(y0>(Max.y+Min.y)/2)	ddy = -ddy;
 	SelectPen(TranspType!=2 ? "k-1":"w-1");

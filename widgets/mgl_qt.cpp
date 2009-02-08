@@ -1,20 +1,22 @@
-/* mgl_qt.cpp is part of Math Graphic Library
- * Copyright (C) 2008 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-//-----------------------------------------------------------------------------
+/***************************************************************************
+ * mgl_qt.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #include <QTimer>
 #include <QApplication>
 #include <QMouseEvent>
@@ -493,7 +495,7 @@ void mglGraphQT::EndFrame()
 		GG = (unsigned char *)realloc(GG,3*(NumFig+1)*Width*Height);
 		NumFig++;
 	}
-	Finish();
+	mglGraph::EndFrame();
 	memcpy(GG + CurFig*Width*Height*3,G,3*Width*Height);
 	CurFig++;
 }
@@ -554,7 +556,7 @@ void mglGraphQT::Adjust()
 	Update();
 }
 //-----------------------------------------------------------------------------
-void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p))
+void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p), bool maximize)
 {
 	NumFig=0;	CurFig=0;
 	CurFrameId = 0;
@@ -562,7 +564,14 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 	if(n<NumFig && n>=0)	NumFig = n;
 	DrawFunc = draw;		FuncPar = par;
 	LoadFunc = reload;
-	if(Wnd)	{	Wnd->setWindowTitle(title);	Wnd->show();	return;	}
+	if(Wnd)
+	{
+		Wnd->setWindowTitle(title);
+		if(maximize)
+		{	Wnd->showMaximized();	}
+		else	Wnd->show();
+		return;
+	}
 
 	if(!qApp && argc>0)
 	{
@@ -587,7 +596,9 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 	QMGL->update();			makeMenu();
 	scroll->setWidget(QMGL);
 	Wnd->setCentralWidget(scroll);
-	Wnd->show();
+	if(maximize)
+	{	Wnd->showMaximized();	}
+	else	Wnd->show();
 }
 //-----------------------------------------------------------------------------
 HMGL mgl_create_graph_qt(HMDR dr, const char *title)

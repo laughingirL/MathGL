@@ -1,19 +1,17 @@
 					MathGL (for v.1.8)
 
-1. Change ticks labels drawing if RotatedText = false;
-2. Add setlocale() into utils !!!
-3. Update documentation (English)
-	* describe mglDraw --> Python ???
-	* Tens()
-	* mgl_set_[xyzc]ttw() and mgl_set_[xyzc]tt()
-	* section about utils
+1. Update documentation (English)
+	* sample of columnplot
 
-5. Spline5 !!!
+2. Update Forth and Pascal interface
 
-10. Use Hershey as built-in font
+3. Import/Export via GIF (as 3d data) ???
 
-4. mglGraph::WriteBitmap(fname,type="png",descr=0) ==> Dima
-11. Add FLTK, QT & GLUT to Fortran ===> Popov Dmitry
+5. \dfrac for normal size and centering
+
+10. Spline5 !!!
+11. Use Hershey as built-in font
+12. Add FLTK, QT & GLUT to Fortran ===> Popov Dmitry
 
 
 					MathGL (for v.1.8.?) ???

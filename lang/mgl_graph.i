@@ -1,19 +1,22 @@
-/* mgl_graph.i is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_graph.i is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 
 %module mathgl
 
@@ -89,6 +92,8 @@ struct mglParse{};
 	{	mgl_set_cut(self, cut);	}
 	void SetCutBox(float x1,float y1,float z1,float x2,float y2,float z2)
 	{	mgl_set_cut_box(self, x1, y1, z1, x2, y2, z2);	}
+	void SetTickLen(float len)
+	{	mgl_set_tick_len(self, len);	}
 	void SetBarWidth(float width)
 	{	mgl_set_bar_width(self, width);	}
 	void SetBaseLineWidth(float width)
@@ -128,6 +133,8 @@ struct mglParse{};
 
 	void ShowImage(const char *viewer="kuickshow", bool keep=0)
 	{	mgl_show_image(self, viewer, keep);	}
+	void WriteFrame(const char *fname,const char *descr="")
+	{	mgl_write_frame(self, fname, descr);	}
 	void WriteIDTF(const char *fname,const char *descr="")
 	{	mgl_write_idtf(self, fname, descr);	}
 	void WriteJPEG(const char *fname,const char *descr="")
@@ -140,10 +147,24 @@ struct mglParse{};
 	{	mgl_write_eps(self, fname, descr);	}
 	void WriteSVG(const char *fname,const char *descr="")
 	{	mgl_write_svg(self, fname, descr);	}
+	void WriteGIF(const char *fname,const char *descr="")
+	{	mgl_write_gif(self, fname, descr);	}
+	void StartGIF(const char *fname, int ms=100)
+	{	mgl_start_gif(self, fname,ms);	}
+	void CloseGIF()
+	{	mgl_close_gif(self);	}
+	void NewFrame()
+	{	mgl_new_frame(self);	}
+	void EndFrame()
+	{	mgl_end_frame(self);	}
+	int GetNumFrame()
+	{	return mgl_get_num_frame(self);	}
+	void ResetFrames()
+	{	mgl_reset_frames(self);	}
+
 	void Flush()
 	{	mgl_flush(self);	}
 
-	/*TODO: %cstring_output_withsize(parm, maxparm)*/
 	void GetRGB(char *imgdata, int imglen)
 	{
 		int w=mgl_get_width(self);
@@ -182,12 +203,6 @@ struct mglParse{};
 			}
 		}
 	}
-/*	const char *GetRGB()
-	{	return (const char *)mgl_get_rgb(self);	}
-	const char *GetRGBA()
-	{	return (const char *)mgl_get_rgba(self);	}*/
-
-
 	int GetWidth()
 	{	return mgl_get_width(self);	}
 	int GetHeight()
@@ -216,8 +231,11 @@ struct mglParse{};
 	{	mgl_clf_rgb(self, r, g, b);	}
 	void SubPlot(int nx,int ny,int m, float dx=0, float dy=0)
 	{	mgl_subplot_d(self, nx, ny, m, dx, dy);	}
-	void InPlot(float x1,float x2,float y1,float y2)
-	{	mgl_inplot(self, x1, x2, y1, y2);	}
+	void InPlot(float x1,float x2,float y1,float y2, bool rel=false)
+	{	if(rel)	mgl_inplot(self, x1, x2, y1, y2);
+		else	mgl_relplot(self, x1, x2, y1, y2);	}
+	void ColumnPlot(int num, int ind)
+	{	mgl_columnplot(self,num,ind);	}
 	void Aspect(float Ax,float Ay,float Az)
 	{	mgl_aspect(self, Ax, Ay, Az);		}
 	void Rotate(float TetX,float TetZ=0,float TetY=0)
@@ -240,6 +258,8 @@ struct mglParse{};
 	{	mgl_set_caxis(self, c1, c2);	}
 	void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0)
 	{	mgl_set_axis(self, x1, y1, z1, x2, y2, z2, NaN, NaN, NaN);	}
+	void SetAutoRanges(float x1, float x2, float y1=0, float y2=0, float z1=0, float z2=0)
+	{	mgl_set_auto(self, x1, x2, y1, y2, z1, z2);	}
 	void SetOrigin(float x0, float y0, float z0=NaN)
 	{	mgl_set_origin(self, x0, y0, z0);	}
 	void SetCRange(mglData *dat, bool add=false)
@@ -320,6 +340,10 @@ struct mglParse{};
 
 	void Colorbar(const char *sch="",int where=0)
 	{	mgl_colorbar(self, sch, where);	}
+	void Colorbar(const char *sch,int where,float x,float y,float w,float h)
+	{	mgl_colorbar_ext(self, sch, where,x,y,w,h);	}
+	void Colorbar(int where,float x,float y,float w,float h)
+	{	mgl_colorbar_ext(self, 0, where,x,y,w,h);	}
 	void SimplePlot(mglData *a, int type, const char *stl="")
 	{	mgl_simple_plot(self, a, type, stl);	}
 	void AddLegend(const char *text,const char *style)
@@ -639,6 +663,8 @@ struct mglParse{};
 	{	mgl_beam_val(self,val,tr,g1,g2,a,r,stl,flag);	}
 
 
+	void TriPlot(mglData *nums, mglData *x, mglData *y, mglData *z, mglData *c, const char *sch="")
+	{	mgl_triplot_xyzc(self, nums, x, y, z, c, sch);	}
 	void TriPlot(mglData *nums, mglData *x, mglData *y, mglData *z, const char *sch="")
 	{	mgl_triplot_xyz(self, nums, x, y, z, sch);	}
 	void TriPlot(mglData *nums, mglData *x, mglData *y, const char *sch="", float zVal=NaN)

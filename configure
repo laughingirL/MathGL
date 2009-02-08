@@ -943,7 +943,8 @@ INCLTDL
 LIBLTDL
 GSL_FLAGS
 GSL_LIBS
-AM_CXXFLAGS
+USE_GSL_TRUE
+USE_GSL_FALSE
 GL_LIBS
 GLUT_LIBS
 GLUT_FLAGS
@@ -953,6 +954,10 @@ HDF5_FLAGS
 HDF5_LIBS
 USE_HDF5_TRUE
 USE_HDF5_FALSE
+GIF_FLAGS
+GIF_LIBS
+USE_GIF_TRUE
+USE_GIF_FALSE
 PNG_LIBS
 JPEG_FLAGS
 JPEG_LIBS
@@ -1008,6 +1013,7 @@ USE_DOCS_TRUE
 USE_DOCS_FALSE
 USE_LTDL_TRUE
 USE_LTDL_FALSE
+AM_CXXFLAGS
 LIBOBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -1613,8 +1619,10 @@ Optional Features:
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --enable-all    Turn on all features
   --enable-langall    Turn on all language interfaces
+  --enable-gsl    Turn on gsl functions
   --enable-glut    Turn on glut
   --enable-hdf5    Turn on hdf5
+  --enable-gif    Turn on gif
   --enable-jpeg    Turn on jpeg
   --enable-fltk    Turn on fltk
   --enable-wx    Turn on wxWidget
@@ -5113,7 +5121,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5116 "configure"' > conftest.$ac_ext
+  echo '#line 5124 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7983,11 +7991,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7986: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7994: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7990: \$? = $ac_status" >&5
+   echo "$as_me:7998: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8273,11 +8281,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8276: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8284: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8280: \$? = $ac_status" >&5
+   echo "$as_me:8288: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8377,11 +8385,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8380: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8388: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8384: \$? = $ac_status" >&5
+   echo "$as_me:8392: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10754,7 +10762,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10757 "configure"
+#line 10765 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10854,7 +10862,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10857 "configure"
+#line 10865 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -13255,11 +13263,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13258: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13266: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:13262: \$? = $ac_status" >&5
+   echo "$as_me:13270: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -13359,11 +13367,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:13362: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:13370: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:13366: \$? = $ac_status" >&5
+   echo "$as_me:13374: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14957,11 +14965,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14960: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14968: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14964: \$? = $ac_status" >&5
+   echo "$as_me:14972: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -15061,11 +15069,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15064: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15072: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15068: \$? = $ac_status" >&5
+   echo "$as_me:15076: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17281,11 +17289,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17284: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17292: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17288: \$? = $ac_status" >&5
+   echo "$as_me:17296: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17571,11 +17579,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17574: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17582: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17578: \$? = $ac_status" >&5
+   echo "$as_me:17586: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17675,11 +17683,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17678: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17686: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:17682: \$? = $ac_status" >&5
+   echo "$as_me:17690: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -20370,6 +20378,49 @@ LIBTOOL='$(SHELL) $(top_builddir)/libtool'
 
 
 
+
+# Check whether --enable-all was given.
+if test "${enable_all+set}" = set; then
+  enableval=$enable_all; case "${enableval}" in
+  yes) all=true ;;
+  no)  all=false ;;
+  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-all" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-all" >&2;}
+   { (exit 1); exit 1; }; } ;;
+esac
+else
+  all=false
+fi
+
+
+# Check whether --enable-langall was given.
+if test "${enable_langall+set}" = set; then
+  enableval=$enable_langall; case "${enableval}" in
+  yes) langall=true ;;
+  no)  langall=false ;;
+  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-langall" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-langall" >&2;}
+   { (exit 1); exit 1; }; } ;;
+esac
+else
+  langall=false
+fi
+
+
+# Check whether --enable-gsl was given.
+if test "${enable_gsl+set}" = set; then
+  enableval=$enable_gsl; case "${enableval}" in
+  yes) gsl=true ;;
+  no)  gsl=false ;;
+  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-gsl" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-gsl" >&2;}
+   { (exit 1); exit 1; }; } ;;
+esac
+else
+  gsl=true
+fi
+
+
 GSL_PROG=gsl-config
 # Extract the first word of "$GSL_PROG", so it can be a program name with args.
 set dummy $GSL_PROG; ac_word=$2
@@ -20445,40 +20496,24 @@ echo "${ECHO_T}no" >&6; }
 fi
 
 
-if !(test "$GSL_LIBS") ;then
-    echo "Please install gsl headers and libraries and make sure that \
+if (test x$all = xtrue || test x$gsl = xtrue) ;then
+    if test "$GSL_LIBS" ;then
+	test_gsl=true
+    else
+	echo "Please install gsl headers and libraries and make sure that \
 	path to $GSL_PROG exist in your PATH"
-    exit
-fi
-
-AM_CXXFLAGS="-Wall $GSL_FLAGS"
-
-
-# Check whether --enable-all was given.
-if test "${enable_all+set}" = set; then
-  enableval=$enable_all; case "${enableval}" in
-  yes) all=true ;;
-  no)  all=false ;;
-  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-all" >&5
-echo "$as_me: error: bad value ${enableval} for --enable-all" >&2;}
-   { (exit 1); exit 1; }; } ;;
-esac
+	exit
+    fi
 else
-  all=false
+    GSL_FLAGS=-DNO_GSL
+
 fi
-
-
-# Check whether --enable-langall was given.
-if test "${enable_langall+set}" = set; then
-  enableval=$enable_langall; case "${enableval}" in
-  yes) langall=true ;;
-  no)  langall=false ;;
-  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-langall" >&5
-echo "$as_me: error: bad value ${enableval} for --enable-langall" >&2;}
-   { (exit 1); exit 1; }; } ;;
-esac
+ if test x$test_gsl = xtrue; then
+  USE_GSL_TRUE=
+  USE_GSL_FALSE='#'
 else
-  langall=false
+  USE_GSL_TRUE='#'
+  USE_GSL_FALSE=
 fi
 
 
@@ -21528,6 +21563,222 @@ fi
 else
   USE_HDF5_TRUE='#'
   USE_HDF5_FALSE=
+fi
+
+
+# Check whether --enable-gif was given.
+if test "${enable_gif+set}" = set; then
+  enableval=$enable_gif; case "${enableval}" in
+  yes) gif=true ;;
+  no)  gif=false ;;
+  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-gif" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-gif" >&2;}
+   { (exit 1); exit 1; }; } ;;
+esac
+else
+  gif=false
+fi
+
+if test "${ac_cv_header_gif_lib_h+set}" = set; then
+  { echo "$as_me:$LINENO: checking for gif_lib.h" >&5
+echo $ECHO_N "checking for gif_lib.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_gif_lib_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_header_gif_lib_h" >&5
+echo "${ECHO_T}$ac_cv_header_gif_lib_h" >&6; }
+else
+  # Is the header compilable?
+{ echo "$as_me:$LINENO: checking gif_lib.h usability" >&5
+echo $ECHO_N "checking gif_lib.h usability... $ECHO_C" >&6; }
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+$ac_includes_default
+#include <gif_lib.h>
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+  ac_header_compiler=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_header_compiler=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+{ echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
+echo "${ECHO_T}$ac_header_compiler" >&6; }
+
+# Is the header present?
+{ echo "$as_me:$LINENO: checking gif_lib.h presence" >&5
+echo $ECHO_N "checking gif_lib.h presence... $ECHO_C" >&6; }
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <gif_lib.h>
+_ACEOF
+if { (ac_try="$ac_cpp conftest.$ac_ext"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null && {
+	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       }; then
+  ac_header_preproc=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+  ac_header_preproc=no
+fi
+
+rm -f conftest.err conftest.$ac_ext
+{ echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
+echo "${ECHO_T}$ac_header_preproc" >&6; }
+
+# So?  What about this header?
+case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
+  yes:no: )
+    { echo "$as_me:$LINENO: WARNING: gif_lib.h: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: gif_lib.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: gif_lib.h: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: gif_lib.h: proceeding with the compiler's result" >&2;}
+    ac_header_preproc=yes
+    ;;
+  no:yes:* )
+    { echo "$as_me:$LINENO: WARNING: gif_lib.h: present but cannot be compiled" >&5
+echo "$as_me: WARNING: gif_lib.h: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: gif_lib.h:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: gif_lib.h:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: gif_lib.h: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: gif_lib.h: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: gif_lib.h:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: gif_lib.h:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: gif_lib.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: gif_lib.h: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: gif_lib.h: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: gif_lib.h: in the future, the compiler will take precedence" >&2;}
+
+    ;;
+esac
+{ echo "$as_me:$LINENO: checking for gif_lib.h" >&5
+echo $ECHO_N "checking for gif_lib.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_gif_lib_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_cv_header_gif_lib_h=$ac_header_preproc
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_header_gif_lib_h" >&5
+echo "${ECHO_T}$ac_cv_header_gif_lib_h" >&6; }
+
+fi
+if test $ac_cv_header_gif_lib_h = yes; then
+  (test x$all = xtrue || test x$gif = xtrue) && GIF_FLAGS=-DHAVE_GIF
+else
+  (test x$all = xtrue || test x$gif = xtrue) && echo "Please install gif headers" && exit
+fi
+
+
+
+{ echo "$as_me:$LINENO: checking for main in -lgif" >&5
+echo $ECHO_N "checking for main in -lgif... $ECHO_C" >&6; }
+if test "${ac_cv_lib_gif_main+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lgif  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext &&
+       $as_test_x conftest$ac_exeext; then
+  ac_cv_lib_gif_main=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_cv_lib_gif_main=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_lib_gif_main" >&5
+echo "${ECHO_T}$ac_cv_lib_gif_main" >&6; }
+if test $ac_cv_lib_gif_main = yes; then
+  (test x$all = xtrue || test x$gif = xtrue) && GIF_LIBS=-lgif
+else
+  (test x$all = xtrue || test x$gif = xtrue) && echo "Please install gif library" && exit
+fi
+
+ if (test x$all = xtrue || test x$gif = xtrue); then
+  USE_GIF_TRUE=
+  USE_GIF_FALSE='#'
+else
+  USE_GIF_TRUE='#'
+  USE_GIF_FALSE=
 fi
 
 
@@ -23330,6 +23581,9 @@ else
 fi
 
 
+AM_CXXFLAGS="-Wall $GSL_FLAGS"
+
+
 ac_config_files="$ac_config_files Makefile mgl/Makefile examples/Makefile include/Makefile lang/Makefile utils/Makefile widgets/Makefile"
 
 cat >confcache <<\_ACEOF
@@ -23479,6 +23733,13 @@ echo "$as_me: error: conditional \"am__fastdepCXX\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${USE_GSL_TRUE}" && test -z "${USE_GSL_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_GSL\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_GSL\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${USE_GLUT_TRUE}" && test -z "${USE_GLUT_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"USE_GLUT\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -23490,6 +23751,13 @@ if test -z "${USE_HDF5_TRUE}" && test -z "${USE_HDF5_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"USE_HDF5\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"USE_HDF5\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_GIF_TRUE}" && test -z "${USE_GIF_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_GIF\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_GIF\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -24235,7 +24503,8 @@ INCLTDL!$INCLTDL$ac_delim
 LIBLTDL!$LIBLTDL$ac_delim
 GSL_FLAGS!$GSL_FLAGS$ac_delim
 GSL_LIBS!$GSL_LIBS$ac_delim
-AM_CXXFLAGS!$AM_CXXFLAGS$ac_delim
+USE_GSL_TRUE!$USE_GSL_TRUE$ac_delim
+USE_GSL_FALSE!$USE_GSL_FALSE$ac_delim
 GL_LIBS!$GL_LIBS$ac_delim
 GLUT_LIBS!$GLUT_LIBS$ac_delim
 GLUT_FLAGS!$GLUT_FLAGS$ac_delim
@@ -24245,6 +24514,10 @@ HDF5_FLAGS!$HDF5_FLAGS$ac_delim
 HDF5_LIBS!$HDF5_LIBS$ac_delim
 USE_HDF5_TRUE!$USE_HDF5_TRUE$ac_delim
 USE_HDF5_FALSE!$USE_HDF5_FALSE$ac_delim
+GIF_FLAGS!$GIF_FLAGS$ac_delim
+GIF_LIBS!$GIF_LIBS$ac_delim
+USE_GIF_TRUE!$USE_GIF_TRUE$ac_delim
+USE_GIF_FALSE!$USE_GIF_FALSE$ac_delim
 PNG_LIBS!$PNG_LIBS$ac_delim
 JPEG_FLAGS!$JPEG_FLAGS$ac_delim
 JPEG_LIBS!$JPEG_LIBS$ac_delim
@@ -24300,11 +24573,12 @@ USE_DOCS_TRUE!$USE_DOCS_TRUE$ac_delim
 USE_DOCS_FALSE!$USE_DOCS_FALSE$ac_delim
 USE_LTDL_TRUE!$USE_LTDL_TRUE$ac_delim
 USE_LTDL_FALSE!$USE_LTDL_FALSE$ac_delim
+AM_CXXFLAGS!$AM_CXXFLAGS$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 85; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 91; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
@@ -24951,4 +25225,5 @@ echo "$as_me: error: $ac_sub_configure failed for $ac_dir" >&2;}
     cd "$ac_popdir"
   done
 fi
+
 

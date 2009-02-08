@@ -1,19 +1,22 @@
-/* mgl_f.h is part of Math Graphic Library
- * Copyright _(C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_f.h is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #ifndef _MGL_F_H_
 #define _MGL_F_H_
 
@@ -40,6 +43,8 @@ uintptr_t mgl_create_graph_fltk_(int (*draw)(uintptr_t *gr), const char *title, 
 uintptr_t mgl_create_graph_qt_(int (*draw)(uintptr_t *gr), const char *title, int);
 void mgl_fltk_run_();
 void mgl_qt_run_();
+void mgl_set_show_mouse_pos_(uintptr_t *gr, int *enable);
+void mgl_get_last_mouse_pos_(uintptr_t *gr, float *x, float *y, float *z);
 //void mgl_fltk_thread_();
 //void mgl_qt_thread_();
 /*****************************************************************************/
@@ -57,6 +62,7 @@ void mgl_set_pal_num_(uintptr_t *graph, int *num);
 void mgl_set_rotated_text_(uintptr_t *graph, int *rotated);
 void mgl_set_cut_(uintptr_t *graph, int *cut);
 void mgl_set_cut_box_(uintptr_t *gr, float *x1,float *y1,float *z1,float *x2,float *y2,float *z2);
+void mgl_set_tick_len_(uintptr_t *graph, float *len);
 void mgl_set_bar_width_(uintptr_t *graph, float *width);
 void mgl_set_base_line_width_(uintptr_t *gr, float *size);
 void mgl_set_mark_size_(uintptr_t *graph, float *size);
@@ -78,6 +84,7 @@ void mgl_restore_font_(uintptr_t *gr);
 /*		Export to file or to memory														 */
 /*****************************************************************************/
 void mgl_show_image_(uintptr_t *graph, const char *viewer, int *keep, int);
+void mgl_write_frame_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_bmp_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_jpg_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_png_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
@@ -85,6 +92,9 @@ void mgl_write_png_solid_(uintptr_t *graph, const char *fname,const char *descr,
 void mgl_write_eps_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_svg_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_idtf_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
+void mgl_write_gif_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
+void mgl_start_gif_(uintptr_t *graph, const char *fname,int *ms,int l);
+void mgl_close_gif_(uintptr_t *graph);
 const unsigned char *mgl_get_rgb_(uintptr_t *graph);
 const unsigned char *mgl_get_rgba_(uintptr_t *graph);
 int mgl_get_width_(uintptr_t *graph);
@@ -92,9 +102,10 @@ int mgl_get_height_(uintptr_t *graph);
 /*****************************************************************************/
 /*		Setup frames transparency _(alpha) and lightning						 */
 /*****************************************************************************/
-int mgl_new_frame_(uintptr_t *graph, int *id);
+int mgl_new_frame_(uintptr_t *graph);
 void mgl_end_frame_(uintptr_t *graph);
 int mgl_get_num_frame_(uintptr_t *graph);
+void mgl_reset_frames_(uintptr_t *graph);
 void mgl_set_transp_type_(uintptr_t *graph, int *type);
 void mgl_set_transp_(uintptr_t *graph, int *enable);
 void mgl_set_alpha_(uintptr_t *graph, int *enable);
@@ -115,6 +126,8 @@ void mgl_clf_rgb_(uintptr_t *graph, float *r, float *g, float *b);
 void mgl_subplot_(uintptr_t *graph, int *nx,int *ny,int *m);
 void mgl_subplot_d_(uintptr_t *graph, int *nx,int *ny,int *m,float *dx,float *dy);
 void mgl_inplot_(uintptr_t *graph, float *x1,float *x2,float *y1,float *y2);
+void mgl_relplot_(uintptr_t *graph, float *x1,float *x2,float *y1,float *y2);
+void mgl_columnplot_(uintptr_t *graph, int *num, int *i);
 void mgl_aspect_(uintptr_t *graph, float *Ax,float *Ay,float *Az);
 void mgl_rotate_(uintptr_t *graph, float *TetX,float *TetZ,float *TetY);
 void mgl_rotate_vector_(uintptr_t *graph, float *Tet,float *x,float *y,float *z);
@@ -136,6 +149,7 @@ void mgl_set_crange_(uintptr_t *graph, uintptr_t *a, int *add);
 void mgl_set_xrange_(uintptr_t *graph, uintptr_t *a, int *add);
 void mgl_set_yrange_(uintptr_t *graph, uintptr_t *a, int *add);
 void mgl_set_zrange_(uintptr_t *graph, uintptr_t *a, int *add);
+void mgl_set_auto_(uintptr_t *graph, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2);
 void mgl_set_func_(uintptr_t *graph, const char *EqX, const char *EqY, const char *EqZ, int, int, int);
 void mgl_set_ternary_(uintptr_t *graph, int *enable);
 void mgl_set_cutoff_(uintptr_t *graph, const char *EqC, int);
@@ -170,6 +184,7 @@ void mgl_title_(uintptr_t *graph, const char *text, const char *fnt, float *size
 void mgl_puts_ext_(uintptr_t *graph, float *x, float *y, float *z,const char *text,const char *font,float *size,const char *dir,int,int,int);
 void mgl_text_ext_(uintptr_t *graph, float *x, float *y, float *z,const char *text,const char *font,float *size,const char *dir,int,int,int);
 void mgl_colorbar_(uintptr_t *graph, const char *sch,int *where,int);
+void mgl_colorbar_ext_(uintptr_t *graph, const char *sch,int *where, float *x, float *y, float *w, float *h, int);
 void mgl_simple_plot_(uintptr_t *graph, uintptr_t *a, int *type, const char *stl,int);
 void mgl_add_legend_(uintptr_t *graph, const char *text,const char *style,int,int);
 void mgl_clear_legend_(uintptr_t *graph);
@@ -366,6 +381,7 @@ void mgl_beam_(uintptr_t *gr, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintp
 /*****************************************************************************/
 /*		Triangular plotting functions											 */
 /*****************************************************************************/
+void mgl_triplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch,int);
 void mgl_triplot_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int);
 void mgl_triplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, const char *sch, float *zVal,int);
 void mgl_dots_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int);

@@ -1,20 +1,22 @@
-/* mgl_glut.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
+/***************************************************************************
+ * mgl_glut.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #define GLUT_NO_LIB_PRAGMA
 #define GLUT_NO_WARNING_DISABLE
 
@@ -177,7 +179,7 @@ mglGraphGLUT::~mglGraphGLUT()
 	_mgl_glwnd = 0;
 }
 //-----------------------------------------------------------------------------
-void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *p),const char *title, void *par, void (*reload)(int next, void *p))
+void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *p),const char *title, void *par, void (*reload)(int next, void *p), bool maximize)
 {
 	NumFig=0;	curr_fig=1;	tt=0;
 	_mgl_glwnd = this;
@@ -191,7 +193,7 @@ void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *
 	glutCreateWindow("MathPlotLibrary");
 
 	Light(0,mglPoint(0,0,3),false);
-	NumFig = draw(this,par);	Finish();
+	NumFig = draw(this,par)-1;	Finish();
 	DrawFunc = draw;	FuncPar = par;
 	LoadFunc = reload;
 	glutSetWindowTitle(title);
@@ -199,6 +201,8 @@ void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *
 	glutDisplayFunc(_mgl_display);
 	glutKeyboardUpFunc(_mgl_key_up);
 	glutTimerFunc(Delay,_mgl_timer,0);
+
+	// TODO: add window maximazing at start up
 
 	glutMainLoop();
 	glDeleteLists(1,NumFig);

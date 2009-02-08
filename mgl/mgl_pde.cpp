@@ -1,19 +1,22 @@
-/* mgl_pde.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_pde.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #include "mgl/mgl_eval.h"
 #include "mgl/mgl_data.h"
 #include "mgl/mgl.h"
@@ -35,6 +38,7 @@ mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mg
 	if(nx<2 || nz<1 || Max.x==Min.x)	return res;	// Too small data
 	if(ini_im.nx*ini_im.ny != nx*ny)	return res;		// Wrong dimensions
 	res.Create(nz, nx, ny);
+#ifndef NO_GSL
 	mglFormula eqs(ham);
 	dual *a = new dual[4*nx*ny], h, h0, h1, h2;	// Add "damping" area
 	memset(a,0,4*nx*ny*sizeof(dual));
@@ -67,11 +71,11 @@ mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mg
 			var['u'-'a'] = abs(a[i0]);
 			h = dual(-eqs.CalcD(var,'i'), eqs.Calc(var))*dd;
 			tmp = 0;
-			if(i<nx/2)		tmp += GAMMA*ipow((nx/2-i)/(nx/2.),2);
-			if(i>3*nx/2)	tmp += GAMMA*ipow((i-3*nx/2-1)/(nx/2.),2);
-			if(j<ny/2)		tmp += GAMMA*ipow((ny/2-j)/(ny/2.),2);
-			if(j>3*ny/2)	tmp += GAMMA*ipow((j-3*ny/2-1)/(ny/2.),2);
-			a[i0] *= exp(h)*exp(-tmp*dz);
+			if(i<nx/2)		tmp += GAMMA*mgl_ipow((nx/2-i)/(nx/2.),2);
+			if(i>3*nx/2)	tmp += GAMMA*mgl_ipow((i-3*nx/2-1)/(nx/2.),2);
+			if(j<ny/2)		tmp += GAMMA*mgl_ipow((ny/2-j)/(ny/2.),2);
+			if(j>3*ny/2)	tmp += GAMMA*mgl_ipow((j-3*ny/2-1)/(ny/2.),2);
+			a[i0] *= exp(h)*exp(-double(tmp*dz));
 		}
 		// "central" point
 		var['x'-'a'] = xs;	var['y'-'a'] = ys;
@@ -131,7 +135,9 @@ mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mg
 	gsl_fft_complex_wavetable_free(wtx);
 	gsl_fft_complex_workspace_free(wsy);
 	gsl_fft_complex_wavetable_free(wty);
-	delete []a;		return res;
+	delete []a;
+#endif
+	return res;
 }
 //-----------------------------------------------------------------------------
 // Solve GO ray equation like dr/dt = d ham/dp, dp/dt = -d ham/dr where ham = ham(x,y,z,p,q,v,t) and px=p, py=q, pz=v. The starting point (at t=0) is r0, p0. Result is array of {x,y,z,p,q,v,t}
@@ -142,6 +148,7 @@ mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, float dt, float tmax)
 	int nt = int(tmax/dt)+1;
 	float x[6], k1[6], k2[6], k3[6], hh=dt/2;
 	res.Create(7,nt);	res.SetColumnId("xyzpqvt");
+#ifndef NO_GSL
 	mglFormula eqs(ham);
 	// initial conditions
 	x[0] = res.a[0] = r0.x;	x[1] = res.a[1] = r0.y;	x[2] = res.a[2] = r0.z;
@@ -179,6 +186,7 @@ mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, float dt, float tmax)
 			res.a[i+7*k] = x[i] += (k1[i]+k2[i]+2*k3[i])*dt/6;
 		res.a[6+7*k] = dt*k;
 	}
+#endif
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -226,6 +234,7 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 	int nx=ini_re.nx, nt=ray.ny;
 	if(nx<2 || ini_im.nx!=nx || nt<2)	return res;
 	res.Create(nx,nt);
+#ifndef NO_GSL
 	dual *a=new dual[2*nx], *hu=new dual[2*nx],  *hx=new dual[2*nx], h0;
 	double *ru=new double[2*nx],  *rx=new double[2*nx],
 			*pu=new double[2*nx],  *px=new double[2*nx];
@@ -332,6 +341,7 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 	gsl_fft_complex_wavetable_free(wtx);
 	delete []a;		delete []hu;	delete []hx;	delete []ra;
 	delete []rx;	delete []ru;	delete []px;	delete []pu;
+#endif
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -341,6 +351,7 @@ mglData mglAF2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 	int nx=ini_re.nx, nt=ray.ny;
 	if(nx<2 || ini_im.nx!=nx || nt<2)	return res;
 	res.Create(nx,nt);
+#ifndef NO_GSL
 	dual *a=new dual[2*nx], *hu=new dual[2*nx],  *hx=new dual[2*nx];
 	mgl_ap *ra = new mgl_ap[nt];	mgl_init_ra(ray.ny, ray.a, ra);	// ray
 	register int i;
@@ -423,6 +434,7 @@ mglData mglAF2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 	gsl_fft_complex_workspace_free(wsx);
 	gsl_fft_complex_wavetable_free(wtx);
 	delete []a;		delete []hu;	delete []hx;	delete []ra;
+#endif
 	return res;
 }
 //-----------------------------------------------------------------------------

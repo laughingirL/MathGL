@@ -224,6 +224,7 @@ Now I show several non-obvious features of MathGL: several subplots in a single 
 * Axis and grids::              
 * Curvilinear coordinates::     
 * Text printing example::       
+* Animation::                   
 @end menu
 
 @c ------------------------------------------------------------------
@@ -380,7 +381,7 @@ Now let use curvilinear coordinates. In difference from other systems of plot cr
 
 
 @c ------------------------------------------------------------------
-@node Text printing example, , Curvilinear coordinates, Advanced usage
+@node Text printing example, Animation, Curvilinear coordinates, Advanced usage
 @subsection Text printing example
 
 MathGL prints text by vector font. There are functions for manual specifying of text position (like @code{Puts}) and for its automatic selection (like @code{Label}, @code{Legend} and so on). MathGL prints text always in specified position even if it lies outside the bounding box. The default size of font is specified by variables @var{FontSize} (@pxref{Font settings}). However, the actual size of output string depends on position of axes (depends on functions @code{SubPlot}, @code{InPlot}). The switching of the font style (italic, bold, wire and so on) can be done for the whole string (by function parameter) or inside the string. By default MathGL parses TeX-like commands for symbols and indexes (see @pxref{mglFont class}). Example of MathGL font drawing is:
@@ -388,13 +389,15 @@ MathGL prints text by vector font. There are functions for manual specifying of 
     int sample(mglGraph *gr, void *)
     {
         setlocale(LC_CTYPE, "ru_RU.cp1251");
-        gr->Puts(mglPoint(0,1),"Text can be in english и на русском");
-        gr->Puts(mglPoint(0,0.6),"It can be \\wire{wire} and \\big{big}");
+        gr->Puts(mglPoint(0,1),"Text can be in ASCII and in Unicode");
+        gr->Puts(mglPoint(0,0.6),"It can be \\wire{wire}, \\big{big} "
+            "or #r{colored}");
         gr->Puts(mglPoint(0,0.2),"One can change style in string: "
             "\\b{bold}, \\i{italic, \\b{both}}");
         gr->Puts(mglPoint(0,-0.2),"Easy to \\a{overline} or "
             "\\u{underline}");
-        gr->Puts(mglPoint(0,-0.6),"Easy to change indexes ^{up} _{down} @{center}");
+        gr->Puts(mglPoint(0,-0.6),"Easy to change indexes "
+            "^{up} _{down} @{center}");
         gr->Puts(mglPoint(0,-1),"It parse TeX: \\int \\alpha \\cdot "
             "\\sqrt3{sin(\\pi x)^2 + \\gamma_{i_k}} dx");
         return 0;
@@ -410,16 +413,68 @@ Another example demonstrate the features of TeX formula parsing.
 @verbatim
     int sample(mglGraph *gr, void *)
     {
-        gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", 0, -4);
+        gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+"
+            "\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", 0, -4);
         return 0;
     }
 @end verbatim
 
 @float
 @image{png/samplee, 7cm}
-@caption{Example of text printing with different font effects}
+@caption{Example of TeX formula parsing}
 @end float
 
+
+@c ------------------------------------------------------------------
+@node Animation, , Text printing example, Advanced usage
+@subsection Animation
+
+You can make animation by several methods in MathGL: by export in animated GIF, or by save each frame in separate file (usually JPEG) and convert these files into movie. Let me show both methods.
+
+The simplest methods is making animated GIF. There are 3 steps: (1) open GIF file by @code{StartGIF()} function; (2) create the frames by calling @code{NewFrame()} before and @code{EndFrame()} after plotting; (3) close GIF by @code{CloseGIF()} function. So the simplest code for ``running'' sinusoid will look like this:
+@verbatim
+    int sample(mglGraph *gr, void *)
+    {
+        mglData dat(100);
+        char str[32];
+        gr->StartGIF("sample.gif");
+        for(int i=0;i<100;i++)
+        {
+            gr->NewFrame();     // start frame
+            gr->Box();          // some plotting
+            sprintf(str,"sin(pi*x+%g*pi)",0.02*i);
+            dat.Modify(str);
+            gr->Plot(dat,"b");
+            gr->EndFrame();     // end frame
+        }
+        gr->CloseGIF();
+        return 0;
+    }
+@end verbatim
+
+The second way is saving each frame in separate file (usually JPEG) and later make the movie from them. MathGL have special function for saving frames -- it is @code{WriteFrame()}. This function save each frame with automatic name @samp{frame0001.jpg, frame0002.jpg} and so on. Here prefix @samp{frame} is defined by @var{PlotId} variable of @code{mglGraph} class. So the similar code will look like this:
+@verbatim
+    int sample(mglGraph *gr, void *)
+    {
+        mglData dat(100);
+        char str[32];
+        for(int i=0;i<100;i++)
+        {
+            gr->NewFrame();     // start frame
+            gr->Box();          // some plotting
+            sprintf(str,"sin(pi*x+%g*pi)",0.02*i);
+            dat.Modify(str);
+            gr->Plot(dat,"b");
+            gr->EndFrame();     // end frame
+            gr->WriteFrame();   // save frame
+        }
+        return 0;
+    }
+@end verbatim
+
+Created set of files can be converted to movie by help of a set of programs. For example, you can use ImageMagic (command @samp{convert frame*.jpg movie.mpg}), MPEG library, GIMP and so on.
+
+Finally, you can use @code{mgl2gif} tool for doing the same with MGL scripts (@pxref{Utilities}).
 
 @c ------------------------------------------------------------------
 @node Data handling, Data plotting, Advanced usage, Examples

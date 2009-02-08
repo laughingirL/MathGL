@@ -1,19 +1,22 @@
-/* mgl_idtf.cpp is part of Math Graphic Library
- * Copyright (C) 2008 Michail Vidiassov <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_idtf.cpp is part of Math Graphic Library
+ * Copyright (C) 2008 Michail Vidiassov <balakin@appl.sci-nnov.ru>         *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
 #include <math.h>
@@ -29,7 +32,7 @@
 #ifndef MAXFLOAT
 #define MAXFLOAT	1e30
 #endif
-#define IDTFROUND(x) roundf((x)*1000000.0f)/1000000.0f
+#define IDTFROUND(x) int((x)*1000000.0f+0.5f)/1000000.0f
 // #define IDTFROUND(x) ldexpf(roundf(ldexpf((x),20)),-20)
 // const static bool dbg = true;
 //-----------------------------------------------------------------------------
@@ -1544,9 +1547,9 @@ void mglGraphIDTF::arrow_plot ( float *p1,float *p2,char st )
 	UseLight = ul;
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::InPlot ( float x1,float x2,float y1,float y2 )
+void mglGraphIDTF::InPlot ( float x1,float x2,float y1,float y2, bool rel )
 {
-	mglGraphAB::InPlot ( x1,x2,y1,y2 );
+	mglGraphAB::InPlot ( x1,x2,y1,y2, rel);
 	points_finished = lines_finished = mesh_finished = true;
 }
 //-----------------------------------------------------------------------------

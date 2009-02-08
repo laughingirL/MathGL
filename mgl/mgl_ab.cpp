@@ -1,19 +1,23 @@
-/* mgl_ab.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_ab.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+#include <stdlib.h>
 #include <time.h>
 #include <wchar.h>
 
@@ -121,20 +125,34 @@ void mglGraphAB::RestoreM()
 	xPos = BL[9];	yPos = BL[10];	zPos = BL[11];
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::InPlot(float x1,float x2,float y1,float y2)
+void mglGraphAB::InPlot(float x1,float x2,float y1,float y2, bool rel)
 {
-	memcpy(BL,B,9*sizeof(float));
-	BL[9] = xPos;	BL[10] = yPos;	BL[11] = zPos;
-	font_factor = Width*(x2-x1) < Height*(y2-y1) ? Width*(x2-x1) : Height*(y2-y1);
+	if(!rel)
+	{
+		memcpy(BL,B,9*sizeof(float));
+		BL[9] = xPos;	BL[10] = yPos;	BL[11] = zPos;
+	}
 	SelectPen("k-1");
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
-	xPos = (x1+x2)/2*Width;
-	yPos = (y1+y2)/2*Height;
-	float d = sqrt(fabs((x2-x1)*(y2-y1)));
-	zPos = (1.f-d/2.f)*Depth;
 	memset(B,0,9*sizeof(float));
-	B[0] = Width*(x2-x1);	B[4] = Height*(y2-y1);	B[8] = Depth*d;
-	memcpy(B1,B,9*sizeof(float));
+	if(rel)
+	{
+		xPos = B1[9] + (x1+x2-1)/2*B1[0];
+		yPos = B1[10]+ (y1+y2-1)/2*B1[4];
+		B[0] = B1[0]*(x2-x1);	B[4] = B1[4]*(y2-y1);
+		B[8] = sqrt(B[0]*B[4]);
+		zPos = B1[11]+ (1.f-B[8]/(2*Depth))*B1[8];
+	}
+	else
+	{
+		B1[9] = xPos = (x1+x2)/2*Width;
+		B1[10]= yPos = (y1+y2)/2*Height;
+		B[0] = Width*(x2-x1);	B[4] = Height*(y2-y1);
+		B[8] = sqrt(B[0]*B[4]);
+		B1[11]= zPos = (1.f-B[8]/(2*Depth))*Depth;
+		memcpy(B1,B,9*sizeof(float));
+	}
+	font_factor = B[0] < B[4] ? B[0] : B[4];
 	PlotFactor = AutoPlotFactor ? 1.55 : 2;	// Automatically change plot factor !!!
 	Persp = 0;
 }
@@ -212,9 +230,10 @@ mglPoint mglGraphAB::CalcXYZ(int xs, int ys)
 		x = s3*(B[5]*xx-B[2]*yy)/d3;
 		z = s3*(B[0]*yy-B[3]*xx)/d3;
 	}
-	return mglPoint(Min.x + (Max.x-Min.x)*(x+1)/2,
+	LastMousePos = mglPoint(Min.x + (Max.x-Min.x)*(x+1)/2,
 					Min.y + (Max.y-Min.y)*(y+1)/2,
 					Min.z + (Max.z-Min.z)*(z+1)/2);
+	return LastMousePos;
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::LightScale()
@@ -248,9 +267,8 @@ void mglGraphAB::Light(int n, mglPoint p, mglColor c, float br, bool inf)
 	cLight[3*n] = c.r;	cLight[3*n+1] = c.g;	cLight[3*n+2] = c.b;
 }
 //-----------------------------------------------------------------------------
-int mglGraphAB::NewFrame(int id)
+int mglGraphAB::NewFrame()
 {
-	CurFrameId = id<=0 ? CurFrameId : id;
 	Clf();
 	Identity();
 	CurFrameId++;
@@ -384,15 +402,20 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, float s
 		if(pp[4]==pp[1] && pp[3]==pp[0])
 		{	free(font1);	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	return;	}
 		float ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
-		float tet = 180*atan2(pp[4]-pp[1],pp[3]-pp[0])/M_PI;
+		float tet = atan2(pp[4]-pp[1],pp[3]-pp[0]);
 //		if(fabs(tet)>90)	tet+=180;
 		memset(B,0,9*sizeof(float));	B[0] = B[4] = B[8] = fsize;
-		float ss = (pp[3]>pp[0] || tet==-90) ? 1 : -1;
+		float ss = (pp[3]>pp[0] || tet==-M_PI/2) ? 1 : -1;
 		xPos = pp[0]+shift*ss*(pp[4]-pp[1])/sqrt(ll);
 		yPos = pp[1]-shift*ss*(pp[3]-pp[0])/sqrt(ll);
 		zPos = pp[2];
-		font = ss>0 ? "rL":"rR";
-		if(pp[4]==pp[1])	font = "rC";
+		
+		if(strlen(font1)<2)
+		{	free(font1);	font1 = (char *)malloc(2);	}
+		font1[0] = shift*ss>0 ? 'L':'R';
+//		if(pp[4]==pp[1])	font = "rC";
+		if(fabs(sin(tet))<0.1)	font1[0]='C';
+		font1[1] = 0;
 	}
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
 
@@ -402,7 +425,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, float s
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Colorbar(const char *sch,int where)
+void mglGraphAB::Colorbar(int where, float x, float y, float w, float h)
 {
 	static int cgid=1;	StartGroup("Colorbar",cgid++);
 	register long i;
@@ -410,19 +433,19 @@ void mglGraphAB::Colorbar(const char *sch,int where)
 	mglColor c;
 
 	pp = new float[6*256];	cc = new float[8*256];
-	SetScheme(sch);
+	x = 2*x-1;	y = 2*y-1;
 	for(i=0;i<255;i++)
 	{
 		d = 2*i/254.-1;
-		pp[6*i+0] = pp[6*i+3] = ss*d;
-		pp[6*i+1] = pp[6*i+4] = ss*d;
+		pp[6*i+0] = pp[6*i+3] = (ss*d+s3)*w+x*s3;	// TODO: check
+		pp[6*i+1] = pp[6*i+4] = (ss*d+s3)*h+y*s3;
 		pp[6*i+2] = pp[6*i+5] = s3;
 		switch(where)
 		{
-		case 1:	pp[6*i]  = -1*s3;	pp[6*i+3] = -0.9*s3;break;
-		case 2:	pp[6*i+1] = 0.9*s3;	pp[6*i+4] = 1*s3;	break;
-		case 3:	pp[6*i+1] = -1*s3;	pp[6*i+4] = -0.9*s3;break;
-		default:pp[6*i]  = 0.9*s3;	pp[6*i+3] = 1*s3;	break;
+		case 1:	pp[6*i]  = x*s3;	pp[6*i+3] = (x+0.1*w)*s3;	break;
+		case 2:	pp[6*i+1]= (y-0.1*h)*s3;	pp[6*i+4] = y*s3;	break;
+		case 3:	pp[6*i+1]= y*s3;	pp[6*i+4] = (y+0.1*h)*s3;	break;
+		default:pp[6*i]  = (x-0.1*w)*s3;	pp[6*i+3] = x*s3;	break;
 		}
 		c = GetC(d,false);
 		cc[8*i+0] = cc[8*i+4] = c.r;
@@ -451,14 +474,15 @@ void mglGraphAB::Colorbar(const char *sch,int where)
 
 	for(i=0;i<5;i++)
 	{
-		d = i*0.5;
-		p.x = p.y = ss*(d-1);	p.z = s3+1;
+		d = i*0.5-1;	p.z = s3+1;
+		p.x = (ss*d+s3)*w+x*s3;
+		p.y = (ss*d+s3)*h+y*s3;
 		switch(where)
 		{
-		case 1:	p.x = -0.87*s3;	break;
-		case 2:	p.y = 0.87*s3;	break;
-		case 3:	p.y = -0.87*s3;	break;
-		default:p.x  = 0.87*s3;	break;
+		case 1:	p.x = (x+0.13*w)*s3;	break;
+		case 2:	p.y = (y-0.13*h)*s3;	break;
+		case 3:	p.y = (y+0.13*h)*s3;	break;
+		default:p.x = (x-0.13*w)*s3;	break;
 		}
 		t = Cmin+i*(Cmax-Cmin)/4;
 		if(ctt)	swprintf(str, 64, ctt, t);
@@ -468,10 +492,10 @@ void mglGraphAB::Colorbar(const char *sch,int where)
 	}
 	switch(where)
 	{
-	case 1:	p = mglPoint(-0.85*s3, 0.75*s3);	break;
-	case 2:	p = mglPoint( 0.75*s3, 0.85*s3);	break;
-	case 3:	p = mglPoint( 0.75*s3,-0.85*s3);	break;
-	default:p = mglPoint( 0.85*s3, 0.75*s3);	break;
+	case 1:	p = mglPoint((x+0.15*w)*s3, (y+1.75*h)*s3);	break;
+	case 2:	p = mglPoint((x+1.75*w)*s3, (y-0.15*h)*s3);	break;
+	case 3:	p = mglPoint((x+1.75*w)*s3, (y+0.15*h)*s3);	break;
+	default:p = mglPoint((x-0.15*w)*s3, (y+1.75*h)*s3);	break;
 	}
 	if(kind&2)	Putsw(p,s,a,FontSize);
 	ScalePuts = true;
@@ -630,12 +654,13 @@ unsigned char **mglGraphAB::GetRGBLines(long &w, long &h, unsigned char *&f, boo
 void mglGraphAB::SetFontSizePT(float pt, int dpi)
 {	FontSize = pt*Height*0.0675/dpi;	}
 //-----------------------------------------------------------------------------
-void mglGraphAB::EndFrame()
+/*void mglGraphAB::EndFrame()
 {
+	mglGraph::EndFrame();
 	char fname[32];
 	sprintf(fname,"frame%d.png",CurFrameId-1);
 	WritePNG(fname);
-}
+}*/
 //-----------------------------------------------------------------------------
 void mglGraphAB::FindOptOrg(float ax[3], float ay[3], float az[3])
 {
@@ -772,15 +797,15 @@ void mglGraphAB::Adjust(){}
 void mglGraphAB::NextFrame(){}
 void mglGraphAB::PrevFrame(){}
 void mglGraphAB::Animation(){}
-void mglGraphAB::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p)){}
+void mglGraphAB::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p), bool maximize){}
 //-----------------------------------------------------------------------------
 int mgl_draw_class(mglGraph *gr, void *p)
 {	return p ? ((mglDraw *)p)->Draw(gr) : 0;	}
 void mgl_reload_class(int next, void *p)
 {	if(p)	((mglDraw *)p)->Reload(next);	}
-void mglGraphAB::Window(int argc, char **argv, mglDraw *draw, const char *title)
+void mglGraphAB::Window(int argc, char **argv, mglDraw *draw, const char *title, bool maximize)
 {
-	Window(argc, argv, mgl_draw_class, title, draw, mgl_reload_class);
+	Window(argc, argv, mgl_draw_class, title, draw, mgl_reload_class, maximize);
 }
 //-----------------------------------------------------------------------------
 

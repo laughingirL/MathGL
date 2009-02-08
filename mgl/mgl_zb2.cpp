@@ -1,19 +1,22 @@
-/* mgl_zb2.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_zb2.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #include "mgl/mgl_ab.h"
 //-----------------------------------------------------------------------------
 //
@@ -528,42 +531,32 @@ void mglGraphAB::quads_plot(long n,float *pp,float *cc,bool *tt)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool *tt,bool wire)
+void mglGraphAB::trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool *tt,bool wire, bool bytrig)
 {
 	if(!DrawFace)	wire=true;
 	register long i,j1,j2,j3;
+	float *c1,*c2,*c3;
 	PostScale(pp,m);	LightScale();
-	if(cc)
+	c1 = c2 = c3 = CDef;
+	for(i=0;i<n;i++)
 	{
-		for(i=0;i<n;i++)
+		j1 = nn[3*i];	j2 = nn[3*i+1];	j3 = nn[3*i+2];
+		if(tt && (!tt[j1] || !tt[j2] || !tt[j3]))	continue;
+		if(cc)
 		{
-			j1 = nn[3*i];	j2 = nn[3*i+1];	j3 = nn[3*i+2];
-			if(tt && (!tt[j1] || !tt[j2] || !tt[j3]))	continue;
-			if(wire)
-			{
-				line_plot(pp+3*j1,pp+3*j2,cc+4*j1,cc+4*j2);
-				line_plot(pp+3*j1,pp+3*j3,cc+4*j1,cc+4*j3);
-				line_plot(pp+3*j3,pp+3*j2,cc+4*j3,cc+4*j2);
-			}
+			if(!bytrig)
+			{	c1 = cc+4*j1;	c2 = cc+4*j2;	c3 = cc+4*j3;	}
 			else
-				trig_plot(pp+3*j1,pp+3*j2,pp+3*j3,cc+4*j1,cc+4*j2,cc+4*j3);
+			{	c1 = c2 = c3 = cc+4*i;	}
 		}
-	}
-	else
-	{
-		for(i=0;i<n;i++)
+		if(wire)
 		{
-			j1 = nn[3*i];	j2 = nn[3*i+1];	j3 = nn[3*i+2];
-			if(tt && (!tt[j1] || !tt[j2] || !tt[j3]))	continue;
-			if(wire)
-			{
-				line_plot(pp+3*j1,pp+3*j2,CDef,CDef);
-				line_plot(pp+3*j1,pp+3*j3,CDef,CDef);
-				line_plot(pp+3*j3,pp+3*j2,CDef,CDef);
-			}
-			else
-				trig_plot(pp+3*j1,pp+3*j2,pp+3*j3,CDef,CDef,CDef);
+			line_plot(pp+3*j1,pp+3*j2,c1,c2);
+			line_plot(pp+3*j1,pp+3*j3,c1,c3);
+			line_plot(pp+3*j3,pp+3*j2,c3,c2);
 		}
+		else
+			trig_plot(pp+3*j1,pp+3*j2,pp+3*j3,c1,c2,c3);
 	}
 }
 //-----------------------------------------------------------------------------

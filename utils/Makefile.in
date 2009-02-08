@@ -33,8 +33,9 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = mgl2png$(EXEEXT) mgl2eps$(EXEEXT) mgl2svg$(EXEEXT) \
-	mgl2cpp$(EXEEXT) $(am__EXEEXT_1)
+	mgl2cpp$(EXEEXT) $(am__EXEEXT_1) $(am__EXEEXT_2)
 @USE_FLTK_TRUE@am__append_1 = mglview
+@USE_GIF_TRUE@am__append_2 = mgl2gif
 subdir = utils
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -45,6 +46,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 @USE_FLTK_TRUE@am__EXEEXT_1 = mglview$(EXEEXT)
+@USE_GIF_TRUE@am__EXEEXT_2 = mgl2gif$(EXEEXT)
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
@@ -54,6 +56,13 @@ mgl2cpp_DEPENDENCIES = $(top_builddir)/mgl/libmgl.la
 am_mgl2eps_OBJECTS = mgl2eps.$(OBJEXT)
 mgl2eps_OBJECTS = $(am_mgl2eps_OBJECTS)
 mgl2eps_DEPENDENCIES = $(top_builddir)/mgl/libmgl.la
+am__mgl2gif_SOURCES_DIST = mgl2gif.cpp
+@USE_GIF_TRUE@am_mgl2gif_OBJECTS = mgl2gif-mgl2gif.$(OBJEXT)
+mgl2gif_OBJECTS = $(am_mgl2gif_OBJECTS)
+@USE_GIF_TRUE@mgl2gif_DEPENDENCIES = $(top_builddir)/mgl/libmgl.la
+mgl2gif_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CXXLD) $(mgl2gif_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_mgl2png_OBJECTS = mgl2png.$(OBJEXT)
 mgl2png_OBJECTS = $(am_mgl2png_OBJECTS)
 mgl2png_DEPENDENCIES = $(top_builddir)/mgl/libmgl.la
@@ -80,11 +89,11 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(mgl2cpp_SOURCES) $(mgl2eps_SOURCES) $(mgl2png_SOURCES) \
-	$(mgl2svg_SOURCES) $(mglview_SOURCES)
+SOURCES = $(mgl2cpp_SOURCES) $(mgl2eps_SOURCES) $(mgl2gif_SOURCES) \
+	$(mgl2png_SOURCES) $(mgl2svg_SOURCES) $(mglview_SOURCES)
 DIST_SOURCES = $(mgl2cpp_SOURCES) $(mgl2eps_SOURCES) \
-	$(mgl2png_SOURCES) $(mgl2svg_SOURCES) \
-	$(am__mglview_SOURCES_DIST)
+	$(am__mgl2gif_SOURCES_DIST) $(mgl2png_SOURCES) \
+	$(mgl2svg_SOURCES) $(am__mglview_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -121,6 +130,8 @@ F77 = @F77@
 FFLAGS = @FFLAGS@
 FLTK_FLAGS = @FLTK_FLAGS@
 FLTK_LIBS = @FLTK_LIBS@
+GIF_FLAGS = @GIF_FLAGS@
+GIF_LIBS = @GIF_LIBS@
 GLUT_FLAGS = @GLUT_FLAGS@
 GLUT_LIBS = @GLUT_LIBS@
 GL_LIBS = @GL_LIBS@
@@ -262,6 +273,9 @@ mgl2svg_LDADD = $(top_builddir)/mgl/libmgl.la
 @USE_FLTK_TRUE@mglview_SOURCES = mglview.cpp
 @USE_FLTK_TRUE@mglview_LDADD = $(top_builddir)/widgets/libmgl-fltk.la
 @USE_FLTK_TRUE@mglview_CXXFLAGS = $(FLTK_FLAGS) $(AM_CXXFLAGS)
+@USE_GIF_TRUE@mgl2gif_SOURCES = mgl2gif.cpp
+@USE_GIF_TRUE@mgl2gif_LDADD = $(top_builddir)/mgl/libmgl.la
+@USE_GIF_TRUE@mgl2gif_CXXFLAGS = $(GIF_FLAGS) $(AM_CXXFLAGS)
 all: all-am
 
 .SUFFIXES:
@@ -329,6 +343,9 @@ mgl2cpp$(EXEEXT): $(mgl2cpp_OBJECTS) $(mgl2cpp_DEPENDENCIES)
 mgl2eps$(EXEEXT): $(mgl2eps_OBJECTS) $(mgl2eps_DEPENDENCIES) 
 	@rm -f mgl2eps$(EXEEXT)
 	$(CXXLINK) $(mgl2eps_OBJECTS) $(mgl2eps_LDADD) $(LIBS)
+mgl2gif$(EXEEXT): $(mgl2gif_OBJECTS) $(mgl2gif_DEPENDENCIES) 
+	@rm -f mgl2gif$(EXEEXT)
+	$(mgl2gif_LINK) $(mgl2gif_OBJECTS) $(mgl2gif_LDADD) $(LIBS)
 mgl2png$(EXEEXT): $(mgl2png_OBJECTS) $(mgl2png_DEPENDENCIES) 
 	@rm -f mgl2png$(EXEEXT)
 	$(CXXLINK) $(mgl2png_OBJECTS) $(mgl2png_LDADD) $(LIBS)
@@ -347,6 +364,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2cpp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2eps.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2gif-mgl2gif.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2png.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl2svg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mglview-mglview.Po@am__quote@
@@ -371,6 +389,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
+
+mgl2gif-mgl2gif.o: mgl2gif.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl2gif_CXXFLAGS) $(CXXFLAGS) -MT mgl2gif-mgl2gif.o -MD -MP -MF $(DEPDIR)/mgl2gif-mgl2gif.Tpo -c -o mgl2gif-mgl2gif.o `test -f 'mgl2gif.cpp' || echo '$(srcdir)/'`mgl2gif.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl2gif-mgl2gif.Tpo $(DEPDIR)/mgl2gif-mgl2gif.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl2gif.cpp' object='mgl2gif-mgl2gif.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl2gif_CXXFLAGS) $(CXXFLAGS) -c -o mgl2gif-mgl2gif.o `test -f 'mgl2gif.cpp' || echo '$(srcdir)/'`mgl2gif.cpp
+
+mgl2gif-mgl2gif.obj: mgl2gif.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl2gif_CXXFLAGS) $(CXXFLAGS) -MT mgl2gif-mgl2gif.obj -MD -MP -MF $(DEPDIR)/mgl2gif-mgl2gif.Tpo -c -o mgl2gif-mgl2gif.obj `if test -f 'mgl2gif.cpp'; then $(CYGPATH_W) 'mgl2gif.cpp'; else $(CYGPATH_W) '$(srcdir)/mgl2gif.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl2gif-mgl2gif.Tpo $(DEPDIR)/mgl2gif-mgl2gif.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mgl2gif.cpp' object='mgl2gif-mgl2gif.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl2gif_CXXFLAGS) $(CXXFLAGS) -c -o mgl2gif-mgl2gif.obj `if test -f 'mgl2gif.cpp'; then $(CYGPATH_W) 'mgl2gif.cpp'; else $(CYGPATH_W) '$(srcdir)/mgl2gif.cpp'; fi`
 
 mglview-mglview.o: mglview.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mglview_CXXFLAGS) $(CXXFLAGS) -MT mglview-mglview.o -MD -MP -MF $(DEPDIR)/mglview-mglview.Tpo -c -o mglview-mglview.o `test -f 'mglview.cpp' || echo '$(srcdir)/'`mglview.cpp

@@ -1,20 +1,23 @@
-/* mgl_eval.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-//-----------------------------------------------------------------------------
+/***************************************************************************
+ * mgl_eval.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+#include <stdlib.h>
 #include <time.h>
 #include <math.h>
 #include <string.h>
@@ -181,12 +184,12 @@ double mgl_rnd()
 	else return temp;
 }
 //-----------------------------------------------------------------------------
-double ipow_mgl(double x,int n);
+double mgl_ipow(double x,int n);
 int mglFormula::Error=0;
 bool mglCheck(char *str,int n);
 int mglFindInText(char *str,const char *lst);
 //-----------------------------------------------------------------------------
-void strtrim_mgl(char *str)
+void mgl_strtrim(char *str)
 {
 	char *c = mgl_strdup(str);
 	unsigned long n=strlen(str);
@@ -201,7 +204,7 @@ void strtrim_mgl(char *str)
 	strcpy(str,c);	free(c);
 }
 //-----------------------------------------------------------------------------
-void strlwr_mgl(char *str)
+void mgl_strlwr(char *str)
 {
 	for(long k=0;k<(long)strlen(str);k++)	// удаляем начальные пробелы
 		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
@@ -226,8 +229,8 @@ mglFormula::mglFormula(const char *string)
 	strcpy(str,string);
 	static char Buf[2048];
 	long n,len;
-	strtrim_mgl(str);
-	strlwr_mgl(str);
+	mgl_strtrim(str);
+	mgl_strlwr(str);
 	len=strlen(str);
 	if(str[0]==0) {	delete []str;	return;	}
 	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// если все выражение в скобах, то убираем  их
@@ -438,7 +441,7 @@ double add(double a,double b)	{return a+b;}
 double sub(double a,double b)	{return a-b;}
 double mul(double a,double b)	{return a&&b?a*b:0;}
 double div(double a,double b)	{return b?a/b:NAN;}
-double ipw(double a,double b)	{return ipow_mgl(a,int(b));}
+double ipw(double a,double b)	{return mgl_ipow(a,int(b));}
 double llg(double a,double b)	{return log(a)/log(b);}
 #ifndef NO_GSL
 double gslEllE(double a,double b)	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE);}
@@ -541,7 +544,7 @@ double mul1(double a,double b)	{return b;}
 double mul2(double a,double b)	{return a;}
 double div1(double a,double b)	{return b?1/b:NAN;}
 double div2(double a,double b)	{return b?-a/(b*b):NAN;}
-double ipw1(double a,double b)	{return int(b)*ipow_mgl(a,int(b-1));}
+double ipw1(double a,double b)	{return int(b)*mgl_ipow(a,int(b-1));}
 double pow1(double a,double b)	{return b*pow(a,b-1);}
 double pow2(double a,double b)	{return log(a)*pow(a,b);}
 double llg1(double a,double b)	{return 1/(a*log(b));}

@@ -1,19 +1,23 @@
-/* mgl_data.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_data.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+#include <stdlib.h>
 #include <string.h>
 #include "mgl/mgl_eval.h"
 #include "mgl/mgl_data.h"
@@ -27,14 +31,14 @@ void mglFillP(int x, const float *a,int nx,float _p[4]);
 void mglFillP5(int x,int y, const float *a,int nx,int ny,float _p[6][6]);
 void mglFillP5(int x, const float *a,int nx,float _p[6]);
 //-----------------------------------------------------------------------------
-double ipow_mgl(double x,int n)
+double mgl_ipow(double x,int n)
 {
 	double t;
 	if(n==2)	return x*x;
 	if(n==1)	return x;
-	if(n<0)		return 1/ipow(x,-n);
+	if(n<0)		return 1/mgl_ipow(x,-n);
 	if(n==0)	return 1;
-	t = ipow(x,n/2);	t = t*t;
+	t = mgl_ipow(x,n/2);	t = t*t;
 	if(n%2==1)	t *= x;
 	return t;
 }
@@ -899,39 +903,65 @@ mglData mglSTFA(const mglData &re, const mglData &im, int dn, char dir)
 	dn = 2*(dn/2);
 	long nx = re.nx, ny = re.ny;
 	if(nx*ny!=im.nx*im.ny)	return d;
-	register long i,j,k,i0;
-	double *a = new double[2*nx*ny];
-	for(i=0;i<nx*ny;i++)	{	a[2*i] = re.a[i];	a[2*i+1] = im.a[i];	}
-	gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(dn);
-	gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(dn);
+	register long i,j,k,i0,dd=dn/2;
+	double *a = new double[4*dn],ff;
+//	for(i=0;i<nx*ny;i++)	{	a[2*i] = re.a[i];	a[2*i+1] = im.a[i];	}
+	gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(2*dn);
+	gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(2*dn);
 	long mx,my,mz;
 	if(dir=='y')
 	{
 		mx = nx;	my = dn;	mz = ny/dn;
-		for(i=0;i<mx;i++)	for(j=0;j<mz;j++)
-			gsl_fft_complex_forward(a+2*(i+j*mx*my), mx, dn, wt, ws);
 		d.Create(mx, mz, my);
-//		for(i=0;i<mx*my*mz;i++)		d.a[i] = hypot(a[2*i], a[2*i+1])/dn;
-		for(i=0;i<my/2;i++)	for(j=0;j<mx;j++)	for(k=0;k<mz;k++)
+		for(i=0;i<mx;i++)	for(j=0;j<mz;j++)
 		{
-			i0 = 2*(j+mx*(dn*i+k*mz));
-			d.a[j+mx*(k+mz*(i+my/2))] = hypot(a[i0],a[i0+1])/dn;
-			d.a[j+mx*(k+mz*(i))] = hypot(a[i0+mx*my],a[i0+mx*my+1])/dn;
+			for(k=0;k<2*dn;k++)
+			{
+				i0 = k-dd+j*dn;
+				if(i0<0)	i0=0;	else if(i0>=ny)	i0=ny-1;
+				i0 = i+nx*i0;		ff = 1;
+				if(k<dd)
+				{	ff = 0.5*(k-dd/2.)/dd;		ff=0.5+ff*(3-ff*ff);	}
+				else if(k>=dn+dd)
+				{	ff = 0.5*(k-3.5*dd)/dd;	ff=0.5-ff*(3-ff*ff);	}
+				a[2*k] = re.a[i0]*ff;	a[2*k+1] = im.a[i0]*ff;
+			}
+			gsl_fft_complex_forward(a, 1, 2*dn, wt, ws);
+			for(k=0;k<dd;k++)
+			{
+				i0 = i+mx*(j+mz*k);
+				d.a[i0+mx*mz*dd] = hypot(a[4*k],a[4*k+1])/dn;
+				d.a[i0] = hypot(a[4*k+2*dn],a[4*k+2*dn+1])/dn;
+			}
 		}
 	}
 	else
 	{
 		mx = dn;	my = nx/dn;	mz = ny;
-		for(i=0;i<my;i++)	for(j=0;j<mz;j++)
-			gsl_fft_complex_forward(a+2*(i*dn+j*nx), 1, dn, wt, ws);
 		d.Create(my, mx, mz);
-		for(i=0;i<mx/2;i++)	for(j=0;j<my;j++)	for(k=0;k<mz;k++)
+		for(i=0;i<my;i++)	for(j=0;j<mz;j++)
 		{
-			i0 = 2*(i+dn*j+k*nx);
-			d.a[j+my*(i+mx/2+mx*k)] = hypot(a[i0],a[i0+1])/dn;
-			d.a[j+my*(i+mx*k)] = hypot(a[i0+mx],a[i0+mx+1])/dn;
+			for(k=0;k<2*dn;k++)
+			{
+				i0 = k-dd+i*dn;
+				if(i0<0)	i0=0;	else if(i0>=nx)	i0=nx-1;
+				i0 += nx*j;		ff = 1;
+				if(k<dd)
+				{	ff = 0.5*(k-dd/2.)/dd;	ff=0.5+ff*(3-ff*ff);	}
+				else if(k>=3*dd)
+				{	ff = 0.5*(k-3.5*dd)/dd;	ff=0.5-ff*(3-ff*ff);	}
+				a[2*k] = re.a[i0]*ff;	a[2*k+1] = im.a[i0]*ff;
+			}
+			gsl_fft_complex_forward(a, 1, 2*dn, wt, ws);
+			for(k=0;k<dd;k++)
+			{
+				i0 = i+my*(k+mx*j);
+				d.a[i0+dd*my] = hypot(a[4*k],a[4*k+1])/dn;
+				d.a[i0] = hypot(a[4*k+2*dn],a[4*k+2*dn+1])/dn;
+			}
 		}
 	}
+	delete []a;
 	gsl_fft_complex_workspace_free(ws);
 	gsl_fft_complex_wavetable_free(wt);
 #endif

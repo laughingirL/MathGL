@@ -33,17 +33,6 @@ AC_SUBST(INCLTDL)
 AC_SUBST(LIBLTDL)
 
 
-GSL_PROG=gsl-config
-AC_CHECK_PROG(GSL_FLAGS,$GSL_PROG,`$GSL_PROG --cflags`)
-AC_CHECK_PROG(GSL_LIBS,$GSL_PROG,`$GSL_PROG --libs`)
-if !(test "$GSL_LIBS") ;then
-    echo "Please install gsl headers and libraries and make sure that \
-	path to $GSL_PROG exist in your PATH"
-    exit
-fi
-
-AM_CXXFLAGS="-Wall $GSL_FLAGS"
-AC_SUBST(AM_CXXFLAGS)
 
 AC_ARG_ENABLE(all,
 [  --enable-all    Turn on all features],
@@ -60,6 +49,31 @@ AC_ARG_ENABLE(langall,
   no)  langall=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-langall) ;;
 esac],[langall=false])
+
+AC_ARG_ENABLE(gsl,
+[  --enable-gsl    Turn on gsl functions],
+[case "${enableval}" in
+  yes) gsl=true ;;
+  no)  gsl=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-gsl) ;;
+esac],[gsl=true])
+
+GSL_PROG=gsl-config
+AC_CHECK_PROG(GSL_FLAGS,$GSL_PROG,`$GSL_PROG --cflags`)
+AC_CHECK_PROG(GSL_LIBS,$GSL_PROG,`$GSL_PROG --libs`)
+if (test x$all = xtrue || test x$gsl = xtrue) ;then
+    if test "$GSL_LIBS" ;then
+	test_gsl=true
+    else
+	echo "Please install gsl headers and libraries and make sure that \
+	path to $GSL_PROG exist in your PATH"
+	exit
+    fi
+else
+    GSL_FLAGS=-DNO_GSL
+    AC_SUBST(GSL_FLAGS)
+fi
+AM_CONDITIONAL(USE_GSL, test x$test_gsl = xtrue)
 
 AC_ARG_ENABLE(glut,
 [  --enable-glut    Turn on glut],
@@ -128,6 +142,20 @@ AC_CHECK_HEADER(hdf5.h,[(test x$all = xtrue || test x$hdf5 = xtrue) && HDF5_FLAG
 AC_CHECK_LIB([hdf5], [main], [(test x$all = xtrue || test x$hdf5 = xtrue) && HDF5_LIBS=-lhdf5 AC_SUBST(HDF5_LIBS)], 
     [(test x$all = xtrue || test x$hdf5 = xtrue) && echo "Please install hdf5 library" && exit])
 AM_CONDITIONAL(USE_HDF5, (test x$all = xtrue || test x$hdf5 = xtrue))
+
+AC_ARG_ENABLE(gif,
+[  --enable-gif    Turn on gif],
+[case "${enableval}" in
+  yes) gif=true ;;
+  no)  gif=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-gif) ;;
+esac],[gif=false])
+AC_CHECK_HEADER(gif_lib.h,[(test x$all = xtrue || test x$gif = xtrue) && GIF_FLAGS=-DHAVE_GIF AC_SUBST(GIF_FLAGS)],
+    [(test x$all = xtrue || test x$gif = xtrue) && echo "Please install gif headers" && exit])
+
+AC_CHECK_LIB([gif], [main], [(test x$all = xtrue || test x$gif = xtrue) && GIF_LIBS=-lgif AC_SUBST(GIF_LIBS)], 
+    [(test x$all = xtrue || test x$gif = xtrue) && echo "Please install gif library" && exit])
+AM_CONDITIONAL(USE_GIF, (test x$all = xtrue || test x$gif = xtrue))
 
 AC_CHECK_HEADER(png.h,,[echo "Please install png headers" && exit])
 
@@ -267,6 +295,9 @@ AM_CONDITIONAL(USE_DOCS, (test x$docs = xtrue || test x$all = xtrue) )
 
 AM_CONDITIONAL(USE_LTDL, (test x$all = xtrue || test x$testio = xtrue || test x$hdf5 = xtrue || test x$jpeg = xtrue ))
 
+AM_CXXFLAGS="-Wall $GSL_FLAGS"
+AC_SUBST(AM_CXXFLAGS)
+
 AC_CONFIG_FILES([
 Makefile
 mgl/Makefile
@@ -277,3 +308,4 @@ utils/Makefile
 widgets/Makefile
 ])
 AC_OUTPUT
+

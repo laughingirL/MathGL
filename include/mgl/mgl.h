@@ -1,19 +1,22 @@
-/* mgl.h is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl.h is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 //-----------------------------------------------------------------------------
 #ifndef _MGL_H_
 #define _MGL_H_
@@ -29,6 +32,11 @@
 //-----------------------------------------------------------------------------
 class mglGraph;
 class mglFormula;
+#ifdef HAVE_GIF
+#include <gif_lib.h>
+#else
+struct GifFileType;
+#endif
 
 enum{
 	mglWarnNone = 0,// Everything OK
@@ -154,6 +162,7 @@ public:
 	float MarkSize;		///< The size of marks for 1D plots.
 	float ArrowSize;	///< The size of arrows.
 	float BaseLineWidth;	///< Base line width (as factor). Useful for LARGE bitmap plots.
+	float TickLen;		///< Length of tiks (subticks length is sqrt(2)=1.41... times smaller)
 
 	float FontSize;		///< The size of font for tick and axis labels
 	bool LegendBox;		///< Set on/off drawing legend box.
@@ -190,15 +199,25 @@ public:
 	virtual void WriteSVG(const char *fname,const char *descr=0);
 	/// Write the frame in file using IDTF format
 	virtual void WriteIDTF(const char *fname,const char *descr=0);
+	/// Write the frame in file using GIF format (only for current frame!)
+	virtual void WriteGIF(const char *fname,const char *descr=0);
+	/// Write the frame in file (depending extension, write current frame if fname is empty)
+	void WriteFrame(const char *fname=0, const char *descr=0);
 	/// Show currently produced image by Qt or FLTK library
 	void ShowImage(const char *viewer="kuickshow", bool keep=false);
 	//@}
 	/// Create new frame.
-	virtual int NewFrame(int id=0);
+	virtual int NewFrame();
 	/// Finish frame drawing
 	virtual void EndFrame();
 	/// Get the number of created frames
-	int GetNumFrame()	{	return CurFrameId-1;	};
+	int GetNumFrame()	{	return CurFrameId;	};
+	/// Reset frames counter (start it from zero)
+	void ResetFrames()	{	CurFrameId=0;	};
+	/// Start write frames to cinema using GIF format
+	void StartGIF(const char *fname, int ms=100);
+	/// Stop writing cinema using GIF format
+	void CloseGIF();
 	/// Flush the plotting commands to frame.
 	virtual void Flush();
 	/// Finish plotting. Normally this function is called internaly.
@@ -253,8 +272,10 @@ public:
 	virtual void Clf(mglColor Back=WC); //=0
 	/// Put further plotting in some region of whole frame surface.
 	void SubPlot(int nx,int ny,int m, float dx=0, float dy=0);
+	/// Put further plotting in column cell of previous subplot
+	void ColumnPlot(int num, int i);
 	/// Put further plotting in some region of whole frame surface.
-	virtual void InPlot(float x1,float x2,float y1,float y2); //=0
+	virtual void InPlot(float x1,float x2,float y1,float y2,bool rel=false); //=0
 	/// Set aspect ratio for further plotting.
 	virtual void Aspect(float Ax,float Ay,float Az)=0;
 	/// Rotate a further plotting.
@@ -293,6 +314,10 @@ public:
 	void YRange(const mglData &a, bool add = false, float fact=0);
 	/// Safety set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
 	void ZRange(const mglData &a, bool add = false, float fact=0);
+	/// Safetely set values of mglGraph::Min and mglGraph::Max
+	void inline SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0)	{	Axis(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2));	};
+	/// Set ranges for automatic variables
+	void SetAutoRanges(float x1, float x2, float y1=0, float y2=0, float z1=0, float z2=0);
 
 	/// Safetly set the values of mglGraph::Cmin and mglGraph::Cmax
 	void inline CAxis(float C1,float C2)	{	Cmin=C1;	Cmax=C2;	};
@@ -315,7 +340,9 @@ public:
 	/// Print the label \a text for axis \a dir.
 	void Label(char dir, const wchar_t *text, int pos=+1, float size=-1.4, float shift=0);
 	/// Draw colorbar at edge of axis
-	virtual void Colorbar(const char *sch=0,int where=0)=0;
+	void Colorbar(const char *sch=0,int where=0);
+	void inline Colorbar(const char *sch, int where, float x, float y, float w, float h)	{	SetScheme(sch);	Colorbar(where,x,y,w,h);	};
+	virtual void Colorbar(int where, float x, float y, float w, float h)=0;
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Primitive functions
@@ -636,6 +663,8 @@ public:
 	void Dots(const mglData &x, const mglData &y, const mglData &z, const char *sch=0);
 	/// Draw dots in points \a tr.
 	void Dots(const mglData &tr, const char *sch=0);
+	/// Draw triangle mesh for points in arrays \a x, \a y, \a z with specified color \a c.
+	void TriPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *sch=0);
 	/// Draw triangle mesh for points in arrays \a x, \a y, \a z.
 	void TriPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch=0);
 	/// Draw triangle mesh for points in arrays \a x, \a y.
@@ -993,7 +1022,7 @@ protected:
 	/// Plot quads depending on positions and colors of vertexes on grid
 	virtual void quads_plot(long n, float *pp, float *cc, bool *tt)=0;
 	/// Plot quads depending on positions and colors of vertexes on grid
-	virtual void trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool *tt,bool wire)=0;
+	virtual void trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool *tt,bool wire, bool bytrig=false)=0;
 	/// Plot series of unconnected lines.
 	virtual void lines_plot(long n, float *pp, float *cc, bool *tt)=0;
 	/// Plot series of unconnected arrows.
@@ -1017,6 +1046,7 @@ protected:
 				float k1,float k2,bool scale);
 
 private:
+	GifFileType *gif;
 	char last_style[64];
 	float _tetx,_tety,_tetz;
 	/// Actual lower edge of bounding box after applying transformation formulas.

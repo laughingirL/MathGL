@@ -38,21 +38,21 @@ Create the instance of class mglGraph with specified sizes @var{width} and @var{
 @end defop
 
 @menu
-* Graphics setup (Python)::   
-* Axis settings (Python)::   
-* Transformation matrix (Python):: 
-* Export to file (Python)::   
-* Primitives drawing (Python):: 
-* Text printing (Python)::   
-* Axis and Colorbar (Python):: 
-* Legend (Python)::       
-* 1D plotting (Python)::    
-* 2D plotting (Python)::    
-* 3D plotting (Python)::    
-* Dual plotting (Python)::   
-* Vector fields (Python)::   
-* Other plotting (Python)::   
-* Nonlinear fitting (Python):: 
+* Graphics setup (Python)::     
+* Axis settings (Python)::      
+* Transformation matrix (Python)::  
+* Export to file (Python)::     
+* Primitives drawing (Python)::  
+* Text printing (Python)::      
+* Axis and Colorbar (Python)::  
+* Legend (Python)::             
+* 1D plotting (Python)::        
+* 2D plotting (Python)::        
+* 3D plotting (Python)::        
+* Dual plotting (Python)::      
+* Vector fields (Python)::      
+* Other plotting (Python)::     
+* Nonlinear fitting (Python)::  
 @end menu
 
 @c ##################################################################
@@ -67,15 +67,15 @@ Restore initial values for all of parameters except described in @ref{Zooming (P
 @end deftypemethod
 
 @menu
-* Transparency (Python)::    
-* Lighting (Python)::      
-* Fog (Python)::        
-* Default sizes (Python)::   
-* Zooming (Python)::      
-* Cutting (Python)::      
-* Font settings (Python)::   
-* Palette and colors (Python):: 
-* Other settings (Python)::   
+* Transparency (Python)::       
+* Lighting (Python)::           
+* Fog (Python)::                
+* Default sizes (Python)::      
+* Zooming (Python)::            
+* Cutting (Python)::            
+* Font settings (Python)::      
+* Palette and colors (Python)::  
+* Other settings (Python)::     
 @end menu
 
 @c ==================================================================
@@ -144,6 +144,7 @@ Function imitate a fog in the plot. Fog start from relative distance @var{dz} fr
 @cindex MarkSize
 @cindex ArrowSize
 @cindex BaseLineWidth
+@cindex TickLen
 
 These functions variables control the default (initial) values for most graphics parameters including sizes of markers, arrows, linewidth and so on. As any other settings these ones will influence only on plots created after the settings change.
 
@@ -161,6 +162,10 @@ The size of arrows for @ref{1D plotting}, lines and curves (@pxref{Primitives dr
 
 @deftypemethod {mglGraph (Python)} @code{void} SetBaseLineWidth (@code{float} val)
 The variable define the base width for all lines. The value <1 is ignored. For values > 1 the real line width is result of multiplication of specified line width and the value of @var{BaseLineWidth}. Increase of this variables is actual for large bitmap pictures. Default value is @code{1}.
+@end deftypemethod
+
+@deftypemethod {mglGraph (Python)} @code{void} SetTickLen (@code{float} val)
+The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt(2)=1.41...} times smaller.
 @end deftypemethod
 
 @c ==================================================================
@@ -283,9 +288,9 @@ If set to @code{true} then it prevent faces drawing. It is useful for speeding u
 These large set of functions control how the axis and ticks will be drawn. Note that there is 3-step transformation of data coordinates are performed. Firstly, coordinates are projected if @code{Cut=true} (@pxref{Cutting}), after it transformation formulas are applied, and finally the data was normalized in bounding box.
 
 @menu
-* Ranges (Python)::       
-* Transformation (Python)::   
-* Ticks (Python)::       
+* Ranges (Python)::             
+* Transformation (Python)::     
+* Ticks (Python)::              
 @end menu
 
 @c ------------------------------------------------------------------
@@ -303,6 +308,8 @@ These large set of functions control how the axis and ticks will be drawn. Note 
 @cindex RecalcBorder
 @cindex Org
 @cindex AutoOrg
+@cindex SetRanges
+@cindex SetAutoRanges
 
 @deftypemethod {mglGraph (Python)} @code{void} SetRanges (@code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{float} z1=@code{0}, @code{float} z2=@code{0})
 Sets maximal and minimal values for coordinate range (bounding box). If minimal and maximal values of the coordinate are the same then they are ignored. This function also sets @var{Cmin}=@code{Min.z} and @var{Cmax}=@code{Max.z}. This is default color range for 2d plots.
@@ -330,6 +337,10 @@ Sets values of color range as minimal and maximal values of data @var{a}. See al
 
 @deftypemethod {mglGraph (Python)} @code{void} SetOrigin (@code{float} x0, @code{float} y0, @code{float} z0)
 Sets center of axis cross section. If one of values is NAN then MathGL library try to select optimal axis position.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} SetAutoRanges (@code{float} x1, @code{float} x2, @code{float} y1=@code{0}, @code{float} y2=@code{0}, @code{float} z1=@code{0}, @code{float} z2=@code{0})
+Sets ranges for automatic variables of plots. Function don't change the direction if minimal and maximal values are the same. For example, if y@var{y1}=@var{y2} then ranges along y-direction will not be changed (will be used previous one). Note that the automatic range become axis range after next call of [XYZ]Range() function(s).
 @end deftypemethod
 
 @c ------------------------------------------------------------------
@@ -367,7 +378,11 @@ Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks posit
 Set the manual positions @var{val} and its labels @var{lbl} for @var{n}-th ticks along axis @var{dir}. The arrays @var{val} and @var{lbl} have to contain @var{n} elements. Use @code{SetTicks()} to restore automatic ticks.
 @end deftypemethod
 
-@deftypemethod {mglGraph (Python)} @code{void} SetTickTemplX (@code{const wchar_t *}xtt)
+@deftypemethod {mglGraph (Python)} @code{void} SetTickTemplX (@code{const char *}xtt)
+@deftypemethodx {mglGraph (Python)} @code{void} SetTickTemplY (@code{const char *}ytt)
+@deftypemethodx {mglGraph (Python)} @code{void} SetTickTemplZ (@code{const char *}ztt)
+@deftypemethodx {mglGraph (Python)} @code{void} SetTickTemplC (@code{const char *}ctt)
+@deftypemethodx {mglGraph (Python)} @code{void} SetTickTemplX (@code{const wchar_t *}xtt)
 @deftypemethodx {mglGraph (Python)} @code{void} SetTickTemplY (@code{const wchar_t *}ytt)
 @deftypemethodx {mglGraph (Python)} @code{void} SetTickTemplZ (@code{const wchar_t *}ztt)
 @deftypemethodx {mglGraph (Python)} @code{void} SetTickTemplC (@code{const wchar_t *}ctt)
@@ -391,15 +406,20 @@ Switch on/off ticks enhancing by factoring common multiplier (for small, like fr
 @cindex Perspective
 @cindex RestoreM
 @cindex View
+@cindex ColumnPlot
 
-These functions control how and where further plotting will be placed. There is a curtain order of calling of these functions for the better plot view. First one should be SubPlot() or InPlot() for specifying the place. After it a Rotate() and Aspect(). And finally any other plotting functions may be called.
+These functions control how and where further plotting will be placed. There is a curtain order of calling of these functions for the better plot view. First one should be SubPlot() or InPlot() for specifying the place. After it a Rotate() and Aspect(). And finally any other plotting functions may be called. Alternatevely you can use ColumnPlot() for position plots in the column one by another without gap between plot axis (bounding boxes).
 
 @deftypemethod {mglGraph (Python)} @code{void} SubPlot (@code{int} nx, @code{int} ny, @code{int} m, @code{float} dx=@code{0}, @code{float} dy=@code{0})
 Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. This function set off any aspects or rotations. So it should be used first for creating the subplot. From the aesthetical point of view it is not recommended to use this function with different matrices in the same frame. The position of the cell can be shifted from its default position by relative size @var{dx}, @var{dy}.
 @end deftypemethod
 
-@deftypemethod {mglGraph (Python)} @code{void} InPlot (@code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2)
-Puts further plotting in some region of the whole frame surface. This function allows one to create a plot in arbitrary place of the screen. The position is defined by rectangular coordinates [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}]. The coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} are normalized to interval [0, 1]. This function set off any aspects or rotations. So it should be used first for creating subplot.
+@deftypemethod {mglGraph (Python)} @code{void} InPlot (@code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{bool} rel=@code{false})
+Puts further plotting in some region of the whole frame surface. This function allows one to create a plot in arbitrary place of the screen. The position is defined by rectangular coordinates [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}]. The coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} are normalized to interval [0, 1]. If parameter @var{rel}=@code{true} then the relative position to current SubPlot() (or last InPlot() with @var{rel}=@code{false}) is used. This function set off any aspects or rotations. So it should be used first for creating subplot.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} ColumnPlot (@code{int} num, @code{int} ind)
+Puts further plotting in @var{ind}-th cell of column with @var{num} cells. The position is relative to previous SubPlot() call (or InPlot() with @var{rel}=@code{false}).
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} Rotate (@code{float} TetX, @code{float} TetZ, @code{float} TetY=@code{0})
@@ -426,17 +446,29 @@ Clears transformation matrix. This function clears all previous effects of Aspec
 @c ##################################################################
 @node Export to file (Python), Primitives drawing (Python), Transformation matrix (Python), Python interface
 @section Export to file (Python)
+@cindex WriteFrame
 @cindex WritePNG
+@cindex WritePNGSolid
+@cindex WriteGIF
+@cindex WriteIDTF
 @cindex WriteSVG
 @cindex WriteBMP
 @cindex WriteEPS
 @cindex WriteJPEG
-@cindex WriteIDTF
 @cindex SetSize
 @cindex Flush
-@cindex Finish
+@cindex ShowImage
+@cindex GetRGBA
+@cindex GetRGB
+@cindex GetBGRN
+@cindex GetWidth
+@cindex GetHeight
 
-These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the transparency in EPS files are not supported.
+These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the transparency is supported in PNG and SVG files.
+
+@deftypemethod mglGraph @code{void} WriteFrame (@code{const char *}fname=@code{NULL}, @code{const char *}descr=@code{NULL})
+Exports current frame to a file @var{fname} which type is determined by the extension. Parameter @var{descr} adds description to file (can be @code{NULL}). If @var{fname}=@code{NULL} then the file @samp{frame####.jpg} is used, where @samp{####} is current frame id.
+@end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} WritePNG (@code{const char *}fname, @code{const char *}descr=@code{NULL})
 Exports current frame to PNG file with transparent background. Parameter @var{fname} specifies the file name, @var{descr} adds description to file. By default there are no description added. This function does nothing if NO_PNG is defined during compilation of MathGL library.
@@ -448,6 +480,10 @@ Exports current frame to PNG file with non-transparent background (usually white
 
 @deftypemethod {mglGraph (Python)} @code{void} WriteJPEG (@code{const char *}fname, @code{const char *}descr=@code{NULL})
 Exports current frame to JPEG file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file. By default there is no description added. This function does nothing if NO_JPEG is defined during compilation of MathGL library.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} WriteGIF (@code{const char *}fname, @code{const char *}descr=@code{NULL})
+Exports current frame to GIF file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file. By default there is no description added.
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} WriteBMP (@code{const char *}fname, @code{const char *}descr=@code{NULL})
@@ -613,6 +649,11 @@ Draws axes with ticks (@pxref{Axis settings}) in directions determined by string
 Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=NULL}) at edge of plot. Parameter @var{where} specifies the position of colorbar: @samp{0} - at right (default), @samp{1} - at left, @samp{2} - at top, @samp{3} - at bottom. @sref{Dens sample}
 @end deftypemethod
 
+@deftypemethod mglGraph @code{void} Colorbar (@code{const char *}sch, @code{int} where, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+@deftypemethodx mglGraph @code{void} Colorbar (@code{int} where, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+Draws colorbar with color scheme @var{sch} (current scheme if not specified) at arbitrary position of subplot @{@var{x}, @var{y}@} (supposed to be in range [0,1]). Parameter @var{where} specifies the position of colorbar labels: @samp{0} - at left, @samp{1} - at right, @samp{2} - at bottom, @samp{3} - at top. Parameters @var{w}, @var{h} set the relative width and height of the colorbar.
+@end deftypemethod
+
 @deftypemethod {mglGraph (Python)} @code{void} Grid (@code{const char *}dir=@code{"xyz"}, @code{const char *}pen=@code{"B-"})
 Draws grid lines perpendicular to direction determined by string parameter @var{dir}. The step of grid lines is the same as tick step for an Axis(). The style of lines is determined by @var{pen} parameter (default value is dark blue solid line (@samp{B-}).
 @end deftypemethod
@@ -663,19 +704,20 @@ These functions perform plotting of 1D data. 1D means that data depended from on
 
 
 @menu
-* Plot (Python)::        
-* Area (Python)::        
-* Region (Python)::       
-* Bars (Python)::        
-* Barh (Python)::        
-* Stem (Python)::        
-* Step (Python)::        
-* Torus (Python)::       
-* Chart (Python)::       
-* Mark (Python)::        
-* TextMark (Python)::      
-* Error (Python)::       
-* Tube (Python)::        
+* Plot (Python)::               
+* Tens (Python)::               
+* Area (Python)::               
+* Region (Python)::             
+* Bars (Python)::               
+* Barh (Python)::               
+* Stem (Python)::               
+* Step (Python)::               
+* Torus (Python)::              
+* Chart (Python)::              
+* Mark (Python)::               
+* TextMark (Python)::           
+* Error (Python)::              
+* Tube (Python)::               
 @end menu
 
 
@@ -684,7 +726,7 @@ These functions perform plotting of 1D data. 1D means that data depended from on
 @subsection Plot (Python)
 @cindex Plot
 
-These functions draw continuous lines between points. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Area}, @ref{Step}, @ref{Stem}, @ref{Tube}, @ref{Mark}, @ref{Error}, @ref{Belt}. @sref{Plot sample}
+These functions draw continuous lines between points. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Area}, @ref{Step}, @ref{Stem}, @ref{Tube}, @ref{Mark}, @ref{Error}, @ref{Belt}, @ref{Tens}. @sref{Plot sample}
 
 @deftypemethod {mglGraph (Python)} @code{void} Plot (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}pen=@code{NULL})
 The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} in 3D space.
@@ -699,7 +741,26 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in
 @end deftypemethod
 
 @c ==================================================================
-@node Area (Python), Region (Python), Plot (Python), 1D plotting (Python)
+@node Tens (Python), Area (Python), Plot (Python), 1D plotting (Python)
+@subsection Tens (Python)
+@cindex Tens
+
+These functions draw continuous lines between points with color defined by the special array (look like tension plot). The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color scheme (@pxref{Color scheme}) and style and/or width of line (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with current color scheme is used. See also @ref{Plot}, @ref{Mesh}, @ref{Fall}. @sref{Tens sample}
+
+@deftypemethod {mglGraph (Python)} @code{void} Tens (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{mglData} c, @code{const char *}pen=@code{NULL})
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} in 3D space with color defined by @var{c}[i].
+@end deftypemethod
+
+@deftypemethod {mglGraph (Python)} @code{void} Tens (@code{mglData} x, @code{mglData} y, @code{mglData} c, @code{const char *}pen=@code{NULL})
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z} with color defined by @var{c}[i].
+@end deftypemethod
+
+@deftypemethod {mglGraph (Python)} @code{void} Tens (@code{mglData} y, @code{mglData} c, @code{const char *}pen=@code{NULL})
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z} with color defined by @var{c}[i], where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
+@end deftypemethod
+
+@c ==================================================================
+@node Area (Python), Region (Python), Tens (Python), 1D plotting (Python)
 @subsection Area (Python)
 @cindex Area
 
@@ -926,17 +987,17 @@ The function draws tube with radius @var{r} between points @{@var{x}[i], @var{y}
 These functions perform plotting of 2D data. 2D means that data depend from 2 independent parameters like matrix @math{f(x_i,y_j), i=1...n, j=1...m}. There are 6 generally different types of data representations: simple mesh lines plot (Mesh), surface plot (Surf), surface plot by boxes (Boxs), surface plot by tiles (Tile), waterfall-like plot (Fall), belt plot (Belt), density plot (Dens), contour lines plot (Cont), solid contours plot (ContF) and its rotational figure (Axial). Cont, ContF and Axial functions have variants for automatic and manual selection of level values for contours. Also there are functions for plotting data grid lines according to the data format (Grid) for enhancing density or contour plots. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 @menu
-* Mesh (Python)::        
-* Fall (Python)::        
-* Belt (Python)::        
-* Surf (Python)::        
-* Boxs (Python)::        
-* Tile (Python)::        
-* Dens (Python)::        
-* Cont (Python)::        
-* ContF (Python)::       
-* Axial (Python)::       
-* Grid (Python)::        
+* Mesh (Python)::               
+* Fall (Python)::               
+* Belt (Python)::               
+* Surf (Python)::               
+* Boxs (Python)::               
+* Tile (Python)::               
+* Dens (Python)::               
+* Cont (Python)::               
+* ContF (Python)::              
+* Axial (Python)::              
+* Grid (Python)::               
 @end menu
 
 @c ==================================================================
@@ -945,7 +1006,7 @@ These functions perform plotting of 2D data. 2D means that data depend from 2 in
 @cindex Mesh
 
 @deftypemethod {mglGraph (Python)} @code{void} Mesh (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
-The function draws mesh lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Mesh lines are plotted for each z slice of the data. See also @ref{Surf}, @ref{Fall}, NeshNum (@pxref{Other settings}), @ref{Cont}. @sref{Mesh sample}
+The function draws mesh lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Mesh lines are plotted for each z slice of the data. See also @ref{Surf}, @ref{Fall}, NeshNum (@pxref{Other settings}), @ref{Cont}, @ref{Tens}. @sref{Mesh sample}
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} Mesh (@code{mglData} z, @code{const char *}sch=@code{NULL})
@@ -958,7 +1019,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @cindex Fall
 
 @deftypemethod {mglGraph (Python)} @code{void} Fall (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
-The function draws fall lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If @var{sch} contain @samp{x} then lines are drawn along x-direction else (by default) lines are drawn along y-direction. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Fall lines are plotted for each z slice of the data. See also @ref{Belt}, @ref{Mesh}, NeshNum (@pxref{Other settings}). @sref{Fall sample}
+The function draws fall lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If @var{sch} contain @samp{x} then lines are drawn along x-direction else (by default) lines are drawn along y-direction. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Fall lines are plotted for each z slice of the data. See also @ref{Belt}, @ref{Mesh}, @ref{Tens}, NeshNum (@pxref{Other settings}). @sref{Fall sample}
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} Fall (@code{mglData} z, @code{const char *}sch=@code{NULL})
@@ -1114,13 +1175,13 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 These functions perform plotting of 3D data. 3D means that data depend from 3 independent parameters like matrix @math{f(x_i,y_j,z_k), i=1...n, j=1...m, k=1...l}. There are 4 generally different types of data representations: isosurface or surface of constant value (Surf3), density plot at slices (Dens3), contour lines plot at slices (Cont3), solid contours plot at slices (ContF3) and cloud-like plot (Cloud). Surf3, Cont3 and ContF3 functions have variants for automatic and manual selection of level values for surfaces/contours. Also there are functions for plotting data grid lines according to the data format (Grid3) for enhancing density or contour plots. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 @menu
-* Surf3 (Python)::       
-* Dens3 (Python)::       
-* Cont3 (Python)::       
-* ContF3 (Python)::       
-* Grid3 (Python)::       
-* Cloud (Python)::       
-* Beam (Python)::        
+* Surf3 (Python)::              
+* Dens3 (Python)::              
+* Cont3 (Python)::              
+* ContF3 (Python)::             
+* Grid3 (Python)::              
+* Cloud (Python)::              
+* Beam (Python)::               
 @end menu
 
 @c ==================================================================
@@ -1284,13 +1345,13 @@ Draws @var{num}-th uniformly distributed in range [@var{Cmin}, @var{Cmax}] isosu
 These plotting functions draw @emph{two matrix} simultaneously. There are 5 generally different types of data representations: surface or isosurface colored by other data (SurfC, Surf3C), surface or isosurface transpared by other data (SurfA, Surf3A), tiles with variable size (TileS), mapping diagram (Map), STFA diagram (STFA). Surf3A and Surf3C have variants for automatic and manual selection of level values for isosurfaces. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 @menu
-* SurfC (Python)::       
-* Surf3C (Python)::       
-* SurfA (Python)::       
-* Surf3A (Python)::       
-* TileS (Python)::       
-* Map (Python)::        
-* STFA (Python)::        
+* SurfC (Python)::              
+* Surf3C (Python)::             
+* SurfA (Python)::              
+* Surf3A (Python)::             
+* TileS (Python)::              
+* Map (Python)::                
+* STFA (Python)::               
 @end menu
 
 @c ==================================================================
@@ -1411,11 +1472,11 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 These functions perform plotting of 2D and 3D vector fields. There are 5 generally different types of vector fields representations: simple vector field (Vect), vector field with coloring (VectC), vector field by dew-drops (Dew), flow threads (Flow), flow pipes (Pipe). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 @menu
-* Vect (Python)::        
-* VectC (Python)::       
-* Dew (Python)::        
-* Flow (Python)::        
-* Pipe (Python)::        
+* Vect (Python)::               
+* VectC (Python)::              
+* Dew (Python)::                
+* Flow (Python)::               
+* Pipe (Python)::               
 @end menu
 
 @c ==================================================================
@@ -1525,14 +1586,14 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 These functions perform miscelaneous plotting. There is unstructured data points plots (Dots), surface reconstruction (Crust), surfaces on the triangular mesh (TriPlot), textual formula plotting (Plots by formula), data plots at edges (Dens[XYZ], Cont[XYZ], ContF[XYZ]), simple plot (SimplePlot). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 @menu
-* DensXYZ (Python)::      
-* ContXYZ (Python)::      
-* ContFXYZ (Python)::      
-* Dots (Python)::        
-* Crust (Python)::       
-* TriPlot (Python)::      
-* Plots by formula (Python)::  
-* SimplePlot (Python)::     
+* DensXYZ (Python)::            
+* ContXYZ (Python)::            
+* ContFXYZ (Python)::           
+* Dots (Python)::               
+* Crust (Python)::              
+* TriPlot (Python)::            
+* Plots by formula (Python)::   
+* SimplePlot (Python)::         
 @end menu
 
 @c ==================================================================
@@ -1645,8 +1706,9 @@ The function reconstruct and draws the surface for arbitrary placed points @{@va
 @subsection TriPlot (Python)
 @cindex TriPlot
 
-@deftypemethod {mglGraph (Python)} @code{void} TriPlot (@code{mglData} id, @code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
-The function draws the surface of triangles. Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also @ref{Dots}, @ref{Crust}.
+@deftypemethod mglGraph @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{NULL})
+@deftypemethodx mglGraph @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL})
+The function draws the surface of triangles. Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. Parameter @var{c} set the colors of triangles (if @var{id}.ny=@var{c}.nx) or colors of vertexes (if @var{x}.nx=@var{c}.nx). See also @ref{Dots}, @ref{Crust}.
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} TriPlot (@code{mglData} id, @code{mglData} x, @code{mglData} y, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1687,7 +1749,7 @@ Plots the array @var{a} depending on it's dimensions and @var{type} parameter. S
 @end deftypemethod
 
 @c ##################################################################
-@node Nonlinear fitting (Python), , Other plotting (Python), Python interface
+@node Nonlinear fitting (Python), Frames/Animation (Python), Other plotting (Python), Python interface
 @section Nonlinear fitting (Python)
 @cindex Fit
 @cindex FitS
@@ -1758,3 +1820,35 @@ Print last fitted formula with found coefficients (as numbers) at position @var{
 Minimal number of points for output array after nonlinear fitting.
 @end deftypemethod
 
+@c ##################################################################
+@node Frames/Animation (Python), , Nonlinear fitting (Python), Python interface
+@section Frames/Animation (Python)
+@cindex NewFrame
+@cindex EndFrame
+@cindex GetNumFrame
+
+These functions provide ability to create several pictures simultaneously. Later, you can write several frames into animated GIF file.
+
+@deftypemethod mglGraph @code{int} NewFrame ()
+Creates new frame. Function returns current frame id. The function @code{EndFrame()} @strong{must} be call after the  finishing of the frame drawing for each call of this function.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} EndFrame ()
+Finishes the frame drawing.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{int} GetNumFrame ()
+Gets the number of created frames.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} ResetFrames ()
+Reset frames counter (start it from zero).
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} StartGIF (@code{const char *}fname, @code{int} ms=@code{100})
+Start writing frames into animated GIF file @var{fname}. Parameter @var{ms} set the delay between frames in milliseconds. You @strong{should not} change the picture size during writing the cinema. Use CloseGIF() to finalize writing. Note, that this function is disabled in OpenGL mode.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{int} CloseGIF ()
+Finish writing animated GIF and close connected pointers.
+@end deftypemethod

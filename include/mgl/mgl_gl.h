@@ -1,19 +1,22 @@
-/* mgl_gl.h is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_gl.h is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 //-----------------------------------------------------------------------------
 #ifndef _MGL_GL_H_
 #define _MGL_GL_H_
@@ -43,11 +46,11 @@ public:
 	void Light(int n,mglPoint p, mglColor c=NC, float br=0.5, bool infty=true);
 	void View(float tetX,float tetY,float tetZ);
 	void Clf(mglColor Back=NC);
-	int NewFrame(int id=-1);
+	int NewFrame();
 	void EndFrame();
-	void InPlot(float x1,float x2,float y1,float y2);
+	void InPlot(float x1,float x2,float y1,float y2,bool rel=false);
 	void SetSize(int ,int ){};
-	
+
 	void Ball(float x,float y,float z,mglColor col=RC,float alpha=1);
 //	void Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line);
 protected:
@@ -56,9 +59,9 @@ protected:
 //	void DefColor(mglColor c, float alpha=-1);
 	void Pen(mglColor col, char style,float width);
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
-	
+
 	void ball(float *p,float *c);
-	
+
 	void LightScale();
 	void line_plot(float *p1,float *p2,float *c1,float *c2,bool all=false);
 	void line_plot_s(float *p1,float *p2,float *c1,float *c2,bool all=false);

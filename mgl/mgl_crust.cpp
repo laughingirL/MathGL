@@ -1,20 +1,23 @@
-/* mgl_crust.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
+/***************************************************************************
+ * mgl_crust.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+#include <stdlib.h>
 #include <float.h>
 #include "mgl/mgl.h"
 #include "mgl/mgl_c.h"
@@ -23,6 +26,44 @@
 //
 //	TriPlot series
 //
+//-----------------------------------------------------------------------------
+void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch)
+{
+	long n = x.nx, m = nums.ny;
+	if(y.nx!=n || z.nx!=n || nums.nx<3)	{	SetWarn(mglWarnLow,"TriPlot");	return;	}
+	if(a.nx!=m && a.nx!=n)	{	SetWarn(mglWarnLow,"TriPlot");	return;	}
+	SetScheme(sch);
+	static int cgid=1;	StartGroup("TriPlot",cgid++);
+	float *pp = new float[3*n], *cc = new float[4*(n>m ? n:m)];
+	bool *tt = new bool[n];
+	long *nn = new long[3*m];
+	mglColor c;
+	register long i,j,k1,k2,k3;
+	for(i=0;i<n;i++)
+	{
+		pp[3*i] = x.a[i];	pp[3*i+1] = y.a[i];	pp[3*i+2] = z.a[i];
+		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+	}
+	for(i=0;i<a.nx;i++)
+	{
+		c = GetC(a.a[i]);	cc[4*i] = c.r;		cc[4*i+1] = c.g;
+		cc[4*i+2] = c.b;	cc[4*i+3] = Transparent ? AlphaDef : 1;
+	}
+	for(i=j=0;i<m;i++)
+	{
+		k1 = long(nums.a[3*i]+0.1);		if(k1<0 || k1>=n)	continue;
+		k2 = long(nums.a[3*i+1]+0.1);	if(k2<0 || k2>=n)	continue;
+		k3 = long(nums.a[3*i+2]+0.1);	if(k3<0 || k3>=n)	continue;
+		nn[3*j]=k1;	nn[3*j+1]=k2;	nn[3*j+2]=k3;	j++;
+	}
+//	DefColor(mglColor(0,0,0),1);
+//	trigs_plot(j,nn,n,pp,cc,tt,false, a.nx==m);
+//	if(sch && strchr(sch,'#'))
+//		trigs_plot(j,nn,n,pp,0,tt,true, a.nx==m);
+	trigs_plot(j,nn,n,pp,cc,tt,sch && strchr(sch,'#'), a.nx==m);
+	EndGroup();
+	delete []pp;	delete []tt;	delete []cc;	delete []nn;
+}
 //-----------------------------------------------------------------------------
 void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch)
 {
@@ -50,6 +91,10 @@ void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, 
 		k3 = long(nums.a[3*i+2]+0.1);	if(k3<0 || k3>=n)	continue;
 		nn[3*j]=k1;	nn[3*j+1]=k2;	nn[3*j+2]=k3;	j++;
 	}
+//	DefColor(mglColor(0,0,0),1);
+//	trigs_plot(j,nn,n,pp,cc,tt,false);
+//	if(sch && strchr(sch,'#'))
+//		trigs_plot(j,nn,n,pp,0,tt,true);
 	trigs_plot(j,nn,n,pp,cc,tt,sch && strchr(sch,'#'));
 	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;	delete []nn;
@@ -242,6 +287,9 @@ long mgl_crust(long n,float *pp,long **nn,float ff)
 }
 //-----------------------------------------------------------------------------
 /// Draw triangle mesh for points in arrays \a x, \a y, \a z.
+void mgl_triplot_xyzc(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch)
+{	if(gr&&nums&&x&&y&&z&&c)	gr->TriPlot(*nums, *x, *y, *z, *c, sch);	}
+/// Draw triangle mesh for points in arrays \a x, \a y, \a z.
 void mgl_triplot_xyz(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch)
 {	if(gr&&nums&&x&&y&&z)	gr->TriPlot(*nums, *x, *y, *z, sch);	}
 /// Draw triangle mesh for points in arrays \a x, \a y.
@@ -262,6 +310,14 @@ void mgl_crust_tr(HMGL gr, const HMDT tr, const char *sch, float er)
 //-----------------------------------------------------------------------------
 //	Fortran interface
 //-----------------------------------------------------------------------------
+/// Draw triangle mesh for points in arrays \a x, \a y, \a z and color it by \a c.
+void mgl_triplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && nums && x && y && z && c)
+		_GR_->TriPlot(_D_(nums), _D_(x), _D_(y), _D_(z), _D_(c), s);
+	delete []s;
+}
 /// Draw triangle mesh for points in arrays \a x, \a y, \a z.
 void mgl_triplot_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int l)
 {

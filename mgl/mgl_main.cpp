@@ -1,19 +1,23 @@
-/* mgl_main.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_main.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+#include <stdlib.h>
 #include <unistd.h>
 #include <stdarg.h>
 #include <wchar.h>
@@ -533,13 +537,14 @@ void mglGraph::DefaultPlotParam()
 	CloudFactor = 1;		MeshNum = 0;
 	ClearLegend();			LegendBox = true;
 	CutMin=mglPoint(0,0,0);	CutMax=mglPoint(0,0,0);
-	AutoOrg = true;			CurFrameId = 0;
+	AutoOrg = true;			//CurFrameId = 0;
 	CirclePnts = 40;		FitPnts = 100;
 	DrawFace = true;		_tetx=_tety=_tetz=0;
 	TuneTicks= true;		_sx=_sy=_sz = 1;
 	Alpha(false);			Fog(0);
 	xtt=ytt=ztt=ctt=0;		FactorPos = 1.15;
 	AutoPlotFactor = true;	ScalePuts = true;
+	TickLen = 0.1;
 	PlotFactor = AutoPlotFactor ? 1.55f :2.f;
 	for(int i=0;i<10;i++)
 	{	Light(i, mglPoint(0,0,1));	Light(i,false);	}
@@ -723,7 +728,7 @@ void mglGraph::Pen(mglColor , char ,float ){}
 void mglGraph::Light(int ,bool ){}
 void mglGraph::Light(int , mglPoint , mglColor , float , bool ){}
 void mglGraph::Clf(mglColor ){}
-void mglGraph::InPlot(float ,float ,float ,float ){}
+void mglGraph::InPlot(float ,float ,float ,float ,bool ){}
 //-----------------------------------------------------------------------------
 // These functions can be pure virtual but it should be empty (do nothing)
 // in some of inherit classes so they are defined empty here
@@ -746,8 +751,6 @@ void mglGraph::Rotate(float TetX,float TetZ,float TetY)
 	RotateN(TetZ+_tetz,0.,0.,1.);
 }
 //-----------------------------------------------------------------------------
-int mglGraph::NewFrame(int ){	return 0;	}
-void mglGraph::EndFrame()	{	Finish();	}
 void mglGraph::Fog(float d, float dz)	{	FogDist=d;	FogDz = dz;	}
 //-----------------------------------------------------------------------------
 void mglGraph::Light(int n,mglPoint p, char c, float bright, bool infty)
@@ -976,5 +979,28 @@ void mglGraph::StartGroup(const char *name, int id)
 	char buf[128];
 	sprintf(buf,"%s_%d",name,id);
 	StartAutoGroup(buf);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::SetAutoRanges(float x1, float x2, float y1, float y2, float z1, float z2)
+{
+	if(x1!=x2)	{	Min.x = x1;	Max.x = x2;	}
+	if(y1!=y2)	{	Min.y = y1;	Max.y = y2;	}
+	if(z1!=z2)	{	Min.z = z1;	Max.z = z2;	}
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Colorbar(const char *sch,int where)
+{
+	SetScheme(sch);
+	float x=0,y=0;
+	if(where==2)	y=1;
+	if(where==0)	x=1;
+	Colorbar(where,x,y,1,1);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::ColumnPlot(int num, int i)
+{
+	float d = i/(num+PlotFactor-1);
+	float w = PlotFactor/(num+PlotFactor-1);
+	InPlot(0,1,d,d+w,true);
 }
 //-----------------------------------------------------------------------------

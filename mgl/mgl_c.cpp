@@ -1,19 +1,23 @@
-/* mgl_c.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_c.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+#include <stdlib.h>
 #include "mgl/mgl_c.h"
 #include "mgl/mgl.h"
 #include "mgl/mgl_ab.h"
@@ -119,14 +123,17 @@ void mgl_show_image(HMGL gr, const char *viewer, int keep)
 //		Setup frames transparency (alpha) and lightning
 //-----------------------------------------------------------------------------
 /// Create new frame.
-int mgl_new_frame(HMGL gr, int id)
-{	return gr->NewFrame(id);	}
+int mgl_new_frame(HMGL gr)
+{	return gr->NewFrame();	}
 /// Finish frame drawing
 void mgl_end_frame(HMGL gr)
 {	gr->EndFrame();	}
 /// Get the number of created frames
 int mgl_get_num_frame(HMGL gr)
 {	return gr->GetNumFrame();	}
+/// Reset frames counter
+void mgl_reset_frames(HMGL gr)
+{	gr->ResetFrames();	}
 /// Set the transparency on/off.
 void mgl_set_alpha(HMGL gr, int enable)
 {	gr->Alpha(enable);	}
@@ -170,6 +177,10 @@ void mgl_subplot_d(HMGL gr, int nx,int ny,int m,float dx,float dy)
 /// Put further plotting in some region of whole frame surface.
 void mgl_inplot(HMGL gr, float x1,float x2,float y1,float y2)
 {	gr->InPlot(x1,x2,y1,y2);	}
+void mgl_relplot(HMGL gr, float x1,float x2,float y1,float y2)
+{	gr->InPlot(x1,x2,y1,y2,true);	}
+void mgl_columnplot(HMGL gr, int num, int i)
+{	gr->ColumnPlot(num,i);	}
 /// Set aspect ratio for further plotting.
 void mgl_aspect(HMGL gr, float Ax,float Ay,float Az)
 {	gr->Aspect(Ax,Ay,Az);	}
@@ -319,6 +330,8 @@ void mgl_text_ext(HMGL gr, float x, float y, float z,const char *text,const char
 /// Draw colorbar at edge of axis
 void mgl_colorbar(HMGL gr, const char *sch,int where)
 {	gr->Colorbar(sch,where);	}
+void mgl_colorbar_ext(HMGL gr, const char *sch,int where, float x, float y, float w, float h)
+{	gr->Colorbar(sch,where,x,y,w,h);	}
 /// Plot data depending on its dimensions and \a type parameter
 void mgl_simple_plot(HMGL gr, const HMDT a, int type, const char *sch)
 {	if(gr && a)	gr->SimplePlot(*a,type,sch);	}
@@ -367,6 +380,17 @@ void mgl_update(HMGL graph)
 {
 	mglGraphAB *g = dynamic_cast<mglGraphAB *>(graph);
 	if(g)	g->Update();
+}
+void mgl_set_show_mouse_pos(HMGL gr, int enable)
+{
+	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);
+	if(g) g->ShowMousePos=enable;
+}
+void mgl_get_last_mouse_pos(HMGL gr, float *x, float *y, float *z)
+{
+	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);
+	if(g)
+	{	*x=g->LastMousePos.x;	*y=g->LastMousePos.y;	*y=g->LastMousePos.y;}
 }
 //-----------------------------------------------------------------------------
 float mgl_data_get_value(const HMDT d, int i, int j, int k)
@@ -421,4 +445,11 @@ int mgl_fortran_func(HMGL gr, void *f)
 	uintptr_t p = uintptr_t(gr);
 	int res = draw(&p);	return res;
 }
+//-----------------------------------------------------------------------------
+void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, float z2)
+{
+	gr->SetAutoRanges(x1,x2,y1,y2,z1,z2);
+}
+void mgl_set_tick_len(HMGL gr, float len)
+{	gr->TickLen = len>0 ? len : 0.1;	}
 //-----------------------------------------------------------------------------

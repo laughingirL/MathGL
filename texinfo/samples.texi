@@ -87,6 +87,7 @@ gr.ShowImage();
 
 @menu
 * Plot sample::                 
+* Tens sample::                 
 * Area sample::                 
 * Bars sample::                 
 * Barh sample::                 
@@ -104,7 +105,7 @@ gr.ShowImage();
 @end menu
 
 @c ------------------------------------------------------------------
-@node Plot sample, Area sample, , 1D plotting samples
+@node Plot sample, Tens sample, , 1D plotting samples
 @subsection Plot sample
 @cindex Plot
 
@@ -163,7 +164,67 @@ gr.Plot(y);
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Area sample, Bars sample, Plot sample, 1D plotting samples
+@node Tens sample, Area sample, Plot sample, 1D plotting samples
+@subsection Tens sample
+@cindex Tens
+
+@float
+@image{png/tens, 7cm}
+@caption{Example of Tens. @tdref{tens}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData y(50), c(50);
+y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)");
+c.Modify("sin(2*pi*x)");
+gr->Box();
+gr->Tens(y,c);
+@end verbatim
+@strong{MGL code}
+@verbatim
+new y 50
+new c 50
+modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
+modify c 'sin(2*pi*x)'
+box
+tens y c
+@end verbatim
+@strong{Pure C code}
+@verbatim
+HMDT y = mgl_create_data_size(50,1,1);
+HMDT c = mgl_create_data_size(50,1,1);
+mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
+mgl_data_modify(c,"sin(2*pi*x)",0);
+mgl_box(gr,1);
+mgl_tens(gr,y,c,NULL);
+mgl_delete_data(y);
+mgl_delete_data(c);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer y, c, mgl_create_data_size
+y = mgl_create_data_size(50,1,1)
+c = mgl_create_data_size(50,1,1)
+call mgl_data_modify(y,'0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)',0)
+call mgl_data_modify(c,'sin(2*pi*x)',0)
+call mgl_box(gr,1)
+call mgl_tens(gr,y,'')
+call mgl_delete_data(y)
+call mgl_delete_data(c)
+@end verbatim
+@strong{Python}
+@verbatim
+y = mglData(50);
+c = mglData(50);
+y.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)");
+c.Modify("sin(2*pi*x)");
+gr.Box();
+gr.Tens(y,c);
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node Area sample, Bars sample, Tens sample, 1D plotting samples
 @subsection Area sample
 @cindex Area
 
@@ -5117,6 +5178,7 @@ sphere -0.65 0 0 0.25 'g'
 * Beam tracing sample::         
 * Parser sample::               
 * Manual ticks sample::         
+* ColumnPlot sample::           
 @end menu
 
 @node Curvelinear coorinates sample, 2-axes sample, , Advanced features
@@ -5493,9 +5555,7 @@ new y 100
 modify x 'pow(10,6*x-3)'
 modify y 'sqrt(1+v^2)' x
 
-xrange 0.001 1000
-yrange 0.1 1000
-origin 0.001 0.1 0
+axis 0.001 0.1 1000 1000
 xtick 0
 ytick 0
 axis 'lg(x)' 'lg(y)' ''
@@ -6210,7 +6270,7 @@ parser.Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Manual ticks sample, , Parser sample, Advanced features
+@node Manual ticks sample, ColumnPlot sample, Parser sample, Advanced features
 @subsection Tick values sample
 @cindex SetTicksVal
 
@@ -6257,4 +6317,63 @@ parser.Execute(gr, "xtick -pi '-\pi' -1.571 '-\pi/2' 0 '0' "
                     "0.886 'x^*' 1.571 '\pi/2' pi '\pi'");
 gr.Axis();     gr.Grid();
 gr.Plot("2*cos(x^2)^2", "r2", 300);
+@end verbatim
+
+
+
+
+
+@c ------------------------------------------------------------------
+@node ColumnPlot sample, , Manual ticks sample, Advanced features
+@subsection Tick values sample
+@cindex SetTicksVal
+
+@float
+@image{png/column, 7cm}
+@caption{Example of MGL parsing.}@c @tdref{tval}}
+@end float
+
+@strong{C++ code}
+@verbatim
+char str[32];
+for(int i=0;i<4;i++)
+{
+        gr->ColumnPlot(4,i);
+        gr->Box();
+        sprintf(str,"Plot %d of 4",i);
+        gr->Text(mglPoint(-0.5,0.5),str);
+        sprintf(str,"sin(pi*x+pi*%d/2)",i);
+        gr->Plot(str);
+}
+@end verbatim
+@strong{MGL code}
+@verbatim
+for $1 0 3
+columnplot 4 $1
+box
+text -0.5 0.5 'Plot $1 of 4'
+fplot 'sin(pi*x+pi*$1/2)'
+next
+@end verbatim
+@strong{Pure C code}
+@verbatim
+int i;
+char str[32];
+for(i=0;i<4;i++)
+{
+        mgl_columnplot(gr,4,i);
+        mgl_box(gr,1);
+        sprintf(str,"Plot %d of 4",i);
+        mgl_text(gr,-0.5,0.5,0.,str);
+        sprintf(str,"sin(pi*x+pi*%d/2)",i);
+        mgl_fplot(gr,str,"",100);
+}
+@end verbatim
+@strong{Fortran code}
+@verbatim
+NOT AVAILABLE
+@end verbatim
+@strong{Python}
+@verbatim
+
 @end verbatim

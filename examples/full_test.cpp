@@ -1,24 +1,27 @@
-/* full_test.cpp is part of Math Graphic Library
-* Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
-* and Michail Vidiassov <master@iaas.msu.ru>
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Library General Public License
-* as published by the Free Software Foundation
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+/***************************************************************************
+ * full_test.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #include <time.h>
 #include <locale.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <getopt.h>
 #include <mgl/mgl_zb.h>
 #include <mgl/mgl_eps.h>
@@ -57,7 +60,10 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 5:	// IDTF
 			sprintf(buf,"%s%s.idtf",name,suf);
 			gr->WriteIDTF(buf);	break;
-		default:// PNG (no alpha)
+		case 6:	// GIF
+			sprintf(buf,"%s%s.gif",name,suf);
+			gr->WriteGIF(buf);	break;
+			default:// PNG (no alpha)
 			sprintf(buf,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);	break;
 	}
@@ -70,6 +76,21 @@ int sample_tval(mglGraph *gr, const void *)	// font features
 				 0.886, "x^*", M_PI/2, "\\pi/2", M_PI, "\\pi");
 	gr->Axis();	gr->Grid();
 	gr->Plot("2*cos(x^2)^2", "r2", NAN, 300);
+	return 0;
+}
+//-----------------------------------------------------------------------------
+int sample_column(mglGraph *gr, const void *)	// font features
+{
+	char str[32];
+	for(int i=0;i<4;i++)
+	{
+		gr->ColumnPlot(4,i);
+		gr->Box();
+		sprintf(str,"Plot %d of 4",i);
+		gr->Text(mglPoint(-0.5,0.5),str);
+		sprintf(str,"sin(pi*x+pi*%d/2)",i);
+		gr->Plot(str);
+	}
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -639,6 +660,7 @@ int sample_1d(mglGraph *gr, const void *s)	// full test (in PNG)
 
 	gr->Org = mglPoint();
 	gr->Clf();	gr->Box();	gr->Plot(y);	save(gr,"plot",suf);
+	gr->Clf();	gr->Box();	gr->Tens(y.SubData(-1,0), y.SubData(-1,1));	save(gr,"tens",suf);
 	gr->Clf();	gr->Box();	gr->Area(y);	save(gr,"area",suf);
 	gr->Clf();	gr->Box();	gr->Stem(y);	save(gr,"stem",suf);
 	gr->Clf();	gr->Box();	gr->Step(y);	save(gr,"step",suf);
@@ -893,6 +915,8 @@ int sample_hint(mglGraph *gr, const void *s)
 	// contours on the surface
 	gr->Clf();	gr->Surf(a,"BbcyrR");	gr->Cont(a,"y");	gr->Box();
 	save(gr,"surf_cont_y",suf);
+	gr->Clf();	gr->Fog(1,0.1);	gr->Surf(a,"BbcyrR");	gr->Cont(a,"y");	gr->Box();
+	save(gr,"surf_cont_fog",suf);
 	// caxis and the surface
 	gr->Clf();	gr->CAxis(0,1);	gr->Surf(a,"BbcyrR");	gr->Box();	gr->CAxis(-1,1);
 	save(gr,"surf_caxis",suf);
@@ -1177,6 +1201,7 @@ int all_samples(mglGraph *gr, const void *s)
 	gr->DefaultPlotParam();	sample_semilog(gr,0);	save(gr,"semilog", suf);
 	gr->DefaultPlotParam();	sample_map(gr,0);		save(gr,"map", suf);
 	gr->DefaultPlotParam();	sample_tval(gr,0);		save(gr,"tval", suf);
+	gr->DefaultPlotParam();	sample_column(gr,0);	save(gr,"column", suf);
 	printf("\n");	fflush(stdout);
 	return 0;
 }
@@ -1192,6 +1217,7 @@ static struct option longopts[] =
 	{ "big",			no_argument,	&big,			1 },
 	{ "idtf",			no_argument,	&type,			5 },
 	{ "eps",			no_argument,	&type,			1 },
+	{ "gif",			no_argument,	&type,			6 },
 	{ "help",			no_argument,	NULL,			'?' },
 	{ NULL,					0,	NULL,			0 }
 };
@@ -1224,14 +1250,33 @@ int test(mglGraph *gr)
 	gr->Axis();
 	gr->Box();*/
 
-//	gr->Box();	gr->Axis();
+	gr->SubPlot(2,2,1);
+	gr->ColumnPlot(4,0);
+	gr->Text(mglPoint(),"0");
+	gr->Box();
+//	gr->SubPlot(2,2,1);
+	gr->ColumnPlot(4,1);
+	gr->Text(mglPoint(),"1");
+	gr->Box();
+//	gr->SubPlot(2,2,3);
+	gr->ColumnPlot(4,2);
+	gr->Text(mglPoint(),"2");
+	gr->Box();
+	gr->ColumnPlot(4,3);
+	gr->Text(mglPoint(),"3");
+	gr->Box();
+/*	gr->Colorbar("wr",0);
+	gr->Colorbar("wg",1);
+	gr->Colorbar("wb",2);
+	gr->Colorbar("wk",3);*/
 
 //	gr->GetFont()->Load("/home/balakin/progr/mgl/ris/adventor");
-	mglParse par;
+
+/*	mglParse par;
 	par.AllowSetSize = true;
 	FILE *fp=fopen("test.mgl","rt");
 	par.Execute(gr,fp);
-	fclose(fp);
+	fclose(fp);*/
 	gr->ShowImage("",true);
 	return 0;
 }
@@ -1258,8 +1303,9 @@ int main(int argc,char **argv)
 	if(dotest)
 	{
 		test(&zb);
-		//sample_tval(&zb,0);
+		//sample_crust(&zb,0);
 		zb.WritePNG("test.png","",false);
+		zb.WriteGIF("test.gif","");
 		return 0;
 	}
 	if(type==5)			gr = &u3d;

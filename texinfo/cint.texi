@@ -31,6 +31,7 @@ Fortran functions/subroutines have the same names as C functions. However, there
 * Axis settings (Pure C)::      
 * Transformation matrix (Pure C)::  
 * Export to file (Pure C)::     
+* Single frame (Pure C)::       
 * Primitives drawing (Pure C)::  
 * Text printing (Pure C)::      
 * Axis and Colorbar (Pure C)::  
@@ -42,7 +43,7 @@ Fortran functions/subroutines have the same names as C functions. However, there
 * Vector fields (Pure C)::      
 * Other plotting (Pure C)::     
 * Nonlinear fitting (Pure C)::  
-* Frames (Pure C)::             
+* Frames/Animation (Pure C)::   
 * Data import (Pure C)::        
 * Data filling (Pure C)::       
 * Rearrange data (Pure C)::     
@@ -101,6 +102,14 @@ Start Qt message handling cycle. In difference of @code{mgl_qt_run()} the loop i
 @deftypefn {C function} @code{void} mgl_update (@code{HMGL} graph)
 Manually update contents of the window.
 @end deftypefn
+
+@deftypefn {C function} @code{void} mgl_set_show_mouse_pos (@code{HMGL} graph, @code{int} enable)
+Switch to show or not in the widget the last mouse click position.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_get_last_mouse_pos (@code{HMGL} graph, @code{float *}x, @code{float *}y, @code{float *}z)
+Last position of mouse click.
+@end deftypefn
+
 
 @item Functions for data creation:
 @deftypefn {C function} @code{HMDT} mgl_create_data ()
@@ -251,6 +260,7 @@ Function imitate a fog in the plot. Fog start from relative distance @var{dz} fr
 @cindex MarkSize
 @cindex ArrowSize
 @cindex BaseLineWidth
+@cindex TickLen
 
 These functions control the default (initial) values for most graphics parameters including sizes of markers, arrows, linewidth and so on. As any other settings these ones will influence only on plots created after the settings change.
 
@@ -269,6 +279,11 @@ The size of arrows for @ref{1D plotting (Pure C)}, lines and curves. Default val
 @deftypefn {C function} @code{void} mgl_set_base_line_width (@code{HMGL} gr, @code{float} val)
 The variable define the base width for all lines. The value <1 is ignored. Increase of this variables is actual for large bitmap pictures. Default value is @code{1}.
 @end deftypefn
+
+@deftypefn {C function} @code{void} mgl_set_tick_len (@code{HMGL} gr, @code{float} val)
+The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt(2)=1.41...} times smaller.
+@end deftypefn
+
 
 @c ==================================================================
 @node Zooming (Pure C), Cutting (Pure C), Default sizes (Pure C), Graphics setup (Pure C)
@@ -440,6 +455,10 @@ Sets values of color range as minimal and maximal values of data @var{a}. See al
 Sets center of axis cross section. If one of values is NAN then MathGL library try to select optimal axis position.
 @end deftypefn
 
+@deftypefn {C function} @code{void} mgl_set_auto (@code{HMGL} gr, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{float} z1, @code{float} z2)
+Sets ranges for automatic variables of plots. It act as changing of @var{Min}, @var{Max} proprties without calling of RecalcBorder(). Function don't change the direction if minimal and maximal values are the same. For example, if y@var{y1}=@var{y2} then ranges along y-direction will not be changed (will be used previous one). Note that the automatic range become axis range after next call of [XYZ]Range() function(s).
+@end deftypefn
+
 @c ------------------------------------------------------------------
 @node Transformation (Pure C), Ticks (Pure C), Ranges (bounding box) (Pure C), Axis settings (Pure C)
 @subsection Transformation (curved coordinates, Pure C)
@@ -488,7 +507,11 @@ Number of axis subticks in x-,y-,z- directions. This function are obsolete -- us
 Starting point for ticks. If corresponding value is NAN then value from @var{Org} is used (it is default). This function are obsolete -- use @code{mgl_set_ticks_dir()} function instead.
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_set_xtt (@code{HMGL} gr, @code{const wchar_t *}templ)
+@deftypefn {C function} @code{void} mgl_set_xttw (@code{HMGL} gr, @code{const wchar_t *}templ)
+@deftypefnx {C function} @code{void} mgl_set_yttw (@code{HMGL} gr, @code{const wchar_t *}templ)
+@deftypefnx {C function} @code{void} mgl_set_zttw (@code{HMGL} gr, @code{const wchar_t *}templ)
+@deftypefnx {C function} @code{void} mgl_set_cttw (@code{HMGL} gr, @code{const wchar_t *}templ)
+@deftypefnx {C function} @code{void} mgl_set_xtt (@code{HMGL} gr, @code{const wchar_t *}templ)
 @deftypefnx {C function} @code{void} mgl_set_ytt (@code{HMGL} gr, @code{const wchar_t *}templ)
 @deftypefnx {C function} @code{void} mgl_set_ztt (@code{HMGL} gr, @code{const wchar_t *}templ)
 @deftypefnx {C function} @code{void} mgl_set_ctt (@code{HMGL} gr, @code{const wchar_t *}templ)
@@ -510,8 +533,9 @@ Switch on/off ticks enhancing by factoring common multiplier (for small, like fr
 @cindex InPlot
 @cindex Identity
 @cindex Perspective
+@cindex ColumnPlot
 
-These functions control how and where further plotting will be placed. There is a curtain order of calling of these functions for the better plot view. First one should be SubPlot() or InPlot() for specifying the place. After it a Rotate() and Aspect(). And finally any other plotting functions may be called.
+These functions control how and where further plotting will be placed. There is a curtain order of calling of these functions for the better plot view. First one should be SubPlot() or InPlot() for specifying the place. After it a Rotate() and Aspect(). And finally any other plotting functions may be called. Alternatevely you can use ColumnPlot() for position plots in the column one by another without gap between plot axis (bounding boxes).
 
 @deftypefn {C function} @code{void} mgl_subplot (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m)
 @deftypefnx {C function} @code{void} mgl_subplot_d (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{float} dx, @code{float} dy)
@@ -520,6 +544,10 @@ Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whol
 
 @deftypefn {C function} @code{void} mgl_inplot (@code{HMGL} gr, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2)
 Puts further plotting in some region of the whole frame surface. This function allows one to create a plot in arbitrary place of the screen. The position is defined by rectangular coordinates [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}]. The coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} are normalized to interval [0, 1]. This function set off any aspects or rotations. So it should be used first for creating subplot.
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_relplot (@code{HMGL} gr, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2)
+Puts further plotting in some region of the last SubPlot() or InPlot(). This function allows one to create a plot in arbitrary place of the screen. The position is defined by rectangular coordinates [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}]. The coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} are normalized to interval [0, 1]. This function set off any aspects or rotations. So it should be used first for creating subplot.
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_rotate (@code{HMGL} gr, @code{float} TetX, @code{float} TetZ, @code{float} TetY)
@@ -555,7 +583,11 @@ Clears transformation matrix. This function clears all previous effects of Aspec
 @cindex GetRGBA
 @cindex GetBits
 
-These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the transparency in EPS files are not supported.
+These functions export current view to a graphic file. The filename @var{fname} should have appropriate extension. Parameter @var{descr} gives the short description of the picture. Just now the transparency is supported in PNG and SVG files.
+
+@deftypefn {C function} @code{void} mgl_write_frame (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
+Exports current frame to a file @var{fname} which type is determined by the extension. Parameter @var{descr} adds description to file (can be @code{NULL}). If @var{fname}=@code{NULL} then the file @samp{frame####.jpg} is used, where @samp{####} is current frame id.
+@end deftypefn
 
 @deftypefn {C function} @code{void} mgl_write_png (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
 @deftypefnx {C function} @code{void} mgl_write_png_solid (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
@@ -564,6 +596,10 @@ Exports current frame to PNG file with transparent background. Parameter @var{fn
 
 @deftypefn {C function} @code{void} mgl_write_jpg (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
 Exports current frame to JPEG file with non-transparent background (usually white). Parameter @var{fname} specifies the file name, @var{descr} adds description to file (can be @code{NULL}).
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_write_gif (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
+Exports current frame to GIF file with non-transparent background (usually white). Parameter @var{fname} specifies the file name, @var{descr} adds description to file (can be @code{NULL}).
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_write_bmp (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
@@ -719,6 +755,10 @@ Draws axes with ticks (@pxref{Axis settings (Pure C)}) in directions determined 
 Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=NULL}) at edge of plot. Parameter @var{where} specifies the position of colorbar: @samp{0} - at right (default), @samp{1} - at left, @samp{2} - at top, @samp{3} - at bottom. @sref{Dens sample}
 @end deftypefn
 
+@deftypefn {C function} @code{void} mgl_colorbar_ext (@code{HMGL} gr, @code{const char *}sch, @code{int} where, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+Draws colorbar with color scheme @var{sch} (current scheme if not specified) at arbitrary position of subplot @{@var{x}, @var{y}@} (supposed to be in range [0,1]). Parameter @var{where} specifies the position of colorbar labels: @samp{0} - at left, @samp{1} - at right, @samp{2} - at bottom, @samp{3} - at top. Parameters @var{w}, @var{h} set the relative width and height of the colorbar.
+@end deftypefn
+
 @deftypefn {C function} @code{void} mgl_axis_grid (@code{HMGL} gr, @code{const char *}dir, @code{const char *}pen)
 Draws grid lines perpendicular to direction determined by string parameter @var{dir}. The step of grid lines is the same as tick step for an Axis(). The style of lines is determined by @var{pen} parameter.
 @end deftypefn
@@ -772,6 +812,7 @@ These functions perform plotting of 1D data. 1D means that data depended from on
 
 @menu
 * Plot (Pure C)::               
+* Tens (Pure C)::               
 * Area (Pure C)::               
 * Region (Pure C)::             
 * Bars (Pure C)::               
@@ -788,7 +829,7 @@ These functions perform plotting of 1D data. 1D means that data depended from on
 
 
 @c ==================================================================
-@node Plot (Pure C), Area (Pure C), , 1D plotting (Pure C)
+@node Plot (Pure C), Tens (Pure C), , 1D plotting (Pure C)
 @subsection Plot (Pure C)
 @cindex Plot
 
@@ -807,7 +848,27 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in
 @end deftypefn
 
 @c ==================================================================
-@node Area (Pure C), Region (Pure C), Plot (Pure C), 1D plotting (Pure C)
+@node Tens (Pure C), Area (Pure C), Plot (Pure C), 1D plotting (Pure C)
+@subsection Tens (Pure C)
+@cindex Tens
+
+These functions draw continuous lines between points with color defined by the special array (look like tension plot). The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color scheme (@pxref{Color scheme}) and style and/or width of line (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with current color scheme is used. See also Plot(), Mesh(), Fall(). @sref{Tens sample}
+
+@deftypefn {C function} @code{void} mgl_tens_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} c, @code{const char *}pen)
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} in 3D space with color defined by @var{c}[i].
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_tens_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} c, @code{const char *}pen)
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z} with color defined by @var{c}[i].
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_tens (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} c, @code{const char *}pen)
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z} with color defined by @var{c}[i], where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
+@end deftypefn
+
+
+@c ==================================================================
+@node Area (Pure C), Region (Pure C), Tens (Pure C), 1D plotting (Pure C)
 @subsection Area (Pure C)
 @cindex Area
 
@@ -1781,7 +1842,8 @@ The same as previous with @var{x=tr}(0,:), @var{y=tr}(1,:), @var{z=tr}(2,:).
 @cindex TriPlot
 
 @deftypefn {C function} @code{void} mgl_triplot_xyz (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
-The function draws the surface of triangles. Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also Dots(), Crust().
+@deftypefnx {C function} @code{void} mgl_triplot_xyzc (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} c, @code{const char *}sch)
+The function draws the surface of triangles. Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. Parameter @var{c} set the colors of triangles (if @var{id}.ny=@var{c}.nx) or colors of vertexes (if @var{x}.nx=@var{c}.nx). See also Dots(), Crust().
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_triplot_xy (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}sch, @code{float} zVal)
@@ -1822,7 +1884,7 @@ Plots the array @var{a} depending on it's dimensions and @var{type} parameter. S
 @end deftypefn
 
 @c ##################################################################
-@node Nonlinear fitting (Pure C), Frames (Pure C), Other plotting (Pure C), C interface
+@node Nonlinear fitting (Pure C), Frames/Animation (Pure C), Other plotting (Pure C), C interface
 @section Nonlinear fitting (Pure C)
 
 These functions fit data to formula. Fitting goal is to find formula parameters for the best fit the data points, i.e. to minimize the sum @math{\sum_i (f(x_i, y_i, z_i) - a_i)^2/s_i^2}. At this, approximation function @samp{f} can depend only on one argument @samp{x} (1D case), on two arguments @samp{x,y} (2D case) and on three arguments @samp{x,y,z} (3D case). The function @samp{f} also may depend on parameters. Normally the list of fitted parameters is specified by @var{var} string (like, @samp{abcd}). Usually user should supply initial values for fitted parameters by @var{ini} variable. But if he/she don't supply it then the zeros are used.
@@ -1884,15 +1946,15 @@ Print last fitted formula with found coefficients (as numbers) at position @{@va
 @end deftypefn
 
 @c ##################################################################
-@node Frames (Pure C), Data import (Pure C), Nonlinear fitting (Pure C), C interface
-@section Frames (Pure C)
+@node Frames/Animation (Pure C), Data import (Pure C), Nonlinear fitting (Pure C), C interface
+@section Frames/Animation (Pure C)
 @cindex NewFrame
 @cindex EndFrame
 @cindex GetNumFrame
 
-These functions provide ability to create several pictures simultaneously. For most of cases it is useless but for widget classes (@pxref{Widget classes}) they can provide a way to show animation.
+These functions provide ability to create several pictures simultaneously. For most of cases it is useless but for widget classes (@pxref{Widget classes}) they can provide a way to show animation. Also you can write several frames into animated GIF file.
 
-@deftypefn {C function} @code{int} mgl_new_frame (@code{HMGL} gr, @code{int} id=@code{0})
+@deftypefn {C function} @code{int} mgl_new_frame (@code{HMGL} gr)
 Creates new frame. Function returns current frame id. Zero or negative parameter @var{id} leads to automatic numbering frames. Positive one sets the new frame id directly. This is not thread safe function! Use direct list creation in multithreading drawing. The function @code{mgl_end_frame()} @strong{must} be call after the  finishing of the frame drawing for each call of this function.
 @end deftypefn
 
@@ -1904,9 +1966,21 @@ Finishes the frame drawing.
 Gets the number of created frames.
 @end deftypefn
 
+@deftypefn {C function} @code{int} mgl_resel_frames (@code{HMGL} gr)
+Reset frames counter (start it from zero).
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_start_gif (@code{HMGL} gr, @code{const char *}fname, @code{int} ms)
+Start writing frames into animated GIF file @var{fname}. Parameter @var{ms} set the delay between frames in milliseconds. You @strong{should not} change the picture size during writing the cinema. Use mgl_close_gif() to finalize writing. Note, that this function is disabled in OpenGL mode.
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_close_gif (@code{HMGL} gr)
+Finish writing animated GIF and close connected pointers.
+@end deftypefn
+
 
 @c ##################################################################
-@node Data import (Pure C), Data filling (Pure C), Frames (Pure C), C interface
+@node Data import (Pure C), Data filling (Pure C), Frames/Animation (Pure C), C interface
 @section Data import (Pure C)
 @cindex Set
 

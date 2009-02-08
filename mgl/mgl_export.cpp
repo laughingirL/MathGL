@@ -1,26 +1,30 @@
-/* mgl_export.cpp is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <mathgl.abalakin@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License
- * as published by the Free Software Foundation
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/***************************************************************************
+ * mgl_export.cpp is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+#include <string.h>
+#include <stdlib.h>
 #include <png.h>
 
 #ifdef HAVE_JPEG
 extern "C" {
 #include <jpeglib.h>
 }
-int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p);
 #endif
 
 #include "mgl/mgl.h"
@@ -31,6 +35,7 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_png_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
+int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p);
 //-----------------------------------------------------------------------------
 unsigned char **mglGraph::GetRGBLines(long &w, long &h, unsigned char *&f, bool )
 {	f=0;	return 0;	}
@@ -181,9 +186,9 @@ int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-#ifdef HAVE_JPEG
 int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
 {
+#ifdef HAVE_JPEG
 	struct jpeg_compress_struct cinfo;
 	struct jpeg_error_mgr jerr;
 	FILE * outfile;
@@ -205,8 +210,8 @@ int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
 	jpeg_destroy_compress(&cinfo);
 	fclose(outfile);
 	return 0;
-}
 #endif
+}
 //-----------------------------------------------------------------------------
 int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 {
@@ -229,6 +234,145 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 	fprintf(fp,"\n\nshowpage\n%%%%EOF\n");
 	fclose(fp);
 	return 0;
+}
+//-----------------------------------------------------------------------------
+//
+//		Save animation
+//
+//-----------------------------------------------------------------------------
+void mglGraph::StartGIF(const char *fname, int ms)
+{
+#ifdef HAVE_GIF
+	if(gif)	EGifCloseFile(gif);
+	EGifSetGifVersion("89a");
+	gif = EGifOpenFileName(fname, 0);
+	// get picture sizes
+	// NOTE: you shouldn't call SetSize() after StartGIF() !!!
+	long width, height;
+	unsigned char *f=0;
+	GetRGBLines(width, height, f);
+	if(f)	free(f);
+	// define colormap
+	GifColorType col[256];
+	memset(col,0,256*sizeof(GifColorType));
+	register int i,j,k,m;
+	for(i=0;i<6;i++)	for(j=0;j<6;j++)	for(k=0;k<6;k++)
+	{
+		m = i+6*(j+6*k);		// part 1
+		col[m].Red = 51*i;
+		col[m].Green=51*j;
+		col[m].Blue =51*k;
+	}
+	// write header
+	ColorMapObject *gmap = MakeMapObject(256, col);
+	EGifPutScreenDesc(gif, width, height, 256,0,gmap);
+	FreeMapObject(gmap);
+	// put animation parameters
+	ms /= 10;
+	unsigned char ext1[11] = {0x4E, 0x45, 0x54, 0x53, 0x43, 0x41, 0x50, 0x45, 0x32, 0x2E, 0x30}, ext3[3] = {0x01, 0xff, 0xff}, ext2[9] = {0x08, ms%256, ms/256, 0xff};
+	EGifPutExtensionFirst(gif,0xff,11,ext1);
+	EGifPutExtensionLast(gif,0xff,3,ext3);
+	EGifPutExtension(gif,0xf9,4,ext2);
+#endif
+}
+//-----------------------------------------------------------------------------
+void mglGraph::CloseGIF()
+{
+#ifdef HAVE_GIF
+	if(gif)	EGifCloseFile(gif);
+#endif
+	gif = 0;
+}
+//-----------------------------------------------------------------------------
+int mglGraph::NewFrame()	{	CurFrameId++;	return CurFrameId;	}
+//-----------------------------------------------------------------------------
+void mglGraph::EndFrame()
+{
+#ifdef HAVE_GIF
+	long width, height, n;
+	unsigned char *f=0, **l=0;
+	l = GetRGBLines(width, height, f);
+	n = width*height;
+	if(!l || !gif)	return;
+	EGifPutImageDesc(gif, 0, 0, width, height, 0, 0);
+	GifPixelType *line = new GifPixelType[n];
+	register long m;
+	register int i,j,k,ii;
+	for(m=0;m<n;m++)
+	{
+		ii = 3*(m%width);	k = m/width;
+		i = (l[k][ii]+25)/51;
+		j = (l[k][ii+1]+25)/51;
+		k = (l[k][ii+2]+25)/51;
+		line[m] = i+6*(j+6*k);
+	}
+	EGifPutLine(gif, line, n);
+	delete []line;	free(l);
+	if(f)	free(f);
+#else
+	Finish();
+#endif
+}
+//-----------------------------------------------------------------------------
+void mglGraph::WriteGIF(const char *fname,const char *)
+{
+#ifdef HAVE_GIF
+	// get picture sizes
+	long width, height, n;
+	unsigned char *f=0, **l=0;
+	l = GetRGBLines(width, height, f);
+	if(!l)	return;
+	n = width*height;
+
+	GifFileType *fg = EGifOpenFileName(fname, 0);
+	// define colormap
+	GifColorType col[256];
+	memset(col,0,256*sizeof(GifColorType));
+	register long m;
+	register int i,j,k,ii;
+	for(i=0;i<6;i++)	for(j=0;j<6;j++)	for(k=0;k<6;k++)
+	{
+		m = i+6*(j+6*k);		// part 1
+		col[m].Red = 51*i;
+		col[m].Green=51*j;
+		col[m].Blue =51*k;
+	}
+	// write header
+	ColorMapObject *gmap = MakeMapObject(256, col);
+	EGifPutScreenDesc(fg, width, height, 256,0,gmap);
+	FreeMapObject(gmap);
+	// write frame
+	EGifPutImageDesc(fg, 0, 0, width, height, 0, 0);
+	GifPixelType *line = new GifPixelType[n];
+	for(m=0;m<n;m++)
+	{
+		ii = 3*(m%width);	k = m/width;
+		i = (l[k][ii]+25)/51;
+		j = (l[k][ii+1]+25)/51;
+		k = (l[k][ii+2]+25)/51;
+		line[m] = i+6*(j+6*k);
+	}
+	EGifPutLine(fg, line, n);
+	EGifCloseFile(fg);
+	delete []line;	free(l);
+	if(f)	free(f);
+#endif
+}
+//-----------------------------------------------------------------------------
+void mglGraph::WriteFrame(const char *fname, const char *descr)
+{
+	char buf[64];
+	if(!fname || !fname[0])
+	{	sprintf(buf,"%s%04d.jpg",PlotId,CurFrameId);	fname = buf;	}
+	int len=strlen(fname);
+	if(!strcmp(fname+len-4,".jpg"))	WriteJPEG(fname,descr);
+	if(!strcmp(fname+len-5,".jpeg"))WriteJPEG(fname,descr);
+	if(!strcmp(fname+len-5,".idtf"))WriteIDTF(fname,descr);
+	if(!strcmp(fname+len-4,".png"))	WritePNG(fname,descr,false);
+	if(!strcmp(fname+len-4,".eps"))	WriteEPS(fname,descr);
+	if(!strcmp(fname+len-4,".svg"))	WriteSVG(fname,descr);
+	if(!strcmp(fname+len-4,".gif"))	WriteGIF(fname,descr);
+	if(!strcmp(fname+len-4,".bmp"))	WriteBMP(fname,descr);
 }
 //-----------------------------------------------------------------------------
 /// Write the frame in file using PNG format
@@ -255,7 +399,6 @@ void mgl_write_png_solid_(uintptr_t *gr, const char *fname,const char *descr,int
 /// Write the frame in file using JPEG format
 void mgl_write_jpg(HMGL gr, const char *fname,const char *descr)
 {	gr->WriteJPEG(fname,descr);	}
-#include <string.h>
 /// Write the frame in file using JPEG format
 void mgl_write_jpg_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {
@@ -267,7 +410,6 @@ void mgl_write_jpg_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 /// Write the frame in file using TIFF format
 void mgl_write_bmp(HMGL gr, const char *fname,const char *descr)
 {	gr->WriteBMP(fname,descr);	}
-#include <string.h>
 /// Write the frame in file using TIFF format
 void mgl_write_bmp_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {
@@ -279,12 +421,50 @@ void mgl_write_bmp_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 /// Write the frame in file using IDTF format
 void mgl_write_idtf(HMGL gr, const char *fname,const char *descr)
 {	gr->WriteIDTF(fname,descr);	}
-#include <string.h>
 /// Write the frame in file using IDTF format
 void mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	_GR_->WriteIDTF(s,f);	delete []s;		delete []f;
+}
+//-----------------------------------------------------------------------------
+/// Write the frame in file using PNG format
+void mgl_write_gif(HMGL gr, const char *fname,const char *descr)
+{	gr->WriteGIF(fname,descr);	}
+/// Write the frame in file using PNG format
+void mgl_write_gif_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{
+	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
+	_GR_->WriteGIF(s,f);	delete []s;		delete []f;
+}
+//-----------------------------------------------------------------------------
+/// Write the frame in file using PNG format
+void mgl_start_gif(HMGL gr, const char *fname,int ms)
+{	gr->StartGIF(fname,ms);	}
+/// Write the frame in file using PNG format
+void mgl_start_gif_(uintptr_t *gr, const char *fname,int *ms,int l)
+{
+	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	_GR_->StartGIF(s,*ms);	delete []s;
+}
+//-----------------------------------------------------------------------------
+/// Write the frame in file using PNG format
+void mgl_close_gif(HMGL gr)
+{	gr->CloseGIF();	}
+/// Write the frame in file using PNG format
+void mgl_start_gif_(uintptr_t *gr)
+{
+	_GR_->CloseGIF();
+}
+//-----------------------------------------------------------------------------
+void mgl_write_frame(HMGL gr, const char *fname,const char *descr)
+{	gr->WriteFrame(fname,descr);	}
+void mgl_write_frame_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{
+	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
+	_GR_->WriteFrame(s,f);	delete []s;		delete []f;
 }
 //-----------------------------------------------------------------------------

@@ -51,6 +51,7 @@ All MGL commands can be divided on several groups. I will use the following nota
 * Program flow (MGL)::          
 * Command options (MGL)::       
 * Suffixes::                    
+* Utilities::                   
 @end menu
 
 
@@ -144,6 +145,10 @@ The size of arrows for lines and curves. Default value is @code{1}.
 
 @deffn {MGL command} linewidth @code{val}
 The variable define the base width for all lines. The value <1 is ignored. Increase of this variables is actual for large bitmap pictures. Default value is @code{1}.
+@end deffn
+
+@deffn {MGL command} ticklen @code{val}
+The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt(2)=1.41...} times smaller.
 @end deffn
 
 @c ==================================================================
@@ -298,8 +303,8 @@ These commands control how and where further plotting will be placed. There is a
 Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. This command set off any aspects or rotations. So it should be used first for creating the subplot. From the aesthetical point of view it is not recommended to use this command with different matrices in the same frame. The position of the cell can be shifted from its default position by relative size @var{dx}, @var{dy}.
 @end deffn
 
-@deffn {MGL command} inplot @code{x1 x2 y1 y2}
-Puts further plotting in some region of the whole frame surface. This command allows one to create a plot in arbitrary place of the screen. The position is defined by rectangular coordinates [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}]. The coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} are normalized to interval [0, 1]. This command set off any aspects or rotations. So it should be used first for creating subplot.
+@deffn {MGL command} inplot @code{x1 x2 y1 y2 [rel=off]}
+Puts further plotting in some region of the whole frame surface. This command allows one to create a plot in arbitrary place of the screen. The position is defined by rectangular coordinates [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}]. The coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} are normalized to interval [0, 1]. If parameter @var{rel}=@code{on} then the relative position to current @code{subplot} is used. This command set off any aspects or rotations. So it should be used first for creating subplot.
 @end deffn
 
 @deffn {MGL command} rotate @code{tetz tetx [tety=0]}
@@ -325,7 +330,7 @@ Add (switch on) the perspective to plot. The parameter @math{val ~ 1/z_@{eff@} \
 @cindex setsize
 
 @deffn {MGL command} write 'fname' [@code{solid=off}]
-Exports current picture to PNG file 'fname'. Solid (usually white) background will be used if @code{solid=on}.
+Exports current picture/frame to file 'fname' (file type is determined by extension). Solid (usually white) background will be used if @code{solid=on}. If 'fname'='' then the file @samp{frame####.jpg} is used, where @samp{####} is current frame id.
 @end deffn
 
 @deffn {MGL command} setsize @code{w h}
@@ -449,6 +454,10 @@ Draws axes with ticks (@pxref{Axis settings (MGL)}) in directions determined by 
 Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=''}) at edge of plot. Parameter @var{pos} specifies the position of colorbar: @samp{0} - at right (default), @samp{1} - at left, @samp{2} - at top, @samp{3} - at bottom. @sref{Dens sample}
 @end deffn
 
+@deffn {MGL command} colorbar 'sch' @code{pos x y w h}
+Draws colorbar with color scheme @var{sch} (current scheme if not specified) at arbitrary position of subplot @{@var{x}, @var{y}@} (supposed to be in range [0,1]). Parameter @var{pos} specifies the position of colorbar labels: @samp{0} - at left, @samp{1} - at right, @samp{2} - at bottom, @samp{3} - at top. Parameters @var{w}, @var{h} set the relative width and height of the colorbar.
+@end deffn
+
 @deffn {MGL command} grid ['dir'='xyz' 'pen'='B']
 Draws grid lines perpendicular to direction determined by string parameter @var{dir}. The step of grid lines is the same as tick step for an @code{axis}. The style of lines is determined by @var{pen} parameter.
 @end deffn
@@ -498,6 +507,7 @@ Switches on/off the drawing of a box near legend. By default, the box is drawn.
 @node 1D plotting (MGL), 2D plotting (MGL), Legend (MGL), MGL interface
 @section 1D plotting (MGL)
 @cindex plot
+@cindex tens
 @cindex area
 @cindex bars
 @cindex barh
@@ -518,7 +528,13 @@ The plots are drawn for each row if one of the data is the matrix. By any case t
 @deffn {MGL command} plot ydat ['stl'='' @code{zval=nan}]
 @deffnx {MGL command} plot xdat ydat ['stl'='' @code{zval=nan}]
 @deffnx {MGL command} plot xdat ydat zdat ['stl'='']
-Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). See also @code{area, step, stem, tube, mark, error, belt}. @sref{Plot sample}
+Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). See also @code{tens, area, step, stem, tube, mark, error, belt}. @sref{Plot sample}
+@end deffn
+
+@deffn {MGL command} tens ydat cdat ['stl'='' @code{zval=nan}]
+@deffnx {MGL command} tens xdat ydat cdat ['stl'='' @code{zval=nan}]
+@deffnx {MGL command} tens xdat ydat zdat cdat ['stl'='']
+Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} with color defined by @var{cdat}[i] (look like tension plot). If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). See also @code{plot, mesh, fall}. @sref{Tens sample}
 @end deffn
 
 @deffn {MGL command} area ydat ['stl'='' @code{zval=nan}]
@@ -618,12 +634,12 @@ String parameter @var{sch} sets the color scheme (@pxref{Color scheme}). Previou
 
 @deffn {MGL command} mesh zdat ['sch'='']
 @deffnx {MGL command} mesh xdat ydat zdat ['sch'='']
-Draws mesh lines for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@}. See also @code{surf, fall, meshnum, cont}. @sref{Mesh sample}
+Draws mesh lines for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@}. See also @code{surf, fall, meshnum, cont, tens}. @sref{Mesh sample}
 @end deffn
 
 @deffn {MGL command} fall zdat ['sch'='']
 @deffnx {MGL command} fall xdat ydat zdat ['sch'='']
-Draws fall lines for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@}. If @var{sch} contain @samp{x} then lines are drawn along x-direction else (by default) lines are drawn along y-direction. See also @code{belt, mesh, meshnum}. @sref{Fall sample}
+Draws fall lines for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@}. If @var{sch} contain @samp{x} then lines are drawn along x-direction else (by default) lines are drawn along y-direction. See also @code{belt, mesh, meshnum, tens}. @sref{Fall sample}
 @end deffn
 
 @deffn {MGL command} belt zdat ['sch'='']
@@ -950,9 +966,10 @@ Draws the arbitrary placed points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@
 Reconstructs and draws the surface for arbitrary placed points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If string contain @samp{#} then wire plot is produced. See also @code{dots, triplot}. @sref{Crust sample}
 @end deffn
 
-@deffn {MGL command} triplot xdat ydat idat ['sch'='' @code{zval=nan}]
-@deffnx {MGL command} triplot xdat ydat zdat idat ['sch'='' @code{zval=nan}]
-Draws the surface of triangles. Triangle vertexes are set by indexes @var{idat} of data points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If string contain @samp{#} then wire plot is produced. First dimensions of @var{idat} must be 3 or greater. See also @code{dots, crust}.
+@deffn {MGL command} triplot idat xdat ydat ['sch'='' @code{zval=nan}]
+@deffnx {MGL command} triplot idat xdat ydat zdat ['sch'='' @code{zval=nan}]
+@deffnx {MGL command} triplot idat xdat ydat zdat cdat ['sch'='' @code{zval=nan}]
+Draws the surface of triangles. Triangle vertexes are set by indexes @var{idat} of data points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If string contain @samp{#} then wire plot is produced. First dimensions of @var{idat} must be 3 or greater. See also @code{dots, crust}. Parameter @var{cdat} set the colors of triangles (if @var{idat}.ny=@var{cdat}.nx) or colors of vertexes (if @var{xdat}.nx=@var{cdat}.nx).
 @end deffn
 
 @deffn {MGL command} fplot 'y(x)' ['pen'='' @code{zval=nan num=100}]
@@ -1472,7 +1489,7 @@ Adds string 'txt' to internal legend accumulator. The style of described line an
 @end deffn
 
 @c ------------------------------------------------------------------
-@node  Suffixes, , Command options (MGL), MGL interface
+@node  Suffixes, Utilities, Command options (MGL), MGL interface
 @section Suffixes for variable
 
 Suffixes can get some numerical value (like its size, maximal or minimal value, the sum of elements and so on) of the data array in variable and use it later as usual number in command arguments. The suffixes start from point @samp{.} right after (without spaces) variable name or its sub-array. For example, @code{a.nx} give the x-size of data a, @code{b(1).max} give maximal value of second row of variable b, @code{c(:,0).sum} give sum of element in first column of c and so on.
@@ -1504,3 +1521,13 @@ Give first nonzero value of data array.
 @item lst
 Give last nonzero value of data array.
 @end table
+
+@c ------------------------------------------------------------------
+@node  Utilities, , Suffixes, MGL interface
+@section Utilities for parsing MGL
+
+MathGL library provides several tools for parsing MGL scripts. There is tools saving it to bitmap (@code{mgl2png}, @code{mgl2gif}) or vectorial (@code{mgl2eps}, @code{mgl2svg}) images. Tool @code{mglview} show MGL script and allow to rotate and setup the image. Also you can translate MGL script to C++ file by help of @code{mgl2cpp} tool.
+
+All of this tools have similar set of arguments. First argument is name of script file, next argument is optional output file name, last arguments are options. There are options for setting script parameters (it is @code{$0, $1, ... $9}) and locale settings. The script parameters have format @samp{-Nval}. Here N=0,1...9 is parameter ID and val is its value. For example, option @samp{-1test} set to substitute @samp{test} instead of @code{$1} in the script. Option -Lval set locale to val. For example, @samp{-Lutf8} will set UTF-8 locale for script.
+
+Additionally you can create animated GIF file or a set of JPEG files with names @samp{frameNNNN.jpg} (here @samp{NNNN} is frame index). You should use @code{mgl2gif} tool and specify the values of @code{$0} parameter for making animation. Values of the parameter @code{$0} can be specified inside the script by comment @code{##a val} for each value @code{val} (one comment for one value) or by option(s) @samp{-Aval}. Tool @code{mgl2gif} will execute script several times (once for each specified value of @code{$0}) and save result in animated GIF file. For saving each frame in JPEG just add command @code{write ''} at the end of the script.
