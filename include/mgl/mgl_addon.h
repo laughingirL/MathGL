@@ -16,8 +16,12 @@ dual expi(dual a);
 dual expi(double a);
 void mgl_fft_freq(double *freq,unsigned nn);
 //---------------------------------------------------------------------------
+/// Duplicate string (returned pointer must be free() after usage)
+char *mgl_strdup(const char *s);
+wchar_t *mgl_wcsdup(const wchar_t *s);
 /// Remove spaces at begining and at the end of the string
 void mgl_strtrim(char *str);
+void mgl_wcstrim(wchar_t *str);
 /// Change register to lowercase (only for ANSI symbols)
 void mgl_strlwr(char *str);
 /// Remove double spaces from the string

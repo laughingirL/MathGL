@@ -1241,42 +1241,12 @@ void usage()
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
-/*	mglData a("/home/balakin/download/datafile");
-	gr->Axis(mglPoint(1e-11, 1.00053e-42), mglPoint(1e-07, 9.99967e-42));
-	gr->Axis("lg(x)", "lg(y)", "");
-	gr->SetTicks('x', 0);
-	gr->SetTicks('y', 0);
-	gr->Plot(a.SubData(0), a.SubData(1));
-	gr->Axis();
-	gr->Box();*/
-
-	gr->SubPlot(2,2,1);
-	gr->ColumnPlot(4,0);
-	gr->Text(mglPoint(),"0");
-	gr->Box();
-//	gr->SubPlot(2,2,1);
-	gr->ColumnPlot(4,1);
-	gr->Text(mglPoint(),"1");
-	gr->Box();
-//	gr->SubPlot(2,2,3);
-	gr->ColumnPlot(4,2);
-	gr->Text(mglPoint(),"2");
-	gr->Box();
-	gr->ColumnPlot(4,3);
-	gr->Text(mglPoint(),"3");
-	gr->Box();
-/*	gr->Colorbar("wr",0);
-	gr->Colorbar("wg",1);
-	gr->Colorbar("wb",2);
-	gr->Colorbar("wk",3);*/
-
-//	gr->GetFont()->Load("/home/balakin/progr/mgl/ris/adventor");
-
-/*	mglParse par;
+	mglParse par;
 	par.AllowSetSize = true;
-	FILE *fp=fopen("test.mgl","rt");
+	FILE *fp=fopen("box.mgl","rt");
 	par.Execute(gr,fp);
-	fclose(fp);*/
+	fclose(fp);
+
 	gr->ShowImage("",true);
 	return 0;
 }

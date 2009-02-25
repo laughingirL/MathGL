@@ -148,7 +148,7 @@ The variable define the base width for all lines. The value <1 is ignored. Incre
 @end deffn
 
 @deffn {MGL command} ticklen @code{val}
-The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt(2)=1.41...} times smaller.
+The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @code{sqrt(2)=1.41...} times smaller.
 @end deffn
 
 @c ==================================================================
@@ -230,6 +230,7 @@ Set direction around which curve rotated in @code{axial, torus}. Default value i
 @cindex crange
 @cindex ctick
 @cindex origin
+@cindex adjust
 
 These large set of commands control how the axis and ticks will be drawn. Note that there is 3-step transformation of data coordinates are performed. Firstly, coordinates are projected and cutting is applied (@pxref{Cutting (MGL)}), after it transformation formulas are applied, and finally the data was normalized in bounding box.
 
@@ -287,6 +288,11 @@ Sets the template for x-, y-, z-axis ticks or colorbar ticks. It may contain TeX
 Sets manual positions @var{val1},@var{val2},... and labels @var{lbl1},@var{lbl2},... for ticks along x-, y-, z-axis. Labels may contain TeX symbols also.
 @end deffn
 
+@deffn {MGL command} adjust 'dir'
+Set the ticks step, number of sub-ticks and initial ticks position to be the most human readable for the axis along direction(s) @var{dir}.
+@end deffn
+
+
 @c ##################################################################
 @node Transformation matrix (MGL), Export to file (MGL), Axis settings (MGL), MGL interface
 @section Transformation matrix (MGL)
@@ -297,7 +303,7 @@ Sets manual positions @var{val1},@var{val2},... and labels @var{lbl1},@var{lbl2}
 @cindex identity
 @cindex perspective
 
-These commands control how and where further plotting will be placed. There is a curtain order of calling of these commands for the better plot view. First one should be @code{subplot} or @code{inplot} for specifying the place. After it a @code{rotate} and @code{aspect}. And finally any other plotting commands may be called.
+These commands control how and where further plotting will be placed. There is a curtain order of calling of these commands for the better plot view. First one should be @code{subplot} or @code{inplot} for specifying the place. After it a @code{rotate} and @code{aspect}. And finally any other plotting commands may be called. Alternatevely you can use @code{columnplot} for position plots in the column one by another without gap between plot axis (bounding boxes).
 
 @deffn {MGL command} subplot @code{nx ny m [dx=0 dy=0]}
 Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. This command set off any aspects or rotations. So it should be used first for creating the subplot. From the aesthetical point of view it is not recommended to use this command with different matrices in the same frame. The position of the cell can be shifted from its default position by relative size @var{dx}, @var{dy}.
@@ -305,6 +311,10 @@ Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whol
 
 @deffn {MGL command} inplot @code{x1 x2 y1 y2 [rel=off]}
 Puts further plotting in some region of the whole frame surface. This command allows one to create a plot in arbitrary place of the screen. The position is defined by rectangular coordinates [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}]. The coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} are normalized to interval [0, 1]. If parameter @var{rel}=@code{on} then the relative position to current @code{subplot} is used. This command set off any aspects or rotations. So it should be used first for creating subplot.
+@end deffn
+
+@deffn {MGL command} columnplot @code{num ind}
+Puts further plotting in @var{ind}-th cell of column with @var{num} cells. The position is relative to previous @code{subplot} call (or @code{inplot} with @code{rel=off}).
 @end deffn
 
 @deffn {MGL command} rotate @code{tetz tetx [tety=0]}
@@ -330,7 +340,7 @@ Add (switch on) the perspective to plot. The parameter @math{val ~ 1/z_@{eff@} \
 @cindex setsize
 
 @deffn {MGL command} write 'fname' [@code{solid=off}]
-Exports current picture/frame to file 'fname' (file type is determined by extension). Solid (usually white) background will be used if @code{solid=on}. If 'fname'='' then the file @samp{frame####.jpg} is used, where @samp{####} is current frame id.
+Exports current picture/frame to file 'fname' (file type is determined by extension). Solid (usually white) background will be used if @code{solid=on}. If 'fname'='' then the file @samp{frameNNNN.jpg} is used, where @samp{NNNN} is current frame id.
 @end deffn
 
 @deffn {MGL command} setsize @code{w h}
@@ -967,8 +977,8 @@ Reconstructs and draws the surface for arbitrary placed points @{@var{xdat}[i], 
 @end deffn
 
 @deffn {MGL command} triplot idat xdat ydat ['sch'='' @code{zval=nan}]
-@deffnx {MGL command} triplot idat xdat ydat zdat ['sch'='' @code{zval=nan}]
-@deffnx {MGL command} triplot idat xdat ydat zdat cdat ['sch'='' @code{zval=nan}]
+@deffnx {MGL command} triplot idat xdat ydat zdat ['sch'='']
+@deffnx {MGL command} triplot idat xdat ydat zdat cdat ['sch'='']
 Draws the surface of triangles. Triangle vertexes are set by indexes @var{idat} of data points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If string contain @samp{#} then wire plot is produced. First dimensions of @var{idat} must be 3 or greater. See also @code{dots, crust}. Parameter @var{cdat} set the colors of triangles (if @var{idat}.ny=@var{cdat}.nx) or colors of vertexes (if @var{xdat}.nx=@var{cdat}.nx).
 @end deffn
 

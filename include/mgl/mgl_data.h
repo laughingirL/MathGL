@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <vector>
 #ifdef _MSC_VER
 #define	_USE_MATH_DEFINES
 #include <float.h>
@@ -111,6 +112,19 @@ public:
 	float *a;	  	///< data array
 	char *id;		///< column (or slice) names
 
+	/// Initiate by other mglData variable
+	mglData(const mglData &d)			{	a=0;	Set(d);		};
+	/// Initiate by flat array
+	mglData(int size, const float *d)	{	a=0;	Set(d,size);	};
+	mglData(int rows, int cols, const float *d)	{	a=0;	Set(d,cols,rows);	};
+	mglData(int size, const double *d)	{	a=0;	Set(d,size);	};
+	mglData(int rows, int cols, const double *d)	{	a=0;	Set(d,cols,rows);	};
+	/// Read data from file
+	mglData(const char *fname)			{	a=0;	Read(fname);	}
+	/// Allocate the memory for data array and initialize it zero
+	mglData(int xx=1,int yy=1,int zz=1)	{	a=0;	Create(xx,yy,zz);	};
+	/// Delete the array
+	~mglData()			{	if(a)	{	delete []a;	delete []id;	}	};
 	// ~~~~~~~~~~~~~~~~~~~~ операции ~~~~~~~~~~~~~~~~~~~~
 	/// Allocate memory and copy the data from the gsl_vector
 	void Set(gsl_vector *v);
@@ -130,6 +144,10 @@ public:
 	void Set(const double ***A,int N1,int N2,int N3);
 	/// Allocate memory and scanf the data from the string
 	void Set(const char *str,int NX,int NY=1,int NZ=1);
+	/// Allocate memory and copy data from std::vector<T>
+	void Set(const std::vector<int> &d);
+	void Set(const std::vector<float> &d);
+	void Set(const std::vector<double> &d);
 	/// Copy the data from other mglData variable
 	inline void Set(const mglData &dat)	{	Set(dat.a,dat.nx,dat.ny,dat.nz);	};
 	/// Rearange data dimensions
@@ -299,17 +317,9 @@ public:
 
 	/// Get the value in given cell of the data with border checking
 	float v(int i,int j=0,int k=0) const;
-
-	/// Initiate by other mglData variable
-	mglData(const mglData &d)		{	a=0;	Set(d);		};
-	/// Read data from file
-	mglData(const char *fname)	{	a=0;	Read(fname);	}
-	/// Allocate the memory for data array and initialize it zero
-	mglData(int xx=1,int yy=1,int zz=1)	{	a=0;	Create(xx,yy,zz);	};
-	/// Delete the array
-	~mglData()			{	if(a)	{	delete []a;	delete []id;	}	};
 	/// Copy data from other mglData variable
 	void operator=(const mglData &d)	{	Set(d.a,d.nx,d.ny,d.nz);	};
+	void operator=(float v);
 	/// Multiplicate the data by other one for each element
 	void operator*=(const mglData &d);
 	/// Divide the data by other one for each element
@@ -328,6 +338,18 @@ public:
 	void operator-=(float d);
 };
 //-----------------------------------------------------------------------------
+mglData operator*(const mglData &b, const mglData &d);
+mglData operator*(float b, const mglData &d);
+mglData operator*(const mglData &d, float b);
+mglData operator-(const mglData &b, const mglData &d);
+mglData operator-(float b, const mglData &d);
+mglData operator-(const mglData &d, float b);
+mglData operator+(const mglData &b, const mglData &d);
+mglData operator+(float b, const mglData &d);
+mglData operator+(const mglData &d, float b);
+mglData operator/(const mglData &b, const mglData &d);
+mglData operator/(const mglData &d, float b);
+//-----------------------------------------------------------------------------
 void mgl_srnd(long seed);
 double mgl_rnd();
 double mgl_ipow(double x,int n);
@@ -335,6 +357,8 @@ double mgl_ipow(double x,int n);
 mglData mglTransformA(const mglData &am, const mglData &ph, const char *tr);
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for real and imaginary parts
 mglData mglTransform(const mglData &re, const mglData &im, const char *tr);
+/// Apply Fourier transform for the data and save result into it
+void mglFourier(mglData &re, mglData &im, const char *dir);
 /// Short time fourier analysis for real and imaginary parts. Output is amplitude of partial fourier (result will have size {dn, floor(nx/dn), ny} for dir='x'
 mglData mglSTFA(const mglData &re, const mglData &im, int dn, char dir='x');
 /// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini

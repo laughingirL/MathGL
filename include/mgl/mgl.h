@@ -21,7 +21,7 @@
 #ifndef _MGL_H_
 #define _MGL_H_
 
-#define MGL_VERSION	7.1
+#define MGL_VERSION	8.1
 
 #include "mgl/mgl_data.h"
 #include "mgl/mgl_font.h"
@@ -223,11 +223,11 @@ public:
 	/// Finish plotting. Normally this function is called internaly.
 	virtual void Finish();
 	/// Set the transparency on/off.
-	virtual void Alpha(bool enable)=0;
+	virtual bool Alpha(bool enable)=0;
 	/// Set the fog distance or switch it off (if d=0).
 	virtual void Fog(float d, float dz=0.25);
 	/// Set the using of light on/off.
-	virtual void Light(bool enable)=0;
+	virtual bool Light(bool enable)=0;
 	/// Switch on/off the specified light source.
 	virtual void Light(int n, bool enable); //=0
 	/// Add a light source.
@@ -248,6 +248,8 @@ public:
 	void SetTicksVal(char dir, int n, float *val, const char **lbl);
 	void SetTicksVal(char dir, int n, float *val, const wchar_t **lbl);
 	void SetTicksVal(char dir, int n, double val, const char *lbl, ...);
+	/// Auto adjust ticks
+	void AdjustTicks(const char *dir);
 	/// Set warning code ant fill Message
 	void SetWarn(int code, const char *who="");
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -944,6 +946,7 @@ public:
 	  *  */
 	//@{
 	virtual void VertexColor(bool enable);
+	virtual void TextureColor(bool enable);
 	virtual void Compression(bool enable);
 	virtual void Unrotate(bool enable);
 	virtual void StartGroup (const char *name);
@@ -1122,6 +1125,7 @@ private:
 	void DrawXTick(float t, float y0, float z0, float dy, float dz, int fact=0);
 	void DrawYTick(float t, float x0, float z0, float dx, float dz, int fact=0);
 	void DrawZTick(float t, float x0, float y0, float dx, float dy, int fact=0);
+	void adjust(char dir, float dv);
 };
 //-----------------------------------------------------------------------------
 #endif

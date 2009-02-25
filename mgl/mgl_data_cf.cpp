@@ -99,6 +99,10 @@ void mgl_data_swap(HMDT d, const char *dir)
 /// Mirror the data in given direction
 void mgl_data_mirror(HMDT d, const char *dir)
 {	d->Mirror(dir);	}
+void mgl_data_insert(HMDT dat, char dir, int at, int num)
+{	dat->Insert(dir,at,num);	}
+void mgl_data_delete(HMDT dat, char dir, int at, int num)
+{	dat->Delete(dir,at,num);	}
 //-----------------------------------------------------------------------------
 /// Allocate memory and copy the data from the (float *) array
 void mgl_data_set_float(HMDT d, const float *A,int NX,int NY,int NZ)
@@ -246,6 +250,10 @@ void mgl_data_mirror_(uintptr_t *d, const char *dir,int l)
 	_DT_->Mirror(s);
 	delete []s;
 }
+void mgl_data_insert_(uintptr_t *d, const char *dir, int *at, int *num, int)
+{	_DT_->Insert(*dir,*at,*num);	}
+void mgl_data_delete_(uintptr_t *d, const char *dir, int *at, int *num, int)
+{	_DT_->Delete(*dir,*at,*num);	}
 //-----------------------------------------------------------------------------
 /// Allocate memory and copy the data from the (float *) array
 void mgl_data_set_real1_(uintptr_t *d, const float *A,int *NX)

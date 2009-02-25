@@ -29,6 +29,7 @@ struct{
     cell alpha?
     cell light
     cell box
+    cell grid
     double ambient
     cell axis?
     cell axis_str
@@ -97,6 +98,7 @@ struct{
 : clear-axis-param
     axis-param dup 'x swap c! 1+ dup 'y swap c! 1+ 'z swap c! ;
 
+: NAN ( -- f: NAN) $7FC00000 sp@ sf@ drop ;
 \ ------------------------------------------------------------------------
 \                                 GUI
 \ ------------------------------------------------------------------------
@@ -107,7 +109,6 @@ component class mathplot
     method mgl_settings_reset
     cell var mhold
   public:
-    early widget
     early open
     early dialog
     early open-app
@@ -125,6 +126,13 @@ component class mathplot
     method mgl-holdon
     method hold@
     method hold!
+    method mgl-grid
+    method fontsize
+
+    method mgl-xlabel
+    method mgl-ylabel    
+    method mgl-zlabel
+    
     canvas ptr mCanvas
     ( [varstart] )
     \ memory-pixmap ptr pxmap \ the pixmap on the canvas
@@ -134,11 +142,13 @@ component class mathplot
     cell var parameters    \ parameter structure
     ( [varend] )
   how:
+    : params   DF[ 0 ]DF s" figure" ;
     : hold@ mhold @ ;
     : hold! mhold ! ;    
     : mgl-hold mhold @ not mhold ! ;
     : mgl-holdoff mhold off ;
     : mgl-holdon mhold on ;
+    
     : open     self DF[ 0 ]DF s" bigforth Plot" open-component ;
     : dialog   new  DF[ 0 ]DF s" bigforth Plot" open-dialog ;
     : open-app new  DF[ 0 ]DF s" bigforth Plot" open-application ;
@@ -157,13 +167,19 @@ component class mathplot
 	parameters @ sizeof mgl-params erase
 	mgl_settings_reset
 	
-	0 0 parameters @ mgl-params labelx$ $!
-	0 0 parameters @ mgl-params labely$ $!
-	0 0 parameters @ mgl-params labelz$ $!
+	\ 0 0
+	parameters @ mgl-params labelx$ dup @ if $off else drop then
+	\ 0 0
+	parameters @ mgl-params labely$ dup @ if $off else drop then
+	\ 0 0
+	parameters @ mgl-params labelz$ dup @ if $off else drop then
 	
 	0 pxmap !
 	0 plotlist !
 	mhold off ;
+
+    : fontsize ( f: size -- ) parameters @ mgl-params fontsize sf! ;
+    
     : mgl-set-params ( -- )
 	graph @
 	dup parameters @ mgl-params rotation[ @ ]@s mgl_rotate
@@ -177,35 +193,30 @@ component class mathplot
 	dup parameters @ mgl-params light         @ mgl_set_light
 	dup parameters @ mgl-params textrotate    @ mgl_set_rotated_text
 	dup parameters @ mgl-params box           @ mgl_box
+	    parameters @ mgl-params grid @ if
+	    dup 0" xyz" 0 mgl_axis_grid
+	then
 	drop ;
     : mgl-post-params ( -- )
-	parameters @ mgl-params axis? @ if
-	    graph @ parameters @ mgl-params axis_str @ mgl_axis
-	then
-	graph @
-	dup 1 mgl_set_rotated_text
+	graph @ 1 mgl_set_rotated_text 
 	parameters @ mgl-params labelx$ @ if
 	    parameters @ mgl-params labelx$ $@ mglstrbuff 0place
-	    dup 'x mglstrbuff 0 parameters @ mgl-params fontsize sf@
-	    1.2e f*
-	    mgl_label_ext
-	then
+	    parameters @ mgl-params fontsize sf@ 0e0	    
+	    graph @ 'x mglstrbuff 0 mgl_label_ext
+	then 
 	parameters @ mgl-params labely$ @ if
 	    parameters @ mgl-params labely$ $@ mglstrbuff 0place
-	    dup 'y mglstrbuff 0 parameters @ mgl-params fontsize sf@
-	    1.2e f*
-	    mgl_label_ext
+	    parameters @ mgl-params fontsize sf@ 0e0	    
+	    graph @ 'y mglstrbuff 0 mgl_label_ext	    
 	then
-	parameters @ mgl-params labelz$ @ if
+	parameters @ mgl-params labelz$ @ drop 0 if
 	    parameters @ mgl-params labelz$ $@ mglstrbuff 0place
-	    dup 'z mglstrbuff 0 parameters @ mgl-params fontsize sf@
-	    1.2e f*
-	    mgl_label_ext
+	    parameters @ mgl-params fontsize sf@ 0e0	    
+	    graph @ 'z mglstrbuff 0 mgl_label_ext	    	    
 	then
-	parameters @ mgl-params colorbar @ if
+	parameters @ mgl-params colorbar @ drop 0 if
 	    dup 0 0 mgl_colorbar
-	then
-	drop ;
+	then ;
     : mgl_settings_reset
 	1 parameters @ mgl-params transp? !
 	1 parameters @ mgl-params transp_type !
@@ -221,7 +232,7 @@ component class mathplot
 	parameters @ mgl-params labelz$ dup @ if $off else drop then
 	\ parameters @ mgl-params textrotate off
 	!0.9 parameters @ mgl-params ambient sf!
-	!3.5 parameters @ mgl-params fontsize sf!
+	!2.5 parameters @ mgl-params fontsize sf!
 	!1.2 parameters @ mgl-params linewidth sf!
 	parameters @ mgl-params rotation[ @ dup if ]free else drop then
 	default-rotation parameters @ mgl-params rotation[ !
@@ -230,9 +241,9 @@ component class mathplot
     ;
 
     : mgl_settings_free
-	parameters @ mgl-params labelx$ dup if $off else drop then
-	parameters @ mgl-params labely$ dup if $off else drop then
-	parameters @ mgl-params labelz$ dup if $off else drop then
+	parameters @ mgl-params labelx$ dup @ if $off else drop then
+	parameters @ mgl-params labely$ dup @ if $off else drop then
+	parameters @ mgl-params labelz$ dup @ if $off else drop then
 	parameters @ mgl-params rotation[ @ dup if ]free else drop then
 	parameters @ mgl-params aspect[ @ dup if ]free else drop then
     ;
@@ -259,7 +270,8 @@ component class mathplot
 	    2r@ rot dup >r *) swap r> )@ F execute
 	    2r>
 	loop 2drop
-	r> a_plot plotfunc @ F execute ;
+	r> a_plot plotfunc @
+	F execute ;
     : xmin ( -- f: xmin )
 	1e20 plotlist @ begin dup while
 		dup a_plot xrange @ ]min fmin
@@ -312,23 +324,24 @@ component class mathplot
 	graph @ mgl_identity
 	graph @ mgl_clf
 	graph @ mCanvas with w @ h @ endwith mgl_set_size
-
+	
+\  	parameters @ mgl-params rotation[ @ ]null? if
+\  	    graph @
+\  	    [ 1e 3e fsqrt f/ 1e fswap f- 2e f/ 0.7e f* ] fliteral
+\  	    fdup
+\  	    fdup fdup 1e fswap f- fswap 1e fswap f-
+\  	    mgl_set_zoom
+\  	else
+	    graph @ 0e 0e 0e 0e mgl_set_zoom
+\	    parameters @ mgl-params fontsize sf@	    
+\ 	    1.2e f* parameters @ mgl-params fontsize sf!
+\	then
 	graph @ xmin ymin zmin xmax ymax zmax mgl_set_axis_3d
-	graph @ xmin ymin zmin mgl_set_origin
-
- 	parameters @ mgl-params rotation[ @ ]null? if
- 	    graph @
- 	    [ 1e 3e fsqrt f/ 1e fswap f- 2e f/ 0.7e f* ] fliteral
- 	    fdup
- 	    fdup fdup 1e fswap f- fswap 1e fswap f-
- 	    mgl_set_zoom
- 	else
- 	    graph @ 0e 0e 0e 0e mgl_set_zoom
- 	    3.5e 1.5e f* parameters @ mgl-params fontsize sf!
-	then
+\	graph @ xmin ymin zmin mgl_set_origin
+	graph @ NAN NAN NAN mgl_set_origin
 	mgl-set-params
-	display_plots
 	mgl-post-params
+	display_plots
     ;
     : fill-pixmap
 	    clear-pixmap
@@ -341,10 +354,11 @@ component class mathplot
     : generate-plot ( -- )
 	create-figure
 	fill-pixmap ;
-    : clf plotlist @ dispose-all-plots 0 plotlist !
-	generate-plot
-	mcanvas draw
-    ;
+
+    : freeplots plotlist @ dispose-all-plots 0 plotlist ! ;
+
+    : clf freeplots clear-pixmap draw ;
+
     : mgl-rotation! ( f: x y z )
 	fswap frot parameters @ mgl-params rotation[ @ ]!s
 	generate-plot
@@ -356,6 +370,21 @@ component class mathplot
 	not
 	parameters @ mgl-params colorbar !
 	generate-plot mcanvas draw ;
+    : mgl-grid parameters @ mgl-params grid dup @ not swap !
+	generate-plot mcanvas draw ;
+    : mgl-xlabel ( addr u -- )
+	parameters @ mgl-params labelx$ dup @
+	if dup $off $! else $! then
+	generate-plot mcanvas draw ;
+    : mgl-ylabel ( addr u -- )
+	parameters @ mgl-params labely$ dup @
+	if dup $off $! else $! then
+	generate-plot mcanvas draw ;	
+    : mgl-zlabel ( addr u -- )
+	parameters @ mgl-params labelz$ dup @
+	if dup $off $! else $! then
+	generate-plot mcanvas draw ;	
+        
     : dispose
 	clear-pixmap
 	plotlist @ dispose-all-plots
@@ -377,7 +406,6 @@ component class mathplot
 	^^ S[ close ]S X"   Close  " button new
 	&3 habox new vfixbox panel
 	&2 vabox new ;
-    : init  ^>^^ assign widget 1 :: init ;
 class;
 
 sizeof a_figure allocate throw constant current-figure
@@ -392,7 +420,7 @@ actor class clear-pointer
 	super dispose ;
 class;
 
-: init-plot
+: init-plot   
     current-figure a_figure active? @ not if
 	screen self mathplot new
 	current-figure a_figure figure !
@@ -445,7 +473,7 @@ class;
 : ]]belt ( *gsl_matrix 0"" -- ) ['] mgl_belt [[]]plot addplot ;
 : ]]fall ( *gsl_matrix 0"" -- ) ['] mgl_fall [[]]plot addplot ;
 : ]]mesh ( *gsl_matrix 0"" -- ) ['] mgl_mesh [[]]plot addplot ;
-: ]]msurf ( *gsl_matrix 0"" -- )
+: ]]msurf ( *gsl_matrix 0"" -- )    
     init-plot
     2dup ]]surf
     current-figure a_figure figure @
@@ -456,9 +484,29 @@ class;
     current-figure a_figure figure @
     mathplot with hold! endwith ;
 
+: [[]]plotf ( f:v x[[ str0 xt -- *a_plot )
+    >r >r dup >r
+    mgl_create_data dup rot mgl_data_set_matrix
+    sizeof a_plot allocate throw
+    dup r@ dup ]]min ]]max s>range[] swap a_plot zrange !
+    dup r@ ]]size1  0e s>f s>range[] swap a_plot xrange !
+    dup r> ]]size2  0e s>f s>range[] swap a_plot yrange !
+    dup 0 swap a_plot next !
+    dup 0 swap a_plot prev !
+    over 1 ivector* over a_plot hmdtlist !
+    over r> f>fs 3 ivector* over a_plot params !
+    ['] @ ['] @ ['] sf@ 3 ivector* over a_plot ops !
+    nip r> over a_plot plotfunc ! ;
+: ]]boxs ( f:v *gsl_matrix 0"" -- ) ['] mgl_boxs [[]]plotf addplot ;
+
 : clf current-figure a_figure active? @ if
 	current-figure a_figure figure @ >o mathplot clf o>
     then ;
+
+: fontsize! ( f:size -- ) current-figure a_figure active? @ if
+	current-figure a_figure figure @ >o mathplot fontsize o>
+    then ;
+
 : rotation ( F: x y z -- )
     current-figure a_figure active? @ if
 	current-figure a_figure figure @ >o mathplot mgl-rotation! o>
@@ -469,6 +517,7 @@ class;
 	current-figure a_figure figure @
 	>o mathplot mgl-colorbar o>
     then ;
+
 
 : mglhold current-figure a_figure active? @ if
 	current-figure a_figure figure @
@@ -483,6 +532,25 @@ class;
 	current-figure a_figure figure @
 	>o mathplot mgl-holdoff o>
     then ;
+
+: mglgrid current-figure a_figure active? @ if
+	current-figure a_figure figure @
+	>o mathplot mgl-grid o>
+    then ;
+
+: xlabel ( addr u -- ) current-figure a_figure active? @ if
+	current-figure a_figure figure @
+	>o mathplot mgl-xlabel o>
+    then ;
+: ylabel ( addr u -- ) current-figure a_figure active? @ if
+	current-figure a_figure figure @
+	>o mathplot mgl-ylabel o>
+    then ;
+: zlabel ( addr u -- ) current-figure a_figure active? @ if
+	current-figure a_figure figure @
+	>o mathplot mgl-zlabel o>
+    then ;
+
 
 clear
 previous previous previous previous previous

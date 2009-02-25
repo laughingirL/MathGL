@@ -61,8 +61,8 @@ Restore initial values for all of parameters except described in @ref{Zooming}.
 
 There are several functions and variables for setup transparency. The general function is @code{Alpha()} which switch on/off the transparency for overall plot. It influence only for graphics which created after @code{Alpha()} call (with one exception, mglGraphGL). Variable @code{AlphaDef} specify the default value of alpha-channel. You may switch off transparency of selected plot by variable @code{Transparent}. Finally, variable @code{TranspType} set the kind of transparency. @sref{Transparent surface sample}
 
-@deftypemethod mglGraph @code{void} Alpha (@code{bool} enable)
-Sets the transparency on/off. It is recommended to call this function before any plotting command. In any case it must be called before  @code{Finish()} function if the last is used. Default value is transparency off. Unfortunately it switches the transparency on/off for all subplots. Use @code{Transparent = false} in particular plot to disable its transparency.
+@deftypemethod mglGraph @code{bool} Alpha (@code{bool} enable)
+Sets the transparency on/off. It is recommended to call this function before any plotting command. Function returns previous value of transparency. In any case it must be called before  @code{Finish()} function if the last is used. Default value is transparency off. Unfortunately it switches the transparency on/off for all subplots. Use @code{Transparent = false} in particular plot to disable its transparency.
 @end deftypemethod
 
 @deftypecv {General option} mglGraph @code{float} AlphaDef
@@ -85,8 +85,8 @@ This variable set the transparency type. Normal transparency (@samp{0}) -- below
 
 There are several functions for setup lighting. The general function is @code{Light(bool)} which switch on/off the lighting for overall plot. It influence only for graphics which created after @code{Light()} call (with one exception, mglGraphGL). Generally MathGL support up to 10 independent light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
 
-@deftypemethod mglGraph @code{void} Light (@code{bool} enable)
-Sets the using of light on/off for overall plot. It is recommended to call this function before any plotting command. Default value is lightning off.
+@deftypemethod mglGraph @code{bool} Light (@code{bool} enable)
+Sets the using of light on/off for overall plot. It is recommended to call this function before any plotting command. Function returns previous value of lighting. Default value is lightning off.
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} Light (@code{int} n, @code{bool} enable)
@@ -139,7 +139,7 @@ The variable define the base width for all lines. The value <1 is ignored. For v
 @end deftypecv
 
 @deftypecv {General option} mglGraph @code{float} TickLen
-The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt(2)=1.41...} times smaller.
+The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt@{2@}=1.41...} times smaller.
 @end deftypecv
 
 @c ==================================================================
@@ -473,6 +473,11 @@ Transformation formula for x, y and z directions. These variables are obsolete -
 @cindex OrgT
 @cindex FactorPos
 @cindex TuneTicks
+@cindex AdjustTicks
+
+@deftypemethod {mglGraph} @code{void} AdjustTicks (@code{const char *}dir)
+Set the ticks step, number of sub-ticks and initial ticks position to be the most human readable for the axis along direction(s) @var{dir}. Also set @var{TuneTicks}=@code{true}.
+@end deftypemethod
 
 @deftypemethod mglGraph @code{void} SetTicks (@code{char} dir, @code{float} d=@code{-5}, @code{int} ns=@code{0}, @code{float} org=@code{NAN})
 Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.

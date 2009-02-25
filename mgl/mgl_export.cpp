@@ -40,14 +40,15 @@ int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p);
 unsigned char **mglGraph::GetRGBLines(long &w, long &h, unsigned char *&f, bool )
 {	f=0;	return 0;	}
 //-----------------------------------------------------------------------------
-void mglGraph::WriteSVG(const char *,const char *){}
-void mglGraph::WriteIDTF(const char *,const char *){}
-void mglGraph::VertexColor(bool enable)  { };
-void mglGraph::Compression(bool enable)  { };
-void mglGraph::Unrotate(bool enable)  { };
-void mglGraph::StartGroup ( const char *name ) { };
-void mglGraph::StartAutoGroup ( const char *name ) { };
-void mglGraph::EndGroup() { };
+void mglGraph::WriteSVG(const char *,const char *)	{}
+void mglGraph::WriteIDTF(const char *,const char *)	{}
+void mglGraph::VertexColor(bool enable)	{}
+void mglGraph::TextureColor(bool enable){}
+void mglGraph::Compression(bool enable)	{}
+void mglGraph::Unrotate(bool enable)	{}
+void mglGraph::StartGroup ( const char *name )		{}
+void mglGraph::StartAutoGroup ( const char *name )	{}
+void mglGraph::EndGroup()	{}
 //-----------------------------------------------------------------------------
 void mglGraph::WriteJPEG(const char *fname,const char *)
 {

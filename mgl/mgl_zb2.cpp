@@ -668,13 +668,13 @@ void mglGraphAB::cloud_plot(long nx,long ny,long nz,float *pp,float *a,float alp
 	delete []aa;	delete []tt;
 }
 //-----------------------------------------------------------------------------
+/// color mixing: color c1 is under color c2 !!!
 void mglGraphAB::combine(unsigned char *c1,unsigned char *c2)
-// смешение цветов; цвет c2 лежит выше цвета c1 !!!
 {
 	if(!c2[3])	return;
-	unsigned int a1=c1[3], a2=c2[3],b1=255-a2,b2,b3;
+	register unsigned int a1=c1[3], a2=c2[3],b1=255-a2;
 	if(a1==0 || a2==255)	{	memcpy(c1,c2,4);	return; }
-	if(!TranspType)
+	if(TranspType==0)
 	{
 		c1[0] = (c1[0]*b1 + c2[0]*a2)/256;
 		c1[1] = (c1[1]*b1 + c2[1]*a2)/256;
@@ -690,6 +690,7 @@ void mglGraphAB::combine(unsigned char *c1,unsigned char *c2)
 	}
 	else if(TranspType==2)
 	{
+		unsigned int b2,b3;
 		b1 = (c1[0]*a1 + c2[0]*a2)/256;		c1[0] = b1<255 ? b1 : 255;
 		b2 = (c1[1]*a1 + c2[1]*a2)/256;		c1[1] = b2<255 ? b2 : 255;
 		b3 = (c1[2]*a1 + c2[2]*a2)/256;		c1[2] = b3<255 ? b3 : 255;

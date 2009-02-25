@@ -36,6 +36,21 @@ wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim){
 #include "mgl/mgl_f.h"
 wchar_t *mgl_wcsdup(const wchar_t *s);
 //-----------------------------------------------------------------------------
+void mgl_wcstrim(wchar_t *str)
+{
+	wchar_t *c = mgl_wcsdup(str);
+	unsigned long n=wcslen(str);
+	long k;
+	for(k=0;k<long(wcslen(str));k++)	// удаляем начальные пробелы
+		if(str[k]>' ')	break;
+	wcscpy(c,&(str[k]));
+	n = wcslen(c);
+	for(k=n-1;k>=0;k--)	// удаляем начальные пробелы
+		if(c[k]>' ')		break;
+	c[k+1] = 0;
+	wcscpy(str,c);	free(c);
+}
+//-----------------------------------------------------------------------------
 wchar_t *mgl_str_copy(const char *s)
 {
 	wchar_t *str = new wchar_t[strlen(s)+1];
@@ -66,7 +81,7 @@ void mgl_wcstombs(char *dst, const wchar_t *src, int size)
 	dst[j] = 0;
 }
 //-----------------------------------------------------------------------------
-// return values : 0 -- OK, 1 -- wrong arguments, 2 -- wrong command
+// return values : 0 -- OK, 1 -- wrong arguments, 2 -- wrong command, 3 -- unclosed string
 int mglParse::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var)
 {
 	int k[10], i;
@@ -350,16 +365,6 @@ int mglParse::PreExec(mglGraph *gr, long k, wchar_t **arg, mglArg *a)
 {
 	long n=0;
 	mglVar *v;
-/*	if(!wcsncmp(L"read",arg[0],4) || !wcscmp(L"new",arg[0]) || !wcscmp(L"copy",arg[0]) || !wcscmp(L"var",arg[0]) || !wcscmp(L"hist",arg[0]) || !wcscmp(L"max",arg[0]) || !wcscmp(L"min",arg[0]) || !wcscmp(L"sum",arg[0]) || !wcscmp(L"resize",arg[0]) || !wcscmp(L"subdata",arg[0]) || !wcscmp(L"fit",arg[0]) || !wcscmp(L"momentum",arg[0]) || !wcscmp(L"import",arg[0]) || !wcscmp(L"evaluate",arg[0]) || !wcscmp(L"transform",arg[0]) || !wcscmp(L"transforma",arg[0]) || !wcscmp(L"stfad",arg[0]) || !wcscmp(L"pde",arg[0]) || !wcscmp(L"qo2d",arg[0]) || !wcscmp(L"ray",arg[0]))
-	{
-		if(k<3 || check_for_name(arg[1]))	return 2;
-		v = AddVar(arg[1]);
-		v->d.Create(1,1,1);
-		a[0].type = 0;	a[0].d = &(v->d);
-		wcscpy(a[0].w, arg[1]);
-		n = 1+(Exec(gr, arg[0],k-1,a));
-	}
-	else */
 	if(!wcscmp(L"delete",arg[0]))	// parse command "delete"
 	{
 		if(k<2)	return 2;
@@ -434,7 +439,7 @@ int mglParse::PreExec(mglGraph *gr, long k, wchar_t **arg, mglArg *a)
 	return n;
 }
 //-----------------------------------------------------------------------------
-// return values: 0 - OK, 1 - wrong arguments, 2 - wrong command, 3 - string too long
+// return values: 0 - OK, 1 - wrong arguments, 2 - wrong command, 3 - string too long, 4 -- unclosed string
 int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 {
 	if(!gr || Stop)	return 0;
@@ -442,12 +447,21 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	str = s;
 	wcscpy(str,string);
 	wcstrim_mgl(str);
+
+	long n,k=0;
+	for(n=1;n<long(wcslen(str));n++)
+		if(str[n]=='\'' && str[n-1]!='\\')	k++;
+	if(k%2)	return 4;	// strings is not closed
 	// define parameters or start cycle
 	if(!wcsncmp(str,L"define",6) && (str[6]==' ' || str[6]=='\t'))
 	{
 		str += 7;	wcstrim_mgl(str);	int res = 1;
 		if(*str=='$' && str[1]>='0' && str[1]<='9')
-		{	res = 0;	AddParam(str[1]-'0', str+2);	}
+		{
+			int n=str[1]-'0';	res = 0;
+			str +=2;	mgl_wcstrim(str);
+			AddParam(n, str);
+		}
 		delete []s;		return res;
 	}
 	if(!wcsncmp(str,L"for",3) && (str[3]==' ' || str[3]=='\t'))
@@ -474,8 +488,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 
 	wcstrim_mgl(str);
 	if(!wcscmp(str,L"stop"))	{	Stop = true;	delete []s;	return 0;	}
-	long k=0,n;
-	while(k<1024)	// parse string to substrings (by spaces)
+	for(k=0;k<1024;k++)	// parse string to substrings (by spaces)
 	{
 		n = mglFindArg(str);
 		if(n<1)
@@ -484,7 +497,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			if(n<0)	str[-n]=0;
 			break;
 		}
-		str[n]=0;	arg[k] = str;	k++;
+		str[n]=0;	arg[k] = str;//	k++;
 		str = str+n+1;	wcstrim_mgl(str);
 	}
 	// try to find last argument
@@ -666,7 +679,8 @@ void mglParse::Execute(mglGraph *gr, FILE *fp, bool print)
 			if(gr->Message && gr->Message[0])	printf("%s\n",gr->Message);
 			if(r==1)	printf("Wrong argument(s) in line %d -- %ls\n", line, str);
 			if(r==2)	printf("Wrong command in line %d -- %ls\n", line, str);
-			if(r==3)	printf("String too long line %d -- %ls\n", line, str);
+			if(r==3)	printf("String too long in line %d -- %ls\n", line, str);
+			if(r==4)	printf("Unbalanced ' in line %d -- %ls\n", line, str);
 		}
 	}
 }

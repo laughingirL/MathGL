@@ -1297,7 +1297,7 @@ int mgls_legend(mglGraph *gr, long n, mglArg *a, int k[10])
 	if(k[0]==3 && k[1]==3)
 		gr->Legend(a[0].v, a[1].v, k[2]==2?a[2].s:"rL", k[3]==3?a[3].v:-1, k[4]==3?a[4].v:0.1);
 	else
-		gr->Legend(k[0]==3?int(a[0].v):3, k[1]==2?a[1].s:"rL", k[2]==3?a[2].v:-1, k[4]==3?a[4].v:0.1);
+		gr->Legend(k[0]==3?int(a[0].v):3, k[1]==2?a[1].s:"rL", k[2]==3?a[2].v:-1, k[3]==3?a[3].v:0.1);
 	return 0;
 }
 void mglc_legend(wchar_t out[1024], long n, mglArg *a, int k[10])
@@ -3255,9 +3255,20 @@ void mglc_ticklen(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"gr->TickLen = %g;", a[0].v>0 ? a[0].v : 0.1);
 }
 //-----------------------------------------------------------------------------
+//	{L"adjust",L"Adjust ticks for best view",L"adjust dir", mgls_adjust, mglc_adjust}
+int mgls_adjust(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)	gr->AdjustTicks(a[0].s);
+	else	return 1;
+	return 0;
+}
+void mglc_adjust(wchar_t out[1024], long n, mglArg *a, int k[10])
+{	if(k[0]==2)	swprintf(out,1024,L"gr->AdjustTicks(\"%s\");",a[0].s);	}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{L"addlegend",L"Add legend entry",L"addlegend txt fmt", mgls_addlegend, mglc_addlegend, false},
 	{L"addto",L"Add data or number",L"addto var|num", mgls_addto, mglc_addto, false},
+	{L"adjust",L"Adjust ticks for best view",L"adjust dir", mgls_adjust, mglc_adjust},
 	{L"af2d",L"Solve PDE in accompanied coordinates",L"qo2d res 'ham' ini_re ini_im ray [r=1 k0=100 xout=0 yout=0]", mgls_af2d, mglc_af2d, true},
 	{L"alpha",L"Switch on/off transparency",L"addto [num]", mgls_alpha, mglc_alpha, false},
 	{L"alphadef",L"Set default transparency",L"alphadef num", mgls_alphadef, mglc_alphadef, false},

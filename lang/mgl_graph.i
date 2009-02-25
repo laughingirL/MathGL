@@ -249,6 +249,8 @@ struct mglParse{};
 	{	mgl_set_ticks_dir(self, dir, d, ns, org);	}
 	void SetTicks(char dir, int n, float *val, const char **lbl)
 	{	mgl_set_ticks_vals(self, dir, n, val, lbl);	}
+	void AdjustTicks(const char *dir)
+	{	mgl_adjust_ticks(self, dir);	}
 
 /*	TODO: %varargs
 	void mgl_set_ticks_val(HMGL graph, char dir, int n, double val, const char *lbl, ...);*/
@@ -304,6 +306,23 @@ struct mglParse{};
 	void SetTickTemplC(const char *templ)
 	{	mgl_set_ctt(self, templ);	}
 
+	void SetXTT(const wchar_t *templ)
+	{	mgl_set_xttw(self, templ);	}
+	void SetYTT(const wchar_t *templ)
+	{	mgl_set_yttw(self, templ);	}
+	void SetZTT(const wchar_t *templ)
+	{	mgl_set_zttw(self, templ);	}
+	void SetCTT(const wchar_t *templ)
+	{	mgl_set_cttw(self, templ);	}
+	void SetXTT(const char *templ)
+	{	mgl_set_xtt(self, templ);	}
+	void SetYTT(const char *templ)
+	{	mgl_set_ytt(self, templ);	}
+	void SetZTT(const char *templ)
+	{	mgl_set_ztt(self, templ);	}
+	void SetCTT(const char *templ)
+	{	mgl_set_ctt(self, templ);	}
+	
 	void Ball(float x, float y, float z, const char *col="r")
 	{	mgl_ball_str(self, x, y, z, col);	}
 	void Mark(float x, float y, float z, char mark)

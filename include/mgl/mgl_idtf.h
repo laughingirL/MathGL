@@ -71,27 +71,56 @@ typedef std::list<u3dLight>  u3dLight_list;
 class u3dMaterial
 {
 public:
-	mglColor color;
+	mglColor diffuse;
+	mglColor specular;
+	mglColor emissive;
+	float reflectivity;
 	float opacity;
-	bool emissive;
 	bool vertex_color;
 	std::string name;
-	u3dMaterial() : opacity ( 1.0f ), emissive ( false ), vertex_color ( false ) {};
+	std::string texture;
+	bool texturealpha;
+        
+	u3dMaterial() : diffuse(BC), specular(BC), emissive(BC), reflectivity(0.25f), opacity(1.0f), vertex_color(false) {};
 	bool operator== ( const u3dMaterial& Material )
 	{
-		return ( this->color         ==  Material.color
-					&& this->opacity       ==  Material.opacity
-					&& this->emissive      ==  Material.emissive
-					&& this->vertex_color  ==  Material.vertex_color );
+		return( this->diffuse	==  Material.diffuse &&
+			this->specular	==  Material.specular &&
+			this->emissive	==  Material.emissive &&
+			this->opacity       ==  Material.opacity &&
+			this->reflectivity  ==  Material.reflectivity &&
+			this->vertex_color  ==  Material.vertex_color &&
+			this->texture.empty() && Material.texture.empty() );
 	}
 	void print_material ( std::ofstream& ostr );
 	void print_shader ( std::ofstream& ostr );
 };
 typedef std::deque<u3dMaterial> u3dMaterial_list;
 //-----------------------------------------------------------------------------
-typedef std::vector<mglPoint> mglPoint_list;
-//-----------------------------------------------------------------------------
-typedef std::vector<size_t> ModelMaterial_list;
+/// This class is used for manipulation with TGA images.
+class TGAImage
+{
+public:
+	TGAImage();
+	~TGAImage();
+
+	bool Initialize( uint32_t width, uint32_t height, uint32_t channels );
+	void Deallocate();
+
+	bool Write( const char* pFileName ) const;
+
+	uint32_t Width, Height;
+	uint32_t Channels;
+	uint8_t* RGBPixels; // RGBA
+};
+class u3dTexture
+{
+public:
+	std::string name;
+	TGAImage image;
+	void print_texture ( const char *fname, std::ofstream& ostrtmp );
+};
+typedef std::list<u3dTexture>  u3dTexture_list;
 //-----------------------------------------------------------------------------
 struct u3dGroup
 {
@@ -101,15 +130,17 @@ struct u3dGroup
 	bool isauto;
 	u3dGroup(): parent ( NULL ), NumberOfChildren ( 0 ), isauto ( false ) {};
 };
-//-----------------------------------------------------------------------------
 typedef std::list<u3dGroup>  u3dGroup_list;
 //-----------------------------------------------------------------------------
+typedef std::vector<mglPoint> mglPoint_list;
+typedef std::vector<mglColor> mglColor_list;
+typedef std::vector<size_t> ModelMaterial_list;
 /// Class describe an object in the scene. Base class for PointSet, LineSet, Mesh. Keeps a vector of vertexes used, colors assigned to them (if any), names of materials used in the model. Has a name and may belong to group of objects (have a parent).
 class u3dModel
 {
 public:
 	mglPoint_list Points;
-	std::vector<mglColor> PointColors;
+	mglColor_list Colors;
 	float position[4][4];
 	float invpos[4][4];
 
@@ -181,29 +212,36 @@ public:
 //-----------------------------------------------------------------------------
 typedef std::list<u3dPointSet>  u3dPointSet_list;
 //-----------------------------------------------------------------------------
-struct u3dTriangle
+struct size_t3 
 {
-	size_t pid0; // ids of points
-	size_t pid1;
-	size_t pid2;
-	size_t mid; // id of triangle material
-	size_t cid0; // ids of point colors
-	size_t cid1;
-	size_t cid2;
+	size_t a;
+	size_t b;
+	size_t c;
 };
-typedef std::vector<u3dTriangle> u3dTriangle_list;
-//-----------------------------------------------------------------------------
+struct TexCoord2D
+{
+	float U;
+	float V;
+	TexCoord2D ( ) { }
+	TexCoord2D ( float u, float v ) { U = u; V = v; }
+};
+typedef std::vector<TexCoord2D>  TexCoord2D_list;
 /// Class contain meshes which are presented as a set of triangles. Indexes of vertexes, index of material, indexes of vertex colors are stored for each triangle. But really there are two modes, with and without per-vertex colors. If vertex colors are used, colors change smoothly along the surface, but transparency and lighting are disabled. If there are no vertex colors, the appearance is affected by materials, transparency and lighting are possible, but a large number of different materials results in slowly displayed models. Boolean parameter vertex_color_flag controls the mode. If you are drawing something in a small set of colors, it is advised to set it to false in order to get lighting for your model. (If exacly one color is used the per-vertex coloring is disabled automatically).
 class u3dMesh : public u3dModel
 {
 public:
+	TexCoord2D_list textureCoords;
+	std::vector<size_t3> Triangles;
+	std::vector<size_t> faceShaders;
+	std::vector<size_t3> faceColors;
 	bool disable_compression;
+	size_t textureDimension;
 	u3dMesh ( const std::string& name, mglGraphIDTF *Graph,
 				const bool& vertex_color, const bool& disable_compression ) : u3dModel ( name, Graph, vertex_color )
 	{
 		this->disable_compression = disable_compression;
+		this->textureDimension = 0;
 	}
-	u3dTriangle_list  Triangles;
 	void quad_plot ( float *pp0,float *pp1,float *pp2,float *pp3,
 						float *cc0,float *cc1,float *cc2,float *cc3 );
 	void quad_plot_n ( float *pp0,float *pp1,float *pp2,float *pp3,
@@ -215,8 +253,9 @@ public:
 						float *cc0,float *cc1,float *cc2,
 						float *nn0,float *nn1,float *nn2 );
 	void print_model_resource ( std::ofstream& ostrtmp );
-	void AddTriangle ( size_t pid0, size_t pid1, size_t pid2, size_t mid,
-						size_t cid0 = SIZE_MAX, size_t cid1 = SIZE_MAX, size_t cid2 = SIZE_MAX );
+	void AddTriangle ( size_t pid0, size_t pid1, size_t pid2, 
+						size_t cid0, size_t cid1, size_t cid2);
+	void AddTriangle ( size_t pid0, size_t pid1, size_t pid2, size_t mid);
 };
 //-----------------------------------------------------------------------------
 typedef std::list<u3dMesh>  u3dMesh_list;
@@ -231,11 +270,11 @@ public:
 	using mglGraph::Ball;
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	void VertexColor(bool enable)  { vertex_color_flag = enable ; }
+	void TextureColor(bool enable)  { textures_flag = enable ; }
 	void Compression(bool enable)  { disable_compression_flag = !enable ; }
 	void Unrotate(bool enable)     { unrotate_flag = enable ; }
 	/// Flush() finishes current PointSet, LineSet and Mesh. Use Flush() to separate unnamed objects in the scene. The named objects or object groups are separeted by StartGroup/EndGroup
 	void Flush() { points_finished = lines_finished = mesh_finished = true; };
-	void Light ( bool enable )	{UseLight=enable;};
 	void Light ( int n,mglPoint p, mglColor c=NC, float br=0.5, bool infty=true );
 	void InPlot ( float x1,float x2,float y1,float y2, bool rel=false );
 	void Clf ( mglColor Back=NC );
@@ -250,6 +289,7 @@ public:
 	friend class u3dMesh;
 	friend class u3dBall;
 	bool vertex_color_flag;			///< use per-vertex color in meshes
+	bool textures_flag;			///< use textures on surfaces
 	bool disable_compression_flag;	///< disable mesh compression (normally is true). One don't need the number of polygons reduced automatically to save space, but you may have to unset it if you use unpatched (unfixed) U3D library.
 	bool unrotate_flag;			///< do not rotate the scene as a whole, in this case you have to set camera position externally.
 	/// Objects can belong to groups. StartGroup() and EndGroup() do what the names imply.
@@ -285,6 +325,7 @@ protected:
 	void font_line ( float *p, unsigned char *r,bool thin=true );
 
 	void surf_plot ( long n,long m,float *pp,float *cc,bool *tt );
+	void cloud_plot( long nx, long ny, long nz, float *pp, float *a, float alpha );
 	void arrow_plot ( float *p1,float *p2,char st );
 	void quads_plot(long n, float *pp, float *cc, bool *tt);
 
@@ -296,6 +337,9 @@ protected:
 
 	u3dMaterial_list Materials;		///< global list of all materials used in all models.
 	size_t AddMaterial ( const u3dMaterial& Material );
+
+	u3dTexture_list Textures;		///< global list of all textures
+	u3dTexture& AddTexture();
 
 	u3dPointSet_list  PointSets;	///< global list of u3dPointSets
 	u3dPointSet& GetPointSet();

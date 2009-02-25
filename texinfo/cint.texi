@@ -24,6 +24,20 @@ These variables contain identifiers for graphics drawing objects and for data ob
 
 Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of types @code{HMGL, HMDT} must be integer with sufficient size (@code{integer*4} for 32-bit operating system or @code{integer*8} for 64-bit operating system). All C functions are subroutines in Fortran which should be called by operator @code{call}. The exceptions are functions which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also one should keep in mind that strings in Fortran are denoted by @code{'} sign but not @code{"} one.
 
+For compiling Fortran program you should specify AT&T calling conversion (it is default for gfortran, g77 and so on). The internal difference of AT&T interface from C interface is that the symbol '_' is added at the end of function name, and string length(s) is passed at the end of argument list. For example:
+@itemize
+@item
+C function is
+ 
+void mgl_fplot(HMGL graph, const char *fy, const char *stl, int n);
+
+@item
+AT&T function is
+
+void mgl_fplot_(uintptr_t *graph, const char *fy, const char *stl, int
+*n, int ly, int ls);
+@end itemize
+
 @menu
 * Create and delete objects::   
 * MGL parsing (Pure C)::        
@@ -31,7 +45,6 @@ Fortran functions/subroutines have the same names as C functions. However, there
 * Axis settings (Pure C)::      
 * Transformation matrix (Pure C)::  
 * Export to file (Pure C)::     
-* Single frame (Pure C)::       
 * Primitives drawing (Pure C)::  
 * Text printing (Pure C)::      
 * Axis and Colorbar (Pure C)::  
@@ -281,7 +294,7 @@ The variable define the base width for all lines. The value <1 is ignored. Incre
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_tick_len (@code{HMGL} gr, @code{float} val)
-The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt(2)=1.41...} times smaller.
+The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt@{2@}=1.41...} times smaller.
 @end deftypefn
 
 
@@ -484,6 +497,11 @@ The function sets to draws Ternary plot. This special plot is for 3 dependent co
 @cindex ctt
 @cindex OrgT
 @cindex TuneTicks
+@cindex AdjustTicks
+
+@deftypefn {C function} @code{void} mgl_adjust_ticks (@code{HMGL} gr, @code{const char *}dir)
+Set the ticks step, number of sub-ticks and initial ticks position to be the most human readable for the axis along direction(s) @var{dir}. Also set @var{TuneTicks}=@code{true}.
+@end deftypefn
 
 @deftypefn {C function} @code{void} mgl_set_ticks_dir (@code{HMGL} gr, @code{char} dir, @code{float} d, @code{int} ns, @code{float} org)
 Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
@@ -770,7 +788,7 @@ Draws bounding box outside the plotting volume with color specified by string @v
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text)
-@deftypefnx {C function} @code{void} mgl_label_ext (@code{char} dir, @code{const char *}text, @code{int} pos, @code{float} size, @code{float} shift)
+@deftypefnx {C function} @code{void} mgl_label_ext (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{int} pos, @code{float} size, @code{float} shift)
 Prints the label @var{text} for axis @var{dir}. The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis (default). If @var{pos}<0 then label is printed at the minimum of axis. Parameter @var{size} determines the font size for the label. By default the font size is 1.4 times larger than the one for ticks @var{FontSize}. @xref{Text printing (Pure C)}.
 @end deftypefn
 
@@ -2077,6 +2095,8 @@ Gets the z-size of the data.
 @cindex Transpose
 @cindex Squeeze
 @cindex Crop
+@cindex Delete
+@cindex Insert
 
 @deftypefn {C function} @code{void} mgl_data_rearrange (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
 Rearrange dimensions without changing data array so that resulting sizes should  be @var{mx}*@var{my}*@var{mz} < nx*ny*nz. If some of parameter @var{my} or @var{mz} are zero then it will be selected to optimal fill of data array. For example, if @var{my}=0 then it will be change to @var{my}=nx*ny*nz/@var{mx} and @var{mz} will be 1.
@@ -2098,6 +2118,13 @@ Reduces the data size by excluding data elements which indexes are not divisible
 @end deftypefn
 @deftypefn {C function} @code{void} mgl_data_crop (@code{HMDT} dat, @code{int} n1, @code{int} n2, @code{char} dir)
 Cuts off edges of the data @var{i}<@var{n1} and @var{i}>@var{n2} if @var{n2}>0 or @var{i}>@code{n[xyz]}-@var{n2} if @var{n2}<=0 along direction @var{dir}.
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_data_insert (@code{HMDT} dat, @code{char} dir, @code{int} pos, @code{char} num)
+Insert @var{num} slices along @var{dir}-direction at position @var{pos} and fill it by zeros.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_data_delete (@code{HMDT} dat, @code{char} dir, @code{int} pos, @code{char} num)
+Delete @var{num} slices along @var{dir}-direction at position @var{pos}.
 @end deftypefn
 
 @c ------------------------------------------------------------------

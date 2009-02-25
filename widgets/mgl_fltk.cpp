@@ -681,7 +681,7 @@ void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void 
 //-----------------------------------------------------------------------------
 int mglFlRun()	{	return Fl::run();	}
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_fltk(HMDR dr, const char *title)
+HMGL mgl_create_graph_fltk_dr(HMDR dr, const char *title)
 {
 	mglGraphFLTK *g = new mglGraphFLTK;
 	g->Window(0,0,dr,title);

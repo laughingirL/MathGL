@@ -384,8 +384,8 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, float s
 	}
 	else if(RotatedText)
 	{
-		if(pp[4]==pp[1] && pp[3]==pp[0])
-		{	free(font1);	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	return;	}
+//		if(pp[4]==pp[1] && pp[3]==pp[0])
+//		{	free(font1);	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	return;	}
 		float ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
 		float tet = 180*atan2(pp[4]-pp[1],pp[3]-pp[0])/M_PI;
 		if(fabs(tet)>90)	tet+=180;
@@ -399,8 +399,8 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, float s
 	}
 	else
 	{
-		if(pp[4]==pp[1] && pp[3]==pp[0])
-		{	free(font1);	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	return;	}
+//		if(pp[4]==pp[1] && pp[3]==pp[0])
+//		{	free(font1);	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	return;	}
 		float ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
 		float tet = atan2(pp[4]-pp[1],pp[3]-pp[0]);
 //		if(fabs(tet)>90)	tet+=180;
@@ -783,8 +783,10 @@ float mglGraphAB::GetOrgZ(char dir)
 	return res;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Alpha(bool enable)	{	UseAlpha=enable;	}
-void mglGraphAB::Light(bool enable)	{	UseLight=enable;	}
+bool mglGraphAB::Alpha(bool enable)
+{	bool t=UseAlpha;	UseAlpha=enable;	return t;	}
+bool mglGraphAB::Light(bool enable)
+{	bool t=UseLight;	UseLight=enable;	return t;	}
 //-----------------------------------------------------------------------------
 void mglGraphAB::Update(){}
 void mglGraphAB::ToggleAlpha(){}

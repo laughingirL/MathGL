@@ -39,8 +39,8 @@ public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	void Flush() {glFlush();};
 	void Finish(){glFinish();};
-	void Alpha(bool enable);
-	void Light(bool enable);
+	bool Alpha(bool enable);
+	bool Light(bool enable);
 	void Light(int n, bool enable);
 	void Fog(float d, float dz=0.25);
 	void Light(int n,mglPoint p, mglColor c=NC, float br=0.5, bool infty=true);

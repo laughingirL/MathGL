@@ -53,6 +53,7 @@ Create the instance of class mglGraph with specified sizes @var{width} and @var{
 * Vector fields (Python)::      
 * Other plotting (Python)::     
 * Nonlinear fitting (Python)::  
+* Frames/Animation (Python)::   
 @end menu
 
 @c ##################################################################
@@ -165,7 +166,7 @@ The variable define the base width for all lines. The value <1 is ignored. For v
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} SetTickLen (@code{float} val)
-The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt(2)=1.41...} times smaller.
+The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt@{2@}=1.41...} times smaller.
 @end deftypemethod
 
 @c ==================================================================
@@ -368,6 +369,12 @@ The function sets to draws Ternary plot. This special plot is for 3 dependent co
 @cindex FactorPos
 @cindex TuneTicks
 @cindex TickStr
+@cindex AdjustTicks
+
+@deftypemethod {mglGraph (Python)} @code{void} AdjustTicks (@code{const char *}dir)
+Set the ticks step, number of sub-ticks and initial ticks position to be the most human readable for the axis along direction(s) @var{dir}. Also set @var{TuneTicks}=@code{true}.
+@end deftypemethod
+
 
 @deftypemethod {mglGraph (Python)} @code{void} SetTicks (@code{char} dir, @code{float} d=@code{-5}, @code{int} ns=@code{0}, @code{float} org=@code{NAN})
 Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
@@ -386,6 +393,14 @@ Set the manual positions @var{val} and its labels @var{lbl} for @var{n}-th ticks
 @deftypemethodx {mglGraph (Python)} @code{void} SetTickTemplY (@code{const wchar_t *}ytt)
 @deftypemethodx {mglGraph (Python)} @code{void} SetTickTemplZ (@code{const wchar_t *}ztt)
 @deftypemethodx {mglGraph (Python)} @code{void} SetTickTemplC (@code{const wchar_t *}ctt)
+@deftypemethodx {mglGraph (Python)} @code{void} SetXTT (@code{const char *}xtt)
+@deftypemethodx {mglGraph (Python)} @code{void} SetYTT (@code{const char *}ytt)
+@deftypemethodx {mglGraph (Python)} @code{void} SetZTT (@code{const char *}ztt)
+@deftypemethodx {mglGraph (Python)} @code{void} SetCTT (@code{const char *}ctt)
+@deftypemethodx {mglGraph (Python)} @code{void} SetXTT (@code{const wchar_t *}xtt)
+@deftypemethodx {mglGraph (Python)} @code{void} SetYTT (@code{const wchar_t *}ytt)
+@deftypemethodx {mglGraph (Python)} @code{void} SetZTT (@code{const wchar_t *}ztt)
+@deftypemethodx {mglGraph (Python)} @code{void} SetCTT (@code{const wchar_t *}ctt)
 The template for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{xtt}, @var{ytt}, @var{ztt}, @var{ctt}=@code{NULL} then default template is used (in simplest case it is @samp{%.2g}) with automatic detaching of common multiplier or common component (see @var{TuneTicks}).
 @end deftypemethod
 

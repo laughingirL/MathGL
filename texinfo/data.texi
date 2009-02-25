@@ -87,6 +87,13 @@ Allocates memory and copies the data from the @code{gsl_matrix *} structure.
 Copies the data from mglData instance @var{dat}.
 @end deftypemethod
 
+@deftypemethod mglData @code{void} Set (@code{const std::vector<int> &}d)
+@deftypemethodx mglData @code{void} Set (@code{const std::vector<float> &}d)
+@deftypemethodx mglData @code{void} Set (@code{const std::vector<double> &}d)
+Allocates memory and copies the data from the @code{std::vector<T>} array.
+@end deftypemethod
+
+
 @deftypemethod mglData @code{void} Set (@code{const char *}str, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
 Allocates memory and scanf the data from the string.
 @end deftypemethod
@@ -181,11 +188,11 @@ Delete @var{num} columns (slice along x-direction) at position @var{at}.
 Delete @var{num} slices (slice along z-direction) at position @var{at}.
 @end deftypemethod
 
-@deftypemethod mglData @code{void} Insert (@code{char} dir, @code{int} at=@code{0}, @code{int} num=@code{1})
-Insert @var{num} slices along @var{dir}-direction at position @var{at} and fill it by zeros.
+@deftypemethod mglData @code{void} Insert (@code{char} dir, @code{int} pos=@code{0}, @code{int} num=@code{1})
+Insert @var{num} slices along @var{dir}-direction at position @var{pos} and fill it by zeros.
 @end deftypemethod
-@deftypemethod mglData @code{void} Delete (@code{char} dir, @code{int} at=@code{0}, @code{int} num=@code{1})
-Delete @var{num} slices along @var{dir}-direction at position @var{at}.
+@deftypemethod mglData @code{void} Delete (@code{char} dir, @code{int} pos=@code{0}, @code{int} num=@code{1})
+Delete @var{num} slices along @var{dir}-direction at position @var{pos}.
 @end deftypemethod
 
 @c ------------------------------------------------------------------
@@ -486,6 +493,44 @@ Adds the number to each element.
 @deftypemethod mglData @code{void} operator-= (@code{float} d)
 Subtracts the number to each element.
 @end deftypemethod
+
+
+@deftypefn {Library Function} mglData operator+ (@code{const mglData &}a, @code{const mglData &}b)
+Adds the other data.
+@end deftypefn
+@deftypefn {Library Function} mglData operator+ (@code{float} a, @code{const mglData &}b)
+Adds the number.
+@end deftypefn
+@deftypefn {Library Function} mglData operator+ (@code{const mglData &}a, @code{float} b)
+Adds the number.
+@end deftypefn
+
+@deftypefn {Library Function} mglData operator- (@code{const mglData &}a, @code{const mglData &}b)
+Subtracts the other data.
+@end deftypefn
+@deftypefn {Library Function} mglData operator- (@code{float} a, @code{const mglData &}b)
+Subtracts from the number.
+@end deftypefn
+@deftypefn {Library Function} mglData operator- (@code{const mglData &}a, @code{float} b)
+Subtracts the number.
+@end deftypefn
+
+@deftypefn {Library Function} mglData operator* (@code{const mglData &}a, @code{const mglData &}b)
+Multiplies by the other data.
+@end deftypefn
+@deftypefn {Library Function} mglData operator* (@code{float} a, @code{const mglData &}b)
+Multiplies by the number.
+@end deftypefn
+@deftypefn {Library Function} mglData operator* (@code{const mglData &}a, @code{float} b)
+Multiplies by the number.
+@end deftypefn
+
+@deftypefn {Library Function} mglData operator/ (@code{const mglData &}a, @code{const mglData &}b)
+Divides by the other data.
+@end deftypefn
+@deftypefn {Library Function} mglData operator/ (@code{const mglData &}a, @code{float} b)
+Divides by the number.
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node Global functions, , Operators, mglData class

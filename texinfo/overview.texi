@@ -76,7 +76,7 @@ Use precompiled binary. There are binaries for MinGW (platform Win32). For preco
 Install precompiled versions from standard packages (RPM, deb, DevPak and so on, see @uref{http://mathgl.sf.net/download.html, Download} section at homepage).
 @end enumerate
 
-At the own program compilation one needs to specify the linker key @code{-lmgl} for compilation in console program or with the external (not MathGL) window library. If one wants to use FLTK or GLUT windows then he needs to add the keys @code{-lmgl-fltk} or @code{-lmgl-glut}. Fortran users also must add C++ library by option @code{-lstdc++}.
+At the own program compilation one needs to specify the linker key @code{-lmgl} for compilation in console program or with the external (not MathGL) window library. If one wants to use FLTK or GLUT windows then he needs to add the keys @code{-lmgl-fltk} or @code{-lmgl-glut}. Fortran users also should add C++ library by option @code{-lstdc++}.
 
 @node General concepts, FAQ, Installation and using, Overview
 @section General concepts
@@ -242,6 +242,13 @@ No. The MathGL library is self-consistent and does not require the knowledge of 
 
 @item In which language the library is written? For which languages the library has interface?
 The core of MathGL library is written on C++. But there are interfaces for pure C, Fortran, Pascal, Forth languages and its own command language MGL. Also there are a large set of interpreter languages support (Python, Java,  ALLEGROCL, CHICKEN, Lisp, CFFI, C#, Guile, Lua, Modula 3, Mzscheme, Ocaml, Octave, Perl, PHP, Pike, R, Ruby, Tcl). These interfaces are written via SWIG (both pure C functions and classes) but only interface for Python and Octave is included in autoconf/automake script. The matter that I don't know any other interpreter languages :(. Note, the most of other languages can use (can link) pure C functions.
+
+@item How I can use MathGL with Fortran?
+You can use MathGL as is with @code{gfortran} because it use by default AT&T notation for external functions. For other compilers (like, Visual Fortran) you have to switch on AT&T notation manually. The AT&T notation require that symbol @samp{_} is added at the end of function name, function argument(s) is passed by pointers and string length(s) is passed at the end of argument list. For example:
+
+@emph{C function} -- @code{void mgl_fplot(HMGL graph, const char *fy, const char *stl, int n);}
+
+@emph{AT&T function} -- @code{void mgl_fplot_(uintptr_t *graph, const char *fy, const char *stl, int *n, int ly, int ls);}
 
 @item I have class Foo and drawing method Foo::draw(mglGraph *gr). How I can use it in FLTK or GLUT window?
 The member-functions of classes have hidden parameter (the pointer to a class instance) in C++. So, their direct usage is impossible. The solution is to write interface function:

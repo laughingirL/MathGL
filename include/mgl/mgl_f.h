@@ -136,6 +136,7 @@ void mgl_perspective_(uintptr_t *graph, float val);
 /*		Axis functions														 */
 /*****************************************************************************/
 void mgl_tune_ticks_(uintptr_t *gr, int *tune, float *fact_pos);
+void mgl_adjust_ticks_(uintptr_t *gr, const char *dir, int l);
 void mgl_set_ticks_dir_(uintptr_t *gr, char *dir, float *d, int *ns, float *org, int);
 void mgl_set_ticks_(uintptr_t *graph, float *DX, float *DY, float *DZ);
 void mgl_set_subticks_(uintptr_t *graph, int *NX, int *NY, int *NZ);
@@ -450,6 +451,8 @@ float mgl_data_min_(uintptr_t *dat);
 const float *mgl_data_data_(uintptr_t *dat);
 uintptr_t mgl_data_combine_(uintptr_t *dat1, uintptr_t *dat2);
 void mgl_data_extend_(uintptr_t *dat, int *n1, int *n2);
+void mgl_data_insert_(uintptr_t *dat, const char *dir, int *at, int *num, int);
+void mgl_data_delete_(uintptr_t *dat, const char *dir, int *at, int *num, int);
 /*****************************************************************************/
 /*		Data manipulation functions											 */
 /*****************************************************************************/

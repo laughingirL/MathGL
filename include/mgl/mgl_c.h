@@ -50,12 +50,8 @@ struct gsl_matrix;
 HMGL mgl_create_graph_gl();
 HMGL mgl_create_graph_zb(int width, int height);
 HMGL mgl_create_graph_ps(int width, int height);
-/*HMGL mgl_create_graph_glut(int argc, char **argv, int (*draw)(HMGL gr, void *p),
-						const char *title, void (*reload)(int next), void *par);
-HMGL mgl_create_graph_fltk(int argc, char **argv, int (*draw)(HMGL gr, void *p),
-						const char *title, void (*reload)(int next), void *par);
-HMGL mgl_create_graph_qt(int argc, char **argv, int (*draw)(HMGL gr, void *p),
-						const char *title, void (*reload)(int next), void *par);*/
+HMGL mgl_create_graph_idtf();
+#ifndef MGL_NO_WIDGET
 int mgl_fortran_func(HMGL gr, void *);
 HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par);
 HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par);
@@ -63,9 +59,9 @@ HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void 
 HMGL mgl_create_graph_glut_dr(HMDR dr, const char *title);
 HMGL mgl_create_graph_fltk_dr(HMDR dr, const char *title);
 HMGL mgl_create_graph_qt_dr(HMDR dr, const char *title);
-HMGL mgl_create_graph_idtf();
 void mgl_fltk_run();
 void mgl_qt_run();
+#endif
 void mgl_set_show_mouse_pos(HMGL gr, int enable);
 void mgl_get_last_mouse_pos(HMGL gr, float *x, float *y, float *z);
 //void mgl_fltk_thread();
@@ -153,8 +149,7 @@ void mgl_set_fog(HMGL graph, float d, float dz);
 void mgl_set_light(HMGL graph, int enable);
 void mgl_set_light_n(HMGL gr, int n, int enable);
 void mgl_add_light(HMGL graph, int n, float x, float y, float z, char c);
-void mgl_add_light_rgb(HMGL graph, int n, float x, float y, float z, int infty,
-                        float r, float g, float b, float i);
+void mgl_add_light_rgb(HMGL graph, int n, float x, float y, float z, int infty, float r, float g, float b, float i);
 void mgl_set_ambbr(HMGL gr, float i);
 /*****************************************************************************/
 /*		Scale and rotate													 */
@@ -167,7 +162,7 @@ void mgl_subplot(HMGL graph, int nx,int ny,int m);
 void mgl_subplot_d(HMGL graph, int nx,int ny,int m, float dx, float dy);
 void mgl_inplot(HMGL graph, float x1,float x2,float y1,float y2);
 void mgl_relplot(HMGL graph, float x1,float x2,float y1,float y2);
-void mgl_columnplot(HMGL graph, int num, int i);
+void mgl_columnplot(HMGL graph, int num, int ind);
 void mgl_aspect(HMGL graph, float Ax,float Ay,float Az);
 void mgl_rotate(HMGL graph, float TetX,float TetZ,float TetY);
 void mgl_rotate_vector(HMGL graph, float Tet,float x,float y,float z);
@@ -175,6 +170,7 @@ void mgl_perspective(HMGL graph, float val);
 /*****************************************************************************/
 /*		Axis functions														 */
 /*****************************************************************************/
+void mgl_adjust_ticks(HMGL graph, const char *dir);
 void mgl_set_ticks(HMGL graph, float DX, float DY, float DZ);
 void mgl_set_subticks(HMGL graph, int NX, int NY, int NZ);
 void mgl_set_ticks_dir(HMGL graph, char dir, float d, int ns, float org);
@@ -494,6 +490,8 @@ float *mgl_data_value(HMDT dat, int i,int j,int k);
 const float *mgl_data_data(const HMDT dat);
 HMDT mgl_data_combine(const HMDT dat1, const HMDT dat2);
 void mgl_data_extend(HMDT dat, int n1, int n2);
+void mgl_data_insert(HMDT dat, char dir, int at, int num);
+void mgl_data_delete(HMDT dat, char dir, int at, int num);
 /*****************************************************************************/
 /*		Data manipulation functions											 */
 /*****************************************************************************/
@@ -570,7 +568,6 @@ HMDT mgl_pde_solve(HMGL gr, const char *ham, const HMDT ini_re, const HMDT ini_i
 HMDT mgl_qo2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, float r, float k0, HMDT xx, HMDT yy);
 HMDT mgl_af2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, float r, float k0, HMDT xx, HMDT yy);
 HMDT mgl_ray_trace(const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt, float tmax);
-void mgl_data_fill_eq(HMGL gr, HMDT res, const char *eq, const HMDT vdat, const HMDT wdat);
 HMDT mgl_jacobian_2d(const HMDT x, const HMDT y);
 HMDT mgl_jacobian_3d(const HMDT x, const HMDT y, const HMDT z);
 HMDT mgl_transform_a(const HMDT am, const HMDT ph, const char *tr);

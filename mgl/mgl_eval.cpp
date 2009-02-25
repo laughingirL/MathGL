@@ -142,8 +142,10 @@ EQ_CL,		// Clausen function
 #ifndef M_PI
 #define M_PI       3.14159265358979323846
 #endif
+//-----------------------------------------------------------------------------
 static long mgl_idum=0;
 void mgl_srnd(long seed)	{	mgl_idum = -abs(seed);	}
+//-----------------------------------------------------------------------------
 double mgl_rnd()
 {
 	long &idum=mgl_idum;

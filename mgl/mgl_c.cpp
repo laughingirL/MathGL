@@ -195,6 +195,9 @@ void mgl_perspective(HMGL gr, float val)
 //-----------------------------------------------------------------------------
 //		Axis functions
 //-----------------------------------------------------------------------------
+/// Auto adjust ticks
+void mgl_adjust_ticks(HMGL gr, const char *dir)
+{	gr->AdjustTicks(dir);	}
 /// Switch on/off ticks tunning and set factor position for tunned ticks.
 void mgl_tune_ticks(HMGL gr, int tune, float fact_pos)
 {	gr->TuneTicks = tune;	gr->FactorPos = fact_pos;	}
@@ -442,8 +445,9 @@ int mgl_fortran_func(HMGL gr, void *f)
 {
 	typedef int (*func_draw)(uintptr_t *gr);
 	func_draw draw = func_draw(f);
-	uintptr_t p = uintptr_t(gr);
-	int res = draw(&p);	return res;
+	static uintptr_t p = uintptr_t(gr);
+	int res = draw(&p);
+	return res;
 }
 //-----------------------------------------------------------------------------
 void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, float z2)

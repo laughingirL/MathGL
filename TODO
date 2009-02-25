@@ -1,11 +1,9 @@
-					MathGL (for v.1.8)
+					MathGL (for v.1.8.1)
 
-1. Update documentation (English)
-	* sample of columnplot
+1. Update documentation
+	* operators for mglData
 
-2. Update Forth and Pascal interface
-
-3. Import/Export via GIF (as 3d data) ???
+4. Import/Export via GIF (as 3d data) ???
 
 5. \dfrac for normal size and centering
 

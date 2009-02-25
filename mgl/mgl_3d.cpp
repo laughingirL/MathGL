@@ -70,7 +70,9 @@ void mglGraph::CloudQ(const mglData &x, const mglData &y, const mglData &z, cons
 		pp[3*i0+2]= z.a[k*tz];
 		aa[i0] = a.a[i*tx+n*(j*ty+m*k*tz)];
 	}
+	bool al=Alpha(true);
 	cloud_plot(n/tx,m/ty,l/tz,pp,aa,alpha);
+	Alpha(al);
 	EndGroup();
 	delete []pp;	delete []aa;
 }
@@ -750,16 +752,27 @@ void mglGraph::CloudP(const mglData &x, const mglData &y, const mglData &z, cons
 	if(alpha>1)	alpha = 1;
 
 	// x, y -- матрицы как и z
+	bool al=Alpha(true);
 	if(both)
 	{
 		for(i=0;i<n*m*l;i++)
-			AVertex(x.a[i],y.a[i],z.a[i],a.a[i],alpha);
+		{
+			j = long(n*m*l*mgl_rnd());
+			AVertex(x.a[j],y.a[j],z.a[j],a.a[j],alpha);
+		}
 	}
 	else	// x, y -- вектора
 	{
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
-			AVertex(x.a[i],y.a[j],z.a[k],a.a[i+n*(j+m*k)],alpha);
+		{
+			long i1,j1,k1;
+			i1 = long(n*mgl_rnd());
+			j1 = long(m*mgl_rnd());
+			k1 = long(l*mgl_rnd());
+			AVertex(x.a[i1],y.a[j1],z.a[k1],a.a[i1+n*(j1+m*k1)],alpha);
+		}
 	}
+	Alpha(al);
 	EndGroup();
 }
 //-----------------------------------------------------------------------------

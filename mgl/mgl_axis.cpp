@@ -287,15 +287,15 @@ void _mgl_tick_text(float z, float z0, float d, float v, int kind, wchar_t str[6
 	if((kind&1) && z>z0)
 	{
 		int n1,n2;
-		n1=swprintf(str, 64, L"@{(+%.2g)}",u);
-		n2=swprintf(str, 64, L"@{(+%g)}",u);
+		swprintf(str, 64, fabs(u)<1 ? L"@{(+%.2g)}" : L"@{(+%.3g)}",u);	n1=wcslen(str);
+		swprintf(str, 64, L"@{(+%g)}",u);	n2=wcslen(str);
 		if(n1<n2)	swprintf(str, 64, L"@{(+%.2g)}",u);
 	}
 	else
 	{
 		int n1,n2;
-		n1=swprintf(str, 64, L"%.2g",u);
-		n2=swprintf(str, 64, L"%g",u);
+		swprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);
+		n1=wcslen(str);	swprintf(str, 64, L"%g",u);	n2=wcslen(str);
 		if(n1<n2)	swprintf(str, 64, L"%.2g",u);
 	}
 }
@@ -1090,5 +1090,21 @@ void mgl_set_ticks_val(HMGL gr, char dir, int n, double val, const char *lbl, ..
 	gr->SetTicksVal(dir,n,v,l);
 	va_end(ap);
 	delete []v;		free(l);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::adjust(char dir, float d)
+{
+	float n;
+	d = fabs(d);	n = floor(log10(d));	d = floor(d*pow(10,-n));
+	if(d<4)		SetTicks(dir,0.5*pow(10,n),4,0);
+	else if(d<7)SetTicks(dir,pow(10,n),4,0);
+	else		SetTicks(dir,2*pow(10,n),3,0);
+}
+void mglGraph::AdjustTicks(const char *dir)
+{
+	if(strchr(dir,'x'))	adjust('x',Max.x-Min.x);
+	if(strchr(dir,'y'))	adjust('y',Max.y-Min.y);
+	if(strchr(dir,'z'))	adjust('z',Max.z-Min.z);
+	TuneTicks = true;
 }
 //-----------------------------------------------------------------------------

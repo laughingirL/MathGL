@@ -39,8 +39,9 @@ mglGraphGL::mglGraphGL() : mglGraphAB(1,1)	{}
 //-----------------------------------------------------------------------------
 mglGraphGL::~mglGraphGL(){}
 //-----------------------------------------------------------------------------
-void mglGraphGL::Alpha(bool enable)
+bool mglGraphGL::Alpha(bool enable)
 {
+	bool t = UseAlpha;
 	if(enable)
 	{
 		UseAlpha = true;
@@ -58,6 +59,7 @@ void mglGraphGL::Alpha(bool enable)
 		glDisable(GL_ALPHA_TEST);
 		glDisable(GL_BLEND);
 	}
+	return t;
 }
 //-----------------------------------------------------------------------------
 void mglGraphGL::Light(int n,mglPoint p,mglColor c, float br,bool infty)
@@ -111,10 +113,13 @@ void mglGraphGL::Light(int n, bool enable)
 	else		glDisable(light[n]);
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::Light(bool enable)
+bool mglGraphGL::Light(bool enable)
 {
-	if(enable)	{	glEnable(GL_LIGHTING);	glEnable(GL_NORMALIZE);	}
+	bool t = UseLight;
+	UseLight = enable;
+	if(enable)	{	glEnable(GL_LIGHTING);	glEnable(GL_NORMALIZE);}
 	else		{	glDisable(GL_LIGHTING);	glDisable(GL_NORMALIZE);	}
+	return t;
 }
 //-----------------------------------------------------------------------------
 void mglGraphGL::View(float TetX,float TetY,float TetZ)

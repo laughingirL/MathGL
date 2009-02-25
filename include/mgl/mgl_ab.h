@@ -38,8 +38,8 @@ using mglGraph::Colorbar;
 //	virtual void EndFrame();
 
 	void SetFontSizePT(float pt, int dpi=72);
-	void Alpha(bool enable);
-	void Light(bool enable);
+	bool Alpha(bool enable);
+	bool Light(bool enable);
 	void Light(int n, bool enable);
 	void Light(int n,mglPoint p, mglColor c=WC, float br=0.5, bool infty=true);
 

@@ -1,15 +1,20 @@
-1.8.1 Released ?? February 2009
+1.8.1 Released 2 March 2009
 	- Add GIF animation features via functions StartGIF/NewFrame/EndFrame/CloseGIF.
 	- Add new plot Tens() for tension plot (curve with variable color).
-	- Add ColumnPlot function for making column of plots
+	- Add ColumnPlot function for making column of plots.
+	- Add AdjustTicks function for automatic ticks adjusting for current axis ranges.
 	- Add image export to GIF files.
+	- Add NumPy import for Python interface.
 	- Improve documentation (add descriptions of new functions; add sections about animation and about utilities).
 	- Add new functions SetRanges(), SetAutoRanges() for setting axis ranges (Python style) and for setting ranges of automatic variables.
 	- Add TickLen parameter for setting length of ticks/subticks
 	- Colorbar now can have arbitrary size and position
 	- Add mgl_set_[xyzc]ttw() functions into C/Fortran interface.
+	- Add error message if string is not closed in MGL script.
+	- Add data export functions from std::vector<T>
 	- Add new tool mgl2gif for exporting to GIF files (including animated GIF)
 	- Add option -Lval for setting locale to val. Option is added to mgl2png, mgl2eps, mgl2cpp, mglview. For example, use "mglview fname -Lru_RU.utf8" for file in UTF-8 encoding.
+	- Extend TriPlot() by adding manual coloring array (like SurfC()).
 	- Improve STFA() by adding smoothed mask at the edges.
 	- Improve tick labels drawing if RotatedText = false.
 	- Add mglGraphAB::LastMousePos
@@ -20,7 +25,6 @@
 	- Bug correction with MGL command 'call'.
 	- Bug with subticks (having the same size as normal ticks).
 	- Improve labels for curved coordinates.
-	- Spelling in documentation.
 
 1.8 Released 26 November 2008
 	- Create Python and Octave interfaces using SWIG. Generally interfaces for a set of languages (Java, Lisp, Perl, PHP, Tcl, R, Ruby, Modula3, C# and other SWIG supported) can be simply created by the same way.

@@ -482,26 +482,22 @@ void mglData::operator-=(const mglData &d)
 //-----------------------------------------------------------------------------
 void mglData::operator-=(float d)
 {
-	register long i;
-	for(i=0;i<ny*nz*nx;i++)	a[i] -= d;
+	for(long i=0;i<ny*nz*nx;i++)	a[i] -= d;
 }
 //-----------------------------------------------------------------------------
 void mglData::operator+=(float d)
 {
-	register long i;
-	for(i=0;i<ny*nz*nx;i++)	a[i] += d;
+	for(long i=0;i<ny*nz*nx;i++)	a[i] += d;
 }
 //-----------------------------------------------------------------------------
 void mglData::operator*=(float d)
 {
-	register long i;
-	for(i=0;i<ny*nz*nx;i++)	a[i] *= d;
+	for(long i=0;i<ny*nz*nx;i++)	a[i] *= d;
 }
 //-----------------------------------------------------------------------------
 void mglData::operator/=(float d)
 {
-	register long i;
-	for(i=0;i<ny*nz*nx;i++)	a[i] = d ? a[i]/d : 0;
+	for(long i=0;i<ny*nz*nx;i++)	a[i] = d ? a[i]/d : 0;
 }
 //-----------------------------------------------------------------------------
 float mglData::Maximal() const
@@ -980,4 +976,36 @@ bool mglData::ReadAll(const char *templ, bool as_slice)
     return false;
 #endif
 }
+//-----------------------------------------------------------------------------
+mglData operator*(const mglData &b, const mglData &d)
+{	mglData a(b);	a*=d;	return a;	}
+mglData operator*(float b, const mglData &d)
+{	mglData a(d);	a*=b;	return a;	}
+mglData operator*(const mglData &d, float b)
+{	mglData a(d);	a*=b;	return a;	}
+mglData operator-(const mglData &b, const mglData &d)
+{	mglData a(b);	a-=d;	return a;	}
+mglData operator-(float b, const mglData &d)
+{	mglData a(d);	a-=b;	return a;	}
+mglData operator-(const mglData &d, float b)
+{	mglData a(d);	a-=b;	return a;	}
+mglData operator+(const mglData &b, const mglData &d)
+{	mglData a(b);	a+=d;	return a;	}
+mglData operator+(float b, const mglData &d)
+{	mglData a(d);	a+=b;	return a;	}
+mglData operator+(const mglData &d, float b)
+{	mglData a(d);	a+=b;	return a;	}
+mglData operator/(const mglData &b, const mglData &d)
+{	mglData a(b);	a/=d;	return a;	}
+mglData operator/(const mglData &d, float b)
+{	mglData a(d);	a/=b;	return a;	}
+void mglData::operator=(float v)
+{	for(long i=0;i<nx*ny*nz;i++)	a[i]=v;	}
+//-----------------------------------------------------------------------------
+void mglData::Set(const std::vector<int> &d)
+{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+void mglData::Set(const std::vector<float> &d)
+{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+void mglData::Set(const std::vector<double> &d)
+{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
 //-----------------------------------------------------------------------------

@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 /// Delete mglGraph object. MUST be called for each mgl_create_* call.
 void mgl_delete_graph_(uintptr_t *gr)
-{	if(gr)	delete (mglGraph *)(*gr);	}
+{	if(*gr)	delete (mglGraph *)(*gr);	}
 //-----------------------------------------------------------------------------
 /// Create mglData object.
 uintptr_t mgl_create_data_()
@@ -41,7 +41,7 @@ uintptr_t mgl_create_data_file_(const char *fname,int l)
 }
 /// Delete mglData object. MUST be called for each mgl_create_data_* call.
 void mgl_delete_data_(uintptr_t *dat)
-{	if(dat)	delete (mglData *)(*dat);	};
+{	if(*dat)	delete (mglData *)(*dat);	};
 //-----------------------------------------------------------------------------
 //		Setup mglGraph
 //-----------------------------------------------------------------------------
@@ -219,6 +219,12 @@ void mgl_perspective_(uintptr_t *gr, float val)
 //-----------------------------------------------------------------------------
 //		Axis functions
 //-----------------------------------------------------------------------------
+/// Auto adjust ticks
+void mgl_adjust_ticks_(uintptr_t *gr, const char *dir, int l)
+{
+	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	_GR_->AdjustTicks(s);	delete []s;
+}
 /// Switch on/off ticks tunning and set factor position for tunned ticks.
 void mgl_tune_ticks_(uintptr_t *gr, int *tune, float *fact_pos)
 {	_GR_->TuneTicks = *tune;	_GR_->FactorPos = *fact_pos;	}
