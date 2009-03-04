@@ -6,6 +6,7 @@ install(DIRECTORY mgl/ DESTINATION ${MGL_INCLUDE_PATH}
                         PATTERN "mgl_wx.h" EXCLUDE
                         PATTERN "mgl_qt.h" EXCLUDE
                         PATTERN "*.fs"
+                        PATTERN "*.pas"
                         PATTERN "*.h")
 
 if(use_fltk)
