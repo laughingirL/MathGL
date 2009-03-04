@@ -207,6 +207,12 @@ struct mglParse{};
 	{	return mgl_get_width(self);	}
 	int GetHeight()
 	{	return mgl_get_height(self);}
+	mglPoint CalcXYZ(int xs, int ys)
+	{
+		float x,y,z;
+		mgl_calc_xyz(self,xs,ys,&x,&y,&z);
+		return mglPoint(x,y,z);
+	}
 
 	void SetTranspType(int type)
 	{	mgl_set_transp_type(self, type);}
@@ -281,8 +287,9 @@ struct mglParse{};
 
 	void Box(const char *col="k", bool ticks=true)
 	{	mgl_box_str(self, col, ticks);	}
-	void Axis(const char *dir="xyz")
-	{	mgl_axis(self, dir);	}
+	void Axis(const char *dir="xyz", bool adjust=false)
+	{	if(adjust)	mgl_adjust_ticks(self,dir);
+		mgl_axis(self, dir);	}
 	void Grid(const char *dir="xyz",const char *pen="B")
 	{	mgl_axis_grid(self, dir, pen);	}
 	void Label(char dir, const char *text, int pos=+1, float size=-1.4, float shift=0)
@@ -322,7 +329,7 @@ struct mglParse{};
 	{	mgl_set_ztt(self, templ);	}
 	void SetCTT(const char *templ)
 	{	mgl_set_ctt(self, templ);	}
-	
+
 	void Ball(float x, float y, float z, const char *col="r")
 	{	mgl_ball_str(self, x, y, z, col);	}
 	void Mark(float x, float y, float z, char mark)
@@ -690,6 +697,8 @@ struct mglParse{};
 	{	mgl_triplot_xy(self, nums, x, y, sch, zVal);	}
 	void Dots(mglData *x, mglData *y, mglData *z, const char *sch="")
 	{	mgl_dots(self, x, y, z, sch);	}
+	void Dots(mglData *x, mglData *y, mglData *z, mglData *a, const char *sch="")
+	{	mgl_dots_a(self, x, y, z, a, sch);	}
 	void Crust(mglData *x, mglData *y, mglData *z, const char *sch="", float er=0)
 	{	mgl_crust(self, x, y, z, sch, er);	}
 

@@ -195,15 +195,19 @@ if(UNIX)
 endif(UNIX)
 
 if(WIN32)
+#        add_definitions(-DWIN32 -D_MSC_VER)
         add_definitions(-DWIN32)
 endif(WIN32)
 
+if(NOT WIN32)
 set(MGL_DATA_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl")
 set(MGL_DOC_PATH "${CMAKE_INSTALL_PREFIX}/share/doc/mathgl")
 set(MGL_FONT_PATH "${MGL_DATA_PATH}/fonts")
 install(DIRECTORY fonts/ DESTINATION ${MGL_FONT_PATH}
                         PATTERN ".svn" EXCLUDE
                         PATTERN "*.vfm")
+endif(NOT WIN32)
+
 add_subdirectory( mgl )
 add_subdirectory( widgets )
 add_subdirectory( utils )

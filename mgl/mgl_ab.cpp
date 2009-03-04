@@ -21,13 +21,13 @@
 #include <time.h>
 #include <wchar.h>
 
-#ifdef WIN32
-#define swprintf    _snwprintf
-#endif
-
 #include "mgl/mgl_ab.h"
 #define imax(a,b)	(a)>(b) ? (a) : (b)
 #define imin(a,b)	(a)<(b) ? (a) : (b)
+
+#ifdef WIN32
+#define swprintf _snwprintf
+#endif
 
 char *mgl_strdup(const char *s);
 //-----------------------------------------------------------------------------
@@ -409,7 +409,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, float s
 		xPos = pp[0]+shift*ss*(pp[4]-pp[1])/sqrt(ll);
 		yPos = pp[1]-shift*ss*(pp[3]-pp[0])/sqrt(ll);
 		zPos = pp[2];
-		
+
 		if(strlen(font1)<2)
 		{	free(font1);	font1 = (char *)malloc(2);	}
 		font1[0] = shift*ss>0 ? 'L':'R';

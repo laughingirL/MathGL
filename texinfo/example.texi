@@ -472,7 +472,7 @@ The second way is saving each frame in separate file (usually JPEG) and later ma
     }
 @end verbatim
 
-Created set of files can be converted to movie by help of a set of programs. For example, you can use ImageMagic (command @samp{convert frame*.jpg movie.mpg}), MPEG library, GIMP and so on.
+Created files can be converted to movie by help of a lot of programs. For example, you can use ImageMagic (command @samp{convert frame*.jpg movie.mpg}), MPEG library, GIMP and so on.
 
 Finally, you can use @code{mgl2gif} tool for doing the same with MGL scripts (@pxref{Utilities}).
 

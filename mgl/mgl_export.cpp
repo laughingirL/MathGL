@@ -46,6 +46,7 @@ void mglGraph::VertexColor(bool enable)	{}
 void mglGraph::TextureColor(bool enable){}
 void mglGraph::Compression(bool enable)	{}
 void mglGraph::Unrotate(bool enable)	{}
+void mglGraph::BallIsPoint(bool enable)	{}
 void mglGraph::StartGroup ( const char *name )		{}
 void mglGraph::StartAutoGroup ( const char *name )	{}
 void mglGraph::EndGroup()	{}
@@ -210,8 +211,8 @@ int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
 	jpeg_finish_compress(&cinfo);
 	jpeg_destroy_compress(&cinfo);
 	fclose(outfile);
-	return 0;
 #endif
+	return 0;
 }
 //-----------------------------------------------------------------------------
 int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)

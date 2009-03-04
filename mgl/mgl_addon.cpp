@@ -1,6 +1,14 @@
 #include <stdarg.h>
 #include <string.h>
 #include "mgl/mgl_addon.h"
+
+#ifdef WIN32
+#include <io.h>
+#define swprintf    _snwprintf
+#else
+#include <unistd.h>
+#endif
+
 //---------------------------------------------------------------------------
 void mgl_strcls(char *str)
 {

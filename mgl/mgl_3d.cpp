@@ -736,7 +736,7 @@ void mglGraph::AVertex(float x,float y,float z, float a,float alpha)
 	if(a)	Ball(x,y,z,c,-alpha*a);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::CloudP(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch, float alpha)
+void mglGraph::CloudP(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch, float alpha, bool rnd)
 {
 	register long i,j,k,n=a.nx,m=a.ny,l=a.nz;
 	if(n<2 || m<2 || l<2)	{	SetWarn(mglWarnLow,"CloudP");	return;	}
@@ -757,7 +757,7 @@ void mglGraph::CloudP(const mglData &x, const mglData &y, const mglData &z, cons
 	{
 		for(i=0;i<n*m*l;i++)
 		{
-			j = long(n*m*l*mgl_rnd());
+			j = rnd ? long(n*m*l*mgl_rnd()) : i;
 			AVertex(x.a[j],y.a[j],z.a[j],a.a[j],alpha);
 		}
 	}
@@ -766,9 +766,13 @@ void mglGraph::CloudP(const mglData &x, const mglData &y, const mglData &z, cons
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
 		{
 			long i1,j1,k1;
-			i1 = long(n*mgl_rnd());
-			j1 = long(m*mgl_rnd());
-			k1 = long(l*mgl_rnd());
+			if(rnd)
+			{
+				i1 = long(n*mgl_rnd());
+				j1 = long(m*mgl_rnd());
+				k1 = long(l*mgl_rnd());
+			}
+			else	{	i1=i;	j1=j;	k1=k;	}
 			AVertex(x.a[i1],y.a[j1],z.a[k1],a.a[i1+n*(j1+m*k1)],alpha);
 		}
 	}
@@ -776,7 +780,7 @@ void mglGraph::CloudP(const mglData &x, const mglData &y, const mglData &z, cons
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::CloudP(const mglData &a, const char *sch, float alpha)
+void mglGraph::CloudP(const mglData &a, const char *sch, float alpha, bool rnd)
 {
 	if(a.nx<2 || a.ny<2 || a.nz<2)
 	{	SetWarn(mglWarnLow,"CloudP");	return;	}
@@ -784,7 +788,7 @@ void mglGraph::CloudP(const mglData &a, const char *sch, float alpha)
 	x.Fill(Min.x,Max.x);
 	y.Fill(Min.y,Max.y);
 	z.Fill(Min.z,Max.z);
-	CloudP(x,y,z,a,sch,alpha);
+	CloudP(x,y,z,a,sch,alpha,rnd);
 }
 //-----------------------------------------------------------------------------
 //		3D plotting functions

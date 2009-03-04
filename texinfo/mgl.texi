@@ -456,8 +456,8 @@ The command draws @var{text} along the curve between points @{@var{xdat}[i], @va
 
 These commands draw the ``things for measuring'', like axis with ticks, colorbar with ticks, grid along axis, bounding box and labels for axis. For more information @pxref{Axis settings (MGL)}.
 
-@deffn {MGL command} axis ['dir'='xyz']
-Draws axes with ticks (@pxref{Axis settings (MGL)}) in directions determined by string parameter @var{dir}.If string contain the symbol @samp{_} then tick labels are not printed. Font for ticks labels is determined by command @code{font}.
+@deffn {MGL command} axis ['dir'='xyz' @code{adjust=off}]
+Draws axes with ticks (@pxref{Axis settings (MGL)}) in directions determined by string parameter @var{dir}.If string contain the symbol @samp{_} then tick labels are not printed. Font for ticks labels is determined by command @code{font}. Ticks will be automatically adjusted if @var{adjust}=@code{on} (by call of @code{adjust 'dir'}).
 @end deffn
 
 @deffn {MGL command} colorbar ['sch'='' @code{pos=0}]
@@ -969,7 +969,8 @@ These plotting commands draw solid contours in x, y or z plain. If @var{dat} is 
 @end deffn
 
 @deffn {MGL command} dots xdat ydat zdat ['sch'='']
-Draws the arbitrary placed points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. See also @code{crust, mark, plot}. @sref{Dots sample}
+@deffnx {MGL command} dots xdat ydat zdat adat ['sch'='']
+Draws the arbitrary placed points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. Variable @var{adat}[i] set transparency for dots. See also @code{crust, mark, plot}. @sref{Dots sample}
 @end deffn
 
 @deffn {MGL command} crust xdat ydat zdat ['sch'='']

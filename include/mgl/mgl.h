@@ -334,7 +334,7 @@ public:
 	/// Recalculate internal parameter for correct applies transformation rules. \b Must \b be \b called after any direct changes of members mglGraph::Min, mglGraph::Max, mglGraph::fx, mglGraph::fy, mglGraph::fz.
 	void RecalcBorder();
 	/// Draw axises with ticks in directions determined by string parameter \a dir.
-	void Axis(const char *dir="xyz");
+	void Axis(const char *dir="xyz", bool adjust=false);
 	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
 	void Grid(const char *dir="xyz",const char *pen="B-");
 	/// Print the label \a text for axis \a dir.
@@ -663,6 +663,8 @@ public:
 	void Crust(const mglData &tr, const char *sch=0,float er=0);
 	/// Draw dots in points \a x, \a y, \a z.
 	void Dots(const mglData &x, const mglData &y, const mglData &z, const char *sch=0);
+	/// Draw half-transparent dots in points \a x, \a y, \a z.
+	void Dots(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch=0, float alpha=1);
 	/// Draw dots in points \a tr.
 	void Dots(const mglData &tr, const char *sch=0);
 	/// Draw triangle mesh for points in arrays \a x, \a y, \a z with specified color \a c.
@@ -888,9 +890,9 @@ public:
 	/// Draw solid contours at central slices for 3d data
 	void ContFA(const mglData &a, const char *sch=0, int Num=7);
 	/// Draw a cloud of points for 3d data specified parametrically
-	void CloudP(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *stl=0, float alpha=1);
+	void CloudP(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *stl=0, float alpha=1, bool rnd=true);
 	/// Draw a cloud of points for 3d data
-	void CloudP(const mglData &a, const char *stl=0, float alpha=1);
+	void CloudP(const mglData &a, const char *stl=0, float alpha=1, bool rnd=true);
 	/// Draw a semi-transparent cloud for 3d data specified parametrically
 	void CloudQ(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *stl=0, float alpha=1);
 	/// Draw a semi-transparent cloud for 3d data
@@ -949,6 +951,7 @@ public:
 	virtual void TextureColor(bool enable);
 	virtual void Compression(bool enable);
 	virtual void Unrotate(bool enable);
+	virtual void BallIsPoint(bool enable);
 	virtual void StartGroup (const char *name);
 	virtual void StartAutoGroup (const char *name);
 	void StartGroup(const char *name, int id);

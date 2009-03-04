@@ -19,14 +19,14 @@
  ***************************************************************************/
 #include <wchar.h>
 
+#include "mgl/mgl_parse.h"
+
 #ifdef WIN32
 #include <io.h>
 #define swprintf    _snwprintf
 #else
 #include <unistd.h>
 #endif
-
-#include "mgl/mgl_parse.h"
 
 char *mgl_strdup(const char *s);
 wchar_t *mgl_str_copy(const char *s);
@@ -166,7 +166,7 @@ int mgls_axis(mglGraph *gr, long n, mglArg *a, int k[10])
 		if(ok)	gr->Axis(mglPoint(a[0].v,a[1].v), mglPoint(a[2].v,a[3].v));
 		else return 1;
 	}
-	else if(k[0]==2)	gr->Axis(a[0].s);
+	else if(k[0]==2)	gr->Axis(a[0].s, k[1]==3 && a[1].v!=0);
 	else if(k[0]==0)	gr->Axis("xyz");
 	else return 1;
 	return 0;
@@ -905,10 +905,12 @@ void mglc_subto(wchar_t out[1024], long n, mglArg *a, int k[10])
 	else if(k[0]==1 && k[1]==3)	swprintf(out,1024,L"%s -= %g;",a[0].s, a[1].v);
 }
 //-----------------------------------------------------------------------------
-//	{"dots","Draw dots for arbitrary data points","dots {xvar yvar zvar} | var [fmt]", mgls_dots, mglc_dots}
+//	{"dots","Draw dots for arbitrary data points","dots {xvar yvar zvar [avar]} | var [fmt]", mgls_dots, mglc_dots}
 int mgls_dots(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==1 && k[1]==1 && k[2]==1)
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		gr->Dots(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
 		gr->Dots(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0);
 	else if(k[0]==1)
 		gr->Dots(*(a[0].d),k[1]==2?a[1].s:0);

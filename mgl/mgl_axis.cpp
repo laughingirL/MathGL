@@ -22,14 +22,14 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-#ifdef WIN32
-#define swprintf    _snwprintf
-#endif
-
 #include "mgl/mgl_eval.h"
 #include "mgl/mgl.h"
 #include "mgl/mgl_c.h"
 #define FLT_EPS	(1.+1.2e-07)
+
+#ifdef WIN32
+#define swprintf    _snwprintf
+#endif
 
 //-----------------------------------------------------------------------------
 wchar_t *mgl_wcsdup(const wchar_t *s)
@@ -568,8 +568,9 @@ void mglGraph::AxisZ(bool text)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Axis(const char *dir)
+void mglGraph::Axis(const char *dir, bool adjust)
 {
+	if(adjust)	AdjustTicks(dir);
 	static int cgid=1;	StartGroup("Axis",cgid++);
 	bool text = strchr(dir,'_')==NULL;
 	if(strchr(dir,'x'))	{	_sx = 1;	AxisX(text);	}
@@ -1102,9 +1103,9 @@ void mglGraph::adjust(char dir, float d)
 }
 void mglGraph::AdjustTicks(const char *dir)
 {
-	if(strchr(dir,'x'))	adjust('x',Max.x-Min.x);
-	if(strchr(dir,'y'))	adjust('y',Max.y-Min.y);
-	if(strchr(dir,'z'))	adjust('z',Max.z-Min.z);
+	if(strchr(dir,'x') || strchr(dir,'X'))	adjust('x',Max.x-Min.x);
+	if(strchr(dir,'y') || strchr(dir,'Y'))	adjust('y',Max.y-Min.y);
+	if(strchr(dir,'z') || strchr(dir,'Z'))	adjust('z',Max.z-Min.z);
 	TuneTicks = true;
 }
 //-----------------------------------------------------------------------------

@@ -2,7 +2,7 @@ Source: mathgl
 Section: libs
 Priority: extra
 Maintainer: Dmitry I. Kulagin <dik@kulagin.nnov.ru>
-Build-Depends: cdbs, debhelper (>= 5), autotools-dev, libtool, autoconf, automake, libgsl0-dev, freeglut3-dev, libgl-dev, libpng-dev, libhdf5-dev, libjpeg-dev, libtiff-dev, libfltk-dev, g++, libqt4-dev, libwxbase2.6-dev, python-all-dev, swig, texinfo, texi2html
+Build-Depends: cdbs, debhelper (>= 5), autotools-dev, libtool, autoconf, automake, libgsl0-dev, freeglut3-dev, libgl-dev, libpng-dev, libhdf5-dev, libjpeg-dev, libtiff-dev, libfltk-dev, g++, libqt4-dev, libwxbase2.6-dev, python-all-dev, swig, texinfo, texi2html, libgif-dev
 Standards-Version: 3.7.2
 
 Package: mathgl

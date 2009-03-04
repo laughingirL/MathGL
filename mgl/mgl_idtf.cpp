@@ -418,7 +418,7 @@ void u3dMaterial::print_material ( std::ofstream& ostr )
 void u3dMaterial::print_shader ( std::ofstream& ostr )
 {
 	ostr << "\t\tRESOURCE_NAME \"" << this->name << "\"\n";
-	if ( this->vertex_color )
+	if ( this->texture.empty()  && this->vertex_color )
 	{
 		ostr << "\t\tATTRIBUTE_USE_VERTEX_COLOR \"TRUE\"\n";
 	}
@@ -536,7 +536,7 @@ size_t u3dModel::AddPoint ( const float *p )
 	return AddPoint( mglPoint ( p[0], p[1], p[2] ) );
 }
 
-size_t u3dModel::AddPoint ( const mglPoint pnt )
+size_t u3dModel::AddPoint ( const mglPoint& pnt )
 {
 	mglPoint point;
 	point.x = invpos[0][0]*pnt.x+invpos[0][1]*pnt.y+invpos[0][2]*pnt.z+invpos[0][3];
@@ -553,6 +553,16 @@ size_t u3dModel::AddPoint ( const mglPoint pnt )
 size_t u3dModel::AddColor ( const float *c )
 {
 	mglColor color = mglColor ( IDTFROUND(c[0]), IDTFROUND(c[1]), IDTFROUND(c[2]) );
+	for ( size_t i=0; i< this->Colors.size(); i++ )
+		if ( this->Colors[i] == color )
+			return i;
+	this->Colors.push_back ( color );
+	return ( this->Colors.size()-1 );
+};
+
+size_t u3dModel::AddColor ( const mglColor& c )
+{
+	mglColor color = mglColor ( c.r, c.g, c.b );
 	for ( size_t i=0; i< this->Colors.size(); i++ )
 		if ( this->Colors[i] == color )
 			return i;
@@ -847,18 +857,144 @@ void u3dBall::print_shading_modifier ( std::ofstream& ostr )
 }
 
 u3dPointSet::u3dPointSet ( const std::string& name, mglGraphIDTF *Graph ) :
-		u3dModel ( name, Graph, false )
+		u3dModel ( name, Graph, true )
 {
-	float color[4] = { 0.0f, 0.0f, 0.0f, 1.0f};
-	this->AddModelMaterial ( color, true, false );
+	const float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	this->AddModelMaterial ( color, true, true );
 	this->both_visible = false;
 }
-void u3dPointSet::point_plot ( const mglPoint& p )
+void u3dPointSet::point_plot ( const mglPoint& p, const mglColor& c )
 {
-	this->AddPoint ( p );
+	Points.push_back( p );
+	Colors.push_back( c );
 }
 
 void u3dPointSet::print_model_resource ( std::ofstream& ostrtmp )
+{
+	size_t numPoints    = this->Points.size();
+	if ( numPoints == 0 )	return;
+// Convert pointset to mesh
+	size_t duplpoints = this->Points.size() % 3;
+	if ( duplpoints > 0 )
+	{
+		this->Points.push_back( this->Points.back() );
+		this->Colors.push_back( this->Colors.back() );
+		numPoints++;
+	}
+	if ( duplpoints == 1 )
+	{
+		this->Points.push_back( this->Points.back() );
+		this->Colors.push_back( this->Colors.back() );
+		numPoints++;
+	}
+
+	size_t numTriangles = this->Points.size() / 3;
+
+	// is there just one color in the model?
+	bool onecolor = true;
+	size_t numColors    = this->Colors.size();
+	for ( size_t cid=0; cid < numColors; cid++ )
+	{
+		if ( Colors[0].r != Colors[cid].r || Colors[0].g != Colors[cid].g || Colors[0].b != Colors[cid].b )
+		{
+			onecolor = false;
+			break;
+		}
+	}
+	if ( onecolor ) // if there is just one color in the model - make the corresponding material
+	{
+		this->ModelMaterials.pop_back();
+		float c[4] = { this->Colors[0].r, this->Colors[0].g, this->Colors[0].b, 1.0f };
+		this->AddModelMaterial ( c, true, false );
+		this->Colors.clear();
+		numColors = 0;
+		this->vertex_color = false;
+	}
+	bool colored  = this->Colors.size() > 0;
+
+	ostrtmp
+	<< "\t\tRESOURCE_NAME \"" << this->name << "\"\n"
+	<< "\t\tMODEL_TYPE \"MESH\"\n"
+	<< "\t\tMESH {\n"
+	<< "\t\t\tFACE_COUNT " << numTriangles << "\n"
+	<< "\t\t\tMODEL_POSITION_COUNT " << numPoints << "\n"
+	<< "\t\t\tMODEL_BASE_POSITION_COUNT " << numPoints << "\n"
+	<< "\t\t\tMODEL_NORMAL_COUNT 0\n"
+	<< "\t\t\tMODEL_DIFFUSE_COLOR_COUNT " << numColors << "\n"
+	<< "\t\t\tMODEL_SPECULAR_COLOR_COUNT 0\n"
+	<< "\t\t\tMODEL_TEXTURE_COORD_COUNT 0\n"
+	<< "\t\t\tMODEL_BONE_COUNT 0\n"
+	<< "\t\t\tMODEL_SHADING_COUNT 1\n"
+	<< "\t\t\tMODEL_SHADING_DESCRIPTION_LIST {\n"
+	<< "\t\t\t\tSHADING_DESCRIPTION 0 {\n"
+	<< "\t\t\t\t\tTEXTURE_LAYER_COUNT 0\n"
+	<< "\t\t\t\t\tSHADER_ID 0\n"
+	<< "\t\t\t\t}\n"
+	<< "\t\t\t}\n";
+
+	ostrtmp << "\t\t\tMESH_FACE_POSITION_LIST {\n";
+	for ( size_t id=0; id < numTriangles; id++ )
+	{
+		ostrtmp << "\t\t\t\t"
+		<< 3*id+0 << " "
+		<< 3*id+1 << " "
+		<< 3*id+2 << "\n";
+	}
+	ostrtmp << "\t\t\t}\n";
+
+	ostrtmp << "\t\t\tMESH_FACE_SHADING_LIST {\n";
+	for ( size_t id=0; id < numTriangles; id++ )
+	{
+		ostrtmp << "\t\t\t\t0\n";
+	}
+	ostrtmp << "\t\t\t}\n";
+
+	if ( colored )
+	{
+		ostrtmp << "\t\t\tMESH_FACE_DIFFUSE_COLOR_LIST {\n";
+		for ( size_t id=0; id < numTriangles; id++ )
+		{
+			ostrtmp << "\t\t\t\t"
+			<< 3*id+0 << " "
+			<< 3*id+1 << " "
+			<< 3*id+2 << "\n";
+		}
+		ostrtmp << "\t\t\t}\n";
+	}
+
+	ostrtmp << "\t\t\tMODEL_POSITION_LIST {\n";
+	for ( size_t pid=0; pid < numPoints; pid++ )
+	{
+		ostrtmp << "\t\t\t\t"
+		<< ( this->Points[pid].x ) << " "
+		<< ( this->Points[pid].y ) << " "
+		<< ( this->Points[pid].z ) << "\n";
+	}
+	ostrtmp << "\t\t\t}\n";
+
+	if ( colored )
+	{
+		ostrtmp << "\t\t\tMODEL_DIFFUSE_COLOR_LIST {\n";
+		for ( size_t cid=0; cid < numColors; cid++ )
+		{
+			ostrtmp << "\t\t\t\t"
+			<< this->Colors[cid].r << " "
+			<< this->Colors[cid].g << " "
+			<< this->Colors[cid].b << "\n";
+		}
+		ostrtmp << "\t\t\t}\n";
+	}
+
+	ostrtmp << "\t\t\tMODEL_BASE_POSITION_LIST {\n";
+	for ( size_t pid=0; pid < numPoints; pid++ )
+	{
+		ostrtmp << "\t\t\t\t" << pid << "\n";
+	}
+	ostrtmp << "\t\t\t}\n";
+
+	ostrtmp << "\t\t}\n";
+}
+/*
 {
 	size_t numMaterials = this->ModelMaterials.size();
 	size_t numPoints = this->Points.size();
@@ -913,7 +1049,7 @@ void u3dPointSet::print_model_resource ( std::ofstream& ostrtmp )
 
 	ostrtmp << "\t\t}\n";
 }
-
+*/
 void u3dLineSet::AddLine ( size_t pid1, size_t pid2, size_t mid )
 {
 	u3dLine line = {pid1, pid2, mid};
@@ -1241,7 +1377,7 @@ void u3dMesh::print_model_resource ( std::ofstream& ostrtmp )
 }
 //-----------------------------------------------------------------------------
 mglGraphIDTF::mglGraphIDTF() : mglGraphAB ( 1,1 ),
-		vertex_color_flag ( true ), disable_compression_flag ( true ), unrotate_flag ( false ),
+		vertex_color_flag ( true ), disable_compression_flag ( true ), unrotate_flag ( false ), ball_is_point_flag ( false ),
 		points_finished ( true ), lines_finished ( true ), mesh_finished ( true ),
 		CurrentGroup ( NULL )
 {	Width = Height = Depth = 1;	}
@@ -1334,8 +1470,8 @@ u3dGroup* mglGraphIDTF::GetCurrentGroup()
 //-----------------------------------------------------------------------------
 void mglGraphIDTF::UnitBall ( )
 {
-	const size_t ThetaResolution = 10;
-	const size_t PhiResolution   = 10;
+	const size_t ThetaResolution = 10; // 4
+	const size_t PhiResolution   = 10; // 3
 	mglPoint pnt;
 	mglPoint nrm;
 	const mglPoint Center = mglPoint ( 0, 0, 0 );
@@ -1345,6 +1481,31 @@ void mglGraphIDTF::UnitBall ( )
 
 	float color[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 	Mesh.AddModelMaterial ( color, false, false );
+
+// tetrahedron
+//	Mesh.Points.push_back ( Radius * mglPoint ( 1,  1,  1) );
+//	Mesh.Points.push_back ( Radius * mglPoint (-1, -1,  1) );
+//	Mesh.Points.push_back ( Radius * mglPoint (-1,  1, -1) );
+//	Mesh.Points.push_back ( Radius * mglPoint ( 1, -1, -1) );
+//	size_t3 triangle;
+//	triangle.a = 0;
+//	triangle.b = 1;
+//	triangle.c = 3;
+//	Mesh.Triangles.push_back ( triangle );
+//	triangle.a = 0;
+//	triangle.b = 2;
+//	triangle.c = 1;
+//	Mesh.Triangles.push_back ( triangle );
+//	triangle.a = 1;
+//	triangle.b = 2;
+//	triangle.c = 3;
+//	Mesh.Triangles.push_back ( triangle );
+//	triangle.a = 0;
+//	triangle.b = 2;
+//	triangle.c = 3;
+//	Mesh.Triangles.push_back ( triangle );
+//	Meshes.push_back ( Mesh );
+//return;
 
 	// Create north pole
 	nrm.x = nrm.y = 0.0; nrm.z = 1.0;
@@ -1394,8 +1555,6 @@ void mglGraphIDTF::UnitBall ( )
 	for ( size_t i=0; i < ThetaResolution; i++ )
 	{
 		size_t3 triangle;
-//	triangle.pid0 = phiResolution*i + numOffset;
-//	triangle.pid1 = ((phiResolution*(i+1)) % base) + numOffset;
 		triangle.b = phiResolution*i + numOffset;
 		triangle.a = ( ( phiResolution* ( i+1 ) ) % base ) + numOffset;
 		triangle.c = numPoles - 1;
@@ -1431,14 +1590,18 @@ void mglGraphIDTF::Ball ( float x,float y,float z,mglColor col,float alpha )
 	u3dBall ball;
 
 	float p[3] = {x,y,z};
-	PostScale ( p,1 );
-	if (PenWidth<0)
+	if (ball_is_point_flag)
 	{
-		point_plot ( mglPoint ( p[0],p[1],p[2] ) );
+		point_plot ( mglPoint ( p[0],p[1],p[2] ), col );
 		return;
 	}
+	PostScale ( p,1 );
 	ball.center = mglPoint ( p[0],p[1],p[2] );
-	ball.radius = fabs(PenWidth)/500;
+	if (PenWidth != 0.0f)
+		ball.radius = fabs(PenWidth)/500.f;
+	else
+		ball.radius = fabs(BaseLineWidth)/500.f;
+// fprintf(stderr, "PenWidth %f BaseLineWidth %f radius %f\n", PenWidth, BaseLineWidth, ball.radius);
 	ball.Graph = this;
 	ball.parent = this->GetCurrentGroup();
 	if (ball.parent) ball.parent->NumberOfChildren++;
@@ -1471,7 +1634,7 @@ void mglGraphIDTF::mark_plot ( float *pp, char type )
 	float ss=MarkSize*0.35*font_factor;
 	if ( type=='.' || ss==0 )
 	{
-		point_plot ( p );
+		point_plot ( p, mglColor( CDef[0], CDef[1], CDef[2] ) );
 	}
 	else
 	{
@@ -1865,9 +2028,9 @@ void mglGraphIDTF::trig_plot_n ( float *pp0,float *pp1,float *pp2,
 	GetMesh().trig_plot_n ( pp0, pp1, pp2, cc0, cc1, cc2, nn0, nn1, nn2 );
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::point_plot ( const mglPoint& p )
+void mglGraphIDTF::point_plot ( const mglPoint& p, const mglColor& c )
 {
-	GetPointSet().point_plot ( p );
+	GetPointSet().point_plot ( p, c );
 }
 //-----------------------------------------------------------------------------
 void mglGraphIDTF::line_plot_s ( float *p1,float *p2,float *c1,float *c2,bool all )
@@ -2484,17 +2647,20 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 	<< "\n";
 
 	// Write textures
-	ostr << "RESOURCE_LIST \"TEXTURE\" {\n"
-	<< "\tRESOURCE_COUNT " << Textures.size() << "\n";
-	ResourceCount = 0;
-	for ( u3dTexture_list::iterator it = Textures.begin(); it != Textures.end(); ++it )
+	if ( Textures.size() != 0 )
 	{
-		ostr << "\tRESOURCE " << ResourceCount++ << " {\n";
-		it->print_texture ( fname, ostr );
-		ostr << "\t}\n";
+		ostr << "RESOURCE_LIST \"TEXTURE\" {\n"
+		<< "\tRESOURCE_COUNT " << Textures.size() << "\n";
+		ResourceCount = 0;
+		for ( u3dTexture_list::iterator it = Textures.begin(); it != Textures.end(); ++it )
+		{
+			ostr << "\tRESOURCE " << ResourceCount++ << " {\n";
+			it->print_texture ( fname, ostr );
+			ostr << "\t}\n";
+		}
+		ostr << "}\n"
+		<< "\n";
 	}
-	ostr << "}\n"
-	<< "\n";
 
 	// Write shading modifiers
 	for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )

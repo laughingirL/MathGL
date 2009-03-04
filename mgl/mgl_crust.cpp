@@ -112,6 +112,25 @@ void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, 
 //	Dots series
 //
 //-----------------------------------------------------------------------------
+void mglGraph::Dots(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch, float alpha)
+{
+	long n = x.nx;
+	if(y.nx!=n || z.nx!=n || a.nx!=n)	{	SetWarn(mglWarnDim,"Dots");	return;	}
+	static int cgid=1;	StartGroup("Dots",cgid++);
+	if(alpha<0)	alpha = AlphaDef;
+	if(sch && strchr(sch,'-'))	alpha = -alpha;
+	SetScheme(sch);
+	alpha /= pow(n,1./3)/CloudFactor/15;
+	if(alpha>1)	alpha = 1;
+	mglColor c;
+
+	bool al=Alpha(true);
+	for(long i=0;i<n;i++)
+		AVertex(x.a[i], y.a[i], z.a[i], a.a[i], alpha);
+	Alpha(al);
+	EndGroup();
+}
+//-----------------------------------------------------------------------------
 void mglGraph::Dots(const mglData &x, const mglData &y, const mglData &z, const char *sch)
 {
 	long n = x.nx;
@@ -129,16 +148,18 @@ void mglGraph::Dots(const mglData &x, const mglData &y, const mglData &z, const 
 //-----------------------------------------------------------------------------
 void mglGraph::Dots(const mglData &tr, const char *sch)
 {
-	long n = tr.ny;
-	if(tr.nx<3)	{	SetWarn(mglWarnLow,"Dots");	return;	}
+	long n = tr.ny, m=tr.nx;
+	if(m<3)	{	SetWarn(mglWarnLow,"Dots");	return;	}
 	static int cgid=1;	StartGroup("Dots",cgid++);
 	SetScheme(sch);
 	mglColor c;
-	for(long i=0;i<n;i++)
+	if(m==3)	for(long i=0;i<n;i++)
 	{
 		c = GetC(tr.a[3*i], tr.a[3*i+1], tr.a[3*i+2]);
 		Ball(tr.a[3*i], tr.a[3*i+1], tr.a[3*i+2], c);
 	}
+	else	for(long i=0;i<n;i++)
+		AVertex(tr.a[m*i], tr.a[m*i+1], tr.a[m*i+2], tr.a[m*i+3], 1);
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -298,6 +319,9 @@ void mgl_triplot_xy(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const 
 /// Draw dots in points \a x, \a y, \a z.
 void mgl_dots(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *sch)
 {	if(gr&&x&&y&&z)	gr->Dots(*x,*y,*z,sch);	}
+/// Draw half-transparent dots in points \a x, \a y, \a z.
+void mgl_dots_a(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch)
+{	if(gr&&x&&y&&z)	gr->Dots(*x,*y,*z,*a,sch);	}
 /// Draw dots in points \a tr.
 void mgl_dots_tr(HMGL gr, const HMDT tr, const char *sch)
 {	if(gr&&tr)	gr->Dots(*tr,sch);	}
@@ -337,6 +361,13 @@ void mgl_dots_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const ch
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && x && y && z)	_GR_->Dots(_D_(x),_D_(y),_D_(z),s);
+	delete []s;
+}
+/// Draw dots in points \a x, \a y, \a z.
+void mgl_dots_a_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && x && y && z)	_GR_->Dots(_D_(x),_D_(y),_D_(z),_D_(a),s);
 	delete []s;
 }
 /// Draw dots in points \a tr.

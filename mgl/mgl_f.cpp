@@ -475,6 +475,15 @@ void mgl_get_last_mouse_pos_(uintptr_t *gr, float *x, float *y, float *z)
 	if(g)
 	{	*x=g->LastMousePos.x;	*y=g->LastMousePos.y;	*y=g->LastMousePos.y;}
 }
+void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, float *x, float *y, float *z)
+{
+	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)
+	{
+		mglPoint p = g->CalcXYZ(*xs,*ys);
+		*x = p.x;	*y = p.y;	*z = p.z;
+	}
+}
 //-----------------------------------------------------------------------------
 float mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k)
 {	return	_DT_->a[*i+_DT_->nx*(*j+*k*_DT_->ny)];	}

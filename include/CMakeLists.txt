@@ -1,7 +1,3 @@
-install(DIRECTORY bigforth/ DESTINATION "${MGL_DATA_PATH}/bigforth"
-                        PATTERN ".svn" EXCLUDE
-                        PATTERN "*.fs")
-
 set(MGL_INCLUDE_PATH "${CMAKE_INSTALL_PREFIX}/include/mgl")
 install(DIRECTORY mgl/ DESTINATION ${MGL_INCLUDE_PATH}
                         PATTERN ".svn" EXCLUDE
@@ -9,6 +5,7 @@ install(DIRECTORY mgl/ DESTINATION ${MGL_INCLUDE_PATH}
                         PATTERN "mgl_glut.h" EXCLUDE
                         PATTERN "mgl_wx.h" EXCLUDE
                         PATTERN "mgl_qt.h" EXCLUDE
+                        PATTERN "*.fs"
                         PATTERN "*.h")
 
 if(use_fltk)

@@ -4,7 +4,7 @@ mgl_2d.cpp     mgl_cont.cpp      mgl_eps.cpp       mgl_flow.cpp  mgl_pde.cpp
 mgl_3d.cpp     mgl_crust.cpp     mgl_evalc.cpp     mgl_font.cpp  mgl_tex_table.cpp
 mgl_ab.cpp     mgl_data_cf.cpp   mgl_eval.cpp      mgl_gl.cpp    mgl_vect.cpp
 mgl_addon.cpp  mgl_data.cpp      mgl_exec.cpp      mgl_idtf.cpp  mgl_zb2.cpp
-mgl_axis.cpp   mgl_data_io.cpp   mgl_export.cpp    mgl_io.cpp    mgl_zb.cpp
+mgl_axis.cpp   mgl_data_io.cpp   mgl_export.cpp                  mgl_zb.cpp
 mgl_c.cpp      mgl_data_png.cpp  mgl_f.cpp         mgl_main.cpp
 )
 
@@ -37,7 +37,7 @@ endif(use_gif)
 
 if(use_hdf5)
 	target_link_libraries(mgl ${HDF5_LIB})
-	add_definitions(-DHAVE_HDF5)
+	add_definitions(-DHAVE_HDF5 -DH5_USE_16_API)
 	include_directories(${HDF5_INCLUDE_DIR})
 endif(use_hdf5)
 
@@ -51,16 +51,12 @@ endif(use_gsl)
 
 target_link_libraries(mgl ${OPENGL_LIBRARIES} ${PNG_LIBRARIES} m)
 include_directories(${OPENGL_INCLUDE_DIR} ${PNG_INCLUDE_DIR})
-file(TO_NATIVE_PATH ${MGL_FONT_PATH} MGL_FONT_PATH_SYS)
+file(TO_NATIVE_PATH $(MGL_FONT_PATH) MGL_FONT_PATH_SYS)
 add_definitions(-DMGL_FONT_PATH="${MGL_FONT_PATH_SYS}")
 
 if(UNIX)
 	add_definitions(-DNO_COLOR_ARRAY)
 endif(UNIX)
-
-if(WIN32)
-	add_definitions(-DWIN32)
-endif(WIN32)
 
 set_target_properties(mgl PROPERTIES SOVERSION 5.0.0)
 install(

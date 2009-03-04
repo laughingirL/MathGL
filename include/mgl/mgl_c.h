@@ -64,6 +64,7 @@ void mgl_qt_run();
 #endif
 void mgl_set_show_mouse_pos(HMGL gr, int enable);
 void mgl_get_last_mouse_pos(HMGL gr, float *x, float *y, float *z);
+void mgl_calc_xyz(HMGL gr, int xs, int ys, float *x, float *y, float *z);
 //void mgl_fltk_thread();
 //void mgl_qt_thread();
 void mgl_update(HMGL graph);
@@ -423,6 +424,7 @@ void mgl_triplot_xyzc(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, cons
 void mgl_triplot_xyz(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch);
 void mgl_triplot_xy(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const char *sch, float zVal);
 void mgl_dots(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *sch);
+void mgl_dots_a(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch);
 void mgl_dots_tr(HMGL gr, const HMDT tr, const char *sch);
 void mgl_crust(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *sch, float er);
 void mgl_crust_tr(HMGL gr, const HMDT tr, const char *sch, float er);

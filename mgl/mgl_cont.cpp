@@ -19,13 +19,14 @@
  ***************************************************************************/
 #include <stdlib.h>
 #include <wchar.h>
-#ifdef WIN32
-#define swprintf    _snwprintf
-#endif
 
 #include "mgl/mgl.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
+
+#ifdef WIN32
+#define swprintf    _snwprintf
+#endif
 //-----------------------------------------------------------------------------
 struct _mgl_slice
 {

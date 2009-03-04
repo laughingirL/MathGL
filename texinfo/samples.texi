@@ -6325,7 +6325,7 @@ gr.Plot("2*cos(x^2)^2", "r2", 300);
 
 @c ------------------------------------------------------------------
 @node ColumnPlot sample, , Manual ticks sample, Advanced features
-@subsection Tick values sample
+@subsection ColumnPlot sample
 @cindex SetTicksVal
 
 @float

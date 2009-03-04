@@ -122,6 +122,9 @@ Switch to show or not in the widget the last mouse click position.
 @deftypefn {C function} @code{void} mgl_get_last_mouse_pos (@code{HMGL} graph, @code{float *}x, @code{float *}y, @code{float *}z)
 Last position of mouse click.
 @end deftypefn
+@deftypefn {C function} @code{void} mgl_calc_xyz (@code{HMGL} graph, @code{int} xs, @code{int} ys, @code{float *}x, @code{float *}y, @code{float *}z)
+Calculate 3D coordinate @{x,y,z@} for screen point @{xs,ys@}. At this moment it ignore perspective and transformation formulas (curvilinear coordinates). The calculation are done for the last used InPlot (@pxref{Transformation matrix}).
+@end deftypefn
 
 
 @item Functions for data creation:
@@ -1834,11 +1837,12 @@ Draws solid contours for data @var{a}=@var{v}[i] at z = @var{sVal}.
 @cindex Dots
 
 @deftypefn {C function} @code{void} mgl_dots (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
-The function draws the arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also Crust(), Mark(), Plot(). @sref{Dots sample}
+@deftypefnx {C function} @code{void} mgl_dots_a (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a, @code{const char *}sch)
+The function draws the arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. If array @var{a} is specified then it define the transparency of dots. Arrays @var{x}, @var{y}, @var{z}, @var{a} must have equal sizes. See also Crust(), Mark(), Plot(). @sref{Dots sample}
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_dots_tr (@code{HMGL} gr, @code{const HMDT} tr, @code{const char *}sch)
-The same as previous with @var{x=tr}(0,:), @var{y=tr}(1,:), @var{z=tr}(2,:).
+The same as previous with @var{x=tr}(0,:), @var{y=tr}(1,:), @var{z=tr}(2,:) and if @var{tr}.nx>3 then @var{a=tr}(3,:).
 @end deftypefn
 
 @c ==================================================================

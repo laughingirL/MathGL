@@ -395,6 +395,15 @@ void mgl_get_last_mouse_pos(HMGL gr, float *x, float *y, float *z)
 	if(g)
 	{	*x=g->LastMousePos.x;	*y=g->LastMousePos.y;	*y=g->LastMousePos.y;}
 }
+void mgl_calc_xyz(HMGL gr, int xs, int ys, float *x, float *y, float *z)
+{
+	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);
+	if(g && x && y && z)
+	{
+		mglPoint p = g->CalcXYZ(xs,ys);
+		*x = p.x;	*y = p.y;	*z = p.z;
+	}
+}
 //-----------------------------------------------------------------------------
 float mgl_data_get_value(const HMDT d, int i, int j, int k)
 {	return	d->a[i+d->nx*(j+d->ny*k)];	}

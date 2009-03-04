@@ -79,6 +79,7 @@ int main(int narg, char **arg)
 			if(r==1)	wprintf(L"Wrong argument(s) in %ls\n",str);
 			if(r==2)	wprintf(L"Wrong command in %ls\n",str);
 			if(r==3)	wprintf(L"String too long in %ls\n",str);
+			if(r==4)	wprintf(L"Unbalanced ' in %ls\n", str);
 		}
 		fwprintf(fo,L"\treturn 0;\n}\n");
 		fclose(fp);	fclose(fo);

@@ -656,8 +656,8 @@ The function draws @var{text} along the curve between points @{@var{x}[i], @var{
 
 These functions draw the ``things for measuring'', like axis with ticks, colorbar with ticks, grid along axis, bounding box and labels for axis. For more information @pxref{Axis settings (Python)}.
 
-@deftypemethod {mglGraph (Python)} @code{void} Axis (@code{const char *}dir=@code{"xyz"})
-Draws axes with ticks (@pxref{Axis settings}) in directions determined by string parameter @var{dir}.If string contain the symbol @samp{_} then tick labels are not printed. Font for ticks labels is determined by @var{FontDef} (@pxref{Font settings (Python)}).
+@deftypemethod {mglGraph (Python)} @code{void} Axis (@code{const char *}dir=@code{"xyz"}, @code{bool} adjust=@code{false})
+Draws axes with ticks (@pxref{Axis settings}) in directions determined by string parameter @var{dir}.If string contain the symbol @samp{_} then tick labels are not printed. Font for ticks labels is determined by @var{FontDef} (@pxref{Font settings (Python)}). Ticks will be adjusted if @var{adjust}=@code{true} (by call of @code{AdjustTicks()}).
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} Colorbar (@code{const char *}sch=@code{NULL}, @code{int} where=@code{0})
@@ -1704,7 +1704,8 @@ Draws solid contours for data @var{a}=@var{v}[i] at z = @var{sVal}.
 @cindex Dots
 
 @deftypemethod {mglGraph (Python)} @code{void} Dots (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{const char *}sch=@code{NULL})
-The function draws the arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also @ref{Crust}, @ref{Mark}, @ref{Plot}. @sref{Dots sample}
+@deftypemethodx {mglGraph (Python)} @code{void} Dots (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{mglData} a, @code{const char *}sch=@code{NULL})
+The function draws the arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If array @var{a} is specified then it define the transparency of dots. Arrays @var{x}, @var{y}, @var{z}, @var{a} must have equal sizes. See also @ref{Crust}, @ref{Mark}, @ref{Plot}. @sref{Dots sample}
 @end deftypemethod
 
 @c ==================================================================

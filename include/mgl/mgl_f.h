@@ -45,6 +45,7 @@ void mgl_fltk_run_();
 void mgl_qt_run_();
 void mgl_set_show_mouse_pos_(uintptr_t *gr, int *enable);
 void mgl_get_last_mouse_pos_(uintptr_t *gr, float *x, float *y, float *z);
+void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, float *x, float *y, float *z);
 //void mgl_fltk_thread_();
 //void mgl_qt_thread_();
 /*****************************************************************************/
@@ -386,6 +387,7 @@ void mgl_triplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *
 void mgl_triplot_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int);
 void mgl_triplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, const char *sch, float *zVal,int);
 void mgl_dots_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int);
+void mgl_dots_a_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch,int);
 void mgl_dots_tr_(uintptr_t *gr, uintptr_t *tr, const char *sch,int);
 void mgl_crust_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, float *er,int);
 void mgl_crust_tr_(uintptr_t *gr, uintptr_t *tr, const char *sch, float *er,int);

@@ -155,8 +155,9 @@ public:
 	void print_shading_modifier ( std::ofstream& ostr );
 	size_t AddModelMaterial ( const float *c, bool emissive, bool vertex_color );
 	size_t AddPoint ( const float *p );
-	size_t AddPoint ( const mglPoint p );
+	size_t AddPoint ( const mglPoint& p );
 	size_t AddColor ( const float *c );
+	size_t AddColor ( const mglColor& c );
 };
 //-----------------------------------------------------------------------------
 typedef std::list<u3dModel>  u3dModel_list;
@@ -205,8 +206,10 @@ typedef std::list<u3dLineSet>  u3dLineSet_list;
 class u3dPointSet : public u3dModel
 {
 public:
+//	std::vector<size_t> pointShaders;
+//	std::vector<size_t> pointColors; does not work due to Adobe bug
 	u3dPointSet ( const std::string& name, mglGraphIDTF *Graph );
-	void point_plot ( const mglPoint& p );
+	void point_plot ( const mglPoint& p, const mglColor& c );
 	void print_model_resource ( std::ofstream& ostrtmp );
 };
 //-----------------------------------------------------------------------------
@@ -270,9 +273,10 @@ public:
 	using mglGraph::Ball;
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	void VertexColor(bool enable)  { vertex_color_flag = enable ; }
-	void TextureColor(bool enable)  { textures_flag = enable ; }
+	void TextureColor(bool enable) { textures_flag = enable ; }
 	void Compression(bool enable)  { disable_compression_flag = !enable ; }
 	void Unrotate(bool enable)     { unrotate_flag = enable ; }
+	void BallIsPoint(bool enable)  { ball_is_point_flag = enable ; }
 	/// Flush() finishes current PointSet, LineSet and Mesh. Use Flush() to separate unnamed objects in the scene. The named objects or object groups are separeted by StartGroup/EndGroup
 	void Flush() { points_finished = lines_finished = mesh_finished = true; };
 	void Light ( int n,mglPoint p, mglColor c=NC, float br=0.5, bool infty=true );
@@ -292,6 +296,7 @@ public:
 	bool textures_flag;			///< use textures on surfaces
 	bool disable_compression_flag;	///< disable mesh compression (normally is true). One don't need the number of polygons reduced automatically to save space, but you may have to unset it if you use unpatched (unfixed) U3D library.
 	bool unrotate_flag;			///< do not rotate the scene as a whole, in this case you have to set camera position externally.
+	bool ball_is_point_flag;
 	/// Objects can belong to groups. StartGroup() and EndGroup() do what the names imply.
 	void StartGroup ( const char *name );
 	void StartAutoGroup ( const char *name );
@@ -303,7 +308,7 @@ protected:
 	void ball ( float *p,float *c );
 	void UnitBall ();
 
-	void point_plot ( const mglPoint& p );
+	void point_plot ( const mglPoint& p, const mglColor& c );
 	void line_plot ( const mglPoint& p0, const mglPoint& p1 );
 	void trig_plot ( const mglPoint& p0, const mglPoint& p1, const mglPoint& p2 );
 	void quad_plot ( const mglPoint& p0, const mglPoint& p1, const mglPoint& p2, const mglPoint& p3 );

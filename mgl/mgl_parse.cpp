@@ -21,6 +21,10 @@
 #include <ctype.h>
 #include <wchar.h>
 
+#include "mgl/mgl_parse.h"
+#include "mgl/mgl_c.h"
+#include "mgl/mgl_f.h"
+
 #ifdef WIN32
 #include <io.h>
 wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim){
@@ -31,9 +35,7 @@ wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim){
 #else
 #include <unistd.h>
 #endif
-#include "mgl/mgl_parse.h"
-#include "mgl/mgl_c.h"
-#include "mgl/mgl_f.h"
+
 wchar_t *mgl_wcsdup(const wchar_t *s);
 //-----------------------------------------------------------------------------
 void mgl_wcstrim(wchar_t *str)

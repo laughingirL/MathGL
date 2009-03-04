@@ -29,18 +29,22 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define NANd	(*(double*)mgl_nan)
 #define NANf	(*(float*)&(mgl_nan[1]))
 #define NAN		NANd
-#define isnan	_isnan
+//#define isnan	_isnan
 #define isfinite	_finite
 #define copysignf	_copysign
 #define chdir	_chdir
 #endif
 
+#include "mgl/mgl_evalc.h"
+#include "mgl/mgl_addon.h"
+
 #ifndef NO_GSL
 #include <gsl/gsl_sf.h>
 #endif
 
-#include "mgl/mgl_evalc.h"
-#include "mgl/mgl_addon.h"
+#ifdef WIN32
+#define isnan _isnan
+#endif
 //-----------------------------------------------------------------------------
 //	константы для распознования выражения
 enum{

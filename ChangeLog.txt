@@ -15,6 +15,7 @@
 	- Add new tool mgl2gif for exporting to GIF files (including animated GIF)
 	- Add option -Lval for setting locale to val. Option is added to mgl2png, mgl2eps, mgl2cpp, mglview. For example, use "mglview fname -Lru_RU.utf8" for file in UTF-8 encoding.
 	- Extend TriPlot() by adding manual coloring array (like SurfC()).
+	- Extend Dots() by adding transparency for dots.
 	- Improve STFA() by adding smoothed mask at the edges.
 	- Improve tick labels drawing if RotatedText = false.
 	- Add mglGraphAB::LastMousePos
