@@ -42,9 +42,11 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #include <gsl/gsl_sf.h>
 #endif
 
-#ifdef WIN32
-#define isnan _isnan
-#endif
+#define isnan std::isnan
+
+//#ifdef WIN32
+//#define isnan _isnan
+//#endif
 //-----------------------------------------------------------------------------
 //	константы для распознования выражения
 enum{

@@ -74,7 +74,7 @@ void mglGraphPS::ball(float *p,float *c)
 //-----------------------------------------------------------------------------
 void mglGraphPS::mark_plot(float *p, char type)
 {
-	mglPrim a;		a.m = type;		a.s = MarkSize*175*font_factor;
+	mglPrim a;		a.m = type;		a.s = MarkSize;//*175*font_factor;
 	a.x[0] = p[0];	a.y[0] = p[1];	a.z = a.zz[0]=p[2];
 	memcpy(a.c,CDef,3*sizeof(float));
 	add_prim(&a);
@@ -392,6 +392,7 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 		{
 			if(P[i].s!=MarkSize)
 			{
+//printf("%g - %g\n",P[i].s, font_factor);
 				fprintf(fp,"/ss {%g} def\n",P[i].s*0.4*font_factor);
 				fprintf(fp,"/s2 {%g} def\n",P[i].s*0.8*font_factor);
 				fprintf(fp,"/sm {-%g} def\n",P[i].s*0.4*font_factor);
