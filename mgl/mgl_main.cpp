@@ -21,8 +21,8 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <wchar.h>
-#include "mgl/mgl_eval.h"
 #include "mgl/mgl.h"
+#include "mgl/mgl_eval.h"
 //-----------------------------------------------------------------------------
 const char *mglWarn[mglWarnEnd] = {"%s: data dimension(s) is incompatible",
 								"%s: data dimension(s) is too small",
@@ -87,23 +87,23 @@ void mglGraph::RecalcBorder()
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetFBord(float x,float y,float z)
+void mglGraph::SetFBord(mreal x,mreal y,mreal z)
 {
 	if(fx)
 	{
-		float v = fx->Calc(x,y,z);
+		mreal v = fx->Calc(x,y,z);
 		if(FMax.x < v)	FMax.x = v;
 		if(FMin.x > v)	FMin.x = v;
 	}
 	if(fy)
 	{
-		float v = fy->Calc(x,y,z);
+		mreal v = fy->Calc(x,y,z);
 		if(FMax.y < v)	FMax.y = v;
 		if(FMin.y > v)	FMin.y = v;
 	}
 	if(fz)
 	{
-		float v = fz->Calc(x,y,z);
+		mreal v = fz->Calc(x,y,z);
 		if(FMax.z < v)	FMax.z = v;
 		if(FMin.z > v)	FMin.z = v;
 	}
@@ -151,11 +151,11 @@ void mglGraph::CutOff(const char *EqC)
 //-----------------------------------------------------------------------------
 //#define FLT_EPS	1.1920928955078125e-07
 #define FLT_EPS	(1.+2e-07)
-bool mglGraph::ScalePoint(float &x,float &y,float &z)
+bool mglGraph::ScalePoint(mreal &x,mreal &y,mreal &z)
 {
-//	float x1=x,y1=y,z1=z;
+//	mreal x1=x,y1=y,z1=z;
 	if(isnan(x) || isnan(y) || isnan(z))	return false;
-	float x1,y1,z1,x2,y2,z2;
+	mreal x1,y1,z1,x2,y2,z2;
 	x1 = x>0?x*FLT_EPS:x/FLT_EPS;	x2 = x<0?x*FLT_EPS:x/FLT_EPS;
 	y1 = y>0?y*FLT_EPS:y/FLT_EPS;	y2 = y<0?y*FLT_EPS:y/FLT_EPS;
 	z1 = z>0?z*FLT_EPS:z/FLT_EPS;	z2 = z<0?z*FLT_EPS:z/FLT_EPS;
@@ -201,11 +201,11 @@ bool mglGraph::ScalePoint(float &x,float &y,float &z)
 	return res;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Color(float a,float a1,float a2)
+void mglGraph::Color(mreal a,mreal a1,mreal a2)
 {
 	mglColor c;
 	if(a1==a2)	{	a1 = Cmin;	a2 = Cmax;	}
-	float z = (2*a-a1-a2)/(a2-a1);
+	mreal z = (2*a-a1-a2)/(a2-a1);
 	if(z>1)	z=1;	if(z<-1)	z=-1;
 	c = GetC(z,false);
 	DefColor(c,AlphaDef);
@@ -249,10 +249,10 @@ void mglGraph::SetScheme(const char *s)
 	if(NumCol==0)	NumCol = 2;
 }
 //-----------------------------------------------------------------------------
-mglColor mglGraph::GetC(float x,float y,float z,bool simple)
+mglColor mglGraph::GetC(mreal x,mreal y,mreal z,bool simple)
 {
 	mglColor c,m;
-	float n;
+	mreal n;
 	if(OnCoord && !simple && NumCol>2)
 	{
 		m = cmap[0]+cmap[1]+cmap[2];		n = m.Norm();
@@ -262,14 +262,14 @@ mglColor mglGraph::GetC(float x,float y,float z,bool simple)
 	return c;
 }
 //-----------------------------------------------------------------------------
-float mglGraph::GetA(float a)
+mreal mglGraph::GetA(mreal a)
 {
 	a = (2*a-Cmin-Cmax)/(Cmax-Cmin);
 	a = fabs(a)>1 ? copysignf(1,a) : a;
 	return a;
 }
 //-----------------------------------------------------------------------------
-mglColor mglGraph::GetC(float z, bool scale)
+mglColor mglGraph::GetC(mreal z, bool scale)
 {
 	mglColor c;
 	register long n = NumCol-1;
@@ -286,10 +286,10 @@ mglColor mglGraph::GetC(float z, bool scale)
 	return c;
 }
 //-----------------------------------------------------------------------------
-mglColor mglGraph::GetC2(float x,float y)
+mglColor mglGraph::GetC2(mreal x,mreal y)
 {
 	mglColor c;
-	float m=1;
+	mreal m=1;
 	x = (2*x-Min.x)/(Max.x-Min.x);
 	y = (2*y-Min.y)/(Max.y-Min.y);
 	if(NumCol<1)		c = mglColor(x-x*y,y-x*y,x*y);
@@ -311,7 +311,7 @@ mglColor mglGraph::GetC2(float x,float y)
 	return c;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::CRange(const mglData &a,bool add, float fact)
+void mglGraph::CRange(const mglData &a,bool add, mreal fact)
 {
 	long n = a.nx*a.ny*a.nz;
 	register long i;
@@ -323,11 +323,11 @@ void mglGraph::CRange(const mglData &a,bool add, float fact)
 		Cmax = Cmax>a.a[i] ? Cmax : a.a[i];
 	}
 	if(Cmin==Cmax)	Cmax += 1;
-	float dc = (Cmax-Cmin)*fact;
+	mreal dc = (Cmax-Cmin)*fact;
 	Cmax+=dc;	Cmin-=dc;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::XRange(const mglData &a,bool add,float fact)
+void mglGraph::XRange(const mglData &a,bool add,mreal fact)
 {
 	long n = a.nx*a.ny*a.nz;
 	register long i;
@@ -338,14 +338,14 @@ void mglGraph::XRange(const mglData &a,bool add,float fact)
 		Min.x = Min.x<a.a[i] ? Min.x : a.a[i];
 		Max.x = Max.x>a.a[i] ? Max.x : a.a[i];
 	}
-	float dc = (Max.x-Min.x)*fact;
+	mreal dc = (Max.x-Min.x)*fact;
 	Max.x+=dc;	Min.x-=dc;
 	if(AutoOrg && Org.x<Min.x && !isnan(Org.x))	Org.x = Min.x;
 	if(AutoOrg && Org.x>Max.x && !isnan(Org.x))	Org.x = Max.x;
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::YRange(const mglData &a,bool add,float fact)
+void mglGraph::YRange(const mglData &a,bool add,mreal fact)
 {
 	long n = a.nx*a.ny*a.nz;
 	register long i;
@@ -356,14 +356,14 @@ void mglGraph::YRange(const mglData &a,bool add,float fact)
 		Min.y = Min.y<a.a[i] ? Min.y : a.a[i];
 		Max.y = Max.y>a.a[i] ? Max.y : a.a[i];
 	}
-	float dc = (Max.y-Min.y)*fact;
+	mreal dc = (Max.y-Min.y)*fact;
 	Max.y+=dc;	Min.y-=dc;
 	if(AutoOrg && Org.y<Min.y && !isnan(Org.y))	Org.y = Min.y;
 	if(AutoOrg && Org.y>Max.y && !isnan(Org.y))	Org.y = Max.y;
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ZRange(const mglData &a,bool add,float fact)
+void mglGraph::ZRange(const mglData &a,bool add,mreal fact)
 {
 	long n = a.nx*a.ny*a.nz;
 	register long i;
@@ -374,7 +374,7 @@ void mglGraph::ZRange(const mglData &a,bool add,float fact)
 		Min.z = Min.z<a.a[i] ? Min.z : a.a[i];
 		Max.z = Max.z>a.a[i] ? Max.z : a.a[i];
 	}
-	float dc = (Max.z-Min.z)*fact;
+	mreal dc = (Max.z-Min.z)*fact;
 	Max.z+=dc;	Min.z-=dc;
 	if(AutoOrg && Org.z<Min.z && !isnan(Org.z))	Org.z = Min.z;
 	if(AutoOrg && Org.z>Max.z && !isnan(Org.z))	Org.z = Max.z;
@@ -428,9 +428,9 @@ char mglGraph::SelectPen(const char *p)
 	return mk;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SubPlot(int nx,int ny,int m, float dx, float dy)
+void mglGraph::SubPlot(int nx,int ny,int m, mreal dx, mreal dy)
 {
-	float x1,x2,y1,y2;
+	mreal x1,x2,y1,y2;
 	int mx = m%nx, my = m/nx;
 	if(AutoPlotFactor)	{	dx /= 1.55;	dy /= 1.55;	}
 	else	{	dx /= 2;	dy /= 2;	}
@@ -450,7 +450,7 @@ void mglGraph::Printf(mglPoint p,const char *str,...)
 	Puts(p,text,FontDef);
 }
 //-----------------------------------------------------------------------------
-float GetX(const mglData &x, int i, int j, int k)
+mreal GetX(const mglData &x, int i, int j, int k)
 {
 	k = k<x.nz ? k : 0;
 	if(x.ny>j && x.nx>i && x.ny>1)	return x.v(i,j,k);
@@ -458,7 +458,7 @@ float GetX(const mglData &x, int i, int j, int k)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-float GetY(const mglData &y, int i, int j, int k)
+mreal GetY(const mglData &y, int i, int j, int k)
 {
 	k = k<y.nz ? k : 0;
 	if(y.ny>j && y.nx>i && y.ny>1)	return y.v(i,j,k);
@@ -466,7 +466,7 @@ float GetY(const mglData &y, int i, int j, int k)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-float GetZ(const mglData &z, int i, int j, int k)
+mreal GetZ(const mglData &z, int i, int j, int k)
 {
 	k = k<z.nz ? k : 0;
 	if(z.ny>j && z.nx>i && z.ny>1)	return z.v(i,j,k);
@@ -474,7 +474,7 @@ float GetZ(const mglData &z, int i, int j, int k)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-void mglColor::Set(mglColor c, float br)
+void mglColor::Set(mglColor c, mreal br)
 {
 	if(br<0)	br=0;	if(br>2.f)	br=2.f;
 	r= br<=1.f ? c.r*br : 1 - (1-c.r)*(2-br);
@@ -482,7 +482,7 @@ void mglColor::Set(mglColor c, float br)
 	b= br<=1.f ? c.b*br : 1 - (1-c.b)*(2-br);
 }
 //-----------------------------------------------------------------------------
-void mglColor::Set(char p, float bright)
+void mglColor::Set(char p, mreal bright)
 {
 	Set(-1,-1,-1);
 	for(long i=0; mglColorIds[i].id; i++)
@@ -490,7 +490,7 @@ void mglColor::Set(char p, float bright)
 		{	Set(mglColorIds[i].col, bright);	break;	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ball(float *p,float *c)
+void mglGraph::ball(mreal *p,mreal *c)
 {
 	Ball(p[0],p[1],p[2],mglColor(c[0],c[1],c[2]),c[3]);
 }
@@ -519,6 +519,7 @@ void mglGraph::SetPalette(const char *colors)
 //-----------------------------------------------------------------------------
 void mglGraph::DefaultPlotParam()
 {
+	FontSize = 5;			BaseLineWidth = 1;
 	Ambient();				Ternary(false);
 	PlotId = "frame";		SetPalette("Hbgrcmyhlnqeup");
 	SetScheme("BbcyrR");	SelectPen("k-1");
@@ -530,7 +531,6 @@ void mglGraph::DefaultPlotParam()
 	BarWidth = 0.7;			fit_res[0] = 0;
 	MarkSize = 0.02;		ArrowSize = 0.03;
 	AlphaDef = 0.5;			Transparent = true;
-	FontSize = 5;			BaseLineWidth = 1;
 	strcpy(FontDef,"rC");	AxialDir = 'y';
 	UseAlpha = false;		TranspType = 0;
 	RotatedText = true;		fnt->gr = this;
@@ -579,7 +579,7 @@ void mglGraph::SimplePlot(const mglData &a, int type, const char *stl)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Zoom(float x1, float y1, float x2, float y2)
+void mglGraph::Zoom(mreal x1, mreal y1, mreal x2, mreal y2)
 {
 	if(x1==x2 || y1==y2)	{	x1=y1=0;	x2=y2=1;	}
 	Clf();
@@ -589,14 +589,14 @@ void mglGraph::Zoom(float x1, float y1, float x2, float y2)
 	else		{	zoomy1=y2;	zoomy2=y1-y2;	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::font_curve(long n,float *pp,bool *,long *nn,const wchar_t *text,
-				int pos,float size)
+void mglGraph::font_curve(long n,mreal *pp,bool *,long *nn,const wchar_t *text,
+				int pos,mreal size)
 {
 	if(n<2 || text==0 || wcslen(text)==0)	return;
 	if(!pp || !nn || n<2 || nn[0]<0)	return;
 	if(size<0)	size = -size*FontSize;
 	mglPoint p[25],t;
-	float del = fnt->Width(text,"rL")*size/8.;
+	mreal del = fnt->Width(text,"rL")*size/8.;
 	del = del>1 ? del:1;
 	long k=1,i,j;
 	bool less;
@@ -626,12 +626,12 @@ bool same_chain(long f,long i,long *nn)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::string_curve(long f,long n,float *pp,long *nn,const wchar_t *text, float size, int pos)
+void mglGraph::string_curve(long f,long n,mreal *pp,long *nn,const wchar_t *text, mreal size, int pos)
 {
 	wchar_t L[2]=L"a";
 	mglPoint p1,n1,p2;
 
-	float w, r, ww, wg=fnt->Height("")*size/8.;//*font_factor;
+	mreal w, r, ww, wg=fnt->Height("")*size/8.;//*font_factor;
 	register long i,k,h;
 	ScalePuts = false;
 
@@ -724,39 +724,39 @@ void mglGraph::string_curve(long f,long n,float *pp,long *nn,const wchar_t *text
 }
 //-----------------------------------------------------------------------------
 // Pure virtual functions below are defined here for compatibility with MinGW
-void mglGraph::Pen(mglColor , char ,float ){}
+void mglGraph::Pen(mglColor , char ,mreal ){}
 void mglGraph::Light(int ,bool ){}
-void mglGraph::Light(int , mglPoint , mglColor , float , bool ){}
+void mglGraph::Light(int , mglPoint , mglColor , mreal , bool ){}
 void mglGraph::Clf(mglColor ){}
-void mglGraph::InPlot(float ,float ,float ,float ,bool ){}
+void mglGraph::InPlot(mreal ,mreal ,mreal ,mreal ,bool ){}
 //-----------------------------------------------------------------------------
 // These functions can be pure virtual but it should be empty (do nothing)
 // in some of inherit classes so they are defined empty here
 void mglGraph::SetSize(int ,int ){}
-float mglGraph::GetRatio(){return 1.;}
+mreal mglGraph::GetRatio(){return 1.;}
 void mglGraph::Flush(){}
 void mglGraph::Finish(){}
 //-----------------------------------------------------------------------------
 void mglGraph::Mark(mglPoint p,char t)
 {	ScalePoint(p.x,p.y,p.z);	Mark(p.x,p.y,p.z,t);	}
 //-----------------------------------------------------------------------------
-void mglGraph::View(float tetx,float tetz,float tety)
+void mglGraph::View(mreal tetx,mreal tetz,mreal tety)
 {	_tetx=tetx;	_tety=tety;	_tetz=tetz;	}
 void mglGraph::Identity()	{	InPlot(0,1,0,1);	}
 //-----------------------------------------------------------------------------
-void mglGraph::Rotate(float TetX,float TetZ,float TetY)
+void mglGraph::Rotate(mreal TetX,mreal TetZ,mreal TetY)
 {
 	RotateN(TetX+_tetx,1.,0.,0.);
 	RotateN(TetY+_tety,0.,1.,0.);
 	RotateN(TetZ+_tetz,0.,0.,1.);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Fog(float d, float dz)	{	FogDist=d;	FogDz = dz;	}
+void mglGraph::Fog(mreal d, mreal dz)	{	FogDist=d;	FogDz = dz;	}
 //-----------------------------------------------------------------------------
-void mglGraph::Light(int n,mglPoint p, char c, float bright, bool infty)
+void mglGraph::Light(int n,mglPoint p, char c, mreal bright, bool infty)
 {	Light(n,p,mglColor(c),bright,infty);	}
 //-----------------------------------------------------------------------------
-void mglGraph::Ambient(float bright)	{	AmbBr = bright;	}
+void mglGraph::Ambient(mreal bright)	{	AmbBr = bright;	}
 //-----------------------------------------------------------------------------
 mglGraph::mglGraph()
 {
@@ -792,14 +792,14 @@ void mglGraph::SetFont(mglFont *f)
 	else	fnt->Load(MGL_DEF_FONT_NAME,0);	//	restore (reload) default typeface
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Title(const wchar_t *str,const char *font,float size)
+void mglGraph::Title(const wchar_t *str,const char *font,mreal size)
 {
 	Identity();
 	Text(mglPoint(0,1.3,0), str, font, size);
 	RestoreM();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Title(const char *str,const char *font,float size)
+void mglGraph::Title(const char *str,const char *font,mreal size)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -808,7 +808,7 @@ void mglGraph::Title(const char *str,const char *font,float size)
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Label(char dir, const char *str, int pos, float size, float shift)
+void mglGraph::Label(char dir, const char *str, int pos, mreal size, mreal shift)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -817,7 +817,7 @@ void mglGraph::Label(char dir, const char *str, int pos, float size, float shift
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Puts(mglPoint p,const char *str,const char *font,float size,char dir,float shift)
+void mglGraph::Puts(mglPoint p,const char *str,const char *font,mreal size,char dir,mreal shift)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -826,17 +826,17 @@ void mglGraph::Puts(mglPoint p,const char *str,const char *font,float size,char 
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-float mglGraph::Puts(mglPoint p,mglPoint l,const char *str,char font,float size)
+mreal mglGraph::Puts(mglPoint p,mglPoint l,const char *str,char font,mreal size)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
-	float res = Putsw(p, l, wcs, font, size);
+	mreal res = Putsw(p, l, wcs, font, size);
 	delete []wcs;
 	return res;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Text(mglPoint p,const char *text,const char *font,float size,char dir)
+void mglGraph::Text(mglPoint p,const char *text,const char *font,mreal size,char dir)
 {
 	bool rt = RotatedText;
 	RotatedText = false;
@@ -844,7 +844,7 @@ void mglGraph::Text(mglPoint p,const char *text,const char *font,float size,char
 	RotatedText = rt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Text(mglPoint p,const wchar_t *text,const char *font,float size,char dir)
+void mglGraph::Text(mglPoint p,const wchar_t *text,const char *font,mreal size,char dir)
 {
 	bool rt = RotatedText;
 	RotatedText = false;
@@ -852,7 +852,7 @@ void mglGraph::Text(mglPoint p,const wchar_t *text,const char *font,float size,c
 	RotatedText = rt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Text(const mglData &y,const char *str,const char *font,float size,float zVal)
+void mglGraph::Text(const mglData &y,const char *str,const char *font,mreal size,mreal zVal)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -861,7 +861,7 @@ void mglGraph::Text(const mglData &y,const char *str,const char *font,float size
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Text(const mglData &x,const mglData &y,const char *str,const char *font,float size,float zVal)
+void mglGraph::Text(const mglData &x,const mglData &y,const char *str,const char *font,mreal size,mreal zVal)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -870,7 +870,7 @@ void mglGraph::Text(const mglData &x,const mglData &y,const char *str,const char
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Text(const mglData &x,const mglData &y,const mglData &z,const char *str,const char *font,float size)
+void mglGraph::Text(const mglData &x,const mglData &y,const mglData &z,const char *str,const char *font,mreal size)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -888,7 +888,7 @@ void mglGraph::TextMark(const mglData &x, const mglData &y, const mglData &z, co
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::TextMark(const mglData &x, const mglData &y, const mglData &r, const char *str, const char *fnt, float zVal)
+void mglGraph::TextMark(const mglData &x, const mglData &y, const mglData &r, const char *str, const char *fnt, mreal zVal)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -897,7 +897,7 @@ void mglGraph::TextMark(const mglData &x, const mglData &y, const mglData &r, co
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::TextMark(const mglData &y, const mglData &r, const char *str, const char *fnt, float zVal)
+void mglGraph::TextMark(const mglData &y, const mglData &r, const char *str, const char *fnt, mreal zVal)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -906,7 +906,7 @@ void mglGraph::TextMark(const mglData &y, const mglData &r, const char *str, con
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::TextMark(const mglData &y, const char *str, const char *fnt, float zVal)
+void mglGraph::TextMark(const mglData &y, const char *str, const char *fnt, mreal zVal)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -925,24 +925,24 @@ void mglGraph::AddLegend(const char *str,const char *style)
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetFontSizePT(float pt, int dpi)
+void mglGraph::SetFontSizePT(mreal pt, int dpi)
 {	FontSize = pt*27.f/dpi;	}
 //-----------------------------------------------------------------------------
-float mglGraph::GetOrgX(char)	{	return isnan(Org.x) ? Min.x : Org.x;	}
-float mglGraph::GetOrgY(char)	{	return isnan(Org.y) ? Min.y : Org.y;	}
-float mglGraph::GetOrgZ(char)	{	return isnan(Org.z) ? Min.z : Org.z;	}
+mreal mglGraph::GetOrgX(char)	{	return isnan(Org.x) ? Min.x : Org.x;	}
+mreal mglGraph::GetOrgY(char)	{	return isnan(Org.y) ? Min.y : Org.y;	}
+mreal mglGraph::GetOrgZ(char)	{	return isnan(Org.z) ? Min.z : Org.z;	}
 //-----------------------------------------------------------------------------
-void mglGraph::FaceX(float x0, float y0, float z0, float wy, float wz, const char *stl, float d1, float d2)
+void mglGraph::FaceX(mreal x0, mreal y0, mreal z0, mreal wy, mreal wz, const char *stl, mreal d1, mreal d2)
 {
 	Face(mglPoint(x0,y0,z0), mglPoint(x0,y0+wy,z0), mglPoint(x0,y0,z0+wz), mglPoint(x0,y0+wy+d1,z0+wz+d2), stl, 2);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::FaceY(float x0, float y0, float z0, float wx, float wz, const char *stl, float d1, float d2)
+void mglGraph::FaceY(mreal x0, mreal y0, mreal z0, mreal wx, mreal wz, const char *stl, mreal d1, mreal d2)
 {
 	Face(mglPoint(x0,y0,z0), mglPoint(x0+wx,y0,z0), mglPoint(x0,y0,z0+wz), mglPoint(x0+wx+d1,y0,z0+wz+d2), stl, 2);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::FaceZ(float x0, float y0, float z0, float wx, float wy, const char *stl, float d1, float d2)
+void mglGraph::FaceZ(mreal x0, mreal y0, mreal z0, mreal wx, mreal wy, const char *stl, mreal d1, mreal d2)
 {
 	Face(mglPoint(x0,y0,z0), mglPoint(x0,y0+wy,z0), mglPoint(x0+wx,y0,z0), mglPoint(x0+wx+d1,y0+wy+d2,z0), stl, 2);
 }
@@ -981,7 +981,7 @@ void mglGraph::StartGroup(const char *name, int id)
 	StartAutoGroup(buf);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetAutoRanges(float x1, float x2, float y1, float y2, float z1, float z2)
+void mglGraph::SetAutoRanges(mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2)
 {
 	if(x1!=x2)	{	Min.x = x1;	Max.x = x2;	}
 	if(y1!=y2)	{	Min.y = y1;	Max.y = y2;	}
@@ -991,7 +991,7 @@ void mglGraph::SetAutoRanges(float x1, float x2, float y1, float y2, float z1, f
 void mglGraph::Colorbar(const char *sch,int where)
 {
 	SetScheme(sch);
-	float x=0,y=0;
+	mreal x=0,y=0;
 	if(where==2)	y=1;
 	if(where==0)	x=1;
 	Colorbar(where,x,y,1,1);
@@ -999,8 +999,8 @@ void mglGraph::Colorbar(const char *sch,int where)
 //-----------------------------------------------------------------------------
 void mglGraph::ColumnPlot(int num, int i)
 {
-	float d = i/(num+PlotFactor-1);
-	float w = PlotFactor/(num+PlotFactor-1);
+	mreal d = i/(num+PlotFactor-1);
+	mreal w = PlotFactor/(num+PlotFactor-1);
 	InPlot(0,1,d,d+w,true);
 }
 //-----------------------------------------------------------------------------

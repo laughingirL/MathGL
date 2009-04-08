@@ -22,15 +22,10 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-#include "mgl/mgl_eval.h"
 #include "mgl/mgl.h"
+#include "mgl/mgl_eval.h"
 #include "mgl/mgl_c.h"
 #define FLT_EPS	(1.+1.2e-07)
-
-#ifdef WIN32
-#define swprintf    _snwprintf
-#endif
-
 //-----------------------------------------------------------------------------
 wchar_t *mgl_wcsdup(const wchar_t *s)
 {
@@ -62,19 +57,19 @@ void wcstrim_mgl(wchar_t *str)
 }
 //-----------------------------------------------------------------------------
 ///	Round the number to k digits. For example, x = 0.01234 -> r = 0.0123 for k=3.
-float mgl_okrugl(float x,int k)
+mreal mgl_okrugl(mreal x,int k)
 {
 	if(x<=0)	return 0;
-	float r;
+	mreal r;
 	long n = long(log10(x));
 	r = floor(x*pow(10.,k-n))/pow(10.,k-n);
 	return r;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::DrawTick(float *pp,bool sub)
+void mglGraph::DrawTick(mreal *pp,bool sub)
 {
 //	bool tt[3];
-//	float d1,d2,f=sub?0.02:0.04;
+//	mreal d1,d2,f=sub?0.02:0.04;
 	ScalePoint(pp[0],pp[1],pp[2]);
 	ScalePoint(pp[3],pp[4],pp[5]);
 	ScalePoint(pp[6],pp[7],pp[8]);
@@ -92,10 +87,10 @@ void mglGraph::DrawTick(float *pp,bool sub)
 	curv_plot(3,pp,0);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::DrawXGridLine(float t, float y0, float z0)
+void mglGraph::DrawXGridLine(mreal t, mreal y0, mreal z0)
 {
 	register int i;
-	float pp[3*31];
+	mreal pp[3*31];
 	bool tt[31];
 	for(i=0;i<31;i++)
 	{
@@ -114,10 +109,10 @@ void mglGraph::DrawXGridLine(float t, float y0, float z0)
 	curv_plot(31,pp,tt);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::DrawYGridLine(float t, float x0, float z0)
+void mglGraph::DrawYGridLine(mreal t, mreal x0, mreal z0)
 {
 	register int i;
-	float pp[3*31];
+	mreal pp[3*31];
 	bool tt[31];
 	for(i=0;i<31;i++)
 	{
@@ -136,10 +131,10 @@ void mglGraph::DrawYGridLine(float t, float x0, float z0)
 	curv_plot(31,pp,tt);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::DrawZGridLine(float t, float x0, float y0)
+void mglGraph::DrawZGridLine(mreal t, mreal x0, mreal y0)
 {
 	register int i;
-	float pp[3*31];
+	mreal pp[3*31];
 	bool tt[31];
 	for(i=0;i<31;i++)
 	{
@@ -160,7 +155,7 @@ void mglGraph::DrawZGridLine(float t, float x0, float y0)
 void mglGraph::Grid(const char *dir, const char *pen)
 {
 	static int cgid=1;	StartGroup("AxisGrid",cgid++);
-	float x0,y0,z0,ddx,ddy,ddz,t;
+	mreal x0,y0,z0,ddx,ddy,ddz,t;
 	if(pen)	SelectPen(pen);
 	else	SelectPen(TranspType!=2 ? "B;1" : "b;1");
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
@@ -209,9 +204,9 @@ void mglGraph::Grid(const char *dir, const char *pen)
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Label(char dir,const wchar_t *text,int pos,float size,float shift)
+void mglGraph::Label(char dir,const wchar_t *text,int pos,mreal size,mreal shift)
 {
-	float t, x0, y0, z0;
+	mreal t, x0, y0, z0;
 	SelectPen("k-1");
 	x0 = GetOrgX(dir);	y0 = GetOrgY(dir);	z0 = GetOrgZ(dir);
 	if(size<=0)	size = -size*FontSize;
@@ -238,7 +233,7 @@ void mglGraph::Label(char dir,const wchar_t *text,int pos,float size,float shift
 	}
 }
 //-----------------------------------------------------------------------------
-int _mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
+int _mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v)
 {
 	int kind = 0;
 	if(fabs(a-b)<0.01*fabs(a))
@@ -279,9 +274,9 @@ int _mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
 	return kind;
 }
 //-----------------------------------------------------------------------------
-void _mgl_tick_text(float z, float z0, float d, float v, int kind, wchar_t str[64])
+void _mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, wchar_t str[64])
 {
-	float u = fabs(z)<d ? 0:z;
+	mreal u = fabs(z)<d ? 0:z;
 	if((kind&1) && z>z0)	u = fabs(z-z0)<d ? 0:(z-z0);
 	if(kind==2 || (kind==3 && z>z0))	u /= v;
 	if((kind&1) && z>z0)
@@ -300,9 +295,9 @@ void _mgl_tick_text(float z, float z0, float d, float v, int kind, wchar_t str[6
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::DrawXTick(float x, float y0, float z0, float dy, float dz, int f)
+void mglGraph::DrawXTick(mreal x, mreal y0, mreal z0, mreal dy, mreal dz, int f)
 {
-	float pp[9],ff=TickLen/sqrt(1.+f);
+	mreal pp[9],ff=TickLen/sqrt(1.+f);
 	pp[0]=x;	pp[1]=y0+dy*ff;	pp[2]=z0;
 	pp[3]=x;	pp[4]=y0;	pp[5]=z0;
 	pp[6]=x;	pp[7]=y0;	pp[8]=z0+dz*ff;
@@ -310,11 +305,11 @@ void mglGraph::DrawXTick(float x, float y0, float z0, float dy, float dz, int f)
 }
 void mglGraph::AxisX(bool text)
 {
-	float pp[3*31];
+	mreal pp[3*31];
 	bool tt[31];
 	wchar_t str[64];
 	long i;
-	float x0,y0,z0,x,ddx,ddy,ddz,v=0;
+	mreal x0,y0,z0,x,ddx,ddy,ddz,v=0;
 	x0 = GetOrgX('x');	y0 = GetOrgY('x');	z0 = GetOrgZ('x');
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
@@ -389,9 +384,9 @@ void mglGraph::AxisX(bool text)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::DrawYTick(float y, float x0, float z0, float dx, float dz, int f)
+void mglGraph::DrawYTick(mreal y, mreal x0, mreal z0, mreal dx, mreal dz, int f)
 {
-	float pp[9],ff=TickLen/sqrt(1.+f);
+	mreal pp[9],ff=TickLen/sqrt(1.+f);
 	pp[0]=x0+dx*ff;	pp[1]=y;	pp[2]=z0;
 	pp[3]=x0;		pp[4]=y;	pp[5]=z0;
 	pp[6]=x0;		pp[7]=y;	pp[8]=z0+dz*ff;
@@ -399,11 +394,11 @@ void mglGraph::DrawYTick(float y, float x0, float z0, float dx, float dz, int f)
 }
 void mglGraph::AxisY(bool text)
 {
-	float pp[3*31];
+	mreal pp[3*31];
 	bool tt[31];
 	wchar_t str[64];
 	long i;
-	float x0,y0,z0,y,ddx,ddy,ddz,v=0;
+	mreal x0,y0,z0,y,ddx,ddy,ddz,v=0;
 	x0 = GetOrgX('y');	y0 = GetOrgY('y');	z0 = GetOrgZ('y');
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
@@ -478,9 +473,9 @@ void mglGraph::AxisY(bool text)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::DrawZTick(float z, float x0, float y0, float dx, float dy, int f)
+void mglGraph::DrawZTick(mreal z, mreal x0, mreal y0, mreal dx, mreal dy, int f)
 {
-	float pp[9],ff=TickLen/sqrt(1.+f);
+	mreal pp[9],ff=TickLen/sqrt(1.+f);
 	pp[0]=x0;	pp[1]=y0+dy*ff;	pp[2]=z;
 	pp[3]=x0;	pp[4]=y0;		pp[5]=z;
 	pp[6]=x0+dx*ff;	pp[7]=y0;	pp[8]=z;
@@ -488,11 +483,11 @@ void mglGraph::DrawZTick(float z, float x0, float y0, float dx, float dy, int f)
 }
 void mglGraph::AxisZ(bool text)
 {
-	float pp[3*31];
+	mreal pp[3*31];
 	bool tt[31];
 	wchar_t str[64];
 	long i;
-	float x0,y0,z0,z,ddx,ddy,ddz,v=0;
+	mreal x0,y0,z0,z,ddx,ddy,ddz,v=0;
 	x0 = GetOrgX('z');	y0 = GetOrgY('z');	z0 = GetOrgZ('z');
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
@@ -588,7 +583,7 @@ void mglGraph::Axis(const char *dir, bool adjust)
 //-----------------------------------------------------------------------------
 void mglGraph::TickBox()
 {
-	float x0,y0,z0,x,y,z,ddx,ddy,ddz;
+	mreal x0,y0,z0,x,y,z,ddx,ddy,ddz;
 	x0 = GetOrgX(0);	y0 = GetOrgY(0);	z0 = GetOrgZ(0);
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
@@ -704,7 +699,7 @@ void mglGraph::Box(const char *col,bool ticks)
 void mglGraph::Box(mglColor p,bool ticks)
 {
 	static int cgid=1;	StartGroup("Box",cgid++);
-	float x1=Min.x,x2=Max.x,y1=Min.y,y2=Max.y,z1=Min.z,z2=Max.z;
+	mreal x1=Min.x,x2=Max.x,y1=Min.y,y2=Max.y,z1=Min.z,z2=Max.z;
 	Arrow1 = Arrow2 = '_';
 	if(p.Valid())	Pen(p,'-',BaseLineWidth);
 	else			Pen(TranspType!=2 ? BC:WC,'-',BaseLineWidth);
@@ -744,10 +739,10 @@ void mglGraph::AddLegend(const wchar_t *text,const char *style)
 	NumLeg++;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Legend(float x, float y, const char *font, float size, float llen)
+void mglGraph::Legend(mreal x, mreal y, const char *font, mreal size, mreal llen)
 {	Legend(NumLeg,LegStr,LegStl,x,y,font,size,llen);	}
 //-----------------------------------------------------------------------------
-void mglGraph::Legend(int where, const char *font, float size, float llen)
+void mglGraph::Legend(int where, const char *font, mreal size, mreal llen)
 {	Legend(NumLeg,LegStr,LegStl,where,font,size,llen);	}
 //-----------------------------------------------------------------------------
 void mglGraph::ClearLegend()
@@ -756,18 +751,18 @@ void mglGraph::ClearLegend()
 	NumLeg = 0;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Legend(int n, wchar_t **text,char **style, float x, float y,
-					const char *font, float size, float llen)
+void mglGraph::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
+					const char *font, mreal size, mreal llen)
 {
 	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
 	if(isnan(llen))	llen=0.1;
 	static int cgid=1;	StartGroup("Legend",cgid++);
-	float pp[15], r=GetRatio(), rh, rw;
+	mreal pp[15], r=GetRatio(), rh, rw;
 	if(size<=0)	size = -size*FontSize;
 
 	rh=(r<1?r:1.)*size/12.*(Max.y-Min.y);
 	rw=(r>1?1./r:1.)*size/16.;
-	float w=0, h=fnt->Height(font)*rh, j, dx=Max.x-Min.x;
+	mreal w=0, h=fnt->Height(font)*rh, j, dx=Max.x-Min.x;
 	register long i;
 	for(i=0;i<n;i++)
 	{
@@ -812,16 +807,16 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, float x, float y,
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
-					const char *font, float size, float llen)
+					const char *font, mreal size, mreal llen)
 {
 	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
 	if(isnan(llen))	llen=0.1;
 	if(size<0)	size = -size*FontSize;
-	float w=0, r=GetRatio(), rh, rw;
+	mreal w=0, r=GetRatio(), rh, rw;
 
 	rh=(r<1?r:1.)*size/12.*(Max.y-Min.y);	// 12 = 16/1.4
 	rw=(r>1?1./r:1.)*size/16.;
-	float h=fnt->Height(font)*rh, x, y, dx = 0.03*(Max.x-Min.x), dy = 0.03*(Max.y-Min.y);
+	mreal h=fnt->Height(font)*rh, x, y, dx = 0.03*(Max.x-Min.x), dy = 0.03*(Max.y-Min.y);
 	for(long i=0;i<n;i++)
 	{
 		x = fnt->Width(text[i],font)*rw;
@@ -855,11 +850,11 @@ void mglGraph::Ternary(bool t)
 //-----------------------------------------------------------------------------
 void mglGraph::AxisTY(bool text)
 {
-	float pp[3*31];
+	mreal pp[3*31];
 	bool tt[31];
 	wchar_t str[64];
 	long i;
-	float y0,z0,y,ddx,ddy,ddz;
+	mreal y0,z0,y,ddx,ddy,ddz;
 	y0 = GetOrgY('y');	z0 = GetOrgZ('y');
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
@@ -905,11 +900,11 @@ void mglGraph::AxisTY(bool text)
 //-----------------------------------------------------------------------------
 void mglGraph::AxisTZ(bool text)
 {
-	float pp[3*31];
+	mreal pp[3*31];
 	bool tt[31];
 	wchar_t str[64];
 	long i;
-	float x0,z0,z,ddx,ddy,ddz;
+	mreal x0,z0,z,ddx,ddy,ddz;
 	x0 = GetOrgX('t');	z0 = GetOrgZ('t');
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
@@ -954,7 +949,7 @@ void mglGraph::AxisTZ(bool text)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetTicks(char dir, float d, int ns, float org)
+void mglGraph::SetTicks(char dir, mreal d, int ns, mreal org)
 {
 	if(dir=='x')
 	{	dx = d;	NSx = ns;	OrgT.x = org;	if(xnum) delete []xbuf;	xnum=0;	}
@@ -964,7 +959,7 @@ void mglGraph::SetTicks(char dir, float d, int ns, float org)
 	{	dz = d;	NSz = ns;	OrgT.z = org;	if(znum) delete []zbuf;	znum=0;	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetTicksVal(char dir, int n, float *val, const wchar_t **lbl)
+void mglGraph::SetTicksVal(char dir, int n, mreal *val, const wchar_t **lbl)
 {
 	long len=0;
 	register int i;
@@ -1009,7 +1004,7 @@ void mglGraph::SetTicksVal(char dir, int n, float *val, const wchar_t **lbl)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetTicksVal(char dir, int n, float *val, const char **lbl)
+void mglGraph::SetTicksVal(char dir, int n, mreal *val, const char **lbl)
 {
 	long len=0;
 	register int i,ll;
@@ -1060,7 +1055,7 @@ void mglGraph::SetTicksVal(char dir, int n, float *val, const char **lbl)
 void mglGraph::SetTicksVal(char dir, int n, double val, const char *lbl, ...)
 {
 	if(n<1)	return;
-	float *v = new float[n];
+	mreal *v = new mreal[n];
 	const char **l = (const char **)malloc(n*sizeof(const char *));
 	v[0] = val;	l[0] = lbl;
 	va_list ap;
@@ -1078,7 +1073,7 @@ void mglGraph::SetTicksVal(char dir, int n, double val, const char *lbl, ...)
 void mgl_set_ticks_val(HMGL gr, char dir, int n, double val, const char *lbl, ...)
 {	// NOTE: I have to repeat the function because I don't know how to pass variable arguments to C++ function
 	if(n<1)	return;
-	float *v = new float[n];
+	mreal *v = new mreal[n];
 	const char **l = (const char **)malloc(n*sizeof(const char *));
 	v[0] = val;	l[0] = lbl;
 	va_list ap;
@@ -1093,9 +1088,9 @@ void mgl_set_ticks_val(HMGL gr, char dir, int n, double val, const char *lbl, ..
 	delete []v;		free(l);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::adjust(char dir, float d)
+void mglGraph::adjust(char dir, mreal d)
 {
-	float n;
+	mreal n;
 	d = fabs(d);	n = floor(log10(d));	d = floor(d*pow(10,-n));
 	if(d<4)		SetTicks(dir,0.5*pow(10,n),4,0);
 	else if(d<7)SetTicks(dir,pow(10,n),4,0);

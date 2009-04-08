@@ -443,10 +443,10 @@ Gets minimal value of the data and its approximated (interpolated) position to v
 @end deftypemethod
 
 @deftypemethod mglData @code{float} Momentum (@code{char} dir, @code{float} &m, @code{float} &w) @code{const}
-Gets zero-momentum (energy, @math{I=\sum a_i}) and write first momentum (median, @math{m = \sum \xi_i a_i/I}) and second momentum (width, @math{w = \sum (\xi_i-m)^2 a_i/I}) to variables. Here @math{\xi} is corresponding coordinate if @var{dir} is @samp{'x'}, @samp{'y'} or @samp{'z'}. Otherwise median is @math{\sum a_i/N}, width is @math{\sum (a_i-m)^2/N}.
+Gets zero-momentum (energy, @math{I=\sum a_i}) and write first momentum (median, @math{m = \sum \xi_i a_i/I}) and second momentum (width, @math{w^2 = \sum (\xi_i-m)^2 a_i/I}) to variables. Here @math{\xi} is corresponding coordinate if @var{dir} is @samp{'x'}, @samp{'y'} or @samp{'z'}. Otherwise median is @math{m = \sum a_i/N}, width is @math{w^2 = \sum (a_i-m)^2/N}.
 @end deftypemethod
 @deftypemethod mglData @code{float} Momentum (@code{char} dir, @code{float} &m, @code{float} &w, @code{float} &s, @code{float} &k) @code{const}
-Gets zero-momentum (energy, @math{I=\sum a_i}) and write first momentum (median, @math{m = \sum \xi_i a_i/I}), second momentum (width, @math{w = \sum (\xi_i-m)^2 a_i/I}, third momentum (skewness, @math{s = \sum (\xi_i-m)^3 a_i/ I w^3}) and fourth momentum (kurtosis, @math{k = \sum (\xi_i-m)^4 a_i / 3 I w^4})) to variables. Here @math{\xi} is corresponding coordinate if @var{dir} is @samp{'x'}, @samp{'y'} or @samp{'z'}. Otherwise median is @math{\sum a_i/N}, width is @math{\sum (a_i-m)^2/N} and so on.
+Gets zero-momentum (energy, @math{I=\sum a_i}) and write first momentum (median, @math{m = \sum \xi_i a_i/I}), second momentum (width, @math{w^2 = \sum (\xi_i-m)^2 a_i/I}, third momentum (skewness, @math{s = \sum (\xi_i-m)^3 a_i/ I w^3}) and fourth momentum (kurtosis, @math{k = \sum (\xi_i-m)^4 a_i / 3 I w^4})) to variables. Here @math{\xi} is corresponding coordinate if @var{dir} is @samp{'x'}, @samp{'y'} or @samp{'z'}. Otherwise median is @math{m = \sum a_i/N}, width is @math{w^2 = \sum (a_i-m)^2/N} and so on.
 @end deftypemethod
 
 @deftypemethod mglData @code{float} Find (@code{const char *}cond, @code{int} &i, @code{int} &j, @code{int} &k) @code{const}

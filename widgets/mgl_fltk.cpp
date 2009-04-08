@@ -205,7 +205,7 @@ int Fl_MathGL::handle(int code)
 	if(code==FL_DRAG)
 	{
 		xe=Fl::event_x();	ye=Fl::event_y();
-		float ff = 240/sqrt(float(w()*h()));
+		mreal ff = 240/sqrt(mreal(w()*h()));
 		if(rotate)
 		{
 			phi += int((x0-xe)*ff);
@@ -222,11 +222,11 @@ int Fl_MathGL::handle(int code)
 		if(zoom)
 		{
 			int w1=w(),h1=h();
-			float _x1,_x2,_y1,_y2;
-			_x1 = x1+(x2-x1)*(x0-x())/float(w1);
-			_y1 = y2-(y2-y1)*(ye-y())/float(h1);
-			_x2 = x1+(x2-x1)*(xe-x())/float(w1);
-			_y2 = y2-(y2-y1)*(y0-y())/float(h1);
+			mreal _x1,_x2,_y1,_y2;
+			_x1 = x1+(x2-x1)*(x0-x())/mreal(w1);
+			_y1 = y2-(y2-y1)*(ye-y())/mreal(h1);
+			_x2 = x1+(x2-x1)*(xe-x())/mreal(w1);
+			_y2 = y2-(y2-y1)*(y0-y())/mreal(h1);
 			x1=_x1;		x2=_x2;		y1=_y1;		y2=_y2;
 			if(x1>x2)	{	_x1=x1;	x1=x2;	x2=_x1;	}
 			if(y1>y2)	{	_x1=y1;	y1=y2;	y2=_x1;	}
@@ -428,7 +428,7 @@ void oncemore_cb(Fl_Widget*, void*v)	{	((mglGraphFLTK*)v)->ReLoad(true);	}
 void su_cb(Fl_Widget*, void* v)
 {
 	mglGraphFLTK* e = (mglGraphFLTK*)v;
-	float x1,x2,y1,y2,d;
+	mreal x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
 	d = (y2-y1)/3;	y1 += d;	y2 += d;
 	e->FMGL->set_zoom(x1,y1,x2,y2);
@@ -438,7 +438,7 @@ void su_cb(Fl_Widget*, void* v)
 void sd_cb(Fl_Widget*, void* v)
 {
 	mglGraphFLTK* e = (mglGraphFLTK*)v;
-	float x1,x2,y1,y2,d;
+	mreal x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
 	d = (y2-y1)/3;	y1 -= d;	y2 -= d;
 	e->FMGL->set_zoom(x1,y1,x2,y2);
@@ -448,7 +448,7 @@ void sd_cb(Fl_Widget*, void* v)
 void sr_cb(Fl_Widget*, void* v)
 {
 	mglGraphFLTK* e = (mglGraphFLTK*)v;
-	float x1,x2,y1,y2,d;
+	mreal x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
 	d = (x2-x1)/3;	x1 += d;	x2 += d;
 	e->FMGL->set_zoom(x1,y1,x2,y2);
@@ -458,7 +458,7 @@ void sr_cb(Fl_Widget*, void* v)
 void sl_cb(Fl_Widget*, void* v)
 {
 	mglGraphFLTK* e = (mglGraphFLTK*)v;
-	float x1,x2,y1,y2,d;
+	mreal x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
 	d = (x2-x1)/3;	x1 -= d;	x2 -= d;
 	e->FMGL->set_zoom(x1,y1,x2,y2);
@@ -468,7 +468,7 @@ void sl_cb(Fl_Widget*, void* v)
 void sz_cb(Fl_Widget*, void* v)
 {
 	mglGraphFLTK* e = (mglGraphFLTK*)v;
-	float x1,x2,y1,y2,d;
+	mreal x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
 	d = (y2-y1)/4;	y1 += d;	y2 -= d;
 	d = (x2-x1)/4;	x1 += d;	x2 -= d;
@@ -479,7 +479,7 @@ void sz_cb(Fl_Widget*, void* v)
 void so_cb(Fl_Widget*, void* v)
 {
 	mglGraphFLTK* e = (mglGraphFLTK*)v;
-	float x1,x2,y1,y2,d;
+	mreal x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
 	d = (y2-y1)/2;	y1 -= d;	y2 += d;
 	d = (x2-x1)/2;	x1 -= d;	x2 += d;

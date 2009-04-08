@@ -21,32 +21,12 @@
 #include <time.h>
 #include <math.h>
 #include <string.h>
-
-#ifdef _MSC_VER
-#define	_USE_MATH_DEFINES
-#include <float.h>
-const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
-#define NANd	(*(double*)mgl_nan)
-#define NANf	(*(float*)&(mgl_nan[1]))
-#define NAN		NANd
-//#define isnan	_isnan
-#define isfinite	_finite
-#define copysignf	_copysign
-#define chdir	_chdir
-#endif
-
 #include "mgl/mgl_evalc.h"
 #include "mgl/mgl_addon.h"
-
+#include "mgl/mgl_define.h"
 #ifndef NO_GSL
 #include <gsl/gsl_sf.h>
 #endif
-
-#define isnan std::isnan
-
-//#ifdef WIN32
-//#define isnan _isnan
-//#endif
 //-----------------------------------------------------------------------------
 //	константы для распознования выражения
 enum{
@@ -240,7 +220,7 @@ dual addc(dual a,dual b)	{return a+b;}
 dual subc(dual a,dual b)	{return a-b;}
 dual mulc(dual a,dual b)	{return a*b;}
 dual divc(dual a,dual b)	{return a/b;}
-dual ipwc(dual a,dual b)	{return mgl_ipowc(a,int(real(b)));}
+dual ipwc(dual a,dual b)	{return mgl_ipowc(a,int(b.real()));}
 dual powc(dual a,dual b)	{return exp(b*log(a));	}
 dual llgc(dual a,dual b)	{return log(a)/log(b);	}
 dual expi(dual a)	{	return exp(dual(0,1)*a);	}
@@ -274,17 +254,17 @@ dual mglFormulaC::CalcIn(const dual *a1)
 	func_1 f1[18] = {sinc,cosc,tanc,asinc,acosc,atanc,sinhc,coshc,tanhc,
 					asinhc,acoshc,atanhc,sqrtc,expc,expi,logc,lgc,absc};
 //	if(Error)	return 0;
-	if(Kod==EQ_A)	return a1[(int)real(Res)];
+	if(Kod==EQ_A)	return a1[(int)Res.real()];
 	if(Kod==EQ_RND)	return mgl_rnd();
 	if(Kod==EQ_NUM) return Res;
 
 	dual a = Left->CalcIn(a1);
-	if(isnan(real(a)) || isnan(imag(a)))	return NAN;
+	if(isnan(a.real()) || isnan(a.imag()))	return NAN;
 
 	if(Kod<EQ_SIN)
 	{
 		dual b = Right->CalcIn(a1);
-		if(isnan(real(b)) || isnan(imag(b)))	return NAN;
+		if(isnan(b.real()) || isnan(b.imag()))	return NAN;
 		return f2[Kod-EQ_ADD](a,b);
 	}
 	else	return f1[Kod-EQ_SIN](a);

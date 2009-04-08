@@ -1139,7 +1139,7 @@ int sample_fit(mglGraph *gr, const void *s)	// flag #
 	gr->Plot(rnd, ". ");
 	gr->Box();
 
-	float ini[3] = {1,1,3};
+	mreal ini[3] = {1,1,3};
 	gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", ini);
 	gr->Plot(res, "r");
 	gr->Plot(in, "b");

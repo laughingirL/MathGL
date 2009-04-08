@@ -7,6 +7,6 @@ case `uname` in
      *)  libtoolize --force --copy --ltdl ;;
 esac
 #libtoolize --force --copy --ltdl
-#autoheader
+autoheader
 automake --add-missing --copy
 autoconf

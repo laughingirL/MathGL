@@ -11,5 +11,5 @@ if(use_python)
 		DEPENDS ${CMAKE_BINARY_DIR}/lang/mathgl.py ${CMAKE_BINARY_DIR}/lang/mgl_python.cpp
 		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 	)
-	install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/setup.py install --prefix=${CMAKE_INSTALL_PREFIX}) WORKING_DIRECTORY ${CMAKE_BINARY_DIR} ")
+	install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/setup.py install --prefix=${CMAKE_INSTALL_PREFIX} WORKING_DIRECTORY ${CMAKE_BINARY_DIR} )")
 endif(use_python)

@@ -73,7 +73,7 @@ void _mgl_key_up(unsigned char ch,int ,int )
 	if(!_mgl_glwnd)	return;
 	static bool Alpha=false;
 	static bool Light=false;
-	static float rL=3,tL=0,pL=0;
+	static mreal rL=3,tL=0,pL=0;
 
 	if(ch=='h')
 	{

@@ -25,18 +25,18 @@
 struct mglGraphPS;
 struct mglPrim
 {
-	float x[4], y[4], zz[4];	// coordinates of corners
-	float z;			// z-position
-	float s;			// size (if applicable)
-	float w;			// width (if applicable)
-	float c[4];			// color (RGBA)
+	mreal x[4], y[4], zz[4];	// coordinates of corners
+	mreal z;			// z-position
+	mreal s;			// size (if applicable)
+	mreal w;			// width (if applicable)
+	mreal c[4];			// color (RGBA)
 	char m;				// mark (if applicable)
 	int type;			// type of primitive (0 - point, 1 - line, 2 - trig, 3 - quad)
 	int style;			// style of pen
-	unsigned short dash;// real pen dashing
+	unsigned short dash;// mreal pen dashing
 	void Draw(mglGraphPS *gr);
 	void DrawGL();
-	bool IsSame(float wp,float *cp,int st);
+	bool IsSame(mreal wp,mreal *cp,int st);
 	void SetStyle(unsigned PDef, int pPos);
 	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	c[3]=1;	};
 };
@@ -52,32 +52,32 @@ public:
 	void WriteSVG(const char *fname,const char *descr=0);
 	virtual void Finish();
 	void Clf(mglColor  Back=WC);
-	void Ball(float x,float y,float z,mglColor col=RC,float alpha=1);
+	void Ball(mreal x,mreal y,mreal z,mglColor col=RC,mreal alpha=1);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 protected:
 	mglPrim *P;			///< Primitives (lines, triangles and so on)
 	long pNum;			///< Actual number of primitives
 	long pMax;			///< Maximal number of primitives
 
-	void ball(float *p,float *c);
-	void line_plot(float *p1,float *p2,float *c1,float *c2,bool all=false);
-	void trig_plot(float *p0,float *p1,float *p2,
-					float *c0,float *c1,float *c2);
-	void trig_plot_n(float *p0,float *p1,float *p2,
-					float *c0,float *c1,float *c2,
-					float *n0,float *n1,float *n2);
-	void quad_plot(float *p0,float *p1,float *p2,float *p3,
-					float *c0,float *c1,float *c2,float *c3);
-	void quad_plot_a(float *p0,float *p1,float *p2,float *p3,
-					float a0,float a1,float a2,float a3,float alpha);
-	void quad_plot_n(float *p0,float *p1,float *p2,float *p3,
-					float *c0,float *c1,float *c2,float *c3,
-					float *n0,float *n1,float *n2,float *n3);
-	void mark_plot(float *pp, char type);
+	void ball(mreal *p,mreal *c);
+	void line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all=false);
+	void trig_plot(mreal *p0,mreal *p1,mreal *p2,
+					mreal *c0,mreal *c1,mreal *c2);
+	void trig_plot_n(mreal *p0,mreal *p1,mreal *p2,
+					mreal *c0,mreal *c1,mreal *c2,
+					mreal *n0,mreal *n1,mreal *n2);
+	void quad_plot(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+					mreal *c0,mreal *c1,mreal *c2,mreal *c3);
+	void quad_plot_a(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+					mreal a0,mreal a1,mreal a2,mreal a3,mreal alpha);
+	void quad_plot_n(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+					mreal *c0,mreal *c1,mreal *c2,mreal *c3,
+					mreal *n0,mreal *n1,mreal *n2,mreal *n3);
+	void mark_plot(mreal *pp, char type);
 	/// add primitive to list
 	void add_prim(mglPrim *a);
 	/// add lightning to color
-	void add_light(float *c, float n1,float n2, float n3);
+	void add_light(mreal *c, mreal n1,mreal n2, mreal n3);
 	void pnt_plot(int x,int y, unsigned char c[4]);
 	void mark_plot(int x,int y, char type, unsigned char cs[4]);
 };

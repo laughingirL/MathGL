@@ -1,4 +1,12 @@
-1.8.1 Released 2 March 2009
+1.8.1.1 Released 17 March 2009
+	- You can now select base type for floating point numbers (double or float).
+	- Function mglData::Sew() now handle NAN values correctly.
+	- Bug correction in marker drawing for EPS, SVG.
+	- Bug correction in configure (older compiler support, wrong glut.h demand).
+	- Bug in lang/CMakeLists.txt (for making Python interface).
+	- Better support for isnan() function on different compilers.
+
+1.8.1 Released 4 March 2009
 	- Add GIF animation features via functions StartGIF/NewFrame/EndFrame/CloseGIF.
 	- Add new plot Tens() for tension plot (curve with variable color).
 	- Add ColumnPlot function for making column of plots.

@@ -20,9 +20,6 @@
 //-----------------------------------------------------------------------------
 #include <stdlib.h>
 #include <wchar.h>
-#ifdef WIN32
-#define swprintf    _snwprintf
-#endif
 
 #include "mgl/mgl_gl.h"
 #include "mgl/mgl_c.h"
@@ -62,7 +59,7 @@ bool mglGraphGL::Alpha(bool enable)
 	return t;
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::Light(int n,mglPoint p,mglColor c, float br,bool infty)
+void mglGraphGL::Light(int n,mglPoint p,mglColor c, mreal br,bool infty)
 {
 	mglColor AmbLight = mglColor(AmbBr,AmbBr,AmbBr);
 	mglColor DifLight = mglColor(br,br,br);
@@ -100,7 +97,9 @@ void mglGraphGL::LightScale()
 	float pos[4]={0,0,0,0};
 	for(int i=0;i<8;i++)
 	{
-		memcpy(pos,pLight+3*i,3*sizeof(float));
+		pos[0] = pLight[3*i];
+		pos[1] = pLight[3*i+1];
+		pos[2] = pLight[3*i+2];
 		if(nLight[i])	glLightfv(light[i], GL_POSITION, pos);
 	}
 }
@@ -122,7 +121,7 @@ bool mglGraphGL::Light(bool enable)
 	return t;
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::View(float TetX,float TetY,float TetZ)
+void mglGraphGL::View(mreal TetX,mreal TetY,mreal TetZ)
 {
 	glMatrixMode(GL_PROJECTION);//GL_PROJECTION GL_VIEWPORT GL_MODELVIEW
 	glRotated(TetX,1.,0.,0.);
@@ -130,7 +129,7 @@ void mglGraphGL::View(float TetX,float TetY,float TetZ)
 	glRotated(TetZ,0.,0.,1.);
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::Fog(float d, float)
+void mglGraphGL::Fog(mreal d, mreal)
 {
 /*	if(d>0)
 	{
@@ -156,29 +155,34 @@ void mglGraphGL::Clf(mglColor Back)
 	glEnable(GL_COLOR_MATERIAL);
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::Ball(float x,float y,float z,mglColor col,float alpha)
+void mglGraphGL::Ball(mreal x,mreal y,mreal z,mglColor col,mreal alpha)
 {
 	if(alpha==0)	return;
 	if(alpha<0)	{	alpha = -alpha;	}
 	else		{	if(!ScalePoint(x,y,z))	return;	}
 	if(!col.Valid())	col = mglColor(1.,0.,0.);
 	alpha = Transparent ? alpha : 1;
-	float p[3] = {x,y,z};	PostScale(p,1);
+	mreal p[3] = {x,y,z};	PostScale(p,1);
 	glBegin(GL_POINTS);
 	glColor4f(col.r,col.g,col.b,alpha);
 	glVertex3f(p[0],p[1],p[2]);
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::ball(float *p,float *c)
+void mglGraphGL::ball(mreal *p,mreal *c)
 {
 	glBegin(GL_POINTS);
+#if(MGL_USE_DOUBLE==1)
+	glColor4dv(c);
+	glVertex3dv(p);
+#else
 	glColor4fv(c);
 	glVertex3fv(p);
+#endif
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::Pen(mglColor col, char style,float width)
+void mglGraphGL::Pen(mglColor col, char style,mreal width)
 {
 	mglGraphAB::Pen(col,style,width);
 	if(style==0)	return;
@@ -228,7 +232,7 @@ unsigned char **mglGraphGL::GetRGBLines(long &width, long &height, unsigned char
 	return p;
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::trig_plot(float *p0,float *p1,float *p2,float *c0,float *c1,float *c2)
+void mglGraphGL::trig_plot(mreal *p0,mreal *p1,mreal *p2,mreal *c0,mreal *c1,mreal *c2)
 {
 	glBegin(GL_TRIANGLES);
 	glColor4f(c0[0],c0[1],c0[2],c0[3]);	glVertex3f(p0[0],p0[1],p0[2]);
@@ -237,7 +241,7 @@ void mglGraphGL::trig_plot(float *p0,float *p1,float *p2,float *c0,float *c1,flo
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::trig_plot_n(float *p0,float *p1,float *p2,float *c0,float *c1,float *c2,float *n0,float *n1,float *n2)
+void mglGraphGL::trig_plot_n(mreal *p0,mreal *p1,mreal *p2,mreal *c0,mreal *c1,mreal *c2,mreal *n0,mreal *n1,mreal *n2)
 {
 	glBegin(GL_TRIANGLES);
 	glColor4f(c0[0],c0[1],c0[2],c0[3]);	glNormal3f(n0[0],n0[1],n0[2]);	glVertex3f(p0[0],p0[1],p0[2]);
@@ -246,7 +250,7 @@ void mglGraphGL::trig_plot_n(float *p0,float *p1,float *p2,float *c0,float *c1,f
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::quad_plot(float *p0,float *p1,float *p2,float *p3, float *c0,float *c1,float *c2,float *c3)
+void mglGraphGL::quad_plot(mreal *p0,mreal *p1,mreal *p2,mreal *p3, mreal *c0,mreal *c1,mreal *c2,mreal *c3)
 {
 	glBegin(GL_QUADS);
 	glColor4f(c0[0],c0[1],c0[2],c0[3]);	glVertex3f(p0[0],p0[1],p0[2]);
@@ -256,10 +260,10 @@ void mglGraphGL::quad_plot(float *p0,float *p1,float *p2,float *p3, float *c0,fl
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::quad_plot_a(float *p0,float *p1,float *p2,float *p3,
-				float a0,float a1,float a2,float a3,float alpha)
+void mglGraphGL::quad_plot_a(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+				mreal a0,mreal a1,mreal a2,mreal a3,mreal alpha)
 {
-	register float t,s;
+	register mreal t,s;
 	register long k;
 	long n = NumCol-1;
 	mglColor c;
@@ -291,7 +295,7 @@ void mglGraphGL::quad_plot_a(float *p0,float *p1,float *p2,float *p3,
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::quad_plot_n(float *p0,float *p1,float *p2,float *p3,float *c0,float *c1,float *c2,float *c3,float *n0,float *n1,float *n2,float *n3)
+void mglGraphGL::quad_plot_n(mreal *p0,mreal *p1,mreal *p2,mreal *p3,mreal *c0,mreal *c1,mreal *c2,mreal *c3,mreal *n0,mreal *n1,mreal *n2,mreal *n3)
 {
 	glBegin(GL_QUADS);
 	glColor4f(c0[0],c0[1],c0[2],c0[3]);	glNormal3f(n0[0],n0[1],n0[2]);	glVertex3f(p0[0],p0[1],p0[2]);
@@ -301,7 +305,7 @@ void mglGraphGL::quad_plot_n(float *p0,float *p1,float *p2,float *p3,float *c0,f
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::line_plot(float *p1,float *p2,float *c1,float *c2,bool all)
+void mglGraphGL::line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all)
 {
 	if(all)		Pen(NC,'-',BaseLineWidth);
 	glBegin(GL_LINES);
@@ -310,9 +314,9 @@ void mglGraphGL::line_plot(float *p1,float *p2,float *c1,float *c2,bool all)
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::mark_plot(float *pp, char type)
+void mglGraphGL::mark_plot(mreal *pp, char type)
 {
-	register float x=pp[0],y=pp[1],z=pp[2], s=MarkSize*175*font_factor;	// 175 = 0.35*500
+	register mreal x=pp[0],y=pp[1],z=pp[2], s=MarkSize*175*font_factor;	// 175 = 0.35*500
 	if(!ScalePoint(x,y,z))	return;
 	Pen(NC,'-',BaseLineWidth);
 	glColor3f(CDef[0],CDef[1],CDef[2]);
@@ -401,7 +405,7 @@ void mglGraphGL::mark_plot(float *pp, char type)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::InPlot(float x1,float x2,float y1,float y2,bool rel)
+void mglGraphGL::InPlot(mreal x1,mreal x2,mreal y1,mreal y2,bool rel)
 {
 	mglGraphAB::InPlot(x1,x2,y1,y2,rel);
 	glMatrixMode(GL_MODELVIEW);//GL_MODELVIEW GL_VIEWPORT GL_PROJECTION

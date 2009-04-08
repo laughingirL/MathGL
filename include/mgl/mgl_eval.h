@@ -21,6 +21,8 @@
 #ifndef _MGL_EVAL_H_
 #define _MGL_EVAL_H_
 //---------------------------------------------------------------------------
+#include <math.h>
+#include "mgl/mgl_define.h"
 /// types of errors
 #define MGL_ERR_LOG		1
 #define MGL_ERR_ARC		2
@@ -33,13 +35,13 @@ class mglFormula					// объект для ввода и вычисления формул
 {
 public:
 	/// Evaluates the formula for 'x','r'=\a x, 'y','n'=\a y, 'z','t'=\a z, 'u'=\a u
-	float Calc(float x,float y=0,float z=0,float u=0);
+	mreal Calc(mreal x,mreal y=0,mreal z=0,mreal u=0);
 	/// Evaluates the formula for 'x, y, z, u, v, w'
-	float Calc(float x,float y,float z,float u,float v,float w);
+	mreal Calc(mreal x,mreal y,mreal z,mreal u,mreal v,mreal w);
 	/// Evaluates the formula for variables \a var
-	float Calc(const float var[MGL_VS]);
+	mreal Calc(const mreal var[MGL_VS]);
 	/// Evaluates the derivates of the formula for variables \a var respect to variable \a diff
-	float CalcD(const float var[MGL_VS], char diff);
+	mreal CalcD(const mreal var[MGL_VS], char diff);
 	/// Return error code
 	int GetError();
 	/// Parse the formula \a str and create formula-tree
@@ -47,11 +49,11 @@ public:
 	/// Clean up formula-tree
 	~mglFormula();
 protected:
-	float CalcIn(const float *a1);
-	float CalcDIn(int id, const float *a1);
+	mreal CalcIn(const mreal *a1);
+	mreal CalcDIn(int id, const mreal *a1);
 	mglFormula *Left,*Right;	// first and second argument of the function
 	int Kod;					// the function ID
-	float Res;					// the number or the variable ID
+	mreal Res;					// the number or the variable ID
 	static int Error;
 };
 //---------------------------------------------------------------------------

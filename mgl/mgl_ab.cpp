@@ -25,16 +25,12 @@
 #define imax(a,b)	(a)>(b) ? (a) : (b)
 #define imin(a,b)	(a)<(b) ? (a) : (b)
 
-#ifdef WIN32
-#define swprintf _snwprintf
-#endif
-
 char *mgl_strdup(const char *s);
 //-----------------------------------------------------------------------------
 void strtrim_mgl(char *str);
 void wcstrim_mgl(wchar_t *str);
-int _mgl_tick_ext(float a, float b, wchar_t s[32], float &v);
-void _mgl_tick_text(float z, float z0, float d, float v, int kind, wchar_t str[64]);
+int _mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v);
+void _mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, wchar_t str[64]);
 //-----------------------------------------------------------------------------
 mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 {
@@ -55,7 +51,7 @@ const unsigned char *mglGraphAB::GetBits()
 const unsigned char *mglGraphAB::GetRGBA()
 {	if(!Finished)	Finish();	return G4;	}
 //-----------------------------------------------------------------------------
-void mglGraphAB::DefColor(mglColor c, float alpha)
+void mglGraphAB::DefColor(mglColor c, mreal alpha)
 {
 	if(alpha<0 || alpha>1)	alpha = AlphaDef;
 	CDef[3] = Transparent ? alpha : 1;
@@ -63,7 +59,7 @@ void mglGraphAB::DefColor(mglColor c, float alpha)
 	{	CDef[0] = c.r;	CDef[1] = c.g;	CDef[2] = c.b;	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Pen(mglColor col, char style,float width)
+void mglGraphAB::Pen(mglColor col, char style,mreal width)
 {
 	if(col.Valid())	DefColor(col,1);
 	switch(style)
@@ -81,14 +77,14 @@ void mglGraphAB::Pen(mglColor col, char style,float width)
 	PenWidth = width;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::RotateN(float Tet,float x,float y,float z)
+void mglGraphAB::RotateN(mreal Tet,mreal x,mreal y,mreal z)
 {
-	float R[9],C[9],c=cos(Tet*M_PI/180),s=-sin(Tet*M_PI/180),r=1-c,n=sqrt(x*x+y*y+z*z);
+	mreal R[9],C[9],c=cos(Tet*M_PI/180),s=-sin(Tet*M_PI/180),r=1-c,n=sqrt(x*x+y*y+z*z);
 	x/=n;	y/=n;	z/=n;
 	C[0] = x*x*r+c;		C[1] = x*y*r-z*s;	C[2] = x*z*r+y*s;
 	C[3] = x*y*r+z*s;	C[4] = y*y*r+c;		C[5] = y*z*r-x*s;
 	C[6] = x*z*r-y*s;	C[7] = y*z*r+x*s;	C[8] = z*z*r+c;
-	memcpy(R,B,9*sizeof(float));
+	memcpy(R,B,9*sizeof(mreal));
 	B[0] = C[0]*R[0] + C[3]*R[1] + C[6]*R[2];
 	B[1] = C[1]*R[0] + C[4]*R[1] + C[7]*R[2];
 	B[2] = C[2]*R[0] + C[5]*R[1] + C[8]*R[2];
@@ -100,12 +96,12 @@ void mglGraphAB::RotateN(float Tet,float x,float y,float z)
 	B[8] = C[2]*R[6] + C[5]*R[7] + C[8]*R[8];
 	if(AutoPlotFactor && !NoAutoFactor)
 	{
-		register float m = fabs(B[3]+B[4]+B[5]);
+		register mreal m = fabs(B[3]+B[4]+B[5]);
 		m = m<fabs(B[3]+B[4]-B[5]) ? fabs(B[3]+B[4]-B[5]) : m;
 		m = m<fabs(B[3]-B[4]+B[5]) ? fabs(B[3]-B[4]+B[5]) : m;
 		m = m<fabs(B[3]-B[4]-B[5]) ? fabs(B[3]-B[4]-B[5]) : m;
 		m /= B1[4];
-		register float n = fabs(B[0]+B[1]+B[2]);
+		register mreal n = fabs(B[0]+B[1]+B[2]);
 		n = n<fabs(B[0]+B[1]-B[2]) ? fabs(B[0]+B[1]-B[2]) : n;
 		n = n<fabs(B[0]-B[1]+B[2]) ? fabs(B[0]-B[1]+B[2]) : n;
 		n = n<fabs(B[0]-B[1]-B[2]) ? fabs(B[0]-B[1]-B[2]) : n;
@@ -114,27 +110,27 @@ void mglGraphAB::RotateN(float Tet,float x,float y,float z)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Perspective(float a)	// I'm too lazy for using 4*4 matrix
+void mglGraphAB::Perspective(mreal a)	// I'm too lazy for using 4*4 matrix
 {
 	Persp = fabs(a)/Depth;
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::RestoreM()
 {
-	memcpy(B,BL,9*sizeof(float));
+	memcpy(B,BL,9*sizeof(mreal));
 	xPos = BL[9];	yPos = BL[10];	zPos = BL[11];
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::InPlot(float x1,float x2,float y1,float y2, bool rel)
+void mglGraphAB::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel)
 {
 	if(!rel)
 	{
-		memcpy(BL,B,9*sizeof(float));
+		memcpy(BL,B,9*sizeof(mreal));
 		BL[9] = xPos;	BL[10] = yPos;	BL[11] = zPos;
 	}
 	SelectPen("k-1");
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
-	memset(B,0,9*sizeof(float));
+	memset(B,0,9*sizeof(mreal));
 	if(rel)
 	{
 		xPos = B1[9] + (x1+x2-1)/2*B1[0];
@@ -150,16 +146,16 @@ void mglGraphAB::InPlot(float x1,float x2,float y1,float y2, bool rel)
 		B[0] = Width*(x2-x1);	B[4] = Height*(y2-y1);
 		B[8] = sqrt(B[0]*B[4]);
 		B1[11]= zPos = (1.f-B[8]/(2*Depth))*Depth;
-		memcpy(B1,B,9*sizeof(float));
+		memcpy(B1,B,9*sizeof(mreal));
 	}
 	font_factor = B[0] < B[4] ? B[0] : B[4];
 	PlotFactor = AutoPlotFactor ? 1.55 : 2;	// Automatically change plot factor !!!
 	Persp = 0;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Aspect(float Ax,float Ay,float Az)
+void mglGraphAB::Aspect(mreal Ax,mreal Ay,mreal Az)
 {
-	float a = fabs(Ax) > fabs(Ay) ? fabs(Ax) : fabs(Ay);
+	mreal a = fabs(Ax) > fabs(Ay) ? fabs(Ax) : fabs(Ay);
 	a = a > fabs(Az) ? a : fabs(Az);
 	if(a==0)	{	SetWarn(mglWarnZero,"Aspect");	return;	}
 	Ax/=a;	Ay/=a;	Az/=a;
@@ -168,25 +164,25 @@ void mglGraphAB::Aspect(float Ax,float Ay,float Az)
 	B[2] *= Az;		B[5] *= Az;		B[8] *= Az;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::NormScale(float *p,long n)
+void mglGraphAB::NormScale(mreal *p,long n)
 {
 	register long i;
-	float x[3], *y;
+	mreal x[3], *y;
 	for(i=0;i<n;i++)
 	{
 		y = p+3*i;
 		x[0] = (y[0]*B[0] + y[1]*B[1] + y[2]*B[2])/zoomx2;
 		x[1] = (y[0]*B[3] + y[1]*B[4] + y[2]*B[5])/zoomy2;
 		x[2] = (y[0]*B[6] + y[1]*B[7] + y[2]*B[8])/sqrt(zoomx2*zoomy2);
-		memcpy(y,x,3*sizeof(float));
+		memcpy(y,x,3*sizeof(mreal));
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::PostScale(float *p,long n)
+void mglGraphAB::PostScale(mreal *p,long n)
 {
-	register float s3=2*PlotFactor;
+	register mreal s3=2*PlotFactor;
 	register long i;
-	float x[3], *y;
+	mreal x[3], *y;
 	for(i=0;i<n;i++)
 	{
 		y = p+3*i;
@@ -196,22 +192,22 @@ void mglGraphAB::PostScale(float *p,long n)
 		x[2] = (zPos + y[0]*B[6] + y[1]*B[7] + y[2]*B[8])/sqrt(zoomx2*zoomy2);
 		if(Persp)
 		{
-			register float d = (1-Persp*Depth/2)/(1-Persp*x[2]);
+			register mreal d = (1-Persp*Depth/2)/(1-Persp*x[2]);
 			x[0] = Width/2 + d*(x[0]-Width/2);
 			x[1] = Height/2 + d*(x[1]-Height/2);
 		}
-		memcpy(y,x,3*sizeof(float));
+		memcpy(y,x,3*sizeof(mreal));
 	}
 }
 //-----------------------------------------------------------------------------
 mglPoint mglGraphAB::CalcXYZ(int xs, int ys)
 {
-	float s3 = 2*PlotFactor, x, y, z;
+	mreal s3 = 2*PlotFactor, x, y, z;
 	// NOTE: Perspective, transformation formulas and lists are not support just now !!! Also it use LAST InPlot parameters!!!
 	ys = Height - ys;
-	float xx = xs*zoomx2 - xPos + zoomx1*Width;
-	float yy = ys*zoomy2 - yPos + zoomy1*Height;
-	float d1=B[0]*B[4]-B[1]*B[3], d2=B[1]*B[5]-B[2]*B[4], d3=B[0]*B[5]-B[2]*B[3];
+	mreal xx = xs*zoomx2 - xPos + zoomx1*Width;
+	mreal yy = ys*zoomy2 - yPos + zoomy1*Height;
+	mreal d1=B[0]*B[4]-B[1]*B[3], d2=B[1]*B[5]-B[2]*B[4], d3=B[0]*B[5]-B[2]*B[3];
 	if(fabs(d1) > fabs(d2) && fabs(d1) > fabs(d3))	// x-y plane
 	{
 		z = 0;
@@ -238,8 +234,8 @@ mglPoint mglGraphAB::CalcXYZ(int xs, int ys)
 //-----------------------------------------------------------------------------
 void mglGraphAB::LightScale()
 {
-	float *x;
-	register float nn;
+	mreal *x;
+	register mreal nn;
 	register long i,j;
 	for(i=0;i<10;i++)
 	{
@@ -259,7 +255,7 @@ void mglGraphAB::Light(int n, bool enable)
 	nLight[n] = enable;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Light(int n, mglPoint p, mglColor c, float br, bool inf)
+void mglGraphAB::Light(int n, mglPoint p, mglColor c, mreal br, bool inf)
 {
 	if(n<0 || n>9)	{	SetWarn(mglWarnLId);	return;	}
 	nLight[n] = true;	aLight[n] = 3;	bLight[n] = br;	iLight[n] = inf;
@@ -275,21 +271,21 @@ int mglGraphAB::NewFrame()
 	return CurFrameId-1;
 }
 //-----------------------------------------------------------------------------
-float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float size)
+mreal mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,mreal size)
 {
 	static int cgid=1;	StartGroup("PutswL",cgid++);
-	float pp[6] = {p.x,p.y,p.z,p.x+n.x,p.y+n.y,p.z+n.z}, bb[9];
+	mreal pp[6] = {p.x,p.y,p.z,p.x+n.x,p.y+n.y,p.z+n.z}, bb[9];
 	Arrow1 = Arrow2 = '_';
 
 	if(size<0)	size = -size*FontSize;
 	f_size = size;
-	float xx=xPos, yy=yPos, zz=zPos;
-	float shift = 0.07, fsize=size/8.*font_factor;
-	float x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2, _p = Persp;
+	mreal xx=xPos, yy=yPos, zz=zPos;
+	mreal shift = 0.07, fsize=size/8.*font_factor;
+	mreal x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2, _p = Persp;
 	if(font=='t')	shift = -0.07;
 
 	shift *= fsize/2;
-	memcpy(bb,B,9*sizeof(float));
+	memcpy(bb,B,9*sizeof(mreal));
 	if(ScalePuts)
 	{
 		bool tt = Cut;	Cut = true;
@@ -301,11 +297,11 @@ float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float
 	PostScale(pp,2);
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	Persp=0;
 
-	float ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
-	if(ll==0)	return 0;
-	float tet = 180*atan2(pp[4]-pp[1],pp[3]-pp[0])/M_PI;
+	mreal ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
+	if(ll==0)	{		EndGroup();	return 0;	}
+	mreal tet = 180*atan2(pp[4]-pp[1],pp[3]-pp[0])/M_PI;
 //	if(fabs(tet)>90)	tet+=180;
-	memset(B,0,9*sizeof(float));
+	memset(B,0,9*sizeof(mreal));
 	B[0] = B[4] = B[8] = fsize;
 	NoAutoFactor=true;	RotateN(-tet,0,0,1);	NoAutoFactor=false;
 	xPos = pp[0]+shift*(pp[4]-pp[1])/sqrt(ll) - B[1]*0.02f;
@@ -313,18 +309,18 @@ float mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,float
 	zPos = pp[2];
 
 	fsize = fnt->Puts(str,"rL",0)*size/8.;
-	xPos=xx;	yPos=yy;	zPos=zz;	memcpy(B,bb,9*sizeof(float));	Persp=_p;
+	xPos=xx;	yPos=yy;	zPos=zz;	memcpy(B,bb,9*sizeof(mreal));	Persp=_p;
 	EndGroup();
 	return fsize;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, float size, char dir, float sh)
+void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal size, char dir, mreal sh)
 {
 	static int cgid=1;	StartGroup("Putsw",cgid++);
 	bool upside = ( (((_sx==-1) ^ (Org.y==Max.y || Org.z==Max.z)) && (dir=='x' || dir=='X')) ||
 					(((_sy==-1) ^ (Org.x==Max.x || Org.z==Max.z)) && (dir=='y' || dir=='Y')) ||
 					(((_sz==-1) ^ (Org.y==Max.y || Org.x==Max.x)) && (dir=='z' || dir=='Z')) );
-	float pp[6] = {p.x,p.y,p.z,p.x,p.y,p.z}, bb[9];
+	mreal pp[6] = {p.x,p.y,p.z,p.x,p.y,p.z}, bb[9];
 	Arrow1 = Arrow2 = '_';
 	char *font1 = mgl_strdup(font ? font:FontDef),*f;
 	char col=TranspType!=2 ? 'k':'w';
@@ -333,9 +329,9 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, float s
 
 	if(size<0)	size = -size*FontSize;
 	f_size = size;
-	float xx=xPos, yy=yPos, zz=zPos;
-	float shift = (sh/10+0.2)*2/PlotFactor, fsize=size/8.*font_factor;
-	float x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2, _p=Persp;
+	mreal xx=xPos, yy=yPos, zz=zPos;
+	mreal shift = (sh/10+0.2)*2/PlotFactor, fsize=size/8.*font_factor;
+	mreal x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2, _p=Persp;
 	zoomx1=zoomy1=0;	zoomx2=zoomy2=1;
 
 	if(strchr("xyz",dir))	shift = (sh/10+0.1)*2/PlotFactor;
@@ -357,7 +353,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, float s
 	}
 	if(upside)	shift = -shift;
 	shift *= fsize/2;
-	memcpy(bb,B,9*sizeof(float));
+	memcpy(bb,B,9*sizeof(mreal));
 
 	if(ScalePuts)
 	{
@@ -371,12 +367,12 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, float s
 	if(dir==0 || dir=='t')
 	{
 		xPos = pp[0];	yPos = pp[1];	zPos = pp[2];
-		memset(B,0,9*sizeof(float));
+		memset(B,0,9*sizeof(mreal));
 		B[0] = B[4] = B[8] = fsize;
 	}
 	else if(dir=='n')
 	{
-		float ax=fsize/B1[0], ay=fsize/B1[4], az=fsize/B1[8];
+		mreal ax=fsize/B1[0], ay=fsize/B1[4], az=fsize/B1[8];
 		xPos = pp[0];	yPos = pp[1];	zPos = pp[2];
 		B[0]*= ax;	B[3]*= ax;	B[6]*= ax;
 		B[1]*= ay;	B[4]*= ay;	B[7]*= ay;
@@ -384,28 +380,28 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, float s
 	}
 	else if(RotatedText)
 	{
-//		if(pp[4]==pp[1] && pp[3]==pp[0])
-//		{	free(font1);	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	return;	}
-		float ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
-		float tet = 180*atan2(pp[4]-pp[1],pp[3]-pp[0])/M_PI;
+		if(pp[4]==pp[1] && pp[3]==pp[0])
+		{	free(font1);	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	EndGroup();	return;	}
+		mreal ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
+		mreal tet = 180*atan2(pp[4]-pp[1],pp[3]-pp[0])/M_PI;
 		if(fabs(tet)>90)	tet+=180;
-		memset(B,0,9*sizeof(float));
+		memset(B,0,9*sizeof(mreal));
 		B[0] = B[4] = B[8] = fsize;
 		NoAutoFactor=true;	RotateN(-tet,0,0,1);	NoAutoFactor=false;
-		float ss = (pp[3]>pp[0] || tet==-90) ? 1 : -1;
+		mreal ss = (pp[3]>pp[0] || tet==-90) ? 1 : -1;
 		xPos = pp[0]+shift*ss*(pp[4]-pp[1])/sqrt(ll) - B[1]*0.02f;
 		yPos = pp[1]-shift*ss*(pp[3]-pp[0])/sqrt(ll) - B[4]*0.02f;
 		zPos = pp[2];
 	}
 	else
 	{
-//		if(pp[4]==pp[1] && pp[3]==pp[0])
-//		{	free(font1);	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	return;	}
-		float ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
-		float tet = atan2(pp[4]-pp[1],pp[3]-pp[0]);
+		if(pp[4]==pp[1] && pp[3]==pp[0])
+		{	free(font1);	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	EndGroup();	return;	}
+		mreal ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
+		mreal tet = atan2(pp[4]-pp[1],pp[3]-pp[0]);
 //		if(fabs(tet)>90)	tet+=180;
-		memset(B,0,9*sizeof(float));	B[0] = B[4] = B[8] = fsize;
-		float ss = (pp[3]>pp[0] || tet==-M_PI/2) ? 1 : -1;
+		memset(B,0,9*sizeof(mreal));	B[0] = B[4] = B[8] = fsize;
+		mreal ss = (pp[3]>pp[0] || tet==-M_PI/2) ? 1 : -1;
 		xPos = pp[0]+shift*ss*(pp[4]-pp[1])/sqrt(ll);
 		yPos = pp[1]-shift*ss*(pp[3]-pp[0])/sqrt(ll);
 		zPos = pp[2];
@@ -420,19 +416,19 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, float s
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
 
 	fnt->Puts(wcs,font1,col);
-	xPos=xx;	yPos=yy;	zPos=zz;	memcpy(B,bb,9*sizeof(float));	Persp=_p;
+	xPos=xx;	yPos=yy;	zPos=zz;	memcpy(B,bb,9*sizeof(mreal));	Persp=_p;
 	free(font1);
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Colorbar(int where, float x, float y, float w, float h)
+void mglGraphAB::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
 {
 	static int cgid=1;	StartGroup("Colorbar",cgid++);
 	register long i;
-	float bb[9],*pp,*cc,d,s3=PlotFactor,ss=s3*0.9;
+	mreal bb[9],*pp,*cc,d,s3=PlotFactor,ss=s3*0.9;
 	mglColor c;
 
-	pp = new float[6*256];	cc = new float[8*256];
+	pp = new mreal[6*256];	cc = new mreal[8*256];
 	x = 2*x-1;	y = 2*y-1;
 	for(i=0;i<255;i++)
 	{
@@ -453,8 +449,8 @@ void mglGraphAB::Colorbar(int where, float x, float y, float w, float h)
 		cc[8*i+2] = cc[8*i+6] = c.b;
 		cc[8*i+3] = cc[8*i+7] = 1;
 	}
-	memcpy(bb,B,9*sizeof(float));
-	memcpy(B,B1,9*sizeof(float));
+	memcpy(bb,B,9*sizeof(mreal));
+	memcpy(B,B1,9*sizeof(mreal));
 	bool ll = UseLight;				UseLight = false;
 	surf_plot(2, 255, pp, cc, 0);	UseLight = ll;
 	delete []pp;	delete []cc;
@@ -467,7 +463,7 @@ void mglGraphAB::Colorbar(int where, float x, float y, float w, float h)
 	ScalePuts = false;
 	SelectPen(TranspType!=2 ? "k-1":"w-1");
 
-	float v=0,t;
+	mreal v=0,t;
 	int kind=0;
 	wchar_t s[32]=L"", str[64];
 	if(!ctt && TuneTicks) kind = _mgl_tick_ext(Cmax, Cmin, s, v);
@@ -499,14 +495,14 @@ void mglGraphAB::Colorbar(int where, float x, float y, float w, float h)
 	}
 	if(kind&2)	Putsw(p,s,a,FontSize);
 	ScalePuts = true;
-	memcpy(B,bb,9*sizeof(float));
+	memcpy(B,bb,9*sizeof(mreal));
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::SetSize(int w,int h)
 {
 	if(w<=0 || h<=0)	{	SetWarn(mglWarnSize);	return;	}
-	Width = w;	Height = h;	Depth = long(sqrt(float(w*h)));
+	Width = w;	Height = h;	Depth = long(sqrt(mreal(w*h)));
 	zPos = 0;//long(2*Depth*sqrt(3.));
 	if(G)	{	delete []G;	delete []G4;	}
 	G = new unsigned char[w*h*3];
@@ -563,11 +559,11 @@ void mglGraphAB::WriteSVG(const char *fname, const char *descr)
 	fclose(fp);
 }*/
 //-----------------------------------------------------------------------------
-void mglGraphAB::arrow_plot(float *p1,float *p2,char st)
+void mglGraphAB::arrow_plot(mreal *p1,mreal *p2,char st)
 {
 	if(!strchr("AVKSDTIO",st))	return;
-	float lx=p1[0]-p2[0], ly=p1[1]-p2[1], ll, kx,ky;
-	float pp[12];
+	mreal lx=p1[0]-p2[0], ly=p1[1]-p2[1], ll, kx,ky;
+	mreal pp[12];
 	ll = hypot(lx,ly)/(ArrowSize*0.35*font_factor);		if(ll==0)	return;
 	lx /= ll;	ly /= ll;	kx = ly;	ky = -lx;
 	pp[2] = pp[5] = pp[8] = pp[11] = p1[2];
@@ -633,7 +629,7 @@ void mglGraphAB::arrow_plot(float *p1,float *p2,char st)
 		}
 		break;
 	}
-/*		float ss = MarkSize;	MarkSize = ArrowSize;
+/*		mreal ss = MarkSize;	MarkSize = ArrowSize;
 		mark_plot(p1,'O');
 		MarkSize = ss;*/
 	}
@@ -651,7 +647,7 @@ unsigned char **mglGraphAB::GetRGBLines(long &w, long &h, unsigned char *&f, boo
 	return p;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::SetFontSizePT(float pt, int dpi)
+void mglGraphAB::SetFontSizePT(mreal pt, int dpi)
 {	FontSize = pt*Height*0.0675/dpi;	}
 //-----------------------------------------------------------------------------
 /*void mglGraphAB::EndFrame()
@@ -662,34 +658,34 @@ void mglGraphAB::SetFontSizePT(float pt, int dpi)
 	WritePNG(fname);
 }*/
 //-----------------------------------------------------------------------------
-void mglGraphAB::FindOptOrg(float ax[3], float ay[3], float az[3])
+void mglGraphAB::FindOptOrg(mreal ax[3], mreal ay[3], mreal az[3])
 {
-	static float px[3]={0,0,0}, py[3]={0,0,0}, pz[3]={0,0,0},
+	static mreal px[3]={0,0,0}, py[3]={0,0,0}, pz[3]={0,0,0},
 				bb[9]={1e30,0,0, 0,0,0, 0,0,0};
 	static mglPoint m1, m2;
-	float nn[24]={0,0,0, 0,0,1, 0,1,0, 0,1,1, 1,0,0, 1,0,1, 1,1,0, 1,1,1};
-	float pp[24];
-	memcpy(pp, nn, 24*sizeof(float));
+	mreal nn[24]={0,0,0, 0,0,1, 0,1,0, 0,1,1, 1,0,0, 1,0,1, 1,1,0, 1,1,1};
+	mreal pp[24];
+	memcpy(pp, nn, 24*sizeof(mreal));
 	// do nothing if transformation matrix the same
-	if(memcmp(B,bb,9*sizeof(float)) || m1!=Min || m2!=Max)
+	if(memcmp(B,bb,9*sizeof(mreal)) || m1!=Min || m2!=Max)
 	{
 		m1 = Min;	m2 = Max;
-		memcpy(bb,B,9*sizeof(float));	PostScale(pp,8);
+		memcpy(bb,B,9*sizeof(mreal));	PostScale(pp,8);
 		// find point with minimal y
 		register long i,j;
 		for(i=j=1;i<24;i+=3)	if(pp[i]<pp[j])	j=i;
-		j--;	memcpy(pp,pp+j,3*sizeof(float));
+		j--;	memcpy(pp,pp+j,3*sizeof(mreal));
 		// find max angle and left point
 		// first select 3 closest points
-		memcpy(pp+3,nn+j,3*sizeof(float));	pp[3]=1-pp[3];	// along x
-		memcpy(pp+6,nn+j,3*sizeof(float));	pp[7]=1-pp[7];	// along y
-		memcpy(pp+9,nn+j,3*sizeof(float));	pp[11]=1-pp[11];// along z
+		memcpy(pp+3,nn+j,3*sizeof(mreal));	pp[3]=1-pp[3];	// along x
+		memcpy(pp+6,nn+j,3*sizeof(mreal));	pp[7]=1-pp[7];	// along y
+		memcpy(pp+9,nn+j,3*sizeof(mreal));	pp[11]=1-pp[11];// along z
 		PostScale(pp+3,3);
 		pp[3] -= pp[0];	pp[4] -= pp[1];	pp[5] -= pp[2];
 		pp[6] -= pp[0];	pp[7] -= pp[1];	pp[8] -= pp[2];
 		pp[9] -= pp[0];	pp[10]-= pp[1];	pp[11]-= pp[2];
 		// find cosine of axis projection
-		float cxy, cxz, cyz, dx, dy, dz;
+		mreal cxy, cxz, cyz, dx, dy, dz;
 		dx = pp[3]*pp[3] + pp[4]*pp[4];
 		dy = pp[6]*pp[6] + pp[7]*pp[7];
 		dz = pp[9]*pp[9] + pp[10]*pp[10];
@@ -702,9 +698,9 @@ void mglGraphAB::FindOptOrg(float ax[3], float ay[3], float az[3])
 		else
 		{	cxy /= sqrt(dx*dy);	cxz /= sqrt(dx*dz);	cyz /= sqrt(dz*dy);	}
 		// find points for axis
-		memcpy(px,nn+j,3*sizeof(float));
-		memcpy(py,nn+j,3*sizeof(float));
-		memcpy(pz,nn+j,3*sizeof(float));
+		memcpy(px,nn+j,3*sizeof(mreal));
+		memcpy(py,nn+j,3*sizeof(mreal));
+		memcpy(pz,nn+j,3*sizeof(mreal));
 		if(cxy<cxz && cxy<cyz)	// xy is lowest
 		{	// px, py the same as pp
 			if(pp[3]<pp[6])	pz[0] = 1-pz[0];
@@ -733,17 +729,17 @@ void mglGraphAB::FindOptOrg(float ax[3], float ay[3], float az[3])
 		pz[2] = Min.z + (Max.z-Min.z)*pz[2];
 	}
 	// just copy saved values
-	memcpy(ax,px,3*sizeof(float));
-	memcpy(ay,py,3*sizeof(float));
-	memcpy(az,pz,3*sizeof(float));
+	memcpy(ax,px,3*sizeof(mreal));
+	memcpy(ay,py,3*sizeof(mreal));
+	memcpy(az,pz,3*sizeof(mreal));
 }
 //-----------------------------------------------------------------------------
-float mglGraphAB::GetOrgX(char dir)
+mreal mglGraphAB::GetOrgX(char dir)
 {
-	float res = Org.x;
+	mreal res = Org.x;
 	if(isnan(res))
 	{
-		float ax[3], ay[3], az[3];
+		mreal ax[3], ay[3], az[3];
 		FindOptOrg(ax,ay,az);
 		if(dir=='x')		res = ax[0];
 		else if(dir=='y')	res = ay[0];
@@ -753,12 +749,12 @@ float mglGraphAB::GetOrgX(char dir)
 	return res;
 }
 //-----------------------------------------------------------------------------
-float mglGraphAB::GetOrgY(char dir)
+mreal mglGraphAB::GetOrgY(char dir)
 {
-	float res = Org.y;
+	mreal res = Org.y;
 	if(isnan(res))
 	{
-		float ax[3], ay[3], az[3];
+		mreal ax[3], ay[3], az[3];
 		FindOptOrg(ax,ay,az);
 		if(dir=='x')		res = ax[1];
 		else if(dir=='y')	res = ay[1];
@@ -768,12 +764,12 @@ float mglGraphAB::GetOrgY(char dir)
 	return res;
 }
 //-----------------------------------------------------------------------------
-float mglGraphAB::GetOrgZ(char dir)
+mreal mglGraphAB::GetOrgZ(char dir)
 {
-	float res = Org.z;
+	mreal res = Org.z;
 	if(isnan(res))
 	{
-		float ax[3], ay[3], az[3];
+		mreal ax[3], ay[3], az[3];
 		FindOptOrg(ax,ay,az);
 		if(dir=='x')		res = ax[2];
 		else if(dir=='y')	res = ay[2];

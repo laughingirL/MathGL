@@ -278,10 +278,10 @@ inline std::string i2s ( int x )
 //-----------------------------------------------------------------------------
 #define sign(x) ((x<0.0) ? (-1.0) : (1.0))
 
-static float mgl_globpos[4][4] = { {0.5, 0, 0, 0.5}, {0, 0.5, 0, 0.5}, {0, 0, 0.5, 0.5}, {0, 0, 0, 1} };
-static float mgl_globinv[4][4] = { {2, 0, 0, -1}, {0, 2, 0, -1}, {0, 0, 2, -1}, {0, 0, 0, 1} };
-const float mgl_definv[4][4] = { {2, 0, 0, -1}, {0, 2, 0, -1}, {0, 0, 2, -1}, {0, 0, 0, 1} };
-const float mgl_idtrans[4][4] = { {1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1} };
+static mreal mgl_globpos[4][4] = { {0.5, 0, 0, 0.5}, {0, 0.5, 0, 0.5}, {0, 0, 0.5, 0.5}, {0, 0, 0, 1} };
+static mreal mgl_globinv[4][4] = { {2, 0, 0, -1}, {0, 2, 0, -1}, {0, 0, 2, -1}, {0, 0, 0, 1} };
+const mreal mgl_definv[4][4] = { {2, 0, 0, -1}, {0, 2, 0, -1}, {0, 0, 2, -1}, {0, 0, 0, 1} };
+const mreal mgl_idtrans[4][4] = { {1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1} };
 
 //-----------------------------------------------------------------------------
 // u3d object methods
@@ -334,7 +334,7 @@ void u3dLight::print_node ( std::ofstream& ostr )
 	Node.print ( ostr );
 }
 
-void mglGraphIDTF::SetAmbientLight ( mglColor c, float br )
+void mglGraphIDTF::SetAmbientLight ( mglColor c, mreal br )
 {
 	u3dLight Light;
 
@@ -346,7 +346,7 @@ void mglGraphIDTF::SetAmbientLight ( mglColor c, float br )
 	memcpy ( Light.position, mgl_idtrans, sizeof ( mgl_idtrans ) );
 	Lights.push_back ( Light );
 }
-void mglGraphIDTF::AddLight ( mglPoint p, mglColor color, float br, bool infty )
+void mglGraphIDTF::AddLight ( mglPoint p, mglColor color, mreal br, bool infty )
 {
 	u3dLight Light;
 
@@ -359,11 +359,11 @@ void mglGraphIDTF::AddLight ( mglPoint p, mglColor color, float br, bool infty )
 	}
 
 	memcpy ( Light.position, mgl_idtrans, sizeof ( mgl_idtrans ) );
-	float a = p.x, b = p.y, c = p.z;
+	mreal a = p.x, b = p.y, c = p.z;
 	if ( infty )
 	{
 		Light.type = "DIRECTIONAL";
-		float n = sqrt ( a*a+b*b+c*c );
+		mreal n = sqrt ( a*a+b*b+c*c );
 		if ( n != 0.0f )
 		{
 			a /= n; b /= n; c /=n;
@@ -432,7 +432,7 @@ void u3dMaterial::print_shader ( std::ofstream& ostr )
 		<< "\t\tSHADER_TEXTURE_LAYER_LIST {\n"
 		<< "\t\t\tTEXTURE_LAYER 0 {\n"
 		<< "\t\t\t\tTEXTURE_LAYER_BLEND_FUNCTION \"REPLACE\"\n"
-		<< "\t\t\t\tTEXTURE_LAYER_ALPHA_ENABLED \"" << (this->texturealpha ? "TRUE" : "FALSE") << "\"\n"
+		<< "\t\t\t\tTEXTURE_LAYER_ALPHA_ENABLED \"" << (this->textumrealpha ? "TRUE" : "FALSE") << "\"\n"
 //		<< "\t\t\t\tTEXTURE_LAYER_REPEAT \"NONE\"\n"
 		<< "\t\t\t\tTEXTURE_NAME \"" << this->texture << "\"\n"
 		<< "\t\t\t}\n"
@@ -531,7 +531,7 @@ u3dMesh& mglGraphIDTF::GetMesh()
 	return Meshes.back();
 }
 
-size_t u3dModel::AddPoint ( const float *p )
+size_t u3dModel::AddPoint ( const mreal *p )
 {
 	return AddPoint( mglPoint ( p[0], p[1], p[2] ) );
 }
@@ -550,7 +550,7 @@ size_t u3dModel::AddPoint ( const mglPoint& pnt )
 	return ( this->Points.size()-1 );
 }
 
-size_t u3dModel::AddColor ( const float *c )
+size_t u3dModel::AddColor ( const mreal *c )
 {
 	mglColor color = mglColor ( IDTFROUND(c[0]), IDTFROUND(c[1]), IDTFROUND(c[2]) );
 	for ( size_t i=0; i< this->Colors.size(); i++ )
@@ -594,9 +594,9 @@ void u3dMesh::AddTriangle ( size_t pid0, size_t pid1, size_t pid2, size_t mid)
 	faceShaders.push_back ( mid );
 };
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::MakeTransformMatrix( float position[4][4], float invpos[4][4] )
+void mglGraphIDTF::MakeTransformMatrix( mreal position[4][4], mreal invpos[4][4] )
 {
-	const float s3=2*PlotFactor;
+	const mreal s3=2*PlotFactor;
 	position[0][0]=B[0]					/(s3*zoomx2);
 	position[0][1]=B[1]					/(s3*zoomx2);
 	position[0][2]=B[2]					/(s3*zoomx2);
@@ -741,20 +741,21 @@ u3dModel::u3dModel ( const std::string name, mglGraphIDTF *Graph, const bool& ve
 	Graph->MakeTransformMatrix(this->position, this->invpos);
 }
 //-----------------------------------------------------------------------------
-size_t u3dModel::AddModelMaterial ( const float *c, bool emissive, bool vertex_color )
+size_t u3dModel::AddModelMaterial ( const mreal *c, bool emissive, bool vertex_color )
 {
 	u3dMaterial Material;
+	mglColor color = mglColor ( IDTFROUND(c[0]), IDTFROUND(c[1]), IDTFROUND(c[2]) );
 	if ( emissive )
 	{
-		Material.diffuse = mglColor ( IDTFROUND(c[0]), IDTFROUND(c[1]), IDTFROUND(c[2]) );
+		Material.diffuse  = color;
 		Material.specular = BC;
-		Material.emissive = mglColor ( IDTFROUND(c[0]), IDTFROUND(c[1]), IDTFROUND(c[2]) );
+		Material.emissive = color;
 	}
 	else
 	{
-		Material.diffuse = mglColor ( IDTFROUND(c[0]), IDTFROUND(c[1]), IDTFROUND(c[2]) );
-		Material.specular = 0.5f*Material.diffuse;
-		Material.emissive = BC;
+		Material.diffuse  = Graph->diff_int * color;
+		Material.specular = Graph->spec_int * color;
+		Material.emissive = Graph->emis_int * color;
 	}
 	Material.opacity = this->Graph->fixalpha ( c[3] );
 	Material.vertex_color = vertex_color;
@@ -814,7 +815,7 @@ void u3dBall::print_node ( std::ofstream& ostr )
 	u3dNode Node;
 	Node.name = name;
 	Node.resource = "UnitBall";
-	float position[4][4];
+	mreal position[4][4];
 	memcpy ( position, mgl_idtrans, sizeof ( mgl_idtrans ) );
 	position[0][0] = this->radius;
 	position[1][1] = this->radius;
@@ -859,21 +860,104 @@ void u3dBall::print_shading_modifier ( std::ofstream& ostr )
 u3dPointSet::u3dPointSet ( const std::string& name, mglGraphIDTF *Graph ) :
 		u3dModel ( name, Graph, true )
 {
-	const float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	const mreal color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	this->AddModelMaterial ( color, true, true );
 	this->both_visible = false;
 }
-void u3dPointSet::point_plot ( const mglPoint& p, const mglColor& c )
+void u3dPointSet::point_plot ( const mglPoint& pnt, const mglColor& c )
 {
-	Points.push_back( p );
+	mglPoint point;
+	point.x = invpos[0][0]*pnt.x+invpos[0][1]*pnt.y+invpos[0][2]*pnt.z+invpos[0][3];
+	point.y = invpos[1][0]*pnt.x+invpos[1][1]*pnt.y+invpos[1][2]*pnt.z+invpos[1][3];
+	point.z = invpos[2][0]*pnt.x+invpos[2][1]*pnt.y+invpos[2][2]*pnt.z+invpos[2][3];
+	Points.push_back( point );
 	Colors.push_back( c );
 }
 
 void u3dPointSet::print_model_resource ( std::ofstream& ostrtmp )
 {
-	size_t numPoints    = this->Points.size();
+	if ( this->Points.size() == 0 )	return;
+	// is there just one color in the model?
+	bool onecolor = true;
+	size_t numColors    = this->Colors.size();
+	for ( size_t cid=0; cid < numColors; cid++ )
+	{
+		if ( Colors[0].r != Colors[cid].r || Colors[0].g != Colors[cid].g || Colors[0].b != Colors[cid].b )
+		{
+			onecolor = false;
+			break;
+		}
+	}
+	if ( onecolor ) // if there is just one color in the model - make the corresponding material
+	{
+		this->ModelMaterials.pop_back();
+		mreal c[4] = { this->Colors[0].r, this->Colors[0].g, this->Colors[0].b, 1.0f };
+		this->AddModelMaterial ( c, true, false );
+		this->Colors.clear();
+		numColors = 0;
+		this->vertex_color = false;
+	}
+	bool colored  = this->Colors.size() > 0;
+
+	if ( !colored && this->Colors[0] == BC )
+{
+	size_t numMaterials = this->ModelMaterials.size();
+	size_t numPoints = this->Points.size();
+
 	if ( numPoints == 0 )	return;
+
+	ostrtmp
+	<< "\t\tRESOURCE_NAME \"" << this->name << "\"\n"
+	<< "\t\tMODEL_TYPE \"POINT_SET\"\n"
+	<< "\t\tPOINT_SET {\n"
+	<< "\t\t\tPOINT_COUNT " << numPoints << "\n"
+	<< "\t\t\tMODEL_POSITION_COUNT " << numPoints << "\n"
+	<< "\t\t\tMODEL_NORMAL_COUNT 0\n"
+	<< "\t\t\tMODEL_DIFFUSE_COLOR_COUNT 0\n"
+	<< "\t\t\tMODEL_SPECULAR_COLOR_COUNT 0\n"
+	<< "\t\t\tMODEL_TEXTURE_COORD_COUNT 0\n"
+	<< "\t\t\tMODEL_SHADING_COUNT " << numMaterials << "\n"
+	<< "\t\t\tMODEL_SHADING_DESCRIPTION_LIST {\n";
+	for ( size_t id=0; id < numMaterials; id++ )
+	{
+		ostrtmp
+		<< "\t\t\t\tSHADING_DESCRIPTION " << id << " {\n"
+		<< "\t\t\t\t\tTEXTURE_LAYER_COUNT 0\n"
+		<< "\t\t\t\t\tSHADER_ID " << id << "\n"
+		<< "\t\t\t\t}\n";
+	}
+	ostrtmp << "\t\t\t}\n";
+
+	ostrtmp << "\t\t\tPOINT_POSITION_LIST {\n";
+	for ( size_t id=0; id < numPoints; id++ )
+	{
+		ostrtmp << "\t\t\t\t" << i2s ( id ) << "\n";
+	}
+	ostrtmp << "\t\t\t}\n";
+
+	ostrtmp << "\t\t\tPOINT_SHADING_LIST {\n";
+	for ( size_t id=0; id < numPoints; id++ )
+	{
+		ostrtmp << "\t\t\t\t 0\n";
+	}
+	ostrtmp << "\t\t\t}\n";
+
+	ostrtmp << "\t\t\tMODEL_POSITION_LIST {\n";
+	for ( size_t pid=0; pid < numPoints; pid++ )
+	{
+		ostrtmp << "\t\t\t\t"
+		<< ( this->Points[pid].x )  << " "
+		<< ( this->Points[pid].y )  << " "
+		<< ( this->Points[pid].z )  << "\n";
+	}
+	ostrtmp << "\t\t\t}\n";
+
+	ostrtmp << "\t\t}\n";
+}
+else
 // Convert pointset to mesh
+{
+	size_t numPoints    = this->Points.size();
 	size_t duplpoints = this->Points.size() % 3;
 	if ( duplpoints > 0 )
 	{
@@ -889,28 +973,6 @@ void u3dPointSet::print_model_resource ( std::ofstream& ostrtmp )
 	}
 
 	size_t numTriangles = this->Points.size() / 3;
-
-	// is there just one color in the model?
-	bool onecolor = true;
-	size_t numColors    = this->Colors.size();
-	for ( size_t cid=0; cid < numColors; cid++ )
-	{
-		if ( Colors[0].r != Colors[cid].r || Colors[0].g != Colors[cid].g || Colors[0].b != Colors[cid].b )
-		{
-			onecolor = false;
-			break;
-		}
-	}
-	if ( onecolor ) // if there is just one color in the model - make the corresponding material
-	{
-		this->ModelMaterials.pop_back();
-		float c[4] = { this->Colors[0].r, this->Colors[0].g, this->Colors[0].b, 1.0f };
-		this->AddModelMaterial ( c, true, false );
-		this->Colors.clear();
-		numColors = 0;
-		this->vertex_color = false;
-	}
-	bool colored  = this->Colors.size() > 0;
 
 	ostrtmp
 	<< "\t\tRESOURCE_NAME \"" << this->name << "\"\n"
@@ -994,61 +1056,8 @@ void u3dPointSet::print_model_resource ( std::ofstream& ostrtmp )
 
 	ostrtmp << "\t\t}\n";
 }
-/*
-{
-	size_t numMaterials = this->ModelMaterials.size();
-	size_t numPoints = this->Points.size();
-
-	if ( numPoints == 0 )	return;
-
-	ostrtmp
-	<< "\t\tRESOURCE_NAME \"" << this->name << "\"\n"
-	<< "\t\tMODEL_TYPE \"POINT_SET\"\n"
-	<< "\t\tPOINT_SET {\n"
-	<< "\t\t\tPOINT_COUNT " << numPoints << "\n"
-	<< "\t\t\tMODEL_POSITION_COUNT " << numPoints << "\n"
-	<< "\t\t\tMODEL_NORMAL_COUNT 0\n"
-	<< "\t\t\tMODEL_DIFFUSE_COLOR_COUNT 0\n"
-	<< "\t\t\tMODEL_SPECULAR_COLOR_COUNT 0\n"
-	<< "\t\t\tMODEL_TEXTURE_COORD_COUNT 0\n"
-	<< "\t\t\tMODEL_SHADING_COUNT " << numMaterials << "\n"
-	<< "\t\t\tMODEL_SHADING_DESCRIPTION_LIST {\n";
-	for ( size_t id=0; id < numMaterials; id++ )
-	{
-		ostrtmp
-		<< "\t\t\t\tSHADING_DESCRIPTION " << id << " {\n"
-		<< "\t\t\t\t\tTEXTURE_LAYER_COUNT 0\n"
-		<< "\t\t\t\t\tSHADER_ID " << id << "\n"
-		<< "\t\t\t\t}\n";
-	}
-	ostrtmp << "\t\t\t}\n";
-
-	ostrtmp << "\t\t\tPOINT_POSITION_LIST {\n";
-	for ( size_t id=0; id < numPoints; id++ )
-	{
-		ostrtmp << "\t\t\t\t" << i2s ( id ) << "\n";
-	}
-	ostrtmp << "\t\t\t}\n";
-
-	ostrtmp << "\t\t\tPOINT_SHADING_LIST {\n";
-	for ( size_t id=0; id < numPoints; id++ )
-	{
-		ostrtmp << "\t\t\t\t 0\n";
-	}
-	ostrtmp << "\t\t\t}\n";
-
-	ostrtmp << "\t\t\tMODEL_POSITION_LIST {\n";
-	for ( size_t pid=0; pid < numPoints; pid++ )
-	{
-		ostrtmp << "\t\t\t\t"
-		<< ( this->Points[pid].x )  << " "
-		<< ( this->Points[pid].y )  << " "
-		<< ( this->Points[pid].z )  << "\n";
-	}
-	ostrtmp << "\t\t\t}\n";
-
-	ostrtmp << "\t\t}\n";
 }
+/*
 */
 void u3dLineSet::AddLine ( size_t pid1, size_t pid2, size_t mid )
 {
@@ -1067,9 +1076,9 @@ void u3dLineSet::AddLine ( size_t pid1, size_t pid2, size_t mid )
 	this->Lines.push_back ( line );
 }
 
-void u3dLineSet::line_plot ( float *p1, float *p2, float *c1, float *c2 )
+void u3dLineSet::line_plot ( mreal *p1, mreal *p2, mreal *c1, mreal *c2 )
 {
-	float color[4];
+	mreal color[4];
 	size_t pid1 = this->AddPoint ( p1 );
 	size_t pid2 = this->AddPoint ( p2 );
 	color[0] = ( c1[0] + c2[0] ) /2.0f;
@@ -1138,23 +1147,23 @@ void u3dLineSet::print_model_resource ( std::ofstream& ostrtmp )
 	ostrtmp << "\t\t}\n";
 }
 //-----------------------------------------------------------------------------
-void u3dMesh::quad_plot ( float *pp0,float *pp1,float *pp2,float *pp3,
-                          float *cc0,float *cc1,float *cc2,float *cc3 )
+void u3dMesh::quad_plot ( mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+                          mreal *cc0,mreal *cc1,mreal *cc2,mreal *cc3 )
 {
 	this->trig_plot ( pp0,pp1,pp2,cc0,cc1,cc2 );
 	this->trig_plot ( pp1,pp3,pp2,cc1,cc3,cc2 );
 }
 //-----------------------------------------------------------------------------
-void u3dMesh::quad_plot_n ( float *pp0,float *pp1,float *pp2,float *pp3,
-                            float *cc0,float *cc1,float *cc2,float *cc3,
-                            float *nn0,float *nn1,float *nn2,float *nn3 )
+void u3dMesh::quad_plot_n ( mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+                            mreal *cc0,mreal *cc1,mreal *cc2,mreal *cc3,
+                            mreal *nn0,mreal *nn1,mreal *nn2,mreal *nn3 )
 {
 	this->trig_plot_n ( pp0,pp1,pp2,cc0,cc1,cc2,nn0,nn1,nn2 );
 	this->trig_plot_n ( pp1,pp3,pp2,cc1,cc3,cc2,nn0,nn2,nn3 );
 }
 //-----------------------------------------------------------------------------
-void u3dMesh::trig_plot ( float *pp0,float *pp1,float *pp2,
-                          float *cc0,float *cc1,float *cc2 )
+void u3dMesh::trig_plot ( mreal *pp0,mreal *pp1,mreal *pp2,
+                          mreal *cc0,mreal *cc1,mreal *cc2 )
 {
 	size_t pid0 = this->AddPoint ( pp0 );
 	size_t pid1 = this->AddPoint ( pp1 );
@@ -1162,7 +1171,7 @@ void u3dMesh::trig_plot ( float *pp0,float *pp1,float *pp2,
 
 	if ( !this->vertex_color )
 	{
-		const float color[4] =
+		const mreal color[4] =
 		{
 			 ( cc0[0]+cc1[0]+cc2[0] ) /3.0f,
 			 ( cc0[1]+cc1[1]+cc2[1] ) /3.0f,
@@ -1176,7 +1185,7 @@ void u3dMesh::trig_plot ( float *pp0,float *pp1,float *pp2,
 	{
 		if ( ModelMaterials.size() == 0 )
 		{
-			const float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+			const mreal color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 			this->AddModelMaterial ( color, false, true );
 		}
 		size_t cid0 = this->AddColor ( cc0 );
@@ -1186,9 +1195,9 @@ void u3dMesh::trig_plot ( float *pp0,float *pp1,float *pp2,
 	}
 }
 //-----------------------------------------------------------------------------
-void u3dMesh::trig_plot_n ( float *pp0,float *pp1,float *pp2,
-                            float *cc0,float *cc1,float *cc2,
-                            float *nn0,float *nn1,float *nn2 )
+void u3dMesh::trig_plot_n ( mreal *pp0,mreal *pp1,mreal *pp2,
+                            mreal *cc0,mreal *cc1,mreal *cc2,
+                            mreal *nn0,mreal *nn1,mreal *nn2 )
 {
 	size_t pid0 = this->AddPoint ( pp0 );
 	size_t pid1 = this->AddPoint ( pp1 );
@@ -1196,7 +1205,7 @@ void u3dMesh::trig_plot_n ( float *pp0,float *pp1,float *pp2,
 
 	if ( !this->vertex_color )
 	{
-		const float color[4] =
+		const mreal color[4] =
 		{
 			 ( cc0[0]+cc1[0]+cc2[0] ) /3.0f,
 			 ( cc0[1]+cc1[1]+cc2[1] ) /3.0f,
@@ -1210,10 +1219,10 @@ void u3dMesh::trig_plot_n ( float *pp0,float *pp1,float *pp2,
 	{
 		if ( ModelMaterials.size() == 0 )
 		{
-			const float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+			const mreal color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 			this->AddModelMaterial ( color, false, true );
 		}
-		float cc[3];
+		mreal cc[3];
 		size_t cid0 = this->AddColor ( this->Graph->col2col ( cc0, nn0, cc ) );
 		size_t cid1 = this->AddColor ( this->Graph->col2col ( cc1, nn1, cc ) );
 		size_t cid2 = this->AddColor ( this->Graph->col2col ( cc2, nn2, cc ) );
@@ -1235,7 +1244,7 @@ void u3dMesh::print_model_resource ( std::ofstream& ostrtmp )
 	if ( this->Colors.size() == 1 ) // if there is just one color in the model - make the corresponding material
 	{
 		this->ModelMaterials.pop_back();
-		float c[4] = { this->Colors[0].r, this->Colors[0].g, this->Colors[0].b, 1.0f };
+		mreal c[4] = { this->Colors[0].r, this->Colors[0].g, this->Colors[0].b, 1.0f };
 		this->AddModelMaterial ( c, false, false );
 		this->Colors.clear();
 	}
@@ -1377,6 +1386,7 @@ void u3dMesh::print_model_resource ( std::ofstream& ostrtmp )
 }
 //-----------------------------------------------------------------------------
 mglGraphIDTF::mglGraphIDTF() : mglGraphAB ( 1,1 ),
+		diff_int ( 0.8f ), spec_int ( 0.4f ), emis_int ( 0.25f ),
 		vertex_color_flag ( true ), disable_compression_flag ( true ), unrotate_flag ( false ), ball_is_point_flag ( false ),
 		points_finished ( true ), lines_finished ( true ), mesh_finished ( true ),
 		CurrentGroup ( NULL )
@@ -1384,7 +1394,7 @@ mglGraphIDTF::mglGraphIDTF() : mglGraphAB ( 1,1 ),
 //-----------------------------------------------------------------------------
 mglGraphIDTF::~mglGraphIDTF() {}
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::Light ( int n, mglPoint p, mglColor c, float br, bool infty )
+void mglGraphIDTF::Light ( int n, mglPoint p, mglColor c, mreal br, bool infty )
 {
 	if ( n<0 || n>9 )	{       SetWarn ( mglWarnLId );	return;	}
 	nLight[n] = true;	aLight[n] = 3;	bLight[n] = br;
@@ -1475,11 +1485,11 @@ void mglGraphIDTF::UnitBall ( )
 	mglPoint pnt;
 	mglPoint nrm;
 	const mglPoint Center = mglPoint ( 0, 0, 0 );
-	const float Radius = 1.0f;
+	const mreal Radius = 1.0f;
 	u3dMesh Mesh = u3dMesh ( "UnitBall" , this, false, true );
 	Mesh.both_visible=false;
 
-	float color[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+	mreal color[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 	Mesh.AddModelMaterial ( color, false, false );
 
 // tetrahedron
@@ -1579,7 +1589,7 @@ void mglGraphIDTF::UnitBall ( )
 	Meshes.push_back ( Mesh );
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::Ball ( float x,float y,float z,mglColor col,float alpha )
+void mglGraphIDTF::Ball ( mreal x,mreal y,mreal z,mglColor col,mreal alpha )
 {
 	if(alpha==0)	return;
 	if(alpha<0)	{	alpha = -alpha;	}
@@ -1589,7 +1599,7 @@ void mglGraphIDTF::Ball ( float x,float y,float z,mglColor col,float alpha )
 	alpha = UseAlpha ? alpha : 1.0f;
 	u3dBall ball;
 
-	float p[3] = {x,y,z};
+	mreal p[3] = {x,y,z};
 	if (ball_is_point_flag)
 	{
 		point_plot ( mglPoint ( p[0],p[1],p[2] ), col );
@@ -1608,9 +1618,9 @@ void mglGraphIDTF::Ball ( float x,float y,float z,mglColor col,float alpha )
 	ball.name = "Ball" + i2s(Balls.size()) ;
 
 	u3dMaterial Material;
-	Material.diffuse = col;
-	Material.specular = 0.5*col;
-	Material.emissive = 0.125*col;
+	Material.diffuse  = diff_int * col;
+	Material.specular = spec_int * col;
+	Material.emissive = emis_int * col;
 	Material.reflectivity = 0.1f;
 	Material.opacity = alpha;
 	Material.vertex_color = false;
@@ -1619,26 +1629,26 @@ void mglGraphIDTF::Ball ( float x,float y,float z,mglColor col,float alpha )
 	Balls.push_back(ball);
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::ball ( float *p,float *c )
+void mglGraphIDTF::ball ( mreal *p,mreal *c )
 {
 //	point_plot ( mglPoint ( p[0], p[1], p[2] ) );
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::mark_plot ( float *pp, char type )
+void mglGraphIDTF::mark_plot ( mreal *pp, char type )
 {
-	float x=pp[0],y=pp[1],z=pp[2];
-#define pnt(x, y)  ( p + ss*mglPoint((float)(x), (float)(y), 0.0f))
+	mreal x=pp[0],y=pp[1],z=pp[2];
+#define pnt(x, y)  ( p + ss*mglPoint((mreal)(x), (mreal)(y), 0.0f))
 	mglPoint p = mglPoint ( x, y, z );
 	mglPoint p1;
 	mglPoint p2;
-	float ss=MarkSize*0.35*font_factor;
+	mreal ss=MarkSize*0.35*font_factor;
 	if ( type=='.' || ss==0 )
 	{
 		point_plot ( p, mglColor( CDef[0], CDef[1], CDef[2] ) );
 	}
 	else
 	{
-		float pw = PenWidth;	PenWidth = BaseLineWidth;
+		mreal pw = PenWidth;	PenWidth = BaseLineWidth;
 		unsigned pd = PDef;	PDef = 0xffff;
 		switch ( type )
 		{
@@ -1711,15 +1721,15 @@ void mglGraphIDTF::mark_plot ( float *pp, char type )
 #undef pnt
 }
 //-----------------------------------------------------------------------------
-float* mglGraphIDTF::col2col ( const float *c, const float *n, float *r )
+mreal* mglGraphIDTF::col2col ( const mreal *c, const mreal *n, mreal *r )
 {
 	register long i,j;
-	static float u[3];
+	static mreal u[3];
 	mglColor b = mglColor ( c[0], c[1], c[2] );
 	if ( r==0 ) r = u;
 	if ( UseLight && n && this->vertex_color_flag )
 	{
-		float nn;
+		mreal nn;
 		b = AmbBr*b;
 		mglPoint Normal = mglPoint ( n[0], n[1], n[2] ); // Normal to surface after transform
 		nn = Norm ( Normal );
@@ -1744,24 +1754,24 @@ float* mglGraphIDTF::col2col ( const float *c, const float *n, float *r )
 	return r;
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::quad_plot ( float *pp0,float *pp1,float *pp2,float *pp3,
-                               float *cc0,float *cc1,float *cc2,float *cc3 )
+void mglGraphIDTF::quad_plot ( mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+                               mreal *cc0,mreal *cc1,mreal *cc2,mreal *cc3 )
 {
 	GetMesh().quad_plot ( pp0, pp1, pp2, pp3, cc0, cc1, cc2, cc3 );
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::cloud_plot(long nx,long ny,long nz,float *pp,float *a,float alpha)
+void mglGraphIDTF::cloud_plot(long nx,long ny,long nz,mreal *pp,mreal *a,mreal alpha)
 {
 	register long i,j,k,i0;
 	if(!pp || !a || !DrawFace || alpha==0)	return;
-	float *aa=new float[nx*ny*nz];
-	float *cc=new float[4*nx*ny*nz];
+	mreal *aa=new mreal[nx*ny*nz];
+	mreal *cc=new mreal[4*nx*ny*nz];
 	bool *tt=new bool[nx*ny*nz];
-	if(!aa || !tt)
-	{	delete []aa;	delete []tt;	return;	}
+	if(!aa || !cc || !tt)
+	{	delete []aa;	delete []cc;	delete []tt;	return;	}
 	for(i=0;i<nx*ny*nz;i++)
 	{
-		register float t,s;
+		register mreal t,s;
 		register long k;
 		const long n = NumCol-1;
 		mglColor c;
@@ -1783,8 +1793,8 @@ void mglGraphIDTF::cloud_plot(long nx,long ny,long nz,float *pp,float *a,float a
 	StartAutoGroup( GroupName.c_str() );
 	for(i=0;i<nx;i++)
 	{
-		float *p=new float[3*ny*nz];
-		float *c=new float[4*ny*nz];
+		mreal *p=new mreal[3*ny*nz];
+		mreal *c=new mreal[4*ny*nz];
 		bool *t=new bool[ny*nz];
 		long i1;
 		for(j=0;j<ny;j++) for(k=0;k<nz;k++)
@@ -1809,8 +1819,8 @@ void mglGraphIDTF::cloud_plot(long nx,long ny,long nz,float *pp,float *a,float a
 	StartAutoGroup( GroupName.c_str() );
 	for(j=0;j<ny;j++)
 	{
-		float *p=new float[3*nx*nz];
-		float *c=new float[4*nx*nz];
+		mreal *p=new mreal[3*nx*nz];
+		mreal *c=new mreal[4*nx*nz];
 		bool *t=new bool[nx*nz];
 		long i1;
 		for(i=0;i<nx;i++) for(k=0;k<nz;k++)
@@ -1835,8 +1845,8 @@ void mglGraphIDTF::cloud_plot(long nx,long ny,long nz,float *pp,float *a,float a
 	StartAutoGroup( GroupName.c_str() );
 	for(k=0;k<nz;k++)
 	{
-		float *p=new float[3*nx*ny];
-		float *c=new float[4*nx*ny];
+		mreal *p=new mreal[3*nx*ny];
+		mreal *c=new mreal[4*nx*ny];
 		bool *t=new bool[nx*ny];
 		long i1;
 		for(i=0;i<nx;i++) for(j=0;j<ny;j++)
@@ -1865,7 +1875,7 @@ void mglGraphIDTF::cloud_plot(long nx,long ny,long nz,float *pp,float *a,float a
 	GroupName.append( "_Cells" );
 	StartAutoGroup( GroupName.c_str() );
 	{
-		register float t,s;
+		register mreal t,s;
 		register long k;
 		const long n = NumCol-1;
 		mglColor c;
@@ -1902,7 +1912,7 @@ void mglGraphIDTF::cloud_plot(long nx,long ny,long nz,float *pp,float *a,float a
 		Material.emissive = false;
 		Material.vertex_color = false;
 		Material.texture = texture.name;
-		Material.texturealpha = true;
+		Material.textumrealpha = true;
 		Mesh.ModelMaterials.push_back ( AddMaterial ( Material ) );
 		for ( i=0;i<nx*ny*nz;i++ )
 		{
@@ -1953,14 +1963,14 @@ void mglGraphIDTF::cloud_plot(long nx,long ny,long nz,float *pp,float *a,float a
 	delete []aa;	delete []tt;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::quad_plot_a ( float *p0,float *p1,float *p2,float *p3,
-                                 float a0,float a1,float a2,float a3,float alpha )
+void mglGraphIDTF::quad_plot_a ( mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+                                 mreal a0,mreal a1,mreal a2,mreal a3,mreal alpha )
 {
-	register float t,s;
+	register mreal t,s;
 	register long k;
 	long n = NumCol-1;
 	mglColor c;
-	float c0[4], c1[4], c2[4], c3[4];
+	mreal c0[4], c1[4], c2[4], c3[4];
 
 	s = a0;
 	t = alpha* ( alpha>0 ? ( s+1.f ) * ( s+1.f ) : ( 1.f-s ) * ( s-1.f ) );
@@ -1993,37 +2003,37 @@ void mglGraphIDTF::quad_plot ( const mglPoint& p0, const mglPoint& p1, const mgl
 {
 //	if ( dbg ) fprintf ( stderr, "quad_plot\n p0 %f %f %f\n p1 %f %f %f\n p2 %f %f %f\n p3 %f %f %f\n",
 //		                     p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p3.x, p3.y, p3.z );
-	float pp0[3] = {p0.x, p0.y, p0.z};
-	float pp1[3] = {p1.x, p1.y, p1.z};
-	float pp2[3] = {p2.x, p2.y, p2.z};
-	float pp3[3] = {p3.x, p3.y, p3.z};
+	mreal pp0[3] = {p0.x, p0.y, p0.z};
+	mreal pp1[3] = {p1.x, p1.y, p1.z};
+	mreal pp2[3] = {p2.x, p2.y, p2.z};
+	mreal pp3[3] = {p3.x, p3.y, p3.z};
 	GetMesh().quad_plot ( pp0, pp1, pp2, pp3, CDef, CDef, CDef, CDef );
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::quad_plot_n ( float *pp0,float *pp1,float *pp2,float *pp3,
-                                 float *cc0,float *cc1,float *cc2,float *cc3,
-                                 float *nn0,float *nn1,float *nn2,float *nn3 )
+void mglGraphIDTF::quad_plot_n ( mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+                                 mreal *cc0,mreal *cc1,mreal *cc2,mreal *cc3,
+                                 mreal *nn0,mreal *nn1,mreal *nn2,mreal *nn3 )
 {
 	GetMesh().quad_plot_n ( pp0, pp1, pp2, pp3, cc0, cc1, cc2, cc3, nn0, nn1, nn2, nn3 );
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::trig_plot ( float *pp0,float *pp1,float *pp2,
-                               float *cc0,float *cc1,float *cc2 )
+void mglGraphIDTF::trig_plot ( mreal *pp0,mreal *pp1,mreal *pp2,
+                               mreal *cc0,mreal *cc1,mreal *cc2 )
 {
 	GetMesh().trig_plot ( pp0, pp1, pp2, cc0, cc1, cc2 );
 }
 //-----------------------------------------------------------------------------
 void mglGraphIDTF::trig_plot ( const mglPoint& p0, const mglPoint& p1, const mglPoint& p2 )
 {
-	float pp0[3] = {p0.x, p0.y, p0.z};
-	float pp1[3] = {p1.x, p1.y, p1.z};
-	float pp2[3] = {p2.x, p2.y, p2.z};
+	mreal pp0[3] = {p0.x, p0.y, p0.z};
+	mreal pp1[3] = {p1.x, p1.y, p1.z};
+	mreal pp2[3] = {p2.x, p2.y, p2.z};
 	GetMesh().trig_plot ( pp0, pp1, pp2, CDef, CDef, CDef );
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::trig_plot_n ( float *pp0,float *pp1,float *pp2,
-                                 float *cc0,float *cc1,float *cc2,
-                                 float *nn0,float *nn1,float *nn2 )
+void mglGraphIDTF::trig_plot_n ( mreal *pp0,mreal *pp1,mreal *pp2,
+                                 mreal *cc0,mreal *cc1,mreal *cc2,
+                                 mreal *nn0,mreal *nn1,mreal *nn2 )
 {
 	GetMesh().trig_plot_n ( pp0, pp1, pp2, cc0, cc1, cc2, nn0, nn1, nn2 );
 }
@@ -2033,7 +2043,7 @@ void mglGraphIDTF::point_plot ( const mglPoint& p, const mglColor& c )
 	GetPointSet().point_plot ( p, c );
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::line_plot_s ( float *p1,float *p2,float *c1,float *c2,bool all )
+void mglGraphIDTF::line_plot_s ( mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all )
 {
 	GetLineSet().line_plot ( p1, p2, c1, c2 );
 }
@@ -2041,12 +2051,12 @@ void mglGraphIDTF::line_plot_s ( float *p1,float *p2,float *c1,float *c2,bool al
 void mglGraphIDTF::line_plot ( const mglPoint& p0, const mglPoint& p1 )
 {
 // if (dbg) fprintf(stderr, "line_plot p0 %f %f %f p1 %f %f %f\n", p0.x, p0.y, p0.z, p1.x, p1.y, p1.z);
-	float pp0[3] = {p0.x, p0.y, p0.z};
-	float pp1[3] = {p1.x, p1.y, p1.z};
+	mreal pp0[3] = {p0.x, p0.y, p0.z};
+	mreal pp1[3] = {p1.x, p1.y, p1.z};
 	GetLineSet().line_plot ( pp0, pp1, CDef, CDef );
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::line_plot ( float *pp0,float *pp1,float *cc0,float *cc1,bool all )
+void mglGraphIDTF::line_plot ( mreal *pp0,mreal *pp1,mreal *cc0,mreal *cc1,bool all )
 {
 	if ( !DrawFace )	{	line_plot_s ( pp0,pp1,cc0,cc1,all );	return;	}
 	if ( PDef == 0x0000 ) 	{	return;	}
@@ -2054,17 +2064,17 @@ void mglGraphIDTF::line_plot ( float *pp0,float *pp1,float *cc0,float *cc1,bool 
 	line_plot_s ( pp0,pp1,cc0,cc1,all );
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
+void mglGraphIDTF::surf_plot ( long n,long m,mreal *pp,mreal *cc,bool *tt )
 {
 	register long i,j,i0;
-	float *c,*ns,d1[3],d2[3];
+	mreal *c,*ns,d1[3],d2[3];
 	long k=3*n;
 	size_t *cid=NULL;
 	size_t *pid=NULL;
 	if ( !pp || n<2 || m<2 )	return;
 	PostScale ( pp,n*m );	LightScale();
 	if ( !DrawFace )	{	wire_plot ( n,m,pp,cc,tt );	return;	}
-	ns = new float[3*n*m];
+	ns = new mreal[3*n*m];
 	for ( i=0;i<n-1;i++ )	for ( j=0;j<m-1;j++ )
 		{
 			i0 = 3* ( i+n*j );
@@ -2075,7 +2085,7 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 			ns[i0+1]= ( d2[0]*d1[2]-d2[2]*d1[0] );
 			ns[i0+2]= ( d2[1]*d1[0]-d2[0]*d1[1] );
 		}
-	memcpy ( ns+3* ( m-1 ) *n,ns+3* ( m-2 ) *n,3*n*sizeof ( float ) );
+	memcpy ( ns+3* ( m-1 ) *n,ns+3* ( m-2 ) *n,3*n*sizeof ( mreal ) );
 	for ( i=0;i<m;i++ )
 	{
 		i0 = 3* ( n-2+i*n );
@@ -2085,14 +2095,15 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 	}
 // Let us check if the surface is is actually in one color
 	bool onecolor=false;
-	const float *thecol=NULL;  // the color of the surface
-	if ( !(vertex_color_flag && UseLight) )
+	const mreal *thecol=NULL;  // the color of the surface
+	if ( !(vertex_color_flag && UseLight) || textures_flag )
 	if ( cc )
 	{
 		onecolor=true;
-		for ( i=4;i<n*m;i++ )
+		for ( i=1;i<n*m;i++ )
 		{
-			if (cc[0] != cc[i] || cc[1] != cc[i+1] || cc[2] != cc[i+2] || (UseAlpha && cc[3] != cc[i+3]))
+			i0 = 4*i;
+			if (cc[0] != cc[i0] || cc[1] != cc[i0+1] || cc[2] != cc[i0+2] || (UseAlpha && cc[3] != cc[i0+3]))
 			{
 				onecolor=false;
 				break;
@@ -2119,24 +2130,35 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 		Mesh.vertex_color = false;
 	}
 // Let us check if the surface is flat
-#define FLT_EPS	(0.+2e-07)
+//#define FLT_EPS	(0.+2e-07)
+#define FLT_EPS	(0.000001)
 	bool flat = false;
 	if ( textures_flag && cc )
 	{
 		flat = true;
 		const mglPoint dx = mglPoint(pp[3*1+0]-pp[0], pp[3*1+1]-pp[1], pp[3*1+2]-pp[2]);
+//	fprintf(stderr,"dx0 %f %f %f\n", pp[3*1+0]-pp[0], pp[3*1+1]-pp[1], pp[3*1+2]-pp[2]);
 		const mglPoint dy = mglPoint(pp[3*n+0]-pp[0], pp[3*n+1]-pp[1], pp[3*n+2]-pp[2]);
-		for ( j=0;j<m;j++ ) for ( i=0;i<n;i++ )
+//	fprintf(stderr,"dy0 %f %f %f\n", pp[3*n+0]-pp[0], pp[3*n+1]-pp[1], pp[3*n+2]-pp[2]);
+		for ( j=0;j<m;j++ )
+		{
+		for ( i=0;i<n;i++ )
 		{
 			i0=i+n*j;
-			if ( !tt[i0] ||
+			if ( ( tt && !tt[i0] ) ||
 				( i>0 && Norm( mglPoint(pp[3*(i0)+0]-pp[3*(i0-1)+0], pp[3*(i0)+1]-pp[3*(i0-1)+1], pp[3*(i0)+2]-pp[3*(i0-1)+2])  - dx ) > FLT_EPS ) ||
 				( j>0 && Norm( mglPoint(pp[3*(i0)+0]-pp[3*(i0-n)+0], pp[3*(i0)+1]-pp[3*(i0-n)+1], pp[3*(i0)+2]-pp[3*(i0-n)+2])  - dy ) > FLT_EPS ) )
 			{
-//	fprintf(stderr,"points %f %f %f x-1 %f %f %f y-1 %f %f %f tt %u\n", pp[3*i0+0], pp[3*i0+1], pp[3*i0+2], pp[3*(i0-1)+0], pp[3*(i0-1)+1], pp[3*(i0-1)+2], pp[3*(i0-n)+0], pp[3*(i0-n)+1], pp[3*(i0-n)+2], tt[i0] );
+//	fprintf(stderr,"points %f %f %f x-1 %f %f %f y-1 %f %f %f tt %u fl %u\n", pp[3*i0+0], pp[3*i0+1], pp[3*i0+2], pp[3*(i0-1)+0], pp[3*(i0-1)+1], pp[3*(i0-1)+2], pp[3*(i0-n)+0], pp[3*(i0-n)+1], pp[3*(i0-n)+2], tt[i0], flat );
+//	fprintf(stderr,"n %ld m %ld i %ld j %ld\n", n, m, i, j);
+//	fprintf(stderr,"dx %f %f %f\n", pp[3*(i0)+0]-pp[3*(i0-1)+0], pp[3*(i0)+1]-pp[3*(i0-1)+1], pp[3*(i0)+2]-pp[3*(i0-1)+2]);
+//	fprintf(stderr,"dy %f %f %f\n", pp[3*(i0)+0]-pp[3*(i0-n)+0], pp[3*(i0)+1]-pp[3*(i0-n)+1], pp[3*(i0)+2]-pp[3*(i0-n)+2]);
 				flat = false;
 				break;
 			}
+		}
+			if ( !flat )
+				break;
 		}
 //fprintf(stderr, "flat %u\n", flat );
 	}
@@ -2153,14 +2175,14 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 				texture.image.RGBPixels[4*i+3] = cc[4*i+3]*255.0f;
 		}
 		u3dMaterial Material;
-		Material.diffuse = BC;
+		Material.diffuse  = BC;
 		Material.specular = BC;
 		Material.emissive = WC;
 		Material.reflectivity = 0.0f;
 		Material.opacity = 1.0f;
 		Material.vertex_color = false;
 		Material.texture = texture.name;
-		Material.texturealpha = UseAlpha;
+		Material.textumrealpha = UseAlpha;
 		Mesh.ModelMaterials.push_back ( AddMaterial ( Material ) );
 		TexCoord2D texCoord;
                 texCoord.U =       0.5f/n; texCoord.V =       0.5f/m; Mesh.textureCoords.push_back( texCoord );
@@ -2210,7 +2232,7 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 	pid = new size_t[n*m];
 	for ( i=0;i<n*m;i++ )
 	{
-		if ( tt[i] )
+		if ( !tt || tt[i] )
 		{
 			mglPoint point;
 			point.x = Mesh.invpos[0][0]*pp[3*i]+Mesh.invpos[0][1]*pp[3*i+1]+Mesh.invpos[0][2]*pp[3*i+2]+Mesh.invpos[0][3];
@@ -2223,18 +2245,18 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 		{
 			pid[i] = SIZE_MAX;
 		}
-		float nn = sqrt ( ns[3*i]*ns[3*i]+ns[3*i+1]*ns[3*i+1]+ns[3*i+2]*ns[3*i+2] );
+		mreal nn = sqrt ( ns[3*i]*ns[3*i]+ns[3*i+1]*ns[3*i+1]+ns[3*i+2]*ns[3*i+2] );
 		if ( nn != 0.0 ) { ns[3*i]/=nn; ns[3*i+1]/=nn; ns[3*i+2]/=nn; }
 	}
 // Do lighting
 	if ( !textures_flag && vertex_color_flag && (cc || UseLight) )
 	{
 		cid = new size_t[n*m];
-		const float color [4] = {1.0f, 1.0f, 1.0f, 1.0f};
+		const mreal color [4] = {1.0f, 1.0f, 1.0f, 1.0f};
 		Mesh.AddModelMaterial ( color, false, true );
 		for ( i=0;i<n*m;i++ )
 		{
-			float col [4];
+			mreal col [4];
 			if (cc)
 			{
 				col2col ( cc+4*i, ns+3*i, col );
@@ -2261,21 +2283,21 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 				texture.image.RGBPixels[4*i+3] = cc[4*i+3]*255.0f;
 		}
 		u3dMaterial Material;
-		Material.diffuse = WC;
-		Material.specular = 0.5*WC;
-		Material.emissive = BC;
+		Material.diffuse  = diff_int * WC;
+		Material.specular = spec_int * WC;
+		Material.emissive = emis_int * WC;
 		Material.reflectivity = 0.25f;
 		Material.opacity = 1.0f;
 		Material.vertex_color = false;
 		Material.texture = texture.name;
-		Material.texturealpha = UseAlpha;
+		Material.textumrealpha = UseAlpha;
 		Mesh.ModelMaterials.push_back ( AddMaterial ( Material ) );
 		for ( j=0;j<m;j++ ) for ( i=0;i<n;i++ )
-			if ( tt[i+n*j] )
+			if ( !tt || tt[i+n*j] )
 				Mesh.textureCoords.push_back ( TexCoord2D ( (0.5 + i)/n, (0.5 + j)/m ) );
 	}
 // if only one color is used
-	if (!cc && !(vertex_color_flag && UseLight))
+	if ( onecolor )
 	{
 		Mesh.AddModelMaterial ( thecol, false, false );
 		Mesh.vertex_color = false;
@@ -2293,7 +2315,7 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 		{										\
 			if (cc)									\
 			{									\
-				float col [4];							\
+				mreal col [4];							\
 				size_t mid;							\
 				col[0] = (c[4*(i1)+0] + c[4*(i2)+0] + c[4*(i3)+0])/3.0f;	\
 				col[1] = (c[4*(i1)+1] + c[4*(i2)+1] + c[4*(i3)+1])/3.0f;	\
@@ -2329,11 +2351,11 @@ void mglGraphIDTF::surf_plot ( long n,long m,float *pp,float *cc,bool *tt )
 	if (cid) delete []cid;
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::arrow_plot ( float *p1,float *p2,char st )
+void mglGraphIDTF::arrow_plot ( mreal *p1,mreal *p2,char st )
 {
 //	 mglGraphAB::arrow_plot(p1, p2, st);
 	if ( !strchr ( "AVKSDTIO",st ) )	return;
-	float ss = 0.35*ArrowSize*font_factor;
+	mreal ss = 0.35*ArrowSize*font_factor;
 	mglPoint p = mglPoint ( p1[0], p1[1], p1[2] );
 	mglPoint l = mglPoint ( p2[0], p2[1], p2[2] )-p;	// unit vector in the direction of the arrow
 	if ( Norm ( l ) == 0.0 ) return;
@@ -2387,7 +2409,7 @@ void mglGraphIDTF::arrow_plot ( float *p1,float *p2,char st )
 	UseLight = ul;
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::InPlot ( float x1,float x2,float y1,float y2, bool rel )
+void mglGraphIDTF::InPlot ( mreal x1,mreal x2,mreal y1,mreal y2, bool rel )
 {
 	mglGraphAB::InPlot ( x1,x2,y1,y2, rel);
 	points_finished = lines_finished = mesh_finished = true;
@@ -2684,10 +2706,10 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::quads_plot(long n,float *pp,float *cc,bool *tt)
+void mglGraphIDTF::quads_plot(long n,mreal *pp,mreal *cc,bool *tt)
 {
 	register long i;
-	float *p=NULL, *c=NULL;
+	mreal *p=NULL, *c=NULL;
 	u3dMesh *pMesh = NULL;;
 	u3dModel *pModel = NULL;;
 	u3dLineSet *pLineSet = NULL;
@@ -2708,7 +2730,7 @@ void mglGraphIDTF::quads_plot(long n,float *pp,float *cc,bool *tt)
 		{
 			if ( pMesh->vertex_color )
 			{
-				const float color[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+				const mreal color[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 				mid = pMesh->AddModelMaterial ( color, false, true );
 			}
 		}
@@ -2737,7 +2759,7 @@ void mglGraphIDTF::quads_plot(long n,float *pp,float *cc,bool *tt)
 				}
 				else
 				{
-					float color[4];
+					mreal color[4];
 					color[0] = ( c[0]+ c[4]+c[12] ) /3.0f;
 					color[1] = ( c[1]+ c[5]+c[13] ) /3.0f;
 					color[2] = ( c[2]+ c[6]+c[14] ) /3.0f;
@@ -2754,7 +2776,7 @@ void mglGraphIDTF::quads_plot(long n,float *pp,float *cc,bool *tt)
 			}
 			else
 			{
-				float color[4];
+				mreal color[4];
 				color[3] = 1.0f;
 				color[0] = ( c[ 0+0] + c[ 4+0] ) /2.0f;
 				color[1] = ( c[ 0+1] + c[ 4+1] ) /2.0f;
@@ -2788,7 +2810,7 @@ void mglGraphIDTF::quads_plot(long n,float *pp,float *cc,bool *tt)
 		{
 			if ( pMesh->vertex_color )
 			{
-				const float color[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+				const mreal color[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 				mid = pMesh->AddModelMaterial ( color, false, true );
 				cid = pMesh->AddColor ( CDef );
 			}
@@ -2838,7 +2860,7 @@ void mglGraphIDTF::quads_plot(long n,float *pp,float *cc,bool *tt)
 }
 //-----------------------------------------------------------------------------
 // I do not remember what problem this workaround was initially for
-void mglGraphIDTF::Putsw(mglPoint p,const wchar_t *text,const char *font,float size,char dir,float shift)
+void mglGraphIDTF::Putsw(mglPoint p,const wchar_t *text,const char *font,mreal size,char dir,mreal shift)
 {
 	bool disable_compression_sav = disable_compression_flag;
 	bool vertex_color_sav = vertex_color_flag;
@@ -2848,13 +2870,13 @@ void mglGraphIDTF::Putsw(mglPoint p,const wchar_t *text,const char *font,float s
 	disable_compression_flag = disable_compression_sav;
 	vertex_color_flag = vertex_color_sav;
 }
-float mglGraphIDTF::Putsw(mglPoint p,mglPoint l,const wchar_t *text,char font,float size)
+mreal mglGraphIDTF::Putsw(mglPoint p,mglPoint l,const wchar_t *text,char font,mreal size)
 {
 	bool disable_compression_sav = disable_compression_flag;
 	bool vertex_color_sav = vertex_color_flag;
 	disable_compression_flag = true;
 	vertex_color_flag = false;
-	float ret = mglGraphAB::Putsw(p, l, text, font, size);
+	mreal ret = mglGraphAB::Putsw(p, l, text, font, size);
 	disable_compression_flag = disable_compression_sav;
 	vertex_color_flag = vertex_color_sav;
 	return ret;

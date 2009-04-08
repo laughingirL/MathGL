@@ -46,7 +46,7 @@ mglGraphZB::~mglGraphZB()
 	if(C)	{	delete []C;	delete []Z;	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::Ball(float x,float y,float z,mglColor col,float alpha)
+void mglGraphZB::Ball(mreal x,mreal y,mreal z,mglColor col,mreal alpha)
 {
 	if(alpha==0)	return;
 	if(alpha<0)	{	alpha = -alpha;	}
@@ -55,7 +55,7 @@ void mglGraphZB::Ball(float x,float y,float z,mglColor col,float alpha)
 	unsigned char r[4];
 	Finished = false;
 	alpha = Transparent ? alpha : 1;
-	float p[3] = {x,y,z}, v, u = 1./(9*PenWidth*PenWidth);
+	mreal p[3] = {x,y,z}, v, u = 1./(9*PenWidth*PenWidth);
 	PostScale(p,1);
 	r[0] = (unsigned char)(255.f*col.r);
 	r[1] = (unsigned char)(255.f*col.g);
@@ -74,7 +74,7 @@ void mglGraphZB::Ball(float x,float y,float z,mglColor col,float alpha)
 	UseAlpha = aa;
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::ball(float *p,float *c)
+void mglGraphZB::ball(mreal *p,mreal *c)
 {
 	unsigned char r[4];
 	Finished = false;
@@ -85,7 +85,7 @@ void mglGraphZB::ball(float *p,float *c)
 	bool aa=UseAlpha;	UseAlpha = true;
 	register long i,j;
 	long w = long(5.5+fabs(PenWidth));
-	float v, u = 1./(4*PenWidth*PenWidth);
+	mreal v, u = 1./(4*PenWidth*PenWidth);
 	for(i=-w;i<=w;i++)	for(j=-w;j<=w;j++)
 	{
 		v = (i*i+j*j)*u;
@@ -96,22 +96,22 @@ void mglGraphZB::ball(float *p,float *c)
 	UseAlpha = aa;
 }
 //-----------------------------------------------------------------------------
-unsigned char* mglGraphZB::col2int(mglColor c,float a,unsigned char *r)
+unsigned char* mglGraphZB::col2int(mglColor c,mreal a,unsigned char *r)
 {
-	float cc[4] = {c.r,c.g,c.b,a};
+	mreal cc[4] = {c.r,c.g,c.b,a};
 	return col2int(cc,0,r);
 }
 //-----------------------------------------------------------------------------
-unsigned char* mglGraphZB::col2int(float *c,float *n,unsigned char *r)
+unsigned char* mglGraphZB::col2int(mreal *c,mreal *n,unsigned char *r)
 {
 	register long i,j;
 	static unsigned char u[4];
-	register float b0=c[0],b1=c[1],b2=c[2];
+	register mreal b0=c[0],b1=c[1],b2=c[2];
 	if(r==0) r = u;
 	if(c[3]<=0)	{	memset(r,0,4*sizeof(unsigned char));	return r;	}
 	if(UseLight && n)
 	{
-		float d0,d1,d2,nn;
+		mreal d0,d1,d2,nn;
 		b0 *= AmbBr;		b1 *= AmbBr;		b2 *= AmbBr;
 		for(i=0;i<10;i++)
 		{
@@ -140,18 +140,18 @@ unsigned char* mglGraphZB::col2int(float *c,float *n,unsigned char *r)
 	return r;
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::pnt_plot(long x,long y,float z,unsigned char c[4])
+void mglGraphZB::pnt_plot(long x,long y,mreal z,unsigned char c[4])
 {
 	long i0=x+Width*(Height-1-y), n=Width*Height;
 	if(x<0 || x>=Width || y<0 || y>=Height)	return;
-	float *zz = Z+i0;
+	mreal *zz = Z+i0;
 #ifdef MGL_ABUF_8
 	unsigned char *cc = C+4*i0,*cf=cc+28*n;
 #else
 	unsigned char *cc = C+4*i0,*cf=cc+12*n;
 #endif
 
-	float zf = FogDist*(z/Depth-0.5-FogDz);
+	mreal zf = FogDist*(z/Depth-0.5-FogDz);
 	if(zf<0)
 	{
 		int d = int(255.f-255.f*exp(5.f*zf));
@@ -300,19 +300,19 @@ void mglGraphZB::Clf(mglColor Back)
 	register long i,n=Width*Height;
 	memset(C,0,32*n);
 	for(i=0;i<n;i++)	Z[i] = -1e20f;
-//	for(i=1;i<Height;i++)	memcpy(Z+i*Width,Z,Width*sizeof(float));
-	for(i=1;i<8;i++)	memcpy(Z+i*n,Z,n*sizeof(float));
+//	for(i=1;i<Height;i++)	memcpy(Z+i*Width,Z,Width*sizeof(mreal));
+	for(i=1;i<8;i++)	memcpy(Z+i*n,Z,n*sizeof(mreal));
 	Finished = false;
 }
 //-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-20)*v + (r3+30-r1-r2)*u*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y) and selected one pair which 0<u<1 and 0<v<1.*/
-void mglGraphZB::quad_plot(float *pp0,float *pp1,float *pp2,float *pp3,
-					float *cc0,float *cc1,float *cc2,float *cc3)
+void mglGraphZB::quad_plot(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+					mreal *cc0,mreal *cc1,mreal *cc2,mreal *cc3)
 {
 	unsigned char r[4];
 	long y1,x1,y2,x2;
-	float d1[3],d2[3],d3[3],c1[4],c2[4],c3[4];
-	float cs[4],ns[3],dd,dsx,dsy;
+	mreal d1[3],d2[3],d3[3],c1[4],c2[4],c3[4];
+	mreal cs[4],ns[3],dd,dsx,dsy;
 
 	d1[0] = pp1[0]-pp0[0];	d2[0] = pp2[0]-pp0[0];	d3[0] = pp3[0]+pp0[0]-pp1[0]-pp2[0];
 	d1[1] = pp1[1]-pp0[1];	d2[1] = pp2[1]-pp0[1];	d3[1] = pp3[1]+pp0[1]-pp1[1]-pp2[1];
@@ -334,7 +334,7 @@ void mglGraphZB::quad_plot(float *pp0,float *pp1,float *pp2,float *pp3,
 //	if(dsx==0 && dsy==0)	// TODO: check it !!!
 	if((d1[0]==0 && d1[1]==0) || (d2[0]==0 && d2[1]==0) || (pp1[0]==pp3[0] && pp1[1]==pp3[1]) || (pp2[0]==pp3[0] && pp2[1]==pp3[1]))
 	{
-		float ps[3];
+		mreal ps[3];
 		ps[0] = (pp0[0]+pp1[0]+pp2[0]+pp3[0])/4;
 		ps[1] = (pp0[1]+pp1[1]+pp2[1]+pp3[1])/4;
 		ps[2] = (pp0[2]+pp1[2]+pp2[2]+pp3[2])/4;
@@ -350,7 +350,7 @@ void mglGraphZB::quad_plot(float *pp0,float *pp1,float *pp2,float *pp3,
 	}
 
 	register long i,j,g;
-	register float u,v,s,xx,yy,q;
+	register mreal u,v,s,xx,yy,q;
 	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
 		xx = (i-pp0[0]);	yy = (j-pp0[1]);
@@ -384,14 +384,14 @@ void mglGraphZB::quad_plot(float *pp0,float *pp1,float *pp2,float *pp3,
 }
 //-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-20)*v + (r3+30-r1-r2)*u*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined 	for each point (x,y) and selected one pair which 0<u<1 and 0<v<1. 	In difference mglGraphZB::quad_plot the normal is also interpolated.*/
-void mglGraphZB::quad_plot_n(float *pp0,float *pp1,float *pp2,float *pp3,
-					float *cc0,float *cc1,float *cc2,float *cc3,
-					float *nn0,float *nn1,float *nn2,float *nn3)
+void mglGraphZB::quad_plot_n(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+					mreal *cc0,mreal *cc1,mreal *cc2,mreal *cc3,
+					mreal *nn0,mreal *nn1,mreal *nn2,mreal *nn3)
 {
 	unsigned char r[4];
 	long y1,x1,y2,x2;
-	float d1[3],d2[3],d3[3],c1[4],c2[4],c3[4],n1[3],n2[3],n3[3];
-	float cs[4],ns[3],dd,dsx,dsy;
+	mreal d1[3],d2[3],d3[3],c1[4],c2[4],c3[4],n1[3],n2[3],n3[3];
+	mreal cs[4],ns[3],dd,dsx,dsy;
 
 	d1[0] = pp1[0]-pp0[0];	d2[0] = pp2[0]-pp0[0];	d3[0] = pp3[0]+pp0[0]-pp1[0]-pp2[0];
 	d1[1] = pp1[1]-pp0[1];	d2[1] = pp2[1]-pp0[1];	d3[1] = pp3[1]+pp0[1]-pp1[1]-pp2[1];
@@ -416,7 +416,7 @@ void mglGraphZB::quad_plot_n(float *pp0,float *pp1,float *pp2,float *pp3,
 //	if(dsx==0 && dsy==0)	// TODO: check it !!!
 	if((d1[0]==0 && d1[1]==0) || (d2[0]==0 && d2[1]==0) || (pp1[0]==pp3[0] && pp1[1]==pp3[1]) || (pp2[0]==pp3[0] && pp2[1]==pp3[1]))
 	{
-		float ps[3];
+		mreal ps[3];
 		ps[0] = (pp0[0]+pp1[0]+pp2[0]+pp3[0])/4;
 		ps[1] = (pp0[1]+pp1[1]+pp2[1]+pp3[1])/4;
 		ps[2] = (pp0[2]+pp1[2]+pp2[2]+pp3[2])/4;
@@ -432,7 +432,7 @@ void mglGraphZB::quad_plot_n(float *pp0,float *pp1,float *pp2,float *pp3,
 	}
 
 	register long i,j,g;
-	register float u,v,s,xx,yy,q;
+	register mreal u,v,s,xx,yy,q;
 	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
 		xx = (i-pp0[0]);	yy = (j-pp0[1]);
@@ -466,13 +466,13 @@ void mglGraphZB::quad_plot_n(float *pp0,float *pp1,float *pp2,float *pp3,
 }
 //-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-20)*v + (r3+30-r1-r2)*u*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y) and selected one pair which 0<u<1 and 0<v<1.*/
-void mglGraphZB::quad_plot_a(float *pp0,float *pp1,float *pp2,float *pp3,
-					float aa0,float aa1,float aa2,float aa3, float alpha)
+void mglGraphZB::quad_plot_a(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+					mreal aa0,mreal aa1,mreal aa2,mreal aa3, mreal alpha)
 {
 	unsigned char r[4];
 	long y1,x1,y2,x2;
-	float d1[3],d2[3],d3[3],a1,a2,a3;
-	float dd,dsx,dsy;
+	mreal d1[3],d2[3],d3[3],a1,a2,a3;
+	mreal dd,dsx,dsy;
 
 	d1[0] = pp1[0]-pp0[0];	d2[0] = pp2[0]-pp0[0];	d3[0] = pp3[0]+pp0[0]-pp1[0]-pp2[0];
 	d1[1] = pp1[1]-pp0[1];	d2[1] = pp2[1]-pp0[1];	d3[1] = pp3[1]+pp0[1]-pp1[1]-pp2[1];
@@ -491,7 +491,7 @@ void mglGraphZB::quad_plot_a(float *pp0,float *pp1,float *pp2,float *pp3,
 	register long i,j,k;
 	bool g;
 	long n = NumCol-1;
-	register float u,v,s,xx,yy,q;
+	register mreal u,v,s,xx,yy,q;
 	mglColor c;
 	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
@@ -529,13 +529,13 @@ void mglGraphZB::quad_plot_a(float *pp0,float *pp1,float *pp2,float *pp3,
 }
 //-----------------------------------------------------------------------------
 /* Linear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-20)*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y). Point plotted is u>0 and v>0 and u+v<1.*/
-void mglGraphZB::trig_plot(float *pp0,float *pp1,float *pp2,
-					float *cc0,float *cc1,float *cc2)
+void mglGraphZB::trig_plot(mreal *pp0,mreal *pp1,mreal *pp2,
+					mreal *cc0,mreal *cc1,mreal *cc2)
 {
 	unsigned char r[4];
 	long y1,x1,y2,x2;
-	float d1[3],d2[3],c1[4],c2[4];
-	float cs[4],ns[3],dxu,dxv,dyu,dyv;
+	mreal d1[3],d2[3],c1[4],c2[4];
+	mreal cs[4],ns[3],dxu,dxv,dyu,dyv;
 
 	d1[0] = pp1[0]-pp0[0];	d2[0] = pp2[0]-pp0[0];
 	d1[1] = pp1[1]-pp0[1];	d2[1] = pp2[1]-pp0[1];
@@ -559,7 +559,7 @@ void mglGraphZB::trig_plot(float *pp0,float *pp1,float *pp2,
 	x2 = imax(long(pp0[0]),imax(long(pp1[0]),long(pp2[0])));
 	y2 = imax(long(pp0[1]),imax(long(pp1[1]),long(pp2[1])));
 
-	register float u,v,xx,yy;
+	register mreal u,v,xx,yy;
 	register long i,j,g;
 	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
@@ -577,14 +577,14 @@ void mglGraphZB::trig_plot(float *pp0,float *pp1,float *pp2,
 }
 //-----------------------------------------------------------------------------
 /* Linear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-20)*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y). Point plotted is u>0 and v>0 and u+v<1.*/
-void mglGraphZB::trig_plot_n(float *pp0,float *pp1,float *pp2,
-					float *cc0,float *cc1,float *cc2,
-					float *nn0,float *nn1,float *nn2)
+void mglGraphZB::trig_plot_n(mreal *pp0,mreal *pp1,mreal *pp2,
+					mreal *cc0,mreal *cc1,mreal *cc2,
+					mreal *nn0,mreal *nn1,mreal *nn2)
 {
 	unsigned char r[4];
 	long y1,x1,y2,x2;
-	float d1[3],d2[3],c1[4],c2[4],n1[3],n2[3];
-	float cs[4],ns[3],dxu,dxv,dyu,dyv;
+	mreal d1[3],d2[3],c1[4],c2[4],n1[3],n2[3];
+	mreal cs[4],ns[3],dxu,dxv,dyu,dyv;
 
 	d1[0] = pp1[0]-pp0[0];	d2[0] = pp2[0]-pp0[0];
 	d1[1] = pp1[1]-pp0[1];	d2[1] = pp2[1]-pp0[1];
@@ -608,7 +608,7 @@ void mglGraphZB::trig_plot_n(float *pp0,float *pp1,float *pp2,
 	x2 = imax(long(pp0[0]),imax(long(pp1[0]),long(pp2[0])));
 	y2 = imax(long(pp0[1]),imax(long(pp1[1]),long(pp2[1])));
 
-	register float u,v,xx,yy;
+	register mreal u,v,xx,yy;
 	register long i,j,g;
 	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
@@ -628,10 +628,10 @@ void mglGraphZB::trig_plot_n(float *pp0,float *pp1,float *pp2,
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::line_plot_s(float *x1,float *x2,float *y1,float *y2,bool /*all*/)
+void mglGraphZB::line_plot_s(mreal *x1,mreal *x2,mreal *y1,mreal *y2,bool /*all*/)
 {
-	float kx,ky,kz,t,dd=1;
-	float c10,c11,c12;
+	mreal kx,ky,kz,t,dd=1;
+	mreal c10,c11,c12;
 
 	register long i;
 	kx = ky = kz = t = 0;
@@ -655,14 +655,14 @@ void mglGraphZB::line_plot_s(float *x1,float *x2,float *y1,float *y2,bool /*all*
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::line_plot(float *pp0,float *pp1,float *cc0,float *cc1,bool all)
+void mglGraphZB::line_plot(mreal *pp0,mreal *pp1,mreal *cc0,mreal *cc1,bool all)
 {
 	if(!DrawFace && FastNoFace)	{	line_plot_s(pp0,pp1,cc0,cc1,all);	return;	}
 	unsigned char r[4];
 	long y1,x1,y2,x2;
-	float dxu,dxv,dyu,dyv,dd,pw = fabs(PenWidth);
+	mreal dxu,dxv,dyu,dyv,dd,pw = fabs(PenWidth);
 	bool hor = fabs(pp0[0]-pp1[0])>fabs(pp0[1]-pp1[1]);
-	float d10,d11,d12, c10,c11,c12, b;
+	mreal d10,d11,d12, c10,c11,c12, b;
 
 	d10 = pp1[0]-pp0[0];	d11 = pp1[1]-pp0[1];
 	dd = sqrt(d10*d10 + d11*d11);
@@ -684,7 +684,7 @@ void mglGraphZB::line_plot(float *pp0,float *pp1,float *cc0,float *cc1,bool all)
 	x2 += int(pw+3.5);	y2 += int(pw+3.5);
 
 	bool aa=UseAlpha;
-	register float u,v,xx,yy;
+	register mreal u,v,xx,yy;
 	register long i,j;
 	register bool tt;
 	UseAlpha = true;
@@ -734,12 +734,12 @@ void mglGraphZB::line_plot(float *pp0,float *pp1,float *cc0,float *cc1,bool all)
 	UseAlpha = aa;
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::mark_plot(float *pp, char type)
+void mglGraphZB::mark_plot(mreal *pp, char type)
 {
 	unsigned char cs[4]={(unsigned char)(255.f*CDef[0]), (unsigned char)(255.f*CDef[1]),
 						(unsigned char)(255.f*CDef[2]), (unsigned char)(255.f*CDef[3])};
-	float p[12]={0,0,pp[2],0,0,pp[2],0,0,pp[2],0,0,pp[2]};
-	float v, ss=MarkSize*0.35*font_factor;
+	mreal p[12]={0,0,pp[2],0,0,pp[2],0,0,pp[2],0,0,pp[2]};
+	mreal v, ss=MarkSize*0.35*font_factor;
 	register long i,j,s;
 	if(type=='.' || ss==0)
 	{
@@ -756,9 +756,9 @@ void mglGraphZB::mark_plot(float *pp, char type)
 	}
 	else
 	{
-		float pw = PenWidth;	PenWidth = BaseLineWidth;
+		mreal pw = PenWidth;	PenWidth = BaseLineWidth;
 		int pd = PDef;	PDef = 0xffff;
-		register float zv = strchr("oOVDTS",type) ? pp[2]+BaseLineWidth : pp[2];
+		register mreal zv = strchr("oOVDTS",type) ? pp[2]+BaseLineWidth : pp[2];
 		switch(type)
 		{
 		case '+':
@@ -865,7 +865,7 @@ void mglGraphZB::SetSize(int w,int h)
 {
 	if(C)	{	delete []C;	delete []Z;	}
 	C = new unsigned char[w*h*32];		// ����� *1 ��� TranspType>0 !!!
-	Z = new float[w*h*8];
+	Z = new mreal[w*h*8];
 	mglGraphAB::SetSize(w,h);
 }
 //-----------------------------------------------------------------------------
@@ -883,7 +883,7 @@ void mglGraphZB::WriteSlice(int n)
 	free(p);
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line, char col)
+void mglGraphZB::Glyph(mreal x,mreal y, mreal f, int nt, const short *trig, int nl, const short *line, char col)
 {
 	mglGraphAB::Glyph(x, y,  f, nt, trig, nl, line, col);
 	// add for smoothing

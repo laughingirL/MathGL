@@ -2,6 +2,7 @@ AC_INIT(mgl/mgl_main.cpp)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(mgl)
 AC_CONFIG_SUBDIRS(libltdl)
+AC_CONFIG_HEADER(include/mgl/config.h)
 
 #MGL_RELEASE=1.4
 #AC_SUBST(MGL_RELEASE)
@@ -34,6 +35,20 @@ AC_SUBST(LIBLTDL)
 
 
 
+AC_ARG_ENABLE(double,
+[  --enable-double    Turn on double precision in MathGL library],
+[case "${enableval}" in
+  yes) double=true ;;
+  no)  double=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-double) ;;
+esac],[double=false])
+
+if (test x$double = xtrue) ;then
+    AC_DEFINE([MGL_USE_DOUBLE],1,[This define enables double precision in MathGL])
+else
+    AC_DEFINE([MGL_USE_DOUBLE],0,[This define enables double precision in MathGL])
+fi
+
 AC_ARG_ENABLE(all,
 [  --enable-all    Turn on all features],
 [case "${enableval}" in
@@ -58,10 +73,10 @@ AC_ARG_ENABLE(gsl,
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-gsl) ;;
 esac],[gsl=true])
 
-GSL_PROG=gsl-config
-AC_CHECK_PROG(GSL_FLAGS,$GSL_PROG,`$GSL_PROG --cflags`)
-AC_CHECK_PROG(GSL_LIBS,$GSL_PROG,`$GSL_PROG --libs`)
 if (test x$all = xtrue || test x$gsl = xtrue) ;then
+    GSL_PROG=gsl-config
+    AC_CHECK_PROG(GSL_FLAGS,$GSL_PROG,`$GSL_PROG --cflags`)
+    AC_CHECK_PROG(GSL_LIBS,$GSL_PROG,`$GSL_PROG --libs`)
     if test "$GSL_LIBS" ;then
 	test_gsl=true
     else
@@ -100,9 +115,9 @@ case "${host}" in
 	    [echo "Please install OpenGL library (lib${GL_LIBS}.a)"; exit])
 	GLUT_LIBS=glut32
 	AC_CHECK_HEADER([GL/glut.h],[(test x$all = xtrue || test x$glut = xtrue) && GLUT_FLAGS=-DHAVE_GLUT AC_SUBST(GLUT_FLAGS)],
-	    [(test x$all = xtrue || test x$glut = xtrue) && (echo "Please install FreeGLUT headers (GL/glut.h)"; exit)])
+	    [(test x$all = xtrue || test x$glut = xtrue) && (echo "Please install FreeGLUT headers (GL/glut.h)" && exit)])
 	AC_CHECK_LIB([${GLUT_LIBS}], [main], [(test x$all = xtrue || test x$glut = xtrue) && GLUT_LIBS=-l${GLUT_LIBS} AC_SUBST(GLUT_LIBS)],
-	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (lib${GLUT_LIBS}.a)"; exit])
+	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (lib${GLUT_LIBS}.a)" && exit])
        ;;
 
        *)
@@ -112,9 +127,9 @@ case "${host}" in
 	    [echo "Please install OpenGL library (lib${GL_LIBS}.a)"; exit])
 	GLUT_LIBS=glut
 	AC_CHECK_HEADER(GL/glut.h,[(test x$all = xtrue || test x$glut = xtrue) && GLUT_FLAGS=-DHAVE_GLUT AC_SUBST(GLUT_FLAGS)],
-	    [(test x$all = xtrue || test x$glut = xtrue) && (echo "Please install FreeGLUT headers (GL/glut.h)"; exit)])
+	    [(test x$all = xtrue || test x$glut = xtrue) && (echo "Please install FreeGLUT headers (GL/glut.h)" && exit)])
 	AC_CHECK_LIB([${GLUT_LIBS}], [main], [(test x$all = xtrue || test x$glut = xtrue) && GLUT_LIBS=-l${GLUT_LIBS} AC_SUBST(GLUT_LIBS)],
-	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (lib${GLUT_LIBS}.a)"; exit])
+	    [(test x$all = xtrue || test x$glut = xtrue) && echo "Please install FreeGLUT library (lib${GLUT_LIBS}.a)" && exit])
        ;;
 
 esac
@@ -183,10 +198,10 @@ AC_ARG_ENABLE(fltk,
   no)  fltk=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-fltk) ;;
 esac],[fltk=false])
-FLTK_PROG=fltk-config
-AC_CHECK_PROG(FLTK_FLAGS,$FLTK_PROG,`$FLTK_PROG --cxxflags`)
-AC_CHECK_PROG(FLTK_LIBS,$FLTK_PROG,`$FLTK_PROG --ldflags`)
 if (test x$all = xtrue || test x$fltk = xtrue) ;then
+    FLTK_PROG=fltk-config
+    AC_CHECK_PROG(FLTK_FLAGS,$FLTK_PROG,`$FLTK_PROG --cxxflags`)
+    AC_CHECK_PROG(FLTK_LIBS,$FLTK_PROG,`$FLTK_PROG --ldflags`)
     if test "$FLTK_FLAGS" && test "$FLTK_LIBS" ;then
 	test_fltk=true
     else
@@ -204,10 +219,10 @@ AC_ARG_ENABLE(wx,
   no)  wx=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-wx) ;;
 esac],[wx=false])
-WX_PROG=wx-config
-AC_CHECK_PROG(WX_FLAGS,$WX_PROG,`$WX_PROG --cflags`)
-AC_CHECK_PROG(WX_LIBS,$WX_PROG,`$WX_PROG --libs`)
 if (test x$all = xtrue || test x$wx = xtrue) ;then
+    WX_PROG=wx-config
+    AC_CHECK_PROG(WX_FLAGS,$WX_PROG,`$WX_PROG --cflags`)
+    AC_CHECK_PROG(WX_LIBS,$WX_PROG,`$WX_PROG --libs`)
     if test "$WX_FLAGS" && test "$WX_LIBS" ;then
 	test_wx=true
     else
@@ -239,9 +254,9 @@ AC_ARG_ENABLE(python,
   no)  python=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-python) ;;
 esac],[python=false])
-AC_CHECK_PROG(PYTHON_HEADERS,python-config,`python-config --cflags`)
-AC_CHECK_PROG(HAVE_SWIG,swig$EXEEXT,true)
 if (test x$langall = xtrue || test x$python = xtrue) ;then
+    AC_CHECK_PROG(PYTHON_HEADERS,python-config,`python-config --cflags`)
+    AC_CHECK_PROG(HAVE_SWIG,swig$EXEEXT,true)
     if (test "$PYTHON_HEADERS" && test "$HAVE_SWIG") ;then
 	test_python=true
 	AM_PATH_PYTHON()

@@ -21,7 +21,7 @@ libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$
 
 libmgl_la_CXXFLAGS = $(WIDGETS) -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
     -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(GIF_FLAGS) $(JPEG_FLAGS) $(TIFF_FLAGS) \
-    $(PNG_FLAGS) $(FLTK_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS) -fopenmp
+    $(PNG_FLAGS) $(FLTK_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS)
 
 if USE_GSL
 libmgl_la_LIBADD += $(GSL_LIBS)

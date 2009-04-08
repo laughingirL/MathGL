@@ -46,7 +46,7 @@ void mgl_delete_data(HMDT dat)
 void mgl_set_palette(HMGL gr, const char *colors)
 {	if(gr)	gr->SetPalette(colors);	}
 /// Set color in mglGraph::Pal array at index \a n.
-void mgl_set_pal_color(HMGL gr, int n, float r, float g, float b)
+void mgl_set_pal_color(HMGL gr, int n, mreal r, mreal g, mreal b)
 {	if(gr && n<100)	gr->Pal[n] = mglColor(r,g,b);	}
 /// Set number of colors in mglGraph::Pal array.
 void mgl_set_pal_num(HMGL gr, int num)
@@ -58,7 +58,7 @@ void mgl_set_rotated_text(HMGL gr, int rotated)
 void mgl_set_cut(HMGL gr, int cut)
 {	gr->Cut = cut;	}
 /// Set mglGraph::CutMin, mglGraph::CutMax.
-void mgl_set_cut_box(HMGL gr, float x1,float y1,float z1,float x2,float y2,float z2)
+void mgl_set_cut_box(HMGL gr, mreal x1,mreal y1,mreal z1,mreal x2,mreal y2,mreal z2)
 {	gr->CutMin = mglPoint(x1,y1,z1);	gr->CutMax = mglPoint(x2,y2,z2);	}
 /// Set type of transparency mglGraph::TranspType.
 void mgl_set_transp_type(HMGL gr, int type)
@@ -67,22 +67,22 @@ void mgl_set_transp_type(HMGL gr, int type)
 void mgl_set_transp(HMGL gr, int enable)
 {	gr->Transparent = enable;	}
 /// Set width of rectangles in mglGraph::Bars().
-void mgl_set_bar_width(HMGL gr, float width)
+void mgl_set_bar_width(HMGL gr, mreal width)
 {	gr->BarWidth = width;	}
 /// Set size of marks mglGraph::BaseLineWidth.
-void mgl_set_base_line_width(HMGL gr, float size)
+void mgl_set_base_line_width(HMGL gr, mreal size)
 {	gr->BaseLineWidth = size;	}
 /// Set size of marks mglGraph::MarkSize.
-void mgl_set_mark_size(HMGL gr, float size)
+void mgl_set_mark_size(HMGL gr, mreal size)
 {	gr->MarkSize = size;	}
 /// Set size of arrows mglGraph::ArrowSize.
-void mgl_set_arrow_size(HMGL gr, float size)
+void mgl_set_arrow_size(HMGL gr, mreal size)
 {	gr->ArrowSize = size;	}
 /// Set default font size mglGraph::FontSize.
-void mgl_set_font_size(HMGL gr, float size)
+void mgl_set_font_size(HMGL gr, mreal size)
 {	gr->FontSize = size;	}
 /// Set default alpha value mglGraph::AlphaDef.
-void mgl_set_alpha_default(HMGL gr, float alpha)
+void mgl_set_alpha_default(HMGL gr, mreal alpha)
 {	gr->AlphaDef = alpha;	}
 /// Set size of frame in pixels. Normally this function is called internaly.
 void mgl_set_size(HMGL gr, int width, int height)
@@ -138,7 +138,7 @@ void mgl_reset_frames(HMGL gr)
 void mgl_set_alpha(HMGL gr, int enable)
 {	gr->Alpha(enable);	}
 /// Set the fog distance.
-void mgl_set_fog(HMGL gr, float d, float dz)
+void mgl_set_fog(HMGL gr, mreal d, mreal dz)
 {	gr->Fog(d,dz);	}
 /// Set the using of light on/off.
 void mgl_set_light(HMGL gr, int enable)
@@ -147,14 +147,14 @@ void mgl_set_light(HMGL gr, int enable)
 void mgl_set_light_n(HMGL gr, int n, int enable)
 {	gr->Light(n, enable);	}
 /// Add white light source.
-void mgl_add_light(HMGL gr, int n, float x, float y, float z, char c)
+void mgl_add_light(HMGL gr, int n, mreal x, mreal y, mreal z, char c)
 {	gr->Light(n,mglPoint(x,y,z),c,0.5);	}
 /// Add a light source with color {r,g,b}.
-void mgl_add_light_rgb(HMGL gr, int n, float x, float y, float z, int infty,
-						float r, float g, float b,float i)
+void mgl_add_light_rgb(HMGL gr, int n, mreal x, mreal y, mreal z, int infty,
+						mreal r, mreal g, mreal b,mreal i)
 {	gr->Light(n,mglPoint(x,y,z),mglColor(r,g,b),i,infty);	}
 // Set ambient light brightness
-void mgl_set_ambbr(HMGL gr, float i)
+void mgl_set_ambbr(HMGL gr, mreal i)
 {	gr->Ambient(i);	}
 //-----------------------------------------------------------------------------
 //		Scale and rotate
@@ -166,31 +166,31 @@ void mgl_identity(HMGL gr)
 void mgl_clf(HMGL gr)
 {	gr->Clf();	}
 /// Clear up the frame
-void mgl_clf_rgb(HMGL gr, float r, float g, float b)
+void mgl_clf_rgb(HMGL gr, mreal r, mreal g, mreal b)
 {	gr->Clf(mglColor(r,g,b));	}
 /// Put further plotting in some region of whole frame surface.
 void mgl_subplot(HMGL gr, int nx,int ny,int m)
 {	gr->SubPlot(nx,ny,m);	}
 /// Put further plotting in some region of whole frame surface.
-void mgl_subplot_d(HMGL gr, int nx,int ny,int m,float dx,float dy)
+void mgl_subplot_d(HMGL gr, int nx,int ny,int m,mreal dx,mreal dy)
 {	gr->SubPlot(nx,ny,m,dx,dy);	}
 /// Put further plotting in some region of whole frame surface.
-void mgl_inplot(HMGL gr, float x1,float x2,float y1,float y2)
+void mgl_inplot(HMGL gr, mreal x1,mreal x2,mreal y1,mreal y2)
 {	gr->InPlot(x1,x2,y1,y2);	}
-void mgl_relplot(HMGL gr, float x1,float x2,float y1,float y2)
+void mgl_relplot(HMGL gr, mreal x1,mreal x2,mreal y1,mreal y2)
 {	gr->InPlot(x1,x2,y1,y2,true);	}
 void mgl_columnplot(HMGL gr, int num, int i)
 {	gr->ColumnPlot(num,i);	}
 /// Set aspect ratio for further plotting.
-void mgl_aspect(HMGL gr, float Ax,float Ay,float Az)
+void mgl_aspect(HMGL gr, mreal Ax,mreal Ay,mreal Az)
 {	gr->Aspect(Ax,Ay,Az);	}
 /// Rotate a further plotting.
-void mgl_rotate(HMGL gr, float TetX,float TetZ,float TetY)
+void mgl_rotate(HMGL gr, mreal TetX,mreal TetZ,mreal TetY)
 {	gr->Rotate(TetX,TetZ,TetY);	}
 /// Rotate a further plotting around vector {x,y,z}.
-void mgl_rotate_vector(HMGL gr, float Tet,float x,float y,float z)
+void mgl_rotate_vector(HMGL gr, mreal Tet,mreal x,mreal y,mreal z)
 {	gr->RotateN(Tet,x,y,z);	}
-void mgl_perspective(HMGL gr, float val)
+void mgl_perspective(HMGL gr, mreal val)
 {	gr->Perspective(val);	}
 //-----------------------------------------------------------------------------
 //		Axis functions
@@ -199,25 +199,25 @@ void mgl_perspective(HMGL gr, float val)
 void mgl_adjust_ticks(HMGL gr, const char *dir)
 {	gr->AdjustTicks(dir);	}
 /// Switch on/off ticks tunning and set factor position for tunned ticks.
-void mgl_tune_ticks(HMGL gr, int tune, float fact_pos)
+void mgl_tune_ticks(HMGL gr, int tune, mreal fact_pos)
 {	gr->TuneTicks = tune;	gr->FactorPos = fact_pos;	}
-void mgl_set_ticks_dir(HMGL gr, char dir, float d, int ns, float org)
+void mgl_set_ticks_dir(HMGL gr, char dir, mreal d, int ns, mreal org)
 {	gr->SetTicks(dir, d, ns, org);	}
 /// Set ticks interval mglGraph::dx, mglGraph::dy, mglGraph::dz.
-void mgl_set_ticks(HMGL gr, float DX, float DY, float DZ)
+void mgl_set_ticks(HMGL gr, mreal DX, mreal DY, mreal DZ)
 {	gr->dx=DX;	gr->dy=DY;	gr->dz=DZ;	}
 /// Set number of subticks mglGraph::NSx, mglGraph::NSy, mglGraph::NSz.
 void mgl_set_subticks(HMGL gr, int NX, int NY, int NZ)
 {	gr->NSx=NX;	gr->NSy=NY;	gr->NSz=NZ;	}
 /// Set the values of mglGraph::Cmin and mglGraph::Cmax
-void mgl_set_caxis(HMGL gr, float C1,float C2)
+void mgl_set_caxis(HMGL gr, mreal C1,mreal C2)
 {	gr->CAxis(C1,C2);	}
 void mgl_set_crange(HMGL gr, const HMDT a, int add)	{	gr->CRange(*a,add);	}
 void mgl_set_xrange(HMGL gr, const HMDT a, int add)	{	gr->XRange(*a,add);	}
 void mgl_set_yrange(HMGL gr, const HMDT a, int add)	{	gr->YRange(*a,add);	}
 void mgl_set_zrange(HMGL gr, const HMDT a, int add)	{	gr->ZRange(*a,add);	}
 /// Safetly set the value for mglGraph::Min, mglGraph::Max and mglGraph::Org members of the class.
-void mgl_set_axis(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float x0, float y0, float z0)
+void mgl_set_axis(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal x0, mreal y0, mreal z0)
 {	gr->Axis(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2),mglPoint(x0,y0,z0));	}
 /// Safetly set the transformation formulas for coordinate.
 void mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ)
@@ -231,7 +231,7 @@ void mgl_box(HMGL gr, int ticks)
 void mgl_box_str(HMGL gr, const char *col, int ticks)
 {	gr->Box(col,ticks);	}
 /// Draws bounding box outside the plotting volume.
-void mgl_box_rgb(HMGL gr, float r, float g, float b, int ticks)
+void mgl_box_rgb(HMGL gr, mreal r, mreal g, mreal b, int ticks)
 {	gr->Box(mglColor(r,g,b),ticks);	}
 /// Draw axises with ticks in directions determined by string parameter \a dir.
 void mgl_axis(HMGL gr, const char *dir)
@@ -243,7 +243,7 @@ void mgl_axis_grid(HMGL gr, const char *dir,const char *pen)
 void mgl_label(HMGL gr, char dir, const char *text)
 {	gr->Label(dir, text);	}
 /// Print the label \a text for axis \a dir.
-void mgl_label_ext(HMGL gr, char dir, const char *text, int pos, float size, float shift)
+void mgl_label_ext(HMGL gr, char dir, const char *text, int pos, mreal size, mreal shift)
 {	gr->Label(dir, text, pos, size, shift);	}
 void mgl_set_xttw(HMGL gr, const wchar_t *templ)	{gr->xtt = templ;}
 void mgl_set_yttw(HMGL gr, const wchar_t *templ)	{gr->ytt = templ;}
@@ -285,55 +285,55 @@ void mgl_set_ctt(HMGL gr, const char *templ)
 //		Simple drawing
 //-----------------------------------------------------------------------------
 /// Draws the red point (ball) at position \a {x,y,z}.
-void mgl_ball(HMGL gr, float x,float y,float z)
+void mgl_ball(HMGL gr, mreal x,mreal y,mreal z)
 {	gr->Ball(mglPoint(x,y,z));	}
 /// Draws the point (ball) at position \a {x,y,z} with color {r,g,b}.
-void mgl_ball_rgb(HMGL gr, float x, float y, float z, float r, float g, float b, float alpha)
+void mgl_ball_rgb(HMGL gr, mreal x, mreal y, mreal z, mreal r, mreal g, mreal b, mreal alpha)
 {	gr->Ball(x,y,z,mglColor(r,g,b),alpha);	}
 /// Draws the point (ball) at position \a p with color \a col.
-void mgl_ball_str(HMGL gr, float x, float y, float z, const char *col)
+void mgl_ball_str(HMGL gr, mreal x, mreal y, mreal z, const char *col)
 {	gr->Ball(mglPoint(x,y,z),col[0]);	}
 /// Draws the line between points with style \a sch.
-void mgl_line(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, const char *pen,int n)
+void mgl_line(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, const char *pen,int n)
 {	gr->Line(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2),pen,n);	}
 
-void mgl_facex(HMGL gr, float x0, float y0, float z0, float wy, float wz, const char *stl, float dx, float dy)
+void mgl_facex(HMGL gr, mreal x0, mreal y0, mreal z0, mreal wy, mreal wz, const char *stl, mreal dx, mreal dy)
 {	gr->FaceX(x0,y0,z0,wy,wz,stl,dx,dy);	}
-void mgl_facey(HMGL gr, float x0, float y0, float z0, float wx, float wz, const char *stl, float dx, float dy)
+void mgl_facey(HMGL gr, mreal x0, mreal y0, mreal z0, mreal wx, mreal wz, const char *stl, mreal dx, mreal dy)
 {	gr->FaceY(x0,y0,z0,wx,wz,stl,dx,dy);	}
-void mgl_facez(HMGL gr, float x0, float y0, float z0, float wx, float wy, const char *stl, float dx, float dy)
+void mgl_facez(HMGL gr, mreal x0, mreal y0, mreal z0, mreal wx, mreal wy, const char *stl, mreal dx, mreal dy)
 {	gr->FaceZ(x0,y0,z0,wx,wy,stl,dx,dy);	}
-void mgl_curve(HMGL gr, float x1, float y1, float z1, float dx1, float dy1, float dz1, float x2, float y2, float z2, float dx2, float dy2, float dz2, const char *pen,int n)
+void mgl_curve(HMGL gr, mreal x1, mreal y1, mreal z1, mreal dx1, mreal dy1, mreal dz1, mreal x2, mreal y2, mreal z2, mreal dx2, mreal dy2, mreal dz2, const char *pen,int n)
 {	gr->Curve(mglPoint(x1,y1,z1), mglPoint(dx1,dy1,dz1), mglPoint(x2,y2,z2), mglPoint(dx2,dy2,dz2), pen, n);	}
 
 /// Print string \a str in position \a p with font size \a size.
-void mgl_puts(HMGL gr, float x, float y, float z,const char *text)
+void mgl_puts(HMGL gr, mreal x, mreal y, mreal z,const char *text)
 {	gr->Puts(mglPoint(x,y,z),text);	}
 /// Print string \a str in position \a p with font size \a size.
-void mgl_putsw(HMGL gr, float x, float y, float z,const wchar_t *text)
+void mgl_putsw(HMGL gr, mreal x, mreal y, mreal z,const wchar_t *text)
 {	gr->Putsw(mglPoint(x,y,z),text);	}
 /// Print string \a str in position \a p along direction \a d with font size \a size.
-void mgl_puts_dir(HMGL gr, float x, float y, float z, float dx, float dy, float dz, const char *text, float size)
+void mgl_puts_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal dz, const char *text, mreal size)
 {	gr->Puts(mglPoint(x,y,z), mglPoint(dx,dy,dz), text, 't', size);	}
 /// Print string \a str in position \a p along direction \a d with font size \a size.
-void mgl_putsw_dir(HMGL gr, float x, float y, float z, float dx, float dy, float dz, const wchar_t *text, float size)
+void mgl_putsw_dir(HMGL gr, mreal x, mreal y, mreal z, mreal dx, mreal dy, mreal dz, const wchar_t *text, mreal size)
 {	gr->Putsw(mglPoint(x,y,z), mglPoint(dx,dy,dz), text, 't', size);	}
 /// Print unrotated string \a str in position \a p with font size \a size.
-void mgl_text(HMGL gr, float x, float y, float z,const char *text)
+void mgl_text(HMGL gr, mreal x, mreal y, mreal z,const char *text)
 {	gr->Text(mglPoint(x,y,z),text);	}
 /// Print string \a str in position \a p with font size \a size.
-void mgl_puts_ext(HMGL gr, float x, float y, float z,const char *text,const char *font,float size,char dir)
+void mgl_puts_ext(HMGL gr, mreal x, mreal y, mreal z,const char *text,const char *font,mreal size,char dir)
 {	gr->Puts(mglPoint(x,y,z),text,font,size,dir);	}
 /// Print string \a str in position \a p with font size \a size.
-void mgl_putsw_ext(HMGL gr, float x, float y, float z,const wchar_t *text,const char *font,float size,char dir)
+void mgl_putsw_ext(HMGL gr, mreal x, mreal y, mreal z,const wchar_t *text,const char *font,mreal size,char dir)
 {	gr->Putsw(mglPoint(x,y,z),text,font,size,dir);	}
 /// Print unrotated string \a str in position \a p with font size \a size.
-void mgl_text_ext(HMGL gr, float x, float y, float z,const char *text,const char *font,float size,char dir)
+void mgl_text_ext(HMGL gr, mreal x, mreal y, mreal z,const char *text,const char *font,mreal size,char dir)
 {	gr->Text(mglPoint(x,y,z),text,font,size,dir);	}
 /// Draw colorbar at edge of axis
 void mgl_colorbar(HMGL gr, const char *sch,int where)
 {	gr->Colorbar(sch,where);	}
-void mgl_colorbar_ext(HMGL gr, const char *sch,int where, float x, float y, float w, float h)
+void mgl_colorbar_ext(HMGL gr, const char *sch,int where, mreal x, mreal y, mreal w, mreal h)
 {	gr->Colorbar(sch,where,x,y,w,h);	}
 /// Plot data depending on its dimensions and \a type parameter
 void mgl_simple_plot(HMGL gr, const HMDT a, int type, const char *sch)
@@ -351,10 +351,10 @@ void mgl_add_legendw(HMGL gr, const wchar_t *text,const char *style)
 void mgl_clear_legend(HMGL gr)
 {	if(gr)	gr->ClearLegend();	}
 /// Draw legend of accumulated strings at position (x, y) by \a font with \a size
-void mgl_legend_xy(HMGL gr, float x, float y, const char *font, float size, float llen)
+void mgl_legend_xy(HMGL gr, mreal x, mreal y, const char *font, mreal size, mreal llen)
 {	if(gr)	gr->Legend(x, y, font, size, llen);	}
 /// Draw legend of accumulated strings by \a font with \a size
-void mgl_legend(HMGL gr, int where, const char *font, float size, float llen)
+void mgl_legend(HMGL gr, int where, const char *font, mreal size, mreal llen)
 {	if(gr)	gr->Legend(where, font, size, llen);	}
 void mgl_set_legend_box(HMGL gr, int enable)
 {	gr->LegendBox = enable;	}
@@ -389,13 +389,13 @@ void mgl_set_show_mouse_pos(HMGL gr, int enable)
 	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);
 	if(g) g->ShowMousePos=enable;
 }
-void mgl_get_last_mouse_pos(HMGL gr, float *x, float *y, float *z)
+void mgl_get_last_mouse_pos(HMGL gr, mreal *x, mreal *y, mreal *z)
 {
 	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);
 	if(g)
 	{	*x=g->LastMousePos.x;	*y=g->LastMousePos.y;	*y=g->LastMousePos.y;}
 }
-void mgl_calc_xyz(HMGL gr, int xs, int ys, float *x, float *y, float *z)
+void mgl_calc_xyz(HMGL gr, int xs, int ys, mreal *x, mreal *y, mreal *z)
 {
 	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);
 	if(g && x && y && z)
@@ -405,40 +405,40 @@ void mgl_calc_xyz(HMGL gr, int xs, int ys, float *x, float *y, float *z)
 	}
 }
 //-----------------------------------------------------------------------------
-float mgl_data_get_value(const HMDT d, int i, int j, int k)
+mreal mgl_data_get_value(const HMDT d, int i, int j, int k)
 {	return	d->a[i+d->nx*(j+d->ny*k)];	}
-void mgl_data_set_value(HMDT d, float v, int i, int j, int k)
+void mgl_data_set_value(HMDT d, mreal v, int i, int j, int k)
 {	d->a[i+d->nx*(j+d->ny*k)] = v;	}
 //-----------------------------------------------------------------------------
 /// Zoom in/out a part of picture
-void mgl_set_zoom(HMGL gr, float x1, float y1, float x2, float y2)
+void mgl_set_zoom(HMGL gr, mreal x1, mreal y1, mreal x2, mreal y2)
 {	gr->Zoom(x1,y1,x2,y2);	}
-void mgl_set_plotfactor(HMGL gr, float val)
+void mgl_set_plotfactor(HMGL gr, mreal val)
 {
 	if(val>0)	{	gr->PlotFactor = val;	gr->AutoPlotFactor=false;	}
 	else	gr->AutoPlotFactor=true;
 }
-void mgl_set_axis_3d(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2)
+void mgl_set_axis_3d(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2)
 {	gr->Axis(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2));	}
-void mgl_set_axis_2d(HMGL gr, float x1, float y1, float x2, float y2)
+void mgl_set_axis_2d(HMGL gr, mreal x1, mreal y1, mreal x2, mreal y2)
 {	gr->Axis(mglPoint(x1,y1),mglPoint(x2,y2));	}
-void mgl_set_origin(HMGL gr, float x0, float y0, float z0)
+void mgl_set_origin(HMGL gr, mreal x0, mreal y0, mreal z0)
 {	gr->Org = mglPoint(x0,y0,z0);	}
-void mgl_set_tick_origin(HMGL gr, float x0, float y0, float z0)
+void mgl_set_tick_origin(HMGL gr, mreal x0, mreal y0, mreal z0)
 {	gr->OrgT = mglPoint(x0,y0,z0);	}
 //-----------------------------------------------------------------------------
-void mgl_title(HMGL gr, const char *text, const char *fnt, float size)
+void mgl_title(HMGL gr, const char *text, const char *fnt, mreal size)
 {	gr->Title(text, fnt,size);	}
-void mgl_titlew(HMGL gr, const wchar_t *text, const char *fnt, float size)
+void mgl_titlew(HMGL gr, const wchar_t *text, const char *fnt, mreal size)
 {	gr->Title(text, fnt,size);	}
 //-----------------------------------------------------------------------------
 void mgl_set_ternary(HMGL gr, int enable)
 {	gr->Ternary(enable);	}
-void mgl_sphere(HMGL gr, float x, float y, float z, float r, const char *stl)
+void mgl_sphere(HMGL gr, mreal x, mreal y, mreal z, mreal r, const char *stl)
 {	gr->Sphere(mglPoint(x,y,z),r,stl);	}
-void mgl_drop(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl, float shift, float ap)
+void mgl_drop(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r, const char *stl, mreal shift, mreal ap)
 {	gr->Drop(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2),r,stl,shift,ap);	}
-void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl, int edge)
+void mgl_cone(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r1, mreal r2, const char *stl, int edge)
 {	gr->Cone(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2),r1,r2,stl,edge);	}
 void mgl_set_def_param(HMGL gr)	{	gr->DefaultPlotParam();	}
 void mgl_set_font_def(HMGL gr, const char *fnt)
@@ -446,7 +446,7 @@ void mgl_set_font_def(HMGL gr, const char *fnt)
 void mgl_flush(HMGL gr)	{	gr->Flush();	}
 void mgl_data_fill_eq(HMGL gr, HMDT dat, const char *eq, const HMDT vdat, const HMDT wdat)
 {	dat->Fill(eq, gr->Min, gr->Max, vdat, wdat);	}
-void mgl_set_ticks_vals(HMGL gr, char dir, int n, float *val, const char **lbl)
+void mgl_set_ticks_vals(HMGL gr, char dir, int n, mreal *val, const char **lbl)
 {	gr->SetTicksVal(dir,n,val,lbl);	}
 //-----------------------------------------------------------------------------
 #include <stdint.h>
@@ -459,10 +459,10 @@ int mgl_fortran_func(HMGL gr, void *f)
 	return res;
 }
 //-----------------------------------------------------------------------------
-void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, float z2)
+void mgl_set_auto(HMGL gr, mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2)
 {
 	gr->SetAutoRanges(x1,x2,y1,y2,z1,z2);
 }
-void mgl_set_tick_len(HMGL gr, float len)
+void mgl_set_tick_len(HMGL gr, mreal len)
 {	gr->TickLen = len>0 ? len : 0.1;	}
 //-----------------------------------------------------------------------------

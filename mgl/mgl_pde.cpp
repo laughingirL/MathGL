@@ -30,7 +30,7 @@
 #endif
 //-----------------------------------------------------------------------------
 // Solving equation du/dz = ham(p,q,x,y,z,|u|)[u] where p=d/dx, q=d/dy. At this moment simplified form of ham is supported: ham = f(p,q,z) + g(x,y,z,'u'), where variable 'u'=|u| (for allowing solve nonlinear problems). You may specify imaginary part like ham = p^2 + i*x*(x>0) but only if dependence on variable 'i' is linear (i.e. ham = hre+i*him).
-mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mglPoint Min, mglPoint Max, float dz, float k0)
+mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mglPoint Min, mglPoint Max, mreal dz, mreal k0)
 {
 	mglData res;
 	int nx=ini_re.nx, ny=ini_re.ny;
@@ -49,12 +49,12 @@ mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mg
 		a[i0] = dual(ini_re.a[i+nx*j], ini_im.a[i+nx*j]);
 		res.a[nz*(i+nx*j)] = abs(a[i0]);
 	}
-	float dx = (Max.x-Min.x)/(nx-1), dy = ny>1?(Max.y-Min.y)/(ny-1):0;
-	float dp = M_PI/(Max.x-Min.x)/k0, dq = M_PI/(Max.y-Min.y)/k0;
-	float var[MGL_VS], xs=(Min.x+Max.x)/2, ys=(Min.y+Max.y)/2, tmp;
+	mreal dx = (Max.x-Min.x)/(nx-1), dy = ny>1?(Max.y-Min.y)/(ny-1):0;
+	mreal dp = M_PI/(Max.x-Min.x)/k0, dq = M_PI/(Max.y-Min.y)/k0;
+	mreal var[MGL_VS], xs=(Min.x+Max.x)/2, ys=(Min.y+Max.y)/2, tmp;
 	double xx = Min.x - dx*nx/2, yy = Min.x - dy*ny/2;
 	double ff = ny>1?4*nx*ny:2*nx, dd = k0*dz;
-	memset(var,0,MGL_VS*sizeof(float));
+	memset(var,0,MGL_VS*sizeof(mreal));
 	// prepare fft. NOTE: slow procedures due to unknown nx, ny.
 	gsl_fft_complex_wavetable *wtx = gsl_fft_complex_wavetable_alloc(2*nx);
 	gsl_fft_complex_workspace *wsx = gsl_fft_complex_workspace_alloc(2*nx);
@@ -141,12 +141,12 @@ mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mg
 }
 //-----------------------------------------------------------------------------
 // Solve GO ray equation like dr/dt = d ham/dp, dp/dt = -d ham/dr where ham = ham(x,y,z,p,q,v,t) and px=p, py=q, pz=v. The starting point (at t=0) is r0, p0. Result is array of {x,y,z,p,q,v,t}
-mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, float dt, float tmax)
+mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, mreal dt, mreal tmax)
 {
 	mglData res;
 	if(tmax<dt)	return res;	// nothing to do
 	int nt = int(tmax/dt)+1;
-	float x[6], k1[6], k2[6], k3[6], hh=dt/2;
+	mreal x[6], k1[6], k2[6], k3[6], hh=dt/2;
 	res.Create(7,nt);	res.SetColumnId("xyzpqvt");
 #ifndef NO_GSL
 	mglFormula eqs(ham);
@@ -156,7 +156,7 @@ mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, float dt, float tmax)
 	res.a[6] = 0;
 	// Runge Kutta scheme of 4th order
 	char v[7]="xyzpqv";
-	float var[MGL_VS];	memset(var,0,MGL_VS*sizeof(float));
+	mreal var[MGL_VS];	memset(var,0,MGL_VS*sizeof(mreal));
 	register int i,k;
 	for(k=1;k<nt;k++)
 	{
@@ -197,7 +197,7 @@ struct mgl_ap
 	mgl_ap()	{	memset(this,0,sizeof(mgl_ap));	};
 };
 //-----------------------------------------------------------------------------
-void mgl_init_ra(int n, const float *r, mgl_ap *ra)	// prepare some intermediate data for mglPDE2d
+void mgl_init_ra(int n, const mreal *r, mgl_ap *ra)	// prepare some intermediate data for mglPDE2d
 {
 	register double tt;
 	tt = hypot(r[7]-r[0], r[8]-r[1]);
@@ -228,7 +228,7 @@ void mgl_init_ra(int n, const float *r, mgl_ap *ra)	// prepare some intermediate
 	ra[0].q1 = r[3]*ra[0].x1 + r[4]*ra[0].y1;
 }
 //-----------------------------------------------------------------------------
-mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, float r, float k0, mglData *xx, mglData *yy, bool UseR)
+mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, mreal r, mreal k0, mglData *xx, mglData *yy, bool UseR)
 {
 	mglData res;
 	int nx=ini_re.nx, nt=ray.ny;
@@ -243,8 +243,8 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 	for(i=0;i<nx;i++)	a[i+nx/2] = dual(ini_re.a[i],ini_im.a[i]);	// ini
 	for(i=0;i<2*nx;i++)	{	rx[i] = ru[i] = 1;	}
 	mglFormula h(ham);
-	float var[MGL_VS], dr = r/nx, dk = M_PI/(k0*r), tt, x1, hh, B1, pt0;
-	memset(var,0,MGL_VS*sizeof(float));
+	mreal var[MGL_VS], dr = r/nx, dk = M_PI/(k0*r), tt, x1, hh, B1, pt0;
+	memset(var,0,MGL_VS*sizeof(mreal));
 	gsl_fft_complex_wavetable *wtx = gsl_fft_complex_wavetable_alloc(2*nx);
 	gsl_fft_complex_workspace *wsx = gsl_fft_complex_workspace_alloc(2*nx);
 	if(xx && yy)	{	xx->Create(nx,nt);	yy->Create(nx,nt);	}
@@ -284,7 +284,7 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 			rx[i] = (h.CalcD(var,'p')*ra[k].x0 + h.CalcD(var,'q')*ra[k].y0)/ra[k].ch;
 			rx[i] = rx[i]>0.3*pt0 ? rx[i] : 0.3*pt0;
 			hx[i] = (dual(h.Calc(var), -h.CalcD(var,'i'))-h0/2.)/rx[i];
-			if(imag(hx[i])>0)	hx[i] = real(hx[i]);
+			if(imag(hx[i])>0)	hx[i] = hx[i].real();
 			// u-y terms
 			x1 = dk/2*(i<nx ? i:i-2*nx);
 			var['x'-'a'] = ray.a[7*k];	var['y'-'a'] = ray.a[7*k+1];
@@ -293,7 +293,7 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 			ru[i] = (h.CalcD(var,'p')*ra[k].x0 + h.CalcD(var,'q')*ra[k].y0)/ra[k].ch;
 			ru[i] = ru[i]>0.3*pt0 ? ru[i] : 0.3*pt0;
 			hu[i] = (dual(h.Calc(var), -h.CalcD(var,'i'))-h0/2.)/ru[i];
-			if(imag(hu[i])>0)	hu[i] = real(hu[i]);
+			if(imag(hu[i])>0)	hu[i] = hu[i].real();
 			// add boundary conditions for x-direction
 			if(i<nx/2)
 			{
@@ -345,7 +345,7 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 	return res;
 }
 //-----------------------------------------------------------------------------
-mglData mglAF2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, float r, float k0, mglData *xx, mglData *yy, bool UseR)
+mglData mglAF2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, mreal r, mreal k0, mglData *xx, mglData *yy, bool UseR)
 {
 	mglData res;
 	int nx=ini_re.nx, nt=ray.ny;
@@ -357,8 +357,8 @@ mglData mglAF2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 	register int i;
 	for(i=0;i<nx;i++)	a[i+nx/2] = dual(ini_re.a[i],ini_im.a[i]);	// ini
 	mglFormula h(ham);
-	float var[MGL_VS], dr = r/nx, dk = M_PI/(k0*r), tt, x1, hh, B1;
-	memset(var,0,MGL_VS*sizeof(float));
+	mreal var[MGL_VS], dr = r/nx, dk = M_PI/(k0*r), tt, x1, hh, B1;
+	memset(var,0,MGL_VS*sizeof(mreal));
 	gsl_fft_complex_wavetable *wtx = gsl_fft_complex_wavetable_alloc(2*nx);
 	gsl_fft_complex_workspace *wsx = gsl_fft_complex_workspace_alloc(2*nx);
 	if(xx && yy)	{	xx->Create(nx,nt);	yy->Create(nx,nt);	}
@@ -452,7 +452,7 @@ mglData mglJacobian(const mglData &x, const mglData &y)
 		im = i>0 ? -1:0;	jm = j>0 ? -nx:0;
 		r.a[i0] = (x.a[i0+ip]-x.a[i0+im])*(y.a[i0+jp]-y.a[i0+jm]) -
 				(y.a[i0+ip]-y.a[i0+im])*(x.a[i0+jp]-x.a[i0+jm]);
-		r.a[i0] *= float((nx-1)*(ny-1)*nx) / ((ip-im)*(jp-jm));
+		r.a[i0] *= mreal((nx-1)*(ny-1)*nx) / ((ip-im)*(jp-jm));
 	}
 	return r;
 }
@@ -476,43 +476,43 @@ mglData mglJacobian(const mglData &x, const mglData &y, const mglData &z)
 				(x.a[i0+jp]-x.a[i0+jm])*(y.a[i0+kp]-y.a[i0+km])*(z.a[i0+ip]-z.a[i0+im]) +
 				(x.a[i0+kp]-x.a[i0+km])*(y.a[i0+ip]-y.a[i0+im])*(z.a[i0+jp]-z.a[i0+jm]) -
 				(x.a[i0+kp]-x.a[i0+km])*(y.a[i0+jp]-y.a[i0+jm])*(z.a[i0+ip]-z.a[i0+im]);
-		r.a[i0] *= float((nx-1)*(ny-1)*(nz-1))*float(nx*nx*ny) / ((ip-im)*(jp-jm)*(kp-km));
+		r.a[i0] *= mreal((nx-1)*(ny-1)*(nz-1))*mreal(nx*nx*ny) / ((ip-im)*(jp-jm)*(kp-km));
 	}
 	return r;
 }
 //-----------------------------------------------------------------------------
-HMDT mgl_pde_solve(HMGL gr, const char *ham, const HMDT ini_re, const HMDT ini_im, float dz, float k0)
+HMDT mgl_pde_solve(HMGL gr, const char *ham, const HMDT ini_re, const HMDT ini_im, mreal dz, mreal k0)
 {	return new mglData(mglPDE(ham, *ini_re, *ini_im, gr->Min, gr->Max, dz,k0));	}
-HMDT mgl_ray_trace(const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt, float tmax)
+HMDT mgl_ray_trace(const char *ham, mreal x0, mreal y0, mreal z0, mreal px, mreal py, mreal pz, mreal dt, mreal tmax)
 {	return new mglData(mglRay(ham, mglPoint(x0,y0,z0), mglPoint(px,py,pz), dt,tmax));	}
-HMDT mgl_qo2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, float r, float k0, HMDT xx, HMDT yy)
+HMDT mgl_qo2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, mreal r, mreal k0, HMDT xx, HMDT yy)
 {	return new mglData(mglQO2d(ham, *ini_re, *ini_im, *ray, r, k0, xx, yy));	}
-HMDT mgl_af2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, float r, float k0, HMDT xx, HMDT yy)
+HMDT mgl_af2d_solve(const char *ham, const HMDT ini_re, const HMDT ini_im, const HMDT ray, mreal r, mreal k0, HMDT xx, HMDT yy)
 {	return new mglData(mglAF2d(ham, *ini_re, *ini_im, *ray, r, k0, xx, yy));	}
 HMDT mgl_jacobian_2d(const HMDT x, const HMDT y)
 {	return new mglData(mglJacobian(*x, *y));	}
 HMDT mgl_jacobian_3d(const HMDT x, const HMDT y, const HMDT z)
 {	return new mglData(mglJacobian(*x, *y, *z));	}
 //-----------------------------------------------------------------------------
-uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, float *dz, float *k0, int l)
+uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0, int l)
 {
 	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
 	uintptr_t res = uintptr_t(new mglData(mglPDE(s, _D_(ini_re), _D_(ini_im), _GR_->Min, _GR_->Max, *dz, *k0)));
 	delete []s;	return res;
 }
-uintptr_t mgl_ray_trace_(const char *ham, float *x0, float *y0, float *z0, float *px, float *py, float *pz, float *dt, float *tmax,int l)
+uintptr_t mgl_ray_trace_(const char *ham, mreal *x0, mreal *y0, mreal *z0, mreal *px, mreal *py, mreal *pz, mreal *dt, mreal *tmax,int l)
 {
 	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
 	uintptr_t res = uintptr_t(new mglData(mglRay(s, mglPoint(*x0,*y0,*z0), mglPoint(*px,*py,*pz), *dt,*tmax)));
 	delete []s;	return res;
 }
-uintptr_t mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, float *r, float *k0, uintptr_t* xx, uintptr_t* yy, int l)
+uintptr_t mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, int l)
 {
 	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
 	uintptr_t res = uintptr_t(new mglData(mglQO2d(s, _D_(ini_re), _D_(ini_im), _D_(ray), *r, *k0, ((mglData *)*xx), ((mglData *)*yy))));
 	delete []s;	return res;
 }
-uintptr_t mgl_af2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, float *r, float *k0, uintptr_t* xx, uintptr_t* yy, int l)
+uintptr_t mgl_af2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, mreal *r, mreal *k0, uintptr_t* xx, uintptr_t* yy, int l)
 {
 	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
 	uintptr_t res = uintptr_t(new mglData(mglAF2d(s, _D_(ini_re), _D_(ini_im), _D_(ray), *r, *k0, ((mglData *)*xx), ((mglData *)*yy))));

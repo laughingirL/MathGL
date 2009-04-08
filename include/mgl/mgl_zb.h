@@ -34,36 +34,36 @@ public:
 	void Finish();
 	virtual void Clf(mglColor Back=NC);
 	virtual void SetSize(int w,int h);
-	void Ball(float x,float y,float z,mglColor col=RC,float alpha=1);
-	void Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line, char col);
+	void Ball(mreal x,mreal y,mreal z,mglColor col=RC,mreal alpha=1);
+	void Glyph(mreal x,mreal y, mreal f, int nt, const short *trig, int nl, const short *line, char col);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	bool FastNoFace;	/// Use fastest (but less accurate) scheme for drawing (without faces)
 protected:
-	float *Z;			///< Height for given level in Z-direction
+	mreal *Z;			///< Height for given level in Z-direction
 	unsigned char *C;	///< Picture for given level in Z-direction
 
 	/// Transform mglColor and alpha value to bits format
-	unsigned char* col2int(mglColor c, float alpha,unsigned char *r);	// mglColor -> int
-	/// Transform float color and alpha to bits format
-	unsigned char* col2int(float *c,float *n,unsigned char *r);
+	unsigned char* col2int(mglColor c, mreal alpha,unsigned char *r);	// mglColor -> int
+	/// Transform mreal color and alpha to bits format
+	unsigned char* col2int(mreal *c,mreal *n,unsigned char *r);
 	/// Plot point \a p with color \a c
-	void ball(float *p,float *c);
-	void pnt_plot(long x,long y,float z,unsigned char c[4]);
-	void line_plot(float *p1,float *p2,float *c1,float *c2,bool all=false);
-	void line_plot_s(float *p1,float *p2,float *c1,float *c2,bool all=false);
-	void trig_plot(float *p0,float *p1,float *p2,
-					float *c0,float *c1,float *c2);
-	void trig_plot_n(float *p0,float *p1,float *p2,
-					float *c0,float *c1,float *c2,
-					float *n0,float *n1,float *n2);
-	void quad_plot(float *p0,float *p1,float *p2,float *p3,
-					float *c0,float *c1,float *c2,float *c3);
-	void quad_plot_a(float *p0,float *p1,float *p2,float *p3,
-					float a0,float a1,float a2,float a3,float alpha);
-	void quad_plot_n(float *p0,float *p1,float *p2,float *p3,
-					float *c0,float *c1,float *c2,float *c3,
-					float *n0,float *n1,float *n2,float *n3);
-	void mark_plot(float *pp, char type);
+	void ball(mreal *p,mreal *c);
+	void pnt_plot(long x,long y,mreal z,unsigned char c[4]);
+	void line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all=false);
+	void line_plot_s(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all=false);
+	void trig_plot(mreal *p0,mreal *p1,mreal *p2,
+					mreal *c0,mreal *c1,mreal *c2);
+	void trig_plot_n(mreal *p0,mreal *p1,mreal *p2,
+					mreal *c0,mreal *c1,mreal *c2,
+					mreal *n0,mreal *n1,mreal *n2);
+	void quad_plot(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+					mreal *c0,mreal *c1,mreal *c2,mreal *c3);
+	void quad_plot_a(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+					mreal a0,mreal a1,mreal a2,mreal a3,mreal alpha);
+	void quad_plot_n(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+					mreal *c0,mreal *c1,mreal *c2,mreal *c3,
+					mreal *n0,mreal *n1,mreal *n2,mreal *n3);
+	void mark_plot(mreal *pp, char type);
 };
 //-----------------------------------------------------------------------------
 #endif

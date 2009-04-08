@@ -18,15 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <wchar.h>
-
-#include "mgl/mgl_parse.h"
-
 #ifdef WIN32
 #include <io.h>
-#define swprintf    _snwprintf
 #else
 #include <unistd.h>
 #endif
+
+#include "mgl/mgl_parse.h"
 
 char *mgl_strdup(const char *s);
 wchar_t *mgl_str_copy(const char *s);
@@ -1560,7 +1558,7 @@ int mgls_rect(mglGraph *gr, long n, mglArg *a, int k[10])
 	else if(n>3)
 	{
 		bool ok=true;
-		float p = (gr->Min.z+gr->Max.z)/2;
+		mreal p = (gr->Min.z+gr->Max.z)/2;
 		for(i=0;i<4;i++)	if(a[i].type!=2)	ok=false;
 		if(ok)
 			gr->Face(mglPoint(a[0].v,a[1].v,p), mglPoint(a[0].v,a[3].v,p),
@@ -2368,7 +2366,7 @@ int mgls_xtick(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==2)
 	{
-		float v[50];	const wchar_t *s[50];	int i;
+		mreal v[50];	const wchar_t *s[50];	int i;
 		for(i=0;i<50 && i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
@@ -2405,7 +2403,7 @@ int mgls_ytick(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==2)
 	{
-		float v[50];	const wchar_t *s[50];	int i;
+		mreal v[50];	const wchar_t *s[50];	int i;
 		for(i=0;i<50 && i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)
@@ -2442,7 +2440,7 @@ int mgls_ztick(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==2)
 	{
-		float v[50];	const wchar_t *s[50]; int i;
+		mreal v[50];	const wchar_t *s[50]; int i;
 		for(i=0;i<50 && i<n/2;i++)
 		{
 			if(a[2*i].type==2 && a[2*i+1].type==1)

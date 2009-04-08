@@ -51,40 +51,40 @@ mglGraphPS::mglGraphPS(int w,int h) : mglGraphAB(w,h)
 //-----------------------------------------------------------------------------
 mglGraphPS::~mglGraphPS()	{	if(P)	delete []P;	}
 //-----------------------------------------------------------------------------
-void mglGraphPS::Ball(float x,float y,float z,mglColor col,float alpha)
+void mglGraphPS::Ball(mreal x,mreal y,mreal z,mglColor col,mreal alpha)
 {
 	if(alpha==0)	return;
 	if(alpha<0)	{	alpha = -alpha;	}
 	else		{	if(!ScalePoint(x,y,z))	return;	}
 	if(!col.Valid())	col = mglColor(1.,0.,0.);
-	float p[3] = {x,y,z};	PostScale(p,1);
+	mreal p[3] = {x,y,z};	PostScale(p,1);
 	mglPrim a;		a.m = '.';
 	a.x[0] = p[0];	a.y[0] = p[1];	a.z = a.zz[0]=p[2];
 	a.c[0] = col.r;	a.c[1] = col.g;	a.c[2] = col.b;
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::ball(float *p,float *c)
+void mglGraphPS::ball(mreal *p,mreal *c)
 {
 	mglPrim a;	PostScale(p,1);		a.m = '.';
 	a.x[0] = p[0];	a.y[0] = p[1];	a.z = a.zz[0]=p[2];
-	memcpy(a.c,c,3*sizeof(float));
+	memcpy(a.c,c,3*sizeof(mreal));
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::mark_plot(float *p, char type)
+void mglGraphPS::mark_plot(mreal *p, char type)
 {
 	mglPrim a;		a.m = type;		a.s = MarkSize;//*175*font_factor;
 	a.x[0] = p[0];	a.y[0] = p[1];	a.z = a.zz[0]=p[2];
-	memcpy(a.c,CDef,3*sizeof(float));
+	memcpy(a.c,CDef,3*sizeof(mreal));
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::line_plot(float *p1,float *p2,float *c1,float *,bool all)
+void mglGraphPS::line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *,bool all)
 {
 	if((PDef==0 && !all) || (fabs(p1[0]-p2[0])<0.01 && fabs(p1[1]-p2[1])<0.01))	return;
 	mglPrim a(1);
-	float pw = fabs(PenWidth);
+	mreal pw = fabs(PenWidth);
 	a.z = (p1[2]+p2[2])/2;	a.w = pw;
 	if(pw>1)	a.z += pw-1;
 	a.x[0]=p1[0];	a.y[0]=p1[1];	a.x[1]=p2[0];	a.y[1]=p2[1];
@@ -96,7 +96,7 @@ void mglGraphPS::line_plot(float *p1,float *p2,float *c1,float *,bool all)
 	pPos = fmod(pPos+hypot(p2[0]-p1[0], p2[1]-p1[1])/pw/1.5, 16);
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::trig_plot(float *p3,float *p1,float *p2,float *c3,float *c1,float *c2)
+void mglGraphPS::trig_plot(mreal *p3,mreal *p1,mreal *p2,mreal *c3,mreal *c1,mreal *c2)
 {
 	bool pnt = fabs(p1[0]-p2[0])<0.01 && fabs(p1[1]-p2[1])<0.01 &&
 				fabs(p1[0]-p3[0])<0.01 && fabs(p1[1]-p3[1])<0.01;
@@ -107,7 +107,7 @@ void mglGraphPS::trig_plot(float *p3,float *p1,float *p2,float *c3,float *c1,flo
 	a.x[1]=p2[0];	a.y[1]=p2[1];	a.zz[1]=p2[2];
 	a.x[2]=p3[0];	a.y[2]=p3[1];	a.zz[2]=p3[2];
 
-	float d1[3],d2[3];
+	mreal d1[3],d2[3];
 	d1[0] = p1[0]-p3[0];	d2[0] = p2[0]-p3[0];	d1[1] = p1[1]-p3[1];
 	d2[1] = p2[1]-p3[1];	d1[2] = p1[2]-p3[2];	d2[2] = p2[2]-p3[2];
 	a.c[0]=(c1[0]+c2[0]+c3[0])/3;	a.c[1]=(c1[1]+c2[1]+c3[1])/3;
@@ -116,8 +116,8 @@ void mglGraphPS::trig_plot(float *p3,float *p1,float *p2,float *c3,float *c1,flo
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::trig_plot_n(float *p3,float *p1,float *p2,
-				float *c3,float *c1,float *c2,float *n3,float *n1,float *n2)
+void mglGraphPS::trig_plot_n(mreal *p3,mreal *p1,mreal *p2,
+				mreal *c3,mreal *c1,mreal *c2,mreal *n3,mreal *n1,mreal *n2)
 {
 	bool pnt = fabs(p1[0]-p2[0])<0.01 && fabs(p1[1]-p2[1])<0.01 &&
 				fabs(p1[0]-p3[0])<0.01 && fabs(p1[1]-p3[1])<0.01;
@@ -133,8 +133,8 @@ void mglGraphPS::trig_plot_n(float *p3,float *p1,float *p2,
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::quad_plot(float *p0,float *p1,float *p2,float *p3,
-				float *c0,float *c1,float *c2,float *c3)
+void mglGraphPS::quad_plot(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+				mreal *c0,mreal *c1,mreal *c2,mreal *c3)
 {
 	bool pnt = fabs(p1[0]-p2[0])<0.01 && fabs(p1[1]-p2[1])<0.01 &&
 				fabs(p1[0]-p3[0])<0.01 && fabs(p1[1]-p3[1])<0.01 &&
@@ -146,7 +146,7 @@ void mglGraphPS::quad_plot(float *p0,float *p1,float *p2,float *p3,
 	a.x[1]=p1[0];	a.y[1]=p1[1];	a.zz[1]=p1[2];
 	a.x[2]=p2[0];	a.y[2]=p2[1];	a.zz[2]=p2[2];
 	a.x[3]=p3[0];	a.y[3]=p3[1];	a.zz[3]=p3[2];
-	float d1[3];
+	mreal d1[3];
 	d1[0]=-p0[2]*p1[1]+p0[1]*p1[2]+p0[2]*p2[1]-p0[1]*p2[2]-p1[2]*p3[1]+
 			p2[2]*p3[1]+p1[1]*p3[2]-p2[1]*p3[2];
 	d1[1]= p0[2]*p1[0]-p0[0]*p1[2]-p0[2]*p2[0]+p0[0]*p2[2]+
@@ -159,8 +159,8 @@ void mglGraphPS::quad_plot(float *p0,float *p1,float *p2,float *p3,
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::quad_plot_n(float *p0,float *p1,float *p2,float *p3,
-				float *c0,float *c1,float *c2,float *c3,float *n0,float *n1,float *n2,float *n3)
+void mglGraphPS::quad_plot_n(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+				mreal *c0,mreal *c1,mreal *c2,mreal *c3,mreal *n0,mreal *n1,mreal *n2,mreal *n3)
 {
 	bool pnt = fabs(p1[0]-p2[0])<0.01 && fabs(p1[1]-p2[1])<0.01 &&
 				fabs(p1[0]-p3[0])<0.01 && fabs(p1[1]-p3[1])<0.01 &&
@@ -178,8 +178,8 @@ void mglGraphPS::quad_plot_n(float *p0,float *p1,float *p2,float *p3,
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::quad_plot_a(float *p0,float *p1,float *p2,float *p3,
-				float a0,float a1,float a2,float a3, float alpha)
+void mglGraphPS::quad_plot_a(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+				mreal a0,mreal a1,mreal a2,mreal a3, mreal alpha)
 {
 	bool pnt = fabs(p1[0]-p2[0])<0.01 && fabs(p1[1]-p2[1])<0.01 &&
 				fabs(p1[0]-p3[0])<0.01 && fabs(p1[1]-p3[1])<0.01 &&
@@ -191,7 +191,7 @@ void mglGraphPS::quad_plot_a(float *p0,float *p1,float *p2,float *p3,
 	a.x[1]=p1[0];	a.y[1]=p1[1];	a.zz[1]=p1[2];
 	a.x[2]=p2[0];	a.y[2]=p2[1];	a.zz[2]=p2[2];
 	a.x[3]=p3[0];	a.y[3]=p3[1];	a.zz[3]=p3[2];
-	float v = (a0+a1+a2+a3)/4;
+	mreal v = (a0+a1+a2+a3)/4;
 	mglColor c(GetC(v,false));
 	a.c[0]=c.r;		a.c[1]=c.g;		a.c[2]=c.b;
 	a.c[3]=alpha>0 ? alpha*(v+1)*(v+1) : -alpha*(v-1)*(v-1);
@@ -232,12 +232,12 @@ void mglGraphPS::add_prim(mglPrim *a)
 		P = (mglPrim *)realloc(P, pMax*sizeof(mglPrim));
 	}
 	// fog
-	float zz = FogDist*(a->z/Depth-0.5-FogDz);
+	mreal zz = FogDist*(a->z/Depth-0.5-FogDz);
 	if(zz<0)
 	{
-		float d = 1-exp(5*zz);
+		mreal d = 1-exp(5*zz);
 		if(255*d>=254)	return;	// not visible under fog
-		float cb[3] = {BDef[0]/255., BDef[1]/255., BDef[2]/255.}, b = 1-d;
+		mreal cb[3] = {BDef[0]/255., BDef[1]/255., BDef[2]/255.}, b = 1-d;
 		a->c[0] = a->c[0]*b + cb[0]*d;	a->c[1] = a->c[1]*b + cb[1]*d;
 		a->c[2] = a->c[2]*b + cb[2]*d;	a->c[3] = a->c[3]*b + d;
 	}
@@ -253,11 +253,11 @@ void mglGraphPS::add_prim(mglPrim *a)
 	pNum++;		Finished = false;
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::add_light(float *b, float n0,float n1, float n2)
+void mglGraphPS::add_light(mreal *b, mreal n0,mreal n1, mreal n2)
 {
 	if(UseLight && (n0*n0+n1*n1+n2*n2)!=0)
 	{
-		float d0,d1,d2,nn;
+		mreal d0,d1,d2,nn;
 		register long i,j;
 
 		b[0]*=AmbBr;	b[1]*=AmbBr;	b[2]*=AmbBr;
@@ -283,7 +283,7 @@ void mglGraphPS::add_light(float *b, float n0,float n1, float n2)
 	}
 }
 //-----------------------------------------------------------------------------
-char *mgl_get_dash(unsigned short d, float w)
+char *mgl_get_dash(unsigned short d, mreal w)
 {
 	static char s[64],b[4];
 	if(d==0xffff)	{	strcpy(s,"");	return s;	}
@@ -372,7 +372,7 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	if(m_T)	fprintf(fp,"/m_T {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl cp} def\n");
 	fprintf(fp,"\n");
 
-	float cp[3]={-1,-1,-1},wp=-1;
+	mreal cp[3]={-1,-1,-1},wp=-1;
 	int st=0;
 	char str[256]="";
 	for(i=0;i<pNum;i++)
@@ -445,7 +445,7 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 			else
 				fprintf(fp,"%s d0 dr\n",str);
 		}
-		memcpy(cp,P[i].c,3*sizeof(float));
+		memcpy(cp,P[i].c,3*sizeof(mreal));
 		if(P[i].type==0)	wp = 1;
 		if(P[i].type==1)	wp = P[i].w>1  ? P[i].w:1;
 		if(P[i].type==1)	st = P[i].style;
@@ -455,7 +455,7 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	fclose(fp);
 }
 //-----------------------------------------------------------------------------
-bool mglPrim::IsSame(float wp,float *cp,int st)
+bool mglPrim::IsSame(mreal wp,mreal *cp,int st)
 {
 	if(abs(type)!=1)	return false;
 	if(w>=1 && wp!=w)	return false;
@@ -496,14 +496,14 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 	fprintf(fp,"<!--Title: %s-->\n<!--CreationDate: %s-->\n\n",descr?descr:fname,ctime(&now));
 	fprintf(fp,"<g fill=\"none\" stroke=\"none\" stroke-width=\"0.5\">\n");
 
-	float cp[3]={-1,-1,-1},wp=-1;
+	mreal cp[3]={-1,-1,-1},wp=-1;
 	register long i,j,k;
 	int st=0;
 	for(i=0;i<pNum;i++)
 	{
 		if(P[i].type==0)
 		{
-			float x=P[i].x[0],y=Height-P[i].y[0],s=0.4*font_factor*P[i].s;
+			mreal x=P[i].x[0],y=Height-P[i].y[0],s=0.4*font_factor*P[i].s;
 			if(strchr("SDVT",P[i].m))
 				fprintf(fp,"<g fill=\"#%02x%02x%02x\">\n",
 					int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
@@ -596,7 +596,7 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 			}
 			fprintf(fp,"\"/> </g>\n");
 		}
-		memcpy(cp,P[i].c,3*sizeof(float));
+		memcpy(cp,P[i].c,3*sizeof(mreal));
 		if(P[i].type==0)	wp = 1;
 		if(P[i].type==1)	wp = P[i].w>1  ? P[i].w:1;
 		if(P[i].type==1)	st = P[i].style;
@@ -631,8 +631,8 @@ void mglPrim::Draw(mglGraphPS *gr)
 	unsigned char r[4]={(unsigned char)(255*c[0]),(unsigned char)(255*c[1]),
 				(unsigned char)(255*c[2]),(unsigned char)(255*c[3])};
 	long y1,x1,y2,x2;
-	float d1[2],d2[2], dxu,dxv,dyu,dyv;
-	register float u,v,xx,yy;
+	mreal d1[2],d2[2], dxu,dxv,dyu,dyv;
+	register mreal u,v,xx,yy;
 	register long i,j,g;
 
 	if(type==0)
@@ -701,7 +701,7 @@ void mglPrim::Draw(mglGraphPS *gr)
 	}
 	else if(type==1)
 	{
-		float b=(w<1?1:w), dd;
+		mreal b=(w<1?1:w), dd;
 
 		bool hor = fabs(x[1]-x[0])>fabs(y[1]-y[0]), tt;
 		d1[0] = x[1]-x[0];	d1[1] = y[1]-y[0];
@@ -772,7 +772,7 @@ void mglGraphPS::mark_plot(int x,int y, char type, unsigned char cs[4])
 {
 //	unsigned char cs[4]={(unsigned char)(255*cs[0]), (unsigned char)(255*cs[1]),
 //						(unsigned char)(255*cs[2]), (unsigned char)(255*cs[3])};
-	float v;
+	mreal v;
 	register long i,j,ss = long(MarkSize*0.35*font_factor);
 	if(type=='.' || ss==0)
 	{

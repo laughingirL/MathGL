@@ -23,10 +23,10 @@
 //	Low level plot functions for ZBuffer
 //
 //-----------------------------------------------------------------------------
-void mglGraphAB::curv_plot(long n,float *pp,bool *tt)
+void mglGraphAB::curv_plot(long n,mreal *pp,bool *tt)
 {
 	register long i;
-	float *p;
+	mreal *p;
 	if(!pp || n<2)	return;
 	PostScale(pp,n);
 	for(i=0;i<n-1;i++)
@@ -38,10 +38,10 @@ void mglGraphAB::curv_plot(long n,float *pp,bool *tt)
 	if(Arrow2>='A' && (!tt || tt[0]))	arrow_plot(pp,pp+3,Arrow2);
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::curv_plot(long n,float *pp,float *cc,bool *tt)
+void mglGraphAB::curv_plot(long n,mreal *pp,mreal *cc,bool *tt)
 {
 	register long i;
-	float *p,c1[4],c2[4],a;
+	mreal *p,c1[4],c2[4],a;
 	mglColor c;
 	if(!pp || n<2)	return;
 	PostScale(pp,n);
@@ -70,12 +70,12 @@ void mglGraphAB::curv_plot(long n,float *pp,float *cc,bool *tt)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::curv_plot(long n,float *pp,bool *tt,long *nn)
+void mglGraphAB::curv_plot(long n,mreal *pp,bool *tt,long *nn)
 {
 	register long i,k=0;
 	if(!pp || !nn || n<2)	return;
 	PostScale(pp,n);
-	float *p1,*p2;
+	mreal *p1,*p2;
 	for(i=0;i<n;i++)
 	{
 		k = nn[i];
@@ -85,17 +85,17 @@ void mglGraphAB::curv_plot(long n,float *pp,bool *tt,long *nn)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Mark(float x,float y,float z, char type)
+void mglGraphAB::Mark(mreal x,mreal y,mreal z, char type)
 {
-	float ps[3] = {x,y,z};
+	mreal ps[3] = {x,y,z};
 	PostScale(ps,1);
 	mark_plot(ps,type);
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::mesh_plot(long n,long m,float *pp,float *cc,bool *tt, int how)
+void mglGraphAB::mesh_plot(long n,long m,mreal *pp,mreal *cc,bool *tt, int how)
 {
 	register long i,j,i0,d=3*n;
-	float *p,*c;
+	mreal *p,*c;
 	long dx=1,dy=1;
 	if(MeshNum>1)	{	dx=(n-1)/(MeshNum-1);	dy=(m-1)/(MeshNum-1);	}
 	if(!DrawFace)	{	dx=(n-1)/9;	dy=(m-1)/9;	}
@@ -124,10 +124,10 @@ void mglGraphAB::mesh_plot(long n,long m,float *pp,float *cc,bool *tt, int how)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::wire_plot(long n,long m,float *pp,float *cc,bool *tt)
+void mglGraphAB::wire_plot(long n,long m,mreal *pp,mreal *cc,bool *tt)
 {
 	register long i,j,i0,d=3*n;
-	float *p,*c;
+	mreal *p,*c;
 	long dx=1,dy=1;
 	if(!DrawFace)	{	dx=(n-1)/9;	dy=(m-1)/9;	}
 	if(dx<1)	dx=1;	if(dy<1)	dy=1;
@@ -151,15 +151,15 @@ void mglGraphAB::wire_plot(long n,long m,float *pp,float *cc,bool *tt)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::surf_plot(long n,long m,float *pp,float *cc,bool *tt)
+void mglGraphAB::surf_plot(long n,long m,mreal *pp,mreal *cc,bool *tt)
 {
 	register long i,j,i0;
-	float *p,*c,*ns,d1[3],d2[3],*s;
+	mreal *p,*c,*ns,d1[3],d2[3],*s;
 	long k=3*n;
 	if(!pp || n<2 || m<2)	return;
 	PostScale(pp,n*m);	LightScale();
 	if(!DrawFace)	{	wire_plot(n,m,pp,cc,tt);	return;	}
-	ns = new float[3*n*m];
+	ns = new mreal[3*n*m];
 	for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
 	{
 		i0 = 3*(i+n*j);
@@ -170,7 +170,7 @@ void mglGraphAB::surf_plot(long n,long m,float *pp,float *cc,bool *tt)
 		ns[i0+1]=(d2[0]*d1[2]-d2[2]*d1[0]);
 		ns[i0+2]=(d2[1]*d1[0]-d2[0]*d1[1]);
 	}
-	memcpy(ns+3*(m-1)*n,ns+3*(m-2)*n,3*n*sizeof(float));
+	memcpy(ns+3*(m-1)*n,ns+3*(m-2)*n,3*n*sizeof(mreal));
 	for(i=0;i<m;i++)
 	{
 		i0 = 3*(n-2+i*n);
@@ -215,13 +215,13 @@ void mglGraphAB::surf_plot(long n,long m,float *pp,float *cc,bool *tt)
 	delete []ns;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::boxs_plot(long n, long m, float *pp, mglColor *cc, bool *tt,
-						float alpha,bool line)
+void mglGraphAB::boxs_plot(long n, long m, mreal *pp, mglColor *cc, bool *tt,
+						mreal alpha,bool line)
 {
 	if(!DrawFace)	line = true;
 	register long i,j,i0,i1,d=3*n;
 	bool h1,h2,s1,s2,s3,s4;
-	float cs[4],*p0,*p1,bs[4]={0,0,0,255};
+	mreal cs[4],*p0,*p1,bs[4]={0,0,0,255};
 	if(!pp || !cc)	return;
 	PostScale(pp,n*m+4*(n-1)*(m-1));	LightScale();
 	alpha = Transparent ? AlphaDef : 1;
@@ -315,9 +315,9 @@ void mglGraphAB::boxs_plot(long n, long m, float *pp, mglColor *cc, bool *tt,
 	}
 }
 //-----------------------------------------------------------------------------
-float mgl_cos_pp(float *pp,long i0,long i1,long i2)
+mreal mgl_cos_pp(mreal *pp,long i0,long i1,long i2)
 {
-	float p1=0,p2=0,pc=0,dp1,dp2;
+	mreal p1=0,p2=0,pc=0,dp1,dp2;
 	dp1 = pp[3*i1]-pp[3*i0];		dp2 = pp[3*i2]-pp[3*i0];
 	p1 = dp1*dp1;	p2 = dp2*dp2;	pc = dp1*dp2;
 	dp1 = pp[3*i1+1]-pp[3*i0+1];	dp2 = pp[3*i2+1]-pp[3*i0+1];
@@ -328,12 +328,12 @@ float mgl_cos_pp(float *pp,long i0,long i1,long i2)
 	return p1*p2>1e-10 ? pc/sqrt(p1*p2) : NAN;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky2, long *kz,float *pp,float *cc,float *kk,float *nn,bool wire)
+void mglGraphAB::surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky2, long *kz,mreal *pp,mreal *cc,mreal *kk,mreal *nn,bool wire)
 {
 	if(!DrawFace)	wire=true;	//return;	//wire=true;
 	register long i,j,k,i0,ii,jj;
 	long id[12],us[12],ni;
-	float d,d0,p[9],s[9],*c0,*c1,*c2=cc;
+	mreal d,d0,p[9],s[9],*c0,*c1,*c2=cc;
 	LightScale();	// set up light source
 
 	for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
@@ -372,11 +372,11 @@ void mglGraphAB::surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky
 			if(d<d0)	{	d0=d;	jj=ii;	}
 		}
 		// copy first 2 points as base
-		memcpy(p,pp+3*id[0],3*sizeof(float));
-		memcpy(p+3,pp+3*id[jj],3*sizeof(float));
-		memcpy(p+6,pp+3*id[1],3*sizeof(float));	// for correct orientation of triangles (in IDTF)
-		memcpy(s,nn+3*id[0],3*sizeof(float));
-		memcpy(s+3,nn+3*id[jj],3*sizeof(float));
+		memcpy(p,pp+3*id[0],3*sizeof(mreal));
+		memcpy(p+3,pp+3*id[jj],3*sizeof(mreal));
+		memcpy(p+6,pp+3*id[1],3*sizeof(mreal));	// for correct orientation of triangles (in IDTF)
+		memcpy(s,nn+3*id[0],3*sizeof(mreal));
+		memcpy(s+3,nn+3*id[jj],3*sizeof(mreal));
 		PostScale(p,3);		NormScale(s,2);
 		// select the same orientation of all triangles of the surface
 		bool proj = (s[0]*((p[4]-p[1])*(p[8]-p[2])-(p[5]-p[2])*(p[7]-p[1])) +
@@ -398,8 +398,8 @@ void mglGraphAB::surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky
 			}
 			if(i0<0)	break;	// no more triangles. NOTE: should be never here
 			jj = i0;	us[jj]=1;
-			memcpy(p+6,pp+3*id[jj],3*sizeof(float));
-			memcpy(s+6,nn+3*id[jj],3*sizeof(float));
+			memcpy(p+6,pp+3*id[jj],3*sizeof(mreal));
+			memcpy(s+6,nn+3*id[jj],3*sizeof(mreal));
 			PostScale(p+6,1);	NormScale(s+6,1);
 			c2 = cc ? cc+4*id[jj] : CDef;
 			if(!wire)
@@ -417,19 +417,19 @@ void mglGraphAB::surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky
 				}
 			}
 			else	line_plot(p+3,p+6,c1,c2,true);
-			memcpy(p+3,p+6,3*sizeof(float));	c1=c2;
-			memcpy(s+3,s+6,3*sizeof(float));
+			memcpy(p+3,p+6,3*sizeof(mreal));	c1=c2;
+			memcpy(s+3,s+6,3*sizeof(mreal));
 		}
 		if(wire)	line_plot(p,p+6,c0,c2,true);
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::axial_plot(long n,float *pp,long *nn,long np, bool wire)
+void mglGraphAB::axial_plot(long n,mreal *pp,long *nn,long np, bool wire)
 {
 	if(!DrawFace)	wire=true;
 	register long i,j;
 	bool g1,g2;
-	float r1,r2,y1,y2,c1,s1,ph,p1[6],p2[6],n1[6],n2[6],d;
+	mreal r1,r2,y1,y2,c1,s1,ph,p1[6],p2[6],n1[6],n2[6],d;
 	if(!pp || !nn)	return;
 	LightScale();	// set up light source
 	long k0=0,k1=1,k2=2;
@@ -476,18 +476,18 @@ void mglGraphAB::axial_plot(long n,float *pp,long *nn,long np, bool wire)
 						quad_plot(p1,p1+3,p2,p2+3,CDef,CDef,CDef,CDef);
 				}
 			}
-			memcpy(p2,p1,6*sizeof(float));
-			memcpy(n2,n1,6*sizeof(float));
+			memcpy(p2,p1,6*sizeof(mreal));
+			memcpy(n2,n1,6*sizeof(mreal));
 			g2 = g1;
 		}
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::quads_plot(long n,float *pp,float *cc,bool *tt)
+void mglGraphAB::quads_plot(long n,mreal *pp,mreal *cc,bool *tt)
 {
 //	if(!DrawFace)	return;
 	register long i;
-	float *p,*c;
+	mreal *p,*c;
 	PostScale(pp,4*n);	LightScale();
 	if(cc)
 	{
@@ -531,11 +531,11 @@ void mglGraphAB::quads_plot(long n,float *pp,float *cc,bool *tt)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool *tt,bool wire, bool bytrig)
+void mglGraphAB::trigs_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool *tt,bool wire, bool bytrig)
 {
 	if(!DrawFace)	wire=true;
 	register long i,j1,j2,j3;
-	float *c1,*c2,*c3;
+	mreal *c1,*c2,*c3;
 	PostScale(pp,m);	LightScale();
 	c1 = c2 = c3 = CDef;
 	for(i=0;i<n;i++)
@@ -560,10 +560,10 @@ void mglGraphAB::trigs_plot(long n, long *nn, long m, float *pp, float *cc, bool
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::lines_plot(long n,float *pp,float *cc,bool *tt)
+void mglGraphAB::lines_plot(long n,mreal *pp,mreal *cc,bool *tt)
 {
 	register long i;
-	float s1[4],s2[4],*p;
+	mreal s1[4],s2[4],*p;
 	mglColor col,c1=cmap[0],c2=NumCol>1?cmap[1]:cmap[0];
 	s1[3] = s2[3] = AlphaDef;
 	PostScale(pp,2*n);
@@ -588,16 +588,16 @@ void mglGraphAB::lines_plot(long n,float *pp,float *cc,bool *tt)
 			s1[0] = c1.r;	s1[1] = c1.g;	s1[2] = c1.b;
 			s2[0] = c2.r;	s2[1] = c2.g;	s2[2] = c2.b;
 		}
-		memcpy(CDef,s1,4*sizeof(float));
+		memcpy(CDef,s1,4*sizeof(mreal));
 		line_plot(p,p+3,s1,s2);		ball(p, CDef);
 	}
 	PDef = pOld;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::vects_plot(long n,float *pp,float *cc,bool *tt)
+void mglGraphAB::vects_plot(long n,mreal *pp,mreal *cc,bool *tt)
 {
 	register long i;
-	float s1[4],s2[4],*p,q[6],d;
+	mreal s1[4],s2[4],*p,q[6],d;
 	mglColor col,c1=cmap[0],c2=NumCol>1?cmap[1]:cmap[0];
 	s1[3] = s2[3] = AlphaDef;
 	PostScale(pp,2*n);
@@ -622,7 +622,7 @@ void mglGraphAB::vects_plot(long n,float *pp,float *cc,bool *tt)
 			s1[0] = c1.r;	s1[1] = c1.g;	s1[2] = c1.b;
 			s2[0] = c2.r;	s2[1] = c2.g;	s2[2] = c2.b;
 		}
-		memcpy(CDef,s1,4*sizeof(float));
+		memcpy(CDef,s1,4*sizeof(mreal));
 
 		d = hypot(p[3]-p[0],p[4]-p[1]);	// make arrow
 		q[0] = p[0]+0.8*(p[3]-p[0]) + 0.1*(p[4]-p[1]);
@@ -637,12 +637,12 @@ void mglGraphAB::vects_plot(long n,float *pp,float *cc,bool *tt)
 	PDef = pOld;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::cloud_plot(long nx,long ny,long nz,float *pp,float *a,float alpha)
+void mglGraphAB::cloud_plot(long nx,long ny,long nz,mreal *pp,mreal *a,mreal alpha)
 {
 	register long i,j,k,i0;
 	if(!pp || !a || !DrawFace || alpha==0)	return;
 	mglColor col;
-	float *aa=new float[nx*ny*nz],*p,*c;
+	mreal *aa=new mreal[nx*ny*nz],*p,*c;
 	bool *tt=new bool[nx*ny*nz];
 	long dy=3*nx,dz=3*ny*nx,d1=nx,d2=nx*ny;
 	if(!aa || !tt)
@@ -698,11 +698,11 @@ void mglGraphAB::combine(unsigned char *c1,unsigned char *c2)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line, char col)
+void mglGraphAB::Glyph(mreal x,mreal y, mreal f, int nt, const short *trig, int nl, const short *line, char col)
 {
 	long ik,ii,il;
-	float p[12], n[3]={0,0,0}, pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
-	float c[4]={CDef[0],CDef[1],CDef[2],CDef[3]};
+	mreal p[12], n[3]={0,0,0}, pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
+	mreal c[4]={CDef[0],CDef[1],CDef[2],CDef[3]};
 	mglColor cc = mglColor(col);
 	unsigned pdef=PDef;	PDef = 0xffff;
 	if(cc.Valid())	{	c[0]=cc.r;	c[1]=cc.g;	c[2]=cc.b;	}
@@ -742,7 +742,7 @@ void mglGraphAB::Glyph(float x,float y, float f, int nt, const short *trig, int 
 	}
 	if(nl<0)	// overline or underline
 	{
-		float dy = 0.004;
+		mreal dy = 0.004;
 		p[0]=x;			p[1]=y+dy;	p[2]=0;
 		p[3]=fabs(f)+x;	p[4]=y+dy;	p[5]=0;
 		p[6]=x;			p[7]=y-dy;	p[8]=0;

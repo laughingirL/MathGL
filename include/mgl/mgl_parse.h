@@ -29,7 +29,7 @@ struct mglArg
 	mglData *d;		///< Pointer to data (used if type==0)
 	wchar_t w[2048];///< String with parameters (used if type==1)
 	char s[2048];	///< String with parameters (used if type==1)
-	float v;		///< Numerical value (used if type==2)
+	mreal v;		///< Numerical value (used if type==2)
 	mglArg()	{	type=-1;	d=0;	v=0;	s[0]=0;	};
 };
 //-----------------------------------------------------------------------------
@@ -119,7 +119,7 @@ private:
 	wchar_t *out;		///< Buffer for writing C++ code (if not NULL)
 	wchar_t leg[128];	///< Buffer for legend
 	bool opt[16];	///< Set on/off optional parameters for command argument
-	float val[20];	///< Values for optional parameters
+	mreal val[20];	///< Values for optional parameters
 	bool Once;		///< Flag for command which should be executed only once
 	bool Skip;		///< Flag that commands should be skiped (inside 'once' block)
 	int if_stack[20];	///< Stack for if-else-endif commands

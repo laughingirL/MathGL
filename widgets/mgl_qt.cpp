@@ -152,16 +152,16 @@ void QMathGL::setRotate(bool r)
 }
 //-----------------------------------------------------------------------------
 void QMathGL::shiftDown()
-{	float d=(y2-y1)/3;	y1+=d;	y2+=d;	update();	}
+{	mreal d=(y2-y1)/3;	y1+=d;	y2+=d;	update();	}
 //-----------------------------------------------------------------------------
 void QMathGL::shiftUp()
-{	float d=(y2-y1)/3;	y1-=d;	y2-=d;	update();	}
+{	mreal d=(y2-y1)/3;	y1-=d;	y2-=d;	update();	}
 //-----------------------------------------------------------------------------
 void QMathGL::shiftRight()
-{	float d=(x2-x1)/3;	x1-=d;	x2-=d;	update();	}
+{	mreal d=(x2-x1)/3;	x1-=d;	x2-=d;	update();	}
 //-----------------------------------------------------------------------------
 void QMathGL::shiftLeft()
-{	float d=(x2-x1)/3;	x1+=d;	x2+=d;	update();	}
+{	mreal d=(x2-x1)/3;	x1+=d;	x2+=d;	update();	}
 //-----------------------------------------------------------------------------
 void QMathGL::restore()
 {
@@ -173,7 +173,7 @@ void QMathGL::restore()
 //-----------------------------------------------------------------------------
 void QMathGL::zoomIn()
 {
-	float d;
+	mreal d;
 	d = (y2-y1)/4;	y1 += d;	y2 -= d;
 	d = (x2-x1)/4;	x1 += d;	x2 -= d;
 	update();
@@ -181,7 +181,7 @@ void QMathGL::zoomIn()
 //-----------------------------------------------------------------------------
 void QMathGL::zoomOut()
 {
-	float d;
+	mreal d;
 	d = (y2-y1)/2;	y1 -= d;	y2 += d;
 	d = (x2-x1)/2;	x1 -= d;	x2 += d;
 	update();
@@ -220,6 +220,7 @@ void QMathGL::mousePressEvent(QMouseEvent *ev)
 		mglPoint p = graph->CalcXYZ(ev->x(), ev->y());
 		mousePos.sprintf("x=%g, y=%g, z=%g",p.x,p.y,p.z);
 		repaint();
+		emit mouseClick(p.x,p.y,p.z);
 	}
 	xe=x0=ev->x();	ye=y0=ev->y();	ev->accept();
 }
@@ -231,9 +232,9 @@ void QMathGL::mouseReleaseEvent(QMouseEvent *ev)
 		if(zoom)
 		{
 			int w1=width(),h1=height();
-			float _x1,_x2,_y1,_y2;
-			_x1 = x1+(x2-x1)*(x0-x())/float(w1);	_y1 = y2-(y2-y1)*(ye-y())/float(h1);
-			_x2 = x1+(x2-x1)*(xe-x())/float(w1);	_y2 = y2-(y2-y1)*(y0-y())/float(h1);
+			mreal _x1,_x2,_y1,_y2;
+			_x1 = x1+(x2-x1)*(x0-x())/mreal(w1);	_y1 = y2-(y2-y1)*(ye-y())/mreal(h1);
+			_x2 = x1+(x2-x1)*(xe-x())/mreal(w1);	_y2 = y2-(y2-y1)*(y0-y())/mreal(h1);
 			x1=_x1;		x2=_x2;		y1=_y1;		y2=_y2;
 			if(x1>x2)	{	_x1=x1;	x1=x2;	x2=_x1;	}
 			if(y1>y2)	{	_x1=y1;	y1=y2;	y2=_x1;	}
@@ -253,7 +254,7 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 	{
 		if(ev->buttons()&Qt::LeftButton)	// rotate
 		{
-			float ff = 240/sqrt(float(width()*height()));
+			mreal ff = 240/sqrt(mreal(width()*height()));
 			phi += int((x0-xe)*ff);
 			tet += int((y0-ye)*ff);
 			if(phi>180)	phi-=360;		if(phi<-180)	phi+=360;
@@ -263,8 +264,8 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 		}
 		if(ev->buttons()&Qt::RightButton)	// zoom and perspective
 		{
-			float ff = 2.*(y0-ye)/width(), gg = 0.5*(xe-x0)/height();
-			float cx = (x1+x2)/2, cy = (y1+y2)/2;
+			mreal ff = 2.*(y0-ye)/width(), gg = 0.5*(xe-x0)/height();
+			mreal cx = (x1+x2)/2, cy = (y1+y2)/2;
 			x1 = cx+(x1-cx)*exp(-ff);	x2 = cx+(x2-cx)*exp(-ff);
 			y1 = cy+(y1-cy)*exp(-ff);	y2 = cy+(y2-cy)*exp(-ff);
 			per = per + gg;
@@ -274,8 +275,8 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 		}
 		if(ev->buttons()&Qt::MidButton)	// shift
 		{
-			float ff = 1./sqrt(float(width()*height()));
-			float dx = (x0-xe)*ff*(x2-x1), dy = (y0-ye)*ff*(y2-y1);
+			mreal ff = 1./sqrt(mreal(width()*height()));
+			mreal dx = (x0-xe)*ff*(x2-x1), dy = (y0-ye)*ff*(y2-y1);
 			x1 += dx;	x2 += dx;	y1 -= dy;	y2 -= dy;
 		}
 		x0 = xe;	y0 = ye;
@@ -653,9 +654,7 @@ void mglGraphQT::makeMenu()
 		oo = new QMenu(TR("&Export as ..."),Wnd);
 		oo->addAction(TR("PNG"), QMGL, SLOT(exportPNG()),Qt::ALT+Qt::Key_P);
 		oo->addAction(TR("solid PNG"), QMGL, SLOT(exportPNGs()),Qt::ALT+Qt::Key_F);
-#ifndef WIN32
 		oo->addAction(TR("JPEG"), QMGL, SLOT(exportJPG()),Qt::ALT+Qt::Key_J);
-#endif
 		oo->addAction(TR("bitmap EPS"), QMGL, SLOT(exportBPS()));
 		oo->addAction(TR("vector EPS"), QMGL, SLOT(exportEPS()),Qt::ALT+Qt::Key_E);
 		oo->addAction(TR("SVG"), QMGL, SLOT(exportSVG()),Qt::ALT+Qt::Key_S);

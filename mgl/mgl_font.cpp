@@ -654,6 +654,7 @@ bool mglFont::read_def(unsigned &cur)
 bool mglFont::Load(const char *base, const char *path)
 {
 //	base = 0;
+	char *buf=0,sep='/';
 	FILE *fp;
 	char str[256];
 	setlocale(LC_NUMERIC,"C");
@@ -661,7 +662,6 @@ bool mglFont::Load(const char *base, const char *path)
 	if(!path)	path = MGL_FONT_PATH;
 	if(base)
 	{
-		char *buf,sep='/';
 #ifdef WIN32
 		sep='\\';
 #endif
@@ -676,7 +676,8 @@ bool mglFont::Load(const char *base, const char *path)
 	}
 	Clear();							// first clear old
 
-	if(!base || !read_main(base,path,cur))	{	read_def(cur);	return true;	}
+	if(!base || !read_main(base,path,cur))
+	{	read_def(cur);	if(buf)	delete []buf;	return true;	}
 
 	//================== bold ===========================================
 	sprintf(str,"%s/%s_b.vfm",path,base);
@@ -707,6 +708,7 @@ bool mglFont::Load(const char *base, const char *path)
 	// Finally normalize all factors
 	fact[0] *= mgl_fgen;	fact[1] *= mgl_fgen;
 	fact[2] *= mgl_fgen;	fact[3] *= mgl_fgen;
+	if(buf)	delete []buf;
 	return true;
 }
 //-----------------------------------------------------------------------------

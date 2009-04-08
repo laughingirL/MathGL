@@ -1,7 +1,11 @@
-					MathGL (for v.1.8.1)
+					MathGL (for v.1.8.2)
 
 1. Update documentation
-	*
+	* FAQ about bitmaps
+
+2. "Chaos" in area.png (near axis)
+
+3. QMathGL signal MouseClicked(float,float,float);
 
 4. Import/Export via GIF (as 3d data) ???
 

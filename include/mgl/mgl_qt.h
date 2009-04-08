@@ -152,6 +152,7 @@ signals:
 	void lightChanged(bool);	///< Lighting changed (by toolbar)
 	void zoomChanged(bool);		///< Zooming changed (by toolbar)
 	void rotateChanged(bool);	///< Rotation changed (by toolbar)
+	void mouseClick(float,float,float);	///< Position of mouse click
 protected:
 	void paintEvent(QPaintEvent *);
 	void resizeEvent(QResizeEvent *);
@@ -171,7 +172,7 @@ protected:
 	bool light;			///< Lightning state
 	bool zoom;			///< Mouse zoom state
 	bool rotate;		///< Mouse rotation state
-	float x1,x2,y1,y2;	///< Zoom in region
+	mreal x1,x2,y1,y2;	///< Zoom in region
 	bool showMessage;	///< Flag for showing messages (enabled by each execute())
 	QMenu *popup;		///< Pointer to pop-up menu
 	QTimer *timer;		///< Timer for animation

@@ -36,7 +36,7 @@ void mglData::Set(const char *v,int NX,int NY,int NZ)
 {
 	if(NX<1 || NY <1 || NZ<1)	return;
 	register int i,j=0,m=NX*NY*NZ;
-	float *b = new float[m];	memset(b,0,m*sizeof(float));
+	mreal *b = new mreal[m];	memset(b,0,m*sizeof(mreal));
 	for(i=0;i<m;i++)
 	{
 		while(isspace(v[j]) && v[j])	j++;
@@ -72,45 +72,72 @@ void mglData::Set(const float *A,int NX,int NY,int NZ)
 {
 	if(NX<=0 || NY<=0 || NZ<=0)	return;
 	Create(NX,NY,NZ);
+#if(MGL_USE_DOUBLE==1)
+	for(long i=0;i<NX*NY*NZ;i++)	a[i] = A[i];
+#else
 	memcpy(a,A,NX*NY*NZ*sizeof(float));
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglData::Set(const double *A,int NX,int NY,int NZ)
 {
 	if(NX<=0 || NY<=0 || NZ<=0)	return;
 	Create(NX,NY,NZ);
+#if(MGL_USE_DOUBLE==1)
+	memcpy(a,A,NX*NY*NZ*sizeof(double));
+#else
 	for(long i=0;i<NX*NY*NZ;i++)	a[i] = A[i];
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglData::Set(const float **A,int N1,int N2)
 {
 	if(N1<=0 || N2<=0)	return;
 	Create(N2,N1);
+#if(MGL_USE_DOUBLE==1)
+	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	a[j+i*N2] = A[i][j];
+#else
 	for(long i=0;i<N1;i++)
 		memcpy(a+i*N2,A[i],N2*sizeof(float));
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglData::Set(const double **A,int N1,int N2)
 {
 	if(N1<=0 || N2<=0)	return;
 	Create(N2,N1);
+#if(MGL_USE_DOUBLE==1)
+	for(long i=0;i<N1;i++)
+		memcpy(a+i*N2,A[i],N2*sizeof(double));
+#else
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	a[j+i*N2] = A[i][j];
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglData::Set(const float ***A,int N1,int N2,int N3)
 {
 	if(N1<=0 || N2<=0 || N3<=0)	return;
 	Create(N3,N2,N1);
+#if(MGL_USE_DOUBLE==1)
+	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	for(long k=0;k<N3;k++)
+		a[k+N3*(j+i*N2)] = A[i][j][k];
+#else
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)
 		memcpy(a+N3*(j+i*N2),A[i][j],N3*sizeof(float));
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglData::Set(const double ***A,int N1,int N2,int N3)
 {
 	if(N1<=0 || N2<=0 || N3<=0)	return;
 	Create(N3,N2,N1);
+#if(MGL_USE_DOUBLE==1)
+	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)
+		memcpy(a+N3*(j+i*N2),A[i][j],N3*sizeof(double));
+#else
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	for(long k=0;k<N3;k++)
 		a[k+N3*(j+i*N2)] = A[i][j][k];
+#endif
 }
 //-----------------------------------------------------------------------------
 mglData mglData::SubData(int xx,int yy,int zz) const
@@ -158,8 +185,8 @@ mglData mglData::Column(const char *eq)
 	mglFormula f(eq);
 	mglData d;
 	d.Create(ny,nz);
-	float var[MGL_VS];
-	memset(var,0,('z'-'a')*sizeof(float));
+	mreal var[MGL_VS];
+	memset(var,0,('z'-'a')*sizeof(mreal));
 	register long i,j;
 	for(i=0;i<ny*nz;i++)
 	{
@@ -273,9 +300,9 @@ void mglData::Create(int mx,int my,int mz)
 {
 	nx = mx>0 ? mx:1;	ny = my>0 ? my:1;	nz = mz>0 ? mz:1;
 	if(a)	{	delete []a;	delete []id;	}
-	a = new float[nx*ny*nz];
+	a = new mreal[nx*ny*nz];
 	id = new char[nx];
-	memset(a,0,nx*ny*nz*sizeof(float));
+	memset(a,0,nx*ny*nz*sizeof(mreal));
 	memset(id,0,nx*sizeof(char));
 }
 //-----------------------------------------------------------------------------
@@ -380,21 +407,21 @@ bool mglData::ReadMat(const char *fname,int dim)
 	return true;
 }
 //-----------------------------------------------------------------------------
-float mglData::v(int i,int j,int k) const
+mreal mglData::v(int i,int j,int k) const
 {
 	bool not_ok = i<0 || i>=nx || j<0 || j>=ny || k<0 || k>=nz;
 	if(not_ok)	return 0;
 	return a[i+nx*(j+ny*k)];
 }
 //-----------------------------------------------------------------------------
-mglData mglData::Resize(int mx, int my, int mz, float x1, float x2,
-	float y1, float y2, float z1, float z2) const
+mglData mglData::Resize(int mx, int my, int mz, mreal x1, mreal x2,
+	mreal y1, mreal y2, mreal z1, mreal z2) const
 {
 	register long i,j,k;
 	mglData d;
 	mx = mx<1 ? 1:mx;	my = my<1 ? 1:my;	mz = mz<1 ? 1:mz;
 	d.Create(mx,my,mz);
-	float dx, dy, dz;
+	mreal dx, dy, dz;
 	dx = mx>1 ? (x2-x1)/(mx-1):0;
 	dy = my>1 ? (y2-y1)/(my-1):0;
 	dz = mz>1 ? (z2-z1)/(mz-1):0;
@@ -480,65 +507,65 @@ void mglData::operator-=(const mglData &d)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglData::operator-=(float d)
+void mglData::operator-=(mreal d)
 {
 	for(long i=0;i<ny*nz*nx;i++)	a[i] -= d;
 }
 //-----------------------------------------------------------------------------
-void mglData::operator+=(float d)
+void mglData::operator+=(mreal d)
 {
 	for(long i=0;i<ny*nz*nx;i++)	a[i] += d;
 }
 //-----------------------------------------------------------------------------
-void mglData::operator*=(float d)
+void mglData::operator*=(mreal d)
 {
 	for(long i=0;i<ny*nz*nx;i++)	a[i] *= d;
 }
 //-----------------------------------------------------------------------------
-void mglData::operator/=(float d)
+void mglData::operator/=(mreal d)
 {
 	for(long i=0;i<ny*nz*nx;i++)	a[i] = d ? a[i]/d : 0;
 }
 //-----------------------------------------------------------------------------
-float mglData::Maximal() const
+mreal mglData::Maximal() const
 {
-	register float m=-1e10;
+	register mreal m=-1e10;
 	for(long i=0;i<nx*ny*nz;i++)
 		m = m>a[i] ? m : a[i];
 	return m;
 }
 //-----------------------------------------------------------------------------
-float mglData::Minimal() const
+mreal mglData::Minimal() const
 {
-	register float m=1e10;
+	register mreal m=1e10;
 	for(long i=0;i<nx*ny*nz;i++)
 		m = m<a[i] ? m : a[i];
 	return m;
 }
 //-----------------------------------------------------------------------------
-float mglData::Maximal(int &im,int &jm,int &km) const
+mreal mglData::Maximal(int &im,int &jm,int &km) const
 {
-	register float m=-1e10;
+	register mreal m=-1e10;
 	for(long i=0;i<nx*ny*nz;i++)
 		if(!isnan(a[i]) && m<a[i])
 		{	m=a[i];	im=i%nx;	jm=(i/nx)%ny;	km=i/(nx*ny);   }
 	return m;
 }
 //-----------------------------------------------------------------------------
-float mglData::Minimal(int &im,int &jm,int &km) const
+mreal mglData::Minimal(int &im,int &jm,int &km) const
 {
-	register float m=1e10;
+	register mreal m=1e10;
 	for(long i=0;i<nx*ny*nz;i++)
 		if(!isnan(a[i]) && m>a[i])
 		{	m=a[i];	im=i%nx;	jm=(i/nx)%ny;	km=i/(nx*ny);   }
 	return m;
 }
 //-----------------------------------------------------------------------------
-float mglData::Maximal(float &x,float &y,float &z) const
+mreal mglData::Maximal(mreal &x,mreal &y,mreal &z) const
 {
 	int im=-1,jm=-1,km=-1;
 	register long tm,i;
-	float m=Maximal(im,jm,km);
+	mreal m=Maximal(im,jm,km);
 	x=im;	y=jm;	z=km;
 
 	if(nx>2)
@@ -564,11 +591,11 @@ float mglData::Maximal(float &x,float &y,float &z) const
 	return m;
 }
 //-----------------------------------------------------------------------------
-float mglData::Minimal(float &x,float &y,float &z) const
+mreal mglData::Minimal(mreal &x,mreal &y,mreal &z) const
 {
 	int im=-1,jm=-1,km=-1;
 	register long tm,i;
-	float m=Minimal(im,jm,km);
+	mreal m=Minimal(im,jm,km);
 	x=im;	y=jm;	z=km;
 	if(nx>2)
 	{
@@ -596,7 +623,7 @@ float mglData::Minimal(float &x,float &y,float &z) const
 void mglData::Modify(const char *eq,int dim)
 {
 	long i,j,k,i0;
-	float x,y,z,dx=nx>1?1/(nx-1.):0,dy=ny>1?1/(ny-1.):0;
+	mreal x,y,z,dx=nx>1?1/(nx-1.):0,dy=ny>1?1/(ny-1.):0;
 	mglFormula eqs(eq);
 	if(dim<0)	dim=0;
 	if(nz>1)	// 3D array
@@ -626,10 +653,10 @@ void mglData::Modify(const char *eq,int dim)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglData::Fill(float x1,float x2,char dir)
+void mglData::Fill(mreal x1,mreal x2,char dir)
 {
 	long i,j,k;
-	register float x;
+	register mreal x;
 	if(isnan(x2))	x2=x1;
 	if(dir<'x' || dir>'z')	dir='x';
 	for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
@@ -641,10 +668,10 @@ void mglData::Fill(float x1,float x2,char dir)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglData::Norm(float v1,float v2,bool sym,int dim)
+void mglData::Norm(mreal v1,mreal v2,bool sym,int dim)
 {
 	long i,s,nn=nx*ny*nz;
-	float a1=1e20,a2=-1e20,v;
+	mreal a1=1e20,a2=-1e20,v;
 	if(nz>1)	s = dim*nx*ny;
 	else		s = dim*ny;
 	for(i=s;i<nn;i++)	// determines borders of existing data
@@ -669,7 +696,7 @@ void mglData::Norm(float v1,float v2,bool sym,int dim)
 void mglData::Squeeze(int rx,int ry,int rz,bool smooth)
 {
 	long kx,ky,kz,i,j,k;
-	float *b;
+	mreal *b;
 
 	// simple checking
 	if(rx<1)	rx=1;	if(rx>nx)	rx=nx;
@@ -677,7 +704,7 @@ void mglData::Squeeze(int rx,int ry,int rz,bool smooth)
 	if(rz<1)	rz=1;	if(rz>nz)	rz=nz;
 	// new sizes
 	kx = nx/rx;	ky = ny/ry;	kz = nz/rz;
-	b = new float[kx*ky*kz];
+	b = new mreal[kx*ky*kz];
 //	if(!smooth)
 	for(i=0;i<kx;i++)  for(j=0;j<ky;j++)  for(k=0;k<kz;k++)
 		b[i+kx*(j+ky*k)] = a[i*rx+nx*(j*ry+ny*rz*k)];
@@ -715,38 +742,38 @@ void mglData::Extend(int n1, int n2)
 {
 	if(nz>2 || n1==0)	return;
 	long mx,my,mz;
-	float *b=0;
+	mreal *b=0;
 	register long i,j;
 	if(n1>0) // extend to higher dimension(s)
 	{
 		n2 = n2>0 ? n2:1;
 		mx = nx;	my = ny>1?ny:n1;	mz = ny>1 ? n1 : n2;
-		b = new float[mx*my*mz];
+		b = new mreal[mx*my*mz];
 		if(ny>1)	for(i=0;i<n1;i++)
-			memcpy(b+i*nx*ny, a, nx*ny*sizeof(float));
+			memcpy(b+i*nx*ny, a, nx*ny*sizeof(mreal));
 		else		for(i=0;i<n1*n2;i++)
-			memcpy(b+i*nx, a, nx*sizeof(float));
+			memcpy(b+i*nx, a, nx*sizeof(mreal));
 	}
 	else
 	{
 		mx = -n1;	my = n2<0 ? -n2 : nx;	mz = n2<0 ? nx : ny;
 		if(n2>0 && ny==1)	mz = n2;
-		b = new float[mx*my*mz];
+		b = new mreal[mx*my*mz];
 		if(n2<0)	for(i=0;i<mx*my;i++)	for(j=0;j<nx;j++)
 			b[i+mx*my*j] = a[j];
 		else		for(i=0;i<mx;i++)		for(j=0;j<nx*ny;j++)
 			b[i+mx*j] = a[j];
 		if(n2>0 && ny==1)	for(i=0;i<n2;i++)
-			memcpy(b+i*mx*my, a, mx*my*sizeof(float));
+			memcpy(b+i*mx*my, a, mx*my*sizeof(mreal));
 	}
 	if(b)	{	delete []a;	a = b;	nx = mx;	ny = my;	nz = mz;	}
 }
 //-----------------------------------------------------------------------------
 void mglData::Transpose(const char *dim)
 {
-	float *b=new float[nx*ny*nz];
+	mreal *b=new mreal[nx*ny*nz];
 	register long i,j,k,n;
-	if(!strcmp(dim,"xyz"))	memcpy(b,a,nx*ny*nz*sizeof(float));
+	if(!strcmp(dim,"xyz"))	memcpy(b,a,nx*ny*nz*sizeof(mreal));
 	else if(!strcmp(dim,"xzy") || !strcmp(dim,"zy"))
 	{
 		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
@@ -785,7 +812,7 @@ void mglData::Modify(const char *eq, const mglData &v, const mglData &w)
 	if(v.nx*v.ny*v.nz!=nx*ny*nz || w.nx*w.ny*w.nz!=nx*ny*nz)
 		return;
 	long i,j,k,i0;
-	float x,y,z,dx=nx>1?1/(nx-1.):0,dy=ny>1?1/(ny-1.):0,dz=nz>1?1/(nz-1.):0;
+	mreal x,y,z,dx=nx>1?1/(nx-1.):0,dy=ny>1?1/(ny-1.):0,dz=nz>1?1/(nz-1.):0;
 	mglFormula eqs(eq);
 	for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 	{
@@ -799,7 +826,7 @@ void mglData::Modify(const char *eq, const mglData &v)
 {
 	if(v.nx*v.ny*v.nz!=nx*ny*nz)	return;
 	long i,j,k,i0;
-	float x,y,z,dx=nx>1?1/(nx-1.):0,dy=ny>1?1/(ny-1.):0,dz=nz>1?1/(nz-1.):0;
+	mreal x,y,z,dx=nx>1?1/(nx-1.):0,dy=ny>1?1/(ny-1.):0,dz=nz>1?1/(nz-1.):0;
 	mglFormula eqs(eq);
 	for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 	{
@@ -814,9 +841,9 @@ void mglData::Fill(const char *eq, mglPoint r1, mglPoint r2, const mglData *v, c
 	if(v && v->nx*v->ny*v->nz!=nx*ny*nz)	return;
 	if(w && w->nx*w->ny*w->nz!=nx*ny*nz)	return;
 	long i,j,k,i0;
-	float x,y,z,dx=nx>1?(r2.x-r1.x)/(nx-1.):0;
-	float dy=ny>1?(r2.y-r1.y)/(ny-1.):0;
-	float dz=nz>1?(r2.z-r1.z)/(nz-1.):0;
+	mreal x,y,z,dx=nx>1?(r2.x-r1.x)/(nx-1.):0;
+	mreal dy=ny>1?(r2.y-r1.y)/(ny-1.):0;
+	mreal dz=nz>1?(r2.z-r1.z)/(nz-1.):0;
 	mglFormula eqs(eq);
 	for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 	{
@@ -841,8 +868,13 @@ void mglData::SaveHDF(const char *fname,const char *data,bool rewrite) const
 	else if(nz==1)	{	rank = 2;	dims[0] = ny;	dims[1] = nx;	}
 	else	{	rank = 3;	dims[0] = nz;	dims[1] = ny;	dims[2] = nx;	}
 	hs = H5Screate_simple(rank, dims, 0);
-	hd = H5Dcreate(hf, data, H5T_IEEE_F32LE, hs, H5P_DEFAULT);
+#if(MGL_USE_DOUBLE==1)
+	hd = H5Dcreate(hf, data, H5T_NATIVE_DOUBLE, hs, H5P_DEFAULT);
+	H5Dwrite(hd, H5T_NATIVE_DOUBLE, hs, hs, H5P_DEFAULT, a);
+#else
+	hd = H5Dcreate(hf, data, H5T_NATIVE_FLOAT, hs, H5P_DEFAULT);
 	H5Dwrite(hd, H5T_NATIVE_FLOAT, hs, hs, H5P_DEFAULT, a);
+#endif
 	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
 }
 //-----------------------------------------------------------------------------
@@ -865,8 +897,12 @@ void mglData::ReadHDF(const char *fname,const char *data)
 		case 2:	nx = dims[1];	ny = dims[0];	break;
 		case 3:	nx = dims[2];	ny = dims[1];	nz = dims[0];	break;
 		}
-		delete []a;		a = new float[nx*ny*nz];
+		delete []a;		a = new mreal[nx*ny*nz];
+#if(MGL_USE_DOUBLE==1)
+		H5Dread(hd, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, a);
+#else
 		H5Dread(hd, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, a);
+#endif
 	}
 	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
 }
@@ -875,19 +911,19 @@ void mglData::SaveHDF(const char *fname,const char *data,bool rewrite) const {}
 void mglData::ReadHDF(const char *fname,const char *data)	{}
 #endif
 //-----------------------------------------------------------------------------
-bool mgl_add_file(long &kx,long &ky, long &kz, float *&b, mglData &d,bool as_slice)
+bool mgl_add_file(long &kx,long &ky, long &kz, mreal *&b, mglData &d,bool as_slice)
 {
 	if(as_slice && d.nz==1)
 	{
 		if(kx==d.nx && d.ny==1)
 		{
-			b = (float *)realloc(b,kx*(ky+1)*sizeof(float));
-			memcpy(b+kx*ky,d.a,kx*sizeof(float));		ky++;
+			b = (mreal *)realloc(b,kx*(ky+1)*sizeof(mreal));
+			memcpy(b+kx*ky,d.a,kx*sizeof(mreal));		ky++;
 		}
 		else if(kx==d.nx && ky==d.ny)
 		{
-			b = (float *)realloc(b,kx*ky*(kz+1)*sizeof(float));
-			memcpy(b+kx*ky*kz,d.a,kx*ky*sizeof(float));	kz++;
+			b = (mreal *)realloc(b,kx*ky*(kz+1)*sizeof(mreal));
+			memcpy(b+kx*ky*kz,d.a,kx*ky*sizeof(mreal));	kz++;
 		}
 		else	return false;
 	}
@@ -895,28 +931,28 @@ bool mgl_add_file(long &kx,long &ky, long &kz, float *&b, mglData &d,bool as_sli
 	{
 		if(d.ny*d.nz==1 && ky*kz==1)
 		{
-			b = (float *)realloc(b,(kx+d.nx)*sizeof(float));
-			memcpy(b+kx,d.a,d.nx*sizeof(float));	kx+=d.nx;
+			b = (mreal *)realloc(b,(kx+d.nx)*sizeof(mreal));
+			memcpy(b+kx,d.a,d.nx*sizeof(mreal));	kx+=d.nx;
 		}
 		else if(kx==d.nx && kz==1 && d.nz==1)
 		{
-			b = (float *)realloc(b,kx*(ky+d.ny)*sizeof(float));
-			memcpy(b+kx*ky,d.a,kx*d.ny*sizeof(float));	ky+=d.ny;
+			b = (mreal *)realloc(b,kx*(ky+d.ny)*sizeof(mreal));
+			memcpy(b+kx*ky,d.a,kx*d.ny*sizeof(mreal));	ky+=d.ny;
 		}
 		else if(kx==d.nx && ky==d.ny)
 		{
-			b = (float *)realloc(b,kx*kx*(kz+d.nz)*sizeof(float));
-			memcpy(b+kx*ky*kz,d.a,kx*ky*d.nz*sizeof(float));	kz+=d.nz;
+			b = (mreal *)realloc(b,kx*kx*(kz+d.nz)*sizeof(mreal));
+			memcpy(b+kx*ky*kz,d.a,kx*ky*d.nz*sizeof(mreal));	kz+=d.nz;
 		}
 		else	return false;
 	}
 	return true;
 }
 //-----------------------------------------------------------------------------
-bool mglData::ReadRange(const char *templ, float from, float to, float step, bool as_slice)
+bool mglData::ReadRange(const char *templ, mreal from, mreal to, mreal step, bool as_slice)
 {
 	mglData d;
-	float t = from, *b;
+	mreal t = from, *b;
 	long kx,ky,kz;
 	char *fname = new char[strlen(templ)+20];
 
@@ -925,8 +961,8 @@ bool mglData::ReadRange(const char *templ, float from, float to, float step, boo
 
 	if(t>to)	return false;
 	kx = d.nx;	ky = d.ny;	kz = d.nz;
-	b = (float *)malloc(kx*ky*kz*sizeof(float));
-	memcpy(b,d.a,kx*ky*kz*sizeof(float));
+	b = (mreal *)malloc(kx*ky*kz*sizeof(mreal));
+	memcpy(b,d.a,kx*ky*kz*sizeof(mreal));
 
 	// read other files
 	for(;t<=to;t+=step)
@@ -947,7 +983,7 @@ bool mglData::ReadAll(const char *templ, bool as_slice)
 	mglData d;
 	glob_t res;
 	unsigned long i;
-	float *b;
+	mreal *b;
 	long kx,ky,kz;
 	char *fname = new char[256];
 	glob (templ, GLOB_TILDE, NULL, &res);
@@ -958,8 +994,8 @@ bool mglData::ReadAll(const char *templ, bool as_slice)
 
 	if(i>=res.gl_pathc)	return false;
 	kx = d.nx;	ky = d.ny;	kz = d.nz;
-	b = (float *)malloc(kx*ky*kz*sizeof(float));
-	memcpy(b,d.a,kx*ky*kz*sizeof(float));
+	b = (mreal *)malloc(kx*ky*kz*sizeof(mreal));
+	memcpy(b,d.a,kx*ky*kz*sizeof(mreal));
 
 	for(;i<res.gl_pathc;i++)
 	{
@@ -979,27 +1015,27 @@ bool mglData::ReadAll(const char *templ, bool as_slice)
 //-----------------------------------------------------------------------------
 mglData operator*(const mglData &b, const mglData &d)
 {	mglData a(b);	a*=d;	return a;	}
-mglData operator*(float b, const mglData &d)
+mglData operator*(mreal b, const mglData &d)
 {	mglData a(d);	a*=b;	return a;	}
-mglData operator*(const mglData &d, float b)
+mglData operator*(const mglData &d, mreal b)
 {	mglData a(d);	a*=b;	return a;	}
 mglData operator-(const mglData &b, const mglData &d)
 {	mglData a(b);	a-=d;	return a;	}
-mglData operator-(float b, const mglData &d)
+mglData operator-(mreal b, const mglData &d)
 {	mglData a(d);	a-=b;	return a;	}
-mglData operator-(const mglData &d, float b)
+mglData operator-(const mglData &d, mreal b)
 {	mglData a(d);	a-=b;	return a;	}
 mglData operator+(const mglData &b, const mglData &d)
 {	mglData a(b);	a+=d;	return a;	}
-mglData operator+(float b, const mglData &d)
+mglData operator+(mreal b, const mglData &d)
 {	mglData a(d);	a+=b;	return a;	}
-mglData operator+(const mglData &d, float b)
+mglData operator+(const mglData &d, mreal b)
 {	mglData a(d);	a+=b;	return a;	}
 mglData operator/(const mglData &b, const mglData &d)
 {	mglData a(b);	a/=d;	return a;	}
-mglData operator/(const mglData &d, float b)
+mglData operator/(const mglData &d, mreal b)
 {	mglData a(d);	a/=b;	return a;	}
-void mglData::operator=(float v)
+void mglData::operator=(mreal v)
 {	for(long i=0;i<nx*ny*nz;i++)	a[i]=v;	}
 //-----------------------------------------------------------------------------
 void mglData::Set(const std::vector<int> &d)

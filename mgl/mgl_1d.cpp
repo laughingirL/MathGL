@@ -26,7 +26,7 @@
 //	Primitives
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Cone(mglPoint p1, mglPoint p2, float r1, float r2, const char *stl, bool edge)
+void mglGraph::Cone(mglPoint p1, mglPoint p2, mreal r1, mreal r2, const char *stl, bool edge)
 {
 	if(r2<0)	r2 = r1;
 	if(r1==0 && r2==0)	return;		// zero radius is invisible
@@ -34,7 +34,7 @@ void mglGraph::Cone(mglPoint p1, mglPoint p2, float r1, float r2, const char *st
 	mglData x(n), y(n), z(n), r(n);
 	if(edge)
 	{
-		float d;
+		mreal d;
 		d = (p2.x-p1.x)/1e3;	x.a[0] = p1.x-d;	x.a[1] = p1.x;	x.a[2] = p2.x;	x.a[3] = p2.x+d;
 		d = (p2.y-p1.y)/1e3;	y.a[0] = p1.y-d;	y.a[1] = p1.y;	y.a[2] = p2.y;	y.a[3] = p2.y+d;
 		d = (p2.z-p1.z)/1e3;	z.a[0] = p1.z-d;	z.a[1] = p1.z;	z.a[2] = p2.z;	z.a[3] = p2.z+d;
@@ -56,7 +56,7 @@ void mglGraph::Curve(mglPoint p1, mglPoint d1, mglPoint p2, mglPoint d2,
 	static int cgid=1;	StartGroup("Curve",cgid++);
 	register long i;
 	n = (n<2) ? 2 : n;
-	float *pp = new float[3*n],a[3],b[3],s;
+	mreal *pp = new mreal[3*n],a[3],b[3],s;
 	bool cut = Cut;	Cut = true;
 	SelectPen(stl);
 	a[0] = 3*(p2.x-p1.x) - (d2.x+2*d1.x);	b[0] = d1.x+d2.x - 2*(p2.x-p1.x);
@@ -81,13 +81,13 @@ void mglGraph::Line(mglPoint p1, mglPoint p2, const char *stl, int n)
 {
 	register long i;
 	n = (n<2) ? 2 : n;
-	float *pp = new float[3*n],s;
+	mreal *pp = new mreal[3*n],s;
 	bool cut = Cut;	Cut = true;
 	SelectPen(stl);
 
 	for(i=0;i<n;i++)
 	{
-		s = i/float(n-1);
+		s = i/mreal(n-1);
 		pp[3*i+0] = p1.x+s*(p2.x-p1.x);
 		pp[3*i+1] = p1.y+s*(p2.y-p1.y);
 		pp[3*i+2] = p1.z+s*(p2.z-p1.z);
@@ -116,14 +116,14 @@ void mglGraph::Error(mglPoint p,mglPoint e,const char *pen)
 //	Plot by formulas series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Plot(const char *eqY, const char *pen, float zVal, int n)
+void mglGraph::Plot(const char *eqY, const char *pen, mreal zVal, int n)
 {
 	// TODO Add strong function variation analisys
 	if(eqY==0 || eqY[0]==0)	return;		// nothing to plot
 	mglData y(n);
 	mglFormula *eq = new mglFormula(eqY);
 	register int i;
-	float d = (Max.x - Min.x)/(n-1.);
+	mreal d = (Max.x - Min.x)/(n-1.);
 	for(i=0;i<n;i++)
 	{
 		y.a[i] = eq->Calc(Min.x + i*d);
@@ -140,7 +140,7 @@ void mglGraph::Plot(const char *eqX, const char *eqY, const char *eqZ, const cha
 	ey = new mglFormula(eqY ? eqY : "0");
 	ez = new mglFormula(eqZ ? eqZ : "0");
 	register int i;
-	register float t;
+	register mreal t;
 	for(i=0;i<n;i++)
 	{
 		t = i/(n-1.);
@@ -164,7 +164,7 @@ void mglGraph::Plot(const mglData &x, const mglData &y, const mglData &z, const 
 	if(n<2)					{	SetWarn(mglWarnLow,"Plot");	return;	}
 	static int cgid=1;	StartGroup("Plot",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	float *pp = new float[3*n];
+	mreal *pp = new mreal[3*n];
 	bool *tt = new bool[n];
 	for(j=0;j<m;j++)
 	{
@@ -187,7 +187,7 @@ void mglGraph::Plot(const mglData &x, const mglData &y, const mglData &z, const 
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Plot(const mglData &x, const mglData &y, const char *pen,float zVal)
+void mglGraph::Plot(const mglData &x, const mglData &y, const char *pen,mreal zVal)
 {
 	mglData z(y.nx);
 	if(isnan(zVal))	zVal = Min.z;
@@ -195,7 +195,7 @@ void mglGraph::Plot(const mglData &x, const mglData &y, const char *pen,float zV
 	Plot(x,y,z,pen);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Plot(const mglData &y, const char *pen,float zVal)
+void mglGraph::Plot(const mglData &y, const char *pen,mreal zVal)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Plot");	return;	}
 	mglData x(y.nx);
@@ -217,7 +217,7 @@ void mglGraph::Tens(const mglData &x, const mglData &y, const mglData &z, const 
 	if(n<2)					{	SetWarn(mglWarnLow,"Tens");	return;	}
 	static int cgid=1;	StartGroup("Tens",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	float *pp = new float[3*n], *cc = new float[n];
+	mreal *pp = new mreal[3*n], *cc = new mreal[n];
 	bool *tt = new bool[n];
 	if(pen && *pen)	SetScheme(pen);
 	if(pen && *pen)	mk=SelectPen(pen);
@@ -234,14 +234,14 @@ void mglGraph::Tens(const mglData &x, const mglData &y, const mglData &z, const 
 			tt[i] = ScalePoint(pp[k],pp[k+1],pp[k+2]);
 //			if(mk && tt[i])	Mark(pp[k],pp[k+1],pp[k+2],mk);
 		}
-		memcpy(cc,c.a+(j<c.ny?j:0)*n,n*sizeof(float));
+		memcpy(cc,c.a+(j<c.ny?j:0)*n,n*sizeof(mreal));
 		curv_plot(n,pp,cc,tt);
 	}
 	EndGroup();
 	delete []tt;	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Tens(const mglData &x, const mglData &y, const mglData &c, const char *pen,float zVal)
+void mglGraph::Tens(const mglData &x, const mglData &y, const mglData &c, const char *pen,mreal zVal)
 {
 	mglData z(y.nx);
 	if(isnan(zVal))	zVal = Min.z;
@@ -249,7 +249,7 @@ void mglGraph::Tens(const mglData &x, const mglData &y, const mglData &c, const 
 	Tens(x,y,z,c,pen);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Tens(const mglData &y, const mglData &c, const char *pen,float zVal)
+void mglGraph::Tens(const mglData &y, const mglData &c, const char *pen,mreal zVal)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Tens");	return;	}
 	mglData x(y.nx);
@@ -269,7 +269,7 @@ void mglGraph::Area(const mglData &x, const mglData &y, const mglData &z, const 
 	if(n<2)					{	SetWarn(mglWarnLow,"Area");	return;	}
 	static int cgid=1;	StartGroup("Area3",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	float *pp = new float[6*n],z0=GetOrgZ('x');
+	mreal *pp = new mreal[6*n],z0=GetOrgZ('x');
 	bool *tt = new bool[2*n];
 	for(j=0;j<m;j++)
 	{
@@ -294,14 +294,14 @@ void mglGraph::Area(const mglData &x, const mglData &y, const mglData &z, const 
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Area(const mglData &x, const mglData &y, const char *pen,bool sum,float zVal)
+void mglGraph::Area(const mglData &x, const mglData &y, const char *pen,bool sum,mreal zVal)
 {
 	long i,j,n=y.nx,m=y.ny,mx;
 	char mk=0;
 	if(x.nx!=n)	{	SetWarn(mglWarnDim,"Area");	return;	}
 	if(n<2)		{	SetWarn(mglWarnLow,"Area");	return;	}
 	static int cgid=1;	StartGroup("Curve",cgid++);
-	float *pp = new float[6*n],y0=GetOrgY('x');
+	mreal *pp = new mreal[6*n],y0=GetOrgY('x');
 	bool *tt = new bool[2*n], znan = isnan(zVal);
 //	if(isnan(zVal))	zVal = Min.z;
 	mglData f(y);
@@ -331,7 +331,7 @@ void mglGraph::Area(const mglData &x, const mglData &y, const char *pen,bool sum
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Area(const mglData &y, const char *pen,bool sum,float zVal)
+void mglGraph::Area(const mglData &y, const char *pen,bool sum,mreal zVal)
 {
 	if(y.nx<2)		{	SetWarn(mglWarnLow,"Area");	return;	}
 	mglData x(y.nx);
@@ -343,7 +343,7 @@ void mglGraph::Area(const mglData &y, const char *pen,bool sum,float zVal)
 //	Region series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, const char *pen, float zVal, bool inside)
+void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, const char *pen, mreal zVal, bool inside)
 {
 	long i,j, n=y1.nx, m=y1.ny, mx;
 	char mk=0;
@@ -351,7 +351,7 @@ void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, co
 	{	SetWarn(mglWarnDim,"Region");	return;	}
 	if(n<2)	{	SetWarn(mglWarnLow,"Region");	return;	}
 	static int cgid=1;	StartGroup("Region",cgid++);
-	float *pp = new float[6*n], f1,f2;
+	mreal *pp = new mreal[6*n], f1,f2;
 	bool *tt = new bool[2*n];
 	if(isnan(zVal))	zVal = Min.z;
 
@@ -377,7 +377,7 @@ void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, co
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Region(const mglData &y1, const mglData &y2, const char *pen, float zVal, bool inside)
+void mglGraph::Region(const mglData &y1, const mglData &y2, const char *pen, mreal zVal, bool inside)
 {
 	mglData x(y1.nx);
 	x.Fill(Min.z, Max.z);
@@ -397,7 +397,7 @@ void mglGraph::Step(const mglData &x, const mglData &y, const mglData &z, const 
 	if(n<2)					{	SetWarn(mglWarnLow,"Step");	return;	}
 	static int cgid=1;	StartGroup("Step3",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	float *pp = new float[6*n];
+	mreal *pp = new mreal[6*n];
 	bool *tt = new bool[2*n];
 	for(j=0;j<m;j++)
 	{
@@ -425,7 +425,7 @@ void mglGraph::Step(const mglData &x, const mglData &y, const mglData &z, const 
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Step(const mglData &x, const mglData &y, const char *pen,float zVal)
+void mglGraph::Step(const mglData &x, const mglData &y, const char *pen,mreal zVal)
 {
 	long i,j,m,mx,my,n=y.nx;
 	char mk=0;
@@ -434,7 +434,7 @@ void mglGraph::Step(const mglData &x, const mglData &y, const char *pen,float zV
 	if(n<2)		{	SetWarn(mglWarnLow,"Step");	return;	}
 	static int cgid=1;	StartGroup("Step",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;
-	float *pp = new float[6*n];
+	mreal *pp = new mreal[6*n];
 	bool *tt = new bool[2*n];
 	if(isnan(zVal))	zVal = Min.z;
 
@@ -464,7 +464,7 @@ void mglGraph::Step(const mglData &x, const mglData &y, const char *pen,float zV
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Step(const mglData &y, const char *pen,float zVal)
+void mglGraph::Step(const mglData &y, const char *pen,mreal zVal)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Step");	return;	}
 	mglData x(y.nx);
@@ -485,7 +485,7 @@ void mglGraph::Stem(const mglData &x, const mglData &y, const mglData &z, const 
 	if(n<2)					{	SetWarn(mglWarnLow,"Stem");	return;	}
 	static int cgid=1;	StartGroup("Stem3",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	float *pp = new float[6*n],z0=GetOrgZ('x');
+	mreal *pp = new mreal[6*n],z0=GetOrgZ('x');
 	long *nn = new long[2*n];
 	bool *tt = new bool[2*n];
 	for(j=0;j<m;j++)
@@ -510,7 +510,7 @@ void mglGraph::Stem(const mglData &x, const mglData &y, const mglData &z, const 
 	delete []tt;	delete []pp;	delete []nn;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Stem(const mglData &x, const mglData &y, const char *pen,float zVal)
+void mglGraph::Stem(const mglData &x, const mglData &y, const char *pen,mreal zVal)
 {
 	long i,j,m,mx,my,n=y.nx;
 	char mk=0;
@@ -519,7 +519,7 @@ void mglGraph::Stem(const mglData &x, const mglData &y, const char *pen,float zV
 	if(n<2)		{	SetWarn(mglWarnLow,"Stem");	return;	}
 	static int cgid=1;	StartGroup("Stem",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;
-	float *pp = new float[6*n],y0=GetOrgY('x');
+	mreal *pp = new mreal[6*n],y0=GetOrgY('x');
 	long *nn = new long[2*n];
 	bool *tt = new bool[2*n];
 	if(isnan(zVal))	zVal = Min.z;
@@ -546,7 +546,7 @@ void mglGraph::Stem(const mglData &x, const mglData &y, const char *pen,float zV
 	delete []tt;	delete []pp;	delete []nn;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Stem(const mglData &y, const char *pen,float zVal)
+void mglGraph::Stem(const mglData &y, const char *pen,mreal zVal)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Stem");	return;	}
 	mglData x(y.nx);
@@ -566,7 +566,7 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const 
 	if(n<2)					{	SetWarn(mglWarnLow,"Bars");	return;	}
 	static int cgid=1;	StartGroup("Bars3",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	float *pp = new float[12*n],x1,x2,y1,y2,z0=GetOrgZ('x'),zz;
+	mreal *pp = new mreal[12*n],x1,x2,y1,y2,z0=GetOrgZ('x'),zz;
 	bool *tt = new bool[4*n], wire = pen && strchr(pen,'#');
 	mglData dd(above ? n : 1);
 
@@ -611,7 +611,7 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const 
 		quads_plot(n,pp,0,tt);
 		if(wire)	for(i=0;i<n;i++)
 		{
-			float ct[4]={0,0,0,1}, *pt = pp+12*i;
+			mreal ct[4]={0,0,0,1}, *pt = pp+12*i;
 			if(tt[4*i] && tt[4*i+1])	line_plot(pt, pt+3, ct, ct);
 			if(tt[4*i] && tt[4*i+3])	line_plot(pt, pt+9, ct, ct);
 			if(tt[4*i+2] && tt[4*i+1])	line_plot(pt+6, pt+3, ct, ct);
@@ -622,7 +622,7 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const 
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,float zVal, bool above)
+void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,mreal zVal, bool above)
 {
 	long i,j,m,mx,my,n=y.nx;
 	char mk=0;
@@ -630,7 +630,7 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,float zV
 	if(n<2)		{	SetWarn(mglWarnLow,"Bars");	return;	}
 	static int cgid=1;	StartGroup("Bars",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;
-	float *pp = new float[12*n],x1,x2,yy,y0=GetOrgY('x');
+	mreal *pp = new mreal[12*n],x1,x2,yy,y0=GetOrgY('x');
 	bool *tt = new bool[4*n], wire = pen && strchr(pen,'#');
 	if(isnan(zVal))	zVal = Min.z;
 	mglData dd(above ? n : 1);
@@ -664,7 +664,7 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,float zV
 		quads_plot(n,pp,0,tt);
 		if(wire)	for(i=0;i<n;i++)
 		{
-			float ct[4]={0,0,0,1}, *pt = pp+12*i;
+			mreal ct[4]={0,0,0,1}, *pt = pp+12*i;
 			if(tt[4*i] && tt[4*i+1])	line_plot(pt, pt+3, ct, ct);
 			if(tt[4*i] && tt[4*i+3])	line_plot(pt, pt+9, ct, ct);
 			if(tt[4*i+2] && tt[4*i+1])	line_plot(pt+6, pt+3, ct, ct);
@@ -675,7 +675,7 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,float zV
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Bars(const mglData &y, const char *pen,float zVal, bool above)
+void mglGraph::Bars(const mglData &y, const char *pen,mreal zVal, bool above)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Bars");	return;	}
 	mglData x(y.nx);
@@ -687,7 +687,7 @@ void mglGraph::Bars(const mglData &y, const char *pen,float zVal, bool above)
 //		Barh series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,float zVal, bool above)
+void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,mreal zVal, bool above)
 {
 	long i,j,m,mx,my,n=v.nx;
 	char mk=0;
@@ -695,7 +695,7 @@ void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,float zV
 	if(n<2)		{	SetWarn(mglWarnLow,"Barh");	return;	}
 	static int cgid=1;	StartGroup("Barh",cgid++);
 	m = y.ny > v.ny ? y.ny : v.ny;
-	float *pp = new float[12*n],y1,y2,xx,x0=GetOrgX('y');
+	mreal *pp = new mreal[12*n],y1,y2,xx,x0=GetOrgX('y');
 	bool *tt = new bool[4*n], wire = pen && strchr(pen,'#');
 	if(isnan(zVal))	zVal = Min.z;
 	mglData dd(above ? n : 1);
@@ -729,7 +729,7 @@ void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,float zV
 		quads_plot(n,pp,0,tt);
 		if(wire)	for(i=0;i<n;i++)
 		{
-			float ct[4]={0,0,0,1}, *pt = pp+12*i;
+			mreal ct[4]={0,0,0,1}, *pt = pp+12*i;
 			if(tt[4*i] && tt[4*i+1])	line_plot(pt, pt+3, ct, ct);
 			if(tt[4*i] && tt[4*i+3])	line_plot(pt, pt+9, ct, ct);
 			if(tt[4*i+2] && tt[4*i+1])	line_plot(pt+6, pt+3, ct, ct);
@@ -740,7 +740,7 @@ void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,float zV
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Barh(const mglData &v, const char *pen,float zVal, bool above)
+void mglGraph::Barh(const mglData &v, const char *pen,mreal zVal, bool above)
 {
 	if(v.nx<2)	{	SetWarn(mglWarnLow,"Barh");	return;	}
 	mglData y(v.nx);
@@ -758,7 +758,7 @@ void mglGraph::Torus(const mglData &r, const mglData &z, const char *sch)
 	if(r.nx*r.ny!=z.nx*z.ny){	SetWarn(mglWarnDim,"Torus");	return;	}
 	if(n<2)					{	SetWarn(mglWarnLow,"Torus");	return;	}
 	static int cgid=1;	StartGroup("Torus",cgid++);
-	float *pp = new float[3*n];
+	mreal *pp = new mreal[3*n];
 	long *nn = new long[n];
 	SetScheme(sch);
 	if(sch)
@@ -770,7 +770,7 @@ void mglGraph::Torus(const mglData &r, const mglData &z, const char *sch)
 	}
 
 	Color(Cmin);
-	memset(pp,0,3*n*sizeof(float));
+	memset(pp,0,3*n*sizeof(mreal));
 	for(j=0;j<r.ny;j++)
 	{
 		for(i=0;i<n;i++)
@@ -797,7 +797,7 @@ void mglGraph::Torus(const mglData &y, const char *pen)
 //
 //-----------------------------------------------------------------------------
 void mglGraph::Error(const mglData &x, const mglData &y, const mglData &ex, const mglData &ey,
-					const char *pen,float zVal)
+					const char *pen,mreal zVal)
 {
 	register long i,j,m=1,n=y.nx*y.ny*y.nz;
 	if(ex.nx*ex.ny*ex.nz!=n || ey.nx*ey.ny*ey.nz!=n || y.nx!=x.nx)
@@ -824,7 +824,7 @@ void mglGraph::Error(const mglData &x, const mglData &y, const mglData &ex, cons
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Error(const mglData &x, const mglData &y, const mglData &ey, const char *pen,
-					float zVal)
+					mreal zVal)
 {
 	if(y.nx*y.ny*y.nz!=ey.nx*ey.ny*ey.nz || y.nx!=x.nx)
 	{	SetWarn(mglWarnDim,"Error");	return;	}
@@ -850,7 +850,7 @@ void mglGraph::Error(const mglData &x, const mglData &y, const mglData &ey, cons
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Error(const mglData &y, const mglData &ey, const char *pen,float zVal)
+void mglGraph::Error(const mglData &y, const mglData &ey, const char *pen,mreal zVal)
 {
 	mglData x(y.nx);
 	x.Fill(Min.x,Max.x);
@@ -883,8 +883,8 @@ void mglGraph::Chart(const mglData &a, const char *cols)
 	}
 	else	nc = NumPal;// get colors from palette
 
-	float dy = (Max.y-Min.y)/a.ny, dx, ss, cs, x1, y1;
-	float *pp = new float[3*40*81];
+	mreal dy = (Max.y-Min.y)/a.ny, dx, ss, cs, x1, y1;
+	mreal *pp = new mreal[3*40*81];
 	for(j=0;j<a.ny;j++)
 	{
 		y1 = Min.y + dy*j;
@@ -906,7 +906,7 @@ void mglGraph::Chart(const mglData &a, const char *cols)
 				pp[i0]=x1+dx*l/(m-1.);	pp[i0+1]=y1+dy*k/39.;	pp[i0+2]=Min.z;
 				ScalePoint(pp[i0],pp[i0+1],pp[i0+2]);
 			}
-			memcpy(pp+3*80*m,pp,3*m*sizeof(float));
+			memcpy(pp+3*80*m,pp,3*m*sizeof(mreal));
 			surf_plot(m,81,pp,0,0);
 			for(k=0;k<40;k++)
 			{
@@ -963,7 +963,7 @@ void mglGraph::Mark(const mglData &x, const mglData &y, const mglData &z, const 
 	if(n<2)	{	SetWarn(mglWarnLow,"Mark");	return;	}
 	static int cgid=1;	StartGroup("Mark",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	float ms = MarkSize, xx,yy,zz;
+	mreal ms = MarkSize, xx,yy,zz;
 	bool tt;
 	if(pen && *pen)	mk=SelectPen(pen);	else mk='o';
 	if(mk==0)	return;
@@ -986,7 +986,7 @@ void mglGraph::Mark(const mglData &x, const mglData &y, const mglData &z, const 
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Mark(const mglData &x, const mglData &y, const mglData &r, const char *pen,float zVal)
+void mglGraph::Mark(const mglData &x, const mglData &y, const mglData &r, const char *pen,mreal zVal)
 {
 	mglData z(y.nx);
 	if(isnan(zVal))	zVal = Min.z;
@@ -994,7 +994,7 @@ void mglGraph::Mark(const mglData &x, const mglData &y, const mglData &r, const 
 	Mark(x,y,z,r,pen);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Mark(const mglData &y, const mglData &r, const char *pen,float zVal)
+void mglGraph::Mark(const mglData &y, const mglData &r, const char *pen,mreal zVal)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Mark");	return;	}
 	mglData x(y.nx);
@@ -1027,7 +1027,7 @@ void mglGraph::TextMark(const mglData &x, const mglData &y, const mglData &z, co
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::TextMark(const mglData &x, const mglData &y, const mglData &r, const wchar_t *text, const char *fnt,float zVal)
+void mglGraph::TextMark(const mglData &x, const mglData &y, const mglData &r, const wchar_t *text, const char *fnt,mreal zVal)
 {
 	mglData z(y.nx);
 	if(isnan(zVal))	zVal = Min.z;
@@ -1035,7 +1035,7 @@ void mglGraph::TextMark(const mglData &x, const mglData &y, const mglData &r, co
 	TextMark(x,y,z,r,text,fnt);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::TextMark(const mglData &y, const mglData &r, const wchar_t *text, const char *fnt,float zVal)
+void mglGraph::TextMark(const mglData &y, const mglData &r, const wchar_t *text, const char *fnt,mreal zVal)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Mark");	return;	}
 	mglData x(y.nx);
@@ -1043,7 +1043,7 @@ void mglGraph::TextMark(const mglData &y, const mglData &r, const wchar_t *text,
 	TextMark(x,y,r,text,fnt,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::TextMark(const mglData &y, const wchar_t *text, const char *fnt,float zVal)
+void mglGraph::TextMark(const mglData &y, const wchar_t *text, const char *fnt,mreal zVal)
 {
 	mglData r(y.nx);	r.Fill(1,1);
 	TextMark(y,r,text,fnt,zVal);
@@ -1053,12 +1053,12 @@ void mglGraph::TextMark(const mglData &y, const wchar_t *text, const char *fnt,f
 //	Tube series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::tube_plot(long n,float *q,float *c,float *r)
+void mglGraph::tube_plot(long n,mreal *q,mreal *c,mreal *r)
 {
 	if(n<2 || CirclePnts<3)	return;
-	float *pp = new float[3*CirclePnts*n], *cc = new float[4*CirclePnts*n];
-	float lx,ly,lz,len,gx=0,gy=0,gz=1,hx,hy,hz;
-	float xx, yy, zz, rr;
+	mreal *pp = new mreal[3*CirclePnts*n], *cc = new mreal[4*CirclePnts*n];
+	mreal lx,ly,lz,len,gx=0,gy=0,gz=1,hx,hy,hz;
+	mreal xx, yy, zz, rr;
 	bool *tt = new bool[CirclePnts*n],tl;
 	register long i,k,j,i0;
 	long m=n;
@@ -1097,7 +1097,7 @@ void mglGraph::tube_plot(long n,float *q,float *c,float *r)
 			pp[3*i0] = xx + gx*lx + hx*ly;
 			pp[3*i0+1]=yy + gy*lx + hy*ly;
 			pp[3*i0+2]=zz + gz*lx + hz*ly;
-			if(c)	memcpy(cc+4*i0,c+4*i,4*sizeof(float));
+			if(c)	memcpy(cc+4*i0,c+4*i,4*sizeof(mreal));
 			tt[i0] = tl;
 			ScalePoint(pp[3*i0],pp[3*i0+1],pp[3*i0+2]);
 		}
@@ -1116,7 +1116,7 @@ void mglGraph::Tube(const mglData &x, const mglData &y, const mglData &z, const 
 	static int cgid=1;	StartGroup("Tube",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;	m = r.ny > m ? r.ny : m;
 	if(pen && *pen)	mk=SelectPen(pen);
-	float *pp = new float[3*n], *rr = new float[n];
+	mreal *pp = new mreal[3*n], *rr = new mreal[n];
 
 	for(j=0;j<m;j++)
 	{
@@ -1137,7 +1137,7 @@ void mglGraph::Tube(const mglData &x, const mglData &y, const mglData &z, const 
 	delete []pp;	delete []rr;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Tube(const mglData &x, const mglData &y, const mglData &r, const char *pen,float zVal)
+void mglGraph::Tube(const mglData &x, const mglData &y, const mglData &r, const char *pen,mreal zVal)
 {
 	mglData z(y.nx);
 	if(isnan(zVal))	zVal = Min.z;
@@ -1145,7 +1145,7 @@ void mglGraph::Tube(const mglData &x, const mglData &y, const mglData &r, const 
 	Tube(x,y,z,r,pen);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Tube(const mglData &y, const mglData &r, const char *pen,float zVal)
+void mglGraph::Tube(const mglData &y, const mglData &r, const char *pen,mreal zVal)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Tube");	return;	}
 	mglData x(y.nx);
@@ -1153,7 +1153,7 @@ void mglGraph::Tube(const mglData &y, const mglData &r, const char *pen,float zV
 	Tube(x,y,r,pen,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Tube(const mglData &y, float rr, const char *pen,float zVal)
+void mglGraph::Tube(const mglData &y, mreal rr, const char *pen,mreal zVal)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Tube");	return;	}
 	mglData x(y.nx), r(y.nx);
@@ -1162,7 +1162,7 @@ void mglGraph::Tube(const mglData &y, float rr, const char *pen,float zVal)
 	Tube(x,y,r,pen,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Tube(const mglData &x, const mglData &y, float rr, const char *pen,float zVal)
+void mglGraph::Tube(const mglData &x, const mglData &y, mreal rr, const char *pen,mreal zVal)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Tube");	return;	}
 	mglData r(y.nx);
@@ -1170,7 +1170,7 @@ void mglGraph::Tube(const mglData &x, const mglData &y, float rr, const char *pe
 	Tube(x,y,r,pen,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Tube(const mglData &x, const mglData &y, const mglData &z, float rr, const char *pen)
+void mglGraph::Tube(const mglData &x, const mglData &y, const mglData &z, mreal rr, const char *pen)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Tube");	return;	}
 	mglData r(y.nx);
@@ -1182,7 +1182,7 @@ void mglGraph::Tube(const mglData &x, const mglData &y, const mglData &z, float 
 //		All in one :) -- NOTE: OBSOLETE functions
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Plot2(const mglData &a, const char *pen,float zVal)
+void mglGraph::Plot2(const mglData &a, const char *pen,mreal zVal)
 {
 	if(a.nx<2 || a.ny<2)	{	SetWarn(mglWarnLow,"Plot2");	return;	}
 	mglData x,y;
@@ -1204,7 +1204,7 @@ void mglGraph::Plot3(const mglData &a, const char *pen)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Area2(const mglData &a, const char *pen,float zVal)
+void mglGraph::Area2(const mglData &a, const char *pen,mreal zVal)
 {
 	if(a.nx<2 || a.ny<2)	{	SetWarn(mglWarnLow,"Area2");	return;	}
 	mglData x,y;
@@ -1226,7 +1226,7 @@ void mglGraph::Area3(const mglData &a, const char *pen)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Stem2(const mglData &a, const char *pen,float zVal)
+void mglGraph::Stem2(const mglData &a, const char *pen,mreal zVal)
 {
 	if(a.nx<2 || a.ny<2)	{	SetWarn(mglWarnLow,"Stem2");	return;	}
 	mglData x,y;
@@ -1248,7 +1248,7 @@ void mglGraph::Stem3(const mglData &a, const char *pen)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Step2(const mglData &a, const char *pen,float zVal)
+void mglGraph::Step2(const mglData &a, const char *pen,mreal zVal)
 {
 	if(a.nx<2 || a.ny<2)	{	SetWarn(mglWarnLow,"Step2");	return;	}
 	mglData x,y;
@@ -1270,7 +1270,7 @@ void mglGraph::Step3(const mglData &a, const char *pen)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Bars2(const mglData &a, const char *pen,float zVal, bool above)
+void mglGraph::Bars2(const mglData &a, const char *pen,mreal zVal, bool above)
 {
 	if(a.nx<2 || a.ny<2)	{	SetWarn(mglWarnLow,"Bars2");	return;	}
 	mglData x,y;
@@ -1351,7 +1351,7 @@ void mgl_region_xy(HMGL gr, const HMDT x, const HMDT y1, const HMDT y2, const ch
 void mgl_region(HMGL gr, const HMDT y1, const HMDT y2, const char *pen, int inside)
 {	if(gr && y1 && y2)	gr->Region(*y1,*y2,pen,NAN,inside);	}
 /// draw mark with different type at position {x,y,z}
-void mgl_mark(HMGL gr, float x,float y,float z,char mark)
+void mgl_mark(HMGL gr, mreal x,mreal y,mreal z,char mark)
 {	gr->Mark(mglPoint(x,y,z),mark);	}
 /// Draw vertical lines from points in arrays \a x, \a y, \a z to mglGraph::Org.
 void mgl_stem_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *pen)
@@ -1442,13 +1442,13 @@ void mgl_tube_xyr(HMGL gr, const HMDT x, const HMDT y, const HMDT r, const char 
 void mgl_tube_r(HMGL gr, const HMDT y, const HMDT r, const char *pen)
 {	if(gr&&y&&r)	gr->Tube(*y,*r,pen);	}
 /// Draw tube with constant radial sizes \a r for points in arrays \a x, \a y, \a z.
-void mgl_tube_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, float r, const char *pen)
+void mgl_tube_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, mreal r, const char *pen)
 {	if(gr&&x&&y&&z)	gr->Tube(*x,*y,*z,r,pen);	}
 /// Draw tube with constant radial sizes \a r for points in arrays \a x, \a y.
-void mgl_tube_xy(HMGL gr, const HMDT x, const HMDT y, float r, const char *pen)
+void mgl_tube_xy(HMGL gr, const HMDT x, const HMDT y, mreal r, const char *pen)
 {	if(gr&&x&&y)	gr->Tube(*x,*y,r,pen);	}
 /// Draw tube with constant radial sizes \a r for points in arrays \a y.
-void mgl_tube(HMGL gr, const HMDT y, float r, const char *pen)
+void mgl_tube(HMGL gr, const HMDT y, mreal r, const char *pen)
 {	if(gr&&y)	gr->Tube(*y,r,pen);	}
 //-----------------------------------------------------------------------------
 //		1D plotting functions (Fortran)
@@ -1560,7 +1560,7 @@ void mgl_region_(uintptr_t *gr, uintptr_t *y1, uintptr_t *y2, const char *pen, i
 	delete []s;
 }
 /// draw mark with different type at position {x,y,z}
-void mgl_mark_(uintptr_t *gr, float *x,float *y,float *z,const char *mark,int)
+void mgl_mark_(uintptr_t *gr, mreal *x,mreal *y,mreal *z,const char *mark,int)
 {	_GR_->Mark(mglPoint(*x,*y,*z),*mark);	}
 /// Draw vertical lines from points in arrays \a x, \a y, \a z to mglGraph::Org.
 void mgl_stem_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int l)
@@ -1767,21 +1767,21 @@ void mgl_tube_r_(uintptr_t *gr, uintptr_t *y, uintptr_t *r, const char *pen,int 
 	delete []s;
 }
 /// Draw tube with constant radial sizes \a r for points in arrays \a x, \a y, \a z.
-void mgl_tube_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, float *r, const char *pen,int l)
+void mgl_tube_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, mreal *r, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&x&&y&&z)	_GR_->Tube(_D_(x),_D_(y),_D_(z),*r,s);
 	delete []s;
 }
 /// Draw tube with constant radial sizes \a r for points in arrays \a x, \a y.
-void mgl_tube_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, float *r, const char *pen,int l)
+void mgl_tube_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, mreal *r, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&x&&y)	_GR_->Tube(_D_(x),_D_(y),*r,s);
 	delete []s;
 }
 /// Draw tube with constant radial sizes \a r for points in arrays \a y.
-void mgl_tube_(uintptr_t *gr, uintptr_t *y, float *r, const char *pen,int l)
+void mgl_tube_(uintptr_t *gr, uintptr_t *y, mreal *r, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr&&y)	_GR_->Tube(_D_(y),*r,s);

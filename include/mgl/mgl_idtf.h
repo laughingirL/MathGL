@@ -44,7 +44,7 @@ class mglGraphIDTF;
 //-----------------------------------------------------------------------------
 struct u3dNode
 {
-	float position[4][4];
+	mreal position[4][4];
 	std::string parent;
 	std::string resource;
 	bool both_visible;
@@ -58,9 +58,9 @@ struct u3dLight
 {
 	std::string type;
 	mglColor color;
-	float position[4][4];
-	float intensity;
-	float attenuation;
+	mreal position[4][4];
+	mreal intensity;
+	mreal attenuation;
 	std::string name;
 	void print_light_resource ( std::ofstream& ostr );
 	void print_node ( std::ofstream& ostr );
@@ -74,13 +74,13 @@ public:
 	mglColor diffuse;
 	mglColor specular;
 	mglColor emissive;
-	float reflectivity;
-	float opacity;
+	mreal reflectivity;
+	mreal opacity;
 	bool vertex_color;
 	std::string name;
 	std::string texture;
-	bool texturealpha;
-        
+	bool textumrealpha;
+
 	u3dMaterial() : diffuse(BC), specular(BC), emissive(BC), reflectivity(0.25f), opacity(1.0f), vertex_color(false) {};
 	bool operator== ( const u3dMaterial& Material )
 	{
@@ -141,8 +141,8 @@ class u3dModel
 public:
 	mglPoint_list Points;
 	mglColor_list Colors;
-	float position[4][4];
-	float invpos[4][4];
+	mreal position[4][4];
+	mreal invpos[4][4];
 
 	bool vertex_color;
 	ModelMaterial_list ModelMaterials;
@@ -153,10 +153,10 @@ public:
 	u3dModel ( const std::string name, mglGraphIDTF *Graph, const bool& vertex_color );
 	void print_node ( std::ofstream& ostr );
 	void print_shading_modifier ( std::ofstream& ostr );
-	size_t AddModelMaterial ( const float *c, bool emissive, bool vertex_color );
-	size_t AddPoint ( const float *p );
+	size_t AddModelMaterial ( const mreal *c, bool emissive, bool vertex_color );
+	size_t AddPoint ( const mreal *p );
 	size_t AddPoint ( const mglPoint& p );
-	size_t AddColor ( const float *c );
+	size_t AddColor ( const mreal *c );
 	size_t AddColor ( const mglColor& c );
 };
 //-----------------------------------------------------------------------------
@@ -166,7 +166,7 @@ class u3dBall
 {
 public:
 	mglPoint center;
-	float radius;
+	mreal radius;
 	size_t material;
 
 	mglGraphIDTF *Graph;
@@ -195,7 +195,7 @@ public:
 		this->both_visible = false;
 	}
 	u3dLine_list  Lines;
-	void line_plot ( float *p1, float *p2, float *c1, float *c2 );
+	void line_plot ( mreal *p1, mreal *p2, mreal *c1, mreal *c2 );
 	void print_model_resource ( std::ofstream& ostrtmp );
 	void AddLine ( size_t pid1, size_t pid2, size_t mid );
 };
@@ -215,7 +215,7 @@ public:
 //-----------------------------------------------------------------------------
 typedef std::list<u3dPointSet>  u3dPointSet_list;
 //-----------------------------------------------------------------------------
-struct size_t3 
+struct size_t3
 {
 	size_t a;
 	size_t b;
@@ -223,13 +223,13 @@ struct size_t3
 };
 struct TexCoord2D
 {
-	float U;
-	float V;
+	mreal U;
+	mreal V;
 	TexCoord2D ( ) { }
-	TexCoord2D ( float u, float v ) { U = u; V = v; }
+	TexCoord2D ( mreal u, mreal v ) { U = u; V = v; }
 };
 typedef std::vector<TexCoord2D>  TexCoord2D_list;
-/// Class contain meshes which are presented as a set of triangles. Indexes of vertexes, index of material, indexes of vertex colors are stored for each triangle. But really there are two modes, with and without per-vertex colors. If vertex colors are used, colors change smoothly along the surface, but transparency and lighting are disabled. If there are no vertex colors, the appearance is affected by materials, transparency and lighting are possible, but a large number of different materials results in slowly displayed models. Boolean parameter vertex_color_flag controls the mode. If you are drawing something in a small set of colors, it is advised to set it to false in order to get lighting for your model. (If exacly one color is used the per-vertex coloring is disabled automatically).
+/// Class contain meshes which are presented as a set of triangles. Indexes of vertexes, index of material, indexes of vertex colors are stored for each triangle. But mreally there are two modes, with and without per-vertex colors. If vertex colors are used, colors change smoothly along the surface, but transparency and lighting are disabled. If there are no vertex colors, the appearance is affected by materials, transparency and lighting are possible, but a large number of different materials results in slowly displayed models. Boolean parameter vertex_color_flag controls the mode. If you are drawing something in a small set of colors, it is advised to set it to false in order to get lighting for your model. (If exacly one color is used the per-vertex coloring is disabled automatically).
 class u3dMesh : public u3dModel
 {
 public:
@@ -245,18 +245,18 @@ public:
 		this->disable_compression = disable_compression;
 		this->textureDimension = 0;
 	}
-	void quad_plot ( float *pp0,float *pp1,float *pp2,float *pp3,
-						float *cc0,float *cc1,float *cc2,float *cc3 );
-	void quad_plot_n ( float *pp0,float *pp1,float *pp2,float *pp3,
-						float *cc0,float *cc1,float *cc2,float *cc3,
-						float *nn0,float *nn1,float *nn2,float *nn3 );
-	void trig_plot ( float *pp0,float *pp1,float *pp2,
-						float *cc0,float *cc1,float *cc2 );
-	void trig_plot_n ( float *pp0,float *pp1,float *pp2,
-						float *cc0,float *cc1,float *cc2,
-						float *nn0,float *nn1,float *nn2 );
+	void quad_plot ( mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+						mreal *cc0,mreal *cc1,mreal *cc2,mreal *cc3 );
+	void quad_plot_n ( mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+						mreal *cc0,mreal *cc1,mreal *cc2,mreal *cc3,
+						mreal *nn0,mreal *nn1,mreal *nn2,mreal *nn3 );
+	void trig_plot ( mreal *pp0,mreal *pp1,mreal *pp2,
+						mreal *cc0,mreal *cc1,mreal *cc2 );
+	void trig_plot_n ( mreal *pp0,mreal *pp1,mreal *pp2,
+						mreal *cc0,mreal *cc1,mreal *cc2,
+						mreal *nn0,mreal *nn1,mreal *nn2 );
 	void print_model_resource ( std::ofstream& ostrtmp );
-	void AddTriangle ( size_t pid0, size_t pid1, size_t pid2, 
+	void AddTriangle ( size_t pid0, size_t pid1, size_t pid2,
 						size_t cid0, size_t cid1, size_t cid2);
 	void AddTriangle ( size_t pid0, size_t pid1, size_t pid2, size_t mid);
 };
@@ -279,19 +279,22 @@ public:
 	void BallIsPoint(bool enable)  { ball_is_point_flag = enable ; }
 	/// Flush() finishes current PointSet, LineSet and Mesh. Use Flush() to separate unnamed objects in the scene. The named objects or object groups are separeted by StartGroup/EndGroup
 	void Flush() { points_finished = lines_finished = mesh_finished = true; };
-	void Light ( int n,mglPoint p, mglColor c=NC, float br=0.5, bool infty=true );
-	void InPlot ( float x1,float x2,float y1,float y2, bool rel=false );
+	void Light ( int n,mglPoint p, mglColor c=NC, mreal br=0.5, bool infty=true );
+	void InPlot ( mreal x1,mreal x2,mreal y1,mreal y2, bool rel=false );
 	void Clf ( mglColor Back=NC );
 	/// Print string \a str in position \a p with font size \a size.
-	void Putsw(mglPoint p,const wchar_t *text,const char *font=0,float size=-1,char dir=0,float shift=0);
+	void Putsw(mglPoint p,const wchar_t *text,const char *font=0,mreal size=-1,char dir=0,mreal shift=0);
 	/// Print string \a str with font size \a size in position \a p along direction \a l.
-	float Putsw(mglPoint p,mglPoint l,const wchar_t *text,char font='t',float size=-1);
+	mreal Putsw(mglPoint p,mglPoint l,const wchar_t *text,char font='t',mreal size=-1);
 
-	void Ball ( float x,float y,float z,mglColor col=RC,float alpha=1 );
+	void Ball ( mreal x,mreal y,mreal z,mglColor col=RC,mreal alpha=1 );
 	void WriteIDTF ( const char *fname,const char *descr=0 );
 	friend class u3dModel;
 	friend class u3dMesh;
 	friend class u3dBall;
+	float diff_int;		///< diffuse color intensity
+	float spec_int;		///< specular color intensity
+	float emis_int;		///< emissive color intensity
 	bool vertex_color_flag;			///< use per-vertex color in meshes
 	bool textures_flag;			///< use textures on surfaces
 	bool disable_compression_flag;	///< disable mesh compression (normally is true). One don't need the number of polygons reduced automatically to save space, but you may have to unset it if you use unpatched (unfixed) U3D library.
@@ -305,40 +308,40 @@ public:
 protected:
 	mglColor def_col;
 
-	void ball ( float *p,float *c );
+	void ball ( mreal *p,mreal *c );
 	void UnitBall ();
 
 	void point_plot ( const mglPoint& p, const mglColor& c );
 	void line_plot ( const mglPoint& p0, const mglPoint& p1 );
 	void trig_plot ( const mglPoint& p0, const mglPoint& p1, const mglPoint& p2 );
 	void quad_plot ( const mglPoint& p0, const mglPoint& p1, const mglPoint& p2, const mglPoint& p3 );
-	void line_plot ( float *p1,float *p2,float *c1,float *c2,bool all=false );
-	void line_plot_s ( float *p1,float *p2,float *c1,float *c2,bool all=false );
-	void trig_plot ( float *p0,float *p1,float *p2,
-						float *c0,float *c1,float *c2 );
-	void trig_plot_n ( float *p0,float *p1,float *p2,
-						float *c0,float *c1,float *c2,
-						float *n0,float *n1,float *n2 );
-	void quad_plot ( float *p0,float *p1,float *p2,float *p3,
-						float *c0,float *c1,float *c2,float *c3 );
-	void quad_plot_a ( float *p0,float *p1,float *p2,float *p3,
-						float a0,float a1,float a2,float a3,float alpha );
-	void quad_plot_n ( float *p0,float *p1,float *p2,float *p3,
-						float *c0,float *c1,float *c2,float *c3,
-						float *n0,float *n1,float *n2,float *n3 );
-	void mark_plot ( float *pp, char type );
-	void font_line ( float *p, unsigned char *r,bool thin=true );
+	void line_plot ( mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all=false );
+	void line_plot_s ( mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all=false );
+	void trig_plot ( mreal *p0,mreal *p1,mreal *p2,
+						mreal *c0,mreal *c1,mreal *c2 );
+	void trig_plot_n ( mreal *p0,mreal *p1,mreal *p2,
+						mreal *c0,mreal *c1,mreal *c2,
+						mreal *n0,mreal *n1,mreal *n2 );
+	void quad_plot ( mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+						mreal *c0,mreal *c1,mreal *c2,mreal *c3 );
+	void quad_plot_a ( mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+						mreal a0,mreal a1,mreal a2,mreal a3,mreal alpha );
+	void quad_plot_n ( mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+						mreal *c0,mreal *c1,mreal *c2,mreal *c3,
+						mreal *n0,mreal *n1,mreal *n2,mreal *n3 );
+	void mark_plot ( mreal *pp, char type );
+	void font_line ( mreal *p, unsigned char *r,bool thin=true );
 
-	void surf_plot ( long n,long m,float *pp,float *cc,bool *tt );
-	void cloud_plot( long nx, long ny, long nz, float *pp, float *a, float alpha );
-	void arrow_plot ( float *p1,float *p2,char st );
-	void quads_plot(long n, float *pp, float *cc, bool *tt);
+	void surf_plot ( long n,long m,mreal *pp,mreal *cc,bool *tt );
+	void cloud_plot( long nx, long ny, long nz, mreal *pp, mreal *a, mreal alpha );
+	void arrow_plot ( mreal *p1,mreal *p2,char st );
+	void quads_plot(long n, mreal *pp, mreal *cc, bool *tt);
 
 	bool points_finished;	///< do not add any more to the current point set
 	bool lines_finished;	///< do not add any more to the current line set
 	bool mesh_finished;		///< do not add any more to the current mesh
 
-	inline float fixalpha ( float alpha ) { return UseAlpha ? (alpha<0?-alpha:alpha) : 1.0f; };
+	inline mreal fixalpha ( mreal alpha ) { return UseAlpha ? (alpha<0?-alpha:alpha) : 1.0f; };
 
 	u3dMaterial_list Materials;		///< global list of all materials used in all models.
 	size_t AddMaterial ( const u3dMaterial& Material );
@@ -356,14 +359,14 @@ protected:
 	u3dBall_list     Balls;		///< global list of u3Balls
 
 	u3dLight_list Lights;
-	void SetAmbientLight ( mglColor c=WC, float br=-1.0 );
-	void AddLight ( mglPoint p, mglColor color=WC, float br=0.5, bool infty=true );
+	void SetAmbientLight ( mglColor c=WC, mreal br=-1.0 );
+	void AddLight ( mglPoint p, mglColor color=WC, mreal br=0.5, bool infty=true );
 
 	u3dGroup*	CurrentGroup;
 	u3dGroup_list	Groups;
 
-	float* col2col ( const float *c, const float *n, float *r );
-	void MakeTransformMatrix( float position[4][4], float invpos[4][4] );
+	mreal* col2col ( const mreal *c, const mreal *n, mreal *r );
+	void MakeTransformMatrix( mreal position[4][4], mreal invpos[4][4] );
 };
 //-----------------------------------------------------------------------------
 #endif

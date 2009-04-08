@@ -23,14 +23,10 @@
 #include "mgl/mgl.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
-
-#ifdef WIN32
-#define swprintf    _snwprintf
-#endif
 //-----------------------------------------------------------------------------
 struct _mgl_slice
 {
-	float *x,*y,*z,*a;
+	mreal *x,*y,*z,*a;
 	long nx,ny;
 	_mgl_slice()	{	x=y=z=a=NULL;	nx=ny=0;	};
 	~_mgl_slice()
@@ -41,15 +37,15 @@ struct _mgl_slice
 //	Cont series
 //
 //-----------------------------------------------------------------------------
-long mglGraph::add_cpoint(long &pc,float **p,float **k,bool **t,
-			float x,float y,float z,float k1,float k2,bool scale)
+long mglGraph::add_cpoint(long &pc,mreal **p,mreal **k,bool **t,
+			mreal x,mreal y,mreal z,mreal k1,mreal k2,bool scale)
 {
 	static long pMax=0;
 	if(*p==NULL)
 	{
 		pMax = 100;	pc = 0;
-		*p = (float *)malloc(3*pMax*sizeof(float));
-		*k = (float *)malloc(2*pMax*sizeof(float));
+		*p = (mreal *)malloc(3*pMax*sizeof(mreal));
+		*k = (mreal *)malloc(2*pMax*sizeof(mreal));
 		*t = (bool *)malloc(pMax*sizeof(bool));
 	}
 	if(scale)	t[0][pc] = ScalePoint(x,y,z);
@@ -59,17 +55,17 @@ long mglGraph::add_cpoint(long &pc,float **p,float **k,bool **t,
 	if(pc>=pMax)
 	{
 		pMax += 100;
-		*p = (float *)realloc(*p,3*pMax*sizeof(float));
-		*k = (float *)realloc(*k,2*pMax*sizeof(float));
+		*p = (mreal *)realloc(*p,3*pMax*sizeof(mreal));
+		*k = (mreal *)realloc(*k,2*pMax*sizeof(mreal));
 		*t = (bool *)realloc(*t,pMax*sizeof(bool));
 	}
 	return pc;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::cont_plot(float val,long n,long m,float *a,
-	float *x,float *y,float *z,float zdef,bool axial,bool wire,int text)
+void mglGraph::cont_plot(mreal val,long n,long m,mreal *a,
+	mreal *x,mreal *y,mreal *z,mreal zdef,bool axial,bool wire,int text)
 {
-	float *pp=NULL,*kk=NULL,xx,yy,zz,d,kx,ky;
+	mreal *pp=NULL,*kk=NULL,xx,yy,zz,d,kx,ky;
 	bool *tt=NULL;
 	long pc=0;
 	long *nn,*ff;
@@ -156,7 +152,7 @@ void mglGraph::cont_plot(float val,long n,long m,float *a,
 	delete []nn;	delete []ff;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Cont(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const char *sch, float zVal)
+void mglGraph::Cont(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const char *sch, mreal zVal)
 {
 	register long i,j,n=z.nx,m=z.ny;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"Cont");	return;	}
@@ -175,8 +171,8 @@ void mglGraph::Cont(const mglData &v, const mglData &x, const mglData &y, const 
 	{
 		for(i=0;i<v.nx;i++)	for(j=0;j<z.nz;j++)
 		{
-			if(isfinite (zVal) && z.nz>1)
-				zVal = Min.z+(Max.z-Min.z)*float(j)/(z.nz-1);
+			if(!isnan(zVal) && z.nz>1)
+				zVal = Min.z+(Max.z-Min.z)*mreal(j)/(z.nz-1);
 			Color(v.a[i]);
 			cont_plot(v.a[i],n,m,z.a+j*m*n,x.a+j*m*n,y.a+j*m*n,
 					NULL,isnan(zVal) ? v.a[i] : zVal,false,false,text);
@@ -185,14 +181,14 @@ void mglGraph::Cont(const mglData &v, const mglData &x, const mglData &y, const 
 	// x, y -- вектора
 	else
 	{
-		float *xx,*yy;
-		xx = new float[n*m];	yy = new float[n*m];
+		mreal *xx,*yy;
+		xx = new mreal[n*m];	yy = new mreal[n*m];
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)
 		{	xx[i+n*j] = x.a[i];	yy[i+n*j] = y.a[j];	}
 		for(i=0;i<v.nx;i++)	for(j=0;j<z.nz;j++)
 		{
-			if(isfinite (zVal) && z.nz>1)
-				zVal = Min.z+(Max.z-Min.z)*float(j)/(z.nz-1);
+			if(!isnan (zVal) && z.nz>1)
+				zVal = Min.z+(Max.z-Min.z)*mreal(j)/(z.nz-1);
 			Color(v.a[i]);
 			cont_plot(v.a[i],n,m,z.a+j*m*n,xx,yy,NULL,
 					isnan(zVal) ? v.a[i] : zVal,false,false,text);
@@ -202,13 +198,13 @@ void mglGraph::Cont(const mglData &v, const mglData &x, const mglData &y, const 
 	EndGroup();
 	if(sch && strchr(sch,'#'))
 	{
-		if(isfinite(zVal))	Grid(x,y,z,"k",zVal);
+		if(!isnan(zVal))	Grid(x,y,z,"k",zVal);
 		else				Mesh(x,y,z);
 	}
 	SetScheme(sch);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Cont(const mglData &v, const mglData &z, const char *sch, float zVal)
+void mglGraph::Cont(const mglData &v, const mglData &z, const char *sch, mreal zVal)
 {
 	if(z.nx<2 || z.ny<2)	{	SetWarn(mglWarnLow,"Cont");	return;	}
 	mglData x(z.nx), y(z.ny);
@@ -217,19 +213,19 @@ void mglGraph::Cont(const mglData &v, const mglData &z, const char *sch, float z
 	Cont(v,x,y,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Cont(const mglData &x, const mglData &y, const mglData &z, const char *sch, int Num, float zVal)
+void mglGraph::Cont(const mglData &x, const mglData &y, const mglData &z, const char *sch, int Num, mreal zVal)
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"Cont");	return;	}
 	mglData v(Num);
-	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*float(i+1)/(Num+1);
+	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i+1)/(Num+1);
 	Cont(v,x,y,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Cont(const mglData &z, const char *sch, int Num, float zVal)
+void mglGraph::Cont(const mglData &z, const char *sch, int Num, mreal zVal)
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"Cont");	return;	}
 	mglData v(Num);
-	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*float(i+1)/(Num+1);
+	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i+1)/(Num+1);
 	Cont(v,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
@@ -237,41 +233,41 @@ void mglGraph::Cont(const mglData &z, const char *sch, int Num, float zVal)
 //	ContF series
 //
 //-----------------------------------------------------------------------------
-long mgl_add_quad(float **p, float *pq)
+long mgl_add_quad(mreal **p, mreal *pq)
 {
 	static long Cur=0,Max=0;
 	if(*p==0)
 	{
 		Max = 256;		Cur = 0;
-		*p = (float *)malloc(Max*12*sizeof(float));
+		*p = (mreal *)malloc(Max*12*sizeof(mreal));
 	}
 	if(Cur>=Max)
 	{
 		Max += 256;
-		*p = (float *)realloc(*p,Max*12*sizeof(float));
+		*p = (mreal *)realloc(*p,Max*12*sizeof(mreal));
 	}
-	memcpy((*p) + 12*Cur, pq, 12*sizeof(float));
+	memcpy((*p) + 12*Cur, pq, 12*sizeof(mreal));
 	Cur++;
 	return Cur;
 }
 //-----------------------------------------------------------------------------
-float mgl_get(long i0,long n,float *x,float px,float py)
+mreal mgl_get(long i0,long n,mreal *x,mreal px,mreal py)
 {
 	return x[i0]*(1+py*px-py-px)+x[i0+n]*py*(1-px)+x[i0+1]*px*(1-py)+x[i0+n+1]*py*px;
 //	return x[i0] + px*py*(x[i0]-x[i0+1]+x[i0+n+1]-x[i0+n]) + px*(x[i0+1]-x[i0]) + py*(x[i0+n]-x[i0]);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::contf_plot(float v1, float v2,long n,long m,float *a,
-	float *x,float *y,float *z,float zdef)
+void mglGraph::contf_plot(mreal v1, mreal v2,long n,long m,mreal *a,
+	mreal *x,mreal *y,mreal *z,mreal zdef)
 {
-	float *pp=NULL,ps[18],px[12],py[12],d;
+	mreal *pp=NULL,ps[18],px[12],py[12],d;
 	bool *tt;
 	register long i,j,k,i0,l,h=0;
 	for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
 	{
 		k=0;
 		i0 = i+n*j;
-		memset(px,0,12*sizeof(float));	memset(py,0,12*sizeof(float));
+		memset(px,0,12*sizeof(mreal));	memset(py,0,12*sizeof(mreal));
 		if(a[i0]>= v1 && a[i0]<=v2)			{	px[k]=0;	py[k]=0;	k++;	}
 		d = _d(v1,a[i0],a[i0+1]);		if(d>=0 && d<1)	{	px[k]=d;	py[k]=0;	k++;	}
 		d = _d(v2,a[i0],a[i0+1]);		if(d>=0 && d<1)	{	px[k]=d;	py[k]=0;	k++;	}
@@ -293,21 +289,21 @@ void mglGraph::contf_plot(float v1, float v2,long n,long m,float *a,
 		switch(k)
 		{
 		case 3:
-			memcpy(ps+9,ps+6,3*sizeof(float));
+			memcpy(ps+9,ps+6,3*sizeof(mreal));
 //			ps[9] *= 1+1e-4;
 			h=mgl_add_quad(&pp,ps);	break;
 		case 4:
 			h=mgl_add_quad(&pp,ps);	break;
 		case 5:
 			h=mgl_add_quad(&pp,ps);
-			memcpy(ps+3,ps,3*sizeof(float));
-			memcpy(ps+6,ps,3*sizeof(float));
+			memcpy(ps+3,ps,3*sizeof(mreal));
+			memcpy(ps+6,ps,3*sizeof(mreal));
 //			ps[3] = ps[3]*(1+1e-5);
 			h=mgl_add_quad(&pp,ps+3);
 			break;
 		case 6:
 			h=mgl_add_quad(&pp,ps);
-			memcpy(ps+6,ps,3*sizeof(float));
+			memcpy(ps+6,ps,3*sizeof(mreal));
 			h=mgl_add_quad(&pp,ps+6);	break;
 		}
 	}
@@ -325,7 +321,7 @@ void mglGraph::contf_plot(float v1, float v2,long n,long m,float *a,
 	free(pp);	delete []tt;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContF(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const char *sch, float zVal)
+void mglGraph::ContF(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const char *sch, mreal zVal)
 {
 	register long i,j,n=z.nx,m=z.ny;
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"ContF");	return;	}
@@ -340,8 +336,8 @@ void mglGraph::ContF(const mglData &v, const mglData &x, const mglData &y, const
 	{
 		for(i=0;i<v.nx-1;i++)	for(j=0;j<z.nz;j++)
 		{
-			if(isfinite(zVal) && z.nz>1)
-				zVal = Min.z+(Max.z-Min.z)*float(j)/(z.nz-1);
+			if(!isnan(zVal) && z.nz>1)
+				zVal = Min.z+(Max.z-Min.z)*mreal(j)/(z.nz-1);
 			Color(v.a[i]);
 			contf_plot(v.a[i],v.a[i+1],n,m,z.a+j*m*n,x.a+j*m*n,y.a+j*m*n,
 					NULL,isnan(zVal) ? v.a[i] : zVal);
@@ -350,14 +346,14 @@ void mglGraph::ContF(const mglData &v, const mglData &x, const mglData &y, const
 	// x, y -- вектора
 	else
 	{
-		float *xx,*yy;
-		xx = new float[n*m];	yy = new float[n*m];
+		mreal *xx,*yy;
+		xx = new mreal[n*m];	yy = new mreal[n*m];
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)
 		{	xx[i+n*j] = x.a[i];	yy[i+n*j] = y.a[j];	}
 		for(i=0;i<v.nx-1;i++)	for(j=0;j<z.nz;j++)
 		{
-			if(isfinite(zVal) && z.nz>1)
-				zVal = Min.z+(Max.z-Min.z)*float(j)/(z.nz-1);
+			if(!isnan(zVal) && z.nz>1)
+				zVal = Min.z+(Max.z-Min.z)*mreal(j)/(z.nz-1);
 			Color(v.a[i]);
 			contf_plot(v.a[i],v.a[i+1],n,m,z.a+j*m*n,xx,yy,NULL,
 					isnan(zVal) ? v.a[i] : zVal);
@@ -367,7 +363,7 @@ void mglGraph::ContF(const mglData &v, const mglData &x, const mglData &y, const
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContF(const mglData &v, const mglData &z, const char *sch, float zVal)
+void mglGraph::ContF(const mglData &v, const mglData &z, const char *sch, mreal zVal)
 {
 	if(z.nx<2 || z.ny<2)	{	SetWarn(mglWarnLow,"ContF");	return;	}
 	mglData x(z.nx), y(z.ny);
@@ -377,19 +373,19 @@ void mglGraph::ContF(const mglData &v, const mglData &z, const char *sch, float 
 }
 //-----------------------------------------------------------------------------
 void mglGraph::ContF(const mglData &x, const mglData &y, const mglData &z, const char *sch,
-					int Num, float zVal)
+					int Num, mreal zVal)
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"ContF");	return;	}
 	mglData v(Num+2);
-	for(long i=0;i<Num+2;i++)	v.a[i] = Cmin + (Cmax-Cmin)*float(i)/(Num+1);
+	for(long i=0;i<Num+2;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i)/(Num+1);
 	ContF(v,x,y,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ContF(const mglData &z, const char *sch, int Num, float zVal)
+void mglGraph::ContF(const mglData &z, const char *sch, int Num, mreal zVal)
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"ContF");	return;	}
 	mglData v(Num+2);
-	for(long i=0;i<Num+2;i++)	v.a[i] = Cmin + (Cmax-Cmin)*float(i)/(Num+1);
+	for(long i=0;i<Num+2;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i)/(Num+1);
 	ContF(v,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
@@ -428,8 +424,8 @@ void mglGraph::Axial(const mglData &v, const mglData &x, const mglData &y, const
 	// x, y -- вектора
 	else
 	{
-		float *xx,*yy;
-		xx = new float[n*m];	yy = new float[n*m];
+		mreal *xx,*yy;
+		xx = new mreal[n*m];	yy = new mreal[n*m];
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)
 		{	xx[i+n*j] = x.a[i];	yy[i+n*j] = y.a[j];	}
 		for(i=v.nx-1;i>=0;i--)	for(k=0;k<z.nz;k++)
@@ -456,7 +452,7 @@ void mglGraph::Axial(const mglData &x, const mglData &y, const mglData &z, const
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"Axial");	return;	}
 	mglData v(Num);
-	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*float(i+1)/(Num+1);
+	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i+1)/(Num+1);
 	Axial(v,x,y,z,sch);
 }
 //-----------------------------------------------------------------------------
@@ -464,7 +460,7 @@ void mglGraph::Axial(const mglData &z, const char *sch, int Num)
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"Axial");	return;	}
 	mglData v(Num);
-	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*float(i+1)/(Num+1);
+	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i+1)/(Num+1);
 	Axial(v,z,sch);
 }
 //-----------------------------------------------------------------------------
@@ -490,33 +486,33 @@ void get_slice(_mgl_slice &s, const mglData &x, const mglData &y, const mglData 
 		d = a.SubData(-1,-1,sVal);	break;
 	}
 	long size = s.nx*s.ny;
-	s.x = new float[size];	s.y = new float[size];
-	s.z = new float[size];	s.a = new float[size];
-	memcpy(s.a,d.a,size*sizeof(float));
+	s.x = new mreal[size];	s.y = new mreal[size];
+	s.z = new mreal[size];	s.a = new mreal[size];
+	memcpy(s.a,d.a,size*sizeof(mreal));
 	if(x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l)
 	{
 		switch(dir)
 		{
 		case 'x':
-			d = x.SubData(sVal,-1,-1);	memcpy(s.x,d.a,size*sizeof(float));
-			d = y.SubData(sVal,-1,-1);	memcpy(s.y,d.a,size*sizeof(float));
-			d = z.SubData(sVal,-1,-1);	memcpy(s.z,d.a,size*sizeof(float));
+			d = x.SubData(sVal,-1,-1);	memcpy(s.x,d.a,size*sizeof(mreal));
+			d = y.SubData(sVal,-1,-1);	memcpy(s.y,d.a,size*sizeof(mreal));
+			d = z.SubData(sVal,-1,-1);	memcpy(s.z,d.a,size*sizeof(mreal));
 			break;
 		case 'y':
-			d = x.SubData(-1,sVal,-1);	memcpy(s.x,d.a,size*sizeof(float));
-			d = y.SubData(-1,sVal,-1);	memcpy(s.y,d.a,size*sizeof(float));
-			d = z.SubData(-1,sVal,-1);	memcpy(s.z,d.a,size*sizeof(float));
+			d = x.SubData(-1,sVal,-1);	memcpy(s.x,d.a,size*sizeof(mreal));
+			d = y.SubData(-1,sVal,-1);	memcpy(s.y,d.a,size*sizeof(mreal));
+			d = z.SubData(-1,sVal,-1);	memcpy(s.z,d.a,size*sizeof(mreal));
 			break;
 		case 'z':
-			d = x.SubData(-1,-1,sVal);	memcpy(s.x,d.a,size*sizeof(float));
-			d = y.SubData(-1,-1,sVal);	memcpy(s.y,d.a,size*sizeof(float));
-			d = z.SubData(-1,-1,sVal);	memcpy(s.z,d.a,size*sizeof(float));
+			d = x.SubData(-1,-1,sVal);	memcpy(s.x,d.a,size*sizeof(mreal));
+			d = y.SubData(-1,-1,sVal);	memcpy(s.y,d.a,size*sizeof(mreal));
+			d = z.SubData(-1,-1,sVal);	memcpy(s.z,d.a,size*sizeof(mreal));
 			break;
 		}
 	}
 	else if(x.nx==n && y.nx==m && z.nx==l)	// x, y -- вектора
 	{
-		float ff;
+		mreal ff;
 		switch(dir)
 		{
 		case 'x':
@@ -542,7 +538,7 @@ void get_slice(_mgl_slice &s, const mglData &a, char dir, long sVal,
 			mglPoint Min, mglPoint Max)
 {
 	register long i,j,k,n=a.nx,m=a.ny,l=a.nz;
-	float x1,y1,z1;
+	mreal x1,y1,z1;
 	mglData d;
 
 	switch(dir)		// общая часть
@@ -558,12 +554,12 @@ void get_slice(_mgl_slice &s, const mglData &a, char dir, long sVal,
 		d = a.SubData(-1,-1,sVal);	break;
 	}
 	long size = s.nx*s.ny;
-	s.x = new float[size];	s.y = new float[size];
-	s.z = new float[size];	s.a = new float[size];
-	memcpy(s.a,d.a,size*sizeof(float));
-	x1 = Min.x + (Max.x-Min.x)*float(sVal)/(n-1.);
-	y1 = Min.y + (Max.y-Min.y)*float(sVal)/(m-1.);
-	z1 = Min.z + (Max.z-Min.z)*float(sVal)/(l-1.);
+	s.x = new mreal[size];	s.y = new mreal[size];
+	s.z = new mreal[size];	s.a = new mreal[size];
+	memcpy(s.a,d.a,size*sizeof(mreal));
+	x1 = Min.x + (Max.x-Min.x)*mreal(sVal)/(n-1.);
+	y1 = Min.y + (Max.y-Min.y)*mreal(sVal)/(m-1.);
+	z1 = Min.z + (Max.z-Min.z)*mreal(sVal)/(l-1.);
 
 	switch(dir)
 	{
@@ -637,7 +633,7 @@ void mglGraph::Cont3(const mglData &x, const mglData &y, const mglData &z, const
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"Cont3");	return;	}
 	mglData v(Num);
-	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*float(i+1)/(Num+1);
+	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i+1)/(Num+1);
 	Cont3(v,x,y,z,a,dir,sVal,sch);
 }
 //-----------------------------------------------------------------------------
@@ -645,7 +641,7 @@ void mglGraph::Cont3(const mglData &a, char dir, int sVal, const char *sch, int 
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"Cont3");	return;	}
 	mglData v(Num);
-	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*float(i+1)/(Num+1);
+	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i+1)/(Num+1);
 	Cont3(v,a,dir,sVal,sch);
 }
 //-----------------------------------------------------------------------------
@@ -669,7 +665,7 @@ void mglGraph::Dens3(const mglData &x, const mglData &y, const mglData &z, const
 	get_slice(s,x,y,z,a,dir,sVal);	// готовим память
 	if(s.a==NULL)	return;
 	mglColor col;
-	float *pp = new float[3*s.nx*s.ny], *cc = new float[4*s.nx*s.ny];
+	mreal *pp = new mreal[3*s.nx*s.ny], *cc = new mreal[4*s.nx*s.ny];
 	bool *tt = new bool[s.nx*s.ny];
 	for(i=0;i<s.nx;i++)	for(j=0;j<s.ny;j++)	// создаем массив точек
 	{
@@ -723,7 +719,7 @@ void mglGraph::Grid3(const mglData &x, const mglData &y, const mglData &z, const
 	get_slice(s,x,y,z,a,dir,sVal);	// готовим память
 	if(s.a==NULL)	return;
 	mglColor col;
-	float *pp = new float[3*s.nx*s.ny];
+	mreal *pp = new mreal[3*s.nx*s.ny];
 	bool *tt = new bool[s.nx*s.ny];
 	if(sm && s.nx>15 && s.ny>15)
 	{
@@ -808,7 +804,7 @@ void mglGraph::ContF3(const mglData &x, const mglData &y, const mglData &z, cons
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"ContF3");	return;	}
 	mglData v(Num+2);
-	for(long i=0;i<Num+2;i++)	v.a[i] = Cmin + (Cmax-Cmin)*float(i)/(Num+1);
+	for(long i=0;i<Num+2;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i)/(Num+1);
 	ContF3(v,x,y,z,a,dir,sVal,sch);
 }
 //-----------------------------------------------------------------------------
@@ -816,7 +812,7 @@ void mglGraph::ContF3(const mglData &a, char dir, int sVal, const char *sch, int
 {
 	if(Num<1)	{	SetWarn(mglWarnCnt,"ContF3");	return;	}
 	mglData v(Num+2);
-	for(long i=0;i<Num+2;i++)	v.a[i] = Cmin + (Cmax-Cmin)*float(i)/(Num+1);
+	for(long i=0;i<Num+2;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i)/(Num+1);
 	ContF3(v,a,dir,sVal,sch);
 }
 //-----------------------------------------------------------------------------
@@ -824,7 +820,7 @@ void mglGraph::ContF3(const mglData &a, char dir, int sVal, const char *sch, int
 //	Text printing along some curve
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Text(const mglData &y,const wchar_t *text,const char *font,float size,float zVal)
+void mglGraph::Text(const mglData &y,const wchar_t *text,const char *font,mreal size,mreal zVal)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Text");	return;	}
 	mglData x(y.nx);
@@ -832,7 +828,7 @@ void mglGraph::Text(const mglData &y,const wchar_t *text,const char *font,float 
 	Text(x,y,text,font,size,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Text(const mglData &x,const mglData &y,const wchar_t *text,const char *font,float size,float zVal)
+void mglGraph::Text(const mglData &x,const mglData &y,const wchar_t *text,const char *font,mreal size,mreal zVal)
 {
 	mglData z(y.nx);
 	if(isnan(zVal))	zVal = Min.z;
@@ -840,7 +836,7 @@ void mglGraph::Text(const mglData &x,const mglData &y,const wchar_t *text,const 
 	Text(x,y,z,text,font,size);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Text(const mglData &x,const mglData &y,const mglData &z,const wchar_t *text,const char *font,float size)
+void mglGraph::Text(const mglData &x,const mglData &y,const mglData &z,const wchar_t *text,const char *font,mreal size)
 {
 	long n=y.nx;
 	if(x.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Text");	return;	}
@@ -852,7 +848,7 @@ void mglGraph::Text(const mglData &x,const mglData &y,const mglData &z,const wch
 	stl[1] = col;
 	SelectPen(stl);		// May be I should use "-0" ?????
 
-	float *pp = new float[3*n];
+	mreal *pp = new mreal[3*n];
 	bool *tt = new bool[n];
 	long *nn = new long[n];
 	register long i,k;
@@ -947,16 +943,16 @@ void mgl_cont_all_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const H
 void mgl_cont_all(HMGL gr, const HMDT a, const char *sch, int Num)
 {	if(gr && a)	gr->ContA(*a, sch, Num);	}
 /// Draw contour lines for 2d data specified parametrically
-void mgl_cont_xy_val(HMGL gr, const HMDT v, const HMDT x, const HMDT y, const HMDT a, const char *sch, float zVal)
+void mgl_cont_xy_val(HMGL gr, const HMDT v, const HMDT x, const HMDT y, const HMDT a, const char *sch, mreal zVal)
 {	if(gr && a && x && y && v)	gr->Cont(*v, *x, *y, *a, sch, zVal);	}
 /// Draw contour lines for 2d data
-void mgl_cont_val(HMGL gr, const HMDT v, const HMDT a, const char *sch,float zVal)
+void mgl_cont_val(HMGL gr, const HMDT v, const HMDT a, const char *sch,mreal zVal)
 {	if(gr && a && v)	gr->Cont(*v, *a, sch, zVal);	}
 /// Draw several contour lines for 2d data specified parametrically
-void mgl_cont_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch, int Num, float zVal)
+void mgl_cont_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch, int Num, mreal zVal)
 {	if(gr && a && x && y)	gr->Cont(*x, *y, *a, sch, Num, zVal);	}
 /// Draw several contour lines for 2d data
-void mgl_cont(HMGL gr, const HMDT a, const char *sch, int Num, float zVal)
+void mgl_cont(HMGL gr, const HMDT a, const char *sch, int Num, mreal zVal)
 {	if(gr && a)	gr->Cont(*a, sch, Num, zVal);	}
 /// Draw grid lines for density plot at slice for 3d data specified parametrically
 void mgl_grid3_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch)
@@ -1017,26 +1013,26 @@ void mgl_contf_all_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const 
 void mgl_contf_all(HMGL gr, const HMDT a, const char *sch, int Num)
 {	if(gr && a)	gr->ContFA(*a, sch, Num);	}
 /// Draw solid contours for 2d data specified parametrically
-void mgl_contf_xy_val(HMGL gr, const HMDT v, const HMDT x, const HMDT y, const HMDT a, const char *sch, float zVal)
+void mgl_contf_xy_val(HMGL gr, const HMDT v, const HMDT x, const HMDT y, const HMDT a, const char *sch, mreal zVal)
 {	if(gr && a && x && y && v)	gr->ContF(*v, *x, *y, *a, sch, zVal);	}
 /// Draw solid contours for 2d data
-void mgl_contf_val(HMGL gr, const HMDT v, const HMDT a, const char *sch,float zVal)
+void mgl_contf_val(HMGL gr, const HMDT v, const HMDT a, const char *sch,mreal zVal)
 {	if(gr && a && v)	gr->ContF(*v, *a, sch, zVal);	}
 /// Draw several solid contours for 2d data specified parametrically
-void mgl_contf_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch, int Num, float zVal)
+void mgl_contf_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch, int Num, mreal zVal)
 {	if(gr && a && x && y)	gr->ContF(*x, *y, *a, sch, Num, zVal);	}
 /// Draw several solid contours for 2d data
-void mgl_contf(HMGL gr, const HMDT a, const char *sch, int Num, float zVal)
+void mgl_contf(HMGL gr, const HMDT a, const char *sch, int Num, mreal zVal)
 {	if(gr && a)	gr->ContF(*a, sch, Num, zVal);	}
 /// Print string \a text auintptr_t curve in 3D with font size \a size.
 void mgl_text_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z,const char *text,
-				const char *font, float size)
+				const char *font, mreal size)
 {	if(gr && x && y && z)	gr->Text(*x,*y,*z,text,font,size);	}
 /// Print string \a text auintptr_t parametrical curve with font size \a size.
-void mgl_text_xy(HMGL gr, const HMDT x, const HMDT y, const char *text, const char *font, float size)
+void mgl_text_xy(HMGL gr, const HMDT x, const HMDT y, const char *text, const char *font, mreal size)
 {	if(gr && x && y)	gr->Text(*x,*y,text,font,size);	}
 /// Print string \a text auintptr_t curve with font size \a size.
-void mgl_text_y(HMGL gr, const HMDT y, const char *text, const char *font, float size)
+void mgl_text_y(HMGL gr, const HMDT y, const char *text, const char *font, mreal size)
 {	if(gr && y)	gr->Text(*y,text,font,size);	}
 //-----------------------------------------------------------------------------
 //	Fortran interface
@@ -1086,28 +1082,28 @@ void mgl_cont_all_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num,int l)
 	delete []s;
 }
 /// Draw contour lines for 2d data specified parametrically
-void mgl_cont_xy_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, float *zVal,int l)
+void mgl_cont_xy_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, mreal *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y && v)	_GR_->Cont(_D_(v), _D_(x), _D_(y), _D_(a), s, *zVal);
 	delete []s;
 }
 /// Draw contour lines for 2d data
-void mgl_cont_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch,float *zVal,int l)
+void mgl_cont_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch,mreal *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && v)	_GR_->Cont(_D_(v), _D_(a), s, *zVal);
 	delete []s;
 }
 /// Draw several contour lines for 2d data specified parametrically
-void mgl_cont_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, int *Num, float *zVal,int l)
+void mgl_cont_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, int *Num, mreal *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y)	_GR_->Cont(_D_(x), _D_(y), _D_(a), s, *Num, *zVal);
 	delete []s;
 }
 /// Draw several contour lines for 2d data
-void mgl_cont_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num, float *zVal,int l)
+void mgl_cont_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num, mreal *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->Cont(_D_(a), s, *Num, *zVal);
@@ -1244,28 +1240,28 @@ void mgl_contf_all_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num,int l
 	delete []s;
 }
 /// Draw solid contours for 2d data specified parametrically
-void mgl_contf_xy_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, float *zVal,int l)
+void mgl_contf_xy_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, mreal *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y && v)	_GR_->ContF(_D_(v), _D_(x), _D_(y), _D_(a), s, *zVal);
 	delete []s;
 }
 /// Draw solid contours for 2d data
-void mgl_contf_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch,float *zVal,int l)
+void mgl_contf_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch,mreal *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && v)	_GR_->ContF(_D_(v), _D_(a), s, *zVal);
 	delete []s;
 }
 /// Draw several solid contours for 2d data specified parametrically
-void mgl_contf_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, int *Num, float *zVal,int l)
+void mgl_contf_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, int *Num, mreal *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a && x && y)	_GR_->ContF(_D_(x), _D_(y), _D_(a), s, *Num, *zVal);
 	delete []s;
 }
 /// Draw several solid contours for 2d data
-void mgl_contf_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num, float *zVal,int l)
+void mgl_contf_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num, mreal *zVal,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && a)	_GR_->ContF(_D_(a), s, *Num, *zVal);
@@ -1273,7 +1269,7 @@ void mgl_contf_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num, float *z
 }
 /// Print string \a text auintptr_t curve in 3D with font size \a size.
 void mgl_text_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z,const char *text,
-				const char *font, float *size,int l,int n)
+				const char *font, mreal *size,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,font,n);	f[n]=0;
@@ -1281,7 +1277,7 @@ void mgl_text_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z,const
 	delete []s;		delete []f;
 }
 /// Print string \a text auintptr_t parametrical curve with font size \a size.
-void mgl_text_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *text, const char *font, float *size, int l,int n)
+void mgl_text_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *text, const char *font, mreal *size, int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,font,n);	f[n]=0;
@@ -1289,7 +1285,7 @@ void mgl_text_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *text, c
 	delete []s;		delete []f;
 }
 /// Print string \a text auintptr_t curve with font size \a size.
-void mgl_text_y_(uintptr_t *gr, uintptr_t *y, const char *text, const char *font, float *size, int l,int n)
+void mgl_text_y_(uintptr_t *gr, uintptr_t *y, const char *text, const char *font, mreal *size, int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,font,n);	f[n]=0;

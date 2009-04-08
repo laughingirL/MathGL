@@ -105,16 +105,16 @@ public:
 	/// Set drawing functions from the class
 	void set_draw(mglDraw *dr);
 	/// Set angles for additional plot rotation
-	inline void set_angle(float t, float p){	tet = t;	phi = p;	};
+	inline void set_angle(mreal t, mreal p){	tet = t;	phi = p;	};
 	/// Set bitwise flags for general state (1-Alpha, 2-Light)
 	inline void set_state(int f)			{	flag = f;	};
 	/// Set flags for handling mouse
 	void set_state(bool z, bool r)	{	zoom = z;	rotate = r;	};
 	/// Set zoom in/out region
-	inline void set_zoom(float X1, float Y1, float X2, float Y2)
+	inline void set_zoom(mreal X1, mreal Y1, mreal X2, mreal Y2)
 	{	x1 = X1;	x2 = X2;	y1 = Y1;	y2 = Y2;	};
 	/// Get zoom region
-	inline void get_zoom(float *X1, float *Y1, float *X2, float *Y2)
+	inline void get_zoom(mreal *X1, mreal *Y1, mreal *X2, mreal *Y2)
 	{	*X1 = x1;	*X2 = x2;	*Y1 = y1;	*Y2 = y2;	};
 	/// Get pointer to grapher
 	inline mglGraph *get_graph()	{	return graph;	};
@@ -125,8 +125,8 @@ protected:
 	const Fl_Menu_Item *popup;	///< pointer to popup menu items
 	Fl_Widget *wpar;			///< widget for popup menu
 	void *vpar;					///< parameter for popup menu
-	float tet,phi;				///< rotation angles
-	float x1,x2,y1,y2;			///< zoom in region
+	mreal tet,phi;				///< rotation angles
+	mreal x1,x2,y1,y2;			///< zoom in region
 	bool zoom, rotate;			///< flag for handle mouse
 	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
 	int x0,y0,xe,ye;			///< mouse position

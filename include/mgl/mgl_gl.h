@@ -42,43 +42,43 @@ public:
 	bool Alpha(bool enable);
 	bool Light(bool enable);
 	void Light(int n, bool enable);
-	void Fog(float d, float dz=0.25);
-	void Light(int n,mglPoint p, mglColor c=NC, float br=0.5, bool infty=true);
-	void View(float tetX,float tetY,float tetZ);
+	void Fog(mreal d, mreal dz=0.25);
+	void Light(int n,mglPoint p, mglColor c=NC, mreal br=0.5, bool infty=true);
+	void View(mreal tetX,mreal tetY,mreal tetZ);
 	void Clf(mglColor Back=NC);
 	int NewFrame();
 	void EndFrame();
-	void InPlot(float x1,float x2,float y1,float y2,bool rel=false);
+	void InPlot(mreal x1,mreal x2,mreal y1,mreal y2,bool rel=false);
 	void SetSize(int ,int ){};
 
-	void Ball(float x,float y,float z,mglColor col=RC,float alpha=1);
-//	void Glyph(float x,float y, float f, int nt, const short *trig, int nl, const short *line);
+	void Ball(mreal x,mreal y,mreal z,mglColor col=RC,mreal alpha=1);
+//	void Glyph(mreal x,mreal y, mreal f, int nt, const short *trig, int nl, const short *line);
 protected:
 	mglColor def_col;
 
-//	void DefColor(mglColor c, float alpha=-1);
-	void Pen(mglColor col, char style,float width);
+//	void DefColor(mglColor c, mreal alpha=-1);
+	void Pen(mglColor col, char style,mreal width);
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 
-	void ball(float *p,float *c);
+	void ball(mreal *p,mreal *c);
 
 	void LightScale();
-	void line_plot(float *p1,float *p2,float *c1,float *c2,bool all=false);
-	void line_plot_s(float *p1,float *p2,float *c1,float *c2,bool all=false);
-	void trig_plot(float *p0,float *p1,float *p2,
-					float *c0,float *c1,float *c2);
-	void trig_plot_n(float *p0,float *p1,float *p2,
-					float *c0,float *c1,float *c2,
-					float *n0,float *n1,float *n2);
-	void quad_plot(float *p0,float *p1,float *p2,float *p3,
-					float *c0,float *c1,float *c2,float *c3);
-	void quad_plot_a(float *p0,float *p1,float *p2,float *p3,
-					float a0,float a1,float a2,float a3,float alpha);
-	void quad_plot_n(float *p0,float *p1,float *p2,float *p3,
-					float *c0,float *c1,float *c2,float *c3,
-					float *n0,float *n1,float *n2,float *n3);
-	void mark_plot(float *pp, char type);
-	void font_line(float *p, unsigned char *r,bool thin=true);
+	void line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all=false);
+	void line_plot_s(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all=false);
+	void trig_plot(mreal *p0,mreal *p1,mreal *p2,
+					mreal *c0,mreal *c1,mreal *c2);
+	void trig_plot_n(mreal *p0,mreal *p1,mreal *p2,
+					mreal *c0,mreal *c1,mreal *c2,
+					mreal *n0,mreal *n1,mreal *n2);
+	void quad_plot(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+					mreal *c0,mreal *c1,mreal *c2,mreal *c3);
+	void quad_plot_a(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+					mreal a0,mreal a1,mreal a2,mreal a3,mreal alpha);
+	void quad_plot_n(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+					mreal *c0,mreal *c1,mreal *c2,mreal *c3,
+					mreal *n0,mreal *n1,mreal *n2,mreal *n3);
+	void mark_plot(mreal *pp, char type);
+	void font_line(mreal *p, unsigned char *r,bool thin=true);
 };
 //-----------------------------------------------------------------------------
 #endif

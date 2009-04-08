@@ -21,24 +21,9 @@
 #include <time.h>
 #include <math.h>
 #include <string.h>
-
-#ifdef _MSC_VER
-#define	_USE_MATH_DEFINES
-#include <float.h>
-const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
-#define NANd	(*(double*)mgl_nan)
-#define NANf	(*(float*)&(mgl_nan[1]))
-#define NAN		NANf
-#define isnan	_isnan
-#define isfinite	_finite
-#define copysignf	_copysign
-#define chdir	_chdir
-#endif
-
 #ifndef NO_GSL
 #include <gsl/gsl_sf.h>
 #endif
-
 #include "mgl/mgl_eval.h"
 //-----------------------------------------------------------------------------
 //	константы для распознования выражения
@@ -60,6 +45,7 @@ EQ_IPOW,	// power x^n for integer n
 EQ_POW,		// power x^y
 EQ_MOD,		// x modulo y
 EQ_LOG,		// logarithm of x on base a, log_a(x) = ln(x)/ln(a)
+EQ_ARG,		// argument of complex number arg(x,y) = atan2(x,y)
 // двуместные спец. функции
 EQ_BESJ,	// regular cylindrical Bessel function of fractional order
 EQ_BESY,	// irregular cylindrical Bessel function of fractional order
@@ -89,7 +75,7 @@ EQ_SIGN,	// sign of number
 EQ_STEP,	// step function
 EQ_ABS,		// absolute value of x
 // одноместные спец функции
-EQ_LI2,		// dilogarithm for a real argument Li2(x) = - \Re \int_0^x ds \log(1-s)/s.
+EQ_LI2,		// dilogarithm for a mreal argument Li2(x) = - \Re \int_0^x ds \log(1-s)/s.
 EQ_ELLE,	// complete elliptic integral is denoted by E(k) = E(\pi/2, k).
 EQ_ELLK,	// complete elliptic integral is denoted by K(k) = F(\pi/2, k).
 EQ_AI,		// Airy function Ai(x)
@@ -104,7 +90,7 @@ EQ_CI,		// Cosine integral Ci(x) = \int_0^x dt \cos(t)/t.
 EQ_GAMMA,	// Gamma function \Gamma(x) = \int_0^\infty dt  t^{x-1} \exp(-t)
 EQ_PSI,		// digamma function \psi(x) = \Gamma'(x)/\Gamma(x) for general x, x \ne 0.
 EQ_W0,		// principal branch of the Lambert W function, W_0(x). Functions W(x), are defined to be solutions of the equation W\exp(W) = x.
-EQ_W1,		// secondary real-valued branch of the Lambert W function, W_{-1}(x). Functions W(x), are defined to be solutions of the equation W\exp(W) = x.
+EQ_W1,		// secondary mreal-valued branch of the Lambert W function, W_{-1}(x). Functions W(x), are defined to be solutions of the equation W\exp(W) = x.
 EQ_SINC,		// compute \sinc(x) = \sin(\pi x) / (\pi x) for any value of x.
 EQ_ZETA,		// Riemann zeta function \zeta(s) = \sum_{k=1}^\infty k^{-s}for arbitrary s, s \ne 1.
 EQ_ETA,		// eta function \eta(s) = (1-2^{1-s}) \zeta(s) for arbitrary s.
@@ -316,70 +302,92 @@ mglFormula::mglFormula(const char *string)
 		memcpy(Buf,&(str[n+1]),len-n);
 		len=strlen(Buf);
 		Buf[--len]=0;
-		if(!strcmp(name,"sin")) Kod=EQ_SIN;
-		else if(!strcmp(name,"step")) Kod=EQ_STEP;
-		else if(!strcmp(name,"sign")) Kod=EQ_SIGN;
-		else if(!strcmp(name,"cos")) Kod=EQ_COS;
-		else if(!strcmp(name,"tg")) Kod=EQ_TAN;
-		else if(!strcmp(name,"tan")) Kod=EQ_TAN;
-		else if(!strcmp(name,"asin")) Kod=EQ_ASIN;
-		else if(!strcmp(name,"acos")) Kod=EQ_ACOS;
-		else if(!strcmp(name,"atan")) Kod=EQ_ATAN;
-		else if(!strcmp(name,"sinh")) Kod=EQ_SINH;
-		else if(!strcmp(name,"cosh")) Kod=EQ_COSH;
-		else if(!strcmp(name,"tanh")) Kod=EQ_TANH;
-		else if(!strcmp(name,"sh")) Kod=EQ_SINH;
-		else if(!strcmp(name,"ch")) Kod=EQ_COSH;
-		else if(!strcmp(name,"th")) Kod=EQ_TANH;
-		else if(!strcmp(name,"sqrt")) Kod=EQ_SQRT;
-		else if(!strcmp(name,"log")) Kod=EQ_LOG;
-		else if(!strcmp(name,"pow")) Kod=EQ_POW;
-		else if(!strcmp(name,"exp")) Kod=EQ_EXP;
-		else if(!strcmp(name,"lg")) Kod=EQ_LG;
-		else if(!strcmp(name,"ln")) Kod=EQ_LN;
-		else if(!strcmp(name,"mod")) Kod=EQ_MOD;
-		else if(!strcmp(name,"erf")) Kod=EQ_ERF;
-		else if(!strcmp(name,"abs")) Kod=EQ_ABS;
-		else if(!strcmp(name,"en")) Kod=EQ_EN;
-		else if(!strcmp(name,"ci")) Kod=EQ_CI;
-		else if(!strcmp(name,"si")) Kod=EQ_SI;
-		else if(!strcmp(name,"j")) Kod=EQ_BESJ;
-		else if(!strcmp(name,"y")) Kod=EQ_BESY;
-		else if(!strcmp(name,"i")) Kod=EQ_BESI;
-		else if(!strcmp(name,"k")) Kod=EQ_BESK;
-		else if(!strcmp(name,"ee")) Kod=EQ_ELLE;
-		else if(!strcmp(name,"ek")) Kod=EQ_ELLK;
-		else if(!strcmp(name,"e")) Kod=EQ_ELE;
-		else if(!strcmp(name,"f")) Kod=EQ_ELF;
-		else if(!strcmp(name,"sn")) Kod=EQ_SN;
-		else if(!strcmp(name,"sc")) Kod=EQ_SC;
-		else if(!strcmp(name,"sd")) Kod=EQ_SD;
-		else if(!strcmp(name,"cn")) Kod=EQ_CN;
-		else if(!strcmp(name,"cs")) Kod=EQ_CS;
-		else if(!strcmp(name,"cd")) Kod=EQ_CD;
-		else if(!strcmp(name,"dn")) Kod=EQ_DN;
-		else if(!strcmp(name,"ds")) Kod=EQ_DS;
-		else if(!strcmp(name,"dc")) Kod=EQ_DC;
-		else if(!strcmp(name,"ns")) Kod=EQ_NS;
-		else if(!strcmp(name,"nc")) Kod=EQ_NC;
-		else if(!strcmp(name,"nd")) Kod=EQ_ND;
-		else if(!strcmp(name,"gamma")) Kod=EQ_GAMMA;
-		else if(!strcmp(name,"ai")) Kod=EQ_AI;
-		else if(!strcmp(name,"bi")) Kod=EQ_BI;
-		else if(!strcmp(name,"cl")) Kod=EQ_CL;
-		else if(!strcmp(name,"dilog")) Kod=EQ_LI2;
-		else if(!strcmp(name,"li2")) Kod=EQ_LI2;
-		else if(!strcmp(name,"ei")) Kod=EQ_EI;
-		else if(!strcmp(name,"e1")) Kod=EQ_E1;
-		else if(!strcmp(name,"e2")) Kod=EQ_E2;
-		else if(!strcmp(name,"w0")) Kod=EQ_W0;
-		else if(!strcmp(name,"w1")) Kod=EQ_W1;
-		else if(!strcmp(name,"legendre")) Kod=EQ_LP;
-		else if(!strcmp(name,"psi")) Kod=EQ_PSI;
-		else if(!strcmp(name,"sinc")) Kod=EQ_SINC;
-		else if(!strcmp(name,"zeta")) Kod=EQ_ZETA;
-		else if(!strcmp(name,"eta")) Kod=EQ_ETA;
-		else if(!strcmp(name,"ei3")) Kod=EQ_EI3;
+		if(name[0]=='a')
+		{
+			if(!strcmp(name+1,"sin"))		Kod=EQ_ASIN;
+			else if(!strcmp(name+1,"cos"))	Kod=EQ_ACOS;
+			else if(!strcmp(name+1,"tan"))	Kod=EQ_ATAN;
+			else if(!strcmp(name+1,"rg"))	Kod=EQ_ARG;
+			else if(!strcmp(name+1,"bs"))	Kod=EQ_ABS;
+			else if(!strcmp(name+1,"i"))	Kod=EQ_AI;
+		}
+		else if(name[0]=='c')
+		{
+			if(!strcmp(name+1,"os"))		Kod=EQ_COS;
+			else if(!strcmp(name+1,"osh"))	Kod=EQ_COSH;
+			else if(!strcmp(name+1,"h"))	Kod=EQ_COSH;
+			else if(!strcmp(name+1,"i"))	Kod=EQ_CI;
+			else if(!strcmp(name+1,"n"))	Kod=EQ_CN;
+			else if(!strcmp(name+1,"s"))	Kod=EQ_CS;
+			else if(!strcmp(name+1,"d"))	Kod=EQ_CD;
+			else if(!strcmp(name+1,"l"))	Kod=EQ_CL;
+		}
+		else if(name[0]=='d')
+		{
+			if(!strcmp(name+1,"n"))			Kod=EQ_DN;
+			else if(!strcmp(name+1,"s"))	Kod=EQ_DS;
+			else if(!strcmp(name+1,"c"))	Kod=EQ_DC;
+			else if(!strcmp(name+1,"ilog"))	Kod=EQ_LI2;
+		}
+		else if(name[0]=='e')
+		{
+			if(!strcmp(name+1,"xp"))		Kod=EQ_EXP;
+			else if(!strcmp(name+1,"rf"))	Kod=EQ_ERF;
+			else if(!strcmp(name+1,"n"))	Kod=EQ_EN;
+			else if(!strcmp(name+1,"e"))	Kod=EQ_ELLE;
+			else if(!strcmp(name+1,"k"))	Kod=EQ_ELLK;
+			else if(name[0]==0)				Kod=EQ_ELE;
+			else if(!strcmp(name+1,"i"))	Kod=EQ_EI;
+			else if(!strcmp(name+1,"1"))	Kod=EQ_E1;
+			else if(!strcmp(name+1,"2"))	Kod=EQ_E2;
+			else if(!strcmp(name+1,"ta"))	Kod=EQ_ETA;
+			else if(!strcmp(name+1,"i3"))	Kod=EQ_EI3;
+		}
+		else if(name[0]=='l')
+		{
+			if(!strcmp(name+1,"og"))		Kod=EQ_LOG;
+			else if(!strcmp(name+1,"g"))	Kod=EQ_LG;
+			else if(!strcmp(name+1,"n"))	Kod=EQ_LN;
+			else if(!strcmp(name+1,"i2"))	Kod=EQ_LI2;
+			else if(!strcmp(name+1,"egendre"))	Kod=EQ_LP;
+		}
+		else if(name[0]=='s')
+		{
+			if(!strcmp(name+1,"qrt"))		Kod=EQ_SQRT;
+			else if(!strcmp(name+1,"in"))	Kod=EQ_SIN;
+			else if(!strcmp(name+1,"tep"))	Kod=EQ_STEP;
+			else if(!strcmp(name+1,"ign"))	Kod=EQ_SIGN;
+			else if(!strcmp(name+1,"inh"))	Kod=EQ_SINH;
+			else if(!strcmp(name+1,"h"))	Kod=EQ_SINH;
+			else if(!strcmp(name+1,"i"))	Kod=EQ_SI;
+			else if(!strcmp(name+1,"n"))	Kod=EQ_SN;
+			else if(!strcmp(name+1,"c"))	Kod=EQ_SC;
+			else if(!strcmp(name+1,"d"))	Kod=EQ_SD;
+			else if(!strcmp(name+1,"inc"))	Kod=EQ_SINC;
+		}
+		else if(name[0]=='t')
+		{
+			if(!strcmp(name+1,"g"))			Kod=EQ_TAN;
+			else if(!strcmp(name+1,"an"))	Kod=EQ_TAN;
+			else if(!strcmp(name+1,"anh"))	Kod=EQ_TANH;
+			else if(!strcmp(name+1,"h"))	Kod=EQ_TANH;
+		}
+		else if(!strcmp(name,"pow"))	Kod=EQ_POW;
+		else if(!strcmp(name,"mod"))	Kod=EQ_MOD;
+		else if(!strcmp(name,"i"))		Kod=EQ_BESI;
+		else if(!strcmp(name,"j"))		Kod=EQ_BESJ;
+		else if(!strcmp(name,"k"))		Kod=EQ_BESK;
+		else if(!strcmp(name,"y"))		Kod=EQ_BESY;
+		else if(!strcmp(name,"f"))		Kod=EQ_ELF;
+		else if(!strcmp(name,"gamma"))	Kod=EQ_GAMMA;
+		else if(!strcmp(name,"ns"))		Kod=EQ_NS;
+		else if(!strcmp(name,"nc"))		Kod=EQ_NC;
+		else if(!strcmp(name,"nd"))		Kod=EQ_ND;
+		else if(!strcmp(name,"bi"))		Kod=EQ_BI;
+		else if(!strcmp(name,"w0"))		Kod=EQ_W0;
+		else if(!strcmp(name,"w1"))		Kod=EQ_W1;
+		else if(!strcmp(name,"psi"))	Kod=EQ_PSI;
+		else if(!strcmp(name,"zeta"))	Kod=EQ_ZETA;
 		else {	delete []str;	return;	}	// unknown function
 		n=mglFindInText(Buf,",");
 		if(n>=0)
@@ -388,17 +396,16 @@ mglFormula::mglFormula(const char *string)
 			Left=new mglFormula(Buf);
 			Right=new mglFormula(&(Buf[n+1]));
 		}
-		else
-			Left=new mglFormula(Buf);
+		else	Left=new mglFormula(Buf);
 	}
 	delete []str;
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n'='v', 't'='z', 'u'='a' variables
-float mglFormula::Calc(float x,float y,float t,float u)
+mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u)
 {
 	Error=0;
-	float a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(float));
+	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(mreal));
 	a1['a'-'a'] = a1['u'-'a'] = u;
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = a1['v'-'a'] = y;
@@ -407,10 +414,10 @@ float mglFormula::Calc(float x,float y,float t,float u)
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n', 't'='z', 'u'='a', 'v'='b', 'w'='c' variables
-float mglFormula::Calc(float x,float y,float t,float u,float v,float w)
+mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u,mreal v,mreal w)
 {
 	Error=0;
-	float a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(float));
+	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(mreal));
 	a1['c'-'a'] = a1['w'-'a'] = w;
 	a1['b'-'a'] = a1['v'-'a'] = v;
 	a1['a'-'a'] = a1['u'-'a'] = u;
@@ -421,14 +428,14 @@ float mglFormula::Calc(float x,float y,float t,float u,float v,float w)
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for arbitrary set of variables
-float mglFormula::Calc(const float var[MGL_VS])
+mreal mglFormula::Calc(const mreal var[MGL_VS])
 {
 	Error=0;
 	return CalcIn(var);
 }
 //-----------------------------------------------------------------------------
 // evaluate derivate of formula respect to 'diff' variable for arbitrary set of other variables
-float mglFormula::CalcD(const float var[MGL_VS], char diff)
+mreal mglFormula::CalcD(const mreal var[MGL_VS], char diff)
 {
 	Error=0;
 	return CalcDIn(diff-'a', var);
@@ -456,6 +463,7 @@ double gslBi(double a)	{return gsl_sf_airy_Bi(a,GSL_PREC_SINGLE);}
 #endif
 double sgn(double a)	{return a<0 ? -1 : (a>0 ? 1:0);}
 double stp(double a)	{return a<0 ? 0 : 1;}
+double arg(double a,double b)	{	return atan2(b,a);	}
 double mgz1(double)	{return 0;}
 double mgz2(double,double)	{return 0;}
 #ifdef _MSC_VER
@@ -467,9 +475,9 @@ double atanh(double x)	{	return fabs(x)<1 ? log((1+x)/(1-x))/2 : NAN;	}
 typedef double (*func_1)(double);
 typedef double (*func_2)(double, double);
 // evaluation of embedded (included) expressions
-float mglFormula::CalcIn(const float *a1)
+mreal mglFormula::CalcIn(const mreal *a1)
 {
-	func_2 f2[20] = {clt,cgt,ceq,cor,cand,add,sub,mul,div,ipw,pow,fmod,llg
+	func_2 f2[21] = {clt,cgt,ceq,cor,cand,add,sub,mul,div,ipw,pow,fmod,llg,arg
 #ifndef NO_GSL
 			,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
 			gsl_sf_bessel_Inu,gsl_sf_bessel_Knu,
@@ -589,7 +597,7 @@ double gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
 #endif
 //-----------------------------------------------------------------------------
 // evaluation of derivative of embedded (included) expressions
-float mglFormula::CalcDIn(int id, const float *a1)
+mreal mglFormula::CalcDIn(int id, const mreal *a1)
 {
 	func_2 f21[20] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgp,mul1,div1,ipw1,pow1,mgp,llg1
 #ifndef NO_GSL
