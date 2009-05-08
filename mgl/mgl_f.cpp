@@ -255,6 +255,9 @@ void mgl_set_func_(uintptr_t *gr, const char *EqX,const char *EqY,const char *Eq
 	_GR_->Axis(sx,sy,sz);
 	delete []sx;	delete []sy;	delete []sz;
 }
+/// Set predefined coordinate system
+void mgl_set_coor_(uintptr_t *gr, int *how)
+{	_GR_->Axis(*how);	}
 void mgl_set_cutoff_(uintptr_t *gr, const char *EqC, int l)
 {
 	char *s=new char[l+1];	memcpy(s,EqC,l);	s[l]=0;

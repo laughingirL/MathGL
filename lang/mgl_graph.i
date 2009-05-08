@@ -282,8 +282,10 @@ struct mglParse{};
 	{	mgl_set_yrange(self, dat, add);	}
 	void SetZRange(mglData *dat, bool add=false)
 	{	mgl_set_zrange(self, dat, add);	}
-	void SetFunc(const char *EqX=NULL, const char *EqY=NULL, const char *EqZ=NULL)
+	void SetFunc(const char *EqX, const char *EqY, const char *EqZ=NULL)
 	{	mgl_set_func(self, EqX, EqY, EqZ);	}
+	void SetCoor(int how)
+	{	mgl_set_coor(self, how);	}
 	void Ternary(bool val)
 	{	mgl_set_ternary(self, val);	}
 	void CutOff(const char *EqC)

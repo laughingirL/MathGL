@@ -86,11 +86,11 @@ public:
 	/// Execute MGL script file \a fname
 	void Execute(mglGraph *gr, FILE *fp, bool print=false);
 	/// Execute MGL script from array of lines
-	void Execute(mglGraph *gr, int num, const wchar_t **text, void (*error)(int line, int kind)=NULL);
+	void Execute(mglGraph *gr, int num, const wchar_t **text, void (*error)(int line, int kind, mglGraph *gr)=NULL);
 	/// Execute MGL script text with '\n' separated lines
-	void Execute(mglGraph *gr, const wchar_t *text, void (*error)(int line, int kind)=NULL);
+	void Execute(mglGraph *gr, const wchar_t *text, void (*error)(int line, int kind, mglGraph *gr)=NULL);
 	/// Execute MGL script text with '\n' separated lines
-	void Execute(mglGraph *gr, const char *text, void (*error)(int line, int kind)=NULL);
+	void Execute(mglGraph *gr, const char *text, void (*error)(int line, int kind, mglGraph *gr)=NULL);
 	/// Find variable or return 0 if absent
 	mglVar *FindVar(const char *name);
 	/// Find variable or return 0 if absent

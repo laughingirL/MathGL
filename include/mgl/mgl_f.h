@@ -162,6 +162,7 @@ void mgl_set_yrange_(uintptr_t *graph, uintptr_t *a, int *add);
 void mgl_set_zrange_(uintptr_t *graph, uintptr_t *a, int *add);
 void mgl_set_auto_(uintptr_t *graph, mreal *x1, mreal *x2, mreal *y1, mreal *y2, mreal *z1, mreal *z2);
 void mgl_set_func_(uintptr_t *graph, const char *EqX, const char *EqY, const char *EqZ, int, int, int);
+void mgl_set_coor_(uintptr_t *gr, int *how);
 void mgl_set_ternary_(uintptr_t *graph, int *enable);
 void mgl_set_cutoff_(uintptr_t *graph, const char *EqC, int);
 void mgl_box_(uintptr_t *graph, int *ticks);

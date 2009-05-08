@@ -1004,3 +1004,34 @@ void mglGraph::ColumnPlot(int num, int i)
 	InPlot(0,1,d,d+w,true);
 }
 //-----------------------------------------------------------------------------
+void mglGraph::Axis(int how)
+{
+	switch(how)
+	{
+	case mglCartesian:	Axis(0,0,0);	break;
+	case mglPolar:
+		Axis("x*cos(y)","x*sin(y)",0);	break;
+	case mglSpherical:
+		Axis("x*sin(y)*cos(z)","x*sin(y)*sin(z)","x*cos(y)");	break;
+	case mglParabolic:
+		Axis("x*y","(x*x-y*y)/2",0);	break;
+	case mglParaboloidal:
+		Axis("(x*x-y*y)*cos(z)/2","(x*x-y*y)*sin(z)/2","x*y");	break;
+	case mglOblate:
+		Axis("cosh(x)*cos(y)*cos(z)","cosh(x)*cos(y)*sin(z)","sinh(x)*sin(y)");	break;
+//		Axis("x*y*cos(z)","x*y*sin(z)","(x*x-1)*(1-y*y)");	break;	
+	case mglProlate:
+		Axis("sinh(x)*sin(y)*cos(z)","sinh(x)*sin(y)*sin(z)","cosh(x)*cos(y)");	break;
+	case mglElliptic:
+		Axis("cosh(x)*cos(y)","sinh(x)*sin(y)",0);	break;
+	case mglToroidal:
+		Axis("sinh(x)*cos(z)/(cosh(x)-cos(y))","sinh(x)*sin(z)/(cosh(x)-cos(y))",
+		     "sin(y)/(cosh(x)-cos(y))");	break;
+	case mglBispherical:
+		Axis("sin(y)*cos(z)/(cosh(x)-cos(y))","sin(y)*sin(z)/(cosh(x)-cos(y))",
+		     "sinh(x)/(cosh(x)-cos(y))");	break;
+	case mglBipolar:
+		Axis("sinh(x)/(cosh(x)-cos(y))","sin(y)/(cosh(x)-cos(y))",0);	break;
+	default:	Axis(0,0,0);	break;
+	}
+}

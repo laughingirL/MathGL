@@ -39,6 +39,20 @@ struct GifFileType;
 #endif
 
 enum{
+	mglCartesian = 0,	// no transformation
+	mglPolar,
+	mglSpherical,
+	mglParabolic,
+	mglParaboloidal,
+	mglOblate,
+	mglProlate,
+	mglElliptic,
+	mglToroidal,
+	mglBispherical,
+	mglBipolar
+};
+
+enum{
 	mglWarnNone = 0,// Everything OK
 	mglWarnDim,		// Data dimension(s) is incompatible
 	mglWarnLow, 	// Data dimension(s) is too small
@@ -327,6 +341,8 @@ public:
 	void Axis(mglPoint Min, mglPoint Max, mglPoint Org=mglPoint(NAN,NAN,NAN));
 	/// Safetly set the transformation formulas for coordinate.
 	void Axis(const char *EqX,const char *EqY,const char *EqZ);
+	/// Set the predefined transformation rules
+	void Axis(int how);
 	/// Safetly set the cutting off condition (formula).
 	void CutOff(const char *EqC);
 	/// Set to draw Ternary axis (triangle like axis, grid and so on)

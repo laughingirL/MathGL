@@ -58,7 +58,7 @@ void mglData::Smooth(int Type,const char *dirs,mreal delta)
 	long i,j,k,i0,nn=nx*ny,d3,d5;
 	mreal y5,y3,x2y;
 	mreal *b = new mreal[nx*ny*nz];
-	// сглаживание по x
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ x
 	memset(b,0,nx*ny*nz*sizeof(mreal));
 	if(nx>4 && strchr(dirs,'x'))
 	{
@@ -451,11 +451,11 @@ void mglFillP(int x,int y, const mreal *a,int nx,int ny,mreal _p[4][4])
 		memset(_p[3],0,4*sizeof(mreal));
 		return;
 	}
-	// значения функции
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	f[0]=a[x+nx*y];		f[1]=a[x+nx*(y+1)];
 	if(nx>1)	{	f[2]=a[x+1+nx*y];	f[3]=a[x+1+nx*(y+1)];	}
 	else		{	f[2] = f[0];	f[3] = f[1];	}
-	// производные по x
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ x
 	if(nx>1)
 	{
 		if(x==0)
@@ -479,7 +479,7 @@ void mglFillP(int x,int y, const mreal *a,int nx,int ny,mreal _p[4][4])
 		sx[2]=(a[x+2+nx*y]-a[x+nx*y])/2;
 		sx[3]=(a[x+2+nx*(y+1)]-a[x+nx*(y+1)])/2;
 	}
-	// производные по y
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ y
 	if(y==0)
 	{
 		sy[0]=a[x+nx*(y+1)]-a[x+nx*y];
@@ -500,10 +500,10 @@ void mglFillP(int x,int y, const mreal *a,int nx,int ny,mreal _p[4][4])
 		sy[1]=(a[x+nx*(y+2)]-a[x+nx*y])/2;
 		sy[3]=(a[x+1+nx*(y+2)]-a[x+1+nx*y])/2;
 	}
-	// перекрестные производные
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	if(nx>1)
 	{
-		// расчет d[0]
+		// пїЅпїЅпїЅпїЅпїЅпїЅ d[0]
 		if(y==0 && x==0)
 			d[0]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*y]+a[x+nx*y]);
 		else if(y==0)
@@ -512,7 +512,7 @@ void mglFillP(int x,int y, const mreal *a,int nx,int ny,mreal _p[4][4])
 			d[0]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*(y-1)]+a[x+nx*(y-1)])/2;
 		else
 			d[0]=(a[x+1+nx*(y+1)]-a[x-1+nx*(y+1)]-a[x+1+nx*(y-1)]+a[x-1+nx*(y-1)])/4;
-		// расчет d[1]
+		// пїЅпїЅпїЅпїЅпїЅпїЅ d[1]
 		if(y==ny-2 && x==0)
 			d[1]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*y]+a[x+nx*y]);
 		else if(y==ny-2)
@@ -521,7 +521,7 @@ void mglFillP(int x,int y, const mreal *a,int nx,int ny,mreal _p[4][4])
 			d[1]=(a[x+1+nx*(y+2)]-a[x+nx*(y+2)]-a[x+1+nx*y]+a[x+nx*y])/2;
 		else
 			d[1]=(a[x+1+nx*(y+2)]-a[x-1+nx*(y+2)]-a[x+1+nx*y]+a[x-1+nx*y])/4;
-		// расчет d[2]
+		// пїЅпїЅпїЅпїЅпїЅпїЅ d[2]
 		if(y==0 && x==nx-2)
 			d[2]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*y]+a[x+nx*y]);
 		else if(y==0)
@@ -530,7 +530,7 @@ void mglFillP(int x,int y, const mreal *a,int nx,int ny,mreal _p[4][4])
 			d[2]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*(y-1)]+a[x+nx*(y-1)])/2;
 		else
 			d[2]=(a[x+2+nx*(y+1)]-a[x+nx*(y+1)]-a[x+2+nx*(y-1)]+a[x+nx*(y-1)])/4;
-		// расчет d[3]
+		// пїЅпїЅпїЅпїЅпїЅпїЅ d[3]
 		if(y==ny-2 && x==nx-2)
 			d[3]=(a[x+1+nx*(y+1)]-a[x+nx*(y+1)]-a[x+1+nx*y]+a[x+nx*y]);
 		else if(y==ny-2)
@@ -540,7 +540,7 @@ void mglFillP(int x,int y, const mreal *a,int nx,int ny,mreal _p[4][4])
 		else
 			d[3]=(a[x+2+nx*(y+2)]-a[x+nx*(y+2)]-a[x+2+nx*y]+a[x+nx*y])/4;
 	}
-	// вычисляем коэффициенты полинома
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	_p[0][0]=f[0];		_p[1][0]=sx[0];
 	_p[2][0]=3*(f[2]-f[0])-2*sx[0]-sx[2];
 	_p[3][0]=sx[0]+sx[2]+2*(f[0]-f[2]);
@@ -569,14 +569,14 @@ void mglFillP(int x, const mreal *a,int nx,mreal _p[4])
 		return;
 	}
 	mreal s[2],f[2];
-	// значения функции
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	f[0]=a[x];		f[1]=a[x+1];
-	// производные по x
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ x
 	if(x==0)	s[0]=a[x+1]-a[x];
 	else		s[0]=(a[x+1]-a[x-1])/2;
 	if(x==nx-2)	s[1]=a[x+1]-a[x];
 	else		s[1]=(a[x+2]-a[x])/2;
-	// вычисляем коэффициенты полинома
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	_p[0]=f[0];		_p[1]=s[0];
 	_p[2]=3*(f[1]-f[0])-2*s[0]-s[1];
 	_p[3]=s[0]+s[1]+2*(f[0]-f[1]);
@@ -1280,7 +1280,7 @@ void mglData::PrintInfo(FILE *fp) const
 	if(fp==0)	return;
 	char *buf = new char[512];
 	PrintInfo(buf);
-	fprintf(fp,buf);	fflush(fp);
+	fprintf(fp,"%s",buf);	fflush(fp);
 	delete []buf;
 }
 //-----------------------------------------------------------------------------
@@ -1624,7 +1624,7 @@ void mglData::Put(mreal val, int xx, int yy, int zz)
 {
 	if(xx>=nx || yy>=ny || zz>=nz)	return;
 	register long i,j;
-	if(xx<0 && yy<0 && zz<0)	// сам массив
+	if(xx<0 && yy<0 && zz<0)	// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 		for(i=0;i<nx*ny*nz;i++)	a[i] = val;
 	else if(xx<0 && yy<0)	// 2d
 		for(i=0;i<nx*ny;i++)	a[i+zz*nx*ny] = val;
@@ -1646,7 +1646,7 @@ void mglData::Put(const mglData &val, int xx, int yy, int zz)
 {
 	if(xx>=nx || yy>=ny || zz>=nz)	return;
 	register long i,j,k;
-	if(xx<0 && yy<0 && zz<0)	// сам массив
+	if(xx<0 && yy<0 && zz<0)	// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	{
 		if(val.nx>=nx && val.ny>=ny && val.nz>=nz)
 			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)

@@ -88,9 +88,9 @@ void mgl_info(const char *str, ...)
 	va_start(lst,str);
 	vsprintf(buf,str,lst);
 	va_end(lst);
-	printf(buf);
+	printf("%s",buf);
 	FILE *fp = fopen("info.txt","at");
-	fprintf(fp,buf);
+	fprintf(fp,"%s",buf);
 	fclose(fp);
 }
 //---------------------------------------------------------------------------

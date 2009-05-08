@@ -42,11 +42,11 @@ void mgl_wcstrim(wchar_t *str)
 	wchar_t *c = mgl_wcsdup(str);
 	unsigned long n=wcslen(str);
 	long k;
-	for(k=0;k<long(wcslen(str));k++)	// удаляем начальные пробелы
+	for(k=0;k<long(wcslen(str));k++)	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		if(str[k]>' ')	break;
 	wcscpy(c,&(str[k]));
 	n = wcslen(c);
-	for(k=n-1;k>=0;k--)	// удаляем начальные пробелы
+	for(k=n-1;k>=0;k--)	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		if(c[k]>' ')		break;
 	c[k+1] = 0;
 	wcscpy(str,c);	free(c);
@@ -541,7 +541,8 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 					if(m>0)
 					{
 						n=0;	fval[r].Create(m+1);
-						fval[r].Fill(a[1].v, a[2].v);
+						for(int ii=0;ii<m+1;ii++)
+							fval[r].a[ii] = a[1].v + step*ii;
 					}
 				}
 				if(n==0)
@@ -661,32 +662,32 @@ int mglParse::FlowExec(mglGraph *gr, const wchar_t *com, long m, mglArg *a)
 	return n+1;
 }
 //-----------------------------------------------------------------------------
+void mgl_error_print(int line, int r, mglGraph *gr)
+{
+	if(r==0)	printf("%s\n",gr->Message);
+	if(r==1)	printf("Wrong argument(s) in line %d\n", line);
+	if(r==2)	printf("Wrong command in line %d\n", line);
+	if(r==3)	printf("String too long in line %d\n", line);
+	if(r==4)	printf("Unbalanced ' in line %d\n", line);
+}
 void mglParse::Execute(mglGraph *gr, FILE *fp, bool print)
 {
 	if(gr==0 || fp==0)	return;
-	wchar_t str[8192];
-	int r, line=0;
-	Stop = false;
-	while(!feof(fp))
+	fseek(fp,0,SEEK_END);	// get file size
+	long len=ftell(fp),cur=0;
+	fseek(fp,0,SEEK_SET);	// restore back
+	wchar_t *str=new wchar_t[len+1];
+	if(len>0)	for(cur=0;cur<len;cur++)
 	{
-		if(!fgetws(str,8192,fp))	break;
-		line++;
-		if(gr->Message) gr->Message[0] = 0;
-		r = Parse(gr,str,ftell(fp));
-		if(r<0)	{	fseek(fp,-r-1,SEEK_SET);	continue;	}
-
-		if(print)
-		{
-			if(gr->Message && gr->Message[0])	printf("%s\n",gr->Message);
-			if(r==1)	printf("Wrong argument(s) in line %d -- %ls\n", line, str);
-			if(r==2)	printf("Wrong command in line %d -- %ls\n", line, str);
-			if(r==3)	printf("String too long in line %d -- %ls\n", line, str);
-			if(r==4)	printf("Unbalanced ' in line %d -- %ls\n", line, str);
-		}
+		str[cur] = fgetwc(fp);
+		if(cur==0 && str[cur]==-1)	cur--;	// Shaytan, but it works!!!
 	}
+	str[len]=0;
+	Execute(gr,str,print?mgl_error_print:NULL);
+	delete []str;
 }
 //-----------------------------------------------------------------------------
-void mglParse::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(int line, int kind))
+void mglParse::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(int line, int kind, mglGraph *gr))
 {
 	if(gr==0 || n<1 || text==0)	return;
 	long i, r;
@@ -696,13 +697,13 @@ void mglParse::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(
 		if(r<0)	{	i = -r-2;	continue;	}
 		if(error)
 		{
-			if(r>0)	error(i, r);
-			if(gr->Message && gr->Message[0])	error(i,0);
+			if(r>0)	error(i, r, gr);
+			if(gr->Message && gr->Message[0])	error(i,0,gr);
 		}
 	}
 }
 //-----------------------------------------------------------------------------
-void mglParse::Execute(mglGraph *gr, const wchar_t *text, void (*error)(int line, int kind))
+void mglParse::Execute(mglGraph *gr, const wchar_t *text, void (*error)(int line, int kind, mglGraph *gr))
 {
 	unsigned s = wcslen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -718,7 +719,7 @@ void mglParse::Execute(mglGraph *gr, const wchar_t *text, void (*error)(int line
 	delete []wcs;	free(str);
 }
 //-----------------------------------------------------------------------------
-void mglParse::Execute(mglGraph *gr, const char *text, void (*error)(int line, int kind))
+void mglParse::Execute(mglGraph *gr, const char *text, void (*error)(int line, int kind, mglGraph *gr))
 {
 	unsigned s = strlen(text)+1;
 	wchar_t *wcs = new wchar_t[s];

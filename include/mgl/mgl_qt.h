@@ -18,12 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 //-----------------------------------------------------------------------------
-#ifndef QMGLCANVAS_H
-#define QMGLCANVAS_H
+#ifndef MGL_QT_H
+#define MGL_QT_H
 //-----------------------------------------------------------------------------
 #include <QWidget>
 #include <QPixmap>
-#include "mgl/mgl_zb.h"
+#include <mgl/mgl_zb.h>
 //-----------------------------------------------------------------------------
 class QTextEdit;
 class QMenu;
@@ -183,27 +183,6 @@ private:
 //-----------------------------------------------------------------------------
 /// Convert bitmap from mglGraphAB to QPixmap
 void convertFromGraph(QPixmap &pic, mglGraphAB *gr, uchar **buf);
-//-----------------------------------------------------------------------------
-/*
-/// Temporal class for showing image
-class mglQShowImg : public QWidget
-{
-Q_OBJECT
-public:
-	uchar *buf;			///< Temporal buffer
-	QPixmap pic;		///< Pixmap for drawing (changed by update)
-	mglQShowImg(QWidget *parent = 0, Qt::WindowFlags f = 0);
-	~mglQShowImg()	{	if(buf)	delete []buf;	};
-public slots:
-	void about();		///< Show about information
-	void aboutQt();		///< Show information about Qt version
-	void copy();		///< copy graphics to clipboard
-	void print();		///< Print plot
-	void save();		///< save graphics to file
-protected:
-	void paintEvent(QPaintEvent *);
-	void resizeEvent(QResizeEvent *);
-};*/
 //-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------

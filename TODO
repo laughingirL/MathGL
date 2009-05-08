@@ -1,3 +1,6 @@
+495 1354165 -- Ботанов Герман Михайлович, Косый Игорь Антонович
+1328343, 1328239 -- Корфидов Дмитрий Михайлович
+
 					MathGL (for v.1.8.2)
 
 1. Update documentation
@@ -5,11 +8,13 @@
 
 2. "Chaos" in area.png (near axis)
 
-3. QMathGL signal MouseClicked(float,float,float);
+3. Ternary
 
 4. Import/Export via GIF (as 3d data) ???
 
 5. \dfrac for normal size and centering
+
+6. 'W'<->'R', 'E'<->'L' in Text() + 'S', 'N' -- align vertically
 
 10. Spline5 !!!
 11. Use Hershey as built-in font

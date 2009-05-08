@@ -1,4 +1,5 @@
-1.8.1.1 Released 17 March 2009
+1.8.2 Released 15 May 2009
+	- Add function mglGraph::Axis() for predefined curvilinear coordinates.
 	- You can now select base type for floating point numbers (double or float).
 	- Function mglData::Sew() now handle NAN values correctly.
 	- Bug correction in marker drawing for EPS, SVG.

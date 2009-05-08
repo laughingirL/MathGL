@@ -1,7 +1,11 @@
 AC_INIT(mgl/mgl_main.cpp)
+
+MGL_RELEASE=1.8
+AC_SUBST(MGL_RELEASE)
+
+AC_CONFIG_MACRO_DIR([config])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(mgl)
-AC_CONFIG_SUBDIRS(libltdl)
 AC_CONFIG_HEADER(include/mgl/config.h)
 
 #MGL_RELEASE=1.4
@@ -26,14 +30,7 @@ AC_PROG_INSTALL
 
 AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_DLOPEN
-AC_LIBLTDL_INSTALLABLE
-#AC_LIBLTDL_CONVENIENCE
 AC_PROG_LIBTOOL
-
-AC_SUBST(INCLTDL)
-AC_SUBST(LIBLTDL)
-
-
 
 AC_ARG_ENABLE(double,
 [  --enable-double    Turn on double precision in MathGL library],
@@ -307,8 +304,6 @@ if (test x$docs = xtrue || test x$all = xtrue) ;then
 	AC_CONFIG_FILES([texinfo/Makefile texinfo/png/Makefile])
 fi
 AM_CONDITIONAL(USE_DOCS, (test x$docs = xtrue || test x$all = xtrue) )
-
-AM_CONDITIONAL(USE_LTDL, (test x$all = xtrue || test x$testio = xtrue || test x$hdf5 = xtrue || test x$jpeg = xtrue ))
 
 AM_CXXFLAGS="-Wall $GSL_FLAGS"
 AC_SUBST(AM_CXXFLAGS)

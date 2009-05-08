@@ -39,12 +39,6 @@ if USE_JPEG
 libmgl_la_LIBADD += $(JPEG_LIBS)
 endif
 
-if USE_LTDL
-INCLUDES        += @INCLTDL@
-libmgl_la_LIBADD += @LIBLTDL@
-libmgl_la_CXXFLAGS += -DWITH_LTDL
-endif
-
 libmgl_la_SOURCES = \
 mgl_data_cf.cpp	   mgl_axis.cpp     mgl_data_png.cpp  mgl_zb2.cpp \
 mgl_c.cpp          mgl_eps.cpp      mgl_font.cpp      mgl_zb.cpp \
@@ -55,16 +49,3 @@ mgl_3d.cpp         mgl_data.cpp     mgl_f.cpp         mgl_idtf.cpp \
 mgl_ab.cpp         mgl_data_io.cpp  mgl_flow.cpp      mgl_vect.cpp \
 mgl_parse.cpp      mgl_fit.cpp      mgl_pde.cpp       mgl_evalc.cpp \
 mgl_addon.cpp
-
-if USE_TESTIO
-bin_PROGRAMS = test-io
-test_io_SOURCES = test_io.cpp mgl_io.cpp
-if USE_LTDL
-test_io_CXXFLAGS = -DWITH_LTDL $(AM_CXXFLAGS)
-test_io_LDADD = @LIBLTDL@
-mgllib_LTLIBRARIES = test-mod.la
-mgllibdir = $(libdir)/mgl
-test_mod_la_LDFLAGS = -no-undefined -module -avoid-version -shared
-test_mod_la_SOURCES = test_mod.cpp
-endif
-endif

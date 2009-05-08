@@ -1,5 +1,4 @@
 INCLUDES        = -I$(top_builddir)/include -I$(top_builddir)
-INCLUDES        += @INCLTDL@
 
 lib_LTLIBRARIES = 
 if USE_FLTK

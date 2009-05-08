@@ -165,6 +165,7 @@ int mgls_axis(mglGraph *gr, long n, mglArg *a, int k[10])
 		else return 1;
 	}
 	else if(k[0]==2)	gr->Axis(a[0].s, k[1]==3 && a[1].v!=0);
+	else if(k[0]==3)	gr->Axis(int(a[0].v));
 	else if(k[0]==0)	gr->Axis("xyz");
 	else return 1;
 	return 0;
@@ -187,6 +188,7 @@ void mglc_axis(wchar_t out[1024], long n, mglArg *a, int k[10])
 		if(ok)	swprintf(out,1024,L"gr->Axis(mglPoint(%g, %g), mglPoint(%g, %g));", a[0].v,a[1].v,a[2].v,a[3].v);
 	}
 	else if(k[0]==2)	swprintf(out,1024,L"gr->Axis(\"%s\");", a[0].s);
+	else if(k[0]==3)	swprintf(out,1024,L"gr->Axis(\"%d\");", int(a[0].v));
 	else if(k[0]==0)	swprintf(out,1024,L"gr->Axis(\"xyz\");");
 }
 //-----------------------------------------------------------------------------

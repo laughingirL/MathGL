@@ -353,8 +353,12 @@ Sets ranges for automatic variables of plots. Function don't change the directio
 @cindex fy
 @cindex fz
 
-@deftypemethod {mglGraph (Python)} @code{void} SetFunc (@code{const char *}EqX=@code{NULL}, @code{const char *}EqY=@code{NULL}, @code{const char *}EqZ=@code{NULL})
+@deftypemethod {mglGraph (Python)} @code{void} SetFunc (@code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ=@code{NULL})
 Sets the transformation formulas for curvilinear coordinate. Each string should contain mathematical expression for real coordinate depending on internal coordinates x, y, z. For example, the cylindrical coordinates are introduced as @code{SetFunc("x*cos(y)", "x*sin(y)", "z");}. For removing of formulas the corresponding parameter should be @code{NULL}. Using transformation formulas will slightly slowing the program, i.e. @code{SetFunc(NULL, NULL, NULL)} is faster than @code{SetFunc("x", "y", "z")}. @xref{mglFormula class}.
+@end deftypemethod
+
+@deftypemethod {mglGraph (Python)} @code{void} SetCoor (@code{int} how)
+Sets one of the predefined transformation formulas for curvilinear coordinate. Paramater @var{how} define the coordinates: @code{mglCartesian=0} -- Cartesian coordinates (no transformation); @code{mglPolar=1} -- Polar coordiantes @math{x_n=x*cos(y),y_n=x*sin(y), z_n=z}; @code{mglSpherical=2} -- Sperical coordinates @math{x_n=x*sin(y)*cos(z), y_n=x*sin(y)*sin(z), z_n=x*cos(y)}; @code{mglParabolic=3} -- Parabolic coordinates @math{x_n=x*y, y_n=(x*x-y*y)/2, z_n=z}; @code{mglParaboloidal=4} -- Paraboloidal coordinates @math{x_n=(x*x-y*y)*cos(z)/2, y_n=(x*x-y*y)*sin(z)/2, z_n=x*y}; @code{mglOblate=5} -- Oblate coordinates @math{x_n=cosh(x)*cos(y)*cos(z), y_n=cosh(x)*cos(y)*sin(z), z_n=sinh(x)*sin(y)}; @code{mglProlate=6} -- Prolate coordinates @math{x_n=sinh(x)*sin(y)*cos(z), y_n=sinh(x)*sin(y)*sin(z), z_n=cosh(x)*cos(y)}; @code{mglElliptic=7} -- Elliptic coordinates @math{x_n=cosh(x)*cos(y), y_n=sinh(x)*sin(y), z_n=z}; @code{mglToroidal=8} -- Toroidal coordinates @math{x_n=sinh(x)*cos(z)/(cosh(x)-cos(y)), y_n=sinh(x)*sin(z)/(cosh(x)-cos(y)), z_n=sin(y)/(cosh(x)-cos(y))}; @code{mglBispherical=9} -- Bispherical coordinates @math{x_n=sin(y)*cos(z)/(cosh(x)-cos(y)), y_n=sin(y)*sin(z)/(cosh(x)-cos(y)), z_n=sinh(x)/(cosh(x)-cos(y))}; @code{mglBipolar=10} -- Bipolar coordinates @math{x_n=sinh(x)/(cosh(x)-cos(y)), y_n=sin(y)/(cosh(x)-cos(y)), z_n=z}.
 @end deftypemethod
 
 @deftypemethod {mglGraph (Python)} @code{void} Ternary (@code{bool} tern)

@@ -197,6 +197,7 @@ void mgl_set_yrange(HMGL graph, const HMDT a, int add);
 void mgl_set_zrange(HMGL graph, const HMDT a, int add);
 void mgl_set_auto(HMGL graph, mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2);
 void mgl_set_func(HMGL graph, const char *EqX,const char *EqY,const char *EqZ);
+void mgl_set_coor(HMGL gr, int how);
 void mgl_set_ternary(HMGL gr, int enable);
 void mgl_set_cutoff(HMGL graph, const char *EqC);
 void mgl_box(HMGL graph, int ticks);

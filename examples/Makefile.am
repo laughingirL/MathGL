@@ -1,5 +1,4 @@
 INCLUDES        = -I$(top_builddir)/include -I$(top_builddir)
-INCLUDES        += @INCLTDL@
 
 check_PROGRAMS =
 bin_PROGRAMS = mgl_example
