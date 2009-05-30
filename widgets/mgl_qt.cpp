@@ -190,7 +190,7 @@ void QMathGL::zoomOut()
 void QMathGL::update(mglGraph *gr)
 {
 	if(gr==0)	gr = graph;
-	if(gr==0)	return;
+	if(gr==0 || draw_func==0)	return;
 	gr->DefaultPlotParam();
 	gr->Alpha(alpha);	gr->Light(light);
 	gr->View(tet,phi);	gr->Org = mglPoint(NAN,NAN,NAN);
@@ -199,7 +199,7 @@ void QMathGL::update(mglGraph *gr)
 	gr->DrawFace = !rotate;
 
 	char *buf=new char[2048];	buf[0]=0;	gr->Message = buf;
-	if(draw_func)	draw_func(gr, draw_par);
+	draw_func(gr, draw_par);
 	if(buf[0] != 0)	QMessageBox::warning(this, appName, buf);
 	gr->Message = 0;		delete []buf;
 	mousePos="";
@@ -561,7 +561,7 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 {
 	NumFig=0;	CurFig=0;
 	CurFrameId = 0;
-	int n = draw(this,par);
+	int n = draw ? 0 : draw(this,par);
 	if(n<NumFig && n>=0)	NumFig = n;
 	DrawFunc = draw;		FuncPar = par;
 	LoadFunc = reload;
@@ -616,11 +616,13 @@ HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void 
 	return g;
 }
 //-----------------------------------------------------------------------------
-uintptr_t mgl_create_graph_qt_(int (*draw)(uintptr_t *gr), const char *title, int l)
+//uintptr_t mgl_create_graph_qt_(int (*draw)(uintptr_t *gr), const char *title, int l)
+uintptr_t mgl_create_graph_qt_(const char *title, int l)
 {
 	mglGraphQT *g = new mglGraphQT;
 	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
-	g->Window(0,0,mgl_fortran_func,s,(void*)draw);
+//	g->Window(0,0,mgl_fortran_func,s,(void*)draw);
+	g->Window(0,0,0,s,0,0);
 	delete []s;
 	return uintptr_t(g);
 }

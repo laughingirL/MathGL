@@ -2312,6 +2312,18 @@ void mglc_zlabel(wchar_t out[1024], long n, mglArg *a, int k[10])
 	if(k[0]==2)	swprintf(out,1024,L"gr->Label('z', \"%s\", %d, %g, %g);", a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 }
 //-----------------------------------------------------------------------------
+//	{"tlabel","Draw label for z-axis","zlabel txt [fnt pos]", mgls_zlabel, mglc_zlabel}
+int mgls_tlabel(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)	gr->Label('t', a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	else	return 1;
+	return 0;
+}
+void mglc_tlabel(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)	swprintf(out,1024,L"gr->Label('t', \"%s\", %d, %g, %g);", a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+}
+//-----------------------------------------------------------------------------
 //	{"xrange","Set range for x-axis","xrange {var [add]} | {x1 x2}", mgls_xrange, mglc_xrange}
 int mgls_xrange(mglGraph *gr, long n, mglArg *a, int k[10])
 {
@@ -3427,6 +3439,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"ticklen",L"Set tick len",L"ticklen val", mgls_ticklen, mglc_ticklen, false},
 	{L"tile",L"Draw horizontal tiles",L"tile {xvar yvar} zvar {rvar} [fmt]", mgls_tile, mglc_tile, false},
 	{L"title",L"Print title for the picture",L"title 'text' ['stl'='' size=-2]", mgls_title, mglc_title, false},
+	{L"tlabel",L"Draw label for t-axis",L"tlabel txt [fnt pos]", mgls_tlabel, mglc_tlabel, false},
 	{L"torus",L"Draw surface of curve rotation",L"torus {zvar} rvar [fmt]", mgls_torus, mglc_torus, false},
 	{L"transform",L"Do integral transform of data",L"transform ovar how rvar ivar", mgls_transform, mglc_transform, true},
 	{L"transforma",L"Do integral transform of data",L"transforma ovar how avar fvar", mgls_transforma, mglc_transforma, true},

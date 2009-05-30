@@ -37,39 +37,6 @@ class mglFormula;
 #else
 struct GifFileType;
 #endif
-
-enum{
-	mglCartesian = 0,	// no transformation
-	mglPolar,
-	mglSpherical,
-	mglParabolic,
-	mglParaboloidal,
-	mglOblate,
-	mglProlate,
-	mglElliptic,
-	mglToroidal,
-	mglBispherical,
-	mglBipolar
-};
-
-enum{
-	mglWarnNone = 0,// Everything OK
-	mglWarnDim,		// Data dimension(s) is incompatible
-	mglWarnLow, 	// Data dimension(s) is too small
-	mglWarnNeg, 	// Minimal data value is negative
-	mglWarnFile,	// No file or wrong data dimensions
-	mglWarnMem,		// Not enough memory
-	mglWarnZero,	// Data values are zero
-	mglWarnLegA,	// Too many legend entries
-	mglWarnLeg,		// No legend entries
-	mglWarnSlc,		// Slice value is out of range
-	mglWarnCnt,		// Number of contours is zero or negative
-	mglWarnOpen,	// Couldn't open file
-	mglWarnLId,		// Light: ID is out of range
-	mglWarnSize,	// Setsize: size(s) is zero or negative
-	mglWarnFmt,		// Format is not supported for that build
-	mglWarnEnd		// Maximal number of warnings (must be last)
-};
 //-----------------------------------------------------------------------------
 /// Class for incapsulating color
 struct mglColor
@@ -350,7 +317,7 @@ public:
 	/// Recalculate internal parameter for correct applies transformation rules. \b Must \b be \b called after any direct changes of members mglGraph::Min, mglGraph::Max, mglGraph::fx, mglGraph::fy, mglGraph::fz.
 	void RecalcBorder();
 	/// Draw axises with ticks in directions determined by string parameter \a dir.
-	void Axis(const char *dir="xyz", bool adjust=false);
+	void Axis(const char *dir="xyzt", bool adjust=false);
 	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
 	void Grid(const char *dir="xyz",const char *pen="B-");
 	/// Print the label \a text for axis \a dir.
@@ -394,7 +361,7 @@ public:
 	/// draw mark with different type at position {x,y,z} (no scaling)
 	void Mark(mglPoint p,char mark='.');
 	/// Draw a set of triangles (or lines if trig==NULL) for glyph from point (0,0). Normally this function is used internally.
-	virtual void Glyph(mreal x,mreal y, mreal f,int nt, const short *trig, int nl, const short *line, char col)=0;
+	virtual void Glyph(mreal x, mreal y, mreal f, int style, long icode, char col)=0;
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Fitting functions
@@ -779,9 +746,9 @@ public:
 	/// Draw vertical tiles with variable size for 2d data
 	void TileS(const mglData &z, const mglData &r, const char *sch=0);
 	/// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length and color proportional to value |a|
-	void Vect(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0,mreal zVal=NAN);
+	void Vect(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0,mreal zVal=NAN, int flag=0);
 	/// Plot vector field {ax,ay} with length and color proportional to value |a|
-	void Vect(const mglData &ax, const mglData &ay, const char *sch=0,mreal zVal=NAN);
+	void Vect(const mglData &ax, const mglData &ay, const char *sch=0,mreal zVal=NAN, int flag=0);
 	/// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length proportional to value |a|
 	void VectL(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0,mreal zVal=NAN);
 	/// Plot vector field {ax,ay} with length proportional to value |a|
@@ -791,9 +758,9 @@ public:
 	/// Plot vector field {ax,ay} with color proportional to value |a|
 	void VectC(const mglData &ax, const mglData &ay, const char *sch=0,mreal zVal=NAN);
 	/// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with length and color proportional to value |a|
-	void Vect(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
+	void Vect(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0, int flag=0);
 	/// Plot 3d vector field {ax,ay,ay} with length and color proportional to value |a|
-	void Vect(const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
+	void Vect(const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0, int flag=0);
 	/// Plot 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with length proportional to value |a|
 	void VectL(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
 	/// Plot 3d vector field {ax,ay,ay} with length proportional to value |a|
@@ -832,6 +799,11 @@ public:
 	void Flow(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0, int num=3, bool central=true);
 	/// Plot flows for 3d vector field {ax,ay,ay} with color proportional to value |a|
 	void Flow(const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0, int num=3, bool central=true);
+	/// Draw flow from point p
+	void Flow(mglPoint p0, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0);
+	void Flow(mglPoint p0, const mglData &ax, const mglData &ay, const char *sch=0);
+	void Flow(mglPoint p0, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
+	void Flow(mglPoint p0, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
 	/// Plot flow pipes for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
 	void Pipe(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0, mreal r0=0.05, int num=5, bool central=true, mreal zVal=NAN);
 	/// Plot flow pipes for vector field {ax,ay} with color proportional to value |a|
@@ -978,7 +950,7 @@ protected:
 	bool TernAxis;				/// Flag that Ternary axis is used
 	mreal FogDist;				/// Inverse fog distance (fog ~ exp(-FogDist*Z))
 	mreal FogDz;				/// Relative shift of fog
-	int _sx,_sy,_sz;			// sign in shift of axis ticks and labels
+	int _sx,_sy,_sz,_st;		// sign in shift of axis ticks and labels
 	char Arrow1, Arrow2;		// Style of arrows at end and at start of curve
 	mreal AmbBr;				///< Default ambient light brightness
 	mglFont *fnt;				///< Class for printing vector text
@@ -1051,6 +1023,10 @@ protected:
 	virtual void vects_plot(long n, mreal *pp, mreal *cc, bool *tt)=0;
 	/// Draw line between points \a p1,\a p2 with color \a c1, \a c2 at edges
 	virtual void line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all=false)=0;
+	/// Draw glyph by peaces
+	virtual void glyph_line(mreal x,mreal y, mreal f, mreal *c, bool solid)=0;
+	virtual void glyph_fill(mreal x,mreal y, mreal f, int nt, const short *trig, mreal *c)=0;
+	virtual void glyph_wire(mreal x,mreal y, mreal f, int nl, const short *line, mreal *c)=0;
 
 	/// Scale coordinates of point for faster plotting also cut off some points
 	virtual bool ScalePoint(mreal &x,mreal &y,mreal &z);
@@ -1128,10 +1104,8 @@ private:
 	void AxisY(bool text);
 	/// Draw z axis
 	void AxisZ(bool text);
-	/// Draw y axis for Ternary plot
-	void AxisTY(bool text);
-	/// Draw z axis for Ternary plot
-	void AxisTZ(bool text);
+	/// Draw y,t-axis for Ternary plot
+	void AxisT(bool text);
 	/// Draw ticks on box
 	void TickBox();
 	/// Draw tick
@@ -1140,6 +1114,7 @@ private:
 	void DrawXGridLine(mreal t, mreal y0, mreal z0);
 	void DrawYGridLine(mreal t, mreal x0, mreal z0);
 	void DrawZGridLine(mreal t, mreal x0, mreal y0);
+	void DrawTGridLine(mreal t, mreal z0);
 	/// Draw X,Y,Z tick
 	void DrawXTick(mreal t, mreal y0, mreal z0, mreal dy, mreal dz, int fact=0);
 	void DrawYTick(mreal t, mreal x0, mreal z0, mreal dx, mreal dz, int fact=0);

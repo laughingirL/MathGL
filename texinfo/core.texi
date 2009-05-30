@@ -803,7 +803,7 @@ Draws bounding box outside the plotting volume with color @var{col}.
 
 @deftypemethod mglGraph @code{void} Label (@code{char} dir, @code{const char *}text, @code{int} pos=@code{+1}, @code{float} size=@code{-1.4}, @code{float} shift=@code{0})
 @deftypemethodx mglGraph @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{int} pos=@code{+1}, @code{float} size=@code{-1.4}, @code{float} shift=@code{0})
-Prints the label @var{text} for axis @var{dir}. The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis. If @var{pos}<0 then label is printed at the minimum of axis. Parameter @var{size} determines the font size for the label. By default the font size is 1.4 times larger than the one for ticks @var{FontSize} (@pxref{Font settings}). @xref{Text printing}.
+Prints the label @var{text} for axis @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t}  (here @samp{t} is ``ternary'' axis @math{t=1-x-y}). The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis. If @var{pos}<0 then label is printed at the minimum of axis. Parameter @var{size} determines the font size for the label. By default the font size is 1.4 times larger than the one for ticks @var{FontSize} (@pxref{Font settings}). @xref{Text printing}.
 @end deftypemethod
 
 @c ##################################################################

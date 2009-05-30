@@ -39,7 +39,7 @@ void mgl_strcls(char *str)
 //---------------------------------------------------------------------------
 int mgl_strpos(const char *str,char *fnd)
 {
-	char *p=strstr(str,fnd);
+	const char *p=strstr(str,fnd);
 	int res;
 	if(p)	res = p-str;
 	else	res = -1;
@@ -48,7 +48,7 @@ int mgl_strpos(const char *str,char *fnd)
 //---------------------------------------------------------------------------
 int mgl_strpos(const char *str,char ch)
 {
-	char *p=strchr(str,ch);
+	const char *p=strchr(str,ch);
 	int res;
 	if(p)	res = p-str;
 	else	res = -1;

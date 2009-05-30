@@ -25,16 +25,6 @@
 #include <string.h>
 #include <vector>
 //-----------------------------------------------------------------------------
-#define SMOOTH_NONE		0
-#define SMOOTH_LINE_3	1
-#define SMOOTH_LINE_5	2
-#define SMOOTH_QUAD_5	3
-//-----------------------------------------------------------------------------
-#define MGL_HIST_IN		0
-#define MGL_HIST_SUM	1
-#define MGL_HIST_UP		2
-#define MGL_HIST_DOWN	3
-//-----------------------------------------------------------------------------
 #ifndef NO_GSL
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_matrix.h>

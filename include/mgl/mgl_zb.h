@@ -35,7 +35,7 @@ public:
 	virtual void Clf(mglColor Back=NC);
 	virtual void SetSize(int w,int h);
 	void Ball(mreal x,mreal y,mreal z,mglColor col=RC,mreal alpha=1);
-	void Glyph(mreal x,mreal y, mreal f, int nt, const short *trig, int nl, const short *line, char col);
+	void Glyph(mreal x, mreal y, mreal f, int style, long icode, char col);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	bool FastNoFace;	/// Use fastest (but less accurate) scheme for drawing (without faces)
 protected:

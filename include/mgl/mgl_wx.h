@@ -20,10 +20,15 @@
 #ifndef MGL_WX_H
 #define MGL_WX_H
 //-----------------------------------------------------------------------------
+#include <wx/window.h>
+#include <wx/image.h>
+#include <wx/timer.h>
 #include <mgl/mgl_zb.h>
 //-----------------------------------------------------------------------------
 class wxMathGL;
 class wxSpinCtrl;
+class wxMenu;
+class wxTimer;
 int mglWxRun();
 //-----------------------------------------------------------------------------
 class mglGraphWX : public mglGraphZB
@@ -34,12 +39,11 @@ using mglGraphAB::Window;
 	int sshow;			///< Current state of animation switch (toggle button)
 	wxMathGL *WMGL;		///< Control which draw graphics
 	int CurFig;			///< Current figure in the list.
-	wxMainWindow *Wnd;	///< Pointer to window
+	wxWindow *Wnd;		///< Pointer to window
 
 	mglGraphWX();
 	~mglGraphWX();
 
-	void SetSize(int w,int h);
 	void EndFrame();
 	const unsigned char *GetBits();
 	void Clf(mglColor Back=NC);
@@ -65,13 +69,119 @@ using mglGraphAB::Window;
 protected:
 	unsigned char *GG;	///< images for all frames (may be too LARGE !!!)
 //	QScrollArea *scroll;	///< Scrolling area
-//	QMenu *popup;			///< Popup menu
+	wxMenu *popup;			///< Popup menu
 	wxSpinCtrl *tet, *phi;	///< Spin box for angles
 //	QAction *anim;
 
 	void makeMenu();		///< Create menu, toolbar and popup menu
 };
 //-----------------------------------------------------------------------------
-/// Class is Qt widget which display MathGL graphics
+/// Class is Wx widget which display MathGL graphics
+class wxMathGL : public wxWindow
+{
+public:
+	wxString appName;	///< Application name for message boxes
+	bool AutoResize;	///< Allow auto resizing (default is false)
+	int AnimDelay;		///< Animation delay in ms
+
+	wxMathGL(wxWindow *parent, wxWindowID id, const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize, long style=0, const wxString& name=wxPanelNameStr);
+	~wxMathGL();
+	double GetRatio()	{	return double(graph->GetWidth())/graph->GetHeight();	};
+	void SetPopup(wxMenu *p)	{	popup = p;	};	///< Set popup menu pointer
+	void SetGraph(mglGraphAB *gr);	///< Set grapher object
+	/// Set drawing functions and its parameter
+	void SetDraw(int (*func)(mglGraph *gr, void *par),	void *par=0);
+	void SetDraw(mglDraw *dr);		///< Set drawing functions from mglDraw class
+
+
+	int GetPer()	{return per;};		///< Get perspective value
+	int GetPhi()	{return phi;};		///< Get Phi-angle value
+	int GetTet()	{return tet;};		///< Get Theta-angle value
+	bool GetAlpha()	{return alpha;};	///< Get transparency state
+	bool GetLight()	{return light;};	///< Get lightning state
+	bool GetZoom()	{return zoom;};		///< Get mouse zooming state
+	bool GetRotate(){return rotate;};	///< Get mouse rotation state
+
+public:
+	void Update(mglGraph *gr=0);	///< Update picture
+	void Copy();			///< copy graphics to clipboard
+	void Print();			///< Print plot
+//	void Stop();			///< Stop execution
+	void SetPer(int p);		///< Set perspective value
+	void SetPhi(int p);		///< Set Phi-angle value
+	void SetTet(int t);		///< Set Theta-angle value
+	void SetAlpha(bool a);	///< Switch on/off transparency
+	void SetLight(bool l);	///< Switch on/off lightning
+	void SetZoom(bool z);	///< Switch on/off mouse zooming
+	void SetRotate(bool r);	///< Switch on/off mouse rotation
+	void ZoomIn();			///< Zoom in graphics
+	void ZoomOut();			///< Zoom out graphics
+	void Restore();			///< Restore zoom and rotation to default values
+//	void Reload();			///< Reload data and execute script
+	void ShiftLeft();		///< Shift graphics to left direction
+	void ShiftRight();		///< Shift graphics to right direction
+	void ShiftUp();			///< Shift graphics to up direction
+	void ShiftDown();		///< Shift graphics to down direction
+	void ExportPNG(wxString fname=L"");	///< export to PNG file
+	void ExportPNGs(wxString fname=L"");	///< export to PNG file (no transparency)
+	void ExportJPG(wxString fname=L"");	///< export to JPEG file
+	void ExportBPS(wxString fname=L"");	///< export to bitmap EPS file
+	void ExportEPS(wxString fname=L"");	///< export to vector EPS file
+	void ExportSVG(wxString fname=L"");	///< export to SVG file
+	void ExportIDTF(wxString fname=L"");	///< export to IDTF file
+	void SetMGLFont(wxString path);		///< restore/load font for graphics
+	//----These functions are executed only if graph is mglGraphQT instance----
+	void Adjust();		///< Adjust plot size to fill entire window
+	void NextSlide();	///< Show next slide
+	void PrevSlide();	///< Show previous slide
+	void Animation(bool st=true);	///< Start animation
+	void About();		///< Show about information
+	void AboutQt();		///< Show information about Qt version
+
+protected:
+	void OnPaint(wxPaintEvent& event);
+	void OnSize(wxSizeEvent& event);
+	void OnNextSlide(wxTimerEvent& evt);	///< Show next slide
+	void OnMouseLeftDown(wxMouseEvent &ev);
+	void OnMouseDown(wxMouseEvent &ev);
+	void OnMouseLeftUp(wxMouseEvent &ev);
+	void OnMouseRightUp(wxMouseEvent &ev);
+	void OnMouseMove(wxMouseEvent &ev);
+//	void MousePressEvent(QMouseEvent *);
+//	void MouseReleaseEvent(QMouseEvent *);
+//	void MouseMoveEvent(QMouseEvent *);
+
+/*signals:*/
+	void PhiChanged(int);	///< Phi angle changed (by mouse or by toolbar)
+	void TetChanged(int);	///< Tet angle changed (by mouse or by toolbar)
+	void PerChanged(int);	///< Perspective changed (by mouse or by toolbar)
+	void AlphaChanged(bool);	///< Transparency changed (by toolbar)
+	void LightChanged(bool);	///< Lighting changed (by toolbar)
+	void ZoomChanged(bool);		///< Zooming changed (by toolbar)
+	void RotateChanged(bool);	///< Rotation changed (by toolbar)
+	void MouseClick(float,float,float);	///< Position of mouse click
+
+	mglGraphAB *graph;	///< Built-in mglGraph-er instance (used by default)
+	void *draw_par;		///< Parameters for drawing function mglGraph::DrawFunc.
+	/// Drawing function for window procedure. It should return the number of frames.
+	int (*draw_func)(mglGraph *gr, void *par);
+	wxString MousePos;	///< Last mouse position
+	wxImage pic;		///< Pixmap for drawing (changed by update)
+	double tet, phi;	///< Rotation angles
+	double per;			///< Value of perspective ( must be in [0,1) )
+	bool alpha;			///< Transparency state
+	bool light;			///< Lightning state
+	bool zoom;			///< Mouse zoom state
+	bool rotate;		///< Mouse rotation state
+	mreal x1,x2,y1,y2;	///< Zoom in region
+	bool showMessage;	///< Flag for showing messages (enabled by each execute())
+	wxMenu *popup;		///< Pointer to pop-up menu
+	wxTimer *timer;		///< Timer for animation
+	DECLARE_EVENT_TABLE()
+private:
+	int x0, y0, xe, ye;		///< Temporary variables for mouse
+//	uchar *grBuf;
+};
+//-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------

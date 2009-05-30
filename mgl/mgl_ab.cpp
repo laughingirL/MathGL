@@ -34,7 +34,8 @@ void _mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, wchar_t str[6
 //-----------------------------------------------------------------------------
 mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 {
-	G = 0;	UseLight = false;
+	G = 0;	UseLight = false;	st_pos=-1;
+	memset(stack,0,MGL_STACK_ENTRY*13*sizeof(mreal));
 	SetSize(w,h);
 	AutoClf=true;	Delay = 100;
 	NoAutoFactor = false;	ShowMousePos = true;
@@ -44,6 +45,31 @@ mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 //-----------------------------------------------------------------------------
 mglGraphAB::~mglGraphAB()
 {	if(G)	{	delete []G;	delete []G4;	}	}
+//-----------------------------------------------------------------------------
+void mglGraphAB::Pop()
+{
+	if(st_pos<0)	return;
+	mreal *c=stack+13*st_pos;
+	xPos=c[0];	yPos=c[1];	zPos=c[2];	Persp=c[3];
+	memcpy(B,c+4,9*sizeof(mreal));
+	st_pos--;
+}
+//-----------------------------------------------------------------------------
+void mglGraphAB::Push()
+{
+	st_pos = st_pos<9 ? st_pos+1:9;
+	if(st_pos<0)	st_pos=0;
+	mreal *c=stack+13*st_pos;
+	c[0]=xPos;	c[1]=yPos;	c[2]=zPos;	c[3]=Persp;
+	memcpy(c+4,B,9*sizeof(mreal));
+}
+//-----------------------------------------------------------------------------
+void mglGraphAB::SetPosScale(mreal xp, mreal yp, mreal zp, mreal scl)
+{
+	memset(B,0,9*sizeof(mreal));
+	B[0] = B[4] = B[8] = scl;
+	xPos=xp;	yPos=yp;	zPos=zp;
+}
 //-----------------------------------------------------------------------------
 const unsigned char *mglGraphAB::GetBits()
 {	if(!Finished)	Finish();	return G;	}
@@ -274,18 +300,16 @@ int mglGraphAB::NewFrame()
 mreal mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,mreal size)
 {
 	static int cgid=1;	StartGroup("PutswL",cgid++);
-	mreal pp[6] = {p.x,p.y,p.z,p.x+n.x,p.y+n.y,p.z+n.z}, bb[9];
+	mreal pp[6] = {p.x,p.y,p.z,p.x+n.x,p.y+n.y,p.z+n.z};
 	Arrow1 = Arrow2 = '_';
 
 	if(size<0)	size = -size*FontSize;
-	f_size = size;
-	mreal xx=xPos, yy=yPos, zz=zPos;
+	f_size = size;	Push();
 	mreal shift = 0.07, fsize=size/8.*font_factor;
-	mreal x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2, _p = Persp;
+	mreal x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2;
 	if(font=='t')	shift = -0.07;
 
 	shift *= fsize/2;
-	memcpy(bb,B,9*sizeof(mreal));
 	if(ScalePuts)
 	{
 		bool tt = Cut;	Cut = true;
@@ -303,14 +327,14 @@ mreal mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,mreal
 //	if(fabs(tet)>90)	tet+=180;
 	memset(B,0,9*sizeof(mreal));
 	B[0] = B[4] = B[8] = fsize;
+	fscl = fsize;	ftet = -tet;
 	NoAutoFactor=true;	RotateN(-tet,0,0,1);	NoAutoFactor=false;
 	xPos = pp[0]+shift*(pp[4]-pp[1])/sqrt(ll) - B[1]*0.02f;
 	yPos = pp[1]-shift*(pp[3]-pp[0])/sqrt(ll) - B[4]*0.02f;
 	zPos = pp[2];
 
 	fsize = fnt->Puts(str,"rL",0)*size/8.;
-	xPos=xx;	yPos=yy;	zPos=zz;	memcpy(B,bb,9*sizeof(mreal));	Persp=_p;
-	EndGroup();
+	Pop();		EndGroup();
 	return fsize;
 }
 //-----------------------------------------------------------------------------
@@ -319,8 +343,9 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	static int cgid=1;	StartGroup("Putsw",cgid++);
 	bool upside = ( (((_sx==-1) ^ (Org.y==Max.y || Org.z==Max.z)) && (dir=='x' || dir=='X')) ||
 					(((_sy==-1) ^ (Org.x==Max.x || Org.z==Max.z)) && (dir=='y' || dir=='Y')) ||
+					(((_st==-1) ^ (Org.x==0 || Org.z==1)) && (dir=='t' || dir=='T')) ||
 					(((_sz==-1) ^ (Org.y==Max.y || Org.x==Max.x)) && (dir=='z' || dir=='Z')) );
-	mreal pp[6] = {p.x,p.y,p.z,p.x,p.y,p.z}, bb[9];
+	mreal pp[6] = {p.x,p.y,p.z,p.x,p.y,p.z};
 	Arrow1 = Arrow2 = '_';
 	char *font1 = mgl_strdup(font ? font:FontDef),*f;
 	char col=TranspType!=2 ? 'k':'w';
@@ -328,13 +353,12 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 //	stl[1] = col;	SelectPen(stl);
 
 	if(size<0)	size = -size*FontSize;
-	f_size = size;
-	mreal xx=xPos, yy=yPos, zz=zPos;
+	f_size = size;	Push();
 	mreal shift = (sh/10+0.2)*2/PlotFactor, fsize=size/8.*font_factor;
-	mreal x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2, _p=Persp;
+	mreal x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2;
 	zoomx1=zoomy1=0;	zoomx2=zoomy2=1;
 
-	if(strchr("xyz",dir))	shift = (sh/10+0.1)*2/PlotFactor;
+	if(strchr("xyzt",dir))	shift = (sh/10+0.1)*2/PlotFactor;
 	switch(dir)
 	{
 	case 'x':
@@ -343,17 +367,21 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	case 'y':
 	case 'Y':
 		if(TernAxis)	upside = !upside;
-		pp[3] -= TernAxis ? (Max.x - Min.x)/100 : 0;
 		pp[4] += (Max.y - Min.y)/10;	break;
 	case 'z':
 	case 'Z':
 		if(TernAxis)	upside = !upside;
-		pp[4] -= TernAxis ? (Max.y - Min.y)/100 : 0;
-		pp[5] += TernAxis ? 0 : (Max.z - Min.z)/100;	break;
+		pp[4] -= 0;
+		pp[5] += (Max.z - Min.z)/100;	break;
+	case 't':
+	case 'T':
+//		upside = !upside;
+		pp[3] += (Max.x - Min.x)/100;
+		pp[4] -= (Max.y - Min.y)/100;
+		pp[5] += 0;	break;
 	}
 	if(upside)	shift = -shift;
 	shift *= fsize/2;
-	memcpy(bb,B,9*sizeof(mreal));
 
 	if(ScalePuts)
 	{
@@ -364,11 +392,12 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	}
 	PostScale(pp,2);	Persp=0;
 
-	if(dir==0 || dir=='t')
+	if(dir==0)
 	{
 		xPos = pp[0];	yPos = pp[1];	zPos = pp[2];
 		memset(B,0,9*sizeof(mreal));
 		B[0] = B[4] = B[8] = fsize;
+		fscl = fsize;	ftet = 0;
 	}
 	else if(dir=='n')
 	{
@@ -377,6 +406,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 		B[0]*= ax;	B[3]*= ax;	B[6]*= ax;
 		B[1]*= ay;	B[4]*= ay;	B[7]*= ay;
 		B[2]*= az;	B[5]*= az;	B[8]*= az;
+		// TODO: fscl, ftet
 	}
 	else if(RotatedText)
 	{
@@ -387,6 +417,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 		if(fabs(tet)>90)	tet+=180;
 		memset(B,0,9*sizeof(mreal));
 		B[0] = B[4] = B[8] = fsize;
+		fscl = fsize;	ftet = -tet;
 		NoAutoFactor=true;	RotateN(-tet,0,0,1);	NoAutoFactor=false;
 		mreal ss = (pp[3]>pp[0] || tet==-90) ? 1 : -1;
 		xPos = pp[0]+shift*ss*(pp[4]-pp[1])/sqrt(ll) - B[1]*0.02f;
@@ -402,6 +433,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 //		if(fabs(tet)>90)	tet+=180;
 		memset(B,0,9*sizeof(mreal));	B[0] = B[4] = B[8] = fsize;
 		mreal ss = (pp[3]>pp[0] || tet==-M_PI/2) ? 1 : -1;
+		fscl = fsize;	ftet = 0;
 		xPos = pp[0]+shift*ss*(pp[4]-pp[1])/sqrt(ll);
 		yPos = pp[1]-shift*ss*(pp[3]-pp[0])/sqrt(ll);
 		zPos = pp[2];
@@ -416,16 +448,14 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
 
 	fnt->Puts(wcs,font1,col);
-	xPos=xx;	yPos=yy;	zPos=zz;	memcpy(B,bb,9*sizeof(mreal));	Persp=_p;
-	free(font1);
-	EndGroup();
+	Pop();	free(font1);	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
 {
 	static int cgid=1;	StartGroup("Colorbar",cgid++);
 	register long i;
-	mreal bb[9],*pp,*cc,d,s3=PlotFactor,ss=s3*0.9;
+	mreal *pp,*cc,d,s3=PlotFactor,ss=s3*0.9;
 	mglColor c;
 
 	pp = new mreal[6*256];	cc = new mreal[8*256];
@@ -449,8 +479,7 @@ void mglGraphAB::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
 		cc[8*i+2] = cc[8*i+6] = c.b;
 		cc[8*i+3] = cc[8*i+7] = 1;
 	}
-	memcpy(bb,B,9*sizeof(mreal));
-	memcpy(B,B1,9*sizeof(mreal));
+	Push();	memcpy(B,B1,9*sizeof(mreal));
 	bool ll = UseLight;				UseLight = false;
 	surf_plot(2, 255, pp, cc, 0);	UseLight = ll;
 	delete []pp;	delete []cc;
@@ -495,8 +524,7 @@ void mglGraphAB::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
 	}
 	if(kind&2)	Putsw(p,s,a,FontSize);
 	ScalePuts = true;
-	memcpy(B,bb,9*sizeof(mreal));
-	EndGroup();
+	Pop();	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::SetSize(int w,int h)
@@ -534,30 +562,6 @@ void mglGraphAB::WriteSVG(const char *fname, const char *descr)
 	fprintf(fp,"</g></svg>");
 	delete []pname;
 }
-//-----------------------------------------------------------------------------
-/*void mglGraphAB::WriteEPS(const char *fname, const char *descr)
-{
-	time_t now;
-	time(&now);
-	register long i,j,k;
-	if(!Finished)	Finish();
-
-	FILE *fp = fopen(fname,"wt");
-	fprintf(fp,"%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",Width,Height);
-	fprintf(fp,"%%%%Creator: MathGL library\n%%%%Title: %s\n",descr ? descr : fname);
-	fprintf(fp,"%%%%CreationDate: %s\n",ctime(&now));
-//	fprintf(fp,"%%%%EndComments\n\n");
-	fprintf(fp,"%d %d 8 [1 0 0 1 0 0] {currentfile %d string readhexstring pop} false 3 colorimage\n",
-			Width,Height,1+Width*Height/40);
-	for(j=0;j<Height;j++)	for(i=0;i<Width;i++)
-	{
-		k = 3*(i+Width*(Height-j-1));
-		if(k%120==0 && k>0)	fprintf(fp,"\n");
-		fprintf(fp,"%02x%02x%02x",G[k],G[k+1],G[k+2]);
-	}
-	fprintf(fp,"\n\nshowpage\n%%%%EOF\n");
-	fclose(fp);
-}*/
 //-----------------------------------------------------------------------------
 void mglGraphAB::arrow_plot(mreal *p1,mreal *p2,char st)
 {
@@ -649,14 +653,6 @@ unsigned char **mglGraphAB::GetRGBLines(long &w, long &h, unsigned char *&f, boo
 //-----------------------------------------------------------------------------
 void mglGraphAB::SetFontSizePT(mreal pt, int dpi)
 {	FontSize = pt*Height*0.0675/dpi;	}
-//-----------------------------------------------------------------------------
-/*void mglGraphAB::EndFrame()
-{
-	mglGraph::EndFrame();
-	char fname[32];
-	sprintf(fname,"frame%d.png",CurFrameId-1);
-	WritePNG(fname);
-}*/
 //-----------------------------------------------------------------------------
 void mglGraphAB::FindOptOrg(mreal ax[3], mreal ay[3], mreal az[3])
 {

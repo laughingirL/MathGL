@@ -224,12 +224,12 @@ HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, voi
 //-----------------------------------------------------------------------------
 mglGraphGLUT::mglGraphGLUT() : mglGraphGL()	{}
 //-----------------------------------------------------------------------------
-uintptr_t mgl_create_graph_glut_(int (*draw)(uintptr_t *gr), const char *title, int l)
+/*uintptr_t mgl_create_graph_glut_(int (*draw)(uintptr_t *gr), const char *title, int l)
 {
 	mglGraphGLUT *g = new mglGraphGLUT;
 	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
 	g->Window(0,0,mgl_fortran_func,s,(void*)draw);
 	delete []s;
 	return uintptr_t(g);
-}
+}*/
 //-----------------------------------------------------------------------------

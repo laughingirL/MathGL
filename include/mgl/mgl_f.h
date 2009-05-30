@@ -47,9 +47,8 @@ uintptr_t mgl_create_graph_zb_(int *width, int *height);
 uintptr_t mgl_create_graph_ps_(int *width, int *height);
 void mgl_delete_graph_(uintptr_t *graph);
 
-uintptr_t mgl_create_graph_glut_(int (*draw)(uintptr_t *gr), const char *title, int);
-uintptr_t mgl_create_graph_fltk_(int (*draw)(uintptr_t *gr), const char *title, int);
-uintptr_t mgl_create_graph_qt_(int (*draw)(uintptr_t *gr), const char *title, int);
+uintptr_t mgl_create_graph_fltk_(const char *title, int);
+uintptr_t mgl_create_graph_qt_(const char *title, int);
 void mgl_fltk_run_();
 void mgl_qt_run_();
 void mgl_set_show_mouse_pos_(uintptr_t *gr, int *enable);
@@ -311,14 +310,14 @@ void mgl_surfa_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, u
 void mgl_surfa_(uintptr_t *graph, uintptr_t *z, uintptr_t *c, const char *sch,int);
 void mgl_stfa_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *re, uintptr_t *im, int *dn, const char *sch, mreal *zVal, int);
 void mgl_stfa_(uintptr_t *graph, uintptr_t *re, uintptr_t *im, int *dn, const char *sch, mreal *zVal, int);
-void mgl_vect_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch,mreal *zVal,int);
-void mgl_vect_2d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, const char *sch,mreal *zVal,int);
+void mgl_vect_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch,mreal *zVal,int *flag,int);
+void mgl_vect_2d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, const char *sch,mreal *zVal,int *flag,int);
 void mgl_vectl_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch,mreal *zVal,int);
 void mgl_vectl_2d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, const char *sch,mreal *zVal,int);
 void mgl_vectc_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch,mreal *zVal,int);
 void mgl_vectc_2d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, const char *sch,mreal *zVal,int);
-void mgl_vect_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int);
-void mgl_vect_3d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int);
+void mgl_vect_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int *flag,int);
+void mgl_vect_3d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int *flag,int);
 void mgl_vectl_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int);
 void mgl_vectl_3d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int);
 void mgl_vectc_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int);
@@ -341,6 +340,12 @@ void mgl_flow_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *ax, u
 void mgl_flow_2d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, const char *sch, int *num, int *central, mreal *zVal,int);
 void mgl_flow_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int *num, int *central,int);
 void mgl_flow_3d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int *num, int *central,int);
+
+void mgl_flowp_xy_(uintptr_t *graph, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, int);
+void mgl_flowp_2d_(uintptr_t *graph, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, const char *sch, int);
+void mgl_flowp_xyz_(uintptr_t *graph, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int);
+void mgl_flowp_3d_(uintptr_t *graph, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,int);
+
 void mgl_pipe_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *r0, int *num, int *central, mreal *zVal,int);
 void mgl_pipe_2d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *r0, int *num, int *central, mreal *zVal,int);
 void mgl_pipe_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *r0, int *num, int *central,int);

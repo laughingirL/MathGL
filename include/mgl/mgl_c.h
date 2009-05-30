@@ -360,14 +360,14 @@ void mgl_surfa_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HM
 void mgl_surfa(HMGL graph, const HMDT z, const HMDT c, const char *sch);
 void mgl_stfa_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT re, const HMDT im, int dn, const char *sch, mreal zVal);
 void mgl_stfa(HMGL graph, const HMDT re, const HMDT im, int dn, const char *sch, mreal zVal);
-void mgl_vect_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
-void mgl_vect_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
+void mgl_vect_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,mreal zVal,int flag);
+void mgl_vect_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch,mreal zVal,int flag);
 void mgl_vectl_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
 void mgl_vectl_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
 void mgl_vectc_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
 void mgl_vectc_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
-void mgl_vect_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
-void mgl_vect_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
+void mgl_vect_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch,int flag);
+void mgl_vect_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch,int flag);
 void mgl_vectl_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
 void mgl_vectl_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
 void mgl_vectc_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
@@ -387,6 +387,12 @@ void mgl_flow_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HM
 void mgl_flow_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch, int num, int central, mreal zVal);
 void mgl_flow_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, int num, int central);
 void mgl_flow_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, int num, int central);
+
+void mgl_flowp_xy(HMGL graph, mreal x0, mreal y0, mreal z0, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch);
+void mgl_flowp_2d(HMGL graph, mreal x0, mreal y0, mreal z0, const HMDT ax, const HMDT ay, const char *sch);
+void mgl_flowp_xyz(HMGL graph, mreal x0, mreal y0, mreal z0, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
+void mgl_flowp_3d(HMGL graph, mreal x0, mreal y0, mreal z0, const HMDT ax, const HMDT ay, const HMDT az, const char *sch);
+
 void mgl_pipe_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch, mreal r0, int num, int central, mreal zVal);
 void mgl_pipe_2d(HMGL graph, const HMDT ax, const HMDT ay, const char *sch, mreal r0, int num, int central, mreal zVal);
 void mgl_pipe_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, mreal r0, int num, int central);

@@ -569,10 +569,10 @@ struct mglParse{};
 	{	mgl_dew_xy(self, x, y, ax, ay, sch, zVal);	}
 	void Dew(mglData *ax, mglData *ay, const char *sch="", float zVal=NaN)
 	{	mgl_dew_2d(self, ax, ay, sch, zVal);	}
-	void Vect(mglData *x, mglData *y, mglData *ax, mglData *ay, const char *sch="", float zVal=NaN)
-	{	mgl_vect_xy(self, x, y, ax, ay, sch, zVal);	}
-	void Vect(mglData *ax, mglData *ay, const char *sch="", float zVal=NaN)
-	{	mgl_vect_2d(self, ax, ay, sch, zVal);	}
+	void Vect(mglData *x, mglData *y, mglData *ax, mglData *ay, const char *sch="", float zVal=NaN, int flag=0)
+	{	mgl_vect_xy(self, x, y, ax, ay, sch, zVal, flag);	}
+	void Vect(mglData *ax, mglData *ay, const char *sch="", float zVal=NaN, int flag=0)
+	{	mgl_vect_2d(self, ax, ay, sch, zVal, flag);	}
 	void VectL(mglData *x, mglData *y, mglData *ax, mglData *ay, const char *sch="", float zVal=NaN)
 	{	mgl_vectl_xy(self, x, y, ax, ay, sch, zVal);	}
 	void VectL(mglData *ax, mglData *ay, const char *sch="", float zVal=NaN)
@@ -581,10 +581,10 @@ struct mglParse{};
 	{	mgl_vectc_xy(self, x, y, ax, ay, sch, zVal);	}
 	void VectC(mglData *ax, mglData *ay, const char *sch="", float zVal=NaN)
 	{	mgl_vectc_2d(self, ax, ay, sch, zVal);	}
-	void Vect(mglData *x, mglData *y, mglData *z, mglData *ax, mglData *ay, mglData *az, const char *sch="")
-	{	mgl_vect_xyz(self, x, y, z, ax, ay, az, sch);	}
-	void Vect(mglData *ax, mglData *ay, mglData *az, const char *sch="")
-	{	mgl_vect_3d(self, ax, ay, az, sch);	}
+	void Vect(mglData *x, mglData *y, mglData *z, mglData *ax, mglData *ay, mglData *az, const char *sch="", int flag=0)
+	{	mgl_vect_xyz(self, x, y, z, ax, ay, az, sch, flag);	}
+	void Vect(mglData *ax, mglData *ay, mglData *az, const char *sch="", int flag=0)
+	{	mgl_vect_3d(self, ax, ay, az, sch, flag);	}
 	void VectL(mglData *x, mglData *y, mglData *z, mglData *ax, mglData *ay, mglData *az, const char *sch="")
 	{	mgl_vectl_xyz(self, x, y, z, ax, ay, az, sch);	}
 	void VectL(mglData *ax, mglData *ay, mglData *az, const char *sch="")
@@ -623,6 +623,15 @@ struct mglParse{};
 	{	mgl_flow_xyz(self, x, y, z, ax, ay, az, sch, num, central);	}
 	void Flow(mglData *ax, mglData *ay, mglData *az, const char *sch="", int num=3, bool central=true)
 	{	mgl_flow_3d(self, ax, ay, az, sch, num, central);	}
+
+	void Flow(float x0, float y0, float z0, mglData *x, mglData *y, mglData *ax, mglData *ay, const char *sch="")
+	{	mgl_flowp_xy(self, x0, y0, z0, x, y, ax, ay, sch);	}
+	void Flow(float x0, float y0, float z0, mglData *ax, mglData *ay, const char *sch="")
+	{	mgl_flowp_2d(self, x0, y0, z0, ax, ay, sch);	}
+	void Flow(float x0, float y0, float z0, mglData *x, mglData *y, mglData *z, mglData *ax, mglData *ay, mglData *az, const char *sch="")
+	{	mgl_flowp_xyz(self, x0, y0, z0, x, y, z, ax, ay, az, sch);	}
+	void Flow(float x0, float y0, float z0, mglData *ax, mglData *ay, mglData *az, const char *sch="")
+	{	mgl_flowp_3d(self, x0, y0, z0, ax, ay, az, sch);	}
 
 	void Pipe(mglData *x, mglData *y, mglData *ax, mglData *ay, const char *sch="", float r0=0.05, int num=5, bool central=true, float zVal=NaN)
 	{	mgl_pipe_xy(self, x, y, ax, ay, sch, r0, num, central, zVal);	}

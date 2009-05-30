@@ -1,4 +1,8 @@
-1.8.2 Released 15 May 2009
+1.8.2 Released 15 June 2009
+	- Improve export in EPS and SVG: lines are exported as single object, improve line dashing, text is exported by glyphs.
+	+ mglGraph*::Window() now can have zero as function (draw built-in bitmap only) -- NOT TESTED
+	- Add functions mglGraph::Flow(mglPoint p, ...) which draw the flow thread from point p.
+	- Functions mglGraph::Vect() now have additional argument for kind of vector plot. Correspondingly mgl_vect_*() functions now have additional argument too!
 	- Add function mglGraph::Axis() for predefined curvilinear coordinates.
 	- You can now select base type for floating point numbers (double or float).
 	- Function mglData::Sew() now handle NAN values correctly.

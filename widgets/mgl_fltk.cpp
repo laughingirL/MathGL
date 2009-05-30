@@ -91,7 +91,7 @@ void Fl_MathGL::draw()
 void Fl_MathGL::update(mglGraph *gr)
 {
 	if(gr==0)	gr=graph;
-	if(gr==0)	return;
+	if(gr==0 || draw_func==0)	return;
 	gr->DefaultPlotParam();
 	gr->Alpha(flag&1);
 	gr->Light(flag&2);
@@ -100,8 +100,8 @@ void Fl_MathGL::update(mglGraph *gr)
 	gr->DrawFace = !rotate;
 
 	gr->Message = new char[2048];	gr->Message[0] = 0;
-	if(draw_func)	draw_func(gr, draw_par);
-	if(gr->Message[0] != 0)			fl_message(gr->Message);
+	draw_func(gr, draw_par);
+	if(gr->Message[0] != 0)			fl_message("%s",gr->Message);
 	delete []gr->Message;			gr->Message = 0;
 
 	if(gr==graph && (graph->GetWidth()!=w() || graph->GetHeight()!=h()))
@@ -570,7 +570,7 @@ void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void 
 {
 	NumFig=0;	CurFig=0;
 	CurFrameId = 0;
-	int n = draw(this,par);
+	int n = draw ? 0 : draw(this,par);
 	if(n<NumFig && n>=0)	NumFig = n;
 	DrawFunc = draw;		FuncPar = par;
 	LoadFunc = reload;
@@ -704,11 +704,13 @@ void mgl_fltk_run()	{	mglFlRun();	}
 	pthread_detach(tmp);
 }*/
 //-----------------------------------------------------------------------------
-uintptr_t mgl_create_graph_fltk_(int (*draw)(uintptr_t *gr), const char *title, int l)
+//uintptr_t mgl_create_graph_fltk_(int (*draw)(uintptr_t *gr), const char *title, int l)
+uintptr_t mgl_create_graph_fltk_(const char *title, int l)
 {
 	mglGraphFLTK *g = new mglGraphFLTK;
 	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
-	g->Window(0,0,mgl_fortran_func,s,(void*)draw);
+//	g->Window(0,0,mgl_fortran_func,s,(void*)draw);
+	g->Window(0,0,0,s,0,0);
 	delete []s;
 	return uintptr_t(g);
 }

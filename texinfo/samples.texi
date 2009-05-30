@@ -4789,7 +4789,7 @@ gr->Line(mglPoint(0.5,0), mglPoint(0,0.75), "g2");
 gr->Axis(); gr->Grid("xyz","B;");
 gr->Label('x',"x comp.");
 gr->Label('y',"y comp.");
-gr->Label('z',"t comp.");
+gr->Label('t',"t comp.");
 @end verbatim
 @strong{MGL code}
 @verbatim
@@ -4813,7 +4813,7 @@ axis
 grid 'xyz' 'B;'
 xlabel 'x comp.'
 ylabel 'y comp.'
-zlabel 't comp.'
+tlabel 't comp.'
 @end verbatim
 @strong{Pure C code}
 @verbatim
@@ -4840,7 +4840,7 @@ mgl_axis(gr,"xyz");
 mgl_axis_grid(gr,"xyz","B:");
 mgl_label(gr,'x',"x comp");
 mgl_label(gr,'y',"y comp");
-mgl_label(gr,'z',"t comp");
+mgl_label(gr,'t',"t comp");
 mgl_delete_data(a);
 mgl_delete_data(x);     mgl_delete_data(y);
 mgl_delete_data(rx);    mgl_delete_data(ry);
@@ -4870,7 +4870,7 @@ call mgl_axis(gr,'xyz')
 call mgl_axis_grid(gr,'xyz','B:')
 call mgl_label(gr,'x','x comp')
 call mgl_label(gr,'y','y comp')
-call mgl_label(gr,'z','t comp')
+call mgl_label(gr,'t','t comp')
 call mgl_delete_data(a)
 call mgl_delete_data(x)
 call mgl_delete_data(y)
@@ -4890,7 +4890,7 @@ gr.Line(0.5,0,0,0,0.75,0,"g2");
 gr.Axis();          gr.Grid("xyz","B;");
 gr.Label("x","x comp.");
 gr.Label("y","y comp.");
-gr.Label("z","t comp.");
+gr.Label("t","t comp.");
 @end verbatim
 
 @c ------------------------------------------------------------------

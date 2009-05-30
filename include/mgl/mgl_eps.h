@@ -27,11 +27,11 @@ struct mglPrim
 {
 	mreal x[4], y[4], zz[4];	// coordinates of corners
 	mreal z;			// z-position
-	mreal s;			// size (if applicable)
-	mreal w;			// width (if applicable)
+	mreal s;			// size (if applicable) or fscl
+	mreal w;			// width (if applicable) or ftet
 	mreal c[4];			// color (RGBA)
-	char m;				// mark (if applicable)
-	int type;			// type of primitive (0 - point, 1 - line, 2 - trig, 3 - quad)
+	wchar_t m;			// mark or symbol id (if applicable)
+	int type;			// type of primitive (0 - point, 1 - line, 2 - trig, 3 - quad, 4 - glyph)
 	int style;			// style of pen
 	unsigned short dash;// mreal pen dashing
 	void Draw(mglGraphPS *gr);
@@ -39,6 +39,9 @@ struct mglPrim
 	bool IsSame(mreal wp,mreal *cp,int st);
 	void SetStyle(unsigned PDef, int pPos);
 	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	c[3]=1;	};
+	void trig(mglGraphPS *gr, mreal x[3], mreal y[3], unsigned char c[4]);
+	void quad(mglGraphPS *gr, mreal x[4], mreal y[4], unsigned char c[4]);
+	void line(mglGraphPS *gr, mreal x[2], mreal y[2], unsigned char c[4]);
 };
 //-----------------------------------------------------------------------------
 /// Class implement the creation of different mathematical plots for exporting in PostScript format
@@ -53,6 +56,7 @@ public:
 	virtual void Finish();
 	void Clf(mglColor  Back=WC);
 	void Ball(mreal x,mreal y,mreal z,mglColor col=RC,mreal alpha=1);
+	void Glyph(mreal x, mreal y, mreal f, int s, long j, char col);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 protected:
 	mglPrim *P;			///< Primitives (lines, triangles and so on)
@@ -80,6 +84,9 @@ protected:
 	void add_light(mreal *c, mreal n1,mreal n2, mreal n3);
 	void pnt_plot(int x,int y, unsigned char c[4]);
 	void mark_plot(int x,int y, char type, unsigned char cs[4]);
+private:
+	void put_line(FILE *fp, long i, mreal wp,mreal *cp,int st, const char *ifmt, const char *nfmt, bool neg);
+	void put_desc(FILE *fp, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf);
 };
 //-----------------------------------------------------------------------------
 #endif

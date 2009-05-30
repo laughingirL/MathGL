@@ -228,7 +228,7 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 //	fprintf(fp,"%%%%EndComments\n\n");
 	fprintf(fp,"%d %d 8 [1 0 0 1 0 0] {currentfile %d string readhexstring pop} false 3 colorimage\n",
 			w,h,1+w*h/40);
-	for(j=0;j<h;j++)	for(i=0;i<w;i++)
+	for(j=h-1;j>=0;j--)	for(i=0;i<w;i++)
 	{
 		if((i+w*(h-j-1))%40==0 && i+j>0)	fprintf(fp,"\n");
 		fprintf(fp,"%02x%02x%02x",p[j][3*i],p[j][3*i+1],p[j][3*i+2]);

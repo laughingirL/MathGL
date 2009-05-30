@@ -150,6 +150,72 @@ void mglGraph::Flow(const mglData &ax, const mglData &ay, const char *sch, int n
 	Flow(x,y,ax,ay,sch,num,cnt,zVal);
 }
 //-----------------------------------------------------------------------------
+void mglGraph::Flow(mglPoint p, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch)
+{
+	mreal u,v;
+	long n=ax.nx, m=ax.ny;
+	if(n*m*ax.nz!=ay.nx*ay.ny*ay.nz)	{	SetWarn(mglWarnDim,"Flow");	return;	}
+	if(n<2 || m<2)						{	SetWarn(mglWarnLow,"Flow");	return;	}
+	static int cgid=1;	StartGroup("FlowP",cgid++);
+	bool both = x.nx==n && y.nx==n && x.ny==m && y.ny==m;
+	if(!(both || (x.nx==n && y.nx==m)))	{	SetWarn(mglWarnDim,"Flow");	return;	}
+
+	Arrow1 = Arrow2 = '_';
+	SetScheme(sch);
+	// find coordinates u, v
+	register long i,j,ii;
+	register mreal d, dm=1e7;
+	long i0=0,j0=0;
+	for(i=0;i<n;i++)	for(j=0;j<m;j++)	// first find closest
+	{
+		ii = i+n*j;
+		d = both ? hypot(x.a[ii]-p.x,y.a[ii]-p.y) : hypot(x.a[i]-p.x,y.a[j]-p.y);
+		if(d<dm)	{	i0=i;	j0=j;	dm=d;	}
+	}
+	if(dm==0)	{	u = i0/float(n);	v = j0/float(m);	}	// we find it
+	else
+	{
+		mreal dxu,dxv,dyu,dyv, dx, dy;
+		if(both)
+		{
+			ii = i0+n*j0;
+			dx = x.a[ii]-p.x;	dy = y.a[ii]-p.y;
+			if(i0<n-1)
+			{	dxu = x.a[ii+1]-x.a[ii];	dyu = y.a[ii+1]-y.a[ii];	}
+			else
+			{	dxu = x.a[ii]-x.a[ii-1];	dyu = y.a[ii]-y.a[ii-1];	}
+			if(j0<m-1)
+			{	dxv = x.a[ii+n]-x.a[ii];	dyv = y.a[ii+n]-y.a[ii];	}
+			else
+			{	dxv = x.a[ii]-x.a[ii-n];	dyv = y.a[ii]-y.a[ii-n];	}
+			d = dxv*dyu-dxu*dyv;
+			u = (i0+(dxv*dy-dx*dyv)/d)/n;
+			v = (j0-(dxu*dy-dx*dyu)/d)/m;
+		}
+		else
+		{
+			dx = x.a[i0]-p.x;	dy = y.a[j0]-p.y;
+			if(i0<n-1)	dxu = x.a[i0+1]-x.a[i0];
+			else		dxu = x.a[i0]-x.a[i0-1];
+			if(j0<m-1)	dyv = y.a[j0+1]-y.a[j0];
+			else		dyv = y.a[j0]-y.a[j0-1];
+			u = (i0+dx/dxu)/n;	v = (j0+dy/dyv)/m;
+		}
+	}
+	flow(false, p.z, u, v, x, y, ax, ay);
+	EndGroup();
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Flow(mglPoint p, const mglData &ax, const mglData &ay, const char *sch)
+{
+	if(ax.nx*ax.ny!=ay.nx*ay.ny){	SetWarn(mglWarnDim,"Flow");	return;	}
+	if(ax.nx<2 || ax.ny<2)		{	SetWarn(mglWarnLow,"Flow");	return;	}
+	mglData x(ax.nx), y(ax.ny);
+	x.Fill(Min.x,Max.x);
+	y.Fill(Min.y,Max.y);
+	Flow(p,x,y,ax,ay,sch);
+}
+//-----------------------------------------------------------------------------
 void mglGraph::flow(bool simple, mreal u, mreal v, mreal w,
 					const mglData &x, const mglData &y, const mglData &z,
 					const mglData &ax, const mglData &ay, const mglData &az)
@@ -295,6 +361,89 @@ void mglGraph::Flow(const mglData &ax, const mglData &ay, const mglData &az,
 	y.Fill(Min.y,Max.y);
 	z.Fill(Min.z,Max.z);
 	Flow(x,y,z,ax,ay,az,sch,num,cnt);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Flow(mglPoint p, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch){	mreal u,v,w;
+	long n=ax.nx,m=ax.ny,l=ax.nz;
+	if(ax.nx*ax.ny*ax.nz!=ay.nx*ay.ny*ay.nz || ax.nx*ax.ny*ax.nz!=az.nx*az.ny*az.nz)
+	{	SetWarn(mglWarnDim,"Flow");	return;	}
+	if(ax.nx<2 || ax.ny<2 || ax.nz<2)
+	{	SetWarn(mglWarnLow,"Flow");	return;	}
+	bool both = x.nx*x.ny*x.nz==n*m*l && y.nx*y.ny*y.nz==n*m*l && z.nx*z.ny*z.nz==n*m*l;
+	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
+	{	SetWarn(mglWarnDim,"Flow");	return;	}
+	static int cgid=1;	StartGroup("FlowP3",cgid++);
+	Arrow1 = Arrow2 = '_';	SetScheme(sch);
+
+	// find coordinates u, v, w
+	register long i,j,k,ii;
+	register mreal d, dm=1e7;
+	long i0=0,j0=0,k0=0;
+	mreal dx,dy,dz;
+	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)	// first find closest
+	{
+		ii = i+n*(j+m*k);
+		if(both)
+		{	dx = x.a[ii]-p.x;	dy = y.a[ii]-p.y;	dz = x.a[ii]-p.z;	}
+		else
+		{	dx = x.a[i]-p.x;	dy = y.a[j]-p.y;	dz = x.a[k]-p.z;	}
+		d = sqrt(dx*dx+dy*dy+dz*dz);
+		if(d<dm)	{	i0=i;	j0=j;	k0=k;	dm=d;	}
+	}
+	if(dm==0)	// we find it
+	{	u=i0/float(n);	v=j0/float(m);	w=k0/float(l);	}
+	else
+	{
+		mreal dxu,dxv,dxw,dyu,dyv,dyw,dzu,dzv,dzw;
+		if(both)
+		{
+			ii = i0+n*j0;
+			dx = x.a[ii]-p.x;	dy = y.a[ii]-p.y;	dz = z.a[ii]-p.z;
+			if(i0<n-1)
+			{	dxu = x.a[ii+1]-x.a[ii];	dyu = y.a[ii+1]-y.a[ii];	dzu = z.a[ii+1]-z.a[ii];	}
+			else
+			{	dxu = x.a[ii]-x.a[ii-1];	dyu = y.a[ii]-y.a[ii-1];	dzu = z.a[ii]-z.a[ii-1];	}
+			if(j0<m-1)
+			{	dxv = x.a[ii+n]-x.a[ii];	dyv = y.a[ii+n]-y.a[ii];	dzv = z.a[ii+n]-z.a[ii];	}
+			else
+			{	dxv = x.a[ii]-x.a[ii-n];	dyv = y.a[ii]-y.a[ii-n];	dzv = z.a[ii]-z.a[ii-n];	}
+			if(k0<l-1)
+			{	dxw = x.a[ii+n*m]-x.a[ii];	dyw = y.a[ii+n*m]-y.a[ii];	dzw = z.a[ii+n*m]-z.a[ii];	}
+			else
+			{	dxw = x.a[ii]-x.a[ii-n*m];	dyw = y.a[ii]-y.a[ii-n*m];	dzw = z.a[ii]-z.a[ii-n*m];	}
+			d = dxu*(dyw*dzv-dyv*dzw)+dxv*(dyu*dzw-dyw*dzu)+dxw*(dyv*dzu-dyu*dzv);
+			u = (i0+(dx*(dyw*dzv-dyv*dzw)+dxv*(dy*dzw-dyw*dz)+dxw*(dyv*dz-dy*dzv))/d)/n;
+			v = (j0-(dx*(dyw*dzu-dyu*dzw)+dxu*(dy*dzw-dyw*dz)+dxw*(dyu*dz-dy*dzu))/d)/m;
+			w = (i0+(dx*(dyv*dzu-dyu*dzv)+dxu*(dy*dzv-dyv*dz)+dxv*(dyu*dz-dy*dzu))/d)/l;
+		}
+		else
+		{
+			dx = x.a[i0]-p.x;	dy = y.a[j0]-p.y;
+			if(i0<n-1)	dxu = x.a[i0+1]-x.a[i0];
+			else		dxu = x.a[i0]-x.a[i0-1];
+			if(j0<m-1)	dyv = y.a[j0+1]-y.a[j0];
+			else		dyv = y.a[j0]-y.a[j0-1];
+			if(k0<l-1)	dzw = z.a[k0+1]-z.a[k0];
+			else		dzw = z.a[k0]-z.a[k0-1];
+			u = (i0+dx/dxu)/n;	v = (j0+dy/dyv)/m;	w = (k0+dz/dzw)/m;
+		}
+	}
+	flow(false, u, v, w, x, y, z, ax, ay, az);
+	EndGroup();
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Flow(mglPoint p, const mglData &ax, const mglData &ay, const mglData &az,
+					const char *sch)
+{
+	if(ax.nx*ax.ny*ax.nz!=ay.nx*ay.ny*ay.nz || ax.nx*ax.ny*ax.nz!=az.nx*az.ny*az.nz)
+	{	SetWarn(mglWarnDim,"Flow");	return;	}
+	if(ax.nx<2 || ax.ny<2 || ax.nz<2)
+	{	SetWarn(mglWarnLow,"Flow");	return;	}
+	mglData x(ax.nx), y(ax.ny), z(ax.nz);
+	x.Fill(Min.x,Max.x);
+	y.Fill(Min.y,Max.y);
+	z.Fill(Min.z,Max.z);
+	Flow(p, x,y,z,ax,ay,az,sch);
 }
 //-----------------------------------------------------------------------------
 //
@@ -585,6 +734,19 @@ void mgl_flow_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT 
 void mgl_flow_3d(HMGL gr, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, int num, int central)
 {	if(gr && ay && ax && az)	gr->Flow(*ax, *ay, *az, sch, num, central);	}
 //-----------------------------------------------------------------------------
+/// Plot flows for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
+void mgl_flowp_xy(HMGL gr, mreal x0, mreal y0, mreal z0, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch)
+{	if(gr && ay && ax && x && y)	gr->Flow(mglPoint(x0,y0,z0), *x, *y, *ax, *ay, sch);	}
+/// Plot flows for vector field {ax,ay} with color proportional to value |a|
+void mgl_flowp_2d(HMGL gr, mreal x0, mreal y0, mreal z0, const HMDT ax, const HMDT ay, const char *sch)
+{	if(gr && ay && ax)	gr->Flow(mglPoint(x0,y0,z0), *ax, *ay, sch);	}
+/// Plot flows for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
+void mgl_flowp_xyz(HMGL gr, mreal x0, mreal y0, mreal z0, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch)
+{	if(gr && ay && ax && az && x && y && z)	gr->Flow(mglPoint(x0,y0,z0), *x, *y, *z, *ax, *ay, *az, sch);	}
+/// Plot flows for 3d vector field {ax,ay,ay} with color proportional to value |a|
+void mgl_flowp_3d(HMGL gr, mreal x0, mreal y0, mreal z0, const HMDT ax, const HMDT ay, const HMDT az, const char *sch)
+{	if(gr && ay && ax && az)	gr->Flow(mglPoint(x0,y0,z0), *ax, *ay, *az, sch);	}
+//-----------------------------------------------------------------------------
 /// Plot flow pipes for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
 void mgl_pipe_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch, mreal r0, int num, int central, mreal zVal)
 {	if(gr && ay && ax && x && y)	gr->Pipe(*x, *y, *ax, *ay, sch, r0, num, central, zVal);	}
@@ -629,6 +791,39 @@ void mgl_flow_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, co
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && az)	_GR_->Flow(_D_(ax), _D_(ay), _D_(az), s, *num, *central);
+	delete []s;
+}
+//-----------------------------------------------------------------------------
+/// Plot flows for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
+void mgl_flowp_xy_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ay && ax && x && y)
+		_GR_->Flow(mglPoint(*x0,*y0,*z0), _D_(x), _D_(y), _D_(ax), _D_(ay), s);
+	delete []s;
+}
+/// Plot flows for vector field {ax,ay} with color proportional to value |a|
+void mgl_flowp_2d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, const char *sch, int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ay && ax)
+		_GR_->Flow(mglPoint(*x0,*y0,*z0), _D_(ax), _D_(ay), s);
+	delete []s;
+}
+/// Plot flows for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
+void mgl_flowp_xyz_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ay && ax && az && x && y && z)
+		_GR_->Flow(mglPoint(*x0,*y0,*z0), _D_(x), _D_(y), _D_(z), _D_(ax), _D_(ay), _D_(az), s);
+	delete []s;
+}
+/// Plot flows for 3d vector field {ax,ay,ay} with color proportional to value |a|
+void mgl_flowp_3d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ay && ax && az)
+		_GR_->Flow(mglPoint(*x0,*y0,*z0), _D_(ax), _D_(ay), _D_(az), s);
 	delete []s;
 }
 //-----------------------------------------------------------------------------

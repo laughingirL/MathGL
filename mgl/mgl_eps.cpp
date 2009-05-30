@@ -198,6 +198,21 @@ void mglGraphPS::quad_plot_a(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
+void mglGraphPS::Glyph(mreal x, mreal y, mreal f, int s, long j, char col)
+{
+	mglPrim a(4);
+	a.s = fscl/PlotFactor;	a.w = ftet;
+	a.x[0] = xPos;	a.y[0] = yPos;
+	a.x[1] = x;		a.y[1] = y;
+	a.zz[1] = f/fnt->GetFact(s&3);
+	a.style = s;	a.m = j;
+	a.z = a.zz[0] = zPos;
+	mglColor cc = mglColor(col);
+	if(!cc.Valid())	cc = mglColor(CDef[0],CDef[1],CDef[2]);
+	a.c[0] = cc.r;	a.c[1] = cc.g;	a.c[2] = cc.b;	a.c[3] = CDef[3];
+	add_prim(&a);
+}
+//-----------------------------------------------------------------------------
 void mglGraphPS::Clf(mglColor  Back)
 {
 	Fog(0);
@@ -304,6 +319,30 @@ char *mgl_get_dash(unsigned short d, mreal w)
 	return s;
 }
 //-----------------------------------------------------------------------------
+bool mglPrim::IsSame(mreal wp,mreal *cp,int st)
+{
+	if(abs(type)!=1)	return false;
+	if(w>=1 && wp!=w)	return false;
+	if(w<1 && wp!=1)	return false;
+	if(st!=style)		return false;
+	return (cp[0]==c[0] && cp[1]==c[1] && cp[2]==c[2]);
+}
+//-----------------------------------------------------------------------------
+void mglPrim::SetStyle(unsigned PDef, int pPos)
+{
+	style=0;
+	switch(PDef)
+	{
+	case 0xff00:	style=1;	break;
+	case 0xf0f0:	style=2;	break;
+	case 0x8888:	style=3;	break;
+	case 0xfe10:	style=4;	break;
+	case 0xe4e4:	style=5;	break;
+	}
+	pPos = abs(pPos)%16;
+	dash = (PDef>>(16-pPos))+(PDef<<pPos);
+}
+//-----------------------------------------------------------------------------
 void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 {
 	if(!P)	return;
@@ -316,46 +355,29 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	fprintf(fp,"%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",Width,Height);
 	fprintf(fp,"%%%%Creator: MathGL library\n%%%%Title: %s\n",descr ? descr : fname);
 	fprintf(fp,"%%%%CreationDate: %s\n",ctime(&now));
-	fprintf(fp,"/lw {setlinewidth} def\n");
-	fprintf(fp,"/rgb {setrgbcolor} def\n");
-	fprintf(fp,"/np {newpath} def\n");
-	fprintf(fp,"/cp {closepath} def\n");
-	fprintf(fp,"/ll {lineto} def\n");
-	fprintf(fp,"/mt {moveto} def\n");
-	fprintf(fp,"/rl {rlineto} def\n");
-	fprintf(fp,"/rm {rmoveto} def\n");
-	fprintf(fp,"/dr {stroke} def\n");
+	fprintf(fp,"/lw {setlinewidth} def\n/rgb {setrgbcolor} def\n");
+	fprintf(fp,"/np {newpath} def\n/cp {closepath} def\n");
+	fprintf(fp,"/ll {lineto} def\n/mt {moveto} def\n");
+	fprintf(fp,"/rl {rlineto} def\n/rm {rmoveto} def\n/dr {stroke} def\n");
 	fprintf(fp,"/ss {%g} def\n",MarkSize*0.4*font_factor);// remove *font_factor); ???
 	fprintf(fp,"/s2 {%g} def\n",MarkSize*0.8*font_factor);// remove *font_factor); ???
 	fprintf(fp,"/sm {-%g} def\n",MarkSize*0.4*font_factor);//remove *font_factor); ???
 	fprintf(fp,"/m_c {ss 0.3 mul 0 360 arc} def\n");
-	fprintf(fp,"/d0 {[] 0 setdash} def\n");
-	fprintf(fp,"/sd {0 setdash} def\n");
-//	fprintf(fp,"/d1 {[8 8] 0 setdash} def\n");
-//	fprintf(fp,"/d2 {[4 4] 0 setdash} def\n");
-//	fprintf(fp,"/d3 {[1 3] 0 setdash} def\n");
-//	fprintf(fp,"/d4 {[7 4 1 4] 0 setdash} def\n");
-//	fprintf(fp,"/d5 {[3 2 1 2] 0 setdash} def\n");
+	fprintf(fp,"/d0 {[] 0 setdash} def\n/sd {0 setdash} def\n");
 
 	bool m_p=false,m_x=false,m_d=false,m_v=false,m_t=false,
 		m_s=false,m_a=false,m_o=false,m_O=false,m_T=false,m_V=false,m_S=false,m_D=false;
-	register long i,j,k;
+	register long i;
+	// add mark definition if present
 	for(i=0;i<pNum;i++)
 	{
-		if(P[i].type>0)	continue;
-		if(P[i].m=='+')	m_p = true;
-		if(P[i].m=='x')	m_x = true;
-		if(P[i].m=='s')	m_s = true;
-		if(P[i].m=='d')	m_d = true;
-		if(P[i].m=='v')	m_v = true;
-		if(P[i].m=='^')	m_t = true;
-		if(P[i].m=='*')	m_a = true;
-		if(P[i].m=='o')	m_o = true;
-		if(P[i].m=='O')	m_O = true;
-		if(P[i].m=='S')	m_S = true;
-		if(P[i].m=='D')	m_D = true;
-		if(P[i].m=='V')	m_V = true;
-		if(P[i].m=='T')	m_T = true;
+		if(P[i].type>0)	continue;		if(P[i].m=='+')	m_p = true;
+		if(P[i].m=='x')	m_x = true;		if(P[i].m=='s')	m_s = true;
+		if(P[i].m=='d')	m_d = true;		if(P[i].m=='v')	m_v = true;
+		if(P[i].m=='^')	m_t = true;		if(P[i].m=='*')	m_a = true;
+		if(P[i].m=='o')	m_o = true;		if(P[i].m=='O')	m_O = true;
+		if(P[i].m=='S')	m_S = true;		if(P[i].m=='D')	m_D = true;
+		if(P[i].m=='V')	m_V = true;		if(P[i].m=='T')	m_T = true;
 	}
 	if(m_p)	fprintf(fp,"/m_p {sm 0 rm s2 0 rl sm sm rm 0 s2 rl d0} def\n");
 	if(m_x)	fprintf(fp,"/m_x {sm sm rm s2 s2 rl 0 sm 2 mul rm sm 2 mul s2 rl d0} def\n");
@@ -372,27 +394,30 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	if(m_T)	fprintf(fp,"/m_T {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl cp} def\n");
 	fprintf(fp,"\n");
 
+	// write definition for all glyphs
+	put_desc(fp,"/%c%c_%04x { np\n", "\t%d %d mt ", "%d %d ll ", "cp\n", "} def\n");
+	// write primitives
 	mreal cp[3]={-1,-1,-1},wp=-1;
 	int st=0;
 	char str[256]="";
 	for(i=0;i<pNum;i++)
 	{
+		if(P[i].type<0)	continue;
 		bool same = fabs(cp[0]-P[i].c[0])<0.01 && fabs(cp[1]-P[i].c[1])<0.01 && fabs(cp[2]-P[i].c[2])<0.01;
 		bool wame = (P[i].type==1 && wp!=P[i].w) || (P[i].type==0 && wp!=1);
-//		bool pame = (P[i].type==1 && P[i].style!=st);
 		str[0] = 0;
 		if(!same && wame)
-			sprintf(str,"%.2g lw %g %g %g rgb ",(P[i].type==1 && P[i].w>1) ? P[i].w:1.,
-						P[i].c[0],P[i].c[1],P[i].c[2]);
+			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ",(P[i].type==1 && P[i].w>1) ? P[i].w:1., P[i].c[0],P[i].c[1],P[i].c[2]);
 		else if(!same)	sprintf(str,"%g %g %g rgb ",P[i].c[0],P[i].c[1],P[i].c[2]);
 		else if(wame)	sprintf(str,"%.2g lw ",(P[i].type==1 && P[i].w>1)  ? P[i].w:1.);
-//		if(pame)	{	char s[4]="d0 ";	s[1]='0'+P[i].style;	strcat(str,s);	}
+		memcpy(cp,P[i].c,3*sizeof(mreal));
+//		sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ",(P[i].type==1 && P[i].w>1) ? P[i].w:1., P[i].c[0],P[i].c[1],P[i].c[2]);
 
-		if(P[i].type==0)
+		if(P[i].type==0)	// mark
 		{
+			wp=1;
 			if(P[i].s!=MarkSize)
 			{
-//printf("%g - %g\n",P[i].s, font_factor);
 				fprintf(fp,"/ss {%g} def\n",P[i].s*0.4*font_factor);
 				fprintf(fp,"/s2 {%g} def\n",P[i].s*0.8*font_factor);
 				fprintf(fp,"/sm {-%g} def\n",P[i].s*0.4*font_factor);
@@ -421,62 +446,47 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 				fprintf(fp,"/sm {-%g} def\n",MarkSize*0.4*font_factor);
 			}
 		}
-		else if(P[i].type==2)
+		else if(P[i].type==2)	// quad
 			fprintf(fp,"np %g %g mt %g %g ll %g %g ll cp %sfill\n",P[i].x[0],P[i].y[0],P[i].x[1],P[i].y[1],P[i].x[2],P[i].y[2],str);
-		else if(P[i].type==3)
+		else if(P[i].type==3)	// trig
 			fprintf(fp,"np %g %g mt %g %g ll %g %g ll %g %g ll cp %sfill\n",P[i].x[0],P[i].y[0],P[i].x[1],P[i].y[1],P[i].x[3],P[i].y[3],P[i].x[2],P[i].y[2],str);
-		else if(P[i].type==1)
+		else if(P[i].type==1)	// line
 		{
-			k = i;	// ищем цепочки
-			fprintf(fp,"np %g %g mt %g %g ll ",P[k].x[0],P[k].y[0],P[k].x[1],P[k].y[1]);
-			long m=1;
-			for(j=i;j<pNum && P[j].IsSame(wp,cp,st);j++)
-			{
-				if(P[j].x[0]==P[k].x[1] && P[j].y[0]==P[k].y[1])
-				{
-					fprintf(fp,"%g %g ll ",P[j].x[1],P[j].y[1]);
-					k=j;	P[k].type = -1;		m++;
-					if(m>10)	{	m=0;	fprintf(fp,"\n");	}
-				}
-			}
+			wp = P[i].w>1  ? P[i].w:1;	st = P[i].style;
+			put_line(fp,i,wp,cp,st, "np %g %g mt ", "%g %g ll ", false);
 			const char *sd = mgl_get_dash(P[i].dash,P[i].w);
-			if(sd && sd[0])
-				fprintf(fp,"%s [%s] sd dr\n",str,sd);
-			else
-				fprintf(fp,"%s d0 dr\n",str);
+			if(sd && sd[0])	fprintf(fp,"%s [%s] sd dr\n",str,sd);
+			else			fprintf(fp,"%s d0 dr\n",str);
 		}
-		memcpy(cp,P[i].c,3*sizeof(mreal));
-		if(P[i].type==0)	wp = 1;
-		if(P[i].type==1)	wp = P[i].w>1  ? P[i].w:1;
-		if(P[i].type==1)	st = P[i].style;
+		else if(P[i].type==4)	// glyph
+		{
+			mreal ss = P[i].s/2, xx = P[i].x[1], yy = P[i].y[1];
+			if(same)
+				fprintf(fp,"gsave\t%g %g translate %g %g scale %g rotate\n", 
+					P[i].x[0], P[i].y[0], ss, ss, -P[i].w);
+			else
+				fprintf(fp,"gsave\t%g %g translate %g %g scale %g rotate %g %g %g rgb\n", 
+					P[i].x[0], P[i].y[0], ss, ss, -P[i].w, P[i].c[0], P[i].c[1], P[i].c[2]);
+			if(P[i].style&8)	// this is "line"
+			{
+				mreal dy = 0.004,f=fabs(P[i].zz[1]);
+				fprintf(fp,"np %g %g mt %g %g ll %g %g ll %g %g ll cp ",
+					xx,yy+dy, xx+f,yy+dy, xx+f,yy-dy, xx,yy-dy);
+//				if(P[i].style&4)	fprintf(fp,"dr");
+//				else	fprintf(fp,"fill");
+			}
+			else
+				fprintf(fp,"%.3g %.3g translate %g %g scale %c%c_%04x ", 
+					xx, yy, P[i].zz[1], P[i].zz[1], P[i].style&1?'b':'n',
+					P[i].style&2?'i':'n', P[i].m);
+			if(P[i].style&4)	fprintf(fp,"dr");
+			else	fprintf(fp,"eofill");
+			fprintf(fp," grestore\n");
+		}
 	}
 	for(i=0;i<pNum;i++)		if(P[i].type==-1)	P[i].type = 1;
 	fprintf(fp,"\nshowpage\n%%%%EOF\n");
 	fclose(fp);
-}
-//-----------------------------------------------------------------------------
-bool mglPrim::IsSame(mreal wp,mreal *cp,int st)
-{
-	if(abs(type)!=1)	return false;
-	if(w>=1 && wp!=w)	return false;
-	if(w<1 && wp!=1)	return false;
-	if(st!=style)		return false;
-	return (cp[0]==c[0] && cp[1]==c[1] && cp[2]==c[2]);
-}
-//-----------------------------------------------------------------------------
-void mglPrim::SetStyle(unsigned PDef, int pPos)
-{
-	style=0;
-	switch(PDef)
-	{
-	case 0xff00:	style=1;	break;
-	case 0xf0f0:	style=2;	break;
-	case 0x8888:	style=3;	break;
-	case 0xfe10:	style=4;	break;
-	case 0xe4e4:	style=5;	break;
-	}
-	pPos = abs(pPos)%16;
-	dash = (PDef>>(16-pPos))+(PDef<<pPos);
 }
 //-----------------------------------------------------------------------------
 void mglGraphPS::WriteSVG(const char *fname,const char *descr)
@@ -494,16 +504,23 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 
 	fprintf(fp,"<!--Creator: MathGL library-->\n");
 	fprintf(fp,"<!--Title: %s-->\n<!--CreationDate: %s-->\n\n",descr?descr:fname,ctime(&now));
-	fprintf(fp,"<g fill=\"none\" stroke=\"none\" stroke-width=\"0.5\">\n");
 
+	// write definition for all glyphs
+	put_desc(fp,"<symbol id=\"%c%c_%04x\"><path d=\"", "\tM %d %d ",
+		"L %d %d ", "Z\n", "\"/></symbol>\n");
+	// currentColor -> inherit ???
+	fprintf(fp,"<g fill=\"none\" stroke=\"none\" stroke-width=\"0.5\">\n");
+	// write primitives
 	mreal cp[3]={-1,-1,-1},wp=-1;
-	register long i,j,k;
+	register long i;
 	int st=0;
+
 	for(i=0;i<pNum;i++)
 	{
 		if(P[i].type==0)
 		{
 			mreal x=P[i].x[0],y=Height-P[i].y[0],s=0.4*font_factor*P[i].s;
+			wp = 1;
 			if(strchr("SDVT",P[i].m))
 				fprintf(fp,"<g fill=\"#%02x%02x%02x\">\n",
 					int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
@@ -579,27 +596,41 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 			fprintf(fp,"<g stroke=\"#%02x%02x%02x\"",
 					int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
 			if(P[i].style)	fprintf(fp," stroke-dasharray=\"%s\"", mgl_get_dash(P[i].dash,P[i].w));
-//			if(P[i].style)	fprintf(fp," stroke-dasharray=\"%s\"", dash[P[i].style]);
 			if(P[i].w>1)	fprintf(fp," stroke-width=\"%g\"", P[i].w);
-
-			fprintf(fp,"><path d=\" M %g %g L %g %g",P[i].x[0],Height-P[i].y[0],P[i].x[1],Height-P[i].y[1]);
-			k = i;	// ищем цепочки
-			long m=1;
-			for(j=i+1;j<pNum && P[j].IsSame(wp,cp,st);j++)
-			{
-				if(P[j].x[0]==P[k].x[1] && P[j].y[0]==P[k].y[1])
-				{
-					fprintf(fp," L %g %g",P[j].x[1],Height-P[j].y[1]);
-					k=j;	P[k].type = -1;		m++;
-					if(m>10)	{	m=0;	fprintf(fp,"\n");	}
-				}
-			}
+			memcpy(cp,P[i].c,3*sizeof(mreal));
+			wp = P[i].w>1  ? P[i].w:1;	st = P[i].style;
+			put_line(fp,i,wp,cp,st, "><path d=\" M %g %g", " L %g %g", true);
 			fprintf(fp,"\"/> </g>\n");
 		}
-		memcpy(cp,P[i].c,3*sizeof(mreal));
-		if(P[i].type==0)	wp = 1;
-		if(P[i].type==1)	wp = P[i].w>1  ? P[i].w:1;
-		if(P[i].type==1)	st = P[i].style;
+		else if(P[i].type==4)
+		{
+			mreal ss = P[i].s/2, xx = P[i].x[1], yy = P[i].y[1];
+			if(P[i].style&8)	// this is "line"
+			{
+				fprintf(fp,"<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"",
+					P[i].x[0], Height-P[i].y[0], ss, -ss, -P[i].w);
+				if(P[i].style&4)
+					fprintf(fp," stroke=\"#%02x%02x%02x\">", int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
+				else
+					fprintf(fp," fill=\"#%02x%02x%02x\">", int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
+				mreal dy = 0.004,f=fabs(P[i].zz[1]);
+				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g L %g %g\"/></g>\n",
+					xx,yy+dy, xx+f,yy+dy, xx+f,yy-dy, xx,yy-dy);
+			}
+			else
+			{
+				ss *= P[i].zz[1];
+				fprintf(fp,"<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"",
+					P[i].x[0], Height-P[i].y[0], ss, -ss, -P[i].w);
+				if(P[i].style&4)
+					fprintf(fp," stroke=\"#%02x%02x%02x\">", int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
+				else
+					fprintf(fp," fill=\"#%02x%02x%02x\">", int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
+				fprintf(fp,"<use x=\"%g\" y=\"%g\" xlink:href=\"#%c%c_%04x\"/></g>\n", 
+					xx/P[i].zz[1], yy/P[i].zz[1], P[i].style&1?'b':'n',
+					P[i].style&2?'i':'n', P[i].m);
+			}
+		}
 	}
 
 	for(i=0;i<pNum;i++)		if(P[i].type==-1)	P[i].type = 1;
@@ -630,134 +661,218 @@ void mglPrim::Draw(mglGraphPS *gr)
 {
 	unsigned char r[4]={(unsigned char)(255*c[0]),(unsigned char)(255*c[1]),
 				(unsigned char)(255*c[2]),(unsigned char)(255*c[3])};
+
+	if(type==0)
+		gr->mark_plot(int(x[0]),int(y[0]),m,r);
+	else if(type==2 && c[3]>0)	trig(gr,x,y,r);
+	else if(type==3 && c[3]>0)	quad(gr,x,y,r);
+	else if(type==1)	line(gr,x,y,r);
+	else if(type==4)
+	{
+		mreal p[12], f=zz[1], xx=x[1], yy=y[1],xp[5],yp[5];
+		// setup B[]
+		gr->Push();
+		gr->SetPosScale(x[0],y[0],z,s*gr->PlotFactor);
+		gr->RotateN(w,0,0,1);
+		if(style&8)		// draw over-/under-line
+		{
+			mreal dy = 0.004;
+			p[0]=xx;			p[1]=yy+dy;		p[2]=0;
+			p[3]=fabs(f)+xx;	p[4]=yy+dy;		p[5]=0;
+			p[6]=xx;			p[7]=yy-dy;		p[8]=0;
+			p[9]=fabs(f)+xx;	p[10]=yy-dy;	p[11]=0;
+			gr->PostScale(p,4);
+			xp[0]=p[0];	xp[1]=p[3];	xp[2]=p[6];	xp[3]=p[9];	xp[4]=p[0];
+			yp[0]=p[1];	yp[1]=p[4];	yp[2]=p[7];	yp[3]=p[10];yp[4]=p[1];
+			if(style&4)
+			{
+				line(gr,xp,yp,r);		line(gr,xp+1,yp+1,r);
+				line(gr,xp+3,yp+3,r);	line(gr,xp+2,xp+2,r);
+			}
+			else	quad(gr,xp,yp,r);
+		}
+		else if(style&4)	// draw glyph
+		{
+			long ik,ii,il=0;
+			int nl=gr->fnt->GetNl(style&3,m);
+			const short *ln=gr->fnt->GetLn(style&3,m);
+			if(ln && nl>0)	for(ik=0;ik<nl;ik++)
+			{
+				ii = 2*ik;
+				if(ln[ii]==0x3fff && ln[ii+1]==0x3fff)	// line breakthrough
+				{	il = ik+1;	continue;	}
+				else if(ik==nl-1 || (ln[ii+2]==0x3fff && ln[ii+3]==0x3fff))
+				{	// enclose the circle. May be in future this block should be commented
+					p[0]=f*ln[ii]+xx;	p[1]=f*ln[ii+1]+yy;	p[2]=0;	ii=2*il;
+					p[3]=f*ln[ii]+xx;	p[4]=f*ln[ii+1]+yy;	p[5]=0;
+				}
+				else
+				{	// normal line
+					p[0]=f*ln[ii]+xx;	p[1]=f*ln[ii+1]+yy;	p[2]=0;	ii+=2;
+					p[3]=f*ln[ii]+xx;	p[4]=f*ln[ii+1]+yy;	p[5]=0;
+				}
+				gr->PostScale(p,2);
+				xp[0]=p[0];	xp[1]=p[3];
+				yp[0]=p[1];	yp[1]=p[4];
+				line(gr,xp,yp,r);
+			}
+		}
+		else
+		{
+			long ik,ii;
+			int nt=gr->fnt->GetNt(style&3,m);
+			const short *tr=gr->fnt->GetTr(style&3,m);
+			if(tr && nt>0)	for(ik=0;ik<nt;ik++)
+			{
+				ii = 6*ik;	p[0]=f*tr[ii]+xx;	p[1]=f*tr[ii+1]+yy;	p[2]=0;
+				ii+=2;		p[3]=f*tr[ii]+xx;	p[4]=f*tr[ii+1]+yy;	p[5]=0;
+				ii+=2;		p[6]=f*tr[ii]+xx;	p[7]=f*tr[ii+1]+yy;	p[8]=0;
+				gr->PostScale(p,3);
+				xp[0]=p[0];	xp[1]=p[3];	xp[2]=p[6];
+				yp[0]=p[1];	yp[1]=p[4];	yp[2]=p[7];
+				trig(gr,xp,yp,r);
+			}
+		}
+		gr->Pop();
+	}
+}
+//-----------------------------------------------------------------------------
+void mglPrim::line(mglGraphPS *gr, mreal x[2], mreal y[2], unsigned char r[4])
+{
+	long y1,x1,y2,x2;
+	mreal d1[2],dxu,dxv,dyu,dyv;
+	register mreal u,v,xx,yy;
+	register long i,j;
+		mreal b=(w<1?1:w), dd;
+
+	bool hor = fabs(x[1]-x[0])>fabs(y[1]-y[0]), tt;
+	d1[0] = x[1]-x[0];	d1[1] = y[1]-y[0];
+	dd = sqrt(d1[0]*d1[0] + d1[1]*d1[1]);
+	if(dd<1e-5)	return;		// points lies on the vertical line
+
+	dxv = d1[1]/dd;	dyv =-d1[0]/dd;
+	dxu = d1[0]/dd;	dyu = d1[1]/dd;
+	long dp = int(w+3.5);
+
+	if(hor)
+	{
+		x1 = imin(long(x[0]),long(x[1])) - dp;	// bounding box
+		x2 = imax(long(x[0]),long(x[1])) + dp;
+		for(i=x1;i<=x2;i++)
+		{
+			y1 = int(y[0]+(y[1]-y[0])*(i-x[0])/(x[1]-x[0])) - dp;
+			y2 = int(y[0]+(y[1]-y[0])*(i-x[0])/(x[1]-x[0])) + dp;
+			for(j=y1;j<=y2;j++)
+			{
+				xx = (i-x[0]);	yy = (j-y[0]);
+				u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
+				if(u<0)			{	v += u*u;			u = 0;	}
+				else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
+				if(v>b)		continue;
+				tt = dash & (1<<long(fmod(u/w, 16)));
+				if(!tt)		continue;
+				u /= dd;
+				r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
+				gr->pnt_plot(i,j,r);
+			}
+		}
+	}
+	else
+	{
+		y1 = imin(long(y[0]),long(y[1])) - dp;
+		y2 = imax(long(y[0]),long(y[1])) + dp;
+		for(j=y1;j<=y2;j++)
+		{
+			x1 = int(x[0]+(x[1]-x[0])*(j-y[0])/(y[1]-y[0])) - dp;
+			x2 = int(x[0]+(x[1]-x[0])*(j-y[0])/(y[1]-y[0])) + dp;
+			for(i=x1;i<=x2;i++)
+			{
+				xx = (i-x[0]);	yy = (j-y[0]);
+				u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
+				if(u<0)			{	v += u*u;			u = 0;	}
+				else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
+				if(v>b)		continue;
+				tt = dash & (1<<long(fmod(u/w, 16)));
+				if(!tt)		continue;
+				u /= dd;
+				r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
+				gr->pnt_plot(i,j,r);
+			}
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+void mglPrim::quad(mglGraphPS *gr, mreal x[4], mreal y[4], unsigned char r[4])
+{
 	long y1,x1,y2,x2;
 	mreal d1[2],d2[2], dxu,dxv,dyu,dyv;
 	register mreal u,v,xx,yy;
 	register long i,j,g;
 
-	if(type==0)
-		gr->mark_plot(int(x[0]),int(y[0]),m,r);
-	else if(type==2 && c[3]>0)
+	x1 = imin(imin(long(x[0]),long(x[3])),imin(long(x[1]),long(x[2])));	// bounding box
+	y1 = imin(imin(long(y[0]),long(y[3])),imin(long(y[1]),long(y[2])));
+	x2 = imax(imax(long(x[0]),long(x[3])),imax(long(x[1]),long(x[2])));
+	y2 = imax(imax(long(y[0]),long(y[3])),imax(long(y[1]),long(y[2])));
+
+	d1[0] = x[1]-x[0];	d2[0] = x[2]-x[0];
+	d1[1] = y[1]-y[0];	d2[1] = y[2]-y[0];
+	dxu = d2[0]*d1[1] - d1[0]*d2[1];
+	if(fabs(dxu)<1e-5)	return;		// points lies on the same line
+	dyv =-d1[0]/dxu;	dxv = d1[1]/dxu;
+	dyu = d2[0]/dxu;	dxu =-d2[1]/dxu;
+
+	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
-		d1[0] = x[1]-x[0];	d2[0] = x[2]-x[0];
-		d1[1] = y[1]-y[0];	d2[1] = y[2]-y[0];
-		x1 = imin(imin(long(x[0]),long(x[2])),long(x[1]));	// bounding box
-		y1 = imin(imin(long(y[0]),long(y[2])),long(y[1]));
-		x2 = imax(imax(long(x[0]),long(x[2])),long(x[1]));
-		y2 = imax(imax(long(y[0]),long(y[2])),long(y[1]));
-
-		dxu = d2[0]*d1[1] - d1[0]*d2[1];
-		if(fabs(dxu)<1e-5)	return;		// points lies on the same line
-		dyv =-d1[0]/dxu;	dxv = d1[1]/dxu;
-		dyu = d2[0]/dxu;	dxu =-d2[1]/dxu;
-
-		for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
-		{
-			xx = (i-x[0]);	yy = (j-y[0]);
-			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
-			g = u<0 || v<0 || u+v>1;
-			if(g)	continue;
-			gr->pnt_plot(i,j,r);
-		}
+		xx = (i-x[0]);	yy = (j-y[0]);
+		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
+		g = u<0 || v<0 || u+v>1;
+		if(g)	continue;
+		gr->pnt_plot(i,j,r);
 	}
-	else if(type==3 && c[3]>0)
+
+	d1[0] = x[1]-x[3];	d2[0] = x[2]-x[3];
+	d1[1] = y[1]-y[3];	d2[1] = y[2]-y[3];
+	dxu = d2[0]*d1[1] - d1[0]*d2[1];
+	if(fabs(dxu)<1e-5)	return;		// points lies on the same line
+	dyv =-d1[0]/dxu;	dxv = d1[1]/dxu;
+	dyu = d2[0]/dxu;	dxu =-d2[1]/dxu;
+
+	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
-		x1 = imin(imin(long(x[0]),long(x[3])),imin(long(x[1]),long(x[2])));	// bounding box
-		y1 = imin(imin(long(y[0]),long(y[3])),imin(long(y[1]),long(y[2])));
-		x2 = imax(imax(long(x[0]),long(x[3])),imax(long(x[1]),long(x[2])));
-		y2 = imax(imax(long(y[0]),long(y[3])),imax(long(y[1]),long(y[2])));
-
-		d1[0] = x[1]-x[0];	d2[0] = x[2]-x[0];
-		d1[1] = y[1]-y[0];	d2[1] = y[2]-y[0];
-		dxu = d2[0]*d1[1] - d1[0]*d2[1];
-		if(fabs(dxu)<1e-5)	return;		// points lies on the same line
-		dyv =-d1[0]/dxu;	dxv = d1[1]/dxu;
-		dyu = d2[0]/dxu;	dxu =-d2[1]/dxu;
-
-		for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
-		{
-			xx = (i-x[0]);	yy = (j-y[0]);
-			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
-			g = u<0 || v<0 || u+v>1;
-			if(g)	continue;
-			gr->pnt_plot(i,j,r);
-		}
-
-		d1[0] = x[1]-x[3];	d2[0] = x[2]-x[3];
-		d1[1] = y[1]-y[3];	d2[1] = y[2]-y[3];
-		dxu = d2[0]*d1[1] - d1[0]*d2[1];
-		if(fabs(dxu)<1e-5)	return;		// points lies on the same line
-		dyv =-d1[0]/dxu;	dxv = d1[1]/dxu;
-		dyu = d2[0]/dxu;	dxu =-d2[1]/dxu;
-
-		for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
-		{
-			xx = (i-x[3]);	yy = (j-y[3]);
-			u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
-			g = u<0 || v<0 || u+v>1;
-			if(g)	continue;
-			gr->pnt_plot(i,j,r);
-		}
+		xx = (i-x[3]);	yy = (j-y[3]);
+		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
+		g = u<0 || v<0 || u+v>1;
+		if(g)	continue;
+		gr->pnt_plot(i,j,r);
 	}
-	else if(type==1)
+}
+//-----------------------------------------------------------------------------
+void mglPrim::trig(mglGraphPS *gr, mreal x[3], mreal y[3], unsigned char r[4])
+{
+	long y1,x1,y2,x2;
+	mreal d1[2],d2[2], dxu,dxv,dyu,dyv;
+	register mreal u,v,xx,yy;
+	register long i,j,g;
+
+	d1[0] = x[1]-x[0];	d2[0] = x[2]-x[0];
+	d1[1] = y[1]-y[0];	d2[1] = y[2]-y[0];
+	x1 = imin(imin(long(x[0]),long(x[2])),long(x[1]));	// bounding box
+	y1 = imin(imin(long(y[0]),long(y[2])),long(y[1]));
+	x2 = imax(imax(long(x[0]),long(x[2])),long(x[1]));
+	y2 = imax(imax(long(y[0]),long(y[2])),long(y[1]));
+
+	dxu = d2[0]*d1[1] - d1[0]*d2[1];
+	if(fabs(dxu)<1e-5)	return;		// points lies on the same line
+	dyv =-d1[0]/dxu;	dxv = d1[1]/dxu;
+	dyu = d2[0]/dxu;	dxu =-d2[1]/dxu;
+
+	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
-		mreal b=(w<1?1:w), dd;
-
-		bool hor = fabs(x[1]-x[0])>fabs(y[1]-y[0]), tt;
-		d1[0] = x[1]-x[0];	d1[1] = y[1]-y[0];
-		dd = sqrt(d1[0]*d1[0] + d1[1]*d1[1]);
-		if(dd<1e-5)	return;		// points lies on the vertical line
-
-		dxv = d1[1]/dd;	dyv =-d1[0]/dd;
-		dxu = d1[0]/dd;	dyu = d1[1]/dd;
-		long dp = int(w+3.5);
-
-		if(hor)
-		{
-			x1 = imin(long(x[0]),long(x[1])) - dp;	// bounding box
-			x2 = imax(long(x[0]),long(x[1])) + dp;
-			for(i=x1;i<=x2;i++)
-			{
-				y1 = int(y[0]+(y[1]-y[0])*(i-x[0])/(x[1]-x[0])) - dp;
-				y2 = int(y[0]+(y[1]-y[0])*(i-x[0])/(x[1]-x[0])) + dp;
-				for(j=y1;j<=y2;j++)
-				{
-					xx = (i-x[0]);	yy = (j-y[0]);
-					u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
-					if(u<0)			{	v += u*u;			u = 0;	}
-					else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
-					if(v>b)		continue;
-					tt = dash & (1<<long(fmod(u/w, 16)));
-					if(!tt)		continue;
-					u /= dd;
-					r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
-					gr->pnt_plot(i,j,r);
-				}
-			}
-		}
-		else
-		{
-			y1 = imin(long(y[0]),long(y[1])) - dp;
-			y2 = imax(long(y[0]),long(y[1])) + dp;
-			for(j=y1;j<=y2;j++)
-			{
-				x1 = int(x[0]+(x[1]-x[0])*(j-y[0])/(y[1]-y[0])) - dp;
-				x2 = int(x[0]+(x[1]-x[0])*(j-y[0])/(y[1]-y[0])) + dp;
-				for(i=x1;i<=x2;i++)
-				{
-					xx = (i-x[0]);	yy = (j-y[0]);
-					u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;	v = v*v;
-					if(u<0)			{	v += u*u;			u = 0;	}
-					else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
-					if(v>b)		continue;
-					tt = dash & (1<<long(fmod(u/w, 16)));
-					if(!tt)		continue;
-					u /= dd;
-					r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
-					gr->pnt_plot(i,j,r);
-				}
-			}
-		}
+		xx = (i-x[0]);	yy = (j-y[0]);
+		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
+		g = u<0 || v<0 || u+v>1;
+		if(g)	continue;
+		gr->pnt_plot(i,j,r);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -888,5 +1003,123 @@ void mglGraphPS::mark_plot(int x,int y, char type, unsigned char cs[4])
 			break;
 		}
 	}
+}
+//-----------------------------------------------------------------------------
+void mglGraphPS::put_line(FILE *fp, long i, mreal wp, mreal *cp,int st, const char *ifmt, const char *nfmt, bool neg)
+{
+	long k = i,j;	// first point
+	mreal x0=P[i].x[0], y0=P[i].y[0];
+	bool ok=true;
+	while(ok)
+	{
+		for(ok=false,j=i+1;j<pNum && P[j].type<2;j++)
+			if(P[j].IsSame(wp,cp,st) && P[j].type==1)
+			{	// previous point
+				if(P[j].x[1]==x0 && P[j].y[1]==y0)
+				{
+					k=j;	ok=true;	P[k].type = -2;
+					x0 = P[k].x[0];	y0=P[k].y[0];
+				}
+				else if(P[j].x[0]==x0 && P[j].y[0]==y0)
+				{
+					k=j;	ok=true;	P[k].type = -2;
+					x0 = P[k].x[1];	y0=P[k].y[1];
+				}
+			}
+	}
+	for(j=i;j<pNum ;j++)	if(P[j].type==-2)	P[j].type = 1;
+	fprintf(fp,ifmt,x0,neg?Height-y0:y0);	ok=true;
+	long m=1;
+	while(ok)
+	{
+		for(ok=false,j=i;j<pNum && P[j].type<2;j++)
+			if(P[j].IsSame(wp,cp,st) && P[j].type==1)
+			{
+				if(P[j].x[0]==x0 && P[j].y[0]==y0)
+				{
+					k=j;	P[k].type = -1;
+					x0 = P[k].x[1];	y0=P[k].y[1];
+					fprintf(fp,nfmt,x0,neg?Height-y0:y0);
+					if(m>10)	{	m=0;	fprintf(fp,"\n");	}
+					ok=true;	m++;
+				}
+				else if(P[j].x[1]==x0 && P[j].y[1]==y0)
+				{
+					k=j;	P[k].type = -1;
+					x0 = P[k].x[0];	y0=P[k].y[0];
+					fprintf(fp,nfmt,x0,neg?Height-y0:y0);
+					if(m>10)	{	m=0;	fprintf(fp,"\n");	}
+					ok=true;	m++;
+				}
+			}
+	}
+}
+//-----------------------------------------------------------------------------
+//put_desc(fp,"%c%c%c_%04x {", "np %d %d mt %d %d ll %d %d ll cp fill\n", 
+//"np %d %d mt ", "%d %d ll ", "cp dr\n", "} def")
+void mglGraphPS::put_desc(FILE *fp, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf)
+{
+	register long i,j,n;
+	wchar_t *g;
+	int *s;
+	for(n=i=0;i<pNum;i++)	if(P[i].type==4)	n++;
+	if(n==0)	return;		// no glyphs
+	g = new wchar_t[n];	s = new int[n];
+	for(n=i=0;i<pNum;i++)
+	{
+		if(P[i].type!=4 || (P[i].style&8))	continue;	// not a glyph
+		bool is=false;
+		for(j=0;j<n;j++)	if(g[j]==P[i].m && s[j]==(P[i].style&7))	is = true;
+		if(is)	continue;		// glyph is described
+		// have to describe
+		g[n]=P[i].m;	s[n]=P[i].style&7;	n++;	// add to list of described
+		// "%c%c%c_%04x {"
+		fprintf(fp,pre, P[i].style&1?'b':'n', P[i].style&2?'i':'n', P[i].m);
+
+			long ik,ii;
+			int nl=fnt->GetNl(P[i].style&3,P[i].m);
+			const short *ln=fnt->GetLn(P[i].style&3,P[i].m);
+			bool np=true;
+			if(ln && nl>0)	for(ik=0;ik<nl;ik++)
+			{
+				ii = 2*ik;
+				if(ln[ii]==0x3fff && ln[ii+1]==0x3fff)	// line breakthrough
+				{	fprintf(fp,"%s",ln3);	np=true;	continue;	}
+				else if(np)	fprintf(fp,ln1,ln[ii],ln[ii+1]);
+				else		fprintf(fp,ln2,ln[ii],ln[ii+1]);
+				np=false;
+			}
+			fprintf(fp,"%s",ln3);
+		
+/*		if(P[i].style&4)	// draw glyph
+		{	// ln1="np %d %d mt ", ln2="%d %d ll ", ln3="cp dr\n"
+			long ik,ii;
+			int nl=fnt->GetNl(P[i].style&3,P[i].m);
+			const short *ln=fnt->GetLn(P[i].style&3,P[i].m);
+			bool np=true;
+			if(ln && nl>0)	for(ik=0;ik<nl;ik++)
+			{
+				ii = 2*ik;
+				if(ln[ii]==0x3fff && ln[ii+1]==0x3fff)	// line breakthrough
+				{	fprintf(fp,"%s",ln3);	np=true;	continue;	}
+				else if(np)	fprintf(fp,ln1,ln[ii],ln[ii+1]);
+				else		fprintf(fp,ln2,ln[ii],ln[ii+1]);
+			}
+			fprintf(fp,"%s",ln3);
+		}
+		else	// trig = "np %d %d mt %d %d ll %d %d ll cp fill\n"
+		{
+			long ik,ii;
+			int nt=fnt->GetNt(P[i].style&3,P[i].m);
+			const short *tr=fnt->GetTr(P[i].style&3,P[i].m);
+			if(tr && nt>0)	for(ik=0;ik<nt;ik++)
+			{
+				ii = 6*ik;
+				fprintf(fp,trig,tr[ii],tr[ii+1],tr[ii+2],tr[ii+3],tr[ii+4],tr[ii+5]);
+			}
+		}*/
+		fprintf(fp,"%s",suf);	// finish glyph description suf="} def"
+	}
+	delete []g;		delete []s;
 }
 //-----------------------------------------------------------------------------

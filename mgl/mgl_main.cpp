@@ -952,7 +952,10 @@ void mglGraph::ShowImage(const char *viewer, bool keep)
 	char fname[128], *cmd = new char [128];
 	sprintf(fname,"%s.png", tmpnam(NULL));
 	WritePNG(fname,"MathGL ShowImage file",false);
-	viewer = (viewer && viewer[0]) ? viewer : "kuickshow";
+	if(!viewer || !viewer[0])
+	{
+		viewer = "kuickshow";
+	}
 	if(keep)
 	{
 		sprintf(cmd,"%s %s &", viewer,fname);

@@ -883,10 +883,22 @@ void mglGraphZB::WriteSlice(int n)
 	free(p);
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::Glyph(mreal x,mreal y, mreal f, int nt, const short *trig, int nl, const short *line, char col)
+void mglGraphZB::Glyph(mreal x, mreal y, mreal f, int s, long j, char col)
 {
-	mglGraphAB::Glyph(x, y,  f, nt, trig, nl, line, col);
-	// add for smoothing
-	if(nt)	mglGraphAB::Glyph(x, y,  f, 0, 0, nl, line, col);
+	int ss=s&3;
+	f /= fnt->GetFact(ss);
+	mglColor cc = mglColor(col);
+	if(!cc.Valid())	cc = mglColor(CDef[0],CDef[1],CDef[2]);
+	mreal c[4]={cc.r,cc.g,cc.b,CDef[3]};
+	if(s&8)
+	{
+		if(!(s&4))	glyph_line(x,y,f,c,true);
+		glyph_line(x,y,f,c,false);
+	}
+	else
+	{
+		if(!(s&4))	glyph_fill(x,y,f,fnt->GetNt(ss,j),fnt->GetTr(ss,j),c);
+		glyph_wire(x,y,f,fnt->GetNl(ss,j),fnt->GetLn(ss,j),c);
+	}
 }
 //-----------------------------------------------------------------------------

@@ -24,13 +24,13 @@
 #include <stdio.h>
 
 //-----------------------------------------------------------------------------
-#define MGL_FONT_BOLD		0x01000000
-#define MGL_FONT_ITAL		0x02000000
+#define MGL_FONT_BOLD		0x01000000	// This value is used binary
+#define MGL_FONT_ITAL		0x02000000	// This value is used binary
 #define MGL_FONT_BOLD_ITAL	0x03000000
-#define MGL_FONT_ULINE		0x04000000
-#define MGL_FONT_OLINE		0x08000000
-#define MGL_FONT_WIRE		0x10000000
-#define MGL_FONT_ZEROW		0x20000000		// internal codes
+#define MGL_FONT_WIRE		0x04000000
+#define MGL_FONT_OLINE		0x08000000	// This value is used binary
+#define MGL_FONT_ULINE		0x10000000
+#define MGL_FONT_ZEROW		0x20000000	// internal codes
 #define MGL_FONT_UPPER		0x40000000
 #define MGL_FONT_LOWER		0x80000000
 #define MGL_FONT_ROMAN		0xfcffffff
@@ -89,6 +89,12 @@ public:
 	void Restore();
 	/// Return true if font is loaded
 	inline bool Ready()	{	return numg!=0;	};
+	/// Return some of pointers
+	inline const short *GetTr(int s, long j)	{	return buf+tr[s][j];	};
+	inline const short *GetLn(int s, long j)	{	return buf+ln[s][j];	};
+	inline int GetNt(int s, long j)	{	return numt[s][j];	};
+	inline int GetNl(int s, long j)	{	return numl[s][j];	};
+	inline float GetFact(int s)		{	return fact[s];	};
 protected:
 	wchar_t *id;		///< Unicode ID for glyph
 	unsigned *tr[4];	///< Shift of glyph description by triangles (for solid font)

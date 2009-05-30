@@ -108,7 +108,7 @@ int sample_map(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->SubPlot(2, 1, 1);
 	a.Fill("(x^3+y^3)/2", gr->Min, gr->Max);
 	b.Fill("(x-y)/2", gr->Min, gr->Max);
-	gr->Puts(mglPoint(0, 1.1), "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", "", -2);
+	gr->Puts(mglPoint(0, 1.1), "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", "C", -2);
 	gr->Box();
 	gr->Map(a, b, "brgk", 0, false);
 	return 0;
@@ -1045,7 +1045,7 @@ int sample_ternary(mglGraph *gr, const void *)	// flag #
 	gr->Axis(); gr->Grid("xyz","B;");
 	gr->Label('x',"x comp.");
 	gr->Label('y',"y comp.");
-	gr->Label('z',"t comp.");
+	gr->Label('t',"t comp.");
 	gr->Ternary(false);
 	return 0;
 }
@@ -1241,6 +1241,11 @@ void usage()
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
+	gr->Box();
+	gr->Puts(mglPoint(0,1),"Text \\a{over} \\u{under} \\frac{aaa}{bbb} \\sqrt{sss}");
+	gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", 0, -4);
+	return 0;
+
 	mglParse par;
 	par.AllowSetSize = true;
 	FILE *fp=fopen("box.mgl","rt");
@@ -1266,13 +1271,13 @@ int main(int argc,char **argv)
 			case 'w':	width = atoi(optarg);	break;
 			case 'h':	height = atoi(optarg);	break;
 			case '?':
-			default:
-				usage();
+			default:	usage();
 		}
 
 	if(dotest)
 	{
 		test(&zb);
+//		sample_ternary(&zb,"");
 		//sample_crust(&zb,0);
 		zb.WritePNG("test.png","",false);
 		zb.WriteGIF("test.gif","");

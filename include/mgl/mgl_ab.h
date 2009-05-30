@@ -21,6 +21,9 @@
 #ifndef _MGL_AB_H_
 #define _MGL_AB_H_
 #include "mgl/mgl.h"
+#ifndef MGL_STACK_ENTRY
+#define MGL_STACK_ENTRY	10
+#endif
 //-----------------------------------------------------------------------------
 /// Class implement the creation of different mathematical plots using Z-ordering
 class mglGraphAB : public mglGraph
@@ -53,7 +56,7 @@ using mglGraph::Colorbar;
 	virtual void SetSize(int w,int h);
 
 	void Mark(mreal x,mreal y,mreal z,char mark='.');
-	void Glyph(mreal x,mreal y, mreal f, int nt, const short *trig, int nl, const short *line, char col);
+	void Glyph(mreal x, mreal y, mreal f, int style, long icode, char col);
 	mreal GetRatio()	{	return B1[0]/B1[4];	};
 	void Putsw(mglPoint p,const wchar_t *text,const char *font=0,mreal size=-1,char dir=0,mreal shift=0);
 	mreal Putsw(mglPoint p,mglPoint l,const wchar_t *text,char font='t',mreal size=-1);
@@ -93,11 +96,18 @@ using mglGraph::Colorbar;
 	virtual void NextFrame();	///< Show next frame (if one)
 	virtual void PrevFrame();	///< Show previous frame (if one)
 	virtual void Animation();	///< Run slideshow (animation) of frames
-	/// Create a window for plotting. Now implemeted only for GLUT.
+	/// Create a window for plotting based on callback function (can be NULL).
 	virtual void Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
 						const char *title, void *par=NULL,
 	  					void (*reload)(int next, void *p)=NULL, bool maximize=false);
+	/// Create a window for plotting based on class mglDraw.
 	void Window(int argc, char **argv, mglDraw *draw, const char *title, bool maximize=false);
+	/// Push transformation matrix into stack
+	void Push();
+	/// Pop transformation matrix from stack
+	void Pop();
+	/// Set diagonal matrix and its shift
+	void SetPosScale(mreal xp, mreal yp, mreal zp, mreal scl=1);
 	//@}
 protected:
 	unsigned char *G4;			///< Final picture in RGBA format. Prepared after calling mglGraphZB::Finish().
@@ -128,6 +138,7 @@ protected:
 	mreal PenWidth;		///< Pen width for further line plotting (must be >0 !!!)
 	bool NoAutoFactor;	///< Temporary variable
 	mreal f_size;		///< font size for glyph lines
+	mreal fscl,ftet;	///< last scale and rotation for glyphs
 
 	int NumFig;			///< Number of figures in the list. If 0 then no list and mglGraph::DrawFunc will called for each drawing.
 	void (*LoadFunc)(int next, void *par);
@@ -183,11 +194,16 @@ protected:
 	void quads_plot(long n, mreal *pp, mreal *cc, bool *tt);
 	void lines_plot(long n, mreal *pp, mreal *cc, bool *tt);
 	void vects_plot(long n, mreal *pp, mreal *cc, bool *tt);
+	void glyph_fill(mreal x,mreal y, mreal f, int nt, const short *trig, mreal *c);
+	void glyph_wire(mreal x,mreal y, mreal f, int nl, const short *line, mreal *c);
+	void glyph_line(mreal x,mreal y, mreal f, mreal *c, bool solid);
 	void FindOptOrg(mreal ax[3], mreal ay[3], mreal az[3]);
 	mreal GetOrgX(char dir);
 	mreal GetOrgY(char dir);
 	mreal GetOrgZ(char dir);
 private:
+	mreal stack[MGL_STACK_ENTRY*13];	// stack for transformation matrixes
+	int st_pos;
 };
 //-----------------------------------------------------------------------------
 #endif
