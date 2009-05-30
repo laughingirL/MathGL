@@ -358,6 +358,14 @@ float mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float
 	return w1>w2 ? w1 : w2;
 }
 //-----------------------------------------------------------------------------
+void mglFont::draw_ouline(mglGraph *gr, int st, float x, float y, float f, float g, float ww, char ccol)
+{
+	if(st&MGL_FONT_OLINE)
+		gr->Glyph(x,y+499*f/g, ww*g, (st&MGL_FONT_WIRE)?12:8, 0, ccol);
+	if(st&MGL_FONT_ULINE)
+		gr->Glyph(x,y-200*f/g, ww*g, (st&MGL_FONT_WIRE)?12:8, 0, ccol);
+}
+//-----------------------------------------------------------------------------
 float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char col)
 {
 	if(numg==0)	return 0;
@@ -388,12 +396,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char
 			str[i-1]=0;	i--;
 			ww = Puts(b1, x, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
-			{
-				if(st&MGL_FONT_OLINE)
-					gr->Glyph(x,y+499*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
- 				if(st&MGL_FONT_ULINE)
-					gr->Glyph(x,y-200*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-			}
+				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
 			st = style;	yy = y;	ff = f;		// clear style modification
 		}
 		else if(s==unsigned(-9))	// underset
@@ -402,12 +405,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char
 			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			Puts(b2, x+(ww-w2)/2, yy-150*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
-			{
-				if(st&MGL_FONT_OLINE)
-					gr->Glyph(x,y+499*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-				if(st&MGL_FONT_ULINE)
-					gr->Glyph(x,y-200*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-			}
+				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
 			st = style;	yy = y;	ff = f;		// clear style modification
 		}
 		else if(s==unsigned(-8))	// overset
@@ -416,12 +414,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char
 			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			Puts(b2, x+(ww-w2)/2, yy+375*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
-			{
-				if(st&MGL_FONT_OLINE)
-					gr->Glyph(x,y+499*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-				if(st&MGL_FONT_ULINE)
-					gr->Glyph(x,y-200*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-			}
+				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
 			st = style;	yy = y;	ff = f;		// clear style modification
 		}
 		else if(s==unsigned(-11))	// stackl
@@ -430,12 +423,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char
 			Puts(b1, x, yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			Puts(b2, x, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
-			{
-				if(st&MGL_FONT_OLINE)
-					gr->Glyph(x,y+499*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-				if(st&MGL_FONT_ULINE)
-					gr->Glyph(x,y-200*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-			}
+				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
 			st = style;	yy = y;	ff = f;		// clear style modification
 		}
 		else if(s==unsigned(-10))	// stacr
@@ -444,12 +432,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char
 			Puts(b1, x+(ww-w1), yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			Puts(b2, x+(ww-w2), yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
-			{
-				if(st&MGL_FONT_OLINE)
-					gr->Glyph(x,y+499*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-				if(st&MGL_FONT_ULINE)
-					gr->Glyph(x,y-200*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-			}
+				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
 			st = style;	yy = y;	ff = f;		// clear style modification
 		}
 		else if(s==unsigned(-7))	// stack
@@ -458,12 +441,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char
 			Puts(b1, x+(ww-w1)/2, yy+250*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			Puts(b2, x+(ww-w2)/2, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
-			{
-				if(st&MGL_FONT_OLINE)
-					gr->Glyph(x,y+499*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-				if(st&MGL_FONT_ULINE)
-					gr->Glyph(x,y-200*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-			}
+				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
 			st = style;	yy = y;	ff = f;		// clear style modification
 		}
 		else if(s==unsigned(-6))	// frac
@@ -473,11 +451,8 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char
 			Puts(b2, x+(ww-w2)/2, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 			{
-				gr->Glyph(x,y+150*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-				if(st&MGL_FONT_OLINE)
-					gr->Glyph(x,y+499*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-				if(st&MGL_FONT_ULINE)
-					gr->Glyph(x,y-200*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
+				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
+				gr->Glyph(x,y+150*f/fact[a], ww*fact[a], (st&MGL_FONT_WIRE)?12:8, 0, ccol);
 			}
 			st = style;	yy = y;	ff = f;		// clear style modification
 		}
@@ -510,12 +485,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char
 					j = Internal('!');
 				ww = ff*width[a][j]/fact[a];
 				if(gr && !(style&0x10))	// add under-/over- line now
-				{
-					if(st&MGL_FONT_OLINE)
-						gr->Glyph(x,y+499*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-					if(st&MGL_FONT_ULINE)
-						gr->Glyph(x,y-200*f/fact[a], ww, 0, (st&MGL_FONT_WIRE)?12:8, ccol);
-				}
+					draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
 				if(s & MGL_FONT_ZEROW)	ww = 0;
 				st = style;	yy = y;	ff = f;	ccol=col;	// clear style modification
 			}

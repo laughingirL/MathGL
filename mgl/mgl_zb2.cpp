@@ -705,7 +705,10 @@ void mglGraphAB::Glyph(mreal x, mreal y, mreal f, int s, long j, char col)
 	mglColor cc = mglColor(col);
 	if(!cc.Valid())	cc = mglColor(CDef[0],CDef[1],CDef[2]);
 	mreal c[4]={cc.r,cc.g,cc.b,CDef[3]};
-	if(s&8)			glyph_line(x,y,f,c,!(s&4));
+	if(s&8)
+	{
+		glyph_line(x,y,f,c,!(s&4));
+	}
 	else if(s&4)	glyph_wire(x,y,f,fnt->GetNl(ss,j),fnt->GetLn(ss,j),c);
 	else			glyph_fill(x,y,f,fnt->GetNt(ss,j),fnt->GetTr(ss,j),c);
 }

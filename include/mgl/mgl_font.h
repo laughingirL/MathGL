@@ -128,6 +128,7 @@ private:
 	bool read_main(const char *base, const char *path, unsigned &cur);
 	void mem_alloc();
 	bool read_def(unsigned &cur);
+	void draw_ouline(mglGraph *gr, int st, float x, float y, float f, float g, float ww, char ccol);
 };
 //-----------------------------------------------------------------------------
 #endif

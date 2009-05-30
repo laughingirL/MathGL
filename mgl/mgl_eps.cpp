@@ -671,6 +671,7 @@ void mglPrim::Draw(mglGraphPS *gr)
 	{
 		mreal p[12], f=zz[1], xx=x[1], yy=y[1],xp[5],yp[5];
 		// setup B[]
+		mreal pf=gr->PlotFactor;
 		gr->Push();
 		gr->SetPosScale(x[0],y[0],z,s*gr->PlotFactor);
 		gr->RotateN(w,0,0,1);
@@ -734,6 +735,7 @@ void mglPrim::Draw(mglGraphPS *gr)
 			}
 		}
 		gr->Pop();
+		gr->PlotFactor=pf;
 	}
 }
 //-----------------------------------------------------------------------------
@@ -1075,50 +1077,20 @@ void mglGraphPS::put_desc(FILE *fp, const char *pre, const char *ln1, const char
 		g[n]=P[i].m;	s[n]=P[i].style&7;	n++;	// add to list of described
 		// "%c%c%c_%04x {"
 		fprintf(fp,pre, P[i].style&1?'b':'n', P[i].style&2?'i':'n', P[i].m);
-
-			long ik,ii;
-			int nl=fnt->GetNl(P[i].style&3,P[i].m);
-			const short *ln=fnt->GetLn(P[i].style&3,P[i].m);
-			bool np=true;
-			if(ln && nl>0)	for(ik=0;ik<nl;ik++)
-			{
-				ii = 2*ik;
-				if(ln[ii]==0x3fff && ln[ii+1]==0x3fff)	// line breakthrough
-				{	fprintf(fp,"%s",ln3);	np=true;	continue;	}
-				else if(np)	fprintf(fp,ln1,ln[ii],ln[ii+1]);
-				else		fprintf(fp,ln2,ln[ii],ln[ii+1]);
-				np=false;
-			}
-			fprintf(fp,"%s",ln3);
-		
-/*		if(P[i].style&4)	// draw glyph
-		{	// ln1="np %d %d mt ", ln2="%d %d ll ", ln3="cp dr\n"
-			long ik,ii;
-			int nl=fnt->GetNl(P[i].style&3,P[i].m);
-			const short *ln=fnt->GetLn(P[i].style&3,P[i].m);
-			bool np=true;
-			if(ln && nl>0)	for(ik=0;ik<nl;ik++)
-			{
-				ii = 2*ik;
-				if(ln[ii]==0x3fff && ln[ii+1]==0x3fff)	// line breakthrough
-				{	fprintf(fp,"%s",ln3);	np=true;	continue;	}
-				else if(np)	fprintf(fp,ln1,ln[ii],ln[ii+1]);
-				else		fprintf(fp,ln2,ln[ii],ln[ii+1]);
-			}
-			fprintf(fp,"%s",ln3);
-		}
-		else	// trig = "np %d %d mt %d %d ll %d %d ll cp fill\n"
+		long ik,ii;
+		int nl=fnt->GetNl(P[i].style&3,P[i].m);
+		const short *ln=fnt->GetLn(P[i].style&3,P[i].m);
+		bool np=true;
+		if(ln && nl>0)	for(ik=0;ik<nl;ik++)
 		{
-			long ik,ii;
-			int nt=fnt->GetNt(P[i].style&3,P[i].m);
-			const short *tr=fnt->GetTr(P[i].style&3,P[i].m);
-			if(tr && nt>0)	for(ik=0;ik<nt;ik++)
-			{
-				ii = 6*ik;
-				fprintf(fp,trig,tr[ii],tr[ii+1],tr[ii+2],tr[ii+3],tr[ii+4],tr[ii+5]);
-			}
-		}*/
-		fprintf(fp,"%s",suf);	// finish glyph description suf="} def"
+			ii = 2*ik;
+			if(ln[ii]==0x3fff && ln[ii+1]==0x3fff)	// line breakthrough
+			{	fprintf(fp,"%s",ln3);	np=true;	continue;	}
+			else if(np)	fprintf(fp,ln1,ln[ii],ln[ii+1]);
+			else		fprintf(fp,ln2,ln[ii],ln[ii+1]);
+			np=false;
+		}
+		fprintf(fp,"%s%s",ln3,suf);	// finish glyph description suf="} def"
 	}
 	delete []g;		delete []s;
 }
