@@ -403,18 +403,12 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	for(i=0;i<pNum;i++)
 	{
 		if(P[i].type<0)	continue;
-		bool same = fabs(cp[0]-P[i].c[0])<0.01 && fabs(cp[1]-P[i].c[1])<0.01 && fabs(cp[2]-P[i].c[2])<0.01;
-		bool wame = (P[i].type==1 && wp!=P[i].w) || (P[i].type==0 && wp!=1);
-		str[0] = 0;
-		if(!same && wame)
-			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ",(P[i].type==1 && P[i].w>1) ? P[i].w:1., P[i].c[0],P[i].c[1],P[i].c[2]);
-		else if(!same)	sprintf(str,"%g %g %g rgb ",P[i].c[0],P[i].c[1],P[i].c[2]);
-		else if(wame)	sprintf(str,"%.2g lw ",(P[i].type==1 && P[i].w>1)  ? P[i].w:1.);
 		memcpy(cp,P[i].c,3*sizeof(mreal));
-//		sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ",(P[i].type==1 && P[i].w>1) ? P[i].w:1., P[i].c[0],P[i].c[1],P[i].c[2]);
+		if(P[i].type>1)	sprintf(str,"%.2g %.2g %.2g rgb ", P[i].c[0],P[i].c[1],P[i].c[2]);
 
 		if(P[i].type==0)	// mark
 		{
+			sprintf(str,"1 lw %.2g %.2g %.2g rgb ", P[i].c[0],P[i].c[1],P[i].c[2]);
 			wp=1;
 			if(P[i].s!=MarkSize)
 			{
@@ -452,6 +446,7 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 			fprintf(fp,"np %g %g mt %g %g ll %g %g ll %g %g ll cp %sfill\n",P[i].x[0],P[i].y[0],P[i].x[1],P[i].y[1],P[i].x[3],P[i].y[3],P[i].x[2],P[i].y[2],str);
 		else if(P[i].type==1)	// line
 		{
+			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", P[i].w>1 ? P[i].w:1., P[i].c[0],P[i].c[1],P[i].c[2]);
 			wp = P[i].w>1  ? P[i].w:1;	st = P[i].style;
 			put_line(fp,i,wp,cp,st, "np %g %g mt ", "%g %g ll ", false);
 			const char *sd = mgl_get_dash(P[i].dash,P[i].w);
@@ -461,19 +456,13 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 		else if(P[i].type==4)	// glyph
 		{
 			mreal ss = P[i].s/2, xx = P[i].x[1], yy = P[i].y[1];
-			if(same)
-				fprintf(fp,"gsave\t%g %g translate %g %g scale %g rotate\n", 
-					P[i].x[0], P[i].y[0], ss, ss, -P[i].w);
-			else
-				fprintf(fp,"gsave\t%g %g translate %g %g scale %g rotate %g %g %g rgb\n", 
-					P[i].x[0], P[i].y[0], ss, ss, -P[i].w, P[i].c[0], P[i].c[1], P[i].c[2]);
+			fprintf(fp,"gsave\t%g %g translate %g %g scale %g rotate %s\n", 
+				P[i].x[0], P[i].y[0], ss, ss, -P[i].w, str);
 			if(P[i].style&8)	// this is "line"
 			{
 				mreal dy = 0.004,f=fabs(P[i].zz[1]);
 				fprintf(fp,"np %g %g mt %g %g ll %g %g ll %g %g ll cp ",
 					xx,yy+dy, xx+f,yy+dy, xx+f,yy-dy, xx,yy-dy);
-//				if(P[i].style&4)	fprintf(fp,"dr");
-//				else	fprintf(fp,"fill");
 			}
 			else
 				fprintf(fp,"%.3g %.3g translate %g %g scale %c%c_%04x ", 

@@ -95,10 +95,10 @@ Create the instance of class mglGraphIDTF.
 Create the instance of class mglGraphGLUT and connected GLUT window. Only one GLUT window can be opened at once. Arguments description can be found in @ref{mglGraphAB class}.
 @end deftypefn
 @deftypefn {C function} @code{HMGL} mgl_create_graph_fltk (@code{int (*}draw@code{)(HMGL gr, void *p)}, @code{const char *}title, @code{void *}par)
-Create the instance of class mglGraphFLTK and connected FLTK window. Several windows can be opened at the same time. However user must call @code{mgl_fltk_run()} function to start the message handling circle. Arguments description can be found in @ref{mglGraphAB class}.
+Create the instance of class mglGraphFLTK and connected FLTK window. Several windows can be opened at the same time. However user must call @code{mgl_fltk_run()} function to start the message handling circle. Arguments description can be found in @ref{mglGraphAB class}. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides).
 @end deftypefn
 @deftypefn {C function} @code{HMGL} mgl_create_graph_qt (@code{int (*}draw@code{)(HMGL gr, void *p)}, @code{const char *}title, @code{void *}par)
-Create the instance of class mglGraphQT and connected Qt window. Several windows can be opened at the same time. However user must call @code{mgl_qt_run()} function to start the message handling circle. Arguments description can be found in @ref{mglGraphAB class}.
+Create the instance of class mglGraphQT and connected Qt window. Several windows can be opened at the same time. However user must call @code{mgl_qt_run()} function to start the message handling circle. Arguments description can be found in @ref{mglGraphAB class}. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides).
 @end deftypefn
 @deftypefn {C function} @code{void} mgl_fltk_run ()
 Start FLTK message handling cycle. A normal program will end main() function with @code{return mgl_fltk_run();}.
@@ -1626,19 +1626,19 @@ These functions perform plotting of 2D and 3D vector fields. There are 5 general
 @subsection Vect (Pure C)
 @cindex Vect
 
-@deftypefn {C function} @code{void} mgl_vect_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal)
-The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The length of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also VectC(), Flow(), Dew(). @sref{Vect sample}
+@deftypefn {C function} @code{void} mgl_vect_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal, @code{int} flag)
+The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The length of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. Parameter @var{flag} setup the hachures (arrows). It is compination of vlaues: @code{MGL_VEC_COL} for drawing bi-color arrow, @code{MGL_VEC_LEN} for drawing fixed length arrows, @code{MGL_VEC_DOT} for drawing hachures with dots instead of arrows, @code{MGL_VEC_END} for drawing arrows to the cell point, @code{MGL_VEC_MID} for drawing arrows with center at cell point. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also VectC(), Flow(), Dew(). @sref{Vect sample}
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_vect_2d (@code{HMGL} gr, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal)
+@deftypefn {C function} @code{void} mgl_vect_2d (@code{HMGL} gr, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal, @code{int} flag)
 The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_vect_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} ax, @code{const HMDT} ay, @code{const HMDT} az, @code{const char *}sch)
+@deftypefn {C function} @code{void} mgl_vect_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} ax, @code{const HMDT} ay, @code{const HMDT} az, @code{const char *}sch, @code{int} flag)
 This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the length of hachures is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. @sref{Vect 3D sample}
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_vect_3d (@code{HMGL} gr, @code{const HMDT} ax, @code{const HMDT} ay, @code{const HMDT} az, @code{const char *}sch)
+@deftypefn {C function} @code{void} mgl_vect_3d (@code{HMGL} gr, @code{const HMDT} ax, @code{const HMDT} ay, @code{const HMDT} az, @code{const char *}sch, @code{int} flag)
 The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
 @end deftypefn
 
@@ -1696,6 +1696,24 @@ This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{
 @deftypefn {C function} @code{void} mgl_flow_3d (@code{HMGL} gr, @code{const HMDT} ax, @code{const HMDT} ay, @code{const HMDT} az, @code{const char *}sch, @code{int} num, @code{int} central)
 The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
 @end deftypefn
+
+
+@deftypefn {C function} @code{void} mgl_flowp_xy (@code{float} x0, @code{float} y0, @code{float} z0, @code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch)
+The function draws flow threads for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} from point @{@var{x0}, @var{y0}@} at level z = @var{z0}. The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also Pipe(), VectC(), Vect(). @sref{Flow sample}
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_flowp_2d (@code{float} x0, @code{float} y0, @code{float} z0, @code{HMGL} gr, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{int} num, @code{int} central, @code{float} zVal)
+The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_flowp_xyz (@code{float} x0, @code{float} y0, @code{float} z0, @code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} ax, @code{const HMDT} ay, @code{const HMDT} az, @code{const char *}sch, @code{int} num, @code{int} central)
+This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the color of line is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. @sref{Flow 3D sample}
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_flowp_3d (@code{float} x0, @code{float} y0, @code{float} z0, @code{HMGL} gr, @code{const HMDT} ax, @code{const HMDT} ay, @code{const HMDT} az, @code{const char *}sch, @code{int} num, @code{int} central)
+The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
+@end deftypefn
+
 
 @c ==================================================================
 @node Pipe (Pure C), , Flow (Pure C), Vector fields (Pure C)

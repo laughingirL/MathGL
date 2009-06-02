@@ -5,7 +5,9 @@
 	- Functions mglGraph::Vect() now have additional argument for kind of vector plot. Correspondingly mgl_vect_*() functions now have additional argument too!
 	- Add function mglGraph::Axis() for predefined curvilinear coordinates.
 	- You can now select base type for floating point numbers (double or float).
+	- Legend now is drawn flat (without any rotation).
 	- Function mglData::Sew() now handle NAN values correctly.
+	- Add MGL command types for further UDAV developping.
 	- Bug correction in marker drawing for EPS, SVG.
 	- Bug correction in configure (older compiler support, wrong glut.h demand).
 	- Bug in lang/CMakeLists.txt (for making Python interface).

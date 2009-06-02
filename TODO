@@ -1,6 +1,8 @@
 
 					MathGL (for v.1.8.2)
 
+- Legend (EPS), Colorbar (text color), Contt (text color)
+
 0. Check Window with draw_func=0 -- especially in Fortran
 
 1. Update documentation

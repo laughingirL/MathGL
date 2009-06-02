@@ -1503,19 +1503,19 @@ These functions perform plotting of 2D and 3D vector fields. There are 5 general
 @subsection Vect (Python)
 @cindex Vect
 
-@deftypemethod {mglGraph (Python)} @code{void} Vect (@code{mglData} x, @code{mglData} y, @code{mglData} ax, @code{mglData} ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The length of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{VectC}, @ref{Flow}, @ref{Dew}. @sref{Vect sample}
+@deftypemethod {mglGraph (Python)} @code{void} Vect (@code{mglData} x, @code{mglData} y, @code{mglData} ax, @code{mglData} ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN}, @code{int} flag=@code{0})
+The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The length of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. Parameter @var{flag} setup the hachures (arrows). It is compination of vlaues: @code{MGL_VEC_COL} for drawing bi-color arrow, @code{MGL_VEC_LEN} for drawing fixed length arrows, @code{MGL_VEC_DOT} for drawing hachures with dots instead of arrows, @code{MGL_VEC_END} for drawing arrows to the cell point, @code{MGL_VEC_MID} for drawing arrows with center at cell point. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{VectC}, @ref{Flow}, @ref{Dew}. @sref{Vect sample}
 @end deftypemethod
 
-@deftypemethod {mglGraph (Python)} @code{void} Vect (@code{mglData} ax, @code{mglData} ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
+@deftypemethod {mglGraph (Python)} @code{void} Vect (@code{mglData} ax, @code{mglData} ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN}, @code{int} flag=@code{0})
 The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
 @end deftypemethod
 
-@deftypemethod {mglGraph (Python)} @code{void} Vect (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{mglData} ax, @code{mglData} ay, @code{mglData} az, @code{const char *}sch=@code{NULL})
+@deftypemethod {mglGraph (Python)} @code{void} Vect (@code{mglData} x, @code{mglData} y, @code{mglData} z, @code{mglData} ax, @code{mglData} ay, @code{mglData} az, @code{const char *}sch=@code{NULL}, @code{int} flag=@code{0})
 This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the length of hachures is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. @sref{Vect 3D sample}
 @end deftypemethod
 
-@deftypemethod {mglGraph (Python)} @code{void} Vect (@code{mglData} ax, @code{mglData} ay, @code{mglData} az, @code{const char *}sch=@code{NULL})
+@deftypemethod {mglGraph (Python)} @code{void} Vect (@code{mglData} ax, @code{mglData} ay, @code{mglData} az, @code{const char *}sch=@code{NULL}, @code{int} flag=@code{0})
 The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
 @end deftypemethod
 
@@ -1575,6 +1575,22 @@ This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{
 The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
 @end deftypemethod
 
+
+@deftypemethod {mglGraph (Python)} @code{void} Flow (@code{float} x0, @code{float} y0, @code{float} z0, @code{mglData} x, @code{mglData} y, @code{mglData} ax, @code{mglData} ay, @code{const char *}sch=@code{NULL})
+The function draws flow threads for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} from point @{@var{x0}, @var{y0}@} at level z = @var{z0}. The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). String @var{sch} sets the color scheme. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Pipe}, @ref{VectC}, @ref{Vect}. @sref{Flow sample}
+@end deftypemethod
+
+@deftypemethod {mglGraph (Python)} @code{void} Flow (@code{float} x0, @code{float} y0, @code{float} z0, @code{mglData} ax, @code{mglData} ay, @code{const char *}sch=@code{NULL})
+The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
+@end deftypemethod
+
+@deftypemethod {mglGraph (Python)} @code{void} Flow (@code{float} x0, @code{float} y0, @code{float} z0, @code{mglData} x, @code{mglData} y, @code{mglData} z, @code{mglData} ax, @code{mglData} ay, @code{mglData} az, @code{const char *}sch=@code{NULL})
+This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the color of line is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. @sref{Flow 3D sample}
+@end deftypemethod
+
+@deftypemethod {mglGraph (Python)} @code{void} Flow (@code{float} x0, @code{float} y0, @code{float} z0, @code{mglData} ax, @code{mglData} ay, @code{mglData} az, @code{const char *}sch=@code{NULL})
+The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
+@end deftypemethod
 
 @c ==================================================================
 @node Pipe (Python), , Flow (Python), Vector fields (Python)

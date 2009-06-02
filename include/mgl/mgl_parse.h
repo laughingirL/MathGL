@@ -44,6 +44,8 @@ struct mglCommand
 	/// Function for exporting in C++ (can be NULL)
 	void (*save)(wchar_t out[1024], long n, mglArg *a, int k[10]);
 	bool create;	///< Should parser create 1st the array automatically
+	int type;		///< Type of command: 0 - data plot, 1 - other plot, 
+					///	2 - setup, 3 - data handle, 4 - subplot, 5 - program
 };
 extern mglCommand mgls_base_cmd[];
 //-----------------------------------------------------------------------------

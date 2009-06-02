@@ -322,7 +322,7 @@ mreal mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,mreal
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	Persp=0;
 
 	mreal ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
-	if(ll==0)	{		EndGroup();	return 0;	}
+	if(ll==0)	{	Pop();	EndGroup();	return 0;	}
 	mreal tet = 180*atan2(pp[4]-pp[1],pp[3]-pp[0])/M_PI;
 //	if(fabs(tet)>90)	tet+=180;
 	memset(B,0,9*sizeof(mreal));
@@ -399,19 +399,11 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 		B[0] = B[4] = B[8] = fsize;
 		fscl = fsize;	ftet = 0;
 	}
-	else if(dir=='n')
-	{
-		mreal ax=fsize/B1[0], ay=fsize/B1[4], az=fsize/B1[8];
-		xPos = pp[0];	yPos = pp[1];	zPos = pp[2];
-		B[0]*= ax;	B[3]*= ax;	B[6]*= ax;
-		B[1]*= ay;	B[4]*= ay;	B[7]*= ay;
-		B[2]*= az;	B[5]*= az;	B[8]*= az;
-		// TODO: fscl, ftet
-	}
 	else if(RotatedText)
 	{
 		if(pp[4]==pp[1] && pp[3]==pp[0])
-		{	free(font1);	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	EndGroup();	return;	}
+		{	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
+			free(font1);	Pop();	EndGroup();	return;	}
 		mreal ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
 		mreal tet = 180*atan2(pp[4]-pp[1],pp[3]-pp[0])/M_PI;
 		if(fabs(tet)>90)	tet+=180;
@@ -427,7 +419,8 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	else
 	{
 		if(pp[4]==pp[1] && pp[3]==pp[0])
-		{	free(font1);	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;	EndGroup();	return;	}
+		{	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
+			free(font1);	Pop();	EndGroup();	return;	}
 		mreal ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
 		mreal tet = atan2(pp[4]-pp[1],pp[3]-pp[0]);
 //		if(fabs(tet)>90)	tet+=180;
@@ -446,9 +439,64 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 		font1[1] = 0;
 	}
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
-
 	fnt->Puts(wcs,font1,col);
 	Pop();	free(font1);	EndGroup();
+}
+//-----------------------------------------------------------------------------
+void mglGraphAB::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
+					const char *font, mreal size, mreal llen)
+{
+	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
+	x = 2*x-1;	y = 2*y-1;
+	if(isnan(llen))	llen=0.1;
+	static int cgid=1;	StartGroup("Legend",cgid++);
+	mreal pp[15], r=GetRatio(), rh, rw, s3=PlotFactor;
+	if(size<=0)	size = -size*FontSize;
+
+	rh=(r<1?r:1.)*size/6.;
+	rw=(r>1?1./r:1.)*size/16.;
+	mreal w=0, h=fnt->Height(font)*rh, j;
+	register long i;
+	for(i=0;i<n;i++)		// find text length
+	{
+		j = fnt->Width(text[i],font)*rw;
+		if(style[i][0]==0)	j -= llen;
+		w = w>j ? w:j;
+	}
+	w = (w + llen*1.1f);	// add space for lines
+
+	Push();	memcpy(B,B1,9*sizeof(mreal));
+	if(LegendBox)	// draw bounding box
+	{
+		pp[2] = pp[5] = pp[8] = pp[11] = pp[14] = s3-0.01;
+		pp[0] = pp[9] = pp[12] = x;		pp[3] = pp[6] = x+w*2;
+		pp[1] = pp[4] = pp[13] = y-0.*h;		pp[7] = pp[10] = y+h*n;
+//		for(i=0;i<5;i++)	ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+		SelectPen(TranspType!=2 ? "k-1":"w-1");
+		curv_plot(5,pp,0);	// bounding rectangle
+		pp[2] = pp[5] = pp[8] = pp[11] = s3-0.01;
+		pp[0] = pp[6] = x;			pp[3] = pp[9] = x+w*2;
+		pp[1] = pp[4] = y-0.*h;		pp[7] = pp[10] = y+h*n;
+		DefColor(mglColor(1,1,1),1);
+//		for(i=0;i<4;i++)	ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+		surf_plot(2,2,pp,0,0);		// white rectangle below it
+	}
+	ScalePuts = false;
+	for(i=0;i<n;i++)	// draw lines and legend
+	{
+		char m=SelectPen(style[i]);
+		pp[2] = pp[5] = pp[8] = s3;
+		pp[1] = pp[4] = pp[7] = y+i*h+0.45f*h;
+		pp[0] = x+0.1f*llen;	pp[3] = x+0.9f*llen;	pp[6] = x+0.5f*llen;
+//		ScalePoint(pp[0],pp[1],pp[2]);	ScalePoint(pp[3],pp[4],pp[5]);	ScalePoint(pp[6],pp[7],pp[8]);
+
+		curv_plot(2,pp,0);
+		if(m)	Mark(pp[6],pp[7],pp[8],m);
+		SelectPen(TranspType!=2 ? "k-1":"w-1");
+		Putsw(mglPoint(x+(style[i][0]!=0?llen:0), y+i*h+0.3f*h, s3), text[i], font, size);
+	}
+	ScalePuts = true;
+	Pop();	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
@@ -463,7 +511,7 @@ void mglGraphAB::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
 	for(i=0;i<255;i++)
 	{
 		d = 2*i/254.-1;
-		pp[6*i+0] = pp[6*i+3] = (ss*d+s3)*w+x*s3;	// TODO: check
+		pp[6*i+0] = pp[6*i+3] = (ss*d+s3)*w+x*s3;
 		pp[6*i+1] = pp[6*i+4] = (ss*d+s3)*h+y*s3;
 		pp[6*i+2] = pp[6*i+5] = s3;
 		switch(where)

@@ -883,15 +883,17 @@ Draws spectrogram of complex array @var{re}+i*@code{im} for Fourier size of @var
 
 These commands perform plotting of 2D and 3D vector fields. There are 5 generally different types of vector fields representations: simple vector field (Vect), vector field with coloring (VectC), vector field by dew-drops (Dew), flow threads (Flow), flow pipes (Pipe). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
-The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{udat}, @var{vdat} and @var{wdat} must be equal. The minor dimensions of arrays @var{xdat}, @var{ydat}, @var{zdat} and @var{udat} must be equal too. Arrays @var{xdat}, @var{ydat} and @var{zdat} can be vectors (not matrices as @var{udat}). The graphics is plotted for each z slice of @var{udat}, @var{vdat} for 2D case.
+The color is specified by the string argument @var{sch}. Previous color scheme is used by default. Parameter @var{flag} setup the hachures (arrows). It is compination of vlaues: @code{MGL_VEC_COL=1} for drawing bi-color arrow, @code{MGL_VEC_LEN=2} for drawing fixed length arrows, @code{MGL_VEC_DOT=16} for drawing hachures with dots instead of arrows, @code{MGL_VEC_END=4} for drawing arrows to the cell point, @code{MGL_VEC_MID=8} for drawing arrows with center at cell point. 
 
-@deffn {MGL command} vect udat vdat ['sch'='' @code{zval=nan}]
-@deffnx {MGL command} vect xdat ydat udat vdat ['sch'='' @code{zval=nan}]
+The size of @var{udat}, @var{vdat} and @var{wdat} must be equal. The minor dimensions of arrays @var{xdat}, @var{ydat}, @var{zdat} and @var{udat} must be equal too. Arrays @var{xdat}, @var{ydat} and @var{zdat} can be vectors (not matrices as @var{udat}). The graphics is plotted for each z slice of @var{udat}, @var{vdat} for 2D case.
+
+@deffn {MGL command} vect udat vdat ['sch'='' @code{zval=nan flag=0}]
+@deffnx {MGL command} vect xdat ydat udat vdat ['sch'='' @code{zval=nan flag=0}]
 Draws plane vector field plot for the field @{@var{udat}, @var{vdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat} at level @var{z=zVal}. The length and color of arrows are proportional to @math{\sqrt@{udat^2+vdat^2@}}. The number of hachures depend on @var{meshnum}. See also @code{vectc, flow, pipe, dew}. @sref{Vect sample}
 @end deffn
 
-@deffn {MGL command} vect udat vdat wdat ['sch'='']
-@deffnx {MGL command} vect xdat ydat zdat udat vdat wdat ['sch'='']
+@deffn {MGL command} vect udat vdat wdat ['sch'='' @code{flag=0}]
+@deffnx {MGL command} vect xdat ydat zdat udat vdat wdat ['sch'='' @code{flag=0}]
 This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the length and color of arrows are proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{Vect 3D sample}
 @end deffn
 
@@ -929,6 +931,17 @@ Draws plane flow threads for the vector field @{@var{udat}, @var{vdat}@} dependi
 @deffnx {MGL command} flow xdat ydat zdat udat vdat wdat ['sch'='' @code{num=3}]
 This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the color is proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{Flow 3D sample}
 @end deffn
+
+@deffn {MGL command} flow @code{x0 y0} udat vdat ['sch'='' @code{zval=nan}]
+@deffnx {MGL command} flow @code{x0 y0} xdat ydat udat vdat ['sch'='' @code{zval=nan}]
+Draws plane flow threads for the vector field @{@var{udat}, @var{vdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat} from point @{@var{x0}, @var{y0}@} at level @var{z=zVal}. The color of lines is proportional to @math{\sqrt@{udat^2+vdat^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). See also @code{vect, vectc, pipe}. @sref{Flow sample}
+@end deffn
+
+@deffn {MGL command} flow @code{x0 y0 z0} udat vdat wdat ['sch'='']
+@deffnx {MGL command} flow @code{x0 y0 z0} xdat ydat zdat udat vdat wdat ['sch'='']
+This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the color is proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{Flow 3D sample}
+@end deffn
+
 
 @deffn {MGL command} pipe udat vdat ['sch'='' @code{r0=0.05 num=5 zval=nan}]
 @deffnx {MGL command} pipe xdat ydat udat vdat ['sch'='' @code{r0=0.05 num=5 zval=nan}]

@@ -795,61 +795,6 @@ void mglGraph::ClearLegend()
 	NumLeg = 0;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
-					const char *font, mreal size, mreal llen)
-{
-	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
-	if(isnan(llen))	llen=0.1;
-	static int cgid=1;	StartGroup("Legend",cgid++);
-	mreal pp[15], r=GetRatio(), rh, rw;
-	if(size<=0)	size = -size*FontSize;
-
-	rh=(r<1?r:1.)*size/12.*(Max.y-Min.y);
-	rw=(r>1?1./r:1.)*size/16.;
-	mreal w=0, h=fnt->Height(font)*rh, j, dx=Max.x-Min.x;
-	register long i;
-	for(i=0;i<n;i++)
-	{
-		j = fnt->Width(text[i],font)*rw;
-		if(style[i][0]==0)	j -= llen;
-		w = w>j ? w:j;
-	}
-	w = (w + llen*1.1f)*dx;	// запас на линию
-
-	if(LegendBox)
-	{
-		pp[2] = pp[5] = pp[8] = pp[11] = pp[14] = Max.z;
-		pp[0] = pp[9] = pp[12] = x;		pp[3] = pp[6] = x+w;
-		pp[1] = pp[4] = pp[13] = y-0.*h;		pp[7] = pp[10] = y+h*n;
-		for(i=0;i<5;i++)	ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
-		SelectPen(TranspType!=2 ? "k-1":"w-1");
-		curv_plot(5,pp,0);	// bounding rectangle
-		pp[2] = pp[5] = pp[8] = pp[11] = Max.z;
-		pp[0] = pp[6] = x;			pp[3] = pp[9] = x+w;
-		pp[1] = pp[4] = y-0.*h;		pp[7] = pp[10] = y+h*n;
-		DefColor(mglColor(1,1,1),1);
-		for(i=0;i<4;i++)	ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
-		surf_plot(2,2,pp,0,0);		// white rectangle below it
-	}
-
-	for(i=0;i<n;i++)
-	{
-		char m=SelectPen(style[i]);
-		pp[2] = pp[5] = pp[8] = Max.z;
-		pp[1] = pp[4] = pp[7] = y+i*h+0.45f*h;
-		pp[0] = x+0.1f*llen*dx;	pp[3] = x+0.9f*llen*dx;	pp[6] = x+0.5f*llen*dx;
-		ScalePoint(pp[0],pp[1],pp[2]);
-		ScalePoint(pp[3],pp[4],pp[5]);
-		ScalePoint(pp[6],pp[7],pp[8]);
-
-		curv_plot(2,pp,0);
-		if(m)	Mark(pp[6],pp[7],pp[8],m);
-		SelectPen(TranspType!=2 ? "k-1":"w-1");
-		Putsw(mglPoint(x+(style[i][0]!=0?llen:0)*dx, y+i*h+0.3f*h, Max.z),text[i], font, size,'n');
-	}
-	EndGroup();
-}
-//-----------------------------------------------------------------------------
 void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
 					const char *font, mreal size, mreal llen)
 {
@@ -858,25 +803,25 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
 	if(size<0)	size = -size*FontSize;
 	mreal w=0, r=GetRatio(), rh, rw;
 
-	rh=(r<1?r:1.)*size/12.*(Max.y-Min.y);	// 12 = 16/1.4
+	rh=(r<1?r:1.)*size/6.;	// 6 = 12/2 = (16/1.4)/2
 	rw=(r>1?1./r:1.)*size/16.;
-	mreal h=fnt->Height(font)*rh, x, y, dx = 0.03*(Max.x-Min.x), dy = 0.03*(Max.y-Min.y);
-	for(long i=0;i<n;i++)
+	mreal h=fnt->Height(font)*rh, x, y, dx = 0.06, dy = 0.06;
+	for(long i=0;i<n;i++)		// find text length
 	{
 		x = fnt->Width(text[i],font)*rw;
 		if(style[i][0]==0)	x -= llen;
 		w = w>x ? w:x;
 	}
-	w = (w + 1.1f*llen)*(Max.x-Min.x);	// запас на линию
+	w = (w + 1.1f*llen)*2;	// add space for lines
 
 	switch(where)
 	{
-	case 0:		x = Min.x+dx;	y = Min.y+dy;		break;
-	case 1:		x = Max.x-w-dx;	y = Min.y+dy;		break;
-	case 2:		x = Min.x+dx;	y = Max.y-h*n-dy;	break;
-	default:	x = Max.x-w-dx;	y = Max.y-h*n-dy;	break;
+	case 0:		x = dx-1;	y = dy-1;		break;
+	case 1:		x = 1-w-dx;	y = dy-1;		break;
+	case 2:		x = dx-1;	y = 1-h*n-dy;	break;
+	default:	x = 1-w-dx;	y = 1-h*n-dy;	break;
 	}
-	Legend(n,text,style,x,y,font,size,llen);
+	Legend(n,text,style,(x+1)/2,(y+1)/2,font,size,llen);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Ternary(bool t)

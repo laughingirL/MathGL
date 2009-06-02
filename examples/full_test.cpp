@@ -46,8 +46,8 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 1:	// EPS
 			sprintf(buf,"%s%s.eps",name,suf);
 			gr->WriteEPS(buf);
-			sprintf(buf,"%s%s.png",name,suf);
-			gr->WritePNG(buf,0,false);	break;
+//			sprintf(buf,"%s%s.png",name,suf);
+//			gr->WritePNG(buf,0,false);	break;
 		case 2:	// SVG
 			sprintf(buf,"%s%s.svg",name,suf);
 			gr->WriteSVG(buf);	break;
@@ -697,7 +697,6 @@ int sample_2d(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->Cont(a,"BbcyrRt");	save(gr,"contt",suf);
 	gr->Clf();	gr->Box();	gr->TileS(a,b,"BbcyrR");save(gr,"tiler",suf);
 	gr->Clf();	gr->Box();	gr->Dens(a);	gr->Colorbar();	save(gr,"dens",suf);
-//	gr->Clf();	gr->Box();	gr->Map(a,b,"brg");		save(gr,"map",suf);
 	gr->Light(true);	gr->Rotate(40,60);
 	gr->Clf();	gr->Box();	gr->Surf(a,"BbcyrR|");	save(gr,"surf_sl",suf);
 	gr->Clf();	gr->Box();	gr->Surf(a,"BbcyrR");	save(gr,"surf",suf);
@@ -1217,6 +1216,7 @@ static struct option longopts[] =
 	{ "big",			no_argument,	&big,			1 },
 	{ "idtf",			no_argument,	&type,			5 },
 	{ "eps",			no_argument,	&type,			1 },
+	{ "svg",			no_argument,	&type,			2 },
 	{ "gif",			no_argument,	&type,			6 },
 	{ "help",			no_argument,	NULL,			'?' },
 	{ NULL,					0,	NULL,			0 }
@@ -1232,6 +1232,7 @@ void usage()
 		"-big			- png picture is 1200x800\n"			\
 		"-idtf			- output idtf\n"				\
 		"-eps			- output EPS\n"					\
+		"-svg			- output SVG\n"					\
 		"-srnd			- produce the same random numbers in any run\n"	\
 		"-test			- perform test\n"
 		);
@@ -1241,9 +1242,10 @@ void usage()
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
-	gr->Box();
-	gr->Puts(mglPoint(0,1),"Text \\a{over} \\u{under} \\frac{aaa}{bbb} \\sqrt{sss}");
-	gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", 0, -4);
+	sample_legend(gr,"");
+//	gr->Box();
+//	gr->Puts(mglPoint(0,1),"Text \\a{over} \\u{under} \\frac{aaa}{bbb} \\sqrt{sss}");
+//	gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", 0, -4);
 	return 0;
 
 	mglParse par;
@@ -1276,15 +1278,20 @@ int main(int argc,char **argv)
 
 	if(dotest)
 	{
+		test(&ps);
 		test(&zb);
 //		sample_ternary(&zb,"");
 		//sample_crust(&zb,0);
 		zb.WritePNG("test.png","",false);
+		ps.WritePNG("test_2.png","",false);
+		ps.WriteEPS("test.eps");
+		ps.WriteSVG("test.svg");
 		zb.WriteGIF("test.gif","");
 		return 0;
 	}
 	if(type==5)			gr = &u3d;
 	else if(type==1){	gr = &ps;	gr->SetSize(width,height);	}
+	else if(type==2){	gr = &ps;	gr->SetSize(width,height);	}
 	else			{	gr = &zb;	gr->SetSize(width,height);	}
 	if(mini)		{	gr->SetSize(200,133);	suf = "_sm";	}
 	if(big)

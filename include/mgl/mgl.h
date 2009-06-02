@@ -129,7 +129,7 @@ public:
 	const wchar_t *ytt;	///< Y-tick template (set NULL to use default one ("%.2g" in simplest case))
 	const wchar_t *ztt;	///< Z-tick template (set NULL to use default one ("%.2g" in simplest case))
 	const wchar_t *ctt;	///< Colorbar-tick template (set NULL to use default one ("%.2g" in simplest case))
-	mreal PlotFactor;	///< Factor for sizing overall plot (should be >1.6, default is =2)
+	mreal PlotFactor;	///< Factor for sizing overall plot (should be >1.5, default is =1.55)
 	bool AutoPlotFactor;///< Enable autochange PlotFactor
 
 	/// Flag which determines how points outside bounding box are drown.
@@ -465,7 +465,7 @@ public:
 	/// Draw legend of accumulated strings by \a font with \a size
 	void Legend(int where=0x3, const char *font="rL", mreal size=-0.8, mreal llen=0.1);
 	/// Draw legend strings \a text at position (x, y) by \a font with \a size
-	void Legend(int n, wchar_t **text, char **style, mreal x, mreal y, const char *font="rL", mreal size=-0.8, mreal llen=0.1);
+	virtual void Legend(int n, wchar_t **text, char **style, mreal x, mreal y, const char *font="rL", mreal size=-0.8, mreal llen=0.1)=0;
 	/// Draw legend of accumulated strings by \a font with \a size
 	void Legend(int n, wchar_t **text, char **style, int where=0x3, const char *font="rL", mreal size=-0.8, mreal llen=0.1);
 	//@}

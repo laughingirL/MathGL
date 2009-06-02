@@ -61,6 +61,7 @@ using mglGraph::Colorbar;
 	void Putsw(mglPoint p,const wchar_t *text,const char *font=0,mreal size=-1,char dir=0,mreal shift=0);
 	mreal Putsw(mglPoint p,mglPoint l,const wchar_t *text,char font='t',mreal size=-1);
 	void Pen(mglColor col, char style,mreal width);
+	void Legend(int n, wchar_t **text, char **style, mreal x, mreal y, const char *font="rL", mreal size=-0.8, mreal llen=0.1);
 
 	void Colorbar(int where, mreal x, mreal y, mreal w, mreal h);
 	/// Get RGB bitmap of current state image.
