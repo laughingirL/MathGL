@@ -561,7 +561,7 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 {
 	NumFig=0;	CurFig=0;
 	CurFrameId = 0;
-	int n = draw ? 0 : draw(this,par);
+	int n = draw ? draw(this,par) : 0;
 	if(n<NumFig && n>=0)	NumFig = n;
 	DrawFunc = draw;		FuncPar = par;
 	LoadFunc = reload;
@@ -574,17 +574,17 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 		return;
 	}
 
-	if(!qApp && argc>0)
+	if(!qApp)
 	{
 		QApplication *a;
 		if(!argv)
 		{
 			static char tmp[2][1];
-			tmp[0][0]=tmp[1][0]=0;	argc=1;
-			a = new QApplication(argc, (char **)tmp);
+			tmp[0][0]=tmp[1][0]=0;
+			static int aa=1;
+			a = new QApplication(aa, (char **)tmp);
 		}
-		else
-			a = new QApplication(argc, argv);
+		else	a = new QApplication(argc, argv);
 		a->connect(a, SIGNAL(lastWindowClosed()), a, SLOT(quit()));
 	}
 

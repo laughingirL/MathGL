@@ -264,6 +264,7 @@ void mglGraphPS::add_prim(mglPrim *a)
 	a->x[2] = int(a->x[2]*100)*0.01;	a->x[3] = int(a->x[3]*100)*0.01;
 	a->y[0] = int(a->y[0]*100)*0.01;	a->y[1] = int(a->y[1]*100)*0.01;
 	a->y[2] = int(a->y[2]*100)*0.01;	a->y[3] = int(a->y[3]*100)*0.01;
+	a->id = ObjId;
 	memcpy(P+pNum,a,sizeof(mglPrim));
 	pNum++;		Finished = false;
 }

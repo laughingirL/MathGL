@@ -570,7 +570,7 @@ void mglGraphFLTK::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void 
 {
 	NumFig=0;	CurFig=0;
 	CurFrameId = 0;
-	int n = draw ? 0 : draw(this,par);
+	int n = draw ? draw(this,par) : 0;
 	if(n<NumFig && n>=0)	NumFig = n;
 	DrawFunc = draw;		FuncPar = par;
 	LoadFunc = reload;

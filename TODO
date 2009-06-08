@@ -1,26 +1,18 @@
 
 					MathGL (for v.1.8.2)
 
-- Legend (EPS), Colorbar (text color), Contt (text color)
-
-0. Check Window with draw_func=0 -- especially in Fortran
+0. Configure should define MGL_DEF_VIEWER
 
 1. Update documentation
 	* FAQ about bitmaps
 
 2. "Chaos" in area.png (near axis)
 
-3. Check viewer for ShowImage()
-
-4. Import/Export via GIF (as 3d data) ???
+4. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
 
 5. \dfrac for normal size and centering ???
 
-6. 'W'<->'R', 'E'<->'L' in Text() + 'S', 'N' -- align vertically ?!?
-
 10. Spline5 !!!
-11. Use Hershey as built-in font
-12. Add FLTK, QT & GLUT to Fortran ===> Popov Dmitry
 
 
 					MathGL (for v.1.8.?) ???
@@ -33,8 +25,8 @@
 7. Converter MGL->C (+ interface for MGL->Fortran by change HMDT->int, HMGL->int, "->');
 8. Update documentation (Russian)
 9. Hankel transform
-10. Zip-compression of EPS + text by UTF codes?!?
-11. Derive mglGraphGL from mglGraphPS ??? (see mgl_gl_new.*)
+10. Derive mglGraphGL from mglGraphPS ??? (see mgl_gl_new.*)
+11. Use Hershey as built-in font ???
 
 
 

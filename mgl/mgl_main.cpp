@@ -23,6 +23,11 @@
 #include <wchar.h>
 #include "mgl/mgl.h"
 #include "mgl/mgl_eval.h"
+#ifndef MGL_DEF_VIEWER
+//#define MGL_DEF_VIEWER "kuickshow"
+#define MGL_DEF_VIEWER "gthumb"
+//#define MGL_DEF_VIEWER "gwenview";
+#endif
 //-----------------------------------------------------------------------------
 const char *mglWarn[mglWarnEnd] = {"%s: data dimension(s) is incompatible",
 								"%s: data dimension(s) is too small",
@@ -953,9 +958,7 @@ void mglGraph::ShowImage(const char *viewer, bool keep)
 	sprintf(fname,"%s.png", tmpnam(NULL));
 	WritePNG(fname,"MathGL ShowImage file",false);
 	if(!viewer || !viewer[0])
-	{
-		viewer = "kuickshow";
-	}
+		viewer = MGL_DEF_VIEWER;
 	if(keep)
 	{
 		sprintf(cmd,"%s %s &", viewer,fname);

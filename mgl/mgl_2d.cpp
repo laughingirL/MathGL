@@ -33,7 +33,7 @@ void mglGraph::Surf(const char *eqZ, const char *sch, int n)
 	mglData z(n,n);
 	mglFormula *eq = new mglFormula(eqZ);
 	register int i,j;
-	mreal dx = (Max.x - Min.x)/(n-1.), dy = (Max.x - Min.x)/(n-1.);
+	mreal dx = (Max.x - Min.x)/(n-1.), dy = (Max.y - Min.y)/(n-1.);
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)
 	{
 		z.a[i+n*j] = eq->Calc(Min.x+i*dx, Min.y+j*dy);

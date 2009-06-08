@@ -1243,6 +1243,7 @@ void usage()
 int test(mglGraph *gr)
 {
 	sample_legend(gr,"");
+	gr->ShowImage("",false);
 //	gr->Box();
 //	gr->Puts(mglPoint(0,1),"Text \\a{over} \\u{under} \\frac{aaa}{bbb} \\sqrt{sss}");
 //	gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", 0, -4);
@@ -1278,15 +1279,15 @@ int main(int argc,char **argv)
 
 	if(dotest)
 	{
-		test(&ps);
+//		test(&ps);
 		test(&zb);
 //		sample_ternary(&zb,"");
 		//sample_crust(&zb,0);
 		zb.WritePNG("test.png","",false);
-		ps.WritePNG("test_2.png","",false);
+/*		ps.WritePNG("test_2.png","",false);
 		ps.WriteEPS("test.eps");
 		ps.WriteSVG("test.svg");
-		zb.WriteGIF("test.gif","");
+		zb.WriteGIF("test.gif","");*/
 		return 0;
 	}
 	if(type==5)			gr = &u3d;

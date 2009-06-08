@@ -31,6 +31,7 @@ class mglGraphAB : public mglGraph
 public:
 using mglGraph::Mark;
 using mglGraph::Colorbar;
+using mglGraph::Legend;
 	/// Initialize ZBuffer drawing and allocate the memory for image with size [Width x Height].
 	mglGraphAB(int w=600, int h=400);
 	~mglGraphAB();

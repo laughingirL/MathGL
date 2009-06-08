@@ -34,6 +34,7 @@ struct mglPrim
 	int type;			// type of primitive (0 - point, 1 - line, 2 - trig, 3 - quad, 4 - glyph)
 	int style;			// style of pen
 	unsigned short dash;// mreal pen dashing
+	int id;		// object id
 	void Draw(mglGraphPS *gr);
 	void DrawGL();
 	bool IsSame(mreal wp,mreal *cp,int st);
@@ -49,6 +50,7 @@ class mglGraphPS : public mglGraphAB
 {
 friend struct mglPrim;
 public:
+	int ObjId;	///< object id for mglPrim
 	mglGraphPS(int w=600, int h=400);
 	~mglGraphPS();
 	void WriteEPS(const char *fname,const char *descr=0);
