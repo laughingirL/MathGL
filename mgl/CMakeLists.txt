@@ -4,7 +4,7 @@ mgl_2d.cpp     mgl_cont.cpp      mgl_eps.cpp       mgl_flow.cpp  mgl_pde.cpp
 mgl_3d.cpp     mgl_crust.cpp     mgl_evalc.cpp     mgl_font.cpp  mgl_tex_table.cpp
 mgl_ab.cpp     mgl_data_cf.cpp   mgl_eval.cpp      mgl_gl.cpp    mgl_vect.cpp
 mgl_addon.cpp  mgl_data.cpp      mgl_exec.cpp      mgl_idtf.cpp  mgl_zb2.cpp
-mgl_axis.cpp   mgl_data_io.cpp   mgl_export.cpp                  mgl_zb.cpp
+mgl_axis.cpp   mgl_data_io.cpp   mgl_export.cpp    mgl_zb.cpp    mgl_evalp.cpp
 mgl_c.cpp      mgl_data_png.cpp  mgl_f.cpp         mgl_main.cpp
 )
 

@@ -108,7 +108,7 @@ int main(int narg, char **arg)
 			}
 		}
 		// now execute it and save
-		gr.Message = buf;
+		gr.Message = buf;	*buf=0;
 		if(head)	// as animated gif
 		{
 			gr.StartGIF(fname);

@@ -1,10 +1,7 @@
 
-					MathGL (for v.1.8.2)
+					MathGL (for v.1.9.*)
 
 0. Configure should define MGL_DEF_VIEWER
-
-1. Update documentation
-	* FAQ about bitmaps
 
 2. "Chaos" in area.png (near axis)
 
@@ -15,13 +12,11 @@
 10. Spline5 !!!
 
 
-					MathGL (for v.1.8.?) ???
+					MathGL (for v.2.?) ???
 
 1. GTK window ???
 3. Interface for Gambas
 4. Interface for Scilab
-5. Try to evaluate to number if it contain only "+-/*^0123456789." in Parse() ??? + string concatenation ???
-6. Save primitives for plotting (like EPS && OpenGL) ???
 7. Converter MGL->C (+ interface for MGL->Fortran by change HMDT->int, HMGL->int, "->');
 8. Update documentation (Russian)
 9. Hankel transform

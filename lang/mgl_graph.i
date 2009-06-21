@@ -92,8 +92,10 @@ struct mglParse{};
 	{	mgl_set_cut(self, cut);	}
 	void SetCutBox(float x1,float y1,float z1,float x2,float y2,float z2)
 	{	mgl_set_cut_box(self, x1, y1, z1, x2, y2, z2);	}
-	void SetTickLen(float len)
-	{	mgl_set_tick_len(self, len);	}
+	void SetTickLen(float len, float stt=1)
+	{	mgl_set_tick_len(self, len, stt);	}
+	void SetTickStl(const char *stl, const char *sub=0)
+	{	mgl_set_tick_stl(self, stl, sub);	}
 	void SetBarWidth(float width)
 	{	mgl_set_bar_width(self, width);	}
 	void SetBaseLineWidth(float width)
@@ -190,15 +192,15 @@ struct mglParse{};
 		int w,h,i;
 		w=mgl_get_width(self);
 		h=mgl_get_height(self);
-		const char *buf=(const char *)mgl_get_rgba(self);
+		const char *buf=(const char *)mgl_get_rgb(self);
 		if(imglen>=4*w*h)
 		{
 			imglen=4*w*h;
 			for(i=0;i<w*h;i++)
 			{
-				imgdata[4*i]   = buf[4*i+2];
-				imgdata[4*i+1] = buf[4*i+1];
-				imgdata[4*i+2] = buf[4*i];
+				imgdata[4*i]   = buf[3*i+2];
+				imgdata[4*i+1] = buf[3*i+1];
+				imgdata[4*i+2] = buf[3*i];
 				imgdata[4*i+3] = 255;
 			}
 		}
@@ -569,6 +571,10 @@ struct mglParse{};
 	{	mgl_dew_xy(self, x, y, ax, ay, sch, zVal);	}
 	void Dew(mglData *ax, mglData *ay, const char *sch="", float zVal=NaN)
 	{	mgl_dew_2d(self, ax, ay, sch, zVal);	}
+	void Traj(mglData *x, mglData *y, mglData *ax, mglData *ay, const char *sch="", float zVal=NaN, float len=0)
+	{	mgl_traj_xy(self, x, y, ax, ay, sch, zVal, len);	}
+	void Traj(mglData *x, mglData *y, mglData *z, mglData *ax, mglData *ay, mglData *az, const char *sch="", float len=0)
+	{	mgl_traj_xyz(self, x, y, z, ax, ay, az, sch, len);	}
 	void Vect(mglData *x, mglData *y, mglData *ax, mglData *ay, const char *sch="", float zVal=NaN, int flag=0)
 	{	mgl_vect_xy(self, x, y, ax, ay, sch, zVal, flag);	}
 	void Vect(mglData *ax, mglData *ay, const char *sch="", float zVal=NaN, int flag=0)

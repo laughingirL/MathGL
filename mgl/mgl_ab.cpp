@@ -145,6 +145,7 @@ void mglGraphAB::RestoreM()
 {
 	memcpy(B,BL,9*sizeof(mreal));
 	xPos = BL[9];	yPos = BL[10];	zPos = BL[11];
+	PlotFactor = BL[12];
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel)
@@ -153,6 +154,7 @@ void mglGraphAB::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel)
 	{
 		memcpy(BL,B,9*sizeof(mreal));
 		BL[9] = xPos;	BL[10] = yPos;	BL[11] = zPos;
+		BL[12] = PlotFactor;
 	}
 	SelectPen("k-1");
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
@@ -347,7 +349,9 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 					(((_sz==-1) ^ (Org.y==Max.y || Org.x==Max.x)) && (dir=='z' || dir=='Z')) );
 	mreal pp[6] = {p.x,p.y,p.z,p.x,p.y,p.z};
 	Arrow1 = Arrow2 = '_';
-	char *font1 = mgl_strdup(font ? font:FontDef),*f;
+	char *f, *font1;
+	if(font)	{	font1=new char[strlen(font)+2];	strcpy(font1,font);	}
+	else	{	font1=new char[strlen(FontDef)+2];	strcpy(font1,FontDef);	}
 	char col=TranspType!=2 ? 'k':'w';
 	f = strchr(font1,':');	if(f)	{	f[0]=0;	col=f[1];	}
 //	stl[1] = col;	SelectPen(stl);
@@ -403,7 +407,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	{
 		if(pp[4]==pp[1] && pp[3]==pp[0])
 		{	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
-			free(font1);	Pop();	EndGroup();	return;	}
+			delete []font1;	Pop();	EndGroup();	return;	}
 		mreal ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
 		mreal tet = 180*atan2(pp[4]-pp[1],pp[3]-pp[0])/M_PI;
 		if(fabs(tet)>90)	tet+=180;
@@ -420,7 +424,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	{
 		if(pp[4]==pp[1] && pp[3]==pp[0])
 		{	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
-			free(font1);	Pop();	EndGroup();	return;	}
+			delete []font1;	Pop();	EndGroup();	return;	}
 		mreal ll=(pp[3]-pp[0])*(pp[3]-pp[0])+(pp[4]-pp[1])*(pp[4]-pp[1]);
 		mreal tet = atan2(pp[4]-pp[1],pp[3]-pp[0]);
 //		if(fabs(tet)>90)	tet+=180;
@@ -431,12 +435,13 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 		yPos = pp[1]-shift*ss*(pp[3]-pp[0])/sqrt(ll);
 		zPos = pp[2];
 
-		if(strlen(font1)<2)
-		{	free(font1);	font1 = (char *)malloc(2);	}
-		font1[0] = shift*ss>0 ? 'L':'R';
-//		if(pp[4]==pp[1])	font = "rC";
-		if(fabs(sin(tet))<0.1)	font1[0]='C';
-		font1[1] = 0;
+		if(!strchr(font1,'R') && !strchr(font1,'C') && !strchr(font1,'L'))
+		{
+			char ch[2]="C";
+//			if((pp[4]-pp[1])*(pp[3]-pp[0])>0) ch[0]=upside?'R':'L';	else ch[0]=upside?'L':'R';
+			if(fabs(sin(tet))>0.1)	ch[0] = shift*ss*sin(tet)>0 ? 'L':'R';
+			strcat(font1,ch);
+		}
 	}
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
 	fnt->Puts(wcs,font1,col);
@@ -452,9 +457,11 @@ void mglGraphAB::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
 	static int cgid=1;	StartGroup("Legend",cgid++);
 	mreal pp[15], r=GetRatio(), rh, rw, s3=PlotFactor;
 	if(size<=0)	size = -size*FontSize;
+	if(!font || !(*font))	font="L";
+	llen *= 1.5;
 
-	rh=(r<1?r:1.)*size/6.;
-	rw=(r>1?1./r:1.)*size/16.;
+	rh=(r<1?r:1.)*size/6.;	rw=(r>1?1./r:1.)*size/8.;
+//	rh=size/6.;	rw=size/24.;
 	mreal w=0, h=fnt->Height(font)*rh, j;
 	register long i;
 	for(i=0;i<n;i++)		// find text length
@@ -469,13 +476,13 @@ void mglGraphAB::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
 	if(LegendBox)	// draw bounding box
 	{
 		pp[2] = pp[5] = pp[8] = pp[11] = pp[14] = s3-0.01;
-		pp[0] = pp[9] = pp[12] = x;		pp[3] = pp[6] = x+w*2;
+		pp[0] = pp[9] = pp[12] = x;		pp[3] = pp[6] = x+w;
 		pp[1] = pp[4] = pp[13] = y-0.*h;		pp[7] = pp[10] = y+h*n;
 //		for(i=0;i<5;i++)	ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 		SelectPen(TranspType!=2 ? "k-1":"w-1");
 		curv_plot(5,pp,0);	// bounding rectangle
 		pp[2] = pp[5] = pp[8] = pp[11] = s3-0.01;
-		pp[0] = pp[6] = x;			pp[3] = pp[9] = x+w*2;
+		pp[0] = pp[6] = x;			pp[3] = pp[9] = x+w;
 		pp[1] = pp[4] = y-0.*h;		pp[7] = pp[10] = y+h*n;
 		DefColor(mglColor(1,1,1),1);
 //		for(i=0;i<4;i++)	ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);

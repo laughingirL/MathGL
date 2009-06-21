@@ -125,7 +125,7 @@ protected:
 	int Depth;			///< Depth of the image
 	mreal B[9];			///< Transformation matrix (used by PostScale() function)
 	mreal B1[12];		///< Transformation matrix for colorbar
-	mreal BL[12];		///< Previous transformation matrix
+	mreal BL[13];		///< Previous transformation matrix
 	unsigned PDef;		///< Pen bit mask
 	mreal pPos;			///< Current position in pen mask
 	bool UseLight;		///< Flag of using lightning

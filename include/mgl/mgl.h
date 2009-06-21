@@ -21,7 +21,7 @@
 #ifndef _MGL_H_
 #define _MGL_H_
 
-#define MGL_VERSION	8.1
+#define MGL_VERSION	9.0
 
 #include "mgl/mgl_data.h"
 #include "mgl/mgl_font.h"
@@ -143,7 +143,6 @@ public:
 	mreal MarkSize;		///< The size of marks for 1D plots.
 	mreal ArrowSize;	///< The size of arrows.
 	mreal BaseLineWidth;	///< Base line width (as factor). Useful for LARGE bitmap plots.
-	mreal TickLen;		///< Length of tiks (subticks length is sqrt(2)=1.41... times smaller)
 
 	mreal FontSize;		///< The size of font for tick and axis labels
 	bool LegendBox;		///< Set on/off drawing legend box.
@@ -231,6 +230,10 @@ public:
 	void SetTicksVal(char dir, int n, double val, const char *lbl, ...);
 	/// Auto adjust ticks
 	void AdjustTicks(const char *dir);
+	/// Set ticks styles
+	void SetTickStl(const char *stl, const char *sub=0);
+	/// Set ticks length
+	void SetTickLen(float tlen, float stt=1.);
 	/// Set warning code ant fill Message
 	void SetWarn(int code, const char *who="");
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -745,6 +748,10 @@ public:
 	void TileS(const mglData &x, const mglData &y, const mglData &z, const mglData &r, const char *sch=0);
 	/// Draw vertical tiles with variable size for 2d data
 	void TileS(const mglData &z, const mglData &r, const char *sch=0);
+	/// Plot arrows at position {x,y} along {ax,ay} with length \a len and color proportional to value |a|
+	void Traj(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0, mreal zVal=NAN, float len=0);
+	/// Plot arrows at position {x,y,z} along {ax,ay,az} with length \a len and color proportional to value |a|
+	void Traj(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0, float len=0);
 	/// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length and color proportional to value |a|
 	void Vect(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0,mreal zVal=NAN, int flag=0);
 	/// Plot vector field {ax,ay} with length and color proportional to value |a|
@@ -973,6 +980,11 @@ protected:
 	bool OnCoord;
 	int CurFrameId;	///< Number of automaticle created frames
 
+	mreal TickLen;		///< Length of tiks (subticks length is sqrt(1+st_t)=1.41... times smaller)
+	char TickStl[32];	///< Tick line style. Default is "k"
+	char SubTStl[32];	///< Subtick line style. Default is "k"
+	float st_t;			///< Subtick-to-tick ratio (ls=lt/sqrt(1+st_t)). Default is 1.
+
 	/// Get RGB(A) lines for saving in file
 	virtual unsigned char **GetRGBLines(long &width, long &height, unsigned char *&f, bool alpha=false);
 
@@ -1119,6 +1131,7 @@ private:
 	void DrawXTick(mreal t, mreal y0, mreal z0, mreal dy, mreal dz, int fact=0);
 	void DrawYTick(mreal t, mreal x0, mreal z0, mreal dx, mreal dz, int fact=0);
 	void DrawZTick(mreal t, mreal x0, mreal y0, mreal dx, mreal dy, int fact=0);
+	void DrawTTick(mreal t, mreal x0, mreal z0, mreal dx, mreal dz, int fact=0);
 	void adjust(char dir, mreal dv);
 };
 //-----------------------------------------------------------------------------

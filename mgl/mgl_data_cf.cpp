@@ -55,6 +55,8 @@ HMDT mgl_data_resize_box(const HMDT d, int mx,int my,int mz,mreal x1,mreal x2,
 /// Get sub-array of the data with given fixed indexes
 HMDT mgl_data_subdata(const HMDT d, int xx,int yy,int zz)
 {	return new mglData(d->SubData(xx,yy,zz));	}
+HMDT mgl_data_subdata_ext(const HMDT d, const HMDT xx, const HMDT yy, const HMDT zz)
+{	return new mglData(d->SubData(*xx,*yy,*zz));	}
 /// Get column (or slice) of the data filled by formulas of other named columns
 HMDT mgl_data_column(const HMDT d, const char *eq)
 {	return new mglData(d->Column(eq));	}
@@ -180,6 +182,8 @@ uintptr_t mgl_data_resize_box_(uintptr_t *d, int *mx,int *my,int *mz,mreal *x1,m
 /// Get sub-array of the data with given fixed indexes
 uintptr_t mgl_data_subdata_(uintptr_t *d, int *xx,int *yy,int *zz)
 {	return uintptr_t(new mglData(_DT_->SubData(*xx,*yy,*zz)));	}
+uintptr_t mgl_data_subdata_ext_(uintptr_t *d, uintptr_t *xx, uintptr_t *yy, uintptr_t *zz)
+{	return uintptr_t(new mglData(_DT_->SubData(_D_(xx),_D_(yy),_D_(zz))));	}
 /// Get column (or slice) of the data filled by formulas of other named columns
 uintptr_t mgl_data_column_(uintptr_t *d, const char *eq,int l)
 {

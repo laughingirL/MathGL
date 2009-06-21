@@ -536,7 +536,7 @@ void mglGraph::DefaultPlotParam()
 	BarWidth = 0.7;			fit_res[0] = 0;
 	MarkSize = 0.02;		ArrowSize = 0.03;
 	AlphaDef = 0.5;			Transparent = true;
-	strcpy(FontDef,"rC");	AxialDir = 'y';
+	FontDef[0]=0;			AxialDir = 'y';
 	UseAlpha = false;		TranspType = 0;
 	RotatedText = true;		fnt->gr = this;
 	CloudFactor = 1;		MeshNum = 0;
@@ -549,12 +549,29 @@ void mglGraph::DefaultPlotParam()
 	Alpha(false);			Fog(0);
 	xtt=ytt=ztt=ctt=0;		FactorPos = 1.15;
 	AutoPlotFactor = true;	ScalePuts = true;
-	TickLen = 0.1;
+	TickLen = 0.1;			st_t = 1;
+	TickStl[0] = SubTStl[0] = 'k';
+	TickStl[1] = SubTStl[1] = 0;
 	PlotFactor = AutoPlotFactor ? 1.55f :2.f;
 	for(int i=0;i<10;i++)
 	{	Light(i, mglPoint(0,0,1));	Light(i,false);	}
 	Light(0,true);			Light(false);
 }
+//-----------------------------------------------------------------------------
+void mglGraph::SetTickStl(const char *stl, const char *sub)
+{
+	if(!stl || !(*stl))
+	{	TickStl[0] = SubTStl[0] = 0;	}
+	else if(strlen(stl)<32)
+	{
+		strcpy(TickStl,stl);
+		if(!sub || !(*sub))		strcpy(SubTStl,stl);
+		else if(strlen(sub)<32)	strcpy(SubTStl,sub);
+	}
+}
+//-----------------------------------------------------------------------------
+void mglGraph::SetTickLen(float tlen, float stt)
+{	TickLen=fabs(tlen)>0?tlen:0.1;	st_t=stt>0?stt:1;	}
 //-----------------------------------------------------------------------------
 void mglGraph::SimplePlot(const mglData &a, int type, const char *stl)
 {

@@ -49,7 +49,7 @@ int main(int narg, char **arg)
 			if(arg[i][0]=='-' && arg[i][1]=='L')
 				setlocale(LC_CTYPE, arg[i]+2);
 		}
-		gr.Message = buf;
+		gr.Message = buf;	*buf=0;
 		p.Execute(&gr,fp,true);
 		fclose(fp);
 		if(narg>2 && arg[2][0]!='-')	strcpy(str,arg[2]);

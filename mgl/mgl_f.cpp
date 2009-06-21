@@ -553,6 +553,13 @@ void mgl_set_auto_(uintptr_t *gr, mreal *x1, mreal *x2, mreal *y1, mreal *y2, mr
 {
 	_GR_->SetAutoRanges(*x1,*x2,*y1,*y2,*z1,*z2);
 }
-void mgl_set_tick_len_(uintptr_t *gr, mreal *len)
-{	_GR_->TickLen = *len>0 ? *len : 0.1;	}
+void mgl_set_tick_len_(uintptr_t *gr, mreal *len, mreal *stt)
+{	_GR_->SetTickLen(*len, *stt);	}
+void mgl_set_tick_stl_(uintptr_t *gr, const char *stl, const char *sub, int l, int m)
+{
+	char *t=new char[l+1];	memcpy(t,stl,l);	t[l]=0;
+	char *s=new char[m+1];	memcpy(s,sub,m);	s[m]=0;
+	_GR_->SetTickStl(t,s);
+	delete []s;	delete []t;
+}
 //-----------------------------------------------------------------------------

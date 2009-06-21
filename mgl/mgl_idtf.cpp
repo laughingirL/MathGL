@@ -2097,28 +2097,30 @@ void mglGraphIDTF::surf_plot ( long n,long m,mreal *pp,mreal *cc,bool *tt )
 	bool onecolor=false;
 	const mreal *thecol=NULL;  // the color of the surface
 	if ( !(vertex_color_flag && UseLight) || textures_flag )
-	if ( cc )
 	{
-		onecolor=true;
-		for ( i=1;i<n*m;i++ )
+		if ( cc )
 		{
-			i0 = 4*i;
-			if (cc[0] != cc[i0] || cc[1] != cc[i0+1] || cc[2] != cc[i0+2] || (UseAlpha && cc[3] != cc[i0+3]))
+			onecolor=true;
+			for ( i=1;i<n*m;i++ )
 			{
-				onecolor=false;
-				break;
+				i0 = 4*i;
+				if (cc[0] != cc[i0] || cc[1] != cc[i0+1] || cc[2] != cc[i0+2] || (UseAlpha && cc[3] != cc[i0+3]))
+				{
+					onecolor=false;
+					break;
+				}
+			}
+			if (onecolor)
+			{
+				thecol=cc;
+				cc = NULL;
 			}
 		}
-		if (onecolor)
+		else
 		{
-			thecol=cc;
-			cc = NULL;
+			onecolor=true;
+			thecol=CDef;
 		}
-	}
-	else
-	{
-		onecolor=true;
-		thecol=CDef;
 	}
 
 	mesh_finished = true;

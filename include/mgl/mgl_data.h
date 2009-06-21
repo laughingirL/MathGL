@@ -224,6 +224,9 @@ public:
 	void Smooth(const char *dirs="xyz");
 	/// Get sub-array of the data with given fixed indexes
 	mglData SubData(int xx,int yy=-1,int zz=-1) const;
+	mglData SubData(const mglData &xx, const mglData &yy, const mglData &zz) const;
+	/// Get trace of the data array
+	mglData Trace() const;
 	/// Create n-th points distribution of this data values in range [v1, v2]
 	mglData Hist(int n,mreal v1=0,mreal v2=1, int nsub=0) const;
 	/// Create n-th points distribution of this data values in range [v1, v2] with weight \a w

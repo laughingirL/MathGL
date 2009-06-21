@@ -140,44 +140,100 @@ void mglData::Set(const double ***A,int N1,int N2,int N3)
 #endif
 }
 //-----------------------------------------------------------------------------
+mglData mglData::Trace() const
+{
+	mglData r(nx);
+	register long i;
+	if(ny>=nx && nz>=nx)	for(i=0;i<nx;i++)	r.a[i] = a[i+nx*(i+ny*i)];
+	else if(ny>=nx)		for(i=0;i<nx;i++)	r.a[i] = a[i+nx*i];
+	else	memcpy(r.a,a,nx*sizeof(mreal));
+	return r;
+}
+//-----------------------------------------------------------------------------
+mglData mglData::SubData(const mglData &xx, const mglData &yy, const mglData &zz) const
+{
+	long n=0,m=0,l=0,i,j,k,i0,x,y,z;
+	mglData d;
+	bool ix=false, iy=false, iz=false;
+	if(xx.nz>1)	// 3d data
+	{
+		n = xx.nx;	m = xx.ny;	l = xx.nz;
+		j = yy.nx*yy.ny*yy.nz;	if(j>1 && j!=n*m*l)	return d;	// wrong sizes
+		k = zz.nx*zz.ny*zz.nz;	if(k>1 && k!=n*m*l)	return d;	// wrong sizes
+		ix = true;	iy = j>1;	iz = k>1;
+	}
+	else if(yy.nz>1)
+	{
+		n = yy.nx;	m = yy.ny;	l = yy.nz;
+		j = xx.nx*xx.ny*xx.nz;	if(j>1 && j!=n*m*l)	return d;	// wrong sizes
+		k = zz.nx*zz.ny*zz.nz;	if(k>1 && k!=n*m*l)	return d;	// wrong sizes
+		iy = true;	ix = j>1;	iz = k>1;
+	}
+	else if(zz.nz>1)
+	{
+		n = zz.nx;	m = zz.ny;	l = zz.nz;
+		j = yy.nx*yy.ny*yy.nz;	if(j>1 && j!=n*m*l)	return d;	// wrong sizes
+		k = xx.nx*xx.ny*xx.nz;	if(k>1 && k!=n*m*l)	return d;	// wrong sizes
+		iz = true;	iy = j>1;	ix = k>1;
+	}
+	else if(xx.ny>1)	// 2d data
+	{
+		n = xx.nx;	m = xx.ny;	l = 1;
+		j = yy.nx*yy.ny;	if(j>1 && j!=n*m)	return d;	// wrong sizes
+		k = zz.nx*zz.ny;	if(k>1 && k!=n*m)	return d;	// wrong sizes
+		ix = true;	iy = j>1;	iz = k>1;
+	}
+	else if(yy.ny>1)
+	{
+		n = yy.nx;	m = yy.ny;	l = 1;
+		j = xx.nx*xx.ny;	if(j>1 && j!=n*m)	return d;	// wrong sizes
+		k = zz.nx*zz.ny;	if(k>1 && k!=n*m)	return d;	// wrong sizes
+		iy = true;	ix = j>1;	iz = k>1;
+	}
+	else if(zz.ny>1)
+	{
+		n = zz.nx;	m = zz.ny;	l = 1;
+		j = yy.nx*yy.ny;	if(j>1 && j!=n*m)	return d;	// wrong sizes
+		k = xx.nx*xx.ny;	if(k>1 && k!=n*m)	return d;	// wrong sizes
+		iz = true;	iy = j>1;	ix = k>1;
+	}
+	if(n*m*l>1)	// this is 2d or 3d data
+	{
+		d.Create(n,m,l);
+		for(i0=0;i0<n*m*l;i0++)
+		{
+			i = int((ix?xx.a[i0]:xx.a[0])+0.5);	if(i<0)i=0;	if(i>=nx)i=nx-1;
+			j = int((iy?yy.a[i0]:yy.a[0])+0.5);	if(j<0)j=0;	if(j>=ny)j=ny-1;
+			k = int((iz?zz.a[i0]:zz.a[0])+0.5);	if(k<0)k=0;	if(k>=nz)k=nz-1;
+			d.a[i0] = a[i+nx*(j+ny*k)];
+		}
+		return d;
+	}
+	// this is 1d data -> try as normal SubData()
+	if(xx.nx>1 || xx.a[0]>=0)	{	n=xx.nx;	ix=true;	}
+	else	{	n=nx;	ix=false;	}
+	if(yy.nx>1 || yy.a[0]>=0)	{	m=yy.nx;	iy=true;	}
+	else	{	m=ny;	iy=false;	}
+	if(zz.nx>1 || zz.a[0]>=0)	{	l=zz.nx;	iz=true;	}
+	else	{	l=nz;	iz=false;	}
+	d.Create(n,m,l);
+	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
+	{
+		x = ix?int(xx.a[i]+0.5):i;	if(x<0)x=0;	if(x>=nx)x=nx-1;
+		y = iy?int(yy.a[j]+0.5):j;	if(y<0)y=0;	if(y>=ny)y=ny-1;
+		z = iz?int(zz.a[k]+0.5):k;	if(z<0)z=0;	if(z>=nz)z=nz-1;
+		d.a[i+n*(j+m*k)] = a[x+nx*(y+ny*z)];
+	}
+	if(m==1)	{	d.ny=d.nz;	d.nz=1;	}// "squeeze" dimensions
+	if(n==1)	{	d.nx=d.ny;	d.ny=d.nz;	d.nz=1;	}
+	return d;
+}
+//-----------------------------------------------------------------------------
 mglData mglData::SubData(int xx,int yy,int zz) const
 {
-	long i,j;
-	mglData d;
-	if(xx>=nx || yy>=ny || zz>=nz)	return d;
-//	xx = xx<0 ? -1:xx;	yy = yy<0 ? -1:yy;	zz = zz<0 ? -1:zz;
-	if(xx<0 && yy<0 && zz<0)	// сам массив
-		d.Set(*this);
-	else if(xx<0 && yy<0)	// 2d
-		d.Set(a+zz*nx*ny,nx,ny,1);
-	else if(yy<0 && zz<0)	// 2d
-	{
-		d.Create(ny,nz);
-		for(i=0;i<ny*nz;i++)
-			d.a[i] = a[xx+i*nx];
-	}
-	else if(xx<0 && zz<0)	// 2d
-	{
-		d.Create(nx,nz);
-		for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
-			d.a[i+nx*j] = a[i+nx*(yy+j*ny)];
-	}
-	else if(xx<0)
-		d.Set(a+nx*(yy+ny*zz),nx,1,1);
-	else if(yy<0)
-	{
-		d.Create(ny);
-		for(i=0;i<ny;i++)
-			d.a[i] = a[xx+nx*(i+zz*ny)];
-	}
-	else if(zz<0)
-	{
-		d.Create(nz);
-		for(i=0;i<nz;i++)
-			d.a[i] = a[xx+nx*(yy+i*ny)];
-	}
-	else	d.a[0] = a[xx+nx*(yy+zz*ny)];
-	return d;
+	mglData x,y,z;
+	x.a[0]=xx;	y.a[0]=yy;	z.a[0]=zz;
+	return SubData(x,y,z);
 }
 //-----------------------------------------------------------------------------
 mglData mglData::Column(const char *eq)

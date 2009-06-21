@@ -594,9 +594,10 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 	QMGL = new QMathGL(Wnd);
 	QMGL->setPopup(popup);	QMGL->setGraph(this);
 	QMGL->setDraw(draw, par);
-	QMGL->update();			makeMenu();
+	makeMenu();	qApp->processEvents();
 	scroll->setWidget(QMGL);
 	Wnd->setCentralWidget(scroll);
+	QMGL->update();
 	if(maximize)
 	{	Wnd->showMaximized();	}
 	else	Wnd->show();

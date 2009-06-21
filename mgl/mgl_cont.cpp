@@ -534,59 +534,6 @@ void get_slice(_mgl_slice &s, const mglData &x, const mglData &y, const mglData 
 	}
 }
 //-----------------------------------------------------------------------------
-void get_slice(_mgl_slice &s, const mglData &a, char dir, long sVal,
-			mglPoint Min, mglPoint Max)
-{
-	register long i,j,k,n=a.nx,m=a.ny,l=a.nz;
-	mreal x1,y1,z1;
-	mglData d;
-
-	switch(dir)		// общая часть
-	{
-	case 'x':
-		s.nx = m;	s.ny = l;	if(sVal<0)	sVal = n/2;
-		d = a.SubData(sVal,-1,-1);	break;
-	case 'y':
-		s.nx = n;	s.ny = l;	if(sVal<0)	sVal = m/2;
-		d = a.SubData(-1,sVal,-1);	break;
-	case 'z':
-		s.nx = n;	s.ny = m;	if(sVal<0)	sVal = l/2;
-		d = a.SubData(-1,-1,sVal);	break;
-	}
-	long size = s.nx*s.ny;
-	s.x = new mreal[size];	s.y = new mreal[size];
-	s.z = new mreal[size];	s.a = new mreal[size];
-	memcpy(s.a,d.a,size*sizeof(mreal));
-	x1 = Min.x + (Max.x-Min.x)*mreal(sVal)/(n-1.);
-	y1 = Min.y + (Max.y-Min.y)*mreal(sVal)/(m-1.);
-	z1 = Min.z + (Max.z-Min.z)*mreal(sVal)/(l-1.);
-
-	switch(dir)
-	{
-	case 'x':
-		for(i=0;i<m;i++)	for(j=0;j<l;j++)
-		{
-			k = i+m*j;		s.y[k] = Min.y + (Max.y-Min.y)*i/(m-1.);
-			s.x[k] = x1;	s.z[k] = Min.z + (Max.z-Min.z)*j/(l-1.);
-		}
-		break;
-	case 'y':
-		for(i=0;i<n;i++)	for(j=0;j<l;j++)
-		{
-			k = i+n*j;		s.x[k] = Min.x + (Max.x-Min.x)*i/(n-1.);
-			s.y[k] = y1;	s.z[k] = Min.z + (Max.z-Min.z)*j/(l-1.);
-		}
-		break;
-	case 'z':
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
-		{
-			k = i+n*j;		s.y[k] = Min.y + (Max.y-Min.y)*j/(m-1.);
-			s.z[k] = z1;	s.x[k] = Min.x + (Max.x-Min.x)*i/(n-1.);
-		}
-		break;
-	}
-}
-//-----------------------------------------------------------------------------
 void mglGraph::Cont3(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 					char dir, int sVal, const char *sch)
 {

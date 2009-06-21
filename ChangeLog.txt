@@ -1,13 +1,21 @@
-1.8.2 Released 15 June 2009
-	- Improve export in EPS and SVG: lines are exported as single object, improve line dashing, text is exported by glyphs.
-	- mglGraph*::Window() now can have zero as function (draw built-in bitmap only). Also the window can be created from Fortran programs too.
-	- Add functions mglGraph::Flow(mglPoint p, ...) which draw the flow thread from point p.
+1.9 Released 23 June 2009
+	- Improve export in EPS and SVG: lines are exported as single object, improve line dashing, text is exported by glyphs now.
+	- Write new MGL parser which can handle arbitrary expression as argument for data and/or number.
+	- Function mglGraph*::Window() now can handle NULL-pointer as function (draw built-in bitmap only). The window can be created from Fortran programs too.
+	- Add new plot Traj() for drawing vectors along the curve.
+	- Add new plot Flow(mglPoint p, ...) for drawing the flow thread from point p.
 	- Functions mglGraph::Vect() now have additional argument for kind of vector plot. Correspondingly mgl_vect_*() functions now have additional argument too!
 	- Add function mglGraph::Axis() for predefined curvilinear coordinates.
+	- Add function mglData::SubData() for indirect access to the data elements.
+	- Add function mglData::Trace() for getting diagonal elements.
+	- Add function for manual setting of ticks/subticks line style.
+	- Improve ticks drawing if RotatedText = false;
+	- NOTE! Hide TickLen variable and change it to SetTickLen() function. Also add additional argument to mgl_set_tick_len() function.
 	- You can now select base type for floating point numbers (double or float).
 	- Legend now is drawn flat (without any rotation).
 	- Function mglData::Sew() now handle NAN values correctly.
 	- Add MGL command types for further UDAV developping.
+	- Line width now isn't influenced on text printing.
 	- Bug correction in marker drawing for EPS, SVG.
 	- Bug correction in configure (older compiler support, wrong glut.h demand).
 	- Bug in lang/CMakeLists.txt (for making Python interface).

@@ -45,11 +45,12 @@ mglFont mglDefFont;
 //-----------------------------------------------------------------------------
 float mglFont::Puts(const char *str,const char *how, char col)
 {
-	int font=0, align=0;
+	int font=0, align=1;
 	if(how)
 	{
 		if(strchr(how,'R'))	align = 2;
 		if(strchr(how,'C'))	align = 1;
+		if(strchr(how,'L'))	align = 0;
 		if(strchr(how,'D'))	align+= 4;
 		if(strchr(how,'b'))	font = font|MGL_FONT_BOLD;
 		if(strchr(how,'i'))	font = font|MGL_FONT_ITAL;
@@ -76,11 +77,12 @@ float mglFont::Width(const char *str,const char *how)
 //-----------------------------------------------------------------------------
 float mglFont::Puts(const wchar_t *str,const char *how, char col)
 {
-	int font=0, align=0;
+	int font=0, align=1;
 	if(how)
 	{
 		if(strchr(how,'R'))	align = 2;
 		if(strchr(how,'C'))	align = 1;
+		if(strchr(how,'L'))	align = 0;
 		if(strchr(how,'D'))	align+= 4;
 		if(strchr(how,'b'))	font = font|MGL_FONT_BOLD;
 		if(strchr(how,'i'))	font = font|MGL_FONT_ITAL;

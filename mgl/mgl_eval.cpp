@@ -462,7 +462,7 @@ double gslAi(double a)	{return gsl_sf_airy_Ai(a,GSL_PREC_SINGLE);}
 double gslBi(double a)	{return gsl_sf_airy_Bi(a,GSL_PREC_SINGLE);}
 #endif
 double sgn(double a)	{return a<0 ? -1 : (a>0 ? 1:0);}
-double stp(double a)	{return a<0 ? 0 : 1;}
+double stp(double a)	{return a>0 ? 1 : 0;}
 double arg(double a,double b)	{	return atan2(b,a);	}
 double mgz1(double)	{return 0;}
 double mgz2(double,double)	{return 0;}

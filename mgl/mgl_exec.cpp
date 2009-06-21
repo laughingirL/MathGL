@@ -502,6 +502,11 @@ int mgls_copy(mglGraph *gr, long n, mglArg *a, int k[10])
 			a[0].d->Fill(a[2].s, gr->Min, gr->Max);
 		else if(k[2]==2)	a[0].d->Modify(a[2].s);
 	}
+	else if(k[0]==1 && k[1]==2)
+	{
+		a[0].d->Create(1,1,1);
+		a[0].d->a[0] = a[1].v;
+	}
 	else	return 1;
 	return 0;
 }
@@ -1970,6 +1975,18 @@ void mglc_subdata(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"%s = %s.SubData(%d, %d, %d);",  a[0].s, a[1].s, int(a[2].v), k[3]==3?int(a[3].v):-1, k[4]==3?int(a[4].v):-1);
 }
 //-----------------------------------------------------------------------------
+//	{"subdata","Extract sub-array","subdata ovar ivar nx [ny nz]", mgls_subdata, mglc_subdata}
+int mgls_trace(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1)	*(a[0].d) = a[1].d->Trace();
+	else	return 1;
+	return 0;
+}
+void mglc_trace(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1)	swprintf(out,1024,L"%s = %s.Trace();",  a[0].s, a[1].s);
+}
+//-----------------------------------------------------------------------------
 //	{"tile","Draw horizontal tiles","tile {xvar yvar} zvar {rvar} [fmt]", mgls_tile, mglc_tile}
 int mgls_tile(mglGraph *gr, long n, mglArg *a, int k[10])
 {
@@ -2300,6 +2317,28 @@ void mglc_vectl(wchar_t out[1024], long n, mglArg *a, int k[10])
 		swprintf(out,1024,L"gr->VectL(%s, %s, %s, %s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, k[6]==2?a[6].s:"");
 }
 //-----------------------------------------------------------------------------
+//	{"traj","Draw arrows along a curve",0, mgls_traj, mglc_traj}
+int mgls_traj(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	int i;
+	for(i=0;i<7;i++)	if(k[i]!=1)	break;
+	if(i==4)
+		gr->Traj(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0, k[5]==3?a[5].v:NAN, k[6]==3?a[6].v:0);
+	else if(i==6)
+		gr->Traj(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:0, k[7]==3?a[7].v:0);
+	else	return 1;
+	return 0;
+}
+void mglc_traj(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	int i;
+	for(i=0;i<7;i++)	if(k[i]!=1)	break;
+	if(i==4)
+		swprintf(out,1024,L"gr->Traj(%s, %s, %s, %s, \"%s\", %g, %g);", a[0].s, a[1].s, a[2].s, a[3].s, k[4]==2?a[4].s:"", k[5]==3?a[5].v:NAN,k[6]==3?a[6].v:0);
+	else if(i==6)
+		swprintf(out,1024,L"gr->Traj(%s, %s, %s, %s, %s, %s, \"%s\", %g);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, k[6]==2?a[6].s:"",k[7]==3?a[7].v:0);
+}
+//-----------------------------------------------------------------------------
 //	{"xlabel","Draw label for x-axis","xlabel txt [fnt pos shift]", mgls_xlabel, mglc_xlabel}
 int mgls_xlabel(mglGraph *gr, long n, mglArg *a, int k[10])
 {
@@ -2564,12 +2603,14 @@ void mglc_extend(wchar_t out[1024], long n, mglArg *a, int k[10])
 int mgls_info(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==1)	a[0].d->PrintInfo(gr->Message, k[1]==3 && a[1].v!=0);
+	else if(k[0]==2)	sprintf(gr->Message, "%ls",a[0].w);
 	else	return 1;
 	return 0;
 }
 void mglc_info(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==1)	swprintf(out,1024,L"%s.PrintInfo(gr->Message, %s);", a[0].s, k[1]==3 && a[1].v!=0 ? "true" : "false");
+	if(k[0]==2)	swprintf(out,1024,L"sprintf(gr->Message, \"%ls\");",a[0].w);
 }
 //-----------------------------------------------------------------------------
 //	{"integrate","Integrate data","integrate var dir", mgls_integrate, mglc_integrate}
@@ -3283,14 +3324,27 @@ void mglc_tens(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"ticklen","Set tick len","ticklen val", mgls_ticklen, mglc_ticklen}
 int mgls_ticklen(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==3)	gr->TickLen = a[0].v>0 ? a[0].v : 0.1;
+	if(k[0]==3)	gr->SetTickLen(a[0].v, k[1]==3?a[1].v:1);
 	else	return 1;
 	return 0;
 }
 void mglc_ticklen(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]==3)
-		swprintf(out,1024,L"gr->TickLen = %g;", a[0].v>0 ? a[0].v : 0.1);
+		swprintf(out,1024,L"gr->SetTickLen(%g,%g);", a[0].v, k[1]==3?a[1].v:1);
+}
+//-----------------------------------------------------------------------------
+//	{"tickstl","Set tick style","tickstl stl [sub='']", mgls_tickstl, mglc_tickstl}
+int mgls_tickstl(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)	gr->SetTickStl(a[0].s, k[1]==2?a[1].s:"");
+	else	return 1;
+	return 0;
+}
+void mglc_tickstl(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]==2)
+		swprintf(out,1024,L"gr->SetTickStl(\"%s\",\"%s\");", a[0].s, k[1]==2?a[1].s:"");
 }
 //-----------------------------------------------------------------------------
 //	{L"adjust",L"Adjust ticks for best view",L"adjust dir", mgls_adjust, mglc_adjust}
@@ -3306,7 +3360,7 @@ void mglc_adjust(wchar_t out[1024], long n, mglArg *a, int k[10])
 mglCommand mgls_base_cmd[] = {
 	{L"addlegend",L"Add legend entry",L"addlegend txt fmt", mgls_addlegend, mglc_addlegend, false, 2},
 	{L"addto",L"Add data or number",L"addto var|num", mgls_addto, mglc_addto, false, 3},
-	{L"adjust",L"Adjust ticks for best view",L"adjust dir", mgls_adjust, mglc_adjust, 2},
+	{L"adjust",L"Adjust ticks for best view",L"adjust dir", mgls_adjust, mglc_adjust, false, 2},
 	{L"af2d",L"Solve PDE in accompanied coordinates",L"qo2d res 'ham' ini_re ini_im ray [r=1 k0=100 xout=0 yout=0]", mgls_af2d, mglc_af2d, true, 3},
 	{L"alpha",L"Switch on/off transparency",L"addto [num]", mgls_alpha, mglc_alpha, false, 2},
 	{L"alphadef",L"Set default transparency",L"alphadef num", mgls_alphadef, mglc_alphadef, false, 2},
@@ -3460,11 +3514,14 @@ mglCommand mgls_base_cmd[] = {
 	{L"ternary",L"Switch on/off to use ternary axis",L"ternary val", mgls_ternary, mglc_ternary, false, 2},
 	{L"text",L"Draw text at some position or along curve",L"", mgls_text, mglc_text, false, 0},
 	{L"textmark",L"Draw TeX mark at point position",L"", mgls_textmark, mglc_textmark, false, 0},
-	{L"ticklen",L"Set tick len",L"ticklen val", mgls_ticklen, mglc_ticklen, false, 2},
+	{L"ticklen",L"Set tick length",L"ticklen val [stt=1]", mgls_ticklen, mglc_ticklen, false, 2},
+	{L"tickstl",L"Set tick style",L"tickstl 'stl' [sub='']", mgls_tickstl, mglc_tickstl, false, 2},
 	{L"tile",L"Draw horizontal tiles",L"tile {xvar yvar} zvar {rvar} [fmt]", mgls_tile, mglc_tile, false, 0},
 	{L"title",L"Print title for the picture",L"title 'text' ['stl'='' size=-2]", mgls_title, mglc_title, false, 1},
 	{L"tlabel",L"Draw label for t-axis",L"tlabel txt [fnt pos]", mgls_tlabel, mglc_tlabel, false, 1},
 	{L"torus",L"Draw surface of curve rotation",L"torus {zvar} rvar [fmt]", mgls_torus, mglc_torus, false, 0},
+	{L"trace",L"Get trace of array",L"trace ovar ivar", mgls_trace, mglc_trace, true, 3},
+	{L"traj",L"Draw arrows along a curve",0, mgls_traj, mglc_traj, false, 0},
 	{L"transform",L"Do integral transform of data",L"transform ovar how rvar ivar", mgls_transform, mglc_transform, true, 3},
 	{L"transforma",L"Do integral transform of data",L"transforma ovar how avar fvar", mgls_transforma, mglc_transforma, true, 3},
 	{L"transparent",L"Switch off transparency",L"transparent val", mgls_transparent, mglc_transparent, false, 2}, //!!! OLD !!!

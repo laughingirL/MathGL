@@ -25,6 +25,80 @@
 //	Vect series
 //
 //-----------------------------------------------------------------------------
+void mglGraph::Traj(const mglData &x, const mglData &y, const mglData &z, 
+					const mglData &ax, const mglData &ay, const mglData &az,
+					const char *sch, mreal len)
+{
+	if(ax.nx<2)	{	SetWarn(mglWarnLow,"Traj");	return;	}
+	if(ax.nx!=x.nx || z.nx!=x.nx || y.nx!=x.nx || ay.nx!=x.nx || az.nx!=x.nx)
+	{	SetWarn(mglWarnDim,"Traj");	return;	}	long n = ax.nx, m, i, j, nc=0;
+	mglColor cm;
+	// find maximum
+	i = ax.ny>ay.ny ? ax.ny:ay.ny;	j = z.ny>az.ny ? z.ny:az.ny;
+	m = x.ny>y.ny ? x.ny:y.ny;		if(i>m)	m=i;	if(j>m)	m=j;
+	if(sch && *sch)	SetScheme(sch);
+	else	{	cm = cmap[0];	nc=NumCol;	NumCol=1;	}
+	mreal *pp=new mreal[6*n*m], *cc=new mreal[n*m];
+	bool *tt=new bool[2*n*m];
+	Pen(cmap[0],'-',BaseLineWidth);
+//	char st[2]={0,0};	// temporary color scheme
+	static int cgid=1;	StartGroup("Traj",cgid++);
+	mreal dx,dy,dz,dd,da,xm=0;
+	register long ix,iy,iz,jx,jy,jz;
+	for(j=0;j<m;j++)	for(i=0;i<n;i++)	// find maximal amplitude of vector field
+	{
+		jx = i+ax.ny*(j%ax.ny);	jy = i+ay.ny*(j%ay.ny);	jz = i+az.ny*(j%az.ny);
+		da = sqrt(ax.a[jx]*ax.a[jx]+ay.a[jy]*ay.a[jy]+az.a[jz]*az.a[jz]);
+		xm = xm>da ? xm : da;
+	}
+	xm = 1./(xm ? sqrt(xm):1);
+	for(j=0;j<m;j++) // start prepare arrows
+	{
+		if(!sch || !sch[0])	cmap[0]=Pal[(CurrPal = (CurrPal+1)%NumPal)];
+		for(i=0;i<n;i++)
+		{
+			ix = i + n*(j<x.ny?j:0);	jx = i + n*(j<ax.ny?j:0);
+			iy = i + n*(j<y.ny?j:0);	jy = i + n*(j<ay.ny?j:0);
+			iz = i + n*(j<z.ny?j:0);	jz = i + n*(j<az.ny?j:0);
+			da = sqrt(ax.a[jx]*ax.a[jx]+ay.a[jy]*ay.a[jy]+az.a[jz]*az.a[jz]);
+			if(len==0)
+			{
+				if(i<n-1)
+				{	dx=x.a[ix+1]-x.a[ix];	dy=y.a[iy+1]-y.a[iy];	dz=z.a[iz+1]-z.a[iz];	}
+				else
+				{	dx=x.a[ix]-x.a[ix-1];	dy=y.a[iy]-y.a[iy-1];	dz=z.a[iz]-z.a[iz-1];	}
+				dd = da ? 1/da : 0;		dd *= sqrt(dx*dx+dy*dy+dz*dz);
+			}
+			else dd = len;
+			cc[i] = da*xm*1.5 - 0.5;
+			pp[6*i+0] = x.a[ix];	pp[6*i+3] = x.a[ix]+dd*ax.a[jx];
+			pp[6*i+1] = y.a[iy];	pp[6*i+4] = y.a[iy]+dd*ay.a[jy];
+			pp[6*i+2] = z.a[iz];	pp[6*i+5] = z.a[iz]+dd*az.a[jz];
+			tt[2*i]   = ScalePoint(pp[6*i],pp[6*i+1],pp[6*i+2]);
+			tt[2*i+1] = ScalePoint(pp[6*i+3],pp[6*i+4],pp[6*i+5]);
+		}
+		vects_plot(n,pp,cc,tt);
+	}
+	if(!sch || !(*sch))	{	cmap[0]=cm;	NumCol=nc;	}
+	EndGroup();
+	delete []pp;	delete []tt;	delete []cc;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Traj(const mglData &x, const mglData &y, const mglData &ax, 
+					const mglData &ay, const char *sch, mreal zVal, mreal len)
+{
+	if(ax.nx<2)	{	SetWarn(mglWarnLow,"Traj");	return;	}
+	if(x.nx!=ax.nx || y.nx!=ax.nx || ay.nx!=ax.nx)
+	{	SetWarn(mglWarnDim,"Traj");	return;	}
+	mglData z(x.nx), az(x.nx);
+	if(isnan(zVal))	zVal = Min.z;	z.Fill(zVal,zVal);
+	Traj(x,y,z,ax,ay,az,sch,len);
+}
+//-----------------------------------------------------------------------------
+//
+//	Vect series
+//
+//-----------------------------------------------------------------------------
 void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch, mreal zVal, int flag)
 {
 	long i,j,n=ax.nx,m=ax.ny,k,ix,iy,jj,i0;
@@ -413,6 +487,11 @@ void mgl_dew_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ax, const HMDT a
 /// Plot dew drops for vector field {ax,ay}
 void mgl_dew_2d(HMGL gr, const HMDT ax, const HMDT ay, const char *sch,mreal zVal)
 {	if(gr && ay && ax)	gr->Dew(*ax, *ay, sch, zVal);	}
+/// Plot arrows {ax,ay,az} along a curve {x,y,y}
+void mgl_traj_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch, mreal zVal, mreal len)
+{	if(gr && ay && ax && x && y)	gr->Traj(*x, *y, *ax, *ay, sch, zVal, len);	}
+void mgl_traj_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, mreal len)
+{	if(gr && ay && ax && az && z && x && y)	gr->Traj(*x, *y, *z, *ax, *ay, *az, sch, len);	}
 /// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length proportional to value |a|
 void mgl_vect_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,mreal zVal,int flag)
 {	if(gr && ay && ax && x && y)	gr->Vect(*x, *y, *ax, *ay, sch, zVal,flag);	}
@@ -466,6 +545,21 @@ void mgl_dew_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, m
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax)	_GR_->Dew(_D_(ax), _D_(ay), s, *zVal);
+	delete []s;
+}
+/// Plot arrows {ax,ay,az} along a curve {x,y,y}
+void mgl_traj_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *zVal, mreal *len,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ay && ax && x && y)
+		_GR_->Traj(_D_(x), _D_(y), _D_(ax), _D_(ay), s, *zVal, *len);
+	delete []s;
+}
+void mgl_traj_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch,mreal *len,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ay && ax && az && z && x && y)
+		_GR_->Traj(_D_(x), _D_(y), _D_(z), _D_(ax), _D_(ay), _D_(az), s, *len);
 	delete []s;
 }
 /// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length proportional to value |a|

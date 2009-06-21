@@ -68,22 +68,9 @@ mreal mgl_okrugl(mreal x,int k)
 //-----------------------------------------------------------------------------
 void mglGraph::DrawTick(mreal *pp,bool sub)
 {
-//	bool tt[3];
-//	mreal d1,d2,f=sub?0.02:0.04;
 	ScalePoint(pp[0],pp[1],pp[2]);
 	ScalePoint(pp[3],pp[4],pp[5]);
 	ScalePoint(pp[6],pp[7],pp[8]);
-/*	pp[0] -= pp[3];		pp[1] -= pp[4];		pp[2] -= pp[5];
-	pp[6] -= pp[3];		pp[7] -= pp[4];		pp[8] -= pp[5];
-	d1 = sqrt(pp[0]*pp[0] + pp[1]*pp[1] + pp[2]*pp[2]);
-	d2 = sqrt(pp[6]*pp[6] + pp[7]*pp[7] + pp[8]*pp[8]);
-	d1 = (d1>0 ? d1:1)/f;	d2 = (d2>0 ? d2:1)/f;
-	pp[0] = pp[3] + pp[0]/d1;
-	pp[1] = pp[4] + pp[1]/d1;
-	pp[2] = pp[5] + pp[2]/d1;
-	pp[6] = pp[3] + pp[6]/d2;
-	pp[7] = pp[4] + pp[7]/d2;
-	pp[8] = pp[5] + pp[8]/d2;*/
 	curv_plot(3,pp,0);
 }
 //-----------------------------------------------------------------------------
@@ -335,10 +322,12 @@ void _mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, wchar_t str[6
 //-----------------------------------------------------------------------------
 void mglGraph::DrawXTick(mreal x, mreal y0, mreal z0, mreal dy, mreal dz, int f)
 {
-	mreal pp[9],ff=TickLen/sqrt(1.+f);
+	mreal pp[9],ff=TickLen/sqrt(1.+f*st_t);
 	pp[0]=x;	pp[1]=y0+dy*ff;	pp[2]=z0;
 	pp[3]=x;	pp[4]=y0;	pp[5]=z0;
 	pp[6]=x;	pp[7]=y0;	pp[8]=z0+dz*ff;
+	if(*TickStl && !f)	SelectPen(TickStl);
+	if(*SubTStl && f)	SelectPen(SubTStl);
 	DrawTick(pp,false);
 }
 void mglGraph::AxisX(bool text)
@@ -352,8 +341,11 @@ void mglGraph::AxisX(bool text)
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
-	if(ddy==0)	ddy=y0*3;//(Max.y-Min.y)/2;
- 	if(ddz==0)	ddz=z0*3;//(Max.z-Min.z)/2;
+//	if(ddx>0.1*fabs(Max.x-Min.x)/TickLen)	ddx = 0.1*(Max.x-Min.x)/TickLen;
+//	if(ddy>0.1*fabs(Max.y-Min.y)/TickLen)	ddy = 0.1*(Max.y-Min.y)/TickLen;
+//	if(ddz>0.1*fabs(Max.z-Min.z)/TickLen)	ddz = 0.1*(Max.z-Min.z)/TickLen;
+	if(ddy==0)	ddy=y0*10>fabs(Max.y-Min.y) ? 0.3*fabs(Max.y-Min.y) : y0*3;
+	if(ddz==0)	ddz=z0*10>fabs(Max.z-Min.z) ? 0.3*fabs(Max.z-Min.z) : z0*3;
 	if(y0>(Max.y+Min.y)/2)	ddy = -ddy;
 	if(z0>(Max.z+Min.z)/2)	ddz = -ddz;
 	SelectPen(TranspType!=2 ? "k-1":"w-1");
@@ -424,10 +416,12 @@ void mglGraph::AxisX(bool text)
 //-----------------------------------------------------------------------------
 void mglGraph::DrawYTick(mreal y, mreal x0, mreal z0, mreal dx, mreal dz, int f)
 {
-	mreal pp[9],ff=TickLen/sqrt(1.+f);
+	mreal pp[9],ff=TickLen/sqrt(1.+f*st_t);
 	pp[0]=x0+dx*ff;	pp[1]=y;	pp[2]=z0;
 	pp[3]=x0;		pp[4]=y;	pp[5]=z0;
 	pp[6]=x0;		pp[7]=y;	pp[8]=z0+dz*ff;
+	if(*TickStl && !f)	SelectPen(TickStl);
+	if(*SubTStl && f)	SelectPen(SubTStl);
 	DrawTick(pp,false);
 }
 void mglGraph::AxisY(bool text)
@@ -441,8 +435,11 @@ void mglGraph::AxisY(bool text)
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
-	if(ddx==0)	ddx=x0*3;//(Max.x-Min.x)/2;
-	if(ddz==0)	ddz=z0*3;//(Max.z-Min.z)/2;
+//	if(ddx>0.1*fabs(Max.x-Min.x)/TickLen)	ddx = 0.1*(Max.x-Min.x)/TickLen;
+//	if(ddy>0.1*fabs(Max.y-Min.y)/TickLen)	ddy = 0.1*(Max.y-Min.y)/TickLen;
+//	if(ddz>0.1*fabs(Max.z-Min.z)/TickLen)	ddz = 0.1*(Max.z-Min.z)/TickLen;
+	if(ddx==0)	ddx=x0*10>fabs(Max.x-Min.x) ? 0.3*fabs(Max.x-Min.x) : x0*3;
+	if(ddz==0)	ddz=z0*10>fabs(Max.z-Min.z) ? 0.3*fabs(Max.z-Min.z) : z0*3;
 	if(x0>(Max.x+Min.x)/2)	ddx = -ddx;
 	if(z0>(Max.z+Min.z)/2)	ddz = -ddz;
 	SelectPen(TranspType!=2 ? "k-1":"w-1");
@@ -513,10 +510,12 @@ void mglGraph::AxisY(bool text)
 //-----------------------------------------------------------------------------
 void mglGraph::DrawZTick(mreal z, mreal x0, mreal y0, mreal dx, mreal dy, int f)
 {
-	mreal pp[9],ff=TickLen/sqrt(1.+f);
+	mreal pp[9],ff=TickLen/sqrt(1.+f*st_t);
 	pp[0]=x0;	pp[1]=y0+dy*ff;	pp[2]=z;
 	pp[3]=x0;	pp[4]=y0;		pp[5]=z;
 	pp[6]=x0+dx*ff;	pp[7]=y0;	pp[8]=z;
+	if(*TickStl && !f)	SelectPen(TickStl);
+	if(*SubTStl && f)	SelectPen(SubTStl);
 	DrawTick(pp,false);
 }
 void mglGraph::AxisZ(bool text)
@@ -530,8 +529,11 @@ void mglGraph::AxisZ(bool text)
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
-	if(ddx==0)	ddx=x0*3;//(Max.x-Min.x)/2;
-	if(ddy==0)	ddy=y0*3;//(Max.y-Min.y)/2;
+//	if(ddx>0.1*fabs(Max.x-Min.x)/TickLen)	ddx = 0.1*(Max.x-Min.x)/TickLen;
+//	if(ddy>0.1*fabs(Max.y-Min.y)/TickLen)	ddy = 0.1*(Max.y-Min.y)/TickLen;
+//	if(ddz>0.1*fabs(Max.z-Min.z)/TickLen)	ddz = 0.1*(Max.z-Min.z)/TickLen;
+	if(ddx==0)	ddx=x0*10>fabs(Max.x-Min.x) ? 0.3*fabs(Max.x-Min.x) : x0*3;
+	if(ddy==0)	ddy=y0*10>fabs(Max.y-Min.y) ? 0.3*fabs(Max.y-Min.y) : y0*3;
 	if(x0>(Max.x+Min.x)/2)	ddx = -ddx;
 	if(y0>(Max.y+Min.y)/2)	ddy = -ddy;
 	SelectPen(TranspType!=2 ? "k-1":"w-1");
@@ -627,18 +629,22 @@ void mglGraph::Axis(const char *dir, bool adjust)
 //-----------------------------------------------------------------------------
 void mglGraph::TickBox()
 {
-	mreal x0,y0,z0,x,y,z,ddx,ddy,ddz;
+	mreal x0,y0,z0,x,y,z,ddx,ddy,ddz,xx,yy,zz;
 	x0 = GetOrgX(0);	y0 = GetOrgY(0);	z0 = GetOrgZ(0);
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
+	xx = ddx;	yy = ddz;	zz = ddz;
+//	xx = ddx>0.1*fabs(Max.x-Min.x) ? 0.1*(Max.x-Min.x) : ddx;
+//	yy = ddy>0.1*fabs(Max.y-Min.y) ? 0.1*(Max.y-Min.y) : ddy;
+//	zz = ddz>0.1*fabs(Max.z-Min.z) ? 0.1*(Max.z-Min.z) : ddz;
 	if(xnum)	for(int i=0;i<xnum;i++)
 	{
 		x = xval[i];
-		DrawXTick(x,Min.y,Min.z,ddy,ddz);
-		DrawXTick(x,Min.y,Max.z,ddy,-ddz);
-		DrawXTick(x,Max.y,Min.z,-ddy,ddz);
-		DrawXTick(x,Max.y,Max.z,-ddy,-ddz);
+		DrawXTick(x,Min.y,Min.z,yy,zz);
+		DrawXTick(x,Min.y,Max.z,yy,-zz);
+		DrawXTick(x,Max.y,Min.z,-yy,zz);
+		DrawXTick(x,Max.y,Max.z,-yy,-zz);
 	}
 	else if(ddx>0)	// рисуем метки по х
 	{
@@ -646,10 +652,10 @@ void mglGraph::TickBox()
 		x0 = x0 - ddx*floor((x0-Min.x)/ddx);
 		for(x=x0;x<Max.x;x+=ddx)
 		{
-			DrawXTick(x,Min.y,Min.z,ddy,ddz);
-			DrawXTick(x,Min.y,Max.z,ddy,-ddz);
-			DrawXTick(x,Max.y,Min.z,-ddy,ddz);
-			DrawXTick(x,Max.y,Max.z,-ddy,-ddz);
+			DrawXTick(x,Min.y,Min.z,yy,zz);
+			DrawXTick(x,Min.y,Max.z,yy,-zz);
+			DrawXTick(x,Max.y,Min.z,-yy,zz);
+			DrawXTick(x,Max.y,Max.z,-yy,-zz);
 		}
 	}
 	else if(Min.x>0)
@@ -668,10 +674,10 @@ void mglGraph::TickBox()
 	if(ynum)	for(int i=0;i<ynum;i++)
 	{
 		y = yval[i];
-		DrawYTick(y,Min.x,Min.z,ddx,ddz);
-		DrawYTick(y,Min.x,Max.z,ddx,-ddz);
-		DrawYTick(y,Max.x,Min.z,-ddx,ddz);
-		DrawYTick(y,Max.x,Max.z,-ddx,-ddz);
+		DrawYTick(y,Min.x,Min.z,xx,zz);
+		DrawYTick(y,Min.x,Max.z,xx,-zz);
+		DrawYTick(y,Max.x,Min.z,-xx,zz);
+		DrawYTick(y,Max.x,Max.z,-xx,-zz);
 	}
 	else if(ddy>0)	// рисуем метки по y
 	{
@@ -679,10 +685,10 @@ void mglGraph::TickBox()
 		y0 = y0 - ddy*floor((y0-Min.y)/ddy);
 		for(y=y0;y<Max.y;y+=ddy)
 		{
-			DrawYTick(y,Min.x,Min.z,ddx,ddz);
-			DrawYTick(y,Min.x,Max.z,ddx,-ddz);
-			DrawYTick(y,Max.x,Min.z,-ddx,ddz);
-			DrawYTick(y,Max.x,Max.z,-ddx,-ddz);
+			DrawYTick(y,Min.x,Min.z,xx,zz);
+			DrawYTick(y,Min.x,Max.z,xx,-zz);
+			DrawYTick(y,Max.x,Min.z,-xx,zz);
+			DrawYTick(y,Max.x,Max.z,-xx,-zz);
 		}
 	}
 	else if(Min.y>0)
@@ -701,10 +707,10 @@ void mglGraph::TickBox()
 	if(znum)	for(int i=0;i<znum;i++)
 	{
 		z = zval[i];
-		DrawZTick(z,Min.x,Min.y,ddx,ddy);
-		DrawZTick(z,Min.x,Max.y,ddx,-ddy);
-		DrawZTick(z,Max.x,Min.y,-ddx,ddy);
-		DrawZTick(z,Max.x,Max.y,-ddx,-ddy);
+		DrawZTick(z,Min.x,Min.y,xx,yy);
+		DrawZTick(z,Min.x,Max.y,xx,-yy);
+		DrawZTick(z,Max.x,Min.y,-xx,yy);
+		DrawZTick(z,Max.x,Max.y,-xx,-yy);
 	}
 	else if(ddz>0)	// рисуем метки
 	{
@@ -712,10 +718,10 @@ void mglGraph::TickBox()
 		z0 = z0 - ddz*floor((z0-Min.z)/ddz);
 		for(z=z0;z<Max.z;z+=ddz)
 		{
-			DrawZTick(z,Min.x,Min.y,ddx,ddy);
-			DrawZTick(z,Min.x,Max.y,ddx,-ddy);
-			DrawZTick(z,Max.x,Min.y,-ddx,ddy);
-			DrawZTick(z,Max.x,Max.y,-ddx,-ddy);
+			DrawZTick(z,Min.x,Min.y,xx,yy);
+			DrawZTick(z,Min.x,Max.y,xx,-yy);
+			DrawZTick(z,Max.x,Min.y,-xx,yy);
+			DrawZTick(z,Max.x,Max.y,-xx,-yy);
 		}
 	}
 	else if(Min.z>0)
@@ -804,7 +810,7 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
 	mreal w=0, r=GetRatio(), rh, rw;
 
 	rh=(r<1?r:1.)*size/6.;	// 6 = 12/2 = (16/1.4)/2
-	rw=(r>1?1./r:1.)*size/16.;
+	rw=(r>1?1./r:1.)*size/8.;
 	mreal h=fnt->Height(font)*rh, x, y, dx = 0.06, dy = 0.06;
 	for(long i=0;i<n;i++)		// find text length
 	{
@@ -812,7 +818,7 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
 		if(style[i][0]==0)	x -= llen;
 		w = w>x ? w:x;
 	}
-	w = (w + 1.1f*llen)*2;	// add space for lines
+	w = (w + 1.1f*llen*1.5);	// add space for lines
 
 	switch(where)
 	{
@@ -838,6 +844,16 @@ void mglGraph::Ternary(bool t)
 	else	{	Axis(x1,x2,o);	Cut = c;	}
 }
 //-----------------------------------------------------------------------------
+void mglGraph::DrawTTick(mreal y, mreal x0, mreal z0, mreal dx, mreal dz, int f)
+{
+	mreal pp[9],ff=TickLen/sqrt(1.+f*st_t);
+	pp[0]=x0-y-dx*ff;	pp[1]=y;	pp[2]=z0;
+	pp[3]=x0-y;			pp[4]=y;	pp[5]=z0;
+	pp[6]=x0-y;			pp[7]=y;	pp[8]=z0+dz*ff;
+	if(*TickStl && !f)	SelectPen(TickStl);
+	if(*SubTStl && f)	SelectPen(SubTStl);
+	DrawTick(pp,false);
+}
 void mglGraph::AxisT(bool text)
 {
 	mreal pp[3*31];
@@ -873,17 +889,11 @@ void mglGraph::AxisT(bool text)
 	NSy = NSy<0 ? 0 : NSy;
 	for(y=0;y<=Max.y+(Max.y-Min.y)*1e-6;y+=ddy)
 	{
-		pp[0]=Max.x-y-ddx/10;pp[1]=y;	pp[2]=z0;
-		pp[3]=Max.x-y;		pp[4]=y;	pp[5]=z0;
-		pp[6]=Max.x-y;		pp[7]=y;	pp[8]=z0+ddz/10;
-		if(y>Min.y && y<Max.y)	DrawTick(pp,false);
+		if(y>Min.y && y<Max.y)	DrawTTick(y,Max.x,z0,ddx,ddz);
 		swprintf(str,64,L"%.2g",y);		wcstrim_mgl(str);
 		if(text)	Putsw(mglPoint(Max.x-y,y,z0),str,FontDef,FontSize,'t');
 
-		pp[0]=Min.x+ddx/10;	pp[1]=Max.y-y;	pp[2]=z0;
-		pp[3]=Min.x;		pp[4]=Max.y-y;	pp[5]=z0;
-		pp[6]=Min.x;		pp[7]=Max.y-y;	pp[8]=z0+ddy/10;
-		if(y>Min.y && y<Max.y)	DrawTick(pp,false);
+		if(y>Min.y && y<Max.y)	DrawYTick(Max.y-y,Min.x,z0,ddx,ddz);
 		swprintf(str,64,L"%.2g",y);		wcstrim_mgl(str);
 		if(text)	Putsw(mglPoint(Min.x,Max.y-y,z0),str,FontDef,FontSize,'y');
 	}
@@ -892,69 +902,11 @@ void mglGraph::AxisT(bool text)
 		ddy /= (NSy+1);	// subticks drawing
 		for(y=0;y<=Max.y;y+=ddy)
 		{
-			pp[0]=Max.x-y-ddx/14;pp[1]=y;	pp[2]=z0;
-			pp[3]=Max.x-y;		pp[4]=y;	pp[5]=z0;
-			pp[6]=Max.x-y;		pp[7]=y;	pp[8]=z0+ddz/14;
-			DrawTick(pp,true);
-
-			pp[0]=Min.x+ddx/14;	pp[1]=Max.y-y;	pp[2]=z0;
-			pp[3]=Min.x;		pp[4]=Max.y-y;	pp[5]=z0;
-			pp[6]=Min.x;		pp[7]=Max.y-y;	pp[8]=z0+ddz/14;
-			DrawTick(pp,true);
+			DrawTTick(y,Max.x,z0,ddx,ddz,1);
+			DrawYTick(Max.y-y,Min.x,z0,ddx,ddz,1);
 		}
 	}
 }
-//-----------------------------------------------------------------------------
-/*void mglGraph::AxisTZ(bool text)
-{
-	mreal pp[3*31];
-	bool tt[31];
-	wchar_t str[64];
-	long i;
-	mreal x0,z0,z,ddx,ddy,ddz;
-	x0 = GetOrgX('t');	z0 = GetOrgZ('t');
-	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
-	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
-	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
-	if(ddx==0)	ddx=(Max.x-Min.x)/2;
-	if(ddy==0)	ddy=(Max.y-Min.y)/2;
-//	if(ddz==0)	ddz=(Max.z-Min.z)/2;
-	SelectPen(TranspType!=2 ? "k-1":"w-1");
-	for(i=0;i<31;i++)	// сама ось
-	{
-		pp[3*i]=x0;
-		pp[3*i+1]=Max.y+(Min.y-Max.y)*i/30.;
-		pp[3*i+2]=z0;
-		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
-	}
-	curv_plot(31,pp,tt);
-
-	if(ddz>0)	// ticks drawing
-	{
-		NSz = NSz<0 ? 0 : NSz;
-//		z0 = z0 - ddz*floor((z0-Min.z)/ddz+1e-3);
-		for(z=0;z<=Max.z+(Max.z-Min.z)*1e-6;z+=ddz)
-		{
-			pp[0]=x0+ddx/10;	pp[1]=Max.y-z-ddy/10;pp[2]=z0;
-			pp[3]=x0;			pp[4]=Max.y-z;		pp[5]=z0;
-			pp[6]=x0+ddx/10;	pp[7]=Max.y-z;		pp[8]=z0;
-			if(z>Min.z && z<Max.z)	DrawTick(pp,false);
-			swprintf(str, 64, L"%.2g",z);	wcstrim_mgl(str);
-			if(text)	Putsw(mglPoint(x0,Max.y-z,z0),str,FontDef,FontSize,'z');
-		}
-		if(NSz>0)
-		{
-			ddz /= (NSz+1);	// subticks drawing
-			for(z=0;z<=Max.z;z+=ddz)
-			{
-				pp[0]=x0+ddx/14;	pp[1]=Max.y-z-ddy/14;	pp[2]=z0;
-				pp[3]=x0;	pp[4]=Max.y-z;			pp[5]=z0;
-				pp[6]=x0+ddx/14;	pp[7]=Max.y-z;	pp[8]=z0;
-				DrawTick(pp,true);
-			}
-		}
-	}
-}*/
 //-----------------------------------------------------------------------------
 void mglGraph::SetTicks(char dir, mreal d, int ns, mreal org)
 {

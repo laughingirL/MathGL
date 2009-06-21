@@ -118,9 +118,19 @@ Function imitate a fog in the plot. Fog start from relative distance @var{dz} fr
 @cindex MarkSize
 @cindex ArrowSize
 @cindex BaseLineWidth
-@cindex TickLen
+@cindex SetTickLen
+@cindex SetTickStl
 
 These variables control the default (initial) values for most graphics parameters including sizes of markers, arrows, linewidth and so on. As any other settings these ones will influence only on plots created after the settings change.
+
+
+@deftypemethod mglGraph @code{void} SetTickLen (@code{float} val, @code{float} stt=@code{1})
+The relative length of axis ticks. Default value is @code{0.1}. Parameter @var{stt}>0 set relative length of subticks which is in @code{sqrt(1+stt)} times smaller.
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} SetTickStl (@code{const char *}stl, @code{const char *}sub)
+The line style of axis ticks (@var{stl}) and subticks (@var{sub}). If @var{stl} is empty then default style is used (@samp{k} or @samp{w} depending on transparency type). If @var{sub} is empty then ticks style is used (i.e. @var{stl}).
+@end deftypemethod
 
 @deftypecv {General option} mglGraph @code{float} BarWidth
 Relative width of rectangles in Bars plot (@pxref{Bars}). Default value is @code{0.7}.
@@ -136,10 +146,6 @@ The size of arrows for @ref{1D plotting}, lines and curves (@pxref{Primitives dr
 
 @deftypecv {General option} mglGraph @code{float} BaseLineWidth
 The variable define the base width for all lines. The value <1 is ignored. For values > 1 the real line width is result of multiplication of specified line width and the value of @var{BaseLineWidth}. Increase of this variables is actual for large bitmap pictures. Default value is @code{1}.
-@end deftypecv
-
-@deftypecv {General option} mglGraph @code{float} TickLen
-The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt@{2@}=1.41...} times smaller.
 @end deftypecv
 
 @c ==================================================================
@@ -1663,6 +1669,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 These functions perform plotting of 2D and 3D vector fields. There are 5 generally different types of vector fields representations: simple vector field (Vect, VectL), vector field with coloring (VectC), vector field by dew-drops (Dew), flow threads (Flow), flow pipes (Pipe). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 @menu
+* Traj::                        
 * Vect::                        
 * VectL::                       
 * VectC::                       
@@ -1672,7 +1679,17 @@ These functions perform plotting of 2D and 3D vector fields. There are 5 general
 @end menu
 
 @c ==================================================================
-@node Vect, VectL, , Vector fields
+@node Traj, Vect, , Vector fields
+@subsection Traj
+@cindex Traj
+
+@deftypemethod mglGraph @code{void} Traj (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}ax, @code{const mglData &}ay, @code{const mglData &}az, @code{const char *}sch=@code{NULL}, @code{float} len=@code{0})
+@deftypemethodx mglGraph @code{void} Traj (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN}, @code{float} len=@code{0})
+The function draws vectors @{@var{ax}, @var{ay}, @var{az}@} along a curve @{@var{x}, @var{y}, @var{z}@}. The length and color of arrows are proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. The color is specified by the string argument @var{sch}. Previous color scheme is used by default. Parameter @var{len} set the vector length factor (if non-zero) or vector length to be proportional the distance between curve points (if @var{len}=0). The minor sizea of all arrays must be equal and large 2. Vectors are plotted for each column of the arrays. See also @ref{Vect}. @sref{Traj sample}
+@end deftypemethod
+
+@c ==================================================================
+@node Vect, VectL, Traj, Vector fields
 @subsection Vect
 @cindex Vect
 
@@ -1697,6 +1714,8 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @subsection VectL
 @cindex VectL
 
+These functions are obsolete -- use Vect() functions instead.
+
 @deftypemethod mglGraph @code{void} VectL (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
 The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The length of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). Points are denote the start of hachures. The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Vect}, @ref{VectC}, @ref{Flow}, @ref{Dew}. @sref{VectL sample}
 @end deftypemethod
@@ -1717,6 +1736,8 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @node VectC, Dew, VectL, Vector fields
 @subsection VectC
 @cindex VectC
+
+These functions are obsolete -- use Vect() functions instead.
 
 @deftypemethod mglGraph @code{void} VectC (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
 The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The color of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). Points are denote the start of hachures. The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Vect}, @ref{VectL}, @ref{Flow}, @ref{Dew}.  @sref{VectC sample}

@@ -284,6 +284,18 @@ The most of the library was written by one person. This is result of near a year
 @item How can I display a bitmap?
 You can import data into a mglData instance and display it by Dens() function. For example, for black-and-white bitmap you can use the code: @code{mglData bmp; bmp.Import("fname.png","wk"); gr->Dens(bmp,"wk");}.
 
+@item How can I use MathGL in Qt, FLTK, wxWidgets ...?
+There are special classes (widgets) for these libraries: QMathGL for Qt, Fl_MathGL for FLTK and so on. If you don't find the appropriate class then you can create yours own widget which display a bitmap from mglGraphAB::GetBits().
+
+@item How can I create U3D file (make 3D in PDF)?
+There are 2 steps: first you should create IDTF file, and later convert it to U3D. You can use @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=300628, U3D tools} for converting IDTF file to U3D. It need @uref{http://libharu.org, libharu} 2.1.0 or later. For installation use @code{./bootstrap, ./configure, make, sudo make install}. It provide IDTFConverter program for converting textual files *.idtf to binary files *.u3d. Last ones can be included into PDF.
+
+@item How I can change font family?
+First, you should download new font files from @uref{http://mathgl.sourceforge.net/download.html, here} or from @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, here}. Next, you should load font files into mglGraph class instance @var{gr} by following command: @code{gr->SetFont(new mglFont(fontname,path));}. Here @var{fontname} is base font name like @samp{STIX} and @var{path} set the location of font files. Use @code{gr->SetFont(NULL);} for using default font.
+
+@item How can I draw tick out of bounding box?
+Just set negative value for @var{TickLen}. For example, use @code{gr->SetTickLen(-0.1);}.
+
 @end table
 
 @node Thanks, , FAQ, Overview

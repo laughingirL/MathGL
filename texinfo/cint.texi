@@ -276,7 +276,8 @@ Function imitate a fog in the plot. Fog start from relative distance @var{dz} fr
 @cindex MarkSize
 @cindex ArrowSize
 @cindex BaseLineWidth
-@cindex TickLen
+@cindex SetTickLen
+@cindex SetTickStl
 
 These functions control the default (initial) values for most graphics parameters including sizes of markers, arrows, linewidth and so on. As any other settings these ones will influence only on plots created after the settings change.
 
@@ -296,8 +297,12 @@ The size of arrows for @ref{1D plotting (Pure C)}, lines and curves. Default val
 The variable define the base width for all lines. The value <1 is ignored. Increase of this variables is actual for large bitmap pictures. Default value is @code{1}.
 @end deftypefn
 
-@deftypefn {C function} @code{void} mgl_set_tick_len (@code{HMGL} gr, @code{float} val)
-The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @math{\sqrt@{2@}=1.41...} times smaller.
+@deftypefn {C function} @code{void} mgl_set_tick_len (@code{HMGL} gr, @code{float} val, @code{float} stt)
+The relative length of axis ticks. Default value is @code{0.1}. Parameter @var{stt}>0 set relative length of subticks which is in @code{sqrt(1+stt)} times smaller.
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_set_tick_stl (@code{HMGL} gr, @code{const char *}stl, @code{const char *}sub)
+The line style of axis ticks (@var{stl}) and subticks (@var{sub}). If @var{stl} is empty then default style is used (@samp{k} or @samp{w} depending on transparency type). If @var{sub} is empty then ticks style is used (i.e. @var{stl}).
 @end deftypefn
 
 
@@ -1614,6 +1619,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 These functions perform plotting of 2D and 3D vector fields. There are 5 generally different types of vector fields representations: simple vector field (Vect), vector field with coloring (VectC), vector field by dew-drops (Dew), flow threads (Flow), flow pipes (Pipe). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 @menu
+* Traj (Pure C)::               
 * Vect (Pure C)::               
 * VectC (Pure C)::              
 * Dew (Pure C)::                
@@ -1622,7 +1628,17 @@ These functions perform plotting of 2D and 3D vector fields. There are 5 general
 @end menu
 
 @c ==================================================================
-@node Vect (Pure C), VectC (Pure C), , Vector fields (Pure C)
+@node Traj (Pure C), Vect (Pure C), , Vector fields (Pure C)
+@subsection Traj (Pure C)
+@cindex Traj
+
+@deftypefn {C function} @code{void} mgl_traj_xyz (@code{HMGL} gr, @code{const HMDT}x, @code{const HMDT}y, @code{const HMDT}z, @code{const HMDT}ax, @code{const HMDT}ay, @code{const HMDT}az, @code{const char *}sch=@code{NULL}, @code{float} len=@code{0})
+@deftypefnx {C function} @code{void} mgl_traj_xy (@code{HMGL} gr, @code{const HMDT}x, @code{const HMDT}y, @code{const HMDT}ax, @code{const HMDT}ay, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN}, @code{float} len=@code{0})
+The function draws vectors @{@var{ax}, @var{ay}, @var{az}@} along a curve @{@var{x}, @var{y}, @var{z}@}. The length and color of arrows are proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. The color is specified by the string argument @var{sch}. Previous color scheme is used by default. Parameter @var{len} set the vector length factor (if non-zero) or vector length to be proportional the distance between curve points (if @var{len}=0). The minor sizea of all arrays must be equal and large 2. Vectors are plotted for each column of the arrays. See also @ref{Vect}. @sref{Traj sample}
+@end deftypefn
+
+@c ==================================================================
+@node Vect (Pure C), VectC (Pure C), Traj (Pure C), Vector fields (Pure C)
 @subsection Vect (Pure C)
 @cindex Vect
 
@@ -1646,6 +1662,8 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @node VectC (Pure C), Dew (Pure C), Vect (Pure C), Vector fields (Pure C)
 @subsection VectC (Pure C)
 @cindex VectC
+
+These functions are obsolete -- use mgl_vect_*() functions instead.
 
 @deftypefn {C function} @code{void} mgl_vectc_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal)
 The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The color of hachures is proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of hachures depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also Vect(), Flow(), Dew(). @sref{VectC sample}
@@ -2201,6 +2219,11 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @deftypefn {C function} @code{HMDT} mgl_data_subdata (@code{const HMDT} dat, @code{int} xx, @code{int} yy, @code{int} zz)
 Extracts sub-array data from the original data array keeping fixed positive index. For example @code{SubData(-1,2)} extracts 3d row (indexes are zero based), @code{SubData(4,-1)} extracts 5th column, @code{SubData(-1,-1,3)} extracts 4th slice and so on.
 @end deftypefn
+
+@deftypefn {C function} @code{HMDT} mgl_data_subdata_ext (@code{const HMDT} dat, @code{const HMDT} xx, @code{const HMDT} yy, @code{const HMDT} zz)
+Extracts sub-array data from the original data array for indexes specified by arrays @var{xx}, @var{yy}, @var{zz} (indirect access). The resulting array have the same dimensions as input arrays for 2D and 3D arguments. This function work like previous one for 1D arguments (or numbers). The dimensions of all argument must be the same if they are 2D or 3D arrays.
+@end deftypefn
+
 @deftypefn {C function} @code{HMDT} mgl_data_column (@code{const HMDT} dat, @code{const char *}eq)
 Get column (or slice) of the data filled by formula @var{eq} of other named columns. For example, @code{Column("n*w^2/exp(t)");}. The column ids must be defined first by @code{SetColumnId()} function.
 @end deftypefn

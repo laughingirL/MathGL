@@ -731,11 +731,11 @@ void mglGraphAB::glyph_fill(mreal x,mreal y, mreal f, int nt, const short *trig,
 //-----------------------------------------------------------------------------
 void mglGraphAB::glyph_wire(mreal x,mreal y, mreal f, int nl, const short *line, mreal *c)
 {
-	long ik,ii,il;
+	if(!line || nl<=0)	return;
+	long ik,ii,il=0;
 	mreal p[12];
 	unsigned pdef=PDef;	PDef = 0xffff;
-	if(!line || nl<=0)	return;
-	il = 0;
+	float opw=PenWidth;	PenWidth=1;
 	for(ik=0;ik<nl;ik++)
 	{
 		ii = 2*ik;
@@ -754,13 +754,14 @@ void mglGraphAB::glyph_wire(mreal x,mreal y, mreal f, int nl, const short *line,
 		PostScale(p,2);
 		line_plot(p,p+3,c,c);
 	}
-	PDef = pdef;
+	PDef = pdef;	PenWidth = opw;
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::glyph_line(mreal x,mreal y, mreal f, mreal *c, bool solid)
 {
 	mreal p[12], pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 	unsigned pdef=PDef;	PDef = 0xffff;
+	float opw=PenWidth;	PenWidth=1;
 
 	mreal dy = 0.004;
 	p[0]=x;			p[1]=y+dy;	p[2]=0;
@@ -778,6 +779,6 @@ void mglGraphAB::glyph_line(mreal x,mreal y, mreal f, mreal *c, bool solid)
 		line_plot(p,p+3,c,c);	line_plot(p+9,p+3,c,c);
 		line_plot(p,p+6,c,c);	line_plot(p+9,p+6,c,c);
 	}
-	PDef = pdef;
+	PDef = pdef;	PenWidth=opw;
 }
 //-----------------------------------------------------------------------------

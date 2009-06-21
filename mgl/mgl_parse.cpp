@@ -27,9 +27,7 @@
 
 #ifdef WIN32
 #include <io.h>
-wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim){
-    wcstok(wcs,delim);
-}
+wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim)	{	wcstok(wcs,delim);	}
 #define wcstok(a,b,c) wcstokw32(a,b)
 #else
 #include <unistd.h>
@@ -204,14 +202,15 @@ bool mglParse::AddParam(int n, const wchar_t *str, bool isstr)
 mglVar *mglParse::FindVar(const wchar_t *name)
 {
 	mglVar *v=DataList;
-	wchar_t *s = mgl_wcsdup(name),*p;
-	p = wcschr(s,'.');	if(p)	{	p[0]=0;	p++;	}
+//	wchar_t *s = mgl_wcsdup(name),*p;
+//	p = wcschr(s,'.');	if(p)	{	p[0]=0;	p++;	}
 	while(v)
 	{
-		if(!wcscmp(s, v->s))	{	free(s);	return v;	}
+//		if(!wcscmp(s, v->s))	{	free(s);	return v;	}
+		if(!wcscmp(name, v->s))	return v;
 		v = v->next;
 	}
-	free(s);
+//	free(s);
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -277,86 +276,41 @@ bool mgls_suffix(const wchar_t *p, mglData *d, mreal *v)
 }
 //-----------------------------------------------------------------------------
 // convert substrings to arguments
+mglData mglFormulaCalc(const wchar_t *string, mglParse *arg);
 void mglParse::FillArg(int k, wchar_t **arg, mglArg *a)
 {
-	wchar_t *s, *t, *p=0, *b;
-	register long n,ii;
+	register long n;
 	for(n=1;n<k;n++)
 	{
 		mglVar *v, *u;
 		a[n-1].type = -1;
-		for(b=arg[n],ii=0,p=0;*b!=0;b++)
-		{
-			if(*b=='\'')	ii = 1-ii;
-			if(ii==0 && *b=='.')
-			{	p = b;	break;	}
-		}
-//		p = wcschr(arg[n],'.');
-		if(arg[n][0]!='\'' && (s=wcschr(arg[n],'(')))	// subdata or column in argument
-		{
-			// separate suffix only HERE !!!
-			if(p)	{	p[0]=0;	p++;	}
-			s = mgl_wcsdup(arg[n]);
-			t = wcstok (s, L"(,)",&b);
-			v = FindVar(t);
-			if(v==0)
-			{	a[n-1].type = 2;	a[n-1].v = NAN;		free(s);	return;	}
-			if(!wcschr(arg[n],'\''))	// this subdata
-			{
-				long k[3]={-1,-1,-1};
-				// continue parsing
-				t = wcstok (0, L"(,)",&b);	if(t)	k[0] = t[0]==':'?-1:wcstol(t,0,0);
-				t = wcstok (0, L"(,)",&b);	if(t)	k[1] = t[0]==':'?-1:wcstol(t,0,0);
-				t = wcstok (0, L"(,)",&b);	if(t)	k[2] = t[0]==':'?-1:wcstol(t,0,0);
-				u = new mglVar;		u->temp = true;
-				swprintf(a[n-1].w,2048,L"%ls.SubData(%d,%d,%d)",v->s,k[0],k[1],k[2]);
-				u->d = v->d.SubData(k[0],k[1],k[2]);
-			}
-			else	// this is column formula
-			{
-				wchar_t *tt = wcstok(0,L"'",&b);
-				t = wcstok(0,L"'",&b);	t[-1]=0;
-				u = new mglVar;		u->temp = true;
-				char *cc = new char[wcslen(tt)+1];
-//				wcstombs(cc,tt,wcslen(tt)+1);
-				mgl_wcstombs(cc,tt,wcslen(tt)+1);
-				swprintf(a[n-1].w,2048,L"%ls.Column(\"%s\")",v->s,cc);
-				u->d = v->d.Column(cc);
-				delete []cc;
-			}
-			free(s);
-			if(DataList)	u->MoveAfter(DataList);
-			else			DataList = u;
-			a[n-1].type = 0;	a[n-1].d = &(u->d);
-		}
-		else if(arg[n][0]=='|')	a[n-1].type = -1;
+		if(arg[n][0]=='|')	a[n-1].type = -1;
 		else if(arg[n][0]=='\'')
-		{
+		{	// this is string (simplest case)
 			a[n-1].type = 1;	arg[n][wcslen(arg[n])-1] = 0;
 			if(wcslen(arg[n]+1)>=2048)	arg[n][2048]=0;
 			wcscpy(a[n-1].w, arg[n]+1);
 		}
 		else if((v = FindVar(arg[n]))!=0)
-		{
-			p = wcschr(arg[n],'.');	if(p)	{	p[0]=0;	p++;	}
+		{	// have to find normal variables (for data creation)
 			a[n-1].type = 0;		a[n-1].d = &(v->d);
 			wcscpy(a[n-1].w, v->s);
 		}
 		else
-		{
-			a[n-1].type = 2;
-			if(!wcscmp(arg[n],L"nan"))	a[n-1].v = NAN;
-			else if(!wcscmp(arg[n],L":"))	a[n-1].v = -1;
-			else if(!wcscmp(arg[n],L"pi"))	a[n-1].v = M_PI;
-			else if(!wcscmp(arg[n],L"-pi"))	a[n-1].v = -M_PI;
-			else if(!wcscmp(arg[n],L"on"))	a[n-1].v = 1;
-			else if(!wcscmp(arg[n],L"off"))	a[n-1].v = 0;
-			else	a[n-1].v = wcstod(arg[n],0);
+		{	// parse all numbers and formulas by unified way
+			const mglData &d=mglFormulaCalc(arg[n], this);
+//printf("arg: %ls, -- dat: %ld x %ld x %ld, -- val: %g\n",arg[n],d.nx,d.ny,d.nz,d.a[0]);
+			if(d.nx*d.ny*d.nz==1)
+			{	a[n-1].type = 2;	a[n-1].v = d.a[0];	}
+			else
+			{
+				u=new mglVar;	u->temp=true;	u->d=d;
+				swprintf(a[n-1].w,2048,L"/*%ls*/",arg[n]);
+				if(DataList)	u->MoveAfter(DataList);
+				else			DataList = u;
+				a[n-1].type = 0;	a[n-1].d = &(u->d);
+			}
 		}
-		// try to find numbers (momentum) for data
-		if(a[n-1].type == 0 && p)
-			if(mgls_suffix(p,a[n-1].d,&(a[n-1].v)))
-				a[n-1].type = 2;
 	}
 }
 //-----------------------------------------------------------------------------

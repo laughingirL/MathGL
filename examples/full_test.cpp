@@ -653,13 +653,14 @@ int sample_1d(mglGraph *gr, const void *s)	// full test (in PNG)
 	y1.Modify("0.5+0.3*cos(2*pi*x)");	y2.Modify("0.3*sin(2*pi*x)");
 	x.Fill(-1,1,'x');			x2.Modify("0.05+0.03*cos(2*pi*x)");
 
-	mglData  x0(10), y0(10), ex0(10), ey0(10),ch(7,2);
+	mglData x0(10), y0(10), ex0(10), ey0(10),ch(7,2);
 	x0.Modify("2*x-1 + 0.1*rnd-0.05");
 	y0.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x) + 0.2*rnd-0.1");
 	ey0.Modify("0.2");	ex0.Modify("0.1");	ch.Modify("rnd+0.1");
 
 	gr->Org = mglPoint();
 	gr->Clf();	gr->Box();	gr->Plot(y);	save(gr,"plot",suf);
+	gr->Clf();	gr->Box();	gr->Plot(x,y);	gr->Traj(x,y,y1,y2);	save(gr,"traj",suf);
 	gr->Clf();	gr->Box();	gr->Tens(y.SubData(-1,0), y.SubData(-1,1));	save(gr,"tens",suf);
 	gr->Clf();	gr->Box();	gr->Area(y);	save(gr,"area",suf);
 	gr->Clf();	gr->Box();	gr->Stem(y);	save(gr,"stem",suf);
@@ -1242,7 +1243,18 @@ void usage()
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
-	sample_legend(gr,"");
+	mglData y(50,3), x(50), x2(50), y1(50), y2(50), ys(10,3);
+	y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
+	y.Modify("sin(2*pi*x)",1);	y.Modify("cos(2*pi*x)",2);
+	y1.Modify("0.5+0.3*cos(2*pi*x)");	y2.Modify("0.3*sin(2*pi*x)");
+	x.Fill(-1,1,'x');			x2.Modify("0.05+0.03*cos(2*pi*x)");
+
+mglData d1=y.SubData(-1,0),d2=y.SubData(-1,1);
+printf("n1: %ld,%ld,%ld\tm1: %g,%g\n",d1.nx,d1.ny,d1.nz,d1.Minimal(),d1.Maximal());
+printf("n2: %ld,%ld,%ld\tm2: %g,%g\n",d2.nx,d2.ny,d2.nz,d2.Minimal(),d2.Maximal());
+//	gr->Box();	gr->Plot(x,y);	gr->Traj(x,y,y1,y2);
+	gr->Tens(d1,d2);
+
 	gr->ShowImage("",false);
 //	gr->Box();
 //	gr->Puts(mglPoint(0,1),"Text \\a{over} \\u{under} \\frac{aaa}{bbb} \\sqrt{sss}");

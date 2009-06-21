@@ -14,12 +14,14 @@ Argument can be a string, a variable name or a number.
 The string is any symbols between ordinary marks @samp{'}.
 
 @item 
-Variable name is arbitrary combination of symbols (except spaces and @samp{'}) started from a letter and with length less than 64. It is possible to use sub-arrays (like in @code{subdata} command) as command argument. For example, @code{a(1)} or @code{a(1,:)} or @code{a(1,:,:)} is second row, @code{a(:,2)} or @code{a(:,2,:)} is third column, @code{a(:,:,0)} is first slice and so on.
+Variable name is arbitrary combination of symbols (except spaces and @samp{'}) started from a letter and with length less than 64. It is possible to use sub-arrays (like in @code{subdata} command) as command argument. For example, @code{a(1)} or @code{a(1,:)} or @code{a(1,:,:)} is second row, @code{a(:,2)} or @code{a(:,2,:)} is third column, @code{a(:,:,0)} is first slice and so on. Also you can extract a part of array from m-th to n-th element by code @code{a(m:n,:,:)} or just @code{a(m:n)}.
 
 If names for data columns was specified (by set_id command or in the file at string started with @code{##}) then it is possible to use any column combinations defined by formulas, like @code{a('n*w^2/exp(t)')}.
 
+Also, any expression (without spaces) of existed variables produce temporary variable. For example, @samp{sqrt(dat(:,5)+1)} will produce temporary variable with data values equal to @code{tmp[i,j] = sqrt(dat[i,5,j]+1)}. Such variables can not be used as 1st argument for commands which create (return) the data (like @samp{new}, @samp{read}, @samp{hist} and so on).
+
 @item 
-Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated as number if they were not redefined by user. Also variables with suffixes are treated as numbers (@pxref{Suffixes}).
+Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated as number if they were not redefined by user. Variables with suffixes are treated as numbers (@pxref{Suffixes}). Also results of formulas with sizes 1x1x1 are treated as number (for example, @samp{pi/dat.nx}).
 @end itemize
 Before the first using all variables must be defined with the help of commands, like, @code{new, var, list, copy} or @code{read}. 
 
@@ -132,6 +134,8 @@ Command imitate a fog in the plot. Fog start from relative distance @var{dz} fro
 @cindex marksize
 @cindex arrowsize
 @cindex linewidth
+@cindex ticklen
+@cindex tickstl
 
 These commands control the default (initial) values for most graphics parameters including sizes of markers, arrows, linewidth and so on. As any other settings these ones will influence only on plots created after the settings change.
 
@@ -147,8 +151,12 @@ The size of arrows for lines and curves. Default value is @code{1}.
 The variable define the base width for all lines. The value <1 is ignored. Increase of this variables is actual for large bitmap pictures. Default value is @code{1}.
 @end deffn
 
-@deffn {MGL command} ticklen @code{val}
-The relative length of axis ticks. Default value is @code{0.1}. Note that subticks are @code{sqrt(2)=1.41...} times smaller.
+@deffn {MGL command} ticklen @code{val} [@code{stt=1}]
+The relative length of axis ticks. Default value is @code{0.1}. Parameter @var{stt}>0 set relative length of subticks which is in @code{sqrt(1+stt)} times smaller.
+@end deffn
+
+@deffn {MGL command} tickstl 'stl' ['sub'='']
+The line style of axis ticks (@var{stl}) and subticks (@var{sub}). If @var{stl}='' then default style is used (@samp{k} or @samp{w} depending on transparency type). If @var{sub}='' then ticks style is used (i.e. @var{stl}).
 @end deffn
 
 @c ==================================================================
@@ -881,11 +889,16 @@ Draws spectrogram of complex array @var{re}+i*@code{im} for Fourier size of @var
 @cindex pipe
 @cindex dew
 
-These commands perform plotting of 2D and 3D vector fields. There are 5 generally different types of vector fields representations: simple vector field (Vect), vector field with coloring (VectC), vector field by dew-drops (Dew), flow threads (Flow), flow pipes (Pipe). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
+These commands perform plotting of 2D and 3D vector fields. There are 6 generally different types of vector fields representations: simple vector field (Vect), vector field with coloring (VectC), vector field by dew-drops (Dew), flow threads (Flow), flow pipes (Pipe), vectors along a curve (Traj). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 The color is specified by the string argument @var{sch}. Previous color scheme is used by default. Parameter @var{flag} setup the hachures (arrows). It is compination of vlaues: @code{MGL_VEC_COL=1} for drawing bi-color arrow, @code{MGL_VEC_LEN=2} for drawing fixed length arrows, @code{MGL_VEC_DOT=16} for drawing hachures with dots instead of arrows, @code{MGL_VEC_END=4} for drawing arrows to the cell point, @code{MGL_VEC_MID=8} for drawing arrows with center at cell point. 
 
 The size of @var{udat}, @var{vdat} and @var{wdat} must be equal. The minor dimensions of arrays @var{xdat}, @var{ydat}, @var{zdat} and @var{udat} must be equal too. Arrays @var{xdat}, @var{ydat} and @var{zdat} can be vectors (not matrices as @var{udat}). The graphics is plotted for each z slice of @var{udat}, @var{vdat} for 2D case.
+
+@deffn {MGL command} traj xdat ydat udat vdat ['sch'='' @code{zval=nan len=0}]
+@deffnx {MGL command} traj xdat ydat zdat udat vdat wdat ['sch'='' @code{len=0}]
+Draws plane vector field plot for the field @{@var{udat}, @var{vdat}, @var{wdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat}, @var{zdat}. The length and color of arrows are proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. See also @code{vect}. @sref{Traj sample}
+@end deffn
 
 @deffn {MGL command} vect udat vdat ['sch'='' @code{zval=nan flag=0}]
 @deffnx {MGL command} vect xdat ydat udat vdat ['sch'='' @code{zval=nan flag=0}]
@@ -1095,6 +1108,10 @@ Set the symbol id for data columns. The string must contain one symbol 'a'...'z'
 Display information (sizes, maximum/minimum, momentums and so on) about the data dat. Show brief information by default (if @code{detail=off}).
 @end deffn
 
+@deffn {MGL command} info 'text'
+Display @var{text} as information (warning).
+@end deffn
+
 @c ------------------------------------------------------------------
 @node Data filling (MGL), Rearrange data (MGL), Data create (MGL), MGL interface
 @section Data filling (MGL)
@@ -1269,6 +1286,10 @@ Makes array @var{res} of sizes @var{mx}, @var{my}, @var{mz} with interpolated da
 
 @deffn {MGL command} subdata res dat @code{xx [yy=: zz=:]}
 Extracts sub-array data @var{res} from the original data @var{dat} array keeping fixed positive index. For example @code{subdata a b : 2} extracts 3d row (indexes are zero based), @code{subdata a b 4 :} extracts 5th column, @code{subdata a b : : 3} extracts 4th slice and so on. Note that symbol @samp{:} is defined @samp{:}=@code{-1} in MGL.
+@end deffn
+
+@deffn {MGL command} trace res dat
+Gets array of diagonal elements dat[i,i] (for 2D case) or dat[i,i,i] (for 3D case) where i=0...nx-1. Function return copy of itself for 1D case. Data array must have dimensions ny,nz >= nx or ny,nz = 1.
 @end deffn
 
 @deffn {MGL command} transform dat 'type' real imag

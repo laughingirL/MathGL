@@ -462,9 +462,9 @@ int mgl_fortran_func(HMGL gr, void *f)
 }
 //-----------------------------------------------------------------------------
 void mgl_set_auto(HMGL gr, mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, mreal z2)
-{
-	gr->SetAutoRanges(x1,x2,y1,y2,z1,z2);
-}
-void mgl_set_tick_len(HMGL gr, mreal len)
-{	gr->TickLen = len>0 ? len : 0.1;	}
+{	gr->SetAutoRanges(x1,x2,y1,y2,z1,z2);	}
+void mgl_set_tick_len(HMGL gr, mreal len, mreal stt)
+{	gr->SetTickLen(len,stt);	}
+void mgl_set_tick_stl(HMGL gr, const char *stl, const char *sub)
+{	gr->SetTickStl(stl,sub);	}
 //-----------------------------------------------------------------------------

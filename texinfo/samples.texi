@@ -2749,6 +2749,7 @@ gr.Surf3(a);
 * SurfA sample::                
 * TileS sample::                
 * Map sample::                  
+* Traj sample::                 
 * Vect sample::                 
 * VectL sample::                
 * VectC sample::                
@@ -2977,7 +2978,7 @@ gr.TileS(a,b);
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Map sample, Vect sample, TileS sample, Dual plotting samples
+@node Map sample, Traj sample, TileS sample, Dual plotting samples
 @subsection Map sample
 @cindex Map
 
@@ -3096,7 +3097,101 @@ gr.Map(a, b, "brgk", 0, 0);
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Vect sample, VectL sample, Map sample, Dual plotting samples
+@node Traj sample, Vect sample, Map sample, Dual plotting samples
+@subsection Traj sample
+@cindex Traj
+
+@float
+@image{png/traj, 7cm}
+@caption{Example of Plot. @tdref{traj}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData y(50,3), x(50), y1(50), y2(50);
+y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);
+y.Modify("cos(2*pi*x)",2);
+y1.Modify("0.5+0.3*cos(2*pi*x)");
+y2.Modify("0.3*sin(2*pi*x)");
+x.Fill(-1,1,'x');
+
+gr->Box();
+gr->Plot(x,y);
+gr->Traj(x,y,y1,y2);
+@end verbatim
+@strong{MGL code}
+@verbatim
+new y 50 3
+new x 50
+new y1 50
+new y2 50
+modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
+modify y 'sin(2*pi*x)' 1
+modify y 'cos(2*pi*x)' 2
+fill x -1 1
+modify y1 '0.5+0.3*cos(2*pi*x)'
+modify y2 '0.3*sin(2*pi*x)'
+box
+plot x y
+traj x y y1 y2
+@end verbatim
+@strong{Pure C code}
+@verbatim
+HMDT y = mgl_create_data_size(50,3,1);
+HMDT x= mgl_create_data_size(50,1,1);
+HMDT y1 = mgl_create_data_size(50,1,1);
+HMDT y2 = mgl_create_data_size(50,1,1);
+mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
+mgl_data_modify(y,"sin(2*pi*x)",1);
+mgl_data_modify(y,"cos(2*pi*x)",2);
+mgl_data_modify(x,"2*x-1",0);
+mgl_data_modify(y1,"0.5+0.3*cos(2*pi*x)",0);
+mgl_data_modify(y2,"0.3*sin(2*pi*x)",0);
+mgl_box(gr,1);
+mgl_plot_xy(gr,x,y,NULL);
+mgl_traj_xy(gr,yx,y,y1,y2,NULL,0,0);
+mgl_delete_data(y);  mgl_delete_data(y1);
+mgl_delete_data(x);  mgl_delete_data(y2);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer x,y,y1,y2, mgl_create_data_size
+y = mgl_create_data_size(50,3,1)
+x= mgl_create_data_size(50,1,1);
+y1 = mgl_create_data_size(50,1,1);
+y2 = mgl_create_data_size(50,1,1);
+call mgl_data_modify(y,'0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)',0)
+call mgl_data_modify(y,'sin(2*pi*x)',1)
+call mgl_data_modify(y,'cos(2*pi*x)',2)
+call mgl_data_modify(x,'2*x-1',0);
+call mgl_data_modify(y1,'0.5+0.3*cos(2*pi*x)',0);
+call mgl_data_modify(y2,'0.3*sin(2*pi*x)',0);
+call mgl_box(gr,1)
+call mgl_plot_xy(gr,x,y,NULL);
+call mgl_traj_xy(gr,yx,y,y1,y2,NULL,0,0);
+call mgl_delete_data(y)
+call mgl_delete_data(x)
+call mgl_delete_data(y1)
+call mgl_delete_data(y2)
+@end verbatim
+@strong{Python}
+@verbatim
+x,y,y1,y2 = mglData(50), mglData(50,3), mglData(50), mglData(50);
+y.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);
+y.Modify("cos(2*pi*x)",2);
+y1.Modify("0.5+0.3*cos(2*pi*x)");
+y2.Modify("0.3*sin(2*pi*x)");
+x.Fill(-1,1,'x');
+gr.Box();
+gr.Plot(x,y);
+gr.Traj(x,y,y1,y2);
+@end verbatim
+
+
+@c ------------------------------------------------------------------
+@node Vect sample, VectL sample, Traj sample, Dual plotting samples
 @subsection Vect sample
 @cindex Vect
 

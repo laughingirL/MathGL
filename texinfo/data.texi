@@ -257,15 +257,25 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @cindex Combine
 @cindex Evaluate
 @cindex Resize
+@cindex Trace
 
 @deftypemethod mglData @code{mglData} SubData (@code{int} xx, @code{int} yy=@code{-1}, @code{int} zz=@code{-1}) @code{const}
 Extracts sub-array data from the original data array keeping fixed positive index. For example @code{SubData(-1,2)} extracts 3d row (indexes are zero based), @code{SubData(4,-1)} extracts 5th column, @code{SubData(-1,-1,3)} extracts 4th slice and so on. The most convenient way is to use this function as initialization of other @code{mglData} variable like @code{mglData a1(a.SubData(-1,-1,3))}.
 @end deftypemethod
+
+@deftypemethod mglData @code{mglData} SubData (@code{const mglData &}xx, @code{const mglData &}yy, @code{const mglData &}zz) @code{const}
+Extracts sub-array data from the original data array for indexes specified by arrays @var{xx}, @var{yy}, @var{zz} (indirect access). The resulting array have the same dimensions as input arrays for 2D and 3D arguments. This function work like previous one for 1D arguments (or numbers). The dimensions of all argument must be the same if they are 2D or 3D arrays.
+@end deftypemethod
+
 @deftypemethod mglData @code{mglData} Column (@code{const char *}eq) @code{const}
 Get column (or slice) of the data filled by formula @var{eq} of other named columns. For example, @code{Column("n*w^2/exp(t)");}. The column ids must be defined first by @code{SetColumnId()} function.
 @end deftypemethod
 @deftypemethod mglData @code{void} SetColumnId (@code{const char *}ids)
 Set the symbol id for data columns. The string must contain one symbol 'a'...'z' per column (without spaces).
+@end deftypemethod
+
+@deftypemethod mglData @code{mglData} Trace () @code{const}
+Gets array of diagonal elements a[i,i] (for 2D case) or a[i,i,i] (for 3D case) where i=0...nx-1. Function return copy of itself for 1D case. Data array must have dimensions ny,nz >= nx or ny,nz = 1.
 @end deftypemethod
 
 @deftypemethod mglData @code{mglData} Hist (@code{int} n, @code{float} v1=@code{0}, @code{float} v2=@code{1}, @code{int} nsub=@code{0}) @code{const}
