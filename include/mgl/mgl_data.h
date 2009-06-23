@@ -178,6 +178,8 @@ public:
 	mglData Column(const char *eq);
 	/// Set names for columns (slices)
 	void SetColumnId(const char *ids);
+	/// Make new id
+	void NewId();
 	/// Reduce size of the data
 	void Squeeze(int rx,int ry=1,int rz=1,bool smooth=true);
 	/// Crop the data

@@ -216,6 +216,8 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 		if(v)	res = v->d;
 		else if(!wcscmp(str,L"rnd"))	res.a[0] = mgl_rnd();
 		else if(!wcscmp(str,L"pi"))	res.a[0] = M_PI;
+		else if(!wcscmp(str,L"on"))	res.a[0] = 1;
+		else if(!wcscmp(str,L"off"))	res.a[0] = 0;
 		else if(!wcscmp(str,L":"))	res.a[0] = -1;
 		else res.a[0] = wcstof(str,0);		// this is number
 		delete []str;	return res;
@@ -521,7 +523,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 //-----------------------------------------------------------------------------
 void mgl_wcslwr(wchar_t *str)
 {
-	for(long k=0;k<(long)wcslen(str);k++)	// удаляем начальные пробелы
+	for(long k=0;k<(long)wcslen(str);k++)	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
 }
 //-----------------------------------------------------------------------------

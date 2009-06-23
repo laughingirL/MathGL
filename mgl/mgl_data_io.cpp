@@ -45,7 +45,7 @@ void mglData::Set(const char *v,int NX,int NY,int NZ)
 		while(!isspace(v[j])&& v[j])	j++;
 	}
 	delete []a;
-	a=b;	nx=NX;	ny=NY;	nz=NZ;
+	a=b;	nx=NX;	ny=NY;	nz=NZ;	NewId();
 }
 //-----------------------------------------------------------------------------
 void mglData::Set(gsl_vector *v)
@@ -225,7 +225,7 @@ mglData mglData::SubData(const mglData &xx, const mglData &yy, const mglData &zz
 		d.a[i+n*(j+m*k)] = a[x+nx*(y+ny*z)];
 	}
 	if(m==1)	{	d.ny=d.nz;	d.nz=1;	}// "squeeze" dimensions
-	if(n==1)	{	d.nx=d.ny;	d.ny=d.nz;	d.nz=1;	}
+	if(n==1)	{	d.nx=d.ny;	d.ny=d.nz;	d.nz=1;	d.NewId();}
 	return d;
 }
 //-----------------------------------------------------------------------------
@@ -256,8 +256,8 @@ mglData mglData::Column(const char *eq)
 //-----------------------------------------------------------------------------
 void mglData::SetColumnId(const char *ids)
 {
-	if(ids)	strncpy(id,ids,nx);
-	else	memset(id,0,nx*sizeof(char));
+	NewId();	// clearing + be sure about correct length
+	if(ids)	for(long i=0;i<nx && ids[i]!=0;i++)	id[i]=ids[i];
 }
 //-----------------------------------------------------------------------------
 void mglData::Save(const char *fname,int ns) const
@@ -409,7 +409,7 @@ bool mglData::ReadMat(const char *fname,int dim)
 	if(dim<=0 || dim>3)	return false;
 	FILE *fp = fopen(fname,"rt");
 	if(!fp)	return false;
-	nx = ny = nz = 1;
+	nx = ny = nz = 1;	NewId();
 
 	fseek(fp,0,SEEK_END);
 	long nb = ftell(fp);
@@ -776,7 +776,7 @@ void mglData::Squeeze(int rx,int ry,int rz,bool smooth)
 		}*/
 	delete []a;
 	a = b;
-	nx = kx;  ny = ky;  nz = kz;
+	nx = kx;  ny = ky;  nz = kz;	NewId();
 }
 //-----------------------------------------------------------------------------
 mglData mglData::Combine(const mglData &b) const
@@ -822,7 +822,7 @@ void mglData::Extend(int n1, int n2)
 		if(n2>0 && ny==1)	for(i=0;i<n2;i++)
 			memcpy(b+i*mx*my, a, mx*my*sizeof(mreal));
 	}
-	if(b)	{	delete []a;	a = b;	nx = mx;	ny = my;	nz = mz;	}
+	if(b)	{	delete []a;	a=b;	nx=mx;	ny=my;	nz=mz;	NewId();	}
 }
 //-----------------------------------------------------------------------------
 void mglData::Transpose(const char *dim)
@@ -840,25 +840,25 @@ void mglData::Transpose(const char *dim)
 	{
 		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
 			b[j+ny*(i+nx*k)] = a[i+nx*(j+ny*k)];
-		n=nx;	nx=ny;	ny=n;
+		n=nx;	nx=ny;	ny=n;	NewId();
 	}
 	else if(!strcmp(dim,"yzx"))
 	{
 		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
 			b[j+ny*(k+nz*i)] = a[i+nx*(j+ny*k)];
-		n=nx;	nx=ny;	ny=nz;	nz=n;
+		n=nx;	nx=ny;	ny=nz;	nz=n;	NewId();
 	}
 	else if(!strcmp(dim,"zxy"))
 	{
 		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
 			b[k+nz*(i+nx*j)] = a[i+nx*(j+ny*k)];
-		n=nx;	nx=nz;	nz=ny;	ny=n;
+		n=nx;	nx=nz;	nz=ny;	ny=n;	NewId();
 	}
 	else if(!strcmp(dim,"zyx") || !strcmp(dim,"zx"))
 	{
 		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
 			b[k+nz*(j+ny*i)] = a[i+nx*(j+ny*k)];
-		n=nz;	nz=nx;	nx=n;
+		n=nz;	nz=nx;	nx=n;	NewId();
 	}
 	delete []a;		a = b;
 }
@@ -953,7 +953,7 @@ void mglData::ReadHDF(const char *fname,const char *data)
 		case 2:	nx = dims[1];	ny = dims[0];	break;
 		case 3:	nx = dims[2];	ny = dims[1];	nz = dims[0];	break;
 		}
-		delete []a;		a = new mreal[nx*ny*nz];
+		delete []a;		a = new mreal[nx*ny*nz];	NewId();
 #if(MGL_USE_DOUBLE==1)
 		H5Dread(hd, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, a);
 #else
@@ -1100,4 +1100,7 @@ void mglData::Set(const std::vector<float> &d)
 {	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
 void mglData::Set(const std::vector<double> &d)
 {	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+//-----------------------------------------------------------------------------
+void mglData::NewId()
+{	delete []id;	id=new char[nx];	memset(id,0,nx*sizeof(char));	}
 //-----------------------------------------------------------------------------

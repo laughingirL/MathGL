@@ -30,7 +30,7 @@ struct mglArg
 	wchar_t w[2048];///< String with parameters (used if type==1)
 	char s[2048];	///< String with parameters (used if type==1)
 	mreal v;		///< Numerical value (used if type==2)
-	mglArg()	{	type=-1;	d=0;	v=0;	s[0]=0;	};
+	mglArg()	{	type=-1;	d=0;	v=0;	s[0]=0;	w[0]=0;	};
 };
 //-----------------------------------------------------------------------------
 /// Structure for MGL command

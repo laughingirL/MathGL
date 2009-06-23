@@ -596,7 +596,7 @@ void mglData::Crop(int n1,int n2,char dir)
 		nn = n2-n1;	b = new mreal[nn*ny*nz];
 		for(i=0;i<ny*nz;i++)
 			memcpy(b+nn*i,a+nx*i+n1,nn*sizeof(mreal));
-		nx = nn;	delete []a;		a = b;
+		nx = nn;	delete []a;		a = b;	NewId();
 		break;
 	case 'y':
 		n2 = n2>0 ? n2 : ny+n2;
@@ -1314,7 +1314,7 @@ void mglData::Rearrange(int mx, int my, int mz)
 	else if(mz<1)	mz = (nx*ny*nz)/(mx*my);
 	long m = mx*my*mz;
 	if(m==0 || m>nx*ny*nz)	return;	// too high desired dimensions
-	nx = mx;	ny = my;	nz = mz;
+	nx = mx;	ny = my;	nz = mz;	NewId();
 }
 //-----------------------------------------------------------------------------
 void mglData::InsertColumns(int at, int num, const char *eq)

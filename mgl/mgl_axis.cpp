@@ -629,22 +629,18 @@ void mglGraph::Axis(const char *dir, bool adjust)
 //-----------------------------------------------------------------------------
 void mglGraph::TickBox()
 {
-	mreal x0,y0,z0,x,y,z,ddx,ddy,ddz,xx,yy,zz;
+	mreal x0,y0,z0,x,y,z,ddx,ddy,ddz;
 	x0 = GetOrgX(0);	y0 = GetOrgY(0);	z0 = GetOrgZ(0);
 	ddx = dx>=0 ? dx : mgl_okrugl((Min.x-Max.x)/(dx+1),3);
 	ddy = dy>=0 ? dy : mgl_okrugl((Min.y-Max.y)/(dy+1),3);
 	ddz = dz>=0 ? dz : mgl_okrugl((Min.z-Max.z)/(dz+1),3);
-	xx = ddx;	yy = ddz;	zz = ddz;
-//	xx = ddx>0.1*fabs(Max.x-Min.x) ? 0.1*(Max.x-Min.x) : ddx;
-//	yy = ddy>0.1*fabs(Max.y-Min.y) ? 0.1*(Max.y-Min.y) : ddy;
-//	zz = ddz>0.1*fabs(Max.z-Min.z) ? 0.1*(Max.z-Min.z) : ddz;
 	if(xnum)	for(int i=0;i<xnum;i++)
 	{
 		x = xval[i];
-		DrawXTick(x,Min.y,Min.z,yy,zz);
-		DrawXTick(x,Min.y,Max.z,yy,-zz);
-		DrawXTick(x,Max.y,Min.z,-yy,zz);
-		DrawXTick(x,Max.y,Max.z,-yy,-zz);
+		DrawXTick(x,Min.y,Min.z,ddy,ddz);
+		DrawXTick(x,Min.y,Max.z,ddy,-ddz);
+		DrawXTick(x,Max.y,Min.z,-ddy,ddz);
+		DrawXTick(x,Max.y,Max.z,-ddy,-ddz);
 	}
 	else if(ddx>0)	// рисуем метки по х
 	{
@@ -652,10 +648,10 @@ void mglGraph::TickBox()
 		x0 = x0 - ddx*floor((x0-Min.x)/ddx);
 		for(x=x0;x<Max.x;x+=ddx)
 		{
-			DrawXTick(x,Min.y,Min.z,yy,zz);
-			DrawXTick(x,Min.y,Max.z,yy,-zz);
-			DrawXTick(x,Max.y,Min.z,-yy,zz);
-			DrawXTick(x,Max.y,Max.z,-yy,-zz);
+			DrawXTick(x,Min.y,Min.z,ddy,ddz);
+			DrawXTick(x,Min.y,Max.z,ddy,-ddz);
+			DrawXTick(x,Max.y,Min.z,-ddy,ddz);
+			DrawXTick(x,Max.y,Max.z,-ddy,-ddz);
 		}
 	}
 	else if(Min.x>0)
@@ -674,10 +670,10 @@ void mglGraph::TickBox()
 	if(ynum)	for(int i=0;i<ynum;i++)
 	{
 		y = yval[i];
-		DrawYTick(y,Min.x,Min.z,xx,zz);
-		DrawYTick(y,Min.x,Max.z,xx,-zz);
-		DrawYTick(y,Max.x,Min.z,-xx,zz);
-		DrawYTick(y,Max.x,Max.z,-xx,-zz);
+		DrawYTick(y,Min.x,Min.z,ddx,ddz);
+		DrawYTick(y,Min.x,Max.z,ddx,-ddz);
+		DrawYTick(y,Max.x,Min.z,-ddx,ddz);
+		DrawYTick(y,Max.x,Max.z,-ddx,-ddz);
 	}
 	else if(ddy>0)	// рисуем метки по y
 	{
@@ -685,10 +681,10 @@ void mglGraph::TickBox()
 		y0 = y0 - ddy*floor((y0-Min.y)/ddy);
 		for(y=y0;y<Max.y;y+=ddy)
 		{
-			DrawYTick(y,Min.x,Min.z,xx,zz);
-			DrawYTick(y,Min.x,Max.z,xx,-zz);
-			DrawYTick(y,Max.x,Min.z,-xx,zz);
-			DrawYTick(y,Max.x,Max.z,-xx,-zz);
+			DrawYTick(y,Min.x,Min.z,ddx,ddz);
+			DrawYTick(y,Min.x,Max.z,ddx,-ddz);
+			DrawYTick(y,Max.x,Min.z,-ddx,ddz);
+			DrawYTick(y,Max.x,Max.z,-ddx,-ddz);
 		}
 	}
 	else if(Min.y>0)
@@ -707,10 +703,10 @@ void mglGraph::TickBox()
 	if(znum)	for(int i=0;i<znum;i++)
 	{
 		z = zval[i];
-		DrawZTick(z,Min.x,Min.y,xx,yy);
-		DrawZTick(z,Min.x,Max.y,xx,-yy);
-		DrawZTick(z,Max.x,Min.y,-xx,yy);
-		DrawZTick(z,Max.x,Max.y,-xx,-yy);
+		DrawZTick(z,Min.x,Min.y,ddx,ddy);
+		DrawZTick(z,Min.x,Max.y,ddx,-ddy);
+		DrawZTick(z,Max.x,Min.y,-ddx,ddy);
+		DrawZTick(z,Max.x,Max.y,-ddx,-ddy);
 	}
 	else if(ddz>0)	// рисуем метки
 	{
@@ -718,10 +714,10 @@ void mglGraph::TickBox()
 		z0 = z0 - ddz*floor((z0-Min.z)/ddz);
 		for(z=z0;z<Max.z;z+=ddz)
 		{
-			DrawZTick(z,Min.x,Min.y,xx,yy);
-			DrawZTick(z,Min.x,Max.y,xx,-yy);
-			DrawZTick(z,Max.x,Min.y,-xx,yy);
-			DrawZTick(z,Max.x,Max.y,-xx,-yy);
+			DrawZTick(z,Min.x,Min.y,ddx,ddy);
+			DrawZTick(z,Min.x,Max.y,ddx,-ddy);
+			DrawZTick(z,Max.x,Min.y,-ddx,ddy);
+			DrawZTick(z,Max.x,Max.y,-ddx,-ddy);
 		}
 	}
 	else if(Min.z>0)

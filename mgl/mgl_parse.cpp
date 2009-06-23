@@ -40,12 +40,10 @@ void mgl_wcstrim(wchar_t *str)
 	wchar_t *c = mgl_wcsdup(str);
 	unsigned long n=wcslen(str);
 	long k;
-	for(k=0;k<long(wcslen(str));k++)	// ������� ��������� �������
-		if(str[k]>' ')	break;
+	for(k=0;k<long(wcslen(str));k++)		if(str[k]>' ')	break;
 	wcscpy(c,&(str[k]));
 	n = wcslen(c);
-	for(k=n-1;k>=0;k--)	// ������� ��������� �������
-		if(c[k]>' ')		break;
+	for(k=n-1;k>=0;k--)	if(c[k]>' ')	break;
 	c[k+1] = 0;
 	wcscpy(str,c);	free(c);
 }
@@ -75,7 +73,7 @@ bool check_for_name(const wchar_t *s)
 void mgl_wcstombs(char *dst, const wchar_t *src, int size)
 {
 	register int j;
-	for(j=0;src[j] && j<size-1;j++)
+	for(j=0;j<size-1 && src[j]!=0;j++)
 		dst[j] = src[j]<0x7f ? src[j] : ' ';
 	dst[j] = 0;
 }
@@ -86,7 +84,7 @@ int mglParse::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wc
 	int k[10], i;
 	for(i=0;i<10;i++)	k[i] = i<n ? a[i].type + 1 : 0;
 //	for(i=0;i<n;i++)	wcstombs(a[i].s, a[i].w, 1024);
-	for(i=0;i<n;i++)	mgl_wcstombs(a[i].s, a[i].w, 1024);
+	for(i=0;i<n;i++)		mgl_wcstombs(a[i].s, a[i].w, 1024);
 	mglCommand tst, *rts;
 	for(i=0;Cmd[i].name[0];i++);	// determine the number of symbols
 	tst.name = com;
@@ -130,13 +128,11 @@ mglVar::~mglVar()
 //-----------------------------------------------------------------------------
 mglParse::mglParse(bool setsize)
 {
-	DataList=0;		Cmd = mgls_base_cmd;
+	memset(this,0,sizeof(mglParse));
+	Cmd = mgls_base_cmd;
 	AllowSetSize=setsize;
-	Once = true;	Skip = false;	out = 0;
-	parlen=320;		Stop=false;		if_pos = 0;
-	for(long i=0;i<10;i++)	{	par[i] = 0;	for_stack[i]=0;	opt[i]=false;	}
-	opt[10] = false;
-	op1 = new wchar_t[2048];	op2 = new wchar_t[2048];
+	Once = true;	parlen=320;
+	op1 = new wchar_t[4096];	op2 = new wchar_t[4096];
 }
 //-----------------------------------------------------------------------------
 mglParse::~mglParse()

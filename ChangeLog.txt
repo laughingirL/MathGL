@@ -3,7 +3,7 @@
 	- Write new MGL parser which can handle arbitrary expression as argument for data and/or number.
 	- Function mglGraph*::Window() now can handle NULL-pointer as function (draw built-in bitmap only). The window can be created from Fortran programs too.
 	- Add new plot Traj() for drawing vectors along the curve.
-	- Add new plot Flow(mglPoint p, ...) for drawing the flow thread from point p.
+	- Add new plot Flow(mglPoint p, ...) for drawing the flow thread from a point.
 	- Functions mglGraph::Vect() now have additional argument for kind of vector plot. Correspondingly mgl_vect_*() functions now have additional argument too!
 	- Add function mglGraph::Axis() for predefined curvilinear coordinates.
 	- Add function mglData::SubData() for indirect access to the data elements.
@@ -15,8 +15,9 @@
 	- Legend now is drawn flat (without any rotation).
 	- Function mglData::Sew() now handle NAN values correctly.
 	- Add MGL command types for further UDAV developping.
-	- Line width now isn't influenced on text printing.
+	- Line width now don't influence on text printing.
 	- Bug correction in marker drawing for EPS, SVG.
+	- Bug with not always defined mglGraph::id.
 	- Bug correction in configure (older compiler support, wrong glut.h demand).
 	- Bug in lang/CMakeLists.txt (for making Python interface).
 	- Better support for isnan() function on different compilers.

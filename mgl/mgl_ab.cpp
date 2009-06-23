@@ -445,7 +445,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	}
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
 	fnt->Puts(wcs,font1,col);
-	Pop();	free(font1);	EndGroup();
+	Pop();	delete []font1;	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
