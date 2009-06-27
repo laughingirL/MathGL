@@ -36,14 +36,14 @@
 #endif
 //-----------------------------------------------------------------------------
 extern unsigned mgl_numg, mgl_cur;
-extern float mgl_fact;
+extern mreal mgl_fact;
 extern long mgl_gen_fnt[516][6];
 extern short mgl_buf_fnt[246080];
-const float mgl_fgen = 4*14;
+const mreal mgl_fgen = 4*14;
 extern mglTeXsymb mgl_tex_symb[];
 mglFont mglDefFont;
 //-----------------------------------------------------------------------------
-float mglFont::Puts(const char *str,const char *how, char col)
+mreal mglFont::Puts(const char *str,const char *how, char col)
 {
 	int font=0, align=1;
 	if(how)
@@ -61,7 +61,7 @@ float mglFont::Puts(const char *str,const char *how, char col)
 	return Puts(str, font, align, col);
 }
 //-----------------------------------------------------------------------------
-float mglFont::Width(const char *str,const char *how)
+mreal mglFont::Width(const char *str,const char *how)
 {
 	int font=0;
 	if(how)
@@ -75,7 +75,7 @@ float mglFont::Width(const char *str,const char *how)
 	return Width(str, font);
 }
 //-----------------------------------------------------------------------------
-float mglFont::Puts(const wchar_t *str,const char *how, char col)
+mreal mglFont::Puts(const wchar_t *str,const char *how, char col)
 {
 	int font=0, align=1;
 	if(how)
@@ -93,7 +93,7 @@ float mglFont::Puts(const wchar_t *str,const char *how, char col)
 	return Puts(str, font, align,col);
 }
 //-----------------------------------------------------------------------------
-float mglFont::Width(const wchar_t *str,const char *how)
+mreal mglFont::Width(const wchar_t *str,const char *how)
 {
 	int font=0;
 	if(how)
@@ -107,30 +107,30 @@ float mglFont::Width(const wchar_t *str,const char *how)
 	return Width(str, font);
 }
 //-----------------------------------------------------------------------------
-float mglFont::Puts(const char *str,int font,int align, char col)
+mreal mglFont::Puts(const char *str,int font,int align, char col)
 {
 	unsigned size = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[size];
 	mbstowcs(wcs,str,size);
-	float w = Puts(wcs,font,align,col);
+	mreal w = Puts(wcs,font,align,col);
 	delete []wcs;
 	return w;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Width(const char *str,int font)
+mreal mglFont::Width(const char *str,int font)
 {
 	unsigned size = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[size];
 	mbstowcs(wcs,str,size);
-	float w = Width(wcs,font);
+	mreal w = Width(wcs,font);
 	delete []wcs;
 	return w;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Puts(const wchar_t *str,int font,int align, char col)
+mreal mglFont::Puts(const wchar_t *str,int font,int align, char col)
 {
 	if(numg==0)	return 0;
-	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0;
+	mreal ww=0,w=0,h = (align&4) ? 500./fact[0] : 0;
 	unsigned size = wcslen(str)+1;
 	if(parse)
 	{
@@ -168,10 +168,10 @@ float mglFont::Puts(const wchar_t *str,int font,int align, char col)
 	return ww;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Width(const wchar_t *str,int font)
+mreal mglFont::Width(const wchar_t *str,int font)
 {
 	if(numg==0)	return 0;
-	float w=0;
+	mreal w=0;
 	unsigned size = wcslen(str)+1;
 	if(parse)
 	{
@@ -195,14 +195,14 @@ float mglFont::Width(const wchar_t *str,int font)
 	return w;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Height(int font)
+mreal mglFont::Height(int font)
 {
 	if(numg==0)	return 0;
 	int s = (font/MGL_FONT_BOLD)&3;
 	return (500.f)/fact[s];
 }
 //-----------------------------------------------------------------------------
-float mglFont::Height(const char *how)
+mreal mglFont::Height(const char *how)
 {
 	if(numg==0)	return 0;
 	int s=0;
@@ -327,7 +327,7 @@ void mglFont::Convert(const wchar_t *str, unsigned *res)
 	res[j] = 0;
 }
 //-----------------------------------------------------------------------------
-float mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float &w1,float &w2, float f1, float f2, int st)
+mreal mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,mreal &w1,mreal &w2, mreal f1, mreal f2, int st)
 {
 	static unsigned s1[2]={0,0}, s2[2]={0,0};
 	register long k;
@@ -360,7 +360,7 @@ float mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float
 	return w1>w2 ? w1 : w2;
 }
 //-----------------------------------------------------------------------------
-void mglFont::draw_ouline(mglGraph *gr, int st, float x, float y, float f, float g, float ww, char ccol)
+void mglFont::draw_ouline(mglGraph *gr, int st, mreal x, mreal y, mreal f, mreal g, mreal ww, char ccol)
 {
 	if(st&MGL_FONT_OLINE)
 		gr->Glyph(x,y+499*f/g, ww*g, (st&MGL_FONT_WIRE)?12:8, 0, ccol);
@@ -368,16 +368,16 @@ void mglFont::draw_ouline(mglGraph *gr, int st, float x, float y, float f, float
 		gr->Glyph(x,y-200*f/g, ww*g, (st&MGL_FONT_WIRE)?12:8, 0, ccol);
 }
 //-----------------------------------------------------------------------------
-float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char col)
+mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char col)
 {
 	if(numg==0)	return 0;
 	register long i,j,k;
 	register unsigned s,ss;
-	float w=0;				// string width
+	mreal w=0;				// string width
 	int st = style;			// current style
 	unsigned *b1, *b2;		// pointer to substring
 	unsigned *str;			// string itself
-	float yy=y, ff=f, ww, w1, w2;
+	mreal yy=y, ff=f, ww, w1, w2;
 	char ccol=col;
 	int a = (st/MGL_FONT_BOLD)&3;
 	for(i=0;text[i];i++);
@@ -509,7 +509,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char
 	return w;
 }
 //-----------------------------------------------------------------------------
-void mglFont::read_data(FILE *fp, float *ff, short *wdt, short *numl,
+void mglFont::read_data(FILE *fp, mreal *ff, short *wdt, short *numl,
 						unsigned *posl, short *numt, unsigned *post, unsigned &cur)
 {
 	char str[256];
@@ -746,7 +746,7 @@ void mglFont::Copy(mglFont *f)
 	memcpy(numl[1],f->numl[1],numg*sizeof(short));
 	memcpy(numl[2],f->numl[2],numg*sizeof(short));
 	memcpy(numl[3],f->numl[3],numg*sizeof(short));
-	memcpy(fact,f->fact,4*sizeof(float));
+	memcpy(fact,f->fact,4*sizeof(mreal));
 	// now copy symbols descriptions
 	buf = (short *)malloc(numb*sizeof(short));
 	memcpy(buf, f->buf, numb*sizeof(short));

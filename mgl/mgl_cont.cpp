@@ -143,7 +143,7 @@ void mglGraph::cont_plot(mreal val,long n,long m,mreal *a,
 	if(text)
 	{
 		wchar_t wcs[64];
-		swprintf(wcs,64,L"%4.3g",val);
+		mglprintf(wcs,64,L"%4.3g",val);
 		font_curve(pc,pp,tt,nn,wcs,text,-0.5);
 	}
 	if(axial)	axial_plot(pc,pp,nn,64,wire);
@@ -158,7 +158,7 @@ void mglGraph::Cont(const mglData &v, const mglData &x, const mglData &y, const 
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"Cont");	return;	}
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"Cont");	return;	}
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
-	{	SetWarn(mglWarnDim);	return;	}
+	{	SetWarn(mglWarnDim, "Cont");	return;	}
 	static int cgid=1;	StartGroup("Cont",cgid++);
 
 	long text=0;
@@ -327,7 +327,7 @@ void mglGraph::ContF(const mglData &v, const mglData &x, const mglData &y, const
 	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"ContF");	return;	}
 	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"ContF");	return;	}
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
-	{	SetWarn(mglWarnDim);	return;	}
+	{	SetWarn(mglWarnDim, "ContF");	return;	}
 	static int cgid=1;	StartGroup("ContF",cgid++);
 
 	SetScheme(sch);
@@ -387,6 +387,58 @@ void mglGraph::ContF(const mglData &z, const char *sch, int Num, mreal zVal)
 	mglData v(Num+2);
 	for(long i=0;i<Num+2;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i)/(Num+1);
 	ContF(v,z,sch,zVal);
+}
+//-----------------------------------------------------------------------------
+//
+//	ContD series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::ContD(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const char *sch, mreal zVal)
+{
+	if(x.nx!=z.nx)		{	SetWarn(mglWarnDim,"ContD");	return;	}
+	if(z.nx<2 || z.ny<2){	SetWarn(mglWarnLow,"ContD");	return;	}
+	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
+	{	SetWarn(mglWarnDim, "ContD");	return;	}
+	if(!sch || !(*sch))	sch = PalNames;
+	mglColor *cm = new mglColor[NUM_COLOR];
+	long nc=NumCol, i, len=strlen(sch);
+	memcpy(cm,cmap,NUM_COLOR*sizeof(mglColor));	// save color scheme
+	mglData vv(2);
+	char ss[2]="k";
+	for(i=0;i<v.nx*v.ny*v.nz-1;i++)
+	{
+		vv.a[0] = v.a[i];	vv.a[1] = v.a[i+1];
+		ss[0] = sch[i%len];	ContF(vv,x,y,z,ss,zVal);
+	}
+	
+	NumCol = nc;
+	memcpy(cmap,cm,NUM_COLOR*sizeof(mglColor));	// restore color scheme
+	delete []cm;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::ContD(const mglData &v, const mglData &z, const char *sch, mreal zVal)
+{
+	if(z.nx<2 || z.ny<2)	{	SetWarn(mglWarnLow,"ContD");	return;	}
+	mglData x(z.nx), y(z.ny);
+	x.Fill(Min.x,Max.x);
+	y.Fill(Min.y,Max.y);
+	ContD(v,x,y,z,sch,zVal);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::ContD(const mglData &x, const mglData &y, const mglData &z, const char *sch, int Num, mreal zVal)
+{
+	if(Num<1)	{	SetWarn(mglWarnCnt,"ContD");	return;	}
+	mglData v(Num+2);
+	for(long i=0;i<Num+2;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i)/(Num+1);
+	ContD(v,x,y,z,sch,zVal);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::ContD(const mglData &z, const char *sch, int Num, mreal zVal)
+{
+	if(Num<1)	{	SetWarn(mglWarnCnt,"ContD");	return;	}
+	mglData v(Num+2);
+	for(long i=0;i<Num+2;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i)/(Num+1);
+	ContD(v,z,sch,zVal);
 }
 //-----------------------------------------------------------------------------
 //
@@ -869,26 +921,24 @@ void mglGraph::ContFA(const mglData &a, const char *stl, int Num)
 }
 //-----------------------------------------------------------------------------
 /// Draw contour lines at slice for 3d data specified parametrically
-void mgl_cont3_xyz_val(HMGL gr, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			char dir, int sVal, const char *sch)
+void mgl_cont3_xyz_val(HMGL gr, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch)
 {	if(gr && a && x && y && z && v)	gr->Cont3(*v, *x, *y, *z, *a, dir, sVal, sch);	}
 /// Draw contour lines at slice for 3d data
 void mgl_cont3_val(HMGL gr, const HMDT v, const HMDT a, char dir, int sVal, const char *sch)
 {	if(gr && a && v)	gr->Cont3(*v, *a, dir, sVal, sch);	}
 /// Draw several contour lines at slice for 3d data specified parametrically
-void mgl_cont3_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			char dir, int sVal, const char *sch, int Num)
+void mgl_cont3_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch, int Num)
 {	if(gr && a && x && y && z)	gr->Cont3(*x, *y, *z, *a, dir, sVal, sch, Num);	}
 /// Draw several contour lines at slice for 3d data
 void mgl_cont3(HMGL gr, const HMDT a, char dir, int sVal, const char *sch, int Num)
 {	if(gr && a)	gr->Cont3(*a, dir, sVal, sch, Num);	}
 /// Draw contour lines at central slices for 3d data specified parametrically
-void mgl_cont_all_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			const char *sch, int Num)
+void mgl_cont_all_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch, int Num)
 {	if(gr && a && x && y && z)	gr->ContA(*x, *y, *z, *a, sch, Num);	}
 /// Draw contour lines at central slices for 3d data
 void mgl_cont_all(HMGL gr, const HMDT a, const char *sch, int Num)
 {	if(gr && a)	gr->ContA(*a, sch, Num);	}
+//-----------------------------------------------------------------------------
 /// Draw contour lines for 2d data specified parametrically
 void mgl_cont_xy_val(HMGL gr, const HMDT v, const HMDT x, const HMDT y, const HMDT a, const char *sch, mreal zVal)
 {	if(gr && a && x && y && v)	gr->Cont(*v, *x, *y, *a, sch, zVal);	}
@@ -901,6 +951,7 @@ void mgl_cont_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *
 /// Draw several contour lines for 2d data
 void mgl_cont(HMGL gr, const HMDT a, const char *sch, int Num, mreal zVal)
 {	if(gr && a)	gr->Cont(*a, sch, Num, zVal);	}
+//-----------------------------------------------------------------------------
 /// Draw grid lines for density plot at slice for 3d data specified parametrically
 void mgl_grid3_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch)
 {	if(gr && a && x && y && z)	gr->Grid3(*x, *y, *z, *a, dir, sVal, sch);	}
@@ -913,6 +964,7 @@ void mgl_grid3_all_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const 
 /// Draw grid lines for density plot at central slices for 3d data
 void mgl_grid3_all(HMGL gr, const HMDT a, const char *sch)
 {	if(gr && a)	gr->GridA(*a, sch);	}
+//-----------------------------------------------------------------------------
 /// Draw density plot at slice for 3d data specified parametrically
 void mgl_dens3_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch)
 {	if(gr && a && x && y && z)	gr->Dens3(*x, *y, *z, *a, dir, sVal, sch);	}
@@ -925,6 +977,7 @@ void mgl_dens3_all_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const 
 /// Draw density plot at central slices for 3d data
 void mgl_dens3_all(HMGL gr, const HMDT a, const char *sch)
 {	if(gr && a)	gr->DensA(*a, sch);	}
+//-----------------------------------------------------------------------------
 /// Draw axial-symmetric isosurfaces for 2d data specified parametrically
 void mgl_axial_xy_val(HMGL gr, const HMDT v, const HMDT x, const HMDT y, const HMDT a, const char *sch)
 {	if(gr && a && x && y && v)	gr->Axial(*v, *x, *y, *a, sch);	}
@@ -939,15 +992,13 @@ void mgl_axial(HMGL gr, const HMDT a, const char *sch, int Num)
 {	if(gr && a)	gr->Axial(*a, sch, Num);	}
 //-----------------------------------------------------------------------------
 /// Draw solid contours at slice for 3d data specified parametrically
-void mgl_contf3_xyz_val(HMGL gr, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			char dir, int sVal, const char *sch)
+void mgl_contf3_xyz_val(HMGL gr, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch)
 {	if(gr && a && x && y && z && v)	gr->ContF3(*v, *x, *y, *z, *a, dir, sVal, sch);	}
 /// Draw solid contours at slice for 3d data
 void mgl_contf3_val(HMGL gr, const HMDT v, const HMDT a, char dir, int sVal, const char *sch)
 {	if(gr && a && v)	gr->ContF3(*v, *a, dir, sVal, sch);	}
 /// Draw several solid contours at slice for 3d data specified parametrically
-void mgl_contf3_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
-			char dir, int sVal, const char *sch, int Num)
+void mgl_contf3_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch, int Num)
 {	if(gr && a && x && y && z)	gr->ContF3(*x, *y, *z, *a, dir, sVal, sch, Num);	}
 /// Draw several solid contours at slice for 3d data
 void mgl_contf3(HMGL gr, const HMDT a, char dir, int sVal, const char *sch, int Num)
@@ -959,6 +1010,7 @@ void mgl_contf_all_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const 
 /// Draw solid contours at central slices for 3d data
 void mgl_contf_all(HMGL gr, const HMDT a, const char *sch, int Num)
 {	if(gr && a)	gr->ContFA(*a, sch, Num);	}
+//-----------------------------------------------------------------------------
 /// Draw solid contours for 2d data specified parametrically
 void mgl_contf_xy_val(HMGL gr, const HMDT v, const HMDT x, const HMDT y, const HMDT a, const char *sch, mreal zVal)
 {	if(gr && a && x && y && v)	gr->ContF(*v, *x, *y, *a, sch, zVal);	}
@@ -971,6 +1023,20 @@ void mgl_contf_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char 
 /// Draw several solid contours for 2d data
 void mgl_contf(HMGL gr, const HMDT a, const char *sch, int Num, mreal zVal)
 {	if(gr && a)	gr->ContF(*a, sch, Num, zVal);	}
+//-----------------------------------------------------------------------------
+/// Draw solid contours for 2d data specified parametrically
+void mgl_contd_xy_val(HMGL gr, const HMDT v, const HMDT x, const HMDT y, const HMDT a, const char *sch, mreal zVal)
+{	if(gr && a && x && y && v)	gr->ContD(*v, *x, *y, *a, sch, zVal);	}
+/// Draw solid contours for 2d data
+void mgl_contd_val(HMGL gr, const HMDT v, const HMDT a, const char *sch,mreal zVal)
+{	if(gr && a && v)	gr->ContD(*v, *a, sch, zVal);	}
+/// Draw several solid contours for 2d data specified parametrically
+void mgl_contd_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT a, const char *sch, int Num, mreal zVal)
+{	if(gr && a && x && y)	gr->ContD(*x, *y, *a, sch, Num, zVal);	}
+/// Draw several solid contours for 2d data
+void mgl_contd(HMGL gr, const HMDT a, const char *sch, int Num, mreal zVal)
+{	if(gr && a)	gr->ContD(*a, sch, Num, zVal);	}
+//-----------------------------------------------------------------------------
 /// Print string \a text auintptr_t curve in 3D with font size \a size.
 void mgl_text_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z,const char *text,
 				const char *font, mreal size)
@@ -1028,6 +1094,7 @@ void mgl_cont_all_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num,int l)
 	if(gr && a)	_GR_->ContA(_D_(a), s, *Num);
 	delete []s;
 }
+//-----------------------------------------------------------------------------
 /// Draw contour lines for 2d data specified parametrically
 void mgl_cont_xy_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, mreal *zVal,int l)
 {
@@ -1056,6 +1123,7 @@ void mgl_cont_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num, mreal *zV
 	if(gr && a)	_GR_->Cont(_D_(a), s, *Num, *zVal);
 	delete []s;
 }
+//-----------------------------------------------------------------------------
 /// Draw grid lines for density plot at slice for 3d data specified parametrically
 void mgl_grid3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *dir, int *sVal, const char *sch,int,int l)
 {
@@ -1084,6 +1152,7 @@ void mgl_grid3_all_(uintptr_t *gr, uintptr_t *a, const char *sch,int l)
 	if(gr && a)	_GR_->GridA(_D_(a), s);
 	delete []s;
 }
+//-----------------------------------------------------------------------------
 /// Draw density plot at slice for 3d data specified parametrically
 void mgl_dens3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *dir, int *sVal, const char *sch,int,int l)
 {
@@ -1112,6 +1181,7 @@ void mgl_dens3_all_(uintptr_t *gr, uintptr_t *a, const char *sch,int l)
 	if(gr && a)	_GR_->DensA(_D_(a), s);
 	delete []s;
 }
+//-----------------------------------------------------------------------------
 /// Draw axial-symmetric isosurfaces for 2d data specified parametrically
 void mgl_axial_xy_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch,int l)
 {
@@ -1186,6 +1256,7 @@ void mgl_contf_all_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num,int l
 	if(gr && a)	_GR_->ContFA(_D_(a), s, *Num);
 	delete []s;
 }
+//-----------------------------------------------------------------------------
 /// Draw solid contours for 2d data specified parametrically
 void mgl_contf_xy_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, mreal *zVal,int l)
 {
@@ -1214,6 +1285,36 @@ void mgl_contf_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num, mreal *z
 	if(gr && a)	_GR_->ContF(_D_(a), s, *Num, *zVal);
 	delete []s;
 }
+//-----------------------------------------------------------------------------
+/// Draw solid contours for 2d data specified parametrically
+void mgl_contd_xy_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, mreal *zVal,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && a && x && y && v)	_GR_->ContD(_D_(v), _D_(x), _D_(y), _D_(a), s, *zVal);
+	delete []s;
+}
+/// Draw solid contours for 2d data
+void mgl_contd_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch,mreal *zVal,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && a && v)	_GR_->ContD(_D_(v), _D_(a), s, *zVal);
+	delete []s;
+}
+/// Draw several solid contours for 2d data specified parametrically
+void mgl_contd_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, int *Num, mreal *zVal,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && a && x && y)	_GR_->ContD(_D_(x), _D_(y), _D_(a), s, *Num, *zVal);
+	delete []s;
+}
+/// Draw several solid contours for 2d data
+void mgl_contd_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num, mreal *zVal,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && a)	_GR_->ContD(_D_(a), s, *Num, *zVal);
+	delete []s;
+}
+//-----------------------------------------------------------------------------
 /// Print string \a text auintptr_t curve in 3D with font size \a size.
 void mgl_text_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z,const char *text,
 				const char *font, mreal *size,int l,int n)

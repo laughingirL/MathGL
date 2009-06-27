@@ -100,9 +100,9 @@ public:
 	void setDraw(mglDraw *dr);		///< Set drawing functions from mglDraw class
 
 
-	int getPer()	{return per;};		///< Get perspective value
-	int getPhi()	{return phi;};		///< Get Phi-angle value
-	int getTet()	{return tet;};		///< Get Theta-angle value
+	int getPer()	{return int(per);};	///< Get perspective value
+	int getPhi()	{return int(phi);};	///< Get Phi-angle value
+	int getTet()	{return int(tet);};	///< Get Theta-angle value
 	bool getAlpha()	{return alpha;};	///< Get transparency state
 	bool getLight()	{return light;};	///< Get lightning state
 	bool getZoom()	{return zoom;};		///< Get mouse zooming state

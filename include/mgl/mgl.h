@@ -217,7 +217,8 @@ public:
 	/// Set ambient light brightness
 	virtual void Ambient(mreal bright=0.5);
 	/// Set palette
-	void SetPalette(const char *colors);
+	inline void SetPalette(const char *colors)
+	{	strcpy(DefPal, colors?colors:"Hbgrcmyhlnqeup");	SetPal(colors);	}
 	/// Set colormap scheme for surfaces (usualy called internaly)
 	void SetScheme(const char *sch);
 	/// Set the parameter of line (usualy called internaly)
@@ -233,7 +234,7 @@ public:
 	/// Set ticks styles
 	void SetTickStl(const char *stl, const char *sub=0);
 	/// Set ticks length
-	void SetTickLen(float tlen, float stt=1.);
+	void SetTickLen(mreal tlen, mreal stt=1.);
 	/// Set warning code ant fill Message
 	void SetWarn(int code, const char *who="");
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -330,7 +331,10 @@ public:
 	/// Draw colorbar at edge of axis
 	void Colorbar(const char *sch=0,int where=0);
 	void inline Colorbar(const char *sch, int where, mreal x, mreal y, mreal w, mreal h)	{	SetScheme(sch);	Colorbar(where,x,y,w,h);	};
-	virtual void Colorbar(int where, mreal x, mreal y, mreal w, mreal h)=0;
+	void Colorbar(int where, mreal x, mreal y, mreal w, mreal h);
+	/// Draw colorbar at edge of axis
+	void Colorbar(const mglData &v, const char *sch=0,int where=0);
+	void Colorbar(const mglData &v, const char *sch, int where, mreal x, mreal y, mreal w, mreal h);
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Primitive functions
@@ -500,6 +504,9 @@ public:
 	/// Draw line plot for points in arrays \a y.
 	void Plot(const mglData &y, const char *pen=0,mreal zVal=NAN);
 
+	/// Draw radar chart (plot in curved coordinates)
+	void Radar(const mglData &a, const char *stl=0, mreal r=-1);
+
 	/// Draw line plot for points in arrays \a x, \a y, \a z which is colored by \a c (like tension plot). Parameter \a pen set color scheme and line styles (dashing and width).
 	void Tens(const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *pen=0);
 	/// Draw line plot for points in arrays \a x, \a y.
@@ -628,8 +635,8 @@ public:
 	  * i=1...n, j=1...m. There are 6 generally different types of data
 	  * representations: simple mesh lines plot (\c Mesh), surface plot
 	  * (\c Surf), surface plot by boxes (\c Boxs), density plot
-	  * (\c Dens), contour lines plot (\c Cont, \c ContF) and its rotational figure (\c Axial).
-	  * \c Cont, \c ContF and \c Axial functions have variants for automatic and manual
+	  * (\c Dens), contour lines plot (\c Cont, \c ContF, \c ContD) and its rotational figure (\c Axial).
+	  * \c Cont, \c ContF, \c ContD and \c Axial functions have variants for automatic and manual
 	  * selection of level values for contours. Also there are
 	  * functions for plotting data grid lines according to the data format
 	  * (\c Grid) for enhancing density or contour plots. Each type
@@ -719,6 +726,15 @@ public:
 	void ContF(const mglData &x, const mglData &y, const mglData &z, const char *sch=0, int Num=7, mreal zVal=NAN);
 	/// Draw several solid contours for 2d data
 	void ContF(const mglData &z, const char *sch=0, int Num=7, mreal zVal=NAN);
+	
+	/// Draw solid contours for 2d data specified parametrically with manual colors
+	void ContD(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const char *sch=0, mreal zVal=NAN);
+	/// Draw solid contours for 2d data with manual colors
+	void ContD(const mglData &v, const mglData &z, const char *sch=0,mreal zVal=NAN);
+	/// Draw several solid contours for 2d data specified parametrically with manual colors
+	void ContD(const mglData &x, const mglData &y, const mglData &z, const char *sch=0, int Num=7, mreal zVal=NAN);
+	/// Draw several solid contours for 2d data with manual colors
+	void ContD(const mglData &z, const char *sch=0, int Num=7, mreal zVal=NAN);
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Dual plotting functions
@@ -749,9 +765,9 @@ public:
 	/// Draw vertical tiles with variable size for 2d data
 	void TileS(const mglData &z, const mglData &r, const char *sch=0);
 	/// Plot arrows at position {x,y} along {ax,ay} with length \a len and color proportional to value |a|
-	void Traj(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0, mreal zVal=NAN, float len=0);
+	void Traj(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0, mreal zVal=NAN, mreal len=0);
 	/// Plot arrows at position {x,y,z} along {ax,ay,az} with length \a len and color proportional to value |a|
-	void Traj(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0, float len=0);
+	void Traj(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0, mreal len=0);
 	/// Plot vector field {ax,ay} parametrically depended on coordinate {x,y} with length and color proportional to value |a|
 	void Vect(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0,mreal zVal=NAN, int flag=0);
 	/// Plot vector field {ax,ay} with length and color proportional to value |a|
@@ -965,6 +981,7 @@ protected:
 	bool UseAlpha;				///< Flag that Alpha is used
 	mglColor cmap[NUM_COLOR];	///< Colors for color scheme
 	char PalNames[101];			///< IDs of colors in the palette
+	char DefPal[101];			///< Default palette
 	int CurrPal;				///< Current index of palette mglGraph::Pal
 	int NumCol;					///< Actual number of colors in color scheme mglGraph::cmap
 	mreal CloudFactor;			///< Factor of transparency in mglGraph::CloudP and mglGraph::CloudQ
@@ -983,10 +1000,12 @@ protected:
 	mreal TickLen;		///< Length of tiks (subticks length is sqrt(1+st_t)=1.41... times smaller)
 	char TickStl[32];	///< Tick line style. Default is "k"
 	char SubTStl[32];	///< Subtick line style. Default is "k"
-	float st_t;			///< Subtick-to-tick ratio (ls=lt/sqrt(1+st_t)). Default is 1.
+	mreal st_t;			///< Subtick-to-tick ratio (ls=lt/sqrt(1+st_t)). Default is 1.
 
 	/// Get RGB(A) lines for saving in file
 	virtual unsigned char **GetRGBLines(long &width, long &height, unsigned char *&f, bool alpha=false);
+	/// Set Pal & NumPal
+	void SetPal(const char *colors);
 
 	/// Get Org.x (parse NAN value)
 	virtual mreal GetOrgX(char dir);
@@ -1001,6 +1020,8 @@ protected:
 	/// draw mark with different type at position {x,y,z} (no scaling)
 	virtual void Mark(mreal x,mreal y,mreal z,char mark='.')=0;
 
+	/// Draw generic colorbar
+	virtual void colorbar(const mglData &v, const mglColor *s, int where, mreal x, mreal y, mreal w, mreal h)=0;
 	/// Draws the point (ball) at position \a p with color \a c.
 	virtual void ball(mreal *p,mreal *c);
 	/// Plot tube between consequently connected lines with color and radius varing

@@ -27,6 +27,7 @@ typedef double mreal;
 #else
 typedef float mreal;
 #endif
+//#include <mgl/mgl_define.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -241,6 +242,7 @@ void mgl_puts_ext(HMGL graph, mreal x, mreal y, mreal z,const char *text,const c
 void mgl_text_ext(HMGL graph, mreal x, mreal y, mreal z,const char *text,const char *font,mreal size,char dir);
 void mgl_colorbar(HMGL graph, const char *sch,int where);
 void mgl_colorbar_ext(HMGL graph, const char *sch, int where, mreal x, mreal y, mreal w, mreal h);
+void mgl_colorbar_val(HMGL graph, const HMDT dat, const char *sch,int where);
 void mgl_simple_plot(HMGL graph, const HMDT a, int type, const char *stl);
 void mgl_add_legend(HMGL graph, const char *text,const char *style);
 void mgl_add_legendw(HMGL graph, const wchar_t *text,const char *style);
@@ -255,9 +257,10 @@ void mgl_fplot(HMGL graph, const char *fy, const char *stl, int n);
 void mgl_fplot_xyz(HMGL graph, const char *fx, const char *fy, const char *fz, const char *stl, int n);
 void mgl_plot_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
 void mgl_plot_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
-void mgl_plot(HMGL graph, const HMDT y,	const char *pen);
+void mgl_plot(HMGL graph, const HMDT y, const char *pen);
 void mgl_plot_2(HMGL graph, const HMDT a, const char *pen);
 void mgl_plot_3(HMGL graph, const HMDT a, const char *pen);
+void mgl_radar(HMGL graph, const HMDT a, const char *pen, mreal r);
 void mgl_tens_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *pen);
 void mgl_tens_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT c, const char *pen);
 void mgl_tens(HMGL graph, const HMDT y, const HMDT c,	const char *pen);
@@ -344,10 +347,17 @@ void mgl_cont_xy_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const
 void mgl_cont_val(HMGL graph, const HMDT v, const HMDT z, const char *sch,mreal zVal);
 void mgl_cont_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch, int Num, mreal zVal);
 void mgl_cont(HMGL graph, const HMDT z, const char *sch, int Num, mreal zVal);
+
 void mgl_contf_xy_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const char *sch, mreal zVal);
 void mgl_contf_val(HMGL graph, const HMDT v, const HMDT z, const char *sch,mreal zVal);
 void mgl_contf_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch, int Num, mreal zVal);
 void mgl_contf(HMGL graph, const HMDT z, const char *sch, int Num, mreal zVal);
+
+void mgl_contd_xy_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const char *sch, mreal zVal);
+void mgl_contd_val(HMGL graph, const HMDT v, const HMDT z, const char *sch,mreal zVal);
+void mgl_contd_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *sch, int Num, mreal zVal);
+void mgl_contd(HMGL graph, const HMDT z, const char *sch, int Num, mreal zVal);
+
 void mgl_axial_xy_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT a, const char *sch);
 void mgl_axial_val(HMGL graph, const HMDT v, const HMDT a, const char *sch);
 void mgl_axial_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT a, const char *sch, int Num);

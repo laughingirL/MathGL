@@ -36,11 +36,11 @@ void mglGraph::Traj(const mglData &x, const mglData &y, const mglData &z,
 	// find maximum
 	i = ax.ny>ay.ny ? ax.ny:ay.ny;	j = z.ny>az.ny ? z.ny:az.ny;
 	m = x.ny>y.ny ? x.ny:y.ny;		if(i>m)	m=i;	if(j>m)	m=j;
-	if(sch && *sch)	SetScheme(sch);
-	else	{	cm = cmap[0];	nc=NumCol;	NumCol=1;	}
+	cm = cmap[0];	nc=NumCol;	NumCol=1;
+	SetPal(sch);
 	mreal *pp=new mreal[6*n*m], *cc=new mreal[n*m];
 	bool *tt=new bool[2*n*m];
-	Pen(cmap[0],'-',BaseLineWidth);
+	Pen(NC,'-',BaseLineWidth);
 //	char st[2]={0,0};	// temporary color scheme
 	static int cgid=1;	StartGroup("Traj",cgid++);
 	mreal dx,dy,dz,dd,da,xm=0;
@@ -54,7 +54,7 @@ void mglGraph::Traj(const mglData &x, const mglData &y, const mglData &z,
 	xm = 1./(xm ? sqrt(xm):1);
 	for(j=0;j<m;j++) // start prepare arrows
 	{
-		if(!sch || !sch[0])	cmap[0]=Pal[(CurrPal = (CurrPal+1)%NumPal)];
+		cmap[0]=Pal[(CurrPal = (CurrPal+1)%NumPal)];
 		for(i=0;i<n;i++)
 		{
 			ix = i + n*(j<x.ny?j:0);	jx = i + n*(j<ax.ny?j:0);
@@ -79,7 +79,7 @@ void mglGraph::Traj(const mglData &x, const mglData &y, const mglData &z,
 		}
 		vects_plot(n,pp,cc,tt);
 	}
-	if(!sch || !(*sch))	{	cmap[0]=cm;	NumCol=nc;	}
+	cmap[0]=cm;	NumCol=nc;
 	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;
 }

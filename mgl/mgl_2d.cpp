@@ -39,6 +39,7 @@ void mglGraph::Surf(const char *eqZ, const char *sch, int n)
 		z.a[i+n*j] = eq->Calc(Min.x+i*dx, Min.y+j*dy);
 	}
 	Surf(z, sch);
+	delete eq;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Surf(const char *eqX, const char *eqY, const char *eqZ, const char *sch, int n)
@@ -59,6 +60,7 @@ void mglGraph::Surf(const char *eqX, const char *eqY, const char *eqZ, const cha
 		z.a[i+n*j] = ez->Calc(0,v,0,u);
 	}
 	Surf(x,y,z,sch);
+	delete ex;	delete ey;	delete ez;
 }
 //-----------------------------------------------------------------------------
 //

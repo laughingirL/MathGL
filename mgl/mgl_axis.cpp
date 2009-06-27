@@ -269,13 +269,13 @@ int _mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v)
 		{
 			int k=int(log10(v)-0.01);
 			kind=3;		v=mgl_ipow(10,k);
-			swprintf(s, 32, L"(@{\\times{}10^{%d}})", k);
+			mglprintf(s, 32, L"(@{\\times{}10^{%d}})", k);
 		}
 		if(v<1e-2f)
 		{
 			int k=int(log10(v)-0.01)-1;
 			kind=3;		v=mgl_ipow(10,k);
-			swprintf(s, 32, L"(@{\\times{}10^{%d}})", k);
+			mglprintf(s, 32, L"(@{\\times{}10^{%d}})", k);
 		}
 	}
 	else
@@ -286,14 +286,14 @@ int _mgl_tick_ext(mreal a, mreal b, wchar_t s[32], mreal &v)
 			kind = 2;
 			int k=int(log10(v)-0.01);
 			v=mgl_ipow(10,k);
-			swprintf(s, 32, L"\\times 10^{%d}", k);
+			mglprintf(s, 32, L"\\times 10^{%d}", k);
 		}
 		if(v<1e-2f)
 		{
 			kind = 2;
 			int k=int(log10(v)-0.01)-1;
 			v=mgl_ipow(10,k);
-			swprintf(s, 32, L"\\times 10^{%d}", k);
+			mglprintf(s, 32, L"\\times 10^{%d}", k);
 		}
 	}
 	return kind;
@@ -307,16 +307,16 @@ void _mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, wchar_t str[6
 	if((kind&1) && z>z0)
 	{
 		int n1,n2;
-		swprintf(str, 64, fabs(u)<1 ? L"@{(+%.2g)}" : L"@{(+%.3g)}",u);	n1=wcslen(str);
-		swprintf(str, 64, L"@{(+%g)}",u);	n2=wcslen(str);
-		if(n1<n2)	swprintf(str, 64, L"@{(+%.2g)}",u);
+		mglprintf(str, 64, fabs(u)<1 ? L"@{(+%.2g)}" : L"@{(+%.3g)}",u);	n1=wcslen(str);
+		mglprintf(str, 64, L"@{(+%g)}",u);	n2=wcslen(str);
+		if(n1<n2)	mglprintf(str, 64, L"@{(+%.2g)}",u);
 	}
 	else
 	{
 		int n1,n2;
-		swprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);
-		n1=wcslen(str);	swprintf(str, 64, L"%g",u);	n2=wcslen(str);
-		if(n1<n2)	swprintf(str, 64, L"%.2g",u);
+		mglprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);
+		n1=wcslen(str);	mglprintf(str, 64, L"%g",u);	n2=wcslen(str);
+		if(n1<n2)	mglprintf(str, 64, L"%.2g",u);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -377,7 +377,7 @@ void mglGraph::AxisX(bool text)
 			DrawXTick(x,y0,z0,ddy,ddz);
 			if(text)
 			{
-				if(xtt)	swprintf(str, 64, xtt, fabs(x)<ddx/100 ? 0 : x);
+				if(xtt)	mglprintf(str, 64, xtt, fabs(x)<ddx/100 ? 0 : x);
 				else	_mgl_tick_text(x,x0,ddx/100,v,kind,str);
 				wcstrim_mgl(str);
 				Putsw(mglPoint(x,y0,z0),str,FontDef,-1,'x');
@@ -402,7 +402,7 @@ void mglGraph::AxisX(bool text)
 			if(x*FLT_EPS>=Min.x && x<=Max.x*FLT_EPS)
 			{
 				DrawXTick(x,y0,z0,ddy,ddz);
-				swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(x))));
+				mglprintf(str,64,L"10^{%d}",int(floor(0.1+log10(x))));
 				if(text && cur%k==0)
 					Putsw(mglPoint(x,y0,z0),str,FontDef,-1,'x');
 				cur++;
@@ -471,7 +471,7 @@ void mglGraph::AxisY(bool text)
 			DrawYTick(y,x0,z0,ddx,ddz);
 			if(text)
 			{
-				if(ytt)	swprintf(str, 64, ytt, fabs(y)<ddy/100 ? 0 : y);
+				if(ytt)	mglprintf(str, 64, ytt, fabs(y)<ddy/100 ? 0 : y);
 				else	_mgl_tick_text(y,y0,ddy/100,v,kind,str);
 				wcstrim_mgl(str);
 				Putsw(mglPoint(x0,y,z0),str,FontDef,-1,'y');
@@ -496,7 +496,7 @@ void mglGraph::AxisY(bool text)
 			if(y*FLT_EPS>=Min.y && y<=Max.y*FLT_EPS)
 			{
 				DrawYTick(y,x0,z0,ddx,ddz);
-				swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(y))));
+				mglprintf(str,64,L"10^{%d}",int(floor(0.1+log10(y))));
 				if(text && cur%k==0)
 					Putsw(mglPoint(x0,y,z0),str,FontDef,-1,'y');
 				cur++;
@@ -565,7 +565,7 @@ void mglGraph::AxisZ(bool text)
 			DrawZTick(z,x0,y0,ddx,ddy);
 			if(text)
 			{
-				if(ztt)	swprintf(str,64,ztt,fabs(z)<ddz/100 ? 0 : z);
+				if(ztt)	mglprintf(str,64,ztt,fabs(z)<ddz/100 ? 0 : z);
 				else	_mgl_tick_text(z,z0,ddz/100,v,kind,str);
 				wcstrim_mgl(str);
 				Putsw(mglPoint(x0,y0,z),str,FontDef,-1,'z');
@@ -590,7 +590,7 @@ void mglGraph::AxisZ(bool text)
 			if(z*FLT_EPS>=Min.z && z<=Max.z*FLT_EPS)
 			{
 				DrawZTick(z,x0,y0,ddx,ddy);
-				swprintf(str,64,L"10^{%d}",int(floor(0.1+log10(z))));
+				mglprintf(str,64,L"10^{%d}",int(floor(0.1+log10(z))));
 				if(text && cur%k==0)
 					Putsw(mglPoint(x0,y0,z),str,FontDef,-1,'z');
 				cur++;
@@ -881,16 +881,16 @@ void mglGraph::AxisT(bool text)
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(31,pp,tt);
-	
+
 	NSy = NSy<0 ? 0 : NSy;
 	for(y=0;y<=Max.y+(Max.y-Min.y)*1e-6;y+=ddy)
 	{
 		if(y>Min.y && y<Max.y)	DrawTTick(y,Max.x,z0,ddx,ddz);
-		swprintf(str,64,L"%.2g",y);		wcstrim_mgl(str);
+		mglprintf(str,64,L"%.2g",y);		wcstrim_mgl(str);
 		if(text)	Putsw(mglPoint(Max.x-y,y,z0),str,FontDef,FontSize,'t');
 
 		if(y>Min.y && y<Max.y)	DrawYTick(Max.y-y,Min.x,z0,ddx,ddz);
-		swprintf(str,64,L"%.2g",y);		wcstrim_mgl(str);
+		mglprintf(str,64,L"%.2g",y);		wcstrim_mgl(str);
 		if(text)	Putsw(mglPoint(Min.x,Max.y-y,z0),str,FontDef,FontSize,'y');
 	}
 	if(NSy>0)

@@ -197,6 +197,7 @@ void mgl_puts_ext_(uintptr_t *graph, mreal *x, mreal *y, mreal *z,const char *te
 void mgl_text_ext_(uintptr_t *graph, mreal *x, mreal *y, mreal *z,const char *text,const char *font,mreal *size,const char *dir,int,int,int);
 void mgl_colorbar_(uintptr_t *graph, const char *sch,int *where,int);
 void mgl_colorbar_ext_(uintptr_t *graph, const char *sch,int *where, mreal *x, mreal *y, mreal *w, mreal *h, int);
+void mgl_colorbar_val_(uintptr_t *graph, uintptr_t *dat, const char *sch,int *where,int);
 void mgl_simple_plot_(uintptr_t *graph, uintptr_t *a, int *type, const char *stl,int);
 void mgl_add_legend_(uintptr_t *graph, const char *text,const char *style,int,int);
 void mgl_clear_legend_(uintptr_t *graph);
@@ -213,10 +214,11 @@ void mgl_plot_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen,
 void mgl_plot_(uintptr_t *graph, uintptr_t *y,	const char *pen,int);
 void mgl_plot_2_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
 void mgl_plot_3_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
-void mgl_area_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int);
+void mgl_radar_(uintptr_t *graph, uintptr_t *a,	const char *pen, mreal *r, int);
 void mgl_tens_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *pen,int);
 void mgl_tens_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *c, const char *pen,int);
 void mgl_tens_(uintptr_t *graph, uintptr_t *y, uintptr_t *c, const char *pen,int);
+void mgl_area_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int);
 void mgl_area_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen,int);
 void mgl_area_(uintptr_t *graph, uintptr_t *y, const char *pen,int);
 void mgl_area_2_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
@@ -294,10 +296,17 @@ void mgl_cont_xy_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *x, uintptr_t *y
 void mgl_cont_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *z, const char *sch,mreal *zVal,int);
 void mgl_cont_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, int *Num, mreal *zVal,int);
 void mgl_cont_(uintptr_t *graph, uintptr_t *z, const char *sch, int *Num, mreal *zVal,int);
+
 void mgl_contf_xy_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, mreal *zVal,int);
 void mgl_contf_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *z, const char *sch,mreal *zVal,int);
 void mgl_contf_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, int *Num, mreal *zVal,int);
 void mgl_contf_(uintptr_t *graph, uintptr_t *z, const char *sch, int *Num, mreal *zVal,int);
+
+void mgl_contd_xy_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, mreal *zVal,int);
+void mgl_contd_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *z, const char *sch,mreal *zVal,int);
+void mgl_contd_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, int *Num, mreal *zVal,int);
+void mgl_contd_(uintptr_t *graph, uintptr_t *z, const char *sch, int *Num, mreal *zVal,int);
+
 void mgl_axial_xy_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch,int);
 void mgl_axial_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *a, const char *sch,int);
 void mgl_axial_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, int *Num,int);

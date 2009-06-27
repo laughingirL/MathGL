@@ -87,6 +87,7 @@ gr.ShowImage();
 
 @menu
 * Plot sample::                 
+* Radar sample::                 
 * Tens sample::                 
 * Area sample::                 
 * Bars sample::                 
@@ -105,7 +106,7 @@ gr.ShowImage();
 @end menu
 
 @c ------------------------------------------------------------------
-@node Plot sample, Tens sample, , 1D plotting samples
+@node Plot sample, Radar sample, , 1D plotting samples
 @subsection Plot sample
 @cindex Plot
 
@@ -163,8 +164,55 @@ gr.Box();
 gr.Plot(y);
 @end verbatim
 
+
+
 @c ------------------------------------------------------------------
-@node Tens sample, Area sample, Plot sample, 1D plotting samples
+@node Radar sample, Tens sample, Plot sample, 1D plotting samples
+@subsection Radar sample
+@cindex Radar
+
+@float
+@image{png/radar, 7cm}
+@caption{Example of Plot. @tdref{radar}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData y(10,3);
+y.Modify("0.4*sin(pi*(2*x+y/2))+0.1*rnd");
+gr->Radar(y,"#");
+@end verbatim
+@strong{MGL code}
+@verbatim
+new y 10 3
+modify y '0.4*sin(pi*(2*x+y/2))+0.1*rnd'
+radar y '#'
+@end verbatim
+@strong{Pure C code}
+@verbatim
+HMDT y = mgl_create_data_size(10,3,1);
+mgl_data_modify(y,"0.4*sin(pi*(2*x+y/2))+0.1*rnd",0);
+mgl_radar(gr,y,"#",-1);
+mgl_delete_data(y);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer y, mgl_create_data_size
+y = mgl_create_data_size(10,3,1)
+call mgl_data_modify(y,'0.4*sin(pi*(2*x+y/2))+0.1*rnd',0)
+call mgl_radar(gr,y,'#',-1.)
+call mgl_delete_data(y)
+@end verbatim
+@strong{Python}
+@verbatim
+y = mglData(10,3);
+y.Modify("0.4*sin(pi*(2*x+y/2))+0.1*rnd");
+gr.Radar(y,"#");
+@end verbatim
+
+
+@c ------------------------------------------------------------------
+@node Tens sample, Area sample, Radar sample, 1D plotting samples
 @subsection Tens sample
 @cindex Tens
 
@@ -1166,6 +1214,7 @@ gr.Chart(ch,"bgr cmy#");
 * Dens sample::                 
 * Cont sample::                 
 * ContF sample::                
+* ContD sample::                
 * Axial sample::                
 @end menu
 
@@ -1839,7 +1888,7 @@ gr.Cont(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node ContF sample, Axial sample, Cont sample, 2D plotting samples
+@node ContF sample, ContD sample, Cont sample, 2D plotting samples
 @subsection ContF sample
 @cindex ContF
 
@@ -1903,7 +1952,70 @@ gr.ContF(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Axial sample, , ContF sample, 2D plotting samples
+@node ContD sample, Axial sample, ContF sample, 2D plotting samples
+@subsection ContD sample
+@cindex ContD
+
+@float
+@image{png/contd, 7cm}
+@caption{Example of ContD. @tdref{contd}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData a(50,40), v(9);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+v.Fill(-1,1);
+gr->Box();
+gr->ContD(v,a);
+gr->Colorbar(v);
+@end verbatim
+@strong{MGL code}
+@verbatim
+new a 50 40
+modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
+var v 9 -1 1
+box
+contd v a
+colorbar v
+@end verbatim
+@strong{Pure C code}
+@verbatim
+HMDT a = mgl_create_data_size(50,40,1);
+HMDT v = mgl_create_data_size(9,1,1);
+mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+mgl_data_fill(v,-1.,1.,'x');
+mgl_box(gr,1);
+mgl_contd_val(gr,v,a,0,0);
+mgl_colorbar_val(gr,v,NULL,0);
+mgl_delete_data(a);
+mgl_delete_data(v);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer a, v, mgl_create_data_size
+a = mgl_create_data_size(50,40,1);
+v = mgl_create_data_size(9,1,1);
+call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+call mgl_data_fill(v,-1.,1.,'x');
+call mgl_box(gr,1)
+call mgl_contd_val(gr,v,a,'',0);
+call mgl_colorbar_val(gr,v,NULL,0);
+call mgl_delete_data(a)
+call mgl_delete_data(v)
+@end verbatim
+@strong{Python}
+@verbatim
+a, v = mglData(50,40), mglData(9);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+v.Fill(-1,1);
+gr.Box();
+gr.ContD(v,a);
+gr.Colorbar(v);
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node Axial sample, , ContD sample, 2D plotting samples
 @subsection Axial sample
 @cindex Axial
 

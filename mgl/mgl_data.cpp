@@ -1551,6 +1551,7 @@ void mglData::Envelop(char dir)
 		gsl_fft_complex_wavetable_free(wt);
 	}
 	for(i=0;i<nx*ny*nz;i++)	a[i] = hypot(b[2*i], b[2*i+1]);
+	delete []b;
 #endif
 }
 //-----------------------------------------------------------------------------

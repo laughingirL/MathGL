@@ -12,7 +12,9 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #endif
 //-----------------------------------------------------------------------------
 #ifdef WIN32
-#define swprintf    _snwprintf
+#define mglprintf    _snwprintf
+#else
+#define mglprintf    swprintf
 #endif
 //-----------------------------------------------------------------------------
 #ifndef isnan

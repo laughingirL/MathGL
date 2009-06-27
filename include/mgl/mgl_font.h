@@ -22,7 +22,7 @@
 #define _MGL_FONT_H_
 
 #include <stdio.h>
-
+#include <mgl/mgl_define.h>
 //-----------------------------------------------------------------------------
 #define MGL_FONT_BOLD		0x01000000	// This value is used binary
 #define MGL_FONT_ITAL		0x02000000	// This value is used binary
@@ -61,26 +61,26 @@ public:
 	/// Free memory
 	void Clear();
 	/// Get height of text
-	float Height(int font);
+	mreal Height(int font);
 	/// Get height of text
-	float Height(const char *how);
+	mreal Height(const char *how);
 	/// Print text string for font specified by string
-	float Puts(const char *str,const char *how, char col);
+	mreal Puts(const char *str,const char *how, char col);
 	/// Get width of text string for font specified by string
-	float Width(const char *str,const char *how);
+	mreal Width(const char *str,const char *how);
 	/// Print text string for font specified by integer constant
-	float Puts(const char *str,int font=0,int align=0, char col='k');
+	mreal Puts(const char *str,int font=0,int align=0, char col='k');
 	/// Get width of text string for font specified by integer constant
-	float Width(const char *str,int font=0);
+	mreal Width(const char *str,int font=0);
 
 	/// Print text string for font specified by string
-	float Puts(const wchar_t *str,const char *how, char col);
+	mreal Puts(const wchar_t *str,const char *how, char col);
 	/// Get width of text string for font specified by string
-	float Width(const wchar_t *str,const char *how);
+	mreal Width(const wchar_t *str,const char *how);
 	/// Print text string for font specified by integer constant
-	float Puts(const wchar_t *str,int font=0,int align=0, char col='k');
+	mreal Puts(const wchar_t *str,int font=0,int align=0, char col='k');
 	/// Get width of text string for font specified by integer constant
-	float Width(const wchar_t *str,int font=0);
+	mreal Width(const wchar_t *str,int font=0);
 	/// Return number of glyphs
 	inline unsigned GetNumGlyph()	{	return numg;	};
 	/// Copy data from other font
@@ -94,7 +94,7 @@ public:
 	inline const short *GetLn(int s, long j)	{	return buf+ln[s][j];	};
 	inline int GetNt(int s, long j)	{	return numt[s][j];	};
 	inline int GetNl(int s, long j)	{	return numl[s][j];	};
-	inline float GetFact(int s)		{	return fact[s];	};
+	inline mreal GetFact(int s)		{	return fact[s];	};
 protected:
 	wchar_t *id;		///< Unicode ID for glyph
 	unsigned *tr[4];	///< Shift of glyph description by triangles (for solid font)
@@ -102,14 +102,14 @@ protected:
 	short *numt[4];		///< Number of triangles in glyph description (for solid font)
 	short *numl[4];		///< Number of lines in glyph description (for wire font)
 	short *width[4];	///< Width of glyph for wire font
-	float fact[4];		///< Divider for width of glyph
+	mreal fact[4];		///< Divider for width of glyph
 	unsigned numg;		///< Number of glyphs
 	short *buf;			///< Buffer for glyph descriptions
 	long numb;			///< Buffer size
 
 	/// Draw string recursively
 	/* x,y - position, f - factor, style: 0x1 - italic, 0x2 - bold, 0x4 - overline, 0x8 - underline, 0x10 - empty (not draw) */
-	float Puts(const unsigned *str, float x,float y,float f,int style,char col);
+	mreal Puts(const unsigned *str, mreal x,mreal y,mreal f,int style,char col);
 	/// Replace TeX symbols by its UTF code and add font styles
 	void Convert(const wchar_t *str, unsigned *res);
 	/// Parse LaTeX command
@@ -122,13 +122,13 @@ protected:
 	/// Get symbol for character \a ch with given \a font style
 	unsigned Symbol(char ch);
 private:
-	float get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float &w1,float &w2, float f1, float f2, int st);
-	void read_data(FILE *fp, float *ff, short *wdt, short *numl, unsigned *posl, short *numt, unsigned *post, unsigned &cur);
+	mreal get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,mreal &w1,mreal &w2, mreal f1, mreal f2, int st);
+	void read_data(FILE *fp, mreal *ff, short *wdt, short *numl, unsigned *posl, short *numt, unsigned *post, unsigned &cur);
 	void main_copy();
 	bool read_main(const char *base, const char *path, unsigned &cur);
 	void mem_alloc();
 	bool read_def(unsigned &cur);
-	void draw_ouline(mglGraph *gr, int st, float x, float y, float f, float g, float ww, char ccol);
+	void draw_ouline(mglGraph *gr, int st, mreal x, mreal y, mreal f, mreal g, mreal ww, char ccol);
 };
 //-----------------------------------------------------------------------------
 #endif

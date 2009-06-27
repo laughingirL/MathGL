@@ -56,7 +56,7 @@ void _mgl_timer(int)
 			_mgl_glwnd->curr_fig = 1;
 		glutPostRedisplay();
 	}
-	glutTimerFunc(_mgl_glwnd->Delay*1000,_mgl_timer,0);
+	glutTimerFunc(int(_mgl_glwnd->Delay*1000),_mgl_timer,0);
 }
 //-----------------------------------------------------------------------------
 void mglGraphGLUT::ToggleAlpha()	{	_mgl_key_up('r',0,0);	}
@@ -200,7 +200,7 @@ void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *
 
 	glutDisplayFunc(_mgl_display);
 	glutKeyboardUpFunc(_mgl_key_up);
-	glutTimerFunc(Delay,_mgl_timer,0);
+	glutTimerFunc(int(1000*Delay),_mgl_timer,0);
 
 	// TODO: add window maximazing at start up
 

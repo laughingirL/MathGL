@@ -88,6 +88,7 @@ void mglGraphAB::DefColor(mglColor c, mreal alpha)
 void mglGraphAB::Pen(mglColor col, char style,mreal width)
 {
 	if(col.Valid())	DefColor(col,1);
+	if(style==0)	return;
 	switch(style)
 	{
 	case '-': PDef = 0xffff;	break;
@@ -506,7 +507,7 @@ void mglGraphAB::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
 	Pop();	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
+/*void mglGraphAB::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
 {
 	static int cgid=1;	StartGroup("Colorbar",cgid++);
 	register long i;
@@ -565,7 +566,7 @@ void mglGraphAB::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
 		default:p.x = (x-0.13*w)*s3;	break;
 		}
 		t = Cmin+i*(Cmax-Cmin)/4;
-		if(ctt)	swprintf(str, 64, ctt, t);
+		if(ctt)	mglprintf(str, 64, ctt, t);
 		else	_mgl_tick_text(t,Cmin,(Cmax-Cmin)/100,v,kind,str);
 		wcstrim_mgl(str);
 		Putsw(p,str,a,FontSize);
@@ -576,6 +577,93 @@ void mglGraphAB::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
 	case 2:	p = mglPoint((x+1.75*w)*s3, (y-0.15*h)*s3);	break;
 	case 3:	p = mglPoint((x+1.75*w)*s3, (y+0.15*h)*s3);	break;
 	default:p = mglPoint((x-0.15*w)*s3, (y+1.75*h)*s3);	break;
+	}
+	if(kind&2)	Putsw(p,s,a,FontSize);
+	ScalePuts = true;
+	Pop();	EndGroup();
+}*/
+//-----------------------------------------------------------------------------
+void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mreal x, mreal y, mreal w, mreal h)
+{
+	static int cgid=1;	StartGroup("Colorbar",cgid++);
+	register long i,n=vv.nx;
+	mreal *pp,*cc,d,s3=PlotFactor,ss=s3*0.9,v1=vv.Minimal(),dv;
+	dv=vv.Maximal()-v1;	if(dv)	dv=2/dv;
+
+	pp = new mreal[12*n];	cc = new mreal[16*n];
+	x = 2*x-1;	y = 2*y-1;
+	for(i=0;i<n-1;i++)
+	{
+		d = (vv.a[i]-v1)*dv-1;
+		pp[12*i+0] = pp[12*i+3] = (ss*d+s3)*w+x*s3;
+		pp[12*i+1] = pp[12*i+4] = (ss*d+s3)*h+y*s3;
+		pp[12*i+2] = pp[12*i+5] = s3;
+		switch(where)
+		{
+			case 1:	pp[12*i]  = x*s3;	pp[12*i+3] = (x+0.1*w)*s3;	break;
+			case 2:	pp[12*i+1]= (y-0.1*h)*s3;	pp[12*i+4] = y*s3;	break;
+			case 3:	pp[12*i+1]= y*s3;	pp[12*i+4] = (y+0.1*h)*s3;	break;
+			default:pp[12*i]  = (x-0.1*w)*s3;	pp[12*i+3] = x*s3;	break;
+		}
+		d = (vv.a[i+1]-v1)*dv-1;
+		pp[12*i+6] = pp[12*i+9] = (ss*d+s3)*w+x*s3;
+		pp[12*i+7] = pp[12*i+10]= (ss*d+s3)*h+y*s3;
+		pp[12*i+8] = pp[12*i+11]= s3;
+		switch(where)
+		{
+			case 1:	pp[12*i+9] = x*s3;	pp[12*i+6] = (x+0.1*w)*s3;	break;
+			case 2:	pp[12*i+10]= (y-0.1*h)*s3;	pp[12*i+7] = y*s3;	break;
+			case 3:	pp[12*i+10]= y*s3;	pp[12*i+7] = (y+0.1*h)*s3;	break;
+			default:pp[12*i+9] = (x-0.1*w)*s3;	pp[12*i+6] = x*s3;	break;
+		}
+		cc[16*i+0] = cc[16*i+4] = cc[16*i+8] = cc[16*i+12] = cs[i].r;
+		cc[16*i+1] = cc[16*i+5] = cc[16*i+9] = cc[16*i+13] = cs[i].g;
+		cc[16*i+2] = cc[16*i+6] = cc[16*i+10]= cc[16*i+14] = cs[i].b;
+		cc[16*i+3] = cc[16*i+7] = cc[16*i+11]= cc[16*i+15] = 1;
+	}
+	Push();	memcpy(B,B1,9*sizeof(mreal));
+	bool ll = UseLight;			UseLight = false;
+//	surf_plot(2, n-1, pp, cc, 0);	UseLight = ll;
+	quads_plot(n-1, pp, cc, 0);	UseLight = ll;
+	delete []pp;	delete []cc;
+
+	const char *a="rC";
+	if(where==0)	a = "rR";
+	if(where==1)	a = "rL";
+	if(where==2)	a = "rDC";
+	mglPoint p;
+	ScalePuts = false;
+	SelectPen(TranspType!=2 ? "k-1":"w-1");
+
+	mreal v=0,t;
+	int kind=0;
+	wchar_t s[32]=L"", str[64];
+	if(!ctt && TuneTicks) kind = _mgl_tick_ext(Cmax, Cmin, s, v);
+
+	long m = n<10?n:6;
+	for(i=0;i<m;i++)
+	{
+		t = vv.a[((n-1)*i)/(m-1)];	d = (t-v1)*dv-1;	p.z = s3+1;
+		p.x = (ss*d+s3)*w+x*s3;
+		p.y = (ss*d+s3)*h+y*s3;
+		switch(where)
+		{
+			case 1:	p.x = (x+0.13*w)*s3;	break;
+			case 2:	p.y = (y-0.13*h)*s3;	break;
+			case 3:	p.y = (y+0.13*h)*s3;	break;
+			default:p.x = (x-0.13*w)*s3;	break;
+		}
+		if(ctt)	mglprintf(str, 64, ctt, t);
+		else	_mgl_tick_text(t,v1,dv/100,v,kind,str);
+		wcstrim_mgl(str);
+		Putsw(p,str,a,FontSize);
+	}
+	switch(where)
+	{
+		case 1:	p = mglPoint((x+0.15*w)*s3, (y+1.75*h)*s3);	break;
+		case 2:	p = mglPoint((x+1.75*w)*s3, (y-0.15*h)*s3);	break;
+		case 3:	p = mglPoint((x+1.75*w)*s3, (y+0.15*h)*s3);	break;
+		default:p = mglPoint((x-0.15*w)*s3, (y+1.75*h)*s3);	break;
 	}
 	if(kind&2)	Putsw(p,s,a,FontSize);
 	ScalePuts = true;

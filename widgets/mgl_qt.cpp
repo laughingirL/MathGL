@@ -427,7 +427,7 @@ void QMathGL::prevSlide()
 void QMathGL::animation(bool st)
 {
 	mglGraphQT *gr = dynamic_cast<mglGraphQT *>(graph);
-	if(st)	timer->start(gr ? gr->Delay*1000 : animDelay);
+	if(st)	timer->start(gr ? int(gr->Delay*1000) : animDelay);
 	else	timer->stop();
 }
 //-----------------------------------------------------------------------------

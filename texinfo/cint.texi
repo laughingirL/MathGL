@@ -789,6 +789,10 @@ Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=NULL}) a
 Draws colorbar with color scheme @var{sch} (current scheme if not specified) at arbitrary position of subplot @{@var{x}, @var{y}@} (supposed to be in range [0,1]). Parameter @var{where} specifies the position of colorbar labels: @samp{0} - at left, @samp{1} - at right, @samp{2} - at bottom, @samp{3} - at top. Parameters @var{w}, @var{h} set the relative width and height of the colorbar.
 @end deftypefn
 
+@deftypefn {C function} @code{void} mgl_colorbar_val (@code{HMGL} gr, @code{const HMDT} v, @code{const char *}sch, @code{int} where)
+Draws colorbar with sharp colors @var{sch} (current palette if @code{sch=NULL}) for values @var{v} at edge of plot. Parameter @var{where} specifies the position of colorbar: @samp{0} - at right (default), @samp{1} - at left, @samp{2} - at top, @samp{3} - at bottom. @sref{Dens sample}
+@end deftypefn
+
 @deftypefn {C function} @code{void} mgl_axis_grid (@code{HMGL} gr, @code{const char *}dir, @code{const char *}pen)
 Draws grid lines perpendicular to direction determined by string parameter @var{dir}. The step of grid lines is the same as tick step for an Axis(). The style of lines is determined by @var{pen} parameter.
 @end deftypefn
@@ -842,6 +846,7 @@ These functions perform plotting of 1D data. 1D means that data depended from on
 
 @menu
 * Plot (Pure C)::               
+* Radar (Pure C)::               
 * Tens (Pure C)::               
 * Area (Pure C)::               
 * Region (Pure C)::             
@@ -859,7 +864,7 @@ These functions perform plotting of 1D data. 1D means that data depended from on
 
 
 @c ==================================================================
-@node Plot (Pure C), Tens (Pure C), , 1D plotting (Pure C)
+@node Plot (Pure C), Radar (Pure C), , 1D plotting (Pure C)
 @subsection Plot (Pure C)
 @cindex Plot
 
@@ -877,8 +882,19 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in
 The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{Min.z}, where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
 @end deftypefn
 
+
 @c ==================================================================
-@node Tens (Pure C), Area (Pure C), Plot (Pure C), 1D plotting (Pure C)
+@node Radar (Pure C), Tens (Pure C), Plot (Pure C), 1D plotting (Pure C)
+@subsection Radar
+@cindex Radar
+
+@deftypefn {C function} @code{void} mgl_radar (@code{HMGL} gr, @code{const HMDT} a, @code{const char *}pen, @code{float} r)
+This functions draws radar chart which is continuous lines between points located on an radial lines (like plot in Polar coordinates). The plots are drawn for each row if one of the data is the matrix. Parameter @var{r} set the additional shift of data (i.e. the data @var{a}+@var{r} is used instead of @var{a}). If @code{r<0} then @code{r=max(0, -min(a)}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). If @var{pen} containt @samp{#} symbol then "grid" (radial lines and circle for @var{r}) is drawn See also @ref{Plot}. @sref{Radar sample}
+@end deftypefn
+
+
+@c ==================================================================
+@node Tens (Pure C), Area (Pure C), Radar (Pure C), 1D plotting (Pure C)
 @subsection Tens (Pure C)
 @cindex Tens
 
@@ -1136,6 +1152,7 @@ These functions perform plotting of 2D data. 2D means that data depend from 2 in
 * Dens (Pure C)::               
 * Cont (Pure C)::               
 * ContF (Pure C)::              
+* ContD (Pure C)::              
 * Axial (Pure C)::              
 * Grid (Pure C)::               
 @end menu
@@ -1253,12 +1270,12 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @end deftypefn
 
 @c ==================================================================
-@node ContF (Pure C), Axial (Pure C), Cont (Pure C), 2D plotting (Pure C)
+@node ContF (Pure C), ContD (Pure C), Cont (Pure C), 2D plotting (Pure C)
 @subsection ContF (Pure C)
 @cindex ContF
 
 @deftypefn {C function} @code{void} mgl_contf_xy_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
-The function draws solid (or filled) contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal} (or for @var{z=v}[k] if @code{zVal==NAN}). Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also Dens(), Cont(), Axial(), ContF[XYZ](). @sref{ContF sample}
+The function draws solid (or filled) contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal} (or for @var{z=v}[k] if @code{zVal==NAN}). Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v} (must be @code{v.nx>2}). String @var{sch} sets the color scheme (@pxref{Color scheme}). Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also Dens(), Cont(), ContD(), Axial(), ContF[XYZ](). @sref{ContF sample}
 @end deftypefn
 
 @deftypefn {C function} @code{void} mgl_contf_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
@@ -1274,7 +1291,28 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @end deftypefn
 
 @c ==================================================================
-@node Axial (Pure C), Grid (Pure C), ContF (Pure C), 2D plotting (Pure C)
+@node ContD (Pure C), Axial (Pure C), ContF (Pure C), 2D plotting (Pure C)
+@subsection ContD (Pure C)
+@cindex ContD
+
+@deftypefn {C function} @code{void} mgl_contd_xy_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
+The function draws solid (or filled) contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal} (or for @var{z=v}[k] if @code{zVal==NAN}) with manual colors. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v} (must be @code{v.nx>2}). String @var{sch} sets the contour colors: the color of k-th contour is determined by character @code{sch[k%strlen(sch)]}. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also Dens(), Cont(), ContF(). @sref{ContD sample}
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_contd_val (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
+The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_contd_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
+The same as first one with vector @var{v} of @var{num}-th elements equidistantly distributed in range [@var{Cmin}, @var{Cmax}].
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_contd (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
+The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
+@end deftypefn
+
+@c ==================================================================
+@node Axial (Pure C), Grid (Pure C), ContD (Pure C), 2D plotting (Pure C)
 @subsection Axial (Pure C)
 @cindex Axial
 

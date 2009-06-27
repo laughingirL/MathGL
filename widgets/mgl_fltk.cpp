@@ -17,11 +17,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifdef USE_GETTEXT
-	#include <libintl.h>
-#else
-	#define gettext(x)	(x)
-#endif
 
 #include <FL/Fl_Pixmap.H>
 #include <FL/fl_ask.H>
@@ -35,6 +30,16 @@
 #include "mgl/mgl_eps.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
+
+#ifdef USE_GETTEXT
+	#include <libintl.h>
+#else
+// Workaround for gcc 4.2
+	#ifndef _LIBINTL_H
+	#define gettext(x)	(x)
+	#endif
+#endif
+
 //-----------------------------------------------------------------------------
 #include "xpm/alpha_on.xpm"
 #include "xpm/light_on.xpm"

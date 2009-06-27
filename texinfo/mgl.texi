@@ -252,7 +252,7 @@ Sets the transformation formulas for curvilinear coordinates. Each string should
 @end deffn
 
 @deffn {MGL command} axis @code{how}
-Sets one of the predefined transformation formulas for curvilinear coordinate. Paramater @var{how} define the coordinates: @code{0} -- Cartesian coordinates (no transformation); @code{1} -- Polar coordiantes @math{x_n=x*cos(y),y_n=x*sin(y), z_n=z}; @code{2} -- Sperical coordinates @math{x_n=x*sin(y)*cos(z), y_n=x*sin(y)*sin(z), z_n=x*cos(y)}; @code{3} -- Parabolic coordinates @math{x_n=x*y, y_n=(x*x-y*y)/2, z_n=z}; @code{4} -- Paraboloidal coordinates @math{x_n=(x*x-y*y)*cos(z)/2, y_n=(x*x-y*y)*sin(z)/2, z_n=x*y}; @code{5} -- Oblate coordinates @math{x_n=cosh(x)*cos(y)*cos(z), y_n=cosh(x)*cos(y)*sin(z), z_n=sinh(x)*sin(y)}; @code{6} -- Prolate coordinates @math{x_n=sinh(x)*sin(y)*cos(z), y_n=sinh(x)*sin(y)*sin(z), z_n=cosh(x)*cos(y)}; @code{7} -- Elliptic coordinates @math{x_n=cosh(x)*cos(y), y_n=sinh(x)*sin(y), z_n=z}; @code{8} -- Toroidal coordinates @math{x_n=sinh(x)*cos(z)/(cosh(x)-cos(y)), y_n=sinh(x)*sin(z)/(cosh(x)-cos(y)), z_n=sin(y)/(cosh(x)-cos(y))}; @code{9} -- Bispherical coordinates @math{x_n=sin(y)*cos(z)/(cosh(x)-cos(y)), y_n=sin(y)*sin(z)/(cosh(x)-cos(y)), z_n=sinh(x)/(cosh(x)-cos(y))}; @code{10} -- Bipolar coordinates @math{x_n=sinh(x)/(cosh(x)-cos(y)), y_n=sin(y)/(cosh(x)-cos(y)), z_n=z}.
+Sets one of the predefined transformation formulas for curvilinear coordinate. Paramater @var{how} define the coordinates: @code{0} -- Cartesian coordinates (no transformation); @code{1} -- Polar coordiantes @math{x_n=x*cos(y),y_n=x*sin(y), z_n=z}; @code{2} -- Spherical coordinates @math{x_n=x*sin(y)*cos(z), y_n=x*sin(y)*sin(z), z_n=x*cos(y)}; @code{3} -- Parabolic coordinates @math{x_n=x*y, y_n=(x*x-y*y)/2, z_n=z}; @code{4} -- Paraboloidal coordinates @math{x_n=(x*x-y*y)*cos(z)/2, y_n=(x*x-y*y)*sin(z)/2, z_n=x*y}; @code{5} -- Oblate coordinates @math{x_n=cosh(x)*cos(y)*cos(z), y_n=cosh(x)*cos(y)*sin(z), z_n=sinh(x)*sin(y)}; @code{6} -- Prolate coordinates @math{x_n=sinh(x)*sin(y)*cos(z), y_n=sinh(x)*sin(y)*sin(z), z_n=cosh(x)*cos(y)}; @code{7} -- Elliptic coordinates @math{x_n=cosh(x)*cos(y), y_n=sinh(x)*sin(y), z_n=z}; @code{8} -- Toroidal coordinates @math{x_n=sinh(x)*cos(z)/(cosh(x)-cos(y)), y_n=sinh(x)*sin(z)/(cosh(x)-cos(y)), z_n=sin(y)/(cosh(x)-cos(y))}; @code{9} -- Bispherical coordinates @math{x_n=sin(y)*cos(z)/(cosh(x)-cos(y)), y_n=sin(y)*sin(z)/(cosh(x)-cos(y)), z_n=sinh(x)/(cosh(x)-cos(y))}; @code{10} -- Bipolar coordinates @math{x_n=sinh(x)/(cosh(x)-cos(y)), y_n=sin(y)/(cosh(x)-cos(y)), z_n=z}.
 @end deffn
 
 @deffn {MGL command} caxis @code{z1 z2}
@@ -481,6 +481,10 @@ Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=''}) at 
 Draws colorbar with color scheme @var{sch} (current scheme if not specified) at arbitrary position of subplot @{@var{x}, @var{y}@} (supposed to be in range [0,1]). Parameter @var{pos} specifies the position of colorbar labels: @samp{0} - at left, @samp{1} - at right, @samp{2} - at bottom, @samp{3} - at top. Parameters @var{w}, @var{h} set the relative width and height of the colorbar.
 @end deffn
 
+@deffn {MGL command} colorbar vdat ['sch'='' @code{pos=0}]
+Draws colorbar with sharp colors @var{sch} (current palette if @code{sch=NULL}) for values @var{vdat} at edge of plot. Parameter @var{pos} specifies the position of colorbar: @samp{0} - at right (default), @samp{1} - at left, @samp{2} - at top, @samp{3} - at bottom. @sref{Dens sample}
+@end deffn
+
 @deffn {MGL command} grid ['dir'='xyz' 'pen'='B']
 Draws grid lines perpendicular to direction determined by string parameter @var{dir}. The step of grid lines is the same as tick step for an @code{axis}. The style of lines is determined by @var{pen} parameter.
 @end deffn
@@ -649,6 +653,7 @@ Draws tube with variable radius @var{rdat}[i] (or @var{rval}) at points @{@var{x
 @cindex dens
 @cindex cont
 @cindex contf
+@cindex contd
 @cindex axial
 @cindex grid
 
@@ -703,11 +708,21 @@ The same as previous one with vector @var{vdat} of @var{num}-th elements equidis
 
 @deffn {MGL command} contf vdat zdat ['sch'='' @code{zval=nan}]
 @deffnx {MGL command} contf vdat xdat ydat zdat ['sch'='' @code{zval=nan}]
-Draws solid (or filled) contours for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} at @var{z} = @var{zVal} (or for @var{z}=@var{vdat}[k] if @code{zval=nan}). Contours are plotted for @var{zdat}[i,j]=@var{vdat}[k] for all k. See also @code{dens, cont, axial, contf[xyz]}. @sref{ContF sample}
+Draws solid (or filled) contours for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} at @var{z} = @var{zVal} (or for @var{z}=@var{vdat}[k] if @code{zval=nan}). Contours are plotted for @var{zdat}[i,j]=@var{vdat}[k] for all k (must be @code{vdat.nx>2}). See also @code{dens, cont, contd, axial, contf[xyz]}. @sref{ContF sample}
 @end deffn
 
 @deffn {MGL command} contf zdat ['sch'='' @code{num=7 zval=nan}]
 @deffnx {MGL command} contf xdat ydat zdat ['sch'='' @code{num=7 zval=nan}]
+The same as previous one with vector @var{vdat} of @var{num}-th elements equidistantly distributed in color range (see, @code{caxis}).
+@end deffn
+
+@deffn {MGL command} contd vdat zdat ['sch'='' @code{zval=nan}]
+@deffnx {MGL command} contd vdat xdat ydat zdat ['sch'='' @code{zval=nan}]
+Draws solid (or filled) contours for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} at @var{z} = @var{zVal} (or for @var{z}=@var{vdat}[k] if @code{zval=nan}) with manual colors. Contours are plotted for @var{zdat}[i,j]=@var{vdat}[k] for all k (must be @code{vdat.nx>2}). The color of k-th contour is @code{sch[k%strlen(sch)]}. See also @code{dens, cont, contf}. @sref{ContD sample}
+@end deffn
+
+@deffn {MGL command} contd zdat ['sch'='' @code{num=7 zval=nan}]
+@deffnx {MGL command} contd xdat ydat zdat ['sch'='' @code{num=7 zval=nan}]
 The same as previous one with vector @var{vdat} of @var{num}-th elements equidistantly distributed in color range (see, @code{caxis}).
 @end deffn
 
@@ -887,6 +902,7 @@ Draws spectrogram of complex array @var{re}+i*@code{im} for Fourier size of @var
 @cindex vect
 @cindex flow
 @cindex pipe
+@cindex traj
 @cindex dew
 
 These commands perform plotting of 2D and 3D vector fields. There are 6 generally different types of vector fields representations: simple vector field (Vect), vector field with coloring (VectC), vector field by dew-drops (Dew), flow threads (Flow), flow pipes (Pipe), vectors along a curve (Traj). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
@@ -897,7 +913,7 @@ The size of @var{udat}, @var{vdat} and @var{wdat} must be equal. The minor dimen
 
 @deffn {MGL command} traj xdat ydat udat vdat ['sch'='' @code{zval=nan len=0}]
 @deffnx {MGL command} traj xdat ydat zdat udat vdat wdat ['sch'='' @code{len=0}]
-Draws plane vector field plot for the field @{@var{udat}, @var{vdat}, @var{wdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat}, @var{zdat}. The length and color of arrows are proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. See also @code{vect}. @sref{Traj sample}
+Draws vectors @{@var{udat}, @var{vdat}, @var{wdat}@} along a curve @var{xdat}, @var{ydat}, @var{zdat}. The length and color of arrows are proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. See also @code{vect}. @sref{Traj sample}
 @end deffn
 
 @deffn {MGL command} vect udat vdat ['sch'='' @code{zval=nan flag=0}]
@@ -952,7 +968,7 @@ Draws plane flow threads for the vector field @{@var{udat}, @var{vdat}@} dependi
 
 @deffn {MGL command} flow @code{x0 y0 z0} udat vdat wdat ['sch'='']
 @deffnx {MGL command} flow @code{x0 y0 z0} xdat ydat zdat udat vdat wdat ['sch'='']
-This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the color is proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{Flow 3D sample}
+Draws flow thread from point @{@var{x0}, @var{y0}, @var{z0}@}. Arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the color is proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{Flow 3D sample}
 @end deffn
 
 
@@ -1093,6 +1109,7 @@ Creates new variable with name @var{dat} and fills it by data values of arrays o
 @end deffn
 
 @deffn {MGL command} copy dat1 dat2 ['eq'='' @code{on_axis=on}]
+@deffnx {MGL command} copy dat1 @code{val}
 Creates new variable with name @var{dat1} and fills it by data values of array @var{dat2}. At this, if parameter @var{eq} is specified then the data will be modified by corresponding formula by the same way as in @code{fill} command (for @code{on_axis=on}) or in @code{modify} command (for @code{on_axis=off}).
 @end deffn
 

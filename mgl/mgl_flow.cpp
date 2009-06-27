@@ -172,7 +172,7 @@ void mglGraph::Flow(mglPoint p, const mglData &x, const mglData &y, const mglDat
 		d = both ? hypot(x.a[ii]-p.x,y.a[ii]-p.y) : hypot(x.a[i]-p.x,y.a[j]-p.y);
 		if(d<dm)	{	i0=i;	j0=j;	dm=d;	}
 	}
-	if(dm==0)	{	u = i0/float(n);	v = j0/float(m);	}	// we find it
+	if(dm==0)	{	u = i0/mreal(n);	v = j0/mreal(m);	}	// we find it
 	else
 	{
 		mreal dxu,dxv,dyu,dyv, dx, dy;
@@ -363,7 +363,9 @@ void mglGraph::Flow(const mglData &ax, const mglData &ay, const mglData &az,
 	Flow(x,y,z,ax,ay,az,sch,num,cnt);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Flow(mglPoint p, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch){	mreal u,v,w;
+void mglGraph::Flow(mglPoint p, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch)
+{
+	mreal u,v,w;
 	long n=ax.nx,m=ax.ny,l=ax.nz;
 	if(ax.nx*ax.ny*ax.nz!=ay.nx*ay.ny*ay.nz || ax.nx*ax.ny*ax.nz!=az.nx*az.ny*az.nz)
 	{	SetWarn(mglWarnDim,"Flow");	return;	}
@@ -391,7 +393,7 @@ void mglGraph::Flow(mglPoint p, const mglData &x, const mglData &y, const mglDat
 		if(d<dm)	{	i0=i;	j0=j;	k0=k;	dm=d;	}
 	}
 	if(dm==0)	// we find it
-	{	u=i0/float(n);	v=j0/float(m);	w=k0/float(l);	}
+	{	u=i0/mreal(n);	v=j0/mreal(m);	w=k0/mreal(l);	}
 	else
 	{
 		mreal dxu,dxv,dxw,dyu,dyv,dyw,dzu,dzv,dzw;

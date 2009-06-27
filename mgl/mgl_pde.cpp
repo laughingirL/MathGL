@@ -35,8 +35,8 @@ mglData mglPDE(const char *ham, const mglData &ini_re, const mglData &ini_im, mg
 	mglData res;
 	int nx=ini_re.nx, ny=ini_re.ny;
 	int nz = int((Max.z-Min.z)/dz)+1;
-	if(nx<2 || nz<1 || Max.x==Min.x)	return res;	// Too small data
-	if(ini_im.nx*ini_im.ny != nx*ny)	return res;		// Wrong dimensions
+	if(nx<2 || nz<2 || Max.x==Min.x)	return res;	// Too small data
+	if(ini_im.nx*ini_im.ny != nx*ny)	return res;	// Wrong dimensions
 	res.Create(nz, nx, ny);
 #ifndef NO_GSL
 	mglFormula eqs(ham);

@@ -50,8 +50,7 @@ void mglGraph::Cone(mglPoint p1, mglPoint p2, mreal r1, mreal r2, const char *st
 	Tube(x,y,z,r,stl);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Curve(mglPoint p1, mglPoint d1, mglPoint p2, mglPoint d2,
-					const char *stl, int n)
+void mglGraph::Curve(mglPoint p1, mglPoint d1, mglPoint p2, mglPoint d2, const char *stl, int n)
 {
 	static int cgid=1;	StartGroup("Curve",cgid++);
 	register long i;
@@ -129,6 +128,7 @@ void mglGraph::Plot(const char *eqY, const char *pen, mreal zVal, int n)
 		y.a[i] = eq->Calc(Min.x + i*d);
 	}
 	Plot(y,pen, zVal);
+	delete eq;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Plot(const char *eqX, const char *eqY, const char *eqZ, const char *pen, int n)
@@ -149,6 +149,44 @@ void mglGraph::Plot(const char *eqX, const char *eqY, const char *eqZ, const cha
 		z.a[i] = ez->Calc(0,0,t);
 	}
 	Plot(x,y,z,pen);
+	delete ex;	delete ey;	delete ez;
+}
+//-----------------------------------------------------------------------------
+//
+//	Radar series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::Radar(const mglData &a, const char *pen, mreal r)
+{
+	long n = a.nx;
+	if(n<2)	{	SetWarn(mglWarnLow,"Radar");	return;	}
+	mglData x(n+1,a.ny), y(n+1,a.ny);
+	mreal m=a.Minimal();
+	if(r<0)	r = m<0 ? -m:0;
+	register long i,j;
+	for(j=0;j<a.ny;j++)
+	{
+		for(i=0;i<n;i++)
+		{
+			x.a[i+(n+1)*j] = (r+a.a[i+n*j])*cos(2*i*M_PI/n);
+			y.a[i+(n+1)*j] = (r+a.a[i+n*j])*sin(2*i*M_PI/n);
+		}
+		x.a[n+(n+1)*j] = r+a.a[n*j];	y.a[n+(n+1)*j] = 0;
+	}
+	Plot(x,y,pen);
+	if(pen && strchr(pen,'#'))	// draw "grid"
+	{
+		m = 1.1*(a.Maximal()+r);
+		for(i=0;i<n;i++)
+			Line(mglPoint(0), mglPoint(m*cos(2*i*M_PI/n),m*sin(2*i*M_PI/n)),"k");
+		if(r>0)
+		{
+			x.Create(101);	y.Create(101);
+			for(i=0;i<101;i++)
+			{	x.a[i]=r*cos(2*i*M_PI/100);	y.a[i]=r*sin(2*i*M_PI/100);	}
+			Plot(x,y,"k");	SetPal(0);
+		}
+	}
 }
 //-----------------------------------------------------------------------------
 //
@@ -166,10 +204,11 @@ void mglGraph::Plot(const mglData &x, const mglData &y, const mglData &z, const 
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
 	mreal *pp = new mreal[3*n];
 	bool *tt = new bool[n];
+	if(pen && *pen)	{	mk=SelectPen(pen);	SetPal(pen);	}
+	else 	Pen(NC, '-', BaseLineWidth);
 	for(j=0;j<m;j++)
 	{
-		if(pen && *pen)	mk=SelectPen(pen);
-		else	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
+		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
 		register long i,k;
 		for(i=0;i<n;i++)
@@ -219,8 +258,7 @@ void mglGraph::Tens(const mglData &x, const mglData &y, const mglData &z, const 
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
 	mreal *pp = new mreal[3*n], *cc = new mreal[n];
 	bool *tt = new bool[n];
-	if(pen && *pen)	SetScheme(pen);
-	if(pen && *pen)	mk=SelectPen(pen);
+	if(pen && *pen)	{	SetScheme(pen);	mk=SelectPen(pen);	}
 	for(j=0;j<m;j++)
 	{
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
@@ -264,18 +302,16 @@ void mglGraph::Tens(const mglData &y, const mglData &c, const char *pen,mreal zV
 void mglGraph::Area(const mglData &x, const mglData &y, const mglData &z, const char *pen)
 {
 	long i,j,n=y.nx,m,mx,my,mz;
-	char mk=0;
 	if(x.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Area");	return;	}
 	if(n<2)					{	SetWarn(mglWarnLow,"Area");	return;	}
 	static int cgid=1;	StartGroup("Area3",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
 	mreal *pp = new mreal[6*n],z0=GetOrgZ('x');
 	bool *tt = new bool[2*n];
+	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		if(pen && *pen)	mk=SelectPen(pen);
-		else	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
-		DefColor(NC, -1);
+		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
 
 		for(i=0;i<y.nx;i++)
@@ -284,7 +320,7 @@ void mglGraph::Area(const mglData &x, const mglData &y, const mglData &z, const 
 			pp[6*i+4] = pp[6*i+1] = y.a[i+my*n];
 			pp[6*i+2] = z.a[i+mz*n];
 			tt[2*i] = ScalePoint(pp[6*i+0],pp[6*i+1],pp[6*i+2]);
-			if(mk && tt[2*i])	Mark(pp[6*i+0],pp[6*i+1],pp[6*i+2],mk);
+//			if(mk && tt[2*i])	Mark(pp[6*i+0],pp[6*i+1],pp[6*i+2],mk);
 			pp[6*i+5] = z0;
 			tt[2*i+1] = ScalePoint(pp[6*i+3],pp[6*i+4],pp[6*i+5]);
 		}
@@ -297,7 +333,6 @@ void mglGraph::Area(const mglData &x, const mglData &y, const mglData &z, const 
 void mglGraph::Area(const mglData &x, const mglData &y, const char *pen,bool sum,mreal zVal)
 {
 	long i,j,n=y.nx,m=y.ny,mx;
-	char mk=0;
 	if(x.nx!=n)	{	SetWarn(mglWarnDim,"Area");	return;	}
 	if(n<2)		{	SetWarn(mglWarnLow,"Area");	return;	}
 	static int cgid=1;	StartGroup("Curve",cgid++);
@@ -307,11 +342,10 @@ void mglGraph::Area(const mglData &x, const mglData &y, const char *pen,bool sum
 	mglData f(y);
 	if(sum)	f.CumSum("y");
 
+	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		if(pen && *pen)	mk=SelectPen(pen);
-		else	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
-		DefColor(NC, -1);
+		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
 		mx = j<x.ny ? j:0;	//my = j<y.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -320,7 +354,7 @@ void mglGraph::Area(const mglData &x, const mglData &y, const char *pen,bool sum
 			// NOTE: I use 'm' (not 'm-1') for placing area plots at z<Max.z
 			pp[6*i+2] = znan ? Min.z + (m-1-j)*(Max.z-Min.z)/m : zVal;
 			tt[2*i+0] = ScalePoint(pp[6*i+0],pp[6*i+1],pp[6*i+2]);
-			if(mk && tt[2*i])	Mark(pp[6*i+0],pp[6*i+1],pp[6*i+2],mk);
+//			if(mk && tt[2*i])	Mark(pp[6*i+0],pp[6*i+1],pp[6*i+2],mk);
 			pp[6*i+4] = sum && j>0 ? f.a[i+j*n-n] : y0;
 			pp[6*i+5] = znan ? Min.z + (m-1-j)*(Max.z-Min.z)/m : zVal;
 			tt[2*i+1] = ScalePoint(pp[6*i+3],pp[6*i+4],pp[6*i+5]);
@@ -346,7 +380,6 @@ void mglGraph::Area(const mglData &y, const char *pen,bool sum,mreal zVal)
 void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, const char *pen, mreal zVal, bool inside)
 {
 	long i,j, n=y1.nx, m=y1.ny, mx;
-	char mk=0;
 	if(x.nx!=n || y2.nx!=n || y2.ny!=m)
 	{	SetWarn(mglWarnDim,"Region");	return;	}
 	if(n<2)	{	SetWarn(mglWarnLow,"Region");	return;	}
@@ -355,11 +388,9 @@ void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, co
 	bool *tt = new bool[2*n];
 	if(isnan(zVal))	zVal = Min.z;
 
+	SetPal(pen);
 	for(j=0;j<m;j++)
-	{
-		if(pen && *pen)	mk=SelectPen(pen);
-		else	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
-		DefColor(NC, -1);
+	{		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
 		mx = j<x.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -399,10 +430,11 @@ void mglGraph::Step(const mglData &x, const mglData &y, const mglData &z, const 
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
 	mreal *pp = new mreal[6*n];
 	bool *tt = new bool[2*n];
+	if(pen && *pen)	mk=SelectPen(pen);	else 	Pen(NC, '-', BaseLineWidth);
+	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		if(pen && *pen)	mk=SelectPen(pen);
-		else	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
+		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -438,10 +470,11 @@ void mglGraph::Step(const mglData &x, const mglData &y, const char *pen,mreal zV
 	bool *tt = new bool[2*n];
 	if(isnan(zVal))	zVal = Min.z;
 
+	if(pen && *pen)	mk=SelectPen(pen);	else 	Pen(NC, '-', BaseLineWidth);
+	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		if(pen && *pen)	mk=SelectPen(pen);
-		else	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
+		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -488,10 +521,11 @@ void mglGraph::Stem(const mglData &x, const mglData &y, const mglData &z, const 
 	mreal *pp = new mreal[6*n],z0=GetOrgZ('x');
 	long *nn = new long[2*n];
 	bool *tt = new bool[2*n];
+	if(pen && *pen)	mk=SelectPen(pen);	else 	Pen(NC, '-', BaseLineWidth);
+	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		if(pen && *pen)	mk=SelectPen(pen);
-		else	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
+		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -524,10 +558,11 @@ void mglGraph::Stem(const mglData &x, const mglData &y, const char *pen,mreal zV
 	bool *tt = new bool[2*n];
 	if(isnan(zVal))	zVal = Min.z;
 
+	if(pen && *pen)	mk=SelectPen(pen);	else 	Pen(NC, '-', BaseLineWidth);
+	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		if(pen && *pen)	mk=SelectPen(pen);
-		else	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
+		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -561,7 +596,6 @@ void mglGraph::Stem(const mglData &y, const char *pen,mreal zVal)
 void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const char *pen, bool above)
 {
 	long i,j,m,mx,my,mz,n=y.nx;
-	char mk=0;
 	if(x.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Bars");	return;	}
 	if(n<2)					{	SetWarn(mglWarnLow,"Bars");	return;	}
 	static int cgid=1;	StartGroup("Bars3",cgid++);
@@ -570,11 +604,10 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const 
 	bool *tt = new bool[4*n], wire = pen && strchr(pen,'#');
 	mglData dd(above ? n : 1);
 
+	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		if(pen && *pen && strcmp(pen,"#"))	mk=SelectPen(pen);
-		else	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
-		DefColor(NC, -1);
+		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -625,7 +658,6 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const 
 void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,mreal zVal, bool above)
 {
 	long i,j,m,mx,my,n=y.nx;
-	char mk=0;
 	if(x.nx!=n)	{	SetWarn(mglWarnDim,"Bars");	return;	}
 	if(n<2)		{	SetWarn(mglWarnLow,"Bars");	return;	}
 	static int cgid=1;	StartGroup("Bars",cgid++);
@@ -635,11 +667,10 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,mreal zV
 	if(isnan(zVal))	zVal = Min.z;
 	mglData dd(above ? n : 1);
 
+	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		if(pen && *pen && strcmp(pen,"#"))	mk=SelectPen(pen);
-		else	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
-		DefColor(NC, -1);
+		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -690,7 +721,6 @@ void mglGraph::Bars(const mglData &y, const char *pen,mreal zVal, bool above)
 void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,mreal zVal, bool above)
 {
 	long i,j,m,mx,my,n=v.nx;
-	char mk=0;
 	if(y.nx!=n)	{	SetWarn(mglWarnDim,"Barh");	return;	}
 	if(n<2)		{	SetWarn(mglWarnLow,"Barh");	return;	}
 	static int cgid=1;	StartGroup("Barh",cgid++);
@@ -700,11 +730,10 @@ void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,mreal zV
 	if(isnan(zVal))	zVal = Min.z;
 	mglData dd(above ? n : 1);
 
+	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		if(pen && *pen && strcmp(pen,"#"))	mk=SelectPen(pen);
-		else	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
-		DefColor(NC, -1);
+		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
 		my = j<y.ny ? j:0;	mx = j<v.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -803,7 +832,7 @@ void mglGraph::Error(const mglData &x, const mglData &y, const mglData &ex, cons
 	if(ex.nx*ex.ny*ex.nz!=n || ey.nx*ey.ny*ey.nz!=n || y.nx!=x.nx)
 	{	SetWarn(mglWarnDim,"Error");	return;	}
 	static int cgid=1;	StartGroup("ErrorXY",cgid++);
-	char mk=SelectPen(pen);
+	char mk=pen?SelectPen(pen):0;
 	if(isnan(zVal))	zVal = Min.z;
 	if(n!=x.nx*x.ny*x.nz)
 	{	m = y.ny*y.nz;	n = y.nx;	}
@@ -829,7 +858,7 @@ void mglGraph::Error(const mglData &x, const mglData &y, const mglData &ey, cons
 	if(y.nx*y.ny*y.nz!=ey.nx*ey.ny*ey.nz || y.nx!=x.nx)
 	{	SetWarn(mglWarnDim,"Error");	return;	}
 	static int cgid=1;	StartGroup("Error",cgid++);
-	char mk=SelectPen(pen);
+	char mk=pen?SelectPen(pen):0;
 	if(isnan(zVal))	zVal = Min.z;
 	register long i,j,m,n;
 	if(y.nx*y.ny*y.nz!=x.nx*x.ny*x.nz)
@@ -868,20 +897,15 @@ void mglGraph::Chart(const mglData &a, const char *cols)
 	bool wire = false;	// draw edges
 	register long n=a.nx,i,j,k,l,m,i0;
 	if(cols && !strcmp(cols,"#"))	{	wire = true;	cols = 0;	}
-
-	mglColor *c = (cols && cols[0] && cols[1]) ? new mglColor[strlen(cols)+1] : 0,*cc=Pal;
+	if(!cols)	cols = "Hbgrcmyhlnqeup";
+	mglColor *c = new mglColor[strlen(cols)+1];
 	long nc=0;			// number of colors
-	if(cols)			// fill colors
+	for(i=0;i<long(strlen(cols));i++)
 	{
-		for(i=0;i<long(strlen(cols));i++)
-		{
-			if(strchr("wkrgbcymhRGBCYMHWlenuqpLENUQP ",cols[i]))
-			{	c[nc].Set(cols[i]);	nc++;	}
-			else if(cols[i]=='#')	wire = true;
-		}
-		cc = c;
+		if(strchr("wkrgbcymhRGBCYMHWlenuqpLENUQP ",cols[i]))
+		{	c[nc].Set(cols[i]);	nc++;	}
+		else if(cols[i]=='#')	wire = true;
 	}
-	else	nc = NumPal;// get colors from palette
 
 	mreal dy = (Max.y-Min.y)/a.ny, dx, ss, cs, x1, y1;
 	mreal *pp = new mreal[3*40*81];
@@ -895,8 +919,8 @@ void mglGraph::Chart(const mglData &a, const char *cols)
 			dx = a.a[i+j*n]/ss;	m = 2+long(38*dx+0.9);
 			if(dx==0)	continue;
 			x1 = Min.x + (Max.x-Min.x)*cs/ss;	dx *= (Max.x-Min.x);
-			if(!cc[i%nc].Valid())	{	cs += a.a[i+j*n];	continue;	}
-			DefColor(cc[i%nc],Transparent ? AlphaDef : 1);
+			if(!c[i%nc].Valid())	{	cs += a.a[i+j*n];	continue;	}
+			DefColor(c[i%nc],Transparent ? AlphaDef : 1);
 			for(k=0;k<40;k++)	for(l=0;l<m;l++)
 			{
 				i0 = 3*(m*k+l);
@@ -946,8 +970,7 @@ void mglGraph::Chart(const mglData &a, const char *cols)
 			cs += a.a[i+j*n];
 		}
 	}
-	EndGroup();
-	delete []pp;	if(c)	delete []c;
+	EndGroup();		delete []pp;	delete []c;
 }
 //-----------------------------------------------------------------------------
 //
@@ -965,12 +988,13 @@ void mglGraph::Mark(const mglData &x, const mglData &y, const mglData &z, const 
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
 	mreal ms = MarkSize, xx,yy,zz;
 	bool tt;
+
 	if(pen && *pen)	mk=SelectPen(pen);	else mk='o';
 	if(mk==0)	return;
-
+	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		if(!pen || *pen==0)	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
+		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
 		mz = j<z.ny ? j:0;	mr = j<r.ny ? j:0;
 		register long i;
@@ -1109,19 +1133,17 @@ void mglGraph::tube_plot(long n,mreal *q,mreal *c,mreal *r)
 void mglGraph::Tube(const mglData &x, const mglData &y, const mglData &z, const mglData &r, const char *pen)
 {
 	long j,m,mx,my,mz,mr,n=y.nx;
-	char mk=0;
 	if(n<2)	{	SetWarn(mglWarnLow,"Tube");	return;	}
 	if(x.nx!=n || z.nx!=n || r.nx!=n)
 	{	SetWarn(mglWarnDim,"Tube");	return;	}
 	static int cgid=1;	StartGroup("Tube",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;	m = r.ny > m ? r.ny : m;
-	if(pen && *pen)	mk=SelectPen(pen);
 	mreal *pp = new mreal[3*n], *rr = new mreal[n];
 
+	SelectPen(pen);	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		if(!pen || *pen==0)	Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],'-',BaseLineWidth);
-		DefColor(NC, -1);
+		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
 		mz = j<z.ny ? j:0;	mr = j<r.ny ? j:0;
 		register long i;
@@ -1317,6 +1339,9 @@ void mgl_plot_2(HMGL gr, const HMDT a, const char *pen)
 /// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
 void mgl_plot_3(HMGL gr, const HMDT a, const char *pen)
 {	if(gr && a)	gr->Plot3(*a,pen);	}
+/// Draw line plot for points in arrays \a y.
+void mgl_radar(HMGL gr, const HMDT a, const char *pen, mreal r)
+{	if(gr && a)	gr->Radar(*a,pen,r);	}
 /// Draw line plot for points in arrays \a x, \a y, \a z.
 void mgl_tens_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *pen)
 {	if(gr && x && y && z)	gr->Tens(*x,*y,*z,*c,pen);	}
@@ -1486,6 +1511,13 @@ void mgl_plot_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && a)	_GR_->Plot3(_D_(a),s);
+	delete []s;
+}
+/// Draw line plot for points in arrays \a y.
+void mgl_radar_(uintptr_t *gr, uintptr_t *a, const char *pen, mreal *r, int l)
+{
+	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	if(gr && a)	_GR_->Radar(_D_(a),s,*r);
 	delete []s;
 }
 /// Draw line plot for points in arrays \a x, \a y, \a z.

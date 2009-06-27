@@ -507,27 +507,28 @@ void mglGraph::ClearEq()
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetPalette(const char *colors)
+void mglGraph::SetPal(const char *colors)
 {
-	if(!colors || !colors[0])	return;	// do nothing if empty
+	if(!colors || !colors[0])	colors = "Hbgrcmyhlnqeup";	// restore default
 	memset(Pal,0,100*sizeof(mglColor));
 	memset(PalNames,0,101*sizeof(char));
-	int i,n = strlen(colors);
+	int i,n = strlen(colors),k;
 	n = n<100? n:100;
-	for(i=0;i<n;i++)
+	for(i=k=0;i<n;i++)
 	{
-		PalNames[i] = colors[i];
-		Pal[i] = mglColor(colors[i]);
+		if(!strchr("wkrgbcymhRGBCYMHWlenuqpLENUQP",colors[i]))	continue;
+		PalNames[k] = colors[i];	Pal[k] = mglColor(colors[i]);	k++;
 	}
-	CurrPal = 0;	NumPal = n;
+	NumPal = k;	//	CurrPal = 0;
+	if(k==0)	SetPal(0);	// if no colors then set default palette
 }
 //-----------------------------------------------------------------------------
 void mglGraph::DefaultPlotParam()
 {
 	FontSize = 5;			BaseLineWidth = 1;
 	Ambient();				Ternary(false);
-	PlotId = "frame";		SetPalette("Hbgrcmyhlnqeup");
-	SetScheme("BbcyrR");	SelectPen("k-1");
+	PlotId = "frame";		SelectPen("k-1");
+	SetScheme("BbcyrR");	SetPalette("Hbgrcmyhlnqeup");
 	Cut = true;				InPlot(0,1,0,1);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');
 	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1));
@@ -570,7 +571,7 @@ void mglGraph::SetTickStl(const char *stl, const char *sub)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetTickLen(float tlen, float stt)
+void mglGraph::SetTickLen(mreal tlen, mreal stt)
 {	TickLen=fabs(tlen)>0?tlen:0.1;	st_t=stt>0?stt:1;	}
 //-----------------------------------------------------------------------------
 void mglGraph::SimplePlot(const mglData &a, int type, const char *stl)
@@ -1018,6 +1019,32 @@ void mglGraph::Colorbar(const char *sch,int where)
 	if(where==2)	y=1;
 	if(where==0)	x=1;
 	Colorbar(where,x,y,1,1);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Colorbar(const mglData &v, const char *sch,int where)
+{
+	mreal x=0,y=0;
+	if(where==2)	y=1;
+	if(where==0)	x=1;
+	Colorbar(v,sch,where,x,y,1,1);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
+{
+	mglData v(256);	v.Fill(-1,1);
+	mglColor *c=new mglColor[256];
+	for(long i=0;i<256;i++)	c[i] = GetC(v.a[i],false);
+	colorbar(v, c, where, x, y, w, h);
+	delete []c;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Colorbar(const mglData &v, const char *sch, int where, mreal x, mreal y, mreal w, mreal h)
+{
+	mglColor *c=new mglColor[v.nx];
+	if(!sch || !(*sch))	sch = PalNames;
+	for(long i=0;i<v.nx;i++)	c[i] = mglColor(sch[i%strlen(sch)]);
+	colorbar(v, c, where, x, y, w, h);
+	delete []c;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::ColumnPlot(int num, int i)

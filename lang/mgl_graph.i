@@ -378,6 +378,8 @@ struct mglParse{};
 	{	mgl_colorbar_ext(self, sch, where,x,y,w,h);	}
 	void Colorbar(int where,float x,float y,float w,float h)
 	{	mgl_colorbar_ext(self, 0, where,x,y,w,h);	}
+	void Colorbar(mglData *val, const char *sch="",int where=0)
+	{	mgl_colorbar_val(self, val, sch, where);	}
 	void SimplePlot(mglData *a, int type, const char *stl="")
 	{	mgl_simple_plot(self, a, type, stl);	}
 	void AddLegend(const char *text,const char *style)
@@ -401,6 +403,8 @@ struct mglParse{};
 	{	mgl_plot_xy(self, x, y, pen);	}
 	void Plot(mglData *y, const char *pen="")
 	{	mgl_plot(self, y, pen);	}
+	void Radar(mglData *a, const char *pen="", float r=-1)
+	{	mgl_radar(self, a, pen, r);	}
 	void Tens(mglData *x, mglData *y, mglData *z, mglData *c, const char *pen="")
 	{	mgl_tens_xyz(self, x, y, z, c, pen);	}
 	void Tens(mglData *x, mglData *y, mglData *c, const char *pen="")
@@ -537,14 +541,25 @@ struct mglParse{};
 	{	mgl_cont_xy(self, x, y, z, sch, Num, zVal);	}
 	void Cont(mglData *z, const char *sch="", int Num=7, float zVal=NaN)
 	{	mgl_cont(self, z, sch, Num, zVal);	}
+	
 	void ContF(mglData *v, mglData *x, mglData *y, mglData *z, const char *sch="", float zVal=NaN)
 	{	mgl_contf_xy_val(self, v, x, y, z, sch, zVal);	}
 	void ContF(mglData *v, mglData *z, const char *sch="", float zVal=NaN)
 	{	mgl_contf_val(self, v, z, sch, zVal);	}
 	void ContF(mglData *x, mglData *y, mglData *z, const char *sch="", int Num=7, float zVal=NaN)
-	{	mgl_cont_xy(self, x, y, z, sch, Num, zVal);	}
+	{	mgl_contf_xy(self, x, y, z, sch, Num, zVal);	}
 	void ContF(mglData *z, const char *sch="", int Num=7, float zVal=NaN)
 	{	mgl_contf(self, z, sch, Num, zVal);	}
+	
+	void ContD(mglData *v, mglData *x, mglData *y, mglData *z, const char *sch="", float zVal=NaN)
+	{	mgl_contd_xy_val(self, v, x, y, z, sch, zVal);	}
+	void ContD(mglData *v, mglData *z, const char *sch="", float zVal=NaN)
+	{	mgl_contd_val(self, v, z, sch, zVal);	}
+	void ContD(mglData *x, mglData *y, mglData *z, const char *sch="", int Num=7, float zVal=NaN)
+	{	mgl_contd_xy(self, x, y, z, sch, Num, zVal);	}
+	void ContD(mglData *z, const char *sch="", int Num=7, float zVal=NaN)
+	{	mgl_contd(self, z, sch, Num, zVal);	}
+	
 	void Axial(mglData *v, mglData *x, mglData *y, mglData *z, const char *sch="")
 	{	mgl_axial_xy_val(self, v, x, y, z, sch);	}
 	void Axial(mglData *v, mglData *z, const char *sch="")

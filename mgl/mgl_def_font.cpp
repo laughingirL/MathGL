@@ -17,9 +17,10 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include <mgl/mgl_define.h>
 //# font STIXGeneral.otf has 516 glyphs
 unsigned mgl_numg=516, mgl_cur=246080;
-float mgl_fact=50;
+mreal mgl_fact=50;
 long mgl_gen_fnt[516][6] = {
 	{33, 232, 41, 0, 39, 62042},
 	{34, 285, 41, 82, 38, 62276},

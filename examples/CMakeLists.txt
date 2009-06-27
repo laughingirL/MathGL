@@ -8,6 +8,10 @@ endif(use_gsl)
 
 add_executable(mgl_example full_test.cpp)
 target_link_libraries(mgl_example mgl)
+install(
+	TARGETS mgl_example
+	RUNTIME DESTINATION bin
+)
 
 if(use_fltk)
 	add_executable(mgl_fltk_example fltk_example.cpp)

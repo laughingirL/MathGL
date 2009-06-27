@@ -1,14 +1,17 @@
-1.9 Released 23 June 2009
+1.9 Released 1 July 2009
 	- Improve export in EPS and SVG: lines are exported as single object, improve line dashing, text is exported by glyphs now.
 	- Write new MGL parser which can handle arbitrary expression as argument for data and/or number.
 	- Function mglGraph*::Window() now can handle NULL-pointer as function (draw built-in bitmap only). The window can be created from Fortran programs too.
 	- Add new plot Traj() for drawing vectors along the curve.
+	- Add new plot ContD() for drawing solid contours with manual colors (useful for phase diagrams).
+	- Add new plot Radar() for drawing radar chart.
 	- Add new plot Flow(mglPoint p, ...) for drawing the flow thread from a point.
 	- Functions mglGraph::Vect() now have additional argument for kind of vector plot. Correspondingly mgl_vect_*() functions now have additional argument too!
 	- Add function mglGraph::Axis() for predefined curvilinear coordinates.
 	- Add function mglData::SubData() for indirect access to the data elements.
 	- Add function mglData::Trace() for getting diagonal elements.
 	- Add function for manual setting of ticks/subticks line style.
+	- Now you can set colors for multiple curves (palette) directly in function style, i.e. like gr->Plot(y,"rgb;").
 	- Improve ticks drawing if RotatedText = false;
 	- NOTE! Hide TickLen variable and change it to SetTickLen() function. Also add additional argument to mgl_set_tick_len() function.
 	- You can now select base type for floating point numbers (double or float).

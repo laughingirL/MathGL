@@ -293,7 +293,7 @@ int sample_ae(mglGraph *gr, const void *)	// TeX sample
 //-----------------------------------------------------------------------------
 int sample_ad(mglGraph *gr, const void *)	// arrow styles
 {
-	float a=0.1,b=0.4,c=0.5;
+	mreal a=0.1,b=0.4,c=0.5;
 	gr->Line(mglPoint(a,1),mglPoint(b,1),"k-A");		gr->Puts(mglPoint(c,1),"Style 'A' or 'A\\_'","rL");
 	gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"k-V");	gr->Puts(mglPoint(c,0.8),"Style 'V' or 'V\\_'","rL");
 	gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"k-K");	gr->Puts(mglPoint(c,0.6),"Style 'K' or 'K\\_'","rL");
@@ -646,8 +646,9 @@ int sample_a1(mglGraph *gr, const void *)	// transformation
 int sample_1d(mglGraph *gr, const void *s)	// full test (in PNG)
 {
 	const char *suf =(const char *)s;
-	mglData y(50,3), x(50), x2(50), y1(50), y2(50), ys(10,3);
+	mglData y(50,3), x(50), x2(50), y1(50), y2(50), ys(10,3), yr(10,3);
 	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+	yr.Modify("0.4*sin(pi*(2*x+y/2))+0.1*rnd");
 	y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 	y.Modify("sin(2*pi*x)",1);	y.Modify("cos(2*pi*x)",2);
 	y1.Modify("0.5+0.3*cos(2*pi*x)");	y2.Modify("0.3*sin(2*pi*x)");
@@ -660,6 +661,7 @@ int sample_1d(mglGraph *gr, const void *s)	// full test (in PNG)
 
 	gr->Org = mglPoint();
 	gr->Clf();	gr->Box();	gr->Plot(y);	save(gr,"plot",suf);
+	gr->Clf();	gr->Radar(yr,"#");	save(gr,"radar",suf);
 	gr->Clf();	gr->Box();	gr->Plot(x,y);	gr->Traj(x,y,y1,y2);	save(gr,"traj",suf);
 	gr->Clf();	gr->Box();	gr->Tens(y.SubData(-1,0), y.SubData(-1,1));	save(gr,"tens",suf);
 	gr->Clf();	gr->Box();	gr->Area(y);	save(gr,"area",suf);
@@ -690,7 +692,7 @@ int sample_1d(mglGraph *gr, const void *s)	// full test (in PNG)
 int sample_2d(mglGraph *gr, const void *s)	// full test (in PNG)
 {
 	const char *suf =(const char *)s;
-	mglData  a(50,40), b(50,40);
+	mglData  a(50,40), b(50,40),v(9);	v.Fill(-1,1);
 	a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 	b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
@@ -698,6 +700,7 @@ int sample_2d(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->Cont(a,"BbcyrRt");	save(gr,"contt",suf);
 	gr->Clf();	gr->Box();	gr->TileS(a,b,"BbcyrR");save(gr,"tiler",suf);
 	gr->Clf();	gr->Box();	gr->Dens(a);	gr->Colorbar();	save(gr,"dens",suf);
+	gr->Clf();	gr->Box();	gr->ContD(v,a);	gr->Colorbar(v);save(gr,"contd",suf);
 	gr->Light(true);	gr->Rotate(40,60);
 	gr->Clf();	gr->Box();	gr->Surf(a,"BbcyrR|");	save(gr,"surf_sl",suf);
 	gr->Clf();	gr->Box();	gr->Surf(a,"BbcyrR");	save(gr,"surf",suf);
@@ -1153,7 +1156,7 @@ int sample_fit(mglGraph *gr, const void *s)	// flag #
 #include <mgl/mgl_parse.h>
 int sample_parser(mglGraph *gr, const void *)	// flag #
 {
-	float a[100];   // let a_i = sin(4*pi*x), x=0...1
+	mreal a[100];   // let a_i = sin(4*pi*x), x=0...1
 	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
 	mglParse *parser = new mglParse;
 	mglData &d =(parser->AddVar("dat"))->d;
@@ -1164,6 +1167,7 @@ int sample_parser(mglGraph *gr, const void *)	// flag #
 	parser->Execute(gr, "xlabel 'x'\nylabel 'y'\nbox");
 	// also you may use cycles or conditions in script
 	parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+	delete parser;
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -1243,22 +1247,12 @@ void usage()
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
-	mglData y(50,3), x(50), x2(50), y1(50), y2(50), ys(10,3);
-	y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
-	y.Modify("sin(2*pi*x)",1);	y.Modify("cos(2*pi*x)",2);
-	y1.Modify("0.5+0.3*cos(2*pi*x)");	y2.Modify("0.3*sin(2*pi*x)");
-	x.Fill(-1,1,'x');			x2.Modify("0.05+0.03*cos(2*pi*x)");
+	mglData  a(50,40),v(9);	v.Fill(-1,1);
+	a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
-mglData d1=y.SubData(-1,0),d2=y.SubData(-1,1);
-printf("n1: %ld,%ld,%ld\tm1: %g,%g\n",d1.nx,d1.ny,d1.nz,d1.Minimal(),d1.Maximal());
-printf("n2: %ld,%ld,%ld\tm2: %g,%g\n",d2.nx,d2.ny,d2.nz,d2.Minimal(),d2.Maximal());
-//	gr->Box();	gr->Plot(x,y);	gr->Traj(x,y,y1,y2);
-	gr->Tens(d1,d2);
-
+	gr->SubPlot(2,1,0);	gr->Box();	gr->ContD(v,a);	gr->Colorbar(v);
+	gr->SubPlot(2,1,1);	gr->Box();	gr->Dens(a);	gr->Colorbar();
 	gr->ShowImage("",false);
-//	gr->Box();
-//	gr->Puts(mglPoint(0,1),"Text \\a{over} \\u{under} \\frac{aaa}{bbb} \\sqrt{sss}");
-//	gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", 0, -4);
 	return 0;
 
 	mglParse par;

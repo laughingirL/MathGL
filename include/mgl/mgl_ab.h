@@ -30,7 +30,7 @@ class mglGraphAB : public mglGraph
 {
 public:
 using mglGraph::Mark;
-using mglGraph::Colorbar;
+//using mglGraph::Colorbar;
 using mglGraph::Legend;
 	/// Initialize ZBuffer drawing and allocate the memory for image with size [Width x Height].
 	mglGraphAB(int w=600, int h=400);
@@ -64,7 +64,8 @@ using mglGraph::Legend;
 	void Pen(mglColor col, char style,mreal width);
 	void Legend(int n, wchar_t **text, char **style, mreal x, mreal y, const char *font="rL", mreal size=-0.8, mreal llen=0.1);
 
-	void Colorbar(int where, mreal x, mreal y, mreal w, mreal h);
+//	void Colorbar(int where, mreal x, mreal y, mreal w, mreal h);
+//	void Colorbar(const mglData &v, const char *sch, int where, mreal x, mreal y, mreal w, mreal h);
 	/// Get RGB bitmap of current state image.
 	virtual const unsigned char *GetBits();
 	/// Get RGBA bitmap of current state image.
@@ -158,6 +159,7 @@ protected:
 	void NormScale(mreal *s,long n);
 	/// Set default color
 	void DefColor(mglColor c, mreal alpha=-1);
+	void colorbar(const mglData &v, const mglColor *s, int where, mreal x, mreal y, mreal w, mreal h);
 
 	/// Draw triangle between points \a p0,\a p1,\a p2 with color \a c0, \a c1, \a c2 at edges
 	virtual void trig_plot(mreal *p0,mreal *p1,mreal *p2,mreal *c0,mreal *c1,mreal *c2)=0;

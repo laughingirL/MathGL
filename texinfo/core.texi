@@ -798,6 +798,10 @@ Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=NULL}) a
 Draws colorbar with color scheme @var{sch} (current scheme if not specified) at arbitrary position of subplot @{@var{x}, @var{y}@} (supposed to be in range [0,1]). Parameter @var{where} specifies the position of colorbar labels: @samp{0} - at left, @samp{1} - at right, @samp{2} - at bottom, @samp{3} - at top. Parameters @var{w}, @var{h} set the relative width and height of the colorbar.
 @end deftypemethod
 
+@deftypemethod mglGraph @code{void} Colorbar (@code{const mglData &}v, @code{const char *}sch=@code{NULL}, @code{int} where=@code{0})
+Draws colorbar with sharp colors @var{sch} (current palette if @code{sch=NULL}) for values @var{v} at edge of plot. Parameter @var{where} specifies the position of the colorbar: @samp{0} - at right (default), @samp{1} - at left, @samp{2} - at top, @samp{3} - at bottom. @sref{ContD sample}
+@end deftypemethod
+
 @deftypemethod mglGraph @code{void} Grid (@code{const char *}dir=@code{"xyz"}, @code{const char *}pen=@code{"B-"})
 Draws grid lines perpendicular to direction determined by string parameter @var{dir}. The step of grid lines is the same as tick step for an Axis(). The style of lines is determined by @var{pen} parameter (default value is dark blue solid line (@samp{B-}).
 @end deftypemethod
@@ -858,6 +862,7 @@ These functions perform plotting of 1D data. 1D means that data depended from on
 
 @menu
 * Plot::                        
+* Radar::                        
 * Tens::                        
 * Area::                        
 * Region::                      
@@ -873,9 +878,8 @@ These functions perform plotting of 1D data. 1D means that data depended from on
 * Tube::                        
 @end menu
 
-
 @c ==================================================================
-@node Plot, Tens, , 1D plotting
+@node Plot, Radar, , 1D plotting
 @subsection Plot
 @cindex Plot
 
@@ -901,7 +905,16 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @va
 @end deftypemethod
 
 @c ==================================================================
-@node Tens, Area, Plot, 1D plotting
+@node Radar, Tens, Plot, 1D plotting
+@subsection Radar
+@cindex Radar
+
+@deftypemethod mglGraph @code{void} Plot (@code{const mglData &}a, @code{const char *}pen=@code{NULL}, @code{float} r=@code{-1})
+This functions draws radar chart which is continuous lines between points located on an radial lines (like plot in Polar coordinates). The plots are drawn for each row if one of the data is the matrix. Parameter @var{r} set the additional shift of data (i.e. the data @var{a}+@var{r} is used instead of @var{a}). If @code{r<0} then @code{r=max(0, -min(a)}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}). If @var{pen} containt @samp{#} symbol then "grid" (radial lines and circle for @var{r}) is drawn See also @ref{Plot}. @sref{Radar sample}
+@end deftypemethod
+
+@c ==================================================================
+@node Tens, Area, Radar, 1D plotting
 @subsection Tens
 @cindex Tens
 
@@ -1184,6 +1197,7 @@ These functions perform plotting of 2D data. 2D means that data depend from 2 in
 * Dens::                        
 * Cont::                        
 * ContF::                       
+* ContD::                       
 * Axial::                       
 * Grid::                        
 @end menu
@@ -1301,12 +1315,12 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @end deftypemethod
 
 @c ==================================================================
-@node ContF, Axial, Cont, 2D plotting
+@node ContF, ContD, Cont, 2D plotting
 @subsection ContF
 @cindex ContF
 
 @deftypemethod mglGraph @code{void} ContF (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
-The function draws solid (or filled) contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal} (or for @var{z=v}[k] if @code{zVal==NAN}). Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Dens}, @ref{Cont}, @ref{Axial}, @ref{ContFXYZ}. @sref{ContF sample}
+The function draws solid (or filled) contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal} (or for @var{z=v}[k] if @code{zVal==NAN}). Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v} (must be @code{v.nx>2}). String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{sch} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Dens}, @ref{Cont}, @ref{Axial}, @ref{ContFXYZ}. @sref{ContF sample}
 @end deftypemethod
 
 @deftypemethod mglGraph @code{void} ContF (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
@@ -1322,7 +1336,28 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @end deftypemethod
 
 @c ==================================================================
-@node Axial, Grid, ContF, 2D plotting
+@node ContD, Axial, ContF, 2D plotting
+@subsection ContD
+@cindex ContD
+
+@deftypemethod mglGraph @code{void} ContD (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
+The function draws solid (or filled) contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z} = @var{zVal} (or for @var{z=v}[k] if @code{zVal==NAN}) with manual colors. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v} (must be @code{v.nx>2}). String @var{sch} sets the contour colors: the color of k-th contour is determined by character @code{sch[k%strlen(sch)]}. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or  @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Surface is plotted for each z slice of the data. See also @ref{Dens}, @ref{Cont}, @ref{ContF}. @sref{ContD sample}
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} ContD (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{float} zVal=@code{NAN})
+The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} ContD (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{int} num=@code{7}, @code{float} zVal=@code{NAN})
+The same as first one with vector @var{v} of @var{num}-th elements equidistantly distributed in range [@var{Cmin}, @var{Cmax}].
+@end deftypemethod
+
+@deftypemethod mglGraph @code{void} ContD (@code{const mglData &}z, @code{const char *}sch=@code{NULL}, @code{int} num=@code{7}, @code{float} zVal=@code{NAN})
+The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
+@end deftypemethod
+
+@c ==================================================================
+@node Axial, Grid, ContD, 2D plotting
 @subsection Axial
 @cindex Axial
 

@@ -735,7 +735,7 @@ void mglGraphAB::glyph_wire(mreal x,mreal y, mreal f, int nl, const short *line,
 	long ik,ii,il=0;
 	mreal p[12];
 	unsigned pdef=PDef;	PDef = 0xffff;
-	float opw=PenWidth;	PenWidth=1;
+	mreal opw=PenWidth;	PenWidth=1;
 	for(ik=0;ik<nl;ik++)
 	{
 		ii = 2*ik;
@@ -761,7 +761,7 @@ void mglGraphAB::glyph_line(mreal x,mreal y, mreal f, mreal *c, bool solid)
 {
 	mreal p[12], pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 	unsigned pdef=PDef;	PDef = 0xffff;
-	float opw=PenWidth;	PenWidth=1;
+	mreal opw=PenWidth;	PenWidth=1;
 
 	mreal dy = 0.004;
 	p[0]=x;			p[1]=y+dy;	p[2]=0;

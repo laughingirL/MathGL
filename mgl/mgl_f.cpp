@@ -407,6 +407,11 @@ void mgl_colorbar_(uintptr_t *gr, const char *sch,int *where,int l)
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	_GR_->Colorbar(s,*where);	delete []s;
 }
+void mgl_colorbar_val_(uintptr_t *gr, uintptr_t *v, const char *sch,int *where,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	_GR_->Colorbar(_D_(v), s,*where);	delete []s;
+}
 void mgl_colorbar_ext_(uintptr_t *gr, const char *sch,int *where, mreal *x, mreal *y, mreal *w, mreal *h, int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;

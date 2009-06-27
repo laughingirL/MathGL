@@ -337,6 +337,8 @@ void mgl_colorbar(HMGL gr, const char *sch,int where)
 {	gr->Colorbar(sch,where);	}
 void mgl_colorbar_ext(HMGL gr, const char *sch,int where, mreal x, mreal y, mreal w, mreal h)
 {	gr->Colorbar(sch,where,x,y,w,h);	}
+void mgl_colorbar_val(HMGL gr, const HMDT val, const char *sch,int where)
+{	gr->Colorbar(*val,sch,where);	}
 /// Plot data depending on its dimensions and \a type parameter
 void mgl_simple_plot(HMGL gr, const HMDT a, int type, const char *sch)
 {	if(gr && a)	gr->SimplePlot(*a,type,sch);	}

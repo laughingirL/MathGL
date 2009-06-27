@@ -133,6 +133,7 @@ mglParse::mglParse(bool setsize)
 	AllowSetSize=setsize;
 	Once = true;	parlen=320;
 	op1 = new wchar_t[4096];	op2 = new wchar_t[4096];
+	fval = new mglData[10];
 }
 //-----------------------------------------------------------------------------
 mglParse::~mglParse()
@@ -143,7 +144,7 @@ mglParse::~mglParse()
 		delete DataList;
 	}
 	for(long i=0;i<10;i++)	if(par[i])	delete [] par[i];
-	delete []op1;	delete []op2;
+	delete []op1;	delete []op2;	delete []fval;
 	if(Cmd!=mgls_base_cmd)	delete []Cmd;
 }
 //-----------------------------------------------------------------------------
@@ -301,7 +302,7 @@ void mglParse::FillArg(int k, wchar_t **arg, mglArg *a)
 			else
 			{
 				u=new mglVar;	u->temp=true;	u->d=d;
-				swprintf(a[n-1].w,2048,L"/*%ls*/",arg[n]);
+				mglprintf(a[n-1].w,2048,L"/*%ls*/",arg[n]);
 				if(DataList)	u->MoveAfter(DataList);
 				else			DataList = u;
 				a[n-1].type = 0;	a[n-1].d = &(u->d);
@@ -499,7 +500,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 				{
 					for(int i=9;i>0;i--)	for_stack[i] = for_stack[i-1];
 					for_stack[0] = r+1;		fval[r].nz = pos;
-					wchar_t buf[32];		swprintf(buf,32,L"%g",fval[r].a[0]);
+					wchar_t buf[32];		mglprintf(buf,32,L"%g",fval[r].a[0]);
 					AddParam(r, buf,true);	fval[r].ny = 1;
 				}
 			}
@@ -534,9 +535,9 @@ int mglParse::FlowExec(mglGraph *gr, const wchar_t *com, long m, mglArg *a)
 		{
 			n = 0;
 			if(a[0].v)
-			{	Skip = !Once;	if(out)	swprintf(out,1024,L"if(!once)\t{\tonce = true;");	}
+			{	Skip = !Once;	if(out)	mglprintf(out,1024,L"if(!once)\t{\tonce = true;");	}
 			else
-			{	Skip = Once = false;	if(out)	swprintf(out,1024,L"}");	}
+			{	Skip = Once = false;	if(out)	mglprintf(out,1024,L"}");	}
 		}
 		else n = 1;
 	}
@@ -546,13 +547,13 @@ int mglParse::FlowExec(mglGraph *gr, const wchar_t *com, long m, mglArg *a)
 		if(a[0].type==2)
 		{
 			n = 0;	cond = (a[0].v!=0)?3:0;
-			if(out)	swprintf(out,1024,L"if(%g!=0)\t{", a[0].v);
+			if(out)	mglprintf(out,1024,L"if(%g!=0)\t{", a[0].v);
 		}
 		else if(m>1 && a[0].type==0 && a[1].type==1)
 		{
 			n = 0;	mgl_wcstombs(a[1].s, a[1].w, 1024);
 			cond = a[0].d->FindAny(a[1].s)?3:0;
-			if(out)	swprintf(out,1024,L"if(%ls.FindAny(\"%s\"))\t{", a[0].w, a[1].s);
+			if(out)	mglprintf(out,1024,L"if(%ls.FindAny(\"%s\"))\t{", a[0].w, a[1].s);
 		}
 		else n = 1;
 		if(n==0)
@@ -561,14 +562,14 @@ int mglParse::FlowExec(mglGraph *gr, const wchar_t *com, long m, mglArg *a)
 	else if(!wcscmp(com,L"endif"))
 	{
 		if_pos = if_pos>0 ? if_pos-1 : 0;
-		n = 0;	if(out)	swprintf(out,1024,L"}");
+		n = 0;	if(out)	mglprintf(out,1024,L"}");
 	}
 	else if(!wcscmp(com,L"else"))
 	{
 		if(if_pos>0)
 		{
 			n=0; if_stack[if_pos-1] = (if_stack[if_pos-1]&2)?2:3;
-			if(out)	swprintf(out,1024,L"}\telse\t{");
+			if(out)	mglprintf(out,1024,L"}\telse\t{");
 		}
 		else n = 1;
 	}
@@ -585,9 +586,9 @@ int mglParse::FlowExec(mglGraph *gr, const wchar_t *com, long m, mglArg *a)
 		{
 			if_stack[if_pos-1] = cond;
 			if(out && a[0].type==2)
-				swprintf(out,1024,L"else if(%g!=0)\t{", a[0].v);
+				mglprintf(out,1024,L"else if(%g!=0)\t{", a[0].v);
 			if(out && m>1 && a[0].type==0 && a[1].type==1)
-				swprintf(out,1024,L"else if(%ls.FindAny(\"%ls\"))\t{", a[0].w, a[1].w);
+				mglprintf(out,1024,L"else if(%ls.FindAny(\"%ls\"))\t{", a[0].w, a[1].w);
 		}
 	}
 	else if(!wcscmp(com,L"next"))
@@ -598,7 +599,7 @@ int mglParse::FlowExec(mglGraph *gr, const wchar_t *com, long m, mglArg *a)
 		{
 			if(fval[r].ny<fval[r].nx)
 			{
-				wchar_t buf[32];		swprintf(buf,32,L"%g",fval[r].a[fval[r].ny]);
+				wchar_t buf[32];		mglprintf(buf,32,L"%g",fval[r].a[fval[r].ny]);
 				AddParam(r, buf,true);	fval[r].ny += 1;
 				n = -fval[r].nz-1;
 			}
@@ -630,7 +631,7 @@ void mglParse::Execute(mglGraph *gr, FILE *fp, bool print)
 	if(len>0)	for(cur=0;cur<len;cur++)
 	{
 		str[cur] = fgetwc(fp);
-		if(cur==0 && str[cur]==-1)	cur--;	// Shaytan, but it works!!!
+		if(cur==0 && str[cur]==wchar_t(-1))	cur--;	// Shaytan, but it works!!!
 	}
 	str[len]=0;
 	Execute(gr,str,print?mgl_error_print:NULL);
@@ -695,67 +696,67 @@ void mglParse::ProcOpt(mglGraph *gr, wchar_t *str)
 		if(opt[0])
 		{
 			gr->Min.x = val[0];	gr->Max.x = val[1];	gr->RecalcBorder();
-			if(out)	swprintf(buf,256,L"\tgr->Min.x = tx1;\tgr->Max.x = tx2;}");
+			if(out)	mglprintf(buf,256,L"\tgr->Min.x = tx1;\tgr->Max.x = tx2;}");
 			wcscat(op2,buf);
 		}
 		if(opt[1])
 		{
 			gr->Min.y = val[2];	gr->Max.y = val[3];	gr->RecalcBorder();
-			if(out)	swprintf(buf,256,L"\tgr->Min.y = ty1;\tgr->Max.y = ty2;}");
+			if(out)	mglprintf(buf,256,L"\tgr->Min.y = ty1;\tgr->Max.y = ty2;}");
 			wcscat(op2,buf);
 		}
 		if(opt[2])
 		{
 			gr->Min.z = val[4];	gr->Max.z = val[5];	gr->RecalcBorder();
-			if(out)	swprintf(buf,256,L"\tgr->Min.z = tz1;\tgr->Max.z = tz2;}");
+			if(out)	mglprintf(buf,256,L"\tgr->Min.z = tz1;\tgr->Max.z = tz2;}");
 			wcscat(op2,buf);
 		}
 		if(opt[3])
 		{
 			gr->Cmin = val[6];	gr->Cmax = val[7];
-			if(out)	swprintf(buf,256,L"\tgr->Cmin = tc1;\tgr->Cmax = tc2;}");
+			if(out)	mglprintf(buf,256,L"\tgr->Cmin = tc1;\tgr->Cmax = tc2;}");
 			wcscat(op2,buf);
 		}
 		if(opt[4])
 		{
 			gr->Ambient(val[8]);
-			if(out)	swprintf(buf,256,L"\tgr->Ambient(tam);}");
+			if(out)	mglprintf(buf,256,L"\tgr->Ambient(tam);}");
 			wcscat(op2,buf);
 		}
 		if(opt[5])
 		{
 			gr->Cut = val[10]!=0;
-			if(out)	swprintf(buf,256,L"\tgr->Cut = tct;}");
+			if(out)	mglprintf(buf,256,L"\tgr->Cut = tct;}");
 			wcscat(op2,buf);
 		}
 		if(opt[6])
 		{
 			gr->AlphaDef = val[12];
-			if(out)	swprintf(buf,256,L"\tgr->AlphaDef = tad;}");
+			if(out)	mglprintf(buf,256,L"\tgr->AlphaDef = tad;}");
 			wcscat(op2,buf);
 		}
 		if(opt[7])
 		{
 			gr->MeshNum  = int(val[14]);
-			if(out)	swprintf(buf,256,L"\tgr->MeshNum = tmn;}");
+			if(out)	mglprintf(buf,256,L"\tgr->MeshNum = tmn;}");
 			wcscat(op2,buf);
 		}
 		if(opt[8])
 		{
 			gr->FontSize = val[16];
-			if(out)	swprintf(buf,256,L"\tgr->FontSize = tfs;}");
+			if(out)	mglprintf(buf,256,L"\tgr->FontSize = tfs;}");
 			wcscat(op2,buf);
 		}
 		if(opt[9])
 		{
 			gr->MarkSize = val[17];
-			if(out)	swprintf(buf,256,L"\tgr->MarkSize = tms;}");
+			if(out)	mglprintf(buf,256,L"\tgr->MarkSize = tms;}");
 			wcscat(op2,buf);
 		}
 		if(opt[10])
 		{
 			gr->AddLegend(leg, gr->last_style);
-			if(out)	swprintf(buf,256,L"\tgr->AddLegend(\"%s\", \"%s\");", leg, gr->last_style);
+			if(out)	mglprintf(buf,256,L"\tgr->AddLegend(\"%s\", \"%s\");", leg, gr->last_style);
 			wcscat(op2,buf);
 		}
 		for(long i=0;i<16;i++)	opt[i]=false;
@@ -785,68 +786,68 @@ void mglParse::ProcOpt(mglGraph *gr, wchar_t *str)
 				if(a[0]=='x')
 				{
 					opt[0]=true;	gr->Min.x = wcstod(b,0);	gr->Max.x = wcstod(s,0);
-					if(out)	swprintf(buf,256,L"{mreal tx1=gr->Min.x, tx2=gr->Max.x;\tgr->Min.x=%g;\tgr->Max.x=%g;", wcstod(b,0), wcstod(s,0));
+					if(out)	mglprintf(buf,256,L"{mreal tx1=gr->Min.x, tx2=gr->Max.x;\tgr->Min.x=%g;\tgr->Max.x=%g;", wcstod(b,0), wcstod(s,0));
 					wcscat(op1,buf);
 				}
 				else if(a[0]=='y')
 				{
 					opt[1]=true;	gr->Min.y = wcstod(b,0);	gr->Max.y = wcstod(s,0);
-					if(out)	swprintf(buf,256,L"{mreal ty1=gr->Min.y, ty2=gr->Max.y;\tgr->Min.y=%g;\tgr->Max.y=%g;", wcstod(b,0), wcstod(s,0));
+					if(out)	mglprintf(buf,256,L"{mreal ty1=gr->Min.y, ty2=gr->Max.y;\tgr->Min.y=%g;\tgr->Max.y=%g;", wcstod(b,0), wcstod(s,0));
 					wcscat(op1,buf);
 				}
 				else if(a[0]=='z')
 				{
 					opt[2]=true;	gr->Min.z = wcstod(b,0);	gr->Max.z = wcstod(s,0);
-					if(out)	swprintf(buf,256,L"{mreal tz1=gr->Min.z, tz2=gr->Max.z;\tgr->Min.z=%g;\tgr->Max.z=%g;", wcstod(b,0), wcstod(s,0));
+					if(out)	mglprintf(buf,256,L"{mreal tz1=gr->Min.z, tz2=gr->Max.z;\tgr->Min.z=%g;\tgr->Max.z=%g;", wcstod(b,0), wcstod(s,0));
 					wcscat(op1,buf);
 				}
 				else if(a[0]=='c')
 				{
 					opt[3]=true;	gr->Cmin = wcstod(b,0);		gr->Cmax = wcstod(s,0);
-					if(out)	swprintf(buf,256,L"{mreal tc1=gr->Cmin, tc2=gr->Cmax;\tgr->Cmin=%g;\tgr->Cmax=%g;", wcstod(b,0), wcstod(s,0));
+					if(out)	mglprintf(buf,256,L"{mreal tc1=gr->Cmin, tc2=gr->Cmax;\tgr->Cmin=%g;\tgr->Cmax=%g;", wcstod(b,0), wcstod(s,0));
 					wcscat(op1,buf);
 				}
 			}
 			else if(!wcscmp(a,L"cut"))
 			{
 				opt[5]=true;	gr->Cut = (ff!=0 || !wcsncmp(s,L"on",2));
-				if(out)	swprintf(buf,256,L"{bool tct=gr->Cut;\tgr->Cut=%s;", gr->Cut?"true":"false");
+				if(out)	mglprintf(buf,256,L"{bool tct=gr->Cut;\tgr->Cut=%s;", gr->Cut?"true":"false");
 				wcscat(op1,buf);
 			}
 			else if(!wcscmp(a,L"meshnum"))
 			{
 				opt[7]=true;	gr->MeshNum = int(ff);
-				if(out)	swprintf(buf,256,L"{int tmn=gr->MeshNum;\tgr->MeshNum=%d;", gr->MeshNum);
+				if(out)	mglprintf(buf,256,L"{int tmn=gr->MeshNum;\tgr->MeshNum=%d;", gr->MeshNum);
 				wcscat(op1,buf);
 			}
 			else if(!wcscmp(a,L"alphadef"))
 			{
 				opt[6]=true;	gr->AlphaDef = ff;
-				if(out)	swprintf(buf,256,L"{mreal tad=gr->AlphaDef;\tgr->AlphaDef=%g;", ff);
+				if(out)	mglprintf(buf,256,L"{mreal tad=gr->AlphaDef;\tgr->AlphaDef=%g;", ff);
 				wcscat(op1,buf);
 			}
 			else if(!wcscmp(a,L"alpha"))
 			{
 				opt[6]=true;	gr->AlphaDef = ff;
-				if(out)	swprintf(buf,256,L"{mreal tad=gr->AlphaDef;\tgr->AlphaDef=%g;", ff);
+				if(out)	mglprintf(buf,256,L"{mreal tad=gr->AlphaDef;\tgr->AlphaDef=%g;", ff);
 				wcscat(op1,buf);
 			}
 			else if(!wcscmp(a,L"fontsize"))
 			{
 				opt[8]=true;	gr->FontSize = ff>0 ? ff : -ff*gr->FontSize;
-				if(out)	swprintf(buf,256,L"{mreal tfs=gr->FontSize;\tgr->FontSize=%g;", gr->FontSize);
+				if(out)	mglprintf(buf,256,L"{mreal tfs=gr->FontSize;\tgr->FontSize=%g;", gr->FontSize);
 				wcscat(op1,buf);
 			}
 			else if(!wcscmp(a,L"ambient"))
 			{
 				opt[4]=true;	gr->Ambient(ff);
-				if(out)	swprintf(buf,256,L"{mreal tam=gr->AmbBr;\tgr->Ambient(%g);", ff);
+				if(out)	mglprintf(buf,256,L"{mreal tam=gr->AmbBr;\tgr->Ambient(%g);", ff);
 				wcscat(op1,buf);
 			}
 			else if(!wcscmp(a,L"marksize"))
 			{
 				opt[9]=true;	gr->MarkSize = ff/50;
-				if(out)	swprintf(buf,256,L"{mreal tad=gr->MarkSize;\tgr->MarkSize=%g/50;", ff);
+				if(out)	mglprintf(buf,256,L"{mreal tad=gr->MarkSize;\tgr->MarkSize=%g/50;", ff);
 				wcscat(op1,buf);
 			}
 			else if(!wcscmp(a,L"legend"))
