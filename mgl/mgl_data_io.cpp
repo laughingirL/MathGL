@@ -31,6 +31,8 @@
 
 #include "mgl/mgl_eval.h"
 #include "mgl/mgl_data.h"
+
+#define isn(ch)		((ch)<' ' && (ch)!='\t')
 //-----------------------------------------------------------------------------
 void mglData::Set(const char *v,int NX,int NY,int NZ)
 {
@@ -316,11 +318,11 @@ bool mglData::Read(const char *fname)
 	register char ch;
 	for(i=nb-1;i>=0;i--)	if(buf[i]>' ')	break;
 	buf[i+1]=0;	nb = i;		// remove tailing spaces
-	for(i=0;i<nb-1 && buf[i]!='\n';i++)	// determine nx
+	for(i=0;i<nb-1 && !isn(buf[i]);i++)	// determine nx
 	{
 		ch = buf[i];
 //		sp = (ch==' ' || ch=='\t');
-		if(ch=='#')		while(buf[i]!='\n' && i<nb)	i++;
+		if(ch=='#')		while(!isn(buf[i]) && i<nb)	i++;
 		if(!isspace(ch) && !first)	first=true;
 		if(first && (ch==' ' || ch=='\t') && !isspace(buf[i+1])) k++;
 	}
@@ -328,10 +330,10 @@ bool mglData::Read(const char *fname)
 	for(i=0;i<nb-1;i++)					// determine ny
 	{
 		ch = buf[i];
-		if(ch=='#')	while(buf[i]!='\n' && i<nb)	i++;
-		if(ch=='\n')
+		if(ch=='#')	while(!isn(buf[i]) && i<nb)	i++;
+		if(isn(ch))
 		{
-			if(buf[i+1]=='\n')	{first=true;	break;	}
+			if(isn(buf[i+1]))	{first=true;	break;	}
 			m++;
 		}
 		if(ch=='\f')	break;
@@ -340,10 +342,10 @@ bool mglData::Read(const char *fname)
 	{
 		ch = buf[i];
 		if(ch=='#')	com = true;	// comment
-		if(ch=='\n')
+		if(isn(ch))
 		{
 			if(com)	{	com=false;	continue;	}
-			if(buf[i+1]=='\n')	l++;
+			if(isn(buf[i+1]))	l++;
 		}
 	}
 	else	for(i=0;i<nb-1;i++)	if(buf[i]=='\f')	l++;
@@ -383,10 +385,10 @@ bool mglData::Read(const char *fname,int mx,int my,int mz)
 		while(buf[j]=='#')		// skip comment
 		{
 			if(i>0 || buf[j+1]!='#')	// this is columns id
-				while(buf[j]!='\n' && j<nb)	j++;
+				while(!isn(buf[j]) && j<nb)	j++;
 			else
 			{
-				while(buf[j]!='\n' && j<nb)
+				while(!isn(buf[j]) && j<nb)
 				{
 					if(buf[j]>='a' && buf[j]<='z')
 						id[k++] = buf[j];
@@ -396,9 +398,10 @@ bool mglData::Read(const char *fname,int mx,int my,int mz)
 //			while(buf[j]!='\n' && j<nb)	j++;
 			while(buf[j]<=' ' && j<nb)	j++;
 		}
-		a[i] = atof(buf+j);	i++;
-		if(i>=nx*ny*nz)	break;
+		char *s=buf+j;
 		while(buf[j]>' ' && j<nb)	j++;
+		buf[j]=0;
+		a[i] = atof(s);	i++;	if(i>=nx*ny*nz)	break;
 	}
 	delete []buf;
 	return true;
@@ -421,7 +424,7 @@ bool mglData::ReadMat(const char *fname,int dim)
 	register long i=0,j=0;
 	while(j<nb)
 	{
-		if(buf[j]=='#')	while(buf[j]!='\n')	j++;	// skip comment
+		if(buf[j]=='#')	while(!isn(buf[j]))	j++;	// skip comment
 		while(buf[j]<=' ' && j<nb)	j++;
 		break;
 	}
@@ -452,7 +455,7 @@ bool mglData::ReadMat(const char *fname,int dim)
 		while(buf[j]<=' ' && j<nb)	j++;
 		while(buf[j]=='#')		// skip comment
 		{
-			while(buf[j]!='\n' && j<nb)	j++;
+			while(!isn(buf[j]) && j<nb)	j++;
 			while(buf[j]<=' ' && j<nb)	j++;
 		}
 		a[i] = atof(buf+j);	i++;

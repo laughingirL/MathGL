@@ -229,7 +229,7 @@ int mglFindArg(const wchar_t *str)
 	{
 		if(l%2==0 && (str[i]=='#' || str[i]==';'))	return -i;
 		if(str[i]=='\'') l++;
-		if(l%2==0 && (str[i]==' ' || str[i]=='\t' || str[i]=='\n'))	return i;
+		if(l%2==0 && (str[i]<=' '))	return i;
 	}
 	return 0;
 }

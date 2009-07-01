@@ -113,7 +113,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 	wcscpy(str,string);
 	static wchar_t Buf[2048];
 	long n,len;
-	mgl_wcstrim(str);	mgl_wcslwr(str);
+	mgl_wcstrim(str);	//	mgl_wcslwr(str);
 	len=wcslen(str);
 	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// remove braces
 	{

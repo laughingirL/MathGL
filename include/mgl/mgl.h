@@ -218,7 +218,7 @@ public:
 	virtual void Ambient(mreal bright=0.5);
 	/// Set palette
 	inline void SetPalette(const char *colors)
-	{	strcpy(DefPal, colors?colors:"Hbgrcmyhlnqeup");	SetPal(colors);	}
+	{	strcpy(DefPal, colors?colors:MGL_DEF_PAL);	SetPal(colors);	}
 	/// Set colormap scheme for surfaces (usualy called internaly)
 	void SetScheme(const char *sch);
 	/// Set the parameter of line (usualy called internaly)

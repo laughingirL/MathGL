@@ -293,7 +293,7 @@ void mglGraphZB::Finish()
 void mglGraphZB::Clf(mglColor Back)
 {
 	Fog(0);
-	pPos = CurrPal = 0;		PDef = 0xffff;
+	pPos = 0;	CurrPal = -1;	PDef = 0xffff;
 	if(Back==NC)		Back = mglColor(1,1,1);
 	if(TranspType==2)	Back = mglColor(0,0,0);
 	col2int(Back,1,BDef);

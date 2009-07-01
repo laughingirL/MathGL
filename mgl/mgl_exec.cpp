@@ -2752,15 +2752,15 @@ int mgls_plotfactor(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]==3)
 	{
-		gr->PlotFactor = a[0].v<0 ? gr->PlotFactor:a[0].v;
-		gr->AutoPlotFactor = (a[0].v<0);
+		if(a[0].v>0)	{	gr->PlotFactor=a[0].v;	gr->AutoPlotFactor=false;	}
+		else			{	gr->PlotFactor=1.55f;	gr->AutoPlotFactor=false;	}
 	}
 	else	return 1;
 	return 0;
 }
 void mglc_plotfactor(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==3)	mglprintf(out,1024,L"gr->PlotFactor = %g<0 ? gr->PlotFactor:%g;\tgr->AutoPlotFactor = (%g<0);", a[0].v, a[0].v, a[0].v);
+	if(k[0]==3)	mglprintf(out,1024,L"if(%g>0) gr->PlotFactor = %g;\tgr->AutoPlotFactor = !(%g>0);", a[0].v, a[0].v, a[0].v);
 }
 //-----------------------------------------------------------------------------
 //	{"norm","Normalize data",0, mgls_norm, mglc_norm}

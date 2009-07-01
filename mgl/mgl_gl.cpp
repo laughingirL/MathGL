@@ -144,7 +144,7 @@ void mglGraphGL::Fog(mreal d, mreal)
 void mglGraphGL::Clf(mglColor Back)
 {
 	Fog(0);
-	CurrPal = 0;
+	CurrPal = -1;
 	if(Back==NC)	Back=mglColor(1,1,1);
 //	glDepthFunc(GL_LESS);
 	glDepthFunc(GL_GREATER);

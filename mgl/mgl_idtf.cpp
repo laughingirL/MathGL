@@ -1405,7 +1405,7 @@ void mglGraphIDTF::Light ( int n, mglPoint p, mglColor c, mreal br, bool infty )
 //-----------------------------------------------------------------------------
 void mglGraphIDTF::Clf ( mglColor Back )
 {
-	CurrPal = 0;
+	CurrPal = -1;
 	if ( Back==NC )	Back=mglColor ( 1,1,1 );
 	Groups.clear();
 	CurrentGroup = NULL;

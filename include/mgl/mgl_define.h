@@ -82,5 +82,7 @@ enum{	// Codes for warnings/messages
 	mglWarnEnd		// Maximal number of warnings (must be last)
 };
 //-----------------------------------------------------------------------------
+#define MGL_DEF_PAL	"bgrcmyhlnqeupH"	// default palette
+//-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------

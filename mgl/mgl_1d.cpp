@@ -390,7 +390,8 @@ void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, co
 
 	SetPal(pen);
 	for(j=0;j<m;j++)
-	{		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
+	{
+		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
 		mx = j<x.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -897,7 +898,7 @@ void mglGraph::Chart(const mglData &a, const char *cols)
 	bool wire = false;	// draw edges
 	register long n=a.nx,i,j,k,l,m,i0;
 	if(cols && !strcmp(cols,"#"))	{	wire = true;	cols = 0;	}
-	if(!cols)	cols = "Hbgrcmyhlnqeup";
+	if(!cols)	cols = MGL_DEF_PAL;
 	mglColor *c = new mglColor[strlen(cols)+1];
 	long nc=0;			// number of colors
 	for(i=0;i<long(strlen(cols));i++)

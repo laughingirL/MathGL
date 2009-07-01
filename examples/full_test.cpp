@@ -234,7 +234,8 @@ int sample_pde(mglGraph *gr, const void *)	// PDE and Ray sample
 	gr->Dens(a,"wyrRk");
 	gr->Plot("-x", "k|", type==5?0.01:NAN);
 	gr->Puts(mglPoint(0, 0.85), "absorption: (x+z)/2 for x+z>0");
-	gr->Title("Equation: \\i{ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0}", "C", -float(width)/height);
+	gr->Title("Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0", "C", -float(width)/height);
+//	gr->Title("Equation: \\i{ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0}", "C", -float(width)/height);
 	gr->Compression(false);  //put setting back
 	return 0;
 }
@@ -336,17 +337,17 @@ int sample_ac(mglGraph *gr, const void *)	// error boxes
 	gr->Error(y,ey,"ko");
 	gr->Plot(y0,"r");
 	gr->Axis();
-	gr->Text(mglPoint(0,1.2,0),"Random {\\i y}");
+	gr->Text(mglPoint(0,1.2,0),"Random \\i{y}");
 	gr->SubPlot(2,2,1);
 	gr->Error(x,y,ex,"ko");
 	gr->Plot(y0,"r");
 	gr->Axis();
-	gr->Text(mglPoint(0,1.2,0),"Random {\\i x, y}");
+	gr->Text(mglPoint(0,1.2,0),"Random \\i{x, y}");
 	gr->SubPlot(2,2,2);
 	gr->Error(x,y,ey,ey,"ko");
 	gr->Plot(y0,"r");
 	gr->Axis();
-	gr->Text(mglPoint(0,1.2,0),"Random {\\i x, y} and 2d boxes");
+	gr->Text(mglPoint(0,1.2,0),"Random \\i{x, y} and 2d boxes");
 	gr->SubPlot(2,2,3);
 	gr->Text(mglPoint(0,1.2,0),"Random point in 3d space");
 	gr->Rotate(40,60);
@@ -360,7 +361,7 @@ int sample_ab(mglGraph *gr, const void *)	// Gaussian beam
 {
 	gr->VertexColor(true);
 	gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
-	mglData a(30,30,30),b(30,30,30);
+	mglData a(30,30,30), b(30,30,30);
 	a.Modify("exp(-16*((z-0.5)^2+(y-0.5)^2)/(1+4*x^2))");
 	b.Modify("16*((z-0.5)^2+(y-0.5)^2)*(x)/(1+4*x^2)");
 	gr->CAxis(0,1);
@@ -1247,7 +1248,7 @@ void usage()
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
-	mglData  a(50,40),v(9);	v.Fill(-1,1);
+	mglData a(50,40),v(9);	v.Fill(-1,1);
 	a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
 	gr->SubPlot(2,1,0);	gr->Box();	gr->ContD(v,a);	gr->Colorbar(v);

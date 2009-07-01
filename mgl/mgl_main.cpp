@@ -509,7 +509,7 @@ void mglGraph::ClearEq()
 //-----------------------------------------------------------------------------
 void mglGraph::SetPal(const char *colors)
 {
-	if(!colors || !colors[0])	colors = "Hbgrcmyhlnqeup";	// restore default
+	if(!colors || !colors[0])	colors = MGL_DEF_PAL;	// restore default
 	memset(Pal,0,100*sizeof(mglColor));
 	memset(PalNames,0,101*sizeof(char));
 	int i,n = strlen(colors),k;
@@ -528,7 +528,7 @@ void mglGraph::DefaultPlotParam()
 	FontSize = 5;			BaseLineWidth = 1;
 	Ambient();				Ternary(false);
 	PlotId = "frame";		SelectPen("k-1");
-	SetScheme("BbcyrR");	SetPalette("Hbgrcmyhlnqeup");
+	SetScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
 	Cut = true;				InPlot(0,1,0,1);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');
 	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1));
@@ -811,14 +811,17 @@ void mglGraph::SetWarn(int code, const char *who)
 //-----------------------------------------------------------------------------
 void mglGraph::SetFont(mglFont *f)
 {
-	if(f)	fnt->Copy(f);					// set new typeface and delete existed
-	else	fnt->Load(MGL_DEF_FONT_NAME,0);	//	restore (reload) default typeface
+	if(f)	fnt->Copy(f);		// set new typeface and delete existed
+	else	fnt->Load(MGL_DEF_FONT_NAME,0);	// restore default typeface
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Title(const wchar_t *str,const char *font,mreal size)
 {
 	Identity();
-	Text(mglPoint(0,1.3,0), str, font, size);
+	mglFormula *ox=fx, *oy=fy, *oz=fz;
+	fx = fy = fz = NULL;
+	Text(mglPoint((Min.x+Max.x)*0.5, Max.y+(Max.y-Min.y)*0.15, (Min.z+Max.z)*0.5), str, font, size);
+	fx=ox;	fy=oy;	fz=oz;
 	RestoreM();
 }
 //-----------------------------------------------------------------------------
@@ -1031,9 +1034,13 @@ void mglGraph::Colorbar(const mglData &v, const char *sch,int where)
 //-----------------------------------------------------------------------------
 void mglGraph::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
 {
-	mglData v(256);	v.Fill(-1,1);
-	mglColor *c=new mglColor[256];
-	for(long i=0;i<256;i++)	c[i] = GetC(v.a[i],false);
+	float d = fabs(Cmax-Cmin);
+	d = floor(d*pow(10,-floor(log10(d))));
+	long n = 50*(d<4?int(2*d+0.5):int(d+0.5))+1;
+	if(d==1.f)	n = 101;
+	mglData v(n);	v.Fill(Cmin,Cmax);
+	mglColor *c=new mglColor[n];
+	for(long i=0;i<n;i++)	c[i] = GetC(v.a[i],true);
 	colorbar(v, c, where, x, y, w, h);
 	delete []c;
 }

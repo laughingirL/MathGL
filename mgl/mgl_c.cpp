@@ -420,7 +420,7 @@ void mgl_set_zoom(HMGL gr, mreal x1, mreal y1, mreal x2, mreal y2)
 void mgl_set_plotfactor(HMGL gr, mreal val)
 {
 	if(val>0)	{	gr->PlotFactor = val;	gr->AutoPlotFactor=false;	}
-	else	gr->AutoPlotFactor=true;
+	else		{	gr->PlotFactor = 1.55f;	gr->AutoPlotFactor=true;	}
 }
 void mgl_set_axis_3d(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2)
 {	gr->Axis(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2));	}

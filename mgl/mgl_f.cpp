@@ -504,7 +504,7 @@ void mgl_set_zoom_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *x2, mreal *y2)
 void mgl_set_plotfactor_(uintptr_t *gr, mreal *val)
 {
 	if(*val>0)	{	_GR_->PlotFactor = *val;	_GR_->AutoPlotFactor=false;	}
-	else	_GR_->AutoPlotFactor=true;
+	else		{	_GR_->PlotFactor = 1.55f;	_GR_->AutoPlotFactor=true;	}
 }
 void mgl_set_axis_3d_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2)
 {	_GR_->Axis(mglPoint(*x1,*y1,*z1),mglPoint(*x2,*y2,*z2));	}

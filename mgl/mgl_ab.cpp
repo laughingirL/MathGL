@@ -640,7 +640,17 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 	wchar_t s[32]=L"", str[64];
 	if(!ctt && TuneTicks) kind = _mgl_tick_ext(Cmax, Cmin, s, v);
 
-	long m = n<10?n:6;
+	long m=n;
+	if(n>20)	// adjust ticks
+	{
+		float d = fabs(vv.Maximal()-v1);
+		d = floor(d*pow(10,-floor(log10(d))));
+		if(d<4)	m = 1+int(2*d+0.5);
+		else	m = 1+int(d+0.5);
+		if(m<5)	m = 5;
+	}
+	
+//	long m = n<=20?n:6;
 	for(i=0;i<m;i++)
 	{
 		t = vv.a[((n-1)*i)/(m-1)];	d = (t-v1)*dv-1;	p.z = s3+1;

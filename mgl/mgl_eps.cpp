@@ -217,7 +217,7 @@ void mglGraphPS::Clf(mglColor  Back)
 {
 	Fog(0);
 	pNum=0;
-	pPos = CurrPal = 0;		PDef = 0xffff;
+	pPos = 0;	CurrPal = -1;	PDef = 0xffff;
 	memset(G,0,3*Width*Height);
 	memset(G4,0,4*Width*Height);
 	if(Back.Valid())
