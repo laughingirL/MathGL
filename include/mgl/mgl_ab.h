@@ -32,6 +32,9 @@ public:
 using mglGraph::Mark;
 //using mglGraph::Colorbar;
 using mglGraph::Legend;
+	int *OI;			///< ObjId arrays
+	int ObjId;	///< object id for mglPrim
+
 	/// Initialize ZBuffer drawing and allocate the memory for image with size [Width x Height].
 	mglGraphAB(int w=600, int h=400);
 	~mglGraphAB();

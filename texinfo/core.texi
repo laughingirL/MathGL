@@ -28,7 +28,7 @@ Note that class mglGraph is abstract and contains only interface functions for p
 @end menu
 
 @c ##################################################################
-@node Graphics setup, Transformation matrix, , MathGL core
+@node Graphics setup, Axis settings, , MathGL core
 @section Graphics setup
 @cindex MathGL setup
 

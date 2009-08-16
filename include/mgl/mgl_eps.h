@@ -50,7 +50,6 @@ class mglGraphPS : public mglGraphAB
 {
 friend struct mglPrim;
 public:
-	int ObjId;	///< object id for mglPrim
 	mglGraphPS(int w=600, int h=400);
 	~mglGraphPS();
 	void WriteEPS(const char *fname,const char *descr=0);
@@ -84,8 +83,8 @@ protected:
 	void add_prim(mglPrim *a);
 	/// add lightning to color
 	void add_light(mreal *c, mreal n1,mreal n2, mreal n3);
-	void pnt_plot(int x,int y, unsigned char c[4]);
-	void mark_plot(int x,int y, char type, unsigned char cs[4]);
+	void pnt_plot(int x,int y, unsigned char c[4], int oi);
+	void mark_plot(int x,int y, char type, unsigned char cs[4],int id);
 private:
 	void put_line(FILE *fp, long i, mreal wp,mreal *cp,int st, const char *ifmt, const char *nfmt, bool neg);
 	void put_desc(FILE *fp, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf);

@@ -416,6 +416,48 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		}
 		delete []s;		return res;
 	}
+	if(!wcsncmp(str,L"defnum",6) && (str[6]==' ' || str[6]=='\t'))
+	{
+		str += 7;	wcstrim_mgl(str);	int res = 1;
+		if(*str=='$' && str[1]>='0' && str[1]<='9')
+		{
+			int n=str[1]-'0';	res = 0;
+			str +=2;	mgl_wcstrim(str);
+			const mglData &d=mglFormulaCalc(str, this);
+			char *buf=new char[128];
+			sprintf(buf,"%g",d.a[0]);
+			AddParam(n, buf);
+			delete []buf;
+		}
+		delete []s;		return res;
+	}
+	if(!wcsncmp(str,L"defchr",6) && (str[6]==' ' || str[6]=='\t'))
+	{
+		str += 7;	wcstrim_mgl(str);	int res = 1;
+		if(*str=='$' && str[1]>='0' && str[1]<='9')
+		{
+			int n=str[1]-'0';	res = 0;
+			str +=2;	mgl_wcstrim(str);
+			const mglData &d=mglFormulaCalc(str, this);
+			wchar_t buf[2]={0,0};	buf[0] = wchar_t(d.a[0]);
+			AddParam(n, buf);
+		}
+		delete []s;		return res;
+	}
+	if(!wcsncmp(str,L"defpal",6) && (str[6]==' ' || str[6]=='\t'))
+	{
+		str += 7;	wcstrim_mgl(str);	int res = 1;
+		if(*str=='$' && str[1]>='0' && str[1]<='9')
+		{
+			int n=str[1]-'0';	res = 0;
+			str +=2;	mgl_wcstrim(str);
+			const mglData &d=mglFormulaCalc(str, this);
+			wchar_t buf[2]={0,0};
+			buf[0] = gr->DefPal[int(d.a[0])%gr->NumPal];
+			AddParam(n, buf);
+		}
+		delete []s;		return res;
+	}
 	if(!wcsncmp(str,L"for",3) && (str[3]==' ' || str[3]=='\t'))
 	{
 		t = str+4;

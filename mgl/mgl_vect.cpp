@@ -80,7 +80,7 @@ void mglGraph::Traj(const mglData &x, const mglData &y, const mglData &z,
 		vects_plot(n,pp,cc,tt);
 	}
 	cmap[0]=cm;	NumCol=nc;
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;
 }
 //-----------------------------------------------------------------------------
@@ -108,15 +108,16 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &ax, const
 	if(!(both || (x.nx==n && y.nx==m)))	{	SetWarn(mglWarnDim,"Vect");	return;	}
 	static int cgid=1;	StartGroup("Vect",cgid++);
 
-	mreal xm,ym,dx,dy,*pp=new mreal[6*n*m],*cc=new mreal[n*m];
-	mreal dd,dm=(fabs(Cmax)+fabs(Cmin))*1e-5;
-	bool *tt=new bool[2*n*m];
 	SetScheme(sch);
 	if(isnan(zVal))	zVal = Min.z;
 	Pen(cmap[0],'-',BaseLineWidth);
 	long tx=1,ty=1;
 	if(MeshNum>1)	{	tx=(n-1)/(MeshNum-1);	ty=(m-1)/(MeshNum-1);	}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
+	long nn=n/tx, mm=m/ty;
+	mreal xm,ym,dx,dy,*pp=new mreal[6*nn*mm],*cc=new mreal[nn*mm];
+	mreal dd,dm=(fabs(Cmax)+fabs(Cmin))*1e-5;
+	bool *tt=new bool[2*nn*mm];
 
 	for(i=0,xm=0;i<m*n*ax.nz;i++)
 	{
@@ -124,14 +125,14 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &ax, const
 		xm = xm>ym ? xm : ym;
 	}
 	xm = 1./(xm==0 ? 1:sqrt(xm));
-	long s = both ? n : 1;
+	long s = both ? n : 1, ni,nj;
 
 	for(k=0;k<ax.nz;k++)
 	{
 		if(ax.nz>1)	zVal = Min.z+(Max.z-Min.z)*mreal(k)/(ax.nz-1);
-		for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
+		for(ni=0;ni<nn;ni++)	for(nj=0;nj<mm;nj++)
 		{
-			jj = i+n*(j+m*k);	i0 = i+n*j;
+			i = ni*tx;	j = nj*ty;	jj = i+n*(j+m*k);	i0 = ni+nn*nj;
 			if(both)
 			{	ix = x.nz>k ? jj : i+n*j;	iy = y.nz>k ? jj : i+n*j;	}
 			else
@@ -157,16 +158,16 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &ax, const
 			}
 			else
 			{
-				pp[6*i0+0] = x.a[ix];		pp[6*i0+1] = y.a[iy];
-				pp[6*i0+3] = x.a[ix]+dx;	pp[6*i0+4] = y.a[iy]+dy;
+				pp[6*i0+0] = x.a[ix];		pp[6*i0+3] = x.a[ix]+dx;
+				pp[6*i0+1] = y.a[iy];		pp[6*i0+4] = y.a[iy]+dy;
 			}
 			tt[2*i0]  = ScalePoint(pp[6*i0],pp[6*i0+1],pp[6*i0+2]);
 			tt[2*i0+1]= ScalePoint(pp[6*i0+3],pp[6*i0+4],pp[6*i0+5]);
 		}
 		if(flag & MGL_VEC_DOT)
-			lines_plot(n*m,pp,(flag&MGL_VEC_COL)?0:cc,tt);
+			lines_plot(nn*mm,pp,(flag&MGL_VEC_COL)?0:cc,tt);
 		else
-			vects_plot(n*m,pp,(flag&MGL_VEC_COL)?0:cc,tt);
+			vects_plot(nn*mm,pp,(flag&MGL_VEC_COL)?0:cc,tt);
 	}
 	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;
@@ -219,7 +220,7 @@ void mglGraph::VectC(const mglData &ax, const mglData &ay, const char *sch, mrea
 //-----------------------------------------------------------------------------
 void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch, int flag)
 {
-	register long i,j,n=ax.nx,m=ax.ny,l=ax.nz,k,jj;
+	register long i,j,n=ax.nx,m=ax.ny,l=ax.nz,k,jj,i0;
 	if(n*m*l!=ay.nx*ay.ny*ay.nz || ax.nx*ax.ny*ax.nz!=az.nx*az.ny*az.nz)
 	{	SetWarn(mglWarnDim,"Vect");	return;	}
 	if(n<2 || m<2 || l<2)	{	SetWarn(mglWarnLow,"Vect");	return;	}
@@ -236,6 +237,7 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &z, const 
 	if(MeshNum>1)
 	{	tx=(n-1)/(MeshNum-1);	ty=(m-1)/(MeshNum-1);	tz=(l-1)/(MeshNum-1);}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;	if(tz<1)	tz=1;
+	long nn=n/tx, mm=m/ty, ll=l/tz;
 
 	for(i=0,xm=0;i<m*n*l;i++)
 	{
@@ -244,15 +246,16 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &z, const 
 	}
 	xm = 1./(xm==0 ? 1:sqrt(xm));
 
-	mreal *pp=new mreal[6*n*m*l],*cc=new mreal[n*m*l];
-	bool *tt=new bool[2*n*m*l];
-	long s = both ? n:1, t = both ? n*m : 1;
+	mreal *pp=new mreal[6*nn*mm*ll],*cc=new mreal[nn*mm*ll];
+	bool *tt=new bool[2*nn*mm*ll];
+	long s = both ? n:1, t = both ? n*m : 1, ni,nj,nk;
 
 	if(both || (x.nx==n && y.nx==m && z.nx==l))
 	{
-		for(k=0;k<l;k+=tz)	for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
+		for(nk=0;nk<ll;nk++)	for(ni=0;ni<nn;ni++)	for(nj=0;nj<mm;nj++)
 		{
-			jj = i+n*(j+m*k);
+			i = ni*tx;	j = nj*ty;	k = nk*tz;
+			jj = i+n*(j+m*k);	i0 = ni+nn*(nj+mm*nk);
 			if(both)
 			{	ix = iy = iz = jj;	}
 			else
@@ -269,29 +272,29 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &z, const 
 			dz *= (flag&MGL_VEC_LEN) ? (dd>dm ? az.a[jj]/dd : 0) : az.a[jj]*xm;
 			if(flag & MGL_VEC_END)
 			{
-				pp[6*jj+0] = x.a[ix]-dx;	pp[6*jj+3] = x.a[ix];
-				pp[6*jj+1] = y.a[iy]-dy;	pp[6*jj+4] = y.a[iy];
-				pp[6*jj+2] = z.a[iz]-dz;	pp[6*jj+5] = z.a[iz];
+				pp[6*i0+0] = x.a[ix]-dx;	pp[6*i0+3] = x.a[ix];
+				pp[6*i0+1] = y.a[iy]-dy;	pp[6*i0+4] = y.a[iy];
+				pp[6*i0+2] = z.a[iz]-dz;	pp[6*i0+5] = z.a[iz];
 			}
 			else if(flag & MGL_VEC_MID)
 			{
-				pp[6*jj+0] = x.a[ix]-dx/2;	pp[6*jj+3] = x.a[ix]+dx/2;
-				pp[6*jj+1] = y.a[iy]-dy/2;	pp[6*jj+4] = y.a[iy]+dy/2;
-				pp[6*jj+2] = z.a[iz]-dz/2;	pp[6*jj+5] = z.a[iz]+dz/2;
+				pp[6*i0+0] = x.a[ix]-dx/2;	pp[6*i0+3] = x.a[ix]+dx/2;
+				pp[6*i0+1] = y.a[iy]-dy/2;	pp[6*i0+4] = y.a[iy]+dy/2;
+				pp[6*i0+2] = z.a[iz]-dz/2;	pp[6*i0+5] = z.a[iz]+dz/2;
 			}
 			else
 			{
-				pp[6*jj+0] = x.a[ix];	pp[6*jj+3] = x.a[ix]+dx;
-				pp[6*jj+1] = y.a[iy];	pp[6*jj+4] = y.a[iy]+dy;
-				pp[6*jj+2] = z.a[iz];	pp[6*jj+5] = z.a[iz]+dz;
+				pp[6*i0+0] = x.a[ix];	pp[6*i0+3] = x.a[ix]+dx;
+				pp[6*i0+1] = y.a[iy];	pp[6*i0+4] = y.a[iy]+dy;
+				pp[6*i0+2] = z.a[iz];	pp[6*i0+5] = z.a[iz]+dz;
 			}
-			tt[2*jj]  = ScalePoint(pp[6*jj],pp[6*jj+1],pp[6*jj+2]);
-			tt[2*jj+1]= ScalePoint(pp[6*jj+3],pp[6*jj+4],pp[6*jj+5]);
+			tt[2*i0]  = ScalePoint(pp[6*i0],pp[6*i0+1],pp[6*i0+2]);
+			tt[2*i0+1]= ScalePoint(pp[6*i0+3],pp[6*i0+4],pp[6*i0+5]);
 		}
 		if(flag & MGL_VEC_DOT)
-			lines_plot(n*m*l,pp,(flag&MGL_VEC_COL)?0:cc,tt);
+			lines_plot(nn*mm*ll,pp,(flag&MGL_VEC_COL)?0:cc,tt);
 		else
-			vects_plot(n*m*l,pp,(flag&MGL_VEC_COL)?0:cc,tt);
+			vects_plot(nn*mm*ll,pp,(flag&MGL_VEC_COL)?0:cc,tt);
 	}
 	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;

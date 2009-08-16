@@ -58,7 +58,7 @@ All MGL commands can be divided on several groups. I will use the following nota
 
 
 @c ##################################################################
-@node Graphics setup (MGL), Transformation matrix (MGL), , MGL interface
+@node Graphics setup (MGL), Axis settings (MGL), , MGL interface
 @section Graphics setup (MGL)
 
 Coomands in this group influences on overall graphics appearance. So all of them should be placed @emph{before} any actual plotting commands. 

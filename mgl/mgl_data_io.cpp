@@ -32,7 +32,8 @@
 #include "mgl/mgl_eval.h"
 #include "mgl/mgl_data.h"
 
-#define isn(ch)		((ch)<' ' && (ch)!='\t')
+//#define isn(ch)		((ch)<' ' && (ch)!='\t')
+#define isn(ch)		((ch)=='\n')
 //-----------------------------------------------------------------------------
 void mglData::Set(const char *v,int NX,int NY,int NZ)
 {

@@ -98,11 +98,11 @@ public:
 typedef std::deque<u3dMaterial> u3dMaterial_list;
 //-----------------------------------------------------------------------------
 /// This class is used for manipulation with TGA images.
-class TGAImage
+class TGAImageMin
 {
 public:
-	TGAImage();
-	~TGAImage();
+	TGAImageMin();
+	~TGAImageMin();
 
 	bool Initialize( uint32_t width, uint32_t height, uint32_t channels );
 	void Deallocate();
@@ -117,7 +117,7 @@ class u3dTexture
 {
 public:
 	std::string name;
-	TGAImage image;
+	TGAImageMin image;
 	void print_texture ( const char *fname, std::ofstream& ostrtmp );
 };
 typedef std::list<u3dTexture>  u3dTexture_list;
@@ -272,6 +272,7 @@ public:
 	using mglGraph::Mark;
 	using mglGraph::Ball;
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	void DoubleSided(bool enable)  { double_sided_flag = enable ; }
 	void VertexColor(bool enable)  { vertex_color_flag = enable ; }
 	void TextureColor(bool enable) { textures_flag = enable ; }
 	void Compression(bool enable)  { disable_compression_flag = !enable ; }
@@ -295,6 +296,7 @@ public:
 	float diff_int;		///< diffuse color intensity
 	float spec_int;		///< specular color intensity
 	float emis_int;		///< emissive color intensity
+	bool double_sided_flag;			///< show both sides in meshes
 	bool vertex_color_flag;			///< use per-vertex color in meshes
 	bool textures_flag;			///< use textures on surfaces
 	bool disable_compression_flag;	///< disable mesh compression (normally is true). One don't need the number of polygons reduced automatically to save space, but you may have to unset it if you use unpatched (unfixed) U3D library.

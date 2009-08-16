@@ -32,6 +32,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @USE_DOCS_TRUE@am__append_1 = texinfo
+@USE_DOCS_TRUE@am__append_2 = install-html install-pdf
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/configure \
@@ -42,7 +43,11 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	config/texinfo.tex
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/config/autotroll.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/config/libtool.m4 \
+	$(top_srcdir)/config/ltoptions.m4 \
+	$(top_srcdir)/config/ltsugar.m4 \
+	$(top_srcdir)/config/ltversion.m4 \
+	$(top_srcdir)/config/lt~obsolete.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -63,7 +68,7 @@ RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 ETAGS = etags
 CTAGS = ctags
-DIST_SUBDIRS = libltdl mgl lang widgets utils examples include texinfo
+DIST_SUBDIRS = mgl lang widgets utils examples include texinfo
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -244,8 +249,8 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I config
-SUBDIRS = libltdl mgl lang widgets utils examples include \
-	$(am__append_1)
+SUBDIRS = mgl lang widgets utils examples include $(am__append_1)
+doctargets = $(am__append_2)
 mgldest = $(DESTDIR)$(datadir)/$(PACKAGE)/fonts
 all: all-recursive
 
@@ -696,7 +701,7 @@ uninstall-am: uninstall-local
 	uninstall uninstall-am uninstall-local
 
 
-install-data-local: install-html install-pdf
+install-data-local: $(doctargets)
 	mkdir -p $(mgldest)
 	cp -r $(top_builddir)/fonts/*.vfm $(mgldest)
 

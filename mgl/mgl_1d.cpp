@@ -204,8 +204,8 @@ void mglGraph::Plot(const mglData &x, const mglData &y, const mglData &z, const 
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
 	mreal *pp = new mreal[3*n];
 	bool *tt = new bool[n];
-	if(pen && *pen)	{	mk=SelectPen(pen);	SetPal(pen);	}
-	else 	Pen(NC, '-', BaseLineWidth);
+	if(pen && *pen)	mk=SelectPen(pen);	else	Pen(NC, '-', BaseLineWidth);
+	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
 		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
@@ -222,7 +222,7 @@ void mglGraph::Plot(const mglData &x, const mglData &y, const mglData &z, const 
 		}
 		curv_plot(n,pp,tt);
 	}
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
@@ -326,7 +326,7 @@ void mglGraph::Area(const mglData &x, const mglData &y, const mglData &z, const 
 		}
 		surf_plot(2,n,pp,0,tt);
 	}
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -361,7 +361,7 @@ void mglGraph::Area(const mglData &x, const mglData &y, const char *pen,bool sum
 		}
 		surf_plot(2,n,pp,0,tt);
 	}
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -405,7 +405,7 @@ void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, co
 		}
 		surf_plot(2,n,pp,0,tt);
 	}
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []pp;	delete []tt;
 }
 //-----------------------------------------------------------------------------
@@ -431,7 +431,7 @@ void mglGraph::Step(const mglData &x, const mglData &y, const mglData &z, const 
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
 	mreal *pp = new mreal[6*n];
 	bool *tt = new bool[2*n];
-	if(pen && *pen)	mk=SelectPen(pen);	else 	Pen(NC, '-', BaseLineWidth);
+	if(pen && *pen)	mk=SelectPen(pen);	else	Pen(NC, '-', BaseLineWidth);
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
@@ -454,7 +454,7 @@ void mglGraph::Step(const mglData &x, const mglData &y, const mglData &z, const 
 		}
 		curv_plot(2*n-1,pp,tt);
 	}
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
@@ -494,7 +494,7 @@ void mglGraph::Step(const mglData &x, const mglData &y, const char *pen,mreal zV
 		}
 		curv_plot(2*n-1,pp,tt);
 	}
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
@@ -541,7 +541,7 @@ void mglGraph::Stem(const mglData &x, const mglData &y, const mglData &z, const 
 		}
 		curv_plot(2*n,pp,tt,nn);
 	}
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []tt;	delete []pp;	delete []nn;
 }
 //-----------------------------------------------------------------------------
@@ -578,7 +578,7 @@ void mglGraph::Stem(const mglData &x, const mglData &y, const char *pen,mreal zV
 		}
 		curv_plot(2*n,pp,tt,nn);
 	}
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []tt;	delete []pp;	delete []nn;
 }
 //-----------------------------------------------------------------------------
@@ -652,7 +652,7 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const 
 			if(tt[4*i+2] && tt[4*i+3])	line_plot(pt+6, pt+9, ct, ct);
 		}
 	}
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
@@ -703,7 +703,7 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,mreal zV
 			if(tt[4*i+2] && tt[4*i+3])	line_plot(pt+6, pt+9, ct, ct);
 		}
 	}
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
@@ -766,7 +766,7 @@ void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,mreal zV
 			if(tt[4*i+2] && tt[4*i+3])	line_plot(pt+6, pt+9, ct, ct);
 		}
 	}
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []tt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
@@ -1007,8 +1007,7 @@ void mglGraph::Mark(const mglData &x, const mglData &y, const mglData &z, const 
 			if(tt)	Mark(xx,yy,zz,mk);
 		}
 	}
-	MarkSize = ms;
-	EndGroup();
+	MarkSize = ms;	SetPal(0);	EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Mark(const mglData &x, const mglData &y, const mglData &r, const char *pen,mreal zVal)
@@ -1156,7 +1155,7 @@ void mglGraph::Tube(const mglData &x, const mglData &y, const mglData &z, const 
 		}
 		tube_plot(n,pp,0,rr);
 	}
-	EndGroup();
+	SetPal(0);	EndGroup();
 	delete []pp;	delete []rr;
 }
 //-----------------------------------------------------------------------------

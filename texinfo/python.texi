@@ -57,7 +57,7 @@ Create the instance of class mglGraph with specified sizes @var{width} and @var{
 @end menu
 
 @c ##################################################################
-@node Graphics setup (Python), Transformation matrix (Python), , Python interface
+@node Graphics setup (Python), Axis settings (Python), , Python interface
 @section Graphics setup (Python)
 @cindex MathGL setup
 

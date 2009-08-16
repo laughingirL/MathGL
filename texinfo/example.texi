@@ -1089,7 +1089,7 @@ At this, one will only write a few lines for data drawing:
 A template-function can also contain settings for font, transparency, lightning, color scheme and so on.
 
 @c ------------------------------------------------------------------
-@node Nonlinear fitting hints, , ``Templates'', Hints
+@node Nonlinear fitting hints, PDE solving hints, ``Templates'', Hints
 @subsection Nonlinear fitting hints
 
 Nonlinear fitting is rather simple. All that you need is the data to fit, the approximation formula and the list of coefficients to fit (better with its initial guess values). Let me demonstrate it on the following simple example (@pxref{Fitting sample}). First, let us use sin function with some random noise:

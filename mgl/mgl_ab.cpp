@@ -37,7 +37,7 @@ mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 	G = 0;	UseLight = false;	st_pos=-1;
 	memset(stack,0,MGL_STACK_ENTRY*13*sizeof(mreal));
 	SetSize(w,h);
-	AutoClf=true;	Delay = 100;
+	AutoClf=true;	Delay = 100;	ObjId=0;
 	NoAutoFactor = false;	ShowMousePos = true;
 	BDef[0] = BDef[1] = BDef[2] = BDef[3] = 255;
 	DefaultPlotParam();
@@ -178,7 +178,7 @@ void mglGraphAB::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel)
 		memcpy(B1,B,9*sizeof(mreal));
 	}
 	font_factor = B[0] < B[4] ? B[0] : B[4];
-	PlotFactor = AutoPlotFactor ? 1.55 : 2;	// Automatically change plot factor !!!
+	if(AutoPlotFactor) PlotFactor = 1.55;	// Automatically change plot factor !!!
 	Persp = 0;
 }
 //-----------------------------------------------------------------------------
@@ -685,9 +685,10 @@ void mglGraphAB::SetSize(int w,int h)
 	if(w<=0 || h<=0)	{	SetWarn(mglWarnSize);	return;	}
 	Width = w;	Height = h;	Depth = long(sqrt(mreal(w*h)));
 	zPos = 0;//long(2*Depth*sqrt(3.));
-	if(G)	{	delete []G;	delete []G4;	}
+	if(G)	{	delete []G;	delete []G4;	delete []OI;	}
 	G = new unsigned char[w*h*3];
 	G4= new unsigned char[w*h*4];
+	OI= new int[w*h];
 	Clf();
 	InPlot(0,1,0,1);	Persp = 0;
 }

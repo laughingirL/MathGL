@@ -42,6 +42,7 @@ unsigned char **mglGraph::GetRGBLines(long &w, long &h, unsigned char *&f, bool 
 //-----------------------------------------------------------------------------
 void mglGraph::WriteSVG(const char *,const char *)	{}
 void mglGraph::WriteIDTF(const char *,const char *)	{}
+void mglGraph::DoubleSided(bool enable)	{}
 void mglGraph::VertexColor(bool enable)	{}
 void mglGraph::TextureColor(bool enable){}
 void mglGraph::Compression(bool enable)	{}

@@ -189,7 +189,7 @@ Allow to parse 'setsize' command or not.
 @end deftypefn
 
 @c ##################################################################
-@node Graphics setup (Pure C), Transformation matrix (Pure C), MGL parsing (Pure C), C interface
+@node Graphics setup (Pure C), Axis settings (Pure C), MGL parsing (Pure C), C interface
 @section Graphics setup (Pure C)
 
 Functions and variables in this group influences on overall graphics appearance. So all of them should be placed @emph{before} any actual plotting function calls.

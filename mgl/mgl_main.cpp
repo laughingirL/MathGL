@@ -509,7 +509,7 @@ void mglGraph::ClearEq()
 //-----------------------------------------------------------------------------
 void mglGraph::SetPal(const char *colors)
 {
-	if(!colors || !colors[0])	colors = MGL_DEF_PAL;	// restore default
+	if(!colors || !colors[0])	colors = DefPal;	// restore default
 	memset(Pal,0,100*sizeof(mglColor));
 	memset(PalNames,0,101*sizeof(char));
 	int i,n = strlen(colors),k;

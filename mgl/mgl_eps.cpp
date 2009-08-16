@@ -653,7 +653,7 @@ void mglPrim::Draw(mglGraphPS *gr)
 				(unsigned char)(255*c[2]),(unsigned char)(255*c[3])};
 
 	if(type==0)
-		gr->mark_plot(int(x[0]),int(y[0]),m,r);
+		gr->mark_plot(int(x[0]),int(y[0]),m,r,id);
 	else if(type==2 && c[3]>0)	trig(gr,x,y,r);
 	else if(type==3 && c[3]>0)	quad(gr,x,y,r);
 	else if(type==1)	line(gr,x,y,r);
@@ -765,7 +765,7 @@ void mglPrim::line(mglGraphPS *gr, mreal x[2], mreal y[2], unsigned char r[4])
 				if(!tt)		continue;
 				u /= dd;
 				r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
-				gr->pnt_plot(i,j,r);
+				gr->pnt_plot(i,j,r,id);
 			}
 		}
 	}
@@ -788,7 +788,7 @@ void mglPrim::line(mglGraphPS *gr, mreal x[2], mreal y[2], unsigned char r[4])
 				if(!tt)		continue;
 				u /= dd;
 				r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
-				gr->pnt_plot(i,j,r);
+				gr->pnt_plot(i,j,r,id);
 			}
 		}
 	}
@@ -819,7 +819,7 @@ void mglPrim::quad(mglGraphPS *gr, mreal x[4], mreal y[4], unsigned char r[4])
 		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
 		g = u<0 || v<0 || u+v>1;
 		if(g)	continue;
-		gr->pnt_plot(i,j,r);
+		gr->pnt_plot(i,j,r,id);
 	}
 
 	d1[0] = x[1]-x[3];	d2[0] = x[2]-x[3];
@@ -835,7 +835,7 @@ void mglPrim::quad(mglGraphPS *gr, mreal x[4], mreal y[4], unsigned char r[4])
 		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
 		g = u<0 || v<0 || u+v>1;
 		if(g)	continue;
-		gr->pnt_plot(i,j,r);
+		gr->pnt_plot(i,j,r,id);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -864,18 +864,18 @@ void mglPrim::trig(mglGraphPS *gr, mreal x[3], mreal y[3], unsigned char r[4])
 		u = dxu*xx+dyu*yy;	v = dxv*xx+dyv*yy;
 		g = u<0 || v<0 || u+v>1;
 		if(g)	continue;
-		gr->pnt_plot(i,j,r);
+		gr->pnt_plot(i,j,r,id);
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::pnt_plot(int x,int y,unsigned char c[4])
+void mglGraphPS::pnt_plot(int x,int y,unsigned char c[4],int oi)
 {
 	long i0=x+Width*(Height-1-y);
 	if(x<0 || x>=Width || y<0 || y>=Height)	return;
-	combine(G4+4*i0,c);
+	combine(G4+4*i0,c);	OI[i0]=oi;
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::mark_plot(int x,int y, char type, unsigned char cs[4])
+void mglGraphPS::mark_plot(int x,int y, char type, unsigned char cs[4], int id)
 {
 //	unsigned char cs[4]={(unsigned char)(255*cs[0]), (unsigned char)(255*cs[1]),
 //						(unsigned char)(255*cs[2]), (unsigned char)(255*cs[3])};
@@ -889,7 +889,7 @@ void mglGraphPS::mark_plot(int x,int y, char type, unsigned char cs[4])
 			v = hypot(i,j)/fabs(PenWidth)/3;
 			cs[3] = (unsigned char)(cs[3]*exp(-6*v*v));
 			if(cs[3]==0)	continue;
-			pnt_plot(x+i,y+j,cs);
+			pnt_plot(x+i,y+j,cs,id);
 		}
 	}
 	else
@@ -899,99 +899,99 @@ void mglGraphPS::mark_plot(int x,int y, char type, unsigned char cs[4])
 		case '+':
 			for(i=-ss;i<=ss;i++)
 			{
-				pnt_plot(x+i, y,cs);
-				pnt_plot(x, y+i,cs);
+				pnt_plot(x+i, y,cs,id);
+				pnt_plot(x, y+i,cs,id);
 			}
 			break;
 		case 'x':
 			for(i=-ss;i<=ss;i++)
 			{
-				pnt_plot(x+i, y-i,cs);
-				pnt_plot(x+i, y+i,cs);
+				pnt_plot(x+i, y-i,cs,id);
+				pnt_plot(x+i, y+i,cs,id);
 			}
 			break;
 		case 's':
 //			ss = int(ss*0.9);
 			for(i=-ss;i<=ss;i++)
 			{
-				pnt_plot(x+i, y-ss,cs);
-				pnt_plot(x+i, y+ss,cs);
-				pnt_plot(x+ss, y-i,cs);
-				pnt_plot(x-ss, y+i,cs);
+				pnt_plot(x+i, y-ss,cs,id);
+				pnt_plot(x+i, y+ss,cs,id);
+				pnt_plot(x+ss, y-i,cs,id);
+				pnt_plot(x-ss, y+i,cs,id);
 			}
 			break;
 		case 'd':
 			ss = int(ss*1.1);
 			for(i=0;i<=ss;i++)
 			{
-				pnt_plot(x+i, y+ss-i,cs);
-				pnt_plot(x-i, y+ss-i,cs);
-				pnt_plot(x+i, y-ss+i,cs);
-				pnt_plot(x-i, y-ss+i,cs);
+				pnt_plot(x+i, y+ss-i,cs,id);
+				pnt_plot(x-i, y+ss-i,cs,id);
+				pnt_plot(x+i, y-ss+i,cs,id);
+				pnt_plot(x-i, y-ss+i,cs,id);
 			}
 			break;
 		case '*':
 			for(i=-ss;i<=ss;i++)
 			{
-				pnt_plot(x+i, y,cs);
-				pnt_plot(int(x+i*0.6), int(y+i*0.8),cs);
-				pnt_plot(int(x-i*0.6), int(y+i*0.8),cs);
+				pnt_plot(x+i, y,cs,id);
+				pnt_plot(int(x+i*0.6), int(y+i*0.8),cs,id);
+				pnt_plot(int(x-i*0.6), int(y+i*0.8),cs,id);
 			}
 			break;
 		case '^':
 			ss = int(ss*1.1);
-			for(i=-ss;i<=ss;i++)	pnt_plot(x+i, y-ss/2,cs);
+			for(i=-ss;i<=ss;i++)	pnt_plot(x+i, y-ss/2,cs,id);
 			for(i=-(ss/2);i<=ss;i++)
 			{
 				j = ss-(i+(ss/2))*ss/(ss+(ss/2));
-				pnt_plot(x+j, y+i,cs);
-				pnt_plot(x-j, y+i,cs);
+				pnt_plot(x+j, y+i,cs,id);
+				pnt_plot(x-j, y+i,cs,id);
 			}
 			break;
 		case 'v':
 			ss = int(ss*1.1);
-			for(i=-ss;i<=ss;i++)	pnt_plot(x+i, y+ss/2,cs);
+			for(i=-ss;i<=ss;i++)	pnt_plot(x+i, y+ss/2,cs,id);
 			for(i=-ss;i<=(ss/2);i++)
 			{
 				j = (i+ss)*ss/(ss+(ss/2));
-				pnt_plot(x+j, y+i,cs);
-				pnt_plot(x-j, y+i,cs);
+				pnt_plot(x+j, y+i,cs,id);
+				pnt_plot(x-j, y+i,cs,id);
 			}
 			break;
 		case 'o':
 			for(i=-4*ss;i<=4*ss;i++)
 			{
-				pnt_plot(int(x+ss*cos(i*M_PI_4/ss)), int(y+ss*sin(i*M_PI_4/ss)),cs);
+				pnt_plot(int(x+ss*cos(i*M_PI_4/ss)), int(y+ss*sin(i*M_PI_4/ss)),cs,id);
 			}
 			break;
 		case 'O':
 			for(i=-ss;i<=ss;i++)	for(j=-ss;j<=ss;j++)
 			{
 				if(i*i+j*j>=ss*ss)	continue;
-				pnt_plot(x+i, y+j,cs);
+				pnt_plot(x+i, y+j,cs,id);
 			}
 			break;
 		case 'S':
 			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
-				pnt_plot(x+i,y+j,cs);
+				pnt_plot(x+i,y+j,cs,id);
 			break;
 		case 'D':
 			ss = int(ss*1.1);
 			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
 				if(abs(i)+abs(j)<=long(ss))
-					pnt_plot(x+i,y+j,cs);
+					pnt_plot(x+i,y+j,cs,id);
 			break;
 		case 'T':
 			ss = int(ss*1.1);
 			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss/2);j<=long(ss);j++)
 				if(1.5*abs(i)+j<=long(ss))
-					pnt_plot(x+i,y+j,cs);
+					pnt_plot(x+i,y+j,cs,id);
 			break;
 		case 'V':
 			ss = int(ss*1.1);
 			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss/2);j++)
 				if(1.5*abs(i)-j<=long(ss))
-					pnt_plot(x+i,y+j,cs);
+					pnt_plot(x+i,y+j,cs,id);
 			break;
 		}
 	}

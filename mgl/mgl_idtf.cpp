@@ -39,6 +39,31 @@
 #define IDTFROUND(x) int((x)*1000000.0f+0.5f)/1000000.0f
 // #define IDTFROUND(x) ldexpf(roundf(ldexpf((x),20)),-20)
 // const static bool dbg = true;
+#ifdef HAVE_U3D
+#include <stdlib.h>
+#include <setjmp.h>
+#include <math.h>
+#include <hpdf.h>
+#include <hpdf_u3d.h>
+#include <hpdf_annotation.h>
+
+#include "IFXResult.h"
+#include "IFXOSLoader.h"
+
+#include "ConverterResult.h"
+#include "IFXDebug.h"
+#include "IFXCOM.h"
+
+#include "ConverterOptions.h"
+#include "SceneConverter.h"
+#include "SceneUtilities.h"
+#include "IFXOSUtilities.h"
+
+#include "File.h"
+#include "Tokens.h"
+#include "Point.h"
+#endif // HAVE_U3D
+
 
 /*
 Here is the description of supported TGA format
@@ -121,7 +146,7 @@ typedef struct _TgaHeader
     uint8_t imageDes; // don't use, space eater
 } TgaHeader;
 
-TGAImage::TGAImage()
+TGAImageMin::TGAImageMin()
 {
 	Width = 0;
 	Height = 0;
@@ -129,12 +154,12 @@ TGAImage::TGAImage()
 	RGBPixels = NULL;
 }
 
-TGAImage::~TGAImage()
+TGAImageMin::~TGAImageMin()
 {
 	Deallocate();
 }
 
-void TGAImage::Deallocate()
+void TGAImageMin::Deallocate()
 {
 	if(RGBPixels)
 	{
@@ -148,7 +173,7 @@ void TGAImage::Deallocate()
 	Channels = 0;
 }
 
-bool TGAImage::Write( const char* pFileName ) const
+bool TGAImageMin::Write( const char* pFileName ) const
 {
 	TgaHeader header;
 	uint8_t* BGRPixels = NULL; // BGRA
@@ -231,7 +256,7 @@ bool TGAImage::Write( const char* pFileName ) const
 	return ret;
 }
 
-bool TGAImage::Initialize( uint32_t width, uint32_t height, uint32_t channels )
+bool TGAImageMin::Initialize( uint32_t width, uint32_t height, uint32_t channels )
 {
 	bool result = true;
 
@@ -252,6 +277,7 @@ bool TGAImage::Initialize( uint32_t width, uint32_t height, uint32_t channels )
 
 	return result;
 }
+
 
 //-----------------------------------------------------------------------------
 /// Create mglGraph object in IDTF mode.
@@ -319,7 +345,7 @@ void u3dLight::print_light_resource ( std::ofstream& ostr )
 	<< "\t\tRESOURCE_NAME \"" << this->name << "\"\n"
 	<< "\t\tLIGHT_TYPE \"" << this->type << "\"\n"
 	<< "\t\tLIGHT_COLOR " << this->color.r << " "  << this->color.g << " " << this->color.b << "\n"
-	<< "\t\tLIGHT_ATTENUATION " << this->attenuation << " 0 0\n"
+	<< "\t\tLIGHT_ATTENUATION " << this->attenuation << " 0.000000 0.000000\n"
 	<< "\t\tLIGHT_INTENSITY " << this->intensity << "\n";
 };
 void u3dLight::print_node ( std::ofstream& ostr )
@@ -337,32 +363,30 @@ void u3dLight::print_node ( std::ofstream& ostr )
 void mglGraphIDTF::SetAmbientLight ( mglColor c, mreal br )
 {
 	u3dLight Light;
-
-	Light.name = "AmbientLight";
-	Light.type = "AMBIENT";
-	Light.attenuation = 1.0;
-	Light.intensity = br >= 0.0 ? br : this->AmbBr;;
-	Light.color = c;
-	memcpy ( Light.position, mgl_idtrans, sizeof ( mgl_idtrans ) );
-	Lights.push_back ( Light );
-}
+  Lights.push_back ( Light );
+  
+	Lights.back().name = "AmbientLight";
+	Lights.back().type = "AMBIENT";
+	Lights.back().attenuation = 1.0;
+	Lights.back().intensity = br >= 0.0 ? br : this->AmbBr;;
+	Lights.back().color = c;
+	memcpy ( Lights.back().position, mgl_idtrans, sizeof ( mgl_idtrans ) );
+	}
 void mglGraphIDTF::AddLight ( mglPoint p, mglColor color, mreal br, bool infty )
 {
 	u3dLight Light;
+  Lights.push_back ( Light );
+	
+  Lights.back().color = color;
+	Lights.back().attenuation = 1.0;
+	Lights.back().intensity = br;
+  Lights.back().name = "Light" + i2s ( Lights.size() );
 
-	Light.color = color;
-	Light.attenuation = 1.0;
-	Light.intensity = br;
-	if ( Light.name.empty() )
-	{
-		Light.name = "Light" + i2s ( Lights.size() );
-	}
-
-	memcpy ( Light.position, mgl_idtrans, sizeof ( mgl_idtrans ) );
+	memcpy ( Lights.back().position, mgl_idtrans, sizeof ( mgl_idtrans ) );
 	mreal a = p.x, b = p.y, c = p.z;
 	if ( infty )
 	{
-		Light.type = "DIRECTIONAL";
+		Lights.back().type = "DIRECTIONAL";
 		mreal n = sqrt ( a*a+b*b+c*c );
 		if ( n != 0.0f )
 		{
@@ -375,39 +399,39 @@ void mglGraphIDTF::AddLight ( mglPoint p, mglColor color, mreal br, bool infty )
 //            -b/sqrt(a*a+b*b)   -a/sqrt(a*a+b*b)           0.0
 //          -a*c/sqrt(a*a+b*b) -b*c/sqrt(a*a+b*b) sqrt(a*a+b*b)
 //                    a                  b             c
-			Light.position[0][0] =   -b/sqrt ( a*a+b*b );
-			Light.position[0][1] =   -a/sqrt ( a*a+b*b );
-			Light.position[1][0] = -a*c/sqrt ( a*a+b*b );
-			Light.position[1][1] = -b*c/sqrt ( a*a+b*b );
-			Light.position[1][2] = sqrt ( a*a+b*b );
-			Light.position[2][0] = a;
-			Light.position[2][1] = b;
-			Light.position[2][2] = c;
+			Lights.back().position[0][0] =   -b/sqrt ( a*a+b*b );
+			Lights.back().position[0][1] =   -a/sqrt ( a*a+b*b );
+			Lights.back().position[1][0] = -a*c/sqrt ( a*a+b*b );
+			Lights.back().position[1][1] = -b*c/sqrt ( a*a+b*b );
+			Lights.back().position[1][2] = sqrt ( a*a+b*b );
+			Lights.back().position[2][0] = a;
+			Lights.back().position[2][1] = b;
+			Lights.back().position[2][2] = c;
 		}
 		else
 		{
 //          1 0 0
 //          0 1 0
 //          0 0 sign(c)
-			Light.position[2][2] = sign ( c );
+			Lights.back().position[2][2] = sign ( c );
 		}
 	}
 	else
 	{
-		Light.type = "POINT";
-		Light.position[3][0] = a;
-		Light.position[3][1] = b;
-		Light.position[3][2] = c;
+		Lights.back().type = "POINT";
+		Lights.back().position[3][0] = a;
+		Lights.back().position[3][1] = b;
+		Lights.back().position[3][2] = c;
 	}
 
-	Lights.push_back ( Light );
+	
 };
 
 void u3dMaterial::print_material ( std::ofstream& ostr )
 {
 	ostr
 	<< "\t\tRESOURCE_NAME \"" << name << "\"\n"
-	<< "\t\tMATERIAL_AMBIENT 0 0 0\n"
+	<< "\t\tMATERIAL_AMBIENT 0.000000 0.000000 0.000000\n"
 	<< "\t\tMATERIAL_DIFFUSE "   << diffuse.r  << " " << diffuse.g  << " " << diffuse.b  << "\n"
 	<< "\t\tMATERIAL_SPECULAR "  << specular.r << " " << specular.g << " " << specular.b << "\n"
 	<< "\t\tMATERIAL_EMISSIVE "  << emissive.r << " " << emissive.g << " " << emissive.b << "\n"
@@ -427,16 +451,22 @@ void u3dMaterial::print_shader ( std::ofstream& ostr )
 		ostr
 		<< "\t\tSHADER_ACTIVE_TEXTURE_COUNT 0\n";
 	else
+  {
 		ostr
 		<< "\t\tSHADER_ACTIVE_TEXTURE_COUNT 1\n"
 		<< "\t\tSHADER_TEXTURE_LAYER_LIST {\n"
 		<< "\t\t\tTEXTURE_LAYER 0 {\n"
 		<< "\t\t\t\tTEXTURE_LAYER_BLEND_FUNCTION \"REPLACE\"\n"
-		<< "\t\t\t\tTEXTURE_LAYER_ALPHA_ENABLED \"" << (this->textumrealpha ? "TRUE" : "FALSE") << "\"\n"
-//		<< "\t\t\t\tTEXTURE_LAYER_REPEAT \"NONE\"\n"
+    << "\t\t\t\tTEXTURE_LAYER_BLEND_SOURCE \"ALPHA\"\n";
+    if (this->textumrealpha)
+      ostr <<
+		   "\t\t\t\tTEXTURE_LAYER_ALPHA_ENABLED \"TRUE\"\n";
+    ostr
+		<< "\t\t\t\tTEXTURE_LAYER_REPEAT \"NONE\"\n"
 		<< "\t\t\t\tTEXTURE_NAME \"" << this->texture << "\"\n"
 		<< "\t\t\t}\n"
 		<< "\t\t}\n";
+  }
 }
 
 size_t mglGraphIDTF::AddMaterial ( const u3dMaterial& Material )
@@ -467,17 +497,23 @@ void u3dTexture::print_texture ( const char *fname, std::ofstream& ostr )
 	strncat(filename, this->name.c_str(), sizeof(filename)-strlen(filename)-5);
 	strcat(filename, ".tga" );
 	ostr
-	<< "\t\tRESOURCE_NAME \"" << this->name << "\"\n"
-	<< "\t\tTEXTURE_IMAGE_TYPE \"" << (this->image.Channels == 4 ? "RGBA" : "RGB") << "\"\n"
+	<< "\t\tRESOURCE_NAME \"" << this->name << "\"\n";
+  if (this->image.Channels == 4)
+    ostr <<
+	   "\t\tTEXTURE_IMAGE_TYPE \"RGBA\"\n";
+  ostr
 	<< "\t\tTEXTURE_IMAGE_COUNT 1\n"
 	<< "\t\tIMAGE_FORMAT_LIST {\n"
-	<< "\t\t        IMAGE_FORMAT 0 {\n"
-	<< "\t\t                COMPRESSION_TYPE \"PNG\"\n"
-	<< "\t\t                ALPHA_CHANNEL \"" << (this->image.Channels == 4 ? "TRUE" : "FALSE") << "\"\n"
-	<< "\t\t                BLUE_CHANNEL \"TRUE\"\n"
-	<< "\t\t                GREEN_CHANNEL \"TRUE\"\n"
-	<< "\t\t                RED_CHANNEL \"TRUE\"\n"
-	<< "\t\t        }\n"
+	<< "\t\t\tIMAGE_FORMAT 0 {\n"
+	<< "\t\t\t\tCOMPRESSION_TYPE \"PNG\"\n";
+  if (this->image.Channels == 4)
+    ostr << 
+      "\t\t\t\tALPHA_CHANNEL \"TRUE\"\n";
+  ostr
+	<< "\t\t\t\tBLUE_CHANNEL \"TRUE\"\n"
+	<< "\t\t\t\tGREEN_CHANNEL \"TRUE\"\n"
+	<< "\t\t\t\tRED_CHANNEL \"TRUE\"\n"
+	<< "\t\t\t}\n"
 	<< "\t\t}\n"
 	<< "\t\tTEXTURE_PATH \"" << filename << "\"\n";
 	this->image.Write( filename );
@@ -718,24 +754,27 @@ void mglGraphIDTF::MakeTransformMatrix( mreal position[4][4], mreal invpos[4][4]
 #undef m42
 #undef m43
 #undef m44
-// puts("pos");
-// printf("%f %f %f %f\n", position[0][0], position[0][1], position[0][2], position[0][3]);
-// printf("%f %f %f %f\n", position[1][0], position[1][1], position[1][2], position[1][3]);
-// printf("%f %f %f %f\n", position[2][0], position[2][1], position[2][2], position[2][3]);
-// printf("%f %f %f %f\n", position[3][0], position[3][1], position[3][2], position[3][3]);
-// puts("invpos");
-// printf("%f %f %f %f\n", invpos[0][0], invpos[0][1], invpos[0][2], invpos[0][3]);
-// printf("%f %f %f %f\n", invpos[1][0], invpos[1][1], invpos[1][2], invpos[1][3]);
-// printf("%f %f %f %f\n", invpos[2][0], invpos[2][1], invpos[2][2], invpos[2][3]);
-// printf("%f %f %f %f\n", invpos[3][0], invpos[3][1], invpos[3][2], invpos[3][3]);
+/* puts("pos");
+ printf("%f %f %f %f\n", position[0][0], position[0][1], position[0][2], position[0][3]);
+ printf("%f %f %f %f\n", position[1][0], position[1][1], position[1][2], position[1][3]);
+ printf("%f %f %f %f\n", position[2][0], position[2][1], position[2][2], position[2][3]);
+ printf("%f %f %f %f\n", position[3][0], position[3][1], position[3][2], position[3][3]);
+ puts("invpos");
+ printf("%f %f %f %f\n", invpos[0][0], invpos[0][1], invpos[0][2], invpos[0][3]);
+ printf("%f %f %f %f\n", invpos[1][0], invpos[1][1], invpos[1][2], invpos[1][3]);
+ printf("%f %f %f %f\n", invpos[2][0], invpos[2][1], invpos[2][2], invpos[2][3]);
+ printf("%f %f %f %f\n", invpos[3][0], invpos[3][1], invpos[3][2], invpos[3][3]);
+  
+  printf("B %f %f %f %f %f %f %f %f %f\n", B[0], B[1], B[2], B[3], B[4], B[5], B[6], B[7], B[8]);
+  printf("pos %f %f %f\n", xPos, yPos, zPos); */
 }
 //-----------------------------------------------------------------------------
 u3dModel::u3dModel ( const std::string name, mglGraphIDTF *Graph, const bool& vertex_color )
-		: both_visible ( true )
 {
 	this->name = name;
 	this->Graph = Graph;
 	this->vertex_color = vertex_color;
+  this->both_visible = Graph->double_sided_flag;
 	this->parent = Graph->GetCurrentGroup();
 	if (this->parent) this->parent->NumberOfChildren++;
 	Graph->MakeTransformMatrix(this->position, this->invpos);
@@ -1313,7 +1352,7 @@ void u3dMesh::print_model_resource ( std::ofstream& ostrtmp )
 		ostrtmp << "\t\t\tMESH_FACE_TEXTURE_COORD_LIST {\n";
 		for ( size_t id=0; id < numTriangles; id++ )
 		{
-			ostrtmp << "\t\t\t\tFACE 0 {\n"
+			ostrtmp << "\t\t\t\tFACE " << id << " {\n"
 			<< "\t\t\t\t\tTEXTURE_LAYER 0 TEX_COORD: "
 			<< this->faceColors[id].a << " "
 			<< this->faceColors[id].b << " "
@@ -1367,7 +1406,7 @@ void u3dMesh::print_model_resource ( std::ofstream& ostrtmp )
 			ostrtmp << "\t\t\t\t"
 			<< this->textureCoords[cid].U << " "
 			<< ( this->textureDimension == 2 ? this->textureCoords[cid].V : 0.0 ) << " "
-			<< "0.0 0.0\n";
+			<< "0.000000 0.000000\n";
 		}
 		ostrtmp << "\t\t\t}\n";
 	}
@@ -1387,7 +1426,7 @@ void u3dMesh::print_model_resource ( std::ofstream& ostrtmp )
 //-----------------------------------------------------------------------------
 mglGraphIDTF::mglGraphIDTF() : mglGraphAB ( 1,1 ),
 		diff_int ( 0.8f ), spec_int ( 0.4f ), emis_int ( 0.25f ),
-		vertex_color_flag ( true ), disable_compression_flag ( true ), unrotate_flag ( false ), ball_is_point_flag ( false ),
+		double_sided_flag ( true ), vertex_color_flag ( false ), textures_flag ( true ), disable_compression_flag ( true ), unrotate_flag ( false ), ball_is_point_flag ( false ),
 		points_finished ( true ), lines_finished ( true ), mesh_finished ( true ),
 		CurrentGroup ( NULL )
 {	Width = Height = Depth = 1;	}
@@ -2417,6 +2456,7 @@ void mglGraphIDTF::InPlot ( mreal x1,mreal x2,mreal y1,mreal y2, bool rel )
 	points_finished = lines_finished = mesh_finished = true;
 }
 //-----------------------------------------------------------------------------
+#ifndef HAVE_U3D
 void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 {
 	std::ofstream ostr ( fname );
@@ -2424,7 +2464,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 	Lights.clear();
 	if ( UseLight )
 	{
-		SetAmbientLight();
+		this->SetAmbientLight();
 		LightScale();
 		for ( int i=0; i<10; i++ )
 			if ( nLight[i] )
@@ -2520,22 +2560,22 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 	<< "\n"
 	<< "NODE \"VIEW\" {\n"
 	<< "	NODE_NAME \"DefaultView\"\n"
-	<< "    PARENT_LIST {\n"
+	<< "  PARENT_LIST {\n"
 	<< "		PARENT_COUNT 1\n"
 	<< "		PARENT 0 {\n"
 	<< "			PARENT_NAME \"<NULL>\"\n"
 	<< "			PARENT_TM {\n"
-	<< "				1 0 0 0\n"
-	<< "				0 1 0 0\n"
-	<< "				0 0 1 0\n"
-	<< "				0 0 2 1\n"
+  << "          1.000000 0.000000 0.000000 0.000000\n"
+  << "          0.000000 1.000000 0.000000 0.000000\n" 
+  << "          0.000000 0.000000 1.000000 0.000000\n"
+  << "          0.000000 0.000000 2.000000 1.000000\n"
 	<< "			}\n"
 	<< "		}\n"
 	<< "	}\n"
 	<< "	RESOURCE_NAME \"SceneViewResource\"\n"
 	<< "	VIEW_DATA {\n"
 	<< "		VIEW_TYPE \"ORTHO\"\n"
-	<< "		VIEW_PROJECTION 2\n"
+	<< "		VIEW_PROJECTION 2.000000\n"
 	<< "		VIEW_PORT_WIDTH 2\n"
 	<< "		VIEW_PORT_HEIGHT 2\n"
 	<< "	}\n"
@@ -2576,7 +2616,6 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 		it->print_node ( ostr );
 	}
 	ostr
-	<< "\n"
 	<< "RESOURCE_LIST \"VIEW\" {\n"
 	<< "	RESOURCE_COUNT 1\n"
 	<< "	RESOURCE 0 {\n"
@@ -2707,6 +2746,1112 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 	ostr.close ();
 
 }
+#else // HAVE_U3D
+void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
+{
+  char fname[PATH_MAX]; // file name without extension
+  bzero( fname, sizeof(fname) );
+  strncpy(fname, fileNameParam, sizeof(fname)-1);
+  const size_t fnlen = strlen(fname);
+  if ( fnlen > 5 && strcasecmp(fname+fnlen-5, ".idtf") == 0 )
+    fname[fnlen-5]='\0';
+  else if ( fnlen > 4 && strcasecmp(fname+fnlen-4, ".u3d") == 0 )
+    fname[fnlen-4]='\0';
+  else if ( fnlen > 4 && strcasecmp(fname+fnlen-4, ".pdf") == 0 )
+    fname[fnlen-4]='\0';
+  
+  
+  // Preparatory work
+  {     
+    Lights.clear();
+    if ( UseLight )
+    {
+      this->SetAmbientLight();
+      LightScale();
+      for ( int i=0; i<10; i++ )
+        if ( nLight[i] )
+        {
+          if ( unrotate_flag )
+            AddLight ( mglPoint ( rLight[3*i], rLight[3*i+1], rLight[3*i+2] ),
+                      mglColor ( cLight[3*i], cLight[3*i+1], cLight[3*i+2] ),
+                      bLight[i], iLight[i] );
+          else
+            AddLight ( mglPoint ( pLight[3*i], pLight[3*i+1], pLight[3*i+2] ),
+                      mglColor ( cLight[3*i], cLight[3*i+1], cLight[3*i+2] ),
+                      bLight[i], iLight[i] );
+        }
+    }
+    // Cleanup
+    // Remove empty models
+    for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
+    {
+      if (it->Points.empty())
+      {
+        if ( it->parent )
+          it->parent->NumberOfChildren--;
+        PointSets.erase(it);
+      }
+    }
+    for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end(); ++it )
+    {
+      if (it->Points.empty() || it->Lines.empty())
+      {
+        if ( it->parent )
+          it->parent->NumberOfChildren--;
+        LineSets.erase(it);
+      }
+    }
+    for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
+    {
+      if (it->Points.empty() || it->Triangles.empty())
+      {
+        if ( it->parent )
+          it->parent->NumberOfChildren--;
+        Meshes.erase(it);
+      }
+    }
+    // Remove automatically created groups that are the only object in manually created ones
+    for ( u3dGroup_list::iterator it = Groups.begin(); it != Groups.end(); ++it )
+    {
+      if (it->isauto && it->parent && !it->parent->isauto && it->parent->NumberOfChildren == 1)
+      {
+        it->name = it->parent->name;
+        it->parent->NumberOfChildren = 0;
+        it->parent = it->parent->parent;
+        it->isauto = false;
+      }
+    }
+    // Reduce groups with just one model in them to just models
+    for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
+    {
+      if (it->parent && it->parent->NumberOfChildren == 1)
+      {
+        it->name = it->parent->name;
+        it->parent->NumberOfChildren = 0;
+        it->parent = it->parent->parent;
+      }
+    }
+    for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end(); ++it )
+    {
+      if (it->parent && it->parent->NumberOfChildren == 1)
+      {
+        it->name = it->parent->name;
+        it->parent->NumberOfChildren = 0;
+        it->parent = it->parent->parent;
+      }
+    }
+    for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
+    {
+      if (it->parent && it->parent->NumberOfChildren == 1)
+      {
+        it->name = it->parent->name;
+        it->parent->NumberOfChildren = 0;
+        it->parent = it->parent->parent;
+      }
+    }
+    
+    // Make inverse coordinate transform with the model, if so desired
+    if (unrotate_flag)
+      MakeTransformMatrix( mgl_globpos, mgl_globinv);
+    else
+      memcpy( mgl_globinv, mgl_definv, sizeof(mgl_definv));
+    
+  }
+  
+  // Initialize U3D lib
+  IFXRESULT result = IFX_OK;
+  
+  result = IFXSetDefaultLocale();
+  IFXTRACE_GENERIC(L"[Converter] IFXSetDefaultLocale %i\n", result);
+
+  if( IFXSUCCESS(result) )
+  {
+    IFXDEBUG_STARTUP();
+    result = IFXCOMInitialize();
+  }
+  
+  if( !IFXSUCCESS(result) )
+    return;
+   
+  // Let us enclose it to be sure everything is cleared before we thry to unload the lib
+                       
+  {
+    using namespace U3D_IDTF;                                                                                                              
+    // Initialize converter
+    ConverterOptions converterOptions;
+    FileOptions fileOptions;
+    
+    wchar_t *wU3DFileName = new wchar_t [mbstowcs(NULL, fname, 32000)+1+4];
+    mbstowcs(wU3DFileName, fname, 32000);
+    wcscat(wU3DFileName,L".u3d");
+    fileOptions.outFile    = wU3DFileName;
+    delete [] wU3DFileName;
+  
+    fileOptions.exportOptions  = IFXExportOptions(65535);
+    fileOptions.profile    = 0;
+    fileOptions.scalingFactor  = 1.0f;
+    fileOptions.debugLevel    = 0;
+  
+    converterOptions.positionQuality = 1000;
+    converterOptions.texCoordQuality = 1000;
+    converterOptions.normalQuality   = 1000;
+    converterOptions.diffuseQuality  = 1000;
+    converterOptions.specularQuality = 1000;
+    converterOptions.geoQuality      = 1000;
+    converterOptions.textureQuality  = 100;
+    converterOptions.animQuality     = 1000;
+    converterOptions.textureLimit    = 0;
+    converterOptions.removeZeroAreaFaces  = FALSE;
+    converterOptions.zeroAreaFaceTolerance  = 100.0f * FLT_EPSILON;
+    converterOptions.excludeNormals  = TRUE;
+  
+    SceneUtilities sceneUtils;
+  
+    result = sceneUtils.InitializeScene( fileOptions.profile, fileOptions.scalingFactor );
+    
+    SceneConverter converter( &sceneUtils, &converterOptions );
+    
+    // Do real work, create model to be converted
+    {
+      NodeList&       Nodes     = converter.m_nodeList;
+      SceneResources& Resources = converter.m_sceneResources;
+      ModifierList&   Modifiers = converter.m_modifierList;
+      
+      Resources.GetResourceList( IDTF_LIGHT    )->SetType( IDTF_LIGHT    );
+      Resources.GetResourceList( IDTF_MODEL    )->SetType( IDTF_MODEL    );
+      Resources.GetResourceList( IDTF_VIEW     )->SetType( IDTF_VIEW     );
+      Resources.GetResourceList( IDTF_SHADER   )->SetType( IDTF_SHADER   );
+      Resources.GetResourceList( IDTF_MATERIAL )->SetType( IDTF_MATERIAL );
+      Resources.GetResourceList( IDTF_TEXTURE  )->SetType( IDTF_TEXTURE  );
+      
+      // Start write the Camera
+      {
+        // Camera Resource
+        {
+          ViewResourceList* pViewResources = static_cast< ViewResourceList* >( Resources.GetResourceList( IDTF_VIEW ) );
+          ViewResource defaultViewResource;
+          defaultViewResource.SetName( L"SceneViewResource" );
+          defaultViewResource.AddRootNode( L"" );
+          pViewResources->AddResource( defaultViewResource );
+        }
+        
+        // Camera node
+        {
+          ViewNode View;
+          View.SetType( IDTF_VIEW );
+          View.SetName( L"DefaultView" );
+          View.SetResourceName( L"SceneViewResource" );
+          ParentList Parents;
+          ParentData Parent;
+          Parent.SetParentName( L"<NULL>" );
+          IFXMatrix4x4 Matrix;
+          Matrix.Reset();
+          Matrix.Translate3x4( IFXVector3( 0, 0, 2 ) );
+          Parent.SetParentTM( Matrix );
+          Parents.AddParentData( Parent );
+          View.SetParentList( Parents );
+          ViewNodeData ViewData;
+          ViewData.SetUnitType( IDTF_VIEW_UNIT_PIXEL );
+          ViewData.SetClipping( VIEW_NEAR_CLIP, VIEW_FAR_CLIP );
+          ViewData.SetViewPort( 2, 2, VIEW_PORT_H_POSITION, VIEW_PORT_V_POSITION );
+          ViewData.SetType( IDTF_ORTHO_VIEW );
+          ViewData.SetProjection( 2 );
+          View.SetViewData( ViewData );
+          Nodes.AddNode( &View );
+        }
+      }
+      // End of Camera
+      
+      // Create nodes
+      {
+        // Create global inverse transform matrix
+        IFXMatrix4x4 GlobInv;
+        {
+        GlobInv[ 0] = mgl_globinv[0][0];
+        GlobInv[ 1] = mgl_globinv[1][0];
+        GlobInv[ 2] = mgl_globinv[2][0];
+        GlobInv[ 3] = mgl_globinv[3][0];
+        GlobInv[ 4] = mgl_globinv[0][1];
+        GlobInv[ 5] = mgl_globinv[1][1];
+        GlobInv[ 6] = mgl_globinv[2][1];
+        GlobInv[ 7] = mgl_globinv[3][1];
+        GlobInv[ 8] = mgl_globinv[0][2];
+        GlobInv[ 9] = mgl_globinv[1][2];
+        GlobInv[10] = mgl_globinv[2][2];
+        GlobInv[11] = mgl_globinv[3][2];
+        GlobInv[12] = mgl_globinv[0][3];
+        GlobInv[13] = mgl_globinv[1][3];
+        GlobInv[14] = mgl_globinv[2][3];
+        GlobInv[15] = mgl_globinv[3][3];
+        }
+        // Create Group nodes
+        for ( u3dGroup_list::iterator it = Groups.begin(); it != Groups.end(); ++it )
+        {
+          if ( it->name == "<NULL>" || it->NumberOfChildren == 0 )
+            continue;
+          Node Group;
+          Group.SetType( IDTF_GROUP );
+          Group.SetName( it->name.c_str() );
+          ParentList Parents;
+          ParentData Parent;
+          if ( it->parent == NULL)
+            Parent.SetParentName( L"<NULL>" );
+          else
+            Parent.SetParentName( it->parent->name.c_str() );
+          IFXMatrix4x4 Matrix;
+          Matrix.Reset();
+          Parent.SetParentTM( Matrix );
+          Parents.AddParentData( Parent );
+          Group.SetParentList( Parents );
+          Nodes.AddNode( &Group );
+        }
+        // Create Light nodes
+        for ( u3dLight_list::iterator it = Lights.begin(); it != Lights.end(); ++it )
+        {
+          LightNode Light;
+          Light.SetType( IDTF_LIGHT );
+          Light.SetName( it->name.c_str() );
+          Light.SetResourceName( it->name.c_str() );
+          ParentList Parents;
+          ParentData Parent;
+          Parent.SetParentName( L"<NULL>" );
+          IFXMatrix4x4 Matrix;
+          Matrix.Reset();
+          Matrix[ 0] = it->position[0][0];
+          Matrix[ 1] = it->position[1][0];
+          Matrix[ 2] = it->position[2][0];
+          Matrix[ 3] = it->position[3][0];
+          Matrix[ 4] = it->position[0][1];
+          Matrix[ 5] = it->position[1][1];
+          Matrix[ 6] = it->position[2][1];
+          Matrix[ 7] = it->position[3][1];
+          Matrix[ 8] = it->position[0][2];
+          Matrix[ 9] = it->position[1][2];
+          Matrix[10] = it->position[2][2];
+          Matrix[11] = it->position[3][2];
+          Matrix[12] = it->position[0][3];
+          Matrix[13] = it->position[1][3];
+          Matrix[14] = it->position[2][3];
+          Matrix[15] = it->position[3][3];
+          Parent.SetParentTM( Matrix );
+          Parents.AddParentData( Parent );
+          Light.SetParentList( Parents );
+          Nodes.AddNode( &Light );
+        }
+        // Create Model nodes
+        for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
+        {
+          ModelNode Model;
+          Model.SetType( IDTF_MODEL );
+          Model.SetName( it->name.c_str() );
+          Model.SetResourceName( it->name.c_str() );
+          ParentList Parents;
+          ParentData Parent;
+          if ( it->parent == NULL)
+            Parent.SetParentName( L"<NULL>" );
+          else
+            Parent.SetParentName( it->parent->name.c_str() );
+          
+          IFXMatrix4x4 Position;
+          Position[ 0] = it->position[0][0];
+          Position[ 1] = it->position[1][0];
+          Position[ 2] = it->position[2][0];
+          Position[ 3] = it->position[3][0];
+          Position[ 4] = it->position[0][1];
+          Position[ 5] = it->position[1][1];
+          Position[ 6] = it->position[2][1];
+          Position[ 7] = it->position[3][1];
+          Position[ 8] = it->position[0][2];
+          Position[ 9] = it->position[1][2];
+          Position[10] = it->position[2][2];
+          Position[11] = it->position[3][2];
+          Position[12] = it->position[0][3];
+          Position[13] = it->position[1][3];
+          Position[14] = it->position[2][3];
+          Position[15] = it->position[3][3];
+          
+          IFXMatrix4x4 Matrix;
+          Matrix.Reset();
+          Matrix.Multiply3x4(GlobInv, Position);
+          
+          Parent.SetParentTM( Matrix );
+          Parents.AddParentData( Parent );
+          Model.SetParentList( Parents );
+          
+          Nodes.AddNode( &Model );
+        }
+        for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end(); ++it )
+        {
+          ModelNode Model;
+          Model.SetType( IDTF_MODEL );
+          Model.SetName( it->name.c_str() );
+          Model.SetResourceName( it->name.c_str() );
+          ParentList Parents;
+          ParentData Parent;
+          if ( it->parent == NULL)
+            Parent.SetParentName( L"<NULL>" );
+          else
+            Parent.SetParentName( it->parent->name.c_str() );
+          
+          IFXMatrix4x4 Position;
+          Position[ 0] = it->position[0][0];
+          Position[ 1] = it->position[1][0];
+          Position[ 2] = it->position[2][0];
+          Position[ 3] = it->position[3][0];
+          Position[ 4] = it->position[0][1];
+          Position[ 5] = it->position[1][1];
+          Position[ 6] = it->position[2][1];
+          Position[ 7] = it->position[3][1];
+          Position[ 8] = it->position[0][2];
+          Position[ 9] = it->position[1][2];
+          Position[10] = it->position[2][2];
+          Position[11] = it->position[3][2];
+          Position[12] = it->position[0][3];
+          Position[13] = it->position[1][3];
+          Position[14] = it->position[2][3];
+          Position[15] = it->position[3][3];
+          
+          IFXMatrix4x4 Matrix;
+          Matrix.Reset();
+          Matrix.Multiply3x4(GlobInv, Position);
+          
+          Parent.SetParentTM( Matrix );
+          Parents.AddParentData( Parent );
+          Model.SetParentList( Parents );
+          
+          Nodes.AddNode( &Model );
+        }
+        for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
+        {
+//          if (  it->name == "UnitBall" )
+//            continue;
+          ModelNode Model;
+          Model.SetType( IDTF_MODEL );
+          Model.SetName( it->name.c_str() );
+          Model.SetResourceName( it->name.c_str() );
+          ParentList Parents;
+          ParentData Parent;
+          if ( it->parent == NULL)
+            Parent.SetParentName( L"<NULL>" );
+          else
+            Parent.SetParentName( it->parent->name.c_str() );
+          
+          IFXMatrix4x4 Position;
+          Position.Reset();
+          Position[ 0] = it->position[0][0];
+          Position[ 1] = it->position[1][0];
+          Position[ 2] = it->position[2][0];
+          Position[ 3] = it->position[3][0];
+          Position[ 4] = it->position[0][1];
+          Position[ 5] = it->position[1][1];
+          Position[ 6] = it->position[2][1];
+          Position[ 7] = it->position[3][1];
+          Position[ 8] = it->position[0][2];
+          Position[ 9] = it->position[1][2];
+          Position[10] = it->position[2][2];
+          Position[11] = it->position[3][2];
+          Position[12] = it->position[0][3];
+          Position[13] = it->position[1][3];
+          Position[14] = it->position[2][3];
+          Position[15] = it->position[3][3];
+          
+          IFXMatrix4x4 Matrix;
+          Matrix.Reset();
+          Matrix.Multiply3x4(GlobInv,Position);
+          
+          Parent.SetParentTM( Matrix );
+          Parents.AddParentData( Parent );
+          Model.SetParentList( Parents );
+          
+          if (it->both_visible)
+            Model.SetVisibility( L"BOTH" );
+          
+          Nodes.AddNode( &Model );
+        }
+        for ( u3dBall_list::iterator it = Balls.begin(); it != Balls.end(); ++it )
+        {
+          ModelNode Model;
+          Model.SetType( IDTF_MODEL );
+          Model.SetName( it->name.c_str() );
+          Model.SetResourceName( L"UnitBall" );
+          ParentList Parents;
+          ParentData Parent;
+          if ( it->parent == NULL)
+            Parent.SetParentName( L"<NULL>" );
+          else
+            Parent.SetParentName( it->parent->name.c_str() );
+          
+          IFXMatrix4x4 Position;
+          Position.Reset();
+          IFXVector3 Scale(it->radius, it->radius, it->radius);
+          Position.Scale3x4(Scale);
+          IFXVector3 Center(it->center.x, it->center.y, it->center.z);
+          Position.SetTranslation(Center);
+          
+          IFXMatrix4x4 Matrix;
+          Matrix.Reset();
+          Matrix.Multiply3x4(GlobInv,Position);
+          
+          Parent.SetParentTM( Matrix );
+          Parents.AddParentData( Parent );
+          Model.SetParentList( Parents );
+          
+          Nodes.AddNode( &Model );
+        }
+      }
+      // End nodes
+      
+      // Write lights resources
+      LightResourceList* pLightResources = static_cast< LightResourceList* >( Resources.GetResourceList( IDTF_LIGHT ) );
+      for ( u3dLight_list::iterator it = Lights.begin(); it != Lights.end(); ++it )
+      {
+        LightResource lightResource;
+        lightResource.SetName( it->name.c_str() );
+        if (it->type == "POINT")
+          lightResource.m_type = IDTF_POINT_LIGHT;
+        else if (it->type == "DIRECTIONAL" ) 
+          lightResource.m_type = IDTF_DIRECTIONAL_LIGHT;
+        else
+          lightResource.m_type = IDTF_AMBIENT_LIGHT;
+        lightResource.m_color.SetColor( IFXVector4( it->color.r, it->color.g, it->color.b ) );
+        lightResource.m_attenuation.SetPoint( IFXVector3( it->attenuation, 0.0f, 0.0f ) );
+        lightResource.m_intensity = it->intensity;
+        lightResource.m_spotAngle = 0.0f;
+        pLightResources->AddResource( lightResource );
+      }
+
+      // Write model resources
+      ModelResourceList* pModelResources = static_cast< ModelResourceList* >( Resources.GetResourceList( IDTF_MODEL ) );
+      for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
+      {
+        // is there just one color in the model?
+        bool onecolor = true;
+        // is there just one black color in the model?
+        bool oneblackcolor = false;
+        size_t numColors    = it->Colors.size();
+        for ( size_t cid=0; cid < numColors; cid++ )
+        {
+          if ( it->Colors[0].r != it->Colors[cid].r || it->Colors[0].g != it->Colors[cid].g || it->Colors[0].b != it->Colors[cid].b )
+          {
+            onecolor = false;
+            break;
+          }
+        }
+        if ( onecolor ) // if there is just one color in the model - make the corresponding material
+        {
+          it->ModelMaterials.pop_back();
+          mreal c[4] = { it->Colors[0].r, it->Colors[0].g, it->Colors[0].b, 1.0f };
+          it->AddModelMaterial ( c, true, false );
+          oneblackcolor = it->Colors[0] == BC;
+          it->Colors.clear();
+          numColors = 0;
+          it->vertex_color = false;
+        }
+        bool colored  = it->Colors.size() > 0;
+        
+        if ( oneblackcolor )
+        {
+          size_t numPoints = it->Points.size();
+          
+          PointSetResource pointSetResource;
+          pointSetResource.SetName( it->name.c_str() );
+          pointSetResource.m_type = IDTF_POINT_SET;
+          pointSetResource.pointCount = numPoints;
+          pointSetResource.m_modelDescription.positionCount = numPoints;
+          pointSetResource.m_modelDescription.basePositionCount = 0;
+          pointSetResource.m_modelDescription.normalCount = 0;
+          pointSetResource.m_modelDescription.diffuseColorCount = 0;
+          pointSetResource.m_modelDescription.specularColorCount = 0;
+          pointSetResource.m_modelDescription.textureCoordCount = 0;
+          pointSetResource.m_modelDescription.boneCount = 0;
+          pointSetResource.m_modelDescription.shadingCount = 1;
+          ShadingDescription shadingDescription;
+          shadingDescription.m_shaderId = 0;
+          shadingDescription.m_textureLayerCount = 0;
+          pointSetResource.m_shadingDescriptions.AddShadingDescription( shadingDescription );
+                  
+          for ( size_t id=0; id < numPoints; id++ )
+             pointSetResource.m_pointPositions.CreateNewElement() = id;
+          
+          for ( size_t id=0; id < numPoints; id++ )
+            pointSetResource.m_pointShaders.CreateNewElement() = 0;
+          
+          for ( size_t pid=0; pid < numPoints; pid++ )
+            pointSetResource.m_positions.CreateNewElement().SetPoint( IFXVector3 ( it->Points[pid].x, it->Points[pid].y, it->Points[pid].z ) );
+
+          pModelResources->AddResource( &pointSetResource );
+        }
+        else
+        // Convert pointset to mesh
+        {
+          size_t numPoints    = it->Points.size();
+          size_t duplpoints = it->Points.size() % 3;
+          if ( duplpoints > 0 )
+          {
+            it->Points.push_back( it->Points.back() );
+            it->Colors.push_back( it->Colors.back() );
+            numPoints++;
+          }
+          if ( duplpoints == 1 )
+          {
+            it->Points.push_back( it->Points.back() );
+            it->Colors.push_back( it->Colors.back() );
+            numPoints++;
+          }
+          
+          size_t numTriangles = it->Points.size() / 3;
+
+          MeshResource meshResource;
+          meshResource.SetName( it->name.c_str()  );
+          meshResource.m_type = IDTF_MESH;
+          meshResource.faceCount = numTriangles;
+          meshResource.m_modelDescription.positionCount = numPoints;
+          meshResource.m_modelDescription.basePositionCount = numPoints;
+          meshResource.m_modelDescription.normalCount = 0;
+          meshResource.m_modelDescription.diffuseColorCount = numColors;
+          meshResource.m_modelDescription.specularColorCount = 0;
+          meshResource.m_modelDescription.textureCoordCount = 0;
+          meshResource.m_modelDescription.boneCount = 0;
+          meshResource.m_modelDescription.shadingCount = 1;
+          ShadingDescription shadingDescription;
+          shadingDescription.m_shaderId = 0;
+          shadingDescription.m_textureLayerCount = 0;
+          meshResource.m_shadingDescriptions.AddShadingDescription( shadingDescription );
+          
+          for ( size_t id=0; id < numTriangles; id++ )
+            meshResource.m_facePositions.CreateNewElement().SetData( 3*id+0, 3*id+1, 3*id+2 );
+          
+          for ( size_t id=0; id < numTriangles; id++ )
+            meshResource.m_faceShaders.CreateNewElement() = 0;
+          
+          if ( colored )
+            for ( size_t id=0; id < numTriangles; id++ )
+              meshResource.m_faceDiffuseColors.CreateNewElement().SetData( 3*id+0, 3*id+1, 3*id+2 );
+          
+          for ( size_t pid=0; pid < numPoints; pid++ )
+            meshResource.m_positions.CreateNewElement().SetPoint( IFXVector3 ( it->Points[pid].x, it->Points[pid].y, it->Points[pid].z ) );
+          
+          if ( colored )
+            for ( size_t cid=0; cid < numColors; cid++ )
+              meshResource.m_diffuseColors.CreateNewElement().SetColor( IFXVector4 ( it->Colors[cid].r, it->Colors[cid].g, it->Colors[cid].b ) );
+                    
+          for ( size_t pid=0; pid < numPoints; pid++ )
+            meshResource.m_basePositions.CreateNewElement() = pid;
+          
+          pModelResources->AddResource( &meshResource );
+        }
+      }
+      for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end(); ++it )
+      {
+        size_t numMaterials = it->ModelMaterials.size();
+        size_t numPoints = it->Points.size();
+        size_t numLines  = it->Lines.size();
+        
+        LineSetResource lineSetResource;
+        lineSetResource.SetName( it->name.c_str() );
+        lineSetResource.m_type = IDTF_LINE_SET;
+        lineSetResource.lineCount = numLines;
+        lineSetResource.m_modelDescription.positionCount = numPoints;
+        lineSetResource.m_modelDescription.basePositionCount = 0;
+        lineSetResource.m_modelDescription.normalCount = 0;
+        lineSetResource.m_modelDescription.diffuseColorCount = 0;
+        lineSetResource.m_modelDescription.specularColorCount = 0;
+        lineSetResource.m_modelDescription.textureCoordCount = 0;
+        lineSetResource.m_modelDescription.boneCount = 0;
+        lineSetResource.m_modelDescription.shadingCount = numMaterials;
+        for ( size_t id=0; id < numMaterials; id++ )
+        {
+          ShadingDescription shadingDescription;
+          shadingDescription.m_shaderId = id;
+          shadingDescription.m_textureLayerCount = 0;
+          lineSetResource.m_shadingDescriptions.AddShadingDescription( shadingDescription );
+        }
+  
+       for ( size_t id=0; id < numLines; id++ )
+          lineSetResource.m_linePositions.CreateNewElement().SetData( it->Lines[id].pid1, it->Lines[id].pid2 );
+        
+        for ( size_t id=0; id < numLines; id++ )
+          lineSetResource.m_lineShaders.CreateNewElement() = it->Lines[id].mid;
+        
+        for ( size_t pid=0; pid < numPoints; pid++ )
+          lineSetResource.m_positions.CreateNewElement().SetPoint( IFXVector3 ( it->Points[pid].x, it->Points[pid].y, it->Points[pid].z ) );
+  
+        pModelResources->AddResource( &lineSetResource );
+      }
+      for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
+      {
+        size_t numMaterials = it->ModelMaterials.size();
+        size_t numPoints    = it->Points.size();
+        size_t numTriangles = it->Triangles.size();
+        size_t numTexCoords = it->textureCoords.size();
+        bool textured = it->textureDimension > 0;
+        bool shaded = it->faceShaders.size() > 0;
+                
+        if ( it->Colors.size() == 1 ) // if there is just one color in the model - make the corresponding material
+        {
+          it->ModelMaterials.pop_back();
+          mreal c[4] = { it->Colors[0].r, it->Colors[0].g, it->Colors[0].b, 1.0f };
+          it->AddModelMaterial ( c, false, false );
+          it->Colors.clear();
+        }
+        bool colored  = it->Colors.size() > 0;
+        size_t numColors    = it->Colors.size();
+        
+        MeshResource meshResource;
+        meshResource.SetName( it->name.c_str()  );
+        meshResource.m_type = IDTF_MESH;
+        meshResource.faceCount = numTriangles;
+        meshResource.m_modelDescription.positionCount = numPoints;
+        if ( it->disable_compression )
+          meshResource.m_modelDescription.basePositionCount = numPoints;
+        else
+          meshResource.m_modelDescription.basePositionCount = 0;
+        meshResource.m_modelDescription.normalCount = 0;
+        meshResource.m_modelDescription.diffuseColorCount = numColors;
+        meshResource.m_modelDescription.specularColorCount = 0;
+        meshResource.m_modelDescription.textureCoordCount = numTexCoords;
+        meshResource.m_modelDescription.boneCount = 0;
+        meshResource.m_modelDescription.shadingCount = numMaterials;
+        for ( size_t cid=0; cid < numMaterials; cid++ )
+        {
+          ShadingDescription shadingDescription;
+          shadingDescription.m_shaderId = cid;
+          if ( textured )
+          {
+            shadingDescription.m_textureLayerCount = 1;
+            shadingDescription.AddTextureCoordDimension( it->textureDimension );
+          }
+          else
+            shadingDescription.m_textureLayerCount = 0;
+          meshResource.m_shadingDescriptions.AddShadingDescription( shadingDescription );
+        }
+        
+        for ( size_t id=0; id < numTriangles; id++ )
+          meshResource.m_facePositions.CreateNewElement().SetData( it->Triangles[id].a, it->Triangles[id].b, it->Triangles[id].c );
+        
+        for ( size_t id=0; id < numTriangles; id++ )
+          if ( shaded )
+            meshResource.m_faceShaders.CreateNewElement() = it->faceShaders[id];
+          else
+            meshResource.m_faceShaders.CreateNewElement() = 0;
+
+        if ( textured )
+          for ( size_t id=0; id < numTriangles; id++ )
+            meshResource.m_faceTextureCoords.CreateNewElement().m_texCoords.CreateNewElement().SetData( it->faceColors[id].a, it->faceColors[id].b, it->faceColors[id].c );
+        
+        if ( colored )
+          for ( size_t id=0; id < numTriangles; id++ )
+            meshResource.m_faceDiffuseColors.CreateNewElement().SetData( it->faceColors[id].a, it->faceColors[id].b, it->faceColors[id].c );
+        
+        for ( size_t pid=0; pid < numPoints; pid++ )
+          meshResource.m_positions.CreateNewElement().SetPoint( IFXVector3 ( it->Points[pid].x, it->Points[pid].y, it->Points[pid].z ) );
+        
+        if ( colored )
+          for ( size_t cid=0; cid < numColors; cid++ )
+            meshResource.m_diffuseColors.CreateNewElement().SetColor( IFXVector4 ( it->Colors[cid].r, it->Colors[cid].g, it->Colors[cid].b ) );
+        
+        if ( textured )
+          for ( size_t cid=0; cid < numTexCoords; cid++ )
+            meshResource.m_textureCoords.CreateNewElement().Set( it->textureCoords[cid].U, ( it->textureDimension == 2 ? it->textureCoords[cid].V : 0.0 ), 0.0, 0.0 );
+        
+        if ( it->disable_compression )
+          for ( size_t pid=0; pid < numPoints; pid++ )
+            meshResource.m_basePositions.CreateNewElement() = pid;
+        
+        pModelResources->AddResource( &meshResource );
+      }
+      if ( Balls.size() != 0 )
+      {
+        const size_t ThetaResolution = 10; // 4
+        const size_t PhiResolution   = 10; // 3
+        mglPoint pnt;
+        mglPoint nrm;
+        const mglPoint Center = mglPoint ( 0, 0, 0 );
+        const mreal Radius = 1.0f;
+        const size_t numTriangles = ThetaResolution*(PhiResolution-2)*2;
+        const size_t numPoints = ThetaResolution*(PhiResolution-2)+2;
+        
+        MeshResource meshResource;
+        meshResource.SetName( L"UnitBall" );
+        meshResource.m_type = IDTF_MESH;
+        meshResource.faceCount = numTriangles;
+        meshResource.m_modelDescription.positionCount = numPoints;
+        meshResource.m_modelDescription.basePositionCount = numPoints;
+        meshResource.m_modelDescription.normalCount = 0;
+        meshResource.m_modelDescription.diffuseColorCount = 0;
+        meshResource.m_modelDescription.specularColorCount = 0;
+        meshResource.m_modelDescription.textureCoordCount = 0;
+        meshResource.m_modelDescription.boneCount = 0;
+        meshResource.m_modelDescription.shadingCount = 1;
+        ShadingDescription shadingDescription;
+        shadingDescription.m_shaderId = 0;
+        shadingDescription.m_textureLayerCount = 0;
+        meshResource.m_shadingDescriptions.AddShadingDescription( shadingDescription );
+        
+        // tetrahedron
+        //	Mesh.Points.push_back ( Radius * mglPoint ( 1,  1,  1) );
+        //	Mesh.Points.push_back ( Radius * mglPoint (-1, -1,  1) );
+        //	Mesh.Points.push_back ( Radius * mglPoint (-1,  1, -1) );
+        //	Mesh.Points.push_back ( Radius * mglPoint ( 1, -1, -1) );
+        //	size_t3 triangle;
+        //	triangle.a = 0;
+        //	triangle.b = 1;
+        //	triangle.c = 3;
+        //	Mesh.Triangles.push_back ( triangle );
+        //	triangle.a = 0;
+        //	triangle.b = 2;
+        //	triangle.c = 1;
+        //	Mesh.Triangles.push_back ( triangle );
+        //	triangle.a = 1;
+        //	triangle.b = 2;
+        //	triangle.c = 3;
+        //	Mesh.Triangles.push_back ( triangle );
+        //	triangle.a = 0;
+        //	triangle.b = 2;
+        //	triangle.c = 3;
+        //	Mesh.Triangles.push_back ( triangle );
+        //	Meshes.push_back ( Mesh );
+        
+        // Create north pole
+        nrm.x = nrm.y = 0.0; nrm.z = 1.0;
+        pnt = Center + Radius * nrm;
+        meshResource.m_positions.CreateNewElement().SetPoint( IFXVector3 (pnt.x, pnt.y, pnt.z ) );
+        
+        // Create south pole
+        nrm.x = nrm.y = 0.0; nrm.z = -1.0;
+        pnt = Center + Radius * nrm;
+        meshResource.m_positions.CreateNewElement().SetPoint( IFXVector3 (pnt.x, pnt.y, pnt.z ) );
+        
+        // Create intermediate points
+        for ( size_t i=0; i < ThetaResolution; i++ )
+        {
+          double deltaTheta = 2*M_PI/ThetaResolution;
+          double theta = i*deltaTheta;;
+          
+          for ( size_t j=1; j<PhiResolution-1; j++ )
+          {
+            double deltaPhi = M_PI/ ( PhiResolution-1 );
+            double phi = j*deltaPhi;
+            nrm.x = sin ( phi ) * cos ( theta );
+            nrm.y = sin ( phi ) * sin ( theta );
+            nrm.z = cos ( phi );
+            pnt = Center + Radius * nrm;
+            meshResource.m_positions.CreateNewElement().SetPoint( IFXVector3 ( pnt.x, pnt.y, pnt.z ) );
+          }
+        }
+        
+        // Generate mesh connectivity
+        size_t phiResolution = PhiResolution - 2;
+        size_t base = phiResolution * ThetaResolution;
+        const size_t numPoles = 2;
+        
+        // around north pole
+        for ( size_t i=0; i < ThetaResolution; i++ )
+        {
+          size_t3 triangle;
+          triangle.a =  phiResolution*i + numPoles;
+          triangle.b = ( phiResolution* ( i+1 ) % base ) + numPoles;
+          triangle.c =  0;
+          meshResource.m_facePositions.CreateNewElement().SetData( triangle.a, triangle.b, triangle.c );
+        }
+        
+        // around south pole
+        size_t numOffset = phiResolution - 1 + numPoles;
+        for ( size_t i=0; i < ThetaResolution; i++ )
+        {
+          size_t3 triangle;
+          triangle.b = phiResolution*i + numOffset;
+          triangle.a = ( ( phiResolution* ( i+1 ) ) % base ) + numOffset;
+          triangle.c = numPoles - 1;
+          meshResource.m_facePositions.CreateNewElement().SetData( triangle.a, triangle.b, triangle.c );
+        }
+        
+        // bands in-between poles
+        for ( size_t i=0; i < ThetaResolution; i++ )
+        {
+          for ( size_t j=0; j < ( phiResolution-1 ); j++ )
+          {
+            size_t3 triangle;
+            triangle.a = phiResolution*i + j + numPoles;
+            triangle.b = triangle.a + 1;
+            triangle.c = ( ( phiResolution* ( i+1 ) +j ) % base ) + numPoles + 1;
+            meshResource.m_facePositions.CreateNewElement().SetData( triangle.a, triangle.b, triangle.c );
+            triangle.b = triangle.c;
+            triangle.c = triangle.b-1;
+            meshResource.m_facePositions.CreateNewElement().SetData( triangle.a, triangle.b, triangle.c );
+          }
+        }
+        
+        for ( size_t id=0; id < numTriangles; id++ )
+          meshResource.m_faceShaders.CreateNewElement() = 0;
+                
+        for ( size_t pid=0; pid < numPoints; pid++ )
+          meshResource.m_basePositions.CreateNewElement() = pid;
+        
+        pModelResources->AddResource( &meshResource );
+      }
+      
+      // Write shaders
+      ShaderResourceList* pShaderResources = static_cast< ShaderResourceList* >( Resources.GetResourceList( IDTF_SHADER ) );
+      for ( u3dMaterial_list::iterator it = Materials.begin(); it != Materials.end(); ++it )
+      {
+        Shader shaderResource;
+        shaderResource.SetName( it->name.c_str() );
+        if ( it->texture.empty()  && it->vertex_color )
+          shaderResource.m_useVertexColor = IDTF_TRUE;
+        shaderResource.m_materialName = it->name.c_str();
+        if ( ! it->texture.empty() )
+        {
+          TextureLayer textureLayer;
+          textureLayer.m_channel = 0;
+          textureLayer.m_intensity = 1.0f;
+          textureLayer.m_blendFunction = L"REPLACE";
+          textureLayer.m_blendSource = L"ALPHA";
+          textureLayer.m_blendConstant = 0.5;
+          textureLayer.m_alphaEnabled = (it->textumrealpha ? IDTF_TRUE : IDTF_FALSE);
+          textureLayer.m_repeat = L"NONE";
+          textureLayer.m_textureName = it->texture.c_str();
+          shaderResource.AddTextureLayer( textureLayer );
+        } 
+        pShaderResources->AddResource( shaderResource );        
+      }
+      
+      // Write materials
+      MaterialResourceList* pMaterialResources = static_cast< MaterialResourceList* >( Resources.GetResourceList( IDTF_MATERIAL ) );
+      for ( u3dMaterial_list::iterator it = Materials.begin(); it != Materials.end(); ++it )
+      {
+        Material materialResource;
+        materialResource.SetName( it->name.c_str() );
+        materialResource.m_ambient.SetColor(  IFXVector4( 0, 0, 0 ) );
+        materialResource.m_diffuse.SetColor(  IFXVector4( it->diffuse.r, it->diffuse.g, it->diffuse.b ) );
+        materialResource.m_specular.SetColor( IFXVector4( it->specular.r, it->specular.g, it->specular.b ) );
+        materialResource.m_emissive.SetColor( IFXVector4( it->emissive.r, it->emissive.g, it->emissive.b ) );
+        materialResource.m_reflectivity = it->reflectivity;
+        materialResource.m_opacity = it->opacity;
+        pMaterialResources->AddResource( materialResource );
+      }
+      
+      // Write textures
+      TextureResourceList* pTextureResources = static_cast< TextureResourceList* >( Resources.GetResourceList( IDTF_TEXTURE ) );
+      for ( u3dTexture_list::iterator it = Textures.begin(); it != Textures.end(); ++it )
+      {
+        char filename[PATH_MAX];
+        bzero( filename, sizeof(filename) );
+        strncpy(filename, fname, sizeof(filename)-1);
+        strncat(filename, it->name.c_str(), sizeof(filename)-strlen(filename)-5);
+        strcat(filename, ".tga" );
+        
+        Texture textureResource;
+        textureResource.SetName( it->name.c_str() );
+        ImageFormat imageFormat;
+        imageFormat.m_compressionType = IDTF_IMAGE_COMPRESSION_TYPE_PNG;
+        imageFormat.m_alpha = (it->image.Channels == 4 ? IDTF_TRUE : IDTF_FALSE) ;
+        imageFormat.m_blue = IDTF_TRUE;
+        imageFormat.m_green = IDTF_TRUE;
+        imageFormat.m_red = IDTF_TRUE;
+        
+        textureResource.AddImageFormat( imageFormat );
+        textureResource.SetExternal( FALSE );
+        textureResource.SetPath( filename );
+        textureResource.SetImageType( (it->image.Channels == 4 ? IDTF_IMAGE_TYPE_RGBA : IDTF_IMAGE_TYPE_RGB) );
+        
+        textureResource.m_textureImage.Initialize( it->image.Width, it->image.Height, it->image.Channels );
+        textureResource.m_textureImage.SetData( it->image.RGBPixels );
+        
+        pTextureResources->AddResource( textureResource );
+      }
+      
+      // Write shading modifiers
+      for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
+      {
+        ShadingModifier shadingModifier;
+        shadingModifier.SetName( it->name.c_str() );
+        shadingModifier.SetType( IDTF_SHADING_MODIFIER );
+        shadingModifier.SetChainType( IDTF_NODE );
+        shadingModifier.SetAttributes( ATTRMESH | ATTRLINE | ATTRPOINT | ATTRGLYPH );
+        for ( ModelMaterial_list::const_iterator itm = it->ModelMaterials.begin(); itm != it->ModelMaterials.end(); ++itm )
+        {
+          ShaderList shaderList;
+          shaderList.AddShaderName( this->Materials[*itm].name.c_str() );
+          shadingModifier.AddShaderList( shaderList );
+        }
+        Modifiers.AddModifier( &shadingModifier );
+      }
+      for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end(); ++it )
+      {
+        ShadingModifier shadingModifier;
+        shadingModifier.SetName( it->name.c_str() );
+        shadingModifier.SetType( IDTF_SHADING_MODIFIER );
+        shadingModifier.SetChainType( IDTF_NODE );
+        shadingModifier.SetAttributes( ATTRMESH | ATTRLINE | ATTRPOINT | ATTRGLYPH );
+        for ( ModelMaterial_list::const_iterator itm = it->ModelMaterials.begin(); itm != it->ModelMaterials.end(); ++itm )
+        {
+          ShaderList shaderList;
+          shaderList.AddShaderName( this->Materials[*itm].name.c_str() );
+          shadingModifier.AddShaderList( shaderList );
+        }
+        Modifiers.AddModifier( &shadingModifier );
+      }
+      for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
+      {
+        ShadingModifier shadingModifier;
+        shadingModifier.SetName( it->name.c_str() );
+        shadingModifier.SetType( IDTF_SHADING_MODIFIER );
+        shadingModifier.SetChainType( IDTF_NODE );
+        shadingModifier.SetAttributes( ATTRMESH | ATTRLINE | ATTRPOINT | ATTRGLYPH );
+        for ( ModelMaterial_list::const_iterator itm = it->ModelMaterials.begin(); itm != it->ModelMaterials.end(); ++itm )
+        {
+          ShaderList shaderList;
+          shaderList.AddShaderName( this->Materials[*itm].name.c_str() );
+          shadingModifier.AddShaderList( shaderList );
+        }
+        Modifiers.AddModifier( &shadingModifier );
+      }
+      for ( u3dBall_list::iterator it = Balls.begin(); it != Balls.end(); ++it )
+      {
+        ShadingModifier shadingModifier;
+        shadingModifier.SetName( it->name.c_str() );
+        shadingModifier.SetType( IDTF_SHADING_MODIFIER );
+        shadingModifier.SetChainType( IDTF_NODE );
+        shadingModifier.SetAttributes( ATTRMESH | ATTRLINE | ATTRPOINT | ATTRGLYPH );
+        ShaderList shaderList;
+        shaderList.AddShaderName( this->Materials[it->material].name.c_str() );
+        shadingModifier.AddShaderList( shaderList );
+        Modifiers.AddModifier( &shadingModifier );
+      }
+      
+  }
+    
+    // Write to IDTF file
+    char *idtfFileName = new char [strlen(fname)+1+5];
+    strcpy(idtfFileName, fname);
+    strcat(idtfFileName,".idtf");
+    converter.Export( idtfFileName );
+    delete [] idtfFileName;
+    // Convert to binary
+    converter.Convert();
+
+    //----------------------------------------------
+    // Scene now built and in the U3D engine.
+    // It is now time to examine the scene and/or
+    // dump it to a debug file or a U3D file.
+    //----------------------------------------------
+    // Write out the scene to a U3D file if this is enabled.
+    if ( IFXSUCCESS( result ) && ( fileOptions.exportOptions > 0 ) )
+    {
+    result = sceneUtils.WriteSceneToFile( fileOptions.outFile, fileOptions.exportOptions );
+  }
+    // If enabled, dump the scene to the debug file.
+    if ( IFXSUCCESS( result ) && ( fileOptions.debugLevel > 0 ) )
+    {
+      U8 file[MAXIMUM_FILENAME_LENGTH];
+      result = fileOptions.outFile.ConvertToRawU8( file, MAXIMUM_FILENAME_LENGTH );
+      
+      if ( IFXSUCCESS( result ) )
+        result = sceneUtils.WriteDebugInfo( (const char*)file );
+    }
+    
+  }
+  IFXTRACE_GENERIC( L"[Converter] Exit code = %x\n", result);
+//  fprintf(stderr,"exit %x\n", result);
+  IFXRESULT comResult = IFXCOMUninitialize();
+  IFXTRACE_GENERIC( L"[Converter] IFXCOMUninitialize %i\n", comResult );
+//  fprintf(stderr,"uninit %x\n", comResult);  
+  IFXDEBUG_SHUTDOWN();
+  
+  {
+    HPDF_Rect rect = {0, 0, 600, 600};
+    
+    HPDF_Doc  pdf;
+    HPDF_Page page;
+    HPDF_Annotation annot;
+    HPDF_U3D u3d;
+    
+    HPDF_Dict view;
+    
+    char u3dFileName[strlen(fname)+1+4];
+    strcpy(u3dFileName, fname);
+    strcat(u3dFileName,".u3d");
+    char pdfFileName[strlen(fname)+1+4];
+    strcpy(pdfFileName, fname);
+    strcat(pdfFileName,".pdf");
+    
+    pdf = HPDF_New (NULL, NULL);
+    if (!pdf) {
+      fprintf (stderr, "error: cannot create PdfDoc object\n");
+      return;
+    }
+    
+    pdf->pdf_version = HPDF_VER_17;
+    
+    page = HPDF_AddPage (pdf);
+    
+    HPDF_Page_SetWidth (page, 600);
+    HPDF_Page_SetHeight (page, 600);
+    
+    u3d = HPDF_LoadU3DFromFile (pdf, u3dFileName);
+    
+    //  Default view
+    view = HPDF_Create3DView (u3d->mmgr, "DefaultView");
+    
+    //  Position camera
+    HPDF_3DView_SetCamera (view, 0, 0, 0, 0, 0, 1, 3, 0);
+    
+    //  Set ortho projection
+    HPDF_3DView_SetOrthogonalProjection (view, 300);
+    
+    //  Background color
+    HPDF_3DView_SetBackgroundColor (view, 0.9, 0.9, 0.9);
+    
+    //  Lighting
+//    HPDF_3DView_SetLighting (view, "CAD");
+    
+    //  Control of individual nodes
+    for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
+    {
+      HPDF_Array nodes = NULL;
+      HPDF_Dict  node = NULL; 
+      HPDF_Dict modedict = NULL;
+      HPDF_STATUS ret = HPDF_OK;
+      
+      nodes = (HPDF_Array)HPDF_Dict_GetItem (view, "NA", HPDF_OCLASS_ARRAY);
+      if (nodes == NULL) {
+        nodes = HPDF_Array_New (view->mmgr);
+        HPDF_Dict_Add (view, "NA", nodes);
+      }
+      
+      node = HPDF_Dict_New (view->mmgr);
+      HPDF_Dict_AddName (node, "Type", "3DNode");
+      HPDF_Dict_Add (node, "N", HPDF_String_New (view->mmgr, it->name.c_str(), NULL));
+      
+      modedict = HPDF_Dict_New (view->mmgr);
+      modedict->header.obj_class |= HPDF_OSUBCLASS_XOBJECT;
+      HPDF_Dict_AddName (modedict, "Type", "3DRenderMode");
+      HPDF_Dict_AddName (modedict, "Subtype", "ShadedVertices");
+        
+      HPDF_Dict_Add (node, "RM", modedict);
+        
+      ret = HPDF_Array_Add(nodes, node);
+    }
+    
+    //  Add views
+    HPDF_U3D_Add3DView (u3d, view);
+    HPDF_U3D_SetDefault3DView(u3d, "DefaultView");
+    
+    //  Create annotation
+    annot = HPDF_Page_Create3DAnnot (page, rect, u3d ); 
+    
+    /* save the document to a file */
+    HPDF_SaveToFile (pdf, pdfFileName);
+    
+    /* clean up */
+    HPDF_Free (pdf);
+    
+  }
+  
+  
+}
+#endif // HAVE_U3D
 //-----------------------------------------------------------------------------
 void mglGraphIDTF::quads_plot(long n,mreal *pp,mreal *cc,bool *tt)
 {

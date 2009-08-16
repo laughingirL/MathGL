@@ -9,6 +9,10 @@ mgl_c.cpp      mgl_data_png.cpp  mgl_f.cpp         mgl_main.cpp
 )
 
 add_library(mgl SHARED ${mgl_src})
+add_library(mgl-static STATIC ${mgl_src})
+set_target_properties(mgl-static PROPERTIES OUTPUT_NAME "mgl")
+set_target_properties(mgl PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+set_target_properties(mgl-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 
 if(use_qt)
 	add_definitions(-DHAVE_QT)
@@ -62,5 +66,6 @@ set_target_properties(mgl PROPERTIES SOVERSION 5.0.0)
 install(
 	TARGETS mgl
 	RUNTIME DESTINATION bin
+	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib
 )

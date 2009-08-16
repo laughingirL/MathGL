@@ -180,7 +180,8 @@ void mglGraphZB::pnt_plot(long x,long y,mreal z,unsigned char c[4])
 				if(z>zz[0])	// shift point on slice down and paste new point
 				{
 					zz[1*n] = zz[0*n];		memcpy(cc+4*n,cc,4);
-					zz[0] = z;				memcpy(cc,c,4);
+					zz[0] = z;	OI[i0]=ObjId;	memcpy(cc,c,4);
+				
 				}
 				else	// shift point on slice down and paste new point
 				{
@@ -256,7 +257,7 @@ void mglGraphZB::pnt_plot(long x,long y,mreal z,unsigned char c[4])
 	else
 	{
 		if(z>zz[0])	// point upper the background
-		{	zz[0]=z;		memcpy(cc,c,4);	}
+		{	zz[0]=z;	memcpy(cc,c,4);		OI[i0]=ObjId;	}
 	}
 }
 //-----------------------------------------------------------------------------
@@ -298,7 +299,7 @@ void mglGraphZB::Clf(mglColor Back)
 	if(TranspType==2)	Back = mglColor(0,0,0);
 	col2int(Back,1,BDef);
 	register long i,n=Width*Height;
-	memset(C,0,32*n);
+	memset(C,0,32*n);	memset(OI,0,n*sizeof(int));
 	for(i=0;i<n;i++)	Z[i] = -1e20f;
 //	for(i=1;i<Height;i++)	memcpy(Z+i*Width,Z,Width*sizeof(mreal));
 	for(i=1;i<8;i++)	memcpy(Z+i*n,Z,n*sizeof(mreal));

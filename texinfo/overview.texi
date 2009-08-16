@@ -50,7 +50,7 @@ three-dimensional plots (Surf3, Dens3, Cont3, ContF3, Cloud-like, @pxref{3D plot
 dual data plots: vector fields Vect and VectC, flow threads Flow, mapping chart Map, surfaces and isosurfaces transpared  or colored (i.e. its transparency or color is depend on) by other data SurfA, SurfC, Surf3A, Surf3C (@pxref{Dual plotting});
 
 @item
-and so on. For detail @xref{MathGL core}.
+and so on. For detail @pxref{MathGL core}.
 @end itemize
 
 In fact, I created functions for drawing of all scientific plots that I know. The list of plots is enlarging, so if you need some special type of plot then write me @email{mathgl.abalakin@@gmail.com, e-mail} and it will appear in new version.

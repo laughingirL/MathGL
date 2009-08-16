@@ -958,6 +958,7 @@ public:
 	  * zoom to / make invizible / make transparent / etc.
 	  *  */
 	//@{
+	virtual void DoubleSided(bool enable);
 	virtual void VertexColor(bool enable);
 	virtual void TextureColor(bool enable);
 	virtual void Compression(bool enable);
