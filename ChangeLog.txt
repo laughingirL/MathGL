@@ -4,6 +4,7 @@
 	- Bug with PlotFactor changing while AutoPlotFactor=false
 	- Bug with Vect() and MeshNum>1
 	- Bug with overriding default pallette by manual color specification
+	- Memory leaks correction
 
 1.9.0.1 Released 8 July 2009
 	- Correct minor bug in win32 version (in mglData::Read()).

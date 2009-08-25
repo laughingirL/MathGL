@@ -72,7 +72,7 @@ unsigned char *mgl_create_scheme(const char *scheme,long &num)
 		case 'P':	cc[3*np]=128;	cc[3*np+1]=0;	cc[3*np+2]=64;	np++;	break;
 		}
 	}
-	if(np<2)	return 0;
+	if(np<2)	{	delete []cc;	return 0;	}
 	for(i=0;i<np-1;i++)	nc+=mgl_col_dif(cc+3*i,cc+3*i+3,false);
 	c = new unsigned char[3*nc+3];
 	long dd,pos=0;

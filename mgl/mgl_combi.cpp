@@ -62,6 +62,7 @@ void mglGraph::DensX(const mglData &a, const char *sch,mreal sVal)
 	}
 	surf_plot(n, m, pp, cc, 0);
 	EndGroup();
+	if(a.nz>1)	delete []b;
 	delete []pp;	delete []cc;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -102,6 +103,7 @@ void mglGraph::DensY(const mglData &a, const char *sch,mreal sVal)
 	}
 	surf_plot(n, m, pp, cc, 0);
 	EndGroup();
+	if(a.nz>1)	delete []b;
 	delete []pp;	delete []cc;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -141,6 +143,7 @@ void mglGraph::DensZ(const mglData &a, const char *sch,mreal sVal)
 	}
 	surf_plot(n, m, pp, cc, 0);
 	EndGroup();
+	if(a.nz>1)	delete []b;
 	delete []pp;	delete []cc;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -210,6 +213,7 @@ void mglGraph::ContX(const mglData &v, const mglData &a, const char *sch, mreal 
 		cont_plot(v.a[i],n,m,b,xx,yy,zz,sVal,false,false,text);
 	}
 	EndGroup();
+	if(a.nz>1)	delete []b;
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -251,6 +255,7 @@ void mglGraph::ContY(const mglData &v, const mglData &a, const char *sch, mreal 
 		cont_plot(v.a[i],n,m,b,xx,yy,zz,sVal,false,false,text);
 	}
 	EndGroup();
+	if(a.nz>1)	delete []b;
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -291,6 +296,7 @@ void mglGraph::ContZ(const mglData &v, const mglData &a, const char *sch, mreal 
 		cont_plot(v.a[i],n,m,b,xx,yy,zz,sVal,false,false,text);
 	}
 	EndGroup();
+	if(a.nz>1)	delete []b;
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -360,6 +366,7 @@ void mglGraph::ContFX(const mglData &v, const mglData &a, const char *sch, mreal
 		contf_plot(v.a[i],v.a[i+1],n,m,b,xx,yy,zz,sVal);
 	}
 	EndGroup();
+	if(a.nz>1)	delete []b;
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -401,6 +408,7 @@ void mglGraph::ContFY(const mglData &v, const mglData &a, const char *sch, mreal
 		contf_plot(v.a[i],v.a[i+1],n,m,b,xx,yy,zz,sVal);
 	}
 	EndGroup();
+	if(a.nz>1)	delete []b;
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------
@@ -441,6 +449,7 @@ void mglGraph::ContFZ(const mglData &v, const mglData &a, const char *sch, mreal
 		contf_plot(v.a[i],v.a[i+1],n,m,b,xx,yy,zz,sVal);
 	}
 	EndGroup();
+	if(a.nz>1)	delete []b;
 	delete []xx;	delete []yy;	delete []zz;	if(bb)	delete []b;
 }
 //-----------------------------------------------------------------------------

@@ -1052,7 +1052,7 @@ bool mglData::ReadAll(const char *templ, bool as_slice)
 	for(i=0;i<res.gl_pathc;i++)
 		if(d.Read(res.gl_pathv[i]))	break;
 
-	if(i>=res.gl_pathc)	return false;
+	if(i>=res.gl_pathc)	{	delete []fname;	return false;	}
 	kx = d.nx;	ky = d.ny;	kz = d.nz;
 	b = (mreal *)malloc(kx*ky*kz*sizeof(mreal));
 	memcpy(b,d.a,kx*ky*kz*sizeof(mreal));
@@ -1061,7 +1061,7 @@ bool mglData::ReadAll(const char *templ, bool as_slice)
 	{
 		if(d.Read(res.gl_pathv[i]))
 			if(!mgl_add_file(kx,ky,kz,b,d,as_slice))
-				return false;
+			{	delete []fname;		return false;	}
 	}
 	Set(b,kx,ky,kz);
 

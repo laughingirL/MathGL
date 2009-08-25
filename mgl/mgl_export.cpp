@@ -111,10 +111,10 @@ int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 	if (!fp)	return 1;
 
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,0,0,0);
-	if (!png_ptr)	return 1;
+	if (!png_ptr)	{	fclose(fp);	return 1;	}
 	png_infop info_ptr = png_create_info_struct(png_ptr);
 	if (!info_ptr)
-	{	png_destroy_write_struct(&png_ptr,0);	return 1;	}
+	{	png_destroy_write_struct(&png_ptr,0);	fclose(fp);	return 1;	}
 
 	png_init_io(png_ptr, fp);
 	png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
@@ -138,10 +138,10 @@ int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 	if (!fp)	return 1;
 
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,0,0,0);
-	if (!png_ptr)	return 1;
+	if (!png_ptr)	{	fclose(fp);	return 1;	}
 	png_infop info_ptr = png_create_info_struct(png_ptr);
 	if (!info_ptr)
-	{	png_destroy_write_struct(&png_ptr,0);	return 1;	}
+	{	png_destroy_write_struct(&png_ptr,0);	fclose(fp);	return 1;	}
 
 	png_init_io(png_ptr, fp);
 	png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);

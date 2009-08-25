@@ -927,6 +927,7 @@ void mglFourier(mglData &re, mglData &im, const char *dir)
 	}
 	for(i=0;i<nx*ny*nz;i++)
 	{	re.a[i] = a[2*i];	im.a[i] = a[2*i+1];	}
+	delete []a;
 #endif
 }
 //-----------------------------------------------------------------------------

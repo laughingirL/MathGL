@@ -271,6 +271,8 @@ unsigned mglFont::Parse(const wchar_t *s)
 	else if(!wcscmp(s,L"underset"))	res = unsigned(-9);
 	else if(!wcscmp(s,L"stackr"))	res = unsigned(-10);
 	else if(!wcscmp(s,L"stackl"))	res = unsigned(-11);
+	else if(!wcscmp(s,L"sub"))		res = unsigned(-12);	// new
+	else if(!wcscmp(s,L"sup"))		res = unsigned(-13);	// new
 	else if(!wcscmp(s,L"b"))		res = MGL_FONT_BOLD;
 	else if(!wcscmp(s,L"i"))		res = MGL_FONT_ITAL;
 	else if(!wcscmp(s,L"bi"))		res = MGL_FONT_BOLD|MGL_FONT_ITAL;
@@ -415,6 +417,24 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
 			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			Puts(b2, x+(ww-w2)/2, yy+375*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
+			if(gr && !(style&0x10))	// add under-/over- line now
+				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
+			st = style;	yy = y;	ff = f;		// clear style modification
+		}
+		else if(s==unsigned(-12))	// sub
+		{
+			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
+			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
+			Puts(b2, x+(ww-w2)/2, yy-250*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
+			if(gr && !(style&0x10))	// add under-/over- line now
+				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
+			st = style;	yy = y;	ff = f;		// clear style modification
+		}
+		else if(s==unsigned(-13))	// sup
+		{
+			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff/4, st);
+			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
+			Puts(b2, x+(ww-w2)/2, yy+450*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
 			st = style;	yy = y;	ff = f;		// clear style modification
