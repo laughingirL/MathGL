@@ -919,7 +919,11 @@ void mglData::SaveHDF(const char *fname,const char *data,bool rewrite) const
 	hid_t hf,hd,hs;
 	hsize_t dims[3];
 	long rank = 3, res;
+#ifndef H5_USE_16_API
+	H5Eset_auto(H5E_DEFAULT,0,0);
+#else
 	H5Eset_auto(0,0);
+#endif
 	res=H5Fis_hdf5(fname);
 	if(res>0 && !rewrite)	hf = H5Fopen(fname, H5F_ACC_RDWR, H5P_DEFAULT);
 	else	hf = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
@@ -929,10 +933,18 @@ void mglData::SaveHDF(const char *fname,const char *data,bool rewrite) const
 	else	{	rank = 3;	dims[0] = nz;	dims[1] = ny;	dims[2] = nx;	}
 	hs = H5Screate_simple(rank, dims, 0);
 #if(MGL_USE_DOUBLE==1)
+#ifndef H5_USE_16_API
+	hd = H5Dcreate(hf, data, H5T_NATIVE_DOUBLE, hs, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+#else  /* ! HAVE_HDF5_18 */
 	hd = H5Dcreate(hf, data, H5T_NATIVE_DOUBLE, hs, H5P_DEFAULT);
+#endif /* HAVE_HDF5_18 */
 	H5Dwrite(hd, H5T_NATIVE_DOUBLE, hs, hs, H5P_DEFAULT, a);
 #else
+#ifndef H5_USE_16_API
+	hd = H5Dcreate(hf, data, H5T_NATIVE_FLOAT, hs, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+#else  /* ! HAVE_HDF5_18 */
 	hd = H5Dcreate(hf, data, H5T_NATIVE_FLOAT, hs, H5P_DEFAULT);
+#endif /* HAVE_HDF5_18 */
 	H5Dwrite(hd, H5T_NATIVE_FLOAT, hs, hs, H5P_DEFAULT, a);
 #endif
 	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
@@ -944,7 +956,11 @@ void mglData::ReadHDF(const char *fname,const char *data)
 	hsize_t dims[3];
 	long rank;
 	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
+#ifndef H5_USE_16_API
+	hd = H5Dopen(hf,data,H5P_DEFAULT);
+#else
 	hd = H5Dopen(hf,data);
+#endif
 	hs = H5Dget_space(hd);
 	rank = H5Sget_simple_extent_ndims(hs);
 	if(rank>0 && rank<=3)

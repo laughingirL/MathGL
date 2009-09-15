@@ -38,7 +38,7 @@ using mglGraph::Legend;
 	/// Initialize ZBuffer drawing and allocate the memory for image with size [Width x Height].
 	mglGraphAB(int w=600, int h=400);
 	~mglGraphAB();
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Служебные ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //	virtual void WriteEPS(const char *fname,const char *descr=0);
 	virtual void WriteSVG(const char *fname,const char *descr=0);
 	virtual int NewFrame();
@@ -182,9 +182,9 @@ protected:
 	/// Draw mark at position \a pp with style \a type
 	virtual void mark_plot(mreal *pp, char type)=0;
 	/// Combine colors in 2 plane.
-	void combine(unsigned char *c1,unsigned char *c2);	// смешение цветов
+	void combine(unsigned char *c1,unsigned char *c2);	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	virtual void cloud_plot(long nx,long ny,long nz,mreal *pp,mreal *a,mreal alpha);
-	// рисование примитивов для mglGraph
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ mglGraph
 	virtual void arrow_plot(mreal *p1,mreal *p2,char st);
 	void curv_plot(long n,mreal *pp,bool *tt);
 	void curv_plot(long n,mreal *pp,bool *tt,long *nn);
@@ -199,7 +199,7 @@ protected:
 							mreal *pp,mreal *cc,mreal *kk,mreal *nn,bool wire);
 	void trigs_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool *tt,bool wire, bool bytrig=false);
 	void quads_plot(long n, mreal *pp, mreal *cc, bool *tt);
-	void lines_plot(long n, mreal *pp, mreal *cc, bool *tt);
+	void lines_plot(long n, mreal *pp, mreal *cc, bool *tt, bool ball);
 	void vects_plot(long n, mreal *pp, mreal *cc, bool *tt);
 	void glyph_fill(mreal x,mreal y, mreal f, int nt, const short *trig, mreal *c);
 	void glyph_wire(mreal x,mreal y, mreal f, int nl, const short *line, mreal *c);

@@ -261,6 +261,8 @@ void mgl_plot(HMGL graph, const HMDT y, const char *pen);
 void mgl_plot_2(HMGL graph, const HMDT a, const char *pen);
 void mgl_plot_3(HMGL graph, const HMDT a, const char *pen);
 void mgl_radar(HMGL graph, const HMDT a, const char *pen, mreal r);
+void mgl_boxplot_xy(HMGL graph, const HMDT x, const HMDT a, const char *pen);
+void mgl_boxplot(HMGL graph, const HMDT a, const char *pen);
 void mgl_tens_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *pen);
 void mgl_tens_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT c, const char *pen);
 void mgl_tens(HMGL graph, const HMDT y, const HMDT c,	const char *pen);

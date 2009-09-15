@@ -403,6 +403,10 @@ struct mglParse{};
 	{	mgl_plot_xy(self, x, y, pen);	}
 	void Plot(mglData *y, const char *pen="")
 	{	mgl_plot(self, y, pen);	}
+	void BoxPlot(mglData *x, mglData *y, const char *pen="")
+	{	mgl_boxplot_xy(self, x, y, pen);	}
+	void BoxPlot(mglData *y, const char *pen="")
+	{	mgl_boxplot(self, y, pen);	}
 	void Radar(mglData *a, const char *pen="", float r=-1)
 	{	mgl_radar(self, a, pen, r);	}
 	void Tens(mglData *x, mglData *y, mglData *z, mglData *c, const char *pen="")

@@ -1,4 +1,5 @@
 1.9.1
+	- Add new plot BoxPlot() for plotting data statistic (max, min, median, quartiles).
 	- Add ObjId for determining the object (or line) of point.
 	- Add ticks drawing for inverted axis (i.e. when Min>Max)
 	- Bug with PlotFactor changing while AutoPlotFactor=false

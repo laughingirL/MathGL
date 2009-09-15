@@ -507,6 +507,9 @@ public:
 	/// Draw radar chart (plot in curved coordinates)
 	void Radar(const mglData &a, const char *stl=0, mreal r=-1);
 
+	void BoxPlot(const mglData &x, const mglData &a, const char *stl=0, mreal zVal=NAN);
+	void BoxPlot(const mglData &a, const char *stl=0, mreal zVal=NAN);
+
 	/// Draw line plot for points in arrays \a x, \a y, \a z which is colored by \a c (like tension plot). Parameter \a pen set color scheme and line styles (dashing and width).
 	void Tens(const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *pen=0);
 	/// Draw line plot for points in arrays \a x, \a y.
@@ -1052,7 +1055,7 @@ protected:
 	/// Plot quads depending on positions and colors of vertexes on grid
 	virtual void trigs_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool *tt,bool wire, bool bytrig=false)=0;
 	/// Plot series of unconnected lines.
-	virtual void lines_plot(long n, mreal *pp, mreal *cc, bool *tt)=0;
+	virtual void lines_plot(long n, mreal *pp, mreal *cc, bool *tt, bool ball)=0;
 	/// Plot series of unconnected arrows.
 	virtual void vects_plot(long n, mreal *pp, mreal *cc, bool *tt)=0;
 	/// Draw line between points \a p1,\a p2 with color \a c1, \a c2 at edges

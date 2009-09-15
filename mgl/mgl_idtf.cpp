@@ -2481,32 +2481,35 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 	}
 // Cleanup
 // Remove empty models
-	for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
+	for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end();)
 	{
 		if (it->Points.empty())
 		{
 			if ( it->parent )
 				it->parent->NumberOfChildren--;
-			PointSets.erase(it);
+			it = PointSets.erase(it);
 		}
+		else ++it;
 	}
-	for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end(); ++it )
+	for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end();)
 	{
 		if (it->Points.empty() || it->Lines.empty())
 		{
 			if ( it->parent )
 				it->parent->NumberOfChildren--;
-			LineSets.erase(it);
+			it = LineSets.erase(it);
 		}
+		else ++it;
 	}
-	for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
+	for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end();)
 	{
 		if (it->Points.empty() || it->Triangles.empty())
 		{
 			if ( it->parent )
 				it->parent->NumberOfChildren--;
-			Meshes.erase(it);
+			it = Meshes.erase(it);
 		}
+		else ++it;
 	}
 // Remove automatically created groups that are the only object in manually created ones
 	for ( u3dGroup_list::iterator it = Groups.begin(); it != Groups.end(); ++it )
@@ -2783,32 +2786,35 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
     }
     // Cleanup
     // Remove empty models
-    for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
+    for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end();)
     {
       if (it->Points.empty())
       {
         if ( it->parent )
           it->parent->NumberOfChildren--;
-        PointSets.erase(it);
+        it = PointSets.erase(it);
       }
+      else ++it;
     }
-    for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end(); ++it )
+    for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end();)
     {
       if (it->Points.empty() || it->Lines.empty())
       {
         if ( it->parent )
           it->parent->NumberOfChildren--;
-        LineSets.erase(it);
+        it = LineSets.erase(it);
       }
+      else ++it;
     }
-    for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
+    for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end();)
     {
       if (it->Points.empty() || it->Triangles.empty())
       {
         if ( it->parent )
           it->parent->NumberOfChildren--;
-        Meshes.erase(it);
+        it = Meshes.erase(it);
       }
+      else ++it;
     }
     // Remove automatically created groups that are the only object in manually created ones
     for ( u3dGroup_list::iterator it = Groups.begin(); it != Groups.end(); ++it )

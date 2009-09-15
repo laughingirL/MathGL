@@ -470,7 +470,7 @@ void mglGraphAB::axial_plot(long n,mreal *pp,long *nn,long np, bool wire)
 				}
 				else
 				{
-					if((!fx && !fy && !fz))	// сглаживание только для декартовой с.к.
+					if((!fx && !fy && !fz))	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ.пїЅ.
 						quad_plot_n(p1,p1+3,p2,p2+3,CDef,CDef,CDef,CDef,n1,n1+3,n2,n2+3);
 					else
 						quad_plot(p1,p1+3,p2,p2+3,CDef,CDef,CDef,CDef);
@@ -560,7 +560,7 @@ void mglGraphAB::trigs_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::lines_plot(long n,mreal *pp,mreal *cc,bool *tt)
+void mglGraphAB::lines_plot(long n,mreal *pp,mreal *cc,bool *tt, bool b)
 {
 	register long i;
 	mreal s1[4],s2[4],*p;
@@ -589,7 +589,7 @@ void mglGraphAB::lines_plot(long n,mreal *pp,mreal *cc,bool *tt)
 			s2[0] = c2.r;	s2[1] = c2.g;	s2[2] = c2.b;
 		}
 		memcpy(CDef,s1,4*sizeof(mreal));
-		line_plot(p,p+3,s1,s2);		ball(p, CDef);
+		line_plot(p,p+3,s1,s2);		if(b)	ball(p, CDef);
 	}
 	PDef = pOld;
 }

@@ -1051,6 +1051,7 @@ enable_langall
 enable_gsl
 enable_glut
 enable_hdf5
+enable_hdf5_18
 enable_gif
 enable_jpeg
 enable_fltk
@@ -1717,6 +1718,7 @@ Optional Features:
   --enable-gsl    Turn on gsl functions
   --enable-glut    Turn on glut
   --enable-hdf5    Turn on hdf5
+  --enable-hdf5_18    Turn on hdf5 version 1.8
   --enable-gif    Turn on gif
   --enable-jpeg    Turn on jpeg
   --enable-fltk    Turn on fltk
@@ -5388,13 +5390,13 @@ if test "${lt_cv_nm_interface+set}" = set; then
 else
   lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:5391: $ac_compile\"" >&5)
+  (eval echo "\"\$as_me:5393: $ac_compile\"" >&5)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:5394: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+  (eval echo "\"\$as_me:5396: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:5397: output\"" >&5)
+  (eval echo "\"\$as_me:5399: output\"" >&5)
   cat conftest.out >&5
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
@@ -6597,7 +6599,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 6600 "configure"' > conftest.$ac_ext
+  echo '#line 6602 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -9169,11 +9171,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:9172: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9174: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:9176: \$? = $ac_status" >&5
+   echo "$as_me:9178: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -9508,11 +9510,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:9511: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9513: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:9515: \$? = $ac_status" >&5
+   echo "$as_me:9517: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -9613,11 +9615,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:9616: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9618: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:9620: \$? = $ac_status" >&5
+   echo "$as_me:9622: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -9668,11 +9670,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:9671: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9673: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:9675: \$? = $ac_status" >&5
+   echo "$as_me:9677: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -12481,7 +12483,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 12484 "configure"
+#line 12486 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12577,7 +12579,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 12580 "configure"
+#line 12582 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -14597,11 +14599,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14600: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14602: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14604: \$? = $ac_status" >&5
+   echo "$as_me:14606: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -14696,11 +14698,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14699: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14701: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14703: \$? = $ac_status" >&5
+   echo "$as_me:14705: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14748,11 +14750,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14751: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14753: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14755: \$? = $ac_status" >&5
+   echo "$as_me:14757: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -16796,6 +16798,20 @@ else
   hdf5=false
 fi
 
+# Check whether --enable-hdf5_18 was given.
+if test "${enable_hdf5_18+set}" = set; then
+  enableval=$enable_hdf5_18; case "${enableval}" in
+  yes) hdf5_18=true ;;
+  no)  hdf5_18=false ;;
+  *) { { $as_echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-hdf5_18" >&5
+$as_echo "$as_me: error: bad value ${enableval} for --enable-hdf5_18" >&2;}
+   { (exit 1); exit 1; }; } ;;
+esac
+else
+  hdf5_18=false
+fi
+
+#AC_CHECK_HEADER(hdf5.h,[(test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue) && HDF5_FLAGS=-DHAVE_HDF5 AC_SUBST(HDF5_FLAGS)],
 if test "${ac_cv_header_hdf5_h+set}" = set; then
   { $as_echo "$as_me:$LINENO: checking for hdf5.h" >&5
 $as_echo_n "checking for hdf5.h... " >&6; }
@@ -16924,13 +16940,16 @@ $as_echo "$ac_cv_header_hdf5_h" >&6; }
 
 fi
 if test "x$ac_cv_header_hdf5_h" = x""yes; then
-  (test x$all = xtrue || test x$hdf5 = xtrue) && HDF5_FLAGS=-DHAVE_HDF5
+  (test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue) && HDF5_FLAGS=-DHAVE_HDF5
 else
-  (test x$all = xtrue || test x$hdf5 = xtrue) && echo "Please install hdf5 headers" && exit
+  (test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue) && echo "Please install hdf5 headers" && exit
 fi
 
 
+if ((test x$all = xtrue || test x$hdf5 = xtrue) && test x$hdf5_18 = xfalse) ;then
+    HDF5_FLAGS="$HDF5_FLAGS -DH5_USE_16_API"
 
+fi
 { $as_echo "$as_me:$LINENO: checking for main in -lhdf5" >&5
 $as_echo_n "checking for main in -lhdf5... " >&6; }
 if test "${ac_cv_lib_hdf5_main+set}" = set; then
@@ -16991,12 +17010,12 @@ fi
 { $as_echo "$as_me:$LINENO: result: $ac_cv_lib_hdf5_main" >&5
 $as_echo "$ac_cv_lib_hdf5_main" >&6; }
 if test "x$ac_cv_lib_hdf5_main" = x""yes; then
-  (test x$all = xtrue || test x$hdf5 = xtrue) && HDF5_LIBS=-lhdf5
+  (test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue) && HDF5_LIBS=-lhdf5
 else
-  (test x$all = xtrue || test x$hdf5 = xtrue) && echo "Please install hdf5 library" && exit
+  (test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue) && echo "Please install hdf5 library" && exit
 fi
 
- if (test x$all = xtrue || test x$hdf5 = xtrue); then
+ if (test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue); then
   USE_HDF5_TRUE=
   USE_HDF5_FALSE='#'
 else

@@ -305,10 +305,6 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_Ci(res.a[i]);	}
-//			else if(!wcscmp(name+1,L"n"))	Kod=EQ_CN;	// TODO
-//			else if(!wcscmp(name+1,L"s"))	Kod=EQ_CS;
-//			else if(!wcscmp(name+1,L"d"))	Kod=EQ_CD;
-//			else if(!wcscmp(name+1,L"l"))	Kod=EQ_CL;	// NOTE: not supported
 		}
 		else if(name[0]=='d')
 		{
@@ -316,9 +312,6 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_dilog(res.a[i]);	}
-//			else if(!wcscmp(name+1,L"n"))		Kod=EQ_DN;	// TODO
-//			else if(!wcscmp(name+1,L"s"))	Kod=EQ_DS;
-//			else if(!wcscmp(name+1,L"c"))	Kod=EQ_DC;
 #endif
 		}
 		else if(name[0]=='e')
@@ -421,9 +414,6 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_Si(res.a[i]);	}
-//			else if(!wcscmp(name+1,L"n"))	Kod=EQ_SN;	// TODO
-//			else if(!wcscmp(name+1,L"c"))	Kod=EQ_SC;
-//			else if(!wcscmp(name+1,L"d"))	Kod=EQ_SD;
 			else if(!wcscmp(name+1,L"inc"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
@@ -493,9 +483,6 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 		{	res=mglFormulaCalc(Buf, arg);
 			for(i=0;i<res.nx*res.ny*res.nz;i++)
 				res.a[i] = gsl_sf_gamma(res.a[i]);	}
-//		else if(!wcscmp(name,L"ns"))		Kod=EQ_NS;	// TODO
-//		else if(!wcscmp(name,L"nc"))		Kod=EQ_NC;
-//		else if(!wcscmp(name,L"nd"))		Kod=EQ_ND;
 		else if(!wcscmp(name,L"bi"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)

@@ -215,6 +215,8 @@ void mgl_plot_(uintptr_t *graph, uintptr_t *y,	const char *pen,int);
 void mgl_plot_2_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
 void mgl_plot_3_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
 void mgl_radar_(uintptr_t *graph, uintptr_t *a,	const char *pen, mreal *r, int);
+void mgl_boxplot_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen,int);
+void mgl_boxplot_(uintptr_t *graph, uintptr_t *y, const char *pen,int);
 void mgl_tens_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *pen,int);
 void mgl_tens_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *c, const char *pen,int);
 void mgl_tens_(uintptr_t *graph, uintptr_t *y, uintptr_t *c, const char *pen,int);

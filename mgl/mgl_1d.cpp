@@ -779,6 +779,84 @@ void mglGraph::Barh(const mglData &v, const char *pen,mreal zVal, bool above)
 }
 //-----------------------------------------------------------------------------
 //
+//	Bars series
+//
+//-----------------------------------------------------------------------------
+double sgn(double a);
+int mgl_cmp_flt(const void *a, const void *b)
+{
+	const mreal *aa = (const mreal *)a;
+	const mreal *bb = (const mreal *)b;
+	return int(sgn(*aa-*bb));
+}
+//-----------------------------------------------------------------------------
+void mglGraph::BoxPlot(const mglData &x, const mglData &y, const char *pen,mreal zVal)
+{
+	long n=y.nx, m=y.ny;
+	if(x.nx!=n)	{	SetWarn(mglWarnDim,"BoxPlot");	return;	}
+//	if(n<2)		{	SetWarn(mglWarnLow,"BoxPlot");	return;	}
+	static int cgid=1;	StartGroup("BoxPlot",cgid++);
+	mreal *b = new mreal[5*n], *pp = new mreal[6*9*n], *d = new mreal[m], x1, x2;
+	bool *tt = new bool[2*9*n];
+	if(isnan(zVal))	zVal = Min.z;
+	register long i,j,i0;
+	for(i=0;i<n;i++)	// find quartiles by itself
+	{
+		register long mm,k;
+		for(mm=j=0;j<m;j++)	if(!isnan(y.a[i+n*j]))
+		{	d[mm]=y.a[i+n*j];	mm++;	}
+        if(m==0)    {   b[i]=NAN;   break;  }
+		qsort(d, mm, sizeof(mreal), mgl_cmp_flt);
+		b[i] = d[0];	b[i+4*n] = d[mm-1];		k = mm/4;
+		b[i+n] = (mm%4) ? d[k] : (d[k]+d[k-1])/2.;
+		b[i+2*n] = (mm%2) ? d[mm/2] : (d[mm/2]+d[mm/2-1])/2.;
+		b[i+3*n] = (mm%4) ? d[mm-k-1] : (d[mm-k-1]+d[mm-k])/2.;
+	}
+	delete []d;
+
+	SetPal(pen);//	DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
+	mglColor c1=cmap[0], c2=cmap[1];
+	cmap[0] = cmap[1] = Pal[(CurrPal = (CurrPal+1)%NumPal)];
+	for(j=0;j<18*n;j++)	pp[2+3*j] = zVal;
+	for(i=0;i<n;i++)
+	{
+		i0 = 54*i;
+		if(i<n-1)	x2 = x.a[i] + BarWidth*(x.a[i+1]-x.a[i])/2;
+		else		x2 = x.a[i];
+		if(i>0)		x1 = x.a[i] - BarWidth*(x.a[i]-x.a[i-1])/2;
+		else		x1 = x.a[i];
+		// x-coordinates of lines
+		pp[i0] = pp[i0+12]=pp[i0+18]=pp[i0+24]=pp[i0+30]=pp[i0+33]=pp[i0+48]=x1;
+		pp[i0+3]=pp[i0+15]=pp[i0+21]=pp[i0+27]=pp[i0+36]=pp[i0+39]=pp[i0+51]=x2;
+		pp[i0+6]=pp[i0+9] =pp[i0+42]=pp[i0+45]=x.a[i];
+		// y-coordinates of lines
+		pp[i0+1] = pp[i0+4] = pp[i0+7] = b[i];
+		pp[i0+49] = pp[i0+52] = pp[i0+46] = b[i+4*n];
+		pp[i0+19] = pp[i0+22] = b[i+2*n];
+		pp[i0+10] = pp[i0+13] = pp[i0+16] = pp[i0+31] = pp[i0+37] = b[i+n];
+		pp[i0+25] = pp[i0+28] = pp[i0+34] = pp[i0+40] = pp[i0+43] = b[i+3*n];
+		if(isnan(b[i]) || isnan(b[i+n]) || isnan(b[i+2*n]) || isnan(b[i+3*n]) || isnan(b[i+4*n]))
+			for(j=0;j<18;j++)	tt[j+18*i] = false;
+		else	for(j=0;j<18;j++)
+		{
+			i0 = j+18*i;
+			tt[i0] = ScalePoint(pp[3*i0],pp[3*i0+1],pp[3*i0+2]);
+		}
+	}
+	lines_plot(9*n,pp,0,tt,false);
+	cmap[0]=c1;	cmap[1]=c2;	SetPal(0);	EndGroup();
+	delete []b;		delete []tt;	delete []pp;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::BoxPlot(const mglData &y, const char *pen,mreal zVal)
+{
+	if(y.nx<2)	{	SetWarn(mglWarnLow,"BoxPlot");	return;	}
+	mglData x(y.nx);
+	x.Fill(Min.x,Max.x);
+	BoxPlot(x,y,pen,zVal);
+}
+//-----------------------------------------------------------------------------
+//
 //		Torus series
 //
 //-----------------------------------------------------------------------------
@@ -1339,7 +1417,13 @@ void mgl_plot_2(HMGL gr, const HMDT a, const char *pen)
 /// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
 void mgl_plot_3(HMGL gr, const HMDT a, const char *pen)
 {	if(gr && a)	gr->Plot3(*a,pen);	}
-/// Draw line plot for points in arrays \a y.
+/// Draw boxplot for points in arrays \a x, \a y.
+void mgl_boxplot_xy(HMGL gr, const HMDT x, const HMDT y, const char *pen)
+{	if(gr && x && y)	gr->BoxPlot(*x,*y,pen);	}
+/// Draw bozplot for points in arrays \a y.
+void mgl_boxplot(HMGL gr, const HMDT y, const char *pen)
+{	if(gr && y)	gr->BoxPlot(*y,pen);	}
+/// Draw radar plot for points in arrays \a y.
 void mgl_radar(HMGL gr, const HMDT a, const char *pen, mreal r)
 {	if(gr && a)	gr->Radar(*a,pen,r);	}
 /// Draw line plot for points in arrays \a x, \a y, \a z.
@@ -1513,7 +1597,21 @@ void mgl_plot_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
 	if(gr && a)	_GR_->Plot3(_D_(a),s);
 	delete []s;
 }
-/// Draw line plot for points in arrays \a y.
+/// Draw boxplot for points in arrays \a x, \a y.
+void mgl_boxplot_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen,int l)
+{
+	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	if(gr && x && y)	_GR_->BoxPlot(_D_(x),_D_(y),s);
+	delete []s;
+}
+/// Draw boxplot for points in arrays \a y.
+void mgl_boxplot_(uintptr_t *gr, uintptr_t *y,	const char *pen,int l)
+{
+	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	if(gr && y)	_GR_->BoxPlot(_D_(y),s);
+	delete []s;
+}
+/// Draw radar plot for points in arrays \a y.
 void mgl_radar_(uintptr_t *gr, uintptr_t *a, const char *pen, mreal *r, int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;

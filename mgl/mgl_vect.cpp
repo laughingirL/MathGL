@@ -31,7 +31,8 @@ void mglGraph::Traj(const mglData &x, const mglData &y, const mglData &z,
 {
 	if(ax.nx<2)	{	SetWarn(mglWarnLow,"Traj");	return;	}
 	if(ax.nx!=x.nx || z.nx!=x.nx || y.nx!=x.nx || ay.nx!=x.nx || az.nx!=x.nx)
-	{	SetWarn(mglWarnDim,"Traj");	return;	}	long n = ax.nx, m, i, j, nc=0;
+	{	SetWarn(mglWarnDim,"Traj");	return;	}
+	long n = ax.nx, m, i, j, nc=0;
 	mglColor cm;
 	// find maximum
 	i = ax.ny>ay.ny ? ax.ny:ay.ny;	j = z.ny>az.ny ? z.ny:az.ny;
@@ -91,7 +92,8 @@ void mglGraph::Traj(const mglData &x, const mglData &y, const mglData &ax,
 	if(x.nx!=ax.nx || y.nx!=ax.nx || ay.nx!=ax.nx)
 	{	SetWarn(mglWarnDim,"Traj");	return;	}
 	mglData z(x.nx), az(x.nx);
-	if(isnan(zVal))	zVal = Min.z;	z.Fill(zVal,zVal);
+	if(isnan(zVal))	zVal = Min.z;
+	z.Fill(zVal,zVal);
 	Traj(x,y,z,ax,ay,az,sch,len);
 }
 //-----------------------------------------------------------------------------
@@ -165,7 +167,7 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &ax, const
 			tt[2*i0+1]= ScalePoint(pp[6*i0+3],pp[6*i0+4],pp[6*i0+5]);
 		}
 		if(flag & MGL_VEC_DOT)
-			lines_plot(nn*mm,pp,(flag&MGL_VEC_COL)?0:cc,tt);
+			lines_plot(nn*mm,pp,(flag&MGL_VEC_COL)?0:cc,tt,true);
 		else
 			vects_plot(nn*mm,pp,(flag&MGL_VEC_COL)?0:cc,tt);
 	}
@@ -292,7 +294,7 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &z, const 
 			tt[2*i0+1]= ScalePoint(pp[6*i0+3],pp[6*i0+4],pp[6*i0+5]);
 		}
 		if(flag & MGL_VEC_DOT)
-			lines_plot(nn*mm*ll,pp,(flag&MGL_VEC_COL)?0:cc,tt);
+			lines_plot(nn*mm*ll,pp,(flag&MGL_VEC_COL)?0:cc,tt,true);
 		else
 			vects_plot(nn*mm*ll,pp,(flag&MGL_VEC_COL)?0:cc,tt);
 	}
@@ -386,7 +388,7 @@ void mglGraph::Map(const mglData &x, const mglData &y, const mglData &ax, const 
 		n1 = j>0 ? n:0;		n2 = j<m-1 ? n:0;
 		xdy = (ax.a[jj+n2]-ax.a[jj-n1])/(y.a[iy+s2]-y.a[iy-s1]);
 		ydy = (ay.a[jj+n2]-ay.a[jj-n1])/(y.a[iy+s2]-y.a[iy-s1]);
-		xdx = xdx*ydy - xdy*ydx;	// якобиан-1
+		xdx = xdx*ydy - xdy*ydx;	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ-1
 		pp[3*i0+0] = ax.a[jj];	pp[3*i0+1] = ay.a[jj];	pp[3*i0+2] = xdx;
 		tt[i0] = ScalePoint(pp[3*i0],pp[3*i0+1],pp[3*i0+2]);
 		if(tt[i0])

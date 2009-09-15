@@ -1811,6 +1811,23 @@ void mglc_plot(wchar_t out[1024], long n, mglArg *a, int k[10])
 	else 	mglprintf(out,1024,L"gr->Plot(%s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"");
 }
 //-----------------------------------------------------------------------------
+//	{"boxplot","Draw boxplot for 2D data","boxplot {xvar} yvar [fmt]", mgls_boxplot, mglc_boxplot}
+int mgls_boxplot(mglGraph *gr, long n, mglArg *a, int k[10])
+{
+	if(k[0]!=1)	return 1;
+	else if(k[1]!=1)	gr->BoxPlot(*(a[0].d),k[1]==2?a[1].s:0,k[2]==3 ? a[2].v : NAN);
+	else if(k[2]!=1)	gr->BoxPlot(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,k[3]==3 ? a[3].v : NAN);
+	return 0;
+}
+void mglc_boxplot(wchar_t out[1024], long n, mglArg *a, int k[10])
+{
+	if(k[0]!=1)	return;
+	else if(k[1]!=1)
+		mglprintf(out,1024,L"gr->BoxPlot(%s, \"%s\", %g);",a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:NAN);
+	else if(k[2]!=1)
+		mglprintf(out,1024,L"gr->BoxPlot(%s, %s, \"%s\", %g);", a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN);
+}
+//-----------------------------------------------------------------------------
 //	{L"radar",L"Draw radar chart",L"radar avar ['fmt' r]", mgls_radar, mglc_radar}
 int mgls_radar(mglGraph *gr, long n, mglArg *a, int k[10])
 {
@@ -3426,6 +3443,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"beam",L"Draw quasioptical beam",L"", mgls_beam, mglc_beam, false, 0},
 	{L"belt",L"Draw belts",L"belt {xvar yvar} zvar [fmt]", mgls_belt, mglc_belt, false, 0},
 	{L"box",L"Draw bounding box",L"box [fmt]", mgls_box, mglc_box, false, 1},
+	{L"boxplot",L"Draw boxplot for 2D data",L"boxplot {xvar} yvar [fmt]", mgls_boxplot, mglc_boxplot},
 	{L"boxs",L"Draw boxes",L"boxs {xvar yvar} zvar [fmt]", mgls_boxs, mglc_boxs, false, 0},
 	{L"caxis",L"Set color range",L"caxis c1 c2", mgls_caxis, mglc_caxis, false, 2},
 	{L"chart",L"Draw chart",L"chart var [fmt]", mgls_chart, mglc_chart, false, 0},

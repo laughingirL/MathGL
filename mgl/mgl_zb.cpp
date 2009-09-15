@@ -332,7 +332,6 @@ void mglGraphZB::quad_plot(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 	dsx =-4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[1];
 	dsy = 4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[0];
 
-//	if(dsx==0 && dsy==0)	// TODO: check it !!!
 	if((d1[0]==0 && d1[1]==0) || (d2[0]==0 && d2[1]==0) || (pp1[0]==pp3[0] && pp1[1]==pp3[1]) || (pp2[0]==pp3[0] && pp2[1]==pp3[1]))
 	{
 		mreal ps[3];
@@ -414,7 +413,6 @@ void mglGraphZB::quad_plot_n(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 	dsx =-4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[1];
 	dsy = 4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[0];
 
-//	if(dsx==0 && dsy==0)	// TODO: check it !!!
 	if((d1[0]==0 && d1[1]==0) || (d2[0]==0 && d2[1]==0) || (pp1[0]==pp3[0] && pp1[1]==pp3[1]) || (pp2[0]==pp3[0] && pp2[1]==pp3[1]))
 	{
 		mreal ps[3];

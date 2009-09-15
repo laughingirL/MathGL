@@ -40,7 +40,7 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 {
 //	return;
 	char buf[128];
-	printf("%s\t",name);	fflush(stdout);
+	printf("%s ",name);	fflush(stdout);
 	switch(type)
 	{
 		case 1:	// EPS
@@ -63,7 +63,7 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 6:	// GIF
 			sprintf(buf,"%s%s.gif",name,suf);
 			gr->WriteGIF(buf);	break;
-			default:// PNG (no alpha)
+		default:// PNG (no alpha)
 			sprintf(buf,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);	break;
 	}
@@ -197,7 +197,7 @@ int sample_colors(mglGraph *gr, const void *)	// Color table
 //-----------------------------------------------------------------------------
 int sample_qo2d(mglGraph *gr, const void *)
 {
-	gr->VertexColor(true);  // we need smooth color change
+//	gr->VertexColor(true);  // we need smooth color change
 	gr->Compression(true);  // try to save space
 	mglData r, xx, yy, a, im(128), re(128);
 	const char *ham = "p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)";
@@ -219,7 +219,7 @@ int sample_qo2d(mglGraph *gr, const void *)
 //-----------------------------------------------------------------------------
 int sample_pde(mglGraph *gr, const void *)	// PDE and Ray sample
 {
-	gr->VertexColor(true);  // we need smooth color change
+//	gr->VertexColor(true);  // we need smooth color change
 	gr->Compression(true);  // try to save space
 	mglData a,re(128),im(128);
 	gr->Axis();
@@ -242,7 +242,7 @@ int sample_pde(mglGraph *gr, const void *)	// PDE and Ray sample
 //-----------------------------------------------------------------------------
 int sample_stfa(mglGraph *gr, const void *)	// STFA sample
 {
-	gr->VertexColor(true);
+//	gr->VertexColor(true);
 	mglData a(2000), b(2000);
 	a.Fill("cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+\
 				cos(200*pi*x)*(x<.5)*(x>0)+cos(400*pi*x)*(x>.5)",
@@ -359,7 +359,6 @@ int sample_ac(mglGraph *gr, const void *)	// error boxes
 //-----------------------------------------------------------------------------
 int sample_ab(mglGraph *gr, const void *)	// Gaussian beam
 {
-	gr->VertexColor(true);
 	gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
 	mglData a(30,30,30), b(30,30,30);
 	a.Modify("exp(-16*((z-0.5)^2+(y-0.5)^2)/(1+4*x^2))");
@@ -367,21 +366,22 @@ int sample_ab(mglGraph *gr, const void *)	// Gaussian beam
 	gr->CAxis(0,1);
 
 	gr->SubPlot(2,2,0);	gr->Rotate(40,60);
+	gr->VertexColor(false);
+	// since we have one-color trasparent surfaces - disable (per-vertex) coloring
 	gr->Surf3(a,"wgk");	gr->Box();
 	gr->SubPlot(2,2,1);	gr->Rotate(40,60);
 	gr->DensA(a);		gr->Box();	gr->Axis();
 	gr->SubPlot(2,2,2);	gr->Rotate(40,60);
-	// Clouds not supported in u3d
-(type==5)?  gr->Text(mglPoint(0,0,0),"no clouds in u3d"): gr->CloudQ(a);		gr->Box();
+	gr->CloudQ(a);		gr->Box();
 	gr->SubPlot(2,2,3);	gr->Rotate(40,60);
-	gr->VertexColor(false);	// for variable transparency the only way is to disable smooth (per-vertex) coloring
+	gr->VertexColor(false);	 
+	// for variable transparency the only way is to disable smooth (per-vertex) coloring
 	gr->Surf3A(b,a,"q");		gr->Box();
 	return 0;
 }
 //-----------------------------------------------------------------------------
 int sample_aa(mglGraph *gr, const void *)	// flag #
 {
-	gr->VertexColor(true);
 	gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
 	mglData a(30,20);
 	a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
@@ -399,7 +399,6 @@ int sample_aa(mglGraph *gr, const void *)	// flag #
 //-----------------------------------------------------------------------------
 int sample_a9(mglGraph *gr, const void *)	// 2d plot
 {
-	gr->VertexColor(true);
 	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
 
 	mglData a0(50,40);
@@ -470,8 +469,6 @@ int sample_a7(mglGraph *gr, const void *)	// smoothing
 	gr->Plot(y1,"r");	gr->AddLegend("LINE\\_3","r");
 	gr->Plot(y2,"g");	gr->AddLegend("LINE\\_5","g");
 	gr->Plot(y3,"b");	gr->AddLegend("QUAD\\_5","b");
-//	if (type==5)	// Problem in idtf, the white background and text take the same place
-//		gr->LegendBox = false;	// TODO: check with new Glyph()
 	gr->Legend();		gr->Box();
 	gr->ClearLegend();	// clear legend strings
 	return 0;
@@ -479,7 +476,6 @@ int sample_a7(mglGraph *gr, const void *)	// smoothing
 //-----------------------------------------------------------------------------
 int sample_a6(mglGraph *gr, const void *)	// differentiate
 {
-	gr->VertexColor(true);
 	mglData a(30,40);	a.Modify("x*y");
 	gr->Axis(mglPoint(0,0,0),mglPoint(1,1,1));
 	gr->SubPlot(2,2,0);	gr->Rotate(60,40);
@@ -523,7 +519,7 @@ int sample_a5(mglGraph *gr, const void *)	// pen styles
 int sample_a4(mglGraph *gr, const void *)	// font features
 {
 //	setlocale(LC_CTYPE, "ru_RU.cp1251");
-//	gr->Putsw(mglPoint(0,1),L"Text can be in english è â Þíèêîäå");
+//	gr->Putsw(mglPoint(0,1),L"Text can be in english Ã¨ Ã¢ ÃžÃ­Ã¨ÃªÃ®Ã¤Ã¥");
 	gr->Putsw(mglPoint(0,1),L"Text can be in ASCII and in Unicode");
 	gr->Puts(mglPoint(0,0.6),"It can be \\wire{wire}, \\big{big} or #r{colored}");
 	gr->Puts(mglPoint(0,0.2),"One can change style in string: "
@@ -679,14 +675,14 @@ int sample_1d(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ex0,ey0,"ko");	save(gr,"error",suf);
 	gr->Light(true);	gr->Rotate(40,60);
 	gr->VertexColor(false);	// let renderer do the lighting where necessary, since all surfeces are one-color ones
-	gr->Unrotate(true);		// we rely on PDF making utility to correctly set camera
+//	gr->Unrotate(true);		// we rely on PDF making utility to correctly set camera
 	gr->Clf();	gr->Box();	gr->Torus(y1,y2,"pz");		save(gr,"torus",suf);
 	gr->Clf();	gr->Box();	gr->Tube(y,0.05);	save(gr,"tube",suf);
 	gr->Clf();	gr->Box();	gr->Tube(y,0.05);	gr->Tube(y1,x,y2,x2);	save(gr,"tube_3d",suf);
 	gr->Clf();	gr->Box();	gr->Chart(ch,"#");	save(gr,"chart",suf);
 	gr->Axis("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)","");
 	gr->Clf();	gr->Box();	gr->Chart(ch,"bgr cmy#");	save(gr,"pie_chart",suf);	gr->Axis(0,0,0);
-	gr->Unrotate(false);	// set back
+//	gr->Unrotate(false);	// set back
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -697,7 +693,6 @@ int sample_2d(mglGraph *gr, const void *s)	// full test (in PNG)
 	a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 	b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
-	gr->VertexColor(true);
 	gr->Clf();	gr->Box();	gr->Cont(a,"BbcyrRt");	save(gr,"contt",suf);
 	gr->Clf();	gr->Box();	gr->TileS(a,b,"BbcyrR");save(gr,"tiler",suf);
 	gr->Clf();	gr->Box();	gr->Dens(a);	gr->Colorbar();	save(gr,"dens",suf);
@@ -729,9 +724,10 @@ int sample_3d(mglGraph *gr, const void *s)	// full test (in PNG)
 	c.Modify("(-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1))");
 	d.Modify("1-2*tanh(4*(x+y-1)^2)");
 
-	gr->VertexColor(true);
 	gr->Rotate(40,60);
+	gr->VertexColor(true);	//  colors are many, the plot is implicit, thus textures do not help
 	gr->Clf();	gr->Box();	gr->Surf3(c,"bgrd");	save(gr,"surf3_rgbd",suf);
+	gr->VertexColor(false);	//  put back
 	gr->Clf();	gr->Box();	gr->ContA(c,"BbcyrR");	save(gr,"conta",suf);
 	gr->Clf();	gr->Box();	gr->DensX(c.Sum("x"),"",-1);	gr->DensY(c.Sum("y"),"",1);
 	gr->DensZ(c.Sum("z"),"",-1);	save(gr,"dens_xyz",suf);
@@ -744,12 +740,11 @@ int sample_3d(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->Surf3(c);		save(gr,"surf3",suf);
 	gr->VertexColor(false);	// for variable transparency the only way is to disable smooth (per-vertex) coloring
 	gr->Clf();	gr->Box();	gr->Surf3A(c,d);	save(gr,"surf3a",suf);
-	gr->VertexColor(true);
 	gr->Clf();	gr->Box();	gr->Surf3C(c,d);	save(gr,"surf3c",suf);
 	gr->Light(false);
 	gr->Clf();	gr->Box();	gr->Org=mglPoint();	gr->Axis();	gr->DensA(c);	save(gr,"densa",suf);
-	gr->Clf();	gr->Box();	type==5?gr->Text(mglPoint(0,0,0),"Clouds not supported"):gr->CloudQ(c,"wyrRk");		save(gr,"cloudq",suf);
-	gr->Clf();	gr->Box();	type==5?gr->Text(mglPoint(0,0,0),"Clouds not supported"):gr->CloudP(c,"wyrRk");		save(gr,"cloudp",suf);
+	gr->Clf();	gr->Box();	gr->CloudQ(c,"wyrRk");		save(gr,"cloudq",suf);
+	gr->Clf();	gr->Box();	type==5?gr->Text(mglPoint(0,0,0),"Point clouds not supported"):gr->CloudP(c,"wyrRk");		save(gr,"cloudp",suf);
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -760,20 +755,20 @@ int sample_vect2d(mglGraph *gr, const void *s)	// full test (in PNG)
 	a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 	b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
-	gr->VertexColor(true);
 	gr->Clf();	gr->Box();	gr->Vect(a,b);	save(gr,"vect",suf);
 	gr->Clf();	gr->Box();	gr->VectL(a,b);	save(gr,"vectl",suf);
 	gr->Clf();	gr->Box();	gr->VectC(a,b);	save(gr,"vectc",suf);
 	gr->Clf();	gr->Box();	gr->Flow(a,b);	save(gr,"flow",suf);
 	gr->Clf();	gr->Box();	gr->Pipe(a,b);	save(gr,"pipe2",suf);
 	gr->Light(true);
-	gr->VertexColor(false);
 	gr->Compression(true);  // try to save space
 	gr->Clf();	gr->Box();	gr->Pipe(a,b);	save(gr,"pipe",suf);
+	gr->DoubleSided(false); // try to improve performance
 	gr->Clf();	gr->Box();	gr->MeshNum=20;	gr->Dew(a,b);	save(gr,"dew",suf);
 	gr->Rotate(40,60);
 	gr->Clf();	gr->Box();	gr->MeshNum=10;	gr->Dew(a,b);	save(gr,"dew2",suf);
 	gr->Compression(false);  //put setting back
+	gr->DoubleSided(true);
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -791,7 +786,6 @@ int sample_vect3d(mglGraph *gr, const void *s)	// full test (in PNG)
 	gr->Clf();	gr->Box();	gr->VectL(ex,ey,ez);	save(gr,"vectl3",suf);
 	gr->Clf();	gr->Box();	gr->VectC(ex,ey,ez);	save(gr,"vectc3",suf);
 	gr->Light(true);
-	gr->VertexColor(false);
 	gr->Compression(true);  // try to save space
 	gr->Clf();	gr->Box();	gr->Pipe(ex,ey,ez);		save(gr,"pipe3",suf);
 	gr->Compression(false);  //put setting back
@@ -804,7 +798,6 @@ int sample_crust(mglGraph *gr, const void *s)
 	mglData pnts("hotdogs.pts");
 	pnts.Norm(-1,1,true);
 
-	gr->VertexColor(true);
 	gr->Rotate(40,60);
 	gr->Light(true);	gr->Alpha(true);
 	gr->Clf();	gr->Box();	gr->Crust(pnts);	save(gr,"crust",suf);
@@ -901,12 +894,11 @@ int sample_hint(mglGraph *gr, const void *s)
 	save(gr,"2_axis",suf);
 
 	gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1));
-	gr->VertexColor(true);
 	// contours under mesh
 	gr->Clf();	gr->Flow(a,b,"br",5,true,type==5?-0.99:NAN);	gr->Dens(d,"BbcyrR");	gr->Box();
 	save(gr,"flow_dens",suf);
 
-	gr->Unrotate(true); // we rely on PDF making utility to correctly set camera
+//	gr->Unrotate(true); // we rely on PDF making utility to correctly set camera
 	gr->Rotate(40,60);
 	// contours on the surface
 	gr->Clf();		gr->Surf(a,"kw");	gr->CAxis(-1,0);	gr->Cont(a,"w");
@@ -931,9 +923,10 @@ int sample_hint(mglGraph *gr, const void *s)
 	// several light sources
 	gr->Light(1,mglPoint(0,1,0),'c');	gr->Light(2,mglPoint(1,0,0),'y');
 	gr->Light(3,mglPoint(0,-1,0),'m');	gr->Clf();	gr->Box();
-	gr->Surf(a,"h");	gr->Light(1,false);	gr->Light(2,false);	gr->Light(3,false);
+	gr->Surf(a,"h");
 	save(gr,"several_light",suf);
-
+	gr->Light(1,false);	gr->Light(2,false);	gr->Light(3,false);
+  
 	gr->VertexColor(false);	gr->Compression(false); // per-vertex colors and compression are detrimental to transparency
 	// CutMin CutMax example
 	gr->CutMin = mglPoint(0,-1,-1);	gr->CutMax = mglPoint(1,0,1.1);
@@ -953,13 +946,14 @@ int sample_hint(mglGraph *gr, const void *s)
 	save(gr,"surf3_cutoff",suf);
 
 	printf("\n");	fflush(stdout);
-	gr->Unrotate(false); // set back
+//	gr->Unrotate(false); // set back
 	return 0;
 }
 //-----------------------------------------------------------------------------
 int sample_molecule(mglGraph *gr, const void *)	// flag #
 {
 	gr->VertexColor(false);	gr->Compression(false); // per-vertex colors and compression are detrimental to transparency
+	gr->DoubleSided(false); // we do not get into atoms, while rendering internal surface has negative impact on trasparency
 	gr->Alpha(true);	gr->Light(true);
 
 	gr->SubPlot(2,2,0);
@@ -1029,6 +1023,7 @@ int sample_molecule(mglGraph *gr, const void *)	// flag #
 	gr->Sphere(mglPoint(-0.65,0,0),0.25,"g");
 	gr->EndGroup();
 
+	gr->DoubleSided( true ); // put back
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -1078,6 +1073,7 @@ int sample_fish(mglGraph *gr, const void *)	// flag #
 {
 	gr->VertexColor(false); // the model is big even without information on point colors
 	gr->Compression(true);  // fishes are important, not their scales
+	gr->DoubleSided(false); // we do not get into drops, while rendering internal surfaces may have negative impact on performace
 	gr->Light(true);	gr->Alpha(false);
 	mglData a(10,10), b(10,10), x(10,10), y(10,10);
 	a.Modify("0.3*x+rnd"); x.Modify("x+0.1*rnd");
@@ -1088,12 +1084,13 @@ int sample_fish(mglGraph *gr, const void *)	// flag #
 	gr->Light(true);
 	gr->Dew(x,y,a,b,"BbcyrR");
 	gr->Compression(false);  // put it back
+	gr->DoubleSided(true);
 	return 0;
 }
 //-----------------------------------------------------------------------------
 int sample_mirror(mglGraph *gr, const void *)	// flag #
 {
-	gr->VertexColor(true);
+	gr->VertexColor(true); gr->TextureColor(false); // Let us use pre-lighting for this example
 	mglData a(30,40),x(30),y1(40),y2(40);
 	a.Modify("pi*(1-2*x)*exp(-4*y^2-4*(2*x-1)^2)");
 	x.Fill(-1,1); y1.Fill(0,1); y2.Fill(0,-1);
@@ -1102,6 +1099,7 @@ int sample_mirror(mglGraph *gr, const void *)	// flag #
 	gr->Rotate(40,60);
 	gr->Light(true);	gr->Box();
 	gr->Surf(x,y1,a,"r"); gr->Surf(x,y2,a,"b");
+	gr->VertexColor(false); gr->TextureColor(true); // set settings back
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -1191,7 +1189,7 @@ int all_samples(mglGraph *gr, const void *s)
 	gr->DefaultPlotParam();	sample_ad(gr,0);	save(gr,"sampled", suf);
 	gr->DefaultPlotParam();	sample_ae(gr,0);	save(gr,"samplee", suf);
 	gr->DefaultPlotParam();	sample_sew(gr,0);	save(gr,"sew",     suf);
-	gr->DefaultPlotParam();	sample_mirror(gr,0);save(gr,"mirror",  suf);
+	gr->DefaultPlotParam();	sample_mirror(gr,0);	save(gr,"mirror",  suf);
 	gr->DefaultPlotParam();	sample_fit(gr,0);	save(gr,"fit",     suf);
 	gr->DefaultPlotParam();	sample_stfa(gr,0);	save(gr,"stfa",    suf);
 	gr->DefaultPlotParam();	sample_pde(gr,0);	save(gr,"pde",     suf);
@@ -1200,13 +1198,13 @@ int all_samples(mglGraph *gr, const void *s)
 	gr->DefaultPlotParam();	sample_ternary(gr,0);	save(gr,"ternary", suf);
 	gr->DefaultPlotParam();	sample_envelop(gr,0);	save(gr,"envelop", suf);
 	gr->DefaultPlotParam();	sample_parser(gr,0);	save(gr,"parser",  suf);
-	gr->DefaultPlotParam();	sample_drops(gr,0);		save(gr,"drops",   suf);
-	gr->DefaultPlotParam();	sample_fish(gr,0);		save(gr,"fish",    suf);
+	gr->DefaultPlotParam();	sample_drops(gr,0);	save(gr,"drops",   suf);
+	gr->DefaultPlotParam();	sample_fish(gr,0);	save(gr,"fish",    suf);
 	gr->DefaultPlotParam();	sample_loglog(gr,0);	save(gr,"loglog",  suf);
 	gr->DefaultPlotParam();	sample_semilog(gr,0);	save(gr,"semilog", suf);
-	gr->DefaultPlotParam();	sample_map(gr,0);		save(gr,"map", suf);
-	gr->DefaultPlotParam();	sample_tval(gr,0);		save(gr,"tval", suf);
-	gr->DefaultPlotParam();	sample_column(gr,0);	save(gr,"column", suf);
+	gr->DefaultPlotParam();	sample_map(gr,0);	save(gr,"map",     suf);
+	gr->DefaultPlotParam();	sample_tval(gr,0);	save(gr,"tval",    suf);
+	gr->DefaultPlotParam();	sample_column(gr,0);	save(gr,"column",  suf);
 	printf("\n");	fflush(stdout);
 	return 0;
 }
@@ -1248,12 +1246,11 @@ void usage()
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
-	mglData a(50,40),v(9);	v.Fill(-1,1);
-	a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
-	gr->SubPlot(2,1,0);	gr->Box();	gr->ContD(v,a);	gr->Colorbar(v);
-	gr->SubPlot(2,1,1);	gr->Box();	gr->Dens(a);	gr->Colorbar();
-	gr->ShowImage("",false);
+	mglData a(3,5),v(9);	v.Fill(-1,1);
+	a.Modify("((2*rnd-1)^3)/2");
+	gr->BoxPlot(a);
+	gr->Plot(a," ko");
+	gr->Box();
 	return 0;
 
 	mglParse par;
@@ -1306,7 +1303,8 @@ int main(int argc,char **argv)
 	{	gr->SetSize(1200,800);	suf = "_lg";	gr->BaseLineWidth = 2;	}
 
 	if(srnd)mgl_srnd(1);
-	gr->VertexColor(true);
+	gr->VertexColor(false);
+	gr->TextureColor(true);
 	gr->Compression(false);
 	all_samples(gr,suf);
 	sample_transp(gr,suf);

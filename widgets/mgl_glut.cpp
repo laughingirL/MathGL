@@ -202,7 +202,7 @@ void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *
 	glutKeyboardUpFunc(_mgl_key_up);
 	glutTimerFunc(int(1000*Delay),_mgl_timer,0);
 
-	// TODO: add window maximazing at start up
+	// TODO Add window maximazing at start up ???
 
 	glutMainLoop();
 	glDeleteLists(1,NumFig);

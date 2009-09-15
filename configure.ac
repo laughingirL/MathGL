@@ -148,12 +148,23 @@ AC_ARG_ENABLE(hdf5,
   no)  hdf5=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-hdf5) ;;
 esac],[hdf5=false])
-AC_CHECK_HEADER(hdf5.h,[(test x$all = xtrue || test x$hdf5 = xtrue) && HDF5_FLAGS=-DHAVE_HDF5 AC_SUBST(HDF5_FLAGS)],
-    [(test x$all = xtrue || test x$hdf5 = xtrue) && echo "Please install hdf5 headers" && exit])
-
-AC_CHECK_LIB([hdf5], [main], [(test x$all = xtrue || test x$hdf5 = xtrue) && HDF5_LIBS=-lhdf5 AC_SUBST(HDF5_LIBS)], 
-    [(test x$all = xtrue || test x$hdf5 = xtrue) && echo "Please install hdf5 library" && exit])
-AM_CONDITIONAL(USE_HDF5, (test x$all = xtrue || test x$hdf5 = xtrue))
+AC_ARG_ENABLE(hdf5_18,
+[  --enable-hdf5_18    Turn on hdf5 version 1.8],
+[case "${enableval}" in
+  yes) hdf5_18=true ;;
+  no)  hdf5_18=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-hdf5_18) ;;
+esac],[hdf5_18=false])
+#AC_CHECK_HEADER(hdf5.h,[(test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue) && HDF5_FLAGS=-DHAVE_HDF5 AC_SUBST(HDF5_FLAGS)],
+AC_CHECK_HEADER(hdf5.h,[(test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue) && HDF5_FLAGS=-DHAVE_HDF5 ],
+    [(test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue) && echo "Please install hdf5 headers" && exit])
+if ((test x$all = xtrue || test x$hdf5 = xtrue) && test x$hdf5_18 = xfalse) ;then
+    HDF5_FLAGS="$HDF5_FLAGS -DH5_USE_16_API"
+    AC_SUBST(HDF5_FLAGS)
+fi
+AC_CHECK_LIB([hdf5], [main], [(test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue) && HDF5_LIBS=-lhdf5 AC_SUBST(HDF5_LIBS)], 
+    [(test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue) && echo "Please install hdf5 library" && exit])
+AM_CONDITIONAL(USE_HDF5, (test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue))
 
 AC_ARG_ENABLE(gif,
 [  --enable-gif    Turn on gif],
