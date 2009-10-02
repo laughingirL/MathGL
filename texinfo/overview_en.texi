@@ -329,7 +329,7 @@ These variables contain identifiers for graphics drawing objects and for data ob
 
 Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of types @code{HMGL, HMDT} must be integer with sufficient size (@code{integer*4} for 32-bit operating system or @code{integer*8} for 64-bit operating system). All C functions are subroutines in Fortran which should be called by operator @code{call}. The exceptions are functions which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also one should keep in mind that strings in Fortran are denoted by @code{'} sign but not @code{"} one.
 
-@subsubsection{Create and delete objects}.
+@strong{Create and delete objects}
 
 @itemize
 @item Functions for non-visual ``grapher'' creation:

@@ -30,4 +30,5 @@ install-data-local: install-html install-pdf
 uninstall-local:
 	rm -rf $(mglpng)
 
-all-local: html pdf
+#all-local: html pdf
+all-local: html
