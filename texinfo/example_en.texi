@@ -1171,7 +1171,7 @@ You may use following code for obtaining the same solution as in previous exampl
 @node MGL parser using, , PDE solving hints, Hints
 @subsection MGL parser using
 
-Sometimes you may prefer to use MGL scripts in yours code. It is simpler (especcially in comparison with C/Fortran interfaces) and fast way to plot the data with annotations, labels and so on. Class @code{mglParse} (@pxref{mglParse class} parse MGL scripts in C++. It have also the corresponding interface for C/Fortran (@pxref{MGL parsing (Pure C)}).
+Sometimes you may prefer to use MGL scripts in yours code. It is simpler (especcially in comparison with C/Fortran interfaces) and fast way to plot the data with annotations, labels and so on. Class @code{mglParse} (@pxref{mglParse class} parse MGL scripts in C++. It have also the corresponding interface for C/Fortran.
 
 The key function here is @code{mglParse::Parse()} (or @code{mgl_parse()} for C/Fortran) which execute one command per string. At this the detailed information about the possible errors or warnings is passed as function value. Or you may execute the whole script as long string with lines separated by @samp{\n}. Functions @code{mglParse::Execute()} and @code{mgl_parse_text()} perform it. Also you may set the values of paramters @samp{$0}...@samp{$9} for the script by functions @code{mglParse::AddParam()} or @code{mgl_add_param()}, allow/disable picture resizing, check ``once'' status and so on. The usage is rather stright-forward.
 

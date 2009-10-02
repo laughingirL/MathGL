@@ -150,7 +150,7 @@ void mglGraph::Flow(const mglData &ax, const mglData &ay, const char *sch, int n
 	Flow(x,y,ax,ay,sch,num,cnt,zVal);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Flow(mglPoint p, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch)
+void mglGraph::FlowP(mglPoint p, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch)
 {
 	mreal u,v;
 	long n=ax.nx, m=ax.ny;
@@ -206,14 +206,14 @@ void mglGraph::Flow(mglPoint p, const mglData &x, const mglData &y, const mglDat
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Flow(mglPoint p, const mglData &ax, const mglData &ay, const char *sch)
+void mglGraph::FlowP(mglPoint p, const mglData &ax, const mglData &ay, const char *sch)
 {
 	if(ax.nx*ax.ny!=ay.nx*ay.ny){	SetWarn(mglWarnDim,"Flow");	return;	}
 	if(ax.nx<2 || ax.ny<2)		{	SetWarn(mglWarnLow,"Flow");	return;	}
 	mglData x(ax.nx), y(ax.ny);
 	x.Fill(Min.x,Max.x);
 	y.Fill(Min.y,Max.y);
-	Flow(p,x,y,ax,ay,sch);
+	FlowP(p,x,y,ax,ay,sch);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::flow(bool simple, mreal u, mreal v, mreal w,
@@ -363,7 +363,7 @@ void mglGraph::Flow(const mglData &ax, const mglData &ay, const mglData &az,
 	Flow(x,y,z,ax,ay,az,sch,num,cnt);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Flow(mglPoint p, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch)
+void mglGraph::FlowP(mglPoint p, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch)
 {
 	mreal u,v,w;
 	long n=ax.nx,m=ax.ny,l=ax.nz;
@@ -434,7 +434,7 @@ void mglGraph::Flow(mglPoint p, const mglData &x, const mglData &y, const mglDat
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Flow(mglPoint p, const mglData &ax, const mglData &ay, const mglData &az,
+void mglGraph::FlowP(mglPoint p, const mglData &ax, const mglData &ay, const mglData &az,
 					const char *sch)
 {
 	if(ax.nx*ax.ny*ax.nz!=ay.nx*ay.ny*ay.nz || ax.nx*ax.ny*ax.nz!=az.nx*az.ny*az.nz)
@@ -445,7 +445,7 @@ void mglGraph::Flow(mglPoint p, const mglData &ax, const mglData &ay, const mglD
 	x.Fill(Min.x,Max.x);
 	y.Fill(Min.y,Max.y);
 	z.Fill(Min.z,Max.z);
-	Flow(p, x,y,z,ax,ay,az,sch);
+	FlowP(p, x,y,z,ax,ay,az,sch);
 }
 //-----------------------------------------------------------------------------
 //
@@ -738,16 +738,16 @@ void mgl_flow_3d(HMGL gr, const HMDT ax, const HMDT ay, const HMDT az, const cha
 //-----------------------------------------------------------------------------
 /// Plot flows for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
 void mgl_flowp_xy(HMGL gr, mreal x0, mreal y0, mreal z0, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch)
-{	if(gr && ay && ax && x && y)	gr->Flow(mglPoint(x0,y0,z0), *x, *y, *ax, *ay, sch);	}
+{	if(gr && ay && ax && x && y)	gr->FlowP(mglPoint(x0,y0,z0), *x, *y, *ax, *ay, sch);	}
 /// Plot flows for vector field {ax,ay} with color proportional to value |a|
 void mgl_flowp_2d(HMGL gr, mreal x0, mreal y0, mreal z0, const HMDT ax, const HMDT ay, const char *sch)
-{	if(gr && ay && ax)	gr->Flow(mglPoint(x0,y0,z0), *ax, *ay, sch);	}
+{	if(gr && ay && ax)	gr->FlowP(mglPoint(x0,y0,z0), *ax, *ay, sch);	}
 /// Plot flows for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
 void mgl_flowp_xyz(HMGL gr, mreal x0, mreal y0, mreal z0, const HMDT x, const HMDT y, const HMDT z, const HMDT ax, const HMDT ay, const HMDT az, const char *sch)
-{	if(gr && ay && ax && az && x && y && z)	gr->Flow(mglPoint(x0,y0,z0), *x, *y, *z, *ax, *ay, *az, sch);	}
+{	if(gr && ay && ax && az && x && y && z)	gr->FlowP(mglPoint(x0,y0,z0), *x, *y, *z, *ax, *ay, *az, sch);	}
 /// Plot flows for 3d vector field {ax,ay,ay} with color proportional to value |a|
 void mgl_flowp_3d(HMGL gr, mreal x0, mreal y0, mreal z0, const HMDT ax, const HMDT ay, const HMDT az, const char *sch)
-{	if(gr && ay && ax && az)	gr->Flow(mglPoint(x0,y0,z0), *ax, *ay, *az, sch);	}
+{	if(gr && ay && ax && az)	gr->FlowP(mglPoint(x0,y0,z0), *ax, *ay, *az, sch);	}
 //-----------------------------------------------------------------------------
 /// Plot flow pipes for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
 void mgl_pipe_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch, mreal r0, int num, int central, mreal zVal)
@@ -801,7 +801,7 @@ void mgl_flowp_xy_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x,
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && x && y)
-		_GR_->Flow(mglPoint(*x0,*y0,*z0), _D_(x), _D_(y), _D_(ax), _D_(ay), s);
+		_GR_->FlowP(mglPoint(*x0,*y0,*z0), _D_(x), _D_(y), _D_(ax), _D_(ay), s);
 	delete []s;
 }
 /// Plot flows for vector field {ax,ay} with color proportional to value |a|
@@ -809,7 +809,7 @@ void mgl_flowp_2d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax)
-		_GR_->Flow(mglPoint(*x0,*y0,*z0), _D_(ax), _D_(ay), s);
+		_GR_->FlowP(mglPoint(*x0,*y0,*z0), _D_(ax), _D_(ay), s);
 	delete []s;
 }
 /// Plot flows for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
@@ -817,7 +817,7 @@ void mgl_flowp_xyz_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *x
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && az && x && y && z)
-		_GR_->Flow(mglPoint(*x0,*y0,*z0), _D_(x), _D_(y), _D_(z), _D_(ax), _D_(ay), _D_(az), s);
+		_GR_->FlowP(mglPoint(*x0,*y0,*z0), _D_(x), _D_(y), _D_(z), _D_(ax), _D_(ay), _D_(az), s);
 	delete []s;
 }
 /// Plot flows for 3d vector field {ax,ay,ay} with color proportional to value |a|
@@ -825,7 +825,7 @@ void mgl_flowp_3d_(uintptr_t *gr, mreal *x0, mreal *y0, mreal *z0, uintptr_t *ax
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && az)
-		_GR_->Flow(mglPoint(*x0,*y0,*z0), _D_(ax), _D_(ay), _D_(az), s);
+		_GR_->FlowP(mglPoint(*x0,*y0,*z0), _D_(ax), _D_(ay), _D_(az), s);
 	delete []s;
 }
 //-----------------------------------------------------------------------------

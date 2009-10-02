@@ -21,8 +21,9 @@
 #ifndef _MGL_H_
 #define _MGL_H_
 
-#define MGL_VERSION	9.0
+#define MGL_VERSION	10.0
 
+#include <wchar.h>
 #include "mgl/mgl_data.h"
 #include "mgl/mgl_font.h"
 
@@ -78,10 +79,10 @@ inline mglColor operator/(const mglColor &a, mreal b)
 inline mglColor operator!(const mglColor &a)
 {	return mglColor(1-a.r, 1-a.g, 1-a.b);	}
 //-----------------------------------------------------------------------------
-#define NC	mglColor(-1,-1,-1)
-#define BC	mglColor( 0, 0, 0)
-#define WC	mglColor( 1, 1, 1)
-#define RC	mglColor( 1, 0, 0)
+const mglColor NC(-1,-1,-1);
+const mglColor BC( 0, 0, 0);
+const mglColor WC( 1, 1, 1);
+const mglColor RC( 1, 0, 0);
 //-----------------------------------------------------------------------------
 /// Structure for color ID
 struct mglColorID
@@ -125,10 +126,6 @@ public:
 	mglFormula *fy;		///< Transformation formula for y direction.
 	mglFormula *fz;		///< Transformation formula for z direction.
 	mglFormula *fc;		///< Cutting off condition (formula).
-	const wchar_t *xtt;	///< X-tick template (set NULL to use default one ("%.2g" in simplest case))
-	const wchar_t *ytt;	///< Y-tick template (set NULL to use default one ("%.2g" in simplest case))
-	const wchar_t *ztt;	///< Z-tick template (set NULL to use default one ("%.2g" in simplest case))
-	const wchar_t *ctt;	///< Colorbar-tick template (set NULL to use default one ("%.2g" in simplest case))
 	mreal PlotFactor;	///< Factor for sizing overall plot (should be >1.5, default is =1.55)
 	bool AutoPlotFactor;///< Enable autochange PlotFactor
 
@@ -204,6 +201,12 @@ public:
 	virtual void Finish();
 	/// Set the transparency on/off.
 	virtual bool Alpha(bool enable)=0;
+	/// Set default value of alpha-channel
+	inline void SetAlphaDef(float val)	{	AlphaDef=val;	};
+	/// Temporary switches transparency on/off 
+	inline void SetTransparent(bool val)	{	Transparent=val;	};
+	/// Set the transparency type
+	inline void SetTranspType(int val)	{	TranspType=val;	};
 	/// Set the fog distance or switch it off (if d=0).
 	virtual void Fog(mreal d, mreal dz=0.25);
 	/// Set the using of light on/off.
@@ -212,10 +215,33 @@ public:
 	virtual void Light(int n, bool enable); //=0
 	/// Add a light source.
 	void Light(int n,mglPoint p, char c='w', mreal bright=0.5, bool infty=true);
+	inline void AddLight(int n, mreal x, mreal y, mreal z, char col='w')
+	{	Light(n, mglPoint(x,y,z), col);	};
 	/// Add a light source.
 	virtual void Light(int n,mglPoint p, mglColor c, mreal bright=0.5, bool infty=true); //=0
 	/// Set ambient light brightness
 	virtual void Ambient(mreal bright=0.5);
+	/// Set relative width of rectangles in Bars, Barh, BoxPlot
+	inline void SetBarWidth(mreal val)	{	BarWidth=val;	};
+	/// Set size of marks
+	inline void SetMarkSize(mreal val)	{	MarkSize=val;	};
+	/// Set size of arrows
+	inline void SetArrowkSize(mreal val)	{	ArrowSize=val;	};
+	/// Set PlotFactor
+	inline void SetPlotFactor(mreal val)
+	{	PlotFactor = val>0?val:1.55;	AutoPlotFactor=(val<=0);	};
+	/// Set cutting for points outside of bounding box
+	inline void SetCut(bool val)	{	Cut=val;	};
+	/// Set additional cutting box
+	inline void SetCutBox (float x1, float y1, float z1, float x2, float y2, float z2)
+	{	CutMin=mglPoint(x1,y1,z1);	CutMax=mglPoint(x2,y2,z2);	};
+	/// Set base width for all lines
+	inline void SetBaseLineWidth(mreal val)	{	BaseLineWidth=val;	};
+	/// Sets color for individual palette entry
+	inline void SetPalColor (int n, float r, float g, float b)
+	{	if(n<100)	Pal[n] = mglColor(r,g,b);	};
+	/// Set number of colors in palette
+	inline void SetPalNum(int num)	{	if(num<100)	NumPal = num;	};
 	/// Set palette
 	inline void SetPalette(const char *colors)
 	{	strcpy(DefPal, colors?colors:MGL_DEF_PAL);	SetPal(colors);	}
@@ -229,14 +255,32 @@ public:
 	void SetTicksVal(char dir, int n, mreal *val, const char **lbl);
 	void SetTicksVal(char dir, int n, mreal *val, const wchar_t **lbl);
 	void SetTicksVal(char dir, int n, double val, const char *lbl, ...);
+	/// Set templates for ticks
+	inline void SetXTT(const wchar_t *t)	{	wcscpy(xtt,t);	};
+	inline void SetYTT(const wchar_t *t)	{	wcscpy(ytt,t);	};
+	inline void SetZTT(const wchar_t *t)	{	wcscpy(ztt,t);	};
+	inline void SetCTT(const wchar_t *t)	{	wcscpy(ctt,t);	};
+	inline void SetXTT(const char *t)	{	mbstowcs(xtt,t,strlen(t)+1);	};
+	inline void SetYTT(const char *t)	{	mbstowcs(ytt,t,strlen(t)+1);	};
+	inline void SetZTT(const char *t)	{	mbstowcs(ztt,t,strlen(t)+1);	};
+	inline void SetCTT(const char *t)	{	mbstowcs(ctt,t,strlen(t)+1);	};
 	/// Auto adjust ticks
 	void AdjustTicks(const char *dir);
+	/// Tune ticks
+	inline void SetTuneTicks(bool tune, mreal pos=1.15)
+	{	TuneTicks = tune;	FactorPos = pos;	};
 	/// Set ticks styles
 	void SetTickStl(const char *stl, const char *sub=0);
 	/// Set ticks length
 	void SetTickLen(mreal tlen, mreal stt=1.);
 	/// Set warning code ant fill Message
 	void SetWarn(int code, const char *who="");
+	/// Set number of mesh lines
+	inline void SetMeshNum(int val)	{	MeshNum=val;	};
+	/// Set default axial direction
+	inline void SetAxialDir(char val)	{	AxialDir=val;	};
+	/// Enable/disable face drawing (for speeding up)
+	inline void SetDrawFace(bool val)	{	DrawFace=val;	};
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Plot positioning functions
 	  * These functions control how and where further plotting will be placed.
@@ -289,9 +333,9 @@ public:
 	  * In this case the function mglGraph::RecalcBorder is called automaticly. */
 	//@{
 	/// Draws bounding box outside the plotting volume.
-	void Box(mglColor pen=NC, bool ticks=true);
+	void Box(mglColor pen, bool ticks=true);
 	/// Draws bounding box outside the plotting volume with color \a c.
-	void Box(const char *col, bool ticks=true);
+	void Box(const char *col=0, bool ticks=true);
 
 	/// Safety set values of mglGraph::Cmin and mglGraph::Cmax as minimal and maximal values of data a
 	void CRange(const mglData &a, bool add = false, mreal fact=0);
@@ -308,12 +352,15 @@ public:
 
 	/// Safetly set the values of mglGraph::Cmin and mglGraph::Cmax
 	void inline CAxis(mreal C1,mreal C2)	{	Cmin=C1;	Cmax=C2;	};
+	void inline CRange(mreal C1,mreal C2)	{	Cmin=C1;	Cmax=C2;	};
+	/// Set axis origin
+	void inline SetOrigin(mreal x0, mreal y0, mreal z0=NAN)	{	Org=mglPoint(x0,y0,z0);	};
 	/// Safetly set the value for mglGraph::Min, mglGraph::Max and mglGraph::Org members of the class.
 	void Axis(mglPoint Min, mglPoint Max, mglPoint Org=mglPoint(NAN,NAN,NAN));
 	/// Safetly set the transformation formulas for coordinate.
-	void Axis(const char *EqX,const char *EqY,const char *EqZ);
+	void SetFunc(const char *EqX,const char *EqY,const char *EqZ);
 	/// Set the predefined transformation rules
-	void Axis(int how);
+	void SetCoor(int how);
 	/// Safetly set the cutting off condition (formula).
 	void CutOff(const char *EqC);
 	/// Set to draw Ternary axis (triangle like axis, grid and so on)
@@ -423,7 +470,19 @@ public:
 	void SetFont(mglFont *f);
 	/// Get current typeface. Note that this variable can be deleted at next SetFont() call!
 	inline mglFont *GetFont()	{	return fnt;	};
-
+	/// Restore font
+	inline void RestoreFont()	{	fnt->Restore();	};
+	/// Load font from file
+	inline void LoadFont (const char *name, const char *path=NULL)
+	{	fnt->Load(name,path);	};
+	/// Copy font from another mglGraph instance
+	inline void CopyFont(mglGraph *gr)	{	fnt->Copy(gr->GetFont());	};
+	/// Set default font size
+	inline void SetFontSize(mreal val)	{	FontSize=val;	};
+	/// Set to use or not text rotation
+	inline void SetRotatedText(bool val)	{	RotatedText=val;	};
+	/// Set default font style and color
+	inline void SetFontDef(const char *fnt)	{	strncpy(FontDef, fnt, 31);	};
 	/// Get ratio (mreal width)/(mreal height).
 	virtual mreal GetRatio();
 	/// Print string \a str in position \a p with font size \a size.
@@ -475,6 +534,8 @@ public:
 	virtual void Legend(int n, wchar_t **text, char **style, mreal x, mreal y, const char *font="rL", mreal size=-0.8, mreal llen=0.1)=0;
 	/// Draw legend of accumulated strings by \a font with \a size
 	void Legend(int n, wchar_t **text, char **style, int where=0x3, const char *font="rL", mreal size=-0.8, mreal llen=0.1);
+	/// Switch on/off box around legend
+	inline void SetLegendBox (bool val)	{	LegendBox=val;	};
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ������� ~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Plot data depending on its dimensions and \a type parameter
@@ -493,9 +554,9 @@ public:
 	  * then solid line with color from palette is used. */
 	//@{
 	/// Draw curve for formula with x in range [Min.x, Max.x]
-	void Plot(const char *eqY, const char *pen=0, mreal zVal=NAN, int n=100);
+	void Plot(const char *eqY, const char *pen=0, mreal zVal=NAN, int n=0);
 	/// Draw curve for formulas parametrically depended on t in range [0,1]
-	void Plot(const char *eqX, const char *eqY, const char *eqZ, const char *pen=0, int n=100);
+	void Plot(const char *eqX, const char *eqY, const char *eqZ, const char *pen=0, int n=0);
 
 	/// Draw line plot for points in arrays \a x, \a y, \a z.
 	void Plot(const mglData &x, const mglData &y, const mglData &z, const char *pen=0);
@@ -649,9 +710,9 @@ public:
 	  * (see mglGraph::SetScheme). */
 	//@{
 	/// Draw curve for formula with x,y in range [Min, Max]
-	void Surf(const char *eqZ, const char *sch=0, int n=100);
+	void Surf(const char *eqZ, const char *sch=0, int n=0);
 	/// Draw curve for formulas parametrically depended on u,v in range [0,1]
-	void Surf(const char *eqX, const char *eqY, const char *eqZ, const char *sch=0, int n=100);
+	void Surf(const char *eqX, const char *eqY, const char *eqZ, const char *sch=0, int n=0);
 
 	/// Draw power crust for points in arrays \a x, \a y, \a z.
 	void Crust(const mglData &x, const mglData &y, const mglData &z, const char *sch=0,mreal er=0);
@@ -826,10 +887,10 @@ public:
 	/// Plot flows for 3d vector field {ax,ay,ay} with color proportional to value |a|
 	void Flow(const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0, int num=3, bool central=true);
 	/// Draw flow from point p
-	void Flow(mglPoint p0, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0);
-	void Flow(mglPoint p0, const mglData &ax, const mglData &ay, const char *sch=0);
-	void Flow(mglPoint p0, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
-	void Flow(mglPoint p0, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
+	void FlowP(mglPoint p0, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0);
+	void FlowP(mglPoint p0, const mglData &ax, const mglData &ay, const char *sch=0);
+	void FlowP(mglPoint p0, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
+	void FlowP(mglPoint p0, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
 	/// Plot flow pipes for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
 	void Pipe(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0, mreal r0=0.05, int num=5, bool central=true, mreal zVal=NAN);
 	/// Plot flow pipes for vector field {ax,ay} with color proportional to value |a|
@@ -908,9 +969,9 @@ public:
 	/// Draw a cloud of points for 3d data
 	void CloudP(const mglData &a, const char *stl=0, mreal alpha=1, bool rnd=true);
 	/// Draw a semi-transparent cloud for 3d data specified parametrically
-	void CloudQ(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *stl=0, mreal alpha=1);
+	void Cloud(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *stl=0, mreal alpha=1);
 	/// Draw a semi-transparent cloud for 3d data
-	void CloudQ(const mglData &a, const char *stl=0, mreal alpha=1);
+	void Cloud(const mglData &a, const char *stl=0, mreal alpha=1);
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Combined plotting functions
@@ -991,6 +1052,12 @@ protected:
 	mreal CloudFactor;			///< Factor of transparency in mglGraph::CloudP and mglGraph::CloudQ
 	bool ScalePuts;				///< Enable/disable point positions scaling in puts
 	bool SmoothColorbar;		///< Use color interpolation in colorbar (default is true)
+
+
+	wchar_t xtt[256];	///< X-tick template (set NULL to use default one ("%.2g" in simplest case))
+	wchar_t ytt[256];	///< Y-tick template (set NULL to use default one ("%.2g" in simplest case))
+	wchar_t ztt[256];	///< Z-tick template (set NULL to use default one ("%.2g" in simplest case))
+	wchar_t ctt[256];	///< Colorbar-tick template (set NULL to use default one ("%.2g" in simplest case))
 
 	int NumLeg;					///< Number of used positions in LegStr and LegStl arrays
 	wchar_t *LegStr[100];			///< String array with legend text (see mglGraph::AddLegend)

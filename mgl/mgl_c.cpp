@@ -221,11 +221,10 @@ void mgl_set_axis(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mre
 {	gr->Axis(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2),mglPoint(x0,y0,z0));	}
 /// Safetly set the transformation formulas for coordinate.
 void mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ)
-{	gr->Axis(EqX,EqY,EqZ);	}
+{	gr->SetFunc(EqX,EqY,EqZ);	}
 /// Set predefined coordinate system
-void mgl_set_coor(HMGL gr, int how)	{	gr->Axis(how);	}
-void mgl_set_cutoff(HMGL gr, const char *EqC)
-{	gr->CutOff(EqC);	}
+void mgl_set_coor(HMGL gr, int how)	{	gr->SetCoor(how);	}
+void mgl_set_cutoff(HMGL gr, const char *EqC)	{	gr->CutOff(EqC);	}
 /// Draws bounding box outside the plotting volume by default color.
 void mgl_box(HMGL gr, int ticks)
 {	gr->Box(NC,ticks);	}
@@ -247,42 +246,14 @@ void mgl_label(HMGL gr, char dir, const char *text)
 /// Print the label \a text for axis \a dir.
 void mgl_label_ext(HMGL gr, char dir, const char *text, int pos, mreal size, mreal shift)
 {	gr->Label(dir, text, pos, size, shift);	}
-void mgl_set_xttw(HMGL gr, const wchar_t *templ)	{gr->xtt = templ;}
-void mgl_set_yttw(HMGL gr, const wchar_t *templ)	{gr->ytt = templ;}
-void mgl_set_zttw(HMGL gr, const wchar_t *templ)	{gr->ztt = templ;}
-void mgl_set_cttw(HMGL gr, const wchar_t *templ)	{gr->ctt = templ;}
-void mgl_set_xtt(HMGL gr, const char *templ)
-{
-	int n = strlen(templ)+1;
-	static wchar_t t[256];
-	memset(t,0,256*sizeof(wchar_t));
-	if(n<256)
-	{	mbstowcs(t,templ,n);	gr->xtt = t;	}
-}
-void mgl_set_ytt(HMGL gr, const char *templ)
-{
-	int n = strlen(templ)+1;
-	static wchar_t t[256];
-	memset(t,0,256*sizeof(wchar_t));
-	if(n<256)
-	{	mbstowcs(t,templ,n);	gr->ytt = t;	}
-}
-void mgl_set_ztt(HMGL gr, const char *templ)
-{
-	int n = strlen(templ)+1;
-	static wchar_t t[256];
-	memset(t,0,256*sizeof(wchar_t));
-	if(n<256)
-	{	mbstowcs(t,templ,n);	gr->ztt = t;	}
-}
-void mgl_set_ctt(HMGL gr, const char *templ)
-{
-	int n = strlen(templ)+1;
-	static wchar_t t[256];
-	memset(t,0,256*sizeof(wchar_t));
-	if(n<256)
-	{	mbstowcs(t,templ,n);	gr->ctt = t;	}
-}
+void mgl_set_xttw(HMGL gr, const wchar_t *templ)	{gr->SetXTT(templ);}
+void mgl_set_yttw(HMGL gr, const wchar_t *templ)	{gr->SetYTT(templ);}
+void mgl_set_zttw(HMGL gr, const wchar_t *templ)	{gr->SetZTT(templ);}
+void mgl_set_cttw(HMGL gr, const wchar_t *templ)	{gr->SetCTT(templ);}
+void mgl_set_xtt(HMGL gr, const char *templ)	{gr->SetXTT(templ);}
+void mgl_set_ytt(HMGL gr, const char *templ)	{gr->SetYTT(templ);}
+void mgl_set_ztt(HMGL gr, const char *templ)	{gr->SetZTT(templ);}
+void mgl_set_ctt(HMGL gr, const char *templ)	{gr->SetCTT(templ);}
 //-----------------------------------------------------------------------------
 //		Simple drawing
 //-----------------------------------------------------------------------------
@@ -293,8 +264,8 @@ void mgl_ball(HMGL gr, mreal x,mreal y,mreal z)
 void mgl_ball_rgb(HMGL gr, mreal x, mreal y, mreal z, mreal r, mreal g, mreal b, mreal alpha)
 {	gr->Ball(x,y,z,mglColor(r,g,b),alpha);	}
 /// Draws the point (ball) at position \a p with color \a col.
-void mgl_ball_str(HMGL gr, mreal x, mreal y, mreal z, const char *col)
-{	gr->Ball(mglPoint(x,y,z),col[0]);	}
+void mgl_ball_str(HMGL gr, mreal x, mreal y, mreal z, char col)
+{	gr->Ball(mglPoint(x,y,z),col);	}
 /// Draws the line between points with style \a sch.
 void mgl_line(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, const char *pen,int n)
 {	gr->Line(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2),pen,n);	}
@@ -418,10 +389,7 @@ void mgl_data_set_value(HMDT d, mreal v, int i, int j, int k)
 void mgl_set_zoom(HMGL gr, mreal x1, mreal y1, mreal x2, mreal y2)
 {	gr->Zoom(x1,y1,x2,y2);	}
 void mgl_set_plotfactor(HMGL gr, mreal val)
-{
-	if(val>0)	{	gr->PlotFactor = val;	gr->AutoPlotFactor=false;	}
-	else		{	gr->PlotFactor = 1.55f;	gr->AutoPlotFactor=true;	}
-}
+{	gr->SetPlotFactor(val);	}
 void mgl_set_axis_3d(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2)
 {	gr->Axis(mglPoint(x1,y1,z1),mglPoint(x2,y2,z2));	}
 void mgl_set_axis_2d(HMGL gr, mreal x1, mreal y1, mreal x2, mreal y2)

@@ -222,6 +222,7 @@ void mgl_tens_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *c, co
 void mgl_tens_(uintptr_t *graph, uintptr_t *y, uintptr_t *c, const char *pen,int);
 void mgl_area_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int);
 void mgl_area_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen,int);
+void mgl_area_s_(uintptr_t *graph, uintptr_t *y, const char *pen,int);
 void mgl_area_(uintptr_t *graph, uintptr_t *y, const char *pen,int);
 void mgl_area_2_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
 void mgl_area_3_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
@@ -393,9 +394,9 @@ void mgl_cont_all_(uintptr_t *graph, uintptr_t *a, const char *sch, int *Num,int
 void mgl_cloudp_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a,
 			const char *stl, mreal *alpha,int);
 void mgl_cloudp_(uintptr_t *graph, uintptr_t *a, const char *stl, mreal *alpha,int);
-void mgl_cloudq_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a,
+void mgl_cloud_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a,
 			const char *stl, mreal *alpha,int);
-void mgl_cloudq_(uintptr_t *graph, uintptr_t *a, const char *stl, mreal *alpha,int);
+void mgl_cloud_(uintptr_t *graph, uintptr_t *a, const char *stl, mreal *alpha,int);
 void mgl_contf3_xyz_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a,
 			const char *dir, int *sVal, const char *sch,int,int);
 void mgl_contf3_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *a, const char *dir, int *sVal, const char *sch,int,int);

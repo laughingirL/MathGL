@@ -137,7 +137,7 @@ void mglGraph::Axis(mglPoint m1, mglPoint m2, mglPoint org)
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Axis(const char *EqX,const char *EqY,const char *EqZ)
+void mglGraph::SetFunc(const char *EqX,const char *EqY,const char *EqZ)
 {
 	if(fx)	delete fx;
 	if(fy)	delete fy;
@@ -529,10 +529,9 @@ void mglGraph::DefaultPlotParam()
 	Ambient();				Ternary(false);
 	PlotId = "frame";		SelectPen("k-1");
 	SetScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
-	Cut = true;				InPlot(0,1,0,1);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');
 	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1));
-	Axis(0,0,0);	CutOff(0);		Zoom(0,0,1,1);
+	Axis(0,0,0);	CutOff(0);
 	SetWarn(mglWarnNone);	Message = 0;
 	BarWidth = 0.7;			fit_res[0] = 0;
 	MarkSize = 0.02;		ArrowSize = 0.03;
@@ -547,16 +546,17 @@ void mglGraph::DefaultPlotParam()
 	CirclePnts = 40;		FitPnts = 100;
 	DrawFace = true;		_tetx=_tety=_tetz=0;
 	TuneTicks= true;		_sx=_sy=_sz = 1;
-	Alpha(false);			Fog(0);
-	xtt=ytt=ztt=ctt=0;		FactorPos = 1.15;
+	Alpha(false);	Fog(0);	FactorPos = 1.15;
+	xtt[0]=ytt[0]=ztt[0]=ctt[0]=0;
 	AutoPlotFactor = true;	ScalePuts = true;
-	TickLen = 0.1;			st_t = 1;
+	TickLen = 0.1;	st_t = 1;	Cut = true;
 	TickStl[0] = SubTStl[0] = 'k';
 	TickStl[1] = SubTStl[1] = 0;
 	PlotFactor = AutoPlotFactor ? 1.55f :2.f;
 	for(int i=0;i<10;i++)
 	{	Light(i, mglPoint(0,0,1));	Light(i,false);	}
-	Light(0,true);			Light(false);
+	Light(0,true);		Light(false);
+	InPlot(0,1,0,1);	Zoom(0,0,1,1);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::SetTickStl(const char *stl, const char *sub)
@@ -596,7 +596,7 @@ void mglGraph::SimplePlot(const mglData &a, int type, const char *stl)
 	{
 	case 1:		DensA(a,stl);	break;
 	case 2:		ContA(a,stl);	break;
-	case 3:		CloudQ(a,stl);	break;
+	case 3:		Cloud(a,stl);	break;
 	case 4:		CloudP(a,stl);	break;
 	default:	Surf3(a,stl);	break;
 	}
@@ -1061,34 +1061,34 @@ void mglGraph::ColumnPlot(int num, int i)
 	InPlot(0,1,d,d+w,true);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Axis(int how)
+void mglGraph::SetCoor(int how)
 {
 	switch(how)
 	{
-	case mglCartesian:	Axis(0,0,0);	break;
+	case mglCartesian:	SetFunc(0,0,0);	break;
 	case mglPolar:
-		Axis("x*cos(y)","x*sin(y)",0);	break;
+		SetFunc("x*cos(y)","x*sin(y)",0);	break;
 	case mglSpherical:
-		Axis("x*sin(y)*cos(z)","x*sin(y)*sin(z)","x*cos(y)");	break;
+		SetFunc("x*sin(y)*cos(z)","x*sin(y)*sin(z)","x*cos(y)");	break;
 	case mglParabolic:
-		Axis("x*y","(x*x-y*y)/2",0);	break;
+		SetFunc("x*y","(x*x-y*y)/2",0);	break;
 	case mglParaboloidal:
-		Axis("(x*x-y*y)*cos(z)/2","(x*x-y*y)*sin(z)/2","x*y");	break;
+		SetFunc("(x*x-y*y)*cos(z)/2","(x*x-y*y)*sin(z)/2","x*y");	break;
 	case mglOblate:
-		Axis("cosh(x)*cos(y)*cos(z)","cosh(x)*cos(y)*sin(z)","sinh(x)*sin(y)");	break;
+		SetFunc("cosh(x)*cos(y)*cos(z)","cosh(x)*cos(y)*sin(z)","sinh(x)*sin(y)");	break;
 //		Axis("x*y*cos(z)","x*y*sin(z)","(x*x-1)*(1-y*y)");	break;	
 	case mglProlate:
-		Axis("sinh(x)*sin(y)*cos(z)","sinh(x)*sin(y)*sin(z)","cosh(x)*cos(y)");	break;
+		SetFunc("sinh(x)*sin(y)*cos(z)","sinh(x)*sin(y)*sin(z)","cosh(x)*cos(y)");	break;
 	case mglElliptic:
-		Axis("cosh(x)*cos(y)","sinh(x)*sin(y)",0);	break;
+		SetFunc("cosh(x)*cos(y)","sinh(x)*sin(y)",0);	break;
 	case mglToroidal:
-		Axis("sinh(x)*cos(z)/(cosh(x)-cos(y))","sinh(x)*sin(z)/(cosh(x)-cos(y))",
-		     "sin(y)/(cosh(x)-cos(y))");	break;
+		SetFunc("sinh(x)*cos(z)/(cosh(x)-cos(y))","sinh(x)*sin(z)/(cosh(x)-cos(y))",
+			"sin(y)/(cosh(x)-cos(y))");	break;
 	case mglBispherical:
-		Axis("sin(y)*cos(z)/(cosh(x)-cos(y))","sin(y)*sin(z)/(cosh(x)-cos(y))",
-		     "sinh(x)/(cosh(x)-cos(y))");	break;
+		SetFunc("sin(y)*cos(z)/(cosh(x)-cos(y))","sin(y)*sin(z)/(cosh(x)-cos(y))",
+			"sinh(x)/(cosh(x)-cos(y))");	break;
 	case mglBipolar:
-		Axis("sinh(x)/(cosh(x)-cos(y))","sin(y)/(cosh(x)-cos(y))",0);	break;
-	default:	Axis(0,0,0);	break;
+		SetFunc("sinh(x)/(cosh(x)-cos(y))","sin(y)/(cosh(x)-cos(y))",0);	break;
+	default:	SetFunc(0,0,0);	break;
 	}
 }

@@ -85,7 +85,12 @@ const int off = 0;
 %rename(__div__) operator/(const mglData &, float);
 #endif
 
+
 #ifdef SWIGOCTAVE
+/*%include "octave_typemaps.i"
+%apply (float64_t* IN_ARRAY1, int32_t DIM1) {(double* series, int length)}
+%apply (float64_t* IN_ARRAY2, int32_t DIM1, int32_t DIM2) {(double* mx, int rows, int cols)}*/
+
 %ignore operator|;
 %ignore operator^;
 %ignore operator&;
@@ -95,12 +100,30 @@ const int off = 0;
 %rename(__div) operator/;
 %rename(__eq) operator==;
 %rename(__ne) operator!=;
+
+%typemap(in,noblock=1) (double* d, int rows, int cols) (Matrix tmp) {
+  if (!$input.is_matrix_type()) {
+    error("A must be a matrix");
+    SWIG_fail;
+  }
+  tmp=$input.matrix_value();
+  $1=tmp.data();
+  $2=tmp.rows();
+  $3=tmp.columns();
+}
 #endif
 
 %{
 #define SWIG_FILE_WITH_INIT
 #include "mgl/mgl_data.h"
 %}
+
+/*#ifdef SWIGOCTAVE
+%include "octave_typemaps.i"
+%apply (float64_t* IN_ARRAY1, int32_t DIM1) {(double* series, int length)}
+%apply (float64_t* IN_ARRAY2, int32_t DIM1, int32_t DIM2) {(double* mx, int rows, int cols)}
+#endif
+*/
 
 /*--- NumPy interface by Alexander Filov ---->*/
 #ifdef SWIGPYTHON

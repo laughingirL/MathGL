@@ -372,7 +372,7 @@ void mglGraph::AxisX(bool text)
 	{
 		int kind=0;
 		wchar_t s[32]=L"";
-		if(!xtt) kind = _mgl_tick_ext(Max.x, Min.x, s, v);
+		if(xtt[0]==0) kind = _mgl_tick_ext(Max.x, Min.x, s, v);
 		if(!TuneTicks)	kind = 0;
 
 		NSx = NSx<0 ? 0 : NSx;
@@ -391,7 +391,7 @@ void mglGraph::AxisX(bool text)
 			DrawXTick(x,y0,z0,ddy,ddz);
 			if(text)
 			{
-				if(xtt)	mglprintf(str, 64, xtt, fabs(x)<ddx/100 ? 0 : x);
+				if(xtt[0])	mglprintf(str, 64, xtt, fabs(x)<ddx/100 ? 0 : x);
 				else	_mgl_tick_text(x,x0,ddx/100,v,kind,str);
 				wcstrim_mgl(str);
 				Putsw(mglPoint(x,y0,z0),str,FontDef,-1,'x');
@@ -477,7 +477,7 @@ void mglGraph::AxisY(bool text)
 	{
 		int kind=0;
 		wchar_t s[32]=L"";
-		if(!ytt) kind = _mgl_tick_ext(Max.y, Min.y, s, v);
+		if(ytt[0]==0) kind = _mgl_tick_ext(Max.y, Min.y, s, v);
 		if(!TuneTicks)	kind = 0;
 
 		NSy = NSy<0 ? 0 : NSy;
@@ -495,7 +495,7 @@ void mglGraph::AxisY(bool text)
 			DrawYTick(y,x0,z0,ddx,ddz);
 			if(text)
 			{
-				if(ytt)	mglprintf(str, 64, ytt, fabs(y)<ddy/100 ? 0 : y);
+				if(ytt[0])	mglprintf(str, 64, ytt, fabs(y)<ddy/100 ? 0 : y);
 				else	_mgl_tick_text(y,y0,ddy/100,v,kind,str);
 				wcstrim_mgl(str);
 				Putsw(mglPoint(x0,y,z0),str,FontDef,-1,'y');
@@ -581,7 +581,7 @@ void mglGraph::AxisZ(bool text)
 	{
 		int kind=0;
 		wchar_t s[32]=L"";
-		if(!ytt) kind = _mgl_tick_ext(Max.z, Min.z, s, v);
+		if(ztt[0]==0) kind = _mgl_tick_ext(Max.z, Min.z, s, v);
 		if(!TuneTicks)	kind = 0;
 
 		NSz = NSz<0 ? 0 : NSz;
@@ -599,7 +599,7 @@ void mglGraph::AxisZ(bool text)
 			DrawZTick(z,x0,y0,ddx,ddy);
 			if(text)
 			{
-				if(ztt)	mglprintf(str,64,ztt,fabs(z)<ddz/100 ? 0 : z);
+				if(ztt[0])	mglprintf(str,64,ztt,fabs(z)<ddz/100 ? 0 : z);
 				else	_mgl_tick_text(z,z0,ddz/100,v,kind,str);
 				wcstrim_mgl(str);
 				Putsw(mglPoint(x0,y0,z),str,FontDef,-1,'z');
@@ -773,9 +773,8 @@ void mglGraph::TickBox()
 //-----------------------------------------------------------------------------
 void mglGraph::Box(const char *col,bool ticks)
 {
-	mglColor c;
-	if(!col || col[0]==0)	Box(NC,ticks);
-	c.Set(col[0]);
+	mglColor c(NC);
+	if(col && col[0])	c.Set(col[0]);
 	Box(c,ticks);
 }
 //-----------------------------------------------------------------------------

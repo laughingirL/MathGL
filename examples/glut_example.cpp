@@ -319,7 +319,7 @@ int sample_3(mglGraph *gr, void *)
 	gr->Text(mglPoint(0,1.2,1),"Cloud plot (switch alpha !!!)");
 	gr->Rotate(40,60);
 	gr->Box();	gr->Axis();
-	gr->CloudQ(a,"BbcyrR");
+	gr->Cloud(a,"BbcyrR");
 	gr->EndFrame();
 
 	gr->NewFrame();

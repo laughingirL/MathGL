@@ -28,24 +28,24 @@
 //-----------------------------------------------------------------------------
 void mglGraph::Surf(const char *eqZ, const char *sch, int n)
 {
-	// TODO Add strong function variation analisys
+	// TODO Add strong function variation analisys ???
 	if(eqZ==0 || eqZ[0]==0)	return;		// nothing to plot
+	if(n<=0)	n=100;
 	mglData z(n,n);
 	mglFormula *eq = new mglFormula(eqZ);
 	register int i,j;
 	mreal dx = (Max.x - Min.x)/(n-1.), dy = (Max.y - Min.y)/(n-1.);
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)
-	{
 		z.a[i+n*j] = eq->Calc(Min.x+i*dx, Min.y+j*dy);
-	}
 	Surf(z, sch);
 	delete eq;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Surf(const char *eqX, const char *eqY, const char *eqZ, const char *sch, int n)
 {
-	// TODO Add strong function variation analisys
+	// TODO Add strong function variation analisys ???
 	mglData x(n,n), y(n,n), z(n,n);
+	if(n<=0)	n=100;
 	mglFormula *ex, *ey, *ez;
 	ex = new mglFormula(eqX ? eqX : "u");
 	ey = new mglFormula(eqY ? eqY : "v");

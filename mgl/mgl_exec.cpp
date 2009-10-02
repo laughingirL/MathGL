@@ -149,7 +149,7 @@ void mglc_axialdir(wchar_t out[1024], long n, mglArg *a, int k[10])
 int mgls_axis(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	register int i;
-	if(k[0]==2 && k[1]==2 && k[2]==2)	gr->Axis(a[0].s,a[1].s,a[2].s);
+	if(k[0]==2 && k[1]==2 && k[2]==2)	gr->SetFunc(a[0].s,a[1].s,a[2].s);
 	else if(n==6)
 	{
 		bool ok=true;
@@ -165,7 +165,7 @@ int mgls_axis(mglGraph *gr, long n, mglArg *a, int k[10])
 		else return 1;
 	}
 	else if(k[0]==2)	gr->Axis(a[0].s, k[1]==3 && a[1].v!=0);
-	else if(k[0]==3)	gr->Axis(int(a[0].v));
+	else if(k[0]==3)	gr->SetCoor(int(a[0].v));
 	else if(k[0]==0)	gr->Axis("xyz");
 	else return 1;
 	return 0;
@@ -174,7 +174,7 @@ void mglc_axis(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	register int i;
 	if(k[0]==2 && k[1]==2 && k[2]==2)
-		mglprintf(out,1024,L"gr->Axis(\"%s\", \"%s\", \"%s\");", a[0].s,a[1].s,a[2].s);
+		mglprintf(out,1024,L"gr->SetFunc(\"%s\", \"%s\", \"%s\");", a[0].s,a[1].s,a[2].s);
 	else if(n==6)
 	{
 		bool ok=true;
@@ -188,7 +188,7 @@ void mglc_axis(wchar_t out[1024], long n, mglArg *a, int k[10])
 		if(ok)	mglprintf(out,1024,L"gr->Axis(mglPoint(%g, %g), mglPoint(%g, %g));", a[0].v,a[1].v,a[2].v,a[3].v);
 	}
 	else if(k[0]==2)	mglprintf(out,1024,L"gr->Axis(\"%s\");", a[0].s);
-	else if(k[0]==3)	mglprintf(out,1024,L"gr->Axis(\"%d\");", int(a[0].v));
+	else if(k[0]==3)	mglprintf(out,1024,L"gr->SetCoor(\"%d\");", int(a[0].v));
 	else if(k[0]==0)	mglprintf(out,1024,L"gr->Axis(\"xyz\");");
 }
 //-----------------------------------------------------------------------------
@@ -351,18 +351,18 @@ void mglc_chart(wchar_t out[1024], long n, mglArg *a, int k[10])
 int mgls_cloud(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->CloudQ(*(a[0].d),k[1]==2?a[1].s:0);
+	else if(k[1]!=1)	gr->Cloud(*(a[0].d),k[1]==2?a[1].s:0);
 	else if(k[1]==1 && k[2]==1 && k[3]==1)
-		gr->CloudQ(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0);
+		gr->Cloud(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0);
 	return 0;
 }
 void mglc_cloud(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
 	if(k[0]!=1)	return;
 	else if(k[1]!=1)
-		mglprintf(out,1024,L"gr->CloudQ(%s,\"%s\");",a[0].s, k[1]==2?a[1].s:"");
+		mglprintf(out,1024,L"gr->Cloud(%s,\"%s\");",a[0].s, k[1]==2?a[1].s:"");
 	else if(k[1]==1 && k[2]==1 && k[3]==1)
-		mglprintf(out,1024,L"gr->CloudQ(%s, %s, %s, %s, \"%s\");", a[0].s,a[1].s,a[2].s,a[3].s,k[4]==2?a[4].s:"");
+		mglprintf(out,1024,L"gr->Cloud(%s, %s, %s, %s, \"%s\");", a[0].s,a[1].s,a[2].s,a[3].s,k[4]==2?a[4].s:"");
 }
 //-----------------------------------------------------------------------------
 //	{"crange","Set color range","crange {var [sym] | c1 c2}", mgls_crange, mglc_crange}
@@ -1146,16 +1146,16 @@ int mgls_flow(mglGraph *gr, long n, mglArg *a, int k[10])
 		gr->Flow(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),
 			k[6]==2?a[6].s:0,k[7]==3?int(a[7].v):3);
 	else if(k[0]==3 && k[1]==3 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==1)
-		gr->Flow(mglPoint(a[0].v,a[1].v,k[7]==3?a[7].v:NAN),
+		gr->FlowP(mglPoint(a[0].v,a[1].v,k[7]==3?a[7].v:NAN),
 			*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:0);
 	else if(k[0]==3 && k[1]==3 && k[2]==1 && k[3]==1)
-		gr->Flow(mglPoint(a[0].v,a[1].v,k[5]==3?a[5].v:NAN),
+		gr->FlowP(mglPoint(a[0].v,a[1].v,k[5]==3?a[5].v:NAN),
 			*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0);
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==1 && k[4]==1 && k[5]==1 && k[6]==1 && k[7]==1 && k[8]==1)
-		gr->Flow(mglPoint(a[0].v,a[1].v,a[2].v),
+		gr->FlowP(mglPoint(a[0].v,a[1].v,a[2].v),
 			*(a[3].d),*(a[4].d),*(a[5].d),*(a[6].d),*(a[7].d),*(a[8].d),k[9]==2?a[9].s:0);
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==1 && k[4]==1 && k[5]==1)
-		gr->Flow(mglPoint(a[0].v,a[1].v,a[2].v),
+		gr->FlowP(mglPoint(a[0].v,a[1].v,a[2].v),
 			*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:0);
 	else	return 1;
 	return 0;
@@ -1173,16 +1173,16 @@ void mglc_flow(wchar_t out[1024], long n, mglArg *a, int k[10])
 	else if(i==6)
 		mglprintf(out,1024,L"gr->Flow(%s, %s, %s, %s, %s, %s, \"%s\", %d);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, k[6]==2?a[6].s:0, k[7]==3?int(a[7].v):3);
 	else if(k[0]==3 && k[1]==3 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==1)
-		mglprintf(out,1024,L"gr->Flow(mglPoint(%g,%g,%g), %s, %s, %s, %s, \"%s\");",
+		mglprintf(out,1024,L"gr->FlowP(mglPoint(%g,%g,%g), %s, %s, %s, %s, \"%s\");",
 			a[0].v,a[1].v,k[7]==3?a[7].v:NAN,a[2].s,a[3].s,a[4].s,a[5].s,k[6]==2?a[6].s:"");
 	else if(k[0]==3 && k[1]==3 && k[2]==1 && k[3]==1)
-		mglprintf(out,1024,L"gr->Flow(mglPoint(%g,%g,%g), %s, %s, \"%s\");",
+		mglprintf(out,1024,L"gr->FlowP(mglPoint(%g,%g,%g), %s, %s, \"%s\");",
 			a[0].v,a[1].v,k[5]==3?a[5].v:NAN,a[2].s,a[3].s,k[4]==2?a[4].s:"");
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==1 && k[4]==1 && k[5]==1 && k[6]==1 && k[7]==1 && k[8]==1)
-		mglprintf(out,1024,L"gr->Flow(mglPoint(%g,%g,%g), %s, %s, %s, %s, %s, %s, \"%s\");",
+		mglprintf(out,1024,L"gr->FlowP(mglPoint(%g,%g,%g), %s, %s, %s, %s, %s, %s, \"%s\");",
 			a[0].v,a[1].v,a[2].v,a[3].s,a[4].s,a[5].s,a[6].s,a[7].s,a[8].s,k[9]==2?a[9].s:"");
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==1 && k[4]==1 && k[5]==1)
-		mglprintf(out,1024,L"gr->Flow(mglPoint(%g,%g,%g), %s, %s, %s, \"%s\");",
+		mglprintf(out,1024,L"gr->FlowP(mglPoint(%g,%g,%g), %s, %s, %s, \"%s\");",
 			a[0].v,a[1].v,a[2].v,a[3].s,a[4].s,a[5].s,k[6]==2?a[6].s:"");
 }
 //-----------------------------------------------------------------------------
@@ -2520,11 +2520,7 @@ int mgls_xtick(mglGraph *gr, long n, mglArg *a, int k[10])
 	}
 	else if(k[0]==3)
 		gr->SetTicks('x', a[0].v, k[1]==3?int(a[1].v):0, k[2]==3?a[2].v:NAN);
-	else if(k[0]==2)
-	{
-		if(gr->xtt)	delete []gr->xtt;
-		gr->xtt = a[0].s[0] ? mgl_str_copy(a[0].s) : 0;
-	}
+	else if(k[0]==2)	gr->SetXTT(a[0].w);
 	else	return 1;
 	return 0;
 }
@@ -2538,7 +2534,7 @@ void mglc_xtick(wchar_t out[1024], long n, mglArg *a, int k[10])
 		mglprintf(out,1024,L"gr->SetTicksVal('x', %g, \"%s\");", a[0].v, a[1].s);
 	else if(k[0]==3)	mglprintf(out,1024,L"gr->SetTicks('x', %g);", a[0].v);
 	else if(k[0]==2)
-		mglprintf(out,1024,L"if(gr->xtt) delete []gr->xtt;\tgr->xtt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
+		mglprintf(out,1024,L"gr->SetXTT(\"%ls\");", a[0].w);
 }
 //-----------------------------------------------------------------------------
 //	{"ytick","Set ticks for y-axis","ytick {val [sub]} | tmpl", mgls_ytick, mglc_ytick}
@@ -2557,11 +2553,7 @@ int mgls_ytick(mglGraph *gr, long n, mglArg *a, int k[10])
 	}
 	else if(k[0]==3)
 		gr->SetTicks('y', a[0].v, k[1]==3?int(a[1].v):0, k[2]==3?a[2].v:NAN);
-	else if(k[0]==2)
-	{
-		if(gr->ytt)	delete []gr->ytt;
-		gr->ytt = a[0].s[0] ? mgl_str_copy(a[0].s) : 0;
-	}
+	else if(k[0]==2)	gr->SetYTT(a[0].w);
 	else	return 1;
 	return 0;
 }
@@ -2574,8 +2566,7 @@ void mglc_ytick(wchar_t out[1024], long n, mglArg *a, int k[10])
 	else if(k[0]==3 && k[1]==2)
 		mglprintf(out,1024,L"gr->SetTicksVal('y', %g, \"%s\");", a[0].v, a[1].s);
 	else if(k[0]==3)	mglprintf(out,1024,L"gr->SetTicks('y', %g);", a[0].v);
-	else if(k[0]==2)
-		mglprintf(out,1024,L"if(gr->ytt) delete []gr->ytt;\tgr->ytt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
+	else if(k[0]==2)	mglprintf(out,1024,L"gr->SetYTT(\"%ls\");", a[0].w);
 }
 //-----------------------------------------------------------------------------
 //	{"ztick","Set ticks for z-axis","ztick {val [sub]} | tmpl", mgls_ztick, mglc_ztick}
@@ -2594,11 +2585,7 @@ int mgls_ztick(mglGraph *gr, long n, mglArg *a, int k[10])
 	}
 	else if(k[0]==3)
 		gr->SetTicks('z', a[0].v, k[1]==3?int(a[1].v):0, k[2]==3?a[2].v:NAN);
-	else if(k[0]==2)
-	{
-		if(gr->ztt)	delete []gr->ztt;
-		gr->ztt = a[0].s[0] ? mgl_str_copy(a[0].s) : 0;
-	}
+	else if(k[0]==2)	gr->SetZTT(a[0].w);
 	else	return 1;
 	return 0;
 }
@@ -2611,8 +2598,7 @@ void mglc_ztick(wchar_t out[1024], long n, mglArg *a, int k[10])
 	else if(k[0]==3 && k[1]==2)
 		mglprintf(out,1024,L"gr->SetTicksVal('z', %g, \"%s\");", a[0].v, a[1].s);
 	else if(k[0]==3)	mglprintf(out,1024,L"gr->SetTicks('z', %g);", a[0].v);
-	else if(k[0]==2)
-		mglprintf(out,1024,L"if(gr->ztt) delete []gr->ztt;\tgr->ztt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
+	else if(k[0]==2)	mglprintf(out,1024,L"gr->SetZTT(\"%ls\");", a[0].s);
 }
 //-----------------------------------------------------------------------------
 //	{"zoom","Zoom in/out plot","zoom x1 y1 x2 y2", mgls_zoom, mglc_zoom}
@@ -3054,18 +3040,13 @@ void mglc_rearrange(wchar_t out[1024], long n, mglArg *a, int k[10])
 //	{"ctick","Set ticks for colorbar","ctick tmpl", mgls_ctick, mglc_ctick}
 int mgls_ctick(mglGraph *gr, long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)
-	{
-		if(gr->ctt)	delete []gr->ctt;
-		gr->ctt = a[0].s[0] ? mgl_str_copy(a[0].s) : 0;
-	}
+	if(k[0]==2)	gr->SetCTT(a[0].w);
 	else	return 1;
 	return 0;
 }
 void mglc_ctick(wchar_t out[1024], long n, mglArg *a, int k[10])
 {
-	if(k[0]==2)
-		mglprintf(out,1024,L"if(gr->ctt) delete []gr->ctt;\tgr->ctt = '%c' ? mgl_str_copy(\"%s\") : 0;", a[0].s[0], a[0].s);
+	if(k[0]==2)	mglprintf(out,1024,L"gr->SetCTT(\"%ls\");", a[0].w);
 }
 //-----------------------------------------------------------------------------
 //	{L"fplot",L"Plot curve by formula",L"fplot 'func' ['stl'='' num=100]", mgls_fplot, mglc_fplot}

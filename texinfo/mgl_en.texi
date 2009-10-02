@@ -1,5 +1,5 @@
 @c ------------------------------------------------------------------
-@node MGL interface, Samples, Python interface, Top
+@node MGL interface, Samples, Other classes, Top
 @chapter MGL interface
 
 MathGL library supports (from version 1.3) the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of mgl2png, mgl2eps, mgl2svg programs and others) or in the frame of the library using.
@@ -824,7 +824,7 @@ Draws grids at all central slices of the 3d data specified parametrically.
 
 @deffn {MGL command} cloud adat ['sch'='']
 @deffnx {MGL command} cloud xdat ydat zdat adat ['sch'='']
-Draws cloud for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]). This plot is a set of cubes with color and transparency proportional to value of @var{adat}. The resulting plot is like cloud -- low value is transparent but higher ones are not. The number of plotting cells depend on @code{meshnum}. Command @var{alpha} changes the overall transparency of plot. See also @code{surf3}. @sref{CloudQ sample}
+Draws cloud for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]). This plot is a set of cubes with color and transparency proportional to value of @var{adat}. The resulting plot is like cloud -- low value is transparent but higher ones are not. The number of plotting cells depend on @code{meshnum}. Command @var{alpha} changes the overall transparency of plot. See also @code{surf3}. @sref{Cloud sample}
 @end deffn
 
 @deffn {MGL command} beam tr g1 g2 adat @code{rval} ['sch'='' @code{flag=0 num=3}]

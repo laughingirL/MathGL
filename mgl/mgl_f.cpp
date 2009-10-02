@@ -252,12 +252,12 @@ void mgl_set_func_(uintptr_t *gr, const char *EqX,const char *EqY,const char *Eq
 	char *sx=new char[lx+1];	memcpy(sx,EqX,lx);	sx[lx]=0;
 	char *sy=new char[ly+1];	memcpy(sy,EqY,ly);	sy[ly]=0;
 	char *sz=new char[lz+1];	memcpy(sz,EqZ,lz);	sz[lz]=0;
-	_GR_->Axis(sx,sy,sz);
+	_GR_->SetFunc(sx,sy,sz);
 	delete []sx;	delete []sy;	delete []sz;
 }
 /// Set predefined coordinate system
 void mgl_set_coor_(uintptr_t *gr, int *how)
-{	_GR_->Axis(*how);	}
+{	_GR_->SetCoor(*how);	}
 void mgl_set_cutoff_(uintptr_t *gr, const char *EqC, int l)
 {
 	char *s=new char[l+1];	memcpy(s,EqC,l);	s[l]=0;
@@ -298,33 +298,25 @@ void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, int *pos, 
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	_GR_->Label(*dir, s, *pos, *size, *shift);	delete []s;
 }
-void mgl_set_xtt_(uintptr_t * gr, const char *templ, int n)
+void mgl_set_xtt_(uintptr_t * gr, const char *templ, int l)
 {
-	static wchar_t t[256];
-	memset(t,0,256*sizeof(wchar_t));
-	if(n<256)
-	{	mbstowcs(t,templ,n);	_GR_->xtt = t;	}
+	char *s=new char[l+1];	memcpy(s,templ,l);	s[l]=0;
+	_GR_->SetXTT(s);	delete []s;
 }
-void mgl_set_ytt_(uintptr_t * gr, const char *templ, int n)
+void mgl_set_ytt_(uintptr_t * gr, const char *templ, int l)
 {
-	static wchar_t t[256];
-	memset(t,0,256*sizeof(wchar_t));
-	if(n<256)
-	{	mbstowcs(t,templ,n);	_GR_->ytt = t;	}
+	char *s=new char[l+1];	memcpy(s,templ,l);	s[l]=0;
+	_GR_->SetYTT(s);	delete []s;
 }
-void mgl_set_ztt_(uintptr_t * gr, const char *templ, int n)
+void mgl_set_ztt_(uintptr_t * gr, const char *templ, int l)
 {
-	static wchar_t t[256];
-	memset(t,0,256*sizeof(wchar_t));
-	if(n<256)
-	{	mbstowcs(t,templ,n);	_GR_->ztt = t;	}
+	char *s=new char[l+1];	memcpy(s,templ,l);	s[l]=0;
+	_GR_->SetZTT(s);	delete []s;
 }
-void mgl_set_ctt_(uintptr_t * gr, const char *templ, int n)
+void mgl_set_ctt_(uintptr_t * gr, const char *templ, int l)
 {
-	static wchar_t t[256];
-	memset(t,0,256*sizeof(wchar_t));
-	if(n<256)
-	{	mbstowcs(t,templ,n);	_GR_->ctt = t;	}
+	char *s=new char[l+1];	memcpy(s,templ,l);	s[l]=0;
+	_GR_->SetCTT(s);	delete []s;
 }
 //-----------------------------------------------------------------------------
 //		Simple drawing

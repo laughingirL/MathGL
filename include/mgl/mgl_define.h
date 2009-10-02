@@ -1,6 +1,7 @@
 #ifndef _MGL_DEFINE_H_
 #define _MGL_DEFINE_H_
 //-----------------------------------------------------------------------------
+#include <math.h>
 #ifdef _MSC_VER
 #define	_USE_MATH_DEFINES
 #include <float.h>

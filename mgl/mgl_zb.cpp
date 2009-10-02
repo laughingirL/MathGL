@@ -142,16 +142,10 @@ unsigned char* mglGraphZB::col2int(mreal *c,mreal *n,unsigned char *r)
 //-----------------------------------------------------------------------------
 void mglGraphZB::pnt_plot(long x,long y,mreal z,unsigned char c[4])
 {
-	long i0=x+Width*(Height-1-y), n=Width*Height;
+	long i0=x+Width*(Height-1-y);
 	if(x<0 || x>=Width || y<0 || y>=Height)	return;
-	mreal *zz = Z+i0;
-#ifdef MGL_ABUF_8
-	unsigned char *cc = C+4*i0,*cf=cc+28*n;
-#else
-	unsigned char *cc = C+4*i0,*cf=cc+12*n;
-#endif
-
-	mreal zf = FogDist*(z/Depth-0.5-FogDz);
+	unsigned char *cc = C+32*i0;
+	mreal *zz = Z+8*i0, zf = FogDist*(z/Depth-0.5-FogDz);
 	if(zf<0)
 	{
 		int d = int(255.f-255.f*exp(5.f*zf));
@@ -162,60 +156,58 @@ void mglGraphZB::pnt_plot(long x,long y,mreal z,unsigned char c[4])
 	if(DrawFace || !FastNoFace)
 	{
 #ifdef MGL_ABUF_8
-		if(z>zz[3*n])
+		if(z>zz[3])
 		{
 #endif
-			if(z>zz[n])
+			if(z>zz[1])
 			{
 #ifdef MGL_ABUF_8
-				combine(cf,cc+24*n);	zz[7*n] = zz[6*n];
-				zz[6*n] = zz[5*n];		memcpy(cc+24*n,cc+20*n,4);
-				zz[5*n] = zz[4*n];		memcpy(cc+20*n,cc+16*n,4);
-				zz[4*n] = zz[3*n];		memcpy(cc+16*n,cc+12*n,4);
-				zz[3*n] = zz[2*n];		memcpy(cc+12*n,cc+8*n,4);
+				zz[7] = zz[6];	zz[6] = zz[5];	zz[5] = zz[4];
+				zz[4] = zz[3];	zz[3] = zz[2];
+				combine(cc+28,cc+24);	memcpy(cc+24,cc+20,4);
+				memcpy(cc+20,cc+16,4);	memcpy(cc+16,cc+12,4);
+				memcpy(cc+12,cc+8,4);
 #else
-				combine(cf,cc+8*n);		zz[3*n] = zz[2*n];
+				zz[3] = zz[2];	combine(cc+12,cc+8);
 #endif
-				zz[2*n] = zz[1*n];		memcpy(cc+8*n,cc+4*n,4);
+				zz[2] = zz[1];	memcpy(cc+8,cc+4,4);
 				if(z>zz[0])	// shift point on slice down and paste new point
 				{
-					zz[1*n] = zz[0*n];		memcpy(cc+4*n,cc,4);
-					zz[0] = z;	OI[i0]=ObjId;	memcpy(cc,c,4);
+					zz[1] = zz[0];	zz[0] = z;	OI[i0]=ObjId;
+					memcpy(cc+4,cc,4);	memcpy(cc,c,4);
 				
 				}
 				else	// shift point on slice down and paste new point
-				{
-					zz[n] = z;				memcpy(cc+4*n,c,4);
-				}
+				{	zz[1] = z;	memcpy(cc+4,c,4);	}
 			}
 			else
 			{
-				if(z>zz[2*n])	// shift point on slice down and paste new point
+				if(z>zz[2])	// shift point on slice down and paste new point
 				{
 #ifdef MGL_ABUF_8
-					combine(cf,cc+24*n);	zz[7*n] = zz[6*n];
-					zz[6*n] = zz[5*n];		memcpy(cc+24*n,cc+20*n,4);
-					zz[5*n] = zz[4*n];		memcpy(cc+20*n,cc+16*n,4);
-					zz[4*n] = zz[3*n];		memcpy(cc+16*n,cc+12*n,4);
-					zz[3*n] = zz[2*n];		memcpy(cc+12*n,cc+8*n,4);
+					zz[7] = zz[6];	zz[6] = zz[5];	zz[5] = zz[4];
+					zz[4] = zz[3];	zz[3] = zz[2];
+					combine(cc+28,cc+24);	memcpy(cc+24,cc+20,4);
+					memcpy(cc+20,cc+16,4);	memcpy(cc+16,cc+12,4);
+					memcpy(cc+12,cc+8,4);
 #else
-					combine(cf,cc+8*n);		zz[3*n] = zz[2*n];
+					zz[3] = zz[2];	combine(cc+12,cc+8);
 #endif
-					zz[2*n] = z;			memcpy(cc+8*n,c,4);
+					zz[2] = z;	memcpy(cc+8,c,4);
 				}
 				else	// shift point on slice down and paste new point
 				{
 #ifdef MGL_ABUF_8
-					combine(cf,cc+24*n);	zz[7*n] = zz[6*n];
-					zz[6*n] = zz[5*n];		memcpy(cc+24*n,cc+20*n,4);
-					zz[5*n] = zz[4*n];		memcpy(cc+20*n,cc+16*n,4);
-					zz[4*n] = zz[3*n];		memcpy(cc+16*n,cc+12*n,4);
-					zz[3*n] = z;			memcpy(cc+12*n,c,4);
+					zz[7] = zz[6];	zz[6] = zz[5];	zz[5] = zz[4];
+					zz[4] = zz[3];	zz[3] = z;
+					combine(cc+28,cc+24);	memcpy(cc+24,cc+20,4);
+					memcpy(cc+20,cc+16,4);	memcpy(cc+16,cc+12,4);
+					memcpy(cc+12,c,4);
 #else
-					if(z>zz[3*n])	// point upper the background
-					{	zz[3*n]=z;		combine(cf,c);	}
-					else			// point below the background
-					{	combine(c,cf);	memcpy(cf,c,4);	}
+					if(z>zz[3])	// point upper the background
+					{	zz[3]=z;	combine(cc+12,c);	}
+					else		// point below the background
+					{	combine(c,cc+12);	memcpy(cc+12,c,4);	}
 #endif
 				}
 			}
@@ -223,33 +215,32 @@ void mglGraphZB::pnt_plot(long x,long y,mreal z,unsigned char c[4])
 		}
 		else
 		{
-			if(z>zz[5*n])
+			if(z>zz[5])
 			{
-				if(z>zz[4*n])	// shift point on slice down and paste new point
+				if(z>zz[4])	// shift point on slice down and paste new point
 				{
-					combine(cf,cc+24*n);	zz[7*n] = zz[6*n];
-					zz[6*n] = zz[5*n];		memcpy(cc+24*n,cc+20*n,4);
-					zz[5*n] = zz[4*n];		memcpy(cc+20*n,cc+16*n,4);
-					zz[4*n] = z;			memcpy(cc+16*n,c,4);
+					zz[7] = zz[6];	zz[6] = zz[5];	zz[5] = zz[4];	zz[4] = z;
+					combine(cc+28,cc+24);	memcpy(cc+24,cc+20,4);
+					memcpy(cc+20,cc+16,4);	memcpy(cc+16,c,4);
 				}
 				else	// shift point on slice down and paste new point
 				{
-					combine(cf,cc+24*n);	zz[7*n] = zz[6*n];
-					zz[6*n] = zz[5*n];		memcpy(cc+24*n,cc+20*n,4);
-					zz[5*n] = z;			memcpy(cc+20*n,c,4);
+					zz[7] = zz[6];	zz[6] = zz[5];	zz[5] = z;
+					combine(cc+28,cc+24);	memcpy(cc+24,cc+20,4);
+					memcpy(cc+20,c,4);
 				}
 			}
 			else
 			{
-				if(z>zz[6*n])	// shift point on slice down and paste new point
+				if(z>zz[6])	// shift point on slice down and paste new point
 				{
-					combine(cf,cc+24*n);	zz[7*n] = zz[6*n];
-					zz[6*n] = z;			memcpy(cc+24*n,c,4);
+					zz[7] = zz[6];	zz[6] = z;
+					combine(cc+28,cc+24);	memcpy(cc+24,c,4);
 				}
-				else	if(z>zz[7*n])	// point upper the background
-				{	zz[7*n]=z;		combine(cf,c);	}
+				else	if(z>zz[7])	// point upper the background
+				{	zz[7]=z;	combine(cc+28,c);	}
 				else			// point below the background
-				{	combine(c,cf);	memcpy(cf,c,4);	}
+				{	combine(c,cc+28);	memcpy(cc+28,c,4);	}
 			}
 		}
 #endif
@@ -263,19 +254,23 @@ void mglGraphZB::pnt_plot(long x,long y,mreal z,unsigned char c[4])
 //-----------------------------------------------------------------------------
 void mglGraphZB::Finish()
 {
-	register long i,n=Width*Height,i0;
+	register long i,i0;
+	long n=Width*Height;
 //	unsigned char c[4],def=TranspType!=2 ? 255:0,alf=TranspType!=2 ? 0:255,*cc;
 	unsigned char c[4],alf=TranspType!=2 ? 0:255,*cc;
 	if(DrawFace || !FastNoFace)	for(i=0;i<n;i++)
 	{
-		i0 = 4*i;	cc = C+i0;
+		i0 = 4*i;
 		c[0]=BDef[0];	c[1]=BDef[1];	c[2]=BDef[2];	c[3]=alf;
+		cc = C+32*i;
 #ifdef MGL_ABUF_8
-		combine(c,cc+28*n);		combine(c,cc+24*n);
-		combine(c,cc+20*n);		combine(c,cc+16*n);
+		combine(c,cc+28);		combine(c,cc+24);
+		combine(c,cc+20);		combine(c,cc+16);
+//#else
+//		cc = C+16*i0;
 #endif
-		combine(c,cc+12*n);		combine(c,cc+8*n);
-		combine(c,cc+4*n);		combine(c,cc);
+		combine(c,cc+12);		combine(c,cc+8);
+		combine(c,cc+4);		combine(c,cc);
 		memcpy(G4+i0,c,4);
 		c[0]=BDef[0];	c[1]=BDef[1];	c[2]=BDef[2];	c[3]=255;
 		combine(c,G4+i0);	memcpy(G+3*i,c,3);
@@ -300,9 +295,9 @@ void mglGraphZB::Clf(mglColor Back)
 	col2int(Back,1,BDef);
 	register long i,n=Width*Height;
 	memset(C,0,32*n);	memset(OI,0,n*sizeof(int));
-	for(i=0;i<n;i++)	Z[i] = -1e20f;
-//	for(i=1;i<Height;i++)	memcpy(Z+i*Width,Z,Width*sizeof(mreal));
-	for(i=1;i<8;i++)	memcpy(Z+i*n,Z,n*sizeof(mreal));
+	for(i=0;i<8*n;i++)	Z[i] = -1e20f;	// TODO Parallelization ?!?
+//	for(i=0;i<Width;i++)	Z[i] = -1e20f;
+//	for(i=1;i<8*Height;i++)	memcpy(Z+i*Width,Z,Width*sizeof(mreal));
 	Finished = false;
 }
 //-----------------------------------------------------------------------------

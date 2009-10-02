@@ -1,11 +1,21 @@
-1.9.1
+1.10
+	- Change license from GPL to LGPL for MathGL core. SWIG-based interfaces still have GPL.
 	- Add new plot BoxPlot() for plotting data statistic (max, min, median, quartiles).
+	- Improve documentation.
+	- Slightly increase the drawing speed.
+	- Add speed up compilation (i.e. allow 'make -j3').
 	- Add ObjId for determining the object (or line) of point.
-	- Add ticks drawing for inverted axis (i.e. when Min>Max)
-	- Bug with PlotFactor changing while AutoPlotFactor=false
-	- Bug with Vect() and MeshNum>1
-	- Bug with overriding default pallette by manual color specification
-	- Memory leaks correction
+	- Add ticks drawing for inverted axis (i.e. when Min>Max).
+	- Add automatic increse of the point numbers in plots by formula (i.e. like Plot("sin(1/x)");
+	- Bug with PlotFactor changing while AutoPlotFactor=false.
+	- Bug with Vect() and MeshNum>1.
+	- Bug with overriding default pallette by manual color specification.
+	- Memory leaks correction.
+	- Incompatible changes:
+		* rename Axis() function to SetFunc() and SetCoor() functions (Python-like)
+		* rename CloudQ() to Cloud(), and mgl_cloudq*() to mgl_cloud*()
+		* rename Flow(mglPoint p0,...) to FlowP(mglPoint p0,...)
+		
 
 1.9.0.1 Released 8 July 2009
 	- Correct minor bug in win32 version (in mglData::Read()).

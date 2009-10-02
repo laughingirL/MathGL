@@ -223,7 +223,7 @@ void mgl_set_ctt(HMGL graph, const char *templ);
 /*****************************************************************************/
 void mgl_ball(HMGL graph, mreal x,mreal y,mreal z);
 void mgl_ball_rgb(HMGL graph, mreal x, mreal y, mreal z, mreal r, mreal g, mreal b, mreal alpha);
-void mgl_ball_str(HMGL graph, mreal x, mreal y, mreal z, const char *col);
+void mgl_ball_str(HMGL graph, mreal x, mreal y, mreal z, char col);
 void mgl_line(HMGL graph, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, const char *pen,int n);
 void mgl_facex(HMGL graph, mreal x0, mreal y0, mreal z0, mreal wy, mreal wz, const char *stl, mreal dx, mreal dy);
 void mgl_facey(HMGL graph, mreal x0, mreal y0, mreal z0, mreal wx, mreal wz, const char *stl, mreal dx, mreal dy);
@@ -269,6 +269,7 @@ void mgl_tens(HMGL graph, const HMDT y, const HMDT c,	const char *pen);
 void mgl_area_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
 void mgl_area_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
 void mgl_area_xys(HMGL graph, const HMDT x, const HMDT y, const char *pen);
+void mgl_area_s(HMGL graph, const HMDT y, const char *pen);
 void mgl_area(HMGL graph, const HMDT y, const char *pen);
 void mgl_area_2(HMGL graph, const HMDT a, const char *pen);
 void mgl_area_3(HMGL graph, const HMDT a, const char *pen);
@@ -437,8 +438,8 @@ void mgl_cont_all_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, cons
 void mgl_cont_all(HMGL graph, const HMDT a, const char *sch, int Num);
 void mgl_cloudp_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl, mreal alpha);
 void mgl_cloudp(HMGL graph, const HMDT a, const char *stl, mreal alpha);
-void mgl_cloudq_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl, mreal alpha);
-void mgl_cloudq(HMGL graph, const HMDT a, const char *stl, mreal alpha);
+void mgl_cloud_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl, mreal alpha);
+void mgl_cloud(HMGL graph, const HMDT a, const char *stl, mreal alpha);
 void mgl_contf3_xyz_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch);
 void mgl_contf3_val(HMGL graph, const HMDT v, const HMDT a, char dir, int sVal, const char *sch);
 void mgl_contf3_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch, int Num);

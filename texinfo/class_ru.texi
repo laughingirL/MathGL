@@ -45,21 +45,32 @@ Generally this class is a bit less abstract class than mglGraph class (@pxref{Ma
 
 Here I just show new public methods for class mglGraphAB. There are functions returning the created picture (bitmap), its width and height. You may display it by yourself in any graphical library (see also, @ref{Widget classes}) or save in file (see also, @ref{Export to file}).
 
-@deftypemethod mglGraphAB @code{const unsigned char *} GetBits ()
-Gets RGB bitmap of the current state of the image. Format of each element of bits is: @{red, green, blue@}. Number of elements is Width*Height. Position of element @{i,j@} is [3*i + 3*Width*j].
-@end deftypemethod
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{const unsigned char *} GetBits ()
+@deftypefnx {Method on @code{mglGraph} (Python)} @code{void} GetRGB (@code{char *}buf, @code{int} size)
+@deftypefnx {Method on @code{mglGraph} (Python)} @code{void} GetBGRN (@code{char *}buf, @code{int} size)
+@deftypefnx {C function} @code{const unsigned char *} mgl_get_rgb (@code{HMGL} gr)
+Gets RGB bitmap of the current state of the image. Format of each element of bits is: @{red, green, blue@}. Number of elements is Width*Height. Position of element @{i,j@} is [3*i + 3*Width*j] (or is [4*i + 4*Width*j] for @code{GetBGRN()}). For Python you have to provide the proper @var{size} of the buffer, @var{buf} i.e. the code should look like 
+@verbatim
+from mathgl import *
+gr = mglGraph();
+bits='\t';
+bits=bits.expandtabs(4*gr.GetWidth()*gr.GetHeight());
+gr.GetBGRN(bits, len(bits));
+@end verbatim
+@end deftypefn
 
-@deftypemethod mglGraphAB @code{const unsigned char *} GetRGBA ()
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{const unsigned char *} GetRGBA ()
+@deftypefnx {Method on @code{mglGraph} (Python)} @code{void} GetRGBA (@code{char *}buf, @code{int} size)
+@deftypefnx {C function} @code{const unsigned char *} mgl_get_rgba (@code{HMGL} gr)
 Gets RGBA bitmap of the current state of the image. Format of each element of bits is: @{red, green, blue, alpha@}. Number of elements is Width*Height. Position of element @{i,j@} is [4*i + 4*Width*j].
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod mglGraphAB @code{int} GetWidth ()
-Gets width of the image.
-@end deftypemethod
-
-@deftypemethod mglGraphAB @code{int} GetHeight ()
-Gets height of the image.
-@end deftypemethod
+@deftypefn {Method on @code{mglGraphAB} (C++, Python)} @code{int} GetWidth ()
+@deftypefnx {Method on @code{mglGraphAB} (C++, Python)} @code{int} GetHeight ()
+@deftypefnx {C function} @code{int} mgl_get_width (@code{HMGL} gr)
+@deftypefnx {C function} @code{int} mgl_get_height (@code{HMGL} gr)
+Gets width and height of the image.
+@end deftypefn
 
 Class mglGraphAB is the base class for ``widget classes''. So there are set of functions for handling window behavior. Most of them are applicable only for ``window'' classes (like mglGraphFLTK and so on, @pxref{Widget classes}). In all other classes these functions just do nothing. You should provide the corresponding interface in derived ``widget'' classes for user convenience.
 
@@ -419,12 +430,12 @@ Animation delay in ms.
 @c @node mglData class, Other classes, Widget classes, Top
 @c @chapter mglData class
 
-@include data.texi
+@include data_ru.texi
 
 
 
 @c ------------------------------------------------------------------
-@node Other classes, C interface, mglData class, Top
+@node Other classes, MGL interface, mglData class, Top
 @chapter Other classes
 
 @menu
@@ -449,57 +460,78 @@ Class mglParse is the interpreter for MGL scripts (@pxref{MGL interface}). The m
 
 Note an important feature -- if user defines function @var{func} in variable then it will be called before the destroying of this variable (@pxref{mglVar class}).
 
-@deftypemethod mglParse @code{} mglParse (@code{bool} setsize=@code{false})
+@deftypefn {Method on @code{mglParse} (C++, Python)} @code{} mglParse (@code{bool} setsize=@code{false})
+@deftypefnx {C function} @code{HMPR} mgl_create_parser ()
 Constructor initializes all values with zero and set @var{AllowSetSize} value.
-@end deftypemethod
-@deftypemethod mglParse @code{int} Parse (@code{mglGraph *}gr, @code{const char *}str, @code{long} pos=@code{0})
-@deftypemethodx mglParse @code{int} Parse (@code{mglGraph *}gr, @code{const wchar_t *}str, @code{long} pos=@code{0})
+@end deftypefn
+
+@deftypefn {Method on @code{mglParse} (C++, Python)} @code{} ~mglParse ()
+@deftypefnx {C function} @code{void} mgl_delete_parser (@code{HMPR} p)
+Destructor delete parser
+@end deftypefn
+
+@deftypefn {Method on @code{mglParse} (C++, Python)} @code{int} Parse (@code{mglGraph *}gr, @code{const char *}str, @code{long} pos=@code{0})
+@deftypefnx {Method on @code{mglParse} (C++)} @code{int} Parse (@code{mglGraph *}gr, @code{const wchar_t *}str, @code{long} pos=@code{0})
+@deftypefnx {C function} @code{int} mgl_parse (@code{HMGL} gr, @code{HMPR} p, @code{const char *}str, @code{int} pos)
+@deftypefnx {C function} @code{int} mgl_parsew (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}str, @code{int} pos)
 Main function in the class. It parses the string @var{str} and executes it by  using @var{gr} as a graphics plotter. Returns the value depending on an error presence in the string @var{str}: 0 -- no error, 1 -- wrong command argument(s), 2 -- unknown command, 3 -- string is too long. Optional argument @var{pos} allows to save the string position in the document (or file) for using @code{for|next} command.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod mglParse @code{int} Export (@code{wchar_t} cpp_out@code{[1024]}, @code{mglGraph *}gr, @code{const wchar_t *}str)
+@deftypefn {Method on @code{mglParse} (C++)} @code{int} Export (@code{wchar_t} cpp_out@code{[1024]}, @code{mglGraph *}gr, @code{const wchar_t *}str)
 Function parses the string @var{str}, executes it by  using @var{gr} as a graphics plotter and exports it to C++ code. Returns the value depending on an error presence in the string @var{str}: 0 -- no error, 1 -- wrong command argument(s), 2 -- unknown command, 3 -- string is too long. Output C++ text will be placed in @var{out} variable. If string @var{str} have options (defined after ';' symbol) then the corresponding C++ texts are placed in variables @var{op1}, @var{op2}.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod mglParse @code{void} Execute (@code{mglGraph *}gr, @code{FILE *}fp, @code{bool} print=@code{false})
+@deftypefn {Method on @code{mglParse} (C++)} @code{void} Execute (@code{mglGraph *}gr, @code{FILE *}fp, @code{bool} print=@code{false})
 Function parse and execute line-by-line MGL script in file @var{fp}. If @var{print}=@code{true} then all warnings and information will be printed in stdout. Also this function support the @code{for|next} MGL commands.
-@end deftypemethod
-@deftypemethod mglParse @code{void} Execute (@code{mglGraph *}gr, @code{int} num, @code{const wchar_t **}text, @code{void (*} error @code{)(int line, int kind)=NULL})
+@end deftypefn
+@deftypefn {Method on @code{mglParse} (C++)} @code{void} Execute (@code{mglGraph *}gr, @code{int} num, @code{const wchar_t **}text, @code{void (*} error @code{)(int line, int kind)=NULL})
 Function parse and execute line-by-line MGL script in array @var{text}. If @var{error} is not @code{NULL} then this function will be called for all warnings, information and other messages. Also this function support the @code{for|next} MGL commands.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod mglParse @code{void} Execute (@code{mglGraph *}gr, @code{const char *}text, @code{void (*} error @code{)(int line, int kind)=NULL})
-@deftypemethodx mglParse @code{void} Execute (@code{mglGraph *}gr, @code{const wchar_t *}text, @code{void (*} error @code{)(int line, int kind)=NULL})
+@deftypefn {Method on @code{mglParse} (C++, Python)} @code{void} Execute (@code{mglGraph *}gr, @code{const char *}text, @code{void (*} error @code{)(int line, int kind)=NULL})
+@deftypefnx {Method on @code{mglParse} (C++)} @code{void} Execute (@code{mglGraph *}gr, @code{const wchar_t *}text, @code{void (*} error @code{)(int line, int kind)=NULL})
+@deftypefnx {C function} @code{void} mgl_parse_text (@code{HMGL} gr, @code{HMPR} p, @code{const char *}text)
+@deftypefnx {C function} @code{void} mgl_parsew_text (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}text)
 Function parse and execute line-by-line MGL script in string @var{text}. Lines are separated by @samp{\n} symbol as usual. If @var{error} is not @code{NULL} then this function will be called for all warnings, information and other messages. Also this function support the @code{for|next} MGL commands.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod mglParse @code{bool} AddParam (@code{int} n, @code{const char *}str, @code{bool} isstr=@code{true})
-@deftypemethodx mglParse @code{bool} AddParam (@code{int} n, @code{const wchar_t *}str, @code{bool} isstr=@code{true})
+@deftypefn {Method on @code{mglParse} (C++, Python)} @code{bool} AddParam (@code{int} n, @code{const char *}str, @code{bool} isstr=@code{true})
+@deftypefnx {Method on @code{mglParse} (C++)} @code{bool} AddParam (@code{int} n, @code{const wchar_t *}str, @code{bool} isstr=@code{true})
+@deftypefnx {C function} @code{void} mgl_add_param (@code{HMPR} p, @code{int} id, @code{const char *}val)
+@deftypefnx {C function} @code{void} mgl_add_paramw (@code{HMPR} p, @code{int} id, @code{const wchar_t *}val)
 Function set the value of @var{n}-th parameter as string @var{str} (@var{n}=0, 1 ... 9). It return @code{true} for success.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod mglParse @code{mglVar *} FindVar (@code{const char *}name)
-@deftypemethodx mglParse @code{mglVar *} FindVar (@code{const wchar_t *}name)
+@deftypefn {Method on @code{mglParse} (C++, Python)} @code{mglVar *} FindVar (@code{const char *}name)
+@deftypefnx {Method on @code{mglParse} (C++)} @code{mglVar *} FindVar (@code{const wchar_t *}name)
+@deftypefnx {C function} @code{const HMDT} mgl_find_var  (@code{HMPR} p, @code{const char *}name)
 Function returns the pointer to variable with name @var{name} or zero if variable is absent. Use this function to put external data array to the script or get the data from the script.
-@end deftypemethod
-@deftypemethod mglParse @code{mglVar *} AddVar (@code{const char *}name)
-@deftypemethodx mglParse @code{mglVar *} AddVar (@code{const wchar_t *}name)
+@end deftypefn
+@deftypefn {Method on @code{mglParse} (C++, Python)} @code{mglVar *} AddVar (@code{const char *}name)
+@deftypefnx {Method on @code{mglParse} (C++)} @code{mglVar *} AddVar (@code{const wchar_t *}name)
+@deftypefnx {C function} @code{const HMDT} mgl_add_var (@code{HMPR} p, @code{const char *}name)
 Function returns the pointer to variable with name @var{name}. If variable is absent then new variable is created with name @var{name}. Use this function to put external data array to the script or get the data from the script.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod mglParse @code{void} DeleteVar (@code{mglVar *}v)
-@deftypemethodx mglParse @code{void} DeleteVar (@code{const char *}name)
-@deftypemethodx mglParse @code{void} DeleteVar (@code{const wchar_t *}name)
+@deftypefn {Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{mglVar *}v)
+@deftypefnx {Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const char *}name)
+@deftypefnx {Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const wchar_t *}name)
 Function delete the variable specified by its name or by its pointer.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod mglParse @code{inline void} RestoreOnce ()
+@deftypefn {Method on @code{mglParse} (C++, Python)} @code{inline void} RestoreOnce ()
+@deftypefnx {C function} @code{void} mgl_restore_once (@code{HMPR} p)
 Restore Once flag.
-@end deftypemethod
+@end deftypefn
 
-@deftypemethod mglParse @code{void} AddCommand (@code{mglCommand *}cmd, @code{int} num=@code{0})
+@deftypefn {Method on @code{mglParse} (Python)} @code{void} AllowSetSize (@code{bool} a)
+@deftypefnx {C function} @code{void} mgl_parser_allow_setsize (@code{HMPR} p, @code{int} a)
+Allow to parse 'setsize' command or not.
+@end deftypefn
+
+@deftypefn {Method on @code{mglParse} (C++)} @code{void} AddCommand (@code{mglCommand *}cmd, @code{int} num=@code{0})
 Add @var{num} commands @var{cmd} to the defined MGL commands list. Parameter @var{cmd} is array of @code{mglCommand} structures. If parameter @var{num}=0 then it will be determined automatically. At this, array @var{cmd} @strong{must have} last element with @code{name=L""}
-@end deftypemethod
+@end deftypefn
 
 @deftypecv {Option} mglParse @code{mglVar *} DataList
 List of variables defined in script.

@@ -96,6 +96,7 @@ gr.ShowImage();
 * Stem sample::                 
 * Region sample::               
 * Error sample::                
+* BoxPlot sample::                
 * Mark sample::                 
 * TextMark sample::             
 * Tube sample::                 
@@ -636,7 +637,7 @@ gr.Plot(y2,"k2");
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Error sample, Mark sample, Region sample, 1D plotting samples
+@node Error sample, BoxPlot sample, Region sample, 1D plotting samples
 @subsection Error sample
 @cindex Error
 
@@ -727,7 +728,63 @@ gr.Error(x0,y0,ex,ey,"ko");
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Mark sample, TextMark sample, Error sample, 1D plotting samples
+@node BoxPlot sample, Mark sample, Error sample, 1D plotting samples
+@subsection BoxPlot sample
+@cindex BoxPlot
+
+@float
+@image{png/boxplot, 7cm}
+@caption{Example of BoxPlot. @tdref{boxplot}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData a(10,7);
+a.Modify("(2*rnd-1)^3/2");
+gr->Box();
+gr->BoxPlot(a);
+gr->Plot(a," ko");
+@end verbatim
+@strong{MGL code}
+@verbatim
+new a 10 7
+modify a '(2*rnd-1)^3/2'
+box
+boxplot a
+plot a ' ko'
+@end verbatim
+@strong{Pure C code}
+@verbatim
+HMDT a = mgl_create_data_size(10,7,1);
+mgl_data_modify(a,"(2*rnd-1)^3/2",0);
+
+mgl_box(gr,1);
+mgl_plot(gr,a," ko");
+mgl_boxplot(gr,a,NULL);
+mgl_delete_data(a);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer a, mgl_create_data_size
+y = mgl_create_data_size(10,7,1)
+call mgl_data_modify(a,'(2*rnd-1)^3/2',0);
+
+call mgl_box(gr,1)
+call mgl_plot(gr,a,' ko')
+call mgl_boxplot(gr,a,'')
+call mgl_delete_data(a)
+@end verbatim
+@strong{Python}
+@verbatim
+a = mglData(10,7);
+a.Modify("(2*rnd-1)^3/2");
+gr.Box();
+gr.Plot(a," ko");
+gr.BoxPlot(a);
+@end verbatim
+
+@c ------------------------------------------------------------------
+@node Mark sample, TextMark sample, BoxPlot sample, 1D plotting samples
 @subsection Mark sample
 @cindex Mark
 
@@ -2086,7 +2143,7 @@ gr.Axial(a);
 
 @menu
 * Surf3 sample::                
-* CloudQ sample::               
+* Cloud sample::               
 * CloudP sample::               
 * Dens3 sample::                
 * Cont3 sample::                
@@ -2099,7 +2156,7 @@ gr.Axial(a);
 @end menu
 
 @c ------------------------------------------------------------------
-@node Surf3 sample, CloudQ sample, , 3D plotting samples
+@node Surf3 sample, Cloud sample, , 3D plotting samples
 @subsection Surf3 sample
 @cindex Surf3
 
@@ -2165,13 +2222,13 @@ gr.Surf3(a);
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node CloudQ sample, CloudP sample, Surf3 sample, 3D plotting samples
-@subsection CloudQ sample
-@cindex CloudQ
+@node Cloud sample, CloudP sample, Surf3 sample, 3D plotting samples
+@subsection Cloud sample
+@cindex Cloud
 
 @float
-@image{png/cloudq, 7cm}
-@caption{Example of CloudQ. @tdref{cloudq}}
+@image{png/cloud, 7cm}
+@caption{Example of Cloud. @tdref{cloud}}
 @end float
 
 @strong{C++ code}
@@ -2182,7 +2239,7 @@ a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
 gr->Rotate(40,60);
 gr->Alpha(true);
 gr->Box();
-gr->CloudQ(a,"wyrRk");
+gr->Cloud(a,"wyrRk");
 @end verbatim
 @strong{MGL code}
 @verbatim
@@ -2202,7 +2259,7 @@ mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_alpha(gr,1);
 mgl_box(gr,1);
-mgl_cloudq(gr,a,"wyrRk",1.);
+mgl_cloud(gr,a,"wyrRk",1.);
 mgl_delete_data(a);
 @end verbatim
 @strong{Fortran code}
@@ -2214,7 +2271,7 @@ call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_alpha(gr,1)
 call mgl_box(gr,1)
-call mgl_cloudq(gr,a,'wyrRk',1.)
+call mgl_cloud(gr,a,'wyrRk',1.)
 call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
@@ -2227,7 +2284,7 @@ gr.Cloud(a,"wyrRk");
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node CloudP sample, Dens3 sample, CloudQ sample, 3D plotting samples
+@node CloudP sample, Dens3 sample, Cloud sample, 3D plotting samples
 @subsection CloudP sample
 @cindex CloudP
 
@@ -3032,8 +3089,8 @@ gr.SurfC(a,b);
 @cindex TileS
 
 @float
-@image{png/tiler, 7cm}
-@caption{Example of TileS. @tdref{tiler}}
+@image{png/tiles, 7cm}
+@caption{Example of TileS. @tdref{tiles}}
 @end float
 
 @strong{C++ code}

@@ -141,10 +141,9 @@ struct mglParse{};
 	{	mgl_write_idtf(self, fname, descr);	}
 	void WriteJPEG(const char *fname,const char *descr="")
 	{	mgl_write_jpg(self, fname, descr);	}
-	void WritePNG(const char *fname,const char *descr="")
-	{	mgl_write_png(self, fname, descr);	}
-	void WritePNGSolid(const char *fname,const char *descr="")
-	{	mgl_write_png_solid(self, fname, descr);	}
+	void WritePNG(const char *fname,const char *descr="", bool alpha=true)
+	{	if(alpha)	mgl_write_png(self, fname, descr);
+		else	mgl_write_png_solid(self, fname, descr);	}
 	void WriteEPS(const char *fname,const char *descr="")
 	{	mgl_write_eps(self, fname, descr);	}
 	void WriteSVG(const char *fname,const char *descr="")
@@ -304,22 +303,6 @@ struct mglParse{};
 	{	mgl_label_ext(self, dir, text, pos, size, shift);	}
 	void SetTuneTicks(bool tune, float fact_pos=1.15)
 	{	mgl_tune_ticks(self, tune, fact_pos);	}
-	void SetTickTemplX(const wchar_t *templ)
-	{	mgl_set_xttw(self, templ);	}
-	void SetTickTemplY(const wchar_t *templ)
-	{	mgl_set_yttw(self, templ);	}
-	void SetTickTemplZ(const wchar_t *templ)
-	{	mgl_set_zttw(self, templ);	}
-	void SetTickTemplC(const wchar_t *templ)
-	{	mgl_set_cttw(self, templ);	}
-	void SetTickTemplX(const char *templ)
-	{	mgl_set_xtt(self, templ);	}
-	void SetTickTemplY(const char *templ)
-	{	mgl_set_ytt(self, templ);	}
-	void SetTickTemplZ(const char *templ)
-	{	mgl_set_ztt(self, templ);	}
-	void SetTickTemplC(const char *templ)
-	{	mgl_set_ctt(self, templ);	}
 
 	void SetXTT(const wchar_t *templ)
 	{	mgl_set_xttw(self, templ);	}
@@ -338,7 +321,7 @@ struct mglParse{};
 	void SetCTT(const char *templ)
 	{	mgl_set_ctt(self, templ);	}
 
-	void Ball(float x, float y, float z, const char *col="r")
+	void Ball(float x, float y, float z, char col='r')
 	{	mgl_ball_str(self, x, y, z, col);	}
 	void Mark(float x, float y, float z, char mark)
 	{	mgl_mark(self, x, y, z, mark);	}
@@ -417,12 +400,10 @@ struct mglParse{};
 	{	mgl_tens(self, y, c, pen);	}
 	void Area(mglData *x, mglData *y, mglData *z, const char *pen="")
 	{	mgl_area_xyz(self, x, y, z, pen);	}
-	void Area(mglData *x, mglData *y, const char *pen="")
-	{	mgl_area_xy(self, x, y, pen);	}
-	void Area(mglData *y, const char *pen="")
-	{	mgl_area(self, y, pen);	}
-	void AreaSum(mglData *x, mglData *y, const char *pen="")
-	{	mgl_area_xys(self, x, y, pen);	}
+	void Area(mglData *x, mglData *y, const char *pen="", bool sum=false)
+	{	if(sum)	mgl_area_xy(self, x, y, pen);	else	mgl_area_xys(self, x, y, pen);	}
+	void Area(mglData *y, const char *pen="", bool sum=false)
+	{	if(sum)	mgl_area(self, y, pen);	else	mgl_area_s(self, y, pen);	}
 	void Stem(mglData *x, mglData *y, mglData *z, const char *pen="")
 	{	mgl_stem_xyz(self, x, y, z, pen);	}
 	void Stem(mglData *x, mglData *y, const char *pen="")
@@ -453,8 +434,6 @@ struct mglParse{};
 
 	void Torus(mglData *r, mglData *z, const char *pen="")
 	{	mgl_torus(self, r, z, pen);	}
-	void Torus(mglData *z, const char *pen="")
-	{	mgl_torus_2(self, z, pen);	}
 	void Text(mglData *x, mglData *y, mglData *z, const char *text, const char *font="", float size=-1)
 	{	mgl_text_xyz(self, x, y, z, text, font, size);	}
 	void Text(mglData *x, mglData *y, const char *text, const char *font="", float size=-1)
@@ -649,13 +628,13 @@ struct mglParse{};
 	void Flow(mglData *ax, mglData *ay, mglData *az, const char *sch="", int num=3, bool central=true)
 	{	mgl_flow_3d(self, ax, ay, az, sch, num, central);	}
 
-	void Flow(float x0, float y0, float z0, mglData *x, mglData *y, mglData *ax, mglData *ay, const char *sch="")
+	void FlowP(float x0, float y0, float z0, mglData *x, mglData *y, mglData *ax, mglData *ay, const char *sch="")
 	{	mgl_flowp_xy(self, x0, y0, z0, x, y, ax, ay, sch);	}
-	void Flow(float x0, float y0, float z0, mglData *ax, mglData *ay, const char *sch="")
+	void FlowP(float x0, float y0, float z0, mglData *ax, mglData *ay, const char *sch="")
 	{	mgl_flowp_2d(self, x0, y0, z0, ax, ay, sch);	}
-	void Flow(float x0, float y0, float z0, mglData *x, mglData *y, mglData *z, mglData *ax, mglData *ay, mglData *az, const char *sch="")
+	void FlowP(float x0, float y0, float z0, mglData *x, mglData *y, mglData *z, mglData *ax, mglData *ay, mglData *az, const char *sch="")
 	{	mgl_flowp_xyz(self, x0, y0, z0, x, y, z, ax, ay, az, sch);	}
-	void Flow(float x0, float y0, float z0, mglData *ax, mglData *ay, mglData *az, const char *sch="")
+	void FlowP(float x0, float y0, float z0, mglData *ax, mglData *ay, mglData *az, const char *sch="")
 	{	mgl_flowp_3d(self, x0, y0, z0, ax, ay, az, sch);	}
 
 	void Pipe(mglData *x, mglData *y, mglData *ax, mglData *ay, const char *sch="", float r0=0.05, int num=5, bool central=true, float zVal=NaN)
@@ -693,9 +672,9 @@ struct mglParse{};
 	void Surf3(mglData *a, const char *stl="", int num=3)
 	{	mgl_surf3(self, a, stl, num);	}
 	void Cloud(mglData *x, mglData *y, mglData *z, mglData *a, const char *stl="", float alpha=1)
-	{	mgl_cloudq_xyz(self, x, y, z, a, stl, alpha);	}
+	{	mgl_cloud_xyz(self, x, y, z, a, stl, alpha);	}
 	void Cloud(mglData *a, const char *stl="", float alpha=1)
-	{	mgl_cloudq(self, a, stl, alpha);	}
+	{	mgl_cloud(self, a, stl, alpha);	}
 
 	void Cont3(mglData *v, mglData *x, mglData *y, mglData *z, mglData *a, char dir, int sVal, const char *sch="")
 	{	mgl_cont3_xyz_val(self, v, x, y, z, a, dir, sVal, sch);	}

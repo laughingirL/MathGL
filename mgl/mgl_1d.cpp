@@ -117,39 +117,87 @@ void mglGraph::Error(mglPoint p,mglPoint e,const char *pen)
 //-----------------------------------------------------------------------------
 void mglGraph::Plot(const char *eqY, const char *pen, mreal zVal, int n)
 {
-	// TODO Add strong function variation analisys
 	if(eqY==0 || eqY[0]==0)	return;		// nothing to plot
-	mglData y(n);
+	if(n<=0)	n=100;
+
+	mreal *x = (mreal *)malloc(n*sizeof(mreal));
+	mreal *y = (mreal *)malloc(n*sizeof(mreal));
 	mglFormula *eq = new mglFormula(eqY);
 	register int i;
-	mreal d = (Max.x - Min.x)/(n-1.);
-	for(i=0;i<n;i++)
+	mreal d = (Max.x - Min.x)/(n-1.), xs, ys, yr, ym=fabs(Max.y - Min.y)/1000;
+	for(i=0;i<n;i++)	// initial data filling
+	{	x[i]=Min.x + i*d;	y[i]=eq->Calc(x[i]);	}
+
+	for(i=0;i<n-1 && n<10000;)
 	{
-		y.a[i] = eq->Calc(Min.x + i*d);
+		xs=(x[i]+x[i+1])/2;
+		ys=(y[i]+y[i+1])/2;	yr=eq->Calc(xs);
+		if(fabs(yr-ys)>ym)	// bad approximation here
+		{
+			x = (mreal *)realloc(x,(n+1)*sizeof(mreal));
+			y = (mreal *)realloc(y,(n+1)*sizeof(mreal));
+			memmove(x+i+2,x+i+1,(n-i-1)*sizeof(mreal));
+			memmove(y+i+2,y+i+1,(n-i-1)*sizeof(mreal));
+			x[i+1] = xs;	y[i+1] = yr;	n++;
+		}
+		else i++;
 	}
-	Plot(y,pen, zVal);
+	
 	delete eq;
+	mglData yy,xx;
+	xx.Set(x,n);	free(x);
+	yy.Set(y,n);	free(y);
+	Plot(xx,yy,pen, zVal);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Plot(const char *eqX, const char *eqY, const char *eqZ, const char *pen, int n)
 {
-	// TODO Add strong function variation analisys
-	mglData x(n), y(n), z(n);
+	if(n<=0)	n=100;
+	mreal *x = (mreal *)malloc(n*sizeof(mreal));
+	mreal *y = (mreal *)malloc(n*sizeof(mreal));
+	mreal *z = (mreal *)malloc(n*sizeof(mreal));
+	mreal *t = (mreal *)malloc(n*sizeof(mreal));
 	mglFormula *ex, *ey, *ez;
 	ex = new mglFormula(eqX ? eqX : "0");
 	ey = new mglFormula(eqY ? eqY : "0");
 	ez = new mglFormula(eqZ ? eqZ : "0");
 	register int i;
-	register mreal t;
-	for(i=0;i<n;i++)
+	mreal ts, xs, ys, zs, xr, yr, zr, xm=fabs(Max.x - Min.x)/1000, ym=fabs(Max.y - Min.y)/1000, zm=fabs(Max.z - Min.z)/1000;
+	for(i=0;i<n;i++)	// initial data filling
 	{
-		t = i/(n-1.);
-		x.a[i] = ex->Calc(0,0,t);
-		y.a[i] = ey->Calc(0,0,t);
-		z.a[i] = ez->Calc(0,0,t);
+		t[i] = i/(n-1.);
+		x[i] = ex->Calc(0,0,t[i]);
+		y[i] = ey->Calc(0,0,t[i]);
+		z[i] = ez->Calc(0,0,t[i]);
 	}
-	Plot(x,y,z,pen);
+
+	for(i=0;i<n-1 && n<10000;)
+	{
+		ts=(t[i]+t[i+1])/2;
+		xs=(x[i]+x[i+1])/2;	xr=ex->Calc(0,0,ts);
+		ys=(y[i]+y[i+1])/2;	yr=ey->Calc(0,0,ts);
+		zs=(z[i]+z[i+1])/2;	zr=ez->Calc(0,0,ts);
+		if(fabs(xr-xs)>xm || fabs(yr-ys)>ym || fabs(zr-zs)>zm)	// bad approximation here
+		{
+			z = (mreal *)realloc(z,(n+1)*sizeof(mreal));
+			t = (mreal *)realloc(t,(n+1)*sizeof(mreal));
+			x = (mreal *)realloc(x,(n+1)*sizeof(mreal));
+			y = (mreal *)realloc(y,(n+1)*sizeof(mreal));
+			memmove(x+i+2,x+i+1,(n-i-1)*sizeof(mreal));
+			memmove(y+i+2,y+i+1,(n-i-1)*sizeof(mreal));
+			memmove(z+i+2,z+i+1,(n-i-1)*sizeof(mreal));
+			memmove(t+i+2,t+i+1,(n-i-1)*sizeof(mreal));
+			t[i+1]=ts;	x[i+1]=xr;	y[i+1]=yr;	z[i+1]=zr;	n++;
+		}
+		else i++;
+	}
 	delete ex;	delete ey;	delete ez;
+
+	// TODO Add s1trong function variation analisys
+	mglData xx,yy,zz;
+	xx.Set(x,n);	yy.Set(y,n);	zz.Set(z,n);
+	free(x);	free(y);	free(z);	free(t);
+	Plot(xx,yy,zz,pen);
 }
 //-----------------------------------------------------------------------------
 //
@@ -805,7 +853,7 @@ void mglGraph::BoxPlot(const mglData &x, const mglData &y, const char *pen,mreal
 		register long mm,k;
 		for(mm=j=0;j<m;j++)	if(!isnan(y.a[i+n*j]))
 		{	d[mm]=y.a[i+n*j];	mm++;	}
-        if(m==0)    {   b[i]=NAN;   break;  }
+		if(m==0)	{	b[i]=NAN;	break;	}
 		qsort(d, mm, sizeof(mreal), mgl_cmp_flt);
 		b[i] = d[0];	b[i+4*n] = d[mm-1];		k = mm/4;
 		b[i+n] = (mm%4) ? d[k] : (d[k]+d[k-1])/2.;
@@ -1445,6 +1493,8 @@ void mgl_area_xy(HMGL gr, const HMDT x, const HMDT y, const char *pen)
 void mgl_area_xys(HMGL gr, const HMDT x, const HMDT y, const char *pen)
 {	if(gr && x && y)	gr->Area(*x,*y,pen,true);	}
 /// Draw area plot for points in arrays \a y.
+void mgl_area_s(HMGL gr, const HMDT y, const char *pen)
+{	if(gr && y)	gr->Area(*y,pen,true);	}
 void mgl_area(HMGL gr, const HMDT y, const char *pen)
 {	if(gr && y)	gr->Area(*y,pen);	}
 /// Draw area plot for points in arrays \a a(0,:),\a a(1,:).
@@ -1655,6 +1705,12 @@ void mgl_area_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen,int
 	delete []s;
 }
 /// Draw area plot for points in arrays \a y.
+void mgl_area_s_(uintptr_t *gr, uintptr_t *y, const char *pen,int l)
+{
+	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	if(gr && y)	_GR_->Area(_D_(y),s,true);
+	delete []s;
+}
 void mgl_area_(uintptr_t *gr, uintptr_t *y, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;

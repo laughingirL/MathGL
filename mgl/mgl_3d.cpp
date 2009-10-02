@@ -26,7 +26,7 @@
 //	CloudQ series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::CloudQ(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
+void mglGraph::Cloud(const mglData &x, const mglData &y, const mglData &z, const mglData &a,
 					const char *sch, mreal alpha)
 {
 	long i,j,k,n=a.nx,m=a.ny,l=a.nz;
@@ -77,7 +77,7 @@ void mglGraph::CloudQ(const mglData &x, const mglData &y, const mglData &z, cons
 	delete []pp;	delete []aa;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::CloudQ(const mglData &a, const char *sch, mreal alpha)
+void mglGraph::Cloud(const mglData &a, const char *sch, mreal alpha)
 {
 	if(a.nx<2 || a.ny<2 || a.nz<2)
 	{	SetWarn(mglWarnLow,"CloudQ");	return;	}
@@ -85,7 +85,7 @@ void mglGraph::CloudQ(const mglData &a, const char *sch, mreal alpha)
 	x.Fill(Min.x,Max.x);
 	y.Fill(Min.y,Max.y);
 	z.Fill(Min.z,Max.z);
-	CloudQ(x,y,z,a,sch,alpha);
+	Cloud(x,y,z,a,sch,alpha);
 }
 //-----------------------------------------------------------------------------
 //
@@ -822,12 +822,12 @@ void mgl_cloudp_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMD
 void mgl_cloudp(HMGL gr, const HMDT a, const char *sch, mreal alpha)
 {	if(gr && a)	gr->CloudP(*a, sch, alpha);	}
 /// Draw a semi-transparent cloud for 3d data specified parametrically
-void mgl_cloudq_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
+void mgl_cloud_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a,
 			const char *sch, mreal alpha)
-{	if(gr && a && x && y && z)	gr->CloudQ(*x, *y, *z, *a, sch, alpha);	}
+{	if(gr && a && x && y && z)	gr->Cloud(*x, *y, *z, *a, sch, alpha);	}
 /// Draw a semi-transparent cloud for 3d data
-void mgl_cloudq(HMGL gr, const HMDT a, const char *sch, mreal alpha)
-{	if(gr && a)	gr->CloudQ(*a, sch, alpha);	}
+void mgl_cloud(HMGL gr, const HMDT a, const char *sch, mreal alpha)
+{	if(gr && a)	gr->Cloud(*a, sch, alpha);	}
 //-----------------------------------------------------------------------------
 /// Draw isosurface for 3d data \a a specified parametrically with alpha proportional to \a b
 void mgl_surf3a_xyz_val(HMGL gr, mreal Val, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT b, const char *sch)
@@ -907,18 +907,18 @@ void mgl_cloudp_(uintptr_t *gr, uintptr_t *a, const char *sch, mreal *alpha,int 
 	delete []s;
 }
 /// Draw a semi-transparent cloud for 3d data specified parametrically
-void mgl_cloudq_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a,
+void mgl_cloud_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a,
 			const char *sch, mreal *alpha,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	if(gr && a && x && y && z)	_GR_->CloudQ(_D_(x), _D_(y), _D_(z), _D_(a), s, *alpha);
+	if(gr && a && x && y && z)	_GR_->Cloud(_D_(x), _D_(y), _D_(z), _D_(a), s, *alpha);
 	delete []s;
 }
 /// Draw a semi-transparent cloud for 3d data
-void mgl_cloudq_(uintptr_t *gr, uintptr_t *a, const char *sch, mreal *alpha,int l)
+void mgl_cloud_(uintptr_t *gr, uintptr_t *a, const char *sch, mreal *alpha,int l)
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	if(gr && a)	_GR_->CloudQ(_D_(a), s, *alpha);
+	if(gr && a)	_GR_->Cloud(_D_(a), s, *alpha);
 	delete []s;
 }
 //-----------------------------------------------------------------------------

@@ -1,9 +1,14 @@
 
 					MathGL (for v.1.9.*)
 
-1. BoxPlot -- MGL, Docs, Example, Web
-2. fplot, fsurf -- number of points
+0. LGPL in sources
+1. BoxPlot -- Web
+2. fsurf -- number of points ???
 3. Spline5
+4. mglGraphPS
+ -- new list: separate points+colors, and add the "simpl" color for prim 
+ -- each prim have the inplot id & reference to settings list (lights, alpha, fog).
+
 
 
 0. Configure should define MGL_DEF_VIEWER

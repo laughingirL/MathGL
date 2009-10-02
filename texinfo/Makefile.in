@@ -32,8 +32,8 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 subdir = texinfo
-DIST_COMMON = $(mathgl_TEXINFOS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+DIST_COMMON = $(mathgl_en_TEXINFOS) $(mathgl_ru_TEXINFOS) \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/config/autotroll.m4 \
 	$(top_srcdir)/config/libtool.m4 \
@@ -48,14 +48,14 @@ CONFIG_HEADER = $(top_builddir)/include/mgl/config.h
 CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
-INFO_DEPS = mathgl.info
+INFO_DEPS = $(srcdir)/mathgl.info $(srcdir)/mathgl.info
 TEXINFO_TEX = $(top_srcdir)/config/texinfo.tex
 am__TEXINFO_TEX_DIR = $(top_srcdir)/config
-DVIS = mathgl.dvi
-PDFS = mathgl.pdf
-PSS = mathgl.ps
-HTMLS = mathgl.html
-TEXINFOS = mathgl.texi
+DVIS = mathgl_en.dvi mathgl_ru.dvi
+PDFS = mathgl_en.pdf mathgl_ru.pdf
+PSS = mathgl_en.ps mathgl_ru.ps
+HTMLS = mathgl_en.html mathgl_ru.html
+TEXINFOS = mathgl_en.texi mathgl_ru.texi
 TEXI2DVI = texi2dvi
 DVIPS = dvips
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
@@ -247,22 +247,29 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = png .
-CLEANFILES = mathgl.info mathgl.info-1 mathgl.info-2 mathgl.info-3
+CLEANFILES = mathgl_en.info mathgl_en.info-1 mathgl_en.info-2 mathgl_en.info-3 \
+mathgl_ru.info mathgl_ru.info-1 mathgl_ru.info-2 mathgl_ru.info-3
+
 MAKEINFOHTML = texi2html
 TEXI2PDF = texi2pdf
 AM_MAKEINFOHTMLFLAGS = --split=chapter
 AM_MAKEINFOFLAGS = --no-validate
-info_TEXINFOS = mathgl.texi
-mathgl_TEXINFOS = \
-cint.texi   example.texi  gpl-3.0.texi  overview.texi  samples.texi \
-class.texi  fdl.texi      data.texi \
-core.texi   gpl-2.0.texi  mgl.texi      python.texi
+info_TEXINFOS = mathgl_en.texi mathgl_ru.texi
+mathgl_en_TEXINFOS = \
+example_en.texi  gpl-3.0.texi  overview_en.texi  samples_en.texi \
+class_en.texi  fdl.texi      data_en.texi \
+core_en.texi   gpl-2.0.texi  mgl_en.texi
+
+mathgl_ru_TEXINFOS = \
+samples_ru.texi class_ru.texi overview_ru.texi appendix_ru.texi \
+data_ru.texi mgl_ru.texi core_ru.texi example_ru.texi fdl.texi \
+gpl-2.0.texi gpl-3.0.texi
 
 mglpng = $(DESTDIR)$(docdir)/png_static
 all: all-recursive
 
 .SUFFIXES:
-.SUFFIXES: .dvi .ps
+.SUFFIXES: .dvi .html .info .pdf .ps .texi
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -299,38 +306,42 @@ mostlyclean-libtool:
 clean-libtool:
 	-rm -rf .libs _libs
 
-mathgl.info: mathgl.texi $(mathgl_TEXINFOS)
+.texi.info:
 	restore=: && backupdir="$(am__leading_dot)am$$$$" && \
+	am__cwd=`pwd` && cd $(srcdir) && \
 	rm -rf $$backupdir && mkdir $$backupdir && \
 	if ($(MAKEINFO) --version) >/dev/null 2>&1; then \
 	  for f in $@ $@-[0-9] $@-[0-9][0-9] $(@:.info=).i[0-9] $(@:.info=).i[0-9][0-9]; do \
 	    if test -f $$f; then mv $$f $$backupdir; restore=mv; else :; fi; \
 	  done; \
 	else :; fi && \
+	cd "$$am__cwd"; \
 	if $(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I $(srcdir) \
-	 -o $@ `test -f 'mathgl.texi' || echo '$(srcdir)/'`mathgl.texi; \
+	 -o $@ $<; \
 	then \
 	  rc=0; \
+	  cd $(srcdir); \
 	else \
 	  rc=$$?; \
+	  cd $(srcdir) && \
 	  $$restore $$backupdir/* `echo "./$@" | sed 's|[^/]*$$||'`; \
 	fi; \
 	rm -rf $$backupdir; exit $$rc
 
-mathgl.dvi: mathgl.texi $(mathgl_TEXINFOS) 
+.texi.dvi:
 	TEXINPUTS="$(am__TEXINFO_TEX_DIR)$(PATH_SEPARATOR)$$TEXINPUTS" \
 	MAKEINFO='$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I $(srcdir)' \
-	$(TEXI2DVI) -o $@ `test -f 'mathgl.texi' || echo '$(srcdir)/'`mathgl.texi
+	$(TEXI2DVI) $<
 
-mathgl.pdf: mathgl.texi $(mathgl_TEXINFOS) 
+.texi.pdf:
 	TEXINPUTS="$(am__TEXINFO_TEX_DIR)$(PATH_SEPARATOR)$$TEXINPUTS" \
 	MAKEINFO='$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I $(srcdir)' \
-	$(TEXI2PDF) -o $@ `test -f 'mathgl.texi' || echo '$(srcdir)/'`mathgl.texi
+	$(TEXI2PDF) $<
 
-mathgl.html: mathgl.texi $(mathgl_TEXINFOS) 
+.texi.html:
 	rm -rf $(@:.html=.htp)
 	if $(MAKEINFOHTML) $(AM_MAKEINFOHTMLFLAGS) $(MAKEINFOFLAGS) -I $(srcdir) \
-	 -o $(@:.html=.htp) `test -f 'mathgl.texi' || echo '$(srcdir)/'`mathgl.texi; \
+	 -o $(@:.html=.htp) $<; \
 	then \
 	  rm -rf $@; \
 	  if test ! -d $(@:.html=.htp) && test -d $(@:.html=); then \
@@ -340,6 +351,10 @@ mathgl.html: mathgl.texi $(mathgl_TEXINFOS)
 	    rm -rf $(@:.html=); else rm -Rf $(@:.html=.htp) $@; fi; \
 	  exit 1; \
 	fi
+$(srcdir)/mathgl.info: mathgl_en.texi $(mathgl_en_TEXINFOS)
+mathgl.dvi: mathgl_en.texi $(mathgl_en_TEXINFOS)
+mathgl.pdf: mathgl_en.texi $(mathgl_en_TEXINFOS)
+mathgl.html: mathgl_en.texi $(mathgl_en_TEXINFOS)
 .dvi.ps:
 	TEXINPUTS="$(am__TEXINFO_TEX_DIR)$(PATH_SEPARATOR)$$TEXINPUTS" \
 	$(DVIPS) -o $@ $<
@@ -418,10 +433,15 @@ dist-info: $(INFO_DEPS)
 	done
 
 mostlyclean-aminfo:
-	-rm -rf mathgl.aux mathgl.cp mathgl.cps mathgl.fn mathgl.fns mathgl.ky \
-	  mathgl.kys mathgl.log mathgl.pg mathgl.tmp mathgl.toc \
-	  mathgl.tp mathgl.tps mathgl.vr mathgl.vrs mathgl.dvi \
-	  mathgl.pdf mathgl.ps mathgl.html
+	-rm -rf mathgl_en.aux mathgl_en.cp mathgl_en.cps mathgl_en.fn mathgl_en.fns \
+	  mathgl_en.ky mathgl_en.kys mathgl_en.log mathgl_en.pg \
+	  mathgl_en.tmp mathgl_en.toc mathgl_en.tp mathgl_en.tps \
+	  mathgl_en.vr mathgl_en.vrs mathgl.dvi mathgl.pdf mathgl.ps \
+	  mathgl.html mathgl_ru.aux mathgl_ru.cp mathgl_ru.cps \
+	  mathgl_ru.fn mathgl_ru.fns mathgl_ru.ky mathgl_ru.kys \
+	  mathgl_ru.log mathgl_ru.pg mathgl_ru.tmp mathgl_ru.toc \
+	  mathgl_ru.tp mathgl_ru.tps mathgl_ru.vr mathgl_ru.vrs \
+	  mathgl.dvi mathgl.pdf mathgl.ps mathgl.html
 
 maintainer-clean-aminfo:
 	@list='$(INFO_DEPS)'; for i in $$list; do \

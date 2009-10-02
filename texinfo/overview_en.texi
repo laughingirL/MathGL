@@ -18,11 +18,12 @@ a library with large and growing set of graphics.
 
 @menu
 * Why I have written MathGL?::  
-* MathGL features::             
-* Installation and using::      
-* General concepts::            
-* FAQ::                         
-* Thanks::                      
+* MathGL features::
+* Installation and using::
+* General concepts::
+* FAQ::
+* Interfaces::
+* Thanks::
 @end menu
 
 @node Why I have written MathGL?, MathGL features, , Overview
@@ -69,7 +70,7 @@ Class mglFormula class allows the fast evaluation of a textual mathematical expr
 MathGL can be installed by 3 ways.
 @enumerate
 @item
-Compile from sources. The standard script for autoconf/automake tools is included in library beginning from version 1.2.1. For its running one should execute 3 commands: @code{./configure} after it @code{make} and @code{make install} with root/sudo rights. Script @code{./configure} have several additional options which is switched off by default. They are: @code{--enable-fltk, --enable-glut, --enable-qt} for ebabling FLTK, GLUT and/or Qt windows; @code{--enable-jpeg, --enable-tiff, --enable-hdf5} for enabling corresponded file formats; @code{--enable-all} for enabling all additional features. The full list of options can be viewed by command @code{./configure --help}.
+Compile from sources. The standard script for autoconf/automake tools is included in library beginning from version 1.2.1. For its running one should execute 3 commands: @code{./configure} after it @code{make} and @code{make install} with root/sudo rights. Script @code{./configure} have several additional options which is switched off by default. They are: @code{--enable-fltk, --enable-glut, --enable-qt} for ebabling FLTK, GLUT and/or Qt windows; @code{--enable-jpeg, --enable-tiff, --enable-hdf5} for enabling corresponded file formats; @code{--enable-all} for enabling all additional features. For enabling language interfaces use @code{--enable-python, --enable-octave} or @code{--enable-langall} for all languages. The full list of options can be viewed by command @code{./configure --help}.
 @item
 Use precompiled binary. There are binaries for MinGW (platform Win32). For precompiled variant one needs only to unpack the archive to the compiler location (or in any other folder and setup paths). By default precompiled versions include the support of GSL (www.gsl.org) and PNG. So, one needs to have these libraries installed on system.
 @item
@@ -120,7 +121,7 @@ The axis origin is defined by variable @var{Org} and is applied for all conseque
 
 There is 4-th axis @emph{c} (color axis or colorbar) in addition to usual axes @emph{x, y, z}. It sets the range of values for the surface coloring. Its borders are automatically set to values of Min.z, Max.z during the call of @code{Axis()} function. Also, there are direct change of the color range by setting of variables @var{Cmax}, @var{Cmax}, or calling functions @code{CAxis()} or @code{CRange()}. Use @code{Colorbar()} function for showing the colorbar.
 
-The form (appearence) of tick labels is controlled by @code{SetTicks()} function and few variables (@pxref{Ticks}). It have 3 arguments: first one @var{d} set the tick step (if positive) or tick number (if negative) or switch logarithmic ticks on (if zero); second one @var{ns} set the number of subticks; last one is the starting point for ticks (default is axis origin). The variable @var{TuneTicks} switches on/off ticks enhancing by the detaching of the common multiplier (for small, like from 0.001 to 0.002, or large, like from 1000 to 2000, coordinate values) or common component (for narrow range, like from 0.999 to 1.000). Finally, you may use variables @var{xtt}, @var{ytt}, @var{ztt}, @var{ctt} for setting templates for tick labels (it supports TeX symbols). Also, there is a possibility to print arbitrary text as tick labels if one defines the pointer (name) of function @var{TickStr}.
+The form (appearence) of tick labels is controlled by @code{SetTicks()} function (@pxref{Ticks}). It have 3 arguments: first one @var{d} set the tick step (if positive) or tick number (if negative) or switch logarithmic ticks on (if zero); second one @var{ns} set the number of subticks; last one is the starting point for ticks (default is axis origin). The function @var{SetTuneTicks} switches on/off ticks enhancing by the detaching of the common multiplier (for small, like from 0.001 to 0.002, or large, like from 1000 to 2000, coordinate values) or common component (for narrow range, like from 0.999 to 1.000). Finally, you may use functions @code{SetXTT(), SetYTT(). SetZTT(). SetCTT()} for setting templates for tick labels (it supports TeX symbols). Also, there is a possibility to print arbitrary text as tick labels by help of @code{SetTicksVal()} function.
 
 @node Line styles, Color scheme, Coordinate axes, General concepts
 @subsection Line styles
@@ -156,7 +157,7 @@ One may specify to draw a special symbol (an arrow) at the beginning and at the 
 
 The color scheme is used for determining the color of surfaces, isolines, isosurfaces and so on. The color scheme is defined by the string which may contain several characters that are color id (@pxref{mglColor class} or @pxref{Line styles}) or characters @samp{d#:|}. Symbol @samp{d} denotes interpolation by 3d position instead of the coloring by amplitude. Symbol @samp{#} switch to mesh drawing or to wire plot. Symbol @samp{|} disable color interpolation in color scheme which can be usefull, for example, for sharp colors during matrix plotting. Symbol @samp{:} finishes the color scheme parsing. After it the user may put styles for text, rotation axis for curves/isolines and so on. Color scheme may contain up to 32 color values.
 
-Also you may use ``lighted'' colors in color scheme specification (@emph{not in line style!}). The ``lighted'' color contain 2 symbols: first one is usual symbol for color specification, second one is digit for its brightness. The digit can be in range @samp{1}...@samp{9}. At this @samp{5} correspond to normal color, @samp{1} is very dark version of the color (practically black), @samp{9} is very bright version of the color (practically white).
+Also you may use ``lighted'' colors in color scheme specification (@emph{not in line style!}). The ``lighted'' color contain 2 symbols: first one is usual symbol for color specification, second one is digit for its brightness. The digit can be in range @samp{1}...@samp{9}. At this @samp{5} correspond to normal color, @samp{1} is very dark version of the color (practically black), @samp{9} is very bright version of the color (practically white). For example, the color scheme can be @samp{b2b7wr7r2}.
 
 @float
 @image{png/colors, 7cm}
@@ -214,8 +215,6 @@ Examples of the most popular color schemes:
 
 For the coloring by @emph{coordinate} the final color is determined by position of the point in 3d space and is calculated by formula c=x*c[1] + y*c[2] + z*c[3]. Here c[1], c[2], c[3] are the first three elements of color array; x, y, z are normalized to @var{Min} -- @var{Max} coordinates of the point. This type of coloring is useful for isosurface plot when color may show the exact position of the peace of surface. For example, @pxref{Surf3}.
 
-Also you may use ``lighted'' colors in color scheme specification (@emph{not in line style!}). The ``lighted'' color contain 2 symbols: first one is usual symbol for color specification, second one is digit for its brightness. The digit can be in range '1'...'9'. At this @samp{5} correspond to normal color, @samp{1} is very dark version of the color (practically black), @samp{9} is very bright version of the color (practically white). For example, the color scheme can be @samp{b2b7wr7r2}.
-
 @node Font style, , Color scheme, General concepts
 @subsection Font style
 
@@ -227,12 +226,12 @@ The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -
 
 The font size can be defined explicitly (if @var{size}>0) or relatively the base font size as |@var{size}|*@var{FontSize} (if @var{size}<0). The value @var{size}=0 specifies that the string will not be printed. The base font size is measured in internal ``MathGL'' units. Special functions @code{SetFontSizePT(), SetFontSizeCM(), SetFontSizeIN()} allow one to set it in more ``common'' variables for given dpi of the picture.
 
-@node FAQ, Thanks, General concepts, Overview
+@node FAQ, Interfaces, General concepts, Overview
 @section FAQ
 
 @table @strong
 @item The plot does not appear
-Check that points of the plot lie  inside the bounding box and resize the bounding box by @code{Axis()} function. Check that the data have correct dimensions for selected type of plot. Be sure that  @code{Finish()} is called after the plotting functions (or be sure that the plot is saved to file).
+Check that points of the plot lie  inside the bounding box and resize the bounding box by @code{Axis()} function. Check that the data have correct dimensions for selected type of plot. Be sure that  @code{Finish()} is called after the plotting functions (or be sure that the plot is saved to file). Sometimes the light reflection from flat surfaces (like, @code{Dens()}) can look as the plot is absent.
 
 @item I can not find some special kind of plot.
 Most of ``new'' type of plot can be created by using of the existing drawing functions. For example, the surface of curve rotation can be created by special function @code{Torus()} or as parametrically specified surface @code{Surf()}. See also, @ref{Hints} and @ref{Examples} of MathGL. If you can not find some type of plot then e-mail me and this plot will appear in the next version of MathGL library.
@@ -279,10 +278,10 @@ For excluding PNG support just comment the body of functions @code{mgl_pnga_save
 @strong{Finally!} Please @emph{do not} ask me Windows-specific questions. I do not use Windows. I know nothing about Visual Basic, Visual C++, CBuiled or .NET. Please find the appropriate Usenet discussion group and ask your question there.
 
 @item How many people write this library?
-The most of the library was written by one person. This is result of near a year of work (mostly in the  evening and in holidays): half-year I spent for writing the kernel and half-year or year I spent for extending, improving and documentation writing. This process continues now :). The autoconf/automake script was written mostly by D.Kulagin, and export to IDTF was written mostly by M.Vidassov. Packages to particular platform (RPM or DEB) are prepared by other people (thanks to D. Kulagin, S. Plis, V. Lipatov and N. Troitsky).
+The most of the library was written by one person. This is result of near a year of work (mostly in the  evening and in holidays): half-year I spent for writing the kernel and half-year or year I spent for extending, improving and documentation writing. This process continues now :). The autoconf/automake script was written mostly by D.Kulagin, and export to IDTF was written mostly by M.Vidassov.
 
-@item How can I display a bitmap?
-You can import data into a mglData instance and display it by Dens() function. For example, for black-and-white bitmap you can use the code: @code{mglData bmp; bmp.Import("fname.png","wk"); gr->Dens(bmp,"wk");}.
+@item How can I display a bitmap on the figure?
+You can import data into a @code{mglData} instance and display it by @code{Dens()} function. For example, for black-and-white bitmap you can use the code: @code{mglData bmp; bmp.Import("fname.png","wk"); gr->Dens(bmp,"wk");}.
 
 @item How can I use MathGL in Qt, FLTK, wxWidgets ...?
 There are special classes (widgets) for these libraries: QMathGL for Qt, Fl_MathGL for FLTK and so on. If you don't find the appropriate class then you can create yours own widget which display a bitmap from mglGraphAB::GetBits().
@@ -298,7 +297,182 @@ Just set negative value for @var{TickLen}. For example, use @code{gr->SetTickLen
 
 @end table
 
-@node Thanks, , FAQ, Overview
+@node Interfaces, Thanks, FAQ, Overview
+@section Interfaces
+
+MathGL library have interface for a set of languages. Most of them are based on C interface via SWIG tool. There are Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, Tcl. Also there is Fortran interface which have similar set of functions but slightly different type of arguments (integers instead of pointers). These functions marked by [C function].
+@c ++++++++++
+Some of languages listed above support classes (like Python). So for them the special wrapper was written. These classes and functions are marked by (Python).
+@c ++++++++++
+Finally the special command language MGL was written for faster access to C++ plotting functions. Corresponding scripts can be executed separately (by UDAV, mgl2png, mgl2eps and so on) or from the C++ code (@pxref{mglParse class}). These commands are described in @ref{MGL interface}.
+
+@menu
+* C interface::
+* Python interface::
+@end menu
+
+@node C interface, Python interface, , Interfaces
+@subsection C interface
+
+C interface is base for many other interfaces. It contain pure C functions for most of methods of MathGL classes. In difference from C++ classes, C functions must have argument HMGL (for graphics) and/or HMDT (for data arrays) which specify the object for drawing or manipulating (changing). So, firstly user have to create this object by function @code{mgl_create_*()} and have to delete it after using by function @code{mgl_delete_*()}.
+
+All C functions are described in header file @code{#include <mgl/mgl_c.h>} and use variable of types:
+@itemize
+@item 
+@code{HMGL} --- Pointer to class @code{mglGraph} (@pxref{MathGL core}).
+@item 
+@code{HMDT} --- Pointer to class @code{mglData} (@pxref{mglData class}).
+@item 
+@code{HMPR} --- Pointer to class @code{mglParse} (@pxref{mglParse class})..
+@end itemize
+These variables contain identifiers for graphics drawing objects and for data objects. 
+
+Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of types @code{HMGL, HMDT} must be integer with sufficient size (@code{integer*4} for 32-bit operating system or @code{integer*8} for 64-bit operating system). All C functions are subroutines in Fortran which should be called by operator @code{call}. The exceptions are functions which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also one should keep in mind that strings in Fortran are denoted by @code{'} sign but not @code{"} one.
+
+@subsubsection{Create and delete objects}.
+
+@itemize
+@item Functions for non-visual ``grapher'' creation:
+@deftypefn {C function} @code{HMGL} mgl_create_graph_gl ()
+Create the instance of class mglGraphGL.
+@end deftypefn
+@deftypefn {C function} @code{HMGL} mgl_create_graph_zb (@code{int} width, @code{int} height)
+Create the instance of class mglGraphZB with specified sizes.
+@end deftypefn
+@deftypefn {C function} @code{HMGL} mgl_create_graph_ps (@code{int} width, @code{int} height)
+Create the instance of class mglGraphPS with specified sizes.
+@end deftypefn
+@deftypefn {C function} @code{HMGL} mgl_create_graph_idtf ()
+Create the instance of class mglGraphIDTF.
+@end deftypefn
+
+@item Function for windowed ``grapher'' creation:
+@deftypefn {C function} @code{HMGL} mgl_create_graph_glut (@code{int (*}draw@code{)(HMGL gr, void *p)}, @code{const char *}title, @code{void *}par)
+Create the instance of class mglGraphGLUT and connected GLUT window. Only one GLUT window can be opened at once. Arguments description can be found in @ref{mglGraphAB class}.
+@end deftypefn
+@deftypefn {C function} @code{HMGL} mgl_create_graph_fltk (@code{int (*}draw@code{)(HMGL gr, void *p)}, @code{const char *}title, @code{void *}par)
+Create the instance of class mglGraphFLTK and connected FLTK window. Several windows can be opened at the same time. However user must call @code{mgl_fltk_run()} function to start the message handling circle. Arguments description can be found in @ref{mglGraphAB class}. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides).
+@end deftypefn
+@deftypefn {C function} @code{HMGL} mgl_create_graph_qt (@code{int (*}draw@code{)(HMGL gr, void *p)}, @code{const char *}title, @code{void *}par)
+Create the instance of class mglGraphQT and connected Qt window. Several windows can be opened at the same time. However user must call @code{mgl_qt_run()} function to start the message handling circle. Arguments description can be found in @ref{mglGraphAB class}. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides).
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_fltk_run ()
+Start FLTK message handling cycle. A normal program will end main() function with @code{return mgl_fltk_run();}.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_fltk_thread ()
+Start FLTK message handling cycle. In difference of @code{mgl_fltk_run()} the loop is started in separate thread so that program continues immediately.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_qt_run ()
+Start Qt message handling cycle. A normal program will end main() function with @code{return mgl_qt_run();}. Alternatively user may setup Qt application by direct Qt functions calls.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_qt_thread ()
+Start Qt message handling cycle. In difference of @code{mgl_qt_run()} the loop is started in separate thread so that program continues immediately.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_update (@code{HMGL} graph)
+Manually update contents of the window.
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_set_show_mouse_pos (@code{HMGL} graph, @code{int} enable)
+Switch to show or not in the widget the last mouse click position.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_get_last_mouse_pos (@code{HMGL} graph, @code{float *}x, @code{float *}y, @code{float *}z)
+Last position of mouse click.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_calc_xyz (@code{HMGL} graph, @code{int} xs, @code{int} ys, @code{float *}x, @code{float *}y, @code{float *}z)
+Calculate 3D coordinate @{x,y,z@} for screen point @{xs,ys@}. At this moment it ignore perspective and transformation formulas (curvilinear coordinates). The calculation are done for the last used InPlot (@pxref{Transformation matrix}).
+@end deftypefn
+
+
+@item Functions for data creation:
+@deftypefn {C function} @code{HMDT} mgl_create_data ()
+Create simple instance of class mglData.
+@end deftypefn
+@deftypefn {C function} @code{HMDT} mgl_create_data_size (@code{int} nx, @code{int} ny, @code{int} nz)
+Create instance of class mglData with specified sizes.
+@end deftypefn
+@deftypefn {C function} @code{HMDT} mgl_create_data_file (@code{const char *}fname)
+Create instance of class mglData and fill it by data from text file.
+@end deftypefn
+
+@item Each created object @strong{must} be deleted after usage by functions:
+@deftypefn {C function} @code{void} mgl_delete_graph (@code{HMGL} graph)
+Delete the instance of class. Must be used after plotting for every created graphical object.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_delete_data (@code{HMDT} dat)
+Delete the instance of class. Must be used after using for every created data object.
+@end deftypefn
+@end itemize
+
+@node Python interface, , C interface, Interfaces
+@subsection Python interface
+
+MathGL provide the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is denoted in the chapter title.
+
+To use Python classes just execute @samp{import mathgl}. The simplest example will be:
+@verbatim
+import mathgl
+a=mathgl.mglGraph()
+a.Box()
+a.WritePNG('test.png')
+@end verbatim
+Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes: 
+@verbatim
+from mathgl import *
+a=mglGraph()
+a.Box()
+a.WritePNG('test.png')
+@end verbatim
+It become useful if you will create many @code{mglData} object, for example.
+
+There are 2 classes in Python interface:
+@itemize 
+@item @code{mglGraph}
+-- provide practically the same functionality as C++ class @code{mglGraph} (@pxref{MathGL core}). But it is not abstract class and it allows one to select at construction stage which plotter (ZB or PS and so on) will be used.
+@item @code{mglData}
+-- is absolutely the same class as C++ @code{mglData} (@pxref{mglData class}). But an additional feature to acess data values is added. You can use construction like this: @code{dat[i]=sth;} or @code{sth=dat[i]} at this flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1. Also you can import NumPy arrays as input arguments: @code{mgl_dat = mglData(numpy_dat);}.
+@c @item @code{mglParse} -- practically the same as C++ class @code{MathGL provide the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is denoted in the chapter title.
+
+To use Python classes just execute @samp{import mathgl}. The simplest example will be:
+@verbatim
+import mathgl
+a=mathgl.mglGraph()
+a.Box()
+a.WritePNG('test.png')
+@end verbatim
+Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes: 
+@verbatim
+from mathgl import *
+a=mglGraph()
+a.Box()
+a.WritePNG('test.png')
+@end verbatim
+It become useful if you will create many @code{mglData} object, for example.
+
+There are 2 classes in Python interface:
+@itemize 
+@item @code{mglGraph}
+-- provide practically the same functionality as C++ class @code{mglGraph} (@pxref{MathGL core}). But it is not abstract class and it allows one to select at construction stage which plotter (ZB or PS and so on) will be used.
+@item @code{mglData}
+-- is absolutely the same class as C++ @code{mglData} (@pxref{mglData class}). But an additional feature to acess data values is added. You can use construction like this: @code{dat[i]=sth;} or @code{sth=dat[i]} at this flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1.
+@c @item @code{mglParse} -- practically the same as C++ class @code{mglParse} (@pxref{mglParse class}).
+@end itemize
+
+There is main difference from C++ classes -- Python class @code{mglGraph} don't have variables (options). All corresponding features are moved to methods.
+The core of MathGL Python class is @strong{mglGraph} class. It contains a lot of plotting functions for 1D, 2D and 3D plots. So most of sections is describe its methods. Its constructor have following arguments:
+
+@defop Constructor {mglGraph (Python)} @code{} mglGraph (@code{int} kind=@code{0}, @code{int} width=@code{600}, @code{int} height=@code{400})
+Create the instance of class mglGraph with specified sizes @var{width} and @var{height}. Parameter @var{type} may have following values: @samp{0} -- use @code{mglGraphZB} plotter (default), @samp{1} -- use @code{mglGraphPS} plotter, @samp{2} -- use @code{mglGraphGL} plotter, @samp{3} -- use @code{mglGraphIDTF} plotter.
+@end defop
+@end itemize
+
+There is main difference from C++ classes -- Python class @code{mglGraph} don't have variables (options). All corresponding features are moved to methods. The core of MathGL Python class is @strong{mglGraph} class. It contains a lot of plotting functions for 1D, 2D and 3D plots. So most of sections is describe its methods. Its constructor have following arguments:
+
+@defop Constructor {mglGraph (Python)} @code{} mglGraph (@code{int} kind=@code{0}, @code{int} width=@code{600}, @code{int} height=@code{400})
+Create the instance of class mglGraph with specified sizes @var{width} and @var{height}. Parameter @var{type} may have following values: @samp{0} -- use @code{mglGraphZB} plotter (default), @samp{1} -- use @code{mglGraphPS} plotter, @samp{2} -- use @code{mglGraphGL} plotter, @samp{3} -- use @code{mglGraphIDTF} plotter.
+@end defop
+
+
+@node Thanks, , Interfaces, Overview
 @section Thanks
 
 @itemize @bullet
