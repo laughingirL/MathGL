@@ -3,17 +3,17 @@
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
@@ -443,13 +443,13 @@ void mgl_contf_z_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *a, const char *
 /*		Data creation functions												 */
 /*****************************************************************************/
 void mgl_data_rearrange_(uintptr_t *dat, int *mx, int *my, int *mz);
-void mgl_data_set_mreal_(uintptr_t *dat, const mreal *A,int *NX,int *NY,int *NZ);
+void mgl_data_set_float_(uintptr_t *dat, const float *A,int *NX,int *NY,int *NZ);
 void mgl_data_set_double_(uintptr_t *dat, const double *A,int *NX,int *NY,int *NZ);
-void mgl_data_set_mreal1_(uintptr_t *d, const mreal *A,int *N1);
+void mgl_data_set_float1_(uintptr_t *d, const float *A,int *N1);
 void mgl_data_set_double1_(uintptr_t *d, const double *A,int *N1);
-void mgl_data_set_mreal2_(uintptr_t *d, const mreal *A,int *N1,int *N2);
+void mgl_data_set_float2_(uintptr_t *d, const float *A,int *N1,int *N2);
 void mgl_data_set_double2_(uintptr_t *d, const double *A,int *N1,int *N2);
-void mgl_data_set_mreal3_(uintptr_t *d, const mreal *A,int *N1,int *N2,int *N3);
+void mgl_data_set_float3_(uintptr_t *d, const float *A,int *N1,int *N2,int *N3);
 void mgl_data_set_double3_(uintptr_t *d, const double *A,int *N1,int *N2,int *N3);
 void mgl_data_set_(uintptr_t *dat, uintptr_t *a);
 mreal mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k);

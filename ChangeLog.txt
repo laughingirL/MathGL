@@ -1,11 +1,13 @@
-1.10
+1.10 Released ?? November 2009
 	- Change license from GPL to LGPL for MathGL core. SWIG-based interfaces still have GPL.
 	- Add new plot BoxPlot() for plotting data statistic (max, min, median, quartiles).
 	- Improve documentation.
-	- Slightly increase the drawing speed.
 	- Add speed up compilation (i.e. allow 'make -j3').
 	- Add ObjId for determining the object (or line) of point.
-	- Add ticks drawing for inverted axis (i.e. when Min>Max).
+	- Add ticks drawing for inverted axis (i.e. when Min>Max, not for log-scaled!).
+	- Add drawing of log-scaled axis for case Min<Max<0.
+	- Several MGL commands can be placed in single string. They have to be separated by column ':'.
+	- MGL command 'define' now can define scalar variables, like "define xmin dat.min-1". These variables can be used as is later, like "xrange xmin 1".
 	- Add automatic increse of the point numbers in plots by formula (i.e. like Plot("sin(1/x)");
 	- Bug with PlotFactor changing while AutoPlotFactor=false.
 	- Bug with Vect() and MeshNum>1.

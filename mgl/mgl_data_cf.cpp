@@ -3,17 +3,17 @@
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
@@ -107,19 +107,19 @@ void mgl_data_delete(HMDT dat, char dir, int at, int num)
 {	dat->Delete(dir,at,num);	}
 //-----------------------------------------------------------------------------
 /// Allocate memory and copy the data from the (mreal *) array
-void mgl_data_set_mreal(HMDT d, const mreal *A,int NX,int NY,int NZ)
+void mgl_data_set_float(HMDT d, const float *A,int NX,int NY,int NZ)
 {	d->Set(A,NX,NY,NZ);	}
 /// Allocate memory and copy the data from the (mreal *) array
 void mgl_data_set_double(HMDT d, const double *A,int NX,int NY,int NZ)
 {	d->Set(A,NX,NY,NZ);	}
 /// Allocate memory and copy the data from the (mreal **) array
-void mgl_data_set_mreal2(HMDT d, const mreal **A,int N1,int N2)
+void mgl_data_set_float2(HMDT d, const float **A,int N1,int N2)
 {	d->Set(A,N1,N2);	}
 /// Allocate memory and copy the data from the (mreal **) array
 void mgl_data_set_double2(HMDT d, const double **A,int N1,int N2)
 {	d->Set(A,N1,N2);	}
 /// Allocate memory and copy the data from the (mreal ***) array
-void mgl_data_set_mreal3(HMDT d, const mreal ***A,int N1,int N2,int N3)
+void mgl_data_set_float3(HMDT d, const float ***A,int N1,int N2,int N3)
 {	d->Set(A,N1,N2,N3);	}
 /// Allocate memory and copy the data from the (mreal ***) array
 void mgl_data_set_double3(HMDT d, const double ***A,int N1,int N2,int N3)
@@ -260,25 +260,25 @@ void mgl_data_delete_(uintptr_t *d, const char *dir, int *at, int *num, int)
 {	_DT_->Delete(*dir,*at,*num);	}
 //-----------------------------------------------------------------------------
 /// Allocate memory and copy the data from the (mreal *) array
-void mgl_data_set_mreal1_(uintptr_t *d, const mreal *A,int *NX)
+void mgl_data_set_float1_(uintptr_t *d, const float *A,int *NX)
 {	_DT_->Set(A,*NX);	}
 /// Allocate memory and copy the data from the (mreal *) array
 void mgl_data_set_double1_(uintptr_t *d, const double *A,int *NX)
 {	_DT_->Set(A,*NX);	}
 /// Allocate memory and copy the data from the (mreal *) array
-void mgl_data_set_mreal_(uintptr_t *d, const mreal *A,int *NX,int *NY,int *NZ)
+void mgl_data_set_float_(uintptr_t *d, const float *A,int *NX,int *NY,int *NZ)
 {	_DT_->Set(A,*NX,*NY,*NZ);	}
 /// Allocate memory and copy the data from the (mreal *) array
 void mgl_data_set_double_(uintptr_t *d, const double *A,int *NX,int *NY,int *NZ)
 {	_DT_->Set(A,*NX,*NY,*NZ);	}
 /// Allocate memory and copy the data from the (mreal **) array
-void mgl_data_set_mreal2_(uintptr_t *d, const mreal *A,int *N1,int *N2)
+void mgl_data_set_float2_(uintptr_t *d, const float *A,int *N1,int *N2)
 {	_DT_->Set(A,*N1,*N2);	}
 /// Allocate memory and copy the data from the (mreal **) array
 void mgl_data_set_double2_(uintptr_t *d, const double *A,int *N1,int *N2)
 {	_DT_->Set(A,*N1,*N2);	}
 /// Allocate memory and copy the data from the (mreal ***) array
-void mgl_data_set_mreal3_(uintptr_t *d, const mreal *A,int *N1,int *N2,int *N3)
+void mgl_data_set_float3_(uintptr_t *d, const float *A,int *N1,int *N2,int *N3)
 {	_DT_->Set(A,*N1,*N2,*N3);	}
 /// Allocate memory and copy the data from the (mreal ***) array
 void mgl_data_set_double3_(uintptr_t *d, const double *A,int *N1,int *N2,int *N3)

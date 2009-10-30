@@ -62,6 +62,20 @@ AC_ARG_ENABLE(langall,
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-langall) ;;
 esac],[langall=false])
 
+AC_ARG_ENABLE(pthread,
+[  --enable-pthread    Turn on pthread support in MathGL library],
+[case "${enableval}" in
+  yes) pthread=true ;;
+  no)  pthread=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-pthread) ;;
+esac],[pthread=true])
+AC_CHECK_HEADER(pthread.h,[(test x$all = xtrue || test x$pthread = xtrue) && PTHREAD_FLAGS=-DHAVE_PTHREAD AC_SUBST(PTHREAD_FLAGS)],
+    [(test x$all = xtrue || test x$pthread = xtrue) && echo "Please install posix threads headers" && exit])
+
+AC_CHECK_LIB([pthread], [main], [(test x$all = xtrue || test x$pthread = xtrue) && PTHREAD_LIBS=-lpthread AC_SUBST(PTHREAD_LIBS)], 
+    [(test x$all = xtrue || test x$pthread = xtrue) && echo "Please install posix threads library" && exit])
+AM_CONDITIONAL(USE_PTHREAD, test x$pthread = xtrue)
+
 AC_ARG_ENABLE(gsl,
 [  --enable-gsl    Turn on gsl functions],
 [case "${enableval}" in

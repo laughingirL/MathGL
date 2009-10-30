@@ -27,6 +27,11 @@ if(use_glut)
 	add_definitions(-DHAVE_GLUT)
 endif(use_glut)
 
+if(use_pthread)
+	target_link_libraries(mgl ${CMAKE_THREAD_LIBS_INIT})
+	add_definitions(-DHAVE_PTHREAD)
+endif(use_pthread)
+
 if(use_jpeg)
 	target_link_libraries(mgl ${JPEG_LIBRARIES})
 	add_definitions(-DHAVE_JPEG)

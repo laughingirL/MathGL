@@ -3,17 +3,17 @@
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
@@ -24,7 +24,7 @@
 #include "mgl/mgl_ab.h"
 #define imax(a,b)	(a)>(b) ? (a) : (b)
 #define imin(a,b)	(a)<(b) ? (a) : (b)
-
+int mglNumThr;
 char *mgl_strdup(const char *s);
 //-----------------------------------------------------------------------------
 void strtrim_mgl(char *str);
@@ -368,16 +368,16 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	{
 	case 'x':
 	case 'X':
-		pp[3] += (Max.x - Min.x)/100;	break;
+		pp[3] += pp[3] ? fabs(pp[3])*.001 :(Max.x - Min.x)/100;	break;
 	case 'y':
 	case 'Y':
 		if(TernAxis)	upside = !upside;
-		pp[4] += (Max.y - Min.y)/10;	break;
+		pp[4] += pp[4] ? fabs(pp[4])*.001 : (Max.y - Min.y)/10;	break;
 	case 'z':
 	case 'Z':
 		if(TernAxis)	upside = !upside;
 		pp[4] -= 0;
-		pp[5] += (Max.z - Min.z)/100;	break;
+		pp[5] += pp[5] ? fabs(pp[5])*.001 :(Max.z - Min.z)/100;	break;
 	case 't':
 	case 'T':
 //		upside = !upside;
@@ -506,82 +506,6 @@ void mglGraphAB::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
 	ScalePuts = true;
 	Pop();	EndGroup();
 }
-//-----------------------------------------------------------------------------
-/*void mglGraphAB::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
-{
-	static int cgid=1;	StartGroup("Colorbar",cgid++);
-	register long i;
-	mreal *pp,*cc,d,s3=PlotFactor,ss=s3*0.9;
-	mglColor c;
-
-	pp = new mreal[6*256];	cc = new mreal[8*256];
-	x = 2*x-1;	y = 2*y-1;
-	for(i=0;i<255;i++)
-	{
-		d = 2*i/254.-1;
-		pp[6*i+0] = pp[6*i+3] = (ss*d+s3)*w+x*s3;
-		pp[6*i+1] = pp[6*i+4] = (ss*d+s3)*h+y*s3;
-		pp[6*i+2] = pp[6*i+5] = s3;
-		switch(where)
-		{
-		case 1:	pp[6*i]  = x*s3;	pp[6*i+3] = (x+0.1*w)*s3;	break;
-		case 2:	pp[6*i+1]= (y-0.1*h)*s3;	pp[6*i+4] = y*s3;	break;
-		case 3:	pp[6*i+1]= y*s3;	pp[6*i+4] = (y+0.1*h)*s3;	break;
-		default:pp[6*i]  = (x-0.1*w)*s3;	pp[6*i+3] = x*s3;	break;
-		}
-		c = GetC(d,false);
-		cc[8*i+0] = cc[8*i+4] = c.r;
-		cc[8*i+1] = cc[8*i+5] = c.g;
-		cc[8*i+2] = cc[8*i+6] = c.b;
-		cc[8*i+3] = cc[8*i+7] = 1;
-	}
-	Push();	memcpy(B,B1,9*sizeof(mreal));
-	bool ll = UseLight;				UseLight = false;
-	surf_plot(2, 255, pp, cc, 0);	UseLight = ll;
-	delete []pp;	delete []cc;
-
-	const char *a="rC";
-	if(where==0)	a = "rR";
-	if(where==1)	a = "rL";
-	if(where==2)	a = "rDC";
-	mglPoint p;
-	ScalePuts = false;
-	SelectPen(TranspType!=2 ? "k-1":"w-1");
-
-	mreal v=0,t;
-	int kind=0;
-	wchar_t s[32]=L"", str[64];
-	if(!ctt && TuneTicks) kind = _mgl_tick_ext(Cmax, Cmin, s, v);
-
-	for(i=0;i<5;i++)
-	{
-		d = i*0.5-1;	p.z = s3+1;
-		p.x = (ss*d+s3)*w+x*s3;
-		p.y = (ss*d+s3)*h+y*s3;
-		switch(where)
-		{
-		case 1:	p.x = (x+0.13*w)*s3;	break;
-		case 2:	p.y = (y-0.13*h)*s3;	break;
-		case 3:	p.y = (y+0.13*h)*s3;	break;
-		default:p.x = (x-0.13*w)*s3;	break;
-		}
-		t = Cmin+i*(Cmax-Cmin)/4;
-		if(ctt)	mglprintf(str, 64, ctt, t);
-		else	_mgl_tick_text(t,Cmin,(Cmax-Cmin)/100,v,kind,str);
-		wcstrim_mgl(str);
-		Putsw(p,str,a,FontSize);
-	}
-	switch(where)
-	{
-	case 1:	p = mglPoint((x+0.15*w)*s3, (y+1.75*h)*s3);	break;
-	case 2:	p = mglPoint((x+1.75*w)*s3, (y-0.15*h)*s3);	break;
-	case 3:	p = mglPoint((x+1.75*w)*s3, (y+0.15*h)*s3);	break;
-	default:p = mglPoint((x-0.15*w)*s3, (y+1.75*h)*s3);	break;
-	}
-	if(kind&2)	Putsw(p,s,a,FontSize);
-	ScalePuts = true;
-	Pop();	EndGroup();
-}*/
 //-----------------------------------------------------------------------------
 void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mreal x, mreal y, mreal w, mreal h)
 {

@@ -32,7 +32,8 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @USE_DOCS_TRUE@am__append_1 = texinfo
-@USE_DOCS_TRUE@am__append_2 = install-html install-pdf
+#doctargets += install-html install-pdf
+@USE_DOCS_TRUE@am__append_2 = install-html
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/configure \
@@ -162,6 +163,8 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PNG_LIBS = @PNG_LIBS@
+PTHREAD_FLAGS = @PTHREAD_FLAGS@
+PTHREAD_LIBS = @PTHREAD_LIBS@
 PYTHON = @PYTHON@
 PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
 PYTHON_HEADERS = @PYTHON_HEADERS@
@@ -711,7 +714,8 @@ uninstall-local:
 clean-local:
 	find . -name '*~' -print0 | xargs -0 rm -f
 
-all-local: html pdf
+#all-local: html pdf
+all-local: html
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -1036,11 +1036,11 @@ procedure mgl_cloudp_xyz(graph: HMGL; x, y, z, a: HMDT; const stl: PChar; alpha:
 //void mgl_cloudp(HMGL graph, const HMDT a, const char *stl, float alpha);
 procedure mgl_cloudp(graph: HMGL; const a: HMDT; const stl: PChar; alpha: single); cdecl; external libmgl;
 
-//void mgl_cloudq_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl, float alpha);
-procedure mgl_cloudq_xyz(graph: HMGL; const x, y, z, a: HMDT; const stl: PChar; alpha: single); cdecl; external libmgl;
+//void mgl_cloud_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *stl, float alpha);
+procedure mgl_cloud_xyz(graph: HMGL; const x, y, z, a: HMDT; const stl: PChar; alpha: single); cdecl; external libmgl;
 
-//void mgl_cloudq(HMGL graph, const HMDT a, const char *stl, float alpha);
-procedure mgl_cloudq(graph: HMGL; const a: HMDT; const stl: PChar; alpha: single); cdecl; external libmgl;
+//void mgl_cloud(HMGL graph, const HMDT a, const char *stl, float alpha);
+procedure mgl_cloud(graph: HMGL; const a: HMDT; const stl: PChar; alpha: single); cdecl; external libmgl;
 
 //void mgl_contf3_xyz_val(HMGL graph, const HMDT v, const HMDT x, const HMDT y, const HMDT z, const HMDT a, char dir, int sVal, const char *sch);
 procedure mgl_contf3_xyz_val(graph: HMGL; const v, x, y, z, a: HMDT; dir: char; sVal: integer; const sch: PChar); cdecl; external libmgl;

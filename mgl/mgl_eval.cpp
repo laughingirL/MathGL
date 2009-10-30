@@ -3,17 +3,17 @@
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
@@ -402,7 +402,7 @@ mglFormula::mglFormula(const char *string)
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n'='v', 't'='z', 'u'='a' variables
-mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u)
+mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u) const
 {
 	Error=0;
 	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(mreal));
@@ -414,7 +414,7 @@ mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u)
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n', 't'='z', 'u'='a', 'v'='b', 'w'='c' variables
-mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u,mreal v,mreal w)
+mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u,mreal v,mreal w) const
 {
 	Error=0;
 	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(mreal));
@@ -428,14 +428,14 @@ mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u,mreal v,mreal w)
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for arbitrary set of variables
-mreal mglFormula::Calc(const mreal var[MGL_VS])
+mreal mglFormula::Calc(const mreal var[MGL_VS]) const
 {
 	Error=0;
 	return CalcIn(var);
 }
 //-----------------------------------------------------------------------------
 // evaluate derivate of formula respect to 'diff' variable for arbitrary set of other variables
-mreal mglFormula::CalcD(const mreal var[MGL_VS], char diff)
+mreal mglFormula::CalcD(const mreal var[MGL_VS], char diff) const
 {
 	Error=0;
 	return CalcDIn(diff-'a', var);
@@ -475,7 +475,7 @@ double atanh(double x)	{	return fabs(x)<1 ? log((1+x)/(1-x))/2 : NAN;	}
 typedef double (*func_1)(double);
 typedef double (*func_2)(double, double);
 // evaluation of embedded (included) expressions
-mreal mglFormula::CalcIn(const mreal *a1)
+mreal mglFormula::CalcIn(const mreal *a1) const
 {
 	func_2 f2[21] = {clt,cgt,ceq,cor,cand,add,sub,mul,div,ipw,pow,fmod,llg,arg
 #ifndef NO_GSL
@@ -597,7 +597,7 @@ double gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
 #endif
 //-----------------------------------------------------------------------------
 // evaluation of derivative of embedded (included) expressions
-mreal mglFormula::CalcDIn(int id, const mreal *a1)
+mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 {
 	func_2 f21[20] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgp,mul1,div1,ipw1,pow1,mgp,llg1
 #ifndef NO_GSL

@@ -82,11 +82,12 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 @USE_FLTK_TRUE@am__EXEEXT_5 = test$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
-am_mgl_example_OBJECTS = full_test.$(OBJEXT)
+am_mgl_example_OBJECTS = wnd_samples.$(OBJEXT) full_test.$(OBJEXT)
 mgl_example_OBJECTS = $(am_mgl_example_OBJECTS)
 mgl_example_DEPENDENCIES = $(top_builddir)/mgl/libmgl.la
-am__mgl_fltk_example_SOURCES_DIST = fltk_example.cpp
+am__mgl_fltk_example_SOURCES_DIST = wnd_samples.cpp fltk_example.cpp
 @USE_FLTK_TRUE@am_mgl_fltk_example_OBJECTS =  \
+@USE_FLTK_TRUE@	mgl_fltk_example-wnd_samples.$(OBJEXT) \
 @USE_FLTK_TRUE@	mgl_fltk_example-fltk_example.$(OBJEXT)
 mgl_fltk_example_OBJECTS = $(am_mgl_fltk_example_OBJECTS)
 am__DEPENDENCIES_1 =
@@ -96,15 +97,17 @@ mgl_fltk_example_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-am__mgl_glut_example_SOURCES_DIST = glut_example.cpp
-@USE_GLUT_TRUE@am_mgl_glut_example_OBJECTS = glut_example.$(OBJEXT)
+am__mgl_glut_example_SOURCES_DIST = wnd_samples.cpp glut_example.cpp
+@USE_GLUT_TRUE@am_mgl_glut_example_OBJECTS = wnd_samples.$(OBJEXT) \
+@USE_GLUT_TRUE@	glut_example.$(OBJEXT)
 mgl_glut_example_OBJECTS = $(am_mgl_glut_example_OBJECTS)
 @USE_GLUT_TRUE@mgl_glut_example_DEPENDENCIES =  \
 @USE_GLUT_TRUE@	$(top_builddir)/widgets/libmgl-glut.la
-am__mgl_qt_example_SOURCES_DIST =  \
+am__mgl_qt_example_SOURCES_DIST = wnd_samples.cpp \
 	$(top_builddir)/include/mgl/mgl_qt.moc.cpp \
 	$(top_builddir)/include/mgl/mgl_qt.h qt_example.cpp
 @USE_QT_TRUE@am_mgl_qt_example_OBJECTS =  \
+@USE_QT_TRUE@	mgl_qt_example-wnd_samples.$(OBJEXT) \
 @USE_QT_TRUE@	mgl_qt_example-mgl_qt.moc.$(OBJEXT) \
 @USE_QT_TRUE@	mgl_qt_example-qt_example.$(OBJEXT)
 mgl_qt_example_OBJECTS = $(am_mgl_qt_example_OBJECTS)
@@ -114,8 +117,9 @@ mgl_qt_example_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(mgl_qt_example_CXXFLAGS) $(CXXFLAGS) \
 	$(mgl_qt_example_LDFLAGS) $(LDFLAGS) -o $@
-am__mgl_wx_example_SOURCES_DIST = wx_example.cpp
+am__mgl_wx_example_SOURCES_DIST = wnd_samples.cpp wx_example.cpp
 @USE_WX_TRUE@am_mgl_wx_example_OBJECTS =  \
+@USE_WX_TRUE@	mgl_wx_example-wnd_samples.$(OBJEXT) \
 @USE_WX_TRUE@	mgl_wx_example-wx_example.$(OBJEXT)
 mgl_wx_example_OBJECTS = $(am_mgl_wx_example_OBJECTS)
 @USE_WX_TRUE@mgl_wx_example_DEPENDENCIES = $(am__DEPENDENCIES_1) \
@@ -124,8 +128,9 @@ mgl_wx_example_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(mgl_wx_example_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-am__test_SOURCES_DIST = main.cpp
-@USE_FLTK_TRUE@am_test_OBJECTS = test-main.$(OBJEXT)
+am__test_SOURCES_DIST = wnd_samples.cpp main.cpp
+@USE_FLTK_TRUE@am_test_OBJECTS = test-wnd_samples.$(OBJEXT) \
+@USE_FLTK_TRUE@	test-main.$(OBJEXT)
 test_OBJECTS = $(am_test_OBJECTS)
 @USE_FLTK_TRUE@test_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 @USE_FLTK_TRUE@	$(top_builddir)/widgets/libmgl-fltk.la
@@ -246,6 +251,8 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PNG_LIBS = @PNG_LIBS@
+PTHREAD_FLAGS = @PTHREAD_FLAGS@
+PTHREAD_LIBS = @PTHREAD_LIBS@
 PYTHON = @PYTHON@
 PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
 PYTHON_HEADERS = @PYTHON_HEADERS@
@@ -333,19 +340,19 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = -I$(top_builddir)/include -I$(top_builddir)
-mgl_example_SOURCES = full_test.cpp
+mgl_example_SOURCES = wnd_samples.cpp full_test.cpp
 mgl_example_LDADD = $(top_builddir)/mgl/libmgl.la
-@USE_FLTK_TRUE@mgl_fltk_example_SOURCES = fltk_example.cpp
+@USE_FLTK_TRUE@mgl_fltk_example_SOURCES = wnd_samples.cpp fltk_example.cpp
 @USE_FLTK_TRUE@mgl_fltk_example_LDADD = $(FLTK_LIBS) $(top_builddir)/widgets/libmgl-fltk.la
 @USE_FLTK_TRUE@mgl_fltk_example_CXXFLAGS = $(FLTK_FLAGS) $(AM_CXXFLAGS)
-@USE_FLTK_TRUE@test_SOURCES = main.cpp
+@USE_FLTK_TRUE@test_SOURCES = wnd_samples.cpp main.cpp
 @USE_FLTK_TRUE@test_LDADD = $(FLTK_LIBS) $(top_builddir)/widgets/libmgl-fltk.la
 @USE_FLTK_TRUE@test_CXXFLAGS = $(FLTK_FLAGS) $(AM_CXXFLAGS)
-@USE_GLUT_TRUE@mgl_glut_example_SOURCES = glut_example.cpp
+@USE_GLUT_TRUE@mgl_glut_example_SOURCES = wnd_samples.cpp glut_example.cpp
 @USE_GLUT_TRUE@mgl_glut_example_LDADD = $(top_builddir)/widgets/libmgl-glut.la
 @USE_WX_TRUE@mgl_wx_example_LDADD = $(WX_LIBS) $(top_builddir)/widgets/libmgl-wx.la
 @USE_WX_TRUE@mgl_wx_example_CXXFLAGS = $(WX_FLAGS) $(AM_CXXFLAGS)
-@USE_WX_TRUE@mgl_wx_example_SOURCES = wx_example.cpp
+@USE_WX_TRUE@mgl_wx_example_SOURCES = wnd_samples.cpp wx_example.cpp
 
 # See autotroll.m4 :)
 @USE_QT_TRUE@SUFFIXES = .moc.cpp .moc.cc .moc.cxx .moc.C .h .hh \
@@ -354,7 +361,7 @@ mgl_example_LDADD = $(top_builddir)/mgl/libmgl.la
 
 @USE_QT_TRUE@DISTCLEANFILES = $(BUILT_SOURCES)
 @USE_QT_TRUE@ACLOCAL_AMFLAGS = -I $(top_srcdir)/config/
-@USE_QT_TRUE@mgl_qt_example_SOURCES = $(top_builddir)/include/mgl/mgl_qt.moc.cpp $(top_builddir)/include/mgl/mgl_qt.h qt_example.cpp
+@USE_QT_TRUE@mgl_qt_example_SOURCES = wnd_samples.cpp $(top_builddir)/include/mgl/mgl_qt.moc.cpp $(top_builddir)/include/mgl/mgl_qt.h qt_example.cpp
 @USE_QT_TRUE@mgl_qt_example_LDADD = $(QT_LIBS) $(top_builddir)/widgets/libmgl-qt.la
 @USE_QT_TRUE@mgl_qt_example_LDFLAGS = $(QT_LDFLAGS)
 @USE_QT_TRUE@mgl_qt_example_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS)
@@ -458,10 +465,15 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/glut_example.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_fltk_example-fltk_example.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_fltk_example-wnd_samples.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_qt_example-mgl_qt.moc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_qt_example-qt_example.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_qt_example-wnd_samples.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_wx_example-wnd_samples.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mgl_wx_example-wx_example.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-wnd_samples.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wnd_samples.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -484,6 +496,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
+mgl_fltk_example-wnd_samples.o: wnd_samples.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) -MT mgl_fltk_example-wnd_samples.o -MD -MP -MF $(DEPDIR)/mgl_fltk_example-wnd_samples.Tpo -c -o mgl_fltk_example-wnd_samples.o `test -f 'wnd_samples.cpp' || echo '$(srcdir)/'`wnd_samples.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl_fltk_example-wnd_samples.Tpo $(DEPDIR)/mgl_fltk_example-wnd_samples.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wnd_samples.cpp' object='mgl_fltk_example-wnd_samples.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) -c -o mgl_fltk_example-wnd_samples.o `test -f 'wnd_samples.cpp' || echo '$(srcdir)/'`wnd_samples.cpp
+
+mgl_fltk_example-wnd_samples.obj: wnd_samples.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) -MT mgl_fltk_example-wnd_samples.obj -MD -MP -MF $(DEPDIR)/mgl_fltk_example-wnd_samples.Tpo -c -o mgl_fltk_example-wnd_samples.obj `if test -f 'wnd_samples.cpp'; then $(CYGPATH_W) 'wnd_samples.cpp'; else $(CYGPATH_W) '$(srcdir)/wnd_samples.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl_fltk_example-wnd_samples.Tpo $(DEPDIR)/mgl_fltk_example-wnd_samples.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wnd_samples.cpp' object='mgl_fltk_example-wnd_samples.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) -c -o mgl_fltk_example-wnd_samples.obj `if test -f 'wnd_samples.cpp'; then $(CYGPATH_W) 'wnd_samples.cpp'; else $(CYGPATH_W) '$(srcdir)/wnd_samples.cpp'; fi`
+
 mgl_fltk_example-fltk_example.o: fltk_example.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) -MT mgl_fltk_example-fltk_example.o -MD -MP -MF $(DEPDIR)/mgl_fltk_example-fltk_example.Tpo -c -o mgl_fltk_example-fltk_example.o `test -f 'fltk_example.cpp' || echo '$(srcdir)/'`fltk_example.cpp
 @am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl_fltk_example-fltk_example.Tpo $(DEPDIR)/mgl_fltk_example-fltk_example.Po
@@ -497,6 +523,20 @@ mgl_fltk_example-fltk_example.obj: fltk_example.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='fltk_example.cpp' object='mgl_fltk_example-fltk_example.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) -c -o mgl_fltk_example-fltk_example.obj `if test -f 'fltk_example.cpp'; then $(CYGPATH_W) 'fltk_example.cpp'; else $(CYGPATH_W) '$(srcdir)/fltk_example.cpp'; fi`
+
+mgl_qt_example-wnd_samples.o: wnd_samples.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl_qt_example_CPPFLAGS) $(CPPFLAGS) $(mgl_qt_example_CXXFLAGS) $(CXXFLAGS) -MT mgl_qt_example-wnd_samples.o -MD -MP -MF $(DEPDIR)/mgl_qt_example-wnd_samples.Tpo -c -o mgl_qt_example-wnd_samples.o `test -f 'wnd_samples.cpp' || echo '$(srcdir)/'`wnd_samples.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl_qt_example-wnd_samples.Tpo $(DEPDIR)/mgl_qt_example-wnd_samples.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wnd_samples.cpp' object='mgl_qt_example-wnd_samples.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl_qt_example_CPPFLAGS) $(CPPFLAGS) $(mgl_qt_example_CXXFLAGS) $(CXXFLAGS) -c -o mgl_qt_example-wnd_samples.o `test -f 'wnd_samples.cpp' || echo '$(srcdir)/'`wnd_samples.cpp
+
+mgl_qt_example-wnd_samples.obj: wnd_samples.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl_qt_example_CPPFLAGS) $(CPPFLAGS) $(mgl_qt_example_CXXFLAGS) $(CXXFLAGS) -MT mgl_qt_example-wnd_samples.obj -MD -MP -MF $(DEPDIR)/mgl_qt_example-wnd_samples.Tpo -c -o mgl_qt_example-wnd_samples.obj `if test -f 'wnd_samples.cpp'; then $(CYGPATH_W) 'wnd_samples.cpp'; else $(CYGPATH_W) '$(srcdir)/wnd_samples.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl_qt_example-wnd_samples.Tpo $(DEPDIR)/mgl_qt_example-wnd_samples.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wnd_samples.cpp' object='mgl_qt_example-wnd_samples.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl_qt_example_CPPFLAGS) $(CPPFLAGS) $(mgl_qt_example_CXXFLAGS) $(CXXFLAGS) -c -o mgl_qt_example-wnd_samples.obj `if test -f 'wnd_samples.cpp'; then $(CYGPATH_W) 'wnd_samples.cpp'; else $(CYGPATH_W) '$(srcdir)/wnd_samples.cpp'; fi`
 
 mgl_qt_example-mgl_qt.moc.o: $(top_builddir)/include/mgl/mgl_qt.moc.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl_qt_example_CPPFLAGS) $(CPPFLAGS) $(mgl_qt_example_CXXFLAGS) $(CXXFLAGS) -MT mgl_qt_example-mgl_qt.moc.o -MD -MP -MF $(DEPDIR)/mgl_qt_example-mgl_qt.moc.Tpo -c -o mgl_qt_example-mgl_qt.moc.o `test -f '$(top_builddir)/include/mgl/mgl_qt.moc.cpp' || echo '$(srcdir)/'`$(top_builddir)/include/mgl/mgl_qt.moc.cpp
@@ -526,6 +566,20 @@ mgl_qt_example-qt_example.obj: qt_example.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mgl_qt_example_CPPFLAGS) $(CPPFLAGS) $(mgl_qt_example_CXXFLAGS) $(CXXFLAGS) -c -o mgl_qt_example-qt_example.obj `if test -f 'qt_example.cpp'; then $(CYGPATH_W) 'qt_example.cpp'; else $(CYGPATH_W) '$(srcdir)/qt_example.cpp'; fi`
 
+mgl_wx_example-wnd_samples.o: wnd_samples.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_wx_example_CXXFLAGS) $(CXXFLAGS) -MT mgl_wx_example-wnd_samples.o -MD -MP -MF $(DEPDIR)/mgl_wx_example-wnd_samples.Tpo -c -o mgl_wx_example-wnd_samples.o `test -f 'wnd_samples.cpp' || echo '$(srcdir)/'`wnd_samples.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl_wx_example-wnd_samples.Tpo $(DEPDIR)/mgl_wx_example-wnd_samples.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wnd_samples.cpp' object='mgl_wx_example-wnd_samples.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_wx_example_CXXFLAGS) $(CXXFLAGS) -c -o mgl_wx_example-wnd_samples.o `test -f 'wnd_samples.cpp' || echo '$(srcdir)/'`wnd_samples.cpp
+
+mgl_wx_example-wnd_samples.obj: wnd_samples.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_wx_example_CXXFLAGS) $(CXXFLAGS) -MT mgl_wx_example-wnd_samples.obj -MD -MP -MF $(DEPDIR)/mgl_wx_example-wnd_samples.Tpo -c -o mgl_wx_example-wnd_samples.obj `if test -f 'wnd_samples.cpp'; then $(CYGPATH_W) 'wnd_samples.cpp'; else $(CYGPATH_W) '$(srcdir)/wnd_samples.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl_wx_example-wnd_samples.Tpo $(DEPDIR)/mgl_wx_example-wnd_samples.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wnd_samples.cpp' object='mgl_wx_example-wnd_samples.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_wx_example_CXXFLAGS) $(CXXFLAGS) -c -o mgl_wx_example-wnd_samples.obj `if test -f 'wnd_samples.cpp'; then $(CYGPATH_W) 'wnd_samples.cpp'; else $(CYGPATH_W) '$(srcdir)/wnd_samples.cpp'; fi`
+
 mgl_wx_example-wx_example.o: wx_example.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_wx_example_CXXFLAGS) $(CXXFLAGS) -MT mgl_wx_example-wx_example.o -MD -MP -MF $(DEPDIR)/mgl_wx_example-wx_example.Tpo -c -o mgl_wx_example-wx_example.o `test -f 'wx_example.cpp' || echo '$(srcdir)/'`wx_example.cpp
 @am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/mgl_wx_example-wx_example.Tpo $(DEPDIR)/mgl_wx_example-wx_example.Po
@@ -539,6 +593,20 @@ mgl_wx_example-wx_example.obj: wx_example.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wx_example.cpp' object='mgl_wx_example-wx_example.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mgl_wx_example_CXXFLAGS) $(CXXFLAGS) -c -o mgl_wx_example-wx_example.obj `if test -f 'wx_example.cpp'; then $(CYGPATH_W) 'wx_example.cpp'; else $(CYGPATH_W) '$(srcdir)/wx_example.cpp'; fi`
+
+test-wnd_samples.o: wnd_samples.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_CXXFLAGS) $(CXXFLAGS) -MT test-wnd_samples.o -MD -MP -MF $(DEPDIR)/test-wnd_samples.Tpo -c -o test-wnd_samples.o `test -f 'wnd_samples.cpp' || echo '$(srcdir)/'`wnd_samples.cpp
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test-wnd_samples.Tpo $(DEPDIR)/test-wnd_samples.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wnd_samples.cpp' object='test-wnd_samples.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_CXXFLAGS) $(CXXFLAGS) -c -o test-wnd_samples.o `test -f 'wnd_samples.cpp' || echo '$(srcdir)/'`wnd_samples.cpp
+
+test-wnd_samples.obj: wnd_samples.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_CXXFLAGS) $(CXXFLAGS) -MT test-wnd_samples.obj -MD -MP -MF $(DEPDIR)/test-wnd_samples.Tpo -c -o test-wnd_samples.obj `if test -f 'wnd_samples.cpp'; then $(CYGPATH_W) 'wnd_samples.cpp'; else $(CYGPATH_W) '$(srcdir)/wnd_samples.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/test-wnd_samples.Tpo $(DEPDIR)/test-wnd_samples.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wnd_samples.cpp' object='test-wnd_samples.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_CXXFLAGS) $(CXXFLAGS) -c -o test-wnd_samples.obj `if test -f 'wnd_samples.cpp'; then $(CYGPATH_W) 'wnd_samples.cpp'; else $(CYGPATH_W) '$(srcdir)/wnd_samples.cpp'; fi`
 
 test-main.o: main.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_CXXFLAGS) $(CXXFLAGS) -MT test-main.o -MD -MP -MF $(DEPDIR)/test-main.Tpo -c -o test-main.o `test -f 'main.cpp' || echo '$(srcdir)/'`main.cpp

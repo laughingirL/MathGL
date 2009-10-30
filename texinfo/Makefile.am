@@ -23,7 +23,8 @@ gpl-2.0.texi gpl-3.0.texi
 
 mglpng=$(DESTDIR)$(docdir)/png_static
 
-install-data-local: install-html install-pdf
+#install-data-local: install-html install-pdf
+install-data-local: install-html
 	mkdir -p $(mglpng)
 	cp -r $(top_builddir)/texinfo/png_static/*.png $(mglpng)
 

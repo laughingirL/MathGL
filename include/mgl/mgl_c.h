@@ -3,17 +3,17 @@
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
@@ -481,11 +481,11 @@ void mgl_contf_z_val(HMGL graph, const HMDT v, const HMDT a, const char *stl, mr
 /*		Data creation functions												 */
 /*****************************************************************************/
 void mgl_data_rearrange(HMDT dat, int mx, int my, int mz);
-void mgl_data_set_mreal(HMDT dat, const mreal *A,int NX,int NY,int NZ);
+void mgl_data_set_float(HMDT dat, const float *A,int NX,int NY,int NZ);
 void mgl_data_set_double(HMDT dat, const double *A,int NX,int NY,int NZ);
-void mgl_data_set_mreal2(HMDT d, const mreal **A,int N1,int N2);
+void mgl_data_set_float2(HMDT d, const float **A,int N1,int N2);
 void mgl_data_set_double2(HMDT d, const double **A,int N1,int N2);
-void mgl_data_set_mreal3(HMDT d, const mreal ***A,int N1,int N2,int N3);
+void mgl_data_set_float3(HMDT d, const float ***A,int N1,int N2,int N3);
 void mgl_data_set_double3(HMDT d, const double ***A,int N1,int N2,int N3);
 void mgl_data_set(HMDT dat, const HMDT a);
 void mgl_data_set_vector(HMDT dat, gsl_vector *v);

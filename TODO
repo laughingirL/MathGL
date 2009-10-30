@@ -8,7 +8,8 @@
 4. mglGraphPS
  -- new list: separate points+colors, and add the "simpl" color for prim 
  -- each prim have the inplot id & reference to settings list (lights, alpha, fog).
-
+5. Many MGL commands by ':' separator
+6. Scalar type in MGL (like number + for!!!)
 
 
 0. Configure should define MGL_DEF_VIEWER

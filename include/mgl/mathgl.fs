@@ -323,8 +323,8 @@ libmgl      mgl_cont_all_xyz          int ptr ptr ptr ptr ptr ptr               
 libmgl      mgl_cont_all              int ptr ptr ptr                               (void) mgl_cont_all
 libmgl      mgl_cloudp_xyz            sf ptr ptr ptr ptr ptr ptr                    (void) mgl_cloudp_xyz
 libmgl      mgl_cloudp                sf ptr ptr ptr                                (void) mgl_cloudp
-libmgl      mgl_cloudq_xyz            sf ptr ptr ptr ptr ptr ptr                    (void) mgl_cloudq_xyz
-libmgl      mgl_cloudq                sf ptr ptr ptr                                (void) mgl_cloudq
+libmgl      mgl_cloud_xyz             sf ptr ptr ptr ptr ptr ptr                    (void) mgl_cloud_xyz
+libmgl      mgl_cloud                 sf ptr ptr ptr                                (void) mgl_cloud
 libmgl      mgl_contf3_xyz_val        ptr int ptr ptr ptr ptr ptr ptr ptr           (void) mgl_contf3_xyz_val
 libmgl      mgl_contf3_val            ptr int ptr ptr ptr ptr                       (void) mgl_contf3_val
 libmgl      mgl_contf3_xyz            int ptr int ptr ptr ptr ptr ptr ptr           (void) mgl_contf3_xyz

@@ -16,12 +16,17 @@ if USE_GLUT
 WIDGETS += -DWITH_GLUT
 endif
 
-libmgl_la_LIBADD = $(PNG_LIBS) $(GL_LIBS) -lgomp
+libmgl_la_LIBADD = $(PNG_LIBS) $(GL_LIBS) $(LOPENMP)
 libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 
 libmgl_la_CXXFLAGS = $(WIDGETS) -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
-    -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(GIF_FLAGS) $(JPEG_FLAGS) $(TIFF_FLAGS) \
-    $(PNG_FLAGS) $(FLTK_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS)
+    -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(GIF_FLAGS) $(JPEG_FLAGS) \
+    $(TIFF_FLAGS) $(PNG_FLAGS) $(FLTK_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS) \
+    $(PTHREAD_FLAGS)
+
+if USE_PTHREAD
+libmgl_la_LIBADD += $(PTHREAD_LIBS)
+endif
 
 if USE_GSL
 libmgl_la_LIBADD += $(GSL_LIBS)
@@ -48,4 +53,4 @@ mgl_2d.cpp         mgl_crust.cpp    mgl_export.cpp    mgl_main.cpp  \
 mgl_3d.cpp         mgl_data.cpp     mgl_f.cpp         mgl_idtf.cpp \
 mgl_ab.cpp         mgl_data_io.cpp  mgl_flow.cpp      mgl_vect.cpp \
 mgl_parse.cpp      mgl_fit.cpp      mgl_pde.cpp       mgl_evalc.cpp \
-mgl_addon.cpp      mgl_evalp.cpp
+mgl_addon.cpp      mgl_evalp.cpp    mgl_fg.cpp

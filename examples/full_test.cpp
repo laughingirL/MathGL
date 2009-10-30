@@ -54,17 +54,21 @@ static struct option longopts[] =
 {
 	{ "test",			no_argument,	&dotest,	1 },
 	{ "srnd",			no_argument,	&srnd,		1 },
-	{ "png",			no_argument,	&type,		0 },
 	{ "width",			required_argument,	NULL,	'w' },
 	{ "height",			required_argument,	NULL,	'h' },
 	{ "list",			no_argument,	NULL,		'l' },
 	{ "kind",			required_argument,	NULL,	'k' },
+	{ "thread",			required_argument,	NULL,	't' },
 	{ "mini",			no_argument,	&mini,		1 },
 	{ "big",			no_argument,	&big,		1 },
-	{ "idtf",			no_argument,	&type,		5 },
+	{ "png",			no_argument,	&type,		0 },
 	{ "eps",			no_argument,	&type,		1 },
 	{ "svg",			no_argument,	&type,		2 },
+	{ "solid",			no_argument,	&type,		3 },
+	{ "jpeg",			no_argument,	&type,		4 },
+	{ "idtf",			no_argument,	&type,		5 },
 	{ "gif",			no_argument,	&type,		6 },
+	{ "none",			no_argument,	&type,		7 },
 	{ "help",			no_argument,	NULL,		'?' },
 	{ NULL,				0,				NULL,		0 }
 };
@@ -79,9 +83,13 @@ void usage()
 		"-big			- png picture is 1200x800\n"	\
 		"-idtf			- output idtf\n"				\
 		"-eps			- output EPS\n"					\
+		"-jpeg			- output JPEG\n"				\
+		"-solid			- output solid PNG\n"			\
 		"-svg			- output SVG\n"					\
+		"-none			- none output\n"				\
 		"-srnd			- use the same random numbers in any run\n"	\
 		"-kind=name		- produce only this picture"	\
+		"-thread=num	- number of threads used"		\
 		"-test			- perform test\n"
 		);
 //	exit(0);
@@ -114,6 +122,8 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 6:	// GIF
 			sprintf(buf,"%s%s.gif",name,suf);
 			gr->WriteGIF(buf);	break;
+		case 7:	// none
+			break;
 		default:// PNG (no alpha)
 			sprintf(buf,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);	break;
@@ -1583,15 +1593,9 @@ void smgl_boxplot(mglGraph *gr)	// flow threads and density plot
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
-	mglData y;
-	mgls_prepare1d(&y);
-	gr->Org=mglPoint();
-	gr->Box();
-	gr->Area(y);
-	return 0;
 	mglParse par;
 	par.AllowSetSize = true;
-	FILE *fp=fopen("fplot.mgl","rt");
+	FILE *fp=fopen("test.mgl","rt");
 	par.Execute(gr,fp);
 	fclose(fp);
 
@@ -1613,9 +1617,10 @@ int main(int argc,char **argv)
 		switch(ch)
 		{
 			case 0:		break;
-			case 'w':	width = atoi(optarg);	break;
-			case 'h':	height = atoi(optarg);	break;
+			case 'w':	width =atoi(optarg);	break;
+			case 'h':	height=atoi(optarg);	break;
 			case 'k':	strcpy(name, optarg);	break;
+			case 't':	mglNumThr=atoi(optarg);	break;
 			case 'l':
 				while(s->name[0])	{	printf("%s ",s->name);	s++;	}
 				printf("\n");	return 0;
@@ -1623,26 +1628,17 @@ int main(int argc,char **argv)
 			default:	usage();	return 0;
 		}
 
-	if(dotest)
-	{
-//		test(&ps);
-		test(&zb);
-//		sample_ternary(&zb,"");
-		//sample_crust(&zb,0);
-		zb.WritePNG("test.png","",false);
-/*		ps.WritePNG("test_2.png","",false);
-		ps.WriteEPS("test.eps");
-		ps.WriteSVG("test.svg");
-		zb.WriteGIF("test.gif","");*/
-		return 0;
-	}
 	if(type==5)			gr = &u3d;
-	else if(type==1){	gr = &ps;	gr->SetSize(width,height);	}
-	else if(type==2){	gr = &ps;	gr->SetSize(width,height);	}
-	else			{	gr = &zb;	gr->SetSize(width,height);	}
+	else if(type==1)	gr = &ps;
+	else if(type==2)	gr = &ps;
+	else				gr = &zb;
 	if(mini)		{	gr->SetSize(200,133);	suf = "_sm";	}
-	if(big)
+	else if(big)
 	{	gr->SetSize(1200,800);	suf = "_lg";	gr->BaseLineWidth = 2;	}
+	else	gr->SetSize(width,height);
+
+	if(dotest)
+	{	test(gr);	gr->WritePNG("test.png","",false);	return 0;	}
 
 	if(srnd)	mgl_srnd(1);
 	gr->VertexColor(false);	gr->TextureColor(true);	gr->Compression(false);

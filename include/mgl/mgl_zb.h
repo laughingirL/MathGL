@@ -3,17 +3,17 @@
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
@@ -25,6 +25,14 @@
 /// Class implement the creation of different mathematical plots using Z-Buffer
 class mglGraphZB : public mglGraphAB
 {
+friend void *mgl_thr_ball(void *p);
+friend void *mgl_thr_dfin(void *p);
+friend void *mgl_thr_ffin(void *p);
+friend void *mgl_thr_quad(void *p);
+friend void *mgl_thr_quaa(void *p);
+friend void *mgl_thr_trig(void *p);
+friend void *mgl_thr_trin(void *p);
+
 public:
 	/// Initialize ZBuffer drawing and allocate the memory for image with size [Width x Height].
 	mglGraphZB(int w=600, int h=400);

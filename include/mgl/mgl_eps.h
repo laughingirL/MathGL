@@ -3,17 +3,17 @@
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
@@ -34,7 +34,10 @@ struct mglPrim
 	int type;			// type of primitive (0 - point, 1 - line, 2 - trig, 3 - quad, 4 - glyph)
 	int style;			// style of pen
 	unsigned short dash;// mreal pen dashing
-	int id;		// object id
+	int id;				// object id
+	int sid;			// subplot id
+	mreal *raw;			// raw data (initial pp,cc,nn) with sizes {7,14,30,40,7}
+
 	void Draw(mglGraphPS *gr);
 	void DrawGL();
 	bool IsSame(mreal wp,mreal *cp,int st);

@@ -1,3 +1,23 @@
+/***************************************************************************
+ * mgl_define.h is part of Math Graphic Library
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+//-----------------------------------------------------------------------------
 #ifndef _MGL_DEFINE_H_
 #define _MGL_DEFINE_H_
 //-----------------------------------------------------------------------------
@@ -83,7 +103,32 @@ enum{	// Codes for warnings/messages
 	mglWarnEnd		// Maximal number of warnings (must be last)
 };
 //-----------------------------------------------------------------------------
+#ifndef MGL_DEF_PAL
 #define MGL_DEF_PAL	"bgrcmyhlnqeupH"	// default palette
+#endif
+//-----------------------------------------------------------------------------
+struct mglThread
+{
+	mreal *z;		// float* array with parameters
+	long *p;		// long* array with parameters
+	void *v;		// pointer to data/grapher
+	int id;			// thread id
+	int n;		// total number of iteration
+//	unsigned char r[4];	// default color
+	mreal res;		// result of operation
+	mglThread();
+	~mglThread();
+};
+/// Start several thread for the task
+mreal mglStartThread(void *(*func)(void *), mreal (*fres)(mreal,mreal), int n, mreal *z, long *p, void *v);
+#ifndef MGL_NTH_DEF
+#define MGL_NTH_DEF		2
+#endif
+#ifndef HAVE_PTHREAD
+#undef MGL_NTH_DEF
+#define MGL_NTH_DEF		1
+#endif
+extern int mglNumThr;		///< Number of thread for plotting and data handling
 //-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------

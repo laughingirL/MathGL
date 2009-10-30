@@ -3,17 +3,17 @@
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
@@ -682,8 +682,8 @@ mreal mglData::Minimal(mreal &x,mreal &y,mreal &z) const
 //-----------------------------------------------------------------------------
 void mglData::Modify(const char *eq,int dim)
 {
-	long i,j,k,i0;
-	mreal x,y,z,dx=nx>1?1/(nx-1.):0,dy=ny>1?1/(ny-1.):0;
+	long i,j,k;
+	mreal y,z,dx=nx>1?1/(nx-1.):0,dy=ny>1?1/(ny-1.):0, *aa;
 	mglFormula eqs(eq);
 	if(dim<0)	dim=0;
 	if(nz>1)	// 3D array
@@ -691,24 +691,21 @@ void mglData::Modify(const char *eq,int dim)
 		for(k=dim;k<nz;k++)
 		{
 			z = (nz>dim+1) ? (k-dim)/(nz-dim-1.) : 0;
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-			{
-				x = dx*i;	y = dy*j;
-				i0 = i+nx*(j+ny*k);
-				a[i0] = eqs.Calc(x,y,z,a[i0]);
-			}
+			aa = a+nx*ny*k;
+//#pragma omp parallel for
+			for(i=0;i<nx*ny;i++)
+				aa[i] = eqs.Calc(dx*(i%nx),dy*(i/nx),z,aa[i]);
 		}
 	}
 	else		// 2D or 1D array
 	{
-		z = 0;
 		if(ny==1)	dim = 0;
 		dy = ny>dim+1 ? 1/(ny-dim-1.) : 0;
-		for(j=dim;j<ny;j++)	for(i=0;i<nx;i++)
+		for(j=dim;j<ny;j++)
 		{
-			x = dx*i;	y = dy*(j-dim);
-			i0 = i+nx*j;
-			a[i0] = eqs.Calc(x,y,0,a[i0]);
+			y = dy*(j-dim);		aa = a+nx*j;
+//#pragma omp parallel for
+			for(i=0;i<nx;i++)	aa[i] = eqs.Calc(dx*i,y,0,aa[i]);
 		}
 	}
 }

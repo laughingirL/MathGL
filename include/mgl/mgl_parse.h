@@ -3,17 +3,17 @@
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
@@ -27,8 +27,8 @@ struct mglArg
 {
 	int type;		///< Type of argument {0-data,1-string,2-number}
 	mglData *d;		///< Pointer to data (used if type==0)
-	wchar_t w[2048];///< String with parameters (used if type==1)
-	char s[2048];	///< String with parameters (used if type==1)
+	wchar_t w[2048];///< String with parameters
+	char s[2048];	///< String with parameters
 	mreal v;		///< Numerical value (used if type==2)
 	mglArg()	{	type=-1;	d=0;	v=0;	s[0]=0;	w[0]=0;	};
 };
@@ -66,12 +66,26 @@ struct mglVar
 	void MoveAfter(mglVar *var);
 };
 //-----------------------------------------------------------------------------
+/// Structure for the number handling (see mglParse class).
+struct mglNum
+{
+	mreal d;		///< Number itself
+	wchar_t s[256];	///< Number name
+	mglNum *next;	///< Pointer to next instance in list
+	mglNum *prev;	///< Pointer to prev instance in list
+	mglNum()	{	d=0;	s[0]=0;		next=prev=0;	};
+	~mglNum();
+	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
+	void MoveAfter(mglNum *var);
+};
+//-----------------------------------------------------------------------------
 /// Structure for the command argument (see mglGraph::Exec()).
 class mglParse
 {
 friend void mgl_export(wchar_t *out, const wchar_t *in, int type);
 public:
 	mglVar *DataList;	///< List with data and its names
+	mglNum *NumList;	///< List with numbers and its names
 	bool AllowSetSize;	///< Allow using setsize command
 	bool Stop;			///< Stop command was. Flag prevent further execution
 	mglCommand *Cmd;	///< Table of recognizable MGL commands (can be changed by user). It MUST be sorted by 'name' field !!!
@@ -101,6 +115,14 @@ public:
 	mglVar *AddVar(const char *name);
 	/// Find variable or create it if absent
 	mglVar *AddVar(const wchar_t *name);
+	/// Find number or return 0 if absent
+	mglNum *FindNum(const char *name);
+	/// Find number or return 0 if absent
+	mglNum *FindNum(const wchar_t *name);
+	/// Find number or create it if absent
+	mglNum *AddNum(const char *name);
+	/// Find number or create it if absent
+	mglNum *AddNum(const wchar_t *name);
 	/// Add string for parameter $1, ..., $9
 	bool AddParam(int n, const char *str, bool isstr=true);
 	/// Add unicode string for parameter $1, ..., $9

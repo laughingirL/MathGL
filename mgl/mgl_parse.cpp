@@ -3,17 +3,17 @@
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
@@ -126,6 +126,26 @@ mglVar::~mglVar()
 	if(next)	next->prev = prev;
 }
 //-----------------------------------------------------------------------------
+void mglNum::MoveAfter(mglNum *var)
+{
+	if(prev)	prev->next = next;
+	if(next)	next->prev = prev;
+	prev = next = 0;
+	if(var)
+	{
+		prev = var;
+		next = var->next;
+		var->next = this;
+	}
+	if(next)	next->prev = this;
+}
+//-----------------------------------------------------------------------------
+mglNum::~mglNum()
+{
+	if(prev)	prev->next = next;
+	if(next)	next->prev = prev;
+}
+//-----------------------------------------------------------------------------
 mglParse::mglParse(bool setsize)
 {
 	memset(this,0,sizeof(mglParse));
@@ -186,6 +206,26 @@ mglVar *mglParse::FindVar(const char *str)
 	return v;
 }
 //-----------------------------------------------------------------------------
+mglNum *mglParse::AddNum(const char *str)
+{
+	unsigned s = strlen(str)+1;
+	wchar_t *wcs = new wchar_t[s];
+	mbstowcs(wcs,str,s);
+	mglNum *v = AddNum(wcs);
+	delete []wcs;
+	return v;
+}
+//-----------------------------------------------------------------------------
+mglNum *mglParse::FindNum(const char *str)
+{
+	unsigned s = strlen(str)+1;
+	wchar_t *wcs = new wchar_t[s];
+	mbstowcs(wcs,str,s);
+	mglNum *v = FindNum(wcs);
+	delete []wcs;
+	return v;
+}
+//-----------------------------------------------------------------------------
 bool mglParse::AddParam(int n, const wchar_t *str, bool isstr)
 {
 	if(n<0 || n>9 || wcschr(str,'$'))	return false;
@@ -199,15 +239,11 @@ bool mglParse::AddParam(int n, const wchar_t *str, bool isstr)
 mglVar *mglParse::FindVar(const wchar_t *name)
 {
 	mglVar *v=DataList;
-//	wchar_t *s = mgl_wcsdup(name),*p;
-//	p = wcschr(s,'.');	if(p)	{	p[0]=0;	p++;	}
 	while(v)
 	{
-//		if(!wcscmp(s, v->s))	{	free(s);	return v;	}
 		if(!wcscmp(name, v->s))	return v;
 		v = v->next;
 	}
-//	free(s);
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -219,6 +255,28 @@ mglVar *mglParse::AddVar(const wchar_t *name)
 	wcsncpy(v->s,name,256);
 	if(DataList)	v->MoveAfter(DataList);
 	else			DataList = v;
+	return v;
+}
+//-----------------------------------------------------------------------------
+mglNum *mglParse::FindNum(const wchar_t *name)
+{
+	mglNum *v=NumList;
+	while(v)
+	{
+		if(!wcscmp(name, v->s))	return v;
+		v = v->next;
+	}
+	return 0;
+}
+//-----------------------------------------------------------------------------
+mglNum *mglParse::AddNum(const wchar_t *name)
+{
+	mglNum *v = FindNum(name);
+	if(v)	return v;
+	v = new mglNum;
+	wcsncpy(v->s,name,256);
+	if(NumList)	v->MoveAfter(NumList);
+	else		NumList = v;
 	return v;
 }
 //-----------------------------------------------------------------------------
@@ -280,6 +338,7 @@ void mglParse::FillArg(int k, wchar_t **arg, mglArg *a)
 	for(n=1;n<k;n++)
 	{
 		mglVar *v, *u;
+		mglNum *f;
 		a[n-1].type = -1;
 		if(arg[n][0]=='|')	a[n-1].type = -1;
 		else if(arg[n][0]=='\'')
@@ -292,6 +351,11 @@ void mglParse::FillArg(int k, wchar_t **arg, mglArg *a)
 		{	// have to find normal variables (for data creation)
 			a[n-1].type = 0;		a[n-1].d = &(v->d);
 			wcscpy(a[n-1].w, v->s);
+		}
+		else if((f = FindNum(arg[n]))!=0)
+		{	// have to find normal variables (for data creation)
+			a[n-1].type = 2;	a[n-1].d = 0;	a[n-1].v = f->d;
+			wcscpy(a[n-1].w, f->s);
 		}
 		else
 		{	// parse all numbers and formulas by unified way
@@ -399,22 +463,44 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	str = s;
 	wcscpy(str,string);
 	wcstrim_mgl(str);
-
 	long n,k=0;
-	for(n=1;n<long(wcslen(str));n++)
+	// try parse ':'
+	for(n=k=0;n<long(wcslen(str));n++)
+	{
+		if(str[n]=='\'')	k++;
+		if(str[n]=='#' && k%2==0)	break;
+		if(str[n]==':' && k%2==0)
+		{
+			str[n]=0;
+			int res=Parse(gr,str,pos);
+			if(!res)	res=Parse(gr,str+n+1,pos);
+			delete []s;	return res;
+		}
+	}
+	// check if string is closed
+	for(n=1,k=0;n<long(wcslen(str));n++)
 		if(str[n]=='\'' && str[n-1]!='\\')	k++;
 	if(k%2)	return 4;	// strings is not closed
 	// define parameters or start cycle
 	if(!wcsncmp(str,L"define",6) && (str[6]==' ' || str[6]=='\t'))
 	{
-		str += 7;	wcstrim_mgl(str);	int res = 1;
-		if(*str=='$' && str[1]>='0' && str[1]<='9')
+		wchar_t *ss=str+7;	wcstrim_mgl(ss);//	int res = 1;
+		if(*ss=='$' && ss[1]>='0' && ss[1]<='9')
 		{
-			int n=str[1]-'0';	res = 0;
-			str +=2;	mgl_wcstrim(str);
-			AddParam(n, str);
+			int n=ss[1]-'0';//	res = 0;
+			ss +=2;	mgl_wcstrim(ss);
+			AddParam(n, ss);
+			delete []s;	return 0;
 		}
-		delete []s;		return res;
+/*		else
+		{
+			for(int i=0;i<wcslen(str);i++)	if(str[i]==' ' || str[i]=='\t')	break;
+			str[i]=0;
+			mglNum *v=AddNum(str);
+			mglData a=mglFormulaCalc(str+i+1, arg);
+			v->d = a.a[0];
+		}
+		delete []s;		return res;*/
 	}
 	if(!wcsncmp(str,L"defnum",6) && (str[6]==' ' || str[6]=='\t'))
 	{
@@ -506,6 +592,16 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		n = FlowExec(gr, arg[0],k-1,a);
 		if(n)	{	delete []s;	delete []a;	return n-1;	}
 		if(Skip || (if_pos>0 && !(if_stack[if_pos-1]&1)))	{	delete []s;	delete []a;	return 0;	}
+		if(!wcscmp(arg[0],L"define"))
+		{
+			if(k==3)
+			{
+				mglNum *v=AddNum(arg[1]);
+				mglData d=mglFormulaCalc(arg[2],this);
+				v->d = d.a[0];
+			}
+			delete []s;	delete []a;	return k==3?0:1;
+		}
 		if(!wcscmp(arg[0],L"call"))
 		{
 			n = 1;

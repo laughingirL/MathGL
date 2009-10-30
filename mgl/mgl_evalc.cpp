@@ -3,17 +3,17 @@
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
@@ -184,7 +184,7 @@ mglFormulaC::mglFormulaC(const char *string)
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n'='v', 't'='z', 'u'='a' variables
-dual mglFormulaC::Calc(dual x,dual y,dual t,dual u)
+dual mglFormulaC::Calc(dual x,dual y,dual t,dual u) const
 {
 	Error=0;
 	dual a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(dual));
@@ -196,7 +196,7 @@ dual mglFormulaC::Calc(dual x,dual y,dual t,dual u)
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for 'x'='r', 'y'='n', 't'='z', 'u'='a', 'v'='b', 'w'='c' variables
-dual mglFormulaC::Calc(dual x,dual y,dual t,dual u,dual v,dual w)
+dual mglFormulaC::Calc(dual x,dual y,dual t,dual u,dual v,dual w) const
 {
 	Error=0;
 	dual a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(dual));
@@ -210,7 +210,7 @@ dual mglFormulaC::Calc(dual x,dual y,dual t,dual u,dual v,dual w)
 }
 //-----------------------------------------------------------------------------
 // evaluate formula for arbitrary set of variables
-dual mglFormulaC::Calc(const dual var[MGL_VS])
+dual mglFormulaC::Calc(const dual var[MGL_VS]) const
 {
 	Error=0;
 	return CalcIn(var);
@@ -248,7 +248,7 @@ dual lgc(dual x)	{	return log10(x);}
 typedef dual (*func_1)(dual);
 typedef dual (*func_2)(dual, dual);
 // evaluation of embedded (included) expressions
-dual mglFormulaC::CalcIn(const dual *a1)
+dual mglFormulaC::CalcIn(const dual *a1) const
 {
 	func_2 f2[7] = {addc,subc,mulc,divc,ipwc,powc,llgc};
 	func_1 f1[18] = {sinc,cosc,tanc,asinc,acosc,atanc,sinhc,coshc,tanhc,
