@@ -1158,6 +1158,7 @@ void mglData::NormSl(mreal v1, mreal v2, char dir, bool keep_en, bool sym)
 	mglData b(*this);
 	register long i,k;
 	register mreal e0=1, e=1, m1, m2, aa;
+	if(sym)	{	v2 = -v1>v2 ? -v1:v2;	v1 = -v2;	}
 	if(dir=='z' && nz>1)
 	{
 		for(k=0;k<nz;k++)
@@ -1171,6 +1172,7 @@ void mglData::NormSl(mreal v1, mreal v2, char dir, bool keep_en, bool sym)
 				e += aa*aa;
 			}
 			if(m1==m2)	m2+=1;
+			if(sym)	{	m2 = -m1>m2 ? -m1:m2;	m1 = -m2;	}
 			if(keep_en && k)	e = sqrt(e/e0);
 			else	{	e0 = e;	e=1;	}
 			for(i=0;i<nx*ny;i++)
@@ -1191,6 +1193,7 @@ void mglData::NormSl(mreal v1, mreal v2, char dir, bool keep_en, bool sym)
 				e += aa*aa;
 			}
 			if(m1==m2)	m2+=1;
+			if(sym)	{	m2 = -m1>m2 ? -m1:m2;	m1 = -m2;	}
 			if(keep_en && j)	e = sqrt(e/e0);
 			else	{	e0 = e;	e=1;	}
 			for(i=0;i<nx;i++)	for(k=0;k<nz;k++)
@@ -1210,6 +1213,7 @@ void mglData::NormSl(mreal v1, mreal v2, char dir, bool keep_en, bool sym)
 				e += aa*aa;
 			}
 			if(m1==m2)	m2+=1;
+			if(sym)	{	m2 = -m1>m2 ? -m1:m2;	m1 = -m2;	}
 			if(keep_en && i)	e = sqrt(e/e0);
 			else	{	e0 = e;	e=1;	}
 			for(k=0;k<ny*nz;k++)

@@ -129,7 +129,7 @@ void mglGraphGL::View(mreal TetX,mreal TetY,mreal TetZ)
 	glRotated(TetZ,0.,0.,1.);
 }
 //-----------------------------------------------------------------------------
-void mglGraphGL::Fog(mreal d, mreal)
+void mglGraphGL::Fog(mreal , mreal)
 {
 /*	if(d>0)
 	{
@@ -316,7 +316,7 @@ void mglGraphGL::line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all)
 //-----------------------------------------------------------------------------
 void mglGraphGL::mark_plot(mreal *pp, char type)
 {
-	register mreal x=pp[0],y=pp[1],z=pp[2], s=MarkSize*175*font_factor;	// 175 = 0.35*500
+	mreal x=pp[0],y=pp[1],z=pp[2], s=MarkSize*175*font_factor;	// 175 = 0.35*500
 	if(!ScalePoint(x,y,z))	return;
 	Pen(NC,'-',BaseLineWidth);
 	glColor3f(CDef[0],CDef[1],CDef[2]);

@@ -52,7 +52,7 @@ class mglFont
 {
 public:
 	mglGraph *gr;	///< mglGraph class used for drawing characters
-	mglFont(const char *name=MGL_DEF_FONT_NAME, const char *path=0);
+	mglFont(const char *name=0, const char *path=0);
 	~mglFont();
 	bool parse;		///< Parse LaTeX symbols
 

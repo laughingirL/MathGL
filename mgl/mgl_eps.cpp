@@ -61,6 +61,8 @@ void mglGraphPS::Ball(mreal x,mreal y,mreal z,mglColor col,mreal alpha)
 	mglPrim a;		a.m = '.';
 	a.x[0] = p[0];	a.y[0] = p[1];	a.z = a.zz[0]=p[2];
 	a.c[0] = col.r;	a.c[1] = col.g;	a.c[2] = col.b;
+	a.raw=new mreal[7];	a.raw[6]=alpha;
+	memcpy(a.raw,p,3*sizeof(mreal));	memcpy(a.raw+3,a.c,3*sizeof(mreal));
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
@@ -69,6 +71,8 @@ void mglGraphPS::ball(mreal *p,mreal *c)
 	mglPrim a;	PostScale(p,1);		a.m = '.';
 	a.x[0] = p[0];	a.y[0] = p[1];	a.z = a.zz[0]=p[2];
 	memcpy(a.c,c,3*sizeof(mreal));
+	a.raw=new mreal[7];	a.raw[6]=1;
+	memcpy(a.raw,p,3*sizeof(mreal));	memcpy(a.raw+3,c,3*sizeof(mreal));
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
@@ -77,10 +81,12 @@ void mglGraphPS::mark_plot(mreal *p, char type)
 	mglPrim a;		a.m = type;		a.s = MarkSize;//*175*font_factor;
 	a.x[0] = p[0];	a.y[0] = p[1];	a.z = a.zz[0]=p[2];
 	memcpy(a.c,CDef,3*sizeof(mreal));
+	a.raw=new mreal[7];	a.raw[6]=1;
+	memcpy(a.raw,p,3*sizeof(mreal));	memcpy(a.raw+3,CDef,3*sizeof(mreal));
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *,bool all)
+void mglGraphPS::line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all)
 {
 	if((PDef==0 && !all) || (fabs(p1[0]-p2[0])<0.01 && fabs(p1[1]-p2[1])<0.01))	return;
 	mglPrim a(1);
@@ -89,9 +95,12 @@ void mglGraphPS::line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *,bool all)
 	if(pw>1)	a.z += pw-1;
 	a.x[0]=p1[0];	a.y[0]=p1[1];	a.x[1]=p2[0];	a.y[1]=p2[1];
 	a.zz[0]=p1[2];	a.zz[1]=p2[2];
-//	a.c[0]=(c1[0]+c2[0])/2;	a.c[1]=(c1[1]+c2[1])/2;	a.c[2]=(c1[2]+c2[2])/2;
-	a.c[0]=c1[0];	a.c[1]=c1[1];	a.c[2]=c1[2];
+	a.c[0]=(c1[0]+c2[0])/2;	a.c[1]=(c1[1]+c2[1])/2;	a.c[2]=(c1[2]+c2[2])/2;
+//	a.c[0]=c1[0];	a.c[1]=c1[1];	a.c[2]=c1[2];
 	a.SetStyle(all? 0xffff:PDef,int(pPos));
+	a.raw=new mreal[14];	a.raw[6]=a.raw[13]=1;
+	memcpy(a.raw,p1,3*sizeof(mreal));	memcpy(a.raw+3,c1,3*sizeof(mreal));
+	memcpy(a.raw+7,p2,3*sizeof(mreal));	memcpy(a.raw+10,c2,3*sizeof(mreal));
 	add_prim(&a);
 	pPos = fmod(pPos+hypot(p2[0]-p1[0], p2[1]-p1[1])/pw/1.5, 16);
 }
@@ -113,6 +122,13 @@ void mglGraphPS::trig_plot(mreal *p3,mreal *p1,mreal *p2,mreal *c3,mreal *c1,mre
 	a.c[0]=(c1[0]+c2[0]+c3[0])/3;	a.c[1]=(c1[1]+c2[1]+c3[1])/3;
 	a.c[2]=(c1[2]+c2[2]+c3[2])/3;	a.c[3]=(c1[3]+c2[3]+c3[3])/3;
 	add_light(a.c, d2[2]*d1[1]-d2[1]*d1[2], d2[0]*d1[2]-d2[2]*d1[0], d2[1]*d1[0]-d2[0]*d1[1]);
+	a.raw=new mreal[30];
+	memcpy(a.raw,p1,3*sizeof(mreal));		memcpy(a.raw+3,c1,4*sizeof(mreal));
+	memcpy(a.raw+10,p2,3*sizeof(mreal));	memcpy(a.raw+13,c2,4*sizeof(mreal));
+	memcpy(a.raw+20,p3,3*sizeof(mreal));	memcpy(a.raw+23,c3,4*sizeof(mreal));
+	a.raw[7]=a.raw[17]=a.raw[27]=d2[2]*d1[1]-d2[1]*d1[2];
+	a.raw[8]=a.raw[18]=a.raw[28]=d2[0]*d1[2]-d2[2]*d1[0];
+	a.raw[9]=a.raw[19]=a.raw[29]=d2[1]*d1[0]-d2[0]*d1[1];
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
@@ -130,6 +146,12 @@ void mglGraphPS::trig_plot_n(mreal *p3,mreal *p1,mreal *p2,
 	a.c[0]=(c1[0]+c2[0]+c3[0])/3;	a.c[1]=(c1[1]+c2[1]+c3[1])/3;
 	a.c[2]=(c1[2]+c2[2]+c3[2])/3;	a.c[3]=(c1[3]+c2[3]+c3[3])/3;
 	add_light(a.c, (n1[0]+n2[0]+n3[0])/3, (n1[1]+n2[1]+n3[1])/3, (n1[2]+n2[2]+n3[2])/3);
+	a.raw=new mreal[30];
+	memcpy(a.raw,p1,3*sizeof(mreal));	memcpy(a.raw+3,c1,4*sizeof(mreal));
+	memcpy(a.raw+7,n1,3*sizeof(mreal));	memcpy(a.raw+10,p2,3*sizeof(mreal));
+	memcpy(a.raw+13,c2,4*sizeof(mreal));memcpy(a.raw+17,n2,3*sizeof(mreal));
+	memcpy(a.raw+20,p3,3*sizeof(mreal));memcpy(a.raw+23,c3,4*sizeof(mreal));
+	memcpy(a.raw+27,n3,3*sizeof(mreal));
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
@@ -156,6 +178,13 @@ void mglGraphPS::quad_plot(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
 	a.c[0]=(c1[0]+c2[0]+c3[0]+c0[0])/4;	a.c[1]=(c1[1]+c2[1]+c3[1]+c0[1])/4;
 	a.c[2]=(c1[2]+c2[2]+c3[2]+c0[2])/4;	a.c[3]=(c1[3]+c2[3]+c3[3]+c0[3])/4;
 	add_light(a.c, d1[0], d1[1], d1[2]);
+	a.raw=new mreal[40];
+	memcpy(a.raw,p0,3*sizeof(mreal));	memcpy(a.raw+3,c0,4*sizeof(mreal));
+	memcpy(a.raw+7,d1,3*sizeof(mreal));	memcpy(a.raw+10,p1,3*sizeof(mreal));
+	memcpy(a.raw+13,c1,4*sizeof(mreal));memcpy(a.raw+17,d1,3*sizeof(mreal));
+	memcpy(a.raw+20,p2,3*sizeof(mreal));memcpy(a.raw+23,c2,4*sizeof(mreal));
+	memcpy(a.raw+27,d1,3*sizeof(mreal));memcpy(a.raw+30,p3,3*sizeof(mreal));
+	memcpy(a.raw+33,c3,4*sizeof(mreal));memcpy(a.raw+37,d1,3*sizeof(mreal));
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
@@ -175,16 +204,23 @@ void mglGraphPS::quad_plot_n(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
 	a.c[0]=(c1[0]+c2[0]+c3[0]+c0[0])/4;	a.c[1]=(c1[1]+c2[1]+c3[1]+c0[1])/4;
 	a.c[2]=(c1[2]+c2[2]+c3[2]+c0[2])/4;	a.c[3]=(c1[3]+c2[3]+c3[3]+c0[3])/4;
 	add_light(a.c, n1[0]+n2[0]+n3[0]+n0[0], n1[1]+n2[1]+n3[1]+n0[1], n1[2]+n2[2]+n3[2]+n0[2]);
+	a.raw=new mreal[40];
+	memcpy(a.raw,p0,3*sizeof(mreal));	memcpy(a.raw+3,c0,4*sizeof(mreal));
+	memcpy(a.raw+7,n0,3*sizeof(mreal));	memcpy(a.raw+10,p1,3*sizeof(mreal));
+	memcpy(a.raw+13,c1,4*sizeof(mreal));memcpy(a.raw+17,n1,3*sizeof(mreal));
+	memcpy(a.raw+20,p2,3*sizeof(mreal));memcpy(a.raw+23,c2,4*sizeof(mreal));
+	memcpy(a.raw+27,n2,3*sizeof(mreal));memcpy(a.raw+30,p3,3*sizeof(mreal));
+	memcpy(a.raw+33,c3,4*sizeof(mreal));memcpy(a.raw+37,n3,3*sizeof(mreal));
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
 void mglGraphPS::quad_plot_a(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
 				mreal a0,mreal a1,mreal a2,mreal a3, mreal alpha)
 {
-	bool pnt = fabs(p1[0]-p2[0])<0.01 && fabs(p1[1]-p2[1])<0.01 &&
+/*	bool pnt = fabs(p1[0]-p2[0])<0.01 && fabs(p1[1]-p2[1])<0.01 &&
 				fabs(p1[0]-p3[0])<0.01 && fabs(p1[1]-p3[1])<0.01 &&
 				fabs(p1[0]-p0[0])<0.01 && fabs(p1[1]-p0[1])<0.01;
-	if(pnt)	return;
+	if(pnt)	return;*/
 	mglPrim a(3);
 	a.z = (p1[2]+p2[2]+p3[2]+p0[2])/4;
 	a.x[0]=p0[0];	a.y[0]=p0[1];	a.zz[0]=p0[2];
@@ -195,6 +231,11 @@ void mglGraphPS::quad_plot_a(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
 	mglColor c(GetC(v,false));
 	a.c[0]=c.r;		a.c[1]=c.g;		a.c[2]=c.b;
 	a.c[3]=alpha>0 ? alpha*(v+1)*(v+1) : -alpha*(v-1)*(v-1);
+	a.raw=new mreal[40];	memset(a.raw,0,40*sizeof(mreal));
+	memcpy(a.raw,p0,3*sizeof(mreal));	memcpy(a.raw+3,a.c,4*sizeof(mreal));
+	memcpy(a.raw+10,p1,3*sizeof(mreal));memcpy(a.raw+13,a.c,4*sizeof(mreal));
+	memcpy(a.raw+20,p2,3*sizeof(mreal));memcpy(a.raw+23,a.c,4*sizeof(mreal));
+	memcpy(a.raw+30,p3,3*sizeof(mreal));memcpy(a.raw+33,a.c,4*sizeof(mreal));
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------
@@ -210,6 +251,10 @@ void mglGraphPS::Glyph(mreal x, mreal y, mreal f, int s, long j, char col)
 	mglColor cc = mglColor(col);
 	if(!cc.Valid())	cc = mglColor(CDef[0],CDef[1],CDef[2]);
 	a.c[0] = cc.r;	a.c[1] = cc.g;	a.c[2] = cc.b;	a.c[3] = CDef[3];
+	a.raw=new mreal[7];
+	a.raw[0]=xPos;	a.raw[1]=yPos;	a.raw[2]=zPos;
+	memcpy(a.raw+3,a.c,4*sizeof(mreal));
+	a.raw[7]=x;	a.raw[8]=y;	a.raw[9]=a.zz[1];	// NOTE: not normale !!!
 	add_prim(&a);
 }
 //-----------------------------------------------------------------------------

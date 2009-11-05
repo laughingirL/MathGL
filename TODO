@@ -1,26 +1,17 @@
 
-					MathGL (for v.1.9.*)
+					MathGL (for v.1.10.*)
 
-0. LGPL in sources
 1. BoxPlot -- Web
-2. fsurf -- number of points ???
-3. Spline5
-4. mglGraphPS
- -- new list: separate points+colors, and add the "simpl" color for prim 
+2. Spline5
+3. mglGraphPS
  -- each prim have the inplot id & reference to settings list (lights, alpha, fog).
-5. Many MGL commands by ':' separator
-6. Scalar type in MGL (like number + for!!!)
+4. Web site (translate "Installation Qt")
 
-
-0. Configure should define MGL_DEF_VIEWER
-
-3. "Chaos" in area.png (near axis)
-
-4. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
-
-5. \dfrac for normal size and centering ???
-
-10. Spline5 !!!
+0. Configure should define MGL_DEF_VIEWER ???
+1. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
+2. \dfrac for normal size and centering ???
+3. fsurf -- number of points ???
+4. "Chaos" in area.png (near axis) ???
 
 
 					MathGL (for v.2.?) ???

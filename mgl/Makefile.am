@@ -53,4 +53,4 @@ mgl_2d.cpp         mgl_crust.cpp    mgl_export.cpp    mgl_main.cpp  \
 mgl_3d.cpp         mgl_data.cpp     mgl_f.cpp         mgl_idtf.cpp \
 mgl_ab.cpp         mgl_data_io.cpp  mgl_flow.cpp      mgl_vect.cpp \
 mgl_parse.cpp      mgl_fit.cpp      mgl_pde.cpp       mgl_evalc.cpp \
-mgl_addon.cpp      mgl_evalp.cpp    mgl_fg.cpp
+mgl_addon.cpp      mgl_evalp.cpp

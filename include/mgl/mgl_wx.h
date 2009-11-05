@@ -25,57 +25,6 @@
 #include <wx/timer.h>
 #include <mgl/mgl_zb.h>
 //-----------------------------------------------------------------------------
-class wxMathGL;
-class wxSpinCtrl;
-class wxMenu;
-class wxTimer;
-int mglWxRun();
-//-----------------------------------------------------------------------------
-class mglGraphWX : public mglGraphZB
-{
-friend class wxMathGL;
-public:
-using mglGraphAB::Window;
-	int sshow;			///< Current state of animation switch (toggle button)
-	wxMathGL *WMGL;		///< Control which draw graphics
-	int CurFig;			///< Current figure in the list.
-	wxWindow *Wnd;		///< Pointer to window
-
-	mglGraphWX();
-	~mglGraphWX();
-
-	void EndFrame();
-	const unsigned char *GetBits();
-	void Clf(mglColor Back=NC);
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Ñëóæåáíûå ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	/// Create a window for plotting. Now implemeted only for GLUT.
-	void Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
-				const char *title,void *par=NULL,
-	  			void (*reload)(int next, void *p)=NULL, bool maximize=false);
-	/// Switch on/off transparency (do not overwrite switches in user drawing function)
-	void ToggleAlpha();
-	/// Switch on/off lighting (do not overwrite switches in user drawing function)
-	void ToggleLight();
-	void ToggleZoom();	///< Switch on/off zooming by mouse
-	void ToggleRotate();///< Switch on/off rotation by mouse
-	void ToggleNo();	///< Switch off all zooming and rotation
-	void Update();		///< Update picture by calling user drawing function
-	void ReLoad(bool o);///< Reload user data and update picture
-	void Adjust();		///< Adjust size of bitmap to window size
-	void NextFrame();	///< Show next frame (if one)
-	void PrevFrame();	///< Show previous frame (if one)
-	void Animation();	///< Run slideshow (animation) of frames
-
-protected:
-	unsigned char *GG;	///< images for all frames (may be too LARGE !!!)
-//	QScrollArea *scroll;	///< Scrolling area
-	wxMenu *popup;			///< Popup menu
-	wxSpinCtrl *tet, *phi;	///< Spin box for angles
-//	QAction *anim;
-
-	void makeMenu();		///< Create menu, toolbar and popup menu
-};
-//-----------------------------------------------------------------------------
 /// Class is Wx widget which display MathGL graphics
 class wxMathGL : public wxWindow
 {
@@ -84,15 +33,15 @@ public:
 	bool AutoResize;	///< Allow auto resizing (default is false)
 	int AnimDelay;		///< Animation delay in ms
 
-	wxMathGL(wxWindow *parent, wxWindowID id, const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize, long style=0, const wxString& name=wxPanelNameStr);
+	wxMathGL(wxWindow *parent, wxWindowID id=-1, const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize, long style=0, const wxString& name=wxPanelNameStr);
 	~wxMathGL();
 	double GetRatio()	{	return double(graph->GetWidth())/graph->GetHeight();	};
 	void SetPopup(wxMenu *p)	{	popup = p;	};	///< Set popup menu pointer
+	void SetSize(int w, int h);		///< Set window/picture sizes
 	void SetGraph(mglGraphAB *gr);	///< Set grapher object
 	/// Set drawing functions and its parameter
 	void SetDraw(int (*func)(mglGraph *gr, void *par),	void *par=0);
 	void SetDraw(mglDraw *dr);		///< Set drawing functions from mglDraw class
-
 
 	int GetPer()	{return per;};		///< Get perspective value
 	int GetPhi()	{return phi;};		///< Get Phi-angle value
@@ -102,7 +51,7 @@ public:
 	bool GetZoom()	{return zoom;};		///< Get mouse zooming state
 	bool GetRotate(){return rotate;};	///< Get mouse rotation state
 
-public:
+	void Repaint();
 	void Update(mglGraph *gr=0);	///< Update picture
 	void Copy();			///< copy graphics to clipboard
 	void Print();			///< Print plot
@@ -151,22 +100,12 @@ protected:
 //	void MouseReleaseEvent(QMouseEvent *);
 //	void MouseMoveEvent(QMouseEvent *);
 
-/*signals:*/
-	void PhiChanged(int);	///< Phi angle changed (by mouse or by toolbar)
-	void TetChanged(int);	///< Tet angle changed (by mouse or by toolbar)
-	void PerChanged(int);	///< Perspective changed (by mouse or by toolbar)
-	void AlphaChanged(bool);	///< Transparency changed (by toolbar)
-	void LightChanged(bool);	///< Lighting changed (by toolbar)
-	void ZoomChanged(bool);		///< Zooming changed (by toolbar)
-	void RotateChanged(bool);	///< Rotation changed (by toolbar)
-	void MouseClick(float,float,float);	///< Position of mouse click
-
 	mglGraphAB *graph;	///< Built-in mglGraph-er instance (used by default)
 	void *draw_par;		///< Parameters for drawing function mglGraph::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglGraph *gr, void *par);
 	wxString MousePos;	///< Last mouse position
-	wxImage pic;		///< Pixmap for drawing (changed by update)
+	wxBitmap pic;		///< Pixmap for drawing (changed by update)
 	double tet, phi;	///< Rotation angles
 	double per;			///< Value of perspective ( must be in [0,1) )
 	bool alpha;			///< Transparency state
@@ -180,8 +119,61 @@ protected:
 	DECLARE_EVENT_TABLE()
 private:
 	int x0, y0, xe, ye;		///< Temporary variables for mouse
-//	uchar *grBuf;
+	unsigned char *grBuf;
 };
+//-----------------------------------------------------------------------------
+#ifdef ENABLE_MGLGRAPHWX
+#include <wx/scrolwin.h>
+class wxSpinCtrl;
+class wxMenu;
+int mglWxRun();
+//-----------------------------------------------------------------------------
+class mglGraphWX : public mglGraphZB
+{
+friend class wxMathGL;
+public:
+using mglGraphAB::Window;
+	int sshow;			///< Current state of animation switch (toggle button)
+	wxMathGL *WMGL;		///< Control which draw graphics
+	int CurFig;			///< Current figure in the list.
+	wxWindow *Wnd;		///< Pointer to window
+
+	mglGraphWX();
+	~mglGraphWX();
+
+	void EndFrame();
+	void SetSize(int w,int h);
+	const unsigned char *GetBits();
+	void Clf(mglColor Back=NC);
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Ñëóæåáíûå ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	/// Create a window for plotting. Now implemeted only for GLUT.
+	void Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
+				const char *title,void *par=NULL,
+	  			void (*reload)(int next, void *p)=NULL, bool maximize=false);
+	/// Switch on/off transparency (do not overwrite switches in user drawing function)
+	void ToggleAlpha();
+	/// Switch on/off lighting (do not overwrite switches in user drawing function)
+	void ToggleLight();
+	void ToggleZoom();	///< Switch on/off zooming by mouse
+	void ToggleRotate();///< Switch on/off rotation by mouse
+	void ToggleNo();	///< Switch off all zooming and rotation
+	void Update();		///< Update picture by calling user drawing function
+	void ReLoad(bool o);///< Reload user data and update picture
+	void Adjust();		///< Adjust size of bitmap to window size
+	void NextFrame();	///< Show next frame (if one)
+	void PrevFrame();	///< Show previous frame (if one)
+	void Animation();	///< Run slideshow (animation) of frames
+
+protected:
+	unsigned char *GG;	///< images for all frames (may be too LARGE !!!)
+	wxScrolledWindow *scroll;	///< Scrolling area
+	wxMenu *popup;			///< Popup menu
+	wxSpinCtrl *tet, *phi;	///< Spin box for angles
+//	QAction *anim;
+
+	void MakeMenu();		///< Create menu, toolbar and popup menu
+};
+#endif
 //-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------

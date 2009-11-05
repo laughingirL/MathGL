@@ -37,19 +37,19 @@ int mgl_png_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p);
 //-----------------------------------------------------------------------------
-unsigned char **mglGraph::GetRGBLines(long &w, long &h, unsigned char *&f, bool )
+unsigned char **mglGraph::GetRGBLines(long &, long &, unsigned char *&f, bool )
 {	f=0;	return 0;	}
 //-----------------------------------------------------------------------------
 void mglGraph::WriteSVG(const char *,const char *)	{}
 void mglGraph::WriteIDTF(const char *,const char *)	{}
-void mglGraph::DoubleSided(bool enable)	{}
-void mglGraph::VertexColor(bool enable)	{}
-void mglGraph::TextureColor(bool enable){}
-void mglGraph::Compression(bool enable)	{}
-void mglGraph::Unrotate(bool enable)	{}
-void mglGraph::BallIsPoint(bool enable)	{}
-void mglGraph::StartGroup ( const char *name )		{}
-void mglGraph::StartAutoGroup ( const char *name )	{}
+void mglGraph::DoubleSided(bool )	{}
+void mglGraph::VertexColor(bool )	{}
+void mglGraph::TextureColor(bool ){}
+void mglGraph::Compression(bool )	{}
+void mglGraph::Unrotate(bool )	{}
+void mglGraph::BallIsPoint(bool )	{}
+void mglGraph::StartGroup ( const char * )		{}
+void mglGraph::StartAutoGroup ( const char * )	{}
 void mglGraph::EndGroup()	{}
 //-----------------------------------------------------------------------------
 void mglGraph::WriteJPEG(const char *fname,const char *)

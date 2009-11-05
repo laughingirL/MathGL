@@ -373,7 +373,8 @@ void mglFont::draw_ouline(mglGraph *gr, int st, mreal x, mreal y, mreal f, mreal
 mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char col)
 {
 	if(numg==0)	return 0;
-	register long i,j,k;
+	register long j,k;
+	long i;
 	register unsigned s,ss;
 	mreal w=0;				// string width
 	int st = style;			// current style
@@ -720,7 +721,8 @@ mglFont::mglFont(const char *name, const char *path)
 	parse = true;	numg=0;	gr=0;
 //	if(this==&mglDefFont)	Load(name, path);	else	Copy(&mglDefFont);
 	if(this!=&mglDefFont)	Copy(&mglDefFont);
-	if(name || this==&mglDefFont)	Load(name, path);
+	if(this==&mglDefFont && (!name || name[0]==0))	Load(MGL_DEF_FONT_NAME,0);
+	else if(name && name[0])	Load(name, path);
 }
 mglFont::~mglFont()	{	Clear();	}
 void mglFont::Restore()	{	Copy(&mglDefFont);	}

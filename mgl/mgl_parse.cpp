@@ -377,7 +377,7 @@ void mglParse::FillArg(int k, wchar_t **arg, mglArg *a)
 //-----------------------------------------------------------------------------
 // return values: 0 - not found, 1 - OK, 2 - wrong arguments,
 //				3 - wrong command, 4 - string too long
-int mglParse::PreExec(mglGraph *gr, long k, wchar_t **arg, mglArg *a)
+int mglParse::PreExec(mglGraph *, long k, wchar_t **arg, mglArg *a)
 {
 	long n=0;
 	mglVar *v;
@@ -664,7 +664,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	return n;
 }
 //-----------------------------------------------------------------------------
-int mglParse::FlowExec(mglGraph *gr, const wchar_t *com, long m, mglArg *a)
+int mglParse::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 {
 	int n=-1;
 	if(!wcscmp(com,L"once"))

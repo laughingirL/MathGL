@@ -573,7 +573,7 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 		else	m = 1+int(d+0.5);
 		if(m<5)	m = 5;
 	}
-	
+
 //	long m = n<=20?n:6;
 	for(i=0;i<m;i++)
 	{
@@ -869,7 +869,7 @@ void mglGraphAB::Adjust(){}
 void mglGraphAB::NextFrame(){}
 void mglGraphAB::PrevFrame(){}
 void mglGraphAB::Animation(){}
-void mglGraphAB::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p), bool maximize){}
+void mglGraphAB::Window(int , char **, int (*)(mglGraph *, void *), const char *, void *, void (*)(int , void *), bool ){}
 //-----------------------------------------------------------------------------
 int mgl_draw_class(mglGraph *gr, void *p)
 {	return p ? ((mglDraw *)p)->Draw(gr) : 0;	}

@@ -1,14 +1,22 @@
 from distutils.core import setup, Extension
+import os
+
+try:
+	source_dir=os.environ["CMAKE_SOURCE_DIR"]
+	mgl_dir="mgl/libmgl.so"
+except KeyError:
+	source_dir="."
+	mgl_dir="mgl/.libs/libmgl.so"
 
 mgl_module = Extension('_mathgl',
-    sources=['lang/mgl_python.cpp'],
-    include_dirs=['./include'],
-    extra_objects=['./mgl/libmgl.so']
+    sources=["lang/mgl_python.cpp"],
+    include_dirs=["%s/include" % source_dir],
+    extra_objects=[mgl_dir]
     )
 
 setup (
     name = "mathgl",
-    version = "1.7",
+    version = "1.8",
     maintainer="Dmitry Kulagin",
     maintainer_email="dik@ufp.appl.sci-nnov.ru",
     author="Alexey Balakin",

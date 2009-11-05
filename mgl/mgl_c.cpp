@@ -368,7 +368,7 @@ void mgl_get_last_mouse_pos(HMGL gr, mreal *x, mreal *y, mreal *z)
 {
 	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);
 	if(g)
-	{	*x=g->LastMousePos.x;	*y=g->LastMousePos.y;	*y=g->LastMousePos.y;}
+	{	*x=g->LastMousePos.x;	*y=g->LastMousePos.y;	*z=g->LastMousePos.z;}
 }
 void mgl_calc_xyz(HMGL gr, int xs, int ys, mreal *x, mreal *y, mreal *z)
 {

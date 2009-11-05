@@ -210,11 +210,7 @@ struct mglParse{};
 	{	return mgl_get_height(self);}
 	mglPoint CalcXYZ(int xs, int ys)
 	{
-#ifdef MGL_USE_DOUBLE
-		double x,y,z;
-#else
-		float x,y,z;
-#endif
+		mreal x,y,z;
 		mgl_calc_xyz(self,xs,ys,&x,&y,&z);
 		return mglPoint(x,y,z);
 	}

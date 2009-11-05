@@ -268,7 +268,7 @@ void mglData::Save(const char *fname,int ns) const
 	FILE *fp;
 	fp = fopen(fname,"w");
 	if(ns<0 || (ns>=nz && nz>1))	for(long k=0;k<nz;k++)
-	{	// ñîõðàíÿåì âñå äàííûå
+	{	// Ã±Ã®ÃµÃ°Ã Ã­Ã¿Ã¥Ã¬ Ã¢Ã±Ã¥ Ã¤Ã Ã­Ã­Ã»Ã¥
 		for(long i=0;i<ny;i++)
 		{
 			for(long j=0;j<nx;j++)
@@ -278,8 +278,8 @@ void mglData::Save(const char *fname,int ns) const
 		fprintf(fp,"\n");
 	}
 	else
-	{	// ñîõðàíÿåì òîëüêî ñðåç
-		if(nz>1)		// äëÿ 3D -- ïëîñêîñòü
+	{	// Ã±Ã®ÃµÃ°Ã Ã­Ã¿Ã¥Ã¬ Ã²Ã®Ã«Ã¼ÃªÃ® Ã±Ã°Ã¥Ã§
+		if(nz>1)		// Ã¤Ã«Ã¿ 3D -- Ã¯Ã«Ã®Ã±ÃªÃ®Ã±Ã²Ã¼
 		{
 			for(long i=0;i<ny;i++)
 			{
@@ -288,7 +288,7 @@ void mglData::Save(const char *fname,int ns) const
 				fprintf(fp,"\n");
 			}
 		}
-		else if(ns<ny)	// äëÿ 2D -- ëèíèÿ
+		else if(ns<ny)	// Ã¤Ã«Ã¿ 2D -- Ã«Ã¨Ã­Ã¨Ã¿
 		{
 			for(long j=0;j<nx;j++)
 				fprintf(fp,"%g\t",a[j+nx*ns]);
@@ -750,7 +750,7 @@ void mglData::Norm(mreal v1,mreal v2,bool sym,int dim)
 
 }
 //-----------------------------------------------------------------------------
-void mglData::Squeeze(int rx,int ry,int rz,bool smooth)
+void mglData::Squeeze(int rx,int ry,int rz,bool /*smooth*/)
 {
 	long kx,ky,kz,i,j,k;
 	mreal *b;
@@ -980,8 +980,8 @@ void mglData::ReadHDF(const char *fname,const char *data)
 	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
 }
 #else
-void mglData::SaveHDF(const char *fname,const char *data,bool rewrite) const {}
-void mglData::ReadHDF(const char *fname,const char *data)	{}
+void mglData::SaveHDF(const char *,const char *,bool ) const {}
+void mglData::ReadHDF(const char *,const char *)	{}
 #endif
 //-----------------------------------------------------------------------------
 bool mgl_add_file(long &kx,long &ky, long &kz, mreal *&b, mglData &d,bool as_slice)

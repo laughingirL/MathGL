@@ -229,7 +229,7 @@ void mgl_data_transpose_(uintptr_t *d, const char *dim,int l)
 void mgl_data_norm_(uintptr_t *d, mreal *v1,mreal *v2,int *sym,int *dim)
 {	_DT_->Norm(*v1,*v2,*sym,*dim);	}
 /// Normalize the data to range [v1,v2]
-void mgl_data_norm_slice_(uintptr_t *d, mreal *v1,mreal *v2,char *dir,int *keep_en,int *sym,int l)
+void mgl_data_norm_slice_(uintptr_t *d, mreal *v1,mreal *v2,char *dir,int *keep_en,int *sym,int )
 {	_DT_->NormSl(*v1,*v2,*dir,*keep_en,*sym);	}
 /// Reduce size of the data
 void mgl_data_squeeze_(uintptr_t *d, int *rx,int *ry,int *rz,int *smooth)
@@ -466,7 +466,7 @@ HMDT mgl_data_evaluate_i(const HMDT dat, const HMDT idat, int norm)
 HMDT mgl_data_evaluate_ij(const HMDT dat, const HMDT idat, const HMDT jdat, int norm)
 {	return new mglData(dat->Evaluate(*idat,*jdat,norm));	}
 HMDT mgl_data_evaluate_ijk(const HMDT dat, const HMDT idat, const HMDT jdat, const HMDT kdat, int norm)
-{	return new mglData(dat->Evaluate(*idat,*jdat,*dat,norm));	}
+{	return new mglData(dat->Evaluate(*idat,*jdat,*kdat,norm));	}
 void mgl_data_envelop(HMDT dat, char dir)	{	dat->Envelop(dir);	}
 void mgl_data_sew(HMDT dat, const char *dirs, mreal da)
 {	dat->Sew(dirs,da);	}

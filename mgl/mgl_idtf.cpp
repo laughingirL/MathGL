@@ -364,7 +364,7 @@ void mglGraphIDTF::SetAmbientLight ( mglColor c, mreal br )
 {
 	u3dLight Light;
   Lights.push_back ( Light );
-  
+
 	Lights.back().name = "AmbientLight";
 	Lights.back().type = "AMBIENT";
 	Lights.back().attenuation = 1.0;
@@ -376,7 +376,7 @@ void mglGraphIDTF::AddLight ( mglPoint p, mglColor color, mreal br, bool infty )
 {
 	u3dLight Light;
   Lights.push_back ( Light );
-	
+
   Lights.back().color = color;
 	Lights.back().attenuation = 1.0;
 	Lights.back().intensity = br;
@@ -424,7 +424,7 @@ void mglGraphIDTF::AddLight ( mglPoint p, mglColor color, mreal br, bool infty )
 		Lights.back().position[3][2] = c;
 	}
 
-	
+
 };
 
 void u3dMaterial::print_material ( std::ofstream& ostr )
@@ -507,7 +507,7 @@ void u3dTexture::print_texture ( const char *fname, std::ofstream& ostr )
 	<< "\t\t\tIMAGE_FORMAT 0 {\n"
 	<< "\t\t\t\tCOMPRESSION_TYPE \"PNG\"\n";
   if (this->image.Channels == 4)
-    ostr << 
+    ostr <<
       "\t\t\t\tALPHA_CHANNEL \"TRUE\"\n";
   ostr
 	<< "\t\t\t\tBLUE_CHANNEL \"TRUE\"\n"
@@ -764,7 +764,7 @@ void mglGraphIDTF::MakeTransformMatrix( mreal position[4][4], mreal invpos[4][4]
  printf("%f %f %f %f\n", invpos[1][0], invpos[1][1], invpos[1][2], invpos[1][3]);
  printf("%f %f %f %f\n", invpos[2][0], invpos[2][1], invpos[2][2], invpos[2][3]);
  printf("%f %f %f %f\n", invpos[3][0], invpos[3][1], invpos[3][2], invpos[3][3]);
-  
+
   printf("B %f %f %f %f %f %f %f %f %f\n", B[0], B[1], B[2], B[3], B[4], B[5], B[6], B[7], B[8]);
   printf("pos %f %f %f\n", xPos, yPos, zPos); */
 }
@@ -1668,7 +1668,7 @@ void mglGraphIDTF::Ball ( mreal x,mreal y,mreal z,mglColor col,mreal alpha )
 	Balls.push_back(ball);
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::ball ( mreal *p,mreal *c )
+void mglGraphIDTF::ball ( mreal *,mreal * )
 {
 //	point_plot ( mglPoint ( p[0], p[1], p[2] ) );
 }
@@ -2082,7 +2082,7 @@ void mglGraphIDTF::point_plot ( const mglPoint& p, const mglColor& c )
 	GetPointSet().point_plot ( p, c );
 }
 //-----------------------------------------------------------------------------
-void mglGraphIDTF::line_plot_s ( mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all )
+void mglGraphIDTF::line_plot_s ( mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool )
 {
 	GetLineSet().line_plot ( p1, p2, c1, c2 );
 }
@@ -2457,7 +2457,7 @@ void mglGraphIDTF::InPlot ( mreal x1,mreal x2,mreal y1,mreal y2, bool rel )
 }
 //-----------------------------------------------------------------------------
 #ifndef HAVE_U3D
-void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
+void mglGraphIDTF::WriteIDTF ( const char *fname,const char * )
 {
 	std::ofstream ostr ( fname );
 
@@ -2569,7 +2569,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char *descr )
 	<< "			PARENT_NAME \"<NULL>\"\n"
 	<< "			PARENT_TM {\n"
   << "          1.000000 0.000000 0.000000 0.000000\n"
-  << "          0.000000 1.000000 0.000000 0.000000\n" 
+  << "          0.000000 1.000000 0.000000 0.000000\n"
   << "          0.000000 0.000000 1.000000 0.000000\n"
   << "          0.000000 0.000000 2.000000 1.000000\n"
 	<< "			}\n"
@@ -2762,10 +2762,10 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
     fname[fnlen-4]='\0';
   else if ( fnlen > 4 && strcasecmp(fname+fnlen-4, ".pdf") == 0 )
     fname[fnlen-4]='\0';
-  
-  
+
+
   // Preparatory work
-  {     
+  {
     Lights.clear();
     if ( UseLight )
     {
@@ -2855,18 +2855,18 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         it->parent = it->parent->parent;
       }
     }
-    
+
     // Make inverse coordinate transform with the model, if so desired
     if (unrotate_flag)
       MakeTransformMatrix( mgl_globpos, mgl_globinv);
     else
       memcpy( mgl_globinv, mgl_definv, sizeof(mgl_definv));
-    
+
   }
-  
+
   // Initialize U3D lib
   IFXRESULT result = IFX_OK;
-  
+
   result = IFXSetDefaultLocale();
   IFXTRACE_GENERIC(L"[Converter] IFXSetDefaultLocale %i\n", result);
 
@@ -2875,29 +2875,29 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
     IFXDEBUG_STARTUP();
     result = IFXCOMInitialize();
   }
-  
+
   if( !IFXSUCCESS(result) )
     return;
-   
+
   // Let us enclose it to be sure everything is cleared before we thry to unload the lib
-                       
+
   {
-    using namespace U3D_IDTF;                                                                                                              
+    using namespace U3D_IDTF;
     // Initialize converter
     ConverterOptions converterOptions;
     FileOptions fileOptions;
-    
+
     wchar_t *wU3DFileName = new wchar_t [mbstowcs(NULL, fname, 32000)+1+4];
     mbstowcs(wU3DFileName, fname, 32000);
     wcscat(wU3DFileName,L".u3d");
     fileOptions.outFile    = wU3DFileName;
     delete [] wU3DFileName;
-  
+
     fileOptions.exportOptions  = IFXExportOptions(65535);
     fileOptions.profile    = 0;
     fileOptions.scalingFactor  = 1.0f;
     fileOptions.debugLevel    = 0;
-  
+
     converterOptions.positionQuality = 1000;
     converterOptions.texCoordQuality = 1000;
     converterOptions.normalQuality   = 1000;
@@ -2910,26 +2910,26 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
     converterOptions.removeZeroAreaFaces  = FALSE;
     converterOptions.zeroAreaFaceTolerance  = 100.0f * FLT_EPSILON;
     converterOptions.excludeNormals  = TRUE;
-  
+
     SceneUtilities sceneUtils;
-  
+
     result = sceneUtils.InitializeScene( fileOptions.profile, fileOptions.scalingFactor );
-    
+
     SceneConverter converter( &sceneUtils, &converterOptions );
-    
+
     // Do real work, create model to be converted
     {
       NodeList&       Nodes     = converter.m_nodeList;
       SceneResources& Resources = converter.m_sceneResources;
       ModifierList&   Modifiers = converter.m_modifierList;
-      
+
       Resources.GetResourceList( IDTF_LIGHT    )->SetType( IDTF_LIGHT    );
       Resources.GetResourceList( IDTF_MODEL    )->SetType( IDTF_MODEL    );
       Resources.GetResourceList( IDTF_VIEW     )->SetType( IDTF_VIEW     );
       Resources.GetResourceList( IDTF_SHADER   )->SetType( IDTF_SHADER   );
       Resources.GetResourceList( IDTF_MATERIAL )->SetType( IDTF_MATERIAL );
       Resources.GetResourceList( IDTF_TEXTURE  )->SetType( IDTF_TEXTURE  );
-      
+
       // Start write the Camera
       {
         // Camera Resource
@@ -2940,7 +2940,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
           defaultViewResource.AddRootNode( L"" );
           pViewResources->AddResource( defaultViewResource );
         }
-        
+
         // Camera node
         {
           ViewNode View;
@@ -2967,7 +2967,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         }
       }
       // End of Camera
-      
+
       // Create nodes
       {
         // Create global inverse transform matrix
@@ -3057,7 +3057,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
             Parent.SetParentName( L"<NULL>" );
           else
             Parent.SetParentName( it->parent->name.c_str() );
-          
+
           IFXMatrix4x4 Position;
           Position[ 0] = it->position[0][0];
           Position[ 1] = it->position[1][0];
@@ -3075,15 +3075,15 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
           Position[13] = it->position[1][3];
           Position[14] = it->position[2][3];
           Position[15] = it->position[3][3];
-          
+
           IFXMatrix4x4 Matrix;
           Matrix.Reset();
           Matrix.Multiply3x4(GlobInv, Position);
-          
+
           Parent.SetParentTM( Matrix );
           Parents.AddParentData( Parent );
           Model.SetParentList( Parents );
-          
+
           Nodes.AddNode( &Model );
         }
         for ( u3dLineSet_list::iterator it = LineSets.begin(); it != LineSets.end(); ++it )
@@ -3098,7 +3098,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
             Parent.SetParentName( L"<NULL>" );
           else
             Parent.SetParentName( it->parent->name.c_str() );
-          
+
           IFXMatrix4x4 Position;
           Position[ 0] = it->position[0][0];
           Position[ 1] = it->position[1][0];
@@ -3116,15 +3116,15 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
           Position[13] = it->position[1][3];
           Position[14] = it->position[2][3];
           Position[15] = it->position[3][3];
-          
+
           IFXMatrix4x4 Matrix;
           Matrix.Reset();
           Matrix.Multiply3x4(GlobInv, Position);
-          
+
           Parent.SetParentTM( Matrix );
           Parents.AddParentData( Parent );
           Model.SetParentList( Parents );
-          
+
           Nodes.AddNode( &Model );
         }
         for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
@@ -3141,7 +3141,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
             Parent.SetParentName( L"<NULL>" );
           else
             Parent.SetParentName( it->parent->name.c_str() );
-          
+
           IFXMatrix4x4 Position;
           Position.Reset();
           Position[ 0] = it->position[0][0];
@@ -3160,18 +3160,18 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
           Position[13] = it->position[1][3];
           Position[14] = it->position[2][3];
           Position[15] = it->position[3][3];
-          
+
           IFXMatrix4x4 Matrix;
           Matrix.Reset();
           Matrix.Multiply3x4(GlobInv,Position);
-          
+
           Parent.SetParentTM( Matrix );
           Parents.AddParentData( Parent );
           Model.SetParentList( Parents );
-          
+
           if (it->both_visible)
             Model.SetVisibility( L"BOTH" );
-          
+
           Nodes.AddNode( &Model );
         }
         for ( u3dBall_list::iterator it = Balls.begin(); it != Balls.end(); ++it )
@@ -3186,27 +3186,27 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
             Parent.SetParentName( L"<NULL>" );
           else
             Parent.SetParentName( it->parent->name.c_str() );
-          
+
           IFXMatrix4x4 Position;
           Position.Reset();
           IFXVector3 Scale(it->radius, it->radius, it->radius);
           Position.Scale3x4(Scale);
           IFXVector3 Center(it->center.x, it->center.y, it->center.z);
           Position.SetTranslation(Center);
-          
+
           IFXMatrix4x4 Matrix;
           Matrix.Reset();
           Matrix.Multiply3x4(GlobInv,Position);
-          
+
           Parent.SetParentTM( Matrix );
           Parents.AddParentData( Parent );
           Model.SetParentList( Parents );
-          
+
           Nodes.AddNode( &Model );
         }
       }
       // End nodes
-      
+
       // Write lights resources
       LightResourceList* pLightResources = static_cast< LightResourceList* >( Resources.GetResourceList( IDTF_LIGHT ) );
       for ( u3dLight_list::iterator it = Lights.begin(); it != Lights.end(); ++it )
@@ -3215,7 +3215,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         lightResource.SetName( it->name.c_str() );
         if (it->type == "POINT")
           lightResource.m_type = IDTF_POINT_LIGHT;
-        else if (it->type == "DIRECTIONAL" ) 
+        else if (it->type == "DIRECTIONAL" )
           lightResource.m_type = IDTF_DIRECTIONAL_LIGHT;
         else
           lightResource.m_type = IDTF_AMBIENT_LIGHT;
@@ -3254,11 +3254,11 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
           it->vertex_color = false;
         }
         bool colored  = it->Colors.size() > 0;
-        
+
         if ( oneblackcolor )
         {
           size_t numPoints = it->Points.size();
-          
+
           PointSetResource pointSetResource;
           pointSetResource.SetName( it->name.c_str() );
           pointSetResource.m_type = IDTF_POINT_SET;
@@ -3275,13 +3275,13 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
           shadingDescription.m_shaderId = 0;
           shadingDescription.m_textureLayerCount = 0;
           pointSetResource.m_shadingDescriptions.AddShadingDescription( shadingDescription );
-                  
+
           for ( size_t id=0; id < numPoints; id++ )
              pointSetResource.m_pointPositions.CreateNewElement() = id;
-          
+
           for ( size_t id=0; id < numPoints; id++ )
             pointSetResource.m_pointShaders.CreateNewElement() = 0;
-          
+
           for ( size_t pid=0; pid < numPoints; pid++ )
             pointSetResource.m_positions.CreateNewElement().SetPoint( IFXVector3 ( it->Points[pid].x, it->Points[pid].y, it->Points[pid].z ) );
 
@@ -3304,7 +3304,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
             it->Colors.push_back( it->Colors.back() );
             numPoints++;
           }
-          
+
           size_t numTriangles = it->Points.size() / 3;
 
           MeshResource meshResource;
@@ -3323,27 +3323,27 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
           shadingDescription.m_shaderId = 0;
           shadingDescription.m_textureLayerCount = 0;
           meshResource.m_shadingDescriptions.AddShadingDescription( shadingDescription );
-          
+
           for ( size_t id=0; id < numTriangles; id++ )
             meshResource.m_facePositions.CreateNewElement().SetData( 3*id+0, 3*id+1, 3*id+2 );
-          
+
           for ( size_t id=0; id < numTriangles; id++ )
             meshResource.m_faceShaders.CreateNewElement() = 0;
-          
+
           if ( colored )
             for ( size_t id=0; id < numTriangles; id++ )
               meshResource.m_faceDiffuseColors.CreateNewElement().SetData( 3*id+0, 3*id+1, 3*id+2 );
-          
+
           for ( size_t pid=0; pid < numPoints; pid++ )
             meshResource.m_positions.CreateNewElement().SetPoint( IFXVector3 ( it->Points[pid].x, it->Points[pid].y, it->Points[pid].z ) );
-          
+
           if ( colored )
             for ( size_t cid=0; cid < numColors; cid++ )
               meshResource.m_diffuseColors.CreateNewElement().SetColor( IFXVector4 ( it->Colors[cid].r, it->Colors[cid].g, it->Colors[cid].b ) );
-                    
+
           for ( size_t pid=0; pid < numPoints; pid++ )
             meshResource.m_basePositions.CreateNewElement() = pid;
-          
+
           pModelResources->AddResource( &meshResource );
         }
       }
@@ -3352,7 +3352,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         size_t numMaterials = it->ModelMaterials.size();
         size_t numPoints = it->Points.size();
         size_t numLines  = it->Lines.size();
-        
+
         LineSetResource lineSetResource;
         lineSetResource.SetName( it->name.c_str() );
         lineSetResource.m_type = IDTF_LINE_SET;
@@ -3372,16 +3372,16 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
           shadingDescription.m_textureLayerCount = 0;
           lineSetResource.m_shadingDescriptions.AddShadingDescription( shadingDescription );
         }
-  
+
        for ( size_t id=0; id < numLines; id++ )
           lineSetResource.m_linePositions.CreateNewElement().SetData( it->Lines[id].pid1, it->Lines[id].pid2 );
-        
+
         for ( size_t id=0; id < numLines; id++ )
           lineSetResource.m_lineShaders.CreateNewElement() = it->Lines[id].mid;
-        
+
         for ( size_t pid=0; pid < numPoints; pid++ )
           lineSetResource.m_positions.CreateNewElement().SetPoint( IFXVector3 ( it->Points[pid].x, it->Points[pid].y, it->Points[pid].z ) );
-  
+
         pModelResources->AddResource( &lineSetResource );
       }
       for ( u3dMesh_list::iterator it = Meshes.begin(); it != Meshes.end(); ++it )
@@ -3392,7 +3392,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         size_t numTexCoords = it->textureCoords.size();
         bool textured = it->textureDimension > 0;
         bool shaded = it->faceShaders.size() > 0;
-                
+
         if ( it->Colors.size() == 1 ) // if there is just one color in the model - make the corresponding material
         {
           it->ModelMaterials.pop_back();
@@ -3402,7 +3402,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         }
         bool colored  = it->Colors.size() > 0;
         size_t numColors    = it->Colors.size();
-        
+
         MeshResource meshResource;
         meshResource.SetName( it->name.c_str()  );
         meshResource.m_type = IDTF_MESH;
@@ -3431,10 +3431,10 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
             shadingDescription.m_textureLayerCount = 0;
           meshResource.m_shadingDescriptions.AddShadingDescription( shadingDescription );
         }
-        
+
         for ( size_t id=0; id < numTriangles; id++ )
           meshResource.m_facePositions.CreateNewElement().SetData( it->Triangles[id].a, it->Triangles[id].b, it->Triangles[id].c );
-        
+
         for ( size_t id=0; id < numTriangles; id++ )
           if ( shaded )
             meshResource.m_faceShaders.CreateNewElement() = it->faceShaders[id];
@@ -3444,26 +3444,26 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         if ( textured )
           for ( size_t id=0; id < numTriangles; id++ )
             meshResource.m_faceTextureCoords.CreateNewElement().m_texCoords.CreateNewElement().SetData( it->faceColors[id].a, it->faceColors[id].b, it->faceColors[id].c );
-        
+
         if ( colored )
           for ( size_t id=0; id < numTriangles; id++ )
             meshResource.m_faceDiffuseColors.CreateNewElement().SetData( it->faceColors[id].a, it->faceColors[id].b, it->faceColors[id].c );
-        
+
         for ( size_t pid=0; pid < numPoints; pid++ )
           meshResource.m_positions.CreateNewElement().SetPoint( IFXVector3 ( it->Points[pid].x, it->Points[pid].y, it->Points[pid].z ) );
-        
+
         if ( colored )
           for ( size_t cid=0; cid < numColors; cid++ )
             meshResource.m_diffuseColors.CreateNewElement().SetColor( IFXVector4 ( it->Colors[cid].r, it->Colors[cid].g, it->Colors[cid].b ) );
-        
+
         if ( textured )
           for ( size_t cid=0; cid < numTexCoords; cid++ )
             meshResource.m_textureCoords.CreateNewElement().Set( it->textureCoords[cid].U, ( it->textureDimension == 2 ? it->textureCoords[cid].V : 0.0 ), 0.0, 0.0 );
-        
+
         if ( it->disable_compression )
           for ( size_t pid=0; pid < numPoints; pid++ )
             meshResource.m_basePositions.CreateNewElement() = pid;
-        
+
         pModelResources->AddResource( &meshResource );
       }
       if ( Balls.size() != 0 )
@@ -3476,7 +3476,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         const mreal Radius = 1.0f;
         const size_t numTriangles = ThetaResolution*(PhiResolution-2)*2;
         const size_t numPoints = ThetaResolution*(PhiResolution-2)+2;
-        
+
         MeshResource meshResource;
         meshResource.SetName( L"UnitBall" );
         meshResource.m_type = IDTF_MESH;
@@ -3493,7 +3493,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         shadingDescription.m_shaderId = 0;
         shadingDescription.m_textureLayerCount = 0;
         meshResource.m_shadingDescriptions.AddShadingDescription( shadingDescription );
-        
+
         // tetrahedron
         //	Mesh.Points.push_back ( Radius * mglPoint ( 1,  1,  1) );
         //	Mesh.Points.push_back ( Radius * mglPoint (-1, -1,  1) );
@@ -3517,23 +3517,23 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         //	triangle.c = 3;
         //	Mesh.Triangles.push_back ( triangle );
         //	Meshes.push_back ( Mesh );
-        
+
         // Create north pole
         nrm.x = nrm.y = 0.0; nrm.z = 1.0;
         pnt = Center + Radius * nrm;
         meshResource.m_positions.CreateNewElement().SetPoint( IFXVector3 (pnt.x, pnt.y, pnt.z ) );
-        
+
         // Create south pole
         nrm.x = nrm.y = 0.0; nrm.z = -1.0;
         pnt = Center + Radius * nrm;
         meshResource.m_positions.CreateNewElement().SetPoint( IFXVector3 (pnt.x, pnt.y, pnt.z ) );
-        
+
         // Create intermediate points
         for ( size_t i=0; i < ThetaResolution; i++ )
         {
           double deltaTheta = 2*M_PI/ThetaResolution;
           double theta = i*deltaTheta;;
-          
+
           for ( size_t j=1; j<PhiResolution-1; j++ )
           {
             double deltaPhi = M_PI/ ( PhiResolution-1 );
@@ -3545,12 +3545,12 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
             meshResource.m_positions.CreateNewElement().SetPoint( IFXVector3 ( pnt.x, pnt.y, pnt.z ) );
           }
         }
-        
+
         // Generate mesh connectivity
         size_t phiResolution = PhiResolution - 2;
         size_t base = phiResolution * ThetaResolution;
         const size_t numPoles = 2;
-        
+
         // around north pole
         for ( size_t i=0; i < ThetaResolution; i++ )
         {
@@ -3560,7 +3560,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
           triangle.c =  0;
           meshResource.m_facePositions.CreateNewElement().SetData( triangle.a, triangle.b, triangle.c );
         }
-        
+
         // around south pole
         size_t numOffset = phiResolution - 1 + numPoles;
         for ( size_t i=0; i < ThetaResolution; i++ )
@@ -3571,7 +3571,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
           triangle.c = numPoles - 1;
           meshResource.m_facePositions.CreateNewElement().SetData( triangle.a, triangle.b, triangle.c );
         }
-        
+
         // bands in-between poles
         for ( size_t i=0; i < ThetaResolution; i++ )
         {
@@ -3587,16 +3587,16 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
             meshResource.m_facePositions.CreateNewElement().SetData( triangle.a, triangle.b, triangle.c );
           }
         }
-        
+
         for ( size_t id=0; id < numTriangles; id++ )
           meshResource.m_faceShaders.CreateNewElement() = 0;
-                
+
         for ( size_t pid=0; pid < numPoints; pid++ )
           meshResource.m_basePositions.CreateNewElement() = pid;
-        
+
         pModelResources->AddResource( &meshResource );
       }
-      
+
       // Write shaders
       ShaderResourceList* pShaderResources = static_cast< ShaderResourceList* >( Resources.GetResourceList( IDTF_SHADER ) );
       for ( u3dMaterial_list::iterator it = Materials.begin(); it != Materials.end(); ++it )
@@ -3618,10 +3618,10 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
           textureLayer.m_repeat = L"NONE";
           textureLayer.m_textureName = it->texture.c_str();
           shaderResource.AddTextureLayer( textureLayer );
-        } 
-        pShaderResources->AddResource( shaderResource );        
+        }
+        pShaderResources->AddResource( shaderResource );
       }
-      
+
       // Write materials
       MaterialResourceList* pMaterialResources = static_cast< MaterialResourceList* >( Resources.GetResourceList( IDTF_MATERIAL ) );
       for ( u3dMaterial_list::iterator it = Materials.begin(); it != Materials.end(); ++it )
@@ -3636,7 +3636,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         materialResource.m_opacity = it->opacity;
         pMaterialResources->AddResource( materialResource );
       }
-      
+
       // Write textures
       TextureResourceList* pTextureResources = static_cast< TextureResourceList* >( Resources.GetResourceList( IDTF_TEXTURE ) );
       for ( u3dTexture_list::iterator it = Textures.begin(); it != Textures.end(); ++it )
@@ -3646,7 +3646,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         strncpy(filename, fname, sizeof(filename)-1);
         strncat(filename, it->name.c_str(), sizeof(filename)-strlen(filename)-5);
         strcat(filename, ".tga" );
-        
+
         Texture textureResource;
         textureResource.SetName( it->name.c_str() );
         ImageFormat imageFormat;
@@ -3655,18 +3655,18 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         imageFormat.m_blue = IDTF_TRUE;
         imageFormat.m_green = IDTF_TRUE;
         imageFormat.m_red = IDTF_TRUE;
-        
+
         textureResource.AddImageFormat( imageFormat );
         textureResource.SetExternal( FALSE );
         textureResource.SetPath( filename );
         textureResource.SetImageType( (it->image.Channels == 4 ? IDTF_IMAGE_TYPE_RGBA : IDTF_IMAGE_TYPE_RGB) );
-        
+
         textureResource.m_textureImage.Initialize( it->image.Width, it->image.Height, it->image.Channels );
         textureResource.m_textureImage.SetData( it->image.RGBPixels );
-        
+
         pTextureResources->AddResource( textureResource );
       }
-      
+
       // Write shading modifiers
       for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
       {
@@ -3725,9 +3725,9 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
         shadingModifier.AddShaderList( shaderList );
         Modifiers.AddModifier( &shadingModifier );
       }
-      
+
   }
-    
+
     // Write to IDTF file
     char *idtfFileName = new char [strlen(fname)+1+5];
     strcpy(idtfFileName, fname);
@@ -3752,110 +3752,110 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
     {
       U8 file[MAXIMUM_FILENAME_LENGTH];
       result = fileOptions.outFile.ConvertToRawU8( file, MAXIMUM_FILENAME_LENGTH );
-      
+
       if ( IFXSUCCESS( result ) )
         result = sceneUtils.WriteDebugInfo( (const char*)file );
     }
-    
+
   }
   IFXTRACE_GENERIC( L"[Converter] Exit code = %x\n", result);
 //  fprintf(stderr,"exit %x\n", result);
   IFXRESULT comResult = IFXCOMUninitialize();
   IFXTRACE_GENERIC( L"[Converter] IFXCOMUninitialize %i\n", comResult );
-//  fprintf(stderr,"uninit %x\n", comResult);  
+//  fprintf(stderr,"uninit %x\n", comResult);
   IFXDEBUG_SHUTDOWN();
-  
+
   {
     HPDF_Rect rect = {0, 0, 600, 600};
-    
+
     HPDF_Doc  pdf;
     HPDF_Page page;
     HPDF_Annotation annot;
     HPDF_U3D u3d;
-    
+
     HPDF_Dict view;
-    
+
     char u3dFileName[strlen(fname)+1+4];
     strcpy(u3dFileName, fname);
     strcat(u3dFileName,".u3d");
     char pdfFileName[strlen(fname)+1+4];
     strcpy(pdfFileName, fname);
     strcat(pdfFileName,".pdf");
-    
+
     pdf = HPDF_New (NULL, NULL);
     if (!pdf) {
       fprintf (stderr, "error: cannot create PdfDoc object\n");
       return;
     }
-    
+
     pdf->pdf_version = HPDF_VER_17;
-    
+
     page = HPDF_AddPage (pdf);
-    
+
     HPDF_Page_SetWidth (page, 600);
     HPDF_Page_SetHeight (page, 600);
-    
+
     u3d = HPDF_LoadU3DFromFile (pdf, u3dFileName);
-    
+
     //  Default view
     view = HPDF_Create3DView (u3d->mmgr, "DefaultView");
-    
+
     //  Position camera
     HPDF_3DView_SetCamera (view, 0, 0, 0, 0, 0, 1, 3, 0);
-    
+
     //  Set ortho projection
     HPDF_3DView_SetOrthogonalProjection (view, 300);
-    
+
     //  Background color
     HPDF_3DView_SetBackgroundColor (view, 0.9, 0.9, 0.9);
-    
+
     //  Lighting
 //    HPDF_3DView_SetLighting (view, "CAD");
-    
+
     //  Control of individual nodes
     for ( u3dPointSet_list::iterator it = PointSets.begin(); it != PointSets.end(); ++it )
     {
       HPDF_Array nodes = NULL;
-      HPDF_Dict  node = NULL; 
+      HPDF_Dict  node = NULL;
       HPDF_Dict modedict = NULL;
       HPDF_STATUS ret = HPDF_OK;
-      
+
       nodes = (HPDF_Array)HPDF_Dict_GetItem (view, "NA", HPDF_OCLASS_ARRAY);
       if (nodes == NULL) {
         nodes = HPDF_Array_New (view->mmgr);
         HPDF_Dict_Add (view, "NA", nodes);
       }
-      
+
       node = HPDF_Dict_New (view->mmgr);
       HPDF_Dict_AddName (node, "Type", "3DNode");
       HPDF_Dict_Add (node, "N", HPDF_String_New (view->mmgr, it->name.c_str(), NULL));
-      
+
       modedict = HPDF_Dict_New (view->mmgr);
       modedict->header.obj_class |= HPDF_OSUBCLASS_XOBJECT;
       HPDF_Dict_AddName (modedict, "Type", "3DRenderMode");
       HPDF_Dict_AddName (modedict, "Subtype", "ShadedVertices");
-        
+
       HPDF_Dict_Add (node, "RM", modedict);
-        
+
       ret = HPDF_Array_Add(nodes, node);
     }
-    
+
     //  Add views
     HPDF_U3D_Add3DView (u3d, view);
     HPDF_U3D_SetDefault3DView(u3d, "DefaultView");
-    
+
     //  Create annotation
-    annot = HPDF_Page_Create3DAnnot (page, rect, u3d ); 
-    
+    annot = HPDF_Page_Create3DAnnot (page, rect, u3d );
+
     /* save the document to a file */
     HPDF_SaveToFile (pdf, pdfFileName);
-    
+
     /* clean up */
     HPDF_Free (pdf);
-    
+
   }
-  
-  
+
+
 }
 #endif // HAVE_U3D
 //-----------------------------------------------------------------------------

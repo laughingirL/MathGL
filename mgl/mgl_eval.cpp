@@ -548,11 +548,11 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 	return Res;
 }
 //-----------------------------------------------------------------------------
-double mgp(double a,double b)	{return 1;}
-double mgm(double a,double b)	{return -1;}
-double mul1(double a,double b)	{return b;}
-double mul2(double a,double b)	{return a;}
-double div1(double a,double b)	{return b?1/b:NAN;}
+double mgp(double ,double )	{return 1;}
+double mgm(double ,double )	{return -1;}
+double mul1(double ,double b)	{return b;}
+double mul2(double a,double )	{return a;}
+double div1(double ,double b)	{return b?1/b:NAN;}
 double div2(double a,double b)	{return b?-a/(b*b):NAN;}
 double ipw1(double a,double b)	{return int(b)*mgl_ipow(a,int(b-1));}
 double pow1(double a,double b)	{return b*pow(a,b-1);}

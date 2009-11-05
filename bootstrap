@@ -3,10 +3,9 @@
 set -x
 aclocal -I config
 case `uname` in
- Darwin) glibtoolize --force --copy --ltdl ;;
-     *)  libtoolize --force --copy --ltdl ;;
+ Darwin) glibtoolize --force --copy ;;
+     *)  libtoolize --force --copy ;;
 esac
-#libtoolize --force --copy --ltdl
 autoheader
 automake --add-missing --copy
 autoconf

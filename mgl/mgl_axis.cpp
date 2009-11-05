@@ -66,7 +66,7 @@ mreal mgl_okrugl(mreal x,int k)
 	return r;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::DrawTick(mreal *pp,bool sub)
+void mglGraph::DrawTick(mreal *pp,bool /*sub*/)
 {
 	ScalePoint(pp[0],pp[1],pp[2]);
 	ScalePoint(pp[3],pp[4],pp[5]);
@@ -735,7 +735,7 @@ void mglGraph::TickBox()
 	if(!d_x)	ddx=x0*10>fabs(Max.x-Min.x) ? 0.3*fabs(Max.x-Min.x) : x0*3;
 	if(!d_y)	ddy=y0*10>fabs(Max.y-Min.y) ? 0.3*fabs(Max.y-Min.y) : y0*3;
 	if(!d_z)	ddz=z0*10>fabs(Max.z-Min.z) ? 0.3*fabs(Max.z-Min.z) : z0*3;
-	
+
 	if(xnum)	for(int i=0;i<xnum;i++)
 	{
 		x = xval[i];

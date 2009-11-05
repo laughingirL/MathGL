@@ -289,10 +289,7 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 QString setExtension(QString &fname, const char *ext)
 {
 	QString oname;
-	if(fname.right(4)!="."+QString(ext))
-//		oname = fname.left(fname.length()-3)+ext;
-//	else
-		oname = fname+"."+QString(ext);
+	if(fname.right(4)!="."+QString(ext))	oname = fname+"."+QString(ext);
 	return oname;
 }
 //-----------------------------------------------------------------------------
@@ -409,20 +406,11 @@ void QMathGL::setMGLFont(QString path)
 void QMathGL::setSize(int w, int h)
 {	graph->SetSize(w,h);	resize(w, h);	update();	};
 //-----------------------------------------------------------------------------
-void QMathGL::adjust()
-{
-	graph->Adjust();
-}
+void QMathGL::adjust()		{	graph->Adjust();	}
 //-----------------------------------------------------------------------------
-void QMathGL::nextSlide()
-{
-	graph->NextFrame();
-}
+void QMathGL::nextSlide()	{	graph->NextFrame();	}
 //-----------------------------------------------------------------------------
-void QMathGL::prevSlide()
-{
-	graph->PrevFrame();
-}
+void QMathGL::prevSlide()	{	graph->PrevFrame();	}
 //-----------------------------------------------------------------------------
 void QMathGL::animation(bool st)
 {
@@ -603,7 +591,7 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 	else	Wnd->show();
 }
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_qt(HMDR dr, const char *title)
+HMGL mgl_create_graph_qt_dr(HMDR dr, const char *title)
 {
 	mglGraphQT *g = new mglGraphQT;
 	g->Window(0,0,dr,title);
