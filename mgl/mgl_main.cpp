@@ -531,7 +531,7 @@ void mglGraph::DefaultPlotParam()
 	SetScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');
 	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1));
-	Axis(0,0,0);	CutOff(0);
+	SetFunc(0,0,0);			CutOff(0);
 	SetWarn(mglWarnNone);	Message = 0;
 	BarWidth = 0.7;			fit_res[0] = 0;
 	MarkSize = 0.02;		ArrowSize = 0.03;
@@ -1076,7 +1076,7 @@ void mglGraph::SetCoor(int how)
 		SetFunc("(x*x-y*y)*cos(z)/2","(x*x-y*y)*sin(z)/2","x*y");	break;
 	case mglOblate:
 		SetFunc("cosh(x)*cos(y)*cos(z)","cosh(x)*cos(y)*sin(z)","sinh(x)*sin(y)");	break;
-//		Axis("x*y*cos(z)","x*y*sin(z)","(x*x-1)*(1-y*y)");	break;	
+//		SetFunc("x*y*cos(z)","x*y*sin(z)","(x*x-1)*(1-y*y)");	break;	
 	case mglProlate:
 		SetFunc("sinh(x)*sin(y)*cos(z)","sinh(x)*sin(y)*sin(z)","cosh(x)*cos(y)");	break;
 	case mglElliptic:

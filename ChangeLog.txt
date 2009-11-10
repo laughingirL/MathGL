@@ -10,6 +10,7 @@
 	- Several MGL commands can be placed in single string. They have to be separated by column ':'.
 	- MGL command 'define' now can define scalar variables, like "define xmin dat.min-1". These variables can be used as is later, like "xrange xmin 1".
 	- Add automatic increse of the point numbers in plots by formula (i.e. like Plot("sin(1/x)");
+	- Output array in Fit[S]() functions now always distributed in Min*Max range and don't depend on input arrays.
 	- Bug with PlotFactor changing while AutoPlotFactor=false.
 	- Bug with Vect() and MeshNum>1.
 	- Bug with overriding default pallette by manual color specification.

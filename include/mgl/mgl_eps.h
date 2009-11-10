@@ -36,14 +36,15 @@ struct mglPrim
 	unsigned short dash;///< mreal pen dashing
 	int id;				///< object id
 	int sid;			///< subplot id
-	mreal *raw;			///< raw data (initial pp,cc,nn) with sizes {7,14,30,40,7}
+	mreal raw[40];			///< raw data (initial pp,cc,nn) with sizes {7,14,30,40,10}
 
 	void Draw(mglGraphPS *gr);
 	void DrawGL();
 	bool IsSame(mreal wp,mreal *cp,int st);
 	void SetStyle(unsigned PDef, int pPos);
 	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	c[3]=1;	};
-	~mglPrim()	{	if(raw)	delete []raw;	}
+//	~mglPrim()	{	if(raw)	delete []raw;	};
+	inline void operator=(mglPrim &a)	{	memcpy(this,&a,sizeof(mglPrim));	};
 	void trig(mglGraphPS *gr, mreal x[3], mreal y[3], unsigned char c[4]);
 	void quad(mglGraphPS *gr, mreal x[4], mreal y[4], unsigned char c[4]);
 	void line(mglGraphPS *gr, mreal x[2], mreal y[2], unsigned char c[4]);
@@ -84,7 +85,7 @@ protected:
 					mreal *n0,mreal *n1,mreal *n2,mreal *n3);
 	void mark_plot(mreal *pp, char type);
 	/// add primitive to list
-	void add_prim(mglPrim *a);
+	void add_prim(mglPrim &a);
 	/// add lightning to color
 	void add_light(mreal *c, mreal n1,mreal n2, mreal n3);
 	void pnt_plot(int x,int y, unsigned char c[4], int oi);

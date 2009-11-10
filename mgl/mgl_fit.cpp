@@ -193,10 +193,10 @@ mreal mglGraph::FitS(mglData &fit, const mglData &x, const mglData &y, const mgl
 		fd.s = s.a+i*y.nx;
 		res = mgl_fit_base(&fd,in.a);
 		for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
-		for(j=0;j<y.nx;j++)
+		for(j=0;j<fit.nx;j++)
 		{
-			val['x'-'a'] = x.a[j+(i%x.ny)*y.nx];
-			fit.a[j+i*y.nx] = fd.eq->Calc(val);
+			val['x'-'a'] = Min.x+j*(Max.x-Min.x)/fit.nx;
+			fit.a[j+i*fit.nx] = fd.eq->Calc(val);
 		}
 		if(ini)	memcpy(ini,in.a,fd.m*sizeof(mreal));
 	}
@@ -235,10 +235,11 @@ mreal mglGraph::FitS(mglData &fit, const mglData &xx, const mglData &yy, const m
 		fd.a = z.a+i*z.nx*z.ny;		fd.s = s.a+i*z.nx*z.ny;
 		res = mgl_fit_base(&fd,in.a);
 		for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
-		for(j=0;j<z.nx*z.ny;j++)
+		for(j=0;j<fit.nx*fit.ny;j++)
 		{
-			val['x'-'a'] = x.a[j];	val['y'-'a'] = y.a[j];
-			fit.a[j+i*z.nx*z.ny] = fd.eq->Calc(val);
+			val['x'-'a'] = Min.x+(j%fit.nx)*(Max.x-Min.x)/fit.nx;
+			val['y'-'a'] = Min.y+(j/fit.nx)*(Max.y-Min.y)/fit.ny;
+			fit.a[j+i*fit.nx*fit.ny] = fd.eq->Calc(val);
 		}
 		if(ini)	memcpy(ini,in.a,fd.m*sizeof(mreal));
 	}
@@ -270,21 +271,22 @@ mreal mglGraph::FitS(mglData &fit, const mglData &xx, const mglData &yy, const m
 	fd.var = var;	fd.m = strlen(var);
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m);
-	if(fit.nx<FitPnts || fit.ny<FitPnts)	fit.Create(FitPnts, FitPnts, z.nz);
+	if(fit.nx<FitPnts || fit.ny<FitPnts || fit.nz<FitPnts)	fit.Create(FitPnts, FitPnts, FitPnts);
 	mreal val[MGL_VS], res = -1;
-	for(long i=0;i<z.nz && i<fit.nz;i++)
+
+	if(ini)	in.Set(ini,fd.m);	else in.Fill(0,0);
+	fd.a = a.a+i*a.nx*a.ny*a.nz;
+	res = mgl_fit_base(&fd,in.a);
+	for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
+	for(i=0;i<fit.nz;i++)	for(j=0;j<fit.nx*fit.ny;j++)
 	{
-		if(ini)	in.Set(ini,fd.m);	else in.Fill(0,0);
-		fd.a = a.a+i*a.nx*a.ny*a.nz;
-		res = mgl_fit_base(&fd,in.a);
-		for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
-		for(j=0;j<a.nx*a.ny*a.nz;j++)
-		{
-			val['x'-'a'] = x.a[j];	val['y'-'a'] = y.a[j];
-			val['z'-'a'] = z.a[j];	fit.a[j] = fd.eq->Calc(val);
-		}
-		if(ini)	memcpy(ini,in.a,fd.m*sizeof(mreal));
+		val['x'-'a'] = Min.x+(j%fit.nx)*(Max.x-Min.x)/fit.nx;
+		val['y'-'a'] = Min.y+(j/fit.nx)*(Max.y-Min.y)/fit.ny;
+		val['z'-'a'] = Min.z+i*(Max.y-Min.y)/fit.nz;
+		fit.a[j+fit.nx*fit.ny*i] = fd.eq->Calc(val);
 	}
+	if(ini)	memcpy(ini,in.a,fd.m*sizeof(mreal));
+
 	PrepareFitEq(res, eq,var,ini,print);
 	delete fd.eq;
 	return res;

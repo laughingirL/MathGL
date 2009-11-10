@@ -420,7 +420,7 @@ void smgl_sampleb(mglGraph *gr)	// Gaussian beam
 	gr->SubPlot(2,2,2);	gr->Rotate(40,60);
 	gr->Cloud(a);		gr->Box();
 	gr->SubPlot(2,2,3);	gr->Rotate(40,60);
-	gr->VertexColor(false);	 
+	gr->VertexColor(false);
 	// for variable transparency the only way is to disable smooth (per-vertex) coloring
 	gr->Surf3A(b,a,"q");		gr->Box();
 }
@@ -1593,12 +1593,13 @@ void smgl_boxplot(mglGraph *gr)	// flow threads and density plot
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
-	mglParse par;
+/*	mglParse par;
 	par.AllowSetSize = true;
 	FILE *fp=fopen("test.mgl","rt");
 	par.Execute(gr,fp);
 	fclose(fp);
-
+*/
+	gr->Box();
 //	gr->ShowImage("",true);
 	return 0;
 }
@@ -1648,7 +1649,7 @@ int main(int argc,char **argv)
 		s->func(gr);	save(gr, s->name, suf);
 		fflush(stdout);	s++;
 	}
-	else	// manual sample 
+	else	// manual sample
 	{
 		mglSample tst;	tst.name=name;
 		int i=0;
