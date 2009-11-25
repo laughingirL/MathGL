@@ -96,7 +96,7 @@ void Fl_MathGL::update(mglGraph *gr)
 {
 	if(gr==0)	gr=graph;
 	if(gr==0 || draw_func==0)	return;
-	gr->DefaultPlotParam();
+	if(gr!=graph || graph->ClfOnUpdate)	gr->DefaultPlotParam();
 	gr->Alpha(flag&1);
 	gr->Light(flag&2);
 	gr->View(tet,phi);

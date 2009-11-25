@@ -463,13 +463,15 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	str = s;
 	wcscpy(str,string);
 	wcstrim_mgl(str);
-	long n,k=0;
+	long n,k=0,m=0;
 	// try parse ':'
 	for(n=k=0;n<long(wcslen(str));n++)
 	{
 		if(str[n]=='\'')	k++;
+		if(str[n]=='(' && k%2==0)	m++;
+		if(str[n]==')' && k%2==0)	m--;
 		if(str[n]=='#' && k%2==0)	break;
-		if(str[n]==':' && k%2==0)
+		if(str[n]==':' && k%2==0 && m==0)
 		{
 			str[n]=0;
 			int res=Parse(gr,str,pos);

@@ -383,6 +383,12 @@ mreal mglData::Linear(mreal x,mreal y,mreal z) const
 //-----------------------------------------------------------------------------
 mreal mglData::Spline(mreal x,mreal y,mreal z) const
 {
+	mreal dx,dy,dz;
+	return Spline3(x,y,z,dx,dy,dz);
+}
+//-----------------------------------------------------------------------------
+mreal mglData::Spline3(mreal x,mreal y,mreal z,mreal &dx,mreal &dy,mreal &dz) const
+{
 	mreal _p[4][4];
 	register long i,j;
 	register mreal fx=1, fy=1;
@@ -390,8 +396,9 @@ mreal mglData::Spline(mreal x,mreal y,mreal z) const
 	mreal b=0;
 	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)
 		return 0;
+	dx=dy=dz=0;
 	if(nz>1 && z!=kz)		// 3d interpolation
-	{
+	{						// TODO: add dx,dy,dz evaluation
 		mreal b1[4]={0,0,0,0};
 		if(kx>nx-2)	kx = nx-2;
 		if(ky>ny-2)	ky = ny-2;
@@ -424,16 +431,23 @@ mreal mglData::Spline(mreal x,mreal y,mreal z) const
 		{
 			fy = 1;
 			for(j=0;j<4;j++)
-			{	b += fy*fx*_p[i][j];	fy *= y-ky;	}
+			{
+				b += fy*fx*_p[i][j];
+				dx+= i*fy*fx*_p[i][j];
+				dy+= j*fy*fx*_p[i][j];
+				fy *= y-ky;
+			}
 			fx *= x-kx;
 		}
+		dx /= x-kx;	dy /= y-ky;
 	}
 	else if(nx>1 && x!=kx)	// 1d interpolation
 	{
 		if(kx>nx-2)	kx = nx-2;
 		mglFillP(kx, a+(ky+ny*kz)*nx, nx, _p[0]);
 		for(i=0,fx=1,b=0;i<4;i++)
-		{	b += fx*_p[0][i];	fx *= x-kx;	}
+		{	b += fx*_p[0][i];	dx+= i*fx*_p[0][i];	fx *= x-kx;	}
+		dx /= x-kx;
 	}
 	else					// no interpolation
 		b = a[kx+nx*(ky+ny*kz)];

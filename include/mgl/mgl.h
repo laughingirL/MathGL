@@ -23,6 +23,7 @@
 #define MGL_VERSION	10.0
 
 #include <wchar.h>
+#include <stdlib.h>
 #include "mgl/mgl_data.h"
 #include "mgl/mgl_font.h"
 
@@ -107,6 +108,7 @@ public:
 	mreal Cmax;			///< Maximal value for data coloring.
 	mglPoint Org;		///< Center of axis cross section.
 	mglPoint OrgT;		///< Point of starting ticks numbering (if NAN then Org is used).
+	mreal OrgC;			///< Starting point for colorbar ticks
 	bool AutoOrg;		///< Shift Org automatically if it lye outside Min ... Max range
 	mglColor Pal[101];	///< Color palette for 1D plotting.
 	int NumPal;			///< Number of colors in palette.
@@ -118,12 +120,14 @@ public:
 	mreal dx;			///< Step for axis mark (if positive) or its number (if negative) in x direction.
 	mreal dy;			///< Step for axis mark (if positive) or its number (if negative) in y direction.
 	mreal dz;			///< Step for axis mark (if positive) or its number (if negative) in z direction.
+	mreal dc;			///< Step for colorbar mark (if positive) or its number (if negative).
 	mreal NSx;			///< Number of axis submarks in x direction
 	mreal NSy;			///< Number of axis submarks in y direction
 	mreal NSz;			///< Number of axis submarks in z direction.
 	mglFormula *fx;		///< Transformation formula for x direction.
 	mglFormula *fy;		///< Transformation formula for y direction.
 	mglFormula *fz;		///< Transformation formula for z direction.
+	mglFormula *fa;		///< Transformation formula for coloring.
 	mglFormula *fc;		///< Cutting off condition (formula).
 	mreal PlotFactor;	///< Factor for sizing overall plot (should be >1.5, default is =1.55)
 	bool AutoPlotFactor;///< Enable autochange PlotFactor
@@ -264,7 +268,7 @@ public:
 	inline void SetZTT(const char *t)	{	mbstowcs(ztt,t,strlen(t)+1);	};
 	inline void SetCTT(const char *t)	{	mbstowcs(ctt,t,strlen(t)+1);	};
 	/// Auto adjust ticks
-	void AdjustTicks(const char *dir);
+	void AdjustTicks(const char *dir="xyzc");
 	/// Tune ticks
 	inline void SetTuneTicks(bool tune, mreal pos=1.15)
 	{	TuneTicks = tune;	FactorPos = pos;	};
@@ -357,11 +361,11 @@ public:
 	/// Safetly set the value for mglGraph::Min, mglGraph::Max and mglGraph::Org members of the class.
 	void Axis(mglPoint Min, mglPoint Max, mglPoint Org=mglPoint(NAN,NAN,NAN));
 	/// Safetly set the transformation formulas for coordinate.
-	void SetFunc(const char *EqX,const char *EqY,const char *EqZ);
+	void SetFunc(const char *EqX, const char *EqY, const char *EqZ=0, const char *EqA=0);
 	/// Set the predefined transformation rules
 	void SetCoor(int how);
 	/// Safetly set the cutting off condition (formula).
-	void CutOff(const char *EqC);
+	void CutOff(const char *EqCut);
 	/// Set to draw Ternary axis (triangle like axis, grid and so on)
 	void Ternary(bool tern);
 	/// Recalculate internal parameter for correct applies transformation rules. \b Must \b be \b called after any direct changes of members mglGraph::Min, mglGraph::Max, mglGraph::fx, mglGraph::fy, mglGraph::fz.
@@ -452,6 +456,8 @@ public:
 	mreal FitS(mglData &fit, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &s, const char *eq, const char *var, mglData &ini, bool print=false);
 	/// Print fitted last formula (with coefficients)
 	void PutsFit(mglPoint p, const char *prefix=0, const char *font=0, mreal size=-1);
+	/// Get last fitted formula
+	inline const char *GetFit()	{	return fit_res;	};
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Text functions

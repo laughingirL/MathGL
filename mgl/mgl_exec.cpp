@@ -149,7 +149,7 @@ void mglc_axialdir(wchar_t out[1024], long , mglArg *a, int k[10])
 int mgls_axis(mglGraph *gr, long n, mglArg *a, int k[10])
 {
 	register int i;
-	if(k[0]==2 && k[1]==2 && k[2]==2)	gr->SetFunc(a[0].s,a[1].s,a[2].s);
+	if(k[0]==2 && k[1]==2)	gr->SetFunc(a[0].s,a[1].s,k[2]==2?a[2].s:"",k[3]==2?a[3].s:"");
 	else if(n==6)
 	{
 		bool ok=true;
@@ -1845,14 +1845,15 @@ void mglc_radar(wchar_t out[1024], long , mglArg *a, int k[10])
 int mgls_squeeze(mglGraph *, long , mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==3)
-		a[0].d->Squeeze(int(a[1].v), k[2]==3?int(a[2].v):1, k[3]==3?int(a[3].v):1);
+		a[0].d->Squeeze(int(a[1].v), k[2]==3?int(a[2].v):1, k[3]==3?int(a[3].v):1, k[4]==3 && a[4].v>0);
 	else	return 1;
 	return 0;
 }
 void mglc_squeeze(wchar_t out[1024], long , mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==3)
-		mglprintf(out,1024,L"%s.Squeeze(%d, %d, %d);", a[0].s, int(a[1].v), k[2]==3?int(a[2].v):1, k[3]==3?int(a[3].v):1);
+		mglprintf(out,1024,L"%s.Squeeze(%d, %d, %d, %s);", a[0].s, int(a[1].v), 
+			k[2]==3?int(a[2].v):1, k[3]==3?int(a[3].v):1, k[4]==3 && a[4].v>0 ? "true":"false");
 }
 //-----------------------------------------------------------------------------
 //	{"stfad","Do STFA transform","", mgls_stfad, mglc_stfad}
@@ -3041,12 +3042,14 @@ void mglc_rearrange(wchar_t out[1024], long , mglArg *a, int k[10])
 int mgls_ctick(mglGraph *gr, long , mglArg *a, int k[10])
 {
 	if(k[0]==2)	gr->SetCTT(a[0].w);
+	else if(k[0]==3)	gr->SetTicks('c',a[0].v);
 	else	return 1;
 	return 0;
 }
 void mglc_ctick(wchar_t out[1024], long , mglArg *a, int k[10])
 {
 	if(k[0]==2)	mglprintf(out,1024,L"gr->SetCTT(\"%ls\");", a[0].w);
+	else if(k[0]==3)	mglprintf(out,1024,L"gr->SetTicks('c',%g);", a[0].v);
 }
 //-----------------------------------------------------------------------------
 //	{L"fplot",L"Plot curve by formula",L"fplot 'func' ['stl'='' num=100]", mgls_fplot, mglc_fplot}

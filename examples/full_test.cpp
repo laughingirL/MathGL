@@ -26,6 +26,8 @@
 #include <mgl/mgl_zb.h>
 #include <mgl/mgl_eps.h>
 #include <mgl/mgl_idtf.h>
+//#include <mgl/mgl_data_w.h>
+//#include <mgl/mgl_graph.h>
 //-----------------------------------------------------------------------------
 struct mglSample	/// Structure for list of samples
 {
@@ -1593,13 +1595,13 @@ void smgl_boxplot(mglGraph *gr)	// flow threads and density plot
 #include "mgl/mgl_parse.h"
 int test(mglGraph *gr)
 {
-/*	mglParse par;
+	mglParse par;
 	par.AllowSetSize = true;
 	FILE *fp=fopen("test.mgl","rt");
 	par.Execute(gr,fp);
 	fclose(fp);
-*/
-	gr->Box();
+
+//	gr->Box();
 //	gr->ShowImage("",true);
 	return 0;
 }

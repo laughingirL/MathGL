@@ -1,3 +1,22 @@
+mathgl (1.9ufp-1) unstable; urgency=low
+
+  * Upstream update
+
+ -- Dmitry I. Kulagin <dik@kulagin.nnov.ru>  Thu, 11 Jun 2009 16:25:00 +0300
+
+mathgl (1.8.1ufp-1) unstable; urgency=low
+
+  * Upstream update
+  * Some changes to control, made packaging more like in Debian
+
+ -- Dmitry I. Kulagin <dik@kulagin.nnov.ru>  Tue, 09 Jun 2009 16:22:00 +0300
+
+mathgl (1.8.1ufp) unstable; urgency=low
+
+  * Upstream update
+
+ -- Dmitry I. Kulagin <dik@kulagin.nnov.ru>  Fri, 17 Apr 2009 16:15:00 +0300
+
 mathgl (1.8.1) unstable; urgency=low
 
   * Upstream update

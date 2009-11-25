@@ -7,6 +7,8 @@ The core of MathGL is @strong{mglGraph} class defined in @code{#include <mgl/mgl
 
 Note that class mglGraph is abstract and contains only interface functions for plotting but does not make plot by itself. For plotting in specific device (screen, memory or file) one should use derived classes: mglGraphZB -- for bitmap picture in file or in memory; mglGraphPS -- for vector PostScript picture; mglGraphGL -- for drawing using OpenGL, or for GLUT windows interface; and so on, @pxref{Plotter classes}. If you want not only to create a picture but to view it in a window/widget or to run animation and so on then look at @ref{Widget classes}.
 
+There is a C++ wrapper class which have the same name @code{mglGraph} and defined in @code{mgl/mgl_graph.h}. You can use this class even with non-GNU compilers (i.e. in Borland or Microsoft one), but you @strong{should not include} any @code{mgl/mgl.h} or @code{mgl/mgl_parse.h} headers in this case! This wrapper class also used as base for all SWIG-based interfaces (Python, Octave and so on). So, later it is refered as @samp{Python} class for distinguish from original @samp{C++} class defined in @code{mgl/mgl.h} .
+
 @menu
 * Graphics setup:: 
 * Axis settings:: 
@@ -513,22 +515,22 @@ Safely sets minimal and maximal values of data for coloring. This values are use
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} XRange (@code{const mglData &} dat, @code{bool} add=@code{false}, @code{float} fact=@code{0})
 @deftypefnx {C function} @code{void} mgl_set_xrange (@code{HMGL} gr, @code{const HMDT} a, @code{int} add)
-Sets values of @code{Min.x} and @code{Max.x} as minimal and maximal values of data @var{a}. Parameter @var{fact} add additional range increase on value (@var{Max}-@var{Min})*@var{fact}. See also Axis().
+Sets values of @code{Min.x} and @code{Max.x} as minimal and maximal values of data @var{a}. Parameter @var{add} specify to add or not the new range to current one. Parameter @var{fact} add additional range increase on value (@var{Max}-@var{Min})*@var{fact}. See also Axis().
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} YRange (@code{const mglData &} dat, @code{bool} add=@code{false}, @code{float} fact=@code{0})
 @deftypefnx {C function} @code{void} mgl_set_yrange (@code{HMGL} gr, @code{const HMDT} a, @code{int} add)
-Sets values of @code{Min.y} and @code{Max.y} as minimal and maximal values of data @var{a}. Parameter @var{fact} add additional range increase on value (@var{Max}-@var{Min})*@var{fact}. See also Axis().
+Sets values of @code{Min.y} and @code{Max.y} as minimal and maximal values of data @var{a}. Parameter @var{add} specify to add or not the new range to current one. Parameter @var{fact} add additional range increase on value (@var{Max}-@var{Min})*@var{fact}. See also Axis().
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} ZRange (@code{const mglData &} dat, @code{bool} add=@code{false}, @code{float} fact=@code{0})
 @deftypefnx {C function} @code{void} mgl_set_zrange (@code{HMGL} gr, @code{const HMDT} a, @code{int} add)
-Sets values of @code{Min.z} and @code{Max.z} as minimal and maximal values of data @var{a}. Parameter @var{fact} add additional range increase on value (@var{Max}-@var{Min})*@var{fact}. See also Axis().
+Sets values of @code{Min.z} and @code{Max.z} as minimal and maximal values of data @var{a}. Parameter @var{add} specify to add or not the new range to current one. Parameter @var{fact} add additional range increase on value (@var{Max}-@var{Min})*@var{fact}. See also Axis().
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} CRange (@code{const mglData &} dat, @code{bool} add=@code{false}, @code{float} fact=@code{0})
 @deftypefnx {C function} @code{void} mgl_set_crange (@code{HMGL} gr, @code{const HMDT} a, @code{int} add)
-Sets values of @code{Cmin} and @code{Cmax} as minimal and maximal values of data @var{a}. Parameter @var{fact} add additional range increase on value (@var{Cmax}-@var{Cmin})*@var{fact}. See also CAxis().
+Sets values of @code{Cmin} and @code{Cmax} as minimal and maximal values of data @var{a}. Parameter @var{add} specify to add or not the new range to current one. Parameter @var{fact} add additional range increase on value (@var{Cmax}-@var{Cmin})*@var{fact}. See also CAxis().
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetAutoRanges (@code{float} x1, @code{float} x2, @code{float} y1=@code{0}, @code{float} y2=@code{0}, @code{float} z1=@code{0}, @code{float} z2=@code{0})
@@ -569,9 +571,10 @@ Flag for automatic shifting of axes origin @var{Org} if it lies out of range @va
 @cindex SetCoor
 @cindex Ternary
 
-@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetFunc (@code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ)
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetFunc (@code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ=@code{""}, @code{const char *}EqA=@code{""})
 @deftypefnx {C function} @code{void} mgl_set_func (@code{HMGL} gr, @code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ)
-Safely sets transformation formulas for curvilinear coordinate. Each string should contain mathematical expression for real coordinate depending on internal coordinates x, y, z. For example, the cylindrical coordinates are introduced as @code{Axis("x*cos(y)", "x*sin(y)", "z");}. For removing of formulas the corresponding parameter should be @code{""}. Using transformation formulas will slightly slowing the program, i.e. @code{Axis("", "", "")} is faster than @code{Axis("x", "y", "z")}. @xref{mglFormula class}.
+@deftypefnx {C function} @code{void} mgl_set_func_ext (@code{HMGL} gr, @code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ, @code{const char *}EqA)
+Safely sets transformation formulas for curvilinear coordinate. Each string should contain mathematical expression for real coordinate depending on internal coordinates x, y, z. For example, the cylindrical coordinates are introduced as @code{Axis("x*cos(y)", "x*sin(y)", "z");}. For removing of formulas the corresponding parameter should be @code{""}. Using transformation formulas will slightly slowing the program, i.e. @code{Axis("", "", "")} is faster than @code{Axis("x", "y", "z")}. Parameter @var{EqA} set the similar transformation formula for color scheme. @xref{mglFormula class}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetCoor (@code{int} how)
@@ -597,7 +600,7 @@ The function sets to draws Ternary plot. This special plot is for 3 dependent co
 @cindex SetZTT
 @cindex SetCTT
 
-@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} AdjustTicks (@code{const char *}dir)
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} AdjustTicks (@code{const char *}dir=@code{"xyz"})
 @deftypefnx {C function} @code{void} mgl_adjust_ticks (@code{HMGL} gr, @code{const char *}dir)
 Set the ticks step, number of sub-ticks and initial ticks position to be the most human readable for the axis along direction(s) @var{dir}. Also set @code{SetTuneTicks(true)}.
 @end deftypefn
@@ -607,7 +610,7 @@ Set the ticks step, number of sub-ticks and initial ticks position to be the mos
 @deftypefnx {C function} @code{void} mgl_set_ticks (@code{HMGL} gr, @code{float} dx, @code{float} dy, @code{float} dz)
 @deftypefnx {C function} @code{void} mgl_set_subticks (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} nz)
 @deftypefnx {C function} @code{void} mgl_set_tick_origin (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0)
-Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir}. Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
+Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir} (use 'c' for colorbar ticks). Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set logarithmic ticks. If @var{org} value is NAN then value from @var{Org} is used.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetTicksVal (@code{char} dir, @code{int} n, @code{float *}val, @code{const char **}lbl)

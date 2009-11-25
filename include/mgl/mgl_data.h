@@ -183,7 +183,7 @@ public:
 	/// Make new id
 	void NewId();
 	/// Reduce size of the data
-	void Squeeze(int rx,int ry=1,int rz=1,bool smooth=true);
+	void Squeeze(int rx,int ry=1,int rz=1,bool smooth=false);
 	/// Crop the data
 	void Crop(int n1, int n2,char dir='x');
 
@@ -272,13 +272,14 @@ public:
 	mreal Spline5(mreal x,mreal y,mreal z,mreal &dx,mreal &dy,mreal &dz) const;
 	/// Interpolate by qubic splain the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	mreal Spline(mreal x,mreal y=0,mreal z=0) const;
+	mreal Spline3(mreal x,mreal y,mreal z,mreal &dx,mreal &dy,mreal &dz) const;
 	/// Interpolate by qubic splain the data to given point \a x,\a y,\a z which normalized in range [0, 1]
-	mreal Spline1(mreal x,mreal y=0,mreal z=0) const
+	inline mreal Spline1(mreal x,mreal y=0,mreal z=0) const
 	{	return Spline(x*(nx-1),y*(ny-1),z*(nz-1));	};
 	/// Interpolate by linear function the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	mreal Linear(mreal x,mreal y=0,mreal z=0) const;
 	/// Interpolate by line the data to given point \a x,\a y,\a z which normalized in range [0, 1]
-	mreal Linear1(mreal x,mreal y=0,mreal z=0) const
+	inline mreal Linear1(mreal x,mreal y=0,mreal z=0) const
 	{	return Linear(x*(nx-1),y*(ny-1),z*(nz-1));	};
 
 	/// Insert \a num rows after \a at and fill it by formula \a eq

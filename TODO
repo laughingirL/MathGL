@@ -6,11 +6,12 @@
 3. mglGraphPS
  -- each prim have the inplot id & reference to settings list (lights, alpha, fog).
 4. Web site (translate "Installation Qt")
+5. Glyph in WriteEPS and zoom (especially in legend)
 
 0. Configure should define MGL_DEF_VIEWER ???
 1. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
 2. \dfrac for normal size and centering ???
-3. fsurf -- number of points ???
+3. fsurf -- auto select the number of points ???
 4. "Chaos" in area.png (near axis) ???
 
 

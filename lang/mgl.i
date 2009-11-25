@@ -47,8 +47,6 @@ const int off = 0;
 
 #define MGL_NO_WIDGET
 %include "mgl/mgl_c.h"
-/* %include mgl_base.i */
-/* %include mgl_data.i */
 
 %ignore operator!;
 %ignore operator=;
@@ -176,4 +174,14 @@ import_array();
 	void __paren_asgn( int i, float y)	{	self->a[i]=y;	};
 };
 
-%include mgl_graph.i
+%{
+#define SWIG_FILE_WITH_INIT
+#include "mgl/mgl_graph.h"
+%}
+
+%include mgl/mgl_graph.h
+
+//%rename mglParseEx mglParse
+//%rename mglGraphEx mglGraph
+
+//%include mgl_graph.i

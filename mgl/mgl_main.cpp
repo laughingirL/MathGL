@@ -137,14 +137,22 @@ void mglGraph::Axis(mglPoint m1, mglPoint m2, mglPoint org)
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetFunc(const char *EqX,const char *EqY,const char *EqZ)
+void mglGraph::SetFunc(const char *EqX,const char *EqY,const char *EqZ,const char *EqA)
 {
-	if(fx)	delete fx;
-	if(fy)	delete fy;
-	if(fz)	delete fz;
-	if(EqX && EqX[0])	fx = new mglFormula(EqX);	else	fx = 0;
-	if(EqY && EqY[0])	fy = new mglFormula(EqY);	else	fy = 0;
-	if(EqZ && EqZ[0])	fz = new mglFormula(EqZ);	else	fz = 0;
+	if(fa)	delete fa;	if(fx)	delete fx;
+	if(fy)	delete fy;	if(fz)	delete fz;
+	if(EqX && EqX[0] && (EqX[0]!='x' || EqX[1]!=0))
+		fx = new mglFormula(EqX);
+	else	fx = 0;
+	if(EqY && EqY[0] && (EqY[0]!='y' || EqY[1]!=0))
+		fy = new mglFormula(EqY);
+	else	fy = 0;
+	if(EqZ && EqZ[0] && (EqZ[0]!='z' || EqZ[1]!=0))
+		fz = new mglFormula(EqZ);
+	else	fz = 0;
+	if(EqA && EqA[0] && ((EqA[0]!='c' && EqA[0]!='a') || EqA[1]!=0))
+		fa = new mglFormula(EqA);
+	else	fa = 0;
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
@@ -269,7 +277,14 @@ mglColor mglGraph::GetC(mreal x,mreal y,mreal z,bool simple)
 //-----------------------------------------------------------------------------
 mreal mglGraph::GetA(mreal a)
 {
-	a = (2*a-Cmin-Cmax)/(Cmax-Cmin);
+	mreal Amin=Cmin, Amax=Cmax;
+	if(fa)
+	{
+		Amin = fa->Calc(0,0,0,Cmin);
+		Amax = fa->Calc(0,0,0,Cmax);
+		a = fa->Calc(0,0,0,a);
+	}
+	a = (2*a-Amin-Amax)/(Amax-Amin);
 	a = fabs(a)>1 ? copysignf(1,a) : a;
 	return a;
 }
@@ -502,8 +517,9 @@ void mglGraph::ball(mreal *p,mreal *c)
 //-----------------------------------------------------------------------------
 void mglGraph::ClearEq()
 {
-	if(fx)	delete fx;	if(fy)	delete fy;	if(fz)	delete fz;	if(fc)	delete fc;
-	fx = fy = fz = fc = 0;
+	if(fx)	delete fx;	if(fy)	delete fy;	if(fz)	delete fz;
+	if(fa)	delete fa;	if(fc)	delete fc;
+	fx = fy = fz = fc = fa = 0;
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
@@ -529,9 +545,9 @@ void mglGraph::DefaultPlotParam()
 	Ambient();				Ternary(false);
 	PlotId = "frame";		SelectPen("k-1");
 	SetScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
-	SetTicks('x');	SetTicks('y');	SetTicks('z');
+	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
 	Axis(mglPoint(-1,-1,-1), mglPoint(1,1,1));
-	SetFunc(0,0,0);			CutOff(0);
+	SetFunc(0,0);			CutOff(0);
 	SetWarn(mglWarnNone);	Message = 0;
 	BarWidth = 0.7;			fit_res[0] = 0;
 	MarkSize = 0.02;		ArrowSize = 0.03;
@@ -1038,9 +1054,14 @@ void mglGraph::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
 	d = floor(d*pow(10,-floor(log10(d))));
 	long n = 50*(d<4?int(2*d+0.5):int(d+0.5))+1;
 	if(d==1.f)	n = 101;
-	mglData v(n);	v.Fill(Cmin,Cmax);
+	mglData v(n);
+	if(dc)	v.Fill(Cmin,Cmax);
+	else if(Cmax>Cmin && Cmin>0)
+	{	v.Fill(log(Cmin), log(Cmax));	v.Modify("exp(u)");		}
+	else if(Cmin<Cmax && Cmax<0)
+	{	v.Fill(log(-Cmin), log(-Cmax));	v.Modify("-exp(u)");	}
 	mglColor *c=new mglColor[n];
-	for(long i=0;i<n;i++)	c[i] = GetC(v.a[i],true);
+	for(long i=0;i<n;i++)	c[i] = GetC(v.a[i]);
 	colorbar(v, c, where, x, y, w, h);
 	delete []c;
 }
@@ -1065,22 +1086,22 @@ void mglGraph::SetCoor(int how)
 {
 	switch(how)
 	{
-	case mglCartesian:	SetFunc(0,0,0);	break;
+	case mglCartesian:	SetFunc(0,0);	break;
 	case mglPolar:
-		SetFunc("x*cos(y)","x*sin(y)",0);	break;
+		SetFunc("x*cos(y)","x*sin(y)");	break;
 	case mglSpherical:
 		SetFunc("x*sin(y)*cos(z)","x*sin(y)*sin(z)","x*cos(y)");	break;
 	case mglParabolic:
-		SetFunc("x*y","(x*x-y*y)/2",0);	break;
+		SetFunc("x*y","(x*x-y*y)/2");	break;
 	case mglParaboloidal:
 		SetFunc("(x*x-y*y)*cos(z)/2","(x*x-y*y)*sin(z)/2","x*y");	break;
 	case mglOblate:
 		SetFunc("cosh(x)*cos(y)*cos(z)","cosh(x)*cos(y)*sin(z)","sinh(x)*sin(y)");	break;
-//		SetFunc("x*y*cos(z)","x*y*sin(z)","(x*x-1)*(1-y*y)");	break;	
+//		SetFunc("x*y*cos(z)","x*y*sin(z)","(x*x-1)*(1-y*y)");	break;
 	case mglProlate:
 		SetFunc("sinh(x)*sin(y)*cos(z)","sinh(x)*sin(y)*sin(z)","cosh(x)*cos(y)");	break;
 	case mglElliptic:
-		SetFunc("cosh(x)*cos(y)","sinh(x)*sin(y)",0);	break;
+		SetFunc("cosh(x)*cos(y)","sinh(x)*sin(y)");	break;
 	case mglToroidal:
 		SetFunc("sinh(x)*cos(z)/(cosh(x)-cos(y))","sinh(x)*sin(z)/(cosh(x)-cos(y))",
 			"sin(y)/(cosh(x)-cos(y))");	break;
@@ -1088,7 +1109,7 @@ void mglGraph::SetCoor(int how)
 		SetFunc("sin(y)*cos(z)/(cosh(x)-cos(y))","sin(y)*sin(z)/(cosh(x)-cos(y))",
 			"sinh(x)/(cosh(x)-cos(y))");	break;
 	case mglBipolar:
-		SetFunc("sinh(x)/(cosh(x)-cos(y))","sin(y)/(cosh(x)-cos(y))",0);	break;
-	default:	SetFunc(0,0,0);	break;
+		SetFunc("sinh(x)/(cosh(x)-cos(y))","sin(y)/(cosh(x)-cos(y))");	break;
+	default:	SetFunc(0,0);	break;
 	}
 }

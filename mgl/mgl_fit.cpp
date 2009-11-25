@@ -195,7 +195,7 @@ mreal mglGraph::FitS(mglData &fit, const mglData &x, const mglData &y, const mgl
 		for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
 		for(j=0;j<fit.nx;j++)
 		{
-			val['x'-'a'] = Min.x+j*(Max.x-Min.x)/fit.nx;
+			val['x'-'a'] = Min.x+j*(Max.x-Min.x)/(fit.nx-1);
 			fit.a[j+i*fit.nx] = fd.eq->Calc(val);
 		}
 		if(ini)	memcpy(ini,in.a,fd.m*sizeof(mreal));
@@ -237,8 +237,8 @@ mreal mglGraph::FitS(mglData &fit, const mglData &xx, const mglData &yy, const m
 		for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
 		for(j=0;j<fit.nx*fit.ny;j++)
 		{
-			val['x'-'a'] = Min.x+(j%fit.nx)*(Max.x-Min.x)/fit.nx;
-			val['y'-'a'] = Min.y+(j/fit.nx)*(Max.y-Min.y)/fit.ny;
+			val['x'-'a'] = Min.x+(j%fit.nx)*(Max.x-Min.x)/(fit.nx-1);
+			val['y'-'a'] = Min.y+(j/fit.nx)*(Max.y-Min.y)/(fit.ny-1);
 			fit.a[j+i*fit.nx*fit.ny] = fd.eq->Calc(val);
 		}
 		if(ini)	memcpy(ini,in.a,fd.m*sizeof(mreal));
@@ -280,9 +280,9 @@ mreal mglGraph::FitS(mglData &fit, const mglData &xx, const mglData &yy, const m
 	for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
 	for(i=0;i<fit.nz;i++)	for(j=0;j<fit.nx*fit.ny;j++)
 	{
-		val['x'-'a'] = Min.x+(j%fit.nx)*(Max.x-Min.x)/fit.nx;
-		val['y'-'a'] = Min.y+(j/fit.nx)*(Max.y-Min.y)/fit.ny;
-		val['z'-'a'] = Min.z+i*(Max.y-Min.y)/fit.nz;
+		val['x'-'a'] = Min.x+(j%fit.nx)*(Max.x-Min.x)/(fit.nx-1);
+		val['y'-'a'] = Min.y+(j/fit.nx)*(Max.y-Min.y)/(fit.ny-1);
+		val['z'-'a'] = Min.z+i*(Max.y-Min.y)/(fit.nz-1);
 		fit.a[j+fit.nx*fit.ny*i] = fd.eq->Calc(val);
 	}
 	if(ini)	memcpy(ini,in.a,fd.m*sizeof(mreal));

@@ -632,8 +632,7 @@ void mglGraph::AxisZ(bool text)
 		NSz = NSz<0 ? 0 : NSz;
 		z0 = isnan(OrgT.z) ? z0 : OrgT.z;
 		double z1 = Max.z+(Max.z-Min.z)*1e-6;
-		if(Max.z>Min.z)
-			z0 = z0 - ddz*floor((z0-Min.z)/ddz+1e-3);
+		if(Max.z>Min.z)		z0 = z0 - ddz*floor((z0-Min.z)/ddz+1e-3);
 		else
 		{
 			z1 = Min.z-(Max.z-Min.z)*1e-6;
@@ -1049,6 +1048,7 @@ void mglGraph::SetTicks(char dir, mreal d, int ns, mreal org)
 	{	dy = d;	NSy = ns;	OrgT.y = org;	if(ynum) delete []ybuf;	ynum=0;	}
 	else if(dir=='z')
 	{	dz = d;	NSz = ns;	OrgT.z = org;	if(znum) delete []zbuf;	znum=0;	}
+	else if(dir=='c' || dir=='a')	{	dc = d;	OrgC = org;	}
 }
 //-----------------------------------------------------------------------------
 void mglGraph::SetTicksVal(char dir, int n, mreal *val, const wchar_t **lbl)
@@ -1193,6 +1193,8 @@ void mglGraph::AdjustTicks(const char *dir)
 	if(strchr(dir,'x') || strchr(dir,'X'))	adjust('x',Max.x-Min.x);
 	if(strchr(dir,'y') || strchr(dir,'Y'))	adjust('y',Max.y-Min.y);
 	if(strchr(dir,'z') || strchr(dir,'Z'))	adjust('z',Max.z-Min.z);
+	if(strchr(dir,'c') || strchr(dir,'C') || strchr(dir,'a') || strchr(dir,'A'))
+		adjust('c',Cmax-Cmin);
 	TuneTicks = true;
 }
 //-----------------------------------------------------------------------------

@@ -36,7 +36,7 @@ mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 {
 	G = 0;	UseLight = false;	st_pos=-1;
 	memset(stack,0,MGL_STACK_ENTRY*13*sizeof(mreal));
-	SetSize(w,h);
+	SetSize(w,h);	ClfOnUpdate = true;
 	AutoClf=true;	Delay = 100;	ObjId=0;
 	NoAutoFactor = false;	ShowMousePos = true;
 	BDef[0] = BDef[1] = BDef[2] = BDef[3] = 255;
@@ -518,7 +518,7 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 	x = 2*x-1;	y = 2*y-1;
 	for(i=0;i<n-1;i++)
 	{
-		d = (vv.a[i]-v1)*dv-1;
+		d = GetA(vv.a[i]);	//(vv.a[i]-v1)*dv-1;
 		pp[12*i+0] = pp[12*i+3] = (ss*d+s3)*w+x*s3;
 		pp[12*i+1] = pp[12*i+4] = (ss*d+s3)*h+y*s3;
 		pp[12*i+2] = pp[12*i+5] = s3;
@@ -529,7 +529,7 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 			case 3:	pp[12*i+1]= y*s3;	pp[12*i+4] = (y+0.1*h)*s3;	break;
 			default:pp[12*i]  = (x-0.1*w)*s3;	pp[12*i+3] = x*s3;	break;
 		}
-		d = (vv.a[i+1]-v1)*dv-1;
+		d = GetA(vv.a[i+1]);	//(vv.a[i+1]-v1)*dv-1;
 		pp[12*i+6] = pp[12*i+9] = (ss*d+s3)*w+x*s3;
 		pp[12*i+7] = pp[12*i+10]= (ss*d+s3)*h+y*s3;
 		pp[12*i+8] = pp[12*i+11]= s3;
@@ -565,19 +565,23 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 	if(!ctt && TuneTicks) kind = _mgl_tick_ext(Cmax, Cmin, s, v);
 
 	long m=n;
-	if(n>20)	// adjust ticks
+/*	if(n>20)	// adjust ticks
 	{
 		float d = fabs(vv.Maximal()-v1);
 		d = floor(d*pow(10,-floor(log10(d))));
 		if(d<4)	m = 1+int(2*d+0.5);
 		else	m = 1+int(d+0.5);
 		if(m<5)	m = 5;
-	}
+	}*/
+	if(dc<0) m=int(0.5-dc);
+	if(dc>0) m=int(0.5+(Cmax-Cmin)/dc);
+	if(dc==0 && Cmax*Cmin>0)	m = 1+int(0.5+fabs(log10(Cmax/Cmin)));
+	if(m<2)	m=2;
+	if(m>n)	m=n;
 
-//	long m = n<=20?n:6;
 	for(i=0;i<m;i++)
 	{
-		t = vv.a[((n-1)*i)/(m-1)];	d = (t-v1)*dv-1;	p.z = s3+1;
+		t = vv.a[(n-1)*i/(m-1)];	d = GetA(t);	p.z = s3+1;
 		p.x = (ss*d+s3)*w+x*s3;
 		p.y = (ss*d+s3)*h+y*s3;
 		switch(where)
@@ -587,7 +591,12 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 			case 3:	p.y = (y+0.13*h)*s3;	break;
 			default:p.x = (x-0.13*w)*s3;	break;
 		}
-		if(ctt)	mglprintf(str, 64, ctt, t);
+		if(ctt[0])	mglprintf(str, 64, ctt, t);
+		else if(dc==0)
+		{
+			long kk=int(floor(0.1+log10(fabs(t))));
+			mglprintf(str,64,L"%.2g\\cdot 10^{%d}",t/pow(10,kk), kk);
+		}
 		else	_mgl_tick_text(t,v1,dv/100,v,kind,str);
 		wcstrim_mgl(str);
 		Putsw(p,str,a,FontSize);

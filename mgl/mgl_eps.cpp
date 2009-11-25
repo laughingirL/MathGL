@@ -235,7 +235,8 @@ void mglGraphPS::Glyph(mreal x, mreal y, mreal f, int s, long j, char col)
 {
 	mglPrim a(4);
 	a.s = fscl/PlotFactor;	a.w = ftet;
-	a.x[0] = xPos;	a.y[0] = yPos;
+	a.x[0] = (xPos - zoomx1*Width) /zoomx2;
+	a.y[0] = (yPos - zoomy1*Height)/zoomy2;
 	a.x[1] = x;		a.y[1] = y;
 	a.zz[1] = f/fnt->GetFact(s&3);
 	a.style = s;	a.m = j;

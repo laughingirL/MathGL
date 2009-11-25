@@ -43,6 +43,7 @@
 			<Add option="-W" />
 			<Add option="-Wall" />
 			<Add option="-fPIC" />
+			<Add directory="include" />
 		</Compiler>
 		<Linker>
 			<Add option="-lpng -ljpeg -lhdf5 -lgif -lgsl" />

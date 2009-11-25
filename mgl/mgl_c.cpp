@@ -222,6 +222,8 @@ void mgl_set_axis(HMGL gr, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mre
 /// Safetly set the transformation formulas for coordinate.
 void mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ)
 {	gr->SetFunc(EqX,EqY,EqZ);	}
+void mgl_set_func_ext(HMGL gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA)
+{	gr->SetFunc(EqX,EqY,EqZ,EqA);	}
 /// Set predefined coordinate system
 void mgl_set_coor(HMGL gr, int how)	{	gr->SetCoor(how);	}
 void mgl_set_cutoff(HMGL gr, const char *EqC)	{	gr->CutOff(EqC);	}

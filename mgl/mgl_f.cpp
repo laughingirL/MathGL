@@ -255,6 +255,15 @@ void mgl_set_func_(uintptr_t *gr, const char *EqX,const char *EqY,const char *Eq
 	_GR_->SetFunc(sx,sy,sz);
 	delete []sx;	delete []sy;	delete []sz;
 }
+void mgl_set_func_ext_(uintptr_t *gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA,int lx,int ly,int lz,int la)
+{
+	char *sx=new char[lx+1];	memcpy(sx,EqX,lx);	sx[lx]=0;
+	char *sy=new char[ly+1];	memcpy(sy,EqY,ly);	sy[ly]=0;
+	char *sz=new char[lz+1];	memcpy(sz,EqZ,lz);	sz[lz]=0;
+	char *sa=new char[la+1];	memcpy(sa,EqA,la);	sa[la]=0;
+	_GR_->SetFunc(sx,sy,sz,sa);
+	delete []sx;	delete []sy;	delete []sz;	delete []sa;
+}
 /// Set predefined coordinate system
 void mgl_set_coor_(uintptr_t *gr, int *how)
 {	_GR_->SetCoor(*how);	}

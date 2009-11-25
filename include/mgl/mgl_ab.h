@@ -87,6 +87,7 @@ using mglGraph::Legend;
 	mreal Delay;		///< Delay for animation in seconds
 	bool ShowMousePos;	///< Switch to show or not mouse click position
 	mglPoint LastMousePos;	///< Last mouse position
+	bool ClfOnUpdate;	///< Clear plot before Update()
 	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
 	mglPoint CalcXYZ(int xs, int ys);
 	/// Switch on/off transparency (do not overwrite switches in user drawing function)

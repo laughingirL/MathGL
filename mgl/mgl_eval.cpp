@@ -406,7 +406,7 @@ mreal mglFormula::Calc(mreal x,mreal y,mreal t,mreal u) const
 {
 	Error=0;
 	mreal a1[MGL_VS];	memset(a1,0,MGL_VS*sizeof(mreal));
-	a1['a'-'a'] = a1['u'-'a'] = u;
+	a1['a'-'a'] = a1['c'-'a'] = a1['u'-'a'] = u;
 	a1['x'-'a'] = a1['r'-'a'] = x;
 	a1['y'-'a'] = a1['n'-'a'] = a1['v'-'a'] = y;
 	a1['z'-'a'] = a1['t'-'a'] = t;

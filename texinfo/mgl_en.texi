@@ -231,11 +231,10 @@ Set direction around which curve rotated in @code{axial, torus}. Default value i
 @cindex xrange
 @cindex yrange
 @cindex zrange
+@cindex crange
 @cindex xtick
 @cindex ytick
 @cindex ztick
-@cindex ctick
-@cindex crange
 @cindex ctick
 @cindex origin
 @cindex adjust
@@ -247,8 +246,8 @@ These large set of commands control how the axis and ticks will be drawn. Note t
 Sets the ranges of coordinates changing. Also it sets the range for coloring (analogous to @code{caxis z1 z2}). Initial ranges are [-1, 1].
 @end deffn
 
-@deffn {MGL command} axis 'fx' 'fy' 'fz'
-Sets the transformation formulas for curvilinear coordinates. Each string should contain mathematical expression for real coordinate depending on internal coordinates x, y, z. For example, the cylindrical coordinates are introduced as @code{axis 'x*cos(y)' 'x*sin(y)' 'z'}. For removing of formulas the corresponding parameter should be @code{''}. The using of transformation formulas will slightly slowing the program, i.e. @code{axis '' '' ''} is faster than @code{axis 'x' 'y' 'z'}. Initially all formulas are absent (Cartesian coordinates are used). For more details about functions and formulas, @pxref{mglFormula class}.
+@deffn {MGL command} axis 'fx' 'fy' ['fz'='' 'fa'='']
+Sets the transformation formulas for curvilinear coordinates. Each string should contain mathematical expression for real coordinate depending on internal coordinates 'x', 'y', 'z' and 'a' or 'c' for colorbar. For example, the cylindrical coordinates are introduced as @code{axis 'x*cos(y)' 'x*sin(y)' 'z'}. For removing of formulas the corresponding parameter should be @code{''}. The using of transformation formulas will slightly slowing the program, i.e. @code{axis '' '' ''} is faster than @code{axis '1*x' '1*y' '1*z'}. Initially all formulas are absent (Cartesian coordinates are used). For more details about functions and formulas, @pxref{mglFormula class}.
 @end deffn
 
 @deffn {MGL command} axis @code{how}
@@ -284,7 +283,8 @@ Sets the range for x-,y-,z- coordinate or coloring. See also axis.
 @deffn {MGL command} xtick @code{val [sub=0 org=nan]}
 @deffnx {MGL command} ytick @code{val [sub=0 org=nan]}
 @deffnx {MGL command} ztick @code{val [sub=0 org=nan]}
-Sets step for x-, y-, z-axis ticks (if @var{cal}>0) or it's number (if @var{val}<0) in corresponding direction. Zero value @var{val}=0 sets logarithmic ticks. Parameter @var{sub} sets the number of sub-ticks. Parameter @var{org} set the starting points for ticks. If not @code{org=nan} then the value from @code{origin} is used.
+@deffnx {MGL command} ctick @code{val}
+Sets step for x-, y-, z-axis ticks or colorbar ticks (if @var{val}>0) or it's number (if @var{val}<0) in corresponding direction. Zero value @var{val}=0 sets logarithmic ticks. Parameter @var{sub} sets the number of sub-ticks. Parameter @var{org} set the starting points for ticks. If not @code{org=nan} then the value from @code{origin} is used.
 @end deffn
 
 @deffn {MGL command} xtick 'templ'
@@ -300,7 +300,7 @@ Sets the template for x-, y-, z-axis ticks or colorbar ticks. It may contain TeX
 Sets manual positions @var{val1},@var{val2},... and labels @var{lbl1},@var{lbl2},... for ticks along x-, y-, z-axis. Labels may contain TeX symbols also.
 @end deffn
 
-@deffn {MGL command} adjust 'dir'
+@deffn {MGL command} adjust ['dir'='xyzc']
 Set the ticks step, number of sub-ticks and initial ticks position to be the most human readable for the axis along direction(s) @var{dir}.
 @end deffn
 
@@ -1189,8 +1189,14 @@ a_ij^new = a_i^old where j=0...@var{n1}. Correspondingly, for @var{n1}<0 new arr
 Transposes (shift order of) dimensions of the data. New order of dimensions is specified int string @var{dim}. This command may be useful also for the reading of one-dimensional data.
 @end deffn
 
-@deffn {MGL command} squeeze dat, @code{rx [ry=1 rz=1]}
-Reduces the data size by excluding data elements which indexes are not divisible by @var{rx}, @var{ry}, @var{rz} correspondingly.
+@deffn {MGL command} squeeze dat @code{rx [ry=1 rz=1 sm=off]}
+Reduces the data size by excluding data elements which indexes are not divisible by @var{rx}, @var{ry}, @var{rz} correspondingly. Parameter @var{sm} set to use smoothing
+@iftex
+(i.e. @math{a_{out}[i]=\sum_{j=i}^{i+r}a[j]/r}) or not (i.e. @math{a_{out}[i]=a[j*r]}).
+@end iftex
+@ifnottex
+(i.e. out[i]=\sum_@{j=i@}^@{i+r@} a[j]/r) or not (i.e. out[i]=a[j*r]).
+@end ifnottex
 @end deffn
 
 @deffn {MGL command} crop dat @code{n1 n2} 'dir'

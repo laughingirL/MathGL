@@ -1,20 +1,25 @@
 1.10 Released ?? November 2009
 	- Change license from GPL to LGPL for MathGL core. SWIG-based interfaces still have GPL.
 	- Add new plot BoxPlot() for plotting data statistic (max, min, median, quartiles).
+	- Add formula for coloring like formulas for curvilinear coordinates.
+	- Add C++ wrapper classes for C functions. These classes (mglDataW, mglGraph, mglParse) can be used even in MSVS naturaly.
 	- Add wxMathGL widget for wxWidgets library.
 	- Improve documentation.
 	- Add speed up compilation (i.e. allow 'make -j3').
-	- Add ObjId for determining the object (or line) of point.
+	- Add ObjId for determining the object (or line) of picture point.
 	- Add ticks drawing for inverted axis (i.e. when Min>Max, not for log-scaled!).
 	- Add drawing of log-scaled axis for case Min<Max<0.
 	- Several MGL commands can be placed in single string. They have to be separated by column ':'.
-	- MGL command 'define' now can define scalar variables, like "define xmin dat.min-1". These variables can be used as is later, like "xrange xmin 1".
-	- Add automatic increse of the point numbers in plots by formula (i.e. like Plot("sin(1/x)");
+	- MGL command 'define' now can define scalar variables, like "define xmin dat.min-1". These variables can be used as is later as a number, like "xrange xmin 1".
+	- Add automatic increse of the point numbers in plots by formula with singularities (i.e. like Plot("sin(1/x)");
+	- Add mglGraph::GetFit() function which return fitted formula.
 	- Output array in Fit[S]() functions now always distributed in Min*Max range and don't depend on input arrays.
+	- Improve mglData::Squeeze() function for keeping last point and add smoothing on demand.
 	- Bug with PlotFactor changing while AutoPlotFactor=false.
 	- Bug with Vect() and MeshNum>1.
 	- Bug with overriding default pallette by manual color specification.
 	- Bug in SWIG interface with selecting between float/double.
+	- Now coordinates of mglQO2d() and mglAF2d() is defined by the same way as in Fill().
 	- Memory leaks correction.
 	- Incompatible changes:
 		* rename Axis() function to SetFunc() and SetCoor() functions (Python-like)

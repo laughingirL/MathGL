@@ -243,7 +243,7 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 	for(i=0;i<nx;i++)	a[i+nx/2] = dual(ini_re.a[i],ini_im.a[i]);	// ini
 	for(i=0;i<2*nx;i++)	{	rx[i] = ru[i] = 1;	}
 	mglFormula h(ham);
-	mreal var[MGL_VS], dr = r/nx, dk = M_PI/(k0*r), tt, x1, hh, B1, pt0;
+	mreal var[MGL_VS], dr = r/(nx-1), dk = M_PI/(k0*r), tt, x1, hh, B1, pt0;
 	memset(var,0,MGL_VS*sizeof(mreal));
 	gsl_fft_complex_wavetable *wtx = gsl_fft_complex_wavetable_alloc(2*nx);
 	gsl_fft_complex_workspace *wsx = gsl_fft_complex_workspace_alloc(2*nx);
@@ -255,7 +255,7 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 			res.a[i+k*nx]=abs(a[i+nx/2])*sqrt(ra[0].ch/ra[k].ch);
 		if(xx && yy)	for(i=0;i<nx;i++)	// prepare xx, yy
 		{
-			x1 = (2*i-nx)*dr;
+			x1 = (2*i-nx+1)*dr;
 			xx->a[i+k*nx] = ray.a[7*k] + ra[k].x1*x1;	// new coordiantes
 			yy->a[i+k*nx] = ray.a[7*k+1] + ra[k].y1*x1;
 		}
@@ -274,7 +274,7 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 			var['q'-'a'] = ray.a[7*k+4] + ra[k].y0*hh;	var['u'-'a'] = 0;
 			h0 = dual(h.Calc(var), -h.CalcD(var,'i'));
 			// x terms
-			x1 = 2*(i-nx)*dr;
+			x1 = (2*i-2*nx+1)*dr;
 			var['x'-'a'] = ray.a[7*k] + ra[k].x1*x1;	// new coordiantes
 			var['y'-'a'] = ray.a[7*k+1] + ra[k].y1*x1;
 			hh = 1 - ra[k].t1*x1;	hh = sqrt(sqrt(0.041+hh*hh*hh*hh));
@@ -357,7 +357,7 @@ mglData mglAF2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 	register int i;
 	for(i=0;i<nx;i++)	a[i+nx/2] = dual(ini_re.a[i],ini_im.a[i]);	// ini
 	mglFormula h(ham);
-	mreal var[MGL_VS], dr = r/nx, dk = M_PI/(k0*r), tt, x1, hh, B1;
+	mreal var[MGL_VS], dr = r/(nx-1), dk = M_PI/(k0*r), tt, x1, hh, B1;
 	memset(var,0,MGL_VS*sizeof(mreal));
 	gsl_fft_complex_wavetable *wtx = gsl_fft_complex_wavetable_alloc(2*nx);
 	gsl_fft_complex_workspace *wsx = gsl_fft_complex_workspace_alloc(2*nx);
@@ -369,7 +369,7 @@ mglData mglAF2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 			res.a[i+k*nx]=abs(a[i+nx/2])*sqrt(ra[0].ch/ra[k].ch);
 		if(xx && yy)	for(i=0;i<nx;i++)	// prepare xx, yy
 		{
-			x1 = (2*i-nx)*dr;
+			x1 = (2*i-nx+1)*dr;
 			xx->a[i+k*nx] = ray.a[7*k] + ra[k].x1*x1;	// new coordiantes
 			yy->a[i+k*nx] = ray.a[7*k+1] + ra[k].y1*x1;
 		}
