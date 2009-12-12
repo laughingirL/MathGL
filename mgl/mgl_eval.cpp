@@ -23,6 +23,7 @@
 #include <string.h>
 #ifndef NO_GSL
 #include <gsl/gsl_sf.h>
+#include <gsl/gsl_errno.h>
 #endif
 #include "mgl/mgl_eval.h"
 //-----------------------------------------------------------------------------
@@ -31,7 +32,7 @@ enum{
 EQ_NUM=0,	// a variable substitution
 EQ_RND,		// random number
 EQ_A,		// numeric constant
-// двуместные функции
+// normal functions of 2 arguments
 EQ_LT,		// comparison x<y			!!! MUST BE FIRST 2-PLACE FUNCTION
 EQ_GT,		// comparison x>y
 EQ_EQ,		// comparison x=y
@@ -46,7 +47,7 @@ EQ_POW,		// power x^y
 EQ_MOD,		// x modulo y
 EQ_LOG,		// logarithm of x on base a, log_a(x) = ln(x)/ln(a)
 EQ_ARG,		// argument of complex number arg(x,y) = atan2(x,y)
-// двуместные спец. функции
+// special functions of 2 arguments
 EQ_BESJ,	// regular cylindrical Bessel function of fractional order
 EQ_BESY,	// irregular cylindrical Bessel function of fractional order
 EQ_BESI,	// regular modified Bessel function of fractional order
@@ -54,7 +55,8 @@ EQ_BESK,	// irregular modified Bessel function of fractional order
 EQ_ELE,		// elliptic integral E(\phi,k) = \int_0^\phi dt   \sqrt((1 - k^2 \sin^2(t)))
 EQ_ELF,		// elliptic integral F(\phi,k) = \int_0^\phi dt 1/\sqrt((1 - k^2 \sin^2(t)))
 EQ_LP,		// Legendre polynomial P_l(x), (|x|<=1, l>=0)
-// одноместные функции
+EQ_BETA,	// beta function B(x,y) = Gamma(x)*Gamma(y)/Gamma(x+y)
+// normal functions of 1 argument
 EQ_SIN,		// sine function \sin(x).			!!! MUST BE FIRST 1-PLACE FUNCTION
 EQ_COS,		// cosine function \cos(x).
 EQ_TAN,		// tangent function \tan(x).
@@ -74,8 +76,8 @@ EQ_LG,		// decimal logarithm of x, lg(x) = ln(x)/ln(10)
 EQ_SIGN,	// sign of number
 EQ_STEP,	// step function
 EQ_ABS,		// absolute value of x
-// одноместные спец функции
-EQ_LI2,		// dilogarithm for a mreal argument Li2(x) = - \Re \int_0^x ds \log(1-s)/s.
+// special functions of 1 argument
+EQ_LI2,		// dilogarithm for a real argument Li2(x) = - \Re \int_0^x ds \log(1-s)/s.
 EQ_ELLE,	// complete elliptic integral is denoted by E(k) = E(\pi/2, k).
 EQ_ELLK,	// complete elliptic integral is denoted by K(k) = F(\pi/2, k).
 EQ_AI,		// Airy function Ai(x)
@@ -94,7 +96,10 @@ EQ_W1,		// secondary mreal-valued branch of the Lambert W function, W_{-1}(x). F
 EQ_SINC,		// compute \sinc(x) = \sin(\pi x) / (\pi x) for any value of x.
 EQ_ZETA,		// Riemann zeta function \zeta(s) = \sum_{k=1}^\infty k^{-s}for arbitrary s, s \ne 1.
 EQ_ETA,		// eta function \eta(s) = (1-2^{1-s}) \zeta(s) for arbitrary s.
-// эллиптические функции
+EQ_AID,		// Derivative of Airy function Ai(x)
+EQ_BID,		// Derivative of Airy function Bi(x)
+EQ_Z,		// Dawson function \exp(-x^2) \int_0^x dt \exp(t^2)
+// Jacoby functions of 2 arguments
 EQ_SN,		// Jacobian elliptic function sn(u|m)	// !!! MUST BE FIRST NON 1-PLACE FUNCTION
 EQ_SC,		// Jacobian elliptic function sn(u|m)/cn(u|m)
 EQ_SD,		// Jacobian elliptic function sn(u|m)/dn(u|m)
@@ -108,7 +113,7 @@ EQ_DN,		// Jacobian elliptic function dn(u|m)
 EQ_DS,		// Jacobian elliptic function dn(u|m)/sn(u|m)
 EQ_DC,		// Jacobian elliptic function dn(u|m)/cn(u|m)
 			// MUST BE LAST ELLIPTIC FUNCTION
-// прочие
+// non-ready
 EQ_EN,
 EQ_CL,		// Clausen function
 };
@@ -208,6 +213,9 @@ mglFormula::~mglFormula()
 // конструктор формулы (автоматически распознает и "компилирует" формулу)
 mglFormula::mglFormula(const char *string)
 {
+#ifndef NO_GSL
+	gsl_set_error_handler_off();
+#endif
 	Error=0;
 	Left=Right=0;
 	Res=0; Kod=0;
@@ -302,14 +310,32 @@ mglFormula::mglFormula(const char *string)
 		memcpy(Buf,&(str[n+1]),len-n);
 		len=strlen(Buf);
 		Buf[--len]=0;
+		if(!strncmp(name,"jacobi_",7))
+			memmove(name,name+7,(strlen(name+7)+1)*sizeof(char));
 		if(name[0]=='a')
 		{
 			if(!strcmp(name+1,"sin"))		Kod=EQ_ASIN;
 			else if(!strcmp(name+1,"cos"))	Kod=EQ_ACOS;
 			else if(!strcmp(name+1,"tan"))	Kod=EQ_ATAN;
+			else if(!strcmp(name+1,"sinh"))	Kod=EQ_ASINH;
+			else if(!strcmp(name+1,"cosh"))	Kod=EQ_ACOSH;
+			else if(!strcmp(name+1,"tanh"))	Kod=EQ_ATANH;
 			else if(!strcmp(name+1,"rg"))	Kod=EQ_ARG;
 			else if(!strcmp(name+1,"bs"))	Kod=EQ_ABS;
 			else if(!strcmp(name+1,"i"))	Kod=EQ_AI;
+			else if(!strcmp(name+1,"iry_ai"))	Kod=EQ_AI;
+			else if(!strcmp(name+1,"iry_bi"))	Kod=EQ_BI;
+			else if(!strcmp(name+1,"iry_dai"))	Kod=EQ_AID;
+			else if(!strcmp(name+1,"iry_dbi"))	Kod=EQ_BID;
+		}
+		else if(name[0]=='b')
+		{
+			if(!strcmp(name+1,"i"))		Kod=EQ_BI;
+			else if(!strcmp(name+1,"essel_j"))	Kod=EQ_BESJ;
+			else if(!strcmp(name+1,"essel_i"))	Kod=EQ_BESI;
+			else if(!strcmp(name+1,"essel_k"))	Kod=EQ_BESK;
+			else if(!strcmp(name+1,"essel_y"))	Kod=EQ_BESY;
+			else if(!strcmp(name+1,"eta"))	Kod=EQ_BETA;
 		}
 		else if(name[0]=='c')
 		{
@@ -342,6 +368,10 @@ mglFormula::mglFormula(const char *string)
 			else if(!strcmp(name+1,"2"))	Kod=EQ_E2;
 			else if(!strcmp(name+1,"ta"))	Kod=EQ_ETA;
 			else if(!strcmp(name+1,"i3"))	Kod=EQ_EI3;
+			else if(!strcmp(name+1,"lliptic_e"))	Kod=EQ_ELE;
+			else if(!strcmp(name+1,"lliptic_f"))	Kod=EQ_ELF;
+			else if(!strcmp(name+1,"lliptic_ec"))	Kod=EQ_ELLE;
+			else if(!strcmp(name+1,"lliptic_kc"))	Kod=EQ_ELLK;
 		}
 		else if(name[0]=='l')
 		{
@@ -383,11 +413,11 @@ mglFormula::mglFormula(const char *string)
 		else if(!strcmp(name,"ns"))		Kod=EQ_NS;
 		else if(!strcmp(name,"nc"))		Kod=EQ_NC;
 		else if(!strcmp(name,"nd"))		Kod=EQ_ND;
-		else if(!strcmp(name,"bi"))		Kod=EQ_BI;
 		else if(!strcmp(name,"w0"))		Kod=EQ_W0;
 		else if(!strcmp(name,"w1"))		Kod=EQ_W1;
 		else if(!strcmp(name,"psi"))	Kod=EQ_PSI;
 		else if(!strcmp(name,"zeta"))	Kod=EQ_ZETA;
+		else if(!strcmp(name,"z"))		Kod=EQ_Z;
 		else {	delete []str;	return;	}	// unknown function
 		n=mglFindInText(Buf,",");
 		if(n>=0)
@@ -460,9 +490,11 @@ double gslEllEc(double a)	{return gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE);}
 double gslEllFc(double a)	{return gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE);}
 double gslAi(double a)	{return gsl_sf_airy_Ai(a,GSL_PREC_SINGLE);}
 double gslBi(double a)	{return gsl_sf_airy_Bi(a,GSL_PREC_SINGLE);}
+double gslAi_d(double a)	{return gsl_sf_airy_Ai_deriv(a,GSL_PREC_SINGLE);}
+double gslBi_d(double a)	{return gsl_sf_airy_Bi_deriv(a,GSL_PREC_SINGLE);}
 #endif
-double sgn(double a)	{return a<0 ? -1 : (a>0 ? 1:0);}
-double stp(double a)	{return a>0 ? 1 : 0;}
+double sgn(double a)	{return a<0 ? -1:(a>0?1:0);}
+double stp(double a)	{return a>0 ? 1:0;}
 double arg(double a,double b)	{	return atan2(b,a);	}
 double mgz1(double)	{return 0;}
 double mgz2(double,double)	{return 0;}
@@ -477,25 +509,26 @@ typedef double (*func_2)(double, double);
 // evaluation of embedded (included) expressions
 mreal mglFormula::CalcIn(const mreal *a1) const
 {
-	func_2 f2[21] = {clt,cgt,ceq,cor,cand,add,sub,mul,div,ipw,pow,fmod,llg,arg
+	func_2 f2[22] = {clt,cgt,ceq,cor,cand,add,sub,mul,div,ipw,pow,fmod,llg,arg
 #ifndef NO_GSL
 			,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
 			gsl_sf_bessel_Inu,gsl_sf_bessel_Knu,
-			gslEllE,gslEllF,gslLegP
+			gslEllE,gslEllF,gslLegP,gsl_sf_beta
 #else
-			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
+			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 		};
-	func_1 f1[38] = {sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,
+	func_1 f1[41] = {sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,
 					asinh,acosh,atanh,sqrt,exp,log,log10,sgn,stp,fabs
 #ifndef NO_GSL
 			,gsl_sf_dilog,gslEllEc,gslEllFc,gslAi,gslBi,gsl_sf_erf,
 			gsl_sf_expint_3,gsl_sf_expint_Ei,gsl_sf_expint_E1,gsl_sf_expint_E2,
 			gsl_sf_Si,gsl_sf_Ci,gsl_sf_gamma,gsl_sf_psi,gsl_sf_lambert_W0,
-			gsl_sf_lambert_Wm1,gsl_sf_sinc,gsl_sf_zeta,gsl_sf_eta
+			gsl_sf_lambert_Wm1,gsl_sf_sinc,gsl_sf_zeta,gsl_sf_eta,gslAi_d,gslBi_d,
+			gsl_sf_dawson
 #else
-			,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,
-			mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1
+			,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,
+			mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1
 #endif
 		};
 //	if(Error)	return 0;
@@ -591,36 +624,34 @@ double gslEllF1(double a,double b)	{return 1./sqrt(1-sin(a)*sin(a)*b);}
 double gslEllF2(double a,double b)	{return (gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE) - gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE)*(1-b))/(2*b*(1-b)) - sin(2*a)/(sqrt(1-sin(a)*sin(a)*b)*2*(1-b));}
 double gslE_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2*a);}
 double gslK_d(double a)	{return (gsl_sf_ellint_Ecomp(a,GSL_PREC_SINGLE) - (1-a)*gsl_sf_ellint_Kcomp(a,GSL_PREC_SINGLE))/(2*a*(1-a));}
-double gslAi_d(double a)	{return gsl_sf_airy_Ai_deriv(a,GSL_PREC_SINGLE);}
-double gslBi_d(double a)	{return gsl_sf_airy_Bi_deriv(a,GSL_PREC_SINGLE);}
 double gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
 #endif
 //-----------------------------------------------------------------------------
 // evaluation of derivative of embedded (included) expressions
 mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 {
-	func_2 f21[20] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgp,mul1,div1,ipw1,pow1,mgp,llg1
+	func_2 f21[22] = {mgz2,mgz2,mgz2, mgz2,mgz2,mgp, mgp,mul1,div1, ipw1,pow1,mgp,llg1, mgz2// TODO deriv of arg!
 #ifndef NO_GSL
-			,mgz2,mgz2,mgz2,mgz2,gslEllE1,gslEllF2,mgz2
+			,mgz2,mgz2,mgz2, mgz2,gslEllE1,gslEllF2, mgz2,mgz2
 #else
-			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
+			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 		};
-	func_2 f22[20] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgm,mul2,div2,mgz2,pow2,mgz2,llg2
+	func_2 f22[22] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgm,mul2,div2,mgz2,pow2,mgz2,llg2, mgz2 // TODO deriv of arg!
 #ifndef NO_GSL
-			,gslJnuD,gslYnuD,gslInuD,gslKnuD,gslEllE2,gslEllF2,mgz2/*gslLegP*/
+			,gslJnuD,gslYnuD,gslInuD,gslKnuD,gslEllE2,gslEllF2,mgz2/*gslLegP*/,mgz2
 #else
-			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
+			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 		};
-	func_1 f11[38] = {cos,cos_d,tan_d,asin_d,acos_d,atan_d,cosh,sinh,tanh_d,
+	func_1 f11[41] = {cos,cos_d,tan_d,asin_d,acos_d,atan_d,cosh,sinh,tanh_d,
 					asinh_d,acosh_d,atanh_d,sqrt_d,exp,log_d,log10_d,mgz1,mgz1,sgn
 #ifndef NO_GSL
 			,dilog_d,gslE_d,gslK_d,gslAi_d,gslBi_d,erf_d,exp3_d,ei_d,e1_d,e2_d,
-			si_d,ci_d,gamma_d,gsl_sf_psi_1,mgz1,mgz1,sinc_d,mgz1,mgz1
+			si_d,ci_d,gamma_d,gsl_sf_psi_1,mgz1,mgz1,sinc_d,mgz1,mgz1,mgz1,mgz1,mgz1
 #else
-			,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,
-			mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1
+			,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,
+			mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1,mgz1
 #endif
 		};
 //	if(Error)	return 0;

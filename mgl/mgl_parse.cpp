@@ -78,6 +78,16 @@ void mgl_wcstombs(char *dst, const wchar_t *src, int size)
 	dst[j] = 0;
 }
 //-----------------------------------------------------------------------------
+mglCommand *mglParse::FindCommand(const wchar_t *com)
+{
+	mglCommand tst, *rts;
+	long i;
+	for(i=0;Cmd[i].name[0];i++);	// determine the number of symbols
+	tst.name = com;
+	rts = (mglCommand *) bsearch(&tst, Cmd, i, sizeof(mglCommand), mgl_cmd_cmp);
+	return rts;
+}
+//-----------------------------------------------------------------------------
 // return values : 0 -- OK, 1 -- wrong arguments, 2 -- wrong command, 3 -- unclosed string
 int mglParse::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var)
 {
@@ -85,10 +95,7 @@ int mglParse::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wc
 	for(i=0;i<10;i++)	k[i] = i<n ? a[i].type + 1 : 0;
 //	for(i=0;i<n;i++)	wcstombs(a[i].s, a[i].w, 1024);
 	for(i=0;i<n;i++)		mgl_wcstombs(a[i].s, a[i].w, 1024);
-	mglCommand tst, *rts;
-	for(i=0;Cmd[i].name[0];i++);	// determine the number of symbols
-	tst.name = com;
-	rts = (mglCommand *) bsearch(&tst, Cmd, i, sizeof(mglCommand), mgl_cmd_cmp);
+	mglCommand *rts=FindCommand(com);
 	if(!rts)	return 2;
 	if(rts->create)
 	{

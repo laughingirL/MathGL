@@ -699,7 +699,8 @@ void mglGraphZB::line_plot(mreal *pp0,mreal *pp1,mreal *cc0,mreal *cc1,bool all)
 			r[0] = (unsigned char)(255.f*(cc0[0]+c10*u));
 			r[1] = (unsigned char)(255.f*(cc0[1]+c11*u));
 			r[2] = (unsigned char)(255.f*(cc0[2]+c12*u));
-			r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
+//			r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
+			r[3] = (unsigned char)(255.f/cosh(3.f*sqrt(v/b)));
 			pnt_plot(i,j,pp0[2]+d12*u+pw,r);
 		}
 	}
@@ -720,7 +721,8 @@ void mglGraphZB::line_plot(mreal *pp0,mreal *pp1,mreal *cc0,mreal *cc1,bool all)
 			r[0] = (unsigned char)(255.f*(cc0[0]+c10*u));
 			r[1] = (unsigned char)(255.f*(cc0[1]+c11*u));
 			r[2] = (unsigned char)(255.f*(cc0[2]+c12*u));
-			r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
+//			r[3] = (unsigned char)(255.f*exp(-6.f*v/b));
+			r[3] = (unsigned char)(255.f/cosh(3.f*sqrt(v/b)));
 			pnt_plot(i,j,pp0[2]+d12*u+pw,r);
 		}
 	}

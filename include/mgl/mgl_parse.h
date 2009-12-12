@@ -93,6 +93,8 @@ public:
 
 	mglParse(bool setsize=false);
 	~mglParse();
+	/// Find the command by the keyword name
+	mglCommand *FindCommand(const wchar_t *name);
 	/// Parse and execute the string of MGL script
 	int Parse(mglGraph *gr, const char *str, long pos=0);
 	/// Parse and execute the unicode string of MGL script

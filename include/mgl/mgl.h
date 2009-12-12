@@ -376,6 +376,9 @@ public:
 	void Grid(const char *dir="xyz",const char *pen="B-");
 	/// Print the label \a text for axis \a dir.
 	void Label(char dir, const char *text, int pos=+1, mreal size=-1.4, mreal shift=0);
+	/// Print the \a text at arbitrary position of the picture \a x, \a y in range [0,1]x[0,1].
+	void Label(mreal x, mreal y, const char *text, const char *fnt=0, mreal size=-1.4);
+	void Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt=0, mreal size=-1.4);
 	/// Print the label \a text for axis \a dir.
 	void Label(char dir, const wchar_t *text, int pos=+1, mreal size=-1.4, mreal shift=0);
 	/// Draw colorbar at edge of axis
@@ -1151,6 +1154,8 @@ protected:
 	/// add point to contour line chain
 	long add_cpoint(long &pc,mreal **p,mreal **k,bool **t,mreal x,mreal y,mreal z,
 				mreal k1,mreal k2,bool scale);
+	/// Draw tick
+	virtual void DrawTick(mreal *pp,bool sub);
 
 private:
 	GifFileType *gif;
@@ -1217,8 +1222,6 @@ private:
 	void AxisT(bool text);
 	/// Draw ticks on box
 	void TickBox();
-	/// Draw tick
-	void DrawTick(mreal *pp,bool sub);
 	/// Draw X,Y,Z grid line
 	void DrawXGridLine(mreal t, mreal y0, mreal z0);
 	void DrawYGridLine(mreal t, mreal x0, mreal z0);

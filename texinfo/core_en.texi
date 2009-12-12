@@ -948,6 +948,13 @@ The function plots the string @var{text} at position @var{p} with fonts @var{how
 Print formatted string at point @var{p}.
 @end deftypefn
 
+@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Label (@code{float} x, @code{float} y, @code{const char *}text, @code{const char *}font=@code{""}, @code{float} size=@code{-1})
+@deftypefnx {Method on @code{mglGraph} (C++)} @code{void} Labelw (@code{float} x, @code{float} y, @code{const wchar_t *}text, @code{const char *}font=@code{""}, @code{float} size=@code{-1})
+@deftypefnx {C function} @code{void} mgl_label_xy (@code{HMGL} gr, @code{float} x, @code{float} y, @code{const char *}text, @code{const char *}font, @code{float} size)
+@deftypefnx {C function} @code{void} mgl_labelw_xy (@code{HMGL} gr, @code{float} x, @code{float} y, @code{const wchar_t *}text, @code{const char *}font, @code{float} size)
+The function draws the string @var{text} at position @{@var{x}, @var{y}@} with fonts specifying by @var{font}. The size of font is set by @var{size} parameter (default is @var{FontSize}). Coordiantes @code{x, y} are supposed to be in range [0,1].
+@end deftypefn
+
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} Title (@code{const char *}text, @code{const char *}font=@code{0}, @code{float} size=@code{-2})
 @deftypefnx {Method on @code{mglGraph} (C++)} @code{void} Title (@code{const wchar_t *}text, @code{const char *}font=@code{0}, @code{float} size=@code{-2})
 @deftypefnx {Method on @code{mglGraph} (Python)} @code{void} Title (@code{const char *}text, @code{const char *}font=@code{0}, @code{int} size=@code{-2})
@@ -2567,6 +2574,11 @@ Fit data along x-, y- and z-directions for 3d array @var{a} with @var{s}=1 and @
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} PutsFit (@code{mglPoint} p, @code{const char *}prefix=@code{""}, @code{const char *}font=@code{NULL}, @code{float} size=@code{-1})
 @deftypefnx {C function} @code{void} mgl_puts_fit (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{const char *}prefix, @code{const char *}font, @code{float} size=@code{-1})
 Print last fitted formula with found coefficients (as numbers) at position @var{p0}. The string @var{prefix} will be printed before formula. All other parameters are the same as in @ref{Text printing}.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{const char *}GetFit ()
+@deftypefnx {C function} @code{const char *} mgl_get_fit (@code{HMGL} gr)
+Get last fitted formula with found coefficients (as numbers).
 @end deftypefn
 
 @deftypecv {General option (C++)} mglGraph @code{int} FitPnts

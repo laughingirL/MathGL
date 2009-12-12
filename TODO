@@ -1,10 +1,14 @@
 
 					MathGL (for v.1.10.*)
 
+b. Try to switch on Tunning if tick labels overlap ???
+a. Bug with rotations :( -- fast ploting
+0. Optimize legend box height (large font)
 1. BoxPlot -- Web
 2. Spline5
 3. mglGraphPS
  -- each prim have the inplot id & reference to settings list (lights, alpha, fog).
+ -- switch to "smoothed" drawing for primitives (the same as mglGraphZB).
 4. Web site (translate "Installation Qt")
 5. Glyph in WriteEPS and zoom (especially in legend)
 

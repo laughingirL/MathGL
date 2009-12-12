@@ -33,14 +33,15 @@ typedef float mreal;
 extern "C" {
 #endif
 /*****************************************************************************/
+//#ifdef _MGL_DATA_H_
 #ifdef __cplusplus
-struct mglDraw;
+class mglDraw;
 typedef mglDraw* HMDR;
-struct mglGraph;
+class mglGraph;
 typedef mglGraph* HMGL;
-struct mglData;
+class mglData;
 typedef mglData* HMDT;
-struct mglParse;
+class mglParse;
 typedef mglParse* HMPR;
 #else
 typedef void* HMDR;
@@ -210,6 +211,8 @@ void mgl_axis(HMGL graph, const char *dir);
 void mgl_axis_grid(HMGL graph, const char *dir,const char *pen);
 void mgl_label(HMGL graph, char dir, const char *text);
 void mgl_label_ext(HMGL graph, char dir, const char *text, int pos, mreal size, mreal shift);
+void mgl_label_xy(HMGL graph, mreal x, mreal y, const char *text, const char *fnt, mreal size);
+void mgl_labelw_xy(HMGL graph, mreal x, mreal y, const wchar_t *text, const char *fnt, mreal size);
 void mgl_tune_ticks(HMGL graph, int tune, mreal fact_pos);
 void mgl_set_xttw(HMGL graph, const wchar_t *templ);
 void mgl_set_yttw(HMGL graph, const wchar_t *templ);
@@ -594,6 +597,7 @@ mreal mgl_fit_xyzs_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z
 mreal mgl_fit_xyzas_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const HMDT s, const char *eq, const char *var, HMDT ini);
 
 void mgl_puts_fit(HMGL gr, mreal x, mreal y, mreal z, const char *prefix, const char *font, mreal size);
+const char *mgl_get_fit(HMGL gr);
 /*****************************************************************************/
 void mgl_sphere(HMGL graph, mreal x, mreal y, mreal z, mreal r, const char *stl);
 void mgl_drop(HMGL graph, mreal x1, mreal y1, mreal z1, mreal x2, mreal y2, mreal z2, mreal r, const char *stl, mreal shift, mreal ap);

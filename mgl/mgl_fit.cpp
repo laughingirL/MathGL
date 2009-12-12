@@ -424,6 +424,7 @@ mreal mgl_fit_xyzas_d(HMGL gr, HMDT fit, const HMDT x, const HMDT y, const HMDT 
 
 void mgl_puts_fit(HMGL gr, mreal x, mreal y, mreal z, const char *prefix, const char *font, mreal size)
 {	gr->PutsFit(mglPoint(x,y,z), prefix, font, size);	}
+const char *mgl_get_fit(HMGL gr)	{	return gr->GetFit();	}
 //-----------------------------------------------------------------------------
 mreal mgl_fit_1_(uintptr_t* gr, uintptr_t* fit, uintptr_t* y, const char *eq, const char *var, mreal *ini, int l, int n)
 {

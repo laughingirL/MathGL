@@ -21,32 +21,10 @@
  ***************************************************************************/
 
 %module mathgl
-
-%{
-#include <math.h>
-#include "mgl/mgl_c.h"
-
-const float NaN = NAN;
-const float pi = M_PI;
-const int on = 1;
-const int off = 0;
-%}
-
-typedef mglGraph *HMGL;
-typedef mglData *HMDT;
-typedef mglParse *HMPR;
-
-const float NaN = NAN;
-const float pi = M_PI;
-const int on = 1;
-const int off = 0;
-
-#idef SWIGOCTAVE
-%feature("autodoc", 1);
-#end // SWIGOCTAVE
-
 #define MGL_NO_WIDGET
-%include "mgl/mgl_c.h"
+#ifdef SWIGOCTAVE
+%feature("autodoc", 1);
+#endif // SWIGOCTAVE
 
 %ignore operator!;
 %ignore operator=;
@@ -56,75 +34,38 @@ const int off = 0;
 %ignore *::operator*=;
 %ignore *::operator/=;
 
-#ifdef SWIGPYTHON
-%ignore operator*(float, const mglPoint &);
-%ignore operator*(const mglData &b, const mglData &d);
-%ignore operator*(float b, const mglData &d);
-%ignore operator-(float b, const mglData &d);
-%ignore operator-(const mglData &d, float b);
-%ignore operator+(float b, const mglData &d);
-%ignore operator+(const mglData &d, float b);
-%ignore operator/(const mglData &b, const mglData &d);
-
-%rename(Mul) operator*(const mglPoint &, float);
-%rename(Div) operator/(const mglPoint &, float);
-%rename(__add__) operator+(const mglPoint&, const mglPoint&);
-%rename(__sub__) operator-(const mglPoint &, const mglPoint &);
-%rename(__mul__) operator*(const mglPoint &, const mglPoint &);
-%rename(__div__) operator/(const mglPoint &, const mglPoint &);
-%rename(__eq__) operator==(const mglPoint &, const mglPoint &);
-%rename(__ne__) operator!=(const mglPoint &, const mglPoint &);
-%rename(__ror__) operator|(const mglPoint &, const mglPoint &);
-%rename(__rand__) operator&(const mglPoint &, const mglPoint &);
-%rename(__rxor__) operator^(const mglPoint &, const mglPoint &);
-%rename(__add__) operator+(const mglData&, const mglData&);
-%rename(__sub__) operator-(const mglData&, const mglData &);
-%rename(__mul__) operator*(const mglData &, float);
-%rename(__div__) operator/(const mglData &, float);
-#endif
-
+%{
+#define SWIG_FILE_WITH_INIT
+//#include "mgl/mgl_c.h"
+#include "mgl/mgl_w.h"
+%}
 
 #ifdef SWIGOCTAVE
-/*%include "octave_typemaps.i"
-%apply (float64_t* IN_ARRAY1, int32_t DIM1) {(double* series, int length)}
-%apply (float64_t* IN_ARRAY2, int32_t DIM1, int32_t DIM2) {(double* mx, int rows, int cols)}*/
-
-%ignore operator|;
-%ignore operator^;
-%ignore operator&;
 %rename(__add) operator+;
 %rename(__sub) operator-;
 %rename(__mul) operator*;
 %rename(__div) operator/;
 %rename(__eq) operator==;
 %rename(__ne) operator!=;
-
-%typemap(in,noblock=1) (double* d, int rows, int cols) (Matrix tmp) {
-  if (!$input.is_matrix_type()) {
-    error("A must be a matrix");
-    SWIG_fail;
-  }
-  tmp=$input.matrix_value();
-  $1=tmp.data();
-  $2=tmp.rows();
-  $3=tmp.columns();
-}
+//%typemap(in,noblock=1) (double* d, int rows, int cols) (Matrix tmp) {
+//	if (!$input.is_matrix_type()) {
+//		error("A must be a matrix");
+//	SWIG_fail;
+//	}
+//	tmp=$input.matrix_value();
+//	$1=tmp.data();
+//	$2=tmp.rows();
+//	$3=tmp.columns();
+//}
 #endif
 
-%{
-#define SWIG_FILE_WITH_INIT
-#include "mgl/mgl_data.h"
-%}
-
-/*#ifdef SWIGOCTAVE
-%include "octave_typemaps.i"
-%apply (float64_t* IN_ARRAY1, int32_t DIM1) {(double* series, int length)}
-%apply (float64_t* IN_ARRAY2, int32_t DIM1, int32_t DIM2) {(double* mx, int rows, int cols)}
-#endif
-*/
-
-/*--- NumPy interface by Alexander Filov ---->*/
 #ifdef SWIGPYTHON
+%rename(__add__) *::operator+(const mglData&, const mglData&);
+%rename(__sub__) *::operator-(const mglData&, const mglData &);
+%rename(__mul__) *::operator*(const mglData &, float);
+%rename(__div__) *::operator/(const mglData &, float);
+
+//--- NumPy interface by Alexander Filov ---->
 // Get the NumPy typemaps
 %include "numpy.i"
 
@@ -158,30 +99,23 @@ import_array();
 %apply (TYPE ARGOUT_ARRAY2[ANY][ANY]) {(TYPE lower[3][3])};
 %apply (TYPE ARGOUT_ARRAY2[ANY][ANY]) {(TYPE upper[3][3])};
 
-%enddef /* %apply_numpy_typemaps() macro */
+%enddef // %apply_numpy_typemaps() macro
 %apply_numpy_typemaps(float )
 %apply_numpy_typemaps(double )
+//<---Alexander Filov----
 #endif
-/*<---Alexander Filov----*/
 
-%include mgl/mgl_data.h
+/*
+%rename(mglData) mglDataW
+%rename(mglParse) mglParseW
+%rename(mglGraph) mglGraphW
+*/
 
+%include "mgl/mgl_w.h"
 %extend mglData
 {
-	float __getitem__( int i)	{	return self->a[i];	};
-	float __paren( int i)		{	return self->a[i];	};
-	void __setitem__( int i, float y)	{	self->a[i]=y;	};
-	void __paren_asgn( int i, float y)	{	self->a[i]=y;	};
+	float __getitem__( int i)	{	return self->GetVal(i);	};
+	float __paren( int i)		{	return self->GetVal(i);	};
+	void __setitem__( int i, float y)	{	self->SetVal(y,i);	};
+	void __paren_asgn( int i, float y)	{	self->SetVal(y,i);	};
 };
-
-%{
-#define SWIG_FILE_WITH_INIT
-#include "mgl/mgl_graph.h"
-%}
-
-%include mgl/mgl_graph.h
-
-//%rename mglParseEx mglParse
-//%rename mglGraphEx mglGraph
-
-//%include mgl_graph.i

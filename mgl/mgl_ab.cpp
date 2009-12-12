@@ -862,6 +862,24 @@ mreal mglGraphAB::GetOrgZ(char dir)
 	return res;
 }
 //-----------------------------------------------------------------------------
+void mglGraphAB::DrawTick(mreal *pp,bool sub)
+{
+	ScalePoint(pp[0],pp[1],pp[2]);
+	ScalePoint(pp[3],pp[4],pp[5]);
+	ScalePoint(pp[6],pp[7],pp[8]);
+	PostScale(pp,3);
+	double dx,dy,dz,dd,ll=TickLen*(B1[0]<B1[4] ? B1[0]:B1[4])/3.5;
+	if(sub)	ll/=sqrt(1.+st_t);
+	dx=pp[0]-pp[3];	dy=pp[1]-pp[4];	dz=pp[2]-pp[5];
+	dd=sqrt(dx*dx+dy*dy+dz*dz);	if(dd)	dd = ll/dd;
+	pp[0]=pp[3]+dd*dx;	pp[1]=pp[4]+dd*dy;	pp[2]=pp[5]+dd*dz;
+	dx=pp[6]-pp[3];	dy=pp[7]-pp[4];	dz=pp[8]-pp[5];
+	dd=sqrt(dx*dx+dy*dy+dz*dz);	if(dd)	dd = ll/dd;
+	pp[6]=pp[3]+dd*dx;	pp[7]=pp[4]+dd*dy;	pp[8]=pp[5]+dd*dz;
+	line_plot(pp,pp+3,CDef,CDef);
+	line_plot(pp+3,pp+6,CDef,CDef);
+}
+//-----------------------------------------------------------------------------
 bool mglGraphAB::Alpha(bool enable)
 {	bool t=UseAlpha;	UseAlpha=enable;	return t;	}
 bool mglGraphAB::Light(bool enable)

@@ -566,7 +566,7 @@ void mglGraph::DefaultPlotParam()
 	xtt[0]=ytt[0]=ztt[0]=ctt[0]=0;
 	AutoPlotFactor = true;	ScalePuts = true;
 	TickLen = 0.1;	st_t = 1;	Cut = true;
-	TickStl[0] = SubTStl[0] = 'k';
+	TickStl[0] = SubTStl[0] = '-';
 	TickStl[1] = SubTStl[1] = 0;
 	PlotFactor = AutoPlotFactor ? 1.55f :2.f;
 	for(int i=0;i<10;i++)
@@ -847,6 +847,27 @@ void mglGraph::Title(const char *str,const char *font,mreal size)
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	Title(wcs, font, size);
+	delete []wcs;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt, mreal size)
+{
+	Identity();
+	mglFormula *ox=fx, *oy=fy, *oz=fz;
+	fx = fy = fz = NULL;
+	Text(mglPoint((Min.x+Max.x)/2+PlotFactor*(Max.x-Min.x)*(x-0.5), 
+				(Min.y+Max.y)/2+PlotFactor*(Max.y-Min.y)*(y-0.5),
+				Max.z), text, fnt, size);
+	fx=ox;	fy=oy;	fz=oz;
+	RestoreM();
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Label(mreal x, mreal y, const char *str, const char *fnt, mreal size)
+{
+	unsigned s = strlen(str)+1;
+	wchar_t *wcs = new wchar_t[s];
+	mbstowcs(wcs,str,s);
+	Labelw(x,y,wcs, fnt, size);
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------

@@ -289,25 +289,36 @@ wxString mglSetExtension(wxString &fname, const char *ext)
 	return oname;
 }
 //-----------------------------------------------------------------------------
+// NOTE: this is replacement for wxString::char_str() which is for v.2.8 or later
+const char *mglw_str(const wxString &str)
+{
+	static char *buf=0;
+	if(buf)	delete []buf;
+	long i, n=str.Len();
+	buf = new char[n+1];	buf[n]=0;
+	for(i=0;i<n;i++)	buf[i] = str.GetChar(i);
+	return buf;
+}
+//-----------------------------------------------------------------------------
 void wxMathGL::ExportPNG(wxString fname)
 {
 	if(fname.IsEmpty())	fname = ScriptName;
 	if(fname.IsEmpty())	wxMessageBox(appName, wxT("No filename."),wxOK|wxICON_ERROR ,this);
-	else	graph->WritePNG(mglSetExtension(fname,"png").char_str(), appName.char_str());
+	else	graph->WritePNG(mglw_str(mglSetExtension(fname,"png")), mglw_str(appName));
 }
 //-----------------------------------------------------------------------------
 void wxMathGL::ExportPNGs(wxString fname)
 {
 	if(fname.IsEmpty())	fname = ScriptName;
 	if(fname.IsEmpty())	wxMessageBox(appName, wxT("No filename."),wxOK|wxICON_ERROR ,this);
-	else	graph->WritePNG(mglSetExtension(fname,"png").char_str(), appName.char_str(), false);
+	else	graph->WritePNG(mglw_str(mglSetExtension(fname,"png")), mglw_str(appName), false);
 }
 //-----------------------------------------------------------------------------
 void wxMathGL::ExportJPG(wxString fname)
 {
 	if(fname.IsEmpty())	fname = ScriptName;
 	if(fname.IsEmpty())	wxMessageBox(appName, wxT("No filename."),wxOK|wxICON_ERROR ,this);
-	else	graph->WriteJPEG(mglSetExtension(fname,"jpg").char_str(), appName.char_str());
+	else	graph->WriteJPEG(mglw_str(mglSetExtension(fname,"jpg")), mglw_str(appName));
 }
 //-----------------------------------------------------------------------------
 void wxMathGL::ExportBPS(wxString fname)
@@ -317,7 +328,7 @@ void wxMathGL::ExportBPS(wxString fname)
 	else
 	{
 		setlocale(LC_ALL, "C");
-		graph->WriteEPS(mglSetExtension(fname,"eps").char_str(), appName.char_str());
+		graph->WriteEPS(mglw_str(mglSetExtension(fname,"eps")), mglw_str(appName));
 		setlocale(LC_ALL, "");
 	}
 }
@@ -332,7 +343,7 @@ void wxMathGL::ExportEPS(wxString fname)
 		ps->SetFont(graph->GetFont());
 		Update(ps);
 		setlocale(LC_ALL, "C");
-		ps->WriteEPS(mglSetExtension(fname,"eps").char_str(), appName.char_str());
+		ps->WriteEPS(mglw_str(mglSetExtension(fname,"eps")), mglw_str(appName));
 		setlocale(LC_ALL, "");
 		delete ps;
 	}
@@ -348,7 +359,7 @@ void wxMathGL::ExportSVG(wxString fname)
 		ps->SetFont(graph->GetFont());
 		Update(ps);
 		setlocale(LC_ALL, "C");
-		ps->WriteSVG(mglSetExtension(fname,"svg").char_str(), appName.char_str());
+		ps->WriteSVG(mglw_str(mglSetExtension(fname,"svg")), mglw_str(appName));
 		setlocale(LC_ALL, "");
 		delete ps;
 	}
@@ -364,7 +375,7 @@ void wxMathGL::ExportIDTF(wxString fname)
 		ps->SetFont(graph->GetFont());
 		Update(ps);
 		setlocale(LC_ALL, "C");
-		ps->WriteIDTF(mglSetExtension(fname,"idtf").char_str(), appName.char_str());
+		ps->WriteIDTF(mglw_str(mglSetExtension(fname,"idtf")), mglw_str(appName));
 		setlocale(LC_ALL, "");
 		delete ps;
 	}
@@ -382,7 +393,7 @@ void wxMathGL::Copy()
 void wxMathGL::SetMGLFont(wxString path)
 {
 	if(path.IsEmpty())	graph->GetFont()->Restore();
-	else	graph->GetFont()->Load(path.char_str());
+	else	graph->GetFont()->Load(mglw_str(path));
 }
 //-----------------------------------------------------------------------------
 void wxMathGL::SetSize(int w, int h)

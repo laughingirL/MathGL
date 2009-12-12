@@ -24,6 +24,7 @@
 #include "mgl/mgl_parse.h"
 #ifndef NO_GSL
 #include <gsl/gsl_sf.h>
+#include <gsl/gsl_errno.h>
 #endif
 //-----------------------------------------------------------------------------
 double mgl_ipow(double x,int n);
@@ -107,6 +108,9 @@ double gslLegP(double a,double b);//	{return gsl_sf_legendre_Pl(int(a),b);}
 // NOTE: the speed is not a goal (mglFormula is faster). It is true interpreter!
 mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 {
+#ifndef NO_GSL
+	gsl_set_error_handler_off();
+#endif
 	mglData res;
 	if(!string || !(*string) || mglFormulaError)	return res;	// nothing to parse
 	wchar_t *str = new wchar_t[wcslen(string)+1];
@@ -232,6 +236,11 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 		wcscpy(Buf,str+n+1);
 		len=wcslen(Buf);	Buf[--len]=0;
 		mglVar *v = arg->FindVar(name);
+		if(!v)
+		{
+			if(!wcsncmp(name,L"jacobi_",7))
+				memmove(name,name+7,(wcslen(name+7)+1)*sizeof(wchar_t));
+		}
 		if(v)	// subdata
 		{
 			if(Buf[0]=='\'' && Buf[len-1]=='\'')	// this is column call
@@ -292,6 +301,36 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_airy_Ai(res.a[i],GSL_PREC_SINGLE);	}
+			else if(!wcscmp(name+1,L"iry_ai"))
+			{	res=mglFormulaCalc(Buf, arg);
+				for(i=0;i<res.nx*res.ny*res.nz;i++)
+					res.a[i] = gsl_sf_airy_Ai(res.a[i],GSL_PREC_SINGLE);	}
+			else if(!wcscmp(name+1,L"iry_dai"))
+			{	res=mglFormulaCalc(Buf, arg);
+				for(i=0;i<res.nx*res.ny*res.nz;i++)
+					res.a[i] = gsl_sf_airy_Ai_deriv(res.a[i],GSL_PREC_SINGLE);	}
+			else if(!wcscmp(name+1,L"iry_bi"))
+			{	res=mglFormulaCalc(Buf, arg);
+				for(i=0;i<res.nx*res.ny*res.nz;i++)
+					res.a[i] = gsl_sf_airy_Bi(res.a[i],GSL_PREC_SINGLE);	}
+			else if(!wcscmp(name+1,L"iry_dbi"))
+			{	res=mglFormulaCalc(Buf, arg);
+				for(i=0;i<res.nx*res.ny*res.nz;i++)
+					res.a[i] = gsl_sf_airy_Bi_deriv(res.a[i],GSL_PREC_SINGLE);	}
+		}
+		else if(name[0]=='b')
+		{
+			if(!wcscmp(name+1,L"eta"))
+			{
+				n=mglFindInText(Buf,",");
+				if(n<=0)	mglFormulaError=true;
+				else
+				{	Buf[n]=0;	res = mglApplyOper(Buf,Buf+n+1,arg, gsl_sf_beta);	}
+			}
+			else if(!wcscmp(name+1,L"i"))
+			{	res=mglFormulaCalc(Buf, arg);
+				for(i=0;i<res.nx*res.ny*res.nz;i++)
+					res.a[i] = gsl_sf_airy_Bi(res.a[i],GSL_PREC_SINGLE);	}
 #endif
 		}
 		else if(name[0]=='c')
@@ -307,13 +346,34 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_Ci(res.a[i]);	}
-		}
-		else if(name[0]=='d')
-		{
-			if(!wcscmp(name+1,L"ilog"))
-			{	res=mglFormulaCalc(Buf, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
-					res.a[i] = gsl_sf_dilog(res.a[i]);	}
+			else if(!wcscmp(name+1,L"essel_i"))
+			{
+				n=mglFindInText(Buf,",");
+				if(n<=0)	mglFormulaError=true;
+				else
+				{	Buf[n]=0;	res = mglApplyOper(Buf,Buf+n+1,arg, gsl_sf_bessel_Inu);	}
+			}
+			else if(!wcscmp(name+1,L"essel_j"))
+			{
+				n=mglFindInText(Buf,",");
+				if(n<=0)	mglFormulaError=true;
+				else
+				{	Buf[n]=0;	res = mglApplyOper(Buf,Buf+n+1,arg, gsl_sf_bessel_Jnu);	}
+			}
+			else if(!wcscmp(name+1,L"essel_k"))
+			{
+				n=mglFindInText(Buf,",");
+				if(n<=0)	mglFormulaError=true;
+				else
+				{	Buf[n]=0;	res = mglApplyOper(Buf,Buf+n+1,arg, gsl_sf_bessel_Knu);	}
+			}
+			else if(!wcscmp(name+1,L"essel_y"))
+			{
+				n=mglFindInText(Buf,",");
+				if(n<=0)	mglFormulaError=true;
+				else
+				{	Buf[n]=0;	res = mglApplyOper(Buf,Buf+n+1,arg, gsl_sf_bessel_Ynu);	}
+			}
 #endif
 		}
 		else if(name[0]=='e')
@@ -327,21 +387,29 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_erf(res.a[i]);	}
 //			else if(!wcscmp(name+1,L"n"))	Kod=EQ_EN;	// NOTE: not supported
-			else if(!wcscmp(name+1,L"e"))
+			else if(!wcscmp(name+1,L"e") || !wcscmp(name+1,L"lliptic_ec"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_ellint_Ecomp(res.a[i],GSL_PREC_SINGLE);	}
-			else if(!wcscmp(name+1,L"k"))
+			else if(!wcscmp(name+1,L"k") || !wcscmp(name+1,L"lliptic_kc"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
 					res.a[i] = gsl_sf_ellint_Kcomp(res.a[i],GSL_PREC_SINGLE);	}
-			else if(name[0]==0)
+			else if(name[0]==0 || !wcscmp(name+1,L"lliptic_e"))
 			{
 				n=mglFindInText(Buf,",");
 				if(n<=0)	mglFormulaError=true;
 				else
 				{	Buf[n]=0;	res = mglApplyOper(Buf,Buf+n+1,arg, gslEllE);	}
 			}
+			else if(!wcscmp(name+1,L"lliptic_f"))
+			{
+				n=mglFindInText(Buf,",");
+				if(n<=0)	mglFormulaError=true;
+				else
+				{	Buf[n]=0;	res = mglApplyOper(Buf,Buf+n+1,arg, gslEllF);	}
+			}
+
 			else if(!wcscmp(name+1,L"i"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
@@ -485,10 +553,6 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 		{	res=mglFormulaCalc(Buf, arg);
 			for(i=0;i<res.nx*res.ny*res.nz;i++)
 				res.a[i] = gsl_sf_gamma(res.a[i]);	}
-		else if(!wcscmp(name,L"bi"))
-			{	res=mglFormulaCalc(Buf, arg);
-				for(i=0;i<res.nx*res.ny*res.nz;i++)
-					res.a[i] = gsl_sf_airy_Bi(res.a[i],GSL_PREC_SINGLE);	}
 		else if(!wcscmp(name,L"w0"))
 		{	res=mglFormulaCalc(Buf, arg);
 			for(i=0;i<res.nx*res.ny*res.nz;i++)
@@ -505,6 +569,10 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 		{	res=mglFormulaCalc(Buf, arg);
 			for(i=0;i<res.nx*res.ny*res.nz;i++)
 				res.a[i] = gsl_sf_zeta(res.a[i]);	}
+		else if(!wcscmp(name,L"z"))
+		{	res=mglFormulaCalc(Buf, arg);
+			for(i=0;i<res.nx*res.ny*res.nz;i++)
+				res.a[i] = gsl_sf_dawson(res.a[i]);	}
 #endif
 	}
 	delete []str;	return res;

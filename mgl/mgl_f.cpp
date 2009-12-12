@@ -307,6 +307,12 @@ void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, int *pos, 
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	_GR_->Label(*dir, s, *pos, *size, *shift);	delete []s;
 }
+void mgl_label_xy_(uintptr_t *gr, mreal *x, mreal *y, const char *txt, const char *fnt, mreal *size,int l,int n)
+{
+	char *s=new char[l+1];	memcpy(s,txt,l);	s[l]=0;
+	char *p=new char[n+1];	memcpy(p,fnt,n);	p[n]=0;
+	_GR_->Label(*x,*y,s,p,*size);	delete []s;	delete []p;
+}
 void mgl_set_xtt_(uintptr_t * gr, const char *templ, int l)
 {
 	char *s=new char[l+1];	memcpy(s,templ,l);	s[l]=0;

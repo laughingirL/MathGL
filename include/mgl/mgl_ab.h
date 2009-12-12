@@ -209,6 +209,7 @@ protected:
 	mreal GetOrgX(char dir);
 	mreal GetOrgY(char dir);
 	mreal GetOrgZ(char dir);
+	void DrawTick(mreal *pp,bool sub);
 private:
 	mreal stack[MGL_STACK_ENTRY*13];	// stack for transformation matrixes
 	int st_pos;

@@ -26,8 +26,7 @@
 #include <mgl/mgl_zb.h>
 #include <mgl/mgl_eps.h>
 #include <mgl/mgl_idtf.h>
-//#include <mgl/mgl_data_w.h>
-//#include <mgl/mgl_graph.h>
+//#include <mgl/mgl_w.h>
 //-----------------------------------------------------------------------------
 struct mglSample	/// Structure for list of samples
 {

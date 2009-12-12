@@ -18,10 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <stdlib.h>
-#include "mgl/mgl_c.h"
-#include "mgl/mgl.h"
 #include "mgl/mgl_ab.h"
-#include "mgl/mgl_data.h"
+#include "mgl/mgl_c.h"
 //-----------------------------------------------------------------------------
 /// Delete mglGraph object. MUST be called for each mgl_create_* call.
 void mgl_delete_graph(HMGL gr)
@@ -248,6 +246,10 @@ void mgl_label(HMGL gr, char dir, const char *text)
 /// Print the label \a text for axis \a dir.
 void mgl_label_ext(HMGL gr, char dir, const char *text, int pos, mreal size, mreal shift)
 {	gr->Label(dir, text, pos, size, shift);	}
+void mgl_label_xy(HMGL gr, mreal x, mreal y, const char *text, const char *fnt, mreal size)
+{	gr->Label(x,y,text,fnt,size);	}
+void mgl_labelw_xy(HMGL gr, mreal x, mreal y, const wchar_t *text, const char *fnt, mreal size)
+{	gr->Labelw(x,y,text,fnt,size);	}
 void mgl_set_xttw(HMGL gr, const wchar_t *templ)	{gr->SetXTT(templ);}
 void mgl_set_yttw(HMGL gr, const wchar_t *templ)	{gr->SetYTT(templ);}
 void mgl_set_zttw(HMGL gr, const wchar_t *templ)	{gr->SetZTT(templ);}

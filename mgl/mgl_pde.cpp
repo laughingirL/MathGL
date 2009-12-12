@@ -243,7 +243,7 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 	for(i=0;i<nx;i++)	a[i+nx/2] = dual(ini_re.a[i],ini_im.a[i]);	// ini
 	for(i=0;i<2*nx;i++)	{	rx[i] = ru[i] = 1;	}
 	mglFormula h(ham);
-	mreal var[MGL_VS], dr = r/(nx-1), dk = M_PI/(k0*r), tt, x1, hh, B1, pt0;
+	mreal var[MGL_VS], dr = r/(nx-1), dk = M_PI*(nx-1)/(k0*r*nx), tt, x1, hh, B1, pt0;
 	memset(var,0,MGL_VS*sizeof(mreal));
 	gsl_fft_complex_wavetable *wtx = gsl_fft_complex_wavetable_alloc(2*nx);
 	gsl_fft_complex_workspace *wsx = gsl_fft_complex_workspace_alloc(2*nx);
@@ -261,7 +261,7 @@ mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, c
 		}
 		memcpy(px,rx,2*nx*sizeof(double));
 		memcpy(pu,ru,2*nx*sizeof(double));
-		hh = ra[k].pt*(1/sqrt(sqrt(1.041))-1);
+		hh = ra[k].pt*(1/sqrt(sqrt(1.041))-1);	// 0.041=0.45^4 -- minimal value of h
 		var['x'-'a'] = ray.a[7*k];	var['y'-'a'] = ray.a[7*k+1];
 		var['p'-'a'] = ray.a[7*k+3] + ra[k].x0*hh;
 		var['q'-'a'] = ray.a[7*k+4] + ra[k].y0*hh;	var['u'-'a'] = 0;
