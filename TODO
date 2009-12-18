@@ -1,22 +1,25 @@
 
 					MathGL (for v.1.10.*)
 
-b. Try to switch on Tunning if tick labels overlap ???
-a. Bug with rotations :( -- fast ploting
-0. Optimize legend box height (large font)
-1. BoxPlot -- Web
-2. Spline5
-3. mglGraphPS
- -- each prim have the inplot id & reference to settings list (lights, alpha, fog).
- -- switch to "smoothed" drawing for primitives (the same as mglGraphZB).
+0. Multiple execution of MGL lines in for-cycle ???
+3. PyQt example into docs
 4. Web site (translate "Installation Qt")
-5. Glyph in WriteEPS and zoom (especially in legend)
 
-0. Configure should define MGL_DEF_VIEWER ???
+
+					MathGL (for v.1.11.*)
+
+0. Miss MAJOR labels or decrease its fontsize if labels too close.
+	Also check that enough digits is printed to distingush the labels
+	Also allow "time"-labels
+	Also allow rotate labels if they too dense
 1. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
-2. \dfrac for normal size and centering ???
-3. fsurf -- auto select the number of points ???
-4. "Chaos" in area.png (near axis) ???
+2. Spline5
+3. mglGraphPS -- each prim have the inplot id & reference to settings list (lights, alpha, fog).
+4. Add plot layot -- i.e. reserve space for title and so on ... May be the best way to analyze code itself ???
+5. Try to decrease font size if tick labels overlap ???
+
+6. \dfrac for normal size and centering ???
+7. "Chaos" in area.png (near axis) ???
 
 
 					MathGL (for v.2.?) ???
@@ -35,8 +38,5 @@ a. Bug with rotations :( -- fast ploting
 					FAQ
 
 1. On which things the subplot influence
-2. Sharp color change
-3. Most useful color scheme (copy from manual).
-4. About unrotated text
-5. Extend colors in line style (pdf + MGL html)
-6. Add "Howto" section in web site.
+2. About unrotated text
+3. Add "Howto" section in web site.

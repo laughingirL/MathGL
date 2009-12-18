@@ -383,6 +383,11 @@ void mgl_calc_xyz(HMGL gr, int xs, int ys, mreal *x, mreal *y, mreal *z)
 		*x = p.x;	*y = p.y;	*z = p.z;
 	}
 }
+void mgl_calc_scr(HMGL gr, mreal x, mreal y, mreal z, int *xs, int *ys)
+{
+	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);
+	if(g && xs && ys)	g->CalcScr(mglPoint(x,y,z),xs,ys);
+}
 //-----------------------------------------------------------------------------
 mreal mgl_data_get_value(const HMDT d, int i, int j, int k)
 {	return	d->a[i+d->nx*(j+d->ny*k)];	}

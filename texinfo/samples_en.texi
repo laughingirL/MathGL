@@ -741,17 +741,16 @@ gr.Error(x0,y0,ex,ey,"ko");
 @verbatim
 mglData a(10,7);
 a.Modify("(2*rnd-1)^3/2");
-gr->Box();
 gr->BoxPlot(a);
+gr->Box();
 gr->Plot(a," ko");
 @end verbatim
 @strong{MGL code}
 @verbatim
 new a 10 7
 modify a '(2*rnd-1)^3/2'
-box
 boxplot a
-plot a ' ko'
+box:plot a ' ko'
 @end verbatim
 @strong{Pure C code}
 @verbatim

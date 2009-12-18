@@ -42,21 +42,21 @@ const int off = 0;
 /// Class for incapsulating point in space
 struct mglPoint
 {
-	mreal x,y,z;
- 	mglPoint(mreal X=0,mreal Y=0,mreal Z=0){x=X;y=Y;z=Z;};
+	double x,y,z;
+ 	mglPoint(double X=0,double Y=0,double Z=0){x=X;y=Y;z=Z;};
 };
 #ifndef SWIG
 inline mglPoint operator+(const mglPoint &a, const mglPoint &b)
 {	return mglPoint(a.x+b.x, a.y+b.y, a.z+b.z);	};
 inline mglPoint operator-(const mglPoint &a, const mglPoint &b)
 {	return mglPoint(a.x-b.x, a.y-b.y, a.z-b.z);	};
-inline mglPoint operator*(mreal b, const mglPoint &a)
+inline mglPoint operator*(double b, const mglPoint &a)
 {	return mglPoint(a.x*b, a.y*b, a.z*b);	};
-inline mglPoint operator*(const mglPoint &a, mreal b)
+inline mglPoint operator*(const mglPoint &a, double b)
 {	return mglPoint(a.x*b, a.y*b, a.z*b);	};
-inline mglPoint operator/(const mglPoint &a, mreal b)
+inline mglPoint operator/(const mglPoint &a, double b)
 {	return mglPoint(a.x/b, a.y/b, a.z/b);	};
-inline mreal operator*(const mglPoint &a, const mglPoint &b)
+inline double operator*(const mglPoint &a, const mglPoint &b)
 {	return a.x*b.x+a.y*b.y+a.z*b.z;	};
 inline mglPoint operator&(const mglPoint &a, const mglPoint &b)
 {	return a - b*((a*b)/(b*b));	};
@@ -70,7 +70,7 @@ inline bool operator==(const mglPoint &a, const mglPoint &b)
 {	return !memcmp(&a, &b, sizeof(mglPoint));	}
 inline bool operator!=(const mglPoint &a, const mglPoint &b)
 {	return memcmp(&a, &b, sizeof(mglPoint));	}
-inline mreal Norm(const mglPoint &p)
+inline double Norm(const mglPoint &p)
 {	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);	};
 #endif
 //-----------------------------------------------------------------------------
@@ -114,9 +114,9 @@ public:
 	inline bool Read(const char *fname,int mx,int my=1,int mz=1)
 	{	return mgl_data_read_dim(a,fname,mx,my,mz);	};
 	inline void Save(const char *fname,int ns=-1)	{	mgl_data_save(a,fname,ns);	};
-	inline void Export(const char *fname,const char *scheme,mreal v1=0,mreal v2=0,int ns=-1)
+	inline void Export(const char *fname,const char *scheme,double v1=0,double v2=0,int ns=-1)
 	{	mgl_data_export(a,fname,scheme,v1,v2,ns);	};
-	inline void Import(const char *fname,const char *scheme,mreal v1=0,mreal v2=1)
+	inline void Import(const char *fname,const char *scheme,double v1=0,double v2=1)
 	{	mgl_data_import(a,fname,scheme,v1,v2);	};
 	inline bool ReadMat(const char *fname, int dim=2)
 	{	return mgl_data_read_mat(a,fname,dim);	};
@@ -124,11 +124,11 @@ public:
 	inline void Create(int nx,int ny=1,int nz=1)	{	mgl_data_create(a,nx,ny,nz);	};
 	inline void Extend(int n1, int n2=0)			{	mgl_data_extend(a,n1,n2);	};
 	inline void Transpose(const char *dim="yx")	{	mgl_data_transpose(a,dim);	};
-	inline void Norm(mreal v1=0,mreal v2=1,bool sym=false,int dim=0)
+	inline void Norm(double v1=0,double v2=1,bool sym=false,int dim=0)
 	{	mgl_data_norm(a,v1,v2,sym,dim);	};
-	inline void NormSl(mreal v1=0,mreal v2=1,char dir='z',bool keep_en=true,bool sym=false)
+	inline void NormSl(double v1=0,double v2=1,char dir='z',bool keep_en=true,bool sym=false)
 	{	mgl_data_norm_slice(a,v1,v2,dir,keep_en,sym);	};
-	inline void Put(mreal val, int i=-1, int j=-1, int k=-1)
+	inline void Put(double val, int i=-1, int j=-1, int k=-1)
 	{	mgl_data_put_val(a, val, i, j, k);	};
 	inline void Put(mglData &val, int i=-1, int j=-1, int k=-1)
 	{	mgl_data_put_dat(a, val.a, i,j,k);	};
@@ -136,22 +136,22 @@ public:
 	inline void Modify(const char *eq, mglData &v, mglData &w)
 	{	mgl_data_modify_vw(a,eq,v.a, w.a);	};
 	inline void Modify(const char *eq,const mglData &v){	mgl_data_modify_vw(a,eq,v.a, NULL);	};
-	inline void Fill(mreal x1,mreal x2,char dir='x')	{	mgl_data_fill(a,x1,x2,dir);	};
+	inline void Fill(double x1,double x2,char dir='x')	{	mgl_data_fill(a,x1,x2,dir);	};
 	inline mglData Column(const char *eq)	{	return mglData(mgl_data_column(a,eq));	};
 	inline void SetColumnId(const char *ids)			{	mgl_data_set_id(a,ids);	};
 	inline void Squeeze(int rx,int ry=1,int rz=1,bool smooth=false)
 	{	mgl_data_squeeze(a,rx,ry,rz,smooth);	};
 	inline void Crop(int n1, int n2,char dir='x')		{	mgl_data_crop(a,n1,n2,dir);	}
 
-	inline mreal Maximal()	{	return mgl_data_max(a);	};
-	inline mreal Minimal()	{	return mgl_data_min(a);	};
+	inline double Maximal()	{	return mgl_data_max(a);	};
+	inline double Minimal()	{	return mgl_data_min(a);	};
 	inline mglData Momentum(char dir, const char *how)
 	{	return mglData(mgl_data_momentum(a, dir, how));	}
 
-	inline void Smooth(int Type,const char *dirs="xyz",mreal delta=0)
+	inline void Smooth(int Type,const char *dirs="xyz",double delta=0)
 	{	mgl_data_smooth(a,Type,delta,dirs);	};
 	inline void Envelop(char dir='x')	{	mgl_data_envelop(a,dir);	};
-	inline void Sew(const char *dirs="xyz", mreal da=2*M_PI)
+	inline void Sew(const char *dirs="xyz", double da=2*M_PI)
 	{	mgl_data_sew(a,dirs,da);	};
 	inline void Smooth(const char *dirs="xyz")
 	{
@@ -165,9 +165,9 @@ public:
 	{	return mglData(mgl_data_subdata(a,xx,yy,zz));	};
 	inline mglData SubData(const mglData &xx, const mglData &yy, const mglData &zz)
 	{	return mglData(mgl_data_subdata_ext(a,xx.a,yy.a,zz.a));	};
-	inline mglData Hist(int n,mreal v1=0,mreal v2=1, int nsub=0)
+	inline mglData Hist(int n,double v1=0,double v2=1, int nsub=0)
 	{	return mglData(mgl_data_hist(a,n,v1,v2,nsub));	};
-	inline mglData Hist(const mglData &w, int n,mreal v1=0,mreal v2=1, int nsub=0)
+	inline mglData Hist(const mglData &w, int n,double v1=0,double v2=1, int nsub=0)
 	{	return mglData(mgl_data_hist_w(a,w.a,n,v1,v2,nsub));	};
 	inline mglData Sum(const char *dir)
 	{	return mglData(mgl_data_sum(a,dir));	};
@@ -175,8 +175,8 @@ public:
 	{	return mglData(mgl_data_max_dir(a,dir));	};
 	inline mglData Min(const char *dir)
 	{	return mglData(mgl_data_min_dir(a,dir));	};
-	inline mglData Resize(int mx,int my=1,int mz=1,mreal x1=0,mreal x2=1,
-		mreal y1=0,mreal y2=1,mreal z1=0,mreal z2=1)
+	inline mglData Resize(int mx,int my=1,int mz=1,double x1=0,double x2=1,
+		double y1=0,double y2=1,double z1=0,double z2=1)
 	{	return mglData(mgl_data_resize_box(a, mx, my, mz, x1, x2, y1, y2, z1, z2));	};
 	inline mglData Combine(const mglData &d)
 	{	return mglData(mgl_data_combine(a,d.a));	};
@@ -198,21 +198,21 @@ public:
 	inline void Swap(const char *dir)		{	mgl_data_swap(a,dir);	};
 	inline void Mirror(const char *dir)	{	mgl_data_mirror(a,dir);	};
 
-	inline mreal Spline(mreal x,mreal y=0,mreal z=0)
+	inline double Spline(double x,double y=0,double z=0)
 	{	return mgl_data_spline(a,x,y,z);	};
-	inline mreal Spline1(mreal x,mreal y=0,mreal z=0)
+	inline double Spline1(double x,double y=0,double z=0)
 	{	return mgl_data_spline1(a,x,y,z);	};
-	inline mreal Linear(mreal x,mreal y=0,mreal z=0)
+	inline double Linear(double x,double y=0,double z=0)
 	{	return mgl_data_linear(a,x,y,z);	};
-	inline mreal Linear1(mreal x,mreal y=0,mreal z=0)
+	inline double Linear1(double x,double y=0,double z=0)
 	{	return mgl_data_linear1(a,x,y,z);	};
 
 	inline void Insert(char dir, int at=0, int num=1)	{	mgl_data_insert(a,dir,at,num);	};
 	inline void Delete(char dir, int at=0, int num=1)	{	mgl_data_delete(a,dir,at,num);	};
 
-	inline mreal v(int i,int j=0,int k=0)		{	return mgl_data_get_value(a,i,j,k);	};
-	inline mreal GetVal(int i, int j=0, int k=0)	{	return mgl_data_get_value(a,i,j,k);	};
-	inline void SetVal(mreal v, int i, int j=0, int k=0)	{	mgl_data_set_value(a,v,i,j,k);	};
+	inline double v(int i,int j=0,int k=0)		{	return mgl_data_get_value(a,i,j,k);	};
+	inline double GetVal(int i, int j=0, int k=0)	{	return mgl_data_get_value(a,i,j,k);	};
+	inline void SetVal(double v, int i, int j=0, int k=0)	{	mgl_data_set_value(a,v,i,j,k);	};
 	inline long GetNx()	{	return mgl_data_get_nx(a);	};
 	inline long GetNy()	{	return mgl_data_get_ny(a);	};
 	inline long GetNz()	{	return mgl_data_get_nz(a);	};
@@ -222,10 +222,10 @@ public:
 	inline void operator/=(const mglData &d)	{	mgl_data_div_dat(a,d.a);};
 	inline void operator+=(const mglData &d)	{	mgl_data_add_dat(a,d.a);};
 	inline void operator-=(const mglData &d)	{	mgl_data_sub_dat(a,d.a);};
-	inline void operator*=(mreal d)	{	mgl_data_mul_num(a,d);	};
-	inline void operator/=(mreal d)	{	mgl_data_div_num(a,d);	};
-	inline void operator+=(mreal d)	{	mgl_data_add_num(a,d);	};
-	inline void operator-=(mreal d)	{	mgl_data_sub_num(a,d);	};
+	inline void operator*=(double d)	{	mgl_data_mul_num(a,d);	};
+	inline void operator/=(double d)	{	mgl_data_div_num(a,d);	};
+	inline void operator+=(double d)	{	mgl_data_add_num(a,d);	};
+	inline void operator-=(double d)	{	mgl_data_sub_num(a,d);	};
 };
 //-----------------------------------------------------------------------------
 /// Wrapper class for mglGraph*
@@ -349,6 +349,12 @@ public:
 		mgl_calc_xyz(self,xs,ys,&x,&y,&z);
 		return mglPoint(x,y,z);
 	};
+	inline mglPoint CalcScr(mglPoint p)
+	{
+		int xs,ys;
+		mgl_calc_scr(self,p.x,p.y,p.z,&xs,&ys);
+		return mglPoint(xs,ys);
+	};
 
 	inline void SetTranspType(int type)		{	mgl_set_transp_type(self, type);};
 	inline void SetTransparent(bool enable)	{	mgl_set_transp(self, enable);};
@@ -414,9 +420,9 @@ public:
 	{	mgl_axis_grid(self, dir, pen);	};
 	inline void Label(char dir, const char *text, int pos=+1, float size=-1.4, float shift=0)
 	{	mgl_label_ext(self, dir, text, pos, size, shift);	};
-	void Label(mreal x, mreal y, const char *text, const char *fnt=0, mreal size=-1.4)
+	void Label(double x, double y, const char *text, const char *fnt=0, double size=-1.4)
 	{	mgl_label_xy(self,x,y,text,fnt,size);	}
-	void Label(mreal x, mreal y, const wchar_t *text, const char *fnt=0, mreal size=-1.4)
+	void Label(double x, double y, const wchar_t *text, const char *fnt=0, double size=-1.4)
 	{	mgl_labelw_xy(self,x,y,text,fnt,size);	}
 	inline void SetTuneTicks(bool tune, float fact_pos=1.15)
 	{	mgl_tune_ticks(self, tune, fact_pos);	};

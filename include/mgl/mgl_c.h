@@ -75,6 +75,7 @@ void mgl_qt_run();
 void mgl_set_show_mouse_pos(HMGL gr, int enable);
 void mgl_get_last_mouse_pos(HMGL gr, mreal *x, mreal *y, mreal *z);
 void mgl_calc_xyz(HMGL gr, int xs, int ys, mreal *x, mreal *y, mreal *z);
+void mgl_calc_scr(HMGL gr, mreal x, mreal y, mreal z, int *xs, int *ys);
 //void mgl_fltk_thread();
 //void mgl_qt_thread();
 void mgl_update(HMGL graph);

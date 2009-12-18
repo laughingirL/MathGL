@@ -45,9 +45,6 @@ struct mglPrim
 	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	c[3]=1;	};
 //	~mglPrim()	{	if(raw)	delete []raw;	};
 	inline void operator=(mglPrim &a)	{	memcpy(this,&a,sizeof(mglPrim));	};
-	void trig(mglGraphPS *gr, mreal x[3], mreal y[3], unsigned char c[4]);
-	void quad(mglGraphPS *gr, mreal x[4], mreal y[4], unsigned char c[4]);
-	void line(mglGraphPS *gr, mreal x[2], mreal y[2], unsigned char c[4]);
 };
 //-----------------------------------------------------------------------------
 /// Class implement the creation of different mathematical plots for exporting in PostScript format
@@ -88,11 +85,11 @@ protected:
 	void add_prim(mglPrim &a);
 	/// add lightning to color
 	void add_light(mreal *c, mreal n1,mreal n2, mreal n3);
-	void pnt_plot(int x,int y, unsigned char c[4], int oi);
-	void mark_plot(int x,int y, char type, unsigned char cs[4],int id);
+	void pnt_plot(long x,long y,mreal z,unsigned char c[4]);
 private:
 	void put_line(FILE *fp, long i, mreal wp,mreal *cp,int st, const char *ifmt, const char *nfmt, bool neg);
 	void put_desc(FILE *fp, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf);
+	void draw_prim(mglPrim *pr, mreal *pp, mreal *c);
 };
 //-----------------------------------------------------------------------------
 #endif

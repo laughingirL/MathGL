@@ -84,6 +84,7 @@ class mglParse
 {
 friend void mgl_export(wchar_t *out, const wchar_t *in, int type);
 public:
+	static mglCommand Prg[];	///< List of program flow commands (parsed by itself)
 	mglVar *DataList;	///< List with data and its names
 	mglNum *NumList;	///< List with numbers and its names
 	bool AllowSetSize;	///< Allow using setsize command
@@ -94,7 +95,7 @@ public:
 	mglParse(bool setsize=false);
 	~mglParse();
 	/// Find the command by the keyword name
-	mglCommand *FindCommand(const wchar_t *name);
+	mglCommand *FindCommand(const wchar_t *name, bool prog=false);
 	/// Parse and execute the string of MGL script
 	int Parse(mglGraph *gr, const char *str, long pos=0);
 	/// Parse and execute the unicode string of MGL script
@@ -150,9 +151,11 @@ private:
 	bool Skip;		///< Flag that commands should be skiped (inside 'once' block)
 	int if_stack[20];	///< Stack for if-else-endif commands
 	int if_pos;		///< position in if_stack
+	int if_for[10];		///< position in if_stack for for-cycle start
 	mglData *fval;	///< Values for for-cycle. Note that nx - number of elements, ny - next element, nz - address (or string number) of first cycle command
-	int for_stack[10];		///< The order of for-variables
-	int for_addr;			///< Flag for saving address in variable (for_addr-1)
+	int for_stack[10];	///< The order of for-variables
+	int for_addr;	///< Flag for saving address in variable (for_addr-1)
+	bool for_br;	///< Break is switched on (skip all comands until 'next')
 
 	/// Parse command
 	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var);
@@ -164,6 +167,9 @@ private:
 	void ProcOpt(mglGraph *gr, wchar_t *str);
 	/// Execute program-flow control commands
 	int FlowExec(mglGraph *gr, const wchar_t *com, long n, mglArg *a);
+	/// In skip mode
+	bool inline ifskip()	{	return (if_pos>0 && !(if_stack[if_pos-1]&1));	};
+	bool inline skip()		{	return (Skip || ifskip() || for_br);	};
 };
 //-----------------------------------------------------------------------------
 #endif

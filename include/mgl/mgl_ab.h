@@ -30,9 +30,10 @@ class mglGraphAB : public mglGraph
 {
 public:
 using mglGraph::Mark;
+using mglGraph::Ball;
 //using mglGraph::Colorbar;
 using mglGraph::Legend;
-	int *OI;			///< ObjId arrays
+	int *OI;	///< ObjId arrays
 	int ObjId;	///< object id for mglPrim
 
 	/// Initialize ZBuffer drawing and allocate the memory for image with size [Width x Height].
@@ -56,10 +57,10 @@ using mglGraph::Legend;
 	void RotateN(mreal Tet,mreal x,mreal y,mreal z);
 	void Perspective(mreal a);
 
-//	virtual void Ball(mreal x,mreal y,mreal z,mglColor col=RC,mreal alpha=1)=0;
 	virtual void SetSize(int w,int h);
 
 	void Mark(mreal x,mreal y,mreal z,char mark='.');
+	void Ball(mreal x,mreal y,mreal z,mglColor col=RC,mreal alpha=1);
 	void Glyph(mreal x, mreal y, mreal f, int style, long icode, char col);
 	mreal GetRatio()	{	return B1[0]/B1[4];	};
 	void Putsw(mglPoint p,const wchar_t *text,const char *font=0,mreal size=-1,char dir=0,mreal shift=0);
@@ -90,6 +91,9 @@ using mglGraph::Legend;
 	bool ClfOnUpdate;	///< Clear plot before Update()
 	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
 	mglPoint CalcXYZ(int xs, int ys);
+	/// Calculate screen point {xs,ys} for 3D coordinate {x,y,z}
+	void CalcScr(mglPoint p, int *xs, int *ys);
+	mglPoint CalcScr(mglPoint p);
 	/// Switch on/off transparency (do not overwrite switches in user drawing function)
 	virtual void ToggleAlpha();
 	/// Switch on/off lighting (do not overwrite switches in user drawing function)
@@ -106,7 +110,7 @@ using mglGraph::Legend;
 	/// Create a window for plotting based on callback function (can be NULL).
 	virtual void Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
 						const char *title, void *par=NULL,
-	  					void (*reload)(int next, void *p)=NULL, bool maximize=false);
+						void (*reload)(int next, void *p)=NULL, bool maximize=false);
 	/// Create a window for plotting based on class mglDraw.
 	void Window(int argc, char **argv, mglDraw *draw, const char *title, bool maximize=false);
 	/// Push transformation matrix into stack
@@ -117,10 +121,10 @@ using mglGraph::Legend;
 	void SetPosScale(mreal xp, mreal yp, mreal zp, mreal scl=1);
 	//@}
 protected:
-	unsigned char *G4;			///< Final picture in RGBA format. Prepared after calling mglGraphZB::Finish().
-	unsigned char *G;			///< Final picture in RGB format. Prepared after calling mglGraphZB::Finish().
-	mreal CDef[4];				///< Default color
-	unsigned char BDef[4];		///< Background color
+	unsigned char *G4;		///< Final picture in RGBA format. Prepared after calling mglGraphZB::Finish().
+	unsigned char *G;		///< Final picture in RGB format. Prepared after calling mglGraphZB::Finish().
+	mreal CDef[4];			///< Default color
+	unsigned char BDef[4];	///< Background color
 	mreal Persp;		///< Perspective factor (=0 is perspective off)
 	mreal xPos;			///< Shifting plot in X-direction (used by PostScale() function)
 	mreal yPos;			///< Shifting plot in Y-direction (used by PostScale() function)
@@ -154,7 +158,6 @@ protected:
 	int (*DrawFunc)(mglGraph *gr, void *par);
 
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
-	virtual void ball(mreal *p,mreal *c)=0;
 	/// Additionally scale points \a p (array with length 3*n) for positioning in image
 	void PostScale(mreal *p,long n);
 	/// Additionally scale positions of light sources
@@ -164,24 +167,37 @@ protected:
 	/// Set default color
 	void DefColor(mglColor c, mreal alpha=-1);
 	void colorbar(const mglData &v, const mglColor *s, int where, mreal x, mreal y, mreal w, mreal h);
+	
+	/// Plot point \a p with color \a c
+	virtual void pnt_plot(long x,long y,mreal z,unsigned char c[4]);
+	/// Transform mglColor and alpha value to bits format
+	unsigned char* col2int(mglColor c, mreal alpha,unsigned char *r);	// mglColor -> int
+	/// Transform mreal color and alpha to bits format
+	unsigned char* col2int(mreal *c,mreal *n,unsigned char *r);
+	/// Draw line between points \a p1,\a p2 with color \a c1, \a c2 at edges
+	virtual void line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all=false);
+	/// Draws the point (ball) at position \a p with color \a c.
+	virtual void ball(mreal *p,mreal *c);
 
 	/// Draw triangle between points \a p0,\a p1,\a p2 with color \a c0, \a c1, \a c2 at edges
-	virtual void trig_plot(mreal *p0,mreal *p1,mreal *p2,mreal *c0,mreal *c1,mreal *c2)=0;
+	virtual void trig_plot(mreal *p0,mreal *p1,mreal *p2,
+		mreal *c0,mreal *c1,mreal *c2);
 	/// Draw triangle between points \a p0,\a p1,\a p2 with color \a c0, \a c1, \a c2 at edges
-	virtual void trig_plot_n(mreal *p0,mreal *p1,mreal *p2,mreal *c0,mreal *c1,mreal *c2,
-					mreal *n0,mreal *n1,mreal *n2)=0;
+	virtual void trig_plot_n(mreal *p0,mreal *p1,mreal *p2,
+	    mreal *c0,mreal *c1,mreal *c2,
+	    mreal *n0,mreal *n1,mreal *n2);
 	/// Draw face of points \a p0,\a p1,\a p2,\a p3 with color \a c0, \a c1, \a c2, \a c3 at edges
 	virtual void quad_plot(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
-					mreal *c0,mreal *c1,mreal *c2,mreal *c3)=0;
+					mreal *c0,mreal *c1,mreal *c2,mreal *c3);
 	/// Draw face of points \a p0,\a p1,\a p2,\a p3 with values \a a0, \a a1, \a a2, \a a3 at edges
 	virtual void quad_plot_a(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
-					mreal a0,mreal a1,mreal a2,mreal a3,mreal alpha)=0;
+					mreal a0,mreal a1,mreal a2,mreal a3,mreal alpha);
 	/// Draw face of points \a p0,\a p1,\a p2,\a p3 with color \a c0, \a c1, \a c2, \a c3 at edges
 	virtual void quad_plot_n(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
 					mreal *c0,mreal *c1,mreal *c2,mreal *c3,
-					mreal *n0,mreal *n1,mreal *n2,mreal *n3)=0;
+					mreal *n0,mreal *n1,mreal *n2,mreal *n3);
 	/// Draw mark at position \a pp with style \a type
-	virtual void mark_plot(mreal *pp, char type)=0;
+	virtual void mark_plot(mreal *pp, char type);
 	/// Combine colors in 2 plane.
 	void combine(unsigned char *c1,unsigned char *c2);	// �������� ������
 	virtual void cloud_plot(long nx,long ny,long nz,mreal *pp,mreal *a,mreal alpha);

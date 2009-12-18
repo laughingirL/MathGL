@@ -499,6 +499,11 @@ void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, mreal *x, mreal *y, mreal *z
 		*x = p.x;	*y = p.y;	*z = p.z;
 	}
 }
+void mgl_calc_scr_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, int *xs, int *ys)
+{
+	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->CalcScr(mglPoint(*x,*y,*z),xs,ys);
+}
 //-----------------------------------------------------------------------------
 mreal mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k)
 {	return	_DT_->a[*i+_DT_->nx*(*j+*k*_DT_->ny)];	}

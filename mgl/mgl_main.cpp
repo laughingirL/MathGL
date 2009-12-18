@@ -229,7 +229,9 @@ void mglGraph::SetScheme(const char *s)
 	unsigned i;
 	mglColor c;
 	const char *col = "kwrgbcymhWRGBCYMHlenpquLENPQU";
-	if(!s || s[0]==0 || (!strchr(col,s[0]) && s[1]==0) || s[0]==':' )	return;
+	if(!s || s[0]==0 || s[0]==':')		return;
+	if(s[0]=='|' && s[1]==0)	{	SmoothColorbar=false;	return;	}
+	if(!strchr(col,s[0]) && s[1]==0)	return;
 	strcpy(last_style, s);
 	NumCol = 0;
 	for(i=0;i<NUM_COLOR;i++)	cmap[i] = NC;
@@ -510,10 +512,8 @@ void mglColor::Set(char p, mreal bright)
 		{	Set(mglColorIds[i].col, bright);	break;	}
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ball(mreal *p,mreal *c)
-{
-	Ball(p[0],p[1],p[2],mglColor(c[0],c[1],c[2]),c[3]);
-}
+void mglGraph::ball(mreal *p, mreal *c)
+{	Ball(p[0],p[1],p[2],mglColor(c[0],c[1],c[2]),c[3]);	}
 //-----------------------------------------------------------------------------
 void mglGraph::ClearEq()
 {

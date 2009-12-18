@@ -2,9 +2,12 @@ if(use_doc)
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 		COMMAND LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/mgl ${CMAKE_BINARY_DIR}/examples/mgl_example
 		COMMAND echo "" > ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
-#		MAIN_DEPENDENCY "${CMAKE_BINARY_DIR}/examples/mgl_example"
+		MAIN_DEPENDENCY ${CMAKE_BINARY_DIR}/examples/mgl_example
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/png
 	)
+	set_source_files_properties(${CMAKE_BINARY_DIR}/examples/mgl_example PROPERTIES GENERATED 1)
+	ADD_CUSTOM_TARGET(gen_all_png DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png)
+	ADD_DEPENDENCIES(gen_all_png mgl_example)
 	set(list_texi_files_en mathgl_en.texi appendix_en.texi core_en.texi example_en.texi mgl_en.texi samples_en.texi class_en.texi data_en.texi overview_en.texi)
 	set(list_texi_files_ru mathgl_ru.texi appendix_ru.texi core_ru.texi example_ru.texi mgl_ru.texi samples_ru.texi class_ru.texi data_ru.texi overview_ru.texi)
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.info

@@ -2,17 +2,18 @@
 	- Change license from GPL to LGPL for MathGL core. SWIG-based interfaces still have GPL.
 	- Add new plot BoxPlot() for plotting data statistic (max, min, median, quartiles).
 	- Add formula for coloring like formulas for curvilinear coordinates.
-	- Add C++ wrapper classes for C functions. These classes (mglDataW, mglGraph, mglParse) can be used even in MSVS naturaly.
+	- Add C++ wrapper classes for C functions. These classes (mglDataW, mglGraph, mglParse) can be used even in MSVS naturally.
 	- Add wxMathGL widget for wxWidgets library.
-	- Improve documentation.
+	- Sufficiently improve documentation.
 	- Add speed up compilation (i.e. allow 'make -j3').
 	- Add ObjId for determining the object (or line) of picture point.
 	- Add ticks drawing for inverted axis (i.e. when Min>Max, not for log-scaled!).
 	- Add drawing of log-scaled axis for case Min<Max<0.
 	- Several MGL commands can be placed in single string. They have to be separated by column ':'.
-	- MGL command 'define' now can define scalar variables, like "define xmin dat.min-1". These variables can be used as is later as a number, like "xrange xmin 1".
+	- MGL command 'define' now can define scalar variables, like "define xmin dat.min-1". These variables can be used as later as a number, like "xrange xmin 1".
 	- Add MGL command 'ranges' for setting plot ranges (like 'axis' command).
-	- Add automatic increse of the point numbers in plots by formula with singularities (i.e. like Plot("sin(1/x)");
+	- Add MGL commands 'break', 'continue' for improving for-cycles.
+	- Add automatic increase of the point numbers in plots by formula with singularities (i.e. like Plot("sin(1/x)");
 	- Add mglGraph::GetFit() function which return fitted formula.
 	- Add function mglGraph::Label() for drawing text at arbitrary place of the screen.
 	- Optimize ticks length -- now it don't depend on axis range, but only on SubPlot()/InPlot() functions.
@@ -21,9 +22,11 @@
 	- Improve mglData::Squeeze() function for keeping last point and add smoothing on demand.
 	- Introduce function names for textual formulas compatible with Maxima one (i.e. elliptic_ec(), jacobi_sn() and so on).
 	- Add extra smoothing in line drawing.
+	- Automatic label shifting now depend on FontSize.
+	- Add smoothed drawing in mglGraphPS -- same as in mglGraphZB (but a bit faster).
 	- Bug with PlotFactor changing while AutoPlotFactor=false.
 	- Bug with Vect() and MeshNum>1.
-	- Bug with overriding default pallette by manual color specification.
+	- Bug with overriding default palette by manual color specification.
 	- Bug in SWIG interface with selecting between float/double.
 	- Memory leaks correction.
 	- Incompatible changes:

@@ -54,6 +54,7 @@ void mgl_qt_run_();
 void mgl_set_show_mouse_pos_(uintptr_t *gr, int *enable);
 void mgl_get_last_mouse_pos_(uintptr_t *gr, mreal *x, mreal *y, mreal *z);
 void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, mreal *x, mreal *y, mreal *z);
+void mgl_calc_scr_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, int *xs, int *ys);
 //void mgl_fltk_thread_();
 //void mgl_qt_thread_();
 /*****************************************************************************/

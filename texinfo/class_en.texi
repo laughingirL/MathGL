@@ -137,9 +137,17 @@ Clear canvas between drawing. You may switch it off for accumulate previous draw
 Delay for animation in seconds. Default value is 1 sec.
 @end deftypecv
 
-@deftypemethod mglGraphAB @code{mglPoint} CalcXYZ (@code{int} xs, @code{int} ys)
+@deftypefn {Method on @code{mglGraphAB} (C++, Python)} @code{mglPoint} CalcXYZ (@code{int} xs, @code{int} ys)
+@deftypefnx {C function} @code{void} mgl_calc_xyz (@code{HMGL} gr, @code{int} xs, @code{int} ys, @code{float *}x, @code{float *}y, @code{float *}z)
 Calculate 3D coordinate @{x,y,z@} for screen point @{xs,ys@}. At this moment it ignore perspective and transformation formulas (curvilinear coordinates). The calculation are done for the last used InPlot (@pxref{Transformation matrix}).
-@end deftypemethod
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraphAB} (C++, Python)} @code{mglPoint} CalcScr (@code{mglPoint} p)
+@deftypefnx {Method on @code{mglGraphAB} (C++)} @code{void} CalcScr (@code{mglPoint} p, @code{int *}xs, @code{int *}ys)
+@deftypefnx {C function} @code{void} mgl_calc_scr (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{int *}xs, @code{int *}ys)
+Calculate screen point @{xs,ys@} for 3D coordinate @{x,y,z@}. The calculation are done for the last used InPlot (@pxref{Transformation matrix}).
+@end deftypefn
+
 @deftypecv {Widget option} mglGraphAB @code{float} ShowMousePos
 Switch to show or not in the widget the last mouse click position.
 @end deftypecv

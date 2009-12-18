@@ -28,117 +28,11 @@
 
 //#define MGL_SIMPLE_LINE
 //-----------------------------------------------------------------------------
-/// Create mglGraph object in ZBuffer mode.
-HMGL mgl_create_graph_zb(int width, int height)
-{    return new mglGraphZB(width,height);	}
-/// Create mglGraph object in ZBuffer mode.
-uintptr_t mgl_create_graph_zb_(int *width, int *height)
-{    return uintptr_t(new mglGraphZB(*width,*height));	}
-//-----------------------------------------------------------------------------
 mglGraphZB::mglGraphZB(int w,int h) : mglGraphAB(w,h)
-{
-	FastNoFace = true;
-	C = 0;	SetSize(w,h);
-}
+{	FastNoFace = true;	C = 0;	SetSize(w,h);	}
 //-----------------------------------------------------------------------------
 mglGraphZB::~mglGraphZB()
-{
-	if(C)	{	delete []C;	delete []Z;	}
-}
-//-----------------------------------------------------------------------------
-void mglGraphZB::Ball(mreal x,mreal y,mreal z,mglColor col,mreal alpha)
-{
-	if(alpha==0)	return;
-	if(alpha<0)	{	alpha = -alpha;	}
-	else		{	if(!ScalePoint(x,y,z))	return;	}
-	if(!col.Valid())	col = mglColor(1.,0.,0.);
-	unsigned char r[4];
-	Finished = false;
-	alpha = Transparent ? alpha : 1;
-	mreal p[3] = {x,y,z}, v, u = 1./(9*PenWidth*PenWidth);
-	PostScale(p,1);
-	r[0] = (unsigned char)(255.f*col.r);
-	r[1] = (unsigned char)(255.f*col.g);
-	r[2] = (unsigned char)(255.f*col.b);
-
-	bool aa=UseAlpha;	UseAlpha = true;
-	register long i,j;
-	long w = long(5.5+fabs(PenWidth));
-	for(i=-w;i<=w;i++)	for(j=-w;j<=w;j++)
-	{
-		v = (i*i+j*j)*u;
-		r[3] = (unsigned char)(255.f*alpha*exp(-6.f*v));
-		if(r[3]==0)	continue;
-		pnt_plot(long(p[0])+i,long(p[1])+j,p[2],r);
-	}
-	UseAlpha = aa;
-}
-//-----------------------------------------------------------------------------
-void mglGraphZB::ball(mreal *p,mreal *c)
-{
-	unsigned char r[4];
-	Finished = false;
-	r[0] = (unsigned char)(255.f*c[0]);
-	r[1] = (unsigned char)(255.f*c[1]);
-	r[2] = (unsigned char)(255.f*c[2]);
-
-	bool aa=UseAlpha;	UseAlpha = true;
-	register long i,j;
-	long w = long(5.5+fabs(PenWidth));
-	mreal v, u = 1./(4*PenWidth*PenWidth);
-	for(i=-w;i<=w;i++)	for(j=-w;j<=w;j++)
-	{
-		v = (i*i+j*j)*u;
-		r[3] = (unsigned char)(255.f*c[3]*exp(-6.f*v));
-		if(r[3]==0)	continue;
-		pnt_plot(long(p[0])+i,long(p[1])+j,p[2],r);
-	}
-	UseAlpha = aa;
-}
-//-----------------------------------------------------------------------------
-unsigned char* mglGraphZB::col2int(mglColor c,mreal a,unsigned char *r)
-{
-	mreal cc[4] = {c.r,c.g,c.b,a};
-	return col2int(cc,0,r);
-}
-//-----------------------------------------------------------------------------
-unsigned char* mglGraphZB::col2int(mreal *c,mreal *n,unsigned char *r)
-{
-	register long i,j;
-	static unsigned char u[4];
-	register mreal b0=c[0],b1=c[1],b2=c[2];
-	if(r==0) r = u;
-	if(c[3]<=0)	{	memset(r,0,4*sizeof(unsigned char));	return r;	}
-	if(UseLight && n)
-	{
-		mreal d0,d1,d2,nn;
-		b0 *= AmbBr;		b1 *= AmbBr;		b2 *= AmbBr;
-		for(i=0;i<10;i++)
-		{
-			if(!nLight[i])	continue;
-			j = 3*i;
-			nn = 2*(n[0]*pLight[j]+n[1]*pLight[j+1]+n[2]*pLight[j+2]) /
-					(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]+1e-6);
-			d0 = pLight[j] - n[0]*nn;
-			d1 = pLight[j+1]-n[1]*nn;
-			d2 = pLight[j+2]-n[2]*nn;
-			nn = 1 + d2/sqrt(d0*d0+d1*d1+d2*d2+1e-6);
-
-			nn = exp(-aLight[i]*nn)*bLight[i]*2;
-			b0 += nn*cLight[j];
-			b1 += nn*cLight[j+1];
-			b2 += nn*cLight[j+2];
-		}
-		b0 = b0<1 ? b0 : 1;
-		b1 = b1<1 ? b1 : 1;
-		b2 = b2<1 ? b2 : 1;
-	}
-	r[0] = (unsigned char)(255.f*b0);	r[1] = (unsigned char)(255.f*b1);
-	r[2] = (unsigned char)(255.f*b2);
-	// c[3] should be <1 but I additionally check it here
-	r[3] = UseAlpha && c[3]<1 ? (unsigned char)(255.f*c[3]) : 255;
-	return r;
-}
+{	if(C)	{	delete []C;	delete []Z;	}	}
 //-----------------------------------------------------------------------------
 void mglGraphZB::pnt_plot(long x,long y,mreal z,unsigned char c[4])
 {
@@ -175,7 +69,6 @@ void mglGraphZB::pnt_plot(long x,long y,mreal z,unsigned char c[4])
 				{
 					zz[1] = zz[0];	zz[0] = z;	OI[i0]=ObjId;
 					memcpy(cc+4,cc,4);	memcpy(cc,c,4);
-				
 				}
 				else	// shift point on slice down and paste new point
 				{	zz[1] = z;	memcpy(cc+4,c,4);	}
@@ -256,7 +149,6 @@ void mglGraphZB::Finish()
 {
 	register long i,i0;
 	long n=Width*Height;
-//	unsigned char c[4],def=TranspType!=2 ? 255:0,alf=TranspType!=2 ? 0:255,*cc;
 	unsigned char c[4],alf=TranspType!=2 ? 0:255,*cc;
 	if(DrawFace || !FastNoFace)	for(i=0;i<n;i++)
 	{
@@ -266,8 +158,6 @@ void mglGraphZB::Finish()
 #ifdef MGL_ABUF_8
 		combine(c,cc+28);		combine(c,cc+24);
 		combine(c,cc+20);		combine(c,cc+16);
-//#else
-//		cc = C+16*i0;
 #endif
 		combine(c,cc+12);		combine(c,cc+8);
 		combine(c,cc+4);		combine(c,cc);
@@ -277,11 +167,9 @@ void mglGraphZB::Finish()
 	}
 	else 	for(i=0;i<n;i++)
 	{
-		i0 = 4*i;	cc = C+i0;
-		c[0]=BDef[0];	c[1]=BDef[1];	c[2]=BDef[2];	c[3]=alf;
-		combine(c,cc);		memcpy(G4+i0,c,4);
+		memcpy(G4+4*i,C+32*i,4);
 		c[0]=BDef[0];	c[1]=BDef[1];	c[2]=BDef[2];	c[3]=255;
-		combine(c,G4+i0);	memcpy(G+3*i,c,3);
+		combine(c,G4+4*i);	memcpy(G+3*i,c,3);
 	}
 	Finished = true;
 }
@@ -301,8 +189,154 @@ void mglGraphZB::Clf(mglColor Back)
 	Finished = false;
 }
 //-----------------------------------------------------------------------------
+void mglGraphZB::SetSize(int w,int h)
+{
+	if(C)	{	delete []C;	delete []Z;	}
+	C = new unsigned char[w*h*32];		// ����� *1 ��� TranspType>0 !!!
+	Z = new mreal[w*h*8];
+	mglGraphAB::SetSize(w,h);
+}
+//-----------------------------------------------------------------------------
+int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
+void mglGraphZB::WriteSlice(int n)
+{
+	unsigned char **p;
+	char fname[32];
+	sprintf(fname,"%d.png",n);
+
+	p = (unsigned char **)malloc(Height * sizeof(unsigned char *));
+	for(long i=0;i<Height;i++)	p[i] = C+4*Width*i + n*4*Width*Height;
+
+	mgl_pnga_save(fname, Width, Height, p);
+	free(p);
+}
+//-----------------------------------------------------------------------------
+void mglGraphZB::Glyph(mreal x, mreal y, mreal f, int s, long j, char col)
+{
+	int ss=s&3;
+	f /= fnt->GetFact(ss);
+	mglColor cc = mglColor(col);
+	if(!cc.Valid())	cc = mglColor(CDef[0],CDef[1],CDef[2]);
+	mreal c[4]={cc.r,cc.g,cc.b,CDef[3]};
+	if(s&8)
+	{
+		if(!(s&4))	glyph_line(x,y,f,c,true);
+		glyph_line(x,y,f,c,false);
+	}
+	else
+	{
+		if(!(s&4))	glyph_fill(x,y,f,fnt->GetNt(ss,j),fnt->GetTr(ss,j),c);
+		glyph_wire(x,y,f,fnt->GetNl(ss,j),fnt->GetLn(ss,j),c);
+	}
+}
+//-----------------------------------------------------------------------------
+/// Create mglGraph object in ZBuffer mode.
+HMGL mgl_create_graph_zb(int width, int height)
+{    return new mglGraphZB(width,height);	}
+/// Create mglGraph object in ZBuffer mode.
+uintptr_t mgl_create_graph_zb_(int *width, int *height)
+{    return uintptr_t(new mglGraphZB(*width,*height));	}
+//-----------------------------------------------------------------------------
+//
+//		now these functions from mglGraphAB
+//
+//-----------------------------------------------------------------------------
+void mglGraphAB::Ball(mreal x,mreal y,mreal z,mglColor col,mreal alpha)
+{
+	if(alpha==0)	return;
+	if(alpha<0)	{	alpha = -alpha;	}
+	else		{	if(!ScalePoint(x,y,z))	return;	}
+	if(!col.Valid())	col = mglColor(1.,0.,0.);
+	unsigned char r[4];
+	Finished = false;
+	alpha = Transparent ? alpha : 1;
+	mreal p[3] = {x,y,z}, v, u = 1./(9*PenWidth*PenWidth);
+	PostScale(p,1);
+	r[0] = (unsigned char)(255.f*col.r);
+	r[1] = (unsigned char)(255.f*col.g);
+	r[2] = (unsigned char)(255.f*col.b);
+
+	bool aa=UseAlpha;	UseAlpha = true;
+	register long i,j;
+	long w = long(5.5+fabs(PenWidth));
+	for(i=-w;i<=w;i++)	for(j=-w;j<=w;j++)
+	{
+		v = (i*i+j*j)*u;
+		r[3] = (unsigned char)(255.f*alpha*exp(-6.f*v));
+		if(r[3]==0)	continue;
+		pnt_plot(long(p[0])+i,long(p[1])+j,p[2],r);
+	}
+	UseAlpha = aa;
+}
+//-----------------------------------------------------------------------------
+void mglGraphAB::ball(mreal *p,mreal *c)
+{
+	unsigned char r[4];
+	Finished = false;
+	r[0] = (unsigned char)(255.f*c[0]);
+	r[1] = (unsigned char)(255.f*c[1]);
+	r[2] = (unsigned char)(255.f*c[2]);
+
+	bool aa=UseAlpha;	UseAlpha = true;
+	register long i,j;
+	long w = long(5.5+fabs(PenWidth));
+	mreal v, u = 1./(4*PenWidth*PenWidth);
+	for(i=-w;i<=w;i++)	for(j=-w;j<=w;j++)
+	{
+		v = (i*i+j*j)*u;
+		r[3] = (unsigned char)(255.f*c[3]*exp(-6.f*v));
+		if(r[3]==0)	continue;
+		pnt_plot(long(p[0])+i,long(p[1])+j,p[2],r);
+	}
+	UseAlpha = aa;
+}
+//-----------------------------------------------------------------------------
+unsigned char* mglGraphAB::col2int(mglColor c,mreal a,unsigned char *r)
+{
+	mreal cc[4] = {c.r,c.g,c.b,a};
+	return col2int(cc,0,r);
+}
+//-----------------------------------------------------------------------------
+unsigned char* mglGraphAB::col2int(mreal *c,mreal *n,unsigned char *r)
+{
+	register long i,j;
+	static unsigned char u[4];
+	register mreal b0=c[0],b1=c[1],b2=c[2];
+	if(r==0) r = u;
+	if(c[3]<=0)	{	memset(r,0,4*sizeof(unsigned char));	return r;	}
+	if(UseLight && n)
+	{
+		mreal d0,d1,d2,nn;
+		b0 *= AmbBr;		b1 *= AmbBr;		b2 *= AmbBr;
+		for(i=0;i<10;i++)
+		{
+			if(!nLight[i])	continue;
+			j = 3*i;
+			nn = 2*(n[0]*pLight[j]+n[1]*pLight[j+1]+n[2]*pLight[j+2]) /
+					(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]+1e-6);
+			d0 = pLight[j] - n[0]*nn;
+			d1 = pLight[j+1]-n[1]*nn;
+			d2 = pLight[j+2]-n[2]*nn;
+			nn = 1 + d2/sqrt(d0*d0+d1*d1+d2*d2+1e-6);
+
+			nn = exp(-aLight[i]*nn)*bLight[i]*2;
+			b0 += nn*cLight[j];
+			b1 += nn*cLight[j+1];
+			b2 += nn*cLight[j+2];
+		}
+		b0 = b0<1 ? b0 : 1;
+		b1 = b1<1 ? b1 : 1;
+		b2 = b2<1 ? b2 : 1;
+	}
+	r[0] = (unsigned char)(255.f*b0);	r[1] = (unsigned char)(255.f*b1);
+	r[2] = (unsigned char)(255.f*b2);
+	// c[3] should be <1 but I additionally check it here
+	r[3] = UseAlpha && c[3]<1 ? (unsigned char)(255.f*c[3]) : 255;
+	return r;
+}
+//-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-20)*v + (r3+30-r1-r2)*u*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y) and selected one pair which 0<u<1 and 0<v<1.*/
-void mglGraphZB::quad_plot(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+void mglGraphAB::quad_plot(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 					mreal *cc0,mreal *cc1,mreal *cc2,mreal *cc3)
 {
 	unsigned char r[4];
@@ -379,7 +413,7 @@ void mglGraphZB::quad_plot(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 }
 //-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-20)*v + (r3+30-r1-r2)*u*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined 	for each point (x,y) and selected one pair which 0<u<1 and 0<v<1. 	In difference mglGraphZB::quad_plot the normal is also interpolated.*/
-void mglGraphZB::quad_plot_n(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+void mglGraphAB::quad_plot_n(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 					mreal *cc0,mreal *cc1,mreal *cc2,mreal *cc3,
 					mreal *nn0,mreal *nn1,mreal *nn2,mreal *nn3)
 {
@@ -460,7 +494,7 @@ void mglGraphZB::quad_plot_n(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 }
 //-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-20)*v + (r3+30-r1-r2)*u*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y) and selected one pair which 0<u<1 and 0<v<1.*/
-void mglGraphZB::quad_plot_a(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+void mglGraphAB::quad_plot_a(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 					mreal aa0,mreal aa1,mreal aa2,mreal aa3, mreal alpha)
 {
 	unsigned char r[4];
@@ -523,7 +557,7 @@ void mglGraphZB::quad_plot_a(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 }
 //-----------------------------------------------------------------------------
 /* Linear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-20)*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y). Point plotted is u>0 and v>0 and u+v<1.*/
-void mglGraphZB::trig_plot(mreal *pp0,mreal *pp1,mreal *pp2,
+void mglGraphAB::trig_plot(mreal *pp0,mreal *pp1,mreal *pp2,
 					mreal *cc0,mreal *cc1,mreal *cc2)
 {
 	unsigned char r[4];
@@ -571,9 +605,8 @@ void mglGraphZB::trig_plot(mreal *pp0,mreal *pp1,mreal *pp2,
 }
 //-----------------------------------------------------------------------------
 /* Linear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-20)*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y). Point plotted is u>0 and v>0 and u+v<1.*/
-void mglGraphZB::trig_plot_n(mreal *pp0,mreal *pp1,mreal *pp2,
-					mreal *cc0,mreal *cc1,mreal *cc2,
-					mreal *nn0,mreal *nn1,mreal *nn2)
+void mglGraphAB::trig_plot_n(mreal *pp0,mreal *pp1,mreal *pp2,
+					mreal *cc0,mreal *cc1,mreal *cc2,mreal *nn0,mreal *nn1,mreal *nn2)
 {
 	unsigned char r[4];
 	long y1,x1,y2,x2;
@@ -622,7 +655,7 @@ void mglGraphZB::trig_plot_n(mreal *pp0,mreal *pp1,mreal *pp2,
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::line_plot_s(mreal *x1,mreal *x2,mreal *y1,mreal *y2,bool /*all*/)
+/*void mglGraphAB::line_plot_s(mreal *x1,mreal *x2,mreal *y1,mreal *y2,bool )
 {
 	mreal kx,ky,kz,t,dd=1;
 	mreal c10,c11,c12;
@@ -647,11 +680,11 @@ void mglGraphZB::line_plot_s(mreal *x1,mreal *x2,mreal *y1,mreal *y2,bool /*all*
 		r[2] = (unsigned char)(255.f*(y1[2]+c12*i));
 		pnt_plot(long(x1[0]+kx*i), long(x1[1]+ky*i), x1[2]+kz*i,r);
 	}
-}
+}*/
 //-----------------------------------------------------------------------------
-void mglGraphZB::line_plot(mreal *pp0,mreal *pp1,mreal *cc0,mreal *cc1,bool all)
+void mglGraphAB::line_plot(mreal *pp0,mreal *pp1,mreal *cc0,mreal *cc1,bool all)
 {
-	if(!DrawFace && FastNoFace)	{	line_plot_s(pp0,pp1,cc0,cc1,all);	return;	}
+//	if(!DrawFace && FastNoFace)	{	line_plot_s(pp0,pp1,cc0,cc1,all);	return;	}
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 	mreal dxu,dxv,dyu,dyv,dd,pw = fabs(PenWidth);
@@ -730,7 +763,7 @@ void mglGraphZB::line_plot(mreal *pp0,mreal *pp1,mreal *cc0,mreal *cc1,bool all)
 	UseAlpha = aa;
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::mark_plot(mreal *pp, char type)
+void mglGraphAB::mark_plot(mreal *pp, char type)
 {
 	unsigned char cs[4]={(unsigned char)(255.f*CDef[0]), (unsigned char)(255.f*CDef[1]),
 						(unsigned char)(255.f*CDef[2]), (unsigned char)(255.f*CDef[3])};
@@ -857,44 +890,5 @@ void mglGraphZB::mark_plot(mreal *pp, char type)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::SetSize(int w,int h)
-{
-	if(C)	{	delete []C;	delete []Z;	}
-	C = new unsigned char[w*h*32];		// ����� *1 ��� TranspType>0 !!!
-	Z = new mreal[w*h*8];
-	mglGraphAB::SetSize(w,h);
-}
-//-----------------------------------------------------------------------------
-int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
-void mglGraphZB::WriteSlice(int n)
-{
-	unsigned char **p;
-	char fname[32];
-	sprintf(fname,"%d.png",n);
-
-	p = (unsigned char **)malloc(Height * sizeof(unsigned char *));
-	for(long i=0;i<Height;i++)	p[i] = C+4*Width*i + n*4*Width*Height;
-
-	mgl_pnga_save(fname, Width, Height, p);
-	free(p);
-}
-//-----------------------------------------------------------------------------
-void mglGraphZB::Glyph(mreal x, mreal y, mreal f, int s, long j, char col)
-{
-	int ss=s&3;
-	f /= fnt->GetFact(ss);
-	mglColor cc = mglColor(col);
-	if(!cc.Valid())	cc = mglColor(CDef[0],CDef[1],CDef[2]);
-	mreal c[4]={cc.r,cc.g,cc.b,CDef[3]};
-	if(s&8)
-	{
-		if(!(s&4))	glyph_line(x,y,f,c,true);
-		glyph_line(x,y,f,c,false);
-	}
-	else
-	{
-		if(!(s&4))	glyph_fill(x,y,f,fnt->GetNt(ss,j),fnt->GetTr(ss,j),c);
-		glyph_wire(x,y,f,fnt->GetNl(ss,j),fnt->GetLn(ss,j),c);
-	}
-}
+void mglGraphAB::pnt_plot(long x,long y,mreal z,unsigned char c[4]){}
 //-----------------------------------------------------------------------------

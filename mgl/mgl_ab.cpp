@@ -261,6 +261,18 @@ mglPoint mglGraphAB::CalcXYZ(int xs, int ys)
 	return LastMousePos;
 }
 //-----------------------------------------------------------------------------
+void mglGraphAB::CalcScr(mglPoint p, int *xs, int *ys)
+{
+	mreal pp[3]={p.x,p.y,p.z};
+	ScalePoint(pp[0],pp[1],pp[2]);
+	PostScale (pp,1);
+	if(xs)	*xs=int(pp[0]);
+	if(ys)	*ys=int(pp[1]);
+}
+//-----------------------------------------------------------------------------
+mglPoint mglGraphAB::CalcScr(mglPoint p)
+{	int x,y;	CalcScr(p,&x,&y);	return mglPoint(x,y);	}
+//-----------------------------------------------------------------------------
 void mglGraphAB::LightScale()
 {
 	mreal *x;
@@ -359,11 +371,12 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 
 	if(size<0)	size = -size*FontSize;
 	f_size = size;	Push();
-	mreal shift = (sh/10+0.2)*2/PlotFactor, fsize=size/8.*font_factor;
+	mreal shift = (sh/10+0.17)*2/PlotFactor, fsize=size/8.*font_factor;
 	mreal x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2;
 	zoomx1=zoomy1=0;	zoomx2=zoomy2=1;
 
 	if(strchr("xyzt",dir))	shift = (sh/10+0.1)*2/PlotFactor;
+	shift *= size/7;
 	switch(dir)
 	{
 	case 'x':
