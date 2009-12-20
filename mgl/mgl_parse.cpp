@@ -788,6 +788,7 @@ void mgl_error_print(int line, int r, mglGraph *gr)
 	if(r==2)	printf("Wrong command in line %d\n", line);
 	if(r==3)	printf("String too long in line %d\n", line);
 	if(r==4)	printf("Unbalanced ' in line %d\n", line);
+	gr->Message[0]=0;
 }
 void mglParse::Execute(mglGraph *gr, FILE *fp, bool print)
 {

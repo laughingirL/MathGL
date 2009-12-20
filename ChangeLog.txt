@@ -1,4 +1,4 @@
-1.10 Released ?? November 2009
+1.10 Released 25 December 2009
 	- Change license from GPL to LGPL for MathGL core. SWIG-based interfaces still have GPL.
 	- Add new plot BoxPlot() for plotting data statistic (max, min, median, quartiles).
 	- Add formula for coloring like formulas for curvilinear coordinates.
