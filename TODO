@@ -1,12 +1,12 @@
 
 					MathGL (for v.1.10.*)
 
-1. PyQt example into docs
-2. Web site (translate "Installation Qt")
+1. Web site (translate "Installation Qt")
 
 
 					MathGL (for v.1.11.*)
 
+a. Save InPlot information in OI[] (i.e. like ObjId) -- fill rectangle then inplot is called.
 0. Miss MAJOR labels or decrease its fontsize if labels too close.
 	Also check that enough digits is printed to distingush the labels
 	Also allow "time"-labels

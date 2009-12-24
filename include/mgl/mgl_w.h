@@ -387,7 +387,7 @@ public:
 
 	inline void SetTicks(char dir, float d=-5, int ns=0, float org=NAN)
 	{	mgl_set_ticks_dir(self, dir, d, ns, org);	};
-	inline void AdjustTicks(const char *dir="xyz")
+	inline void AdjustTicks(const char *dir="xyzc")
 	{	mgl_adjust_ticks(self, dir);	};
 
 	inline void SetCRange(float c1, float c2)

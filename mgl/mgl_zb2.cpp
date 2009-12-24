@@ -732,7 +732,7 @@ void mglGraphAB::glyph_wire(mreal x,mreal y, mreal f, int nl, const short *line,
 	long ik,ii,il=0;
 	mreal p[12];
 	unsigned pdef=PDef;	PDef = 0xffff;
-	mreal opw=PenWidth;	PenWidth=1;
+	mreal opw=PenWidth;	PenWidth=0.75;
 	for(ik=0;ik<nl;ik++)
 	{
 		ii = 2*ik;

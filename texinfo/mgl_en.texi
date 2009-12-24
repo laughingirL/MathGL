@@ -566,7 +566,7 @@ Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}
 
 
 @deffn {MGL command} radar adat ['stl'='' @code{r=-1}]
-Draws radar chart which is continuous lines between points located on an radial lines (like plot in Polar coordinates). The plots are drawn for each row if one of the data is the matrix. Parameter @var{r} set the additional shift of data (i.e. the data @var{adat}+@var{r} is used instead of @var{adat}). If @code{r<0} then @code{r=max(0, -min(adat)}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=""}) solid line with color from palette is used (@pxref{Palette and colors}). If @var{pen} containt @samp{#} symbol then "grid" (radial lines and circle for @var{r}) is drawn See also @ref{plot}. @sref{Radar sample}
+Draws radar chart which is continuous lines between points located on an radial lines (like plot in Polar coordinates). The plots are drawn for each row if one of the data is the matrix. Parameter @var{r} set the additional shift of data (i.e. the data @var{adat}+@var{r} is used instead of @var{adat}). If @code{r<0} then @code{r=max(0, -min(adat)}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=""}) solid line with color from palette is used (@pxref{Palette and colors}). If @var{pen} containt @samp{#} symbol then "grid" (radial lines and circle for @var{r}) is drawn See also @code{plot}. @sref{Radar sample}
 @end deffn
 
 @deffn {MGL command} tens ydat cdat ['stl'='' @code{zval=nan}]

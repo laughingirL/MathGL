@@ -150,15 +150,18 @@ Sets the value in specified cell of the data with border checking.
 Gets the value in specified cell of the data with border checking.
 @end deftypefn
 
-@deftypefn {C function} @code{float} mgl_data_get_nx (@code{HMDT} dat)
+@deftypefn {Method on @code{mglData} (C+, Python)} @code{void} GetNx ()
+@deftypefnx {C function} @code{float} mgl_data_get_nx (@code{HMDT} dat)
 Gets the x-size of the data.
 @end deftypefn
 
-@deftypefn {C function} @code{float} mgl_data_get_ny (@code{HMDT} dat)
+@deftypefn {Method on @code{mglData} (C+, Python)} @code{void} GetNy ()
+@deftypefnx {C function} @code{float} mgl_data_get_ny (@code{HMDT} dat)
 Gets the y-size of the data.
 @end deftypefn
 
-@deftypefn {C function} @code{float} mgl_data_get_nz (@code{HMDT} dat)
+@deftypefn {Method on @code{mglData} (C+, Python)} @code{void} GetNz ()
+@deftypefnx {C function} @code{float} mgl_data_get_nz (@code{HMDT} dat)
 Gets the z-size of the data.
 @end deftypefn
 

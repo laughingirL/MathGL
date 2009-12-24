@@ -22,7 +22,6 @@
 	- Improve mglData::Squeeze() function for keeping last point and add smoothing on demand.
 	- Introduce function names for textual formulas compatible with Maxima one (i.e. elliptic_ec(), jacobi_sn() and so on).
 	- Add extra smoothing in line drawing.
-	- Automatic label shifting now depend on FontSize.
 	- Add smoothed drawing in mglGraphPS -- same as in mglGraphZB (but a bit faster).
 	- Bug with PlotFactor changing while AutoPlotFactor=false.
 	- Bug with Vect() and MeshNum>1.

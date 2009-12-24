@@ -371,12 +371,12 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 
 	if(size<0)	size = -size*FontSize;
 	f_size = size;	Push();
-	mreal shift = (sh/10+0.17)*2/PlotFactor, fsize=size/8.*font_factor;
+	mreal shift = (sh/10+0.2)*2/PlotFactor, fsize=size/8.*font_factor;
 	mreal x1=zoomx1, x2=zoomx2, y1=zoomy1, y2=zoomy2;
 	zoomx1=zoomy1=0;	zoomx2=zoomy2=1;
 
 	if(strchr("xyzt",dir))	shift = (sh/10+0.1)*2/PlotFactor;
-	shift *= size/7;
+//	shift *= size/7;
 	switch(dir)
 	{
 	case 'x':
@@ -445,8 +445,8 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 		memset(B,0,9*sizeof(mreal));	B[0] = B[4] = B[8] = fsize;
 		mreal ss = (pp[3]>pp[0] || tet==-M_PI/2) ? 1 : -1;
 		fscl = fsize;	ftet = 0;
-		xPos = pp[0]+shift*ss*(pp[4]-pp[1])/sqrt(ll);
-		yPos = pp[1]-shift*ss*(pp[3]-pp[0])/sqrt(ll);
+		xPos = pp[0]+shift*ss*(pp[4]-pp[1])/sqrt(ll) - B[1]*0.02f;
+		yPos = pp[1]-shift*ss*(pp[3]-pp[0])/sqrt(ll) - B[4]*0.02f;
 		zPos = pp[2];
 
 		if(!strchr(font1,'R') && !strchr(font1,'C') && !strchr(font1,'L'))

@@ -104,6 +104,11 @@ public:
 	/// Delete the array
 	~mglData()			{	if(a)	{	delete []a;	delete []id;	}	};
 	// ~~~~~~~~~~~~~~~~~~~~ операции ~~~~~~~~~~~~~~~~~~~~
+	// Get sizes
+	inline long GetNx()	{	return nx;	};
+	inline long GetNy()	{	return ny;	};
+	inline long GetNz()	{	return nz;	};
+
 	/// Allocate memory and copy the data from the gsl_vector
 	void Set(gsl_vector *v);
 	/// Allocate memory and copy the data from the gsl_matrix
