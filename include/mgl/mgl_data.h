@@ -120,7 +120,7 @@ public:
 	/// Allocate memory and copy the data from the (float **) array
 	void Set(const float **A,int N1,int N2);
 	/// Allocate memory and copy the data from the (double **) array
-	void Set(const double **A,int N1,int N2);
+	void Set(const double **A,int N1,int N2); 
 	/// Allocate memory and copy the data from the (float ***) array
 	void Set(const float ***A,int N1,int N2,int N3);
 	/// Allocate memory and copy the data from the (double ***) array

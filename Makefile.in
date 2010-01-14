@@ -173,7 +173,6 @@ LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MGL_AGE = @MGL_AGE@
 MGL_CURRENT = @MGL_CURRENT@
-MGL_RELEASE = @MGL_RELEASE@
 MGL_REVISION = @MGL_REVISION@
 MKDIR_P = @MKDIR_P@
 MOC = @MOC@
@@ -784,7 +783,7 @@ uninstall-am: uninstall-local
 
 install-data-local: $(doctargets)
 	mkdir -p $(mgldest)
-	cp -r $(top_builddir)/fonts/*.vfm $(mgldest)
+	cp -r $(top_srcdir)/fonts/*.vfm $(mgldest)
 
 uninstall-local:
 	rm -rf $(mgldest)

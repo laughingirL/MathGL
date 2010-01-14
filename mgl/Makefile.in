@@ -131,7 +131,8 @@ CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
-AM_CXXFLAGS = @AM_CXXFLAGS@
+AM_CXXFLAGS = @AM_CXXFLAGS@ -I$(top_srcdir)/include \
+	-I$(top_builddir)/include
 AR = @AR@
 AS = @AS@
 AUTOCONF = @AUTOCONF@
@@ -190,7 +191,6 @@ LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MGL_AGE = @MGL_AGE@
 MGL_CURRENT = @MGL_CURRENT@
-MGL_RELEASE = @MGL_RELEASE@
 MGL_REVISION = @MGL_REVISION@
 MKDIR_P = @MKDIR_P@
 MOC = @MOC@
@@ -300,7 +300,6 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-INCLUDES = -I$(top_builddir)/include -I$(top_builddir)
 lib_LTLIBRARIES = libmgl.la
 WIDGETS = $(am__append_1) $(am__append_2) $(am__append_3) \
 	$(am__append_4)

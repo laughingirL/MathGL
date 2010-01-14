@@ -70,7 +70,9 @@ Class mglFormula class allows the fast evaluation of a textual mathematical expr
 MathGL can be installed by 3 ways.
 @enumerate
 @item
-Compile from sources. The standard script for autoconf/automake tools is included in library beginning from version 1.2.1. For its running one should execute 3 commands: @code{./configure} after it @code{make} and @code{make install} with root/sudo rights. Script @code{./configure} have several additional options which is switched off by default. They are: @code{--enable-fltk, --enable-glut, --enable-qt} for ebabling FLTK, GLUT and/or Qt windows; @code{--enable-jpeg, --enable-tiff, --enable-hdf5} for enabling corresponded file formats; @code{--enable-all} for enabling all additional features. For enabling language interfaces use @code{--enable-python, --enable-octave} or @code{--enable-langall} for all languages. The full list of options can be viewed by command @code{./configure --help}.
+Compile from sources. The standard script for autoconf/automake tools is included in library beginning from version 1.2.1. For its running one should execute 3 commands: @code{./configure} after it @code{make} and @code{make install} with root/sudo rights. Sometimes after installation you may need to update the library list -- just execute @code{ldconfig} with root/sudo rights.
+
+Script @code{./configure} have several additional options which is switched off by default. They are: @code{--enable-fltk, --enable-glut, --enable-qt} for ebabling FLTK, GLUT and/or Qt windows; @code{--enable-jpeg, --enable-tiff, --enable-hdf5} for enabling corresponded file formats; @code{--enable-all} for enabling all additional features. For enabling language interfaces use @code{--enable-python, --enable-octave} or @code{--enable-langall} for all languages. The full list of options can be viewed by command @code{./configure --help}.
 @item
 Use precompiled binary. There are binaries for MinGW (platform Win32). For precompiled variant one needs only to unpack the archive to the compiler location (or in any other folder and setup paths). By default precompiled versions include the support of GSL (www.gsl.org) and PNG. So, one needs to have these libraries installed on system.
 @item
@@ -113,7 +115,7 @@ Except general concept I want consider on some non-trivial or non-usual general 
 @node Coordinate axes, Line styles, , General concepts
 @subsection Coordinate axes
 
-There is twofold axes representation in MathGL. First one consists in normalizing of the data point coordinates in box @var{Min}x@var{Max} (@pxref{Axis settings}). If @var{Cut} is @code{true} then the outlied points are omitted otherwise they are projected to the bounding box (@pxref{Cutting}). Also, the point will be omitted if it lies inside the box defined by @var{CutMin}x@var{CutMax} or if the value of formula @code{CutOff}() is nonzero for its cooridnates. After it transformation formulas are applied to the data point (@pxref{Transformation}). Finally, the data point is plotted by one of function.
+There is twofold axes representation in MathGL. First one consists in normalizing of the data point coordinates in box @var{Min}x@var{Max} (@pxref{Axis settings}). If @var{Cut} is @code{true} then the outlied points are omitted otherwise they are projected to the bounding box (@pxref{Cutting}). Also, the point will be omitted if it lies inside the box defined by @var{CutMin}x@var{CutMax} or if the value of formula @code{CutOff}() is nonzero for its cooridnates. After it transformation formulas are applied to the data point (@pxref{Curved coordinates}). Finally, the data point is plotted by one of function.
 
 There is possibility to set members @var{Max}, @var{Min} directly but one should call @code{RecalcBorder()} function to setup plotting routines. The more safe way is to set these values by calling @code{Axis()} function. In this case the function @code{RecalcBorder()} is called automatically. Another way to specify the size of axis is to set it as a minimal or maximal value of data array. Functions @code{XRange(), YRange(), ZRange()} do it. The second (optional) argument sets to replace the axis range or to join with the existed range.
 
@@ -269,7 +271,7 @@ The standard way is the using of Unicode encoding for the text output. But MathG
 There are 3 general ways. First, the point with @code{NAN} value of one of coordinate will never be plotted. Second, special variables @var{CutMin}, @var{CutMax} or function @code{CutOff}() define the condition when the points should be omitted (@pxref{Cutting}). Last, you may change the transparency of part of the plot by the help of functions @code{SurfA()}, @code{Surf3A()} (@pxref{Dual plotting}). In last case the transparency is switched on smoothly.
 
 @item I use VisualStudio, CBuilder or some other compiler (not MinGW/gcc). How can I link MathGL library?
-For v.1.10, you can use header file @code{#include <mgl/mgl_w.h>} which contain wrapper C++ classes which should be acceptable for any compiler. However I recommend to use usual headers if you use GNU compilers (like MinGW).
+For v.1.10, you can use header file @code{#include <mgl/mgl_w.h>} which contain wrapper C++ classes which should be acceptable for any compiler. Note, that wrapper classes are @strong{incompatible} with classes in usual headers and you should use only one of them (wrapper or usual)! I recommend to use usual headers if you use GNU compilers (like MinGW).
 
 @c @strong{Finally!} Please @emph{do not} ask me Windows-specific questions. I do not use Windows. I know nothing about Visual Basic, Visual C++, CBuiled or .NET. Please find the appropriate Usenet discussion group and ask your question there.
 

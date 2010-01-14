@@ -4,7 +4,7 @@
 
 MathGL library supports (from version 1.3) the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of mgl2png, mgl2eps, mgl2svg programs and others) or in the frame of the library using.
 
-MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is sufficient, i.e. variables a and A are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when # is a part of some string. Also options can be specified at the end of string (after symbol @samp{;}, @pxref{Command options (MGL)}).
+MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is sufficient, i.e. variables a and A are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when # is a part of some string. Also options can be specified at the end of string (after symbol @samp{;}, @pxref{Command options (MGL)}). Symbol @samp{:} starts new command (like new line character) if it is not placed inside a string or inside brackets.
 
 If string contain references to external parameters (substrings @samp{$0}, @samp{$1} ... @samp{$9}) then before execution the values of parameter will be substituted instead of reference. It allows to use the same MGL script for different parameters (filenames, paths, condition and so on).
 
@@ -87,7 +87,7 @@ There are several commands for setup transparency. The general command is @code{
 Sets the transparency on/off. It is recommended to call this command before any plotting command. Default value is @code{off}. Use @code{transparent off} in particular plot to disable its transparency.
 @end deffn
 @deffn {MGL command} alphadef @code{val}
-Default value of alpha channel (transparency) for all plotting commands.
+Default value of alpha channel (transparency) for all plotting commands. Initial value is 0.5.
 @end deffn
 @deffn {MGL command} transparent @code{val}
 Temporary switches transparency on/off for the plot.
@@ -102,7 +102,7 @@ This command set the transparency type. Normal transparency (@samp{0}) -- below 
 @cindex light
 @cindex ambient
 
-There are several commands for setup lighting. The general command is @code{mgl_set_light()} which switch on/off the lighting for overall plot. It influence only for graphics which created after @code{mgl_set_light()} call (with one exeption, mglGraphGL). Generally MathGL support up to 10 independent light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
+There are several commands for setup lighting. The general command is @code{light} which switch on/off the lighting for overall plot. It influence only for graphics which created after @code{light} call (with one exeption, mglGraphGL). Generally MathGL support up to 10 independent light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
 
 @deffn {MGL command} light @code{[val=on]}
 Sets the using of light on/off for overall plot. It is recommended to call this command before any plotting command. Default value is lightning off.
@@ -138,6 +138,10 @@ Command imitate a fog in the plot. Fog start from relative distance @var{dz} fro
 @cindex tickstl
 
 These commands control the default (initial) values for most graphics parameters including sizes of markers, arrows, linewidth and so on. As any other settings these ones will influence only on plots created after the settings change.
+
+@deffn {MGL command} barwidth @code{val}
+Sets relative width of rectangles in @code{bars, barh, boxplot}. Default value is @code{0.7}.
+@end deffn
 
 @deffn {MGL command} marksize @code{val}
 The size of marks. Default value is @code{1}.
@@ -231,11 +235,10 @@ Set direction around which curve rotated in @code{axial, torus}. Default value i
 @cindex xrange
 @cindex yrange
 @cindex zrange
+@cindex crange
 @cindex xtick
 @cindex ytick
 @cindex ztick
-@cindex ctick
-@cindex crange
 @cindex ctick
 @cindex origin
 @cindex adjust
@@ -244,11 +247,12 @@ These large set of commands control how the axis and ticks will be drawn. Note t
 
 @deffn {MGL command} axis @code{x1 y1 x2 y2}
 @deffnx {MGL command} axis @code{x1 y1 z1 x2 y2 z2}
+@deffnx {MGL command} ranges @code{x1 x2 y1 y2 [z1=0 z2=0]}
 Sets the ranges of coordinates changing. Also it sets the range for coloring (analogous to @code{caxis z1 z2}). Initial ranges are [-1, 1].
 @end deffn
 
-@deffn {MGL command} axis 'fx' 'fy' 'fz'
-Sets the transformation formulas for curvilinear coordinates. Each string should contain mathematical expression for real coordinate depending on internal coordinates x, y, z. For example, the cylindrical coordinates are introduced as @code{axis 'x*cos(y)' 'x*sin(y)' 'z'}. For removing of formulas the corresponding parameter should be @code{''}. The using of transformation formulas will slightly slowing the program, i.e. @code{axis '' '' ''} is faster than @code{axis 'x' 'y' 'z'}. Initially all formulas are absent (Cartesian coordinates are used). For more details about functions and formulas, @pxref{mglFormula class}.
+@deffn {MGL command} axis 'fx' 'fy' ['fz'='' 'fa'='']
+Sets the transformation formulas for curvilinear coordinates. Each string should contain mathematical expression for real coordinate depending on internal coordinates 'x', 'y', 'z' and 'a' or 'c' for colorbar. For example, the cylindrical coordinates are introduced as @code{axis 'x*cos(y)' 'x*sin(y)' 'z'}. For removing of formulas the corresponding parameter should be @code{''}. The using of transformation formulas will slightly slowing the program, i.e. @code{axis '' '' ''} is faster than @code{axis '1*x' '1*y' '1*z'}. Initially all formulas are absent (Cartesian coordinates are used). For more details about functions and formulas, @pxref{mglFormula class}.
 @end deffn
 
 @deffn {MGL command} axis @code{how}
@@ -284,7 +288,8 @@ Sets the range for x-,y-,z- coordinate or coloring. See also axis.
 @deffn {MGL command} xtick @code{val [sub=0 org=nan]}
 @deffnx {MGL command} ytick @code{val [sub=0 org=nan]}
 @deffnx {MGL command} ztick @code{val [sub=0 org=nan]}
-Sets step for x-, y-, z-axis ticks (if @var{cal}>0) or it's number (if @var{val}<0) in corresponding direction. Zero value @var{val}=0 sets logarithmic ticks. Parameter @var{sub} sets the number of sub-ticks. Parameter @var{org} set the starting points for ticks. If not @code{org=nan} then the value from @code{origin} is used.
+@deffnx {MGL command} ctick @code{val}
+Sets step for x-, y-, z-axis ticks or colorbar ticks (if @var{val}>0) or it's number (if @var{val}<0) in corresponding direction. Zero value @var{val}=0 sets logarithmic ticks. Parameter @var{sub} sets the number of sub-ticks. Parameter @var{org} set the starting points for ticks. If not @code{org=nan} then the value from @code{origin} is used.
 @end deffn
 
 @deffn {MGL command} xtick 'templ'
@@ -300,7 +305,7 @@ Sets the template for x-, y-, z-axis ticks or colorbar ticks. It may contain TeX
 Sets manual positions @var{val1},@var{val2},... and labels @var{lbl1},@var{lbl2},... for ticks along x-, y-, z-axis. Labels may contain TeX symbols also.
 @end deffn
 
-@deffn {MGL command} adjust 'dir'
+@deffn {MGL command} adjust ['dir'='xyzc']
 Set the ticks step, number of sub-ticks and initial ticks position to be the most human readable for the axis along direction(s) @var{dir}.
 @end deffn
 
@@ -493,10 +498,10 @@ Draws grid lines perpendicular to direction determined by string parameter @var{
 Draws bounding box outside the plotting volume with line style 'stl'.
 @end deffn
 
-@deffn {MGL command} xlabel 'text' [@code{pos=1 shift=0}]
-@deffnx {MGL command} ylabel 'text' [@code{pos=1 shift=0}]
-@deffnx {MGL command} zlabel 'text' [@code{pos=1 shift=0}]
-@deffnx {MGL command} tlabel 'text' [@code{pos=1 shift=0}]
+@deffn {MGL command} xlabel 'text' [@code{pos=1 size=-1.4 shift=0}]
+@deffnx {MGL command} ylabel 'text' [@code{pos=1 size=-1.4 shift=0}]
+@deffnx {MGL command} zlabel 'text' [@code{pos=1 size=-1.4 shift=0}]
+@deffnx {MGL command} tlabel 'text' [@code{pos=1 size=-1.4 shift=0}]
 Prints the label @var{text} for x-,y-,z-,t-axis (here @samp{t} is ``ternary'' axis @math{t=1-x-y}). The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis (default). If @var{pos}<0 then label is printed at the minimum of axis. The font size is 1.4 times larger than the one for ticks @code{font}. Parameter @code{shift} specify additional shifting of the label. @xref{Text printing (MGL)}.
 @end deffn
 
@@ -549,14 +554,19 @@ Switches on/off the drawing of a box near legend. By default, the box is drawn.
 @cindex tube
 @cindex region
 
-These commands perform plotting of 1D data. 1D means that data depended from only 1 parameter like parametric curve @{x(i),y(i),z(i)@}, i=1...n. There are 5 generally different types of data representations: simple line plot (Plot), line plot with filling under it (Area), stairs plot (Step), bar plot (Bars, Barh) and vertical lines (Stem). Each type of plotting has similar interface. There are 3D version and two 2D versions. One of last requires single array. The parameters of line and marks are specified by the string argument. If the string parameter is NULL then solid line with color from palette Pal is used (@pxref{Palette and colors}). Also there are some special 1d plots having slightly different interface: surface of curve rotation (Torus), chart (Chart) and error boxes (Error), marks with variable size (Mark), tubes (Tube) and so on. @xref{Line styles}.
+These commands perform plotting of 1D data. 1D means that data depended from only 1 parameter like parametric curve @{x(i),y(i),z(i)@}, i=1...n. Most of plotting type has similar interface. There are 3D version and two 2D versions. One of last requires single array. The parameters of line and marks are specified by the string argument. If the string parameter is NULL then solid line with color from palette Pal is used (@pxref{Palette and colors}). Also there are some special 1d plots having slightly different interface: surface of curve rotation (Torus), chart (Chart) and error boxes (Error), marks with variable size (Mark), tubes (Tube) and so on. @xref{Line styles}.
 
 The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=NULL}) solid line with color from palette is used (@pxref{Palette and colors}).
 
 @deffn {MGL command} plot ydat ['stl'='' @code{zval=nan}]
 @deffnx {MGL command} plot xdat ydat ['stl'='' @code{zval=nan}]
 @deffnx {MGL command} plot xdat ydat zdat ['stl'='']
-Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). See also @code{tens, area, step, stem, tube, mark, error, belt}. @sref{Plot sample}
+Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). See also @code{tens, radar, area, step, stem, tube, mark, error, belt}. @sref{Plot sample}
+@end deffn
+
+
+@deffn {MGL command} radar adat ['stl'='' @code{r=-1}]
+Draws radar chart which is continuous lines between points located on an radial lines (like plot in Polar coordinates). The plots are drawn for each row if one of the data is the matrix. Parameter @var{r} set the additional shift of data (i.e. the data @var{adat}+@var{r} is used instead of @var{adat}). If @code{r<0} then @code{r=max(0, -min(adat)}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=""}) solid line with color from palette is used (@pxref{Palette and colors}). If @var{pen} containt @samp{#} symbol then "grid" (radial lines and circle for @var{r}) is drawn See also @code{plot}. @sref{Radar sample}
 @end deffn
 
 @deffn {MGL command} tens ydat cdat ['stl'='' @code{zval=nan}]
@@ -640,6 +650,10 @@ Draws error boxes @{@var{xerr}[i], @var{yerr}[i]@} at points @{@var{xdat}[i], @v
 Draws tube with variable radius @var{rdat}[i] (or @var{rval}) at points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). See also @code{plot}. @sref{TextMark sample}
 @end deffn
 
+@deffn {MGL command} boxplot adat ['stl'='' @code{zval=nan}]
+@deffnx {MGL command} boxplot xdat adat ['stl'='' @code{zval=nan}]
+Draws boxplot (also known as a box-and-whisker diagram) at points @var{xdat} in plane z=@code{zval} (by default is at the bottom of the bounding box). This is five-number summaries of data <em>adat</em> (minimum, lower quartile (Q1), median (Q2), upper quartile (Q3) and maximum) along second (j-th) direction.
+@end deffn
 
 @c ##################################################################
 @node 2D plotting (MGL), 3D plotting (MGL), 1D plotting (MGL), MGL interface
@@ -1189,8 +1203,14 @@ a_ij^new = a_i^old where j=0...@var{n1}. Correspondingly, for @var{n1}<0 new arr
 Transposes (shift order of) dimensions of the data. New order of dimensions is specified int string @var{dim}. This command may be useful also for the reading of one-dimensional data.
 @end deffn
 
-@deffn {MGL command} squeeze dat, @code{rx [ry=1 rz=1]}
-Reduces the data size by excluding data elements which indexes are not divisible by @var{rx}, @var{ry}, @var{rz} correspondingly.
+@deffn {MGL command} squeeze dat @code{rx [ry=1 rz=1 sm=off]}
+Reduces the data size by excluding data elements which indexes are not divisible by @var{rx}, @var{ry}, @var{rz} correspondingly. Parameter @var{sm} set to use smoothing
+@iftex
+(i.e. @math{a_{out}[i]=\sum_{j=i}^{i+r}a[j]/r}) or not (i.e. @math{a_{out}[i]=a[j*r]}).
+@end iftex
+@ifnottex
+(i.e. out[i]=\sum_@{j=i@}^@{i+r@} a[j]/r) or not (i.e. out[i]=a[j*r]).
+@end ifnottex
 @end deffn
 
 @deffn {MGL command} crop dat @code{n1 n2} 'dir'
@@ -1463,6 +1483,9 @@ Changes the current directory to @var{path}.
 @end deffn
 @deffn {MGL command} define $N smth
 Sets @var{N}-th script argument to @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present).
+@end deffn
+@deffn {MGL command} define name smth
+Create scalar variable @code{name} which have the numeric value of @code{smth}. Later you can use this variable as usual number.
 @end deffn
 @deffn {MGL command} if dat 'cond'
 Starts block which will be executed if @var{dat} satisfy to @var{cond}.

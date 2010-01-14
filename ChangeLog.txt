@@ -1,3 +1,6 @@
+1.10.1 Released ?? February 2010
+	- Colorbar factor now placed at top of a plot.
+
 1.10 Released 25 December 2009
 	- Change license from GPL to LGPL for MathGL core. SWIG-based interfaces still have GPL.
 	- Add new plot BoxPlot() for plotting data statistic (max, min, median, quartiles).

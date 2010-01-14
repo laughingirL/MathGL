@@ -616,10 +616,10 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 	}
 	switch(where)
 	{
-		case 1:	p = mglPoint((x+0.15*w)*s3, (y+1.75*h)*s3);	break;
-		case 2:	p = mglPoint((x+1.75*w)*s3, (y-0.15*h)*s3);	break;
-		case 3:	p = mglPoint((x+1.75*w)*s3, (y+0.15*h)*s3);	break;
-		default:p = mglPoint((x-0.15*w)*s3, (y+1.75*h)*s3);	break;
+		case 1:	p = mglPoint((x+0.15*w)*s3, (y+1.75*h)*s3, s3+1);	break;
+		case 2:	p = mglPoint((x+1.75*w)*s3, (y-0.15*h)*s3, s3+1);	break;
+		case 3:	p = mglPoint((x+1.75*w)*s3, (y+0.15*h)*s3, s3+1);	break;
+		default:p = mglPoint((x-0.15*w)*s3, (y+1.75*h)*s3, s3+1);	break;
 	}
 	if(kind&2)	Putsw(p,s,a,FontSize);
 	ScalePuts = true;

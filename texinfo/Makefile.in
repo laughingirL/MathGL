@@ -185,7 +185,6 @@ LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MGL_AGE = @MGL_AGE@
 MGL_CURRENT = @MGL_CURRENT@
-MGL_RELEASE = @MGL_RELEASE@
 MGL_REVISION = @MGL_REVISION@
 MKDIR_P = @MKDIR_P@
 MOC = @MOC@
@@ -943,7 +942,7 @@ uninstall-am: uninstall-dvi-am uninstall-html-am uninstall-info-am \
 #install-data-local: install-html install-pdf
 install-data-local: install-html
 	mkdir -p $(mglpng)
-	cp -r $(top_builddir)/texinfo/png_static/*.png $(mglpng)
+	cp -r $(top_srcdir)/texinfo/png_static/*.png $(mglpng)
 
 uninstall-local:
 	rm -rf $(mglpng)

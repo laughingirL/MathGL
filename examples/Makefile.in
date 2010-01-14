@@ -66,7 +66,11 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/config/autotroll.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/config/libtool.m4 \
+	$(top_srcdir)/config/ltoptions.m4 \
+	$(top_srcdir)/config/ltsugar.m4 \
+	$(top_srcdir)/config/ltversion.m4 \
+	$(top_srcdir)/config/lt~obsolete.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -103,7 +107,7 @@ mgl_glut_example_OBJECTS = $(am_mgl_glut_example_OBJECTS)
 @USE_GLUT_TRUE@	$(top_builddir)/widgets/libmgl-glut.la
 am__mgl_qt_example_SOURCES_DIST = wnd_samples.cpp \
 	$(top_builddir)/include/mgl/mgl_qt.moc.cpp \
-	$(top_builddir)/include/mgl/mgl_qt.h qt_example.cpp
+	$(top_srcdir)/include/mgl/mgl_qt.h qt_example.cpp
 @USE_QT_TRUE@am_mgl_qt_example_OBJECTS =  \
 @USE_QT_TRUE@	mgl_qt_example-wnd_samples.$(OBJEXT) \
 @USE_QT_TRUE@	mgl_qt_example-mgl_qt.moc.$(OBJEXT) \
@@ -170,7 +174,8 @@ CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
-AM_CXXFLAGS = @AM_CXXFLAGS@
+AM_CXXFLAGS = @AM_CXXFLAGS@ -I$(top_srcdir)/include \
+	-I$(top_builddir)/include
 AR = @AR@
 AS = @AS@
 AUTOCONF = @AUTOCONF@
@@ -229,7 +234,6 @@ LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MGL_AGE = @MGL_AGE@
 MGL_CURRENT = @MGL_CURRENT@
-MGL_RELEASE = @MGL_RELEASE@
 MGL_REVISION = @MGL_REVISION@
 MKDIR_P = @MKDIR_P@
 MOC = @MOC@
@@ -339,7 +343,6 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-INCLUDES = -I$(top_builddir)/include -I$(top_builddir)
 mgl_example_SOURCES = wnd_samples.cpp full_test.cpp
 mgl_example_LDADD = $(top_builddir)/mgl/libmgl.la
 @USE_FLTK_TRUE@mgl_fltk_example_SOURCES = wnd_samples.cpp fltk_example.cpp
@@ -361,7 +364,7 @@ mgl_example_LDADD = $(top_builddir)/mgl/libmgl.la
 
 @USE_QT_TRUE@DISTCLEANFILES = $(BUILT_SOURCES)
 @USE_QT_TRUE@ACLOCAL_AMFLAGS = -I $(top_srcdir)/config/
-@USE_QT_TRUE@mgl_qt_example_SOURCES = wnd_samples.cpp $(top_builddir)/include/mgl/mgl_qt.moc.cpp $(top_builddir)/include/mgl/mgl_qt.h qt_example.cpp
+@USE_QT_TRUE@mgl_qt_example_SOURCES = wnd_samples.cpp $(top_builddir)/include/mgl/mgl_qt.moc.cpp $(top_srcdir)/include/mgl/mgl_qt.h qt_example.cpp
 @USE_QT_TRUE@mgl_qt_example_LDADD = $(QT_LIBS) $(top_builddir)/widgets/libmgl-qt.la
 @USE_QT_TRUE@mgl_qt_example_LDFLAGS = $(QT_LDFLAGS)
 @USE_QT_TRUE@mgl_qt_example_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS)

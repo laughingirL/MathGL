@@ -1,7 +1,4 @@
-AC_INIT(mgl/mgl_main.cpp)
-
-MGL_RELEASE=1.8
-AC_SUBST(MGL_RELEASE)
+AC_INIT([mathgl], [1.10], [mathgl.abalakin@gmail.com])
 
 AC_CONFIG_MACRO_DIR([config])
 AC_CONFIG_AUX_DIR(config)
@@ -22,7 +19,7 @@ AC_SUBST(MGL_CURRENT)
 AC_SUBST(MGL_REVISION)
 AC_SUBST(MGL_AGE)
 
-AM_INIT_AUTOMAKE(mathgl,MGL_RELEASE)
+AM_INIT_AUTOMAKE
 
 AC_PROG_CC
 AC_PROG_CXX
@@ -242,6 +239,7 @@ AC_ARG_ENABLE(wx,
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-wx) ;;
 esac],[wx=false])
 if (test x$all = xtrue || test x$wx = xtrue) ;then
+#if (test x$wx = xtrue) ;then
     WX_PROG=wx-config
     AC_CHECK_PROG(WX_FLAGS,$WX_PROG,`$WX_PROG --cflags`)
     AC_CHECK_PROG(WX_LIBS,$WX_PROG,`$WX_PROG --libs`)

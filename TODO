@@ -1,11 +1,6 @@
-
-					MathGL (for v.1.10.*)
-
-1. Web site (translate "Installation Qt")
-
-
 					MathGL (for v.1.11.*)
 
+b. Colorbar: add grid for label values
 a. Save InPlot information in OI[] (i.e. like ObjId) -- fill rectangle then inplot is called.
 0. Miss MAJOR labels or decrease its fontsize if labels too close.
 	Also check that enough digits is printed to distingush the labels
@@ -39,3 +34,10 @@ a. Save InPlot information in OI[] (i.e. like ObjId) -- fill rectangle then inpl
 1. On which things the subplot influence
 2. About unrotated text
 3. Add "Howto" section in web site.
+
+					Web
+					
+1. "Data plotting", "Data plot", "Scientific visualtization", "Surface", "Cloud", 
+	"Plot", "statistical graphics"
+2. Examples of animation
+3. Example of inverted axis, minus-log axis

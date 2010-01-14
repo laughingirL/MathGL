@@ -150,15 +150,18 @@ Sets the value in specified cell of the data with border checking.
 Gets the value in specified cell of the data with border checking.
 @end deftypefn
 
-@deftypefn {C function} @code{float} mgl_data_get_nx (@code{HMDT} dat)
+@deftypefn {Method on @code{mglData} (C+, Python)} @code{void} GetNx ()
+@deftypefnx {C function} @code{float} mgl_data_get_nx (@code{HMDT} dat)
 Gets the x-size of the data.
 @end deftypefn
 
-@deftypefn {C function} @code{float} mgl_data_get_ny (@code{HMDT} dat)
+@deftypefn {Method on @code{mglData} (C+, Python)} @code{void} GetNy ()
+@deftypefnx {C function} @code{float} mgl_data_get_ny (@code{HMDT} dat)
 Gets the y-size of the data.
 @end deftypefn
 
-@deftypefn {C function} @code{float} mgl_data_get_nz (@code{HMDT} dat)
+@deftypefn {Method on @code{mglData} (C+, Python)} @code{void} GetNz ()
+@deftypefnx {C function} @code{float} mgl_data_get_nz (@code{HMDT} dat)
 Gets the z-size of the data.
 @end deftypefn
 
@@ -197,10 +200,17 @@ a_ij^new = a_i^old where j=0...@var{n1}. Correspondingly, for @var{n1}<0 new arr
 @deftypefnx {C function} @code{void} mgl_data_transpose (@code{const char *}dim)
 Transposes (shift order of) dimensions of the data. New order of dimensions is specified int string @var{dim}. This function may be useful also for the reading of one-dimensional data.
 @end deftypefn
-@deftypefn {Method on @code{mglData} (C++, Python)} @code{void} Squeeze (@code{int} rx, @code{int} ry=@code{1}, @code{int} rz=@code{1}, @code{bool} smooth=@code{true})
+@deftypefn {Method on @code{mglData} (C++, Python)} @code{void} Squeeze (@code{int} rx, @code{int} ry=@code{1}, @code{int} rz=@code{1}, @code{bool} smooth=@code{false})
 @deftypefnx {C function} @code{void} mgl_data_squeeze (@code{HMDT} dat, @code{int} rx, @code{int} ry, @code{int} rz, @code{int} smooth)
-Reduces the data size by excluding data elements which indexes are not divisible by @var{rx}, @var{ry}, @var{rz} correspondingly.
+Reduces the data size by excluding data elements which indexes are not divisible by @var{rx}, @var{ry}, @var{rz} correspondingly. Parameter @var{squeeze} set to use smoothing
+@iftex
+(i.e. @math{a_{out}[i]=\sum_{j=i,i+r}a[j]/r}) or not (i.e. @math{a_{out}[i]=a[j*r]}).
+@end iftex
+@ifnottex
+(i.e. out[i]=\sum_@{j=i,i+r@} a[j]/r) or not (i.e. out[i]=a[j*r]).
+@end ifnottex
 @end deftypefn
+
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{void} Crop (@code{int} n1, @code{int} n2, @code{char} dir=@code{'x'})
 @deftypefnx {C function} @code{void} mgl_data_crop (@code{HMDT} dat, @code{int} n1, @code{int} n2, @code{char} dir)
 Cuts off edges of the data @var{i}<@var{n1} and @var{i}>@var{n2} if @var{n2}>0 or @var{i}>@code{n[xyz]}-@var{n2} if @var{n2}<=0 along direction @var{dir}.

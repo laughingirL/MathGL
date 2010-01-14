@@ -62,11 +62,11 @@ Restore initial values for all of parameters except described in @ref{Zooming}.
 @cindex SetTransparent
 @cindex SetTranspType
 
-There are several functions and variables for setup transparency. The general function is @code{Alpha()} which switch on/off the transparency for overall plot. It influence only for graphics which created after @code{Alpha()} call (with one exception, mglGraphGL). Variable @code{AlphaDef} specify the default value of alpha-channel. You may switch off transparency of selected plot by variable @code{Transparent}. Finally, variable @code{TranspType} set the kind of transparency. @sref{Transparent surface sample}
+There are several functions and variables for setup transparency. The general function is @code{Alpha()} which switch on/off the transparency for overall plot. It influence only for graphics which created after @code{Alpha()} call (with one exception, mglGraphGL). Function @code{SetAlphaDef} specify the default value of alpha-channel. You may switch off transparency of selected plot by function @code{SetTransparent}. Finally, function @code{SetTranspType} set the kind of transparency. @sref{Transparent surface sample}
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{bool} Alpha (@code{bool} enable)
 @deftypefnx {C function} @code{void} mgl_set_alpha (@code{HMGL} gr, @code{int} enable)
-Sets the transparency on/off. It is recommended to call this function before any plotting command. Function returns previous value of transparency. In any case it must be called before @code{Finish()} function if the last is used. Default value is transparency off. Unfortunately it switches the transparency on/off for all subplots. Use @code{SetTransparent(false)} in particular plot to disable its transparency.
+Sets the transparency on/off and returns previous value of transparency. It is recommended to call this function before any plotting command. In any case it must be called before @code{Finish()} function if the last is used. Default value is transparency off. Unfortunately it switches the transparency on/off for all subplots. Use @code{SetTransparent(false)} in particular plot to disable its transparency.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetAlphaDef (@code{float} val)
@@ -107,7 +107,7 @@ There are several functions for setup lighting. The general function is @code{Li
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{bool} Light (@code{bool} enable)
 @deftypefnx {C function} @code{void} mgl_set_light (@code{HMGL} gr, @code{int} enable)
-Sets the using of light on/off for overall plot. It is recommended to call this function before any plotting command. Function returns previous value of lighting. Default value is lightning off.
+Sets the using of light on/off for overall plot. Function returns previous value of lighting. Default value is lightning off.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Light (@code{int} n, @code{bool} enable)
@@ -119,12 +119,12 @@ Switch on/off @var{n}-th light source separately.
 @deftypefnx {Method on @code{mglGraph} (C++)} @code{void} Light (@code{int} n, @code{mglPoint} p, @code{char} c=@code{'w'}, @code{float} bright=@code{0.5}, @code{bool} infty=@code{true})
 @deftypefnx {Method on @code{mglGraph} (C++)} @code{void} Light (@code{int} n, @code{mglPoint} p, @code{mglColor} c, @code{float} bright=@code{0.5}, @code{bool} infty=@code{true})
 @deftypefnx {C function} @code{void} mgl_add_light (@code{HMGL} gr, @code{int} n, @code{float} x, @code{float} y, @code{float} z, @code{char} c)
-The function adds a light source with identification @var{n} at position @var{p}. The color of light is @var{c} (white by default). The brightness of light is @var{bright} which must be in range [0,1]. Flag @var{infty}=@code{true} puts the source to infinite distance (for the faster drawing). It is recommended to call this function before any plotting command.
+The function adds a light source with identification @var{n} at position @var{p} with color @var{c} and with brightness @var{bright} (which must be in range [0,1]). Flag @var{infty}=@code{true} puts the source to infinite distance (for the faster drawing).
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Ambient (@code{float} bright=@code{0.5})
 @deftypefnx {C function} @code{void} mgl_set_ambbr (@code{HMGL} gr, @code{float} bright)
-Sets the brightness of ambient light. The value should be in range [0,1]. It is recommended to call this function before any plotting command.
+Sets the brightness of ambient light. The value should be in range [0,1].
 @end deftypefn
 
 @c ==================================================================
@@ -174,7 +174,7 @@ Defines the base width for all lines. The value <1 is ignored. For values > 1 th
 The relative length of axis ticks. Default value is @code{0.1}. Parameter @var{stt}>0 set relative length of subticks which is in @code{sqrt(1+stt)} times smaller.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetTickStl (@code{const char *}stl, @code{const char *}sub)
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetTickStl (@code{const char *}stl, @code{const char *}sub=@code{0})
 @deftypefnx {C function} @code{void} mgl_set_tick_stl (@code{HMGL} gr, @code{const char *}stl, @code{const char *}sub)
 The line style of axis ticks (@var{stl}) and subticks (@var{sub}). If @var{stl} is empty then default style is used (@samp{k} or @samp{w} depending on transparency type). If @var{sub} is empty then ticks style is used (i.e. @var{stl}).
 @end deftypefn
@@ -228,7 +228,7 @@ Switch on/off automatic change of PlotFactor variable during plot rotation. See 
 @cindex SetCutBox
 @cindex CutOff
 
-These variables and functions set the condition when the points are excluded (cutted) from the drawing.
+These variables and functions set the condition when the points are excluded (cutted) from the drawing. Note, that a point with NAN value(s) of coordinate or amplitude will be automatically excluded from the drawing.
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetCut (@code{bool} val)
 @deftypefnx {C function} @code{void} mgl_set_cut (@code{HMGL} gr, @code{int} val)
@@ -237,7 +237,7 @@ Flag which determines how points outside bounding box are drawn. If it is @code{
 
 @float
 @image{png_static/cut, 7cm}
-@caption{Left figure is drawn with parameter @code{Cut=false}. Right one is drawn with parameter @code{Cut=true}}
+@caption{Left figure is drawn with parameter @code{Cut=false}. Right one is drawn with parameter @code{Cut=true}.}
 @end float
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetCutBox (@code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2)
@@ -251,11 +251,11 @@ Sets the cutting off condition by formula @var{EqC}. This condition determine wi
 @end deftypefn
 
 @deftypecv {@emph{Obsolete option}} mglGraph @code{bool} Cut
-Flag which determines how points outside bounding box are drawn. If it is @code{true} then points are excluded from plot (it is default) otherwise the points are projected to edges of bounding box.
+Flag which determines how points outside bounding box are drawn. See @code{SetCut()}.
 @end deftypecv
 
 @deftypecv {@emph{Obsolete option}} mglGraph @code{mglPoint} {CutMin, CutMax}
-Lower and upper edge of the box in which never points are drawn. If both edges are the same (the variables are equal) then the cutting box is empty. @sref{CutMinMax sample}
+Lower and upper edge of the box in which never points are drawn. See @code{SetCutBox()}.
 @end deftypecv
 
 @c ==================================================================
@@ -280,7 +280,7 @@ Sets the size of font for tick and axis labels. Default font size of axis labels
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetFontDef (@code{const char *}fnt)
 @deftypefnx {C function} @code{void} mgl_set_font_def (@code{HMGL} gr, @code{const char *} val)
-Sets the font specification (@pxref{Text printing}). Default is ``rC'' -- Roman font centering.
+Sets the font specification (@pxref{Text printing}). Default is @samp{rC} -- Roman font centering.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetRotatedText (@code{bool} val)
@@ -313,17 +313,17 @@ Set FontSize by size in centimeters and picture DPI (default is 0.56 cm = 16 pt)
 Set FontSize by size in inch and picture DPI (default is 0.22 in = 16 pt).
 @end deftypefn
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} SetFont (@code{mglFont *}f)
-Sets font typeface. Note that each mglFont instance can be used with ONLY ONE mglGraph instance at a moment of time! If @code{f==""} then default font is used.
+Sets font typeface. Note that each mglFont instance can be used with @emph{ONLY ONE} mglGraph instance at a moment of time! If @code{f==""} then default font is used.
 @end deftypefn
 @deftypefn {Method on @code{mglGraph} (C++)} @code{inline mglFont *}GetFont ()
 Gets current typeface. Note that this variable can be deleted at next SetFont() call!
 @end deftypefn
 
 @deftypecv {@emph{Obsolete option}} mglGraph @code{float} FontSize
-The size of font for tick and axis labels. Default font size of axis labels is 1.4 times large than for tick labels.
+The font size. See @code{SetFontSize()}.
 @end deftypecv
 @deftypecv {@emph{Obsolete option}} mglGraph @code{char} FontDef@code{[32]}
-Font specification (@pxref{Text printing}). Default is ``rC'' -- Roman font centering.
+Font style. See @code{SetFontDef()}.
 @end deftypecv
 @deftypecv {@emph{Obsolete option}} mglGraph @code{bool} RotatedText
 Set to use or not text rotation along axis.
@@ -345,7 +345,7 @@ Sets the palette as selected colors. Default value is @code{"Hbgrcmyhlnqeup"} th
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetPalColor (@code{int} n, @code{float} r, @code{float} g, @code{float} b)
 @deftypefnx {C function} @code{void} mgl_set_pal_color (@code{HMGL} gr, @code{int} n, @code{float} r, @code{float} g, @code{float} b)
-Sets color for individual palette entry. Look at @code{mgl_set_palette()} function for simplified palette setting.
+Sets color for individual palette entry. Look at @code{SetPalette()} function for simplified palette setting.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetPalNum (@code{int} num)
@@ -379,14 +379,14 @@ Number of actual colors in palette. See @code{SetPalette()}.
 @cindex WarnCode
 @cindex SetWarn
 
-There are 2 variables which indicate the warnings/errors presence during plot creation. Normally user should set it to zero by @code{SetWarn(0);} before plotting and check if @var{WarnCode} is not zero after plotting. Note that only last warning will be saved.
+There are 2 variables which indicate the warnings/errors presence during plot creation. Normally user should set it to zero by @code{SetWarn(0);} before plotting and check if @var{WarnCode} is not zero after plotting. Only last warning will be saved. All warnings/errors produced by MathGL is not critical -- the plot just will not be drawn.
 
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} SetWarn (@code{int} code, @code{const char *}who=@code{""})
 Set warning code and corresponding message from function @var{who}. Normally you should call this function only for clearing the warning state, i.e. call @code{SetWarn(0);}.
 @end deftypefn
 
 @deftypecv {General option (C++)} mglGraph @code{char *} Message
-Pointer to buffer for writing messages about matters why some plot are not drawn. Set to "" to disable messages. The buffer length must be at least 1024. If Message[0]==0 then there are no messages
+Pointer to buffer for writing messages about matters why some plot are not drawn. Set to NULL to disable messages. The buffer length must be at least 1024. If Message[0]==0 then there are no messages
 @end deftypecv
 
 @deftypecv {General option (C++)} mglGraph @code{int} WarnCode
@@ -422,8 +422,6 @@ Light: ID is out of range
 Setsize: size(s) is zero or negative
 @item mglWarnFmt
 Format is not supported for that build
-@item mglWarnEnd
-Maximal number of warnings (must be last)
 @end table
 @end deftypecv
 
@@ -447,7 +445,7 @@ Sets direction around which curve rotated in Axial() and Torus(). Default value 
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetDrawFace (@code{bool} val)
 @deftypefnx {C function} @code{void} mgl_set_draw_face (@code{HMGL} gr, @code{int} val)
-If set to @code{true} then it prevent faces drawing. It is useful for speeding up drawing (for example, during rotation and so on).
+Enable/disable faces drawing. It is useful for speeding up drawing (for example, during rotation and so on).
 @end deftypefn
 
 @deftypecv {General option (C++)} mglGraph @code{const char *} PlotId
@@ -455,15 +453,15 @@ Id of plot for saving filename (in GLUT window for example).
 @end deftypecv
 
 @deftypecv {@emph{Obsolete option}} mglGraph @code{int} MeshNum
-Sets approximate number of lines in Mesh(), Fall(), Grid() and also the number of hachures in Vect(), VectC(), Dew() and the number of cells in Cloud*(). By default (=0) it draws all lines/hachures/cells.
+Sets approximate number of lines/hachures/cells. See @code{SetMeshNum()}.
 @end deftypecv
 
 @deftypecv {@emph{Obsolete option}} mglGraph @code{char} AxialDir
-Set direction around which curve rotated in Axial() and Torus(). Default value is 'z'.
+Set rotation direction. See @code{SetAxialDir()}.
 @end deftypecv
 
 @deftypecv {@emph{Obsolete option}} mglGraph @code{bool} DrawFace
-If set to @code{true} then it prevent faces drawing. It is useful for speeding up drawing (for example, during rotation and so on).
+Flag for preventing faces drawing. See @code{SetDrawFace()}.
 @end deftypecv
 
 @deftypecv {@emph{Obsolete option}} mglGraph @code{int} CirclePnts
@@ -478,12 +476,12 @@ These large set of variables and functions control how the axis and ticks will b
 
 @menu
 * Ranges (bounding box):: 
-* Transformation:: 
+* Curved coordinates:: 
 * Ticks:: 
 @end menu
 
 @c ------------------------------------------------------------------
-@node Ranges (bounding box), Transformation, , Axis settings
+@node Ranges (bounding box), Curved coordinates, , Axis settings
 @subsection Ranges (bounding box)
 @cindex Axis
 @cindex CAxis
@@ -565,8 +563,8 @@ Flag for automatic shifting of axes origin @var{Org} if it lies out of range @va
 
 
 @c ------------------------------------------------------------------
-@node Transformation, Ticks, Ranges (bounding box), Axis settings
-@subsection Transformation (curved coordinates)
+@node Curved coordinates, Ticks, Ranges (bounding box), Axis settings
+@subsection Curved coordinates
 @cindex SetFunc
 @cindex SetCoor
 @cindex Ternary
@@ -574,7 +572,7 @@ Flag for automatic shifting of axes origin @var{Org} if it lies out of range @va
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetFunc (@code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ=@code{""}, @code{const char *}EqA=@code{""})
 @deftypefnx {C function} @code{void} mgl_set_func (@code{HMGL} gr, @code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ)
 @deftypefnx {C function} @code{void} mgl_set_func_ext (@code{HMGL} gr, @code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ, @code{const char *}EqA)
-Safely sets transformation formulas for curvilinear coordinate. Each string should contain mathematical expression for real coordinate depending on internal coordinates x, y, z. For example, the cylindrical coordinates are introduced as @code{Axis("x*cos(y)", "x*sin(y)", "z");}. For removing of formulas the corresponding parameter should be @code{""}. Using transformation formulas will slightly slowing the program, i.e. @code{Axis("", "", "")} is faster than @code{Axis("x", "y", "z")}. Parameter @var{EqA} set the similar transformation formula for color scheme. @xref{mglFormula class}.
+Sets transformation formulas for curvilinear coordinate. Each string should contain mathematical expression for real coordinate depending on internal coordinates x, y, z. For example, the cylindrical coordinates are introduced as @code{Axis("x*cos(y)", "x*sin(y)", "z");}. For removing of formulas the corresponding parameter should be empty or @code{NULL}. Using transformation formulas will slightly slowing the program. Parameter @var{EqA} set the similar transformation formula for color scheme. @xref{mglFormula class}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetCoor (@code{int} how)
@@ -588,7 +586,7 @@ The function sets to draws Ternary plot. This special plot is for 3 dependent co
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Ticks, , Transformation, Axis settings
+@node Ticks, , Curved coordinates, Axis settings
 @subsection Ticks
 
 @cindex SetTicks
@@ -642,7 +640,7 @@ Switch on/off ticks enhancing by factoring common multiplier (for small, like fr
 @deftypefnx {C function} @code{void} mgl_set_ytt (@code{HMGL} gr, @code{const wchar_t *}ytt)
 @deftypefnx {C function} @code{void} mgl_set_ztt (@code{HMGL} gr, @code{const wchar_t *}ztt)
 @deftypefnx {C function} @code{void} mgl_set_ctt (@code{HMGL} gr, @code{const wchar_t *}ctt)
-The template for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{xtt}, @var{ytt}, @var{ztt}, @var{ctt}=@code{""} then default template is used (in simplest case it is @samp{%.2g}) with automatic detaching of common multiplier or common component (see @code{SetTuneTicks()}).
+The template for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{xtt}, @var{ytt}, @var{ztt}, @var{ctt}=@code{""} then default template is used (in simplest case it is @samp{%.2g}). Setting of template switch off automatic ticks tuning (see @code{SetTuneTicks()}).
 @end deftypefn
 
 @deftypecv {@emph{Obsolete option}} mglGraph @code{float} {dx, dy, dz}
@@ -655,10 +653,6 @@ Number of axis sub-ticks. See @code{SetTicks()}.
 
 @deftypecv {@emph{Obsolete option}} mglGraph @code{mglPoint} OrgT
 Starting point for ticks. See @code{SetTicks()}.
-@end deftypecv
-
-@deftypecv {@emph{Obsolete option}} mglGraph @code{const wchar_t} {*xtt, *ytt, *ztt, *ctt}
-The template for x-,y-,z-axis ticks or colorbar ticks. See @code{Set[XYZC]TT()}.
 @end deftypecv
 
 @deftypecv {@emph{Obsolete option}} mglGraph @code{bool} TuneTicks
@@ -705,12 +699,12 @@ Puts further plotting in @var{ind}-th cell of column with @var{num} cells. The p
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Rotate (@code{float} TetX, @code{float} TetZ, @code{float} TetY=@code{0})
 @deftypefnx {C function} @code{void} mgl_rotate (@code{HMGL} gr, @code{float} TetX, @code{float} TetZ, @code{float} TetY)
-Rotates a further plotting relative to each axis (x, z, y) consecutively on angles @var{TetX}, @var{TetZ}, @var{TetY}.
+Rotates a further plotting relative to each axis @{x, z, y@} consecutively on angles @var{TetX}, @var{TetZ}, @var{TetY}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} RotateN (@code{float} Tet, @code{float} x, @code{float} y, @code{float} z)
 @deftypefnx {C function} @code{void} mgl_rotate_vector (@code{HMGL} gr, @code{float Tet}, @code{float x}, @code{float y}, @code{float z})
-Rotates a further plotting around vector @{x,y,z@}.
+Rotates a further plotting around vector @{@var{x}, @var{y}, @var{z}@} on angle @var{Tet}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Aspect (@code{float} Ax, @code{float} Ay, @code{float} Az)
@@ -730,10 +724,6 @@ Clears transformation matrix. This function clears all previous effects of Aspec
 
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} RestoreM ()
 Restore transformation matrix after last @code{InPlot()}. This function clears all previous effects of Aspect(), SubPlot(), InPlot() or Rotate() functions. It is useful to restore back the transformation matrix after @code{Identity()} call.
-@end deftypefn
-
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} View (@code{float} tetx, @code{float} tetz, @code{float} tety= @code{0})
-Sets angle of view independently from Rotate() but usually don't rotate actually.
 @end deftypefn
 
 
@@ -839,7 +829,7 @@ These functions draw some simple objects like line, point, sphere, drop, cone an
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Clf (@code{mglColor} Back=@code{WC})
 @deftypefnx {C function} @code{void} mgl_clf (@code{HMGL} gr)
 @deftypefnx {C function} @code{void} mgl_clf_rgb (@code{HMGL} gr, @code{float} r, @code{float} g, @code{float} b)
-Clear the picture and will it by color @var{Back}.
+Clear the picture and fill it by color @var{Back}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} Ball (@code{float} x, @code{float} y, @code{float} z, @code{mglColor} col=@code{RC}, @code{float} alpha=@code{1})
@@ -858,13 +848,13 @@ Draws a 3d error box at position @var{p} with sizes @var{e} and style @var{pen}.
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} Line (@code{mglPoint} p1, @code{mglPoint} p2, @code{char *}stl=@code{"B"}, @code{int}num=@code{2})
 @deftypefnx {Method on @code{mglGraph} (Python)} @code{void} Line (@code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{char *}stl=@code{"B"}, @code{int}num=@code{2})
 @deftypefnx {C function} @code{void} mgl_line (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{char *}stl, @code{int}num)
-Draws a geodesic line (straight line in Cartesian coordinates) from point @var{p1} to @var{p2} using line style @var{stl}. Parameter @var{num} define the ``quality'' of the line. If @var{num}=@code{2} then the stright line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Transformation}). Contrary, for large values (for example, =@code{100}) the geodesic line will be drawn in corresponding coordinate system (straight line in Cartesian coordinates, circle in polar coordinates and so on). Line will be drawn even if it lies out of bounding box.
+Draws a geodesic line (straight line in Cartesian coordinates) from point @var{p1} to @var{p2} using line style @var{stl}. Parameter @var{num} define the ``quality'' of the line. If @var{num}=@code{2} then the stright line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Curved coordinates}). Contrary, for large values (for example, =@code{100}) the geodesic line will be drawn in corresponding coordinate system (straight line in Cartesian coordinates, circle in polar coordinates and so on). Line will be drawn even if it lies out of bounding box.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} Curve (@code{mglPoint} p1, @code{mglPoint} d1, @code{mglPoint} p2, @code{mglPoint} d2, @code{const char *}stl=@code{"B"}, @code{int} num=@code{100})
 @deftypefnx {Method on @code{mglGraph} (Python)} @code{void} Curve (@code{float} x1, @code{float} y1, @code{float} z1, @code{float} dx1, @code{float} dy1, @code{float} dz1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} dx2, @code{float} dy2, @code{float} dz2, @code{const char *}stl=@code{"B"}, @code{int} num=@code{100})
 @deftypefnx {C function} @code{void} mgl_curve (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} dx1, @code{float} dy1, @code{float} dz1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} dx2, @code{float} dy2, @code{float} dz2, @code{const char *}stl, @code{int} num)
-Draws Bezier-like curve from point @var{p1} to @var{p2} using line style @var{stl}. At this tangent is codirected with @var{d1}, @var{d2} and proportional to its amplitude. Parameter @var{num} define the ``quality'' of the curve. If @var{num}=@code{2} then the straight line will be drawn in all coordinate system (independently on transformation formulas (@pxref{Transformation}). Contrary, for large values (for example, =@code{100}) the spline like Bezier curve will be drawn in corresponding coordinate system. Curve will be drawn even if it lies out of bounding box.
+Draws Bezier-like curve from point @var{p1} to @var{p2} using line style @var{stl}. At this tangent is codirected with @var{d1}, @var{d2} and proportional to its amplitude. Parameter @var{num} define the ``quality'' of the curve. If @var{num}=@code{2} then the straight line will be drawn in all coordinate system (independently on transformation formulas @pxref{Curved coordinates}). Contrary, for large values (for example, =@code{100}) the spline like Bezier curve will be drawn in corresponding coordinate system. Curve will be drawn even if it lies out of bounding box.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} Face (@code{mglPoint} p1, @code{mglPoint} p2, @code{mglPoint} p3, @code{mglPoint} p4, @code{const char *}stl=@code{"w"}, @code{int} num=@code{2})
@@ -906,7 +896,7 @@ Draws a marks of different type at position @var{p}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} Glyph (@code{float} x, @code{float} y, @code{float} f, @code{int} nt, @code{const short *}trig, @code{int} nl, @code{const short *}line)
-Draw a set of triangles (or lines if @var{trig}=@code{""}) for glyph which is placed at point @{@var{x}, @var{y}@}. Values in the arrays are normalized by factor @var{f}. Normally this function is used internally.
+Draw a set of triangles (or lines if @var{trig}=@code{NULL}) for glyph which is placed at point @{@var{x}, @var{y}@}. Values in the arrays are normalized by factor @var{f}. Normally this function is used internally.
 @end deftypefn
 
 @c ##################################################################
@@ -917,9 +907,9 @@ Draw a set of triangles (or lines if @var{trig}=@code{""}) for glyph which is pl
 @cindex Text
 @cindex Title
 
-These functions draw the text. There are functions for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The class mglFont (@pxref{mglFont class}) is used for low-level string parsing and printing. It can use arbitrary font-faces and parse many TeX commands. All these functions have 2 variant: for printing 8-bit text (@code{char *}) and for printing Unicode text (@code{wchar_t *}). In first case the conversion in current locale is used. So sometimes you need to specify it by @code{setlocale()} function. The size argument control the size of text: if positive it give the value, if negative it give the value relative to @var{FontSize}. The font type (STIX, arial, courier, times and so on) can be selected by function SetFont(), GetFont(). @xref{Font settings}.
+These functions draw the text. There are functions for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The class mglFont (@pxref{mglFont class}) is used for low-level string parsing and printing. It can use arbitrary font-faces and parse many TeX commands (for detail @pxref{mglFont class}). All these functions have 2 variant: for printing 8-bit text (@code{char *}) and for printing Unicode text (@code{wchar_t *}). In first case the conversion in current locale is used. So sometimes you need to specify it by @code{setlocale()} function. The size argument control the size of text: if positive it give the value, if negative it give the value relative to @var{FontSize}. The font type (STIX, arial, courier, times and so on) can be selected by function SetFont(), GetFont(). @xref{Font settings}.
 
-The font parameters are described by string. This string may contain several characters of font type (@samp{rbiwou}) and/or align (@samp{LRC}) specification. Also it may contain the text color @samp{wkrgbcymhRGBCYMHW} (@pxref{mglColor class}) after symbol @samp{:}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style, @samp{w} -- wired style, @samp{o} -- over-lined text, @samp{u} -- underlined text. By default roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Also a parsing of the LaTeX-like syntax is provided (for detail @pxref{mglFont class}). For example, string @samp{iC:b} correspond to italic font style for centered text which printed by blue color.
+The font parameters are described by string. This string may contain several characters of font type (@samp{rbiwou}) and/or align (@samp{LRC}) specification. Also it may contain the text color @samp{wkrgbcymhRGBCYMHW} (@pxref{mglColor class}) after symbol @samp{:}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style, @samp{w} -- wired style, @samp{o} -- over-lined text, @samp{u} -- underlined text. By default roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. For example, string @samp{iC:b} correspond to italic font style for centered text which printed by blue color.
 
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} Puts (@code{mglPoint} p, @code{const char *}text, @code{const char *}font=@code{""}, @code{float} size=@code{-1}, @code{char} dir=@code{0}, @code{float} shift=@code{0})
 @deftypefnx {Method on @code{mglGraph} (C++)} @code{void} Putsw (@code{mglPoint} p, @code{const wchar_t *}text, @code{const char *}font=@code{""}, @code{float} size=@code{-1}, @code{char} dir=@code{0}, @code{float} shift=@code{0})
@@ -1009,7 +999,7 @@ Draws colorbar with sharp colors @var{sch} (current palette if @code{sch=""}) fo
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Grid (@code{const char *}dir=@code{"xyz"}, @code{const char *}pen=@code{"B-"})
 @deftypefnx {C function} @code{void} mgl_axis_grid (@code{HMGL} gr, @code{const char *}dir, @code{const char *}pen)
-Draws grid lines perpendicular to direction determined by string parameter @var{dir}. The step of grid lines is the same as tick step for an Axis(). The style of lines is determined by @var{pen} parameter (default value is dark blue solid line (@samp{B-}).
+Draws grid lines perpendicular to direction determined by string parameter @var{dir}. The step of grid lines is the same as tick step for an Axis(). The style of lines is determined by @var{pen} parameter (default value is dark blue solid line @samp{B-}).
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Box (@code{const char *}col=@code{""}, @code{bool} ticks=@code{true})
@@ -1034,7 +1024,7 @@ Prints the label @var{text} for axis @var{dir}=@samp{x},@samp{y},@samp{z},@samp{
 @cindex AddLegend
 @cindex ClearLegend
 
-These functions draw legend to the graph (useful for @ref{1D plotting}). Legend entry is a pair of strings: one for style of the line, another one with description text (with included LaTeX parsing). The array of string may be used directly or by accumulating first to the internal arrays (by function AddLegend()) and further plotting it. The position of the legend can be selected automatic or manually. Parameters @var{font} and @var{size} specify the font style and size (@pxref{Font settings}). Parameter @var{llen} set the relative width of the line sample and the text indent. If line style string for entry is empty then the corresponding text is printed without indent. @sref{Legend sample}
+These functions draw legend to the graph (useful for @ref{1D plotting}). Legend entry is a pair of strings: one for style of the line, another one with description text (with included TeX parsing). The arrays of strings may be used directly or by accumulating first to the internal arrays (by function AddLegend()) and further plotting it. The position of the legend can be selected automatic or manually. Parameters @var{font} and @var{size} specify the font style and size (@pxref{Font settings}). Parameter @var{llen} set the relative width of the line sample and the text indent. If line style string for entry is empty then the corresponding text is printed without indent. @sref{Legend sample}
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Legend (@code{int} where=@code{0x3}, @code{const char *}font=@code{"rL"}, @code{float} size=@code{-0.8}, @code{float} llen=@code{0.1})
 @deftypefnx {C function} @code{void} mgl_legend (@code{HMGL} gr, @code{int} where, @code{const char *}font, @code{float} size, @code{float} llen)
@@ -1449,7 +1439,7 @@ Draws a error box @var{ey} (along only one direction) in point position @{@var{x
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Error (@code{const mglData &}y, @code{const mglData &}ey, @code{const char *}pen=@code{""})
 @deftypefnx {C function} @code{void} mgl_error (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} ey, @code{const char *}pen)
-Draws a error box @var{ey} (along only one direction) in point position @{@var{x}, @var{y}@}, where @var{x} values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
+Draws a error box @var{ey} (along only one direction) in point position @{@var{x}, @var{y}@}, where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
 @end deftypefn
 
 @c ==================================================================
@@ -1461,19 +1451,19 @@ These functions draw boxplot (also known as a box-and-whisker diagram) at points
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} BoxPlot (@code{const mglData &}x, @code{const mglData &}a, @code{const char *}pen=@code{""})
 @deftypefnx {C function} @code{void} mgl_boxplot_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} a, @code{const char *}pen)
-Draws a boxplot with parametric dependence on coordinate @var{x}.
+Draws a boxplot with specified values of coordinate @var{x}[i].
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} BoxPlot (@code{const mglData &}a, @code{const char *}pen=@code{""})
 @deftypefnx {C function} @code{void} mgl_boxplot (@code{HMGL} gr, @code{const HMDT} a, @code{const char *}pen)
-Draws a boxplot with @var{x} values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
+Draws a boxplot with @var{x}[i] values equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
 @end deftypefn
 
 @c ##################################################################
 @node 2D plotting, 3D plotting, 1D plotting, MathGL core
 @section 2D plotting
 
-These functions perform plotting of 2D data. 2D means that data depend from 2 independent parameters like matrix @math{f(x_i,y_j), i=1...n, j=1...m}. There are 6 generally different types of data representations: simple mesh lines plot (Mesh), surface plot (Surf), surface plot by boxes (Boxs), surface plot by tiles (Tile), waterfall-like plot (Fall), belt plot (Belt), density plot (Dens), contour lines plot (Cont), solid contours plot (ContF) and its rotational figure (Axial). Cont, ContF and Axial functions have variants for automatic and manual selection of level values for contours. Also there are functions for plotting data grid lines according to the data format (Grid) for enhancing density or contour plots. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
+These functions perform plotting of 2D data. 2D means that data depend from 2 independent parameters like matrix @math{f(x_i,y_j), i=1...n, j=1...m}. There are several generally different types of data representations: simple mesh lines plot (Mesh), surface plot (Surf), surface plot by boxes (Boxs), surface plot by tiles (Tile), waterfall-like plot (Fall), belt plot (Belt), density plot (Dens), contour lines plot (Cont), solid contours plot (ContF) and its rotational figure (Axial). Cont, ContF and Axial functions have variants for automatic and manual selection of level values for contours. Also there are functions for plotting data grid lines according to the data format (Grid) for enhancing density or contour plots. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 @menu
 * Mesh:: 
@@ -1512,7 +1502,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Fall (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""})
 @deftypefnx {C function} @code{void} mgl_fall_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
-The function draws fall lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If @var{sch} contain @samp{x} then lines are drawn along x-direction else (by default) lines are drawn along y-direction. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Fall lines are plotted for each z slice of the data. See also @ref{Belt}, @ref{Mesh}, @ref{Tens}, NeshNum (@pxref{Other settings}). @sref{Fall sample}
+The function draws fall lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@}. This plot can be used for plotting several curves shifted in depth one from another. String @var{sch} sets the color scheme. Previous color scheme is used by default. If @var{sch} contain @samp{x} then lines are drawn along x-direction else (by default) lines are drawn along y-direction. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @var{x.nx=z.nx && y.nx=z.ny} or @var{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). Fall lines are plotted for each z slice of the data. See also @ref{Belt}, @ref{Mesh}, @ref{Tens}, NeshNum (@pxref{Other settings}). @sref{Fall sample}
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Fall (@code{const mglData &}z, @code{const char *}sch=@code{""})
@@ -1715,7 +1705,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @node 3D plotting, Dual plotting, 2D plotting, MathGL core
 @section 3D plotting
 
-These functions perform plotting of 3D data. 3D means that data depend from 3 independent parameters like matrix @math{f(x_i,y_j,z_k), i=1...n, j=1...m, k=1...l}. There are 4 generally different types of data representations: isosurface or surface of constant value (Surf3), density plot at slices (Dens3), contour lines plot at slices (Cont3), solid contours plot at slices (ContF3) and cloud-like plot (Cloud). Surf3, Cont3 and ContF3 functions have variants for automatic and manual selection of level values for surfaces/contours. Also there are functions for plotting data grid lines according to the data format (Grid3) for enhancing density or contour plots. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
+These functions perform plotting of 3D data. 3D means that data depend from 3 independent parameters like matrix @math{f(x_i,y_j,z_k), i=1...n, j=1...m, k=1...l}. There are 5 generally different types of data representations: isosurface or surface of constant value (Surf3), density plot at slices (Dens3), contour lines plot at slices (Cont3), solid contours plot at slices (ContF3) and cloud-like plot (Cloud). Surf3, Cont3 and ContF3 functions have variants for automatic and manual selection of level values for surfaces/contours. Also there are functions for plotting data grid lines according to the data format (Grid3) for enhancing density or contour plots. Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 @menu
 * Surf3:: 
@@ -1858,7 +1848,7 @@ The same as previous with @var{x}, @var{y}, @var{z} equidistantly distributed in
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Grid3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{char} dir, @code{int} sVal=@code{-1}, @code{const char *}stl=@code{""})
 @deftypefnx {C function} @code{void} mgl_grid3_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a, @code{char} dir, @code{int} sVal, @code{const char *}stl)
-The function draws grid for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Density is plotted at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string @var{stl} have symbol @samp{#} then grid lines are drawn. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Cont3}, @ref{ContF3}, @ref{Dens3}, @ref{Grid}.
+The function draws grid for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Grid is plotted at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. String @var{sch} sets the color scheme. Previous color scheme is used by default. The minor dimensions of arrays @var{x}, @var{y}, @var{z} must be equal. Arrays @var{x}, @var{y}, @var{z} can be vectors (not 3d arrays as @var{a}). See also @ref{Cont3}, @ref{ContF3}, @ref{Dens3}, @ref{Grid}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Grid3 (@code{const mglData &}a, @code{char} dir, @code{int} sVal=@code{-1}, @code{const char *}sch=@code{""})
@@ -2041,7 +2031,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Map (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{int} ks=@code{0}, @code{bool} pnts=@code{true})
 @deftypefnx {C function} @code{void} mgl_map_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{int} ks, @code{int} pnts)
-The function draws mapping plot for matrices @{@var{ax}, @var{ay} @} which parametrically depend on coordinates @var{x}, @var{y}. The previous position of the cell (point) is marked by color. Height is proportional to Jacobian(ax,ay). This plot is like Arnold diagram ???. If @code{pnts=false} then face is drawn otherwise the color ball at matrix knots are drawn. Parameter @var{ks} specifies the slice of matrices which will be used. String @var{sch} sets the color scheme. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be the same. The minor dimensions of arrays @var{x}, @var{y}, @var{ax} should be equal. Arrays @var{x}, @var{y} can be vectors (not matrix as @var{ax}). @xref{Color scheme}. @sref{Map sample}
+The function draws mapping plot for matrices @{@var{ax}, @var{ay} @} which parametrically depend on coordinates @var{x}, @var{y}. The initial position of the cell (point) is marked by color. Height is proportional to Jacobian(ax,ay). This plot is like Arnold diagram ???. If @code{pnts=false} then face is drawn otherwise the color ball at matrix knots are drawn. Parameter @var{ks} specifies the slice of matrices which will be used. String @var{sch} sets the color scheme. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be the same. The minor dimensions of arrays @var{x}, @var{y}, @var{ax} should be equal. Arrays @var{x}, @var{y} can be vectors (not matrix as @var{ax}). @xref{Color scheme}. @sref{Map sample}
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Map (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{int} ks=@code{0}, @code{bool} pnts=@code{true})
@@ -2069,7 +2059,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @node Vector fields, Other plotting, Dual plotting, MathGL core
 @section Vector fields
 
-These functions perform plotting of 2D and 3D vector fields. There are 5 generally different types of vector fields representations: simple vector field (Vect, VectL), vector field with coloring (VectC), vector field by dew-drops (Dew), flow threads (Flow), flow pipes (Pipe). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
+These functions perform plotting of 2D and 3D vector fields. There are 5 generally different types of vector fields representations: simple vector field (Vect), vectors along the curve (Traj), vector field by dew-drops (Dew), flow threads (Flow, FlowP), flow pipes (Pipe). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 @menu
 * Traj:: 
@@ -2091,7 +2081,7 @@ These functions perform plotting of 2D and 3D vector fields. There are 5 general
 @deftypefnx {Method on @code{mglGraph} (C++, Python)} @code{void} Traj (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN}, @code{float} len=@code{0})
 @deftypefnx {C function} @code{void} mgl_traj_xyz (@code{HMGL} gr, @code{const HMDT}x, @code{const HMDT}y, @code{const HMDT}z, @code{const HMDT}ax, @code{const HMDT}ay, @code{const HMDT}az, @code{const char *}sch, @code{float} len)
 @deftypefnx {C function} @code{void} mgl_traj_xy (@code{HMGL} gr, @code{const HMDT}x, @code{const HMDT}y, @code{const HMDT}ax, @code{const HMDT}ay, @code{const char *}sch, @code{float} zVal, @code{float} len)
-The function draws vectors @{@var{ax}, @var{ay}, @var{az}@} along a curve @{@var{x}, @var{y}, @var{z}@}. The length and color of arrows are proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. The color is specified by the string argument @var{sch}. Previous color scheme is used by default. Parameter @var{len} set the vector length factor (if non-zero) or vector length to be proportional the distance between curve points (if @var{len}=0). The minor sizea of all arrays must be equal and large 2. Vectors are plotted for each column of the arrays. See also @ref{Vect}. @sref{Traj sample}
+The function draws vectors @{@var{ax}, @var{ay}, @var{az}@} along a curve @{@var{x}, @var{y}, @var{z}@}. The length of arrows are proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. String @var{pen} specifies the color (@pxref{Line styles}). By default (@code{pen=""}) color from palette is used (@pxref{Palette and colors}). Parameter @var{len} set the vector length factor (if non-zero) or vector length to be proportional the distance between curve points (if @var{len}=0). The minor sizes of all arrays must be equal and large 2. The plots are drawn for each row if one of the data is the matrix. See also @ref{Vect}. @sref{Traj sample}
 @end deftypefn
 
 @c ==================================================================
@@ -2101,7 +2091,7 @@ The function draws vectors @{@var{ax}, @var{ay}, @var{az}@} along a curve @{@var
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Vect (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN}, @code{int} flag=@code{0})
 @deftypefnx {C function} @code{void} mgl_vect_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal, @code{int} flag)
-The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The length and color of arrows are proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of arrows depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. Parameter @var{flag} setup the hachures (arrows). It is compination of vlaues: @code{MGL_VEC_COL} for drawing bi-color arrow, @code{MGL_VEC_LEN} for drawing fixed length arrows, @code{MGL_VEC_DOT} for drawing hachures with dots instead of arrows, @code{MGL_VEC_END} for drawing arrows to the cell point, @code{MGL_VEC_MID} for drawing arrows with center at cell point. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{VectL}, @ref{VectC}, @ref{Flow}, @ref{Dew}. @sref{Vect sample}
+The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z=zVal}. The length and color of arrows are proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of arrows depend on @var{MeshNum} (@pxref{Other settings}). The color is specified by the string argument @var{sch}. Previous color scheme is used by default. Parameter @var{flag} is bitwise flag for setup the hachures (arrows): @code{MGL_VEC_COL} for drawing bi-color arrow, @code{MGL_VEC_LEN} for drawing fixed length arrows, @code{MGL_VEC_DOT} for drawing hachures with dots instead of arrows, @code{MGL_VEC_END} for drawing arrows to the cell point, @code{MGL_VEC_MID} for drawing arrows with center at cell point. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{VectL}, @ref{VectC}, @ref{Flow}, @ref{Dew}. @sref{Vect sample}
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Vect (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN}, @code{int} flag=@code{0})
@@ -2221,7 +2211,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} FlowP (@code{mglPoint} p0, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""})
 @deftypefnx {Method on @code{mglGraph} (Python)} @code{void} FlowP (@code{float} x0, @code{float} y0, @code{float} z0, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""})
 @deftypefnx {C function} @code{void} mgl_flowp_xy (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch)
-The function draws flow thread for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} from point @{@var{p0}.x, @var{p0}.z@} at level z = @var{p0}.z. The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). String @var{sch} sets the color scheme. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Pipe}, @ref{VectC}, @ref{Vect}.
+The function draws flow thread for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} from point @var{p0} at level z = @var{p0}.z. The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). String @var{sch} sets the color scheme. Previous color scheme is used by default. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{Pipe}, @ref{VectC}, @ref{Vect}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} FlowP (@code{mglPoint} p0, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""})
@@ -2323,7 +2313,7 @@ Draws density plot for data @var{a} at z = @var{sVal}.
 @cindex ContY
 @cindex ContZ
 
-These plotting functions draw density plot in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. For example, code like
+These plotting functions draw contour lines in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. For example, code like
 @example
 gr->ContX(c.Sum("x"),"BbcyrR",-1);
 gr->ContY(c.Sum("y"),0,1);
@@ -2368,7 +2358,7 @@ Draws contour lines for data @var{a}=@var{v}[i] at z = @var{sVal}.
 @cindex ContFY
 @cindex ContFZ
 
-These plotting functions draw density plot in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. See also @ref{ContXYZ}, @ref{DensXYZ}, @ref{ContF}.
+These plotting functions draw solid contour lines in x, y, or z plain. If @var{a} is a tensor (3-dimensional data) then interpolation to a given @var{sVal} is performed. These functions are useful for creating projections of the 3D data array to the bounding box. See also @ref{ContXYZ}, @ref{DensXYZ}, @ref{ContF}.
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} ContFX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{int} num=@code{7})
 @deftypefnx {C function} @code{void} mgl_contf_x (@code{HMGL} gr, @code{const HMDT} a, @code{const char *}stl, @code{float} sVal, @code{int} num)
