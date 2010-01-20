@@ -5450,8 +5450,8 @@ sphere -0.65 0 0 0.25 'g'
 @cindex Axis
 
 @float
-@image{png/sample 3, 7cm}
-@caption{Example of curvelinear coorinates usage. @tdref{sample 3}}
+@image{png/sample3, 7cm}
+@caption{Example of curvelinear coorinates usage. @tdref{sample3}}
 @end float
 
 @strong{C++ код}
@@ -6328,7 +6328,7 @@ i \\frac{x+z}{2}\\cdot u = 0", "iC", -1.5);
 
 @float
 @image{png/qo2d, 7cm}
-@caption{Example of ray and beam tracing. Compare with @ref{PDE -- пример использования}.}@c @tdref{qo2d}}
+@caption{Example of ray and beam tracing. Compare with @ref{PDE sample}.}@c @tdref{qo2d}}
 @end float
 
 @strong{C++ код}

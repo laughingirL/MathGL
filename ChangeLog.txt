@@ -1,4 +1,5 @@
 1.10.1 Released ?? February 2010
+	- Add parsing of option arguments.
 	- Colorbar factor now placed at top of a plot.
 
 1.10 Released 25 December 2009

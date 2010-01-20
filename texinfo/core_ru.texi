@@ -435,7 +435,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} SetMeshNum (@code{int} val)
 @deftypefnx {Функция С} @code{void} mgl_set_meshnum (@code{HMGL} gr, @code{int} num)
-Задает ориентировочное число линий в Mesh(), Fall(), Grid() и число стрелок (штрихов) в Vect(), VectC(), Dew() и число ячеек в Cloud*(). По умолчанию (=0) рисуются все линии, стрелки, ячейки.
+Задает ориентировочное число линий в Mesh(), Fall(), Grid() и число стрелок (штрихов) в Vect(), Dew() и число ячеек в Cloud*(). По умолчанию (=0) рисуются все линии, стрелки, ячейки.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} SetAxialDir (@code{char} val)
@@ -2015,8 +2015,6 @@ Setsize: размер(ы) равны нулю или отрицательны
 @menu
 * Traj:: 
 * Vect:: 
-* VectL:: 
-* VectC:: 
 * Dew:: 
 * Flow:: 
 * FlowP:: 
@@ -2036,13 +2034,13 @@ Setsize: размер(ы) равны нулю или отрицательны
 @end deftypefn
 
 @c ==================================================================
-@node Vect, VectL, Traj, Vector fields
+@node Vect, Dew, Traj, Vector fields
 @subsection Vect
 @cindex Vect
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Vect (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN}, @code{int} flag=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_vect_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal, @code{int} flag)
-Рисует векторное поле @{@var{ax}, @var{ay}@} параметрически зависящее от координат @var{x}, @var{y} на плоскости при @var{z}=@var{zVal}. Длина и цвет векторов пропорциональна @math{\sqrt@{ax^2+ay^2@}}. Число рисуемых векторов зависит от @code{SetMeshNum()} (@pxref{Other settings}). Цвет задается строкой @var{sch}. Предыдущая цветовая схема используется по умолчанию. Параметр @var{flag} побитовый флаг для настройки вид векторов: @code{MGL_VEC_COL} -- двуцветный вектор, @code{MGL_VEC_LEN} -- одинаковая длина векторов, @code{MGL_VEC_DOT} -- рисует штрихи вместо стрелок, @code{MGL_VEC_END} -- рисует стрелку в точку сетки, @code{MGL_VEC_MID} -- рисует стрелку с серединой в точке сетки. Все размеры массивов @var{ax} и @var{ay} должны быть одинаковы. Младшие размерности массивов @var{x}, @var{y} и @var{ax} должны быть одинаковы. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{ax}). График строится для каждого z среза @var{ax}, @var{ay}. См. также @ref{VectL}, @ref{VectC}, @ref{Flow}, @ref{Dew}. @sref{Vect sample}
+Рисует векторное поле @{@var{ax}, @var{ay}@} параметрически зависящее от координат @var{x}, @var{y} на плоскости при @var{z}=@var{zVal}. Длина и цвет векторов пропорциональна @math{\sqrt@{ax^2+ay^2@}}. Число рисуемых векторов зависит от @code{SetMeshNum()} (@pxref{Other settings}). Цвет задается строкой @var{sch}. Предыдущая цветовая схема используется по умолчанию. Параметр @var{flag} побитовый флаг для настройки вид векторов: @code{MGL_VEC_COL} -- двуцветный вектор, @code{MGL_VEC_LEN} -- одинаковая длина векторов, @code{MGL_VEC_DOT} -- рисует штрихи вместо стрелок, @code{MGL_VEC_END} -- рисует стрелку в точку сетки, @code{MGL_VEC_MID} -- рисует стрелку с серединой в точке сетки. Все размеры массивов @var{ax} и @var{ay} должны быть одинаковы. Младшие размерности массивов @var{x}, @var{y} и @var{ax} должны быть одинаковы. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{ax}). График строится для каждого z среза @var{ax}, @var{ay}. См. также @ref{Flow}, @ref{Dew}. @sref{Vect sample}
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Vect (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN}, @code{int} flag=@code{0})
@@ -2061,13 +2059,13 @@ Setsize: размер(ы) равны нулю или отрицательны
 @end deftypefn
 
 @c ==================================================================
-@node Dew, Flow, VectC, Vector fields
+@node Dew, Flow, Vect, Vector fields
 @subsection Dew
 @cindex Dew
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Dew (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
 @deftypefnx {Функция С} @code{void} mgl_dew_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} zVal)
-Рисует капли для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} при @var{z=zVal}. Замечу, что график требует много памяти и процессорного времени для своего создания! Цвет капель пропорционален @math{\sqrt@{ax^2+ay^2@}}. Число капель определяется @code{SetMeshNum()} (@pxref{Other settings}). Цвет задается строкой @var{sch}. Предыдущая цветовая схема используется по умолчанию. Все размеры массивов @var{ax} и @var{ay} должны быть одинаковы. Младшие размерности массивов @var{x}, @var{y} и @var{ax} должны быть одинаковы. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{ax}). График строится для каждого z среза @var{ax}, @var{ay}. См. также @ref{Vect}, @ref{VectC}. @sref{Dew sample}
+Рисует капли для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} при @var{z=zVal}. Замечу, что график требует много памяти и процессорного времени для своего создания! Цвет капель пропорционален @math{\sqrt@{ax^2+ay^2@}}. Число капель определяется @code{SetMeshNum()} (@pxref{Other settings}). Цвет задается строкой @var{sch}. Предыдущая цветовая схема используется по умолчанию. Все размеры массивов @var{ax} и @var{ay} должны быть одинаковы. Младшие размерности массивов @var{x}, @var{y} и @var{ax} должны быть одинаковы. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{ax}). График строится для каждого z среза @var{ax}, @var{ay}. См. также @ref{Vect}. @sref{Dew sample}
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Dew (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
@@ -2082,7 +2080,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Flow (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{bool} central=@code{true}, @code{float} zVal=@code{NAN})
 @deftypefnx {Функция С} @code{void} mgl_flow_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{int} num, @code{int} central, @code{float} zVal)
-Рисует нити тока для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} на плоскости при z = @var{zVal}. Число нитей пропорционально @var{num}. Параметр @var{central} задает возможность старта нитей изнутри сетки (если true) или только с краев (если false). Цвет нитей пропорционален @math{\sqrt@{ax^2+ay^2@}}. Теплые цвета соответствуют нормальному току (типа стока). Холодные цвета соответствуют обратному току (типа источника). Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Все размеры массивов @var{ax} и @var{ay} должны быть одинаковы. Младшие размерности массивов @var{x}, @var{y} и @var{ax} должны быть одинаковы. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{ax}). График строится для каждого z среза @var{ax}, @var{ay}. См. также @ref{Pipe}, @ref{VectC}, @ref{Vect}. @sref{Flow sample}
+Рисует нити тока для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} на плоскости при z = @var{zVal}. Число нитей пропорционально @var{num}. Параметр @var{central} задает возможность старта нитей изнутри сетки (если true) или только с краев (если false). Цвет нитей пропорционален @math{\sqrt@{ax^2+ay^2@}}. Теплые цвета соответствуют нормальному току (типа стока). Холодные цвета соответствуют обратному току (типа источника). Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Все размеры массивов @var{ax} и @var{ay} должны быть одинаковы. Младшие размерности массивов @var{x}, @var{y} и @var{ax} должны быть одинаковы. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{ax}). График строится для каждого z среза @var{ax}, @var{ay}. См. также @ref{Pipe}, @ref{Vect}. @sref{Flow sample}
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Flow (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{bool} central=@code{true}, @code{float} zVal=@code{NAN})
@@ -2108,7 +2106,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefn {Метод класса @code{mglGraph} (C++)} @code{void} FlowP (@code{mglPoint} p0, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""})
 @deftypefnx {Метод класса @code{mglGraph} (Python)} @code{void} FlowP (@code{float} x0, @code{float} y0, @code{float} z0, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_flowp_xy (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch)
-Рисует нить тока из точки @var{p0} для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} на плоскости при z = @var{p0}.z. Цвет нити пропорционален @math{\sqrt@{ax^2+ay^2@}}. Теплые цвета соответствуют нормальному току (типа стока). Холодные цвета соответствуют обратному току (типа источника). Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Все размеры массивов @var{ax} и @var{ay} должны быть одинаковы. Младшие размерности массивов @var{x}, @var{y} и @var{ax} должны быть одинаковы. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{ax}). График строится для каждого z среза @var{ax}, @var{ay}. См. также @ref{Pipe}, @ref{VectC}, @ref{Vect}.
+Рисует нить тока из точки @var{p0} для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} на плоскости при z = @var{p0}.z. Цвет нити пропорционален @math{\sqrt@{ax^2+ay^2@}}. Теплые цвета соответствуют нормальному току (типа стока). Холодные цвета соответствуют обратному току (типа источника). Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Все размеры массивов @var{ax} и @var{ay} должны быть одинаковы. Младшие размерности массивов @var{x}, @var{y} и @var{ax} должны быть одинаковы. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{ax}). График строится для каждого z среза @var{ax}, @var{ay}. См. также @ref{Pipe}, @ref{Vect}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++)} @code{void} FlowP (@code{mglPoint} p0, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""})
@@ -2137,7 +2135,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Pipe (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{float} r0=@code{0.05}, @code{int} num=@code{5}, @code{bool} central=@code{true}, @code{float} zVal=@code{NAN})
 @deftypefnx {Функция С} @code{void} mgl_pipe_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{float} r0, @code{int} num, @code{int} central, @code{float} zVal)
-Рисует трубки тока для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} на плоскости при z = @var{zVal}. Число трубок пропорционально @var{num}. Параметр @var{central} задает возможность старта трубок изнутри сетки (если true) или только с краев (если false). Цвет и радиус трубок пропорционален @math{\sqrt@{ax^2+ay^2@}}. Теплые цвета соответствуют нормальному току (типа стока). Холодные цвета соответствуют обратному току (типа источника). Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Параметр @var{r0} задает радиус трубок. При @var{r0}<0 радиус трубок обратно пропорционален их амплитуде. Все размеры массивов @var{ax} и @var{ay} должны быть одинаковы. Младшие размерности массивов @var{x}, @var{y} и @var{ax} должны быть одинаковы. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{ax}). График строится для каждого z среза @var{ax}, @var{ay}. См. также @ref{Pipe}, @ref{VectC}, @ref{Vect}. @sref{Pipe sample}
+Рисует трубки тока для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} на плоскости при z = @var{zVal}. Число трубок пропорционально @var{num}. Параметр @var{central} задает возможность старта трубок изнутри сетки (если true) или только с краев (если false). Цвет и радиус трубок пропорционален @math{\sqrt@{ax^2+ay^2@}}. Теплые цвета соответствуют нормальному току (типа стока). Холодные цвета соответствуют обратному току (типа источника). Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Параметр @var{r0} задает радиус трубок. При @var{r0}<0 радиус трубок обратно пропорционален их амплитуде. Все размеры массивов @var{ax} и @var{ay} должны быть одинаковы. Младшие размерности массивов @var{x}, @var{y} и @var{ax} должны быть одинаковы. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{ax}). График строится для каждого z среза @var{ax}, @var{ay}. См. также @ref{Pipe}, @ref{Vect}. @sref{Pipe sample}
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Pipe (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{float} r0=@code{0.05}, @code{int} num=@code{5}, @code{bool} central=@code{true}, @code{float} zVal=@code{NAN})
