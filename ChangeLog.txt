@@ -1,6 +1,7 @@
 1.10.1 Released ?? February 2010
 	- Add parsing of option arguments.
 	- Colorbar factor now placed at top of a plot.
+	- Bug of double glyph drawing in mglGraphPS
 
 1.10 Released 25 December 2009
 	- Change license from GPL to LGPL for MathGL core. SWIG-based interfaces still have GPL.
