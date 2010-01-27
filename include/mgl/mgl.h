@@ -151,7 +151,7 @@ public:
 	mreal AlphaDef;		///< Default value of alpha channel (transparency) for all plotting functions.
 	char *Message;		///< Buffer for receiving messages
 	int WarnCode;		///< Warning code
-	bool TuneTicks;		///< Draw tuned ticks with extracted common component
+	int TuneTicks;		///< Draw tuned ticks with extracted common component
 	mreal FactorPos;	///< Position of axis ticks factor (0 at Min, 1 at Max, 1.1 is default)
 	int CirclePnts;		///< Number of points for a circle drawing (used in Tube(), Drop(), Sphere(), Cone())
 	int FitPnts;		///< Number of output points in fitting
@@ -270,7 +270,7 @@ public:
 	/// Auto adjust ticks
 	void AdjustTicks(const char *dir="xyzc");
 	/// Tune ticks
-	inline void SetTuneTicks(bool tune, mreal pos=1.15)
+	inline void SetTuneTicks(int tune, mreal pos=1.15)
 	{	TuneTicks = tune;	FactorPos = pos;	};
 	/// Set ticks styles
 	void SetTickStl(const char *stl, const char *sub=0);

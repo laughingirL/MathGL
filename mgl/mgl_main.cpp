@@ -855,9 +855,13 @@ void mglGraph::Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt, mr
 	Identity();
 	mglFormula *ox=fx, *oy=fy, *oz=fz;
 	fx = fy = fz = NULL;
+	char *f = new char[strlen(fnt)+1];
+	strcpy(f,fnt);
+	for(int i=0;f[i];i++)	if(f[i]=='a')	f[i]=' ';
 	Text(mglPoint((Min.x+Max.x)/2+PlotFactor*(Max.x-Min.x)*(x-0.5), 
 				(Min.y+Max.y)/2+PlotFactor*(Max.y-Min.y)*(y-0.5),
-				Max.z), text, fnt, size);
+				Max.z), text, f, size);
+	delete []f;
 	fx=ox;	fy=oy;	fz=oz;
 	RestoreM();
 }
@@ -1055,19 +1059,11 @@ void mglGraph::SetAutoRanges(mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, m
 void mglGraph::Colorbar(const char *sch,int where)
 {
 	SetScheme(sch);
-	mreal x=0,y=0;
-	if(where==2)	y=1;
-	if(where==0)	x=1;
-	Colorbar(where,x,y,1,1);
+	Colorbar(where, where==0?1:0, where==2?1:0, 1, 1);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Colorbar(const mglData &v, const char *sch,int where)
-{
-	mreal x=0,y=0;
-	if(where==2)	y=1;
-	if(where==0)	x=1;
-	Colorbar(v,sch,where,x,y,1,1);
-}
+{	Colorbar(v,sch,where, where==0?1:0, where==2?1:0, 1, 1);	}
 //-----------------------------------------------------------------------------
 void mglGraph::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
 {
@@ -1134,3 +1130,4 @@ void mglGraph::SetCoor(int how)
 	default:	SetFunc(0,0);	break;
 	}
 }
+//-----------------------------------------------------------------------------

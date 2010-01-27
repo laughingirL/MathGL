@@ -199,11 +199,11 @@ void mglc_ball(wchar_t out[1024], long , mglArg *a, int k[10])
 //-----------------------------------------------------------------------------
 int mgls_box(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	gr->Box(k[0]==2 ? a[0].s : (gr->TranspType!=2 ?"k-":"w-"));
+	gr->Box(k[0]==2 ? a[0].s : (gr->TranspType!=2 ?"k-":"w-"), k[1]==3 || a[1].v);
 	return 0;
 }
 void mglc_box(wchar_t out[1024], long , mglArg *a, int k[10])
-{	mglprintf(out,1024,L"gr->Box(\"%s\");", k[0]==2 ? a[0].s : "");	}
+{	mglprintf(out,1024,L"gr->Box(\"%s\", %s);", k[0]==2 ? a[0].s : "", k[1]==3 || a[1].v ? "true":"false");	}
 //-----------------------------------------------------------------------------
 int mgls_bars(mglGraph *gr, long , mglArg *a, int k[10])
 {

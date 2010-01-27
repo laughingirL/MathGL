@@ -356,6 +356,7 @@ mreal mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,mreal
 void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal size, char dir, mreal sh)
 {
 	static int cgid=1;	StartGroup("Putsw",cgid++);
+	if(strchr(font, 'a'))	{	Labelw(p.x, p.y, wcs,font,size);	return;	}
 	bool upside = ( (((_sx==-1) ^ (Org.y==Max.y || Org.z==Max.z)) && (dir=='x' || dir=='X')) ||
 					(((_sy==-1) ^ (Org.x==Max.x || Org.z==Max.z)) && (dir=='y' || dir=='Y')) ||
 					(((_st==-1) ^ (Org.x==0 || Org.z==1)) && (dir=='t' || dir=='T')) ||
@@ -524,8 +525,7 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 {
 	static int cgid=1;	StartGroup("Colorbar",cgid++);
 	register long i,n=vv.nx;
-	mreal *pp,*cc,d,s3=PlotFactor,ss=s3*0.9,v1=vv.Minimal(),dv;
-	dv=vv.Maximal()-v1;	if(dv)	dv=2/dv;
+	mreal *pp,*cc,d,s3=PlotFactor,ss=s3*0.9,v1=vv.Minimal();
 
 	pp = new mreal[12*n];	cc = new mreal[16*n];
 	x = 2*x-1;	y = 2*y-1;
@@ -562,7 +562,6 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 	bool ll = UseLight;			UseLight = false;
 //	surf_plot(2, n-1, pp, cc, 0);	UseLight = ll;
 	quads_plot(n-1, pp, cc, 0);	UseLight = ll;
-	delete []pp;	delete []cc;
 
 	const char *a="rC";
 	if(where==0)	a = "rR";
@@ -575,7 +574,7 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 	mreal v=0,t;
 	int kind=0;
 	wchar_t s[32]=L"", str[64];
-	if(!ctt && TuneTicks) kind = _mgl_tick_ext(Cmax, Cmin, s, v);
+	if(ctt[0]==0 && TuneTicks) kind = _mgl_tick_ext(Cmax, Cmin, s, v);
 
 	long m=n;
 /*	if(n>20)	// adjust ticks
@@ -592,6 +591,7 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 	if(m<2)	m=2;
 	if(m>n)	m=n;
 
+	mreal dv=(vv.Maximal()-v1)/m;
 	for(i=0;i<m;i++)
 	{
 		t = vv.a[(n-1)*i/(m-1)];	d = GetA(t);	p.z = s3+1;
@@ -611,8 +611,20 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 			mglprintf(str,64,L"%.2g\\cdot 10^{%d}",t/pow(10,kk), kk);
 		}
 		else	_mgl_tick_text(t,v1,dv/100,v,kind,str);
-		wcstrim_mgl(str);
-		Putsw(p,str,a,FontSize);
+		wcstrim_mgl(str);	Putsw(p,str,a,FontSize);
+		// draw "grid" lines
+		pp[0] = pp[3] = (ss*d+s3)*w+x*s3;
+		pp[1] = pp[4] = (ss*d+s3)*h+y*s3;
+		pp[2] = pp[5] = s3+1;
+		switch(where)
+		{
+			case 1:	pp[0]  = x*s3;	pp[3] = (x+0.1*w)*s3;	break;
+			case 2:	pp[1]= (y-0.1*h)*s3;	pp[4] = y*s3;	break;
+			case 3:	pp[1]= y*s3;	pp[4] = (y+0.1*h)*s3;	break;
+			default:pp[0]  = (x-0.1*w)*s3;	pp[3] = x*s3;	break;
+		}
+		memset(cc,0,6*sizeof(mreal));	PostScale (pp,2);
+		line_plot(pp,pp+3,cc,cc+3,true);
 	}
 	switch(where)
 	{
@@ -624,6 +636,7 @@ void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mrea
 	if(kind&2)	Putsw(p,s,a,FontSize);
 	ScalePuts = true;
 	Pop();	EndGroup();
+	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::SetSize(int w,int h)

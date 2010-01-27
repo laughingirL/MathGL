@@ -36,7 +36,6 @@ struct mglPrim
 	unsigned short dash;///< mreal pen dashing
 	int id;				///< object id
 	int sid;			///< subplot id
-	mreal raw[40];			///< raw data (initial pp,cc,nn) with sizes {7,14,30,40,10}
 
 	void Draw(mglGraphPS *gr);
 	void DrawGL();

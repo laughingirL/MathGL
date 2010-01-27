@@ -494,7 +494,7 @@ Draws colorbar with sharp colors @var{sch} (current palette if @code{sch=NULL}) 
 Draws grid lines perpendicular to direction determined by string parameter @var{dir}. The step of grid lines is the same as tick step for an @code{axis}. The style of lines is determined by @var{pen} parameter.
 @end deffn
 
-@deffn {MGL command} box ['stl'='k']
+@deffn {MGL command} box ['stl'='k' @code{ticks=on}]
 Draws bounding box outside the plotting volume with line style 'stl'.
 @end deffn
 
