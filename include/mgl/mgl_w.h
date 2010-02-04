@@ -424,7 +424,7 @@ public:
 	{	mgl_label_xy(self,x,y,text,fnt,size);	}
 	void Label(double x, double y, const wchar_t *text, const char *fnt=0, double size=-1.4)
 	{	mgl_labelw_xy(self,x,y,text,fnt,size);	}
-	inline void SetTuneTicks(bool tune, float fact_pos=1.15)
+	inline void SetTuneTicks(int tune, float fact_pos=1.15)
 	{	mgl_tune_ticks(self, tune, fact_pos);	};
 
 	inline void SetXTT(const wchar_t *templ)	{	mgl_set_xttw(self, templ);	};

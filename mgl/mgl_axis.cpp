@@ -367,7 +367,7 @@ void mglGraph::AxisX(bool text)
 	if(y0>(Max.y+Min.y)/2)	ddy = -ddy;
 	if(z0>(Max.z+Min.z)/2)	ddz = -ddz;
 	SelectPen(TranspType!=2 ? "k-1":"w-1");
-	for(i=0;i<31;i++)	// сама ось
+	for(i=0;i<31;i++)	// draw axis line
 	{
 		pp[3*i+1]=y0;	pp[3*i+2]=z0;
 		pp[3*i]=Min.x+(Max.x-Min.x)*i/30.;

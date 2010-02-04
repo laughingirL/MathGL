@@ -2336,30 +2336,30 @@ gr->ContZ(c.Sum("z"),0,-1);
 
 @c ==================================================================
 @node Plots by formula, SimplePlot, TriPlot, Other plotting
-@subsection Plots by formula
+@subsection Графики функций
 @cindex Plot
 @cindex Surf
 
-These functions perform plotting of 1D или 2D functions specified by textual formula. You do not need to create the data arrays to plot it. The parameter @var{stl} set the line style (@pxref{Line styles}) for @code{Plot()} или color scheme (@pxref{Color scheme}) for @code{Surf()}. The parameter @var{n} set the minimal number of points along coordinate(s) for plots. At this time (v. 1.10) there is adaptive increase of data points numbers but only for 1D variant (i.e. for Plot()).
+Эти функции строят графики 1D или 2D функций, заданный текстовыми формулами. Вам не нужно создавать массивы для их построения. Параметр @var{stl} задаект стиль линии (@pxref{Line styles}) для @code{Plot()} или цветовую схему (@pxref{Color scheme}) для @code{Surf()}. Параметр @var{n} задает минимальное число точек по координате(ам) для графика. В настоящее время (v. 1.10) число точек автоматически увеличивается для области резкого изменения функции, но только для 1D графиков (т.е. для Plot()).
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Plot (@code{const char *}eqY, @code{const char *}stl=@code{""}, @code{float} zVal=@code{NAN}, @code{int} n=@code{100})
 @deftypefnx {Функция С} @code{void} mgl_fplot (@code{HMGL} gr, @code{const char *}eqY, @code{const char *}stl, @code{float} zVal, @code{int} n)
-Рисует function @samp{eqY(x)} при plane z=@var{zVal} where @samp{x} variable is changed in range [@var{Min}.x, @var{Max}.x]. См. также @ref{Plot}.
+Рисует функцию @samp{eqY(x)} в плоскости z=@var{zVal} с координатой @samp{x} в диапазоне [@var{Min}.x, @var{Max}.x]. См. также @ref{Plot}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Plot (@code{const char *}eqX, @code{const char *}eqY, @code{const char *}eqZ, @code{const char *}stl=@code{""}, @code{float} zVal=@code{NAN}, @code{int} n=@code{100})
 @deftypefnx {Функция С} @code{void} mgl_fplot_xyz (@code{HMGL} gr, @code{const char *}eqX, @code{const char *}eqY, @code{const char *}eqZ, @code{const char *}stl, @code{float} zVal, @code{int} n)
-Рисует parametrical curve @{@samp{eqX(t)}, @samp{eqY(t)}, @samp{eqZ(t)}@} where @samp{t} variable is changed in range [0, 1]. См. также @ref{Plot}.
+Рисует параметрическую кривую @{@samp{eqX(t)}, @samp{eqY(t)}, @samp{eqZ(t)}@}, где координата @samp{t} меняется в диапазоне [0, 1]. См. также @ref{Plot}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Surf (@code{const char *}eqZ, @code{const char *}stl=@code{""}, @code{int} n=@code{100});
 @deftypefnx {Функция С} @code{void} mgl_fsurf (@code{HMGL} gr, @code{const char *}eqZ, @code{const char *}stl, @code{int} n);
-Рисует surface for function @samp{eqY(x,y)} where @samp{x}, @samp{y} variables are changed in range [@var{Min}, @var{Max}]. См. также @ref{Surf}.
+Рисует поверхность @samp{eqY(x,y)} с координатами @samp{x}, @samp{y} в диапазоне [@var{Min}, @var{Max}]. См. также @ref{Surf}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Surf (@code{const char *}eqX, @code{const char *}eqY, @code{const char *}eqZ, @code{const char *}stl=@code{""}, @code{int} n=@code{100})
 @deftypefnx {Функция С} @code{void} mgl_fsurf_xyz (@code{HMGL} gr, @code{const char *}eqX, @code{const char *}eqY, @code{const char *}eqZ, @code{const char *}stl, @code{int} n)
-Рисует parametrical surface @{@samp{eqX(u,v)}, @samp{eqY(u,v)}, @samp{eqZ(u,v)}@} where @samp{u}, @samp{v} variables are changed in range [0, 1]. См. также @ref{Surf}.
+Рисует параметрическую поверхность @{@samp{eqX(u,v)}, @samp{eqY(u,v)}, @samp{eqZ(u,v)}@}, где координаты @samp{u}, @samp{v} меняются в диапазоне [0, 1]. См. также @ref{Surf}.
 @end deftypefn
 
 @c ==================================================================
@@ -2369,7 +2369,7 @@ These functions perform plotting of 1D или 2D functions specified by textual 
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} SimplePlot (@code{const mglData &}a, @code{int} type=@code{0}, @code{const char *}stl=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_simple_plot (@code{HMGL} gr, @code{const HMDT} a, @code{int} type, @code{const char *}stl)
-Plots the array @var{a} depending on it's dimensions and @var{type} parameter. String @var{stl} specifies the style of plotting. For 1d data: @code{type=0} -- @ref{Plot}, @code{type=1} -- @ref{Area}, @code{type=2} -- @ref{Step}, @code{type=3} -- @ref{Stem}, @code{type=4} -- @ref{Bars}. For 2d data: @code{type=0} -- @ref{Surf}, @code{type=1} -- @ref{Dens}, @code{type=2} -- @ref{Mesh}, @code{type=3} -- @ref{Cont}. For 3d data: @code{type=0} -- @ref{Surf3}, @code{type=1} -- @ref{Dens3}, @code{type=2} -- @ref{Cont3}, @code{type=2} -- @ref{Cloud}.
+Рисует график массива @var{a} в зависимости от его размерности и параметра @var{type}. Строка @var{stl} задает стиль графика. Для 1d массивов: @code{type=0} -- @ref{Plot}, @code{type=1} -- @ref{Area}, @code{type=2} -- @ref{Step}, @code{type=3} -- @ref{Stem}, @code{type=4} -- @ref{Bars}. Для 2d массивов: @code{type=0} -- @ref{Surf}, @code{type=1} -- @ref{Dens}, @code{type=2} -- @ref{Mesh}, @code{type=3} -- @ref{Cont}. Для 3d массивов: @code{type=0} -- @ref{Surf3}, @code{type=1} -- @ref{Dens3}, @code{type=2} -- @ref{Cont3}, @code{type=2} -- @ref{Cloud}.
 @end deftypefn
 
 @c ##################################################################
@@ -2382,155 +2382,155 @@ Plots the array @var{a} depending on it's dimensions and @var{type} parameter. S
 @cindex Fit2
 @cindex Fit3
 
-These functions fit data to formula. Fitting goal is to find formula parameters for the best fit the data points, i.e. to minimize the sum @math{\sum_i (f(x_i, y_i, z_i) - a_i)^2/s_i^2}. At this, approximation function @samp{f} can depend only on one argument @samp{x} (1D case), on two arguments @samp{x,y} (2D case) and on three arguments @samp{x,y,z} (3D case). The function @samp{f} also may depend on parameters. Normally the list of fitted parameters is specified by @var{var} string (like, @samp{abcd}). Usually user should supply initial values for fitted parameters by @var{ini} variable. But if he/she don't supply it then the zeros are used. Parameter @var{print}=@code{true} switch on printing the found coefficients to @var{Message} (@pxref{Error handling}).
+Эти функции подбирают параметры функции для наилучшей аппроксимации данных, т.е. минимизируют сумму @math{\sum_i (f(x_i, y_i, z_i) - a_i)^2/s_i^2}. При этом аппроксимирующая функция @samp{f} может зависеть от 1 аргументы @samp{x} (1D случай), от двух аргументов @samp{x,y} (2D случай) или от трех аргументов @samp{x,y,z} (3D случай). Функция @samp{f} также может зависеть от параметров. Список параметров задается строкой @var{var} (например, @samp{abcd}). Обычно пользователь должен предоставить начальные значения параметров в переменной @var{ini}. Однако, при его отсутствии используются нулевые значения. Параметр @var{print}=@code{true} включает вывод найденной формулы в @var{Message} (@pxref{Error handling}).
 
-Functions Fit() and FitS() do not draw the obtained data themselves. They fill the data @var{fit} by formula @samp{f} with found coefficients and return the @math{\chi^2} error of approximation. At this, the @samp{x,y,z} coordinates are equidistantly distributed in the interval @var{Min}--@var{Max}. Number of points in @var{fit} is selected as maximal value of @var{fit} size and the value of @var{FitPnts}. Note, that this functions use GSL library and do something only if MathGL was compiled with GSL support. @sref{Fitting sample}
+Функции Fit() и FitS() не рисуют полученные массивы. Они заполняют массив @var{fit} по формуле @samp{f} с найденными коэффициентами и возвращают @math{\chi^2} ошибку аппроксимации. При этом, координаты @samp{x,y,z} равнораспределены в интервале @var{Min}--@var{Max}. Число точек в @var{fit} выбирается максимальным из размера массива @var{fit} и значения переменной @var{FitPnts}. Функции используют библиотеку GSL. @sref{Fitting sample}
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{float} FitS (@code{mglData &}fit, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{float *}ini=@code{NULL}, @code{bool} print=@code{false})
 @deftypefnx {Метод класса @code{mglGraph} (C++, Python)} @code{float} FitS (@code{mglData &}fit, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{bool} print=@code{false})
 @deftypefnx {Функция С} @code{float} mgl_fit_xyzas (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a, @code{const HMDT} s, @code{const char *}func, @code{const char *}var, @code{float *}ini)
 @deftypefnx {Функция С} @code{float} mgl_fit_xyzas_d (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a, @code{const HMDT} s, @code{const char *}func, @code{const char *}var, @code{HMDT} ini)
-Fit data along x-, y- and z-directions for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]).
+"Подгоняют" формулу вдоль x-, y- и z-направлений для 3d массива заданного параметрически @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]).
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{float} FitS (@code{mglData &}fit, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{float *}ini=@code{NULL}, @code{bool} print=@code{false})
 @deftypefnx {Метод класса @code{mglGraph} (C++, Python)} @code{float} FitS (@code{mglData &}fit, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{bool} print=@code{false})
 @deftypefnx {Функция С} @code{float} mgl_fit_xyzs (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} a, @code{const HMDT} s, @code{const char *}func, @code{const char *}var, @code{float *}ini)
 @deftypefnx {Функция С} @code{float} mgl_fit_xyzs_d (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} a, @code{const HMDT} s, @code{const char *}func, @code{const char *}var, @code{HMDT} ini)
-Fit data along x-, and y-directions for 2d array specified parametrically @var{a}[i,j](@var{x}[i,j], @var{y}[i,j]) for each data slice.
+"Подгоняют" формулу вдоль x- и y-направлений для 2d массива заданного параметрически @var{a}[i,j](@var{x}[i,j], @var{y}[i,j]) для каждого среза данных.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{float} FitS (@code{mglData &}fit, @code{const mglData &}x, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{float *}ini=@code{NULL}, @code{bool} print=@code{false})
 @deftypefnx {Метод класса @code{mglGraph} (C++, Python)} @code{float} FitS (@code{mglData &}fit, @code{const mglData &}x, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{bool} print=@code{false})
 @deftypefnx {Функция С} @code{float} mgl_fit_xys (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} x, @code{const HMDT} a, @code{const HMDT} s, @code{const char *}func, @code{const char *}var, @code{float *}ini)
 @deftypefnx {Функция С} @code{float} mgl_fit_xys_d (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} x, @code{const HMDT} a, @code{const HMDT} s, @code{const char *}func, @code{const char *}var, @code{HMDT} ini)
-Fit data along x-direction for 1d array specified parametrically @var{a}[i](@var{x}[i]) for each data slice.
+"Подгоняют" формулу вдоль x-направления для 1d массива заданного параметрически @var{a}[i](@var{x}[i]) для каждого среза данных.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{float} FitS (@code{mglData &}fit, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{float *}ini=@code{NULL}, @code{bool} print=@code{false})
 @deftypefnx {Метод класса @code{mglGraph} (C++, Python)} @code{float} FitS (@code{mglData &}fit, @code{const mglData &}a, @code{const mglData &}s, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{bool} print=@code{false})
 @deftypefnx {Функция С} @code{float} mgl_fit_ys (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} a, @code{const HMDT} s, @code{const char *}func, @code{const char *}var, @code{float *}ini)
 @deftypefnx {Функция С} @code{float} mgl_fit_ys_d (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} a, @code{const HMDT} s, @code{const char *}func, @code{const char *}var, @code{HMDT} ini)
-Fit data along x-direction for 1d array with @var{x} equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
+"Подгоняют" формулу вдоль x-направления для 1d массива с @var{x} равно распределенным в интервале [@var{Min}.x, @var{Max}.x].
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{float} Fit (@code{mglData &}fit, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{float *}ini=@code{NULL}, @code{bool} print=@code{false})
 @deftypefnx {Метод класса @code{mglGraph} (C++, Python)} @code{float} Fit (@code{mglData &}fit, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{bool} print=@code{false})
 @deftypefnx {Функция С} @code{float} mgl_fit_xyza (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a, @code{const char *}func, @code{const char *}var, @code{float *}ini)
 @deftypefnx {Функция С} @code{float} mgl_fit_xyza_d (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a, @code{const char *}func, @code{const char *}var, @code{HMDT} ini)
-Fit data along x-, y- and z-directions for 3d array specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) with @var{s}[i,j,k]=1.
+"Подгоняют" формулу вдоль x-, y- и z-направлений для 3d массива заданного параметрически @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]) с @var{s}[i,j,k]=1.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{float} Fit (@code{mglData &}fit, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{float *}ini=@code{NULL}, @code{bool} print=@code{false})
 @deftypefnx {Метод класса @code{mglGraph} (C++, Python)} @code{float} Fit (@code{mglData &}fit, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{bool} print=@code{false})
 @deftypefnx {Функция С} @code{float} mgl_fit_xyz (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} a, @code{const char *}func, @code{const char *}var, @code{float *}ini)
 @deftypefnx {Функция С} @code{float} mgl_fit_xyz_d (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} a, @code{const char *}func, @code{const char *}var, @code{HMDT} ini)
-Fit data along x-, and y-directions for 2d array specified parametrically @var{a}[i,j](@var{x}[i,j], @var{y}[i,j]) with @var{s}[i,j]=1 for each data slice.
+"Подгоняют" формулу вдоль x- и y-направлений для 2d массива заданного параметрически @var{a}[i,j](@var{x}[i,j], @var{y}[i,j]) с @var{s}[i,j]=1 для каждого среза данных.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{float} Fit (@code{mglData &}fit, @code{const mglData &}x, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{float *}ini=@code{NULL}, @code{bool} print=@code{false})
 @deftypefnx {Метод класса @code{mglGraph} (C++, Python)} @code{float} Fit (@code{mglData &}fit, @code{const mglData &}x, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{bool} print=@code{false})
 @deftypefnx {Функция С} @code{float} mgl_fit_xy (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} x, @code{const HMDT} a, @code{const char *}func, @code{const char *}var, @code{float *}ini)
 @deftypefnx {Функция С} @code{float} mgl_fit_xy_d (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} x, @code{const HMDT} a, @code{const char *}func, @code{const char *}var, @code{HMDT} ini)
-Fit data along x-direction for 1d array specified parametrically @var{a}[i](@var{x}[i]) with @var{s}[i]=1 for each data slice.
+"Подгоняют" формулу вдоль x-направления для 1d массива заданного параметрически @var{a}[i](@var{x}[i]) с @var{s}[i]=1 для каждого среза данных.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{float} Fit (@code{mglData &}fit, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{float *}ini=@code{""}, @code{bool} print=@code{false})
 @deftypefnx {Метод класса @code{mglGraph} (C++, Python)} @code{float} Fit (@code{mglData &}fit, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{bool} print=@code{false})
 @deftypefnx {Функция С} @code{float} mgl_fit_1 (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} a, @code{const char *}func, @code{const char *}var, @code{float *}ini)
 @deftypefnx {Функция С} @code{float} mgl_fit_1_d (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} a, @code{const char *}func, @code{const char *}var, @code{HMDT} ini)
-Fit data along x-direction for 1d array @var{a} with @var{s}=1 and @var{x} equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
+"Подгоняют" формулу вдоль x-направления для 1d массива @var{a} с @var{s}=1 и @var{x} равно распределенным в интервале [@var{Min}.x, @var{Max}.x].
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{float} Fit2 (@code{mglData &}fit, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{float *}ini=@code{NULL}, @code{bool} print=@code{false})
 @deftypefnx {Метод класса @code{mglGraph} (C++, Python)} @code{float} Fit2 (@code{mglData &}fit, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{bool} print=@code{false})
 @deftypefnx {Функция С} @code{float} mgl_fit_2 (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} a, @code{const char *}func, @code{const char *}var, @code{float *}ini)
 @deftypefnx {Функция С} @code{float} mgl_fit_2_d (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} a, @code{const char *}func, @code{const char *}var, @code{HMDT} ini)
-Fit data along x-, and y-directions for 2d array @var{a} with @var{s}=1 and @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
+"Подгоняют" формулу вдоль x- и y-направлений для 2d массива @var{a} с @var{s}=1 и @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{float} Fit3 (@code{mglData &}fit, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{float *}ini=@code{NULL}, @code{bool} print=@code{false})
 @deftypefnx {Метод класса @code{mglGraph} (C++, Python)} @code{float} Fit3 (@code{mglData &}fit, @code{const mglData &}a, @code{const char *}func, @code{const char *}var, @code{mglData &}ini, @code{bool} print=@code{false})
 @deftypefnx {Функция С} @code{float} mgl_fit_3 (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} a, @code{const char *}func, @code{const char *}var, @code{float *}ini)
 @deftypefnx {Функция С} @code{float} mgl_fit_3_d (@code{HMGL} gr, @code{HMDT} fit, @code{const HMDT} a, @code{const char *}func, @code{const char *}var, @code{HMDT} ini)
-Fit data along x-, y- and z-directions for 3d array @var{a} with @var{s}=1 and @var{x}, @var{y}, @var{z} equidistantly distributed in interval [@var{Min}, @var{Max}].
+"Подгоняют" формулу вдоль x-, y- и z-направлений для 3d массива @var{a} с @var{s}=1 и @var{x}, @var{y}, @var{z} равно распределенными в интервале [@var{Min}, @var{Max}].
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} PutsFit (@code{mglPoint} p, @code{const char *}prefix=@code{""}, @code{const char *}font=@code{NULL}, @code{float} size=@code{-1})
 @deftypefnx {Функция С} @code{void} mgl_puts_fit (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{const char *}prefix, @code{const char *}font, @code{float} size=@code{-1})
-Print last fitted formula with found coefficients (as numbers) при position @var{p0}. The string @var{prefix} will be printed before formula. All other parameters are the same as in @ref{Text printing}.
+Печатает последнюю подобранную формулу с найденными коэффициентами в точке @var{p0}. Строка @var{prefix} будет напечатана перед формулой. Все другие параметры такие же как в @ref{Text printing}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{const char *}GetFit ()
 @deftypefnx {Функция С} @code{const char *} mgl_get_fit (@code{HMGL} gr)
-Get last fitted formula with found coefficients (as numbers).
+Возвращает последнюю подобранную формулу с найденными коэффициентами.
 @end deftypefn
 
 @deftypecv {Переменная(C++)} mglGraph @code{int} FitPnts
-Minimal number of points for output array after nonlinear fitting.
+Минимальное число точек для массива со значениями подобранной формулы.
 @end deftypecv
 
 @c ##################################################################
 @node Frames/Animation, IDTF functions, Nonlinear fitting, MathGL core
-@section Frames/Animation
+@section Кадры/Анимация
 @cindex NewFrame
 @cindex EndFrame
 @cindex GetNumFrame
 
-These functions provide ability to create several pictures simultaneously. For most of cases it is useless but for widget classes (@pxref{Widget classes}) they can provide a way to show animation. Also you can write several frames into animated GIF file.
+Эти функции позволяют создавать несколько картинок одновременно. В большинстве случаев это бесполезно, но для органов управления (@pxref{Widget classes}) это позволяет показывать анимацию. Также можно записать несколько кадров в анимированный GIF файл.
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{int} NewFrame ()
 @deftypefnx {Функция С} @code{int} mgl_new_frame (@code{HMGL} gr)
-Creates new frame. Function returns current frame id. This is not thread safe function in OpenGL mode! Use direct list creation in multi-threading drawing. The function @code{EndFrame()} @strong{must} be call after the finishing of the frame drawing for each call of this function.
+Создает новый кадр. Функция возвращает номер текущего кадра. В режиме OpenGL функция не должны вызываться в параллельных потоках! -- используйте прямое создание списка. Функция @code{EndFrame()} @strong{должна} быть вызвана после рисования кадра для каждого вызова этой функции.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} EndFrame ()
 @deftypefnx {Функция С} @code{void} mgl_end_frame (@code{HMGL} gr)
-Finishes the frame drawing.
+Завершает рисование кадра.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{int} GetNumFrame ()
 @deftypefnx {Функция С} @code{int} mgl_get_num_frame (@code{HMGL} gr)
-Gets the number of created frames.
+Возвращает число созданных кадров.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} ResetFrames ()
 @deftypefnx {Функция С} @code{int} mgl_reset_frames (@code{HMGL} gr)
-Reset frames counter (start it from zero).
+Сбрасывает счетчик кадров в 0.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} StartGIF (@code{const char *}fname, @code{int} ms=@code{100})
 @deftypefnx {Функция С} @code{void} mgl_start_gif (@code{HMGL} gr, @code{const char *}fname, @code{int} ms)
-Start writing frames into animated GIF file @var{fname}. Parameter @var{ms} set the delay between frames in milliseconds. You @strong{should not} change the picture size during writing the cinema. Use CloseGIF() to finalize writing. Note, that this function is disabled in OpenGL mode.
+Начинает запись кадров в анимированный GIF файл @var{fname}. Параметр @var{ms} задает задержку между кадрами в миллисекундах. Вы @strong{не должны} менять размер рисунка во время создания кино. Используйте CloseGIF() для завершения записи. Эта функция не работает в режиме OpenGL.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{int} CloseGIF ()
 @deftypefnx {Функция С} @code{void} mgl_close_gif (@code{HMGL} gr)
-Finish writing animated GIF and close connected pointers.
+Завершает запись анимированного GIF файла.
 @end deftypefn
 
 @c ##################################################################
 @node IDTF functions, , Frames/Animation, MathGL core
-@section IDTF functions
+@section IDTF функции
 @cindex NewFrame
 @cindex EndFrame
 @cindex GetNumFrame
 
-These functions provide IDTF specific features. In all other cases they do nothing.
+Эти функции обеспечивают поддержку особых возможностей при создании IDTF. Во всех прочих случаях они не делают ничего.
 
 @deftypefn {Метод класса @code{mglGraph} (C++)} @code{void} VertexColor (@code{bool} enable)
-Enables smooth color change.
+Разрешает плавное изменение цвета.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++)} @code{void} Compression (@code{bool} enable)
-Gives smaller files, but quality degrades.
+Дает меньший объем файла, но с худшим качеством.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++)} @code{void} StartGroup (const char *name)
-Starts group definition. Groups contain objects and other groups, they are used to select a part of a model to zoom to или to make invizible или to make transparent and so on.
+Начинает определение группы. Группа может содержать объекты и другие группы. Они используются для выбора части модели при приближении, изменении прозрачности и т.д.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++)} @code{void} EndGroup ()
-Ends group definition.
+Завершает определение группы.
 @end deftypefn
 
