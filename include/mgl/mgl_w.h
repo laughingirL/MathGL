@@ -357,7 +357,7 @@ public:
 	};
 
 	inline void SetTranspType(int type)		{	mgl_set_transp_type(self, type);};
-	inline void SetTransparent(bool enable)	{	mgl_set_transp(self, enable);};
+	inline void SetTransparent(bool enable)	{	mgl_set_transp(self, enable);	};
 	inline void Alpha(bool enable)			{	mgl_set_alpha(self, enable);	};
 	inline void Fog(float d, float dz=0.25)	{	mgl_set_fog(self, d, dz);		};
 	inline void Light(bool enable)			{	mgl_set_light(self, enable);	};
@@ -366,7 +366,7 @@ public:
 	{	mgl_add_light(self, n, x, y, z, c);	};
 	inline void SetAmbient(float i)			{	mgl_set_ambbr(self, i);	};
 
-	inline void Identity()					{	mgl_identity(self);	};
+	inline void Identity(bool rel=false)	{	mgl_identity(self, rel);	};
 	inline void Clf(float r=1, float g=1, float b=1)
 	{	mgl_clf_rgb(self, r, g, b);	};
 	inline void SubPlot(int nx,int ny,int m, float dx=0, float dy=0)
@@ -866,6 +866,13 @@ public:
 	{	mgl_contf_y_val(self, v.a, a.a, stl, sVal);	};
 	inline void ContFZ(mglData &v, mglData &a, const char *stl="", float sVal=NAN)
 	{	mgl_contf_z_val(self, v.a, a.a, stl, sVal);	};
+
+	inline void Hist(mglData &res, mglData &x, mglData &a)
+	{	mgl_hist_x(self, res.a, x.a, a.a);	}
+	inline void Hist(mglData &res, mglData &x, mglData &y, mglData &a)
+	{	mgl_hist_xy(self, res.a, x.a, y.a, a.a);	}
+	inline void Hist(mglData &res, mglData &x, mglData &y, mglData &z, mglData &a)
+	{	mgl_hist_xyz(self, res.a, x.a, y.a, z.a, a.a);	}
 
 	inline float Fit(mglData &fit, mglData &y, const char *eq, const char *var)
 	{	return mgl_fit_1(self, fit.a, y.a, eq,var,0);	};

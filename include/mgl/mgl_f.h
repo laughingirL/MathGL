@@ -130,7 +130,7 @@ void mgl_set_ambbr_(uintptr_t *gr, mreal *i);
 /*****************************************************************************/
 /*		Scale and rotate													 */
 /*****************************************************************************/
-void mgl_identity_(uintptr_t *graph);
+void mgl_identity_(uintptr_t *graph, int *rel);
 void mgl_clf_(uintptr_t *graph);
 void mgl_flush_(uintptr_t *gr);
 void mgl_clf_rgb_(uintptr_t *graph, mreal *r, mreal *g, mreal *b);
@@ -529,6 +529,12 @@ void mgl_data_mul_num_(uintptr_t *dat, mreal *d);
 void mgl_data_div_num_(uintptr_t *dat, mreal *d);
 void mgl_data_add_num_(uintptr_t *dat, mreal *d);
 void mgl_data_sub_num_(uintptr_t *dat, mreal *d);
+/*****************************************************************************/
+/*		Nonlinear fitting													 */
+/*****************************************************************************/
+void mgl_hist_x_(uintptr_t* gr, uintptr_t* res, uintptr_t* x, uintptr_t* a);
+void mgl_hist_xy_(uintptr_t* gr, uintptr_t* res, uintptr_t* x, uintptr_t* y, uintptr_t* a);
+void mgl_hist_xyz_(uintptr_t* gr, uintptr_t* res, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a);
 /*****************************************************************************/
 /*		Nonlinear fitting													 */
 /*****************************************************************************/

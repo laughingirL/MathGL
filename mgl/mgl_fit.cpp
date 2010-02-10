@@ -380,6 +380,66 @@ void mglGraph::PutsFit(mglPoint p, const char *pre, const char *font, mreal size
 	delete []buf;
 }
 //-----------------------------------------------------------------------------
+void mglGraph::Hist(mglData &res, const mglData &x, const mglData &a)
+{
+	int n1=res.nx, nn=a.nx*a.ny*a.nz;
+	if(n1<FitPnts)	n1=FitPnts;
+	res.Create(n1);
+	if(nn!=x.nx*x.ny*x.nz)	{	SetWarn(mglWarnDim);	return;	}
+	register int i,j1;
+	for(i=0;i<nn;i++)
+	{
+		j1 = int(n1*(x.a[i]-Min.x)/(Max.x-Min.x));	if(j1<0 || j1>=n1)	continue;
+		res.a[j1] += a.a[i];
+	}
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Hist(mglData &res, const mglData &x, const mglData &y, const mglData &a)
+{
+	int n1=res.nx, n2=res.ny, nn=a.nx*a.ny*a.nz;
+	if(n1<FitPnts) n1=FitPnts;	if(n2<FitPnts) n2=FitPnts;
+	res.Create(n1,n2);
+	if(nn!=x.nx*x.ny*x.nz || nn!=y.nx*y.ny*y.nz)
+	{	SetWarn(mglWarnDim);	return;	}
+	register int i,j1,j2;
+	for(i=0;i<nn;i++)
+	{
+		j1 = int(n1*(x.a[i]-Min.x)/(Max.x-Min.x));	if(j1<0 || j1>=n1)	continue;
+		j2 = int(n2*(y.a[i]-Min.y)/(Max.y-Min.y));	if(j2<0 || j2>=n2)	continue;
+		res.a[j1+n1*j2] += a.a[i];
+	}
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Hist(mglData &res, const mglData &x, const mglData &y, const mglData &z, const mglData &a)
+{
+	int n1=res.nx, n2=res.ny, n3=res.nz, nn=a.nx*a.ny*a.nz;
+	if(n1<FitPnts) n1=FitPnts;	if(n2<FitPnts) n2=FitPnts;	if(n3<FitPnts) n3=FitPnts;
+	res.Create(n1,n2,n3);
+	if(nn!=x.nx*x.ny*x.nz || nn!=y.nx*y.ny*y.nz || nn!=z.nx*z.ny*z.nz)
+	{	SetWarn(mglWarnDim);	return;	}
+	register int i,j1,j2,j3;
+	for(i=0;i<nn;i++)
+	{
+		j1 = int(n1*(x.a[i]-Min.x)/(Max.x-Min.x));	if(j1<0 || j1>=n1)	continue;
+		j2 = int(n2*(y.a[i]-Min.y)/(Max.y-Min.y));	if(j2<0 || j2>=n2)	continue;
+		j3 = int(n3*(z.a[i]-Min.z)/(Max.z-Min.z));	if(j3<0 || j3>=n3)	continue;
+		res.a[j1+n1*(j2+n2*j3)] += a.a[i];
+	}
+}
+//-----------------------------------------------------------------------------
+void mgl_hist_x(HMGL gr, HMDT res, const HMDT x, const HMDT a)
+{	gr->Hist(*res, *x, *a);	}
+void mgl_hist_xy(HMGL gr, HMDT res, const HMDT x, const HMDT y, const HMDT a)
+{	gr->Hist(*res, *x, *y, *a);	}
+void mgl_hist_xyz(HMGL gr, HMDT res, const HMDT x, const HMDT y, const HMDT z, const HMDT a)
+{	gr->Hist(*res, *x, *y, *z, *a);	}
+void mgl_hist_x_(uintptr_t* gr, uintptr_t* res, uintptr_t* x, uintptr_t* a)
+{	_GR_->Hist(_DM_(res), _D_(x), _D_(a));	}
+void mgl_hist_xy_(uintptr_t* gr, uintptr_t* res, uintptr_t* x, uintptr_t* y, uintptr_t* a)
+{	_GR_->Hist(_DM_(res), _D_(x), _D_(y), _D_(a));	}
+void mgl_hist_xyz_(uintptr_t* gr, uintptr_t* res, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a)
+{	_GR_->Hist(_DM_(res), _D_(x), _D_(y), _D_(z), _D_(a));	}
+//-----------------------------------------------------------------------------
 mreal mgl_fit_1(HMGL gr, HMDT fit, const HMDT y, const char *eq, const char *var, mreal *ini)
 {	return gr->Fit(*fit, *y, eq, var, ini);	}
 mreal mgl_fit_2(HMGL gr, HMDT fit, const HMDT z, const char *eq, const char *var, mreal *ini)

@@ -717,9 +717,9 @@ Defines aspect ratio for the plot. The viewable axes will be related one to anot
 Add (switch on) the perspective to plot. The parameter @math{a ~ 1/z_@{eff@} \in [0,1)}. By default (@code{a=0}) the perspective is off.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Identity ()
-@deftypefnx {C function} @code{void} mgl_identity (@code{HMGL} gr)
-Clears transformation matrix. This function clears all previous effects of Aspect(), SubPlot(), InPlot() or Rotate() functions. It is equivalent to the call of @code{InPlot(0,1,0,1)}.
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Identity (@code{bool} rel=@code{false})
+@deftypefnx {C function} @code{void} mgl_identity (@code{HMGL} gr, @code{int} rel)
+Clears transformation matrix. This function clears all previous effects of Aspect(), SubPlot(), InPlot() or Rotate() functions. It is equivalent to the call of @code{InPlot(0,1,0,1,rel)}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} RestoreM ()
@@ -910,6 +910,8 @@ Draw a set of triangles (or lines if @var{trig}=@code{NULL}) for glyph which is 
 These functions draw the text. There are functions for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The class mglFont (@pxref{mglFont class}) is used for low-level string parsing and printing. It can use arbitrary font-faces and parse many TeX commands (for detail @pxref{mglFont class}). All these functions have 2 variant: for printing 8-bit text (@code{char *}) and for printing Unicode text (@code{wchar_t *}). In first case the conversion in current locale is used. So sometimes you need to specify it by @code{setlocale()} function. The size argument control the size of text: if positive it give the value, if negative it give the value relative to @var{FontSize}. The font type (STIX, arial, courier, times and so on) can be selected by function SetFont(), GetFont(). @xref{Font settings}.
 
 The font parameters are described by string. This string may contain several characters of font type (@samp{rbiwou}) and/or align (@samp{LRC}) specification. Also it may contain the text color @samp{wkrgbcymhRGBCYMHW} (@pxref{mglColor class}) after symbol @samp{:}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style, @samp{w} -- wired style, @samp{o} -- over-lined text, @samp{u} -- underlined text. By default roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. For example, string @samp{iC:b} correspond to italic font style for centered text which printed by blue color.
+
+If string contains symbols @samp{aA} then text is printed at arbitrary position @{@var{x}, @var{y}@} (supposed to be in range [0,1]) of subplot (for @samp{a}) or picture (for @samp{A}).
 
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} Puts (@code{mglPoint} p, @code{const char *}text, @code{const char *}font=@code{""}, @code{float} size=@code{-1}, @code{char} dir=@code{0}, @code{float} shift=@code{0})
 @deftypefnx {Method on @code{mglGraph} (C++)} @code{void} Putsw (@code{mglPoint} p, @code{const wchar_t *}text, @code{const char *}font=@code{""}, @code{float} size=@code{-1}, @code{char} dir=@code{0}, @code{float} shift=@code{0})

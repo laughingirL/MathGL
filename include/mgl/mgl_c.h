@@ -167,7 +167,7 @@ void mgl_set_ambbr(HMGL gr, mreal i);
 /*****************************************************************************/
 /*		Scale and rotate													 */
 /*****************************************************************************/
-void mgl_identity(HMGL graph);
+void mgl_identity(HMGL graph, int rel);
 void mgl_clf(HMGL graph);
 void mgl_flush(HMGL gr);
 void mgl_clf_rgb(HMGL graph, mreal r, mreal g, mreal b);
@@ -572,6 +572,12 @@ void mgl_data_mul_num(HMDT dat, mreal d);
 void mgl_data_div_num(HMDT dat, mreal d);
 void mgl_data_add_num(HMDT dat, mreal d);
 void mgl_data_sub_num(HMDT dat, mreal d);
+/*****************************************************************************/
+/*		Nonlinear fitting													 */
+/*****************************************************************************/
+void mgl_hist_x(HMGL gr, HMDT res, const HMDT x, const HMDT a);
+void mgl_hist_xy(HMGL gr, HMDT res, const HMDT x, const HMDT y, const HMDT a);
+void mgl_hist_xyz(HMGL gr, HMDT res, const HMDT x, const HMDT y, const HMDT z, const HMDT a);
 /*****************************************************************************/
 /*		Nonlinear fitting													 */
 /*****************************************************************************/

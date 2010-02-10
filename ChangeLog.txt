@@ -1,9 +1,10 @@
 1.10.1 Released ?? February 2010
 	- Add parsing of option arguments.
-	- If text style contain 'a' then text in absolute coordinates is drawn.
+	- If text style contain 'a'/'A' then text in absolute subplot/picture coordinates is drawn.
 	- Add extra argument for 'box' command.
 	- Add ticks (lines) for Colorbar.
 	- Colorbar factor now placed at top of a plot.
+	- Dots() now don't change transparence for self.
 	- Bug with missing ticks tunning in Colorbar.
 	- Bug of double glyph drawing in mglGraphPS.
 

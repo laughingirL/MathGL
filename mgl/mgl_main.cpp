@@ -781,7 +781,7 @@ void mglGraph::Mark(mglPoint p,char t)
 //-----------------------------------------------------------------------------
 void mglGraph::View(mreal tetx,mreal tetz,mreal tety)
 {	_tetx=tetx;	_tety=tety;	_tetz=tetz;	}
-void mglGraph::Identity()	{	InPlot(0,1,0,1);	}
+void mglGraph::Identity(bool rel)	{	InPlot(0,1,0,1,rel);	}
 //-----------------------------------------------------------------------------
 void mglGraph::Rotate(mreal TetX,mreal TetZ,mreal TetY)
 {
@@ -850,9 +850,9 @@ void mglGraph::Title(const char *str,const char *font,mreal size)
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt, mreal size)
+void mglGraph::Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt, mreal size, bool rel)
 {
-	Identity();
+	Identity(rel);
 	mglFormula *ox=fx, *oy=fy, *oz=fz;
 	fx = fy = fz = NULL;
 	char *f = new char[strlen(fnt)+1];
@@ -866,12 +866,12 @@ void mglGraph::Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt, mr
 	RestoreM();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Label(mreal x, mreal y, const char *str, const char *fnt, mreal size)
+void mglGraph::Label(mreal x, mreal y, const char *str, const char *fnt, mreal size, bool rel)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
-	Labelw(x,y,wcs, fnt, size);
+	Labelw(x,y,wcs, fnt, size, rel);
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------

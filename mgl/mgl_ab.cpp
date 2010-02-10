@@ -356,7 +356,8 @@ mreal mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,mreal
 void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal size, char dir, mreal sh)
 {
 	static int cgid=1;	StartGroup("Putsw",cgid++);
-	if(strchr(font, 'a'))	{	Labelw(p.x, p.y, wcs,font,size);	return;	}
+	if(font && strchr(font, 'A'))	{	Labelw(p.x, p.y, wcs,font,size,false);	return;	}
+	if(font && strchr(font, 'a'))	{	Labelw(p.x, p.y, wcs,font,size,true);	return;	}
 	bool upside = ( (((_sx==-1) ^ (Org.y==Max.y || Org.z==Max.z)) && (dir=='x' || dir=='X')) ||
 					(((_sy==-1) ^ (Org.x==Max.x || Org.z==Max.z)) && (dir=='y' || dir=='Y')) ||
 					(((_st==-1) ^ (Org.x==0 || Org.z==1)) && (dir=='t' || dir=='T')) ||

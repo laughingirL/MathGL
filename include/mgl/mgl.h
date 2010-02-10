@@ -299,7 +299,7 @@ public:
 	/// Zoom in or zoom out (if Zoom(0, 0, 1, 1)) a part of picture
 	void Zoom(mreal x1, mreal y1, mreal x2, mreal y2);
 	/// Clear transformation matrix.
-	void Identity();
+	void Identity(bool rel=false);
 	/// Restore transformation matrix after last InPlot()
 	virtual void RestoreM()=0;
 	/// Clear up the frame
@@ -377,8 +377,8 @@ public:
 	/// Print the label \a text for axis \a dir.
 	void Label(char dir, const char *text, int pos=+1, mreal size=-1.4, mreal shift=0);
 	/// Print the \a text at arbitrary position of the picture \a x, \a y in range [0,1]x[0,1].
-	void Label(mreal x, mreal y, const char *text, const char *fnt=0, mreal size=-1.4);
-	void Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt=0, mreal size=-1.4);
+	void Label(mreal x, mreal y, const char *text, const char *fnt=0, mreal size=-1.4, bool rel=false);
+	void Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt=0, mreal size=-1.4, bool rel=false);
 	/// Print the label \a text for axis \a dir.
 	void Label(char dir, const wchar_t *text, int pos=+1, mreal size=-1.4, mreal shift=0);
 	/// Draw colorbar at edge of axis
@@ -422,6 +422,14 @@ public:
 	void Mark(mglPoint p,char mark='.');
 	/// Draw a set of triangles (or lines if trig==NULL) for glyph from point (0,0). Normally this function is used internally.
 	virtual void Glyph(mreal x, mreal y, mreal f, int style, long icode, char col)=0;
+	//@}
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	/** @name Histogram functions
+	  * These functions make histogram (distribution) of data. This functions do not draw obtained curve itself.*/
+	//@{
+	void Hist(mglData &res, const mglData &x, const mglData &a);
+	void Hist(mglData &res, const mglData &x, const mglData &y, const mglData &a);
+	void Hist(mglData &res, const mglData &x, const mglData &y, const mglData &z, const mglData &a);
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Fitting functions

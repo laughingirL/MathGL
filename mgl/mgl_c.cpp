@@ -158,8 +158,8 @@ void mgl_set_ambbr(HMGL gr, mreal i)
 //		Scale and rotate
 //-----------------------------------------------------------------------------
 /// Clear transformation matrix.
-void mgl_identity(HMGL gr)
-{	gr->Identity();	}
+void mgl_identity(HMGL gr, int rel)
+{	gr->Identity(rel);	}
 /// Clear up the frame
 void mgl_clf(HMGL gr)
 {	gr->Clf();	}

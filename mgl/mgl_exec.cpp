@@ -199,11 +199,11 @@ void mglc_ball(wchar_t out[1024], long , mglArg *a, int k[10])
 //-----------------------------------------------------------------------------
 int mgls_box(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	gr->Box(k[0]==2 ? a[0].s : (gr->TranspType!=2 ?"k-":"w-"), k[1]==3 || a[1].v);
+	gr->Box(k[0]==2 ? a[0].s : (gr->TranspType!=2 ?"k-":"w-"), k[1]!=3 || a[1].v);
 	return 0;
 }
 void mglc_box(wchar_t out[1024], long , mglArg *a, int k[10])
-{	mglprintf(out,1024,L"gr->Box(\"%s\", %s);", k[0]==2 ? a[0].s : "", k[1]==3 || a[1].v ? "true":"false");	}
+{	mglprintf(out,1024,L"gr->Box(\"%s\", %s);", k[0]==2 ? a[0].s : "", k[1]!=3 || a[1].v ? "true":"false");	}
 //-----------------------------------------------------------------------------
 int mgls_bars(mglGraph *gr, long , mglArg *a, int k[10])
 {
@@ -2656,12 +2656,18 @@ void mglc_norm(wchar_t out[1024], long , mglArg *a, int k[10])
 		mglprintf(out,1024,L"%s.Norm(%g, %g, %s, %d);", a[0].s, a[1].v, a[2].v, (k[3]==3&&a[3].v!=0)?"true":"false", k[4]==3?int(a[4].v):0);
 }
 //-----------------------------------------------------------------------------
-int mgls_hist(mglGraph *, long , mglArg *a, int k[10])
+int mgls_hist(mglGraph *gr, long , mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==3 && k[4]==3 && k[5]==3)
 		*(a[0].d) = a[1].d->Hist(*(a[2].d), int(a[3].v), a[4].v, a[5].v, k[6]==3?int(a[6].v):0);
 	else if(k[0]==1 && k[1]==1 && k[2]==3 && k[3]==3 && k[4]==3)
 		*(a[0].d) = a[1].d->Hist(int(a[2].v), a[3].v, a[4].v, k[5]==3?int(a[5].v):0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		gr->Hist(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d));
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		gr->Hist(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d));
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		gr->Hist(*(a[0].d), *(a[1].d), *(a[2].d));
 	else	return 1;
 	return 0;
 }
@@ -2671,6 +2677,12 @@ void mglc_hist(wchar_t out[1024], long , mglArg *a, int k[10])
 		mglprintf(out,1024,L"%s = %s.Hist(%s, %d, %g, %g, %d);", a[0].s, a[1].s, a[2].s, int(a[3].v), a[4].v, a[5].v, k[6]==3?int(a[6].v):0);
 	else if(k[0]==1 && k[1]==1 && k[2]==3 && k[3]==3 && k[4]==3)
 		mglprintf(out,1024,L"%s = %s.Hist(%d, %g, %g, %d);", a[0].s, a[1].s, int(a[2].v), a[3].v, a[4].v, k[5]==3?int(a[5].v):0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		mglprintf(out,1024,L"gr->Hist(%s, %s, %s, %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"gr->Hist(%s, %s, %s, %s);", a[0].s, a[1].s, a[2].s, a[3].s);
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		mglprintf(out,1024,L"gr->Hist(%s, %s, %s);", a[0].s, a[1].s, a[2].s);
 }
 //-----------------------------------------------------------------------------
 int mgls_mirror(mglGraph *, long , mglArg *a, int k[10])
@@ -3283,7 +3295,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"barwidth",L"Set default bars width",L"barwidth val", mgls_barwidth, mglc_barwidth},
 	{L"beam",L"Draw quasioptical beam",L"beam Tr G1 G2 Adat r ['sch' flag num] ", mgls_beam, mglc_beam, false, 0},
 	{L"belt",L"Draw belts",L"belt Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_belt, mglc_belt, false, 0},
-	{L"box",L"Draw bounding box",L"box ['fmt']", mgls_box, mglc_box, false, 1},
+	{L"box",L"Draw bounding box",L"box ['fmt' ticks]", mgls_box, mglc_box, false, 1},
 	{L"boxplot",L"Draw boxplot for 2D data",L"boxplot Ydat ['fmt']|Xdat Ydat ['fmt']", mgls_boxplot, mglc_boxplot},
 	{L"boxs",L"Draw boxes",L"boxs Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_boxs, mglc_boxs, false, 0},
 	{L"caxis",L"Set color range",L"caxis c1 c2", mgls_caxis, mglc_caxis, false, 2},

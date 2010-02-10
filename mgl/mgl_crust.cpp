@@ -124,10 +124,9 @@ void mglGraph::Dots(const mglData &x, const mglData &y, const mglData &z, const 
 	if(alpha>1)	alpha = 1;
 	mglColor c;
 
-	bool al=Alpha(true);
-	for(long i=0;i<n;i++)
-		AVertex(x.a[i], y.a[i], z.a[i], a.a[i], alpha);
-	Alpha(al);
+//	bool al=Alpha(true);
+	for(long i=0;i<n;i++)	AVertex(x.a[i], y.a[i], z.a[i], a.a[i], alpha);
+//	Alpha(al);
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
