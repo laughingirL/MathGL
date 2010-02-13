@@ -341,7 +341,7 @@ bool mgls_suffix(const wchar_t *p, mglData *d, mreal *v)
 //-----------------------------------------------------------------------------
 // convert substrings to arguments
 mglData mglFormulaCalc(const wchar_t *string, mglParse *arg);
-void mglParse::FillArg(int k, wchar_t **arg, mglArg *a)
+void mglParse::FillArg(mglGraph *gr, int k, wchar_t **arg, mglArg *a)
 {
 	register long n;
 	for(n=1;n<k;n++)
@@ -359,25 +359,12 @@ void mglParse::FillArg(int k, wchar_t **arg, mglArg *a)
 		else if(arg[n][0]=='{')
 		{	// this is temp data
 			arg[n][wcslen(arg[n])-1] = 0;
-/*			wchar_t *str, *s = new wchar_t[wcslen(string)+1+parlen],*arg[1024],*t;
-			for(k=0;k<1024;k++)	// parse string to substrings (by spaces)
-			{
-				nn = mglFindArg(arg[n]);
-				if(n<1)
-				{
-					if(arg[n][-nn]==';')	ProcOpt(gr,arg[n]-nn);
-					if(nn<0)	str[-nn]=0;
-					break;
-				}
-				str[n]=0;	arg[k] = str;//	k++;
-				str = str+n+1;	wcstrim_mgl(str);
-			}
-			a[n-1].type = 0;
-			// try to find last argument
-			if(str[0]!=0 && str[0]!='#' && str[0]!=';')	{	arg[k] = str;	k++;	}*/
-/*			a[n-1].type = 1;	arg[n][wcslen(arg[n])-1] = 0;
-			if(wcslen(arg[n]+1)>=2048)	arg[n][2048]=0;
-			wcscpy(a[n-1].w, arg[n]+1);*/
+			u=new mglVar;	u->temp=true;
+			mglprintf(a[n-1].w,2048,L"/*%ls*/",arg[n]);
+			if(DataList)	u->MoveAfter(DataList);
+			else			DataList = u;
+			a[n-1].type = 0;	a[n-1].d = &(u->d);
+			ParseDat(gr, arg[n]+1, u->d);	// TODO: Check it
 		}
 		else if((v = FindVar(arg[n]))!=0)
 		{	// have to find normal variables (for data creation)
@@ -616,7 +603,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	{
 		// fill arguments by its values
 		mglArg *a = new mglArg[k];
-		FillArg(k, arg, a);
+		FillArg(gr, k, arg, a);
 		// execute first special (program-flow-control) commands
 		n = FlowExec(gr, arg[0],k-1,a);
 		if(n)		{	delete []s;	delete []a;	return n-1;	}
@@ -691,6 +678,48 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	// restore plot settings if it was changed
 	ProcOpt(gr,0);
 	delete []s;
+	return n;
+}
+//-----------------------------------------------------------------------------
+// return values: 0 - OK, 1 - wrong arguments, 2 - wrong command, 3 - string too long, 4 -- unclosed string
+int mglParse::ParseDat(mglGraph *gr, const wchar_t *string, mglData &res)
+{
+	wchar_t *str, *s = new wchar_t[wcslen(string)+1+parlen],*arg[32];
+	str = s;
+	wcscpy(str,string);	wcstrim_mgl(str);
+	long n,k=0;
+	for(k=0;k<32;k++)	// parse string to substrings (by spaces)
+	{
+		n = mglFindArg(str);
+		if(n<1)
+		{
+			if(str[-n]==';')	ProcOpt(gr,str-n);
+			if(n<0)	str[-n]=0;
+			break;
+		}
+		str[n]=0;	arg[k] = str;//	k++;
+		str = str+n+1;	wcstrim_mgl(str);
+	}
+	// try to find last argument
+	if(str[0]!=0 && str[0]!='#' && str[0]!=';')	{	arg[k] = str;	k++;	}
+	if(k<1) n =0;
+	else
+	{
+		// fill arguments by its values
+		mglArg *a = new mglArg[k+1];
+		FillArg(gr, k, arg, a+1);	a[0].type=0;	a[0].d=&res;
+		// alocate new arrays and execute the command itself
+		int kk[10], i;
+		for(i=0;i<10;i++)	kk[i] = i<=k ? a[i].type + 1 : 0;
+		for(i=0;i<=k;i++)	mgl_wcstombs(a[i].s, a[i].w, 1024);
+		mglCommand *rts=FindCommand(arg[0]);
+		if(!rts || !rts->create)	return 2;
+		if(out)	rts->save(out, k, a, kk);
+		n = rts->exec(gr, k, a, kk);
+		delete []a;
+	}
+	// restore plot settings if it was changed
+	ProcOpt(gr,0);	delete []s;
 	return n;
 }
 //-----------------------------------------------------------------------------

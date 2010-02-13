@@ -14,11 +14,11 @@ c. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 7. "Chaos" in area.png (near axis) ???
 
 8. Options "iI_-aA" for colorbar
-9. MGL: temporary arrays as code inside [] -- like "dens [sum a 'x']"
 
 10. New docs:
 - 'hist' and mglGraph::Hist()
 - GridPnts
+- Commands in MGL arguments (like, plot {sum dat 'x'})
 
 
 

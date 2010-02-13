@@ -1,8 +1,11 @@
 1.10.1 Released ?? February 2010
+	- Add "in-place" commands for arguments in a MGL script (like, "plot {sum dat 'x'}").
 	- Add parsing of option arguments.
 	- If text style contain 'a'/'A' then text in absolute subplot/picture coordinates is drawn.
+	- Add functions mglGraph::Hist() for converting value from points to grids.
 	- Add extra argument for 'box' command.
 	- Add ticks (lines) for Colorbar.
+	- Add GridPnts for changing number of points in grid lines (for curved coordinates)
 	- Colorbar factor now placed at top of a plot.
 	- Dots() now don't change transparence for self.
 	- Bug with missing ticks tunning in Colorbar.

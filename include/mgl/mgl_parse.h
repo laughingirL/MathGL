@@ -160,13 +160,15 @@ private:
 	/// Parse command
 	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var);
 	/// Fill arguments \a a from strings
-	void FillArg(int n, wchar_t **arg, mglArg *a);
+	void FillArg(mglGraph *gr, int n, wchar_t **arg, mglArg *a);
 	/// PreExecute stage -- parse some commands and create variables
 	int PreExec(mglGraph *gr, long n, wchar_t **arg, mglArg *a);
 	/// Process optional arguments
 	void ProcOpt(mglGraph *gr, wchar_t *str);
 	/// Execute program-flow control commands
 	int FlowExec(mglGraph *gr, const wchar_t *com, long n, mglArg *a);
+	/// Parse and execute the unicode string of MGL script
+	int ParseDat(mglGraph *gr, const wchar_t *str, mglData &res);
 	/// In skip mode
 	bool inline ifskip()	{	return (if_pos>0 && !(if_stack[if_pos-1]&1));	};
 	bool inline skip()		{	return (Skip || ifskip() || for_br);	};
