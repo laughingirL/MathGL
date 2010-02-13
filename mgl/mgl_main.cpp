@@ -559,7 +559,7 @@ void mglGraph::DefaultPlotParam()
 	ClearLegend();			LegendBox = true;
 	CutMin=mglPoint(0,0,0);	CutMax=mglPoint(0,0,0);
 	AutoOrg = true;			//CurFrameId = 0;
-	CirclePnts = 40;		FitPnts = 100;
+	CirclePnts=40;	FitPnts=100;	GridPnts=50;
 	DrawFace = true;		_tetx=_tety=_tetz=0;
 	TuneTicks= true;		_sx=_sy=_sz = 1;
 	Alpha(false);	Fog(0);	FactorPos = 1.15;

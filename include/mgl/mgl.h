@@ -155,6 +155,7 @@ public:
 	mreal FactorPos;	///< Position of axis ticks factor (0 at Min, 1 at Max, 1.1 is default)
 	int CirclePnts;		///< Number of points for a circle drawing (used in Tube(), Drop(), Sphere(), Cone())
 	int FitPnts;		///< Number of output points in fitting
+	int GridPnts;		///< Number of points for grid lines
 
 	mglGraph();			///< Set default parameter for plotting
 	virtual ~mglGraph();///< Clear the used variables

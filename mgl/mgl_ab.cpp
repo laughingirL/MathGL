@@ -36,7 +36,7 @@ mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 {
 	G = 0;	UseLight = false;	st_pos=-1;
 	memset(stack,0,MGL_STACK_ENTRY*13*sizeof(mreal));
-	SetSize(w,h);	ClfOnUpdate = true;
+	SetSize(w,h);	ClfOnUpdate = true;	SetDrawReg(1,1,0);
 	AutoClf=true;	Delay = 100;	ObjId=0;
 	NoAutoFactor = false;	ShowMousePos = true;
 	BDef[0] = BDef[1] = BDef[2] = BDef[3] = 255;
@@ -650,7 +650,7 @@ void mglGraphAB::SetSize(int w,int h)
 	G4= new unsigned char[w*h*4];
 	OI= new int[w*h];
 	Clf();
-	InPlot(0,1,0,1);	Persp = 0;
+	InPlot(0,1,0,1);	SetDrawReg(1,1,0);	Persp = 0;
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::WriteSVG(const char *fname, const char *descr)

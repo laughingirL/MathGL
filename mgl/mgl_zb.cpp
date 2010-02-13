@@ -34,10 +34,35 @@ mglGraphZB::mglGraphZB(int w,int h) : mglGraphAB(w,h)
 mglGraphZB::~mglGraphZB()
 {	if(C)	{	delete []C;	delete []Z;	}	}
 //-----------------------------------------------------------------------------
+void mglGraphAB::SetDrawReg(int nx, int ny, int m)
+{
+	int mx = m%nx, my = m/nx;
+	nx1 = Width*mx/nx;		ny1 = Height-Height*(my+1)/ny;
+	nx2 = Width*(mx+1)/nx;	ny2 = Height-Height*my/ny;
+}
+//-----------------------------------------------------------------------------
+void mglGraphAB::PutDrawReg(int , int , int , mglGraphAB *)	{}
+//-----------------------------------------------------------------------------
+void mglGraphZB::PutDrawReg(int nx, int ny, int m, mglGraphAB *g)
+{
+	mglGraphZB *gr=dynamic_cast<mglGraphZB *>(g);
+	if(!gr)	return;
+	int mx = m%nx, my = m/nx, x1, x2, y1, y2;
+	x1 = Width*mx/nx;		y1 = Height-Height*(my+1)/ny;
+	x2 = Width*(mx+1)/nx;	y2 = Height-Height*my/ny;
+	register long i,j;
+	for(j=y1;j<y2;j++)
+	{
+		i = x1+Width*(Height-1-j);
+		memcpy(Z+8*i,gr->Z+8*i,8*(x2-x1)*sizeof(mreal));
+		memcpy(C+32*i,gr->C+32*i,32*(x2-x1));
+	}
+}
+//-----------------------------------------------------------------------------
 void mglGraphZB::pnt_plot(long x,long y,mreal z,unsigned char c[4])
 {
 	long i0=x+Width*(Height-1-y);
-	if(x<0 || x>=Width || y<0 || y>=Height)	return;
+	if(x<nx1 || x>=nx2 || y<ny1 || y>=ny2)	return;
 	unsigned char *cc = C+32*i0;
 	mreal *zz = Z+8*i0, zf = FogDist*(z/Depth-0.5-FogDz);
 	if(zf<0)
@@ -356,6 +381,8 @@ void mglGraphAB::quad_plot(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 	y1 = imin(imin(long(pp0[1]),long(pp3[1])),imin(long(pp1[1]),long(pp2[1])));
 	x2 = imax(imax(long(pp0[0]),long(pp3[0])),imax(long(pp1[0]),long(pp2[0])));
 	y2 = imax(imax(long(pp0[1]),long(pp3[1])),imax(long(pp1[1]),long(pp2[1])));
+	x1=x1>nx1?x1:nx1;	x2=x2<nx2?x2:nx2-1;	y1=y1>ny1?y1:ny1;	y2=y2<ny2?y2:ny2-1;
+	if(x1>x2 || y1>y2)	return;
 
 	dd=d1[0]*d2[1]-d1[1]*d2[0];
 	dsx =-4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[1];
@@ -437,6 +464,8 @@ void mglGraphAB::quad_plot_n(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 	y1 = imin(imin(long(pp0[1]),long(pp3[1])),imin(long(pp1[1]),long(pp2[1])));
 	x2 = imax(imax(long(pp0[0]),long(pp3[0])),imax(long(pp1[0]),long(pp2[0])));
 	y2 = imax(imax(long(pp0[1]),long(pp3[1])),imax(long(pp1[1]),long(pp2[1])));
+	x1=x1>nx1?x1:nx1;	x2=x2<nx2?x2:nx2-1;	y1=y1>ny1?y1:ny1;	y2=y2<ny2?y2:ny2-1;
+	if(x1>x2 || y1>y2)	return;
 
 	dd=d1[0]*d2[1]-d1[1]*d2[0];
 	dsx =-4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[1];
@@ -511,6 +540,8 @@ void mglGraphAB::quad_plot_a(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 	y1 = imin(imin(long(pp0[1]),long(pp3[1])),imin(long(pp1[1]),long(pp2[1])));
 	x2 = imax(imax(long(pp0[0]),long(pp3[0])),imax(long(pp1[0]),long(pp2[0])));
 	y2 = imax(imax(long(pp0[1]),long(pp3[1])),imax(long(pp1[1]),long(pp2[1])));
+	x1=x1>nx1?x1:nx1;	x2=x2<nx2?x2:nx2-1;	y1=y1>ny1?y1:ny1;	y2=y2<ny2?y2:ny2-1;
+	if(x1>x2 || y1>y2)	return;
 
 	dd=d1[0]*d2[1]-d1[1]*d2[0];
 	dsx =-4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[1];
@@ -586,6 +617,8 @@ void mglGraphAB::trig_plot(mreal *pp0,mreal *pp1,mreal *pp2,
 	y1 = imin(long(pp0[1]),imin(long(pp1[1]),long(pp2[1])));
 	x2 = imax(long(pp0[0]),imax(long(pp1[0]),long(pp2[0])));
 	y2 = imax(long(pp0[1]),imax(long(pp1[1]),long(pp2[1])));
+	x1=x1>nx1?x1:nx1;	x2=x2<nx2?x2:nx2-1;	y1=y1>ny1?y1:ny1;	y2=y2<ny2?y2:ny2-1;
+	if(x1>x2 || y1>y2)	return;
 
 	register mreal u,v,xx,yy;
 	register long i,j,g;
@@ -634,6 +667,8 @@ void mglGraphAB::trig_plot_n(mreal *pp0,mreal *pp1,mreal *pp2,
 	y1 = imin(long(pp0[1]),imin(long(pp1[1]),long(pp2[1])));
 	x2 = imax(long(pp0[0]),imax(long(pp1[0]),long(pp2[0])));
 	y2 = imax(long(pp0[1]),imax(long(pp1[1]),long(pp2[1])));
+	x1=x1>nx1?x1:nx1;	x2=x2<nx2?x2:nx2-1;	y1=y1>ny1?y1:ny1;	y2=y2<ny2?y2:ny2-1;
+	if(x1>x2 || y1>y2)	return;
 
 	register mreal u,v,xx,yy;
 	register long i,j,g;
@@ -709,6 +744,8 @@ void mglGraphAB::line_plot(mreal *pp0,mreal *pp1,mreal *cc0,mreal *cc1,bool all)
 	y2 = imax(long(pp0[1]),long(pp1[1]));
 	x1 -= int(pw+3.5);	y1 -= int(pw+3.5);
 	x2 += int(pw+3.5);	y2 += int(pw+3.5);
+	x1=x1>nx1?x1:nx1;	x2=x2<nx2?x2:nx2-1;	y1=y1>ny1?y1:ny1;	y2=y2<ny2?y2:ny2-1;
+	if(x1>x2 || y1>y2)	return;
 
 	bool aa=UseAlpha;
 	register mreal u,v,xx,yy;
@@ -719,6 +756,7 @@ void mglGraphAB::line_plot(mreal *pp0,mreal *pp1,mreal *cc0,mreal *cc1,bool all)
 	{
 		y1 = int(pp0[1]+(pp1[1]-pp0[1])*(i-pp0[0])/(pp1[0]-pp0[0]) - pw - 3.5);
 		y2 = int(pp0[1]+(pp1[1]-pp0[1])*(i-pp0[0])/(pp1[0]-pp0[0]) + pw + 3.5);
+		y1=y1>ny1?y1:ny1;	y2=y2<ny2?y2:ny2-1;		if(y1>y2)	continue;
 		for(j=y1;j<=y2;j++)
 		{
 			xx = (i-pp0[0]);	yy = (j-pp0[1]);
@@ -741,6 +779,8 @@ void mglGraphAB::line_plot(mreal *pp0,mreal *pp1,mreal *cc0,mreal *cc1,bool all)
 	{
 		x1 = int(pp0[0]+(pp1[0]-pp0[0])*(j-pp0[1])/(pp1[1]-pp0[1]) - pw - 3.5);
 		x2 = int(pp0[0]+(pp1[0]-pp0[0])*(j-pp0[1])/(pp1[1]-pp0[1]) + pw + 3.5);
+		x1=x1>nx1?x1:nx1;	x2=x2<nx2?x2:nx2-1;		if(x1>x2)	continue;
+
 		for(i=x1;i<=x2;i++)
 		{
 			xx = (i-pp0[0]);	yy = (j-pp0[1]);

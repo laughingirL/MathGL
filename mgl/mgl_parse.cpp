@@ -289,12 +289,14 @@ mglNum *mglParse::AddNum(const wchar_t *name)
 //-----------------------------------------------------------------------------
 int mglFindArg(const wchar_t *str)
 {
-	register long l=0,i;//,j,len=strlen(lst);
+	register long l=0,k=0,i;//,j,len=strlen(lst);
 	for(i=0;i<long(wcslen(str));i++)
 	{
-		if(l%2==0 && (str[i]=='#' || str[i]==';'))	return -i;
+		if(l%2==0 && k==0 && (str[i]=='#' || str[i]==';'))	return -i;
 		if(str[i]=='\'') l++;
-		if(l%2==0 && (str[i]<=' '))	return i;
+		if(str[i]=='{') k++;
+		if(str[i]=='}') k--;
+		if(l%2==0 && k==0 && (str[i]<=' '))	return i;
 	}
 	return 0;
 }
@@ -353,6 +355,29 @@ void mglParse::FillArg(int k, wchar_t **arg, mglArg *a)
 			a[n-1].type = 1;	arg[n][wcslen(arg[n])-1] = 0;
 			if(wcslen(arg[n]+1)>=2048)	arg[n][2048]=0;
 			wcscpy(a[n-1].w, arg[n]+1);
+		}
+		else if(arg[n][0]=='{')
+		{	// this is temp data
+			arg[n][wcslen(arg[n])-1] = 0;
+/*			wchar_t *str, *s = new wchar_t[wcslen(string)+1+parlen],*arg[1024],*t;
+			for(k=0;k<1024;k++)	// parse string to substrings (by spaces)
+			{
+				nn = mglFindArg(arg[n]);
+				if(n<1)
+				{
+					if(arg[n][-nn]==';')	ProcOpt(gr,arg[n]-nn);
+					if(nn<0)	str[-nn]=0;
+					break;
+				}
+				str[n]=0;	arg[k] = str;//	k++;
+				str = str+n+1;	wcstrim_mgl(str);
+			}
+			a[n-1].type = 0;
+			// try to find last argument
+			if(str[0]!=0 && str[0]!='#' && str[0]!=';')	{	arg[k] = str;	k++;	}*/
+/*			a[n-1].type = 1;	arg[n][wcslen(arg[n])-1] = 0;
+			if(wcslen(arg[n]+1)>=2048)	arg[n][2048]=0;
+			wcscpy(a[n-1].w, arg[n]+1);*/
 		}
 		else if((v = FindVar(arg[n]))!=0)
 		{	// have to find normal variables (for data creation)
@@ -491,58 +516,61 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		if(str[n]=='\'' && str[n-1]!='\\')	k++;
 	if(k%2)	return 4;	// strings is not closed
 	// define parameters or start cycle
-	if(!skip() && !wcsncmp(str,L"define",6) && (str[6]==' ' || str[6]=='\t'))
+	if(!skip() && !wcsncmp(str,L"def",3) && (str[6]==' ' || str[6]=='\t'))
 	{
-		wchar_t *ss=str+7;	wcstrim_mgl(ss);//	int res = 1;
-		if(*ss=='$' && ss[1]>='0' && ss[1]<='9')
+		if(!skip() && !wcsncmp(str+3,L"ine",3) && (str[6]==' ' || str[6]=='\t'))
 		{
-			int n=ss[1]-'0';//	res = 0;
-			ss +=2;	mgl_wcstrim(ss);
-			AddParam(n, ss);
-			delete []s;	return 0;
+			wchar_t *ss=str+7;	wcstrim_mgl(ss);//	int res = 1;
+			if(*ss=='$' && ss[1]>='0' && ss[1]<='9')
+			{
+				int n=ss[1]-'0';//	res = 0;
+				ss +=2;	mgl_wcstrim(ss);
+				AddParam(n, ss);
+				delete []s;	return 0;
+			}
 		}
-	}
-	if(!skip() && !wcsncmp(str,L"defnum",6) && (str[6]==' ' || str[6]=='\t'))
-	{
-		str += 7;	wcstrim_mgl(str);	int res = 1;
-		if(*str=='$' && str[1]>='0' && str[1]<='9')
+		if(!skip() && !wcsncmp(str+3,L"num",3) && (str[6]==' ' || str[6]=='\t'))
 		{
-			int n=str[1]-'0';	res = 0;
-			str +=2;	mgl_wcstrim(str);
-			const mglData &d=mglFormulaCalc(str, this);
-			char *buf=new char[128];
-			sprintf(buf,"%g",d.a[0]);
-			AddParam(n, buf);
-			delete []buf;
+			str += 7;	wcstrim_mgl(str);	int res = 1;
+			if(*str=='$' && str[1]>='0' && str[1]<='9')
+			{
+				int n=str[1]-'0';	res = 0;
+				str +=2;	mgl_wcstrim(str);
+				const mglData &d=mglFormulaCalc(str, this);
+				char *buf=new char[128];
+				sprintf(buf,"%g",d.a[0]);
+				AddParam(n, buf);
+				delete []buf;
+			}
+			delete []s;		return res;
 		}
-		delete []s;		return res;
-	}
-	if(!skip() && !wcsncmp(str,L"defchr",6) && (str[6]==' ' || str[6]=='\t'))
-	{
-		str += 7;	wcstrim_mgl(str);	int res = 1;
-		if(*str=='$' && str[1]>='0' && str[1]<='9')
+		if(!skip() && !wcsncmp(str+3,L"chr",3) && (str[6]==' ' || str[6]=='\t'))
 		{
-			int n=str[1]-'0';	res = 0;
-			str +=2;	mgl_wcstrim(str);
-			const mglData &d=mglFormulaCalc(str, this);
-			wchar_t buf[2]={0,0};	buf[0] = wchar_t(d.a[0]);
-			AddParam(n, buf);
+			str += 7;	wcstrim_mgl(str);	int res = 1;
+			if(*str=='$' && str[1]>='0' && str[1]<='9')
+			{
+				int n=str[1]-'0';	res = 0;
+				str +=2;	mgl_wcstrim(str);
+				const mglData &d=mglFormulaCalc(str, this);
+				wchar_t buf[2]={0,0};	buf[0] = wchar_t(d.a[0]);
+				AddParam(n, buf);
+			}
+			delete []s;		return res;
 		}
-		delete []s;		return res;
-	}
-	if(!skip() && !wcsncmp(str,L"defpal",6) && (str[6]==' ' || str[6]=='\t'))
-	{
-		str += 7;	wcstrim_mgl(str);	int res = 1;
-		if(*str=='$' && str[1]>='0' && str[1]<='9')
+		if(!skip() && !wcsncmp(str+3,L"pal",3) && (str[6]==' ' || str[6]=='\t'))
 		{
-			int n=str[1]-'0';	res = 0;
-			str +=2;	mgl_wcstrim(str);
-			const mglData &d=mglFormulaCalc(str, this);
-			wchar_t buf[2]={0,0};
-			buf[0] = gr->DefPal[int(d.a[0])%gr->NumPal];
-			AddParam(n, buf);
+			str += 7;	wcstrim_mgl(str);	int res = 1;
+			if(*str=='$' && str[1]>='0' && str[1]<='9')
+			{
+				int n=str[1]-'0';	res = 0;
+				str +=2;	mgl_wcstrim(str);
+				const mglData &d=mglFormulaCalc(str, this);
+				wchar_t buf[2]={0,0};
+				buf[0] = gr->DefPal[int(d.a[0])%gr->NumPal];
+				AddParam(n, buf);
+			}
+			delete []s;		return res;
 		}
-		delete []s;		return res;
 	}
 	if(!skip() && !wcsncmp(str,L"for",3) && (str[3]==' ' || str[3]=='\t'))
 	{
