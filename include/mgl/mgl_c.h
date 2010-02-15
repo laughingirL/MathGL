@@ -176,6 +176,7 @@ void mgl_subplot_d(HMGL graph, int nx,int ny,int m, mreal dx, mreal dy);
 void mgl_inplot(HMGL graph, mreal x1,mreal x2,mreal y1,mreal y2);
 void mgl_relplot(HMGL graph, mreal x1,mreal x2,mreal y1,mreal y2);
 void mgl_columnplot(HMGL graph, int num, int ind);
+void mgl_stickplot(HMGL graph, int num, int ind, mreal tet, mreal phi);
 void mgl_aspect(HMGL graph, mreal Ax,mreal Ay,mreal Az);
 void mgl_rotate(HMGL graph, mreal TetX,mreal TetZ,mreal TetY);
 void mgl_rotate_vector(HMGL graph, mreal Tet,mreal x,mreal y,mreal z);

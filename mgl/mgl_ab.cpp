@@ -123,7 +123,7 @@ void mglGraphAB::RotateN(mreal Tet,mreal x,mreal y,mreal z)
 	B[8] = C[2]*R[6] + C[5]*R[7] + C[8]*R[8];
 	if(AutoPlotFactor && !NoAutoFactor)
 	{
-		register mreal m = fabs(B[3]+B[4]+B[5]);
+/*		register mreal m = fabs(B[3]+B[4]+B[5]);
 		m = m<fabs(B[3]+B[4]-B[5]) ? fabs(B[3]+B[4]-B[5]) : m;
 		m = m<fabs(B[3]-B[4]+B[5]) ? fabs(B[3]-B[4]+B[5]) : m;
 		m = m<fabs(B[3]-B[4]-B[5]) ? fabs(B[3]-B[4]-B[5]) : m;
@@ -133,7 +133,10 @@ void mglGraphAB::RotateN(mreal Tet,mreal x,mreal y,mreal z)
 		n = n<fabs(B[0]-B[1]+B[2]) ? fabs(B[0]-B[1]+B[2]) : n;
 		n = n<fabs(B[0]-B[1]-B[2]) ? fabs(B[0]-B[1]-B[2]) : n;
 		n /= B1[0];
-		PlotFactor = 1.55+0.6147*(m<n ? (n-1):(m-1));
+		PlotFactor = 1.55+0.6147*(m<n ? (n-1):(m-1));*/
+		mreal m=fabs(B[3]/B1[4])+fabs(B[5]/B1[4]);
+		mreal n=fabs(B[1]/B1[0])+fabs(B[2]/B1[0]);
+		PlotFactor = 1.55+0.6147*(m<n ? n:m);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -191,6 +194,26 @@ void mglGraphAB::Aspect(mreal Ax,mreal Ay,mreal Az)
 	B[0] *= Ax;		B[3] *= Ax;		B[6] *= Ax;
 	B[1] *= Ay;		B[4] *= Ay;		B[7] *= Ay;
 	B[2] *= Az;		B[5] *= Az;		B[8] *= Az;
+}
+//-----------------------------------------------------------------------------
+void mglGraphAB::StickPlot(int num, int id, mreal tet, mreal phi)
+{
+	mreal dx,dy,w0,h0,pf;
+	RestoreM();	Rotate(tet, phi);	pf=PlotFactor/BL[12];
+	dx=fabs(B[0]/BL[0])/pf;	dy=fabs(B[3]/BL[4])/pf;
+	w0=1/(1+(num-1)*dx);	h0=1/(1+(num-1)*dy);	dx *= w0;	dy *= h0;
+	InPlot(0, w0, 1-h0, 1, true);		// first correction
+	Rotate(tet,phi);	pf=PlotFactor/BL[12];
+	dx=fabs(B[0]/BL[0])/pf;	dy=fabs(B[3]/BL[4])/pf;
+	w0=1/(1+(num-1)*dx);	h0=1/(1+(num-1)*dy);	dx *= w0;	dy *= h0;
+	mreal p[6]={1,0,0,-1,0,0};
+	InPlot(0, w0, 1-h0, 1, true);		// extra shift
+	Rotate(tet,phi);	PostScale(p,1);
+	InPlot(dx, dx+w0, 1-(dy+h0), 1-dy, true);
+	Rotate(tet,phi);	PostScale(p+3,1);
+	dx -= (p[3]-p[0])/BL[0];	dy += (p[4]-p[1])/BL[4];
+	InPlot(id*dx, id*dx+w0, 1-(id*dy+h0), 1-id*dy, true);
+	Rotate(tet,phi);
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::NormScale(mreal *p,long n)

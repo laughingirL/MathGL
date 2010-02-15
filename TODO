@@ -18,6 +18,7 @@ c. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 10. New docs:
 - 'hist' and mglGraph::Hist()
 - GridPnts
+- StickPlot()
 - Commands in MGL arguments (like, plot {sum dat 'x'})
 
 

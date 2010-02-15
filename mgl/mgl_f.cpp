@@ -205,6 +205,8 @@ void mgl_relplot_(uintptr_t *gr, mreal *x1,mreal *x2,mreal *y1,mreal *y2)
 {	_GR_->InPlot(*x1,*x2,*y1,*y2,true);	}
 void mgl_columnplot_(uintptr_t *gr, int *num, int *i)
 {	_GR_->ColumnPlot(*num,*i);	}
+void mgl_stickplot_(uintptr_t *gr, int *num, int *i, mreal *tet, mreal *phi)
+{	_GR_->StickPlot(*num, *i, *tet, *phi);	}
 /// Set aspect ratio for further plotting.
 void mgl_aspect_(uintptr_t *gr, mreal *Ax,mreal *Ay,mreal *Az)
 {	_GR_->Aspect(*Ax,*Ay,*Az);	}

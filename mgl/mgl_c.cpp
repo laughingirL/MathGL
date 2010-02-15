@@ -179,6 +179,8 @@ void mgl_relplot(HMGL gr, mreal x1,mreal x2,mreal y1,mreal y2)
 {	gr->InPlot(x1,x2,y1,y2,true);	}
 void mgl_columnplot(HMGL gr, int num, int i)
 {	gr->ColumnPlot(num,i);	}
+void mgl_stickplot(HMGL gr, int num, int i, mreal tet, mreal phi)
+{	gr->StickPlot(num, i, tet, phi);	}
 /// Set aspect ratio for further plotting.
 void mgl_aspect(HMGL gr, mreal Ax,mreal Ay,mreal Az)
 {	gr->Aspect(Ax,Ay,Az);	}

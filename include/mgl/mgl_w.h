@@ -376,6 +376,8 @@ public:
 		else	mgl_relplot(self, x1, x2, y1, y2);	};
 	inline void ColumnPlot(int num, int ind)
 	{	mgl_columnplot(self,num,ind);	};
+	inline void StickPlot(int num, int i, float tet, float phi)
+	{	mgl_stickplot(self,num,i,tet,phi);	};
 	inline void Aspect(float Ax,float Ay,float Az)
 	{	mgl_aspect(self, Ax, Ay, Az);		};
 	inline void Rotate(float TetX,float TetZ=0,float TetY=0)

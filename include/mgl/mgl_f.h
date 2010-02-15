@@ -139,6 +139,7 @@ void mgl_subplot_d_(uintptr_t *graph, int *nx,int *ny,int *m,mreal *dx,mreal *dy
 void mgl_inplot_(uintptr_t *graph, mreal *x1,mreal *x2,mreal *y1,mreal *y2);
 void mgl_relplot_(uintptr_t *graph, mreal *x1,mreal *x2,mreal *y1,mreal *y2);
 void mgl_columnplot_(uintptr_t *graph, int *num, int *i);
+void mgl_stickplot_(uintptr_t *graph, int *num, int *i, mreal *tet, mreal *phi);
 void mgl_aspect_(uintptr_t *graph, mreal *Ax,mreal *Ay,mreal *Az);
 void mgl_rotate_(uintptr_t *graph, mreal *TetX,mreal *TetZ,mreal *TetY);
 void mgl_rotate_vector_(uintptr_t *graph, mreal *Tet,mreal *x,mreal *y,mreal *z);

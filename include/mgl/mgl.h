@@ -309,6 +309,8 @@ public:
 	void SubPlot(int nx,int ny,int m, mreal dx=0, mreal dy=0);
 	/// Put further plotting in column cell of previous subplot
 	void ColumnPlot(int num, int i);
+	/// Put further plotting in cell of stick rotated on angles tet, phi
+	virtual void StickPlot(int num, int i, mreal tet, mreal phi)=0;
 	/// Put further plotting in some region of whole frame surface.
 	virtual void InPlot(mreal x1,mreal x2,mreal y1,mreal y2,bool rel=false); //=0
 	/// Set aspect ratio for further plotting.

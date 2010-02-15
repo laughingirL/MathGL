@@ -53,6 +53,7 @@ using mglGraph::Legend;
 
 	void RestoreM();
 	void InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel=false);
+	void StickPlot(int num, int i, mreal tet, mreal phi);
 	void Aspect(mreal Ax,mreal Ay,mreal Az);
 	void RotateN(mreal Tet,mreal x,mreal y,mreal z);
 	void Perspective(mreal a);
@@ -78,6 +79,10 @@ using mglGraph::Legend;
 	int GetWidth()	{	return Width;	};
 	/// Get height of the image
 	int GetHeight()	{	return Height;	};
+	/// Set allowed drawing region (for multithreading, like subplots)
+	void SetDrawReg(int m, int n, int k);
+	/// Put drawing from other mglGraphZB (for multithreading, like subplots)
+	virtual void PutDrawReg(int m, int n, int k, mglGraphAB *gr);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/** @name Widget functions
 	  * These functions control window behaviar in classes mglGraphFLTK, mglGraphQT
@@ -150,6 +155,7 @@ protected:
 	bool NoAutoFactor;	///< Temporary variable
 	mreal f_size;		///< font size for glyph lines
 	mreal fscl,ftet;	///< last scale and rotation for glyphs
+	int nx1, nx2, ny1, ny2;		// Allowed drawing region
 
 	int NumFig;			///< Number of figures in the list. If 0 then no list and mglGraph::DrawFunc will called for each drawing.
 	void (*LoadFunc)(int next, void *par);

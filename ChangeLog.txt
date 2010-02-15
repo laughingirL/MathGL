@@ -1,5 +1,6 @@
 1.10.1 Released ?? February 2010
 	- Add "in-place" commands for arguments in a MGL script (like, "plot {sum dat 'x'}").
+	- Add StickPlot() for putting plot in to a cell of sticks
 	- Add parsing of option arguments.
 	- If text style contain 'a'/'A' then text in absolute subplot/picture coordinates is drawn.
 	- Add functions mglGraph::Hist() for converting value from points to grids.

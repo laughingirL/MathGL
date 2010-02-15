@@ -2584,6 +2584,20 @@ void mglc_columnplot(wchar_t out[1024], long , mglArg *a, int k[10])
 		mglprintf(out,1024,L"gr->ColumnPlot(%d, %d);", int(a[0].v), int(a[1].v));
 }
 //-----------------------------------------------------------------------------
+int mgls_stickplot(mglGraph *gr, long , mglArg *a, int k[10])
+{
+	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
+		gr->StickPlot(int(a[0].v), int(a[1].v), a[2].v, a[3].v);
+	else	return 1;
+	return 0;
+}
+void mglc_stickplot(wchar_t out[1024], long , mglArg *a, int k[10])
+{
+	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
+		mglprintf(out,1024,L"gr->StickPlot(%d, %d, %g, %g);",
+			int(a[0].v), int(a[1].v), a[2].v, a[3].v);
+}
+//-----------------------------------------------------------------------------
 int mgls_pipe(mglGraph *gr, long , mglArg *a, int k[10])
 {
 	int i;
@@ -3422,6 +3436,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"squeeze",L"Squeeze data",L"squeeze Dat kx [ky kz]", mgls_squeeze, mglc_squeeze, false, 3},
 	{L"stem",L"Draw stem plot for 1D data",L"stem Ydat ['fmt' zval]|Xdat Ydat ['fmt' zval]|Xdat Ydat Zdat ['fmt']", mgls_stem, mglc_stem, false, 0},
 	{L"step",L"Draw step plot for 1D data",L"step Ydat ['fmt' zval]|Xdat Ydat ['fmt' zval]|Xdat Ydat Zdat ['fmt']", mgls_step, mglc_step, false, 0},
+	{L"stickplot",L"Set position of plot inside cell of stick", L"stickplot num ind tet phi", mgls_stickplot, mglc_stickplot, false, 4},
 	{L"stfa",L"Draw STFA diagram",L"stfa Udat Vdat dn ['fmt']|Xdat Ydat Udat Vdat dn ['fmt']", mgls_stfa, mglc_stfa, false, 0},
 	{L"stfad",L"Do STFA transform",L"stfad Res Real Imag dn ['dir']", mgls_stfad, mglc_stfad, true, 3},
 	{L"subdata",L"Extract sub-array",L"subdata Res Dat nx [ny nz]", mgls_subdata, mglc_subdata, true, 3},
