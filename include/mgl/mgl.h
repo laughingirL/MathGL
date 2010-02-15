@@ -250,7 +250,7 @@ public:
 	inline void SetPalette(const char *colors)
 	{	strcpy(DefPal, colors?colors:MGL_DEF_PAL);	SetPal(colors);	}
 	/// Set colormap scheme for surfaces (usualy called internaly)
-	void SetScheme(const char *sch);
+	void SetScheme(const char *sch, bool face=true);
 	/// Set the parameter of line (usualy called internaly)
 	char SelectPen(const char *pen);
 	/// Set the ticks parameters

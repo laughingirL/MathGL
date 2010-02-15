@@ -296,7 +296,7 @@ void mglGraph::Plot(const mglData &y, const char *pen,mreal zVal)
 //-----------------------------------------------------------------------------
 void mglGraph::Tens(const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *pen)
 {
-	long j,m,mx,my,mz,n=y.nx;
+	long j,m,mx,my,mz,mc,n=y.nx;
 	Arrow1 = Arrow2 = '_';
 	char mk=0;
 	if(x.nx!=n || z.nx!=n || c.nx!=n)
@@ -306,10 +306,11 @@ void mglGraph::Tens(const mglData &x, const mglData &y, const mglData &z, const 
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
 	mreal *pp = new mreal[3*n], *cc = new mreal[n];
 	bool *tt = new bool[n];
-	if(pen && *pen)	{	SetScheme(pen);	mk=SelectPen(pen);	}
+	if(pen && *pen)	{	SetScheme(pen,false);	mk=SelectPen(pen);	}
 	for(j=0;j<m;j++)
 	{
-		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
+		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
+		mz = j<z.ny ? j:0;	mc = j<c.ny ? j:0;
 		register long i,k;
 		for(i=0;i<n;i++)
 		{
@@ -318,9 +319,13 @@ void mglGraph::Tens(const mglData &x, const mglData &y, const mglData &z, const 
 			pp[k+1] = y.a[i+my*n];
 			pp[k+2] = z.a[i+mz*n];
 			tt[i] = ScalePoint(pp[k],pp[k+1],pp[k+2]);
-//			if(mk && tt[i])	Mark(pp[k],pp[k+1],pp[k+2],mk);
+			if(mk && tt[i])
+			{
+				DefColor(GetC(c.a[i+mc*n]));
+				Mark(pp[k],pp[k+1],pp[k+2],mk);
+			}
 		}
-		memcpy(cc,c.a+(j<c.ny?j:0)*n,n*sizeof(mreal));
+		memcpy(cc,c.a+mc*n,n*sizeof(mreal));
 		curv_plot(n,pp,cc,tt);
 	}
 	EndGroup();

@@ -25,6 +25,7 @@
 * Vector fields:: 
 * Other plotting:: 
 * Nonlinear fitting:: 
+* Data distributions:: 
 * Frames/Animation:: 
 * IDTF functions:: 
 @end menu
@@ -464,8 +465,12 @@ Setsize: размер(ы) равны нулю или отрицательны
 Флаг запрета рисования граней. См. @code{SetDrawFace()}.
 @end deftypecv
 
-@deftypecv {@emph{Устаревшая переменная}} mglGraph @code{int} CirclePnts
+@deftypecv {Переменная(C++)} mglGraph @code{int} CirclePnts
 Число точек при аппроксимации окружности в @ref{Primitives drawing}, @ref{Tube}, @ref{Pipe} и т.д. По умолчанию 40.
+@end deftypecv
+
+@deftypecv {Переменная(C++)} mglGraph @code{int} GridPnts
+Число точек при построении линий сеток -- важно для криволинейных координат. По умолчанию 50.
 @end deftypecv
 
 @c ==================================================================
@@ -695,6 +700,11 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} ColumnPlot (@code{int} num, @code{int} ind)
 @deftypefnx {Функция С} @code{void} mgl_columnplot (@code{HMGL} gr, @code{int} num, @code{int} ind)
 Помещает последующий вывод в @var{ind}-ую строку столбца из @var{num} строк. Положение столбца выбирается относительно последнего вызова SubPlot() (или InPlot() с @var{rel}=@code{false}).
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} StickPlot (@code{int} num, @code{int} ind, @code{float} tet, @code{float} phi)
+@deftypefnx {C function} @code{void} mgl_stickplot (@code{HMGL} gr, @code{int} num, @code{int} ind, @code{float} tet, @code{float} phi)
+Помещает последующий вывод в @var{ind}-ую ячейку "бруска" из @var{num} ячеек. При этом сам брусок повернут на углы @var{tet}, @var{phi}. Положение выбирается относительно последнего вызова SubPlot() (или InPlot() с @var{rel}=@code{false}).
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Rotate (@code{float} TetX, @code{float} TetZ, @code{float} TetY=@code{0})
@@ -2375,7 +2385,7 @@ gr->ContZ(c.Sum("z"),0,-1);
 @end deftypefn
 
 @c ##################################################################
-@node Nonlinear fitting, Frames/Animation, Other plotting, MathGL core
+@node Nonlinear fitting, Data distributions, Other plotting, MathGL core
 @section Nonlinear fitting
 @cindex Fit
 @cindex FitS
@@ -2472,8 +2482,36 @@ gr->ContZ(c.Sum("z"),0,-1);
 Минимальное число точек для массива со значениями подобранной формулы.
 @end deftypecv
 
+
+
+
 @c ##################################################################
-@node Frames/Animation, IDTF functions, Nonlinear fitting, MathGL core
+@node Data distributions, Frames/Animation, Nonlinear fitting, MathGL core
+@section Распределение данных
+@cindex Hist
+
+Эти функции создают распределения данных. Они не выполняют построение сами по себе. Функции могут быть полезны в случае когда данные пользователя определены на случайно расположенных точка (например, после PIC расчетов) и он хочет построить график, требующий регулярных данных (данных на сетках). Диапазон сеток равен диапазону осей координат Min...Max. Массивы @var{x}, @var{y}, @var{z} определяют положение (координаты) точек. Массив @var{a} задает значения данных. Число точек в результате @var{res} -- максимум из размера @var{res} и значения @var{FitPnts}.
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Hist (@code{mglData &}res, @code{const mglData &}x, @code{const mglData &}a)
+@deftypefnx {C function} @code{int} mgl_hist_x (@code{HMGL} gr, @code{HMDT} res, @code{const HMDT} x, @code{const HMDT} a)
+Создет 1D распределение значений массива @var{a} в диапазоне [Min, Max].
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Hist (@code{mglData &}res, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}a)
+@deftypefnx {C function} @code{int} mgl_hist_xy (@code{HMGL} gr, @code{HMDT} res, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} a)
+Создет 2D распределение значений массива @var{a} в диапазоне [Min, Max].
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Hist (@code{mglData &}res, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a)
+@deftypefnx {C function} @code{int} mgl_hist_xyz (@code{HMGL} gr, @code{HMDT} res, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a)
+Создет 3D распределение значений массива @var{a} в диапазоне [Min, Max].
+@end deftypefn
+
+
+
+
+@c ##################################################################
+@node Frames/Animation, IDTF functions, Data distributions, MathGL core
 @section Кадры/Анимация
 @cindex NewFrame
 @cindex EndFrame

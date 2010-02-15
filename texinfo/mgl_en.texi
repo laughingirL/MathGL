@@ -20,8 +20,10 @@ If names for data columns was specified (by set_id command or in the file at str
 
 Also, any expression (without spaces) of existed variables produce temporary variable. For example, @samp{sqrt(dat(:,5)+1)} will produce temporary variable with data values equal to @code{tmp[i,j] = sqrt(dat[i,5,j]+1)}. Such variables can not be used as 1st argument for commands which create (return) the data (like @samp{new}, @samp{read}, @samp{hist} and so on).
 
+Finally, you can put code for making new data inside @{@}. For example, @samp{@{sum dat 'x'@}} produce temporary variable which contain result of summation of @var{dat} along direction 'x'. This is the same array @var{tmp} as produced by command @samp{sum tmp dat 'x'}. You can use nested constructions, like @samp{@{sum @{max dat 'z'@} 'x'@}}.
+
 @item 
-Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated as number if they were not redefined by user. Variables with suffixes are treated as numbers (@pxref{Suffixes}). Also results of formulas with sizes 1x1x1 are treated as number (for example, @samp{pi/dat.nx}).
+Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated as number if they were not redefined by user. Variables with suffixes are treated as numbers (@pxref{Suffixes}). Names defined by @code{define} command are treated as number. Also results of formulas with sizes 1x1x1 are treated as number (for example, @samp{pi/dat.nx}).
 @end itemize
 Before the first using all variables must be defined with the help of commands, like, @code{new, var, list, copy} or @code{read}. 
 
@@ -332,6 +334,10 @@ Puts further plotting in some region of the whole frame surface. This command al
 
 @deffn {MGL command} columnplot @code{num ind}
 Puts further plotting in @var{ind}-th cell of column with @var{num} cells. The position is relative to previous @code{subplot} call (or @code{inplot} with @code{rel=off}).
+@end deffn
+
+@deffn {MGL command} stickplot @code{num ind tet phi}
+Puts further plotting in @var{ind}-th cell of stick with @var{num} cells. At this, stick is rotated on angles @var{tet}, @var{phi}. The position is relative to previous @code{subplot} call (or @code{inplot} with @code{rel=off}).
 @end deffn
 
 @deffn {MGL command} rotate @code{tetz tetx [tety=0]}
@@ -1295,6 +1301,15 @@ Get array which values is result of interpolation of original array for coordina
 @deffnx {MGL command} hist res dat wdat @code{num v1 v2 [nsub=0]}
 Creates @var{num}-th points distribution @var{res} of the data values of @var{dat} in range [@var{v1}, @var{v2}]. Array @var{wdat} specifies weights of the data elements (all weight is 1 if @var{wdat} is not specified). Parameter @var{nsub} define the number of additional interpolated points (for smoothness of histogram).
 @end deffn
+
+@deffn {MGL command} hist res xdat adat
+@deffnx {MGL command} hist res xdat ydat adat
+@deffnx {MGL command} hist res xdat ydat zdat adat
+Creates distribution @var{res} of the data values of @var{adat} in axis range [Min, Max]. Array @var{adat} look like weights of the data points.
+@end deffn
+
+
+
 
 @deffn {MGL command} momentum res dat 'how' ['dir'='z']
 Get momentum (1D-array) of the data along direction @var{dir}. String @var{how} contain kind of momentum. The momentum is defined like as

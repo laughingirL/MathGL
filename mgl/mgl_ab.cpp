@@ -198,22 +198,20 @@ void mglGraphAB::Aspect(mreal Ax,mreal Ay,mreal Az)
 //-----------------------------------------------------------------------------
 void mglGraphAB::StickPlot(int num, int id, mreal tet, mreal phi)
 {
-	mreal dx,dy,w0,h0,pf;
-	RestoreM();	Rotate(tet, phi);	pf=PlotFactor/BL[12];
-	dx=fabs(B[0]/BL[0])/pf;	dy=fabs(B[3]/BL[4])/pf;
-	w0=1/(1+(num-1)*dx);	h0=1/(1+(num-1)*dy);	dx *= w0;	dy *= h0;
-	InPlot(0, w0, 1-h0, 1, true);		// first correction
-	Rotate(tet,phi);	pf=PlotFactor/BL[12];
-	dx=fabs(B[0]/BL[0])/pf;	dy=fabs(B[3]/BL[4])/pf;
-	w0=1/(1+(num-1)*dx);	h0=1/(1+(num-1)*dy);	dx *= w0;	dy *= h0;
-	mreal p[6]={1,0,0,-1,0,0};
-	InPlot(0, w0, 1-h0, 1, true);		// extra shift
-	Rotate(tet,phi);	PostScale(p,1);
-	InPlot(dx, dx+w0, 1-(dy+h0), 1-dy, true);
-	Rotate(tet,phi);	PostScale(p+3,1);
-	dx -= (p[3]-p[0])/BL[0];	dy += (p[4]-p[1])/BL[4];
-	InPlot(id*dx, id*dx+w0, 1-(id*dy+h0), 1-id*dy, true);
-	Rotate(tet,phi);
+	mreal dx,dy,w0,h0, p[6]={-1,0,0,1,0,0}, w=B1[0], h=B1[4];
+	InPlot(0,1,0,1,true);	Rotate(tet, phi);	PostScale(p,2);
+	w0=1/(1+(num-1)*fabs(p[3]-p[0])/w);		dx=(p[3]-p[0])*w0/w;
+	h0=1/(1+(num-1)*fabs(p[4]-p[1])/h);		dy=(p[4]-p[1])*h0/h;
+
+	p[0]=-1;	p[3]=1;		p[1]=p[2]=p[4]=p[5]=0;	// extra widening
+	InPlot(dx>0?0:1-w0, dx>0?w0:1, dy>0?0:1-h0, dy>0?h0:1, true);
+	Rotate(tet,phi);	PostScale(p,2);		w*=w0;	h*=h0;
+	w0=1/(1+(num-1)*fabs(p[3]-p[0])/w);		dx=(p[3]-p[0])*w0/w;
+	h0=1/(1+(num-1)*fabs(p[4]-p[1])/h);		dy=(p[4]-p[1])*h0/h;
+
+	mreal x1=dx>0?dx*id:1-w0+dx*id, x2=dx>0?w0+dx*id:1+dx*id;
+	mreal y1=dy>0?dy*id:1-h0+dy*id, y2=dy>0?h0+dy*id:1+dy*id;
+	InPlot(x1, x2, y1, y2, true);	Rotate(tet,phi);
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::NormScale(mreal *p,long n)

@@ -28,6 +28,24 @@
 #include <mgl/mgl_idtf.h>
 //#include <mgl/mgl_w.h>
 //-----------------------------------------------------------------------------
+#include "mgl/mgl_parse.h"
+int test(mglGraphAB *gr)
+{
+	mglParse par;
+	par.AllowSetSize = true;
+	FILE *fp=fopen("test.mgl","rt");
+	par.Execute(gr,fp);
+	fclose(fp);
+/*	gr->SetDrawReg(2,2,1);
+	gr->Rotate(40,60);
+	gr->Surf("sin(x*y)");
+	gr->SubPlot(2,2,1);	gr->Box();*/
+
+//	gr->Box();
+//	gr->ShowImage("",true);
+	return 0;
+}
+//=============================================================================
 struct mglSample	/// Structure for list of samples
 {
 	const char *name;
@@ -70,6 +88,7 @@ static struct option longopts[] =
 	{ "idtf",			no_argument,	&type,		5 },
 	{ "gif",			no_argument,	&type,		6 },
 	{ "none",			no_argument,	&type,		7 },
+	{ "bps",			no_argument,	&type,		8 },
 	{ "help",			no_argument,	NULL,		'?' },
 	{ NULL,				0,				NULL,		0 }
 };
@@ -106,8 +125,7 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 		case 1:	// EPS
 			sprintf(buf,"%s%s.eps",name,suf);
 			gr->WriteEPS(buf);
-//			sprintf(buf,"%s%s.png",name,suf);
-//			gr->WritePNG(buf,0,false);	break;
+			break;
 		case 2:	// SVG
 			sprintf(buf,"%s%s.svg",name,suf);
 			gr->WriteSVG(buf);	break;
@@ -125,6 +143,10 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 			gr->WriteGIF(buf);	break;
 		case 7:	// none
 			break;
+		case 8:	// EPS to PNG
+			sprintf(buf,"%s%s.png",name,suf);
+			gr->WritePNG(buf,0,false);
+			break;
 		default:// PNG (no alpha)
 			sprintf(buf,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);	break;
@@ -140,6 +162,21 @@ void smgl_tval(mglGraph *gr)	// ticks features
 				 0.886, "x^*", M_PI/2, "\\pi/2", M_PI, "\\pi");
 	gr->Axis();	gr->Grid();
 	gr->Plot("2*cos(x^2)^2", "r2", NAN, 300);
+}
+//-----------------------------------------------------------------------------
+void smgl_stick(mglGraph *gr)	// column plot
+{
+	gr->SetRanges(-1, 1, -1, 1, 0, 1);	gr->Light(true);
+	gr->StickPlot(3, 0, 40, 30);		gr->Axis("xyz_");
+	gr->Surf("exp(-10*y^2-6*x^2)");
+	gr->Text(mglPoint(0.2, 0, 1.2), "z=0", "", -2);
+	gr->StickPlot(3, 1, 40, 30);		gr->Axis("xyz_");
+	gr->Surf("exp(-10*y^2/2-6*x^2)/sqrt(2)");
+	gr->Text(mglPoint(0.2, 0, 1.2), "z=1", "", -2);
+	gr->StickPlot(3, 2, 40, 30);		gr->Axis("xyz_");
+	gr->Surf("exp(-10*y^2/5-6*x^2)/sqrt(5)");
+	gr->Text(mglPoint(0.2, 0, 1.2), "z=2", "", -2);
+	gr->Label('x',"\\tau", 0);	gr->Label('y', "\\rho");
 }
 //-----------------------------------------------------------------------------
 void smgl_column(mglGraph *gr)	// column plot
@@ -1591,20 +1628,6 @@ void smgl_boxplot(mglGraph *gr)	// flow threads and density plot
 	gr->Box();	gr->BoxPlot(a);	gr->Plot(a," ko");
 }
 //-----------------------------------------------------------------------------
-#include "mgl/mgl_parse.h"
-int test(mglGraph *gr)
-{
-	mglParse par;
-	par.AllowSetSize = true;
-	FILE *fp=fopen("test.mgl","rt");
-	par.Execute(gr,fp);
-	fclose(fp);
-
-//	gr->Box();
-//	gr->ShowImage("",true);
-	return 0;
-}
-//-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
 	const char *suf = "";
@@ -1613,7 +1636,7 @@ int main(int argc,char **argv)
 	mglGraphIDTF u3d;
 	mglGraphZB zb;
 	mglGraphPS ps;
-	mglGraph *gr = NULL;
+	mglGraphAB *gr = NULL;
 	mglSample *s=samp;
 	while(( ch = getopt_long_only(argc, argv, "", longopts, NULL)) != -1)
 		switch(ch)
@@ -1631,8 +1654,7 @@ int main(int argc,char **argv)
 		}
 
 	if(type==5)			gr = &u3d;
-	else if(type==1)	gr = &ps;
-	else if(type==2)	gr = &ps;
+	else if(type==1 || type==2 || type==8)	gr = &ps;
 	else				gr = &zb;
 	if(mini)		{	gr->SetSize(200,133);	suf = "_sm";	}
 	else if(big)
@@ -1738,6 +1760,7 @@ mglSample samp[] = {
 	{"sew", smgl_sew},
 	{"stem", smgl_stem},
 	{"step", smgl_step},
+	{"stick", smgl_stick},
 	{"stfa", smgl_stfa},
 	{"surf", smgl_surf},
 	{"surf3", smgl_surf3},

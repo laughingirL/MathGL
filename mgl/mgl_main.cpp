@@ -224,14 +224,15 @@ void mglGraph::Color(mreal a,mreal a1,mreal a2)
 	DefColor(c,AlphaDef);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::SetScheme(const char *s)
+void mglGraph::SetScheme(const char *s, bool face)
 {
 	unsigned i;
 	mglColor c;
 	const char *col = "kwrgbcymhWRGBCYMHlenpquLENPQU";
 	if(!s || s[0]==0 || s[0]==':')		return;
-	if(s[0]=='|' && s[1]==0)	{	SmoothColorbar=false;	return;	}
-	if(!strchr(col,s[0]) && s[1]==0)	return;
+	if(face && s[0]=='|' && s[1]==0)	{	SmoothColorbar=false;	return;	}
+	for(;*s;s++)	if(strchr(col,*s))	break;
+	if(s[0]==0)	return;
 	strcpy(last_style, s);
 	NumCol = 0;
 	for(i=0;i<NUM_COLOR;i++)	cmap[i] = NC;
@@ -239,9 +240,9 @@ void mglGraph::SetScheme(const char *s)
 	OnCoord = false;	SmoothColorbar = true;
 	for(i=0;i<strlen(s);i++)
 	{
-		if(s[i]=='d')	OnCoord = true;
-		if(s[i]=='|')	SmoothColorbar = false;
-		else if(s[i]==':')	break;
+		if(face && s[i]=='d')	OnCoord = true;
+		if(face && s[i]=='|')	SmoothColorbar = false;
+		else if(face && s[i]==':')	break;
 		else if(strchr(col,s[i]))
 		{
 			if(s[i+1]>='1' && s[i+1]<='9')

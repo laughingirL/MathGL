@@ -2,6 +2,7 @@
 	- Add "in-place" commands for arguments in a MGL script (like, "plot {sum dat 'x'}").
 	- Add StickPlot() for putting plot in to a cell of sticks
 	- Add parsing of option arguments.
+	- Allow marks drawing in Tens() plot.
 	- If text style contain 'a'/'A' then text in absolute subplot/picture coordinates is drawn.
 	- Add functions mglGraph::Hist() for converting value from points to grids.
 	- Add extra argument for 'box' command.

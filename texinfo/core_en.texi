@@ -25,6 +25,7 @@ There is a C++ wrapper class which have the same name @code{mglGraph} and define
 * Vector fields:: 
 * Other plotting:: 
 * Nonlinear fitting:: 
+* Data distributions:: 
 * Frames/Animation:: 
 * IDTF functions:: 
 @end menu
@@ -464,8 +465,12 @@ Set rotation direction. See @code{SetAxialDir()}.
 Flag for preventing faces drawing. See @code{SetDrawFace()}.
 @end deftypecv
 
-@deftypecv {@emph{Obsolete option}} mglGraph @code{int} CirclePnts
+@deftypecv {General option (C++)} mglGraph @code{int} CirclePnts
 Number of points used for a circle approximation (for example, in @ref{Primitives drawing}, @ref{Tube}, @ref{Pipe} and so on). Default value is 40.
+@end deftypecv
+
+@deftypecv {General option (C++)} mglGraph @code{int} GridPnts
+Number of points used for grid lines drawing (it is important for curved coordinates). Default value is 50.
 @end deftypecv
 
 @c ==================================================================
@@ -671,6 +676,7 @@ The position of common multiplier/component on the axis. See @code{SetTuneTicks(
 @cindex Rotate
 @cindex RotateN
 @cindex SubPlot
+@cindex StickPlot
 @cindex InPlot
 @cindex Identity
 @cindex Perspective
@@ -695,6 +701,11 @@ Puts further plotting in some region of the whole frame surface. This function a
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} ColumnPlot (@code{int} num, @code{int} ind)
 @deftypefnx {C function} @code{void} mgl_columnplot (@code{HMGL} gr, @code{int} num, @code{int} ind)
 Puts further plotting in @var{ind}-th cell of column with @var{num} cells. The position is relative to previous SubPlot() call (or InPlot() with @var{rel}=@code{false}).
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} StickPlot (@code{int} num, @code{int} ind, @code{float} tet, @code{float} phi)
+@deftypefnx {C function} @code{void} mgl_stickplot (@code{HMGL} gr, @code{int} num, @code{int} ind, @code{float} tet, @code{float} phi)
+Puts further plotting in @var{ind}-th cell of stick with @var{num} cells. At this, stick is rotated on angles @var{tet}, @var{phi}. The position is relative to previous SubPlot() call (or InPlot() with @var{rel}=@code{false}).
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Rotate (@code{float} TetX, @code{float} TetZ, @code{float} TetY=@code{0})
@@ -2480,7 +2491,7 @@ Plots the array @var{a} depending on it's dimensions and @var{type} parameter. S
 @end deftypefn
 
 @c ##################################################################
-@node Nonlinear fitting, Frames/Animation, Other plotting, MathGL core
+@node Nonlinear fitting, Data distributions, Other plotting, MathGL core
 @section Nonlinear fitting
 @cindex Fit
 @cindex FitS
@@ -2577,8 +2588,33 @@ Get last fitted formula with found coefficients (as numbers).
 Minimal number of points for output array after nonlinear fitting.
 @end deftypecv
 
+
+
 @c ##################################################################
-@node Frames/Animation, IDTF functions, Nonlinear fitting, MathGL core
+@node Data distributions, Frames/Animation, Nonlinear fitting, MathGL core
+@section Data distributions
+@cindex Hist
+
+These functions make distribution (histogram) of data. They do not draw the obtained data themselves. These functions can be useful if user have data defined for random points (for example, after PIC simulation) and he want to produce a plot which require regular data (defined on grid(s)). The range for grids is always selected as axis range Min...Max. Arrays @var{x}, @var{y}, @var{z} define the positions (coordinates) of random points. Array @var{a} define the data value. Number of points in output array @var{res} is selected as maximal value of @var{res} size and the value of @var{FitPnts}.
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Hist (@code{mglData &}res, @code{const mglData &}x, @code{const mglData &}a)
+@deftypefnx {C function} @code{int} mgl_hist_x (@code{HMGL} gr, @code{HMDT} res, @code{const HMDT} x, @code{const HMDT} a)
+Creates 1D distribution of the data values @var{a} in range [Min, Max].
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Hist (@code{mglData &}res, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}a)
+@deftypefnx {C function} @code{int} mgl_hist_xy (@code{HMGL} gr, @code{HMDT} res, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} a)
+Creates 2D distribution of the data values @var{a} in range [Min, Max].
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Hist (@code{mglData &}res, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a)
+@deftypefnx {C function} @code{int} mgl_hist_xyz (@code{HMGL} gr, @code{HMDT} res, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} a)
+Creates 3D distribution of the data values @var{a} in range [Min, Max].
+@end deftypefn
+
+
+@c ##################################################################
+@node Frames/Animation, IDTF functions, Data distributions, MathGL core
 @section Frames/Animation
 @cindex NewFrame
 @cindex EndFrame
