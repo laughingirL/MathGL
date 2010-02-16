@@ -699,12 +699,12 @@ Setsize: размер(ы) равны нулю или отрицательны
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} ColumnPlot (@code{int} num, @code{int} ind)
 @deftypefnx {Функция С} @code{void} mgl_columnplot (@code{HMGL} gr, @code{int} num, @code{int} ind)
-Помещает последующий вывод в @var{ind}-ую строку столбца из @var{num} строк. Положение столбца выбирается относительно последнего вызова SubPlot() (или InPlot() с @var{rel}=@code{false}).
+Помещает последующий вывод в @var{ind}-ую строку столбца из @var{num} строк. Положение столбца выбирается относительно последнего вызова SubPlot() (или InPlot() с @var{rel}=@code{false}). @sref{ColumnPlot sample}
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} StickPlot (@code{int} num, @code{int} ind, @code{float} tet, @code{float} phi)
 @deftypefnx {C function} @code{void} mgl_stickplot (@code{HMGL} gr, @code{int} num, @code{int} ind, @code{float} tet, @code{float} phi)
-Помещает последующий вывод в @var{ind}-ую ячейку "бруска" из @var{num} ячеек. При этом сам брусок повернут на углы @var{tet}, @var{phi}. Положение выбирается относительно последнего вызова SubPlot() (или InPlot() с @var{rel}=@code{false}).
+Помещает последующий вывод в @var{ind}-ую ячейку "бруска" из @var{num} ячеек. При этом сам брусок повернут на углы @var{tet}, @var{phi}. Положение выбирается относительно последнего вызова SubPlot() (или InPlot() с @var{rel}=@code{false}). @sref{StickPlot sample}
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Rotate (@code{float} TetX, @code{float} TetZ, @code{float} TetY=@code{0})
@@ -2196,7 +2196,7 @@ gr->DensX(c.Sum("x"),"BbcyrR",-1);
 gr->DensY(c.Sum("y"),0,1);
 gr->DensZ(c.Sum("z"),0,-1);
 @end example
-создают такую картинку. См. также @ref{ContXYZ}, @ref{ContFXYZ}, @ref{Dens}. @sref{Dens projection sample}
+создают такую картинку. См. также @ref{ContXYZ}, @ref{ContFXYZ}, @ref{Dens}, @ref{Data distributions}. @sref{Dens projection sample}
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} DensX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN})
 @deftypefnx {Функция С} @code{void} mgl_dens_x (@code{HMGL} gr, @code{const HMDT} a, @code{const char *}stl, @code{float} sVal)
@@ -2226,7 +2226,7 @@ gr->ContX(c.Sum("x"),"BbcyrR",-1);
 gr->ContY(c.Sum("y"),0,1);
 gr->ContZ(c.Sum("z"),0,-1);
 @end example
-создают такую картинку. См. также @ref{ContFXYZ}, @ref{DensXYZ}, @ref{Cont}. @sref{Cont projection sample}
+создают такую картинку. См. также @ref{ContFXYZ}, @ref{DensXYZ}, @ref{Cont}, @ref{Data distributions}. @sref{Cont projection sample}
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} ContX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{int} num=@code{7})
 @deftypefnx {Функция С} @code{void} mgl_cont_x (@code{HMGL} gr, @code{const HMDT} a, @code{const char *}stl, @code{float} sVal, @code{int} num)
@@ -2265,7 +2265,7 @@ gr->ContZ(c.Sum("z"),0,-1);
 @cindex ContFY
 @cindex ContFZ
 
-Эти функции рисуют закрашенные контуры уровня на x, y или z плоскостях. Если @var{a} -- 3d массив, то выполняется интерполяция к заданному срезу @var{sVal}. Функции полезны для создания проекций 3D массивов на оси координат. См. также @ref{ContXYZ}, @ref{DensXYZ}, @ref{ContF}.
+Эти функции рисуют закрашенные контуры уровня на x, y или z плоскостях. Если @var{a} -- 3d массив, то выполняется интерполяция к заданному срезу @var{sVal}. Функции полезны для создания проекций 3D массивов на оси координат. См. также @ref{ContXYZ}, @ref{DensXYZ}, @ref{ContF}, @ref{Data distributions}.
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} ContFX (@code{const mglData &}a, @code{const char *}stl=@code{""}, @code{float} sVal=@code{NAN}, @code{int} num=@code{7})
 @deftypefnx {Функция С} @code{void} mgl_contf_x (@code{HMGL} gr, @code{const HMDT} a, @code{const char *}stl, @code{float} sVal, @code{int} num)

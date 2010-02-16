@@ -513,7 +513,7 @@ gr.Step(y);
 @caption{Example of Stem. @tdref{stem}}
 @end float
 
-@strong{C++ код}
+@strong{C++ code}
 @verbatim
 mglData y(50,3);
 y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
@@ -521,9 +521,9 @@ y.Modify("sin(2*pi*x)",1);
 y.Modify("cos(2*pi*x)",2);
 gr->Org=mglPoint(0,0);
 gr->Box();
-gr->Stem(y);
+gr->Stem(y,"o");
 @end verbatim
-@strong{MGL скрипт}
+@strong{MGL code}
 @verbatim
 new y 50 3
 modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
@@ -531,9 +531,9 @@ modify y 'sin(2*pi*x)' 1
 modify y 'cos(2*pi*x)' 2
 origin 0 0
 box
-stem y
+stem y 'o'
 @end verbatim
-@strong{C-ый код}
+@strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(50,3,1);
 mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
@@ -541,10 +541,10 @@ mgl_data_modify(y,"sin(2*pi*x)",1);
 mgl_data_modify(y,"cos(2*pi*x)",2);
 mgl_set_origin(gr,0.,0.,0.);
 mgl_box(gr,1);
-mgl_stem(gr,y,NULL);
+mgl_stem(gr,y,"o");
 mgl_delete_data(y);
 @end verbatim
-@strong{Fortran}
+@strong{Fortran code}
 @verbatim
 integer y, mgl_create_data_size
 y = mgl_create_data_size(50,3,1)
@@ -553,7 +553,7 @@ call mgl_data_modify(y,'sin(2*pi*x)',1)
 call mgl_data_modify(y,'cos(2*pi*x)',2)
 call mgl_set_origin(gr,0.,0.,0.)
 call mgl_box(gr,1)
-call mgl_stem(gr,y,'')
+call mgl_stem(gr,y,'o')
 call mgl_delete_data(y)
 @end verbatim
 @strong{Python}
@@ -564,7 +564,7 @@ y.Modify("sin(2*pi*x)",1);
 y.Modify("cos(2*pi*x)",2);
 gr.SetOrigin(0.,0.);
 gr.Box();
-gr.Stem(y);
+gr.Stem(y,"o");
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -5443,6 +5443,7 @@ sphere -0.65 0 0 0.25 'g'
 * Parser sample::               
 * Manual ticks sample::         
 * ColumnPlot sample::           
+* StickPlot sample::            
 @end menu
 
 @node Curvelinear coorinates sample, 2-axes sample,, Advanced features
@@ -6584,7 +6585,7 @@ gr.Plot("2*cos(x^2)^2", "r2", 300);
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node ColumnPlot sample,, Manual ticks sample, Advanced features
+@node ColumnPlot sample, StickPlot sample, Manual ticks sample, Advanced features
 @subsection ColumnPlot -- пример использования
 @cindex SetTicksVal
 
@@ -6637,3 +6638,69 @@ NOT AVAILABLE
 @verbatim
 
 @end verbatim
+
+@c ------------------------------------------------------------------
+@node StickPlot sample, , ColumnPlot sample, Advanced features
+@subsection StickPlot -- пример использования
+@cindex SetTicksVal
+
+@float
+@image{png/column, 7cm}
+@caption{Example of MGL parsing.}@c @tdref{tval}}
+@end float
+
+@strong{C++ code}
+@verbatim
+gr->SetRanges(-1, 1, -1, 1, 0, 1);  gr->Light(true);
+gr->StickPlot(3, 0, 40, 30);        gr->Axis("xyz_");
+gr->Surf("exp(-10*y^2-6*x^2)");
+gr->Text(mglPoint(0.2, 0, 1.2), "z=0", "", -2);
+gr->StickPlot(3, 1, 40, 30);        gr->Axis("xyz_");
+gr->Surf("exp(-10*y^2/2-6*x^2)/sqrt(2)");
+gr->Text(mglPoint(0.2, 0, 1.2), "z=1", "", -2);
+gr->StickPlot(3, 2, 40, 30);        gr->Axis("xyz_");
+gr->Surf("exp(-10*y^2/5-6*x^2)/sqrt(5)");
+gr->Text(mglPoint(0.2, 0, 1.2), "z=2", "", -2);
+gr->Label('x',"\\tau", 0);  gr->Label('y', "\\rho");
+@end verbatim
+@strong{MGL code}
+@verbatim
+ranges -1 1 -1 1 0 1:light on
+stickplot 3 0 40 30 : axis 'xyz_'
+fsurf 'exp(-10*y^2-6*x^2)'
+text 0.2 0 1.2 'z=0' '' -2
+stickplot 3 1 40 30 : axis 'xy_'
+fsurf 'exp(-10*y^2/2-6*x^2)/sqrt(2)'
+text 0.2 0 1.2 'z=1' '' -2
+stickplot 3 2 40 30 : axis 'xy_'
+fsurf 'exp(-10*y^2/5-6*x^2)/sqrt(5)'
+text 0.2 0 1.2 'z=2' '' -2
+xlabel '\tau' 0 : ylabel '\rho'
+@end verbatim
+@strong{Pure C code}
+@verbatim
+mgl_set_axis_3d(gr, -1, -1, 0, 1, 1, 1);
+mgl_set_light(gr, 1);
+mgl_stickplot(gr, 3, 0, 40, 30);
+mgl_axis(gr, "xyz_");
+mgl_fsurf(gr,"exp(-10*y^2-6*x^2)","",100);
+mgl_text(gr, 0.2, 0, 1.2, "z=0");
+mgl_stickplot(gr, 3, 1, 40, 30);
+mgl_axis(gr, "xyz_");
+mgl_fsurf(gr,"exp(-10*y^2/2-6*x^2)/sqrt(2)","",100);
+mgl_text(gr, 0.2, 0, 1.2, "z=1");
+mgl_stickplot(gr, 3, 2, 40, 30);
+mgl_axis(gr, "xyz_");
+mgl_fsurf(gr,"exp(-10*y^2/5-6*x^2)/sqrt(5)","",100);
+mgl_text(gr, 0.2, 0, 1.2, "z=2");
+mgl_label(gr,'x',"\\tau");
+mgl_label(gr,'y', "\\rho");
+@end verbatim
+@strong{Fortran code}
+@verbatim
+NOT AVAILABLE
+@end verbatim
+@strong{Python}
+@verbatim
+@end verbatim
+

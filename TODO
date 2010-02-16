@@ -19,7 +19,9 @@ c. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 8. Options "iI_-aA" for colorbar
 9. Hankel transform
 
-10. New docs:
+10. http://en.wikipedia.org/wiki/Waterfall_chart
+
+AA. New docs:
 - Update documentation (Russian)
 
 

@@ -640,7 +640,7 @@ void mglGraphPS::draw_prim(mglPrim *pr, mreal *pp, mreal *c)
 	UseLight=ul;
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::pnt_plot(long x,long y, float, unsigned char c[4])
+void mglGraphPS::pnt_plot(long x,long y, mreal, unsigned char c[4])
 {
 	long i0=x+Width*(Height-1-y);
 	if(x<0 || x>=Width || y<0 || y>=Height)	return;

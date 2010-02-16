@@ -750,7 +750,7 @@ void smgl_area(mglGraph *gr)
 void smgl_stem(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
-	gr->Org=mglPoint();	gr->Box();	gr->Stem(y);
+	gr->Org=mglPoint();	gr->Box();	gr->Stem(y,"o");
 }
 //-----------------------------------------------------------------------------
 void smgl_step(mglGraph *gr)
@@ -1760,8 +1760,8 @@ mglSample samp[] = {
 	{"sew", smgl_sew},
 	{"stem", smgl_stem},
 	{"step", smgl_step},
-	{"stick", smgl_stick},
 	{"stfa", smgl_stfa},
+	{"stick", smgl_stick},
 	{"surf", smgl_surf},
 	{"surf3", smgl_surf3},
 	{"surf3_cutoff", smgl_surf3_cutoff},
