@@ -498,7 +498,7 @@ double stp(double a)	{return a>0 ? 1:0;}
 double arg(double a,double b)	{	return atan2(b,a);	}
 double mgz1(double)	{return 0;}
 double mgz2(double,double)	{return 0;}
-#ifdef _MSC_VER
+#ifdef WIN32
 double asinh(double x)	{	return log(x+sqrt(x*x+1));	}
 double acosh(double x)	{	return x>1 ? log(x+sqrt(x*x-1)) : NAN;	}
 double atanh(double x)	{	return fabs(x)<1 ? log((1+x)/(1-x))/2 : NAN;	}

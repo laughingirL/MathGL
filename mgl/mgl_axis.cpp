@@ -69,8 +69,8 @@ mreal mgl_okrugl(mreal x,int k)
 void mglGraph::DrawXGridLine(mreal t, mreal y0, mreal z0)
 {
 	register int i;
-	mreal pp[3*GridPnts+3];
-	bool tt[GridPnts+1];
+	mreal *pp = new mreal[3*GridPnts+3];
+	bool *tt = new bool[GridPnts+1];
 	for(i=0;i<GridPnts+1;i++)
 	{
 		pp[3*i]=t;//TernAxis ? t-t*i/30. : t;
@@ -86,13 +86,14 @@ void mglGraph::DrawXGridLine(mreal t, mreal y0, mreal z0)
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
+	delete [] tt;	delete [] pp;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::DrawYGridLine(mreal t, mreal x0, mreal z0)
 {
 	register int i;
-	mreal pp[3*GridPnts+3];
-	bool tt[GridPnts+1];
+	mreal *pp = new mreal[3*GridPnts+3];
+	bool *tt = new bool[GridPnts+1];
 	for(i=0;i<GridPnts+1;i++)
 	{
 		pp[3*i]=x0;//TernAxis ? t*i/30. : x0;
@@ -108,13 +109,14 @@ void mglGraph::DrawYGridLine(mreal t, mreal x0, mreal z0)
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
+	delete [] tt;	delete [] pp;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::DrawZGridLine(mreal t, mreal x0, mreal y0)
 {
 	register int i;
-	mreal pp[3*GridPnts+3];
-	bool tt[GridPnts+1];
+	mreal *pp = new mreal[3*GridPnts+3];
+	bool *tt = new bool[GridPnts+1];
 	for(i=0;i<GridPnts+1;i++)
 	{
 		pp[3*i+1]=y0;	pp[3*i+2]=t;
@@ -129,14 +131,15 @@ void mglGraph::DrawZGridLine(mreal t, mreal x0, mreal y0)
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
+	delete [] tt;	delete [] pp;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::DrawTGridLine(mreal t, mreal z0)
 {
 	if(!TernAxis)	return;
 	register int i;
-	mreal pp[3*GridPnts+3];
-	bool tt[GridPnts+1];
+	mreal *pp = new mreal[3*GridPnts+3];
+	bool *tt = new bool[GridPnts+1];
 	for(i=0;i<GridPnts+1;i++)
 	{
 		pp[3*i]= t*i/GridPnts;
@@ -152,6 +155,7 @@ void mglGraph::DrawTGridLine(mreal t, mreal z0)
 		pp[3*i+2]=z0;
 	}
 	curv_plot(GridPnts+1,pp,tt);
+	delete [] tt;	delete [] pp;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Grid(const char *dir, const char *pen)

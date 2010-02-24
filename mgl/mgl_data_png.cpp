@@ -18,7 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <stdlib.h>
+#ifndef NO_PNG
 #include <png.h>
+#endif
 #include "mgl/mgl_data.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
@@ -98,6 +100,7 @@ void mglData::Import(const char *fname,const char *scheme,mreal v1,mreal v2)
 	if(v1>=v2)	return;
 	long num=0;
 
+#ifndef NO_PNG
 	FILE *fp = fopen(fname, "rb");
 	if (!fp)	return;
 	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
@@ -138,6 +141,7 @@ void mglData::Import(const char *fname,const char *scheme,mreal v1,mreal v2)
 	delete []c;
 	png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
 	fclose(fp);
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglData::Export(const char *fname,const char *scheme,mreal v1,mreal v2,int ns) const
@@ -153,6 +157,7 @@ void mglData::Export(const char *fname,const char *scheme,mreal v1,mreal v2,int 
 	}
 	if(v1==v2)	return;
 
+#ifndef NO_PNG
 	long num=0;
 	unsigned char *c = mgl_create_scheme(scheme,num);
 	if(num<2)	{	delete []c;		return;		}
@@ -192,6 +197,7 @@ void mglData::Export(const char *fname,const char *scheme,mreal v1,mreal v2,int 
 
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);	free(p);	free(d);
+#endif
 }
 //-----------------------------------------------------------------------------
 void mgl_data_export(HMDT dat, const char *fname, const char *scheme,mreal v1,mreal v2,int ns)

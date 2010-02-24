@@ -17,10 +17,13 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
+#ifndef NO_PNG
 #include <png.h>
-
+#endif
 #ifdef HAVE_JPEG
 extern "C" {
 #include <jpeglib.h>
@@ -107,6 +110,7 @@ void mglGraph::WriteEPS(const char *fname,const char *)
 //-----------------------------------------------------------------------------
 int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 {
+#ifndef NO_PNG
 	FILE *fp = fopen(fname, "wb");
 	if (!fp)	return 1;
 
@@ -129,11 +133,13 @@ int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);
+#endif
 	return 0;
 }
 //-----------------------------------------------------------------------------
 int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 {
+#ifndef NO_PNG
 	FILE *fp = fopen(fname, "wb");
 	if (!fp)	return 1;
 
@@ -156,6 +162,7 @@ int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);
+#endif
 	return 0;
 }
 //-----------------------------------------------------------------------------

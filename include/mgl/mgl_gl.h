@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 #ifndef _MGL_GL_H_
 #define _MGL_GL_H_
-#ifdef _MSC_VER
+#ifdef WIN32
 #include <windows.h>
 #endif
 #ifdef __APPLE__

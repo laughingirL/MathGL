@@ -123,27 +123,14 @@ void mglGraphAB::RotateN(mreal Tet,mreal x,mreal y,mreal z)
 	B[8] = C[2]*R[6] + C[5]*R[7] + C[8]*R[8];
 	if(AutoPlotFactor && !NoAutoFactor)
 	{
-/*		register mreal m = fabs(B[3]+B[4]+B[5]);
-		m = m<fabs(B[3]+B[4]-B[5]) ? fabs(B[3]+B[4]-B[5]) : m;
-		m = m<fabs(B[3]-B[4]+B[5]) ? fabs(B[3]-B[4]+B[5]) : m;
-		m = m<fabs(B[3]-B[4]-B[5]) ? fabs(B[3]-B[4]-B[5]) : m;
-		m /= B1[4];
-		register mreal n = fabs(B[0]+B[1]+B[2]);
-		n = n<fabs(B[0]+B[1]-B[2]) ? fabs(B[0]+B[1]-B[2]) : n;
-		n = n<fabs(B[0]-B[1]+B[2]) ? fabs(B[0]-B[1]+B[2]) : n;
-		n = n<fabs(B[0]-B[1]-B[2]) ? fabs(B[0]-B[1]-B[2]) : n;
-		n /= B1[0];
-		PlotFactor = 1.55+0.6147*(m<n ? (n-1):(m-1));*/
-		mreal m=fabs(B[3]/B1[4])+fabs(B[5]/B1[4]);
-		mreal n=fabs(B[1]/B1[0])+fabs(B[2]/B1[0]);
-		PlotFactor = 1.55+0.6147*(m<n ? n:m);
+		mreal m=(fabs(B[3])+fabs(B[4])+fabs(B[5]))/inH;
+		mreal n=(fabs(B[0])+fabs(B[1])+fabs(B[2]))/inW;
+		PlotFactor = 1.55+0.6147*(m<n ? (n-1):(m-1));
 	}
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::Perspective(mreal a)	// I'm too lazy for using 4*4 matrix
-{
-	Persp = fabs(a)/Depth;
-}
+{	Persp = fabs(a)/Depth;	}
 //-----------------------------------------------------------------------------
 void mglGraphAB::RestoreM()
 {
@@ -180,6 +167,7 @@ void mglGraphAB::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel)
 		B1[11]= zPos = (1.f-B[8]/(2*Depth))*Depth;
 		memcpy(B1,B,9*sizeof(mreal));
 	}
+	inW = B[0];	inH=B[4];
 	font_factor = B[0] < B[4] ? B[0] : B[4];
 	if(AutoPlotFactor) PlotFactor = 1.55;	// Automatically change plot factor !!!
 	Persp = 0;
@@ -198,16 +186,16 @@ void mglGraphAB::Aspect(mreal Ax,mreal Ay,mreal Az)
 //-----------------------------------------------------------------------------
 void mglGraphAB::StickPlot(int num, int id, mreal tet, mreal phi)
 {
-	mreal dx,dy,w0,h0, p[6]={-1,0,0,1,0,0}, w=B1[0], h=B1[4];
+	mreal dx,dy,w0,h0, p[6]={-1,0,0,1,0,0};
 	InPlot(0,1,0,1,true);	Rotate(tet, phi);	PostScale(p,2);
-	w0=1/(1+(num-1)*fabs(p[3]-p[0])/w);		dx=(p[3]-p[0])*w0/w;
-	h0=1/(1+(num-1)*fabs(p[4]-p[1])/h);		dy=(p[4]-p[1])*h0/h;
+	w0=1/(1+(num-1)*fabs(p[3]-p[0])/inW);		dx=(p[3]-p[0])*w0/inW;
+	h0=1/(1+(num-1)*fabs(p[4]-p[1])/inH);		dy=(p[4]-p[1])*h0/inH;
 
 	p[0]=-1;	p[3]=1;		p[1]=p[2]=p[4]=p[5]=0;	// extra widening
 	InPlot(dx>0?0:1-w0, dx>0?w0:1, dy>0?0:1-h0, dy>0?h0:1, true);
-	Rotate(tet,phi);	PostScale(p,2);		w*=w0;	h*=h0;
-	w0=1/(1+(num-1)*fabs(p[3]-p[0])/w);		dx=(p[3]-p[0])*w0/w;
-	h0=1/(1+(num-1)*fabs(p[4]-p[1])/h);		dy=(p[4]-p[1])*h0/h;
+	Rotate(tet,phi);	PostScale(p,2);
+	w0=1/(1+(num-1)*fabs(p[3]-p[0])/inW);		dx=(p[3]-p[0])*w0/inW;
+	h0=1/(1+(num-1)*fabs(p[4]-p[1])/inH);		dy=(p[4]-p[1])*h0/inH;
 
 	mreal x1=dx>0?dx*id:1-w0+dx*id, x2=dx>0?w0+dx*id:1+dx*id;
 	mreal y1=dy>0?dy*id:1-h0+dy*id, y2=dy>0?h0+dy*id:1+dy*id;

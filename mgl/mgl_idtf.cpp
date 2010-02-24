@@ -29,6 +29,17 @@
 #define PATH_MAX	256
 #endif
 #ifdef WIN32
+#include <ctype.h>
+int strcasecmp (const char *s1,const char *s2)
+{
+  while (*s1 != '\0' && tolower(*s1) == tolower(*s2))
+    {
+      s1++;
+	  s2++;
+    }
+
+  return tolower(*(unsigned char *) s1) - tolower(*(unsigned char *) s2);
+}
 #define bzero(a,b) memset(a,0,b)
 #endif
 #include "mgl/mgl_idtf.h"
@@ -320,7 +331,7 @@ void u3dNode::print ( std::ofstream& ostr )
 	<< "\tPARENT_LIST {\n"
 	<< "\t\tPARENT_COUNT 1\n"
 	<< "\t\tPARENT 0 {\n"
-	<< "\t\t\tPARENT_NAME \"" << ( this->parent.empty() ? "<NULL>" : this->parent ) << "\"\n"
+	<< "\t\t\tPARENT_NAME \"" << ( this->parent.empty() ? std::string("<NULL>") : this->parent ) << "\"\n"
 	<< "\t\t\tPARENT_TM {\n";
 	for ( int i=0; i<4;i++ )
 		ostr << "\t\t\t\t" << IDTFPrintVector4 ( position[i] ) << "\n";

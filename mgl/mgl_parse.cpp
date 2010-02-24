@@ -27,7 +27,7 @@
 
 #ifdef WIN32
 #include <io.h>
-wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim)	{	wcstok(wcs,delim);	}
+wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim)	{	return wcstok(wcs,delim);	}
 #define wcstok(a,b,c) wcstokw32(a,b)
 #else
 #include <unistd.h>

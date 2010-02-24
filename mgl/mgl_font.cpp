@@ -135,7 +135,7 @@ mreal mglFont::Puts(const wchar_t *str,int font,int align, char col)
 	if(parse)
 	{
 		unsigned *wcs = new unsigned[size];
-		memcpy(wcs,str,size*sizeof(unsigned));
+		memcpy(wcs,str,size*sizeof(wchar_t));
 		Convert(str, wcs);
 		ww = w = Puts(wcs,0,0,1.f,0x10|font,col);	// find width
 		Puts(wcs,-w*(align&3)/2.f,-h,1.f,font,col);	// draw it really
@@ -176,7 +176,7 @@ mreal mglFont::Width(const wchar_t *str,int font)
 	if(parse)
 	{
 		unsigned *wcs = new unsigned[size];
-		memcpy(wcs,str,size*sizeof(unsigned));
+		memcpy(wcs,str,size*sizeof(wchar_t));
 		Convert(str, wcs);
 		w = Puts(wcs,0,0,1.,0x10+font,'k');
 		delete []wcs;

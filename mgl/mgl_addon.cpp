@@ -18,7 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <stdarg.h>
+#ifdef WIN32
+#include <io.h>
+#include <direct.h>
+#else
 #include <unistd.h>
+#endif
 #include <string.h>
 #include "mgl/mgl_addon.h"
 //---------------------------------------------------------------------------

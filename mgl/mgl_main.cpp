@@ -18,7 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <stdlib.h>
+#ifdef WIN32
+#include <io.h>
+#include <direct.h>
+#else
 #include <unistd.h>
+#endif
 #include <stdarg.h>
 #include <wchar.h>
 #include "mgl/mgl.h"
@@ -288,7 +293,7 @@ mreal mglGraph::GetA(mreal a)
 		a = fa->Calc(0,0,0,a);
 	}
 	a = (2*a-Amin-Amax)/(Amax-Amin);
-	a = fabs(a)>1 ? copysignf(1,a) : a;
+	a = a<1?(a>-1?a:-1):1;
 	return a;
 }
 //-----------------------------------------------------------------------------

@@ -31,7 +31,7 @@
 # include <iostream>
 # include <fstream>
 
-#ifdef _MSC_VER
+#ifdef WIN32
 #include <windows.h>
 #endif
 #ifndef SIZE_MAX

@@ -1154,7 +1154,7 @@ protected:
 	/// Scale coordinates of point for faster plotting also cut off some points
 	virtual bool ScalePoint(mreal &x,mreal &y,mreal &z);
 	/// fast linear interpolation
-	inline mreal _d(mreal v,mreal v1,mreal v2) { return (v-v1)/(v2-v1); };
+	inline mreal _d(mreal v,mreal v1,mreal v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; };
 
 	/// Get color depending on single variable \a z, which should be scaled if \a scale=true
 	mglColor GetC(mreal z,bool scale = true);

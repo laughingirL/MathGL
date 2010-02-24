@@ -119,6 +119,8 @@ mreal mgl_fit_base(mglFitData *fd, mreal *ini)
 	gsl_matrix_free (covar);
 	delete []x_init;
 	return res;
+#else
+	return 0.0;
 #endif
 }
 //-----------------------------------------------------------------------------

@@ -225,7 +225,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 		else if(!wcscmp(str,L"on"))	res.a[0] = 1;
 		else if(!wcscmp(str,L"off"))	res.a[0] = 0;
 		else if(!wcscmp(str,L":"))	res.a[0] = -1;
-		else res.a[0] = wcstof(str,0);		// this is number
+		else res.a[0] = wcstod(str,0);		// this is number
 		delete []str;	return res;
 	}
 	else
