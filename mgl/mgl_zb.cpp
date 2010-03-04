@@ -59,11 +59,12 @@ void mglGraphZB::PutDrawReg(int nx, int ny, int m, mglGraphAB *g)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphZB::pnt_plot(long x,long y,mreal z,unsigned char c[4])
+void mglGraphZB::pnt_plot(long x,long y,mreal z,unsigned char ci[4])
 {
 	long i0=x+Width*(Height-1-y);
 	if(x<nx1 || x>=nx2 || y<ny1 || y>=ny2)	return;
-	unsigned char *cc = C+32*i0;
+	unsigned char *cc = C+32*i0, c[4];
+	memcpy(c,ci,4);
 	mreal *zz = Z+8*i0, zf = FogDist*(z/Depth-0.5-FogDz);
 	if(zf<0)
 	{
