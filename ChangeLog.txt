@@ -1,7 +1,7 @@
-1.10.1 Released ?? February 2010
+1.10.1 Released 5 March 2010
 	- Add "in-place" commands for arguments in a MGL script (like, "plot {sum dat 'x'}").
 	- Add StickPlot() for putting plot in to a cell of sticks
-	- Add parsing of option arguments.
+	- Add parsing of MGL option arguments.
 	- Allow marks drawing in Tens() plot.
 	- If text style contain 'a'/'A' then text in absolute subplot/picture coordinates is drawn.
 	- Add functions mglGraph::Hist() for converting value from points to grids.
@@ -10,8 +10,8 @@
 	- Add GridPnts for changing number of points in grid lines (for curved coordinates)
 	- Colorbar factor now placed at top of a plot.
 	- Dots() now don't change transparence for self.
-	- Bug with missing ticks tunning in Colorbar.
-	- Bug of double glyph drawing in mglGraphPS.
+	- Bug with missing ticks tunning in Colorbar is corrected.
+	- Bug of double glyph drawing in mglGraphPS is corrected.
 
 1.10 Released 25 December 2009
 	- Change license from GPL to LGPL for MathGL core. SWIG-based interfaces still have GPL.

@@ -28,18 +28,16 @@
 #if(!defined(PATH_MAX))
 #define PATH_MAX	256
 #endif
-#ifdef WIN32
+#ifdef _MSC_VER
 #include <ctype.h>
 int strcasecmp (const char *s1,const char *s2)
 {
-  while (*s1 != '\0' && tolower(*s1) == tolower(*s2))
-    {
-      s1++;
-	  s2++;
-    }
-
-  return tolower(*(unsigned char *) s1) - tolower(*(unsigned char *) s2);
+	while (*s1 != '\0' && tolower(*s1) == tolower(*s2))
+	{	s1++;	s2++;	}
+	return tolower(*(unsigned char *) s1) - tolower(*(unsigned char *) s2);
 }
+#endif
+#ifdef WIN32
 #define bzero(a,b) memset(a,0,b)
 #endif
 #include "mgl/mgl_idtf.h"

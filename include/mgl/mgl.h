@@ -20,7 +20,7 @@
 #ifndef _MGL_H_
 #define _MGL_H_
 
-#define MGL_VERSION	10.0
+#define MGL_VERSION	10.1
 
 #include <wchar.h>
 #include <stdlib.h>
