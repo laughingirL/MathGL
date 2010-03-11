@@ -239,7 +239,7 @@ void mglGraph::Grid(const char *dir, const char *pen)
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Label(char dir,const wchar_t *text,int pos,mreal size,mreal shift)
+void mglGraph::Labelw(char dir,const wchar_t *text,mreal pos,mreal size,mreal shift)
 {
 	mreal t, x0, y0, z0;
 	SelectPen("k-1");
@@ -247,30 +247,34 @@ void mglGraph::Label(char dir,const wchar_t *text,int pos,mreal size,mreal shift
 	if(size<=0)	size = -size*FontSize;
 	if(dir=='x')
 	{
-		t = pos>0 ? Max.x : (pos<0 ? Min.x : (dx ? (Min.x+Max.x)/2 : sqrt(Min.x*Max.x)));
+		if(dx)	t = (Min.x+Max.x+pos*(Max.x-Min.x))/2;
+		else	t = Min.x*pow(Max.x/Min.x, (pos+1)/2);
 		Putsw(mglPoint(t,y0,z0),text,FontDef,size,'X',shift);
 	}
 	if(dir=='y')
 	{
 		if(TernAxis)
 		{
-			t = pos>0 ? 1 : (pos<0 ? 0.: (dz ? 0.5 : 0.));
+			t = (pos+1)/2;
 			Putsw(mglPoint(Max.x-t,t,z0),text,FontDef,size,'T',shift);
 		}
 		else
 		{
-			t = pos>0 ? Max.y : (pos<0 ? Min.y : (dy ? (Min.y+Max.y)/2 : sqrt(Min.y*Max.y)));
+			if(dx)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
+			else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
 			Putsw(mglPoint(x0,t,z0),text,FontDef,size,'Y',shift);
 		}
 	}
 	if(dir=='z')
 	{
-		t = pos>0 ? Max.z : (pos<0 ? Min.z : (dz ? (Min.z+Max.z)/2 : sqrt(Min.z*Max.z)));
+		if(dx)	t = (Min.z+Max.z+pos*(Max.z-Min.z))/2;
+		else	t = Min.z*pow(Max.z/Min.z, (pos+1)/2);
 		Putsw(mglPoint(x0,y0,t),text,FontDef,size,'Z',shift);
 	}
 	if(dir=='t' && TernAxis)
 	{
-		t = pos<0 ? Max.y : (pos>0 ? Min.y : (dy ? (Min.y+Max.y)/2 : sqrt(Min.y*Max.y)));
+		if(dx)	t = (Min.x+Max.x-pos*(Max.x-Min.x))/2;
+		else	t = Max.x*pow(Min.x/Max.x, (pos+1)/2);
 		Putsw(mglPoint(x0,t,z0),text,FontDef,size,'Y',shift);
 	}
 }

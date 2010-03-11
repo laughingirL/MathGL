@@ -246,8 +246,10 @@ void mgl_axis_grid(HMGL gr, const char *dir,const char *pen)
 void mgl_label(HMGL gr, char dir, const char *text)
 {	gr->Label(dir, text);	}
 /// Print the label \a text for axis \a dir.
-void mgl_label_ext(HMGL gr, char dir, const char *text, int pos, mreal size, mreal shift)
+void mgl_label_ext(HMGL gr, char dir, const char *text, mreal pos, mreal size, mreal shift)
 {	gr->Label(dir, text, pos, size, shift);	}
+void mgl_labelw_ext(HMGL gr, char dir, const wchar_t *text, mreal pos, mreal size, mreal shift)
+{	gr->Labelw(dir, text, pos, size, shift);	}
 void mgl_label_xy(HMGL gr, mreal x, mreal y, const char *text, const char *fnt, mreal size)
 {	gr->Label(x,y,text,fnt,size);	}
 void mgl_labelw_xy(HMGL gr, mreal x, mreal y, const wchar_t *text, const char *fnt, mreal size)

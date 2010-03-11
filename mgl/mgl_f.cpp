@@ -304,7 +304,7 @@ void mgl_label_(uintptr_t *gr, const char *dir, const char *text,int,int l)
 	_GR_->Label(*dir, s);	delete []s;
 }
 /// Print the label \a text for axis \a dir.
-void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, int *pos, mreal *size, mreal *shift,int,int l)
+void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, mreal *pos, mreal *size, mreal *shift,int,int l)
 {
 	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	_GR_->Label(*dir, s, *pos, *size, *shift);	delete []s;

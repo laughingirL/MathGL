@@ -598,7 +598,7 @@ bool mglFont::read_main(const char *base, const char *path, unsigned &cur)
 	int tmpi, tmpw, tmpnl, tmpnt;
 	unsigned s, tmppl, tmppt;
 #ifdef WIN32	// normal weight (should have most of symbols !!!)
-	if(path)	sprintf(str,"%s\%s.vfm",path,base);
+	if(path)	sprintf(str,"%s\\%s.vfm",path,base);
 #else
 	if(path)	sprintf(str,"%s/%s.vfm",path,base);
 #endif
@@ -659,6 +659,9 @@ bool mglFont::Load(const char *base, const char *path)
 {
 //	base = 0;
 	char *buf=0,sep='/';
+#ifdef WIN32
+	sep='\\';
+#endif
 	FILE *fp;
 	char str[256];
 	setlocale(LC_NUMERIC,"C");
@@ -666,9 +669,6 @@ bool mglFont::Load(const char *base, const char *path)
 	if(!path)	path = MGL_FONT_PATH;
 	if(base)
 	{
-#ifdef WIN32
-		sep='\\';
-#endif
 		buf = new char[strlen(base)+1];
 		strcpy(buf,base);
 		if(strchr(buf,sep))
@@ -684,7 +684,7 @@ bool mglFont::Load(const char *base, const char *path)
 	{	read_def(cur);	if(buf)	delete []buf;	return true;	}
 
 	//================== bold ===========================================
-	sprintf(str,"%s/%s_b.vfm",path,base);
+	sprintf(str,"%s%c%s_b.vfm",path,sep,base);
 	fp = fopen(str,"rt");
 	if(fp)		// this file may absent
 	{
@@ -699,12 +699,12 @@ bool mglFont::Load(const char *base, const char *path)
 	}
 
 	//================== italic =========================================
-	sprintf(str,"%s/%s_i.vfm",path,base);
+	sprintf(str,"%s%c%s_i.vfm",path,sep,base);
 	fp = fopen(str,"rt");
 	if(fp)	read_data(fp, fact+2, width[2], numl[2], ln[2], numt[2], tr[2], cur);
 
 	//================== bold-italic ====================================
-	sprintf(str,"%s/%s_bi.vfm",path,base);
+	sprintf(str,"%s%c%s_bi.vfm",path,sep,base);
 	fp = fopen(str,"rt");
 	if(fp)	read_data(fp, fact+3, width[3], numl[3], ln[3], numt[3], tr[3], cur);
 	numb = cur;

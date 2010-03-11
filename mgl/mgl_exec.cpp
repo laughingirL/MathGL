@@ -1166,6 +1166,20 @@ void mglc_font(wchar_t out[1024], long , mglArg *a, int k[10])
 		mglprintf(out,1024,L"strcpy(gr->FontDef,\"%s\");",a[0].s);
 }
 //-----------------------------------------------------------------------------
+int mgls_loadfont(mglGraph *gr, long , mglArg *a, int k[10])
+{
+	if(k[0]==2 && a[0].s[0])	gr->GetFont()->Load(a[0].s);
+	else	gr->GetFont()->Restore();
+	return 0;
+}
+void mglc_loadfont(wchar_t out[1024], long , mglArg *a, int k[10])
+{
+	if(k[0]==2 && a[0].s[0])
+		mglprintf(out,1024,L"gr->GetFont()->Load(\"%s\");", a[0].s);
+	else
+		mglprintf(out,1024,L"gr->GetFont()->Restore();");
+}
+//-----------------------------------------------------------------------------
 int mgls_grid(mglGraph *gr, long , mglArg *a, int k[10])
 {
 	if(k[0]!=1)			gr->Grid(k[0]==2?a[0].s:"xyz", k[1]==2?a[1].s:"B-");
@@ -2005,19 +2019,19 @@ int mgls_text(mglGraph *gr, long , mglArg *a, int k[10])
 void mglc_text(wchar_t out[1024], long , mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
-		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), \"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].v, a[3].w, (k[4]==2 && a[4].s[0]!=0)?a[4].s:"C", k[5]==3?a[5].v:-1.4);
+		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), L\"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].v, a[3].w, (k[4]==2 && a[4].s[0]!=0)?a[4].s:"C", k[5]==3?a[5].v:-1.4);
 	else if(k[0]==3 && k[1]==3 && k[2]==2)
-		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g), \"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].w, (k[3]==2 && a[3].s[0]!=0)?a[3].s:"C", k[4]==3?a[4].v:-1.4);
+		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g), L\"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].w, (k[3]==2 && a[3].s[0]!=0)?a[3].s:"C", k[4]==3?a[4].v:-1.4);
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3 && k[6]==2)
-		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), \"%ls\", 't', %g);", a[0].v, a[1].v, a[2].v, a[3].v, a[4].v, a[5].v, a[6].w, k[8]==3?a[8].v:-1.4);
+		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), L\"%ls\", 't', %g);", a[0].v, a[1].v, a[2].v, a[3].v, a[4].v, a[5].v, a[6].w, k[8]==3?a[8].v:-1.4);
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==2)
-		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g), mglPoint(%g, %g), \"%ls\", 't', %g);", a[0].v, a[1].v, a[2].v, a[3].v, a[4].w, k[6]==3?a[6].v:-1.4);
+		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g), mglPoint(%g, %g), L\"%ls\", 't', %g);", a[0].v, a[1].v, a[2].v, a[3].v, a[4].w, k[6]==3?a[6].v:-1.4);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
-		mglprintf(out,1024,L"gr->Text(%s, %s, %s, \"%ls\", \"%s\", %g);",  a[0].s, a[1].s, a[2].s, a[3].w, k[4]==2?a[4].s:"", k[5]==3?a[5].v:-1);
+		mglprintf(out,1024,L"gr->Text(%s, %s, %s, L\"%ls\", \"%s\", %g);",  a[0].s, a[1].s, a[2].s, a[3].w, k[4]==2?a[4].s:"", k[5]==3?a[5].v:-1);
 	else if(k[0]==1 && k[1]==1 && k[2]==2)
-		mglprintf(out,1024,L"gr->Text(%s, %s, \"%ls\", \"%s\", %g, %g);",  a[0].s, a[1].s, a[2].w, k[3]==2?a[3].s:"", k[4]==3?a[4].v:-1, k[5]==3?a[5].v:NAN);
+		mglprintf(out,1024,L"gr->Text(%s, %s, L\"%ls\", \"%s\", %g, %g);",  a[0].s, a[1].s, a[2].w, k[3]==2?a[3].s:"", k[4]==3?a[4].v:-1, k[5]==3?a[5].v:NAN);
 	else if(k[0]==1 && k[1]==2)
-		mglprintf(out,1024,L"gr->Text(%s, \"%ls\", \"%s\", %g, %g);",  a[0].s, a[1].w, k[2]==2?a[2].s:"", k[3]==3?a[3].v:-1, k[4]==3?a[4].v:NAN);
+		mglprintf(out,1024,L"gr->Text(%s, L\"%ls\", \"%s\", %g, %g);",  a[0].s, a[1].w, k[2]==2?a[2].s:"", k[3]==3?a[3].v:-1, k[4]==3?a[4].v:NAN);
 }
 //-----------------------------------------------------------------------------
 int mgls_torus(mglGraph *gr, long , mglArg *a, int k[10])
@@ -2130,13 +2144,13 @@ int mgls_textmark(mglGraph *gr, long , mglArg *a, int k[10])
 void mglc_textmark(wchar_t out[1024], long , mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
-		mglprintf(out,1024,L"gr->TextMark(%s, %s, %s, %s, \"%ls\", \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, a[4].w, k[5]==2?a[5].s:"");
+		mglprintf(out,1024,L"gr->TextMark(%s, %s, %s, %s, L\"%ls\", \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, a[4].w, k[5]==2?a[5].s:"");
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
-		mglprintf(out,1024,L"gr->TextMark(%s, %s, %s, \"%ls\", \"%s\", %g);", a[0].s, a[1].s, a[2].s, a[3].w, k[4]==2?a[4].s:"", k[5]==3?a[5].v:NAN);
+		mglprintf(out,1024,L"gr->TextMark(%s, %s, %s, L\"%ls\", \"%s\", %g);", a[0].s, a[1].s, a[2].s, a[3].w, k[4]==2?a[4].s:"", k[5]==3?a[5].v:NAN);
 	else if(k[0]==1 && k[1]==1 && k[2]==2)
-		mglprintf(out,1024,L"gr->TextMark(%s, %s, \"%ls\", \"%s\", %g);", a[0].s, a[1].s, a[2].w, k[3]==2?a[3].s:"", k[4]==3?a[4].v:NAN);
+		mglprintf(out,1024,L"gr->TextMark(%s, %s, L\"%ls\", \"%s\", %g);", a[0].s, a[1].s, a[2].w, k[3]==2?a[3].s:"", k[4]==3?a[4].v:NAN);
 	else if(k[0]==1 && k[1]==2)
-		mglprintf(out,1024,L"gr->TextMark(%s, \"%ls\", \"%s\", %g);", a[0].s, a[1].w, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN);
+		mglprintf(out,1024,L"gr->TextMark(%s, L\"%ls\", \"%s\", %g);", a[0].s, a[1].w, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN);
 }
 //-----------------------------------------------------------------------------
 int mgls_triplot(mglGraph *gr, long , mglArg *a, int k[10])
@@ -2292,46 +2306,46 @@ void mglc_traj(wchar_t out[1024], long , mglArg *a, int k[10])
 //-----------------------------------------------------------------------------
 int mgls_xlabel(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Label('x', a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	if(k[0]==2)	gr->Labelw('x', a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 	else	return 1;
 	return 0;
 }
 void mglc_xlabel(wchar_t out[1024], long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('x', \"%s\", %d, %g, %g);", a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('x', L\"%ls\", %g, %g, %g);", a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 }
 //-----------------------------------------------------------------------------
 int mgls_ylabel(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Label('y', a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	if(k[0]==2)	gr->Labelw('y', a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 	else	return 1;
 	return 0;
 }
 void mglc_ylabel(wchar_t out[1024], long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('y', \"%s\", %d, %g, %g);", a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('y', L\"%ls\", %g, %g, %g);", a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 }
 //-----------------------------------------------------------------------------
 int mgls_zlabel(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Label('z', a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	if(k[0]==2)	gr->Labelw('z', a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 	else	return 1;
 	return 0;
 }
 void mglc_zlabel(wchar_t out[1024], long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('z', \"%s\", %d, %g, %g);", a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('z', L\"%ls\", %g, %g, %g);", a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 }
 //-----------------------------------------------------------------------------
 int mgls_tlabel(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Label('t', a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	if(k[0]==2)	gr->Labelw('t', a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 	else	return 1;
 	return 0;
 }
 void mglc_tlabel(wchar_t out[1024], long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('t', \"%s\", %d, %g, %g);", a[0].s, k[1]==3?int(a[1].v):1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('t', L\"%ls\", %g, %g, %g);", a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 }
 //-----------------------------------------------------------------------------
 int mgls_label(mglGraph *gr, long , mglArg *a, int k[10])
@@ -2424,7 +2438,7 @@ void mglc_xtick(wchar_t out[1024], long , mglArg *a, int k[10])
 		mglprintf(out,1024,L"gr->SetTicksVal('x', %g, \"%s\");", a[0].v, a[1].s);
 	else if(k[0]==3)	mglprintf(out,1024,L"gr->SetTicks('x', %g);", a[0].v);
 	else if(k[0]==2)
-		mglprintf(out,1024,L"gr->SetXTT(\"%ls\");", a[0].w);
+		mglprintf(out,1024,L"gr->SetXTT(L\"%ls\");", a[0].w);
 }
 //-----------------------------------------------------------------------------
 int mgls_ytick(mglGraph *gr, long n, mglArg *a, int k[10])
@@ -2455,7 +2469,7 @@ void mglc_ytick(wchar_t out[1024], long , mglArg *a, int k[10])
 	else if(k[0]==3 && k[1]==2)
 		mglprintf(out,1024,L"gr->SetTicksVal('y', %g, \"%s\");", a[0].v, a[1].s);
 	else if(k[0]==3)	mglprintf(out,1024,L"gr->SetTicks('y', %g);", a[0].v);
-	else if(k[0]==2)	mglprintf(out,1024,L"gr->SetYTT(\"%ls\");", a[0].w);
+	else if(k[0]==2)	mglprintf(out,1024,L"gr->SetYTT(L\"%ls\");", a[0].w);
 }
 //-----------------------------------------------------------------------------
 int mgls_ztick(mglGraph *gr, long n, mglArg *a, int k[10])
@@ -2486,7 +2500,7 @@ void mglc_ztick(wchar_t out[1024], long , mglArg *a, int k[10])
 	else if(k[0]==3 && k[1]==2)
 		mglprintf(out,1024,L"gr->SetTicksVal('z', %g, \"%s\");", a[0].v, a[1].s);
 	else if(k[0]==3)	mglprintf(out,1024,L"gr->SetTicks('z', %g);", a[0].v);
-	else if(k[0]==2)	mglprintf(out,1024,L"gr->SetZTT(\"%ls\");", a[0].s);
+	else if(k[0]==2)	mglprintf(out,1024,L"gr->SetZTT(L\"%ls\");", a[0].s);
 }
 //-----------------------------------------------------------------------------
 int mgls_zoom(mglGraph *gr, long , mglArg *a, int k[10])
@@ -2546,7 +2560,7 @@ int mgls_info(mglGraph *gr, long , mglArg *a, int k[10])
 void mglc_info(wchar_t out[1024], long , mglArg *a, int k[10])
 {
 	if(k[0]==1)	mglprintf(out,1024,L"%s.PrintInfo(gr->Message, %s);", a[0].s, k[1]==3 && a[1].v!=0 ? "true" : "false");
-	if(k[0]==2)	mglprintf(out,1024,L"sprintf(gr->Message, \"%ls\");",a[0].w);
+	if(k[0]==2)	mglprintf(out,1024,L"sprintf(gr->Message, L\"%ls\");",a[0].w);
 }
 //-----------------------------------------------------------------------------
 int mgls_integrate(mglGraph *, long , mglArg *a, int k[10])
@@ -2927,7 +2941,7 @@ int mgls_ctick(mglGraph *gr, long , mglArg *a, int k[10])
 }
 void mglc_ctick(wchar_t out[1024], long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	mglprintf(out,1024,L"gr->SetCTT(\"%ls\");", a[0].w);
+	if(k[0]==2)	mglprintf(out,1024,L"gr->SetCTT(L\"%ls\");", a[0].w);
 	else if(k[0]==3)	mglprintf(out,1024,L"gr->SetTicks('c',%g);", a[0].v);
 }
 //-----------------------------------------------------------------------------
@@ -3390,6 +3404,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"light",L"Setup light",L"light [val] | val num | num xpos ypos zpos ['fmt' br]", mgls_light, mglc_light, false, 2},
 	{L"line",L"Draw line",L"line x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_line, mglc_line, false, 1},
 	{L"linewidth",L"Set default line width",L"linewidth val", mgls_linewidth, mglc_linewidth, false, 2},
+	{L"loadfont",L"Load fontfaces",L"loadfont ['fmt']", mgls_loadfont, mglc_loadfont, false, 2},
 	{L"map",L"Draw mapping plot",L"map Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_map, mglc_map, false, 0},
 	{L"mark",L"Draw mark plot for 1D data",L"mark Ydat Rdat ['fmt' zval]|Xdat Ydat Rdat ['fmt' zval]|Xdat Ydat Zdat Rdat ['fmt']", mgls_mark, mglc_mark, false, 0},
 	{L"marksize",L"Set size of markers",L"marksize val", mgls_marksize, mglc_marksize, false, 2},

@@ -378,12 +378,12 @@ public:
 	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
 	void Grid(const char *dir="xyz",const char *pen="B-");
 	/// Print the label \a text for axis \a dir.
-	void Label(char dir, const char *text, int pos=+1, mreal size=-1.4, mreal shift=0);
+	void Label(char dir, const char *text, mreal pos=+1, mreal size=-1.4, mreal shift=0);
 	/// Print the \a text at arbitrary position of the picture \a x, \a y in range [0,1]x[0,1].
 	void Label(mreal x, mreal y, const char *text, const char *fnt=0, mreal size=-1.4, bool rel=false);
 	void Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt=0, mreal size=-1.4, bool rel=false);
 	/// Print the label \a text for axis \a dir.
-	void Label(char dir, const wchar_t *text, int pos=+1, mreal size=-1.4, mreal shift=0);
+	void Labelw(char dir, const wchar_t *text, mreal pos=+1, mreal size=-1.4, mreal shift=0);
 	/// Draw colorbar at edge of axis
 	void Colorbar(const char *sch=0,int where=0);
 	void inline Colorbar(const char *sch, int where, mreal x, mreal y, mreal w, mreal h)	{	SetScheme(sch);	Colorbar(where,x,y,w,h);	};

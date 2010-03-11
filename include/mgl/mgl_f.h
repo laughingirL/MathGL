@@ -174,7 +174,7 @@ void mgl_box_rgb_(uintptr_t *graph, mreal *r, mreal *g, mreal *b, int *ticks);
 void mgl_axis_(uintptr_t *graph, const char *dir,int);
 void mgl_axis_grid_(uintptr_t *graph, const char *dir,const char *pen,int,int);
 void mgl_label_(uintptr_t *graph, const char *dir, const char *text,int,int);
-void mgl_label_ext_(uintptr_t *graph, const char *dir, const char *text, int *pos, mreal *size, mreal *shift,int,int);
+void mgl_label_ext_(uintptr_t *graph, const char *dir, const char *text, mreal *pos, mreal *size, mreal *shift,int,int);
 void mgl_label_xy_(uintptr_t *graph, mreal *x, mreal *y, const char *text, const char *fnt, mreal *size,int,int);
 void mgl_set_xtt_(uintptr_t * graph, const char *templ,int);
 void mgl_set_ytt_(uintptr_t * graph, const char *templ,int);

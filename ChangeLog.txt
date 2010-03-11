@@ -1,3 +1,8 @@
+1.10.2
+	- Add MGL command 'loadfont' for in-script font changing.
+	- Add labelw_ext() and rename Label() to Labelw() for wchar_t argument.
+	- Bug with font path reconstraction in win32.
+
 1.10.1 Released 5 March 2010
 	- Add "in-place" commands for arguments in a MGL script (like, "plot {sum dat 'x'}").
 	- Add StickPlot() for putting plot in to a cell of sticks

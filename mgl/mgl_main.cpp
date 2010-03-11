@@ -881,12 +881,12 @@ void mglGraph::Label(mreal x, mreal y, const char *str, const char *fnt, mreal s
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Label(char dir, const char *str, int pos, mreal size, mreal shift)
+void mglGraph::Label(char dir, const char *str, mreal pos, mreal size, mreal shift)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
-	Label(dir, wcs, pos, size, shift);
+	Labelw(dir, wcs, pos, size, shift);
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
