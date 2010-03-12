@@ -37,6 +37,10 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define chdir	_chdir // BORLAND has chdir
 #endif
 #endif
+
+#ifndef M_PI
+#define M_PI	3.14159265358979323846  /* pi */
+#endif
 //-----------------------------------------------------------------------------
 #ifdef WIN32
 #define mglprintf    _snwprintf

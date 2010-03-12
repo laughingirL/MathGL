@@ -32,12 +32,8 @@ struct gsl_matrix;
 #include "mgl/mgl_define.h"
 #include "mgl/mgl_c.h"
 //-----------------------------------------------------------------------------
-/*const float NaN = NAN;
-#ifdef SWIG
+const float NaN = NAN;
 const float pi = M_PI;
-const int on = 1;
-const int off = 0;
-#endif*/
 //-----------------------------------------------------------------------------
 /// Class for incapsulating point in space
 struct mglPoint
@@ -88,14 +84,33 @@ public:
 	mglData(const char *fname)	{	a=mgl_create_data_file(fname);	del=true;	}
 	~mglData()	{	if(a && del)	mgl_delete_data(a);	};
 	mglData(const mglData &d)	{	a=mgl_create_data();	mgl_data_set(a,d.a);	del=true;	};
+
 	mglData(int size, const float *d)
 	{	a=mgl_create_data();	mgl_data_set_float(a,d,size,1,1);		del=true;	};
 	mglData(int rows, int cols, const float *d)
 	{	a=mgl_create_data();	mgl_data_set_float(a,d,cols,rows,1);	del=true;	};
+	mglData(int rows, int cols, int slc, const float *d)
+	{	a=mgl_create_data();	mgl_data_set_float(a,d,cols,rows,slc);	del=true;	};
 	mglData(int size, const double *d)
 	{	a=mgl_create_data();	mgl_data_set_double(a,d,size,1,1);		del=true;	};
 	mglData(int rows, int cols, const double *d)
 	{	a=mgl_create_data();	mgl_data_set_double(a,d,cols,rows,1);	del=true;	};
+	mglData(int rows, int cols, int slc, const double *d)
+	{	a=mgl_create_data();	mgl_data_set_double(a,d,cols,rows,slc);	del=true;	};
+
+	mglData(const float *d, int size)
+	{	a=mgl_create_data();	mgl_data_set_float(a,d,size,1,1);		del=true;	};
+	mglData(const float *d, int rows, int cols)
+	{	a=mgl_create_data();	mgl_data_set_float(a,d,cols,rows,1);	del=true;	};
+	mglData(const float *d, int rows, int cols, int slc)
+	{	a=mgl_create_data();	mgl_data_set_float(a,d,cols,rows,slc);	del=true;	};
+	mglData(const double *d, int size)
+	{	a=mgl_create_data();	mgl_data_set_double(a,d,size,1,1);		del=true;	};
+	mglData(const double *d, int rows, int cols)
+	{	a=mgl_create_data();	mgl_data_set_double(a,d,cols,rows,1);	del=true;	};
+	mglData(const double *d, int rows, int cols, int slc)
+	{	a=mgl_create_data();	mgl_data_set_double(a,d,cols,rows,slc);	del=true;	};
+
 	inline HMDT Self()	{	return a;	};
 
 	inline void Set(gsl_vector *v)	{	mgl_data_set_vector(a,v);	};
@@ -151,7 +166,7 @@ public:
 	inline void Smooth(int Type,const char *dirs="xyz",double delta=0)
 	{	mgl_data_smooth(a,Type,delta,dirs);	};
 	inline void Envelop(char dir='x')	{	mgl_data_envelop(a,dir);	};
-	inline void Sew(const char *dirs="xyz", double da=2*M_PI)
+	inline void Sew(const char *dirs="xyz", double da=2*pi)
 	{	mgl_data_sew(a,dirs,da);	};
 	inline void Smooth(const char *dirs="xyz")
 	{
