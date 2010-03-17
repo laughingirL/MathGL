@@ -225,6 +225,34 @@ public:
 	inline void Insert(char dir, int at=0, int num=1)	{	mgl_data_insert(a,dir,at,num);	};
 	inline void Delete(char dir, int at=0, int num=1)	{	mgl_data_delete(a,dir,at,num);	};
 
+	inline mreal Find(const char *cond, int &i, int &j, int &k)
+	{	return mgl_data_first(a, cond, &i, &j, &k);	};
+	inline mreal Last(const char *cond, int &i, int &j, int &k)
+	{	return mgl_data_last(a, cond, &i, &j, &k);	};
+	inline int Find(const char *cond, char dir, int i=0, int j=0, int k=0)
+	{	return mgl_data_find(a, cond, dir, i, j, k);	};
+	inline bool FindAny(const char *cond)
+	{	return mgl_data_find_any(a, cond);	};
+	float Maximal(int &i,int &j,int &k)
+	{	return mgl_data_max_int(a, &i, &j, &k);	};
+	float Minimal(int &i,int &j,int &k)
+	{	return mgl_data_min_int(a, &i, &j, &k);	};
+	float Maximal(float &x,float &y,float &z)
+	{
+		mreal i=x,j=y,k=z,r=mgl_data_max_real(a, &i, &j, &k);
+		x=i;	y=j;	z=k;	return r;
+	};
+	float Minimal(float &x,float &y,float &z)
+	{
+		mreal i=x,j=y,k=z,r=mgl_data_min_real(a, &i, &j, &k);
+		x=i;	y=j;	z=k;	return r;
+	};
+	float Momentum(char dir,float &m,float &w)
+	{
+		mreal i=0,j=0,r=mgl_data_momentum_mw(a, dir, &m, &w);
+		m=i;	w=j;	return r;
+	};
+
 	inline double v(int i,int j=0,int k=0)		{	return mgl_data_get_value(a,i,j,k);	};
 	inline double GetVal(int i, int j=0, int k=0)	{	return mgl_data_get_value(a,i,j,k);	};
 	inline void SetVal(double v, int i, int j=0, int k=0)	{	mgl_data_set_value(a,v,i,j,k);	};

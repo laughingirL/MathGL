@@ -486,6 +486,17 @@ void mgl_data_squeeze_(uintptr_t *dat, int *rx,int *ry,int *rz,int *smooth);
 mreal mgl_data_max_(uintptr_t *dat);
 mreal mgl_data_min_(uintptr_t *dat);
 const mreal *mgl_data_data_(uintptr_t *dat);
+
+mreal mgl_data_first_(uintptr_t *dat, const char *cond, int *i, int *j, int *k, int);
+mreal mgl_data_last_(uintptr_t *dat, const char *cond, int *i, int *j, int *k, int);
+int mgl_data_find_(uintptr_t *dat, const char *cond, char *dir, int *i, int *j, int *k, int,int);
+int mgl_data_find_any_(uintptr_t *dat, const char *cond, int);
+mreal mgl_data_max_int_(uintptr_t *dat, int *i, int *j, int *k);
+mreal mgl_data_max_real_(uintptr_t *dat, mreal *x, mreal *y, mreal *z);
+mreal mgl_data_min_int_(uintptr_t *dat, int *i, int *j, int *k);
+mreal mgl_data_min_real_(uintptr_t *dat, mreal *x, mreal *y, mreal *z);
+mreal mgl_data_momentum_mw_(uintptr_t *dat, char *dir, mreal *m, mreal *w,int);
+
 uintptr_t mgl_data_combine_(uintptr_t *dat1, uintptr_t *dat2);
 void mgl_data_extend_(uintptr_t *dat, int *n1, int *n2);
 void mgl_data_insert_(uintptr_t *dat, const char *dir, int *at, int *num, int);

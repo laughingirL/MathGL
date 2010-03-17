@@ -530,3 +530,57 @@ void mgl_data_diff_par_(uintptr_t *d, uintptr_t *v1, uintptr_t *v2, uintptr_t *v
 	else	_DT_->Diff(_D_(v1),_D_(v2));
 }
 //-----------------------------------------------------------------------------
+mreal mgl_data_first(const HMDT d, const char *cond, int *i, int *j, int *k)
+{	return d->Find(cond,*i,*j,*k);	}
+mreal mgl_data_last(const HMDT d, const char *cond, int *i, int *j, int *k)
+{	return d->Last(cond,*i,*j,*k);	}
+int mgl_data_find(const HMDT d, const char *cond, char dir, int i, int j, int k)
+{	return d->Find(cond,dir,i,j,k);	}
+int mgl_data_find_any(const HMDT d, const char *cond)
+{	return d->FindAny(cond);	}
+mreal mgl_data_first_(uintptr_t *d, const char *cond, int *i, int *j, int *k, int l)
+{
+	char *s=new char[l+1];	memcpy(s,cond,l);	s[l]=0;
+	mreal res = _DT_->Find(s,*i,*j,*k);
+	delete []s;		return res;
+}
+mreal mgl_data_last_(uintptr_t *d, const char *cond, int *i, int *j, int *k, int l)
+{
+	char *s=new char[l+1];	memcpy(s,cond,l);	s[l]=0;
+	mreal res = _DT_->Last(s,*i,*j,*k);
+	delete []s;		return res;
+}
+int mgl_data_find_(uintptr_t *d, const char *cond, char *dir, int *i, int *j, int *k, int l, int)
+{
+	char *s=new char[l+1];	memcpy(s,cond,l);	s[l]=0;
+	int res = _DT_->Find(s,*dir,*i,*j,*k);
+	delete []s;		return res;
+}
+int mgl_data_find_any_(uintptr_t *d, const char *cond, int l)
+{
+	char *s=new char[l+1];	memcpy(s,cond,l);	s[l]=0;
+	int res = _DT_->FindAny(s);
+	delete []s;		return res;
+}
+//-----------------------------------------------------------------------------
+mreal mgl_data_max_int(const HMDT d, int *i, int *j, int *k)
+{	return d->Maximal(*i,*j,*k);	}
+mreal mgl_data_max_real(const HMDT d, mreal *i, mreal *j, mreal *k)
+{	return d->Maximal(*i,*j,*k);	}
+mreal mgl_data_min_int(const HMDT d, int *i, int *j, int *k)
+{	return d->Minimal(*i,*j,*k);	}
+mreal mgl_data_min_real(const HMDT d, mreal *i, mreal *j, mreal *k)
+{	return d->Minimal(*i,*j,*k);	}
+mreal mgl_data_momentum_mw(const HMDT d, char dir, mreal *m, mreal *w)
+{	return d->Momentum(dir,*m,*w);	}
+mreal mgl_data_max_int_(uintptr_t *d, int *i, int *j, int *k)
+{	return _DT_->Maximal(*i,*j,*k);	}
+mreal mgl_data_max_real_(uintptr_t *d, mreal *i, mreal *j, mreal *k)
+{	return _DT_->Maximal(*i,*j,*k);	}
+mreal mgl_data_min_int_(uintptr_t *d, int *i, int *j, int *k)
+{	return _DT_->Minimal(*i,*j,*k);	}
+mreal mgl_data_min_real_(uintptr_t *d, mreal *i, mreal *j, mreal *k)
+{	return _DT_->Minimal(*i,*j,*k);	}
+mreal mgl_data_momentum_mw_(uintptr_t *d, char *dir, mreal *m, mreal *w,int)
+{	return _DT_->Momentum(*dir,*m,*w);	}
+//-----------------------------------------------------------------------------

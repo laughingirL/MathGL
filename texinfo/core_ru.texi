@@ -1017,10 +1017,11 @@ Setsize: размер(ы) равны нулю или отрицательны
 Рисует ограничивающий параллелепипед цветом @var{col}.
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Label (@code{char} dir, @code{const char *}text, @code{int} pos=@code{+1}, @code{float} size=@code{-1.4}, @code{float} shift=@code{0})
-@deftypefnx {Метод класса @code{mglGraph} (C++)} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{int} pos=@code{+1}, @code{float} size=@code{-1.4}, @code{float} shift=@code{0})
+@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Label (@code{char} dir, @code{const char *}text, @code{float} pos=@code{+1}, @code{float} size=@code{-1.4}, @code{float} shift=@code{0})
+@deftypefnx {Метод класса @code{mglGraph} (C++)} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{float} pos=@code{+1}, @code{float} size=@code{-1.4}, @code{float} shift=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text)
-@deftypefnx {Функция С} @code{void} mgl_label_ext (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{int} pos, @code{float} size, @code{float} shift)
+@deftypefnx {Функция С} @code{void} mgl_label_ext (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{float} pos, @code{float} size, @code{float} shift)
+@deftypefnx {Функция С} @code{void} mgl_labelw_ext (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{float} pos, @code{float} size, @code{float} shift)
 Выводит подпись @var{text} для оси @var{dir}=@samp{x},@samp{y},@samp{z},@samp{t} (где @samp{t} -- ``тернарная'' ось @math{t=1-x-y}). Параметр @var{pos} задает положение подписи: при @var{pos}=0 -- по центру оси, при @var{pos}>0 -- около максимальных значений, при @var{pos}<0 -- около минимальных значений. Параметр @var{size} задает размер шрифта (по умолчанию в 1.4 раза больше чем у меток, @pxref{Font settings}). @xref{Text printing}.
 @end deftypefn
 

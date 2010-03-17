@@ -3,6 +3,7 @@
 	- Add labelw_ext() and rename Label() to Labelw() for wchar_t argument.
 	- Bug with font path reconstraction in win32.
 	- Python interface now can use 3D NumPy arrays as initialization of mglData() constructor.
+	- Add C/Fortran/SWIG interface for a number of mglData functions: Find(), Last(), FindAny(), Maximal(), Minimal(), Momentum()
 
 1.10.1 Released 5 March 2010
 	- Add "in-place" commands for arguments in a MGL script (like, "plot {sum dat 'x'}").

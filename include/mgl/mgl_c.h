@@ -529,6 +529,17 @@ mreal mgl_data_max(const HMDT dat);
 mreal mgl_data_min(const HMDT dat);
 mreal *mgl_data_value(HMDT dat, int i,int j,int k);
 const mreal *mgl_data_data(const HMDT dat);
+
+mreal mgl_data_first(const HMDT dat, const char *cond, int *i, int *j, int *k);
+mreal mgl_data_last(const HMDT dat, const char *cond, int *i, int *j, int *k);
+int mgl_data_find(const HMDT dat, const char *cond, char dir, int i, int j, int k);
+int mgl_data_find_any(const HMDT dat, const char *cond);
+mreal mgl_data_max_int(const HMDT dat, int *i, int *j, int *k);
+mreal mgl_data_max_real(const HMDT dat, mreal *x, mreal *y, mreal *z);
+mreal mgl_data_min_int(const HMDT dat, int *i, int *j, int *k);
+mreal mgl_data_min_real(const HMDT dat, mreal *x, mreal *y, mreal *z);
+mreal mgl_data_momentum_mw(const HMDT dat, char dir, mreal *m, mreal *w);
+
 HMDT mgl_data_combine(const HMDT dat1, const HMDT dat2);
 void mgl_data_extend(HMDT dat, int n1, int n2);
 void mgl_data_insert(HMDT dat, char dir, int at, int num);

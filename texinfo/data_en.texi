@@ -522,10 +522,10 @@ Gets the pointer to internal data array.
 @cindex Last
 @cindex FindAny
 
-@deftypefn {Method on @code{mglData} (C++, Python)} @code{void} PrintInfo (@code{char *}buf, @code{bool} all=@code{false}) @code{const}
+@deftypefn {Method on @code{mglData} (C++)} @code{void} PrintInfo (@code{char *}buf, @code{bool} all=@code{false}) @code{const}
 Print information about the data (sizes and momentum) to string @var{buf}. Parameter @var{all} set to print most of information (if @code{true}) or just basic one like dimensions, maximal an minimal values.
 @end deftypefn
-@deftypefn {Method on @code{mglData} (C++, Python)} @code{void} PrintInfo (@code{FILE *}fp) @code{const}
+@deftypefn {Method on @code{mglData} (C++)} @code{void} PrintInfo (@code{FILE *}fp) @code{const}
 Print information about the data (sizes and momentum) to FILE (for example, stdout)
 @end deftypefn
 
@@ -539,35 +539,44 @@ Gets minimal value of the data.
 @end deftypefn
 
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Maximal (@code{int} &i, @code{int} &j, @code{int} &k) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_max_int (@code{const HMDT} dat, @code{int} *i, @code{int} *j, @code{int} *k)
 Gets maximal value of the data and its position in the array to variables @var{i}, @var{j}, @var{k}.
 @end deftypefn
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Minimal (@code{int} &i, @code{int} &j, @code{int} &k) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_min_int (@code{const HMDT} dat, @code{int} *i, @code{int} *j, @code{int} *k)
 Gets minimal value of the data and its position in the array to variables @var{i}, @var{j}, @var{k}.
 @end deftypefn
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Maximal (@code{float} &i, @code{float} &j, @code{float} &k) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_max_real (@code{const HMDT} dat, @code{float} *x, @code{float} *y, @code{float} *z)
 Gets maximal value of the data and its approximated (interpolated) position to variables @var{i}, @var{j}, @var{k}.
 @end deftypefn
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Minimal (@code{float} &i, @code{float} &j, @code{float} &k) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_min_real (@code{const HMDT} dat, @code{float} *x, @code{float} *y, @code{float} *z)
 Gets minimal value of the data and its approximated (interpolated) position to variables @var{i}, @var{j}, @var{k}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Momentum (@code{char} dir, @code{float} &m, @code{float} &w) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_momentum_mw (@code{const HMDT} dat, @code{char} dir, @code{float} *m, @code{float} *w)
 Gets zero-momentum (energy, @math{I=\sum a_i}) and write first momentum (median, @math{m = \sum \xi_i a_i/I}) and second momentum (width, @math{w^2 = \sum (\xi_i-m)^2 a_i/I}) to variables. Here @math{\xi} is corresponding coordinate if @var{dir} is @samp{'x'}, @samp{'y'} or @samp{'z'}. Otherwise median is @math{m = \sum a_i/N}, width is @math{w^2 = \sum (a_i-m)^2/N}.
 @end deftypefn
-@deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Momentum (@code{char} dir, @code{float} &m, @code{float} &w, @code{float} &s, @code{float} &k) @code{const}
+@deftypefn {Method on @code{mglData} (C++)} @code{float} Momentum (@code{char} dir, @code{float} &m, @code{float} &w, @code{float} &s, @code{float} &k) @code{const}
 Gets zero-momentum (energy, @math{I=\sum a_i}) and write first momentum (median, @math{m = \sum \xi_i a_i/I}), second momentum (width, @math{w^2 = \sum (\xi_i-m)^2 a_i/I}, third momentum (skewness, @math{s = \sum (\xi_i-m)^3 a_i/ I w^3}) and fourth momentum (kurtosis, @math{k = \sum (\xi_i-m)^4 a_i / 3 I w^4})) to variables. Here @math{\xi} is corresponding coordinate if @var{dir} is @samp{'x'}, @samp{'y'} or @samp{'z'}. Otherwise median is @math{m = \sum a_i/N}, width is @math{w^2 = \sum (a_i-m)^2/N} and so on.
 @end deftypefn
 
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Find (@code{const char *}cond, @code{int} &i, @code{int} &j, @code{int} &k) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_first (@code{const HMDT} dat, @code{const char *}cond, @code{int} *i, @code{int} *j, @code{int} *k)
 Find position (after specified in @var{i}, @var{j}, @var{k}) of first nonzero value of formula @var{cond}. Function return the data value at found position.
 @end deftypefn
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Last (@code{const char *}cond, @code{int} &i, @code{int} &j, @code{int} &k) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_last (@code{const HMDT} dat, @code{const char *}cond, @code{int} *i, @code{int} *j, @code{int} *k)
 Find position (before specified in @var{i}, @var{j}, @var{k}) of last nonzero value of formula @var{cond}. Function return the data value at found position.
 @end deftypefn
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{int} Find (@code{const char *}cond, @code{char} dir, @code{int} i=@code{0}, @code{int} j=@code{0}, @code{int} k=@code{0}) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_find (@code{const HMDT} dat, @code{const char *}cond, @code{int} i, @code{int} j, @code{int} k)
 Return position of first in direction @var{dir} nonzero value of formula @var{cond}. The search is started from point @{i,j,k@}.
 @end deftypefn
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{bool} FindAny (@code{const char *}cond) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_find_any (@code{const HMDT} dat, @code{const char *}cond)
 Determines if any nonzero value of formula in the data array.
 @end deftypefn
 

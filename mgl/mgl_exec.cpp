@@ -3379,11 +3379,11 @@ mglCommand mgls_base_cmd[] = {
 	{L"facey",L"Draw face perpendicular to y-axis",L"facex x0 y0 z0 wx wz ['fmt' d1 d2]", mgls_facey, mglc_facey, false, 1},
 	{L"facez",L"Draw face perpendicular to z-axis",L"facex x0 y0 z0 wy wz ['fmt' d1 d2]", mgls_facez, mglc_facez, false, 1},
 	{L"fall",L"Draw waterfalls",L"fall Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_fall, mglc_fall, false, 0},
-	{L"fgets",L"Print string from file",L"fgets x y {z} 'fname' [pos=0 'fmt' size]|x y z 'fname' [pos=0 'fmt' size]", mgls_fgets, mglc_fgets, false, 1},
+	{L"fgets",L"Print string from file",L"fgets x y z 'fname' [pos=0 'fmt' size]|x y z 'fname' [pos=0 'fmt' size]", mgls_fgets, mglc_fgets, false, 1},
 	{L"fill",L"Fill data linearly in range [v1, v2]",L"fill Var v1 v2 ['dir'] | Var 'eq' [Vdat Wdat]", mgls_fill, mglc_fill, false, 3},
 	{L"fit",L"Fit data to formula",L"fit Res A 'eq' 'var' [Ini]|Res X A 'eq' 'var' [Ini]|Res X Y A 'eq' 'var' [Ini]|Res X Y Z A 'eq' 'var' [Ini]", mgls_fit, mglc_fit, true, 3},
 	{L"fits",L"Fit data to formula",L"fits Res A S 'eq' 'var' [Ini]|Res X A S 'eq' 'var' [Ini]|Res X Y A S 'eq' 'var' [Ini]|Res X Y Z A S 'eq' 'var' [Ini]", mgls_fits, mglc_fits, true, 3},
-	{L"flow",L"Draw flow threads for vector field",L"flow Udat Vdat ['fmt' num zval]|Xdat Ydat Udat Vdat ['fmt' num zval]|Udat Vdat Wdat ['fmt' num]|Xdat Ydat Zdat Udat Vdat {Wdat} ['fmt' num]|\
+	{L"flow",L"Draw flow threads for vector field",L"flow Udat Vdat ['fmt' num zval]|Xdat Ydat Udat Vdat ['fmt' num zval]|Udat Vdat Wdat ['fmt' num]|Xdat Ydat Zdat Udat Vdat ['fmt' num]|\
 			x0 y0 Udat Vdat ['fmt' zval]|x0 y0 Xdat Ydat Udat Vdat ['fmt' zval]|x0 y0 z0 Udat Vdat Wdat ['fmt']|x0 y0 z0 Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_flow, mglc_flow, false, 0},
 	{L"fog",L"Switch on/off fog",L"fog val [pos]", mgls_fog, mglc_fog, false, 2},
 	{L"font",L"Setup font",L"font 'fmt' [size]", mgls_font, mglc_font, false, 2},
