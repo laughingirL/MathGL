@@ -140,49 +140,6 @@ void mglData::Smooth(int Type,const char *dirs,mreal delta)
 	delete []b;
 }
 //-----------------------------------------------------------------------------
-mglData mglData::Sum(const char *dir) const
-{
-	register long i,j,k,i0;
-	long kx=nx,ky=ny,kz=nz;
-	mreal *b = new mreal[nx*ny*nz];
-	mglData d;
-	memset(b,0,nx*ny*nz*sizeof(mreal));
-	if(strchr(dir,'z') && kz>1)
-	{
-		for(i=0;i<kx*ky;i++)
-		{
-			for(j=0;j<kz;j++)
-				b[i] += a[i+kx*ky*j];
-			b[i] /= kz;
-		}
-		kz = 1;
-	}
-	if(strchr(dir,'y') && ky>1)
-	{
-		for(i=0;i<kx;i++)  for(k=0;k<kz;k++)
-		{
-			i0 = i+kx*ky*k;
-			for(j=0;j<ky;j++)
-				b[i+kx*k] += a[i0+kx*j];
-			b[i+kx*k] /= ky;
-		}
-		ky = kz;  kz = 1;
-	}
-	if(strchr(dir,'x') && kx>1)
-	{
-		for(j=0;j<ky*kz;j++)
-		{
-			for(i=0;i<kx;i++)
-				b[j] += a[i+kx*j];
-			b[j] /= kx;
-		}
-		kx = ky;  ky = kz;  kz = 1;
-	}
-	d.Set(b,kx,ky,kz);
-	delete []b;
-	return d;
-}
-//-----------------------------------------------------------------------------
 void mglData::CumSum(const char *dir)
 {
 	register long i,j,k,i0;
@@ -684,47 +641,88 @@ mglData mglData::Hist(const mglData &w, int n,mreal v1,mreal v2,int nsub) const
 	return b;
 }
 //-----------------------------------------------------------------------------
-mglData mglData::Max(const char *dir) const
+mglData mglData::Sum(const char *dir) const
 {
 	register long i,j,k,i0;
 	long kx=nx,ky=ny,kz=nz;
 	mreal *b = new mreal[nx*ny*nz];
+	mreal *c = new mreal[nx*ny*nz];
 	mglData d;
-//	memset(b,0,nx*ny*nz*sizeof(mreal));
+	memset(b,0,nx*ny*nz*sizeof(mreal));
+	memcpy(c,a,nx*ny*nz*sizeof(mreal));
 	if(strchr(dir,'z') && kz>1)
 	{
 		for(i=0;i<kx*ky;i++)
 		{
-			b[i] = a[i];
-			for(j=1;j<kz;j++)
-				b[i] = b[i] > a[i+kx*ky*j] ? b[i] : a[i+kx*ky*j];
+			for(j=0;j<kz;j++)	b[i] += c[i+kx*ky*j];
+			b[i] /= kz;
 		}
-		kz = 1;
+		memcpy(c,b,nx*ny*nz*sizeof(mreal));	kz = 1;
 	}
 	if(strchr(dir,'y') && ky>1)
 	{
 		for(i=0;i<kx;i++)  for(k=0;k<kz;k++)
 		{
 			i0 = i+kx*ky*k;
-			b[i+kx*k] = a[i0];
-			for(j=1;j<ky;j++)
-				b[i+kx*k] = b[i+kx*k] > a[i0+kx*j] ? b[i+kx*k] : a[i0+kx*j];
+			for(j=0;j<ky;j++)	b[i+kx*k] += c[i0+kx*j];
+			b[i+kx*k] /= ky;
 		}
-		ky = kz;  kz = 1;
+		memcpy(c,b,nx*ny*nz*sizeof(mreal));	ky = kz;	kz = 1;
 	}
 	if(strchr(dir,'x') && kx>1)
 	{
 		for(j=0;j<ky*kz;j++)
 		{
-			b[j] = a[kx*j];
-			for(i=1;i<kx;i++)
-				b[j] = b[j] > a[i+kx*j] ? b[j] : a[i+kx*j];
+			for(i=0;i<kx;i++)	b[j] += c[i+kx*j];
+			b[j] /= kx;
 		}
-		kx = ky;  ky = kz;  kz = 1;
+		kx = ky;	ky = kz;	kz = 1;
 	}
 	d.Set(b,kx,ky,kz);
-	delete []b;
-	return d;
+	delete []b;		delete []c;		return d;
+}
+//-----------------------------------------------------------------------------
+mglData mglData::Max(const char *dir) const
+{
+	register long i,j,k,i0;
+	long kx=nx,ky=ny,kz=nz;
+	mreal *b = new mreal[nx*ny*nz];
+	mreal *c = new mreal[nx*ny*nz];
+	mglData d;
+	memcpy(c,a,nx*ny*nz*sizeof(mreal));
+	if(strchr(dir,'z') && kz>1)
+	{
+		for(i=0;i<kx*ky;i++)
+		{
+			b[i] = c[i];
+			for(j=1;j<kz;j++)
+				b[i] = b[i] > c[i+kx*ky*j] ? b[i] : c[i+kx*ky*j];
+		}
+		memcpy(c,b,nx*ny*nz*sizeof(mreal));	kz = 1;
+	}
+	if(strchr(dir,'y') && ky>1)
+	{
+		for(i=0;i<kx;i++)  for(k=0;k<kz;k++)
+		{
+			i0 = i+kx*ky*k;
+			b[i+kx*k] = c[i0];
+			for(j=1;j<ky;j++)
+				b[i+kx*k] = b[i+kx*k] > c[i0+kx*j] ? b[i+kx*k] : c[i0+kx*j];
+		}
+		memcpy(c,b,nx*ny*nz*sizeof(mreal));	ky = kz;	kz = 1;
+	}
+	if(strchr(dir,'x') && kx>1)
+	{
+		for(j=0;j<ky*kz;j++)
+		{
+			b[j] = c[kx*j];
+			for(i=1;i<kx;i++)
+				b[j] = b[j] > c[i+kx*j] ? b[j] : c[i+kx*j];
+		}
+		kx = ky;	ky = kz;	kz = 1;
+	}
+	d.Set(b,kx,ky,kz);
+	delete []b;		delete []c;		return d;
 }
 //-----------------------------------------------------------------------------
 mglData mglData::Min(const char *dir) const
@@ -732,42 +730,42 @@ mglData mglData::Min(const char *dir) const
 	register long i,j,k,i0;
 	long kx=nx,ky=ny,kz=nz;
 	mreal *b = new mreal[nx*ny*nz];
+	mreal *c = new mreal[nx*ny*nz];
 	mglData d;
-//	memset(b,0,nx*ny*nz*sizeof(mreal));
+	memcpy(c,a,nx*ny*nz*sizeof(mreal));
 	if(strchr(dir,'z') && kz>1)
 	{
 		for(i=0;i<kx*ky;i++)
 		{
-			b[i] = a[i];
+			b[i] = c[i];
 			for(j=1;j<kz;j++)
-				b[i] = b[i] < a[i+kx*ky*j] ? b[i] : a[i+kx*ky*j];
+				b[i] = b[i] < c[i+kx*ky*j] ? b[i] : c[i+kx*ky*j];
 		}
-		kz = 1;
+		memcpy(c,b,nx*ny*nz*sizeof(mreal));	kz = 1;
 	}
 	if(strchr(dir,'y') && ky>1)
 	{
 		for(i=0;i<kx;i++)  for(k=0;k<kz;k++)
 		{
 			i0 = i+kx*ky*k;
-			b[i+kx*k] = a[i0];
+			b[i+kx*k] = c[i0];
 			for(j=1;j<ky;j++)
-				b[i+kx*k] = b[i+kx*k] < a[i0+kx*j] ? b[i+kx*k] : a[i0+kx*j];
+				b[i+kx*k] = b[i+kx*k] < c[i0+kx*j] ? b[i+kx*k] : c[i0+kx*j];
 		}
-		ky = kz;  kz = 1;
+		memcpy(c,b,nx*ny*nz*sizeof(mreal));	ky = kz;	kz = 1;
 	}
 	if(strchr(dir,'x') && kx>1)
 	{
 		for(j=0;j<ky*kz;j++)
 		{
-			b[j] = a[kx*j];
+			b[j] = c[kx*j];
 			for(i=1;i<kx;i++)
-				b[j] = b[j] < a[i+kx*j] ? b[j] : a[i+kx*j];
+				b[j] = b[j] < c[i+kx*j] ? b[j] : c[i+kx*j];
 		}
-		kx = ky;  ky = kz;  kz = 1;
+		kx = ky;	ky = kz;	kz = 1;
 	}
 	d.Set(b,kx,ky,kz);
-	delete []b;
-	return d;
+	delete []b;		delete []c;		return d;
 }
 //-----------------------------------------------------------------------------
 mreal mglData::Last(const char *cond, int &i, int &j, int &k) const

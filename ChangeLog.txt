@@ -1,9 +1,12 @@
-1.10.2
+1.10.2 Released 22 March 2010
 	- Add MGL command 'loadfont' for in-script font changing.
 	- Add labelw_ext() and rename Label() to Labelw() for wchar_t argument.
-	- Bug with font path reconstraction in win32.
 	- Python interface now can use 3D NumPy arrays as initialization of mglData() constructor.
-	- Add C/Fortran/SWIG interface for a number of mglData functions: Find(), Last(), FindAny(), Maximal(), Minimal(), Momentum()
+	- Add C/Fortran/SWIG interface for a number of mglData functions: Find(), Last(), FindAny(), Maximal(), Minimal(), Momentum().
+	- Add extra argument for Face() which define variable color for the face (C++ only).
+	- Bug with font path reconstraction in win32.
+	- Bug with options parsing for MGL command.
+	- Bug in mglData::Sum(), Max(), Min() for operation along several direction.
 
 1.10.1 Released 5 March 2010
 	- Add "in-place" commands for arguments in a MGL script (like, "plot {sum dat 'x'}").

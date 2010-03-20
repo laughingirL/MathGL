@@ -67,7 +67,7 @@ void mglGraph::Surf(const char *eqX, const char *eqY, const char *eqZ, const cha
 //	Primitives
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl, int n)
+void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl, int n,mreal val)
 {
 	static int cgid=1;	StartGroup("Face",cgid++);
 	register long i,j,i0;
@@ -78,9 +78,10 @@ void mglGraph::Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const ch
 	bool cut = Cut;	Cut = true;
 
 	SetScheme(stl);
-	if(NumCol)	c1 = cmap[0];
-	bool all = NumCol>3;
+	if(stl && *stl && NumCol)	c1 = cmap[0];
+	bool all = stl && strlen(stl)>4 && NumCol>4;
 	if(all)	{	c2=cmap[1];	c3=cmap[2];	c4=cmap[3];	}
+	else if(!isnan(val))	c1 = GetC(val);
 
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)
 	{

@@ -85,7 +85,7 @@ public:
 	long nx;		///< number of points in 1st dimensions ('x' dimension)
 	long ny;		///< number of points in 2nd dimensions ('y' dimension)
 	long nz;		///< number of points in 3d dimensions ('z' dimension)
-	mreal *a;	  	///< data array
+	mreal *a;		///< data array
 	char *id;		///< column (or slice) names
 
 	/// Initiate by other mglData variable

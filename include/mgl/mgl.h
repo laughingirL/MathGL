@@ -20,7 +20,7 @@
 #ifndef _MGL_H_
 #define _MGL_H_
 
-#define MGL_VERSION	10.1
+#define MGL_VERSION	10.2
 
 #include <wchar.h>
 #include <stdlib.h>
@@ -407,7 +407,7 @@ public:
 	/// Draws the spline curve between points with style \a stl.
 	void Curve(mglPoint p1, mglPoint d1, mglPoint p2, mglPoint d2, const char *stl="B",int num=100);
 	/// Draws the face between points with color \a stl (include interpolation up to 4 colors).
-	void Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl="w", int num=2);
+	void Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl="w", int num=2, mreal val=NAN);
 	void FaceX(mreal x0, mreal y0, mreal z0, mreal wy, mreal wz, const char *stl="w", mreal dx=0, mreal dy=0);
 	void FaceY(mreal x0, mreal y0, mreal z0, mreal wx, mreal wz, const char *stl="w", mreal dx=0, mreal dy=0);
 	void FaceZ(mreal x0, mreal y0, mreal z0, mreal wx, mreal wy, const char *stl="w", mreal dx=0, mreal dy=0);

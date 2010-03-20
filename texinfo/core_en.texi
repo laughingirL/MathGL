@@ -868,8 +868,8 @@ Draws a geodesic line (straight line in Cartesian coordinates) from point @var{p
 Draws Bezier-like curve from point @var{p1} to @var{p2} using line style @var{stl}. At this tangent is codirected with @var{d1}, @var{d2} and proportional to its amplitude. Parameter @var{num} define the ``quality'' of the curve. If @var{num}=@code{2} then the straight line will be drawn in all coordinate system (independently on transformation formulas @pxref{Curved coordinates}). Contrary, for large values (for example, =@code{100}) the spline like Bezier curve will be drawn in corresponding coordinate system. Curve will be drawn even if it lies out of bounding box.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Face (@code{mglPoint} p1, @code{mglPoint} p2, @code{mglPoint} p3, @code{mglPoint} p4, @code{const char *}stl=@code{"w"}, @code{int} num=@code{2})
-Draws the solid quadrangle (face) with vertexes @var{p1}, @var{p2}, @var{p3}, @var{p4} and with color(s) @var{stl}. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. Face will be drawn even if it lies out of bounding box.
+@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Face (@code{mglPoint} p1, @code{mglPoint} p2, @code{mglPoint} p3, @code{mglPoint} p4, @code{const char *}stl=@code{"w"}, @code{int} num=@code{2}, @code{float} val=@code{NAN})
+Draws the solid quadrangle (face) with vertexes @var{p1}, @var{p2}, @var{p3}, @var{p4} and with color(s) @var{stl}. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. In first case parameter @var{val} (if not @code{NAN}) set the color according color scheme. Face will be drawn even if it lies out of bounding box.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} FaceX (@code{float} x0, @code{float} y0, @code{float} z0, @code{float} wy, @code{float} wz, @code{const char *}stl=@code{"w"}, @code{float} dx=@code{0}, @code{float} dy=@code{0})
