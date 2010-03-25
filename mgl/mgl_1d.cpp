@@ -256,7 +256,7 @@ void mglGraph::Plot(const mglData &x, const mglData &y, const mglData &z, const 
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
+		Pen(GetPal(),0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
 		register long i,k;
 		for(i=0;i<n;i++)
@@ -364,7 +364,7 @@ void mglGraph::Area(const mglData &x, const mglData &y, const mglData &z, const 
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
+		DefColor(GetPal(), -1);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
 
 		for(i=0;i<y.nx;i++)
@@ -398,7 +398,7 @@ void mglGraph::Area(const mglData &x, const mglData &y, const char *pen,bool sum
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
+		DefColor(GetPal(), -1);
 		mx = j<x.ny ? j:0;	//my = j<y.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -444,7 +444,7 @@ void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, co
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
+		DefColor(GetPal(), -1);
 		mx = j<x.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -488,7 +488,7 @@ void mglGraph::Step(const mglData &x, const mglData &y, const mglData &z, const 
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
+		Pen(GetPal(),0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -528,7 +528,7 @@ void mglGraph::Step(const mglData &x, const mglData &y, const char *pen,mreal zV
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
+		Pen(GetPal(),0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -579,7 +579,7 @@ void mglGraph::Stem(const mglData &x, const mglData &y, const mglData &z, const 
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
+		Pen(GetPal(),0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -616,7 +616,7 @@ void mglGraph::Stem(const mglData &x, const mglData &y, const char *pen,mreal zV
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
+		Pen(GetPal(),0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -661,7 +661,7 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const 
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
+		DefColor(GetPal(), -1);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -724,7 +724,7 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,mreal zV
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
+		DefColor(GetPal(), -1);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -787,7 +787,7 @@ void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,mreal zV
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
+		DefColor(GetPal(), -1);
 		my = j<y.ny ? j:0;	mx = j<v.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -867,9 +867,9 @@ void mglGraph::BoxPlot(const mglData &x, const mglData &y, const char *pen,mreal
 	}
 	delete []d;
 
-	SetPal(pen);//	DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
+	SetPal(pen);//	DefColor(GetPal(), -1);
 	mglColor c1=cmap[0], c2=cmap[1];
-	cmap[0] = cmap[1] = Pal[(CurrPal = (CurrPal+1)%NumPal)];
+	cmap[0] = cmap[1] = GetPal();
 	for(j=0;j<18*n;j++)	pp[2+3*j] = zVal;
 	for(i=0;i<n;i++)
 	{
@@ -1126,7 +1126,7 @@ void mglGraph::Mark(const mglData &x, const mglData &y, const mglData &z, const 
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		Pen(Pal[(CurrPal = (CurrPal+1)%NumPal)],0,0);
+		Pen(GetPal(),0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
 		mz = j<z.ny ? j:0;	mr = j<r.ny ? j:0;
 		register long i;
@@ -1276,7 +1276,7 @@ void mglGraph::Tube(const mglData &x, const mglData &y, const mglData &z, const 
 	SelectPen(pen);	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(Pal[(CurrPal = (CurrPal+1)%NumPal)], -1);
+		DefColor(GetPal(), -1);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
 		mz = j<z.ny ? j:0;	mr = j<r.ny ? j:0;
 		register long i;

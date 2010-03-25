@@ -55,7 +55,7 @@ void mglGraph::Traj(const mglData &x, const mglData &y, const mglData &z,
 	xm = 1./(xm ? sqrt(xm):1);
 	for(j=0;j<m;j++) // start prepare arrows
 	{
-		cmap[0]=Pal[(CurrPal = (CurrPal+1)%NumPal)];
+		cmap[0]=GetPal();
 		for(i=0;i<n;i++)
 		{
 			ix = i + n*(j<x.ny?j:0);	jx = i + n*(j<ax.ny?j:0);

@@ -1000,18 +1000,20 @@ void mglParse::ProcOpt(mglGraph *gr, wchar_t *str)
 			// NOTE: not consider ';' inside legend entry !!!
 			s=q;	q=wcschr(s,';');
 			if(q)	{	*q=0;	q++;	}
-			wcstrim_mgl(s);
-			n=mglFindArg(s);	if(n<1)	return;
-			s[n]=0;		a=s;	s=s+n+1;	wcstrim_mgl(a);
-			n=mglFindArg(s);	if(n<1)	return;
-			s[n]=0;		b=s;	s=s+n+1;	wcstrim_mgl(b);
+			wcstrim_mgl(s);		a=s;
+			n=mglFindArg(s);	if(n>0)	{	s[n]=0;		s=s+n+1;	}
+			wcstrim_mgl(a);		b=s;
+			n=mglFindArg(s);	if(n>0)	{	s[n]=0;		s=s+n+1;	}
+			wcstrim_mgl(b);
+
 			mglData bb,ss;
 			bb = mglFormulaCalc(b, this);
 			mreal ff = bb.a[0];
 			if(!wcscmp(a+1,L"range"))
 			{
-				n=mglFindArg(s);	if(n<1)	return;
-				s[n]=0;		c=s;	s=s+n+1;	wcstrim_mgl(c);
+				n=mglFindArg(s);	c=s;
+				if(n>0)	{	s[n]=0;		s=s+n+1;	}
+				wcstrim_mgl(c);
 				ss = mglFormulaCalc(c, this);
 				if(a[0]=='x')
 				{

@@ -10,7 +10,8 @@ This chapter contain information about basic and advanced MathGL, hints and samp
 * Data handling::               
 * Data plotting::               
 * C/Fortran interface::         
-* Hints::                       
+* MathGL and PyQt::
+* Hints::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -67,7 +68,7 @@ The ``interactive'' way of drawing in MathGL consists in window creation  with h
 @end verbatim
 Here function @code{sample} is defined. This function does all drawing. Other function @code{main} is entry point function for console program. Arguments of @code{main} should be transfered to @code{Window()} since it may contain OS specific information (@pxref{mglGraphAB class}).
 
-Alternatively you can create yours own class inherited from class @code{mglDraw} and reimplement the function @code{Draw()} in it:
+Alternatively you can create yours own class inherited from class @code{mglDraw} and re-implement the function @code{Draw()} in it:
 @verbatim
     class Foo : public mglDraw
     {
@@ -424,6 +425,28 @@ Another example demonstrate the features of TeX formula parsing.
 @caption{Example of TeX formula parsing}
 @end float
 
+Finally you can change font during execution (this work well for mglGraphZB class only).
+@verbatim
+    int sample(mglGraph *gr, void *)
+    {
+        float h=1.1, d=0.25;
+        gr->LoadFont("STIX");       gr->Puts(mglPoint(0,h), "default font (STIX)");
+        gr->LoadFont("adventor");   gr->Puts(mglPoint(0,h-d), "adventor font");
+        gr->LoadFont("bonum");      gr->Puts(mglPoint(0,h-2*d), "bonum font");
+        gr->LoadFont("chorus");     gr->Puts(mglPoint(0,h-3*d), "chorus font");
+        gr->LoadFont("cursor");     gr->Puts(mglPoint(0,h-4*d), "cursor font");
+        gr->LoadFont("heros");      gr->Puts(mglPoint(0,h-5*d), "heros font");
+        gr->LoadFont("heroscn");    gr->Puts(mglPoint(0,h-6*d), "heroscn font");
+        gr->LoadFont("pagella");    gr->Puts(mglPoint(0,h-7*d), "pagella font");
+        gr->LoadFont("schola");     gr->Puts(mglPoint(0,h-8*d), "schola font");
+        gr->LoadFont("termes");     gr->Puts(mglPoint(0,h-9*d), "termes font");
+    }
+@end verbatim
+
+@float
+@image{png/fonts, 7cm}
+@caption{Example of font face changing.}
+@end float
 
 @c ------------------------------------------------------------------
 @node Animation, , Text printing example, Advanced usage
@@ -830,7 +853,7 @@ As example I shall show the variant of plot from @ref{Plots for 2D data} (grid d
 @end float
 
 @c ------------------------------------------------------------------
-@node C/Fortran interface, Hints, Data plotting, Examples
+@node C/Fortran interface, MathGL and PyQt, Data plotting, Examples
 @section C/Fortran interface
 
 The usage of pure C or Fortran or any similar interfaces (@pxref{C interface}) is practically identical to classes usage. But there are some differences. C functions must have argument HMGL (for graphics) and/or HMDT (for data arrays) which specifies the object for drawing or manipulating (changing). Fortran users may regard these variables as integer. So, firstly the user has to create this object by function mgl_create_*() and has to delete it after the using by function mgl_delete_*().
@@ -888,7 +911,7 @@ Practically the same simple to create a window. For example let rewrite the code
     }
 @end verbatim
 
-The fortran code have some perculiarities. Exactly it not allow one to send arbitrary parameter (which was @code{NULL} in previous example) to function. This is limitation of Fortran language. So, the corresponding code will be @strong{NOT TESTED NOW!!!}:
+The Fortran code have some peculiarities. Exactly it not allow one to send arbitrary parameter (which was @code{NULL} in previous example) to function. This is limitation of Fortran language. So, the corresponding code will be @strong{NOT TESTED NOW!!!}:
 @verbatim
     program TEST
     integer x,f,func
@@ -906,7 +929,79 @@ The fortran code have some perculiarities. Exactly it not allow one to send arbi
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Hints, , C/Fortran interface, Examples
+@node MathGL and PyQt, Hints, C/Fortran interface, Examples
+@section MathGL and PyQt
+
+Generally SWIG based classes (including the Python one) are the same as C++ classes. However, there are few tips for using MathGL with PyQt. Below I place a very simple python code which demonstrate how MathGL can be used with PyQt. This code is mostly written by Prof. Dr. Heino Falcke. You can just copy it to a file @code{mgl-pyqt-test.py} and execute it from python shell by command @code{execfile("mgl-pyqt-test.py")}
+
+@verbatim
+from PyQt4 import QtGui,QtCore
+from mathgl import *
+import sys
+app = QtGui.QApplication(sys.argv)
+qpointf=QtCore.QPointF()
+
+class hfQtPlot(QtGui.QWidget):
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__(self, parent)
+        self.img=(QtGui.QImage())
+    def setgraph(self,gr):
+        self.buffer='\t' 
+        self.buffer=self.buffer.expandtabs(4*gr.GetWidth()*gr.GetHeight())
+        gr.GetBGRN(self.buffer,len(self.buffer))
+        self.img=QtGui.QImage(self.buffer, gr.GetWidth(),gr.GetHeight(),QtGui.QImage.Format_ARGB32)
+        self.update()
+    def paintEvent(self, event):
+        paint = QtGui.QPainter()
+        paint.begin(self)
+        paint.drawImage(qpointf,self.img)
+        paint.end()
+
+BackgroundColor=[1.0,1.0,1.0]
+size=100
+gr=mglGraph()
+y=mglData(size)
+#y.Modify("((0.7*cos(2*pi*(x+.2)*500)+0.3)*(rnd*0.5+0.5)+362.135+10000.)")
+y.Modify("(cos(2*pi*x*10)+1.1)*1000.*rnd-501")
+x=mglData(size)
+x.Modify("x^2");
+
+def plotpanel(gr,x,y,n):
+    gr.SubPlot(2,2,n)
+    gr.SetXRange(x)
+    gr.SetYRange(y)
+    gr.AdjustTicks()
+    gr.Axis()
+    gr.Box()
+    gr.Label("x","x-Axis",1)
+    gr.Label("y","y-Axis",1)
+    gr.ClearLegend()
+    gr.AddLegend("Legend: "+str(n),"k")
+    gr.Legend()
+    gr.Plot(x,y)
+
+
+gr.Clf(BackgroundColor[0],BackgroundColor[1],BackgroundColor[2])
+gr.SetPlotFactor(1.5)
+plotpanel(gr,x,y,0)
+y.Modify("(cos(2*pi*x*10)+1.1)*1000.*rnd-501")
+plotpanel(gr,x,y,1)
+y.Modify("(cos(2*pi*x*10)+1.1)*1000.*rnd-501")
+plotpanel(gr,x,y,2)
+y.Modify("(cos(2*pi*x*10)+1.1)*1000.*rnd-501")
+plotpanel(gr,x,y,3)
+
+gr.WritePNG("test.png","Test Plot")
+
+qw = hfQtPlot()
+qw.show()
+qw.setgraph(gr)
+qw.raise_()
+@end verbatim
+
+
+@c ------------------------------------------------------------------
+@node Hints, , MathGL and PyQt, Examples
 @section Hints
 
 In this section I have included some small hints and advices for the improving of the quality of plots and for the demonstration of some non-trivial features of MathGL library. In contrast to previous examples I showed mostly the idea but not the whole drawing function. More examples with the source code can be find at @uref{http://mathgl.sf.net/} or in section @ref{Samples}.
@@ -1171,7 +1266,7 @@ You may use following code for obtaining the same solution as in previous exampl
 @node MGL parser using, , PDE solving hints, Hints
 @subsection MGL parser using
 
-Sometimes you may prefer to use MGL scripts in yours code. It is simpler (especcially in comparison with C/Fortran interfaces) and fast way to plot the data with annotations, labels and so on. Class @code{mglParse} (@pxref{mglParse class} parse MGL scripts in C++. It have also the corresponding interface for C/Fortran.
+Sometimes you may prefer to use MGL scripts in yours code. It is simpler (especially in comparison with C/Fortran interfaces) and fast way to plot the data with annotations, labels and so on. Class @code{mglParse} (@pxref{mglParse class} parse MGL scripts in C++. It have also the corresponding interface for C/Fortran.
 
 The key function here is @code{mglParse::Parse()} (or @code{mgl_parse()} for C/Fortran) which execute one command per string. At this the detailed information about the possible errors or warnings is passed as function value. Or you may execute the whole script as long string with lines separated by @samp{\n}. Functions @code{mglParse::Execute()} and @code{mgl_parse_text()} perform it. Also you may set the values of paramters @samp{$0}...@samp{$9} for the script by functions @code{mglParse::AddParam()} or @code{mgl_add_param()}, allow/disable picture resizing, check ``once'' status and so on. The usage is rather stright-forward.
 

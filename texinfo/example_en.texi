@@ -425,6 +425,28 @@ Another example demonstrate the features of TeX formula parsing.
 @caption{Example of TeX formula parsing}
 @end float
 
+Finally you can change font during execution (this work well for mglGraphZB class only).
+@verbatim
+    int sample(mglGraph *gr, void *)
+    {
+        float h=1.1, d=0.25;
+        gr->LoadFont("STIX");       gr->Puts(mglPoint(0,h), "default font (STIX)");
+        gr->LoadFont("adventor");   gr->Puts(mglPoint(0,h-d), "adventor font");
+        gr->LoadFont("bonum");      gr->Puts(mglPoint(0,h-2*d), "bonum font");
+        gr->LoadFont("chorus");     gr->Puts(mglPoint(0,h-3*d), "chorus font");
+        gr->LoadFont("cursor");     gr->Puts(mglPoint(0,h-4*d), "cursor font");
+        gr->LoadFont("heros");      gr->Puts(mglPoint(0,h-5*d), "heros font");
+        gr->LoadFont("heroscn");    gr->Puts(mglPoint(0,h-6*d), "heroscn font");
+        gr->LoadFont("pagella");    gr->Puts(mglPoint(0,h-7*d), "pagella font");
+        gr->LoadFont("schola");     gr->Puts(mglPoint(0,h-8*d), "schola font");
+        gr->LoadFont("termes");     gr->Puts(mglPoint(0,h-9*d), "termes font");
+    }
+@end verbatim
+
+@float
+@image{png/fonts, 7cm}
+@caption{Example of font face changing.}
+@end float
 
 @c ------------------------------------------------------------------
 @node Animation, , Text printing example, Advanced usage

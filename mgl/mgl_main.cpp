@@ -413,12 +413,12 @@ char mglGraph::SelectPen(const char *p)
 {
 	mglColor c = NC;
 	int w=1;
-	char st='-',mk=0;
+	char st='-',mk=0,cc=0;
 
 	Arrow1 = Arrow2 = '-';
 	if(p && *p!=0)
 	{
-		strcpy(last_style, p);
+//		strcpy(last_style, p);
 		const char *col = "wkrgbcymhRGBCYMHWlenuqpLENUQP";
 		const char *stl = " -|;:ji";
 		const char *mrk = "*o+xsd.^v";
@@ -429,7 +429,7 @@ char mglGraph::SelectPen(const char *p)
 			if(strchr(stl,p[i]))	st  = p[i];
 			else if(strchr(mrk,p[i]))	mk = p[i];
 			else if(strchr(wdh,p[i]))	w = p[i]-'0';
-			else if(strchr(col,p[i]))	c.Set(p[i]);
+			else if(strchr(col,p[i]))	{	cc=p[i];	c.Set(p[i]);	}
 			else if(strchr(arr,p[i]))
 			{
 				if(Arrow1=='-')	Arrow1 = p[i];
@@ -450,10 +450,35 @@ char mglGraph::SelectPen(const char *p)
 			if(mk=='v')	mk = 'V';
 		}
 	}
-	else
-	{	last_style[0] = PalNames[(CurrPal+1)%NumPal];	last_style[1] = 0;	}
 	Pen(c, st, BaseLineWidth*w);
+	last_style[0]=cc?cc:(NumPal?PalNames[(CurrPal+1)%NumPal]:'k');
+	last_style[1]=st;	last_style[2]=w+'0';	last_style[3]=mk;	last_style[4]=0;
 	return mk;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::SetPal(const char *colors)
+{
+	if(!colors || !colors[0])	colors = DefPal;	// restore default
+	memset(Pal,0,100*sizeof(mglColor));
+	memset(PalNames,0,101*sizeof(char));
+	int i,n = strlen(colors),k;
+	n = n<100? n:100;
+	for(i=k=0;i<n;i++)
+	{
+		if(!strchr("wkrgbcymhRGBCYMHWlenuqpLENUQP",colors[i]))	continue;
+		PalNames[k] = colors[i];	Pal[k] = mglColor(colors[i]);	k++;
+	}
+	NumPal = k;	//	CurrPal = 0;
+	if(k==0)	SetPal(0);	// if no colors then set default palette
+}
+//-----------------------------------------------------------------------------
+mglColor mglGraph::GetPal()
+{
+//	const char *col = "wkrgbcymhRGBCYMHWlenuqpLENUQP";
+	CurrPal = (CurrPal+1)%NumPal;
+//	if(*last_style==0)	{	last_style[0] = PalNames[CurrPal];	last_style[1]=0;	}
+//	else for
+	return 	Pal[CurrPal];
 }
 //-----------------------------------------------------------------------------
 void mglGraph::SubPlot(int nx,int ny,int m, mreal dx, mreal dy)
@@ -527,22 +552,6 @@ void mglGraph::ClearEq()
 	if(fa)	delete fa;	if(fc)	delete fc;
 	fx = fy = fz = fc = fa = 0;
 	RecalcBorder();
-}
-//-----------------------------------------------------------------------------
-void mglGraph::SetPal(const char *colors)
-{
-	if(!colors || !colors[0])	colors = DefPal;	// restore default
-	memset(Pal,0,100*sizeof(mglColor));
-	memset(PalNames,0,101*sizeof(char));
-	int i,n = strlen(colors),k;
-	n = n<100? n:100;
-	for(i=k=0;i<n;i++)
-	{
-		if(!strchr("wkrgbcymhRGBCYMHWlenuqpLENUQP",colors[i]))	continue;
-		PalNames[k] = colors[i];	Pal[k] = mglColor(colors[i]);	k++;
-	}
-	NumPal = k;	//	CurrPal = 0;
-	if(k==0)	SetPal(0);	// if no colors then set default palette
 }
 //-----------------------------------------------------------------------------
 void mglGraph::DefaultPlotParam()
@@ -863,8 +872,8 @@ void mglGraph::Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt, mr
 	fx = fy = fz = NULL;
 	char *f = new char[strlen(fnt)+1];
 	strcpy(f,fnt);
-	for(int i=0;f[i];i++)	if(f[i]=='a')	f[i]=' ';
-	Text(mglPoint((Min.x+Max.x)/2+PlotFactor*(Max.x-Min.x)*(x-0.5), 
+	for(int i=0;f[i];i++)	if(f[i]=='a' || f[i]=='A')	f[i]=' ';
+	Text(mglPoint((Min.x+Max.x)/2+PlotFactor*(Max.x-Min.x)*(x-0.5),
 				(Min.y+Max.y)/2+PlotFactor*(Max.y-Min.y)*(y-0.5),
 				Max.z), text, f, size);
 	delete []f;

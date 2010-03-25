@@ -5,9 +5,13 @@ c. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 	Also check that enough digits is printed to distingush the labels
 	Also allow "time"-labels
 	Also allow rotate labels if they too dense
-1. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
-2. Spline5
+4. Plot for gradients of scalar field (like flow)
+6. Bug with 'ylabel' if x-axis is log-scaled; bug with 'adjust'
+8. Contour label should not rotated on ~180 degree
 
+
+1. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
+2. Plot for isolines of vector fields ???
 3. Cloud by boxes?!
 
 4. Add plot layot -- i.e. reserve space for title and so on ... May be the best way to analyze code itself ???

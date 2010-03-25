@@ -364,9 +364,26 @@ mreal mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,mreal
 //-----------------------------------------------------------------------------
 void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal size, char dir, mreal sh)
 {
+	static int nl_shift = 0;
 	static int cgid=1;	StartGroup("Putsw",cgid++);
 	if(font && strchr(font, 'A'))	{	Labelw(p.x, p.y, wcs,font,size,false);	return;	}
 	if(font && strchr(font, 'a'))	{	Labelw(p.x, p.y, wcs,font,size,true);	return;	}
+
+	wchar_t *wcl;
+	int wn=0;
+	const wchar_t *wnl=0;
+	for(wn=0;wn<wcslen(wcs);wn++)
+		if(wcs[wn]=='\n' || (wcs[wn]=='\\' && wcs[wn+1]=='n'))
+		{	wnl = wcs+wn;	break;	}
+	if(wnl)
+	{
+		wcl = new wchar_t[wn+1];	memcpy(wcl,wcs,wn*sizeof(wchar_t));
+		wcl[wn]=0;	Putsw(p, wcl, font, size, dir, sh);
+		wnl = wcs[wn]=='\n'?wnl+1:wnl+2;
+		nl_shift++;	Putsw(p, wnl, font, size, dir, sh);	nl_shift--;
+		return;
+	}
+
 	bool upside = ( (((_sx==-1) ^ (Org.y==Max.y || Org.z==Max.z)) && (dir=='x' || dir=='X')) ||
 					(((_sy==-1) ^ (Org.x==Max.x || Org.z==Max.z)) && (dir=='y' || dir=='Y')) ||
 					(((_st==-1) ^ (Org.x==0 || Org.z==1)) && (dir=='t' || dir=='T')) ||
@@ -469,6 +486,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 		}
 	}
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
+	yPos -= nl_shift*shift*1.25;
 	fnt->Puts(wcs,font1,col);
 	Pop();	delete []font1;	EndGroup();
 }

@@ -1,3 +1,8 @@
+1.10.2.1 Released ?? March 2010
+	- Add multiline (i.e. separated by \n) text printing.
+	- Bug with MGL options including bug with 'legend' option for automatic colors.
+	- Bug with 'A' option of text style.
+
 1.10.2 Released 22 March 2010
 	- Add MGL command 'loadfont' for in-script font changing.
 	- Add labelw_ext() and rename Label() to Labelw() for wchar_t argument.

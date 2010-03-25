@@ -249,7 +249,7 @@ public:
 	};
 	float Momentum(char dir,float &m,float &w)
 	{
-		mreal i=0,j=0,r=mgl_data_momentum_mw(a, dir, &m, &w);
+		mreal i=0,j=0,r=mgl_data_momentum_mw(a, dir, &i, &j);
 		m=i;	w=j;	return r;
 	};
 

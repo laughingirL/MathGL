@@ -1096,6 +1096,7 @@ protected:
 	virtual unsigned char **GetRGBLines(long &width, long &height, unsigned char *&f, bool alpha=false);
 	/// Set Pal & NumPal
 	void SetPal(const char *colors);
+	mglColor GetPal();
 
 	/// Get Org.x (parse NAN value)
 	virtual mreal GetOrgX(char dir);
