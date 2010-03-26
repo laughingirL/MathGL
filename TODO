@@ -6,7 +6,6 @@ c. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 	Also allow "time"-labels
 	Also allow rotate labels if they too dense
 4. Plot for gradients of scalar field (like flow)
-6. Bug with 'ylabel' if x-axis is log-scaled; bug with 'adjust'
 8. Contour label should not rotated on ~180 degree
 
 

@@ -1187,13 +1187,18 @@ void mglGraph::adjust(char dir, mreal d)
 	else if(d<7)SetTicks(dir,pow(10,n),4,0);
 	else		SetTicks(dir,2*pow(10,n),3,0);
 }
+bool mgl_islog(mreal a, mreal b)
+{	return (a>0 && b>10*a) || (b<0 && a<10*b);	}
 void mglGraph::AdjustTicks(const char *dir)
 {
-	if(strchr(dir,'x') || strchr(dir,'X'))	adjust('x',Max.x-Min.x);
-	if(strchr(dir,'y') || strchr(dir,'Y'))	adjust('y',Max.y-Min.y);
-	if(strchr(dir,'z') || strchr(dir,'Z'))	adjust('z',Max.z-Min.z);
+	if(strchr(dir,'x') || strchr(dir,'X'))
+	{	if(fx && mgl_islog(Min.x,Max.x))	SetTicks ('x',0);	else	adjust('x',Max.x-Min.x);	}
+	if(strchr(dir,'y') || strchr(dir,'Y'))
+	{	if(fy && mgl_islog(Min.y,Max.y))	SetTicks ('y',0);	else	adjust('y',Max.y-Min.y);	}
+	if(strchr(dir,'z') || strchr(dir,'Z'))
+	{	if(fz && mgl_islog(Min.z,Max.z))	SetTicks ('z',0);	else	adjust('z',Max.z-Min.z);	}
 	if(strchr(dir,'c') || strchr(dir,'C') || strchr(dir,'a') || strchr(dir,'A'))
-		adjust('c',Cmax-Cmin);
+	{	if(fa && mgl_islog(Cmin,Cmax))	SetTicks ('c',0);	else	adjust('c',Cmax-Cmin);	}
 	TuneTicks = true;
 }
 //-----------------------------------------------------------------------------
