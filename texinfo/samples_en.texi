@@ -1204,7 +1204,7 @@ ch.Modify("rnd+0.1");
 
 gr->Rotate(40,60);
 gr->Light(true);
-gr->Axis("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)",0);
+gr->SetFunc("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)");
 gr->Box();
 gr->Chart(ch,"bgr cmy#");
 @end verbatim
@@ -5464,19 +5464,19 @@ gr->Axis(); gr->Grid();
 gr->Text(mglPoint(0,1.3,1),"Cartesian");
 
 gr->SubPlot(2,2,1); gr->Rotate(60,40);
-gr->Axis("y*sin(pi*x)","y*cos(pi*x)",0);
+gr->SetFunc("y*sin(pi*x)","y*cos(pi*x)");
 gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
 gr->Axis(); gr->Grid();
 gr->Text(mglPoint(0,1.3,1),"Cylindrical");
 
 gr->SubPlot(2,2,2); gr->Rotate(60,40);
-gr->Axis("2*y*x","y*y - x*x",0);
+gr->SetFunc("2*y*x","y*y - x*x");
 gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
 gr->Axis(); gr->Grid();
 gr->Text(mglPoint(0,1.3,1),"Parabolic");
 
 gr->SubPlot(2,2,3); gr->Rotate(60,40);
-gr->Axis("y*sin(pi*x)","y*cos(pi*x)","x+z");
+gr->SetFunc("y*sin(pi*x)","y*cos(pi*x)","x+z");
 gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
 gr->Axis(); gr->Grid();
 gr->Text(mglPoint(0,1.3,1),"Spiral");
@@ -5591,13 +5591,13 @@ gr.Axis();              gr.Grid();
 gr.Puts(0,1.3,1,"Gartesian","rC",-1.5);
 
 gr.SubPlot(2,2,1);  gr.Rotate(60,40);
-gr.SetFunc("y*sin(pi*x)","y*cos(pi*x)","");
+gr.SetFunc("y*sin(pi*x)","y*cos(pi*x)");
 gr.Line(-1,0.5,0,1,0.5,0,"r2",100);
 gr.Axis();          gr.Grid();
 gr.Puts(0,1.3,1,"Cylindrical","rC",-1.5);
 
 gr.SubPlot(2,2,2);  gr.Rotate(60,40);
-gr.SetFunc("2*y*x","y*y-x*x","");
+gr.SetFunc("2*y*x","y*y-x*x");
 gr.Line(-1,0.5,0,1,0.5,0,"r2",100);
 gr.Axis();          gr.Grid();
 gr.Puts(0,1.3,1,"Parabolic","rC",-1.5);
@@ -5607,7 +5607,7 @@ gr.SetFunc("y*sin(pi*x)","y*cos(pi*x)","x+z");
 gr.Line(-1,0.5,0,1,0.5,0,"r2",100);
 gr.Axis();          gr.Grid();
 gr.Puts(0,1.3,1,"Spiral","rC",-1.5);
-gr.SetFunc("","","");   # set to default Gartesian
+gr.SetFunc("","");   # set to default Gartesian
 @end verbatim
 
 @c ------------------------------------------------------------------
@@ -5716,7 +5716,7 @@ mglData x(2000), y(2000);
 x.Modify("0.01/(x+10^(-5))"); y.Modify("sin(1/v)",x);
 
 gr->Axis(mglPoint(0.01,-1),mglPoint(1000,1),mglPoint(0.01,-1));
-gr->Axis("lg(x)",0,0);  gr->SetTicks('x',0);
+gr->SetFunc("lg(x)",0);  gr->SetTicks('x',0);
 
 gr->Box();
 gr->Plot(x,y,"b2");
@@ -5804,7 +5804,7 @@ mglData x(100), y(100);
 x.Modify("pow(10,6*x-3)"); y.Modify("sqrt(1+v^2)",x);
 
 gr->Axis(mglPoint(0.001,0.1),mglPoint(1000,1000),mglPoint(0.001,0.1));
-gr->Axis("lg(x)","lg(y)",0);
+gr->SetFunc("lg(x)","lg(y)");
 gr->SetTicks('x',0);    gr->SetTicks('y',0);
 
 gr->Box();
@@ -5875,7 +5875,7 @@ call mgl_delete_data(y)
 x, y = mglData(100), mglData(100);
 x.Modify("pow(10,6*x-3)");          y.Modify("sqrt(1+v^2)",x);
 gr.SetRanges(0.001,1000,0.1,1000);  gr.SetOrigin(0.001,0.1);
-gr.SetFunc("lg(x)","lg(y)","");
+gr.SetFunc("lg(x)","lg(y)");
 gr.SetTicks("x",0);     gr.SetTicks("y",0);
 gr.Box();               gr.Plot(x,y,"b2");
 gr.Axis();              gr.Grid("xy","g;");

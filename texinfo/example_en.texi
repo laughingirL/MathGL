@@ -352,7 +352,7 @@ Now let use curvilinear coordinates. In difference from other systems of plot cr
         gr->Puts(mglPoint(0,1.3,1),"Cartesian");
 
         gr->SubPlot(2,2,1);
-        gr->Axis("y*sin(pi*x)","y*cos(pi*x)",0);
+        gr->SetFunc("y*sin(pi*x)","y*cos(pi*x)",0);
         gr->Rotate(60,40);
         gr->Plot(x,y,z,"r2");
         gr->Axis(); gr->Grid();
@@ -360,14 +360,14 @@ Now let use curvilinear coordinates. In difference from other systems of plot cr
 
         gr->SubPlot(2,2,2);
         gr->Rotate(60,40);
-        gr->Axis("2*y*x","y*y - x*x",0);
+        gr->SetFunc("2*y*x","y*y - x*x",0);
         gr->Plot(x,y,z,"r2");
         gr->Axis(); gr->Grid();
         gr->Puts(mglPoint(0,1.3,1),"Parabolic");
 
         gr->SubPlot(2,2,3);
         gr->Rotate(60,40);
-        gr->Axis("y*sin(pi*x)","y*cos(pi*x)","x+z");
+        gr->SetFunc("y*sin(pi*x)","y*cos(pi*x)","x+z");
         gr->Plot(x,y,z,"r2");
         gr->Axis(); gr->Grid();
         gr->Puts(mglPoint(0,1.3,1),"Spiral");
@@ -1152,7 +1152,7 @@ I tried to make such plot in @code{Map}. It shows the set of points or set of fa
 @node Log-scaled plot, ``Templates'', Mapping visualization, Hints
 @subsection Log-scaled plot
 
-Log-scaled plot can be drawn by 2 steps. First, one should change the scale of axis by call @code{Axis("lg(x)", "lg(y)", 0);} (in this example, x- and y-axis will be log-scaled). Second, one should set logarithmic scale for axis ticks by changing variables: @code{SetTicks('x',0); SetTicks('y',0);}. Finally, one should check (or change) the axis ranges and origin so that their values to be positive. For example of log-log plot @pxref{Log-log sample}.
+Log-scaled plot can be drawn by 2 steps. First, one should change the scale of axis by call @code{SetFunc("lg(x)", "lg(y)");} (in this example, x- and y-axis will be log-scaled). Second, one should set logarithmic scale for axis ticks by changing variables: @code{SetTicks('x',0); SetTicks('y',0);}. Finally, one should check (or change) the axis ranges and origin so that their values to be positive. For example of log-log plot @pxref{Log-log sample}.
 
 @c ------------------------------------------------------------------
 @node ``Templates'', Nonlinear fitting hints, Log-scaled plot, Hints
@@ -1167,7 +1167,7 @@ For example, let one has a set of points (experimental or numerical) and wants t
         mglData  law(100);      // create the law
         law.Modify("exp(-10*x)");
         gr->Axis(mglPoint(0,0.0001), mglPoint(20,1), mglPoint(0,0.0001));
-        gr->Axis(0,"lg(y)",0);   gr->dy = 0;
+        gr->SetFunc(0,"lg(y)",0);   gr->dy = 0;
         gr->Plot(law,"r2");
         gr->Text(mglPoint(10,0.2),"Theoretical law: e^x","rL");
         gr->Label('x',"x val."); gr->Label('y',"y val.");
