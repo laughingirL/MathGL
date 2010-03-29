@@ -221,8 +221,9 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 		if(v)	res = v->d;
 		else if(f)	res.a[0] = f->d;
 		else if(!wcscmp(str,L"rnd"))	res.a[0] = mgl_rnd();
-		else if(!wcscmp(str,L"pi"))	res.a[0] = M_PI;
-		else if(!wcscmp(str,L"on"))	res.a[0] = 1;
+		else if(!wcscmp(str,L"nan"))	res.a[0] = NAN;
+		else if(!wcscmp(str,L"pi"))		res.a[0] = M_PI;
+		else if(!wcscmp(str,L"on"))		res.a[0] = 1;
 		else if(!wcscmp(str,L"off"))	res.a[0] = 0;
 		else if(!wcscmp(str,L":"))	res.a[0] = -1;
 		else res.a[0] = wcstod(str,0);		// this is number

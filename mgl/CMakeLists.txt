@@ -72,7 +72,7 @@ endif(UNIX)
 
 set_target_properties(mgl PROPERTIES SOVERSION 5.0.0)
 install(
-	TARGETS mgl
+	TARGETS mgl mgl-static
 	RUNTIME DESTINATION bin
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib

@@ -17,7 +17,7 @@ if(use_fltk)
 	target_link_libraries(mgl-fltk ${FLTK_LIBRARIES} mgl)
 	set_target_properties(mgl-fltk PROPERTIES SOVERSION 5.0.0)
 	install(
-		TARGETS mgl-fltk
+		TARGETS mgl-fltk mgl-fltk-static
 		RUNTIME DESTINATION bin
 		ARCHIVE DESTINATION lib
 		LIBRARY DESTINATION lib
@@ -35,7 +35,7 @@ if(use_glut)
 	target_link_libraries(mgl-glut ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} mgl)
 	set_target_properties(mgl-glut PROPERTIES SOVERSION 5.0.0)
 	install(
-		TARGETS mgl-glut
+		TARGETS mgl-glut mgl-glut-static
 		RUNTIME DESTINATION bin
 		ARCHIVE DESTINATION lib
 		LIBRARY DESTINATION lib
@@ -53,7 +53,7 @@ if(use_wx)
 	target_link_libraries(mgl-wx ${wxWidgets_LIBRARIES} mgl)
 	set_target_properties(mgl-wx PROPERTIES SOVERSION 5.0.0)
 	install(
-		TARGETS mgl-wx
+		TARGETS mgl-wx mgl-wx-static
 		RUNTIME DESTINATION bin
 		ARCHIVE DESTINATION lib
 		LIBRARY DESTINATION lib
@@ -72,7 +72,7 @@ if(use_qt)
 	target_link_libraries(mgl-qt ${QT_LIBRARIES} mgl)
 	set_target_properties(mgl-qt PROPERTIES SOVERSION 5.0.0)
 	install(
-		TARGETS mgl-qt
+		TARGETS mgl-qt mgl-qt-static
 		RUNTIME DESTINATION bin
 		ARCHIVE DESTINATION lib
 		LIBRARY DESTINATION lib
