@@ -260,14 +260,14 @@ void mglGraph::Labelw(char dir,const wchar_t *text,mreal pos,mreal size,mreal sh
 		}
 		else
 		{
-			if(dx)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
+			if(dy)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 			else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
 			Putsw(mglPoint(x0,t,z0),text,FontDef,size,'Y',shift);
 		}
 	}
 	if(dir=='z')
 	{
-		if(dx)	t = (Min.z+Max.z+pos*(Max.z-Min.z))/2;
+		if(dz)	t = (Min.z+Max.z+pos*(Max.z-Min.z))/2;
 		else	t = Min.z*pow(Max.z/Min.z, (pos+1)/2);
 		Putsw(mglPoint(x0,y0,t),text,FontDef,size,'Z',shift);
 	}
