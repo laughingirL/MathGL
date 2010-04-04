@@ -43,6 +43,7 @@ public:
 	virtual void Clf(mglColor Back=NC);
 	virtual void SetSize(int w,int h);
 	void Glyph(mreal x, mreal y, mreal f, int style, long icode, char col);
+	void PutDrawReg(int m, int n, int k, mglGraphAB *gr);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	bool FastNoFace;	/// Use fastest (but less accurate) scheme for drawing (without faces)
 protected:
