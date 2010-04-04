@@ -1,5 +1,5 @@
-1.10.2.1 Released ?? March 2010
-	- Add multiline (i.e. separated by \n) text printing.
+1.10.2.1 Released 28 March 2010
+	- Add multi-line (i.e. separated by \n) text printing.
 	- Ticks adjusting now correctly work with log-scaled axis.
 	- Bug with MGL options including bug with 'legend' option for automatic colors.
 	- Bug with 'A' option of text style.

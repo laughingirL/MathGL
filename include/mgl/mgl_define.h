@@ -27,13 +27,18 @@
 
 #include <math.h>
 
-#ifdef WIN32
+//#ifdef WIN32
+#ifdef _MSC_VER
 #include <float.h>
 const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define NANd	(*(double*)mgl_nan)
 #define NANf	(*(float*)&(mgl_nan[1]))
+#if(MGL_USE_DOUBLE==1)
 #define NAN		NANd
-#if defined(_MSC_VER)
+#else
+#define NAN		NANd
+#endif
+#ifdef _MSC_VER
 #define chdir	_chdir // BORLAND has chdir
 #endif
 #endif

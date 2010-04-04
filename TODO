@@ -5,8 +5,17 @@ c. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 	Also check that enough digits is printed to distingush the labels
 	Also allow "time"-labels
 	Also allow rotate labels if they too dense
-4. Plot for gradients of scalar field (like flow)
-8. Contour label should not rotated on ~180 degree
+1. Plot for gradients of scalar field (like flow)
+2. Contour label should not rotated on ~180 degree
+3. Gradient filling in Area(), Region() if 2 colors is specified.
+4. http://en.wikipedia.org/wiki/Waterfall_chart
+5. Help about 't'/'T' style for contours (+MGL)
+6. Bug with label position for log-scale axis
+7. Add mark symbols '<' and '>' as left/right triangle
+8. Multi-line in 'xlabel' and 'ylabel' -- wrong shifting
+9. Add MGL commands "function 'name'", "return [Res]" and modify "call 'name' [Res]"
+10. Bug with wrong restore of 'inplot' after text with style 'a'
+
 
 
 1. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
@@ -21,8 +30,6 @@ c. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 
 8. Options "iI_-aA" for colorbar
 9. Hankel transform
-
-10. http://en.wikipedia.org/wiki/Waterfall_chart
 
 AA. New docs:
 - Update documentation (Russian)

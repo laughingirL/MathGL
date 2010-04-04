@@ -868,7 +868,7 @@ void mglParse::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(
 {
 	if(gr==0 || n<1 || text==0)	return;
 	long i, r;
-	for_br=Skip=false;	if_pos=0;
+	for_br=Skip=false;	if_pos=fn_pos=0;
 	for(i=0;i<n;i++)
 	{
 		r = Parse(gr,text[i],i+1);

@@ -151,7 +151,9 @@ private:
 	bool Skip;		///< Flag that commands should be skiped (inside 'once' block)
 	int if_stack[20];	///< Stack for if-else-endif commands
 	int if_pos;		///< position in if_stack
-	int if_for[10];		///< position in if_stack for for-cycle start
+	int fn_stack[100];	///< Function calls stack
+	int fn_pos;		///< position in function stack
+	int if_for[10];	///< position in if_stack for for-cycle start
 	mglData *fval;	///< Values for for-cycle. Note that nx - number of elements, ny - next element, nz - address (or string number) of first cycle command
 	int for_stack[10];	///< The order of for-variables
 	int for_addr;	///< Flag for saving address in variable (for_addr-1)
