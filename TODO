@@ -15,6 +15,11 @@ c. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 8. Multi-line in 'xlabel' and 'ylabel' -- wrong shifting
 9. Add MGL commands "function 'name'", "return [Res]" and modify "call 'name' [Res]"
 10. Bug with wrong restore of 'inplot' after text with style 'a'
+11. FAQ about pthread and MathGL -- for mglGraphFLTK.
+12. Keep text formating for next symbol -- for example '\b{b}none'
+13. Bug with mult-line text in axis labels
+14. Bug with multi-line text and keywords like '\nu'
+15. Text style 'a' should be applied even for last RELATIVE inplot!
 
 
 
@@ -22,7 +27,7 @@ c. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 2. Plot for isolines of vector fields ???
 3. Cloud by boxes?!
 
-4. Add plot layot -- i.e. reserve space for title and so on ... May be the best way to analyze code itself ???
+4. Add plot layot -- i.e. reserve space for title, colorbars and so on ... May be the best way to analyze code itself ???
 5. Try to decrease font size if tick labels overlap ???
 
 6. \dfrac for normal size and centering ???

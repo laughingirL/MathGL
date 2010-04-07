@@ -1,3 +1,7 @@
+1.11 Released ?? May 2010
+	- Bug with newline symbol '\n'
+
+
 1.10.2.1 Released 28 March 2010
 	- Add multi-line (i.e. separated by \n) text printing.
 	- Ticks adjusting now correctly work with log-scaled axis.

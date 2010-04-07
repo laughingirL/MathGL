@@ -373,7 +373,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	int wn=0;
 	const wchar_t *wnl=0;
 	for(wn=0;wn<wcslen(wcs);wn++)
-		if(wcs[wn]=='\n' || (wcs[wn]=='\\' && wcs[wn+1]=='n'))
+		if(wcs[wn]=='\n' || (wcs[wn]=='\\' && wcs[wn+1]=='n' && strchr(" \t,.{[]1234567890",wcs[wn+2])))
 		{	wnl = wcs+wn;	break;	}
 	if(wnl)
 	{

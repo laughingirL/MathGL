@@ -102,7 +102,7 @@ protected:
 	short *numt[4];		///< Number of triangles in glyph description (for solid font)
 	short *numl[4];		///< Number of lines in glyph description (for wire font)
 	short *width[4];	///< Width of glyph for wire font
-	mreal fact[4];		///< Divider for width of glyph
+	float fact[4];		///< Divider for width of glyph
 	unsigned numg;		///< Number of glyphs
 	short *buf;			///< Buffer for glyph descriptions
 	long numb;			///< Buffer size
