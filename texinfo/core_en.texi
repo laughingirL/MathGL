@@ -683,6 +683,8 @@ The position of common multiplier/component on the axis. See @code{SetTuneTicks(
 @cindex RestoreM
 @cindex View
 @cindex ColumnPlot
+@cindex Push
+@cindex Pop
 
 These functions control how and where further plotting will be placed. There is a curtain order of calling of these functions for the better plot view. First one should be SubPlot() or InPlot() for specifying the place. After it a Rotate() and Aspect(). And finally any other plotting functions may be called. Alternatevely you can use ColumnPlot() for position plots in the column one by another without gap between plot axis (bounding boxes).
 
@@ -733,10 +735,15 @@ Add (switch on) the perspective to plot. The parameter @math{a ~ 1/z_@{eff@} \in
 Clears transformation matrix. This function clears all previous effects of Aspect(), SubPlot(), InPlot() or Rotate() functions. It is equivalent to the call of @code{InPlot(0,1,0,1,rel)}.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} RestoreM ()
-Restore transformation matrix after last @code{InPlot()}. This function clears all previous effects of Aspect(), SubPlot(), InPlot() or Rotate() functions. It is useful to restore back the transformation matrix after @code{Identity()} call.
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Push ()
+@deftypefnx {C function} @code{void} mgl_mat_push (@code{HMGL} gr)
+Push transformation matrix into stack. Later you can restore its current state by Pop() function. Stack can keep up to 10 matrices.
 @end deftypefn
 
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Pop ()
+@deftypefnx {C function} @code{void} mgl_mat_pop (@code{HMGL} gr)
+Pop (restore last 'pushed') transformation matrix into stack.
+@end deftypefn
 
 @c ##################################################################
 @node Export to file, Primitives drawing, Transformation matrix, MathGL core

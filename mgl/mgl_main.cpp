@@ -848,12 +848,12 @@ void mglGraph::SetFont(mglFont *f)
 //-----------------------------------------------------------------------------
 void mglGraph::Title(const wchar_t *str,const char *font,mreal size)
 {
-	Identity();
+	Push();	Identity();
 	mglFormula *ox=fx, *oy=fy, *oz=fz;
 	fx = fy = fz = NULL;
 	Text(mglPoint((Min.x+Max.x)*0.5, Max.y+(Max.y-Min.y)*0.15, (Min.z+Max.z)*0.5), str, font, size);
 	fx=ox;	fy=oy;	fz=oz;
-	RestoreM();
+	Pop();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Title(const char *str,const char *font,mreal size)
@@ -867,7 +867,7 @@ void mglGraph::Title(const char *str,const char *font,mreal size)
 //-----------------------------------------------------------------------------
 void mglGraph::Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt, mreal size, bool rel)
 {
-	Identity(rel);
+	Push();	if(rel)	Identity();
 	mglFormula *ox=fx, *oy=fy, *oz=fz;
 	fx = fy = fz = NULL;
 	char *f = new char[strlen(fnt)+1];
@@ -878,7 +878,7 @@ void mglGraph::Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt, mr
 				Max.z), text, f, size);
 	delete []f;
 	fx=ox;	fy=oy;	fz=oz;
-	RestoreM();
+	Pop();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Label(mreal x, mreal y, const char *str, const char *fnt, mreal size, bool rel)

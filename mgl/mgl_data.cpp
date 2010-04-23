@@ -1018,36 +1018,40 @@ mglData mglSTFA(const mglData &re, const mglData &im, int dn, char dir)
 //-----------------------------------------------------------------------------
 void mglData::Swap(const char *dir)
 {
-	register long i,j,k,i0,nn,j0;
-	mreal b;
-	if(strchr(dir,'z') && nz>1)
+	if(strchr(dir,'z') && nz>1)	Roll('z',nz/2);
+	if(strchr(dir,'y') && ny>1)	Roll('y',ny/2);
+	if(strchr(dir,'x') && nx>1)	Roll('x',nx/2);
+}
+//-----------------------------------------------------------------------------
+void mglData::Roll(char dir, int num)
+{
+	register long i,d;
+	mreal *b;
+	if(dir=='z' && nz>1)
 	{
-		for(i=0;i<nx*ny;i++)
-		{
-			nn = (nz/2)*nx*ny;
-			for(j=0;j<nz/2;j++)
-			{	i0 = i+j*nx*ny;	b = a[i0];	a[i0] = a[i0+nn];	a[i0+nn] = b;	}
-		}
+		d = num%nz;	if(d==0)	return;		// nothing to do
+		b = new mreal[nx*ny*nz];
+		memcpy(b,a+nx*ny*d,nx*ny*(nz-d)*sizeof(mreal));
+		memcpy(b+nx*ny*(nz-d),a,nx*ny*d*sizeof(mreal));
+		delete []a;	a=b;
 	}
-	if(strchr(dir,'y') && ny>1)
+	if(dir=='y' && ny>1)
 	{
-		nn = (ny/2)*nx;
-		for(i=0;i<nx;i++)  for(k=0;k<nz;k++)
-		{
-			j0 = i+nx*ny*k;
-			for(j=0;j<ny/2;j++)
-			{	i0 = j0+j*nx;	b = a[i0];	a[i0] = a[i0+nn];	a[i0+nn] = b;	}
-		}
+		d = num%ny;	if(d==0)	return;		// nothing to do
+		b = new mreal[nx*ny*nz];
+		memcpy(b,a+nx*d,(nx*ny*nz-nx*d)*sizeof(mreal));
+		for(i=0;i<nz;i++)
+			memcpy(b+nx*(ny-d)+nx*ny*i,a+nx*ny*i,nx*d*sizeof(mreal));
+		delete []a;	a=b;
 	}
-	if(strchr(dir,'x') && nx>1)
+	if(dir=='x' && nx>1)
 	{
-		nn = nx/2;
-		for(j=0;j<ny*nz;j++)
-		{
-			j0 = j*nx;
-			for(i=0;i<nx/2;i++)
-			{	i0 = i+j0;	b = a[i0];	a[i0] = a[i0+nn];	a[i0+nn] = b;	}
-		}
+		d = num%nx;	if(d==0)	return;		// nothing to do
+		b = new mreal[nx*ny*nz];
+		memcpy(b,a+d,(nx*ny*nz-d)*sizeof(mreal));
+		for(i=0;i<nz*ny;i++)
+			memcpy(b+nx-d+nx*i,a+nx*i,d*sizeof(mreal));
+		delete []a;	a=b;
 	}
 }
 //-----------------------------------------------------------------------------

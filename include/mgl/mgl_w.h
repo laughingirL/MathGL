@@ -211,7 +211,8 @@ public:
 	{	mgl_data_diff_par(a,v1.a,v2.a,v3.a);	};
 	inline void Diff2(const char *dir)		{	mgl_data_diff2(a,dir);	};
 	inline void Swap(const char *dir)		{	mgl_data_swap(a,dir);	};
-	inline void Mirror(const char *dir)	{	mgl_data_mirror(a,dir);	};
+	inline void Roll(char dir, int num)		{	mgl_data_roll(a,dir,num);	};
+	inline void Mirror(const char *dir)		{	mgl_data_mirror(a,dir);	};
 
 	inline double Spline(double x,double y=0,double z=0)
 	{	return mgl_data_spline(a,x,y,z);	};

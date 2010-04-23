@@ -270,6 +270,8 @@ public:
 	void Diff2(const char *dir);
 	/// Swap left and right part of the data in given direction (useful for fourier spectrums)
 	void Swap(const char *dir);
+	/// Roll data along direction \a dir by \a num slices
+	void Roll(char dir, int num);
 	/// Mirror the data in given direction (useful for fourier spectrums)
 	void Mirror(const char *dir);
 

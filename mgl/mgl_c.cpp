@@ -157,18 +157,18 @@ void mgl_set_ambbr(HMGL gr, mreal i)
 //-----------------------------------------------------------------------------
 //		Scale and rotate
 //-----------------------------------------------------------------------------
+/// Push transformation matrix into stack.
+void mgl_mat_push(HMGL gr)	{	gr->Push();	}
+/// Pop transformation matrix into stack.
+void mgl_mat_pop(HMGL gr)	{	gr->Pop();	}
 /// Clear transformation matrix.
-void mgl_identity(HMGL gr, int rel)
-{	gr->Identity(rel);	}
+void mgl_identity(HMGL gr, int rel)	{	gr->Identity(rel);	}
 /// Clear up the frame
-void mgl_clf(HMGL gr)
-{	gr->Clf();	}
+void mgl_clf(HMGL gr)	{	gr->Clf();	}
 /// Clear up the frame
-void mgl_clf_rgb(HMGL gr, mreal r, mreal g, mreal b)
-{	gr->Clf(mglColor(r,g,b));	}
+void mgl_clf_rgb(HMGL gr, mreal r, mreal g, mreal b){	gr->Clf(mglColor(r,g,b));	}
 /// Put further plotting in some region of whole frame surface.
-void mgl_subplot(HMGL gr, int nx,int ny,int m)
-{	gr->SubPlot(nx,ny,m);	}
+void mgl_subplot(HMGL gr, int nx,int ny,int m)		{	gr->SubPlot(nx,ny,m);	}
 /// Put further plotting in some region of whole frame surface.
 void mgl_subplot_d(HMGL gr, int nx,int ny,int m,mreal dx,mreal dy)
 {	gr->SubPlot(nx,ny,m,dx,dy);	}

@@ -183,9 +183,12 @@ void mgl_set_ambbr_(uintptr_t *gr, mreal *i)
 //-----------------------------------------------------------------------------
 //		Scale and rotate
 //-----------------------------------------------------------------------------
+/// Push transformation matrix into stack.
+void mgl_mat_push_(uintptr_t *gr)	{	_GR_->Push();	}
+/// Pop transformation matrix into stack.
+void mgl_mat_pop_(uintptr_t *gr)	{	_GR_->Pop();	}
 /// Clear transformation matrix.
-void mgl_identity_(uintptr_t *gr, int *rel)
-{	_GR_->Identity(*rel);	}
+void mgl_identity_(uintptr_t *gr, int *rel)	{	_GR_->Identity(*rel);	}
 /// Clear up the frame
 void mgl_clf_(uintptr_t *gr)
 {	_GR_->Clf();	}

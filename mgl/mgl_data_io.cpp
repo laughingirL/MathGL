@@ -775,8 +775,7 @@ void mglData::Squeeze(int rx,int ry,int rz,bool smooth)
 			s += a[i1+nx*(j1+ny*k1)];
 		b[i+kx*(j+ky*k)] = s/dx*dy*dz;
 	}
-	delete []a;
-	a = b;
+	delete []a;	a=b;
 	nx = kx;  ny = ky;  nz = kz;	NewId();
 }
 //-----------------------------------------------------------------------------

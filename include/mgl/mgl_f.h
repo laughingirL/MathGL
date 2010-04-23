@@ -130,6 +130,8 @@ void mgl_set_ambbr_(uintptr_t *gr, mreal *i);
 /*****************************************************************************/
 /*		Scale and rotate													 */
 /*****************************************************************************/
+void mgl_mat_push_(uintptr_t *gr);
+void mgl_mat_pop_(uintptr_t *gr);
 void mgl_identity_(uintptr_t *graph, int *rel);
 void mgl_clf_(uintptr_t *graph);
 void mgl_flush_(uintptr_t *gr);
@@ -514,6 +516,7 @@ void mgl_data_diff_(uintptr_t *dat, const char *dir,int);
 void mgl_data_diff_par_(uintptr_t *dat, uintptr_t *v1, uintptr_t *v2, uintptr_t *v3);
 void mgl_data_diff2_(uintptr_t *dat, const char *dir,int);
 void mgl_data_swap_(uintptr_t *dat, const char *dir,int);
+void mgl_data_roll_(uintptr_t *dat, const char *dir, int *num, int);
 void mgl_data_mirror_(uintptr_t *dat, const char *dir,int);
 mreal mgl_data_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 mreal mgl_data_spline1_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);

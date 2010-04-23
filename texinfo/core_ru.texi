@@ -732,8 +732,14 @@ Setsize: размер(ы) равны нулю или отрицательны
 Сбрасывает матрицу трансформации. Эквивалентно вызову @code{InPlot(0,1,0,1,rel)}.
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph} (C++)} @code{void} RestoreM ()
-Восстанавливает матрицу преобразования к матрице после последнего @code{InPlot()}. Полезна для возвращения состояния после вызова функции @code{Identity()}.
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Push ()
+@deftypefnx {C function} @code{void} mgl_mat_push (@code{HMGL} gr)
+Помещает матрицу преобразования в стек. Позднее вы можете восстановить текущее состояние с помощью функции Pop(). Стек может содержать до 10 матриц.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Pop ()
+@deftypefnx {C function} @code{void} mgl_mat_pop (@code{HMGL} gr)
+Заменяет (восстанавливает) матрицу преобразования на последнюю помещенную в стек матрицу.
 @end deftypefn
 
 

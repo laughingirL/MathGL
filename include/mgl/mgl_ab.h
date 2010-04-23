@@ -51,7 +51,6 @@ using mglGraph::Legend;
 	void Light(int n, bool enable);
 	void Light(int n,mglPoint p, mglColor c=WC, mreal br=0.5, bool infty=true);
 
-	void RestoreM();
 	void InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel=false);
 	void StickPlot(int num, int i, mreal tet, mreal phi);
 	void Aspect(mreal Ax,mreal Ay,mreal Az);
@@ -119,9 +118,9 @@ using mglGraph::Legend;
 	/// Create a window for plotting based on class mglDraw.
 	void Window(int argc, char **argv, mglDraw *draw, const char *title, bool maximize=false);
 	/// Push transformation matrix into stack
-	void Push();
+	virtual void Push();
 	/// Pop transformation matrix from stack
-	void Pop();
+	virtual void Pop();
 	/// Set diagonal matrix and its shift
 	void SetPosScale(mreal xp, mreal yp, mreal zp, mreal scl=1);
 	//@}
@@ -139,7 +138,6 @@ protected:
 	int Depth;			///< Depth of the image
 	mreal B[9];			///< Transformation matrix (used by PostScale() function)
 	mreal B1[12];		///< Transformation matrix for colorbar
-	mreal BL[13];		///< Previous transformation matrix
 	mreal inW, inH;		///< Relative width and height of last InPlot
 	unsigned PDef;		///< Pen bit mask
 	mreal pPos;			///< Current position in pen mask

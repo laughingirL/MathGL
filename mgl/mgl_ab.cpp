@@ -132,21 +132,8 @@ void mglGraphAB::RotateN(mreal Tet,mreal x,mreal y,mreal z)
 void mglGraphAB::Perspective(mreal a)	// I'm too lazy for using 4*4 matrix
 {	Persp = fabs(a)/Depth;	}
 //-----------------------------------------------------------------------------
-void mglGraphAB::RestoreM()
-{
-	memcpy(B,BL,9*sizeof(mreal));
-	xPos = BL[9];	yPos = BL[10];	zPos = BL[11];
-	PlotFactor = BL[12];
-}
-//-----------------------------------------------------------------------------
 void mglGraphAB::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel)
 {
-	if(!rel)
-	{
-		memcpy(BL,B,9*sizeof(mreal));
-		BL[9] = xPos;	BL[10] = yPos;	BL[11] = zPos;
-		BL[12] = PlotFactor;
-	}
 	SelectPen("k-1");
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
 	memset(B,0,9*sizeof(mreal));

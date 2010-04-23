@@ -171,6 +171,8 @@ private:
 	int FlowExec(mglGraph *gr, const wchar_t *com, long n, mglArg *a);
 	/// Parse and execute the unicode string of MGL script
 	int ParseDat(mglGraph *gr, const wchar_t *str, mglData &res);
+	/// Parse $N arguments
+	void PutArg(const wchar_t *string, wchar_t *str, bool def);
 	/// In skip mode
 	bool inline ifskip()	{	return (if_pos>0 && !(if_stack[if_pos-1]&1));	};
 	bool inline skip()		{	return (Skip || ifskip() || for_br);	};

@@ -17,6 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include <wchar.h>
 #include <time.h>
 #include <locale.h>
 #include <string.h>
@@ -29,6 +30,7 @@
 //#include <mgl/mgl_w.h>
 //-----------------------------------------------------------------------------
 #include "mgl/mgl_parse.h"
+extern mglTeXsymb mgl_tex_symb[];
 int test(mglGraphAB *gr)
 {
 	mglParse par;
@@ -162,6 +164,21 @@ void smgl_tval(mglGraph *gr)	// ticks features
 				 0.886, "x^*", M_PI/2, "\\pi/2", M_PI, "\\pi");
 	gr->Axis();	gr->Grid();
 	gr->Plot("2*cos(x^2)^2", "r2", NAN, 300);
+}
+//-----------------------------------------------------------------------------
+void smgl_fonts(mglGraph *gr)	// ticks features
+{
+	float h=1.1, d=0.25;
+	gr->LoadFont("STIX");		gr->Puts(mglPoint(0,h), "default font (STIX)");
+	gr->LoadFont("adventor");	gr->Puts(mglPoint(0,h-d), "adventor font");
+	gr->LoadFont("bonum");		gr->Puts(mglPoint(0,h-2*d), "bonum font");
+	gr->LoadFont("chorus");		gr->Puts(mglPoint(0,h-3*d), "chorus font");
+	gr->LoadFont("cursor");		gr->Puts(mglPoint(0,h-4*d), "cursor font");
+	gr->LoadFont("heros");		gr->Puts(mglPoint(0,h-5*d), "heros font");
+	gr->LoadFont("heroscn");	gr->Puts(mglPoint(0,h-6*d), "heroscn font");
+	gr->LoadFont("pagella");	gr->Puts(mglPoint(0,h-7*d), "pagella font");
+	gr->LoadFont("schola");		gr->Puts(mglPoint(0,h-8*d), "schola font");
+	gr->LoadFont("termes");		gr->Puts(mglPoint(0,h-9*d), "termes font");
 }
 //-----------------------------------------------------------------------------
 void smgl_stick(mglGraph *gr)	// column plot
@@ -1723,6 +1740,7 @@ mglSample samp[] = {
 	{"flow", smgl_flow},
 	{"flow3", smgl_flow3},
 	{"flow_dens", smgl_flow_dens},
+	{"fonts", smgl_fonts},
 	{"legend", smgl_legend},
 	{"loglog", smgl_loglog},
 	{"map",		smgl_map},

@@ -94,7 +94,8 @@ am__mgl_fltk_example_SOURCES_DIST = wnd_samples.cpp fltk_example.cpp
 mgl_fltk_example_OBJECTS = $(am_mgl_fltk_example_OBJECTS)
 am__DEPENDENCIES_1 =
 @USE_FLTK_TRUE@mgl_fltk_example_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-@USE_FLTK_TRUE@	$(top_builddir)/widgets/libmgl-fltk.la
+@USE_FLTK_TRUE@	$(top_builddir)/widgets/libmgl-fltk.la \
+@USE_FLTK_TRUE@	$(top_builddir)/mgl/libmgl.la
 mgl_fltk_example_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(mgl_fltk_example_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
@@ -104,7 +105,8 @@ am__mgl_glut_example_SOURCES_DIST = wnd_samples.cpp glut_example.cpp
 @USE_GLUT_TRUE@	glut_example.$(OBJEXT)
 mgl_glut_example_OBJECTS = $(am_mgl_glut_example_OBJECTS)
 @USE_GLUT_TRUE@mgl_glut_example_DEPENDENCIES =  \
-@USE_GLUT_TRUE@	$(top_builddir)/widgets/libmgl-glut.la
+@USE_GLUT_TRUE@	$(top_builddir)/widgets/libmgl-glut.la \
+@USE_GLUT_TRUE@	$(top_builddir)/mgl/libmgl.la
 am__mgl_qt_example_SOURCES_DIST = wnd_samples.cpp \
 	$(top_builddir)/include/mgl/mgl_qt.moc.cpp \
 	$(top_srcdir)/include/mgl/mgl_qt.h qt_example.cpp
@@ -114,7 +116,8 @@ am__mgl_qt_example_SOURCES_DIST = wnd_samples.cpp \
 @USE_QT_TRUE@	mgl_qt_example-qt_example.$(OBJEXT)
 mgl_qt_example_OBJECTS = $(am_mgl_qt_example_OBJECTS)
 @USE_QT_TRUE@mgl_qt_example_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-@USE_QT_TRUE@	$(top_builddir)/widgets/libmgl-qt.la
+@USE_QT_TRUE@	$(top_builddir)/widgets/libmgl-qt.la \
+@USE_QT_TRUE@	$(top_builddir)/mgl/libmgl.la
 mgl_qt_example_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(mgl_qt_example_CXXFLAGS) $(CXXFLAGS) \
@@ -125,7 +128,8 @@ am__mgl_wx_example_SOURCES_DIST = wnd_samples.cpp wx_example.cpp
 @USE_WX_TRUE@	mgl_wx_example-wx_example.$(OBJEXT)
 mgl_wx_example_OBJECTS = $(am_mgl_wx_example_OBJECTS)
 @USE_WX_TRUE@mgl_wx_example_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-@USE_WX_TRUE@	$(top_builddir)/widgets/libmgl-wx.la
+@USE_WX_TRUE@	$(top_builddir)/widgets/libmgl-wx.la \
+@USE_WX_TRUE@	$(top_builddir)/mgl/libmgl.la
 mgl_wx_example_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(mgl_wx_example_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
@@ -135,7 +139,8 @@ am__test_SOURCES_DIST = wnd_samples.cpp main.cpp
 @USE_FLTK_TRUE@	test-main.$(OBJEXT)
 test_OBJECTS = $(am_test_OBJECTS)
 @USE_FLTK_TRUE@test_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-@USE_FLTK_TRUE@	$(top_builddir)/widgets/libmgl-fltk.la
+@USE_FLTK_TRUE@	$(top_builddir)/widgets/libmgl-fltk.la \
+@USE_FLTK_TRUE@	$(top_builddir)/mgl/libmgl.la
 test_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(test_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
@@ -346,14 +351,14 @@ top_srcdir = @top_srcdir@
 mgl_example_SOURCES = wnd_samples.cpp full_test.cpp
 mgl_example_LDADD = $(top_builddir)/mgl/libmgl.la
 @USE_FLTK_TRUE@mgl_fltk_example_SOURCES = wnd_samples.cpp fltk_example.cpp
-@USE_FLTK_TRUE@mgl_fltk_example_LDADD = $(FLTK_LIBS) $(top_builddir)/widgets/libmgl-fltk.la
+@USE_FLTK_TRUE@mgl_fltk_example_LDADD = $(FLTK_LIBS) $(top_builddir)/widgets/libmgl-fltk.la $(top_builddir)/mgl/libmgl.la
 @USE_FLTK_TRUE@mgl_fltk_example_CXXFLAGS = $(FLTK_FLAGS) $(AM_CXXFLAGS)
 @USE_FLTK_TRUE@test_SOURCES = wnd_samples.cpp main.cpp
-@USE_FLTK_TRUE@test_LDADD = $(FLTK_LIBS) $(top_builddir)/widgets/libmgl-fltk.la
+@USE_FLTK_TRUE@test_LDADD = $(FLTK_LIBS) $(top_builddir)/widgets/libmgl-fltk.la $(top_builddir)/mgl/libmgl.la
 @USE_FLTK_TRUE@test_CXXFLAGS = $(FLTK_FLAGS) $(AM_CXXFLAGS)
 @USE_GLUT_TRUE@mgl_glut_example_SOURCES = wnd_samples.cpp glut_example.cpp
-@USE_GLUT_TRUE@mgl_glut_example_LDADD = $(top_builddir)/widgets/libmgl-glut.la
-@USE_WX_TRUE@mgl_wx_example_LDADD = $(WX_LIBS) $(top_builddir)/widgets/libmgl-wx.la
+@USE_GLUT_TRUE@mgl_glut_example_LDADD = $(top_builddir)/widgets/libmgl-glut.la $(top_builddir)/mgl/libmgl.la
+@USE_WX_TRUE@mgl_wx_example_LDADD = $(WX_LIBS) $(top_builddir)/widgets/libmgl-wx.la $(top_builddir)/mgl/libmgl.la
 @USE_WX_TRUE@mgl_wx_example_CXXFLAGS = $(WX_FLAGS) $(AM_CXXFLAGS)
 @USE_WX_TRUE@mgl_wx_example_SOURCES = wnd_samples.cpp wx_example.cpp
 
@@ -365,7 +370,7 @@ mgl_example_LDADD = $(top_builddir)/mgl/libmgl.la
 @USE_QT_TRUE@DISTCLEANFILES = $(BUILT_SOURCES)
 @USE_QT_TRUE@ACLOCAL_AMFLAGS = -I $(top_srcdir)/config/
 @USE_QT_TRUE@mgl_qt_example_SOURCES = wnd_samples.cpp $(top_builddir)/include/mgl/mgl_qt.moc.cpp $(top_srcdir)/include/mgl/mgl_qt.h qt_example.cpp
-@USE_QT_TRUE@mgl_qt_example_LDADD = $(QT_LIBS) $(top_builddir)/widgets/libmgl-qt.la
+@USE_QT_TRUE@mgl_qt_example_LDADD = $(QT_LIBS) $(top_builddir)/widgets/libmgl-qt.la $(top_builddir)/mgl/libmgl.la
 @USE_QT_TRUE@mgl_qt_example_LDFLAGS = $(QT_LDFLAGS)
 @USE_QT_TRUE@mgl_qt_example_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS)
 @USE_QT_TRUE@mgl_qt_example_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)

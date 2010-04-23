@@ -474,11 +474,31 @@ int mglParse::PreExec(mglGraph *, long k, wchar_t **arg, mglArg *a)
 	return n;
 }
 //-----------------------------------------------------------------------------
+void mglParse::PutArg(const wchar_t *string, wchar_t *str, bool def)
+{
+	if(parlen>0)
+	{
+		wchar_t *sb = new wchar_t[wcslen(string)+1], *t;
+		if(def)	str = str+10;
+		while((t=wcschr(str,'$'))!=0)
+		{
+			wcscpy(sb,t+2);
+			t[0]=0;
+			long n = t[1]-'0';
+			if(n>=0 && n<=9 && par[n])	wcscat(str,par[n]);
+			if(t[1]=='$')	wcscat(str,L"\xffff");
+			wcscat(str,sb);
+		}
+		delete []sb;
+		while((t=wcschr(str,L'\xffff'))!=0)	*t='$';
+	}
+}
+//-----------------------------------------------------------------------------
 // return values: 0 - OK, 1 - wrong arguments, 2 - wrong command, 3 - string too long, 4 -- unclosed string
 int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 {
 	if(!gr || Stop)	return 0;
-	wchar_t *str, *s = new wchar_t[wcslen(string)+1+parlen],*arg[1024],*t;
+	wchar_t *str, *s = new wchar_t[wcslen(string)+1+10*parlen],*arg[1024],*t;
 	str = s;
 	wcscpy(str,string);
 	wcstrim_mgl(str);
@@ -499,13 +519,13 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		}
 	}
 	// check if string is closed
-	for(n=1,k=0;n<long(wcslen(str));n++)
-		if(str[n]=='\'' && str[n-1]!='\\')	k++;
+	for(n=1,k=0;n<long(wcslen(str));n++)	if(str[n]=='\'' && str[n-1]!='\\')	k++;
 	if(k%2)	return 4;	// strings is not closed
 	// define parameters or start cycle
 	if(!skip() && !wcsncmp(str,L"def",3) && (str[6]==' ' || str[6]=='\t'))
 	{
-		if(!skip() && !wcsncmp(str+3,L"ine",3) && (str[6]==' ' || str[6]=='\t'))
+		PutArg(string,str,true);
+		if(!wcsncmp(str+3,L"ine",3))
 		{
 			wchar_t *ss=str+7;	wcstrim_mgl(ss);//	int res = 1;
 			if(*ss=='$' && ss[1]>='0' && ss[1]<='9')
@@ -516,7 +536,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 				delete []s;	return 0;
 			}
 		}
-		if(!skip() && !wcsncmp(str+3,L"num",3) && (str[6]==' ' || str[6]=='\t'))
+		if(!wcsncmp(str+3,L"num",3))
 		{
 			str += 7;	wcstrim_mgl(str);	int res = 1;
 			if(*str=='$' && str[1]>='0' && str[1]<='9')
@@ -531,7 +551,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			}
 			delete []s;		return res;
 		}
-		if(!skip() && !wcsncmp(str+3,L"chr",3) && (str[6]==' ' || str[6]=='\t'))
+		if(!wcsncmp(str+3,L"chr",3))
 		{
 			str += 7;	wcstrim_mgl(str);	int res = 1;
 			if(*str=='$' && str[1]>='0' && str[1]<='9')
@@ -544,7 +564,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			}
 			delete []s;		return res;
 		}
-		if(!skip() && !wcsncmp(str+3,L"pal",3) && (str[6]==' ' || str[6]=='\t'))
+		if(!wcsncmp(str+3,L"pal",3))
 		{
 			str += 7;	wcstrim_mgl(str);	int res = 1;
 			if(*str=='$' && str[1]>='0' && str[1]<='9')
@@ -567,21 +587,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		if(*t=='$' && t[1]>='0' && t[1]<='9')	*t = ' ';
 	}
 	// parse arguments (parameters $1, ..., $9)
-	if(parlen>0)
-	{
-		wchar_t *sb = new wchar_t[wcslen(string)+1];
-		while((t=wcschr(str,'$'))!=0)
-		{
-			wcscpy(sb,t+2);
-			t[0]=0;
-			long n = t[1]-'0';
-			if(n>=0 && n<=9 && par[n])	wcscat(str,par[n]);
-			wcscat(str,sb);
-		}
-		delete []sb;
-	}
-
-	wcstrim_mgl(str);
+	PutArg (string,str,false);	wcstrim_mgl(str);
 	if(!skip() && !wcscmp(str,L"stop"))	{	Stop = true;	delete []s;	return 0;	}
 
 	for(k=0;k<1024;k++)	// parse string to substrings (by spaces)

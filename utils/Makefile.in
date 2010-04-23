@@ -80,7 +80,8 @@ am__mglview_SOURCES_DIST = mglview.cpp
 @USE_FLTK_TRUE@am_mglview_OBJECTS = mglview-mglview.$(OBJEXT)
 mglview_OBJECTS = $(am_mglview_OBJECTS)
 @USE_FLTK_TRUE@mglview_DEPENDENCIES =  \
-@USE_FLTK_TRUE@	$(top_builddir)/widgets/libmgl-fltk.la
+@USE_FLTK_TRUE@	$(top_builddir)/widgets/libmgl-fltk.la \
+@USE_FLTK_TRUE@	$(top_builddir)/mgl/libmgl.la
 mglview_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(mglview_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
@@ -285,7 +286,7 @@ mgl2eps_LDADD = $(top_builddir)/mgl/libmgl.la
 mgl2svg_SOURCES = mgl2svg.cpp
 mgl2svg_LDADD = $(top_builddir)/mgl/libmgl.la
 @USE_FLTK_TRUE@mglview_SOURCES = mglview.cpp
-@USE_FLTK_TRUE@mglview_LDADD = $(top_builddir)/widgets/libmgl-fltk.la
+@USE_FLTK_TRUE@mglview_LDADD = $(top_builddir)/widgets/libmgl-fltk.la $(top_builddir)/mgl/libmgl.la 
 @USE_FLTK_TRUE@mglview_CXXFLAGS = $(FLTK_FLAGS) $(AM_CXXFLAGS)
 @USE_GIF_TRUE@mgl2gif_SOURCES = mgl2gif.cpp
 @USE_GIF_TRUE@mgl2gif_LDADD = $(top_builddir)/mgl/libmgl.la

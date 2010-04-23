@@ -3304,6 +3304,42 @@ int mgls_adjust(mglGraph *gr, long , mglArg *a, int k[10])
 void mglc_adjust(wchar_t out[1024], long , mglArg *a, int k[10])
 {	mglprintf(out,1024,L"gr->AdjustTicks(\"%s\");",k[0]==2?a[0].s:"xyzc");	}
 //-----------------------------------------------------------------------------
+int mgls_insert(mglGraph *, long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2)	a[0].d->Insert(a[1].s[0], k[2]==3 ? int(a[2].v):0, k[3]==3 ? int(a[3].v):1);
+	else	return 1;
+	return 0;
+}
+void mglc_insert(wchar_t out[1024], long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2)	mglprintf(out,1024,L"%s.Insert('%c', %d, %d);",
+	    a[0].s, a[1].s[0], k[2]==3 ? int(a[2].v):0, k[3]==3 ? int(a[3].v):1);
+}
+//-----------------------------------------------------------------------------
+int mgls_delete(mglGraph *, long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2)	a[0].d->Delete(a[1].s[0], k[2]==3 ? int(a[2].v):0, k[3]==3 ? int(a[3].v):1);
+	else	return 1;
+	return 0;
+}
+void mglc_delete(wchar_t out[1024], long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2)	mglprintf(out,1024,L"%s.Delete('%c', %d, %d);",
+	    a[0].s, a[1].s[0], k[2]==3 ? int(a[2].v):0, k[3]==3 ? int(a[3].v):1);
+}
+//-----------------------------------------------------------------------------
+int mgls_roll(mglGraph *, long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==3)	a[0].d->Roll(a[1].s[0], int(a[2].v));
+	else	return 1;
+	return 0;
+}
+void mglc_roll(wchar_t out[1024], long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2 && k[2]==3)	mglprintf(out,1024,L"%s.Roll('%c', %d);",
+	    a[0].s, a[1].s[0], int(a[2].v));
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{L"addlegend",L"Add legend entry",L"addlegend 'txt' 'fmt'", mgls_addlegend, mglc_addlegend, false, 2},
 	{L"addto",L"Add data or number",L"addto Var Dat|Var num", mgls_addto, mglc_addto, false, 3},
@@ -3358,6 +3394,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"cumsum",L"Cumulative summation",L"cumsum Dat 'dir'", mgls_cumsum, mglc_cumsum, false, 3},
 	{L"curve",L"Draw curve",L"curve x1 y1 dx1 dy1 x2 y2 dx2 dy2 ['fmt']|x1 y1 z1 dx1 dy1 dz1 x2 y2 z2 dx2 dy2 dz2 ['fmt']", mgls_curve, mglc_curve, false, 1},
 	{L"cut",L"Setup plot points cutting",L"cut val|x1 y1 z1 x2 y2 z2|'cond'", mgls_cut, mglc_cut, false, 2},
+	{L"delete",L"Delete slice of data",L"delete Dat 'dir' [pos=0 num=1]", mgls_delete, mglc_delete, false, 3},
 	{L"dens",L"Draw density plot",L"dens Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' zpos]", mgls_dens, mglc_dens, false, 0},
 	{L"dens3",L"Draw density plot at slices of 3D data",L"dens3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_dens3, mglc_dens3, false, 0},
 	{L"densa",L"Draw density plot at central slices of 3D data",L"densa Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_densa, mglc_densa, false, 0},
@@ -3396,6 +3433,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"import",L"Import data from PNG picture",L"import Dat 'fname' 'scheme' [v1 v2]", mgls_import, mglc_import, true, 3},
 	{L"info",L"Print information about data",L"info Dat [detail]|'message'", mgls_info, mglc_info, false, 3},
 	{L"inplot",L"Set position of plot in picture",L"x1 x2 y1 y2 [rel]", mgls_inplot, mglc_inplot, false, 4},
+	{L"insert",L"Insert slice of data",L"insert Dat 'dir' [pos=0 num=1]", mgls_insert, mglc_insert, false, 3},
 	{L"integrate",L"Integrate data",L"integrate Dat 'dir'", mgls_integrate, mglc_integrate, false, 3},
 	{L"jacobian",L"Get Jacobian",L"jacobian Res Xdat Ydat [Zdat]", mgls_jacobian, mglc_jacobian, true, 3},
 	{L"label",L"Draw label at arbitrary position",L"label x y 'txt' ['fmt' size]", mgls_label, mglc_label, false, 1},
@@ -3440,6 +3478,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"rect",L"Draw rectangle",L"rect x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_rect, mglc_rect, false, 1},
 	{L"region",L"Draw filled region between 2 curves",L"region Ydat1 Ydat2 ['fmt' inside]|Xdat Ydat1 Ydat2 ['fmt' inside]", mgls_region, mglc_region, false, 0},
 	{L"resize",L"Resize data",L"resize Res Dat mx [my mz]", mgls_resize, mglc_resize, true, 3},
+	{L"roll",L"Roll data along direction",L"roll Dat 'dir' num", mgls_roll, mglc_roll, false, 0},
 	{L"rotate",L"Rotate plot",L"rotate tetz tetx [tety] | tet x y z", mgls_rotate, mglc_rotate, false, 4},
 	{L"rotatetext",L"Set to auto rotate text or not",L"rotatetext val", mgls_rotatetext, mglc_rotatetext, false, 2},
 	{L"save",L"Save data to file",L"save Dat 'file'", mgls_save, mglc_save, false, 3},

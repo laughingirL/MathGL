@@ -167,6 +167,8 @@ void mgl_set_ambbr(HMGL gr, mreal i);
 /*****************************************************************************/
 /*		Scale and rotate													 */
 /*****************************************************************************/
+void mgl_mat_pop(HMGL gr);
+void mgl_mat_push(HMGL gr);
 void mgl_identity(HMGL graph, int rel);
 void mgl_clf(HMGL graph);
 void mgl_flush(HMGL gr);
@@ -557,6 +559,7 @@ void mgl_data_diff(HMDT dat, const char *dir);
 void mgl_data_diff_par(HMDT dat, const HMDT v1, const HMDT v2, const HMDT v3);
 void mgl_data_diff2(HMDT dat, const char *dir);
 void mgl_data_swap(HMDT dat, const char *dir);
+void mgl_data_roll(HMDT dat, char dir, int num);
 void mgl_data_mirror(HMDT dat, const char *dir);
 mreal mgl_data_spline(const HMDT dat, mreal x,mreal y,mreal z);
 mreal mgl_data_spline1(const HMDT dat, mreal x,mreal y,mreal z);

@@ -436,6 +436,11 @@ Double-differentiates (like Laplace operator) the data in given direction.
 @deftypefnx {C function} @code{void} mgl_data_swap (@code{HMDT} dat, @code{const char *}dir)
 Swaps the left and right part of the data in given direction (useful for Fourier spectrum).
 @end deftypefn
+@deftypefn {Method on @code{mglData} (C++, Python)} @code{void} Roll (@code{char} dir, @code{num})
+@deftypefnx {C function} @code{void} mgl_data_roll (@code{HMDT} dat, @code{char} dir, @code{num})
+Rolls the data along direction @var{dir}. Resulting array will be out[i] = ini[(i+num)%nx] if @code{dir='x'}.
+@end deftypefn
+
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{void} Mirror (@code{const char *}dir)
 @deftypefnx {C function} @code{void} mgl_data_mirror (@code{HMDT} dat, @code{const char *}dir)
 Mirror the left-to-right part of the data in given direction. Looks like change the value index @var{i}->@var{n-i}.

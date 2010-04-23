@@ -1,5 +1,11 @@
 1.11 Released ?? May 2010
+	- Add mglData::Roll() for "rolling" data along direction. Improve Swap() function.
+	- Add MGL commands: "insert dat 'dir' [at=0 num=1]", "delete dat 'dir' [at=0 num=1]", "roll Dat 'dir' num".
+	- Now $N is substituted into the second argument of MGL commands 'define', 'defnum', 'defpal', 'defchr'.
 	- Bug with newline symbol '\n'
+	- Bug with wrong restore previous InPlot() after text with style 'a'.
+	- Bug with label position for log-scale axis.
+	- Add TeX symbol sample in documentation.
 
 
 1.10.2.1 Released 28 March 2010

@@ -27,6 +27,8 @@ Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated a
 @end itemize
 Before the first using all variables must be defined with the help of commands, like, @code{new, var, list, copy} or @code{read}. 
 
+Command may have several set of possible arguments (for example, @code{plot ydat} and @code{plot xdat ydat}). All command arguments for a selected set must be specified. However, some arguments can have default values. These argument are printed in [], like @code{plot ydat ['stl'='' zval=nan]}. At this, the record @code{[arg1 arg2 arg3 ...]} means @code{[arg1 [arg2 [arg3 ...]]]}, i.e. you can omit only tailing arguments if you agree with its default values. Note, that you cannot skip some of arguments (even with default values) -- for example, @code{plot ydat '' 1} or @code{plot ydat ''} is correct, but @code{plot ydat 1} is incorrect (argument @code{'stl'} is missed).
+
 All MGL commands can be divided on several groups. I will use the following notation for a command description: command names are bold, strings are denoted by commas, variable names are italic, numbers are typewriter. Optional arguments are placed in square brackets and default values for them are shown. Detailed description of color, line styles, color schemes, font types, TeX-like symbols and formulas can be found in corresponding section.
 
 @menu
@@ -501,7 +503,7 @@ Draws grid lines perpendicular to direction determined by string parameter @var{
 @end deffn
 
 @deffn {MGL command} box ['stl'='k' @code{ticks=on}]
-Draws bounding box outside the plotting volume with line style 'stl'.
+Draws bounding box outside the plotting volume with line style 'stl'. If @code{ticks=on} then ticks are drawn with current axis setting.
 @end deffn
 
 @deffn {MGL command} xlabel 'text' [@code{pos=1 size=-1.4 shift=0}]
@@ -1190,6 +1192,8 @@ Function copies value(s) from array @var{v} to the range of array @var{a}. Negat
 @cindex transpose
 @cindex squeeze
 @cindex crop
+@cindex delete
+@cindex insert
 
 @deffn {MGL command} rearrange dat @code{mx [my=0 mz=0]}
 Rearrange dimensions without changing data array so that resulting sizes should  be @var{mx}*@var{my}*@var{mz} < nx*ny*nz. If some of parameter @var{my} or @var{mz} are zero then it will be selected to optimal fill of data array. For example, if @var{my}=0 then it will be change to @var{my}=nx*ny*nz/@var{mx} and @var{mz} will be 1.
@@ -1221,6 +1225,14 @@ Reduces the data size by excluding data elements which indexes are not divisible
 
 @deffn {MGL command} crop dat @code{n1 n2} 'dir'
 Cuts off edges of the data @var{i}<@var{n1} and @var{i}>@var{n2} if @var{n2}>0 or @var{i}>@code{n[xyz]}-@var{n2} if @var{n2}<=0 along direction @var{dir}.
+@end deffn
+
+@deffn {MGL command} delete dat 'dir' @code{[pos=off num=0]}
+Delete @var{num} slices along @var{dir}-direction at position @var{pos}.
+@end deffn
+
+@deffn {MGL command} insert dat 'dir' @code{[pos=off num=0]}
+Insert @var{num} slices along @var{dir}-direction at position @var{pos}.
 @end deffn
 
 @c ------------------------------------------------------------------
@@ -1309,8 +1321,6 @@ Creates distribution @var{res} of the data values of @var{adat} in axis range [M
 @end deffn
 
 
-
-
 @deffn {MGL command} momentum res dat 'how' ['dir'='z']
 Get momentum (1D-array) of the data along direction @var{dir}. String @var{how} contain kind of momentum. The momentum is defined like as
 @iftex
@@ -1357,7 +1367,7 @@ Short time Fourier analysis for real and imaginary parts. Output  is amplitude o
 @end deffn
 
 @deffn {MGL command} pde res 'ham' ini_re ini_im [@code{dz=0.1 k0=100}]
-Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Coordinates of the equation (and the solution) are supposed to be in the bounding box. Note, that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for field amplitude |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham='p^2+q^2-u^2'}. You may specify imaginary part for wave absorption, like @code{ham = 'p^2+i*x*(x>0)'}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}).
+Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Coordinates of the equation (and the solution) are supposed to be in the bounding box. Note, that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for field amplitude |u|. This allow one solve nonlinear problems -- for example, for non-linear Shrodinger equation you may set @code{ham='p^2+q^2-u^2'}. You may specify imaginary part for wave absorption, like @code{ham = 'p^2+i*x*(x>0)'}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}).
 @end deffn
 
 @deffn {MGL command} ray res 'ham' @code{x0 y0 z0 p0 q0 v0 [dt=0.1 tmax=10]}
@@ -1369,7 +1379,7 @@ Solves equation du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u], where p=-i/k0*d/dx, q=-i
 @end deffn
 
 @deffn {MGL command} jacobian res xdat ydat [zdat=0]
-Computates the Jacobian for transformation @{i,j,k@} to @{@var{xdat},@var{ydat},@var{zdat}@} where initial coordinates  @{i,j,k@} are data indexes normalized in range [0,1]. The Jacobian is determined by formula det||@math{dr_\alpha/d\xi_\beta}|| where @math{r}=@{@var{xdat},@var{ydat},@var{zdat}@} and @math{\xi}=@{i,j,k@}. All dimensions must be the same for all data arrays. Data must be 3D if all 3 arrays @{@var{xdat},@var{ydat},@var{zdat}@} are specified or 2D if only 2 arrays @{@var{xdat},@var{ydat}@} are specified.
+Computates the Jacobian for transformation @{i,j,k@} to @{@var{xdat},@var{ydat},@var{zdat}@} where initial coordinates  @{i,j,k@} are data indexes normalized in range [0,1]. The Jacobian is determined by formula det||@math{dr_\alpha/d\xi_\beta}|| where @math{r}=@{@var{xdat},@var{ydat},@var{zdat}@} and @math{\  xi}=@{i,j,k@}. All dimensions must be the same for all data arrays. Data must be 3D if all 3 arrays @{@var{xdat},@var{ydat},@var{zdat}@} are specified or 2D if only 2 arrays @{@var{xdat},@var{ydat}@} are specified.
 @end deffn
 
 
@@ -1410,6 +1420,10 @@ Double-differentiates (like Laplace operator) the data in given direction.
 @deffn {MGL command} swap dat 'dir'
 Swaps the left and right part of the data in given direction (useful for Fourier spectrum).
 @end deffn
+@deffn {MGL command} roll dat 'dir' num
+Rolls the data along direction 'dir'. Resulting array will be out[i] = ini[(i+num)%nx] if @code{dir='x'}.
+@end deffn
+
 @deffn {MGL command} mirror dat 'dir'
 Mirror the left-to-right part of the data in given direction. Looks like change the value index @var{i}->@var{n-i}.
 @end deffn
@@ -1438,7 +1452,6 @@ Normalizes data slice-by-slice along direction @var{dir} the data in slices to r
 @deffn {MGL command} norm dat @code{v1 v2 [sym=off dim=0]}
 Normalizes the data to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{on} then symmetrical interval [-max(|v1|,|v2|), max(|v1|,|v2|)] is used. Modification will be applied only for slices >=@var{dim}.
 @end deffn
-
 
 @c ------------------------------------------------------------------
 @node Operators (MGL), Program flow (MGL), Commands on direction (MGL), MGL interface
@@ -1501,6 +1514,15 @@ Sets @var{N}-th script argument to @var{smth}. Note, that @var{smth} is used as 
 @end deffn
 @deffn {MGL command} define name smth
 Create scalar variable @code{name} which have the numeric value of @code{smth}. Later you can use this variable as usual number.
+@end deffn
+@deffn {MGL command} defchr $N smth
+Sets @var{N}-th script argument to character with value evaluated from @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present).
+@end deffn
+@deffn {MGL command} defnum $N smth
+Sets @var{N}-th script argument to number with value evaluated from @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present).
+@end deffn
+@deffn {MGL command} defpal $N smth
+Sets @var{N}-th script argument to palette character at position evaluated from @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present).
 @end deffn
 @deffn {MGL command} if dat 'cond'
 Starts block which will be executed if @var{dat} satisfy to @var{cond}.

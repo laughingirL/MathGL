@@ -301,8 +301,10 @@ public:
 	void Zoom(mreal x1, mreal y1, mreal x2, mreal y2);
 	/// Clear transformation matrix.
 	void Identity(bool rel=false);
-	/// Restore transformation matrix after last InPlot()
-	virtual void RestoreM()=0;
+	/// Push transformation matrix into stack
+	virtual void Push()=0;
+	/// Pop transformation matrix from stack
+	virtual void Pop()=0;
 	/// Clear up the frame
 	virtual void Clf(mglColor Back=WC); //=0
 	/// Put further plotting in some region of whole frame surface.

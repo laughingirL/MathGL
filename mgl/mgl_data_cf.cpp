@@ -96,15 +96,13 @@ mreal mgl_data_min(const HMDT d)	{	return d->Minimal();	}
 mreal *mgl_data_value(HMDT d, int i,int j,int k)
 {	return d->a+i+d->nx*(j+d->ny*k);	}
 /// Swap left and right part of the data in given direction (useful for fourier spectrums)
-void mgl_data_swap(HMDT d, const char *dir)
-{	d->Swap(dir);	}
+void mgl_data_swap(HMDT d, const char *dir)		{	d->Swap(dir);	}
+/// Swap left and right part of the data in given direction (useful for fourier spectrums)
+void mgl_data_roll(HMDT d, char dir, int num)	{	d->Roll(dir,num);	}
 /// Mirror the data in given direction
-void mgl_data_mirror(HMDT d, const char *dir)
-{	d->Mirror(dir);	}
-void mgl_data_insert(HMDT dat, char dir, int at, int num)
-{	dat->Insert(dir,at,num);	}
-void mgl_data_delete(HMDT dat, char dir, int at, int num)
-{	dat->Delete(dir,at,num);	}
+void mgl_data_mirror(HMDT d, const char *dir)	{	d->Mirror(dir);	}
+void mgl_data_insert(HMDT dat, char dir, int at, int num){	dat->Insert(dir,at,num);	}
+void mgl_data_delete(HMDT dat, char dir, int at, int num){	dat->Delete(dir,at,num);	}
 //-----------------------------------------------------------------------------
 /// Allocate memory and copy the data from the (mreal *) array
 void mgl_data_set_float(HMDT d, const float *A,int NX,int NY,int NZ)
@@ -247,6 +245,8 @@ void mgl_data_swap_(uintptr_t *d, const char *dir,int l)
 	_DT_->Swap(s);
 	delete []s;
 }
+void mgl_data_roll_(uintptr_t *d, const char *dir, int *num, int)
+{	_DT_->Roll(*dir, *num);	}
 /// Mirror the data in given direction
 void mgl_data_mirror_(uintptr_t *d, const char *dir,int l)
 {
