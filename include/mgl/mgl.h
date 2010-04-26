@@ -1227,13 +1227,13 @@ private:
 	/// Set color depending on it value
 	void Color(mreal a,mreal a1=0,mreal a2=0);	// ���� �����
 	/// Draw x axis
-	void AxisX(bool text);
+	void AxisX(bool text, const char *stl);
 	/// Draw y axis
-	void AxisY(bool text);
+	void AxisY(bool text, const char *stl);
 	/// Draw z axis
-	void AxisZ(bool text);
+	void AxisZ(bool text, const char *stl);
 	/// Draw y,t-axis for Ternary plot
-	void AxisT(bool text);
+	void AxisT(bool text, const char *stl);
 	/// Draw ticks on box
 	void TickBox();
 	/// Draw X,Y,Z grid line

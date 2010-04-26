@@ -359,10 +359,9 @@ void mglGraph::DrawXTick(mreal x, mreal y0, mreal z0, mreal dy, mreal dz, int f)
 	if(*SubTStl && f)	SelectPen(SubTStl);
 	DrawTick(pp,f!=0);
 }
-void mglGraph::AxisX(bool text)
+void mglGraph::AxisX(bool text, const char *stl)
 {
-	mreal pp[3*31];
-	bool tt[31];
+	mreal pp[3*32];
 	wchar_t str[64];
 	long i;
 	mreal x0,y0,z0,x,ddx,ddy,ddz,v=0;
@@ -374,14 +373,21 @@ void mglGraph::AxisX(bool text)
 	if(ddz==0)	ddz=z0*10>fabs(Max.z-Min.z) ? 0.3*fabs(Max.z-Min.z) : z0*3;
 	if(y0>(Max.y+Min.y)/2)	ddy = -ddy;
 	if(z0>(Max.z+Min.z)/2)	ddz = -ddz;
-	SelectPen(TranspType!=2 ? "k-1":"w-1");
+	SelectPen(stl);
 	for(i=0;i<31;i++)	// draw axis line
 	{
 		pp[3*i+1]=y0;	pp[3*i+2]=z0;
 		pp[3*i]=Min.x+(Max.x-Min.x)*i/30.;
-		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+		ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
-	curv_plot(31,pp,tt);
+	if(stl[3])
+	{
+		pp[3*31+1]=y0;	pp[3*31+2]=z0;
+		pp[3*31]=Min.x+(Max.x-Min.x)*1.05;
+		ScalePoint(pp[3*31],pp[3*31+1],pp[3*31+2]);
+		curv_plot(32,pp,0);
+	}
+	else	curv_plot(31,pp,0);
 
 	if(xnum)	for(int i=0;i<xnum;i++)
 	{
@@ -406,7 +412,6 @@ void mglGraph::AxisX(bool text)
 			x0 = x0 - ddx*floor((x0-Max.x)/ddx+1e-3);
 		}
 		for(x=x0;x<=x1;x+=ddx)
-//		for(x=x0;fabs(x-Max.x)<fabs(Max.x-Min.x)*1.000001;x+=ddx)
 		{
 			DrawXTick(x,y0,z0,ddy,ddz);
 			if(text)
@@ -476,10 +481,9 @@ void mglGraph::DrawYTick(mreal y, mreal x0, mreal z0, mreal dx, mreal dz, int f)
 	if(*SubTStl && f)	SelectPen(SubTStl);
 	DrawTick(pp,f!=0);
 }
-void mglGraph::AxisY(bool text)
+void mglGraph::AxisY(bool text, const char *stl)
 {
-	mreal pp[3*31];
-	bool tt[31];
+	mreal pp[3*32];
 	wchar_t str[64];
 	long i;
 	mreal x0,y0,z0,y,ddx,ddy,ddz,v=0;
@@ -491,14 +495,21 @@ void mglGraph::AxisY(bool text)
 	if(ddz==0)	ddz=z0*10>fabs(Max.z-Min.z) ? 0.3*fabs(Max.z-Min.z) : z0*3;
 	if(x0>(Max.x+Min.x)/2)	ddx = -ddx;
 	if(z0>(Max.z+Min.z)/2)	ddz = -ddz;
-	SelectPen(TranspType!=2 ? "k-1":"w-1");
+	SelectPen(stl);
 	for(i=0;i<31;i++)	// сама ось
 	{
 		pp[3*i]=x0;	pp[3*i+2]=z0;
 		pp[3*i+1]=Min.y+(Max.y-Min.y)*i/30.;
-		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+		ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
-	curv_plot(31,pp,tt);
+	if(stl[3])
+	{
+		pp[3*31]=x0;	pp[3*31+2]=z0;
+		pp[3*31+1]=Min.y+(Max.y-Min.y)*1.05;
+		ScalePoint(pp[3*31],pp[3*31+1],pp[3*31+2]);
+		curv_plot(32,pp,0);
+	}
+	else	curv_plot(31,pp,0);
 
 	if(ynum)	for(int i=0;i<ynum;i++)
 	{
@@ -592,10 +603,9 @@ void mglGraph::DrawZTick(mreal z, mreal x0, mreal y0, mreal dx, mreal dy, int f)
 	if(*SubTStl && f)	SelectPen(SubTStl);
 	DrawTick(pp,f!=0);
 }
-void mglGraph::AxisZ(bool text)
+void mglGraph::AxisZ(bool text, const char *stl)
 {
-	mreal pp[3*31];
-	bool tt[31];
+	mreal pp[3*32];
 	wchar_t str[64];
 	long i;
 	mreal x0,y0,z0,z,ddx,ddy,ddz,v=0;
@@ -607,14 +617,21 @@ void mglGraph::AxisZ(bool text)
 	if(ddy==0)	ddy=y0*10>fabs(Max.y-Min.y) ? 0.3*fabs(Max.y-Min.y) : y0*3;
 	if(x0>(Max.x+Min.x)/2)	ddx = -ddx;
 	if(y0>(Max.y+Min.y)/2)	ddy = -ddy;
-	SelectPen(TranspType!=2 ? "k-1":"w-1");
+	SelectPen(stl);
 	for(i=0;i<31;i++)	// сама ось
 	{
 		pp[3*i]=x0;	pp[3*i+1]=y0;
 		pp[3*i+2]=Min.z+(Max.z-Min.z)*i/30.;
-		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+		ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
-	curv_plot(31,pp,tt);
+	if(stl[3])
+	{
+		pp[3*31]=x0;	pp[3*31+1]=y0;
+		pp[3*31+2]=Min.z+(Max.z-Min.z)*1.05;
+		ScalePoint(pp[3*31],pp[3*31+1],pp[3*31+2]);
+		curv_plot(32,pp,0);
+	}
+	else	curv_plot(31,pp,0);
 
 	if(znum)	for(int i=0;i<znum;i++)
 	{
@@ -702,22 +719,26 @@ void mglGraph::Axis(const char *dir, bool adjust)
 	if(adjust)	AdjustTicks(dir);
 	static int cgid=1;	StartGroup("Axis",cgid++);
 	bool text = strchr(dir,'_')==NULL;
+	const char *arr = "AKDTVISO";
+	char stl[5]={TranspType!=2?'k':'w', '-', '1', 0, 0};
+	for(int i=0;i<strlen(arr);i++)
+		if(strchr(dir,arr[i]))	{	stl[3]=arr[i];	break;	}
+
 	if(TernAxis)
 	{
 		_sx = _sy = _st = 1;
-		AxisX(text);
-//		AxisY(text);
-		AxisT(text);
+		AxisX(text, stl);
+		AxisT(text, stl);
 	}
 	else
 	{
-		if(strchr(dir,'x'))	{	_sx = 1;	AxisX(text);	}
-		if(strchr(dir,'X'))	{	_sx = -1;	AxisX(text);	}
-		if(strchr(dir,'y'))	{	_sy = 1;	AxisY(text);	}
-		if(strchr(dir,'Y'))	{	_sy = -1;	AxisY(text);	}
+		if(strchr(dir,'x'))	{	_sx = 1;	AxisX(text, stl);	}
+		if(strchr(dir,'X'))	{	_sx = -1;	AxisX(text, stl);	}
+		if(strchr(dir,'y'))	{	_sy = 1;	AxisY(text, stl);	}
+		if(strchr(dir,'Y'))	{	_sy = -1;	AxisY(text, stl);	}
 	}
-	if(strchr(dir,'z'))	{	_sz = 1;	AxisZ(text);	}
-	if(strchr(dir,'Z'))	{	_sz = -1;	AxisZ(text);	}
+	if(strchr(dir,'z'))	{	_sz = 1;	AxisZ(text, stl);	}
+	if(strchr(dir,'Z'))	{	_sz = -1;	AxisZ(text, stl);	}
 	EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -985,10 +1006,9 @@ void mglGraph::DrawTTick(mreal y, mreal x0, mreal z0, mreal dx, mreal dz, int f)
 	if(*SubTStl && f)	SelectPen(SubTStl);
 	DrawTick(pp,f!=0);
 }
-void mglGraph::AxisT(bool text)
+void mglGraph::AxisT(bool text, const char *stl)
 {
-	mreal pp[3*31];
-	bool tt[31];
+	mreal pp[3*32];
 	wchar_t str[64];
 	long i;
 	mreal z0=GetOrgZ('z'), y, ddx, ddy, ddz;
@@ -998,24 +1018,39 @@ void mglGraph::AxisT(bool text)
 	if(ddx==0)	ddx=(Max.x-Min.x)/2;
 	if(ddy==0)	ddy=(Max.y-Min.y)/2;
 	if(ddz==0)	ddz=(Max.z-Min.z)/2;
-	SelectPen(TranspType!=2 ? "k-1":"w-1");
+	SelectPen(stl);
 
 	for(i=0;i<31;i++)	// сама ось
 	{
 		pp[3*i]=Max.x+(Min.x-Max.x)*i/30.;
 		pp[3*i+2]=z0;
 		pp[3*i+1]=Min.y+(Max.y-Min.y)*i/30.;
-		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+		ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
-	curv_plot(31,pp,tt);
+	if(stl[3])
+	{
+		pp[3*31]=Max.x+(Min.x-Max.x)*1.05;
+		pp[3*31+1]=Min.y+(Max.y-Min.y)*1.05;
+		pp[3*31+2]=z0;
+		ScalePoint(pp[3*31],pp[3*31+1],pp[3*31+2]);
+		curv_plot(32,pp,0);
+	}
+	else	curv_plot(31,pp,0);
 	for(i=0;i<31;i++)	// сама ось
 	{
 		pp[3*i]=Min.x;
 		pp[3*i+1]=Max.y+(Min.y-Max.y)*i/30.;
 		pp[3*i+2]=z0;
-		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+		ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
-	curv_plot(31,pp,tt);
+	if(stl[3])
+	{
+		pp[3*31]=Min.x;	pp[3*31+2]=z0;
+		pp[3*31+1]=Max.y+(Min.y-Max.y)*1.05;
+		ScalePoint(pp[3*31],pp[3*31+1],pp[3*31+2]);
+		curv_plot(32,pp,0);
+	}
+	else	curv_plot(31,pp,0);
 
 	NSy = NSy<0 ? 0 : NSy;
 	for(y=0;y<=Max.y+(Max.y-Min.y)*1e-6;y+=ddy)

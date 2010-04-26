@@ -41,7 +41,6 @@ a. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 44. INCOMPATIBLE CHANGES!!! hide unused arguments (like "size")
 45. Questions: new version (incompatible changes), 
 46. Export to X3D
-48. Add "arrow" style for axis
 
 
 1. Plot for isolines of vector fields ???

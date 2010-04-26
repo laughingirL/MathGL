@@ -1,5 +1,6 @@
 1.11 Released ?? May 2010
 	- Add mglData::Roll() for "rolling" data along direction. Improve Swap() function.
+	- Axis now can have "arrows" at the end by setting arrow style ("AKDTVISO") for Axis().
 	- Add MGL commands: "insert dat 'dir' [at=0 num=1]", "delete dat 'dir' [at=0 num=1]", "roll Dat 'dir' num".
 	- Now $N is substituted into the second argument of MGL commands 'define', 'defnum', 'defpal', 'defchr'.
 	- Bug with newline symbol '\n'
