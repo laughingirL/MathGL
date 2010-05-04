@@ -123,7 +123,7 @@ protected:
 	unsigned Symbol(char ch);
 private:
 	mreal get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,mreal &w1,mreal &w2, mreal f1, mreal f2, int st);
-	void read_data(FILE *fp, mreal *ff, short *wdt, short *numl, unsigned *posl, short *numt, unsigned *post, unsigned &cur);
+	void read_data(FILE *fp, float *ff, short *wdt, short *numl, unsigned *posl, short *numt, unsigned *post, unsigned &cur);
 	void main_copy();
 	bool read_main(const char *base, const char *path, unsigned &cur);
 	void mem_alloc();

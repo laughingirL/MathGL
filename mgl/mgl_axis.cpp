@@ -721,7 +721,7 @@ void mglGraph::Axis(const char *dir, bool adjust)
 	bool text = strchr(dir,'_')==NULL;
 	const char *arr = "AKDTVISO";
 	char stl[5]={TranspType!=2?'k':'w', '-', '1', 0, 0};
-	for(int i=0;i<strlen(arr);i++)
+	for(unsigned i=0;i<strlen(arr);i++)
 		if(strchr(dir,arr[i]))	{	stl[3]=arr[i];	break;	}
 
 	if(TernAxis)

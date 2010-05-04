@@ -530,7 +530,7 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 	return w;
 }
 //-----------------------------------------------------------------------------
-void mglFont::read_data(FILE *fp, mreal *ff, short *wdt, short *numl,
+void mglFont::read_data(FILE *fp, float *ff, short *wdt, short *numl,
 						unsigned *posl, short *numt, unsigned *post, unsigned &cur)
 {
 	char str[256];
