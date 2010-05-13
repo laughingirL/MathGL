@@ -829,134 +829,111 @@ void mglGraphAB::mark_plot(mreal *pp, char type)
 		mreal pw = PenWidth;	PenWidth = BaseLineWidth;
 		int pd = PDef;	PDef = 0xffff;
 		register mreal zv = strchr("oOVDTS",type) ? pp[2]+BaseLineWidth : pp[2];
+		if(!strchr("xsSoO",type))	ss *= 1.1;
 		switch(type)
 		{
 		case '+':
-			ss = ss*1.1;
 			p[0] = pp[0]-ss;	p[1] = pp[1];	p[3] = pp[0]+ss;	p[4] = pp[1];
-			line_plot(p,p+3,CDef,CDef);
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 			p[0] = pp[0];	p[1] = pp[1]-ss;	p[3] = pp[0];	p[4] = pp[1]+ss;
-			line_plot(p,p+3,CDef,CDef);
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 			break;
 		case 'x':
 			p[0] = pp[0]-ss;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1]+ss;
-			line_plot(p,p+3,CDef,CDef);
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 			p[0] = pp[0]+ss;	p[1] = pp[1]-ss;	p[3] = pp[0]-ss;	p[4] = pp[1]+ss;
-			line_plot(p,p+3,CDef,CDef);
-			break;
-		case 's':
-			p[0] = pp[0]-ss;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1]-ss;
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]+ss;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1]+ss;
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]+ss;	p[1] = pp[1]+ss;	p[3] = pp[0]-ss;	p[4] = pp[1]+ss;
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]-ss;	p[1] = pp[1]+ss;	p[3] = pp[0]-ss;	p[4] = pp[1]-ss;
-			line_plot(p,p+3,CDef,CDef);
-			break;
-		case 'd':
-			ss = ss*1.1;
-			p[0] = pp[0];	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1];
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]+ss;	p[1] = pp[1];	p[3] = pp[0];	p[4] = pp[1]+ss;
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0];	p[1] = pp[1]+ss;	p[3] = pp[0]-ss;	p[4] = pp[1];
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]-ss;	p[1] = pp[1];	p[3] = pp[0];	p[4] = pp[1]-ss;
-			line_plot(p,p+3,CDef,CDef);
-			break;
-		case 'Y':
-			ss = ss*1.1;
-			p[0] = pp[0];	p[1] = pp[1]-ss;	p[3] = pp[0];	p[4] = pp[1];
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]-0.8*ss;	p[1] = pp[1]+0.6*ss;	p[3] = pp[0];	p[4] = pp[1];
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]+0.8*ss;	p[1] = pp[1]+0.6*ss;	p[3] = pp[0];	p[4] = pp[1];
-			line_plot(p,p+3,CDef,CDef);
-			break;
-		case '*':
-			ss = ss*1.1;
-			p[0] = pp[0]-ss;	p[1] = pp[1];	p[3] = pp[0]+ss;	p[4] = pp[1];
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]-0.6*ss;	p[1] = pp[1]-0.8*ss;	p[3] = pp[0]+0.6*ss;	p[4] = pp[1]+0.8*ss;
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]-0.6*ss;	p[1] = pp[1]+0.8*ss;	p[3] = pp[0]+0.6*ss;	p[4] = pp[1]-0.8*ss;
-			line_plot(p,p+3,CDef,CDef);
-			break;
-		case '^':
-			ss = ss*1.1;
-			p[0] = pp[0]-ss;	p[1] = pp[1]-ss/2;	p[3] = pp[0];	p[4] = pp[1]+ss;
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]-ss;	p[1] = pp[1]-ss/2;	p[3] = pp[0]+ss;	p[4] = pp[1]-ss/2;
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]+ss;	p[1] = pp[1]-ss/2;	p[3] = pp[0];	p[4] = pp[1]+ss;
-			line_plot(p,p+3,CDef,CDef);
-			break;
-		case 'v':
-			ss = ss*1.1;
-			p[0] = pp[0]-ss;	p[1] = pp[1]+ss/2;	p[3] = pp[0];	p[4] = pp[1]-ss;
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]-ss;	p[1] = pp[1]+ss/2;	p[3] = pp[0]+ss;	p[4] = pp[1]+ss/2;
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]+ss;	p[1] = pp[1]+ss/2;	p[3] = pp[0];	p[4] = pp[1]-ss;
-			line_plot(p,p+3,CDef,CDef);
-			break;
-		case '<':
-			ss = ss*1.1;
-			p[0] = pp[0]+ss/2;	p[1] = pp[1]-ss;	p[3] = pp[0]-ss;	p[4] = pp[1];
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]+ss/2;	p[1] = pp[1]+ss;	p[3] = pp[0]-ss;	p[4] = pp[1];
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = p[3] = pp[0]+ss/2;	p[1] = pp[1]-ss;	p[4] = pp[1]+ss;
-			line_plot(p,p+3,CDef,CDef);
-			break;
-		case '>':
-			ss = ss*1.1;
-			p[0] = pp[0]-ss/2;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1];
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = pp[0]-ss/2;	p[1] = pp[1]+ss;	p[3] = pp[0]+ss;	p[4] = pp[1];
-			line_plot(p,p+3,CDef,CDef);
-			p[0] = p[3] = pp[0]-ss/2;	p[1] = pp[1]-ss;	p[4] = pp[1]+ss;
-			line_plot(p,p+3,CDef,CDef);
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 			break;
 		case 'S':
-			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
+			for(i=long(-ss-1);i<=long(ss+1);i++)	for(j=long(-ss-1);j<=long(ss+1);j++)
 				pnt_plot(long(pp[0])+i,long(pp[1])+j,zv,cs);
+		case 's':
+			p[0] = pp[0]-ss;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1]-ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]+ss;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]+ss;	p[1] = pp[1]+ss;	p[3] = pp[0]-ss;	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-ss;	p[1] = pp[1]+ss;	p[3] = pp[0]-ss;	p[4] = pp[1]-ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 			break;
 		case 'D':
-			ss = ss*1.1;
-			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
-				if(abs(i)+abs(j)<=long(ss))
+			for(i=long(-ss-1);i<=long(ss+1);i++)	for(j=long(-ss-1);j<=long(ss+1);j++)
+				if(abs(i)+abs(j)<=long(ss+1))
 					pnt_plot(long(pp[0])+i,long(pp[1])+j,zv,cs);
+		case 'd':
+			p[0] = pp[0];	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1];
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]+ss;	p[1] = pp[1];	p[3] = pp[0];	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0];	p[1] = pp[1]+ss;	p[3] = pp[0]-ss;	p[4] = pp[1];
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-ss;	p[1] = pp[1];	p[3] = pp[0];	p[4] = pp[1]-ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			break;
+		case 'Y':
+			p[0] = pp[0];	p[1] = pp[1]-ss;	p[3] = pp[0];	p[4] = pp[1];
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-0.8*ss;	p[1] = pp[1]+0.6*ss;	p[3] = pp[0];	p[4] = pp[1];
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]+0.8*ss;	p[1] = pp[1]+0.6*ss;	p[3] = pp[0];	p[4] = pp[1];
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			break;
+		case '*':
+			p[0] = pp[0]-ss;	p[1] = pp[1];	p[3] = pp[0]+ss;	p[4] = pp[1];
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-0.6*ss;	p[1] = pp[1]-0.8*ss;	p[3] = pp[0]+0.6*ss;	p[4] = pp[1]+0.8*ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-0.6*ss;	p[1] = pp[1]+0.8*ss;	p[3] = pp[0]+0.6*ss;	p[4] = pp[1]-0.8*ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 			break;
 		case 'T':
-			ss = ss*1.1;
-			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss/2);j<=long(ss);j++)
-				if(3*abs(i)+2*j<=2*long(ss))
+			for(i=long(-ss-1);i<=long(ss+1);i++)	for(j=long(-ss/2-1);j<=long(ss+1);j++)
+				if(3*abs(i)+2*j<=long(2*ss+1))
 					pnt_plot(long(pp[0])+i,long(pp[1])+j,zv,cs);
+		case '^':
+			p[0] = pp[0]-ss;	p[1] = pp[1]-ss/2;	p[3] = pp[0];	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-ss;	p[1] = pp[1]-ss/2;	p[3] = pp[0]+ss;	p[4] = pp[1]-ss/2;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]+ss;	p[1] = pp[1]-ss/2;	p[3] = pp[0];	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 			break;
 		case 'V':
-			ss = ss*1.1;
-			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss/2);j++)
-				if(3*abs(i)-2*j<=2*long(ss))
+			for(i=long(-ss-1);i<=long(ss+1);i++)	for(j=long(-ss-1);j<=long(ss/2+1);j++)
+				if(3*abs(i)-2*j<=long(2*ss+1))
 					pnt_plot(long(pp[0])+i,long(pp[1])+j,zv,cs);
-			break;
-		case 'R':
-			ss = ss*1.1;
-			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss/2);j<=long(ss);j++)
-				if(3*abs(i)+2*j<=2*long(ss))
-					pnt_plot(long(pp[0])+j,long(pp[1])+i,zv,cs);
+		case 'v':
+			p[0] = pp[0]-ss;	p[1] = pp[1]+ss/2;	p[3] = pp[0];	p[4] = pp[1]-ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-ss;	p[1] = pp[1]+ss/2;	p[3] = pp[0]+ss;	p[4] = pp[1]+ss/2;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]+ss;	p[1] = pp[1]+ss/2;	p[3] = pp[0];	p[4] = pp[1]-ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 			break;
 		case 'L':
-			ss = ss*1.1;
-			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss/2);j++)
-				if(3*abs(i)-2*j<=2*long(ss))
+			for(i=long(-ss-1);i<=long(ss+1);i++)	for(j=long(-ss-1);j<=long(ss/2+1);j++)
+				if(3*abs(i)-2*j<=long(2*ss+1))
 					pnt_plot(long(pp[0])+j,long(pp[1])+i,zv,cs);
+		case '<':
+			p[0] = pp[0]+ss/2;	p[1] = pp[1]-ss;	p[3] = pp[0]-ss;	p[4] = pp[1];
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]+ss/2;	p[1] = pp[1]+ss;	p[3] = pp[0]-ss;	p[4] = pp[1];
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = p[3] = pp[0]+ss/2;	p[1] = pp[1]-ss;	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 			break;
-		case 'o':
-			for(i=long(-4*ss);i<=long(4*ss);i++)
-				pnt_plot(long(pp[0]+ss*cos(i*M_PI_4/ss)),
-					long(pp[1]+ss*sin(i*M_PI_4/ss)),zv,cs);
+		case 'R':
+			for(i=long(-ss-1);i<=long(ss+1);i++)	for(j=long(-ss/2-1);j<=long(ss+1);j++)
+				if(3*abs(i)+2*j<=long(2*ss+1))
+					pnt_plot(long(pp[0])+j,long(pp[1])+i,zv,cs);
+		case '>':
+			p[0] = pp[0]-ss/2;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1];
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-ss/2;	p[1] = pp[1]+ss;	p[3] = pp[0]+ss;	p[4] = pp[1];
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = p[3] = pp[0]-ss/2;	p[1] = pp[1]-ss;	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 			break;
 		case 'O':
 			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
@@ -964,6 +941,10 @@ void mglGraphAB::mark_plot(mreal *pp, char type)
 				if(i*i+j*j>=ss*ss)	continue;
 				pnt_plot(long(pp[0])+i,long(pp[1])+j,zv,cs);
 			}
+		case 'o':
+			for(i=long(-4*ss);i<=long(4*ss);i++)
+				pnt_plot(long(pp[0]+ss*cos(i*M_PI_4/ss)),
+					long(pp[1]+ss*sin(i*M_PI_4/ss)),zv,cs);
 			break;
 		}
 		PDef = pd;	PenWidth = pw;

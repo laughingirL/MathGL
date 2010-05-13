@@ -365,11 +365,11 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	if(m_V)	fprintf(fp,"/m_V {sm ss 2 div rm s2 0 rl sm sm 1.5 mul rl cp} def\n");
 	if(m_T)	fprintf(fp,"/m_T {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl cp} def\n");
 
-	if(m_Y)	fprintf(fp,"/m_Y {0 sm rm 0 0 rl sm 1.6 mul ss 0.8 mul rm 0 0 rl ss 1.6 mul ss 0.8 mul rm 0 0 rl d0} def\n");
-	if(m_r)	fprintf(fp,"/m_r {ss 2 div sm rm 0 s2 rl sm sm 1.5 mul rl d0 cp} def\n");
-	if(m_l)	fprintf(fp,"/m_l {sm 2 div sm rm 0 s2 rl ss sm 1.5 mul rl d0 cp} def\n");
-	if(m_R)	fprintf(fp,"/m_R {ss 2 div sm rm 0 s2 rl sm sm 1.5 mul rl cp} def\n");
-	if(m_L)	fprintf(fp,"/m_L {sm 2 div sm rm 0 s2 rl ss sm 1.5 mul rl cp} def\n");
+	if(m_Y)	fprintf(fp,"/m_Y {0 sm rm 0 ss rl sm ss rl s2 0 rm sm sm rl d0} def\n");
+	if(m_r)	fprintf(fp,"/m_r {sm 2 div sm rm 0 s2 rl ss 1.5 mul sm rl d0 cp} def\n");
+	if(m_l)	fprintf(fp,"/m_l {ss 2 div sm rm 0 s2 rl sm 1.5 mul sm rl d0 cp} def\n");
+	if(m_R)	fprintf(fp,"/m_R {sm 2 div sm rm 0 s2 rl ss 1.5 mul sm rl cp} def\n");
+	if(m_L)	fprintf(fp,"/m_L {ss 2 div sm rm 0 s2 rl sm 1.5 mul sm rl cp} def\n");
 	fprintf(fp,"\n");
 
 	// write definition for all glyphs
@@ -409,6 +409,11 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 			case 'T':	fprintf(fp,"np %g %g mt m_T %sfill\n",P[i].x[0],P[i].y[0],str);	break;
 			case 'o':	fprintf(fp,"%g %g m_o %sdr\n",P[i].x[0],P[i].y[0],str);break;
 			case 'O':	fprintf(fp,"%g %g m_O %sdr\n",P[i].x[0],P[i].y[0],str);break;
+			case 'Y':	fprintf(fp,"np %g %g mt m_Y %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case '<':	fprintf(fp,"np %g %g mt m_l %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case '>':	fprintf(fp,"np %g %g mt m_r %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'L':	fprintf(fp,"np %g %g mt m_L %sfill\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'R':	fprintf(fp,"np %g %g mt m_R %sfill\n",P[i].x[0],P[i].y[0],str);	break;
 			default:	fprintf(fp,"%g %g m_c %sfill\n",P[i].x[0],P[i].y[0],str);
 			}
 			if(P[i].s!=MarkSize)
@@ -487,8 +492,9 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 		if(P[i].type==0)
 		{
 			mreal x=P[i].x[0],y=Height-P[i].y[0],s=0.4*font_factor*P[i].s;
+			if(!strchr("xsSoO",P[i].m))	s *= 1.1;
 			wp = 1;
-			if(strchr("SDVT",P[i].m))
+			if(strchr("SDVTLR",P[i].m))
 				fprintf(fp,"<g fill=\"#%02x%02x%02x\">\n",
 					int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
 			else
@@ -503,29 +509,32 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 				fprintf(fp,"<path d=\"M %g %g L %g %g M %g %g L %g %g\"/>\n",
 						x-s,y-s,x+s,y+s,x+s,y-s,x-s,y+s);	break;
 			case 's':
-				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g L %g %gZ\"/>\n",
-						x-s,y-s,x+s,y-s,x+s,y+s,x-s,y+s);	break;
-			case 'd':
-				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g L %g %gZ\"/>\n",
-						x-s,y,x,y-s,x+s,y,x,y+s);	break;
-			case '^':
-				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
-						x-s,y+s/2,x+s,y+s/2,x,y-s);	break;
-			case 'v':
-				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
-						x-s,y-s/2,x+s,y-s/2,x,y+s);	break;
 			case 'S':
 				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g L %g %gZ\"/>\n",
 						x-s,y-s,x+s,y-s,x+s,y+s,x-s,y+s);	break;
+			case 'd':
 			case 'D':
 				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g L %g %gZ\"/>\n",
 						x-s,y,x,y-s,x+s,y,x,y+s);	break;
+			case '^':
 			case 'T':
 				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
 						x-s,y+s/2,x+s,y+s/2,x,y-s);	break;
+			case 'v':
 			case 'V':
 				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
 						x-s,y-s/2,x+s,y-s/2,x,y+s);	break;
+			case '<':
+			case 'L':
+				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
+						x+s/2,y+s,x+s/2,y-s,x-s,y);	break;
+			case '>':
+			case 'R':
+				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
+						x-s/2,y+s,x-s/2,y-s,x+s,y);	break;
+			case 'Y':
+				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g M %g %g L %g %g\"/>\n",
+						x,y+s, x,y, x+s,y-s, x,y, x-s,y-s);	break;
 			case 'o':
 				fprintf(fp,"<circle cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n",
 						x,y,s);	break;
