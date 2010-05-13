@@ -865,6 +865,15 @@ void mglGraphAB::mark_plot(mreal *pp, char type)
 			p[0] = pp[0]-ss;	p[1] = pp[1];	p[3] = pp[0];	p[4] = pp[1]-ss;
 			line_plot(p,p+3,CDef,CDef);
 			break;
+		case 'Y':
+			ss = ss*1.1;
+			p[0] = pp[0];	p[1] = pp[1]-ss;	p[3] = pp[0];	p[4] = pp[1];
+			line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-0.8*ss;	p[1] = pp[1]+0.6*ss;	p[3] = pp[0];	p[4] = pp[1];
+			line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]+0.8*ss;	p[1] = pp[1]+0.6*ss;	p[3] = pp[0];	p[4] = pp[1];
+			line_plot(p,p+3,CDef,CDef);
+			break;
 		case '*':
 			ss = ss*1.1;
 			p[0] = pp[0]-ss;	p[1] = pp[1];	p[3] = pp[0]+ss;	p[4] = pp[1];
@@ -892,6 +901,24 @@ void mglGraphAB::mark_plot(mreal *pp, char type)
 			p[0] = pp[0]+ss;	p[1] = pp[1]+ss/2;	p[3] = pp[0];	p[4] = pp[1]-ss;
 			line_plot(p,p+3,CDef,CDef);
 			break;
+		case '<':
+			ss = ss*1.1;
+			p[0] = pp[0]+ss/2;	p[1] = pp[1]-ss;	p[3] = pp[0]-ss;	p[4] = pp[1];
+			line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]+ss/2;	p[1] = pp[1]+ss;	p[3] = pp[0]-ss;	p[4] = pp[1];
+			line_plot(p,p+3,CDef,CDef);
+			p[0] = p[3] = pp[0]+ss/2;	p[1] = pp[1]-ss;	p[4] = pp[1]+ss;
+			line_plot(p,p+3,CDef,CDef);
+			break;
+		case '>':
+			ss = ss*1.1;
+			p[0] = pp[0]-ss/2;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1];
+			line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-ss/2;	p[1] = pp[1]+ss;	p[3] = pp[0]+ss;	p[4] = pp[1];
+			line_plot(p,p+3,CDef,CDef);
+			p[0] = p[3] = pp[0]-ss/2;	p[1] = pp[1]-ss;	p[4] = pp[1]+ss;
+			line_plot(p,p+3,CDef,CDef);
+			break;
 		case 'S':
 			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss);j++)
 				pnt_plot(long(pp[0])+i,long(pp[1])+j,zv,cs);
@@ -913,6 +940,18 @@ void mglGraphAB::mark_plot(mreal *pp, char type)
 			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss/2);j++)
 				if(3*abs(i)-2*j<=2*long(ss))
 					pnt_plot(long(pp[0])+i,long(pp[1])+j,zv,cs);
+			break;
+		case 'R':
+			ss = ss*1.1;
+			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss/2);j<=long(ss);j++)
+				if(3*abs(i)+2*j<=2*long(ss))
+					pnt_plot(long(pp[0])+j,long(pp[1])+i,zv,cs);
+			break;
+		case 'L':
+			ss = ss*1.1;
+			for(i=long(-ss);i<=long(ss);i++)	for(j=long(-ss);j<=long(ss/2);j++)
+				if(3*abs(i)-2*j<=2*long(ss))
+					pnt_plot(long(pp[0])+j,long(pp[1])+i,zv,cs);
 			break;
 		case 'o':
 			for(i=long(-4*ss);i<=long(4*ss);i++)

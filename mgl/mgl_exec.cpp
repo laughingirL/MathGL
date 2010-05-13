@@ -82,8 +82,8 @@ void mglc_ambient(wchar_t out[1024], long , mglArg *a, int k[10])
 int mgls_area(mglGraph *gr, long , mglArg *a, int k[10])
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Area(*(a[0].d),k[1]==2?a[1].s:0,false,k[2]==3 ? a[2].v : NAN);
-	else if(k[2]!=1)	gr->Area(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,false,k[3]==3 ? a[3].v : NAN);
+	else if(k[1]!=1)	gr->Area(*(a[0].d),k[1]==2?a[1].s:0,k[2]==3 ? a[2].v : NAN);
+	else if(k[2]!=1)	gr->Area(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,k[3]==3 ? a[3].v : NAN);
 	else 				gr->Area(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0);
 	return 0;
 }
@@ -91,9 +91,9 @@ void mglc_area(wchar_t out[1024], long , mglArg *a, int k[10])
 {
 	if(k[0]!=1)	return;
 	else if(k[1]!=1)
-		mglprintf(out,1024,L"gr->Area(%s, \"%s\", false, %g);",a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:NAN);
+		mglprintf(out,1024,L"gr->Area(%s, \"%s\", %g);",a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:NAN);
 	else if(k[2]!=1)
-		mglprintf(out,1024,L"gr->Area(%s, %s, \"%s\", false, %g);", a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN);
+		mglprintf(out,1024,L"gr->Area(%s, %s, \"%s\", %g);", a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN);
 	else 	mglprintf(out,1024,L"gr->Area(%s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"");
 }
 //-----------------------------------------------------------------------------
@@ -209,38 +209,38 @@ void mglc_box(wchar_t out[1024], long , mglArg *a, int k[10])
 int mgls_bars(mglGraph *gr, long , mglArg *a, int k[10])
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Bars(*(a[0].d), k[1]==2?a[1].s:0, k[2]==3?a[2].v:NAN, k[3]==3?(a[3].v!=0):false);
-	else if(k[2]!=1)	gr->Bars(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:0, k[3]==3?a[3].v:NAN, k[4]==3?(a[4].v!=0):false);
-	else 				gr->Bars(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:0, k[4]==3?(a[4].v!=0):false);
+	else if(k[1]!=1)	gr->Bars(*(a[0].d), k[1]==2?a[1].s:0, k[2]==3?a[2].v:NAN);
+	else if(k[2]!=1)	gr->Bars(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:0, k[3]==3?a[3].v:NAN);
+	else 				gr->Bars(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:0);
 	return 0;
 }
 void mglc_bars(wchar_t out[1024], long , mglArg *a, int k[10])
 {
 	if(k[0]!=1)	return;
 	else if(k[1]!=1)
-		mglprintf(out,1024,L"gr->Bars(%s, \"%s\", %g, %s);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:NAN, (k[3]==3&&a[3].v!=0)?"true":"false");
+		mglprintf(out,1024,L"gr->Bars(%s, \"%s\", %g);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:NAN);
 	else if(k[2]!=1)
-		mglprintf(out,1024,L"gr->Bars(%s, %s, \"%s\", %g, %s);",a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN, (k[4]==3&&a[4].v!=0)?"true":"false");
+		mglprintf(out,1024,L"gr->Bars(%s, %s, \"%s\", %g);",a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN);
 	else
-		mglprintf(out,1024,L"gr->Bars(%s, %s, %s, \"%s\", %s);",a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"", (k[4]==3&&a[4].v!=0)?"true":"false");
+		mglprintf(out,1024,L"gr->Bars(%s, %s, %s, \"%s\");",a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"");
 }
 //-----------------------------------------------------------------------------
 int mgls_barh(mglGraph *gr, long , mglArg *a, int k[10])
 {
 	if(k[0]!=1)	return 1;
 	else if(k[1]!=1)
-		gr->Barh(*(a[0].d), k[1]==2?a[1].s:0, k[2]==3?a[2].v:NAN, k[3]==3?(a[3].v!=0):false);
+		gr->Barh(*(a[0].d), k[1]==2?a[1].s:0, k[2]==3?a[2].v:NAN);
 	else
-		gr->Barh(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:0, k[3]==3?a[3].v:NAN, k[4]==3?(a[4].v!=0):false);
+		gr->Barh(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:0, k[3]==3?a[3].v:NAN);
 	return 0;
 }
 void mglc_barh(wchar_t out[1024], long , mglArg *a, int k[10])
 {
 	if(k[0]!=1)	return;
 	else if(k[1]!=1)
-		mglprintf(out,1024,L"gr->Barh(%s, \"%s\", %g, %s);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:NAN, (k[3]==3&&a[3].v!=0)?"true":"false");
+		mglprintf(out,1024,L"gr->Barh(%s, \"%s\", %g);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:NAN);
 	else
-		mglprintf(out,1024,L"gr->Barh(%s, %s, \"%s\", %g, %s);",a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN, (k[4]==3&&a[4].v!=0)?"true":"false");
+		mglprintf(out,1024,L"gr->Barh(%s, %s, \"%s\", %g);",a[0].s, a[1].s, k[2]==2?a[2].s:"", k[3]==3?a[3].v:NAN);
 }
 //-----------------------------------------------------------------------------
 int mgls_belt(mglGraph *gr, long , mglArg *a, int k[10])

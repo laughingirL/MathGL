@@ -218,8 +218,6 @@ void mgl_fplot_xyz_(uintptr_t *graph, const char *fx, const char *fy, const char
 void mgl_plot_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int);
 void mgl_plot_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen,int);
 void mgl_plot_(uintptr_t *graph, uintptr_t *y,	const char *pen,int);
-void mgl_plot_2_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
-void mgl_plot_3_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
 void mgl_radar_(uintptr_t *graph, uintptr_t *a,	const char *pen, mreal *r, int);
 void mgl_boxplot_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen,int);
 void mgl_boxplot_(uintptr_t *graph, uintptr_t *y, const char *pen,int);
@@ -230,33 +228,24 @@ void mgl_area_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, c
 void mgl_area_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen,int);
 void mgl_area_s_(uintptr_t *graph, uintptr_t *y, const char *pen,int);
 void mgl_area_(uintptr_t *graph, uintptr_t *y, const char *pen,int);
-void mgl_area_2_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
-void mgl_area_3_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
 void mgl_region_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y1, uintptr_t *y2, const char *pen, int *inside, int);
 void mgl_region_(uintptr_t *graph, uintptr_t *y1, uintptr_t *y2, const char *pen, int *inside, int);
 void mgl_mark_(uintptr_t *graph, mreal *x,mreal *y,mreal *z,const char *mark,int);
 void mgl_stem_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int);
 void mgl_stem_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen,int);
 void mgl_stem_(uintptr_t *graph, uintptr_t *y,	const char *pen,int);
-void mgl_stem_2_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
-void mgl_stem_3_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
 void mgl_step_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int);
 void mgl_step_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen,int);
 void mgl_step_(uintptr_t *graph, uintptr_t *y,	const char *pen,int);
-void mgl_step_2_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
-void mgl_step_3_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
 void mgl_bars_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int);
 void mgl_bars_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen,int);
 void mgl_bars_(uintptr_t *graph, uintptr_t *y,	const char *pen,int);
-void mgl_bars_2_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
-void mgl_bars_3_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
 void mgl_barh_yx_(uintptr_t *graph, uintptr_t *y, uintptr_t *v, const char *pen,int);
 void mgl_barh_(uintptr_t *graph, uintptr_t *v,	const char *pen,int);
 /*****************************************************************************/
 /*		Advanced 1D plotting functions												 */
 /*****************************************************************************/
 void mgl_torus_(uintptr_t *graph, uintptr_t *r, uintptr_t *z, const char *pen,int);
-void mgl_torus_2_(uintptr_t *graph, uintptr_t *a, const char *pen,int);
 void mgl_text_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z,const char *text, const char *font, mreal *size,int,int);
 void mgl_text_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *text, const char *font, mreal *size,int,int);
 void mgl_text_y_(uintptr_t *graph, uintptr_t *y, const char *text, const char *font, mreal *size,int,int);

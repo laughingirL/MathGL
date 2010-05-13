@@ -7,49 +7,46 @@ a. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 	Also allow rotate labels if they too dense
 1. Plot for gradients of scalar field (like flow)
 2. Contour label should not rotated on ~180 degree
-3. Gradient filling in Area(), Region() if 2 colors is specified.
-4. http://en.wikipedia.org/wiki/Waterfall_chart + allow 2 color spec (pos and neg values)
-5. Help about 't'/'T' style for contours (+MGL)
-6. Add MGL commands "function 'name'", "return [Res]" and modify "call 'name' [Res]"
-7. Add mark symbols '<' and '>' as left/right triangle + add '/' and '\' for -< and >- symbols (rotate 90 deg)
-8. TriCont() -- contours line for triangle-mesh.
-9. QuadPlot() -- like TriPlot() but for quads.
-11. FAQ about pthread and MathGL -- for mglGraphFLTK.
-11. Keep text formating for next symbol -- for example '\b{b}none'
-12. Bug with mult-line text in axis labels -- wrong shifting
-14. Save glyph then it is used for mglGraphPS -- allow different font family in EPS|SVG ??!
-15. Add small-caps in TeX parsing -- also do 2-wchar string parsing (text + attributes).
-21. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
-23. Add plot layot -- i.e. reserve space for title, colorbars and so on ... May be the best way to analyze code itself ???
-24. Options "iI_-aA" for colorbar
-25. Hankel transform
-26. The same function for ticks of axis and colorbar
-29. Save id of subplots and axis for getting value of click coordinates arbitrary inplot -- fill only part which is overlapped. Clear it at Clf() + update for any Rotate, Aspect, InPlot, SetRanges, 
-30. Add option ':[xyzd]' in color scheme for coloring along coordinate (default 'z') ?!?
-31. Example of "ring" chart
-32. Add sample for color scheme "UBbcgyqrR"
-33. Regroup pictures in WWW by big classes + combo plots
-34. Save ALL plot styles for each curve (0...N) for each subplot (0...M) in format \leg{N_M}
-35. Add TeX command \leg{plot style} for line+mark of specified style.
-36. Allow legend and colorbar in absolute coordinates ?!! the same as in Text() :)
-37. Allow color for text if it is not text style
-38. Add "colorbar x y ['sch'='' w=1 h=1]" + "colorbar x y dat ['sch'='' w=1 h=1]"
-39. Rename 'stl'->'style', 'sch'->'scheme' in MGL docs ???
-40. Add '[' as separator in string
-41. INCOMPATIBLE CHANGES!!! swap color and font style in text option ('bR:r' -> 'r:bR')
-42. INCOMPATIBLE CHANGES!!! hide 'dir' argument as ':[xyz]' for cont3, dens3, contf3, grid3 + remove conta, densa, grida, contfa
-42a. INCOMPATIBLE!!! Allow slice definition as real: sl<1 ? sl=int(n*sl) : int(sl);
-43. INCOMPATIBLE CHANGES!!! tune colors as {} -- for example, 'b{3}'
-44. INCOMPATIBLE CHANGES!!! hide unused arguments (like "size")
-45. Questions: new version (incompatible changes), 
-46. Export to X3D
+3. Help about 't'/'T' style for contours (+MGL)
+4. Add MGL commands "function 'name'", "return [Res]" and modify "call 'name' [Res]"
+5. TriCont() -- contours line for triangle-mesh.
+6. QuadPlot() -- like TriPlot() but for quads.
+7. FAQ about pthread and MathGL -- for mglGraphFLTK.
+8. Keep text formating for next symbol -- for example '\b{b}none'
+9. Bug with mult-line text in axis labels -- wrong shifting
+10. Save glyph then it is used for mglGraphPS -- allow different font family in EPS|SVG ??!
+11. Add small-caps in TeX parsing -- also do 2-wchar string parsing (text + attributes).
+12. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
+13. Add plot layot -- i.e. reserve space for title, colorbars and so on ... May be the best way to analyze code itself ???
+14. Options "iI_-aA" for colorbar
+15. Hankel transform
+16. The same function for ticks of axis and colorbar
+17. Save id of subplots and axis for getting value of click coordinates arbitrary inplot -- fill only part which is overlapped. Clear it at Clf() + update for any Rotate, Aspect, InPlot, SetRanges, 
+18. Add option ':[xyzd]' in color scheme for coloring along coordinate (default 'z') ?!?
+19. Example of "ring" chart
+20. Add sample for color scheme "UBbcgyqrR"
+21. Regroup pictures in WWW by big classes + combo plots
+22. Save ALL plot styles for each curve (0...N) for each subplot (0...M) in format \leg{N_M}
+23. Add TeX command \leg{plot style} for line+mark of specified style.
+24. Allow legend and colorbar in absolute coordinates ?!! the same as in Text() :)
+25. Allow color for text if it is not text style
+26. Add "colorbar x y ['sch'='' w=1 h=1]" + "colorbar x y dat ['sch'='' w=1 h=1]"
+27. Rename 'stl'->'style', 'sch'->'scheme' in MGL docs ???
+28. Add '[' as separator in string
+29. INCOMPATIBLE CHANGES!!! swap color and font style in text option ('bR:r' -> 'r:bR')
+30. INCOMPATIBLE CHANGES!!! hide 'dir' argument as ':[xyz]' for cont3, dens3, contf3, grid3 + remove conta, densa, grida, contfa
+31. INCOMPATIBLE!!! Allow slice definition as real: sl<1 ? sl=int(n*sl) : int(sl);
+32. INCOMPATIBLE CHANGES!!! tune colors as {} -- for example, 'b{3}'
+33. INCOMPATIBLE CHANGES!!! hide unused arguments (like "size")
+34. Export to X3D
+35. Samples about gradient filling in Area() and Range; + About 'a' and 'f' options of Bars(), Barh() + 2 colors
 
 
 1. Plot for isolines of vector fields ???
 2. Named arguments in MGL ???
-6. \dfrac for normal size and centering ???
-7. "Chaos" in area.png (near axis) ???
-8. save data coordinates in picture??? -- NO -- slow + a lot of memory!
+3. \dfrac for normal size and centering ???
+4. "Chaos" in area.png (near axis) ???
+5. save data coordinates in picture??? -- NO -- slow + a lot of memory!
 
 					MathGL (for v.2.?) ???
 

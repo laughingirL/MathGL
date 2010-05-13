@@ -267,8 +267,6 @@ void mgl_fplot_xyz(HMGL graph, const char *fx, const char *fy, const char *fz, c
 void mgl_plot_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
 void mgl_plot_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
 void mgl_plot(HMGL graph, const HMDT y, const char *pen);
-void mgl_plot_2(HMGL graph, const HMDT a, const char *pen);
-void mgl_plot_3(HMGL graph, const HMDT a, const char *pen);
 void mgl_radar(HMGL graph, const HMDT a, const char *pen, mreal r);
 void mgl_boxplot_xy(HMGL graph, const HMDT x, const HMDT a, const char *pen);
 void mgl_boxplot(HMGL graph, const HMDT a, const char *pen);
@@ -280,33 +278,24 @@ void mgl_area_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
 void mgl_area_xys(HMGL graph, const HMDT x, const HMDT y, const char *pen);
 void mgl_area_s(HMGL graph, const HMDT y, const char *pen);
 void mgl_area(HMGL graph, const HMDT y, const char *pen);
-void mgl_area_2(HMGL graph, const HMDT a, const char *pen);
-void mgl_area_3(HMGL graph, const HMDT a, const char *pen);
 void mgl_region_xy(HMGL graph, const HMDT x, const HMDT y1, const HMDT y2, const char *pen, int inside);
 void mgl_region(HMGL graph, const HMDT y1, const HMDT y2, const char *pen, int inside);
 void mgl_mark(HMGL graph, mreal x,mreal y,mreal z,char mark);
 void mgl_stem_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
 void mgl_stem_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
 void mgl_stem(HMGL graph, const HMDT y,	const char *pen);
-void mgl_stem_2(HMGL graph, const HMDT a, const char *pen);
-void mgl_stem_3(HMGL graph, const HMDT a, const char *pen);
 void mgl_step_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
 void mgl_step_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
 void mgl_step(HMGL graph, const HMDT y,	const char *pen);
-void mgl_step_2(HMGL graph, const HMDT a, const char *pen);
-void mgl_step_3(HMGL graph, const HMDT a, const char *pen);
 void mgl_bars_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const char *pen);
 void mgl_bars_xy(HMGL graph, const HMDT x, const HMDT y, const char *pen);
 void mgl_bars(HMGL graph, const HMDT y,	const char *pen);
-void mgl_bars_2(HMGL graph, const HMDT a, const char *pen);
-void mgl_bars_3(HMGL graph, const HMDT a, const char *pen);
 void mgl_barh_yx(HMGL graph, const HMDT y, const HMDT v, const char *pen);
 void mgl_barh(HMGL graph, const HMDT v,	const char *pen);
 /*****************************************************************************/
 /*		Advanced 1D plotting functions												 */
 /*****************************************************************************/
 void mgl_torus(HMGL graph, const HMDT r, const HMDT z, const char *pen);
-void mgl_torus_2(HMGL graph, const HMDT a, const char *pen);
 void mgl_text_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z,const char *text, const char *font, mreal size);
 void mgl_text_xy(HMGL graph, const HMDT x, const HMDT y, const char *text, const char *font, mreal size);
 void mgl_text_y(HMGL graph, const HMDT y, const char *text, const char *font, mreal size);

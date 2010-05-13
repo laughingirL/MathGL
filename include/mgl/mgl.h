@@ -245,7 +245,7 @@ public:
 	inline void SetPalColor (int n, float r, float g, float b)
 	{	if(n<100)	Pal[n] = mglColor(r,g,b);	};
 	/// Set number of colors in palette
-	inline void SetPalNum(int num)	{	if(num<100)	NumPal = num;	};
+	inline void SetPalNum(int num)	{	if(num<100 && num>0)	NumPal = num;	};
 	/// Set palette
 	inline void SetPalette(const char *colors)
 	{	strcpy(DefPal, colors?colors:MGL_DEF_PAL);	SetPal(colors);	}
@@ -607,9 +607,9 @@ public:
 	/// Draw area plot for points in arrays \a x, \a y, \a z.
 	void Area(const mglData &x, const mglData &y, const mglData &z, const char *pen=0);
 	/// Draw area plot for points in arrays \a x, \a y.
-	void Area(const mglData &x, const mglData &y, const char *pen=0,bool sum=false,mreal zVal=NAN);
+	void Area(const mglData &x, const mglData &y, const char *pen=0, mreal zVal=NAN);
 	/// Draw area plot for points in arrays \a y.
-	void Area(const mglData &y, const char *pen=0,bool sum=false,mreal zVal=NAN);
+	void Area(const mglData &y, const char *pen=0, mreal zVal=NAN);
 
 	/// Draw vertical lines from points in arrays \a x, \a y, \a z to mglGraph::Org.
 	void Stem(const mglData &x, const mglData &y, const mglData &z, const char *pen=0);
@@ -626,16 +626,16 @@ public:
 	void Step(const mglData &y, const char *pen=0,mreal zVal=NAN);
 
 	/// Draw vertical bars from points in arrays \a x, \a y, \a z to mglGraph::Org.
-	void Bars(const mglData &x, const mglData &y, const mglData &z, const char *pen=0, bool above=false);
+	void Bars(const mglData &x, const mglData &y, const mglData &z, const char *pen=0);
 	/// Draw vertical bars from points in arrays \a x, \a y to mglGraph::Org.
-	void Bars(const mglData &x, const mglData &y, const char *pen=0,mreal zVal=NAN, bool above=false);
+	void Bars(const mglData &x, const mglData &y, const char *pen=0,mreal zVal=NAN);
 	/// Draw vertical bars from points in arrays \a y to mglGraph::Org.
-	void Bars(const mglData &y, const char *pen=0,mreal zVal=NAN, bool above=false);
+	void Bars(const mglData &y, const char *pen=0,mreal zVal=NAN);
 
 	/// Draw vertical bars from points in arrays \a x, \a y to mglGraph::Org.
-	void Barh(const mglData &y, const mglData &v, const char *pen=0,mreal zVal=NAN, bool above=false);
+	void Barh(const mglData &y, const mglData &v, const char *pen=0,mreal zVal=NAN);
 	/// Draw vertical bars from points in arrays \a y to mglGraph::Org.
-	void Barh(const mglData &v, const char *pen=0,mreal zVal=NAN, bool above=false);
+	void Barh(const mglData &v, const char *pen=0,mreal zVal=NAN);
 
 	/// Draw surface of curve {\a r,\a z} rotatation around Z axis
 	void Torus(const mglData &r, const mglData &z, const char *pen=0);
@@ -688,29 +688,6 @@ public:
 	void Tube(const mglData &x, const mglData &y, mreal r, const char *pen=0,mreal zVal=NAN);
 	/// Draw tube with constant radial sizes \a r for points in arrays \a y.
 	void Tube(const mglData &y, mreal r, const char *pen=0,mreal zVal=NAN);
-
-	/// Draw line plot for points in arrays \a a(0,:),\a a(1,:).
-	void Plot2(const mglData &a, const char *pen=0,mreal zVal=NAN);
-	/// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-	void Plot3(const mglData &a, const char *pen=0);
-	/// Draw area plot for points in arrays \a a(0,:),\a a(1,:).
-	void Area2(const mglData &a, const char *pen=0,mreal zVal=NAN);
-	/// Draw area plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-	void Area3(const mglData &a, const char *pen=0);
-	/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-	void Bars2(const mglData &a, const char *pen=0,mreal zVal=NAN, bool above=false);
-	/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-	void Bars3(const mglData &a, const char *pen=0, bool above=false);
-	/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-	void Stem2(const mglData &a, const char *pen=0,mreal zVal=NAN);
-	/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-	void Stem3(const mglData &a, const char *pen=0);
-	/// Draw stairs for points in arrays \a a(0,:),\a a(1,:).
-	void Step2(const mglData &a, const char *pen=0,mreal zVal=NAN);
-	/// Draw stairs for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-	void Step3(const mglData &a, const char *pen=0);
-	/// Draw surface of curve {\a a(0,:),\a a(1,:)} rotatation around Z axis for
-	void Torus2(const mglData &a, const char *pen=0);
 
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

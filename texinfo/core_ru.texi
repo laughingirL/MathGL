@@ -1159,17 +1159,16 @@ Setsize: размер(ы) равны нулю или отрицательны
 @subsection Area
 @cindex Area
 
-Функции рисуют ломанную линию между точками и закрашивает ее вниз до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (@pxref{Palette and colors}). См. также @ref{Plot}, @ref{Bars}, @ref{Stem}. @sref{Area sample}
+Функции рисуют ломанную линию между точками и закрашивает ее вниз до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (@pxref{Palette and colors}). Также можно использовать градиентное закрашивание если число указанных цветов равно удвоеному числу кривых для построения. Если строка содержит символ @samp{a}, то линии рисуются одна поверх другой (с сумированием) -- того же эффекта можно достичь вызовом @code{y.CumSum("y");} перед построением графика. См. также @ref{Plot}, @ref{Bars}, @ref{Stem}. @sref{Area sample}
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_area_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}pen)
 Рисует в пространстве линию между точками @{@var{x}[i], @var{y}[i], @var{z}[i]@} и закрашивает ее вниз до плоскости @var{z} = Org.z.
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{bool} sum=@code{false})
+@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_area_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}pen)
-@deftypefnx {Функция С} @code{void} mgl_area_xys (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}pen)
-Рисует линию между точками @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}) и закрашивает ее до прямой @var{y} = Org.y. Параметр @var{sum} задает режим рисования линий одна поверх другой (с сумированием). Замечу, что того же эффекта можно достичь вызовом @code{y.CumSum("y");} перед построением графика.
+Рисует линию между точками @{@var{x}[i], @var{y}[i]@} в плоскости @var{z}=@var{zVal} (по умолчанию в плоскости @var{z}=@var{Min.z}) и закрашивает ее до прямой @var{y} = Org.y.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Area (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{bool} sum=@code{false})
@@ -1183,7 +1182,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @subsection Region
 @cindex Region
 
-Фунукции закрашивают область между 2 кривыми. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y1.nx=y2.nx} и размеры массивов @var{y1}, @var{y2} должны быть также одинаковы. Строка @var{pen} задает цвет (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется текущий цвет из палитры (@pxref{Palette and colors}). См. также @ref{Area}, @ref{Bars}, @ref{Stem}. @sref{Region sample}
+Фунукции закрашивают область между 2 кривыми. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y1.nx=y2.nx} и размеры массивов @var{y1}, @var{y2} должны быть также одинаковы. Строка @var{pen} задает цвет (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется текущий цвет из палитры (@pxref{Palette and colors}). Также можно использовать градиентное закрашивание если число указанных цветов равно удвоеному числу кривых для построения. См. также @ref{Area}, @ref{Bars}, @ref{Stem}. @sref{Region sample}
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Region (@code{const mglData &}x, @code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{float} zVal=@code{NAN}, @code{bool} inside=@code{true})
 @deftypefnx {Функция С} @code{void} mgl_region_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y1, @code{const HMDT} y2, @code{const char *}pen, @code{int} inside)
@@ -1222,7 +1221,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @subsection Bars
 @cindex Bars
 
-Функции рисуют вертикальные полосы (прямоугольники) из точек до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (@pxref{Palette and colors}). См. также @ref{Barh}, @ref{Area}, @ref{Stem}, @ref{Chart}, @ref{Default sizes}. @sref{Bars sample}
+Функции рисуют вертикальные полосы (прямоугольники) из точек до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (@pxref{Palette and colors}). Если строка содержит символ @samp{a}, то линии рисуются одна поверх другой. См. также @ref{Barh}, @ref{Area}, @ref{Stem}, @ref{Chart}, @ref{Default sizes}. @sref{Bars sample}
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Bars (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_bars_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}pen)
@@ -1244,7 +1243,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @subsection Barh
 @cindex Barh
 
-Функции рисуют горизонтальные полосы (прямоугольники) из точек до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (@pxref{Palette and colors}). См. также @ref{Barh}, @ref{Default sizes}. @sref{Barh sample}
+Функции рисуют горизонтальные полосы (прямоугольники) из точек до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (@pxref{Palette and colors}). Если строка содержит символ @samp{a}, то линии рисуются одна поверх другой. См. также @ref{Barh}, @ref{Default sizes}. @sref{Barh sample}
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Barh (@code{const mglData &}y, @code{const mglData &}v, @code{const char *}pen=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_barh_xy (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} v, @code{const char *}pen)

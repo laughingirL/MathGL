@@ -1341,13 +1341,13 @@ void mglData::Rearrange(int mx, int my, int mz)
 void mglData::InsertColumns(int at, int num, const char *eq)
 {
 	if(num<1)	return;
-	mglData b(nx+num,ny,nz);
-	if(at<1)	at=1;	if(at>nx)	at=nx;
-	register long i,j,k;
+	if(at<0)	at=0;	if(at>nx)	at=nx;
+	register long i,j,k,nn=nx+num;
+	mglData b(nn,ny,nz);
 	for(i=0;i<at;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
-		b.a[i+(nx+num)*(j+ny*k)] = a[i+nx*(j+ny*k)];
+		b.a[i+nn*(j+ny*k)] = a[i+nx*(j+ny*k)];
 	for(i=at;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
-		b.a[i+num+(nx+num)*(j+ny*k)] = a[i+nx*(j+ny*k)];
+		b.a[i+num+nn*(j+ny*k)] = a[i+nx*(j+ny*k)];
 	if(eq)
 	{
 		mglFormula e(eq);
@@ -1356,7 +1356,7 @@ void mglData::InsertColumns(int at, int num, const char *eq)
 		dy = ny==1?0:1./(ny-1);
 		dz = nz==1?0:1./(nz-1);
 		for(i=0;i<num;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
-			b.a[i+at+(nx+num)*(j+ny*k)] = e.Calc(i*dx,j*dy, k*dz);
+			b.a[i+at+nn*(j+ny*k)] = e.Calc(i*dx,j*dy, k*dz);
 	}
 	Set(b);
 }
@@ -1364,13 +1364,13 @@ void mglData::InsertColumns(int at, int num, const char *eq)
 void mglData::InsertRows(int at, int num, const char *eq)
 {
 	if(num<1)	return;
-	mglData b(nx,ny+num,nz);
-	if(at<1)	at=1;	if(at>nx)	at=nx;
-	register long i,j,k;
+	if(at<0)	at=0;	if(at>nx)	at=nx;
+	register long i,j,k,nn=num+ny;
+	mglData b(nx,nn,nz);
 	for(i=0;i<nx;i++)	for(j=0;j<at;j++)	for(k=0;k<nz;k++)
-		b.a[i+nx*(j+(ny+num)*k)] = a[i+nx*(j+ny*k)];
+		b.a[i+nx*(j+nn*k)] = a[i+nx*(j+ny*k)];
 	for(i=0;i<nx;i++)	for(j=at;j<ny;j++)	for(k=0;k<nz;k++)
-		b.a[i+nx*(j+num+(ny+num)*k)] = a[i+nx*(j+ny*k)];
+		b.a[i+nx*(j+num+nn*k)] = a[i+nx*(j+ny*k)];
 	if(eq)
 	{
 		mglFormula e(eq);
@@ -1379,7 +1379,7 @@ void mglData::InsertRows(int at, int num, const char *eq)
 		dx = nx==1?0:1./(nx-1);
 		dz = nz==1?0:1./(nz-1);
 		for(i=0;i<nx;i++)	for(j=0;j<num;j++)	for(k=0;k<nz;k++)
-			b.a[i+nx*(j+at+(ny+num)*k)] = e.Calc(i*dx,j*dy, k*dz);
+			b.a[i+nx*(j+at+nn*k)] = e.Calc(i*dx,j*dy, k*dz);
 	}
 	Set(b);
 }
@@ -1387,9 +1387,9 @@ void mglData::InsertRows(int at, int num, const char *eq)
 void mglData::InsertSlices(int at, int num, const char *eq)
 {
 	if(num<1)	return;
-	mglData b(nx,ny,nz+num);
-	if(at<1)	at=1;	if(at>nx)	at=nx;
+	if(at<0)	at=0;	if(at>nx)	at=nx;
 	register long i,j,k;
+	mglData b(nx,ny,nz+num);
 	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<at;k++)
 		b.a[i+nx*(j+ny*k)] = a[i+nx*(j+ny*k)];
 	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=at;k<nz;k++)

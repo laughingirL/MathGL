@@ -1,11 +1,17 @@
 1.11 Released ?? May 2010
+	- Add marks '<', '>', '#<', '#>', '#*' for left/right wire/solid triangles and Y sign.
+	- Allow 2 colors diagrams (in Bars(), Barh()) -- one for positive, one for negative.
+	- Add style 'f' for Bars(), Barh() which draw diagrams like water-fall ones.
+	- Move argument 'above' of Bars(), Barh() to string (if it contain 'a' symbol).
+	- Add gradient filling in Area() and Region() plots if number of specified colors (colors in palette) is equal to 2*number of cureves.
 	- Add mglData::Roll() for "rolling" data along direction. Improve Swap() function.
 	- Axis now can have "arrows" at the end by setting arrow style ("AKDTVISO") for Axis().
 	- Add MGL commands: "insert dat 'dir' [at=0 num=1]", "delete dat 'dir' [at=0 num=1]", "roll Dat 'dir' num".
 	- Now $N is substituted into the second argument of MGL commands 'define', 'defnum', 'defpal', 'defchr'.
-	- Bug with newline symbol '\n'
-	- Bug with wrong restore previous InPlot() after text with style 'a'.
-	- Bug with label position for log-scale axis.
+	- Bugfix with newline symbol '\n'
+	- Bugfix with wrong restore previous InPlot() after text with style 'a'.
+	- Bugfix with label position for log-scale axis.
+	- Bugfix for mglData::Insert().
 	- Add TeX symbol sample in documentation.
 
 

@@ -1134,13 +1134,6 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in
 The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}), where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Plot2 (@code{const mglData &}a, @code{const char *}pen=@code{""}, @code{float} zVal=@code{NAN})
-The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}), where @var{x}=@var{a}(2*k,:), @var{y}=@var{a}(2*k+1,:), k \in 0 ... @var{a.ny}/2. This function is obsolete -- use Plot() and SubData() functions instead.
-@end deftypefn
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Plot3 (@code{const mglData &}a, @code{const char *}pen=@code{""})
-The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} in 3D space, where @var{x}=@var{a}(3*k,:), @var{y}=@var{a}(3*k+1,:), @var{z}=@var{a}(3*k+2,:), k \in 0 ... @var{a.ny}/3. This function is obsolete -- use Plot() and SubData() functions instead.
-@end deftypefn
-
 @c ==================================================================
 @node Radar, Tens, Plot, 1D plotting
 @subsection Radar
@@ -1178,30 +1171,21 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in
 @subsection Area
 @cindex Area
 
-These functions draw continuous lines between points and fills it to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=""}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Plot}, @ref{Bars}, @ref{Stem}. @sref{Area sample}
+These functions draw continuous lines between points and fills it to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=""}) solid line with color from palette is used (@pxref{Palette and colors}). Also you can use gradient filling if number of specified colors is equal to 2*number of curves. If string contain symbol @samp{a} then lines are drawn one above another (like summation) -- you can reach the same effect if call @code{y.CumSum("y");} before plot. See also @ref{Plot}, @ref{Bars}, @ref{Stem}. @sref{Area sample}
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""})
 @deftypefnx {C function} @code{void} mgl_area_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}pen)
 The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} in 3D space and fills it down to @var{z} = Org.z.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""}, @code{bool} sum=@code{false})
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const char *}pen=@code{""})
 @deftypefnx {C function} @code{void} mgl_area_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}pen)
-@deftypefnx {C function} @code{void} mgl_area_xys (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}pen)
-The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}) and fills it down to @var{y} = Org.y. Parameter @var{sum} set to draw a lines one above another (like summation). Note, you can reach the same effect if call @code{y.CumSum("y");} before plot.
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}) and fills it down to @var{y} = Org.y.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Area (@code{const mglData &}y, @code{const char *}pen=@code{""}, @code{bool} sum=@code{false})
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Area (@code{const mglData &}y, @code{const char *}pen=@code{""})
 @deftypefnx {C function} @code{void} mgl_area (@code{HMGL} gr, @code{const HMDT} y, @code{const char *}pen)
-@deftypefnx {C function} @code{void} mgl_area_s (@code{HMGL} gr, @code{const HMDT} y, @code{const char *}pen)
-The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}) and fills it down to @var{y} = Org.y, where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x]. Parameter @var{sum} set to draw a lines one above another (like summation). Note, you can reach the same effect if call @code{y.CumSum("y");} before plot.
-@end deftypefn
-
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Area2 (@code{const mglData &}a, @code{const char *}pen=@code{""}, @code{float} zVal=@code{NAN})
-The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}) and fills it down to @var{y} = Org.y, where @var{x}=@var{a}(2*k,:), @var{y}=@var{a}(2*k+1,:), k \in 0 ... @var{a.ny}/2. This function is obsolete -- use Area() and SubData() functions instead.
-@end deftypefn
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Area3 (@code{const mglData &}a, @code{const char *}pen=@code{""})
-The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} in 3D space and fills it down to @var{z} = Org.z, where @var{x}=@var{a}(3*k,:), @var{y}=@var{a}(3*k+1,:), @var{z}=@var{a}(3*k+2,:), k \in 0 ... @var{a.ny}/3. This function is obsolete -- use Area() and SubData() functions instead.
+The function draws continuous lines between points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}) and fills it down to @var{y} = Org.y, where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
 @end deftypefn
 
 @c ==================================================================
@@ -1209,7 +1193,7 @@ The function draws continuous lines between points @{@var{x}[i], @var{y}[i], @va
 @subsection Region
 @cindex Region
 
-These functions fill area between 2 curves. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y1.nx=y2.nx} and all dimensions of arrays @var{y1} and @var{y2} must be equal too. String @var{pen} specifies the color (@pxref{Line styles}). By default (@code{pen=""}) color from palette is used (@pxref{Palette and colors}). See also @ref{Area}, @ref{Bars}, @ref{Stem}. @sref{Region sample}
+These functions fill area between 2 curves. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y1.nx=y2.nx} and all dimensions of arrays @var{y1} and @var{y2} must be equal too. String @var{pen} specifies the color (@pxref{Line styles}). By default (@code{pen=""}) color from palette is used (@pxref{Palette and colors}). Also you can use gradient filling if number of specified colors is equal to 2*number of curves. See also @ref{Area}, @ref{Bars}, @ref{Stem}. @sref{Region sample}
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Region (@code{const mglData &}x, @code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{float} zVal=@code{NAN}, @code{bool} inside=@code{true})
 @deftypefnx {C function} @code{void} mgl_region_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y1, @code{const HMDT} y2, @code{const char *}pen, @code{int} inside)
@@ -1243,19 +1227,12 @@ The function draws vertical lines from points @{@var{x}[i], @var{y}[i]@} down to
 The function draws vertical lines from points @{@var{x}[i], @var{y}[i]@} down to @var{y} = Org.y in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}), where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Stem2 (@code{const mglData &}a, @code{const char *}pen=@code{""}, @code{float} zVal=@code{NAN})
-The function draws vertical lines from points @{@var{x}[i], @var{y}[i]@} down to @var{y} = Org.y in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}), where @var{x}=@var{a}(2*k,:), @var{y}=@var{a}(2*k+1,:), k \in 0 ... @var{a.ny}/2. This function is obsolete -- use Stem() and SubData() functions instead.
-@end deftypefn
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Stem3 (@code{const mglData &}a, @code{const char *}pen=@code{""})
-The function draws vertical lines from points @{@var{x}[i], @var{y}[i], @var{z}[i]@} down to @var{z} = Org.z, where @var{x}=@var{a}(3*k,:), @var{y}=@var{a}(3*k+1,:), @var{z}=@var{a}(3*k+2,:), k \in 0 ... @var{a.ny}/3. This function is obsolete -- use Stem() and SubData() functions instead.
-@end deftypefn
-
 @c ==================================================================
 @node Bars, Barh, Stem, 1D plotting
 @subsection Bars
 @cindex Bars
 
-These functions draw vertical bars from points to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=""}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Barh}, @ref{Area}, @ref{Stem}, @ref{Chart}, @ref{Default sizes}. @sref{Bars sample}
+These functions draw vertical bars from points to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=""}) solid line with color from palette is used (@pxref{Palette and colors}). If string contain symbol @samp{a} then lines are drawn one above another (like summation). See also @ref{Barh}, @ref{Area}, @ref{Stem}, @ref{Chart}, @ref{Default sizes}. @sref{Bars sample}
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Bars (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""})
 @deftypefnx {C function} @code{void} mgl_bars_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}pen)
@@ -1272,19 +1249,12 @@ The function draws vertical bars from points @{@var{x}[i], @var{y}[i]@} down to 
 The function draws vertical bars from points @{@var{x}[i], @var{y}[i]@} down to @var{y} = Org.y in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}), where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Bars2 (@code{const mglData &}a, @code{const char *}pen=@code{""}, @code{float} zVal=@code{NAN})
-The function draws vertical bars from points @{@var{x}[i], @var{y}[i]@} down to @var{y} = Org.y in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}), where @var{x}=@var{a}(2*k,:), @var{y}=@var{a}(2*k+1,:), k \in 0 ... @var{a.ny}/2. This function is obsolete -- use Bars() and SubData() functions instead.
-@end deftypefn
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Bars3 (@code{const mglData &}a, @code{const char *}pen=@code{""})
-The function draws vertical bars from points @{@var{x}[i], @var{y}[i], @var{z}[i]@} down to @var{z} = Org.z, where @var{x}=@var{a}(3*k,:), @var{y}=@var{a}(3*k+1,:), @var{z}=@var{a}(3*k+2,:), k \in 0 ... @var{a.ny}/3. This function is obsolete -- use Bars() and SubData() functions instead.
-@end deftypefn
-
 @c ==================================================================
 @node Barh, Chart, Bars, 1D plotting
 @subsection Barh
 @cindex Barh
 
-These functions draw horizontal bars from points to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=""}) solid line with color from palette is used (@pxref{Palette and colors}). See also @ref{Barh}, @ref{Default sizes}. @sref{Barh sample}
+These functions draw horizontal bars from points to axis plane. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @var{x.nx=y.nx=z.nx}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{pen=""}) solid line with color from palette is used (@pxref{Palette and colors}). If string contain symbol @samp{a} then lines are drawn one above another (like summation). See also @ref{Barh}, @ref{Default sizes}. @sref{Barh sample}
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Barh (@code{const mglData &}y, @code{const mglData &}v, @code{const char *}pen=@code{""})
 @deftypefnx {C function} @code{void} mgl_barh_xy (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} v, @code{const char *}pen)
@@ -1329,13 +1299,6 @@ The function draws continuous stairs for points @{@var{x}[i], @var{y}[i]@} in pl
 The function draws continuous stairs for points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}), where @var{x}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Step2 (@code{const mglData &}a, @code{const char *}pen=@code{""}, @code{float} zVal=@code{NAN})
-The function draws continuous stairs for points @{@var{x}[i], @var{y}[i]@} in plane @var{z}=@var{zVal} (default in plane @var{z}=@var{Min.z}), where @var{x}=@var{a}(2*k,:), @var{y}=@var{a}(2*k+1,:), k \in 0 ... @var{a.ny}/2. This function is obsolete -- use Step() and SubData() functions instead.
-@end deftypefn
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Step3 (@code{const mglData &}a, @code{const char *}pen=@code{""})
-The function draws continuous stairs for points @{@var{x}[i], @var{y}[i], @var{z}[i]@}, where @var{x}=@var{a}(3*k,:), @var{y}=@var{a}(3*k+1,:), @var{z}=@var{a}(3*k+2,:), k \in 0 ... @var{a.ny}/3. This function is obsolete -- use Step() and SubData() functions instead.
-@end deftypefn
-
 @c ==================================================================
 @node Torus, Tube, Step, 1D plotting
 @subsection Torus
@@ -1350,10 +1313,6 @@ The function draws surface which is result of curve @{@var{r}[i], @var{z}[i]@} r
 
 @deftypefn {Method on @code{mglGraph} (C++)} @code{void} Torus (@code{const mglData &}z, @code{const char *}pen=@code{""})
 The function draws surface which is result of curve @{@var{r}[i], @var{z}[i]@} rotation, where @var{r}[i] values are equidistantly distributed in interval [@var{Min}.x, @var{Max}.x].
-@end deftypefn
-
-@deftypefn {Method on @code{mglGraph} (C++)} @code{void} Torus2 (@code{const mglData &}a, @code{const char *}pen=@code{""})
-The function draws surface which is result of curve @{@var{x}[i], @var{y}[i]@} rotation, where @var{r}=@var{a}(2*k,:), @var{z}=@var{a}(2*k+1,:), k \in 0 ... @var{a.ny}/2. This function is obsolete -- use Torus() and SubData() functions instead.
 @end deftypefn
 
 @c ==================================================================

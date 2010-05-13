@@ -193,7 +193,7 @@ void mglGraph::Plot(const char *eqX, const char *eqY, const char *eqZ, const cha
 	}
 	delete ex;	delete ey;	delete ez;
 
-	// TODO Add s1trong function variation analisys
+	// TODO Add strong function variation analisys
 	mglData xx,yy,zz;
 	xx.Set(x,n);	yy.Set(y,n);	zz.Set(z,n);
 	free(x);	free(y);	free(z);	free(t);
@@ -359,71 +359,80 @@ void mglGraph::Area(const mglData &x, const mglData &y, const mglData &z, const 
 	if(n<2)					{	SetWarn(mglWarnLow,"Area");	return;	}
 	static int cgid=1;	StartGroup("Area3",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	mreal *pp = new mreal[6*n],z0=GetOrgZ('x');
+	mreal *pp = new mreal[6*n], *cc = new mreal[8*n], z0=GetOrgZ('x');
 	bool *tt = new bool[2*n];
+	mglColor c1,c2;
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(GetPal(), -1);
+		c1 = GetPal();
+		if(NumPal==2*m)	c2 = GetPal();	else	c2 = c1;
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
 
 		for(i=0;i<y.nx;i++)
 		{
+			cc[8*i+3] = cc[8*i+7] = AlphaDef;
+			cc[8*i]   = c2.r;	cc[8*i+1] = c2.g;	cc[8*i+2] = c2.b;
+			cc[8*i+4] = c1.r;	cc[8*i+5] = c1.g;	cc[8*i+6] = c1.b;
 			pp[6*i+3] = pp[6*i+0] = x.a[i+mx*n];
 			pp[6*i+4] = pp[6*i+1] = y.a[i+my*n];
 			pp[6*i+2] = z.a[i+mz*n];
 			tt[2*i] = ScalePoint(pp[6*i+0],pp[6*i+1],pp[6*i+2]);
-//			if(mk && tt[2*i])	Mark(pp[6*i+0],pp[6*i+1],pp[6*i+2],mk);
 			pp[6*i+5] = z0;
 			tt[2*i+1] = ScalePoint(pp[6*i+3],pp[6*i+4],pp[6*i+5]);
 		}
-		surf_plot(2,n,pp,0,tt);
+		surf_plot(2,n,pp,cc,tt);
 	}
 	SetPal(0);	EndGroup();
-	delete []pp;	delete []tt;
+	delete []pp;	delete []tt;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Area(const mglData &x, const mglData &y, const char *pen,bool sum,mreal zVal)
+void mglGraph::Area(const mglData &x, const mglData &y, const char *pen, mreal zVal)
 {
 	long i,j,n=y.nx,m=y.ny,mx;
 	if(x.nx!=n)	{	SetWarn(mglWarnDim,"Area");	return;	}
 	if(n<2)		{	SetWarn(mglWarnLow,"Area");	return;	}
 	static int cgid=1;	StartGroup("Curve",cgid++);
-	mreal *pp = new mreal[6*n],y0=GetOrgY('x');
+	mreal *pp = new mreal[6*n], *cc = new mreal[8*n], y0=GetOrgY('x');
 	bool *tt = new bool[2*n], znan = isnan(zVal);
-//	if(isnan(zVal))	zVal = Min.z;
+	mglColor c1,c2;
 	mglData f(y);
+	bool sum = pen && strchr(pen,'a')!=0;
 	if(sum)	f.CumSum("y");
 
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(GetPal(), -1);
+		c1 = GetPal();
+		if(NumPal==2*m)	c2 = GetPal();	else	c2 = c1;
 		mx = j<x.ny ? j:0;	//my = j<y.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
+			cc[8*i+3] = cc[8*i+7] = AlphaDef;
+			cc[8*i]   = c2.r;	cc[8*i+1] = c2.g;	cc[8*i+2] = c2.b;
+			cc[8*i+4] = c1.r;	cc[8*i+5] = c1.g;	cc[8*i+6] = c1.b;
+
 			pp[6*i+3] = pp[6*i+0] = x.a[i+mx*n];
 			pp[6*i+1] = f.a[i+j*n];
 			// NOTE: I use 'm' (not 'm-1') for placing area plots at z<Max.z
 			pp[6*i+2] = znan ? Min.z + (m-1-j)*(Max.z-Min.z)/m : zVal;
 			tt[2*i+0] = ScalePoint(pp[6*i+0],pp[6*i+1],pp[6*i+2]);
-//			if(mk && tt[2*i])	Mark(pp[6*i+0],pp[6*i+1],pp[6*i+2],mk);
 			pp[6*i+4] = sum && j>0 ? f.a[i+j*n-n] : y0;
 			pp[6*i+5] = znan ? Min.z + (m-1-j)*(Max.z-Min.z)/m : zVal;
 			tt[2*i+1] = ScalePoint(pp[6*i+3],pp[6*i+4],pp[6*i+5]);
 		}
-		surf_plot(2,n,pp,0,tt);
+		surf_plot(2,n,pp,cc,tt);
 	}
 	SetPal(0);	EndGroup();
-	delete []pp;	delete []tt;
+	delete []pp;	delete []tt;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Area(const mglData &y, const char *pen,bool sum,mreal zVal)
+void mglGraph::Area(const mglData &y, const char *pen, mreal zVal)
 {
 	if(y.nx<2)		{	SetWarn(mglWarnLow,"Area");	return;	}
 	mglData x(y.nx);
 	x.Fill(Min.x,Max.x);
-	Area(x,y,pen,sum,zVal);
+	Area(x,y,pen,zVal);
 }
 //-----------------------------------------------------------------------------
 //
@@ -437,17 +446,22 @@ void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, co
 	{	SetWarn(mglWarnDim,"Region");	return;	}
 	if(n<2)	{	SetWarn(mglWarnLow,"Region");	return;	}
 	static int cgid=1;	StartGroup("Region",cgid++);
-	mreal *pp = new mreal[6*n], f1,f2;
+	mreal *pp = new mreal[6*n], *cc = new mreal[8*n], f1,f2;
 	bool *tt = new bool[2*n];
 	if(isnan(zVal))	zVal = Min.z;
 
+	mglColor c1,c2;
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(GetPal(), -1);
+		c1 = GetPal();
+		if(NumPal==2*m)	c2 = GetPal();	else	c2 = c1;
 		mx = j<x.ny ? j:0;
 		for(i=0;i<n;i++)
 		{
+			cc[8*i+3] = cc[8*i+7] = AlphaDef;
+			cc[8*i]   = c2.r;	cc[8*i+1] = c2.g;	cc[8*i+2] = c2.b;
+			cc[8*i+4] = c1.r;	cc[8*i+5] = c1.g;	cc[8*i+6] = c1.b;
 			pp[6*i+3] = pp[6*i+0] = x.a[i+mx*n];
 			f1 = y1.a[i+j*n];	f2 = y2.a[i+j*n];
 			pp[6*i+1] = f1;		pp[6*i+2] = zVal;
@@ -456,10 +470,10 @@ void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, co
 			tt[2*i+1] = ScalePoint(pp[6*i+3],pp[6*i+4],pp[6*i+5]);
 			if(f1>f2 && inside)	{	tt[2*i] = tt[2*i+1] = false;	}
 		}
-		surf_plot(2,n,pp,0,tt);
+		surf_plot(2,n,pp,cc,tt);
 	}
 	SetPal(0);	EndGroup();
-	delete []pp;	delete []tt;
+	delete []pp;	delete []tt;	delete []cc;
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Region(const mglData &y1, const mglData &y2, const char *pen, mreal zVal, bool inside)
@@ -647,22 +661,27 @@ void mglGraph::Stem(const mglData &y, const char *pen,mreal zVal)
 //	Bars series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const char *pen, bool above)
+void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const char *pen)
 {
 	long i,j,m,mx,my,mz,n=y.nx;
 	if(x.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Bars");	return;	}
 	if(n<2)					{	SetWarn(mglWarnLow,"Bars");	return;	}
 	static int cgid=1;	StartGroup("Bars3",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	mreal *pp = new mreal[12*n],x1,x2,y1,y2,z0=GetOrgZ('x'),zz;
+	mreal *pp = new mreal[12*n],*cc = new mreal[16*n],x1,x2,y1,y2,z0,zz,zp;
 	bool *tt = new bool[4*n], wire = pen && strchr(pen,'#');
+	bool above = pen && strchr(pen,'a')!=0, fall = pen && strchr(pen,'f')!=0;
+	if(above)	fall = false;
 	mglData dd(above ? n : 1);
 
+	mglColor c1,c2,c;
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(GetPal(), -1);
+		c1 = GetPal();
+		if(NumPal==2*m)	c2 = GetPal();	else	c2 = c1;
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
+		zp = z0 = GetOrgZ('x');
 		for(i=0;i<n;i++)
 		{
 			if(i<n-1)
@@ -685,6 +704,13 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const 
 			}
 			else
 			{	z0 = GetOrgZ('x') + dd.a[i];	dd.a[i] += zz;	zz += z0;	}
+			if(fall)	{	z0 = zp;	zz += z0;	zp = zz;	}
+
+			c = (z.a[i+n*mz]<0) ? c1 : c2;
+			cc[16*i]   = cc[16*i+4] = cc[16*i+8] = cc[16*i+12] = c.r;
+			cc[16*i+1] = cc[16*i+5] = cc[16*i+9] = cc[16*i+13] = c.g;
+			cc[16*i+2] = cc[16*i+6] = cc[16*i+10]= cc[16*i+14] = c.b;
+			cc[16*i+3] = cc[16*i+7] = cc[16*i+11]= cc[16*i+15] = AlphaDef;
 
 			pp[12*i+0] = x1;	pp[12*i+1] = y1;	pp[12*i+2] = zz;
 			pp[12*i+3] = x1;	pp[12*i+4] = y1;	pp[12*i+5] = z0;
@@ -695,7 +721,7 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const 
 			tt[4*i+2] = ScalePoint(pp[12*i+6],pp[12*i+7],pp[12*i+8]);
 			tt[4*i+3] = ScalePoint(pp[12*i+9],pp[12*i+10],pp[12*i+11]);
 		}
-		quads_plot(n,pp,0,tt);
+		quads_plot(n,pp,cc,tt);
 		if(wire)	for(i=0;i<n;i++)
 		{
 			mreal ct[4]={0,0,0,1}, *pt = pp+12*i;
@@ -706,26 +732,30 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const mglData &z, const 
 		}
 	}
 	SetPal(0);	EndGroup();
-	delete []tt;	delete []pp;
+	delete []tt;	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,mreal zVal, bool above)
+void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,mreal zVal)
 {
 	long i,j,m,mx,my,n=y.nx;
 	if(x.nx!=n)	{	SetWarn(mglWarnDim,"Bars");	return;	}
 	if(n<2)		{	SetWarn(mglWarnLow,"Bars");	return;	}
 	static int cgid=1;	StartGroup("Bars",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;
-	mreal *pp = new mreal[12*n],x1,x2,yy,y0=GetOrgY('x');
+	mreal *pp = new mreal[12*n],*cc = new mreal[16*n],x1,x2,yy,y0,yp;
 	bool *tt = new bool[4*n], wire = pen && strchr(pen,'#');
 	if(isnan(zVal))	zVal = Min.z;
+	bool above = pen && strchr(pen,'a')!=0, fall = pen && strchr(pen,'f')!=0;
+	if(above)	fall = false;
 	mglData dd(above ? n : 1);
 
+	mglColor c1,c2,c;
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(GetPal(), -1);
-		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
+		c1 = GetPal();
+		if(NumPal==2*m)	c2 = GetPal();	else	c2 = c1;
+		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	y0 = yp = GetOrgY('x');
 		for(i=0;i<n;i++)
 		{
 			if(i<n-1)	x2 = x.a[i+n*mx] + BarWidth*(x.a[i+1+n*mx]-x.a[i+n*mx])/2;
@@ -737,6 +767,14 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,mreal zV
 			{	x2 = (x2-x1)/m;		x1 += j*x2;		x2 += x1;	}
 			else
 			{	y0 = GetOrgY('x') + dd.a[i];	dd.a[i] += yy;	yy += y0;	}
+			if(fall)	{	y0 = yp;	yy += y0;	yp = yy;	}
+
+			c = (y.a[i+n*my]<0) ? c1 : c2;
+			cc[16*i]   = cc[16*i+4] = cc[16*i+8] = cc[16*i+12] = c.r;
+			cc[16*i+1] = cc[16*i+5] = cc[16*i+9] = cc[16*i+13] = c.g;
+			cc[16*i+2] = cc[16*i+6] = cc[16*i+10]= cc[16*i+14] = c.b;
+			cc[16*i+3] = cc[16*i+7] = cc[16*i+11]= cc[16*i+15] = AlphaDef;
+
 			pp[12*i+0] = x1;	pp[12*i+1] = yy;	pp[12*i+2] = zVal;
 			pp[12*i+3] = x1;	pp[12*i+4] = y0;	pp[12*i+5] = zVal;
 			pp[12*i+6] = x2;	pp[12*i+7] = y0;	pp[12*i+8] = zVal;
@@ -746,7 +784,7 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,mreal zV
 			tt[4*i+2] = ScalePoint(pp[12*i+6],pp[12*i+7],pp[12*i+8]);
 			tt[4*i+3] = ScalePoint(pp[12*i+9],pp[12*i+10],pp[12*i+11]);
 		}
-		quads_plot(n,pp,0,tt);
+		quads_plot(n,pp,cc,tt);
 		if(wire)	for(i=0;i<n;i++)
 		{
 			mreal ct[4]={0,0,0,1}, *pt = pp+12*i;
@@ -757,38 +795,42 @@ void mglGraph::Bars(const mglData &x, const mglData &y, const char *pen,mreal zV
 		}
 	}
 	SetPal(0);	EndGroup();
-	delete []tt;	delete []pp;
+	delete []tt;	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Bars(const mglData &y, const char *pen,mreal zVal, bool above)
+void mglGraph::Bars(const mglData &y, const char *pen,mreal zVal)
 {
 	if(y.nx<2)	{	SetWarn(mglWarnLow,"Bars");	return;	}
 	mglData x(y.nx);
 	x.Fill(Min.x,Max.x);
-	Bars(x,y,pen,zVal,above);
+	Bars(x,y,pen,zVal);
 }
 //-----------------------------------------------------------------------------
 //
 //		Barh series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,mreal zVal, bool above)
+void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,mreal zVal)
 {
 	long i,j,m,mx,my,n=v.nx;
 	if(y.nx!=n)	{	SetWarn(mglWarnDim,"Barh");	return;	}
 	if(n<2)		{	SetWarn(mglWarnLow,"Barh");	return;	}
 	static int cgid=1;	StartGroup("Barh",cgid++);
 	m = y.ny > v.ny ? y.ny : v.ny;
-	mreal *pp = new mreal[12*n],y1,y2,xx,x0=GetOrgX('y');
+	mreal *pp = new mreal[12*n],*cc = new mreal[16*n],y1,y2,xx,x0,xp;
 	bool *tt = new bool[4*n], wire = pen && strchr(pen,'#');
 	if(isnan(zVal))	zVal = Min.z;
+	bool above = pen && strchr(pen,'a')!=0, fall = pen && strchr(pen,'f')!=0;
+	if(above)	fall = false;
 	mglData dd(above ? n : 1);
 
+	mglColor c1,c2,c;
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
-		DefColor(GetPal(), -1);
-		my = j<y.ny ? j:0;	mx = j<v.ny ? j:0;
+		c1 = GetPal();
+		if(NumPal==2*m)	c2 = GetPal();	else	c2 = c1;
+		my = j<y.ny ? j:0;	mx = j<v.ny ? j:0;	xp = x0 = GetOrgX('y');
 		for(i=0;i<n;i++)
 		{
 			if(i<n-1)	y2 = y.a[i+n*my] + BarWidth*(y.a[i+1+n*my]-y.a[i+n*my])/2;
@@ -800,6 +842,14 @@ void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,mreal zV
 			{	y2 = (y2-y1)/m;		y1 += j*y2;		y2 += y1;	}
 			else
 			{	x0 = GetOrgX('y') + dd.a[i];	dd.a[i] += xx;	xx += x0;	}
+			if(fall)	{	x0 = xp;	xx += x0;	xp = xx;	}
+
+			c = (v.a[i+n*mx]<0) ? c1 : c2;
+			cc[16*i]   = cc[16*i+4] = cc[16*i+8] = cc[16*i+12] = c.r;
+			cc[16*i+1] = cc[16*i+5] = cc[16*i+9] = cc[16*i+13] = c.g;
+			cc[16*i+2] = cc[16*i+6] = cc[16*i+10]= cc[16*i+14] = c.b;
+			cc[16*i+3] = cc[16*i+7] = cc[16*i+11]= cc[16*i+15] = AlphaDef;
+
 			pp[12*i+0] = xx;	pp[12*i+1] = y1;	pp[12*i+2] = zVal;
 			pp[12*i+3] = xx;	pp[12*i+4] = y2;	pp[12*i+5] = zVal;
 			pp[12*i+6] = x0;	pp[12*i+7] = y2;	pp[12*i+8] = zVal;
@@ -809,7 +859,7 @@ void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,mreal zV
 			tt[4*i+2] = ScalePoint(pp[12*i+6],pp[12*i+7],pp[12*i+8]);
 			tt[4*i+3] = ScalePoint(pp[12*i+9],pp[12*i+10],pp[12*i+11]);
 		}
-		quads_plot(n,pp,0,tt);
+		quads_plot(n,pp,cc,tt);
 		if(wire)	for(i=0;i<n;i++)
 		{
 			mreal ct[4]={0,0,0,1}, *pt = pp+12*i;
@@ -820,15 +870,15 @@ void mglGraph::Barh(const mglData &y, const mglData &v, const char *pen,mreal zV
 		}
 	}
 	SetPal(0);	EndGroup();
-	delete []tt;	delete []pp;
+	delete []tt;	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Barh(const mglData &v, const char *pen,mreal zVal, bool above)
+void mglGraph::Barh(const mglData &v, const char *pen,mreal zVal)
 {
 	if(v.nx<2)	{	SetWarn(mglWarnLow,"Barh");	return;	}
 	mglData y(v.nx);
 	y.Fill(Min.y,Max.y);
-	Barh(y,v,pen,zVal,above);
+	Barh(y,v,pen,zVal);
 }
 //-----------------------------------------------------------------------------
 //
@@ -1333,128 +1383,6 @@ void mglGraph::Tube(const mglData &x, const mglData &y, const mglData &z, mreal 
 	Tube(x,y,z,r,pen);
 }
 //-----------------------------------------------------------------------------
-//
-//		All in one :) -- NOTE: OBSOLETE functions
-//
-//-----------------------------------------------------------------------------
-void mglGraph::Plot2(const mglData &a, const char *pen,mreal zVal)
-{
-	if(a.nx<2 || a.ny<2)	{	SetWarn(mglWarnLow,"Plot2");	return;	}
-	mglData x,y;
-	for(long i=0;i<a.ny/2;i++)
-	{
-		x=a.SubData(-1,2*i);	y=a.SubData(-1,2*i+1);
-		Plot(x,y,pen,zVal);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglGraph::Plot3(const mglData &a, const char *pen)
-{
-	if(a.nx<2 || a.ny<3)	{	SetWarn(mglWarnLow,"Plot3");	return;	}
-	mglData x,y,z;
-	for(long i=0;i<a.ny/2;i++)
-	{
-		x=a.SubData(-1,3*i);	y=a.SubData(-1,3*i+1);	z=a.SubData(-1,3*i+2);
-		Plot(x,y,z,pen);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglGraph::Area2(const mglData &a, const char *pen,mreal zVal)
-{
-	if(a.nx<2 || a.ny<2)	{	SetWarn(mglWarnLow,"Area2");	return;	}
-	mglData x,y;
-	for(long i=0;i<a.ny/2;i++)
-	{
-		x=a.SubData(-1,2*i);	y=a.SubData(-1,2*i+1);
-		Area(x,y,pen,false,zVal);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglGraph::Area3(const mglData &a, const char *pen)
-{
-	if(a.nx<2 || a.ny<3)	{	SetWarn(mglWarnLow,"Area3");	return;	}
-	mglData x,y,z;
-	for(long i=0;i<a.ny/2;i++)
-	{
-		x=a.SubData(-1,3*i);	y=a.SubData(-1,3*i+1);	z=a.SubData(-1,3*i+2);
-		Area(x,y,z,pen);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglGraph::Stem2(const mglData &a, const char *pen,mreal zVal)
-{
-	if(a.nx<2 || a.ny<2)	{	SetWarn(mglWarnLow,"Stem2");	return;	}
-	mglData x,y;
-	for(long i=0;i<a.ny/2;i++)
-	{
-		x=a.SubData(-1,2*i);	y=a.SubData(-1,2*i+1);
-		Stem(x,y,pen,zVal);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglGraph::Stem3(const mglData &a, const char *pen)
-{
-	if(a.nx<2 || a.ny<3)	{	SetWarn(mglWarnLow,"Stem3");	return;	}
-	mglData x,y,z;
-	for(long i=0;i<a.ny/2;i++)
-	{
-		x=a.SubData(-1,3*i);	y=a.SubData(-1,3*i+1);	z=a.SubData(-1,3*i+2);
-		Stem(x,y,z,pen);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglGraph::Step2(const mglData &a, const char *pen,mreal zVal)
-{
-	if(a.nx<2 || a.ny<2)	{	SetWarn(mglWarnLow,"Step2");	return;	}
-	mglData x,y;
-	for(long i=0;i<a.ny/2;i++)
-	{
-		x=a.SubData(-1,2*i);	y=a.SubData(-1,2*i+1);
-		Step(x,y,pen,zVal);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglGraph::Step3(const mglData &a, const char *pen)
-{
-	if(a.nx<2 || a.ny<3)	{	SetWarn(mglWarnLow,"Step3");	return;	}
-	mglData x,y,z;
-	for(long i=0;i<a.ny/2;i++)
-	{
-		x=a.SubData(-1,3*i);	y=a.SubData(-1,3*i+1);	z=a.SubData(-1,3*i+2);
-		Step(x,y,z,pen);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglGraph::Bars2(const mglData &a, const char *pen,mreal zVal, bool above)
-{
-	if(a.nx<2 || a.ny<2)	{	SetWarn(mglWarnLow,"Bars2");	return;	}
-	mglData x,y;
-	for(long i=0;i<a.ny/2;i++)
-	{
-		x=a.SubData(-1,2*i);	y=a.SubData(-1,2*i+1);
-		Bars(x,y,pen,zVal,above);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglGraph::Bars3(const mglData &a, const char *pen, bool above)
-{
-	if(a.nx<2 || a.ny<3)	{	SetWarn(mglWarnLow,"Bars3");	return;	}
-	mglData x,y,z;
-	for(long i=0;i<a.ny/2;i++)
-	{
-		x=a.SubData(-1,3*i);	y=a.SubData(-1,3*i+1);	z=a.SubData(-1,3*i+2);
-		Bars(x,y,z,pen,above);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglGraph::Torus2(const mglData &a, const char *sch)
-{
-	if(a.nx<2 || a.ny<2)	{	SetWarn(mglWarnLow,"Torus2");	return;	}
-	mglData x=a.SubData(-1,0);
-	mglData z=a.SubData(-1,1);
-	Torus(x,z,sch);
-}
-//-----------------------------------------------------------------------------
 //		1D plotting functions
 //-----------------------------------------------------------------------------
 /// Draw line plot for points in arrays \a x, \a y, \a z.
@@ -1466,12 +1394,6 @@ void mgl_plot_xy(HMGL gr, const HMDT x, const HMDT y, const char *pen)
 /// Draw line plot for points in arrays \a y.
 void mgl_plot(HMGL gr, const HMDT y, const char *pen)
 {	if(gr && y)	gr->Plot(*y,pen);	}
-/// Draw line plot for points in arrays \a a(0,:),\a a(1,:).
-void mgl_plot_2(HMGL gr, const HMDT a, const char *pen)
-{	if(gr && a)	gr->Plot2(*a,pen);	}
-/// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-void mgl_plot_3(HMGL gr, const HMDT a, const char *pen)
-{	if(gr && a)	gr->Plot3(*a,pen);	}
 /// Draw boxplot for points in arrays \a x, \a y.
 void mgl_boxplot_xy(HMGL gr, const HMDT x, const HMDT y, const char *pen)
 {	if(gr && x && y)	gr->BoxPlot(*x,*y,pen);	}
@@ -1496,20 +1418,9 @@ void mgl_area_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char 
 /// Draw area plot for points in arrays \a x, \a y.
 void mgl_area_xy(HMGL gr, const HMDT x, const HMDT y, const char *pen)
 {	if(gr && x && y)	gr->Area(*x,*y,pen);	}
-/// Draw area plot for points in arrays \a x, \a y.
-void mgl_area_xys(HMGL gr, const HMDT x, const HMDT y, const char *pen)
-{	if(gr && x && y)	gr->Area(*x,*y,pen,true);	}
 /// Draw area plot for points in arrays \a y.
-void mgl_area_s(HMGL gr, const HMDT y, const char *pen)
-{	if(gr && y)	gr->Area(*y,pen,true);	}
 void mgl_area(HMGL gr, const HMDT y, const char *pen)
 {	if(gr && y)	gr->Area(*y,pen);	}
-/// Draw area plot for points in arrays \a a(0,:),\a a(1,:).
-void mgl_area_2(HMGL gr, const HMDT a, const char *pen)
-{	if(gr && a)	gr->Area2(*a, pen);	}
-/// Draw area plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-void mgl_area_3(HMGL gr, const HMDT a, const char *pen)
-{	if(gr && a)	gr->Area3(*a,pen);	}
 /// Fill area between curves \a y1, \a y2 parametrically dependent on \a x.
 void mgl_region_xy(HMGL gr, const HMDT x, const HMDT y1, const HMDT y2, const char *pen, int inside)
 {	if(gr && x && y1 && y2)	gr->Region(*x,*y1,*y2,pen,NAN,inside);	}
@@ -1528,12 +1439,6 @@ void mgl_stem_xy(HMGL gr, const HMDT x, const HMDT y, const char *pen)
 /// Draw vertical lines from points in arrays \a y to mglGraph::Org.
 void mgl_stem(HMGL gr, const HMDT y,	const char *pen)
 {	if(gr && y)	gr->Stem(*y,pen);	}
-/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-void mgl_stem_2(HMGL gr, const HMDT a, const char *pen)
-{	if(gr && a)	gr->Stem2(*a, pen);	}
-/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-void mgl_stem_3(HMGL gr, const HMDT a, const char *pen)
-{	if(gr && a)	gr->Stem3(*a, pen);	}
 /// Draw stairs for points in arrays \a x, \a y, \a z.
 void mgl_step_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *pen)
 {	if(gr && x && y && z)	gr->Step(*x,*y,*z,pen);	}
@@ -1543,12 +1448,6 @@ void mgl_step_xy(HMGL gr, const HMDT x, const HMDT y, const char *pen)
 /// Draw line plot for points in arrays \a y.
 void mgl_step(HMGL gr, const HMDT y,	const char *pen)
 {	if(gr && y)	gr->Step(*y,pen);	}
-/// Draw stairs for points in arrays \a a(0,:),\a a(1,:).
-void mgl_step_2(HMGL gr, const HMDT a, const char *pen)
-{	if(gr && a)	gr->Step2(*a, pen);	}
-/// Draw stairs for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-void mgl_step_3(HMGL gr, const HMDT a, const char *pen)
-{	if(gr && a)	gr->Step3(*a, pen);	}
 /// Draw vertical bars from points in arrays \a x, \a y, \a z to mglGraph::Org.
 void mgl_bars_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *pen)
 {	if(gr && x && y && z)	gr->Bars(*x,*y,*z,pen);	}
@@ -1558,12 +1457,6 @@ void mgl_bars_xy(HMGL gr, const HMDT x, const HMDT y, const char *pen)
 /// Draw vertical bars from points in arrays \a y to mglGraph::Org.
 void mgl_bars(HMGL gr, const HMDT y,	const char *pen)
 {	if(gr && y)	gr->Bars(*y,pen);	}
-/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-void mgl_bars_2(HMGL gr, const HMDT a, const char *pen)
-{	if(gr && a)	gr->Bars2(*a, pen);	}
-/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-void mgl_bars_3(HMGL gr, const HMDT a, const char *pen)
-{	if(gr && a)	gr->Bars3(*a, pen);	}
 /// Draw vertical bars from points in arrays \a x, \a y to mglGraph::Org.
 void mgl_barh_yx(HMGL gr, const HMDT y, const HMDT v, const char *pen)
 {	if(gr && v && y)	gr->Barh(*y,*v,pen);	}
@@ -1573,9 +1466,6 @@ void mgl_barh(HMGL gr, const HMDT v,	const char *pen)
 /// Draw surface of curve {\a r,\a z} rotatation around Z axis
 void mgl_torus(HMGL gr, const HMDT r, const HMDT z, const char *pen)
 {	if(gr && r && z)	gr->Torus(*r, *z, pen);	}
-/// Draw surface of curve {\a a(0,:),\a a(1,:)} rotatation around Z axis for
-void mgl_torus_2(HMGL gr, const HMDT a, const char *pen)
-{	if(gr && a)	gr->Torus2(*a, pen);	}
 //-----------------------------------------------------------------------------
 /// Draw chart for data a
 void mgl_chart(HMGL gr, const HMDT a, const char *col)
@@ -1640,20 +1530,6 @@ void mgl_plot_(uintptr_t *gr, uintptr_t *y,	const char *pen,int l)
 	if(gr && y)	_GR_->Plot(_D_(y),s);
 	delete []s;
 }
-/// Draw line plot for points in arrays \a a(0,:),\a a(1,:).
-void mgl_plot_2_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
-{
-	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
-	if(gr && a)	_GR_->Plot2(_D_(a),s);
-	delete []s;
-}
-/// Draw line plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-void mgl_plot_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
-{
-	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
-	if(gr && a)	_GR_->Plot3(_D_(a),s);
-	delete []s;
-}
 /// Draw boxplot for points in arrays \a x, \a y.
 void mgl_boxplot_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen,int l)
 {
@@ -1712,30 +1588,10 @@ void mgl_area_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen,int
 	delete []s;
 }
 /// Draw area plot for points in arrays \a y.
-void mgl_area_s_(uintptr_t *gr, uintptr_t *y, const char *pen,int l)
-{
-	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
-	if(gr && y)	_GR_->Area(_D_(y),s,true);
-	delete []s;
-}
 void mgl_area_(uintptr_t *gr, uintptr_t *y, const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && y)	_GR_->Area(_D_(y),s);
-	delete []s;
-}
-/// Draw area plot for points in arrays \a a(0,:),\a a(1,:).
-void mgl_area_2_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
-{
-	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
-	if(gr && a)	_GR_->Area2(_D_(a), s);
-	delete []s;
-}
-/// Draw area plot for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-void mgl_area_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
-{
-	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
-	if(gr && a)	_GR_->Area3(_D_(a),s);
 	delete []s;
 }
 /// Fill area between the curves \a y1, \a y2 parametrically dependent on \a x.
@@ -1776,20 +1632,6 @@ void mgl_stem_(uintptr_t *gr, uintptr_t *y,	const char *pen,int l)
 	if(gr && y)	_GR_->Stem(_D_(y),s);
 	delete []s;
 }
-/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-void mgl_stem_2_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
-{
-	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
-	if(gr && a)	_GR_->Stem2(_D_(a), s);
-	delete []s;
-}
-/// Draw vertical lines from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-void mgl_stem_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
-{
-	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
-	if(gr && a)	_GR_->Stem3(_D_(a), s);
-	delete []s;
-}
 /// Draw stairs for points in arrays \a x, \a y, \a z.
 void mgl_step_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen,int l)
 {
@@ -1809,20 +1651,6 @@ void mgl_step_(uintptr_t *gr, uintptr_t *y,	const char *pen,int l)
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && y)	_GR_->Step(_D_(y),s);
-	delete []s;
-}
-/// Draw stairs for points in arrays \a a(0,:),\a a(1,:).
-void mgl_step_2_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
-{
-	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
-	if(gr && a)	_GR_->Step2(_D_(a), s);
-	delete []s;
-}
-/// Draw stairs for points in arrays \a a(0,:),\a a(1,:),\a a(2,:).
-void mgl_step_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
-{
-	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
-	if(gr && a)	_GR_->Step3(_D_(a), s);
 	delete []s;
 }
 /// Draw vertical bars from points in arrays \a x, \a y, \a z to mglGraph::Org.
@@ -1846,20 +1674,6 @@ void mgl_bars_(uintptr_t *gr, uintptr_t *y,	const char *pen,int l)
 	if(gr && y)	_GR_->Bars(_D_(y),s);
 	delete []s;
 }
-/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:) to mglGraph::Org.
-void mgl_bars_2_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
-{
-	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
-	if(gr && a)	_GR_->Bars2(_D_(a), s);
-	delete []s;
-}
-/// Draw vertical bars from points in arrays \a a(0,:),\a a(1,:),\a a(2,:) to mglGraph::Org.
-void mgl_bars_3_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
-{
-	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
-	if(gr && a)	_GR_->Bars3(_D_(a), s);
-	delete []s;
-}
 /// Draw vertical bars from points in arrays \a x, \a y to mglGraph::Org.
 void mgl_barh_yx_(uintptr_t *gr, uintptr_t *y, uintptr_t *v, const char *pen,int l)
 {
@@ -1879,13 +1693,6 @@ void mgl_torus_(uintptr_t *gr, uintptr_t *r, uintptr_t *z, const char *pen,int l
 {
 	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
 	if(gr && r && z)	_GR_->Torus(_D_(r), _D_(z), s);
-	delete []s;
-}
-/// Draw surface of curve {\a a(0,:),\a a(1,:)} rotatation around Z axis for
-void mgl_torus_2_(uintptr_t *gr, uintptr_t *a, const char *pen,int l)
-{
-	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
-	if(gr && a)	_GR_->Torus2(_D_(a), s);
 	delete []s;
 }
 //-----------------------------------------------------------------------------

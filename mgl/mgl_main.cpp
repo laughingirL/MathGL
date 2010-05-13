@@ -421,7 +421,7 @@ char mglGraph::SelectPen(const char *p)
 //		strcpy(last_style, p);
 		const char *col = "wkrgbcymhRGBCYMHWlenuqpLENUQP";
 		const char *stl = " -|;:ji";
-		const char *mrk = "*o+xsd.^v";
+		const char *mrk = "*o+xsd.^v<>";
 		const char *wdh = "123456789";
 		const char *arr = "AKDTVISO_";
 		for(unsigned i=0;i<strlen(p);i++)
@@ -448,6 +448,9 @@ char mglGraph::SelectPen(const char *p)
 			if(mk=='s')	mk = 'S';
 			if(mk=='^')	mk = 'T';
 			if(mk=='v')	mk = 'V';
+			if(mk=='<')	mk = 'L';
+			if(mk=='>')	mk = 'R';
+			if(mk=='*')	mk = 'Y';
 		}
 	}
 	Pen(c, st, BaseLineWidth*w);
@@ -867,7 +870,7 @@ void mglGraph::Title(const char *str,const char *font,mreal size)
 //-----------------------------------------------------------------------------
 void mglGraph::Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt, mreal size, bool rel)
 {
-	Push();	if(rel)	Identity();
+	Push();	if(!rel)	Identity();
 	mglFormula *ox=fx, *oy=fy, *oz=fz;
 	fx = fy = fz = NULL;
 	char *f = new char[strlen(fnt)+1];

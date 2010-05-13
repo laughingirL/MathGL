@@ -333,7 +333,9 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	fprintf(fp,"/d0 {[] 0 setdash} def\n/sd {0 setdash} def\n");
 
 	bool m_p=false,m_x=false,m_d=false,m_v=false,m_t=false,
-		m_s=false,m_a=false,m_o=false,m_O=false,m_T=false,m_V=false,m_S=false,m_D=false;
+		m_s=false,m_a=false,m_o=false,m_O=false,m_T=false,
+		m_V=false,m_S=false,m_D=false,m_Y=false,m_l=false,
+		m_L=false,m_r=false,m_R=false;
 	register long i;
 	// add mark definition if present
 	for(i=0;i<pNum;i++)
@@ -345,6 +347,9 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 		if(P[i].m=='o')	m_o = true;		if(P[i].m=='O')	m_O = true;
 		if(P[i].m=='S')	m_S = true;		if(P[i].m=='D')	m_D = true;
 		if(P[i].m=='V')	m_V = true;		if(P[i].m=='T')	m_T = true;
+		if(P[i].m=='<')	m_l = true;		if(P[i].m=='L')	m_L = true;
+		if(P[i].m=='>')	m_r = true;		if(P[i].m=='R')	m_R = true;
+		if(P[i].m=='Y')	m_Y = true;
 	}
 	if(m_p)	fprintf(fp,"/m_p {sm 0 rm s2 0 rl sm sm rm 0 s2 rl d0} def\n");
 	if(m_x)	fprintf(fp,"/m_x {sm sm rm s2 s2 rl 0 sm 2 mul rm sm 2 mul s2 rl d0} def\n");
@@ -359,6 +364,12 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	if(m_D)	fprintf(fp,"/m_D {sm 0 rm ss ss rl ss sm rl sm sm rl cp} def\n");
 	if(m_V)	fprintf(fp,"/m_V {sm ss 2 div rm s2 0 rl sm sm 1.5 mul rl cp} def\n");
 	if(m_T)	fprintf(fp,"/m_T {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl cp} def\n");
+
+	if(m_Y)	fprintf(fp,"/m_Y {0 sm rm 0 0 rl sm 1.6 mul ss 0.8 mul rm 0 0 rl ss 1.6 mul ss 0.8 mul rm 0 0 rl d0} def\n");
+	if(m_r)	fprintf(fp,"/m_r {ss 2 div sm rm 0 s2 rl sm sm 1.5 mul rl d0 cp} def\n");
+	if(m_l)	fprintf(fp,"/m_l {sm 2 div sm rm 0 s2 rl ss sm 1.5 mul rl d0 cp} def\n");
+	if(m_R)	fprintf(fp,"/m_R {ss 2 div sm rm 0 s2 rl sm sm 1.5 mul rl cp} def\n");
+	if(m_L)	fprintf(fp,"/m_L {sm 2 div sm rm 0 s2 rl ss sm 1.5 mul rl cp} def\n");
 	fprintf(fp,"\n");
 
 	// write definition for all glyphs

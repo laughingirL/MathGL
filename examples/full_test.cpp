@@ -538,7 +538,7 @@ void smgl_sample8(mglGraph *gr)	// 1d plot
 	mglData x(50);		x.Modify("cos(pi*2*x-pi)");
 	gr->Plot(x,y0,"Y+");
 
-	gr->Plot2(y1,"q|");
+	gr->Plot(y1.SubData(-1,0),y1.SubData(-1,1),"q|");
 
 	gr->SubPlot(2,2,2);	gr->Rotate(60,40);
 	mglData z(50);		z.Modify("2*x-1");
@@ -546,7 +546,7 @@ void smgl_sample8(mglGraph *gr)	// 1d plot
 
 	mglData y2(10,3);	y2.Modify("cos(pi*(2*x-1-y))");
 	y2.Modify("2*x-1",2);
-	gr->Plot3(y2,"bo ");
+	gr->Plot(y2.SubData(-1,0),y2.SubData(-1,1),y2.SubData(-1,2),"bo ");
 
 	gr->SubPlot(2,2,3);	gr->Rotate(60,40);
 	gr->Bars(x,y0,z,"ri");		gr->Box();

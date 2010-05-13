@@ -586,25 +586,25 @@ Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}
 @deffn {MGL command} area ydat ['stl'='' @code{zval=nan}]
 @deffnx {MGL command} area xdat ydat ['stl'='' @code{zval=nan}]
 @deffnx {MGL command} area xdat ydat zdat ['stl'='']
-Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} and fills it down to axis (to axis plane in 3D). If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). See also @code{plot, bars, stem, region}. @sref{Area sample}
+Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} and fills it down to axis (to axis plane in 3D). If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). Also you can use gradient filling if number of specified colors is equal to 2*number of curves. If string contain symbol @samp{a} then lines are drawn one above another (like summation). See also @code{plot, bars, stem, region}. @sref{Area sample}
 @end deffn
 
 @deffn {MGL command} region fdat gdat ['stl'='' @code{inside=off}]
 @deffnx {MGL command} region xdat fdat gdat ['stl'='' @code{inside=off}]
-Fills area between curves @{@var{xdat}[i], @var{fdat}[i]@} and @{@var{xdat}[i], @var{gdat}[i]@}. If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x.  Parameter  @code{inside=off} set to fill are with y1<y<y2 else the area with y2<y<y1 will be also filled.
+Fills area between curves @{@var{xdat}[i], @var{fdat}[i]@} and @{@var{xdat}[i], @var{gdat}[i]@}. If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x.  Parameter  @code{inside=off} set to fill are with y1<y<y2 else the area with y2<y<y1 will be also filled. Also you can use gradient filling if number of specified colors is equal to 2*number of curves.
 @c If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). 
 See also @code{area, bars, stem}. @sref{Region sample}
 @end deffn
 
-@deffn {MGL command} bars ydat ['stl'='' @code{zval=nan above=off}]
-@deffnx {MGL command} bars xdat ydat ['stl'='' @code{zval=nan above=off}]
-@deffnx {MGL command} bars xdat ydat zdat ['stl'='' @code{above=off}]
-Draws vertical bars from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} to axis (to axis plane in 3D). If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). Bars are drawn side-by-side (if @code{above = off}) or one above another (if @code{above = on}). Marks at data points are not drawn. See also @code{area, barh, stem, chart}. @sref{Bars sample}
+@deffn {MGL command} bars ydat ['stl'='' @code{zval=nan}]
+@deffnx {MGL command} bars xdat ydat ['stl'='' @code{zval=nan}]
+@deffnx {MGL command} bars xdat ydat zdat ['stl'='']
+Draws vertical bars from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} to axis (to axis plane in 3D). If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). Bars are drawn side-by-side (if @code{above = off}) or one above another (if @code{above = on}). Marks at data points are not drawn. If style contain symbol @samp{a} then lines are drawn one above another. See also @code{area, barh, stem, chart}. @sref{Bars sample}
 @end deffn
 
-@deffn {MGL command} barh vdat ['stl'='' @code{zval=nan above=off}]
-@deffnx {MGL command} bars ydat vdat ['stl'='' @code{zval=nan above=off}]
-Draws horizontal bars from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} to y-axis. If array @var{ydat} is not specified then its an automatic array is used with values equidistantly distributed along y. Bars are drawn side-by-side (if @code{above = off}) or one above another (if @code{above = on}). Marks at data points are not drawn.
+@deffn {MGL command} barh vdat ['stl'='' @code{zval=nan}]
+@deffnx {MGL command} barh ydat vdat ['stl'='' @code{zval=nan}]
+Draws horizontal bars from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} to y-axis. If array @var{ydat} is not specified then its an automatic array is used with values equidistantly distributed along y. Bars are drawn side-by-side (if @code{above = off}) or one above another (if @code{above = on}). Marks at data points are not drawn. If style contain symbol @samp{a} then lines are drawn one above another.
 @c If array @var{zdat} is not specified then @var{zdat}[i] = @var{zval} is used (the default is at the bottom of the bounding box). 
 See also @code{bars}. @sref{Barh sample}
 @end deffn
