@@ -472,7 +472,7 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 	if(!fp)		{	SetWarn(mglWarnOpen,fname);	return;	}
 	fprintf(fp,"<?xml version=\"1.0\" standalone=\"no\"?>\n");
 	fprintf(fp,"<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20000303 Stylable//EN\" \"http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd\">\n");
-	fprintf(fp,"<svg width=\"%d\" height=\"%d\">\n",Width,Height);
+	fprintf(fp,"<svg width=\"%d\" height=\"%d\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n",Width,Height);
 
 	fprintf(fp,"<!--Creator: MathGL library-->\n");
 	fprintf(fp,"<!--Title: %s-->\n<!--CreationDate: %s-->\n\n",descr?descr:fname,ctime(&now));

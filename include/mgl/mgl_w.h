@@ -563,10 +563,10 @@ public:
 	{	mgl_tens(self, y.a, c.a, pen);	};
 	inline void Area(mglData &x, mglData &y, mglData &z, const char *pen="")
 	{	mgl_area_xyz(self, x.a, y.a, z.a, pen);	};
-	inline void Area(mglData &x, mglData &y, const char *pen="", bool sum=false)
-	{	if(sum)	mgl_area_xy(self, x.a, y.a, pen);	else	mgl_area_xys(self, x.a, y.a, pen);	};
-	inline void Area(mglData &y, const char *pen="", bool sum=false)
-	{	if(sum)	mgl_area(self, y.a, pen);	else	mgl_area_s(self, y.a, pen);	};
+	inline void Area(mglData &x, mglData &y, const char *pen="")
+	{	mgl_area_xy(self, x.a, y.a, pen);	};
+	inline void Area(mglData &y, const char *pen="")
+	{	mgl_area(self, y.a, pen);	};
 	inline void Stem(mglData &x, mglData &y, mglData &z, const char *pen="")
 	{	mgl_stem_xyz(self, x.a, y.a, z.a, pen);	};
 	inline void Stem(mglData &x, mglData &y, const char *pen="")
