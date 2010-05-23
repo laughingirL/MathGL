@@ -40,7 +40,8 @@ a. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 33. INCOMPATIBLE CHANGES!!! hide unused arguments (like "size")
 34. Export to X3D
 35. Samples about gradient filling in Area() and Range; + About 'a' and 'f' options of Bars(), Barh() + 2 colors
-
+36. Bug with text + new marks in OpenGL mode
+37. Check if widget functions can be added to mgl_w.h !?!
 
 1. Plot for isolines of vector fields ???
 2. Named arguments in MGL ???

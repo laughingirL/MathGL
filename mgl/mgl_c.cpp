@@ -393,6 +393,37 @@ void mgl_calc_scr(HMGL gr, mreal x, mreal y, mreal z, int *xs, int *ys)
 	if(g && xs && ys)	g->CalcScr(mglPoint(x,y,z),xs,ys);
 }
 //-----------------------------------------------------------------------------
+void mgl_wnd_set_delay(HMGL gr, mreal dt)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->Delay = dt;	}
+void mgl_wnd_set_auto_clf(HMGL gr, int val)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->AutoClf = val;	}
+void mgl_wnd_set_show_mouse_pos(HMGL gr, int val)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->ShowMousePos = val;	}
+void mgl_wnd_set_clf_update(HMGL gr, int val)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->ClfOnUpdate = val;	}
+void mgl_wnd_toggle_alpha(HMGL gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->ToggleAlpha();	}
+void mgl_wnd_toggle_light(HMGL gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->ToggleLight();	}
+void mgl_wnd_toggle_zoom(HMGL gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->ToggleZoom();	}
+void mgl_wnd_toggle_rotate(HMGL gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->ToggleRotate();	}
+void mgl_wnd_toggle_no(HMGL gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->ToggleNo();	}
+void mgl_wnd_update(HMGL gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->Update();	}
+void mgl_wnd_reload(HMGL gr, int o)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->ReLoad(o);	}
+void mgl_wnd_adjust(HMGL gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->Adjust();	}
+void mgl_wnd_next_frame(HMGL gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->NextFrame();	}
+void mgl_wnd_prev_frame(HMGL gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->PrevFrame();	}
+void mgl_wnd_animation(HMGL gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>(gr);	if(g)	g->Animation();	}
+//-----------------------------------------------------------------------------
 mreal mgl_data_get_value(const HMDT d, int i, int j, int k)
 {	return	d->a[i+d->nx*(j+d->ny*k)];	}
 void mgl_data_set_value(HMDT d, mreal v, int i, int j, int k)

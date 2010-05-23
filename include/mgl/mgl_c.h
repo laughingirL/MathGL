@@ -71,6 +71,22 @@ HMGL mgl_create_graph_fltk_dr(HMDR dr, const char *title);
 HMGL mgl_create_graph_qt_dr(HMDR dr, const char *title);
 void mgl_fltk_run();
 void mgl_qt_run();
+
+void mgl_wnd_set_delay(HMGL gr, mreal dt);
+void mgl_wnd_set_auto_clf(HMGL gr, int val);
+void mgl_wnd_set_show_mouse_pos(HMGL gr, int val);
+void mgl_wnd_set_clf_update(HMGL gr, int val);
+void mgl_wnd_toggle_alpha(HMGL gr);
+void mgl_wnd_toggle_light(HMGL gr);
+void mgl_wnd_toggle_zoom(HMGL gr);
+void mgl_wnd_toggle_rotate(HMGL gr);
+void mgl_wnd_toggle_no(HMGL gr);
+void mgl_wnd_update(HMGL gr);
+void mgl_wnd_reload(HMGL gr, int o);
+void mgl_wnd_adjust(HMGL gr);
+void mgl_wnd_next_frame(HMGL gr);
+void mgl_wnd_prev_frame(HMGL gr);
+void mgl_wnd_animation(HMGL gr);
 #endif
 void mgl_set_show_mouse_pos(HMGL gr, int enable);
 void mgl_get_last_mouse_pos(HMGL gr, mreal *x, mreal *y, mreal *z);

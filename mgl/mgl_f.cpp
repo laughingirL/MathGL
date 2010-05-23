@@ -510,6 +510,52 @@ void mgl_calc_scr_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, int *xs, int *ys
 	if(g)	g->CalcScr(mglPoint(*x,*y,*z),xs,ys);
 }
 //-----------------------------------------------------------------------------
+void mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->Delay = *dt;	}
+void mgl_wnd_set_auto_clf_(uintptr_t *gr, int *val)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->AutoClf = *val;	}
+void mgl_wnd_set_show_mouse_pos_(uintptr_t *gr, int *val)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->ShowMousePos = *val;	}
+void mgl_wnd_set_clf_update_(uintptr_t *gr, int *val)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->ClfOnUpdate = *val;	}
+void mgl_wnd_toggle_alpha_(uintptr_t *gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->ToggleAlpha();	}
+void mgl_wnd_toggle_light_(uintptr_t *gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->ToggleLight();	}
+void mgl_wnd_toggle_zoom_(uintptr_t *gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->ToggleZoom();	}
+void mgl_wnd_toggle_rotate_(uintptr_t *gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->ToggleRotate();	}
+void mgl_wnd_toggle_no_(uintptr_t *gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->ToggleNo();	}
+void mgl_wnd_update_(uintptr_t *gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->Update();	}
+void mgl_wnd_reload_(uintptr_t *gr, int *o)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->ReLoad(*o);	}
+void mgl_wnd_adjust_(uintptr_t *gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->Adjust();	}
+void mgl_wnd_next_frame_(uintptr_t *gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->NextFrame();	}
+void mgl_wnd_prev_frame_(uintptr_t *gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->PrevFrame();	}
+void mgl_wnd_animation_(uintptr_t *gr)
+{	mglGraphAB *g = dynamic_cast<mglGraphAB *>((mglGraph *)(*gr));
+	if(g)	g->Animation();	}
+//-----------------------------------------------------------------------------
 mreal mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k)
 {	return	_DT_->a[*i+_DT_->nx*(*j+*k*_DT_->ny)];	}
 void mgl_data_set_value_(uintptr_t *d, mreal *v, int *i, int *j, int *k)

@@ -96,43 +96,59 @@ You should inherit yours class from @code{mglDraw} and reimplement one or both f
 @end deftypemethod
 
 
-@deftypemethod mglGraphAB @code{void} ToggleAlpha ()
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleAlpha ()
+@deftypefnx {C function} @code{int} mgl_wnd_toggle_alpha (@code{HMGL} gr)
 Switch on/off transparency but do not overwrite switches in user drawing function.
-@end deftypemethod
-@deftypemethod mglGraphAB @code{void} ToggleLight ()
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleLight ()
+@deftypefnx {C function} @code{int} mgl_wnd_toggle_light (@code{HMGL} gr)
 Switch on/off lighting but do not overwrite switches in user drawing function.
-@end deftypemethod
-@deftypemethod mglGraphAB @code{void} ToggleZoom ()
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleZoom ()
+@deftypefnx {C function} @code{int} mgl_wnd_toggle_zoom (@code{HMGL} gr)
 Switch on/off zooming by mouse as region selection.
-@end deftypemethod
-@deftypemethod mglGraphAB @code{void} ToggleRotate ()
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleRotate ()
+@deftypefnx {C function} @code{int} mgl_wnd_toggle_rotate (@code{HMGL} gr)
 Switch on/off rotation by mouse. Usually, left button is used for rotation, middle button for shift, right button for zoom/perspective.
-@end deftypemethod
-@deftypemethod mglGraphAB @code{void} ToggleNo ()
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleNo ()
+@deftypefnx {C function} @code{int} mgl_wnd_toggle_no (@code{HMGL} gr)
 Switch off all zooming and rotation and restore initial state.
-@end deftypemethod
-@deftypemethod mglGraphAB @code{void} Update ()
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} Update ()
+@deftypefnx {C function} @code{int} mgl_wnd_update (@code{HMGL} gr)
 Update window contents.
-@end deftypemethod
-@deftypemethod mglGraphAB @code{void} ReLoad (@code{bool} o)
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ReLoad (@code{bool} o)
+@deftypefnx {C function} @code{int} mgl_wnd_reload (@code{HMGL} gr, @code{int} val)
 Reload user data and update picture.
-@end deftypemethod
-@deftypemethod mglGraphAB @code{void} Adjust ()
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} Adjust ()
+@deftypefnx {C function} @code{int} mgl_wnd_adjust (@code{HMGL} gr)
 Adjust size of bitmap to window size.
-@end deftypemethod
-@deftypemethod mglGraphAB @code{void} NextFrame ()
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} NextFrame ()
+@deftypefnx {C function} @code{int} mgl_wnd_next_frame (@code{HMGL} gr)
 Show next frame if one.
-@end deftypemethod
-@deftypemethod mglGraphAB @code{void} PrevFrame ()
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} PrevFrame ()
+@deftypefnx {C function} @code{int} mgl_wnd_prev_frame (@code{HMGL} gr)
 Show previous frame if one.
-@end deftypemethod
-@deftypemethod mglGraphAB @code{void} Animation ()
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} Animation ()
+@deftypefnx {C function} @code{int} mgl_wnd_animation (@code{HMGL} gr)
 Run/stop slideshow (animation) of frames
-@end deftypemethod
+@end deftypefn
 
+@deftypefn {C function} @code{int} mgl_wnd_set_auto_clf (@code{HMGL} gr, @code{int} val)
+@end deftypefn
 @deftypecv {Widget option} mglGraphAB @code{bool} AutoClf
 Clear canvas between drawing. You may switch it off for accumulate previous drawing (for example some points or parts of a picture).
 @end deftypecv
+
+@deftypefn {C function} @code{int} mgl_wnd_set_delay (@code{HMGL} gr, @code{int} val)
+@end deftypefn
 @deftypecv {Widget option} mglGraphAB @code{float} Delay
 Delay for animation in seconds. Default value is 1 sec.
 @end deftypecv
@@ -148,9 +164,12 @@ Calculate 3D coordinate @{x,y,z@} for screen point @{xs,ys@}. At this moment it 
 Calculate screen point @{xs,ys@} for 3D coordinate @{x,y,z@}. The calculation are done for the last used InPlot (@pxref{Transformation matrix}).
 @end deftypefn
 
+@deftypefn {C function} @code{int} mgl_wnd_set_show_mouse_pos (@code{HMGL} gr, @code{int} val)
+@end deftypefn
 @deftypecv {Widget option} mglGraphAB @code{float} ShowMousePos
 Switch to show or not in the widget the last mouse click position.
 @end deftypecv
+
 @deftypecv {Widget option} mglGraphAB @code{mglPoint} LastMousePos
 Last position of mouse click.
 @end deftypecv
@@ -873,7 +892,7 @@ Flag for temporar variable. Temporal variables will be destroyed after script ex
 Callback function for destroying non-temporal variable.
 @end deftypecv
 
-@deftypemethod mglGraphAB @code{void} MoveAfter (@code{mglVar *}var)
+@deftypemethod mglVar @code{void} MoveAfter (@code{mglVar *}var)
 Move variable after @var{var} and copy @code{func} from @code{var} (if @code{func} is not 0)
 @end deftypemethod
 

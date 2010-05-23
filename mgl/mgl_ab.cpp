@@ -37,7 +37,7 @@ mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 	G = 0;	UseLight = false;	st_pos=-1;
 	memset(stack,0,MGL_STACK_ENTRY*13*sizeof(mreal));
 	SetSize(w,h);	ClfOnUpdate = true;	SetDrawReg(1,1,0);
-	AutoClf=true;	Delay = 100;	ObjId=0;
+	AutoClf=true;	Delay = 1;	ObjId=0;
 	NoAutoFactor = false;	ShowMousePos = true;
 	BDef[0] = BDef[1] = BDef[2] = BDef[3] = 255;
 	DefaultPlotParam();

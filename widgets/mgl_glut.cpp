@@ -143,8 +143,7 @@ void _mgl_key_up(unsigned char ch,int ,int )
 		_mgl_glwnd->WriteEPS(str, "Math GL");
 	}
 	if(ch==' ')	_mgl_glwnd->Clf();
-	if(ch=='m')
-		_mgl_glwnd->tt = _mgl_glwnd->tt==0 ? 1:0;
+	if(ch=='m')	_mgl_glwnd->tt = 1-_mgl_glwnd->tt;
 	rL = rL<0 ? 0 : (rL>5 ? 5 : rL);
 	_mgl_glwnd->Light(0,mglPoint(rL*cos(pL)*sin(tL), rL*sin(pL)*sin(tL), rL*cos(tL)),false);
 	_mgl_glwnd->Alpha(Alpha);

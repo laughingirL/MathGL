@@ -57,6 +57,22 @@ void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, mreal *x, mreal *y, mreal *z
 void mgl_calc_scr_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, int *xs, int *ys);
 //void mgl_fltk_thread_();
 //void mgl_qt_thread_();
+
+void mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt);
+void mgl_wnd_set_auto_clf_(uintptr_t *gr, int *val);
+void mgl_wnd_set_show_mouse_pos_(uintptr_t *gr, int *val);
+void mgl_wnd_set_clf_update_(uintptr_t *gr, int *val);
+void mgl_wnd_toggle_alpha_(uintptr_t *gr);
+void mgl_wnd_toggle_light_(uintptr_t *gr);
+void mgl_wnd_toggle_zoom_(uintptr_t *gr);
+void mgl_wnd_toggle_rotate_(uintptr_t *gr);
+void mgl_wnd_toggle_no_(uintptr_t *gr);
+void mgl_wnd_update_(uintptr_t *gr);
+void mgl_wnd_reload_(uintptr_t *gr, int *o);
+void mgl_wnd_adjust_(uintptr_t *gr);
+void mgl_wnd_next_frame_(uintptr_t *gr);
+void mgl_wnd_prev_frame_(uintptr_t *gr);
+void mgl_wnd_animation_(uintptr_t *gr);
 /*****************************************************************************/
 uintptr_t mgl_create_data_();
 uintptr_t mgl_create_data_size_(int *nx, int *ny, int *nz);
