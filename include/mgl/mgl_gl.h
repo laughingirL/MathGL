@@ -52,6 +52,7 @@ public:
 	void SetSize(int ,int ){};
 
 	void Ball(mreal x,mreal y,mreal z,mglColor col=RC,mreal alpha=1);
+	void Glyph(mreal x, mreal y, mreal f, int style, long icode, char col);
 //	void Glyph(mreal x,mreal y, mreal f, int nt, const short *trig, int nl, const short *line);
 protected:
 	mglColor def_col;

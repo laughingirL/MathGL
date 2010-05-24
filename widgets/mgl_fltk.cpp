@@ -700,7 +700,7 @@ HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, voi
 }
 //-----------------------------------------------------------------------------
 void *mgl_fl_tmp(void *)	{	mglFlRun();	return 0;	}
-void mgl_fltk_run()	{	mglFlRun();	}
+void mgl_fltk_run()		{	mglFlRun();	}
 /*void mgl_fltk_thread()
 {
 	static pthread_t tmp;

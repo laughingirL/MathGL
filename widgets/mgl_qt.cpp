@@ -626,6 +626,7 @@ void *mgl_qt_tmp(void *)	{	mglQtRun();	return 0;	}
 	pthread_detach(tmp);
 }*/
 //-----------------------------------------------------------------------------
+void mgl_qt_run()	{	mglQtRun();	}
 void mgl_qt_run_()	{	mglQtRun();	}
 //-----------------------------------------------------------------------------
 #define TR	QObject::tr

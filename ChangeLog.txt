@@ -12,8 +12,9 @@
 	- Reduce animation delay to 1 sec.
 	- Bugfix with newline symbol '\n'
 	- Bugfix with wrong restore previous InPlot() after text with style 'a'.
-	- Bugfix with label position for log-scale axis.
+	- Bugfix for label position for log-scale axis.
 	- Bugfix for mglData::Insert().
+	- Bugfix for text and marks drawing in OpenGL mode.
 	- Add TeX symbol sample in documentation.
 
 

@@ -316,8 +316,8 @@ void mglGraphGL::line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all)
 //-----------------------------------------------------------------------------
 void mglGraphGL::mark_plot(mreal *pp, char type)
 {
-	mreal x=pp[0],y=pp[1],z=pp[2], s=MarkSize*175*font_factor;	// 175 = 0.35*500
-	if(!ScalePoint(x,y,z))	return;
+	mreal x=pp[0],y=pp[1],z=pp[2], s=MarkSize*0.35*font_factor;	// 175 = 0.35*500
+//	if(!ScalePoint(x,y,z))	return;
 	Pen(NC,'-',BaseLineWidth);
 	glColor3f(CDef[0],CDef[1],CDef[2]);
 	if(type=='.')
@@ -360,6 +360,13 @@ void mglGraphGL::mark_plot(mreal *pp, char type)
 			glVertex3f(x-0.6*s,y-0.8*s,z);	glVertex3f(x+0.6*s,y+0.8*s,z);
 			glVertex3f(x+0.6*s,y-0.8*s,z);	glVertex3f(x-0.6*s,y+0.8*s,z);
 			glEnd();				break;
+		case 'Y':
+			glBegin(GL_LINES);
+			glVertex3f(x,y-s,z);			glVertex3f(x,y,z);
+			glVertex3f(x-0.8*s,y+0.6*s,z);	glVertex3f(x,y,z);
+			glVertex3f(x+0.8*s,y+0.6*s,z);	glVertex3f(x,y,z);
+			glEnd();				break;
+
 		case '^':
 			s = s*1.1;
 			glBegin(GL_LINE_LOOP);
@@ -370,6 +377,28 @@ void mglGraphGL::mark_plot(mreal *pp, char type)
 			glBegin(GL_LINE_LOOP);
 			glVertex3f(x-s,y+s/2,z);	glVertex3f(x+s,y+s/2,z);
 			glVertex3f(x,y-s,z);		glEnd();		break;
+
+		case 'R':
+			s = s*1.1;
+			glBegin(GL_TRIANGLES);
+			glVertex3f(x-s/2,y-s,z);	glVertex3f(x-s/2,y+s,z);
+			glVertex3f(x+s,y,z);		glEnd();		break;
+		case '>':
+			s = s*1.1;
+			glBegin(GL_LINE_LOOP);
+			glVertex3f(x-s/2,y-s,z);	glVertex3f(x-s/2,y+s,z);
+			glVertex3f(x+s,y,z);		glEnd();		break;
+		case 'L':
+			s = s*1.1;
+			glBegin(GL_TRIANGLES);
+			glVertex3f(x+s/2,y-s,z);	glVertex3f(x+s/2,y+s,z);
+			glVertex3f(x-s,y,z);		glEnd();		break;
+		case '<':
+			s = s*1.1;
+			glBegin(GL_LINE_LOOP);
+			glVertex3f(x+s/2,y-s,z);	glVertex3f(x+s/2,y+s,z);
+			glVertex3f(x-s,y,z);		glEnd();		break;
+
 		case 'S':
 			glBegin(GL_QUADS);
 			glVertex3f(x-s,y-s,z);		glVertex3f(x+s,y-s,z);
@@ -412,5 +441,71 @@ void mglGraphGL::InPlot(mreal x1,mreal x2,mreal y1,mreal y2,bool rel)
 	glLoadIdentity();
 	glScaled(2,2,1.5);
 	glTranslated(-0.5,-0.5,-0.5);
+}
+//-----------------------------------------------------------------------------
+void mglGraphGL::Glyph(mreal x, mreal y, mreal f, int s, long j, char col)
+{
+	int ss=s&3;
+	mreal p[12];
+	f /= fnt->GetFact(ss);
+	mglColor cc = mglColor(col);
+	if(!cc.Valid())	cc = mglColor(CDef[0],CDef[1],CDef[2]);
+	glColor4f(cc.r,cc.g,cc.b,CDef[3]);
+	if(s&8)
+	{
+		mreal dy = 0.004;
+		if(s&4)	glBegin(GL_LINE_LOOP);
+		else	glBegin(GL_QUADS);
+		p[2]=p[5]=p[8]=p[11]=0;
+		p[0]=p[6]=x;			p[1]=p[4] =y+dy;
+		p[3]=p[9]=fabs(f)+x;	p[7]=p[10]=y-dy;
+		PostScale(p,4);
+		glVertex3f(p[0],p[1],p[2]);		glVertex3f(p[3],p[4],p[5]);
+		glVertex3f(p[9],p[10],p[11]);	glVertex3f(p[6],p[7],p[8]);
+		glEnd();
+	}
+	else if(s&4)
+	{
+		const short *line = fnt->GetLn(ss,j);
+		long ik,ii,il=0, nl=fnt->GetNl(ss,j);
+		if(!line || nl<=0)	return;
+		glBegin(GL_LINES);
+		for(ik=0;ik<nl;ik++)
+		{
+			ii = 2*ik;
+			if(line[ii]==0x3fff && line[ii+1]==0x3fff)	// line breakthrough
+			{	il = ik+1;	continue;	}
+			else if(ik==nl-1 || (line[ii+2]==0x3fff && line[ii+3]==0x3fff))
+			{	// enclose the circle. May be in future this block should be commented
+				p[0]=f*line[ii]+x;	p[1]=f*line[ii+1]+y;	p[2]=0;	ii=2*il;
+				p[3]=f*line[ii]+x;	p[4]=f*line[ii+1]+y;	p[5]=0;
+			}
+			else
+			{	// normal line
+				p[0]=f*line[ii]+x;	p[1]=f*line[ii+1]+y;	p[2]=0;	ii+=2;
+				p[3]=f*line[ii]+x;	p[4]=f*line[ii+1]+y;	p[5]=0;
+			}
+			PostScale(p,2);
+			glVertex3f(p[0],p[1],p[2]);	glVertex3f(p[3],p[4],p[5]);
+		}
+		glEnd();
+	}
+	else
+	{
+		const short *trig = fnt->GetTr(ss,j);
+		register long ik,ii, nt=fnt->GetNt(ss,j);
+		if(!trig || nt<=0)	return;
+		glBegin(GL_TRIANGLES);
+		for(ik=0;ik<nt;ik++)
+		{
+			ii = 6*ik;	p[0]=f*trig[ii]+x;	p[1]=f*trig[ii+1]+y;	p[2]=0;
+			ii+=2;		p[3]=f*trig[ii]+x;	p[4]=f*trig[ii+1]+y;	p[5]=0;
+			ii+=2;		p[6]=f*trig[ii]+x;	p[7]=f*trig[ii+1]+y;	p[8]=0;
+			PostScale(p,3);
+			glVertex3f(p[0],p[1],p[2]);	glVertex3f(p[3],p[4],p[5]);
+			glVertex3f(p[6],p[7],p[8]);
+		}
+		glEnd();
+	}
 }
 //-----------------------------------------------------------------------------
