@@ -21,6 +21,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <zlib.h>
+#include <stdarg.h>
 #ifndef NO_PNG
 #include <png.h>
 #endif
@@ -213,9 +215,7 @@ int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
 	cinfo.in_color_space = JCS_RGB;
 	jpeg_set_defaults(&cinfo);
 	jpeg_start_compress(&cinfo, TRUE);
-
-    jpeg_write_scanlines(&cinfo, p, h);
-
+	jpeg_write_scanlines(&cinfo, p, h);
 	jpeg_finish_compress(&cinfo);
 	jpeg_destroy_compress(&cinfo);
 	fclose(outfile);
@@ -223,26 +223,37 @@ int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
 	return 0;
 }
 //-----------------------------------------------------------------------------
+void mgl_printf(void *fp, bool gz, const char *str, ...)
+{
+	char buf[512];
+	va_list lst;
+	va_start(lst,str);
+	vsprintf(buf,str,lst);
+	va_end(lst);
+	if(gz)	gzprintf(fp, "%s", buf);
+	else	fprintf((FILE *)fp, "%s", buf);
+}
+//---------------------------------------------------------------------------
 int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 {
 	time_t now;
 	time(&now);
 	register long i,j;
+	bool gz = fname[strlen(fname)-1]=='z';
 
-	FILE *fp = fopen(fname,"wt");
-	fprintf(fp,"%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",w,h);
-	fprintf(fp,"%%%%Creator: MathGL library\n%%%%Title: %s\n", fname);
-	fprintf(fp,"%%%%CreationDate: %s\n",ctime(&now));
-//	fprintf(fp,"%%%%EndComments\n\n");
-	fprintf(fp,"%d %d 8 [1 0 0 1 0 0] {currentfile %d string readhexstring pop} false 3 colorimage\n",
+	void *fp = gz ? gzopen(fname,"wt") : fopen(fname,"wt");
+	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",w,h);
+	mgl_printf(fp, gz, "%%%%Creator: MathGL library\n%%%%Title: %s\n", fname);
+	mgl_printf(fp, gz, "%%%%CreationDate: %s\n",ctime(&now));
+	mgl_printf(fp, gz, "%d %d 8 [1 0 0 1 0 0] {currentfile %d string readhexstring pop} false 3 colorimage\n",
 			w,h,1+w*h/40);
 	for(j=h-1;j>=0;j--)	for(i=0;i<w;i++)
 	{
-		if((i+w*(h-j-1))%40==0 && i+j>0)	fprintf(fp,"\n");
-		fprintf(fp,"%02x%02x%02x",p[j][3*i],p[j][3*i+1],p[j][3*i+2]);
+		if((i+w*(h-j-1))%40==0 && i+j>0)	mgl_printf(fp, gz, "\n");
+		mgl_printf(fp, gz, "%02x%02x%02x",p[j][3*i],p[j][3*i+1],p[j][3*i+2]);
 	}
-	fprintf(fp,"\n\nshowpage\n%%%%EOF\n");
-	fclose(fp);
+	mgl_printf(fp, gz, "\n\nshowpage\n%%%%EOF\n");
+	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
 	return 0;
 }
 //-----------------------------------------------------------------------------

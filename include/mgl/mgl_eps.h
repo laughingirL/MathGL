@@ -86,8 +86,8 @@ protected:
 	void add_light(mreal *c, mreal n1,mreal n2, mreal n3);
 	void pnt_plot(long x,long y,mreal z,unsigned char c[4]);
 private:
-	void put_line(FILE *fp, long i, mreal wp,mreal *cp,int st, const char *ifmt, const char *nfmt, bool neg);
-	void put_desc(FILE *fp, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf);
+	void put_line(void *fp, bool gz, long i, mreal wp,mreal *cp,int st, const char *ifmt, const char *nfmt, bool neg);
+	void put_desc(void *fp, bool gz, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf);
 	void draw_prim(mglPrim *pr, mreal *pp, mreal *c);
 };
 //-----------------------------------------------------------------------------

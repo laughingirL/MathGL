@@ -347,7 +347,7 @@ public:
 	inline void ResetFrames()	{	mgl_reset_frames(self);	};
 	inline void Flush()			{	mgl_flush(self);	};
 
-	void GetRGB(char *imgdata, int imglen)
+	inline void GetRGB(char *imgdata, int imglen)
 	{
 		int w=mgl_get_width(self);
 		int h=mgl_get_height(self);

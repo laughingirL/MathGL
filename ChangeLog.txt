@@ -1,5 +1,6 @@
 1.11 Released ?? May 2010
 	- Add marks '<', '>', '#<', '#>', '#*' for left/right wire/solid triangles and Y sign.
+	- Allow to save compressed files with extensions "eps.gz" and "svgz" as output.
 	- Allow 2 colors diagrams (in Bars(), Barh()) -- one for positive, one for negative.
 	- Add style 'f' for Bars(), Barh() which draw diagrams like water-fall ones.
 	- Move argument 'above' of Bars(), Barh() to string (if it contain 'a' symbol).

@@ -19,9 +19,11 @@
  ***************************************************************************/
 #include <stdlib.h>
 #include <time.h>
+#include <zlib.h>
 #include "mgl/mgl_eps.h"
 #include "mgl/mgl_c.h"
 #include "mgl/mgl_f.h"
+void mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
 int mgl_compare_prim(const void *p1, const void *p2)
 {
@@ -317,20 +319,21 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	time_t now;
 	time(&now);
 
-	FILE *fp = fopen(fname,"wt");
+	bool gz = fname[strlen(fname)-1]=='z';
+	void *fp = gz ? gzopen(fname,"wt") : fopen(fname,"wt");
 	if(!fp)		{	SetWarn(mglWarnOpen,fname);	return;	}
-	fprintf(fp,"%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",Width,Height);
-	fprintf(fp,"%%%%Creator: MathGL library\n%%%%Title: %s\n",descr ? descr : fname);
-	fprintf(fp,"%%%%CreationDate: %s\n",ctime(&now));
-	fprintf(fp,"/lw {setlinewidth} def\n/rgb {setrgbcolor} def\n");
-	fprintf(fp,"/np {newpath} def\n/cp {closepath} def\n");
-	fprintf(fp,"/ll {lineto} def\n/mt {moveto} def\n");
-	fprintf(fp,"/rl {rlineto} def\n/rm {rmoveto} def\n/dr {stroke} def\n");
-	fprintf(fp,"/ss {%g} def\n",MarkSize*0.4*font_factor);// remove *font_factor); ???
-	fprintf(fp,"/s2 {%g} def\n",MarkSize*0.8*font_factor);// remove *font_factor); ???
-	fprintf(fp,"/sm {-%g} def\n",MarkSize*0.4*font_factor);//remove *font_factor); ???
-	fprintf(fp,"/m_c {ss 0.3 mul 0 360 arc} def\n");
-	fprintf(fp,"/d0 {[] 0 setdash} def\n/sd {0 setdash} def\n");
+	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",Width,Height);
+	mgl_printf(fp, gz, "%%%%Creator: MathGL library\n%%%%Title: %s\n",descr ? descr : fname);
+	mgl_printf(fp, gz, "%%%%CreationDate: %s\n",ctime(&now));
+	mgl_printf(fp, gz, "/lw {setlinewidth} def\n/rgb {setrgbcolor} def\n");
+	mgl_printf(fp, gz, "/np {newpath} def\n/cp {closepath} def\n");
+	mgl_printf(fp, gz, "/ll {lineto} def\n/mt {moveto} def\n");
+	mgl_printf(fp, gz, "/rl {rlineto} def\n/rm {rmoveto} def\n/dr {stroke} def\n");
+	mgl_printf(fp, gz, "/ss {%g} def\n",MarkSize*0.4*font_factor);// remove *font_factor); ???
+	mgl_printf(fp, gz, "/s2 {%g} def\n",MarkSize*0.8*font_factor);// remove *font_factor); ???
+	mgl_printf(fp, gz, "/sm {-%g} def\n",MarkSize*0.4*font_factor);//remove *font_factor); ???
+	mgl_printf(fp, gz, "/m_c {ss 0.3 mul 0 360 arc} def\n");
+	mgl_printf(fp, gz, "/d0 {[] 0 setdash} def\n/sd {0 setdash} def\n");
 
 	bool m_p=false,m_x=false,m_d=false,m_v=false,m_t=false,
 		m_s=false,m_a=false,m_o=false,m_O=false,m_T=false,
@@ -351,29 +354,29 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 		if(P[i].m=='>')	m_r = true;		if(P[i].m=='R')	m_R = true;
 		if(P[i].m=='Y')	m_Y = true;
 	}
-	if(m_p)	fprintf(fp,"/m_p {sm 0 rm s2 0 rl sm sm rm 0 s2 rl d0} def\n");
-	if(m_x)	fprintf(fp,"/m_x {sm sm rm s2 s2 rl 0 sm 2 mul rm sm 2 mul s2 rl d0} def\n");
-	if(m_s)	fprintf(fp,"/m_s {sm sm rm 0 s2 rl s2 0 rl 0 sm 2 mul rl cp d0} def\n");
-	if(m_d)	fprintf(fp,"/m_d {sm 0 rm ss ss rl ss sm rl sm sm rl cp d0} def\n");
-	if(m_v)	fprintf(fp,"/m_v {sm ss 2 div rm s2 0 rl sm sm 1.5 mul rl d0 cp} def\n");
-	if(m_t)	fprintf(fp,"/m_t {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl d0 cp} def\n");
-	if(m_a)	fprintf(fp,"/m_a {sm 0 rm s2 0 rl sm 1.6 mul sm 0.8 mul rm ss 1.2 mul ss 1.6 mul rl 0 sm 1.6 mul rm sm 1.2 mul ss 1.6 mul rl d0} def\n");
-	if(m_o)	fprintf(fp,"/m_o {ss 0 360 d0 arc} def\n");
-	if(m_O)	fprintf(fp,"/m_O {ss 0 360 d0 arc fill} def\n");
-	if(m_S)	fprintf(fp,"/m_S {sm sm rm 0 s2 rl s2 0 rl 0 sm 2 mul rl cp} def\n");
-	if(m_D)	fprintf(fp,"/m_D {sm 0 rm ss ss rl ss sm rl sm sm rl cp} def\n");
-	if(m_V)	fprintf(fp,"/m_V {sm ss 2 div rm s2 0 rl sm sm 1.5 mul rl cp} def\n");
-	if(m_T)	fprintf(fp,"/m_T {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl cp} def\n");
+	if(m_p)	mgl_printf(fp, gz, "/m_p {sm 0 rm s2 0 rl sm sm rm 0 s2 rl d0} def\n");
+	if(m_x)	mgl_printf(fp, gz, "/m_x {sm sm rm s2 s2 rl 0 sm 2 mul rm sm 2 mul s2 rl d0} def\n");
+	if(m_s)	mgl_printf(fp, gz, "/m_s {sm sm rm 0 s2 rl s2 0 rl 0 sm 2 mul rl cp d0} def\n");
+	if(m_d)	mgl_printf(fp, gz, "/m_d {sm 0 rm ss ss rl ss sm rl sm sm rl cp d0} def\n");
+	if(m_v)	mgl_printf(fp, gz, "/m_v {sm ss 2 div rm s2 0 rl sm sm 1.5 mul rl d0 cp} def\n");
+	if(m_t)	mgl_printf(fp, gz, "/m_t {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl d0 cp} def\n");
+	if(m_a)	mgl_printf(fp, gz, "/m_a {sm 0 rm s2 0 rl sm 1.6 mul sm 0.8 mul rm ss 1.2 mul ss 1.6 mul rl 0 sm 1.6 mul rm sm 1.2 mul ss 1.6 mul rl d0} def\n");
+	if(m_o)	mgl_printf(fp, gz, "/m_o {ss 0 360 d0 arc} def\n");
+	if(m_O)	mgl_printf(fp, gz, "/m_O {ss 0 360 d0 arc fill} def\n");
+	if(m_S)	mgl_printf(fp, gz, "/m_S {sm sm rm 0 s2 rl s2 0 rl 0 sm 2 mul rl cp} def\n");
+	if(m_D)	mgl_printf(fp, gz, "/m_D {sm 0 rm ss ss rl ss sm rl sm sm rl cp} def\n");
+	if(m_V)	mgl_printf(fp, gz, "/m_V {sm ss 2 div rm s2 0 rl sm sm 1.5 mul rl cp} def\n");
+	if(m_T)	mgl_printf(fp, gz, "/m_T {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl cp} def\n");
 
-	if(m_Y)	fprintf(fp,"/m_Y {0 sm rm 0 ss rl sm ss rl s2 0 rm sm sm rl d0} def\n");
-	if(m_r)	fprintf(fp,"/m_r {sm 2 div sm rm 0 s2 rl ss 1.5 mul sm rl d0 cp} def\n");
-	if(m_l)	fprintf(fp,"/m_l {ss 2 div sm rm 0 s2 rl sm 1.5 mul sm rl d0 cp} def\n");
-	if(m_R)	fprintf(fp,"/m_R {sm 2 div sm rm 0 s2 rl ss 1.5 mul sm rl cp} def\n");
-	if(m_L)	fprintf(fp,"/m_L {ss 2 div sm rm 0 s2 rl sm 1.5 mul sm rl cp} def\n");
-	fprintf(fp,"\n");
+	if(m_Y)	mgl_printf(fp, gz, "/m_Y {0 sm rm 0 ss rl sm ss rl s2 0 rm sm sm rl d0} def\n");
+	if(m_r)	mgl_printf(fp, gz, "/m_r {sm 2 div sm rm 0 s2 rl ss 1.5 mul sm rl d0 cp} def\n");
+	if(m_l)	mgl_printf(fp, gz, "/m_l {ss 2 div sm rm 0 s2 rl sm 1.5 mul sm rl d0 cp} def\n");
+	if(m_R)	mgl_printf(fp, gz, "/m_R {sm 2 div sm rm 0 s2 rl ss 1.5 mul sm rl cp} def\n");
+	if(m_L)	mgl_printf(fp, gz, "/m_L {ss 2 div sm rm 0 s2 rl sm 1.5 mul sm rl cp} def\n");
+	mgl_printf(fp, gz, "\n");
 
 	// write definition for all glyphs
-	put_desc(fp,"/%c%c_%04x { np\n", "\t%d %d mt ", "%d %d ll ", "cp\n", "} def\n");
+	put_desc(fp,gz,"/%c%c_%04x { np\n", "\t%d %d mt ", "%d %d ll ", "cp\n", "} def\n");
 	// write primitives
 	mreal cp[3]={-1,-1,-1},wp=-1;
 	int st=0;
@@ -390,75 +393,75 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 			wp=1;
 			if(P[i].s!=MarkSize)
 			{
-				fprintf(fp,"/ss {%g} def\n",P[i].s*0.4*font_factor);
-				fprintf(fp,"/s2 {%g} def\n",P[i].s*0.8*font_factor);
-				fprintf(fp,"/sm {-%g} def\n",P[i].s*0.4*font_factor);
+				mgl_printf(fp, gz, "/ss {%g} def\n",P[i].s*0.4*font_factor);
+				mgl_printf(fp, gz, "/s2 {%g} def\n",P[i].s*0.8*font_factor);
+				mgl_printf(fp, gz, "/sm {-%g} def\n",P[i].s*0.4*font_factor);
 			}
 			switch(P[i].m)
 			{
-			case '+':	fprintf(fp,"np %g %g mt m_p %sdr\n",P[i].x[0],P[i].y[0],str);	break;
-			case 'x':	fprintf(fp,"np %g %g mt m_x %sdr\n",P[i].x[0],P[i].y[0],str);	break;
-			case 's':	fprintf(fp,"np %g %g mt m_s %sdr\n",P[i].x[0],P[i].y[0],str);	break;
-			case 'd':	fprintf(fp,"np %g %g mt m_d %sdr\n",P[i].x[0],P[i].y[0],str);	break;
-			case '*':	fprintf(fp,"np %g %g mt m_a %sdr\n",P[i].x[0],P[i].y[0],str);	break;
-			case 'v':	fprintf(fp,"np %g %g mt m_v %sdr\n",P[i].x[0],P[i].y[0],str);	break;
-			case '^':	fprintf(fp,"np %g %g mt m_t %sdr\n",P[i].x[0],P[i].y[0],str);	break;
-			case 'S':	fprintf(fp,"np %g %g mt m_S %sfill\n",P[i].x[0],P[i].y[0],str);	break;
-			case 'D':	fprintf(fp,"np %g %g mt m_D %sfill\n",P[i].x[0],P[i].y[0],str);	break;
-			case 'V':	fprintf(fp,"np %g %g mt m_V %sfill\n",P[i].x[0],P[i].y[0],str);	break;
-			case 'T':	fprintf(fp,"np %g %g mt m_T %sfill\n",P[i].x[0],P[i].y[0],str);	break;
-			case 'o':	fprintf(fp,"%g %g m_o %sdr\n",P[i].x[0],P[i].y[0],str);break;
-			case 'O':	fprintf(fp,"%g %g m_O %sdr\n",P[i].x[0],P[i].y[0],str);break;
-			case 'Y':	fprintf(fp,"np %g %g mt m_Y %sdr\n",P[i].x[0],P[i].y[0],str);	break;
-			case '<':	fprintf(fp,"np %g %g mt m_l %sdr\n",P[i].x[0],P[i].y[0],str);	break;
-			case '>':	fprintf(fp,"np %g %g mt m_r %sdr\n",P[i].x[0],P[i].y[0],str);	break;
-			case 'L':	fprintf(fp,"np %g %g mt m_L %sfill\n",P[i].x[0],P[i].y[0],str);	break;
-			case 'R':	fprintf(fp,"np %g %g mt m_R %sfill\n",P[i].x[0],P[i].y[0],str);	break;
-			default:	fprintf(fp,"%g %g m_c %sfill\n",P[i].x[0],P[i].y[0],str);
+			case '+':	mgl_printf(fp, gz, "np %g %g mt m_p %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'x':	mgl_printf(fp, gz, "np %g %g mt m_x %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case 's':	mgl_printf(fp, gz, "np %g %g mt m_s %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'd':	mgl_printf(fp, gz, "np %g %g mt m_d %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case '*':	mgl_printf(fp, gz, "np %g %g mt m_a %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'v':	mgl_printf(fp, gz, "np %g %g mt m_v %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case '^':	mgl_printf(fp, gz, "np %g %g mt m_t %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'S':	mgl_printf(fp, gz, "np %g %g mt m_S %sfill\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'D':	mgl_printf(fp, gz, "np %g %g mt m_D %sfill\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'V':	mgl_printf(fp, gz, "np %g %g mt m_V %sfill\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'T':	mgl_printf(fp, gz, "np %g %g mt m_T %sfill\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'o':	mgl_printf(fp, gz, "%g %g m_o %sdr\n",P[i].x[0],P[i].y[0],str);break;
+			case 'O':	mgl_printf(fp, gz, "%g %g m_O %sdr\n",P[i].x[0],P[i].y[0],str);break;
+			case 'Y':	mgl_printf(fp, gz, "np %g %g mt m_Y %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case '<':	mgl_printf(fp, gz, "np %g %g mt m_l %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case '>':	mgl_printf(fp, gz, "np %g %g mt m_r %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'L':	mgl_printf(fp, gz, "np %g %g mt m_L %sfill\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'R':	mgl_printf(fp, gz, "np %g %g mt m_R %sfill\n",P[i].x[0],P[i].y[0],str);	break;
+			default:	mgl_printf(fp, gz, "%g %g m_c %sfill\n",P[i].x[0],P[i].y[0],str);
 			}
 			if(P[i].s!=MarkSize)
 			{
-				fprintf(fp,"/ss {%g} def\n",MarkSize*0.4*font_factor);
-				fprintf(fp,"/s2 {%g} def\n",MarkSize*0.8*font_factor);
-				fprintf(fp,"/sm {-%g} def\n",MarkSize*0.4*font_factor);
+				mgl_printf(fp, gz, "/ss {%g} def\n",MarkSize*0.4*font_factor);
+				mgl_printf(fp, gz, "/s2 {%g} def\n",MarkSize*0.8*font_factor);
+				mgl_printf(fp, gz, "/sm {-%g} def\n",MarkSize*0.4*font_factor);
 			}
 		}
 		else if(P[i].type==2)	// quad
-			fprintf(fp,"np %g %g mt %g %g ll %g %g ll cp %sfill\n",P[i].x[0],P[i].y[0],P[i].x[1],P[i].y[1],P[i].x[2],P[i].y[2],str);
+			mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll cp %sfill\n",P[i].x[0],P[i].y[0],P[i].x[1],P[i].y[1],P[i].x[2],P[i].y[2],str);
 		else if(P[i].type==3)	// trig
-			fprintf(fp,"np %g %g mt %g %g ll %g %g ll %g %g ll cp %sfill\n",P[i].x[0],P[i].y[0],P[i].x[1],P[i].y[1],P[i].x[3],P[i].y[3],P[i].x[2],P[i].y[2],str);
+			mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll %g %g ll cp %sfill\n",P[i].x[0],P[i].y[0],P[i].x[1],P[i].y[1],P[i].x[3],P[i].y[3],P[i].x[2],P[i].y[2],str);
 		else if(P[i].type==1)	// line
 		{
 			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", P[i].w>1 ? P[i].w:1., P[i].c[0],P[i].c[1],P[i].c[2]);
 			wp = P[i].w>1  ? P[i].w:1;	st = P[i].style;
-			put_line(fp,i,wp,cp,st, "np %g %g mt ", "%g %g ll ", false);
+			put_line(fp,gz,i,wp,cp,st, "np %g %g mt ", "%g %g ll ", false);
 			const char *sd = mgl_get_dash(P[i].dash,P[i].w);
-			if(sd && sd[0])	fprintf(fp,"%s [%s] sd dr\n",str,sd);
-			else			fprintf(fp,"%s d0 dr\n",str);
+			if(sd && sd[0])	mgl_printf(fp, gz, "%s [%s] sd dr\n",str,sd);
+			else			mgl_printf(fp, gz, "%s d0 dr\n",str);
 		}
 		else if(P[i].type==4)	// glyph
 		{
 			mreal ss = P[i].s/2, xx = P[i].x[1], yy = P[i].y[1];
-			fprintf(fp,"gsave\t%g %g translate %g %g scale %g rotate %s\n", 
+			mgl_printf(fp, gz, "gsave\t%g %g translate %g %g scale %g rotate %s\n", 
 				P[i].x[0], P[i].y[0], ss, ss, -P[i].w, str);
 			if(P[i].style&8)	// this is "line"
 			{
 				mreal dy = 0.004,f=fabs(P[i].zz[1]);
-				fprintf(fp,"np %g %g mt %g %g ll %g %g ll %g %g ll cp ",
+				mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll %g %g ll cp ",
 					xx,yy+dy, xx+f,yy+dy, xx+f,yy-dy, xx,yy-dy);
 			}
 			else
-				fprintf(fp,"%.3g %.3g translate %g %g scale %c%c_%04x ", 
+				mgl_printf(fp, gz, "%.3g %.3g translate %g %g scale %c%c_%04x ", 
 					xx, yy, P[i].zz[1], P[i].zz[1], P[i].style&1?'b':'n',
 					P[i].style&2?'i':'n', P[i].m);
-			if(P[i].style&4)	fprintf(fp,"dr");
-			else	fprintf(fp,"eofill");
-			fprintf(fp," grestore\n");
+			if(P[i].style&4)	mgl_printf(fp, gz, "dr");
+			else	mgl_printf(fp, gz, "eofill");
+			mgl_printf(fp, gz, " grestore\n");
 		}
 	}
 	for(i=0;i<pNum;i++)		if(P[i].type==-1)	P[i].type = 1;
-	fprintf(fp,"\nshowpage\n%%%%EOF\n");
-	fclose(fp);
+	mgl_printf(fp, gz, "\nshowpage\n%%%%EOF\n");
+	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
 }
 //-----------------------------------------------------------------------------
 void mglGraphPS::WriteSVG(const char *fname,const char *descr)
@@ -468,20 +471,21 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 	time_t now;
 	time(&now);
 
-	FILE *fp = fopen(fname,"wt");
+	bool gz = fname[strlen(fname)-1]=='z';
+	void *fp = gz ? gzopen(fname,"wt") : fopen(fname,"wt");
 	if(!fp)		{	SetWarn(mglWarnOpen,fname);	return;	}
-	fprintf(fp,"<?xml version=\"1.0\" standalone=\"no\"?>\n");
-	fprintf(fp,"<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20000303 Stylable//EN\" \"http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd\">\n");
-	fprintf(fp,"<svg width=\"%d\" height=\"%d\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n",Width,Height);
+	mgl_printf(fp, gz, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
+	mgl_printf(fp, gz, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20000303 Stylable//EN\" \"http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd\">\n");
+	mgl_printf(fp, gz, "<svg width=\"%d\" height=\"%d\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n",Width,Height);
 
-	fprintf(fp,"<!--Creator: MathGL library-->\n");
-	fprintf(fp,"<!--Title: %s-->\n<!--CreationDate: %s-->\n\n",descr?descr:fname,ctime(&now));
+	mgl_printf(fp, gz, "<!--Creator: MathGL library-->\n");
+	mgl_printf(fp, gz, "<!--Title: %s-->\n<!--CreationDate: %s-->\n\n",descr?descr:fname,ctime(&now));
 
 	// write definition for all glyphs
-	put_desc(fp,"<symbol id=\"%c%c_%04x\"><path d=\"", "\tM %d %d ",
+	put_desc(fp,gz,"<symbol id=\"%c%c_%04x\"><path d=\"", "\tM %d %d ",
 		"L %d %d ", "Z\n", "\"/></symbol>\n");
 	// currentColor -> inherit ???
-	fprintf(fp,"<g fill=\"none\" stroke=\"none\" stroke-width=\"0.5\">\n");
+	mgl_printf(fp, gz, "<g fill=\"none\" stroke=\"none\" stroke-width=\"0.5\">\n");
 	// write primitives
 	mreal cp[3]={-1,-1,-1},wp=-1;
 	register long i;
@@ -495,114 +499,114 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 			if(!strchr("xsSoO",P[i].m))	s *= 1.1;
 			wp = 1;
 			if(strchr("SDVTLR",P[i].m))
-				fprintf(fp,"<g fill=\"#%02x%02x%02x\">\n",
+				mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\">\n",
 					int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
 			else
-				fprintf(fp,"<g stroke=\"#%02x%02x%02x\">\n",
+				mgl_printf(fp, gz, "<g stroke=\"#%02x%02x%02x\">\n",
 					int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
 			switch(P[i].m)
 			{
 			case '+':
-				fprintf(fp,"<path d=\"M %g %g L %g %g M %g %g L %g %g\"/>\n",
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g\"/>\n",
 						x-s,y,x+s,y,x,y-s,x,y+s);	break;
 			case 'x':
-				fprintf(fp,"<path d=\"M %g %g L %g %g M %g %g L %g %g\"/>\n",
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g\"/>\n",
 						x-s,y-s,x+s,y+s,x+s,y-s,x-s,y+s);	break;
 			case 's':
 			case 'S':
-				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g L %g %gZ\"/>\n",
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %gZ\"/>\n",
 						x-s,y-s,x+s,y-s,x+s,y+s,x-s,y+s);	break;
 			case 'd':
 			case 'D':
-				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g L %g %gZ\"/>\n",
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %gZ\"/>\n",
 						x-s,y,x,y-s,x+s,y,x,y+s);	break;
 			case '^':
 			case 'T':
-				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
 						x-s,y+s/2,x+s,y+s/2,x,y-s);	break;
 			case 'v':
 			case 'V':
-				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
 						x-s,y-s/2,x+s,y-s/2,x,y+s);	break;
 			case '<':
 			case 'L':
-				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
 						x+s/2,y+s,x+s/2,y-s,x-s,y);	break;
 			case '>':
 			case 'R':
-				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %gZ\"/>\n",
 						x-s/2,y+s,x-s/2,y-s,x+s,y);	break;
 			case 'Y':
-				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g M %g %g L %g %g\"/>\n",
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g M %g %g L %g %g\"/>\n",
 						x,y+s, x,y, x+s,y-s, x,y, x-s,y-s);	break;
 			case 'o':
-				fprintf(fp,"<circle cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n",
+				mgl_printf(fp, gz, "<circle cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n",
 						x,y,s);	break;
 			case 'O':
-				fprintf(fp,"<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n",
+				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n",
 						int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]),x,y,s);	break;
 			case '*':
-				fprintf(fp,"<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g\"/>\n",
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g\"/>\n",
 						x-s,y,x+s,y,x-0.8*s,y-1.6*s,x+0.8*s,y+1.6*s,x+0.8*s,y-1.6*s,x-0.8*s,y+1.6*s);	break;
 			default:
-				fprintf(fp,"<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"0.15\"/>\n",
+				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"0.15\"/>\n",
 						int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]),x,y);	break;
 			}
-			fprintf(fp,"</g>\n");
+			mgl_printf(fp, gz, "</g>\n");
 		}
 		else if(P[i].type==2 && P[i].c[3]>0)
 		{
-			fprintf(fp,"<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n",
+			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n",
 				int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]),P[i].c[3]);
-			fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g Z\"/> </g>\n",
+			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g Z\"/> </g>\n",
 					P[i].x[0],Height-P[i].y[0],P[i].x[1],Height-P[i].y[1],
 					P[i].x[2],Height-P[i].y[2]);
 		}
 		else if(P[i].type==3 && P[i].c[3]>0)
 		{
-			fprintf(fp,"<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n",
+			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n",
 				int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]),P[i].c[3]);
-			fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g L %g %g Z\"/> </g>\n",
+			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %g Z\"/> </g>\n",
 					P[i].x[0],Height-P[i].y[0],P[i].x[1],Height-P[i].y[1],
 					P[i].x[3],Height-P[i].y[3],P[i].x[2],Height-P[i].y[2]);
 		}
 		else if(P[i].type==1)
 		{
 //			const char *dash[]={"", "8 8","4 4","1 3","7 4 1 4","3 2 1 2"};
-			fprintf(fp,"<g stroke=\"#%02x%02x%02x\"",
+			mgl_printf(fp, gz, "<g stroke=\"#%02x%02x%02x\"",
 					int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
-			if(P[i].style)	fprintf(fp," stroke-dasharray=\"%s\"", mgl_get_dash(P[i].dash,P[i].w));
-			if(P[i].w>1)	fprintf(fp," stroke-width=\"%g\"", P[i].w);
+			if(P[i].style)	mgl_printf(fp, gz, " stroke-dasharray=\"%s\"", mgl_get_dash(P[i].dash,P[i].w));
+			if(P[i].w>1)	mgl_printf(fp, gz, " stroke-width=\"%g\"", P[i].w);
 			memcpy(cp,P[i].c,3*sizeof(mreal));
 			wp = P[i].w>1  ? P[i].w:1;	st = P[i].style;
-			put_line(fp,i,wp,cp,st, "><path d=\" M %g %g", " L %g %g", true);
-			fprintf(fp,"\"/> </g>\n");
+			put_line(fp,gz,i,wp,cp,st, "><path d=\" M %g %g", " L %g %g", true);
+			mgl_printf(fp, gz, "\"/> </g>\n");
 		}
 		else if(P[i].type==4)
 		{
 			mreal ss = P[i].s/2, xx = P[i].x[1], yy = P[i].y[1];
 			if(P[i].style&8)	// this is "line"
 			{
-				fprintf(fp,"<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"",
+				mgl_printf(fp, gz, "<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"",
 					P[i].x[0], Height-P[i].y[0], ss, -ss, -P[i].w);
 				if(P[i].style&4)
-					fprintf(fp," stroke=\"#%02x%02x%02x\">", int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
+					mgl_printf(fp, gz, " stroke=\"#%02x%02x%02x\">", int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
 				else
-					fprintf(fp," fill=\"#%02x%02x%02x\">", int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
+					mgl_printf(fp, gz, " fill=\"#%02x%02x%02x\">", int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
 				mreal dy = 0.004,f=fabs(P[i].zz[1]);
-				fprintf(fp,"<path d=\"M %g %g L %g %g L %g %g L %g %g\"/></g>\n",
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %g\"/></g>\n",
 					xx,yy+dy, xx+f,yy+dy, xx+f,yy-dy, xx,yy-dy);
 			}
 			else
 			{
 				ss *= P[i].zz[1];
-				fprintf(fp,"<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"",
+				mgl_printf(fp, gz, "<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"",
 					P[i].x[0], Height-P[i].y[0], ss, -ss, -P[i].w);
 				if(P[i].style&4)
-					fprintf(fp," stroke=\"#%02x%02x%02x\">", int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
+					mgl_printf(fp, gz, " stroke=\"#%02x%02x%02x\">", int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
 				else
-					fprintf(fp," fill=\"#%02x%02x%02x\">", int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
-				fprintf(fp,"<use x=\"%g\" y=\"%g\" xlink:href=\"#%c%c_%04x\"/></g>\n", 
+					mgl_printf(fp, gz, " fill=\"#%02x%02x%02x\">", int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
+				mgl_printf(fp, gz, "<use x=\"%g\" y=\"%g\" xlink:href=\"#%c%c_%04x\"/></g>\n", 
 					xx/P[i].zz[1], yy/P[i].zz[1], P[i].style&1?'b':'n',
 					P[i].style&2?'i':'n', P[i].m);
 			}
@@ -610,8 +614,8 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 	}
 
 	for(i=0;i<pNum;i++)		if(P[i].type==-1)	P[i].type = 1;
-	fprintf(fp,"</g></svg>");
-	fclose(fp);
+	mgl_printf(fp, gz, "</g></svg>");
+	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
 }
 //-----------------------------------------------------------------------------
 void mglGraphPS::Finish()
@@ -667,7 +671,7 @@ void mglGraphPS::pnt_plot(long x,long y, mreal, unsigned char c[4])
 	combine(G4+4*i0,c);	OI[i0]=ObjId;
 }
 //-----------------------------------------------------------------------------
-void mglGraphPS::put_line(FILE *fp, long i, mreal wp, mreal *cp,int st, const char *ifmt, const char *nfmt, bool neg)
+void mglGraphPS::put_line(void *fp, bool gz, long i, mreal wp, mreal *cp,int st, const char *ifmt, const char *nfmt, bool neg)
 {
 	long k = i,j;	// first point
 	mreal x0=P[i].x[0], y0=P[i].y[0];
@@ -690,7 +694,7 @@ void mglGraphPS::put_line(FILE *fp, long i, mreal wp, mreal *cp,int st, const ch
 			}
 	}
 	for(j=i;j<pNum ;j++)	if(P[j].type==-2)	P[j].type = 1;
-	fprintf(fp,ifmt,x0,neg?Height-y0:y0);	ok=true;
+	mgl_printf(fp, gz, ifmt,x0,neg?Height-y0:y0);	ok=true;
 	long m=1;
 	while(ok)
 	{
@@ -701,16 +705,16 @@ void mglGraphPS::put_line(FILE *fp, long i, mreal wp, mreal *cp,int st, const ch
 				{
 					k=j;	P[k].type = -1;
 					x0 = P[k].x[1];	y0=P[k].y[1];
-					fprintf(fp,nfmt,x0,neg?Height-y0:y0);
-					if(m>10)	{	m=0;	fprintf(fp,"\n");	}
+					mgl_printf(fp, gz, nfmt,x0,neg?Height-y0:y0);
+					if(m>10)	{	m=0;	mgl_printf(fp, gz, "\n");	}
 					ok=true;	m++;
 				}
 				else if(P[j].x[1]==x0 && P[j].y[1]==y0)
 				{
 					k=j;	P[k].type = -1;
 					x0 = P[k].x[0];	y0=P[k].y[0];
-					fprintf(fp,nfmt,x0,neg?Height-y0:y0);
-					if(m>10)	{	m=0;	fprintf(fp,"\n");	}
+					mgl_printf(fp, gz, nfmt,x0,neg?Height-y0:y0);
+					if(m>10)	{	m=0;	mgl_printf(fp, gz, "\n");	}
 					ok=true;	m++;
 				}
 			}
@@ -719,7 +723,7 @@ void mglGraphPS::put_line(FILE *fp, long i, mreal wp, mreal *cp,int st, const ch
 //-----------------------------------------------------------------------------
 //put_desc(fp,"%c%c%c_%04x {", "np %d %d mt %d %d ll %d %d ll cp fill\n", 
 //"np %d %d mt ", "%d %d ll ", "cp dr\n", "} def")
-void mglGraphPS::put_desc(FILE *fp, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf)
+void mglGraphPS::put_desc(void *fp, bool gz, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf)
 {
 	register long i,j,n;
 	wchar_t *g;
@@ -736,7 +740,7 @@ void mglGraphPS::put_desc(FILE *fp, const char *pre, const char *ln1, const char
 		// have to describe
 		g[n]=P[i].m;	s[n]=P[i].style&7;	n++;	// add to list of described
 		// "%c%c%c_%04x {"
-		fprintf(fp,pre, P[i].style&1?'b':'n', P[i].style&2?'i':'n', P[i].m);
+		mgl_printf(fp, gz, pre, P[i].style&1?'b':'n', P[i].style&2?'i':'n', P[i].m);
 		long ik,ii;
 		int nl=fnt->GetNl(P[i].style&3,P[i].m);
 		const short *ln=fnt->GetLn(P[i].style&3,P[i].m);
@@ -745,12 +749,12 @@ void mglGraphPS::put_desc(FILE *fp, const char *pre, const char *ln1, const char
 		{
 			ii = 2*ik;
 			if(ln[ii]==0x3fff && ln[ii+1]==0x3fff)	// line breakthrough
-			{	fprintf(fp,"%s",ln3);	np=true;	continue;	}
-			else if(np)	fprintf(fp,ln1,ln[ii],ln[ii+1]);
-			else		fprintf(fp,ln2,ln[ii],ln[ii+1]);
+			{	mgl_printf(fp, gz, "%s",ln3);	np=true;	continue;	}
+			else if(np)	mgl_printf(fp, gz, ln1,ln[ii],ln[ii+1]);
+			else		mgl_printf(fp, gz, ln2,ln[ii],ln[ii+1]);
 			np=false;
 		}
-		fprintf(fp,"%s%s",ln3,suf);	// finish glyph description suf="} def"
+		mgl_printf(fp, gz, "%s%s",ln3,suf);	// finish glyph description suf="} def"
 	}
 	delete []g;		delete []s;
 }
