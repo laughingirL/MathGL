@@ -44,6 +44,10 @@ a. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 37. Check if widget functions can be added to mgl_w.h !?! -- use #define ??!
 38. Load/save GZ compressed files for EPS, SVG, VFM -- add functions for handling "textual" streams like double stof(char **sptr).
 39. Surface by interpolation for arbitrary points {x,y,z}.
+40. Bug with 'a' option of text after Rotate ?!
+41. Update STIX fonts -- new release 
+42. Create PWT fonts
+43. Allow interpolation in MGL if argument is not integer.
 
 1. Plot for isolines of vector fields ???
 2. Named arguments in MGL ???

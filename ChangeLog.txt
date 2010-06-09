@@ -17,6 +17,8 @@
 	- Bugfix for mglData::Insert().
 	- Bugfix for text and marks drawing in OpenGL mode.
 	- Add TeX symbol sample in documentation.
+	- Now curves always start dashing from zero position.
+	- Now MathGL use standard random numbers generator: GSL one or simple rand() if NO_GSL is defined.
 
 
 1.10.2.1 Released 28 March 2010

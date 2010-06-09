@@ -174,6 +174,8 @@ void mgl_set_caxis_(uintptr_t *graph, mreal *C1,mreal *C2);
 void mgl_set_axis_(uintptr_t *graph, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *x0, mreal *y0, mreal *z0);
 void mgl_set_axis_3d_(uintptr_t *graph, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2);
 void mgl_set_axis_2d_(uintptr_t *graph, mreal *x1, mreal *y1, mreal *x2, mreal *y2);
+inline void mgl_set_ranges_(uintptr_t *graph, mreal *x1, mreal *x2, mreal *y1, mreal *y2, mreal *z1, mreal *z2)
+{	mgl_set_axis_3d_(graph, x1,y1,z1,x2,y2,z2);	};
 void mgl_set_origin_(uintptr_t *graph, mreal *x0, mreal *y0, mreal *z0);
 void mgl_set_tick_origin_(uintptr_t *graph, mreal *x0, mreal *y0, mreal *z0);
 void mgl_set_crange_(uintptr_t *graph, uintptr_t *a, int *add);
