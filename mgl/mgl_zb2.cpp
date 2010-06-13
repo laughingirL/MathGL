@@ -28,7 +28,7 @@ void mglGraphAB::curv_plot(long n,mreal *pp,bool *tt)
 	register long i;
 	mreal *p;
 	if(!pp || n<2)	return;
-	PostScale(pp,n);	pPos=0;
+	PostScale(pp,n);
 	for(i=0;i<n-1;i++)
 	{
 		p = pp+3*i;
@@ -44,7 +44,7 @@ void mglGraphAB::curv_plot(long n,mreal *pp,mreal *cc,bool *tt)
 	mreal *p,c1[4],c2[4],a;
 	mglColor c;
 	if(!pp || n<2)	return;
-	PostScale(pp,n);	pPos=0;
+	PostScale(pp,n);
 	for(i=0;i<n-1;i++)
 	{
 		p = pp+3*i;
@@ -74,7 +74,7 @@ void mglGraphAB::curv_plot(long n,mreal *pp,bool *tt,long *nn)
 {
 	register long i,k=0;
 	if(!pp || !nn || n<2)	return;
-	PostScale(pp,n);	pPos=0;
+	PostScale(pp,n);
 	mreal *p1,*p2;
 	for(i=0;i<n;i++)
 	{

@@ -80,6 +80,9 @@ inline mreal Norm(const mglPoint &p)
 /// Class for working with data array
 class mglData
 {
+protected:
+	/// Read data array from HDF4 file
+	void ReadHDF4(const char *fname,const char *data);
 public:
 
 	long nx;		///< number of points in 1st dimensions ('x' dimension)
@@ -136,10 +139,12 @@ public:
 	/// Rearange data dimensions
 	void Rearrange(int mx, int my=0, int mz=0);
 
-	/// Read data array from HDF file
+	/// Read data array from HDF file (parse HDF4 and HDF5 files)
 	void ReadHDF(const char *fname,const char *data);
 	/// Save data to HDF file
 	void SaveHDF(const char *fname,const char *data,bool rewrite=false) const;
+	/// Put HDF data names into buf as '\t' separated.
+	int DatasHDF(const char *fname, char *buf, long size);
 	/// Read data from tab-separated text file with auto determining size
 	bool Read(const char *fname);
 	/// Read data from text file with specifeid size

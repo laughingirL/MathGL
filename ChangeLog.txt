@@ -9,6 +9,7 @@
 	- Axis now can have "arrows" at the end by setting arrow style ("AKDTVISO") for Axis().
 	- Add MGL commands: "insert dat 'dir' [at=0 num=1]", "delete dat 'dir' [at=0 num=1]", "roll Dat 'dir' num".
 	- Add C/Fortran interface functions for widget features.
+	- Add possibility to read HDF4 files.
 	- Now $N is substituted into the second argument of MGL commands 'define', 'defnum', 'defpal', 'defchr'.
 	- Reduce animation delay to 1 sec.
 	- Bugfix with newline symbol '\n'
@@ -18,6 +19,7 @@
 	- Bugfix for text and marks drawing in OpenGL mode.
 	- Add TeX symbol sample in documentation.
 	- Now curves always start dashing from zero position.
+	- Add mini-dash for '=' line style symbol.
 	- Now MathGL use standard random numbers generator: GSL one or simple rand() if NO_GSL is defined.
 
 

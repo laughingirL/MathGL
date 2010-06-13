@@ -48,6 +48,10 @@ a. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 41. Update STIX fonts -- new release 
 42. Create PWT fonts
 43. Allow interpolation in MGL if argument is not integer.
+44. FAQ about cmake for mingw
+45. Check HDF4 reading -- put in Cmake + configure + docs
+46. Docs about SetLegendMarks
+
 
 1. Plot for isolines of vector fields ???
 2. Named arguments in MGL ???

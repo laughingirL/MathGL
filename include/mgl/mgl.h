@@ -556,7 +556,9 @@ public:
 	/// Draw legend of accumulated strings by \a font with \a size
 	void Legend(int n, wchar_t **text, char **style, int where=0x3, const char *font="rL", mreal size=-0.8, mreal llen=0.1);
 	/// Switch on/off box around legend
-	inline void SetLegendBox (bool val)	{	LegendBox=val;	};
+	inline void SetLegendBox(bool val)	{	LegendBox=val;	};
+	/// Number of marks in legend sample
+	inline void SetLegendMarks(int num=1)	{	LegendMarks = num>0?num:1;	};
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ������� ~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Plot data depending on its dimensions and \a type parameter
@@ -1050,6 +1052,7 @@ protected:
 	mreal CloudFactor;			///< Factor of transparency in mglGraph::CloudP and mglGraph::CloudQ
 	bool ScalePuts;				///< Enable/disable point positions scaling in puts
 	bool SmoothColorbar;		///< Use color interpolation in colorbar (default is true)
+	int LegendMarks;			///< Number of marks in the Legend
 
 
 	wchar_t xtt[256];	///< X-tick template (set NULL to use default one ("%.2g" in simplest case))

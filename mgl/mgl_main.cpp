@@ -420,7 +420,7 @@ char mglGraph::SelectPen(const char *p)
 	{
 //		strcpy(last_style, p);
 		const char *col = "wkrgbcymhRGBCYMHWlenuqpLENUQP";
-		const char *stl = " -|;:ji";
+		const char *stl = " -|;:ji=";
 		const char *mrk = "*o+xsd.^v<>";
 		const char *wdh = "123456789";
 		const char *arr = "AKDTVISO_";
@@ -559,6 +559,7 @@ void mglGraph::ClearEq()
 //-----------------------------------------------------------------------------
 void mglGraph::DefaultPlotParam()
 {
+	LegendMarks = 1;
 	FontSize = 5;			BaseLineWidth = 1;
 	Ambient();				Ternary(false);
 	PlotId = "frame";		SelectPen("k-1");

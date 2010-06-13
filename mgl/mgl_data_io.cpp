@@ -909,6 +909,45 @@ void mglData::Fill(const char *eq, mglPoint r1, mglPoint r2, const mglData *v, c
 	}
 }
 //-----------------------------------------------------------------------------
+void mglData::ReadHDF4(const char *fname,const char *data)
+{
+#ifdef HAVE_HDF4
+	int sd = SDstart(fname,DFACC_READ), nn, i;
+	if(sd==-1)	return 0;	// is not a HDF4 file
+	char name[64];
+	SDfileinfo(sd,&nn,&i);
+	for(i=0;i<nn;i++)
+	{
+		int sds, rank, dims[32], type, attr, in[2]={0,0};
+		sds = SDselect(sd,i);
+		SDgetinfo(sds,name,&rank,dims,&type,&attr);
+		if(!strcmp(name,data))	// as I understand there are possible many datas with the same name
+		{
+			if(dims==1)			Create(dims[0]);
+			else if(dims==2)	Create(dims[1],dims[0]);
+			else if(dims==3)	Create(dims[3],dims[1],dims[0]);
+			else	continue;
+			if(type==DFNT_FLOAT32)
+			{
+				float *b = new float[nx*ny*nz];
+				SDreaddata(sds,in,0,dims,b);
+				for(long j=0;j<nx*ny*nz;j++)	a[j]=b[j];
+				delete []b;
+			}
+			if(type==DFNT_FLOAT64)
+			{
+				double *b = new float[nx*ny*nz];
+				SDreaddata(sds,in,0,dims,b);
+				for(long j=0;j<nx*ny*nz;j++)	a[j]=b[j];
+				delete []b;
+			}
+		}
+		SDendaccess(sds);
+	}
+	SDend(sd);
+#endif
+}
+//-----------------------------------------------------------------------------
 #ifdef HAVE_HDF5
 void mglData::SaveHDF(const char *fname,const char *data,bool rewrite) const
 {
@@ -950,13 +989,15 @@ void mglData::ReadHDF(const char *fname,const char *data)
 {
 	hid_t hf,hd,hs;
 	hsize_t dims[3];
-	long rank;
-	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
+	long rank, res = H5Fis_hdf5(fname);
+	if(res<=0)	{	ReadHDF4(fname,data);	return;	}
+	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);	if(hf<0)	return;
 #ifndef H5_USE_16_API
 	hd = H5Dopen(hf,data,H5P_DEFAULT);
 #else
 	hd = H5Dopen(hf,data);
 #endif
+	if(hd<0)	return;
 	hs = H5Dget_space(hd);
 	rank = H5Sget_simple_extent_ndims(hs);
 	if(rank>0 && rank<=3)
@@ -1081,7 +1122,7 @@ bool mglData::ReadAll(const char *templ, bool as_slice)
 	delete []fname;		free(b);
 	return true;
 #else
-    return false;
+	return false;
 #endif
 }
 //-----------------------------------------------------------------------------

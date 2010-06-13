@@ -92,11 +92,12 @@ void mglGraphAB::Pen(mglColor col, char style,mreal width)
 	switch(style)
 	{
 	case '-': PDef = 0xffff;	break;
-	case '|': PDef = 0xff00;	break;
-	case ';': PDef = 0xf0f0;	break;
-	case ':': PDef = 0x8888;	break;
-	case 'j': PDef = 0xfe10;	break;
-	case 'i': PDef = 0xe4e4;	break;
+	case '|': PDef = 0x00ff;	break;
+	case ';': PDef = 0x0f0f;	break;
+	case '=': PDef = 0x3333;	break;
+	case ':': PDef = 0x1111;	break;
+	case 'j': PDef = 0x087f;	break;
+	case 'i': PDef = 0x2727;	break;
 	case ' ': PDef = 0x0000;	break;
 //	case 0:	  PDef = 0x0000;	break;
 //	default:  PDef = 0xffff;
@@ -527,8 +528,14 @@ void mglGraphAB::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
 		pp[0] = x+0.1f*llen;	pp[3] = x+0.9f*llen;	pp[6] = x+0.5f*llen;
 //		ScalePoint(pp[0],pp[1],pp[2]);	ScalePoint(pp[3],pp[4],pp[5]);	ScalePoint(pp[6],pp[7],pp[8]);
 
-		curv_plot(2,pp,0);
-		if(m)	Mark(pp[6],pp[7],pp[8],m);
+		pPos=0;	curv_plot(2,pp,0);
+		if(m)	for(int j=0;j<LegendMarks;j++)
+		{
+			pp[8] = s3;	pp[7] = y+i*h+0.45f*h;
+			pp[6] = x+0.1f*llen + (j+1)*0.8f*llen/(1.+LegendMarks);
+//			ScalePoint(pp[6],pp[7],pp[8]);
+			Mark(pp[6],pp[7],pp[8],m);
+		}
 		SelectPen(TranspType!=2 ? "k-1":"w-1");
 		Putsw(mglPoint(x+(style[i][0]!=0?llen:0), y+i*h+0.3f*h, s3), text[i], font, size);
 	}
