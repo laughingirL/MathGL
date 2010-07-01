@@ -463,6 +463,8 @@ void mgl_legend_(uintptr_t *gr, int *where, const char *font, mreal *size, mreal
 }
 void mgl_set_legend_box_(uintptr_t *gr, int *enable)
 {	_GR_->LegendBox = *enable;	}
+void mgl_set_legend_marks_(uintptr_t *gr, int *num)
+{	_GR_->SetLegendMarks(*num);	}
 //-----------------------------------------------------------------------------
 const unsigned char *mgl_get_rgb_(uintptr_t *graph)
 {

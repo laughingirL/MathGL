@@ -1,5 +1,8 @@
 AC_INIT([mathgl], [1.10], [mathgl.abalakin@gmail.com])
 
+MGL_RELEASE=1.10
+AC_SUBST(MGL_RELEASE)
+
 AC_CONFIG_MACRO_DIR([config])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(mgl)

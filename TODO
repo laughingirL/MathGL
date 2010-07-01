@@ -50,7 +50,7 @@ a. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 43. Allow interpolation in MGL if argument is not integer.
 44. FAQ about cmake for mingw
 45. Check HDF4 reading -- put in Cmake + configure + docs
-46. Docs about SetLegendMarks
+46. Docs about SetLegendMarks/mgl_set_legend_marks
 
 
 1. Plot for isolines of vector fields ???

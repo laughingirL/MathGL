@@ -107,6 +107,7 @@ void mglGraph::Flow(const mglData &x, const mglData &y, const mglData &ax, const
 	SetScheme(sch);
 	// allocate memory
 	if(isnan(zVal)) zVal = Min.z;
+	cnt=(num>0);	num = abs(num);	// redefine central parater
 
 	for(long k=0;k<ax.nz;k++)
 	{
@@ -309,7 +310,8 @@ void mglGraph::Flow(const mglData &x, const mglData &y, const mglData &z, const 
 	if(!(both || (x.nx==n && y.nx==m && z.nx==l)))
 	{	SetWarn(mglWarnDim,"Flow");	return;	}
 	static int cgid=1;	StartGroup("Flow3",cgid++);
-
+	cnt=(num>0);	num = abs(num);	// redefine central parater
+	
 	Arrow1 = Arrow2 = '_';
 	SetScheme(sch);
 

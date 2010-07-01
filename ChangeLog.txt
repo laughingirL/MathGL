@@ -9,6 +9,8 @@
 	- Axis now can have "arrows" at the end by setting arrow style ("AKDTVISO") for Axis().
 	- Add MGL commands: "insert dat 'dir' [at=0 num=1]", "delete dat 'dir' [at=0 num=1]", "roll Dat 'dir' num".
 	- Add C/Fortran interface functions for widget features.
+	- Disable color gradient in Vect() by default -- still enabled in VectC(), VectL().
+	- Add new function SetLegendMarks() to allow multiple marks in Legend() sample.
 	- Add possibility to read HDF4 files.
 	- Now $N is substituted into the second argument of MGL commands 'define', 'defnum', 'defpal', 'defchr'.
 	- Reduce animation delay to 1 sec.
@@ -21,6 +23,7 @@
 	- Now curves always start dashing from zero position.
 	- Add mini-dash for '=' line style symbol.
 	- Now MathGL use standard random numbers generator: GSL one or simple rand() if NO_GSL is defined.
+	- Now parameter 'cnt' of Flow() is always defined by value of 'num' -- cnt = (num>0)!
 
 
 1.10.2.1 Released 28 March 2010

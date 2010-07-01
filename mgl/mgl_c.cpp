@@ -341,6 +341,8 @@ void mgl_legend(HMGL gr, int where, const char *font, mreal size, mreal llen)
 {	if(gr)	gr->Legend(where, font, size, llen);	}
 void mgl_set_legend_box(HMGL gr, int enable)
 {	gr->LegendBox = enable;	}
+void mgl_set_legend_marks(HMGL gr, int num)
+{	gr->SetLegendMarks(num);	}
 //-----------------------------------------------------------------------------
 const unsigned char *mgl_get_rgb(HMGL graph)
 {

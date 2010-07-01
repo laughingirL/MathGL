@@ -316,6 +316,7 @@ public:
 	inline void SetPlotFactor(float val)	{	mgl_set_plotfactor(self, val);	};
 	inline void SetDrawFace(bool enable)	{	mgl_set_draw_face(self, enable);};
 	inline void SetLegendBox(bool enable)	{	mgl_set_legend_box(self, enable);	};
+	inline void SetLegendMarks(int num)		{	mgl_set_legend_marks(self, num);	};
 	inline void LoadFont(const char *name, const char *path=NULL)
 	{	mgl_load_font(self, name, path);	};
 	inline void CopyFont(mglGraph *gr)		{	mgl_copy_font(self, gr->Self());};

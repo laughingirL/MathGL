@@ -277,6 +277,7 @@ void mgl_clear_legend(HMGL graph);
 void mgl_legend_xy(HMGL graph, mreal x, mreal y, const char *font, mreal size, mreal llen);
 void mgl_legend(HMGL graph, int where, const char *font, mreal size, mreal llen);
 void mgl_set_legend_box(HMGL gr, int enable);
+void mgl_set_legend_marks(HMGL gr, int num);
 /*****************************************************************************/
 /*		1D plotting functions												 */
 /*****************************************************************************/

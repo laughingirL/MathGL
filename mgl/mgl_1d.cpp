@@ -946,7 +946,7 @@ void mglGraph::BoxPlot(const mglData &x, const mglData &y, const char *pen,mreal
 			tt[i0] = ScalePoint(pp[3*i0],pp[3*i0+1],pp[3*i0+2]);
 		}
 	}
-	lines_plot(9*n,pp,0,tt,false);
+	lines_plot(9*n,pp,0,tt,false,false);
 	cmap[0]=c1;	cmap[1]=c2;	SetPal(0);	EndGroup();
 	delete []b;		delete []tt;	delete []pp;
 }

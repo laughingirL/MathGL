@@ -78,7 +78,7 @@ void mglGraph::Traj(const mglData &x, const mglData &y, const mglData &z,
 			tt[2*i]   = ScalePoint(pp[6*i],pp[6*i+1],pp[6*i+2]);
 			tt[2*i+1] = ScalePoint(pp[6*i+3],pp[6*i+4],pp[6*i+5]);
 		}
-		vects_plot(n,pp,cc,tt);
+		vects_plot(n,pp,cc,tt,false);
 	}
 	cmap[0]=cm;	NumCol=nc;
 	SetPal(0);	EndGroup();
@@ -167,9 +167,9 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &ax, const
 			tt[2*i0+1]= ScalePoint(pp[6*i0+3],pp[6*i0+4],pp[6*i0+5]);
 		}
 		if(flag & MGL_VEC_DOT)
-			lines_plot(nn*mm,pp,(flag&MGL_VEC_COL)?0:cc,tt,true);
+			lines_plot(nn*mm,pp,(flag&MGL_VEC_COL)?0:cc,tt,true,flag&MGL_VEC_GRD);
 		else
-			vects_plot(nn*mm,pp,(flag&MGL_VEC_COL)?0:cc,tt);
+			vects_plot(nn*mm,pp,(flag&MGL_VEC_COL)?0:cc,tt,flag&MGL_VEC_GRD);
 	}
 	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;
@@ -189,7 +189,7 @@ void mglGraph::Vect(const mglData &ax, const mglData &ay, const char *sch, mreal
 //
 //-----------------------------------------------------------------------------
 void mglGraph::VectL(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch, mreal zVal)
-{	Vect(x,y,ax,ay,sch,zVal,MGL_VEC_COL|MGL_VEC_DOT);	}
+{	Vect(x,y,ax,ay,sch,zVal,MGL_VEC_COL|MGL_VEC_DOT|MGL_VEC_GRD);	}
 //-----------------------------------------------------------------------------
 void mglGraph::VectL(const mglData &ax, const mglData &ay, const char *sch, mreal zVal)
 {
@@ -205,7 +205,7 @@ void mglGraph::VectL(const mglData &ax, const mglData &ay, const char *sch, mrea
 //
 //-----------------------------------------------------------------------------
 void mglGraph::VectC(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch, mreal zVal)
-{	Vect(x,y,ax,ay,sch,zVal,MGL_VEC_LEN|MGL_VEC_DOT);	}
+{	Vect(x,y,ax,ay,sch,zVal,MGL_VEC_LEN|MGL_VEC_DOT|MGL_VEC_GRD);	}
 //-----------------------------------------------------------------------------
 void mglGraph::VectC(const mglData &ax, const mglData &ay, const char *sch, mreal zVal)
 {
@@ -294,9 +294,9 @@ void mglGraph::Vect(const mglData &x, const mglData &y, const mglData &z, const 
 			tt[2*i0+1]= ScalePoint(pp[6*i0+3],pp[6*i0+4],pp[6*i0+5]);
 		}
 		if(flag & MGL_VEC_DOT)
-			lines_plot(nn*mm*ll,pp,(flag&MGL_VEC_COL)?0:cc,tt,true);
+			lines_plot(nn*mm*ll,pp,(flag&MGL_VEC_COL)?0:cc,tt,true,flag&MGL_VEC_GRD);
 		else
-			vects_plot(nn*mm*ll,pp,(flag&MGL_VEC_COL)?0:cc,tt);
+			vects_plot(nn*mm*ll,pp,(flag&MGL_VEC_COL)?0:cc,tt,flag&MGL_VEC_GRD);
 	}
 	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;
@@ -318,7 +318,7 @@ void mglGraph::Vect(const mglData &ax, const mglData &ay, const mglData &az, con
 //
 //-----------------------------------------------------------------------------
 void mglGraph::VectL(const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch)
-{	Vect(x,y,z,ax,ay,az,sch,MGL_VEC_COL|MGL_VEC_DOT);	}
+{	Vect(x,y,z,ax,ay,az,sch,MGL_VEC_COL|MGL_VEC_DOT|MGL_VEC_GRD);	}
 //-----------------------------------------------------------------------------
 void mglGraph::VectL(const mglData &ax, const mglData &ay, const mglData &az, const char *sch)
 {
@@ -337,7 +337,7 @@ void mglGraph::VectL(const mglData &ax, const mglData &ay, const mglData &az, co
 //-----------------------------------------------------------------------------
 void mglGraph::VectC(const mglData &x, const mglData &y, const mglData &z,
 					const mglData &ax, const mglData &ay, const mglData &az, const char *sch)
-{	Vect(x,y,z,ax,ay,az,sch,MGL_VEC_LEN|MGL_VEC_DOT);	}
+{	Vect(x,y,z,ax,ay,az,sch,MGL_VEC_LEN|MGL_VEC_DOT|MGL_VEC_GRD);	}
 //-----------------------------------------------------------------------------
 void mglGraph::VectC(const mglData &ax, const mglData &ay, const mglData &az, const char *sch)
 {

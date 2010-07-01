@@ -221,8 +221,8 @@ protected:
 							mreal *pp,mreal *cc,mreal *kk,mreal *nn,bool wire);
 	void trigs_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool *tt,bool wire, bool bytrig=false);
 	void quads_plot(long n, mreal *pp, mreal *cc, bool *tt);
-	void lines_plot(long n, mreal *pp, mreal *cc, bool *tt, bool ball);
-	void vects_plot(long n, mreal *pp, mreal *cc, bool *tt);
+	void lines_plot(long n, mreal *pp, mreal *cc, bool *tt, bool ball, bool grad);
+	void vects_plot(long n, mreal *pp, mreal *cc, bool *tt, bool grad);
 	void glyph_fill(mreal x,mreal y, mreal f, int nt, const short *trig, mreal *c);
 	void glyph_wire(mreal x,mreal y, mreal f, int nl, const short *line, mreal *c);
 	void glyph_line(mreal x,mreal y, mreal f, mreal *c, bool solid);

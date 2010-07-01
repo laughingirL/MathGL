@@ -125,6 +125,8 @@ FILE *mgl_next_data(const char *fname,int p)
 	{
 		s = mgl_fgetstr(fp);
 		fflush(stdout);
+		if(s[0]=='$' || s[1]=='$' || s[3]=='$')
+		{	fclose(fp);	return NULL;	}
 	} while(!feof(fp) && (s[0]!='-' || s[1]!='-' || s[3]!='-'));
 	if(feof(fp))	// no more data
 	{	fclose(fp);	return NULL;	}

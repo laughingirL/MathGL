@@ -560,11 +560,11 @@ void mglGraphAB::trigs_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool
 	}
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::lines_plot(long n,mreal *pp,mreal *cc,bool *tt, bool b)
+void mglGraphAB::lines_plot(long n,mreal *pp,mreal *cc,bool *tt, bool b,bool grd)
 {
 	register long i;
 	mreal s1[4],s2[4],*p;
-	mglColor col,c1=cmap[0],c2=NumCol>1?cmap[1]:cmap[0];
+	mglColor col,c1=cmap[0],c2=(grd && NumCol>1)?cmap[1]:cmap[0];
 	s1[3] = s2[3] = AlphaDef;
 	PostScale(pp,2*n);
 	long pOld = PDef;
@@ -579,7 +579,7 @@ void mglGraphAB::lines_plot(long n,mreal *pp,mreal *cc,bool *tt, bool b)
 			{
 				col = GetC(cc[i]-0.5,false);
 				s1[0] = col.r;	s1[1] = col.g;	s1[2] = col.b;
-				col = GetC(cc[i],false);
+				if(grd)	col = GetC(cc[i],false);
 				s2[0] = col.r;	s2[1] = col.g;	s2[2] = col.b;
 			}
 		}
@@ -594,11 +594,11 @@ void mglGraphAB::lines_plot(long n,mreal *pp,mreal *cc,bool *tt, bool b)
 	PDef = pOld;
 }
 //-----------------------------------------------------------------------------
-void mglGraphAB::vects_plot(long n,mreal *pp,mreal *cc,bool *tt)
+void mglGraphAB::vects_plot(long n,mreal *pp,mreal *cc,bool *tt, bool grd)
 {
 	register long i;
 	mreal s1[4],s2[4],*p,q[6],d;
-	mglColor col,c1=cmap[0],c2=NumCol>1?cmap[1]:cmap[0];
+	mglColor col,c1=cmap[0],c2=(grd && NumCol>1)?cmap[1]:cmap[0];
 	s1[3] = s2[3] = AlphaDef;
 	PostScale(pp,2*n);
 	long pOld = PDef;
@@ -613,7 +613,7 @@ void mglGraphAB::vects_plot(long n,mreal *pp,mreal *cc,bool *tt)
 			{
 				col = GetC(cc[i]-0.5,false);
 				s1[0] = col.r;	s1[1] = col.g;	s1[2] = col.b;
-				col = GetC(cc[i],false);
+				if(grd)	col = GetC(cc[i],false);
 				s2[0] = col.r;	s2[1] = col.g;	s2[2] = col.b;
 			}
 		}

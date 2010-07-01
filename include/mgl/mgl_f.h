@@ -228,6 +228,7 @@ void mgl_clear_legend_(uintptr_t *graph);
 void mgl_legend_xy_(uintptr_t *graph, mreal *x, mreal *y, const char *font, mreal *size, mreal *llen,int);
 void mgl_legend_(uintptr_t *graph, int *where, const char *font, mreal *size, mreal *llen,int);
 void mgl_set_legend_box_(uintptr_t *gr, int *enable);
+void mgl_set_legend_marks_(uintptr_t *gr, int *num);
 /*****************************************************************************/
 /*		1D plotting functions												 */
 /*****************************************************************************/

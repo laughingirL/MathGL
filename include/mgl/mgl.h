@@ -1124,9 +1124,9 @@ protected:
 	/// Plot quads depending on positions and colors of vertexes on grid
 	virtual void trigs_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool *tt,bool wire, bool bytrig=false)=0;
 	/// Plot series of unconnected lines.
-	virtual void lines_plot(long n, mreal *pp, mreal *cc, bool *tt, bool ball)=0;
+	virtual void lines_plot(long n, mreal *pp, mreal *cc, bool *tt, bool ball, bool grad)=0;
 	/// Plot series of unconnected arrows.
-	virtual void vects_plot(long n, mreal *pp, mreal *cc, bool *tt)=0;
+	virtual void vects_plot(long n, mreal *pp, mreal *cc, bool *tt, bool grad)=0;
 	/// Draw line between points \a p1,\a p2 with color \a c1, \a c2 at edges
 	virtual void line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all=false)=0;
 	/// Draw glyph by peaces
