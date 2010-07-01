@@ -461,7 +461,8 @@ char mglGraph::SelectPen(const char *p)
 //-----------------------------------------------------------------------------
 void mglGraph::SetPal(const char *colors)
 {
-	if(!colors || !colors[0])	colors = DefPal;	// restore default
+	if((!colors || !colors[0]) && NumPal<2)	// restore default if only 1 color
+		colors = DefPal;
 	memset(Pal,0,100*sizeof(mglColor));
 	memset(PalNames,0,101*sizeof(char));
 	int i,n = strlen(colors),k;
@@ -471,8 +472,8 @@ void mglGraph::SetPal(const char *colors)
 		if(!strchr("wkrgbcymhRGBCYMHWlenuqpLENUQP",colors[i]))	continue;
 		PalNames[k] = colors[i];	Pal[k] = mglColor(colors[i]);	k++;
 	}
-	NumPal = k;	//	CurrPal = 0;
-	if(k==0)	SetPal(0);	// if no colors then set default palette
+	if(k>0)	NumPal = k;	//	CurrPal = 0;
+	else	SetPal(0);	// if no colors then set default palette
 }
 //-----------------------------------------------------------------------------
 mglColor mglGraph::GetPal()
