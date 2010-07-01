@@ -461,8 +461,8 @@ char mglGraph::SelectPen(const char *p)
 //-----------------------------------------------------------------------------
 void mglGraph::SetPal(const char *colors)
 {
-	if((!colors || !colors[0]) && NumPal<2)	// restore default if only 1 color
-		colors = DefPal;
+	if(!colors || !colors[0])	// restore default if only 1 color
+	{	if(NumPal<2)	colors = DefPal;	else	return;	}
 	memset(Pal,0,100*sizeof(mglColor));
 	memset(PalNames,0,101*sizeof(char));
 	int i,n = strlen(colors),k;
