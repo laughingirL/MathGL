@@ -312,7 +312,11 @@ bool mglData::Read(const char *fname)
 	char *buf = new char[nb+1];
 	fseek(fp,0,SEEK_SET);
 	memset(buf,0,nb*sizeof(char));
-	fread(buf,nb,1,fp);
+	if(fread(buf,nb,1,fp)==0)
+	{
+		if(!a)	Create(1,1,1);
+		fclose(fp);	return false;
+	}
 	fclose(fp);
 
 	bool first=false,com=false;
@@ -376,7 +380,12 @@ bool mglData::Read(const char *fname,int mx,int my,int mz)
 	long nb = ftell(fp);
 	char *buf = new char[nb+1];
 	fseek(fp,0,SEEK_SET);
-	memset(buf,0,nb);	fread(buf,nb,1,fp);
+	memset(buf,0,nb);
+	if(fread(buf,nb,1,fp)==0)
+	{
+		if(!a)	Create(1,1,1);
+		fclose(fp);	return false;
+	}
 	fclose(fp);
 
 	register long i=0, j=0, k=0;
@@ -419,7 +428,12 @@ bool mglData::ReadMat(const char *fname,int dim)
 	long nb = ftell(fp);
 	char *buf = new char[nb+1];
 	fseek(fp,0,SEEK_SET);
-	memset(buf,0,nb);	fread(buf,nb,1,fp);
+	memset(buf,0,nb);
+	if(fread(buf,nb,1,fp)==0)
+	{
+		if(!a)	Create(1,1,1);
+		fclose(fp);	return false;
+	}
 	fclose(fp);
 
 	register long i=0,j=0;

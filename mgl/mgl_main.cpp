@@ -1044,7 +1044,7 @@ void mglGraph::ShowImage(const char *viewer, bool keep)
 	if(keep)
 	{
 		sprintf(cmd,"%s %s &", viewer,fname);
-		system(cmd);
+		if(system(cmd)==-1)	printf("Error to call external viewver\n");
 #ifdef WIN32
 //		sleep(2);
 		sprintf(cmd,"del %s", fname);
@@ -1058,7 +1058,7 @@ void mglGraph::ShowImage(const char *viewer, bool keep)
 	else
 		sprintf(cmd,"%s %s; rm %s", viewer,fname,fname);
 #endif
-	system(cmd);
+	if(system(cmd)==-1)	printf("Error to call external viewver\n");
 	delete []cmd;
 }
 //-----------------------------------------------------------------------------

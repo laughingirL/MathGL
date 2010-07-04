@@ -39,8 +39,8 @@ void mgl_strcls(char *str)
 	}
 	for(n=0;n<strlen(tmp);n++)		if(tmp[n]!=' ')	break;
 	for(i=strlen(tmp)-1;i>0;i--)	if(tmp[i]!=' ')	break;
-	tmp[i+1]=0;
-	strcpy(str,&(tmp[n]));
+	tmp[i+1]=0;	strcpy(str,&(tmp[n]));
+	delete []tmp;
 }
 //---------------------------------------------------------------------------
 int mgl_strpos(const char *str,char *fnd)
@@ -66,7 +66,7 @@ char *mgl_fgetstr(FILE *fp)
 	static char s[256];
 	do
 	{
-		fgets(s,256,fp);
+		if(!fgets(s,256,fp))	break;
 		mgl_strtrim(s);
 //		strlwr(s);
 	} while(!feof(fp) && (s[0]==0 || s[0]=='%' || s[0]=='#'));
@@ -109,8 +109,8 @@ FILE *mgl_next_data(const char *fname,int p)
 
 	if(p>0)	pos = p;
 	if(fname==NULL)	return NULL;
-	if(pos==0)	getcwd(path,256);	// remember ini dyrectory
-	else		chdir(path);
+	if(pos==0)	{	if(!getcwd(path,256))	return 0;	}	// remember ini dyrectory
+	else		{	if(chdir(path)==-1)		return 0;	}
 
 	// read the initial (common) date from "mbrs.ini"
 	FILE *fp=fopen(fname,"rt");

@@ -2999,8 +2999,12 @@ int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10])
 			if(gr->Message)	sprintf(gr->Message,"Wrong file %s",a[3].s);
 			return 0;
 		}
-		for(i=0;i<n;i++)	fgets(buf,1024,fp);
-		fgets(buf,1024,fp);
+		for(i=0;i<n;i++)	if(!fgets(buf,1024,fp))	continue;
+		if(!fgets(buf,1024,fp))
+		{
+			if(gr->Message)	sprintf(gr->Message,"Couldn't read %d-th string of file %s",n,a[3].s);
+			fclose(fp);	return 0;
+		}
 		fclose(fp);
 		gr->Text(mglPoint(a[0].v,a[1].v,a[2].v),buf, (k[5]==2 && a[5].s[0]!=0)?a[5].s:gr->FontDef, k[6]==3?a[6].v:-1.4);
 	}
@@ -3013,8 +3017,12 @@ int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10])
 			if(gr->Message)	sprintf(gr->Message,"Wrong file %s",a[2].s);
 			return 0;
 		}
-		for(i=0;i<n;i++)	fgets(buf,1024,fp);
-		fgets(buf,1024,fp);
+		for(i=0;i<n;i++)	if(!fgets(buf,1024,fp))	continue;
+		if(!fgets(buf,1024,fp))
+		{
+			if(gr->Message)	sprintf(gr->Message,"Couldn't read %d-th string of file %s",n,a[3].s);
+			fclose(fp);	return 0;
+		}
 		fclose(fp);
 		gr->Text(mglPoint(a[0].v,a[1].v,gr->Min.z),buf, (k[4]==2 && a[4].s[0]!=0)?a[4].s:gr->FontDef, k[5]==3?a[5].v:-1.4);
 	}

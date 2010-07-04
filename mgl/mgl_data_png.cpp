@@ -99,31 +99,28 @@ void mglData::Import(const char *fname,const char *scheme,mreal v1,mreal v2)
 {
 	if(v1>=v2)	return;
 	long num=0;
-
 #ifndef NO_PNG
 	FILE *fp = fopen(fname, "rb");
 	if (!fp)	return;
 	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-	if (!png_ptr)	return;
+	if (!png_ptr)	{	fclose(fp);	return;	}
 	png_infop info_ptr = png_create_info_struct(png_ptr);
 	if (!info_ptr)
-	{	png_destroy_read_struct(&png_ptr,0, 0);	return;	}
+	{	png_destroy_read_struct(&png_ptr,0,0);	fclose(fp);	return;	}
 	png_infop end_info = png_create_info_struct(png_ptr);
 	if (!end_info)
-	{	png_destroy_read_struct(&png_ptr, &info_ptr, 0);	return;	}
+	{	png_destroy_read_struct(&png_ptr,&info_ptr,0);	fclose(fp);	return;	}
 
 	png_init_io(png_ptr, fp);
 	png_read_png(png_ptr, info_ptr,
 		PNG_TRANSFORM_STRIP_ALPHA|PNG_TRANSFORM_PACKING|
 		PNG_TRANSFORM_STRIP_16|PNG_TRANSFORM_EXPAND,0);
 	unsigned char **rows = png_get_rows(png_ptr, info_ptr);
-
 	unsigned char *c = mgl_create_scheme(scheme,num);
 	if(num>1)
 	{
 		long w=png_get_image_width(png_ptr, info_ptr);
 		long h=png_get_image_height(png_ptr, info_ptr);
-
 		Create(w,h,1);
 		register long i,j,k;
 		long pos=0,val,mval=256;
@@ -147,7 +144,6 @@ void mglData::Import(const char *fname,const char *scheme,mreal v1,mreal v2)
 void mglData::Export(const char *fname,const char *scheme,mreal v1,mreal v2,int ns) const
 {
 	register long i,j,i0,k;
-
 	if(v1>v2)	return;
 	if(v1==v2)
 	{
@@ -156,7 +152,6 @@ void mglData::Export(const char *fname,const char *scheme,mreal v1,mreal v2,int 
 		{	if(a[i]<v1)	v1=a[i];	if(a[i]>v2)	v2=a[i];	}
 	}
 	if(v1==v2)	return;
-
 #ifndef NO_PNG
 	long num=0;
 	unsigned char *c = mgl_create_scheme(scheme,num);
@@ -165,7 +160,6 @@ void mglData::Export(const char *fname,const char *scheme,mreal v1,mreal v2,int 
 	unsigned char **p = (unsigned char **)malloc(ny*sizeof(unsigned char *));
 	unsigned char *d = (unsigned char *)malloc(3*nx*ny*sizeof(unsigned char));
 	for(i=0;i<ny;i++)	p[i] = d+3*nx*(ny-1-i);
-
 	if(ns<0 || ns>=nz)	ns=0;
 	long dd = nx*ny*ns;
 	for(i=0;i<ny;i++)	for(j=0;j<nx;j++)
@@ -179,13 +173,11 @@ void mglData::Export(const char *fname,const char *scheme,mreal v1,mreal v2,int 
 
 	FILE *fp = fopen(fname, "wb");
 	if (!fp)	return;
-
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-	if (!png_ptr)	return;
+	if (!png_ptr)	{	fclose(fp);	return;	}
 	png_infop info_ptr = png_create_info_struct(png_ptr);
 	if (!info_ptr)
-	{	png_destroy_write_struct(&png_ptr,0);	return;	}
-
+	{	png_destroy_write_struct(&png_ptr,0);	fclose(fp);	return;	}
 	png_init_io(png_ptr, fp);
 	png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
 	png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
@@ -194,7 +186,6 @@ void mglData::Export(const char *fname,const char *scheme,mreal v1,mreal v2,int 
 	png_set_rows(png_ptr, info_ptr, p);
 	png_write_png(png_ptr, info_ptr,  PNG_TRANSFORM_IDENTITY, 0);
 	png_write_end(png_ptr, info_ptr);
-
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);	free(p);	free(d);
 #endif

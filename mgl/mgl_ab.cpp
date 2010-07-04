@@ -44,7 +44,7 @@ mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 }
 //-----------------------------------------------------------------------------
 mglGraphAB::~mglGraphAB()
-{	if(G)	{	delete []G;	delete []G4;	}	}
+{	if(G)	{	delete []G;	delete []G4;	delete []OI;	}	}
 //-----------------------------------------------------------------------------
 void mglGraphAB::Pop()
 {
@@ -358,7 +358,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	if(font && strchr(font, 'a'))	{	Labelw(p.x, p.y, wcs,font,size,true);	return;	}
 
 	wchar_t *wcl;
-	int wn=0;
+	unsigned wn=0;
 	const wchar_t *wnl=0;
 	for(wn=0;wn<wcslen(wcs);wn++)
 		if(wcs[wn]=='\n' || (wcs[wn]=='\\' && wcs[wn+1]=='n' && strchr(" \t,.{[]1234567890",wcs[wn+2])))

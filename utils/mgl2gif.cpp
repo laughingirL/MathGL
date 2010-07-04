@@ -99,7 +99,7 @@ int main(int narg, char **arg)
 		// first read animation parameters from file
 		while(!feof(fp))
 		{
-			fgetws(str,8192,fp);
+			if(!fgetws(str,8192,fp))	break;
 			wcstrim_mgl(str);
 			if(str[0]=='#' && str[1]=='#' && str[2]=='a' && str[3]==' ')
 			{

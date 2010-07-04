@@ -537,11 +537,11 @@ void mglFont::read_data(FILE *fp, float *ff, short *wdt, short *numl,
 	int tmpw, tmpnl, tmpnt;
 	unsigned s,i,n, tmpi, tmppl, tmppt;
 	long j;
-
-	fgets(str,256,fp);				// first string is comment (not used)
-	fgets(str,256,fp);				// second string have information
+	// first string is comment (not used), second string have information
+	if(!fgets(str,256,fp) || !fgets(str,256,fp))	return;
 	sscanf(str, "%u%f%d", &n, ff, &s);
 	buf = (short *)realloc(buf, (cur+s)*sizeof(short));	// prealocate buffer
+	if(!buf)	return;
 
 	for(i=0;i<n;i++)
 	{
@@ -606,11 +606,12 @@ bool mglFont::read_main(const char *base, const char *path, unsigned &cur)
 
 	fp = fopen(str,"r");
 	if(!fp)	return false;			// this font must be in any case
-	fgets(str,256,fp);				// first string is comment (not used)
-	fgets(str,256,fp);				// second string have information
+	// first string is comment (not used), second string have information
+	if(!fgets(str,256,fp) || !fgets(str,256,fp))	return false;
 	sscanf(str, "%u%f%u", &numg, fact, &s);
 	fact[1] = fact[2] = fact[3] = fact[0];	// copy default factor for other font styles;
 	buf = (short *)malloc(s*sizeof(short));	// prealocate buffer
+	if(!buf)	return false;
 	// now allocate memory for all fonts
 	mem_alloc();
 	// and load symbols itself
