@@ -243,39 +243,42 @@ void mglGraph::Labelw(char dir,const wchar_t *text,mreal pos,mreal size,mreal sh
 {
 	mreal t, x0, y0, z0;
 	SelectPen("k-1");
+	char font[33]="C";
+	if(pos<-0.2)	font[0]='L';	if(pos>0.2)	font[0]='R';
+	strcat(font,FontDef);
 	x0 = GetOrgX(dir);	y0 = GetOrgY(dir);	z0 = GetOrgZ(dir);
 	if(size<=0)	size = -size*FontSize;
 	if(dir=='x')
 	{
 		if(dx)	t = (Min.x+Max.x+pos*(Max.x-Min.x))/2;
 		else	t = Min.x*pow(Max.x/Min.x, (pos+1)/2);
-		Putsw(mglPoint(t,y0,z0),text,FontDef,size,'X',shift);
+		Putsw(mglPoint(t,y0,z0),text,font,size,'X',shift);
 	}
 	if(dir=='y')
 	{
 		if(TernAxis)
 		{
 			t = (pos+1)/2;
-			Putsw(mglPoint(Max.x-t,t,z0),text,FontDef,size,'T',shift);
+			Putsw(mglPoint(Max.x-t,t,z0),text,font,size,'T',shift);
 		}
 		else
 		{
 			if(dy)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 			else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
-			Putsw(mglPoint(x0,t,z0),text,FontDef,size,'Y',shift);
+			Putsw(mglPoint(x0,t,z0),text,font,size,'Y',shift);
 		}
 	}
 	if(dir=='z')
 	{
 		if(dz)	t = (Min.z+Max.z+pos*(Max.z-Min.z))/2;
 		else	t = Min.z*pow(Max.z/Min.z, (pos+1)/2);
-		Putsw(mglPoint(x0,y0,t),text,FontDef,size,'Z',shift);
+		Putsw(mglPoint(x0,y0,t),text,font,size,'Z',shift);
 	}
 	if(dir=='t' && TernAxis)
 	{
 		if(dx)	t = (Min.x+Max.x-pos*(Max.x-Min.x))/2;
 		else	t = Max.x*pow(Min.x/Max.x, (pos+1)/2);
-		Putsw(mglPoint(x0,t,z0),text,FontDef,size,'Y',shift);
+		Putsw(mglPoint(x0,t,z0),text,font,size,'Y',shift);
 	}
 }
 //-----------------------------------------------------------------------------

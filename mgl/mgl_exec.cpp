@@ -1123,6 +1123,32 @@ void mglc_flow(wchar_t out[1024], long , mglArg *a, int k[10])
 			a[0].v,a[1].v,a[2].v,a[3].s,a[4].s,a[5].s,k[6]==2?a[6].s:"");
 }
 //-----------------------------------------------------------------------------
+int mgls_grad(mglGraph *gr, long , mglArg *a, int k[10])
+{
+	int i;
+	for(i=0;i<7;i++)	if(k[i]!=1)	break;
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		gr->Grad(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), k[4]==2?a[4].s:0, k[5]==3?int(a[5].v):5);
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		gr->Grad(*(a[0].d),*(a[1].d),*(a[2].d), k[3]==2?a[3].s:0, k[4]==3?int(a[4].v):5, k[5]==3?a[5].v:NAN);
+	else if(k[0]==1)
+		gr->Grad(*(a[0].d), k[1]==2?a[1].s:0, k[2]==3?int(a[2].v):5, k[3]==3?a[3].v:NAN);
+	else	return 1;
+	return 0;
+}
+void mglc_grad(wchar_t out[1024], long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"gr->Grad(%s, %s, %s, %s, \"%s\", %d, %g);", 
+			a[0].s, a[1].s, a[2].s, a[3].s, k[4]==2?a[4].s:"", k[5]==3?int(a[5].v):5);
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		mglprintf(out,1024,L"gr->Grad(%s, %s, %s, \"%s\", %d, %g);", 
+			a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"", k[4]==3?int(a[4].v):5, k[5]==3?a[5].v:NAN);
+	else if(k[0]==1)
+		mglprintf(out,1024,L"gr->Grad(%s, \"%s\", %d, %g);", 
+			a[0].s, k[1]==2?a[1].s:"", k[2]==3?int(a[2].v):5, k[3]==3?a[3].v:NAN);
+}
+//-----------------------------------------------------------------------------
 int mgls_fill(mglGraph *gr, long , mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==2)
@@ -1944,14 +1970,18 @@ void mglc_surf3a(wchar_t out[1024], long , mglArg *a, int k[10])
 //-----------------------------------------------------------------------------
 int mgls_subplot(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	if(k[0]==3 && k[1]==3 && k[2]==3)
+	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
+		gr->SubPlot(int(a[0].v), int(a[1].v), int(a[2].v), a[3].s);
+	else if(k[0]==3 && k[1]==3 && k[2]==3)
 		gr->SubPlot(int(a[0].v), int(a[1].v), int(a[2].v), k[3]==3?a[3].v:0, k[4]==3?a[4].v:0);
 	else	return 1;
 	return 0;
 }
 void mglc_subplot(wchar_t out[1024], long , mglArg *a, int k[10])
 {
-	if(k[0]==3 && k[1]==3 && k[2]==3)
+	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
+		mglprintf(out,1024,L"gr->SubPlot(%d, %d, %d, \"%s\");", int(a[0].v), int(a[1].v), int(a[2].v), a[3].s);
+	else if(k[0]==3 && k[1]==3 && k[2]==3)
 		mglprintf(out,1024,L"gr->SubPlot(%d, %d, %d, %g, %g);", int(a[0].v), int(a[1].v), int(a[2].v), k[3]==3?a[3].v:0, k[4]==3?a[4].v:0);
 }
 //-----------------------------------------------------------------------------
@@ -2177,12 +2207,57 @@ int mgls_triplot(mglGraph *gr, long , mglArg *a, int k[10])
 }
 void mglc_triplot(wchar_t out[1024], long , mglArg *a, int k[10])
 {
-	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[3]==1)
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
 		mglprintf(out,1024,L"gr->TriPlot(%s, %s, %s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, k[5]==2?a[5].s:"");
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
 		mglprintf(out,1024,L"gr->TriPlot(%s, %s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, k[4]==2?a[4].s:"");
 	else if(k[0]==1 && k[1]==1 && k[2]==1)
 		mglprintf(out,1024,L"gr->TriPlot(%s, %s, %s, \"%s\", %g);", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"", k[4]==3?a[4].v:NAN);
+}
+//-----------------------------------------------------------------------------
+int mgls_quadplot(mglGraph *gr, long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		gr->QuadPlot(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),k[5]==2?a[5].s:0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		gr->QuadPlot(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		gr->QuadPlot(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,k[4]==3?a[4].v:NAN);
+	else	return 1;
+	return 0;
+}
+void mglc_quadplot(wchar_t out[1024], long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		mglprintf(out,1024,L"gr->QuadPlot(%s, %s, %s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, k[5]==2?a[5].s:"");
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"gr->QuadPlot(%s, %s, %s, %s, \"%s\");", a[0].s, a[1].s, a[2].s, a[3].s, k[4]==2?a[4].s:"");
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		mglprintf(out,1024,L"gr->QuadPlot(%s, %s, %s, \"%s\", %g);", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"", k[4]==3?a[4].v:NAN);
+}
+//-----------------------------------------------------------------------------
+int mgls_tricont(mglGraph *gr, long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==1)
+		gr->TriContV(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		gr->TriContV(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),k[5]==2?a[5].s:0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[5]==1)
+		gr->TriContV(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,k[5]==3?a[5].v:NAN);
+	else	return 1;
+	return 0;
+}
+void mglc_tricont(wchar_t out[1024], long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==1)
+		mglprintf(out,1024,L"gr->TriContV(%s, %s, %s, %s, %s, %s, \"%s\");",
+			a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, a[5].s, k[6]==2?a[6].s:"");
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		mglprintf(out,1024,L"gr->TriContV(%s, %s, %s, %s, %s, \"%s\");",
+			a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, k[5]==2?a[5].s:"");
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"gr->TriContV(%s, %s, %s, %s, \"%s\", %g);",
+			a[0].s, a[1].s, a[2].s, a[3].s, k[4]==2?a[4].s:"", k[5]==3?a[5].v:NAN);
 }
 //-----------------------------------------------------------------------------
 int mgls_ternary(mglGraph *gr, long , mglArg *a, int k[10])
@@ -3445,6 +3520,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"font",L"Setup font",L"font 'fmt' [size]", mgls_font, mglc_font, false, 2},
 	{L"fplot",L"Plot curve by formula",L"fplot 'y(x)' ['fmt' zval num]|'x(t)' 'y(t)' 'z(t)' ['fmt' num]", mgls_fplot, mglc_fplot, false, 1},
 	{L"fsurf",L"Plot surface by formula",L"fsurf 'z(x,y)' ['fmt' num]|'x(u,v)' 'y(u,v)' 'z(u,v)' ['fmt' num]", mgls_fsurf, mglc_fsurf, false, 1},
+	{L"grad",L"Draw gradient lines for scalar field",L"grad Phi ['fmt' num zval]|Xdat Ydat Phi ['fmt' num zval]|Xdat Ydat Zdat Phi ['fmt' num]", mgls_grad, mglc_grad, false, 0},
 	{L"grid",L"Draw grid",L"grid ['dir' 'fmt']|Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_grid, mglc_grid, false, 0},
 	{L"grid3",L"Draw grid at slices of 3D data",L"grid3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_grid3, mglc_grid3, false, 0},
 	{L"grida",L"Draw grid at central slices of 3D data",L"grida Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_grida, mglc_grida, false, 0},
@@ -3487,6 +3563,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"put",L"Put value (numeric or array) to given data element",L"put Dat val [i j k] | Dat Val [i j k]", mgls_put, mglc_put, false, 3},
 	{L"putsfit",L"Print fitted formula",L"putsfit x y ['pre' 'font' size]|x y z ['pre' 'font' size]", mgls_putsfit, mglc_putsfit, false, 0},
 	{L"qo2d",L"Solve PDE in accompanied coordinates",L"qo2d Res 'ham' IniRe IniIm Ray [r k0 Xout Yout]", mgls_qo2d, mglc_qo2d, true, 3},
+	{L"quadplot",L"Draw surface of quadrangles",L"quadplot Idat Xdat Ydat ['fmt']|Idat Xdat Ydat Zdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_quadplot, mglc_quadplot, false, 0},
 	{L"radar",L"Draw radar chart",L"radar Rdat ['fmt' r]", mgls_radar, mglc_radar, false, 0},
 	{L"ranges",L"Set axis ranges",L"ranges x1 x2 y1 y2 [z1 z2]", mgls_ranges, mglc_ranges, false, 2},
 	{L"ray",L"Solve Hamiltonian ODE (find GO ray or trajectory)",L"ray Res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray, mglc_ray, true, 3},
@@ -3515,7 +3592,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"stfad",L"Do STFA transform",L"stfad Res Real Imag dn ['dir']", mgls_stfad, mglc_stfad, true, 3},
 	{L"stickplot",L"Set position of plot inside cell of stick", L"stickplot num ind tet phi", mgls_stickplot, mglc_stickplot, false, 4},
 	{L"subdata",L"Extract sub-array",L"subdata Res Dat nx [ny nz]", mgls_subdata, mglc_subdata, true, 3},
-	{L"subplot",L"Set position of plot",L"subplot m n pos [dx dy]", mgls_subplot, mglc_subplot, false, 4},
+	{L"subplot",L"Set position of plot",L"subplot m n pos [dx dy]|m n pos 'style'", mgls_subplot, mglc_subplot, false, 4},
 	{L"subto",L"Subtract data or number",L"subto Var Dat|Var num", mgls_subto, mglc_subto, false, 3},
 	{L"sum",L"Find summation over direction",L"sum Res Dat 'dir'", mgls_sum, mglc_sum, true, 3},
 	{L"surf",L"Draw solid surface",L"surf Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_surf, mglc_surf, false, 0},
@@ -3542,6 +3619,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"transparent",L"Switch off transparency",L"transparent val", mgls_transparent, mglc_transparent, false, 2}, //!!! OLD !!!
 	{L"transpose",L"Transpose data array",L"transpose Dat ['dir']", mgls_transpose, mglc_transpose, false, 3},
 	{L"transptype",L"Set type transparency",L"transptype val", mgls_transptype, mglc_transptype, false, 2},
+	{L"tricont",L"Draw contour lines for surface of triangles",L"tricont Vdat Idat Xdat Ydat ['fmt']|Vdat Idat Xdat Ydat Zdat ['fmt']|Vdat Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_tricont, mglc_tricont, false, 0},
 	{L"triplot",L"Draw surface of triangles",L"triplot Idat Xdat Ydat ['fmt']|Idat Xdat Ydat Zdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_triplot, mglc_triplot, false, 0},
 	{L"tube",L"Draw curve by tube",L"tube Ydat Rdat ['fmt' zval]|Ydat rval ['fmt' zval]|Xdat Ydat Rdat ['fmt' zval]|Xdat Ydat rval ['fmt' zval]|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat rval ['fmt']", mgls_tube, mglc_tube, false, 0},
 	{L"var",L"Create new 1D data and fill it in range",L"var Dat nx x1 [x2]", mgls_var, mglc_var, true, 3},

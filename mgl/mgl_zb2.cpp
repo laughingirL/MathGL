@@ -487,46 +487,21 @@ void mglGraphAB::quads_plot(long n,mreal *pp,mreal *cc,bool *tt)
 {
 //	if(!DrawFace)	return;
 	register long i;
-	mreal *p,*c;
+	mreal *p;
+	mreal *c1=CDef,*c2=CDef,*c3=CDef,*c4=CDef;
 	PostScale(pp,4*n);	LightScale();
-	if(cc)
+	for(i=0;i<n;i++)
 	{
-		for(i=0;i<n;i++)
+		if(tt && (!tt[4*i] || !tt[4*i+1] || !tt[4*i+2] || !tt[4*i+3]))
+			continue;
+		p = pp+12*i;
+		if(cc)	{	c1=cc+16*i;	c2=c1+4;	c3=c1+8;	c4=c1+12;	}
+		if(DrawFace)
+			quad_plot(p,p+3,p+9,p+6,c1,c2,c4,c3);
+		else
 		{
-			if(tt && (!tt[4*i] || !tt[4*i+1] || !tt[4*i+2] || !tt[4*i+3]))
-				continue;
-			p = pp+12*i;	c = cc+16*i;
-			if(DrawFace)
-				quad_plot(p,p+3,p+9,p+6,c,c+4,c+12,c+8);
-			else
-			{
-				line_plot(p,p+3,c,c+4);
-				line_plot(p,p+9,c,c+12);
-				line_plot(p+9,p+6,c+12,c+8);
-				line_plot(p+3,p+6,c+4,c+8);
-			}
-		}
-	}
-	else
-	{
-		for(i=0;i<n;i++)
-		{
-			if(tt && (!tt[4*i] || !tt[4*i+1] || !tt[4*i+2] || !tt[4*i+3]))
-				continue;
-			p = pp+12*i;	//c = cc+16*i;
-			if(DrawFace)
-//				quad_plot(p,p+3,p+9,p+6,CDef,CDef,CDef,CDef);
-			{
-				trig_plot(p,p+3,p+9,CDef,CDef,CDef);
-				trig_plot(p+3,p+6,p+9,CDef,CDef,CDef);
-			}
-			else
-			{
-				line_plot(p,p+3,CDef,CDef);
-				line_plot(p,p+9,CDef,CDef);
-				line_plot(p+9,p+6,CDef,CDef);
-				line_plot(p+3,p+6,CDef,CDef);
-			}
+			line_plot(p,p+3,c1,c2);		line_plot(p,p+9,c1,c4);
+			line_plot(p+9,p+6,c4,c3);	line_plot(p+3,p+6,c2,c3);
 		}
 	}
 }
@@ -557,6 +532,36 @@ void mglGraphAB::trigs_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool
 		}
 		else
 			trig_plot(pp+3*j1,pp+3*j2,pp+3*j3,c1,c2,c3);
+	}
+}
+//-----------------------------------------------------------------------------
+void mglGraphAB::quads_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool *tt,bool wire, bool byquad)
+{
+	if(!DrawFace)	wire=true;
+	register long i,j1,j2,j3,j4;
+	mreal *c1,*c2,*c3,*c4;
+	PostScale(pp,m);	LightScale();
+	c1 = c2 = c3 = c4 = CDef;
+	for(i=0;i<n;i++)
+	{
+		j1 = nn[4*i];	j2 = nn[4*i+1];	j3 = nn[4*i+2];	j4 = nn[4*i+3];
+		if(tt && (!tt[j1] || !tt[j2] || !tt[j3] || !tt[j4]))	continue;
+		if(cc)
+		{
+			if(!byquad)
+			{	c1=cc+4*j1;	c2=cc+4*j2;	c3=cc+4*j3;	c4=cc+4*j4;	}
+			else
+			{	c1 = c2 = c3 = c4 = cc+4*i;	}
+		}
+		if(wire)
+		{
+			line_plot(pp+3*j1,pp+3*j2,c1,c2);
+			line_plot(pp+3*j1,pp+3*j4,c1,c4);
+			line_plot(pp+3*j3,pp+3*j2,c3,c2);
+			line_plot(pp+3*j3,pp+3*j4,c3,c4);
+		}
+		else
+			quad_plot(pp+3*j1,pp+3*j2,pp+3*j4,pp+3*j3,c1,c2,c4,c3);
 	}
 }
 //-----------------------------------------------------------------------------

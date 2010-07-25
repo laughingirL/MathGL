@@ -220,7 +220,7 @@ int sample_2(mglGraph *gr, void *)
 	gr->Box();	gr->Axis();
 	gr->Text(mglPoint(0,1.2,1),"Density plot");
 	gr->Dens(a,"BbcyrR");
-	gr->InPlot(0.6,1,0.6,1);	// new axis in upper right corner
+	gr->InPlot(0.6,1,0.6,1,false);	// new axis in upper right corner
 	gr->Box();	gr->Axis();
 	gr->Text(mglPoint(0,1.2,1),"... with bicolor");
 	gr->Dens(a,"BbwrR");

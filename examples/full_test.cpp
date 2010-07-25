@@ -35,7 +35,7 @@ int test(mglGraphAB *gr)
 {
 	mglParse par;
 	par.AllowSetSize = true;
-	FILE *fp=fopen("test.mgl","rt");
+	FILE *fp=fopen("layouts.mgl","rt");
 	par.Execute(gr,fp);
 	fclose(fp);
 /*	gr->SetDrawReg(2,2,1);
@@ -709,7 +709,7 @@ void smgl_sample1(mglGraph *gr)	// transformation
 	gr->SubPlot(2,2,0);  // just new axis without rotation and aspects
 	gr->Box();
 	gr->Text(mglPoint(-1,1.1,1),"Just box","rL");
-	gr->InPlot(0.2,0.5,0.7,1);
+	gr->InPlot(0.2,0.5,0.7,1,false);
 	gr->Box();
 	gr->Text(mglPoint(0,1.2,1),"InPlot example");
 	gr->SubPlot(2,2,1);  // new axis with aspect and rotation

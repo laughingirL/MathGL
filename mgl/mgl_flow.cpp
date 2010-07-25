@@ -451,6 +451,53 @@ void mglGraph::FlowP(mglPoint p, const mglData &ax, const mglData &ay, const mgl
 }
 //-----------------------------------------------------------------------------
 //
+//	Grad series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::Grad(const mglData &x, const mglData &y, const mglData &z, const mglData &phi, const char *sch, int num)
+{
+	mglData ax(phi), ay(phi),az(phi),xx(phi),yy(phi),zz(phi);
+	long nn = phi.nx*phi.ny*phi.nz;
+	if(x.nx*x.ny*x.nz==nn && y.nx*y.ny*y.nz==nn && x.nx*x.ny*x.nz==nn)
+	{	xx = x;	yy = y;	zz = z;	}	// nothing to do
+	else if(x.nx==phi.nx && y.nx==phi.ny && z.nx==phi.nz)
+	{	// prepare data
+		register long i,j,k,i0;
+		for(i=0;i<phi.nx;i++)	for(j=0;j<phi.ny;j++)	for(k=0;k<phi.nz;k++)
+		{
+			i0 = i+phi.nx*(j+phi.ny*k);	xx.a[i0] = x.a[i];
+			yy.a[i0] = y.a[j];			zz.a[i0] = z.a[k];	}
+	}
+	else	{	SetWarn(mglWarnDim,"Grad");	return;	}
+	ax.Diff(xx,yy,zz);	ay.Diff(yy,xx,zz);	ay.Diff(zz,xx,yy);
+	Flow(xx,yy,zz,ax,ay,az,sch,num,num>0);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Grad(const mglData &x, const mglData &y, const mglData &phi, const char *sch, int num, mreal zVal)
+{
+	mglData ax(phi), ay(phi),xx(phi),yy(phi);
+	long nn = phi.nx*phi.ny;
+	if(x.nx*x.ny==nn && y.nx*y.ny==nn)	{	xx = x;	yy = y;	}
+	else if(x.nx==phi.nx && y.nx==phi.ny)
+	{
+		register long i,j,i0;
+		for(i=0;i<phi.nx;i++)	for(j=0;j<phi.ny;j++)
+		{	i0 = i+phi.nx*j;	xx.a[i0] = x.a[i];	yy.a[i0] = y.a[j];	}
+	}
+	else	{	SetWarn(mglWarnDim,"Grad");	return;	}
+	ax.Diff(xx,yy);	ay.Diff(yy,xx);
+	Flow(xx,yy,ax,ay,sch,num,num>0,zVal);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::Grad(const mglData &phi, const char *sch, int num, mreal zVal)
+{
+	mglData x(phi.nx), y(phi.ny), z(phi.nz);
+	x.Fill(Min.x,Max.x);	y.Fill(Min.y,Max.y);	z.Fill(Min.z,Max.z);
+	if(phi.nz>2)	Grad(x,y,z,phi,sch,num?num:3);
+	else			Grad(x,y,phi,sch,num?num:5,zVal);
+}
+//-----------------------------------------------------------------------------
+//
 //	Pipe series
 //
 //-----------------------------------------------------------------------------
@@ -764,6 +811,14 @@ void mgl_pipe_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT 
 void mgl_pipe_3d(HMGL gr, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, mreal r0, int num, int central)
 {	if(gr && ay && ax && az)	gr->Pipe(*ax, *ay, *az, sch, r0, num, central);	}
 //-----------------------------------------------------------------------------
+/// The gradient of the scalar field
+void mgl_grad_xyz(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT ph, const char *sch, int num)
+{	if(gr&&x&&y&&z&&ph)	gr->Grad(*x,*y,*z,*ph,sch,num);	}
+void mgl_grad_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ph, const char *sch, int num, mreal zVal)
+{	if(gr&&x&&y&&ph)	gr->Grad(*x,*y,*ph,sch,num,zVal);	}
+void mgl_grad(HMGL gr, const HMDT ph, const char *sch, int num, mreal zVal)
+{	if(gr&&ph)	gr->Grad(*ph,sch,num,zVal);	}
+//-----------------------------------------------------------------------------
 //	Fortran interface
 //-----------------------------------------------------------------------------
 /// Plot flows for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
@@ -861,6 +916,29 @@ void mgl_pipe_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, co
 {
 	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	if(gr && ay && ax && az)	_GR_->Pipe(_D_(ax), _D_(ay), _D_(az), s, *r0, *num, *central);
+	delete []s;
+}
+//-----------------------------------------------------------------------------
+/// Plot gradient for scalar field ph parametrically depended on coordinate {x,y} with color proportional to value |a|
+void mgl_grad_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ph, const char *sch,
+					int *num, mreal *zVal,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ph && x && y)	_GR_->Grad(_D_(x), _D_(y), _D_(ph), s, *num, *zVal);
+	delete []s;
+}
+void mgl_grad_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ph, const char *sch,
+					int *num, int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ph && x && y && z)	_GR_->Grad(_D_(x), _D_(y), _D_(z), _D_(ph), s, *num);
+	delete []s;
+}
+/// Plot flows for vector field {ax,ay} with color proportional to value |a|
+void mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, int *num, mreal *zVal,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && ph)	_GR_->Flow(_D_(ph), s, *num, *zVal);
 	delete []s;
 }
 //-----------------------------------------------------------------------------

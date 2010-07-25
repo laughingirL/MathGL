@@ -154,6 +154,7 @@ void mgl_flush_(uintptr_t *gr);
 void mgl_clf_rgb_(uintptr_t *graph, mreal *r, mreal *g, mreal *b);
 void mgl_subplot_(uintptr_t *graph, int *nx,int *ny,int *m);
 void mgl_subplot_d_(uintptr_t *graph, int *nx,int *ny,int *m,mreal *dx,mreal *dy);
+void mgl_subplot_s_(uintptr_t *graph, int *nx,int *ny,int *m, const char *s,int);
 void mgl_inplot_(uintptr_t *graph, mreal *x1,mreal *x2,mreal *y1,mreal *y2);
 void mgl_relplot_(uintptr_t *graph, mreal *x1,mreal *x2,mreal *y1,mreal *y2);
 void mgl_columnplot_(uintptr_t *graph, int *num, int *i);
@@ -381,6 +382,10 @@ void mgl_pipe_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, u
 void mgl_pipe_3d_(uintptr_t *graph, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, mreal *r0, int *num, int *central,int);
 void mgl_dew_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *zVal,int l);
 void mgl_dew_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *zVal,int l);
+
+void mgl_grad_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ph, const char *sch, int *num, int);
+void mgl_grad_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *ph, const char *sch, int *num, mreal *zVal,int);
+void mgl_grad_(uintptr_t *graph, uintptr_t *ph, const char *sch, int *num, mreal *zVal,int);
 /*****************************************************************************/
 /*		3D plotting functions												 */
 /*****************************************************************************/
@@ -430,6 +435,15 @@ void mgl_beam_(uintptr_t *gr, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintp
 void mgl_triplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch,int);
 void mgl_triplot_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int);
 void mgl_triplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, const char *sch, mreal *zVal,int);
+void mgl_quadplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch,int);
+void mgl_quadplot_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int);
+void mgl_quadplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, const char *sch, mreal *zVal,int);
+
+void mgl_tricont_xyzcv_(uintptr_t *gr, uintptr_t *v, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, mreal *zVal,int);
+void mgl_tricont_xyzv_(uintptr_t *gr, uintptr_t *v, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, mreal *zVal,int);
+void mgl_tricont_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, int *n, mreal *zVal, int);
+void mgl_tricont_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, int *n, mreal *zVal, int);
+
 void mgl_dots_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int);
 void mgl_dots_a_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch,int);
 void mgl_dots_tr_(uintptr_t *gr, uintptr_t *tr, const char *sch,int);

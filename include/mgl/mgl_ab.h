@@ -220,6 +220,7 @@ protected:
 	void surf3_plot(long n,long m,long *kx1,long *kx2,long *ky1,long *ky2,long *kz,
 							mreal *pp,mreal *cc,mreal *kk,mreal *nn,bool wire);
 	void trigs_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool *tt,bool wire, bool bytrig=false);
+	void quads_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool *tt,bool wire, bool byquad);
 	void quads_plot(long n, mreal *pp, mreal *cc, bool *tt);
 	void lines_plot(long n, mreal *pp, mreal *cc, bool *tt, bool ball, bool grad);
 	void vects_plot(long n, mreal *pp, mreal *cc, bool *tt, bool grad);

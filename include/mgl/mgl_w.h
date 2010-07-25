@@ -416,7 +416,9 @@ public:
 	{	mgl_clf_rgb(self, r, g, b);	};
 	inline void SubPlot(int nx,int ny,int m, float dx=0, float dy=0)
 	{	mgl_subplot_d(self, nx, ny, m, dx, dy);	};
-	inline void InPlot(float x1,float x2,float y1,float y2, bool rel=false)
+	inline void SubPlot(int nx,int ny,int m, const char *style)
+	{	mgl_subplot_s(self, nx, ny, m, style);	};
+	inline void InPlot(float x1,float x2,float y1,float y2, bool rel=true)
 	{	if(rel)	mgl_inplot(self, x1, x2, y1, y2);
 		else	mgl_relplot(self, x1, x2, y1, y2);	};
 	inline void ColumnPlot(int num, int ind)
@@ -801,6 +803,13 @@ public:
 	inline void FlowP(float x0, float y0, float z0, mglData &ax, mglData &ay, mglData &az, const char *sch="")
 	{	mgl_flowp_3d(self, x0, y0, z0, ax.a, ay.a, az.a, sch);	};
 
+	inline void Grad(const mglData &x, const mglData &y, const mglData &z, const mglData &phi, const char *sch=0, int num=3)
+	{	mgl_grad_xyz(self,x.a,y.a,z.a,phi.a,sch,num);	}
+	inline void Grad(const mglData &x, const mglData &y, const mglData &phi, const char *sch=0, int num=5, mreal zVal=NAN)
+	{	mgl_grad_xy(self,x.a,y.a,phi.a,sch,num,zVal);	}
+	inline void Grad(const mglData &phi, const char *sch=0, int num=5, mreal zVal=NAN)
+	{	mgl_grad(self,phi.a,sch,num,zVal);	}
+
 	inline void Pipe(mglData &x, mglData &y, mglData &ax, mglData &ay, const char *sch="", float r0=0.05, int num=5, bool central=true, float zVal=NAN)
 	{	mgl_pipe_xy(self, x.a, y.a, ax.a, ay.a, sch, r0, num, central, zVal);	};
 	inline void Pipe(mglData &ax, mglData &ay, const char *sch="", float r0=0.05, int num=5, bool central=true, float zVal=NAN)
@@ -878,6 +887,22 @@ public:
 	{	mgl_triplot_xyz(self, nums.a, x.a, y.a, z.a, sch);	};
 	inline void TriPlot(mglData &nums, mglData &x, mglData &y, const char *sch="", float zVal=NAN)
 	{	mgl_triplot_xy(self, nums.a, x.a, y.a, sch, zVal);	};
+	inline void QuadPlot(mglData &nums, mglData &x, mglData &y, mglData &z, mglData &c, const char *sch="")
+	{	mgl_quadplot_xyzc(self, nums.a, x.a, y.a, z.a, c.a, sch);	};
+	inline void QuadPlot(mglData &nums, mglData &x, mglData &y, mglData &z, const char *sch="")
+	{	mgl_quadplot_xyz(self, nums.a, x.a, y.a, z.a, sch);	};
+	inline void QuadPlot(mglData &nums, mglData &x, mglData &y, const char *sch="", float zVal=NAN)
+	{	mgl_quadplot_xy(self, nums.a, x.a, y.a, sch, zVal);	};
+
+	inline void TriCont(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch=0,int num=7,mreal zVal=NAN)
+	{	mgl_tricont_xyz(self, nums.a, x.a, y.a, z.a, sch, num, zVal);	};
+	inline void TriContV(const mglData &v, const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch=0,mreal zVal=NAN)
+	{	mgl_tricont_xyzv(self, v.a, nums.a, x.a, y.a, z.a, sch, zVal);	};
+	inline void TriCont(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch=0,int num=7,mreal zVal=NAN)
+	{	mgl_tricont_xyzc(self, nums.a, x.a, y.a, z.a, a.a, sch, num, zVal);	};
+	inline void TriContV(const mglData &v, const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch=0,mreal zVal=NAN)
+	{	mgl_tricont_xyzcv(self, v.a, nums.a, x.a, y.a, z.a, a.a, sch, zVal);	};
+
 	inline void Dots(mglData &x, mglData &y, mglData &z, const char *sch="")
 	{	mgl_dots(self, x.a, y.a, z.a, sch);	};
 	inline void Dots(mglData &x, mglData &y, mglData &z, mglData &a, const char *sch="")

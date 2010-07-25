@@ -11,7 +11,13 @@
 	- Add C/Fortran interface functions for widget features.
 	- Disable color gradient in Vect() by default -- still enabled in VectC(), VectL().
 	- Add new function SetLegendMarks() to allow multiple marks in Legend() sample.
+	- Add QuadPlot() functions for making plot of unregular quadrangle mesh (like TriPlot()).
+	- Add TriCont[V]() functions for plotting contour lines for unregular triangle mesh.
+	- Add Grad() for plotting gradient of scalar field by flow threads.
+	- Add "styled" SubPlot() to better fitting of subplot according axis/colorbar/title layouts.
+	- Add extra text align for axis label if it is located near minimal or maximal axis value.
 	- Add possibility to read HDF4 files.
+	- Add MGL commands 'grad', 'quadplot', 'tricont'
 	- Now $N is substituted into the second argument of MGL commands 'define', 'defnum', 'defpal', 'defchr'.
 	- Reduce animation delay to 1 sec.
 	- Bugfix with newline symbol '\n'

@@ -169,12 +169,13 @@ void mgl_clf(HMGL gr)	{	gr->Clf();	}
 void mgl_clf_rgb(HMGL gr, mreal r, mreal g, mreal b){	gr->Clf(mglColor(r,g,b));	}
 /// Put further plotting in some region of whole frame surface.
 void mgl_subplot(HMGL gr, int nx,int ny,int m)		{	gr->SubPlot(nx,ny,m);	}
-/// Put further plotting in some region of whole frame surface.
 void mgl_subplot_d(HMGL gr, int nx,int ny,int m,mreal dx,mreal dy)
 {	gr->SubPlot(nx,ny,m,dx,dy);	}
+void mgl_subplot_s(HMGL gr, int nx,int ny,int m,const char *style)
+{	gr->SubPlot(nx,ny,m,style);	}
 /// Put further plotting in some region of whole frame surface.
 void mgl_inplot(HMGL gr, mreal x1,mreal x2,mreal y1,mreal y2)
-{	gr->InPlot(x1,x2,y1,y2);	}
+{	gr->InPlot(x1,x2,y1,y2,false);	}
 void mgl_relplot(HMGL gr, mreal x1,mreal x2,mreal y1,mreal y2)
 {	gr->InPlot(x1,x2,y1,y2,true);	}
 void mgl_columnplot(HMGL gr, int num, int i)

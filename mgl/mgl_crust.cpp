@@ -56,10 +56,6 @@ void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, 
 		k3 = long(nums.a[3*i+2]+0.1);	if(k3<0 || k3>=n)	continue;
 		nn[3*j]=k1;	nn[3*j+1]=k2;	nn[3*j+2]=k3;	j++;
 	}
-//	DefColor(mglColor(0,0,0),1);
-//	trigs_plot(j,nn,n,pp,cc,tt,false, a.nx==m);
-//	if(sch && strchr(sch,'#'))
-//		trigs_plot(j,nn,n,pp,0,tt,true, a.nx==m);
 	trigs_plot(j,nn,n,pp,cc,tt,sch && strchr(sch,'#'), a.nx==m);
 	EndGroup();
 	delete []pp;	delete []tt;	delete []cc;	delete []nn;
@@ -67,37 +63,7 @@ void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, 
 //-----------------------------------------------------------------------------
 void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch)
 {
-	long n = x.nx, m = nums.ny;
-	if(y.nx!=n || z.nx!=n || nums.nx<3)	{	SetWarn(mglWarnLow,"TriPlot");	return;	}
-	SetScheme(sch);
-	static int cgid=1;	StartGroup("TriPlot",cgid++);
-	mreal *pp = new mreal[3*n], *cc = new mreal[4*n];
-	bool *tt = new bool[n];
-	long *nn = new long[3*m];
-	mglColor c;
-	register long i,j,k1,k2,k3;
-	for(i=0;i<n;i++)
-	{
-		pp[3*i] = x.a[i];	pp[3*i+1] = y.a[i];	pp[3*i+2] = z.a[i];
-		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
-		c = GetC(x.a[i], y.a[i], z.a[i]);
-		cc[4*i] = c.r;		cc[4*i+1] = c.g;
-		cc[4*i+2] = c.b;	cc[4*i+3] = Transparent ? AlphaDef : 1;
-	}
-	for(i=j=0;i<m;i++)
-	{
-		k1 = long(nums.a[3*i]+0.1);		if(k1<0 || k1>=n)	continue;
-		k2 = long(nums.a[3*i+1]+0.1);	if(k2<0 || k2>=n)	continue;
-		k3 = long(nums.a[3*i+2]+0.1);	if(k3<0 || k3>=n)	continue;
-		nn[3*j]=k1;	nn[3*j+1]=k2;	nn[3*j+2]=k3;	j++;
-	}
-//	DefColor(mglColor(0,0,0),1);
-//	trigs_plot(j,nn,n,pp,cc,tt,false);
-//	if(sch && strchr(sch,'#'))
-//		trigs_plot(j,nn,n,pp,0,tt,true);
-	trigs_plot(j,nn,n,pp,cc,tt,sch && strchr(sch,'#'));
-	EndGroup();
-	delete []pp;	delete []tt;	delete []cc;	delete []nn;
+	TriPlot(nums,x,y,z,z,sch);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, const char *sch, mreal zVal)
@@ -105,7 +71,120 @@ void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, 
 	if(isnan(zVal))	zVal = Min.z;
 	mglData z(x.nx);
 	z.Fill(zVal,zVal);
-	TriPlot(nums,x,y,z,sch);
+	TriPlot(nums,x,y,z,z,sch);
+}
+//-----------------------------------------------------------------------------
+//
+//	TriCont series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::tricont_line(mreal val, long i, long k1, long k2, long k3, const mglData &x, const mglData &y, 
+					const mglData &z, const mglData &a, mreal zVal)
+{
+	mreal d1,d2,p1[3],p2[3],c1[4],c2[4];
+	mglColor q1,q2,q3;
+	d1 = _d(val,z.a[k1],z.a[k2]);
+	d2 = _d(val,z.a[k1],z.a[k3]);
+	if(d1<0 || d1>1 || d2<0 || d2>1)	return;
+	p1[2] = p2[2] = zVal;
+
+	p1[0] = x.a[k1]*(1-d1)+x.a[k2]*d1;
+	p1[1] = y.a[k1]*(1-d1)+y.a[k2]*d1;
+	if(!ScalePoint(p1[0],p1[1],p1[2]))	return;
+	p2[0] = x.a[k1]*(1-d2)+x.a[k3]*d2;
+	p2[1] = y.a[k1]*(1-d2)+y.a[k3]*d2;
+	if(!ScalePoint(p1[0],p1[1],p1[2]))	return;
+	if(a.nx==x.nx)
+	{
+		q1 = GetC(a.a[k1]);	q2 = GetC(a.a[k2]);	q3 = GetC(a.a[k3]);
+		c1[0] = q1.r*(1-d1)+q2.r*d1;	c2[0] = q1.r*(1-d2)+q3.r*d2;
+		c1[2] = q1.g*(1-d1)+q2.g*d1;	c2[2] = q1.g*(1-d2)+q3.g*d2;
+		c1[3] = q1.b*(1-d1)+q2.b*d1;	c2[3] = q1.b*(1-d2)+q3.b*d2;
+		c1[3]=c2[3]=1;
+	}
+	else
+	{
+		q1 = GetC(a.a[i]);	c1[0]=q1.r;	c1[1]=q1.g;	c1[2]=q1.b;	c1[3]=1;
+		memcpy(c2,c1,4*sizeof(mreal));
+	}
+	line_plot(p1,p2,c1,c2);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::TriContV(const mglData &v, const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch,mreal zVal)
+{
+	long n = x.nx, m = nums.ny;
+	if(y.nx!=n || z.nx!=n || nums.nx<3)	{	SetWarn(mglWarnLow,"TriCont");	return;	}
+	if(a.nx!=m && a.nx!=n)	{	SetWarn(mglWarnLow,"TriCont");	return;	}
+	SetScheme(sch);
+	static int cgid=1;	StartGroup("TriCont",cgid++);
+	mreal val;
+	register long i,k;
+	long k1,k2,k3;
+	for(k=0;k<v.nx;k++)	for(i=0;i<m;i++)
+	{
+		k1 = long(nums.a[3*i]+0.1);		if(k1<0 || k1>=n)	continue;
+		k2 = long(nums.a[3*i+1]+0.1);	if(k2<0 || k2>=n)	continue;
+		k3 = long(nums.a[3*i+2]+0.1);	if(k3<0 || k3>=n)	continue;
+		val = isnan(zVal) ? v.a[k] : zVal;
+		tricont_line(v.a[k], i,k1,k2,k3,x,y,z,a,val);
+		tricont_line(v.a[k], i,k2,k1,k3,x,y,z,a,val);
+		tricont_line(v.a[k], i,k3,k2,k1,x,y,z,a,val);
+	}
+}
+//-----------------------------------------------------------------------------
+void mglGraph::TriCont(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch, int Num, mreal zVal)
+{
+	if(Num<1)	{	SetWarn(mglWarnCnt,"Cont");	return;	}
+	mglData v(Num);
+	for(long i=0;i<Num;i++)	v.a[i] = Cmin + (Cmax-Cmin)*mreal(i+1)/(Num+1);
+	TriContV(v,nums,x,y,z,a,sch,zVal);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::TriCont(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch, int Num, mreal zVal)
+{	TriCont(nums,x,y,z,z,sch,Num,zVal);	}
+//-----------------------------------------------------------------------------
+void mglGraph::TriContV(const mglData &v, const mglData &nums, const mglData &x, 
+						const mglData &y, const mglData &z, const char *sch,mreal zVal)
+{	TriContV(v,nums,x,y,z,z,sch,zVal);	}
+//-----------------------------------------------------------------------------
+//
+//	QuadPlot series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::QuadPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch)
+{
+	long n = x.nx, m = nums.ny;	if(y.nx!=n || z.nx!=n || nums.nx<4)	{	SetWarn(mglWarnLow,"QuadPlot");	return;	}	if(a.nx!=m && a.nx!=n)	{	SetWarn(mglWarnLow,"QuadPlot");	return;	}
+	SetScheme(sch);	static int cgid=1;	StartGroup("QuadPlot",cgid++);	mreal *pp = new mreal[3*n], *cc = new mreal[4*n];	bool *tt = new bool[n];	long *nn = new long[4*m];	mglColor c;	register long i,j,k1,k2,k3,k4;	for(i=0;i<n;i++)	{		pp[3*i] = x.a[i];	pp[3*i+1] = y.a[i];	pp[3*i+2] = z.a[i];		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+	}
+	for(i=0;i<a.nx;i++)
+	{
+		c = GetC(a.a[i]);	cc[4*i] = c.r;		cc[4*i+1] = c.g;
+		cc[4*i+2] = c.b;	cc[4*i+3] = Transparent ? AlphaDef : 1;
+	}
+	for(i=j=0;i<m;i++)
+	{
+		k1 = long(nums.a[4*i]+0.1);		if(k1<0 || k1>=n)	continue;
+		k2 = long(nums.a[4*i+1]+0.1);	if(k2<0 || k2>=n)	continue;
+		k3 = long(nums.a[4*i+2]+0.1);	if(k3<0 || k3>=n)	continue;
+		k4 = long(nums.a[4*i+3]+0.1);	if(k4<0 || k4>=n)	continue;
+		nn[4*j]=k1;	nn[4*j+1]=k2;	nn[4*j+2]=k3;	nn[4*j+4]=k4;	j++;
+	}
+	quads_plot(j,nn,n,pp,cc,tt,sch && strchr(sch,'#'), a.nx==m);
+	EndGroup();
+	delete []pp;	delete []tt;	delete []cc;	delete []nn;
+}
+//-----------------------------------------------------------------------------
+void mglGraph::QuadPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch)
+{
+	QuadPlot(nums,x,y,z,z,sch);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::QuadPlot(const mglData &nums, const mglData &x, const mglData &y, const char *sch, mreal zVal)
+{
+	if(isnan(zVal))	zVal = Min.z;
+	mglData z(x.nx);
+	z.Fill(zVal,zVal);
+	QuadPlot(nums,x,y,z,z,sch);
 }
 //-----------------------------------------------------------------------------
 //
@@ -315,6 +394,27 @@ void mgl_triplot_xyz(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const
 /// Draw triangle mesh for points in arrays \a x, \a y.
 void mgl_triplot_xy(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const char *sch, mreal zVal)
 {	if(gr&&nums&&x&&y)	gr->TriPlot(*nums, *x, *y, sch, zVal);	}
+/// Draw quad mesh for points in arrays \a x, \a y, \a z.
+void mgl_quadplot_xyzc(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch)
+{	if(gr&&nums&&x&&y&&z&&c)	gr->QuadPlot(*nums, *x, *y, *z, *c, sch);	}
+/// Draw quad mesh for points in arrays \a x, \a y, \a z.
+void mgl_quadplot_xyz(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch)
+{	if(gr&&nums&&x&&y&&z)	gr->QuadPlot(*nums, *x, *y, *z, sch);	}
+/// Draw quad mesh for points in arrays \a x, \a y.
+void mgl_quadplot_xy(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const char *sch, mreal zVal)
+{	if(gr&&nums&&x&&y)	gr->QuadPlot(*nums, *x, *y, sch, zVal);	}
+
+/// Draw contours for triangle mesh for points in arrays \a x, \a y, \a z.
+void mgl_tricont_xyzcv(HMGL gr, const HMDT v, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch, mreal zVal)
+{	if(gr&&nums&&x&&y&&z&&c)	gr->TriContV(*v, *nums, *x, *y, *z, *c, sch, zVal);	}
+void mgl_tricont_xyzc(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch, int n, mreal zVal)
+{	if(gr&&nums&&x&&y&&z&&c)	gr->TriCont(*nums, *x, *y, *z, *c, sch, n, zVal);	}
+/// Draw contours for triangle mesh for points in arrays \a x, \a y, \a z.
+void mgl_tricont_xyzv(HMGL gr, const HMDT v, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch, mreal zVal)
+{	if(gr&&nums&&x&&y&&z)	gr->TriContV(*v, *nums, *x, *y, *z, sch, zVal);	}
+void mgl_tricont_xyz(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch, int n, mreal zVal)
+{	if(gr&&nums&&x&&y&&z)	gr->TriCont(*nums, *x, *y, *z, sch, n, zVal);	}
+
 /// Draw dots in points \a x, \a y, \a z.
 void mgl_dots(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *sch)
 {	if(gr&&x&&y&&z)	gr->Dots(*x,*y,*z,sch);	}
@@ -355,6 +455,60 @@ void mgl_triplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y,
 	if(gr&&nums&&x&&y)	_GR_->TriPlot(_D_(nums), _D_(x), _D_(y), s, *zVal);
 	delete []s;
 }
+/// Draw triangle mesh for points in arrays \a x, \a y, \a z and color it by \a c.
+void mgl_quadplot_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && nums && x && y && z && c)
+		_GR_->QuadPlot(_D_(nums), _D_(x), _D_(y), _D_(z), _D_(c), s);
+	delete []s;
+}
+/// Draw triangle mesh for points in arrays \a x, \a y, \a z.
+void mgl_quadplot_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && nums && x && y && z)	_GR_->QuadPlot(_D_(nums), _D_(x), _D_(y), _D_(z), s);
+	delete []s;
+}
+/// Draw triangle mesh for points in arrays \a x, \a y.
+void mgl_quadplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, const char *sch, mreal *zVal,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr&&nums&&x&&y)	_GR_->QuadPlot(_D_(nums), _D_(x), _D_(y), s, *zVal);
+	delete []s;
+}
+
+/// Draw triangle mesh for points in arrays \a x, \a y, \a z and color it by \a c.
+void mgl_tricont_xyzcv_(uintptr_t *gr, uintptr_t *v, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, mreal *zVal,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && nums && x && y && z && c)
+		_GR_->TriContV(_D_(v), _D_(nums), _D_(x), _D_(y), _D_(z), _D_(c), s, *zVal);
+	delete []s;
+}
+/// Draw triangle mesh for points in arrays \a x, \a y, \a z.
+void mgl_tricont_xyzv_(uintptr_t *gr, uintptr_t *v, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, mreal *zVal,int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && nums && x && y && z)	_GR_->TriContV(_D_(v), _D_(nums), _D_(x), _D_(y), _D_(z), s, *zVal);
+	delete []s;
+}
+/// Draw triangle mesh for points in arrays \a x, \a y, \a z and color it by \a c.
+void mgl_tricont_xyzc_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, int *n, mreal *zVal, int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && nums && x && y && z && c)
+		_GR_->TriCont( _D_(nums), _D_(x), _D_(y), _D_(z), _D_(c), s, *n, *zVal);
+	delete []s;
+}
+/// Draw triangle mesh for points in arrays \a x, \a y, \a z.
+void mgl_tricont_xyz_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, int *n, mreal *zVal, int l)
+{
+	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	if(gr && nums && x && y && z)	_GR_->TriCont(_D_(nums), _D_(x), _D_(y), _D_(z), s, *n, *zVal);
+	delete []s;
+}
+
 /// Draw dots in points \a x, \a y, \a z.
 void mgl_dots_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int l)
 {

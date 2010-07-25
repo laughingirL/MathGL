@@ -198,12 +198,14 @@ void mgl_clf_rgb_(uintptr_t *gr, mreal *r, mreal *g, mreal *b)
 /// Put further plotting in some region of whole frame surface.
 void mgl_subplot_(uintptr_t *gr, int *nx,int *ny,int *m)
 {	_GR_->SubPlot(*nx,*ny,*m);	}
-/// Put further plotting in some region of whole frame surface.
 void mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,mreal *dx,mreal *dy)
 {	_GR_->SubPlot(*nx,*ny,*m,*dx,*dy);	}
+void mgl_subplot_s_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st,int l)
+{	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
+	_GR_->SubPlot(*nx,*ny,*m,s);	delete []s;	}
 /// Put further plotting in some region of whole frame surface.
 void mgl_inplot_(uintptr_t *gr, mreal *x1,mreal *x2,mreal *y1,mreal *y2)
-{	_GR_->InPlot(*x1,*x2,*y1,*y2);	}
+{	_GR_->InPlot(*x1,*x2,*y1,*y2,false);	}
 void mgl_relplot_(uintptr_t *gr, mreal *x1,mreal *x2,mreal *y1,mreal *y2)
 {	_GR_->InPlot(*x1,*x2,*y1,*y2,true);	}
 void mgl_columnplot_(uintptr_t *gr, int *num, int *i)

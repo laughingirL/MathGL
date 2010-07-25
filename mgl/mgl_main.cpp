@@ -493,7 +493,35 @@ void mglGraph::SubPlot(int nx,int ny,int m, mreal dx, mreal dy)
 	else	{	dx /= 2;	dy /= 2;	}
 	x1 = (mx+dx)/nx;		x2 = (mx+1+dx)/nx;
 	y2 = 1.f-(my+dy)/ny;	y1 = 1.f-(my+1+dy)/ny;
-	InPlot(x1,x2,y1,y2);
+	InPlot(x1,x2,y1,y2,false);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::SubPlot(int nx,int ny,int m, const char *style)
+{
+	mreal x1,x2,y1,y2;
+	int mx = m%nx, my = m/nx;
+	x1 = float(mx)/nx;		x2 = float(mx+1)/nx;
+	y2 = 1.f-float(my)/ny;	y1 = 1.f-float(my+1)/ny;
+	InPlot(x1,x2,y1,y2,style);
+}
+//-----------------------------------------------------------------------------
+void mglGraph::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)
+{
+	if(!st)		{	InPlot(x1,x2,y1,y2,false);	return;	}
+	if(strchr(st,'T'))	{	y1*=0.9;	y2*=0.9;	}	// general title
+	bool r = !(strchr(st,'r') || strchr(st,'R') || strchr(st,'g'));
+	bool l = !(strchr(st,'l') || strchr(st,'L') || strchr(st,'g'));
+	bool u = !(strchr(st,'u') || strchr(st,'U') || strchr(st,'g'));
+	bool a = !(strchr(st,'a') || strchr(st,'A') || strchr(st,'g') || strchr(st,'t'));
+	// let use simplified scheme -- i.e. no differences between axis, colorbar and/or title
+	register mreal xs=(x1+x2)/2, ys=(y1+y2)/2, f1 = 1.3, f2 = 1.1;
+	if(r && l)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f1;	}
+	else if(r)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f2;	}
+	else if(l)	{	x2=xs+(x2-xs)*f2;	x1=xs+(x1-xs)*f1;	}
+	if(a && u)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f1;	}
+	else if(a)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f2;	}
+	else if(u)	{	y2=ys+(y2-ys)*f2;	y1=ys+(y1-ys)*f1;	}
+	InPlot(x1,x2,y1,y2,false);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Printf(mglPoint p,const char *str,...)
@@ -592,7 +620,7 @@ void mglGraph::DefaultPlotParam()
 	for(int i=0;i<10;i++)
 	{	Light(i, mglPoint(0,0,1));	Light(i,false);	}
 	Light(0,true);		Light(false);
-	InPlot(0,1,0,1);	Zoom(0,0,1,1);
+	InPlot(0,1,0,1,false);	Zoom(0,0,1,1);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::SetTickStl(const char *stl, const char *sub)

@@ -309,12 +309,13 @@ public:
 	virtual void Clf(mglColor Back=WC); //=0
 	/// Put further plotting in some region of whole frame surface.
 	void SubPlot(int nx,int ny,int m, mreal dx=0, mreal dy=0);
+	void SubPlot(int nx,int ny,int m, const char *style);
 	/// Put further plotting in column cell of previous subplot
 	void ColumnPlot(int num, int i);
 	/// Put further plotting in cell of stick rotated on angles tet, phi
 	virtual void StickPlot(int num, int i, mreal tet, mreal phi)=0;
 	/// Put further plotting in some region of whole frame surface.
-	virtual void InPlot(mreal x1,mreal x2,mreal y1,mreal y2,bool rel=false); //=0
+	virtual void InPlot(mreal x1,mreal x2,mreal y1,mreal y2,bool rel=true); //=0
 	/// Set aspect ratio for further plotting.
 	virtual void Aspect(mreal Ax,mreal Ay,mreal Az)=0;
 	/// Rotate a further plotting.
@@ -724,12 +725,25 @@ public:
 	void Dots(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch=0, mreal alpha=1);
 	/// Draw dots in points \a tr.
 	void Dots(const mglData &tr, const char *sch=0);
+
 	/// Draw triangle mesh for points in arrays \a x, \a y, \a z with specified color \a c.
 	void TriPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *sch=0);
 	/// Draw triangle mesh for points in arrays \a x, \a y, \a z.
 	void TriPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch=0);
 	/// Draw triangle mesh for points in arrays \a x, \a y.
 	void TriPlot(const mglData &nums, const mglData &x, const mglData &y, const char *sch=0, mreal zVal=NAN);
+	/// Draw quad mesh for points in arrays \a x, \a y, \a z with specified color \a c.
+	void QuadPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &c, const char *sch=0);
+	/// Draw quad mesh for points in arrays \a x, \a y, \a z.
+	void QuadPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch=0);
+	/// Draw quad mesh for points in arrays \a x, \a y.
+	void QuadPlot(const mglData &nums, const mglData &x, const mglData &y, const char *sch=0, mreal zVal=NAN);
+	/// Draw contour lines for triangle mesh for points in arrays \a x, \a y, \a z.
+	void TriCont(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch=0,int num=7,mreal zVal=NAN);
+	void TriContV(const mglData &v, const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch=0,mreal zVal=NAN);
+	void TriCont(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch=0,int num=7,mreal zVal=NAN);
+	void TriContV(const mglData &v, const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch=0,mreal zVal=NAN);
+
 	/// Draw grid lines for density plot of 2d data specified parametrically
 	void Grid(const mglData &x, const mglData &y, const mglData &z, const char *stl=0,mreal zVal=NAN);
 	/// Draw grid lines for density plot of 2d data
@@ -878,6 +892,7 @@ public:
 	void Surf3C(const mglData &x, const mglData &y, const mglData &z, const mglData &a, const mglData &b, const char *stl=0, int num=3);
 	/// Draw several isosurface for 3d data \a a with color proportional to \a b
 	void Surf3C(const mglData &a, const mglData &b, const char *stl=0, int num=3);
+
 	/// Plot flows for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
 	void Flow(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0, int num=5, bool central=true, mreal zVal=NAN);
 	/// Plot flows for vector field {ax,ay} with color proportional to value |a|
@@ -891,6 +906,11 @@ public:
 	void FlowP(mglPoint p0, const mglData &ax, const mglData &ay, const char *sch=0);
 	void FlowP(mglPoint p0, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
 	void FlowP(mglPoint p0, const mglData &ax, const mglData &ay, const mglData &az, const char *sch=0);
+
+	void Grad(const mglData &x, const mglData &y, const mglData &z, const mglData &phi, const char *sch=0, int num=5);
+	void Grad(const mglData &x, const mglData &y, const mglData &phi, const char *sch=0, int num=5, mreal zVal=NAN);
+	void Grad(const mglData &phi, const char *sch=0, int num=5, mreal zVal=NAN);
+
 	/// Plot flow pipes for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
 	void Pipe(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch=0, mreal r0=0.05, int num=5, bool central=true, mreal zVal=NAN);
 	/// Plot flow pipes for vector field {ax,ay} with color proportional to value |a|
@@ -1093,6 +1113,7 @@ protected:
 	/// draw mark with different type at position {x,y,z} (no scaling)
 	virtual void Mark(mreal x,mreal y,mreal z,char mark='.')=0;
 
+	void InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *style);
 	/// Draw generic colorbar
 	virtual void colorbar(const mglData &v, const mglColor *s, int where, mreal x, mreal y, mreal w, mreal h)=0;
 	/// Draws the point (ball) at position \a p with color \a c.
@@ -1121,8 +1142,10 @@ protected:
 							mreal *pp,mreal *cc,mreal *kk,mreal *nn,bool wire)=0;
 	/// Plot quads depending on positions and colors of vertexes on grid
 	virtual void quads_plot(long n, mreal *pp, mreal *cc, bool *tt)=0;
-	/// Plot quads depending on positions and colors of vertexes on grid
+	/// Plot independent triangles
 	virtual void trigs_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool *tt,bool wire, bool bytrig=false)=0;
+	/// Plot independent quads
+	virtual void quads_plot(long n, long *nn, long m, mreal *pp, mreal *cc, bool *tt,bool wire, bool byquad)=0;
 	/// Plot series of unconnected lines.
 	virtual void lines_plot(long n, mreal *pp, mreal *cc, bool *tt, bool ball, bool grad)=0;
 	/// Plot series of unconnected arrows.
@@ -1169,6 +1192,8 @@ private:
 
 	/// Prepare fitted formula
 	void PrepareFitEq(mreal chi, const char *eq, const char *var, mreal *par, bool print);
+
+	void tricont_line(mreal val, long i, long k0, long k1, long k2, const mglData &x, const mglData &y, const mglData &z, const mglData &a, mreal zVal);
 	/// Print curved text
 	void font_curve(long n,mreal *pp,bool *tt,long *nn,const wchar_t *text,
 					int pos,mreal size);

@@ -191,6 +191,7 @@ void mgl_flush(HMGL gr);
 void mgl_clf_rgb(HMGL graph, mreal r, mreal g, mreal b);
 void mgl_subplot(HMGL graph, int nx,int ny,int m);
 void mgl_subplot_d(HMGL graph, int nx,int ny,int m, mreal dx, mreal dy);
+void mgl_subplot_s(HMGL graph, int nx,int ny,int m,const char *style);
 void mgl_inplot(HMGL graph, mreal x1,mreal x2,mreal y1,mreal y2);
 void mgl_relplot(HMGL graph, mreal x1,mreal x2,mreal y1,mreal y2);
 void mgl_columnplot(HMGL graph, int num, int ind);
@@ -432,6 +433,10 @@ void mgl_pipe_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HM
 void mgl_pipe_3d(HMGL graph, const HMDT ax, const HMDT ay, const HMDT az, const char *sch, mreal r0, int num, int central);
 void mgl_dew_xy(HMGL gr, const HMDT x, const HMDT y, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
 void mgl_dew_2d(HMGL gr, const HMDT ax, const HMDT ay, const char *sch,mreal zVal);
+
+void mgl_grad_xyz(HMGL graph, const HMDT x, const HMDT y, const HMDT z, const HMDT ph, const char *sch, int num);
+void mgl_grad_xy(HMGL graph, const HMDT x, const HMDT y, const HMDT ph, const char *sch, int num, mreal zVal);
+void mgl_grad(HMGL graph, const HMDT ph, const char *sch, int num, mreal zVal);
 /*****************************************************************************/
 /*		3D plotting functions												 */
 /*****************************************************************************/
@@ -471,6 +476,13 @@ void mgl_beam(HMGL graph, const HMDT tr, const HMDT g1, const HMDT g2, const HMD
 void mgl_triplot_xyzc(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch);
 void mgl_triplot_xyz(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch);
 void mgl_triplot_xy(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const char *sch, mreal zVal);
+void mgl_quadplot_xyzc(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch);
+void mgl_quadplot_xyz(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch);
+void mgl_quadplot_xy(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const char *sch, mreal zVal);
+void mgl_tricont_xyzcv(HMGL gr, const HMDT v, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch, mreal zVal);
+void mgl_tricont_xyzv(HMGL gr, const HMDT v, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch, mreal zVal);
+void mgl_tricont_xyzc(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const HMDT c, const char *sch, int n, mreal zVal);
+void mgl_tricont_xyz(HMGL gr, const HMDT nums, const HMDT x, const HMDT y, const HMDT z, const char *sch, int n, mreal zVal);
 void mgl_dots(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const char *sch);
 void mgl_dots_a(HMGL gr, const HMDT x, const HMDT y, const HMDT z, const HMDT a, const char *sch);
 void mgl_dots_tr(HMGL gr, const HMDT tr, const char *sch);
