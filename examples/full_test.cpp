@@ -35,7 +35,7 @@ int test(mglGraphAB *gr)
 {
 	mglParse par;
 	par.AllowSetSize = true;
-	FILE *fp=fopen("layouts.mgl","rt");
+	FILE *fp=fopen("test.mgl","rt");
 	par.Execute(gr,fp);
 	fclose(fp);
 /*	gr->SetDrawReg(2,2,1);
@@ -1695,7 +1695,11 @@ int main(int argc,char **argv)
 		int i=0;
 		for(i=0;samp[i].name[0];i++);	// determine the number of samples
 		s = (mglSample *) bsearch(&tst, samp, i, sizeof(mglSample), mgl_cmd_smp);
-		if(s)	{	s->func(gr);	save(gr, s->name, suf);	}
+		if(s)
+		{
+			gr->DefaultPlotParam();	gr->Clf();
+			s->func(gr);	save(gr, s->name, suf);
+		}
 		else	printf("no sample %s\n",name);
 	}
 	printf("\n");	return 0;

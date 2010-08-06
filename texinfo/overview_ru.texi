@@ -199,9 +199,13 @@ MathGL это ...
 @image{png_static/QqwcC}
 @item CcwyY
 @image{png_static/CcwyY}
+@item UuwqR
+@image{png_static/UuwqR}
 
 @item BbcyrR
 @image{png_static/BbcyrR}
+@item UbcyqR
+@image{png_static/UbcyqR}
 @item BbcwyrR
 @image{png_static/BbcwyrR}
 @item bwr
@@ -274,6 +278,46 @@ gr->Window(argc,argv,foo_draw,"Title",this);
 Начиная с версии 1.10, можно использовать заголовочный файл @code{#include <mgl/mgl_w.h>}, содержащий C++ классы только с @code{inline} функциями. Такие классы должны быть совместимы с любым компилятором. Отмечу, что эти "интерфейсные" классы @strong{не совместимы} с классами в обычных заголовочных файлах и использоваться должны только одни из них! Я рекомендую использовать обычные заголовочные классы для компиляторов GNU (например для MinGW).
 
 @c @strong{Наконец!} Пожалуйста @emph{не спрашивайте} меня вопросы про Windows. Я не использую Windows. Я ничего не знаю о Visual Basic, Visual C++, CBuiled или .NET. Найдите подходящие форумы в интернете и задайте свой вопрос там.
+
+@item Как мне собрать MathGL под Windows?
+Простейший путь -- использование комбинации CMake и MinGW. Также Вам может потребоваться дополнительные библиотеки, такие как GSL, PNG, JPEG и пр. Все они могут быть найдены на @url{http://gnuwin32.sourceforge.net/packages.html}. После установки всех компонент, просто запустите конфигуратор CMake и соберите MathGL командой make.
+
+@item Как создать окно FLTK/GLUT/Qt с текущими результатами параллельно с выполнением основных вычислений?
+Следует создать отдельный поток для обработки сообщений в окно. Кросс-платформенный путь -- использование библиотеки @code{pthread}. Обновление данных в окне можно выполнить вызовом функции @code{mglGraphFLTK::Update()}. Пример код имеет вид:
+@verbatim
+//-----------------------------------------------------------------------------
+#include <mgl/mgl_fltk.h>
+#include <pthread.h>
+#include <unistd.h>
+
+mglPoint pnt;  // some global variable for changable data
+//-----------------------------------------------------------------------------
+int sample(mglGraph *gr, void *)
+{
+  gr->Box();  gr->Line(mglPoint(),pnt,"Ar2"); // just draw a vector
+  return 0;
+}
+//-----------------------------------------------------------------------------
+void *mgl_fltk_tmp(void *)      {       mglFlRun();     return 0;       }
+int main (int argc, char ** argv)
+{
+  mglGraphFLTK gr;
+  gr.Window(argc,argv,sample,"test");  // create window
+  static pthread_t tmp;
+  pthread_create(&tmp, 0, mgl_fltk_tmp, 0);
+  pthread_detach(tmp);    // run window handling in the separate thread
+  for(int i=0;i<10;i++)   // do calculation
+  {
+    sleep(1);             // which can be very long
+    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+    gr.Update();          // update window
+  }
+  return 0;   // finish calculations and close the window
+}
+//-----------------------------------------------------------------------------
+@end verbatim
+
+
 
 @item Сколько человек участвовало в создании библиотеки?
 Большую часть библиотеки написал один человек. Это результат примерно года работы на написание ядра библиотеки и базовых функций (в основном вечерами и по выходным). Процесс усовершенствования продолжается и теперь :). Скрипты сборки в основном написаны Д.Кулагиным, а экспорт в IDTF написан М.Видассовым.

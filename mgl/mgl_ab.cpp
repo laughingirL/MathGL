@@ -397,22 +397,21 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	{
 	case 'x':
 	case 'X':
-		pp[3] += pp[3] ? fabs(pp[3])*.001 :(Max.x - Min.x)/100;	break;
+//		pp[3] += pp[3] ? fabs(pp[3])*.001 :(Max.x - Min.x)/100;	break;
+		pp[3] += (Max.x - Min.x)/1000;	break;
 	case 'y':
 	case 'Y':
 		if(TernAxis)	upside = !upside;
-		pp[4] += pp[4] ? fabs(pp[4])*.001 : (Max.y - Min.y)/10;	break;
+//		pp[4] += pp[4] ? fabs(pp[4])*.001 : (Max.y - Min.y)/10;	break;
+		pp[4] += (Max.y - Min.y)/1000;	break;
 	case 'z':
 	case 'Z':
 		if(TernAxis)	upside = !upside;
-		pp[4] -= 0;
-		pp[5] += pp[5] ? fabs(pp[5])*.001 :(Max.z - Min.z)/100;	break;
+//		pp[4] -= 0;		pp[5] += pp[5] ? fabs(pp[5])*.001 :(Max.z - Min.z)/100;	break;
+		pp[5] += (Max.z - Min.z)/1000;	break;
 	case 't':
 	case 'T':
-//		upside = !upside;
-		pp[3] += (Max.x - Min.x)/100;
-		pp[4] -= (Max.y - Min.y)/100;
-		pp[5] += 0;	break;
+		pp[3] += (Max.x - Min.x)/1000;	pp[4] -= (Max.y - Min.y)/1000;	break;
 	}
 	if(upside)	shift = -shift;
 	shift *= fsize/2;

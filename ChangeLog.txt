@@ -18,6 +18,9 @@
 	- Add extra text align for axis label if it is located near minimal or maximal axis value.
 	- Add possibility to read HDF4 files.
 	- Add MGL commands 'grad', 'quadplot', 'tricont'
+	- Add 'int(x)' function to the expression parser (class mglFormula).
+	- Add optional gap for ColumnPlot.
+	- Allow defining manual array in MGL command argument as [v1,v2,v3,...]. Array can be multidimensional like [[v1,v2],[v3,v4]].
 	- Now $N is substituted into the second argument of MGL commands 'define', 'defnum', 'defpal', 'defchr'.
 	- Reduce animation delay to 1 sec.
 	- Bugfix with newline symbol '\n'

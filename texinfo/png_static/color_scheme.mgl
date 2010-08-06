@@ -1,0 +1,5 @@
+setsize 360 29
+new a 256 2
+fill a 'x'
+plotfactor 1
+dens a 'UuwqR'

@@ -1,54 +1,52 @@
 					MathGL (for v.1.11.*)
 
-a. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
-0. Miss MAJOR labels or decrease its fontsize if labels too close.
+1. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
+2. Miss MAJOR labels or decrease its fontsize if labels too close.
 	Also check that enough digits is printed to distingush the labels
 	Also allow "time"-labels
 	Also allow rotate labels if they too dense
-2. Contour label should not rotated on ~180 degree
-3. Help about 't'/'T' style for contours (+MGL)
+3. Contour label should not rotated on ~180 degree ?!
 4. Add MGL commands "function 'name'", "return [Res]" and modify "call 'name' [Res]"
-7. FAQ about pthread and MathGL -- for mglGraphFLTK.
-8. Keep text formating for next symbol -- for example '\b{b}none'
-9. Bug with mult-line text in axis labels -- wrong shifting
-10. Save glyph then it is used for mglGraphPS -- allow different font family in EPS|SVG ??!
-11. Add small-caps in TeX parsing -- also do 2-wchar string parsing (text + attributes).
-12. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
-14. Options "iI_-aA" for colorbar
-15. Hankel transform
-16. The same function for ticks of axis and colorbar
-17. Save id of subplots and axis for getting value of click coordinates arbitrary inplot -- fill only part which is overlapped. Clear it at Clf() + update for any Rotate, Aspect, InPlot, SetRanges, 
-18. Add option ':[xyzd]' in color scheme for coloring along coordinate (default 'z') ?!?
-19. Example of "ring" chart
-20. Add sample for color scheme "UBbcgyqrR"
-21. Regroup pictures in WWW by big classes + combo plots
-22. Save ALL plot styles for each curve (0...N) for each subplot (0...M) in format \leg{N_M}
-23. Add TeX command \leg{plot style} for line+mark of specified style.
-24. Allow legend and colorbar in absolute coordinates ?!! the same as in Text() :)
-25. Allow color for text if it is not text style
-26. Add "colorbar x y ['sch'='' w=1 h=1]" + "colorbar x y dat ['sch'='' w=1 h=1]"
-27. Rename 'stl'->'style', 'sch'->'scheme' in MGL docs ???
-28. Add '[' as separator in string
-29. INCOMPATIBLE CHANGES!!! swap color and font style in text option ('bR:r' -> 'r:bR')
-30. INCOMPATIBLE CHANGES!!! hide 'dir' argument as ':[xyz]' for cont3, dens3, contf3, grid3 + remove conta, densa, grida, contfa
-31. INCOMPATIBLE!!! Allow slice definition as real: sl<1 ? sl=int(n*sl) : int(sl);
-32. INCOMPATIBLE CHANGES!!! tune colors as {} -- for example, 'b{3}'
-33. INCOMPATIBLE CHANGES!!! hide unused arguments (like "size")
-34. Export to X3D
-35. Samples about gradient filling in Area() and Range; + About 'a' and 'f' options of Bars(), Barh() + 2 colors
-36. Legend in OpenGL mode
-37. Check if widget functions can be added to mgl_w.h !?! -- use #define ??!
-38. Load GZ compressed files VFM -- add functions for handling "textual" streams like double stof(char **sptr).
-39. Surface by interpolation for arbitrary points {x,y,z}.
-40. Bug with 'a' option of text after Rotate ?!
-41. Update STIX fonts -- new release 
-42. Create PWT fonts
-43. Allow interpolation in MGL if argument is not integer.
-44. FAQ about cmake for mingw
-45. Check HDF4 reading -- put in Cmake + configure + docs
-46. Docs about SetLegendMarks/mgl_set_legend_marks
-48. Docs about Grad(), TriCont(), QuadPlot()
-49. Inplace arrays as [v1,v2,v3] in MGL
+5. Keep text formating for next symbol -- for example '\b{b}none'
+6. Bug with mult-line text in axis labels -- wrong shifting
+7. Save glyph then it is used for mglGraphPS -- allow different font family in EPS|SVG ??!
+8. Add small-caps in TeX parsing -- also do 2-wchar string parsing (text + attributes).
+9. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
+10. Options "iI_-aA" for colorbar
+11. Hankel transform
+12. The same function for ticks of axis and colorbar
+13. Add option ':[xyzd]' in color scheme for coloring along coordinate (default 'z') ?!?
+14. Save ALL plot styles for each curve (0...N) for each subplot (0...M) in format \leg{N_M} ?!?
+15. Add TeX command \leg{plot style} for line+mark of specified style.
+16. Allow legend and colorbar in absolute coordinates ?!! the same as in Text() :)
+18. Add "colorbar x y ['sch'='' w=1 h=1]" + "colorbar x y dat ['sch'='' w=1 h=1]"
+19. Export to X3D
+21. Quaternary diagrams plotted in a tetrahedron: equivalent to ternary diagrams, but in 3D.
+22. Legend in OpenGL mode
+23. Load GZ compressed files VFM -- add functions for handling "textual" streams like double stof(char **sptr).
+25. Bug with 'a' option of text after Rotate ?!
+26. Check HDF4 reading -- put in Cmake + configure + docs
+27. Update STIX fonts -- new release 
+28. Create PWT fonts
+29. T-ticks in wrong direction (should be x+y
+30. SetCut for lines -- do "accurate" cutting to the edges???
+31. Problem with \calB and so on (\calH, ...).
+32. Allow different ranges for ternary axis
+
+35. INCOMPATIBLE CHANGES!!! swap color and font style in text option ('bR:r' -> 'r:bR')
+36. INCOMPATIBLE CHANGES!!! hide 'dir' argument as ':[xyz]' for cont3, dens3, contf3, grid3 + remove conta, densa, grida, contfa
+37. INCOMPATIBLE!!! Allow slice definition as real: sl<1 ? sl=int(n*sl) : int(sl);
+38. INCOMPATIBLE CHANGES!!! tune colors as {} -- for example, 'b{3}'
+39. INCOMPATIBLE CHANGES!!! hide unused arguments (like "size")
+
+40. Docs about SetLegendMarks/mgl_set_legend_marks
+41. Docs about Grad(), TriCont(), QuadPlot(), ColumnPlot()
+42. Example of "stereo-image"
+43. Example of "ring" chart
+44. Samples about gradient filling in Area() and Range; + About 'a' and 'f' options of Bars(), Barh() + 2 colors
+45. Regroup pictures in WWW by big classes + combo plots
+46. Rename 'stl'->'style', 'sch'->'scheme' in MGL docs ???
+47. Docs about inplace arrays [[v1,v2],...]
 
 
 1. Plot for isolines of vector fields ???
@@ -56,6 +54,13 @@ a. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
 3. \dfrac for normal size and centering ???
 4. "Chaos" in area.png (near axis) ???
 5. save data coordinates in picture??? -- NO -- slow + a lot of memory!
+6. "Cut off" curves if text is printed along it (for contour labels) ?!?
+7. Allow interpolation in MGL if argument is not integer ???
+8. Check if widget functions can be added to mgl_w.h !?! -- use #define ??!
+9. Add '[' as separator in string ???
+10. Save id of subplots and axis for getting value of click coordinates arbitrary inplot -- fill only part which is overlapped. Clear it at Clf() + update for any Rotate, Aspect, InPlot, SetRanges, 
+11. Surface by interpolation for arbitrary points {x,y,z} -- seems to be too complicated :(
+
 
 					MathGL (for v.2.?) ???
 

@@ -46,12 +46,10 @@ void wcstrim_mgl(wchar_t *str)
 	wchar_t *c = mgl_wcsdup(str);
 	unsigned long n=wcslen(str);
 	long k;
-	for(k=0;k<long(wcslen(str));k++)	// удаляем начальные пробелы
-		if(!isspace(str[k]))	break;
+	for(k=0;k<long(wcslen(str));k++)	if(!isspace(str[k]))	break;
 	wcscpy(c,&(str[k]));
 	n = wcslen(c);
-	for(k=n-1;k>=0;k--)	// удаляем начальные пробелы
-		if(!isspace(c[k]))		break;
+	for(k=n-1;k>=0;k--)	if(!isspace(c[k]))	break;
 	c[k+1] = 0;
 	wcscpy(str,c);	free(c);
 }
@@ -331,16 +329,16 @@ void _mgl_tick_text(mreal z, mreal z0, mreal d, mreal v, int kind, wchar_t str[6
 	if((kind&1) && z>z0)
 	{
 		int n1,n2;
-		mglprintf(str, 64, fabs(u)<1 ? L"@{(+%.2g)}" : L"@{(+%.3g)}",u);	n1=wcslen(str);
-		mglprintf(str, 64, L"@{(+%g)}",u);	n2=wcslen(str);
-		if(n1<n2)	mglprintf(str, 64, L"@{(+%.2g)}",u);
+		mglprintf(str, 64, fabs(u)<1 ? L"@{(+%.2g)}" : L"@{(+%.3g)}",u);
+		n1=wcslen(str);	mglprintf(str, 64, L"@{(+%g)}",u);	n2=wcslen(str);
+		if(n1<n2)	mglprintf(str, 64, fabs(u)<1 ? L"@{(+%.2g)}" : L"@{(+%.3g)}",u);
 	}
 	else
 	{
 		int n1,n2;
 		mglprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);
 		n1=wcslen(str);	mglprintf(str, 64, L"%g",u);	n2=wcslen(str);
-		if(n1<n2)	mglprintf(str, 64, L"%.2g",u);
+		if(n1<n2)	mglprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);
 	}
 }
 //-----------------------------------------------------------------------------

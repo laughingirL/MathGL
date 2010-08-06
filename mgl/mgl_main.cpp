@@ -472,8 +472,8 @@ void mglGraph::SetPal(const char *colors)
 		if(!strchr("wkrgbcymhRGBCYMHWlenuqpLENUQP",colors[i]))	continue;
 		PalNames[k] = colors[i];	Pal[k] = mglColor(colors[i]);	k++;
 	}
-	if(k>0)	NumPal = k;	//	CurrPal = 0;
-	else	SetPal(0);	// if no colors then set default palette
+	NumPal = k;	//	CurrPal = 0;
+	if(k<1)	SetPal(0);	// if no colors then set default palette
 }
 //-----------------------------------------------------------------------------
 mglColor mglGraph::GetPal()
@@ -1140,11 +1140,11 @@ void mglGraph::Colorbar(const mglData &v, const char *sch, int where, mreal x, m
 	delete []c;
 }
 //-----------------------------------------------------------------------------
-void mglGraph::ColumnPlot(int num, int i)
+void mglGraph::ColumnPlot(int num, int i, mreal dd)
 {
 	mreal d = i/(num+PlotFactor-1);
 	mreal w = PlotFactor/(num+PlotFactor-1);
-	InPlot(0,1,d,d+w,true);
+	InPlot(0,1,d,d+w*(1-dd),true);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::SetCoor(int how)

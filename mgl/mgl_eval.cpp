@@ -76,6 +76,7 @@ EQ_LN,		// logarithm of x, ln(x)
 EQ_LG,		// decimal logarithm of x, lg(x) = ln(x)/ln(10)
 EQ_SIGN,	// sign of number
 EQ_STEP,	// step function
+EQ_INT,		// integer part [x]
 EQ_ABS,		// absolute value of x
 // special functions of 1 argument
 EQ_LI2,		// dilogarithm for a real argument Li2(x) = - \Re \int_0^x ds \log(1-s)/s.
@@ -381,6 +382,7 @@ mglFormula::mglFormula(const char *string)
 		else if(!strcmp(name,"pow"))	Kod=EQ_POW;
 		else if(!strcmp(name,"mod"))	Kod=EQ_MOD;
 		else if(!strcmp(name,"i"))		Kod=EQ_BESI;
+		else if(!strcmp(name,"int"))	Kod=EQ_INT;
 		else if(!strcmp(name,"j"))		Kod=EQ_BESJ;
 		else if(!strcmp(name,"k"))		Kod=EQ_BESK;
 		else if(!strcmp(name,"y"))		Kod=EQ_BESY;
@@ -494,8 +496,8 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 		};
-	func_1 f1[41] = {sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,
-					asinh,acosh,atanh,sqrt,exp,log,log10,sgn,stp,fabs
+	func_1 f1[42] = {sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,
+					asinh,acosh,atanh,sqrt,exp,log,log10,sgn,stp,floor,fabs
 #ifndef NO_GSL
 			,gsl_sf_dilog,gslEllEc,gslEllFc,gslAi,gslBi,gsl_sf_erf,
 			gsl_sf_expint_3,gsl_sf_expint_Ei,gsl_sf_expint_E1,gsl_sf_expint_E2,
@@ -620,8 +622,8 @@ mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 		};
-	func_1 f11[41] = {cos,cos_d,tan_d,asin_d,acos_d,atan_d,cosh,sinh,tanh_d,
-					asinh_d,acosh_d,atanh_d,sqrt_d,exp,log_d,log10_d,mgz1,mgz1,sgn
+	func_1 f11[42] = {cos,cos_d,tan_d,asin_d,acos_d,atan_d,cosh,sinh,tanh_d,
+					asinh_d,acosh_d,atanh_d,sqrt_d,exp,log_d,log10_d,mgz1,mgz1,mgz1,sgn
 #ifndef NO_GSL
 			,dilog_d,gslE_d,gslK_d,gslAi_d,gslBi_d,erf_d,exp3_d,ei_d,e1_d,e2_d,
 			si_d,ci_d,gamma_d,gsl_sf_psi_1,mgz1,mgz1,sinc_d,mgz1,mgz1,mgz1,mgz1,mgz1

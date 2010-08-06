@@ -311,7 +311,7 @@ public:
 	void SubPlot(int nx,int ny,int m, mreal dx=0, mreal dy=0);
 	void SubPlot(int nx,int ny,int m, const char *style);
 	/// Put further plotting in column cell of previous subplot
-	void ColumnPlot(int num, int i);
+	void ColumnPlot(int num, int i, mreal d=0);
 	/// Put further plotting in cell of stick rotated on angles tet, phi
 	virtual void StickPlot(int num, int i, mreal tet, mreal phi)=0;
 	/// Put further plotting in some region of whole frame surface.

@@ -2675,14 +2675,14 @@ void mglc_inplot(wchar_t out[1024], long , mglArg *a, int k[10])
 //-----------------------------------------------------------------------------
 int mgls_columnplot(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	if(k[0]==3 && k[1]==3)	gr->ColumnPlot(int(a[0].v), int(a[1].v));
+	if(k[0]==3 && k[1]==3)	gr->ColumnPlot(int(a[0].v), int(a[1].v), k[2]==3?a[2].v:0);
 	else	return 1;
 	return 0;
 }
 void mglc_columnplot(wchar_t out[1024], long , mglArg *a, int k[10])
 {
 	if(k[0]==3 && k[1]==3)
-		mglprintf(out,1024,L"gr->ColumnPlot(%d, %d);", int(a[0].v), int(a[1].v));
+		mglprintf(out,1024,L"gr->ColumnPlot(%d, %d, %g);", int(a[0].v), int(a[1].v), k[2]==3?a[2].v:0);
 }
 //-----------------------------------------------------------------------------
 int mgls_stickplot(mglGraph *gr, long , mglArg *a, int k[10])
@@ -3464,7 +3464,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"clf",L"Clear picture",L"clf", mgls_clf, mglc_clf, false, 5},
 	{L"cloud",L"Draw cloud",L"cloud Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_cloud, mglc_cloud, false, 0},
 	{L"colorbar",L"Draw colorbar",L"colorbar ['fmt' pos]|Vdat ['fmt' pos]|'sch' pos x y w h ", mgls_colorbar, mglc_colorbar, false, 1},
-	{L"columnplot",L"Set position of plot inside cell of column", L"columnplot num ind", mgls_columnplot, mglc_columnplot, false, 4},
+	{L"columnplot",L"Set position of plot inside cell of column", L"columnplot num ind [d]", mgls_columnplot, mglc_columnplot, false, 4},
 	{L"combine", L"Direct multiplication of arrays", L"combine Res Adat Bdat", mgls_combine, mglc_combine, false, 3},
 	{L"cone",L"Draw cone",L"cone x1 y1 z1 x2 y2 z2 r1 [r2 'fmt' edge]", mgls_cone, mglc_cone, false, 1},
 	{L"cont",L"Draw contour lines",L"cont Zdat ['fmt' num zpos]|Vdat Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' num zpos]|Vdat Xdat Ydat Zdat ['fmt' zpos]", mgls_cont, mglc_cont, false, 0},

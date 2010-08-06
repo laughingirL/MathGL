@@ -126,6 +126,48 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 		wcscpy(str,Buf);
 	}
 	len=wcslen(str);
+	if(str[0]=='[')	// this is manual subdata
+	{
+		mglData a1;
+		long i, j, br=0,k;
+		bool ar=true,mt=false;
+		for(i=1,j=1;i<len-1;i++)
+		{
+			if(str[i]=='[')	br++;
+			if(str[i]==']' && br>0)	br--;
+			if(str[i]==',' && !br)
+			{
+				wcscpy(Buf,str+j);	Buf[i-j]=0;
+				a1=mglFormulaCalc(Buf, arg);
+				if(j==1)
+				{	res = a1;	ar = (a1.nx==1);	mt = (a1.nx>1 && a1.ny==1);	}
+				else
+				{
+					if(ar)		// res 1d array
+					{	k = res.nx;	res.InsertColumns(k);	res.Put(a1,k);	}
+					else if(mt)	// res 2d array
+					{	k = res.ny;	res.InsertRows(k);	res.Put(a1,-1,k);	}
+					else		// res 3d array
+					{	k = res.nz;	res.InsertSlices(k);	res.Put(a1,-1,-1,k);	}
+				}
+				j=i+1;
+			}
+		}
+		wcscpy(Buf,str+j);	Buf[i-j]=0;
+		a1=mglFormulaCalc(Buf, arg);
+		if(j==1)
+		{	res = a1;	ar = (a1.nx==1);	mt = (a1.nx>1 && a1.ny==1);	}
+		else
+		{
+			if(ar)		// res 1d array
+			{	k = res.nx;	res.InsertColumns(k);	res.Put(a1,k);	}
+			else if(mt)	// res 2d array
+			{	k = res.ny;	res.InsertRows(k);	res.Put(a1,-1,k);	}
+			else		// res 3d array
+			{	k = res.nz;	res.InsertSlices(k);	res.Put(a1,-1,-1,k);	}
+		}
+		return res;
+	}
 
 	n=mglFindInText(str,"&|");				// lowest priority -- logical
 	if(n>=0)
@@ -514,6 +556,9 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 			else
 			{	Buf[n]=0;	res = mglApplyOper(Buf,Buf+n+1,arg, fmod);	}
 		}
+		else if(!wcscmp(name+1,L"int"))
+		{	res=mglFormulaCalc(Buf, arg);
+			for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = floor(res.a[i]);	}
 #ifndef NO_GSL
 		else if(!wcscmp(name,L"i"))
 		{

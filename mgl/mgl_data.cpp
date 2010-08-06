@@ -1679,6 +1679,9 @@ void mglData::Put(const mglData &val, int xx, int yy, int zz)
 		else if(val.nx>=nx)
 			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
 				a[i+nx*(j+k*ny)] = val.a[i];
+		else if(val.nx==1)
+			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+				a[i+nx*(j+k*ny)] = val.a[0];
 	}
 	else if(xx<0 && yy<0)	// 2d
 	{
@@ -1688,6 +1691,9 @@ void mglData::Put(const mglData &val, int xx, int yy, int zz)
 		else if(val.nx>=nx)
 			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
 				a[i+nx*(j+zz*ny)] = val.a[i];
+		else if(val.nx==1)
+			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+				a[i+nx*(j+zz*ny)] = val.a[0];
 	}
 	else if(yy<0 && zz<0)	// 2d
 	{
@@ -1697,6 +1703,9 @@ void mglData::Put(const mglData &val, int xx, int yy, int zz)
 		else if(val.nx>=ny)
 			for(i=0;i<ny;i++)	for(j=0;j<nz;j++)
 				a[xx+nx*(i+j*ny)] = val.a[i];
+		else if(val.nx==1)
+			for(i=0;i<ny;i++)	for(j=0;j<nz;j++)
+				a[xx+nx*(i+j*ny)] = val.a[0];
 	}
 	else if(xx<0 && zz<0)	// 2d
 	{
@@ -1706,21 +1715,30 @@ void mglData::Put(const mglData &val, int xx, int yy, int zz)
 		else if(val.nx>=nx)
 			for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
 				a[i+nx*(yy+j*ny)] = val.a[i];
+		else if(val.nx==1)
+			for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
+				a[i+nx*(yy+j*ny)] = val.a[0];
 	}
 	else if(xx<0)
 	{
 		if(val.nx>=nx)	for(i=0;i<nx;i++)
 			a[i+nx*(yy+zz*ny)] = val.a[i];
+		else if(val.nx==1)	for(i=0;i<nx;i++)
+			a[i+nx*(yy+zz*ny)] = val.a[0];
 	}
 	else if(yy<0)
 	{
 		if(val.nx>=ny)	for(i=0;i<ny;i++)
 			a[xx+nx*(i+zz*ny)] = val.a[i];
+		else if(val.nx==1)	for(i=0;i<ny;i++)
+			a[xx+nx*(i+zz*ny)] = val.a[0];
 	}
 	else if(zz<0)
 	{
 		if(val.nx>=nz)	for(i=0;i<nz;i++)
 			a[xx+nx*(yy+i*ny)] = val.a[i];
+		else if(val.nx==1)	for(i=0;i<nz;i++)
+			a[xx+nx*(yy+i*ny)] = val.a[0];
 	}
 }
 //-----------------------------------------------------------------------------

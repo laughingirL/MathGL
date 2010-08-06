@@ -421,8 +421,8 @@ public:
 	inline void InPlot(float x1,float x2,float y1,float y2, bool rel=true)
 	{	if(rel)	mgl_inplot(self, x1, x2, y1, y2);
 		else	mgl_relplot(self, x1, x2, y1, y2);	};
-	inline void ColumnPlot(int num, int ind)
-	{	mgl_columnplot(self,num,ind);	};
+	inline void ColumnPlot(int num, int ind, float d=0)
+	{	mgl_columnplot_d(self,num,ind,d);	};
 	inline void StickPlot(int num, int i, float tet, float phi)
 	{	mgl_stickplot(self,num,i,tet,phi);	};
 	inline void Aspect(float Ax,float Ay,float Az)

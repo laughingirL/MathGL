@@ -195,6 +195,7 @@ void mgl_subplot_s(HMGL graph, int nx,int ny,int m,const char *style);
 void mgl_inplot(HMGL graph, mreal x1,mreal x2,mreal y1,mreal y2);
 void mgl_relplot(HMGL graph, mreal x1,mreal x2,mreal y1,mreal y2);
 void mgl_columnplot(HMGL graph, int num, int ind);
+void mgl_columnplot_d(HMGL graph, int num, int ind, mreal d);
 void mgl_stickplot(HMGL graph, int num, int ind, mreal tet, mreal phi);
 void mgl_aspect(HMGL graph, mreal Ax,mreal Ay,mreal Az);
 void mgl_rotate(HMGL graph, mreal TetX,mreal TetZ,mreal TetY);
