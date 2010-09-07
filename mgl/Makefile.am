@@ -1,4 +1,4 @@
-INCLUDES        = -I$(top_builddir)/include -I$(top_builddir)
+AM_CXXFLAGS += -I$(top_srcdir)/include -I$(top_builddir)/include
 
 lib_LTLIBRARIES = libmgl.la
 
@@ -20,7 +20,7 @@ libmgl_la_LIBADD = $(PNG_LIBS) $(GL_LIBS) $(LOPENMP)
 libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 
 libmgl_la_CXXFLAGS = $(WIDGETS) -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
-    -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(GIF_FLAGS) $(JPEG_FLAGS) \
+    -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(HDF4_FLAGS) $(GIF_FLAGS) $(JPEG_FLAGS) \
     $(TIFF_FLAGS) $(PNG_FLAGS) $(FLTK_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS) \
     $(PTHREAD_FLAGS)
 
@@ -30,6 +30,10 @@ endif
 
 if USE_GSL
 libmgl_la_LIBADD += $(GSL_LIBS)
+endif
+
+if USE_HDF4
+libmgl_la_LIBADD += $(HDF4_LIBS)
 endif
 
 if USE_HDF5

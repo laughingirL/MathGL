@@ -764,6 +764,12 @@ void smgl_area(mglGraph *gr)
 	gr->Org=mglPoint();	gr->Box();	gr->Area(y);
 }
 //-----------------------------------------------------------------------------
+void smgl_area_2(mglGraph *gr)
+{
+	mglData y;	mgls_prepare1d(&y);
+	gr->Org=mglPoint();	gr->Box();	gr->Area(y,"cbgGyr");
+}
+//-----------------------------------------------------------------------------
 void smgl_stem(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
@@ -774,6 +780,24 @@ void smgl_step(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
 	gr->Box();	gr->Step(y);
+}
+//-----------------------------------------------------------------------------
+void smgl_bars_2(mglGraph *gr)
+{
+	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+	gr->Org=mglPoint();	gr->Box();	gr->Bars(ys,"cbgGyr");
+}
+//-----------------------------------------------------------------------------
+void smgl_bars_a(mglGraph *gr)
+{
+	mglData ys(10,3);	ys.Modify("0.3*sin(pi*(2*x+y/2))+0.1*rnd");
+	gr->Org=mglPoint();	gr->Box();	gr->Bars(ys,"a");
+}
+//-----------------------------------------------------------------------------
+void smgl_bars_f(mglGraph *gr)
+{
+	mglData ys(10,2);	ys.Modify("0.24*sin(pi*(2*x+y/2))+0.06*rnd");
+	gr->Org=mglPoint();	gr->Box();	gr->Bars(ys,"f");
 }
 //-----------------------------------------------------------------------------
 void smgl_bars(mglGraph *gr)
@@ -806,6 +830,13 @@ void smgl_region(mglGraph *gr)
 {
 	mglData y1,y2;	mgls_prepare1d(0, &y1, &y2);
 	gr->Box();	gr->Region(y2,y1,"r");
+	gr->Plot(y1,"k2");	gr->Plot(y2,"k2");
+}
+//-----------------------------------------------------------------------------
+void smgl_region_2(mglGraph *gr)
+{
+	mglData y1,y2;	mgls_prepare1d(0, &y1, &y2);
+	gr->Box();	gr->Region(y2,y1,"yr");
 	gr->Plot(y1,"k2");	gr->Plot(y2,"k2");
 }
 //-----------------------------------------------------------------------------
@@ -877,6 +908,14 @@ void smgl_chart(mglGraph *gr)
 	gr->Box();	gr->Chart(ch,"#");
 }
 //-----------------------------------------------------------------------------
+void smgl_ring_chart(mglGraph *gr)
+{
+	mglData ch(7,2);	for(int i=0;i<7*2;i++)	ch.a[i]=mgl_rnd()+0.1;
+	gr->Light(true);	gr->Rotate(40,60);	gr->VertexColor(false);
+	gr->SetFunc("(y+2)/3*cos(pi*x)","(y+2)/3*sin(pi*x)","");
+	gr->Box();	gr->Chart(ch,"bgr cmy#");
+}
+//-----------------------------------------------------------------------------
 void smgl_pie_chart(mglGraph *gr)
 {
 	mglData ch(7,2);	for(int i=0;i<7*2;i++)	ch.a[i]=mgl_rnd()+0.1;
@@ -897,6 +936,13 @@ void mgls_prepare2d(mglData *a, mglData *b=0, mglData *v=0)
 		if(a)	a->a[i0] = 0.6*sin(2*M_PI*x)*sin(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
 		if(b)	b->a[i0] = 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
 	}
+}
+//-----------------------------------------------------------------------------
+void smgl_grad(mglGraph *gr)
+{
+	mglData a;	mgls_prepare2d(&a);
+	gr->Box();	gr->Grad(a);
+	gr->Alpha(true);	gr->Dens(a);
 }
 //-----------------------------------------------------------------------------
 void smgl_contt(mglGraph *gr)
@@ -934,6 +980,16 @@ void smgl_surf(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
 	gr->Light(true);	gr->Rotate(40,60);
+	gr->Box();	gr->Surf(a);
+}
+//-----------------------------------------------------------------------------
+void smgl_stereo(mglGraph *gr)
+{
+	mglData a;	mgls_prepare2d(&a);
+	gr->Light(true);
+	gr->SubPlot(2,1,0);	gr->Rotate(40,60+3);
+	gr->Box();	gr->Surf(a);
+	gr->SubPlot(2,1,1);	gr->Rotate(40,60-3);
 	gr->Box();	gr->Surf(a);
 }
 //-----------------------------------------------------------------------------
@@ -1708,9 +1764,13 @@ int main(int argc,char **argv)
 mglSample samp[] = {
 	{"2_axis", smgl_2_axis},
 	{"area", smgl_area},
+	{"area_2", smgl_area_2},
 	{"axial", smgl_axial},
 	{"barh", smgl_barh},
 	{"bars", smgl_bars},
+	{"bars_2", smgl_bars_2},
+	{"bars_a", smgl_bars_a},
+	{"bars_f", smgl_bars_f},
 	{"belt", smgl_belt},
 	{"boxplot", smgl_boxplot},
 	{"boxs", smgl_boxs},
@@ -1745,6 +1805,7 @@ mglSample samp[] = {
 	{"flow3", smgl_flow3},
 	{"flow_dens", smgl_flow_dens},
 	{"fonts", smgl_fonts},
+	{"grad", smgl_grad},
 	{"legend", smgl_legend},
 	{"loglog", smgl_loglog},
 	{"map",		smgl_map},
@@ -1763,6 +1824,8 @@ mglSample samp[] = {
 	{"qo2d", smgl_qo2d},
 	{"radar", smgl_radar},
 	{"region", smgl_region},
+	{"region_2", smgl_region_2},
+	{"ring_chart", smgl_ring_chart},
 	{"sample1", smgl_sample1},
 	{"sample2", smgl_sample2},
 	{"sample3", smgl_sample3},
@@ -1782,6 +1845,7 @@ mglSample samp[] = {
 	{"sew", smgl_sew},
 	{"stem", smgl_stem},
 	{"step", smgl_step},
+	{"stereo", smgl_stereo},
 	{"stfa", smgl_stfa},
 	{"stick", smgl_stick},
 	{"surf", smgl_surf},

@@ -1075,6 +1075,11 @@ Setsize: размер(ы) равны нулю или отрицательны
 Включает/выключает рисование прямоугольника вокруг легенды. По умолчанию (=@code{true}) прямоугольник рисуется.
 @end deftypefn
 
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetLegendMarks (@code{int} num)
+@deftypefnx {C function} @code{void} mgl_set_legend_marks (@code{HMGL} gr, @code{int} num)
+Задает число маркеров в легенде. По умолчанию используется 1 маркер.
+@end deftypefn
+
 @c ##################################################################
 @node 1D plotting, 2D plotting, Legend, MathGL core
 @section 1D графики
@@ -1446,6 +1451,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 * ContF:: 
 * ContD:: 
 * Axial:: 
+* Grad:: 
 * Grid:: 
 @end menu
 
@@ -1630,7 +1636,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @end deftypefn
 
 @c ==================================================================
-@node Axial, Grid, ContD, 2D plotting
+@node Axial, Grad, ContD, 2D plotting
 @subsection Axial
 @cindex Axial
 
@@ -1655,7 +1661,28 @@ Setsize: размер(ы) равны нулю или отрицательны
 @end deftypefn
 
 @c ==================================================================
-@node Grid, , Axial, 2D plotting
+@node Grad, Grid, Axial, 2D plotting
+@subsection Grad
+@cindex Grad
+
+@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}phi, @code{const char *}sch=@code{""}, @code{int} num=@code{5})
+@deftypefnx {Функция С} @code{void} mgl_grad_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
+Рисует линии градиента скалярного поля @var{phi}[i,j,k] заданного параметрически @{@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]@}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Число линий пропорционально @var{num}. Линии рисуются только с границ интервала при @var{num}<0. Младшие размерности массивов @var{x}, @var{y}, @var{z}, @var{phi} должны быть одинаковы @var{x.nx=phi.nx && y.nx=phi.ny && z.nx=phi.nz} или @var{x.nx=y.nx=z.nx=phi.nx && x.ny=y.ny=z.ny=phi.ny && x.nz=y.nz=z.nz=phi.nz}. Массивы @var{x}, @var{y} и @var{z} могут быть векторами (не матрицами как @var{phi}). См. также @ref{Dens3}, @ref{Cont3}, @ref{Flow}.
+@end deftypefn
+
+
+@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{float} zVal=@code{NAN})
+@deftypefnx {Функция С} @code{void} mgl_grad_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
+Рисует линии градиента скалярного поля @var{phi}[i,j] заданного параметрически @{@var{x}[i,j], @var{y}[i,j]@} при @var{z} = @var{zVal}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Число линий пропорционально @var{num}. Линии рисуются только с границ интервала при @var{num}<0. Младшие размерности массивов @var{x}, @var{y}, @var{phi} должны быть одинаковы @var{x.nx=phi.nx && y.nx=phi.ny} или @var{x.nx=y.nx=phi.nx && x.ny=y.ny=phi.ny}. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{phi}). График строится для каждого z среза данных. См. также @ref{Dens}, @ref{Cont}, @ref{ContF}, @ref{Flow}. @sref{Grad sample}
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Grad (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{float} zVal=@code{NAN})
+@deftypefnx {Функция С} @code{void} mgl_grad (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
+Как предыдущий с @var{x}, @var{y} равно распределенными в интервале [@var{Min}, @var{Max}].
+@end deftypefn
+
+@c ==================================================================
+@node Grid, , Grad, 2D plotting
 @subsection Grid
 @cindex Grid
 
@@ -2185,6 +2212,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 * Dots:: 
 * Crust:: 
 * TriPlot:: 
+* QuadPlot:: 
 * Plots by formula:: 
 * SimplePlot:: 
 @end menu
@@ -2336,7 +2364,7 @@ gr->ContZ(c.Sum("z"),0,-1);
 @end deftypefn
 
 @c ==================================================================
-@node TriPlot, Plots by formula, Crust, Other plotting
+@node TriPlot, QuadPlot, Crust, Other plotting
 @subsection TriPlot
 @cindex TriPlot
 
@@ -2344,7 +2372,7 @@ gr->ContZ(c.Sum("z"),0,-1);
 @deftypefnx {Метод класса @code{mglGraph} (C++, Python)} @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_triplot_xyz (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
 @deftypefnx {Функция С} @code{void} mgl_triplot_xyzc (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} c, @code{const char *}sch)
-Рисует поверхность из треугольников. Вершины треугольников задаются индексами @var{id} в массиве точек @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Если строка содержит @samp{#}, то рисуется сетчатая поверхность. Размер по 1-му индексу массива @var{id} должен быть 3 или больше. Массивы @var{x}, @var{y}, @var{z} должны иметь одинаковые размеры. Массив @var{c} задает цвет треугольников (если @var{id}.ny=@var{c}.nx) или цвет вершин (если @var{x}.nx=@var{c}.nx). См. также @ref{Dots}, @ref{Crust}.
+Рисует поверхность из треугольников. Вершины треугольников задаются индексами @var{id} в массиве точек @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Если строка содержит @samp{#}, то рисуется сетчатая поверхность. Размер по 1-му индексу массива @var{id} должен быть 3 или больше. Массивы @var{x}, @var{y}, @var{z} должны иметь одинаковые размеры. Массив @var{c} задает цвет треугольников (если @var{id}.ny=@var{c}.nx) или цвет вершин (если @var{x}.nx=@var{c}.nx). См. также @ref{Dots}, @ref{Crust}, @ref{QuadPlot}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
@@ -2353,7 +2381,24 @@ gr->ContZ(c.Sum("z"),0,-1);
 @end deftypefn
 
 @c ==================================================================
-@node Plots by formula, SimplePlot, TriPlot, Other plotting
+@node QuadPlot, Plots by formula, TriPlot, Other plotting
+@subsection QuadPlot
+@cindex QuadPlot
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} QuadPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""})
+@deftypefnx {Method on @code{mglGraph} (C++, Python)} @code{void} QuadPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""})
+@deftypefnx {C function} @code{void} mgl_quadplot_xyz (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
+@deftypefnx {C function} @code{void} mgl_quadplot_xyzc (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} c, @code{const char *}sch)
+Рисует поверхность из четырехугольников. Вершины четырехугольников задаются индексами @var{id} в массиве точек @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Если строка содержит @samp{#}, то рисуется сетчатая поверхность. Размер по 1-му индексу массива @var{id} должен быть 4 или больше. Массивы @var{x}, @var{y}, @var{z} должны иметь одинаковые размеры. Массив @var{c} задает цвет четырехугольников (если @var{id}.ny=@var{c}.nx) или цвет вершин (если @var{x}.nx=@var{c}.nx). См. также @ref{TriPlot}.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} QuadPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
+@deftypefnx {C function} @code{void} mgl_quadplot_xy (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}sch, @code{float} zVal)
+Как предыдущий с @var{z}[i]=@var{zVal}.
+@end deftypefn
+
+@c ==================================================================
+@node Plots by formula, SimplePlot, QuadPlot, Other plotting
 @subsection Графики функций
 @cindex Plot
 @cindex Surf

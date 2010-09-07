@@ -250,25 +250,39 @@ void mglGraph::Plot(const mglData &x, const mglData &y, const mglData &z, const 
 	if(n<2)					{	SetWarn(mglWarnLow,"Plot");	return;	}
 	static int cgid=1;	StartGroup("Plot",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	mreal *pp = new mreal[3*n];
-	bool *tt = new bool[n];
+	mreal *pp = new mreal[6*n];
+	bool *tt = new bool[2*n];
 	if(pen && *pen)	mk=SelectPen(pen);	else	Pen(NC, '-', BaseLineWidth);
 	SetPal(pen);
 	for(j=0;j<m;j++)
 	{
 		Pen(GetPal(),0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
-		register long i,k;
-		for(i=0;i<n;i++)
+		register long i,k,jj;
+		for(jj=i=0;i<n;i++,jj++)
 		{
-			k = 3*i;
-			pp[k+0] = x.a[i+mx*n];
-			pp[k+1] = y.a[i+my*n];
-			pp[k+2] = z.a[i+mz*n];
-			tt[i] = ScalePoint(pp[k],pp[k+1],pp[k+2]);
-			if(mk && tt[i])	Mark(pp[k],pp[k+1],pp[k+2],mk);
+			k = 3*jj;
+			pp[k+0] = x.a[i+mx*n];	pp[k+1] = y.a[i+my*n];	pp[k+2] = z.a[i+mz*n];
+			tt[jj] = ScalePoint(pp[k],pp[k+1],pp[k+2]);
+			if(mk && tt[jj])	Mark(pp[k],pp[k+1],pp[k+2],mk);
+			if(jj>0 && ((tt[jj] && !tt[jj-1]) || (tt[jj-1] && !tt[jj])))	// do smoothing
+			{
+				float i1=0, i2=1, ii;
+				pp[k+3] = pp[k+0];	pp[k+4] = pp[k+1];	// copy current
+				pp[k+5] = pp[k+2];	tt[jj+1] = tt[jj];
+				do {
+					ii = (i1+i2)/2;
+					pp[k+0] = x.a[i+mx*n]*ii+x.a[i-1+mx*n]*(1-ii);
+					pp[k+1] = y.a[i+my*n]*ii+y.a[i-1+my*n]*(1-ii);
+					pp[k+2] = z.a[i+mz*n]*ii+z.a[i-1+mz*n]*(1-ii);
+					tt[jj] = ScalePoint(pp[k],pp[k+1],pp[k+2]);
+					if((tt[jj] && tt[jj+1]) || (tt[jj-1] && !tt[jj]))	i2 = ii;
+					else	i1 = ii;
+				} while(fabs(i2-i1)>1e-3);
+				tt[jj] = true;	jj++;
+			}
 		}
-		curv_plot(n,pp,tt);
+		curv_plot(jj,pp,tt);
 	}
 	SetPal(0);	EndGroup();
 	delete []tt;	delete []pp;
@@ -304,29 +318,43 @@ void mglGraph::Tens(const mglData &x, const mglData &y, const mglData &z, const 
 	if(n<2)					{	SetWarn(mglWarnLow,"Tens");	return;	}
 	static int cgid=1;	StartGroup("Tens",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
-	mreal *pp = new mreal[3*n], *cc = new mreal[n];
-	bool *tt = new bool[n];
+	mreal *pp = new mreal[6*n], *cc = new mreal[2*n];
+	bool *tt = new bool[2*n];
 	if(pen && *pen)	{	SetScheme(pen,false);	mk=SelectPen(pen);	}
 	for(j=0;j<m;j++)
 	{
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;
 		mz = j<z.ny ? j:0;	mc = j<c.ny ? j:0;
-		register long i,k;
-		for(i=0;i<n;i++)
+		register long i,jj,k;
+		for(jj=i=0;i<n;i++,jj++)
 		{
-			k = 3*i;
-			pp[k+0] = x.a[i+mx*n];
-			pp[k+1] = y.a[i+my*n];
-			pp[k+2] = z.a[i+mz*n];
-			tt[i] = ScalePoint(pp[k],pp[k+1],pp[k+2]);
-			if(mk && tt[i])
+			k = 3*jj;
+			pp[k+0] = x.a[i+mx*n];	pp[k+1] = y.a[i+my*n];
+			pp[k+2] = z.a[i+mz*n];	cc[jj] = c.a[i+mc*n];
+			tt[jj] = ScalePoint(pp[k],pp[k+1],pp[k+2]);
+			if(mk && tt[jj])
 			{
-				DefColor(GetC(c.a[i+mc*n]));
+				DefColor(GetC(cc[jj]));
 				Mark(pp[k],pp[k+1],pp[k+2],mk);
 			}
+			if(jj>0 && ((tt[jj] && !tt[jj-1]) || (tt[jj-1] && !tt[jj])))	// do smoothing
+			{
+				float i1=0, i2=1, ii;
+				pp[k+3] = pp[k+0];	pp[k+4] = pp[k+1];	// copy current
+				pp[k+5] = pp[k+2];	tt[jj+1] = tt[jj];
+				do {
+					ii = (i1+i2)/2;
+					pp[k+0] = x.a[i+mx*n]*ii+x.a[i-1+mx*n]*(1-ii);
+					pp[k+1] = y.a[i+my*n]*ii+y.a[i-1+my*n]*(1-ii);
+					pp[k+2] = z.a[i+mz*n]*ii+z.a[i-1+mz*n]*(1-ii);
+					tt[jj] = ScalePoint(pp[k],pp[k+1],pp[k+2]);
+					if((tt[jj] && tt[jj+1]) || (tt[jj-1] && !tt[jj]))	i2 = ii;
+					else	i1 = ii;
+				} while(fabs(i2-i1)>1e-3);
+				tt[jj] = true;	jj++;
+			}
 		}
-		memcpy(cc,c.a+mc*n,n*sizeof(mreal));
-		curv_plot(n,pp,cc,tt);
+		curv_plot(jj,pp,cc,tt);
 	}
 	EndGroup();
 	delete []tt;	delete []pp;	delete []cc;
@@ -460,8 +488,8 @@ void mglGraph::Region(const mglData &x, const mglData &y1, const mglData &y2, co
 		for(i=0;i<n;i++)
 		{
 			cc[8*i+3] = cc[8*i+7] = AlphaDef;
-			cc[8*i]   = c2.r;	cc[8*i+1] = c2.g;	cc[8*i+2] = c2.b;
-			cc[8*i+4] = c1.r;	cc[8*i+5] = c1.g;	cc[8*i+6] = c1.b;
+			cc[8*i]   = c1.r;	cc[8*i+1] = c1.g;	cc[8*i+2] = c1.b;
+			cc[8*i+4] = c2.r;	cc[8*i+5] = c2.g;	cc[8*i+6] = c2.b;
 			pp[6*i+3] = pp[6*i+0] = x.a[i+mx*n];
 			f1 = y1.a[i+j*n];	f2 = y2.a[i+j*n];
 			pp[6*i+1] = f1;		pp[6*i+2] = zVal;

@@ -1,4 +1,4 @@
-1.11 Released ?? May 2010
+1.11 Released ?? September 2010
 	- Add marks '<', '>', '#<', '#>', '#*' for left/right wire/solid triangles and Y sign.
 	- Allow to save compressed files with extensions "eps.gz" and "svgz" as output.
 	- Allow 2 colors diagrams (in Bars(), Barh()) -- one for positive, one for negative.
@@ -16,11 +16,12 @@
 	- Add Grad() for plotting gradient of scalar field by flow threads.
 	- Add "styled" SubPlot() to better fitting of subplot according axis/colorbar/title layouts.
 	- Add extra text align for axis label if it is located near minimal or maximal axis value.
-	- Add possibility to read HDF4 files.
+	- Add possibility to read HDF4 files in mglData.
 	- Add MGL commands 'grad', 'quadplot', 'tricont'
 	- Add 'int(x)' function to the expression parser (class mglFormula).
 	- Add optional gap for ColumnPlot.
 	- Allow defining manual array in MGL command argument as [v1,v2,v3,...]. Array can be multidimensional like [[v1,v2],[v3,v4]].
+	- Now Plot() and Tens() now "accurately" cut off line segments.
 	- Now $N is substituted into the second argument of MGL commands 'define', 'defnum', 'defpal', 'defchr'.
 	- Reduce animation delay to 1 sec.
 	- Bugfix with newline symbol '\n'
@@ -28,6 +29,7 @@
 	- Bugfix for label position for log-scale axis.
 	- Bugfix for mglData::Insert().
 	- Bugfix for text and marks drawing in OpenGL mode.
+	- Bugfix for T-ticks orientation in Ternary plot.
 	- Add TeX symbol sample in documentation.
 	- Now curves always start dashing from zero position.
 	- Add mini-dash for '=' line style symbol.

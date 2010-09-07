@@ -25,11 +25,8 @@
 22. Legend in OpenGL mode
 23. Load GZ compressed files VFM -- add functions for handling "textual" streams like double stof(char **sptr).
 25. Bug with 'a' option of text after Rotate ?!
-26. Check HDF4 reading -- put in Cmake + configure + docs
 27. Update STIX fonts -- new release 
 28. Create PWT fonts
-29. T-ticks in wrong direction (should be x+y
-30. SetCut for lines -- do "accurate" cutting to the edges???
 31. Problem with \calB and so on (\calH, ...).
 32. Allow different ranges for ternary axis
 
@@ -39,14 +36,9 @@
 38. INCOMPATIBLE CHANGES!!! tune colors as {} -- for example, 'b{3}'
 39. INCOMPATIBLE CHANGES!!! hide unused arguments (like "size")
 
-40. Docs about SetLegendMarks/mgl_set_legend_marks
-41. Docs about Grad(), TriCont(), QuadPlot(), ColumnPlot()
-42. Example of "stereo-image"
-43. Example of "ring" chart
-44. Samples about gradient filling in Area() and Range; + About 'a' and 'f' options of Bars(), Barh() + 2 colors
-45. Regroup pictures in WWW by big classes + combo plots
-46. Rename 'stl'->'style', 'sch'->'scheme' in MGL docs ???
-47. Docs about inplace arrays [[v1,v2],...]
+40. Docs about inplace arrays [[v1,v2],...]
+41. Docs about TriCont()
+42. Regroup pictures in WWW by big classes + combo plots
 
 
 1. Plot for isolines of vector fields ???
@@ -60,6 +52,7 @@
 9. Add '[' as separator in string ???
 10. Save id of subplots and axis for getting value of click coordinates arbitrary inplot -- fill only part which is overlapped. Clear it at Clf() + update for any Rotate, Aspect, InPlot, SetRanges, 
 11. Surface by interpolation for arbitrary points {x,y,z} -- seems to be too complicated :(
+12. Rename 'stl'->'style', 'sch'->'scheme' in MGL docs ???
 
 
 					MathGL (for v.2.?) ???

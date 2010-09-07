@@ -7,4 +7,4 @@ CLEANFILES = $(png_images)
 
 $(png_images): hotdogs.pts # $(top_builddir)/examples/mgl_example
 	$(top_builddir)/examples/mgl_example -kind=${@:.png=}
-	touch ../mathgl.texi
+	touch $(srcdir)/../mathgl.texi

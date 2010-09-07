@@ -40,9 +40,10 @@ host_triplet = @host@
 @USE_GLUT_TRUE@am__append_4 = -DWITH_GLUT
 @USE_PTHREAD_TRUE@am__append_5 = $(PTHREAD_LIBS)
 @USE_GSL_TRUE@am__append_6 = $(GSL_LIBS)
-@USE_HDF5_TRUE@am__append_7 = $(HDF5_LIBS)
-@USE_GIF_TRUE@am__append_8 = $(GIF_LIBS)
-@USE_JPEG_TRUE@am__append_9 = $(JPEG_LIBS)
+@USE_HDF4_TRUE@am__append_7 = $(HDF4_LIBS)
+@USE_HDF5_TRUE@am__append_8 = $(HDF5_LIBS)
+@USE_GIF_TRUE@am__append_9 = $(GIF_LIBS)
+@USE_JPEG_TRUE@am__append_10 = $(JPEG_LIBS)
 subdir = mgl
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -84,13 +85,14 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 @USE_PTHREAD_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
 @USE_GSL_TRUE@am__DEPENDENCIES_3 = $(am__DEPENDENCIES_1)
-@USE_HDF5_TRUE@am__DEPENDENCIES_4 = $(am__DEPENDENCIES_1)
-@USE_GIF_TRUE@am__DEPENDENCIES_5 = $(am__DEPENDENCIES_1)
-@USE_JPEG_TRUE@am__DEPENDENCIES_6 = $(am__DEPENDENCIES_1)
+@USE_HDF4_TRUE@am__DEPENDENCIES_4 = $(am__DEPENDENCIES_1)
+@USE_HDF5_TRUE@am__DEPENDENCIES_5 = $(am__DEPENDENCIES_1)
+@USE_GIF_TRUE@am__DEPENDENCIES_6 = $(am__DEPENDENCIES_1)
+@USE_JPEG_TRUE@am__DEPENDENCIES_7 = $(am__DEPENDENCIES_1)
 libmgl_la_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_3) \
 	$(am__DEPENDENCIES_4) $(am__DEPENDENCIES_5) \
-	$(am__DEPENDENCIES_6)
+	$(am__DEPENDENCIES_6) $(am__DEPENDENCIES_7)
 am_libmgl_la_OBJECTS = libmgl_la-mgl_data_cf.lo libmgl_la-mgl_axis.lo \
 	libmgl_la-mgl_data_png.lo libmgl_la-mgl_zb2.lo \
 	libmgl_la-mgl_c.lo libmgl_la-mgl_eps.lo libmgl_la-mgl_font.lo \
@@ -171,6 +173,8 @@ GREP = @GREP@
 GSL_FLAGS = @GSL_FLAGS@
 GSL_LIBS = @GSL_LIBS@
 HAVE_SWIG = @HAVE_SWIG@
+HDF4_FLAGS = @HDF4_FLAGS@
+HDF4_LIBS = @HDF4_LIBS@
 HDF5_FLAGS = @HDF5_FLAGS@
 HDF5_LIBS = @HDF5_LIBS@
 INSTALL = @INSTALL@
@@ -306,10 +310,10 @@ WIDGETS = $(am__append_1) $(am__append_2) $(am__append_3) \
 	$(am__append_4)
 libmgl_la_LIBADD = $(PNG_LIBS) $(GL_LIBS) $(LOPENMP) $(am__append_5) \
 	$(am__append_6) $(am__append_7) $(am__append_8) \
-	$(am__append_9)
+	$(am__append_9) $(am__append_10)
 libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 libmgl_la_CXXFLAGS = $(WIDGETS) -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
-    -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(GIF_FLAGS) $(JPEG_FLAGS) \
+    -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(HDF4_FLAGS) $(GIF_FLAGS) $(JPEG_FLAGS) \
     $(TIFF_FLAGS) $(PNG_FLAGS) $(FLTK_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS) \
     $(PTHREAD_FLAGS)
 

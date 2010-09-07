@@ -1273,6 +1273,7 @@ gr.Chart(ch,"bgr cmy#");
 * ContF sample::                
 * ContD sample::                
 * Axial sample::                
+* Grad sample::                
 @end menu
 
 @c ------------------------------------------------------------------
@@ -2072,7 +2073,7 @@ gr.Colorbar(v);
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Axial sample,, ContD sample, 2D plotting samples
+@node Axial sample, Grad sample, ContD sample, 2D plotting samples
 @subsection Axial -- пример использования
 @cindex Axial
 
@@ -2136,6 +2137,60 @@ gr.Rotate(40,60);   gr.Light(True);    gr.Alpha(True);
 gr.Box();
 gr.Axial(a);
 @end verbatim
+
+@c ------------------------------------------------------------------
+@node Grad sample, , Axial sample, 2D plotting samples
+@subsection Grad -- пример использования
+@cindex Grad
+
+@float
+@image{png/grad, 7cm}
+@caption{Example of Grad. @tdref{grad}}
+@end float
+
+@strong{C++ код}
+@verbatim
+mglData a(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+gr->Box();  gr->Alpha(true);    gr->Dens(a);
+gr->Grad(a);
+@end verbatim
+@strong{MGL скрипт}
+@verbatim
+new a 50 40
+modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
+box:alpha on:dens a
+grad a
+@end verbatim
+@strong{C-ый код}
+@verbatim
+HMDT a = mgl_create_data_size(50,40,1);
+mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+mgl_box(gr,1);
+mgl_set_alpha(gr,1);
+mgl_dens(gr,a,0,0);
+mgl_grad(gr,a,0,0);
+mgl_delete_data(a);
+@end verbatim
+@strong{Fortran}
+@verbatim
+integer a, mgl_create_data_size
+a = mgl_create_data_size(50,40,1);
+call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+call mgl_box(gr,1)
+call mgl_set_alpha(gr,1)
+call mgl_dens(gr,a,'',0)
+call mgl_grad(gr,a,'',0)
+call mgl_delete_data(a)
+@end verbatim
+@strong{Python}
+@verbatim
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Box();   gr.Alpha(1);    gr.Dens(a);
+gr.Colorbar();
+@end verbatim
+
 
 @c ------------------------------------------------------------------
 @node 3D plotting samples, Dual plotting samples, 2D plotting samples, Samples
@@ -5444,6 +5499,7 @@ sphere -0.65 0 0 0.25 'g'
 * Manual ticks sample::         
 * ColumnPlot sample::           
 * StickPlot sample::            
+* Stereo image sample::         
 @end menu
 
 @node Curvelinear coorinates sample, 2-axes sample,, Advanced features
@@ -6541,7 +6597,7 @@ parser.Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
 
 @float
 @image{png/tval, 7cm}
-@caption{Example of MGL parsing.}@c @tdref{tval}}
+@caption{Example of manual tick values.}@c @tdref{tval}}
 @end float
 
 @strong{C++ код}
@@ -6591,7 +6647,7 @@ gr.Plot("2*cos(x^2)^2", "r2", 300);
 
 @float
 @image{png/column, 7cm}
-@caption{Example of MGL parsing.}@c @tdref{tval}}
+@caption{Example of ColumnPlot.}@c @tdref{tval}}
 @end float
 
 @strong{C++ код}
@@ -6645,8 +6701,8 @@ NOT AVAILABLE
 @cindex SetTicksVal
 
 @float
-@image{png/column, 7cm}
-@caption{Example of MGL parsing.}@c @tdref{tval}}
+@image{png/stick, 7cm}
+@caption{Example of StickPlot.}@c @tdref{tval}}
 @end float
 
 @strong{C++ code}
@@ -6703,4 +6759,91 @@ NOT AVAILABLE
 @strong{Python}
 @verbatim
 @end verbatim
+
+@c ------------------------------------------------------------------
+@node Stereo image sample, , StickPlot sample, Advanced features
+@subsection Пример стерео изображения
+
+@float
+@image{png/stereo, 7cm}
+@caption{Example of stereo image.}@c @tdref{stereo}}
+@end float
+
+@strong{C++ code}
+@verbatim
+mglData a(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+gr->Light(true);
+
+gr->SubPlot(2,1,0);
+gr->Rotate(40,60+3);
+gr->Box();   gr->Surf(a);
+
+gr->SubPlot(2,1,1);
+gr->Rotate(40,60-3);
+gr->Box();   gr->Surf(a);
+@end verbatim
+@strong{MGL code}
+@verbatim
+new a 50 40
+modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
+light on
+
+subplot 2 1 0
+rotate 40 60+3
+box:surf a
+
+subplot 2 1 1
+rotate 40 60-3
+box:surf a
+@end verbatim
+@strong{Pure C code}
+@verbatim
+HMDT a = mgl_create_data_size(50,40,1);
+mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+mgl_set_light(gr,1);
+
+mgl_subplot(gr,2,1,0);
+mgl_rotate(gr,40.,60.+3.,0.);
+mgl_box(gr,1);
+mgl_surf(gr,a,0);
+mgl_subplot(gr,2,1,1);
+mgl_rotate(gr,40.,60.-3.,0.);
+mgl_box(gr,1);
+mgl_surf(gr,a,0);
+
+mgl_delete_data(a);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer a, mgl_create_data_size
+a = mgl_create_data_size(50,40,1);
+call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+call mgl_set_light(gr,1)
+
+call mgl_subplot(gr,2,1,0)
+call mgl_rotate(gr,40.,60.+3.,0.)
+call mgl_box(gr,1)
+call mgl_surf(gr,a,'')
+call mgl_subplot(gr,2,1,1)
+call mgl_rotate(gr,40.,60.-3.,0.)
+call mgl_box(gr,1)
+call mgl_surf(gr,a,'')
+
+call mgl_delete_data(a)
+@end verbatim
+@strong{Python}
+@verbatim
+a = mglData(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+gr.Light(True);
+
+gr.SubPlot(2,1,0);
+gr.Rotate(40,60+3);
+gr.Surf(a);  gr.Box();
+gr.SubPlot(2,1,1);
+gr.Rotate(40,60-3);
+gr.Surf(a);  gr.Box();
+@end verbatim
+
 

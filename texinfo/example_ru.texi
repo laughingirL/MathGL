@@ -1010,8 +1010,8 @@ In this section I have included some small hints and advices for the improving o
 * ``Compound'' graphics::       
 * Two axes in one plot::        
 * Titles for the plot::         
-* Changing of the color range::  
-* Management of the point cutting::  
+* Changing of the color range:: 
+* Management of a point cutting::
 * Vector field visualization::  
 * Several light sources::       
 * CutMin and CutMax features::  
@@ -1021,6 +1021,7 @@ In this section I have included some small hints and advices for the improving o
 * Nonlinear fitting hints::     
 * PDE solving hints::           
 * MGL parser using::            
+* Stereo image::                
 @end menu
 
 @c ------------------------------------------------------------------
@@ -1078,7 +1079,7 @@ Note, that the first and the second axes look better if being placed in differen
 The printing of nice titles for the plot is not so trivial task in general case. The problem is that the rotation and aspect change lead to different looks for titles of different subplots. So, the resulting look is not so good as it could be. The solution is simple -- to print titles exactly after @code{SubPlot}() call and before any rotation, aspect change and so on! Analogously, the title for the whole picture looks better if it is printed first (before any @code{SubPlot()} calls). Alternatively you can use function @code{Title()} for plotting title for the picture at any time.
 
 @c ------------------------------------------------------------------
-@node Changing of the color range, Management of the point cutting, Titles for the plot, Hints
+@node Changing of the color range, Management of a point cutting, Titles for the plot, Hints
 @subsection Changing of the color range
 
 By default (for the user comfort), the color range is set equal to z-range of the plot. However, there are different ranges. So, one can obtain amusing plot by the change of color range manually. For example, there are plots with one-color bottom (or top) or practically bi-color picture and so on.
@@ -1094,8 +1095,8 @@ For example, compare 2 surfaces:
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Management of the point cutting, Vector field visualization, Changing of the color range, Hints
-@subsection Management of the point cutting
+@node Management of a point cutting, Vector field visualization, Changing of the color range, Hints
+@subsection Management of a point cutting
 
 Sometimes an experimental or numerical surface has outstanding points. Visualization of such surface will lead to the hole(s) in place of such points. The standard method of ``fighting''  -- to change data values -- is not always good and is not so convenient. MathGL library has another method -- to set variable @code{Cut=false}. As a consequence, all outstanding points will be projected on the bounding box.
 
@@ -1111,7 +1112,7 @@ Such method is good not only for outstanding points but also for the case when o
 It is an interesting result, is not it?
 
 @c ------------------------------------------------------------------
-@node Vector field visualization, Several light sources, Management of the point cutting, Hints
+@node Vector field visualization, Several light sources, Management of a point cutting, Hints
 @subsection Vector field visualization
 
 Vector field visualization (especially in 3d case @code{Vect3} or @code{VectC}) may look tangly -- there are too many overlapping lines. I may suggest 2 ways to solve this problem. The first one is to change @code{MeshNum} for decreasing the number of hachures. The second way is to use the flow thread chart @code{Flow}. Unfortunately, I don't know any other methods to visualize 3d vector field. If you know any, e-mail me and I shall add it to MatGL.
@@ -1263,7 +1264,7 @@ You may use following code for obtaining the same solution as in previous exampl
 
 
 @c ------------------------------------------------------------------
-@node MGL parser using, , PDE solving hints, Hints
+@node MGL parser using, Stereo image, PDE solving hints, Hints
 @subsection MGL parser using
 
 Sometimes you may prefer to use MGL scripts in yours code. It is simpler (especially in comparison with C/Fortran interfaces) and fast way to plot the data with annotations, labels and so on. Class @code{mglParse} (@pxref{mglParse class} parse MGL scripts in C++. It have also the corresponding interface for C/Fortran.
@@ -1303,3 +1304,19 @@ The code in C/Fortran looks practically the same:
     mgl_parse_text(gr, parser, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
     mgl_write_png(gr, "test.png", "");  // don't forgot to save picture
 @end verbatim
+
+@c ------------------------------------------------------------------
+@node Stereo image, , MGL parser using, Hints
+@subsection Stereo image
+
+One can easily create stereo image in MathGL. Stereo image can be produced by making two subplots with slightly different rotation angles. The corresponding code looks like this (@pxref{Stereo image sample}):
+@verbatim
+    gr->SubPlot(2,1,0);     // left image
+    gr->Rotate(40,60+3);
+    // draw something here
+    
+    gr->SubPlot(2,1,0);     // right image
+    gr->Rotate(40,60-3);
+    // draw the same here
+@end verbatim
+

@@ -53,6 +53,12 @@ if(use_hdf5 OR use_hdf5_18)
 	include_directories(${HDF5_INCLUDE_DIR})
 endif(use_hdf5 OR use_hdf5_18)
 
+if(use_hdf4)
+	target_link_libraries(mgl ${HDF4_LIB})
+	add_definitions(-DHAVE_HDF4)
+	include_directories(${HDF4_INCLUDE_DIR})
+endif(use_hdf4)
+
 if(use_gsl)
 	target_link_libraries(mgl ${GSL_LIB} ${GSL_CBLAS_LIB} )
 	add_definitions(-DHAVE_GSL)

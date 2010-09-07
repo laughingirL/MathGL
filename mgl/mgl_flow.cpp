@@ -469,7 +469,7 @@ void mglGraph::Grad(const mglData &x, const mglData &y, const mglData &z, const 
 			yy.a[i0] = y.a[j];			zz.a[i0] = z.a[k];	}
 	}
 	else	{	SetWarn(mglWarnDim,"Grad");	return;	}
-	ax.Diff(xx,yy,zz);	ay.Diff(yy,xx,zz);	ay.Diff(zz,xx,yy);
+	ax.Diff(xx,yy,zz);	ay.Diff(yy,xx,zz);	az.Diff(zz,xx,yy);
 	Flow(xx,yy,zz,ax,ay,az,sch,num,num>0);
 }
 //-----------------------------------------------------------------------------

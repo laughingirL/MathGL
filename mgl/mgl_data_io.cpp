@@ -24,6 +24,9 @@
 #ifdef HAVE_HDF5
 #include <hdf5.h>
 #endif
+#ifdef HAVE_HDF4
+#include <hdf/mfhdf.h>
+#endif
 
 #ifndef WIN32
 #include <glob.h>
@@ -927,7 +930,7 @@ void mglData::ReadHDF4(const char *fname,const char *data)
 {
 #ifdef HAVE_HDF4
 	int sd = SDstart(fname,DFACC_READ), nn, i;
-	if(sd==-1)	return 0;	// is not a HDF4 file
+	if(sd==-1)	return;	// is not a HDF4 file
 	char name[64];
 	SDfileinfo(sd,&nn,&i);
 	for(i=0;i<nn;i++)
@@ -937,9 +940,9 @@ void mglData::ReadHDF4(const char *fname,const char *data)
 		SDgetinfo(sds,name,&rank,dims,&type,&attr);
 		if(!strcmp(name,data))	// as I understand there are possible many datas with the same name
 		{
-			if(dims==1)			Create(dims[0]);
-			else if(dims==2)	Create(dims[1],dims[0]);
-			else if(dims==3)	Create(dims[3],dims[1],dims[0]);
+			if(rank==1)			Create(dims[0]);
+			else if(rank==2)	Create(dims[1],dims[0]);
+			else if(rank==3)	Create(dims[3],dims[1],dims[0]);
 			else	continue;
 			if(type==DFNT_FLOAT32)
 			{
@@ -950,7 +953,7 @@ void mglData::ReadHDF4(const char *fname,const char *data)
 			}
 			if(type==DFNT_FLOAT64)
 			{
-				double *b = new float[nx*ny*nz];
+				double *b = new double[nx*ny*nz];
 				SDreaddata(sds,in,0,dims,b);
 				for(long j=0;j<nx*ny*nz;j++)	a[j]=b[j];
 				delete []b;

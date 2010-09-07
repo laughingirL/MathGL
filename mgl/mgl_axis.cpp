@@ -475,7 +475,10 @@ void mglGraph::AxisX(bool text, const char *stl)
 void mglGraph::DrawYTick(mreal y, mreal x0, mreal z0, mreal dx, mreal dz, int f)
 {
 	mreal pp[9],ff=TickLen/sqrt(1.+f*st_t);
-	pp[0]=x0+dx*ff;	pp[1]=y;	pp[2]=z0;
+	if(TernAxis)
+	{	pp[0]=x0+dx*ff;	pp[1]=y-dx*ff;	pp[2]=z0;	}
+	else
+	{	pp[0]=x0+dx*ff;	pp[1]=y;	pp[2]=z0;	}
 	pp[3]=x0;		pp[4]=y;	pp[5]=z0;
 	pp[6]=x0;		pp[7]=y;	pp[8]=z0+dz*ff;
 	if(*TickStl && !f)	SelectPen(TickStl);

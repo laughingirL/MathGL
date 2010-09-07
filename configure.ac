@@ -180,6 +180,21 @@ AC_CHECK_LIB([hdf5], [main], [(test x$all = xtrue || test x$hdf5 = xtrue || test
     [(test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue) && echo "Please install hdf5 library" && exit])
 AM_CONDITIONAL(USE_HDF5, (test x$all = xtrue || test x$hdf5 = xtrue || test x$hdf5_18 = xtrue))
 
+
+AC_ARG_ENABLE(hdf4,
+[  --enable-hdf4    Turn on hdf4],
+[case "${enableval}" in
+  yes) hdf4=true ;;
+  no)  hdf4=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-hdf4) ;;
+esac],[hdf4=false])
+AC_CHECK_HEADER(hdf/mfhdf.h,[(test x$all = xtrue || test x$hdf4 = xtrue) && HDF4_FLAGS=-DHAVE_HDF4 ],
+    [(test x$all = xtrue || test x$hdf4 = xtrue) && echo "Please install hdf4 headers" && exit])
+    AC_SUBST(HDF4_FLAGS)
+AC_CHECK_LIB([df], [main], [(test x$all = xtrue || test x$hdf4 = xtrue) && HDF4_LIBS="-lmfhdf -ldf" AC_SUBST(HDF4_LIBS)], 
+    [(test x$all = xtrue || test x$hdf4 = xtrue) && echo "Please install hdf4 library" && exit])
+AM_CONDITIONAL(USE_HDF4, (test x$all = xtrue || test x$hdf4 = xtrue))
+
 AC_ARG_ENABLE(gif,
 [  --enable-gif    Turn on gif],
 [case "${enableval}" in

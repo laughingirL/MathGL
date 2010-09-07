@@ -1044,6 +1044,7 @@ Prints the label @var{text} for axis @var{dir}=@samp{x},@samp{y},@samp{z},@samp{
 @cindex Legend
 @cindex AddLegend
 @cindex ClearLegend
+@cindex SetLegendMarks
 
 These functions draw legend to the graph (useful for @ref{1D plotting}). Legend entry is a pair of strings: one for style of the line, another one with description text (with included TeX parsing). The arrays of strings may be used directly or by accumulating first to the internal arrays (by function AddLegend()) and further plotting it. The position of the legend can be selected automatic or manually. Parameters @var{font} and @var{size} specify the font style and size (@pxref{Font settings}). Parameter @var{llen} set the relative width of the line sample and the text indent. If line style string for entry is empty then the corresponding text is printed without indent. @sref{Legend sample}
 
@@ -1080,6 +1081,11 @@ Clears saved legend strings.
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetLegendBox (@code{bool} enable)
 @deftypefnx {C function} @code{void} mgl_set_legend_box (@code{HMGL} gr, @code{int} enable)
 Switch on/off drawing box near legend. By default (=@code{true}) box is drawn.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SetLegendMarks (@code{int} num)
+@deftypefnx {C function} @code{void} mgl_set_legend_marks (@code{HMGL} gr, @code{int} num)
+Set the number of marks in the legend. By default 1 mark is used.
 @end deftypefn
 
 @deftypecv {@emph{Obsolete option}} mglGraph @code{bool} LegendBox
@@ -1457,6 +1463,7 @@ These functions perform plotting of 2D data. 2D means that data depend from 2 in
 * ContF:: 
 * ContD:: 
 * Axial:: 
+* Grad:: 
 * Grid:: 
 @end menu
 
@@ -1641,7 +1648,7 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @end deftypefn
 
 @c ==================================================================
-@node Axial, Grid, ContD, 2D plotting
+@node Axial, Grad, ContD, 2D plotting
 @subsection Axial
 @cindex Axial
 
@@ -1665,8 +1672,29 @@ The same as first one with vector @var{v} of @var{num}-th elements equidistantly
 The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
 @end deftypefn
 
+
 @c ==================================================================
-@node Grid, , Axial, 2D plotting
+@node Grad, Grid, Axial, 2D plotting
+@subsection Grad
+@cindex Grad
+
+@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}phi, @code{const char *}sch=@code{""}, @code{int} num=@code{5})
+@deftypefnx {Функция С} @code{void} mgl_grad_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
+The function draws gradient lines for scalar field @var{phi}[i,j,k] specified parametrically @{@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. Number of lines is proportional to @var{num}. If @var{num}<0 then lines start from borders only. The minor dimensions of arrays @var{x}, @var{y}, @var{z}, @var{phi} should be equal @var{x.nx=phi.nx && y.nx=phi.ny && z.nx=phi.nz} or @var{x.nx=y.nx=z.nx=phi.nx && x.ny=y.ny=z.ny=phi.ny && x.nz=y.nz=z.nz=phi.nz}. Arrays @var{x}, @var{y} and @var{z} can be vectors (not matrices as @var{phi}). See also @ref{Dens3}, @ref{Cont3}, @ref{Flow}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{float} zVal=@code{NAN})
+@deftypefnx {Функция С} @code{void} mgl_grad_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
+The function draws gradient lines for scalar field @var{phi}[i,j] specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{phi}[i,j]@} at @var{z} = @var{zVal}. String @var{sch} sets the color scheme. Previous color scheme is used by default. Number of lines is proportional to @var{num}. If @var{num}<0 then lines start from borders only. The minor dimensions of arrays @var{x}, @var{y}, @var{phi} should be equal @var{x.nx=phi.nx && y.nx=phi.ny} or @var{x.nx=y.nx=phi.nx && x.ny=y.ny=phi.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{phi}). Lines are plotted for each z slice of the data. See also @ref{Dens}, @ref{Cont}, @ref{ContF}, @ref{Flow}. @sref{Grad sample}
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Grad (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{float} zVal=@code{NAN})
+@deftypefnx {Функция С} @code{void} mgl_grad (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
+The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
+@end deftypefn
+
+@c ==================================================================
+@node Grid, , Grad, 2D plotting
 @subsection Grid
 @cindex Grid
 
@@ -2252,6 +2280,7 @@ These functions perform miscelaneous plotting. There is unstructured data points
 * Dots:: 
 * Crust:: 
 * TriPlot:: 
+* QuadPlot:: 
 * Plots by formula:: 
 * SimplePlot:: 
 @end menu
@@ -2403,7 +2432,7 @@ The same as previous with @var{x=tr}(0,:), @var{y=tr}(1,:), @var{z=tr}(2,:).
 @end deftypefn
 
 @c ==================================================================
-@node TriPlot, Plots by formula, Crust, Other plotting
+@node TriPlot, QuadPlot, Crust, Other plotting
 @subsection TriPlot
 @cindex TriPlot
 
@@ -2411,7 +2440,7 @@ The same as previous with @var{x=tr}(0,:), @var{y=tr}(1,:), @var{z=tr}(2,:).
 @deftypefnx {Method on @code{mglGraph} (C++, Python)} @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""})
 @deftypefnx {C function} @code{void} mgl_triplot_xyz (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
 @deftypefnx {C function} @code{void} mgl_triplot_xyzc (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} c, @code{const char *}sch)
-The function draws the surface of triangles. Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. Parameter @var{c} set the colors of triangles (if @var{id}.ny=@var{c}.nx) or colors of vertexes (if @var{x}.nx=@var{c}.nx). See also @ref{Dots}, @ref{Crust}.
+The function draws the surface of triangles. Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. Parameter @var{c} set the colors of triangles (if @var{id}.ny=@var{c}.nx) or colors of vertexes (if @var{x}.nx=@var{c}.nx). See also @ref{Dots}, @ref{Crust}, @ref{QuadPlot}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} TriPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
@@ -2420,7 +2449,24 @@ The same as previous with @var{z}[i]=@var{zVal}.
 @end deftypefn
 
 @c ==================================================================
-@node Plots by formula, SimplePlot, TriPlot, Other plotting
+@node QuadPlot, Plots by formula, TriPlot, Other plotting
+@subsection QuadPlot
+@cindex QuadPlot
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} QuadPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""})
+@deftypefnx {Method on @code{mglGraph} (C++, Python)} @code{void} QuadPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""})
+@deftypefnx {C function} @code{void} mgl_quadplot_xyz (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch)
+@deftypefnx {C function} @code{void} mgl_quadplot_xyzc (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} c, @code{const char *}sch)
+The function draws the surface of quadrangles. Quadrangles vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 4 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. Parameter @var{c} set the colors of quadrangles (if @var{id}.ny=@var{c}.nx) or colors of vertexes (if @var{x}.nx=@var{c}.nx). See also @ref{TriPlot}.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} QuadPlot (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
+@deftypefnx {C function} @code{void} mgl_quadplot_xy (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const char *}sch, @code{float} zVal)
+The same as previous with @var{z}[i]=@var{zVal}.
+@end deftypefn
+
+@c ==================================================================
+@node Plots by formula, SimplePlot, QuadPlot, Other plotting
 @subsection Plots by formula
 @cindex Plot
 @cindex Surf
