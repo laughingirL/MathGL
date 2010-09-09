@@ -636,4 +636,5 @@ void mgl_set_tick_stl_(uintptr_t *gr, const char *stl, const char *sub, int l, i
 	_GR_->SetTickStl(t,s);
 	delete []s;	delete []t;
 }
+int mgl_get_warn_code_(uintptr_t *gr)	{	return _GR_->WarnCode;	}
 //-----------------------------------------------------------------------------

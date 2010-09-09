@@ -21,6 +21,7 @@
 	- Add 'int(x)' function to the expression parser (class mglFormula).
 	- Add optional gap for ColumnPlot.
 	- Allow defining manual array in MGL command argument as [v1,v2,v3,...]. Array can be multidimensional like [[v1,v2],[v3,v4]].
+	- Restrict usage of original and wrapper classes simultaneously.
 	- Now Plot() and Tens() now "accurately" cut off line segments.
 	- Now $N is substituted into the second argument of MGL commands 'define', 'defnum', 'defpal', 'defchr'.
 	- Reduce animation delay to 1 sec.

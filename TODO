@@ -37,7 +37,7 @@
 39. INCOMPATIBLE CHANGES!!! hide unused arguments (like "size")
 
 40. Docs about inplace arrays [[v1,v2],...]
-41. Docs about TriCont()
+41. Docs about TriCont(), GetWarnCode(), mgl_get_warn_code()
 42. Regroup pictures in WWW by big classes + combo plots
 
 
