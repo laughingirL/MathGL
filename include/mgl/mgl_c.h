@@ -145,6 +145,7 @@ void mgl_set_scheme(HMGL gr, const char *sch);
 void mgl_load_font(HMGL gr, const char *name, const char *path);
 void mgl_copy_font(HMGL gr, HMGL gr_from);
 void mgl_restore_font(HMGL gr);
+int mgl_get_warn_code(HMGL gr);
 /*****************************************************************************/
 /*		Export to file or to memory											 */
 /*****************************************************************************/

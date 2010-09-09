@@ -288,6 +288,7 @@ public:
 	~mglGraph()	{	mgl_delete_graph(self);	};
 	inline HMGL Self()	{	return self;	};
 
+	inline int  GetWarnCode()	{	return mgl_get_warn_code(self);	};
 	inline void DefaultPlotParam()	{	mgl_set_def_param(self);	};
 	inline void SetPalColor(int n, float r, float g, float b)
 	{	if(n>=0 && n<100)	mgl_set_pal_color(self, n, r, g, b);	};
