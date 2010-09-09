@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 //-----------------------------------------------------------------------------
+#ifdef _MGL_W_H_
+#warning "MathGL wrapper was enabled. So disable original MathGL classes"
+#else
 #ifndef _MGL_PS_H_
 #define _MGL_PS_H_
 #include "mgl/mgl_ab.h"
@@ -91,5 +94,6 @@ private:
 	void draw_prim(mglPrim *pr, mreal *pp, mreal *c);
 };
 //-----------------------------------------------------------------------------
+#endif
 #endif
 //-----------------------------------------------------------------------------

@@ -900,7 +900,7 @@ void mglGraph::Title(const char *str,const char *font,mreal size)
 //-----------------------------------------------------------------------------
 void mglGraph::Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt, mreal size, bool rel)
 {
-	Push();	if(!rel)	Identity();
+	Push();	Identity(rel);
 	mglFormula *ox=fx, *oy=fy, *oz=fz;
 	fx = fy = fz = NULL;
 	char *f = new char[strlen(fnt)+1];

@@ -30,6 +30,7 @@
 	- Bugfix for mglData::Insert().
 	- Bugfix for text and marks drawing in OpenGL mode.
 	- Bugfix for T-ticks orientation in Ternary plot.
+	- Bugfix for text position with 'a' option after Rotate().
 	- Add TeX symbol sample in documentation.
 	- Now curves always start dashing from zero position.
 	- Add mini-dash for '=' line style symbol.

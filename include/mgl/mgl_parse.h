@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 //-----------------------------------------------------------------------------
+#ifdef _MGL_W_H_
+#warning "MathGL wrapper was enabled. So disable original MathGL classes"
+#else
 #ifndef _MGL_PARSE_H_
 #define _MGL_PARSE_H_
 #include "mgl/mgl.h"
@@ -178,6 +181,7 @@ private:
 	bool inline skip()		{	return (Skip || ifskip() || for_br);	};
 };
 //-----------------------------------------------------------------------------
+#endif
 #endif
 //-----------------------------------------------------------------------------
 

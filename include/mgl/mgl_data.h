@@ -17,6 +17,9 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifdef _MGL_W_H_
+#warning "MathGL wrapper was enabled. So disable original MathGL classes"
+#else
 #ifndef _MGL_DATA_H_
 #define _MGL_DATA_H_
 //-----------------------------------------------------------------------------
@@ -370,4 +373,5 @@ mglData mglJacobian(const mglData &x, const mglData &y);
 /// Calculate Jacobian determinant for D{x(u,v,w), y(u,v,w), z(u,v,w)}
 mglData mglJacobian(const mglData &x, const mglData &y, const mglData &z);
 //-----------------------------------------------------------------------------
+#endif
 #endif

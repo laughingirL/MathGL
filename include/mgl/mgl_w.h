@@ -20,6 +20,7 @@
 #ifdef _MGL_DATA_H_
 #warning "MathGL wrapper is disabled due to using original MathGL classes"
 #else
+#ifndef _MGL_W_H_
 #define _MGL_W_H_
 
 #ifndef NO_GSL
@@ -1025,4 +1026,5 @@ public:
 	inline void AllowSetSize(bool allow)	{	mgl_parser_allow_setsize(self, allow);	};
 };
 //-----------------------------------------------------------------------------
+#endif
 #endif

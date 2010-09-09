@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 //-----------------------------------------------------------------------------
+#ifdef _MGL_W_H_
+#warning "MathGL wrapper was enabled. So disable original MathGL classes"
+#else
 #ifndef _MGL_IDTF_H_
 #define _MGL_IDTF_H_
 
@@ -371,5 +374,6 @@ protected:
 	void MakeTransformMatrix( mreal position[4][4], mreal invpos[4][4] );
 };
 //-----------------------------------------------------------------------------
+#endif
 #endif
 //-----------------------------------------------------------------------------

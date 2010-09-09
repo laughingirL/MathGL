@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 //-----------------------------------------------------------------------------
+#ifdef _MGL_W_H_
+#warning "MathGL wrapper was enabled. So disable original MathGL classes"
+#else
 #ifndef MGL_QT_H
 #define MGL_QT_H
 //-----------------------------------------------------------------------------
@@ -184,5 +187,6 @@ private:
 /// Convert bitmap from mglGraphAB to QPixmap
 void convertFromGraph(QPixmap &pic, mglGraphAB *gr, uchar **buf);
 //-----------------------------------------------------------------------------
+#endif
 #endif
 //-----------------------------------------------------------------------------

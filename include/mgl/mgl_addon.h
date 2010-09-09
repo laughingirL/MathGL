@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 //---------------------------------------------------------------------------
+#ifdef _MGL_W_H_
+#warning "MathGL wrapper was enabled. So disable original MathGL classes"
+#else
 #ifndef _MGL_ADDON_H_
 #define _MGL_ADDON_H_
 //---------------------------------------------------------------------------
@@ -66,4 +69,5 @@ bool mglDifrAxial(dual *a, int n, dual q, int Border,dual *b, dual *d, int kk, d
 /// Explicit scheme for 1 step of plane diffraction
 bool mglDifrGrid(dual *a,int n,dual q,int Border,dual *b,dual *d,int kk);
 //---------------------------------------------------------------------------
+#endif
 #endif

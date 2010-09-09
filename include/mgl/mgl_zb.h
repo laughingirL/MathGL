@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 //-----------------------------------------------------------------------------
+#ifdef _MGL_W_H_
+#warning "MathGL wrapper was enabled. So disable original MathGL classes"
+#else
 #ifndef _MGL_ZB_H_
 #define _MGL_ZB_H_
 #include "mgl/mgl_ab.h"
@@ -54,5 +57,6 @@ protected:
 	void pnt_plot(long x,long y,mreal z,unsigned char c[4]);
 };
 //-----------------------------------------------------------------------------
+#endif
 #endif
 //-----------------------------------------------------------------------------

@@ -12,7 +12,7 @@
 7. Save glyph then it is used for mglGraphPS -- allow different font family in EPS|SVG ??!
 8. Add small-caps in TeX parsing -- also do 2-wchar string parsing (text + attributes).
 9. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
-10. Options "iI_-aA" for colorbar
+10. Options "iI_-aA" for colorbar -- for specifying its position in text.
 11. Hankel transform
 12. The same function for ticks of axis and colorbar
 13. Add option ':[xyzd]' in color scheme for coloring along coordinate (default 'z') ?!?
@@ -24,9 +24,9 @@
 21. Quaternary diagrams plotted in a tetrahedron: equivalent to ternary diagrams, but in 3D.
 22. Legend in OpenGL mode
 23. Load GZ compressed files VFM -- add functions for handling "textual" streams like double stof(char **sptr).
-25. Bug with 'a' option of text after Rotate ?!
 27. Update STIX fonts -- new release 
 28. Create PWT fonts
+29. Multithreading by "subplots" -- for parser first of all !!!
 31. Problem with \calB and so on (\calH, ...).
 32. Allow different ranges for ternary axis
 
