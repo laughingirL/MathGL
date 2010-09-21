@@ -251,7 +251,7 @@ void mglGraph::Plot(const mglData &x, const mglData &y, const mglData &z, const 
 	static int cgid=1;	StartGroup("Plot",cgid++);
 	m = x.ny > y.ny ? x.ny : y.ny;	m = z.ny > m ? z.ny : m;
 	mreal *pp = new mreal[6*n];
-	bool *tt = new bool[2*n];
+	bool *tt = new bool[2*n],inan,onan;
 	if(pen && *pen)	mk=SelectPen(pen);	else	Pen(NC, '-', BaseLineWidth);
 	SetPal(pen);
 	for(j=0;j<m;j++)
@@ -259,13 +259,16 @@ void mglGraph::Plot(const mglData &x, const mglData &y, const mglData &z, const 
 		Pen(GetPal(),0,0);
 		mx = j<x.ny ? j:0;	my = j<y.ny ? j:0;	mz = j<z.ny ? j:0;
 		register long i,k,jj;
+		inan = onan = false;
 		for(jj=i=0;i<n;i++,jj++)
 		{
 			k = 3*jj;
 			pp[k+0] = x.a[i+mx*n];	pp[k+1] = y.a[i+my*n];	pp[k+2] = z.a[i+mz*n];
+			inan = isnan(pp[k+0]) || isnan(pp[k+1]) || isnan(pp[k+2]);
+			if(jj>0)	onan = isnan(pp[k-3]) || isnan(pp[k-2]) || isnan(pp[k-1]);
 			tt[jj] = ScalePoint(pp[k],pp[k+1],pp[k+2]);
 			if(mk && tt[jj])	Mark(pp[k],pp[k+1],pp[k+2],mk);
-			if(jj>0 && ((tt[jj] && !tt[jj-1]) || (tt[jj-1] && !tt[jj])))	// do smoothing
+			if(jj>0 && ((tt[jj] && !tt[jj-1] && !onan) || (tt[jj-1] && !tt[jj] && !inan)))	// do smoothing
 			{
 				float i1=0, i2=1, ii;
 				pp[k+3] = pp[k+0];	pp[k+4] = pp[k+1];	// copy current

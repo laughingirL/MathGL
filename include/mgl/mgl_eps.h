@@ -36,14 +36,13 @@ struct mglPrim
 	wchar_t m;			///< mark or symbol id (if applicable)
 	int type;			///< type of primitive (0 - point, 1 - line, 2 - trig, 3 - quad, 4 - glyph)
 	int style;			///< style of pen
-	unsigned short dash;///< mreal pen dashing
+//	unsigned short dash;///< mreal pen dashing
 	int id;				///< object id
 	int sid;			///< subplot id
 
 	void Draw(mglGraphPS *gr);
 	void DrawGL();
 	bool IsSame(mreal wp,mreal *cp,int st);
-	void SetStyle(unsigned PDef, int pPos);
 	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	c[3]=1;	};
 //	~mglPrim()	{	if(raw)	delete []raw;	};
 	inline void operator=(mglPrim &a)	{	memcpy(this,&a,sizeof(mglPrim));	};

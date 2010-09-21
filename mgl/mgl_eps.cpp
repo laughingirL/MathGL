@@ -86,7 +86,7 @@ void mglGraphPS::line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all)
 	a.zz[0]=p1[2];	a.zz[1]=p2[2];
 	a.c[0]=(c1[0]+c2[0])/2;	a.c[1]=(c1[1]+c2[1])/2;	a.c[2]=(c1[2]+c2[2])/2;
 //	a.c[0]=c1[0];	a.c[1]=c1[1];	a.c[2]=c1[2];
-	a.SetStyle(all? 0xffff:PDef,int(pPos));
+	a.style=all? 0xffff:PDef;	a.s = pPos;
 	add_prim(a);
 	pPos = fmod(pPos+hypot(p2[0]-p1[0], p2[1]-p1[1])/pw/1.5, 16);
 }
@@ -297,21 +297,6 @@ bool mglPrim::IsSame(mreal wp,mreal *cp,int st)
 	return (cp[0]==c[0] && cp[1]==c[1] && cp[2]==c[2]);
 }
 //-----------------------------------------------------------------------------
-void mglPrim::SetStyle(unsigned PDef, int pPos)
-{
-	style=PDef;
-/*	switch(PDef)
-	{
-	case 0xff00:	style=1;	break;
-	case 0xf0f0:	style=2;	break;
-	case 0x8888:	style=3;	break;
-	case 0xfe10:	style=4;	break;
-	case 0xe4e4:	style=5;	break;
-	}*/
-	pPos = abs(pPos)%16;
-	dash = (PDef>>(16-pPos))+(PDef<<pPos);
-}
-//-----------------------------------------------------------------------------
 void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 {
 	if(!P)	return;
@@ -333,7 +318,7 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	mgl_printf(fp, gz, "/s2 {%g} def\n",MarkSize*0.8*font_factor);// remove *font_factor); ???
 	mgl_printf(fp, gz, "/sm {-%g} def\n",MarkSize*0.4*font_factor);//remove *font_factor); ???
 	mgl_printf(fp, gz, "/m_c {ss 0.3 mul 0 360 arc} def\n");
-	mgl_printf(fp, gz, "/d0 {[] 0 setdash} def\n/sd {0 setdash} def\n");
+	mgl_printf(fp, gz, "/d0 {[] 0 setdash} def\n/sd {setdash} def\n");
 
 	bool m_p=false,m_x=false,m_d=false,m_v=false,m_t=false,
 		m_s=false,m_a=false,m_o=false,m_O=false,m_T=false,
@@ -435,8 +420,8 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", P[i].w>1 ? P[i].w:1., P[i].c[0],P[i].c[1],P[i].c[2]);
 			wp = P[i].w>1  ? P[i].w:1;	st = P[i].style;
 			put_line(fp,gz,i,wp,cp,st, "np %g %g mt ", "%g %g ll ", false);
-			const char *sd = mgl_get_dash(P[i].dash,P[i].w);
-			if(sd && sd[0])	mgl_printf(fp, gz, "%s [%s] sd dr\n",str,sd);
+			const char *sd = mgl_get_dash(P[i].style,P[i].w);
+			if(sd && sd[0])	mgl_printf(fp, gz, "%s [%s] %g sd dr\n",str,sd,P[i].w*P[i].s);
 			else			mgl_printf(fp, gz, "%s d0 dr\n",str);
 		}
 		else if(P[i].type==4)	// glyph
@@ -575,7 +560,11 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 //			const char *dash[]={"", "8 8","4 4","1 3","7 4 1 4","3 2 1 2"};
 			mgl_printf(fp, gz, "<g stroke=\"#%02x%02x%02x\"",
 					int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
-			if(P[i].style)	mgl_printf(fp, gz, " stroke-dasharray=\"%s\"", mgl_get_dash(P[i].dash,P[i].w));
+			if(P[i].style)
+			{
+				mgl_printf(fp, gz, " stroke-dasharray=\"%s\"", mgl_get_dash(P[i].style,P[i].w));
+				mgl_printf(fp, gz, " stroke-dashoffset=\"%g\"", P[i].s*P[i].w);
+			}
 			if(P[i].w>1)	mgl_printf(fp, gz, " stroke-width=\"%g\"", P[i].w);
 			memcpy(cp,P[i].c,3*sizeof(mreal));
 			wp = P[i].w>1  ? P[i].w:1;	st = P[i].style;
@@ -651,7 +640,8 @@ void mglGraphPS::draw_prim(mglPrim *pr, mreal *pp, mreal *c)
 	switch(pr->type)
 	{
 	case 0:	mglGraphAB::mark_plot(pp,pr->m);	break;
-	case 1:	mglGraphAB::line_plot(pp,pp+3,c,c);	break;
+	case 1:	PDef = pr->style;	pPos = pr->s;
+			mglGraphAB::line_plot(pp,pp+3,c,c);	break;
 	case 2:	mglGraphAB::trig_plot(pp,pp+3,pp+6,c,c,c);	break;
 	case 3:	mglGraphAB::quad_plot(pp,pp+3,pp+6,pp+9,c,c,c,c);	break;
 	case 4:
