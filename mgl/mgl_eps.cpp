@@ -299,15 +299,15 @@ bool mglPrim::IsSame(mreal wp,mreal *cp,int st)
 //-----------------------------------------------------------------------------
 void mglPrim::SetStyle(unsigned PDef, int pPos)
 {
-	style=0;
-	switch(PDef)
+	style=PDef;
+/*	switch(PDef)
 	{
 	case 0xff00:	style=1;	break;
 	case 0xf0f0:	style=2;	break;
 	case 0x8888:	style=3;	break;
 	case 0xfe10:	style=4;	break;
 	case 0xe4e4:	style=5;	break;
-	}
+	}*/
 	pPos = abs(pPos)%16;
 	dash = (PDef>>(16-pPos))+(PDef<<pPos);
 }
