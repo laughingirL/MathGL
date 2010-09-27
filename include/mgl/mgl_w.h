@@ -324,7 +324,7 @@ public:
 	inline void CopyFont(mglGraph *gr)		{	mgl_copy_font(self, gr->Self());};
 	inline void RestoreFont()				{	mgl_restore_font(self);	};
 
-	inline void ShowImage(const char *viewer="kuickshow", bool keep=0)
+	inline void ShowImage(const char *viewer=0, bool keep=0)
 	{	mgl_show_image(self, viewer, keep);	};
 	inline void WriteFrame(const char *fname,const char *descr="")
 	{	mgl_write_frame(self, fname, descr);	};

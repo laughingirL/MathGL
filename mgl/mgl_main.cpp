@@ -28,11 +28,6 @@
 #include <wchar.h>
 #include "mgl/mgl.h"
 #include "mgl/mgl_eval.h"
-#ifndef MGL_DEF_VIEWER
-//#define MGL_DEF_VIEWER "kuickshow"
-#define MGL_DEF_VIEWER "gthumb"
-//#define MGL_DEF_VIEWER "gwenview";
-#endif
 //-----------------------------------------------------------------------------
 const char *mglWarn[mglWarnEnd] = {"%s: data dimension(s) is incompatible",
 								"%s: data dimension(s) is too small",
@@ -1072,7 +1067,7 @@ void mglGraph::ShowImage(const char *viewer, bool keep)
 	if(keep)
 	{
 		sprintf(cmd,"%s %s &", viewer,fname);
-		if(system(cmd)==-1)	printf("Error to call external viewver\n");
+		if(system(cmd)==-1)	printf("Error to call external viewer\n");
 #ifdef WIN32
 //		sleep(2);
 		sprintf(cmd,"del %s", fname);
@@ -1086,7 +1081,7 @@ void mglGraph::ShowImage(const char *viewer, bool keep)
 	else
 		sprintf(cmd,"%s %s; rm %s", viewer,fname,fname);
 #endif
-	if(system(cmd)==-1)	printf("Error to call external viewver\n");
+	if(system(cmd)==-1)	printf("Error to call external viewer\n");
 	delete []cmd;
 }
 //-----------------------------------------------------------------------------

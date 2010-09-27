@@ -58,7 +58,7 @@ using mglGraphAB::Window;
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	void Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p),
 						const char *title,void *par=NULL,
-	  					void (*reload)(int next, void *p)=NULL, bool maximize=false);
+						void (*reload)(int next, void *p)=NULL, bool maximize=false);
 	/// Switch on/off transparency (do not overwrite switches in user drawing function)
 	void ToggleAlpha();
 	/// Switch on/off lighting (do not overwrite switches in user drawing function)

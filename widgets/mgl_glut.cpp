@@ -210,7 +210,7 @@ void mglGraphGLUT::Window(int argc, char **argv,int (*draw)(mglGraph *gr, void *
 HMGL mgl_create_graph_glut(HMDR dr, const char *title)
 {
 	mglGraphGLUT *g = new mglGraphGLUT;
-	g->Window(0,0,dr,title);
+	g->Window(0,0,title,dr);
 	return g;
 }
 //-----------------------------------------------------------------------------

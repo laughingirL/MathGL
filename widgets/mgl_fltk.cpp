@@ -95,28 +95,27 @@ void Fl_MathGL::draw()
 void Fl_MathGL::update(mglGraph *gr)
 {
 	if(gr==0)	gr=graph;
-	if(gr==0 || draw_func==0)	return;
-	if(gr!=graph || graph->ClfOnUpdate)	gr->DefaultPlotParam();
-	gr->Alpha(flag&1);
-	gr->Light(flag&2);
-	gr->View(tet,phi);
-	gr->Zoom(x1,y1,x2,y2);
-	gr->DrawFace = !rotate;
-
-	gr->Message = new char[2048];	gr->Message[0] = 0;
-	draw_func(gr, draw_par);
-	if(gr->Message[0] != 0)			fl_message("%s",gr->Message);
-	delete []gr->Message;			gr->Message = 0;
-
+	if(gr==0)	return;
+	if(draw_func)
+	{
+		if(gr!=graph || graph->ClfOnUpdate)	gr->DefaultPlotParam();
+		gr->Message = new char[2048];	gr->Message[0] = 0;
+		gr->Alpha(flag&1);
+		gr->Light(flag&2);
+		gr->View(tet,phi);
+		gr->Zoom(x1,y1,x2,y2);
+		gr->DrawFace = !rotate;
+		draw_func(gr, draw_par);
+		if(gr->Message[0] != 0)			fl_message("%s",gr->Message);
+		delete []gr->Message;			gr->Message = 0;
+	}
 	if(gr==graph && (graph->GetWidth()!=w() || graph->GetHeight()!=h()))
 		size(graph->GetWidth(), graph->GetHeight());
 	redraw();
 }
 //-----------------------------------------------------------------------------
 void Fl_MathGL::resize(int x, int y, int w, int h)
-{
-	Fl_Widget::resize(x,y,w,h);
-}
+{	Fl_Widget::resize(x,y,w,h);	}
 //-----------------------------------------------------------------------------
 int Fl_MathGL::handle(int code)
 {
@@ -688,7 +687,7 @@ int mglFlRun()	{	return Fl::run();	}
 HMGL mgl_create_graph_fltk_dr(HMDR dr, const char *title)
 {
 	mglGraphFLTK *g = new mglGraphFLTK;
-	g->Window(0,0,dr,title);
+	g->Window(0,0,title,dr);
 	return g;
 }
 //-----------------------------------------------------------------------------

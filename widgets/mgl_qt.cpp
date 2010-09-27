@@ -190,16 +190,18 @@ void QMathGL::zoomOut()
 void QMathGL::update(mglGraph *gr)
 {
 	if(gr==0)	gr = graph;
-	if(gr==0 || draw_func==0)	return;
+	if(gr==0)	return;
+	if(draw_func==0)	{	refresh();	return;	}
 	if(gr!=graph || graph->ClfOnUpdate)	gr->DefaultPlotParam();
+	char *buf=new char[2048];	buf[0]=0;	gr->Message = buf;
+
 	gr->Alpha(alpha);	gr->Light(light);
 	gr->View(tet,phi);	gr->Org = mglPoint(NAN,NAN,NAN);
 	gr->Perspective(per);
 	gr->Zoom(x1,y1,x2,y2);
 	gr->DrawFace = !rotate;
-
-	char *buf=new char[2048];	buf[0]=0;	gr->Message = buf;
 	draw_func(gr, draw_par);
+
 	if(buf[0] != 0)	QMessageBox::warning(this, appName, buf);
 	gr->Message = 0;		delete []buf;
 	mousePos="";
@@ -594,7 +596,7 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 HMGL mgl_create_graph_qt_dr(HMDR dr, const char *title)
 {
 	mglGraphQT *g = new mglGraphQT;
-	g->Window(0,0,dr,title);
+	g->Window(0,0,title,dr);
 	return g;
 }
 //-----------------------------------------------------------------------------

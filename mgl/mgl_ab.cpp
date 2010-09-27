@@ -949,7 +949,7 @@ int mgl_draw_class(mglGraph *gr, void *p)
 {	return p ? ((mglDraw *)p)->Draw(gr) : 0;	}
 void mgl_reload_class(int next, void *p)
 {	if(p)	((mglDraw *)p)->Reload(next);	}
-void mglGraphAB::Window(int argc, char **argv, mglDraw *draw, const char *title, bool maximize)
+void mglGraphAB::Window(int argc, char **argv, const char *title, mglDraw *draw, bool maximize)
 {
 	Window(argc, argv, mgl_draw_class, title, draw, mgl_reload_class, maximize);
 }

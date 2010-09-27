@@ -119,7 +119,7 @@ using mglGraph::Legend;
 						const char *title, void *par=NULL,
 						void (*reload)(int next, void *p)=NULL, bool maximize=false);
 	/// Create a window for plotting based on class mglDraw.
-	void Window(int argc, char **argv, mglDraw *draw, const char *title, bool maximize=false);
+	void Window(int argc, char **argv, const char *title, mglDraw *draw, bool maximize=false);
 	/// Push transformation matrix into stack
 	virtual void Push();
 	/// Pop transformation matrix from stack
