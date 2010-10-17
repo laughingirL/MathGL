@@ -697,9 +697,10 @@ Setsize: размер(ы) равны нулю или отрицательны
 Помещает последующий вывод в прямоугольную область [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}] (исходный размер [0,1]*[0,1]). Эта функция позволяет поместить график в произвольную область рисунока. Если параметр @var{rel}=@code{true}, то используется позиция относительно текщего SubPlot() (или InPlot() с @var{rel}=@code{false}). Функция сбрасывает матрицу трансформации (повороты и сжатие графика) и должна вызываться первой для создания "подграфика".
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} ColumnPlot (@code{int} num, @code{int} ind)
+@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} ColumnPlot (@code{int} num, @code{int} ind, @code{float} d=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_columnplot (@code{HMGL} gr, @code{int} num, @code{int} ind)
-Помещает последующий вывод в @var{ind}-ую строку столбца из @var{num} строк. Положение столбца выбирается относительно последнего вызова SubPlot() (или InPlot() с @var{rel}=@code{false}). @sref{ColumnPlot sample}
+@deftypefnx {Функция С} @code{void} mgl_columnplot (@code{HMGL} gr, @code{int} num, @code{int} ind, @code{float} d)
+Помещает последующий вывод в @var{ind}-ую строку столбца из @var{num} строк. Положение столбца выбирается относительно последнего вызова SubPlot() (или InPlot() с @var{rel}=@code{false}). Параметр @var{d} задает дополнительный зазор между строк. @sref{ColumnPlot sample}
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} StickPlot (@code{int} num, @code{int} ind, @code{float} tet, @code{float} phi)

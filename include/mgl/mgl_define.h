@@ -120,6 +120,7 @@ enum{	// Codes for warnings/messages
 	mglWarnLId,		// Light: ID is out of range
 	mglWarnSize,	// Setsize: size(s) is zero or negative
 	mglWarnFmt,		// Format is not supported for that build
+	mglWarnTern,	// Axis ranges are incompatible
 	mglWarnEnd		// Maximal number of warnings (must be last)
 };
 //-----------------------------------------------------------------------------

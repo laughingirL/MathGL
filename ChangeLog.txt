@@ -19,7 +19,11 @@
 	- Add possibility to read HDF4 files in mglData.
 	- Add MGL commands 'grad', 'quadplot', 'tricont'
 	- Add 'int(x)' function to the expression parser (class mglFormula).
+	- Add \textsc{} for small-caps to TeX parsing.
 	- Add optional gap for ColumnPlot.
+	- Colorbar position can be specified in sch string: ‘>’ - right, ‘<’ - left, ‘^’ - above, ‘_’ - under. If string have 'A' then absolute coordiantes is used.
+	- Legend coordinates set absolute position if font argument contain 'A' symbol.
+	- Font files can be compressed now by 'gzip'.
 	- Allow defining manual array in MGL command argument as [v1,v2,v3,...]. Array can be multidimensional like [[v1,v2],[v3,v4]].
 	- Restrict usage of original and wrapper classes simultaneously.
 	- Now Plot() and Tens() now "accurately" cut off line segments.
@@ -32,6 +36,8 @@
 	- Bugfix for text and marks drawing in OpenGL mode.
 	- Bugfix for T-ticks orientation in Ternary plot.
 	- Bugfix for text position with 'a' option after Rotate().
+	- Bugfix for keeping bold/italic text formating of next symbol.
+	- Bugfix for Ternary axis with Min.y!=0.
 	- Add TeX symbol sample in documentation.
 	- Now curves always start dashing from zero position.
 	- Add mini-dash for '=' line style symbol.

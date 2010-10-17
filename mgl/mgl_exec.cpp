@@ -1208,7 +1208,7 @@ void mglc_loadfont(wchar_t out[1024], long , mglArg *a, int k[10])
 //-----------------------------------------------------------------------------
 int mgls_grid(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	if(k[0]!=1)			gr->Grid(k[0]==2?a[0].s:"xyz", k[1]==2?a[1].s:"B-");
+	if(k[0]!=1)			gr->Grid(k[0]==2?a[0].s:"xyzt", k[1]==2?a[1].s:"B-");
 	else if(k[1]!=1)	gr->Grid(*(a[0].d),k[1]==2?a[1].s:0,k[2]==3?a[2].v:NAN);
 	else if(k[1]==1 && k[2]==1 && k[3]!=1)
 		gr->Grid(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:0, k[4]==3?a[4].v:NAN);
@@ -2392,7 +2392,7 @@ void mglc_traj(wchar_t out[1024], long , mglArg *a, int k[10])
 //-----------------------------------------------------------------------------
 int mgls_xlabel(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Labelw('x', a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	if(k[0]==2)	gr->Labelw('x', a[0].w, k[1]==3?a[1].v:0, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 	else	return 1;
 	return 0;
 }
@@ -2403,7 +2403,7 @@ void mglc_xlabel(wchar_t out[1024], long , mglArg *a, int k[10])
 //-----------------------------------------------------------------------------
 int mgls_ylabel(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Labelw('y', a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	if(k[0]==2)	gr->Labelw('y', a[0].w, k[1]==3?a[1].v:0, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 	else	return 1;
 	return 0;
 }
@@ -2414,7 +2414,7 @@ void mglc_ylabel(wchar_t out[1024], long , mglArg *a, int k[10])
 //-----------------------------------------------------------------------------
 int mgls_zlabel(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Labelw('z', a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	if(k[0]==2)	gr->Labelw('z', a[0].w, k[1]==3?a[1].v:0, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 	else	return 1;
 	return 0;
 }
@@ -2425,7 +2425,7 @@ void mglc_zlabel(wchar_t out[1024], long , mglArg *a, int k[10])
 //-----------------------------------------------------------------------------
 int mgls_tlabel(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr->Labelw('t', a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
+	if(k[0]==2)	gr->Labelw('t', a[0].w, k[1]==3?a[1].v:0, k[2]==3?a[2].v:-1.4, k[3]==3?a[3].v:0);
 	else	return 1;
 	return 0;
 }

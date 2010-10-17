@@ -1735,7 +1735,7 @@ int main(int argc,char **argv)
 	else	gr->SetSize(width,height);
 
 	if(dotest)
-	{	test(gr);	gr->WritePNG("test.png","",false);	return 0;	}
+	{	test(gr);	gr->WriteEPS("test.eps");	gr->WritePNG("test.png","",false);	return 0;	}
 
 	if(srnd)	mgl_srnd(1);
 	gr->VertexColor(false);	gr->TextureColor(true);	gr->Compression(false);

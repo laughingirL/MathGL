@@ -111,7 +111,7 @@ void Fl_MathGL::update(mglGraph *gr)
 	}
 	if(gr==graph && (graph->GetWidth()!=w() || graph->GetHeight()!=h()))
 		size(graph->GetWidth(), graph->GetHeight());
-	redraw();
+	redraw();//	Fl::check();
 }
 //-----------------------------------------------------------------------------
 void Fl_MathGL::resize(int x, int y, int w, int h)

@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <ctype.h>
+#include <wctype.h>
+#include <zlib.h>
 
 #ifdef WIN32
 #include <windows.h>
@@ -271,8 +273,9 @@ unsigned mglFont::Parse(const wchar_t *s)
 	else if(!wcscmp(s,L"underset"))	res = unsigned(-9);
 	else if(!wcscmp(s,L"stackr"))	res = unsigned(-10);
 	else if(!wcscmp(s,L"stackl"))	res = unsigned(-11);
-	else if(!wcscmp(s,L"sub"))		res = unsigned(-12);	// new
-	else if(!wcscmp(s,L"sup"))		res = unsigned(-13);	// new
+	else if(!wcscmp(s,L"sub"))		res = unsigned(-12);
+	else if(!wcscmp(s,L"sup"))		res = unsigned(-13);
+	else if(!wcscmp(s,L"textsc"))	res = unsigned(-14);	// new
 	else if(!wcscmp(s,L"b"))		res = MGL_FONT_BOLD;
 	else if(!wcscmp(s,L"i"))		res = MGL_FONT_ITAL;
 	else if(!wcscmp(s,L"bi"))		res = MGL_FONT_BOLD|MGL_FONT_ITAL;
@@ -370,6 +373,7 @@ void mglFont::draw_ouline(mglGraph *gr, int st, mreal x, mreal y, mreal f, mreal
 		gr->Glyph(x,y-200*f/g, ww*g, (st&MGL_FONT_WIRE)?12:8, 0, ccol);
 }
 //-----------------------------------------------------------------------------
+#define MGL_CLEAR_STYLE {st = style;	yy = y;	ff = f;	ccol=col;	a = (st/MGL_FONT_BOLD)&3;}
 mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char col)
 {
 	if(numg==0)	return 0;
@@ -402,7 +406,7 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 			ww = Puts(b1, x, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
-			st = style;	yy = y;	ff = f;		// clear style modification
+			MGL_CLEAR_STYLE
 		}
 		else if(s==unsigned(-9))	// underset
 		{
@@ -411,7 +415,7 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 			Puts(b2, x+(ww-w2)/2, yy-150*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
-			st = style;	yy = y;	ff = f;		// clear style modification
+			MGL_CLEAR_STYLE
 		}
 		else if(s==unsigned(-8))	// overset
 		{
@@ -420,7 +424,7 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 			Puts(b2, x+(ww-w2)/2, yy+375*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
-			st = style;	yy = y;	ff = f;		// clear style modification
+			MGL_CLEAR_STYLE
 		}
 		else if(s==unsigned(-12))	// sub
 		{
@@ -429,7 +433,7 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 			Puts(b2, x+(ww-w2)/2, yy-250*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
-			st = style;	yy = y;	ff = f;		// clear style modification
+			MGL_CLEAR_STYLE
 		}
 		else if(s==unsigned(-13))	// sup
 		{
@@ -438,7 +442,7 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 			Puts(b2, x+(ww-w2)/2, yy+450*ff/fact[a], ff/4, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
-			st = style;	yy = y;	ff = f;		// clear style modification
+			MGL_CLEAR_STYLE
 		}
 		else if(s==unsigned(-11))	// stackl
 		{
@@ -447,7 +451,7 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 			Puts(b2, x, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
-			st = style;	yy = y;	ff = f;		// clear style modification
+			MGL_CLEAR_STYLE
 		}
 		else if(s==unsigned(-10))	// stacr
 		{
@@ -456,7 +460,7 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 			Puts(b2, x+(ww-w2), yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
-			st = style;	yy = y;	ff = f;		// clear style modification
+			MGL_CLEAR_STYLE
 		}
 		else if(s==unsigned(-7))	// stack
 		{
@@ -465,7 +469,7 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 			Puts(b2, x+(ww-w2)/2, yy-110*ff/fact[a], ff*0.45, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
-			st = style;	yy = y;	ff = f;		// clear style modification
+			MGL_CLEAR_STYLE
 		}
 		else if(s==unsigned(-6))	// frac
 		{
@@ -477,10 +481,20 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 				draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
 				gr->Glyph(x,y+150*f/fact[a], ww*fact[a], (st&MGL_FONT_WIRE)?12:8, 0, ccol);
 			}
-			st = style;	yy = y;	ff = f;		// clear style modification
+			MGL_CLEAR_STYLE
 		}
-		else if(s==unsigned(-4))	// should be never here but if I miss sth ...
-			continue;
+		else if(s==unsigned(-4))	MGL_CLEAR_STYLE	// should be never here but if I miss sth ...
+		else if(s==unsigned(-14))	// script symbols
+		{
+			register long j,k=1;
+			if(str[i+1]==unsigned(-3))	for(j=i+2;k>0 && str[j];j++)
+			{
+				if(str[j]==unsigned(-3))	k++;
+				if(str[j]==unsigned(-4))	k--;
+				if(iswlower(str[j]))
+					str[j] = MGL_FONT_UPPER|MGL_FONT_LOWER|towupper(str[j]);
+			}
+		}
 		else if(s==unsigned(-5))	// large symbol
 			ff *= 1.5;
 		else if(s==unsigned(-1))	// set normal font
@@ -498,10 +512,8 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 					if(j==-1)	continue;
 					if(gr && !(style&0x10))
 					{
-						if(st & MGL_FONT_WIRE)
-							gr->Glyph(x,yy,ff,a+4,j,ccol);
-						else
-							gr->Glyph(x,yy,ff,a,j,ccol);
+						if(st & MGL_FONT_WIRE)	gr->Glyph(x,yy,ff,a+4,j,ccol);
+						else					gr->Glyph(x,yy,ff,a,j,ccol);
 					}
 				}
 				else
@@ -510,7 +522,7 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 				if(gr && !(style&0x10))	// add under-/over- line now
 					draw_ouline(gr,st,x,y,f,fact[a],ww,ccol);
 				if(s & MGL_FONT_ZEROW)	ww = 0;
-				st = style;	yy = y;	ff = f;	ccol=col;	// clear style modification
+				MGL_CLEAR_STYLE
 			}
 			// apply new styles
 			if(s/MGL_FONT_BOLD)	st = st | (s & MGL_FONT_STYLE);
@@ -518,42 +530,15 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 			ss = (s/MGL_FONT_UPPER)%4;
 			if(ss)
 			{
-				if(ss==1)		yy += 200*ff/fact[a];	// =  500*0.4
-				else if(ss==2)	yy -=  80*ff/fact[a];	// = -500*0.16
-				else if(ss==3)	yy +=  60*ff/fact[a];	// =  500*0.12
-				ff *=0.6;
+				if(ss==1)		{	ff *=0.6;	yy += 200*ff/fact[a];	}	// =  500*0.4
+				else if(ss==2)	{	ff *=0.6;	yy -=  80*ff/fact[a];	}	// = -500*0.16
+				else if(ss==3)	{	ff *=0.8;	yy +=  0*60*ff/fact[a];	}	// =  500*0.12
 			}
 		}
 		x += ww;	w += ww;
 	}
 	delete []str;
 	return w;
-}
-//-----------------------------------------------------------------------------
-void mglFont::read_data(FILE *fp, float *ff, short *wdt, short *numl,
-						unsigned *posl, short *numt, unsigned *post, unsigned &cur)
-{
-	char str[256];
-	int tmpw, tmpnl, tmpnt;
-	unsigned s,i,n, tmpi, tmppl, tmppt;
-	long j;
-	// first string is comment (not used), second string have information
-	if(!fgets(str,256,fp) || !fgets(str,256,fp))	return;
-	sscanf(str, "%u%f%d", &n, ff, &s);
-	buf = (short *)realloc(buf, (cur+s)*sizeof(short));	// prealocate buffer
-	if(!buf)	return;
-
-	for(i=0;i<n;i++)
-	{
-		fscanf(fp,"%u%d%d%u%d%u", &tmpi, &tmpw, &tmpnl, &tmppl, &tmpnt, &tmppt);
-		j=Internal(unsigned(tmpi));	if(j<0)	continue;
-		if(wdt)	wdt[j] = tmpw;
-		numl[j] = tmpnl;	posl[j] = tmppl+cur;
-		numt[j] = tmpnt;	post[j] = tmppt+cur;
-	}
-	for(i=0;i<s;i++)	{	fscanf(fp,"%d", &tmpi);	buf[i+cur] = tmpi;	}
-	cur += s;
-	fclose(fp);	// !!! close file here !!!
 }
 //-----------------------------------------------------------------------------
 void mglFont::mem_alloc()
@@ -591,46 +576,6 @@ void mglFont::main_copy()
 	memcpy(width[3],width[0],numg*sizeof(short));
 }
 //-----------------------------------------------------------------------------
-bool mglFont::read_main(const char *base, const char *path, unsigned &cur)
-{
-	FILE *fp;
-	char str[256];
-	int tmpi, tmpw, tmpnl, tmpnt;
-	unsigned s, tmppl, tmppt;
-#ifdef WIN32	// normal weight (should have most of symbols !!!)
-	if(path)	sprintf(str,"%s\\%s.vfm",path,base);
-#else
-	if(path)	sprintf(str,"%s/%s.vfm",path,base);
-#endif
-	else	sprintf(str,"%s.vfm",base);
-
-	fp = fopen(str,"r");
-	if(!fp)	return false;			// this font must be in any case
-	// first string is comment (not used), second string have information
-	if(!fgets(str,256,fp) || !fgets(str,256,fp))	return false;
-	sscanf(str, "%u%f%u", &numg, fact, &s);
-	fact[1] = fact[2] = fact[3] = fact[0];	// copy default factor for other font styles;
-	buf = (short *)malloc(s*sizeof(short));	// prealocate buffer
-	if(!buf)	return false;
-	// now allocate memory for all fonts
-	mem_alloc();
-	// and load symbols itself
-	register long i;
-	for(i=0;i<int(numg);i++)
-	{
-		fscanf(fp,"%u%d%d%u%d%u", &tmpi, &tmpw, &tmpnl, &tmppl, &tmpnt, &tmppt);
-		id[i] = tmpi;		width[0][i] = tmpw;
-		numl[0][i] = tmpnl; ln[0][i] = tmppl;
-		numt[0][i] = tmpnt;	tr[0][i] = tmppt;
-	}
-	for(i=0;i<int(s);i++)	{	fscanf(fp,"%d", &tmpi);	buf[i] = tmpi;	}
-	cur += s;
-	fclose(fp);		// finish wire normal font
-	numb = cur;
-	main_copy();	// copy normal style as default for other styles
-	return true;
-}
-//-----------------------------------------------------------------------------
 bool mglFont::read_def(unsigned &cur)
 {
 	numg = mgl_numg;	cur = mgl_cur;
@@ -656,6 +601,81 @@ bool mglFont::read_def(unsigned &cur)
 	return true;
 }
 //-----------------------------------------------------------------------------
+bool mglFont::read_data(const char *fname, float *ff, short *wdt, short *numl,
+						unsigned *posl, short *numt, unsigned *post, unsigned &cur)
+{
+	gzFile fp;
+	char str[256];
+	int tmpw, tmpnl, tmpnt;
+	unsigned s,n, tmpi, tmppl, tmppt;
+	register long i,j,ch;
+	fp = gzopen(fname,"r");	if(!fp)	return false;	// false if no file
+	// first string is comment (not used), second string have information
+	if(!gzgets(fp,str,256) || !gzgets(fp,str,256))
+	{	gzclose(fp);	return false;	}
+	sscanf(str, "%u%f%d", &n, ff, &s);
+	buf = (short *)realloc(buf, (cur+s)*sizeof(short));	// prealocate buffer
+	if(!buf)	{	gzclose(fp);	return false;	}
+
+	for(i=0;i<n;i++)
+	{
+		gzgets(fp,str,256);
+		sscanf(str,"%u%d%d%u%d%u", &tmpi, &tmpw, &tmpnl, &tmppl, &tmpnt, &tmppt);
+		j=Internal(unsigned(tmpi));	if(j<0)	continue;
+		if(wdt)	wdt[j] = tmpw;
+		numl[j] = tmpnl;	posl[j] = tmppl+cur;
+		numt[j] = tmpnt;	post[j] = tmppt+cur;
+	}
+	for(j=i=0;i<int(s);i++)
+	{
+		for(j=0;j<256;j++)
+		{	str[j] = ch = gzgetc(fp);	if(ch<=' ')	break;	}
+		buf[i+cur] = atoi(str);
+	}
+	cur += s;
+	gzclose(fp);		// finish wire normal font
+	return true;
+}
+//-----------------------------------------------------------------------------
+bool mglFont::read_main(const char *fname, unsigned &cur)
+{
+	gzFile fp;
+	int tmpi, tmpw, tmpnl, tmpnt;
+	unsigned s, tmppl, tmppt;
+	char str[256];
+
+	fp = gzopen(fname,"r");	if(!fp)	return false;	// this font must be in any case
+	// first string is comment (not used), second string have information
+	if(!gzgets(fp,str,256) || !gzgets(fp,str,256))
+	{	gzclose(fp);	return false;	}
+	sscanf(str, "%u%f%u", &numg, fact, &s);
+	fact[1] = fact[2] = fact[3] = fact[0];	// copy default factor for other font styles;
+	buf = (short *)malloc(s*sizeof(short));	// prealocate buffer
+	if(!buf)	{	gzclose(fp);	return false;	}
+	// now allocate memory for all fonts
+	mem_alloc();
+	// and load symbols itself
+	register long i,j,ch;
+	for(i=0;i<int(numg);i++)
+	{
+		gzgets(fp,str,256);
+		sscanf(str,"%u%d%d%u%d%u", &tmpi, &tmpw, &tmpnl, &tmppl, &tmpnt, &tmppt);
+		id[i] = tmpi;		width[0][i] = tmpw;
+		numl[0][i] = tmpnl; ln[0][i] = tmppl;
+		numt[0][i] = tmpnt;	tr[0][i] = tmppt;
+	}
+	for(j=i=0;i<int(s);i++)
+	{
+		for(j=0;j<256;j++)
+		{	str[j] = ch = gzgetc(fp);	if(ch<=' ')	break;	}
+		buf[i] = atoi(str);
+	}
+	gzclose(fp);	// finish wire normal font
+	cur += s;		numb = cur;
+	main_copy();	// copy normal style as default for other styles
+	return true;
+}
+//-----------------------------------------------------------------------------
 bool mglFont::Load(const char *base, const char *path)
 {
 //	base = 0;
@@ -663,7 +683,6 @@ bool mglFont::Load(const char *base, const char *path)
 #ifdef WIN32
 	sep='\\';
 #endif
-	FILE *fp;
 	char str[256];
 	setlocale(LC_NUMERIC,"C");
 	unsigned cur=0;
@@ -681,15 +700,14 @@ bool mglFont::Load(const char *base, const char *path)
 	}
 	Clear();							// first clear old
 
-	if(!base || !read_main(base,path,cur))
+	sprintf(str,"%s%c%s.vfm",path,sep,base);
+	if(!base || !read_main(str,cur))
 	{	read_def(cur);	if(buf)	delete []buf;	return true;	}
 
 	//================== bold ===========================================
-	sprintf(str,"%s%c%s_b.vfm",path,sep,base);
-	fp = fopen(str,"rt");
-	if(fp)		// this file may absent
+	sprintf(str,"%s%c%s_b.vfm",path,sep,base);	// this file may absent
+	if(read_data(str, fact+1, width[1], numl[1], ln[1], numt[1], tr[1], cur))
 	{
-		read_data(fp, fact+1, width[1], numl[1], ln[1], numt[1], tr[1], cur);
 		fact[3] = fact[1];		// copy default factor for bold-italic;
 		// copy normal style as default for other styles
 		memcpy(numl[3],numl[1],numg*sizeof(short));
@@ -701,13 +719,11 @@ bool mglFont::Load(const char *base, const char *path)
 
 	//================== italic =========================================
 	sprintf(str,"%s%c%s_i.vfm",path,sep,base);
-	fp = fopen(str,"rt");
-	if(fp)	read_data(fp, fact+2, width[2], numl[2], ln[2], numt[2], tr[2], cur);
+	read_data(str, fact+2, width[2], numl[2], ln[2], numt[2], tr[2], cur);
 
 	//================== bold-italic ====================================
 	sprintf(str,"%s%c%s_bi.vfm",path,sep,base);
-	fp = fopen(str,"rt");
-	if(fp)	read_data(fp, fact+3, width[3], numl[3], ln[3], numt[3], tr[3], cur);
+	read_data(str, fact+3, width[3], numl[3], ln[3], numt[3], tr[3], cur);
 	numb = cur;
 
 	// Finally normalize all factors

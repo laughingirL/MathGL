@@ -71,8 +71,7 @@ void mglGraph::DrawXGridLine(mreal t, mreal y0, mreal z0)
 	bool *tt = new bool[GridPnts+1];
 	for(i=0;i<GridPnts+1;i++)
 	{
-		pp[3*i]=t;//TernAxis ? t-t*i/30. : t;
-		pp[3*i+1]=y0;//TernAxis ? t*i/30. : y0;
+		pp[3*i]=t;		pp[3*i+1]=y0;
 		pp[3*i+2]=Min.z+(Max.z-Min.z)*i/GridPnts;
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
@@ -80,7 +79,7 @@ void mglGraph::DrawXGridLine(mreal t, mreal y0, mreal z0)
 	for(i=0;i<GridPnts+1;i++)
 	{
 		pp[3*i]=t;	pp[3*i+2]=z0;
-		pp[3*i+1]=Min.y+(Max.y-(TernAxis ? t:Min.y))*i/GridPnts;
+		pp[3*i+1]=Min.y+(Max.y-(TernAxis ? Min.y+t-Min.x:Min.y))*i/GridPnts;
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
@@ -94,8 +93,8 @@ void mglGraph::DrawYGridLine(mreal t, mreal x0, mreal z0)
 	bool *tt = new bool[GridPnts+1];
 	for(i=0;i<GridPnts+1;i++)
 	{
-		pp[3*i]=x0;//TernAxis ? t*i/30. : x0;
-		pp[3*i+1]=t;//TernAxis ? t-t*i/30. : t;
+		pp[3*i]=TernAxis ? Max.x-t+Min.y:x0;
+		pp[3*i+1]=t;
 		pp[3*i+2]=Min.z+(Max.z-Min.z)*i/GridPnts;
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
@@ -103,7 +102,7 @@ void mglGraph::DrawYGridLine(mreal t, mreal x0, mreal z0)
 	for(i=0;i<GridPnts+1;i++)
 	{
 		pp[3*i+2]=z0;	pp[3*i+1]=t;
-		pp[3*i]=Min.x+(Max.x-(TernAxis ? t : Min.x))*i/GridPnts;
+		pp[3*i]=Min.x+(Max.x-(TernAxis ? Min.x+Min.y-t : Min.x))*i/GridPnts;
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
@@ -140,17 +139,17 @@ void mglGraph::DrawTGridLine(mreal t, mreal z0)
 	bool *tt = new bool[GridPnts+1];
 	for(i=0;i<GridPnts+1;i++)
 	{
-		pp[3*i]= t*i/GridPnts;
-		pp[3*i+1]=t-t*i/GridPnts;
+		pp[3*i]= Min.x+t*i/GridPnts;
+		pp[3*i+1]=Min.y+t-t*i/GridPnts;
 		pp[3*i+2]=z0;
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
 	for(i=0;i<GridPnts+1;i++)
 	{
-		pp[3*i]=t-t*i/GridPnts;
-		pp[3*i+1]=t*i/GridPnts;
-		pp[3*i+2]=z0;
+		pp[3*i]=Min.x;		pp[3*i+1]=Min.y+t;
+		pp[3*i+2]=Min.z+(Max.z-Min.z)*i/GridPnts;
+		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
 	delete [] tt;	delete [] pp;
@@ -225,13 +224,13 @@ void mglGraph::Grid(const char *dir, const char *pen)
 			for(t=z0;t>=Min.z*FLT_EPS;t*=10)	DrawZGridLine(t,x0,y0);
 		}
 	}
-	if(strchr(dir,'t'))
+	if(strchr(dir,'t') && TernAxis)
 	{
 		z0 = isnan(OrgT.z) ? GetOrgZ('z') : OrgT.z;
 		z0 = z0 - ddz*floor((z0-Min.z)/ddz);
 		if(xnum)	for(int i=0;i<xnum;i++)		DrawTGridLine(xval[i],z0);
-		else if(dx)	for(t=Min.x;t<=Max.x;t+=ddx)	DrawTGridLine(t,z0);
-		else if(dy)	for(t=Min.y;t<=Max.y;t+=ddy)	DrawTGridLine(t,z0);
+		else if(dx)	for(t=Min.x;t<=Max.x;t+=ddx)	DrawTGridLine(t-Min.x,z0);
+		else if(dy)	for(t=Min.y;t<=Max.y;t+=ddy)	DrawTGridLine(t-Min.y,z0);
 	}
 	SelectPen("k-1");
 	EndGroup();
@@ -256,8 +255,8 @@ void mglGraph::Labelw(char dir,const wchar_t *text,mreal pos,mreal size,mreal sh
 	{
 		if(TernAxis)
 		{
-			t = (pos+1)/2;
-			Putsw(mglPoint(Max.x-t,t,z0),text,font,size,'T',shift);
+			t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
+			Putsw(mglPoint(Max.x+Min.y-t,t,z0),text,font,size,'T',shift);
 		}
 		else
 		{
@@ -274,9 +273,8 @@ void mglGraph::Labelw(char dir,const wchar_t *text,mreal pos,mreal size,mreal sh
 	}
 	if(dir=='t' && TernAxis)
 	{
-		if(dx)	t = (Min.x+Max.x-pos*(Max.x-Min.x))/2;
-		else	t = Max.x*pow(Min.x/Max.x, (pos+1)/2);
-		Putsw(mglPoint(x0,t,z0),text,font,size,'Y',shift);
+		t = (Min.y+Max.y-pos*(Max.y-Min.y))/2;
+		Putsw(mglPoint(Min.x,t,Min.z),text,font,size,'Y',shift);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -731,6 +729,8 @@ void mglGraph::Axis(const char *dir, bool adjust)
 	if(TernAxis)
 	{
 		_sx = _sy = _st = 1;
+		if(fabs(Max.x-Min.x) != fabs(Max.y-Min.y))
+			SetWarn(mglWarnTern,"Axis");
 		AxisX(text, stl);
 		AxisT(text, stl);
 	}
@@ -986,7 +986,7 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
 	Legend(n,text,style,(x+1)/2,(y+1)/2,font,size,llen);
 }
 //-----------------------------------------------------------------------------
-void mglGraph::Ternary(bool t)
+void mglGraph::Ternary(int t)
 {
 	static mglPoint x1(-1,-1,-1),x2(1,1,1),o(NAN,NAN,NAN);
 	static bool c = true;
@@ -1003,9 +1003,9 @@ void mglGraph::Ternary(bool t)
 void mglGraph::DrawTTick(mreal y, mreal x0, mreal z0, mreal dx, mreal dz, int f)
 {
 	mreal pp[9],ff=TickLen/sqrt(1.+f*st_t);
-	pp[0]=x0-y-dx*ff;	pp[1]=y;	pp[2]=z0;
-	pp[3]=x0-y;			pp[4]=y;	pp[5]=z0;
-	pp[6]=x0-y;			pp[7]=y;	pp[8]=z0+dz*ff;
+	pp[0]=x0-y+Min.y-dx*ff;		pp[1]=y;	pp[2]=z0;
+	pp[3]=x0-y+Min.y;			pp[4]=y;	pp[5]=z0;
+	pp[6]=x0-y+Min.y;			pp[7]=y;	pp[8]=z0+dz*ff;
 	if(*TickStl && !f)	SelectPen(TickStl);
 	if(*SubTStl && f)	SelectPen(SubTStl);
 	DrawTick(pp,f!=0);
@@ -1057,23 +1057,25 @@ void mglGraph::AxisT(bool text, const char *stl)
 	else	curv_plot(31,pp,0);
 
 	NSy = NSy<0 ? 0 : NSy;
-	for(y=0;y<=Max.y+(Max.y-Min.y)*1e-6;y+=ddy)
+	for(y=Min.y;y<=Max.y+(Max.y-Min.y)*1e-6;y+=ddy)
 	{
 		if(y>Min.y && y<Max.y)	DrawTTick(y,Max.x,z0,ddx,ddz);
 		mglprintf(str,64,L"%.2g",y);		wcstrim_mgl(str);
-		if(text)	Putsw(mglPoint(Max.x-y,y,z0),str,FontDef,FontSize,'t');
+		if(text)	Putsw(mglPoint(Max.x+Min.y-y,y,z0),str,FontDef,FontSize,'t');
 
-		if(y>Min.y && y<Max.y)	DrawYTick(Max.y-y,Min.x,z0,ddx,ddz);
-		mglprintf(str,64,L"%.2g",y);		wcstrim_mgl(str);
-		if(text)	Putsw(mglPoint(Min.x,Max.y-y,z0),str,FontDef,FontSize,'y');
+		if(y>Min.y && y<Max.y)	DrawYTick(Max.y+Min.y-y,Min.x,z0,ddx,ddz);
+		mreal yy = 1-Min.x-Min.y-Max.y+y;
+		yy = fabs(yy)<(Max.y-Min.y)*1e-6 ? 0:yy;
+		mglprintf(str,64,L"%.2g",yy);	wcstrim_mgl(str);
+		if(text)	Putsw(mglPoint(Min.x,Max.y+Min.y-y,z0),str,FontDef,FontSize,'y');
 	}
 	if(NSy>0)
 	{
 		ddy /= (NSy+1);	// subticks drawing
-		for(y=0;y<=Max.y;y+=ddy)
+		for(y=Min.y;y<=Max.y;y+=ddy)
 		{
 			DrawTTick(y,Max.x,z0,ddx,ddz,1);
-			DrawYTick(Max.y-y,Min.x,z0,ddx,ddz,1);
+			DrawYTick(Max.y+Min.y-y,Min.x,z0,ddx,ddz,1);
 		}
 	}
 }

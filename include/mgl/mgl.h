@@ -376,20 +376,19 @@ public:
 	/// Safetly set the cutting off condition (formula).
 	void CutOff(const char *EqCut);
 	/// Set to draw Ternary axis (triangle like axis, grid and so on)
-	void Ternary(bool tern);
+	void Ternary(int tern);
 	/// Recalculate internal parameter for correct applies transformation rules. \b Must \b be \b called after any direct changes of members mglGraph::Min, mglGraph::Max, mglGraph::fx, mglGraph::fy, mglGraph::fz.
 	void RecalcBorder();
 	/// Draw axises with ticks in directions determined by string parameter \a dir.
 	void Axis(const char *dir="xyzt", bool adjust=false);
 	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
-	void Grid(const char *dir="xyz",const char *pen="B-");
+	void Grid(const char *dir="xyzt",const char *pen="B-");
 	/// Print the label \a text for axis \a dir.
-	void Label(char dir, const char *text, mreal pos=+1, mreal size=-1.4, mreal shift=0);
+	void Label(char dir, const char *text, mreal pos=0, mreal size=-1.4, mreal shift=0);
+	void Labelw(char dir, const wchar_t *text, mreal pos=0, mreal size=-1.4, mreal shift=0);
 	/// Print the \a text at arbitrary position of the picture \a x, \a y in range [0,1]x[0,1].
 	void Label(mreal x, mreal y, const char *text, const char *fnt=0, mreal size=-1.4, bool rel=false);
 	void Labelw(mreal x, mreal y, const wchar_t *text, const char *fnt=0, mreal size=-1.4, bool rel=false);
-	/// Print the label \a text for axis \a dir.
-	void Labelw(char dir, const wchar_t *text, mreal pos=+1, mreal size=-1.4, mreal shift=0);
 	/// Draw colorbar at edge of axis
 	void Colorbar(const char *sch=0,int where=0);
 	void inline Colorbar(const char *sch, int where, mreal x, mreal y, mreal w, mreal h)	{	SetScheme(sch);	Colorbar(where,x,y,w,h);	};
@@ -1058,7 +1057,7 @@ public:
 	//@}
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 protected:
-	bool TernAxis;				/// Flag that Ternary axis is used
+	int TernAxis;				/// Flag that Ternary axis is used
 	mreal FogDist;				/// Inverse fog distance (fog ~ exp(-FogDist*Z))
 	mreal FogDz;				/// Relative shift of fog
 	int _sx,_sy,_sz,_st;		// sign in shift of axis ticks and labels

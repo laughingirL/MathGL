@@ -465,13 +465,13 @@ public:
 
 	inline void Box(const char *col="k", bool ticks=true)
 	{	mgl_box_str(self, col, ticks);	};
-	inline void Axis(const char *dir="xyz", bool adjust=false)
+	inline void Axis(const char *dir="xyzt", bool adjust=false)
 	{	if(adjust)	mgl_adjust_ticks(self,dir);	mgl_axis(self, dir);	};
-	inline void Grid(const char *dir="xyz",const char *pen="B")
+	inline void Grid(const char *dir="xyzt",const char *pen="B")
 	{	mgl_axis_grid(self, dir, pen);	};
 	inline void Label(char dir, const char *text, float pos=+1, float size=-1.4, float shift=0)
 	{	mgl_label_ext(self, dir, text, pos, size, shift);	};
-	inline void Label(char dir, const wchar_t *text, float pos=+1, float size=-1.4, float shift=0)
+	inline void Label(char dir, const wchar_t *text, float pos=0, float size=-1.4, float shift=0)
 	{	mgl_labelw_ext(self, dir, text, pos, size, shift);	};
 	void Label(double x, double y, const char *text, const char *fnt=0, double size=-1.4)
 	{	mgl_label_xy(self,x,y,text,fnt,size);	}

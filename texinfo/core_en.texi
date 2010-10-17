@@ -700,9 +700,10 @@ Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whol
 Puts further plotting in some region of the whole frame surface. This function allows one to create a plot in arbitrary place of the screen. The position is defined by rectangular coordinates [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}]. The coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} are normalized to interval [0, 1]. If parameter @var{rel}=@code{true} then the relative position to current SubPlot() (or last InPlot() with @var{rel}=@code{false}) is used. This function set off any aspects or rotations. So it should be used first for creating subplot.
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} ColumnPlot (@code{int} num, @code{int} ind)
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} ColumnPlot (@code{int} num, @code{int} ind, @code{float} d=@code{0})
 @deftypefnx {C function} @code{void} mgl_columnplot (@code{HMGL} gr, @code{int} num, @code{int} ind)
-Puts further plotting in @var{ind}-th cell of column with @var{num} cells. The position is relative to previous SubPlot() call (or InPlot() with @var{rel}=@code{false}). @sref{ColumnPlot sample}
+@deftypefnx {C function} @code{void} mgl_columnplot_d (@code{HMGL} gr, @code{int} num, @code{int} ind, @code{float} d)
+Puts further plotting in @var{ind}-th cell of column with @var{num} cells. The position is relative to previous SubPlot() call (or InPlot() with @var{rel}=@code{false}). Paramater @var{d} set extra gap between cells. @sref{ColumnPlot sample}
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} StickPlot (@code{int} num, @code{int} ind, @code{float} tet, @code{float} phi)
@@ -1678,18 +1679,18 @@ The same as previous with @var{x}, @var{y} equidistantly distributed in interval
 @subsection Grad
 @cindex Grad
 
-@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}phi, @code{const char *}sch=@code{""}, @code{int} num=@code{5})
-@deftypefnx {Функция С} @code{void} mgl_grad_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}phi, @code{const char *}sch=@code{""}, @code{int} num=@code{5})
+@deftypefnx {C function} @code{void} mgl_grad_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
 The function draws gradient lines for scalar field @var{phi}[i,j,k] specified parametrically @{@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. Number of lines is proportional to @var{num}. If @var{num}<0 then lines start from borders only. The minor dimensions of arrays @var{x}, @var{y}, @var{z}, @var{phi} should be equal @var{x.nx=phi.nx && y.nx=phi.ny && z.nx=phi.nz} or @var{x.nx=y.nx=z.nx=phi.nx && x.ny=y.ny=z.ny=phi.ny && x.nz=y.nz=z.nz=phi.nz}. Arrays @var{x}, @var{y} and @var{z} can be vectors (not matrices as @var{phi}). See also @ref{Dens3}, @ref{Cont3}, @ref{Flow}.
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_grad_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Grad (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{float} zVal=@code{NAN})
+@deftypefnx {C function} @code{void} mgl_grad_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
 The function draws gradient lines for scalar field @var{phi}[i,j] specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{phi}[i,j]@} at @var{z} = @var{zVal}. String @var{sch} sets the color scheme. Previous color scheme is used by default. Number of lines is proportional to @var{num}. If @var{num}<0 then lines start from borders only. The minor dimensions of arrays @var{x}, @var{y}, @var{phi} should be equal @var{x.nx=phi.nx && y.nx=phi.ny} or @var{x.nx=y.nx=phi.nx && x.ny=y.ny=phi.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{phi}). Lines are plotted for each z slice of the data. See also @ref{Dens}, @ref{Cont}, @ref{ContF}, @ref{Flow}. @sref{Grad sample}
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Grad (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{float} zVal=@code{NAN})
-@deftypefnx {Функция С} @code{void} mgl_grad (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} Grad (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{float} zVal=@code{NAN})
+@deftypefnx {C function} @code{void} mgl_grad (@code{HMGL} gr, @code{const HMDT} z, @code{const char *}sch, @code{int} num, @code{float} zVal)
 The same as previous with @var{x}, @var{y} equidistantly distributed in interval [@var{Min}, @var{Max}].
 @end deftypefn
 

@@ -126,9 +126,9 @@ protected:
 	unsigned Symbol(char ch);
 private:
 	mreal get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,mreal &w1,mreal &w2, mreal f1, mreal f2, int st);
-	void read_data(FILE *fp, float *ff, short *wdt, short *numl, unsigned *posl, short *numt, unsigned *post, unsigned &cur);
+	bool read_data(const char *fname, float *ff, short *wdt, short *numl, unsigned *posl, short *numt, unsigned *post, unsigned &cur);
 	void main_copy();
-	bool read_main(const char *base, const char *path, unsigned &cur);
+	bool read_main(const char *fname, unsigned &cur);
 	void mem_alloc();
 	bool read_def(unsigned &cur);
 	void draw_ouline(mglGraph *gr, int st, mreal x, mreal y, mreal f, mreal g, mreal ww, char ccol);

@@ -5,42 +5,33 @@
 	Also check that enough digits is printed to distingush the labels
 	Also allow "time"-labels
 	Also allow rotate labels if they too dense
-3. Contour label should not rotated on ~180 degree ?!
-4. Add MGL commands "function 'name'", "return [Res]" and modify "call 'name' [Res]"
-5. Keep text formating for next symbol -- for example '\b{b}none'
-6. Bug with mult-line text in axis labels -- wrong shifting
-7. Save glyph then it is used for mglGraphPS -- allow different font family in EPS|SVG ??!
-8. Add small-caps in TeX parsing -- also do 2-wchar string parsing (text + attributes).
-9. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
-10. Options "iI_-aA" for colorbar -- for specifying its position in text.
-11. Hankel transform
-12. The same function for ticks of axis and colorbar
-13. Add option ':[xyzd]' in color scheme for coloring along coordinate (default 'z') ?!?
-14. Save ALL plot styles for each curve (0...N) for each subplot (0...M) in format \leg{N_M} ?!?
-15. Add TeX command \leg{plot style} for line+mark of specified style.
-16. Allow legend and colorbar in absolute coordinates ?!! the same as in Text() :)
-18. Add "colorbar x y ['sch'='' w=1 h=1]" + "colorbar x y dat ['sch'='' w=1 h=1]"
-19. Export to X3D
-21. Quaternary diagrams plotted in a tetrahedron: equivalent to ternary diagrams, but in 3D.
-22. Legend in OpenGL mode
-23. Load GZ compressed files VFM -- add functions for handling "textual" streams like double stof(char **sptr).
-27. Update STIX fonts -- new release 
-28. Create PWT fonts
-29. Multithreading by "subplots" -- for parser first of all !!!
-31. Problem with \calB and so on (\calH, ...).
-32. Allow different ranges for ternary axis
+3. Add MGL commands "function 'name'", "return [Res]" and modify "call 'name' [Res]"
+4. Bug with mult-line text in axis labels -- wrong shifting
+5. Save glyph then it is used for mglGraphPS -- allow different font family in EPS|SVG ??!
+6. Hankel transform
+7. Export to X3D
+8. Quaternary diagrams plotted in a tetrahedron: equivalent to ternary diagrams, but in 3D.
+9. Legend in OpenGL mode
+10. Update STIX fonts (new release) + create PWT fonts
+11. Multithreading by "subplots" -- for parser first of all !!!
+12. Problem with \calB and so on (\calH, ...) -- they are present only in italic font :(.
 
-35. INCOMPATIBLE CHANGES!!! swap color and font style in text option ('bR:r' -> 'r:bR')
-36. INCOMPATIBLE CHANGES!!! hide 'dir' argument as ':[xyz]' for cont3, dens3, contf3, grid3 + remove conta, densa, grida, contfa
-37. INCOMPATIBLE!!! Allow slice definition as real: sl<1 ? sl=int(n*sl) : int(sl);
-38. INCOMPATIBLE CHANGES!!! tune colors as {} -- for example, 'b{3}'
-39. INCOMPATIBLE CHANGES!!! hide unused arguments (like "size")
+21. INCOMPATIBLE CHANGES!!! swap color and font style in text option ('bR:r' -> 'r:bR')
+22. INCOMPATIBLE CHANGES!!! hide 'dir' argument as ':[xyz]' for cont3, dens3, contf3, grid3 + remove conta, densa, grida, contfa
+23. INCOMPATIBLE!!! Allow slice definition as real: sl<1 ? sl=int(n*sl) : int(sl);
+24. INCOMPATIBLE CHANGES!!! tune colors as {} -- for example, 'b{3}'
+25. INCOMPATIBLE CHANGES!!! hide unused arguments (like "size")
 
-40. Docs about inplace arrays [[v1,v2],...]
-41. Docs about TriCont(), GetWarnCode(), mgl_get_warn_code()
-42. Regroup pictures in WWW by big classes + combo plots
+30. Docs about inplace arrays [[v1,v2],...]
+31. Docs about TriCont(), GetWarnCode(), mgl_get_warn_code()
+32. Regroup pictures in WWW by big classes + combo plots
+33. Docs about \utf0x???? in TeX
+34. Docs -- default label pos is 0 (MGL,C++,W)
+35. Docs about colorbar position by string argument + legend position
 
-
+=========================
+			Later
+			
 1. Plot for isolines of vector fields ???
 2. Named arguments in MGL ???
 3. \dfrac for normal size and centering ???
@@ -53,6 +44,13 @@
 10. Save id of subplots and axis for getting value of click coordinates arbitrary inplot -- fill only part which is overlapped. Clear it at Clf() + update for any Rotate, Aspect, InPlot, SetRanges, 
 11. Surface by interpolation for arbitrary points {x,y,z} -- seems to be too complicated :(
 12. Rename 'stl'->'style', 'sch'->'scheme' in MGL docs ???
+13. Add option ':[xyzd]' in color scheme for coloring along coordinate (default 'z') ?!?
+14. Save ALL plot styles for each curve (0...N) for each subplot (0...M) in format \leg{N_M} ?!?
+15. Add TeX command \leg{plot style} for line+mark of specified style.
+16. Import/Export via GIF (as 3d data) ??? + 16bit PNG ?!!
+17. Contour label should not rotated on ~180 degree ?!
+18. The same function for ticks of axis and colorbar ???
+13. Add "colorbar x y ['sch'='' w=1 h=1]" + "colorbar x y dat ['sch'='' w=1 h=1]" -- NO because need w,h !
 
 
 					MathGL (for v.2.?) ???

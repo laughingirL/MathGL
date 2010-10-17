@@ -374,7 +374,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 
 	bool upside = ( (((_sx==-1) ^ (Org.y==Max.y || Org.z==Max.z)) && (dir=='x' || dir=='X')) ||
 					(((_sy==-1) ^ (Org.x==Max.x || Org.z==Max.z)) && (dir=='y' || dir=='Y')) ||
-					(((_st==-1) ^ (Org.x==0 || Org.z==1)) && (dir=='t' || dir=='T')) ||
+					(((_st==1)) && (dir=='t' || dir=='T')) ||
 					(((_sz==-1) ^ (Org.y==Max.y || Org.x==Max.x)) && (dir=='z' || dir=='Z')) );
 	mreal pp[6] = {p.x,p.y,p.z,p.x,p.y,p.z};
 	Arrow1 = Arrow2 = '_';
@@ -488,6 +488,7 @@ void mglGraphAB::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
 	mreal pp[15], r=GetRatio(), rh, rw, s3=PlotFactor;
 	if(size<=0)	size = -size*FontSize;
 	if(!font || !(*font))	font="L";
+	char *pA, *ff = new char[strlen(font)+1];	strcpy(ff,font);
 	llen *= 1.5;
 
 	rh=(r<1?r:1.)*size/6.;	rw=(r>1?1./r:1.)*size/8.;
@@ -502,7 +503,13 @@ void mglGraphAB::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
 	}
 	w = (w + llen*1.1f);	// add space for lines
 
-	Push();	memcpy(B,B1,9*sizeof(mreal));
+	bool rel = true;
+	if((pA=strchr(ff,'A')))
+	{
+		*pA = 'L';
+		rel = false;
+	}
+	Push();	Identity(rel);	//	memcpy(B,B1,9*sizeof(mreal));
 	if(LegendBox)	// draw bounding box
 	{
 		pp[2] = pp[5] = pp[8] = pp[11] = pp[14] = s3-0.01;
@@ -536,10 +543,10 @@ void mglGraphAB::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
 			Mark(pp[6],pp[7],pp[8],m);
 		}
 		SelectPen(TranspType!=2 ? "k-1":"w-1");
-		Putsw(mglPoint(x+(style[i][0]!=0?llen:0), y+i*h+0.3f*h, s3), text[i], font, size);
+		Putsw(mglPoint(x+(style[i][0]!=0?llen:0), y+i*h+0.3f*h, s3), text[i], ff, size);
 	}
 	ScalePuts = true;
-	Pop();	EndGroup();
+	Pop();	EndGroup();	delete []ff;
 }
 //-----------------------------------------------------------------------------
 void mglGraphAB::colorbar(const mglData &vv, const mglColor *cs, int where, mreal x, mreal y, mreal w, mreal h)
@@ -874,6 +881,7 @@ mreal mglGraphAB::GetOrgX(char dir)
 		if(dir=='x')		res = ax[0];
 		else if(dir=='y')	res = ay[0];
 		else if(dir=='z')	res = az[0];
+		else if(dir=='t')	res = Min.x;
 		else res = B[6]>0 ? Max.x:Min.x;
 	}
 	return res;
@@ -889,6 +897,7 @@ mreal mglGraphAB::GetOrgY(char dir)
 		if(dir=='x')		res = ax[1];
 		else if(dir=='y')	res = ay[1];
 		else if(dir=='z')	res = az[1];
+		else if(dir=='t')	res = Min.y;
 		else res = B[7]>0 ? Max.y:Min.y;
 	}
 	return res;
@@ -904,6 +913,7 @@ mreal mglGraphAB::GetOrgZ(char dir)
 		if(dir=='x')		res = ax[2];
 		else if(dir=='y')	res = ay[2];
 		else if(dir=='z')	res = az[2];
+		else if(dir=='t')	res = Min.z;
 		else res = B[8]>0 ? Max.z:Min.z;
 	}
 	return res;

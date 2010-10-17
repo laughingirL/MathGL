@@ -193,7 +193,6 @@ void mglGraph::Plot(const char *eqX, const char *eqY, const char *eqZ, const cha
 	}
 	delete ex;	delete ey;	delete ez;
 
-	// TODO Add strong function variation analisys
 	mglData xx,yy,zz;
 	xx.Set(x,n);	yy.Set(y,n);	zz.Set(z,n);
 	free(x);	free(y);	free(z);	free(t);

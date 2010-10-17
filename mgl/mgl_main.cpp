@@ -585,7 +585,7 @@ void mglGraph::DefaultPlotParam()
 {
 	LegendMarks = 1;
 	FontSize = 5;			BaseLineWidth = 1;
-	Ambient();				Ternary(false);
+	Ambient();				Ternary(0);
 	PlotId = "frame";		SelectPen("k-1");
 	SetScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
@@ -1102,11 +1102,26 @@ void mglGraph::SetAutoRanges(mreal x1, mreal x2, mreal y1, mreal y2, mreal z1, m
 void mglGraph::Colorbar(const char *sch,int where)
 {
 	SetScheme(sch);
+	// ‘0’ - right, ‘1’ - left, ‘2’ - above, ‘3’ - under
+	if(sch && strchr(sch,'>'))	where = 0;
+	if(sch && strchr(sch,'<'))	where = 1;
+	if(sch && strchr(sch,'^'))	where = 2;
+	if(sch && strchr(sch,'_'))	where = 3;
+	if(sch && strchr(sch,'A'))	{	Push();	Identity();	}
 	Colorbar(where, where==0?1:0, where==2?1:0, 1, 1);
+	if(sch && strchr(sch,'A'))	Pop();
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Colorbar(const mglData &v, const char *sch,int where)
-{	Colorbar(v,sch,where, where==0?1:0, where==2?1:0, 1, 1);	}
+{
+	if(sch && strchr(sch,'>'))	where = 0;
+	if(sch && strchr(sch,'<'))	where = 1;
+	if(sch && strchr(sch,'^'))	where = 2;
+	if(sch && strchr(sch,'_'))	where = 3;
+	if(sch && strchr(sch,'A'))	{	Push();	Identity();	}
+	Colorbar(v,sch,where, where==0?1:0, where==2?1:0, 1, 1);
+	if(sch && strchr(sch,'A'))	Pop();
+}
 //-----------------------------------------------------------------------------
 void mglGraph::Colorbar(int where, mreal x, mreal y, mreal w, mreal h)
 {
