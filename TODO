@@ -1,19 +1,16 @@
 					MathGL (for v.1.11.*)
 
 1. Colorbar: print more digits for manual arrays ... but avoid overlapping ???
+
 2. Miss MAJOR labels or decrease its fontsize if labels too close.
 	Also check that enough digits is printed to distingush the labels
 	Also allow "time"-labels
 	Also allow rotate labels if they too dense
 3. Add MGL commands "function 'name'", "return [Res]" and modify "call 'name' [Res]"
-4. Bug with mult-line text in axis labels -- wrong shifting
-5. Save glyph then it is used for mglGraphPS -- allow different font family in EPS|SVG ??!
-6. Hankel transform
-7. Export to X3D
-8. Quaternary diagrams plotted in a tetrahedron: equivalent to ternary diagrams, but in 3D.
-9. Legend in OpenGL mode
-10. Update STIX fonts (new release) + create PWT fonts
-11. Multithreading by "subplots" -- for parser first of all !!!
+4. Hankel transform
+5. Legend in OpenGL mode
+
+11. Update STIX fonts (new release) + create PWT fonts
 12. Problem with \calB and so on (\calH, ...) -- they are present only in italic font :(.
 
 21. INCOMPATIBLE CHANGES!!! swap color and font style in text option ('bR:r' -> 'r:bR')
@@ -21,6 +18,10 @@
 23. INCOMPATIBLE!!! Allow slice definition as real: sl<1 ? sl=int(n*sl) : int(sl);
 24. INCOMPATIBLE CHANGES!!! tune colors as {} -- for example, 'b{3}'
 25. INCOMPATIBLE CHANGES!!! hide unused arguments (like "size")
+26. Quaternary diagrams plotted in a tetrahedron: equivalent to ternary diagrams, but in 3D.
+27. Export to X3D
+28. Save glyph then it is used for mglGraphPS -- allow different font family in EPS|SVG ??!
+29. Multithreading by "subplots" -- for parser first of all !!!
 
 30. Docs about inplace arrays [[v1,v2],...]
 31. Docs about TriCont(), GetWarnCode(), mgl_get_warn_code()
@@ -28,6 +29,7 @@
 33. Docs about \utf0x???? in TeX
 34. Docs -- default label pos is 0 (MGL,C++,W)
 35. Docs about colorbar position by string argument + legend position
+36. Sample about pthread using.
 
 =========================
 			Later

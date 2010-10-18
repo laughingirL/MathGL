@@ -29,6 +29,7 @@
 	- Now Plot() and Tens() now "accurately" cut off line segments.
 	- Now $N is substituted into the second argument of MGL commands 'define', 'defnum', 'defpal', 'defchr'.
 	- Reduce animation delay to 1 sec.
+	- mglGraphFLTK::Update() now force window redrawing.
 	- Bugfix with newline symbol '\n'
 	- Bugfix with wrong restore previous InPlot() after text with style 'a'.
 	- Bugfix for label position for log-scale axis.
@@ -38,6 +39,7 @@
 	- Bugfix for text position with 'a' option after Rotate().
 	- Bugfix for keeping bold/italic text formating of next symbol.
 	- Bugfix for Ternary axis with Min.y!=0.
+	- Bugfix for multiline labels.
 	- Add TeX symbol sample in documentation.
 	- Now curves always start dashing from zero position.
 	- Add mini-dash for '=' line style symbol.

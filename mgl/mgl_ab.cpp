@@ -368,6 +368,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 		wcl = new wchar_t[wn+1];	memcpy(wcl,wcs,wn*sizeof(wchar_t));
 		wcl[wn]=0;	Putsw(p, wcl, font, size, dir, sh);
 		wnl = wcs[wn]=='\n'?wnl+1:wnl+2;
+		if(*wnl<=' ')	wnl++;
 		nl_shift++;	Putsw(p, wnl, font, size, dir, sh);	nl_shift--;
 		return;
 	}
@@ -473,7 +474,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 		}
 	}
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
-	yPos -= nl_shift*shift*1.25;
+	yPos -= nl_shift*0.1/PlotFactor*fsize;
 	fnt->Puts(wcs,font1,col);
 	Pop();	delete []font1;	EndGroup();
 }
