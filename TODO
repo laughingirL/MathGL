@@ -7,7 +7,6 @@
 	Also allow "time"-labels
 	Also allow rotate labels if they too dense
 3. Add MGL commands "function 'name'", "return [Res]" and modify "call 'name' [Res]"
-4. Hankel transform
 5. Legend in OpenGL mode
 
 11. Update STIX fonts (new release) + create PWT fonts
@@ -27,9 +26,10 @@
 31. Docs about TriCont(), GetWarnCode(), mgl_get_warn_code()
 32. Regroup pictures in WWW by big classes + combo plots
 33. Docs about \utf0x???? in TeX
-34. Docs -- default label pos is 0 (MGL,C++,W)
+34. Docs -- default label pos is 0 [MGL,C++,C]
 35. Docs about colorbar position by string argument + legend position
 36. Sample about pthread using.
+37. Docs about Hankel(), SinFFT(), CosFFT() [MGL,C++,C]
 
 =========================
 			Later

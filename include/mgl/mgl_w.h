@@ -153,6 +153,7 @@ public:
 	{	mgl_data_modify_vw(a,eq,v.a, w.a);	};
 	inline void Modify(const char *eq,const mglData &v){	mgl_data_modify_vw(a,eq,v.a, NULL);	};
 	inline void Fill(double x1,double x2,char dir='x')	{	mgl_data_fill(a,x1,x2,dir);	};
+	inline void FillSample(int n, const char *how)	{	mgl_data_fill_sample(a,n,how);	};
 	inline mglData Column(const char *eq)	{	return mglData(mgl_data_column(a,eq));	};
 	inline void SetColumnId(const char *ids)			{	mgl_data_set_id(a,ids);	};
 	inline void Squeeze(int rx,int ry=1,int rz=1,bool smooth=false)
@@ -215,6 +216,10 @@ public:
 	inline void Roll(char dir, int num)		{	mgl_data_roll(a,dir,num);	};
 	inline void Mirror(const char *dir)		{	mgl_data_mirror(a,dir);	};
 
+	inline void Hankel(char dir)	{	mgl_data_hankel(a,dir);	};
+	inline void SinFFT(char dir)	{	mgl_data_sinfft(a,dir);	};
+	inline void CosFFT(char dir)	{	mgl_data_cosfft(a,dir);	};
+	
 	inline double Spline(double x,double y=0,double z=0)
 	{	return mgl_data_spline(a,x,y,z);	};
 	inline double Spline1(double x,double y=0,double z=0)

@@ -583,6 +583,12 @@ void mgl_data_diff2(HMDT dat, const char *dir);
 void mgl_data_swap(HMDT dat, const char *dir);
 void mgl_data_roll(HMDT dat, char dir, int num);
 void mgl_data_mirror(HMDT dat, const char *dir);
+
+void mgl_data_hankel(HMDT dat, char dir);
+void mgl_data_sinfft(HMDT dat, char dir);
+void mgl_data_cosfft(HMDT dat, char dir);
+void mgl_data_fill_sample(HMDT dat, int num, const char *how);
+
 mreal mgl_data_spline(const HMDT dat, mreal x,mreal y,mreal z);
 mreal mgl_data_spline1(const HMDT dat, mreal x,mreal y,mreal z);
 mreal mgl_data_linear(const HMDT dat, mreal x,mreal y,mreal z);

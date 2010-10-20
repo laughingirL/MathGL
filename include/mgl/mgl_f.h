@@ -542,6 +542,12 @@ void mgl_data_diff2_(uintptr_t *dat, const char *dir,int);
 void mgl_data_swap_(uintptr_t *dat, const char *dir,int);
 void mgl_data_roll_(uintptr_t *dat, const char *dir, int *num, int);
 void mgl_data_mirror_(uintptr_t *dat, const char *dir,int);
+
+void mgl_data_hankel_(uintptr_t *dat, const char *dir,int);
+void mgl_data_sinfft_(uintptr_t *dat, const char *dir,int);
+void mgl_data_cosfft_(uintptr_t *dat, const char *dir,int);
+void mgl_data_fill_sample_(uintptr_t *dat, int num, const char *how,int);
+
 mreal mgl_data_spline_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 mreal mgl_data_spline1_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);
 mreal mgl_data_linear_(uintptr_t *dat, mreal *x,mreal *y,mreal *z);

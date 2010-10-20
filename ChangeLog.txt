@@ -14,6 +14,8 @@
 	- Add QuadPlot() functions for making plot of unregular quadrangle mesh (like TriPlot()).
 	- Add TriCont[V]() functions for plotting contour lines for unregular triangle mesh.
 	- Add Grad() for plotting gradient of scalar field by flow threads.
+	- Add mglData::Hankel(), mglData::SinFFT(), mglData::CosFFT(), mglData::FillSample().
+	- Add 's','c','h' symbols for Sine/Cosine/Hankel transforms in functions mglTransform(), mglTransformA().
 	- Add "styled" SubPlot() to better fitting of subplot according axis/colorbar/title layouts.
 	- Add extra text align for axis label if it is located near minimal or maximal axis value.
 	- Add possibility to read HDF4 files in mglData.

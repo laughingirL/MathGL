@@ -1166,6 +1166,18 @@ void mglc_fill(wchar_t out[1024], long , mglArg *a, int k[10])
 		mglprintf(out,1024,L"%s.Fill(%g, %g, '%c');", a[0].s, a[1].v,a[2].v, k[3]==2?a[3].s[0]:'x');
 }
 //-----------------------------------------------------------------------------
+int mgls_fillsample(mglGraph *gr, long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==3 && k[2]==2)	a[0].d->FillSample(int(a[1].v+0.5), a[2].s);
+	else	return 1;
+	return 0;
+}
+void mglc_fillsample(wchar_t out[1024], long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==3 && k[2]==2)
+		mglprintf(out,1024,L"%s.FillSample(%d, \"%s\");", a[0].s, int(a[1].v+0.5), a[2].s);
+}
+//-----------------------------------------------------------------------------
 int mgls_fog(mglGraph *gr, long , mglArg *a, int k[10])
 {
 	if(k[0]==3)	gr->Fog(a[0].v,k[1]==3?a[1].v:0.25);
@@ -2809,6 +2821,30 @@ int mgls_mirror(mglGraph *, long , mglArg *a, int k[10])
 void mglc_mirror(wchar_t out[1024], long , mglArg *a, int k[10])
 {	if(k[0]==1 && k[1]==2)	mglprintf(out,1024,L"%s.Mirror(\"%s\");", a[0].s, a[1].s);	}
 //-----------------------------------------------------------------------------
+int mgls_hankel(mglGraph *, long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2)	a[0].d->Hankel(a[1].s[0]);	else	return 1;
+	return 0;
+}
+void mglc_hankel(wchar_t out[1024], long , mglArg *a, int k[10])
+{	if(k[0]==1 && k[1]==2)	mglprintf(out,1024,L"%s.Hankel('%c');", a[0].s, a[1].s[0]);	}
+//-----------------------------------------------------------------------------
+int mgls_sinfft(mglGraph *, long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2)	a[0].d->SinFFT(a[1].s[0]);	else	return 1;
+	return 0;
+}
+void mglc_sinfft(wchar_t out[1024], long , mglArg *a, int k[10])
+{	if(k[0]==1 && k[1]==2)	mglprintf(out,1024,L"%s.SinFFT('%c');", a[0].s, a[1].s[0]);	}
+//-----------------------------------------------------------------------------
+int mgls_cosfft(mglGraph *, long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==2)	a[0].d->CosFFT(a[1].s[0]);	else	return 1;
+	return 0;
+}
+void mglc_cosfft(wchar_t out[1024], long , mglArg *a, int k[10])
+{	if(k[0]==1 && k[1]==2)	mglprintf(out,1024,L"%s.CosFFT('%c');", a[0].s, a[1].s[0]);	}
+//-----------------------------------------------------------------------------
 int mgls_new(mglGraph *, long , mglArg *a, int k[10])
 {
 	if(k[0]==1)	a[0].d->Create(k[1]==3?int(a[1].v):1, k[2]==3?int(a[2].v):1, k[3]==3?int(a[3].v):1);
@@ -3481,6 +3517,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"conty",L"Draw contour lines at y-slice (or y-plane)",L"conty Dat ['fmt' pos num]", mgls_conty, mglc_conty, false, 0},
 	{L"contz",L"Draw contour lines at z-slice (or z-plane)",L"contz Dat ['fmt' pos num]", mgls_contz, mglc_contz, false, 0},
 	{L"copy",L"Copy data from another variable",L"copy Dat1 Dat2 ['eq' onaxis]", mgls_copy, mglc_copy, true, 3},
+	{L"cosfft",L"Cos-Fourier transform at some direction",L"cosfft Dat 'dir'", mgls_cosfft, mglc_cosfft, false, 3},
 	{L"crange",L"Set color range",L"crange Dat [sym] | c1 c2", mgls_crange, mglc_crange, false, 2},
 	{L"crop",L"Crop edge of data",L"crop Dat n1 n2 'dir'", mgls_crop, mglc_crop, false, 3},
 	{L"crust",L"Draw reconstructed surface for arbitrary data points",L"crust Xdat Ydat Zdat ['fmt']", mgls_crust, mglc_crust, false, 0},
@@ -3512,6 +3549,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"fall",L"Draw waterfalls",L"fall Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_fall, mglc_fall, false, 0},
 	{L"fgets",L"Print string from file",L"fgets x y z 'fname' [pos=0 'fmt' size]|x y z 'fname' [pos=0 'fmt' size]", mgls_fgets, mglc_fgets, false, 1},
 	{L"fill",L"Fill data linearly in range [v1, v2]",L"fill Var v1 v2 ['dir'] | Var 'eq' [Vdat Wdat]", mgls_fill, mglc_fill, false, 3},
+	{L"fillsample",L"Fill x-,k-samples for transforms",L"fillsample Var num 'how'", mgls_fillsample, mglc_fillsample, false, 3},
 	{L"fit",L"Fit data to formula",L"fit Res A 'eq' 'var' [Ini]|Res X A 'eq' 'var' [Ini]|Res X Y A 'eq' 'var' [Ini]|Res X Y Z A 'eq' 'var' [Ini]", mgls_fit, mglc_fit, true, 3},
 	{L"fits",L"Fit data to formula",L"fits Res A S 'eq' 'var' [Ini]|Res X A S 'eq' 'var' [Ini]|Res X Y A S 'eq' 'var' [Ini]|Res X Y Z A S 'eq' 'var' [Ini]", mgls_fits, mglc_fits, true, 3},
 	{L"flow",L"Draw flow threads for vector field",L"flow Udat Vdat ['fmt' num zval]|Xdat Ydat Udat Vdat ['fmt' num zval]|Udat Vdat Wdat ['fmt' num]|Xdat Ydat Zdat Udat Vdat ['fmt' num]|\
@@ -3524,6 +3562,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"grid",L"Draw grid",L"grid ['dir' 'fmt']|Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_grid, mglc_grid, false, 0},
 	{L"grid3",L"Draw grid at slices of 3D data",L"grid3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_grid3, mglc_grid3, false, 0},
 	{L"grida",L"Draw grid at central slices of 3D data",L"grida Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_grida, mglc_grida, false, 0},
+	{L"hankel",L"Hankel transform at some direction",L"hankel Dat 'dir'", mgls_hankel, mglc_hankel, false, 3},
 	{L"hist",L"Create histogram (distribution) of data values",L"hist Res Dat num v1 v2 [nsub]|Res Dat Wdat num v1 v2 [nsub]", mgls_hist, mglc_hist, true, 3},
 	{L"import",L"Import data from PNG picture",L"import Dat 'fname' 'scheme' [v1 v2]", mgls_import, mglc_import, true, 3},
 	{L"info",L"Print information about data",L"info Dat [detail]|'message'", mgls_info, mglc_info, false, 3},
@@ -3583,6 +3622,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"set_id",L"Set column id for data",L"set_id Dat 'ids'", mgls_set_id, mglc_set_id, false, 3},
 	{L"setsize",L"Set picture size",L"setsize width height", mgls_setsize, mglc_setsize, false, 5},
 	{L"sew",L"Remove jump into the data, like phase jumps",L"sew Dat ['dir' da]", mgls_sew, mglc_sew, false, 3},
+	{L"sinfft",L"Sin-Fourier transform at some direction",L"sinfft Dat 'dir'", mgls_sinfft, mglc_sinfft, false, 3},
 	{L"smooth",L"Smooth data",L"smooth Dat [kind 'dir']", mgls_smooth, mglc_smooth, false, 3},
 	{L"sphere",L"Draw sphere",L"sphere x0 y0 r ['fmt']|x0 y0 z0 r ['fmt']", mgls_sphere, mglc_sphere, false, 1},
 	{L"squeeze",L"Squeeze data",L"squeeze Dat kx [ky kz]", mgls_squeeze, mglc_squeeze, false, 3},

@@ -189,6 +189,8 @@ public:
 	void Fill(const char *eq, mglPoint r1, mglPoint r2, const mglData *v=0, const mglData *w=0);
 	/// Eqidistantly fill the data to range [x1,x2] in direction \a dir
 	void Fill(mreal x1,mreal x2,char dir='x');
+	/// Fill data by 'x'/'k' samples for Hankel ('h') or Fourier ('f') transform
+	void FillSample(int n, const char *how);
 	/// Get column (or slice) of the data filled by formulas of other named columns
 	mglData Column(const char *eq);
 	/// Set names for columns (slices)
@@ -282,6 +284,13 @@ public:
 	void Roll(char dir, int num);
 	/// Mirror the data in given direction (useful for fourier spectrums)
 	void Mirror(const char *dir);
+
+	/// Hankel transform
+	void Hankel(char dir);
+	/// Sin-Fourier transform
+	void SinFFT(char dir);
+	/// Cos-Fourier transform
+	void CosFFT(char dir);
 
 	/// Interpolate by 5-th order splain the data to given point \a x,\a y,\a z which normalized in range [0, 1] and evaluate its derivatives
 	mreal Spline5(mreal x,mreal y,mreal z,mreal &dx,mreal &dy,mreal &dz) const;

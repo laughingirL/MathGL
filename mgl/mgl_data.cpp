@@ -24,6 +24,8 @@
 
 #ifndef NO_GSL
 #include <gsl/gsl_fft_complex.h>
+#include <gsl/gsl_dht.h>
+#include <gsl/gsl_sf.h>
 #endif
 
 void mglFillP(int x,int y, const mreal *a,int nx,int ny,mreal _p[4][4]);
@@ -865,10 +867,9 @@ mglData mglTransformA(const mglData &am, const mglData &ph, const char *tr)
 //-----------------------------------------------------------------------------
 mglData mglTransform(const mglData &re, const mglData &im, const char *tr)
 {
-	mglData d,rr(re),ii(im);
 	int nx = re.nx, ny = re.ny, nz = re.nz;
-	if(nx*ny*nz != im.nx*im.ny*im.nz || !tr || tr[0]==0)
-	{	d.Create(1,1,1);	return d;	}
+	if(nx*ny*nz != im.nx*im.ny*im.nz || !tr || tr[0]==0)	return mglData();
+	mglData rr(re),ii(im);
 	if(strchr(tr,'i') && strchr(tr,'f'))	// general case
 	{
 		if(tr[0]=='f')	mglFourier(rr,ii,"x");
@@ -894,9 +895,27 @@ mglData mglTransform(const mglData &re, const mglData &im, const char *tr)
 		if(tr[2]=='f')	str[2]='z';
 		mglFourier(rr,ii,str);
 	}
-	d.Create(nx, ny, nz);
+	else if(strchr(tr,'s'))	// do Fourier only once for speeding up
+	{
+		if(tr[0]=='s')	{	rr.SinFFT('x');	ii.SinFFT('x');	}
+		if(tr[1]=='s')	{	rr.SinFFT('y');	ii.SinFFT('y');	}
+		if(tr[2]=='s')	{	rr.SinFFT('z');	ii.SinFFT('z');	}
+	}
+	else if(strchr(tr,'c'))	// do Fourier only once for speeding up
+	{
+		if(tr[0]=='c')	{	rr.CosFFT('x');	ii.CosFFT('x');	}
+		if(tr[1]=='c')	{	rr.CosFFT('y');	ii.CosFFT('y');	}
+		if(tr[2]=='c')	{	rr.CosFFT('z');	ii.CosFFT('z');	}
+	}
+	else if(strchr(tr,'s'))	// do Fourier only once for speeding up
+	{
+		if(tr[0]=='h')	{	rr.Hankel('x');	ii.Hankel('x');	}
+		if(tr[1]=='h')	{	rr.Hankel('y');	ii.Hankel('y');	}
+		if(tr[2]=='h')	{	rr.Hankel('z');	ii.Hankel('z');	}
+	}
+	mglData d(nx, ny, nz);
 	register long i;
-	for(i=0;i<nx*ny*nz;i++)		d.a[i] = hypot(rr.a[i],ii.a[i]);
+	for(i=0;i<nx*ny*nz;i++)	d.a[i] = hypot(rr.a[i],ii.a[i]);
 	return d;
 }
 //-----------------------------------------------------------------------------
@@ -1014,6 +1033,183 @@ mglData mglSTFA(const mglData &re, const mglData &im, int dn, char dir)
 	gsl_fft_complex_wavetable_free(wt);
 #endif
 	return d;
+}
+//-----------------------------------------------------------------------------
+void mglData::FillSample(int n, const char *how)
+{
+	bool xx = strchr(how,'x');
+	Create(n);
+	register long i;
+	if(strchr(how,'h'))	// Hankel
+	{
+#ifndef NO_GSL
+		gsl_dht *dht = gsl_dht_new(nx,0,1);
+		for(i=0;i<nx;i++)
+			a[i] = xx ? gsl_dht_x_sample(dht, i) : gsl_dht_k_sample(dht, i);
+		gsl_dht_free(dht);
+#endif
+	}
+	else	// Fourier
+	{
+		if(xx)	for(i=0;i<nx;i++)	a[i] = mreal(2*i-nx)/nx;
+		else	for(i=0;i<nx;i++)	a[i] = M_PI*(i<nx/2 ? i:i-nx);
+	}
+}
+//-----------------------------------------------------------------------------
+void mglData::Hankel(char dir)
+{
+#ifndef NO_GSL
+	double *ai=0, *af=0, mm;
+	gsl_dht *dht=0;
+	register long i,j,k;
+	if(dir=='x' && nx>1)
+	{
+		ai = new double[nx];	af = new double[nx];
+		dht = gsl_dht_new(nx,0,1);
+		mm = gsl_sf_bessel_zero_J0(nx+1);
+		for(i=0;i<ny*nz;i++)
+		{
+			for(j=0;j<nx;j++)	ai[j] = a[j+nx*i];
+			gsl_dht_apply(dht,ai,af);
+			for(j=0;j<nx;j++)	a[j+nx*i] = af[j]*mm;
+		}
+	}
+	if(dir=='y' && ny>1)
+	{
+		ai = new double[ny];	af = new double[ny];
+		dht = gsl_dht_new(ny,0,1);
+		mm = gsl_sf_bessel_zero_J0(ny+1);
+		for(i=0;i<nx;i++)	for(k=0;k<nz;k++)
+		{
+			for(j=0;j<nx;j++)	ai[j] = a[i+nx*(j+ny*k)];
+			gsl_dht_apply(dht,ai,af);
+			for(j=0;j<nx;j++)	a[i+nx*(j+ny*k)] = af[j]*mm;
+		}
+	}
+	if(dir=='z' && nz>1)
+	{
+		ai = new double[nz];	af = new double[nz];
+		dht = gsl_dht_new(nz,0,1);
+		mm = gsl_sf_bessel_zero_J0(nz+1);
+		k = nx*ny;	for(i=0;i<k;i++)
+		{
+			for(j=0;j<nz;j++)	ai[j] = a[i+j*k];
+			gsl_dht_apply(dht,ai,af);
+			for(j=0;j<nz;j++)	a[i+j*k] = af[j]*mm;
+		}
+	}
+	if(ai)
+	{
+		delete []ai;	delete []af;
+		gsl_dht_free(dht);
+	}
+#endif
+}
+//-----------------------------------------------------------------------------
+void mglData::CosFFT(char dir)
+{
+#ifndef NO_GSL
+	double *b = 0;
+	gsl_fft_complex_wavetable *wt=0;
+	gsl_fft_complex_workspace *ws=0;
+	register long i,j,k;
+	if(dir=='x' && nx>1)
+	{
+		wt = gsl_fft_complex_wavetable_alloc(2*nx);
+		ws = gsl_fft_complex_workspace_alloc(2*nx);
+		b = new double[4*nx];
+		for(i=0;i<ny*nz;i++)
+		{
+			k = i*nx;	memset(b,0,4*nx*sizeof(double));	b[0] = b[2*nx] = a[k];
+			for(j=1;j<nx;j++)	{	b[2*j] = a[k+j];	b[4*nx-2*j] = a[k+j];	}
+			gsl_fft_complex_transform(b, 1, 2*nx, wt, ws, forward);
+			for(j=0;j<nx;j++)	a[k+j] = b[2*j]/sqrt(2*nx);
+		}
+	}
+	if(dir=='y' && ny>1)
+	{
+		wt = gsl_fft_complex_wavetable_alloc(2*ny);
+		ws = gsl_fft_complex_workspace_alloc(2*ny);
+		b = new double[4*ny];
+		for(i=0;i<nx;i++)	for(k=0;k<nz;k++)
+		{
+			memset(b,0,4*ny*sizeof(double));	b[0] = b[2*ny] = a[i+nx*ny*k];
+			for(j=1;j<ny;j++)	{	b[2*j] = a[i+nx*(ny*k+j)];	b[4*ny-2*j] = a[i+nx*(ny*k+j)];	}
+			gsl_fft_complex_transform(b, 1, 2*ny, wt, ws, forward);
+			for(j=0;j<ny;j++)	a[i+nx*(ny*k+j)] = b[2*j]/sqrt(2*ny);
+		}
+	}
+	if(dir=='z' && nz>1)
+	{
+		wt = gsl_fft_complex_wavetable_alloc(2*nz);
+		ws = gsl_fft_complex_workspace_alloc(2*nz);
+		b = new double[4*nz];	k = nx*ny;
+		for(i=0;i<k;i++)
+		{
+			memset(b,0,4*nz*sizeof(double));	b[0] = b[2*nx] = a[i];
+			for(j=1;j<nx;j++)	{	b[2*j] = a[i+k*j];	b[4*nx-2*j] = a[i+k*j];	}
+			gsl_fft_complex_transform(b, 1, 2*nz, wt, ws, forward);
+			for(j=0;j<nz;j++)	a[i+k*j] = b[2*j]/sqrt(2*nz);
+		}
+	}
+	if(b)
+	{	delete []b;	
+		gsl_fft_complex_workspace_free(ws);
+		gsl_fft_complex_wavetable_free(wt);	}
+#endif
+}
+//-----------------------------------------------------------------------------
+void mglData::SinFFT(char dir)
+{
+#ifndef NO_GSL
+	double *b = 0;
+	gsl_fft_complex_wavetable *wt=0;
+	gsl_fft_complex_workspace *ws=0;
+	register long i,j,k;
+	if(dir=='x' && nx>1)
+	{
+		wt = gsl_fft_complex_wavetable_alloc(2*nx);
+		ws = gsl_fft_complex_workspace_alloc(2*nx);
+		b = new double[4*nx];
+		for(i=0;i<ny*nz;i++)
+		{
+			k = i*nx;	memset(b,0,4*nx*sizeof(double));	b[0] = a[k];	b[2*nx] = -a[k];
+			for(j=1;j<nx;j++)	{	b[2*j] = a[k+j];	b[4*nx-2*j] = -a[k+j];	}
+			gsl_fft_complex_transform(b, 1, 2*nx, wt, ws, forward);
+			for(j=0;j<nx;j++)	a[k+j] = -b[2*j+1]/sqrt(2*nx);
+		}
+	}
+	if(dir=='y' && ny>1)
+	{
+		wt = gsl_fft_complex_wavetable_alloc(2*ny);
+		ws = gsl_fft_complex_workspace_alloc(2*ny);
+		b = new double[4*ny];
+		for(i=0;i<nx;i++)	for(k=0;k<nz;k++)
+		{
+			memset(b,0,4*ny*sizeof(double));	b[0] = a[i+nx*ny*k];	b[2*ny] = -a[i+nx*ny*k];
+			for(j=1;j<ny;j++)	{	b[2*j] = a[i+nx*(ny*k+j)];	b[4*ny-2*j] = -a[i+nx*(ny*k+j)];	}
+			gsl_fft_complex_transform(b, 1, 2*ny, wt, ws, forward);
+			for(j=0;j<ny;j++)	a[i+nx*(ny*k+j)] = -b[2*j+1]/sqrt(2*ny);
+		}
+	}
+	if(dir=='z' && nz>1)
+	{
+		wt = gsl_fft_complex_wavetable_alloc(2*nz);
+		ws = gsl_fft_complex_workspace_alloc(2*nz);
+		b = new double[4*nz];	k = nx*ny;
+		for(i=0;i<k;i++)
+		{
+			memset(b,0,4*nz*sizeof(double));	b[0] = a[i];	b[2*nx] = -a[i];
+			for(j=1;j<nx;j++)	{	b[2*j] = a[i+k*j];	b[4*nx-2*j] = -a[i+k*j];	}
+			gsl_fft_complex_transform(b, 1, 2*nz, wt, ws, forward);
+			for(j=0;j<nz;j++)	a[i+k*j] = -b[2*j+1]/sqrt(2*nz);
+		}
+	}
+	if(b)
+	{	delete []b;	
+		gsl_fft_complex_workspace_free(ws);
+		gsl_fft_complex_wavetable_free(wt);	}
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglData::Swap(const char *dir)
