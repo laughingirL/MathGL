@@ -95,6 +95,7 @@
 	- MGL command 'define' now can define scalar variables, like "define xmin dat.min-1". These variables can be used as later as a number, like "xrange xmin 1".
 	- Add MGL command 'ranges' for setting plot ranges (like 'axis' command).
 	- Add MGL commands 'break', 'continue' for improving for-cycles.
+	- Add function in MGL by commands "function 'name' [arg1 arg2 ... arg9]", "return" and modify "call 'name' [arg1 arg2 ... arg9]"
 	- Add automatic increase of the point numbers in plots by formula with singularities (i.e. like Plot("sin(1/x)");
 	- Add mglGraph::GetFit() function which return fitted formula.
 	- Add function mglGraph::Label() for drawing text at arbitrary place of the screen.

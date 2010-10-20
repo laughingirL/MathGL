@@ -1024,6 +1024,7 @@ public:
 	{	return mgl_parse(gr->Self(), self, str, pos);	};
 	inline int Parse(mglGraph *gr, const wchar_t *str, int pos)
 	{	return mgl_parsew(gr->Self(), self, str, pos);	};
+	inline void ScanFunc(const wchar_t *line){	mgl_scan_func(self, line);	};
 	inline void Execute(mglGraph *gr, const char *str)
 	{	mgl_parse_text(gr->Self(), self, str);	};
 	inline void Execute(mglGraph *gr, const wchar_t *str)

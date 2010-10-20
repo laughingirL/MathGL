@@ -35,6 +35,36 @@ wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim)	{	return wcstok(wcs,delim
 
 wchar_t *mgl_wcsdup(const wchar_t *s);
 //-----------------------------------------------------------------------------
+mglFunc::mglFunc(long p, const wchar_t *f, mglFunc *prev)
+{
+	pos = p;	next = prev;
+	register long i;
+	for(i=0;(isalnum(f[i]) || f[i]=='_') && i<31;i++)	func[i]=f[i];
+	func[i]=0;
+}
+//-----------------------------------------------------------------------------
+long mglParse::IsFunc(const wchar_t *name)
+{
+	mglFunc *f=func;
+	while(f)
+	{
+		if(!wcscmp(name,f->func))	return f->pos;
+		f = f->next;
+	}
+	return 0;
+}
+//-----------------------------------------------------------------------------
+void mglParse::ScanFunc(const wchar_t *line)
+{
+	static long num=0;
+	if(!line)	{	num=0;	delete func;	return;	}
+	num++;
+	if(wcsncmp(line,L"func",4) || line[4]>' ')	return;
+	register long i;
+	for(i=4;line[i]<=' ' || line[i]=='\'';i++);
+	func = new mglFunc(num-1, line+i, func);
+}
+//-----------------------------------------------------------------------------
 void mgl_wcstrim(wchar_t *str)
 {
 	wchar_t *c = mgl_wcsdup(str);
@@ -170,9 +200,12 @@ mglParse::~mglParse()
 		while(DataList->next)	delete DataList->next;
 		delete DataList;
 	}
-	for(long i=0;i<10;i++)	if(par[i])	delete [] par[i];
+	for(long i=0;i<10;i++)
+	{	if(par[i])	delete []par[i];
+		if(opar[i])	delete []opar[i];	}
 	delete []op1;	delete []op2;	delete []fval;
 	if(Cmd!=mgls_base_cmd)	delete []Cmd;
+	if(fn_stack)	free(fn_stack);
 }
 //-----------------------------------------------------------------------------
 bool mglParse::AddParam(int n, const char *str, bool isstr)
@@ -588,7 +621,8 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	}
 	// parse arguments (parameters $1, ..., $9)
 	PutArg (string,str,false);	wcstrim_mgl(str);
-	if(!skip() && !wcscmp(str,L"stop"))	{	Stop = true;	delete []s;	return 0;	}
+	if((!skip() && !wcscmp(str,L"stop")) || !wcscmp(str,L"func"))
+	{	Stop = true;	delete []s;	return 0;	}
 
 	for(k=0;k<1024;k++)	// parse string to substrings (by spaces)
 	{
@@ -629,8 +663,20 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			n = 1;
 			if(a[0].type==1)
 			{
-				n=0;	mgl_wcstombs(a[0].s, a[0].w, 1024);
-				FILE *fp = fopen(a[0].s,"rt");	Execute(gr,fp);	fclose(fp);
+				mgl_wcstombs(a[0].s, a[0].w, 1024);		n=-IsFunc(a[0].w);
+				if(n)
+				{
+					if(!fn_stack)
+					{	fn_num = 100;	fn_stack = (int*)malloc(fn_num*sizeof(int));	}
+					if(fn_pos >= fn_num)
+					{	fn_num+= 100;	fn_stack = (int*)realloc(fn_stack,fn_num*sizeof(int));	}
+					fn_stack[fn_pos] = pos;	fn_pos++;	n--;
+					register long i;
+					for(i=1;i<10;i++)	{	opar[i] = par[i];	par[i]=0;	}
+					for(i=1;i<k-1;i++)	AddParam(i,arg[i+1]);
+				}
+				else
+				{	FILE *fp = fopen(a[0].s,"rt");	Execute(gr,fp);	fclose(fp);	}
 			}
 			delete []s;	delete []a;	return n;
 		}
@@ -802,6 +848,18 @@ int mglParse::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 		if(if_pos==if_for[0])	if_pos = if_pos>0 ? if_pos-1 : 0;
 		if(out)	mglprintf(out,1024,L"break;");	for_br = true;
 	}
+	else if(!skip() && !wcscmp(com, L"return"))	// parse command "delete"
+	{
+		if(!fn_pos)	return 2;
+		fn_pos--;	n = -fn_stack[fn_pos]-1;
+		if(fn_pos==0)	for(int i=1;i<10;i++)
+		{
+			if(par[i])	delete []par[i];
+			par[i] = opar[i];
+			opar[i]=0;
+		}
+
+	}
 	else if(!ifskip() && !Skip && !wcscmp(com,L"next"))
 	{
 		if(if_pos==if_for[0])	if_pos = if_pos>0 ? if_pos-1 : 0;
@@ -874,7 +932,8 @@ void mglParse::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(
 {
 	if(gr==0 || n<1 || text==0)	return;
 	long i, r;
-	for_br=Skip=false;	if_pos=fn_pos=0;
+	for_br=Skip=false;	if_pos=fn_pos=0;	ScanFunc(0);
+	for(i=0;i<n;i++)	ScanFunc(text[i]);
 	for(i=0;i<n;i++)
 	{
 		r = Parse(gr,text[i],i+1);
@@ -1144,9 +1203,11 @@ mglCommand mglParse::Prg[]={
 	{L"elseif",L"Conditional operator",L"elseif val|Dat ['cond']", 0, 0, 0, 5},
 	{L"endif",L"Finish if/else block",L"endif", 0, 0, 0, 5},
 	{L"for",L"For cycle",L"for $N v1 v2 [dv] | $N Dat", 0, 0, 0, 5},
+	{L"func",L"Start function definition and stop execution of main script",L"func 'name'", 0, 0, 0, 5},
 	{L"if",L"Conditional operator",L"if val|Dat ['cond']", 0, 0, 0, 5},
 	{L"next",L"Start next for-cycle iteration",L"next", 0, 0, 0, 5},
 	{L"once",L"Start/close commands which should executed only once",L"once val", 0, 0, 0, 5},
+	{L"return",L"Return from function",L"return", 0, 0, 0, 5},
 	{L"stop",L"Stop execution",L"stop", 0, 0, 0, 5},
 {L"",0,0, 0, 0, 0, 0}};
 //-----------------------------------------------------------------------------
@@ -1162,6 +1223,7 @@ void mgl_parse_text(HMGL gr, HMPR p, const char *str)	{	p->Execute(gr, str);	}
 void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str){	p->Parse(gr, str);	}
 void mgl_restore_once(HMPR p)	{	p->RestoreOnce();	}
 void mgl_parser_allow_setsize(HMPR p, int a)	{	p->AllowSetSize = a;	}
+void mgl_scan_func(HMPR p, const wchar_t *line)	{	p->ScanFunc(line);	}
 //-----------------------------------------------------------------------------
 uintptr_t mgl_create_parser_()	{	return uintptr_t(new mglParse);	}
 void mgl_delete_parser_(uintptr_t* p)	{	delete _PR_;	}

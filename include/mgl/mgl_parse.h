@@ -82,6 +82,16 @@ struct mglNum
 	void MoveAfter(mglNum *var);
 };
 //-----------------------------------------------------------------------------
+/// Structure for function name and position.
+struct mglFunc
+{
+	long pos;
+	wchar_t func[32];
+	mglFunc *next;
+	mglFunc(long p, const wchar_t *f, mglFunc *prev=0);
+	~mglFunc()	{	delete next;	};
+};
+//-----------------------------------------------------------------------------
 /// Structure for the command argument (see mglGraph::Exec()).
 class mglParse
 {
@@ -113,6 +123,10 @@ public:
 	void Execute(mglGraph *gr, const wchar_t *text, void (*error)(int line, int kind, mglGraph *gr)=NULL);
 	/// Execute MGL script text with '\n' separated lines
 	void Execute(mglGraph *gr, const char *text, void (*error)(int line, int kind, mglGraph *gr)=NULL);
+	/// Scan for functions (use NULL for reset)
+	void ScanFunc(const wchar_t *line);
+	/// Check if name is function and return its address (or 0 if no)
+	long IsFunc(const wchar_t *name);
 	/// Find variable or return 0 if absent
 	mglVar *FindVar(const char *name);
 	/// Find variable or return 0 if absent
@@ -146,6 +160,7 @@ public:
 private:
 	long parlen;	///< Length of parameter strings
 	wchar_t *par[10];	///< Parameter for substituting instead of $1, ..., $9
+	wchar_t *opar[10];	///< Parameter for substituting instead of $1, ..., $9 (original)
 	wchar_t *out;		///< Buffer for writing C++ code (if not NULL)
 	wchar_t leg[128];	///< Buffer for legend
 	bool opt[16];	///< Set on/off optional parameters for command argument
@@ -154,8 +169,10 @@ private:
 	bool Skip;		///< Flag that commands should be skiped (inside 'once' block)
 	int if_stack[20];	///< Stack for if-else-endif commands
 	int if_pos;		///< position in if_stack
-	int fn_stack[100];	///< Function calls stack
+	mglFunc *func;	///< function names and position
+	int *fn_stack;	///< function calls stack
 	int fn_pos;		///< position in function stack
+	int fn_num;		///< size of function stack
 	int if_for[10];	///< position in if_stack for for-cycle start
 	mglData *fval;	///< Values for for-cycle. Note that nx - number of elements, ny - next element, nz - address (or string number) of first cycle command
 	int for_stack[10];	///< The order of for-variables

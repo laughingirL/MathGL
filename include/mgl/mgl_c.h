@@ -104,6 +104,7 @@ void mgl_delete_data(HMDT dat);
 /*****************************************************************************/
 HMPR mgl_create_parser();
 void mgl_delete_parser(HMPR p);
+void mgl_scan_func(HMPR p, const wchar_t *line);
 void mgl_add_param(HMPR p, int id, const char *str);
 void mgl_add_paramw(HMPR p, int id, const wchar_t *str);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/

@@ -6,7 +6,6 @@
 	Also check that enough digits is printed to distingush the labels
 	Also allow "time"-labels
 	Also allow rotate labels if they too dense
-3. Add MGL commands "function 'name'", "return [Res]" and modify "call 'name' [Res]"
 5. Legend in OpenGL mode
 
 11. Update STIX fonts (new release) + create PWT fonts
