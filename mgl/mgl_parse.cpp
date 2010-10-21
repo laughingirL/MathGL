@@ -690,7 +690,11 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 					fn_stack[fn_pos].pos = pos;	fn_pos++;	n--;
 				}
 				else
-				{	FILE *fp = fopen(a[0].s,"rt");	Execute(gr,fp);	fclose(fp);	}
+				{
+					FILE *fp = fopen(a[0].s,"rt");
+					if(fp)	{	Execute(gr,fp);	fclose(fp);	}
+					else	n=1;
+				}
 			}
 			delete []s;	delete []a;	return n;
 		}
@@ -1202,7 +1206,7 @@ void mglParse::AddCommand(mglCommand *cmd, int mc)
 //-----------------------------------------------------------------------------
 mglCommand mglParse::Prg[]={
 	{L"break",L"Break for-cycle",L"break", 0, 0, 0, 5},
-	{L"call",L"Execute script in external file",L"call 'filename'", 0, 0, 0, 5},
+	{L"call",L"Execute script in external file",L"call 'name' [args]", 0, 0, 0, 5},
 	{L"continue",L"Skip commands and iterate for-cycle again",L"continue", 0, 0, 0, 5},
 	{L"defchr",L"Define parameter as character",L"defchr $N val", 0, 0, 0, 5},
 	{L"define",L"Define constant or parameter",L"define $N sth | Var val", 0, 0, 0, 5},
@@ -1213,7 +1217,7 @@ mglCommand mglParse::Prg[]={
 	{L"elseif",L"Conditional operator",L"elseif val|Dat ['cond']", 0, 0, 0, 5},
 	{L"endif",L"Finish if/else block",L"endif", 0, 0, 0, 5},
 	{L"for",L"For cycle",L"for $N v1 v2 [dv] | $N Dat", 0, 0, 0, 5},
-	{L"func",L"Start function definition and stop execution of main script",L"func 'name'", 0, 0, 0, 5},
+	{L"func",L"Start function definition and stop execution of main script",L"func 'name' [narg]", 0, 0, 0, 5},
 	{L"if",L"Conditional operator",L"if val|Dat ['cond']", 0, 0, 0, 5},
 	{L"next",L"Start next for-cycle iteration",L"next", 0, 0, 0, 5},
 	{L"once",L"Start/close commands which should executed only once",L"once val", 0, 0, 0, 5},

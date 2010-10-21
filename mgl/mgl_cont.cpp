@@ -400,9 +400,9 @@ void mglGraph::ContD(const mglData &v, const mglData &x, const mglData &y, const
 	if(y.nx!=z.ny && (x.ny!=z.ny || y.nx!=z.nx || y.ny!=z.ny))
 	{	SetWarn(mglWarnDim, "ContD");	return;	}
 	if(!sch || !(*sch))	sch = PalNames;
-	mglColor *cm = new mglColor[NUM_COLOR];
+	mglColor *cm = new mglColor[MGL_CMAP_COLOR];
 	long nc=NumCol, i, len=strlen(sch);
-	memcpy(cm,cmap,NUM_COLOR*sizeof(mglColor));	// save color scheme
+	memcpy(cm,cmap,MGL_CMAP_COLOR*sizeof(mglColor));	// save color scheme
 	mglData vv(2);
 	char ss[2]="k";
 	for(i=0;i<v.nx*v.ny*v.nz-1;i++)
@@ -412,7 +412,7 @@ void mglGraph::ContD(const mglData &v, const mglData &x, const mglData &y, const
 	}
 	
 	NumCol = nc;
-	memcpy(cmap,cm,NUM_COLOR*sizeof(mglColor));	// restore color scheme
+	memcpy(cmap,cm,MGL_CMAP_COLOR*sizeof(mglColor));	// restore color scheme
 	delete []cm;
 }
 //-----------------------------------------------------------------------------

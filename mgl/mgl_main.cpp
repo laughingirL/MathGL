@@ -235,7 +235,7 @@ void mglGraph::SetScheme(const char *s, bool face)
 	if(s[0]==0)	return;
 	strcpy(last_style, s);
 	NumCol = 0;
-	for(i=0;i<NUM_COLOR;i++)	cmap[i] = NC;
+	for(i=0;i<MGL_CMAP_COLOR;i++)	cmap[i] = NC;
 	cmap[0] = mglColor(0,0,0);	cmap[1] = mglColor(1,1,1);
 	OnCoord = false;	SmoothColorbar = true;
 	for(i=0;i<strlen(s);i++)
@@ -249,7 +249,7 @@ void mglGraph::SetScheme(const char *s, bool face)
 			{	cmap[NumCol].Set(s[i],(s[i+1]-'0')/5.f);	i++;	}
 			else	cmap[NumCol].Set(s[i]);
 			NumCol++;
-			if(NumCol>=NUM_COLOR)	break;
+			if(NumCol>=MGL_CMAP_COLOR)	break;
 		}
 		else
 		{
@@ -258,7 +258,7 @@ void mglGraph::SetScheme(const char *s, bool face)
 			{
 				cmap[NumCol].Set(s[i]);
 				NumCol++;
-				if(NumCol>=NUM_COLOR)	break;
+				if(NumCol>=MGL_CMAP_COLOR)	break;
 			}
 		}
 	}

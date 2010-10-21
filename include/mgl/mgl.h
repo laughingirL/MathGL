@@ -23,16 +23,10 @@
 #ifndef _MGL_H_
 #define _MGL_H_
 
-#define MGL_VERSION	10.2
-
 #include <wchar.h>
 #include <stdlib.h>
 #include "mgl/mgl_data.h"
 #include "mgl/mgl_font.h"
-
-#ifndef NUM_COLOR
-#define NUM_COLOR	32
-#endif
 //-----------------------------------------------------------------------------
 class mglGraph;
 class mglFormula;
@@ -1066,7 +1060,7 @@ protected:
 	mglFont *fnt;				///< Class for printing vector text
 	mreal font_factor;
 	bool UseAlpha;				///< Flag that Alpha is used
-	mglColor cmap[NUM_COLOR];	///< Colors for color scheme
+	mglColor cmap[MGL_CMAP_COLOR];	///< Colors for color scheme
 	char PalNames[101];			///< IDs of colors in the palette
 	char DefPal[101];			///< Default palette
 	int CurrPal;				///< Current index of palette mglGraph::Pal

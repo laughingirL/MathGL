@@ -27,6 +27,8 @@
 
 #include <math.h>
 
+#define MGL_VERSION	11
+
 //#ifdef WIN32
 #ifdef _MSC_VER
 #include <float.h>
@@ -63,6 +65,10 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 typedef double mreal;
 #else
 typedef float mreal;
+#endif
+//-----------------------------------------------------------------------------
+#ifndef MGL_CMAP_COLOR
+#define MGL_CMAP_COLOR	32
 #endif
 //-----------------------------------------------------------------------------
 #ifndef MGL_DEF_VIEWER
