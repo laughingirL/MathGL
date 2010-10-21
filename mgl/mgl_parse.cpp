@@ -41,14 +41,17 @@ mglFunc::mglFunc(long p, const wchar_t *f, mglFunc *prev)
 	register long i;
 	for(i=0;(isalnum(f[i]) || f[i]=='_') && i<31;i++)	func[i]=f[i];
 	func[i]=0;
+	narg = wcstol(f+i+1,0,0);
+	if(narg<0 || narg>9)	narg=0;
 }
 //-----------------------------------------------------------------------------
-long mglParse::IsFunc(const wchar_t *name)
+long mglParse::IsFunc(const wchar_t *name, int *na)
 {
 	mglFunc *f=func;
 	while(f)
 	{
-		if(!wcscmp(name,f->func))	return f->pos;
+		if(!wcscmp(name,f->func))
+		{	if(na)	*na=f->narg;	return f->pos;	}
 		f = f->next;
 	}
 	return 0;
@@ -57,7 +60,9 @@ long mglParse::IsFunc(const wchar_t *name)
 void mglParse::ScanFunc(const wchar_t *line)
 {
 	static long num=0;
-	if(!line)	{	num=0;	delete func;	return;	}
+	if(!line)
+	{	if(func)	delete func;
+		num=0;	func=0;	return;	}
 	num++;
 	if(wcsncmp(line,L"func",4) || line[4]>' ')	return;
 	register long i;
@@ -200,9 +205,7 @@ mglParse::~mglParse()
 		while(DataList->next)	delete DataList->next;
 		delete DataList;
 	}
-	for(long i=0;i<10;i++)
-	{	if(par[i])	delete []par[i];
-		if(opar[i])	delete []opar[i];	}
+	for(long i=0;i<10;i++)	if(par[i])	delete []par[i];
 	delete []op1;	delete []op2;	delete []fval;
 	if(Cmd!=mgls_base_cmd)	delete []Cmd;
 	if(fn_stack)	free(fn_stack);
@@ -621,8 +624,6 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	}
 	// parse arguments (parameters $1, ..., $9)
 	PutArg (string,str,false);	wcstrim_mgl(str);
-	if((!skip() && !wcscmp(str,L"stop")) || !wcscmp(str,L"func"))
-	{	Stop = true;	delete []s;	return 0;	}
 
 	for(k=0;k<1024;k++)	// parse string to substrings (by spaces)
 	{
@@ -645,6 +646,9 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		mglArg *a = new mglArg[k];
 		FillArg(gr, k, arg, a);
 		// execute first special (program-flow-control) commands
+		if(!skip() && !wcscmp(arg[0],L"stop"))
+		{	Stop = true;	delete []s;	delete []a;	return 0;	}
+		if(!wcscmp(arg[0],L"func"))	{	delete []s;	delete []a;	return 0;	}
 		n = FlowExec(gr, arg[0],k-1,a);
 		if(n)		{	delete []s;	delete []a;	return n-1;	}
 		if(skip())	{	delete []s;	delete []a;	return 0;	}
@@ -663,17 +667,27 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			n = 1;
 			if(a[0].type==1)
 			{
-				mgl_wcstombs(a[0].s, a[0].w, 1024);		n=-IsFunc(a[0].w);
-				if(n)
+				int na=0;
+				mgl_wcstombs(a[0].s, a[0].w, 1024);		n=-IsFunc(a[0].w,&na);
+				if(n && k!=na+2)	
+				{
+					if(gr->Message)
+						sprintf(gr->Message,"Bad arguments for %ls: %ld instead of %d\n",
+								a[0].w,k-2,na);
+					n = 1;
+				}
+				else if(n)
 				{
 					if(!fn_stack)
-					{	fn_num = 100;	fn_stack = (int*)malloc(fn_num*sizeof(int));	}
+					{	fn_num = 100;
+						fn_stack = (mglFnStack*)malloc(fn_num*sizeof(mglFnStack));	}
 					if(fn_pos >= fn_num)
-					{	fn_num+= 100;	fn_stack = (int*)realloc(fn_stack,fn_num*sizeof(int));	}
-					fn_stack[fn_pos] = pos;	fn_pos++;	n--;
-					register long i;
-					for(i=1;i<10;i++)	{	opar[i] = par[i];	par[i]=0;	}
-					for(i=1;i<k-1;i++)	AddParam(i,arg[i+1]);
+					{	fn_num+= 100;
+						fn_stack = (mglFnStack*)realloc(fn_stack,fn_num*sizeof(mglFnStack));	}
+					memcpy(fn_stack[fn_pos].par,par+1,9*sizeof(wchar_t*));
+					memset(par+1,0,9*sizeof(wchar_t*));
+					for(int i=1;i<k-1;i++)	AddParam(i,arg[i+1]);
+					fn_stack[fn_pos].pos = pos;	fn_pos++;	n--;
 				}
 				else
 				{	FILE *fp = fopen(a[0].s,"rt");	Execute(gr,fp);	fclose(fp);	}
@@ -851,14 +865,9 @@ int mglParse::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 	else if(!skip() && !wcscmp(com, L"return"))	// parse command "delete"
 	{
 		if(!fn_pos)	return 2;
-		fn_pos--;	n = -fn_stack[fn_pos]-1;
-		if(fn_pos==0)	for(int i=1;i<10;i++)
-		{
-			if(par[i])	delete []par[i];
-			par[i] = opar[i];
-			opar[i]=0;
-		}
-
+		fn_pos--;	n = -fn_stack[fn_pos].pos-1;
+		for(int i=1;i<10;i++)	if(par[i])	delete []par[i];
+		memcpy(par+1,fn_stack[fn_pos].par,9*sizeof(wchar_t*));
 	}
 	else if(!ifskip() && !Skip && !wcscmp(com,L"next"))
 	{
@@ -909,7 +918,7 @@ void mgl_error_print(int line, int r, mglGraph *gr)
 	if(r==2)	printf("Wrong command in line %d\n", line);
 	if(r==3)	printf("String too long in line %d\n", line);
 	if(r==4)	printf("Unbalanced ' in line %d\n", line);
-	gr->Message[0]=0;
+	if(gr->Message)	gr->Message[0]=0;
 }
 void mglParse::Execute(mglGraph *gr, FILE *fp, bool print)
 {
@@ -936,11 +945,12 @@ void mglParse::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(
 	for(i=0;i<n;i++)	ScanFunc(text[i]);
 	for(i=0;i<n;i++)
 	{
+//printf("line %ld : %ls\n",i,text[i]);
 		r = Parse(gr,text[i],i+1);
 		if(r<0)	{	i = -r-2;	continue;	}
 		if(error)
 		{
-			if(r>0)	error(i, r, gr);
+			if(r>0)	error(i+1, r, gr);
 			if(gr->Message && gr->Message[0])	error(i,0,gr);
 		}
 	}

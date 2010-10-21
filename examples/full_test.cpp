@@ -36,7 +36,7 @@ int test(mglGraphAB *gr)
 	mglParse par;
 	par.AllowSetSize = true;
 	FILE *fp=fopen("test.mgl","rt");
-	par.Execute(gr,fp);
+	par.Execute(gr,fp,true);
 	fclose(fp);
 /*	gr->SetDrawReg(2,2,1);
 	gr->Rotate(40,60);

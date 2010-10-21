@@ -86,10 +86,18 @@ struct mglNum
 struct mglFunc
 {
 	long pos;
+	int narg;
 	wchar_t func[32];
 	mglFunc *next;
 	mglFunc(long p, const wchar_t *f, mglFunc *prev=0);
-	~mglFunc()	{	delete next;	};
+	~mglFunc()	{	if(next)	delete next;	};
+};
+//-----------------------------------------------------------------------------
+/// Structure for stack of functions and its arguments.
+struct mglFnStack
+{
+	long pos;
+	wchar_t *par[9];
 };
 //-----------------------------------------------------------------------------
 /// Structure for the command argument (see mglGraph::Exec()).
@@ -126,7 +134,7 @@ public:
 	/// Scan for functions (use NULL for reset)
 	void ScanFunc(const wchar_t *line);
 	/// Check if name is function and return its address (or 0 if no)
-	long IsFunc(const wchar_t *name);
+	long IsFunc(const wchar_t *name, int *narg=0);
 	/// Find variable or return 0 if absent
 	mglVar *FindVar(const char *name);
 	/// Find variable or return 0 if absent
@@ -160,7 +168,6 @@ public:
 private:
 	long parlen;	///< Length of parameter strings
 	wchar_t *par[10];	///< Parameter for substituting instead of $1, ..., $9
-	wchar_t *opar[10];	///< Parameter for substituting instead of $1, ..., $9 (original)
 	wchar_t *out;		///< Buffer for writing C++ code (if not NULL)
 	wchar_t leg[128];	///< Buffer for legend
 	bool opt[16];	///< Set on/off optional parameters for command argument
@@ -170,7 +177,7 @@ private:
 	int if_stack[20];	///< Stack for if-else-endif commands
 	int if_pos;		///< position in if_stack
 	mglFunc *func;	///< function names and position
-	int *fn_stack;	///< function calls stack
+	mglFnStack *fn_stack;	///< function calls stack
 	int fn_pos;		///< position in function stack
 	int fn_num;		///< size of function stack
 	int if_for[10];	///< position in if_stack for for-cycle start
