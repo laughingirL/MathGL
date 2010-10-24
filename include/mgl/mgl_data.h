@@ -286,11 +286,11 @@ public:
 	void Mirror(const char *dir);
 
 	/// Hankel transform
-	void Hankel(char dir);
+	void Hankel(const char *dir);
 	/// Sin-Fourier transform
-	void SinFFT(char dir);
+	void SinFFT(const char *dir);
 	/// Cos-Fourier transform
-	void CosFFT(char dir);
+	void CosFFT(const char *dir);
 
 	/// Interpolate by 5-th order splain the data to given point \a x,\a y,\a z which normalized in range [0, 1] and evaluate its derivatives
 	mreal Spline5(mreal x,mreal y,mreal z,mreal &dx,mreal &dy,mreal &dz) const;

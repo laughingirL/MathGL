@@ -284,10 +284,10 @@ Saves the whole data array (for @var{ns}=@code{-1}) or only ns-th slice to text 
 @end deftypefn
 
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{void} ReadHDF (@code{const char *}fname, @code{const char *}dname)
-Reads data array named @var{dname} from HDF file. This function does nothing if NO_HDF5 was defined during library compilation.
+Reads data array named @var{dname} from HDF5 or HDF4 file. This function does nothing if NO_HDF5|NO_HDF4 was defined during library compilation.
 @end deftypefn
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{void} SaveHDF (@code{const char *}fname, @code{const char *}dname, @code{bool} rewrite=@code{false}) @code{const}
-Saves data array named @var{dname} from HDF file. This function does nothing if NO_HDF5 was defined during library compilation.
+Saves data array named @var{dname} from HDF5 or HDF4 file. This function does nothing if NO_HDF5|NO_HDF4 was defined during library compilation.
 @end deftypefn
 
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{void} Import (@code{const char *}fname, @code{const char *}scheme, @code{float} v1=@code{0}, float v2=@code{1})
@@ -432,6 +432,22 @@ Differentiates the data specified parametrically in direction @var{x} with @var{
 @deftypefnx {C function} @code{void} mgl_data_diff2 (@code{const char *}dir)
 Double-differentiates (like Laplace operator) the data in given direction.
 @end deftypefn
+
+
+@deftypefn {Method on @code{mglData} (C++, Python)} @code{void} SinFFT (@code{const char *}dir)
+@deftypefnx {C function} @code{void} mgl_data_sinfft (@code{HMDT} dat, @code{const char *}dir)
+Do Sine transform of the data in given direction or directions. The Sine transform is @math{\sum a_i \sin(k i)}.
+@end deftypefn
+@deftypefn {Method on @code{mglData} (C++, Python)} @code{void} CosFFT (@code{const char *}dir)
+@deftypefnx {C function} @code{void} mgl_data_cosfft (@code{HMDT} dat, @code{const char *}dir)
+Do Cosine transform of the data in given direction or directions. The Cosine transform is @math{\sum a_i \cos(k i)}.
+@end deftypefn
+@deftypefn {Method on @code{mglData} (C++, Python)} @code{void} Hankel (@code{const char *}dir)
+@deftypefnx {C function} @code{void} mgl_data_hankel (@code{HMDT} dat, @code{const char *}dir)
+Do Hankel transform of the data in given direction or directions. The Hankel transform is @math{\sum a_i J_0(k i)}.
+@end deftypefn
+
+
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{void} Swap (@code{const char *}dir)
 @deftypefnx {C function} @code{void} mgl_data_swap (@code{HMDT} dat, @code{const char *}dir)
 Swaps the left and right part of the data in given direction (useful for Fourier spectrum).
@@ -671,12 +687,12 @@ These functions are not methods of @code{mglData} class. However it have additio
 
 @deftypefn {Global function} @code{mglData} mglTransform (@code{const mglData &}real, @code{const mglData &}imag, @code{const char *}type)
 @deftypefnx {C function} @code{HMDT} mgl_transform (@code{const HMDT} real, @code{const HMDT} imag, @code{const char *}type)
-Do integral transformation of complex data @var{real}, @var{imag} on specified direction. Now only Fourier transformation is supported. The order of transformations is specified in string @var{type}: first character for x-dimension, second one for y-dimension, third one for z-dimension. The possible character are: @samp{f} is forward Fourier transformation, @samp{i} is inverse Fourier transformation, @samp{n} or @samp{ } is no transformation.
+Do integral transformation of complex data @var{real}, @var{imag} on specified direction. Now only Fourier transformation is supported. The order of transformations is specified in string @var{type}: first character for x-dimension, second one for y-dimension, third one for z-dimension. The possible character are: @samp{f} is forward Fourier transformation, @samp{i} is inverse Fourier transformation, @samp{s} is Sine transform, @samp{c} is Cosine transform, @samp{h} is Hankel transform, @samp{n} or @samp{ } is no transformation.
 @end deftypefn
 
 @deftypefn {Global function} @code{mglData} mglTransformA @code{const mglData &}ampl, @code{const mglData &}phase, @code{const char *}type)
 @deftypefnx {C function} @code{HMDT} mgl_transform_a @code{const HMDT} ampl, @code{const HMDT} phase, @code{const char *}type)
-Do integral transformation of complex data @var{ampl}, @var{phase} on specified direction. Now only Fourier transformation is supported. The order of transformations is specified in string @var{type}: first character for x-dimension, second one for y-dimension, third one for z-dimension. The possible character are: @samp{f} is forward Fourier transformation, @samp{i} is inverse Fourier transformation, @samp{n} or @samp{ } is no transformation.
+Do integral transformation of complex data @var{ampl}, @var{phase} on specified direction. Now only Fourier transformation is supported. The order of transformations is specified in string @var{type}: first character for x-dimension, second one for y-dimension, third one for z-dimension. The possible character are: @samp{f} is forward Fourier transformation, @samp{i} is inverse Fourier transformation, @samp{s} is Sine transform, @samp{c} is Cosine transform, @samp{h} is Hankel transform, @samp{n} or @samp{ } is no transformation.
 @end deftypefn
 
 @deftypefn {Global function} @code{mglData} mglSTFA (@code{const mglData &}real, @code{const mglData &}imag, @code{int} dn, @code{char} dir=@code{'x'})

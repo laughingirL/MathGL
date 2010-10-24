@@ -590,7 +590,7 @@ It is the fast variant of formula evaluation. At creation it will be recognized 
 
 There are a lot of functions and operators available. The operators are: @samp{+} -- addition, @samp{-} -- subtraction, @samp{*} -- multiplication, @samp{/} -- division, @samp{^} -- integer power. Also there are logical ``operators'': @samp{<} -- true if x<y, @samp{>} -- true if x>y, @samp{=} -- true if x=y, @samp{&} -- true if x and y both nonzero, @samp{|} -- true if x or y nonzero. These logical operators have lowest priority and return 1 if true or 0 if false.
 
-The basic functions are: @samp{sqrt(x)} -- square root of @var{x}, @samp{pow(x,y)} power @var{x} in @var{y}, @samp{ln(x)} -- natural logarithm of @var{x}, @samp{lg(x)} -- decimal logarithm of @var{x}, @samp{log(a,x)} -- logarithm base @var{a} of @var{x}, @samp{abs(x)} -- absolute value of @var{x}, @samp{sign(x)} -- sign of @var{x}, @samp{mod(x,y)} -- x modulo y, @samp{step(x)} -- step function, @samp{rnd} -- random number, @samp{pi} -- number @math{\pi=3.1415926...}.
+The basic functions are: @samp{sqrt(x)} -- square root of @var{x}, @samp{pow(x,y)} power @var{x} in @var{y}, @samp{ln(x)} -- natural logarithm of @var{x}, @samp{lg(x)} -- decimal logarithm of @var{x}, @samp{log(a,x)} -- logarithm base @var{a} of @var{x}, @samp{abs(x)} -- absolute value of @var{x}, @samp{sign(x)} -- sign of @var{x}, @samp{mod(x,y)} -- x modulo y, @samp{step(x)} -- step function, @samp{int(x)} -- integer part of @var{x}, @samp{rnd} -- random number, @samp{pi} -- number @math{\pi=3.1415926...}.
 
 Trigonometric functions are: @samp{sin(x)}, @samp{cos(x)}, @samp{tan(x)} (or @samp{tg(x)}). Inverse trigonometric functions are: @samp{asin(x)}, @samp{acos(x)}, @samp{atan(x)}. Hyperbolic functions are: @samp{sinh(x)} (or @samp{sh(x)}), @samp{cosh(x)} (or @samp{ch(x)}), @samp{tanh(x)} (or @samp{th(x)}). Inverse hyperbolic functions are: @samp{asinh(x)}, @samp{acosh(x)}, @samp{atanh(x)}.
 
@@ -638,9 +638,20 @@ The string can be any combination of characters: @samp{rbiLCRwou}. The font type
 
 The over way of font and alignment setting is the using of the integer constant. Integer font Id can be one of predefined constants: @code{MGL_FONT_ITAL, MGL_FONT_BOLD, MGL_FONT_BOLD_ITAL = MGL_FONT_ITAL+MGL_FONT_BOLD}. Default font is @code{MGL_FONT_ROMAN}. Also there are flags @code{MGL_FONT_ULINE, MGL_FONT_OLINE, MGL_FONT_WIRE} for additional font effects. Align parameter controls the text alignment: 0 -- align left, 1 -- align center, 2 -- align right.
 
-Parsing of the string to special (TeX-like) commands will be done if variable @var{parse} is true (it's default). There are commands for the font style changing inside the string (for example, use \b for bold font): \a or \overline -- over-lined, \b or \textbf -- bold, \i or \textit -- italic, \r or \textrm -- roman (disable bold and italic attributes), \u or \underline -- underlined, \w or \wire -- wired, \big -- bigger size, @@ -- smaller size. The lower and upper indexes are specified by @samp{_} and @samp{^} symbols. At this the changed font style is applied only on next symbol or symbols in braces @{@}. The text in braces @{@} are treated as single symbol that allow one to print the index of index. For example, compare the strings @samp{sin (x^@{2^3@})} and @samp{sin (x^2^3)}. You may also change text color inside string by command #? or by \color? where @samp{?} is symbolic id of the color (@pxref{mglColor class}). For example, words @samp{Blue} and @samp{red} will be colored in the string @samp{#b@{Blue@} and \colorr@{red@} text}.
+Parsing of the string to special (TeX-like) commands will be done if variable @var{parse} is true (it's default). There are commands for the font style changing inside the string (for example, use \b for bold font): \a or \overline -- over-lined, \b or \textbf -- bold, \i or \textit -- italic, \r or \textrm -- roman (disable bold and italic attributes), \u or \underline -- underlined, \w or \wire -- wired, \big -- bigger size, @@ -- smaller size. The lower and upper indexes are specified by @samp{_} and @samp{^} symbols. At this the changed font style is applied only on next symbol or symbols in braces @{@}. The text in braces @{@} are treated as single symbol that allow one to print the index of index. For example, compare the strings @samp{sin (x^@{2^3@})} and @samp{sin (x^2^3)}. You may also change text color inside string by command #? or by \color? where @samp{?} is symbolic id of the color (@pxref{mglColor class}). For example, words @samp{Blue} and @samp{red} will be colored in the string @samp{#b@{Blue@} and \colorr@{red@} text}. 
+@ifhtml
+@html
+Finally, you can use arbitrary UTF codes by command @code{\utf0x????}, for example, @code{\utf0x3b1} will produce &alpha; symbol.
+@end html
+@end ifhtml
+@ifnothtml
+Finally, you can use arbitrary UTF codes by command @code{\utf0x????}, for example, @code{\utf0x3b1} will produce @math{\alpha} symbol.
+@end ifnothtml
 
-The most of commands for special TeX or AMSTeX symbols, the commands for font style changing (\textrm, \textbf, \textit, \overline, \underline), accents (\hat, \tilde, \dot, \ddot, \acute, \check, \grave, \bar, \breve) and roots (\sqrt, \sqrt3, \sqrt4) are recognized. The full list contain approximately 2000 commands. Note that first space symbol after the command is ignored, but second one is printed as normal symbol (space). For example, the following strings produce the same result @math{\tilde a}: @samp{\tilde@{a@}}; @samp{\tilde a}; @samp{\tilde@{@}a}.
+
+
+
+The most of commands for special TeX or AMSTeX symbols, the commands for font style changing (\textrm, \textbf, \textit, \textsc, \overline, \underline), accents (\hat, \tilde, \dot, \ddot, \acute, \check, \grave, \bar, \breve) and roots (\sqrt, \sqrt3, \sqrt4) are recognized. The full list contain approximately 2000 commands. Note that first space symbol after the command is ignored, but second one is printed as normal symbol (space). For example, the following strings produce the same result @math{\tilde a}: @samp{\tilde@{a@}}; @samp{\tilde a}; @samp{\tilde@{@}a}.
 
 @ifhtml
 @html
@@ -742,6 +753,8 @@ After it @var{numg}-th strings with glyphs description are placed. Each string c
 @item
 The end of file contains the buffer with point coordinates at lines or triangles vertexes. The size of buffer (the number of integer) is @var{size}.
 @end enumerate
+
+Each font file can be compressed by gzip.
 
 Note: the closing contour line  is done automatically (so the last segment may be absent). For starting new contour use a point with coordinates @code{@{0x3fff, 0x3fff@}}.
 

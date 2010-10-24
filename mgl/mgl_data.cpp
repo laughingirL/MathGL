@@ -897,21 +897,21 @@ mglData mglTransform(const mglData &re, const mglData &im, const char *tr)
 	}
 	else if(strchr(tr,'s'))	// do Fourier only once for speeding up
 	{
-		if(tr[0]=='s')	{	rr.SinFFT('x');	ii.SinFFT('x');	}
-		if(tr[1]=='s')	{	rr.SinFFT('y');	ii.SinFFT('y');	}
-		if(tr[2]=='s')	{	rr.SinFFT('z');	ii.SinFFT('z');	}
+		if(tr[0]=='s')	{	rr.SinFFT("x");	ii.SinFFT("x");	}
+		if(tr[1]=='s')	{	rr.SinFFT("y");	ii.SinFFT("y");	}
+		if(tr[2]=='s')	{	rr.SinFFT("z");	ii.SinFFT("z");	}
 	}
 	else if(strchr(tr,'c'))	// do Fourier only once for speeding up
 	{
-		if(tr[0]=='c')	{	rr.CosFFT('x');	ii.CosFFT('x');	}
-		if(tr[1]=='c')	{	rr.CosFFT('y');	ii.CosFFT('y');	}
-		if(tr[2]=='c')	{	rr.CosFFT('z');	ii.CosFFT('z');	}
+		if(tr[0]=='c')	{	rr.CosFFT("x");	ii.CosFFT("x");	}
+		if(tr[1]=='c')	{	rr.CosFFT("y");	ii.CosFFT("y");	}
+		if(tr[2]=='c')	{	rr.CosFFT("z");	ii.CosFFT("z");	}
 	}
 	else if(strchr(tr,'s'))	// do Fourier only once for speeding up
 	{
-		if(tr[0]=='h')	{	rr.Hankel('x');	ii.Hankel('x');	}
-		if(tr[1]=='h')	{	rr.Hankel('y');	ii.Hankel('y');	}
-		if(tr[2]=='h')	{	rr.Hankel('z');	ii.Hankel('z');	}
+		if(tr[0]=='h')	{	rr.Hankel("x");	ii.Hankel("x");	}
+		if(tr[1]=='h')	{	rr.Hankel("y");	ii.Hankel("y");	}
+		if(tr[2]=='h')	{	rr.Hankel("z");	ii.Hankel("z");	}
 	}
 	mglData d(nx, ny, nz);
 	register long i;
@@ -1056,13 +1056,13 @@ void mglData::FillSample(int n, const char *how)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglData::Hankel(char dir)
+void mglData::Hankel(const char *dir)
 {
 #ifndef NO_GSL
 	double *ai=0, *af=0, mm;
 	gsl_dht *dht=0;
 	register long i,j,k;
-	if(dir=='x' && nx>1)
+	if(strchr(dir,'x') && nx>1)
 	{
 		ai = new double[nx];	af = new double[nx];
 		dht = gsl_dht_new(nx,0,1);
@@ -1074,7 +1074,7 @@ void mglData::Hankel(char dir)
 			for(j=0;j<nx;j++)	a[j+nx*i] = af[j]*mm;
 		}
 	}
-	if(dir=='y' && ny>1)
+	if(strchr(dir,'y') && ny>1)
 	{
 		ai = new double[ny];	af = new double[ny];
 		dht = gsl_dht_new(ny,0,1);
@@ -1086,7 +1086,7 @@ void mglData::Hankel(char dir)
 			for(j=0;j<nx;j++)	a[i+nx*(j+ny*k)] = af[j]*mm;
 		}
 	}
-	if(dir=='z' && nz>1)
+	if(strchr(dir,'z') && nz>1)
 	{
 		ai = new double[nz];	af = new double[nz];
 		dht = gsl_dht_new(nz,0,1);
@@ -1106,14 +1106,14 @@ void mglData::Hankel(char dir)
 #endif
 }
 //-----------------------------------------------------------------------------
-void mglData::CosFFT(char dir)
+void mglData::CosFFT(const char *dir)
 {
 #ifndef NO_GSL
 	double *b = 0;
 	gsl_fft_complex_wavetable *wt=0;
 	gsl_fft_complex_workspace *ws=0;
 	register long i,j,k;
-	if(dir=='x' && nx>1)
+	if(strchr(dir,'x') && nx>1)
 	{
 		wt = gsl_fft_complex_wavetable_alloc(2*nx);
 		ws = gsl_fft_complex_workspace_alloc(2*nx);
@@ -1126,7 +1126,7 @@ void mglData::CosFFT(char dir)
 			for(j=0;j<nx;j++)	a[k+j] = b[2*j]/sqrt(2*nx);
 		}
 	}
-	if(dir=='y' && ny>1)
+	if(strchr(dir,'y') && ny>1)
 	{
 		wt = gsl_fft_complex_wavetable_alloc(2*ny);
 		ws = gsl_fft_complex_workspace_alloc(2*ny);
@@ -1139,7 +1139,7 @@ void mglData::CosFFT(char dir)
 			for(j=0;j<ny;j++)	a[i+nx*(ny*k+j)] = b[2*j]/sqrt(2*ny);
 		}
 	}
-	if(dir=='z' && nz>1)
+	if(strchr(dir,'z') && nz>1)
 	{
 		wt = gsl_fft_complex_wavetable_alloc(2*nz);
 		ws = gsl_fft_complex_workspace_alloc(2*nz);
@@ -1159,14 +1159,14 @@ void mglData::CosFFT(char dir)
 #endif
 }
 //-----------------------------------------------------------------------------
-void mglData::SinFFT(char dir)
+void mglData::SinFFT(const char *dir)
 {
 #ifndef NO_GSL
 	double *b = 0;
 	gsl_fft_complex_wavetable *wt=0;
 	gsl_fft_complex_workspace *ws=0;
 	register long i,j,k;
-	if(dir=='x' && nx>1)
+	if(strchr(dir,'x') && nx>1)
 	{
 		wt = gsl_fft_complex_wavetable_alloc(2*nx);
 		ws = gsl_fft_complex_workspace_alloc(2*nx);
@@ -1179,7 +1179,7 @@ void mglData::SinFFT(char dir)
 			for(j=0;j<nx;j++)	a[k+j] = -b[2*j+1]/sqrt(2*nx);
 		}
 	}
-	if(dir=='y' && ny>1)
+	if(strchr(dir,'y') && ny>1)
 	{
 		wt = gsl_fft_complex_wavetable_alloc(2*ny);
 		ws = gsl_fft_complex_workspace_alloc(2*ny);
@@ -1192,7 +1192,7 @@ void mglData::SinFFT(char dir)
 			for(j=0;j<ny;j++)	a[i+nx*(ny*k+j)] = -b[2*j+1]/sqrt(2*ny);
 		}
 	}
-	if(dir=='z' && nz>1)
+	if(strchr(dir,'z') && nz>1)
 	{
 		wt = gsl_fft_complex_wavetable_alloc(2*nz);
 		ws = gsl_fft_complex_workspace_alloc(2*nz);

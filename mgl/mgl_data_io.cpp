@@ -328,11 +328,11 @@ bool mglData::Read(const char *fname)
 	buf[i+1]=0;	nb = i;		// remove tailing spaces
 	for(i=0;i<nb-1 && !isn(buf[i]);i++)	// determine nx
 	{
-		ch = buf[i];
 //		sp = (ch==' ' || ch=='\t');
-		if(ch=='#')		while(!isn(buf[i]) && i<nb)	i++;
-		if(!isspace(ch) && !first)	first=true;
-		if(first && (ch==' ' || ch=='\t') && !isspace(buf[i+1])) k++;
+		if(buf[i]=='#')		while(!isn(buf[i]) && i<nb)	i++;
+		ch = buf[i];
+		if(ch>' ' && !first)	first=true;
+		if(first && (ch==' ' || ch=='\t') && buf[i+1]>' ') k++;
 	}
 	first = false;
 	for(i=0;i<nb-1;i++)					// determine ny

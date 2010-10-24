@@ -377,7 +377,7 @@
 @subsection Обработка ошибок
 
 @cindex Message
-@cindex WarnCode
+@cindex GetWarnCode
 @cindex SetWarn
 
 Есть 2 переменные показывающие наличие предупреждения/ошибки при создании графика. Обычно вы должны сбросить их с помощью @code{SetWarn(0);} перед построением и проверить переменную @var{WarnCode} на наличие ошибок после построения. Только последнее предупреждение сохраняется. Замечу, что все предупреждения/ошибки в MathGL не являются критичными -- в худшем из вариантов соответствующий график просто не будет построен.
@@ -390,8 +390,9 @@
 Указатель на строку для вывода сообщений библиотеки о причине отсутствия графика. Если равен NULL, то сообщения не выводятся. Размер буфера должен быть не менее 1024 байт. Если Message[0]==0, то сообщений нет.
 @end deftypecv
 
-@deftypecv {Переменная(C++)} mglGraph @code{int} WarnCode
-Код сообщения о причине отсутствия графика. Возможные значения:
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{int} GetWarn ()
+@deftypefnx {C function} @code{int} mgl_get_warn (@code{HMGL} gr)
+Возвращает код сообщения о причине отсутствия графика. Возможные значения:
 @table @code
 @item mglWarnNone=0
 Предупреждений нет
@@ -424,6 +425,10 @@ Setsize: размер(ы) равны нулю или отрицательны
 @item mglWarnFmt
 Формат не поддерживается
 @end table
+@end deftypefn
+
+@deftypecv {Устаревшая переменная} mglGraph @code{int} WarnCode
+Код сообщения о причине отсутствия графика. 
 @end deftypecv
 
 @c ==================================================================
@@ -691,6 +696,11 @@ Setsize: размер(ы) равны нулю или отрицательны
 Помещает последующий вывод в @var{m}-ую ячейку сетки размером @var{nx}*@var{ny} от всего рисунка. Функция сбрасывает матрицу трансформации (повороты и сжатие графика) и должна вызываться первой для создания "подграфика". С эстетической точки зрения не рекомендуется вызывать эту функцию с различными (или не кратными) размерами сетки. Ячейка может быть дополнительно сдвинута относительно своего обычного положения на относительный размер @var{dx}, @var{dy}.
 @end deftypefn
 
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} SubPlot (@code{int} nx, @code{int} ny, @code{int} m, @code{const char *}style)
+@deftypefnx {C function} @code{void} mgl_subplot_s (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{const char *}style)
+Аналогично предыдущему, но место для осей/colorbar резервируется только если строка @var{style} содержит: @samp{L} или @samp{<} -- с левого края, @samp{R} или @samp{>} -- с правого края, @samp{A} или @samp{^} -- с верхнего края, @samp{U} или @samp{_} -- с нижнего края.
+@end deftypefn
+
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} InPlot (@code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{bool} rel=@code{false})
 @deftypefnx {Функция С} @code{void} mgl_inplot (@code{HMGL} gr, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2)
 @deftypefnx {Функция С} @code{void} mgl_relplot (@code{HMGL} gr, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2)
@@ -790,12 +800,12 @@ Setsize: размер(ы) равны нулю или отрицательны
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} WriteEPS (@code{const char *}fname, @code{const char *}descr=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_write_eps (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
-Экспортирует текущий кадр в EPS файл, используя векторное представление графика (класс mglGraphPS). Вследствие чего не рекомендуется сохранять большие графики (поверхности, а особенно поверхности уровня) в формате EPS из-за большого размера файла. Хотя никаких внутренних ограничений на размер выходного файла нет. Для них лучше использовать растровый формат (например, PNG или JPEG). Параметры функции следующие: @var{fname} -- имя файла, @var{descr} -- описание файла.
+Экспортирует текущий кадр в EPS файл, используя векторное представление графика (класс mglGraphPS). Вследствие чего не рекомендуется сохранять большие графики (поверхности, а особенно поверхности уровня) в формате EPS из-за большого размера файла. Хотя никаких внутренних ограничений на размер выходного файла нет. Для них лучше использовать растровый формат (например, PNG или JPEG). Параметры функции следующие: @var{fname} -- имя файла, @var{descr} -- описание файла. Если имя файла оканчивается на @samp{z} (например, @samp{fname.eps.gz}), то файл автоматически архивируется в формате gzip.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} WriteSVG (@code{const char *}fname, @code{const char *}descr=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_write_svg (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
-Экспортирует текущий кадр в SVG файл, используя векторное представление графика (класс mglGraphPS). Вследствие чего не рекомендуется сохранять большие графики (поверхности, а особенно поверхности уровня) в формате SVG из-за большого размера файла. Хотя никаких внутренних ограничений на размер выходного файла нет. Для них лучше использовать растровый формат (например, PNG или JPEG). Параметры функции следующие: @var{fname} -- имя файла, @var{descr} -- описание файла.
+Экспортирует текущий кадр в SVG файл, используя векторное представление графика (класс mglGraphPS). Вследствие чего не рекомендуется сохранять большие графики (поверхности, а особенно поверхности уровня) в формате SVG из-за большого размера файла. Хотя никаких внутренних ограничений на размер выходного файла нет. Для них лучше использовать растровый формат (например, PNG или JPEG). Параметры функции следующие: @var{fname} -- имя файла, @var{descr} -- описание файла. Если имя файла оканчивается на @samp{z} (например, @samp{fname.svgz}), то файл автоматически архивируется в формате gzip.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} WriteIDTF (@code{const char *}fname, @code{const char *}descr=@code{""})
@@ -997,18 +1007,22 @@ Setsize: размер(ы) равны нулю или отрицательны
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Colorbar (@code{const char *}sch=@code{""}, @code{int} where=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_colorbar (@code{HMGL} gr, @code{const char *}sch, @code{int} where)
-Рисует полосу соответствия цвета и числовых значений (colorbar) для цветовой схемы @var{sch} (используется текущая для @code{sch=""}) с краю от графика. Параметр @var{where} задает местоположение: @samp{0} - справа (по умолчанию), @samp{1} - слева, @samp{2} - сверху, @samp{3} - снизу. @sref{Dens sample}
-@end deftypefn
-
-@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Colorbar (@code{const char *}sch, @code{int} where, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
-@deftypefnx {Метод класса @code{mglGraph} (C++)} @code{void} Colorbar (@code{int} where, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
-@deftypefnx {Функция С} @code{void} mgl_colorbar_ext (@code{HMGL} gr, @code{const char *}sch, @code{int} where, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
-Рисует полосу соответствия цвета и числовых значений (colorbar) для цветовой схемы @var{sch} (используется текущая для @code{sch=""}) в произвольном месте графика @{@var{x}, @var{y}@} (полагаются в диапазоне [0,1]). Параметр @var{where} задает положение меток: @samp{0} - слева, @samp{1} - справа, @samp{2} - снизу, @samp{3} - сверху. Параметры @var{w}, @var{h} задают относительную ширину и высоту colorbar.
+Рисует полосу соответствия цвета и числовых значений (colorbar) для цветовой схемы @var{sch} (используется текущая для @code{sch=""}) с краю от графика. Параметр @var{where} задает местоположение: @samp{0} - справа (по умолчанию), @samp{1} - слева, @samp{2} - сверху, @samp{3} - снизу. Если строка @var{sch} содержит @samp{<>^_}, то параметр @var{pos} определяется как: @code{pos=0} для @samp{>} (справа), @code{pos=1} для @samp{<} (слева), @code{pos=2} для @samp{^} (сверху), @code{pos=3} для @samp{_} (снизу). Если строка содержит @samp{A}, то используются абсолютные координаты (относительно рисунка). @sref{Dens sample}
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Colorbar (@code{const mglData &}v, @code{const char *}sch=@code{""}, @code{int} where=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_colorbar_val (@code{HMGL} gr, @code{const HMDT} v, @code{const char *}sch, @code{int} where)
-Рисует полосу соответствия цвета и числовых значений (colorbar) для цветовой схемы без сглаживания @var{sch} (используется текущая для @code{sch=""}) для значений @var{v} с краю от графика. Параметр @var{where} задает местоположение: @samp{0} - справа (по умолчанию), @samp{1} - слева, @samp{2} - сверху, @samp{3} - снизу. @sref{ContD sample}
+Аналогично предыдущему, но для цветовой схемы без сглаживания с заданными значениями @var{v}. @sref{ContD sample}
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Colorbar (@code{const char *}sch, @code{int} where, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+@deftypefnx {Метод класса @code{mglGraph} (C++, Python)} @code{void} Colorbar (@code{int} where, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+@deftypefnx {Функция С} @code{void} mgl_colorbar_ext (@code{HMGL} gr, @code{const char *}sch, @code{int} where, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+Аналогично первому, но в произвольном месте графика @{@var{x}, @var{y}@} (полагаются в диапазоне [0,1]). Параметры @var{w}, @var{h} задают относительную ширину и высоту colorbar.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglGraph} (C++)} @code{void} Colorbar (@code{const mglData &}v, @code{const char *}sch, @code{int} where, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+Аналогично предыдущему, но для цветовой схемы без сглаживания с заданными значениями @var{v}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Grid (@code{const char *}dir=@code{"xyz"}, @code{const char *}pen=@code{"B-"})
@@ -1024,8 +1038,8 @@ Setsize: размер(ы) равны нулю или отрицательны
 Рисует ограничивающий параллелепипед цветом @var{col}.
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Label (@code{char} dir, @code{const char *}text, @code{float} pos=@code{+1}, @code{float} size=@code{-1.4}, @code{float} shift=@code{0})
-@deftypefnx {Метод класса @code{mglGraph} (C++)} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{float} pos=@code{+1}, @code{float} size=@code{-1.4}, @code{float} shift=@code{0})
+@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Label (@code{char} dir, @code{const char *}text, @code{float} pos=@code{0}, @code{float} size=@code{-1.4}, @code{float} shift=@code{0})
+@deftypefnx {Метод класса @code{mglGraph} (C++)} @code{void} Label (@code{char} dir, @code{const wchar_t *}text, @code{float} pos=@code{0}, @code{float} size=@code{-1.4}, @code{float} shift=@code{0})
 @deftypefnx {Функция С} @code{void} mgl_label (@code{HMGL} gr, @code{char} dir, @code{const char *}text)
 @deftypefnx {Функция С} @code{void} mgl_label_ext (@code{HMGL} gr, @code{char} dir, @code{const char *}text, @code{float} pos, @code{float} size, @code{float} shift)
 @deftypefnx {Функция С} @code{void} mgl_labelw_ext (@code{HMGL} gr, @code{char} dir, @code{const wchar_t *}text, @code{float} pos, @code{float} size, @code{float} shift)
@@ -1038,8 +1052,10 @@ Setsize: размер(ы) равны нулю или отрицательны
 @cindex Legend
 @cindex AddLegend
 @cindex ClearLegend
+@cindex SetLegendBox
+@cindex SetLegendMarks
 
-Эти функции обеспечивают рисование легенды графика (полезно для @ref{1D plotting}). Запись в легенде состоит из двух строк: одна для стиля линии и маркеров, другая с текстом описания (с включенным разбором TeX-их команд). Можно использовать непосредственно массивы строк, или накопление во внутренние массивы с помощью функции AddLegend() с последующим отображением. Положение легенды можно задать автоматически или вручную. Параметры @var{font} и @var{size} задают стиль и размер шрифта (@pxref{Font settings}). Параметр @var{llen} задает относительную ширину примера линии. Ели стиль линии пустой, то соответствующий текст печатается без отступа. @sref{Legend sample}
+Эти функции обеспечивают рисование легенды графика (полезно для @ref{1D plotting}). Запись в легенде состоит из двух строк: одна для стиля линии и маркеров, другая с текстом описания (с включенным разбором TeX-их команд). Можно использовать непосредственно массивы строк, или накопление во внутренние массивы с помощью функции AddLegend() с последующим отображением. Положение легенды можно задать автоматически или вручную. Параметры @var{font} и @var{size} задают стиль и размер шрифта (@pxref{Font settings}). Параметр @var{llen} задает относительную ширину примера линии. Ели стиль линии пустой, то соответствующий текст печатается без отступа. Если строка @var{font} содержит символ @samp{A}, то координаты легенды считаются относительно картинки (а не текущего subplot). @sref{Legend sample}
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Legend (@code{int} where=@code{0x3}, @code{const char *}font=@code{"rL"}, @code{float} size=@code{-0.8}, @code{float} llen=@code{0.1})
 @deftypefnx {Функция С} @code{void} mgl_legend (@code{HMGL} gr, @code{int} where, @code{const char *}font, @code{float} size, @code{float} llen)
@@ -1165,7 +1181,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @subsection Area
 @cindex Area
 
-Функции рисуют ломанную линию между точками и закрашивает ее вниз до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (@pxref{Palette and colors}). Также можно использовать градиентное закрашивание если число указанных цветов равно удвоеному числу кривых для построения. Если строка содержит символ @samp{a}, то линии рисуются одна поверх другой (с сумированием) -- того же эффекта можно достичь вызовом @code{y.CumSum("y");} перед построением графика. См. также @ref{Plot}, @ref{Bars}, @ref{Stem}. @sref{Area sample}
+Функции рисуют ломанную линию между точками и закрашивает ее вниз до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (@pxref{Palette and colors}). Также можно использовать градиентное закрашивание если число указанных цветов равно удвоенному числу кривых для построения. Если строка содержит символ @samp{a}, то линии рисуются одна поверх другой (с суммированием) -- того же эффекта можно достичь вызовом @code{y.CumSum("y");} перед построением графика. См. также @ref{Plot}, @ref{Bars}, @ref{Stem}. @sref{Area sample}
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Area (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_area_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}pen)
@@ -1188,7 +1204,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @subsection Region
 @cindex Region
 
-Фунукции закрашивают область между 2 кривыми. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y1.nx=y2.nx} и размеры массивов @var{y1}, @var{y2} должны быть также одинаковы. Строка @var{pen} задает цвет (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется текущий цвет из палитры (@pxref{Palette and colors}). Также можно использовать градиентное закрашивание если число указанных цветов равно удвоеному числу кривых для построения. См. также @ref{Area}, @ref{Bars}, @ref{Stem}. @sref{Region sample}
+Фунукции закрашивают область между 2 кривыми. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y1.nx=y2.nx} и размеры массивов @var{y1}, @var{y2} должны быть также одинаковы. Строка @var{pen} задает цвет (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется текущий цвет из палитры (@pxref{Palette and colors}). Также можно использовать градиентное закрашивание если число указанных цветов равно удвоенному числу кривых для построения. См. также @ref{Area}, @ref{Bars}, @ref{Stem}. @sref{Region sample}
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Region (@code{const mglData &}x, @code{const mglData &}y1, @code{const mglData &}y2, @code{const char *}pen=@code{""}, @code{float} zVal=@code{NAN}, @code{bool} inside=@code{true})
 @deftypefnx {Функция С} @code{void} mgl_region_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y1, @code{const HMDT} y2, @code{const char *}pen, @code{int} inside)
@@ -1227,7 +1243,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @subsection Bars
 @cindex Bars
 
-Функции рисуют вертикальные полосы (прямоугольники) из точек до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (@pxref{Palette and colors}). Если строка содержит символ @samp{a}, то линии рисуются одна поверх другой. См. также @ref{Barh}, @ref{Area}, @ref{Stem}, @ref{Chart}, @ref{Default sizes}. @sref{Bars sample}
+Функции рисуют вертикальные полосы (прямоугольники) из точек до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (@pxref{Palette and colors}). Если строка содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. См. также @ref{Barh}, @ref{Area}, @ref{Stem}, @ref{Chart}, @ref{Default sizes}. @sref{Bars sample}
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Bars (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}pen=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_bars_xyz (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}pen)
@@ -1249,7 +1265,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @subsection Barh
 @cindex Barh
 
-Функции рисуют горизонтальные полосы (прямоугольники) из точек до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (@pxref{Palette and colors}). Если строка содержит символ @samp{a}, то линии рисуются одна поверх другой. См. также @ref{Barh}, @ref{Default sizes}. @sref{Barh sample}
+Функции рисуют горизонтальные полосы (прямоугольники) из точек до плоскости осей координат. График рисуется для каждой строки если один из массивов матрица. Размер по 1-ой координате @strong{должен быть одинаков} для всех массивов @var{x.nx=y.nx=z.nx}. Строка @var{pen} задает цвет и стиль линии и маркеров (@pxref{Line styles}). По умолчанию (@code{pen=""}) используется сплошная линия с текущим цветом из палитры (@pxref{Palette and colors}). Если строка содержит символ @samp{a}, то линии рисуются одна поверх другой. Если строка содержит символ @samp{f}, то рисуется график типа waterfall для определения кумулятивного эффекта последовательности положительных и отрицательных значений. Можно использовать разные цвета для положительных и отрицательных значений если число указанных цветов равно удвоенному числу кривых для построения. См. также @ref{Barh}, @ref{Default sizes}. @sref{Barh sample}
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Barh (@code{const mglData &}y, @code{const mglData &}v, @code{const char *}pen=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_barh_xy (@code{HMGL} gr, @code{const HMDT} y, @code{const HMDT} v, @code{const char *}pen)
@@ -2126,7 +2142,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Flow (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{bool} central=@code{true}, @code{float} zVal=@code{NAN})
 @deftypefnx {Функция С} @code{void} mgl_flow_xy (@code{HMGL} gr, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} ax, @code{const HMDT} ay, @code{const char *}sch, @code{int} num, @code{int} central, @code{float} zVal)
-Рисует нити тока для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} на плоскости при z = @var{zVal}. Число нитей пропорционально @var{num}. Параметр @var{central} задает возможность старта нитей изнутри сетки (если true) или только с краев (если false). Цвет нитей пропорционален @math{\sqrt@{ax^2+ay^2@}}. Теплые цвета соответствуют нормальному току (типа стока). Холодные цвета соответствуют обратному току (типа источника). Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Все размеры массивов @var{ax} и @var{ay} должны быть одинаковы. Младшие размерности массивов @var{x}, @var{y} и @var{ax} должны быть одинаковы. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{ax}). График строится для каждого z среза @var{ax}, @var{ay}. См. также @ref{Pipe}, @ref{Vect}. @sref{Flow sample}
+Рисует нити тока для векторного поля @{@var{ax}, @var{ay}@}, параметрически зависящего от координат @var{x}, @var{y} на плоскости при z = @var{zVal}. Число нитей пропорционально @var{num}. Параметр @var{central} задает возможность старта нитей изнутри сетки (если true) или только с краев (если false). С версии 1.11 он игнорируется и всегда равен (@var{num}>0). Цвет нитей пропорционален @math{\sqrt@{ax^2+ay^2@}}. Теплые цвета соответствуют нормальному току (типа стока). Холодные цвета соответствуют обратному току (типа источника). Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Все размеры массивов @var{ax} и @var{ay} должны быть одинаковы. Младшие размерности массивов @var{x}, @var{y} и @var{ax} должны быть одинаковы. Массивы @var{x} и @var{y} могут быть векторами (не матрицами как @var{ax}). График строится для каждого z среза @var{ax}, @var{ay}. См. также @ref{Pipe}, @ref{Vect}. @sref{Flow sample}
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Flow (@code{const mglData &}ax, @code{const mglData &}ay, @code{const char *}sch=@code{""}, @code{int} num=@code{5}, @code{bool} central=@code{true}, @code{float} zVal=@code{NAN})
@@ -2213,6 +2229,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 * Dots:: 
 * Crust:: 
 * TriPlot:: 
+* TriCont:: 
 * QuadPlot:: 
 * Plots by formula:: 
 * SimplePlot:: 
@@ -2365,7 +2382,7 @@ gr->ContZ(c.Sum("z"),0,-1);
 @end deftypefn
 
 @c ==================================================================
-@node TriPlot, QuadPlot, Crust, Other plotting
+@node TriPlot, TriCont, Crust, Other plotting
 @subsection TriPlot
 @cindex TriPlot
 
@@ -2382,7 +2399,26 @@ gr->ContZ(c.Sum("z"),0,-1);
 @end deftypefn
 
 @c ==================================================================
-@node QuadPlot, Plots by formula, TriPlot, Other plotting
+@node TriCont, QuadPlot, TriPlot, Other plotting
+@subsection TriCont
+@cindex TriCont
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} TriContV (@code{const mglData &}v, @code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
+@deftypefnx {Method on @code{mglGraph} (C++, Python)} @code{void} TriContV (@code{const mglData &}v, @code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{float} zVal=@code{NAN})
+@deftypefnx {C function} @code{void} mgl_tricont_xyzcv (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} c, @code{const char *}sch, @code{float} zVal)
+@deftypefnx {C function} @code{void} mgl_tricont_xyzv (@code{HMGL} gr, @code{const HMDT} v, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{float} zVal)
+Рисует линии уровня поверхности из треугольников при @var{z} = @var{zVal} (или для @var{z=v}[k] если @code{zVal==NAN}). Вершины треугольников задаются индексами @var{id} в массиве точек @{@var{x}[i], @var{y}[i], @var{z}[i]@}. Строка @var{sch} задает цветовую схему. Предыдущая цветовая схема используется по умолчанию. Массив @var{c} (если указан) используется для определения цвета контуров. Размер по 1-му индексу массива @var{id} должен быть 3 или больше. Массивы @var{x}, @var{y}, @var{z} должны иметь одинаковые размеры. Массив @var{c} задает цвет треугольников (если @var{id}.ny=@var{c}.nx) или цвет вершин (если @var{x}.nx=@var{c}.nx). См. также @ref{TriPlot}, @ref{Cont}.
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph} (C++, Python)} @code{void} TriCont (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}c, @code{const char *}sch=@code{""}, @code{num}=@code{7}, @code{float} zVal=@code{NAN})
+@deftypefnx {Method on @code{mglGraph} (C++, Python)} @code{void} TriCont (@code{const mglData &}id, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{num}=@code{7}, @code{float} zVal=@code{NAN})
+@deftypefnx {C function} @code{void} mgl_tricont_xyzc (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const HMDT} c, @code{const char *}sch, @code{num}, @code{float} zVal)
+@deftypefnx {C function} @code{void} mgl_tricont_xyz (@code{HMGL} gr, @code{const HMDT} id, @code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z, @code{const char *}sch, @code{num}, @code{float} zVal)
+Аналогично предыдущему с вектором @var{v} из @var{num} элементов равно распределенных в интервале [@var{Cmin}, @var{Cmax}].
+@end deftypefn
+
+@c ==================================================================
+@node QuadPlot, Plots by formula, TriCont, Other plotting
 @subsection QuadPlot
 @cindex QuadPlot
 

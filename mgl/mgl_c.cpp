@@ -486,5 +486,5 @@ void mgl_set_tick_len(HMGL gr, mreal len, mreal stt)
 {	gr->SetTickLen(len,stt);	}
 void mgl_set_tick_stl(HMGL gr, const char *stl, const char *sub)
 {	gr->SetTickStl(stl,sub);	}
-int mgl_get_warn_code(HMGL gr)	{	return gr->WarnCode;	}
+int mgl_get_warn(HMGL gr)	{	return gr->WarnCode;	}
 //-----------------------------------------------------------------------------

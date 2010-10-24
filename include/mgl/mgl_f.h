@@ -107,7 +107,7 @@ void mgl_set_scheme_(uintptr_t *gr, char *sch, int);
 void mgl_load_font_(uintptr_t *gr, char *name, char *path, int l, int n);
 void mgl_copy_font_(uintptr_t *gr, uintptr_t *gr_from);
 void mgl_restore_font_(uintptr_t *gr);
-int mgl_get_warn_code_(uintptr_t *gr);
+int mgl_get_warn_(uintptr_t *gr);
 /*****************************************************************************/
 /*		Export to file or to memory														 */
 /*****************************************************************************/

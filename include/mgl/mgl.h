@@ -293,6 +293,7 @@ public:
 	//@{
 	/// Set angle of view indepently from mglGraph::Rotate().
 	virtual void View(mreal tetx,mreal tetz,mreal tety=0);
+	inline int GetWarn()	{	return WarnCode;	};
 	void DefaultPlotParam();	///< Set default parameter for plotting
 	/// Zoom in or zoom out (if Zoom(0, 0, 1, 1)) a part of picture
 	void Zoom(mreal x1, mreal y1, mreal x2, mreal y2);

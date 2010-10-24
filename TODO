@@ -21,13 +21,7 @@
 28. Save glyph then it is used for mglGraphPS -- allow different font family in EPS|SVG ??!
 29. Multithreading by "subplots" -- for parser first of all !!!
 
-30. Docs about inplace arrays [[v1,v2],...]
-31. Docs about TriCont(), GetWarnCode(), mgl_get_warn_code()
-33. Docs about \utf0x???? in TeX
-34. Docs -- default label pos is 0 [MGL,C++,C]
-35. Docs about colorbar position by string argument + legend position
-36. Sample about pthread using.
-37. Docs about Hankel(), SinFFT(), CosFFT() [MGL,C++,C]
+30. Sample about pthread using.
 
 32. Regroup pictures in WWW by big classes + combo plots
 

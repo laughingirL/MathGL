@@ -504,10 +504,10 @@ void mglGraph::InPlot(mreal x1,mreal x2,mreal y1,mreal y2, const char *st)
 {
 	if(!st)		{	InPlot(x1,x2,y1,y2,false);	return;	}
 	if(strchr(st,'T'))	{	y1*=0.9;	y2*=0.9;	}	// general title
-	bool r = !(strchr(st,'r') || strchr(st,'R') || strchr(st,'g'));
-	bool l = !(strchr(st,'l') || strchr(st,'L') || strchr(st,'g'));
-	bool u = !(strchr(st,'u') || strchr(st,'U') || strchr(st,'g'));
-	bool a = !(strchr(st,'a') || strchr(st,'A') || strchr(st,'g') || strchr(st,'t'));
+	bool r = !(strchr(st,'r') || strchr(st,'R') || strchr(st,'>') || strchr(st,'g'));
+	bool l = !(strchr(st,'l') || strchr(st,'L') || strchr(st,'<') || strchr(st,'g'));
+	bool u = !(strchr(st,'u') || strchr(st,'U') || strchr(st,'_') || strchr(st,'g'));
+	bool a = !(strchr(st,'a') || strchr(st,'A') || strchr(st,'^') || strchr(st,'g') || strchr(st,'t'));
 	// let use simplified scheme -- i.e. no differences between axis, colorbar and/or title
 	register mreal xs=(x1+x2)/2, ys=(y1+y2)/2, f1 = 1.3, f2 = 1.1;
 	if(r && l)	{	x2=xs+(x2-xs)*f1;	x1=xs+(x1-xs)*f1;	}

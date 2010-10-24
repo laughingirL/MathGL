@@ -104,9 +104,9 @@ void mgl_data_mirror(HMDT d, const char *dir)	{	d->Mirror(dir);	}
 void mgl_data_fill_sample(HMDT d, int num, const char *how)	{	d->FillSample(num,how);	}
 void mgl_data_insert(HMDT d, char dir, int at, int num){	d->Insert(dir,at,num);	}
 void mgl_data_delete(HMDT d, char dir, int at, int num){	d->Delete(dir,at,num);	}
-void mgl_data_hankel(HMDT d, char dir)	{	d->Hankel(dir);	}
-void mgl_data_sinfft(HMDT d, char dir)	{	d->SinFFT(dir);	}
-void mgl_data_cosfft(HMDT d, char dir)	{	d->CosFFT(dir);	}
+void mgl_data_hankel(HMDT d, const char *dir)	{	d->Hankel(dir);	}
+void mgl_data_sinfft(HMDT d, const char *dir)	{	d->SinFFT(dir);	}
+void mgl_data_cosfft(HMDT d, const char *dir)	{	d->CosFFT(dir);	}
 //-----------------------------------------------------------------------------
 /// Allocate memory and copy the data from the (mreal *) array
 void mgl_data_set_float(HMDT d, const float *A,int NX,int NY,int NZ)
@@ -268,9 +268,21 @@ void mgl_data_insert_(uintptr_t *d, const char *dir, int *at, int *num, int)
 {	_DT_->Insert(*dir,*at,*num);	}
 void mgl_data_delete_(uintptr_t *d, const char *dir, int *at, int *num, int)
 {	_DT_->Delete(*dir,*at,*num);	}
-void mgl_data_hankel_(uintptr_t *d, const char *dir,int l)	{	_DT_->Hankel(*dir);	}
-void mgl_data_sinfft_(uintptr_t *d, const char *dir,int l)	{	_DT_->SinFFT(*dir);	}
-void mgl_data_cosfft_(uintptr_t *d, const char *dir,int l)	{	_DT_->CosFFT(*dir);	}
+void mgl_data_hankel_(uintptr_t *d, const char *dir,int l)
+{
+	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	_DT_->Hankel(s);	delete []s;
+}
+void mgl_data_sinfft_(uintptr_t *d, const char *dir,int l)
+{
+	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	_DT_->SinFFT(s);	delete []s;
+}
+void mgl_data_cosfft_(uintptr_t *d, const char *dir,int l)
+{
+	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	_DT_->CosFFT(s);	delete []s;
+}
 //-----------------------------------------------------------------------------
 /// Allocate memory and copy the data from the (mreal *) array
 void mgl_data_set_float1_(uintptr_t *d, const float *A,int *NX)

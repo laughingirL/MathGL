@@ -146,7 +146,7 @@ void mgl_set_scheme(HMGL gr, const char *sch);
 void mgl_load_font(HMGL gr, const char *name, const char *path);
 void mgl_copy_font(HMGL gr, HMGL gr_from);
 void mgl_restore_font(HMGL gr);
-int mgl_get_warn_code(HMGL gr);
+int mgl_get_warn(HMGL gr);
 /*****************************************************************************/
 /*		Export to file or to memory											 */
 /*****************************************************************************/
@@ -585,9 +585,9 @@ void mgl_data_swap(HMDT dat, const char *dir);
 void mgl_data_roll(HMDT dat, char dir, int num);
 void mgl_data_mirror(HMDT dat, const char *dir);
 
-void mgl_data_hankel(HMDT dat, char dir);
-void mgl_data_sinfft(HMDT dat, char dir);
-void mgl_data_cosfft(HMDT dat, char dir);
+void mgl_data_hankel(HMDT dat, const char *dir);
+void mgl_data_sinfft(HMDT dat, const char *dir);
+void mgl_data_cosfft(HMDT dat, const char *dir);
 void mgl_data_fill_sample(HMDT dat, int num, const char *how);
 
 mreal mgl_data_spline(const HMDT dat, mreal x,mreal y,mreal z);

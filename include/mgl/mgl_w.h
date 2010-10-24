@@ -216,9 +216,9 @@ public:
 	inline void Roll(char dir, int num)		{	mgl_data_roll(a,dir,num);	};
 	inline void Mirror(const char *dir)		{	mgl_data_mirror(a,dir);	};
 
-	inline void Hankel(char dir)	{	mgl_data_hankel(a,dir);	};
-	inline void SinFFT(char dir)	{	mgl_data_sinfft(a,dir);	};
-	inline void CosFFT(char dir)	{	mgl_data_cosfft(a,dir);	};
+	inline void Hankel(const char *dir)	{	mgl_data_hankel(a,dir);	};
+	inline void SinFFT(const char *dir)	{	mgl_data_sinfft(a,dir);	};
+	inline void CosFFT(const char *dir)	{	mgl_data_cosfft(a,dir);	};
 	
 	inline double Spline(double x,double y=0,double z=0)
 	{	return mgl_data_spline(a,x,y,z);	};
@@ -293,7 +293,7 @@ public:
 	~mglGraph()	{	mgl_delete_graph(self);	};
 	inline HMGL Self()	{	return self;	};
 
-	inline int  GetWarnCode()	{	return mgl_get_warn_code(self);	};
+	inline int  GetWarn()	{	return mgl_get_warn(self);	};
 	inline void DefaultPlotParam()	{	mgl_set_def_param(self);	};
 	inline void SetPalColor(int n, float r, float g, float b)
 	{	if(n>=0 && n<100)	mgl_set_pal_color(self, n, r, g, b);	};
