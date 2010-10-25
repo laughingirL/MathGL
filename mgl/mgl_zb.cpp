@@ -217,6 +217,7 @@ void mglGraphZB::Clf(mglColor Back)
 //-----------------------------------------------------------------------------
 void mglGraphZB::SetSize(int w,int h)
 {
+	if(w<=0 || h<=0)	{	SetWarn(mglWarnSize);	return;	}
 	if(C)	{	delete []C;	delete []Z;	}
 	C = new unsigned char[w*h*32];		// ����� *1 ��� TranspType>0 !!!
 	Z = new mreal[w*h*8];
