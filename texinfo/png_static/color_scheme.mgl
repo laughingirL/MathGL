@@ -1,4 +1,4 @@
-setsize 360 29
+setsize 180 29
 new a 256 2
 fill a 'x'
 plotfactor 1
