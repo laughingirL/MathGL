@@ -1,5 +1,4 @@
 @c ------------------------------------------------------------------
-@node MathGL core, Plotter classes, Examples, Top
 @chapter MathGL core
 @cindex mglGraph
 
@@ -237,7 +236,7 @@ Flag which determines how points outside bounding box are drawn. If it is @code{
 @end deftypefn
 
 @float
-@image{png_static/cut, 7cm}
+@image{../png_static/cut, 7cm}
 @caption{Left figure is drawn with parameter @code{Cut=false}. Right one is drawn with parameter @code{Cut=true}.}
 @end float
 
@@ -937,9 +936,9 @@ Draw a set of triangles (or lines if @var{trig}=@code{NULL}) for glyph which is 
 @cindex Text
 @cindex Title
 
-These functions draw the text. There are functions for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The class mglFont (@pxref{mglFont class}) is used for low-level string parsing and printing. It can use arbitrary font-faces and parse many TeX commands (for detail @pxref{mglFont class}). All these functions have 2 variant: for printing 8-bit text (@code{char *}) and for printing Unicode text (@code{wchar_t *}). In first case the conversion in current locale is used. So sometimes you need to specify it by @code{setlocale()} function. The size argument control the size of text: if positive it give the value, if negative it give the value relative to @var{FontSize}. The font type (STIX, arial, courier, times and so on) can be selected by function SetFont(), GetFont(). @xref{Font settings}.
+These functions draw the text. There are functions for drawing text in arbitrary place, in arbitrary direction and along arbitrary curve. The class mglFont (@pxref{mglFont class}) is used for low-level string parsing and printing. It can use arbitrary font-faces and parse many TeX commands (for detail @pxref{Font styles}). All these functions have 2 variant: for printing 8-bit text (@code{char *}) and for printing Unicode text (@code{wchar_t *}). In first case the conversion in current locale is used. So sometimes you need to specify it by @code{setlocale()} function. The size argument control the size of text: if positive it give the value, if negative it give the value relative to @var{FontSize}. The font type (STIX, arial, courier, times and so on) can be selected by function SetFont(), GetFont(). @xref{Font settings}.
 
-The font parameters are described by string. This string may contain several characters of font type (@samp{rbiwou}) and/or align (@samp{LRC}) specification. Also it may contain the text color @samp{wkrgbcymhRGBCYMHW} (@pxref{mglColor class}) after symbol @samp{:}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style, @samp{w} -- wired style, @samp{o} -- over-lined text, @samp{u} -- underlined text. By default roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. For example, string @samp{iC:b} correspond to italic font style for centered text which printed by blue color.
+The font parameters are described by string. This string may contain several characters of font type (@samp{rbiwou}) and/or align (@samp{LRC}) specification. Also it may contain the text color @samp{wkrgbcymhRGBCYMHW} (@pxref{Line styles}) after symbol @samp{:}. The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style, @samp{w} -- wired style, @samp{o} -- over-lined text, @samp{u} -- underlined text. By default roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. For example, string @samp{iC:b} correspond to italic font style for centered text which printed by blue color.
 
 If string contains symbols @samp{aA} then text is printed at arbitrary position @{@var{x}, @var{y}@} (supposed to be in range [0,1]) of subplot (for @samp{a}) or picture (for @samp{A}).
 

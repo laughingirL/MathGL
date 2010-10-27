@@ -1,13 +1,10 @@
 @c ------------------------------------------------------------------
-@node Samples, TeX-like symbols, MGL interface, Top
 @chapter Samples
-
-This chapter contain a lot of sample codes for all types of plots and for most important examples and hints. The same sample (with pictures) you can find at @uref{http://mathgl.sf.net/pictures.html}. Most of examples have the sample code on 5 languages: C++, MGL, C, Fortran and Python. However, I put only C++ code for some of examples due to a lot of them and clearency how to write code for other languages. All samples are divided on 6 large categories.
-
+This chapter contain a lot of sample codes for all types of plots and for most important examples and hints. The same sample (with pictures) you can find at @uref{http://mathgl.sf.net/pictures.html}. 
+@ifclear UDAV
+Most of examples have the sample code on 5 languages: C++, MGL, C, Fortran and Python. However, I put only C++ code for some of examples due to a lot of them and clearency how to write code for other languages. All samples are divided on 6 large categories.
 The minimal code to view the samples for different languages are following.
-
 @strong{C++ code}
-
 For compilation use: @code{g++ -o sample sample.cpp -lmgl}.
 @verbatim
 #include <mgl/mgl_zb.h>
@@ -22,7 +19,6 @@ int main()
 }
 @end verbatim
 @strong{MGL code}
-
 For preview use: @code{mglview sample.mgl}.
 @verbatim
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -31,7 +27,6 @@ For preview use: @code{mglview sample.mgl}.
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @end verbatim
 @strong{Pure C code}
-
 For compilation use: @code{gcc -o sample sample.c -lmgl}.
 @verbatim
 #include <mgl/mgl_c.h>
@@ -47,7 +42,6 @@ int main()
 }
 @end verbatim
 @strong{Fortran code}
-
 For compilation use: @code{gfortran -o sample sample.f90 -lmgl}. Note, fortran don't have argument checking. So you have to take special attention to pass real variables to real arguments of functions and integer variables to integer arguments of functions. There is no other special checking for that!!!
 @verbatim
 integer gr, mgl_create_graph_zb
@@ -60,7 +54,6 @@ call mgl_delete_graph(gr)
 end
 @end verbatim
 @strong{Python}
-
 For preview use: @code{python sample.py}.
 @verbatim
 from mathgl import *
@@ -70,8 +63,7 @@ gr = mglGraph();
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 gr.ShowImage();
 @end verbatim
-
-
+@end ifclear
 @menu
 * 1D plotting samples::         
 * 2D plotting samples::         
@@ -80,11 +72,9 @@ gr.ShowImage();
 * Additional features::         
 * Advanced features::           
 @end menu
-
 @c ------------------------------------------------------------------
 @node 1D plotting samples, 2D plotting samples, , Samples
 @section 1D plotting samples
-
 @menu
 * Plot sample::                 
 * Radar sample::                 
@@ -105,17 +95,15 @@ gr.ShowImage();
 * Chart sample::                
 * Pie chart sample::            
 @end menu
-
 @c ------------------------------------------------------------------
 @node Plot sample, Radar sample, , 1D plotting samples
 @subsection Plot sample
 @cindex Plot
-
 @float
-@image{png/plot, 7cm}
-@caption{Example of Plot. @tdref{plot}}
+@image{../png/plot, 7cm}
+@c @caption{Example of Plot. @tdref{plot}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(50,3);
@@ -126,6 +114,7 @@ gr->Box();
 gr->Plot(y);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 50 3
 modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
@@ -134,6 +123,7 @@ modify y 'cos(2*pi*x)' 2
 box
 plot y
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(50,3,1);
@@ -164,19 +154,16 @@ y.Modify("cos(2*pi*x)",2);
 gr.Box();
 gr.Plot(y);
 @end verbatim
-
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Radar sample, Tens sample, Plot sample, 1D plotting samples
 @subsection Radar sample
 @cindex Radar
-
 @float
-@image{png/radar, 7cm}
-@caption{Example of Plot. @tdref{radar}}
+@image{../png/radar, 7cm}
+@c @caption{Example of Plot. @tdref{radar}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(10,3);
@@ -184,11 +171,13 @@ y.Modify("0.4*sin(pi*(2*x+y/2))+0.1*rnd");
 gr->Radar(y,"#");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 10 3
 modify y '0.4*sin(pi*(2*x+y/2))+0.1*rnd'
 radar y '#'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(10,3,1);
@@ -210,18 +199,16 @@ y = mglData(10,3);
 y.Modify("0.4*sin(pi*(2*x+y/2))+0.1*rnd");
 gr.Radar(y,"#");
 @end verbatim
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Tens sample, Area sample, Radar sample, 1D plotting samples
 @subsection Tens sample
 @cindex Tens
-
 @float
-@image{png/tens, 7cm}
-@caption{Example of Tens. @tdref{tens}}
+@image{../png/tens, 7cm}
+@c @caption{Example of Tens. @tdref{tens}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(50), c(50);
@@ -231,6 +218,7 @@ gr->Box();
 gr->Tens(y,c);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 50
 new c 50
@@ -239,6 +227,7 @@ modify c 'sin(2*pi*x)'
 box
 tens y c
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(50,1,1);
@@ -271,17 +260,16 @@ c.Modify("sin(2*pi*x)");
 gr.Box();
 gr.Tens(y,c);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Area sample, Bars sample, Tens sample, 1D plotting samples
 @subsection Area sample
 @cindex Area
-
 @float
-@image{png/area, 7cm}
-@caption{Example of Area. @tdref{area}}
+@image{../png/area, 7cm}
+@c @caption{Example of Area. @tdref{area}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(50,3);
@@ -293,6 +281,7 @@ gr->Box();
 gr->Area(y);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 50 3
 modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
@@ -302,6 +291,7 @@ origin 0 0
 box
 area y
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(50,3,1);
@@ -335,17 +325,16 @@ gr.SetOrigin(0.,0.);
 gr.Box();
 gr.Area(y);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Bars sample, Barh sample, Area sample, 1D plotting samples
 @subsection Bars sample
 @cindex Bars
-
 @float
-@image{png/bars, 7cm}
-@caption{Example of Bars. @tdref{bars}}
+@image{../png/bars, 7cm}
+@c @caption{Example of Bars. @tdref{bars}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(10,3);
@@ -355,6 +344,7 @@ gr->Box();
 gr->Bars(y);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 10 3
 modify y '0.8*sin(pi*(2*x+y/2))+0.2*rnd'
@@ -362,6 +352,7 @@ origin 0 0
 box
 bars y
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(10,3,1);
@@ -389,17 +380,16 @@ gr.SetOrigin(0.,0.);
 gr.Box();
 gr.Bars(y);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Barh sample, Step sample, Bars sample, 1D plotting samples
 @subsection Barh sample
 @cindex Barh
-
 @float
-@image{png/barh, 7cm}
-@caption{Example of Barh. @tdref{barh}}
+@image{../png/barh, 7cm}
+@c @caption{Example of Barh. @tdref{barh}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(10,3);
@@ -409,6 +399,7 @@ gr->Box();
 gr->Barh(y);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 10 3
 modify y '0.8*sin(pi*(2*x+y/2))+0.2*rnd'
@@ -416,6 +407,7 @@ origin 0 0
 box
 barh y
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(10,3,1);
@@ -443,17 +435,16 @@ gr.SetOrigin(0.,0.);
 gr.Box();
 gr.Barh(y);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Step sample, Stem sample, Barh sample, 1D plotting samples
 @subsection Step sample
 @cindex Step
-
 @float
-@image{png/step, 7cm}
-@caption{Example of Step. @tdref{step}}
+@image{../png/step, 7cm}
+@c @caption{Example of Step. @tdref{step}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(50,3);
@@ -464,6 +455,7 @@ gr->Box();
 gr->Step(y);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 50 3
 modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
@@ -472,6 +464,7 @@ modify y 'cos(2*pi*x)' 2
 box
 step y
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(50,3,1);
@@ -502,17 +495,16 @@ y.Modify("cos(2*pi*x)",2);
 gr.Box();
 gr.Step(y);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Stem sample, Region sample, Step sample, 1D plotting samples
 @subsection Stem sample
 @cindex Stem
-
 @float
-@image{png/stem, 7cm}
-@caption{Example of Stem. @tdref{stem}}
+@image{../png/stem, 7cm}
+@c @caption{Example of Stem. @tdref{stem}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(50,3);
@@ -524,6 +516,7 @@ gr->Box();
 gr->Stem(y,"o");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 50 3
 modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
@@ -533,6 +526,7 @@ origin 0 0
 box
 stem y 'o'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(50,3,1);
@@ -566,17 +560,16 @@ gr.SetOrigin(0.,0.);
 gr.Box();
 gr.Stem(y,"o");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Region sample, Error sample, Stem sample, 1D plotting samples
 @subsection Region sample
 @cindex Region
-
 @float
-@image{png/region, 7cm}
-@caption{Example of Region. @tdref{region}}
+@image{../png/region, 7cm}
+@c @caption{Example of Region. @tdref{region}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y1(50), y2(50);
@@ -588,6 +581,7 @@ gr->Plot(y1,"k2");
 gr->Plot(y2,"k2");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y1 50
 new y2 50
@@ -598,6 +592,7 @@ region y1 y2 'r'
 plot y1 'k2'
 plot y2 'k2'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y1 = mgl_create_data_size(50,1,1);
@@ -635,17 +630,16 @@ gr.Region(y1,y2,"r");
 gr.Plot(y1,"k2");
 gr.Plot(y2,"k2");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Error sample, BoxPlot sample, Region sample, 1D plotting samples
 @subsection Error sample
 @cindex Error
-
 @float
-@image{png/error, 7cm}
-@caption{Example of Error. @tdref{error}}
+@image{../png/error, 7cm}
+@c @caption{Example of Error. @tdref{error}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(50,1), x0(10), y0(10), ex(10), ey(10);
@@ -658,6 +652,7 @@ gr->Plot(y);
 gr->Error(x0,y0,ex,ey,"ko");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 50
 new x0 10
@@ -673,6 +668,7 @@ box
 plot y
 error x0 y0 ex ey 'ko'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(50,1,1);
@@ -684,7 +680,6 @@ mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 mgl_data_modify(x0,"2*x-1 + 0.1*rnd-0.05",0);
 mgl_data_modify(y0,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x) + 0.2*rnd-0.1",0);
 mgl_data_modify(ey,"0.2",0); mgl_data_modify(ex,"0.1",0);
-
 mgl_box(gr,1);
 mgl_plot(gr,y,NULL);
 mgl_error_exy(gr,x0,y0,ex,ey,"ko");
@@ -706,7 +701,6 @@ call mgl_data_modify(y0,'0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + &
                          0.2*sin(pi*x) + 0.2*rnd-0.1',0);
 call mgl_data_modify(ey,'0.2',0)
 call mgl_data_modify(ex,'0.1',0);
-
 call mgl_box(gr,1)
 call mgl_plot(gr,y,'')
 call mgl_error_exy(gr,x0,y0,ex,ey,'ko')
@@ -726,17 +720,16 @@ ey.Modify("0.2");   ex.Modify("0.1");
 gr.Box();           gr.Plot(y);
 gr.Error(x0,y0,ex,ey,"ko");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node BoxPlot sample, Mark sample, Error sample, 1D plotting samples
 @subsection BoxPlot sample
 @cindex BoxPlot
-
 @float
-@image{png/boxplot, 7cm}
-@caption{Example of BoxPlot. @tdref{boxplot}}
+@image{../png/boxplot, 7cm}
+@c @caption{Example of BoxPlot. @tdref{boxplot}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(10,7);
@@ -746,17 +739,18 @@ gr->Box();
 gr->Plot(a," ko");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 10 7
 modify a '(2*rnd-1)^3/2'
 boxplot a
 box:plot a ' ko'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(10,7,1);
 mgl_data_modify(a,"(2*rnd-1)^3/2",0);
-
 mgl_box(gr,1);
 mgl_plot(gr,a," ko");
 mgl_boxplot(gr,a,NULL);
@@ -767,7 +761,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 y = mgl_create_data_size(10,7,1)
 call mgl_data_modify(a,'(2*rnd-1)^3/2',0);
-
 call mgl_box(gr,1)
 call mgl_plot(gr,a,' ko')
 call mgl_boxplot(gr,a,'')
@@ -781,17 +774,16 @@ gr.Box();
 gr.Plot(a," ko");
 gr.BoxPlot(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Mark sample, TextMark sample, BoxPlot sample, 1D plotting samples
 @subsection Mark sample
 @cindex Mark
-
 @float
-@image{png/mark, 7cm}
-@caption{Example of Mark. @tdref{mark}}
+@image{../png/mark, 7cm}
+@c @caption{Example of Mark. @tdref{mark}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(50,3), y1(50);
@@ -803,6 +795,7 @@ gr->Box();
 gr->Mark(y,y1,"bs");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 50 3
 modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
@@ -813,6 +806,7 @@ modify y1 '0.5+0.3*cos(2*pi*x)'
 box
 mark y y1 'bs'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(50,3,1);
@@ -849,17 +843,16 @@ y1.Modify("0.5+0.3*cos(2*pi*x)");
 gr.Box();
 gr.Mark(y,y1,"bs");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node TextMark sample, Tube sample, Mark sample, 1D plotting samples
 @subsection TextMark sample
 @cindex TextMark
-
 @float
-@image{png/textmark, 7cm}
-@caption{Example of TextMark. @tdref{textmark}}
+@image{../png/textmark, 7cm}
+@c @caption{Example of TextMark. @tdref{textmark}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(50,3), y1(50);
@@ -871,6 +864,7 @@ gr->Box();
 gr->TextMark(y,y1,"\\gamma");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 50 3
 modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
@@ -881,6 +875,7 @@ modify y1 '0.5+0.3*cos(2*pi*x)'
 box
 textmark y y1 '\gamma'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y, y1;
@@ -918,48 +913,46 @@ y1.Modify("0.5+0.3*cos(2*pi*x)");
 gr.Box();
 gr.TextMark(y,y1,"\\gamma");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Tube sample, Text sample, TextMark sample, 1D plotting samples
 @subsection Tube sample
 @cindex Tube
-
 @float
-@image{png/tube, 7cm}
-@caption{Example of Tube. @tdref{tube}}
+@image{../png/tube, 7cm}
+@c @caption{Example of Tube. @tdref{tube}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(50,3);
 y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 y.Modify("sin(2*pi*x)",1);
 y.Modify("cos(2*pi*x)",2);
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
 gr->Tube(y,0.05);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 50 3
 modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
 modify y 'sin(2*pi*x)' 1
 modify y 'cos(2*pi*x)' 2
-
 rotate 40 60
 light on
 box
 tube y 0.05
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(50,3,1);
 mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
 mgl_data_modify(y,"sin(2*pi*x)",1);
 mgl_data_modify(y,"cos(2*pi*x)",2);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -973,7 +966,6 @@ y = mgl_create_data_size(50,3,1)
 call mgl_data_modify(y,'0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)',0)
 call mgl_data_modify(y,'sin(2*pi*x)',1)
 call mgl_data_modify(y,'cos(2*pi*x)',2)
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
@@ -988,17 +980,16 @@ y.Modify("sin(2*pi*x)",1);  y.Modify("cos(2*pi*x)",2);
 gr.Rotate(40,60);   gr.Light(True);    gr.Box();
 gr.Tube(y,0.05);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Text sample, Torus sample, Tube sample, 1D plotting samples
 @subsection Text sample
 @cindex Text
-
 @float
-@image{png/text, 7cm}
-@caption{Example of Text. @tdref{text}}
+@image{../png/text, 7cm}
+@c @caption{Example of Text. @tdref{text}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(50,3);
@@ -1011,6 +1002,7 @@ gr->Text(y,"This is very long string drawn along a curve",":k");
 gr->Text(y,"Another string drawn above a curve","T:r");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 50 3
 modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
@@ -1021,6 +1013,7 @@ plot y(:,0)
 text y 'This is very long string drawn along a curve' ':k'
 text y 'Another string drawn above a curve' 'T:r'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(50,1,1);
@@ -1052,47 +1045,45 @@ gr.Plot(y.SubData(-1,0));
 gr.Text(y,"This is very long string drawn along a curve",":k");
 gr.Text(y,"Another string drawn above a curve","T:r");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Torus sample, Chart sample, Text sample, 1D plotting samples
 @subsection Torus sample
 @cindex Torus
-
 @float
-@image{png/torus, 7cm}
-@caption{Example of Torus. @tdref{torus}}
+@image{../png/torus, 7cm}
+@c @caption{Example of Torus. @tdref{torus}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y1(50), y2(50);
 y1.Modify("0.5+0.3*cos(2*pi*x)");
 y2.Modify("0.3*sin(2*pi*x)");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
 gr->Torus(y1,y2,"pz");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y1 50
 new y2 50
 modify y1 '0.5+0.3*cos(2*pi*x)'
 modify y2 '0.3*sin(2*pi*x)'
-
 rotate 40 60
 light on
 box
 torus y1 y2 'pz'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y1 = mgl_create_data_size(50,1,1);
 HMDT y2 = mgl_create_data_size(50,1,1);
 mgl_data_modify(y1,"0.5+0.3*cos(2*pi*x)",0);
 mgl_data_modify(y2,"0.3*sin(2*pi*x)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -1107,7 +1098,6 @@ y1 = mgl_create_data_size(50,1,1);
 y2 = mgl_create_data_size(50,1,1);
 call mgl_data_modify(y1,"0.5+0.3*cos(2*pi*x)",0);
 call mgl_data_modify(y2,"0.3*sin(2*pi*x)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
@@ -1124,42 +1114,40 @@ gr.Rotate(40,60);    gr.Light(True);
 gr.Box();
 gr.Torus(y1,y2,"pz");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Chart sample, Pie chart sample, Torus sample, 1D plotting samples
 @subsection Chart sample
 @cindex Chart
-
 @float
-@image{png/chart, 7cm}
-@caption{Example of Chart. @tdref{chart}}
+@image{../png/chart, 7cm}
+@c @caption{Example of Chart. @tdref{chart}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData ch(7,2);
 ch.Modify("rnd+0.1");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
 gr->Chart(ch,"#");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new ch 7 2
 modify ch 'rnd+0.1'
-
 rotate 40 60
 light on
 box
 chart ch
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT ch = mgl_create_data_size(7,2,1);
 mgl_data_modify(ch,"rnd+0.1",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -1171,7 +1159,6 @@ mgl_delete_data(ch);
 integer ch, mgl_create_data_size
 ch = mgl_create_data_size(7,2,1)
 call mgl_data_modify(ch,'rnd+0.1',0)
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
@@ -1185,23 +1172,21 @@ gr.Rotate(40,60);   gr.Light(True);
 gr.Box();
 gr.Chart(ch,"#");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Pie chart sample, , Chart sample, 1D plotting samples
 @subsection Pie chart sample
 @cindex Chart
 @cindex Axis
-
 @float
-@image{png/pie_chart, 7cm}
-@caption{Example of Chart in cylindrical coordinates. @tdref{pie_chart}}
+@image{../png/pie_chart, 7cm}
+@c @caption{Example of Chart in cylindrical coordinates. @tdref{pie_chart}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData ch(7,2);
 ch.Modify("rnd+0.1");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->SetFunc("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)");
@@ -1209,21 +1194,21 @@ gr->Box();
 gr->Chart(ch,"bgr cmy#");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new ch 7 2
 modify ch 'rnd+0.1'
-
 rotate 40 60
 light on
 axis '(y+1)/2*cos(pi*x)' '(y+1)/2*sin(pi*x)' ''
 box
 chart ch 'bgr cmy#'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT ch = mgl_create_data_size(7,2,1);
 mgl_data_modify(ch,"rnd+0.1",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_func(gr,"(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)",0);
@@ -1236,7 +1221,6 @@ mgl_delete_data(ch);
 integer ch, mgl_create_data_size
 ch = mgl_create_data_size(7,2,1)
 call mgl_data_modify(ch,'rnd+0.1',0)
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_func(gr,'(y+1)/2*cos(pi*x)','(y+1)/2*sin(pi*x)','');
@@ -1252,11 +1236,10 @@ gr.SetFunc("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)");
 gr.Box();
 gr.Chart(ch,"bgr cmy#");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node 2D plotting samples, 3D plotting samples, 1D plotting samples, Samples
 @section 2D plotting samples
-
 @menu
 * Surf sample::                 
 * Transparent surface sample::  
@@ -1274,42 +1257,39 @@ gr.Chart(ch,"bgr cmy#");
 * Axial sample::                
 * Grad sample::                 
 @end menu
-
 @c ------------------------------------------------------------------
 @node Surf sample, Transparent surface sample, , 2D plotting samples
 @subsection Surf sample
 @cindex Surf
-
 @float
-@image{png/surf, 7cm}
-@caption{Example of Surf. @tdref{surf}}
+@image{../png/surf, 7cm}
+@c @caption{Example of Surf. @tdref{surf}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
 gr->Surf(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
 box
 surf a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -1321,7 +1301,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
@@ -1335,23 +1314,21 @@ a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Rotate(40,60);   gr.Light(True);    gr.Box();
 gr.Surf(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Transparent surface sample, Surface in fog sample, Surf sample, 2D plotting samples
 @subsection Transparent surface sample
 @cindex Surf
 @cindex Alpha
-
 @float
-@image{png/surf_alpha, 7cm}
-@caption{Example of Surf & Alpha. @tdref{surf_alpha}}
+@image{../png/surf_alpha, 7cm}
+@c @caption{Example of Surf & Alpha. @tdref{surf_alpha}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Alpha(true);
@@ -1359,21 +1336,21 @@ gr->Box();
 gr->Surf(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
 alpha on
 box
 surf a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_alpha(gr,1);
@@ -1386,7 +1363,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_alpha(gr,1)
@@ -1402,23 +1378,21 @@ gr.Rotate(40,60);   gr.Light(True);    gr.Box();
 gr.Alpha(True);
 gr.Surf(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Surface in fog sample, Sharp colors sample, Transparent surface sample, 2D plotting samples
 @subsection Surface in fog sample
 @cindex Surf
 @cindex Fog
-
 @float
-@image{png/surf_fog, 7cm}
-@caption{Example of Surf & Fog. @tdref{surf_fog}}
+@image{../png/surf_fog, 7cm}
+@c @caption{Example of Surf & Fog. @tdref{surf_fog}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Fog(1);
@@ -1426,21 +1400,21 @@ gr->Box();
 gr->Surf(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
 fog 1
 box
 surf a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_fog(gr,1.,0.25);
@@ -1453,7 +1427,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_fog(gr,1.,0.25)
@@ -1469,42 +1442,40 @@ gr.Rotate(40,60);   gr.Light(True);    gr.Box();
 gr.Fog(1);
 gr.Surf(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Sharp colors sample, Mesh sample, Surface in fog sample, 2D plotting samples
 @subsection Sharp colors sample
 @cindex Surf
-
 @float
-@image{png/surf_sl, 7cm}
-@caption{Example of sharp color scheme. @tdref{surf_sl}}
+@image{../png/surf_sl, 7cm}
+@c @caption{Example of sharp color scheme. @tdref{surf_sl}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
 gr->Surf(a,"BbcyrR|");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
 box
 surf a 'BbcyrR|'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -1516,7 +1487,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
@@ -1530,40 +1500,38 @@ a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Rotate(40,60);   gr.Light(True);    gr.Box();
 gr.Surf(a,"BbcyrR|");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Mesh sample, Fall sample, Sharp colors sample, 2D plotting samples
 @subsection Mesh sample
 @cindex Mesh
-
 @float
-@image{png/mesh, 7cm}
-@caption{Example of Mesh. @tdref{mesh}}
+@image{../png/mesh, 7cm}
+@c @caption{Example of Mesh. @tdref{mesh}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Box();
 gr->Mesh(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 box
 mesh a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
 mgl_mesh(gr,a,0);
@@ -1574,7 +1542,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1)
 call mgl_mesh(gr,a,'')
@@ -1587,40 +1554,38 @@ a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Rotate(40,60);   gr.Light(True);    gr.Box();
 gr.Mesh(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Fall sample, Belt sample, Mesh sample, 2D plotting samples
 @subsection Fall sample
 @cindex Fall
-
 @float
-@image{png/fall, 7cm}
-@caption{Example of Fall. @tdref{fall}}
+@image{../png/fall, 7cm}
+@c @caption{Example of Fall. @tdref{fall}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Box();
 gr->Fall(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 box
 fall a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
 mgl_fall(gr,a,0);
@@ -1631,7 +1596,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1)
 call mgl_fall(gr,a,'')
@@ -1644,42 +1608,40 @@ a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Rotate(40,60);   gr.Light(True);    gr.Box();
 gr.Fall(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Belt sample, Tile sample, Fall sample, 2D plotting samples
 @subsection Belt sample
 @cindex Belt
-
 @float
-@image{png/belt, 7cm}
-@caption{Example of Belt. @tdref{belt}}
+@image{../png/belt, 7cm}
+@c @caption{Example of Belt. @tdref{belt}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
 gr->Belt(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
 box
 belt a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -1691,7 +1653,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
@@ -1705,42 +1666,40 @@ a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Rotate(40,60);   gr.Light(True);    gr.Box();
 gr.Belt(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Tile sample, Boxs sample, Belt sample, 2D plotting samples
 @subsection Tile sample
 @cindex Tile
-
 @float
-@image{png/tile, 7cm}
-@caption{Example of Tile. @tdref{tile}}
+@image{../png/tile, 7cm}
+@c @caption{Example of Tile. @tdref{tile}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
 gr->Tile(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
 box
 tile a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -1752,7 +1711,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
@@ -1766,17 +1724,16 @@ a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Rotate(40,60);   gr.Light(True);    gr.Box();
 gr.Tile(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Boxs sample, Dens sample, Tile sample, 2D plotting samples
 @subsection Boxs sample
 @cindex Boxs
-
 @float
-@image{png/boxs, 7cm}
-@caption{Example of Boxs. @tdref{boxs}}
+@image{../png/boxs, 7cm}
+@c @caption{Example of Boxs. @tdref{boxs}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
@@ -1787,6 +1744,7 @@ gr->Box();
 gr->Boxs(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
@@ -1796,11 +1754,11 @@ origin 0 0 0
 box
 boxs a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_origin(gr,0.,0.,0.);
@@ -1813,7 +1771,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_origin(gr,0.,0.,0.);
@@ -1829,18 +1786,17 @@ gr.Rotate(40,60);       gr.Light(True);
 gr.SetOrigin(0.,0.,0.); gr.Box();
 gr.Boxs(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Dens sample, Cont sample, Boxs sample, 2D plotting samples
 @subsection Dens sample
 @cindex Dens
 @cindex Colorbar
-
 @float
-@image{png/dens, 7cm}
-@caption{Example of Dens & Colorbar. @tdref{dens}}
+@image{../png/dens, 7cm}
+@c @caption{Example of Dens & Colorbar. @tdref{dens}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
@@ -1850,6 +1806,7 @@ gr->Dens(a);
 gr->Colorbar();
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
@@ -1857,6 +1814,7 @@ box
 dens a
 colorbar
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
@@ -1884,17 +1842,16 @@ gr.Box();
 gr.Dens(a);
 gr.Colorbar();
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Cont sample, ContF sample, Dens sample, 2D plotting samples
 @subsection Cont sample
 @cindex Cont
-
 @float
-@image{png/cont, 7cm}
-@caption{Example of Cont. @tdref{cont}}
+@image{../png/cont, 7cm}
+@c @caption{Example of Cont. @tdref{cont}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
@@ -1904,6 +1861,7 @@ gr->Box();
 gr->Cont(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
@@ -1911,11 +1869,11 @@ rotate 40 60
 box
 cont a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
 mgl_cont(gr,a,0,7,NAN);
@@ -1929,7 +1887,6 @@ real zero, nan
 zero = 0; nan = zero/zero 
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1)
 call mgl_cont(gr,a,'',7,nan)
@@ -1943,41 +1900,39 @@ gr.Rotate(40,60);
 gr.Box();
 gr.Cont(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node ContF sample, ContD sample, Cont sample, 2D plotting samples
 @subsection ContF sample
 @cindex ContF
-
 @float
-@image{png/contf, 7cm}
-@caption{Example of ContF. @tdref{contf}}
+@image{../png/contf, 7cm}
+@c @caption{Example of ContF. @tdref{contf}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);  gr->Light(true);
 gr->Box();
 gr->ContF(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
 box
 contf a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -1992,7 +1947,6 @@ real zero, nan
 zero = 0; nan = zero/zero
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
@@ -2007,17 +1961,16 @@ gr.Rotate(40,60);   gr.Light(True);
 gr.Box();
 gr.ContF(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node ContD sample, Axial sample, ContF sample, 2D plotting samples
 @subsection ContD sample
 @cindex ContD
-
 @float
-@image{png/contd, 7cm}
-@caption{Example of ContD. @tdref{contd}}
+@image{../png/contd, 7cm}
+@c @caption{Example of ContD. @tdref{contd}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40), v(9);
@@ -2028,6 +1981,7 @@ gr->ContD(v,a);
 gr->Colorbar(v);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
@@ -2036,6 +1990,7 @@ box
 contd v a
 colorbar v
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
@@ -2070,22 +2025,20 @@ gr.Box();
 gr.ContD(v,a);
 gr.Colorbar(v);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Axial sample, Grad sample, ContD sample, 2D plotting samples
 @subsection Axial sample
 @cindex Axial
-
 @float
-@image{png/axial, 7cm}
-@caption{Example of Axial. @tdref{axial}}
+@image{../png/axial, 7cm}
+@c @caption{Example of Axial. @tdref{axial}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Alpha(true);
@@ -2093,21 +2046,21 @@ gr->Box();
 gr->Axial(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
 alpha on
 box
 axial a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_alpha(gr,1);
@@ -2120,7 +2073,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_alpha(gr,1)
@@ -2136,17 +2088,16 @@ gr.Rotate(40,60);   gr.Light(True);    gr.Alpha(True);
 gr.Box();
 gr.Axial(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Grad sample, , Axial sample, 2D plotting samples
 @subsection Grad sample
 @cindex Grad
-
 @float
-@image{png/grad, 7cm}
-@caption{Example of Grad. @tdref{grad}}
+@image{../png/grad, 7cm}
+@c @caption{Example of Grad. @tdref{grad}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
@@ -2155,12 +2106,14 @@ gr->Box();  gr->Alpha(true);    gr->Dens(a);
 gr->Grad(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 box:alpha on:dens a
 grad a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
@@ -2189,12 +2142,10 @@ a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Box();   gr.Alpha(1);    gr.Dens(a);
 gr.Colorbar();
 @end verbatim
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node 3D plotting samples, Dual plotting samples, 2D plotting samples, Samples
 @section 3D plotting samples
-
 @menu
 * Surf3 sample::                
 * Cloud sample::               
@@ -2208,22 +2159,19 @@ gr.Colorbar();
 * ``Isocaps'' sample::          
 * CutOff sample::               
 @end menu
-
 @c ------------------------------------------------------------------
 @node Surf3 sample, Cloud sample, , 3D plotting samples
 @subsection Surf3 sample
 @cindex Surf3
-
 @float
-@image{png/surf3, 7cm}
-@caption{Example of Surf3. @tdref{surf3}}
+@image{../png/surf3, 7cm}
+@c @caption{Example of Surf3. @tdref{surf3}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Alpha(true);
@@ -2231,21 +2179,21 @@ gr->Box();
 gr->Surf3(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-
 rotate 40 60
 light on
 alpha on
 box
 surf3 a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_alpha(gr,1);
@@ -2258,7 +2206,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_alpha(gr,1)
@@ -2274,42 +2221,40 @@ gr.Rotate(40,60);   gr.Light(True);    gr.Alpha(True);
 gr.Box();
 gr.Surf3(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Cloud sample, CloudP sample, Surf3 sample, 3D plotting samples
 @subsection Cloud sample
 @cindex Cloud
-
 @float
-@image{png/cloud, 7cm}
-@caption{Example of Cloud. @tdref{cloud}}
+@image{../png/cloud, 7cm}
+@c @caption{Example of Cloud. @tdref{cloud}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-
 gr->Rotate(40,60);
 gr->Alpha(true);
 gr->Box();
 gr->Cloud(a,"wyrRk");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-
 rotate 40 60
 alpha on
 box
 cloud a 'wyrRk'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_alpha(gr,1);
 mgl_box(gr,1);
@@ -2321,7 +2266,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_alpha(gr,1)
 call mgl_box(gr,1)
@@ -2336,36 +2280,33 @@ gr.Rotate(40,60);   gr.Alpha(True);
 gr.Box();
 gr.Cloud(a,"wyrRk");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node CloudP sample, Dens3 sample, Cloud sample, 3D plotting samples
 @subsection CloudP sample
 @cindex CloudP
-
 @float
-@image{png/cloudp, 7cm}
-@caption{Example of CloudP. @tdref{cloudp}}
+@image{../png/cloudp, 7cm}
+@c @caption{Example of CloudP. @tdref{cloudp}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-
 gr->Rotate(40,60);
 gr->Alpha(true);
 gr->Box();
 gr->CloudP(a,"wyrRk");
 @end verbatim
 @strong{MGL code}
-
+@end ifclear
 Not available.
-
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_alpha(gr,1);
 mgl_box(gr,1);
@@ -2377,7 +2318,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_alpha(gr,1)
 call mgl_box(gr,1)
@@ -2385,36 +2325,32 @@ call mgl_cloudp(gr,a,'wyrRk',1.)
 call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
-
 Not available.
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Dens3 sample, Cont3 sample, CloudP sample, 3D plotting samples
 @subsection Dens3 sample
 @cindex Dens3
 @cindex Axis
-
 @float
-@image{png/densa, 7cm}
-@caption{Example of Dens3. @tdref{densa}}
+@image{../png/densa, 7cm}
+@c @caption{Example of Dens3. @tdref{densa}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-
 gr->Rotate(40,60);  gr->Alpha(true);    gr->Org = mglPoint(0,0,0);
 gr->Box();
 gr->DensA(a);
 gr->Axis();
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-
 rotate 40 60
 alpha on
 origin 0 0 0
@@ -2422,11 +2358,11 @@ box
 densa a
 axis
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_alpha(gr,1);
 mgl_set_origin(gr,0.,0.,0.);
@@ -2440,7 +2376,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_alpha(gr,1)
 call mgl_set_origin(gr,0.,0.,0.);
@@ -2458,40 +2393,38 @@ gr.SetOrigin(0,0,0);    gr.Box();
 gr.Axis();
 gr.DensA(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Cont3 sample, ContF3 sample, Dens3 sample, 3D plotting samples
 @subsection Cont3 sample
 @cindex Cont3
-
 @float
-@image{png/conta, 7cm}
-@caption{Example of Cont3. @tdref{conta}}
+@image{../png/conta, 7cm}
+@c @caption{Example of Cont3. @tdref{conta}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-
 gr->Rotate(40,60);
 gr->Box();
 gr->ContA(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-
 rotate 40 60
 box
 conta a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
 mgl_cont_all(gr,a,0,7);
@@ -2502,7 +2435,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1)
 call mgl_cont_all(gr,a,'',7)
@@ -2516,41 +2448,39 @@ gr.Rotate(40,60);
 gr.Box();
 gr.ContA(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node ContF3 sample, Cont projection sample, Cont3 sample, 3D plotting samples
 @subsection ContF3 sample
 @cindex ContF3
-
 @float
-@image{png/contfa, 7cm}
-@caption{Example of ContF3. @tdref{contfa}}
+@image{../png/contfa, 7cm}
+@c @caption{Example of ContF3. @tdref{contfa}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-
 gr->Rotate(40,60);  gr->Light(true);
 gr->Box();
 gr->ContFA(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-
 rotate 40 60
 light on
 box
 contfa a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -2562,7 +2492,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
@@ -2577,24 +2506,22 @@ gr.Rotate(40,60);   gr.Light(True);
 gr.Box();
 gr.ContFA(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Cont projection sample, Dens projection sample, ContF3 sample, 3D plotting samples
 @subsection Cont projection sample
 @cindex ContX
 @cindex ContY
 @cindex ContZ
-
 @float
-@image{png/cont_xyz, 7cm}
-@caption{Example of projection by Cont[XYZ]. @tdref{cont_xyz}}
+@image{../png/cont_xyz, 7cm}
+@c @caption{Example of projection by Cont[XYZ]. @tdref{cont_xyz}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-
 gr->Rotate(40,60);
 gr->Box();
 gr->ContX(a.Sum("x"),"",-1);
@@ -2602,10 +2529,10 @@ gr->ContY(a.Sum("y"),"",1);
 gr->ContZ(a.Sum("z"),"",-1);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-
 rotate 40 60
 box
 sum s a 'x'
@@ -2615,11 +2542,11 @@ conty s '' 1
 sum s a 'z'
 contz s '' -1
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(60,50,40), s;
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
 s=mgl_data_sum(a,"x"); mgl_cont_x(gr,s,0,-1.,7); mgl_delete_data(s);
@@ -2632,7 +2559,6 @@ mgl_delete_data(a);
 integer a,s, mgl_create_data_size, mgl_data_sum
 a = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1)
 s=mgl_data_sum(a,'x')
@@ -2655,24 +2581,22 @@ gr.ContX(a.Sum("x"),"",-1);
 gr.ContY(a.Sum("y"),"",1);
 gr.ContZ(a.Sum("z"),"",-1);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Dens projection sample, CutMinMax sample, Cont projection sample, 3D plotting samples
 @subsection Dens projection sample
 @cindex DensX
 @cindex DensY
 @cindex DensZ
-
 @float
-@image{png/dens_xyz, 7cm}
-@caption{Example of projection by Dens[XYZ]. @tdref{dens_xyz}}
+@image{../png/dens_xyz, 7cm}
+@c @caption{Example of projection by Dens[XYZ]. @tdref{dens_xyz}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-
 gr->Rotate(40,60);
 gr->Box();
 gr->DensX(a.Sum("x"),"",-1);
@@ -2680,10 +2604,10 @@ gr->DensY(a.Sum("y"),"",1);
 gr->DensZ(a.Sum("z"),"",-1);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-
 rotate 40 60
 box
 sum s a 'x'
@@ -2693,11 +2617,11 @@ densy s '' 1
 sum s a 'z'
 densz s '' -1
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a, s; a = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
 s=mgl_data_sum(a,"x"); mgl_dens_x(gr,s,0,-1.); mgl_delete_data(s);
@@ -2710,7 +2634,6 @@ mgl_delete_data(a);
 integer a,s, mgl_create_data_size, mgl_data_sum
 a = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1)
 s=mgl_data_sum(a,'x')
@@ -2733,24 +2656,22 @@ gr.DensX(a.Sum("x"),"",-1);
 gr.DensY(a.Sum("y"),"",1);
 gr.DensZ(a.Sum("z"),"",-1);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node CutMinMax sample, ``Isocaps'' sample, Dens projection sample, 3D plotting samples
 @subsection CutMinMax sample
 @cindex Surf3
 @cindex CutMin
 @cindex CutMax
-
 @float
-@image{png/cutminmax, 7cm}
-@caption{Example of Surf3 & CutMin, CutMax. @tdref{cutminmax}}
+@image{../png/cutminmax, 7cm}
+@c @caption{Example of Surf3 & CutMin, CutMax. @tdref{cutminmax}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Alpha(true);
@@ -2759,10 +2680,10 @@ gr->Box();
 gr->Surf3(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-
 rotate 40 60
 light on
 alpha on
@@ -2770,11 +2691,11 @@ cut 0 -1 -1 1 0 1
 box
 surf3 a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_alpha(gr,1);
@@ -2788,7 +2709,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_alpha(gr,1)
@@ -2805,7 +2725,7 @@ gr.Rotate(40,60);   gr.Light(True);    gr.Alpha(True);
 gr.SetCutBox(0,-1,-1,1,0,1);    gr.Box();
 gr.Surf3(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node ``Isocaps'' sample, CutOff sample, CutMinMax sample, 3D plotting samples
 @subsection ``Isocaps'' sample
@@ -2813,17 +2733,15 @@ gr.Surf3(a);
 @cindex ContF3
 @cindex CutMin
 @cindex CutMax
-
 @float
-@image{png/cutminmax2, 7cm}
-@caption{Example of ``Isocaps''. @tdref{cutminmax2}}
+@image{../png/cutminmax2, 7cm}
+@c @caption{Example of ``Isocaps''. @tdref{cutminmax2}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(61,51,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->CutMin = mglPoint(0,-1,-1); gr->CutMax = mglPoint(1,0,1.1);
@@ -2833,10 +2751,10 @@ gr->ContF3(a,'x',-1); gr->ContF3(a,'y',-1);
 gr->ContF3(a,'z', 0); gr->ContF3(a,'z',39);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 61 51 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-
 rotate 40 60
 light on
 cut 0 -1 -1 1 0 1.1
@@ -2847,11 +2765,11 @@ contf3 a 'y' -1
 contf3 a 'z' 0
 contf3 a 'z' 39
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(61,51,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_cut_box(gr,0.,-1.,-1.,1.,0.,1.1);
@@ -2867,7 +2785,6 @@ mgl_delete_data(a);
 @verbatim
 a = mgl_create_data_size(61,51,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_cut_box(gr,0.,-1.,-1.,1.,0.,1.1);
@@ -2889,23 +2806,21 @@ gr.Surf3(-1,a);
 gr.ContF3(a,"x",-1);    gr.ContF3(a,"y",-1);
 gr.ContF3(a,"z",0);     gr.ContF3(a,"z",39);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node CutOff sample, , ``Isocaps'' sample, 3D plotting samples
 @subsection CutOff sample
 @cindex Surf3
 @cindex CutOff
-
 @float
-@image{png/surf3_cutoff, 7cm}
-@caption{Example of Surf3 & CutOff. @tdref{surf3_cutoff}}
+@image{../png/surf3_cutoff, 7cm}
+@c @caption{Example of Surf3 & CutOff. @tdref{surf3_cutoff}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Alpha(true);
@@ -2914,10 +2829,10 @@ gr->Box();
 gr->Surf3(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-
 rotate 40 60
 light on
 alpha on
@@ -2925,11 +2840,11 @@ cut '(z>(x+0.5*y-1)^2-1) & (z>(x-0.5*y-1)^2-1)'
 box
 surf3 a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_alpha(gr,1);
@@ -2943,7 +2858,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,'-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)',0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_alpha(gr,1)
@@ -2961,12 +2875,10 @@ gr.CutOff("(z>(x+0.5*y-1)^2-1) & (z>(x-0.5*y-1)^2-1)");
 gr.Box();
 gr.Surf3(a);
 @end verbatim
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Dual plotting samples, Additional features, 3D plotting samples, Samples
 @section Dual plotting samples
-
 @menu
 * SurfC sample::                
 * SurfA sample::                
@@ -2989,47 +2901,44 @@ gr.Surf3(a);
 * Crust sample::                
 * Dots sample::                 
 @end menu
-
 @c ------------------------------------------------------------------
 @node SurfC sample, SurfA sample, , Dual plotting samples
 @subsection SurfC sample
 @cindex SurfC
-
 @float
-@image{png/surfc, 7cm}
-@caption{Example of SurfC. @tdref{surfc}}
+@image{../png/surfc, 7cm}
+@c @caption{Example of SurfC. @tdref{surfc}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40), b(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
 gr->SurfC(a,b);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 new b 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
 box
 surfc a b
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 HMDT b = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -3043,7 +2952,6 @@ a = mgl_create_data_size(50,40,1);
 b = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
@@ -3060,23 +2968,21 @@ gr.Rotate(40,60);   gr.Light(True);
 gr.Box();
 gr.SurfC(a,b);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node SurfA sample, TileS sample, SurfC sample, Dual plotting samples
 @subsection SurfA sample
 @cindex SurfA
-
 @float
-@image{png/surfa, 7cm}
-@caption{Example of SurfA. @tdref{surfa}}
+@image{../png/surfa, 7cm}
+@c @caption{Example of SurfA. @tdref{surfa}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40), b(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Alpha(true);
@@ -3084,18 +2990,19 @@ gr->Box();
 gr->SurfA(a,b);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 new b 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
 alpha on
 box
 surfa a b
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a, b;
@@ -3103,7 +3010,6 @@ a = mgl_create_data_size(50,40,1);
 b = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_alpha(gr,1);
@@ -3118,7 +3024,6 @@ a = mgl_create_data_size(50,40,1);
 b = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_alpha(gr,1);
@@ -3136,36 +3041,35 @@ gr.Rotate(40,60);   gr.Light(True);    gr.Alpha(True);
 gr.Box();
 gr.SurfC(a,b);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node TileS sample, Map sample, SurfA sample, Dual plotting samples
 @subsection Tiles sample
 @cindex TileS
-
 @float
-@image{png/tiles, 7cm}
-@caption{Example of TileS. @tdref{tiles}}
+@image{../png/tiles, 7cm}
+@c @caption{Example of TileS. @tdref{tiles}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40), b(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Box();
 gr->TileS(a,b);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 new b 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 box
 tile a b
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a, b;
@@ -3173,7 +3077,6 @@ a = mgl_create_data_size(50,40,1);
 b = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_box(gr,1);
 mgl_tiles(gr,a,b,0);
 mgl_delete_data(a); mgl_delete_data(b);
@@ -3185,7 +3088,6 @@ a = mgl_create_data_size(50,40,1);
 b = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_box(gr,1)
 call mgl_tiles(gr,a,b,'')
 call mgl_delete_data(a)
@@ -3199,28 +3101,25 @@ b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Box();
 gr.TileS(a,b);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Map sample, Traj sample, TileS sample, Dual plotting samples
 @subsection Map sample
 @cindex Map
-
 @float
-@image{png/map, 7cm}
-@caption{Example of Map. @tdref{map}}
+@image{../png/map, 7cm}
+@c @caption{Example of Map. @tdref{map}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50, 40), b(50, 40);
 gr->Puts(mglPoint(0, 0), "\\to", "", -1.4);
 gr->Axis(mglPoint(-1,-1,-2),mglPoint(1,1,2));
-
 gr->SubPlot(2, 1, 0);
 a.Fill("x", gr->Min, gr->Max);	b.Fill("y", gr->Min, gr->Max);
 gr->Puts(mglPoint(0, 1.1), "\\{x, y\\}", "C", -2);		gr->Box();
 gr->Map(a, b, "brgk", 0, false);
-
 gr->SubPlot(2, 1, 1);
 a.Fill("(x^3+y^3)/2", gr->Min, gr->Max);
 b.Fill("(x-y)/2", gr->Min, gr->Max);
@@ -3229,19 +3128,18 @@ gr->Box();
 gr->Map(a, b, "brgk", 0, false);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 new b 50 40
 text 0 0 '\to'
 zrange -2 2
-
 subplot 2 1 0
 text 0 1.1 '\{x, y\}' '' -2
 box
 fill a 'x'
 fill b 'y'
 map a b 'brgk' 0 0
-
 subplot 2 1 1
 text 0 1.1 '\{\frac{x^3+y^3}{2}, \frac{x-y}{2}\}' '' -2
 box
@@ -3249,27 +3147,25 @@ fill a '(x^3+y^3)/2'
 fill b '(x-y)/2'
 map a b 'brgk' 0 0
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 HMDT b = mgl_create_data_size(50,40,1);
 mgl_puts_ext(gr, 0.,0.,0., "\\to", "", -1.4, 't');
 mgl_set_axis_3d(gr,-1.,-1.,-2.,1.,1.,2.);
-
 mgl_subplot(gr, 2, 1, 0);
 mgl_data_fill_eq(gr, a, "x", 0, 0);
 mgl_data_fill_eq(gr, b, "y", 0, 0);
 mgl_puts_ext(gr, 0.,1.1,0., "\\{x, y\\}", "C", -2., 't');
 mgl_box(gr,1);
 mgl_map(gr, a, b, "brgk", 0, 0);
-
 mgl_subplot(gr, 2, 1, 1);
 mgl_data_fill_eq(gr, a, "(x^3+y^3)/2", 0, 0);
 mgl_data_fill_eq(gr, b, "(x-y)/2", 0, 0);
 mgl_puts_ext(gr, 0.,1.1,0., "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", "C", -2., 't');
 mgl_box(gr,1);
 mgl_map(gr, a, b, "brgk", 0, 0);
-
 mgl_box(gr,1);
 mgl_map(gr,a,b,0,0,1);
 mgl_delete_data(a); mgl_delete_data(b);
@@ -3281,14 +3177,12 @@ a = mgl_create_data_size(50,40,1);
 b = mgl_create_data_size(50,40,1);
 call mgl_puts_ext(gr, 0.,0.,0., '\to', '', -1.4, 't');
 call mgl_set_axis_3d(gr,-1.,-1.,-2.,1.,1.,2.);
-
 call mgl_subplot(gr, 2, 1, 0);
 call mgl_data_fill_eq(gr, a, 'x', 0, 0);
 call mgl_data_fill_eq(gr, b, 'y', 0, 0);
 call mgl_puts_ext(gr, 0.,1.1,0., '\{x, y\}', 'C', -2., 't');
 call mgl_box(gr,1);
 call mgl_map(gr, a, b, 'brgk', 0, 0);
-
 call mgl_subplot(gr, 2, 1, 1);
 call mgl_data_fill_eq(gr, a, '(x^3+y^3)/2', 0, 0);
 call mgl_data_fill_eq(gr, b, '(x-y)/2', 0, 0);
@@ -3305,30 +3199,27 @@ call mgl_delete_data(b)
 a, b = mglData(50,40), mglData(50,40);
 gr.Puts(0, 0, 0, "\\to", "", -1.4);
 gr.SetRanges(-1,1,-1,1,-2,2);
-
 gr.SubPlot(2, 1, 0);
 gr.Fill(a, "x");    gr.Fill(b, "y");
 gr.Puts(0, 1.1, 0, "\\{x, y\\}", "C", -2);
 gr.Box();
 gr.Map(a, b, "brgk", 0, 0);
-
 gr.SubPlot(2, 1, 1);
 gr.Fill(a, "(x^3+y^3)/2");   gr.Fill(b, "(x-y)/2");
 gr.Puts(0, 1.1, 0, "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", "C", -2);
 gr.Box();
 gr.Map(a, b, "brgk", 0, 0);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Traj sample, Vect sample, Map sample, Dual plotting samples
 @subsection Traj sample
 @cindex Traj
-
 @float
-@image{png/traj, 7cm}
-@caption{Example of Plot. @tdref{traj}}
+@image{../png/traj, 7cm}
+@c @caption{Example of Plot. @tdref{traj}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y(50,3), x(50), y1(50), y2(50);
@@ -3338,12 +3229,12 @@ y.Modify("cos(2*pi*x)",2);
 y1.Modify("0.5+0.3*cos(2*pi*x)");
 y2.Modify("0.3*sin(2*pi*x)");
 x.Fill(-1,1,'x');
-
 gr->Box();
 gr->Plot(x,y);
 gr->Traj(x,y,y1,y2);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y 50 3
 new x 50
@@ -3359,6 +3250,7 @@ box
 plot x y
 traj x y y1 y2
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y = mgl_create_data_size(50,3,1);
@@ -3411,28 +3303,26 @@ gr.Box();
 gr.Plot(x,y);
 gr.Traj(x,y,y1,y2);
 @end verbatim
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Vect sample, VectL sample, Traj sample, Dual plotting samples
 @subsection Vect sample
 @cindex Vect
-
 @float
-@image{png/vect, 7cm}
-@caption{Example of Vect. @tdref{vect}}
+@image{../png/vect, 7cm}
+@c @caption{Example of Vect. @tdref{vect}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(20,30), b(20,30);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Box();
 gr->Vect(a,b);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 20 30
 new b 20 30
@@ -3441,13 +3331,13 @@ modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 box
 vect a b
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(20,30,1);
 HMDT b = mgl_create_data_size(20,30,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_box(gr,1);
 mgl_vect_2d(gr,a,b,0,0.);
 mgl_delete_data(a); mgl_delete_data(b);
@@ -3459,7 +3349,6 @@ a = mgl_create_data_size(20,30,1);
 b = mgl_create_data_size(20,30,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_box(gr,1)
 call mgl_vect_2d(gr,a,b,'',0.)
 call mgl_delete_data(a)
@@ -3473,27 +3362,26 @@ b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Box();
 gr.Vect(a,b);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node VectL sample, VectC sample, Vect sample, Dual plotting samples
 @subsection VectL sample
 @cindex VectL
-
 @float
-@image{png/vectl, 7cm}
-@caption{Example of VectL. @tdref{vectl}}
+@image{../png/vectl, 7cm}
+@c @caption{Example of VectL. @tdref{vectl}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(20,30), b(20,30);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Box();
 gr->VectL(a,b);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 20 30
 new b 20 30
@@ -3502,6 +3390,7 @@ modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 box
 vectl a b
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a, b;
@@ -3509,7 +3398,6 @@ a = mgl_create_data_size(20,30,1);
 b = mgl_create_data_size(20,30,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_box(gr,1);
 mgl_vectl_2d(gr,a,b,0,0.);
 mgl_delete_data(a); mgl_delete_data(b);
@@ -3521,7 +3409,6 @@ a = mgl_create_data_size(20,30,1);
 b = mgl_create_data_size(20,30,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_box(gr,1)
 call mgl_vectl_2d(gr,a,b,'',0.)
 call mgl_delete_data(a)
@@ -3535,28 +3422,26 @@ b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Box();
 gr.VectL(a,b);
 @end verbatim
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node VectC sample, Flow sample, VectL sample, Dual plotting samples
 @subsection VectC sample
 @cindex VectC
-
 @float
-@image{png/vectc, 7cm}
-@caption{Example of VectC. @tdref{vectc}}
+@image{../png/vectc, 7cm}
+@c @caption{Example of VectC. @tdref{vectc}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(20,30), b(20,30);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Box();
 gr->VectC(a,b);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 20 30
 new b 20 30
@@ -3565,6 +3450,7 @@ modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 box
 vectc a b
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a, b;
@@ -3572,7 +3458,6 @@ a = mgl_create_data_size(20,30,1);
 b = mgl_create_data_size(20,30,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_box(gr,1);
 mgl_vectc_2d(gr,a,b,0,0.);
 mgl_delete_data(a); mgl_delete_data(b);
@@ -3584,7 +3469,6 @@ a = mgl_create_data_size(20,30,1);
 b = mgl_create_data_size(20,30,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_box(gr,1)
 call mgl_vectc_2d(gr,a,b,'',0.)
 call mgl_delete_data(a)
@@ -3598,28 +3482,26 @@ b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Box();
 gr.VectC(a,b);
 @end verbatim
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Flow sample, Pipe sample, VectC sample, Dual plotting samples
 @subsection Flow sample
 @cindex Flow
-
 @float
-@image{png/flow, 7cm}
-@caption{Example of Flow. @tdref{flow}}
+@image{../png/flow, 7cm}
+@c @caption{Example of Flow. @tdref{flow}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(20,30), b(20,30);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Box();
 gr->Flow(a,b);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 20 30
 new b 20 30
@@ -3628,13 +3510,13 @@ modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 box
 flow a b
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(20,30,1);
 HMDT b = mgl_create_data_size(20,30,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_box(gr,1);
 mgl_flow_2d(gr,a,b,0,5,1,0.);
 mgl_delete_data(a); mgl_delete_data(b);
@@ -3646,7 +3528,6 @@ a = mgl_create_data_size(20,30,1);
 b = mgl_create_data_size(20,30,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_box(gr,1)
 call mgl_flow_2d(gr,a,b,'',5,1,0.)
 call mgl_delete_data(a)
@@ -3660,17 +3541,16 @@ b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Box();
 gr.Flow(a,b);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Pipe sample, Dew sample, Flow sample, Dual plotting samples
 @subsection Pipe sample
 @cindex Pipe
-
 @float
-@image{png/pipe, 7cm}
-@caption{Example of Pipe. @tdref{pipe}}
+@image{../png/pipe, 7cm}
+@c @caption{Example of Pipe. @tdref{pipe}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(20,30), b(20,30);
@@ -3681,6 +3561,7 @@ gr->Box();
 gr->Pipe(a,b);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 20 30
 new b 20 30
@@ -3690,6 +3571,7 @@ light on
 box
 pipe a b
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(20,30,1);
@@ -3722,17 +3604,16 @@ b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Light(True);    gr.Box();
 gr.Pipe(a,b);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Dew sample, Surf3C sample, Pipe sample, Dual plotting samples
 @subsection Dew sample
 @cindex Dew
-
 @float
-@image{png/dew, 7cm}
-@caption{Example of Dew. @tdref{dew}}
+@image{../png/dew, 7cm}
+@c @caption{Example of Dew. @tdref{dew}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(20,30), b(20,30);
@@ -3743,6 +3624,7 @@ gr->Light(true);
 gr->Dew(a,b);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 20 30
 new b 20 30
@@ -3752,6 +3634,7 @@ box
 light on
 dew a b
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(20,30,1);
@@ -3784,23 +3667,21 @@ b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Light(True);    gr.Box();
 gr.Dew(a,b);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Surf3C sample, Surf3A sample, Dew sample, Dual plotting samples
 @subsection Surf3C sample
 @cindex Surf3C
-
 @float
-@image{png/surf3c, 7cm}
-@caption{Example of Surf3C. @tdref{surf3c}}
+@image{../png/surf3c, 7cm}
+@c @caption{Example of Surf3C. @tdref{surf3c}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40), b(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
 b.Modify("1-2*tanh(4*(x+y-1)^2)");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Alpha(true);
@@ -3808,25 +3689,25 @@ gr->Box();
 gr->Surf3C(a, b);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 60 50 40
 new b 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
 modify b '1-2*tanh(4*(x+y-1)^2)'
-
 rotate 40 60
 light on
 alpha on
 box
 surf3c a b
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(60,50,40);
 HMDT b = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
 mgl_data_modify(b,"1-2*tanh(4*(x+y-1)^2)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_alpha(gr,1);
@@ -3841,7 +3722,6 @@ a = mgl_create_data_size(60,50,40);
 b = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
 call mgl_data_modify(b,"1-2*tanh(4*(x+y-1)^2)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_alpha(gr,1)
@@ -3859,24 +3739,21 @@ gr.Rotate(40,60);   gr.Light(True);     gr.Alpha(True);
 gr.Box();
 gr.Surf3C(a,b);
 @end verbatim
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Surf3A sample, Vect 3D sample, Surf3C sample, Dual plotting samples
 @subsection Surf3A sample
 @cindex Surf3A
-
 @float
-@image{png/surf3a, 7cm}
-@caption{Example of Surf3A. @tdref{surf3a}}
+@image{../png/surf3a, 7cm}
+@c @caption{Example of Surf3A. @tdref{surf3a}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40), b(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
 b.Modify("1-2*tanh(4*(x+y-1)^2)");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Alpha(true);
@@ -3884,25 +3761,25 @@ gr->Box();
 gr->Surf3A(a, b);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 60 50 40
 new b 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
 modify b '1-2*tanh(4*(x+y-1)^2)'
-
 rotate 40 60
 light on
 alpha on
 box
 surf3a a b
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a, b; a = mgl_create_data_size(60,50,40);
 b = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
 mgl_data_modify(b,"1-2*tanh(4*(x+y-1)^2)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_alpha(gr,1);
@@ -3917,7 +3794,6 @@ a = mgl_create_data_size(60,50,40);
 b = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
 call mgl_data_modify(b,"1-2*tanh(4*(x+y-1)^2)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_alpha(gr,1)
@@ -3935,17 +3811,16 @@ gr.Rotate(40,60);   gr.Light(True);     gr.Alpha(True);
 gr.Box();
 gr.Surf3A(a,b);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Vect 3D sample, VectL 3D sample, Surf3A sample, Dual plotting samples
 @subsection Vect 3D sample
 @cindex Vect
-
 @float
-@image{png/vect3, 7cm}
-@caption{Example of Vect in 3D. @tdref{vect3}}
+@image{../png/vect3, 7cm}
+@c @caption{Example of Vect in 3D. @tdref{vect3}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
@@ -3960,6 +3835,7 @@ gr->Box();
 gr->Vect(ex, ey, ez, "bwr");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new ex 10 10 10
 new ey 10 10 10
@@ -3967,11 +3843,11 @@ new ez 10 10 10
 fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
 fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
 fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
-
 rotate 40 60
 box
 vect ex ey ez 'bwr'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT ex, ey, ez;
@@ -3984,7 +3860,6 @@ mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
          0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
 mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
          0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
 mgl_vect_3d(gr,ex,ey,ez,"bwr");
@@ -4002,7 +3877,6 @@ call mgl_data_fill_eq(gr, ey, '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - &
          0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
 call mgl_data_fill_eq(gr, ez, '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - &
          0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1);
 call mgl_vect_3d(gr,ex,ey,ez,'bwr')
@@ -4022,17 +3896,16 @@ gr.Fill(ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
 gr.Rotate(40,60);       gr.Box();
 gr.Vect(ex,ey,ez,"bwr");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node VectL 3D sample, VectC 3D sample, Vect 3D sample, Dual plotting samples
 @subsection VectL 3D sample
 @cindex VectL
-
 @float
-@image{png/vectl3, 7cm}
-@caption{Example of VectL in 3D. @tdref{vectl3}}
+@image{../png/vectl3, 7cm}
+@c @caption{Example of VectL in 3D. @tdref{vectl3}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
@@ -4047,6 +3920,7 @@ gr->Box();
 gr->VectL(ex, ey, ez, "bwr");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new ex 10 10 10
 new ey 10 10 10
@@ -4054,11 +3928,11 @@ new ez 10 10 10
 fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
 fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
 fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
-
 rotate 40 60
 box
 vectl ex ey ez 'bwr'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT ex, ey, ez;
@@ -4071,7 +3945,6 @@ mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
          0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
 mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
          0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
 mgl_vectl_3d(gr,ex,ey,ez,"bwr");
@@ -4089,7 +3962,6 @@ call mgl_data_fill_eq(gr, ey, '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - &
          0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
 call mgl_data_fill_eq(gr, ez, '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - &
          0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1);
 call mgl_vectl_3d(gr,ex,ey,ez,'bwr')
@@ -4109,17 +3981,16 @@ gr.Fill(ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
 gr.Rotate(40,60);       gr.Box();
 gr.VectL(ex,ey,ez,"bwr");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node VectC 3D sample, Flow 3D sample, VectL 3D sample, Dual plotting samples
 @subsection VectC 3D sample
 @cindex VectC
-
 @float
-@image{png/vectc3, 7cm}
-@caption{Example of VectC in 3D. @tdref{vectc3}}
+@image{../png/vectc3, 7cm}
+@c @caption{Example of VectC in 3D. @tdref{vectc3}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
@@ -4134,6 +4005,7 @@ gr->Box();
 gr->VectC(ex, ey, ez, "bwr");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new ex 10 10 10
 new ey 10 10 10
@@ -4141,11 +4013,11 @@ new ez 10 10 10
 fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
 fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
 fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
-
 rotate 40 60
 box
 vectc ex ey ez 'bwr'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT ex, ey, ez;
@@ -4158,7 +4030,6 @@ mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
          0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
 mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
          0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
 mgl_vectc_3d(gr,ex,ey,ez,"bwr");
@@ -4176,7 +4047,6 @@ call mgl_data_fill_eq(gr, ey, '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - &
          0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
 call mgl_data_fill_eq(gr, ez, '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - &
          0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1);
 call mgl_vectc_3d(gr,ex,ey,ez,'bwr')
@@ -4196,17 +4066,16 @@ gr.Fill(ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
 gr.Rotate(40,60);       gr.Box();
 gr.VectC(ex,ey,ez,"bwr");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Flow 3D sample, Pipe 3D sample, VectC 3D sample, Dual plotting samples
 @subsection Flow 3D sample
 @cindex Flow
-
 @float
-@image{png/flow3, 7cm}
-@caption{Example of Flow in 3D. @tdref{flow3}}
+@image{../png/flow3, 7cm}
+@c @caption{Example of Flow in 3D. @tdref{flow3}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData ex(30,30,30), ey(30,30,30), ez(30,30,30);
@@ -4221,6 +4090,7 @@ gr->Box();
 gr->Flow(ex, ey, ez, "bwr");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new ex 30 30 30
 new ey 30 30 30
@@ -4228,11 +4098,11 @@ new ez 30 30 30
 fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
 fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
 fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
-
 rotate 40 60
 box
 flow ex ey ez 'bwr'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT ex, ey, ez;
@@ -4245,7 +4115,6 @@ mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
          0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
 mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
          0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
 mgl_flow_3d(gr,ex,ey,ez,"bwr",3,1);
@@ -4263,7 +4132,6 @@ call mgl_data_fill_eq(gr, ey, '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - &
          0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
 call mgl_data_fill_eq(gr, ez, '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - &
          0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1);
 call mgl_flow_3d(gr,ex,ey,ez,'bwr',3,1)
@@ -4283,17 +4151,16 @@ gr.Fill(ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
 gr.Rotate(40,60);       gr.Box();
 gr.Flow(ex,ey,ez,"bwr");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Pipe 3D sample, Crust sample, Flow 3D sample, Dual plotting samples
 @subsection Pipe 3D sample
 @cindex Pipe
-
 @float
-@image{png/pipe3, 7cm}
-@caption{Example of Pipe in 3D. @tdref{pipe3}}
+@image{../png/pipe3, 7cm}
+@c @caption{Example of Pipe in 3D. @tdref{pipe3}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
@@ -4309,6 +4176,7 @@ gr->Box();
 gr->Pipe(ex, ey, ez, "bwr");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new ex 10 10 10
 new ey 10 10 10
@@ -4316,12 +4184,12 @@ new ez 10 10 10
 fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
 fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
 fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
-
 rotate 40 60
 light on
 box
 pipe ex ey ez 'bwr'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT ex, ey, ez;
@@ -4334,7 +4202,6 @@ mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
          0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
 mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
          0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -4353,7 +4220,6 @@ call mgl_data_fill_eq(gr, ey, '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - &
          0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
 call mgl_data_fill_eq(gr, ez, '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - &
          0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)',0,0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1);
 call mgl_box(gr,1);
@@ -4374,17 +4240,16 @@ gr.Fill(ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
 gr.Rotate(40,60);   gr.Light(True);    gr.Box();
 gr.Pipe(ex,ey,ez,"bwr");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Crust sample, Dots sample, Pipe 3D sample, Dual plotting samples
 @subsection Crust sample
 @cindex Crust
-
 @float
-@image{png/crust, 7cm}
-@caption{Example of Crust. @tdref{crust}}
+@image{../png/crust, 7cm}
+@c @caption{Example of Crust. @tdref{crust}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a("hotdogs.pts");
@@ -4395,6 +4260,7 @@ gr->Box();
 gr->Crust(a,"p");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 read a 'hotdogs.pts'
 norm a -1 1 on
@@ -4403,6 +4269,7 @@ light on
 box
 crust a 'p'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_file("hotdogs.pts");
@@ -4432,17 +4299,16 @@ gr.Rotate(40,60);   gr.Light(True);
 gr.Box();
 gr.Crust(a);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Dots sample, , Crust sample, Dual plotting samples
 @subsection Dots sample
 @cindex Dots
-
 @float
-@image{png/dots, 7cm}
-@caption{Example of Dots. @tdref{dots}}
+@image{../png/dots, 7cm}
+@c @caption{Example of Dots. @tdref{dots}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a("hotdogs.pts");
@@ -4452,6 +4318,7 @@ gr->Box();
 gr->Dots(a,"p");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 read a 'hotdogs.pts'
 norm a -1 1 on
@@ -4459,6 +4326,7 @@ rotate 40 60
 box
 dots a 'p'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_file("hotdogs.pts");
@@ -4486,13 +4354,10 @@ gr.Rotate(40,60);   gr.Light(True);
 gr.Box();
 gr.Dots(a);
 @end verbatim
-
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Additional features, Advanced features, Dual plotting samples, Samples
 @section Additional features
-
 @menu
 * Legend sample::               
 * Adding mesh sample::          
@@ -4506,19 +4371,17 @@ gr.Dots(a);
 * Drops sample::                
 * Molecules drawing sample::    
 @end menu
-
 @c ------------------------------------------------------------------
 @node Legend sample, Adding mesh sample, , Additional features
 @subsection Legend sample
 @cindex Plot
 @cindex Legend
 @cindex AddLegend
-
 @float
-@image{png/legend, 7cm}
-@caption{Example of Legend usage. @tdref{legend}}
+@image{../png/legend, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData f(50,3);
@@ -4533,12 +4396,12 @@ gr->AddLegend("sin(\\pi \\sqrt{\\a x})","r+");
 gr->Legend();
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new f 50 3
 modify f 'sin(2*pi*x*x)'
 modify f 'sin(2*pi*x)' 1
 modify f 'sin(2*pi*sqrt(x))' 2
-
 axis 0 -1 1 1
 box
 plot f
@@ -4548,6 +4411,7 @@ addlegend 'sin(\pi x)' 'g*'
 addlegend 'sin(\pi \sqrt{\a x})' 'r+'
 legend
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT f = mgl_create_data_size(50,3,1);
@@ -4571,7 +4435,6 @@ f = mgl_create_data_size(50,3,1)
 call mgl_data_modify(f,'sin(2*pi*x*x)',0)
 call mgl_data_modify(f,'sin(2*pi*x)',1)
 call mgl_data_modify(f,'sin(2*pi*sqrt(x))',2)
-
 call mgl_set_axis(gr, 0.,-1.,0., 1.,1.,1., 0.,0.,0.)
 call mgl_box(gr,1)
 call mgl_plot(gr,f,'')
@@ -4592,7 +4455,7 @@ gr.AddLegend("sin(\\pi x)","g*");
 gr.AddLegend("sin(\\pi\\sqrt{\\a x})","r+");
 gr.Legend();
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Adding mesh sample, Surf & Cont sample, Legend sample, Additional features
 @subsection Adding mesh sample
@@ -4601,19 +4464,17 @@ gr.Legend();
 @cindex Dens
 @cindex Cont
 @cindex Axial
-
 @float
-@image{png/samplea, 7cm}
-@caption{Example of adding mesh. @tdref{samplea}}
+@image{../png/samplea, 7cm}
+@c @caption{Example of adding mesh. @tdref{samplea}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 gr->Light(true);
 gr->Alpha(true);
-
 gr->SubPlot(2,2,0); gr->Rotate(40,60);
 gr->Surf(a,"BbcyrR#");  gr->Box();
 gr->SubPlot(2,2,1); gr->Rotate(40,60);
@@ -4624,13 +4485,12 @@ gr->SubPlot(2,2,3); gr->Rotate(40,60);
 gr->Axial(a,"BbcyrR#"); gr->Box();
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 alpha on
 light on
-
 subplot 2 2 0
 rotate 40 60
 surf a 'BbcyrR#'
@@ -4648,13 +4508,13 @@ rotate 40 60
 axial a 'BbcyrR#'
 box
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_set_alpha(gr,1);
 mgl_set_light(gr,1);
-
 mgl_subplot(gr,2,2,0); mgl_rotate(gr,40.,60.,0.);
 mgl_surf(gr,a,"BbcyrR#");       mgl_box(gr,1);
 mgl_subplot(gr,2,2,1); mgl_rotate(gr,40.,60.,0.);
@@ -4674,7 +4534,6 @@ a = mgl_create_data_size(50,40,1)
 call mgl_data_modify(a,'0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))',0)
 call mgl_set_alpha(gr,1)
 call mgl_set_light(gr,1)
-
 call mgl_subplot(gr,2,2,0)
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_surf(gr,a,'BbcyrR#')
@@ -4707,24 +4566,21 @@ gr.Rotate(40,60);   gr.Cont(a,"BbcyrR#");   gr.Box();
 gr.SubPlot(2,2,3);
 gr.Rotate(40,60);   gr.Axial(a,"BbcyrR#");  gr.Box();
 @end verbatim
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Surf & Cont sample, Flow & Dens sample, Adding mesh sample, Additional features
 @subsection Surf & Cont sample
 @cindex Surf
 @cindex Cont
-
 @float
-@image{png/surf_cont_y, 7cm}
-@caption{Example of Surf & Cont. @tdref{surf_cont_y}}
+@image{../png/surf_cont_y, 7cm}
+@c @caption{Example of Surf & Cont. @tdref{surf_cont_y}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
@@ -4732,21 +4588,21 @@ gr->Surf(a);
 gr->Cont(a,"y");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
 box
 surf a
 cont a 'y'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -4761,7 +4617,6 @@ real zero, nan
 zero = 0; nan = zero/zero
 a = mgl_create_data_size(50,40,1)
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0)
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
@@ -4777,18 +4632,17 @@ gr.Rotate(40,60);   gr.Light(True);
 gr.Box();
 gr.Surf(a);         gr.Cont(a,"y");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Flow & Dens sample, Several light sample, Surf & Cont sample, Additional features
 @subsection Flow & Dens sample
 @cindex Flow
 @cindex Dens
-
 @float
-@image{png/flow_dens, 7cm}
-@caption{Example of Flow & Dens. @tdref{flow_dens}}
+@image{../png/flow_dens, 7cm}
+@c @caption{Example of Flow & Dens. @tdref{flow_dens}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40), b(50,40), d(a);
@@ -4799,6 +4653,7 @@ gr->Box();
 gr->Flow(a,b,"br"); gr->Dens(d,"BbcyrR");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 new b 50 40
@@ -4810,6 +4665,7 @@ box
 flow a b 'br'
 dens d 'BbcyrR'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a, b, d;
@@ -4819,7 +4675,6 @@ d = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_data_modify(d,"sqrt(v^2+w^2)",a,b);
-
 mgl_box(gr,1);
 mgl_flow_2d(gr,a,b,"br",5,1,0.);
 mgl_dens(gr,d,"BbcyrR",-1.);
@@ -4834,7 +4689,6 @@ d = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_data_modify(d,"sqrt(v^2+w^2)",a,b);
-
 call mgl_box(gr,1)
 call mgl_flow_2d(gr,a,b,'br',5,1,0.)
 call mgl_dens(gr,d,'BbcyrR',-1.);
@@ -4851,23 +4705,21 @@ d.Modify("sqrt(v^2+w^2)",a,b);
 gr.Box();
 gr.Flow(a,b,"br");      gr.Dens(d,"BbcyrR");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Several light sample, Mirrored surface sample, Flow & Dens sample, Additional features
 @subsection Several light sample
 @cindex Surf
 @cindex Light
-
 @float
-@image{png/several_light, 7cm}
-@caption{Example of Surf with several light. @tdref{several_light}}
+@image{../png/several_light, 7cm}
+@c @caption{Example of Surf with several light. @tdref{several_light}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Light(1,mglPoint(0,1,0),'c');
@@ -4877,30 +4729,28 @@ gr->Box();
 gr->Surf(a,"h");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-
 rotate 40 60
 light on
 light 1 0 1 0 'c'
 light 2 1 0 0 'y'
 light 3 0 -1 0 'm'
-
 box
 surf a 'h'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_add_light_rgb(gr,1,0.,1.,0.,1, 0.,1.,1.,0.5);
 mgl_add_light_rgb(gr,2,1.,0.,0.,1, 1.,1.,0.,0.5);
 mgl_add_light_rgb(gr,3,0.,-1.,0.,1, 1.,0.,1.,0.5);
-
 mgl_box(gr,1);
 mgl_surf(gr,a,"h");
 mgl_delete_data(a);
@@ -4910,13 +4760,11 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_add_light_rgb(gr,1,0.,1.,0.,1, 0.,1.,1.,0.5)
 call mgl_add_light_rgb(gr,2,1.,0.,0.,1, 1.,1.,0.,0.5)
 call mgl_add_light_rgb(gr,3,0.,-1.,0.,1, 1.,0.,1.,0.5)
-
 call mgl_box(gr,1)
 call mgl_surf(gr,a,'h')
 call mgl_delete_data(a)
@@ -4932,33 +4780,31 @@ gr.AddLight(3,0,-1,0,"m");
 gr.Box();
 gr.Surf(a,"h")
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Mirrored surface sample, Cont with labels sample, Several light sample, Additional features
 @subsection Mirrored surface sample
 @cindex Surf
-
 @float
-@image{png/mirror, 7cm}
-@caption{Example of mirrored surface. @tdref{mirror}}
+@image{../png/mirror, 7cm}
+@c @caption{Example of mirrored surface. @tdref{mirror}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(30,40),x(30),y1(40),y2(40);
 a.Modify("pi*(1-2*x)*exp(-4*y^2-4*(2*x-1)^2)");
 x.Fill(-1,1); y1.Fill(0,1); y2.Fill(0,-1);
-
 gr->Rotate(40,60);
 gr->Light(true);
 gr->Box();
 gr->Surf(x,y1,a,"r"); gr->Surf(x,y2,a,"b");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 30 40
 modify a 'pi*(1-2*x)*exp(-4*y^2-4*(2*x-1)^2)'
-
 rotate 40 60
 light on
 surf a 'r'; yrange 0 1
@@ -4972,13 +4818,13 @@ var x 30 -1 1
 var y1 40 0 1
 var y2 40 0 -1
 modify a 'pi*(1-2*x)*exp(-4*y^2-4*(2*x-1)^2)'
-
 rotate 40 60
 light on
 surf x y1 a 'r'
 surf x y2 a 'b'
 box
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a,x,y1,y2;
@@ -4990,7 +4836,6 @@ mgl_data_modify(a,"pi*(1-2*x)*exp(-4*y^2-4*(2*x-1)^2)",0);
 mgl_data_fill(x,-1.,1.,'x');
 mgl_data_fill(y1,0.,1.,'x');
 mgl_data_fill(y2,0.,-1.,'x');
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_box(gr,1);
@@ -5009,7 +4854,6 @@ call mgl_data_modify(a,'pi*(1-2*x)*exp(-4*y^2-4*(2*x-1)^2)',0)
 call mgl_data_fill(x,-1.,1.,'x')
 call mgl_data_fill(y1,0.,1.,'x')
 call mgl_data_fill(y2,0.,-1.,'x')
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_box(gr,1)
@@ -5028,17 +4872,16 @@ x.Fill(-1,1);   y1.Fill(0,1);   y2.Fill(0,-1);
 gr.Rotate(40,60);       gr.Light(True);         gr.Box();
 gr.Surf(x,y1,a,"r");    gr.Surf(x,y2,a,"b");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Cont with labels sample, Ternary plot sample, Mirrored surface sample, Additional features
 @subsection Cont with labels sample
 @cindex Cont
-
 @float
-@image{png/contt, 7cm}
-@caption{Example of Cont with labels. @tdref{contt}}
+@image{../png/contt, 7cm}
+@c @caption{Example of Cont with labels. @tdref{contt}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
@@ -5047,12 +4890,14 @@ gr->Box();
 gr->Cont(a,"BbcyrRt");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 box
 cont a 'BbcyrRt'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
@@ -5066,7 +4911,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-
 call mgl_box(gr,1)
 call mgl_cont(gr,a,'BbcyrRt',7,0)
 call mgl_delete_data(a)
@@ -5078,18 +4922,16 @@ a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Box();
 gr.Cont(a,"BbcyrRt");
 @end verbatim
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Ternary plot sample, Coloring by coordinates sample, Cont with labels sample, Additional features
 @subsection Ternary plot sample
 @cindex Ternary
-
 @float
-@image{png/ternary, 7cm}
-@caption{Example of Ternary plot. @tdref{ternary}}
+@image{../png/ternary, 7cm}
+@c @caption{Example of Ternary plot. @tdref{ternary}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData x(50),y(50),rx(10),ry(10), a(20,30);
@@ -5097,7 +4939,6 @@ a.Modify("4*x*y");
 x.Modify("0.25*(1+cos(2*pi*x))");
 y.Modify("0.25*(1+sin(2*pi*x))");
 rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
-
 gr->Text(mglPoint(-0.8,1.3), "Ternary plot (x+y+t=1)");
 gr->Ternary(true);
 gr->Plot(x,y,"r2");
@@ -5110,6 +4951,7 @@ gr->Label('y',"y comp.");
 gr->Label('t',"t comp.");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new rx 10
 new ry 10
@@ -5133,6 +4975,7 @@ xlabel 'x comp.'
 ylabel 'y comp.'
 tlabel 't comp.'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT x,y,rx,ry,a;
@@ -5146,13 +4989,11 @@ mgl_data_modify(y,"0.25*(1+sin(2*pi*x))",0);
 mgl_data_modify(rx,"rnd",0);
 mgl_data_modify_vw(ry,"(1-v)*rnd",rx,0);
 mgl_data_modify(a,"4*x*y",0);
-
 mgl_puts_ext(gr,-0.8,1.3,0.,"Ternary plot (x+y+t=1)","C",-1.4,'t');
 mgl_set_ternary(gr,1);
 mgl_plot_xy(gr,x,y,"r2");
 mgl_plot_xy(gr,rx,ry,"q^ ");
 mgl_cont(gr,a,"",7,0.);
-
 mgl_line(gr,0.5,0.,0.,0.,0.75,0.,"g2",2);
 mgl_axis(gr,"xyz");
 mgl_axis_grid(gr,"xyz","B:");
@@ -5176,13 +5017,11 @@ call mgl_data_modify(y,'0.25*(1+sin(2*pi*x))',0)
 call mgl_data_modify(rx,'rnd',0)
 call mgl_data_modify_vw(ry,'(1-v)*rnd',rx,rx)
 call mgl_data_modify(a,'4*x*y',0)
-
 call mgl_puts_ext(gr,-0.8,1.3,0.,'Ternary plot (x+y+t=1)','C',-1.4,'t')
 call mgl_set_ternary(gr,1)
 call mgl_plot_xy(gr,x,y,'r2')
 call mgl_plot_xy(gr,rx,ry,'q^ ')
 call mgl_cont(gr,a,'',7,0.)
-
 call mgl_line(gr,0.5,0.,0.,0.,0.75,0.,'g2',2)
 call mgl_axis(gr,'xyz')
 call mgl_axis_grid(gr,'xyz','B:')
@@ -5210,40 +5049,38 @@ gr.Label("x","x comp.");
 gr.Label("y","y comp.");
 gr.Label("t","t comp.");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Coloring by coordinates sample, Drops sample, Ternary plot sample, Additional features
 @subsection Coloring by coordinates sample
 @cindex Surf3
-
 @float
-@image{png/surf3_rgbd, 7cm}
-@caption{Example of Surf3 colored by coordinates. @tdref{surf3_rgbd}}
+@image{../png/surf3_rgbd, 7cm}
+@c @caption{Example of Surf3 colored by coordinates. @tdref{surf3_rgbd}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(60,50,40);
 a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-
 gr->Rotate(40,60);
 gr->Box();
 gr->Surf3(a,"bgrd");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 60 50 40
 modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-
 rotate 40 60
 box
 surf3 a 'bgrd'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(60,50,40);
 mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 mgl_rotate(gr,40.,60.,0.);
 mgl_box(gr,1);
 mgl_surf3(gr,a,"bgrd",3);
@@ -5254,7 +5091,6 @@ mgl_delete_data(a);
 integer a, mgl_create_data_size
 a = mgl_create_data_size(60,50,40);
 call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_box(gr,1)
 call mgl_surf3(gr,a,'bgrd',3)
@@ -5267,17 +5103,16 @@ a.Modify("-2*((2*x-1)^2+(2*y-1)^2+(2*z-1)^4-(2*z-1)^2-0.1)");
 gr.Rotate(40,60);       gr.Box();
 gr.Surf3(a,"bgrd");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Drops sample, Molecules drawing sample, Coloring by coordinates sample, Additional features
 @subsection Drops sample
 @cindex Drop
-
 @float
-@image{png/drops, 7cm}
-@caption{Example of Drop(s). @tdref{drops}}
+@image{../png/drops, 7cm}
+@c @caption{Example of Drop(s). @tdref{drops}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 gr->Light(true);
@@ -5296,6 +5131,7 @@ gr->Ball(mglPoint(1,0,1),'k');
 gr->Line(mglPoint(-1,0,1),mglPoint(1,0,1),"b");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 light on
 text -1 1.2 'sh=0'
@@ -5311,12 +5147,12 @@ ball -0.33 0 1 'k'
 ball 0.33 0 1 'k'
 ball 1 0 1 'k'
 line -1 0 1 1 0 1 'b'
-
 new h 100
 modify h '0.25*(1+x)^2'
 plot h 'k|'
 text -1 0.6 'h\sim(1+sh)^2' 'rL'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 mgl_set_light(gr,1);
@@ -5366,22 +5202,20 @@ gr.Ball(-1,0,1,"k");    gr.Ball(-0.33,0,1,"k");
 gr.Ball(0.33,0,1,"k");  gr.Ball(1,0,1,"k");
 gr.Line(-1,0,1,1,0,1,"b");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Molecules drawing sample, , Drops sample, Additional features
 @subsection Molecules drawing sample
 @cindex Drop
 @cindex Sphere
-
 @float
-@image{png/molecule, 7cm}
-@caption{Example of molecules drawing. @tdref{molecule}}
+@image{../png/molecule, 7cm}
+@c @caption{Example of molecules drawing. @tdref{molecule}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 gr->Alpha(true); gr->Light(true);
-
 gr->SubPlot(2,2,0);
 gr->Text(mglPoint(0,1.2),"Methane, CH_4",0,-3); gr->Rotate(60,120);
 gr->Sphere(mglPoint(0,0,0),0.25,"k");
@@ -5393,7 +5227,6 @@ gr->Drop(mglPoint(0,0,0),mglPoint(0.47,0.82,-0.33),0.35,"h",1,2);
 gr->Sphere(mglPoint(0.33,0.57,-0.23),0.25,"g");
 gr->Drop(mglPoint(0,0,0),mglPoint(0.47,-0.82,-0.33),0.35,"h",1,2);
 gr->Sphere(mglPoint(0.33,-0.57,-0.23),0.25,"g");
-
 gr->SubPlot(2,2,1);
 gr->Text(mglPoint(0,1.2),"Water, H{_2}O",0,-3); gr->Rotate(60,100);
 gr->Sphere(mglPoint(0,0,0),0.25,"r");
@@ -5401,14 +5234,12 @@ gr->Drop(mglPoint(0,0,0),mglPoint(0.3,0.5,0),0.3,"m",1,2);
 gr->Sphere(mglPoint(0.3,0.5,0),0.25,"g");
 gr->Drop(mglPoint(0,0,0),mglPoint(0.3,-0.5,0),0.3,"m",1,2);
 gr->Sphere(mglPoint(0.3,-0.5,0),0.25,"g");
-
 gr->SubPlot(2,2,2);
 gr->Text(mglPoint(0,1.2),"Oxygen, O_2",0,-3); gr->Rotate(60,120);
 gr->Drop(mglPoint(0,0.5,0),mglPoint(0,-0.3,0),0.3,"m",1,2);
 gr->Sphere(mglPoint(0,0.5,0),0.25,"r");
 gr->Drop(mglPoint(0,-0.5,0),mglPoint(0,0.3,0),0.3,"m",1,2);
 gr->Sphere(mglPoint(0,-0.5,0),0.25,"r");
-
 gr->SubPlot(2,2,3);
 gr->Text(mglPoint(0,1.2),"Ammonia, NH_3",0,-3); gr->Rotate(60,120);
 gr->Sphere(mglPoint(0,0,0),0.25,"b");
@@ -5420,10 +5251,10 @@ gr->Drop(mglPoint(0,0,0),mglPoint(-0.65,0,0),0.32,"n",1,2);
 gr->Sphere(mglPoint(-0.65,0,0),0.25,"g");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 alpha on
 light on
-
 subplot 2 2 0
 text 0 1.2 'Methane, CH_4' '' -3
 rotate 60 120
@@ -5436,7 +5267,6 @@ drop 0 0 0 0.47 0.82 -0.33 0.35 'h' 1 2
 sphere 0.33 0.57 -0.23 0.25 'g'
 drop 0 0 0 0.47 -0.82 -0.33 0.35 'h' 1 2
 sphere 0.33 -0.57 -0.23 0.25 'g'
-
 subplot 2 2 1
 text 0 1.2 'Water, H{_2}O' '' -3
 rotate 60 100
@@ -5445,7 +5275,6 @@ drop 0 0 0 0.3 0.5 0 0.3 'm' 1 2
 sphere 0.3 0.5 0 0.25 'g'
 drop 0 0 0 0.3 -0.5 0 0.3 'm' 1 2
 sphere 0.3 -0.5 0 0.25 'g'
-
 subplot 2 2 2
 text 0 1.2 'Oxygen, O_2' '' -3
 rotate 60 120
@@ -5453,7 +5282,6 @@ drop 0 0.5 0 0 -0.3 0 0.3 'm' 1 2
 sphere 0 0.5 0 0.25 'r'
 drop 0 -0.5 0 0 0.3 0 0.3 'm' 1 2
 sphere 0 -0.5 0 0.25 'r'
-
 subplot 2 2 3
 text 0 1.2 0 'Ammonia, NH_3' '' -3
 rotate 60 120
@@ -5465,24 +5293,9 @@ sphere 0.33 -0.57 0 0.25 'g'
 drop 0 0 0 -0.65 0 0 0.32 'n' 1 2
 sphere -0.65 0 0 0.25 'g'
 @end verbatim
-@c @strong{Pure C code}
-@c @verbatim
-@c TO BE DONE
-@c @end verbatim
-@c @strong{Fortran code}
-@c @verbatim
-@c TO BE DONE
-@c @end verbatim
-@c @strong{Python}
-@c @verbatim
-@c TO BE DONE
-@c @end verbatim
-
 @c ------------------------------------------------------------------
 @node Advanced features, , Additional features, Samples
 @section Advanced features
-
-@c ------------------------------------------------------------------
 @menu
 * Curvelinear coorinates sample::  
 * 2-axes sample::               
@@ -5500,37 +5313,32 @@ sphere -0.65 0 0 0.25 'g'
 * StickPlot sample::            
 * Stereo image sample::         
 @end menu
-
+@c ------------------------------------------------------------------
 @node Curvelinear coorinates sample, 2-axes sample, , Advanced features
 @subsection Curvelinear coorinates sample
 @cindex Axis
-
 @float
-@image{png/sample3, 7cm}
-@caption{Example of curvelinear coorinates usage. @tdref{sample3}}
+@image{../png/sample3, 7cm}
+@c @caption{Example of curvelinear coorinates usage. @tdref{sample3}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 gr->Org = mglPoint(-1,1,-1);
-
 gr->SubPlot(2,2,0); gr->Rotate(60,40);
 gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
 gr->Axis(); gr->Grid();
 gr->Text(mglPoint(0,1.3,1),"Cartesian");
-
 gr->SubPlot(2,2,1); gr->Rotate(60,40);
 gr->SetFunc("y*sin(pi*x)","y*cos(pi*x)");
 gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
 gr->Axis(); gr->Grid();
 gr->Text(mglPoint(0,1.3,1),"Cylindrical");
-
 gr->SubPlot(2,2,2); gr->Rotate(60,40);
 gr->SetFunc("2*y*x","y*y - x*x");
 gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
 gr->Axis(); gr->Grid();
 gr->Text(mglPoint(0,1.3,1),"Parabolic");
-
 gr->SubPlot(2,2,3); gr->Rotate(60,40);
 gr->SetFunc("y*sin(pi*x)","y*cos(pi*x)","x+z");
 gr->Line(mglPoint(-1,0.5,0),mglPoint(1,0.5,0),"r2",100);
@@ -5539,16 +5347,15 @@ gr->Text(mglPoint(0,1.3,1),"Spiral");
 gr->Axis(0,0,0); // set to default Cartesian
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 origin -1 1 -1
-
 subplot 2 2 0
 rotate 60 40
 line -1 0.5 0 1 0.5 0 'r2'
 axis
 grid
 text 0 1.3 1 'Cartesian'
-
 subplot 2 2 1
 rotate 60 40
 axis 'y*sin(pi*x)' 'y*cos(pi*x)' ''
@@ -5556,7 +5363,6 @@ line -1 0.5 0 1 0.5 0 'r2'
 axis
 grid
 text 0 1.3 1 'Cylindrical'
-
 subplot 2 2 2
 rotate 60 40
 axis '2*y*x' 'y*y - x*x' ''
@@ -5564,7 +5370,6 @@ line -1 0.5 0 1 0.5 0 'r2'
 axis
 grid
 text 0 1.3 1 'Parabolic'
-
 subplot 2 2 3
 rotate 60 40
 axis 'y*sin(pi*x)' 'y*cos(pi*x)' 'x+z'
@@ -5574,6 +5379,7 @@ grid
 text 0 1.3 1 'Spiral'
 axis '' '' '' # set to default Cartesian
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 mgl_set_origin(gr,-1,1,-1);
@@ -5581,19 +5387,16 @@ mgl_subplot(gr,2,2,0); mgl_rotate(gr,60,40,0);
 mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
 mgl_axis(gr,"xyz"); mgl_axis_grid(gr,"xyz","B");
 mgl_text(gr,0,1.3,1,"Cartesian");
-
 mgl_subplot(gr,2,2,1); mgl_rotate(gr,60,40,0);
 mgl_set_func(gr,"y*sin(pi*x)","y*cos(pi*x)",0);
 mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
 mgl_axis(gr,"xyz"); mgl_axis_grid(gr,"xyz","B");
 mgl_text(gr,0,1.3,1,"Cylindrical");
-
 mgl_subplot(gr,2,2,2); mgl_rotate(gr,60,40,0);
 mgl_set_func(gr,"2*y*x","y*y - x*x","");
 mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
 mgl_axis(gr,"xyz"); mgl_axis_grid(gr,"xyz","B");
 mgl_text(gr,0,1.3,1,"Parabolic");
-
 mgl_subplot(gr,2,2,3); mgl_rotate(gr,60,40,0);
 mgl_set_func(gr,"y*sin(pi*x)","y*cos(pi*x)","x+z");
 mgl_line(gr,-1,0.5,0,1,0.5,0,"r2",100);
@@ -5604,14 +5407,12 @@ mgl_set_func(gr,0,0,0); /* set to default Cartesian */
 @strong{Fortran code}
 @verbatim
 call mgl_set_origin(gr,-1.,1.,-1.)
-
 call mgl_subplot(gr,2,2,0)
 call mgl_rotate(gr,60.,40.,0.)
 call mgl_line(gr,-1.,0.5,0.,1.,0.5,0.,'r2',100)
 call mgl_axis(gr,'xyz')
 call mgl_axis_grid(gr,'xyz','B')
 call mgl_text(gr,0.,1.3,1.,'Cartesian')
-
 call mgl_subplot(gr,2,2,1)
 call mgl_rotate(gr,60.,40.,0.)
 call mgl_set_func(gr,'y*sin(pi*x)','y*cos(pi*x)','')
@@ -5619,7 +5420,6 @@ call mgl_line(gr,-1.,0.5,0.,1.,0.5,0.,'r2',100)
 call mgl_axis(gr,'xyz')
 call mgl_axis_grid(gr,'xyz','B')
 call mgl_text(gr,0.,1.3,1.,'Cylindrical')
-
 call mgl_subplot(gr,2,2,2)
 call mgl_rotate(gr,60.,40.,0.)
 call mgl_set_func(gr,'2*y*x','y*y - x*x','')
@@ -5627,7 +5427,6 @@ call mgl_line(gr,-1.,0.5,0.,1.,0.5,0.,'r2',100)
 call mgl_axis(gr,'xyz')
 call mgl_axis_grid(gr,'xyz','B')
 call mgl_text(gr,0.,1.3,1.,"Parabolic")
-
 call mgl_subplot(gr,2,2,3)
 call mgl_rotate(gr,60.,40.,0.)
 call mgl_set_func(gr,'y*sin(pi*x)','y*cos(pi*x)','x+z')
@@ -5640,24 +5439,20 @@ call mgl_set_func(gr,'','','') ! set to default Cartesian
 @strong{Python}
 @verbatim
 gr.SetOrigin(-1,1,-1);
-
 gr.SubPlot(2,2,0);              gr.Rotate(60,40);
 gr.Line(-1,0.5,0,1,0.5,0,"r2",100);
 gr.Axis();              gr.Grid();
 gr.Puts(0,1.3,1,"Gartesian","rC",-1.5);
-
 gr.SubPlot(2,2,1);  gr.Rotate(60,40);
 gr.SetFunc("y*sin(pi*x)","y*cos(pi*x)");
 gr.Line(-1,0.5,0,1,0.5,0,"r2",100);
 gr.Axis();          gr.Grid();
 gr.Puts(0,1.3,1,"Cylindrical","rC",-1.5);
-
 gr.SubPlot(2,2,2);  gr.Rotate(60,40);
 gr.SetFunc("2*y*x","y*y-x*x");
 gr.Line(-1,0.5,0,1,0.5,0,"r2",100);
 gr.Axis();          gr.Grid();
 gr.Puts(0,1.3,1,"Parabolic","rC",-1.5);
-
 gr.SubPlot(2,2,3);  gr.Rotate(60,40);
 gr.SetFunc("y*sin(pi*x)","y*cos(pi*x)","x+z");
 gr.Line(-1,0.5,0,1,0.5,0,"r2",100);
@@ -5665,17 +5460,16 @@ gr.Axis();          gr.Grid();
 gr.Puts(0,1.3,1,"Spiral","rC",-1.5);
 gr.SetFunc("","");   # set to default Gartesian
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node 2-axes sample, Semi-log sample, Curvelinear coorinates sample, Advanced features
 @subsection 2-axes sample
 @cindex Axis
-
 @float
-@image{png/2_axis, 7cm}
-@caption{Example of 2 axes on the plot. @tdref{2_axis}}
+@image{../png/2_axis, 7cm}
+@c @caption{Example of 2 axes on the plot. @tdref{2_axis}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData y1(50), y2(50);
@@ -5688,6 +5482,7 @@ gr->Axis(); gr->Label('y',"axis 2",0);
 gr->Stem(y2,"r");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new y1 50
 new y2 50
@@ -5704,6 +5499,7 @@ axis
 ylabel 'axis 2' 0
 stem y2 'r'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT y1 = mgl_create_data_size(50,1,1);
@@ -5715,7 +5511,6 @@ mgl_set_origin(gr,-1.,-1.,-1.);
 mgl_axis(gr,"xyz");
 mgl_label_ext(gr,'y',"axis 1",0,-1.4,0.);
 mgl_plot(gr,y1,"b");
-
 mgl_set_axis_2d(gr,0.,0.,1.,1.);
 mgl_set_origin(gr,1.,1.,1.);
 mgl_axis(gr,"xyz");
@@ -5734,7 +5529,6 @@ call mgl_set_origin(gr,-1.,-1.,-1.)
 call mgl_axis(gr,'xyz')
 call mgl_label_ext(gr,'y','axis 1',0,-1.4,0.)
 call mgl_plot(gr,y1,'b')
-
 call mgl_set_axis_2d(gr,0.,0.,1.,1.)
 call mgl_set_origin(gr,1.,1.,1.)
 call mgl_axis(gr,'xyz')
@@ -5748,49 +5542,44 @@ y1.Modify("0.3*sin(2*pi*x)");   y2.Modify("0.5+0.3*cos(2*pi*x)");
 gr.SetRanges(-1,1,-1,1);   gr.SetOrigin(-1,-1);
 gr.Axis();      gr.Label("y","axis 1",0);
 gr.Plot(y1,"b");
-
 gr.SetRanges(0,1,0,1);      gr.SetOrigin(1,1);
 gr.Axis();      gr.Label("y","axis 2",0);
 gr.Stem(y2,"r");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Semi-log sample, Log-log sample, 2-axes sample, Advanced features
 @subsection Semi-log sample
 @cindex Axis
 @cindex SetTicks
 @cindex Plot
-
 @float
-@image{png/semilog, 7cm}
-@caption{Example of semi-log plot. @tdref{semilog}}
+@image{../png/semilog, 7cm}
+@c @caption{Example of semi-log plot. @tdref{semilog}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData x(2000), y(2000);
 x.Modify("0.01/(x+10^(-5))"); y.Modify("sin(1/v)",x);
-
 gr->Axis(mglPoint(0.01,-1),mglPoint(1000,1),mglPoint(0.01,-1));
 gr->SetFunc("lg(x)",0);  gr->SetTicks('x',0);
-
 gr->Box();
 gr->Plot(x,y,"b2");
 gr->Axis(); gr->Grid("xy","g");
 gr->Label('x',"x",0);   gr->Label('y', "y = sin 1/x",0);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new x 2000
 new y 2000
 modify x '0.01/(x+10^(-5))'
 modify y 'sin(1/v)' x
-
 xrange 0.01 1000
 origin 0.01 -1 0
 xtick 0
 axis 'lg(x)' '' ''
-
 plot x y 'b2'
 axis
 grid 'xy' 'g'
@@ -5798,17 +5587,16 @@ xlabel 'x' 0
 ylabel 'y = sin 1/x' 0
 box
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT x = mgl_create_data_size(2000,1,1);
 HMDT y = mgl_create_data_size(2000,1,1);
 mgl_data_modify(x,"0.01/(x+10^(-5))",0);
 mgl_data_modify_vw(y,"sin(1/v)",x,0);
-
 mgl_set_axis(gr,0.01,-1.,0.,1000.,1.,0.,0.01,-1.,0.);
 mgl_set_func(gr,"lg(x)",0,0);
 mgl_set_ticks(gr,0.,-5.,-5.);
-
 mgl_box(gr,1);
 mgl_plot_xy(gr,x,y,"b2");
 mgl_axis(gr,"xy"); mgl_axis_grid(gr,"xy","g");
@@ -5823,11 +5611,9 @@ x = mgl_create_data_size(2000,1,1)
 y = mgl_create_data_size(2000,1,1)
 call mgl_data_modify(x,'0.01/(x+10^(-5))',0)
 call mgl_data_modify_vw(y,'sin(1/v)',x,x)
-
 call mgl_set_axis(gr,0.01,-1.,0.,1000.,1.,0.,0.01,-1.,0.)
 call mgl_set_func(gr,'lg(x)','','')
 call mgl_set_ticks(gr,0.,-5.,-5.)
-
 call mgl_box(gr,1)
 call mgl_plot_xy(gr,x,y,'b2')
 call mgl_axis(gr,'xy')
@@ -5841,45 +5627,41 @@ call mgl_delete_data(y)
 @verbatim
 TO BE DONE
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Log-log sample, Fitting sample, Semi-log sample, Advanced features
 @subsection Log-log sample
 @cindex Axis
 @cindex SetTicks
 @cindex Plot
-
 @float
-@image{png/loglog, 7cm}
-@caption{Example of log-log plot. @tdref{loglog}}
+@image{../png/loglog, 7cm}
+@c @caption{Example of log-log plot. @tdref{loglog}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData x(100), y(100);
 x.Modify("pow(10,6*x-3)"); y.Modify("sqrt(1+v^2)",x);
-
 gr->Axis(mglPoint(0.001,0.1),mglPoint(1000,1000),mglPoint(0.001,0.1));
 gr->SetFunc("lg(x)","lg(y)");
 gr->SetTicks('x',0);    gr->SetTicks('y',0);
-
 gr->Box();
 gr->Plot(x,y,"b2");
 gr->Axis(); gr->Grid("xy","g;");
 gr->Label('x',"x",0); gr->Label('y', "y=\\sqrt{1+x^2}",0);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new x 100
 new y 100
 modify x 'pow(10,6*x-3)'
 modify y 'sqrt(1+v^2)' x
-
 axis 0.001 0.1 1000 1000
 xtick 0
 ytick 0
 axis 'lg(x)' 'lg(y)' ''
-
 plot x y 'b2'
 axis
 grid 'xy' 'g;'
@@ -5887,17 +5669,16 @@ xlabel 'x' 0
 ylabel 'y=\sqrt{1+x^2}' 0
 box
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT x = mgl_create_data_size(100,1,1);
 HMDT y = mgl_create_data_size(100,1,1);
 mgl_data_modify(x,"pow(10,6*x-3)",0);
 mgl_data_modify_vw(y,"sqrt(1+v^2)",x,0);
-
 mgl_set_axis(gr,0.001,0.1,0.,1000.,1000.,0.,0.001,0.1,0.);
 mgl_set_func(gr,"lg(x)","lg(y)",0);
 mgl_set_ticks(gr,0.,0.,-5.);
-
 mgl_box(gr,1);
 mgl_plot_xy(gr,x,y,"b2");
 mgl_axis(gr,"xy"); mgl_axis_grid(gr,"xy","g;");
@@ -5912,11 +5693,9 @@ x = mgl_create_data_size(100,1,1)
 y = mgl_create_data_size(100,1,1)
 call mgl_data_modify(x,'pow(10,6*x-3)',0)
 call mgl_data_modify_vw(y,'sqrt(1+v^2)',x,x)
-
 call mgl_set_axis(gr,0.001,0.1,0.,1000.,1000.,0.,0.001,0.1,0.)
 call mgl_set_func(gr,'lg(x)','lg(y)','')
 call mgl_set_ticks(gr,0.,0.,-5.)
-
 call mgl_box(gr,1)
 call mgl_plot_xy(gr,x,y,'b2')
 call mgl_axis(gr,'xy')
@@ -5937,28 +5716,25 @@ gr.Box();               gr.Plot(x,y,"b2");
 gr.Axis();              gr.Grid("xy","g;");
 gr.Label("x","x",0);    gr.Label("y","y=\\sqrt{1+x^2}",0);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Fitting sample, Envelop sample, Log-log sample, Advanced features
 @subsection Fitting sample
 @cindex Fit
 @cindex PutsFit
-
 @float
-@image{png/fit, 7cm}
-@caption{Example of nonlinear fitting. @tdref{fit}}
+@image{../png/fit, 7cm}
+@c @caption{Example of nonlinear fitting. @tdref{fit}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData rnd(100), in(100), res;
 rnd.Fill("0.4*rnd+0.1+sin(2*pi*x)", gr->Min, gr->Max);
 in.Fill("0.3+sin(2*pi*x)", gr->Min, gr->Max);
-
 gr->Axis(mglPoint(-1,-2), mglPoint(1,2));
 gr->Plot(rnd, ". ");
 gr->Box();
-
 float ini[3] = {1,1,3};
 gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", ini);
 gr->Plot(res, "r");
@@ -5968,16 +5744,15 @@ gr->PutsFit(mglPoint(0, -1.8), "y = ", "C:r", -1);
 gr->Text(mglPoint(0, 2.2), "initial: y = 0.3+sin(2\\pi x)", "C:b", -1);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new rnd 100
 fill rnd '0.4*rnd+0.1+sin(2*pi*x)'
 new in 100
 fill in '0.3+sin(2*pi*x)'
-
 yrange -2 2
 plot rnd '. '
 box
-
 list ini 1 1 3
 fit res rnd 'a+b*sin(c*x)' 'abc' ini
 plot res 'r'
@@ -5986,6 +5761,7 @@ text -1 -1.3 'fitted:' 'L:r' -1
 putsfit 0 -1.8 'y = ' 'C:r'
 text 0 2.2 'initial: y = 0.3+sin(2\pi x)' 'C:b' -1
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT rnd,in,res;
@@ -5998,7 +5774,6 @@ mgl_data_modify(in,"0.3+sin(4*pi*x)",0);
 mgl_set_axis_2d(gr,-1.,-2.,1.,2.);
 mgl_plot(gr,rnd,". ");
 mgl_box(gr,1);
-
 mgl_fit_1(gr,res,rnd,"a+b*sin(c*x)","abc",ini);
 mgl_plot(gr,res,"r");   mgl_plot(gr,in,"b");
 mgl_puts_ext(gr,-1.,-1.3,0.,"fitted:","L:r",-1.,'t');
@@ -6018,7 +5793,6 @@ call mgl_data_modify(in,"0.3+sin(4*pi*x)",0);
 call mgl_set_axis_2d(gr,-1.,-2.,1.,2.);
 call mgl_plot(gr,rnd,". ");
 call mgl_box(gr,1);
-
 call mgl_fit_1(gr,res,rnd,"a+b*sin(c*x)","abc",ini);
 call mgl_plot(gr,res,"r");
 call mgl_plot(gr,in,"b");
@@ -6034,7 +5808,6 @@ In.Modify("0.3+sin(4*pi*x)");
 gr.SetRanges(-1,1,-2,2);
 gr.Plot(rnd,". ");
 gr.Box();
-
 ini[0], ini[1], ini[2] = 1, 1, 3;
 gr.Fit(res,rnd,"a+b*sin(c*x)","abc",ini);
 gr.Plot(res,"r");   gr.Plot(In,"b");
@@ -6042,17 +5815,16 @@ gr.Puts(-1,-1.3,0,"fitted:","L:r",-1);
 gr.PutsFit(0,-1.8,0,"y = ","C:r",-1);
 gr.Puts(0,2.2,0,"initial: y = 0.3+sin(2\\pi x)","C:b",-1);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Envelop sample, Sew sample, Fitting sample, Advanced features
 @subsection Envelop sample
 @cindex Envelop
-
 @float
-@image{png/envelop, 7cm}
-@caption{Example of envelop reconstruction.}@c @tdref{envelop}}
+@image{../png/envelop, 7cm}
+@c @caption{Example of envelop reconstruction.}@c @tdref{envelop}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(1000);
@@ -6063,6 +5835,7 @@ gr->Plot(a, "r");
 gr->Axis();
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 1000
 fill a 'exp(-8*x^2)*sin(10*pi*x)'
@@ -6071,6 +5844,7 @@ envelop a
 plot a 'r'
 axis
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(1000,1,1);
@@ -6099,17 +5873,16 @@ a.Envelop("x");
 gr.Plot(a,"r");
 gr.Axis();
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Sew sample, STFA sample, Envelop sample, Advanced features
 @subsection Sew sample
 @cindex Sew
-
 @float
-@image{png/sew, 7cm}
-@caption{Example of phase ``sewing''.}@c @tdref{sew}}
+@image{../png/sew, 7cm}
+@c @caption{Example of phase ``sewing''.}@c @tdref{sew}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(100, 100);
@@ -6123,6 +5896,7 @@ gr->Surf(a, "r");
 gr->Box();
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 100 100
 modify a 'mod((y^2-(1-x)^2)/2,0.1)'
@@ -6134,6 +5908,7 @@ sew a 'xy' 0.1
 surf a 'r'
 box
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(100,100,1);
@@ -6141,7 +5916,6 @@ mgl_data_modify(a, "mod((y^2-(1-x)^2)/2, 0.1)", 0);
 mgl_rotate(gr,40.,60.,0.);
 mgl_set_light(gr,1);
 mgl_set_alpha(gr,1);
-
 mgl_surf(gr,a,"b");
 mgl_data_sew(a,"xy",0.1);
 mgl_surf(gr,a,"r");
@@ -6155,7 +5929,6 @@ call mgl_data_modify(a, 'mod((y^2-(1-x)^2)/2, 0.1)', 0)
 call mgl_rotate(gr,40.,60.,0.)
 call mgl_set_light(gr,1)
 call mgl_set_alpha(gr,1)
-
 call mgl_surf(gr,a,'b')
 call mgl_data_sew(a,'xy',0.1)
 call mgl_surf(gr,a,'r')
@@ -6171,17 +5944,16 @@ a.Sew("xy", 0.1);
 gr.Surf(a, "r");
 gr.Box();
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node STFA sample, PDE sample, Sew sample, Advanced features
 @subsection STFA sample
 @cindex STFA
-
 @float
-@image{png/stfa, 7cm}
-@caption{Example of Short Time Fourier Analysis.}@c @tdref{stfa}}
+@image{../png/stfa, 7cm}
+@c @caption{Example of Short Time Fourier Analysis.}@c @tdref{stfa}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(2000), b(2000);
@@ -6192,7 +5964,6 @@ gr->SubPlot(1, 2, 0);
 gr->Plot(a);
 gr->Axis();
 gr->Label('x', "\\i t");
-
 gr->SubPlot(1, 2, 1);
 gr->STFA(a, b, 64);
 gr->Axis();
@@ -6200,6 +5971,7 @@ gr->Label('x', "\\i t");
 gr->Label('y', "\\omega", 0);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 2000
 new b 2000
@@ -6215,6 +5987,7 @@ axis
 ylabel '\omega' 0
 xlabel '\i t'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(2000,1,1);
@@ -6225,7 +5998,6 @@ mgl_subplot(gr,1,2,0);
 mgl_plot(gr,a,"");
 mgl_axis(gr,"xy");
 mgl_label(gr,'x', "\\i t");
-
 mgl_subplot(gr,1,2,1);
 mgl_stfa(gr,a,b,64,"",0.);
 mgl_axis(gr,"xy");
@@ -6243,7 +6015,6 @@ call mgl_subplot(gr,1,2,0)
 call mgl_plot(gr,a,'')
 call mgl_axis(gr,'xy')
 call mgl_label(gr,'x', '\i t')
-
 call mgl_subplot(gr,1,2,1)
 call mgl_stfa(gr,a,b,64,'',0.)
 call mgl_axis(gr,'xy')
@@ -6259,25 +6030,23 @@ gr.SubPlot(1, 2, 0);
 gr.Plot(a);
 gr.Axis();
 gr.Label('x', "\\i t");
-
 gr.SubPlot(1, 2, 1);
 gr.STFA(a, b, 64);
 gr.Axis();
 gr.Label('x', "\\i t");
 gr.Label('y', "\\omega", 0);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node PDE sample, Beam tracing sample, STFA sample, Advanced features
 @subsection PDE sample
 @cindex mglPDE
 @cindex mglRay
-
 @float
-@image{png/pde, 7cm}
-@caption{Example of Partial Differential Eduation solving.}@c @tdref{pde}}
+@image{../png/pde, 7cm}
+@c @caption{Example of Partial Differential Eduation solving.}@c @tdref{pde}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a,re(128),im(128);
@@ -6296,23 +6065,23 @@ gr->Title("\\r{Equation:} ik_0\\partial_zu + \\Delta u + x\\cdot u + \
 i \\frac{x+z}{2}\\cdot u = 0", "iC", -1.5);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 axis
 xlabel '\i x'
 ylabel '\i z'
-
 new re 128
 new im 128
 fill re 'exp(-48*(x+0.7)^2)'
 pde a 'p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)' re im 0.01 30
 transpose a
-
 crange 0 1
 dens a 'wyrRk'
 fplot '-x' 'k|'
 text 0 0.85 'absorption: (x+z)/2 for x+z>0' '' -1
 title 'Equation: ik_0\partial_zu + \Delta u + x\cdot u + i \frac{x+z}{2}\cdot u = 0' 'iC' -1.5
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data();
@@ -6321,7 +6090,6 @@ HMDT im = mgl_create_data_size(128,1,1);
 mgl_axis(gr,"xyz");
 mgl_label(gr,'x', "\\i x");
 mgl_label(gr,'y', "\\i z");
-
 mgl_data_fill_eq(gr,re,"exp(-48*(x+0.7)^2)", 0, 0);
 a = mgl_pde_solve(gr, "p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)", re, im, 0.01, 30.);
 mgl_data_transpose(a, "yxz");
@@ -6344,7 +6112,6 @@ im = mgl_create_data_size(128,1,1)
 call mgl_axis(gr,'xyz')
 call mgl_label(gr,'x', '\i x')
 call mgl_label(gr,'y', '\i z')
-
 call mgl_data_fill_eq(gr,re,'exp(-48*(x+0.7)^2)', 0, 0)
 a = mgl_pde_solve(gr, 'p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)', re, im, 0.01, 30.)
 call mgl_data_transpose(a, 'yxz')
@@ -6375,18 +6142,17 @@ gr.Puts(0, 0.85, 0., "absorption: (x+z)/2 for x+z>0");
 gr.Title("\\r{Equation:} ik_0\\partial_zu + \\Delta u + x\\cdot u + \
 i \\frac{x+z}{2}\\cdot u = 0", "iC", -1.5);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Beam tracing sample, Parser sample, PDE sample, Advanced features
 @subsection Beam tracing sample
 @cindex mglQO2d
 @cindex mglRay
-
 @float
-@image{png/qo2d, 7cm}
-@caption{Example of ray and beam tracing. Compare with @ref{PDE sample}.}@c @tdref{qo2d}}
+@image{../png/qo2d, 7cm}
+@c @caption{Example of ray and beam tracing. Compare with @ref{PDE sample}.}@c @tdref{qo2d}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData r, xx, yy, a, im(128), re(128);
@@ -6405,6 +6171,7 @@ gr->Puts(mglPoint(0.7, -0.05), "central ray");
 gr->Title("Beam and ray tracing", "C", -1.5);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 define $1 'p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)'
 ray r $1 -0.7 -1 0 0 0.5 0 0.02 2
@@ -6412,14 +6179,12 @@ plot r(0) r(1) 'k'
 axis
 xlabel '\i x'
 ylabel '\i z'
-
 new re 128
 new im 128
 new xx
 new yy
 fill re 'exp(-48*x^2)'
 qo2d a $1 re im r 1 30 xx yy 
-
 crange 0 1
 dens xx yy a 'wyrRk'
 fplot '-x' 'k|'
@@ -6427,6 +6192,7 @@ text -0.8 0.85 'absorption: (x+y)/2 for x+y>0' 'L' -1
 text 0.5 -0.05 'central ray' 'L' -1
 title 'Beam and ray tracing' 'C' -1.5
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 const char *ham = "p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)";
@@ -6440,7 +6206,6 @@ mgl_plot_xy(gr, xx, yy, "k");
 mgl_axis(gr,"xyz");
 mgl_label(gr,'x',"\\i x");
 mgl_label(gr,'y',"\\i z");
-
 mgl_data_fill_eq(gr,re,"exp(-48*x^2)", 0, 0);
 a = mgl_qo2d_solve(ham, re, im, r, 1, 30, xx, yy);
 mgl_set_caxis(gr,0.,1.);
@@ -6459,7 +6224,6 @@ integer r, xx, yy, a, im, re, mgl_create_data_size
 integer mgl_data_subdata, mgl_ray_trace, mgl_qo2d_solve
 character*64 ham
 ham = 'p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)'
-
 im = mgl_create_data_size(128,1,1)
 re = mgl_create_data_size(128,1,1)
 r = mgl_ray_trace(ham, -0.7, -1., 0., 0., 0.5, 0., 0.02, 2.)
@@ -6469,7 +6233,6 @@ call mgl_plot_xy(gr, xx, yy, 'k')
 call mgl_axis(gr,'xyz')
 call mgl_label(gr,'x','\i x')
 call mgl_label(gr,'y','\i z')
-
 call mgl_data_fill_eq(gr,re,'exp(-48*x^2)', 0, 0)
 a = mgl_qo2d_solve(ham, re, im, r, 1., 30., xx, yy)
 call mgl_set_caxis(gr,0.,1.)
@@ -6491,10 +6254,8 @@ ham = "p^2+q^2-x-1+i*0.5*(y+x)*(y>-x)";
 r, xx, yy, a = mglData(), mglData(), mglData(), mglData();
 im, re = mglData(128), mglData(128);
 r = mglRay(ham, mglPoint(-0.7, -1), mglPoint(0, 0.5), 0.02, 2);
-
 gr.Plot(r.SubData(0), r.SubData(1), "k");
 gr.Axis();	gr.Label('x', "\\i x");	gr.Label('y', "\\i z");
-
 gr.Fill(re,"exp(-48*x^2)");
 a = mglQO2d(ham, re, im, r, 1, 30, xx, yy);
 gr.SetCRange(0, 1);
@@ -6504,17 +6265,16 @@ gr.Puts(0, 0.85, 0, "absorption: (x+y)/2 for x+y>0");
 gr.Puts(0.7, -0.05, 0, "central ray");
 gr.Title("Beam and ray tracing", "C", -1.5);
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Parser sample, Manual ticks sample, Beam tracing sample, Advanced features
 @subsection Parser sample
 @cindex mglParse
-
+@ifclear UDAV
 @float
-@image{png/parser, 7cm}
-@caption{Example of MGL parsing.}@c @tdref{parser}}
+@image{../png/parser, 7cm}
+@c @caption{Example of MGL parsing.}@c @tdref{parser}}
 @end float
-
 @strong{C++ code}
 @verbatim
 float a[100];   // let a_i = sin(4*pi*x), x=0...1
@@ -6588,17 +6348,16 @@ parser.Execute(gr, "xlabel 'x'\nylabel 'y'");
 # also you may use cycles or conditions in script
 parser.Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Manual ticks sample, ColumnPlot sample, Parser sample, Advanced features
 @subsection Tick values sample
 @cindex SetTicksVal
-
 @float
-@image{png/tval, 7cm}
-@caption{Example of manual tick values.}@c @tdref{tval}}
+@image{../png/tval, 7cm}
+@c @caption{Example of manual tick values.}@c @tdref{tval}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 gr->Axis(mglPoint(-M_PI, 0), mglPoint(M_PI, 2));
@@ -6608,6 +6367,7 @@ gr->Axis();     gr->Grid();
 gr->Plot("2*cos(x^2)^2", "r2", NAN, 300);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 axis -pi 0 pi 2
 xtick -pi '-\pi' -1.571 '-\pi/2' 0 '0' 0.886 'x^*' 1.571 '\pi/2' pi '\pi'
@@ -6615,6 +6375,7 @@ axis
 grid
 fplot '2*cos(x^2)^2' 'r2' nan 300
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 mgl_set_axis_2d(gr, -M_PI, 0, M_PI, 2);
@@ -6638,21 +6399,16 @@ parser.Execute(gr, "xtick -pi '-\pi' -1.571 '-\pi/2' 0 '0' "
 gr.Axis();     gr.Grid();
 gr.Plot("2*cos(x^2)^2", "r2", 300);
 @end verbatim
-
-
-
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node ColumnPlot sample, StickPlot sample, Manual ticks sample, Advanced features
 @subsection ColumnPlot sample
-@cindex SetTicksVal
-
+@cindex ColumnPlot
 @float
-@image{png/column, 7cm}
-@caption{Example of ColumnPlot.}@c @tdref{column}}
+@image{../png/column, 7cm}
+@c @caption{Example of ColumnPlot.}@c @tdref{column}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 char str[32];
@@ -6667,6 +6423,7 @@ for(int i=0;i<4;i++)
 }
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 for $1 0 3
 columnplot 4 $1
@@ -6675,6 +6432,7 @@ text -0.5 0.5 'Plot $1 of 4'
 fplot 'sin(pi*x+pi*$1/2)'
 next
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 int i;
@@ -6695,18 +6453,18 @@ NOT AVAILABLE
 @end verbatim
 @strong{Python}
 @verbatim
+NOT AVAILABLE
 @end verbatim
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node StickPlot sample, Stereo image sample, ColumnPlot sample, Advanced features
 @subsection StickPlot sample
-@cindex SetTicksVal
-
+@cindex StickPlot
 @float
-@image{png/stick, 7cm}
-@caption{Example of StickPlot.}@c @tdref{stick}}
+@image{../png/stick, 7cm}
+@c @caption{Example of StickPlot.}@c @tdref{stick}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 gr->SetRanges(-1, 1, -1, 1, 0, 1);  gr->Light(true);
@@ -6722,6 +6480,7 @@ gr->Text(mglPoint(0.2, 0, 1.2), "z=2", "", -2);
 gr->Label('x',"\\tau", 0);  gr->Label('y', "\\rho");
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 ranges -1 1 -1 1 0 1:light on
 stickplot 3 0 40 30 : axis 'xyz_'
@@ -6735,6 +6494,7 @@ fsurf 'exp(-10*y^2/5-6*x^2)/sqrt(5)'
 text 0.2 0 1.2 'z=2' '' -2
 xlabel '\tau' 0 : ylabel '\rho'
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 mgl_set_axis_3d(gr, -1, -1, 0, 1, 1, 1);
@@ -6772,51 +6532,46 @@ gr->Surf("exp(-10*y^2/5-6*x^2)/sqrt(5)");
 gr->Text(mglPoint(0.2, 0, 1.2), "z=2", "", -2);
 gr->Label('x',"\\tau", 0);  gr->Label('y', "\\rho");
 @end verbatim
-
-
+@end ifclear
 @c ------------------------------------------------------------------
 @node Stereo image sample, , StickPlot sample, Advanced features
 @subsection Stereo image sample
-
 @float
-@image{png/stereo, 7cm}
-@caption{Example of stereo image.}@c @tdref{stereo}}
+@image{../png/stereo, 7cm}
+@c @caption{Example of stereo image.}@c @tdref{stereo}}
 @end float
-
+@ifclear UDAV
 @strong{C++ code}
 @verbatim
 mglData a(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 gr->Light(true);
-
 gr->SubPlot(2,1,0);
 gr->Rotate(40,60+3);
 gr->Box();   gr->Surf(a);
-
 gr->SubPlot(2,1,1);
 gr->Rotate(40,60-3);
 gr->Box();   gr->Surf(a);
 @end verbatim
 @strong{MGL code}
+@end ifclear
 @verbatim
 new a 50 40
 modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
 light on
-
 subplot 2 1 0
 rotate 40 60+3
 box:surf a
-
 subplot 2 1 1
 rotate 40 60-3
 box:surf a
 @end verbatim
+@ifclear UDAV
 @strong{Pure C code}
 @verbatim
 HMDT a = mgl_create_data_size(50,40,1);
 mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 mgl_set_light(gr,1);
-
 mgl_subplot(gr,2,1,0);
 mgl_rotate(gr,40.,60.+3.,0.);
 mgl_box(gr,1);
@@ -6825,7 +6580,6 @@ mgl_subplot(gr,2,1,1);
 mgl_rotate(gr,40.,60.-3.,0.);
 mgl_box(gr,1);
 mgl_surf(gr,a,0);
-
 mgl_delete_data(a);
 @end verbatim
 @strong{Fortran code}
@@ -6834,7 +6588,6 @@ integer a, mgl_create_data_size
 a = mgl_create_data_size(50,40,1);
 call mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
 call mgl_set_light(gr,1)
-
 call mgl_subplot(gr,2,1,0)
 call mgl_rotate(gr,40.,60.+3.,0.)
 call mgl_box(gr,1)
@@ -6843,7 +6596,6 @@ call mgl_subplot(gr,2,1,1)
 call mgl_rotate(gr,40.,60.-3.,0.)
 call mgl_box(gr,1)
 call mgl_surf(gr,a,'')
-
 call mgl_delete_data(a)
 @end verbatim
 @strong{Python}
@@ -6851,7 +6603,6 @@ call mgl_delete_data(a)
 a = mglData(50,40);
 a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
 gr.Light(True);
-
 gr.SubPlot(2,1,0);
 gr.Rotate(40,60+3);
 gr.Surf(a);  gr.Box();
@@ -6859,4 +6610,5 @@ gr.SubPlot(2,1,1);
 gr.Rotate(40,60-3);
 gr.Surf(a);  gr.Box();
 @end verbatim
+@end ifclear
 

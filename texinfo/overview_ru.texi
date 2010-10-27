@@ -1,5 +1,4 @@
 
-@node Overview, Examples, , Top
 @chapter Обзор MathGL
 
 @cindex Обзор MathGL
@@ -108,129 +107,12 @@ MathGL это ...
 * Coordinate axes::             
 * Line styles::                 
 * Color scheme::                
-* Font style::                  
+* Font styles::                  
+* Textual formulas::            
 @end menu
 
+@include concept_ru.texi
 
-@node Coordinate axes, Line styles, , General concepts
-@subsection Оси координат
-
-Представление системы координат в MathGL состоит из двух частей. Вначале координаты нормируются в интервал @var{Min}x@var{Max} (@pxref{Axis settings}). Если флаг @var{Cut} установлен, то точки вне интервала отбрасываются, в противном случае, они проецируются на ограничивающий параллелепипед (@pxref{Cutting}). Кроме того, отбрасываются точки внутри границ, определенных переменными @var{CutMin}x@var{CutMax} и точки, для которых значение функции @code{CutOff}() не равно нулю. После этого формулы перехода в криволинейную систему координат @code{SetFunc()}применяются к каждой точке. Наконец, точка данных отображается с помощью одной из графических функций.
-
-Величины @var{Max}, @var{Min} можно изменять вручную. Однако, после этого необходимо вызвать функцию @code{RecalcBorder()} для настройки графика. Более удобный и безопасный путь состоит в вызове функций @code{Axis(), SetRanges()} и др. В последнем случае функция @code{RecalcBorder()} вызывается автоматически. Размеры осей можно задавать и автоматически по минимальному и максимальному значениям массива данных. Для этого предназначены функции @code{XRange(), YRange(), ZRange()}. Второй не обязательный аргумент указывает, заменять ли новые значения диапазона изменения оси координат (по умолчанию) или только расширить уже существующий диапазон.
-
-Точка пересечения осей координат задается переменной @var{Org} и действует на последующие вызовы функций рисования осей координат и сетки. По умолчанию, если точка пересечения осей координат попадает вне диапазона осей координат, то она проецируется на границу области. Изменить такое поведение можно, задав @var{AutoOrg}=@code{false}. В случае, если одно из значений @var{Org} равно NAN, то соответствующее значение будет выбрано автоматически.
-
-Кроме привычных осей @emph{x, y, z} есть еще одна ось -- цветовая шкала -- ось @emph{c}. Она используется при окрашивании поверхностей и задает границы изменения функции при окрашивании. При вызове @code{Axis()} ее границы автоматически устанавливаются равными Min.z и Max.z. Возможно и ручное изменение границ цветового интервала посредством вызова функции @code{CAxis()} или изменение границ по заданному массиву @code{CRange()}. Используйте @code{Colorbar()} для отображения цветовой шкалы.
-
-Вид меток по осям определяется функцией @code{SetTicks()} (@pxref{Ticks}). Она имеет 3 аргумента: первый @var{d} задает шаг меток (если положительны) или их число (если отрицательны) или логарифмические метки (если равны нулю); второ @var{ns} задает число "подметок"; последний определяет начальную точку для меток (по умолчанию это точка пересечения осей). Функция @var{SetTuneTicks} включает/выключает выделение общего множителя (большого или малого факторов в диапазоне) для меток осей координат. Наконец, если стандартный вид меток не устраивает пользователя, то их шаблон можно задать явно (можно использовать и ТеХ символы), воспользовавшись функциями  @code{SetXTT(), SetYTT(). SetZTT(). SetCTT()}. Кроме того, в качестве меток можно вывести произвольный текст использовав функцию @code{SetTicksVal()}.
-
-@node Line styles, Color scheme, Coordinate axes, General concepts
-@subsection Стиль линий
-
-@cindex Стиль линий
-@cindex Стиль маркеров
-@cindex Стиль стрелок
-
-Стиль линии задается строкой, которая может содержать символ цвета (@samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}), тип пунктира (@samp{-|;:ji} или пробел), ширину линии (@samp{0123456789}) и тип маркера (@samp{o+xsd.^v} и модификатор @samp{#}). Если пропущен цвет или тип пунктира, то используется значение по умолчанию с последним указанным цветом.
-
-Символы цвета те же, что и в классе mglColor (@pxref{mglColor class}): @samp{k} -- черный, @samp{r} -- красный, @samp{R} -- темно красный, @samp{g} -- зеленый, @samp{G} -- темно зеленый, @samp{b} -- синий, @samp{B} -- темно синий, @samp{c} -- голубой, @samp{C} -- темно голубой, @samp{m} -- пурпурный, @samp{M} -- темно пурпурный, @samp{y} -- желтый, @samp{Y} -- темно желтый (золотой), @samp{h} -- серый, @samp{H} -- темно серый, @samp{w} -- белый, @samp{W} -- светло серый, @samp{l} -- сине-зеленый, @samp{L} -- темно сине-зеленый, @samp{e} -- желто-зеленый, @samp{E} -- темно желто-зеленый, @samp{n} -- небесно-синий, @samp{N} -- темно небесно-синий, @samp{u} -- сине-фиолетовый, @samp{U} -- темно сине-фиолетовый, @samp{p} -- фиолетовый, @samp{P} -- темно фиолетовый, @samp{q} -- оранжевый, @samp{Q} -- темно оранжевый (коричневый).
-
-Тип пунктира: пробел -- нет линии (для рисования только маркеров), @samp{-} -- сплошная линия (################), @samp{|} -- длинный пунктир (########________), @samp{;} -- пунктир (####____####____), @samp{=} -- короткий пунктир (##__##__##__##__), @samp{:} -- точки (#___#___#___#___), @samp{j} -- пунктир с точками  (#######____#____), @samp{i} -- мелкий пунктир с точками (###__#__###__#__).
-
-Типы маркеров: @samp{o} -- окружность, @samp{+} -- крест, @samp{x} -- косой крест, @samp{s} - квадрат, @samp{d} - ромб, @samp{.} -- точка, @samp{^} -- треугольник вверх, @samp{v} -- треугольник вниз, @samp{<} -- треугольник влево, @samp{>} -- треугольник вправо, @samp{#*} -- знак Y. Если в строке присутствует символ @samp{#}, то используются символы с заполнением.
-
-@float
-@image{png/sample5, 7cm}
-@caption{Стили линий и маркеров.}
-@end float
-
-На конце и в начале линии можно выводить специальный символ (стрелку), если в строке указать один из символов: @samp{A} -- стрелка наружу, @samp{V} -- стрелка внутрь, @samp{I} -- поперечная черта, @samp{K} -- стрелка с чертой, @samp{T} -- треугольник, @samp{S} -- квадрат, @samp{D} -- ромб, @samp{O} -- круг, @samp{_} -- нет стрелки (по умолчанию). При этом действует следующее правило: первый символ определяет стрелку на конце линии, второй символ -- стрелку в начале линии. Например, @samp{r-A} -- красная сплошная линия со стрелкой на конце, @samp{b|AI} -- синий пунктир со стрелкой на конце и чертой вначале, @samp{_O} -- линия с текущим стилем и кружком вначале. Эти стили действуют и при построении графиков (например, @ref{Plot}).
-
-@float
-@image{png/sampled, 7cm}
-@caption{Стили стрелок.}
-@end float
-
-@node Color scheme, Font style, Line styles, General concepts
-@subsection Цветовая схема
-
-@cindex Цветовая схема
-
-Цветовая схема используется для определения цвета поверхностей, линий уровня и пр. Цветовая схема задается строкой @emph{s}, которая содержит символы цвета (@pxref{Line styles}) или символы @samp{d#:|}. Символ @samp{d} указывает на определение цвета в зависимости от положения точки в пространстве, а не по амплитуде данных. Символ @samp{#} переключает рисование поверхности на сетчатое (для трехмерных поверхностей) или включает рисование сетки на поверхности. Символ @samp{|} отключает интерполяцию цвета в цветовой схеме. Это может быть полезно для ``резких'' цветов, например, при рисовании матриц. Если в строке встречается символ @samp{:}, то он принудительно заканчивает разбор строки для стиля поверхности. После этого символа могут идти описание стиля текста или оси вращения кривой/линий уровня. Цветовая схема может содержать до 32 значений цвета.
-
-В цветовой схеме можно использовать тональные (``подсвеченные'') цвета (@emph{не в стиле линий!}). Тональный цвет задается двумя символами: первый -- обычный цвет, второй -- его яркость цифрой. Цифра может быть в диапазоне @samp{1}...@samp{9}. При этом @samp{5} соответствует нормальному цвету, @samp{1} -- очень темная версия цвета (почти черный), @samp{9} -- очень светлая версия цвета (почти белый). Например цветовая схема может быть @samp{b2b7wr7r2}.
-
-@float
-@image{png/colors, 7cm}
-@caption{Цвета и их идентификаторы.}
-@end float
-
-При определении цвета по @emph{амплитуде} (наиболее часто используется) окончательный цвет определяется путем линейной интерполяции массива цветов. Массив цветов формируется из цветов, указанных в строке спецификации. Аргумент -- амплитуда, нормированная между @var{Cmin} -- @var{Cmax} (@pxref{Ranges (bounding box)}). Например, строка из 4 символов @samp{bcyr} соответствует изменению цвета от синего (минимальное значение) через голубой и желтый (промежуточные значения) к красному (максимальное значение). Строка @samp{kw} соответствует изменению цвета от черного (минимальное значение) к белому (максимальное значение). Строка из одного символоа (например, @samp{g}) соответствует однотонному цвету (в данному случае зеленому).
-
-Есть несколько полезных цветовых схем. Строка @samp{kw} дает обычную серую (черно-белую) схему, когда большие значения светлее. Строка @samp{wk} представляет обратную серую схему, когда большие значения темнее. Строки @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} представляют собой хорошо известные схемы @emph{hot}, @emph{summer} и @emph{winter}. Строки @samp{BbwrR} и @samp{bBkRr} позволяют рисовать двухцветные фигуры на белом или черном фоне, когда отрицательные значения показаны синим цветом, а положительные -- красным. Строка @samp{BbcyrR} дает цветовую схему, близкую к хорошо известной схеме @emph{jet}.
-
-Примеры наиболее популярных цветовых схем:
-@table @samp
-@item kw
-@image{png_static/kw}
-@item wk
-@image{png_static/wk}
-@item hHCcw
-@image{png_static/kHCcw}
-
-@item kRryw
-@image{png_static/kRryw}
-@item kGgew
-@image{png_static/kGgew}
-@item kBbcw
-@image{png_static/kBbcw}
-
-@item BbwrR
-@image{png_static/BbwrR}
-@item BbwgG
-@image{png_static/BbwgG}
-@item GgwmM
-@image{png_static/GgwmM}
-
-@item bcwyr
-@image{png_static/bcwyr}
-@item QqwcC
-@image{png_static/QqwcC}
-@item CcwyY
-@image{png_static/CcwyY}
-@item UuwqR
-@image{png_static/UuwqR}
-
-@item BbcyrR
-@image{png_static/BbcyrR}
-@item UbcyqR
-@image{png_static/UbcyqR}
-@item BbcwyrR
-@image{png_static/BbcwyrR}
-@item bwr
-@image{png_static/bwr}
-
-@item bcyr
-@image{png_static/bcyr}
-@item bgr
-@image{png_static/bgr}
-@item BbcyrR|
-@image{png_static/sharp}
-@end table
-
-При определении цвета по @emph{положению точки в пространстве} окончательный цвет определяется по формуле c=x*c[1] + y*c[2] + z*c[3]. Здесь c[1], c[2], c[3] -- первые три цвета в цветовом массиве; x, y, z -- координаты точки, нормированные на @var{Min}x@var{Max}. Такой тип определения цвета полезен, например, при построении поверхностей уровня, когда цвет дает представление о положении точки в пространстве. Например, @pxref{Surf3}.
-
-@node Font style, , Color scheme, General concepts
-@subsection Стиль текста
-
-@cindex Стиль текста
-
-Стиль текста задается строкой, которая может содержать несколько символов: тип шрифта (@samp{ribwou}) и/или выравнивания (@samp{LRC}), а также цвет текста @samp{wkrgbcymhRGBCYMHW} (@pxref{mglColor class}) после символа @samp{:}. Например, @samp{biC:b} соответствует жирному курсиву с выравниванием по центру синего цвета.
-
-Начертания шрифта: @samp{r} -- прямой шрифт, @samp{i} -- курсив, @samp{b} -- жирный. По умолчанию используется прямой шрифт. Типы выравнивания текста: @samp{L} -- по левому краю (по умолчанию), @samp{C} -- по центру, @samp{R} -- по правому краю. Дополнительные эффекты шрифта: @samp{w} -- контурный, @samp{o} -- надчеркнутый, @samp{u} -- подчеркнутый. Синтаксический разбор LaTeX-их команд по умолчанию включен (подробнее см. @pxref{mglFont class} и @ref{Font settings}).
-
-Размер текста может быть задан явно (если @var{size}>0) или относительно базового размера шрифта для рисунка |@var{size}|*@var{FontSize} при @var{size}<0. Значение @var{size}=0 указывает, что соответствующая строка выводиться не будет. Базовый размер шрифта измеряется во внутренних единицах. Специальные функции @code{SetFontSizePT(), SetFontSizeCM(), SetFontSizeIN()} позволяют задавать его в более ``привычных'' единицах.
 
 @node FAQ, Interfaces, General concepts, Overview
 @section FAQ
@@ -369,7 +251,7 @@ C интерфейс является базовым для большинств
 @end itemize
 Эти переменные содержат идентификаторы объектов графики или данных. 
 
-Фортрановские функции имеют те же имена, что и функции C. Однако, есть различие: переменные типов @code{HMGL, HMDT} должны быть объявлены как целые достаточной разрядности (integer*4 на 32-битных системах или integer*8 на 64-битных системах). Все С функции являются процедурами для Фортрана (должны вызываться с помощью оператора call). Исключение составляют функции, возвращающие переменные типа @code{HMGL} или @code{HMDT}. Последние должны быть объявлены целыми  для использования в фортрановском коде. Также помните, что строки в фортране обозначаются одинарной кавычкой @code{'}, а не двойной @code{"} как в С/С++.
+Фортрановские функции имеют те же имена, что и функции C. Однако, есть различие: переменные типов @code{HMGL, HMDT} должны быть объявлены как целые достаточной разрядности (integer*4 на 32-битных системах или integer*8 на 64-битных системах). Все С функции являются процедурами для Фортрана (должны вызываться с помощью оператора call). Исключение составляют функции, возвращающие переменные типа @code{HMGL} или @code{HMDT}. Последние должны быть объявлены целыми  для использования в фортрановском коде. Также помните, что строки в фортране обозначаются одинарной кавычкой @code{</samp>&rsquo;}, а не двойной @code{"} как в С/С++.
 
 @strong{Создание и удаление графического объекта}
 
@@ -455,14 +337,14 @@ To use Python classes just execute @samp{import mathgl}. The simplest example wi
 import mathgl
 a=mathgl.mglGraph()
 a.Box()
-a.WritePNG('test.png')
+a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
 @end verbatim
 Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes: 
 @verbatim
 from mathgl import *
 a=mglGraph()
 a.Box()
-a.WritePNG('test.png')
+a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
 @end verbatim
 It become useful if you will create many @code{mglData} object, for example.
 
@@ -479,14 +361,14 @@ To use Python classes just execute @samp{import mathgl}. The simplest example wi
 import mathgl
 a=mathgl.mglGraph()
 a.Box()
-a.WritePNG('test.png')
+a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
 @end verbatim
 Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes: 
 @verbatim
 from mathgl import *
 a=mglGraph()
 a.Box()
-a.WritePNG('test.png')
+a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
 @end verbatim
 It become useful if you will create many @code{mglData} object, for example.
 
@@ -499,7 +381,7 @@ There are 2 classes in Python interface:
 @c @item @code{mglParse} -- practically the same as C++ class @code{mglParse} (@pxref{mglParse class}).
 @end itemize
 
-There is main difference from C++ classes -- Python class @code{mglGraph} don't have variables (options). All corresponding features are moved to methods.
+There is main difference from C++ classes -- Python class @code{mglGraph} don</samp>&rsquo;t have variables (options). All corresponding features are moved to methods.
 The core of MathGL Python class is @strong{mglGraph} class. It contains a lot of plotting functions for 1D, 2D and 3D plots. So most of sections is describe its methods. Its constructor have following arguments:
 
 @defop Constructor {mglGraph (Python)} @code{} mglGraph (@code{int} kind=@code{0}, @code{int} width=@code{600}, @code{int} height=@code{400})
@@ -507,7 +389,7 @@ Create the instance of class mglGraph with specified sizes @var{width} and @var{
 @end defop
 @end itemize
 
-There is main difference from C++ classes -- Python class @code{mglGraph} don't have variables (options). All corresponding features are moved to methods. The core of MathGL Python class is @strong{mglGraph} class. It contains a lot of plotting functions for 1D, 2D and 3D plots. So most of sections is describe its methods. Its constructor have following arguments:
+There is main difference from C++ classes -- Python class @code{mglGraph} don</samp>&rsquo;t have variables (options). All corresponding features are moved to methods. The core of MathGL Python class is @strong{mglGraph} class. It contains a lot of plotting functions for 1D, 2D and 3D plots. So most of sections is describe its methods. Its constructor have following arguments:
 
 @defop Constructor {mglGraph (Python)} @code{} mglGraph (@code{int} kind=@code{0}, @code{int} width=@code{600}, @code{int} height=@code{400})
 Create the instance of class mglGraph with specified sizes @var{width} and @var{height}. Parameter @var{type} may have following values: @samp{0} -- use @code{mglGraphZB} plotter (default), @samp{1} -- use @code{mglGraphPS} plotter, @samp{2} -- use @code{mglGraphGL} plotter, @samp{3} -- use @code{mglGraphIDTF} plotter.
@@ -521,11 +403,11 @@ Create the instance of class mglGraph with specified sizes @var{width} and @var{
 @item
 My special thanks to Marina Balakina for the patience during library writing and for the help in documentation writing and spelling.
 @item
-I'm thankful to D. Kulagin and S.M. Plis for making Debian packages.
+I</samp>&rsquo;m thankful to D. Kulagin and S.M. Plis for making Debian packages.
 @item
-I'm thankful to M. Vidassov for the help in handling solid UTF-8 fonts.
+I</samp>&rsquo;m thankful to M. Vidassov for the help in handling solid UTF-8 fonts.
 @item
-I'm thankful to N. Troickiy and V. Lipatov for making RPM packages.
+I</samp>&rsquo;m thankful to N. Troickiy and V. Lipatov for making RPM packages.
 @item
-I'm thankful to S. Skobelev, A. Korotkevich, V. Onuchin, S.M. Plis, R. Kiselev, A. Ivanov, M. Vidiassov and V. Lipatov for fruitful comments.
+I</samp>&rsquo;m thankful to S. Skobelev, A. Korotkevich, V. Onuchin, S.M. Plis, R. Kiselev, A. Ivanov, M. Vidiassov and V. Lipatov for fruitful comments.
 @end itemize

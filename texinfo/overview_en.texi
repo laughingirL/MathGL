@@ -1,5 +1,3 @@
-
-@node Overview, Examples, , Top
 @chapter Overview
 
 @cindex MathGL overview
@@ -62,7 +60,7 @@ All texts are drawn by vector fonts, which allows for high scalability and porta
 
 Special mglData class is used for data encapsulation (@pxref{mglData class}). In addition to a safe creation and deletion of data arrays it includes functions for data processing (smoothing, differentiating, integrating, interpolating and so on) and reading of data files with automatic size determination. Class mglData can handle arrays with up to three dimensions (arrays which depend on up to 3 independent indexes @math{a_@{ijk@}}). Using an array with higher number of dimensions is not meaningful, because I do not know how it can be plotted. Data filling and modification may be done manually or by textual formulas.
 
-The mglFormula class allows a fast evaluation of a textual mathematical expression (@pxref{mglFormula class}). It is based on string precompilation to tree-like code at the creation of class instance. At evaluation stage code performs only fast tree-walk and returns the value of the expression. In addition to changing data values, textual formulas are also used for drawing in @emph{arbitrary} curvilinear coordinates. A set of such curvilinear coordinates is limited only by user's imagination rather than a fixed list like: polar, parabolic, spherical, and so on.
+The mglFormula class allows a fast evaluation of a textual mathematical expression (@pxref{mglFormula class}). It is based on string precompilation to tree-like code at the creation of class instance. At evaluation stage code performs only fast tree-walk and returns the value of the expression. In addition to changing data values, textual formulas are also used for drawing in @emph{arbitrary} curvilinear coordinates. A set of such curvilinear coordinates is limited only by user</samp>&rsquo;s imagination rather than a fixed list like: polar, parabolic, spherical, and so on.
 
 @node Installation and usage, General concepts, MathGL features, Overview
 @section Installation and usage
@@ -95,7 +93,7 @@ There are six most general (base) concepts:
 @item
 @strong{Every plot settings (style of lines, font, color scheme) are specified by a string.} It provides convenience for user/programmer -- short string with parameters is more comprehensible than a large set of parameters. Also it provides portability -- the strings are the same in any OS so that it is not necessary to think about argument types.
 @item
-@strong{All functions have ``simplified'' and ``advanced'' forms.} It is done for user's convenience. One needs to specify only one data array in the ``simplified'' form in order to see the result. But one may set parametric dependence of coordinates and produce rather complex curves and surfaces in the ``advanced'' form. In both cases the order of function arguments is the same: first data arrays, second the string with plot parameters, and later optional arguments for plot tuning.
+@strong{All functions have ``simplified'' and ``advanced'' forms.} It is done for user</samp>&rsquo;s convenience. One needs to specify only one data array in the ``simplified'' form in order to see the result. But one may set parametric dependence of coordinates and produce rather complex curves and surfaces in the ``advanced'' form. In both cases the order of function arguments is the same: first data arrays, second the string with plot parameters, and later optional arguments for plot tuning.
 @item
 @strong{All data arrays for plotting are encapsulated in mglData class.} This reduces the number of errors while working with memory and provides a uniform interface for data of different types (float, double and so on) or for formula plotting.
 @item
@@ -110,130 +108,11 @@ In addition to the general concepts I want to comment on some non-trivial or les
 * Coordinate axes::             
 * Line styles::                 
 * Color scheme::                
-* Font style::                  
+* Font styles::                  
+* Textual formulas::            
 @end menu
 
-
-@node Coordinate axes, Line styles, , General concepts
-@subsection Coordinate axes
-
-Two axis representations are used in MathGL. The first one consists of normalizing the data point coordinates in a box @var{Min}x@var{Max} (@pxref{Axis settings}). If @var{Cut} is @code{true} then the outlier points are omitted, otherwise they are projected to the bounding box (@pxref{Cutting}). Also, the point will be omitted if it lies inside the box defined by @var{CutMin} x @var{CutMax} or if the value of formula @code{CutOff}() is nonzero for its coordinates. After that, transformation formulas are applied to the data point (@pxref{Curved coordinates}). Finally, the data point is plotted by one of the functions.
-
-There is a possibility to set members @var{Max}, @var{Min} directly, but one should call @code{RecalcBorder()} function to setup plotting routines. A safer way is to set these values by calling the @code{Axis()} function, which calls @code{RecalcBorder()} automatically. Another way to specify the scaling of the axis is to set it as a minimal or maximal value of the data array. Functions @code{XRange(), YRange(), ZRange()} do it. The second (optional) argument is used to replace the axis range or to join with the existed range.
-
-The axis origin is defined by the variable @var{Org} and is applied to all consequent calls of axes or grid drawing. By default, if this point lies outside the bounding box then it is projected onto the one (variable @var{AutoOrg} controls it). If one of the values of @var{Org} is equal to NAN then the corresponding value will be selected automatically.
-
-There is 4-th axis @emph{c} (color axis or colorbar) in addition to the usual axes @emph{x, y, z}. It sets the range of values for the surface coloring. Its borders are automatically set to values of Min.z, Max.z during the call of @code{Axis()} function. Also, one can directly change the color range by setting variables @var{Cmax}, @var{Cmax}, or calling functions @code{CAxis()} or @code{CRange()}. Use @code{Colorbar()} function for showing the colorbar.
-
-The form (appearence) of tick labels is controlled by @code{SetTicks()} function (@pxref{Ticks}). It has 3 arguments: first one @var{d} sets the tick step (if positive) or tick number (if negative) or switches logarithmic ticks on (if zero); the second one, @var{ns}, sets the number of subticks; the last one is the starting point for ticks (default is axis origin). Function @var{SetTuneTicks} switches on/off tick enhancing by factoring out acommon multiplier (for small coordinate values, like 0.001 to 0.002, or large, like from 1000 to 2000) or common component (for narrow range, like from 0.999 to 1.000). Finally, you may use functions @code{SetXTT(), SetYTT(), SetZTT(), SetCTT()} for setting templates for tick labels (it supports TeX symbols). Also, there is a possibility to print arbitrary text as tick labels the by help of @code{SetTicksVal()} function.
-
-@node Line styles, Color scheme, Coordinate axes, General concepts
-@subsection Line styles
-
-@cindex Line style
-@cindex Mark style
-@cindex Arrows
-
-The line style is defined by the string which may contain specifications for color (@samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}), dashing style (@samp{-|;:ji} or space), width (@samp{0123456789}) and marks (@samp{o+xsd.^v} and @samp{#} modifier). If one of the type of information is omitted then default values used with the previous color are adopted.
-
-The color types are the same as described in mglColor class (@pxref{mglColor class}): @samp{k} -- black, @samp{r} -- red, @samp{R} -- dark red, @samp{g} -- green, @samp{G} -- dark green, @samp{b} -- blue, @samp{B} -- dark blue, @samp{c} -- cyan, @samp{C} -- dark cyan, @samp{m} -- magenta, @samp{M} -- dark magenta, @samp{y} -- yellow, @samp{Y} -- dark yellow (gold), @samp{h} -- gray, @samp{H} -- dark gray, @samp{w} -- white, @samp{W} -- bright gray, @samp{l} -- green-blue, @samp{L} -- dark green-blue, @samp{e} -- green-yellow, @samp{E} -- dark green-yellow, @samp{n} -- sky-blue, @samp{N} -- dark sky-blue, @samp{u} -- blue-violet, @samp{U} -- dark blue-violet, @samp{p} -- purple, @samp{P} -- dark purple, @samp{q} -- orange, @samp{Q} -- dark orange (brown).
-
-Dashing style has the following meaning: space -- no line (usable for plotting only marks), @samp{-} -- solid line (################), @samp{|} -- long dashed line (########________), @samp{;} -- dashed line (####____####____), @samp{=} -- small dashed line (##__##__##__##__), @samp{:} -- dotted line (#___#___#___#___), @samp{j} -- dash-dotted line (#######____#____), @samp{i} -- small dash-dotted line (###__#__###__#__).
-
-Marker types are: @samp{o} -- circle, @samp{+} -- cross, @samp{x} -- skew cross, @samp{s} - square, @samp{d} - rhomb (or diamond), @samp{.} -- point, @samp{^} -- triangle up, @samp{v} -- triangle down, @samp{<} -- triangle left, @samp{>} -- triangle right, @samp{#*} -- Y sign. If string contain symbol @samp{#} then the solid versions of markers are used.
-
-@float
-@image{png/sample5, 7cm}
-@caption{Styles of lines and marks.}
-@end float
-
-One may specify to draw a special symbol (an arrow) at the beginning and at the end of line. This is done if the specification string contains one of the following symbols: @samp{A} -- outer arrow, @samp{V} -- inner arrow, @samp{I} -- transverse hatches, @samp{K} -- arrow with hatches, @samp{T} -- triangle, @samp{S} -- square, @samp{D} -- rhombus, @samp{O} -- circle, @samp{_} -- nothing (the default). The following rule applies: the first symbol specifies the arrow at the end of line, the second specifies the arrow at the beginning of the line. For example, @samp{r-A} defines a red solid line with usual arrow at the end, @samp{b|AI} defines a blue dash line with an arrow at the end and with hatches at the beginning, @samp{_O} defines a line with the current style and with a circle at the beginning. These styles are applicable during the graphics plotting as well (for example, @ref{Plot}).
-
-@float
-@image{png/sampled, 7cm}
-@caption{Arrow styles.}
-@end float
-
-@node Color scheme, Font style, Line styles, General concepts
-@subsection Color scheme
-
-@cindex Color scheme
-
-The color scheme is used for determining the color of surfaces, isolines, isosurfaces and so on. The color scheme is defined by the string, which may contain several characters that are color id (@pxref{mglColor class} or @pxref{Line styles}) or characters @samp{d#:|}. Symbol @samp{d} denotes the interpolation by 3d position instead of the coloring by amplitude. Symbol @samp{#} switches to mesh drawing or to a wire plot. Symbol @samp{|} disables color interpolation in color scheme, which can be useful, for example, for sharp colors during matrix plotting. Symbol @samp{:} finishes the color scheme parsing. Following it, the user may put styles for the text, rotation axis for curves/isocontours, and so on. Color scheme may contain up to 32 color values.
-
-You may also use ``lighted'' colors in the color scheme specification (@emph{not in line style!}). The ``lighted'' color contain 2 symbols: first one is the usual symbol for color specification, the second one is a digit for its brightness. The digit can be in range @samp{1}...@samp{9}. 
-Number @samp{5} corresponds to a normal color, @samp{1} is a very dark version of the color (practically black), and @samp{9} is a very bright version of the color (practically white). For example, the color scheme can be @samp{b2b7wr7r2}.
-
-@float
-@image{png/colors, 7cm}
-@caption{Colors and its ids.}
-@end float
-
-For coloring by @emph{amplitude} (most common) the final color is a linear interpolation of color array. The color array is constructed from the string ids. The argument is the amplitude normalized between @var{Cmin} -- @var{Cmax} (@pxref{Ranges (bounding box)}). For example, string containing 4 characters @samp{bcyr} corresponds to a colorbar from blue (lowest value) through cyan (next value) through yellow (next value) to the red (highest value). String @samp{kw} corresponds to a colorbar from black (lowest value) to white (highest value). String @samp{m} corresponds to a simple magenta color.
-
-There are several useful combinations. String @samp{kw} corresponds to the simplest gray color scheme where higher values are brighter. String @samp{wk} presents the inverse gray color scheme where higher value is darker. Strings @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} present the well-known @emph{hot}, @emph{summer} and @emph{winter} color schemes. Strings @samp{BbwrR} and @samp{bBkRr} allow to view bi-color figure on white or black background, where negative values are blue and positive values are red. String @samp{BbcyrR} gives a color scheme similar to the well-known @emph{jet} color scheme.
-
-Examples of the most popular color schemes:
-@table @samp
-@item kw
-@image{png_static/kw}
-@item wk
-@image{png_static/wk}
-@item hHCcw
-@image{png_static/kHCcw}
-
-@item kRryw
-@image{png_static/kRryw}
-@item kGgew
-@image{png_static/kGgew}
-@item kBbcw
-@image{png_static/kBbcw}
-
-@item BbwrR
-@image{png_static/BbwrR}
-@item BbwgG
-@image{png_static/BbwgG}
-@item GgwmM
-@image{png_static/GgwmM}
-
-@item bcwyr
-@image{png_static/bcwyr}
-@item QqwcC
-@image{png_static/QqwcC}
-@item CcwyY
-@image{png_static/CcwyY}
-@item UuwqR
-@image{png_static/UuwqR}
-
-@item BbcyrR
-@image{png_static/BbcyrR}
-@item UbcyqR
-@image{png_static/UbcyqR}
-@item BbcwyrR
-@image{png_static/BbcwyrR}
-@item bwr
-@image{png_static/bwr}
-
-@item bcyr
-@image{png_static/bcyr}
-@item bgr
-@image{png_static/bgr}
-@item BbcyrR|
-@image{png_static/sharp}
-@end table
-
-When coloring by @emph{coordinate}, the final color is determined by the position of the point in 3d space and is calculated from formula c=x*c[1] + y*c[2] + z*c[3]. Here, c[1], c[2], c[3] are the first three elements of color array; x, y, z are normalized to @var{Min} -- @var{Max} coordinates of the point. This type of coloring is useful for isosurface plot where color may show the exact position of a piece of surface. For example, @pxref{Surf3}.
-
-@node Font style, , Color scheme, General concepts
-@subsection Font style
-
-@cindex Font style
-
-Text style is specified by the string which may contain several characters of font (@samp{ribwou}) and/or alignment (@samp{LRC}) specifications. The string also may contain the color id characters @samp{wkrgbcymhRGBCYMHW} (@pxref{mglColor class}) after the symbol @samp{:}. For example, @samp{biC:b} sets the bold italic font text aligned at the center and with blue color.
-
-The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style. By default roman roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Additional font effects are: @samp{w} -- wired, @samp{o} -- over-lined, @samp{u} -- underlined. Also a parsing of the LaTeX-like syntax is provided (for detail, @pxref{mglFont class} and @ref{Font settings}).
-
-The font size can be defined explicitly (if @var{size}>0) or relative to a base font size as |@var{size}|*@var{FontSize} (if @var{size}<0). The value @var{size}=0 specifies that the string will not be printed. The base font size is measured in internal ``MathGL'' units. Special functions @code{SetFontSizePT(), SetFontSizeCM(), SetFontSizeIN()} allow one to set it in more ``common'' variables for a given dpi value of the picture.
+@include concept_en.texi
 
 @node FAQ, Interfaces, General concepts, Overview
 @section FAQ
@@ -249,7 +128,7 @@ Most ``new'' types of plots can be created by using the existing drawing functio
 No. The MathGL library is self-contained and does not require the knowledge of external libraries.
 
 @item In which language is the library written? For which languages does it have an interface?
-The core of the MathGL library is written in C++. But there are interfaces for: pure C, Fortran, Pascal, Forth, and its own command language MGL. Also there is a large set of interpreted languages, which are supported (Python, Java,  ALLEGROCL, CHICKEN, Lisp, CFFI, C#, Guile, Lua, Modula 3, Mzscheme, Ocaml, Octave, Perl, PHP, Pike, R, Ruby, Tcl). These interfaces are written using SWIG (both pure C functions and classes) but only the interface for Python and Octave is included in the autoconf/automake script. The reason is that I don't know any other interpreted languages :(. Note that most other languages can use (link to) the pure C functions.
+The core of the MathGL library is written in C++. But there are interfaces for: pure C, Fortran, Pascal, Forth, and its own command language MGL. Also there is a large set of interpreted languages, which are supported (Python, Java,  ALLEGROCL, CHICKEN, Lisp, CFFI, C#, Guile, Lua, Modula 3, Mzscheme, Ocaml, Octave, Perl, PHP, Pike, R, Ruby, Tcl). These interfaces are written using SWIG (both pure C functions and classes) but only the interface for Python and Octave is included in the autoconf/automake script. The reason is that I don</samp>&rsquo;t know any other interpreted languages :(. Note that most other languages can use (link to) the pure C functions.
 
 @item How can I use MathGL with Fortran?
 You can use MathGL as is with @code{gfortran} because it uses by default the AT&T notation for external functions. For other compilers (like Visual Fortran) you have to switch on the AT&T notation manually. The AT&T notation requires that the symbol @samp{_} is added at the end of each function name, function argument(s) is passed by pointers and the string length(s) is passed at the end of the argument list. For example:
@@ -328,7 +207,7 @@ Most of the library was written by one person. This is a result of nearly a year
 You can import data into a @code{mglData} instance and display it by @code{Dens()} function. For example, for black-and-white bitmap you can use the code: @code{mglData bmp; bmp.Import("fname.png","wk"); gr->Dens(bmp,"wk");}.
 
 @item How can I use MathGL in Qt, FLTK, wxWidgets etc.?
-There are special classes (widgets) for these libraries: QMathGL for Qt, Fl_MathGL for FLTK and so on. If you don't find the appropriate class then you can create your own widget that displays a bitmap using mglGraphAB::GetBits().
+There are special classes (widgets) for these libraries: QMathGL for Qt, Fl_MathGL for FLTK and so on. If you don</samp>&rsquo;t find the appropriate class then you can create your own widget that displays a bitmap using mglGraphAB::GetBits().
 
 @item How can I create U3D file (make 3D in PDF)?
 There are 2 steps: first you should create IDTF file, and later convert it to U3D. You can use @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=300628, U3D tools} for converting IDTF file to U3D. It needs @uref{http://libharu.org, libharu} 2.1.0 or later. For installation use @code{./bootstrap, ./configure, make, sudo make install}. It provides  IDTFConverter program for converting text files *.idtf to binary files *.u3d. The latter can be included into PDF.
@@ -371,7 +250,7 @@ All C functions are described in the header file @code{#include <mgl/mgl_c.h>} a
 @end itemize
 These variables contain identifiers for graphics drawing objects and for the data objects. 
 
-Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of type @code{HMGL, HMDT} must be an integer with sufficient size (@code{integer*4} in the 32-bit operating system or @code{integer*8} in the 64-bit operating system). All C functions are subroutines in Fortran, which are called by operator @code{call}. The exceptions are functions, which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also, one should keep in mind that strings in Fortran are denoted by @code{'} symbol, not the @code{"} symbol.
+Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of type @code{HMGL, HMDT} must be an integer with sufficient size (@code{integer*4} in the 32-bit operating system or @code{integer*8} in the 64-bit operating system). All C functions are subroutines in Fortran, which are called by operator @code{call}. The exceptions are functions, which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also, one should keep in mind that strings in Fortran are denoted by @code{</samp>&rsquo;} symbol, not the @code{"} symbol.
 
 @strong{Create and delete objects}
 
@@ -450,21 +329,21 @@ Delete the instance of a class. Must be used after the use of every created data
 @node Python interface, , C interface, Interfaces
 @subsection Python interface
 
-MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is named in this chapter's title.
+MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is named in this chapter</samp>&rsquo;s title.
 
 To use Python classes just execute @samp{import mathgl}. The simplest example will be:
 @verbatim
 import mathgl
 a=mathgl.mglGraph()
 a.Box()
-a.WritePNG('test.png')
+a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
 @end verbatim
 Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes like this:
 @verbatim
 from mathgl import *
 a=mglGraph()
 a.Box()
-a.WritePNG('test.png')
+a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
 @end verbatim
 This becomes useful if you create many @code{mglData} objects, for example.
 
@@ -481,14 +360,14 @@ To use Python classes just execute @samp{import mathgl}. The simplest example wi
 import mathgl
 a=mathgl.mglGraph()
 a.Box()
-a.WritePNG('test.png')
+a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
 @end verbatim
 Alternatively, you can import all the classes from @code{mathgl} module and easily access MathGL classes: 
 @verbatim
 from mathgl import *
 a=mglGraph()
 a.Box()
-a.WritePNG('test.png')
+a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
 @end verbatim
 This is useful if you create many @code{mglData} objects, for example.
 
@@ -524,11 +403,11 @@ Create the instance of class mglGraph with specified sizes @var{width} and @var{
 @item
 My special thanks to Marina Balakina for the patience during the writing of this library and for the help in documentation writing and spelling.
 @item
-I'm thankful to D. Kulagin and S.M. Plis for making Debian packages.
+I</samp>&rsquo;m thankful to D. Kulagin and S.M. Plis for making Debian packages.
 @item
-I'm thankful to M. Vidassov for the help in handling solid UTF-8 fonts.
+I</samp>&rsquo;m thankful to M. Vidassov for the help in handling solid UTF-8 fonts.
 @item
-I'm thankful to N. Troickiy and V. Lipatov for making RPM packages.
+I</samp>&rsquo;m thankful to N. Troickiy and V. Lipatov for making RPM packages.
 @item
-I'm thankful to S. Skobelev, A. Korotkevich, V. Onuchin, S.M. Plis, R. Kiselev, A. Ivanov, M. Vidiassov and V. Lipatov for fruitful comments.
+I</samp>&rsquo;m thankful to S. Skobelev, A. Korotkevich, V. Onuchin, S.M. Plis, R. Kiselev, A. Ivanov, M. Vidiassov and V. Lipatov for fruitful comments.
 @end itemize

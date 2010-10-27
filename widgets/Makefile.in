@@ -122,7 +122,7 @@ libmgl_glut_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 @USE_QT_TRUE@	$(top_builddir)/mgl/libmgl.la
 am__libmgl_qt_la_SOURCES_DIST =  \
 	$(top_builddir)/include/mgl/mgl_qt.moc.cpp mgl_qt.cpp \
-	$(top_srcdir)/include/mgl/mgl_qt.h
+	$(top_builddir)/include/mgl/mgl_qt.h
 @USE_QT_TRUE@am_libmgl_qt_la_OBJECTS = libmgl_qt_la-mgl_qt.moc.lo \
 @USE_QT_TRUE@	libmgl_qt_la-mgl_qt.lo
 libmgl_qt_la_OBJECTS = $(am_libmgl_qt_la_OBJECTS)
@@ -172,8 +172,7 @@ CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
-AM_CXXFLAGS = @AM_CXXFLAGS@ -I$(top_srcdir)/include \
-	-I$(top_builddir)/include
+AM_CXXFLAGS = @AM_CXXFLAGS@
 AR = @AR@
 AS = @AS@
 AUTOCONF = @AUTOCONF@
@@ -344,6 +343,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+INCLUDES = -I$(top_builddir)/include -I$(top_builddir)
 lib_LTLIBRARIES = $(am__append_1) $(am__append_2) $(am__append_3) \
 	$(am__append_4)
 @USE_FLTK_TRUE@libmgl_fltk_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
@@ -370,7 +370,7 @@ lib_LTLIBRARIES = $(am__append_1) $(am__append_2) $(am__append_3) \
 @USE_QT_TRUE@libmgl_qt_la_LIBADD = $(QT_LIBS) $(top_builddir)/mgl/libmgl.la
 @USE_QT_TRUE@libmgl_qt_la_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS)
 @USE_QT_TRUE@libmgl_qt_la_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
-@USE_QT_TRUE@libmgl_qt_la_SOURCES = $(top_builddir)/include/mgl/mgl_qt.moc.cpp mgl_qt.cpp $(top_srcdir)/include/mgl/mgl_qt.h
+@USE_QT_TRUE@libmgl_qt_la_SOURCES = $(top_builddir)/include/mgl/mgl_qt.moc.cpp mgl_qt.cpp $(top_builddir)/include/mgl/mgl_qt.h
 @USE_QT_TRUE@BUILT_SOURCES = $(top_builddir)/include/mgl/mgl_qt.moc.cpp
 @USE_QT_TRUE@CLEANFILES = $(BUILT_SOURCES)
 all: $(BUILT_SOURCES)

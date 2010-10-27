@@ -1730,13 +1730,13 @@ void mglc_swap(wchar_t out[1024], long , mglArg *a, int k[10])
 	if(k[0]==1 && k[1]==2)	mglprintf(out,1024,L"%s.Swap(\"%s\");", a[0].s, a[1].s);
 }
 //-----------------------------------------------------------------------------
-int mgls_set_id(mglGraph *, long , mglArg *a, int k[10])
+int mgls_idset(mglGraph *, long , mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==2)	a[0].d->SetColumnId(a[1].s);
 	else	return 1;
 	return 0;
 }
-void mglc_set_id(wchar_t out[1024], long , mglArg *a, int k[10])
+void mglc_idset(wchar_t out[1024], long , mglArg *a, int k[10])
 {
 	if(k[0]==1 && k[1]==2)	mglprintf(out,1024,L"%s.SetColumnId(\"%s\");", a[0].s, a[1].s);
 }
@@ -3584,6 +3584,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"grida",L"Draw grid at central slices of 3D data",L"grida Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_grida, mglc_grida, false, 0},
 	{L"hankel",L"Hankel transform at some direction",L"hankel Dat 'dir'", mgls_hankel, mglc_hankel, false, 3},
 	{L"hist",L"Create histogram (distribution) of data values",L"hist Res Dat num v1 v2 [nsub]|Res Dat Wdat num v1 v2 [nsub]", mgls_hist, mglc_hist, true, 3},
+	{L"idset",L"Set column id for data",L"idset Dat 'ids'", mgls_idset, mglc_idset, false, 3},
 	{L"import",L"Import data from PNG picture",L"import Dat 'fname' 'scheme' [v1 v2]", mgls_import, mglc_import, true, 3},
 	{L"info",L"Print information about data",L"info Dat [detail]|'message'", mgls_info, mglc_info, false, 3},
 	{L"inplot",L"Set position of plot in picture",L"x1 x2 y1 y2 [rel]", mgls_inplot, mglc_inplot, false, 4},
@@ -3639,7 +3640,6 @@ mglCommand mgls_base_cmd[] = {
 	{L"rotatetext",L"Set to auto rotate text or not",L"rotatetext val", mgls_rotatetext, mglc_rotatetext, false, 2},
 	{L"save",L"Save data to file",L"save Dat 'file'", mgls_save, mglc_save, false, 3},
 	{L"savehdf",L"Save data to HDF5 file",L"savehdf Dat 'file' 'id'", mgls_savehdf, mglc_savehdf, false, 3},
-	{L"set_id",L"Set column id for data",L"set_id Dat 'ids'", mgls_set_id, mglc_set_id, false, 3},
 	{L"setsize",L"Set picture size",L"setsize width height", mgls_setsize, mglc_setsize, false, 5},
 	{L"sew",L"Remove jump into the data, like phase jumps",L"sew Dat ['dir' da]", mgls_sew, mglc_sew, false, 3},
 	{L"sinfft",L"Sin-Fourier transform at some direction",L"sinfft Dat 'dir'", mgls_sinfft, mglc_sinfft, false, 3},

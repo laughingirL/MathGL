@@ -1,6 +1,6 @@
 \input texinfo
 @setfilename mathgl_en.info
-@set VERSION 1.10.1
+@set VERSION 1.11
 @settitle MathGL @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
@@ -86,13 +86,36 @@ supports it in developing GNU and promoting software freedom.''
 @macro tdref{nam}
 @uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
 @end macro
+@macro MGL
+(MGL)
+@end macro
 
+
+@node Overview, Examples, , Top
 @include overview_en.texi
-@include example_en.texi
-@include core_en.texi
-@include class_en.texi
-@include mgl_en.texi
 
+@node Examples, MathGL core, Overview, Top
+@include example_en.texi
+
+@node MathGL core, Plotter classes, Examples, Top
+@include core_en.texi
+
+@node Plotter classes, Widget classes, MathGL core, Top
+@include class_en.texi
+
+@node Widget classes, mglData class, Plotter classes, Top
+@include widget_en.texi
+
+@node mglData class, Other classes, Widget classes, Top
+@include data_en.texi
+
+@node Other classes, MGL interface, mglData class, Top
+@include other_en.texi
+
+@node MGL interface, Samples, Other classes, Top
+@include mgl_cmd_en.texi
+
+@node Samples, TeX-like symbols, MGL interface, Top
 @include samples_en.texi
 
 @node TeX-like symbols, Copying This Manual, Samples, Top
