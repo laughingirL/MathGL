@@ -321,9 +321,9 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	mgl_printf(fp, gz, "/d0 {[] 0 setdash} def\n/sd {setdash} def\n");
 
 	bool m_p=false,m_x=false,m_d=false,m_v=false,m_t=false,
-		m_s=false,m_a=false,m_o=false,m_O=false,m_T=false,
+		m_s=false,m_a=false,m_o=false,m_T=false,
 		m_V=false,m_S=false,m_D=false,m_Y=false,m_l=false,
-		m_L=false,m_r=false,m_R=false;
+		m_L=false,m_r=false,m_R=false,m_X=false,m_P=false;
 	register long i;
 	// add mark definition if present
 	for(i=0;i<pNum;i++)
@@ -332,13 +332,16 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 		if(P[i].m=='x')	m_x = true;		if(P[i].m=='s')	m_s = true;
 		if(P[i].m=='d')	m_d = true;		if(P[i].m=='v')	m_v = true;
 		if(P[i].m=='^')	m_t = true;		if(P[i].m=='*')	m_a = true;
-		if(P[i].m=='o')	m_o = true;		if(P[i].m=='O')	m_O = true;
+		if(P[i].m=='o' || P[i].m=='O' || P[i].m=='C')	m_o = true;
 		if(P[i].m=='S')	m_S = true;		if(P[i].m=='D')	m_D = true;
 		if(P[i].m=='V')	m_V = true;		if(P[i].m=='T')	m_T = true;
 		if(P[i].m=='<')	m_l = true;		if(P[i].m=='L')	m_L = true;
 		if(P[i].m=='>')	m_r = true;		if(P[i].m=='R')	m_R = true;
 		if(P[i].m=='Y')	m_Y = true;
+		if(P[i].m=='P')	m_P = true;		if(P[i].m=='X')	m_X = true;
 	}
+	if(m_P)	{	m_p=true;	m_s=true;	}
+	if(m_X)	{	m_x=true;	m_s=true;	}
 	if(m_p)	mgl_printf(fp, gz, "/m_p {sm 0 rm s2 0 rl sm sm rm 0 s2 rl d0} def\n");
 	if(m_x)	mgl_printf(fp, gz, "/m_x {sm sm rm s2 s2 rl 0 sm 2 mul rm sm 2 mul s2 rl d0} def\n");
 	if(m_s)	mgl_printf(fp, gz, "/m_s {sm sm rm 0 s2 rl s2 0 rl 0 sm 2 mul rl cp d0} def\n");
@@ -347,17 +350,18 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 	if(m_t)	mgl_printf(fp, gz, "/m_t {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl d0 cp} def\n");
 	if(m_a)	mgl_printf(fp, gz, "/m_a {sm 0 rm s2 0 rl sm 1.6 mul sm 0.8 mul rm ss 1.2 mul ss 1.6 mul rl 0 sm 1.6 mul rm sm 1.2 mul ss 1.6 mul rl d0} def\n");
 	if(m_o)	mgl_printf(fp, gz, "/m_o {ss 0 360 d0 arc} def\n");
-	if(m_O)	mgl_printf(fp, gz, "/m_O {ss 0 360 d0 arc fill} def\n");
 	if(m_S)	mgl_printf(fp, gz, "/m_S {sm sm rm 0 s2 rl s2 0 rl 0 sm 2 mul rl cp} def\n");
 	if(m_D)	mgl_printf(fp, gz, "/m_D {sm 0 rm ss ss rl ss sm rl sm sm rl cp} def\n");
 	if(m_V)	mgl_printf(fp, gz, "/m_V {sm ss 2 div rm s2 0 rl sm sm 1.5 mul rl cp} def\n");
 	if(m_T)	mgl_printf(fp, gz, "/m_T {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl cp} def\n");
-
 	if(m_Y)	mgl_printf(fp, gz, "/m_Y {0 sm rm 0 ss rl sm ss rl s2 0 rm sm sm rl d0} def\n");
 	if(m_r)	mgl_printf(fp, gz, "/m_r {sm 2 div sm rm 0 s2 rl ss 1.5 mul sm rl d0 cp} def\n");
 	if(m_l)	mgl_printf(fp, gz, "/m_l {ss 2 div sm rm 0 s2 rl sm 1.5 mul sm rl d0 cp} def\n");
 	if(m_R)	mgl_printf(fp, gz, "/m_R {sm 2 div sm rm 0 s2 rl ss 1.5 mul sm rl cp} def\n");
 	if(m_L)	mgl_printf(fp, gz, "/m_L {ss 2 div sm rm 0 s2 rl sm 1.5 mul sm rl cp} def\n");
+	if(m_P)	mgl_printf(fp, gz, "/m_P {m_p 0 sm rm m_s} def\n");
+	if(m_X)	mgl_printf(fp, gz, "/m_X {m_x ss sm rm m_s} def\n");
+//	if(m_C)	mgl_printf(fp, gz, "/m_C {m_c m_o} def\n");
 	mgl_printf(fp, gz, "\n");
 
 	// write definition for all glyphs
@@ -396,12 +400,15 @@ void mglGraphPS::WriteEPS(const char *fname,const char *descr)
 			case 'V':	mgl_printf(fp, gz, "np %g %g mt m_V %sfill\n",P[i].x[0],P[i].y[0],str);	break;
 			case 'T':	mgl_printf(fp, gz, "np %g %g mt m_T %sfill\n",P[i].x[0],P[i].y[0],str);	break;
 			case 'o':	mgl_printf(fp, gz, "%g %g m_o %sdr\n",P[i].x[0],P[i].y[0],str);break;
-			case 'O':	mgl_printf(fp, gz, "%g %g m_O %sdr\n",P[i].x[0],P[i].y[0],str);break;
+			case 'O':	mgl_printf(fp, gz, "%g %g m_o %sfill\n",P[i].x[0],P[i].y[0],str);break;
 			case 'Y':	mgl_printf(fp, gz, "np %g %g mt m_Y %sdr\n",P[i].x[0],P[i].y[0],str);	break;
 			case '<':	mgl_printf(fp, gz, "np %g %g mt m_l %sdr\n",P[i].x[0],P[i].y[0],str);	break;
 			case '>':	mgl_printf(fp, gz, "np %g %g mt m_r %sdr\n",P[i].x[0],P[i].y[0],str);	break;
 			case 'L':	mgl_printf(fp, gz, "np %g %g mt m_L %sfill\n",P[i].x[0],P[i].y[0],str);	break;
 			case 'R':	mgl_printf(fp, gz, "np %g %g mt m_R %sfill\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'P':	mgl_printf(fp, gz, "np %g %g mt m_P %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'X':	mgl_printf(fp, gz, "np %g %g mt m_X %sdr\n",P[i].x[0],P[i].y[0],str);	break;
+			case 'C':	mgl_printf(fp, gz, "%g %g m_o %g %g m_c %sdr\n",P[i].x[0],P[i].y[0],P[i].x[0],P[i].y[0],str);	break;
 			default:	mgl_printf(fp, gz, "%g %g m_c %sfill\n",P[i].x[0],P[i].y[0],str);
 			}
 			if(P[i].s!=MarkSize)
@@ -491,9 +498,15 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 					int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]));
 			switch(P[i].m)
 			{
+			case 'P':
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g L %g %g L %g %g L %g %g\"/>\n",
+						x-s,y,x+s,y,x,y-s,x,y+s, x-s,y-s,x+s,y-s,x+s,y+s,x-s,y+s,x-s,y-s);	break;
 			case '+':
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g\"/>\n",
 						x-s,y,x+s,y,x,y-s,x,y+s);	break;
+			case 'X':
+				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g L %g %g L %g %g L %g %g\"/>\n",
+						x-s,y-s,x+s,y+s,x+s,y-s,x-s,y+s, x-s,y-s,x+s,y-s,x+s,y+s,x-s,y+s,x-s,y-s);	break;
 			case 'x':
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g\"/>\n",
 						x-s,y-s,x+s,y+s,x+s,y-s,x-s,y+s);	break;

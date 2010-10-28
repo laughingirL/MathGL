@@ -812,9 +812,11 @@ void mglGraphAB::mark_plot(mreal *pp, char type)
 	mreal p[12]={0,0,pp[2],0,0,pp[2],0,0,pp[2],0,0,pp[2]};
 	mreal v, ss=MarkSize*0.35*font_factor;
 	register long i,j,s;
-	if(type=='.' || ss==0)
+	if(type=='.' || type=='C' || ss==0)
 	{
 		bool aa=UseAlpha;	UseAlpha = true;
+		ss *= 1.1;	if(type=='C')	for(i=long(-4*ss);i<=long(4*ss);i++)
+			pnt_plot(long(pp[0]+ss*cos(i*M_PI_4/ss)), long(pp[1]+ss*sin(i*M_PI_4/ss)),pp[2],cs);
 		s = long(5.5+fabs(PenWidth));
 		for(i=-s;i<=s;i++)	for(j=-s;j<=s;j++)
 		{
@@ -833,12 +835,30 @@ void mglGraphAB::mark_plot(mreal *pp, char type)
 		if(!strchr("xsSoO",type))	ss *= 1.1;
 		switch(type)
 		{
+		case 'P':
+			p[0] = pp[0]-ss;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1]-ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-ss;	p[1] = pp[1]-ss;	p[3] = pp[0]-ss;	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-ss;	p[1] = pp[1]+ss;	p[3] = pp[0]+ss;	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]+ss;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 		case '+':
 			p[0] = pp[0]-ss;	p[1] = pp[1];	p[3] = pp[0]+ss;	p[4] = pp[1];
 			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 			p[0] = pp[0];	p[1] = pp[1]-ss;	p[3] = pp[0];	p[4] = pp[1]+ss;
 			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 			break;
+		case 'X':
+			p[0] = pp[0]-ss;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1]-ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-ss;	p[1] = pp[1]-ss;	p[3] = pp[0]-ss;	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]-ss;	p[1] = pp[1]+ss;	p[3] = pp[0]+ss;	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
+			p[0] = pp[0]+ss;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1]+ss;
+			mglGraphAB::line_plot(p,p+3,CDef,CDef);
 		case 'x':
 			p[0] = pp[0]-ss;	p[1] = pp[1]-ss;	p[3] = pp[0]+ss;	p[4] = pp[1]+ss;
 			mglGraphAB::line_plot(p,p+3,CDef,CDef);

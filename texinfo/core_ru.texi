@@ -76,7 +76,7 @@
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} SetTransparent (@code{bool} val)
 @deftypefnx {Функция С} @code{void} mgl_set_transp (@code{HMGL} gr, @code{int} enable)
-Временно включает/вохвращает прозрачность графиков. Это аналог @code{Alpha(val)}, но работает более корректно для класса mglGraphGL.
+Временно включает/возвращает прозрачность графиков. Это аналог @code{Alpha(val)}, но работает более корректно для класса mglGraphGL.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} SetTranspType (@code{int} type)
@@ -134,7 +134,7 @@
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Fog (@code{float} d, @code{float} dz=@code{0.25})
 @deftypefnx {Функция С} @code{void} mgl_set_fog (@code{HMGL} gr, @code{float} d, @code{float} dz)
-Имитирует туман на графике. Туман начинается на относительном расстоянии @var{dz} от точки обзора и его плотность растет экспоненциально вглубь по закону ~ 1-exp(-@emph{d*z}). Здесь @emph{z} -- нормализованная на 1 глубина графика. Если @var{d}=@code{0} то туман отсутствует. @sref{Surface in fog sample}
+Имитирует туман на графике. Туман начинается на относительном расстоянии @var{dz} от точки обзора и его плотность растет экспоненциально вглубь по закону ~@math{1-exp(-d*z)}. Здесь @emph{z} -- нормализованная на 1 глубина графика. Если @var{d}=@code{0} то туман отсутствует. @sref{Surface in fog sample}
 @end deftypefn
 
 @c ==================================================================
@@ -581,7 +581,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} SetFunc (@code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ=@code{""}, @code{const char *}EqA=@code{""})
 @deftypefnx {Функция С} @code{void} mgl_set_func (@code{HMGL} gr, @code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ)
 @deftypefnx {Функция С} @code{void} mgl_set_func_ext (@code{HMGL} gr, @code{const char *}EqX, @code{const char *}EqY, @code{const char *}EqZ, @code{const char *}EqA)
-Задает формулы перехода к криволинейным координатам. Каждая строка является математическим выражением, зависящим от старых координат x, y, z. Например, для цилиндрических координат будет @code{Axis("x*cos(y)", "x*sin(y)", "z");}. Для удаления формул соответствующий параметр должен быть пустым или @code{NULL}. Использование формул преобразования слегка замедляет программу, т.е.. @code{Axis("", "", "")} быстрее чем @code{Axis("1*x", "1*y", "1*z")}. Параметр @var{EqA} задает аналогичную формулу для цветовой шкалы. @xref{mglFormula class}.
+Задает формулы перехода к криволинейным координатам. Каждая строка является математическим выражением, зависящим от старых координат @samp{x}, @samp{y}, @samp{z} и @samp{a} или @samp{c} для цветовой шкалы. Например, для цилиндрических координат будет @code{Axis("x*cos(y)", "x*sin(y)", "z");}. Для удаления формул соответствующий параметр должен быть пустым или @code{NULL}. Использование формул преобразования слегка замедляет программу, т.е.. @code{Axis("", "", "")} быстрее чем @code{Axis("1*x", "1*y", "1*z")}. Параметр @var{EqA} задает аналогичную формулу для цветовой шкалы. @xref{Textual formulas}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} SetCoor (@code{int} how)
@@ -617,7 +617,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefnx {Функция С} @code{void} mgl_set_ticks (@code{HMGL} gr, @code{float} dx, @code{float} dy, @code{float} dz)
 @deftypefnx {Функция С} @code{void} mgl_set_subticks (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} nz)
 @deftypefnx {Функция С} @code{void} mgl_set_tick_origin (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0)
-Задает шаг меток осей @var{d}, число подметок @var{ns} и начальное положение меток @var{org} для оси вдоль направления @var{dir} (используйте 'c' для меток colorbar). Переменная @var{d} задает шаг меток (если положительна) или их число на оси (if отрицательна). Нулевое значение задает логарифмические метки. Если @var{org}=@code{NAN}, то используется значение из переменной @var{Org}.
+Задает шаг меток осей @var{d}, число подметок @var{ns} и начальное положение меток @var{org} для оси вдоль направления @var{dir} (используйте 'c' для меток colorbar). Переменная @var{d} задает шаг меток (если положительна) или их число на оси (если отрицательна). Нулевое значение задает логарифмические метки. Если @var{org}=@code{NAN}, то используется значение из переменной @var{Org}.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} SetTicksVal (@code{char} dir, @code{int} n, @code{float *}val, @code{const char **}lbl)
@@ -703,7 +703,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} InPlot (@code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{bool} rel=@code{false})
 @deftypefnx {Функция С} @code{void} mgl_inplot (@code{HMGL} gr, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2)
 @deftypefnx {Функция С} @code{void} mgl_relplot (@code{HMGL} gr, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2)
-Помещает последующий вывод в прямоугольную область [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}] (исходный размер [0,1]*[0,1]). Эта функция позволяет поместить график в произвольную область рисунока. Если параметр @var{rel}=@code{true}, то используется позиция относительно текщего SubPlot() (или InPlot() с @var{rel}=@code{false}). Функция сбрасывает матрицу трансформации (повороты и сжатие графика) и должна вызываться первой для создания "подграфика".
+Помещает последующий вывод в прямоугольную область [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}] (исходный размер [0,1]*[0,1]). Эта функция позволяет поместить график в произвольную область рисунка. Если параметр @var{rel}=@code{true}, то используется позиция относительно текщего SubPlot() (или InPlot() с @var{rel}=@code{false}). Функция сбрасывает матрицу трансформации (повороты и сжатие графика) и должна вызываться первой для создания "подграфика".
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} ColumnPlot (@code{int} num, @code{int} ind, @code{float} d=@code{0})
@@ -893,7 +893,7 @@ Setsize: размер(ы) равны нулю или отрицательны
 @deftypefnx {Функция С} @code{void} mgl_facex (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} wy, @code{float} wz, @code{const char *}stl, @code{float} d1, @code{float} d2)
 @deftypefnx {Функция С} @code{void} mgl_facey (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} wx, @code{float} wz, @code{const char *}stl, @code{float} d1, @code{float} d2)
 @deftypefnx {Функция С} @code{void} mgl_facez (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} wx, @code{float} wy, @code{const char *}stl, @code{float} d1, @code{float} d2)
-Рисует заполненный прямоугольник (грань) перпендикулярно оси [x,y,z] в точке @{@var{x0}, @var{y0}, @var{z0}@} цветом @var{stl} и шириной @var{wx}, @var{wy}, @var{wz} вдоль соответствующего направления. При этом цвет может быть один для всей грани, или различным если указаны все 4 цвета. Параметры @var{d1}!=0, @var{d2}!=0 задают дополнительный сдвиг последней точки (т.е. рисуют четырехугольник).Грань будет нарисована даже если часть ее лежит вне диапазона осей координат.
+Рисует закрашенный прямоугольник (грань) перпендикулярно оси [x,y,z] в точке @{@var{x0}, @var{y0}, @var{z0}@} цветом @var{stl} и шириной @var{wx}, @var{wy}, @var{wz} вдоль соответствующего направления. При этом цвет может быть один для всей грани, или различным для разных вершин если указаны все 4 цвета. Параметры @var{d1}!=0, @var{d2}!=0 задают дополнительный сдвиг последней точки (т.е. рисуют четырехугольник).Грань будет нарисована даже если часть ее лежит вне диапазона осей координат.
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++)} @code{void} Sphere (@code{mglPoint} p, @code{float} r, @code{const char *}stl=@code{"r"})
@@ -1004,9 +1004,9 @@ Setsize: размер(ы) равны нулю или отрицательны
 Рисует оси координат и метки на них (@pxref{Axis settings}) в направлениях, указанных строкой @var{dir}. Если строка содержит символ @samp{_}, то подписи меток отображаться не будут. Шрифт подписей определяется функцией @code{SetFontDef()} (@pxref{Font settings}). Метки будут "подогнаны" если @var{adjust}=@code{true} (с помощью вызова функции @code{AdjustTicks()}). 
 @end deftypefn
 
-@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Colorbar (@code{const char *}sch=@code{""}, @code{int} where=@code{0})
-@deftypefnx {Функция С} @code{void} mgl_colorbar (@code{HMGL} gr, @code{const char *}sch, @code{int} where)
-Рисует полосу соответствия цвета и числовых значений (colorbar) для цветовой схемы @var{sch} (используется текущая для @code{sch=""}) с краю от графика. Параметр @var{where} задает местоположение: @samp{0} - справа (по умолчанию), @samp{1} - слева, @samp{2} - сверху, @samp{3} - снизу. Если строка @var{sch} содержит @samp{<>^_}, то параметр @var{pos} определяется как: @code{pos=0} для @samp{>} (справа), @code{pos=1} для @samp{<} (слева), @code{pos=2} для @samp{^} (сверху), @code{pos=3} для @samp{_} (снизу). Если строка содержит @samp{A}, то используются абсолютные координаты (относительно рисунка). @sref{Dens sample}
+@deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Colorbar (@code{const char *}sch=@code{""}, @code{int} pos=@code{0})
+@deftypefnx {Функция С} @code{void} mgl_colorbar (@code{HMGL} gr, @code{const char *}sch, @code{int} pos)
+Рисует полосу соответствия цвета и числовых значений (colorbar) для цветовой схемы @var{sch} (используется текущая для @code{sch=""}) с краю от графика. Параметр @var{pos} задает местоположение: @samp{0} - справа (по умолчанию), @samp{1} - слева, @samp{2} - сверху, @samp{3} - снизу. Если строка @var{sch} содержит @samp{<>^_}, то параметр @var{pos} определяется как: @code{pos=0} для @samp{>} (справа), @code{pos=1} для @samp{<} (слева), @code{pos=2} для @samp{^} (сверху), @code{pos=3} для @samp{_} (снизу). Если строка содержит @samp{A}, то используются абсолютные координаты (относительно рисунка). @sref{Dens sample}
 @end deftypefn
 
 @deftypefn {Метод класса @code{mglGraph} (C++, Python)} @code{void} Colorbar (@code{const mglData &}v, @code{const char *}sch=@code{""}, @code{int} where=@code{0})

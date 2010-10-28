@@ -37,7 +37,7 @@ The color types are: @samp{k} -- black, @samp{r} -- red, @samp{R} -- dark red, @
 Dashing style has the following meaning: space -- no line (usable for plotting only marks), @samp{-} -- solid line (################), @samp{|} -- long dashed line (########________), @samp{;} -- dashed line (####____####____), @samp{=} -- small dashed line (##__##__##__##__), @samp{:} -- dotted line (#___#___#___#___), @samp{j} -- dash-dotted line (#######____#____), @samp{i} -- small dash-dotted line (###__#__###__#__).
 @end ifnothtml
 
-Marker types are: @samp{o} -- circle, @samp{+} -- cross, @samp{x} -- skew cross, @samp{s} - square, @samp{d} - rhomb (or diamond), @samp{.} -- point, @samp{^} -- triangle up, @samp{v} -- triangle down, @samp{<} -- triangle left, @samp{>} -- triangle right, @samp{#*} -- Y sign. If string contain symbol @samp{#} then the solid versions of markers are used.
+Marker types are: @samp{o} -- circle, @samp{+} -- cross, @samp{x} -- skew cross, @samp{s} - square, @samp{d} - rhomb (or diamond), @samp{.} -- dot (point), @samp{^} -- triangle up, @samp{v} -- triangle down, @samp{<} -- triangle left, @samp{>} -- triangle right, @samp{#*} -- Y sign, @samp{#+} -- squared cross, @samp{#x} -- squared skew cross, @samp{#.} -- circled dot. If string contain symbol @samp{#} then the solid versions of markers are used.
 
 @float
 @image{../png/sample5, 7cm}

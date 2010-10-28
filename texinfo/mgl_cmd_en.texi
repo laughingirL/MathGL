@@ -39,7 +39,7 @@ Before the first using all variables must be defined with the help of commands, 
 
 Command may have several set of possible arguments (for example, @code{plot ydat} and @code{plot xdat ydat}). All command arguments for a selected set must be specified. However, some arguments can have default values. These argument are printed in [], like @code{plot ydat ['stl'='' zval=nan]}. At this, the record @code{[arg1 arg2 arg3 ...]} means @code{[arg1 [arg2 [arg3 ...]]]}, i.e. you can omit only tailing arguments if you agree with its default values. For example, @code{plot ydat '' 1} or @code{plot ydat ''} is correct, but @code{plot ydat 1} is incorrect (argument @code{'stl'} is missed).
 
-All MGL commands can be divided on several groups. I will use the following notation for a command description: command names are bold, strings are denoted by commas, variable names are italic, numbers are typewriter. Optional arguments are placed in square brackets and default values for them are shown. Detailed description of color, line styles, color schemes, font types, TeX-like symbols and formulas can be found in corresponding section.
+All MGL commands can be divided on several groups. I will use the following notation for a command description: command names are bold, strings are denoted by commas, variable names are italic, numbers are typewriter. Optional arguments are placed in square brackets and default values for them are shown. Detailed description of color, line styles (@pxref{Line styles}), color schemes (@pxref{Color scheme}), font types, TeX-like symbols (@pxref{Font styles}) and formulas (@pxref{Textual formulas}) can be found in corresponding section.
 
 @menu
 @ifset UDAV
@@ -133,7 +133,7 @@ Coomands in this group influences on overall graphics appearance. So all of them
 @cindex transparent
 @cindex transptype
 
-There are several commands for setup transparency. The general command is @code{alpha} which switch on/off the transparency for overall plot. It influence only for graphics which created after @code{alpha} call (with one exeption, mglGraphGL). Command @code{alphadef} specify the default value of alpha-channel. You may switch off transparency of selected plot by command @code{transparent}. Finally, command @code{transptype} set the kind of transparency. @sref{Transparent surface sample}
+There are several commands for setup transparency. The general command is @code{alpha} which switch on/off the transparency for overall plot. It influence only for graphics which created after @code{alpha} call. Command @code{alphadef} specify the default value of alpha-channel. You may switch off transparency of selected plot by command @code{transparent}. Finally, command @code{transptype} set the kind of transparency. @sref{Transparent surface sample}
 
 @anchor{alpha}
 @deffn {MGL command} alpha @code{[val=on]}
@@ -149,7 +149,7 @@ Temporary switches transparency on/off for the plot.
 @end deffn
 @anchor{transptype}
 @deffn {MGL command} transptype @code{val}
-This command set the transparency type. Normal transparency (@samp{0}) -- below things is less visible than upper ones. It does not look well in OpenGL mode (mglGraphGL) for several surfaces. Glass-like transparency (@samp{1}) -- below and upper things are commutable and just decrease intensity of light by RGB channel. Lamp-like transparency (@samp{2}) -- below and upper things are commutable and are the source of some additional light. I recommend to set @code{alphadef 0.3} or less for lamp-like transparency.
+This command set the transparency type. Normal transparency (@samp{0}) -- below things is less visible than upper ones. Glass-like transparency (@samp{1}) -- below and upper things are commutable and just decrease intensity of light by RGB channel. Lamp-like transparency (@samp{2}) -- below and upper things are commutable and are the source of some additional light. I recommend to set @code{alphadef 0.3} or less for lamp-like transparency.
 @end deffn
 
 @c ==================================================================
@@ -158,7 +158,7 @@ This command set the transparency type. Normal transparency (@samp{0}) -- below 
 @cindex light
 @cindex ambient
 
-There are several commands for setup lighting. The general command is @code{light} which switch on/off the lighting for overall plot. It influence only for graphics which created after @code{light} call (with one exeption, mglGraphGL). Generally MathGL support up to 10 independent light sources. But in OpenGL mode only 8 of light sources is used due to OpenGL limitations. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
+There are several commands for setup lighting. The general command is @code{light} which switch on/off the lighting for overall plot. It influence only for graphics which created after @code{light} call (with one exeption, mglGraphGL). Generally MathGL support up to 10 independent light sources. The position, color, brightness of each light source can be set separately. By default only one light source is active. It is source number @code{0} with white color, located at top of the plot.
 
 @anchor{light}
 @deffn {MGL command} light @code{[val=on]}
@@ -184,7 +184,7 @@ Sets the brightness of ambient light. The value should be in range [0,1]. Initia
 
 @anchor{fog}
 @deffn {MGL command} fog @code{val [dz=0.25]}
-Command imitate a fog in the plot. Fog start from relative distance @var{dz} from view point and its density growths exponentially in depth. So that the fog influence is determined by law ~ 1-exp(-@emph{val*z}). Here @emph{z} is normalized to 1 depth of the plot. If value @var{val}=@code{0} then the fog is absent. @sref{Surface in fog sample}
+Command imitate a fog in the plot. Fog start from relative distance @var{dz} from view point and its density growths exponentially in depth. So that the fog influence is determined by law ~@math{1-exp(-d*z)}. Here @emph{z} is normalized to 1 depth of the plot. If value @var{val}=@code{0} then the fog is absent. @sref{Surface in fog sample}
 @end deffn
 
 @c ==================================================================
@@ -251,11 +251,11 @@ The command changes the scale of graphics that correspond to zoom in/out of the 
 @subsection Cutting @MGL{}
 @cindex cut
 
-These commands set the condition when the points are excluded (cutted) from the drawing.
+These commands set the condition when the points are excluded (cutted) from the drawing. Note, that a point with @code{nan} value(s) of coordinate or amplitude will be automatically excluded from the drawing.
 
 @anchor{cut}
 @deffn {MGL command} cut @code{val}
-Determines how points outside bounding box are drawn. If it is @code{true} then points are excluded from plot (it is default) otherwise the points are projected to edges of bounding box.
+Determines how points outside bounding box are drawn. If it is @code{on} then points are excluded from plot (it is default) otherwise the points are projected to edges of bounding box.
 @end deffn
 
 @deffn {MGL command} cut @code{x1 y1 z1 x2 y2 z2}
@@ -327,11 +327,11 @@ Sets the ranges of coordinates changing. Also it sets the range for coloring (an
 @end deffn
 
 @deffn {MGL command} axis 'fx' 'fy' ['fz'='' 'fa'='']
-Sets the transformation formulas for curvilinear coordinates. Each string should contain mathematical expression for real coordinate depending on internal coordinates 'x', 'y', 'z' and 'a' or 'c' for colorbar. For example, the cylindrical coordinates are introduced as @code{axis 'x*cos(y)' 'x*sin(y)' 'z'}. For removing of formulas the corresponding parameter should be @code{''}. The using of transformation formulas will slightly slowing the program, i.e. @code{axis '' '' ''} is faster than @code{axis '1*x' '1*y' '1*z'}. Initially all formulas are absent (Cartesian coordinates are used). For more details about functions and formulas, @pxref{Textual formulas}.
+Sets the transformation formulas for curvilinear coordinates. Each string should contain mathematical expression for real coordinate depending on internal coordinates @samp{x}, @samp{y}, @samp{z} and @samp{a} or @samp{c} for colorbar. For example, the cylindrical coordinates are introduced as @code{axis 'x*cos(y)' 'x*sin(y)' 'z'}. For removing of formulas the corresponding parameter should be @code{''}. The using of transformation formulas will slightly slowing the program, i.e. @code{axis '' '' ''} is faster than @code{axis '1*x' '1*y' '1*z'}. Initially all formulas are absent (Cartesian coordinates are used). For more details about functions and formulas, @pxref{Textual formulas}.
 @end deffn
 
 @deffn {MGL command} axis @code{how}
-Sets one of the predefined transformation formulas for curvilinear coordinate. Paramater @var{how} define the coordinates: @code{0} -- Cartesian coordinates (no transformation); @code{1} -- Polar coordiantes @math{x_n=x*cos(y),y_n=x*sin(y), z_n=z}; @code{2} -- Spherical coordinates @math{x_n=x*sin(y)*cos(z), y_n=x*sin(y)*sin(z), z_n=x*cos(y)}; @code{3} -- Parabolic coordinates @math{x_n=x*y, y_n=(x*x-y*y)/2, z_n=z}; @code{4} -- Paraboloidal coordinates @math{x_n=(x*x-y*y)*cos(z)/2, y_n=(x*x-y*y)*sin(z)/2, z_n=x*y}; @code{5} -- Oblate coordinates @math{x_n=cosh(x)*cos(y)*cos(z), y_n=cosh(x)*cos(y)*sin(z), z_n=sinh(x)*sin(y)}; @code{6} -- Prolate coordinates @math{x_n=sinh(x)*sin(y)*cos(z), y_n=sinh(x)*sin(y)*sin(z), z_n=cosh(x)*cos(y)}; @code{7} -- Elliptic coordinates @math{x_n=cosh(x)*cos(y), y_n=sinh(x)*sin(y), z_n=z}; @code{8} -- Toroidal coordinates @math{x_n=sinh(x)*cos(z)/(cosh(x)-cos(y)), y_n=sinh(x)*sin(z)/(cosh(x)-cos(y)), z_n=sin(y)/(cosh(x)-cos(y))}; @code{9} -- Bispherical coordinates @math{x_n=sin(y)*cos(z)/(cosh(x)-cos(y)), y_n=sin(y)*sin(z)/(cosh(x)-cos(y)), z_n=sinh(x)/(cosh(x)-cos(y))}; @code{10} -- Bipolar coordinates @math{x_n=sinh(x)/(cosh(x)-cos(y)), y_n=sin(y)/(cosh(x)-cos(y)), z_n=z}.
+Sets one of the predefined transformation formulas for curvilinear coordinate. Paramater @var{how} define the coordinates: @samp{0} -- Cartesian coordinates (no transformation); @samp{1} -- Polar coordiantes @math{x_n=x*cos(y),y_n=x*sin(y), z_n=z}; @samp{2} -- Spherical coordinates @math{x_n=x*sin(y)*cos(z), y_n=x*sin(y)*sin(z), z_n=x*cos(y)}; @samp{3} -- Parabolic coordinates @math{x_n=x*y, y_n=(x*x-y*y)/2, z_n=z}; @samp{4} -- Paraboloidal coordinates @math{x_n=(x*x-y*y)*cos(z)/2, y_n=(x*x-y*y)*sin(z)/2, z_n=x*y}; @samp{5} -- Oblate coordinates @math{x_n=cosh(x)*cos(y)*cos(z), y_n=cosh(x)*cos(y)*sin(z), z_n=sinh(x)*sin(y)}; @samp{6} -- Prolate coordinates @math{x_n=sinh(x)*sin(y)*cos(z), y_n=sinh(x)*sin(y)*sin(z), z_n=cosh(x)*cos(y)}; @samp{7} -- Elliptic coordinates @math{x_n=cosh(x)*cos(y), y_n=sinh(x)*sin(y), z_n=z}; @samp{8} -- Toroidal coordinates @math{x_n=sinh(x)*cos(z)/(cosh(x)-cos(y)), y_n=sinh(x)*sin(z)/(cosh(x)-cos(y)), z_n=sin(y)/(cosh(x)-cos(y))}; @samp{9} -- Bispherical coordinates @math{x_n=sin(y)*cos(z)/(cosh(x)-cos(y)), y_n=sin(y)*sin(z)/(cosh(x)-cos(y)), z_n=sinh(x)/(cosh(x)-cos(y))}; @samp{10} -- Bipolar coordinates @math{x_n=sinh(x)/(cosh(x)-cos(y)), y_n=sin(y)/(cosh(x)-cos(y)), z_n=z}.
 @end deffn
 
 @anchor{caxis}
@@ -531,7 +531,7 @@ Draw the drop with radius @var{r} at point @{@var{x0},@var{y0},@var{z0}@} elonga
 @end deffn
 
 @anchor{cone}
-@deffn {MGL command} cone @code{x1 y1 z1 x2 y2 z2 r1} [@code{r2=-1} 'st'='' @code{edge=off}]
+@deffn {MGL command} cone @code{x1 y1 z1 x2 y2 z2 r1} [@code{r2=-1} 'stl'='' @code{edge=off}]
 Draw tube (or truncated cone if @var{edge}=@code{off}) between points @{@var{x1},@var{y1},@var{z1}@}, @{@var{x2},@var{y2},@var{z2}@} with radiuses at the edges @var{r1}, @var{r2}. If @var{r2}<0 then it is supposed that @var{r2}=@var{r1}. The cone color is defined by string @var{stl}.
 @end deffn
 
@@ -561,7 +561,7 @@ Draws unrotated text string @var{text} at position @{@var{x},@var{y},@var{z}@} w
 The command plots the string @var{text} at position @{@var{x},@var{y},@var{z}@} along direction @{@var{dx},@var{dy},@var{dz}@} with specified style @var{fnt} and @var{size}. By default parameters from @code{font} command are used.
 @end deffn
 
-@deffn {MGL command} text xdat 'text' ['fnt'='' @code{size=-1 zval=nan}]
+@deffn {MGL command} text ydat 'text' ['fnt'='' @code{size=-1 zval=nan}]
 @deffnx {MGL command} text xdat ydat 'text' ['fnt'='' @code{size=-1 zval=nan}]
 @deffnx {MGL command} text xdat ydat zdat 'text' ['fnt'='' @code{size=-1}]
 The command draws @var{text} along the curve between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} by font style @var{fnt} and with size @var{size}. The string @var{fnt} may contain symbols @samp{t} for printing the text under the curve (default), or @samp{T} for printing the text above the curve. The sizes of 1st dimension must be equal for all arrays @var{xdat.nx=ydat.nx=zdat.nx}. If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{z}[i] = @var{zval} is used. @sref{Text sample}
@@ -639,15 +639,15 @@ Prints the label @var{text} for x-,y-,z-,t-axis (here @samp{t} is ``ternary'' ax
 @cindex addlegend
 @cindex clearlegend
 
-These commands draw legend to the graph (useful for @ref{1D plotting @MGL{}}). Legend entry is a pair of strings: one for style of the line, another one with description text (with included LaTeX parsing). The array of string are accumulated first to the internal arrays (by command @code{addlegend}) and are plotted later. The position of the legend can be selected automatic or manually. Parameters @var{fnt} and @var{size} specify the font style and size. Parameter @var{llen} set the relative width of the line sample and the text indent (default value is 0.1). If line style string for entry is empty then the corresponding text is printed without indent. @sref{Legend sample}
+These commands draw legend to the graph (useful for @ref{1D plotting @MGL{}}). Legend entry is a pair of strings: one for style of the line, another one with description text (with included LaTeX parsing). The array of string are accumulated first to the internal arrays (by command @code{addlegend}) and are plotted later. The position of the legend can be selected automatic or manually. Parameters @var{fnt} and @var{size} specify the font style and size. Parameter @var{llen} set the relative width of the line sample and the text indent (default value is 0.1). If line style string for entry is empty then the corresponding text is printed without indent. If string contains @samp{A} then legend coordinates set position in the picture. @sref{Legend sample}
 
 @anchor{legend}
 @deffn {MGL command} legend [@code{pos=3} 'fnt'='rL' @code{size=-1 llen=0.1}]
-Draws legend of accumulated legend entries by font @var{fnt} with specified @var{size}. Parameter @var{pos} sets the position of the legend: @samp{0} is bottom left corner, @samp{1} is bottom right corner, @samp{2} is top left corner, @samp{3} is top right corner (is default). If string contains @samp{A} then legend coordinates set position in the picture.
+Draws legend of accumulated legend entries by font @var{fnt} with specified @var{size}. Parameter @var{pos} sets the position of the legend: @samp{0} is bottom left corner, @samp{1} is bottom right corner, @samp{2} is top left corner, @samp{3} is top right corner (is default).
 @end deffn
 
 @deffn {MGL command} legend @code{x y} ['fnt'='rL' @code{size=-1 llen=0.1}]
-Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Position of legend in the current subplot is determined by parameter @var{x}, @var{y} which supposed to be normalized to interval [0,1]. If string contains @samp{A} then legend coordinates set position in the picture.
+Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Position of legend in the current subplot is determined by parameter @var{x}, @var{y} which supposed to be normalized to interval [0,1].
 @end deffn
 
 @anchor{addlegend}

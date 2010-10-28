@@ -6,7 +6,7 @@
 	- Allow 2 colors diagrams (in Bars(), Barh()) -- one for positive, one for negative.
 	- Add style 'f' for Bars(), Barh() which draw diagrams like water-fall ones.
 	- Move argument 'above' of Bars(), Barh() to string (if it contain 'a' symbol).
-	- Add marks '<', '>', '#<', '#>', '#*' for left/right wire/solid triangles and Y sign.
+	- Add marks '<', '>', '#<', '#>', '#*', '#x', '#+', '#.' for left/right wire/solid triangles, Y sign, squared + and x signs.
 	- Add mini-dash for '=' line style symbol.
 	- Colorbar position can be specified in sch string: ‘>’ - right, ‘<’ - left, ‘^’ - above, ‘_’ - under. If string have 'A' then absolute coordinates is used.
 	- Legend coordinates set absolute position if font argument contain 'A' symbol.
@@ -37,6 +37,7 @@
 	- Now curves always start dashing from zero position.
 	- Restrict usage of original and wrapper classes simultaneously.
 	- Rename MGL command 'grid' to 'grid2' for case of plain grid drawing for data array(s).
+	- Rename MGL command 'set_id' to 'idset'.
 	- Disable color gradient in Vect() by default -- still enabled in VectC(), VectL().
 	- mglGraphFLTK::Update() now force window redrawing.
 	- Bugfix with newline symbol '\n'

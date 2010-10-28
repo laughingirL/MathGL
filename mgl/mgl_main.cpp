@@ -438,6 +438,9 @@ char mglGraph::SelectPen(const char *p)
 		}
 		if(strchr(p,'#'))
 		{
+			if(mk=='.')	mk = 'C';
+			if(mk=='+')	mk = 'P';
+			if(mk=='x')	mk = 'X';
 			if(mk=='o')	mk = 'O';
 			if(mk=='d')	mk = 'D';
 			if(mk=='s')	mk = 'S';
