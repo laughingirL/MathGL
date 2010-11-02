@@ -537,6 +537,9 @@ void mglGraphPS::WriteSVG(const char *fname,const char *descr)
 			case 'Y':
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g M %g %g L %g %g\"/>\n",
 						x,y+s, x,y, x+s,y-s, x,y, x-s,y-s);	break;
+			case 'C':
+				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"0.15\"/>\n<circle cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n",
+						int(255*P[i].c[0]),int(255*P[i].c[1]),int(255*P[i].c[2]),x,y,x,y,s);	break;
 			case 'o':
 				mgl_printf(fp, gz, "<circle cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n",
 						x,y,s);	break;

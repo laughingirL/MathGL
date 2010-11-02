@@ -1,32 +1,32 @@
 
 @c ------------------------------------------------------------------
-@chapter Plotter classes
+@chapter Классы для отрисовки
 @cindex mglGraphAB
 @cindex mglGraphZB
 @cindex mglGraphPS
 @cindex mglGraphGL
 @cindex mglGraphIDTF
 
-The class mglGraph (@pxref{MathGL core}) provide the basic tools for creating scientific graphics but it is abstract class. The matter is that there are several possible way to draw a graphics: in bitmap, in vector file, using OpenGL and so on. As result, user should use some of derived classes to do actual drawing. In principle, it is possible to derive a class exactly from mglGraph (and it was in v.1.6). But I recommend to derive from mglGraphAB class for higher compatibility of produced graphics from different classes. Class mglGraphAB is another abstract class which provide basic coordinates transformation, plotting functions and export to bitmap picture. It still require a functions for drawing lines, triangles and quadrangles. So below a set of ``plotter'' classes with short comments.
+Класс mglGraph (@pxref{MathGL core}) обеспечивает базовые функции для создания научной графики, но это абстрактный класс. Причина в том, что существует несколько возможностей вывода/отображения получившегося рисунка: в растровый или в векторный файлы, используя OpenGL и т.д. В результате, для конечной отрисовки необходимо использовать производные классы. В принципе, можно наследовать непосредственно mglGraph (и так было до версии 1.6). Однако, я рекомендую использовать в качестве базового класс mglGraphAB для большего единообразия получающейся графики в различных классах. Класс mglGraphAB -- другой абстрактный класс, обеспечивающий преобразование координат, базовые функции рисования и сохранения в растровое изображение. Он требует доопределения функций рисования линий, треугольников и четырехугольников. Ниже приведены классы ``отрисовки'' с короткими комментариями.
 
-@deftp {Class} mglGraphAB
-Abstract class mglGraphAB implements plotting function for 1D, 2D and 3D plots using Z-ordering and provides base functionality for to screen coordinate transformation, bitmap creation and so on. Class is defined in @code{#include <mgl/mgl_ab.h>}.
+@deftp {Класс} mglGraphAB
+Абстрактный класс, обеспечивающий отрисовку по глубине, преобразование к экранным координатам, сохранение в растровое изображение и т.д. Класс определен в @code{#include <mgl/mgl_ab.h>}.
 @end deftp
 
-@deftp {Class} mglGraphZB
-Class mglGraphZB implements plotting function for 1D, 2D and 3D plots using Z-Buffer. It is useful for off-screen (for console or SSH terminal) programs. Also this class can be used in any other programs which may draw bitmap on the  screen (for example, by using FLTK, Qt, wxWidgets libraries and so on). Note that bitmap picture is saved while exporting to EPS format. The produced graphics have better quality but slower in comparison with graphics in the class mglGraphPS. Class is defined in @code{#include <mgl/mgl_zb.h>}.
+@deftp {Класс} mglGraphZB
+Реализует растровую отрисовку изображения используя Z-Buffer. Можно использовать для рисования в памяти (или в консоли/SSH терминале). Также этот класс используется как базовый для рисования в окне (например, используя FLTK, Qt, wxWidgets библиотеки и пр.). При экспорте в EPS формат сохраняется растровая картинка. Получающийся рисунок лучшего качества, но рисуется медленнее чем в классе mglGraphPS. Класс определен в @code{#include <mgl/mgl_zb.h>}.
 @end deftp
 
-@deftp {Class} mglGraphPS
-Class mglGraphPS implements plotting functions for 1D, 2D and 3D plots and exports them to PostScript or SVG file. It is useful for off-screen (for console or SSH terminal) programs. Note that there is no transparency support now and color interpolation and lightning support is limited (not so nice as in class mglGraphZB). As result the plots with transparency (SurfA, Surf3A, CloudP, CloudQ) may look not so good. However the speed of drawing is higher in comparison with one in the class mglGraphZB. Class is defined in @code{#include <mgl/mgl_eps.h>}.
+@deftp {Класс} mglGraphPS
+Реализует векторную отрисовку изображения с возможностью сохранения в векторный PostScript или SVG файл. Можно использовать для рисования в памяти (или в консоли/SSH терминале). Замечу, что сглаживание цвета не поддерживается, а при экспорте в EPS не поддерживается и прозрачность (в силу ограничения формата). В результате рисунок получается быстрее, но более низкого качества чем в классе mglGraphZB. Класс определен в @code{#include <mgl/mgl_eps.h>}.
 @end deftp
 
-@deftp {Class} mglGraphGL
-Class mglGraphGL implements plotting function for 1D, 2D and 3D plots under OpenGL. This class can not be used in off-screen applications. Note, that several transparent overlapped surfaces are drawn not so correctly due to OpenGL limitations. Class is defined in @code{#include <mgl/mgl_gl.h>}.
+@deftp {Класс} mglGraphGL
+Реализует векторную графику с использованием OpenGL. Класс не может быть использован для рисования в консоли. В силу ограничения OpenGL возможна проблема корректного отображения нескольких перекрывающихся поверхностей. Класс определен в @code{#include <mgl/mgl_gl.h>}.
 @end deftp
 
-@deftp {Class} mglGraphIDTF
-Class mglGraphIDTF implements plotting function for 1D, 2D and 3D plots  and export it in IDTF format. Later this file can be converted in U3D format. Class is defined in @code{#include <mgl/mgl_idtf.h>}.
+@deftp {Класс} mglGraphIDTF
+Реализует экспорт графики в IDTF формате, который затем можно преобразовать в формат U3D. Класс определен в @code{#include <mgl/mgl_idtf.h>}.
 @end deftp
 
 @menu
@@ -35,20 +35,20 @@ Class mglGraphIDTF implements plotting function for 1D, 2D and 3D plots  and exp
 
 @c ------------------------------------------------------------------
 @node mglGraphAB class, , , Plotter classes
-@section mglGraphAB class
+@section Класс mglGraphAB
 @cindex mglGraphAB
 @cindex window
-#cindex mglDraw
+@cindex mglDraw
 
-Generally this class is a bit less abstract class than mglGraph class (@pxref{MathGL core}). It provide many protected methods for handling intermediate data from mglGraph methods and require a few methods to be defined by derived class. The developers of derived classes should look on file @samp{mgl_ab.h} and comments inside it or contact me.
+Вообще говоря это чуть ``менее абстрактный'' класс чем mglGraph (@pxref{MathGL core}). Он предоставляет много методов для обработки промежуточных данных и требует в производных классах определения только нескольких методов для отрисовки примитивов. Разработчикам, наследующим этот класс, следует посмотреть файл @samp{mgl_ab.h} и комментарии в нем или обратиться к автору.
 
-Here I just show new public methods for class mglGraphAB. There are functions returning the created picture (bitmap), its width and height. You may display it by yourself in any graphical library (see also, @ref{Widget classes}) or save in file (see also, @ref{Export to file}).
+Ниже я только перечислю основные общедоступные методы класса mglGraphAB. В первую очередь это функции, возвращающие созданный растровый рисунок, его ширину и высоту. В дальнейшем его можно использовать в любой графической библиотеке (см. также, @ref{Widget classes}) или сохранить в файл (см. также, @ref{Export to file}).
 
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{const unsigned char *} GetBits ()
-@deftypefnx {Method on @code{mglGraph} (Python)} @code{void} GetRGB (@code{char *}buf, @code{int} size)
-@deftypefnx {Method on @code{mglGraph} (Python)} @code{void} GetBGRN (@code{char *}buf, @code{int} size)
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{const unsigned char *} GetBits ()
+@deftypefnx {Метод класса @code{mglGraph} (Python)} @code{void} GetRGB (@code{char *}buf, @code{int} size)
+@deftypefnx {Метод класса @code{mglGraph} (Python)} @code{void} GetBGRN (@code{char *}buf, @code{int} size)
 @deftypefnx {C function} @code{const unsigned char *} mgl_get_rgb (@code{HMGL} gr)
-Gets RGB bitmap of the current state of the image. Format of each element of bits is: @{red, green, blue@}. Number of elements is Width*Height. Position of element @{i,j@} is [3*i + 3*Width*j] (or is [4*i + 4*Width*j] for @code{GetBGRN()}). For Python you have to provide the proper @var{size} of the buffer, @var{buf} i.e. the code should look like 
+Возвращает растровое изображение в формате RGB для текущего кадра. Формат каждого элемента (пикселя): @{red, green, blue@}. Число элементов Width*Height. Положение элемента @{i,j@} есть [3*i + 3*Width*j] (или [4*i + 4*Width*j] для @code{GetBGRN()}). В Python вы должны предоставить буфер @var{buf} достаточного размера @var{size}, т.е. код должен выглядеть следующим образом 
 @verbatim
 from mathgl import *
 gr = mglGraph();
@@ -58,31 +58,31 @@ gr.GetBGRN(bits, len(bits));
 @end verbatim
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{const unsigned char *} GetRGBA ()
-@deftypefnx {Method on @code{mglGraph} (Python)} @code{void} GetRGBA (@code{char *}buf, @code{int} size)
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{const unsigned char *} GetRGBA ()
+@deftypefnx {Метод класса @code{mglGraph} (Python)} @code{void} GetRGBA (@code{char *}buf, @code{int} size)
 @deftypefnx {C function} @code{const unsigned char *} mgl_get_rgba (@code{HMGL} gr)
-Gets RGBA bitmap of the current state of the image. Format of each element of bits is: @{red, green, blue, alpha@}. Number of elements is Width*Height. Position of element @{i,j@} is [4*i + 4*Width*j].
+Возвращает растровое изображение в формате RGBA для текущего кадра. Формат каждого элемента (пикселя): @{red, green, blue, alpha@}. Число элементов Width*Height. Положение элемента @{i,j@} есть [4*i + 4*Width*j].
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraphAB} (C++, Python)} @code{int} GetWidth ()
-@deftypefnx {Method on @code{mglGraphAB} (C++, Python)} @code{int} GetHeight ()
+@deftypefn {Метод класса @code{mglGraphAB} (C++, Python)} @code{int} GetWidth ()
+@deftypefnx {Метод класса @code{mglGraphAB} (C++, Python)} @code{int} GetHeight ()
 @deftypefnx {C function} @code{int} mgl_get_width (@code{HMGL} gr)
 @deftypefnx {C function} @code{int} mgl_get_height (@code{HMGL} gr)
-Gets width and height of the image.
+Возвращает ширину и высоту изображения.
 @end deftypefn
 
-Class mglGraphAB is the base class for ``widget classes''. So there are set of functions for handling window behavior. Most of them are applicable only for ``window'' classes (like mglGraphFLTK and so on, @pxref{Widget classes}). In all other classes these functions just do nothing. You should provide the corresponding interface in derived ``widget'' classes for user convenience.
+Класс mglGraphAB -- базовый класс для ``оконных классов''. Поэтому он содержит набор функций для создания и управления окном. Большинство из них применимо только в ``оконных классах'' (типа mglGraphFLTK и др, @pxref{Widget classes}). В остальных случаях функции ничего не делают. Если вы создаете оконный класс, то Вам следует предоставить такой же интерфейс для удобства пользователя.
 
 @deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{int (*}draw)(@code{mglGraph *}gr, @code{void *}p), @code{const char *}title, @code{void *}par=@code{NULL}, @code{void (*}reload)(@code{int} next, @code{void *}p)=@code{NULL}, @code{bool} maximize=@code{false})
-This function creates a window for plotting. Parameters @var{argc}, @var{argv} contain OS specific information and should be the same as in function @code{main(int argc,char **argv)}. Parameter @var{draw} sets a pointer (this is the name of function) to drawing function. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides). Parameter @var{title} sets the title of the window. Parameter @var{par} contains pointer to data for the plotting function @var{draw}. Parameter @var{maximize}=@code{true} open maximized window.
+Создает окно для вывода графика. Параметры @var{argc}, @var{argv} содержат информацию операционной системы и их слеудет передать в эту функцию из функции @code{main(int argc,char **argv)} (хотя они и могут быть равны @code{NULL}). Параметр @var{draw} -- указатель (имя) функции рисования. Есть возможность создания нескольких кадров вначале (требует больше памяти) и их быстрая анимации в дальнейшем. В этом случае функция @var{draw} должна возвращать число кадров или ноль для рисования по запросу. Замечу, что @var{draw} может быть равна @code{NULL} для отображения статической (текущей) картинки. Параметр @var{title} задает заголовок окна. Параметр @var{par} содержит указатель на данные, передаваемые функции рисования @var{draw}. Параметр @var{maximize}=@code{true} открывает окно раскрытым на весь экран.
 
-There are some keys handles for manipulating by the plot: 'a', 'd', 'w', 's' for the rotating; ',', '.' for viewing of the previous or next frames in the list; 'r' for the switching of transparency; 'f' for the switching of lightning; 'x' for hiding (closing) the window.
+В окне просмотра можно использовать клавиши: 'a', 'd', 'w', 's' для вращения; ',', '.' для просмотра предыдущего и следующего кадров; 'r' для переключения прозрачности; 'f' для переключения оспещенности; 'x' для закрытия окна.
 
-@strong{IMPORTANT!!!} You need to add a call of Rotate() (@pxref{Transformation matrix}) function for having possibility of plot rotation. If plot should be unrotated by default just add @code{Rotate(0,0)} in drawing function.
+@strong{ВАЖНО!!!} Вам не следует вызывать функцию Rotate() (@pxref{Transformation matrix}) если Вы хотите вращать график.
 @end deftypemethod
 
 @deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{mglDraw *}draw, @code{const char *}title, @code{bool} maximize=@code{false})
-This function is mostly the same as previous one. The only difference is that the drawing function and function for data reloading are specified as methods on a class inherited from class @code{mglDraw}. This class is defined in @code{#include <mgl/mgl_data.h>} and have only 2 methods:
+В основном аналогична предыдущей. Основное отличие в том, что функции рисования и обновления данных определены в классе наследнике класса @code{mglDraw}. Этот класс определен в @code{#include <mgl/mgl_define.h>} и имеет только 2 метода:
 @verbatim
 class mglDraw
 {
@@ -91,86 +91,88 @@ public:
     virtual void Reload(int) {};
 };
 @end verbatim
-You should inherit yours class from @code{mglDraw} and reimplement one or both functions for using this function.
+Вы можете создать класс-наследник @code{mglDraw} и переопределить один или оба метода для использования с данной функцией.
 @end deftypemethod
 
 
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleAlpha ()
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{void} ToggleAlpha ()
 @deftypefnx {C function} @code{int} mgl_wnd_toggle_alpha (@code{HMGL} gr)
-Switch on/off transparency but do not overwrite switches in user drawing function.
+Включает/выключает прозрачность, но не перезаписывает настройки пользовательской функции рисования.
 @end deftypefn
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleLight ()
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{void} ToggleLight ()
 @deftypefnx {C function} @code{int} mgl_wnd_toggle_light (@code{HMGL} gr)
+Включает/выключает освещение, но не перезаписывает настройки пользовательской функции рисования.
 Switch on/off lighting but do not overwrite switches in user drawing function.
 @end deftypefn
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleZoom ()
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{void} ToggleZoom ()
 @deftypefnx {C function} @code{int} mgl_wnd_toggle_zoom (@code{HMGL} gr)
-Switch on/off zooming by mouse as region selection.
+Включает/выключает приближение выбранного мышью области рисунка.
 @end deftypefn
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleRotate ()
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{void} ToggleRotate ()
 @deftypefnx {C function} @code{int} mgl_wnd_toggle_rotate (@code{HMGL} gr)
-Switch on/off rotation by mouse. Usually, left button is used for rotation, middle button for shift, right button for zoom/perspective.
+Включает/выключает режим вращения мышью. Обычно левая кнопка вращает график, средняя сдвигает, правая приближает и меняет перспективу.
 @end deftypefn
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleNo ()
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{void} ToggleNo ()
 @deftypefnx {C function} @code{int} mgl_wnd_toggle_no (@code{HMGL} gr)
+Выключает режим приближения/вращения и восстанавливает вид по умолчанию.
 Switch off all zooming and rotation and restore initial state.
 @end deftypefn
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} Update ()
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{void} Update ()
 @deftypefnx {C function} @code{int} mgl_wnd_update (@code{HMGL} gr)
-Update window contents.
+Обновляет содержимое окна.
 @end deftypefn
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ReLoad (@code{bool} o)
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{void} ReLoad (@code{bool} o)
 @deftypefnx {C function} @code{int} mgl_wnd_reload (@code{HMGL} gr, @code{int} val)
-Reload user data and update picture.
+Перезагружает данные пользователя и обновляет картинку.
 @end deftypefn
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} Adjust ()
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{void} Adjust ()
 @deftypefnx {C function} @code{int} mgl_wnd_adjust (@code{HMGL} gr)
-Adjust size of bitmap to window size.
+Подгоняет размер картинки под размер окна (виджета).
 @end deftypefn
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} NextFrame ()
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{void} NextFrame ()
 @deftypefnx {C function} @code{int} mgl_wnd_next_frame (@code{HMGL} gr)
-Show next frame if one.
+Показывает следующий кадр.
 @end deftypefn
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} PrevFrame ()
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{void} PrevFrame ()
 @deftypefnx {C function} @code{int} mgl_wnd_prev_frame (@code{HMGL} gr)
+Показывает предыдущий кадр.
 Show previous frame if one.
 @end deftypefn
-@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} Animation ()
+@deftypefn {Метод класса @code{mglGraphAB} (C++)} @code{void} Animation ()
 @deftypefnx {C function} @code{int} mgl_wnd_animation (@code{HMGL} gr)
-Run/stop slideshow (animation) of frames
+Запускает/останавливает слайд-шоу (анимацию) кадров.
 @end deftypefn
 
 @deftypefn {C function} @code{int} mgl_wnd_set_auto_clf (@code{HMGL} gr, @code{int} val)
 @end deftypefn
 @deftypecv {Widget option} mglGraphAB @code{bool} AutoClf
-Clear canvas between drawing. You may switch it off for accumulate previous drawing (for example some points or parts of a picture).
+Включает/выключает автоматическую очистку рисунка между перерисовкой. Выключение полезно для рисования с накоплением (например, результатов/точек расчета).
 @end deftypecv
 
 @deftypefn {C function} @code{int} mgl_wnd_set_delay (@code{HMGL} gr, @code{int} val)
 @end deftypefn
 @deftypecv {Widget option} mglGraphAB @code{float} Delay
-Delay for animation in seconds. Default value is 1 sec.
+Задержка анимации в секундах. По умолчанию равно 1 секунде.
 @end deftypecv
 
-@deftypefn {Method on @code{mglGraphAB} (C++, Python)} @code{mglPoint} CalcXYZ (@code{int} xs, @code{int} ys)
+@deftypefn {Метод класса @code{mglGraphAB} (C++, Python)} @code{mglPoint} CalcXYZ (@code{int} xs, @code{int} ys)
 @deftypefnx {C function} @code{void} mgl_calc_xyz (@code{HMGL} gr, @code{int} xs, @code{int} ys, @code{float *}x, @code{float *}y, @code{float *}z)
-Calculate 3D coordinate @{x,y,z@} for screen point @{xs,ys@}. At this moment it ignore perspective and transformation formulas (curvilinear coordinates). The calculation are done for the last used InPlot (@pxref{Transformation matrix}).
+Вычисляет 3D координаты @{x,y,z@} для экранной точки @{xs,ys@}. В данный момент игнорируется перспектива графика и формулы перехода в криволинейные координаты. Вычисления производятся для последнего использованного InPlot (@pxref{Transformation matrix}).
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraphAB} (C++, Python)} @code{mglPoint} CalcScr (@code{mglPoint} p)
-@deftypefnx {Method on @code{mglGraphAB} (C++)} @code{void} CalcScr (@code{mglPoint} p, @code{int *}xs, @code{int *}ys)
+@deftypefn {Метод класса @code{mglGraphAB} (C++, Python)} @code{mglPoint} CalcScr (@code{mglPoint} p)
+@deftypefnx {Метод класса @code{mglGraphAB} (C++)} @code{void} CalcScr (@code{mglPoint} p, @code{int *}xs, @code{int *}ys)
 @deftypefnx {C function} @code{void} mgl_calc_scr (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{int *}xs, @code{int *}ys)
-Calculate screen point @{xs,ys@} for 3D coordinate @{x,y,z@}. The calculation are done for the last used InPlot (@pxref{Transformation matrix}).
+Вычисляет экранные координаты @{xs,ys@} для 3D координат @{x,y,z@}. Вычисления производятся для последнего использованного InPlot (@pxref{Transformation matrix}).
 @end deftypefn
 
 @deftypefn {C function} @code{int} mgl_wnd_set_show_mouse_pos (@code{HMGL} gr, @code{int} val)
 @end deftypefn
 @deftypecv {Widget option} mglGraphAB @code{float} ShowMousePos
-Switch to show or not in the widget the last mouse click position.
+Включает/выключает показ координат последнего нажатия кнопки мыши на рисунке.
 @end deftypecv
 
 @deftypecv {Widget option} mglGraphAB @code{mglPoint} LastMousePos
-Last position of mouse click.
+Последнее положение нажатия кнопки мыши.
 @end deftypecv
-
 

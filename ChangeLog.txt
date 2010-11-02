@@ -27,7 +27,7 @@
 	- Add new function SetLegendMarks() to allow multiple marks in Legend() sample.
 	- Add functions GetWarnCode(), mgl_get_warn_code() for getting code of the last warning 
 	- Add possibility to read HDF4 files in mglData.
-	- Now parameter 'cnt' of Flow() is always defined by value of 'num' -- cnt = (num>0)!
+	- Now parameter 'cnt' of Flow() and Pipe() is always defined by value of 'num' -- cnt = (num>0)!
 	- Add C/Fortran interface functions for widget features.
 	- Allow to save compressed files with extensions "eps.gz" and "svgz" as output.
 	- Font files can be compressed now by 'gzip'.
@@ -39,6 +39,8 @@
 	- Rename MGL command 'grid' to 'grid2' for case of plain grid drawing for data array(s).
 	- Rename MGL command 'set_id' to 'idset'.
 	- Disable color gradient in Vect() by default -- still enabled in VectC(), VectL().
+	- Add extra options/comments for animation parameters in mgl2png.
+	- Update printing in QMathGL.
 	- mglGraphFLTK::Update() now force window redrawing.
 	- Bugfix with newline symbol '\n'
 	- Bugfix with wrong restore previous InPlot() after text with style 'a'.

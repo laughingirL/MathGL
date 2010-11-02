@@ -27,7 +27,7 @@
 
 #include <math.h>
 
-#define MGL_VERSION	11
+#define MGL_VERSION	11.0
 
 //#ifdef WIN32
 #ifdef _MSC_VER
@@ -156,6 +156,16 @@ mreal mglStartThread(void *(*func)(void *), mreal (*fres)(mreal,mreal), int n, m
 #define MGL_NTH_DEF		1
 #endif
 extern int mglNumThr;		///< Number of thread for plotting and data handling
+//-----------------------------------------------------------------------------
+/// Class for drawing in windows (like, mglGraphFLTK, mglGraphQT and so on)
+/// Make inherited class and redefine Draw() function if you don't want to use function pointers.
+class mglGraph;
+struct mglDraw
+{
+	virtual int Draw(mglGraph *)	{	return 0;	};
+	virtual void Reload(int)	{};
+	virtual ~mglDraw()	{};
+};
 //-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------

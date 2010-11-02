@@ -37,16 +37,6 @@ struct gsl_matrix;
 #endif
 #include "mgl/mgl_define.h"
 //-----------------------------------------------------------------------------
-/// Class for drawing in windows (like, mglGraphFLTK, mglGraphQT and so on)
-/// Make inherited class and redefine Draw() function if you don't want to use function pointers.
-class mglGraph;
-struct mglDraw
-{
-	virtual int Draw(mglGraph *)	{	return 0;	};
-	virtual void Reload(int)	{};
-	virtual ~mglDraw()	{};
-};
-//-----------------------------------------------------------------------------
 /// Class for incapsulating point in space
 struct mglPoint
 {

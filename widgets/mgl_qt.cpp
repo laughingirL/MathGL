@@ -432,24 +432,19 @@ void QMathGL::aboutQt()	{	QMessageBox::aboutQt(this, tr("About Qt"));	}
 void QMathGL::print()
 {
 	QPrinter *printer = new QPrinter;
+	printer->setOrientation(getRatio()>1 ? QPrinter::Landscape : QPrinter::Portrait);
 	QPrintDialog printDlg(printer, this);
 	if (printDlg.exec() == QDialog::Accepted)
 	{
+		QRectF r = printer->pageRect(QPrinter::Inch);
+		int d1 = int(pic.width()/r.width()), d2 = int(pic.height()/r.height());
+		int dpi = printer->resolution();
+		if(dpi<d1)	dpi=d1;		if(dpi<d2)	dpi=d2;
+		printer->setResolution(dpi);
+		
 		QPainter p;
 		if(!p.begin(printer))	return;	// paint on printer
-		QRect r = p.viewport();
-		int w = r.width(), h = r.height(), h1;
-		h1 = int(w/getRatio());
-		if(h1<h)	h = h1;	else	w = int(h*getRatio());
-		mglGraphZB gr(w, h);
-		if(w*h > 240000)	gr.BaseLineWidth = sqrt(w*h/2.4e5);
-		update(&gr);
-
-		uchar *grBuf=0;
-		QPixmap pic;
-		convertFromGraph(pic, &gr, &grBuf);
 		p.drawPixmap(0,0,pic);
-		delete []grBuf;
 	}
 	delete printer;
 }

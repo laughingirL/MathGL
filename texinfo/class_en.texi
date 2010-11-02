@@ -42,7 +42,7 @@ Class mglGraphIDTF implements plotting function for 1D, 2D and 3D plots  and exp
 
 Generally this class is a bit less abstract class than mglGraph class (@pxref{MathGL core}). It provide many protected methods for handling intermediate data from mglGraph methods and require a few methods to be defined by derived class. The developers of derived classes should look on file @samp{mgl_ab.h} and comments inside it or contact me.
 
-Here I just show new public methods for class mglGraphAB. There are functions returning the created picture (bitmap), its width and height. You may display it by yourself in any graphical library (see also, @ref{Widget classes}) or save in file (see also, @ref{Export to file}).
+Here I just show main public methods for class mglGraphAB. There are functions returning the created picture (bitmap), its width and height. You may display it by yourself in any graphical library (see also, @ref{Widget classes}) or save in file (see also, @ref{Export to file}).
 
 @deftypefn {Method on @code{mglGraphAB} (C++)} @code{const unsigned char *} GetBits ()
 @deftypefnx {Method on @code{mglGraph} (Python)} @code{void} GetRGB (@code{char *}buf, @code{int} size)
@@ -82,7 +82,7 @@ There are some keys handles for manipulating by the plot: 'a', 'd', 'w', 's' for
 @end deftypemethod
 
 @deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{mglDraw *}draw, @code{const char *}title, @code{bool} maximize=@code{false})
-This function is mostly the same as previous one. The only difference is that the drawing function and function for data reloading are specified as methods on a class inherited from class @code{mglDraw}. This class is defined in @code{#include <mgl/mgl_data.h>} and have only 2 methods:
+This function is mostly the same as previous one. The only difference is that the drawing function and function for data reloading are specified as methods on a class inherited from class @code{mglDraw}. This class is defined in @code{#include <mgl/mgl_define.h>} and have only 2 methods:
 @verbatim
 class mglDraw
 {
@@ -137,7 +137,7 @@ Show previous frame if one.
 @end deftypefn
 @deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} Animation ()
 @deftypefnx {C function} @code{int} mgl_wnd_animation (@code{HMGL} gr)
-Run/stop slideshow (animation) of frames
+Run/stop slideshow (animation) of frames.
 @end deftypefn
 
 @deftypefn {C function} @code{int} mgl_wnd_set_auto_clf (@code{HMGL} gr, @code{int} val)

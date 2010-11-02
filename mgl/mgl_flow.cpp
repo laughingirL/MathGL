@@ -583,7 +583,8 @@ void mglGraph::Pipe(const mglData &x, const mglData &y, const mglData &ax, const
 	SetScheme(sch);
 	// allocate memory
 	if(isnan(zVal)) zVal = Min.z;
-
+	cnt=(num>0);	num = abs(num);
+	
 	for(long k=0;k<ax.nz;k++)
 	{
 		if(ax.nz>1)	zVal = Min.z+(Max.z-Min.z)*mreal(k)/(ax.nz-1);
@@ -721,7 +722,8 @@ void mglGraph::Pipe(const mglData &x, const mglData &y, const mglData &z, const 
 
 	Arrow1 = Arrow2 = '_';
 	SetScheme(sch);
-
+	cnt=(num>0);	num = abs(num);
+	
 	for(i=0;i<num;i++)	for(j=0;j<num;j++)
 	{
 		u = (i+1.)/(num+1.);	v = (j+1.)/(num+1.);	w = 0;

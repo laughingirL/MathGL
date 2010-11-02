@@ -70,6 +70,7 @@ int main(int narg, char **arg)
 		printf("\tHere N=0,1...9 is parameter ID and val is its value.\n");
 		printf("\tOption -Lval set locale to val.\n");
 		printf("\tOption -Aval add value of $0 for making animation.\n");
+		printf("\tOption -Cn1:n2 cycle from n1 to n2 for making animation.\n");
 	}
 	else
 	{
@@ -89,6 +90,18 @@ int main(int narg, char **arg)
 				if(cur)	cur = new Str(cur,arg[i]+2);
 				else	head = cur = new Str(0,arg[i]+2);
 			}
+			if(arg[i][0]=='-' && arg[i][1]=='C')
+			{
+				int n,n1,n2;
+				sscanf(arg[i]+2,"%d:%d",&n1,&n2);
+				char str[64];
+				for(n=n1;n<n2;n++)
+				{
+					sprintf(str,"%d",n);
+					if(cur)	cur = new Str(cur,str);
+					else	head = cur = new Str(0,str);
+				}
+			}
 		}
 		if(narg>2 && arg[2][0]!='-')	strcpy(fname,arg[2]);
 		else
@@ -105,6 +118,18 @@ int main(int narg, char **arg)
 			{
 				if(cur)	cur = new Str(cur,str+4);
 				else	head = cur = new Str(0,str+4);
+			}
+			if(str[0]=='#' && str[1]=='#' && str[2]=='c' && str[3]==' ')
+			{
+				float v1,v2,dv,v;
+				wscanf(str+4,"%g %g %g",&v1,&v2,&dv);
+				char ss[64];
+				for(v=v1;v<v2;v+=dv)
+				{
+					sprintf(ss,"%g",v);
+					if(cur)	cur = new Str(cur,ss);
+					else	head = cur = new Str(0,ss);
+				}
 			}
 		}
 		// now execute it and save

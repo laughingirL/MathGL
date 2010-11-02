@@ -42,7 +42,7 @@ Class @code{mglGraphGLUT} adds the possibility to create plotting window with th
 @cindex Fl_MathGL
 @cindex widgets
 
-Class is FLTK widget which display MathGL graphics (defined in @code{#include <mgl/mgl_fltk.h>}
+Class is FLTK widget which display MathGL graphics (defined in @code{#include <mgl/mgl_fltk.h>}).
 
 @deftypemethod Fl_MathGL @code{void} set_draw (@code{mglDraw *}dr)
 Sets drawing function from a class inherited from @code{mglDraw}.
@@ -94,11 +94,7 @@ Drawing function for window procedure. It should return the number of frames.
 @cindex QMathGL
 @cindex widgets
 
-Class is Qt widget which display MathGL graphics (defined in @code{#include <mgl/mgl_qt.h>}
-
-@deftypemethod QMathGL @code{double} getRatio ()
-Return aspect ratio of the picture.
-@end deftypemethod
+Class is Qt widget which display MathGL graphics (defined in @code{#include <mgl/mgl_qt.h>}).
 
 @deftypemethod QMathGL @code{void} setDraw (@code{mglDraw *}dr)
 Sets drawing functions from a class inherited from @code{mglDraw}.
@@ -183,7 +179,7 @@ Zoom out graphics.
 Restore zoom and rotation to default values.
 @end defop
 @defop Slot QMathGL @code{void} reload ()
-Reload data and execute script.
+Reload data and redraw graphics.
 @end defop
 @defop Slot QMathGL @code{void} shiftLeft ()
 Shift graphics to left direction.
@@ -219,7 +215,7 @@ Export current picture to SVG file.
 Export current picture to IDTF file.
 @end defop
 @defop Slot QMathGL @code{void} setMGLFont (@code{QString} path)
-Restore (@var{path}=@code{""} or load font for graphics.
+Restore (@var{path}=@code{""}) or load font for graphics.
 @end defop
 @defop Slot QMathGL @code{void} print ()
 Print current picture
