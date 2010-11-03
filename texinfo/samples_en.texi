@@ -69,6 +69,7 @@ gr.ShowImage();
 * 2D plotting samples::         
 * 3D plotting samples::         
 * Dual plotting samples::       
+* Basic features::             
 * Additional features::         
 * Advanced features::           
 @end menu
@@ -77,14 +78,19 @@ gr.ShowImage();
 @section 1D plotting samples
 @menu
 * Plot sample::                 
-* Radar sample::                 
+* Radar sample::                
 * Tens sample::                 
 * Area sample::                 
+* Area gradient sample::   
 * Bars sample::                 
+* Bars 2 colors sample::                 
+* Bars above sample::                 
+* Bars fall sample::                 
 * Barh sample::                 
 * Step sample::                 
 * Stem sample::                 
 * Region sample::               
+* Region gradient sample::               
 * Error sample::                
 * BoxPlot sample::                
 * Mark sample::                 
@@ -94,6 +100,7 @@ gr.ShowImage();
 * Torus sample::                
 * Chart sample::                
 * Pie chart sample::            
+* Ring chart sample::            
 @end menu
 @c ------------------------------------------------------------------
 @node Plot sample, Radar sample, , 1D plotting samples
@@ -262,7 +269,7 @@ gr.Tens(y,c);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Area sample, Bars sample, Tens sample, 1D plotting samples
+@node Area sample, Area gradient sample, Tens sample, 1D plotting samples
 @subsection Area sample
 @cindex Area
 @float
@@ -327,7 +334,72 @@ gr.Area(y);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Bars sample, Barh sample, Area sample, 1D plotting samples
+@node Area gradient sample, Bars sample, Area sample, 1D plotting samples
+@subsection Area with gradient filling sample
+@cindex Area
+@float
+@image{../png/area_2, 7cm}
+@c @caption{Example of Area. @tdref{area}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+mglData y(50,3);
+y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);
+y.Modify("cos(2*pi*x)",2);
+gr->Org=mglPoint(0,0);
+gr->Box();
+gr->Area(y,"cbgGyr");
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+new y 50 3
+modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
+modify y 'sin(2*pi*x)' 1
+modify y 'cos(2*pi*x)' 2
+origin 0 0
+box
+area y 'cbgGyr'
+@end verbatim
+@ifclear UDAV
+@strong{Pure C code}
+@verbatim
+HMDT y = mgl_create_data_size(50,3,1);
+mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
+mgl_data_modify(y,"sin(2*pi*x)",1);
+mgl_data_modify(y,"cos(2*pi*x)",2);
+mgl_set_origin(gr,0.,0.,0.);
+mgl_box(gr,1);
+mgl_area(gr,y,"cbgGyr");
+mgl_delete_data(y);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer y, mgl_create_data_size
+y = mgl_create_data_size(50,3,1)
+call mgl_data_modify(y,'0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)',0)
+call mgl_data_modify(y,'sin(2*pi*x)',1)
+call mgl_data_modify(y,'cos(2*pi*x)',2)
+call mgl_set_origin(gr,0.,0.,0.)
+call mgl_box(gr,1)
+call mgl_area(gr,y,'cbgGyr')
+call mgl_delete_data(y)
+@end verbatim
+@strong{Python}
+@verbatim
+y = mglData(50,3);
+y.Modify("0.7*sin(2*pi*x)+0.5*cos(3*pi*x)+0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);
+y.Modify("cos(2*pi*x)",2);
+gr.SetOrigin(0.,0.);
+gr.Box();
+gr.Area(y,"cbgGyr");
+@end verbatim
+@end ifclear
+@c ------------------------------------------------------------------
+@node Bars sample, Bars 2 colors sample, Area gradient sample, 1D plotting samples
 @subsection Bars sample
 @cindex Bars
 @float
@@ -382,7 +454,172 @@ gr.Bars(y);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Barh sample, Step sample, Bars sample, 1D plotting samples
+@node Bars 2 colors sample, Bars above sample, Bars sample, 1D plotting samples
+@subsection Bars 2 colors sample
+@cindex Bars
+@float
+@image{../png/bars_2, 7cm}
+@c @caption{Example of Bars. @tdref{bars}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+mglData y(10,3);
+y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+gr->Org=mglPoint(0,0);
+gr->Box();
+gr->Bars(y,"cbgGyr");
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+new y 10 3
+modify y '0.8*sin(pi*(2*x+y/2))+0.2*rnd'
+origin 0 0
+box
+bars y 'cbgGyr'
+@end verbatim
+@ifclear UDAV
+@strong{Pure C code}
+@verbatim
+HMDT y = mgl_create_data_size(10,3,1);
+mgl_data_modify(y,"0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+mgl_set_origin(gr,0.,0.,0.);
+mgl_box(gr,1);
+mgl_bars(gr,y,"cbgGyr");
+mgl_delete_data(y);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer y, mgl_create_data_size
+y = mgl_create_data_size(10,3,1)
+call mgl_data_modify(y,'0.8*sin(pi*(2*x+y/2))+0.2*rnd')
+call mgl_set_origin(gr,0.,0.,0.)
+call mgl_box(gr,1)
+call mgl_bars(gr,y,'cbgGyr')
+call mgl_delete_data(y)
+@end verbatim
+@strong{Python}
+@verbatim
+y = mglData(10,3);
+y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+gr.SetOrigin(0.,0.);
+gr.Box();
+gr.Bars(y,"cbgGyr");
+@end verbatim
+@end ifclear
+@c ------------------------------------------------------------------
+@node Bars above sample, Bars fall sample, Bars 2 colors sample, 1D plotting samples
+@subsection Bars above sample
+@cindex Bars
+@float
+@image{../png/bars_a, 7cm}
+@c @caption{Example of Bars. @tdref{bars}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+mglData y(10,3);
+y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+gr->Org=mglPoint(0,0);
+gr->Box();
+gr->Bars(y,"a");
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+new y 10 3
+modify y '0.8*sin(pi*(2*x+y/2))+0.2*rnd'
+origin 0 0
+box
+bars y 'a'
+@end verbatim
+@ifclear UDAV
+@strong{Pure C code}
+@verbatim
+HMDT y = mgl_create_data_size(10,3,1);
+mgl_data_modify(y,"0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+mgl_set_origin(gr,0.,0.,0.);
+mgl_box(gr,1);
+mgl_bars(gr,y,"a");
+mgl_delete_data(y);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer y, mgl_create_data_size
+y = mgl_create_data_size(10,3,1)
+call mgl_data_modify(y,'0.8*sin(pi*(2*x+y/2))+0.2*rnd')
+call mgl_set_origin(gr,0.,0.,0.)
+call mgl_box(gr,1)
+call mgl_bars(gr,y,'a')
+call mgl_delete_data(y)
+@end verbatim
+@strong{Python}
+@verbatim
+y = mglData(10,3);
+y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+gr.SetOrigin(0.,0.);
+gr.Box();
+gr.Bars(y,"a");
+@end verbatim
+@end ifclear
+@c ------------------------------------------------------------------
+@node Bars fall sample, Barh sample, Bars above sample, 1D plotting samples
+@subsection Bars fall sample
+@cindex Bars
+@float
+@image{../png/bars_f, 7cm}
+@c @caption{Example of Bars. @tdref{bars}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+mglData y(10,3);
+y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+gr->Org=mglPoint(0,0);
+gr->Box();
+gr->Bars(y,"f");
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+new y 10 3
+modify y '0.8*sin(pi*(2*x+y/2))+0.2*rnd'
+origin 0 0
+box
+bars y 'f'
+@end verbatim
+@ifclear UDAV
+@strong{Pure C code}
+@verbatim
+HMDT y = mgl_create_data_size(10,3,1);
+mgl_data_modify(y,"0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+mgl_set_origin(gr,0.,0.,0.);
+mgl_box(gr,1);
+mgl_bars(gr,y,"f");
+mgl_delete_data(y);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer y, mgl_create_data_size
+y = mgl_create_data_size(10,3,1)
+call mgl_data_modify(y,'0.8*sin(pi*(2*x+y/2))+0.2*rnd')
+call mgl_set_origin(gr,0.,0.,0.)
+call mgl_box(gr,1)
+call mgl_bars(gr,y,'f')
+call mgl_delete_data(y)
+@end verbatim
+@strong{Python}
+@verbatim
+y = mglData(10,3);
+y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+gr.SetOrigin(0.,0.);
+gr.Box();
+gr.Bars(y,"f");
+@end verbatim
+@end ifclear
+@c ------------------------------------------------------------------
+@node Barh sample, Step sample, Bars fall sample, 1D plotting samples
 @subsection Barh sample
 @cindex Barh
 @float
@@ -562,7 +799,7 @@ gr.Stem(y,"o");
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Region sample, Error sample, Stem sample, 1D plotting samples
+@node Region sample, Region gradient sample, Stem sample, 1D plotting samples
 @subsection Region sample
 @cindex Region
 @float
@@ -632,7 +869,77 @@ gr.Plot(y2,"k2");
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Error sample, BoxPlot sample, Region sample, 1D plotting samples
+@node Region gradient sample, Error sample, Region sample, 1D plotting samples
+@subsection Region gradient sample
+@cindex Region
+@float
+@image{../png/region_2, 7cm}
+@c @caption{Example of Region. @tdref{region}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+mglData y1(50), y2(50);
+y1.Modify("0.3*sin(2*pi*x)");
+y2.Modify("0.5+0.3*cos(2*pi*x)");
+gr->Box();
+gr->Region(y1,y2,"yr");
+gr->Plot(y1,"k2");
+gr->Plot(y2,"k2");
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+new y1 50
+new y2 50
+modify y1 '0.3*sin(2*pi*x)'
+modify y2 '0.5+0.3*cos(2*pi*x)'
+box
+region y1 y2 'yr'
+plot y1 'k2'
+plot y2 'k2'
+@end verbatim
+@ifclear UDAV
+@strong{Pure C code}
+@verbatim
+HMDT y1 = mgl_create_data_size(50,1,1);
+HMDT y2 = mgl_create_data_size(50,1,1);
+mgl_data_modify(y1,"0.3*sin(2*pi*x)",0);
+mgl_data_modify(y2,"0.5+0.3*cos(2*pi*x)",0);
+mgl_box(gr,1);
+mgl_region(gr,y1,y2,"yr",1);
+mgl_plot(gr,y1,"k2");
+mgl_plot(gr,y2,"k2");
+mgl_delete_data(y1);
+mgl_delete_data(y2);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer y1, y2, mgl_create_data_size
+y1 = mgl_create_data_size(50,1,1);
+y2 = mgl_create_data_size(50,1,1);
+call mgl_data_modify(y1,'0.3*sin(2*pi*x)',0);
+call mgl_data_modify(y2,'0.5+0.3*cos(2*pi*x)',0);
+call mgl_box(gr,1);
+call mgl_region(gr,y1,y2,'yr',1);
+call mgl_plot(gr,y1,'k2');
+call mgl_plot(gr,y2,'k2');
+call mgl_delete_data(y1);
+call mgl_delete_data(y2);
+@end verbatim
+@strong{Python}
+@verbatim
+y1, y2, x = mglData(50), mglData(50), mglData(50);
+y1.Modify("0.3*sin(2*pi*x)");
+y2.Modify("0.5+0.3*cos(2*pi*x)");
+gr.Box();
+gr.Region(y1,y2,"yr");
+gr.Plot(y1,"k2");
+gr.Plot(y2,"k2");
+@end verbatim
+@end ifclear
+@c ------------------------------------------------------------------
+@node Error sample, BoxPlot sample, Region gradient sample, 1D plotting samples
 @subsection Error sample
 @cindex Error
 @float
@@ -1174,7 +1481,7 @@ gr.Chart(ch,"#");
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Pie chart sample, , Chart sample, 1D plotting samples
+@node Pie chart sample, Ring chart sample, Chart sample, 1D plotting samples
 @subsection Pie chart sample
 @cindex Chart
 @cindex Axis
@@ -1233,6 +1540,70 @@ call mgl_delete_data(ch)
 ch = mglData(7,2);  ch.Modify("rnd+0.1");
 gr.Rotate(40,60);   gr.Light(True);
 gr.SetFunc("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)");
+gr.Box();
+gr.Chart(ch,"bgr cmy#");
+@end verbatim
+@end ifclear
+@c ------------------------------------------------------------------
+@node Ring chart sample, , Pie chart sample, 1D plotting samples
+@subsection Ring chart sample
+@cindex Chart
+@cindex Axis
+@float
+@image{../png/ring_chart, 7cm}
+@c @caption{Example of Chart in cylindrical coordinates. @tdref{pie_chart}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+mglData ch(7,2);
+ch.Modify("rnd+0.1");
+gr->Rotate(40,60);
+gr->Light(true);
+gr->SetFunc("(y+2)/3*cos(pi*x)","(y+2)/3*sin(pi*x)");
+gr->Box();
+gr->Chart(ch,"bgr cmy#");
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+new ch 7 2
+modify ch 'rnd+0.1'
+rotate 40 60
+light on
+axis '(y+2)/3*cos(pi*x)' '(y+2)/3*sin(pi*x)' ''
+box
+chart ch 'bgr cmy#'
+@end verbatim
+@ifclear UDAV
+@strong{Pure C code}
+@verbatim
+HMDT ch = mgl_create_data_size(7,2,1);
+mgl_data_modify(ch,"rnd+0.1",0);
+mgl_rotate(gr,40.,60.,0.);
+mgl_set_light(gr,1);
+mgl_set_func(gr,"(y+2)/3*cos(pi*x)","(y+2)/3*sin(pi*x)",0);
+mgl_box(gr,1);
+mgl_chart(gr,ch,"bgr cmy#");
+mgl_delete_data(ch);
+@end verbatim
+@strong{Fortran code}
+@verbatim
+integer ch, mgl_create_data_size
+ch = mgl_create_data_size(7,2,1)
+call mgl_data_modify(ch,'rnd+0.1',0)
+call mgl_rotate(gr,40.,60.,0.)
+call mgl_set_light(gr,1)
+call mgl_set_func(gr,'(y+2)/3*cos(pi*x)','(y+2)/3*sin(pi*x)','');
+call mgl_box(gr,1)
+call mgl_chart(gr,ch,'bgr cmy#')
+call mgl_delete_data(ch)
+@end verbatim
+@strong{Python}
+@verbatim
+ch = mglData(7,2);  ch.Modify("rnd+0.1");
+gr.Rotate(40,60);   gr.Light(True);
+gr.SetFunc("(y+2)/3*cos(pi*x)","(y+2)/3*sin(pi*x)");
 gr.Box();
 gr.Chart(ch,"bgr cmy#");
 @end verbatim
@@ -2156,7 +2527,7 @@ gr.Colorbar();
 * Cont projection sample::      
 * Dens projection sample::      
 * CutMinMax sample::            
-* ``Isocaps'' sample::          
+* Isocaps sample::          
 * CutOff sample::               
 @end menu
 @c ------------------------------------------------------------------
@@ -2658,7 +3029,7 @@ gr.DensZ(a.Sum("z"),"",-1);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node CutMinMax sample, ``Isocaps'' sample, Dens projection sample, 3D plotting samples
+@node CutMinMax sample, Isocaps sample, Dens projection sample, 3D plotting samples
 @subsection CutMinMax sample
 @cindex Surf3
 @cindex CutMin
@@ -2727,7 +3098,7 @@ gr.Surf3(a);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node ``Isocaps'' sample, CutOff sample, CutMinMax sample, 3D plotting samples
+@node Isocaps sample, CutOff sample, CutMinMax sample, 3D plotting samples
 @subsection ``Isocaps'' sample
 @cindex Surf3
 @cindex ContF3
@@ -2808,7 +3179,7 @@ gr.ContF3(a,"z",0);     gr.ContF3(a,"z",39);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node CutOff sample, , ``Isocaps'' sample, 3D plotting samples
+@node CutOff sample, , Isocaps sample, 3D plotting samples
 @subsection CutOff sample
 @cindex Surf3
 @cindex CutOff
@@ -2877,7 +3248,7 @@ gr.Surf3(a);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Dual plotting samples, Additional features, 3D plotting samples, Samples
+@node Dual plotting samples, Basic features, 3D plotting samples, Samples
 @section Dual plotting samples
 @menu
 * SurfC sample::                
@@ -3044,7 +3415,7 @@ gr.SurfC(a,b);
 @end ifclear
 @c ------------------------------------------------------------------
 @node TileS sample, Map sample, SurfA sample, Dual plotting samples
-@subsection Tiles sample
+@subsection TileS sample
 @cindex TileS
 @float
 @image{../png/tiles, 7cm}
@@ -4356,6 +4727,691 @@ gr.Dots(a);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
+
+@c ------------------------------------------------------------------
+@node Basic features, Additional features, Dual plotting samples, Samples
+@section Basic features
+@menu
+* 1D plot sample::              
+* 2D plot sample::              
+* 3D plot sample::              
+* Line styles sample::          
+* Arrow styles sample::         
+* Text styles sample::          
+* TeX parsing sample::          
+* Font faces sample::           
+* Colors sample::               
+* Color schemes sample::        
+* Normal transparency::         
+* Glass-like transparency::     
+* Lamp-like transparency::      
+@end menu
+@c ------------------------------------------------------------------
+@node 1D plot sample, 2D plot sample, , Basic features
+@subsection 1D plot sample
+@cindex Plot
+@cindex Bars
+@cindex SubPlot
+@float
+@image{../png/sample8, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+mglData y0(50);		y0.Modify("sin(pi*(2*x-1))");
+gr->SubPlot(2,2,0);
+gr->Plot(y0);		gr->Box();
+
+gr->SubPlot(2,2,1);
+mglData y1(50,2);
+y1.Modify("sin(pi*2*x-pi)");	y1.Modify("cos(pi*2*x-pi)/2",1);
+gr->Plot(y1);		gr->Box();
+
+mglData x(50);		x.Modify("cos(pi*2*x-pi)");
+gr->Plot(x,y0,"Y+");
+
+gr->Plot(y1.SubData(-1,0),y1.SubData(-1,1),"q|");
+
+gr->SubPlot(2,2,2);	gr->Rotate(60,40);
+mglData z(50);		z.Modify("2*x-1");
+gr->Plot(x,y0,z);		gr->Box();
+
+mglData y2(10,3);	y2.Modify("cos(pi*(2*x-1-y))");
+y2.Modify("2*x-1",2);
+gr->Plot(y2.SubData(-1,0),y2.SubData(-1,1),y2.SubData(-1,2),"bo ");
+
+gr->SubPlot(2,2,3);	gr->Rotate(60,40);
+gr->Bars(x,y0,z,"ri");		gr->Box();
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+new y0 50: modify y0 'sin(pi*(2*x-1))'
+subplot 2 2 0
+plot y0: box
+
+subplot 2 2 1
+new y1 50 2
+modify y1 'sin(pi*2*x-pi)'
+modify y1 'cos(pi*2*x-pi)/2' 1
+plot y1: box
+
+new x 50: modify x 'cos(pi*2*x-pi)'
+plot x y0 'Y+'
+plot y1(:,0) y(:,1) 'q|'
+
+subplot 2 2 2:rotate 60 40
+new z 50:   modify z '2*x-1'
+plot x y0 z 'g':box
+new y2 10 3
+modify y2 'cos(pi*(2*x-1-y))'
+modify y2 '2*x-1' 2
+plot y2(:,0) y2(:,1) y2(:,2) 'bo '
+
+subplot 2 2 3:rotate 60 40
+bars x y0 z 'r':box
+@end verbatim
+@c ------------------------------------------------------------------
+@node 2D plot sample, 3D plot sample, 1D plot sample, Basic features
+@subsection 2D plot sample
+@cindex Surf
+@cindex Dens
+@cindex Alpha
+@float
+@image{../png/sample9, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+gr->Light(true);
+mglData a0(50,40);
+a0.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+gr->SubPlot(2,2,0); gr->Rotate(60,40);
+gr->Surf(a0);       gr->Box();
+
+mglData x(50,40),y(50,40),z(50,40);
+x.Modify("0.8*sin(2*pi*x)*sin(pi*y)");
+y.Modify("0.8*cos(2*pi*x)*sin(pi*y)");
+z.Modify("0.8*cos(pi*y)");
+gr->SubPlot(2,2,1); gr->Rotate(60,40);
+gr->Surf(x,y,z,"BbwrR");    gr->Box();
+
+mglData a1(50,40,3);
+a1.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+a1.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*sin(3*pi*(x*y))",1);
+a1.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",2);
+gr->SubPlot(2,2,2); gr->Rotate(60,40);
+gr->Alpha(true);
+gr->Surf(a1);       gr->Box();
+
+gr->SubPlot(2,2,3); gr->Rotate(60,40);
+gr->Dens(a1);       gr->Box();
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+light on
+
+new a0 50 40
+modify a0 '0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))'
+subplot 2 2 0:rotate 60 40
+surf a0: box
+
+new x 50 40: new y 50 40: new z 50 40
+modify x '0.8*sin(2*pi*x)*sin(pi*y)'
+modify y '0.8*cos(2*pi*x)*sin(pi*y)'
+modify z '0.8*cos(pi*y)'
+subplot 2 2 1:rotate 60 40
+surf x y z 'bbwrr': box
+
+new a1 50 40 3
+modify a1 '0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))'
+modify a1 '0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*sin(3*pi*(x*y))' 1
+modify a1 '0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))' 2
+subplot 2 2 2:rotate 60 40
+alpha on
+surf a1: box
+
+subplot 2 2 3: rotate 60 40
+dens a1: box
+@end verbatim
+@c ------------------------------------------------------------------
+@node 3D plot sample, Line styles sample, 2D plot sample, Basic features
+@subsection 3D plot sample
+@cindex Surf
+@cindex Dens
+@cindex Alpha
+@float
+@image{../png/sampleb, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
+mglData a(30,30,30), b(30,30,30);
+a.Modify("exp(-16*((z-0.5)^2+(y-0.5)^2)/(1+4*x^2))");
+b.Modify("16*((z-0.5)^2+(y-0.5)^2)*(x)/(1+4*x^2)");
+gr->CAxis(0,1);
+
+gr->SubPlot(2,2,0);	gr->Rotate(40,60);
+gr->Surf3(a,"wgk");	gr->Box();
+gr->SubPlot(2,2,1);	gr->Rotate(40,60);
+gr->DensA(a);		gr->Box();	gr->Axis();
+gr->SubPlot(2,2,2);	gr->Rotate(40,60);
+gr->Cloud(a);		gr->Box();
+gr->SubPlot(2,2,3);	gr->Rotate(40,60);
+gr->Surf3A(b,a,"q");		gr->Box();
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+alpha on: light on
+light 0 0 0 1
+new a 30 30 30: new b 30 30 30
+modify a 'exp(-16*((z-0.5)^2+(y-0.5)^2)/(1+4*x^2))'
+modify b '16*((z-0.5)^2+(y-0.5)^2)*(x)/(1+4*x^2)'
+caxis 0 1
+
+subplot 2 2 0: rotate 40 60
+surf3 a 'wgk': box
+subplot 2 2 1: rotate 40 60
+densa a: box: axis
+subplot 2 2 2: rotate 40 60
+cloud a: box
+subplot 2 2 3: rotate 40 60
+surf3a b a 'q': box
+@end verbatim
+@c ------------------------------------------------------------------
+@node Line styles sample, Arrow styles sample, 3D plot sample, Basic features
+@subsection Line styles sample
+@cindex Mark
+@cindex Line
+@float
+@image{../png/sample5, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+float d,x1,x2,x0,y=0.95;
+d=0.3, x0=0.2, x1=0.5, x2=0.6;
+gr->Line(mglPoint(x0,1-0*d),mglPoint(x1,1-0*d),"k-");	gr->Puts(mglPoint(x2,y-0*d),"Solid '-'","rL");
+gr->Line(mglPoint(x0,1-1*d),mglPoint(x1,1-1*d),"k|");	gr->Puts(mglPoint(x2,y-1*d),"Long Dash '|'","rL");
+gr->Line(mglPoint(x0,1-2*d),mglPoint(x1,1-2*d),"k;");	gr->Puts(mglPoint(x2,y-2*d),"Dash ';'","rL");
+gr->Line(mglPoint(x0,1-3*d),mglPoint(x1,1-3*d),"k=");	gr->Puts(mglPoint(x2,y-3*d),"Small dash '='","rL");
+gr->Line(mglPoint(x0,1-4*d),mglPoint(x1,1-4*d),"kj");	gr->Puts(mglPoint(x2,y-4*d),"Dash-dot 'j'","rL");
+gr->Line(mglPoint(x0,1-5*d),mglPoint(x1,1-5*d),"ki");	gr->Puts(mglPoint(x2,y-5*d),"Small dash-dot 'i'","rL");
+gr->Line(mglPoint(x0,1-6*d),mglPoint(x1,1-6*d),"k:");	gr->Puts(mglPoint(x2,y-6*d),"Dots ':'","rL");
+gr->Line(mglPoint(x0,1-7*d),mglPoint(x1,1-7*d),"k ");	gr->Puts(mglPoint(x2,y-7*d),"None ' '","rL");
+
+d=0.25; x1=-1; x0=-0.8;	y = -0.05;
+gr->Mark(mglPoint(x1,5*d),'.');		gr->Puts(mglPoint(x0,y+5*d),"'.'","rL");
+gr->Mark(mglPoint(x1,4*d),'+');		gr->Puts(mglPoint(x0,y+4*d),"'+'","rL");
+gr->Mark(mglPoint(x1,3*d),'x');		gr->Puts(mglPoint(x0,y+3*d),"'x'","rL");
+gr->Mark(mglPoint(x1,2*d),'*');		gr->Puts(mglPoint(x0,y+2*d),"'*'","rL");
+gr->Mark(mglPoint(x1,d),'s');		gr->Puts(mglPoint(x0,y+d),"'s'","rL");
+gr->Mark(mglPoint(x1,0),'d');		gr->Puts(mglPoint(x0,y),"'d'","rL");
+gr->Mark(mglPoint(x1,-d,0),'o');	gr->Puts(mglPoint(x0,y-d),"'o'","rL");
+gr->Mark(mglPoint(x1,-2*d,0),'^');	gr->Puts(mglPoint(x0,y-2*d),"'\\^'","rL");
+gr->Mark(mglPoint(x1,-3*d,0),'v');	gr->Puts(mglPoint(x0,y-3*d),"'v'","rL");
+gr->Mark(mglPoint(x1,-4*d,0),'<');	gr->Puts(mglPoint(x0,y-4*d),"'<'","rL");
+gr->Mark(mglPoint(x1,-5*d,0),'>');	gr->Puts(mglPoint(x0,y-5*d),"'>'","rL");
+
+d=0.25; x1=-0.5; x0=-0.3;	y = -0.05;
+gr->Mark(mglPoint(x1,5*d),'C');		gr->Puts(mglPoint(x0,y+5*d),"'\\#.'","rL");
+gr->Mark(mglPoint(x1,4*d),'P');		gr->Puts(mglPoint(x0,y+4*d),"'\\#+'","rL");
+gr->Mark(mglPoint(x1,3*d),'X');		gr->Puts(mglPoint(x0,y+3*d),"'\\#x'","rL");
+gr->Mark(mglPoint(x1,2*d),'Y');		gr->Puts(mglPoint(x0,y+2*d),"'\\#*'","rL");
+gr->Mark(mglPoint(x1,d),'S');		gr->Puts(mglPoint(x0,y+d),"'\\#s'","rL");
+gr->Mark(mglPoint(x1,0),'D');		gr->Puts(mglPoint(x0,y),"'\\#d'","rL");
+gr->Mark(mglPoint(x1,-d,0),'O');	gr->Puts(mglPoint(x0,y-d),"'\\#o'","rL");
+gr->Mark(mglPoint(x1,-2*d,0),'T');	gr->Puts(mglPoint(x0,y-2*d),"'\\#\\^'","rL");
+gr->Mark(mglPoint(x1,-3*d,0),'V');	gr->Puts(mglPoint(x0,y-3*d),"'\\#v'","rL");
+gr->Mark(mglPoint(x1,-4*d,0),'L');	gr->Puts(mglPoint(x0,y-4*d),"'\\#<'","rL");
+gr->Mark(mglPoint(x1,-5*d,0),'R');	gr->Puts(mglPoint(x0,y-5*d),"'\\#>'","rL");
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+NOT AVAILABLE
+@end verbatim
+@c ------------------------------------------------------------------
+@node Arrow styles sample, Text styles sample, Line styles sample, Basic features
+@subsection Arrow styles sample
+@cindex Line
+@float
+@image{../png/sampled, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+float a=0.1,b=0.4,c=0.5;
+gr->Line(mglPoint(a,1),mglPoint(b,1),"k-A");		gr->Puts(mglPoint(c,1),"Style 'A' or 'A\\_'","rL");
+gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"k-V");	gr->Puts(mglPoint(c,0.8),"Style 'V' or 'V\\_'","rL");
+gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"k-K");	gr->Puts(mglPoint(c,0.6),"Style 'K' or 'K\\_'","rL");
+gr->Line(mglPoint(a,0.4),mglPoint(b,0.4),"k-I");	gr->Puts(mglPoint(c,0.4),"Style 'I' or 'I\\_'","rL");
+gr->Line(mglPoint(a,0.2),mglPoint(b,0.2),"k-D");	gr->Puts(mglPoint(c,0.2),"Style 'D' or 'D\\_'","rL");
+gr->Line(mglPoint(a,0),mglPoint(b,0),"k-S");		gr->Puts(mglPoint(c,0),"Style 'S' or 'S\\_'","rL");
+gr->Line(mglPoint(a,-0.2),mglPoint(b,-0.2),"k-O");	gr->Puts(mglPoint(c,-0.2),"Style 'O' or 'O\\_'","rL");
+gr->Line(mglPoint(a,-0.4),mglPoint(b,-0.4),"k-T");	gr->Puts(mglPoint(c,-0.4),"Style 'T' or 'T\\_'","rL");
+gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-_");	gr->Puts(mglPoint(c,-0.6),"Style '\\_' or none","rL");
+gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-AS");	gr->Puts(mglPoint(c,-0.8),"Style 'AS'","rL");
+gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-_A");		gr->Puts(mglPoint(c,-1),"Style '\\_A'","rL");
+
+a=-1;	b=-0.7;	c=-0.6;
+gr->Line(mglPoint(a,1),mglPoint(b,1),"kAA");		gr->Puts(mglPoint(c,1),"Style 'AA'","rL");
+gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"kVV");	gr->Puts(mglPoint(c,0.8),"Style 'VV'","rL");
+gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"kKK");	gr->Puts(mglPoint(c,0.6),"Style 'KK'","rL");
+gr->Line(mglPoint(a,0.4),mglPoint(b,0.4),"kII");	gr->Puts(mglPoint(c,0.4),"Style 'II'","rL");
+gr->Line(mglPoint(a,0.2),mglPoint(b,0.2),"kDD");	gr->Puts(mglPoint(c,0.2),"Style 'DD'","rL");
+gr->Line(mglPoint(a,0),mglPoint(b,0),"kSS");		gr->Puts(mglPoint(c,0),"Style 'SS'","rL");
+gr->Line(mglPoint(a,-0.2),mglPoint(b,-0.2),"kOO");	gr->Puts(mglPoint(c,-0.2),"Style 'OO'","rL");
+gr->Line(mglPoint(a,-0.4),mglPoint(b,-0.4),"kTT");	gr->Puts(mglPoint(c,-0.4),"Style 'TT'","rL");
+gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-__");	gr->Puts(mglPoint(c,-0.6),"Style '\\_\\_'","rL");
+gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-VA");	gr->Puts(mglPoint(c,-0.8),"Style 'VA'","rL");
+gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-AV");		gr->Puts(mglPoint(c,-1),"Style 'AV'","rL");
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+NOT AVAILABLE
+@end verbatim
+@c ------------------------------------------------------------------
+@node Text styles sample, TeX parsing sample, Arrow styles sample, Basic features
+@subsection Text styles sample
+@cindex Puts
+@float
+@image{../png/sample4, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+gr->Putsw(mglPoint(0,1),L"Text can be in ASCII and in Unicode");
+gr->Puts(mglPoint(0,0.6),"It can be \\wire{wire}, \\big{big} or #r{colored}");
+gr->Puts(mglPoint(0,0.2),"One can change style in string: "
+        "\\b{bold}, \\i{italic, \\b{both}}");
+gr->Puts(mglPoint(0,-0.2),"Easy to \\a{overline} or "
+        "\\u{underline}");
+gr->Puts(mglPoint(0,-0.6),"Easy to change indexes ^{up} _{down} @{center}");
+gr->Puts(mglPoint(0,-1),"It parse TeX: \\int \\alpha \\cdot "
+        "\\sqrt3{sin(\\pi x)^2 + \\gamma_{i_k}} dx");
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+text 0 1 'Text can be in ASCII and in Unicode'
+text 0 0.6 'It can be \wire{wire}, \big{big} or #r{colored}'
+text 0 0.2 'One can change style in string: \b{bold}, \i{italic, \b{both}}'
+text 0 -0.2 'Easy to \a{overline} or \u{underline}'
+text 0 -0.6 'Easy to change indexes ^{up} _{down} @{center}'
+text 0 -1 'It parse TeX: \int \alpha \cdot \sqrt3{sin(\pi x)^2 + \gamma_{i_k}} dx'
+@end verbatim
+@c ------------------------------------------------------------------
+@node TeX parsing sample, Font faces sample, Text styles sample, Basic features
+@subsection TeX parsing sample
+@cindex Puts
+@float
+@image{../png/samplee, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+"
+        "\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", 0, -4);
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+text 0 0 '\sqrt{\frac{\alpha^{\gamma^2}+\overset 1{\big\infty}}{\sqrt3{2+b}}}' '' -4
+@end verbatim
+@c ------------------------------------------------------------------
+@node Font faces sample, Colors sample, TeX parsing sample, Basic features
+@subsection Font faces sample
+@cindex Puts
+@float
+@image{../png/fonts, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+float h=1.1, d=0.25;
+gr->LoadFont("STIX");		gr->Puts(mglPoint(0,h), "default font (STIX)");
+gr->LoadFont("adventor");	gr->Puts(mglPoint(0,h-d), "adventor font");
+gr->LoadFont("bonum");		gr->Puts(mglPoint(0,h-2*d), "bonum font");
+gr->LoadFont("chorus");		gr->Puts(mglPoint(0,h-3*d), "chorus font");
+gr->LoadFont("cursor");		gr->Puts(mglPoint(0,h-4*d), "cursor font");
+gr->LoadFont("heros");		gr->Puts(mglPoint(0,h-5*d), "heros font");
+gr->LoadFont("heroscn");	gr->Puts(mglPoint(0,h-6*d), "heroscn font");
+gr->LoadFont("pagella");	gr->Puts(mglPoint(0,h-7*d), "pagella font");
+gr->LoadFont("schola");		gr->Puts(mglPoint(0,h-8*d), "schola font");
+gr->LoadFont("termes");		gr->Puts(mglPoint(0,h-9*d), "termes font");
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+NOT AVAILABLE
+@end verbatim
+@c ------------------------------------------------------------------
+@node Colors sample, Color schemes sample, Font faces sample, Basic features
+@subsection Colors sample
+@float
+@image{../png/colors, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+//#LENUQ
+gr->FaceZ(-1,	-1, 0, 0.4, 0.3, "L#");	gr->Puts(mglPoint(-0.8,-0.9), "L", "C:w", -1.4);
+gr->FaceZ(-0.6,	-1, 0, 0.4, 0.3, "E#");	gr->Puts(mglPoint(-0.4,-0.9), "E", "C:w", -1.4);
+gr->FaceZ(-0.2,	-1, 0, 0.4, 0.3, "N#");	gr->Puts(mglPoint(0,  -0.9), "N", "C:w", -1.4);
+gr->FaceZ(0.2,	-1, 0, 0.4, 0.3, "U#");	gr->Puts(mglPoint(0.4,-0.9), "U", "C:w", -1.4);
+gr->FaceZ(0.6,	-1, 0, 0.4, 0.3, "Q#");	gr->Puts(mglPoint(0.8,-0.9), "Q", "C:w", -1.4);
+//#lenuq
+gr->FaceZ(-1,	-0.7, 0, 0.4, 0.3, "l#");	gr->Puts(mglPoint(-0.8,-0.6), "l", "C:k", -1.4);
+gr->FaceZ(-0.6,	-0.7, 0, 0.4, 0.3, "e#");	gr->Puts(mglPoint(-0.4,-0.6), "e", "C:k", -1.4);
+gr->FaceZ(-0.2,	-0.7, 0, 0.4, 0.3, "n#");	gr->Puts(mglPoint(0,  -0.6), "n", "C:k", -1.4);
+gr->FaceZ(0.2,	-0.7, 0, 0.4, 0.3, "u#");	gr->Puts(mglPoint(0.4,-0.6), "u", "C:k", -1.4);
+gr->FaceZ(0.6,	-0.7, 0, 0.4, 0.3, "q#");	gr->Puts(mglPoint(0.8,-0.6), "q", "C:k", -1.4);
+//#CMYkP
+gr->FaceZ(-1,	-0.4, 0, 0.4, 0.3, "C#");	gr->Puts(mglPoint(-0.8,-0.3), "C", "C:w", -1.4);
+gr->FaceZ(-0.6,	-0.4, 0, 0.4, 0.3, "M#");	gr->Puts(mglPoint(-0.4,-0.3), "M", "C:w", -1.4);
+gr->FaceZ(-0.2,	-0.4, 0, 0.4, 0.3, "Y#");	gr->Puts(mglPoint(0,  -0.3), "Y", "C:w", -1.4);
+gr->FaceZ(0.2,	-0.4, 0, 0.4, 0.3, "k#");	gr->Puts(mglPoint(0.4,-0.3), "k", "C:w", -1.4);
+gr->FaceZ(0.6,	-0.4, 0, 0.4, 0.3, "P#");	gr->Puts(mglPoint(0.8,-0.3), "P", "C:w", -1.4);
+//#cmywp
+gr->FaceZ(-1,	-0.1, 0, 0.4, 0.3, "c#");	gr->Puts(mglPoint(-0.8, 0), "c", "C:k", -1.4);
+gr->FaceZ(-0.6,	-0.1, 0, 0.4, 0.3, "m#");	gr->Puts(mglPoint(-0.4, 0), "m", "C:k", -1.4);
+gr->FaceZ(-0.2,	-0.1, 0, 0.4, 0.3, "y#");	gr->Puts(mglPoint(0,   0), "y", "C:k", -1.4);
+gr->FaceZ(0.2,	-0.1, 0, 0.4, 0.3, "w#");	gr->Puts(mglPoint(0.4, 0), "w", "C:k", -1.4);
+gr->FaceZ(0.6,	-0.1, 0, 0.4, 0.3, "p#");	gr->Puts(mglPoint(0.8, 0), "p", "C:k", -1.4);
+//#BGRHW
+gr->FaceZ(-1,	0.2, 0, 0.4, 0.3, "B#");	gr->Puts(mglPoint(-0.8, 0.3), "B", "C:w", -1.4);
+gr->FaceZ(-0.6,	0.2, 0, 0.4, 0.3, "G#");	gr->Puts(mglPoint(-0.4, 0.3), "G", "C:w", -1.4);
+gr->FaceZ(-0.2,	0.2, 0, 0.4, 0.3, "R#");	gr->Puts(mglPoint(0,   0.3), "R", "C:w", -1.4);
+gr->FaceZ(0.2,	0.2, 0, 0.4, 0.3, "H#");	gr->Puts(mglPoint(0.4, 0.3), "H", "C:w", -1.4);
+gr->FaceZ(0.6,	0.2, 0, 0.4, 0.3, "W#");	gr->Puts(mglPoint(0.8, 0.3), "W", "C:w", -1.4);
+//#bgrhw
+gr->FaceZ(-1,	0.2, 0, 0.4, 0.3, "b#");	gr->Puts(mglPoint(-0.8, 0.6), "b", "C:k", -1.4);
+gr->FaceZ(-0.6,	0.5, 0, 0.4, 0.3, "g#");	gr->Puts(mglPoint(-0.4, 0.6), "g", "C:k", -1.4);
+gr->FaceZ(-0.2,	0.2, 0, 0.4, 0.3, "r#");	gr->Puts(mglPoint(0,   0.6), "r", "C:k", -1.4);
+gr->FaceZ(0.2,	0.2, 0, 0.4, 0.3, "h#");	gr->Puts(mglPoint(0.4, 0.6), "h", "C:k", -1.4);
+gr->FaceZ(0.6,	0.2, 0, 0.4, 0.3, "w#");	gr->Puts(mglPoint(0.8, 0.6), "w", "C:k", -1.4);
+//#brighted
+gr->FaceZ(-1,	0.8, 0, 0.4, 0.3, "r1#");	gr->Puts(mglPoint(-0.8, 0.9), "r1", "C:w", -1.4);
+gr->FaceZ(-0.6,	0.8, 0, 0.4, 0.3, "r3#");	gr->Puts(mglPoint(-0.4, 0.9), "r3", "C:w", -1.4);
+gr->FaceZ(-0.2,	0.8, 0, 0.4, 0.3, "r5#");	gr->Puts(mglPoint(0,   0.9), "r5", "C:k", -1.4);
+gr->FaceZ(0.2,	0.8, 0, 0.4, 0.3, "r7#");	gr->Puts(mglPoint(0.4, 0.9), "r7", "C:k", -1.4);
+gr->FaceZ(0.6,	0.8, 0, 0.4, 0.3, "r9#");	gr->Puts(mglPoint(0.8, 0.9), "r9", "C:k", -1.4);
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+#LENUQ
+facez -1   -1 0 0.4 0.3 'L#': text -0.8 -0.9 'L' 'C:w'
+facez -0.6 -1 0 0.4 0.3 'E#': text -0.4 -0.9 'E' 'C:w'
+facez -0.2 -1 0 0.4 0.3 'N#': text  0   -0.9 'N' 'C:w'
+facez  0.2 -1 0 0.4 0.3 'U#': text  0.4 -0.9 'U' 'C:w'
+facez  0.6 -1 0 0.4 0.3 'Q#': text  0.8 -0.9 'Q' 'C:w'
+#lenuq
+facez -1   -0.7 0 0.4 0.3 'l#': text -0.8 -0.6 'l' 'C:k'
+facez -0.6 -0.7 0 0.4 0.3 'e#': text -0.4 -0.6 'e' 'C:k'
+facez -0.2 -0.7 0 0.4 0.3 'n#': text  0   -0.6 'n' 'C:k'
+facez  0.2 -0.7 0 0.4 0.3 'u#': text  0.4 -0.6 'u' 'C:k'
+facez  0.6 -0.7 0 0.4 0.3 'q#': text  0.8 -0.6 'q' 'C:k'
+#CMYkP
+facez -1   -0.4 0 0.4 0.3 'C#': text -0.8 -0.3 'C' 'C:w'
+facez -0.6 -0.4 0 0.4 0.3 'M#': text -0.4 -0.3 'M' 'C:w'
+facez -0.2 -0.4 0 0.4 0.3 'Y#': text  0   -0.3 'Y' 'C:w'
+facez  0.2 -0.4 0 0.4 0.3 'k#': text  0.4 -0.3 'k' 'C:w'
+facez  0.6 -0.4 0 0.4 0.3 'P#': text  0.8 -0.3 'P' 'C:w'
+#lenuq
+facez -1   -0.1 0 0.4 0.3 'c#': text -0.8 0 'c' 'C:k'
+facez -0.6 -0.1 0 0.4 0.3 'm#': text -0.4 0 'm' 'C:k'
+facez -0.2 -0.1 0 0.4 0.3 'y#': text  0   0 'y' 'C:k'
+facez  0.2 -0.1 0 0.4 0.3 'w#': text  0.4 0 'w' 'C:k'
+facez  0.6 -0.1 0 0.4 0.3 'p#': text  0.8 0 'p' 'C:k'
+#BGRHW
+facez -1   0.2 0 0.4 0.3 'B#': text -0.8 0.3 'B' 'C:k'
+facez -0.6 0.2 0 0.4 0.3 'G#': text -0.4 0.3 'G' 'C:k'
+facez -0.2 0.2 0 0.4 0.3 'R#': text  0   0.3 'R' 'C:k'
+facez  0.2 0.2 0 0.4 0.3 'H#': text  0.4 0.3 'H' 'C:k'
+facez  0.6 0.2 0 0.4 0.3 'W#': text  0.8 0.3 'W' 'C:k'
+#bgrhw
+facez -1   0.5 0 0.4 0.3 'b#': text -0.8 0.6 'b' 'C:w'
+facez -0.6 0.5 0 0.4 0.3 'g#': text -0.4 0.6 'g' 'C:w'
+facez -0.2 0.5 0 0.4 0.3 'r#': text  0   0.6 'r' 'C:w'
+facez  0.2 0.5 0 0.4 0.3 'h#': text  0.4 0.6 'h' 'C:w'
+facez  0.6 0.5 0 0.4 0.3 'w#': text  0.8 0.6 'w' 'C:w'
+#brighted
+facez -1   0.8 0 0.4 0.3 'r1#': text -0.8 0.9 'r1' 'C:k'
+facez -0.6 0.8 0 0.4 0.3 'r3#': text -0.4 0.9 'r3' 'C:k'
+facez -0.2 0.8 0 0.4 0.3 'r5#': text  0   0.9 'r5' 'C:k'
+facez  0.2 0.8 0 0.4 0.3 'r7#': text  0.4 0.9 'r7' 'C:k'
+facez  0.6 0.8 0 0.4 0.3 'r9#': text  0.8 0.9 'r9' 'C:k'
+@end verbatim
+@c ------------------------------------------------------------------
+@node Color schemes sample, Normal transparency, Colors sample, Basic features
+@subsection Color schemes sample
+@cindex Colorbar
+@float
+@image{../png/color_schemes, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+mglData a(256,2);	a.Fill(-1,1);
+gr->SubPlot(2,10,0,0.2);	gr->Dens(a,"kw", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "kw", "C", -8);
+gr->SubPlot(2,10,1,0.2);	gr->Dens(a,"wk", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "wk", "C", -8);
+gr->SubPlot(2,10,2,0.2);	gr->Dens(a,"kHCcw", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "kHCcw", "C", -8);
+gr->SubPlot(2,10,3,0.2);	gr->Dens(a,"kBbcw", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "kBbcw", "C", -8);
+gr->SubPlot(2,10,4,0.2);	gr->Dens(a,"kRryw", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "kRryw", "C", -8);
+gr->SubPlot(2,10,5,0.2);	gr->Dens(a,"kGgew", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "kGgew", "C", -8);
+gr->SubPlot(2,10,6,0.2);	gr->Dens(a,"BbwrR", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "BbwrR", "C", -8);
+gr->SubPlot(2,10,7,0.2);	gr->Dens(a,"BbwgG", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "BbwgG", "C", -8);
+gr->SubPlot(2,10,8,0.2);	gr->Dens(a,"GgwmM", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "GgwmM", "C", -8);
+gr->SubPlot(2,10,9,0.2);	gr->Dens(a,"UuwqR", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "UuwqR", "C", -8);
+gr->SubPlot(2,10,10,0.2);	gr->Dens(a,"QqwcC", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "QqwcC", "C", -8);
+gr->SubPlot(2,10,11,0.2);	gr->Dens(a,"CcwyY", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "CcwyY", "C", -8);
+gr->SubPlot(2,10,12,0.2);	gr->Dens(a,"bcwyr", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "bcwyr", "C", -8);
+gr->SubPlot(2,10,13,0.2);	gr->Dens(a,"bwr", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "bwr", "C", -8);
+gr->SubPlot(2,10,14,0.2);	gr->Dens(a,"BbcyrR", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "BbcyrR", "C", -8);
+gr->SubPlot(2,10,15,0.2);	gr->Dens(a,"UbcyqR", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "UbcyqR", "C", -8);
+gr->SubPlot(2,10,16,0.2);	gr->Dens(a,"BbcwyrR", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "BbcwyrR", "C", -8);
+gr->SubPlot(2,10,17,0.2);	gr->Dens(a,"bcyr", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "bcyr", "C", -8);
+gr->SubPlot(2,10,18,0.2);	gr->Dens(a,"BbcyrR|", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "BbcyrR|", "C", -8);
+gr->SubPlot(2,10,19,0.2);	gr->Dens(a,"bgr", nan);
+gr->Puts(mglPoint(-1.4, -0.3), "bgr", "C", -8);
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+new a 256 2: fill a 'x'
+subplot 2 10 0 0.2:dens a 'kw'
+text -1.4 -0.3 'kw' '' -8
+subplot 2 10 1 0.2:dens a 'wk'
+text -1.4 -0.3 'wk' '' -8
+subplot 2 10 2 0.2:dens a 'kHCcw'
+text -1.4 -0.3 'kHCcw' '' -8
+subplot 2 10 3 0.2:dens a 'kBbcw'
+text -1.4 -0.3 'kBbcw' '' -8
+subplot 2 10 4 0.2:dens a 'kRryw'
+text -1.4 -0.3 'kRryw' '' -8
+subplot 2 10 5 0.2:dens a 'kGgew'
+text -1.4 -0.3 'kGgew' '' -8
+subplot 2 10 6 0.2:dens a 'BbwrR'
+text -1.4 -0.3 'BbwrR' '' -8
+subplot 2 10 7 0.2:dens a 'BbwgG'
+text -1.4 -0.3 'BbwgG' '' -8
+subplot 2 10 8 0.2:dens a 'GgwmM'
+text -1.4 -0.3 'GgwmM' '' -8
+subplot 2 10 9 0.2:dens a 'UuwqR'
+text -1.4 -0.3 'UuwqR' '' -8
+subplot 2 10 10 0.2:dens a 'QqwcC'
+text -1.4 -0.3 'QqwcC' '' -8
+subplot 2 10 11 0.2:dens a 'CcwyY'
+text -1.4 -0.3 'CcwyY' '' -8
+subplot 2 10 12 0.2:dens a 'bcwyr'
+text -1.4 -0.3 'bcwyr' '' -8
+subplot 2 10 13 0.2:dens a 'bwr'
+text -1.4 -0.3 'bwr' '' -8
+subplot 2 10 14 0.2:dens a 'BbcyrR'
+text -1.4 -0.3 'BbcyrR' '' -8
+subplot 2 10 15 0.2:dens a 'UbcyqR'
+text -1.4 -0.3 'UbcyqR' '' -8
+subplot 2 10 16 0.2:dens a 'BbcwyrR'
+text -1.4 -0.3 'BbcwyrR' '' -8
+subplot 2 10 17 0.2:dens a 'bcyr'
+text -1.4 -0.3 'bcyr' '' -8
+subplot 2 10 18 0.2:dens a 'BbcyrR|'
+text -1.4 -0.3 'BbcyrR|' '' -8
+subplot 2 10 19 0.2:dens a 'bgr'
+text -1.4 -0.3 'bgr' '' -8
+@end verbatim
+@c ------------------------------------------------------------------
+@node Normal transparency, Glass-like transparency, Color schemes sample, Basic features
+@subsection Normal transparency
+@cindex TranspType
+@float
+@image{../png/type0, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+gr->Alpha(true);	gr->Light(true);
+mglData a(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+
+gr->TranspType = 0;	gr->Clf();
+gr->SubPlot(2,2,0);	gr->Rotate(40,60);	gr->Surf(a);	gr->Box();
+gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Dens(a);	gr->Box();
+gr->SubPlot(2,2,2);	gr->Rotate(40,60);	gr->Cont(a);	gr->Box();
+gr->SubPlot(2,2,3);	gr->Rotate(40,60);	gr->Axial(a);	gr->Box();
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+alpha on: light on
+new a 50 40
+modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
+
+transptype 0: clf
+subplot 2 2 0: rotate 40 60: surf a:  box
+subplot 2 2 1: rotate 40 60: dens a:  box
+subplot 2 2 2: rotate 40 60: cont a:  box
+subplot 2 2 3: rotate 40 60: axial a: box
+@end verbatim
+@c ------------------------------------------------------------------
+@node Glass-like transparency, Lamp-like transparency, Normal transparency, Basic features
+@subsection Glass-like transparency
+@cindex TranspType
+@float
+@image{../png/type1, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+gr->Alpha(true);	gr->Light(true);
+mglData a(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+
+gr->TranspType = 1;	gr->Clf();
+gr->SubPlot(2,2,0);	gr->Rotate(40,60);	gr->Surf(a);	gr->Box();
+gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Dens(a);	gr->Box();
+gr->SubPlot(2,2,2);	gr->Rotate(40,60);	gr->Cont(a);	gr->Box();
+gr->SubPlot(2,2,3);	gr->Rotate(40,60);	gr->Axial(a);	gr->Box();
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+alpha on: light on
+new a 50 40
+modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
+
+transptype 1: clf
+subplot 2 2 0: rotate 40 60: surf a:  box
+subplot 2 2 1: rotate 40 60: dens a:  box
+subplot 2 2 2: rotate 40 60: cont a:  box
+subplot 2 2 3: rotate 40 60: axial a: box
+@end verbatim
+@c ------------------------------------------------------------------
+@node Lamp-like transparency, , Glass-like transparency, Basic features
+@subsection Lamp-like transparency
+@cindex TranspType
+@float
+@image{../png/type2, 7cm}
+@c @caption{Example of Legend usage. @tdref{legend}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+gr->Alpha(true);	gr->Light(true);
+mglData a(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+
+gr->TranspType = 2;	gr->Clf();
+gr->SubPlot(2,2,0);	gr->Rotate(40,60);	gr->Surf(a);	gr->Box();
+gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Dens(a);	gr->Box();
+gr->SubPlot(2,2,2);	gr->Rotate(40,60);	gr->Cont(a);	gr->Box();
+gr->SubPlot(2,2,3);	gr->Rotate(40,60);	gr->Axial(a);	gr->Box();
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+alpha on: light on
+new a 50 40
+modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
+
+transptype 2: clf
+subplot 2 2 0: rotate 40 60: surf a:  box
+subplot 2 2 1: rotate 40 60: dens a:  box
+subplot 2 2 2: rotate 40 60: cont a:  box
+subplot 2 2 3: rotate 40 60: axial a: box
+@end verbatim
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @node Additional features, Advanced features, Dual plotting samples, Samples
 @section Additional features
 @menu

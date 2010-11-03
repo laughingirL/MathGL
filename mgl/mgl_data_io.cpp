@@ -21,6 +21,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <string.h>
+#include <zlib.h>
 #ifdef HAVE_HDF5
 #include <hdf5.h>
 #endif
@@ -300,27 +301,27 @@ void mglData::Save(const char *fname,int ns) const
 	fclose(fp);
 }
 //-----------------------------------------------------------------------------
+char *mgl_read_gz(gzFile fp)
+{
+	long size=1024,n=0;
+	char *buf=(char*)malloc(size);
+	while(gzread(fp,buf+n,size)>0)
+	{	n++;	buf=(char*)realloc(buf,size*n);	}
+	return buf;
+}
+//-----------------------------------------------------------------------------
 bool mglData::Read(const char *fname)
 {
 	long l=1,m=1,k=1;
 	long nb,i;
-	FILE *fp = fopen(fname,"rb");
+	gzFile fp = gzopen(fname,"r");
 	if(!fp)
 	{
 		if(!a)	Create(1,1,1);
 		return	false;
 	}
-	fseek(fp,0,SEEK_END);
-	nb = ftell(fp);
-	char *buf = new char[nb+1];
-	fseek(fp,0,SEEK_SET);
-	memset(buf,0,nb*sizeof(char));
-	if(fread(buf,nb,1,fp)==0)
-	{
-		if(!a)	Create(1,1,1);
-		fclose(fp);	return false;
-	}
-	fclose(fp);
+	char *buf = mgl_read_gz(fp);
+	nb = strlen(buf);	gzclose(fp);
 
 	bool first=false,com=false;
 	register char ch;
@@ -357,8 +358,7 @@ bool mglData::Read(const char *fname)
 		}
 	}
 	else	for(i=0;i<nb-1;i++)	if(buf[i]=='\f')	l++;
-
-	delete []buf;
+	free(buf);
 	return Read(fname,k,m,l);
 }
 //-----------------------------------------------------------------------------
@@ -375,21 +375,11 @@ void mglData::Create(int mx,int my,int mz)
 bool mglData::Read(const char *fname,int mx,int my,int mz)
 {
 	if(mx<=0 || my<=0 || mz<=0)	return false;
-	FILE *fp = fopen(fname,"rt");
+	gzFile fp = gzopen(fname,"r");
 	if(!fp)	return false;
 	Create(mx,my,mz);
-
-	fseek(fp,0,SEEK_END);
-	long nb = ftell(fp);
-	char *buf = new char[nb+1];
-	fseek(fp,0,SEEK_SET);
-	memset(buf,0,nb);
-	if(fread(buf,nb,1,fp)==0)
-	{
-		if(!a)	Create(1,1,1);
-		fclose(fp);	return false;
-	}
-	fclose(fp);
+	char *buf = mgl_read_gz(fp);
+	long nb = strlen(buf);	gzclose(fp);
 
 	register long i=0, j=0, k=0;
 	while(j<nb)
@@ -416,28 +406,18 @@ bool mglData::Read(const char *fname,int mx,int my,int mz)
 		buf[j]=0;
 		a[i] = atof(s);	i++;	if(i>=nx*ny*nz)	break;
 	}
-	delete []buf;
+	free(buf);
 	return true;
 }
 //-----------------------------------------------------------------------------
 bool mglData::ReadMat(const char *fname,int dim)
 {
 	if(dim<=0 || dim>3)	return false;
-	FILE *fp = fopen(fname,"rt");
+	gzFile fp = gzopen(fname,"r");
 	if(!fp)	return false;
 	nx = ny = nz = 1;	NewId();
-
-	fseek(fp,0,SEEK_END);
-	long nb = ftell(fp);
-	char *buf = new char[nb+1];
-	fseek(fp,0,SEEK_SET);
-	memset(buf,0,nb);
-	if(fread(buf,nb,1,fp)==0)
-	{
-		if(!a)	Create(1,1,1);
-		fclose(fp);	return false;
-	}
-	fclose(fp);
+	char *buf = mgl_read_gz(fp);
+	long nb = strlen(buf);	gzclose(fp);
 
 	register long i=0,j=0;
 	while(j<nb)
@@ -480,7 +460,7 @@ bool mglData::ReadMat(const char *fname,int dim)
 		if(i>=nx*ny*nz)	break;
 		while(buf[j]>' ' && j<nb)	j++;
 	}
-	delete []buf;
+	free(buf);
 	return true;
 }
 //-----------------------------------------------------------------------------

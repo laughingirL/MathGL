@@ -383,11 +383,12 @@ Drawing in 3D space is mostly the same. Let us draw spiral with default line sty
 @verbatim
 subplot 2 2 2:rotate 60 40
 new z 50: modify z '2*x-1'
-plot x y0 z:box
+plot x y0 z 'g':box
 @end verbatim
 Function @code{Plot3} does 3D curve plot but for single array. Use it to put circle marks on the previous plot:
 @verbatim
-new y2 10 3:modify y2 'cos(pi*(2*x-1+y))'
+new y2 10 3
+modify y2 'cos(pi*(2*x-1-y))'
 modify y2 '2*x-1' 2
 plot y2(:,0) y2(:,1) y2(:,2) 'bo '
 @end verbatim
@@ -410,7 +411,7 @@ Surfaces @code{Surf} and other 2D plots (@pxref{2D plotting}) are drown the same
 
 Now I shall show the example of a surface drawing. At first let us switch lightning on
 @verbatim
-light on: light 0 0 0 1
+light on
 @end verbatim
 and draw the surface, considering coordinates x,y to be uniformly distributed in interval @var{Min}*@var{Max}
 @verbatim

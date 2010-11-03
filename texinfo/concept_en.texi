@@ -70,102 +70,10 @@ For coloring by @emph{amplitude} (most common) the final color is a linear inter
 
 There are several useful combinations. String @samp{kw} corresponds to the simplest gray color scheme where higher values are brighter. String @samp{wk} presents the inverse gray color scheme where higher value is darker. Strings @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} present the well-known @emph{hot}, @emph{summer} and @emph{winter} color schemes. Strings @samp{BbwrR} and @samp{bBkRr} allow to view bi-color figure on white or black background, where negative values are blue and positive values are red. String @samp{BbcyrR} gives a color scheme similar to the well-known @emph{jet} color scheme.
 
-@ifhtml
-@html
-<table align="center" border="1"><caption><em>Examples of the most popular color schemes</em></caption><tbody align="right">
-	<tr>
-	<td>kw</td>	<td><img src="../png_static/kw.png" alt="kw.png"></td>
-	<td>wk</td>	<td><img src="../png_static/wk.png" alt="wk.png"></td>
-	</tr>
-	<tr>
-	<td>kHCcw</td>	<td><img src="../png_static/kHCcw.png" alt="kHCcw.png"></td>
-	<td>kBbcw</td>	<td><img src="../png_static/kBbcw.png" alt="kBbcw.png"></td>
-	</tr>
-	<tr>
-	<td>kRryw</td>	<td><img src="../png_static/kRryw.png" alt="kRryw.png"></td>
-	<td>kGgew</td>	<td><img src="../png_static/kGgew.png" alt="kGgew.png"></td>
-	</tr>
-	<tr>
-	<td>BbwrR</td>	<td><img src="../png_static/BbwrR.png" alt="BbwrR.png"></td>
-	<td>BbwgG</td>	<td><img src="../png_static/BbwgG.png" alt="BbwgG.png"></td>
-	</tr>
-	<tr>
-	<td>GgwmM</td>	<td><img src="../png_static/GgwmM.png" alt="GgwmM.png"></td>
-	<td>UuwqR</td>	<td><img src="../png_static/UuwqR.png" alt="UuwqR.png"></td>
-	</tr>
-	<tr>
-	<td>QqwcC</td>	<td><img src="../png_static/QqwcC.png" alt="QqwcC.png"></td>
-	<td>CcwyY</td>	<td><img src="../png_static/CcwyY.png" alt="CcwyY.png"></td>
-	</tr>
-	<tr>
-	<td>bcwyr</td>	<td><img src="../png_static/bcwyr.png" alt="bcwyr.png"></td>
-	<td>bwr</td>	<td><img src="../png_static/bwr.png" alt="bwr.png"></td>
-	</tr>
-	<tr>
-	<td>BbcyrR</td>	<td><img src="../png_static/BbcyrR.png" alt="BbcyrR.png"></td>
-	<td>UbcyqR</td><td><img src="../png_static/UbcyqR.png" alt="UbcyqR.png"></td>
-	</tr>
-	<tr>
-	<td>BbcwyrR</td>	<td><img src="../png_static/BbcwyrR.png" alt="BbcwyrR.png"></td>
-	<td>bcyr</td><td><img src="../png_static/bcyr.png" alt="bcyr.png"></td>
-	</tr>
-	<tr>
-	<td>BbcyrR|</td>	<td><img src="../png_static/sharp.png" alt="sharp.png"></td>
-	<td>bgr</td>	<td><img src="../png_static/bgr.png" alt="bgr.png"></td>
-	</tr>
-</tbody></table>
-@end html
-@end ifhtml
-@ifnothtml
-Examples of the most popular color schemes:
-@table @samp
-@item kw
-@image{../png_static/kw}
-@item wk
-@image{../png_static/wk}
-@item hHCcw
-@image{../png_static/kHCcw}
-
-@item kRryw
-@image{../png_static/kRryw}
-@item kGgew
-@image{../png_static/kGgew}
-@item kBbcw
-@image{../png_static/kBbcw}
-
-@item BbwrR
-@image{../png_static/BbwrR}
-@item BbwgG
-@image{../png_static/BbwgG}
-@item GgwmM
-@image{../png_static/GgwmM}
-
-@item bcwyr
-@image{../png_static/bcwyr}
-@item QqwcC
-@image{../png_static/QqwcC}
-@item CcwyY
-@image{../png_static/CcwyY}
-@item UuwqR
-@image{../png_static/UuwqR}
-
-@item BbcyrR
-@image{../png_static/BbcyrR}
-@item UbcyqR
-@image{../png_static/UbcyqR}
-@item BbcwyrR
-@image{../png_static/BbcwyrR}
-@item bwr
-@image{../png_static/bwr}
-
-@item bcyr
-@image{../png_static/bcyr}
-@item bgr
-@image{../png_static/bgr}
-@item BbcyrR|
-@image{../png_static/sharp}
-@end table
-@end ifnothtml
+@float
+@image{../png/color_schemes, 7cm}
+@caption{Most popular color schemes.}
+@end float
 
 When coloring by @emph{coordinate}, the final color is determined by the position of the point in 3d space and is calculated from formula c=x*c[1] + y*c[2] + z*c[3]. Here, c[1], c[2], c[3] are the first three elements of color array; x, y, z are normalized to @var{Min} -- @var{Max} coordinates of the point. This type of coloring is useful for isosurface plot where color may show the exact position of a piece of surface.
 

@@ -474,7 +474,7 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 		}
 	}
 	zoomx1=x1;	zoomx2=x2;	zoomy1=y1;	zoomy2=y2;
-	yPos -= nl_shift*0.1/PlotFactor*fsize;
+	yPos -= nl_shift*0.11/PlotFactor*fsize;
 	fnt->Puts(wcs,font1,col);
 	Pop();	delete []font1;	EndGroup();
 }
