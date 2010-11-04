@@ -28,14 +28,14 @@ info_TEXINFOS		+= mgl_ru.texi
 mgl_ru_TEXINFOS	= \
 mgl_cmd_ru.texi samples_ru.texi ex_mgl_ru.texi concept_ru.texi fdl.texi
 
-mglpng=$(DESTDIR)$(docdir)/png_static
+#mglpng=$(DESTDIR)$(docdir)/png_static
 
 #install-data-local: install-html install-pdf
 install-data-local: 
-	mkdir -p $(mglpng)
-	cp -r $(top_srcdir)/texinfo/png_static/*.png $(mglpng)
+#	mkdir -p $(mglpng)
+#	cp -r $(top_srcdir)/texinfo/png_static/*.png $(mglpng)
 uninstall-local:
-	rm -rf $(mglpng)
+#	rm -rf $(mglpng)
 
 #all-local: html pdf
 all-local: html

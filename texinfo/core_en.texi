@@ -236,7 +236,7 @@ Flag which determines how points outside bounding box are drawn. If it is @code{
 @end deftypefn
 
 @float
-@image{../png_static/cut, 7cm}
+@image{cut, 7cm}
 @caption{Left figure is drawn with parameter @code{Cut=false}. Right one is drawn with parameter @code{Cut=true}.}
 @end float
 

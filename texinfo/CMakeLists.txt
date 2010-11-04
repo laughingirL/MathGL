@@ -1,3 +1,7 @@
+
+# Warning!!!!!
+# new files and destination for html docs.
+
 if(use_doc)
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 		COMMAND LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/mgl ${CMAKE_BINARY_DIR}/examples/mgl_example

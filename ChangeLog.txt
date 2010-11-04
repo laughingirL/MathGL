@@ -24,6 +24,7 @@
 	- Add 'int(x)' function to the expression parser (class mglFormula).
 	- Add \textsc{} for small-caps to TeX parsing.
 	- Now $N is substituted into the second argument of MGL commands 'define', 'defnum', 'defpal', 'defchr'.
+	- Add definitions $a...$z used by the same order as arguments $0...$9.
 	- Add new function SetLegendMarks() to allow multiple marks in Legend() sample.
 	- Add functions GetWarnCode(), mgl_get_warn_code() for getting code of the last warning.
 	- Add possibility to read HDF4 files in mglData.

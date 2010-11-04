@@ -45,7 +45,7 @@ supports it in developing GNU and promoting software freedom.''
 
 @ifnottex
 @node Top
-@top MathGL
+@top Язык MGL
 
 Это документация для языка MGL (версии @value{VERSION}). Пожалуйста сообщайте о любых ошибках в этом руководстве на @email{mathgl.abalakin@@gmail.org}. Дополнительную информацию о MGL и MathGL можно найти на домашней странице проекта @uref{http://mathgl.sourceforge.net/}.
 

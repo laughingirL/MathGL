@@ -19,6 +19,11 @@ Class @code{mglGraphFLTK} adds the possibility to create plotting window with th
 Class is FLTK widget for displaying the MathGL output. Class is defined in @code{#include <mgl/mgl_fltk.h>}.
 @end deftp
 
+@float
+@image{fltk, 7cm}
+@caption{Example of FLTK window with MathGL plot.}
+@end float
+
 @deftp {Class} mglGraphQT
 Class @code{mglGraphQT} adds the possibility to create plotting window with the help of QT library. It allows one to show, rotate, export, and change view of the plot by keyboard, menu and toolbar. ``Corresponding'' widget class is @code{QMathGL}. Class is defined in @code{#include <mgl/mgl_qt.h>}.
 @end deftp
@@ -27,9 +32,19 @@ Class @code{mglGraphQT} adds the possibility to create plotting window with the 
 Class is Qt widget for dysplaying the MathGL output. Class is defined in @code{#include <mgl/mgl_qt.h>}.
 @end deftp
 
+@float
+@image{qt, 7cm}
+@caption{Example of Qt window with MathGL plot.}
+@end float
+
 @deftp {Class} mglGraphGLUT
 Class @code{mglGraphGLUT} adds the possibility to create plotting window with the help of GLUT library. It allows one to show, rotate, export, and change view of the plot only by keyboard. Class is defined in @code{#include <mgl/mgl_glut.h>}.
 @end deftp
+
+@float
+@image{glut, 7cm}
+@caption{Example of GLUT window with MathGL plot.}
+@end float
 
 @menu
 * Fl_MathGL class::             

@@ -5,7 +5,7 @@ MathGL library supports the simplest scripts for data handling and plotting. The
 
 MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is sufficient, i.e. variables @var{a} and @var{A} are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when @samp{#} is a part of some string. Also options can be specified after symbol @samp{;} (@pxref{Command options @MGL{}}). Symbol @samp{:} starts new command (like new line character) if it is not placed inside a string or inside brackets.
 
-If string contain references to external parameters (substrings @samp{$0}, @samp{$1} ... @samp{$9}) then before execution the values of parameter will be substituted instead of reference. It allows to use the same MGL script for different parameters (filenames, paths, condition and so on).
+If string contain references to external parameters (substrings @samp{$0}, @samp{$1} ... @samp{$9}) or definitions (substrings @samp{$a}, @samp{$b} ... @samp{$z}) then before execution the values of parameter/definition will be substituted instead of reference. It allows to use the same MGL script for different parameters (filenames, paths, condition and so on).
 
 Argument can be a string, a variable name or a number. 
 @itemize @bullet
@@ -1817,25 +1817,25 @@ Changes the current directory to @var{path}.
 @cindex define
 @anchor{define}
 @deffn {MGL command} define $N smth
-Sets @var{N}-th script argument to @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present).
+Sets @var{N}-th script argument to @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present). Here @var{N} is digit (0...9) or alpha (a...z).
 @end deffn
 @deffn {MGL command} define name smth
-Create scalar variable @code{name} which have the numeric value of @code{smth}. Later you can use this variable as usual number.
+Create scalar variable @code{name} which have the numeric value of @code{smth}. Later you can use this variable as usual number. Here @var{N} is digit (0...9) or alpha (a...z).
 @end deffn
 @cindex defchr
 @anchor{defchr}
 @deffn {MGL command} defchr $N smth
-Sets @var{N}-th script argument to character with value evaluated from @var{smth}.
+Sets @var{N}-th script argument to character with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
 @end deffn
 @cindex defnum
 @anchor{defnum}
 @deffn {MGL command} defnum $N smth
-Sets @var{N}-th script argument to number with value evaluated from @var{smth}.
+Sets @var{N}-th script argument to number with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
 @end deffn
 @cindex defpal
 @anchor{defpal}
 @deffn {MGL command} defpal $N smth
-Sets @var{N}-th script argument to palette character at position evaluated from @var{smth}.
+Sets @var{N}-th script argument to palette character at position evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
 @end deffn
 
 @cindex call
@@ -1885,10 +1885,10 @@ Finishes @code{if/elseif/else} block.
 @cindex for
 @anchor{for}
 @deffn {MGL command} for $N @code{v1 v2 [dv=1]}
-Starts cycle with $@var{N}-th argument changing from @var{v1} to @var{v2} with the step @var{dv}.
+Starts cycle with $@var{N}-th argument changing from @var{v1} to @var{v2} with the step @var{dv}. Here @var{N} is digit (0...9) or alpha (a...z).
 @end deffn
 @deffn {MGL command} for $N dat
-Starts cycle with $@var{N}-th argument changing for @var{dat} values.
+Starts cycle with $@var{N}-th argument changing for @var{dat} values. Here @var{N} is digit (0...9) or alpha (a...z).
 @end deffn
 @cindex next
 @anchor{next}

@@ -236,7 +236,7 @@
 @end deftypefn
 
 @float
-@image{../png_static/cut, 7cm}
+@image{cut, 7cm}
 @caption{Левый рисунок нарисован при @code{Cut=false}, правый при @code{Cut=true}.}
 @end float
 
