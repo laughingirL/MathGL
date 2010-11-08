@@ -45,11 +45,11 @@ Let me consider the aforesaid in more detail.
 
 @c ------------------------------------------------------------------
 @node Using FLTK/GLUT window, Drawing to file, , Basic usage
-@subsection Using FLTK/GLUT window
+@subsection Using FLTK/Qt/GLUT window
 @cindex window
 @cindex widgets
 
-The ``interactive'' way of drawing in MathGL consists in window creation  with help of class @code{mglGraphGLUT} or @code{mglGraphGLUT} (@pxref{Widget classes}) and the following drawing in this window. There is a corresponding code:
+The ``interactive'' way of drawing in MathGL consists in window creation  with help of class @code{mglGraphFLTK}, @code{mglGraphQT} or @code{mglGraphGLUT} (@pxref{Widget classes}) and the following drawing in this window. There is a corresponding code:
 @verbatim
     int sample(mglGraph *gr, void *)
     {
@@ -90,7 +90,7 @@ Alternatively you can create yours own class inherited from class @code{mglDraw}
     }
 @end verbatim
 
-The similar code can be written for @code{mglGraphGLUT} or for @code{mglGraphQT} window (function @code{sample()} is the same):
+The similar code can be written for @code{mglGraphQT} or for @code{mglGraphGLUT} window (function @code{sample()} is the same):
 @verbatim
     int main(int argc,char **argv)
     {
@@ -176,7 +176,47 @@ The last way of MathGL using is the drawing in memory. Class @code{mglGraphZB} a
         dc.DrawBitmap(wxBitmap(img),0,y);
     }
 @end verbatim
-The drawing in other libraries is most the same. Moreover, I excluded the support of TIFF and JPEG files from MathGL by default for compatibility with wxWidgets library.
+The drawing in other libraries is most the same.
+@c Moreover, I excluded the support of TIFF and JPEG files from MathGL by default for compatibility with wxWidgets library.
+
+For example, FLTK code will look like
+@verbatim
+    void Fl_MyWidget::draw()
+    {
+        mglGraphZB gr(w(),h());
+        gr.Alpha(true);         // draws something using MathGL
+        gr.Light(true);         gr.Light(0,mglPoint(1,0,-1));
+        sample(&gr,NULL);
+        fl_draw_image(gr.GetBits(), x(), y(), gr.GetWidth(), gr.GetHeight(), 3);
+    }
+@end verbatim
+Qt code will look like
+@verbatim
+    void MyWidget::paintEvent(QPaintEvent *)
+    {
+        mglGraphZB gr(w(),h());
+        gr.Alpha(true);         // draws something using MathGL
+        gr.Light(true);         gr.Light(0,mglPoint(1,0,-1));
+        sample(&gr,NULL);
+
+        // Qt don't support RGB format as is. So, let convert it to BGRN.
+        const uchar *bb = gr.GetBits();
+        register long i, w=gr.GetWidth(), h=gr.GetHeight();
+        *buf = new uchar[4*w*h];
+        for(i=0;i<w*h;i++)
+        {
+            (*buf)[4*i]   = bb[3*i+2];
+            (*buf)[4*i+1] = bb[3*i+1];
+            (*buf)[4*i+2] = bb[3*i];
+            (*buf)[4*i+3] = 255;
+        }
+        QPixmap pic = QPixmap::fromImage(QImage(*buf, w, h, QImage::Format_RGB32));
+
+        QPainter paint;
+        paint.begin(this);  paint.drawPixmap(0,0,pic);  paint.end();
+        delete []buf;
+    }
+@end verbatim
 
 @c ------------------------------------------------------------------
 @node Using QMathGL, , Drawing in memory, Basic usage
@@ -664,9 +704,9 @@ Below I shall show the features of 1D plotting on base of @code{Plot()} function
 @verbatim
     int sample(mglGraph *gr, void *)
     {
-        mglData y0(50);		y0.Modify("sin(pi*(2*x-1))");
+        mglData y0(50); 	y0.Modify("sin(pi*(2*x-1))");
         gr->SubPlot(2,2,0);
-        gr->Plot(y0);		gr->Box();
+        gr->Plot(y0);   	gr->Box();
 @end verbatim
 Style of line is not specified in @code{Plot()} function. So MathGL uses the solid line with first color of palette (this is blue). Next subplot shows array @var{y1} with 2 rows:
 @verbatim
@@ -674,11 +714,11 @@ Style of line is not specified in @code{Plot()} function. So MathGL uses the sol
         mglData y1(50,2);
         y1.Modify("sin(pi*2*x-pi)");
         y1.Modify("cos(pi*2*x-pi)/2",1);
-        gr->Plot(y1);		gr->Box();
+        gr->Plot(y1);   	gr->Box();
 @end verbatim
 As previously I did not specify the style of lines. As a result, MathGL again uses solid line with next colors in palette (there are green and red). Now let us plot a circle on the same subplot. The circle is parametric curve @math{x=cos(\pi t), y=sin(\pi t)}. I will set the color of the circle (dark yellow, @samp{Y}) and put marks @samp{+} at point position:
 @verbatim
-        mglData x(50);		x.Modify("cos(pi*2*x-pi)");
+        mglData x(50);  	x.Modify("cos(pi*2*x-pi)");
         gr->Plot(x,y0,"Y+");
 @end verbatim
 Note that solid line is used because I did not specify the type of line. The same picture can be achieved by @code{Plot2()} function. Let us draw ellipse by orange dash line:
@@ -689,7 +729,7 @@ Note that solid line is used because I did not specify the type of line. The sam
 Drawing in 3D space is mostly the same. Let us draw spiral with default line style. Now its color is 4-th color from palette (this is cyan):
 @verbatim
         gr->SubPlot(2,2,2);	gr->Rotate(60,40);
-        mglData z(50);		z.Modify("2*x-1");
+        mglData z(50);  	z.Modify("2*x-1");
         gr->Plot(x,y0,z);	gr->Box();
 @end verbatim
 Function @code{Plot3()} does 3D curve plot but for single array. Use it to put circle marks on the previous plot:

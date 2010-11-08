@@ -22,6 +22,8 @@
 #include <wx/msgdlg.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
+#include <wx/menu.h>
+
 #include "mgl/mgl_idtf.h"
 #include "mgl/mgl_eps.h"
 #include "mgl/mgl_wx.h"
@@ -91,7 +93,7 @@ void wxMathGL::OnSize(wxSizeEvent& event)
 	wxSize ev = event.GetSize();
 	if(graph->GetWidth()==ev.GetWidth() && graph->GetHeight()==ev.GetHeight())
 		return;
-	if(AutoResize)
+	if(AutoResize && ev.GetWidth()>0 && ev.GetHeight()>0)
 	{	graph->SetSize(ev.GetWidth(), ev.GetHeight());	Update();	}
 	else	SetSize(graph->GetWidth(), graph->GetHeight());
 }
@@ -99,10 +101,7 @@ void wxMathGL::OnSize(wxSizeEvent& event)
 void wxMathGL::OnNextSlide(wxTimerEvent& evt)	{	NextSlide();	}
 //-----------------------------------------------------------------------------
 void wxMathGL::SetPer(int p)
-{
-	if(per!=p && p>=0 && p<100)
-	{	per = 100*p;	Update();	}
-}
+{	if(per!=p && p>=0 && p<100)	{	per = 100*p;	Update();	}	}
 //-----------------------------------------------------------------------------
 void wxMathGL::SetPhi(int p)
 {	if(phi!=p)	{	phi = p;	Update();	}	}
@@ -539,7 +538,7 @@ void mglGraphWX::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 	int n = draw ? draw(this,par) : 0;
 	if(n<NumFig && n>=0)	NumFig = n;
 	DrawFunc = draw;		FuncPar = par;
-	LoadFunc = reload;
+	LoadFunc = reload;		popup = 0;
 	if(Wnd)
 	{
 		Wnd->SetLabel(wxString(title,wxConvLibc));
@@ -553,16 +552,28 @@ void mglGraphWX::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 
 	Wnd = new wxWindow;	Wnd->SetSize(650,480);
 	Wnd->SetLabel(wxString(title,wxConvLibc));
+
 	scroll = new wxScrolledWindow(Wnd);
-	WMGL = new wxMathGL(scroll);
+	WMGL = new wxMathGL(scroll);	MakeMenu();
 	WMGL->SetPopup(popup);	WMGL->SetGraph(this);
 	WMGL->SetDraw(draw, par);
-	MakeMenu();
+
 	WMGL->Update();
 	if(maximize)	Wnd->SetSize(Wnd->GetMaxSize());
 	Wnd->Show();
 }
 //-----------------------------------------------------------------------------
+void mglGraphWX::MakeMenu()
+{
+/*	wxMenuBar *m = new wxMenuBar;
+	wxMenu *o, *oo;
+	
+	o = new wxMenu;	m->Append(o, wxT("&File"));
+	oo= new wxMenu;	o->AppendSubMenu(oo,wxT("&Export as ..."));
+	o->Append(wxID_EXIT, wxT("&Close"));
+	Wnd->Connect(wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(wxWindow::Close));
+*/
+}
 /*void mglGraphQT::makeMenu()
 {
 	QAction *a;
@@ -721,7 +732,7 @@ void mglGraphWX::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 HMGL mgl_create_graph_wx_dr(HMDR dr, const char *title)
 {
 	mglGraphWX *g = new mglGraphWX;
-	g->Window(0,0,dr,title);
+	g->Window(0,0,title,dr);
 	return g;
 }
 //-----------------------------------------------------------------------------
@@ -748,4 +759,3 @@ int mglWxRun()		{	return wxTheApp ? wxTheApp->MainLoop():0;	}
 void mgl_wx_run_()	{	mglWxRun();	}
 //-----------------------------------------------------------------------------
 #endif
-//-----------------------------------------------------------------------------

@@ -39,3 +39,4 @@ uninstall-local:
 
 #all-local: html pdf
 all-local: html
+	./filter.py

@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-eps -test" />
+				<Option parameters="-test" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -40,7 +40,6 @@
 		</Compiler>
 		<Unit filename="examples/full_test.cpp" />
 		<Unit filename="examples/test.mgl" />
-		<Unit filename="test.mgl" />
 		<Extensions>
 			<envvars />
 			<code_completion />

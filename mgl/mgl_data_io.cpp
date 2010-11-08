@@ -305,8 +305,8 @@ char *mgl_read_gz(gzFile fp)
 {
 	long size=1024,n=0;
 	char *buf=(char*)malloc(size);
-	while(gzread(fp,buf+n,size)>0)
-	{	n++;	buf=(char*)realloc(buf,size*n);	}
+	while(gzread(fp,buf+size*n,size)>0)
+	{	n++;	buf=(char*)realloc(buf,size*(n+1));	}
 	return buf;
 }
 //-----------------------------------------------------------------------------
@@ -329,7 +329,6 @@ bool mglData::Read(const char *fname)
 	buf[i+1]=0;	nb = i;		// remove tailing spaces
 	for(i=0;i<nb-1 && !isn(buf[i]);i++)	// determine nx
 	{
-//		sp = (ch==' ' || ch=='\t');
 		if(buf[i]=='#')		while(!isn(buf[i]) && i<nb)	i++;
 		ch = buf[i];
 		if(ch>' ' && !first)	first=true;

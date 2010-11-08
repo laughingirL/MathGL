@@ -23,6 +23,7 @@
 #include <wx/window.h>
 #include <wx/image.h>
 #include <wx/timer.h>
+#include <wx/bitmap.h>
 #include <mgl/mgl_zb.h>
 //-----------------------------------------------------------------------------
 /// Class is Wx widget which display MathGL graphics

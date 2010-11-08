@@ -1,4 +1,4 @@
-INCLUDES        = -I$(top_builddir)/include -I$(top_builddir)
+AM_CXXFLAGS += -I$(top_srcdir)/include -I$(top_builddir)/include
 
 lib_LTLIBRARIES = 
 if USE_FLTK
@@ -34,7 +34,7 @@ libmgl_qt_la_LDFLAGS = $(QT_LDFLAGS) $(LDFLAGS) -no-undefined -version-info $(MG
 libmgl_qt_la_LIBADD = $(QT_LIBS) $(top_builddir)/mgl/libmgl.la
 libmgl_qt_la_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS)
 libmgl_qt_la_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
-libmgl_qt_la_SOURCES = $(top_builddir)/include/mgl/mgl_qt.moc.cpp mgl_qt.cpp $(top_builddir)/include/mgl/mgl_qt.h
+libmgl_qt_la_SOURCES = $(top_builddir)/include/mgl/mgl_qt.moc.cpp mgl_qt.cpp $(top_srcdir)/include/mgl/mgl_qt.h
 
 BUILT_SOURCES = $(top_builddir)/include/mgl/mgl_qt.moc.cpp
 CLEANFILES = $(BUILT_SOURCES)

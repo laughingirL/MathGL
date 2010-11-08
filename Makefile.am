@@ -13,7 +13,7 @@ mgldest=$(DESTDIR)$(datadir)/$(PACKAGE)/fonts
 
 install-data-local: $(doctargets)
 	mkdir -p $(mgldest)
-	cp -r $(top_builddir)/fonts/*.vfm $(mgldest)
+	cp -r $(top_srcdir)/fonts/*.vfm $(mgldest)
 
 uninstall-local:
 	rm -rf $(mgldest)

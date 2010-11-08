@@ -718,7 +718,7 @@ void mglGraphAB::Glyph(mreal x, mreal y, mreal f, int s, long j, char col)
 void mglGraphAB::glyph_fill(mreal x,mreal y, mreal f, int nt, const short *trig, mreal *c)
 {
 	long ik,ii;
-	mreal p[12], n[3]={0,0,0}, pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
+	mreal p[12], pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 	if(!trig || nt<=0)	return;
 	for(ik=0;ik<nt;ik++)
 	{
@@ -727,7 +727,9 @@ void mglGraphAB::glyph_fill(mreal x,mreal y, mreal f, int nt, const short *trig,
 		ii+=2;		p[6]=f*trig[ii]+x;	p[7]=f*trig[ii+1]+y;	p[8]=0;
 		PostScale(p,3);
 		p[2]+=pw;	p[5]+=pw;	p[8]+=pw;
-		mglGraphAB::trig_plot_n(p,p+3,p+6,c,c,c,n,n,n);
+		bool ul=UseLight;	UseLight=false;
+		mglGraphAB::trig_plot(p,p+3,p+6,c,c,c);
+		UseLight=ul;
 	}
 }
 //-----------------------------------------------------------------------------

@@ -110,7 +110,7 @@ void QMathGL::paintEvent(QPaintEvent *)
 //-----------------------------------------------------------------------------
 void QMathGL::resizeEvent(QResizeEvent *ev)
 {
-	if(autoResize)
+	if(autoResize && ev->size().width()>0 && ev->size().height()>0)
 	{	graph->SetSize(ev->size().width(), ev->size().height());	update();	}
 	else	resize(graph->GetWidth(), graph->GetHeight());
 }
@@ -576,16 +576,15 @@ void mglGraphQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p
 	Wnd = new QMainWindow;	Wnd->resize(650,480);
 	Wnd->setWindowTitle(title);
 	scroll = new QScrollArea(Wnd);
-	QMGL = new QMathGL(Wnd);
+	QMGL = new QMathGL(Wnd);	makeMenu();
 	QMGL->setPopup(popup);	QMGL->setGraph(this);
 	QMGL->setDraw(draw, par);
-	makeMenu();	qApp->processEvents();
+	qApp->processEvents();
 	scroll->setWidget(QMGL);
 	Wnd->setCentralWidget(scroll);
 	QMGL->update();
-	if(maximize)
-	{	Wnd->showMaximized();	}
-	else	Wnd->show();
+	if(!maximize)	Wnd->show();
+	else	Wnd->showMaximized();
 }
 //-----------------------------------------------------------------------------
 HMGL mgl_create_graph_qt_dr(HMDR dr, const char *title)
