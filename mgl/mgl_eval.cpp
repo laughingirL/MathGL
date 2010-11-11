@@ -124,7 +124,9 @@ EQ_CL,		// Clausen function
 #define M_PI       3.14159265358979323846
 #endif
 //-----------------------------------------------------------------------------
+#ifndef NO_GSL
 gsl_rng *mgl_rng=0;
+#endif
 void mgl_srnd(long seed)
 {
 #ifndef NO_GSL
@@ -150,7 +152,7 @@ double mgl_rnd()
 	return gsl_rng_uniform(mgl_rng);
 //	gsl_rng_free(r);
 #else
-	return rand()/(RND_MAX-1.);
+	return rand()/(RAND_MAX-1.);
 #endif
 }
 //-----------------------------------------------------------------------------
