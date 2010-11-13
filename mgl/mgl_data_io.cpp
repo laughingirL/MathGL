@@ -303,10 +303,13 @@ void mglData::Save(const char *fname,int ns) const
 //-----------------------------------------------------------------------------
 char *mgl_read_gz(gzFile fp)
 {
-	long size=1024,n=0;
+	long size=1024,n=0,m;
 	char *buf=(char*)malloc(size);
-	while(gzread(fp,buf+size*n,size)>0)
-	{	n++;	buf=(char*)realloc(buf,size*(n+1));	}
+	while((m=gzread(fp,buf+size*n,size))>0)
+	{
+		if(m<size)	{	buf[size*n+m]=0;	break;	}
+		n++;		buf=(char*)realloc(buf,size*(n+1));
+	}
 	return buf;
 }
 //-----------------------------------------------------------------------------
@@ -322,6 +325,7 @@ bool mglData::Read(const char *fname)
 	}
 	char *buf = mgl_read_gz(fp);
 	nb = strlen(buf);	gzclose(fp);
+printf("buf (of %ld) is \n%s\n----\n",nb,buf);
 
 	bool first=false,com=false;
 	register char ch;
@@ -358,6 +362,7 @@ bool mglData::Read(const char *fname)
 	}
 	else	for(i=0;i<nb-1;i++)	if(buf[i]=='\f')	l++;
 	free(buf);
+printf("sizes = {%ld, %ld, %ld}\n",k,m,l);
 	return Read(fname,k,m,l);
 }
 //-----------------------------------------------------------------------------
@@ -403,7 +408,8 @@ bool mglData::Read(const char *fname,int mx,int my,int mz)
 		char *s=buf+j;
 		while(buf[j]>' ' && j<nb)	j++;
 		buf[j]=0;
-		a[i] = atof(s);	i++;	if(i>=nx*ny*nz)	break;
+		a[i] = atof(s);
+		i++;	if(i>=nx*ny*nz)	break;
 	}
 	free(buf);
 	return true;
