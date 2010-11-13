@@ -65,14 +65,19 @@ The mglFormula class allows a fast evaluation of a textual mathematical expressi
 @node Installation and usage, General concepts, MathGL features, Overview
 @section Installation and usage
 
-MathGL can be installed in 3 different ways.
+MathGL can be installed in 4 different ways.
 @enumerate
 @item
 Compile from sources. The standard script for autoconf/automake tool is included in the library beginning from version 1.2.1. To run it, one should execute 3 commands: @code{./configure} after it @code{make} and @code{make install} with root/sudo rights. Sometimes after installation you may need to update the library list -- just execute @code{ldconfig} with root/sudo rights.
 
 Script @code{./configure} have several additional options which are switched off by default. They are: @code{--enable-fltk, --enable-glut, --enable-qt} for ebabling FLTK, GLUT and/or Qt windows; @code{--enable-jpeg, --enable-tiff, --enable-hdf5} for enabling corresponding file formats; @code{--enable-all} for enabling all additional features. For using @code{double} as base internal data type use option @code{--enable-double}. For enabling language interfaces use @code{--enable-python, --enable-octave} or @code{--enable-langall} for all languages. The full list of options can be viewed by command @code{./configure --help}.
+
 @item
-Use a precompiled binary. There are binaries for MinGW (platform Win32). For a precompiled variant one needs only to unpack the archive to the location of the compiler (or in any other folder and setup paths). By default, precompiled versions include the support of GSL (www.gsl.org) and PNG. So, one needs to have these libraries installed on system.
+One can use cmake for building MathGL library if autoconf/automake tools are absent. For example, it is the typical situation for Windows, MacOS and/or using of non-GNU compilers. However the making of MathGL documentation is switched off for this case. You can use WYSIWYG tools to change cmake build options.
+
+@item
+Use a precompiled binary. There are binaries for MinGW (platform Win32). For a precompiled variant one needs only to unpack the archive to the location of the compiler (or in any other folder and setup paths). By default, precompiled versions include the support of GSL (www.gsl.org) and PNG. So, one needs to have these libraries installed on system (it can be found, for example, at @uref{http://gnuwin32.sourceforge.net/packages.html})..
+
 @item
 Install precompiled versions from standard packages (RPM, deb, DevPak and so on, see @uref{http://mathgl.sf.net/download.html, Download} section at homepage).
 @end enumerate
