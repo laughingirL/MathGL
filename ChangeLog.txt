@@ -1,3 +1,7 @@
+1.11.0.1 Released 15 November 2010
+	- Bugfix for reading textual data files (mostly under win32).
+	- Docs update.
+
 1.11 Released 8 November 2010
 	- Add new plot Grad() -- gradient of scalar field by flow threads.
 	- Add new plot QuadPlot() -- plot of irregular quadrangle mesh (like TriPlot()).

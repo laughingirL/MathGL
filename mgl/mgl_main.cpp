@@ -62,6 +62,21 @@ mglColorID mglColorIds[] = {{'k', mglColor(0,0,0)},
 	{' ', mglColor(-1,-1,-1)},	{0, mglColor(-1,-1,-1)}	// the last one MUST have id=0
 };
 //-----------------------------------------------------------------------------
+bool mglTestMode=false;
+void mglTest(const char *str, ...)
+{
+	if(mglTestMode)
+	{
+		char buf[256];
+		va_list lst;
+		va_start(lst,str);
+		vsprintf(buf,str,lst);
+		va_end(lst);
+		printf("TEST: %s\n",buf);
+		fflush(stdout);
+	}
+}
+//---------------------------------------------------------------------------
 void mglGraph::RecalcBorder()
 {
 	if(!fx &&	!fy &&	!fz)

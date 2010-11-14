@@ -325,7 +325,6 @@ bool mglData::Read(const char *fname)
 	}
 	char *buf = mgl_read_gz(fp);
 	nb = strlen(buf);	gzclose(fp);
-printf("buf (of %ld) is \n%s\n----\n",nb,buf);
 
 	bool first=false,com=false;
 	register char ch;
@@ -362,7 +361,6 @@ printf("buf (of %ld) is \n%s\n----\n",nb,buf);
 	}
 	else	for(i=0;i<nb-1;i++)	if(buf[i]=='\f')	l++;
 	free(buf);
-printf("sizes = {%ld, %ld, %ld}\n",k,m,l);
 	return Read(fname,k,m,l);
 }
 //-----------------------------------------------------------------------------

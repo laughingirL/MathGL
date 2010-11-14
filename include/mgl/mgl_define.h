@@ -148,6 +148,9 @@ struct mglThread
 };
 /// Start several thread for the task
 mreal mglStartThread(void *(*func)(void *), mreal (*fres)(mreal,mreal), int n, mreal *z, long *p, void *v);
+/// write testing messages
+extern bool mglTestMode;
+void mglTest(const char *str, ...);
 #ifndef MGL_NTH_DEF
 #define MGL_NTH_DEF		2
 #endif
