@@ -465,6 +465,7 @@ uninstall-am: uninstall-pngDATA
 
 $(png_images): hotdogs.pts # $(top_builddir)/examples/mgl_example
 	$(top_builddir)/examples/mgl_example -kind=${@:.png=}
+	cp ${@} ../../png/
 	touch $(srcdir)/../mathgl.texi
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
