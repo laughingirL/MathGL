@@ -26,7 +26,9 @@
 #include <hdf5.h>
 #endif
 #ifdef HAVE_HDF4
+#define intf hdf4_intf
 #include <hdf/mfhdf.h>
+#undef intf
 #endif
 
 #ifndef WIN32
