@@ -1,3 +1,0 @@
-/* This define enables double precision in MathGL */
-#define MGL_USE_DOUBLE ${MGL_USE_DOUBLE}
-
