@@ -1,0 +1,418 @@
+@chapter Overview
+
+@cindex MathGL overview
+
+MathGL is ...
+@itemize @bullet
+@item
+a library for making high-quality scientific graphics under Linux and Windows;
+@item
+a library for the fast data plotting and handling of large data arrays;
+@item
+a library for working in window and console modes and for easy embedding into other programs;
+@item
+a library with large and growing set of graphics.
+@end itemize
+
+@menu
+* Why have I written MathGL?::  
+* MathGL features::
+* Installation and usage::
+* General concepts::
+* FAQ::
+* Interfaces::
+* Thanks::
+@end menu
+
+@node Why have I written MathGL?, MathGL features, , Overview
+@section Why have I written MathGL?
+
+A code for making high-quality scientific graphics under Linux and Windows. A  code for the fast handling and plotting of large data arrays. A code for working in window and console regimes and for easy including into another program. A code with large and renewal set of graphics. Exactly such a code I was looking for in the last years. Exactly such a code I tried to realize in MathGL library.
+
+At this version (@value{VERSION}) MathGL has more than 20000 code strings, more than 40 general types of graphics for 1d, 2d and 3d data arrays. It can export graphics to bitmap and vector (EPS or SVG) files. It has OpenGL interface and can be used from console programs. It has functions for data handling and script MGL language for simplification of data plotting. It also has several types of transparency and smoothed lighting, vector fonts and TeX-like symbol parsing, arbitrary curvilinear coordinate system and many other useful things (see pictures section at @uref{http://mathgl.sf.net/, homepage}). Finally it is platform-independent and free (under GPL v.2.0 or later license).
+
+@node MathGL features, Installation and usage, Why have I written MathGL?, Overview
+@section MathGL features
+
+MathGL can plot a wide range of graphics. It includes:
+@itemize @bullet
+@item
+one-dimensional (Plot, Area, Bars, Step, Stem, Torus, Chart, Error, Tube, Mark, @pxref{1D plotting});
+
+@item
+two-dimensional plots (Mesh, Surf, Dens, Cont, ContF, Boxs, Axial, Fall, Belt, Tile, @pxref{2D plotting});
+
+@item
+three-dimensional plots (Surf3, Dens3, Cont3, ContF3, Cloud-like, @pxref{3D plotting});
+
+@item
+dual data plots: vector fields Vect and VectC, flow threads Flow, mapping chart Map, surfaces and isosurfaces, transparent or colored (i.e. with transparency or color varied) by other data SurfA, SurfC, Surf3A, Surf3C (@pxref{Dual plotting});
+
+@item
+and so on. For details see @pxref{MathGL core}.
+@end itemize
+
+In fact, I created the functions for drawing of all the types of scientific plots that I know. The list of plots is growing; if you need some special type of a plot then please email me @email{mathgl.abalakin@@gmail.com, e-mail} and it will appear in the new version.
+
+I tried to make plots as nice looking as possible: e.g., a surface can be transparent and highlighted by several (up to 10) light sources. Most of the drawing functions have 2 variants: simple one for the fast plotting of data, complex one for specifying of the exact position of the plot (including parametric representation). Resulting image can be saved in bitmap (with the help of mglGraphZB, mglGraphGL) PNG, JPEG, TIFF, BMP format or in vector EPS or SVG format (with the help of mglGraphPS), or in IDTF format (with the help of mglGraphIDTF) which can be converted into U3D.
+
+All texts are drawn by vector fonts, which allows for high scalability and portability. Texts may contain commands for: some of the TeX-like symbols, changing index (upper or lower indexes) and the style of font inside the text string (@pxref{mglFont class}). Texts of ticks are rotated with axis rotation. It is possible to create a legend of plot and put text in an arbitrary position on the plot. Arbitrary text encoding (by the help of function @code{setlocale()}) and UTF-16 encoding are supported.
+
+Special mglData class is used for data encapsulation (@pxref{mglData class}). In addition to a safe creation and deletion of data arrays it includes functions for data processing (smoothing, differentiating, integrating, interpolating and so on) and reading of data files with automatic size determination. Class mglData can handle arrays with up to three dimensions (arrays which depend on up to 3 independent indexes @math{a_@{ijk@}}). Using an array with higher number of dimensions is not meaningful, because I do not know how it can be plotted. Data filling and modification may be done manually or by textual formulas.
+
+The mglFormula class allows a fast evaluation of a textual mathematical expression (@pxref{mglFormula class}). It is based on string precompilation to tree-like code at the creation of class instance. At evaluation stage code performs only fast tree-walk and returns the value of the expression. In addition to changing data values, textual formulas are also used for drawing in @emph{arbitrary} curvilinear coordinates. A set of such curvilinear coordinates is limited only by user</samp>&rsquo;s imagination rather than a fixed list like: polar, parabolic, spherical, and so on.
+
+@node Installation and usage, General concepts, MathGL features, Overview
+@section Installation and usage
+
+MathGL can be installed in 4 different ways.
+@enumerate
+@item
+Compile from sources. The standard script for autoconf/automake tool is included in the library beginning from version 1.2.1. To run it, one should execute 3 commands: @code{./configure} after it @code{make} and @code{make install} with root/sudo rights. Sometimes after installation you may need to update the library list -- just execute @code{ldconfig} with root/sudo rights.
+
+Script @code{./configure} have several additional options which are switched off by default. They are: @code{--enable-fltk, --enable-glut, --enable-qt} for ebabling FLTK, GLUT and/or Qt windows; @code{--enable-jpeg, --enable-tiff, --enable-hdf5} for enabling corresponding file formats; @code{--enable-all} for enabling all additional features. For using @code{double} as base internal data type use option @code{--enable-double}. For enabling language interfaces use @code{--enable-python, --enable-octave} or @code{--enable-langall} for all languages. The full list of options can be viewed by command @code{./configure --help}.
+
+@item
+One can use cmake for building MathGL library if autoconf/automake tools are absent. For example, it is the typical situation for Windows, MacOS and/or using of non-GNU compilers. However the making of MathGL documentation is switched off for this case. You can use WYSIWYG tools to change cmake build options.
+
+@item
+Use a precompiled binary. There are binaries for MinGW (platform Win32). For a precompiled variant one needs only to unpack the archive to the location of the compiler (or in any other folder and setup paths). By default, precompiled versions include the support of GSL (www.gsl.org) and PNG. So, one needs to have these libraries installed on system (it can be found, for example, at @uref{http://gnuwin32.sourceforge.net/packages.html})..
+
+@item
+Install precompiled versions from standard packages (RPM, deb, DevPak and so on, see @uref{http://mathgl.sf.net/download.html, Download} section at homepage).
+@end enumerate
+
+To compile your own program, you need to specify the linker option @code{-lmgl} for a compilation in the console program or with external (non-MathGL) window library. If you want to use FLTK or GLUT windows then you need to add the option @code{-lmgl-fltk} or @code{-lmgl-glut}. Fortran users also should add C++ library by the option @code{-lstdc++}.
+
+@node General concepts, FAQ, Installation and usage, Overview
+@section General concepts
+
+The set of MathGL features is rather rich -- just the number of basic graphics types 
+is larger than 40. Also there are functions for data handling, plot setup and so on. In spite of it I tried to keep a similar style in function names and in the order of arguments. Mostly it is 
+used for different drawing functions.
+
+There are six most general (base) concepts:
+@enumerate
+@item
+@strong{Any picture is created in memory first.} The internal (memory) representation can be different: bitmap picture or the list of vector primitives. After that the user may decide what he/she want: save to file, display on the screen, run animation, do additional editing and so on. This approach assures a high portability of the program -- the source code will produce exactly the same picture in @emph{any} OS. Another big positive consequence is the ability to create the picture in the console program (using command line, without creating a window)!
+@item
+@strong{Every plot settings (style of lines, font, color scheme) are specified by a string.} It provides convenience for user/programmer -- short string with parameters is more comprehensible than a large set of parameters. Also it provides portability -- the strings are the same in any OS so that it is not necessary to think about argument types.
+@item
+@strong{All functions have ``simplified'' and ``advanced'' forms.} It is done for user</samp>&rsquo;s convenience. One needs to specify only one data array in the ``simplified'' form in order to see the result. But one may set parametric dependence of coordinates and produce rather complex curves and surfaces in the ``advanced'' form. In both cases the order of function arguments is the same: first data arrays, second the string with plot parameters, and later optional arguments for plot tuning.
+@item
+@strong{All data arrays for plotting are encapsulated in mglData class.} This reduces the number of errors while working with memory and provides a uniform interface for data of different types (float, double and so on) or for formula plotting.
+@item
+@strong{All plots are vector plots.} The MathGL library is intended for handling scientific data which have vector nature (lines, faces, matrices and so on). As a result, vector representation is used in all cases! In addition, the vector representation allows one to scale the plot easily -- change the canvas size by a factor of 2, and the picture will be proportionally scaled.
+@item
+@strong{New drawing never clears things drawn already.} This, in some sense, unexpected, idea allows to create a lot of ``combined'' graphics. For example, to make a surface with contour lines one needs to call the function for surface plotting and the function for contour lines plotting (in any order). Thus the special functions for making this ``combined'' plots (as it is done in Matlab and some other plotting systems) are superfluous. Many more examples of such plots can be found in section @ref{Hints} and in home site (@uref{http://mathgl.sf.net/index.html}).
+@end enumerate
+
+In addition to the general concepts I want to comment on some non-trivial or less commonly used general ideas -- plot positioning, axis specification and curvilinear coordinates, styles for lines, text and color scheme.
+
+@menu
+* Coordinate axes::             
+* Line styles::                 
+* Color scheme::                
+* Font styles::                  
+* Textual formulas::            
+@end menu
+
+@include concept_en.texi
+
+@node FAQ, Interfaces, General concepts, Overview
+@section FAQ
+
+@table @strong
+@item The plot does not appear
+Check that points of the plot lie  inside the bounding box and resize the bounding box using @code{Axis()} function. Check that the data have correct dimensions for selected type of plot. Be sure that  @code{Finish()} is called after the plotting functions (or be sure that the plot is saved to a file). Sometimes the light reflection from flat surfaces (like, @code{Dens()}) can look as if the plot were absent.
+
+@item I can not find some special kind of plot.
+Most ``new'' types of plots can be created by using the existing drawing functions. For example, the surface of curve rotation can be created by a special function @code{Torus()}, or as a parametrically specified surface by @code{Surf()}. See also, @ref{Hints} and @ref{Examples} of MathGL. If you can not find a specific type of plot, please e-mail me and this plot will appear in the next version of MathGL library.
+
+@item Should I know some graphical libraries (like OpenGL) before using the MathGL library?
+No. The MathGL library is self-contained and does not require the knowledge of external libraries.
+
+@item In which language is the library written? For which languages does it have an interface?
+The core of the MathGL library is written in C++. But there are interfaces for: pure C, Fortran, Pascal, Forth, and its own command language MGL. Also there is a large set of interpreted languages, which are supported (Python, Java,  ALLEGROCL, CHICKEN, Lisp, CFFI, C#, Guile, Lua, Modula 3, Mzscheme, Ocaml, Octave, Perl, PHP, Pike, R, Ruby, Tcl). These interfaces are written using SWIG (both pure C functions and classes) but only the interface for Python and Octave is included in the autoconf/automake script. The reason is that I don</samp>&rsquo;t know any other interpreted languages :(. Note that most other languages can use (link to) the pure C functions.
+
+@item How can I use MathGL with Fortran?
+You can use MathGL as is with @code{gfortran} because it uses by default the AT&T notation for external functions. For other compilers (like Visual Fortran) you have to switch on the AT&T notation manually. The AT&T notation requires that the symbol @samp{_} is added at the end of each function name, function argument(s) is passed by pointers and the string length(s) is passed at the end of the argument list. For example:
+
+@emph{C function} -- @code{void mgl_fplot(HMGL graph, const char *fy, const char *stl, int n);}
+
+@emph{AT&T function} -- @code{void mgl_fplot_(uintptr_t *graph, const char *fy, const char *stl, int *n, int ly, int ls);}
+
+@item I have a class Foo and a drawing method Foo::draw(mglGraph *gr). How I can use it in FLTK or GLUT window?
+The member-functions of classes have a hidden parameter (the pointer to a class instance) in C++. So, their direct usage is impossible. The solution is to write an interface function:
+@example
+int foo_draw(mglGraph *gr, void *par)
+@{   ((Foo *)foo)->draw(gr);    @}
+@end example
+and to use it in the call of @code{Window()} function:
+@example
+gr->Window(argc,argv,foo_draw,"Title",this);
+@end example
+
+Alternatively you can inherit your class from @code{mglDraw} class and use the functions like @code{gr->Window(argc, argv, foo, "Title");}.
+
+@item How can I print in Russian/Spanish/Arabic/Japanese, and so on?
+The standard way is to use Unicode encoding for the text output. But the MathGL library also has interface for 8-bit (char *) strings with internal conversion to Unicode. This conversion depends on the current locale OS. You may change it by @code{setlocale()} function. For example, for Russian text in CP1251 encoding you may use @code{setlocale(LC_CTYPE, "ru_RU.cp1251");} (under MS Windows the name of locale may differ -- @code{setlocale(LC_CTYPE, "russian_russia.1251")}). I strongly recommend not to use the constant @code{LC_ALL} in the conversion. Since it also changes the number format, it may lead to mistakes in formula writing and reading of the text in data files. For example, the program will await a @samp{,} as a decimal point but the user will enter @samp{.}.
+
+@item How can I exclude a point or a region of plot from the drawing?
+There are 3 general ways. First, the point with @code{NAN} value as one of the coordinates will never be plotted. Second, special variables @var{CutMin}, @var{CutMax} or function @code{CutOff}() define the condition when the points should be omitted (@pxref{Cutting}). Last, you may change the transparency of a part of the plot by the help of functions @code{SurfA()}, @code{Surf3A()} (@pxref{Dual plotting}). In this last case the transparency is switched on smoothly.
+
+@item I use VisualStudio, CBuilder or some other compiler (not MinGW/gcc). How can I link the MathGL library?
+In version 1.10, you can use the header file @code{#include <mgl/mgl_w.h>} which contains wrapper C++ classes, which should be acceptable for any compiler. Note, that wrapper classes are @strong{incompatible} with classes in usual headers and you should use only one of them (wrapper or usual)! However, I recommend to use the usual headers if you use GNU compilers (like MinGW).
+
+@c @strong{Finally!} Please @emph{do not} ask me Windows-specific questions. I do not use Windows. I know nothing about Visual Basic, Visual C++, CBuiled or .NET. Please find the appropriate Usenet discussion group and ask your question there.
+
+@item How I can build MathGL under Windows?
+The simplest way is using the combination CMake+MinGW. Also you need some extra libraries like GSL, PNG, JPEG and so on. All of them can be found at @url{http://gnuwin32.sourceforge.net/packages.html}. After installing all components, just run CMake configurator and make the MathGL itself.
+
+@item How I can create FLTK/GLUT/Qt window in parallel with calculation?
+You should create a separate thread for processing window messages. The cross-platform way is using the @code{pthread} library. You can update the data by calling @code{mglGraphFLTK::Update()} function. The code can look like this:
+@verbatim
+//-----------------------------------------------------------------------------
+#include <mgl/mgl_fltk.h>
+#include <pthread.h>
+#include <unistd.h>
+
+mglPoint pnt;  // some global variable for changable data
+//-----------------------------------------------------------------------------
+int sample(mglGraph *gr, void *)
+{
+  gr->Box();  gr->Line(mglPoint(),pnt,"Ar2"); // just draw a vector
+  return 0;
+}
+//-----------------------------------------------------------------------------
+void *mgl_fltk_tmp(void *)      {       mglFlRun();     return 0;       }
+int main (int argc, char ** argv)
+{
+  mglGraphFLTK gr;
+  gr.Window(argc,argv,sample,"test");  // create window
+  static pthread_t tmp;
+  pthread_create(&tmp, 0, mgl_fltk_tmp, 0);
+  pthread_detach(tmp);    // run window handling in the separate thread
+  for(int i=0;i<10;i++)   // do calculation
+  {
+    sleep(1);             // which can be very long
+    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+    gr.Update();          // update window
+  }
+  return 0;   // finish calculations and close the window
+}
+//-----------------------------------------------------------------------------
+@end verbatim
+
+
+@item How many people write this library?
+Most of the library was written by one person. This is a result of nearly a year of work (mostly in the evening and on holidays): I spent half a year to write the kernel and half a year to a year on extending, improving the library and writing documentation. This process continues now :). The autoconf/automake script was written mostly by D.Kulagin, and the export to IDTF was written mostly by M.Vidassov.
+
+@item How can I display a bitmap on the figure?
+You can import data into a @code{mglData} instance and display it by @code{Dens()} function. For example, for black-and-white bitmap you can use the code: @code{mglData bmp; bmp.Import("fname.png","wk"); gr->Dens(bmp,"wk");}.
+
+@item How can I use MathGL in Qt, FLTK, wxWidgets etc.?
+There are special classes (widgets) for these libraries: QMathGL for Qt, Fl_MathGL for FLTK and so on. If you don</samp>&rsquo;t find the appropriate class then you can create your own widget that displays a bitmap using mglGraphAB::GetBits().
+
+@item How can I create U3D file (make 3D in PDF)?
+There are 2 steps: first you should create IDTF file, and later convert it to U3D. You can use @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=300628, U3D tools} for converting IDTF file to U3D. It needs @uref{http://libharu.org, libharu} 2.1.0 or later. For installation use @code{./bootstrap, ./configure, make, sudo make install}. It provides  IDTFConverter program for converting text files *.idtf to binary files *.u3d. The latter can be included into PDF.
+
+@item How I can change the font family?
+First, you should download new font files from @uref{http://mathgl.sourceforge.net/download.html, here} or from @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, here}. Next, you should load the font files into mglGraph class instance @var{gr} by the following command: @code{gr->SetFont(new mglFont(fontname,path));}. Here @var{fontname} is the base font name like @samp{STIX} and @var{path} sets the location of font files. Use @code{gr->SetFont(NULL);} to start using the default font.
+
+@item How can I draw tick out of a bounding box?
+Just set a negative value for @var{TickLen}. For example, use @code{gr->SetTickLen(-0.1);}.
+
+@end table
+
+@node Interfaces, Thanks, FAQ, Overview
+@section Interfaces
+
+The MathGL library has interfaces for a set of languages. Most of them are based on the C interface via SWIG tool. There are Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, and Tcl interfaces. Also there is a Fortran interface which has a similar set of functions, but slightly different types of arguments (integers instead of pointers). These functions are marked as [C function].
+@c ++++++++++
+Some of the languages listed above support classes (like Python). For them, a special wrapper was written. These classes and functions are marked as (Python).
+@c ++++++++++
+Finally, a special command language MGL was written for a faster access to C++ plotting functions. Corresponding scripts can be executed separately (by UDAV, mgl2png, mgl2eps and so on) or from the C++ code (@pxref{mglParse class}). These commands are described in @ref{MGL interface}.
+
+@menu
+* C interface::
+* Python interface::
+@end menu
+
+@node C interface, Python interface, , Interfaces
+@subsection C interface
+
+The C interface is a base for many other interfaces. It contains the pure C functions for most of the methods of MathGL classes. In distinction to C++ classes, C functions must have an argument HMGL (for graphics) and/or HMDT (for data arrays), which specifies the object for drawing or manipulating (changing). So, firstly, the user has to create this object by the function @code{mgl_create_*()} and has to delete it after the use by function @code{mgl_delete_*()}.
+
+All C functions are described in the header file @code{#include <mgl/mgl_c.h>} and use variables of the following types:
+@itemize
+@item 
+@code{HMGL} --- Pointer to class @code{mglGraph} (@pxref{MathGL core}).
+@item 
+@code{HMDT} --- Pointer to class @code{mglData} (@pxref{mglData class}).
+@item 
+@code{HMPR} --- Pointer to class @code{mglParse} (@pxref{mglParse class})..
+@end itemize
+These variables contain identifiers for graphics drawing objects and for the data objects. 
+
+Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of type @code{HMGL, HMDT} must be an integer with sufficient size (@code{integer*4} in the 32-bit operating system or @code{integer*8} in the 64-bit operating system). All C functions are subroutines in Fortran, which are called by operator @code{call}. The exceptions are functions, which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also, one should keep in mind that strings in Fortran are denoted by @code{</samp>&rsquo;} symbol, not the @code{"} symbol.
+
+@strong{Create and delete objects}
+
+@itemize
+@item Functions for non-visual ``grapher'' creation:
+@deftypefn {C function} @code{HMGL} mgl_create_graph_gl ()
+Create the instance of class mglGraphGL.
+@end deftypefn
+@deftypefn {C function} @code{HMGL} mgl_create_graph_zb (@code{int} width, @code{int} height)
+Create the instance of class mglGraphZB with specified sizes.
+@end deftypefn
+@deftypefn {C function} @code{HMGL} mgl_create_graph_ps (@code{int} width, @code{int} height)
+Create the instance of class mglGraphPS with specified sizes.
+@end deftypefn
+@deftypefn {C function} @code{HMGL} mgl_create_graph_idtf ()
+Create the instance of class mglGraphIDTF.
+@end deftypefn
+
+@item Function for windowed ``grapher'' creation:
+@deftypefn {C function} @code{HMGL} mgl_create_graph_glut (@code{int (*}draw@code{)(HMGL gr, void *p)}, @code{const char *}title, @code{void *}par)
+Create the instance of class mglGraphGLUT and the connected GLUT window. Only one GLUT window can be opened at once. Argument description can be found in @ref{mglGraphAB class}.
+@end deftypefn
+@deftypefn {C function} @code{HMGL} mgl_create_graph_fltk (@code{int (*}draw@code{)(HMGL gr, void *p)}, @code{const char *}title, @code{void *}par)
+Create the instance of class mglGraphFLTK and the connected FLTK window. Several windows can be opened at the same time. However user must call @code{mgl_fltk_run()} function to start the message handling cycle. Argument description can be found in @ref{mglGraphAB class}. Note that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides).
+@end deftypefn
+@deftypefn {C function} @code{HMGL} mgl_create_graph_qt (@code{int (*}draw@code{)(HMGL gr, void *p)}, @code{const char *}title, @code{void *}par)
+Create the instance of class mglGraphQT and the connected Qt window. Several windows can be opened at the same time. However user must call @code{mgl_qt_run()} function to start the message handling cycle. Arguments description can be found in @ref{mglGraphAB class}. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides).
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_fltk_run ()
+Start FLTK message handling cycle. A normal program will end main() function with @code{return mgl_fltk_run();}.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_fltk_thread ()
+Start FLTK message handling cycle. In distinction to @code{mgl_fltk_run()} the loop is started in a separate thread, so that program continues immediately.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_qt_run ()
+Start Qt message handling cycle. A normal program will end main() function with @code{return mgl_qt_run();}. Alternatively, the user may setup Qt application by direct Qt function calls.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_qt_thread ()
+Start Qt message handling cycle. In distinction to @code{mgl_qt_run()} the loop is started in separate thread so that the program continues immediately.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_update (@code{HMGL} graph)
+Manually update contents of the window.
+@end deftypefn
+
+@deftypefn {C function} @code{void} mgl_set_show_mouse_pos (@code{HMGL} graph, @code{int} enable)
+Switch to show or not in the widget the last mouse click position.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_get_last_mouse_pos (@code{HMGL} graph, @code{float *}x, @code{float *}y, @code{float *}z)
+Last position of mouse click.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_calc_xyz (@code{HMGL} graph, @code{int} xs, @code{int} ys, @code{float *}x, @code{float *}y, @code{float *}z)
+Calculate 3D coordinate @{x,y,z@} for screen point @{xs,ys@}. At this moment, it ignores perspective and transformation formulas (curvilinear coordinates). The calculations are done for the last used InPlot (@pxref{Transformation matrix}).
+@end deftypefn
+
+
+@item Functions for data creation:
+@deftypefn {C function} @code{HMDT} mgl_create_data ()
+Create a simple instance of class mglData.
+@end deftypefn
+@deftypefn {C function} @code{HMDT} mgl_create_data_size (@code{int} nx, @code{int} ny, @code{int} nz)
+Create an instance of class mglData with specified sizes.
+@end deftypefn
+@deftypefn {C function} @code{HMDT} mgl_create_data_file (@code{const char *}fname)
+Create an instance of class mglData and fill it by data from text file.
+@end deftypefn
+
+@item Each created object @strong{must} be deleted after usage by functions:
+@deftypefn {C function} @code{void} mgl_delete_graph (@code{HMGL} graph)
+Delete the instance of a class. Must be used after plotting for every created graphical object.
+@end deftypefn
+@deftypefn {C function} @code{void} mgl_delete_data (@code{HMDT} dat)
+Delete the instance of a class. Must be used after the use of every created data object.
+@end deftypefn
+@end itemize
+
+@node Python interface, , C interface, Interfaces
+@subsection Python interface
+
+MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is named in this chapter</samp>&rsquo;s title.
+
+To use Python classes just execute @samp{import mathgl}. The simplest example will be:
+@verbatim
+import mathgl
+a=mathgl.mglGraph()
+a.Box()
+a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
+@end verbatim
+Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes like this:
+@verbatim
+from mathgl import *
+a=mglGraph()
+a.Box()
+a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
+@end verbatim
+This becomes useful if you create many @code{mglData} objects, for example.
+
+There are 2 classes in Python interface:
+@itemize 
+@item @code{mglGraph}
+-- provide practically the same functionality as C++ class @code{mglGraph} (@pxref{MathGL core}). But it is not an abstract class and it allows one to select at construction stage which plotter (ZB or PS and so on) will be used.
+@item @code{mglData}
+-- is exactly the same class as C++ @code{mglData} (@pxref{mglData class}), but an additional feature to access data values is added. You can use a construct like this: @code{dat[i]=sth;} or @code{sth=dat[i]} where flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1). You can also import NumPy arrays as input arguments: @code{mgl_dat = mglData(numpy_dat);}.
+@c @item @code{mglParse} -- practically the same as C++ class @code{MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is denoted in the chapter title.
+
+To use Python classes just execute @samp{import mathgl}. The simplest example will be:
+@verbatim
+import mathgl
+a=mathgl.mglGraph()
+a.Box()
+a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
+@end verbatim
+Alternatively, you can import all the classes from @code{mathgl} module and easily access MathGL classes: 
+@verbatim
+from mathgl import *
+a=mglGraph()
+a.Box()
+a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
+@end verbatim
+This is useful if you create many @code{mglData} objects, for example.
+
+There are 2 classes in Python interface:
+@itemize 
+@item @code{mglGraph}
+-- provide practically the same functionality as C++ class @code{mglGraph} (@pxref{MathGL core}). But it is not an abstract class and it allows one to select at the construction stage which plotter (ZB or PS and so on) will be used.
+@item @code{mglData}
+-- is exactly the same class as C++ @code{mglData} (@pxref{mglData class}), but an additional feature to access data values is added. You can use a construct like this: @code{dat[i]=sth;} or @code{sth=dat[i]} where flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1).
+@c @item @code{mglParse} -- practically the same as C++ class @code{mglParse} (@pxref{mglParse class}).
+@end itemize
+
+There is one main difference from C++ classes -- Python class @code{mglGraph} does not have variables (options). All the corresponding features are moved to methods.
+The core of MathGL Python class is the @strong{mglGraph} class. It contains a lot of plotting functions for 1D, 2D and 3D plots. So most of the sections describe its methods. Its constructor has the following arguments:
+
+@defop Constructor {mglGraph (Python)} @code{} mglGraph (@code{int} kind=@code{0}, @code{int} width=@code{600}, @code{int} height=@code{400})
+Create the instance of class mglGraph with specified sizes @var{width} and @var{height}. Parameter @var{type} may have following values: @samp{0} -- use @code{mglGraphZB} plotter (default), @samp{1} -- use @code{mglGraphPS} plotter, @samp{2} -- use @code{mglGraphGL} plotter, @samp{3} -- use @code{mglGraphIDTF} plotter.
+@end defop
+@end itemize
+
+There is one difference from C++ classes -- Python class @code{mglGraph} does not have variables (options). All the corresponding features are moved to methods. 
+The core of MathGL Python class is the @strong{mglGraph} class. It contains a lot of plotting functions for 1D, 2D and 3D plots. So most of the sections describe its methods. Its constructor has the following arguments:
+
+@defop Constructor {mglGraph (Python)} @code{} mglGraph (@code{int} kind=@code{0}, @code{int} width=@code{600}, @code{int} height=@code{400})
+Create the instance of class mglGraph with specified sizes @var{width} and @var{height}. Parameter @var{type} may have following values: @samp{0} -- use @code{mglGraphZB} plotter (default), @samp{1} -- use @code{mglGraphPS} plotter, @samp{2} -- use @code{mglGraphGL} plotter, @samp{3} -- use @code{mglGraphIDTF} plotter.
+@end defop
+
+
+@node Thanks, , Interfaces, Overview
+@section Thanks
+
+@itemize @bullet
+@item
+My special thanks to Marina Balakina for the patience during the writing of this library and for the help in documentation writing and spelling.
+@item
+I</samp>&rsquo;m thankful to D. Kulagin and S.M. Plis for making Debian packages.
+@item
+I</samp>&rsquo;m thankful to M. Vidassov for the help in handling solid UTF-8 fonts.
+@item
+I</samp>&rsquo;m thankful to N. Troickiy and V. Lipatov for making RPM packages.
+@item
+I</samp>&rsquo;m thankful to S. Skobelev, A. Korotkevich, V. Onuchin, S.M. Plis, R. Kiselev, A. Ivanov, M. Vidiassov and V. Lipatov for fruitful comments.
+@end itemize

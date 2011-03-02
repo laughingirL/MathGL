@@ -1,0 +1,11 @@
+#! /bin/sh
+
+set -x
+aclocal -I config
+case `uname` in
+ Darwin) glibtoolize --force --copy ;;
+     *)  libtoolize --force --copy ;;
+esac
+autoheader
+automake --add-missing --copy
+autoconf

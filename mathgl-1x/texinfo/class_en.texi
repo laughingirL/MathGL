@@ -1,0 +1,175 @@
+
+@c ------------------------------------------------------------------
+@chapter Plotter classes
+@cindex mglGraphAB
+@cindex mglGraphZB
+@cindex mglGraphPS
+@cindex mglGraphGL
+@cindex mglGraphIDTF
+
+The class mglGraph (@pxref{MathGL core}) provide the basic tools for creating scientific graphics but it is abstract class. The matter is that there are several possible way to draw a graphics: in bitmap, in vector file, using OpenGL and so on. As result, user should use some of derived classes to do actual drawing. In principle, it is possible to derive a class exactly from mglGraph (and it was in v.1.6). But I recommend to derive from mglGraphAB class for higher compatibility of produced graphics from different classes. Class mglGraphAB is another abstract class which provide basic coordinates transformation, plotting functions and export to bitmap picture. It still require a functions for drawing lines, triangles and quadrangles. So below a set of ``plotter'' classes with short comments.
+
+@deftp {Class} mglGraphAB
+Abstract class mglGraphAB implements plotting function for 1D, 2D and 3D plots using Z-ordering and provides base functionality for to screen coordinate transformation, bitmap creation and so on. Class is defined in @code{#include <mgl/mgl_ab.h>}.
+@end deftp
+
+@deftp {Class} mglGraphZB
+Class mglGraphZB implements plotting function for 1D, 2D and 3D plots using Z-Buffer. It is useful for off-screen (for console or SSH terminal) programs. Also this class can be used in any other programs which may draw bitmap on the  screen (for example, by using FLTK, Qt, wxWidgets libraries and so on). Note that bitmap picture is saved while exporting to EPS format. The produced graphics have better quality but slower in comparison with graphics in the class mglGraphPS. Class is defined in @code{#include <mgl/mgl_zb.h>}.
+@end deftp
+
+@deftp {Class} mglGraphPS
+Class mglGraphPS implements plotting functions for 1D, 2D and 3D plots and exports them to PostScript or SVG file. It is useful for off-screen (for console or SSH terminal) programs. Note that there is no transparency support now and color interpolation and lightning support is limited (not so nice as in class mglGraphZB). As result the plots with transparency (SurfA, Surf3A, CloudP, CloudQ) may look not so good. However the speed of drawing is higher in comparison with one in the class mglGraphZB. Class is defined in @code{#include <mgl/mgl_eps.h>}.
+@end deftp
+
+@deftp {Class} mglGraphGL
+Class mglGraphGL implements plotting function for 1D, 2D and 3D plots under OpenGL. This class can not be used in off-screen applications. Note, that several transparent overlapped surfaces are drawn not so correctly due to OpenGL limitations. Class is defined in @code{#include <mgl/mgl_gl.h>}.
+@end deftp
+
+@deftp {Class} mglGraphIDTF
+Class mglGraphIDTF implements plotting function for 1D, 2D and 3D plots  and export it in IDTF format. Later this file can be converted in U3D format. Class is defined in @code{#include <mgl/mgl_idtf.h>}.
+@end deftp
+
+@menu
+* mglGraphAB class::            
+@end menu
+
+@c ------------------------------------------------------------------
+@node mglGraphAB class, , , Plotter classes
+@section mglGraphAB class
+@cindex mglGraphAB
+@cindex window
+#cindex mglDraw
+
+Generally this class is a bit less abstract class than mglGraph class (@pxref{MathGL core}). It provide many protected methods for handling intermediate data from mglGraph methods and require a few methods to be defined by derived class. The developers of derived classes should look on file @samp{mgl_ab.h} and comments inside it or contact me.
+
+Here I just show main public methods for class mglGraphAB. There are functions returning the created picture (bitmap), its width and height. You may display it by yourself in any graphical library (see also, @ref{Widget classes}) or save in file (see also, @ref{Export to file}).
+
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{const unsigned char *} GetBits ()
+@deftypefnx {Method on @code{mglGraph} (Python)} @code{void} GetRGB (@code{char *}buf, @code{int} size)
+@deftypefnx {Method on @code{mglGraph} (Python)} @code{void} GetBGRN (@code{char *}buf, @code{int} size)
+@deftypefnx {C function} @code{const unsigned char *} mgl_get_rgb (@code{HMGL} gr)
+Gets RGB bitmap of the current state of the image. Format of each element of bits is: @{red, green, blue@}. Number of elements is Width*Height. Position of element @{i,j@} is [3*i + 3*Width*j] (or is [4*i + 4*Width*j] for @code{GetBGRN()}). For Python you have to provide the proper @var{size} of the buffer, @var{buf} i.e. the code should look like 
+@verbatim
+from mathgl import *
+gr = mglGraph();
+bits='\t';
+bits=bits.expandtabs(4*gr.GetWidth()*gr.GetHeight());
+gr.GetBGRN(bits, len(bits));
+@end verbatim
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{const unsigned char *} GetRGBA ()
+@deftypefnx {Method on @code{mglGraph} (Python)} @code{void} GetRGBA (@code{char *}buf, @code{int} size)
+@deftypefnx {C function} @code{const unsigned char *} mgl_get_rgba (@code{HMGL} gr)
+Gets RGBA bitmap of the current state of the image. Format of each element of bits is: @{red, green, blue, alpha@}. Number of elements is Width*Height. Position of element @{i,j@} is [4*i + 4*Width*j].
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraphAB} (C++, Python)} @code{int} GetWidth ()
+@deftypefnx {Method on @code{mglGraphAB} (C++, Python)} @code{int} GetHeight ()
+@deftypefnx {C function} @code{int} mgl_get_width (@code{HMGL} gr)
+@deftypefnx {C function} @code{int} mgl_get_height (@code{HMGL} gr)
+Gets width and height of the image.
+@end deftypefn
+
+Class mglGraphAB is the base class for ``widget classes''. So there are set of functions for handling window behavior. Most of them are applicable only for ``window'' classes (like mglGraphFLTK and so on, @pxref{Widget classes}). In all other classes these functions just do nothing. You should provide the corresponding interface in derived ``widget'' classes for user convenience.
+
+@deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{int (*}draw)(@code{mglGraph *}gr, @code{void *}p), @code{const char *}title, @code{void *}par=@code{NULL}, @code{void (*}reload)(@code{int} next, @code{void *}p)=@code{NULL}, @code{bool} maximize=@code{false})
+This function creates a window for plotting. Parameters @var{argc}, @var{argv} contain OS specific information and should be the same as in function @code{main(int argc,char **argv)}. Parameter @var{draw} sets a pointer (this is the name of function) to drawing function. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides). Parameter @var{title} sets the title of the window. Parameter @var{par} contains pointer to data for the plotting function @var{draw}. Parameter @var{maximize}=@code{true} open maximized window.
+
+There are some keys handles for manipulating by the plot: 'a', 'd', 'w', 's' for the rotating; ',', '.' for viewing of the previous or next frames in the list; 'r' for the switching of transparency; 'f' for the switching of lightning; 'x' for hiding (closing) the window.
+
+@strong{IMPORTANT!!!} You need to add a call of Rotate() (@pxref{Transformation matrix}) function for having possibility of plot rotation. If plot should be unrotated by default just add @code{Rotate(0,0)} in drawing function.
+@end deftypemethod
+
+@deftypemethod mglGraphAB @code{void} Window (@code{int} argc, @code{char **}argv, @code{mglDraw *}draw, @code{const char *}title, @code{bool} maximize=@code{false})
+This function is mostly the same as previous one. The only difference is that the drawing function and function for data reloading are specified as methods on a class inherited from class @code{mglDraw}. This class is defined in @code{#include <mgl/mgl_define.h>} and have only 2 methods:
+@verbatim
+class mglDraw
+{
+public:
+    virtual int Draw(mglGraph *) { return 0; };
+    virtual void Reload(int) {};
+};
+@end verbatim
+You should inherit yours class from @code{mglDraw} and reimplement one or both functions for using this function.
+@end deftypemethod
+
+
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleAlpha ()
+@deftypefnx {C function} @code{int} mgl_wnd_toggle_alpha (@code{HMGL} gr)
+Switch on/off transparency but do not overwrite switches in user drawing function.
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleLight ()
+@deftypefnx {C function} @code{int} mgl_wnd_toggle_light (@code{HMGL} gr)
+Switch on/off lighting but do not overwrite switches in user drawing function.
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleZoom ()
+@deftypefnx {C function} @code{int} mgl_wnd_toggle_zoom (@code{HMGL} gr)
+Switch on/off zooming by mouse as region selection.
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleRotate ()
+@deftypefnx {C function} @code{int} mgl_wnd_toggle_rotate (@code{HMGL} gr)
+Switch on/off rotation by mouse. Usually, left button is used for rotation, middle button for shift, right button for zoom/perspective.
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ToggleNo ()
+@deftypefnx {C function} @code{int} mgl_wnd_toggle_no (@code{HMGL} gr)
+Switch off all zooming and rotation and restore initial state.
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} Update ()
+@deftypefnx {C function} @code{int} mgl_wnd_update (@code{HMGL} gr)
+Update window contents.
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} ReLoad (@code{bool} o)
+@deftypefnx {C function} @code{int} mgl_wnd_reload (@code{HMGL} gr, @code{int} val)
+Reload user data and update picture.
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} Adjust ()
+@deftypefnx {C function} @code{int} mgl_wnd_adjust (@code{HMGL} gr)
+Adjust size of bitmap to window size.
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} NextFrame ()
+@deftypefnx {C function} @code{int} mgl_wnd_next_frame (@code{HMGL} gr)
+Show next frame if one.
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} PrevFrame ()
+@deftypefnx {C function} @code{int} mgl_wnd_prev_frame (@code{HMGL} gr)
+Show previous frame if one.
+@end deftypefn
+@deftypefn {Method on @code{mglGraphAB} (C++)} @code{void} Animation ()
+@deftypefnx {C function} @code{int} mgl_wnd_animation (@code{HMGL} gr)
+Run/stop slideshow (animation) of frames.
+@end deftypefn
+
+@deftypefn {C function} @code{int} mgl_wnd_set_auto_clf (@code{HMGL} gr, @code{int} val)
+@end deftypefn
+@deftypecv {Widget option} mglGraphAB @code{bool} AutoClf
+Clear canvas between drawing. You may switch it off for accumulate previous drawing (for example some points or parts of a picture).
+@end deftypecv
+
+@deftypefn {C function} @code{int} mgl_wnd_set_delay (@code{HMGL} gr, @code{int} val)
+@end deftypefn
+@deftypecv {Widget option} mglGraphAB @code{float} Delay
+Delay for animation in seconds. Default value is 1 sec.
+@end deftypecv
+
+@deftypefn {Method on @code{mglGraphAB} (C++, Python)} @code{mglPoint} CalcXYZ (@code{int} xs, @code{int} ys)
+@deftypefnx {C function} @code{void} mgl_calc_xyz (@code{HMGL} gr, @code{int} xs, @code{int} ys, @code{float *}x, @code{float *}y, @code{float *}z)
+Calculate 3D coordinate @{x,y,z@} for screen point @{xs,ys@}. At this moment it ignore perspective and transformation formulas (curvilinear coordinates). The calculation are done for the last used InPlot (@pxref{Transformation matrix}).
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraphAB} (C++, Python)} @code{mglPoint} CalcScr (@code{mglPoint} p)
+@deftypefnx {Method on @code{mglGraphAB} (C++)} @code{void} CalcScr (@code{mglPoint} p, @code{int *}xs, @code{int *}ys)
+@deftypefnx {C function} @code{void} mgl_calc_scr (@code{HMGL} gr, @code{float} x, @code{float} y, @code{float} z, @code{int *}xs, @code{int *}ys)
+Calculate screen point @{xs,ys@} for 3D coordinate @{x,y,z@}. The calculation are done for the last used InPlot (@pxref{Transformation matrix}).
+@end deftypefn
+
+@deftypefn {C function} @code{int} mgl_wnd_set_show_mouse_pos (@code{HMGL} gr, @code{int} val)
+@end deftypefn
+@deftypecv {Widget option} mglGraphAB @code{float} ShowMousePos
+Switch to show or not in the widget the last mouse click position.
+@end deftypecv
+
+@deftypecv {Widget option} mglGraphAB @code{mglPoint} LastMousePos
+Last position of mouse click.
+@end deftypecv
+

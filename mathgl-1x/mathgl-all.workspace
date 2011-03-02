@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="mathgl.cbp" />
+		<Project filename="mgl-glut.cbp" />
+		<Project filename="mgl-fltk.cbp" />
+		<Project filename="mgl2png.cbp" />
+		<Project filename="mgl2svg.cbp" />
+		<Project filename="mgl2eps.cbp" />
+		<Project filename="mgl2gif.cbp" />
+		<Project filename="mgl2cpp.cbp" />
+		<Project filename="mglview.cbp" />
+		<Project filename="mgl_example.cbp" active="1" />
+	</Workspace>
+</CodeBlocks_workspace_file>

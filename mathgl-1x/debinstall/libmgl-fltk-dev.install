@@ -1,0 +1,2 @@
+debian/tmp/usr/include/mgl/mgl_fltk.h
+debian/tmp/usr/lib/libmgl-fltk.{a,la,so}

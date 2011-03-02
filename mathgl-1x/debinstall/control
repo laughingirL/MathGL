@@ -1,0 +1,261 @@
+Source: mathgl
+Section: libs
+Priority: extra
+Maintainer: Dmitry I. Kulagin <dik@kulagin.nnov.ru>
+Build-Depends: cdbs, debhelper (>= 5), autotools-dev, libtool, autoconf, automake, libgsl0-dev, freeglut3-dev, libgl-dev, libpng-dev, libhdf5-dev, libjpeg-dev, libtiff-dev, libfltk-dev, g++, libqt4-dev, libwxbase2.6-dev, python-all-dev, swig, texinfo, texi2html, libgif-dev
+Standards-Version: 3.7.2
+
+Package: mathgl
+Architecture: any
+Section: libs
+Priority: extra
+Depends: ${shlibs:Depends}, libmgl5 (= ${binary:Version})
+Suggests: libmgl-dev
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ MathGL utilities and examples.
+
+Package: mathgl-doc-html
+Architecture: all
+Section: doc
+Priority: extra
+Suggests: libmgl5
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ MathGL HTML documentation
+
+Package: mathgl-doc-pdf
+Architecture: all
+Section: doc
+Priority: extra
+Suggests: libmgl5
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ MathGL PDF documentation
+
+Package: mathgl-doc-info
+Architecture: all
+Section: doc
+Priority: extra
+Suggests: libmgl5
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ MathGL INFO documentation
+
+Package: libmgl5
+Architecture: any
+Section: libs
+Priority: extra
+Suggests: libmgl-dev, mathgl
+Depends: ${shlibs:Depends}, libmgl-data (= ${binary:Version})
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ Main library.
+
+Package: libmgl-data
+Architecture: any
+Section: libs
+Priority: extra
+Suggests: libmgl-dev, mathgl
+Depends: libmgl5 (= ${binary:Version})
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ Fonts and data.
+
+Package: libmgl-dev
+Architecture: any
+Section: libdevel
+Priority: extra
+Depends: libmgl5 (= ${binary:Version}), libgsl0-dev, libgl-dev, libpng-dev
+Suggests: mathgl
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ MathGL development files.
+
+Package: libmgl-fltk5
+Architecture: any
+Section: libs
+Priority: extra
+Suggests: libmgl-dev, mathgl
+Depends: ${shlibs:Depends}, libmgl5 (= ${binary:Version})
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ FLTK frontend.
+
+Package: libmgl-fltk-dev
+Architecture: any
+Section: libdevel
+Priority: extra
+Depends: libmgl5 (= ${binary:Version}), libmgl-fltk5 (= ${binary:Version}), libfltk-dev, libmgl-dev
+Suggests: mathgl
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ MathGL FLTK development files.
+
+Package: libmgl-qt5
+Architecture: any
+Section: libs
+Priority: extra
+Suggests: libmgl-dev, mathgl
+Depends: ${shlibs:Depends}, libmgl5 (= ${binary:Version})
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ QT4 frontend.
+
+Package: libmgl-qt-dev
+Architecture: any
+Section: libdevel
+Priority: extra
+Depends: libmgl5 (= ${binary:Version}), libmgl-qt5 (= ${binary:Version}), libqt4-dev, libmgl-dev
+Suggests: mathgl
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ MathGL QT4 development files.
+
+Package: libmgl-wx5
+Architecture: any
+Section: libs
+Priority: extra
+Suggests: libmgl-dev, mathgl
+Depends: ${shlibs:Depends}, libmgl5 (= ${binary:Version})
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ wxWidgets frontend.
+
+Package: libmgl-wx-dev
+Architecture: any
+Section: libdevel
+Priority: extra
+Depends: libmgl5 (= ${binary:Version}), libmgl-wx5 (= ${binary:Version})
+Suggests: mathgl
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ MathGL wxWidgets development files.
+
+Package: libmgl-glut5
+Architecture: any
+Section: libs
+Priority: extra
+Suggests: libmgl-dev, mathgl
+Depends: ${shlibs:Depends}, libmgl5 (= ${binary:Version})
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ GLUT frontend.
+
+Package: libmgl-glut-dev
+Architecture: any
+Section: libdevel
+Priority: extra
+Depends: libmgl5 (= ${binary:Version}), libmgl-glut5 (= ${binary:Version}), freeglut3-dev, libmgl-dev
+Suggests: mathgl
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ MathGL GLUT development files.
+
+Package: python-mathgl
+Architecture: any
+Section: python
+Priority: extra
+Depends: ${python:Depends}, ${shlibs:Depends}, libmgl5 (= ${binary:Version})
+Provides: ${python:Provides}
+Suggests: libmgl-dev, mathgl
+Description: MathGL is a library for the plotting of the data
+ MathGL is a free library of fast C++ routines for the plotting
+ of the data varied in one or more dimensions. It uses OpenGL
+ (www.opengl.org) for the plotting. Also there is a simple window
+ interface based on GLUT. This provides high compatibility with
+ any operating system (really any which has OpenGL-like libraries).
+ .
+ Python language interface
+
+#Package: octave-mathgl
+#Architecture: any
+#Section: math
+#Priority: extra
+#Depends: ${octave:Depends}, ${shlibs:Depends}, libmgl5 (= ${binary:Version})
+#Provides: ${octave:Provides}
+#Suggests: libmgl-dev, mathgl
+#Description: MathGL is a library for the plotting of the data
+# MathGL is a free library of fast C++ routines for the plotting
+# of the data varied in one or more dimensions. It uses OpenGL
+# (www.opengl.org) for the plotting. Also there is a simple window
+# interface based on GLUT. This provides high compatibility with
+# any operating system (really any which has OpenGL-like libraries).
+# .
+# Octave language interface
+
