@@ -253,7 +253,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
 		gr->ReserveN(n*m);	gr->ReserveC(n*m);
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			i1 = i+n*j;
 			if(i<n-1)
@@ -410,7 +410,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
 		gr->ReserveN(n*m);	gr->ReserveC(n*m);
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			i1 = i+n*j;
 			if(i<n-1)
@@ -569,7 +569,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
 		gr->ReserveN(n*m);	gr->ReserveC(n*m);
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			i1 = i+n*j;
 			if(i<n-1)

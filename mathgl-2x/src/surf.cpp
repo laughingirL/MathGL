@@ -62,7 +62,7 @@ void mgl_fsurf(HMGL gr, const char *eqZ, const char *sch, int n)
 	mglFormula *eq = new mglFormula(eqZ);
 	register int i,j;
 	float dx = (gr->Max.x - gr->Min.x)/(n-1.), dy = (gr->Max.y - gr->Min.y)/(n-1.);
-	for(i=0;i<n;i++)	for(j=0;j<n;j++)
+	for(j=0;j<n;j++)	for(i=0;i<n;i++)
 		z.a[i+n*j] = eq->Calc(gr->Min.x+i*dx, gr->Min.y+j*dy);
 	mgl_surf(gr, &z, sch);
 	delete eq;
@@ -80,7 +80,7 @@ void mgl_fsurf_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, c
 	ez = new mglFormula(eqZ ? eqZ : "0");
 	register int i,j;
 	register float u,v;
-	for(i=0;i<n;i++)	for(j=0;j<n;j++)
+	for(j=0;j<n;j++)	for(i=0;i<n;i++)
 	{
 		v = i/(n-1.);	u = j/(n-1.);
 		x.a[i+n*j] = ex->Calc(0,v,0,u);
@@ -126,7 +126,7 @@ void mgl_mesh_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	mglColor c;
 	for(k=0;k<z->GetNz();k++)
 	{
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, z->v(i,j,k));
 			c = gr->GetC(p);	gr->ScalePoint(p);	gr->AddPntC(p,c);
@@ -174,7 +174,7 @@ void mgl_fall_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	mglColor c;
 	for(k=0;k<z->GetNz();k++)
 	{
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, z->v(i,j,k));
 			c = gr->GetC(p);	gr->ScalePoint(p);	gr->AddPntC(p,c);
@@ -224,7 +224,7 @@ void mgl_grid_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 	for(k=0;k<z->GetNz();k++)
 	{
 		if(z->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(z->GetNz()-1);
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
 			c = gr->GetC(p);	gr->ScalePoint(p);	gr->AddPntC(p,c);
@@ -273,7 +273,7 @@ void mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	for(k=0;k<z->GetNz();k++)
 	{
 		pos=gr->GetPosN();
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
@@ -408,7 +408,7 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 		if(z->GetNz()>1)
 			zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(z->GetNz()-1);
 		pos = gr->GetPosN();
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)	// ñîçäàåì ìàññèâ òî÷åê
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)	// ñîçäàåì ìàññèâ òî÷åê
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).y, zVal);
 			zz = z->v(i,j,k);	c = gr->GetC(zz);
@@ -484,7 +484,7 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 	for(k=0;k<z->GetNz();k++)
 	{
 		pos=gr->GetPosN();
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
@@ -546,7 +546,7 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 	for(k=0;k<z->GetNz();k++)
 	{
 		pos=gr->GetPosN();
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
@@ -675,7 +675,7 @@ void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	long k1,k2,k3,k4;
 	for(k=0;k<z->GetNz();k++)
 	{
-		for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
+		for(j=0;j<m-1;j++)	for(i=0;i<n-1;i++)
 		{
 			zz = z->v(i,j,k);		c = gr->GetC(zz);
 			x1 = GetX(x,i,j,k).x;	y1 = GetY(y,i,j,k).x;
@@ -727,7 +727,7 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch)
 	long k1,k2,k3,k4;
 	for(k=0;k<z->GetNz();k++)
 	{
-		for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
+		for(j=0;j<m-1;j++)	for(i=0;i<n-1;i++)
 		{
 			zz = z->v(i,j,k);	c = gr->GetC(zz);
 			ss = (1-gr->GetA(s->v(i,j,k)))/4;	sm = 1-ss;
@@ -794,7 +794,7 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, int 
 	mglColor c;
 	long pos = gr->ReserveN(n*m);
 
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)
+	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
 		s1 = i>0 ? 1:0;		s2 = i<n-1 ? 1:0;
 		xdx = (ax->v(i+s2,j,ks)-ax->v(i-s1,j,ks))/(GetX(x,i+s2,j,ks).x-GetX(x,i-s1,j,ks).x);

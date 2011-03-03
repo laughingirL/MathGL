@@ -46,6 +46,16 @@ mglGraphAB::mglGraphAB(int w,int h) : mglGraph()
 mglGraphAB::~mglGraphAB()
 {	if(G)	{	delete []G;	delete []G4;	delete []OI;	}	}
 //-----------------------------------------------------------------------------
+void mglGraphAB::DefaultPlotParam()
+{
+	mglGraph::DefaultPlotParam();
+}
+//-----------------------------------------------------------------------------
+void mglGraphAB::Rotate(mreal TetX,mreal TetZ,mreal TetY)
+{
+	mglGraph::Rotate( TetX,TetZ,TetY );
+}
+//-----------------------------------------------------------------------------
 void mglGraphAB::Pop()
 {
 	if(st_pos<0)	return;

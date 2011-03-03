@@ -42,7 +42,6 @@
 		<Unit filename="include/mgl/canvas.h" />
 		<Unit filename="include/mgl/cont.h" />
 		<Unit filename="include/mgl/data.h" />
-		<Unit filename="include/mgl/data_cf.h" />
 		<Unit filename="include/mgl/define.h" />
 		<Unit filename="include/mgl/eval.h" />
 		<Unit filename="include/mgl/fit.h" />
@@ -66,7 +65,6 @@
 		<Unit filename="src/cont.cpp" />
 		<Unit filename="src/crust.cpp" />
 		<Unit filename="src/data.cpp" />
-		<Unit filename="src/data_cf.cpp" />
 		<Unit filename="src/data_io.cpp" />
 		<Unit filename="src/data_new.cpp" />
 		<Unit filename="src/data_op.cpp" />
@@ -88,6 +86,7 @@
 		<Unit filename="src/vect.cpp" />
 		<Unit filename="src/volume.cpp" />
 		<Unit filename="test.cpp" />
+		<Unit filename="todo.txt" />
 		<Extensions>
 			<code_completion />
 			<envvars />

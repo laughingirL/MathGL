@@ -56,7 +56,7 @@ void mgl_data_envelop(HMDT d, char dir)
 	{
 		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(ny);
 		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(ny);
-		for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
+		for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
 		{
 			i0 = 2*i+2*j*nx*ny;
 			gsl_fft_complex_transform(b+i0, nx, ny, wt, ws, forward);
@@ -171,7 +171,7 @@ HMDT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 	if(zz->GetNx()>1 || vz>=0)	{	l=zz->GetNx();	iz=true;	}
 	else	{	l=nz;	iz=false;	}
 	r->Create(n,m,l);
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
+	for(k=0;k<l;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
 		x = ix?long(xx->v(i)+0.5):i;	if(x<0)x=0;	if(x>=nx)x=nx-1;
 		y = iy?long(yy->v(j)+0.5):j;	if(y<0)y=0;	if(y>=ny)y=ny-1;
@@ -647,8 +647,8 @@ void mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 	{
 		gsl_fft_complex_wavetable *wt = gsl_fft_complex_wavetable_alloc(ny);
 		gsl_fft_complex_workspace *ws = gsl_fft_complex_workspace_alloc(ny);
-		for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
-				gsl_fft_complex_transform(a+2*i+2*j*nx*ny, nx, ny, wt, ws, how);
+		for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
+			gsl_fft_complex_transform(a+2*i+2*j*nx*ny, nx, ny, wt, ws, how);
 		gsl_fft_complex_workspace_free(ws);
 		gsl_fft_complex_wavetable_free(wt);
 	}
@@ -688,7 +688,7 @@ HMDT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir)
 	{
 		mx = nx;	my = dn;	mz = ny/dn;
 		mgl_data_create(d, mx, mz, my);
-		for(i=0;i<mx;i++)	for(j=0;j<mz;j++)
+		for(j=0;j<mz;j++)	for(i=0;i<mx;i++)
 		{
 			for(k=0;k<2*dn;k++)
 			{
@@ -713,7 +713,7 @@ HMDT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir)
 	{
 		mx = dn;	my = nx/dn;	mz = ny;
 		mgl_data_create(d, my, mx, mz);
-		for(i=0;i<my;i++)	for(j=0;j<mz;j++)
+		for(j=0;j<mz;j++)	for(i=0;i<my;i++)
 		{
 			for(k=0;k<2*dn;k++)
 			{
@@ -1029,7 +1029,7 @@ void mgl_data_mul_dat(HMDT d, HCDT a)
 		else if(nz==b->nz && ny==b->ny && nx==b->nx)
 		{	n=nx*ny*nz;	mglStartThread(mgl_eqmul,0,nx*ny*nz,d->a,b->a,0,&n);	}
 	}
-	else	for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)	for(long k=0;k<ny;k++)
+	else	for(long k=0;k<ny;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 		d->a[i+nx*(j+ny*k)] *= a->v(i,j,k);
 }
 //-----------------------------------------------------------------------------
@@ -1061,7 +1061,7 @@ void mgl_data_div_dat(HMDT d, HCDT a)
 		else if(nz==b->nz && ny==b->ny && nx==b->nx)
 		{	n=nx*ny*nz;	mglStartThread(mgl_eqdiv,0,nx*ny*nz,d->a,b->a,0,&n);	}
 	}
-	else	for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)	for(long k=0;k<ny;k++)
+	else	for(long k=0;k<ny;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 		d->a[i+nx*(j+ny*k)] /= a->v(i,j,k);
 }
 //-----------------------------------------------------------------------------
@@ -1093,7 +1093,7 @@ void mgl_data_add_dat(HMDT d, HCDT a)
 		else if(nz==b->nz && ny==b->ny && nx==b->nx)
 		{	n=nx*ny*nz;	mglStartThread(mgl_eqadd,0,nx*ny*nz,d->a,b->a,0,&n);	}
 	}
-	else	for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)	for(long k=0;k<ny;k++)
+	else	for(long k=0;k<ny;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 		d->a[i+nx*(j+ny*k)] += a->v(i,j,k);
 }
 //-----------------------------------------------------------------------------
@@ -1125,7 +1125,7 @@ void mgl_data_sub_dat(HMDT d, HCDT a)
 		else if(nz==b->nz && ny==b->ny && nx==b->nx)
 		{	n=nx*ny*nz;	mglStartThread(mgl_eqsub,0,nx*ny*nz,d->a,b->a,0,&n);	}
 	}
-	else	for(long i=0;i<nx;i++)	for(long j=0;j<ny;j++)	for(long k=0;k<ny;k++)
+	else	for(long k=0;k<ny;k++)	for(long j=0;j<ny;j++)	for(long i=0;i<nx;i++)
 		d->a[i+nx*(j+ny*k)] -= a->v(i,j,k);
 }
 //-----------------------------------------------------------------------------

@@ -285,6 +285,9 @@ public:
 	void Flush() { points_finished = lines_finished = mesh_finished = true; };
 	void Light ( int n,mglPoint p, mglColor c=NC, mreal br=0.5, bool infty=true );
 	void InPlot ( mreal x1,mreal x2,mreal y1,mreal y2, bool rel=false );
+	void DefaultPlotParam();	///< Set default parameter for plotting
+	void Rotate(mreal TetX,mreal TetZ,mreal TetY=0);
+	void SetSize(int ,int ) {};
 	void Clf ( mglColor Back=NC );
 	/// Print string \a str in position \a p with font size \a size.
 	void Putsw(mglPoint p,const wchar_t *text,const char *font=0,mreal size=-1,char dir=0,mreal shift=0);
@@ -293,6 +296,8 @@ public:
 
 	void Ball ( mreal x,mreal y,mreal z,mglColor col=RC,mreal alpha=1 );
 	void WriteIDTF ( const char *fname,const char *descr=0 );
+	void WriteU3D ( const char *fname,const char *descr=0 );
+	void WritePDF ( const char *fname,const char *descr=0 );
 	friend class u3dModel;
 	friend class u3dMesh;
 	friend class u3dBall;
@@ -372,6 +377,8 @@ protected:
 
 	mreal* col2col ( const mreal *c, const mreal *n, mreal *r );
 	void MakeTransformMatrix( mreal position[4][4], mreal invpos[4][4] );
+
+	mreal rotX, rotY, rotZ;
 };
 //-----------------------------------------------------------------------------
 #endif

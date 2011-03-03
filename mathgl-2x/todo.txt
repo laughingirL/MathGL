@@ -1,0 +1,17 @@
+TODO: FrameBox(const char *title,const char *stl="#",float size=-2); -- title and box around InPlot; auto resize inplot; 2 colors define to highlited stripe near title; text can be aligned left,right,center
+|---------------------------|
+|			Title			|
+|---------------------------|
+|							|
+|							|
+|			Plot			|
+|							|
+|							|
+|							|
+|---------------------------|
+
+TODO: MultiPlot(int nx,int ny,int i,int dx,int dy,const char *pos=0); -- like SubPlot(), but for several (dx*dy) cells
+
+TODO: Arrows at flow lines ?!?
+
+TODO: BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.

@@ -91,6 +91,8 @@ static struct option longopts[] =
 	{ "gif",			no_argument,	&type,		6 },
 	{ "none",			no_argument,	&type,		7 },
 	{ "bps",			no_argument,	&type,		8 },
+	{ "u3d",			no_argument,	&type,		9 },
+	{ "pdf",			no_argument,	&type,		10 },
 	{ "help",			no_argument,	NULL,		'?' },
 	{ NULL,				0,				NULL,		0 }
 };
@@ -104,6 +106,8 @@ void usage()
 		"-mini			- png picture is 200x133\n"		\
 		"-big			- png picture is 1200x800\n"	\
 		"-idtf			- output idtf\n"				\
+		"-u3d			- output u3d\n"				\
+		"-pdf			- output pdf\n"				\
 		"-eps			- output EPS\n"					\
 		"-jpeg			- output JPEG\n"				\
 		"-solid			- output solid PNG\n"			\
@@ -149,6 +153,12 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 			sprintf(buf,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);
 			break;
+		case 9:	// U3D
+			sprintf(buf,"%s%s.u3d",name,suf);
+			gr->WriteU3D(buf);	break;
+		case 10:	// PDF
+			sprintf(buf,"%s%s.pdf",name,suf);
+			gr->WritePDF(buf);	break;
 		default:// PNG (no alpha)
 			sprintf(buf,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);	break;
@@ -183,6 +193,9 @@ void smgl_fonts(mglGraph *gr)	// ticks features
 //-----------------------------------------------------------------------------
 void smgl_stick(mglGraph *gr)	// column plot
 {
+	if(type==5 || type==9 || type==10)	
+		gr->Puts(mglPoint(0,0),"Does not work in 3D\\n for reasons I do not care to investigate till 2.0");
+
 	gr->SetRanges(-1, 1, -1, 1, 0, 1);	gr->Light(true);
 	gr->StickPlot(3, 0, 40, 30);		gr->Axis("xyz_");
 	gr->Surf("exp(-10*y^2-6*x^2)");
@@ -354,7 +367,7 @@ void smgl_pde(mglGraph *gr)	// PDE and Ray sample
 	a.Transpose("yxz");
 	gr->CAxis(0, 1);
 	gr->Dens(a,"wyrRk");
-	gr->Plot("-x", "k|", type==5?0.01:NAN);
+	gr->Plot("-x", "k|", (type==5 || type==9 || type==10)?0.01:NAN);
 	gr->Puts(mglPoint(0, 0.85), "absorption: (x+z)/2 for x+z>0");
 	gr->Title("Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0", "C", -float(width)/height);
 	gr->Compression(false);  //put setting back
@@ -467,6 +480,7 @@ void smgl_samplec(mglGraph *gr)	// error boxes
 	for(int i=0;i<10;i++)
 		gr->Error(mglPoint(mgl_rnd()-0.5,mgl_rnd()-0.5,mgl_rnd()-0.5), mglPoint(0.1,0.1,0.1),"bo");
 	gr->Axis();
+	gr->Rotate(0,0); // for unrotate in IDTF
 }
 //-----------------------------------------------------------------------------
 void smgl_sampleb(mglGraph *gr)	// Gaussian beam
@@ -561,6 +575,8 @@ void smgl_sample8(mglGraph *gr)	// 1d plot
 
 	gr->SubPlot(2,2,3);	gr->Rotate(60,40);
 	gr->Bars(x,y0,z,"ri");		gr->Box();
+	
+	gr->Rotate(0,0); // for unrotate in IDTF
 }
 //-----------------------------------------------------------------------------
 void smgl_sample7(mglGraph *gr)	// smoothing
@@ -600,7 +616,7 @@ void smgl_sample6(mglGraph *gr)	// differentiate
 //-----------------------------------------------------------------------------
 void smgl_sample5(mglGraph *gr)	// pen styles
 {
-	if(type==5)	gr->Puts(mglPoint(0,1.2),"line styles not supported","rL");
+	if(type==5 || type==9 || type==10)	gr->Puts(mglPoint(0,1.2),"line styles not supported","rL");
 	mreal d,x1,x2,x0,y=0.95;
 	d=0.3, x0=0.2, x1=0.5, x2=0.6;
 	gr->Line(mglPoint(x0,1-0*d),mglPoint(x1,1-0*d),"k-");	gr->Puts(mglPoint(x2,y-0*d),"Solid '-'","rL");
@@ -732,6 +748,8 @@ void smgl_sample2(mglGraph *gr)	// axis and grid
 	gr->Label('z',"Z axis",0);
 	gr->Puts(mglPoint(0,0,1.5),"Remove X axis, and");
 	gr->Puts(mglPoint(0,0,1.2),"decrease number of ticks");
+	
+	gr->Rotate(0,0); // for unrotate in IDTF
 }
 //-----------------------------------------------------------------------------
 void smgl_sample1(mglGraph *gr)	// transformation
@@ -757,6 +775,7 @@ void smgl_sample1(mglGraph *gr)	// transformation
 	gr->Aspect(1,2,2);
 	gr->Box();
 	gr->Text(mglPoint(0,0,1.5),"Aspect in other direction");
+	gr->Rotate(0,0); // for unrotate in IDTF
 }
 //-----------------------------------------------------------------------------
 void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0)
@@ -1021,6 +1040,7 @@ void smgl_stereo(mglGraph *gr)
 	gr->Box();	gr->Surf(a);
 	gr->SubPlot(2,1,1);	gr->Rotate(40,60-3);
 	gr->Box();	gr->Surf(a);
+	gr->Rotate(0,0); // for unrotate in IDTF
 }
 //-----------------------------------------------------------------------------
 void smgl_tile(mglGraph *gr)
@@ -1083,7 +1103,7 @@ void smgl_surf_fog(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
 	gr->Light(true);	gr->Rotate(40,60);	gr->Fog(1);	gr->Box();
-	type==5?gr->Text(mglPoint(),"Fog not supported") : gr->Surf(a);
+	(type==5 || type==9 || type==10)?gr->Text(mglPoint(),"Fog not supported") : gr->Surf(a);
 	gr->Fog(0);
 }
 //-----------------------------------------------------------------------------
@@ -1205,7 +1225,7 @@ void smgl_cloudp(mglGraph *gr)
 	mglData c;	mgls_prepare3d(&c);
 	gr->Rotate(40,60);	gr->Alpha(true);	gr->VertexColor(false);
 	gr->Box();
-	if(type==5)	gr->Text(mglPoint(0,0,0),"Point clouds not supported");
+	if(type==5 || type==9 || type==10)	gr->Text(mglPoint(0,0,0),"Point clouds not supported");
 	else		gr->CloudP(c,"wyrRk");
 }
 //-----------------------------------------------------------------------------
@@ -1361,14 +1381,14 @@ void smgl_legend(mglGraph *gr)
 	}
 	gr->Axis(mglPoint(0), mglPoint(1));
 	gr->Box();	gr->Plot(f);	gr->Axis("xy");
-	if(type==5)	gr->LegendBox = false;
+	if(type==5 || type==9 || type==10)	gr->LegendBox = false;
 	gr->AddLegend("sin(\\pi {x^2})","b");	gr->AddLegend("sin(\\pi x)","g*");
 	gr->AddLegend("sin(\\pi \\sqrt{x})","r+");	gr->Legend();
 }
 //-----------------------------------------------------------------------------
 void smgl_type0(mglGraph *gr)	// TranspType = 0
 {
-	if(type==5)	return;
+	if(type==5 || type==9 || type==10)	return;
 	gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
 	mglData a;	mgls_prepare2d(&a);
 	gr->TranspType = 0;	gr->Clf();
@@ -1380,7 +1400,7 @@ void smgl_type0(mglGraph *gr)	// TranspType = 0
 //-----------------------------------------------------------------------------
 void smgl_type1(mglGraph *gr)	// TranspType = 1
 {
-	if(type==5)	return;
+	if(type==5 || type==9 || type==10)	return;
 	gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
 	mglData a;	mgls_prepare2d(&a);
 	gr->TranspType = 1;	gr->Clf();
@@ -1392,7 +1412,7 @@ void smgl_type1(mglGraph *gr)	// TranspType = 1
 //-----------------------------------------------------------------------------
 void smgl_type2(mglGraph *gr)	// TranspType = 2
 {
-	if(type==5)	return;
+	if(type==5 || type==9 || type==10)	return;
 	gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
 	mglData a;	mgls_prepare2d(&a);
 	gr->TranspType = 2;	gr->Clf();
@@ -1624,7 +1644,7 @@ void smgl_flow_dens(mglGraph *gr)	// flow threads and density plot
 {
 	mglData a,b,d;	mgls_prepare2v(&a,&b);	d = a;
 	for(int i=0;i<a.nx*a.ny;i++)	d.a[i] = hypot(a.a[i],b.a[i]);
-	gr->Flow(a,b,"br",5,true,type==5?-0.99:NAN);
+	gr->Flow(a,b,"br",5,true,(type==5 || type==9 || type==10)?-0.99:NAN);
 	gr->Dens(d,"BbcyrR");	gr->Box();
 }
 //-----------------------------------------------------------------------------
@@ -1756,9 +1776,17 @@ int main(int argc,char **argv)
 			default:	usage();	return 0;
 		}
 
-	if(type==5)			gr = &u3d;
-	else if(type==1 || type==2 || type==8)	gr = &ps;
+	if(type==5 || type==9 || type==10)
+	{
+		u3d.unrotate_flag = true;
+		gr = &u3d;
+	}
+	else 
+	{
+		if(type==1 || type==2 || type==8)	gr = &ps;
 	else				gr = &zb;
+	}
+
 	if(mini)		{	gr->SetSize(200,133);	suf = "_sm";	}
 	else if(big)
 	{	gr->SetSize(1200,800);	suf = "_lg";	gr->BaseLineWidth = 2;	}

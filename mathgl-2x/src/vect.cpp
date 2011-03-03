@@ -121,12 +121,12 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch,floa
 	long tx=1,ty=1;
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
-	float xm,ym,dx,dy;
+	float xm=0,ym,dx,dy;
 	float dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
 
-	for(i=0,xm=0;i<m*n*ax->GetNz();i++)
+	for(k=0;k<ax->GetNz();k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
-		ym = ax->vthr(i)*ax->vthr(i)+ay->vthr(i)*ay->vthr(i);
+		ym = ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k);
 		xm = xm>ym ? xm : ym;
 	}
 	xm = 1./(xm==0 ? 1:sqrt(xm));
@@ -201,16 +201,16 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
 	static int cgid=1;	gr->StartGroup("Vect3",cgid++);
 
-	float xm,ym,dx,dy,dz,dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
+	float xm=0,ym,dx,dy,dz,dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
 	gr->SetScheme(sch);		gr->ReserveC(2*n*m*l);
 	long tx=1,ty=1,tz=1;
 	if(gr->MeshNum>1)
 	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	tz=(l-1)/(gr->MeshNum-1);}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;	if(tz<1)	tz=1;
 
-	for(i=0,xm=0;i<m*n*l;i++)
+	for(k=0;k<l;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
-		ym = ax->vthr(i)*ax->vthr(i)+ay->vthr(i)*ay->vthr(i)+az->vthr(i)*az->vthr(i);
+		ym = ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k)+az->v(i,j,k)*az->v(i,j,k);
 		xm = xm>ym ? xm : ym;
 	}
 	xm = 1./(xm==0 ? 1:sqrt(xm));

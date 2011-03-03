@@ -686,7 +686,13 @@ bool mglFont::Load(const char *base, const char *path)
 	char str[256];
 	setlocale(LC_NUMERIC,"C");
 	unsigned cur=0;
-	if(!path)	path = MGL_FONT_PATH;
+
+	if(!path)
+		if (strlen(MGL_FONT_PATH)!=0)
+			path = MGL_FONT_PATH;
+		else
+			path = ".";
+	
 	if(base)
 	{
 		buf = new char[strlen(base)+1];

@@ -520,7 +520,7 @@ void mgl_data_mirror(HMDT d, const char *dir)
 	mreal b, *a=d->a;
 	if(strchr(dir,'z') && nz>1)
 	{
-		for(i=0;i<nx*ny;i++)	for(j=0;j<nz/2;j++)
+		for(j=0;j<nz/2;j++)	for(i=0;i<nx*ny;i++)
 		{
 			i0 = i+j*nx*ny;	j0 = i+(nz-1-j)*nx*ny;
 			b = a[i0];	a[i0] = a[j0];	a[j0] = b;
@@ -528,7 +528,7 @@ void mgl_data_mirror(HMDT d, const char *dir)
 	}
 	if(strchr(dir,'y') && ny>1)
 	{
-		for(i=0;i<nx;i++)  for(k=0;k<nz;k++)
+		for(k=0;k<nz;k++)	for(i=0;i<nx;i++)
 		{
 			j0 = i+nx*ny*k;
 			for(j=0;j<ny/2;j++)
@@ -814,8 +814,8 @@ void mgl_data_crop(HMDT d, long n1, long n2, char dir)
 		n2 = n2>0 ? n2 : ny+n2;
 		if(n2<0 || n2>=ny || n2<n1)	n2 = ny;
 		nn = n2-n1;	b = new mreal[nn*nx*nz];
-		for(i=0;i<nx;i++)	for(long j=0;j<nz;j++)	for(k=0;k<nn;k++)
-			b[i+nx*(k+nn*j)] = d->a[i+nx*(n1+k+ny*j)];
+		for(long j=0;j<nz;j++)	for(k=0;k<nn;k++)
+			memcpy(b+nx*(k+nn*j),d->a+nx*(n1+k+ny*j),nx*sizeof(mreal));
 		d->ny = nn;	if(!d->link)	delete []d->a;
 		d->a = b;	d->link=false;
 		break;
@@ -823,8 +823,7 @@ void mgl_data_crop(HMDT d, long n1, long n2, char dir)
 		n2 = n2>0 ? n2 : nz+n2;
 		if(n2<0 || n2>=nz || n2<n1)	n2 = nz;
 		nn = n2-n1;	b = new mreal[nn*nx*ny];
-		for(i=0;i<nx*ny;i++)	for(k=0;k<nn;k++)
-			b[i+nx*ny*k] = d->a[i+nx*ny*(n1+k)];
+		memcpy(b,d->a+nx*ny*n1,nn*nx*ny*sizeof(mreal));
 		d->nz = nn;	if(!d->link)	delete []d->a;
 		d->a = b;	d->link=false;
 		break;
@@ -906,7 +905,7 @@ int mgl_data_find_any(HCDT d, const char *cond)
 	bool cc = false;
 	if(!cond || *cond==0)	cond = "u";
 	mglFormula eq(cond);
-	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+	for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 	{
 		x=i/(nx-1.);	y=j/(ny-1.);	z=k/(nz-1.);
 		if(eq.Calc(x,y,z,d->v(i,j,k)))	{	cc = true;	break;	}
@@ -1006,7 +1005,7 @@ void mgl_data_norm_slice(HMDT d, float v1,float v2,char dir,long keep_en,long sy
 		for(j=0;j<ny;j++)
 		{
 			m1 = 1e20;	m2 = -1e20;
-			for(i=0;i<nx;i++)	for(k=0;k<nz;k++)
+			for(k=0;k<nz;k++)	for(i=0;i<nx;i++)
 			{
 				aa = a[i+nx*(j+ny*k)];
 				m1 = m1<aa ? m1 : aa;
@@ -1017,7 +1016,7 @@ void mgl_data_norm_slice(HMDT d, float v1,float v2,char dir,long keep_en,long sy
 			if(sym)	{	m2 = -m1>m2 ? -m1:m2;	m1 = -m2;	}
 			if(keep_en && j)	e = sqrt(e/e0);
 			else	{	e0 = e;	e=1;	}
-			for(i=0;i<nx;i++)	for(k=0;k<nz;k++)
+			for(k=0;k<nz;k++)	for(i=0;i<nx;i++)
 				b.a[i+nx*(j+ny*k)] = (v1 + (v2-v1)*(a[i+nx*(j+ny*k)]-m1)/(m2-m1))*e;
 		}
 	}
@@ -1070,37 +1069,37 @@ void mgl_data_insert(HMDT d, char dir, long at, long num)
 {
 	if(num<1)	return;
 	at = at<0 ? 0:at;
-	register long i,j,k,nn;
+	register long k,nn;
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	mglData b;
 	if(dir=='x')
 	{
 		if(at>nx)	at=nx;
 		nn=nx+num;	b.Create(nn,ny,nz);
-		for(i=0;i<at;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
-			b.a[i+nn*(j+ny*k)] = d->a[i+nx*(j+ny*k)];
-		for(i=at;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
-			b.a[i+num+nn*(j+ny*k)] = d->a[i+nx*(j+ny*k)];
+		for(k=0;k<ny*nz;k++)
+		{
+			if(at>0)	memcpy(b.a+nn*k, d->a+nx*k,at*sizeof(mreal));
+			if(at<nx)	memcpy(b.a+at+num+nn*k, d->a+at+nx*k,(nx-at)*sizeof(mreal));
+		}
 		d->Set(b);	nx+=num;
 	}
 	if(dir=='y')
 	{
 		if(at>ny)	at=ny;
 		nn=num+ny;	b.Create(nx,nn,nz);
-		for(i=0;i<nx;i++)	for(j=0;j<at;j++)	for(k=0;k<nz;k++)
-			b.a[i+nx*(j+nn*k)] = d->a[i+nx*(j+ny*k)];
-		for(i=0;i<nx;i++)	for(j=at;j<ny;j++)	for(k=0;k<nz;k++)
-			b.a[i+nx*(j+num+nn*k)] = d->a[i+nx*(j+ny*k)];
+		for(k=0;k<nz;k++)
+		{
+			if(at>0)	memcpy(b.a+nx*nn*k, d->a+nx*ny*k,at*nx*sizeof(mreal));
+			if(at<ny)	memcpy(b.a+nx*(at+num+nn*k), d->a+nx*(at+ny*k),(ny-at)*nx*sizeof(mreal));
+		}
 		d->Set(b);	ny+=num;
 	}
 	if(dir=='z')
 	{
 		if(at>nz)	at=nz;
 		b.Create(nx,ny,nz+num);
-		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<at;k++)
-			b.a[i+nx*(j+ny*k)] = d->a[i+nx*(j+ny*k)];
-		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=at;k<nz;k++)
-			b.a[i+nx*(j+ny*(k+num))] = d->a[i+nx*(j+ny*k)];
+		if(at>0)	memcpy(b.a, d->a,at*nx*ny*sizeof(mreal));
+		if(at<nz)	memcpy(b.a+nx*ny*(at+num), d->a+nx*ny*at,(nz-at)*nx*ny*sizeof(mreal));
 		d->Set(b);	nz+=num;
 	}
 }
@@ -1110,36 +1109,35 @@ void mgl_data_delete(HMDT d, char dir, long at, long num)
 	if(num<1 || at<0)	return;
 	mglData b;
 	long nx=d->nx, ny=d->ny, nz=d->nz;
-	register long i,j,k,nn;
+	register long k,nn;
 	if(dir=='x')
 	{
 		if(at+num>=nx)	return;
 		nn=nx-num;	b.Create(nn,ny,nz);
-		for(i=0;i<at;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
-			b.a[i+nn*(j+ny*k)] = d->a[i+nx*(j+ny*k)];
-		for(i=at+num;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
-			b.a[i-num+nn*(j+ny*k)] = d->a[i+nx*(j+ny*k)];
+		for(k=0;k<ny*nz;k++)
+		{
+			if(at>0)	memcpy(b.a+nn*k, d->a+nx*k,at*sizeof(mreal));
+			memcpy(b.a+at+nn*k, d->a+at+num+nx*k,(nx-at-num)*sizeof(mreal));
+		}
 		d->Set(b);	nx-=num;
 	}
 	if(dir=='y')
 	{
 		if(at+num>=ny)	return;
 		nn=ny-num;	b.Create(nx,nn,nz);
-		register long i,j,k;
-		for(i=0;i<nx;i++)	for(j=0;j<at;j++)	for(k=0;k<nz;k++)
-			b.a[i+nx*(j+nn*k)] = d->a[i+nx*(j+ny*k)];
-		for(i=0;i<nx;i++)	for(j=at+num;j<ny;j++)	for(k=0;k<nz;k++)
-			b.a[i+nx*(j-num+nn*k)] = d->a[i+nx*(j+ny*k)];
+		for(k=0;k<nz;k++)
+		{
+			if(at>0)	memcpy(b.a+nx*nn*k, d->a+nx*ny*k,at*nx*sizeof(mreal));
+			memcpy(b.a+nx*(at+nn*k), d->a+nx*(at+num+ny*k),(ny-at-num)*nx*sizeof(mreal));
+		}
 		d->Set(b);	ny-=num;
 	}
 	if(dir=='z')
 	{
 		if(at+num>=nz)	return;
 		b.Create(nx,ny,nz-num);
-		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<at;k++)
-			b.a[i+nx*(j+ny*k)] = d->a[i+nx*(j+ny*k)];
-		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=at+num;k<nz;k++)
-			b.a[i+nx*(j+(k-num)*num)] = d->a[i+nx*(j+ny*k)];
+		if(at>0)	memcpy(b.a, d->a,at*nx*ny*sizeof(mreal));
+		memcpy(b.a+nx*ny*at, d->a+nx*ny*(at+num),(nz-at-num)*nx*ny*sizeof(mreal));
 		d->Set(b);	nz-=num;
 	}
 }
@@ -1286,41 +1284,38 @@ void mgl_data_put_dat(HMDT d, HCDT v, long xx, long yy, long zz)
 	if(xx<0 && yy<0 && zz<0)	// whole array
 	{
 		if(vx>=nx && vy>=ny && vz>=nz)
-			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+			for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(j+k*ny)] = v->v(i,j,k);
 		else if(vx>=nx && vy>=ny)
-			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+			for(k=0;k<nz;k++)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(j+k*ny)] = v->v(i,j);
-		else if(vx>=nx)	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
-				a[i+nx*(j+k*ny)] = v->v(i);
-		else for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
-				a[i+nx*(j+k*ny)] = vv;
+		else if(vx>=nx)	for(k=0;k<ny*nz;k++)	for(i=0;i<nx;i++)
+				a[i+nx*k] = v->v(i);
+		else	for(i=0;i<nx*ny*nz;i++)	a[i] = vv;
 	}
 	else if(xx<0 && yy<0)	// 2d
 	{
-		if(vx>=nx && vy>=ny)	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+		if(vx>=nx && vy>=ny)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(j+zz*ny)] = v->v(i,j);
-		else if(vx>=nx)	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+		else if(vx>=nx)	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(j+zz*ny)] = v->v(i);
-		else for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
-				a[i+nx*(j+zz*ny)] = vv;
+		else	for(i=0;i<nx*ny;i++)	a[i+nx*ny*zz] = vv;
 	}
 	else if(yy<0 && zz<0)	// 2d
 	{
-		if(vx>=ny && vy>=nz)	for(i=0;i<ny;i++)	for(j=0;j<nz;j++)
+		if(vx>=ny && vy>=nz)	for(j=0;j<nz;j++)	for(i=0;i<ny;i++)
 				a[xx+nx*(i+j*ny)] = v->v(i,j);
-		else if(vx>=ny)	for(i=0;i<ny;i++)	for(j=0;j<nz;j++)
+		else if(vx>=ny)	for(j=0;j<nz;j++)	for(i=0;i<ny;i++)
 				a[xx+nx*(i+j*ny)] = v->v(i);
-		else for(i=0;i<ny;i++)	for(j=0;j<nz;j++)
-				a[xx+nx*(i+j*ny)] = vv;
+		else	for(i=0;i<ny*nz;i++)	a[xx+nx*i] = vv;
 	}
 	else if(xx<0 && zz<0)	// 2d
 	{
-		if(vx>=nx && vy>=nz)	for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
+		if(vx>=nx && vy>=nz)	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(yy+j*ny)] = v->v(i,j);
-		else if(vx>=nx)	for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
+		else if(vx>=nx)	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(yy+j*ny)] = v->v(i);
-		else for(i=0;i<nx;i++)	for(j=0;j<nz;j++)
+		else	for(j=0;j<nz;j++)	for(i=0;i<nx;i++)
 				a[i+nx*(yy+j*ny)] = vv;
 	}
 	else if(xx<0)

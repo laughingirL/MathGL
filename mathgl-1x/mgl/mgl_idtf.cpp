@@ -49,28 +49,30 @@ int strcasecmp (const char *s1,const char *s2)
 // #define IDTFROUND(x) ldexpf(roundf(ldexpf((x),20)),-20)
 // const static bool dbg = true;
 #ifdef HAVE_U3D
+#ifdef HAVE_HPDF_H
 #include <stdlib.h>
 #include <setjmp.h>
 #include <math.h>
 #include <hpdf.h>
 #include <hpdf_u3d.h>
 #include <hpdf_annotation.h>
+#endif // HAVE_HPDF_H
 
-#include "IFXResult.h"
-#include "IFXOSLoader.h"
+#include "u3d/IFXResult.h"
+#include "u3d/IFXOSLoader.h"
 
-#include "ConverterResult.h"
-#include "IFXDebug.h"
-#include "IFXCOM.h"
+#include "u3d/ConverterResult.h"
+#include "u3d/IFXDebug.h"
+#include "u3d/IFXCOM.h"
 
-#include "ConverterOptions.h"
-#include "SceneConverter.h"
-#include "SceneUtilities.h"
-#include "IFXOSUtilities.h"
+#include "u3d/ConverterOptions.h"
+#include "u3d/SceneConverterLib.h"
+#include "u3d/SceneUtilities.h"
+#include "u3d/IFXOSUtilities.h"
 
-#include "File.h"
-#include "Tokens.h"
-#include "Point.h"
+#include "u3d/File.h"
+#include "u3d/Tokens.h"
+#include "u3d/Point.h"
 #endif // HAVE_U3D
 
 
@@ -1437,7 +1439,7 @@ mglGraphIDTF::mglGraphIDTF() : mglGraphAB ( 1,1 ),
 		diff_int ( 0.8f ), spec_int ( 0.4f ), emis_int ( 0.25f ),
 		double_sided_flag ( true ), vertex_color_flag ( false ), textures_flag ( true ), disable_compression_flag ( true ), unrotate_flag ( false ), ball_is_point_flag ( false ),
 		points_finished ( true ), lines_finished ( true ), mesh_finished ( true ),
-		CurrentGroup ( NULL )
+		CurrentGroup ( NULL ), rotX(0), rotY(0), rotZ(0)
 {	Width = Height = Depth = 1;	}
 //-----------------------------------------------------------------------------
 mglGraphIDTF::~mglGraphIDTF() {}
@@ -1466,6 +1468,12 @@ void mglGraphIDTF::Clf ( mglColor Back )
 	points_finished = true;
 	lines_finished = true;
 	mesh_finished = true;
+}
+//-----------------------------------------------------------------------------
+void mglGraphIDTF::DefaultPlotParam()
+{
+    rotX = rotY = rotZ = 0;
+	mglGraphAB::DefaultPlotParam();
 }
 
 void mglGraphIDTF::StartGroup ( const char *name )
@@ -1698,13 +1706,24 @@ void mglGraphIDTF::mark_plot ( mreal *pp, char type )
 	{
 		mreal pw = PenWidth;	PenWidth = BaseLineWidth;
 		unsigned pd = PDef;	PDef = 0xffff;
+		// mreal zv = strchr("oOVDTS",type) ? pp[2]+BaseLineWidth : pp[2];
+		if(!strchr("xsSoO",type))	ss *= 1.1;
 		switch ( type )
 		{
+			case 'P':
+				line_plot ( pnt ( -1,-1 ), pnt ( 1,-1 ) );
+				line_plot ( pnt ( 1,-1 ), pnt ( 1, 1 ) );
+				line_plot ( pnt ( 1 ,1 ), pnt ( -1, 1 ) );
+				line_plot ( pnt ( -1, 1 ), pnt ( -1,-1 ) );
 			case '+':
-				ss = ss*1.1;
 				line_plot ( pnt ( -1, 0 ), pnt ( 1, 0 ) );
 				line_plot ( pnt ( 0,-1 ), pnt ( 0, 1 ) );
 				break;
+			case 'X':
+				line_plot ( pnt ( -1,-1 ), pnt ( 1,-1 ) );
+				line_plot ( pnt ( 1,-1 ), pnt ( 1, 1 ) );
+				line_plot ( pnt ( 1 ,1 ), pnt ( -1, 1 ) );
+				line_plot ( pnt ( -1, 1 ), pnt ( -1,-1 ) );
 			case 'x':
 				line_plot ( pnt ( -1,-1 ), pnt ( 1, 1 ) );
 				line_plot ( pnt ( 1,-1 ), pnt ( -1, 1 ) );
@@ -1716,30 +1735,64 @@ void mglGraphIDTF::mark_plot ( mreal *pp, char type )
 				line_plot ( pnt ( -1, 1 ), pnt ( -1,-1 ) );
 				break;
 			case 'd':
-				ss = ss*1.1;
 				line_plot ( pnt ( 0,-1 ), pnt ( 1, 0 ) );
 				line_plot ( pnt ( 1, 0 ), pnt ( 0, 1 ) );
 				line_plot ( pnt ( 0, 1 ), pnt ( -1, 0 ) );
 				line_plot ( pnt ( -1, 0 ), pnt ( 0,-1 ) );
 				break;
 			case '*':
-				ss = ss*1.1;
 				line_plot ( pnt ( -1, 0 ), pnt ( 1, 0 ) );
 				line_plot ( pnt ( -0.6,-0.8 ), pnt ( 0.6, 0.8 ) );
 				line_plot ( pnt ( -0.6, 0.8 ), pnt ( 0.6,-0.8 ) );
 				break;
+			case 'Y':
+				line_plot ( pnt (  0.0,-1.0 ), pnt ( 0, 0 ) );
+				line_plot ( pnt ( -0.8, 0.6 ), pnt ( 0, 0 ) );
+				line_plot ( pnt (  0.8, 0.6 ), pnt ( 0, 0 ) );
+				break;
+
 			case '^':
-				ss = ss*1.1;
-				line_plot ( pnt ( 0, 1 ), pnt ( 0.7,-0.5 ) );
+				line_plot ( pnt (  0.0, 1.0 ), pnt (  0.7,-0.5 ) );
 				line_plot ( pnt ( 0.7,-0.5 ), pnt ( -0.7,-0.5 ) );
-				line_plot ( pnt ( -0.7,-0.5 ), pnt ( 0,   1 ) );
+				line_plot ( pnt ( -0.7,-0.5 ), pnt (  0.0, 1.0 ) );
 				break;
 			case 'v':
-				ss = ss*1.1;
-				line_plot ( pnt ( 0,  -1 ), pnt ( 0.7, 0.5 ) );
+				line_plot ( pnt (  0.0,-1.0 ), pnt (  0.7, 0.5 ) );
 				line_plot ( pnt ( 0.7, 0.5 ), pnt ( -0.7, 0.5 ) );
-				line_plot ( pnt ( -0.7, 0.5 ), pnt ( 0,  -1 ) );
+				line_plot ( pnt ( -0.7, 0.5 ), pnt (  0.0,-1.0 ) );
 				break;
+
+			case 'R':
+				trig_plot ( pnt ( -0.5, 1.0 ), pnt ( -0.5,-1.0 ), pnt (  1.0, 0.0 ) );
+				break;
+			case '>':
+				line_plot ( pnt ( -0.5,-1.0 ), pnt ( -0.5, 1.0 ) );
+				line_plot ( pnt ( -0.5, 1.0 ), pnt (  1.0, 0.0 ) );
+				line_plot ( pnt (  1.0, 0.0 ), pnt ( -0.5,-1.0 ) );
+				break;
+			case 'L':
+				trig_plot ( pnt (  0.5,-1.0 ), pnt (  0.5, 1.0 ), pnt ( -1.0, 0.0 ) );
+				break;
+			case '<':
+				line_plot ( pnt (  0.5,-1.0 ), pnt (  0.5, 1.0 ) );
+				line_plot ( pnt (  0.5, 1.0 ), pnt ( -1.0, 0.0 ) );
+				line_plot ( pnt ( -1.0, 0.0 ), pnt (  0.5,-1.0 ) );
+				break;
+
+			case 'S':
+				quad_plot ( pnt ( -1,-1 ), pnt (  1,-1 ), pnt ( -1, 1 ), pnt (  1, 1 ) );
+				break;
+			case 'D':
+				quad_plot ( pnt (  0,-1 ), pnt (  1, 0 ), pnt ( -1, 0 ), pnt (  0, 1 ) );
+				break;
+			case 'T':
+				trig_plot ( pnt ( -1.0,-0.5 ), pnt (  1.0,-0.5 ), pnt (  0.0, 1.0 ) );
+				break;
+			case 'V':
+				trig_plot ( pnt (  0.0,-1.0 ), pnt (  1.0, 0.5 ), pnt ( -1.0, 0.5 ) );
+				break;
+			case 'C':
+				point_plot ( p, mglColor( CDef[0], CDef[1], CDef[2] ) );
 			case 'o':
 				p1 = pnt ( 1, 0 );
 				for ( int i=1;i<32;i++ )
@@ -2465,7 +2518,12 @@ void mglGraphIDTF::InPlot ( mreal x1,mreal x2,mreal y1,mreal y2, bool rel )
 	points_finished = lines_finished = mesh_finished = true;
 }
 //-----------------------------------------------------------------------------
-#ifndef HAVE_U3D
+void mglGraphIDTF::Rotate(mreal TetX,mreal TetZ,mreal TetY)
+{
+	rotX = TetX; rotY = TetY; rotZ = TetZ;
+	mglGraphAB::Rotate( TetX,TetZ,TetY );
+}
+//-----------------------------------------------------------------------------
 void mglGraphIDTF::WriteIDTF ( const char *fname,const char * )
 {
 	std::ofstream ostr ( fname );
@@ -2562,14 +2620,20 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char * )
 
 // Make inverse coordinate transform with the model, if so desired
 	if (unrotate_flag)
+    {
+        SubPlot(1,1,0);
+        Rotate(rotX, rotZ, rotY);
 		MakeTransformMatrix( mgl_globpos, mgl_globinv);
+    }
 	else
 		memcpy( mgl_globinv, mgl_definv, sizeof(mgl_definv));
 
 	ostr << std::fixed << std::setprecision(6)
 	<< "FILE_FORMAT \"IDTF\"\n"
 	<< "FORMAT_VERSION 100\n"
-	<< "\n"
+	<< "\n";
+    if(!unrotate_flag)
+	ostr
 	<< "NODE \"VIEW\" {\n"
 	<< "	NODE_NAME \"DefaultView\"\n"
 	<< "  PARENT_LIST {\n"
@@ -2627,6 +2691,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char * )
 	{
 		it->print_node ( ostr );
 	}
+    if(!unrotate_flag)
 	ostr
 	<< "RESOURCE_LIST \"VIEW\" {\n"
 	<< "	RESOURCE_COUNT 1\n"
@@ -2758,8 +2823,24 @@ void mglGraphIDTF::WriteIDTF ( const char *fname,const char * )
 	ostr.close ();
 
 }
-#else // HAVE_U3D
-void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
+//-----------------------------------------------------------------------------
+#ifdef HAVE_U3D
+// Rotate (X,Y,Z) by Tet around (x,y,z)
+void RotateMy( HPDF_REAL *X, HPDF_REAL *Y, HPDF_REAL *Z, HPDF_REAL Tet, HPDF_REAL x, HPDF_REAL y, HPDF_REAL z)
+{
+    double C[3][3], c=cos(Tet*M_PI/180),s=-sin(Tet*M_PI/180),r=1-c,n=sqrt(x*x+y*y+z*z);
+    HPDF_REAL u = *X, v = *Y, w = *Z;
+    x/=n;   y/=n;   z/=n;
+    C[0][0] = x*x*r+c;         C[0][1] = x*y*r-z*s;       C[0][2] = x*z*r+y*s;
+    C[1][0] = x*y*r+z*s;       C[1][1] = y*y*r+c;         C[1][2] = y*z*r-x*s;
+    C[2][0] = x*z*r-y*s;       C[2][1] = y*z*r+x*s;       C[2][2] = z*z*r+c;
+    
+    *X = C[0][0]*u + C[0][1]*v + C[0][2]*w;
+    *Y = C[1][0]*u + C[1][1]*v + C[1][2]*w;
+    *Z = C[2][0]*u + C[2][1]*v + C[2][2]*w;
+}
+
+void mglGraphIDTF::WriteU3D ( const char *fileNameParam,const char *descr )
 {
   char fname[PATH_MAX]; // file name without extension
   bzero( fname, sizeof(fname) );
@@ -2867,7 +2948,11 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
 
     // Make inverse coordinate transform with the model, if so desired
     if (unrotate_flag)
+    {
+        SubPlot(1,1,0);
+        Rotate(rotX, rotZ, rotY);
       MakeTransformMatrix( mgl_globpos, mgl_globinv);
+    }
     else
       memcpy( mgl_globinv, mgl_definv, sizeof(mgl_definv));
 
@@ -2886,7 +2971,10 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
   }
 
   if( !IFXSUCCESS(result) )
+  {
+    fprintf(stderr, "unable to load U3D library!");
     return;
+  }
 
   // Let us enclose it to be sure everything is cleared before we thry to unload the lib
 
@@ -2940,6 +3028,7 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
       Resources.GetResourceList( IDTF_TEXTURE  )->SetType( IDTF_TEXTURE  );
 
       // Start write the Camera
+      if(!unrotate_flag)
       {
         // Camera Resource
         {
@@ -3738,11 +3827,12 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
   }
 
     // Write to IDTF file
-    char *idtfFileName = new char [strlen(fname)+1+5];
-    strcpy(idtfFileName, fname);
-    strcat(idtfFileName,".idtf");
-    converter.Export( idtfFileName );
-    delete [] idtfFileName;
+//    char *idtfFileName = new char [strlen(fname)+1+5];
+//    strcpy(idtfFileName, fname);
+//    strcat(idtfFileName,".idtf");
+//    converter.Export( idtfFileName );
+//    delete [] idtfFileName;
+
     // Convert to binary
     converter.Convert();
 
@@ -3768,13 +3858,26 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
 
   }
   IFXTRACE_GENERIC( L"[Converter] Exit code = %x\n", result);
-//  fprintf(stderr,"exit %x\n", result);
+  if ( !IFXSUCCESS( result ) ) fprintf(stderr,"converter exit code  %x\n", result);
   IFXRESULT comResult = IFXCOMUninitialize();
   IFXTRACE_GENERIC( L"[Converter] IFXCOMUninitialize %i\n", comResult );
-//  fprintf(stderr,"uninit %x\n", comResult);
+  if ( !IFXSUCCESS( result ) ) fprintf(stderr,"U3D library unload error %x\n", comResult);
   IFXDEBUG_SHUTDOWN();
-
+}
+#ifdef HAVE_HPDF_H
+void mglGraphIDTF::WritePDF ( const char *fileNameParam,const char *descr )
   {
+  char fname[PATH_MAX]; // file name without extension
+  bzero( fname, sizeof(fname) );
+  strncpy(fname, fileNameParam, sizeof(fname)-1);
+  const size_t fnlen = strlen(fname);
+  if ( fnlen > 5 && strcasecmp(fname+fnlen-5, ".idtf") == 0 )
+    fname[fnlen-5]='\0';
+  else if ( fnlen > 4 && strcasecmp(fname+fnlen-4, ".u3d") == 0 )
+    fname[fnlen-4]='\0';
+  else if ( fnlen > 4 && strcasecmp(fname+fnlen-4, ".pdf") == 0 )
+    fname[fnlen-4]='\0';
+
     HPDF_Rect rect = {0, 0, 600, 600};
 
     HPDF_Doc  pdf;
@@ -3784,12 +3887,14 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
 
     HPDF_Dict view;
 
-    char u3dFileName[strlen(fname)+1+4];
+    char u3dFileName[strlen(fname)+1+4+4];
     strcpy(u3dFileName, fname);
-    strcat(u3dFileName,".u3d");
+    strcat(u3dFileName,"_tmp.u3d");
     char pdfFileName[strlen(fname)+1+4];
     strcpy(pdfFileName, fname);
     strcat(pdfFileName,".pdf");
+
+    WriteU3D(u3dFileName);
 
     pdf = HPDF_New (NULL, NULL);
     if (!pdf) {
@@ -3810,10 +3915,19 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
     view = HPDF_Create3DView (u3d->mmgr, "DefaultView");
 
     //  Position camera
+	if(unrotate_flag)
+	{
+        HPDF_REAL c2cx = 0, c2cy = 0, c2cz = 1;
+        RotateMy(&c2cx, &c2cy, &c2cz, -rotX, 1, 0, 0);
+        RotateMy(&c2cx, &c2cy, &c2cz, -rotY, 0, 1, 0);
+        RotateMy(&c2cx, &c2cy, &c2cz, -rotZ, 0, 0, 1);
+		HPDF_3DView_SetCamera (view, 0, 0, 0, c2cx, c2cy, c2cz, 3, 0);
+	}
+	else
     HPDF_3DView_SetCamera (view, 0, 0, 0, 0, 0, 1, 3, 0);
 
     //  Set ortho projection
-    HPDF_3DView_SetOrthogonalProjection (view, 300);
+    HPDF_3DView_SetOrthogonalProjection (view, unrotate_flag?300/PlotFactor:300);
 
     //  Background color
     HPDF_3DView_SetBackgroundColor (view, 0.9, 0.9, 0.9);
@@ -3862,10 +3976,14 @@ void mglGraphIDTF::WriteIDTF ( const char *fileNameParam,const char *descr )
     /* clean up */
     HPDF_Free (pdf);
 
+    remove(u3dFileName);
   }
-
-
-}
+#else
+void mglGraphIDTF::WritePDF ( const char *fileNameParam,const char *descr ) {}
+#endif
+#else // HAVE_U3D
+void mglGraphIDTF::WriteU3D ( const char *fileNameParam,const char *descr ) {}
+void mglGraphIDTF::WritePDF ( const char *fileNameParam,const char *descr ) {}
 #endif // HAVE_U3D
 //-----------------------------------------------------------------------------
 void mglGraphIDTF::quads_plot(long n,mreal *pp,mreal *cc,bool *tt)

@@ -44,11 +44,16 @@ host_triplet = @host@
 @USE_HDF5_TRUE@am__append_8 = $(HDF5_LIBS)
 @USE_GIF_TRUE@am__append_9 = $(GIF_LIBS)
 @USE_JPEG_TRUE@am__append_10 = $(JPEG_LIBS)
+@USE_U3D_TRUE@am__append_11 = $(U3D_LIBS)
 subdir = mgl
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/config/autotroll.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/config/libtool.m4 \
+	$(top_srcdir)/config/ltoptions.m4 \
+	$(top_srcdir)/config/ltsugar.m4 \
+	$(top_srcdir)/config/ltversion.m4 \
+	$(top_srcdir)/config/lt~obsolete.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -85,10 +90,12 @@ am__DEPENDENCIES_1 =
 @USE_HDF5_TRUE@am__DEPENDENCIES_5 = $(am__DEPENDENCIES_1)
 @USE_GIF_TRUE@am__DEPENDENCIES_6 = $(am__DEPENDENCIES_1)
 @USE_JPEG_TRUE@am__DEPENDENCIES_7 = $(am__DEPENDENCIES_1)
+@USE_U3D_TRUE@am__DEPENDENCIES_8 = $(am__DEPENDENCIES_1)
 libmgl_la_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_3) \
 	$(am__DEPENDENCIES_4) $(am__DEPENDENCIES_5) \
-	$(am__DEPENDENCIES_6) $(am__DEPENDENCIES_7)
+	$(am__DEPENDENCIES_6) $(am__DEPENDENCIES_7) \
+	$(am__DEPENDENCIES_8)
 am_libmgl_la_OBJECTS = libmgl_la-mgl_data_cf.lo libmgl_la-mgl_axis.lo \
 	libmgl_la-mgl_data_png.lo libmgl_la-mgl_zb2.lo \
 	libmgl_la-mgl_c.lo libmgl_la-mgl_eps.lo libmgl_la-mgl_font.lo \
@@ -240,6 +247,7 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 TMPDIR = @TMPDIR@
+U3D_LIBS = @U3D_LIBS@
 UIC = @UIC@
 VERSION = @VERSION@
 WX_FLAGS = @WX_FLAGS@
@@ -306,7 +314,7 @@ WIDGETS = $(am__append_1) $(am__append_2) $(am__append_3) \
 	$(am__append_4)
 libmgl_la_LIBADD = $(PNG_LIBS) $(GL_LIBS) $(LOPENMP) $(am__append_5) \
 	$(am__append_6) $(am__append_7) $(am__append_8) \
-	$(am__append_9) $(am__append_10)
+	$(am__append_9) $(am__append_10) $(am__append_11)
 libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 libmgl_la_CXXFLAGS = $(WIDGETS) -DMGL_FONT_PATH=\"$(datadir)/$(PACKAGE)/fonts/\" \
     -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(HDF4_FLAGS) $(GIF_FLAGS) $(JPEG_FLAGS) \

@@ -320,7 +320,7 @@ void mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, f
 	}
 	// x, y -- have the same size z
 	float z0, v0;
-	for(i=0;i<v->GetNx();i++)	for(j=0;j<z->GetNz();j++)
+	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
 	{
 		z0 = z->GetNz()>1 ? gr->Min.z+(gr->Max.z-gr->Min.z)*float(j)/(z->GetNz()-1) : zVal;
 		v0 = v->v(i);		if(isnan(zVal))	z0 = v0;
@@ -495,13 +495,13 @@ void mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	{
 		xx.Create(z->GetNx(), z->GetNy());
 		yy.Create(z->GetNx(), z->GetNy());
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
 	float z0, v0;
-	for(i=0;i<v->GetNx()-1;i++)	for(j=0;j<z->GetNz();j++)
+	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx()-1;i++)
 	{
 		z0 = z->GetNz()>1 ? gr->Min.z+(gr->Max.z-gr->Min.z)*float(j)/(z->GetNz()-1) : zVal;
 		v0 = v->v(i);		if(isnan(zVal))	z0 = v0;
@@ -585,7 +585,7 @@ void mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	}
 	// x, y -- have the same size z
 	float z0, v0;
-	for(i=0;i<v->GetNx()-1;i++)	for(j=0;j<z->GetNz();j++)
+	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx()-1;i++)
 	{
 		z0 = z->GetNz()>1 ? gr->Min.z+(gr->Max.z-gr->Min.z)*float(j)/(z->GetNz()-1) : zVal;
 		v0 = v->v(i);		if(isnan(zVal))	z0 = v0;
@@ -662,7 +662,7 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 		switch(dir)
 		{
 		case 'x':
-			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 			{
 				i0 = i+nx*j;
 				s.x.a[i0] = x->v(p,i,j)*(1-d) + x->v(p+1,i,j)*d;
@@ -672,7 +672,7 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 			}
 			break;
 		case 'y':
-			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 			{
 				i0 = i+nx*j;
 				s.x.a[i0] = x->v(i,p,j)*(1-d) + x->v(i,p+1,j)*d;
@@ -682,7 +682,7 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 			}
 			break;
 		case 'z':
-			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 			{
 				i0 = i+nx*j;
 				s.x.a[i0] = x->v(i,j,p)*(1-d) + x->v(i,j,p+1)*d;
@@ -699,7 +699,7 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 		{
 		case 'x':
 			v = x->v(p)*(1-d)+x->v(p+1)*d;
-			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 			{
 				i0 = i+nx*j;	s.x.a[i0] = v;
 				s.y.a[i0] = y->v(i);	s.z.a[i0] = z->v(j);
@@ -708,7 +708,7 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 			break;
 		case 'y':
 			v = y->v(p)*(1-d)+y->v(p+1)*d;
-			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 			{
 				i0 = i+nx*j;	s.y.a[i0] = v;
 				s.x.a[i0] = x->v(i);	s.z.a[i0] = z->v(j);
@@ -717,7 +717,7 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 			break;
 		case 'z':
 			v = z->v(p)*(1-d)+z->v(p+1)*d;
-			for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
+			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 			{
 				i0 = i+nx*j;	s.z.a[i0] = v;
 				s.x.a[i0] = x->v(i);	s.y.a[i0] = y->v(j);
@@ -1000,7 +1000,7 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, mglColor c, char 
 //	gr->ReserveC(2*n*m);
 
 	// add intersection point of isoline and Y axis
-	for(i=0;i<n-1;i++)	for(j=0;j<m;j++)
+	for(j=0;j<m;j++)	for(i=0;i<n-1;i++)
 	{
 		d = mgl_d(val,a->v(i,j,ak),a->v(i+1,j,ak));
 		if(d>=0 && d<1)
@@ -1011,7 +1011,7 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, mglColor c, char 
 		}
 	}
 	// add intersection point of isoline and X axis
-	for(i=0;i<n;i++)	for(j=0;j<m-1;j++)
+	for(j=0;j<m-1;j++)	for(i=0;i<n;i++)
 	{
 		d = mgl_d(val,a->v(i,j,ak),a->v(i,j+1,ak));
 		if(d>=0 && d<1)
@@ -1078,14 +1078,14 @@ void mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch)
 	{
 		xx.Create(z->GetNx(), z->GetNy());
 		yy.Create(z->GetNx(), z->GetNy());
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
 	float v0;
 	bool wire = sch && strchr(sch,'#');
-	for(i=0;i<v->GetNx();i++)	for(j=0;j<z->GetNz();j++)
+	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
 	{
 		v0 = v->v(i);
 		mgl_axial_gen(gr,v0,z,x,y,gr->GetC(v0),dir,j,wire);

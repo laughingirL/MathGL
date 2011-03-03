@@ -43,7 +43,7 @@ void mgl_dens_x(HMGL gr, HCDT a, const char *sch, float sv)
 		k = long(d);	d = d - k;
 		if(k>n-2)	{	k=n-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
-		for(i=0;i<m;i++)	for(j=0;j<l;j++)
+		for(j=0;j<l;j++)	for(i=0;i<m;i++)
 			aa.a[i+m*j] = a->v(k,i,j)*(1-d) + d*a->v(k+1,i,j);
 		a = &aa;
 	}
@@ -70,7 +70,7 @@ void mgl_dens_y(HMGL gr, HCDT a, const char *sch, float sv)
 		k = long(d);	d = d - k;
 		if(k>m-2)	{	k=m-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
-		for(i=0;i<n;i++)	for(j=0;j<l;j++)
+		for(j=0;j<l;j++)	for(i=0;i<n;i++)
 			aa.a[i+n*j] = a->v(i,k,j)*(1-d) + d*a->v(i,k+1,j);
 		a = &aa;
 	}
@@ -98,7 +98,7 @@ void mgl_dens_z(HMGL gr, HCDT a, const char *sch, float sv)
 		k = long(d);	d = d - k;
 		if(k>l-2)	{	k=l-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 			aa.a[i+n*j] = a->v(i,j,k)*(1-d) + d*a->v(i,j,k+1);
 		a = &aa;
 	}
@@ -147,7 +147,7 @@ void mgl_cont_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 		k = long(d);	d = d - k;
 		if(k>n-2)	{	k=n-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
-		for(i=0;i<m;i++)	for(j=0;j<l;j++)
+		for(j=0;j<l;j++)	for(i=0;i<m;i++)
 			aa.a[i+m*j] = a->v(k,i,j)*(1-d) + d*a->v(k+1,i,j);
 		a = &aa;
 	}
@@ -184,7 +184,7 @@ void mgl_cont_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 		k = long(d);	d = d - k;
 		if(k>m-2)	{	k=m-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
-		for(i=0;i<n;i++)	for(j=0;j<l;j++)
+		for(j=0;j<l;j++)	for(i=0;i<n;i++)
 			aa.a[i+n*j] = a->v(i,k,j)*(1-d) + d*a->v(i,k+1,j);
 		a = &aa;
 	}
@@ -222,7 +222,7 @@ void mgl_cont_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 		k = long(d);	d = d - k;
 		if(k>l-2)	{	k=l-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 			aa.a[i+n*j] = a->v(i,j,k)*(1-d) + d*a->v(i,j,k+1);
 		a = &aa;
 	}
@@ -307,7 +307,7 @@ void mgl_contf_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 		k = long(d);	d = d - k;
 		if(k>n-2)	{	k=n-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
-		for(i=0;i<m;i++)	for(j=0;j<l;j++)
+		for(j=0;j<l;j++)	for(i=0;i<m;i++)
 			aa.a[i+m*j] = a->v(k,i,j)*(1-d) + d*a->v(k+1,i,j);
 		a = &aa;
 	}
@@ -341,7 +341,7 @@ void mgl_contf_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 		k = long(d);	d = d - k;
 		if(k>m-2)	{	k=m-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
-		for(i=0;i<n;i++)	for(j=0;j<l;j++)
+		for(j=0;j<l;j++)	for(i=0;i<n;i++)
 			aa.a[i+n*j] = a->v(i,k,j)*(1-d) + d*a->v(i,k+1,j);
 		a = &aa;
 	}
@@ -376,7 +376,7 @@ void mgl_contf_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 		k = long(d);	d = d - k;
 		if(k>l-2)	{	k=l-2;	d=1;	}
 		if(k<0)		{	k=0;	d=0;	}
-		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 			aa.a[i+n*j] = a->v(i,j,k)*(1-d) + d*a->v(i,j,k+1);
 		a = &aa;
 	}

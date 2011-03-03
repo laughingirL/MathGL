@@ -97,7 +97,7 @@ void mgl_data_set(HMDT d, HCDT a)
 	else	// NOTE: very inefficient!!!
 	{
 		register long i,j,k;
-		for(i=0;i<d->nx;i++)	for(j=0;j<d->ny;j++)	for(k=0;k<d->nz;k++)
+		for(k=0;k<d->nz;k++)	for(j=0;j<d->ny;j++)	for(i=0;i<d->nx;i++)
 			d->a[i+d->nx*(j+d->ny*k)] = a->v(i,j,k);
 	}
 }
@@ -131,7 +131,7 @@ void mgl_data_set_matrix(HMDT d, gsl_matrix *m)
 	if(!m || m->size1<1 || m->size2<1)	return;
 	mgl_data_create(d, m->size1,m->size2,1);
 	register long i,j;
-	for(i=0;i<d->nx;i++)	for(j=0;j<d->ny;j++)
+	for(j=0;j<d->ny;j++)	for(i=0;i<d->nx;i++)
 		d->a[i+j*d->nx] = m->data[i * m->tda + j];
 #endif
 }
@@ -165,8 +165,7 @@ void mgl_data_set_float2(HMDT d, const float **A,long N1,long N2)
 #if(MGL_USE_DOUBLE==1)
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	d->a[j+i*N2] = A[i][j];
 #else
-	for(long i=0;i<N1;i++)
-		memcpy(d->a+i*N2,A[i],N2*sizeof(float));
+	for(long i=0;i<N1;i++)	memcpy(d->a+i*N2,A[i],N2*sizeof(float));
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -175,8 +174,7 @@ void mgl_data_set_double2(HMDT d, const double **A,long N1,long N2)
 	if(N1<=0 || N2<=0)	return;
 	mgl_data_create(d, N2,N1,1);	if(!A)	return;
 #if(MGL_USE_DOUBLE==1)
-	for(long i=0;i<N1;i++)
-		memcpy(d->a+i*N2,A[i],N2*sizeof(double));
+	for(long i=0;i<N1;i++)	memcpy(d->a+i*N2,A[i],N2*sizeof(double));
 #else
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	d->a[j+i*N2] = A[i][j];
 #endif
@@ -606,16 +604,16 @@ void mgl_data_squeeze(HMDT d, long rx,long ry,long rz,long smooth)
 	// new sizes
 	kx = 1+(nx-1)/rx;	ky = 1+(ny-1)/ry;	kz = 1+(nz-1)/rz;
 	b = new mreal[kx*ky*kz];
-	if(!smooth)	for(i=0;i<kx;i++)  for(j=0;j<ky;j++)  for(k=0;k<kz;k++)
+	if(!smooth)	for(k=0;k<kz;k++)	for(j=0;j<ky;j++)	for(i=0;i<kx;i++)
 		b[i+kx*(j+ky*k)] = d->a[i*rx+nx*(j*ry+ny*rz*k)];
-	else		for(i=0;i<kx;i++)  for(j=0;j<ky;j++)  for(k=0;k<kz;k++)
+	else		for(k=0;k<kz;k++)	for(j=0;j<ky;j++)	for(i=0;i<kx;i++)
 	{
 		long dx,dy,dz,i1,j1,k1;
 		dx = (i+1)*rx<=nx ? rx : nx-i*rx;
 		dy = (j+1)*ry<=ny ? ry : ny-j*ry;
 		dz = (k+1)*rz<=nz ? rz : nz-k*rz;
 		mreal s = 0;
-		for(i1=i*rx;i1<i*rx+dx;i1++)	for(j1=j*ry;j1<j*ry+dz;j1++)	for(k1=k*rz;k1<k*rz+dz;k1++)
+		for(k1=k*rz;k1<k*rz+dz;k1++)	for(j1=j*ry;j1<j*ry+dz;j1++)	for(i1=i*rx;i1<i*rx+dx;i1++)
 			s += d->a[i1+nx*(j1+ny*k1)];
 		b[i+kx*(j+ky*k)] = s/dx*dy*dz;
 	}
@@ -647,9 +645,9 @@ void mgl_data_extend(HMDT d, long n1, long n2)
 		mx = -n1;	my = n2<0 ? -n2 : nx;	mz = n2<0 ? nx : ny;
 		if(n2>0 && ny==1)	mz = n2;
 		b = new mreal[mx*my*mz];
-		if(n2<0)	for(i=0;i<mx*my;i++)	for(j=0;j<nx;j++)
+		if(n2<0)	for(j=0;j<nx;j++)	for(i=0;i<mx*my;i++)
 			b[i+mx*my*j] = d->a[j];
-		else		for(i=0;i<mx;i++)		for(j=0;j<nx*ny;j++)
+		else	for(j=0;j<nx*ny;j++)	for(i=0;i<mx;i++)
 			b[i+mx*j] = d->a[j];
 		if(n2>0 && ny==1)	for(i=0;i<n2;i++)
 			memcpy(b+i*mx*my, d->a, mx*my*sizeof(mreal));
@@ -669,19 +667,19 @@ void mgl_data_transpose(HMDT d, const char *dim)
 	if(!strcmp(dim,"xyz"))	memcpy(b,a,nx*ny*nz*sizeof(mreal));
 	else if(!strcmp(dim,"xzy") || !strcmp(dim,"zy"))
 	{
-		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+		for(j=0;j<ny;j++)	for(k=0;k<nz;k++)	for(i=0;i<nx;i++)
 			b[i+nx*(k+nz*j)] = a[i+nx*(j+ny*k)];
 		n=nz;	nz=ny;	ny=n;
 	}
 	else if(!strcmp(dim,"yxz") || !strcmp(dim,"yx"))
 	{
-		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+		for(k=0;k<nz;k++)	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
 			b[j+ny*(i+nx*k)] = a[i+nx*(j+ny*k)];
 		n=nx;	nx=ny;	ny=n;
 	}
 	else if(!strcmp(dim,"yzx"))
 	{
-		for(i=0;i<nx;i++)	for(j=0;j<ny;j++)	for(k=0;k<nz;k++)
+		for(k=0;k<nz;k++)	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
 			b[j+ny*(k+nz*i)] = a[i+nx*(j+ny*k)];
 		n=nx;	nx=ny;	ny=nz;	nz=n;
 	}

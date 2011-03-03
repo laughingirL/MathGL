@@ -177,6 +177,10 @@ public:
 	virtual void WriteSVG(const char *fname,const char *descr=0);
 	/// Write the frame in file using IDTF format
 	virtual void WriteIDTF(const char *fname,const char *descr=0);
+	/// Write the frame in file using U3D format
+	virtual void WriteU3D(const char *fname,const char *descr=0);
+	/// Write the frame in file using PDF format
+	virtual void WritePDF(const char *fname,const char *descr=0);
 	/// Write the frame in file using GIF format (only for current frame!)
 	virtual void WriteGIF(const char *fname,const char *descr=0);
 	/// Write the frame in file (depending extension, write current frame if fname is empty)
@@ -294,7 +298,7 @@ public:
 	/// Set angle of view indepently from mglGraph::Rotate().
 	virtual void View(mreal tetx,mreal tetz,mreal tety=0);
 	inline int GetWarn()	{	return WarnCode;	};
-	void DefaultPlotParam();	///< Set default parameter for plotting
+	virtual void DefaultPlotParam();	///< Set default parameter for plotting
 	/// Zoom in or zoom out (if Zoom(0, 0, 1, 1)) a part of picture
 	void Zoom(mreal x1, mreal y1, mreal x2, mreal y2);
 	/// Clear transformation matrix.
@@ -317,7 +321,7 @@ public:
 	/// Set aspect ratio for further plotting.
 	virtual void Aspect(mreal Ax,mreal Ay,mreal Az)=0;
 	/// Rotate a further plotting.
-	void Rotate(mreal TetX,mreal TetZ,mreal TetY=0);
+	virtual void Rotate(mreal TetX,mreal TetZ,mreal TetY=0);
 	/// Rotate a further plotting around vector {x,y,z}.
 	virtual void RotateN(mreal Tet,mreal x,mreal y,mreal z)=0;
 	/// Set perspective (in range [0,1)) for plot. Set to zero for switching off.

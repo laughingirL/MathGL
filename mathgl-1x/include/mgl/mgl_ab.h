@@ -54,7 +54,9 @@ using mglGraph::Legend;
 	void Light(int n, bool enable);
 	void Light(int n,mglPoint p, mglColor c=WC, mreal br=0.5, bool infty=true, mreal ap=0);
 
-	void InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel=false);
+	virtual void InPlot(mreal x1,mreal x2,mreal y1,mreal y2, bool rel=false);
+	virtual void DefaultPlotParam();	///< Set default parameter for plotting
+	virtual void Rotate(mreal TetX,mreal TetZ,mreal TetY=0);
 	void StickPlot(int num, int i, mreal tet, mreal phi);
 	void Aspect(mreal Ax,mreal Ay,mreal Az);
 	void RotateN(mreal Tet,mreal x,mreal y,mreal z);

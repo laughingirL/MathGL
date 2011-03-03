@@ -1,12 +1,13 @@
-AC_INIT([mathgl], [1.10], [mathgl.abalakin@gmail.com])
+AC_INIT([mathgl], [1.11], [mathgl.abalakin@gmail.com])
 
-MGL_RELEASE=1.10
+MGL_RELEASE=1.11
 AC_SUBST(MGL_RELEASE)
 
 AC_CONFIG_MACRO_DIR([config])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(mgl)
 AC_CONFIG_HEADER(include/mgl/config.h)
+AC_LANG([C++])
 
 #MGL_RELEASE=1.4
 #AC_SUBST(MGL_RELEASE)
@@ -228,6 +229,49 @@ AC_CHECK_LIB([jpeg], [main], [(test x$all = xtrue || test x$jpeg = xtrue) && JPE
     [(test x$all = xtrue || test x$jpeg = xtrue) && echo "Please install jpeg library" && exit])
 AM_CONDITIONAL(USE_JPEG, (test x$all = xtrue || test x$jpeg = xtrue))
 
+AC_ARG_ENABLE(u3d,
+[  --enable-u3d    Turn on u3d functions],
+[case "${enableval}" in
+  yes) u3d=true ;;
+  no)  u3d=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-u3d) ;;
+esac],[u3d=false])
+AC_ARG_ENABLE(pdf,
+[  --enable-pdf    Turn on u3d and pdf functions],
+[case "${enableval}" in
+  yes) pdf=true; u3d=true ;;
+  no)  pdf=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-pdf) ;;
+esac],[pdf=false])
+AS_IF([test "x$pdf" == xtrue],
+  [AC_CHECK_LIB([hpdf], [main],
+   [],
+   [AC_MSG_FAILURE(
+   [--enable-pdf was given, but test for libharu failed])]
+  )])
+AS_IF([test "x$pdf" == xtrue],
+  [AC_CHECK_HEADERS([hpdf.h], [],
+  [AC_MSG_FAILURE(
+  [--enable-pdf was given, but test for headers failed])]
+  )])
+AM_CONDITIONAL(USE_PDF, test x$pdf = xtrue)
+
+AS_IF([test "x$u3d" == xtrue],
+  [AC_CHECK_LIB([IDTF], [main],
+  [AC_SUBST([U3D_LIBS], ["-lIDTF -lm -ldl"])
+  AC_DEFINE([HAVE_U3D], [1],
+  [Define if you have libIDTF])
+  ],
+  [AC_MSG_FAILURE(
+  [--enable-u3d was given, but test for libIDTF failed])],
+  [-lm -ldl])])
+AS_IF([test "x$u3d" == xtrue],
+  [AC_CHECK_HEADERS([u3d/SceneConverterLib.h], [],
+  [AC_MSG_FAILURE(
+  [--enable-u3d was given, but test for headers failed])]
+  )])
+AM_CONDITIONAL(USE_U3D, test x$u3d = xtrue)
+
 AC_ARG_ENABLE(fltk,
 [  --enable-fltk    Turn on fltk],
 [case "${enableval}" in
@@ -346,7 +390,7 @@ if (test x$docs = xtrue || test x$all = xtrue) ;then
 fi
 AM_CONDITIONAL(USE_DOCS, (test x$docs = xtrue || test x$all = xtrue) )
 
-AM_CXXFLAGS="-Wall $GSL_FLAGS"
+AM_CXXFLAGS="$AM_CXXFLAGS -Wall $GSL_FLAGS"
 AC_SUBST(AM_CXXFLAGS)
 
 AC_CONFIG_FILES([

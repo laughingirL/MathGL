@@ -47,6 +47,8 @@ unsigned char **mglGraph::GetRGBLines(long &, long &, unsigned char *&f, bool )
 //-----------------------------------------------------------------------------
 void mglGraph::WriteSVG(const char *,const char *)	{}
 void mglGraph::WriteIDTF(const char *,const char *)	{}
+void mglGraph::WriteU3D(const char *,const char *)	{}
+void mglGraph::WritePDF(const char *,const char *)	{}
 void mglGraph::DoubleSided(bool )	{}
 void mglGraph::VertexColor(bool )	{}
 void mglGraph::TextureColor(bool ){}
@@ -389,6 +391,8 @@ void mglGraph::WriteFrame(const char *fname, const char *descr)
 	if(!strcmp(fname+len-4,".jpg"))	WriteJPEG(fname,descr);
 	if(!strcmp(fname+len-5,".jpeg"))WriteJPEG(fname,descr);
 	if(!strcmp(fname+len-5,".idtf"))WriteIDTF(fname,descr);
+	if(!strcmp(fname+len-4,".u3d")) WriteU3D(fname,descr);
+	if(!strcmp(fname+len-4,".pdf")) WritePDF(fname,descr);
 	if(!strcmp(fname+len-4,".png"))	WritePNG(fname,descr,false);
 	if(!strcmp(fname+len-4,".eps"))	WriteEPS(fname,descr);
 	if(!strcmp(fname+len-4,".svg"))	WriteSVG(fname,descr);
@@ -448,6 +452,28 @@ void mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,in
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	_GR_->WriteIDTF(s,f);	delete []s;		delete []f;
+}
+//-----------------------------------------------------------------------------
+/// Write the frame in file using U3D format
+void mgl_write_u3d(HMGL gr, const char *fname,const char *descr)
+{	gr->WriteU3D(fname,descr);	}
+/// Write the frame in file using U3D format
+void mgl_write_u3d_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{
+	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
+	_GR_->WriteU3D(s,f);	delete []s;		delete []f;
+}
+//-----------------------------------------------------------------------------
+/// Write the frame in file using PDF format
+void mgl_write_pdf(HMGL gr, const char *fname,const char *descr)
+{	gr->WritePDF(fname,descr);	}
+/// Write the frame in file using PDF format
+void mgl_write_pdf_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{
+	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
+	_GR_->WritePDF(s,f);	delete []s;		delete []f;
 }
 //-----------------------------------------------------------------------------
 /// Write the frame in file using PNG format

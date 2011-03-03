@@ -48,6 +48,10 @@ if USE_JPEG
 libmgl_la_LIBADD += $(JPEG_LIBS)
 endif
 
+if USE_U3D
+libmgl_la_LIBADD += $(U3D_LIBS)
+endif
+
 libmgl_la_SOURCES = \
 mgl_data_cf.cpp	   mgl_axis.cpp     mgl_data_png.cpp  mgl_zb2.cpp \
 mgl_c.cpp          mgl_eps.cpp      mgl_font.cpp      mgl_zb.cpp \

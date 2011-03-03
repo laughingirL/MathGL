@@ -728,7 +728,7 @@ void mglGraphAB::glyph_fill(mreal x,mreal y, mreal f, int nt, const short *trig,
 		PostScale(p,3);
 		p[2]+=pw;	p[5]+=pw;	p[8]+=pw;
 		bool ul=UseLight;	UseLight=false;
-		mglGraphAB::trig_plot(p,p+3,p+6,c,c,c);
+		trig_plot(p,p+3,p+6,c,c,c);
 		UseLight=ul;
 	}
 }
@@ -756,7 +756,7 @@ void mglGraphAB::glyph_wire(mreal x,mreal y, mreal f, int nl, const short *line,
 			p[3]=f*line[ii]+x;	p[4]=f*line[ii+1]+y;	p[5]=0;
 		}
 		PostScale(p,2);
-		mglGraphAB::line_plot(p,p+3,c,c);
+		line_plot(p,p+3,c,c);
 	}
 	PDef = pdef;	PenWidth = opw;
 }
@@ -776,14 +776,14 @@ void mglGraphAB::glyph_line(mreal x,mreal y, mreal f, mreal *c, bool solid)
 	if(solid)
 	{
 		p[2]+=pw;	p[5]+=pw;	p[8]+=pw;	p[11]+=pw;
-		mglGraphAB::quad_plot(p,p+3,p+6,p+9,c,c,c,c);
+		quad_plot(p,p+3,p+6,p+9,c,c,c,c);
 	}
 	else
 	{
-		mglGraphAB::line_plot(p,p+3,c,c);
-		mglGraphAB::line_plot(p+9,p+3,c,c);
-		mglGraphAB::line_plot(p,p+6,c,c);
-		mglGraphAB::line_plot(p+9,p+6,c,c);
+		line_plot(p,p+3,c,c);
+		line_plot(p+9,p+3,c,c);
+		line_plot(p,p+6,c,c);
+		line_plot(p+9,p+6,c,c);
 	}
 	PDef = pdef;	PenWidth=opw;
 }
