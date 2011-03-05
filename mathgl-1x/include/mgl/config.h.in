@@ -3,8 +3,14 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
+/* Define to 1 if you have the <hpdf.h> header file. */
+#undef HAVE_HPDF_H
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `hpdf' library (-lhpdf). */
+#undef HAVE_LIBHPDF
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
@@ -26,6 +32,12 @@
 
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
+
+/* Define if you have libIDTF */
+#undef HAVE_U3D
+
+/* Define to 1 if you have the <u3d/SceneConverterLib.h> header file. */
+#undef HAVE_U3D_SCENECONVERTERLIB_H
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
