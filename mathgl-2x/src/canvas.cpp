@@ -182,11 +182,14 @@ void mglCanvas::mark_plot(long p, char type, float size)
 {
 	if(isnan(pntN[10*p]))	return;
 	if(size>=0)	size *= MarkSize;
-	mglPrim a;	a.s = size?size:MarkSize;
-	a.w = fabs(PenWidth);
-	a.n1 = p;	a.m = type;		a.z = pntC[7*p+2];
-	if(Quality&4)	mark_draw(pntC+7*p,type,a.s);
-	else	add_prim(a);
+	if(Quality&4)	mark_draw(pntC+7*p,type,size?size:MarkSize);
+	else
+	{
+		mglPrim a;
+		a.w = fabs(PenWidth);	a.s = size?size:MarkSize;
+		a.n1 = p;	a.m = type;	a.z = pntC[7*p+2];
+		add_prim(a);
+	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::line_plot(long p1, long p2, bool fromN)
@@ -195,17 +198,20 @@ void mglCanvas::line_plot(long p1, long p2, bool fromN)
 	if(fromN && (isnan(pntN[10*p1]) || isnan(pntN[10*p2])))	return;
 	if(!fromN && (isnan(pntC[7*p1]) || isnan(pntC[7*p2])))	return;
 	float pw = fabs(PenWidth),d;
-	mglPrim a(1);	a.w = pw;	a.m = fromN;
-	a.z = fromN ? (pntN[10*p1+2]+pntN[10*p2+2])/2 : (pntC[7*p1+2]+pntC[7*p2+2])/2;
-	if(pw>1)		a.z += pw-1;
-	a.style=PDef;	a.s = pPos;
-	a.n1 = p1;		a.n2 = p2;
 	if(Quality&4)
 	{
 		if(fromN)	line_draw(pntN+10*p1,pntN+10*p2);
 		else		line_draw(pntC+7*p1,pntC+7*p2);
 	}
-	else	add_prim(a);
+	else
+	{
+		mglPrim a(1);	a.w = pw;	a.m = fromN;
+		a.z = fromN ? (pntN[10*p1+2]+pntN[10*p2+2])/2 : (pntC[7*p1+2]+pntC[7*p2+2])/2;
+		if(pw>1)		a.z += pw-1;
+		a.style=PDef;	a.s = pPos;
+		a.n1 = p1;		a.n2 = p2;
+		add_prim(a);
+	}
 	if(fromN)	d = hypot(pntN[10*p1]-pntN[10*p2], pntN[10*p1+1]-pntN[10*p2+1]);
 	else		d = hypot(pntC[7*p1]-pntC[7*p2], pntC[7*p1+1]-pntC[7*p2+1]);
 	pPos = fmod(pPos+d/pw/1.5, 16);
@@ -213,31 +219,31 @@ void mglCanvas::line_plot(long p1, long p2, bool fromN)
 //-----------------------------------------------------------------------------
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
-	bool pnt = fabs(pntN[10*p1]-pntN[10*p2])<0.01 && fabs(pntN[10*p1+1]-pntN[10*p2+1])<0.01 &&
-				fabs(pntN[10*p1]-pntN[10*p3])<0.01 && fabs(pntN[10*p1+1]-pntN[10*p3+1])<0.01;
-	if(pnt || isnan(pntN[10*p1]) || isnan(pntN[10*p2]) || isnan(pntN[10*p3]))	return;
-	mglPrim a(2);
-	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;
-	a.z = (pntN[10*p1+2]+pntN[10*p2+2]+pntN[10*p3+2])/3;
+	if(isnan(pntN[10*p1]) || isnan(pntN[10*p2]) || isnan(pntN[10*p3]))	return;
 	if(Quality&4)	trig_draw(pntN+10*p1,pntN+10*p2,pntN+10*p3,true);
-	else	add_prim(a);
+	else
+	{
+		mglPrim a(2);
+		a.n1 = p1;	a.n2 = p2;	a.n3 = p3;
+		a.z = (pntN[10*p1+2]+pntN[10*p2+2]+pntN[10*p3+2])/3;
+		add_prim(a);
+	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 {
-	bool pnt = fabs(pntN[10*p1]-pntN[10*p2])<0.01 && fabs(pntN[10*p1+1]-pntN[10*p2+1])<0.01 &&
-				fabs(pntN[10*p1]-pntN[10*p3])<0.01 && fabs(pntN[10*p1+1]-pntN[10*p3+1])<0.01 &&
-				fabs(pntN[10*p1]-pntN[10*p4])<0.01 && fabs(pntN[10*p1+1]-pntN[10*p4+1])<0.01;
-	if(pnt)	return;
 	if(isnan(pntN[10*p1]))	{	trig_plot(p4,p2,p3);	return;	}
 	if(isnan(pntN[10*p2]))	{	trig_plot(p1,p4,p3);	return;	}
 	if(isnan(pntN[10*p3]))	{	trig_plot(p1,p2,p4);	return;	}
 	if(isnan(pntN[10*p4]))	{	trig_plot(p1,p2,p3);	return;	}
-	mglPrim a(3);
-	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;
-	a.z = (pntN[10*p1+2]+pntN[10*p2+2]+pntN[10*p3+2]+pntN[10*p4+2])/4;
 	if(Quality&4)	quad_draw(pntN+10*p1,pntN+10*p2,pntN+10*p3,pntN+10*p4);
-	else	add_prim(a);
+	else
+	{
+		mglPrim a(3);
+		a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;
+		a.z = (pntN[10*p1+2]+pntN[10*p2+2]+pntN[10*p3+2]+pntN[10*p4+2])/4;
+		add_prim(a);
+	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Glyph(float x, float y, float f, int s, long j, char col)
@@ -318,6 +324,17 @@ void mglCanvas::SubPlot(int nx,int ny,int m, const char *style)
 	int mx = m%nx, my = m/nx;
 	x1 = float(mx)/nx;		x2 = float(mx+1)/nx;
 	y2 = 1.f-float(my)/ny;	y1 = 1.f-float(my+1)/ny;
+	InPlot(x1,x2,y1,y2,style);
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::MultiPlot(int nx,int ny,int m, int dx, int dy, const char *style)
+{
+	float x1,x2,y1,y2;
+	int mx = m%nx, my = m/nx;
+	dx = (dx<1 || dx+mx>=nx) ? 1 : dx;
+	dy = (dy<1 || dy+my>=ny) ? 1 : dy;
+	x1 = float(mx)/nx;		x2 = float(mx+dx)/nx;
+	y2 = 1-float(my)/ny;	y1 = 1-float(my+dy)/ny;
 	InPlot(x1,x2,y1,y2,style);
 }
 //-----------------------------------------------------------------------------

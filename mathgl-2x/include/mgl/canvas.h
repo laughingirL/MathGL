@@ -94,6 +94,8 @@ public:
 	/// Put further plotting in some region of whole frame surface.
 	void SubPlot(int nx,int ny,int m, float dx=0, float dy=0);
 	void SubPlot(int nx,int ny,int m, const char *style);
+	/// Like SubPlot bot "join" several cells
+	void MultiPlot(int nx,int ny,int m, int dx, int dy, const char *style);
 	/// Put further plotting in column cell of previous subplot
 	void ColumnPlot(int num, int i, float d=0);
 	/// Put further plotting in cell of stick rotated on angles tet, phi
