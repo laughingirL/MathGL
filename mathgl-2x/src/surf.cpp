@@ -119,17 +119,18 @@ void mgl_mesh_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
 	{	gr->SetWarn(mglWarnDim);	return;	};
 	static int cgid=1;	gr->StartGroup("Mesh",cgid++);
-	gr->SetPenPal("-");	gr->SetScheme(sch);
+	gr->SetPenPal("-");
+	long ss = gr->AddTexture(sch);
 	long pos = gr->ReserveC(n*m*z->GetNz());
 
 	mglPoint p;
-	mglColor c;
+	float c;
 	for(k=0;k<z->GetNz();k++)
 	{
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, z->v(i,j,k));
-			c = gr->GetC(p);	gr->ScalePoint(p);	gr->AddPntC(p,c);
+			c = gr->GetC(ss,p.z);	gr->ScalePoint(p);	gr->AddPntC(p,c);
 		}
 		mesh_plot(gr,pos+k*n*m,n,m,3);
 	}
@@ -167,17 +168,18 @@ void mgl_fall_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	if(y->GetNx()!=z->GetNy() && (x->GetNy()!=z->GetNy() || y->GetNx()!=z->GetNx() || y->GetNy()!=z->GetNy()))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	static int cgid=1;	gr->StartGroup("Fall",cgid++);
-	gr->SetPenPal("-");	gr->SetScheme(sch);
+	gr->SetPenPal("-");
+	long ss = gr->AddTexture(sch);
 	long pos = gr->ReserveC(n*m*z->GetNz());
 
 	mglPoint p;
-	mglColor c;
+	float c;
 	for(k=0;k<z->GetNz();k++)
 	{
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, z->v(i,j,k));
-			c = gr->GetC(p);	gr->ScalePoint(p);	gr->AddPntC(p,c);
+			c = gr->GetC(ss,p.z);	gr->ScalePoint(p);	gr->AddPntC(p,c);
 		}
 		mesh_plot(gr,pos+k*n*m,n,m, (sch && strchr(sch,'x')) ? 2:1);
 	}
@@ -220,14 +222,13 @@ void mgl_grid_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 	long pos = gr->ReserveC(n*m*z->GetNz());
 
 	mglPoint p;
-	mglColor c;
 	for(k=0;k<z->GetNz();k++)
 	{
 		if(z->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(z->GetNz()-1);
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
-			c = gr->GetC(p);	gr->ScalePoint(p);	gr->AddPntC(p,c);
+			gr->ScalePoint(p);	gr->AddPntC(p,gr->CDef);
 		}
 		mesh_plot(gr,pos+k*n*m,n,m,3);
 	}
@@ -265,11 +266,11 @@ void mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	if(y->GetNx()!=m && (x->GetNy()!=m || y->GetNx()!=n || y->GetNy()!=m))
 	{	gr->SetWarn(mglWarnDim);	return;	};
 	static int cgid=1;	gr->StartGroup("Surf",cgid++);
-	gr->SetScheme(sch);
+	long ss = gr->AddTexture(sch);
 	long pos = gr->ReserveN(n*m*z->GetNz());
 
 	mglPoint p,q,s,xx,yy;
-	mglColor c;
+	float c;
 	for(k=0;k<z->GetNz();k++)
 	{
 		pos=gr->GetPosN();
@@ -279,13 +280,13 @@ void mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
-			c = gr->GetC(p);	gr->ScalePoint(p);	gr->AddPntN(p,c,q^s);
+			c = gr->GetC(ss,p.z);	gr->ScalePoint(p);	gr->AddPntN(p,c,q^s);
 		}
 		surf_plot(gr,pos,n,m);
 		if(sch && strchr(sch,'#'))
 		{
 			gr->SetPenPal("-");
-			long pp = gr->CopyNtoC(pos,n*m,BC);
+			long pp = gr->CopyNtoC(pos,n*m,gr->AddTexture('k'));
 			mesh_plot(gr,pp,n,m,3);
 		}
 	}
@@ -323,12 +324,13 @@ void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	if(y->GetNx()!=z->GetNy() && (x->GetNy()!=z->GetNy() || y->GetNx()!=z->GetNx() || y->GetNy()!=z->GetNy()))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	static int cgid=1;	gr->StartGroup("Belt",cgid++);
-	gr->SetScheme(sch);
+
+	long ss = gr->AddTexture(sch);
 	long pos = gr->ReserveN(2*n*m*z->GetNz());
 	bool how = !(sch && strchr(sch,'x'));
 
 	mglPoint p1,p2,q,s,xx,yy;
-	mglColor c;
+	float c;
 	for(k=0;k<z->GetNz();k++)
 	{
 		if(how)	for(i=0;i<n-1;i++)
@@ -339,7 +341,7 @@ void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 				p1 = mglPoint(xx.x, yy.x, z->v(i,j,k));
 				s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
 				q = mglPoint(xx.y, yy.y, 0);	s = q^s;
-				c = gr->GetC(p1);
+				c = gr->GetC(ss,p1.z);
 				p2 = mglPoint(GetX(x,i+1,j,k).x,GetY(y,i+1,j,k).x,p1.z);
 				gr->ScalePoint(p1);	gr->AddPntN(p1,c,s);
 				gr->ScalePoint(p2);	gr->AddPntN(p2,c,s);
@@ -354,7 +356,7 @@ void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 				p1 = mglPoint(xx.x, yy.x, z->v(i,j,k));
 				q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 				s = mglPoint(xx.z, yy.z, 0);	s = q^s;
-				c = gr->GetC(p1);
+				c = gr->GetC(ss,p1.z);
 				p2 = mglPoint(GetX(x,i,j+1,k).x,GetY(y,i,j+1,k).x,p1.z);
 				gr->ScalePoint(p1);	gr->AddPntN(p1,c,s);
 				gr->ScalePoint(p2);	gr->AddPntN(p2,c,s);
@@ -391,18 +393,18 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 {
 	if(!gr || !z || !x || !y)	return;
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
-	mglColor c;
 	if(x->GetNx()!=z->GetNx())		{	gr->SetWarn(mglWarnDim,"Dens");	return;	}
 	if(z->GetNx()<2 || z->GetNy()<2){	gr->SetWarn(mglWarnLow,"Dens");	return;	}
 	if(y->GetNx()!=z->GetNy() && (x->GetNy()!=z->GetNy() || y->GetNx()!=z->GetNx() || y->GetNy()!=z->GetNy()))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	static int cgid=1;	gr->StartGroup("Dens",cgid++);
 	if(isnan(zVal))	zVal = gr->Min.z;
-	gr->SetScheme(sch);
+
+	long ss = gr->AddTexture(sch);
 	long pos = gr->ReserveN(n*m*z->GetNz());
 
 	mglPoint p,s=mglPoint(0,0,1);
-	float zz;
+	float zz, c;
 	for(k=0;k<z->GetNz();k++)
 	{
 		if(z->GetNz()>1)
@@ -411,7 +413,7 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)	// ñîçäàåì ìàññèâ òî÷åê
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).y, zVal);
-			zz = z->v(i,j,k);	c = gr->GetC(zz);
+			zz = z->v(i,j,k);	c = gr->GetC(ss,zz);
 			gr->ScalePoint(p);	if(isnan(zz))	p.x = NAN;
 			gr->AddPntN(p,c,s);
 		}
@@ -419,7 +421,7 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 		if(sch && strchr(sch,'#'))
 		{
 			gr->SetPenPal("-");
-			long pp = gr->CopyNtoC(pos,n*m,BC);
+			long pp = gr->CopyNtoC(pos,n*m,gr->AddTexture('k'));
 			mesh_plot(gr,pp,n,m,3);
 		}
 	}
@@ -469,7 +471,6 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 {
 	if(!gr)	return;
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
-	mglColor col;
 	if(x->GetNx()!=z->GetNx())		{	gr->SetWarn(mglWarnDim,"SurfC");	return;	}
 	if(z->GetNx()<2 || z->GetNy()<2){	gr->SetWarn(mglWarnLow,"SurfC");	return;	}
 	if(z->GetNx()*z->GetNy()*z->GetNz()!=c->GetNx()*c->GetNy()*c->GetNz())
@@ -477,8 +478,10 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 	if(y->GetNx()!=z->GetNy() && (x->GetNy()!=z->GetNy() || y->GetNx()!=z->GetNx() || y->GetNy()!=z->GetNy()))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	static int cgid=1;	gr->StartGroup("SurfC",cgid++);
-	gr->SetScheme(sch);
+
+	long ss = gr->AddTexture(sch);
 	long pos = gr->ReserveN(n*m*z->GetNz());
+	float col;
 
 	mglPoint p,q,s,xx,yy;
 	for(k=0;k<z->GetNz();k++)
@@ -490,14 +493,14 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
-			col = gr->GetC(c->v(i,j,k));
+			col = gr->GetC(ss,c->v(i,j,k));
 			gr->ScalePoint(p);	gr->AddPntN(p,col,q^s);
 		}
 		surf_plot(gr,pos,n,m);
 		if(sch && strchr(sch,'#'))
 		{
 			gr->SetPenPal("-");
-			long pp = gr->CopyNtoC(pos,n*m,BC);
+			long pp = gr->CopyNtoC(pos,n*m,gr->AddTexture('k'));
 			mesh_plot(gr,pp,n,m,3);
 		}
 	}
@@ -531,7 +534,6 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 	if(!gr)	return;
 	register long i,j;
 	long k,n=z->GetNx(),m=z->GetNy();
-	mglColor col;
 	if(x->GetNx()!=z->GetNx())		{	gr->SetWarn(mglWarnDim,"SurfA");	return;	}
 	if(z->GetNx()<2 || z->GetNy()<2){	gr->SetWarn(mglWarnLow,"SurfA");	return;	}
 	if(z->GetNx()*z->GetNy()*z->GetNz()!=c->GetNx()*c->GetNy()*c->GetNz())
@@ -539,7 +541,8 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 	if(y->GetNx()!=z->GetNy() && (x->GetNy()!=z->GetNy() || y->GetNx()!=z->GetNx() || y->GetNy()!=z->GetNy()))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	static int cgid=1;	gr->StartGroup("SurfA",cgid++);
-	gr->SetScheme(sch);
+
+	long ss = gr->AddTexture(sch);
 	long pos = gr->ReserveN(n*m*z->GetNz());
 
 	mglPoint p,q,s,xx,yy;
@@ -552,14 +555,14 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
-			col = gr->GetC(p);	col.a = mgl_ipow(gr->GetA(c->v(i,j,k))+1,2)/4;
-			gr->ScalePoint(p);	gr->AddPntN(p,col,q^s);
+			// NOTE: before was c.a ~ a^2 !!!
+			gr->ScalePoint(p);	gr->AddPntN(p,gr->GetC(ss,p.z),q^s,gr->GetA(c->v(i,j,k)));
 		}
 		surf_plot(gr,pos,n,m);
 		if(sch && strchr(sch,'#'))
 		{
 			gr->SetPenPal("-");
-			long pp = gr->CopyNtoC(pos,n*m,BC);
+			long pp = gr->CopyNtoC(pos,n*m,gr->AddTexture('k'));
 			mesh_plot(gr,pp,n,m,3);
 		}
 	}
@@ -598,18 +601,18 @@ void mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	static int cgid=1;	gr->StartGroup("Boxs",cgid++);
 	if(isnan(zVal))	zVal = gr->GetOrgZ('x');
-	gr->SetScheme(sch);
+
+	long ss = gr->AddTexture(sch);
 	gr->ReserveN(12*n*m*z->GetNz());
 
 	mglPoint p1,p2,p3,p4,q,s,t=mglPoint(0,0,1),xx,yy;
-	mglColor c;
-	float zz,z1,z2,x1,y1;
+	float zz,z1,z2,x1,y1,c;
 	long k1,k2,k3,k4;
 	for(k=0;k<z->GetNz();k++)
 	{
 		for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
 		{
-			zz = z->v(i,j,k);		c  = gr->GetC(zz);
+			zz = z->v(i,j,k);		c  = gr->GetC(ss,zz);
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
 			x1 = GetX(x,i+1,j,k).x;	y1 = GetY(y,i,j+1,k).x;
 			z1 = z->v(i+1,j,k);		z2 = z->v(i,j+1,k);
@@ -666,18 +669,18 @@ void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	if(y->GetNx()!=z->GetNy() && (x->GetNy()!=z->GetNy() || y->GetNx()!=z->GetNx() || y->GetNy()!=z->GetNy()))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	static int cgid=1;	gr->StartGroup("Tile",cgid++);
-	gr->SetScheme(sch);
+
+	long ss = gr->AddTexture(sch);
 	gr->ReserveN(4*n*m*z->GetNz());
 
 	mglPoint p1,p2,p3,p4,s=mglPoint(0,0,1);
-	mglColor c;
-	float zz,x1,x2,y1,y2;
+	float zz,x1,x2,y1,y2,c;
 	long k1,k2,k3,k4;
 	for(k=0;k<z->GetNz();k++)
 	{
 		for(j=0;j<m-1;j++)	for(i=0;i<n-1;i++)
 		{
-			zz = z->v(i,j,k);		c = gr->GetC(zz);
+			zz = z->v(i,j,k);		c = gr->GetC(ss,zz);
 			x1 = GetX(x,i,j,k).x;	y1 = GetY(y,i,j,k).x;
 			x2 = GetX(x,i+1,j,k).x;	y2 = GetY(y,i,j+1,k).x;
 			p1 = mglPoint(x1,y1,zz);	gr->ScalePoint(p1);	k1 = gr->AddPntN(p1,c,s);
@@ -718,19 +721,20 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch)
 	if(y->GetNx()!=z->GetNy() && (x->GetNy()!=z->GetNy() || y->GetNx()!=z->GetNx() || y->GetNy()!=z->GetNy()))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	static int cgid=1;	gr->StartGroup("TileS",cgid++);
-	gr->SetScheme(sch);
+
+	long cc = gr->AddTexture(sch);
 	gr->ReserveN(4*n*m*z->GetNz());
 
 	mglPoint p1,p2,p3,p4,t=mglPoint(0,0,1);
-	mglColor c;
-	float zz,x1,x2,x3,x4,y1,y2,y3,y4,ss,sm;
+	float zz,x1,x2,x3,x4,y1,y2,y3,y4,ss,sm,c;
 	long k1,k2,k3,k4;
 	for(k=0;k<z->GetNz();k++)
 	{
 		for(j=0;j<m-1;j++)	for(i=0;i<n-1;i++)
 		{
-			zz = z->v(i,j,k);	c = gr->GetC(zz);
-			ss = (1-gr->GetA(s->v(i,j,k)))/4;	sm = 1-ss;
+			zz = z->v(i,j,k);	c = gr->GetC(cc,zz);
+			// TODO check it!!!
+			ss = (1-gr->GetA(s->v(i,j,k)))/2;	sm = 1-ss;
 
 			x1 = GetX(x,i,j,k).x;		y1 = GetY(y,i,j,k).x;
 			x2 = GetX(x,i+1,j,k).x-x1;	y2 = GetY(y,i+1,j,k).x-y1;
@@ -785,13 +789,12 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, int 
 	{	gr->SetWarn(mglWarnDim,"Map");	return;	}
 	static int cgid=1;	gr->StartGroup("Map",cgid++);
 
-	gr->SetScheme(sch);
+	long ss = gr->AddTexture((sch && *sch)?sch:"rgb",2);
 	if(ks<0 || ks>=ay->GetNz() || ks>=ax->GetNz())	ks = 0;
 	long s = both ? n:1, s1, s2;
 
-	float xdy,xdx,ydx,ydy;
+	float xdy,xdx,ydx,ydy,xx,yy;
 	mglPoint p,t=mglPoint(NAN);
-	mglColor c;
 	long pos = gr->ReserveN(n*m);
 
 	for(j=0;j<m;j++)	for(i=0;i<n;i++)
@@ -805,12 +808,13 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, int 
 		xdx = xdx*ydy - xdy*ydx;	// Jacobian
 
 		p = mglPoint(ax->v(i,j,ks), ay->v(i,j,ks), xdx);
-		c = gr->GetC2(x->v(i,j,ks),y->v(i,j,ks));
-		gr->ScalePoint(p);	gr->AddPntN(p,c,t);
+		xx = (x->v(i,j,ks) - gr->Min.x)/(gr->Max.x - gr->Min.x);
+		yy = (y->v(i,j,ks) - gr->Min.y)/(gr->Max.y - gr->Min.y);
+		gr->ScalePoint(p);	gr->AddPntN(p,gr->GetC(ss,xx),t,yy);
 	}
 	if(pnts)
 	{
-		pos = gr->CopyNtoC(pos,n*m,NC);
+		pos = gr->CopyNtoC(pos,n*m);
 		for(i=0;i<n*m;i++)	gr->mark_plot(pos+i,'.',-1);
 	}
 	else	surf_plot(gr,pos,n,m);

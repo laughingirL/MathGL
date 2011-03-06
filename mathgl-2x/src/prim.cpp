@@ -40,20 +40,11 @@ void mgl_mark_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, const char *pen,int 
 void mgl_ball(HMGL gr, float x,float y,float z)
 {
 	mglPoint p(x,y,z);	gr->ScalePoint(p);
-	gr->mark_plot(gr->AddPntC(p,mglColor(1,0,0)),'.');
+	gr->mark_plot(gr->AddPntC(p,gr->AddTexture('r')),'.');
 }
 //-----------------------------------------------------------------------------
 void mgl_ball_(uintptr_t *gr, mreal *x,mreal *y,mreal *z)
 {	mgl_ball(_GR_, *x,*y,*z);	}
-//-----------------------------------------------------------------------------
-void mgl_ball_rgb(HMGL gr, float x, float y, float z, float r, float g, float b, float a)
-{
-	mglPoint p(x,y,z);	gr->ScalePoint(p);
-	gr->mark_plot(gr->AddPntC(p,mglColor(r,g,b,a)),'.');
-}
-//-----------------------------------------------------------------------------
-void mgl_ball_rgb_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, mreal *r, mreal *g, mreal *b, mreal *alpha)
-{	mgl_ball_rgb(_GR_, *x,*y,*z, *r,*g,*b,*alpha);	}
 //-----------------------------------------------------------------------------
 void mgl_line(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, const char *pen,int n)
 {
@@ -137,17 +128,15 @@ void mgl_error_box_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, m
 //	Face series
 //
 //-----------------------------------------------------------------------------
-void mgl_face(HMGL gr, mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl)
+void mgl_face(HMGL gr, mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *pen)
 {
 	static int cgid=1;	gr->StartGroup("Face",cgid++);
-	gr->SetPenPal(stl);
-	mglColor c1,c2,c3,c4;
-	if(gr->GetNumPal()>=4)
-	{
-		c1=gr->CDef;		c2=gr->NextColor();
-		c3=gr->NextColor();	c4=gr->NextColor();
-	}
-	else	c1=c2=c3=c4=gr->CDef;
+	long pal;
+	gr->SetPenPal(pen,&pal);
+	float c1,c2,c3,c4;
+	c1=c2=c3=c4=gr->CDef;
+	if(gr->GetNumPal(pal)>=4)
+	{	c2=gr->NextColor(pal);	c3=gr->NextColor(pal);	c4=gr->NextColor(pal);	}
 	mglPoint q1,q2,q3,q4;
 	q1 = (p2-p1)^(p3-p1);	q4 = (p2-p4)^(p3-p4);
 	q2 = (p1-p2)^(p4-p2);	q3 = (p1-p3)^(p4-p3);
@@ -204,8 +193,8 @@ void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 	static int cgid=1;	gr->StartGroup("Cone",cgid++);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p,q, d=p2-p1,a,b;
 	a=!d;	a/=Norm(a);		b=d^a;	b/=Norm(b);
-	gr->SetScheme(stl);
-	mglColor c1=gr->GetC(p1), c2=gr->GetC(p2);
+	long ss=gr->AddTexture(stl);
+	float c1=gr->GetC(ss,p1.z), c2=gr->GetC(ss,p2.z);
 	long *kk=new long[164],k1=-1,k2=-1;
 	gr->ReserveN(edge?166:82);
 	if(edge)
@@ -253,7 +242,7 @@ void mgl_sphere_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, mreal *r, const ch
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
 	mgl_sphere(_GR_, *x,*y,*z,*r,s);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_drop(HMGL gr, mglPoint p, mglPoint q, float r, mglColor c, float sh, float a)
+void mgl_drop(HMGL gr, mglPoint p, mglPoint q, float r, float c, float sh, float a)
 {
 	mglPoint p1,p2,pp,qq;
 	if(Norm(q)==0)	{	q = mglPoint(1,0,0);	sh=0;	}
@@ -284,8 +273,7 @@ void mgl_drop(HMGL gr, mglPoint p, mglPoint q, float r, mglColor c, float sh, fl
 //-----------------------------------------------------------------------------
 void mgl_drop(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl, float sh, float a)
 {
-	mglColor c('r');
-	if(stl && stl[0])	c.Set(stl[0]);
+	float c=gr->AddTexture((stl && stl[0]) ? stl[0]:'r');
 	mgl_drop(gr,mglPoint(x1,y1,z1), mglPoint(x2,y2,z2), r, c, sh, a);
 }
 //-----------------------------------------------------------------------------
@@ -307,7 +295,7 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch,float
 	static int cgid=1;	gr->StartGroup("DewXY",cgid++);
 
 	float xm,ym,dx,dy,dd;
-	gr->SetScheme(sch);
+	long ss = gr->AddTexture(sch);
 	bool inv = sch && strchr(sch,'A');
 	if(isnan(zVal))	zVal = gr->Min.z;
 	long tx=1,ty=1;
@@ -336,7 +324,7 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch,float
 			if(!gr->ScalePoint(p))	continue;	//	don't plot unvisible drops
 			q = inv ? mglPoint(-ax->v(i,j,k),-ay->v(i,j,k),0) : mglPoint(ax->v(i,j,k),ay->v(i,j,k),0);
 			p = mglPoint(xx, yy, zVal);		dd = Norm(q);
-			mgl_drop(gr,p,q,(dx<dy?dx:dy)/2,gr->GetC(2*dd*xm-1,false),dd*xm,1);
+			mgl_drop(gr,p,q,(dx<dy?dx:dy)/2,gr->GetC(ss,2*dd*xm-1,false),dd*xm,1);
 		}
 	}
 	gr->EndGroup();
@@ -381,7 +369,7 @@ void mgl_putsw_dir(HMGL gr, float x, float y, float z, float dx, float dy, float
 {
 	mglPoint p(x,y,z), d(dx,dy,dz);
 	gr->ScalePoint(p,false);
-	long k = gr->AddPntN(p,NC,d);
+	long k = gr->AddPntN(p,-1,d);
 	gr->text_plot(k,text,font,size);
 }
 //-----------------------------------------------------------------------------
@@ -420,7 +408,7 @@ void mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const wchar_t *
 		for(i=0;i<n;i++)
 		{
 			p = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
-			gr->ScalePoint(p);	k = gr->AddPntN(p,NC,q);
+			gr->ScalePoint(p);	k = gr->AddPntN(p,-1,q);
 			gr->text_plot(k, text, fnt, -0.5*fabs(r->v(i,mr)));
 		}
 	}

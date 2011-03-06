@@ -30,9 +30,6 @@ void mgl_set_origin(HMGL gr, float x0, float y0, float z0)
 {	gr->SetOrigin(x0,y0,z0);	}
 void mgl_set_palette(HMGL gr, const char *colors)
 {	gr->SetPalette(colors);	}
-void mgl_set_pal_color(HMGL gr, int n, float r, float g, float b)
-{	gr->SetPalColor(n,r,g,b);	}
-void mgl_set_pal_num(HMGL gr, int num)	{	gr->SetPalNum(num);	}
 void mgl_set_meshnum(HMGL gr, int num)	{	gr->SetMeshNum(num);	}
 void mgl_set_alpha_default(HMGL gr, float alpha)	{	gr->SetAlphaDef(alpha);	}
 //-----------------------------------------------------------------------------
@@ -78,9 +75,6 @@ int mgl_get_warn_(uintptr_t *gr)	{	return _GR_->GetWarn();	}
 void mgl_set_palette_(uintptr_t *gr, const char *colors, int l)
 {	char *s=new char[l+1];	memcpy(s,colors,l);	s[l]=0;
 	_GR_->SetPalette(s);	delete []s;	}
-void mgl_set_pal_color_(uintptr_t *gr, int *n, float *r, float *g, float *b)
-{	_GR_->SetPalColor(*n,*r,*g,*b);	}
-void mgl_set_pal_num_(uintptr_t *gr, int *num)	{	_GR_->SetPalNum(*num);	}
 void mgl_set_meshnum_(uintptr_t *gr, int *num)	{	_GR_->SetMeshNum(*num);	}
 void mgl_set_alpha_default_(uintptr_t *gr, float *alpha)	{	_GR_->SetAlphaDef(*alpha);	}
 //-----------------------------------------------------------------------------

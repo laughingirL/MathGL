@@ -126,7 +126,7 @@ void mgl_dens_z_(uintptr_t *gr, uintptr_t *a, const char *sch, float *sv,int l)
 //	ContX, ContY, ContZ series
 //
 //-----------------------------------------------------------------------------
-void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, mglColor c, int text,long ak);
+void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, int text,long ak);
 void mgl_cont_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 {
 	register long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
@@ -137,8 +137,8 @@ void mgl_cont_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	mglData xx,yy,zz,aa;
 
 	bool text=(sch && strchr(sch,'t'));
+	long ss=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
-	gr->SetScheme(sch);
 
 	if(l>1)
 	{
@@ -159,7 +159,7 @@ void mgl_cont_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	for(i=0;i<v->GetNx();i++)
 	{
 		register float v0 = v->v(i);
-		mgl_cont_gen(gr,v0,a,&xx,&yy,&zz,gr->GetC(v0),text,0);
+		mgl_cont_gen(gr,v0,a,&xx,&yy,&zz,gr->GetC(ss,v0),text,0);
 	}
 	gr->EndGroup();
 }
@@ -174,8 +174,8 @@ void mgl_cont_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	mglData xx,yy,zz,aa;
 
 	bool text=(sch && strchr(sch,'t'));
+	long ss=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
-	gr->SetScheme(sch);
 
 	if(l>1)
 	{
@@ -196,7 +196,7 @@ void mgl_cont_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	for(i=0;i<v->GetNx();i++)
 	{
 		register float v0 = v->v(i);
-		mgl_cont_gen(gr,v0,a,&xx,&yy,&zz,gr->GetC(v0),text,0);
+		mgl_cont_gen(gr,v0,a,&xx,&yy,&zz,gr->GetC(ss,v0),text,0);
 	}
 	gr->EndGroup();
 }
@@ -211,8 +211,8 @@ void mgl_cont_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	mglData xx,yy,zz,aa;
 
 	bool text=(sch && strchr(sch,'t'));
+	long ss=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
-	gr->SetScheme(sch);
 
 	xx.Create(n,m);	yy.Create(n,m);	zz.Create(n,m);
 	if(l>1)
@@ -232,7 +232,7 @@ void mgl_cont_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	for(i=0;i<v->GetNx();i++)
 	{
 		register float v0 = v->v(i);
-		mgl_cont_gen(gr,v0,a,&xx,&yy,&zz,gr->GetC(v0),text,0);
+		mgl_cont_gen(gr,v0,a,&xx,&yy,&zz,gr->GetC(ss,v0),text,0);
 	}
 	gr->EndGroup();
 }
@@ -289,7 +289,7 @@ void mgl_cont_z_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch,
 //	ContFX, ContFY, ContFZ series
 //
 //-----------------------------------------------------------------------------
-void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, mglColor c, long ak);
+void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, float c, long ak);
 void mgl_contf_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 {
 	register long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
@@ -298,7 +298,7 @@ void mgl_contf_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	if(sv<gr->Min.x || sv>gr->Max.x)	{	gr->SetWarn(mglWarnSlc,"ContFX");	return;	}
 	static int cgid=1;	gr->StartGroup("ContFX",cgid++);
 	mglData xx,yy,zz,aa;
-	gr->SetScheme(sch);
+	long ss=gr->AddTexture(sch);
 
 	if(l>1)
 	{
@@ -319,7 +319,7 @@ void mgl_contf_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	for(i=0;i<v->GetNx()-1;i++)
 	{
 		register float v0 = v->v(i);
-		mgl_contf_gen(gr,v0,v->v(i+1),a,&xx,&yy,&zz,gr->GetC(v0),0);
+		mgl_contf_gen(gr,v0,v->v(i+1),a,&xx,&yy,&zz,gr->GetC(ss,v0),0);
 	}
 	gr->EndGroup();
 }
@@ -332,7 +332,7 @@ void mgl_contf_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	if(sv<gr->Min.x || sv>gr->Max.x)	{	gr->SetWarn(mglWarnSlc,"ContFY");	return;	}
 	static int cgid=1;	gr->StartGroup("ContFY",cgid++);
 	mglData xx,yy,zz,aa;
-	gr->SetScheme(sch);
+	long ss=gr->AddTexture(sch);
 
 	if(l>1)
 	{
@@ -353,7 +353,7 @@ void mgl_contf_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	for(i=0;i<v->GetNx()-1;i++)
 	{
 		register float v0 = v->v(i);
-		mgl_contf_gen(gr,v0,v->v(i+1),a,&xx,&yy,&zz,gr->GetC(v0),0);
+		mgl_contf_gen(gr,v0,v->v(i+1),a,&xx,&yy,&zz,gr->GetC(ss,v0),0);
 	}
 	gr->EndGroup();
 }
@@ -366,7 +366,7 @@ void mgl_contf_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	if(sv<gr->Min.x || sv>gr->Max.x)	{	gr->SetWarn(mglWarnSlc,"ContFZ");	return;	}
 	static int cgid=1;	gr->StartGroup("ContFZ",cgid++);
 	mglData xx,yy,zz,aa;
-	gr->SetScheme(sch);
+	long ss=gr->AddTexture(sch);
 
 	xx.Create(n,m);	yy.Create(n,m);	zz.Create(n,m);
 	if(l>1)
@@ -386,7 +386,7 @@ void mgl_contf_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	for(i=0;i<v->GetNx()-1;i++)
 	{
 		register float v0 = v->v(i);
-		mgl_contf_gen(gr,v0,v->v(i+1),a,&xx,&yy,&zz,gr->GetC(v0),0);
+		mgl_contf_gen(gr,v0,v->v(i+1),a,&xx,&yy,&zz,gr->GetC(ss,v0),0);
 	}
 	gr->EndGroup();
 }

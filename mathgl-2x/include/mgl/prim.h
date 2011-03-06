@@ -28,7 +28,6 @@ extern "C" {
 /*****************************************************************************/
 void mgl_mark(HMGL gr, float x,float y,float z,const char *mark);
 void mgl_ball(HMGL gr, float x,float y,float z);
-void mgl_ball_rgb(HMGL gr, float x, float y, float z, float r, float g, float b, float alpha);
 
 void mgl_line(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, const char *pen,int n);
 void mgl_curve(HMGL gr, float x1, float y1, float z1, float dx1, float dy1, float dz1, float x2, float y2, float z2, float dx2, float dy2, float dz2, const char *pen,int n);
@@ -63,7 +62,6 @@ void mgl_textmarkw(HMGL graph, HCDT y, const wchar_t *text, const char *fnt);
 /*****************************************************************************/
 void mgl_mark_(uintptr_t *gr, float *x,float *y,float *z,const char *mark,int);
 void mgl_ball_(uintptr_t *gr, float *x,float *y,float *z);
-void mgl_ball_rgb_(uintptr_t *gr, float *x, float *y, float *z, float *r, float *g, float *b, float *alpha);
 
 void mgl_line_(uintptr_t *gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, const char *pen,int *n,int);
 void mgl_curve_(uintptr_t* gr, float *x1, float *y1, float *z1, float *dx1, float *dy1, float *dz1, float *x2, float *y2, float *z2, float *dx2, float *dy2, float *dz2, const char *pen,int *n, int l);

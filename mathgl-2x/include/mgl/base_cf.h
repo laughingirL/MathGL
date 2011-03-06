@@ -30,8 +30,6 @@ int mgl_get_warn(HMGL gr);
 void mgl_set_origin(HMGL gr, float x0, float y0, float z0);
 void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, float z2);
 void mgl_set_palette(HMGL gr, const char *colors);
-void mgl_set_pal_color(HMGL graph, int n, float r, float g, float b);
-void mgl_set_pal_num(HMGL graph, int num);
 void mgl_set_alpha_default(HMGL graph, float alpha);
 void mgl_set_bar_width(HMGL graph, float width);
 void mgl_set_meshnum(HMGL graph, int num);

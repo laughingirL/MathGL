@@ -114,7 +114,8 @@ void mglCanvas::Legend(int n, wchar_t **text, char **style, float x, float y, co
 
 	long k1,k2,k3,k4,i1,i2,i3,i4;
 	mglPoint p,q=mglPoint(NAN);
-	mglColor c1 = TranspType!=2 ? WC : BC, c2=!c1;
+	float c1=AddTexture('w'), c2=AddTexture('k');
+	if(TranspType==2)	{	float cc=c1;	c2=c2;	c2=cc;	};
 	if(LegendBox)	// draw bounding box
 	{
 		p = mglPoint(x,y,s3-0.01);		k1=AddPntN(p,c1,q);	i1=AddPntC(p,c2);
@@ -137,7 +138,7 @@ void mglCanvas::Legend(int n, wchar_t **text, char **style, float x, float y, co
 			mark_plot(AddPntC(p,CDef),m);
 		}
 		p = mglPoint(x+(style[i][0]!=0?llen:0), y+i*h+0.3f*h, s3);
-		k1 = AddPntN(p,NC,q);
+		k1 = AddPntN(p,-1,q);
 		text_plot(k1, text[i], ff, size);
 	}
 	Pop();	EndGroup();	delete []ff;

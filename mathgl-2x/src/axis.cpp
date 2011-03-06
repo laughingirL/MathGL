@@ -25,7 +25,6 @@
 #include "mgl/canvas.h"
 //-----------------------------------------------------------------------------
 #define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
-#define FLT_EPS	(1.+1.2e-07)
 #define sign(a)	((a)<0 ? -1:1)
 
 //-----------------------------------------------------------------------------
@@ -340,7 +339,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 	else if(aa.dv==0 && aa.v1>0)	// positive log-scale
 	{
 		v0 = exp(M_LN10*floor(0.1+log10(aa.v1)));
-		for(v=v0;v<=aa.v2*FLT_EPS;v*=10)	if(v*FLT_EPS>=aa.v1)
+		for(v=v0;v<=aa.v2*MGL_FLT_EPS;v*=10)	if(v*MGL_FLT_EPS>=aa.v1)
 		{
 			mglprintf(buf,64,L"10^{%d}",int(floor(0.1+log10(v))));
 			aa.AddLabel(v,buf);
@@ -349,7 +348,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 	else if(aa.dv==0 && aa.v2<0)
 	{
 		v0 = -exp(M_LN10*floor(0.1+log10(-aa.v2)));
-		for(v=v0;v>=aa.v1*FLT_EPS;v*=10)	if(v*FLT_EPS<=aa.v2)
+		for(v=v0;v>=aa.v1*MGL_FLT_EPS;v*=10)	if(v*MGL_FLT_EPS<=aa.v2)
 		{
 			mglprintf(buf,64,L"-10^{%d}",int(floor(0.1+log10(-v))));
 			aa.AddLabel(v,buf);
@@ -445,7 +444,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	if(n>0)	for(i=0;i<n;i++)	// TODO: Add labels "rotation", "missing" and so on
 	{
 		p = o+d*aa.val[i];
-		ScalePoint(p,false);	k1 = AddPntN(p,NC,aa.dir);
+		ScalePoint(p,false);	k1 = AddPntN(p,-1,aa.dir,0);
 		text_plot(k1, aa.str[i], s.y>q.y ? "T":"t", -1);
 	}
 }
@@ -513,19 +512,17 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Colorbar(const char *sch,int where)
-{
-	SetScheme(sch);
-	// ‘0’ - right, ‘1’ - left, ‘2’ - above, ‘3’ - under
+{	// ‘0’ - right, ‘1’ - left, ‘2’ - above, ‘3’ - under
 	if(sch && strchr(sch,'>'))	where = 0;
 	if(sch && strchr(sch,'<'))	where = 1;
 	if(sch && strchr(sch,'^'))	where = 2;
 	if(sch && strchr(sch,'_'))	where = 3;
 	if(sch && strchr(sch,'A'))	{	Push();	Identity();	}
-	Colorbar(where, where==0?1:0, where==2?1:0, 1, 1);
+	Colorbar(where, where==0?1:0, where==2?1:0, 1, 1, AddTexture(sch));
 	if(sch && strchr(sch,'A'))	Pop();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Colorbar(int where, float x, float y, float w, float h)
+void mglCanvas::Colorbar(int where, float x, float y, float w, float h, long s)
 {
 	float d = fabs(Max.c-Min.c);
 	d = floor(d*pow(10,-floor(log10(d))));
@@ -538,7 +535,7 @@ void mglCanvas::Colorbar(int where, float x, float y, float w, float h)
 	else if(Min.c<Max.c && Max.c<0)
 	{	v.Fill(log(-Min.c), log(-Max.c));	v.Modify("-exp(u)");	}
 	mglColor *c=new mglColor[n];
-	for(long i=0;i<n;i++)	c[i] = GetC(v.a[i]);
+	for(long i=0;i<n;i++)	c[i] = GetC(s,v.a[i]);
 	colorbar(&v, c, where, x, y, w, h);
 	delete []c;
 }
@@ -606,7 +603,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float size, flo
 		p = mglPoint(x0,y0,t);	q = mglPoint(0,0,1);
 	}
 	ScalePoint(p);
-	text_plot(AddPntN(p,NC,q),text,font,size,1+shift);
+	text_plot(AddPntN(p,-1,q,0),text,font,size,1+shift);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Label(float x, float y, const char *str, const char *fnt, float size, bool rel)
@@ -628,7 +625,7 @@ void mglCanvas::Labelw(float x, float y, const wchar_t *text, const char *fnt, f
 	for(int i=0;f[i];i++)	if(f[i]=='a' || f[i]=='A')	f[i]=' ';
 	mglPoint p((Min.x+Max.x)/2+PlotFactor*(Max.x-Min.x)*(x-0.5),
 				(Min.y+Max.y)/2+PlotFactor*(Max.y-Min.y)*(y-0.5), Max.z);
-	ScalePoint(p);	text_plot(AddPntN(p,NC,mglPoint(NAN)),text,f,size);
+	ScalePoint(p);	text_plot(AddPntN(p,-1,mglPoint(NAN),0),text,f,size);
 	delete []f;	fx=ox;	fy=oy;	fz=oz;	Pop();
 }
 //-----------------------------------------------------------------------------
@@ -638,7 +635,7 @@ void mglCanvas::Title(const wchar_t *str,const char *font,float size)
 	mglFormula *ox=fx, *oy=fy, *oz=fz;
 	fx = fy = fz = NULL;
 	mglPoint p((Min.x+Max.x)/2, Max.y+(Max.y-Min.y)*0.15, (Min.z+Max.z)/2);
-	ScalePoint(p);	text_plot(AddPntN(p,NC,mglPoint(NAN)), str, font, size);
+	ScalePoint(p);	text_plot(AddPntN(p,-1,mglPoint(NAN),0), str, font, size);
 	fx=ox;	fy=oy;	fz=oz;	Pop();
 }
 //-----------------------------------------------------------------------------

@@ -228,8 +228,8 @@ public:
 	/// Draw colorbar at edge of axis
 	void Colorbar(const char *sch=0,int where=0);
 	void inline Colorbar(const char *sch, int where, float x, float y, float w, float h)
-	{	SetScheme(sch);	Colorbar(where,x,y,w,h);	};
-	void Colorbar(int where, float x, float y, float w, float h);
+	{	Colorbar(where,x,y,w,h,AddTexture(sch));	};
+	void Colorbar(int where, float x, float y, float w, float h, long s=0);
 	/// Draw colorbar at edge of axis
 	void Colorbar(HCDT v, const char *sch=0,int where=0);
 	void Colorbar(HCDT v, const char *sch, int where, float x, float y, float w, float h);
@@ -362,10 +362,8 @@ private:
 	void pnt_plot(long x,long y,float z,unsigned char c[4]);
 	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 	float FindOptOrg(char dir, int ind);
-	/// Transform mglColor and alpha value to bits format
-	unsigned char* col2int(mglColor c, float alpha,unsigned char *r);	// mglColor -> int
 	/// Transform float color and alpha to bits format
-	unsigned char* col2int(float *c,float *n,unsigned char *r);
+	unsigned char* col2int(float u, float v,float *n,unsigned char *r);
 	/// Combine colors in 2 plane.
 	void combine(unsigned char *c1,unsigned char *c2);
 	/// Fast drawing of line between 2 points

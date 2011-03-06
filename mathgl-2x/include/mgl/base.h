@@ -21,6 +21,7 @@
 #define _MGL_BASE_H_
 #include <string.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include "mgl/define.h"
@@ -118,7 +119,7 @@ struct mglColor
 	/// Constructor for RGB components manualy
 	mglColor(float R,float G,float B, float A=1){	r=R;	g=G;	b=B;	a=A;	}
 	/// Constructor set color from character id
-	mglColor(char c='k'){	Set(c);	}
+	mglColor(char c='k', float bright=1)		{	Set(c,bright);	}
 	/// Set color as Red, Green, Blue values
 	void Set(float R,float G,float B,float A=1)	{r=R;	g=G;	b=B;	a=A;	}
 	/// Set color as Red, Green, Blue values
@@ -134,6 +135,8 @@ struct mglColor
 	/// Copy color from other one
 	bool operator==(const mglColor &c)
 	{	return (r==c.r && g==c.g && b==c.b && a==c.a);	}
+	bool operator!=(const mglColor &c)
+	{	return (r!=c.r || g!=c.g || b!=c.b || a!=c.a);	}
 };
 inline mglColor operator+(const mglColor &a, const mglColor &b)
 {	return mglColor(a.r+b.r, a.g+b.g, a.b+b.b);	}
@@ -147,6 +150,22 @@ inline mglColor operator/(const mglColor &a, float b)
 {	return mglColor(a.r/b, a.g/b, a.b/b);	}
 inline mglColor operator!(const mglColor &a)
 {	return mglColor(1-a.r, 1-a.g, 1-a.b);	}
+//-----------------------------------------------------------------------------
+struct mglTexture
+{
+	long n;			///< Number of colors along u
+	bool sm;		///< Return smooth color
+	mglColor *c;	///< Colors itself
+	char *id;
+	mglTexture()	{	memset(this,0,sizeof(mglTexture));	}
+	~mglTexture()	{	Clear();	}
+	void Clear()
+	{	if(c)	delete []c;	if(id)	delete []id;	c=0;	id=0;	}
+//	void Set(int nn, mglColor *cc, float a=0);
+	void Set(const char *cols, int smooth=0,float alpha=1);
+	void GetC(float u,float v,float *c);
+	bool IsSame(mglTexture &t);
+};
 //-----------------------------------------------------------------------------
 const mglColor NC(-1,-1,-1);
 const mglColor BC( 0, 0, 0);
@@ -173,7 +192,7 @@ public:
 	char *Message;		///< Buffer for receiving messages
 	int ObjId;			///< object id for mglPrim
 
-	mglColor CDef;		///< Default (current) color
+	float CDef;			///< Default (current) color in texture
 	float AlphaDef;		///< Default value of alpha channel (transparency)
 	float BarWidth;		///< Relative width of rectangles in Bars().
 	int MeshNum;		///< Set approximate number of lines in Mesh and Grid. By default (=0) it draw all lines.
@@ -219,15 +238,13 @@ public:
 
 	/// Set default value of alpha-channel
 	inline void SetAlphaDef(float val)	{	AlphaDef=val;	};
-	/// Sets color for individual palette entry
-	inline void SetPalColor (int n, float r, float g, float b)
-	{	if(n<100)	Pal[n] = mglColor(r,g,b);	}
-	/// Set number of colors in palette
-	inline void SetPalNum(int num)	{	if(num<100 && num>0)	NumPal = num;	}
-	/// Set palette
+	/// Set default palette
 	inline void SetPalette(const char *colors)
-	{	strcpy(DefPal, colors?colors:MGL_DEF_PAL);	SetPal(colors);	}
-	inline long GetNumPal()	{	return NumPal;	}
+	{	txt[0].Set((colors && *colors)?colors:MGL_DEF_PAL,-1);	}
+	inline long GetNumPal(long id)	{	return txt[abs(id)/256].n;	}
+	/// Set default color scheme
+	inline void SetDefScheme(const char *colors)
+	{	txt[1].Set((colors && *colors)?colors:"BbcyrR");	}
 
 	/// Set number of mesh lines
 	inline void SetMeshNum(int val)	{	MeshNum=val;	};
@@ -277,20 +294,21 @@ public:
 
 	// ~~~~~~~~~~~~~~~~~~~~~~ Developer functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// NOTE! Following 5 functions are NOT thread-safe!!!
-	long AddPntC(mglPoint p, mglColor c);				///< Add point to the pntC and return its position
-	long AddPntN(mglPoint p, mglColor c, mglPoint n,bool scl=true);	///< Add point to the pntN and return its position
-	long ReserveC(long n);			///< Allocate n-cells for pntC and return current position
-	long ReserveN(long n);			///< Allocate n-cells for pntC and return current position
-	long CopyNtoC(long from, long size, mglColor c=NC);
+	long AddPntC(mglPoint p, float c);	///< Add point to the pntC and return its position
+	/// Add point to the pntN and return its position
+	long AddPntN(mglPoint p, float c, mglPoint n, float a=-1, bool scl=true);
+	long ReserveC(long n);		///< Allocate n-cells for pntC and return current position
+	long ReserveN(long n);		///< Allocate n-cells for pntC and return current position
+	long CopyNtoC(long from, long size, float c=NAN);
 
 	inline long GetPosC()	{	return posC;	}
 	inline long GetPosN()	{	return posN;	}
 	inline mglPoint GetPntC(long i)
-	{	return mglPoint(pntC[7*i],pntC[7*i+1],pntC[7*i+2]);	}
+	{	return mglPoint(pntC[4*i],pntC[4*i+1],pntC[4*i+2]);	}
 	inline mglPoint GetPntN(long i)
-	{	return mglPoint(pntN[10*i],pntN[10*i+1],pntN[10*i+2]);	}
-	inline mglColor GetClrC(long i)
-	{	return mglColor(pntC[7*i+3],pntC[7*i+4],pntC[7*i+5],pntC[7*i+6]);	}
+	{	return mglPoint(pntN[8*i],pntN[8*i+1],pntN[8*i+2]);	}
+	inline float GetClrC(long i)
+	{	return pntC[4*i+3];	}
 	/// Scale coordinates and cut off some points
 	virtual bool ScalePoint(mglPoint &p, bool use_nan=true);
 
@@ -299,20 +317,18 @@ public:
 	virtual float GetOrgZ(char dir)=0;	///< Get Org.z (parse NAN value)
 
 	/// Get color depending on single variable z, which should be scaled if scale=true
-	mglColor GetC(float z,bool scale = true);
+	inline float GetC(long s,float z,bool scale = true)
+	{	return s+scale?GetA(z):z;	}
 	/// Get alpha value depending on single variable \a a
 	float GetA(float a);
-	/// Get color depending on three coordinates x, y, z
-	mglColor GetC(mglPoint p,bool simple=false);
-	mglColor GetC2(float x,float y);
 	/// Set pen/palette
-	char SetPenPal(const char *stl);
-	/// Set color scheme
-	void SetScheme(const char *stl, bool face=true);
+	char SetPenPal(const char *stl, long *id=0);
+	/// Add texture (like color scheme) and return the position of first color
+	long AddTexture(const char *cols, int smooth=0);
+	float AddTexture(char col);
+//	long SetScheme(const char *stl)	{	return AddTexture(stl);	}	// TODO Remove it
 	/// Set next color from palette
-	inline mglColor NextColor()
-	{	CurrPal = (CurrPal+1)%NumPal;		CDef = Pal[CurrPal];
-		last_style[0]=PalNames[CurrPal];	return CDef;	}
+	float NextColor(long id);
 
 	virtual void mark_plot(long p, char type, float size=1)=0;		// position in pntC
 	virtual void arrow_plot(long p1, long p2, char st)=0;			// position in pntC
@@ -333,7 +349,8 @@ protected:
 	unsigned PDef;		///< Pen bit mask
 	float pPos;			///< Current position in pen mask
 	float PenWidth;		///< Pen width for further line plotting (must be >0 !!!)
-	int CurrPal;		///< Current index of palette mglGraph::Pal
+	mglTexture *txt;	///< Pointer to textures
+	long numT;			///< Number of textures
 
 	mglFont *fnt;		///< Class for printing vector text
 	float FontSize;		///< The size of font for tick and axis labels
@@ -358,15 +375,6 @@ private:
 	mglPoint FMax;		///< Actual upper edge after transformation formulas.
 	mglPoint CutMin;	///< Lower edge of bounding box for cut off.
 	mglPoint CutMax;	///< Upper edge of bounding box for cut off.
-
-	mglColor Pal[101];	///< Color palette for 1D plotting.
-	int NumPal;			///< Number of colors in palette.
-	char PalNames[101];	///< IDs of colors in the palette
-	char DefPal[101];	///< Default palette
-	mglColor cmap[MGL_CMAP_COLOR];	///< Colors for color scheme
-	int NumCol;			///< Actual number of colors in color scheme mglGraph::cmap
-	bool OnCoord;		///< Flag which allow to use color scheme along axis
-	bool SmoothColorbar;///< Use color interpolation in colorbar (default is true)
 
 	void RecalcCRange();	///< Recalculate internal parameter for correct coloring.
 	void RecalcBorder();	///< Recalculate internal parameter for correct transformation rules.

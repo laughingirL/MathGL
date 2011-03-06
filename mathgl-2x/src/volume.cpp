@@ -44,39 +44,34 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 	if(alpha<0)	alpha = gr->AlphaDef;
 	bool inv = sch && strchr(sch,'-');
 	bool dot = sch && strchr(sch,'.');
-	alpha /= pow(n/tx*m/ty*l/tz,1./3)/20;
-	float aa;
+	alpha /= pow(n/tx*m/ty*l/tz,1./3)/5;
+	float aa,bb;
 	if(alpha>1)	alpha = 1;
-	gr->SetScheme(sch);
+	long ss = gr->AddTexture(sch);
 
 	// x, y, z -- have the same size as a
 	long pos = (n/tx)*(m/ty)*(l/tz);
 	pos = dot ? gr->ReserveC(pos) : gr->ReserveN(pos);
 	mglPoint p,q=mglPoint(NAN);
-	mglColor c;
 	if(both)	for(k=0;k<l;k+=tz)	for(j=0;j<m;j+=ty)	for(i=0;i<n;i+=tx)
 	{
 		p = mglPoint(x->v(i,j,k), y->v(i,j,k), z->v(i,j,k));	gr->ScalePoint(p);
 		aa = gr->GetA(a->v(i,j,k));
-		c = gr->GetC(aa,false);
-		if(inv)	c.a = (1-aa)*(1-aa)*alpha;
-		else	c.a = (1+aa)*(1+aa)*alpha;
-		if(dot)	gr->mark_plot(gr->AddPntC(p,c),'.');
-		else	gr->AddPntN(p,c,q);
+		if(inv)	bb = (1-aa)*(1-aa)*alpha;
+		else	bb = aa*aa*alpha;
+		gr->AddPntN(p,gr->GetC(ss,aa,false),q,bb);
 	}
 	// x, y, z -- vectors
 	else		for(k=0;k<l;k+=tz)	for(j=0;j<m;j+=ty)	for(i=0;i<n;i+=tx)
 	{
 		p = mglPoint(x->v(i), y->v(j), z->v(k));	gr->ScalePoint(p);
 		aa = gr->GetA(a->v(i,j,k));
-		c = gr->GetC(aa,false);
-		if(inv)	c.a = (1-aa)*(1-aa)*alpha;
-		else	c.a = (1+aa)*(1+aa)*alpha;
-		if(dot)	gr->mark_plot(gr->AddPntC(p,c),'.');
-		else	gr->AddPntN(p,c,q);
+		if(inv)	bb = (1-aa)*(1-aa)*alpha;
+		else	bb = aa*aa*alpha;
+		gr->AddPntN(p,gr->GetC(ss,aa,false),q,bb);
 	}
 	n /= tx;	m /= ty;	l /= tz;
-	if(!dot)	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
+	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
 	{
 		i0 = pos + i+n*(j+m*k);
 		if(i<n-1 && j<m-1)	gr->quad_plot(i0,i0+1,i0+n,i0+n+1);
@@ -237,12 +232,12 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 	static int cgid=1;	gr->StartGroup("Surf3",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
-	bool OnCoord = (sch && strchr(sch,'d'));
-	gr->SetScheme(sch);
+	long ss = gr->AddTexture(sch);
+
 	kx1 = new long[n*m];	kx2 = new long[n*m];
 	ky1 = new long[n*m];	ky2 = new long[n*m];
 	kz  = new long[n*m];
-	mglColor c, cc=gr->GetC(val);
+	float c=gr->GetC(ss,val);
 	long numK = n*m, posN = gr->GetPosN(), pos;
 	mglPoint *kk = (mglPoint *)malloc(numK*sizeof(mglPoint));
 
@@ -265,7 +260,6 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 									y->v(i,j,k)*(1-d)+y->v(i+1,j,k)*d,
 									z->v(i,j,k)*(1-d)+z->v(i+1,j,k)*d);
 					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
-					c = OnCoord ? gr->GetC(p) : cc;		c.a = gr->AlphaDef;
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
@@ -287,7 +281,6 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 									y->v(i,j,k)*(1-d)+y->v(i,j+1,k)*d,
 									z->v(i,j,k)*(1-d)+z->v(i,j+1,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
-					c = OnCoord ? gr->GetC(p) : cc;		c.a = gr->AlphaDef;
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
@@ -309,7 +302,6 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 									y->v(i,j,k-1)*(1-d)+y->v(i,j,k)*d,
 									z->v(i,j,k-1)*(1-d)+z->v(i,j,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
-					c = OnCoord ? gr->GetC(p) : cc;		c.a = gr->AlphaDef;
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
@@ -394,12 +386,12 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
-	bool OnCoord = (sch && strchr(sch,'d'));
-	gr->SetScheme(sch);
+	long ss = gr->AddTexture(sch);
+
 	kx1 = new long[n*m];	kx2 = new long[n*m];
 	ky1 = new long[n*m];	ky2 = new long[n*m];
 	kz  = new long[n*m];
-	mglColor c, cc=gr->GetC(val);
+	float c=gr->GetC(ss,val),aa;
 	long numK = n*m, posN = gr->GetPosN(), pos;
 	mglPoint *kk = (mglPoint *)malloc(numK*sizeof(mglPoint));
 
@@ -422,12 +414,11 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 									y->v(i,j,k)*(1-d)+y->v(i+1,j,k)*d,
 									z->v(i,j,k)*(1-d)+z->v(i+1,j,k)*d);
 					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
-					c = OnCoord ? gr->GetC(p) : cc;
-					c.a = gr->GetA(b->v(i,j,k)*(1-d)+b->v(i+1,j,k)*d);
+					aa = gr->GetA(b->v(i,j,k)*(1-d)+b->v(i+1,j,k)*d);
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPntN(p,c,q)-posN;
+					pos = gr->AddPntN(p,c,q,aa)-posN;
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -445,12 +436,11 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 									y->v(i,j,k)*(1-d)+y->v(i,j+1,k)*d,
 									z->v(i,j,k)*(1-d)+z->v(i,j+1,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
-					c = OnCoord ? gr->GetC(p) : cc;
-					c.a = gr->GetA(b->v(i,j,k)*(1-d)+b->v(i,j+1,k)*d);
+					aa = gr->GetA(b->v(i,j,k)*(1-d)+b->v(i,j+1,k)*d);
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPntN(p,c,q)-posN;
+					pos = gr->AddPntN(p,c,q,aa)-posN;
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -468,12 +458,11 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 									y->v(i,j,k-1)*(1-d)+y->v(i,j,k)*d,
 									z->v(i,j,k-1)*(1-d)+z->v(i,j,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
-					c = OnCoord ? gr->GetC(p) : cc;
-					c.a = gr->GetA(b->v(i,j,k-1)*(1-d)+b->v(i,j,k)*d);
+					aa = gr->GetA(b->v(i,j,k-1)*(1-d)+b->v(i,j,k)*d);
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPntN(p,c,q)-posN;
+					pos = gr->AddPntN(p,c,q,aa)-posN;
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -554,11 +543,12 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
-	gr->SetScheme(sch);
+	long ss = gr->AddTexture(sch);
+
 	kx1 = new long[n*m];	kx2 = new long[n*m];
 	ky1 = new long[n*m];	ky2 = new long[n*m];
 	kz  = new long[n*m];
-	mglColor c;
+	float c;
 	long numK = n*m, posN = gr->GetPosN(), pos;
 	mglPoint *kk = (mglPoint *)malloc(numK*sizeof(mglPoint));
 
@@ -581,7 +571,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 									y->v(i,j,k)*(1-d)+y->v(i+1,j,k)*d,
 									z->v(i,j,k)*(1-d)+z->v(i+1,j,k)*d);
 					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
-					c = gr->GetC(b->v(i,j,k)*(1-d)+b->v(i+1,j,k)*d);	c.a = gr->AlphaDef;
+					c = gr->GetC(ss,b->v(i,j,k)*(1-d)+b->v(i+1,j,k)*d);
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
@@ -603,7 +593,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 									y->v(i,j,k)*(1-d)+y->v(i,j+1,k)*d,
 									z->v(i,j,k)*(1-d)+z->v(i,j+1,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
-					c = gr->GetC(b->v(i,j,k)*(1-d)+b->v(i,j+1,k)*d);	c.a = gr->AlphaDef;
+					c = gr->GetC(ss,b->v(i,j,k)*(1-d)+b->v(i,j+1,k)*d);
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
@@ -625,7 +615,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 									y->v(i,j,k-1)*(1-d)+y->v(i,j,k)*d,
 									z->v(i,j,k-1)*(1-d)+z->v(i,j,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
-					c = gr->GetC(b->v(i,j,k-1)*(1-d)+b->v(i,j,k)*d);	c.a = gr->AlphaDef;
+					c = gr->GetC(ss,b->v(i,j,k-1)*(1-d)+b->v(i,j,k)*d);
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);

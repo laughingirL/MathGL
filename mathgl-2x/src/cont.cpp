@@ -49,12 +49,12 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 
 	h=f;	k=nn[f];	// print string symbol-by-symbol
 	mglPoint p0=gr->GetPntC(ff[h]),n0=gr->GetPntC(ff[k])-p0, pa;
-	mglColor c=gr->GetClrC(ff[h]);
+	float c=gr->GetClrC(ff[h]);
 
 	for(unsigned j=0;j<wcslen(text);j++)
 	{
 		L[0] = text[j];	pa = pos>0 ? p0 : p0-wg*(!n0);
-		gr->ScalePoint(pa);	pp = gr->AddPntN(pa,c,n0,false);
+		gr->ScalePoint(pa);	pp = gr->AddPntN(pa,c,n0,0,false);
 		ww = gr->text_plot(pp,text,font,size);
 		p1 = p0+(ww/Norm(n0))*n0;
 		// let find closest point
@@ -134,7 +134,7 @@ void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *text, const ch
 	for(i=0;i<n;i++)
 	{
 		p = mglPoint(x->v(i),y->v(i),z->v(i));
-		gr->ScalePoint(p);	ff[i] = gr->AddPntC(p,NC);
+		gr->ScalePoint(p);	ff[i] = gr->AddPntC(p,-1);
 	}
 	for(i=1;i<n;i++)	nn[i-1] = i;
 	nn[n-1]=-1;
@@ -190,7 +190,7 @@ void mgl_text_y_(uintptr_t *gr, uintptr_t *y, const char *text, const char *font
 //
 //-----------------------------------------------------------------------------
 // NOTE! All data MUST have the same size! Only first slice is used!
-void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, mglColor c, int text,long ak)
+void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, int text,long ak)
 {
 	long n=a->GetNx(), m=a->GetNy();
 	if(n<2 || m<2 || x->GetNx()*x->GetNx()!=n*m || y->GetNx()*y->GetNx()!=n*m || z->GetNx()*z->GetNx()!=n*m)
@@ -306,8 +306,8 @@ void mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, f
 	static int cgid=1;	gr->StartGroup("Cont",cgid++);
 
 	bool text=(sch && strchr(sch,'t'));
+	long s=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
-	gr->SetScheme(sch);
 
 	mglData xx, yy, zz(z->GetNx(), z->GetNy());
 	if(!both)	// make
@@ -325,7 +325,7 @@ void mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, f
 		z0 = z->GetNz()>1 ? gr->Min.z+(gr->Max.z-gr->Min.z)*float(j)/(z->GetNz()-1) : zVal;
 		v0 = v->v(i);		if(isnan(zVal))	z0 = v0;
 		zz.Fill(z0,z0);
-		mgl_cont_gen(gr,v0,z,x,y,&zz,gr->GetC(v0),text,j);
+		mgl_cont_gen(gr,v0,z,x,y,&zz,gr->GetC(s,v0),text,j);
 	}
 	gr->EndGroup();
 }
@@ -375,7 +375,7 @@ void mgl_cont_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num, float *zV
 //	ContF series
 //
 //-----------------------------------------------------------------------------
-inline long mgl_add_pnt(HMGL gr, float d, HCDT x, HCDT y, HCDT z, long i1, long j1, long i2, long j2, mglColor c)
+inline long mgl_add_pnt(HMGL gr, float d, HCDT x, HCDT y, HCDT z, long i1, long j1, long i2, long j2, float c)
 {
 	long res=-1;
 	if(d>0 && d<1)
@@ -395,7 +395,7 @@ inline long mgl_add_pnt(HMGL gr, float d, HCDT x, HCDT y, HCDT z, long i1, long 
 	return res;
 }
 //-----------------------------------------------------------------------------
-void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, mglColor c, long ak)
+void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, float c, long ak)
 {
 	long n=a->GetNx(), m=a->GetNy();
 	if(n<2 || m<2 || x->GetNx()*x->GetNx()!=n*m || y->GetNx()*y->GetNx()!=n*m || z->GetNx()*z->GetNx()!=n*m)
@@ -477,7 +477,8 @@ void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, 
 //-----------------------------------------------------------------------------
 void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, const char *c)
 {
-	gr->SetPenPal(c);	mgl_contf_gen(gr,v1,v2,a,x,y,z,gr->CDef,0);
+	gr->SetPenPal(c);
+	mgl_contf_gen(gr,v1,v2,a,x,y,z,gr->CDef,0);
 }
 //-----------------------------------------------------------------------------
 void mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, float zVal)
@@ -488,7 +489,7 @@ void mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	bool both = x->GetNx()*x->GetNy()==m*n && y->GetNx()*y->GetNy()==m*n;
 	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "ContF");	return;	}
 	static int cgid=1;	gr->StartGroup("ContF",cgid++);
-	gr->SetScheme(sch);
+	long s=gr->AddTexture(sch);
 
 	mglData xx, yy, zz(z->GetNx(), z->GetNy());
 	if(!both)	// make
@@ -506,7 +507,7 @@ void mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 		z0 = z->GetNz()>1 ? gr->Min.z+(gr->Max.z-gr->Min.z)*float(j)/(z->GetNz()-1) : zVal;
 		v0 = v->v(i);		if(isnan(zVal))	z0 = v0;
 		zz.Fill(z0,z0);
-		mgl_contf_gen(gr,v0,v->v(i+1),z,x,y,&zz,gr->GetC(v0),j);
+		mgl_contf_gen(gr,v0,v->v(i+1),z,x,y,&zz,gr->GetC(s,v0),j);
 	}
 	gr->EndGroup();
 }
@@ -571,8 +572,9 @@ void mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "ContD");	return;	}
 	static int cgid=1;	gr->StartGroup("ContD",cgid++);
 	if(!sch || !sch[0])	sch = MGL_DEF_PAL;
-	char *cc = new char[strlen(sch)];
-	int nc = mgl_get_ncol(sch,cc);
+//	char *cc = new char[strlen(sch)];
+	long s = gr->AddTexture(sch,1);
+	int nc = gr->GetNumPal(s*256);
 
 	mglData xx, yy, zz(z->GetNx(), z->GetNy());
 	if(!both)	// make
@@ -584,15 +586,15 @@ void mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
-	float z0, v0;
+	float z0, v0, dc = nc>1 ? 1/(MGL_FLT_EPS*(n-1)) : 0;
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx()-1;i++)
 	{
 		z0 = z->GetNz()>1 ? gr->Min.z+(gr->Max.z-gr->Min.z)*float(j)/(z->GetNz()-1) : zVal;
 		v0 = v->v(i);		if(isnan(zVal))	z0 = v0;
 		zz.Fill(z0,z0);
-		mgl_contf_gen(gr,v0,v->v(i+1),z,x,y,&zz,mglColor(cc[i%nc]),j);
+		mgl_contf_gen(gr,v0,v->v(i+1),z,x,y,&zz,s+i*dc,j);
 	}
-	gr->EndGroup();	delete []cc;
+	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_contd_val(HMGL gr, HCDT v, HCDT z, const char *sch,float zVal)
@@ -738,15 +740,15 @@ void mgl_cont3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, char dir
 	static int cgid=1;	gr->StartGroup("Cont3",cgid++);
 
 	bool text=(sch && strchr(sch,'t'));
+	long ss=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
-	gr->SetScheme(sch);
 
 	_mgl_slice s;
 	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
 	for(long i=0;i<v->GetNx();i++)
 	{
 		float v0 = v->v(i);
-		mgl_cont_gen(gr,v0,&s.a,&s.x,&s.y,&s.z,gr->GetC(v0),text,0);
+		mgl_cont_gen(gr,v0,&s.a,&s.x,&s.y,&s.z,gr->GetC(ss,v0),text,0);
 	}
 	gr->EndGroup();
 }
@@ -881,13 +883,13 @@ void mgl_contf3_xyz_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, char di
 	{	gr->SetWarn(mglWarnDim,"ContF3");	return;	}
 	static int cgid=1;	gr->StartGroup("ContF3",cgid++);
 
-	gr->SetScheme(sch);
+	long ss=gr->AddTexture(sch);
 	_mgl_slice s;
 	mgl_get_slice(s,x,y,z,a,dir,sVal,both);
 	for(long i=0;i<v->GetNx();i++)
 	{
 		float v0 = v->v(i);
-		mgl_contf_gen(gr,v0,v->v(i+1),&s.a,&s.x,&s.y,&s.z,gr->GetC(v0),0);
+		mgl_contf_gen(gr,v0,v->v(i+1),&s.a,&s.x,&s.y,&s.z,gr->GetC(ss,v0),0);
 	}
 	gr->EndGroup();
 }
@@ -945,7 +947,7 @@ long mgl_find_prev(long i, long pc, long *nn)
 	for(long k=0;k<pc;k++)	if(nn[k]==i)	return k;
 	return -1;
 }
-void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,mglColor cc,bool wire)
+void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float cc,bool wire)
 {
 	mglPoint a(0,0,1),b,c,p,q1,q2;
 	if(dir=='x')	a = mglPoint(1,0,0);
@@ -987,7 +989,7 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,mglColo
 }
 //-----------------------------------------------------------------------------
 // NOTE! All data MUST have the same size! Only first slice is used!
-void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, mglColor c, char dir,long ak,bool wire)
+void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir,long ak,bool wire)
 {
 	long n=a->GetNx(), m=a->GetNy();
 	if(n<2 || m<2 || x->GetNx()*x->GetNx()!=n*m || y->GetNx()*y->GetNx()!=n*m)
@@ -1065,7 +1067,7 @@ void mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch)
 	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "Axial");	return;	}
 	static int cgid=1;	gr->StartGroup("Axial",cgid++);
 
-	gr->SetScheme(sch);
+	long s=gr->AddTexture(sch);
 	char dir='y';
 	if(sch)
 	{
@@ -1088,7 +1090,7 @@ void mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch)
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
 	{
 		v0 = v->v(i);
-		mgl_axial_gen(gr,v0,z,x,y,gr->GetC(v0),dir,j,wire);
+		mgl_axial_gen(gr,v0,z,x,y,gr->GetC(s,v0),dir,j,wire);
 	}
 	gr->EndGroup();
 }
@@ -1148,7 +1150,7 @@ void mgl_torus(HMGL gr, HCDT r, HCDT z, const char *sch)
 
 	mglPoint *pp = new mglPoint[n];
 	long *nn = new long[n];
-	gr->SetScheme(sch);
+	long ss=gr->AddTexture(sch);
 	char dir='y';
 	if(sch)
 	{
@@ -1156,7 +1158,7 @@ void mgl_torus(HMGL gr, HCDT r, HCDT z, const char *sch)
 		if(strchr(sch,'z'))	dir = 'z';
 	}
 
-	mglColor c = gr->GetC(gr->Min.c);
+	float c = gr->GetC(ss,gr->Min.c);
 	for(j=0;j<r->GetNy();j++)
 	{
 		for(i=0;i<n;i++)

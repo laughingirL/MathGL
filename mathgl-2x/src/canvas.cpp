@@ -43,7 +43,7 @@ void mglCanvas::DefaultPlotParam()
 //	FontSize = 5;			BaseLineWidth = 1;
 	Ambient();				Ternary(0);
 	PlotId = "frame";		SetPenPal("k-1");
-	SetScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
+	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
 	SetRanges(mglPoint(-1,-1,-1), mglPoint(1,1,1));
 	SetFunc(0,0);			CutOff(0);
@@ -180,14 +180,14 @@ float mglCanvas::GetOrgZ(char dir)
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_plot(long p, char type, float size)
 {
-	if(isnan(pntN[10*p]))	return;
+	if(isnan(pntC[4*p]))	return;
 	if(size>=0)	size *= MarkSize;
-	if(Quality&4)	mark_draw(pntC+7*p,type,size?size:MarkSize);
+	if(Quality&4)	mark_draw(pntC+4*p,type,size?size:MarkSize);
 	else
 	{
 		mglPrim a;
 		a.w = fabs(PenWidth);	a.s = size?size:MarkSize;
-		a.n1 = p;	a.m = type;	a.z = pntC[7*p+2];
+		a.n1 = p;	a.m = type;	a.z = pntC[4*p+2];
 		add_prim(a);
 	}
 }
@@ -195,53 +195,53 @@ void mglCanvas::mark_plot(long p, char type, float size)
 void mglCanvas::line_plot(long p1, long p2, bool fromN)
 {
 	if(PDef==0)	return;
-	if(fromN && (isnan(pntN[10*p1]) || isnan(pntN[10*p2])))	return;
-	if(!fromN && (isnan(pntC[7*p1]) || isnan(pntC[7*p2])))	return;
+	if(fromN && (isnan(pntN[8*p1]) || isnan(pntN[8*p2])))	return;
+	if(!fromN && (isnan(pntC[4*p1]) || isnan(pntC[4*p2])))	return;
 	float pw = fabs(PenWidth),d;
 	if(Quality&4)
 	{
-		if(fromN)	line_draw(pntN+10*p1,pntN+10*p2);
-		else		line_draw(pntC+7*p1,pntC+7*p2);
+		if(fromN)	line_draw(pntN+8*p1,pntN+8*p2);
+		else		line_draw(pntC+4*p1,pntC+4*p2);
 	}
 	else
 	{
 		mglPrim a(1);	a.w = pw;	a.m = fromN;
-		a.z = fromN ? (pntN[10*p1+2]+pntN[10*p2+2])/2 : (pntC[7*p1+2]+pntC[7*p2+2])/2;
+		a.z = fromN ? (pntN[8*p1+2]+pntN[8*p2+2])/2 : (pntC[4*p1+2]+pntC[4*p2+2])/2;
 		if(pw>1)		a.z += pw-1;
 		a.style=PDef;	a.s = pPos;
 		a.n1 = p1;		a.n2 = p2;
 		add_prim(a);
 	}
-	if(fromN)	d = hypot(pntN[10*p1]-pntN[10*p2], pntN[10*p1+1]-pntN[10*p2+1]);
-	else		d = hypot(pntC[7*p1]-pntC[7*p2], pntC[7*p1+1]-pntC[7*p2+1]);
+	if(fromN)	d = hypot(pntN[8*p1]-pntN[8*p2], pntN[8*p1+1]-pntN[8*p2+1]);
+	else		d = hypot(pntC[4*p1]-pntC[4*p2], pntC[4*p1+1]-pntC[4*p2+1]);
 	pPos = fmod(pPos+d/pw/1.5, 16);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
-	if(isnan(pntN[10*p1]) || isnan(pntN[10*p2]) || isnan(pntN[10*p3]))	return;
-	if(Quality&4)	trig_draw(pntN+10*p1,pntN+10*p2,pntN+10*p3,true);
+	if(isnan(pntN[8*p1]) || isnan(pntN[8*p2]) || isnan(pntN[8*p3]))	return;
+	if(Quality&4)	trig_draw(pntN+8*p1,pntN+8*p2,pntN+8*p3,true);
 	else
 	{
 		mglPrim a(2);
 		a.n1 = p1;	a.n2 = p2;	a.n3 = p3;
-		a.z = (pntN[10*p1+2]+pntN[10*p2+2]+pntN[10*p3+2])/3;
+		a.z = (pntN[8*p1+2]+pntN[8*p2+2]+pntN[8*p3+2])/3;
 		add_prim(a);
 	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 {
-	if(isnan(pntN[10*p1]))	{	trig_plot(p4,p2,p3);	return;	}
-	if(isnan(pntN[10*p2]))	{	trig_plot(p1,p4,p3);	return;	}
-	if(isnan(pntN[10*p3]))	{	trig_plot(p1,p2,p4);	return;	}
-	if(isnan(pntN[10*p4]))	{	trig_plot(p1,p2,p3);	return;	}
-	if(Quality&4)	quad_draw(pntN+10*p1,pntN+10*p2,pntN+10*p3,pntN+10*p4);
+	if(isnan(pntN[8*p1]))	{	trig_plot(p4,p2,p3);	return;	}
+	if(isnan(pntN[8*p2]))	{	trig_plot(p1,p4,p3);	return;	}
+	if(isnan(pntN[8*p3]))	{	trig_plot(p1,p2,p4);	return;	}
+	if(isnan(pntN[8*p4]))	{	trig_plot(p1,p2,p3);	return;	}
+	if(Quality&4)	quad_draw(pntN+8*p1,pntN+8*p2,pntN+8*p3,pntN+8*p4);
 	else
 	{
 		mglPrim a(3);
 		a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;
-		a.z = (pntN[10*p1+2]+pntN[10*p2+2]+pntN[10*p3+2]+pntN[10*p4+2])/4;
+		a.z = (pntN[8*p1+2]+pntN[8*p2+2]+pntN[8*p3+2]+pntN[8*p4+2])/4;
 		add_prim(a);
 	}
 }
@@ -250,14 +250,14 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, char col)
 {
 	mglPrim a(4);
 	a.s = fscl/PlotFactor;	a.w = ftet;
-	mglColor cc = mglColor(col);
-	if(!cc.Valid())	cc = CDef;
+	float cc = AddTexture(col);
+	if(cc<0)	cc = CDef;
 	a.n1 = AddPntC(mglPoint((B[9]-zoomx1*Width) /zoomx2, (B[10]-zoomy1*Height)/zoomy2, B[11]), cc);
 	a.n2 = AddPntC(mglPoint(x,y,f/fnt->GetFact(s&3)),cc);
 	a.style = s;	a.m = j;
 	a.z = B[11];
 	add_prim(a);
-	if(Quality&4)	glyph_draw(pntC+7*a.n1,f/fnt->GetFact(s&3),s,j);
+	if(Quality&4)	glyph_draw(pntC+4*a.n1,f/fnt->GetFact(s&3),s,j);
 	else	add_prim(a);
 }
 //-----------------------------------------------------------------------------
@@ -284,13 +284,13 @@ void mglPrim::Draw()
 	gr->PDef=style;	gr->pPos=s;	gr->PenWidth=w;
 	switch(type)
 	{
-	case 0:	gr->mark_draw(gr->pntC+7*n1,m,s);	break;
+	case 0:	gr->mark_draw(gr->pntC+4*n1,m,s);	break;
 	case 1:	gr->PDef=style;	gr->pPos=s;	gr->PenWidth=w;
-			if(m)	gr->line_draw(gr->pntN+10*n1,gr->pntN+10*n2);
-			else	gr->line_draw(gr->pntC+7*n1,gr->pntC+7*n2);
+			if(m)	gr->line_draw(gr->pntN+8*n1,gr->pntN+8*n2);
+			else	gr->line_draw(gr->pntC+4*n1,gr->pntC+4*n2);
 			break;
-	case 2:	gr->trig_draw(gr->pntN+10*n1,gr->pntN+10*n2,gr->pntN+10*n3,true);	break;
-	case 3:	gr->quad_draw(gr->pntN+10*n1,gr->pntN+10*n2,gr->pntN+10*n3,gr->pntN+10*n4);	break;
+	case 2:	gr->trig_draw(gr->pntN+8*n1,gr->pntN+8*n2,gr->pntN+8*n3,true);	break;
+	case 3:	gr->quad_draw(gr->pntN+8*n1,gr->pntN+8*n2,gr->pntN+8*n3,gr->pntN+8*n4);	break;
 	}
 	gr->PDef=pdef;	gr->pPos=ss;	gr->PenWidth=ww;
 }
@@ -505,7 +505,7 @@ void mglCanvas::AddLight(int n, mglPoint p, char col, float br, bool inf, float 
 void mglCanvas::arrow_plot(long n1, long n2,char st)
 {
 	if(!strchr("AVKSDTIO",st))	return;
-	float *p1=pntC+7*n1, *p2=pntC+7*n2;
+	float *p1=pntC+4*n1, *p2=pntC+4*n2;
 	float lx=p1[0]-p2[0], ly=p1[1]-p2[1], ll, kx,ky;
 	ll = hypot(lx,ly)/(PenWidth*ArrowSize*0.35*font_factor);
 	if(ll==0)	return;
