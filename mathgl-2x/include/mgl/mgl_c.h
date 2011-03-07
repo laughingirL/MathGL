@@ -48,8 +48,6 @@ struct gsl_matrix;
 #endif
 /*****************************************************************************/
 HMGL mgl_create_graph_gl();
-HMGL mgl_create_graph_zb(int width, int height);
-HMGL mgl_create_graph_ps(int width, int height);
 HMGL mgl_create_graph_idtf();
 #ifndef MGL_NO_WIDGET
 int mgl_fortran_func(HMGL gr, void *);
@@ -81,7 +79,6 @@ void mgl_get_last_mouse_pos(HMGL gr, float *x, float *y, float *z);
 //void mgl_fltk_thread();
 //void mgl_qt_thread();
 void mgl_update(HMGL graph);
-void mgl_delete_graph(HMGL graph);
 /*****************************************************************************/
 HMPR mgl_create_parser();
 void mgl_delete_parser(HMPR p);
@@ -101,51 +98,13 @@ void mgl_parser_allow_setsize(HMPR p, int a);
 /*****************************************************************************/
 /*		Setup mglGraph														 */
 /*****************************************************************************/
-void mgl_set_tick_len(HMGL graph, float len, float stt);
-void mgl_set_tick_stl(HMGL gr, const char *stl, const char *sub);
-void mgl_set_size(HMGL graph, int width, int height);
-void mgl_set_zoom(HMGL gr, float x1, float y1, float x2, float y2);
 /*****************************************************************************/
 /*		Axis functions														 */
 /*****************************************************************************/
-void mgl_adjust_ticks(HMGL graph, const char *dir);
-void mgl_set_ticks(HMGL graph, char dir, float d, int ns, float org);
-void mgl_set_ticks_val(HMGL graph, char dir, int n, double val, const char *lbl, ...);
-void mgl_set_ticks_vals(HMGL graph, char dir, int n, float *val, const char **lbl);
 
-void mgl_box(HMGL graph, int ticks);
-void mgl_box_str(HMGL graph, const char *col, int ticks);
-void mgl_box_rgb(HMGL graph, float r, float g, float b, int ticks);
-void mgl_axis(HMGL graph, const char *dir);
-void mgl_axis_grid(HMGL graph, const char *dir,const char *pen);
-void mgl_label(HMGL graph, char dir, const char *text);
-void mgl_label_ext(HMGL graph, char dir, const char *text, float pos, float size, float shift);
-void mgl_labelw_ext(HMGL graph, char dir, const wchar_t *text, float pos, float size, float shift);
-void mgl_label_xy(HMGL graph, float x, float y, const char *text, const char *fnt, float size);
-void mgl_labelw_xy(HMGL graph, float x, float y, const wchar_t *text, const char *fnt, float size);
-void mgl_tune_ticks(HMGL graph, int tune, float fact_pos);
-void mgl_set_xttw(HMGL graph, const wchar_t *templ);
-void mgl_set_yttw(HMGL graph, const wchar_t *templ);
-void mgl_set_zttw(HMGL graph, const wchar_t *templ);
-void mgl_set_cttw(HMGL graph, const wchar_t *templ);
-void mgl_set_xtt(HMGL graph, const char *templ);
-void mgl_set_ytt(HMGL graph, const char *templ);
-void mgl_set_ztt(HMGL graph, const char *templ);
-void mgl_set_ctt(HMGL graph, const char *templ);
 /*****************************************************************************/
 /*		Simple drawing														 */
 /*****************************************************************************/
-void mgl_colorbar(HMGL graph, const char *sch,int where);
-void mgl_colorbar_ext(HMGL graph, const char *sch, int where, float x, float y, float w, float h);
-void mgl_colorbar_val(HMGL graph, HCDT dat, const char *sch,int where);
-
-void mgl_add_legend(HMGL graph, const char *text,const char *style);
-void mgl_add_legendw(HMGL graph, const wchar_t *text,const char *style);
-void mgl_clear_legend(HMGL graph);
-void mgl_legend_xy(HMGL graph, float x, float y, const char *font, float size, float llen);
-void mgl_legend(HMGL graph, int where, const char *font, float size, float llen);
-void mgl_set_legend_box(HMGL gr, int enable);
-void mgl_set_legend_marks(HMGL gr, int num);
 /*****************************************************************************/
 #ifdef __cplusplus
 }

@@ -534,7 +534,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglTexture::GetC(float u,float v,float *cc)
+void mglTexture::GetC(float u,float v,float cc[4])
 {
 	if(!c || n<1)	{	cc[0]=cc[1]=cc[2]=NAN;	return;	}
 	mglColor c1,c2;
@@ -555,7 +555,7 @@ void mglTexture::GetC(float u,float v,float *cc)
 		c1 = c[m];	c2 = c[m+1];
 	}
 	c1 = c1*(1-v)+c2*v;
-	cc[0]=c1.r;	cc[1]=c1.g;	cc[2]=c1.b;
+	cc[0]=c1.r;	cc[1]=c1.g;	cc[2]=c1.b;	cc[3]=c1.a;
 }
 //-----------------------------------------------------------------------------
 bool mglTexture::IsSame(mglTexture &t)

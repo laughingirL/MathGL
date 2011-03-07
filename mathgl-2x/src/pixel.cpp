@@ -240,7 +240,7 @@ unsigned char* mglCanvas::col2int(float uu,float vv,float *n,unsigned char *r)
 {
 	register long i,j;
 	static unsigned char u[4];
-	float c[3];	txt[long(uu)].GetC(uu,vv,c);
+	float c[4];	txt[long(uu)].GetC(uu,vv,c);
 	register float b0=c[0],b1=c[1],b2=c[2];
 	if(r==0) r = u;
 	if(c[3]<=0)	{	memset(r,0,4*sizeof(unsigned char));	return r;	}
@@ -268,10 +268,10 @@ unsigned char* mglCanvas::col2int(float uu,float vv,float *n,unsigned char *r)
 		b1 = b1<1 ? b1 : 1;
 		b2 = b2<1 ? b2 : 1;
 	}
-	r[0] = (unsigned char)(255.f*b0);	r[1] = (unsigned char)(255.f*b1);
-	r[2] = (unsigned char)(255.f*b2);
+	r[0] = (unsigned char)(255*b0);	r[1] = (unsigned char)(255*b1);
+	r[2] = (unsigned char)(255*b2);
 	// c[3] should be <1 but I additionally check it here
-	r[3] = UseAlpha && c[3]<1 ? (unsigned char)(256.f*c[3]) : 255;
+	r[3] = UseAlpha && c[3]<1 ? (unsigned char)(256*c[3]) : 255;
 	return r;
 }
 //-----------------------------------------------------------------------------
@@ -385,8 +385,8 @@ void mglCanvas::quad_draw(float *p1, float *p2, float *p3, float *p4)
 		}
 		s = u*v;
 		for(g=2;g<8;g++)	p[g] = p1[g]+d1[g]*u+d2[g]*v+d3[g]*s;
-		if(isnan(p[7]))
-		{	p[7] = nr.x;	p[8] = nr.y;	p[9] = nr.z;	}
+		if(isnan(p[5]))
+		{	p[5] = nr.x;	p[6] = nr.y;	p[7] = nr.z;	}
 		pnt_plot(i,j,p[2],col2int(p[3],p[4],p+5,r));
 	}
 }
@@ -432,8 +432,8 @@ void mglCanvas::trig_draw(float *p1, float *p2, float *p3, bool anorm)
 		if(Quality&2)	// slow but accurate
 		{
 			for(g=2;g<8;g++)	p[g] = p1[g]+d1[g]*u+d2[g]*v;
-			if(isnan(p[7]) && anorm)
-			{	p[7] = nr.x;	p[8] = nr.y;	p[9] = nr.z;	}
+			if(isnan(p[5]) && anorm)
+			{	p[5] = nr.x;	p[6] = nr.y;	p[7] = nr.z;	}
 			pnt_plot(i,j,p[2],col2int(p[3],p[4],p+5,r));
 		}
 		else	pnt_plot(i,j,p1[2],col2int(p[3],p[4],p+5,r));
@@ -447,7 +447,7 @@ void mglCanvas::line_draw(float *p1, float *p2)
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 
-	float d[4],c[3],uu, pw = PenWidth, dxu,dxv,dyu,dyv,dd;
+	float d[4],c[4],uu, pw = PenWidth, dxu,dxv,dyu,dyv,dd;
 	for(int i=0;i<4;i++)	d[i] = p2[i]-p1[i];
 	bool hor = fabs(d[0])>fabs(d[1]);
 
@@ -517,7 +517,7 @@ void mglCanvas::line_draw(float *p1, float *p2)
 void mglCanvas::fast_draw(float *p1, float *p2)
 {
 	Finished = false;
-	float c[3];	txt[long(p1[3])].GetC(p1[3],0,c);
+	float c[4];	txt[long(p1[3])].GetC(p1[3],0,c);
 	unsigned char r[4]={255*c[0], 255*c[1], 255*c[2], 255};
 	long y1,x1,y2,x2;
 
@@ -539,7 +539,7 @@ void mglCanvas::fast_draw(float *p1, float *p2)
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_draw(float *q, char type, float size)
 {
-	float c[3];	txt[long(q[3])].GetC(q[3],0,c);
+	float c[4];	txt[long(q[3])].GetC(q[3],0,c);
 	unsigned char cs[4]={255*c[0], 255*c[1], 255*c[2], size>0 ? 255 : 255*q[6]};
 	float p[8], v, ss=fabs(size)*0.35*font_factor;
 	register long i,j,s;

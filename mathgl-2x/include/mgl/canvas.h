@@ -17,15 +17,13 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef MGL_H
-#define MGL_H
+#ifndef MGL_CANVAS_H
+#define MGL_CANVAS_H
 #include "mgl/base.h"
-/*****************************************************************************/
+//-----------------------------------------------------------------------------
 #ifndef MGL_STACK_ENTRY
 #define MGL_STACK_ENTRY	10
 #endif
-/*****************************************************************************/
-#ifdef __cplusplus
 //-----------------------------------------------------------------------------
 #ifdef HAVE_GIF
 #include <gif_lib.h>
@@ -68,7 +66,7 @@ public:
 	mglPoint LastMousePos;	///< Last mouse position
 	const char *PlotId;	///< Id of plot for saving filename (in GLUT window for example)
 
-	mglCanvas();
+	mglCanvas(int w=800, int h=600);
 	virtual ~mglCanvas();
 
 	/// Set PlotFactor
@@ -193,9 +191,9 @@ public:
 	void SetTicksVal(char dir, HCDT v, const wchar_t **lbl);
 	/// Set templates for ticks
 	void SetTickTempl(char dir, const wchar_t *t);
-	void SetTickTempl(char dir, char *t);
+	void SetTickTempl(char dir, const char *t);
 	/// Set templates for ticks
-	void SetTimeTick(char dir, float d, const char *t="%F");
+	void SetTickTime(char dir, float d, const char *t="%F");
 	/// Set the ticks parameters
 	void SetTicks(char dir, float d=0, int ns=0, float org=NAN);
 	/// Auto adjust ticks
@@ -229,8 +227,7 @@ public:
 	void Colorbar(const char *sch=0,int where=0);
 	void inline Colorbar(const char *sch, int where, float x, float y, float w, float h)
 	{	Colorbar(where,x,y,w,h,AddTexture(sch));	};
-	void Colorbar(int where, float x, float y, float w, float h, long s=0);
-	/// Draw colorbar at edge of axis
+	/// Draw colorbar at edge of axis for manual colors
 	void Colorbar(HCDT v, const char *sch=0,int where=0);
 	void Colorbar(HCDT v, const char *sch, int where, float x, float y, float w, float h);
 
@@ -304,6 +301,8 @@ protected:
 	float FogDist;		/// Inverse fog distance (fog ~ exp(-FogDist*Z))
 	float FogDz;		/// Relative shift of fog
 
+	/// Draw colorbar at edge of axis
+	void Colorbar(int where, float x, float y, float w, float h, long s=0);
 	/// Auto adjust ticks
 	void AdjustTicks(mglAxis &aa, bool ff);
 	/// Prepare labels for ticks
@@ -407,120 +406,4 @@ struct mglPrim
 	inline void operator=(mglPrim &a)	{	memcpy(this,&a,sizeof(mglPrim));	}
 };
 //-----------------------------------------------------------------------------
-extern "C" {
-#endif
-/*****************************************************************************/
-void mgl_show_image(HMGL graph, const char *viewer, int keep);
-void mgl_write_frame(HMGL graph, const char *fname,const char *descr);
-void mgl_write_bmp(HMGL graph, const char *fname,const char *descr);
-void mgl_write_jpg(HMGL graph, const char *fname,const char *descr);
-void mgl_write_png(HMGL graph, const char *fname,const char *descr);
-void mgl_write_png_solid(HMGL graph, const char *fname,const char *descr);
-void mgl_write_eps(HMGL graph, const char *fname,const char *descr);
-void mgl_write_svg(HMGL graph, const char *fname,const char *descr);
-void mgl_write_idtf(HMGL graph, const char *fname,const char *descr);
-void mgl_write_gif(HMGL graph, const char *fname,const char *descr);
-void mgl_start_gif(HMGL graph, const char *fname,int ms);
-void mgl_close_gif(HMGL graph);
-
-const unsigned char *mgl_get_rgb(HMGL graph);
-const unsigned char *mgl_get_rgba(HMGL graph);
-int mgl_get_width(HMGL graph);
-int mgl_get_height(HMGL graph);
-void mgl_calc_xyz(HMGL gr, int xs, int ys, float *x, float *y, float *z);
-void mgl_calc_scr(HMGL gr, float x, float y, float z, int *xs, int *ys);
-
-int mgl_new_frame(HMGL graph);
-void mgl_end_frame(HMGL graph);
-int mgl_get_num_frame(HMGL graph);
-void mgl_reset_frames(HMGL graph);
-
-void mgl_set_transp_type(HMGL graph, int type);
-void mgl_set_alpha(HMGL graph, int enable);
-void mgl_set_fog(HMGL graph, float d, float dz);
-void mgl_set_light(HMGL graph, int enable);
-void mgl_set_light_n(HMGL gr, int n, int enable);
-void mgl_add_light(HMGL graph, int n, float x, float y, float z, char c);
-void mgl_add_light_ext(HMGL graph, int n, float x, float y, float z, char c, float br, bool inf, float ap);
-void mgl_set_ambbr(HMGL gr, float i);
-
-void mgl_mat_pop(HMGL gr);
-void mgl_mat_push(HMGL gr);
-void mgl_identity(HMGL graph, int rel);
-void mgl_clf(HMGL graph);
-void mgl_clf_rgb(HMGL graph, float r, float g, float b);
-
-void mgl_subplot(HMGL graph, int nx,int ny,int m);
-void mgl_subplot_d(HMGL graph, int nx,int ny,int m, float dx, float dy);
-void mgl_subplot_s(HMGL graph, int nx,int ny,int m,const char *style);
-void mgl_inplot(HMGL graph, float x1,float x2,float y1,float y2);
-void mgl_relplot(HMGL graph, float x1,float x2,float y1,float y2);
-void mgl_columnplot(HMGL graph, int num, int ind);
-void mgl_columnplot_d(HMGL graph, int num, int ind, float d);
-void mgl_stickplot(HMGL graph, int num, int ind, float tet, float phi);
-void mgl_aspect(HMGL graph, float Ax,float Ay,float Az);
-void mgl_rotate(HMGL graph, float TetX,float TetZ,float TetY);
-void mgl_rotate_vector(HMGL graph, float Tet,float x,float y,float z);
-void mgl_perspective(HMGL graph, float val);
-
-/*****************************************************************************/
-void mgl_show_image_(uintptr_t *graph, const char *viewer, int *keep, int);
-void mgl_write_frame_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
-void mgl_write_bmp_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
-void mgl_write_jpg_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
-void mgl_write_png_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
-void mgl_write_png_solid_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
-void mgl_write_eps_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
-void mgl_write_svg_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
-void mgl_write_idtf_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
-void mgl_write_gif_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
-void mgl_start_gif_(uintptr_t *graph, const char *fname,int *ms,int l);
-void mgl_close_gif_(uintptr_t *graph);
-
-const unsigned char *mgl_get_rgb_(uintptr_t *graph);
-const unsigned char *mgl_get_rgba_(uintptr_t *graph);
-int mgl_get_width_(uintptr_t *graph);
-int mgl_get_height_(uintptr_t *graph);
-void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, float *x, float *y, float *z);
-void mgl_calc_scr_(uintptr_t *gr, float *x, float *y, float *z, int *xs, int *ys);
-
-int mgl_new_frame_(uintptr_t *graph);
-void mgl_end_frame_(uintptr_t *graph);
-int mgl_get_num_frame_(uintptr_t *graph);
-void mgl_reset_frames_(uintptr_t *graph);
-
-void mgl_set_transp_type_(uintptr_t *graph, int *type);
-void mgl_set_alpha_(uintptr_t *graph, int *enable);
-void mgl_set_fog_(uintptr_t *graph, float *dist, float *dz);
-void mgl_set_light_(uintptr_t *graph, int *enable);
-void mgl_set_light_n_(uintptr_t *gr, int *n, int *enable);
-void mgl_add_light_(uintptr_t *graph, int *n, float *x, float *y, float *z, char *c, int);
-void mgl_add_light(HMGL graph, int n, float x, float y, float z, char c);
-void mgl_add_light_ext_(HMGL graph, int n, float x, float y, float z, char c, float br, bool inf, float ap);
-void mgl_add_light_rgb_(uintptr_t *graph, int *n, float *x, float *y, float *z, char *c, float *br, int *inf, float *ap, int);
-void mgl_set_ambbr_(uintptr_t *gr, float *i);
-
-void mgl_mat_push_(uintptr_t *gr);
-void mgl_mat_pop_(uintptr_t *gr);
-void mgl_identity_(uintptr_t *graph, int *rel);
-void mgl_clf_(uintptr_t *graph);
-void mgl_clf_rgb_(uintptr_t *graph, float *r, float *g, float *b);
-
-void mgl_subplot_(uintptr_t *graph, int *nx,int *ny,int *m);
-void mgl_subplot_d_(uintptr_t *graph, int *nx,int *ny,int *m,float *dx,float *dy);
-void mgl_subplot_s_(uintptr_t *graph, int *nx,int *ny,int *m, const char *s,int);
-void mgl_inplot_(uintptr_t *graph, float *x1,float *x2,float *y1,float *y2);
-void mgl_relplot_(uintptr_t *graph, float *x1,float *x2,float *y1,float *y2);
-void mgl_columnplot_(uintptr_t *graph, int *num, int *i);
-void mgl_columnplot_d_(uintptr_t *graph, int *num, int *i, float *d);
-void mgl_stickplot_(uintptr_t *graph, int *num, int *i, float *tet, float *phi);
-void mgl_aspect_(uintptr_t *graph, float *Ax,float *Ay,float *Az);
-void mgl_rotate_(uintptr_t *graph, float *TetX,float *TetZ,float *TetY);
-void mgl_rotate_vector_(uintptr_t *graph, float *Tet,float *x,float *y,float *z);
-void mgl_perspective_(uintptr_t *graph, float val);
-/*****************************************************************************/
-#ifdef __cplusplus
-}
-#endif
-/*****************************************************************************/
 #endif

@@ -163,7 +163,7 @@ struct mglTexture
 	{	if(c)	delete []c;	if(id)	delete []id;	c=0;	id=0;	}
 //	void Set(int nn, mglColor *cc, float a=0);
 	void Set(const char *cols, int smooth=0,float alpha=1);
-	void GetC(float u,float v,float *c);
+	void GetC(float u,float v,float c[4]);
 	bool IsSame(mglTexture &t);
 };
 //-----------------------------------------------------------------------------

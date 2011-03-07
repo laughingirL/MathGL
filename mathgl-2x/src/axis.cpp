@@ -188,7 +188,7 @@ void mglCanvas::SetTickTempl(char dir, const wchar_t *t)
 	if(wcslen(t)<255) wcscpy(aa.t,t);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::SetTickTempl(char dir, char *t)
+void mglCanvas::SetTickTempl(char dir, const char *t)
 {
 	mglAxis &aa=ax;
 	if(dir=='c' || dir=='a')	aa = ac;
@@ -202,7 +202,7 @@ void mglCanvas::SetTickTempl(char dir, char *t)
 	if(strlen(t)<255) mbstowcs(aa.t,t,strlen(t)+1);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::SetTimeTick(char dir, float d, const char *t)
+void mglCanvas::SetTickTime(char dir, float d, const char *t)
 {
 	mglAxis &aa=ax;
 	if(dir=='c' || dir=='a')	aa = ac;

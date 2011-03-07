@@ -20,9 +20,9 @@
 #include <stdlib.h>
 #include "mgl/canvas.h"
 //-----------------------------------------------------------------------------
-mglCanvas::mglCanvas()
+mglCanvas::mglCanvas(int w, int h)
 {
-	memset(this,0,sizeof(mglCanvas));
+	memset(this,0,sizeof(mglCanvas));		SetSize(w,h);
 	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';

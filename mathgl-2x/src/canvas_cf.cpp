@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "mgl/canvas.h"
+#include "mgl/canvas_cf.h"
 //-----------------------------------------------------------------------------
 #undef _GR_
 #define _GR_	((mglCanvas *)(*gr))
@@ -138,4 +139,157 @@ void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, mreal *x, mreal *y, mreal *z
 {	mglPoint p = _GR_->CalcXYZ(*xs,*ys);	*x = p.x;	*y = p.y;	*z = p.z;	}
 void mgl_calc_scr_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, int *xs, int *ys)
 {	_GR_->CalcScr(mglPoint(*x,*y,*z),xs,ys);	}
+//-----------------------------------------------------------------------------
+HMGL mgl_create_graph(int width, int height)
+{	return new mglCanvas(width,height);	}
+void mgl_delete_graph(HMGL gr)	{	delete gr;	}
+void mgl_set_size(HMGL gr, int width, int height)
+{	_Gr_->SetSize(width, height);	}
+void mgl_set_zoom(HMGL gr, float x1, float y1, float x2, float y2)
+{	_Gr_->Zoom(x1,y1,x2,y2);	}
+void mgl_set_def_param(HMGL gr)	{	_Gr_->DefaultPlotParam();	}
+//-----------------------------------------------------------------------------
+void mgl_set_tick_len(HMGL gr, float len, float stt)
+{	_Gr_->SetTickLen(len,stt);	}
+void mgl_set_tick_stl(HMGL gr, const char *stl, const char *sub)
+{	_Gr_->SetTickStl(stl,sub);	}
+void mgl_tune_ticks(HMGL gr, int tune, float pos)
+{	_Gr_->SetTuneTicks(tune,pos);	}
+void mgl_adjust_ticks(HMGL gr, const char *dir)
+{	_Gr_->AdjustTicks(dir);	}
+void mgl_set_ticks(HMGL gr, char dir, float d, int ns, float org)
+{	_Gr_->SetTicks(dir,d,ns,org);	}
+void mgl_set_ticks_val(HMGL gr, char dir, HCDT val, const char *lbl)
+{	_Gr_->SetTicksVal(dir,val,lbl);	}
+void mgl_set_ticks_valw(HMGL gr, char dir, HCDT val, const wchar_t *lbl)
+{	_Gr_->SetTicksVal(dir,val,lbl);	}
+void mgl_set_tick_templ(HMGL gr, char dir, const char *templ)
+{	_Gr_->SetTickTempl(dir,templ);	}
+void mgl_set_tick_templw(HMGL gr, char dir, const wchar_t *templ)
+{	_Gr_->SetTickTempl(dir,templ);	}
+void mgl_set_tick_time(HMGL gr, char dir, float d, const char *t)
+{	_Gr_->SetTickTime(dir,d,t);	}
+//-----------------------------------------------------------------------------
+void mgl_box(HMGL gr)	{	_Gr_->Box();	}
+void mgl_box_str(HMGL gr, const char *col, int ticks)
+{	_Gr_->Box(col,ticks);	}
+void mgl_axis(HMGL gr, const char *dir)
+{	_Gr_->Axis(dir);	}
+void mgl_axis_grid(HMGL gr, const char *dir,const char *pen)
+{	_Gr_->Grid(dir,pen);	}
+void mgl_label(HMGL gr, char dir, const char *text)
+{	_Gr_->Label(dir,text);	}
+void mgl_label_ext(HMGL gr, char dir, const char *text, float pos, float size, float shift)
+{	_Gr_->Label(dir,text,pos,size,shift);	}
+void mgl_labelw_ext(HMGL gr, char dir, const wchar_t *text, float pos, float size, float shift)
+{	_Gr_->Labelw(dir,text,pos,size,shift);	}
+void mgl_label_xy(HMGL gr, float x, float y, const char *text, const char *fnt, float size)
+{	_Gr_->Label(x,y,text,fnt,size);	}
+void mgl_labelw_xy(HMGL gr, float x, float y, const wchar_t *text, const char *fnt, float size)
+{	_Gr_->Labelw(x,y,text,fnt,size);	}
+//-----------------------------------------------------------------------------
+void mgl_colorbar(HMGL gr, const char *sch,int where)
+{	_Gr_->Colorbar(sch,where);	}
+void mgl_colorbar_ext(HMGL gr, const char *sch, int where, float x, float y, float w, float h)
+{	_Gr_->Colorbar(sch,where,x,y,w,h);	}
+void mgl_colorbar_val(HMGL gr, HCDT dat, const char *sch,int where)
+{	_Gr_->Colorbar(dat,sch,where);	}
+void mgl_colorbar_val_ext(HMGL gr, HCDT dat, const char *sch,int where,float x, float y, float w, float h)
+{	_Gr_->Colorbar(dat,sch,where,x,y,w,h);	}
+//-----------------------------------------------------------------------------
+void mgl_add_legend(HMGL gr, const char *text,const char *style)
+{	_Gr_->AddLegend(text,style);	}
+void mgl_add_legendw(HMGL gr, const wchar_t *text,const char *style)
+{	_Gr_->AddLegend(text,style);	}
+void mgl_clear_legend(HMGL gr)
+{	_Gr_->ClearLegend();	}
+void mgl_legend_xy(HMGL gr, float x, float y, const char *font, float size, float llen)
+{	_Gr_->Legend(x,y,font,size,llen);	}
+void mgl_legend(HMGL gr, int where, const char *font, float size, float llen)
+{	_Gr_->Legend(where,font,size,llen);	}
+void mgl_set_legend_box(HMGL gr, int enable)
+{	_Gr_->SetLegendBox(enable);	}
+void mgl_set_legend_marks(HMGL gr, int num)
+{	_Gr_->SetLegendMarks(num);	}
+//-----------------------------------------------------------------------------
+uintptr_t mgl_create_graph_(int *width, int *height)
+{	return uintptr_t(new mglCanvas(*width,*height));	}
+void mgl_delete_graph_(uintptr_t *gr)	{	delete _GR_;	}
+void mgl_set_size_(uintptr_t *gr, int *width, int *height)
+{	_GR_->SetSize(*width,*height);	}
+void mgl_set_zoom_(uintptr_t *gr, float *x1, float *y1, float *x2, float *y2)
+{	_GR_->Zoom(*x1,*y1,*x2,*y2);	}
+//-----------------------------------------------------------------------------
+void mgl_set_tick_len_(uintptr_t *gr, float *len, float *stt)
+{	_GR_->SetTickLen(*len, *stt);	}
+void mgl_set_tick_stl_(uintptr_t *gr, const char *stl, const char *sub, int l,int m)
+{	char *t=new char[l+1];	memcpy(t,stl,l);	t[l]=0;
+	char *s=new char[m+1];	memcpy(s,sub,m);	s[m]=0;
+	_GR_->SetTickStl(t,s);	delete []s;	delete []t;	}
+void mgl_adjust_ticks_(uintptr_t *gr, const char *dir, int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	_GR_->AdjustTicks(s);	delete []s;	}
+void mgl_set_ticks_(uintptr_t *gr, char *dir, float *d, int *ns, float *org, int)
+{	_GR_->SetTicks(*dir, *d, *ns, *org);	}
+void mgl_set_ticks_val_(uintptr_t *gr, const char *dir, uintptr_t *val, const char *lbl,int,int l)
+{	char *s=new char[l+1];	memcpy(s,lbl,l);	s[l]=0;
+	_GR_->SetTicksVal(*dir,_DA_(val),s);	delete []s;	}
+void mgl_tune_ticks_(uintptr_t *gr, int *tune, float *fact_pos)
+{	_GR_->SetTuneTicks(*tune, *fact_pos);	}
+void mgl_set_tick_templ_(uintptr_t *gr, const char *dir, const char *templ,int,int l)
+{	char *s=new char[l+1];	memcpy(s,templ,l);	s[l]=0;
+	_GR_->SetTickTempl(*dir,s);	delete []s;	}
+void mgl_set_tick_time_(uintptr_t *gr, const char *dir, float *d, const char *t,int,int l)
+{	char *s=new char[l+1];	memcpy(s,t,l);	s[l]=0;
+	_GR_->SetTickTime(*dir,*d,s);	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_box_(uintptr_t *gr)	{	_GR_->Box();	}
+void mgl_box_str_(uintptr_t *gr, const char *col, int *ticks, int l)
+{	char *s=new char[l+1];	memcpy(s,col,l);	s[l]=0;
+	_GR_->Box(s,*ticks);	delete []s;	}
+void mgl_axis_(uintptr_t *gr, const char *dir,int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;	_GR_->Axis(s);	delete []s;	}
+void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	char *p=new char[n+1];	memcpy(p,pen,n);	p[n]=0;
+	_GR_->Grid(s,p);	delete []s;	delete []p;	}
+void mgl_label_(uintptr_t *gr, const char *dir, const char *text,int,int l)
+{	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
+	_GR_->Label(*dir, s);	delete []s;	}
+void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, float *pos, float *size, float *shift,int,int l)
+{	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
+	_GR_->Label(*dir, s, *pos, *size, *shift);	delete []s;	}
+void mgl_label_xy_(uintptr_t *gr, float *x, float *y, const char *txt, const char *fnt, float *size,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,txt,l);	s[l]=0;
+	char *p=new char[n+1];	memcpy(p,fnt,n);	p[n]=0;
+	_GR_->Label(*x,*y,s,p,*size);	delete []s;	delete []p;	}
+//-----------------------------------------------------------------------------
+void mgl_colorbar_(uintptr_t *gr, const char *sch,int *where,int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	_GR_->Colorbar(s,*where);	delete []s;	}
+void mgl_colorbar_ext_(uintptr_t *gr, const char *sch,int *where, float *x, float *y, float *w, float *h, int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	_GR_->Colorbar(s,*where,*x,*y,*w,*h);	delete []s;	}
+void mgl_colorbar_val_(uintptr_t *gr, uintptr_t *dat, const char *sch,int *where,int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	_GR_->Colorbar(_DA_(dat), s,*where);	delete []s;	}
+void mgl_colorbar_val_ext_(uintptr_t *gr, uintptr_t *dat, const char *sch,int *where, float *x, float *y, float *w, float *h, int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	_GR_->Colorbar(_DA_(dat),s,*where,*x,*y,*w,*h);	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_add_legend_(uintptr_t *gr, const char *text,const char *style,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,style,n);	f[n]=0;
+	if(gr)	_GR_->AddLegend(s,f);	delete []s;	delete []f;	}
+void mgl_clear_legend_(uintptr_t *gr)	{	if(gr)	_GR_->ClearLegend();	}
+void mgl_legend_xy_(uintptr_t *gr, float *x, float *y, const char *font, float *size, float *llen,int l)
+{	char *s=new char[l+1];	memcpy(s,font,l);	s[l]=0;
+	if(gr)	_GR_->Legend(*x, *y, s, *size,*llen);	delete []s;	}
+void mgl_legend_(uintptr_t *gr, int *where, const char *font, float *size, float *llen,int l)
+{	char *s=new char[l+1];	memcpy(s,font,l);	s[l]=0;
+	if(gr)	_GR_->Legend(*where, s, *size,*llen);	delete []s;	}
+void mgl_set_legend_box_(uintptr_t *gr, int *enable)
+{	_GR_->SetLegendBox(*enable);	}
+void mgl_set_legend_marks_(uintptr_t *gr, int *num)
+{	_GR_->SetLegendMarks(*num);	}
 //-----------------------------------------------------------------------------
