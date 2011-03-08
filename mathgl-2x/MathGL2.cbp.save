@@ -35,7 +35,7 @@
 			<Add directory="include" />
 		</Compiler>
 		<Linker>
-			<Add option="-lgsl -lgslcblas -lpthread -lz -lpng -lGL" />
+			<Add option="-lgsl -lgslcblas -lpthread -lz -lpng" />
 		</Linker>
 		<Unit filename="include/mgl/base.h" />
 		<Unit filename="include/mgl/base_cf.h" />

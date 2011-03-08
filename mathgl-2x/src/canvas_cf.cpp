@@ -219,6 +219,7 @@ void mgl_set_size_(uintptr_t *gr, int *width, int *height)
 {	_GR_->SetSize(*width,*height);	}
 void mgl_set_zoom_(uintptr_t *gr, float *x1, float *y1, float *x2, float *y2)
 {	_GR_->Zoom(*x1,*y1,*x2,*y2);	}
+void mgl_set_def_param_(uintptr_t *gr)	{	_GR_->DefaultPlotParam();	}
 //-----------------------------------------------------------------------------
 void mgl_set_tick_len_(uintptr_t *gr, float *len, float *stt)
 {	_GR_->SetTickLen(*len, *stt);	}

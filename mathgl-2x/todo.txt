@@ -15,3 +15,5 @@ TODO: MultiPlot(int nx,int ny,int i,int dx,int dy,const char *pos=0); -- like Su
 TODO: Arrows at flow lines ?!?
 
 TODO: BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
+
+TODO: mgl_circle_ext(x,y,z,r,col,dx,dy,dz) + mgl_circle(x,y,r,col) as primitive

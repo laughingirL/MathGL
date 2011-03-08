@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include "mgl/canvas.h"
 //-----------------------------------------------------------------------------
-mglCanvas::mglCanvas(int w, int h)
+mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
 	memset(this,0,sizeof(mglCanvas));		SetSize(w,h);
 	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';

@@ -369,6 +369,7 @@ protected:
 
 	virtual void LightScale()=0;			///< Scale positions of light sources
 	virtual void NormScale(mglPoint &n)=0;	///< Scale normale
+	virtual void SetPen(char style,float width);
 
 private:
 	mglPoint FMin;		///< Actual lower edge after transformation formulas.

@@ -185,8 +185,8 @@ void mglCanvas::Clf(mglColor Back)
 	Fog(0);
 	posN = posC = pNum = pPos = 0;
 	PDef = 0xffff;
-	if(Back==NC)		Back = mglColor(1,1,1);
-	if(TranspType==2)	Back = mglColor(0,0,0);
+	if(Back==0)			Back = 'w';
+	if(TranspType==2)	Back = 'k';
 //	col2int(Back,1,BDef);
 	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;	BDef[2]=Back.b*255;	BDef[3]=0;
 	register long i,n=Width*Height;
@@ -537,6 +537,9 @@ void mglCanvas::fast_draw(float *p1, float *p2)
 		pnt_plot(p1[0]+d[0]*(i-p1[1])/d[1], i, p1[2]+d[2]*(i-p1[1])/d[1]+pw, r);
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::pnt_draw(float x,float y,float z,unsigned char *c)
+{	pnt_plot(x,y,z,c);	}
+//-----------------------------------------------------------------------------
 void mglCanvas::mark_draw(float *q, char type, float size)
 {
 	float c[4];	txt[long(q[3])].GetC(q[3],0,c);
@@ -548,14 +551,14 @@ void mglCanvas::mark_draw(float *q, char type, float size)
 	{
 		bool aa=UseAlpha;	UseAlpha = true;
 		ss *= 1.1;	if(type=='C')	for(i=long(-4*ss);i<=long(4*ss);i++)
-			pnt_plot(q[0]+ss*cos(i*M_PI_4/ss), q[1]+ss*sin(i*M_PI_4/ss),q[2],cs);
+			pnt_draw(q[0]+ss*cos(i*M_PI_4/ss), q[1]+ss*sin(i*M_PI_4/ss),q[2],cs);
 		s = long(5.5+fabs(PenWidth));
 		for(j=-s;j<=s;j++)	for(i=-s;i<=s;i++)
 		{
 			v = (i*i+j*j)/(9*PenWidth*PenWidth);
 			cs[3] = (unsigned char)((size>0 ? 255 : 255*q[6])*exp(-6.f*v));
 			if(cs[3]==0)	continue;
-			pnt_plot(q[0]+i,q[1]+j,q[2],cs);
+			pnt_draw(q[0]+i,q[1]+j,q[2],cs);
 		}
 		UseAlpha = aa;
 	}
@@ -587,7 +590,7 @@ void mglCanvas::mark_draw(float *q, char type, float size)
 			break;
 		case 'S':
 			for(j=long(-ss-1);j<=long(ss+1);j++)	for(i=long(-ss-1);i<=long(ss+1);i++)
-				pnt_plot(q[0]+i,q[1]+j,zv,cs);
+				pnt_draw(q[0]+i,q[1]+j,zv,cs);
 		case 's':
 			p[0] = q[0]-ss;	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1]-ss;	line_draw(p,p+4);
 			p[0] = q[0]+ss;	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
@@ -597,7 +600,7 @@ void mglCanvas::mark_draw(float *q, char type, float size)
 		case 'D':
 			for(j=long(-ss-1);j<=long(ss+1);j++)	for(i=long(-ss-1);i<=long(ss+1);i++)
 				if(abs(i)+abs(j)<=long(ss+1))
-					pnt_plot(long(q[0])+i,long(q[1])+j,zv,cs);
+					pnt_draw(long(q[0])+i,long(q[1])+j,zv,cs);
 		case 'd':
 			p[0] = q[0];	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1];	line_draw(p,p+4);
 			p[0] = q[0]+ss;	p[1] = q[1];	p[4] = q[0];	p[5] = q[1]+ss;	line_draw(p,p+4);
@@ -617,7 +620,7 @@ void mglCanvas::mark_draw(float *q, char type, float size)
 		case 'T':
 			for(j=long(-ss/2-1);j<=long(ss+1);j++)	for(i=long(-ss-1);i<=long(ss+1);i++)
 				if(3*abs(i)+2*j<=long(2*ss+1))
-					pnt_plot(long(q[0])+i,long(q[1])+j,zv,cs);
+					pnt_draw(long(q[0])+i,long(q[1])+j,zv,cs);
 		case '^':
 			p[0] = q[0]-ss;	p[1] = q[1]-ss/2;	p[4] = q[0];	p[5] = q[1]+ss;		line_draw(p,p+4);
 			p[0] = q[0]-ss;	p[1] = q[1]-ss/2;	p[4] = q[0]+ss;	p[5] = q[1]-ss/2;	line_draw(p,p+4);
@@ -626,7 +629,7 @@ void mglCanvas::mark_draw(float *q, char type, float size)
 		case 'V':
 			for(j=long(-ss-1);j<=long(ss/2+1);j++)	for(i=long(-ss-1);i<=long(ss+1);i++)
 				if(3*abs(i)-2*j<=long(2*ss+1))
-					pnt_plot(long(q[0])+i,long(q[1])+j,zv,cs);
+					pnt_draw(long(q[0])+i,long(q[1])+j,zv,cs);
 		case 'v':
 			p[0] = q[0]-ss;	p[1] = q[1]+ss/2;	p[4] = q[0];	p[5] = q[1]-ss;		line_draw(p,p+4);
 			p[0] = q[0]-ss;	p[1] = q[1]+ss/2;	p[4] = q[0]+ss;	p[5] = q[1]+ss/2;	line_draw(p,p+4);
@@ -635,7 +638,7 @@ void mglCanvas::mark_draw(float *q, char type, float size)
 		case 'L':
 			for(j=long(-ss-1);j<=long(ss/2+1);j++)	for(i=long(-ss-1);i<=long(ss+1);i++)
 				if(3*abs(i)-2*j<=long(2*ss+1))
-					pnt_plot(long(q[0])+j,long(q[1])+i,zv,cs);
+					pnt_draw(long(q[0])+j,long(q[1])+i,zv,cs);
 		case '<':
 			p[0] = q[0]+ss/2;	p[1] = q[1]-ss;	p[4] = q[0]-ss;	p[5] = q[1];	line_draw(p,p+4);
 			p[0] = q[0]+ss/2;	p[1] = q[1]+ss;	p[4] = q[0]-ss;	p[5] = q[1];	line_draw(p,p+4);
@@ -644,7 +647,7 @@ void mglCanvas::mark_draw(float *q, char type, float size)
 		case 'R':
 			for(j=long(-ss/2-1);j<=long(ss+1);j++)	for(i=long(-ss-1);i<=long(ss+1);i++)
 				if(3*abs(i)+2*j<=long(2*ss+1))
-					pnt_plot(long(q[0])+j,long(q[1])+i,zv,cs);
+					pnt_draw(long(q[0])+j,long(q[1])+i,zv,cs);
 		case '>':
 			p[0] = q[0]-ss/2;	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1];	line_draw(p,p+4);
 			p[0] = q[0]-ss/2;	p[1] = q[1]+ss;	p[4] = q[0]+ss;	p[5] = q[1];	line_draw(p,p+4);
@@ -654,7 +657,7 @@ void mglCanvas::mark_draw(float *q, char type, float size)
 			for(j=long(-ss);j<=long(ss);j++)	for(i=long(-ss);i<=long(ss);i++)
 			{
 				if(i*i+j*j>=ss*ss)	continue;
-				pnt_plot(long(q[0])+i,long(q[1])+j,zv,cs);
+				pnt_draw(long(q[0])+i,long(q[1])+j,zv,cs);
 			}
 		case 'o':
 			for(i=0;i<40;i++)

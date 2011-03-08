@@ -88,7 +88,7 @@ public:
 	/// Pop transformation matrix from stack
 	void Pop();
 	/// Clear up the frame
-	virtual void Clf(mglColor Back=WC);
+	virtual void Clf(mglColor back=WC);
 	/// Put further plotting in some region of whole frame surface.
 	void SubPlot(int nx,int ny,int m, float dx=0, float dy=0);
 	void SubPlot(int nx,int ny,int m, const char *style);
@@ -340,7 +340,9 @@ protected:
 	virtual void line_draw(float *p1, float *p2);
 	virtual void trig_draw(float *p1, float *p2, float *p3,bool anorm=false);
 	virtual void quad_draw(float *p1, float *p2, float *p3, float *p4);
+	virtual void pnt_draw(float x,float y,float z,unsigned char *c);
 	void glyph_draw(float *p, float f, int style, long icode);
+	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 
 private:
 	float _tetx,_tety,_tetz;			// extra angles
@@ -359,7 +361,6 @@ private:
 	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f);
 	/// Plot point \a p with color \a c
 	void pnt_plot(long x,long y,float z,unsigned char c[4]);
-	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 	float FindOptOrg(char dir, int ind);
 	/// Transform float color and alpha to bits format
 	unsigned char* col2int(float u, float v,float *n,unsigned char *r);

@@ -609,7 +609,7 @@ float mglBase::NextColor(long id)
 }
 char mglBase::SetPenPal(const char *p, long *Id)
 {
-	char mk=0;
+	char mk=0, pp=0;
 
 	Arrow1 = Arrow2 = 0;
 	if(p && *p!=0)
@@ -634,7 +634,7 @@ char mglBase::SetPenPal(const char *p, long *Id)
 				case 'i': PDef = 0x2727;	break;
 				case ' ': PDef = 0x0000;	break;
 				}
-				last_style[1]=p[i];
+				pp = last_style[1]=p[i];
 			}
 			else if(strchr(mrk,p[i]))	mk = p[i];
 			else if(strchr(wdh,p[i]))
@@ -661,11 +661,13 @@ char mglBase::SetPenPal(const char *p, long *Id)
 			if(mk=='*')	mk = 'Y';
 		}
 	}
-	last_style[3]=mk;
+	last_style[3]=mk;	SetPen(pp, PenWidth);
 	CDef = AddTexture(p,-1);	CDef = CDef<0 ? 0:1;
 	if(Id)	*Id=long(CDef)*256;
 	return mk;
 }
+//-----------------------------------------------------------------------------
+void mglBase::SetPen(char style,float width)	{}
 //-----------------------------------------------------------------------------
 float mglBase::GetA(float a)
 {
