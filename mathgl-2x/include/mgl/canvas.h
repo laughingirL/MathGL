@@ -335,12 +335,12 @@ protected:
 	float text_plot(long p,const wchar_t *text,const char *fnt,float size,float sh=0);	// position in pntN
 
 	void add_prim(mglPrim &a);	///< add primitive to list
-	void mark_draw(float *p, char type, float size);
-	void arrow_draw(float *p1, float *p2, char st, float size);
-	virtual void line_draw(float *p1, float *p2);
-	virtual void trig_draw(float *p1, float *p2, float *p3,bool anorm=false);
-	virtual void quad_draw(float *p1, float *p2, float *p3, float *p4);
-	virtual void pnt_draw(float x,float y,float z,unsigned char *c);
+	void mark_draw(const float *p, char type, float size);
+	void arrow_draw(const float *p1, const float *p2, char st, float size);
+	virtual void line_draw(const float *p1, const float *p2);
+	virtual void trig_draw(const float *p1, const float *p2, const float *p3, bool anorm=false);
+	virtual void quad_draw(const float *p1, const float *p2, const float *p3, const float *p4);
+	virtual void pnt_draw(const float *p);
 	void glyph_draw(float *p, float f, int style, long icode);
 	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 
@@ -360,14 +360,14 @@ private:
 	/// Draw tick
 	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f);
 	/// Plot point \a p with color \a c
-	void pnt_plot(long x,long y,float z,unsigned char c[4]);
+	void pnt_plot(long x,long y,float z,const unsigned char c[4]);
 	float FindOptOrg(char dir, int ind);
 	/// Transform float color and alpha to bits format
 	unsigned char* col2int(float u, float v,float *n,unsigned char *r);
 	/// Combine colors in 2 plane.
 	void combine(unsigned char *c1,unsigned char *c2);
 	/// Fast drawing of line between 2 points
-	void fast_draw(float *p1, float *p2);
+	void fast_draw(const float *p1, const float *p2);
 
 	/// Additionally scale points \a p (array with length 3*n) for positioning in image
 	void PostScale(mglPoint &p);

@@ -2,25 +2,25 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
 	<File name="include/mgl/base.h" open="1" top="0" tabpos="1">
-		<Cursor position="7871" topLine="78" />
+		<Cursor position="17860" topLine="269" />
 	</File>
 	<File name="include/mgl/base_cf.h" open="0" top="0" tabpos="0">
 		<Cursor position="1959" topLine="2" />
 	</File>
-	<File name="include/mgl/canvas.h" open="1" top="0" tabpos="5">
-		<Cursor position="8897" topLine="136" />
+	<File name="include/mgl/canvas.h" open="1" top="0" tabpos="2">
+		<Cursor position="16924" topLine="321" />
 	</File>
-	<File name="include/mgl/canvas_cf.h" open="1" top="1" tabpos="4">
-		<Cursor position="5674" topLine="166" />
+	<File name="include/mgl/canvas_cf.h" open="0" top="0" tabpos="4">
+		<Cursor position="3616" topLine="19" />
 	</File>
-	<File name="include/mgl/canvas_gl.h" open="0" top="0" tabpos="0">
-		<Cursor position="2479" topLine="32" />
+	<File name="include/mgl/canvas_gl.h" open="1" top="0" tabpos="5">
+		<Cursor position="1830" topLine="9" />
 	</File>
 	<File name="include/mgl/define.h" open="0" top="0" tabpos="0">
 		<Cursor position="2357" topLine="30" />
 	</File>
-	<File name="include/mgl/mgl.h" open="1" top="0" tabpos="2">
-		<Cursor position="13462" topLine="0" />
+	<File name="include/mgl/mgl.h" open="1" top="0" tabpos="4">
+		<Cursor position="2107" topLine="14" />
 	</File>
 	<File name="include/mgl/mgl_c.h" open="0" top="0" tabpos="0">
 		<Cursor position="4831" topLine="17" />
@@ -46,8 +46,8 @@
 	<File name="src/canvas.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="1703" topLine="76" />
 	</File>
-	<File name="src/canvas_cf.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="3614" topLine="25" />
+	<File name="src/canvas_cf.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="11454" topLine="158" />
 	</File>
 	<File name="src/cont.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="28780" topLine="183" />
@@ -64,13 +64,13 @@
 	<File name="src/legend.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="5282" topLine="58" />
 	</File>
-	<File name="src/opengl.cpp" open="1" top="0" tabpos="0">
-		<Cursor position="0" topLine="0" />
+	<File name="src/opengl.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="7683" topLine="136" />
 	</File>
 	<File name="src/other.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="8217" topLine="77" />
 	</File>
-	<File name="src/pixel.cpp" open="0" top="0" tabpos="3">
+	<File name="src/pixel.cpp" open="1" top="1" tabpos="3">
 		<Cursor position="14204" topLine="151" />
 	</File>
 	<File name="src/plot.cpp" open="0" top="0" tabpos="0">

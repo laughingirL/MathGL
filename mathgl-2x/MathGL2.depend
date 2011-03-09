@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1299495653 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/axis.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/axis.cpp
 	<time.h>
 	<wchar.h>
 	<ctype.h>
@@ -7,13 +7,13 @@
 	"mgl/data.h"
 	"mgl/canvas.h"
 
-1299308733 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/data.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/data.h
 	"mgl/base.h"
 	<gsl/gsl_vector.h>
 	<gsl/gsl_matrix.h>
 	<vector>
 
-1299612219 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/base.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/base.h
 	<string.h>
 	<stdint.h>
 	<stdlib.h>
@@ -23,63 +23,63 @@
 	"mgl/eval.h"
 	"mgl/font.h"
 
-1299403483 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/define.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/define.h
 	<math.h>
 	<float.h>
 
-1299308733 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/eval.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/eval.h
 	<math.h>
 	"mgl/mgl_define.h"
 
-1299308733 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/font.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/font.h
 	<stdio.h>
 	"mgl/mgl_define.h"
 
-1299612654 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/canvas.h
+1299654705 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/canvas.h
 	"mgl/base.h"
 	<gif_lib.h>
 
-1299399878 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/base_cf.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/base_cf.cpp
 	"mgl/base_cf.h"
 
-1299399879 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/base_cf.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/base_cf.h
 	<stdint.h>
 	"mgl/base.h"
 
-1299610237 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/canvas.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/canvas.cpp
 	<stdlib.h>
 	"mgl/canvas.h"
 
-1299613626 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/canvas_cf.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/canvas_cf.cpp
 	"mgl/canvas.h"
 	"mgl/canvas_cf.h"
 
-1299446688 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/cont.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/cont.cpp
 	<wchar.h>
 	"mgl/surf.h"
 	"mgl/cont.h"
 	"mgl/data.h"
 	"mgl/eval.h"
 
-1299308733 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/surf.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/surf.h
 	<stdint.h>
 	"mgl/base.h"
 
-1299308733 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/cont.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/cont.h
 	<stdint.h>
 	"mgl/base.h"
 
-1299446697 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/crust.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/crust.cpp
 	<stdlib.h>
 	<float.h>
 	"mgl/other.h"
 	"mgl/data.h"
 
-1299308733 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/other.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/other.h
 	<stdint.h>
 	"mgl/base.h"
 
-1299308735 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/data.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/data.cpp
 	<stdlib.h>
 	<string.h>
 	<sys/sysinfo.h>
@@ -87,7 +87,7 @@
 	"mgl/eval.h"
 	<pthread.h>
 
-1299308735 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/data_io.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/data_io.cpp
 	<stdlib.h>
 	<ctype.h>
 	<math.h>
@@ -99,7 +99,7 @@
 	"mgl/data.h"
 	"mgl/eval.h"
 
-1299308735 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/data_new.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/data_new.cpp
 	<stdlib.h>
 	<ctype.h>
 	<math.h>
@@ -109,27 +109,27 @@
 	<gsl/gsl_sf.h>
 	"mgl/data.h"
 
-1299308735 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/data_op.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/data_op.cpp
 	<stdlib.h>
 	<ctype.h>
 	<math.h>
 	<string.h>
 	"mgl/data.h"
 
-1299308735 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/data_png.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/data_png.cpp
 	<stdlib.h>
 	<png.h>
 	"mgl/data.h"
 
-1299308735 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/def_font.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/def_font.cpp
 
-1299450682 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/eps_svg.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/eps_svg.cpp
 	"mgl/canvas.h"
 	<stdlib.h>
 	<time.h>
 	<zlib.h>
 
-1299308735 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/eval.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/eval.cpp
 	<stdlib.h>
 	<time.h>
 	<math.h>
@@ -139,7 +139,7 @@
 	<gsl/gsl_errno.h>
 	"mgl/eval.h"
 
-1299308735 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/export.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/export.cpp
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -150,7 +150,7 @@
 	<jpeglib.h>
 	"mgl/canvas.h"
 
-1299308735 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/fit.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/fit.cpp
 	<gsl/gsl_multifit_nlin.h>
 	<gsl/gsl_blas.h>
 	<ctype.h>
@@ -158,11 +158,11 @@
 	"mgl/eval.h"
 	"mgl/data.h"
 
-1299308733 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/fit.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/fit.h
 	<stdint.h>
 	"mgl/base.h"
 
-1299308735 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/font.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/font.cpp
 	<stdlib.h>
 	<locale.h>
 	<ctype.h>
@@ -173,14 +173,14 @@
 	"mgl/base.h"
 	"mgl/font.h"
 
-1299446712 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/legend.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/legend.cpp
 	<time.h>
 	<wchar.h>
 	<ctype.h>
 	<stdlib.h>
 	"mgl/canvas.h"
 
-1299446738 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/other.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/other.cpp
 	"mgl/other.h"
 	"mgl/surf.h"
 	"mgl/cont.h"
@@ -193,80 +193,80 @@
 	<math.h>
 	"mgl/canvas.h"
 
-1299446807 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/plot.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/plot.cpp
 	"mgl/plot.h"
 	"mgl/eval.h"
 	"mgl/data.h"
 	<stdlib.h>
 
-1299308733 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/plot.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/plot.h
 	<stdint.h>
 	"mgl/base.h"
 
-1299446995 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/prim.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/prim.cpp
 	<wchar.h>
 	<stdlib.h>
 	"mgl/prim.h"
 	"mgl/data.h"
 
-1299438538 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/prim.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/prim.h
 	<stdint.h>
 	"mgl/base.h"
 
-1299448185 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/surf.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/surf.cpp
 	"mgl/define.h"
 	"mgl/surf.h"
 	"mgl/data.h"
 	"mgl/eval.h"
 
-1299308735 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/tex_table.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/tex_table.cpp
 	"mgl/font.h"
 
-1299308735 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/text.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/text.cpp
 	"mgl/text.h"
 
-1299308733 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/text.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/text.h
 	<stdint.h>
 	"mgl/base.h"
 
-1299448968 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/vect.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/vect.cpp
 	"mgl/vect.h"
 	"mgl/eval.h"
 	"mgl/data.h"
 	<stdlib.h>
 
-1299308733 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/vect.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/vect.h
 	<stdint.h>
 	"mgl/base.h"
 
-1299449451 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/volume.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/volume.cpp
 	"mgl/define.h"
 	"mgl/volume.h"
 	"mgl/data.h"
 	"mgl/eval.h"
 
-1299308733 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/volume.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/volume.h
 	<stdint.h>
 	"mgl/base.h"
 
-1299495375 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/test.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/test.cpp
 	<time.h>
 	<stdio.h>
 	"mgl/mgl.h"
 
-1299612258 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/base.cpp
+1299650229 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/base.cpp
 	<stdlib.h>
 	"mgl/base.h"
 	"mgl/define.h"
 
-1299613624 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/canvas_cf.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/canvas_cf.h
 	"mgl/base.h"
 
-1299496303 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/mgl.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/mgl.h
 	"mgl/mgl_cf.h"
 	"mgl/data.h"
 
-1299489484 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/mgl_cf.h
+1299650228 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/mgl_cf.h
 	"mgl/base_cf.h"
 	"mgl/data.h"
 	"mgl/cont.h"
@@ -280,12 +280,12 @@
 	"mgl/other.h"
 	"mgl/canvas_cf.h"
 
-1299613178 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/opengl.cpp
+1299655074 source:/home/balakin/progr/sfnet/mathgl/mathgl-2x/src/opengl.cpp
 	<windows.h>
 	<OpenGL/gl.h>
 	<GL/gl.h>
 	"mgl/canvas_gl.h"
 
-1299613767 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/canvas_gl.h
+1299654712 /home/balakin/progr/sfnet/mathgl/mathgl-2x/include/mgl/canvas_gl.h
 	"mgl/canvas.h"
 

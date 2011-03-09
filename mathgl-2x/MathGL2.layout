@@ -2,19 +2,19 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
 	<File name="include/mgl/base.h" open="1" top="0" tabpos="1">
-		<Cursor position="17860" topLine="269" />
+		<Cursor position="13921" topLine="269" />
 	</File>
 	<File name="include/mgl/base_cf.h" open="0" top="0" tabpos="0">
 		<Cursor position="1959" topLine="2" />
 	</File>
 	<File name="include/mgl/canvas.h" open="1" top="0" tabpos="2">
-		<Cursor position="16924" topLine="321" />
+		<Cursor position="16974" topLine="324" />
 	</File>
 	<File name="include/mgl/canvas_cf.h" open="0" top="0" tabpos="4">
 		<Cursor position="3616" topLine="19" />
 	</File>
-	<File name="include/mgl/canvas_gl.h" open="1" top="1" tabpos="5">
-		<Cursor position="1830" topLine="9" />
+	<File name="include/mgl/canvas_gl.h" open="1" top="0" tabpos="5">
+		<Cursor position="2468" topLine="24" />
 	</File>
 	<File name="include/mgl/define.h" open="0" top="0" tabpos="0">
 		<Cursor position="2357" topLine="30" />
@@ -65,13 +65,13 @@
 		<Cursor position="5282" topLine="58" />
 	</File>
 	<File name="src/opengl.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="7683" topLine="136" />
+		<Cursor position="7616" topLine="177" />
 	</File>
 	<File name="src/other.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="8217" topLine="77" />
 	</File>
-	<File name="src/pixel.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="14204" topLine="151" />
+	<File name="src/pixel.cpp" open="1" top="1" tabpos="6">
+		<Cursor position="19037" topLine="300" />
 	</File>
 	<File name="src/plot.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="7343" topLine="33" />

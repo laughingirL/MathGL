@@ -195,7 +195,7 @@ void mglCanvas::Clf(mglColor Back)
 	Finished = false;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pnt_plot(long x,long y,float z,unsigned char ci[4])
+void mglCanvas::pnt_plot(long x,long y,float z,const unsigned char ci[4])
 {
 	long i0=x+Width*(Height-1-y);
 	if(x<dr_nx1 || x>=dr_nx2 || y<dr_ny1 || y>=dr_ny2)	return;
@@ -323,7 +323,7 @@ const unsigned char *mglCanvas::GetRGBA()
 {	if(!Finished)	Finish();	return G4;	}
 //-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-r0)*v + (r3+r0-r1-r2)*u*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined 	for each point (x,y) and selected one pair which 0<u<1 and 0<v<1.*/
-void mglCanvas::quad_draw(float *p1, float *p2, float *p3, float *p4)
+void mglCanvas::quad_draw(const float *p1, const float *p2, const float *p3, const float *p4)
 {
 	if(!(Quality&3))
 	{
@@ -392,7 +392,7 @@ void mglCanvas::quad_draw(float *p1, float *p2, float *p3, float *p4)
 }
 //-----------------------------------------------------------------------------
 /* Linear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-r0)*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y). Point plotted is u>0 and v>0 and u+v<1.*/
-void mglCanvas::trig_draw(float *p1, float *p2, float *p3, bool anorm)
+void mglCanvas::trig_draw(const float *p1, const float *p2, const float *p3, bool anorm)
 {
 	if(!(Quality&3))
 	{
@@ -440,7 +440,7 @@ void mglCanvas::trig_draw(float *p1, float *p2, float *p3, bool anorm)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::line_draw(float *p1, float *p2)
+void mglCanvas::line_draw(const float *p1, const float *p2)
 {
 	if(!(Quality&3))	{	fast_draw(p1,p2);	return;	}
 	Finished = false;
@@ -514,7 +514,7 @@ void mglCanvas::line_draw(float *p1, float *p2)
 	UseAlpha = aa;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::fast_draw(float *p1, float *p2)
+void mglCanvas::fast_draw(const float *p1, const float *p2)
 {
 	Finished = false;
 	float c[4];	txt[long(p1[3])].GetC(p1[3],0,c);
@@ -537,129 +537,139 @@ void mglCanvas::fast_draw(float *p1, float *p2)
 		pnt_plot(p1[0]+d[0]*(i-p1[1])/d[1], i, p1[2]+d[2]*(i-p1[1])/d[1]+pw, r);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pnt_draw(float x,float y,float z,unsigned char *c)
-{	pnt_plot(x,y,z,c);	}
+void mglCanvas::pnt_draw(const float *p)
+{
+	bool aa=UseAlpha;	UseAlpha = true;
+	register long i,j,s;
+	float v,c[4];
+	txt[long(p[3])].GetC(p[3],0,c);
+	unsigned char cs[4]={255*c[0],255*c[1],255*c[2],255*c[3]};
+	s = long(5.5+fabs(PenWidth));
+	for(j=-s;j<=s;j++)	for(i=-s;i<=s;i++)
+	{
+		v = (i*i+j*j)/(9*PenWidth*PenWidth);
+		cs[3] = (unsigned char)(255*c[3]*exp(-6*v));
+		if(cs[3]==0)	continue;
+		pnt_plot(p[0]+i,p[1]+j,p[2],cs);
+	}
+	UseAlpha = aa;
+}
 //-----------------------------------------------------------------------------
-void mglCanvas::mark_draw(float *q, char type, float size)
+void mglCanvas::mark_draw(const float *q, char type, float size)
 {
 	float c[4];	txt[long(q[3])].GetC(q[3],0,c);
 	unsigned char cs[4]={255*c[0], 255*c[1], 255*c[2], size>0 ? 255 : 255*q[6]};
-	float p[8], v, ss=fabs(size)*0.35*font_factor;
-	register long i,j,s;
+	float p[8], ss=fabs(size)*0.35*font_factor;
+	float pp[32];
+	register long i,j;
 	memcpy(p,q,4*sizeof(float));	memcpy(p+4,q,4*sizeof(float));
-	if(type=='.' || type=='C' || ss==0)
-	{
-		bool aa=UseAlpha;	UseAlpha = true;
-		ss *= 1.1;	if(type=='C')	for(i=long(-4*ss);i<=long(4*ss);i++)
-			pnt_draw(q[0]+ss*cos(i*M_PI_4/ss), q[1]+ss*sin(i*M_PI_4/ss),q[2],cs);
-		s = long(5.5+fabs(PenWidth));
-		for(j=-s;j<=s;j++)	for(i=-s;i<=s;i++)
-		{
-			v = (i*i+j*j)/(9*PenWidth*PenWidth);
-			cs[3] = (unsigned char)((size>0 ? 255 : 255*q[6])*exp(-6.f*v));
-			if(cs[3]==0)	continue;
-			pnt_draw(q[0]+i,q[1]+j,q[2],cs);
-		}
-		UseAlpha = aa;
-	}
+	memcpy(pp,q,4*sizeof(float));	pp[4]=0;	pp[2]+=1;
+	pp[5]=pp[6]=pp[7]=NAN;			memcpy(pp+8,pp,8*sizeof(float));
+	memcpy(pp+16,pp,8*sizeof(float));	memcpy(pp+24,pp,8*sizeof(float));
+	if(type=='.' || ss==0)	pnt_draw(q);
 	else
 	{
 		float pw = PenWidth;	PenWidth = 1;
 		int pd = PDef;	PDef = 0xffff;
-		register float zv = strchr("oOVDTS",type) ? q[2]+1 : q[2];
 		if(!strchr("xsSoO",type))	ss *= 1.1;
 		switch(type)
 		{
 		case 'P':
 			p[0] = q[0]-ss;	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1]-ss;	line_draw(p,p+4);
-			p[0] = q[0]-ss;	p[1] = q[1]-ss;	p[4] = q[0]-ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
-			p[0] = q[0]-ss;	p[1] = q[1]+ss;	p[4] = q[0]+ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
-			p[0] = q[0]+ss;	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
+			p[0] = q[0]+ss;	p[1] = q[1]+ss;	line_draw(p,p+4);
+			p[4] = q[0]-ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
+			p[0] = q[0]-ss;	p[1] = q[1]-ss;	line_draw(p,p+4);
 		case '+':
 			p[0] = q[0]-ss;	p[1] = q[1];	p[4] = q[0]+ss;	p[5] = q[1];	line_draw(p,p+4);
 			p[0] = q[0];	p[1] = q[1]-ss;	p[4] = q[0];	p[5] = q[1]+ss;	line_draw(p,p+4);
 			break;
 		case 'X':
 			p[0] = q[0]-ss;	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1]-ss;	line_draw(p,p+4);
-			p[0] = q[0]-ss;	p[1] = q[1]-ss;	p[4] = q[0]-ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
-			p[0] = q[0]-ss;	p[1] = q[1]+ss;	p[4] = q[0]+ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
-			p[0] = q[0]+ss;	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
+			p[0] = q[0]+ss;	p[1] = q[1]+ss;	line_draw(p,p+4);
+			p[4] = q[0]-ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
+			p[0] = q[0]-ss;	p[1] = q[1]-ss;	line_draw(p,p+4);
 		case 'x':
 			p[0] = q[0]-ss;	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
 			p[0] = q[0]+ss;	p[1] = q[1]-ss;	p[4] = q[0]-ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
 			break;
 		case 'S':
-			for(j=long(-ss-1);j<=long(ss+1);j++)	for(i=long(-ss-1);i<=long(ss+1);i++)
-				pnt_draw(q[0]+i,q[1]+j,zv,cs);
+			pp[0] = q[0]-ss;	pp[1] = q[1]-ss;	pp[8] = q[0]-ss;	pp[9] = q[1]+ss;
+			pp[16]= q[0]+ss;	pp[17]= q[1]+ss;	pp[24]= q[0]+ss;	pp[25]= q[1]-ss;
+			quad_draw(pp,pp+8,pp+24,pp+16);
 		case 's':
 			p[0] = q[0]-ss;	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1]-ss;	line_draw(p,p+4);
-			p[0] = q[0]+ss;	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
-			p[0] = q[0]+ss;	p[1] = q[1]+ss;	p[4] = q[0]-ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
-			p[0] = q[0]-ss;	p[1] = q[1]+ss;	p[4] = q[0]-ss;	p[5] = q[1]-ss;	line_draw(p,p+4);
+			p[0] = q[0]+ss;	p[1] = q[1]+ss;	line_draw(p,p+4);
+			p[4] = q[0]-ss;	p[5] = q[1]+ss;	line_draw(p,p+4);
+			p[0] = q[0]-ss;	p[1] = q[1]-ss;	line_draw(p,p+4);
 			break;
 		case 'D':
-			for(j=long(-ss-1);j<=long(ss+1);j++)	for(i=long(-ss-1);i<=long(ss+1);i++)
-				if(abs(i)+abs(j)<=long(ss+1))
-					pnt_draw(long(q[0])+i,long(q[1])+j,zv,cs);
+			pp[0] = q[0];	pp[1] = q[1]-ss;	pp[8] = q[0]+ss;	pp[9] = q[1];
+			pp[16]= q[0];	pp[17]= q[1]+ss;	pp[24]= q[0]-ss;	pp[25]= q[1];
+			quad_draw(pp,pp+8,pp+24,pp+16);
 		case 'd':
 			p[0] = q[0];	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1];	line_draw(p,p+4);
-			p[0] = q[0]+ss;	p[1] = q[1];	p[4] = q[0];	p[5] = q[1]+ss;	line_draw(p,p+4);
-			p[0] = q[0];	p[1] = q[1]+ss;	p[4] = q[0]-ss;	p[5] = q[1];	line_draw(p,p+4);
-			p[0] = q[0]-ss;	p[1] = q[1];	p[4] = q[0];	p[5] = q[1]-ss;	line_draw(p,p+4);
+			p[0] = q[0];	p[1] = q[1]+ss;	line_draw(p,p+4);
+			p[4] = q[0]-ss;	p[5] = q[1];	line_draw(p,p+4);
+			p[0] = q[0];	p[1] = q[1]-ss;	line_draw(p,p+4);
 			break;
 		case 'Y':
-			p[0] = q[0];	p[1] = q[1]-ss;	p[4] = q[0];	p[5] = q[1];	line_draw(p,p+4);
-			p[0] = q[0]-0.8*ss;	p[1] = q[1]+0.6*ss;	p[4] = q[0];	p[5] = q[1];	line_draw(p,p+4);
-			p[0] = q[0]+0.8*ss;	p[1] = q[1]+0.6*ss;	p[4] = q[0];	p[5] = q[1];	line_draw(p,p+4);
+			p[0] = q[0];		p[1] = q[1]-ss;		p[4] = q[0];	p[5] = q[1];	line_draw(p,p+4);
+			p[0] = q[0]-0.8*ss;	p[1] = q[1]+0.6*ss;	line_draw(p,p+4);
+			p[0] = q[0]+0.8*ss;	p[1] = q[1]+0.6*ss;	line_draw(p,p+4);
 			break;
 		case '*':
-			p[0] = q[0]-ss;	p[1] = q[1];	p[4] = q[0]+ss;	p[5] = q[1];	line_draw(p,p+4);
+			p[0] = q[0]-ss;		p[1] = q[1];		p[4] = q[0]+ss;		p[5] = q[1];	line_draw(p,p+4);
 			p[0] = q[0]-0.6*ss;	p[1] = q[1]-0.8*ss;	p[4] = q[0]+0.6*ss;	p[5] = q[1]+0.8*ss;	line_draw(p,p+4);
 			p[0] = q[0]-0.6*ss;	p[1] = q[1]+0.8*ss;	p[4] = q[0]+0.6*ss;	p[5] = q[1]-0.8*ss;	line_draw(p,p+4);
 			break;
 		case 'T':
-			for(j=long(-ss/2-1);j<=long(ss+1);j++)	for(i=long(-ss-1);i<=long(ss+1);i++)
-				if(3*abs(i)+2*j<=long(2*ss+1))
-					pnt_draw(long(q[0])+i,long(q[1])+j,zv,cs);
+			pp[0] = q[0]-ss;	pp[1] = q[1]-ss/2;	pp[8] = q[0]+ss;	pp[9] = q[1]-ss/2;
+			pp[16]= q[0];		pp[17]= q[1]+ss;	trig_draw(pp,pp+8,pp+16);
 		case '^':
 			p[0] = q[0]-ss;	p[1] = q[1]-ss/2;	p[4] = q[0];	p[5] = q[1]+ss;		line_draw(p,p+4);
-			p[0] = q[0]-ss;	p[1] = q[1]-ss/2;	p[4] = q[0]+ss;	p[5] = q[1]-ss/2;	line_draw(p,p+4);
-			p[0] = q[0]+ss;	p[1] = q[1]-ss/2;	p[4] = q[0];	p[5] = q[1]+ss;		line_draw(p,p+4);
+			p[4] = q[0]+ss;	p[5] = q[1]-ss/2;	line_draw(p,p+4);
+			p[0] = q[0];	p[1] = q[1]+ss;		line_draw(p,p+4);
 			break;
 		case 'V':
-			for(j=long(-ss-1);j<=long(ss/2+1);j++)	for(i=long(-ss-1);i<=long(ss+1);i++)
-				if(3*abs(i)-2*j<=long(2*ss+1))
-					pnt_draw(long(q[0])+i,long(q[1])+j,zv,cs);
+			pp[0] = q[0]-ss;	pp[1] = q[1]+ss/2;	pp[8] = q[0]+ss;	pp[9] = q[1]+ss/2;
+			pp[16]= q[0];		pp[17]= q[1]-ss;	trig_draw(pp,pp+8,pp+16);
 		case 'v':
 			p[0] = q[0]-ss;	p[1] = q[1]+ss/2;	p[4] = q[0];	p[5] = q[1]-ss;		line_draw(p,p+4);
-			p[0] = q[0]-ss;	p[1] = q[1]+ss/2;	p[4] = q[0]+ss;	p[5] = q[1]+ss/2;	line_draw(p,p+4);
-			p[0] = q[0]+ss;	p[1] = q[1]+ss/2;	p[4] = q[0];	p[5] = q[1]-ss;		line_draw(p,p+4);
+			p[4] = q[0]+ss;	p[5] = q[1]+ss/2;	line_draw(p,p+4);
+			p[0] = q[0];	p[1] = q[1]-ss;		line_draw(p,p+4);
 			break;
 		case 'L':
-			for(j=long(-ss-1);j<=long(ss/2+1);j++)	for(i=long(-ss-1);i<=long(ss+1);i++)
-				if(3*abs(i)-2*j<=long(2*ss+1))
-					pnt_draw(long(q[0])+j,long(q[1])+i,zv,cs);
+			pp[0] = q[0]+ss/2;	pp[1] = q[1]+ss;	pp[8] = q[0]+ss/2;	pp[9] = q[1]-ss;
+			pp[16]= q[0]-ss;	pp[17]= q[1];		trig_draw(pp,pp+8,pp+16);
 		case '<':
 			p[0] = q[0]+ss/2;	p[1] = q[1]-ss;	p[4] = q[0]-ss;	p[5] = q[1];	line_draw(p,p+4);
-			p[0] = q[0]+ss/2;	p[1] = q[1]+ss;	p[4] = q[0]-ss;	p[5] = q[1];	line_draw(p,p+4);
-			p[0] = p[4] = q[0]+ss/2;	p[1] = q[1]-ss;	p[5] = q[1]+ss;			line_draw(p,p+4);
+			p[0] = q[0]+ss/2;	p[1] = q[1]+ss;	line_draw(p,p+4);
+			p[4] = p[0];		p[5] = q[1]-ss;	line_draw(p,p+4);
 			break;
 		case 'R':
-			for(j=long(-ss/2-1);j<=long(ss+1);j++)	for(i=long(-ss-1);i<=long(ss+1);i++)
-				if(3*abs(i)+2*j<=long(2*ss+1))
-					pnt_draw(long(q[0])+j,long(q[1])+i,zv,cs);
+			pp[0] = q[0]-ss/2;	pp[1] = q[1]+ss;	pp[8] = q[0]-ss/2;	pp[9] = q[1]-ss;
+			pp[16]= q[0]+ss;	pp[17]= q[1];		trig_draw(pp,pp+8,pp+16);
 		case '>':
 			p[0] = q[0]-ss/2;	p[1] = q[1]-ss;	p[4] = q[0]+ss;	p[5] = q[1];	line_draw(p,p+4);
-			p[0] = q[0]-ss/2;	p[1] = q[1]+ss;	p[4] = q[0]+ss;	p[5] = q[1];	line_draw(p,p+4);
-			p[0] = p[4] = q[0]-ss/2;	p[1] = q[1]-ss;	p[5] = q[1]+ss;			line_draw(p,p+4);
+			p[0] = q[0]-ss/2;	p[1] = q[1]+ss;	line_draw(p,p+4);
+			p[4] = p[0];		p[5] = q[1]-ss;	line_draw(p,p+4);
 			break;
 		case 'O':
 			for(j=long(-ss);j<=long(ss);j++)	for(i=long(-ss);i<=long(ss);i++)
 			{
 				if(i*i+j*j>=ss*ss)	continue;
-				pnt_draw(long(q[0])+i,long(q[1])+j,zv,cs);
+				pnt_plot(long(q[0])+i,long(q[1])+j,q[2]+1,cs);
 			}
 		case 'o':
+			for(i=0;i<40;i++)
+			{
+				p[0] = q[0]+ss*cos(i*M_PI/10);		p[1] = q[1]+ss*sin(i*M_PI/10);
+				p[4] = q[0]+ss*cos((i+1)*M_PI/10);	p[5] = q[1]+ss*sin((i+1)*M_PI/10);
+				line_draw(p,p+4);
+			}
+			break;
+		case 'C':
+			pnt_draw(q);
 			for(i=0;i<40;i++)
 			{
 				p[0] = q[0]+ss*cos(i*M_PI/10);		p[1] = q[1]+ss*sin(i*M_PI/10);

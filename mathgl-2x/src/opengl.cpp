@@ -187,7 +187,7 @@ unsigned char **mglCanvasGL::GetRGBLines(long &width, long &height, unsigned cha
 	return p;
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::trig_draw(float *p1, float *p2, float *p3,bool anorm)
+void mglCanvasGL::trig_draw(const float *p1, const float *p2, const float *p3, bool anorm)
 {
 	float c[4];
 	glBegin(GL_TRIANGLES);
@@ -200,7 +200,7 @@ void mglCanvasGL::trig_draw(float *p1, float *p2, float *p3,bool anorm)
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::quad_draw(float *p0, float *p1, float *p2, float *p3)
+void mglCanvasGL::quad_draw(const float *p0, const float *p1, const float *p2, const float *p3)
 {
 	float c[4];
 	glBegin(GL_QUADS);
@@ -215,7 +215,7 @@ void mglCanvasGL::quad_draw(float *p0, float *p1, float *p2, float *p3)
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::line_draw(float *p1, float *p2)
+void mglCanvasGL::line_draw(const float *p1, const float *p2)
 {
 	float c[4];
 	glBegin(GL_LINES);
@@ -226,11 +226,12 @@ void mglCanvasGL::line_draw(float *p1, float *p2)
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::pnt_draw(long x,long y,float z,unsigned char cc[4])
+void mglCanvasGL::pnt_draw(const float *p)
 {
-	float c[4]={cc[0]/255.,cc[1]/255.,cc[2]/255.,cc[3]/255.};
+	float c[4];
+	txt[long(p[3])].GetC(p[3],0,c);
 	glBegin(GL_POINTS);
-	glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(x,y,z);
+	glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p[0],p[1],p[2]);
 	glEnd();
 }
 //-----------------------------------------------------------------------------

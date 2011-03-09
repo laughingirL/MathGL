@@ -43,10 +43,10 @@ public:
 	virtual void Clf(mglColor Back=WC);
 
 protected:
-	virtual void line_draw(float *p1, float *p2);
-	virtual void trig_draw(float *p1, float *p2, float *p3,bool anorm=false);
-	virtual void quad_draw(float *p1, float *p2, float *p3, float *p4);
-	virtual void pnt_draw(long x,long y,float z,unsigned char c[4]);
+	virtual void line_draw(const float *p1, const float *p2);
+	virtual void trig_draw(const float *p1, const float *p2, const float *p3, bool anorm=false);
+	virtual void quad_draw(const float *p1, const float *p2, const float *p3, const float *p4);
+	virtual void pnt_draw(const float *p);
 
 	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 	virtual void LightScale();
