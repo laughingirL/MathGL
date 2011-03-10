@@ -47,35 +47,7 @@ struct gsl_vector;
 struct gsl_matrix;
 #endif
 /*****************************************************************************/
-HMGL mgl_create_graph_gl();
 HMGL mgl_create_graph_idtf();
-#ifndef MGL_NO_WIDGET
-int mgl_fortran_func(HMGL gr, void *);
-HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par);
-HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par);
-HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par);
-HMGL mgl_create_graph_glut_dr(HMDR dr, const char *title);
-HMGL mgl_create_graph_fltk_dr(HMDR dr, const char *title);
-HMGL mgl_create_graph_qt_dr(HMDR dr, const char *title);
-void mgl_fltk_run();
-void mgl_qt_run();
-
-void mgl_wnd_set_delay(HMGL gr, float dt);
-void mgl_setup_window(HMGL gr, int autoclf, int showpos, int clf_upd);
-void mgl_wnd_toggle_alpha(HMGL gr);
-void mgl_wnd_toggle_light(HMGL gr);
-void mgl_wnd_toggle_zoom(HMGL gr);
-void mgl_wnd_toggle_rotate(HMGL gr);
-void mgl_wnd_toggle_no(HMGL gr);
-void mgl_wnd_update(HMGL gr);
-void mgl_wnd_reload(HMGL gr, int o);
-void mgl_wnd_adjust(HMGL gr);
-void mgl_wnd_next_frame(HMGL gr);
-void mgl_wnd_prev_frame(HMGL gr);
-void mgl_wnd_animation(HMGL gr);
-#endif
-void mgl_set_show_mouse_pos(HMGL gr, int enable);
-void mgl_get_last_mouse_pos(HMGL gr, float *x, float *y, float *z);
 //void mgl_fltk_thread();
 //void mgl_qt_thread();
 void mgl_update(HMGL graph);
@@ -95,16 +67,6 @@ void mgl_parse_text(HMGL gr, HMPR p, const char *str);
 void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str);
 void mgl_restore_once(HMPR p);
 void mgl_parser_allow_setsize(HMPR p, int a);
-/*****************************************************************************/
-/*		Setup mglGraph														 */
-/*****************************************************************************/
-/*****************************************************************************/
-/*		Axis functions														 */
-/*****************************************************************************/
-
-/*****************************************************************************/
-/*		Simple drawing														 */
-/*****************************************************************************/
 /*****************************************************************************/
 #ifdef __cplusplus
 }

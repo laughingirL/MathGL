@@ -35,7 +35,7 @@
 			<Add directory="include" />
 		</Compiler>
 		<Linker>
-			<Add option="-lgsl -lgslcblas -lpthread -lz -lpng -lGL" />
+			<Add option="-lgsl -lgslcblas -lpthread -lz -lpng -lGL -lfltk" />
 		</Linker>
 		<Unit filename="TODO" />
 		<Unit filename="include/mgl/base.h" />
@@ -53,6 +53,8 @@
 		<Unit filename="include/mgl/mgl_c.h" />
 		<Unit filename="include/mgl/mgl_cf.h" />
 		<Unit filename="include/mgl/mgl_f.h" />
+		<Unit filename="include/mgl/mgl_fltk.h" />
+		<Unit filename="include/mgl/mgl_qt.h" />
 		<Unit filename="include/mgl/other.h" />
 		<Unit filename="include/mgl/plot.h" />
 		<Unit filename="include/mgl/prim.h" />
@@ -60,6 +62,7 @@
 		<Unit filename="include/mgl/text.h" />
 		<Unit filename="include/mgl/vect.h" />
 		<Unit filename="include/mgl/volume.h" />
+		<Unit filename="include/mgl/window.h" />
 		<Unit filename="src/axis.cpp" />
 		<Unit filename="src/base.cpp" />
 		<Unit filename="src/base_cf.cpp" />
@@ -91,6 +94,8 @@
 		<Unit filename="src/volume.cpp" />
 		<Unit filename="test.cpp" />
 		<Unit filename="todo.txt" />
+		<Unit filename="widget/fltk.cpp" />
+		<Unit filename="widget/window.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

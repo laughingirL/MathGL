@@ -25,7 +25,7 @@
 #define _MGL_EVAL_H_
 //---------------------------------------------------------------------------
 #include <math.h>
-#include "mgl/mgl_define.h"
+#include "mgl/define.h"
 /// types of errors
 #define MGL_ERR_LOG		1
 #define MGL_ERR_ARC		2

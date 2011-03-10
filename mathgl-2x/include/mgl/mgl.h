@@ -54,10 +54,10 @@ public:
 	{	mgl_set_tick_stl(gr, stl, sub);	}
 	inline void SetTickTime(char dir, float d, const char *t="%F")
 	{	mgl_set_tick_time(gr,dir,d,t);	}
-	inline void SetTicksVal(char dir, HCDT v, const char *lbl)
-	{	mgl_set_ticks_val(gr,dir,v,lbl);	}
-	inline void SetTicksVal(char dir, HCDT v, const wchar_t *lbl)
-	{	mgl_set_ticks_valw(gr,dir,v,lbl);	}
+	inline void SetTicksVal(char dir, const mglDataA &v, const char *lbl)
+	{	mgl_set_ticks_val(gr,dir,&v,lbl);	}
+	inline void SetTicksVal(char dir, const mglDataA &v, const wchar_t *lbl)
+	{	mgl_set_ticks_valw(gr,dir,&v,lbl);	}
 	inline void SetSize(int width, int height)	{	mgl_set_size(gr, width, height);	}
 	inline void SetBarWidth(float width)	{	mgl_set_bar_width(gr, width);	}
 	inline void SetMarkSize(float size)		{	mgl_set_mark_size(gr, size);	}
@@ -234,33 +234,33 @@ public:
 	inline void SetTickTempl(char dir, char *t)
 	{	mgl_set_tick_templ(gr,dir,t);	}
 
-	inline void Mark(float x, float y, float z, const char *mark)
-	{	mgl_mark(gr, x, y, z, mark);	}
-	inline void Line(float x1, float y1, float z1, float x2, float y2, float z2, const char *pen="B",int n=2)
-	{	mgl_line(gr, x1, y1, z1, x2, y2, z2, pen, n);	}
-	inline void FaceX(float x0, float y0, float z0, float wy, float wz, const char *stl="w", float dx=0, float dy=0)
-	{	mgl_facex(gr, x0, y0, z0, wy, wz, stl, dx, dy);	}
-	inline void FaceY(float x0, float y0, float z0, float wx, float wz, const char *stl="w", float dx=0, float dy=0)
-	{	mgl_facey(gr, x0, y0, z0, wx, wz, stl, dx, dy);	}
-	inline void FaceZ(float x0, float y0, float z0, float wx, float wy, const char *stl="w", float dx=0, float dy=0)
-	{	mgl_facez(gr, x0, y0, z0, wx, wy, stl, dx, dy);	}
-	inline void Curve(float x1, float y1, float z1, float dx1, float dy1, float dz1, float x2, float y2, float z2, float dx2, float dy2, float dz2, const char *pen="B", int n=100)
-	{	mgl_curve(gr, x1, y1, z1, dx1, dy1, dz1, x2, y2, z2, dx2, dy2, dz2, pen, n);	}
-	inline void Drop(float x0, float y0, float z0, float dx, float dy, float dz, float r, const char *col="r", float shift=1, float ap=1)
-	{	mgl_drop(gr, x0, y0, z0, dx, dy, dz, r, col, shift, ap);	}
-	inline void Sphere(float x0, float y0, float z0, float r, const char *col="r")
-	{	mgl_sphere(gr, x0, y0, z0, r, col);	}
-	inline void Cone (float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2=-1, const char *stl="B", bool edge=false)
-	{	mgl_cone(gr, x1,y1,z1,x2,y2,z2,r1,r2,stl,edge);	}
+	inline void Mark(mglPoint p, const char *mark)
+	{	mgl_mark(gr, p.x, p.y, p.z, mark);	}
+	inline void Line(mglPoint p1, mglPoint p2, const char *pen="B",int n=2)
+	{	mgl_line(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, pen, n);	}
+	inline void FaceX(mglPoint p, float wy, float wz, const char *stl="w", float dx=0, float dy=0)
+	{	mgl_facex(gr, p.x, p.y, p.z, wy, wz, stl, dx, dy);	}
+	inline void FaceY(mglPoint p, float wx, float wz, const char *stl="w", float dx=0, float dy=0)
+	{	mgl_facey(gr, p.x, p.y, p.z, wx, wz, stl, dx, dy);	}
+	inline void FaceZ(mglPoint p, float wx, float wy, const char *stl="w", float dx=0, float dy=0)
+	{	mgl_facez(gr, p.x, p.y, p.z, wx, wy, stl, dx, dy);	}
+	inline void Curve(mglPoint p1, mglPoint d1, mglPoint p2, mglPoint d2, const char *pen="B", int n=100)
+	{	mgl_curve(gr, p1.x, p1.y, p1.z, d1.x, d1.y, d1.z, p2.x, p2.y, p2.z, d2.x, d2.y, d2.z, pen, n);	}
+	inline void Drop(mglPoint p, mglPoint d, float r, const char *col="r", float shift=1, float ap=1)
+	{	mgl_drop(gr, p.x, p.y, p.z, d.x, d.y, d.z, r, col, shift, ap);	}
+	inline void Sphere(mglPoint p, float r, const char *col="r")
+	{	mgl_sphere(gr, p.x, p.y, p.z, r, col);	}
+	inline void Cone (mglPoint p1, mglPoint p2, float r1, float r2=-1, const char *stl="B", bool edge=false)
+	{	mgl_cone(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z,r1,r2,stl,edge);	}
 
-	inline void Putsw(float x, float y, float z,const wchar_t *text,const char *font="C",float size=-1)
-	{	mgl_putsw(gr, x, y, z, text, font, size);	}
-	inline void Puts(float x, float y, float z,const char *text,const char *font="C",float size=-1)
-	{	mgl_puts(gr, x, y, z, text, font, size);	}
-	inline void Putsw(float x, float y, float z, float dx, float dy, float dz, const wchar_t *text, const char *font="C", float size=-1)
-	{	mgl_putsw_dir(gr, x, y, z, dx, dy, dz, text, font, size);	}
-	inline void Puts(float x, float y, float z, float dx, float dy, float dz, const char *text, const char *font="C", float size=-1)
-	{	mgl_puts_dir(gr, x, y, z, dx, dy, dz, text, font, size);	}
+	inline void Putsw(mglPoint p,const wchar_t *text,const char *font="C",float size=-1)
+	{	mgl_putsw(gr, p.x, p.y, p.z, text, font, size);	}
+	inline void Puts(mglPoint p,const char *text,const char *font="C",float size=-1)
+	{	mgl_puts(gr, p.x, p.y, p.z, text, font, size);	}
+	inline void Putsw(mglPoint p, mglPoint d, const wchar_t *text, const char *font="C", float size=-1)
+	{	mgl_putsw_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, text, font, size);	}
+	inline void Puts(mglPoint p, mglPoint d, const char *text, const char *font="C", float size=-1)
+	{	mgl_puts_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, text, font, size);	}
 	inline void Title(const char *text, const char *font="C", float size=-2)
 	{	mgl_title(gr, text, font, size);	}
 	inline void Title(const wchar_t *text, const char *font="C", float size=-2)

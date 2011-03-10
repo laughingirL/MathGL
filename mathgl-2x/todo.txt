@@ -17,3 +17,8 @@ TODO: Arrows at flow lines ?!?
 TODO: BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
 
 TODO: mgl_circle_ext(x,y,z,r,col,dx,dy,dz) + mgl_circle(x,y,r,col) as primitive
+
+TODO: Box + edges + half-transparent
+
+TODO: 3D-like solid marks
+

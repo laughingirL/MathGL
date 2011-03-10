@@ -30,7 +30,6 @@ extern "C" {
 #endif
 #define _PR_	((mglParse *)(*p))
 /*****************************************************************************/
-uintptr_t mgl_create_graph_gl_();
 uintptr_t mgl_create_graph_idtf_();
 /*****************************************************************************/
 uintptr_t mgl_create_parser_();
@@ -49,23 +48,6 @@ uintptr_t mgl_create_graph_fltk_(const char *title, int);
 uintptr_t mgl_create_graph_qt_(const char *title, int);
 void mgl_fltk_run_();
 void mgl_qt_run_();
-void mgl_get_last_mouse_pos_(uintptr_t *gr, float *x, float *y, float *z);
-//void mgl_fltk_thread_();
-//void mgl_qt_thread_();
-
-void mgl_wnd_set_delay_(uintptr_t *gr, float *dt);
-void mgl_setup_window_(uintptr_t *gr, int *autoclf, int *showpos, int *clf_upd);
-void mgl_wnd_toggle_alpha_(uintptr_t *gr);
-void mgl_wnd_toggle_light_(uintptr_t *gr);
-void mgl_wnd_toggle_zoom_(uintptr_t *gr);
-void mgl_wnd_toggle_rotate_(uintptr_t *gr);
-void mgl_wnd_toggle_no_(uintptr_t *gr);
-void mgl_wnd_update_(uintptr_t *gr);
-void mgl_wnd_reload_(uintptr_t *gr, int *o);
-void mgl_wnd_adjust_(uintptr_t *gr);
-void mgl_wnd_next_frame_(uintptr_t *gr);
-void mgl_wnd_prev_frame_(uintptr_t *gr);
-void mgl_wnd_animation_(uintptr_t *gr);
 /*****************************************************************************/
 /*****************************************************************************/
 

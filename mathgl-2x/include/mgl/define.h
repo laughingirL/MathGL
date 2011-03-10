@@ -171,15 +171,5 @@ extern int mglNumThr;		///< Number of thread for plotting and data handling
 extern bool mglTestMode;
 void mglTest(const char *str, ...);
 //-----------------------------------------------------------------------------
-/// Class for drawing in windows (like, mglGraphFLTK, mglGraphQT and so on)
-/// Make inherited class and redefine Draw() function if you don't want to use function pointers.
-struct mglGraph;
-struct mglDraw
-{
-	virtual int Draw(mglGraph *)	{	return 0;	};
-	virtual void Reload(int)	{};
-	virtual ~mglDraw()	{};
-};
-//-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------
