@@ -239,7 +239,7 @@ void mgl_data_mirror_(uintptr_t *dat, const char *dir,int);
 void mgl_data_hankel_(uintptr_t *dat, const char *dir,int);
 void mgl_data_sinfft_(uintptr_t *dat, const char *dir,int);
 void mgl_data_cosfft_(uintptr_t *dat, const char *dir,int);
-void mgl_data_fill_sample_(uintptr_t *dat, int num, const char *how,int);
+void mgl_data_fill_sample_(uintptr_t *dat, int *num, const char *how,int);
 
 float mgl_data_spline_(uintptr_t *dat, float *x,float *y,float *z);
 float mgl_data_linear_(uintptr_t *dat, float *x,float *y,float *z);
@@ -266,10 +266,6 @@ void mgl_data_add_num_(uintptr_t *dat, float *d);
 void mgl_data_sub_num_(uintptr_t *dat, float *d);
 /*****************************************************************************/
 /*		Nonlinear fitting													 */
-/*****************************************************************************/
-void mgl_hist_x_(uintptr_t* gr, uintptr_t* res, uintptr_t* x, uintptr_t* a);
-void mgl_hist_xy_(uintptr_t* gr, uintptr_t* res, uintptr_t* x, uintptr_t* y, uintptr_t* a);
-void mgl_hist_xyz_(uintptr_t* gr, uintptr_t* res, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a);
 /*****************************************************************************/
 uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, float *dz, float *k0,int);
 uintptr_t mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, float *r, float *k0, uintptr_t* xx, uintptr_t* yy, int);

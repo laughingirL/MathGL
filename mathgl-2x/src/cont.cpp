@@ -144,6 +144,23 @@ void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *text, const ch
 	delete []ff;	delete []nn;
 }
 //-----------------------------------------------------------------------------
+void mgl_textw_xy(HMGL gr, HCDT x, HCDT y, const wchar_t *text, const char *font, float size)
+{
+	if(y->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"Text");	return;	}
+	mglData z(y->GetNx());
+	z.Fill(gr->Min.z,gr->Min.z);
+	mgl_textw_xyz(gr,x,y,&z,text,font,size);
+}
+//-----------------------------------------------------------------------------
+void mgl_textw_y(HMGL gr, HCDT y, const wchar_t *text, const char *font, float size)
+{
+	if(y->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"Text");	return;	}
+	mglData x(y->GetNx()), z(y->GetNx());
+	x.Fill(gr->Min.x,gr->Max.x);
+	z.Fill(gr->Min.z,gr->Min.z);
+	mgl_textw_xyz(gr,&x,y,&z,text,font,size);
+}
+//-----------------------------------------------------------------------------
 void mgl_text_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const char *text, const char *font, float size)
 {
 	unsigned s = strlen(text)+1;

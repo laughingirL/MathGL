@@ -29,7 +29,7 @@ public:
 	mglCanvasGL();
 	virtual ~mglCanvasGL();
 
-	virtual void Finish()	{	glFinish();	}
+	virtual void Finish();
 	virtual void SetSize(int w,int h)	{}
 	virtual void View(float tetX,float tetY,float tetZ);
 	virtual int NewFrame();
@@ -55,9 +55,9 @@ protected:
 extern "C" {
 #endif
 /*****************************************************************************/
-HMGL mgl_create_graph_gl(int width, int height);
+HMGL mgl_create_graph_gl();
 /*****************************************************************************/
-uintptr_t mgl_create_graph_gl_(int *width, int *height);
+uintptr_t mgl_create_graph_gl_();
 /*****************************************************************************/
 #ifdef __cplusplus
 }

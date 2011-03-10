@@ -26,14 +26,14 @@
 #include <getopt.h>
 #include <mgl/mgl.h>
 //#include <mgl/mgl_idtf.h>
-//#include "mgl/parse.h"
+#include "mgl/parser.h"
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
-//	mglParse par;
-//	par.AllowSetSize = true;
+	mglParse par;
+	par.AllowSetSize = true;
 	FILE *fp=fopen("test.mgl","rt");
-//	par.Execute(gr,fp,true);
+	par.Execute(*gr,fp,true);
 	fclose(fp);
 /*	gr->SetDrawReg(2,2,1);
 	gr->Rotate(40,60);
@@ -41,7 +41,7 @@ int test(mglGraph *gr)
 	gr->SubPlot(2,2,1);	gr->Box();*/
 
 //	gr->Box();
-//	gr->ShowImage("",true);
+	gr->ShowImage("",true);
 	return 0;
 }
 //=============================================================================
@@ -341,7 +341,7 @@ void smgl_qo2d(mglGraph *gr)
 	// now start beam tracing
 	gr->Fill(re,"exp(-48*x^2)");
 	a = mglQO2d(ham, re, im, r, 1, 30, &xx, &yy);
-	gr->SetCRange(0, 1);
+	gr->SetRange('c',0, 1);
 	gr->Dens(xx, yy, a, "wyrRk");
 	gr->Plot("-x", "k|");
 	gr->Puts(mglPoint(0, 0.85), "absorption: (x+y)/2 for x+y>0");
@@ -361,9 +361,9 @@ void smgl_pde(mglGraph *gr)	// PDE and Ray sample
 	gr->Fill(re,"exp(-48*(x+0.7)^2)");
 	a = gr->PDE("p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)", re, im, 0.01, 30);
 	a.Transpose("yxz");
-	gr->SetCRange(0, 1);
+	gr->SetRange('c',0, 1);
 	gr->Dens(a,"wyrRk");
-	gr->Plot("-x", "k|", (type==5 || type==9 || type==10)?0.01:NAN);
+	gr->Plot("-x", "k|");
 	gr->Puts(mglPoint(0, 0.85), "absorption: (x+z)/2 for x+z>0");
 	gr->Title("Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0", "C", -float(width)/height);
 	gr->Compression(false);  //put setting back
@@ -484,7 +484,7 @@ void smgl_sampleb(mglGraph *gr)	// Gaussian beam
 	mglData a(30,30,30), b(30,30,30);
 	a.Modify("exp(-16*((z-0.5)^2+(y-0.5)^2)/(1+4*x^2))");
 	b.Modify("16*((z-0.5)^2+(y-0.5)^2)*(x)/(1+4*x^2)");
-	gr->SetCRange(0,1);
+	gr->SetRange('c',0,1);
 
 	gr->SubPlot(2,2,0);	gr->Rotate(40,60);
 	gr->VertexColor(false);
@@ -1238,13 +1238,13 @@ void smgl_vect(mglGraph *gr)
 void smgl_vectl(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2v(&a,&b);
-	gr->Box();	gr->Vect(a,b,"",NAN,MGL_VEC_COL|MGL_VEC_DOT|MGL_VEC_GRD);
+	gr->Box();	gr->Vect(a,b,"",NAN, MGL_VECTL);
 }
 //-----------------------------------------------------------------------------
 void smgl_vectc(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2v(&a,&b);
-	gr->Box();	gr->Vect(a,b,"",NAN,MGL_VEC_LEN|MGL_VEC_DOT|MGL_VEC_GRD);
+	gr->Box();	gr->Vect(a,b,"",NAN, MGL_VECTC);
 }
 //-----------------------------------------------------------------------------
 void smgl_flow(mglGraph *gr)
@@ -1322,14 +1322,14 @@ void smgl_vectl3(mglGraph *gr)
 {
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
 	gr->Rotate(40,60);
-	gr->Box();	gr->Box();	gr->Vect(ex,ey,ez,"bwr",MGL_VEC_COL|MGL_VEC_DOT|MGL_VEC_GRD);
+	gr->Box();	gr->Box();	gr->Vect(ex,ey,ez,"bwr", MGL_VECTL);
 }
 //-----------------------------------------------------------------------------
 void smgl_vectc3(mglGraph *gr)
 {
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
 	gr->Rotate(40,60);
-	gr->Box();	gr->Box();	gr->Vect(ex,ey,ez,"bwr",MGL_VEC_LEN|MGL_VEC_DOT|MGL_VEC_GRD);
+	gr->Box();	gr->Box();	gr->Vect(ex,ey,ez,"bwr", MGL_VECTC);
 }
 //-----------------------------------------------------------------------------
 void smgl_pipe3(mglGraph *gr)
@@ -1601,7 +1601,7 @@ void smgl_fit(mglGraph *gr)	// nonlinear fitting
 	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));	gr->SetOrigin(0,0,0);
 }
 //-----------------------------------------------------------------------------
-/*#include "mgl/parse.h"	// TODO: Add parser sample
+#include "mgl/parser.h"
 void smgl_parser(mglGraph *gr)	// example of MGL parsing
 {
 	mreal a[100];   // let a_i = sin(4*pi*x), x=0...1
@@ -1609,14 +1609,14 @@ void smgl_parser(mglGraph *gr)	// example of MGL parsing
 	mglParse *parser = new mglParse;
 	mglData &d =(parser->AddVar("dat"))->d;
 	d.Set(a,100); // set data to variable
-	parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
+	parser->Execute(*gr, "plot dat; xrange 0 1\nbox\naxis");
 	// you may break script at any line do something
 	// and continue after that
-	parser->Execute(gr, "xlabel 'x'\nylabel 'y'\nbox");
+	parser->Execute(*gr, "xlabel 'x'\nylabel 'y'\nbox");
 	// also you may use cycles or conditions in script
-	parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+	parser->Execute(*gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
 	delete parser;
-}*/
+}
 //-----------------------------------------------------------------------------
 void smgl_2_axis(mglGraph *gr)	// 2 axis
 {
@@ -1641,8 +1641,8 @@ void smgl_surf_cont(mglGraph *gr)	// contour lines over surface
 	mglData a;	mgls_prepare2d(&a);
 	gr->Rotate(40,60);
 	gr->Box();	gr->Surf(a,"kw");
-	gr->SetCRange(-1,0);	gr->Cont(a,"w");
-	gr->SetCRange( 0,1);	gr->Cont(a,"k");
+	gr->SetRange('c',-1,0);	gr->Cont(a,"w");
+	gr->SetRange('c', 0,1);	gr->Cont(a,"k");
 }
 //-----------------------------------------------------------------------------
 void smgl_mesh_cont(mglGraph *gr)	// contours under mesh
@@ -1670,7 +1670,7 @@ void smgl_surf_caxis(mglGraph *gr)	// caxis and the surface
 {
 	mglData a;	mgls_prepare2d(&a);
 	gr->Rotate(40,60);	gr->Light(true);
-	gr->SetCRange(0,1);	gr->Box();	gr->Surf(a);
+	gr->SetRange('c',0,1);	gr->Box();	gr->Surf(a);
 }
 //-----------------------------------------------------------------------------
 void smgl_surf_cut(mglGraph *gr)	// cutting
@@ -1854,7 +1854,7 @@ mglSample samp[] = {
 	{"mesh_cont", smgl_mesh_cont},
 	{"mirror", smgl_mirror},
 	{"molecule", smgl_molecule},
-//	{"parser", smgl_parser},	// TODO: Add parser sample
+	{"parser", smgl_parser},
 	{"pde", smgl_pde},
 	{"pie_chart", smgl_pie_chart},
 	{"pipe", smgl_pipe},

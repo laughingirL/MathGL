@@ -489,3 +489,9 @@ void mgl_write_frame_(uintptr_t *gr, const char *fname,const char *descr,int l,i
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	_GR_->WriteFrame(s,f);	delete []s;		delete []f;}
 //-----------------------------------------------------------------------------
+void mgl_show_image(HMGL gr, const char *viewer, int keep)
+{	_Gr_->ShowImage(viewer,keep);	}
+void mgl_show_image_(uintptr_t *gr, const char *viewer, int *keep, int l)
+{	char *s=new char[l+1];	memcpy(s,viewer,l);	s[l]=0;
+	_GR_->ShowImage(s,*keep);	delete []s;	}
+//-----------------------------------------------------------------------------

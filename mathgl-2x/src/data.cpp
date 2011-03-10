@@ -510,7 +510,7 @@ void mgl_data_roll(HMDT dd, char dir, long num)
 		memcpy(a,b,nx*ny*nz*sizeof(mreal));	delete []b;
 	}
 }
-void mgl_data_swap_(uintptr_t *d, const char *dir, int *num, int)
+void mgl_data_roll_(uintptr_t *d, const char *dir, int *num, int)
 {	mgl_data_roll(_DT_,*dir,*num);	}
 //-----------------------------------------------------------------------------
 void mgl_data_mirror(HMDT d, const char *dir)

@@ -34,6 +34,7 @@ void mgl_curve(HMGL gr, float x1, float y1, float z1, float dx1, float dy1, floa
 
 void mgl_error_box(HMGL gr, float x, float y, float z, float ex, float ey, float ez, const char *pen);
 
+void mgl_face(HMGL gr, float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, const char *stl);
 void mgl_facex(HMGL gr, float x0, float y0, float z0, float wy, float wz, const char *stl, float dx, float dy);
 void mgl_facey(HMGL gr, float x0, float y0, float z0, float wx, float wz, const char *stl, float dx, float dy);
 void mgl_facez(HMGL gr, float x0, float y0, float z0, float wx, float wy, const char *stl, float dx, float dy);
@@ -71,6 +72,7 @@ void mgl_curve_(uintptr_t* gr, float *x1, float *y1, float *z1, float *dx1, floa
 
 void mgl_error_box_(uintptr_t* gr, float *x, float *y, float *z, float *ex, float *ey, float *ez, const char *pen, int);
 
+void mgl_face_(uintptr_t* gr, float *x0, float *y0, float *z0, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *x3, float *y3, float *z3, const char *stl, int);
 void mgl_facex_(uintptr_t* gr, float *x0, float *y0, float *z0, float *wy, float *wz, const char *stl, float *dx, float *dy, int l);
 void mgl_facey_(uintptr_t* gr, float *x0, float *y0, float *z0, float *wx, float *wz, const char *stl, float *dx, float *dy, int l);
 void mgl_facez_(uintptr_t* gr, float *x0, float *y0, float *z0, float *wx, float *wy, const char *stl, float *dx, float *dy, int l);
@@ -89,6 +91,8 @@ void mgl_textmark_(uintptr_t *graph, uintptr_t *y, const char *text, const char 
 
 void mgl_puts_fit_(uintptr_t* gr, float *x, float *y, float *z, const char *prefix, const char *font, float *size, int l, int n);
 
+void mgl_dew_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *zVal,int l);
+void mgl_dew_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, mreal *zVal,int l);
 /*****************************************************************************/
 #ifdef __cplusplus
 }

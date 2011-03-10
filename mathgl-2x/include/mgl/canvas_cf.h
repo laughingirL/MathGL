@@ -42,7 +42,7 @@ void mgl_set_tick_templ(HMGL graph, char dir, const char *templ);
 void mgl_set_tick_templw(HMGL graph, char dir, const wchar_t *templ);
 void mgl_set_tick_time(HMGL gr, char dir, float d, const char *t);
 
-void mgl_box(HMGL graph, int ticks);
+void mgl_box(HMGL graph);
 void mgl_box_str(HMGL graph, const char *col, int ticks);
 void mgl_axis(HMGL graph, const char *dir);
 void mgl_axis_grid(HMGL graph, const char *dir,const char *pen);
@@ -191,8 +191,7 @@ void mgl_set_light_(uintptr_t *graph, int *enable);
 void mgl_set_light_n_(uintptr_t *gr, int *n, int *enable);
 void mgl_add_light_(uintptr_t *graph, int *n, float *x, float *y, float *z, char *c, int);
 void mgl_add_light(HMGL graph, int n, float x, float y, float z, char c);
-void mgl_add_light_ext_(HMGL graph, int n, float x, float y, float z, char c, float br, bool inf, float ap);
-void mgl_add_light_rgb_(uintptr_t *graph, int *n, float *x, float *y, float *z, char *c, float *br, int *inf, float *ap, int);
+void mgl_add_light_ext_(uintptr_t *graph, int *n, float *x, float *y, float *z, char *c, float *br, int *inf, float *ap, int);
 void mgl_set_ambbr_(uintptr_t *gr, float *i);
 
 void mgl_mat_push_(uintptr_t *gr);

@@ -119,6 +119,8 @@ enum{	// types of predefined curvelinear coordinate systems
 #define MGL_VEC_MID	8	// draw vector with point at center
 #define MGL_VEC_DOT	16	// draw dot instead of vector
 #define MGL_VEC_GRD	32	// enable color gradient along vector/dash
+#define MGL_VECTC MGL_VEC_LEN|MGL_VEC_DOT|MGL_VEC_GRD
+#define MGL_VECTL MGL_VEC_COL|MGL_VEC_DOT|MGL_VEC_GRD
 //-----------------------------------------------------------------------------
 enum{	// Codes for warnings/messages
 	mglWarnNone = 0,// Everything OK

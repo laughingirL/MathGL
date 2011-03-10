@@ -39,8 +39,8 @@ void mglCanvas::AddLegend(const wchar_t *text,const char *style)
 	if(!text)	return;
 	if(NumLeg>=100)	{	SetWarn(mglWarnLegA);	return;	}
 	LegStr[NumLeg] = mgl_wcsdup(text);
-	if(style)	LegStl[NumLeg] = mgl_strdup(style);
-	else		LegStl[NumLeg] = mgl_strdup(last_style);
+	if(style && *style)	LegStl[NumLeg] = mgl_strdup(style);
+	else	LegStl[NumLeg] = mgl_strdup(last_style);
 	NumLeg++;
 }
 //-----------------------------------------------------------------------------

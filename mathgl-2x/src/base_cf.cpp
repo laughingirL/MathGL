@@ -23,9 +23,10 @@
 //		C interfaces
 //
 //-----------------------------------------------------------------------------
-void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, float z2)
-{	gr->SetAutoRanges(x1,x2,y1,y2,z1,z2);	}
+void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, float z2, float c1, float c2)
+{	gr->SetAutoRanges(x1,x2,y1,y2,z1,z2,c1,c2);	}
 int mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}
+void mgl_set_warn(HMGL gr, int code)	{	return gr->SetWarn(code);	}
 void mgl_set_origin(HMGL gr, float x0, float y0, float z0)
 {	gr->SetOrigin(x0,y0,z0);	}
 void mgl_set_palette(HMGL gr, const char *colors)
@@ -39,14 +40,18 @@ void mgl_set_cut_box(HMGL gr, float x1,float y1,float z1,float x2,float y2,float
 void mgl_set_cutoff(HMGL gr, const char *EqC)	{	gr->CutOff(EqC);	}
 //-----------------------------------------------------------------------------
 void mgl_set_ternary(HMGL gr, int enable)			{	gr->Ternary(enable);	}
-void mgl_set_crange_val(HMGL gr, float v1,float v2)	{	gr->CRange(v1,v2);	}
-void mgl_set_xrange_val(HMGL gr, float v1,float v2)	{	gr->XRange(v1,v2);	}
-void mgl_set_yrange_val(HMGL gr, float v1,float v2)	{	gr->YRange(v1,v2);	}
-void mgl_set_zrange_val(HMGL gr, float v1,float v2)	{	gr->ZRange(v1,v2);	}
-void mgl_set_crange(HMGL gr, HCDT a, int add)	{	gr->CRange(_Da_(a),add);	}
-void mgl_set_xrange(HMGL gr, HCDT a, int add)	{	gr->XRange(_Da_(a),add);	}
-void mgl_set_yrange(HMGL gr, HCDT a, int add)	{	gr->YRange(_Da_(a),add);	}
-void mgl_set_zrange(HMGL gr, HCDT a, int add)	{	gr->ZRange(_Da_(a),add);	}
+void mgl_set_range_val(HMGL gr, char dir, float v1,float v2)
+{
+	if(dir=='c')		gr->CRange(v1,v2);
+	else if(dir=='x')	gr->XRange(v1,v2);
+	else if(dir=='y')	gr->YRange(v1,v2);
+	else if(dir=='z')	gr->ZRange(v1,v2);	}
+void mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add)
+{
+	if(dir=='c')		gr->CRange(_Da_(a),add);
+	else if(dir=='x')	gr->XRange(_Da_(a),add);
+	else if(dir=='y')	gr->YRange(_Da_(a),add);
+	else if(dir=='z')	gr->ZRange(_Da_(a),add);	}
 void mgl_set_ranges(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2)
 {	gr->SetRanges(x1,y1,z1,x2,y2,z2);	}
 void mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ)
@@ -67,11 +72,12 @@ void mgl_set_bar_width(HMGL gr, float width)	{	gr->SetBarWidth(width);	}
 //		Fortran interfaces
 //
 //-----------------------------------------------------------------------------
-void mgl_set_auto_(uintptr_t *gr, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2)
-{	_GR_->SetAutoRanges(*x1,*x2,*y1,*y2,*z1,*z2);	}
+void mgl_set_auto_(uintptr_t *gr, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2, float *c1, float *c2)
+{	_GR_->SetAutoRanges(*x1,*x2,*y1,*y2,*z1,*z2,*c1,*c2);	}
 void mgl_set_origin_(uintptr_t *gr, float *x0, float *y0, float *z0)
 {	_GR_->SetOrigin(*x0,*y0,*z0);	}
 int mgl_get_warn_(uintptr_t *gr)	{	return _GR_->GetWarn();	}
+void mgl_set_warn_(uintptr_t *gr, int *code)	{	return _GR_->SetWarn(*code);	}
 void mgl_set_palette_(uintptr_t *gr, const char *colors, int l)
 {	char *s=new char[l+1];	memcpy(s,colors,l);	s[l]=0;
 	_GR_->SetPalette(s);	delete []s;	}
@@ -86,14 +92,18 @@ void mgl_set_cutoff_(uintptr_t *gr, const char *EqC, int l)
 	_GR_->CutOff(s);	delete []s;	}
 //-----------------------------------------------------------------------------
 void mgl_set_ternary_(uintptr_t *gr, int *enable)			{	_GR_->Ternary(*enable);	}
-void mgl_set_crange_val_(uintptr_t *gr, float *v1,float *v2){	_GR_->CRange(*v1,*v2);	}
-void mgl_set_xrange_val_(uintptr_t *gr, float *v1,float *v2){	_GR_->XRange(*v1,*v2);	}
-void mgl_set_yrange_val_(uintptr_t *gr, float *v1,float *v2){	_GR_->YRange(*v1,*v2);	}
-void mgl_set_zrange_val_(uintptr_t *gr, float *v1,float *v2){	_GR_->ZRange(*v1,*v2);	}
-void mgl_set_crange_(uintptr_t *gr, uintptr_t *a, int *add)	{	_GR_->CRange(*_DA_(a),*add);	}
-void mgl_set_xrange_(uintptr_t *gr, uintptr_t *a, int *add)	{	_GR_->XRange(*_DA_(a),*add);	}
-void mgl_set_yrange_(uintptr_t *gr, uintptr_t *a, int *add)	{	_GR_->YRange(*_DA_(a),*add);	}
-void mgl_set_zrange_(uintptr_t *gr, uintptr_t *a, int *add)	{	_GR_->ZRange(*_DA_(a),*add);	}
+void mgl_set_range_val_(uintptr_t *gr, const char *dir, float *v1,float *v2,int)
+{
+	if(*dir=='c')		_GR_->CRange(*v1,*v2);
+	else if(*dir=='x')	_GR_->XRange(*v1,*v2);
+	else if(*dir=='y')	_GR_->YRange(*v1,*v2);
+	else if(*dir=='z')	_GR_->ZRange(*v1,*v2);	}
+void mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,int)
+{
+	if(*dir=='c')		_GR_->CRange(*_DA_(a),*add);
+	else if(*dir=='x')	_GR_->XRange(*_DA_(a),*add);
+	else if(*dir=='y')	_GR_->YRange(*_DA_(a),*add);
+	else if(*dir=='z')	_GR_->ZRange(*_DA_(a),*add);	}
 void mgl_set_ranges_(uintptr_t *gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2)
 {	_GR_->SetRanges(*x1,*y1,*z1,*x2,*y2,*z2);	}
 void mgl_set_func_(uintptr_t *gr, const char *EqX,const char *EqY,const char *EqZ,int lx,int ly,int lz)
@@ -126,6 +136,7 @@ void mgl_set_rotated_text(HMGL gr, int rotated)	{	gr->SetRotatedText(rotated);	}
 void mgl_set_mark_size(HMGL gr, mreal size)		{	gr->SetMarkSize(size);	}
 void mgl_set_arrow_size(HMGL gr, mreal size)	{	gr->SetArrowSize(size);	}
 void mgl_set_font_size(HMGL gr, mreal size)		{	gr->SetFontSize(size);	}
+void mgl_set_font_def(HMGL gr, const char *fnt)	{	gr->SetFontDef(fnt);	}
 void mgl_load_font(HMGL gr, const char *name, const char *path)
 {	gr->GetFont()->Load(name,path);	}
 void mgl_copy_font(HMGL gr, HMGL gr_from)		{	gr->GetFont()->Copy(gr_from->GetFont());	}
@@ -136,6 +147,9 @@ void mgl_set_rotated_text_(uintptr_t *gr, int *rotated)	{	_GR_->SetRotatedText(*
 void mgl_set_mark_size_(uintptr_t *gr, mreal *size)		{	_GR_->SetMarkSize(*size);	}
 void mgl_set_arrow_size_(uintptr_t *gr, mreal *size)	{	_GR_->SetArrowSize(*size);	}
 void mgl_set_font_size_(uintptr_t *gr, mreal *size)		{	_GR_->SetFontSize(*size);	}
+void mgl_set_font_def_(uintptr_t *gr, char *name, int l)
+{	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
+	_GR_->SetFontDef(s);	delete []s;	}
 void mgl_load_font_(uintptr_t *gr, char *name, char *path, int l,int n)
 {	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
 	char *d=new char[n+1];		memcpy(d,path,n);	d[n]=0;
@@ -168,4 +182,9 @@ void mgl_test_txt(const char *str, ...)
 }
 void mgl_set_test_mode(int enable)
 {	mglTestMode=enable;	}
+//---------------------------------------------------------------------------
+void mgl_save_state(HMGL gr)	{	gr->SaveState();	}
+void mgl_load_state(HMGL gr)	{	gr->LoadState();	}
+void mgl_save_state_(uintptr_t *gr)	{	_GR_->SaveState();	}
+void mgl_load_state_(uintptr_t *gr)	{	_GR_->LoadState();	}
 //---------------------------------------------------------------------------

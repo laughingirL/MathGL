@@ -272,7 +272,7 @@ void mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, co
 }
 //-----------------------------------------------------------------------------
 //
-//	Flow series
+//	Flow 2d series
 //
 //-----------------------------------------------------------------------------
 void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay,long ss)
@@ -390,6 +390,13 @@ void mgl_flow_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, int num, float zVal
 	mgl_flow_xy(gr,&x,&y,ax,ay,sch,num,zVal);
 }
 //-----------------------------------------------------------------------------
+void mgl_flow_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, int *num, float *zVal,int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_flow_xy(_GR_, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, *num, *zVal);	delete []s;	}
+void mgl_flow_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, int *num, float *zVal,int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_flow_2d(_GR_, _DA_(ax), _DA_(ay), s, *num, *zVal);	delete []s;	}
+//-----------------------------------------------------------------------------
 void mgl_flowp_xy(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch)
 {
 	mglPoint p(x0,y0,z0);
@@ -443,6 +450,18 @@ void mgl_flowp_2d(HMGL gr, float x0, float y0, float z0, HCDT ax, HCDT ay, const
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_flowp_xy(gr,x0,y0,z0,&x,&y,ax,ay,sch);
 }
+//-----------------------------------------------------------------------------
+void mgl_flowp_xy_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_flowp_xy(_GR_, *x0,*y0,*z0, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s);	delete []s;
+}
+void mgl_flowp_2d_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *ax, uintptr_t *ay, const char *sch, int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_flowp_2d(_GR_, *x0,*y0,*z0, _DA_(ax), _DA_(ay), s);	delete []s;	}
+//-----------------------------------------------------------------------------
+//
+//	Flow 3d series
+//
 //-----------------------------------------------------------------------------
 void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az,long ss)
 {
@@ -571,6 +590,13 @@ void mgl_flow_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, int num)
 	mgl_flow_xyz(gr,&x,&y,&z,ax,ay,az,sch,num);
 }
 //-----------------------------------------------------------------------------
+void mgl_flow_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int *num,int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_flow_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, *num);	delete []s;	}
+void mgl_flow_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int *num,int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_flow_3d(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, *num);	delete []s;	}
+//-----------------------------------------------------------------------------
 void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch)
 {
 	mglPoint p(x0,y0,z0);
@@ -639,6 +665,13 @@ void mgl_flowp_3d(HMGL gr, float x0, float y0, float z0, HCDT ax, HCDT ay, HCDT 
 	mgl_flowp_xyz(gr, x0,y0,z0, &x,&y,&z,ax,ay,az,sch);
 }
 //-----------------------------------------------------------------------------
+void mgl_flowp_xyz_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_flowp_xyz(_GR_, *x0,*y0,*z0, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s);	delete []s;	}
+void mgl_flowp_3d_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_flowp_3d(_GR_, *x0,*y0,*z0, _DA_(ax), _DA_(ay), _DA_(az), s);	delete []s;	}
+//-----------------------------------------------------------------------------
 //
 //	Grad series
 //
@@ -685,8 +718,20 @@ void mgl_grad(HMGL gr, HCDT phi, const char *sch, int num, float zVal)
 	else				mgl_grad_xyz(gr,&x,&y,&z,phi,sch,num?num:3);
 }
 //-----------------------------------------------------------------------------
+void mgl_grad_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ph, const char *sch, int *num, int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_grad_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ph), s, *num);	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_grad_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ph, const char *sch, int *num, float *zVal, int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_grad_xy(_GR_, _DA_(x), _DA_(y), _DA_(ph), s, *num, *zVal);	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_grad_(uintptr_t *gr, uintptr_t *ph, const char *sch, int *num, float *zVal, int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_grad(_GR_, _DA_(ph), s, *num, *zVal);	delete []s;	}
+//-----------------------------------------------------------------------------
 //
-//	Pipe series
+//	Pipe 2d series
 //
 //-----------------------------------------------------------------------------
 void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, float r0,long sc)
@@ -822,6 +867,17 @@ void mgl_pipe_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, float r0, int num, 
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_pipe_xy(gr,&x,&y,ax,ay,sch,r0,num,zVal);
 }
+//-----------------------------------------------------------------------------
+void mgl_pipe_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, float *r0, int *num, float *zVal,int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_pipe_xy(_GR_, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, *r0, *num, *zVal);	delete []s;	}
+void mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, float *r0, int *num, float *zVal,int l)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+	mgl_pipe_2d(_GR_, _DA_(ax), _DA_(ay), s, *r0, *num, *zVal);	delete []s;	}
+//-----------------------------------------------------------------------------
+//
+//	Pipe 3d series
+//
 //-----------------------------------------------------------------------------
 void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az, float r0,long sc)
 {
@@ -967,55 +1023,10 @@ void mgl_pipe_3d(HMGL gr, HCDT ax, HCDT ay, HCDT az, const char *sch, float r0, 
 	mgl_pipe_xyz(gr,&x,&y,&z,ax,ay,az,sch,r0,num);
 }
 //-----------------------------------------------------------------------------
-//	Fortran interface
-//-----------------------------------------------------------------------------
-/// Plot flows for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
-void mgl_flow_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch,
-					int *num, float *zVal,int l)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_flow_xy(_GR_, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, *num, *zVal);	delete []s;	}
-/// Plot flows for vector field {ax,ay} with color proportional to value |a|
-void mgl_flow_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, int *num, float *zVal,int l)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_flow_2d(_GR_, _DA_(ax), _DA_(ay), s, *num, *zVal);	delete []s;	}
-/// Plot flows for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
-void mgl_flow_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int *num,int l)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_flow_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, *num);	delete []s;	}
-/// Plot flows for 3d vector field {ax,ay,ay} with color proportional to value |a|
-void mgl_flow_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int *num,int l)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_flow_3d(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, *num);	delete []s;	}
-//-----------------------------------------------------------------------------
-/// Plot flows for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
-void mgl_flowp_xy_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, int l)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_flowp_xy(_GR_, *x0,*y0,*z0, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s);	delete []s;
-}
-/// Plot flows for vector field {ax,ay} with color proportional to value |a|
-void mgl_flowp_2d_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *ax, uintptr_t *ay, const char *sch, int l)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_flowp_2d(_GR_, *x0,*y0,*z0, _DA_(ax), _DA_(ay), s);	delete []s;	}
-/// Plot flows for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
-void mgl_flowp_xyz_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int l)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_flowp_xyz(_GR_, *x0,*y0,*z0, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s);	delete []s;	}
-/// Plot flows for 3d vector field {ax,ay,ay} with color proportional to value |a|
-void mgl_flowp_3d_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, int l)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_flowp_3d(_GR_, *x0,*y0,*z0, _DA_(ax), _DA_(ay), _DA_(az), s);	delete []s;	}
-//-----------------------------------------------------------------------------
-/// Plot flow pipes for vector field {ax,ay} parametrically depended on coordinate {x,y} with color proportional to value |a|
-void mgl_pipe_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, float *r0, int *num, float *zVal,int l)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_pipe_xy(_GR_, _DA_(x), _DA_(y), _DA_(ax), _DA_(ay), s, *r0, *num, *zVal);	delete []s;	}
-void mgl_pipe_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, float *r0, int *num, float *zVal,int l)
-{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_pipe_2d(_GR_, _DA_(ax), _DA_(ay), s, *r0, *num, *zVal);	delete []s;	}
-/// Plot flow pipes for 3d vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to value |a|
 void mgl_pipe_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, float *r0, int *num,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	mgl_pipe_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(ax), _DA_(ay), _DA_(az), s, *r0, *num);	delete []s;	}
 void mgl_pipe_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, const char *sch, float *r0, int *num,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	mgl_pipe_3d(_GR_, _DA_(ax), _DA_(ay), _DA_(az), s, *r0, *num);	delete []s;	}
+//-----------------------------------------------------------------------------

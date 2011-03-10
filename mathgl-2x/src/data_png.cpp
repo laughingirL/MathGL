@@ -111,7 +111,7 @@ void mgl_data_import(HMDT d, const char *fname, const char *scheme,float v1,floa
 #endif
 }
 //-----------------------------------------------------------------------------
-void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,float v2,int ns)
+void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,float v2,long ns)
 {
 	register long i,j,k;
 	long nx=dd->GetNx(), ny=dd->GetNy(), nz=dd->GetNz();
@@ -161,14 +161,14 @@ void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,flo
 #endif
 }
 //-----------------------------------------------------------------------------
-void mgl_data_export_(long* d, const char *fname, const char *scheme, mreal *v1, mreal *v2, int *ns,int l, int n)
+void mgl_data_export_(uintptr_t *d, const char *fname, const char *scheme,float *v1,float *v2,int *ns,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,scheme,n);	f[n]=0;
 	mgl_data_export(_DT_,s,f,*v1,*v2,*ns);
 	delete []s;		delete []f;
 }
-void mgl_data_import_(long* d, const char *fname, const char *scheme, mreal *v1, mreal *v2,int l, int n)
+void mgl_data_import_(uintptr_t *d, const char *fname, const char *scheme,float *v1,float *v2,int l,int n)
 {
 	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,scheme,n);	f[n]=0;

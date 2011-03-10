@@ -27,13 +27,12 @@ extern "C" {
 #endif
 /*****************************************************************************/
 int mgl_get_warn(HMGL gr);
+void mgl_set_warn(HMGL gr, int code);
 void mgl_start_group(HMGL gr, const char *);
 void mgl_end_group(HMGL gr);
 void mgl_test_txt(const char *str, ...);
 void mgl_set_test_mode(int enable);
 
-void mgl_set_origin(HMGL gr, float x0, float y0, float z0);
-void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, float z2);
 void mgl_set_palette(HMGL gr, const char *colors);
 void mgl_set_alpha_default(HMGL graph, float alpha);
 void mgl_set_bar_width(HMGL graph, float width);
@@ -42,16 +41,13 @@ void mgl_set_meshnum(HMGL graph, int num);
 void mgl_set_cut(HMGL graph, int cut);
 void mgl_set_cut_box(HMGL gr, float x1,float y1,float z1,float x2,float y2,float z2);
 void mgl_set_ranges(HMGL graph, float x1, float x2, float y1, float y2, float z1, float z2);
-void mgl_set_xrange_val(HMGL graph, float v1, float v2);
-void mgl_set_yrange_val(HMGL graph, float v1, float v2);
-void mgl_set_zrange_val(HMGL graph, float v1, float v2);
-void mgl_set_crange_val(HMGL graph, float v1, float v2);
+void mgl_set_range_val(HMGL gr, char dir, float v1,float v2);
+void mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add);
+void mgl_save_state(HMGL gr);
+void mgl_load_state(HMGL gr);
+
 void mgl_set_origin(HMGL graph, float x0, float y0, float z0);
-void mgl_set_crange(HMGL graph, HCDT a, int add);
-void mgl_set_xrange(HMGL graph, HCDT a, int add);
-void mgl_set_yrange(HMGL graph, HCDT a, int add);
-void mgl_set_zrange(HMGL graph, HCDT a, int add);
-void mgl_set_auto(HMGL graph, float x1, float x2, float y1, float y2, float z1, float z2);
+void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, float z2, float c1, float c2);
 void mgl_set_func(HMGL graph, const char *EqX,const char *EqY,const char *EqZ);
 void mgl_set_func_ext(HMGL graph, const char *EqX,const char *EqY,const char *EqZ,const char *EqA);
 void mgl_set_coor(HMGL gr, int how);
@@ -71,14 +67,12 @@ void mgl_set_rotated_text(HMGL graph, int rotated);
 void mgl_load_font(HMGL gr, const char *name, const char *path);
 void mgl_copy_font(HMGL gr, HMGL gr_from);
 void mgl_restore_font(HMGL gr);
-int mgl_get_warn(HMGL gr);
 /*****************************************************************************/
 int mgl_get_warn_(uintptr_t *gr);
+void mgl_set_warn_(uintptr_t *gr, int *code);
 void mgl_start_group_(uintptr_t *gr, const char *,int);
 void mgl_end_group_(uintptr_t *gr);
 
-void mgl_set_origin_(uintptr_t *gr, float *x0, float *y0, float *z0);
-void mgl_set_auto_(uintptr_t *gr, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2);
 void mgl_set_palette_(uintptr_t *gr, const char *colors, int);
 void mgl_set_pal_color_(uintptr_t *graph, int *n, float *r, float *g, float *b);
 void mgl_set_pal_num_(uintptr_t *graph, int *num);
@@ -89,16 +83,13 @@ void mgl_set_meshnum_(uintptr_t *graph, int *num);
 void mgl_set_cut_(uintptr_t *graph, int *cut);
 void mgl_set_cut_box_(uintptr_t *gr, float *x1,float *y1,float *z1,float *x2,float *y2,float *z2);
 void mgl_set_ranges_(uintptr_t *graph, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2);
-void mgl_set_xrange_val_(uintptr_t *graph, float *v1, float *v2);
-void mgl_set_yrange_val_(uintptr_t *graph, float *v1, float *v2);
-void mgl_set_zrange_val_(uintptr_t *graph, float *v1, float *v2);
-void mgl_set_crange_val_(uintptr_t *graph, float *v1, float *v2);
-void mgl_set_origin_(uintptr_t *graph, float *x0, float *y0, float *z0);
-void mgl_set_crange_(uintptr_t *graph, uintptr_t *a, int *add);
-void mgl_set_xrange_(uintptr_t *graph, uintptr_t *a, int *add);
-void mgl_set_yrange_(uintptr_t *graph, uintptr_t *a, int *add);
-void mgl_set_zrange_(uintptr_t *graph, uintptr_t *a, int *add);
-void mgl_set_auto_(uintptr_t *graph, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2);
+void mgl_set_range_val_(uintptr_t *gr, const char *dir, float *v1,float *v2,int);
+void mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,int);
+void mgl_save_state_(uintptr_t *gr);
+void mgl_load_state_(uintptr_t *gr);
+
+void mgl_set_origin_(uintptr_t *gr, float *x0, float *y0, float *z0);
+void mgl_set_auto_(uintptr_t *gr, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2, float *c1, float *c2);
 void mgl_set_func_(uintptr_t *graph, const char *EqX, const char *EqY, const char *EqZ, int, int, int);
 void mgl_set_func_ext_(uintptr_t *graph, const char *EqX, const char *EqY, const char *EqZ, const char *EqA, int, int, int, int);
 void mgl_set_coor_(uintptr_t *gr, int *how);
@@ -118,7 +109,6 @@ void mgl_set_rotated_text_(uintptr_t *graph, int *rotated);
 void mgl_load_font_(uintptr_t *gr, char *name, char *path, int l, int n);
 void mgl_copy_font_(uintptr_t *gr, uintptr_t *gr_from);
 void mgl_restore_font_(uintptr_t *gr);
-int mgl_get_warn_(uintptr_t *gr);
 /*****************************************************************************/
 #ifdef __cplusplus
 }

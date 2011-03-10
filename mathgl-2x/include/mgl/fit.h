@@ -57,10 +57,9 @@ uintptr_t mgl_fit_xys_(uintptr_t* gr, uintptr_t* fit, uintptr_t* x, uintptr_t* y
 uintptr_t mgl_fit_xyzs_(uintptr_t* gr, uintptr_t* fit, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* ss, const char *eq, const char *var, uintptr_t *ini, int l, int n);
 uintptr_t mgl_fit_xyzas_(uintptr_t* gr, uintptr_t* fit, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a, uintptr_t* ss, const char *eq, const char *var, uintptr_t *ini, int l, int n);
 
-/*uintptr_t mgl_hist_x_(uintptr_t* gr, uintptr_t* x, uintptr_t* a);
+uintptr_t mgl_hist_x_(uintptr_t* gr, uintptr_t* x, uintptr_t* a);
 uintptr_t mgl_hist_xy_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* a);
-uintptr_t mgl_hist_xyz_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a);*/
-
+uintptr_t mgl_hist_xyz_(uintptr_t* gr, uintptr_t* x, uintptr_t* y, uintptr_t* z, uintptr_t* a);
 /*****************************************************************************/
 #ifdef __cplusplus
 }

@@ -872,6 +872,9 @@ void mgl_data_cosfft(HMDT d, const char *dir)
 		gsl_fft_complex_wavetable_free(wt);	}
 #endif
 }
+void mgl_data_cosfft_(uintptr_t *d, const char *dir,int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	mgl_data_cosfft(_DT_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
 void mgl_data_sinfft(HMDT d, const char *dir)
 {

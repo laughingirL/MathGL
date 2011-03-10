@@ -30,6 +30,7 @@ mglBase::mglBase()
 	// Always create default palette txt[0] and default scheme txt[1]
 	txt[0].Set(MGL_DEF_PAL,-1);		txt[1].Set("BbcyrR");	numT=2;
 	last_style[0]='k';	last_style[1]='-';	last_style[2]='0';	last_style[3]=last_style[4]=0;
+	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
 }
 mglBase::~mglBase()
 {
@@ -355,11 +356,12 @@ void mglBase::ZRange(const mglDataA &a,bool add,float fact)
 	RecalcBorder();
 }
 //-----------------------------------------------------------------------------
-void mglBase::SetAutoRanges(float x1, float x2, float y1, float y2, float z1, float z2)
+void mglBase::SetAutoRanges(float x1, float x2, float y1, float y2, float z1, float z2, float c1, float c2)
 {
 	if(x1!=x2)	{	Min.x = x1;	Max.x = x2;	}
 	if(y1!=y2)	{	Min.y = y1;	Max.y = y2;	}
 	if(z1!=z2)	{	Min.z = z1;	Max.z = z2;	}
+	if(c1!=c2)	{	Min.c = c1;	Max.c = c2;	}
 }
 //-----------------------------------------------------------------------------
 void mglBase::Ternary(int t)
@@ -727,3 +729,17 @@ void mglBase::vect_plot(long p1, long p2)	// position in pntC
 	posC+=2;
 }
 //-----------------------------------------------------------------------------
+void mglBase::SaveState()
+{
+	MSS=MarkSize;	ASS=ArrowSize;
+	FSS=FontSize;	ADS=AlphaDef;
+	MNS=MeshNum;	CSS=Cut;
+	MinS=Min;	MaxS=Max;
+}
+void mglBase::LoadState()
+{
+	MarkSize=MSS;	ArrowSize=ASS;
+	FontSize=FSS;	AlphaDef=ADS;
+	MeshNum=MNS;	Cut=CSS;
+	Min=MinS;	Max=MaxS;
+}

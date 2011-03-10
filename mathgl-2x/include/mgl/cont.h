@@ -26,8 +26,10 @@
 extern "C" {
 #endif
 /*****************************************************************************/
-void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *text, const char *font, float size);
-void mgl_text_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const char *text, const char *font, float size);
+void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const char *font, float size);
+void mgl_textw_xy(HMGL gr, HCDT x, HCDT y, const wchar_t *text, const char *font, float size);
+void mgl_textw_y(HMGL gr, HCDT y, const wchar_t *text, const char *font, float size);
+void mgl_text_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *text, const char *font, float size);
 void mgl_text_xy(HMGL gr, HCDT x, HCDT y, const char *text, const char *font, float size);
 void mgl_text_y(HMGL gr, HCDT y, const char *text, const char *font, float size);
 

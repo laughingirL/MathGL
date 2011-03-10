@@ -49,6 +49,7 @@ void mgl_ball_(uintptr_t *gr, mreal *x,mreal *y,mreal *z)
 void mgl_line(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, const char *pen,int n)
 {
 	static int cgid=1;	gr->StartGroup("Line",cgid++);
+	if(isnan(z1) || isnan(z2))	z1=z2=gr->Min.z;
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p=p1;
 	gr->SetPenPal(pen);
 	n = (n<2) ? 2 : n;
@@ -128,13 +129,16 @@ void mgl_error_box_(uintptr_t *gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, m
 //	Face series
 //
 //-----------------------------------------------------------------------------
-void mgl_face(HMGL gr, mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *pen)
+void mgl_face(HMGL gr, float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, const char *stl)
 {
 	static int cgid=1;	gr->StartGroup("Face",cgid++);
 	long pal;
-	gr->SetPenPal(pen,&pal);
-	float c1,c2,c3,c4;
+	gr->SetPenPal(stl,&pal);
+	float c1,c2,c3,c4,zz=(gr->Min.z+gr->Max.z)/2;
 	c1=c2=c3=c4=gr->CDef;
+	if(isnan(z0))	z0 = zz;	if(isnan(z1))	z1 = zz;
+	if(isnan(z2))	z2 = zz;	if(isnan(z3))	z3 = zz;
+	mglPoint p1(x0,y0,z0), p2(x1,y1,z1), p3(x2,y2,z2), p4(x3,y3,z3);
 	if(gr->GetNumPal(pal)>=4)
 	{	c2=gr->NextColor(pal);	c3=gr->NextColor(pal);	c4=gr->NextColor(pal);	}
 	mglPoint q1,q2,q3,q4;
@@ -151,22 +155,13 @@ void mgl_face(HMGL gr, mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const
 }
 //-----------------------------------------------------------------------------
 void mgl_facex(HMGL gr, float x0, float y0, float z0, float wy, float wz, const char *stl, float d1, float d2)
-{
-	mgl_face(gr, mglPoint(x0,y0,z0), mglPoint(x0,y0+wy,z0), mglPoint(x0,y0,z0+wz),
-			mglPoint(x0,y0+wy+d1,z0+wz+d2), stl);
-}
+{	mgl_face(gr, x0,y0,z0, x0,y0+wy,z0, x0,y0,z0+wz, x0,y0+wy+d1,z0+wz+d2, stl);	}
 //-----------------------------------------------------------------------------
 void mgl_facey(HMGL gr, float x0, float y0, float z0, float wx, float wz, const char *stl, float d1, float d2)
-{
-	mgl_face(gr, mglPoint(x0,y0,z0), mglPoint(x0+wx,y0,z0), mglPoint(x0,y0,z0+wz),
-			mglPoint(x0+wx+d1,y0,z0+wz+d2), stl);
-}
+{	mgl_face(gr, x0,y0,z0, x0+wx,y0,z0, x0,y0,z0+wz, x0+wx+d1,y0,z0+wz+d2, stl);	}
 //-----------------------------------------------------------------------------
 void mgl_facez(HMGL gr, float x0, float y0, float z0, float wx, float wy, const char *stl, float d1, float d2)
-{
-	mgl_face(gr, mglPoint(x0,y0,z0), mglPoint(x0,y0+wy,z0), mglPoint(x0+wx,y0,z0),
-			mglPoint(x0+wx+d1,y0+wy+d2,z0), stl);
-}
+{	mgl_face(gr, x0,y0,z0, x0,y0+wy,z0, x0+wx,y0,z0, x0+wx+d1,y0+wy+d2,z0, stl);	}
 //-----------------------------------------------------------------------------
 void mgl_facex_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *wy, mreal *wz, const char *stl, mreal *dx, mreal *dy, int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
@@ -180,6 +175,10 @@ void mgl_facey_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *wx, mreal
 void mgl_facez_(uintptr_t* gr, mreal *x0, mreal *y0, mreal *z0, mreal *wx, mreal *wy, const char *stl, mreal *dx, mreal *dy, int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
 	mgl_facez(_GR_, *x0,*y0,*z0,*wx,*wy,s,*dx,*dy);	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_face_(uintptr_t* gr, float *x0, float *y0, float *z0, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *x3, float *y3, float *z3, const char *stl, int l)
+{	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	mgl_face(_GR_, *x0,*y0,*z0, *x1,*y1,*z1, *x2,*y2,*z2, *x3,*y3,*z3, stl);	delete []s;	}
 //-----------------------------------------------------------------------------
 //
 //	Cone

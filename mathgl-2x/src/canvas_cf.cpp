@@ -92,7 +92,7 @@ void mgl_set_light_n_(uintptr_t *gr, int *n, int *enable)
 {	_GR_->Light(*n, *enable);	}
 void mgl_add_light_(uintptr_t *gr, int *n, float *x, float *y, float *z, char *c, int)
 {	_GR_->AddLight(*n,mglPoint(*x,*y,*z),*c);	}
-void mgl_add_light_rgb_(uintptr_t *gr, int *n, float *x, float *y, float *z, char *c, float *br, int *inf, float *ap, int)
+void mgl_add_light_ext_(uintptr_t *gr, int *n, float *x, float *y, float *z, char *c, float *br, int *inf, float *ap, int)
 {	_GR_->AddLight(*n,mglPoint(*x,*y,*z),*c,*br,*inf,*ap);	}
 void mgl_set_ambbr_(uintptr_t *gr, float *i)
 {	_GR_->Ambient(*i);	}

@@ -19,6 +19,8 @@ mglCanvasGL::mglCanvasGL() : mglCanvas(1,1)	{}
 //-----------------------------------------------------------------------------
 mglCanvasGL::~mglCanvasGL(){}
 //-----------------------------------------------------------------------------
+void mglCanvasGL::Finish()	{	glFinish();	}
+//-----------------------------------------------------------------------------
 bool mglCanvasGL::Alpha(bool enable)
 {
 	bool t = UseAlpha;

@@ -30,18 +30,21 @@ const float pi = M_PI;
 class mglGraph
 {
 	HMGL gr;
+	bool cl;
 public:
 	mglGraph(int kind=0, int width=600, int height=400)
 	{
-/*		if(kind==1)		gr=mgl_create_graph_gl();
-		else if(kind==2)gr=mgl_create_graph_idtf();
-		else	*/
-		gr=mgl_create_graph(width, height);
+		if(kind==1)		gr=mgl_create_graph_gl();
+//		else if(kind==2)gr=mgl_create_graph_idtf();
+		else	gr=mgl_create_graph(width, height);
+		cl = true;
 	}
-	~mglGraph()	{	mgl_delete_graph(gr);	}
+	mglGraph(HMGL graph)	{	gr = graph;		cl = false;	}
+	~mglGraph()			{	if(cl)	mgl_delete_graph(gr);	}
 	inline HMGL Self()	{	return gr;	}
 
 	inline int  GetWarn()			{	return mgl_get_warn(gr);}
+	inline void SetWarn(int code)	{	mgl_set_warn(gr, code);	}
 	inline void DefaultPlotParam()	{	mgl_set_def_param(gr);	}
 
 	inline void SetPalette(const char *colors)	{	mgl_set_palette(gr, colors);	}
@@ -166,8 +169,8 @@ public:
 	inline void Fog(float d, float dz=0.25)	{	mgl_set_fog(gr, d, dz);		}
 	inline void Light(bool enable)			{	mgl_set_light(gr, enable);	}
 	inline void Light(int n,bool enable)	{	mgl_set_light_n(gr, n, enable);	}
-	inline void AddLight(int n, mglPoint p, char c='w')
-	{	mgl_add_light(gr, n, p.x, p.y, p.z, c);	}
+	inline void AddLight(int n, mglPoint p, char col='w', float bright=0.5, bool infty=true, float ap=0)
+	{	mgl_add_light_ext(gr, n, p.x, p.y, p.z, col, bright, infty, ap);	}
 	inline void SetAmbient(float i)			{	mgl_set_ambbr(gr, i);	}
 
 	inline void Identity(bool rel=false)	{	mgl_identity(gr, rel);	}
@@ -198,30 +201,24 @@ public:
 	inline void AdjustTicks(const char *dir="xyzc")
 	{	mgl_adjust_ticks(gr, dir);	}
 
-	inline void SetCRange(float c1, float c2)
-	{	mgl_set_crange_val(gr, c1, c2);	}
-	inline void SetXRange(float c1, float c2)
-	{	mgl_set_xrange_val(gr, c1, c2);	}
-	inline void SetYRange(float c1, float c2)
-	{	mgl_set_yrange_val(gr, c1, c2);	}
-	inline void SetZRange(float c1, float c2)
-	{	mgl_set_zrange_val(gr, c1, c2);	}
+	inline void SetRange(char dir, float c1, float c2)
+	{	mgl_set_range_val(gr, dir, c1, c2);	}
+	inline void SetRange(char dir, const mglDataA &dat, bool add=false)
+	{	mgl_set_range_dat(gr, dir, &dat, add);	}
 	inline void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0)
 	{	mgl_set_ranges(gr, x1, x2, y1, y2, z1, z2);	}
 	inline void SetRanges(mglPoint p1, mglPoint p2)
 	{	mgl_set_ranges(gr, p1.x, p2.x, p1.y, p2.y, p1.z, p2.z);	}
-	inline void SetAutoRanges(float x1, float x2, float y1=0, float y2=0, float z1=0, float z2=0)
-	{	mgl_set_auto(gr, x1, x2, y1, y2, z1, z2);	}
+	inline void SetAutoRanges(float x1, float x2, float y1=0, float y2=0, float z1=0, float z2=0, float c1=0, float c2=0)
+	{	mgl_set_auto(gr, x1, x2, y1, y2, z1, z2, c1, c2);	}
+	inline void SaveState()	{	mgl_save_state(gr);	}
+	inline void LoadState()	{	mgl_load_state(gr);	}
+
+
+	inline void SetOrigin(mglPoint p)
+	{	mgl_set_origin(gr, p.x, p.y, p.z);	}
 	inline void SetOrigin(float x0, float y0, float z0=NAN)
 	{	mgl_set_origin(gr, x0, y0, z0);	}
-	inline void SetCRange(const mglDataA &dat, bool add=false)
-	{	mgl_set_crange(gr, &dat, add);	}
-	inline void SetXRange(const mglDataA &dat, bool add=false)
-	{	mgl_set_xrange(gr, &dat, add);	}
-	inline void SetYRange(const mglDataA &dat, bool add=false)
-	{	mgl_set_yrange(gr, &dat, add);	}
-	inline void SetZRange(const mglDataA &dat, bool add=false)
-	{	mgl_set_zrange(gr, &dat, add);	}
 	inline void SetFunc(const char *EqX, const char *EqY, const char *EqZ=NULL, const char *EqA=NULL)
 	{	mgl_set_func_ext(gr, EqX, EqY, EqZ,EqA);	}
 	inline void SetCoor(int how)		{	mgl_set_coor(gr, how);	}
@@ -256,6 +253,9 @@ public:
 	{	mgl_mark(gr, p.x, p.y, p.z, mark);	}
 	inline void Line(mglPoint p1, mglPoint p2, const char *pen="B",int n=2)
 	{	mgl_line(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, pen, n);	}
+
+	inline void Face(mglPoint p1, mglPoint p2, mglPoint p3, mglPoint p4, const char *stl="r")
+	{	mgl_face(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p3.x, p3.y, p3.z, p4.x, p4.y, p4.z, stl);	}
 	inline void FaceX(mglPoint p, float wy, float wz, const char *stl="w", float dx=0, float dy=0)
 	{	mgl_facex(gr, p.x, p.y, p.z, wy, wz, stl, dx, dy);	}
 	inline void FaceY(mglPoint p, float wx, float wz, const char *stl="w", float dx=0, float dy=0)
@@ -299,7 +299,7 @@ public:
 
 	inline void AddLegend(const char *text,const char *style)
 	{	mgl_add_legend(gr, text, style);	}
-	inline void AddLegendw(const wchar_t *text,const char *style)
+	inline void AddLegend(const wchar_t *text,const char *style)
 	{	mgl_add_legendw(gr, text, style);	}
 	inline void ClearLegend()
 	{	mgl_clear_legend(gr);	}
@@ -308,10 +308,10 @@ public:
 	inline void Legend(int where=3, const char *font="L", float size=-0.8, float llen=0.1)
 	{	mgl_legend(gr, where, font, size, llen);	}
 
-	inline void Plot(const char *fy, const char *stl="", int n=100)
-	{	mgl_fplot(gr, fy, stl, n);	}
-	inline void Plot(const char *fx, const char *fy, const char *fz, const char *stl="", int n=100)
-	{	mgl_fplot_xyz(gr, fx, fy, fz, stl, n);	}
+	inline void Plot(const char *fy, const char *stl="")
+	{	mgl_fplot(gr, fy, stl, 100);	}
+	inline void Plot(const char *fx, const char *fy, const char *fz, const char *stl="")
+	{	mgl_fplot_xyz(gr, fx, fy, fz, stl, 100);	}
 	inline void Plot(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *pen="")
 	{	mgl_plot_xyz(gr, &x, &y, &z, pen);	}
 	inline void Plot(const mglDataA &x, const mglDataA &y, const char *pen="")
@@ -366,12 +366,6 @@ public:
 
 	inline void Torus(const mglDataA &r, const mglDataA &z, const char *pen="")
 	{	mgl_torus(gr, &r, &z, pen);	}
-	inline void Text(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *text, const char *font="", float size=-1)
-	{	mgl_text_xyz(gr, &x, &y, &z, text, font, size);	}
-	inline void Text(const mglDataA &x, const mglDataA &y, const char *text, const char *font="", float size=-1)
-	{	mgl_text_xy(gr, &x, &y, text, font, size);	}
-	inline void Text(const mglDataA &y, const char *text, const char *font="", float size=-1)
-	{	mgl_text_y(gr, &y, text, font, size);	}
 	inline void Chart(const mglDataA &a, const char *colors="")
 	{	mgl_chart(gr, &a, colors);	}
 	inline void Error(const mglDataA &y, const mglDataA &ey, const char *pen="")
@@ -386,14 +380,6 @@ public:
 	{	mgl_mark_xy(gr, &x, &y, &r, pen);	}
 	inline void Mark(const mglDataA &y, const mglDataA &r, const char *pen)
 	{	mgl_mark_y(gr, &y, &r, pen);	}
-	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *text, const char *fnt="")
-	{	mgl_textmark_xyzr(gr, &x, &y, &z, &r, text, fnt);	}
-	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &r, const char *text, const char *fnt="")
-	{	mgl_textmark_xyr(gr, &x, &y, &r, text, fnt);	}
-	inline void TextMark(const mglDataA &y, const mglDataA &r, const char *text, const char *fnt="")
-	{	mgl_textmark_yr(gr, &y, &r, text, fnt);	}
-	inline void TextMark(const mglDataA &y, const char *text, const char *fnt="")
-	{	mgl_textmark(gr, &y, text, fnt);	}
 	inline void Tube(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *pen="")
 	{	mgl_tube_xyzr(gr, &x, &y, &z, &r, pen);	}
 	inline void Tube(const mglDataA &x, const mglDataA &y, const mglDataA &z, float r, const char *pen="")
@@ -406,6 +392,36 @@ public:
 	{	mgl_tube_r(gr, &y, &r, pen);	}
 	inline void Tube(const mglDataA &y, float r, const char *pen="")
 	{	mgl_tube(gr, &y, r, pen);	}
+
+
+	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *text, const char *fnt="")
+	{	mgl_textmark_xyzr(gr, &x, &y, &z, &r, text, fnt);	}
+	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &r, const char *text, const char *fnt="")
+	{	mgl_textmark_xyr(gr, &x, &y, &r, text, fnt);	}
+	inline void TextMark(const mglDataA &y, const mglDataA &r, const char *text, const char *fnt="")
+	{	mgl_textmark_yr(gr, &y, &r, text, fnt);	}
+	inline void TextMark(const mglDataA &y, const char *text, const char *fnt="")
+	{	mgl_textmark(gr, &y, text, fnt);	}
+	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const wchar_t *text, const char *fnt="")
+	{	mgl_textmarkw_xyzr(gr, &x, &y, &z, &r, text, fnt);	}
+	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &r, const wchar_t *text, const char *fnt="")
+	{	mgl_textmarkw_xyr(gr, &x, &y, &r, text, fnt);	}
+	inline void TextMark(const mglDataA &y, const mglDataA &r, const wchar_t *text, const char *fnt="")
+	{	mgl_textmarkw_yr(gr, &y, &r, text, fnt);	}
+	inline void TextMark(const mglDataA &y, const wchar_t *text, const char *fnt="")
+	{	mgl_textmarkw(gr, &y, text, fnt);	}
+	inline void Text(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *text, const char *font="", float size=-1)
+	{	mgl_text_xyz(gr, &x, &y, &z, text, font, size);	}
+	inline void Text(const mglDataA &x, const mglDataA &y, const char *text, const char *font="", float size=-1)
+	{	mgl_text_xy(gr, &x, &y, text, font, size);	}
+	inline void Text(const mglDataA &y, const char *text, const char *font="", float size=-1)
+	{	mgl_text_y(gr, &y, text, font, size);	}
+	inline void Text(const mglDataA &x, const mglDataA &y, const mglDataA &z, const wchar_t *text, const char *font="", float size=-1)
+	{	mgl_textw_xyz(gr, &x, &y, &z, text, font, size);	}
+	inline void Text(const mglDataA &x, const mglDataA &y, const wchar_t *text, const char *font="", float size=-1)
+	{	mgl_textw_xy(gr, &x, &y, text, font, size);	}
+	inline void Text(const mglDataA &y, const wchar_t *text, const char *font="", float size=-1)
+	{	mgl_textw_y(gr, &y, text, font, size);	}
 
 	inline void Surf(const char *fz, const char *stl="", int n=100)
 	{	mgl_fsurf(gr, fz, stl, n);	}
@@ -544,14 +560,14 @@ public:
 	inline void Flow(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", int num=3)
 	{	mgl_flow_3d(gr, &ax, &ay, &az, sch, num);	}
 
-	inline void FlowP(float x0, float y0, float z0, const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="")
-	{	mgl_flowp_xy(gr, x0, y0, z0, &x, &y, &ax, &ay, sch);	}
-	inline void FlowP(float x0, float y0, float z0, const mglDataA &ax, const mglDataA &ay, const char *sch="")
-	{	mgl_flowp_2d(gr, x0, y0, z0, &ax, &ay, sch);	}
-	inline void FlowP(float x0, float y0, float z0, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="")
-	{	mgl_flowp_xyz(gr, x0, y0, z0, &x, &y, &z, &ax, &ay, &az, sch);	}
-	inline void FlowP(float x0, float y0, float z0, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="")
-	{	mgl_flowp_3d(gr, x0, y0, z0, &ax, &ay, &az, sch);	}
+	inline void FlowP(mglPoint p, const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="")
+	{	mgl_flowp_xy(gr, p.x, p.y, p.z, &x, &y, &ax, &ay, sch);	}
+	inline void FlowP(mglPoint p, const mglDataA &ax, const mglDataA &ay, const char *sch="")
+	{	mgl_flowp_2d(gr, p.x, p.y, p.z, &ax, &ay, sch);	}
+	inline void FlowP(mglPoint p, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="")
+	{	mgl_flowp_xyz(gr, p.x, p.y, p.z, &x, &y, &z, &ax, &ay, &az, sch);	}
+	inline void FlowP(mglPoint p, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="")
+	{	mgl_flowp_3d(gr, p.x, p.y, p.z, &ax, &ay, &az, sch);	}
 
 	inline void Grad(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &phi, const char *sch=0, int num=3)
 	{	mgl_grad_xyz(gr,&x,&y,&z,&phi,sch,num);	}
@@ -684,43 +700,43 @@ public:
 
 	inline mglData Fit(const mglDataA &y, const char *eq, const char *var)
 	{	return mglData(true,mgl_fit_1(gr, &y, eq,var,0));	}
-	inline mglData Fit(const mglDataA &fit, const mglDataA &y, const char *eq, const char *var, mglData &ini)
+	inline mglData Fit(const mglDataA &y, const char *eq, const char *var, mglData &ini)
 	{	return mglData(true,mgl_fit_1(gr, &y, eq, var, &ini));	}
-	inline mglData Fit2(const mglDataA &fit, const mglDataA &z, const char *eq, const char *var)
+	inline mglData Fit2(const mglDataA &z, const char *eq, const char *var)
 	{	return mglData(true,mgl_fit_2(gr, &z, eq, var,0));	}
-	inline mglData Fit2(const mglDataA &fit, const mglDataA &z, const char *eq, const char *var, mglData &ini)
+	inline mglData Fit2(const mglDataA &z, const char *eq, const char *var, mglData &ini)
 	{	return mglData(true,mgl_fit_2(gr, &z, eq, var, &ini));	}
-	inline mglData Fit3(const mglDataA &fit, const mglDataA &a, const char *eq, const char *var)
+	inline mglData Fit3(const mglDataA &a, const char *eq, const char *var)
 	{	return mglData(true,mgl_fit_3(gr, &a, eq, var,0));	}
-	inline mglData Fit3(const mglDataA &fit, const mglDataA &a, const char *eq, const char *var, mglData &ini)
+	inline mglData Fit3(const mglDataA &a, const char *eq, const char *var, mglData &ini)
 	{	return mglData(true,mgl_fit_3(gr, &a, eq, var, &ini));	}
-	inline mglData Fit(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const char *eq, const char *var)
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const char *eq, const char *var)
 	{	return mglData(true,mgl_fit_xy(gr, &x, &y, eq, var,0));	}
-	inline mglData Fit(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const char *eq, const char *var, mglData &ini)
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const char *eq, const char *var, mglData &ini)
 	{	return mglData(true,mgl_fit_xy(gr, &x, &y, eq, var, &ini));	}
-	inline mglData Fit(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *eq, const char *var)
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *eq, const char *var)
 	{	return mglData(true,mgl_fit_xyz(gr, &x, &y, &z, eq, var,0));	}
-	inline mglData Fit(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *eq, const char *var, mglData &ini)
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *eq, const char *var, mglData &ini)
 	{	return mglData(true,mgl_fit_xyz(gr, &x, &y, &z, eq, var, &ini));	}
-	inline mglData Fit(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *eq, const char *var)
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *eq, const char *var)
 	{	return mglData(true,mgl_fit_xyza(gr, &x, &y, &z, &a, eq, var,0));	}
-	inline mglData Fit(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *eq, const char *var, mglData &ini)
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *eq, const char *var, mglData &ini)
 	{	return mglData(true,mgl_fit_xyza(gr, &x, &y, &z, &a, eq,var, &ini));	}
-	inline mglData FitS(const mglDataA &fit, const mglDataA &y, const mglDataA &s, const char *eq, const char *var)
+	inline mglData FitS(const mglDataA &y, const mglDataA &s, const char *eq, const char *var)
 	{	return mglData(true,mgl_fit_ys(gr, &y, &s, eq, var,0));	}
-	inline mglData FitS(const mglDataA &fit, const mglDataA &y, const mglDataA &s, const char *eq, const char *var, mglData &ini)
+	inline mglData FitS(const mglDataA &y, const mglDataA &s, const char *eq, const char *var, mglData &ini)
 	{	return mglData(true,mgl_fit_ys(gr, &y, &s, eq, var, &ini));	}
-	inline mglData FitS(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *eq, const char *var)
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *eq, const char *var)
 	{	return mglData(true,mgl_fit_xys(gr, &x, &y, &s, eq, var,0));	}
-	inline mglData FitS(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *eq, const char *var, mglData &ini)
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *eq, const char *var, mglData &ini)
 	{	return mglData(true,mgl_fit_xys(gr, &x, &y, &s, eq, var, &ini));	}
-	inline mglData FitS(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *eq, const char *var)
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *eq, const char *var)
 	{	return mglData(true,mgl_fit_xyzs(gr, &x, &y, &z, &s, eq, var,0));	}
-	inline mglData FitS(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *eq, const char *var, mglData &ini)
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *eq, const char *var, mglData &ini)
 	{	return mglData(true,mgl_fit_xyzs(gr, &x, &y, &z, &s, eq, var, &ini));	}
-	inline mglData FitS(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var)
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var)
 	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, var,0));	}
-	inline mglData FitS(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var, mglData &ini)
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var, mglData &ini)
 	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, var, &ini));	}
 	inline void PutsFit(mglPoint p, const char *prefix=0, const char *font=0, float size=-1)
 	{	mgl_puts_fit(gr, p.x, p.y, p.z, prefix, font, size);	}

@@ -215,10 +215,14 @@ public:
 	void ZRange(const mglDataA &a, bool add = false, float fact=0);
 	inline void ZRange(float v1,float v2)	{	Min.z=v1;	Max.z=v2;	RecalcBorder();	}
 	/// Set ranges for automatic variables
-	void SetAutoRanges(float x1, float x2, float y1=0, float y2=0, float z1=0, float z2=0);
+	void SetAutoRanges(float x1, float x2, float y1=0, float y2=0, float z1=0, float z2=0, float c1=0, float c2=0);
 	/// Set axis origin
 	inline void SetOrigin(float x0, float y0, float z0=NAN, float c0=NAN)
 	{	Org=mglPoint(x0,y0,z0,c0);	}
+	/// Save ranges into internal variable
+	void SaveState();
+	/// Load ranges from internal variable
+	void LoadState();
 
 	/// Safetly set the transformation formulas for coordinate.
 	void SetFunc(const char *EqX, const char *EqY, const char *EqZ=0, const char *EqA=0);
@@ -326,7 +330,6 @@ public:
 	/// Add texture (like color scheme) and return the position of first color
 	long AddTexture(const char *cols, int smooth=0);
 	float AddTexture(char col);
-//	long SetScheme(const char *stl)	{	return AddTexture(stl);	}	// TODO Remove it
 	/// Set next color from palette
 	float NextColor(long id);
 
@@ -372,6 +375,11 @@ protected:
 	virtual void SetPen(char style,float width);
 
 private:
+	mglPoint MinS;		///< Saved lower edge of bounding box for graphics.
+	mglPoint MaxS;		///< Saved upper edge of bounding box for graphics.
+	float MSS, ASS, FSS, ADS, MNS, CSS;	///< Saved state
+
+
 	mglPoint FMin;		///< Actual lower edge after transformation formulas.
 	mglPoint FMax;		///< Actual upper edge after transformation formulas.
 	mglPoint CutMin;	///< Lower edge of bounding box for cut off.
