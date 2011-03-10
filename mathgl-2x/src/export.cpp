@@ -33,6 +33,7 @@ extern "C" {
 #endif
 
 #include "mgl/canvas.h"
+#include "mgl/canvas_cf.h"
 
 int mgl_bps_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p);

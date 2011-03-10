@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "mgl/canvas.h"
+#include "mgl/canvas_cf.h"
 #include <stdlib.h>
 #include <time.h>
 #include <zlib.h>
@@ -508,4 +509,21 @@ void mglCanvas::put_color(float *c, mglPrim *p)
 		c[2] = c[2]<1 ? c[2] : 1;
 	}
 }
+//-----------------------------------------------------------------------------
+#undef _GR_
+#define _GR_	((mglCanvas *)(*gr))
+#define _Gr_	((mglCanvas *)(gr))
+void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
+{	_Gr_->WriteEPS(fname,descr);	}
+void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
+{	_Gr_->WriteSVG(fname,descr);	}
+//-----------------------------------------------------------------------------
+void mgl_write_eps_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
+	_GR_->WriteEPS(s,d);	delete []s;		delete []d;	}
+void mgl_write_svg_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
+	_GR_->WriteSVG(s,d);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------

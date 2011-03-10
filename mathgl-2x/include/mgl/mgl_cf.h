@@ -29,7 +29,6 @@
 #include "mgl/volume.h"
 #include "mgl/vect.h"
 #include "mgl/prim.h"
-#include "mgl/text.h"
 #include "mgl/other.h"
 #include "mgl/canvas_cf.h"
 /*****************************************************************************/

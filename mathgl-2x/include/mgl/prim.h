@@ -59,6 +59,9 @@ void mgl_textmarkw_xyzr(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT r, const wchar_
 void mgl_textmarkw_xyr(HMGL graph, HCDT x, HCDT y, HCDT r, const wchar_t *text, const char *fnt);
 void mgl_textmarkw_yr(HMGL graph, HCDT y, HCDT r, const wchar_t *text, const char *fnt);
 void mgl_textmarkw(HMGL graph, HCDT y, const wchar_t *text, const char *fnt);
+
+void mgl_puts_fit(HMGL gr, float x, float y, float z, const char *prefix, const char *font, float size);
+
 /*****************************************************************************/
 void mgl_mark_(uintptr_t *gr, float *x,float *y,float *z,const char *mark,int);
 void mgl_ball_(uintptr_t *gr, float *x,float *y,float *z);
@@ -83,6 +86,8 @@ void mgl_textmark_xyzr_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t 
 void mgl_textmark_xyr_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *text, const char *fnt,int,int);
 void mgl_textmark_yr_(uintptr_t *graph, uintptr_t *y, uintptr_t *r, const char *text, const char *fnt,int,int);
 void mgl_textmark_(uintptr_t *graph, uintptr_t *y, const char *text, const char *fnt,int,int);
+
+void mgl_puts_fit_(uintptr_t* gr, float *x, float *y, float *z, const char *prefix, const char *font, float *size, int l, int n);
 
 /*****************************************************************************/
 #ifdef __cplusplus

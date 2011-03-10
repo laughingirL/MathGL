@@ -233,8 +233,7 @@ void smgl_map(mglGraph *gr)	// example of mapping
 	gr->Map(a, b, "brgk", 0, false);
 
 	gr->SubPlot(2, 1, 1);
-	a.Fill("(x^3+y^3)/2", gr->Min, gr->Max);
-	b.Fill("(x-y)/2", gr->Min, gr->Max);
+	gr->Fill(a,"(x^3+y^3)/2");	gr->Fill(b,"(x-y)/2");
 	gr->Puts(mglPoint(0, 1.1), "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", "C", -2);
 	gr->Box();
 	gr->Map(a, b, "brgk", 0, false);
@@ -340,9 +339,9 @@ void smgl_qo2d(mglGraph *gr)
 	gr->Plot(r.SubData(0), r.SubData(1), "k");
 	gr->Axis();	gr->Label('x', "\\i x");	gr->Label('y', "\\i z");
 	// now start beam tracing
-	re.Fill("exp(-48*x^2)", gr->Min, gr->Max);
+	gr->Fill(re,"exp(-48*x^2)");
 	a = mglQO2d(ham, re, im, r, 1, 30, &xx, &yy);
-	gr->CAxis(0, 1);
+	gr->SetCRange(0, 1);
 	gr->Dens(xx, yy, a, "wyrRk");
 	gr->Plot("-x", "k|");
 	gr->Puts(mglPoint(0, 0.85), "absorption: (x+y)/2 for x+y>0");
@@ -359,11 +358,10 @@ void smgl_pde(mglGraph *gr)	// PDE and Ray sample
 	gr->Label('x', "\\i x");
 	gr->Label('y', "\\i z");
 
-	re.Fill("exp(-48*(x+0.7)^2)", gr->Min, gr->Max);
-	a = mglPDE("p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)", re, im,
-				gr->Min, gr->Max, 0.01, 30);
+	gr->Fill(re,"exp(-48*(x+0.7)^2)");
+	a = gr->PDE("p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)", re, im, 0.01, 30);
 	a.Transpose("yxz");
-	gr->CAxis(0, 1);
+	gr->SetCRange(0, 1);
 	gr->Dens(a,"wyrRk");
 	gr->Plot("-x", "k|", (type==5 || type==9 || type==10)?0.01:NAN);
 	gr->Puts(mglPoint(0, 0.85), "absorption: (x+z)/2 for x+z>0");
@@ -374,9 +372,8 @@ void smgl_pde(mglGraph *gr)	// PDE and Ray sample
 void smgl_stfa(mglGraph *gr)	// STFA sample
 {
 	mglData a(2000), b(2000);
-	a.Fill("cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+\
-				cos(200*pi*x)*(x<.5)*(x>0)+cos(400*pi*x)*(x>.5)",
-				gr->Min, gr->Max);
+	gr->Fill(a,"cos(50*pi*x)*(x<-.5)+cos(100*pi*x)*(x<0)*(x>-.5)+\
+				cos(200*pi*x)*(x<.5)*(x>0)+cos(400*pi*x)*(x>.5)");
 	gr->SubPlot(1, 2, 0);
 	gr->Plot(a);
 	gr->Axis();
@@ -392,7 +389,7 @@ void smgl_stfa(mglGraph *gr)	// STFA sample
 void smgl_envelop(mglGraph *gr)	// Envelop reconstruction
 {
 	mglData a(1000);
-	a.Fill("exp(-8*x^2)*sin(10*pi*x)", gr->Min, gr->Max);
+	gr->Fill(a,"exp(-8*x^2)*sin(10*pi*x)");
 	gr->Plot(a, "b");
 	a.Envelop('x');
 	gr->Plot(a, "r");
@@ -461,19 +458,19 @@ void smgl_samplec(mglGraph *gr)	// error boxes
 	gr->Error(y,ey,"ko");
 	gr->Plot(y0,"r");
 	gr->Axis();
-	gr->Text(mglPoint(0,1.2,0),"Random \\i{y}");
+	gr->Puts(mglPoint(0,1.2,0),"Random \\i{y}");
 	gr->SubPlot(2,2,1);
 	gr->Error(x,y,ex,"ko");
 	gr->Plot(y0,"r");
 	gr->Axis();
-	gr->Text(mglPoint(0,1.2,0),"Random \\i{x, y}");
+	gr->Puts(mglPoint(0,1.2,0),"Random \\i{x, y}");
 	gr->SubPlot(2,2,2);
 	gr->Error(x,y,ey,ey,"ko");
 	gr->Plot(y0,"r");
 	gr->Axis();
-	gr->Text(mglPoint(0,1.2,0),"Random \\i{x, y} and 2d boxes");
+	gr->Puts(mglPoint(0,1.2,0),"Random \\i{x, y} and 2d boxes");
 	gr->SubPlot(2,2,3);
-	gr->Text(mglPoint(0,1.2,0),"Random point in 3d space");
+	gr->Puts(mglPoint(0,1.2,0),"Random point in 3d space");
 	gr->Rotate(40,60);
 	for(int i=0;i<10;i++)
 		gr->Error(mglPoint(mgl_rnd()-0.5,mgl_rnd()-0.5,mgl_rnd()-0.5), mglPoint(0.1,0.1,0.1),"bo");
@@ -483,18 +480,19 @@ void smgl_samplec(mglGraph *gr)	// error boxes
 //-----------------------------------------------------------------------------
 void smgl_sampleb(mglGraph *gr)	// Gaussian beam
 {
-	gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
+	gr->Alpha(true);	gr->Light(true);	gr->AddLight(0,mglPoint(0,0,1));
 	mglData a(30,30,30), b(30,30,30);
 	a.Modify("exp(-16*((z-0.5)^2+(y-0.5)^2)/(1+4*x^2))");
 	b.Modify("16*((z-0.5)^2+(y-0.5)^2)*(x)/(1+4*x^2)");
-	gr->CAxis(0,1);
+	gr->SetCRange(0,1);
 
 	gr->SubPlot(2,2,0);	gr->Rotate(40,60);
 	gr->VertexColor(false);
 	// since we have one-color trasparent surfaces - disable (per-vertex) coloring
 	gr->Surf3(a,"wgk");	gr->Box();
 	gr->SubPlot(2,2,1);	gr->Rotate(40,60);
-	gr->DensA(a);		gr->Box();	gr->Axis();
+	gr->Dens3(a,'x');	gr->Dens3(a,'y');	gr->Dens3(a,'z');
+	gr->Box();	gr->Axis();
 	gr->SubPlot(2,2,2);	gr->Rotate(40,60);
 	gr->Cloud(a);		gr->Box();
 	gr->SubPlot(2,2,3);	gr->Rotate(40,60);
@@ -505,7 +503,7 @@ void smgl_sampleb(mglGraph *gr)	// Gaussian beam
 //-----------------------------------------------------------------------------
 void smgl_samplea(mglGraph *gr)	// flag #
 {
-	gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
+	gr->Alpha(true);	gr->Light(true);	gr->AddLight(0,mglPoint(0,0,1));
 	mglData a(30,20);
 	a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
@@ -521,7 +519,7 @@ void smgl_samplea(mglGraph *gr)	// flag #
 //-----------------------------------------------------------------------------
 void smgl_sample9(mglGraph *gr)	// 2d plot
 {
-	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
+	gr->Light(true);	gr->AddLight(0,mglPoint(0,0,1));
 
 	mglData a0(50,40);
 	a0.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
@@ -582,9 +580,9 @@ void smgl_sample7(mglGraph *gr)	// smoothing
 	mglData y0(30),y1,y2,y3;
 	y0.Modify("0.4*sin(2*pi*x) + 0.3*cos(3*pi*x) - 0.4*sin(4*pi*x)+0.2*rnd");
 
-	y1=y0;	y1.Smooth(SMOOTH_LINE_3);
-	y2=y0;	y2.Smooth(SMOOTH_LINE_5);
-	y3=y0;	y3.Smooth(SMOOTH_QUAD_5);
+	y1=y0;	y1.Smooth("3");
+	y2=y0;	y2.Smooth("5");
+	y3=y0;	y3.Smooth("");
 
 	gr->Plot(y0,"k");	gr->AddLegend("NONE","k");
 	gr->Plot(y1,"r");	gr->AddLegend("LINE\\_3","r");
@@ -597,19 +595,19 @@ void smgl_sample7(mglGraph *gr)	// smoothing
 void smgl_sample6(mglGraph *gr)	// differentiate
 {
 	mglData a(30,40);	a.Modify("x*y");
-	gr->Axis(mglPoint(0,0,0),mglPoint(1,1,1));
+	gr->SetRanges(0,1,0,1,0,1);
 	gr->SubPlot(2,2,0);	gr->Rotate(60,40);
 	gr->Surf(a);		gr->Box();
-	gr->Text(mglPoint(0.7,1,1.2),"a(x,y)");
+	gr->Puts(mglPoint(0.7,1,1.2),"a(x,y)");
 	gr->SubPlot(2,2,1);	gr->Rotate(60,40);
 	a.Diff("x");		gr->Surf(a);	gr->Box();
-	gr->Text(mglPoint(0.7,1,1.2),"da/dx");
+	gr->Puts(mglPoint(0.7,1,1.2),"da/dx");
 	gr->SubPlot(2,2,2);	gr->Rotate(60,40);
 	a.Integral("xy");	gr->Surf(a);	gr->Box();
-	gr->Text(mglPoint(0.7,1,1.2),"\\int da/dx dxdy");
+	gr->Puts(mglPoint(0.7,1,1.2),"\\int da/dx dxdy");
 	gr->SubPlot(2,2,3);	gr->Rotate(60,40);
 	a.Diff2("y");	gr->Surf(a);	gr->Box();
-	gr->Text(mglPoint(0.7,1,1.2),"\\int {d^2}a/dxdy dx");
+	gr->Puts(mglPoint(0.7,1,1.2),"\\int {d^2}a/dxdy dx");
 }
 //-----------------------------------------------------------------------------
 void smgl_sample5(mglGraph *gr)	// pen styles
@@ -627,30 +625,30 @@ void smgl_sample5(mglGraph *gr)	// pen styles
 	gr->Line(mglPoint(x0,1-7*d),mglPoint(x1,1-7*d),"k ");	gr->Puts(mglPoint(x2,y-7*d),"None ' '","rL");
 
 	d=0.25; x1=-1; x0=-0.8;	y = -0.05;
-	gr->Mark(mglPoint(x1,5*d),'.');		gr->Puts(mglPoint(x0,y+5*d),"'.'","rL");
-	gr->Mark(mglPoint(x1,4*d),'+');		gr->Puts(mglPoint(x0,y+4*d),"'+'","rL");
-	gr->Mark(mglPoint(x1,3*d),'x');		gr->Puts(mglPoint(x0,y+3*d),"'x'","rL");
-	gr->Mark(mglPoint(x1,2*d),'*');		gr->Puts(mglPoint(x0,y+2*d),"'*'","rL");
-	gr->Mark(mglPoint(x1,d),'s');		gr->Puts(mglPoint(x0,y+d),"'s'","rL");
-	gr->Mark(mglPoint(x1,0),'d');		gr->Puts(mglPoint(x0,y),"'d'","rL");
-	gr->Mark(mglPoint(x1,-d,0),'o');	gr->Puts(mglPoint(x0,y-d),"'o'","rL");
-	gr->Mark(mglPoint(x1,-2*d,0),'^');	gr->Puts(mglPoint(x0,y-2*d),"'\\^'","rL");
-	gr->Mark(mglPoint(x1,-3*d,0),'v');	gr->Puts(mglPoint(x0,y-3*d),"'v'","rL");
-	gr->Mark(mglPoint(x1,-4*d,0),'<');	gr->Puts(mglPoint(x0,y-4*d),"'<'","rL");
-	gr->Mark(mglPoint(x1,-5*d,0),'>');	gr->Puts(mglPoint(x0,y-5*d),"'>'","rL");
+	gr->Mark(mglPoint(x1,5*d),".");		gr->Puts(mglPoint(x0,y+5*d),"'.'","rL");
+	gr->Mark(mglPoint(x1,4*d),"+");		gr->Puts(mglPoint(x0,y+4*d),"'+'","rL");
+	gr->Mark(mglPoint(x1,3*d),"x");		gr->Puts(mglPoint(x0,y+3*d),"'x'","rL");
+	gr->Mark(mglPoint(x1,2*d),"*");		gr->Puts(mglPoint(x0,y+2*d),"'*'","rL");
+	gr->Mark(mglPoint(x1,d),"s");		gr->Puts(mglPoint(x0,y+d),"'s'","rL");
+	gr->Mark(mglPoint(x1,0),"d");		gr->Puts(mglPoint(x0,y),"'d'","rL");
+	gr->Mark(mglPoint(x1,-d,0),"o");	gr->Puts(mglPoint(x0,y-d),"'o'","rL");
+	gr->Mark(mglPoint(x1,-2*d,0),"^");	gr->Puts(mglPoint(x0,y-2*d),"'\\^'","rL");
+	gr->Mark(mglPoint(x1,-3*d,0),"v");	gr->Puts(mglPoint(x0,y-3*d),"'v'","rL");
+	gr->Mark(mglPoint(x1,-4*d,0),"<");	gr->Puts(mglPoint(x0,y-4*d),"'<'","rL");
+	gr->Mark(mglPoint(x1,-5*d,0),">");	gr->Puts(mglPoint(x0,y-5*d),"'>'","rL");
 
 	d=0.25; x1=-0.5; x0=-0.3;	y = -0.05;
-	gr->Mark(mglPoint(x1,5*d),'C');		gr->Puts(mglPoint(x0,y+5*d),"'\\#.'","rL");
-	gr->Mark(mglPoint(x1,4*d),'P');		gr->Puts(mglPoint(x0,y+4*d),"'\\#+'","rL");
-	gr->Mark(mglPoint(x1,3*d),'X');		gr->Puts(mglPoint(x0,y+3*d),"'\\#x'","rL");
-	gr->Mark(mglPoint(x1,2*d),'Y');		gr->Puts(mglPoint(x0,y+2*d),"'\\#*'","rL");
-	gr->Mark(mglPoint(x1,d),'S');		gr->Puts(mglPoint(x0,y+d),"'\\#s'","rL");
-	gr->Mark(mglPoint(x1,0),'D');		gr->Puts(mglPoint(x0,y),"'\\#d'","rL");
-	gr->Mark(mglPoint(x1,-d,0),'O');	gr->Puts(mglPoint(x0,y-d),"'\\#o'","rL");
-	gr->Mark(mglPoint(x1,-2*d,0),'T');	gr->Puts(mglPoint(x0,y-2*d),"'\\#\\^'","rL");
-	gr->Mark(mglPoint(x1,-3*d,0),'V');	gr->Puts(mglPoint(x0,y-3*d),"'\\#v'","rL");
-	gr->Mark(mglPoint(x1,-4*d,0),'L');	gr->Puts(mglPoint(x0,y-4*d),"'\\#<'","rL");
-	gr->Mark(mglPoint(x1,-5*d,0),'R');	gr->Puts(mglPoint(x0,y-5*d),"'\\#>'","rL");
+	gr->Mark(mglPoint(x1,5*d),"C");		gr->Puts(mglPoint(x0,y+5*d),"'\\#.'","rL");
+	gr->Mark(mglPoint(x1,4*d),"P");		gr->Puts(mglPoint(x0,y+4*d),"'\\#+'","rL");
+	gr->Mark(mglPoint(x1,3*d),"X");		gr->Puts(mglPoint(x0,y+3*d),"'\\#x'","rL");
+	gr->Mark(mglPoint(x1,2*d),"Y");		gr->Puts(mglPoint(x0,y+2*d),"'\\#*'","rL");
+	gr->Mark(mglPoint(x1,d),"S");		gr->Puts(mglPoint(x0,y+d),"'\\#s'","rL");
+	gr->Mark(mglPoint(x1,0),"D");		gr->Puts(mglPoint(x0,y),"'\\#d'","rL");
+	gr->Mark(mglPoint(x1,-d,0),"O");	gr->Puts(mglPoint(x0,y-d),"'\\#o'","rL");
+	gr->Mark(mglPoint(x1,-2*d,0),"T");	gr->Puts(mglPoint(x0,y-2*d),"'\\#\\^'","rL");
+	gr->Mark(mglPoint(x1,-3*d,0),"V");	gr->Puts(mglPoint(x0,y-3*d),"'\\#v'","rL");
+	gr->Mark(mglPoint(x1,-4*d,0),"L");	gr->Puts(mglPoint(x0,y-4*d),"'\\#<'","rL");
+	gr->Mark(mglPoint(x1,-5*d,0),"R");	gr->Puts(mglPoint(x0,y-5*d),"'\\#>'","rL");
 }
 //-----------------------------------------------------------------------------
 void smgl_sample4(mglGraph *gr)	// font features
@@ -674,36 +672,36 @@ void smgl_sample3(mglGraph *gr)	// curvilinear coordinates
 	y.Fill(0.5,0.5);
 	x.Fill(-1,1);        // create data arrays
 
-	gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,1,-1));
-	gr->SetTicks('z', 0.5);  // set tick step to 0.5
+	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));
+	gr->SetOrigin(-1,1,-1);	gr->SetTicks('z', 0.5);  // set tick step to 0.5
 
 	gr->SubPlot(2,2,0);
 	gr->Rotate(60,40);
 	gr->Plot(x,y,z,"r2");
 	gr->Axis(); gr->Grid();
-	gr->Text(mglPoint(0,1.3,1),"Cartesian");
+	gr->Puts(mglPoint(0,1.3,1),"Cartesian");
 
 	gr->SubPlot(2,2,1);
 	gr->SetFunc("y*sin(pi*x)","y*cos(pi*x)",0);
 	gr->Rotate(60,40);
 	gr->Plot(x,y,z,"r2");
 	gr->Axis(); gr->Grid();
-	gr->Text(mglPoint(0,1.3,1),"Cylindrical");
+	gr->Puts(mglPoint(0,1.3,1),"Cylindrical");
 
 	gr->SubPlot(2,2,2);
 	gr->Rotate(60,40);
 	gr->SetFunc("2*y*x","y*y - x*x",0);
 	gr->Plot(x,y,z,"r2");
 	gr->Axis(); gr->Grid();
-	gr->Text(mglPoint(0,1.3,1),"Parabolic");
+	gr->Puts(mglPoint(0,1.3,1),"Parabolic");
 
 	gr->SubPlot(2,2,3);
 	gr->Rotate(60,40);
 	gr->SetFunc("y*sin(pi*x)","y*cos(pi*x)","x+z");
 	gr->Plot(x,y,z,"r2");
 	gr->Axis(); gr->Grid();
-	gr->Text(mglPoint(0,1.3,1),"Spiral");
-	gr->Axis(0,0,0);	// set to default Cartesian
+	gr->Puts(mglPoint(0,1.3,1),"Spiral");
+	gr->SetFunc(0,0,0);	// set to default Cartesian
 }
 //-----------------------------------------------------------------------------
 void smgl_sample2(mglGraph *gr)	// axis and grid
@@ -717,7 +715,7 @@ void smgl_sample2(mglGraph *gr)	// axis and grid
 	gr->Puts(mglPoint(0,1.3,1),"Axis and grid");
 
 	gr->SetTicks('x');  gr->SetTicks('y'); // restore back
-	gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(0,0,0));
+	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));	gr->SetOrigin(0,0,0);
 
 	gr->SubPlot(2,2,1);
 	gr->Rotate(60,40);
@@ -731,7 +729,7 @@ void smgl_sample2(mglGraph *gr)	// axis and grid
 	gr->Rotate(60,40);
 	gr->SetTicks('x', 0.2); gr->SetTicks('y', 0.2);
 	gr->SetTicks('z', 0.2); // too low step of ticks
-	gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,-1,-1));
+	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));	gr->SetOrigin(-1,-1,-1);
 	gr->Axis();
 	gr->Grid();
 	gr->Puts(mglPoint(0,0,1.5),"Shift origin and add grid");
@@ -754,25 +752,25 @@ void smgl_sample1(mglGraph *gr)	// transformation
 {
 	gr->SubPlot(2,2,0);  // just new axis without rotation and aspects
 	gr->Box();
-	gr->Text(mglPoint(-1,1.1,1),"Just box","rL");
+	gr->Puts(mglPoint(-1,1.1,1),"Just box","rL");
 	gr->InPlot(0.2,0.5,0.7,1,false);
 	gr->Box();
-	gr->Text(mglPoint(0,1.2,1),"InPlot example");
+	gr->Puts(mglPoint(0,1.2,1),"InPlot example");
 	gr->SubPlot(2,2,1);  // new axis with aspect and rotation
 	gr->Rotate(60,40);
 	gr->Aspect(1,1,1);
 	gr->Box();
-	gr->Text(mglPoint(1,1,1.5),"Rotate only","rR");
+	gr->Puts(mglPoint(1,1,1.5),"Rotate only","rR");
 	gr->SubPlot(2,2,2);  // aspect in other direction
 	gr->Rotate(60,40);
 	gr->Aspect(1,1,2);
 	gr->Box();
-	gr->Text(mglPoint(0,0,2),"Aspect and Rotate");
+	gr->Puts(mglPoint(0,0,2),"Aspect and Rotate");
 	gr->SubPlot(2,2,3);  // rotation before aspect. INCORRECT !!!
 	gr->Rotate(60,40);
 	gr->Aspect(1,2,2);
 	gr->Box();
-	gr->Text(mglPoint(0,0,1.5),"Aspect in other direction");
+	gr->Puts(mglPoint(0,0,1.5),"Aspect in other direction");
 	gr->Rotate(0,0); // for unrotate in IDTF
 }
 //-----------------------------------------------------------------------------
@@ -808,19 +806,19 @@ void smgl_plot(mglGraph *gr)
 void smgl_area(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
-	gr->Org=mglPoint();	gr->Box();	gr->Area(y);
+	gr->SetOrigin(0,0,0);	gr->Box();	gr->Area(y);
 }
 //-----------------------------------------------------------------------------
 void smgl_area_2(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
-	gr->Org=mglPoint();	gr->Box();	gr->Area(y,"cbgGyr");
+	gr->SetOrigin(0,0,0);	gr->Box();	gr->Area(y,"cbgGyr");
 }
 //-----------------------------------------------------------------------------
 void smgl_stem(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
-	gr->Org=mglPoint();	gr->Box();	gr->Stem(y,"o");
+	gr->SetOrigin(0,0,0);	gr->Box();	gr->Stem(y,"o");
 }
 //-----------------------------------------------------------------------------
 void smgl_step(mglGraph *gr)
@@ -832,31 +830,31 @@ void smgl_step(mglGraph *gr)
 void smgl_bars_2(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-	gr->Org=mglPoint();	gr->Box();	gr->Bars(ys,"cbgGyr");
+	gr->SetOrigin(0,0,0);	gr->Box();	gr->Bars(ys,"cbgGyr");
 }
 //-----------------------------------------------------------------------------
 void smgl_bars_a(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.3*sin(pi*(2*x+y/2))+0.1*rnd");
-	gr->Org=mglPoint();	gr->Box();	gr->Bars(ys,"a");
+	gr->SetOrigin(0,0,0);	gr->Box();	gr->Bars(ys,"a");
 }
 //-----------------------------------------------------------------------------
 void smgl_bars_f(mglGraph *gr)
 {
 	mglData ys(10,2);	ys.Modify("0.24*sin(pi*(2*x+y/2))+0.06*rnd");
-	gr->Org=mglPoint();	gr->Box();	gr->Bars(ys,"f");
+	gr->SetOrigin(0,0,0);	gr->Box();	gr->Bars(ys,"f");
 }
 //-----------------------------------------------------------------------------
 void smgl_bars(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-	gr->Org=mglPoint();	gr->Box();	gr->Bars(ys);
+	gr->SetOrigin(0,0,0);	gr->Box();	gr->Bars(ys);
 }
 //-----------------------------------------------------------------------------
 void smgl_barh(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-	gr->Org=mglPoint();	gr->Box();	gr->Barh(ys);
+	gr->SetOrigin(0,0,0);	gr->Box();	gr->Barh(ys);
 }
 //-----------------------------------------------------------------------------
 void smgl_tens(mglGraph *gr)
@@ -1093,7 +1091,7 @@ void smgl_surfc(mglGraph *gr)
 void smgl_boxs(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
-	gr->Org = mglPoint();	gr->Light(true);	gr->Rotate(40,60);
+	gr->SetOrigin(0,0,0);	gr->Light(true);	gr->Rotate(40,60);
 	gr->Box();	gr->Boxs(a);
 }
 //-----------------------------------------------------------------------------
@@ -1101,7 +1099,7 @@ void smgl_surf_fog(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
 	gr->Light(true);	gr->Rotate(40,60);	gr->Fog(1);	gr->Box();
-	(type==5 || type==9 || type==10)?gr->Text(mglPoint(),"Fog not supported") : gr->Surf(a);
+	(type==5 || type==9 || type==10)?gr->Puts(mglPoint(),"Fog not supported") : gr->Surf(a);
 	gr->Fog(0);
 }
 //-----------------------------------------------------------------------------
@@ -1152,7 +1150,7 @@ void smgl_conta(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
 	gr->Rotate(40,60);	gr->VertexColor(false);
-	gr->Box();	gr->ContA(c);
+	gr->Box();	gr->Cont3(c,'x');	gr->Cont3(c,'y');	gr->Cont3(c,'z');
 }
 //-----------------------------------------------------------------------------
 void smgl_dens_xyz(mglGraph *gr)
@@ -1176,7 +1174,7 @@ void smgl_contfa(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
 	gr->Rotate(40,60);	gr->Light(true);	gr->VertexColor(false);
-	gr->Box();	gr->ContFA(c);
+	gr->Box();	gr->ContF3(c,'x');	gr->ContF3(c,'y');	gr->ContF3(c,'z');
 }
 //-----------------------------------------------------------------------------
 void smgl_surf3(mglGraph *gr)
@@ -1207,8 +1205,8 @@ void smgl_densa(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
 	gr->Rotate(40,60);	gr->Alpha(true);	gr->VertexColor(false);
-	gr->Org=mglPoint();	gr->Axis();
-	gr->Box();			gr->DensA(c);
+	gr->SetOrigin(0,0,0);	gr->Axis();
+	gr->Box();	gr->Dens3(c,'x');	gr->Dens3(c,'y');	gr->Dens3(c,'z');
 }
 //-----------------------------------------------------------------------------
 void smgl_cloud(mglGraph *gr)
@@ -1216,15 +1214,6 @@ void smgl_cloud(mglGraph *gr)
 	mglData c;	mgls_prepare3d(&c);
 	gr->Rotate(40,60);	gr->Alpha(true);	gr->VertexColor(false);
 	gr->Box();	gr->Cloud(c,"wyrRk");
-}
-//-----------------------------------------------------------------------------
-void smgl_cloudp(mglGraph *gr)
-{
-	mglData c;	mgls_prepare3d(&c);
-	gr->Rotate(40,60);	gr->Alpha(true);	gr->VertexColor(false);
-	gr->Box();
-	if(type==5 || type==9 || type==10)	gr->Text(mglPoint(0,0,0),"Point clouds not supported");
-	else		gr->CloudP(c,"wyrRk");
 }
 //-----------------------------------------------------------------------------
 void mgls_prepare2v(mglData *a, mglData *b)
@@ -1249,13 +1238,13 @@ void smgl_vect(mglGraph *gr)
 void smgl_vectl(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2v(&a,&b);
-	gr->Box();	gr->VectL(a,b);
+	gr->Box();	gr->Vect(a,b,"",NAN,MGL_VEC_COL|MGL_VEC_DOT|MGL_VEC_GRD);
 }
 //-----------------------------------------------------------------------------
 void smgl_vectc(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2v(&a,&b);
-	gr->Box();	gr->VectC(a,b);
+	gr->Box();	gr->Vect(a,b,"",NAN,MGL_VEC_LEN|MGL_VEC_DOT|MGL_VEC_GRD);
 }
 //-----------------------------------------------------------------------------
 void smgl_flow(mglGraph *gr)
@@ -1283,7 +1272,7 @@ void smgl_dew(mglGraph *gr)
 	mglData a,b;	mgls_prepare2v(&a,&b);
 	gr->Light(true);	gr->Compression(true);  // try to save space
 	gr->DoubleSided(false); // try to improve performance
-	gr->Box();	gr->MeshNum=20;	gr->Dew(a,b);
+	gr->Box();	gr->SetMeshNum(20);	gr->Dew(a,b);
 	gr->DoubleSided(true);
 	gr->Compression(false);  //put setting back
 }
@@ -1293,7 +1282,7 @@ void smgl_dew2(mglGraph *gr)
 	mglData a,b;	mgls_prepare2v(&a,&b);
 	gr->Rotate(40,60);	gr->Light(true);	gr->Compression(true);  // try to save space
 	gr->DoubleSided(false); // try to improve performance
-	gr->Box();	gr->MeshNum=10;	gr->Dew(a,b);
+	gr->Box();	gr->SetMeshNum(10);	gr->Dew(a,b);
 	gr->DoubleSided(true);
 	gr->Compression(false);  //put setting back
 }
@@ -1333,14 +1322,14 @@ void smgl_vectl3(mglGraph *gr)
 {
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
 	gr->Rotate(40,60);
-	gr->Box();	gr->Box();	gr->VectL(ex,ey,ez,"bwr");
+	gr->Box();	gr->Box();	gr->Vect(ex,ey,ez,"bwr",MGL_VEC_COL|MGL_VEC_DOT|MGL_VEC_GRD);
 }
 //-----------------------------------------------------------------------------
 void smgl_vectc3(mglGraph *gr)
 {
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
 	gr->Rotate(40,60);
-	gr->Box();	gr->Box();	gr->VectC(ex,ey,ez,"bwr");
+	gr->Box();	gr->Box();	gr->Vect(ex,ey,ez,"bwr",MGL_VEC_LEN|MGL_VEC_DOT|MGL_VEC_GRD);
 }
 //-----------------------------------------------------------------------------
 void smgl_pipe3(mglGraph *gr)
@@ -1356,14 +1345,14 @@ void smgl_crust(mglGraph *gr)
 {
 	mglData pnts("hotdogs.pts");	pnts.Norm(-1,1,true);
 	gr->Rotate(40,60);	gr->Light(true);	gr->Alpha(true);
-	gr->Clf();	gr->Box();	gr->Crust(pnts);
+	gr->Clf();	gr->Box();	gr->Crust(pnts.SubData(0),pnts.SubData(1),pnts.SubData(2));
 }
 //-----------------------------------------------------------------------------
 void smgl_dots(mglGraph *gr)
 {
 	mglData pnts("hotdogs.pts");	pnts.Norm(-1,1,true);
 	gr->Rotate(40,60);	gr->Light(true);	gr->Alpha(true);
-	gr->Clf();	gr->Box();	gr->Dots(pnts);
+	gr->Clf();	gr->Box();	gr->Dots(pnts.SubData(0),pnts.SubData(1),pnts.SubData(2));
 }
 //-----------------------------------------------------------------------------
 void smgl_legend(mglGraph *gr)
@@ -1377,9 +1366,9 @@ void smgl_legend(mglGraph *gr)
 		f.a[i+50]=sin(2*M_PI*x);
 		f.a[i+100]=sin(2*M_PI*sqrt(x));
 	}
-	gr->Axis(mglPoint(0), mglPoint(1));
+	gr->SetRanges(mglPoint(0), mglPoint(1));
 	gr->Box();	gr->Plot(f);	gr->Axis("xy");
-	if(type==5 || type==9 || type==10)	gr->LegendBox = false;
+	if(type==5 || type==9 || type==10)	gr->SetLegendBox(false);
 	gr->AddLegend("sin(\\pi {x^2})","b");	gr->AddLegend("sin(\\pi x)","g*");
 	gr->AddLegend("sin(\\pi \\sqrt{x})","r+");	gr->Legend();
 }
@@ -1387,9 +1376,9 @@ void smgl_legend(mglGraph *gr)
 void smgl_type0(mglGraph *gr)	// TranspType = 0
 {
 	if(type==5 || type==9 || type==10)	return;
-	gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
+	gr->Alpha(true);	gr->Light(true);	gr->AddLight(0,mglPoint(0,0,1));
 	mglData a;	mgls_prepare2d(&a);
-	gr->TranspType = 0;	gr->Clf();
+	gr->SetTranspType(0);	gr->Clf();
 	gr->SubPlot(2,2,0);	gr->Rotate(40,60);	gr->Surf(a);	gr->Box();
 	gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Dens(a);	gr->Box();
 	gr->SubPlot(2,2,2);	gr->Rotate(40,60);	gr->Cont(a);	gr->Box();
@@ -1399,9 +1388,9 @@ void smgl_type0(mglGraph *gr)	// TranspType = 0
 void smgl_type1(mglGraph *gr)	// TranspType = 1
 {
 	if(type==5 || type==9 || type==10)	return;
-	gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
+	gr->Alpha(true);	gr->Light(true);	gr->AddLight(0,mglPoint(0,0,1));
 	mglData a;	mgls_prepare2d(&a);
-	gr->TranspType = 1;	gr->Clf();
+	gr->SetTranspType(1);	gr->Clf();
 	gr->SubPlot(2,2,0);	gr->Rotate(40,60);	gr->Surf(a);	gr->Box();
 	gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Dens(a);	gr->Box();
 	gr->SubPlot(2,2,2);	gr->Rotate(40,60);	gr->Cont(a);	gr->Box();
@@ -1411,9 +1400,9 @@ void smgl_type1(mglGraph *gr)	// TranspType = 1
 void smgl_type2(mglGraph *gr)	// TranspType = 2
 {
 	if(type==5 || type==9 || type==10)	return;
-	gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
+	gr->Alpha(true);	gr->Light(true);	gr->AddLight(0,mglPoint(0,0,1));
 	mglData a;	mgls_prepare2d(&a);
-	gr->TranspType = 2;	gr->Clf();
+	gr->SetTranspType(2);	gr->Clf();
 	gr->SubPlot(2,2,0);	gr->Rotate(40,60);	gr->Surf(a);	gr->Box();
 	gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Dens(a);	gr->Box();
 	gr->SubPlot(2,2,2);	gr->Rotate(40,60);	gr->Cont(a);	gr->Box();
@@ -1503,7 +1492,7 @@ void smgl_ternary(mglGraph *gr)	// flag #
 	y.Modify("0.25*(1+sin(2*pi*x))");
 	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
 
-	gr->Text(mglPoint(-0.8,1.3), "Ternary plot (x+y+t=1)");
+	gr->Puts(mglPoint(-0.8,1.3), "Ternary plot (x+y+t=1)");
 	gr->Ternary(true);
 	gr->Plot(x,y,"r2");
 	gr->Plot(rx,ry,"q^ ");
@@ -1520,13 +1509,13 @@ void smgl_drops(mglGraph *gr)	// flag #
 {
 	gr->VertexColor(false);	// not strictly required, but looks better imho
 	gr->Light(true);	gr->Alpha(false);
-	gr->Text(mglPoint(-1,1.2),"sh=0");
+	gr->Puts(mglPoint(-1,1.2),"sh=0");
 	gr->Drop(mglPoint(-1,0),mglPoint(0,1),0.5,"r",0);
-	gr->Text(mglPoint(-0.33,1.2),"sh=0.33");
+	gr->Puts(mglPoint(-0.33,1.2),"sh=0.33");
 	gr->Drop(mglPoint(-0.33,0),mglPoint(0,1),0.5,"r",0.33);
-	gr->Text(mglPoint(0.33,1.2),"sh=0.67");
+	gr->Puts(mglPoint(0.33,1.2),"sh=0.67");
 	gr->Drop(mglPoint(0.33,0),mglPoint(0,1),0.5,"r",0.67);
-	gr->Text(mglPoint(1,1.2),"sh=1");
+	gr->Puts(mglPoint(1,1.2),"sh=1");
 	gr->Drop(mglPoint(1,0),mglPoint(0,1),0.5,"r",1);
 	gr->Ball(mglPoint(-1,0,1),'k');
 	gr->Ball(mglPoint(-0.33,0,1),'k');
@@ -1546,7 +1535,7 @@ void smgl_fish(mglGraph *gr)	// flag #
 	b.Modify("0.3*y+rnd"); y.Modify("y+0.1*rnd");
 
 	gr->Clf();
-	gr->Axis(mglPoint(0,0),mglPoint(1.1,1.1));
+	gr->SetRanges(mglPoint(0,0),mglPoint(1.1,1.1));
 	gr->Light(true);
 	gr->Dew(x,y,a,b,"BbcyrR");
 	gr->Compression(false);	gr->DoubleSided(true);
@@ -1570,7 +1559,7 @@ void smgl_semilog(mglGraph *gr)	// semi-log axis
 	mglData x(2000), y(2000);
 	x.Modify("0.01/(x+10^(-5))"); y.Modify("sin(1/v)",x);
 
-	gr->Axis(mglPoint(0.01,-1),mglPoint(1000,1));
+	gr->SetRanges(mglPoint(0.01,-1),mglPoint(1000,1));
 	gr->SetFunc("lg(x)",0,0); gr->SetTicks('x', 0);	gr->Box();
 	gr->Plot(x,y,"b2");
 	gr->Axis(); gr->Grid("xy","g");
@@ -1582,7 +1571,7 @@ void smgl_loglog(mglGraph *gr)	// log-log axis
 	mglData x(2000), y(2000);
 	x.Modify("pow(10,6*x-3)"); y.Modify("sqrt(1+v^2)",x);
 
-	gr->Axis(mglPoint(0.001,0.1),mglPoint(1000,1000));
+	gr->SetRanges(mglPoint(0.001,0.1),mglPoint(1000,1000));
 	gr->SetFunc("lg(x)","lg(y)",0);
 	gr->SetTicks('x', 0);
 	gr->SetTicks('y', 0);
@@ -1594,24 +1583,25 @@ void smgl_loglog(mglGraph *gr)	// log-log axis
 void smgl_fit(mglGraph *gr)	// nonlinear fitting
 {
 	mglData rnd(100), in(100), res;
-	rnd.Fill("0.4*rnd+0.1+sin(2*pi*x)", gr->Min, gr->Max);
-	in.Fill("0.3+sin(2*pi*x)", gr->Min, gr->Max);
+	gr->Fill(rnd,"0.4*rnd+0.1+sin(2*pi*x)");
+	gr->Fill(in,"0.3+sin(2*pi*x)");
 
-	gr->Axis(mglPoint(-1,-2), mglPoint(1,2));
+	gr->SetRanges(mglPoint(-1,-2), mglPoint(1,2));
 	gr->Plot(rnd, ". ");
 	gr->Box();
 
 	mreal ini[3] = {1,1,3};
-	gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", ini);
+	mglData Ini(3,ini);
+	gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", Ini);
 	gr->Plot(res, "r");
 	gr->Plot(in, "b");
-	gr->Text(mglPoint(-1, -1.3), "fitted:", "L:r", -1);
+	gr->Puts(mglPoint(-1, -1.3), "fitted:", "L:r", -1);
 	gr->PutsFit(mglPoint(0, -1.8), "y = ", "C:r", -1);
-	gr->Text(mglPoint(0, 2.2), "initial: y = 0.3+sin(2\\pi x)", "C:b", -1);
-	gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(0,0,0));
+	gr->Puts(mglPoint(0, 2.2), "initial: y = 0.3+sin(2\\pi x)", "C:b", -1);
+	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));	gr->SetOrigin(0,0,0);
 }
 //-----------------------------------------------------------------------------
-#include <mgl/mgl_parse.h>
+/*#include "mgl/parse.h"	// TODO: Add parser sample
 void smgl_parser(mglGraph *gr)	// example of MGL parsing
 {
 	mreal a[100];   // let a_i = sin(4*pi*x), x=0...1
@@ -1626,15 +1616,15 @@ void smgl_parser(mglGraph *gr)	// example of MGL parsing
 	// also you may use cycles or conditions in script
 	parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
 	delete parser;
-}
+}*/
 //-----------------------------------------------------------------------------
 void smgl_2_axis(mglGraph *gr)	// 2 axis
 {
 	mglData y1,y2;	mgls_prepare1d(0,&y2,&y1);
-	gr->Axis(mglPoint(-1,-1,-1),mglPoint(1,1,1),mglPoint(-1,-1,-1));
+	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));	gr->SetOrigin(-1,-1,-1);
 	gr->Axis();	gr->Label('y',"axis 1",0);	gr->Plot(y1,"b");
 	// set up second axis
-	gr->Axis(mglPoint(0,0,0),mglPoint(1,1,1),mglPoint(1,1,1));
+	gr->SetRanges(mglPoint(0,0,0),mglPoint(1,1,1));		gr->SetOrigin(1,1,1);
 	gr->Axis();	gr->Label('y',"axis 2",0);	gr->Stem(y2,"r");
 }
 //-----------------------------------------------------------------------------
@@ -1642,7 +1632,7 @@ void smgl_flow_dens(mglGraph *gr)	// flow threads and density plot
 {
 	mglData a,b,d;	mgls_prepare2v(&a,&b);	d = a;
 	for(int i=0;i<a.nx*a.ny;i++)	d.a[i] = hypot(a.a[i],b.a[i]);
-	gr->Flow(a,b,"br",5,true,(type==5 || type==9 || type==10)?-0.99:NAN);
+	gr->Flow(a,b,"br",5,(type==5 || type==9 || type==10)?-0.99:NAN);
 	gr->Dens(d,"BbcyrR");	gr->Box();
 }
 //-----------------------------------------------------------------------------
@@ -1651,8 +1641,8 @@ void smgl_surf_cont(mglGraph *gr)	// contour lines over surface
 	mglData a;	mgls_prepare2d(&a);
 	gr->Rotate(40,60);
 	gr->Box();	gr->Surf(a,"kw");
-	gr->CAxis(-1,0);	gr->Cont(a,"w");
-	gr->CAxis( 0,1);	gr->Cont(a,"k");
+	gr->SetCRange(-1,0);	gr->Cont(a,"w");
+	gr->SetCRange( 0,1);	gr->Cont(a,"k");
 }
 //-----------------------------------------------------------------------------
 void smgl_mesh_cont(mglGraph *gr)	// contours under mesh
@@ -1680,14 +1670,14 @@ void smgl_surf_caxis(mglGraph *gr)	// caxis and the surface
 {
 	mglData a;	mgls_prepare2d(&a);
 	gr->Rotate(40,60);	gr->Light(true);
-	gr->CAxis(0,1);	gr->Box();	gr->Surf(a);
+	gr->SetCRange(0,1);	gr->Box();	gr->Surf(a);
 }
 //-----------------------------------------------------------------------------
 void smgl_surf_cut(mglGraph *gr)	// cutting
 {
 	mglData a;	mgls_prepare2d(&a);
 	gr->Rotate(40,60);	gr->Light(true);
-	gr->Axis(mglPoint(-1,-1,0),mglPoint(1,1,1));	gr->Cut=false;
+	gr->SetRanges(mglPoint(-1,-1,0),mglPoint(1,1,1));	gr->SetCut(false);
 	gr->Box();	gr->Surf(a);
 }
 //-----------------------------------------------------------------------------
@@ -1695,8 +1685,8 @@ void smgl_several_light(mglGraph *gr)	// several light sources
 {
 	mglData a;	mgls_prepare2d(&a);
 	gr->Rotate(40,60);	gr->Light(true);
-	gr->Light(1,mglPoint(0,1,0),'c');	gr->Light(2,mglPoint(1,0,0),'y');
-	gr->Light(3,mglPoint(0,-1,0),'m');
+	gr->AddLight(1,mglPoint(0,1,0),'c');	gr->AddLight(2,mglPoint(1,0,0),'y');
+	gr->AddLight(3,mglPoint(0,-1,0),'m');
 	gr->Box();	gr->Surf(a,"h");
 	gr->Light(1,false);	gr->Light(2,false);	gr->Light(3,false);
 }
@@ -1719,7 +1709,7 @@ void smgl_cutminmax2(mglGraph *gr)	// CutMin CutMax example
 	mglData v(10);	v.Fill(-0.5,1);
 	gr->Rotate(40,60);	gr->Light(true);
 	gr->VertexColor(false);	gr->Compression(false);
-	gr->CutMin = mglPoint(0,-1,-1);	gr->CutMax = mglPoint(1,0,1.1);
+	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
 	gr->Box();	gr->Surf3(-0.5,c);
 	gr->ContF3(v,c,'x',-1);	gr->ContF3(v,c,'y',-1);
 	gr->ContF3(v,c,'z',0);	gr->ContF3(v,c,'z',39);
@@ -1730,7 +1720,7 @@ void smgl_cutminmax(mglGraph *gr)	// CutMin CutMax example
 	mglData c;	mgls_preparecc(&c);
 	gr->Rotate(40,60);	gr->Light(true);	gr->Alpha(true);
 	gr->VertexColor(false);	gr->Compression(false);
-	gr->CutMin = mglPoint(0,-1,-1);	gr->CutMax = mglPoint(1,0,1.1);
+	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
 	gr->Box();	gr->Surf3(c);
 }
 //-----------------------------------------------------------------------------
@@ -1754,9 +1744,7 @@ int main(int argc,char **argv)
 	const char *suf = "";
 	char name[256]="";
 	int ch;
-	mglGraphIDTF u3d;
-	mglGraphZB zb;
-	mglGraphPS ps;
+//	mglGraphIDTF u3d;
 	mglGraph *gr = NULL;
 	mglSample *s=samp;
 	while(( ch = getopt_long_only(argc, argv, "", longopts, NULL)) != -1)
@@ -1774,25 +1762,17 @@ int main(int argc,char **argv)
 			default:	usage();	return 0;
 		}
 
-	if(type==5 || type==9 || type==10)
-	{
-		u3d.unrotate_flag = true;
-		gr = &u3d;
-	}
-	else
-	{
-		if(type==1 || type==2 || type==8)	gr = &ps;
-	else				gr = &zb;
-	}
+	gr = new mglGraph;
+//	if(type==5 || type==9 || type==10)	{	u3d.unrotate_flag = true;	gr = &u3d;	}
 
 	if(mini)		{	gr->SetSize(200,133);	suf = "_sm";	}
 	else if(big)
-	{	gr->SetSize(1200,800);	suf = "_lg";	gr->BaseLineWidth = 2;	}
+	{	gr->SetSize(1200,800);	suf = "_lg";	}
 	else	gr->SetSize(width,height);
 
 	if(dotest)
 	{
-		mglTestMode=true;	test(gr);
+		mgl_set_test_mode(true);	test(gr);
 		gr->WriteEPS("test.eps");	gr->WritePNG("test.png","",false);
 		return 0;
 	}
@@ -1836,7 +1816,6 @@ mglSample samp[] = {
 	{"boxs", smgl_boxs},
 	{"chart", smgl_chart},
 	{"cloud", smgl_cloud},
-	{"cloudp", smgl_cloudp},
 	{"color_schemes", smgl_color_schemes},
 	{"colors", smgl_colors},
 	{"column",	smgl_column},
@@ -1875,7 +1854,7 @@ mglSample samp[] = {
 	{"mesh_cont", smgl_mesh_cont},
 	{"mirror", smgl_mirror},
 	{"molecule", smgl_molecule},
-	{"parser", smgl_parser},
+//	{"parser", smgl_parser},	// TODO: Add parser sample
 	{"pde", smgl_pde},
 	{"pie_chart", smgl_pie_chart},
 	{"pipe", smgl_pipe},

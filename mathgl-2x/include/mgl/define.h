@@ -167,9 +167,5 @@ extern int mglNumThr;		///< Number of thread for plotting and data handling
 #define MGL_NTH_DEF		1
 #endif
 //-----------------------------------------------------------------------------
-/// write testing messages
-extern bool mglTestMode;
-void mglTest(const char *str, ...);
-//-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------

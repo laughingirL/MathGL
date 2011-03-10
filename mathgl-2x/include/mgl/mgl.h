@@ -43,11 +43,12 @@ public:
 
 	inline int  GetWarn()			{	return mgl_get_warn(gr);}
 	inline void DefaultPlotParam()	{	mgl_set_def_param(gr);	}
+
 	inline void SetPalette(const char *colors)	{	mgl_set_palette(gr, colors);	}
 	inline void SetRotatedText(bool rotated)	{	mgl_set_rotated_text(gr, rotated);	}
 	inline void SetCut(bool cut)				{	mgl_set_cut(gr, cut);	}
-	inline void SetCutBox(float x1,float y1,float z1,float x2,float y2,float z2)
-	{	mgl_set_cut_box(gr, x1, y1, z1, x2, y2, z2);	}
+	inline void SetCutBox(mglPoint p1, mglPoint p2)
+	{	mgl_set_cut_box(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);	}
 	inline void SetTickLen(float len, float stt=1)
 	{	mgl_set_tick_len(gr, len, stt);	}
 	inline void SetTickStl(const char *stl, const char *sub=0)
@@ -153,13 +154,20 @@ public:
 		return mglPoint(xs,ys);
 	}
 
+	inline void Compression(bool){}		// TODO: Add later -- IDTF
+	inline void VertexColor(bool){}		// TODO: Add later -- IDTF
+	inline void DoubleSided(bool){}		// TODO: Add later -- IDTF
+	inline void TextureColor(bool){}	// TODO: Add later -- IDTF
+	inline void StartGroup(const char *name)		{	mgl_start_group(gr, name);	}
+	inline void EndGroup()					{	mgl_end_group(gr);	}
+
 	inline void SetTranspType(int type)		{	mgl_set_transp_type(gr, type);}
 	inline void Alpha(bool enable)			{	mgl_set_alpha(gr, enable);	}
 	inline void Fog(float d, float dz=0.25)	{	mgl_set_fog(gr, d, dz);		}
 	inline void Light(bool enable)			{	mgl_set_light(gr, enable);	}
 	inline void Light(int n,bool enable)	{	mgl_set_light_n(gr, n, enable);	}
-	inline void AddLight(int n, float x, float y, float z, char c='w')
-	{	mgl_add_light(gr, n, x, y, z, c);	}
+	inline void AddLight(int n, mglPoint p, char c='w')
+	{	mgl_add_light(gr, n, p.x, p.y, p.z, c);	}
 	inline void SetAmbient(float i)			{	mgl_set_ambbr(gr, i);	}
 
 	inline void Identity(bool rel=false)	{	mgl_identity(gr, rel);	}
@@ -192,8 +200,16 @@ public:
 
 	inline void SetCRange(float c1, float c2)
 	{	mgl_set_crange_val(gr, c1, c2);	}
+	inline void SetXRange(float c1, float c2)
+	{	mgl_set_xrange_val(gr, c1, c2);	}
+	inline void SetYRange(float c1, float c2)
+	{	mgl_set_yrange_val(gr, c1, c2);	}
+	inline void SetZRange(float c1, float c2)
+	{	mgl_set_zrange_val(gr, c1, c2);	}
 	inline void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0)
 	{	mgl_set_ranges(gr, x1, x2, y1, y2, z1, z2);	}
+	inline void SetRanges(mglPoint p1, mglPoint p2)
+	{	mgl_set_ranges(gr, p1.x, p2.x, p1.y, p2.y, p1.z, p2.z);	}
 	inline void SetAutoRanges(float x1, float x2, float y1=0, float y2=0, float z1=0, float z2=0)
 	{	mgl_set_auto(gr, x1, x2, y1, y2, z1, z2);	}
 	inline void SetOrigin(float x0, float y0, float z0=NAN)
@@ -234,6 +250,8 @@ public:
 	inline void SetTickTempl(char dir, char *t)
 	{	mgl_set_tick_templ(gr,dir,t);	}
 
+	inline void Ball(mglPoint p, char c)
+	{	char s[3]={'.',c,0};	mgl_mark(gr, p.x, p.y, p.z, s);	}
 	inline void Mark(mglPoint p, const char *mark)
 	{	mgl_mark(gr, p.x, p.y, p.z, mark);	}
 	inline void Line(mglPoint p1, mglPoint p2, const char *pen="B",int n=2)
@@ -250,8 +268,10 @@ public:
 	{	mgl_drop(gr, p.x, p.y, p.z, d.x, d.y, d.z, r, col, shift, ap);	}
 	inline void Sphere(mglPoint p, float r, const char *col="r")
 	{	mgl_sphere(gr, p.x, p.y, p.z, r, col);	}
-	inline void Cone (mglPoint p1, mglPoint p2, float r1, float r2=-1, const char *stl="B", bool edge=false)
+	inline void Cone(mglPoint p1, mglPoint p2, float r1, float r2=-1, const char *stl="B", bool edge=false)
 	{	mgl_cone(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z,r1,r2,stl,edge);	}
+	inline void Error(mglPoint p, mglPoint e, const char *pen="k")
+	{	mgl_error_box(gr, p.x, p.y, p.z, e.x, e.y, e.z, pen);	}
 
 	inline void Putsw(mglPoint p,const wchar_t *text,const char *font="C",float size=-1)
 	{	mgl_putsw(gr, p.x, p.y, p.z, text, font, size);	}
@@ -549,13 +569,13 @@ public:
 	inline void Pipe(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", float r0=0.05, int num=3)
 	{	mgl_pipe_3d(gr, &ax, &ay, &az, sch, r0, num);	}
 
-	inline void Grid3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, int sVal, const char *stl="")
+	inline void Grid3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *stl="")
 	{	mgl_grid3_xyz(gr, &x, &y, &z, &a, dir, sVal, stl);	}
-	inline void Grid3(const mglDataA &a, char dir, int sVal, const char *stl="")
+	inline void Grid3(const mglDataA &a, char dir, float sVal=-1, const char *stl="")
 	{	mgl_grid3(gr, &a, dir, sVal, stl);	}
-	inline void Dens3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, int sVal, const char *stl="")
+	inline void Dens3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *stl="")
 	{	mgl_dens3_xyz(gr, &x, &y, &z, &a, dir, sVal, stl);	}
-	inline void Dens3(const mglDataA &a, char dir, int sVal, const char *stl="")
+	inline void Dens3(const mglDataA &a, char dir, float sVal=-1, const char *stl="")
 	{	mgl_dens3(gr, &a, dir, sVal, stl);	}
 
 	inline void Surf3(float Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="")
@@ -571,22 +591,22 @@ public:
 	inline void Cloud(const mglDataA &a, const char *stl="", float alpha=1)
 	{	mgl_cloud(gr, &a, stl, alpha);	}
 
-	inline void Cont3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, int sVal, const char *sch="")
+	inline void Cont3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *sch="")
 	{	mgl_cont3_xyz_val(gr, &v, &x, &y, &z, &a, dir, sVal, sch);	}
-	inline void Cont3(const mglDataA &v, const mglDataA &a, char dir, int sVal, const char *sch="")
+	inline void Cont3(const mglDataA &v, const mglDataA &a, char dir, float sVal=-1, const char *sch="")
 	{	mgl_cont3_val(gr, &v, &a, dir, sVal, sch);	}
-	inline void Cont3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, int sVal, const char *sch="", int Num=7)
+	inline void Cont3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *sch="", int Num=7)
 	{	mgl_cont3_xyz(gr, &x, &y, &z, &a, dir, sVal, sch, Num);	}
-	inline void Cont3(const mglDataA &a, char dir, int sVal, const char *sch="", int Num=7)
+	inline void Cont3(const mglDataA &a, char dir, float sVal=-1, const char *sch="", int Num=7)
 	{	mgl_cont3(gr, &a, dir, sVal, sch, Num);	}
 
-	inline void ContF3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, int sVal, const char *sch="")
+	inline void ContF3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *sch="")
 	{	mgl_contf3_xyz_val(gr, &v, &x, &y, &z, &a, dir, sVal, sch);	}
-	inline void ContF3(const mglDataA &v, const mglDataA &a, char dir, int sVal, const char *sch="")
+	inline void ContF3(const mglDataA &v, const mglDataA &a, char dir, float sVal=-1, const char *sch="")
 	{	mgl_contf3_val(gr, &v, &a, dir, sVal, sch);	}
-	inline void ContF3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, int sVal, const char *sch="", int Num=7)
+	inline void ContF3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *sch="", int Num=7)
 	{	mgl_contf3_xyz(gr, &x, &y, &z, &a, dir, sVal, sch, Num);	}
-	inline void ContF3(const mglDataA &a, char dir, int sVal, const char *sch="", int Num=7)
+	inline void ContF3(const mglDataA &a, char dir, float sVal=-1, const char *sch="", int Num=7)
 	{	mgl_contf3(gr, &a, dir, sVal, sch, Num);	}
 
 	inline void Beam(const mglDataA &tr, const mglDataA &g1, const mglDataA &g2, const mglDataA &a, float r, const char *stl=0, int flag=0, int num=3)
@@ -702,8 +722,8 @@ public:
 	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, var,0));	}
 	inline mglData FitS(const mglDataA &fit, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var, mglData &ini)
 	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, var, &ini));	}
-	inline void PutsFit(float x, float y, float z, const char *prefix=0, const char *font=0, float size=-1)
-	{	mgl_puts_fit(gr, x, y, z, prefix, font, size);	}
+	inline void PutsFit(mglPoint p, const char *prefix=0, const char *font=0, float size=-1)
+	{	mgl_puts_fit(gr, p.x, p.y, p.z, prefix, font, size);	}
 	inline const char *GetFit()
 	{	return mgl_get_fit(gr);	}
 

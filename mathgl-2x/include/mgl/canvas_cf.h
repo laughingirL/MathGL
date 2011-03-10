@@ -119,6 +119,9 @@ void mgl_rotate(HMGL graph, float TetX,float TetZ,float TetY);
 void mgl_rotate_vector(HMGL graph, float Tet,float x,float y,float z);
 void mgl_perspective(HMGL graph, float val);
 
+void mgl_title(HMGL graph, const char *text, const char *fnt, float size);
+void mgl_titlew(HMGL graph, const wchar_t *text, const char *fnt, float size);
+
 /*****************************************************************************/
 uintptr_t mgl_create_graph_(int *width, int *height);
 void mgl_delete_graph_(uintptr_t *graph);
@@ -210,6 +213,9 @@ void mgl_aspect_(uintptr_t *graph, float *Ax,float *Ay,float *Az);
 void mgl_rotate_(uintptr_t *graph, float *TetX,float *TetZ,float *TetY);
 void mgl_rotate_vector_(uintptr_t *graph, float *Tet,float *x,float *y,float *z);
 void mgl_perspective_(uintptr_t *graph, float val);
+
+void mgl_title_(uintptr_t *graph, const char *text, const char *fnt, float *size, int,int);
+
 /*****************************************************************************/
 #ifdef __cplusplus
 }

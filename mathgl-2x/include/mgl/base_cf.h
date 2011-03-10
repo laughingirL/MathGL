@@ -27,6 +27,11 @@ extern "C" {
 #endif
 /*****************************************************************************/
 int mgl_get_warn(HMGL gr);
+void mgl_start_group(HMGL gr, const char *);
+void mgl_end_group(HMGL gr);
+void mgl_test_txt(const char *str, ...);
+void mgl_set_test_mode(int enable);
+
 void mgl_set_origin(HMGL gr, float x0, float y0, float z0);
 void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, float z2);
 void mgl_set_palette(HMGL gr, const char *colors);
@@ -69,6 +74,9 @@ void mgl_restore_font(HMGL gr);
 int mgl_get_warn(HMGL gr);
 /*****************************************************************************/
 int mgl_get_warn_(uintptr_t *gr);
+void mgl_start_group_(uintptr_t *gr, const char *,int);
+void mgl_end_group_(uintptr_t *gr);
+
 void mgl_set_origin_(uintptr_t *gr, float *x0, float *y0, float *z0);
 void mgl_set_auto_(uintptr_t *gr, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2);
 void mgl_set_palette_(uintptr_t *gr, const char *colors, int);

@@ -294,3 +294,12 @@ void mgl_set_legend_box_(uintptr_t *gr, int *enable)
 void mgl_set_legend_marks_(uintptr_t *gr, int *num)
 {	_GR_->SetLegendMarks(*num);	}
 //-----------------------------------------------------------------------------
+void mgl_title(HMGL gr, const char *text, const char *font, float size)
+{	_Gr_->Title(text,font,size);	}
+void mgl_titlew(HMGL gr, const wchar_t *text, const char *font, float size)
+{	_Gr_->Title(text,font,size);	}
+void mgl_title_(uintptr_t *gr, const char *text, const char *fnt, float *size, int l,int n)
+{	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
+	_GR_->Title(s,f, *size);	delete []s;	delete []f;	}
+//-----------------------------------------------------------------------------
