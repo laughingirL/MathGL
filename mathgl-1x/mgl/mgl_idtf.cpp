@@ -3967,6 +3967,176 @@ void mglGraphIDTF::WritePDF ( const char *fileNameParam,const char *descr )
     HPDF_U3D_Add3DView (u3d, view);
     HPDF_U3D_SetDefault3DView(u3d, "DefaultView");
 
+    HPDF_Dict js = NULL;
+
+    js = HPDF_DictStream_New (pdf->mmgr, pdf->xref);
+
+    js->header.obj_class |= HPDF_OSUBCLASS_XOBJECT;
+
+    /* add required elements */
+    js->filter = HPDF_STREAM_FILTER_NONE;
+
+    const unsigned char buf[] = 
+"\
+// inspired by s2plot.js \n\
+// arrays of specially-named sections of the model tree \n\
+var bbmeshes = new Array(); // stores the billboard meshes \n\
+var bbpos    = new Array(); // stores the billboard positions \n\
+var bbscale  = new Array(); // stores the billboard scales \n\
+var bbcount = 0;            // how many billboard meshes are there? \n\
+var vrx = new Array(); //  x volume rendering planes \n\
+var vrxcount = 0; \n\
+var vry = new Array(); \n\
+var vrycount = 0; \n\
+var vrz = new Array(); \n\
+var vrzcount = 0; \n\
+ \n\
+ \n\
+// compile lists of BBOARD*, VRSET* and FRAME* meshes \n\
+var meshes=scene.meshes; \n\
+var meshescount=meshes.count; \n\
+for (var i=0; i<meshescount; i++) {  \n\
+  // temporary variables \n\
+  var mesh = meshes.getByIndex(i); \n\
+  var name = mesh.name; \n\
+  var Pname = \"\"; \n\
+  var PPname = \"\"; \n\
+  var PPPname = \"\"; \n\
+  var PPPPname = \"\"; \n\
+ \n\
+  if (mesh.name.length > 0) { \n\
+    Pname = mesh.parent.name; \n\
+    if (mesh.parent.name.length > 0) { \n\
+      PPname = mesh.parent.parent.name; \n\
+      if (mesh.parent.parent.name.length > 0) { \n\
+        PPPname = mesh.parent.parent.parent.name; \n\
+        if (mesh.parent.parent.parent.name.length > 0) { \n\
+          PPPPname = mesh.parent.parent.parent.parent.name; \n\
+        } \n\
+      } \n\
+    } \n\
+  } \n\
+  if ((   name.indexOf(\"_bb\") > -1) || \n\
+      (  Pname.indexOf(\"_bb\") > -1) || \n\
+      ( PPname.indexOf(\"_bb\") > -1)) { \n\
+    bbmeshes.push(mesh); \n\
+    var bb_scale = Math.pow(Math.abs(mesh.transform.determinant),1.0/3.0);	// scale. \n\
+    var bb_center = mesh.computeBoundingBox().center; 	// center (vector3) \n\
+    bbpos.push(mesh.transform.translation.addScaled(bb_center, bb_scale)); \n\
+    bbscale.push(Matrix4x4().translate(bb_center.scale(-1)).scale(bb_scale, bb_scale, bb_scale)); \n\
+  } else if ((   Pname.indexOf(\"xSections\") > -1) || \n\
+	     (  PPname.indexOf(\"xSections\") > -1) || \n\
+	     ( PPPname.indexOf(\"xSections\") > -1)) { \n\
+    vrx.push(mesh); \n\
+  } else if ((   Pname.indexOf(\"ySections\") > -1) || \n\
+	     (  PPname.indexOf(\"ySections\") > -1) || \n\
+	     ( PPPname.indexOf(\"ySections\") > -1)) { \n\
+    vry.push(mesh); \n\
+  } else if ((   Pname.indexOf(\"zSections\") > -1) || \n\
+	     (  PPname.indexOf(\"zSections\") > -1) || \n\
+	     ( PPPname.indexOf(\"zSections\") > -1)) { \n\
+    vrz.push(mesh); \n\
+  }  \n\
+ \n\
+} \n\
+bbcount=bbmeshes.length; \n\
+vrxcount=vrx.length; \n\
+vrycount=vry.length; \n\
+vrzcount=vrz.length; \n\
+ \n\
+// Get Camera \n\
+var camera = scene.cameras.getByIndex(0); \n\
+ \n\
+function doBillboard() { \n\
+	 \n\
+	// Loop through all billboards, orientating their view direction with the camera position. \n\
+	var cam_posn = camera.position.subtract(camera.targetPosition);	// Camera's position vector (vector3) \n\
+	var cam_up = camera.up.subtract(camera.position);		// Camera's up vector (vector3) \n\
+	for (var j = 0; j < bbcount; j++) { \n\
+		var bb_pos = bbpos[j]; \n\
+		var bb_trans = Matrix4x4(); \n\
+		bb_trans.setView(bb_pos, cam_posn.add(bb_pos), cam_up.add(bb_pos)); \n\
+		bbmeshes[j].transform.set(bbscale[j].multiply(bb_trans));	// Set billboard view. \n\
+	} \n\
+ \n\
+} \n\
+ \n\
+// volume rendering handling code \n\
+function setVRSETvis(which, visibility, update) { \n\
+  if (which == 0) { \n\
+    for (var j=0; j<vrxcount; j++) {  \n\
+      vrx[j].visible = visibility; \n\
+    }  \n\
+  } else if (which == 1) { \n\
+    for (var j=0; j<vrycount; j++) {  \n\
+      vry[j].visible = visibility; \n\
+    } \n\
+  } else if (which == 2) { \n\
+    for (var j=0; j<vrzcount; j++) {  \n\
+      vrz[j].visible = visibility; \n\
+    } \n\
+  } \n\
+  if (update) { \n\
+    scene.update(); \n\
+    runtime.refresh(); \n\
+  } \n\
+} \n\
+ \n\
+function allSetVis(which) { \n\
+  setVRSETvis(which, true, 0); \n\
+  setVRSETvis((which + 1) % 3, false, 0); \n\
+  setVRSETvis((which + 2) % 3, false, 1); \n\
+} \n\
+ \n\
+var oldframeset = 3; \n\
+ \n\
+function pickFrameSet() { \n\
+  var camera = scene.cameras.getByIndex(0); \n\
+  var camdir = camera.position.subtract(camera.targetPosition); \n\
+   \n\
+  // default \n\
+  var whichframeset = 0; \n\
+   \n\
+  if ((Math.abs(camdir.y) >= Math.abs(camdir.x)) &&  \n\
+      (Math.abs(camdir.y) >= Math.abs(camdir.z))) { \n\
+    whichframeset = 1; \n\
+  } else if ((Math.abs(camdir.z) >= Math.abs(camdir.x)) && \n\
+	     (Math.abs(camdir.z) >= Math.abs(camdir.y))) { \n\
+    whichframeset = 2; \n\
+  } \n\
+  if ( whichframeset != oldframeset ) { \n\
+    oldframeset = whichframeset; \n\
+    allSetVis(whichframeset); \n\
+  } \n\
+} \n\
+ \n\
+ \n\
+mreh = new MouseEventHandler(); \n\
+mreh.onMouseDown = false; \n\
+mreh.onMouseMove = true; \n\
+mreh.reportAllTargets = false; \n\
+mreh.onEvent = function(event) { \n\
+  if (event.leftButtonDown) { \n\
+    doBillboard(); \n\
+    pickFrameSet(); \n\
+  } \n\
+} \n\
+runtime.addEventHandler(mreh); \n\
+ \n\
+ceh = new RenderEventHandler(); \n\
+ceh.onEvent = function(event) { \n\
+  doBillboard(); \n\
+  pickFrameSet(); \n\
+} \n\
+runtime.addEventHandler(ceh); \n\
+ \n\
+doBillboard(); \n\
+pickFrameSet(); \n\
+ \n\
+";
+    HPDF_Stream_Write (js->stream, buf, strlen((char*)buf));
+    HPDF_Dict_Add (u3d, "OnInstantiate", js);
+
     //  Create annotation
     annot = HPDF_Page_Create3DAnnot (page, rect, u3d );
 
