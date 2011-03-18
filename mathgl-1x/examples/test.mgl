@@ -1,4 +1,13 @@
-define $b -1
-for $z -1 1 0.1
-line 0 0 $b $z 'b'
-next
+read a 'sample.csv'
+copy x a(0)
+copy y a(1)
+copy z a(2)
+triangulate n x y
+
+xrange x
+yrange y
+zrange z
+crange z
+#triplot n x y z
+triplot n x y z '#'
+tricont n x y z 'k'

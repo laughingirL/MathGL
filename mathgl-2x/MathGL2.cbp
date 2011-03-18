@@ -50,9 +50,7 @@
 		<Unit filename="include/mgl/fit.h" />
 		<Unit filename="include/mgl/font.h" />
 		<Unit filename="include/mgl/mgl.h" />
-		<Unit filename="include/mgl/mgl_c.h" />
 		<Unit filename="include/mgl/mgl_cf.h" />
-		<Unit filename="include/mgl/mgl_f.h" />
 		<Unit filename="include/mgl/mgl_fltk.h" />
 		<Unit filename="include/mgl/mgl_qt.h" />
 		<Unit filename="include/mgl/mgl_txt.h" />

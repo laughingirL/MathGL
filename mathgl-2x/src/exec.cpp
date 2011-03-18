@@ -2116,8 +2116,8 @@ int mgls_tricont(mglGraph gr, long , mglArg *a, int k[10])
 		gr.TriContV(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:0,k[7]==3?a[7].v:NAN);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
 		gr.TriContV(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),k[5]==2?a[5].s:0,k[6]==3?a[6].v:NAN);
-	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[5]==1)
-		gr.TriCont(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,k[5]==3?a[5].v:NAN);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		gr.TriCont(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,7,k[5]==3?a[5].v:NAN);
 	else	return 1;
 	return 0;
 }
@@ -2130,7 +2130,7 @@ void mglc_tricont(wchar_t out[1024], long , mglArg *a, int k[10])
 		mglprintf(out,1024,L"gr.TriContV(%s, %s, %s, %s, %s, \"%s\", %g);",
 			a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, k[5]==2?a[5].s:"",k[6]==3?a[6].v:NAN);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-		mglprintf(out,1024,L"gr.TriCont(%s, %s, %s, %s, \"%s\", %g);",
+		mglprintf(out,1024,L"gr.TriCont(%s, %s, %s, %s, \"%s\", 7, %g);",
 			a[0].s, a[1].s, a[2].s, a[3].s, k[4]==2?a[4].s:"", k[5]==3?a[5].v:NAN);
 }
 //-----------------------------------------------------------------------------
@@ -3314,6 +3314,23 @@ void mglc_roll(wchar_t out[1024], long , mglArg *a, int k[10])
 	    a[0].s, a[1].s[0], iint(a[2].v));
 }
 //-----------------------------------------------------------------------------
+int mgls_triangulate(mglGraph , long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		*(a[0].d) = mglTriangulation(*(a[1].d), *(a[2].d), *(a[3].d), k[4]==3?a[4].v:0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		*(a[0].d) = mglTriangulation(*(a[1].d), *(a[2].d), k[3]==3?a[3].v:0);
+	else	return 1;
+	return 0;
+}
+void mglc_triangulate(wchar_t out[1024], long , mglArg *a, int k[10])
+{
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"%s = mglTriangulation(%s, %s, %s, %g);",a[0].s, a[1].s, a[2].s, a[3].s, k[4]==3?a[4].v:0);
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		mglprintf(out,1024,L"%s = mglTriangulation(%s, %s, %g);",a[0].s, a[1].s, a[2].s, k[3]==3?a[3].v:0);
+}
+//-----------------------------------------------------------------------------
 mglCommand mgls_base_cmd[] = {
 	{L"addlegend",L"Add legend entry",L"addlegend 'txt' 'fmt'", mgls_addlegend, mglc_addlegend, false, 2},
 	{L"addto",L"Add data or number",L"addto Var Dat|Var num", mgls_addto, mglc_addto, false, 3},
@@ -3495,6 +3512,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"transforma",L"Do integral transform of data",L"transforma Res 'how' Adat Pdat", mgls_transforma, mglc_transforma, true, 3},
 	{L"transpose",L"Transpose data array",L"transpose Dat ['dir']", mgls_transpose, mglc_transpose, false, 3},
 	{L"transptype",L"Set type transparency",L"transptype val", mgls_transptype, mglc_transptype, false, 2},
+	{L"triangulate",L"Find triangles of randomly placed points",L"triangulate Res Xdat Ydat [er]|Res Xdat Ydat Zdat [er]", mgls_triangulate, mglc_triangulate, true, 3},
 	{L"tricont",L"Draw contour lines for surface of triangles",L"tricont Vdat Idat Xdat Ydat ['fmt']|Vdat Idat Xdat Ydat Zdat ['fmt']|Vdat Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_tricont, mglc_tricont, false, 0},
 	{L"triplot",L"Draw surface of triangles",L"triplot Idat Xdat Ydat ['fmt']|Idat Xdat Ydat Zdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_triplot, mglc_triplot, false, 0},
 	{L"tube",L"Draw curve by tube",L"tube Ydat Rdat ['fmt' zval]|Ydat rval ['fmt' zval]|Xdat Ydat Rdat ['fmt' zval]|Xdat Ydat rval ['fmt' zval]|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat rval ['fmt']", mgls_tube, mglc_tube, false, 0},

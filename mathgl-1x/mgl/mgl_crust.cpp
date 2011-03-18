@@ -81,33 +81,20 @@ void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, 
 void mglGraph::tricont_line(mreal val, long i, long k1, long k2, long k3, const mglData &x, const mglData &y, 
 					const mglData &z, const mglData &a, mreal zVal)
 {
-	mreal d1,d2,p1[3],p2[3],c1[4],c2[4];
+	mreal d1,d2,pp[6];
 	mglColor q1,q2,q3;
 	d1 = _d(val,z.a[k1],z.a[k2]);
 	d2 = _d(val,z.a[k1],z.a[k3]);
 	if(d1<0 || d1>1 || d2<0 || d2>1)	return;
-	p1[2] = p2[2] = zVal;
+	pp[2] = pp[5] = zVal;
 
-	p1[0] = x.a[k1]*(1-d1)+x.a[k2]*d1;
-	p1[1] = y.a[k1]*(1-d1)+y.a[k2]*d1;
-	if(!ScalePoint(p1[0],p1[1],p1[2]))	return;
-	p2[0] = x.a[k1]*(1-d2)+x.a[k3]*d2;
-	p2[1] = y.a[k1]*(1-d2)+y.a[k3]*d2;
-	if(!ScalePoint(p1[0],p1[1],p1[2]))	return;
-	if(a.nx==x.nx)
-	{
-		q1 = GetC(a.a[k1]);	q2 = GetC(a.a[k2]);	q3 = GetC(a.a[k3]);
-		c1[0] = q1.r*(1-d1)+q2.r*d1;	c2[0] = q1.r*(1-d2)+q3.r*d2;
-		c1[2] = q1.g*(1-d1)+q2.g*d1;	c2[2] = q1.g*(1-d2)+q3.g*d2;
-		c1[3] = q1.b*(1-d1)+q2.b*d1;	c2[3] = q1.b*(1-d2)+q3.b*d2;
-		c1[3]=c2[3]=1;
-	}
-	else
-	{
-		q1 = GetC(a.a[i]);	c1[0]=q1.r;	c1[1]=q1.g;	c1[2]=q1.b;	c1[3]=1;
-		memcpy(c2,c1,4*sizeof(mreal));
-	}
-	line_plot(p1,p2,c1,c2);
+	pp[0] = x.a[k1]*(1-d1)+x.a[k2]*d1;
+	pp[1] = y.a[k1]*(1-d1)+y.a[k2]*d1;
+	if(!ScalePoint(pp[0],pp[1],pp[2]))	return;
+	pp[3] = x.a[k1]*(1-d2)+x.a[k3]*d2;
+	pp[4] = y.a[k1]*(1-d2)+y.a[k3]*d2;
+	if(!ScalePoint(pp[3],pp[4],pp[5]))	return;
+	curv_plot(2,pp,0);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::TriContV(const mglData &v, const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch,mreal zVal)
@@ -126,6 +113,7 @@ void mglGraph::TriContV(const mglData &v, const mglData &nums, const mglData &x,
 		k2 = long(nums.a[3*i+1]+0.1);	if(k2<0 || k2>=n)	continue;
 		k3 = long(nums.a[3*i+2]+0.1);	if(k3<0 || k3>=n)	continue;
 		val = isnan(zVal) ? v.a[k] : zVal;
+		DefColor(GetC(v.a[k]));
 		tricont_line(v.a[k], i,k1,k2,k3,x,y,z,a,val);
 		tricont_line(v.a[k], i,k2,k1,k3,x,y,z,a,val);
 		tricont_line(v.a[k], i,k3,k2,k1,x,y,z,a,val);
@@ -245,6 +233,7 @@ void mglGraph::Dots(const mglData &tr, const char *sch)
 //	mglTriangulation
 //
 //-----------------------------------------------------------------------------
+long mgl_crust_new(long n,const mreal *pp,long **nn,mreal ff);
 long mgl_crust(long n,mreal *pp,long **nn,mreal rs);
 mglData mglTriangulation(const mglData &x, const mglData &y, const mglData &z, mreal er)
 {
@@ -289,11 +278,11 @@ void mglGraph::Crust(const mglData &tr, const char *sch,mreal er)
 	Crust(tr.SubData(0), tr.SubData(1), tr.SubData(2),sch,er);
 }
 //-----------------------------------------------------------------------------
-mreal mgl_dist(mreal *p1, mreal *p2)
+mreal mgl_dist(const mreal *p1, const mreal *p2)
 {
 	return (p1[0]-p2[0])*(p1[0]-p2[0])+(p1[1]-p2[1])*(p1[1]-p2[1])+(p1[2]-p2[2])*(p1[2]-p2[2]);
 }
-mreal mgl_mult(mreal *p1, mreal *p2, mreal *p0)
+mreal mgl_mult(const mreal *p1, const mreal *p2, const mreal *p0)
 {
 	return (p1[0]-p0[0])*(p2[0]-p0[0])+(p1[1]-p0[1])*(p2[1]-p0[1])+(p1[2]-p0[2])*(p2[2]-p0[2]);
 }
@@ -390,6 +379,96 @@ long mgl_crust(long n,mreal *pp,long **nn,mreal ff)
 		m = mgl_insert_trig(i,ind[k1],ind[0],nn);
 	}
 	return m;
+}
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+#define sqr(a) (a)*(a)
+void mgl_add_trig(long i1,long i2,long n,const mreal *pp,long **nn,long *c,long *m,mreal ff,char *tt)
+{
+	register long i,im=-1,ii=-1;
+	register mreal cm=2,c2=2,co,fm,f,g=0;
+	const mreal *p1=pp+3*i1,*p2=pp+3*i2,*pi;
+	fm =(sqr(p2[0]-p1[0])+sqr(p2[1]-p1[1])+sqr(p2[2]-p1[2]));	fm*=4*fm*ff;
+	for(i=0;i<n;i++)
+	{
+		if(tt[i]>1 || i==i1 || i==i2)	continue;	// this is other surface
+		pi = pp+3*i;
+		co=(pi[0]-p1[0])*(pi[0]-p2[0])+(pi[1]-p1[1])*(pi[1]-p2[1])+(pi[2]-p1[2])*(pi[2]-p2[2]);
+		f = (sqr(pi[0]-p1[0])+sqr(pi[1]-p1[1])+sqr(pi[2]-p1[2])) *
+			(sqr(pi[0]-p2[0])+sqr(pi[1]-p2[1])+sqr(pi[2]-p2[2]));
+		co /= sqrt(f);
+		if(co<cm && f<fm && tt[i]==0)	{	g=f;	cm=co;	im=i;	}
+		if(co<c2 && f<fm && tt[i]==1)	{	g=f;	c2=co;	ii=i;	}
+//		if(co<cm && f<fm)	{	cm=co;	im=i;	}
+	}
+	bool ok=(im>0);	// try best variant
+	register long k[3]={i1,i2,im};
+	if(i2<i1)		{k[0]=i2;	k[1]=i1;}	// sort vertexes
+	if(im<k[0])		{k[2]=k[1];	k[0]=im;}
+	if(k[2]<k[1])	{i=k[1];	k[1]=k[2];	k[2]=i;	}
+	for(i=0;i<*c;i++)	// check if already exist
+		if(!memcmp(nn+3*i,k,3*sizeof(long)))
+		{	ok = false;	break;	}
+printf("B(%g,%g,%d):%ld,%ld,%ld -- %ld of %ld\n",g,fm,ok,i1,i2,im,*c,n);
+
+	if(!ok)			// try worse variant
+	{
+		im=ii;		ok=(im>0);
+		register long k[3]={i1,i2,im};
+		if(i2<i1)		{k[0]=i2;	k[1]=i1;}	// sort vertexes
+		if(im<k[0])		{k[2]=k[1];	k[0]=im;}
+		if(k[2]<k[1])	{i=k[1];	k[1]=k[2];	k[2]=i;	}
+		for(i=0;i<*c;i++)	// check if already exist
+			if(!memcmp(nn+3*i,k,3*sizeof(long)))
+			{	ok = false;	break;	}
+	}
+printf("B(%g,%g,%d):%ld,%ld,%ld -- %ld of %ld\n",g,fm,ok,i1,i2,im,*c,n);
+	if(!ok)	return;
+	
+	if(*c>=*m)			// trig is OK -- add it
+	{
+		*m+=n;
+		*nn=(long*)realloc(*nn,(*m)*sizeof(long));
+	}
+	memcpy(nn+3*(*c),k,3*sizeof(long));	*c+=1;	tt[im]=1;
+printf("Add %ld,%ld,%ld -- %ld of %ld\n",i1,i2,im,*c,n);
+	mgl_add_trig(i1,im,n,pp,nn,c,m,ff,tt);	// parse bound
+	mgl_add_trig(i2,im,n,pp,nn,c,m,ff,tt);	// NOTE: it may require HUGE stack!!!
+}
+long mgl_crust_new(long n,const mreal *pp,long **nn,mreal ff)
+{
+	register long i,j,k=0;
+	register mreal r,rm;
+	if(ff==0)	ff=1;
+	char *tt=new char[n],ok=1;	memset(tt,0,n*sizeof(char));
+	long c=0,m=n;
+	*nn = (long*)malloc(m*sizeof(long));
+
+	while(ok)
+	{
+		j=-1;
+		for(rm=FLT_MAX,i=0;i<n;i++)	// find closest
+		{
+			r = mgl_dist(pp+3*i,pp);
+			if(rm>r && !tt[i] && i!=k)	{	j=i;	rm = r;	}
+		}
+printf("closest -- %ld-%ld of %g\n",k,j,rm);
+		if(j>0)
+		{
+			tt[0]=tt[j]=1;
+			mgl_add_trig(k,j,n,pp,nn,&c,&m,ff,tt);
+		}
+printf("first iteration done -- %ld of %ld\n",m,n);
+		ok = 0;
+		for(i=0;i<n;i++)	// check if one more surface is existed
+			if(tt[k])	tt[k]=2;
+			else	{	ok=1;	k=i;	}
+	}
+	delete []tt;
+	return c;
 }
 //-----------------------------------------------------------------------------
 /// Draw triangle mesh for points in arrays \a x, \a y, \a z.

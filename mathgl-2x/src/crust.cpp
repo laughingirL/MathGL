@@ -363,16 +363,24 @@ long mgl_insert_trig(long i1,long i2,long i3,long **n)
 		*n = (long *)realloc(*n,Max*3*sizeof(long));
 	}
 	long *nn = *n;
-	register long i,k;
-	for(k=0;k<Cur;k++)
+	register long i,ii,j,jj,k1,k2;
+	if(i1>i3)	{	k1=i1;	i1=i3;	i3=k1;	}	// simple sorting
+	if(i1>i2)	{	k1=i1;	i1=i2;	i2=k1;	}
+	if(i2>i3)	{	k1=i2;	i2=i3;	i3=k1;	}
+	for(i=0;i<Cur;i++)	// check if it is unique
 	{
-		i = 3*k;
-		if((nn[i]==i1 && nn[i+1]==i2 && nn[i+2]==i3))	return Cur;
-		if((nn[i]==i1 && nn[i+1]==i3 && nn[i+2]==i2))	return Cur;
-		if((nn[i]==i2 && nn[i+1]==i3 && nn[i+2]==i1))	return Cur;
-		if((nn[i]==i2 && nn[i+1]==i1 && nn[i+2]==i3))	return Cur;
-		if((nn[i]==i3 && nn[i+1]==i2 && nn[i+2]==i1))	return Cur;
-		if((nn[i]==i3 && nn[i+1]==i1 && nn[i+2]==i2))	return Cur;
+		ii = 3*i;
+		if(nn[ii]==i1 && nn[ii+1]==i2 && nn[ii+2]==i3)	return Cur;
+/*		if(nn[ii]==i1 && nn[ii+1]==i2)
+		{
+			k2 = nn[ii+2];
+			if(i3<k2)	k1=i3;	else	{	k1=k2;	k2=i3;	}
+			for(j=i+1;j<Cur;j++)
+			{
+				jj = 3*j;
+				if()
+			}
+		}*/
 	}
 	i = 3*Cur;
 	nn[i]=i1;	nn[i+1]=i2;	nn[i+2]=i3;
@@ -394,10 +402,11 @@ long mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
 }
 //-----------------------------------------------------------------------------
 long mgl_crust(long n,mglPoint *pp,long **nn,float ff)
-{
+{	// NOTE: very slow variant!
+	// TODO: update to normal algorithm
 	register long i,j;
 	register float r,rm,rs;
-	if(ff==0)	ff=2;
+	if(ff<=0)	ff=2;
 	for(rs=0,i=0;i<n;i++)
 	{
 		for(rm = FLT_MAX,j=0;j<n;j++)
@@ -408,7 +417,7 @@ long mgl_crust(long n,mglPoint *pp,long **nn,float ff)
 		}
 		rs += sqrt(rm);
 	}
-	rs *= ff/n;	rs = rs*rs;
+	rs *= ff/n;	rs = rs*rs;		// "average" distance
 	long ind[100], set[100], ii;	// indexes of "close" points, flag that it was added and its number
 	mglPoint qq[100];	// normalized point coordinates
 	long k1,k2,k3,m=0;

@@ -633,6 +633,8 @@ int mglParse::Parse(mglGraph gr, const wchar_t *string, long pos)
 		if(*t=='$' && t[1]>='0' && t[1]<='9')	*t = ' ';
 		if(*t=='$' && t[1]>='a' && t[1]<='z')	*t = ' ';
 	}
+
+	gr.SaveState();	// save state before command execution
 	// parse arguments (parameters $1, ..., $9)
 	PutArg(string,str,false);	wcstrim_mgl(str);
 
