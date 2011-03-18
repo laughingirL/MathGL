@@ -242,38 +242,45 @@ void mglGraph::Dots(const mglData &tr, const char *sch)
 }
 //-----------------------------------------------------------------------------
 //
-//	Crust series
+//	mglTriangulation
 //
 //-----------------------------------------------------------------------------
 long mgl_crust(long n,mreal *pp,long **nn,mreal rs);
-void mglGraph::Crust(const mglData &x, const mglData &y, const mglData &z, const char *sch,mreal er)
+mglData mglTriangulation(const mglData &x, const mglData &y, const mglData &z, mreal er)
 {
+	mglData nums;
 	long n = x.nx, m;
-	if(y.nx!=n || z.nx!=n)	{	SetWarn(mglWarnDim,"Crust");	return;	}
-	static int cgid=1;	StartGroup("Crust",cgid++);
+	if(y.nx!=n || z.nx!=n)	return nums;
 	register long i;
 	mreal *pp = new mreal[3*n];
 	long *nn=0;
 	for(i=0;i<n;i++)
 	{	pp[3*i] = x.a[i];	pp[3*i+1] = y.a[i];	pp[3*i+2] = z.a[i];	}
-
 	m = mgl_crust(n,pp,&nn,er);
-	if(m<=0)	{	delete []pp;	if(nn)	free(nn);	return;	}
 
-	SetScheme(sch);
-	mglColor c;
-	mreal *cc = new mreal[4*n];
-	bool *tt = new bool[n];
-	for(i=0;i<n;i++)
+	if(m>0)
 	{
-		c = GetC(pp[3*i],pp[3*i+1],pp[3*i+2]);
-		cc[4*i] = c.r;		cc[4*i+1] = c.g;
-		cc[4*i+2] = c.b;	cc[4*i+3] = 1;
-		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+		nums.Create(3,m);
+		for(i=0;i<3*m;i++)	nums.a[i]=nn[i];
 	}
-	trigs_plot(m,nn,n,pp,cc,tt,sch && strchr(sch,'#'));
-	EndGroup();
-	delete []tt;	delete []cc;	delete []pp;	free(nn);
+	delete []pp;	free(nn);	return nums;
+}
+//-----------------------------------------------------------------------------
+mglData mglTriangulation(const mglData &x, const mglData &y, mreal er)
+{
+	mglData z(x.nx);
+	return mglTriangulation(x,y,z,er);
+}
+//-----------------------------------------------------------------------------
+//
+//	Crust series
+//
+//-----------------------------------------------------------------------------
+void mglGraph::Crust(const mglData &x, const mglData &y, const mglData &z, const char *sch,mreal er)
+{
+	if(y.nx!=x.nx || z.nx!=x.nx)	{	SetWarn(mglWarnDim,"Crust");	return;	}
+	mglData nums=mglTriangulation(x,y,z,er);
+	TriPlot(nums,x,y,z,sch);
 }
 //-----------------------------------------------------------------------------
 void mglGraph::Crust(const mglData &tr, const char *sch,mreal er)

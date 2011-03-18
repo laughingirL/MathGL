@@ -451,6 +451,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 //-----------------------------------------------------------------------------
 void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f)
 {
+	if(TickLen==0)	return;
 	float v = TickLen/sqrt(1+f);
 	mglPoint p;
 	long k1,k2,k3;
@@ -650,7 +651,26 @@ void mglCanvas::Title(const char *str,const char *font,float size)
 //-----------------------------------------------------------------------------
 void mglCanvas::Box(const char *col, bool ticks)
 {
-	// TODO: Add code here
+	mglPoint o = Org;
+	float tl=TickLen;
+	if(!ticks)	TickLen=0;
+	Org = Min;	Axis("xyz_");
+	if(TernAxis==0)
+	{
+		Org.z=Max.z;	Axis("xy_");
+		Org = Max;		Axis("xyz_");
+		Org.z=Min.z;	Axis("xy_");
+	}
+	else if(TernAxis==1)
+	{
+		Axis("t_");
+		Org.z=Max.z;	Axis("xyt_");
+		Org.x=Max.x;	Axis("z_");
+		Org.x=Min.x;	Org.y=Max.y;	Axis("z_");
+	}
+	else if(TernAxis==2)
+		Axis("tuv_");
+	Org=o;	TickLen=tl;
 }
 //-----------------------------------------------------------------------------
 float mglCanvas::text_plot(long p,const wchar_t *text,const char *fnt,float size,float sh)

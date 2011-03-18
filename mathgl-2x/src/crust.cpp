@@ -297,46 +297,51 @@ void mgl_dots_a_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintpt
 	mgl_dots_a(_GR_, _DA_(x),_DA_(y),_DA_(z),_DA_(a),s);	delete []s;	}
 //-----------------------------------------------------------------------------
 //
-//	Crust series
+//	mglTriangulation
 //
 //-----------------------------------------------------------------------------
-long mgl_crust(long n,mglPoint *pp,long **nn,float rs);
-void mgl_crust(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, float er)
+long mgl_crust(long n,mglPoint *pp,long **nn,float ff);
+HMDT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z, float er)
 {
+	mglData *nums=new mglData;
 	long n = x->GetNx(), m;
-	if(y->GetNx()!=n || z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Crust");	return;	}
-	static int cgid=1;	gr->StartGroup("Crust",cgid++);
+	if(y->GetNx()!=n || z->GetNx()!=n)	return nums;
 	register long i;
 	mglPoint *pp = new mglPoint[n];
 	long *nn=0;
 	for(i=0;i<n;i++)	pp[i] = mglPoint(x->v(i), y->v(i), z->v(i));
-
 	m = mgl_crust(n,pp,&nn,er);
-	if(m<=0)	{	delete []pp;	if(nn)	free(nn);	return;	}
 
-	long *kk = new long[n];
-	long ss=gr->AddTexture(sch);
-	float c;
-	for(i=0;i<n;i++)
+	if(m>0)
 	{
-		c = gr->GetC(ss,pp[i].z);	gr->ScalePoint(pp[i]);
-		kk[i] = gr->AddPntN(pp[i],c,mglPoint(NAN));
+		nums->Create(3,m);
+		for(i=0;i<3*m;i++)	nums->a[i]=nn[i];
 	}
-	bool wire = sch && strchr(sch,'#');
-	register long j1,j2,j3;
-	for(i=0;i<m;i++)
-	{
-		j1 = nn[3*i];	j2 = nn[3*i+1];	j3 = nn[3*i+2];
-		if(wire)
-		{
-			gr->line_plot(kk[j1],kk[j2],true);
-			gr->line_plot(kk[j1],kk[j3],true);
-			gr->line_plot(kk[j3],kk[j2],true);
-		}
-		else	gr->trig_plot(kk[j1],kk[j2],kk[j3]);
-	}
-	gr->EndGroup();
-	delete []kk;	delete []pp;	free(nn);
+	delete []pp;	free(nn);	return nums;
+}
+//-----------------------------------------------------------------------------
+HMDT mgl_triangulation_2d(HCDT x, HCDT y, float er)
+{
+	mglData z(x->GetNx());
+	return mgl_triangulation_3d(x,y,&z,er);
+}
+//-----------------------------------------------------------------------------
+uintptr_t mgl_triangulation_3d_(uintptr_t *x, uintptr_t *y, uintptr_t *z, float *er)
+{	return uintptr_t(mgl_triangulation_3d(_DA_(x),_DA_(y),_DA_(z),*er));	}
+uintptr_t mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y, float *er)
+{	return uintptr_t(mgl_triangulation_2d(_DA_(x),_DA_(y),*er));	}
+//-----------------------------------------------------------------------------
+//
+//	Crust series
+//
+//-----------------------------------------------------------------------------
+void mgl_crust(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, float er)
+{
+	if(y->GetNx()!=x->GetNx() || z->GetNx()!=x->GetNx())
+	{	gr->SetWarn(mglWarnDim,"Crust");	return;	}
+	HMDT nums = mgl_triangulation_3d(x, y, z, er);
+	mgl_triplot_xyzc(gr,nums,x,y,z,z,sch);
+	mgl_delete_data(nums);
 }
 //-----------------------------------------------------------------------------
 void mgl_crust_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, float *er,int l)

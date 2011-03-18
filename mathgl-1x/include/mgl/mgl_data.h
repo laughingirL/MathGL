@@ -371,6 +371,9 @@ mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, mreal dt=0.1, mreal tm
 mglData mglJacobian(const mglData &x, const mglData &y);
 /// Calculate Jacobian determinant for D{x(u,v,w), y(u,v,w), z(u,v,w)}
 mglData mglJacobian(const mglData &x, const mglData &y, const mglData &z);
+// Do something like Delone triangulation
+mglData mglTriangulation(const mglData &x, const mglData &y, const mglData &z, mreal er);
+mglData mglTriangulation(const mglData &x, const mglData &y, mreal er);
 //-----------------------------------------------------------------------------
 #endif
 #endif

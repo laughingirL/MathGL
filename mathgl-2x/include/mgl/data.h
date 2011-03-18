@@ -165,6 +165,9 @@ HMDT mgl_transform_a(HCDT am, HCDT ph, const char *tr);
 HMDT mgl_transform(HCDT re, HCDT im, const char *tr);
 void mgl_data_fourier(HMDT re, HMDT im, const char *dir);
 HMDT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir);
+
+HMDT mgl_triangulation_3d(HCDT x, HCDT y, HCDT z, float er);
+HMDT mgl_triangulation_2d(HCDT x, HCDT y, float er);
 /*****************************************************************************/
 /*		Data creation functions												 */
 /*****************************************************************************/
@@ -278,6 +281,9 @@ uintptr_t mgl_transform_a_(uintptr_t *am, uintptr_t *ph, const char *tr, int);
 uintptr_t mgl_transform_(uintptr_t *re, uintptr_t *im, const char *tr, int);
 void mgl_data_fourier_(uintptr_t *re, uintptr_t *im, const char *dir, int l);
 uintptr_t mgl_data_stfa_(uintptr_t *re, uintptr_t *im, int *dn, char *dir, int);
+
+uintptr_t mgl_triangulation_3d_(uintptr_t *x, uintptr_t *y, uintptr_t *z, float *er);
+uintptr_t mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y, float *er);
 /*****************************************************************************/
 int mgl_data_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n);
 void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l);
@@ -682,6 +688,11 @@ inline mglData mglJacobian(const mglData &x, const mglData &y)
 /// Calculate Jacobian determinant for D{x(u,v,w), y(u,v,w), z(u,v,w)}
 inline mglData mglJacobian(const mglData &x, const mglData &y, const mglData &z)
 {	return mglData(true, mgl_jacobian_3d(&x, &y, &z));	}
+// Do something like Delone triangulation
+inline mglData mglTriangulation(const mglData &x, const mglData &y, const mglData &z, float er=0)
+{	return mglData(true,mgl_triangulation_3d(&x,&y,&z,er));	}
+inline mglData mglTriangulation(const mglData &x, const mglData &y, float er=0)
+{	return mglData(true,mgl_triangulation_2d(&x,&y,er));	}
 //-----------------------------------------------------------------------------
 #endif
 #endif
