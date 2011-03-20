@@ -28,7 +28,7 @@ mglBase::mglBase()
 	pntN=(float *)malloc(8*numC*sizeof(float));
 	txt = (mglTexture *)malloc(2*sizeof(mglTexture));
 	// Always create default palette txt[0] and default scheme txt[1]
-	txt[0].Set(MGL_DEF_PAL,-1);		txt[1].Set("BbcyrR");	numT=2;
+	txt[0].Set(MGL_DEF_PAL,-1);		txt[1].Set("BbcyrR",1);	numT=2;
 	last_style[0]='k';	last_style[1]='-';	last_style[2]='0';	last_style[3]=last_style[4]=0;
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
 }
@@ -485,43 +485,38 @@ void mglColor::Set(char p, float bright)
 //-----------------------------------------------------------------------------
 void mglTexture::Set(const char *s, int smooth, float alpha)
 {
+	bool sm;		///< Use smoothed color
+	mglColor *c;	///< Colors itself
+
 	// NOTE: New syntax -- colors are CCCCC or {CNCNCCCN}; options inside []
 	if(!s || !s[0])	return;
 	if(strchr(s,'|') && !smooth)	smooth = -1;
 	sm = smooth>=0;
 	register long i,j=0,m=0,l=strlen(s);
-	const char *col = "kwrgbcymhWRGBCYMHlenpquLENPQU";
+	const char *cols = "kwrgbcymhWRGBCYMHlenpquLENPQU";
 	for(i=0;i<l;i++)		// find number of colors
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
-		if(strchr(col,s[i]) && j<1)	n++;
+		if(strchr(cols,s[i]) && j<1)	n++;
 	}
-	if(c)	delete []c;
-	if(id)	delete []id;
 	if(!n)	return;
 	c = new mglColor[2*n];
-	id= new char[2*n+2];
-	strcpy(id,"{");
-	char cc[3]={0,0,0};
 	bool map = (smooth==2);
 	for(i=j=n=0;i<l;i++)	// fill colors
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
 		if(j>0 && s[i]=='M')	map=true;
 		if(s[i]=='{')	m++;	if(s[i]=='}')	m--;
-		if(strchr(col,s[i]) && j<1)		// this is color
+		if(strchr(cols,s[i]) && j<1)		// this is color
 		{
-			cc[0]=s[i];	cc[1]='5';
 			if(m>0 && s[i+1]>'0' && s[i+1]<='9')// ext color
-			{	c[2*n] = mglColor(s[i],(s[i+1]-'0')/5.f);
-				cc[1]=s[i+1];	i++;	}
+			{	c[2*n] = mglColor(s[i],(s[i+1]-'0')/5.f);	i++;	}
 			else	c[2*n] = mglColor(s[i]);	// usual color
-			n++;	strcat(id,cc);
+			n++;
 		}
 		// NOTE: User can change alpha if it placed like {AN}
 		if(s[i]=='A' && j<1 && m>0 && s[i+1]>'0' && s[i+1]<='9')
-		{	cc[0]=s[i];	cc[1]=s[i+1];	strcat(id,cc);
-			alpha = 0.1*(s[i+1]-'0');	i++;	}
+		{	alpha = 0.1*(s[i+1]-'0');	i++;	}
 	}
 	for(i=0;i<n;i++)	// default texture
 	{	c[2*i+1]=c[2*i];	c[2*i].a=alpha;	c[2*i+1].a=sm?0:alpha;	}
@@ -534,49 +529,47 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 		else
 		{	c[1]=c[4];	c[3]=c[6];	n=2;	}
 	}
+	register float u;
+	for(i=0;i<256;i++)
+	{
+		u = (n-1)*i/256.;	j = long(u);	u-=j;
+		if(!sm || j>=n-1)
+		{	col[2*i] = c[2*j];	col[2*i+1] = c[2*j+1];	}
+		else
+		{
+			col[2*i] = c[2*j]*(1-u)+c[2*j+2]*u;
+			col[2*i+1]=c[2*j+1]*(1-u)+c[2*j+3]*u;
+		}
+	}
+	col[512]=col[510];	col[513]=col[511];
+	delete []c;
 }
 //-----------------------------------------------------------------------------
 void mglTexture::GetC(float u,float v,float cc[4])
 {
-	if(!c || n<1)	{	cc[0]=cc[1]=cc[2]=NAN;	return;	}
-	mglColor c1,c2;
-	register long m=n-1, i;
-	if(sm)
-	{
-		u = fmod(u,1);	i=long(u*m)%n;
-		if(i<m)
-		{
-			c1 = c[2*i]*(1-u)+c[2*i+2]*u;
-			c2 = c[2*i+1]*(1-u)+c[2*i+3]*u;
-		}
-		else	{	c1 = c[2*m];	c2 = c[2*m+1];	}
-	}
-	else
-	{
-		m = 2*(long(u*(n-1)+0.5)%n);
-		c1 = c[m];	c2 = c[m+1];
-	}
-	c1 = c1*(1-v)+c2*v;
-	cc[0]=c1.r;	cc[1]=c1.g;	cc[2]=c1.b;	cc[3]=c1.a;
+	u -= long(u);
+	register long i=long(256*u);
+	mglColor *s=col+2*i;
+	u = u*256-i;
+	cc[0] = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
+	cc[1] = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
+	cc[2] = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
+	cc[3] = (s[0].a*(1-u)+s[2].a*u)*(1-v) + (s[1].a*(1-u)+s[3].a*u)*v;
 }
 //-----------------------------------------------------------------------------
 bool mglTexture::IsSame(mglTexture &t)
-{
-	if(n!=t.n || sm!=t.sm || !t.c)	return false;
-	for(long i=0;i<2*n;i++)	if(c[i]!=t.c[i])	return false;
-	return true;
-}
+{	return !memcmp(col,t.col,514*sizeof(mglColor));	}
 //-----------------------------------------------------------------------------
 long mglBase::AddTexture(const char *cols, int smooth)
 {
-	mglTexture t;	t.Set(cols,smooth);
-	if(t.n==0)	return smooth<0 ? 0:1;
+	mglTexture *t=new mglTexture;	t->Set(cols,smooth);
+	if(t->n==0)	return smooth<0 ? 0:1;
 	// check if already exist
-	for(long i=0;i<numT;i++)	if(t.IsSame(txt[i]))	return i;
+	for(long i=0;i<numT;i++)	if(t->IsSame(txt[i]))	return i;
 	// create new one
 	txt = (mglTexture *)realloc(txt,(numT+1)*sizeof(mglTexture));
-	memcpy(txt+numT, &t, sizeof(mglTexture));	numT++;
-	memset(&t, 0, sizeof(mglTexture));
+	memcpy(txt+numT, t, sizeof(mglTexture));	numT++;
+	delete t;
 	return numT-1;
 }
 //-----------------------------------------------------------------------------
@@ -586,29 +579,26 @@ float mglBase::AddTexture(char col)
 	register long i,j;
 	if(!c.Valid())	return -1;
 	// first lets try an existed one
-	for(i=0;i<numT;i++)	for(j=0;j<txt[i].n;j++)
-		if(c==txt[i].c[j])	return i+j/MGL_FLT_EPS/(txt[i].n-1.);
+	for(i=0;i<numT;i++)	for(j=0;j<256;j++)
+		if(c==txt[i].col[2*j])	return i+j/255.;
 	// add new texture
-	mglTexture t;
-	t.c=new mglColor[2];	t.id=new char[3];
-	t.n=1;			t.c[0]=t.c[1]=c;
-	t.id[0]=col;	t.id[1]='5';	t.id[2]=0;
 	txt = (mglTexture *)realloc(txt,(numT+1)*sizeof(mglTexture));
-	memcpy(txt+numT, &t, sizeof(mglTexture));	numT++;
-	memset(&t, 0, sizeof(mglTexture));
+	mglTexture *t=txt+numT;
+	for(i=0;i<514;i++)	t->col[i]=c;	numT++;
 	return numT-1;
 }
 //-----------------------------------------------------------------------------
 //		Coloring and palette
 //-----------------------------------------------------------------------------
-float mglBase::NextColor(long id)
+float mglBase::NextColor(long &id)
 {	// NOTE: I suppose that texture contain not more than 256 colors!
 	long i=abs(id)/256, n=txt[i].n, p=abs(id)&0xff;
-	if(id>=0)	p=(p+1)%n;
-//	last_style[0]=c;	// TODO: last_style !!!
+	if(id>=0)	{	p=(p+1)%n;	id = 256*i+p;	}
+	last_style[0]=MGL_DEF_PAL[p%strlen(MGL_DEF_PAL)];	// TODO: last_style correctly !!!
 	CDef = i + (n>0 ? 0.99*p/(n-1.) : 0);
 	return CDef;
 }
+//-----------------------------------------------------------------------------
 char mglBase::SetPenPal(const char *p, long *Id)
 {
 	char mk=0, pp=0;
@@ -664,8 +654,9 @@ char mglBase::SetPenPal(const char *p, long *Id)
 		}
 	}
 	last_style[3]=mk;	SetPen(pp, PenWidth);
-	CDef = AddTexture(p,-1);	CDef = CDef<0 ? 0:1;
-	if(Id)	*Id=long(CDef)*256;
+	long tt;
+	tt = AddTexture(p,-1);	CDef = tt;
+	if(Id)	*Id=long(tt)*256+txt[tt].n-1;
 	return mk;
 }
 //-----------------------------------------------------------------------------

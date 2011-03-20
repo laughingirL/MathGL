@@ -178,12 +178,12 @@ void mglCanvas::WriteEPS(const char *fname,const char *descr)
 				mgl_printf(fp, gz, "/sm {-%g} def\n",MarkSize*0.4*font_factor);
 			}
 		}
-		else if(P[i].type==2)	// quad
-			mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll cp %sfill\n",
-						pntN[8*P[i].n1], pntN[8*P[i].n1+1], pntN[8*P[i].n2], pntN[8*P[i].n2+1],
-						pntN[8*P[i].n3], pntN[8*P[i].n3+1], pntN[8*P[i].n4], pntN[8*P[i].n4+1], str);
-		else if(P[i].type==3)	// trig
+		else if(P[i].type==3)	// quad
 			mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll %g %g ll cp %sfill\n",
+						pntN[8*P[i].n1], pntN[8*P[i].n1+1], pntN[8*P[i].n2], pntN[8*P[i].n2+1],
+						pntN[8*P[i].n4], pntN[8*P[i].n4+1], pntN[8*P[i].n3], pntN[8*P[i].n3+1], str);
+		else if(P[i].type==2)	// trig
+			mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll cp %sfill\n",
 						pntN[8*P[i].n1], pntN[8*P[i].n1+1], pntN[8*P[i].n2], pntN[8*P[i].n2+1],
 						pntN[8*P[i].n3], pntN[8*P[i].n3+1], str);
 		else if(P[i].type==1)	// line
@@ -384,8 +384,8 @@ void mglCanvas::WriteSVG(const char *fname,const char *descr)
 	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
 }
 //-----------------------------------------------------------------------------
-#define xx(i,n)	P[i].m ? pntN[8*P[i].n]   : pntC[4*P[i].n]
-#define yy(i,n)	P[i].m ? pntN[8*P[i].n+1] : pntC[4*P[i].n+1]
+#define xx(i,n)	(P[i].m ? pntN[8*P[i].n]   : pntC[4*P[i].n])
+#define yy(i,n)	(P[i].m ? pntN[8*P[i].n+1] : pntC[4*P[i].n+1])
 void mglCanvas::put_line(void *fp, bool gz, long i, float wp, float *cp,int st, const char *ifmt, const char *nfmt, bool neg)
 {
 	long k = i,j;	// first point

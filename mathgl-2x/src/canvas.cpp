@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
-	memset(this,0,sizeof(mglCanvas));		SetSize(w,h);
+	G=0;	SetSize(w,h);	Quality = MGL_DRAW_NORM;
 	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
@@ -90,7 +90,7 @@ float mglCanvas::FindOptOrg(char dir, int ind)
 		// find point with minimal y
 		register long i,j;
 		for(i=j=0;i<8;i++)	if(pp[i].y<pp[j].y)	j=i;
-		j--;	pp[0]=pp[j];
+		pp[0]=pp[j];
 		// find max angle and left point
 		// first select 3 closest points
 		pp[1]=nn[j];	pp[1].x=1-pp[1].x;

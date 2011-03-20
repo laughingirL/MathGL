@@ -363,7 +363,7 @@ long mgl_insert_trig(long i1,long i2,long i3,long **n)
 		*n = (long *)realloc(*n,Max*3*sizeof(long));
 	}
 	long *nn = *n;
-	register long i,ii,j,jj,k1,k2;
+	register long i,ii,k1;
 	if(i1>i3)	{	k1=i1;	i1=i3;	i3=k1;	}	// simple sorting
 	if(i1>i2)	{	k1=i1;	i1=i2;	i2=k1;	}
 	if(i2>i3)	{	k1=i2;	i2=i3;	i3=k1;	}

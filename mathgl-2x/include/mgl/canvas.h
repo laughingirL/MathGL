@@ -73,7 +73,7 @@ public:
 	inline void SetPlotFactor(float val)
 	{	PlotFactor = val>0?val:1.55;	AutoPlotFactor=(val<=0);	}
 	/// Set plot quality
-	inline void SetQuality(int qual=2)	{	Quality=qual;	}
+	inline void SetQuality(int qual=MGL_DRAW_NORM)	{	Quality=qual;	}
 
 	///< Set default parameter for plotting
 	void DefaultPlotParam();

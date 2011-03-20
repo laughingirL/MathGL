@@ -646,7 +646,6 @@ void mgl_stem_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 
 	float z0=gr->GetOrgZ('x');
 	char mk=gr->SetPenPal(pen,&pal);	gr->ReserveC(2*n*m);
-	bool t1,t2;
 	mglPoint p1,p2;
 	long n1,n2;
 	for(j=0;j<m;j++)
@@ -656,11 +655,11 @@ void mgl_stem_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 		for(i=0;i<n;i++)
 		{
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), z->v(i-1,mz));
-			t1 = gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
-			if(mk && t1)	gr->mark_plot(n1,mk);
+			gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+			if(mk)	gr->mark_plot(n1,mk);
 			p2 = mglPoint(x->v(i,mx), y->v(i,my), z0);
-			t2 = gr->ScalePoint(p2);	n2 = gr->AddPntC(p2,gr->CDef);
-			if(t1 && t2)	gr->line_plot(n1,n2);
+			gr->ScalePoint(p2);	n2 = gr->AddPntC(p2,gr->CDef);
+			gr->line_plot(n1,n2);
 		}
 	}
 	gr->EndGroup();
@@ -677,7 +676,6 @@ void mgl_stem_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 	float zVal = gr->Min.z;
 	float y0=gr->GetOrgY('x');
 	char mk=gr->SetPenPal(pen,&pal);	gr->ReserveC(2*n*m);
-	bool t1,t2;
 	mglPoint p1,p2;
 	long n1,n2;
 	for(j=0;j<m;j++)
@@ -687,11 +685,11 @@ void mgl_stem_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 		for(i=0;i<n;i++)
 		{
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), zVal);
-			t1 = gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
-			if(mk && t1)	gr->mark_plot(n1,mk);
+			gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+			if(mk)	gr->mark_plot(n1,mk);
 			p2 = mglPoint(x->v(i,mx), y0, zVal);
-			t2 = gr->ScalePoint(p2);	n2 = gr->AddPntC(p2,gr->CDef);
-			if(t1 && t2)	gr->line_plot(n1,n2);
+			gr->ScalePoint(p2);	n2 = gr->AddPntC(p2,gr->CDef);
+			gr->line_plot(n1,n2);
 		}
 	}
 	gr->EndGroup();
@@ -775,12 +773,12 @@ void mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 			p2 = mglPoint(x1,y1,z0);	gr->ScalePoint(p2);	n2 = gr->AddPntN(p2,c,nn);
 			p3 = mglPoint(x2,y2,z0);	gr->ScalePoint(p3);	n3 = gr->AddPntN(p3,c,nn);
 			p4 = mglPoint(x2,y2,zz);	gr->ScalePoint(p4);	n4 = gr->AddPntN(p4,c,nn);
-			gr->quad_plot(n1,n2,n3,n4);
 			if(wire)
 			{
 				gr->line_plot(n1,n2,true);	gr->line_plot(n1,n4,true);
 				gr->line_plot(n3,n2,true);	gr->line_plot(n3,n4,true);
 			}
+			else	gr->quad_plot(n1,n2,n4,n3);
 		}
 	}
 	gr->EndGroup();	delete []dd;
@@ -829,12 +827,12 @@ void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 			p2 = mglPoint(x1,y0,zVal);	gr->ScalePoint(p2);	n2 = gr->AddPntN(p2,c,nn);
 			p3 = mglPoint(x2,y0,zVal);	gr->ScalePoint(p3);	n3 = gr->AddPntN(p3,c,nn);
 			p4 = mglPoint(x2,yy,zVal);	gr->ScalePoint(p4);	n4 = gr->AddPntN(p4,c,nn);
-			gr->quad_plot(n1,n2,n3,n4);
 			if(wire)
 			{
 				gr->line_plot(n1,n2,true);	gr->line_plot(n1,n4,true);
 				gr->line_plot(n3,n2,true);	gr->line_plot(n3,n4,true);
 			}
+			else	gr->quad_plot(n1,n2,n4,n3);
 		}
 	}
 	gr->EndGroup();	delete []dd;
@@ -910,12 +908,12 @@ void mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen)
 			p2 = mglPoint(xx,y2,zVal);	gr->ScalePoint(p2);	n2 = gr->AddPntN(p2,c,nn);
 			p3 = mglPoint(x0,y2,zVal);	gr->ScalePoint(p3);	n3 = gr->AddPntN(p3,c,nn);
 			p4 = mglPoint(x0,y1,zVal);	gr->ScalePoint(p4);	n4 = gr->AddPntN(p4,c,nn);
-			gr->quad_plot(n1,n2,n3,n4);
 			if(wire)
 			{
 				gr->line_plot(n1,n2,true);	gr->line_plot(n1,n4,true);
 				gr->line_plot(n3,n2,true);	gr->line_plot(n3,n4,true);
 			}
+			else	gr->quad_plot(n1,n2,n4,n3);
 		}
 	}
 	gr->EndGroup();	delete []dd;
@@ -1246,7 +1244,9 @@ void mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen)
 	if(x->GetNx()!=n || z->GetNx()!=n || r->GetNx()!=n)
 	{	gr->SetWarn(mglWarnDim,"Tube");	return;	}
 	static int cgid=1;	gr->StartGroup("Tube",cgid++);
-	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;	m = r->GetNy() > m ? r->GetNy() : m;
+	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
+	m = z->GetNy() > m ? z->GetNy() : m;
+	m = r->GetNy() > m ? r->GetNy() : m;
 
 	const int num=41;
 	gr->SetPenPal(pen,&pal);
@@ -1275,7 +1275,7 @@ void mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen)
 		for(k=0;k<num-1;k++)	for(i=0;i<n-1;i++)
 		{
 			i0 = pos+j*n*num+k+num*i;
-			gr->quad_plot(i0,i0+1,i0+1+num,i0+num);
+			gr->quad_plot(i0,i0+1,i0+num,i0+1+num);
 		}
 	}
 	gr->EndGroup();

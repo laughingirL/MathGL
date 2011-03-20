@@ -31,8 +31,8 @@ void mglCanvas::SetSize(int w,int h)
 	C = new unsigned char[w*h*12];
 	Z = new float[w*h*3];	// only 3 planes
 	OI= new int[w*h];
-	Clf();
 	InPlot(0,1,0,1);	SetDrawReg(1,1,0);	Persp = 0;
+	Clf();
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::PostScale(mglPoint &p)
@@ -190,8 +190,8 @@ void mglCanvas::Clf(mglColor Back)
 //	col2int(Back,1,BDef);
 	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;	BDef[2]=Back.b*255;	BDef[3]=0;
 	register long i,n=Width*Height;
-	memset(C,0,32*n);	memset(OI,0,n*sizeof(int));
-	for(i=0;i<8*n;i++)	Z[i] = -1e20f;	// TODO: Parallelization ?!?
+	memset(C,0,12*n);	memset(OI,0,n*sizeof(int));
+	for(i=0;i<3*n;i++)	Z[i] = -1e20f;	// TODO: Parallelization ?!?
 	Finished = false;
 }
 //-----------------------------------------------------------------------------
@@ -347,7 +347,7 @@ void mglCanvas::quad_draw(const float *p1, const float *p2, const float *p3, con
 	y2 = long(fmax(fmax(p1[1],p2[1]),fmax(p3[1],p4[1])));
 	x1=x1>dr_nx1?x1:dr_nx1;	x2=x2<dr_nx2?x2:dr_nx2-1;
 	y1=y1>dr_ny1?y1:dr_ny1;	y2=y2<dr_ny2?y2:dr_ny2-1;
-	if(x1>=x2 || y1>=y2)	return;
+	if(x1>x2 || y1>y2)	return;
 
 	dd = d1[0]*d2[1]-d1[1]*d2[0];
 	dsx =-4*(d2[1]*d3[0] - d2[0]*d3[1])*d1[1];
@@ -416,7 +416,7 @@ void mglCanvas::trig_draw(const float *p1, const float *p2, const float *p3, boo
 	y2 = long(fmax(fmax(p1[1],p2[1]),p3[1]));
 	x1=x1>dr_nx1?x1:dr_nx1;	x2=x2<dr_nx2?x2:dr_nx2-1;
 	y1=y1>dr_ny1?y1:dr_ny1;	y2=y2<dr_ny2?y2:dr_ny2-1;
-	if(x1>=x2 || y1>=y2)	return;
+	if(x1>x2 || y1>y2)	return;
 	// default normale
 	mglPoint nr = mglPoint(p2[0]-p1[0],p2[1]-p1[1],p2[2]-p1[2])^mglPoint(p3[0]-p1[0],p3[1]-p1[1],p3[2]-p1[2]);
 
@@ -456,7 +456,7 @@ void mglCanvas::line_draw(const float *p1, const float *p2)
 	x1=x1>dr_nx1?x1:dr_nx1;	x2=x2<dr_nx2?x2:dr_nx2-1;
 	y1=y1>dr_ny1?y1:dr_ny1;	y2=y2<dr_ny2?y2:dr_ny2-1;
 	dd = sqrt(d[0]*d[0] + d[1]*d[1]);
-	if(x1>=x2 || y1>=y2 || dd<1e-5)	return;
+	if(x1>x2 || y1>y2 || dd<1e-5)	return;
 
 	dxv = d[1]/dd;	dyv =-d[0]/dd;
 	dxu = d[0]/dd;	dyu = d[1]/dd;
@@ -528,13 +528,19 @@ void mglCanvas::fast_draw(const float *p1, const float *p2)
 	x2 = long(fmax(p1[0],p2[0]));	y2 = long(fmax(p1[1],p2[1]));
 	x1=x1>dr_nx1?x1:dr_nx1;	x2=x2<dr_nx2?x2:dr_nx2-1;
 	y1=y1>dr_ny1?y1:dr_ny1;	y2=y2<dr_ny2?y2:dr_ny2-1;
-	if(x1>=x2 || y1>=y2)	return;
+	if(x1>x2 || y1>y2)	return;
 
 	register long i;
-	if(hor)	for(i=x1;i<=x2;i++)
-		pnt_plot(i, p1[1]+d[1]*(i-p1[0])/d[0], p1[2]+d[2]*(i-p1[0])/d[0]+pw, r);
-	else	for(i=y1;i<=y2;i++)
-		pnt_plot(p1[0]+d[0]*(i-p1[1])/d[1], i, p1[2]+d[2]*(i-p1[1])/d[1]+pw, r);
+	if(hor)
+	{
+		for(i=x1;i<=x2;i++)
+			pnt_plot(i, p1[1]+d[1]*(i-p1[0])/d[0], p1[2]+d[2]*(i-p1[0])/d[0]+pw, r);
+	}
+	else
+	{
+		for(i=y1;i<=y2;i++)
+			pnt_plot(p1[0]+d[0]*(i-p1[1])/d[1], i, p1[2]+d[2]*(i-p1[1])/d[1]+pw, r);
+	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_draw(const float *p)

@@ -27,9 +27,33 @@
 #include <mgl/mgl.h>
 //#include <mgl/mgl_idtf.h>
 #include "mgl/parser.h"
+void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0);
+void mgls_prepare2d(mglData *a, mglData *b=0, mglData *v=0);
+void mgls_prepare3d(mglData *a, mglData *b=0);
+void mgls_prepare2v(mglData *a, mglData *b);
+void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
+/*	mglData b(3,2);
+	long i,j,i0;
+	float x,y;
+	for(j=0;j<2;j++)	for(i=0;i<3;i++)
+	{
+		x = i/2.;	y = j;	i0 = i+3*j;
+		b.a[i0] = 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
+	}*/
+
+	mglData ys(3,2);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+	mglData y;	mgls_prepare1d(&y);
+	mglData a;	mgls_prepare2d(&a);
+	gr->Light(true);
+	gr->Rotate(40,60);
+//	gr->Box();
+	gr->Tile(a);
+//	gr->Plot(y);
+	return 0;
+
 	mglParse par;
 	par.AllowSetSize = true;
 	FILE *fp=fopen("test.mgl","rt");
@@ -774,7 +798,7 @@ void smgl_sample1(mglGraph *gr)	// transformation
 	gr->Rotate(0,0); // for unrotate in IDTF
 }
 //-----------------------------------------------------------------------------
-void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0)
+void mgls_prepare1d(mglData *y, mglData *y1, mglData *y2, mglData *x1, mglData *x2)
 {
 	register long i,n=50;
 	if(y)	y->Create(n,3);
@@ -969,7 +993,7 @@ void smgl_pie_chart(mglGraph *gr)
 	gr->Box();	gr->Chart(ch,"bgr cmy#");
 }
 //-----------------------------------------------------------------------------
-void mgls_prepare2d(mglData *a, mglData *b=0, mglData *v=0)
+void mgls_prepare2d(mglData *a, mglData *b, mglData *v)
 {
 	register long i,j,n=50,m=40,i0;
 	if(a)	a->Create(n,m);		if(b)	b->Create(n,m);
@@ -1126,7 +1150,7 @@ void smgl_surfa(mglGraph *gr)
 	gr->Box();	gr->SurfA(a,b);
 }
 //-----------------------------------------------------------------------------
-void mgls_prepare3d(mglData *a, mglData *b=0)
+void mgls_prepare3d(mglData *a, mglData *b)
 {
 	register long i,j,k,n=60,m=50,l=40,i0;
 	if(a)	a->Create(n,m,l);		if(b)	b->Create(n,m,l);

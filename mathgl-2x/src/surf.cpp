@@ -26,25 +26,23 @@ void mesh_plot(mglBase *gr, long pos, long n, long m, int how)
 {
 	int d = gr->MeshNum>0 ? gr->MeshNum+1 : 1;
 	register long i,j,i0;
-	if(how&1)	for(i=0;i<n;i+=d)	for(j=0;j<m;j++)
+	if(how&1)	for(j=0;j<m;j++)	for(i=0;i<n-1;i+=d)
 	{
-		i0 = pos+j+m*i;
-		gr->line_plot(i0,i0+1);
+		i0 = pos+n*j+i;	gr->line_plot(i0,i0+1);
 	}
-	if(how&2)	for(i=0;i<n;i++)	for(j=0;j<m;j+=d)
+	if(how&2)	for(j=0;j<m-1;j+=d)	for(i=0;i<n;i++)
 	{
-		i0 = pos+j+m*i;
-		gr->line_plot(i0,i0+m);
+		i0 = pos+n*j+i;	gr->line_plot(i0,i0+n);
 	}
 }
 //-----------------------------------------------------------------------------
 void surf_plot(mglBase *gr, long pos, long n, long m)
 {
 	register long i,j,i0;
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)
+	for(j=0;j<m-1;j++)	for(i=0;i<n-1;i++)
 	{
-		i0 = pos+j+m*i;
-		gr->quad_plot(i0,i0+1,i0+1+m,i0+m);
+		i0 = pos+n*j+i;
+		gr->quad_plot(i0,i0+1,i0+n,i0+1+n);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -130,7 +128,8 @@ void mgl_mesh_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, z->v(i,j,k));
-			c = gr->GetC(ss,p.z);	gr->ScalePoint(p);	gr->AddPntC(p,c);
+			c = gr->GetC(ss,p.z);	gr->ScalePoint(p);
+			gr->AddPntC(p,c);
 		}
 		mesh_plot(gr,pos+k*n*m,n,m,3);
 	}
@@ -412,7 +411,7 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 		pos = gr->GetPosN();
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)	// ñîçäàåì ìàññèâ òî÷åê
 		{
-			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).y, zVal);
+			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
 			zz = z->v(i,j,k);	c = gr->GetC(ss,zz);
 			gr->ScalePoint(p);	if(isnan(zz))	p.x = NAN;
 			gr->AddPntN(p,c,s);

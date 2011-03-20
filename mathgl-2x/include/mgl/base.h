@@ -133,38 +133,36 @@ struct mglColor
 	/// Set color from symbolic id
 	void Set(char p, float bright=1);
 	/// Copy color from other one
-	bool operator==(const mglColor &c)
+	inline bool operator==(const mglColor &c)
 	{	return (r==c.r && g==c.g && b==c.b && a==c.a);	}
-	bool operator!=(const mglColor &c)
+	inline bool operator!=(const mglColor &c)
 	{	return (r!=c.r || g!=c.g || b!=c.b || a!=c.a);	}
 };
 inline mglColor operator+(const mglColor &a, const mglColor &b)
-{	return mglColor(a.r+b.r, a.g+b.g, a.b+b.b);	}
+{	return mglColor(a.r+b.r, a.g+b.g, a.b+b.b, a.a+b.a);	}
 inline mglColor operator-(const mglColor &a, const mglColor &b)
-{	return mglColor(a.r-b.r, a.g-b.g, a.b-b.b);	}
+{	return mglColor(a.r-b.r, a.g-b.g, a.b-b.b, a.a-b.a);	}
 inline mglColor operator*(const mglColor &a, float b)
-{	return mglColor(a.r*b, a.g*b, a.b*b);	}
+{	return mglColor(a.r*b, a.g*b, a.b*b, a.a*b);	}
 inline mglColor operator*(float b, const mglColor &a)
-{	return mglColor(a.r*b, a.g*b, a.b*b);	}
+{	return mglColor(a.r*b, a.g*b, a.b*b, a.a*b);	}
 inline mglColor operator/(const mglColor &a, float b)
-{	return mglColor(a.r/b, a.g/b, a.b/b);	}
+{	return mglColor(a.r/b, a.g/b, a.b/b, a.a/b);	}
 inline mglColor operator!(const mglColor &a)
-{	return mglColor(1-a.r, 1-a.g, 1-a.b);	}
+{	return mglColor(1-a.r, 1-a.g, 1-a.b, a.a);	}
 //-----------------------------------------------------------------------------
 struct mglTexture
 {
-	long n;			///< Number of colors along u
-	bool sm;		///< Return smooth color
-	mglColor *c;	///< Colors itself
-	char *id;
+	mglColor col[514];
+	long n;			///< Number of initial colors along u
 	mglTexture()	{	memset(this,0,sizeof(mglTexture));	}
 	~mglTexture()	{	Clear();	}
-	void Clear()
-	{	if(c)	delete []c;	if(id)	delete []id;	c=0;	id=0;	}
+	void Clear()	{	memset(this,0,sizeof(mglTexture));	}
 //	void Set(int nn, mglColor *cc, float a=0);
 	void Set(const char *cols, int smooth=0,float alpha=1);
 	void GetC(float u,float v,float c[4]);
 	bool IsSame(mglTexture &t);
+private:
 };
 //-----------------------------------------------------------------------------
 const mglColor NC(-1,-1,-1);
@@ -322,7 +320,7 @@ public:
 
 	/// Get color depending on single variable z, which should be scaled if scale=true
 	inline float GetC(long s,float z,bool scale = true)
-	{	return s+scale?GetA(z):z;	}
+	{	return s+(scale?GetA(z):z);	}
 	/// Get alpha value depending on single variable \a a
 	float GetA(float a);
 	/// Set pen/palette
@@ -331,7 +329,7 @@ public:
 	long AddTexture(const char *cols, int smooth=0);
 	float AddTexture(char col);
 	/// Set next color from palette
-	float NextColor(long id);
+	float NextColor(long &id);
 
 	virtual void mark_plot(long p, char type, float size=1)=0;		// position in pntC
 	virtual void arrow_plot(long p1, long p2, char st)=0;			// position in pntC

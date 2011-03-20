@@ -427,7 +427,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr)
 	{
 		p = o+d*aa.val[i];	tick_draw(p,da,db,0);
 		register float v;
-		for(v=aa.val[i]+aa.ds; v <= (i<k2-1 ? aa.val[i+1]:aa.v2); v+=aa.ds)
+		if(text)	for(v=aa.val[i]+aa.ds; v <= (i<k2-1 ? aa.val[i+1]:aa.v2); v+=aa.ds)
 			tick_draw(o+d*v,da,db,1);
 	}
 	if(text)	DrawLabels(aa);
@@ -660,6 +660,8 @@ void mglCanvas::Box(const char *col, bool ticks)
 		Org.z=Max.z;	Axis("xy_");
 		Org = Max;		Axis("xyz_");
 		Org.z=Min.z;	Axis("xy_");
+		Org.x=Min.x;	DrawAxis(az,0,0);
+		Org.x=Max.x;	Org.y=Min.y;	DrawAxis(az,0,0);
 	}
 	else if(TernAxis==1)
 	{
