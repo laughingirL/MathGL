@@ -52,7 +52,7 @@ void mglCanvas::DefaultPlotParam()
 	MarkSize = 0.02;		ArrowSize = 0.03;
 	AlphaDef = 0.5;			FontDef[0]=0;
 	TranspType = 0;			MeshNum = 0;
-	RotatedText = true;
+	RotatedText = true;		CurrPal = 0;
 //	CloudFactor = 1;
 //	ClearLegend();			LegendBox = true;
 	SetCutBox(mglPoint(0,0,0), mglPoint(0,0,0));

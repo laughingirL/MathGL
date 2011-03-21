@@ -364,6 +364,7 @@ protected:
 	mglFormula *fa;		///< Transformation formula for coloring.
 	mglFormula *fc;		///< Cutting off condition (formula).
 
+	long CurrPal;		///< Current palette index
 	float MarkSize;		///< The size of marks for 1D plots.
 	float ArrowSize;	///< The size of arrows.
 	char last_style[64];///< Last pen style
@@ -377,7 +378,6 @@ private:
 	mglPoint MaxS;		///< Saved upper edge of bounding box for graphics.
 	float MSS, ASS, FSS, ADS, MNS, CSS;	///< Saved state
 
-
 	mglPoint FMin;		///< Actual lower edge after transformation formulas.
 	mglPoint FMax;		///< Actual upper edge after transformation formulas.
 	mglPoint CutMin;	///< Lower edge of bounding box for cut off.
@@ -387,7 +387,6 @@ private:
 	void RecalcBorder();	///< Recalculate internal parameter for correct transformation rules.
 	void SetFBord(float x,float y,float z);	///< Set internal boundng box depending on transformation formula
 	void ClearEq();			///< Clear the used variables for axis transformation
-	void SetPal(const char *colors);		///< Set Pal & NumPal
 };
 //-----------------------------------------------------------------------------
 #define _Da_(d)	(*((const mglDataA *)(d)))

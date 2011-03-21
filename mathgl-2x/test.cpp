@@ -35,22 +35,21 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
-/*	mglData b(3,2);
-	long i,j,i0;
-	float x,y;
-	for(j=0;j<2;j++)	for(i=0;i<3;i++)
-	{
-		x = i/2.;	y = j;	i0 = i+3*j;
-		b.a[i0] = 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
-	}*/
+	mglData x,y,y1,y2;	mgls_prepare1d(&y,&y1,&y2,&x);
+	gr->Box();	gr->Plot(x,y);
+//	gr->Traj(x,y,y1,y2);
 
-	mglData ys(3,2);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-	mglData y;	mgls_prepare1d(&y);
-	mglData a;	mgls_prepare2d(&a);
-	gr->Light(true);
-	gr->Rotate(40,60);
+//	mglData ys(3,2);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+//	mglData y;	mgls_prepare1d(&y);
+//	mglData a;	mgls_prepare2d(&a);
+	mglData a,b;	mgls_prepare2v(&a,&b);
 //	gr->Box();
-	gr->Tile(a);
+//	gr->Vect(a,b);
+
+//	gr->Light(true);
+//	gr->Rotate(40,60);
+//	gr->Box();
+//	gr->Tile(a);
 //	gr->Plot(y);
 	return 0;
 

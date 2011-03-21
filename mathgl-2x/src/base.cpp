@@ -23,6 +23,7 @@
 //-----------------------------------------------------------------------------
 mglBase::mglBase()
 {
+	memset(this,0,sizeof(mglBase));
 	posC=posN=0;	numC=numN=1024;
 	pntC=(float *)malloc(4*numC*sizeof(float));
 	pntN=(float *)malloc(8*numC*sizeof(float));
@@ -529,10 +530,10 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 		else
 		{	c[1]=c[4];	c[3]=c[6];	n=2;	}
 	}
-	register float u;
+	register float u,v=sm?(n-1)/255.:n/256.;
 	for(i=0;i<256;i++)
 	{
-		u = (n-1)*i/256.;	j = long(u);	u-=j;
+		u = v*i;	j = long(u);	u-=j;
 		if(!sm || j>=n-1)
 		{	col[2*i] = c[2*j];	col[2*i+1] = c[2*j+1];	}
 		else
@@ -591,11 +592,11 @@ float mglBase::AddTexture(char col)
 //		Coloring and palette
 //-----------------------------------------------------------------------------
 float mglBase::NextColor(long &id)
-{	// NOTE: I suppose that texture contain not more than 256 colors!
+{
 	long i=abs(id)/256, n=txt[i].n, p=abs(id)&0xff;
 	if(id>=0)	{	p=(p+1)%n;	id = 256*i+p;	}
 	last_style[0]=MGL_DEF_PAL[p%strlen(MGL_DEF_PAL)];	// TODO: last_style correctly !!!
-	CDef = i + (n>0 ? 0.99*p/(n-1.) : 0);
+	CDef = i + (n>0 ? (p+0.5)/n : 0);	CurrPal++;
 	return CDef;
 }
 //-----------------------------------------------------------------------------
@@ -654,9 +655,10 @@ char mglBase::SetPenPal(const char *p, long *Id)
 		}
 	}
 	last_style[3]=mk;	SetPen(pp, PenWidth);
-	long tt;
-	tt = AddTexture(p,-1);	CDef = tt;
-	if(Id)	*Id=long(tt)*256+txt[tt].n-1;
+	long tt, n;
+	tt = AddTexture(p,-1);	n=txt[tt].n;
+	CDef = tt+((n+CurrPal-1)%n+0.5)/n;
+	if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
 	return mk;
 }
 //-----------------------------------------------------------------------------
