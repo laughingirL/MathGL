@@ -324,12 +324,12 @@ void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mgl
 		// condition of end
 		end = end || u<0 || v<0 || u>1 || v>1;
 	} while(!end);
-	register long i,j;
+	long i,j,jj;
 	gr->ReserveC(k);	j = gr->AddPntC(pp[0],cc[0]);
 	for(i=1;i<k;i++)
 	{
-		k=j;	j = gr->AddPntC(pp[i],cc[i]);
-		gr->line_plot(k,j);
+		jj=j;	j = gr->AddPntC(pp[i],cc[i]);
+		gr->line_plot(jj,j);
 	}
 	free(pp);	free(cc);
 }
@@ -519,12 +519,12 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 		// condition of end
 		end = end || u<0 || v<0 || u>1 || v>1 || w<0 || w>1;
 	} while(!end);
-	register long i,j;
+	long i,j,jj;
 	gr->ReserveC(k);	j = gr->AddPntC(pp[0],cc[0]);
 	for(i=1;i<k;i++)
 	{
-		j = gr->AddPntC(pp[i],cc[i]);
-		gr->line_plot(j-1,j);
+		jj=j;	j = gr->AddPntC(pp[i],cc[i]);
+		gr->line_plot(jj,j);
 	}
 	free(pp);	free(cc);
 }
@@ -805,7 +805,7 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 			gr->ScalePoint(p);	gr->AddPntN(p,cc[i],d);
 		}
 	}
-	for(j=0;j<num-1;j++)	for(i=0;i<n-1;i++)
+	for(j=0;j<num-1;j++)	for(i=0;i<k-1;i++)
 	{
 		i0 = pos+j+num*i;
 		gr->quad_plot(i0,i0+1,i0+1+num,i0+num);

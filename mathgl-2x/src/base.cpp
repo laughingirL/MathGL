@@ -559,7 +559,7 @@ void mglTexture::GetC(float u,float v,float cc[4])
 }
 //-----------------------------------------------------------------------------
 bool mglTexture::IsSame(mglTexture &t)
-{	return !memcmp(col,t.col,514*sizeof(mglColor));	}
+{	return n==t.n && !memcmp(col,t.col,514*sizeof(mglColor));	}
 //-----------------------------------------------------------------------------
 long mglBase::AddTexture(const char *cols, int smooth)
 {
@@ -704,22 +704,20 @@ mglPoint GetZ(const mglDataA *z, int i, int j, int k)
 //-----------------------------------------------------------------------------
 void mglBase::vect_plot(long p1, long p2)	// position in pntC
 {
-	float pp[14], *pp1=pntC+7*p1, *pp2=pntC+7*p2;
-	memcpy(pp,pp2,7*sizeof(float));
-	memcpy(pp+7,pp2,7*sizeof(float));
+	float pp[8], *pp1=pntC+4*p1, *pp2=pntC+4*p2;
+	memcpy(pp,pp2,4*sizeof(float));	memcpy(pp+4,pp2,4*sizeof(float));
 	pp[0] = pp1[0]+0.8*(pp2[0]-pp1[0]) + 0.1*(pp2[1]-pp1[1]);
-	pp[7] = pp1[0]+0.8*(pp2[0]-pp1[0]) - 0.1*(pp2[1]-pp1[1]);
+	pp[4] = pp1[0]+0.8*(pp2[0]-pp1[0]) - 0.1*(pp2[1]-pp1[1]);
 	pp[1] = pp1[1]+0.8*(pp2[1]-pp1[1]) - 0.1*(pp2[0]-pp1[0]);
-	pp[8] = pp1[1]+0.8*(pp2[1]-pp1[1]) + 0.1*(pp2[0]-pp1[0]);
-	pp[2] = pp[9] = pp1[2]+0.8*(pp2[2]-pp1[2]);
+	pp[5] = pp1[1]+0.8*(pp2[1]-pp1[1]) + 0.1*(pp2[0]-pp1[0]);
+	pp[2] = pp[6] = pp1[2]+0.8*(pp2[2]-pp1[2]);
 
 	if(posC>numC-3)
-	{	numC+=1024;	pntC=(float *)realloc(pntC,7*numC*sizeof(float));	}
-	memcpy(pntC+posC*7,pp,14*sizeof(float));
+	{	numC+=1024;	pntC=(float *)realloc(pntC,4*numC*sizeof(float));	}
+	memcpy(pntC+posC*4,pp,8*sizeof(float));	posC+=2;
 	line_plot(p1,p2);
-	line_plot(posC,p2);
-	line_plot(p2,posC+1);
-	posC+=2;
+	line_plot(posC-2,p2);
+	line_plot(p2,posC-1);
 }
 //-----------------------------------------------------------------------------
 void mglBase::SaveState()

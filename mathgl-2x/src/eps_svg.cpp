@@ -477,13 +477,13 @@ void mglCanvas::put_desc(void *fp, bool gz, const char *pre, const char *ln1, co
 void mglCanvas::put_color(float *c, mglPrim *p)
 {
 	float n[3]={NAN,NAN,NAN},u,v=0;
+	register long i, j = p->type==1 ? p->n2:p->n1;
 	if(p->type==2 || p->type==3 || (p->type==1 && p->m))
-	{	u=pntN[8*p->n1+3];	v=pntN[8*p->n1+4];
-		memcpy(n,pntN+8*p->n1+5,3*sizeof(float));	}
-	else	u=pntC[4*p->n1+3];
+	{	u=pntN[8*j+3];	v=pntN[8*j+4];
+		memcpy(n,pntN+8*j+5,3*sizeof(float));	}
+	else	u=pntC[4*j+3];
 	txt[long(u)].GetC(u,v,c);
 
-	register long i,j;
 	if(UseLight && !isnan(n[0]))
 	{
 		float d0,d1,d2,nn;

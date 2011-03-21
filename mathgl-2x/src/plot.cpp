@@ -372,11 +372,13 @@ void mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 	mglPoint p1,p2,p3,p4,nn;
 	long n1,n2,n3,n4;
 	gr->SetPenPal(pen,&pal);	gr->ReserveN(2*n*m);
-
+	long s=gr->AddTexture(pen,1);
 	for(j=0;j<m;j++)
 	{
 		gr->NextColor(pal);	c2=c1=gr->CDef;
-		if(gr->GetNumPal(pal)==2*m)	c2 = gr->NextColor(pal);
+		if(gr->GetNumPal(pal)==2*m)
+		{	c1 = s+2*j/(2*m-1.);	c2 = s+(2*j+0.999)/(2*m-1);	}
+//		if(gr->GetNumPal(pal)==2*m)	c2 = gr->NextColor(pal);
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
 
 		p1 = mglPoint(x->v(0,mx),y->v(0,my),z->v(0,mz));
@@ -415,10 +417,12 @@ void mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 	bool sum = pen && strchr(pen,'a')!=0;
 
 	gr->SetPenPal(pen,&pal);	gr->ReserveN(2*n*m);
+	long s=gr->AddTexture(pen,1);
 	for(j=0;j<m;j++)
 	{
 		gr->NextColor(pal);	c2=c1=gr->CDef;
-		if(gr->GetNumPal(pal)==2*m)	c2 = gr->NextColor(pal);
+		if(gr->GetNumPal(pal)==2*m)
+		{	c1 = s+2*j/(2*m-1.);	c2 = s+(2*j+0.999)/(2*m-1);	}
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;
 		z0 = gr->Min.z + (m-1-j)*(gr->Max.z-gr->Min.z)/m;
 
