@@ -54,8 +54,8 @@ public:
 	{	mgl_set_cut_box(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);	}
 	inline void SetTickLen(float len, float stt=1)
 	{	mgl_set_tick_len(gr, len, stt);	}
-	inline void SetTickStl(const char *stl, const char *sub=0)
-	{	mgl_set_tick_stl(gr, stl, sub);	}
+	inline void SetAxisStl(const char *stl="k", const char *tck=0, const char *sub=0)
+	{	mgl_set_axis_stl(gr, stl, tck, sub);	}
 	inline void SetTickTime(char dir, float d, const char *t="%F")
 	{	mgl_set_tick_time(gr,dir,d,t);	}
 	inline void SetTicksVal(char dir, const mglDataA &v, const char *lbl)

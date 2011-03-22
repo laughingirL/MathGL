@@ -172,7 +172,8 @@ public:
 	/// Set the transparency on/off.
 	virtual bool Alpha(bool enable);
 	/// Set the transparency type
-	inline void SetTranspType(int val)	{	TranspType=val;	};
+	inline void SetTranspType(int val)
+	{	TranspType=val;	SetAxisStl(val==2?"w":"k");	}
 	/// Set the fog distance or switch it off (if d=0).
 	virtual void Fog(float d, float dz=0.25);
 	/// Set the using of light on/off.
@@ -202,7 +203,7 @@ public:
 	inline void SetTuneTicks(int tune, float pos=1.15)
 	{	TuneTicks = tune;	FactorPos = pos;	};
 	/// Set ticks styles
-	void SetTickStl(const char *stl, const char *sub=0);
+	void SetAxisStl(const char *stl="k", const char *tck=0, const char *sub=0);
 	/// Set ticks length
 	void SetTickLen(float tlen, float stt=1.);
 
@@ -268,6 +269,7 @@ protected:
 	int TuneTicks;		///< Draw tuned ticks with extracted common component
 	float FactorPos;	///< Position of axis ticks factor (0 at Min, 1 at Max, 1.1 is default)
 	float TickLen;		///< Length of tiks (subticks length is sqrt(1+st_t)=1.41... times smaller)
+	char AxisStl[32];	///< Axis line style. Default is "k"
 	char TickStl[32];	///< Tick line style. Default is "k"
 	char SubTStl[32];	///< Subtick line style. Default is "k"
 	float st_t;			///< Subtick-to-tick ratio (ls=lt/sqrt(1+st_t)). Default is 1.
@@ -328,7 +330,7 @@ protected:
 
 	void mark_plot(long p, char type, float size=1);	// position in pntC
 	void arrow_plot(long p1, long p2, char st);			// position in pntC
-	void line_plot(long p1, long p2, bool fromN=false);	// position in pntC
+	void line_plot(long p1, long p2);	// position in pntC
 	void trig_plot(long p1, long p2, long p3);			// position in pntN
 	void quad_plot(long p1, long p2, long p3, long p4);	// position in pntN
 	void Glyph(float x, float y, float f, int style, long icode, char col);

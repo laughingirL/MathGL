@@ -36,11 +36,16 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 int test(mglGraph *gr)
 {
 //	mglData ys(3,2);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-//	mglData y;	mgls_prepare1d(&y);
-//	mglData a;	mgls_prepare2d(&a);
+//	mglData y;		mgls_prepare1d(&y);
+//	mglData a;		mgls_prepare2d(&a);
 	mglData a,b;	mgls_prepare2v(&a,&b);
-//	gr->Box();
-	gr->Pipe(a,b);
+//	gr->Rotate(40,60);	gr->Light(true);
+	gr->Box();
+	mglData v(2);	v.a[0]=-0.6;	v.a[1]=-0.3;
+//	gr->Mesh(a,"k");	gr->Cont(v,a,"r");
+
+	gr->ContF(v,a);
+//	gr->Flow(a,b);
 
 //	gr->Light(true);
 //	gr->Rotate(40,60);
@@ -1158,12 +1163,12 @@ void mgls_prepare3d(mglData *a, mglData *b)
 	}
 }
 //-----------------------------------------------------------------------------
-void smgl_surf3_rgbd(mglGraph *gr)
+/*void smgl_surf3_rgbd(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
 	gr->Rotate(40,60);	gr->VertexColor(true);
 	gr->Box();	gr->Surf3(c,"bgrd");
-}
+}*/
 //-----------------------------------------------------------------------------
 void smgl_conta(mglGraph *gr)
 {
@@ -1792,7 +1797,8 @@ int main(int argc,char **argv)
 	if(dotest)
 	{
 		mgl_set_test_mode(true);	test(gr);
-		gr->WriteEPS("test.eps");	gr->WritePNG("test.png","",false);
+		gr->WritePNG("test.png","",false);
+		gr->WriteEPS("test.eps");
 		return 0;
 	}
 
@@ -1910,7 +1916,7 @@ mglSample samp[] = {
 	{"surf", smgl_surf},
 	{"surf3", smgl_surf3},
 	{"surf3_cutoff", smgl_surf3_cutoff},
-	{"surf3_rgbd", smgl_surf3_rgbd},
+//	{"surf3_rgbd", smgl_surf3_rgbd},
 	{"surf3a", smgl_surf3a},
 	{"surf3c", smgl_surf3c},
 	{"surf_alpha", smgl_surf_alpha},

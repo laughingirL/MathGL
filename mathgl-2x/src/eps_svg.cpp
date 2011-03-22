@@ -384,8 +384,8 @@ void mglCanvas::WriteSVG(const char *fname,const char *descr)
 	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
 }
 //-----------------------------------------------------------------------------
-#define xx(i,n)	(P[i].m ? pntN[8*P[i].n]   : pntC[4*P[i].n])
-#define yy(i,n)	(P[i].m ? pntN[8*P[i].n+1] : pntC[4*P[i].n+1])
+#define xx(i,n)	(pntC[4*P[i].n])
+#define yy(i,n)	(pntC[4*P[i].n+1])
 void mglCanvas::put_line(void *fp, bool gz, long i, float wp, float *cp,int st, const char *ifmt, const char *nfmt, bool neg)
 {
 	long k = i,j;	// first point
@@ -478,7 +478,7 @@ void mglCanvas::put_color(float *c, mglPrim *p)
 {
 	float n[3]={NAN,NAN,NAN},u,v=0;
 	register long i, j = p->type==1 ? p->n2:p->n1;
-	if(p->type==2 || p->type==3 || (p->type==1 && p->m))
+	if(p->type==2 || p->type==3)
 	{	u=pntN[8*j+3];	v=pntN[8*j+4];
 		memcpy(n,pntN+8*j+5,3*sizeof(float));	}
 	else	u=pntC[4*j+3];

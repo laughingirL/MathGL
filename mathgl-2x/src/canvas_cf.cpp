@@ -151,8 +151,8 @@ void mgl_set_def_param(HMGL gr)	{	_Gr_->DefaultPlotParam();	}
 //-----------------------------------------------------------------------------
 void mgl_set_tick_len(HMGL gr, float len, float stt)
 {	_Gr_->SetTickLen(len,stt);	}
-void mgl_set_tick_stl(HMGL gr, const char *stl, const char *sub)
-{	_Gr_->SetTickStl(stl,sub);	}
+void mgl_set_axis_stl(HMGL gr, const char *stl, const char *tck, const char *sub)
+{	_Gr_->SetAxisStl(stl,tck,sub);	}
 void mgl_tune_ticks(HMGL gr, int tune, float pos)
 {	_Gr_->SetTuneTicks(tune,pos);	}
 void mgl_adjust_ticks(HMGL gr, const char *dir)
@@ -223,10 +223,11 @@ void mgl_set_def_param_(uintptr_t *gr)	{	_GR_->DefaultPlotParam();	}
 //-----------------------------------------------------------------------------
 void mgl_set_tick_len_(uintptr_t *gr, float *len, float *stt)
 {	_GR_->SetTickLen(*len, *stt);	}
-void mgl_set_tick_stl_(uintptr_t *gr, const char *stl, const char *sub, int l,int m)
-{	char *t=new char[l+1];	memcpy(t,stl,l);	t[l]=0;
-	char *s=new char[m+1];	memcpy(s,sub,m);	s[m]=0;
-	_GR_->SetTickStl(t,s);	delete []s;	delete []t;	}
+void mgl_set_axis_stl_(uintptr_t *gr, const char *stl, const char *tck, const char *sub, int l,int m,int n)
+{	char *a=new char[l+1];	memcpy(a,stl,l);	a[l]=0;
+	char *t=new char[l+1];	memcpy(t,tck,l);	t[m]=0;
+	char *s=new char[m+1];	memcpy(s,sub,m);	s[n]=0;
+	_GR_->SetAxisStl(a,t,s);	delete []a;	delete []s;	delete []t;	}
 void mgl_adjust_ticks_(uintptr_t *gr, const char *dir, int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	_GR_->AdjustTicks(s);	delete []s;	}

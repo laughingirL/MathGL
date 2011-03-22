@@ -301,7 +301,7 @@ public:
 	long AddPntN(mglPoint p, float c, mglPoint n, float a=-1, bool scl=true);
 	long ReserveC(long n);		///< Allocate n-cells for pntC and return current position
 	long ReserveN(long n);		///< Allocate n-cells for pntC and return current position
-	long CopyNtoC(long from, long size, float c=NAN);
+	long CopyNtoC(long from, float c=NAN);
 
 	inline long GetPosC()	{	return posC;	}
 	inline long GetPosN()	{	return posN;	}
@@ -333,7 +333,7 @@ public:
 
 	virtual void mark_plot(long p, char type, float size=1)=0;		// position in pntC
 	virtual void arrow_plot(long p1, long p2, char st)=0;			// position in pntC
-	virtual void line_plot(long p1, long p2,bool fromN=false)=0;	// position in pntC
+	virtual void line_plot(long p1, long p2)=0;	// position in pntC
 	virtual void trig_plot(long p1, long p2, long p3)=0;			// position in pntN
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;	// position in pntN
 	virtual void Glyph(float x, float y, float f, int style, long icode, char col)=0;

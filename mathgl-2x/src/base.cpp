@@ -106,19 +106,13 @@ long mglBase::ReserveN(long n)
 	return posN;
 }
 //-----------------------------------------------------------------------------
-long mglBase::CopyNtoC(long from, long size, float c)
+long mglBase::CopyNtoC(long from, float c)
 {
-	if(size<1)	return -1;
-	ReserveC(size);
-	register long i,j;
-	for(i=from;i<numN && i<from+size;i++)
-	{
-		j = 4*(posC+i-from);
-		memcpy(pntC+j, pntN+8*i, 4*sizeof(float));
-		if(c>=0)	pntC[j+3] = c;
-	}
-	posC+=size;
-	return posC-size;
+	if(posC+1>numC)
+	{	numC=posC+1;	pntC=(float *)realloc(pntC,4*numC*sizeof(float));	}
+	memcpy(pntC+4*posC, pntN+8*from, 4*sizeof(float));
+	if(!isnan(c))	pntC[4*posC+3]=c;
+	posC++;			return posC-1;
 }
 //-----------------------------------------------------------------------------
 //		Boundaries and scaling

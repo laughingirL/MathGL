@@ -53,6 +53,7 @@ void mglCanvas::DefaultPlotParam()
 	AlphaDef = 0.5;			FontDef[0]=0;
 	TranspType = 0;			MeshNum = 0;
 	RotatedText = true;		CurrPal = 0;
+	SetAxisStl();
 //	CloudFactor = 1;
 //	ClearLegend();			LegendBox = true;
 	SetCutBox(mglPoint(0,0,0), mglPoint(0,0,0));
@@ -192,28 +193,22 @@ void mglCanvas::mark_plot(long p, char type, float size)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::line_plot(long p1, long p2, bool fromN)
+void mglCanvas::line_plot(long p1, long p2)
 {
 	if(PDef==0)	return;
-	if(fromN && (isnan(pntN[8*p1]) || isnan(pntN[8*p2])))	return;
-	if(!fromN && (isnan(pntC[4*p1]) || isnan(pntC[4*p2])))	return;
+	if(isnan(pntC[4*p1]) || isnan(pntC[4*p2]))	return;
 	float pw = fabs(PenWidth),d;
-	if(Quality&4)
-	{
-		if(fromN)	line_draw(pntN+8*p1,pntN+8*p2);
-		else		line_draw(pntC+4*p1,pntC+4*p2);
-	}
+	if(Quality&4)	line_draw(pntC+4*p1,pntC+4*p2);
 	else
 	{
-		mglPrim a(1);	a.w = pw;	a.m = fromN;
-		a.z = fromN ? (pntN[8*p1+2]+pntN[8*p2+2])/2 : (pntC[4*p1+2]+pntC[4*p2+2])/2;
+		mglPrim a(1);	a.w = pw;
+		a.z = (pntC[4*p1+2]+pntC[4*p2+2])/2;
 		if(pw>1)		a.z += pw-1;
 		a.style=PDef;	a.s = pPos;
 		a.n1 = p1;		a.n2 = p2;
 		add_prim(a);
 	}
-	if(fromN)	d = hypot(pntN[8*p1]-pntN[8*p2], pntN[8*p1+1]-pntN[8*p2+1]);
-	else		d = hypot(pntC[4*p1]-pntC[4*p2], pntC[4*p1+1]-pntC[4*p2+1]);
+	d = hypot(pntC[4*p1]-pntC[4*p2], pntC[4*p1+1]-pntC[4*p2+1]);
 	pPos = fmod(pPos+d/pw/1.5, 16);
 }
 //-----------------------------------------------------------------------------

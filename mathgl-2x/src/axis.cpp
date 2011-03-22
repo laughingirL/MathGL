@@ -59,16 +59,14 @@ void mglAxis::AddLabel(float v, const wchar_t *b)
 //-----------------------------------------------------------------------------
 //		Ticks setup
 //-----------------------------------------------------------------------------
-void mglCanvas::SetTickStl(const char *stl, const char *sub)
+void mglCanvas::SetAxisStl(const char *stl, const char *tck, const char *sub)
 {
-	if(!stl || !(*stl))
-	{	TickStl[0] = SubTStl[0] = 0;	}
-	else if(strlen(stl)<32)
-	{
-		strcpy(TickStl,stl);
-		if(!sub || !(*sub))		strcpy(SubTStl,stl);
-		else if(strlen(sub)<32)	strcpy(SubTStl,sub);
-	}
+	if(!stl || !(*stl))		strcpy(AxisStl,"k");
+	else if(strlen(stl)<32)	strcpy(AxisStl,stl);
+	if(!tck || !(*tck))		strcpy(TickStl,AxisStl);
+	else if(strlen(tck)<32)	strcpy(TickStl,tck);
+	if(!sub || !(*sub))		strcpy(SubTStl,AxisStl);
+	else if(strlen(sub)<32)	strcpy(SubTStl,sub);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTickLen(float tlen, float stt)
@@ -405,7 +403,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr)
 	mglPoint av=(Min+Max)/2, dv,da,db, p;
 	dv = mglPoint(sign(av.x-o.x)*ax.dv, sign(av.y-o.y)*ay.dv, sign(av.z-o.z)*az.dv);
 	da = aa.a*(dv*aa.a);	db = aa.b*(dv*aa.b);
-	SetPenPal(TranspType!=2 ?"k-":"w-");
+	SetPenPal(AxisStl);
 
 	register long i,k1,k2;
 	p = o + d*aa.v1;	ScalePoint(p);	k1 = AddPntC(p,CDef);

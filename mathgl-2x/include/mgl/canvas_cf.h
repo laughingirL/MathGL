@@ -32,7 +32,7 @@ void mgl_set_zoom(HMGL gr, float x1, float y1, float x2, float y2);
 void mgl_set_def_param(HMGL gr);
 
 void mgl_set_tick_len(HMGL graph, float len, float stt);
-void mgl_set_tick_stl(HMGL gr, const char *stl, const char *sub);
+void mgl_set_axis_stl(HMGL gr, const char *stl, const char *tck, const char *sub);
 void mgl_adjust_ticks(HMGL graph, const char *dir);
 void mgl_set_ticks(HMGL graph, char dir, float d, int ns, float org);
 void mgl_set_ticks_val(HMGL graph, char dir, HCDT val, const char *lbl);
@@ -130,7 +130,7 @@ void mgl_set_zoom_(uintptr_t *gr, float *x1, float *y1, float *x2, float *y2);
 void mgl_set_def_param_(uintptr_t *gr);
 
 void mgl_set_tick_len_(uintptr_t *graph, float *len, float *stt);
-void mgl_set_tick_stl_(uintptr_t *graph, const char *stl, const char *sub, int,int);
+void mgl_set_axis_stl_(uintptr_t *graph, const char *stl, const char *tck, const char *sub, int,int,int);
 
 void mgl_adjust_ticks_(uintptr_t *gr, const char *dir, int l);
 void mgl_set_ticks_(uintptr_t *gr, char *dir, float *d, int *ns, float *org, int);

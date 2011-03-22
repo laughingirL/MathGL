@@ -3228,13 +3228,15 @@ int mgls_ticklen(mglGraph gr, long , mglArg *a, int k[10])
 void mglc_ticklen(wchar_t out[1024], long , mglArg *a, int k[10])
 {	if(k[0]==3)	mglprintf(out,1024,L"gr.SetTickLen(%g,%g);", a[0].v, k[1]==3?a[1].v:1);	}
 //-----------------------------------------------------------------------------
-int mgls_tickstl(mglGraph gr, long , mglArg *a, int k[10])
+int mgls_axisstl(mglGraph gr, long , mglArg *a, int k[10])
 {
-	if(k[0]==2)	gr.SetTickStl(a[0].s, k[1]==2?a[1].s:"");	else	return 1;
+	if(k[0]==2)
+		gr.SetAxisStl(a[0].s, k[1]==2?a[1].s:"", k[2]==2?a[2].s:"");
+	else	return 1;
 	return 0;
 }
-void mglc_tickstl(wchar_t out[1024], long , mglArg *a, int k[10])
-{	if(k[0]==2)	mglprintf(out,1024,L"gr.SetTickStl(\"%s\",\"%s\");", a[0].s, k[1]==2?a[1].s:"");	}
+void mglc_axisstl(wchar_t out[1024], long , mglArg *a, int k[10])
+{	if(k[0]==2)	mglprintf(out,1024,L"gr.SetAxisStl(\"%s\",\"%s\",\"%s\");", a[0].s, k[1]==2?a[1].s:"", k[2]==2?a[2].s:"");	}
 //-----------------------------------------------------------------------------
 int mgls_ranges(mglGraph gr, long n, mglArg *a, int k[10])
 {
@@ -3343,6 +3345,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"aspect",L"Set aspect ration",L"aspect valx valy [valz]", mgls_aspect, mglc_aspect, false, 4},
 	{L"axial",L"Draw surfaces of contour lines rotation",L"axial Zdat ['fmt' num]|Xdat Ydat Zdat ['fmt' num]", mgls_axial, mglc_axial, false, 0},
 	{L"axis",L"Setup or draw axis",L"axis ['dir' adjust]|'fx' 'fy' ['fz' 'fc']|how", mgls_axis, mglc_axis, false, 1},
+	{L"axisstl",L"Set axis and tick style",L"axisstl 'stl' ['sub']", mgls_axisstl, mglc_axisstl, false, 2},
 	{L"ball",L"Draw point (ball)",L"ball posx posy ['fmt']|posx posy posz ['fmt']", mgls_ball, mglc_ball, false, 1},
 	{L"barh",L"Draw horizontal bars for 1D data", L"barh Ydat ['fmt' zval above]|Xdat Ydat ['fmt' zval above]", mgls_barh, mglc_barh, false, 0},
 	{L"bars",L"Draw bars for 1D data",L"bars Ydat ['fmt' zval above]|Xdat Ydat ['fmt' zval above]|Xdat Ydat Zdat ['fmt' above]", mgls_bars, mglc_bars, false, 0},
@@ -3500,7 +3503,6 @@ mglCommand mgls_base_cmd[] = {
 	{L"text",L"Draw text at some position or along curve",L"text x y 'txt' ['fmt' size]|x y z 'txt' ['fmt' size]|x y dx dy 'txt' ['fmt' size]|x y z dx dy dz 'txt' ['fmt' size]|Ydat 'txt' ['font' sise zval]|Xdat Ydat 'txt' ['font' sise zval]", mgls_text, mglc_text, false, 0},
 	{L"textmark",L"Draw TeX mark at point position",L"textmark Ydat Rdat 'text' ['fmt' zval]|Xdat Ydat Rdat 'text' ['fmt' zval]|Xdat Ydat Zdat Rdat 'text' ['fmt']", mgls_textmark, mglc_textmark, false, 0},
 	{L"ticklen",L"Set tick length",L"ticklen val [stt]", mgls_ticklen, mglc_ticklen, false, 2},
-	{L"tickstl",L"Set tick style",L"tickstl 'stl' ['sub']", mgls_tickstl, mglc_tickstl, false, 2},
 	{L"tile",L"Draw horizontal tiles",L"tile Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tile, mglc_tile, false, 0},
 	{L"tiles",L"Draw horizontal tiles with variable size",L"tiles Zdat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_tiles, mglc_tiles, false, 0},
 	{L"title",L"Print title for the picture",L"title 'text' ['fmt' size]", mgls_title, mglc_title, false, 1},

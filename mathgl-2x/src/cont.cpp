@@ -210,11 +210,11 @@ void mgl_text_y_(uintptr_t *gr, uintptr_t *y, const char *text, const char *font
 void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, int text,long ak)
 {
 	long n=a->GetNx(), m=a->GetNy();
-	if(n<2 || m<2 || x->GetNx()*x->GetNx()!=n*m || y->GetNx()*y->GetNx()!=n*m || z->GetNx()*z->GetNx()!=n*m)
+	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
 	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
 
 	mglPoint *kk = new mglPoint[2*n*m],p;
-	float d, kx, ky;
+	float d, r, kx, ky;
 	register long i,j,k, pc=0;
 	// NOTE. Usually number of points is much smaller. So, there is no reservation.
 //	gr->ReserveC(2*n*m);
@@ -247,32 +247,43 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 	}
 	// deallocate arrays and finish if no point
 	if(pc==0)	{	free(kk);	return;	}
-	// allocate arrays for curve
+	// allocate arrays for curve (nn - next, ff - prev)
 	long *nn = new long[pc], *ff = new long[pc];
+	// -1 is not parsed, -2 starting
 	for(i=0;i<pc;i++)	nn[i] = ff[i] = -1;
 	// connect points to line
-	j=-1;
+	long i11,i12,i21,i22,j11,j12,j21,j22;
+	j=-1;	// current point
 	do{
 		if(j>=0)
 		{
-			kx = kk[j].x;	ky = kk[j].y;		i = -1;
+			kx = kk[j].x;	ky = kk[j].y;	i = -1;
+			i11 = long(kx+1e-5);	i12 = long(kx-1e-5);
+			j11 = long(ky+1e-5);	j12 = long(ky-1e-5);
+			r=10;
 			for(k=0;k<pc;k++)	// find closest point in grid
 			{
 				if(k==j || k==ff[j] || ff[k]!=-1)	continue;	// point is marked
-				if(fabs(kk[k].x-kx)<1e-5 && fabs(kk[k].y-ky)<1e-5)	{	i=k;	break;	}
+				i21 = long(kk[k].x+1e-5);	i22 = long(kk[k].x-1e-5);
+				j21 = long(kk[k].y+1e-5);	j22 = long(kk[k].y-1e-5);
+				// check if in the same cell
+				register bool cond = (i11==i21 || i11==i22 || i12==i21 || i12==i22) &&
+						(j11==j21 || j11==j22 || j12==j21 || j12==j22);
+				d = hypot(kk[k].x-kx,kk[k].y-ky);	// if several then select closest
+				if(cond && d<r)	{	r=d;	i=k;	}
 			}
-			if(i<0)	j = -1;
-			else				// mark the point
+			if(i<0)	j = -1;	// no free close points
+			else			// mark the point
 			{	nn[j] = i;	ff[i] = j;	j = nn[i]<0 ? i : -1;	}
 		}
 		if(j<0)
 		{
-			for(k=0;k<pc;k++)	if(nn[k]==-1)
+			for(k=0;k<pc;k++)	if(nn[k]==-1)	// first check edges
 			{
 				if(kk[k].x==0 || fabs(kk[k].x-n+1)<1e-5 || kk[k].y==0 || fabs(kk[k].y-m+1)<1e-5)
 				{	nn[k]=-2;	j = k;	break;	}
 			}
-			if(j<0)	for(k=0;k<pc;k++)	if(nn[k]==-1)
+			if(j<0)	for(k=0;k<pc;k++)	if(nn[k]==-1)	// or any points inside
 			{	j = k;	nn[k]=-2;	break;	}
 		}
 	}while(j>=0);
@@ -302,7 +313,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 			if(k>=25)	break;
 		}
 	}
-	for(i=0;i<pc;i++)	gr->line_plot(ff[i], ff[nn[i]]);
+	for(i=0;i<pc;i++)	if(nn[i]>=0)	gr->line_plot(ff[i], ff[nn[i]]);
 	delete []kk;	delete []nn;	delete []ff;
 }
 //-----------------------------------------------------------------------------
@@ -392,10 +403,10 @@ void mgl_cont_(uintptr_t *gr, uintptr_t *a, const char *sch, int *Num, float *zV
 //	ContF series
 //
 //-----------------------------------------------------------------------------
-inline long mgl_add_pnt(HMGL gr, float d, HCDT x, HCDT y, HCDT z, long i1, long j1, long i2, long j2, float c)
+long mgl_add_pnt(HMGL gr, float d, HCDT x, HCDT y, HCDT z, long i1, long j1, long i2, long j2, float c, bool edge)
 {
 	long res=-1;
-	if(d>0 && d<1)
+	if(edge || (d>0 && d<1))
 	{
 		mglPoint p,u,v;
 		p = mglPoint(x->v(i1,j1)*(1-d)+x->v(i2,j2)*d,
@@ -407,85 +418,88 @@ inline long mgl_add_pnt(HMGL gr, float d, HCDT x, HCDT y, HCDT z, long i1, long 
 		v = mglPoint(x->dvy(i1,j1)*(1-d)+x->dvy(i2,j2)*d,
 					 y->dvy(i1,j1)*(1-d)+y->dvy(i2,j2)*d,
 					 z->dvy(i1,j1)*(1-d)+z->dvy(i2,j2)*d);
-		if(gr->ScalePoint(p))	res = gr->AddPntN(p,c,u^v);
+		gr->ScalePoint(p);
+		res = gr->AddPntN(p,c,u^v);
 	}
 	return res;
+}
+//-----------------------------------------------------------------------------
+void mgl_add_range(HMGL gr, HCDT a, HCDT x, HCDT y, HCDT z, long i1, long j1, long di, long dj, float c, long &u1, long &u2, long ak, float v1, float v2)
+{
+	long i2=i1+di, j2=j1+dj;
+
+	float f1 = a->v(i1,j1,ak),	f2 = a->v(i2,j2,ak), d1, d2;
+	d1 = mgl_d(v1,f1,f2);
+	u1 = mgl_add_pnt(gr,d1,x,y,z,i1,j1,i2,j2,c,false);
+	d2 = mgl_d(v2,f1,f2);
+	u2 = mgl_add_pnt(gr,d2,x,y,z,i1,j1,i2,j2,c,false);
+	if(d1>d2)	{	j2=u1;	u1=u2;	u2=j2;	}
+}
+//-----------------------------------------------------------------------------
+void mgl_add_edges(HMGL gr, HCDT a, HCDT x, HCDT y, HCDT z, long i1, long j1, long di, long dj, float c, long &u1, long &u2, long ak, float v1, float v2)
+{
+	long i2=i1+di, j2=j1+dj;
+	u1 = u2 = -1;
+
+	float f1 = a->v(i1,j1,ak),	f2 = a->v(i2,j2,ak);
+	if(f1<=v2 && f1>=v1)
+		u1 = mgl_add_pnt(gr,0,x,y,z,i1,j1,i2,j2,c,true);
+	if(f2<=v2 && f2>=v1)
+		u2 = mgl_add_pnt(gr,1,x,y,z,i1,j1,i2,j2,c,true);
 }
 //-----------------------------------------------------------------------------
 void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, float c, long ak)
 {
 	long n=a->GetNx(), m=a->GetNy();
-	if(n<2 || m<2 || x->GetNx()*x->GetNx()!=n*m || y->GetNx()*y->GetNx()!=n*m || z->GetNx()*z->GetNx()!=n*m)
+	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
 	{	gr->SetWarn(mglWarnDim,"ContFGen");	return;	}
 
-	float d1, d2;
 	register long i,j;
 	gr->ReserveN(n*m);
-	long *kk = new long[2*n], l1,l2, r1,r2, t1,t2, u1,u2, pos[8],num;
+	long *kk = new long[4*n], l1,l2, r1,r2, t1,t2, u1,u2, b1,b2, d1,d2, p[8],num;
 	memset(kk,-1,2*n*sizeof(long));
-	float f1,f2;
 	for(i=0;i<n-1;i++)	// add intersection points for first line
 	{
-		f1 = a->v(i,0,ak);		f2 = a->v(i+1,0,ak);
-		d1 = mgl_d(v1,f1,f2);
-		u1 = mgl_add_pnt(gr,d1,x,y,z,i,0,i+1,0,c);
-		if(u1<0 && f1>=v2 && f1<=v1)
-		{	d1=0;	u1 = mgl_add_pnt(gr,0,x,y,z,i,0,i,0,c);	}
-		d2 = mgl_d(v2,f1,f2);
-		u2 = mgl_add_pnt(gr,d1,x,y,z,i,0,i+1,0,c);
-		if(u2<0 && f2>=v2 && f2<=v1)
-		{	d2=1;	u2 = mgl_add_pnt(gr,0,x,y,z,i+1,0,i+1,0,c);	}
-		if(d1<d2)	{	kk[2*i]=u1;	kk[2*i+1]=u2;	}
-		else		{	kk[2*i]=u2;	kk[2*i+1]=u1;	}
+		mgl_add_range(gr,a,x,y,z, i,0,1,0, c,u1,u2, ak,v1,v2);
+		kk[4*i]=u1;		kk[4*i+1]=u2;
+		mgl_add_edges(gr,a,x,y,z, i,0,1,0, c,d1,d2, ak,v1,v2);
+		kk[4*i+2]=d1;		kk[4*i+3]=d2;
 	}
 	for(j=1;j<m;j++)	// add intersection points
 	{
-		f1 = a->v(i,j-1,ak);	f2 = a->v(i,j,ak);
-		d1 = mgl_d(v1,f1,f2);	//	left edge
-		r1 = mgl_add_pnt(gr,d1,x,y,z,i,j-1,i,j,c);
-		d2 = mgl_d(v2,f1,f2);
-		r2 = mgl_add_pnt(gr,d1,x,y,z,i,j-1,i,j,c);
-		if(d1>d2)	{	u1=r1;	r1=r2;	r2=u1;	}
+		mgl_add_range(gr,a,x,y,z, 0,j-1,0,1, c,r1,r2, ak,v1,v2);
 		for(i=0;i<n-1;i++)
 		{
 			l1 = r1;		l2 = r2;	num=0;
-			t1 = kk[2*i];	t2 = kk[2*i+1];
+			t1 = kk[4*i];	t2 = kk[4*i+1];
+			b1 = kk[4*i+2];	b2 = kk[4*i+3];
 			// right edge
-			f1 = a->v(i+1,j-1,ak);	f2 = a->v(i+1,j,ak);
-			d1 = mgl_d(v1,f1,f2);
-			r1 = mgl_add_pnt(gr,d1,x,y,z,i+1,j-1,i+1,j,c);
-			d2 = mgl_d(v2,f1,f2);
-			r2 = mgl_add_pnt(gr,d1,x,y,z,i+1,j-1,i+1,j,c);
-			if(d1>d2)	{	u1=r1;	r1=r2;	r2=u1;	}
+			mgl_add_range(gr,a,x,y,z, i+1,j-1,0,1, c,r1,r2, ak,v1,v2);
 			// top edge
-			f1 = a->v(i,j,ak);		//f2 = a->v(i+1,j,ak);	// f2 is the same
-			d1 = mgl_d(v1,f1,f2);
-			u1 = mgl_add_pnt(gr,d1,x,y,z,i,j,i+1,j,c);
-			if(u1<0 && f1>=v2 && f1<=v1)
-			{	d1=0;	u1 = mgl_add_pnt(gr,0,x,y,z,i,j,i,j,c);	}
-			d2 = mgl_d(v2,f1,f2);
-			u2 = mgl_add_pnt(gr,d1,x,y,z,i,j,i+1,j,c);
-			if(u2<0 && f2>=v2 && f2<=v1)
-			{	d2=1;	u2 = mgl_add_pnt(gr,0,x,y,z,i+1,j,i+1,j,c);	}
-			if(d1<d2)	{	kk[2*i]=u1;	kk[2*i+1]=u2;	}
-			else		{	kk[2*i]=u2;	kk[2*i+1]=u1;	}
+			mgl_add_range(gr,a,x,y,z, i,j,1,0, c,u1,u2, ak,v1,v2);
+			kk[4*i]=u1;		kk[4*i+1]=u2;
+			mgl_add_edges(gr,a,x,y,z, i,j,1,0, c,d1,d2, ak,v1,v2);
+			kk[4*i+2]=d1;	kk[4*i+3]=d2;
 			// collect points
-			if(t1>=0)	pos[num++] = t1;	if(t2>=0)	pos[num++] = t2;
-			if(r1>=0)	pos[num++] = r1;	if(r2>=0)	pos[num++] = r2;
-			if(u2>=0)	pos[num++] = u2;	if(u1>=0)	pos[num++] = u1;
-			if(l2>=0)	pos[num++] = l2;	if(l1>=0)	pos[num++] = l1;
+			if(b1>=0)	p[num++] = b1;	if(t1>=0)	p[num++] = t1;
+			if(t2>=0)	p[num++] = t2;	if(b2>=0)	p[num++] = b2;
+			if(r1>=0)	p[num++] = r1;	if(r2>=0)	p[num++] = r2;
+			if(d2>=0)	p[num++] = d2;	if(u2>=0)	p[num++] = u2;
+			if(u1>=0)	p[num++] = u1;	if(d1>=0)	p[num++] = d1;
+			if(l2>=0)	p[num++] = l2;	if(l1>=0)	p[num++] = l1;
 			// draw it
-			if(num==4)	gr->quad_plot(pos[0],pos[1],pos[2],pos[3]);
-			else if(num==3)	gr->trig_plot(pos[0],pos[1],pos[2]);
+			if(num<3)	continue;
+			if(num==4)	gr->quad_plot(p[0],p[1],p[3],p[2]);
+			else if(num==3)	gr->trig_plot(p[0],p[1],p[2]);
 			else if(num==5)
 			{
-				gr->quad_plot(pos[0],pos[1],pos[2],pos[3]);
-				gr->trig_plot(pos[0],pos[3],pos[4]);
+				gr->quad_plot(p[0],p[1],p[3],p[2]);
+				gr->trig_plot(p[0],p[3],p[4]);
 			}
 			else if(num==6)
 			{
-				gr->quad_plot(pos[0],pos[1],pos[2],pos[3]);
-				gr->quad_plot(pos[0],pos[3],pos[4],pos[5]);
+				gr->quad_plot(p[0],p[1],p[3],p[2]);
+				gr->quad_plot(p[0],p[3],p[5],p[4]);
 			}
 		}
 	}
@@ -974,7 +988,7 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float c
 	register long i,j,k;
 	float fi,si,co;
 	long p1,p2,p3,p4;
-	gr->ReserveN(pc*82);
+	if(wire)	gr->ReserveC(pc*82);	else	gr->ReserveN(pc*82);
 	for(i=0;i<pc;i++)
 	{
 		k = mgl_find_prev(i,pc,nn);
@@ -982,24 +996,25 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float c
 		q1 = k<0 ? ff[nn[i]]-ff[i]  : (ff[nn[i]]-ff[k])*0.5;
 		q2 = nn[nn[i]]<0 ? ff[nn[i]]-ff[i]  : (ff[nn[nn[i]]]-ff[i])*0.5;
 
-		p = a*ff[i].y + c*ff[i].x;			gr->ScalePoint(p);	p1 = gr->AddPntN(p,cc,q1^b);
-		p = a*ff[nn[i]].y + c*ff[nn[i]].x;	gr->ScalePoint(p);	p2 = gr->AddPntN(p,cc,q2^b);
-		if(wire)	gr->line_plot(p1,p2,true);
+		p = a*ff[i].y + c*ff[i].x;			gr->ScalePoint(p);
+		p1 = wire ? gr->AddPntC(p,cc) : gr->AddPntN(p,cc,q1^b);
+		p = a*ff[nn[i]].y + c*ff[nn[i]].x;	gr->ScalePoint(p);
+		p2 = wire ? gr->AddPntC(p,cc) : gr->AddPntN(p,cc,q2^b);
+		if(wire)	gr->line_plot(p1,p2);
 
 		for(j=1;j<41;j++)
 		{
 			p3 = p1;	p4 = p2;
-			fi = j*M_PI/40;		si = sin(fi);	co = cos(fi);
+			fi = j*M_PI/20;		si = sin(fi);	co = cos(fi);
 			p = a*ff[i].y + b*(si*ff[i].x) +  c*(co*ff[i].x);
-			gr->ScalePoint(p);	p1 = gr->AddPntN(p,cc,q1^(b*co-c*si));
+			gr->ScalePoint(p);
+			p1 = wire ?	gr->AddPntC(p,cc) : gr->AddPntN(p,cc,q1^(b*co-c*si));
 			p = a*ff[nn[i]].y + b*(si*ff[nn[i]].x) +  c*(co*ff[nn[i]].x);
-			gr->ScalePoint(p);	p2 = gr->AddPntN(p,cc,q2^(b*co-c*si));
+			gr->ScalePoint(p);
+			p2 = wire ?	gr->AddPntC(p,cc) : gr->AddPntN(p,cc,q2^(b*co-c*si));
 			if(wire)
-			{
-				gr->line_plot(p1,p2,true);
-				gr->line_plot(p3,p1,true);
-				gr->line_plot(p4,p2,true);
-			}
+			{	gr->line_plot(p1,p2);	gr->line_plot(p1,p3);
+				gr->line_plot(p4,p2);	gr->line_plot(p4,p3);	}
 			else	gr->quad_plot(p3,p4,p1,p2);
 		}
 	}
@@ -1009,7 +1024,7 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float c
 void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir,long ak,bool wire)
 {
 	long n=a->GetNx(), m=a->GetNy();
-	if(n<2 || m<2 || x->GetNx()*x->GetNx()!=n*m || y->GetNx()*y->GetNx()!=n*m)
+	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m)
 	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
 
 	mglPoint *kk = new mglPoint[2*n*m],*pp = new mglPoint[2*n*m],p;
@@ -1046,28 +1061,36 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir
 	long *nn = new long[pc], *ff = new long[pc];
 	for(i=0;i<pc;i++)	nn[i] = ff[i] = -1;
 	// connect points to line
-	j=-1;
+	long i11,i12,i21,i22,j11,j12,j21,j22;
+	j=-1;	// current point
 	do{
 		if(j>=0)
 		{
-			kx = kk[j].x;	ky = kk[j].y;		i = -1;
+			kx = kk[j].x;	ky = kk[j].y;	i = -1;
+			i11 = long(kx+1e-5);	i12 = long(kx-1e-5);
+			j11 = long(ky+1e-5);	j12 = long(ky-1e-5);
 			for(k=0;k<pc;k++)	// find closest point in grid
 			{
 				if(k==j || k==ff[j] || ff[k]!=-1)	continue;	// point is marked
-				if(fabs(kk[k].x-kx)<1e-5 && fabs(kk[k].y-ky)<1e-5)	{	i=k;	break;	}
+				i21 = long(kk[k].x+1e-5);	i22 = long(kk[k].x-1e-5);
+				j21 = long(kk[k].y+1e-5);	j22 = long(kk[k].y-1e-5);
+				// check if in the same cell
+				register bool cond = (i11==i21 || i11==i22 || i12==i21 || i12==i22) &&
+						(j11==j21 || j11==j22 || j12==j21 || j12==j22);
+				if(cond){	i=k;	break;	}
 			}
-			if(i<0)	j = -1;
-			else				// mark the point
+			if(i<0)	j = -1;	// no free close points
+			else			// mark the point
 			{	nn[j] = i;	ff[i] = j;	j = nn[i]<0 ? i : -1;	}
 		}
 		if(j<0)
 		{
-			for(k=0;k<pc;k++)	if(nn[k]==-1)
+			for(k=0;k<pc;k++)	if(nn[k]==-1)	// first check edges
 			{
 				if(kk[k].x==0 || fabs(kk[k].x-n+1)<1e-5 || kk[k].y==0 || fabs(kk[k].y-m+1)<1e-5)
 				{	nn[k]=-2;	j = k;	break;	}
 			}
-			if(j<0)	for(k=0;k<pc;k++)	if(nn[k]==-1)
+			if(j<0)	for(k=0;k<pc;k++)	if(nn[k]==-1)	// or any points inside
 			{	j = k;	nn[k]=-2;	break;	}
 		}
 	}while(j>=0);

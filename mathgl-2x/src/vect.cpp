@@ -280,58 +280,51 @@ void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mgl
 	long n=10*(ax.nx+ax.ny);
 	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
 
-	mglPoint *pp = (mglPoint *)malloc(n*sizeof(mglPoint)), dp;
-	float *cc = (float *)malloc(n*sizeof(float));
+	mglPoint *pp = new mglPoint[n], dp;
+	float *cc = new float[n];
+	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 
 	float dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=1;
 	if(u<0 || v<0)	{	dt = -dt;	u = -u;		v = -v;		s = -1;}
 	register long k=0,m;
 	bool end = false;
 	do{
-		if(k>=n)	// resize array if need
-		{
-			n += 10*(ax.nx+ax.ny);
-			pp = (mglPoint *)realloc(pp,n*sizeof(mglPoint));
-			cc = (float *)realloc(cc,n*sizeof(float));
-		}
-		// insert point
 		pp[k].x = both ? x.Spline1(u,v,0):x.Spline1(u,0,0);
 		pp[k].y = both ? y.Spline1(u,v,0):y.Spline1(v,0,0);
 		pp[k].z = zVal;
-		gr->ScalePoint(pp[k]);
 		for(m=0;m<k-1;m++)	// determines encircle
-			if(Norm(pp[k]-pp[m])<dt*dt/4.)	{	end = true;	break;	}
+			if(Norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
 		f = ax.Linear1(u,v,0);	g = ay.Linear1(u,v,0);
-		h = hypot(f,g);	cc[k] = gr->GetC(ss,s*h);	h+=1;
+		h = hypot(f,g);	cc[k] = gr->GetC(ss,s*h);
+		if(h<1e-5)	break;	// stationary point
 		k++;
 		// find next point by midpoint method
-		if(h<1e-7)	break;	// stationary point
-		ff[0]=f*dt/h;	gg[0]=g*dt/h;
+		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		e = u+ff[0]/2;	h = v+gg[0]/2;
-		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);	h = 1+hypot(f,g);
-		if(h<1e-7)	break;	// stationary point
-		ff[1]=f*dt/h;	gg[1]=g*dt/h;
+		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);
+		h = 1+hypot(f,g);	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		e = u+ff[1]/2;	h = v+gg[1]/2;
-		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);	h = 1+hypot(f,g);
-		if(h<1e-7)	break;	// stationary point
-		ff[2]=f*dt/h;	gg[2]=g*dt/h;
+		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);
+		h = 1+hypot(f,g);	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		e = u+ff[2];	h = v+gg[2];
-		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);	h = 1+hypot(f,g);
-		if(h<1e-7)	break;	// stationary point
-		ff[3]=f*dt/h;	gg[3]=g*dt/h;
+		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);
+		h = 1+hypot(f,g);	ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
 		v += gg[0]/6+gg[1]/3+gg[2]/3+gg[3]/6;
 		// condition of end
-		end = end || u<0 || v<0 || u>1 || v>1;
+		end = end || k>=n || u<0 || v<0 || u>1 || v>1;
 	} while(!end);
+	if(k<2)	return;
 	long i,j,jj;
-	gr->ReserveC(k);	j = gr->AddPntC(pp[0],cc[0]);
+	gr->ReserveC(k);
+	gr->ScalePoint(pp[0]);	j = gr->AddPntC(pp[0],cc[0]);
 	for(i=1;i<k;i++)
 	{
-		jj=j;	j = gr->AddPntC(pp[i],cc[i]);
+		gr->ScalePoint(pp[i]);	jj=j;
+		j = gr->AddPntC(pp[i],cc[i]);
 		gr->line_plot(jj,j);
 	}
-	free(pp);	free(cc);
+	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
 void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, int num, float zVal)
@@ -468,8 +461,9 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 	static long n=10*(ax.nx+ax.ny);
 	long nn = ax.nx*ax.ny*ax.nz;
 	bool both = x.nx*x.ny*x.nz==nn && y.nx*y.ny*y.nz==nn && z.nx*z.ny*z.nz==nn;
-	mglPoint *pp = (mglPoint *)malloc(n*sizeof(mglPoint));
-	float *cc = (float *)malloc(n*sizeof(float));
+	mglPoint *pp = new mglPoint[n], dp;
+	float *cc = new float[n];
+	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 
 	nn = (ax.nx > ax.ny ? ax.nx : ax.ny);
 	nn = (nn > ax.nz ? nn : ax.nz);
@@ -479,54 +473,46 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 	register long k=0,m;
 	bool end = false;
 	do{
-		if(k>=n)	// resize array if need
-		{
-			n += 10*(ax.nx+ax.ny);
-			pp = (mglPoint *)realloc(pp,n*sizeof(mglPoint));
-			cc = (float *)realloc(cc,n*sizeof(float));
-		}
-		// insert point
 		pp[k].x = both ? x.Spline1(u,v,w):x.Spline1(u,0,0);
 		pp[k].y = both ? y.Spline1(u,v,w):y.Spline1(v,0,0);
 		pp[k].z = both ? z.Spline1(u,v,w):z.Spline1(w,0,0);
-		gr->ScalePoint(pp[k]);
 		for(m=0;m<k-1;m++)	// determines encircle
-			if(Norm(pp[k]-pp[m])<dt*dt/4.)	{	end = true;	break;	}
+			if(Norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
 		e = ax.Linear1(u,v,w);	f = ay.Linear1(u,v,w);	g = az.Linear1(u,v,w);
-		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(ss,s*h);	h+=1;
+		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(ss,s*h);
+		if(h<1e-5)	break;	// stationary point
 		k++;
 		// find next point by midpoint method
-		if(h<1e-7)	break;	// stationary point
-		ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
+		h+=1;	ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		u1 = u+ee[0]/2;	v1 = v+ff[0]/2;	w1 = w+gg[0]/2;
 		e = ax.Linear1(u1,v1,w1);	f = ay.Linear1(u1,v1,w1);
 		g = az.Linear1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
-		if(h<1e-7)	break;	// stationary point
 		ee[1]=e*dt/h;	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		u1 = u+ee[1]/2;	v1 = v+ff[1]/2;	w1 = w+gg[1]/2;
 		e = ax.Linear1(u1,v1,w1);	f = ay.Linear1(u1,v1,w1);
 		g = az.Linear1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
-		if(h<1e-7)	break;	// stationary point
 		ee[2]=e*dt/h;	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		u1 = u+ee[2];	v1 = v+ff[2];	w1 = w+gg[2];
 		e = ax.Linear1(u1,v1,w1);	f = ay.Linear1(u1,v1,w1);
 		g = az.Linear1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
-		if(h<1e-7)	break;	// stationary point
 		ee[3]=e*dt/h;	ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ee[0]/6+ee[1]/3+ee[2]/3+ee[3]/6;
 		v += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
 		w += gg[0]/6+gg[1]/3+gg[2]/3+gg[3]/6;
 		// condition of end
-		end = end || u<0 || v<0 || u>1 || v>1 || w<0 || w>1;
+		end = end || k>=n || u<0 || v<0 || u>1 || v>1 || w<0 || w>1;
 	} while(!end);
+	if(k<2)	return;
 	long i,j,jj;
-	gr->ReserveC(k);	j = gr->AddPntC(pp[0],cc[0]);
+	gr->ReserveC(k);
+	gr->ScalePoint(pp[0]);	j = gr->AddPntC(pp[0],cc[0]);
 	for(i=1;i<k;i++)
 	{
-		jj=j;	j = gr->AddPntC(pp[i],cc[i]);
+		gr->ScalePoint(pp[k]);	jj=j;
+		j = gr->AddPntC(pp[i],cc[i]);
 		gr->line_plot(jj,j);
 	}
-	free(pp);	free(cc);
+	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
 void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, int num)
@@ -739,8 +725,9 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 	long n=10*(ax.nx+ax.ny);
 	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
 
-	mglPoint *pp = (mglPoint *)malloc(n*sizeof(mglPoint)), dp;
-	float *cc = (float *)malloc(n*sizeof(float));
+	mglPoint *pp = new mglPoint[n], dp;
+	float *cc = new float[n];
+	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 
 	float dt = 0.5/(ax.nx > ax.ny ? ax.nx : ax.ny),e,f,g,ff[4],gg[4],h,s=1;
 	float ss = 	4/mgl_ipow(gr->Max.c - gr->Min.c,2);
@@ -748,69 +735,65 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 	register long k=0,m;
 	bool end = false;
 	do{
-		if(k>=n)	// resize array if need
-		{
-			n += 10*(ax.nx+ax.ny);
-			pp = (mglPoint *)realloc(pp,n*sizeof(mglPoint));
-			cc = (float *)realloc(cc,n*sizeof(float));
-		}
-		// insert point
 		pp[k].x = both ? x.Spline1(u,v,0):x.Spline1(u,0,0);
 		pp[k].y = both ? y.Spline1(u,v,0):y.Spline1(v,0,0);
 		pp[k].z = zVal;
-		gr->ScalePoint(pp[k]);
 		for(m=0;m<k-1;m++)	// determines encircle
-			if(Norm(pp[k]-pp[m])<dt*dt/4.)	{	end = true;	break;	}
+			if(Norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
 		f = ax.Linear1(u,v,0);	g = ay.Linear1(u,v,0);
-		h = hypot(f,g);	cc[k] = gr->GetC(sc,s*h);	h+=1;
+		h = hypot(f,g);	cc[k] = gr->GetC(sc,s*h);
 		pp[k].c = r0>0 ? r0*sqrt(1e-2+ss*h*h)/2 : -r0/sqrt(1e-2+ss*h*h)/5;
+		if(h<1e-5)	break;	// stationary point
 		k++;
 		// find next point by midpoint method
-		if(h<1e-7)	break;	// stationary point
-		ff[0]=f*dt/h;	gg[0]=g*dt/h;
+		h+=1;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		e = u+ff[0]/2;	h = v+gg[0]/2;
 		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);	h = 1+hypot(f,g);
-		if(h<1e-7)	break;	// stationary point
 		ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		e = u+ff[1]/2;	h = v+gg[1]/2;
 		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);	h = 1+hypot(f,g);
-		if(h<1e-7)	break;	// stationary point
 		ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		e = u+ff[2];	h = v+gg[2];
 		f = ax.Linear1(e,h,0);	g = ay.Linear1(e,h,0);	h = 1+hypot(f,g);
-		if(h<1e-7)	break;	// stationary point
 		ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
 		v += gg[0]/6+gg[1]/3+gg[2]/3+gg[3]/6;
 		// condition of end
-		end = end || u<0 || v<0 || u>1 || v>1;
+		end = end || k>=n || u<0 || v<0 || u>1 || v>1;
 	} while(!end);
-	register long i,j, i0;
-	const int num=41;
 	if(k<2)	return;	// nothing to plot
-	long pos = gr->ReserveN(num*k);
-	mglPoint p,l,t,q,d;
-	for(i=0;i<k;i++)
+
+	const int num=41;
+	long i,j,*id=new long[2*num];
+	mglPoint p,l=pp[1]-pp[0],t,q,d;
+	t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
+	float si,co,fi, rr=pp[0].c,dr=l.c;
+	gr->ReserveN(num*k);
+
+	for(j=0;j<num;j++)
 	{
-		if(i==0)		l = pp[1]-pp[0];
-		else if(i==k-1)	l = pp[i]-pp[i-1];
-		else	l = pp[i+1]-pp[i-1];
+		fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
+		p = pp[0] + t*(rr*co) + q*(rr*si);
+		d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
+		gr->ScalePoint(p);	id[j] = gr->AddPntN(p,cc[0],d);
+	}
+	for(i=1;i<k;i++)
+	{
+		if(i<k-1)	l = pp[i+1]-pp[i-1];
+		else	l = pp[i]-pp[i-1];
 		t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
-		float si,co,ff, rr=pp[i].c,dr=l.c;
+		rr=pp[i].c;	dr=l.c;
+		memcpy(id+num,id,num*sizeof(long));
 		for(j=0;j<num;j++)
 		{
-			ff = j*2*M_PI/(num-1);	co = cos(ff);	si = sin(ff);
+			fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
 			p = pp[i] + t*(rr*co) + q*(rr*si);
 			d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-			gr->ScalePoint(p);	gr->AddPntN(p,cc[i],d);
+			gr->ScalePoint(p);	id[j] = gr->AddPntN(p,cc[i],d);
+			if(j>0)	gr->quad_plot(id[j-1],id[j],id[j+num-1],id[j+num]);
 		}
 	}
-	for(j=0;j<num-1;j++)	for(i=0;i<k-1;i++)
-	{
-		i0 = pos+j+num*i;
-		gr->quad_plot(i0,i0+1,i0+1+num,i0+num);
-	}
-	free(pp);	free(cc);
+	delete []pp;	delete []cc;	delete []id;
 }
 //-----------------------------------------------------------------------------
 void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, float r0, int num, float zVal)
@@ -884,8 +867,9 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 	static long n=10*(ax.nx+ax.ny);
 	long nn = ax.nx*ax.ny*ax.nz;
 	bool both = x.nx*x.ny*x.nz==nn && y.nx*y.ny*y.nz==nn && z.nx*z.ny*z.nz==nn;
-	mglPoint *pp = (mglPoint *)malloc(n*sizeof(mglPoint));
-	float *cc = (float *)malloc(n*sizeof(float));
+	mglPoint *pp = new mglPoint[n], dp;
+	float *cc = new float[n];
+	mglPoint dx(1/fabs(gr->Max.x-gr->Min.x),1/fabs(gr->Max.y-gr->Min.y),1/fabs(gr->Max.z-gr->Min.z));
 
 	nn = (ax.nx > ax.ny ? ax.nx : ax.ny);
 	nn = (nn > ax.nz ? nn : ax.nz);
@@ -895,70 +879,68 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 	register long k=0,m;
 	bool end = false;
 	do{
-		if(k>=n)	// resize array if need
-		{
-			n += 10*(ax.nx+ax.ny);
-			pp = (mglPoint *)realloc(pp,n*sizeof(mglPoint));
-			cc = (float *)realloc(cc,n*sizeof(float));
-		}
-		// insert point
 		pp[k].x = both ? x.Spline1(u,v,w):x.Spline1(u,0,0);
 		pp[k].y = both ? y.Spline1(u,v,w):y.Spline1(v,0,0);
 		pp[k].z = both ? z.Spline1(u,v,w):z.Spline1(w,0,0);
-		gr->ScalePoint(pp[k]);
 		for(m=0;m<k-1;m++)	// determines encircle
-			if(Norm(pp[k]-pp[m])<dt*dt/4.)	{	end = true;	break;	}
+			if(Norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
 		e = ax.Linear1(u,v,w);	f = ay.Linear1(u,v,w);	g = az.Linear1(u,v,w);
-		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(sc,s*h);	h+=1;
+		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(sc,s*h);
+		if(h<1e-5)	break;	// stationary point
 		k++;
 		// find next point by midpoint method
-		if(h<1e-7)	break;	// stationary point
-		ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
+		h+=1;	ee[0]=e*dt/h;	ff[0]=f*dt/h;	gg[0]=g*dt/h;
 		u1 = u+ee[0]/2;	v1 = v+ff[0]/2;	w1 = w+gg[0]/2;
 		e = ax.Linear1(u1,v1,w1);	f = ay.Linear1(u1,v1,w1);
 		g = az.Linear1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
-		if(h<1e-7)	break;	// stationary point
 		ee[1]=e*dt/h;	ff[1]=f*dt/h;	gg[1]=g*dt/h;
 		u1 = u+ee[1]/2;	v1 = v+ff[1]/2;	w1 = w+gg[1]/2;
 		e = ax.Linear1(u1,v1,w1);	f = ay.Linear1(u1,v1,w1);
 		g = az.Linear1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
-		if(h<1e-7)	break;	// stationary point
 		ee[2]=e*dt/h;	ff[2]=f*dt/h;	gg[2]=g*dt/h;
 		u1 = u+ee[2];	v1 = v+ff[2];	w1 = w+gg[2];
 		e = ax.Linear1(u1,v1,w1);	f = ay.Linear1(u1,v1,w1);
 		g = az.Linear1(u1,v1,w1);	h = 1+sqrt(e*e+f*f+g*g);
-		if(h<1e-7)	break;	// stationary point
 		ee[3]=e*dt/h;	ff[3]=f*dt/h;	gg[3]=g*dt/h;
 		u += ee[0]/6+ee[1]/3+ee[2]/3+ee[3]/6;
 		v += ff[0]/6+ff[1]/3+ff[2]/3+ff[3]/6;
 		w += gg[0]/6+gg[1]/3+gg[2]/3+gg[3]/6;
 		// condition of end
-		end = end || u<0 || v<0 || u>1 || v>1 || w<0 || w>1;
+		end = end || k>=n || u<0 || v<0 || u>1 || v>1 || w<0 || w>1;
 	} while(!end);
-	register long i,j, i0;
-	const int num=41;
 	if(k<2)	return;	// nothing to plot
-	long pos = gr->ReserveN(num*k);
-	mglPoint p,l,t,q;
-	for(i=0;i<k;i++)
+
+	const int num=41;
+	long i,j,*id=new long[2*num];
+	mglPoint p,l=pp[1]-pp[0],t,q,d;
+	t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
+	float si,co,fi, rr=pp[0].c,dr=l.c;
+	gr->ReserveN(num*k);
+
+	for(j=0;j<num;j++)
 	{
-		if(i==0)		l = pp[1]-pp[0];
-		else if(i==k-1)	l = pp[i]-pp[i-1];
-		else	l = pp[i+1]-pp[i-1];
-		l = l/Norm(l);	t = !l;		q = t^l;
-		float rr=pp[i].c;
+		fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
+		p = pp[0] + t*(rr*co) + q*(rr*si);
+		d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
+		gr->ScalePoint(p);	id[j] = gr->AddPntN(p,cc[0],d);
+	}
+	for(i=1;i<k;i++)
+	{
+		if(i<k-1)	l = pp[i+1]-pp[i-1];
+		else	l = pp[i]-pp[i-1];
+		t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
+		rr=pp[i].c;	dr=l.c;
+		memcpy(id+num,id,num*sizeof(long));
 		for(j=0;j<num;j++)
 		{
-			p = pp[i] + t*(rr*cos(j*2*M_PI/(num-1))) + q*(rr*sin(j*2*M_PI/(num-1)));
-			gr->ScalePoint(p);	gr->AddPntN(p,cc[i],p-q);
+			fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
+			p = pp[i] + t*(rr*co) + q*(rr*si);
+			d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
+			gr->ScalePoint(p);	id[j] = gr->AddPntN(p,cc[i],d);
+			if(j>0)	gr->quad_plot(id[j-1],id[j],id[j+num-1],id[j+num]);
 		}
 	}
-	for(j=0;j<num-1;j++)	for(i=0;i<n-1;i++)
-	{
-		i0 = pos+j+num*i;
-		gr->quad_plot(i0,i0+1,i0+1+num,i0+num);
-	}
-	free(pp);	free(cc);
+	delete []pp;	delete []cc;	delete []id;
 }
 //-----------------------------------------------------------------------------
 void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, float r0, int num)
