@@ -559,7 +559,7 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
 			// NOTE: before was c.a ~ a^2 !!!
 			gr->ScalePoint(p);
-			pos[i+n*j] = gr->AddPntN(p,gr->GetC(ss,p.z),q^s,gr->GetA(c->v(i,j,k)));
+			pos[i+n*j] = gr->AddPntN(p,gr->GetC(ss,z->v(i,j,k)),q^s,gr->GetA(c->v(i,j,k)));
 		}
 		mgl_surf_plot(gr,pos,n,m);
 		if(sch && strchr(sch,'#'))
@@ -750,9 +750,9 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch)
 			gr->ScalePoint(p1);	k1 = gr->AddPntN(p1,c,t);
 			p2 = mglPoint(x1+x2*sm+x4*ss+x3*ss*sm, y1+y2*sm+y4*ss+y3*ss*sm, zz);
 			gr->ScalePoint(p2);	k2 = gr->AddPntN(p2,c,t);
-			p3 = mglPoint(x1+x2*sm+x4*sm+x3*sm*sm, y1+y2*sm+y4*sm+y3*sm*sm, zz);
+			p3 = mglPoint(x1+x2*ss+x4*sm+x3*ss*sm, y1+y2*ss+y4*sm+y3*ss*sm, zz);
 			gr->ScalePoint(p3);	k3 = gr->AddPntN(p3,c,t);
-			p4 = mglPoint(x1+x2*ss+x4*sm+x3*ss*sm, y1+y2*ss+y4*sm+y3*ss*sm);
+			p4 = mglPoint(x1+x2*sm+x4*sm+x3*sm*sm, y1+y2*sm+y4*sm+y3*sm*sm, zz);
 			gr->ScalePoint(p4);	k4 = gr->AddPntN(p4,c,t);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
@@ -799,7 +799,7 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, int 
 
 	float xdy,xdx,ydx,ydy,xx,yy;
 	mglPoint p,t=mglPoint(NAN);
-	long *pos = new long[n*m];
+	long *pos = new long[n*m], kk=x->GetNz()>=ks?ks:0;
 	gr->ReserveN(n*m);
 
 	for(j=0;j<m;j++)	for(i=0;i<n;i++)
@@ -813,10 +813,20 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, int 
 		xdx = xdx*ydy - xdy*ydx;	// Jacobian
 
 		p = mglPoint(ax->v(i,j,ks), ay->v(i,j,ks), xdx);
-		xx = (x->v(i,j,ks) - gr->Min.x)/(gr->Max.x - gr->Min.x);
-		yy = (y->v(i,j,ks) - gr->Min.y)/(gr->Max.y - gr->Min.y);
+		if(both)
+		{
+			xx = (x->v(i,j,kk) - gr->Min.x)/(gr->Max.x - gr->Min.x);
+			yy = (y->v(i,j,kk) - gr->Min.y)/(gr->Max.y - gr->Min.y);
+		}
+		else
+		{
+			xx = (x->v(i) - gr->Min.x)/(gr->Max.x - gr->Min.x);
+			yy = (y->v(j) - gr->Min.y)/(gr->Max.y - gr->Min.y);
+		}
+		if(xx<0)	xx=0;	if(xx>=1)	xx=1/MGL_FLT_EPS;
+		if(yy<0)	yy=0;	if(yy>=1)	yy=1/MGL_FLT_EPS;
 		gr->ScalePoint(p);
-		pos[i+n*j] = gr->AddPntN(p,gr->GetC(ss,xx),t,yy);
+		pos[i+n*j] = gr->AddPntN(p,gr->GetC(ss,xx,false),t,yy);
 	}
 	if(pnts)
 	{

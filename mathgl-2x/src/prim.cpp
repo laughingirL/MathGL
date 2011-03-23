@@ -29,7 +29,7 @@
 void mgl_mark(HMGL gr, float x,float y,float z,const char *mark)
 {
 	char mk = gr->SetPenPal(mark);
-	mglPoint p(x,y,z);	gr->ScalePoint(p);
+	mglPoint p(x,y,z);	gr->ScalePoint(p,false);
 	gr->mark_plot(gr->AddPntC(p,gr->CDef),mk);
 }
 //-----------------------------------------------------------------------------
@@ -39,7 +39,7 @@ void mgl_mark_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, const char *pen,int 
 //-----------------------------------------------------------------------------
 void mgl_ball(HMGL gr, float x,float y,float z)
 {
-	mglPoint p(x,y,z);	gr->ScalePoint(p);
+	mglPoint p(x,y,z);	gr->ScalePoint(p,false);
 	gr->mark_plot(gr->AddPntC(p,gr->AddTexture('r')),'.');
 }
 //-----------------------------------------------------------------------------
@@ -57,7 +57,7 @@ void mgl_line(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 	register long i,k1,k2;
 	register float s;
 	gr->ReserveC(n);
-	gr->ScalePoint(p);	k1 = gr->AddPntC(p,gr->CDef);
+	gr->ScalePoint(p,false);	k1 = gr->AddPntC(p,gr->CDef);
 	for(i=1;i<n;i++)
 	{
 		s = i/float(n-1);	p = p1*(1-s)+p2*s;	k2 = k1;
@@ -107,17 +107,17 @@ void mgl_error_box(HMGL gr, float x, float y, float z, float ex, float ey, float
 	mglPoint p(x,y,z), q;
 	gr->ReserveC(7);
 	long k1,k2;
-	q = p;	q.x += ex;	gr->ScalePoint(q);	k1 = gr->AddPntC(q,gr->CDef);
-	q = p;	q.x -= ex;	gr->ScalePoint(q);	k2 = gr->AddPntC(q,gr->CDef);
+	q = p;	q.x += ex;	gr->ScalePoint(q,false);	k1 = gr->AddPntC(q,gr->CDef);
+	q = p;	q.x -= ex;	gr->ScalePoint(q,false);	k2 = gr->AddPntC(q,gr->CDef);
 	gr->line_plot(k1,k2);	gr->arrow_plot(k1,k2,'I');	gr->arrow_plot(k2,k1,'I');
-	q = p;	q.y += ey;	gr->ScalePoint(q);	k1 = gr->AddPntC(q,gr->CDef);
-	q = p;	q.y -= ey;	gr->ScalePoint(q);	k2 = gr->AddPntC(q,gr->CDef);
+	q = p;	q.y += ey;	gr->ScalePoint(q,false);	k1 = gr->AddPntC(q,gr->CDef);
+	q = p;	q.y -= ey;	gr->ScalePoint(q,false);	k2 = gr->AddPntC(q,gr->CDef);
 	gr->line_plot(k1,k2);	gr->arrow_plot(k1,k2,'I');	gr->arrow_plot(k2,k1,'I');
-	q = p;	q.z += ez;	gr->ScalePoint(q);	k1 = gr->AddPntC(q,gr->CDef);
-	q = p;	q.z -= ez;	gr->ScalePoint(q);	k2 = gr->AddPntC(q,gr->CDef);
+	q = p;	q.z += ez;	gr->ScalePoint(q,false);	k1 = gr->AddPntC(q,gr->CDef);
+	q = p;	q.z -= ez;	gr->ScalePoint(q,false);	k2 = gr->AddPntC(q,gr->CDef);
 	gr->line_plot(k1,k2);	gr->arrow_plot(k1,k2,'I');	gr->arrow_plot(k2,k1,'I');
 	if(mk)
-	{	gr->ScalePoint(p);	k1 = gr->AddPntC(p,gr->CDef);	gr->mark_plot(k1,mk);	}
+	{	gr->ScalePoint(p,false);	k1 = gr->AddPntC(p,gr->CDef);	gr->mark_plot(k1,mk);	}
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -146,11 +146,20 @@ void mgl_face(HMGL gr, float x0, float y0, float z0, float x1, float y1, float z
 	q2 = (p1-p2)^(p4-p2);	q3 = (p1-p3)^(p4-p3);
 	gr->ReserveN(4);
 	long k1,k2,k3,k4;
-	gr->ScalePoint(p1);		k1 = gr->AddPntN(p1,c1,q1);
-	gr->ScalePoint(p2);		k2 = gr->AddPntN(p2,c2,q2);
-	gr->ScalePoint(p3);		k3 = gr->AddPntN(p3,c3,q3);
-	gr->ScalePoint(p4);		k4 = gr->AddPntN(p4,c4,q4);
+	gr->ScalePoint(p1,false);		k1 = gr->AddPntN(p1,c1,q1);
+	gr->ScalePoint(p2,false);		k2 = gr->AddPntN(p2,c2,q2);
+	gr->ScalePoint(p3,false);		k3 = gr->AddPntN(p3,c3,q3);
+	gr->ScalePoint(p4,false);		k4 = gr->AddPntN(p4,c4,q4);
 	gr->quad_plot(k1,k2,k3,k4);
+	if(strchr(stl,'#'))
+	{
+		gr->ReserveC(4);
+		pal = gr->AddTexture('k');
+		k1=gr->CopyNtoC(k1,pal);	k2=gr->CopyNtoC(k2,pal);
+		k3=gr->CopyNtoC(k3,pal);	k4=gr->CopyNtoC(k4,pal);
+		gr->line_plot(k1,k2);		gr->line_plot(k1,k3);
+		gr->line_plot(k3,k4);		gr->line_plot(k2,k4);
+	}
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -198,19 +207,19 @@ void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 	gr->ReserveN(edge?166:82);
 	if(edge)
 	{
-		p = p1;	gr->ScalePoint(p);	k1=gr->AddPntN(p,c1,d);
-		p = p2;	gr->ScalePoint(p);	k2=gr->AddPntN(p,c2,d);
+		p = p1;	gr->ScalePoint(p,false);	k1=gr->AddPntN(p,c1,d);
+		p = p2;	gr->ScalePoint(p,false);	k2=gr->AddPntN(p,c2,d);
 	}
 	float f,si,co, dr=r2-r1;
 	register long i;
 	for(i=0;i<41;i++)
 	{
 		f = i*M_PI/20;	co = cos(f);	si = sin(f);
-		p = p1+(r1*co)*a+(r1*si)*b;		gr->ScalePoint(p);
+		p = p1+(r1*co)*a+(r1*si)*b;		gr->ScalePoint(p,false);
 		q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);
 		kk[i] = gr->AddPntN(p,c1,q);
 		if(edge)	kk[i+82] = gr->AddPntN(p,c1,d);
-		p = p2+(r2*co)*a+(r2*si)*b;		gr->ScalePoint(p);
+		p = p2+(r2*co)*a+(r2*si)*b;		gr->ScalePoint(p,false);
 		kk[i+41] = gr->AddPntN(p,c2,q);
 		if(edge)	kk[i+123] = gr->AddPntN(p,c2,d);
 	}
@@ -261,7 +270,7 @@ void mgl_drop(HMGL gr, mglPoint p, mglPoint q, float r, float c, float sh, float
 		dr = r*a/(1+sh)*(co*(1.+sh*co) - sh*si*si);
 		x = rr*cos(v);	y = rr*sin(v);
 		z = r*(1+sh)*(co+sh);
-		pp = p + p1*x + p2*y + q*z;	gr->ScalePoint(pp);
+		pp = p + p1*x + p2*y + q*z;	gr->ScalePoint(pp,false);
 		qq = (p1*sin(v)-p2*cos(v))^(p1*(dr*cos(v)) + p2*(dr*sin(v)) - q*(r*(1+sh)*si));
 		gr->AddPntN(pp,c,qq);
 	}
@@ -303,10 +312,10 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch,float
 
 	for(i=0,xm=0;i<m*n*ax->GetNz();i++)
 	{
-		ym = (ax->v(i))*(ax->v(i))+(ay->v(i))*(ay->v(i));
+		ym = hypot(ax->vthr(i),ay->vthr(i));
 		xm = xm>ym ? xm : ym;
 	}
-	xm = 1./(xm==0 ? 1:sqrt(xm));
+	xm = 1./MGL_FLT_EPS/(xm==0 ? 1:xm);
 	mglPoint p,q;
 
 	for(k=0;k<ax->GetNz();k++)
@@ -314,16 +323,17 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch,float
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(ax->GetNz()-1);
 		for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 		{
-			float xx=GetX(x,i,j,k).x, yy=GetY(x,i,j,k).x;
+			float xx=GetX(x,i,j,k).x, yy=GetY(y,i,j,k).x;
 			dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
 			dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
 			dx *= tx;	dy *= ty;
 
 			p = mglPoint(xx, yy, zVal);
-			if(!gr->ScalePoint(p))	continue;	//	don't plot unvisible drops
+//			if(!gr->ScalePoint(p))	continue;	//	don't plot unvisible drops
 			q = inv ? mglPoint(-ax->v(i,j,k),-ay->v(i,j,k),0) : mglPoint(ax->v(i,j,k),ay->v(i,j,k),0);
 			p = mglPoint(xx, yy, zVal);		dd = Norm(q);
-			mgl_drop(gr,p,q,(dx<dy?dx:dy)/2,gr->GetC(ss,2*dd*xm-1,false),dd*xm,1);
+			float ccc = gr->GetC(ss,dd*xm,false);
+			mgl_drop(gr,p,q,(dx<dy?dx:dy)/2,ccc,dd*xm,1);
 		}
 	}
 	gr->EndGroup();

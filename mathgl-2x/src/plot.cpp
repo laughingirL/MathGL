@@ -484,10 +484,12 @@ void mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen, int insid
 	float xx,f1,f2,f3,f4;
 
 	gr->SetPenPal(pen,&pal);	gr->ReserveN(2*n*m);
+	long s=gr->AddTexture(pen,1);
 	for(j=0;j<m;j++)
 	{
 		gr->NextColor(pal);	c2=c1=gr->CDef;
-		if(gr->GetNumPal(pal)==2*m)	c2 = gr->NextColor(pal);
+		if(gr->GetNumPal(pal)==2*m)
+		{	c1 = s+2*j/(2*m-1.);	c2 = s+(2*j+0.999)/(2*m-1);	}
 		mx = j<x->GetNy() ? j:0;
 		float z0 = gr->Min.z + (m-1-j)*(gr->Max.z-gr->Min.z)/m;
 
@@ -999,7 +1001,7 @@ void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 
 	mglPoint p1,p2;
 	long n1,n2,pal;
-	gr->SetPenPal(pen,&pal);	gr->ReserveC(18*n);
+	gr->SetPenPal(pen,&pal);	gr->NextColor(pal);	gr->ReserveC(18*n);
 	for(i=0;i<n;i++)
 	{
 		i0 = 54*i;
@@ -1130,7 +1132,7 @@ void face_plot(mglBase *gr, mglPoint o, mglPoint d1, mglPoint d2, float c, bool 
 	register long i,j,i0,n=num+1;
 	long *id=new long[n*n];
 	gr->ReserveN(n*n);
-	for(i=0;i<n;i++)	for(j=0;j<n;j++)
+	for(j=0;j<n;j++)	for(i=0;i<n;i++)
 	{
 		p = o+d1*i+d2*j;	gr->ScalePoint(p);
 		id[i+n*j] = gr->AddPntN(p,c,nn);
@@ -1148,7 +1150,7 @@ void face_plot(mglBase *gr, mglPoint o, mglPoint d1, mglPoint d2, float c, bool 
 		jj[2] = jj[3] = gr->CopyNtoC(id[n*n-1],gr->CDef);
 		for(i=1;i<n;i++)
 		{
-			memcpy(jj+4,jj,4*sizeof(float));
+			memcpy(jj+4,jj,4*sizeof(long));
 			jj[0] = gr->CopyNtoC(id[i],gr->CDef);
 			jj[1] = gr->CopyNtoC(id[n*i],gr->CDef);
 			jj[2] = gr->CopyNtoC(id[n*n-1-i],gr->CDef);
@@ -1343,7 +1345,7 @@ void mgl_tube(HMGL gr, HCDT y, float rr, const char *pen)
 	x.Fill(gr->Min.x,gr->Max.x);
 	r.Fill(rr,rr);
 	z.Fill(gr->Min.z,gr->Min.z);
-	mgl_tube_xyzr(gr,&x,y,&x,&r,pen);
+	mgl_tube_xyzr(gr,&x,y,&z,&r,pen);
 }
 //-----------------------------------------------------------------------------
 void mgl_tube_xy(HMGL gr, HCDT x, HCDT y, float rr, const char *pen)

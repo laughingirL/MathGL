@@ -35,23 +35,18 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
-//	mglData ys(3,2);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-//	mglData y;		mgls_prepare1d(&y);
-//	mglData a;		mgls_prepare2d(&a);
-	mglData a,b;	mgls_prepare2v(&a,&b);
-//	gr->Rotate(40,60);	gr->Light(true);
-	gr->Box();
-	mglData v(2);	v.a[0]=-0.6;	v.a[1]=-0.3;
-//	gr->Mesh(a,"k");	gr->Cont(v,a,"r");
-
-	gr->ContF(v,a);
-//	gr->Flow(a,b);
-
-//	gr->Light(true);
-//	gr->Rotate(40,60);
-//	gr->Box();
-//	gr->Tile(a);
-//	gr->Plot(y);
+	mreal a[100];   // let a_i = sin(4*pi*x), x=0...1
+	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
+	mglParse *parser = new mglParse;
+	mglData &d =(parser->AddVar("dat"))->d;
+	d.Set(a,100); // set data to variable
+	parser->Execute(*gr, "plot dat; xrange 0 1\nbox\naxis");
+	// you may break script at any line do something
+	// and continue after that
+	parser->Execute(*gr, "xlabel 'x'\nylabel 'y'\nbox");
+	// also you may use cycles or conditions in script
+	parser->Execute(*gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+	delete parser;
 	return 0;
 
 	mglParse par;
@@ -347,11 +342,11 @@ void smgl_colors(mglGraph *gr)	// Color table
 	gr->FaceZ(mglPoint(0.2,	0.5), 0.4, 0.3, "h#");	gr->Puts(mglPoint(0.4, 0.6), "h", "C:k", -1.4);
 	gr->FaceZ(mglPoint(0.6,	0.5), 0.4, 0.3, "w#");	gr->Puts(mglPoint(0.8, 0.6), "w", "C:k", -1.4);
 	//#brighted
-	gr->FaceZ(mglPoint(-1,	0.8), 0.4, 0.3, "r1#");	gr->Puts(mglPoint(-0.8, 0.9), "r1", "C:w", -1.4);
-	gr->FaceZ(mglPoint(-0.6,0.8), 0.4, 0.3, "r3#");	gr->Puts(mglPoint(-0.4, 0.9), "r3", "C:w", -1.4);
-	gr->FaceZ(mglPoint(-0.2,0.8), 0.4, 0.3, "r5#");	gr->Puts(mglPoint(0,   0.9), "r5", "C:k", -1.4);
-	gr->FaceZ(mglPoint(0.2,	0.8), 0.4, 0.3, "r7#");	gr->Puts(mglPoint(0.4, 0.9), "r7", "C:k", -1.4);
-	gr->FaceZ(mglPoint(0.6,	0.8), 0.4, 0.3, "r9#");	gr->Puts(mglPoint(0.8, 0.9), "r9", "C:k", -1.4);
+	gr->FaceZ(mglPoint(-1,	0.8), 0.4, 0.3, "{r1}#");	gr->Puts(mglPoint(-0.8, 0.9), "\\{r1\\}", "C:w", -1.4);
+	gr->FaceZ(mglPoint(-0.6,0.8), 0.4, 0.3, "{r3}#");	gr->Puts(mglPoint(-0.4, 0.9), "\\{r3\\}", "C:w", -1.4);
+	gr->FaceZ(mglPoint(-0.2,0.8), 0.4, 0.3, "{r5}#");	gr->Puts(mglPoint(0,   0.9), "\\{r5\\}", "C:k", -1.4);
+	gr->FaceZ(mglPoint(0.2,	0.8), 0.4, 0.3, "{r7}#");	gr->Puts(mglPoint(0.4, 0.9), "\\{r7\\}", "C:k", -1.4);
+	gr->FaceZ(mglPoint(0.6,	0.8), 0.4, 0.3, "{r9}#");	gr->Puts(mglPoint(0.8, 0.9), "\\{r9\\}", "C:k", -1.4);
 }
 //-----------------------------------------------------------------------------
 void smgl_qo2d(mglGraph *gr)
@@ -1712,7 +1707,7 @@ void smgl_several_light(mglGraph *gr)	// several light sources
 	gr->AddLight(1,mglPoint(0,1,0),'c');	gr->AddLight(2,mglPoint(1,0,0),'y');
 	gr->AddLight(3,mglPoint(0,-1,0),'m');
 	gr->Box();	gr->Surf(a,"h");
-	gr->Light(1,false);	gr->Light(2,false);	gr->Light(3,false);
+//	gr->Light(1,false);	gr->Light(2,false);	gr->Light(3,false);
 }
 //-----------------------------------------------------------------------------
 void mgls_preparecc(mglData *c)
@@ -1879,7 +1874,7 @@ mglSample samp[] = {
 	{"mesh_cont", smgl_mesh_cont},
 	{"mirror", smgl_mirror},
 	{"molecule", smgl_molecule},
-	{"parser", smgl_parser},
+//	{"parser", smgl_parser},	// TODO: enable later
 	{"pde", smgl_pde},
 	{"pie_chart", smgl_pie_chart},
 	{"pipe", smgl_pipe},

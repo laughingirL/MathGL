@@ -45,7 +45,7 @@ void mglCanvas::DefaultPlotParam()
 	PlotId = "frame";		SetPenPal("k-1");
 	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
-	SetRanges(mglPoint(-1,-1,-1), mglPoint(1,1,1));
+	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
 	SetFunc(0,0);			CutOff(0);
 	SetWarn(mglWarnNone);	Message = 0;
 	BarWidth = 0.7;			//fit_res[0] = 0;

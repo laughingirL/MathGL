@@ -266,21 +266,17 @@ void mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch)
 	long n = x->GetNx();
 	if(y->GetNx()!=n || z->GetNx()!=n || a->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Dots");	return;	}
 	static int cgid=1;	gr->StartGroup("Dots",cgid++);
-	long ss=gr->AddTexture(sch);
 	char mk=gr->SetPenPal(sch);
+	long ss=gr->AddTexture(sch), pp;
 	if(mk==0)	mk='.';
-	float alpha = gr->AlphaDef/(pow(n,1./3)/20), aa, c;
-	if(alpha>1)	alpha = 1;
-	if(sch && strchr(sch,'-'))	alpha = -alpha;
 	gr->ReserveC(n);
 	mglPoint p;
 
 	for(long i=0;i<n;i++)
 	{
 		p = mglPoint(x->v(i),y->v(i),z->v(i));	gr->ScalePoint(p);
-		aa = gr->GetA(a->v(i));		c = gr->GetC(ss,aa,false);
-//		aa = fabs(alpha)*(alpha>0 ? aa*aa : (aa-1)*(aa-1));
-		gr->mark_plot(gr->AddPntC(p,c), mk);
+		pp = gr->AddPntC(p,gr->GetC(ss,a->v(i)));
+		gr->mark_plot(pp, mk);
 	}
 	gr->EndGroup();
 }

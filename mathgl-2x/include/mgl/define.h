@@ -53,7 +53,7 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define mglprintf    swprintf
 #endif
 //#define FLT_EPS	1.1920928955078125e-07
-#define MGL_FLT_EPS	(1.+1.2e-07)
+#define MGL_FLT_EPS	(1.+1e-06)
 //-----------------------------------------------------------------------------
 #ifndef isnan
 #define isnan(a)		((a)!=(a))

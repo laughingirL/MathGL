@@ -997,9 +997,9 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float c
 		q2 = nn[nn[i]]<0 ? ff[nn[i]]-ff[i]  : (ff[nn[nn[i]]]-ff[i])*0.5;
 
 		p = a*ff[i].y + c*ff[i].x;			gr->ScalePoint(p);
-		p1 = wire ? gr->AddPntC(p,cc) : gr->AddPntN(p,cc,q1^b);
+		p1 = wire ? gr->AddPntC(p,cc) : gr->AddPntN(p,cc,(a*q1.y + c*q1.x)^b);
 		p = a*ff[nn[i]].y + c*ff[nn[i]].x;	gr->ScalePoint(p);
-		p2 = wire ? gr->AddPntC(p,cc) : gr->AddPntN(p,cc,q2^b);
+		p2 = wire ? gr->AddPntC(p,cc) : gr->AddPntN(p,cc,(a*q2.y + c*q2.x)^b);
 		if(wire)	gr->line_plot(p1,p2);
 
 		for(j=1;j<41;j++)
@@ -1008,10 +1008,10 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float c
 			fi = j*M_PI/20;		si = sin(fi);	co = cos(fi);
 			p = a*ff[i].y + b*(si*ff[i].x) +  c*(co*ff[i].x);
 			gr->ScalePoint(p);
-			p1 = wire ?	gr->AddPntC(p,cc) : gr->AddPntN(p,cc,q1^(b*co-c*si));
+			p1 = wire ?	gr->AddPntC(p,cc) : gr->AddPntN(p,cc,(a*q1.y + b*(si*q1.x) +  c*(co*q1.x))^(b*co-c*si));
 			p = a*ff[nn[i]].y + b*(si*ff[nn[i]].x) +  c*(co*ff[nn[i]].x);
 			gr->ScalePoint(p);
-			p2 = wire ?	gr->AddPntC(p,cc) : gr->AddPntN(p,cc,q2^(b*co-c*si));
+			p2 = wire ?	gr->AddPntC(p,cc) : gr->AddPntN(p,cc,(a*q2.y + b*(si*q2.x) +  c*(co*q2.x))^(b*co-c*si));
 			if(wire)
 			{	gr->line_plot(p1,p2);	gr->line_plot(p1,p3);
 				gr->line_plot(p4,p2);	gr->line_plot(p4,p3);	}

@@ -222,7 +222,7 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 
 	for(k=0;k<l;k+=tz)	for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 	{
-		xx = GetX(x,i,j,k).x;	yy = GetY(y,i,j,k).x;	zz = GetY(z,i,j,k).x;
+		xx = GetX(x,i,j,k).x;	yy = GetY(y,i,j,k).x;	zz = GetZ(z,i,j,k).x;
 		dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
 		dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
 		dz = k<l-1 ? (GetZ(z,i,j,k+1).x-zz) : (zz-GetZ(z,i,j,k-1).x);
@@ -314,15 +314,17 @@ void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mgl
 		// condition of end
 		end = end || k>=n || u<0 || v<0 || u>1 || v>1;
 	} while(!end);
-	if(k<2)	return;
-	long i,j,jj;
-	gr->ReserveC(k);
-	gr->ScalePoint(pp[0]);	j = gr->AddPntC(pp[0],cc[0]);
-	for(i=1;i<k;i++)
+	if(k>1)
 	{
-		gr->ScalePoint(pp[i]);	jj=j;
-		j = gr->AddPntC(pp[i],cc[i]);
-		gr->line_plot(jj,j);
+		long i,j,jj;
+		gr->ReserveC(k);
+		gr->ScalePoint(pp[0]);	j = gr->AddPntC(pp[0],cc[0]);
+		for(i=1;i<k;i++)
+		{
+			gr->ScalePoint(pp[i]);	jj=j;
+			j = gr->AddPntC(pp[i],cc[i]);
+			gr->line_plot(jj,j);
+		}
 	}
 	delete []pp;	delete []cc;
 }
@@ -502,17 +504,20 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 		// condition of end
 		end = end || k>=n || u<0 || v<0 || u>1 || v>1 || w<0 || w>1;
 	} while(!end);
-	if(k<2)	return;
-	long i,j,jj;
-	gr->ReserveC(k);
-	gr->ScalePoint(pp[0]);	j = gr->AddPntC(pp[0],cc[0]);
-	for(i=1;i<k;i++)
+	if(k>1)
 	{
-		gr->ScalePoint(pp[k]);	jj=j;
-		j = gr->AddPntC(pp[i],cc[i]);
-		gr->line_plot(jj,j);
+		long i,j,jj;
+		gr->ReserveC(k);
+		gr->ScalePoint(pp[0]);	j = gr->AddPntC(pp[0],cc[0]);
+		for(i=1;i<k;i++)
+		{
+			gr->ScalePoint(pp[i]);	jj=j;
+			j = gr->AddPntC(pp[i],cc[i]);
+			gr->line_plot(jj,j);
+		}
 	}
-	delete []pp;	delete []cc;
+	delete []pp;
+	delete []cc;
 }
 //-----------------------------------------------------------------------------
 void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, int num)
@@ -761,39 +766,41 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 		// condition of end
 		end = end || k>=n || u<0 || v<0 || u>1 || v>1;
 	} while(!end);
-	if(k<2)	return;	// nothing to plot
-
-	const int num=41;
-	long i,j,*id=new long[2*num];
-	mglPoint p,l=pp[1]-pp[0],t,q,d;
-	t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
-	float si,co,fi, rr=pp[0].c,dr=l.c;
-	gr->ReserveN(num*k);
-
-	for(j=0;j<num;j++)
+	if(k>1)
 	{
-		fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
-		p = pp[0] + t*(rr*co) + q*(rr*si);
-		d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-		gr->ScalePoint(p);	id[j] = gr->AddPntN(p,cc[0],d);
-	}
-	for(i=1;i<k;i++)
-	{
-		if(i<k-1)	l = pp[i+1]-pp[i-1];
-		else	l = pp[i]-pp[i-1];
+		const int num=41;
+		long i,j,*id=new long[2*num];
+		mglPoint p,l=pp[1]-pp[0],t,q,d;
 		t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
-		rr=pp[i].c;	dr=l.c;
-		memcpy(id+num,id,num*sizeof(long));
+		float si,co,fi, rr=pp[0].c,dr=l.c;
+		gr->ReserveN(num*k);
+
 		for(j=0;j<num;j++)
 		{
 			fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
-			p = pp[i] + t*(rr*co) + q*(rr*si);
+			p = pp[0] + t*(rr*co) + q*(rr*si);
 			d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-			gr->ScalePoint(p);	id[j] = gr->AddPntN(p,cc[i],d);
-			if(j>0)	gr->quad_plot(id[j-1],id[j],id[j+num-1],id[j+num]);
+			gr->ScalePoint(p);	id[j] = gr->AddPntN(p,cc[0],d);
 		}
+		for(i=1;i<k;i++)
+		{
+			if(i<k-1)	l = pp[i+1]-pp[i-1];
+			else	l = pp[i]-pp[i-1];
+			t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
+			rr=pp[i].c;	dr=l.c;
+			memcpy(id+num,id,num*sizeof(long));
+			for(j=0;j<num;j++)
+			{
+				fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
+				p = pp[i] + t*(rr*co) + q*(rr*si);
+				d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
+				gr->ScalePoint(p);	id[j] = gr->AddPntN(p,cc[i],d);
+				if(j>0)	gr->quad_plot(id[j-1],id[j],id[j+num-1],id[j+num]);
+			}
+		}
+		delete []id;
 	}
-	delete []pp;	delete []cc;	delete []id;
+	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
 void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, float r0, int num, float zVal)
@@ -908,39 +915,41 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 		// condition of end
 		end = end || k>=n || u<0 || v<0 || u>1 || v>1 || w<0 || w>1;
 	} while(!end);
-	if(k<2)	return;	// nothing to plot
-
-	const int num=41;
-	long i,j,*id=new long[2*num];
-	mglPoint p,l=pp[1]-pp[0],t,q,d;
-	t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
-	float si,co,fi, rr=pp[0].c,dr=l.c;
-	gr->ReserveN(num*k);
-
-	for(j=0;j<num;j++)
+	if(k>1)
 	{
-		fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
-		p = pp[0] + t*(rr*co) + q*(rr*si);
-		d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-		gr->ScalePoint(p);	id[j] = gr->AddPntN(p,cc[0],d);
-	}
-	for(i=1;i<k;i++)
-	{
-		if(i<k-1)	l = pp[i+1]-pp[i-1];
-		else	l = pp[i]-pp[i-1];
+		const int num=41;
+		long i,j,*id=new long[2*num];
+		mglPoint p,l=pp[1]-pp[0],t,q,d;
 		t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
-		rr=pp[i].c;	dr=l.c;
-		memcpy(id+num,id,num*sizeof(long));
+		float si,co,fi, rr=pp[0].c,dr=l.c;
+		gr->ReserveN(num*k);
+
 		for(j=0;j<num;j++)
 		{
 			fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
-			p = pp[i] + t*(rr*co) + q*(rr*si);
+			p = pp[0] + t*(rr*co) + q*(rr*si);
 			d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-			gr->ScalePoint(p);	id[j] = gr->AddPntN(p,cc[i],d);
-			if(j>0)	gr->quad_plot(id[j-1],id[j],id[j+num-1],id[j+num]);
+			gr->ScalePoint(p);	id[j] = gr->AddPntN(p,cc[0],d);
 		}
+		for(i=1;i<k;i++)
+		{
+			if(i<k-1)	l = pp[i+1]-pp[i-1];
+			else	l = pp[i]-pp[i-1];
+			t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
+			rr=pp[i].c;	dr=l.c;
+			memcpy(id+num,id,num*sizeof(long));
+			for(j=0;j<num;j++)
+			{
+				fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
+				p = pp[i] + t*(rr*co) + q*(rr*si);
+				d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
+				gr->ScalePoint(p);	id[j] = gr->AddPntN(p,cc[i],d);
+				if(j>0)	gr->quad_plot(id[j-1],id[j],id[j+num-1],id[j+num]);
+			}
+		}
+		delete []id;
 	}
-	delete []pp;	delete []cc;	delete []id;
+	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
 void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, float r0, int num)

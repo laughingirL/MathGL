@@ -198,7 +198,7 @@ void mglCanvas::Clf(mglColor Back)
 void mglCanvas::pnt_plot(long x,long y,float z,const unsigned char ci[4])
 {
 	long i0=x+Width*(Height-1-y);
-	if(x<dr_nx1 || x>=dr_nx2 || y<dr_ny1 || y>=dr_ny2)	return;
+	if(x<dr_nx1 || x>=dr_nx2 || y<dr_ny1 || y>=dr_ny2 || ci[3]==0)	return;
 	unsigned char *cc = C+12*i0, c[4];
 	memcpy(c,ci,4);
 	float *zz = Z+3*i0, zf = FogDist*(z/Depth-0.5-FogDz);
@@ -548,7 +548,7 @@ void mglCanvas::pnt_draw(const float *p)
 	bool aa=UseAlpha;	UseAlpha = true;
 	register long i,j,s;
 	float v,c[4];
-	txt[long(p[3])].GetC(p[3],0,c);
+	txt[long(p[3])].GetC(p[3],1,c);
 	unsigned char cs[4]={255*c[0],255*c[1],255*c[2],255*c[3]};
 	s = long(5.5+fabs(PenWidth));
 	for(j=-s;j<=s;j++)	for(i=-s;i<=s;i++)

@@ -23,3 +23,9 @@ TODO: Box + edges + half-transparent
 TODO: 3D-like solid marks
 
 TODO: Write "Quick start" userguide
+
+TODO: FAQ about sizes of plot (parametrical, or Min*Max)
+
+TODO: Check: crust (triplot, tricont, triangulation), axis (grid), legend, parser, stfa, contd(?)
+
+TODO: FAQ about MinGW -- http://www.mingw.org/wiki/FAQ

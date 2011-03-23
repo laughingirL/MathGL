@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 mglBase::mglBase()
 {
-	memset(this,0,sizeof(mglBase));
+	memset(this,0,sizeof(mglBase));	InUse = 1;
 	posC=posN=0;	numC=numN=1024;
 	pntC=(float *)malloc(4*numC*sizeof(float));
 	pntN=(float *)malloc(8*numC*sizeof(float));
@@ -500,7 +500,6 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 	for(i=j=n=0;i<l;i++)	// fill colors
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
-		if(j>0 && s[i]=='M')	map=true;
 		if(s[i]=='{')	m++;	if(s[i]=='}')	m--;
 		if(strchr(cols,s[i]) && j<1)		// this is color
 		{
@@ -528,8 +527,10 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 	for(i=0;i<256;i++)
 	{
 		u = v*i;	j = long(u);	u-=j;
-		if(!sm || j>=n-1)
+		if(!sm || j==n-1)
 		{	col[2*i] = c[2*j];	col[2*i+1] = c[2*j+1];	}
+		else if(j>n-1)	// NOTE: never should be here!
+		{	col[2*i] = c[2*n-2];col[2*i+1] = c[2*n-1];	printf("AddTexture -- out of bounds");	}
 		else
 		{
 			col[2*i] = c[2*j]*(1-u)+c[2*j+2]*u;
@@ -543,13 +544,12 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 void mglTexture::GetC(float u,float v,float cc[4])
 {
 	u -= long(u);
-	register long i=long(256*u);
+	register long i=long(256*u);	u = u*256-i;
 	mglColor *s=col+2*i;
-	u = u*256-i;
 	cc[0] = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
 	cc[1] = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
 	cc[2] = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
-	cc[3] = (s[0].a*(1-u)+s[2].a*u)*(1-v) + (s[1].a*(1-u)+s[3].a*u)*v;
+	cc[3] = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// NOTE: for alpha use inverted
 }
 //-----------------------------------------------------------------------------
 bool mglTexture::IsSame(mglTexture &t)
@@ -606,8 +606,11 @@ char mglBase::SetPenPal(const char *p, long *Id)
 		const char *mrk = "*o+xsd.^v<>";
 		const char *wdh = "123456789";
 		const char *arr = "AKDTVISO_";
+		long m=0;
 		for(unsigned i=0;i<strlen(p);i++)
 		{
+			if(p[i]=='{')	m++;	if(p[i]=='}')	m--;
+			if(m>0)	continue;
 			if(strchr(stl,p[i]))
 			{
 				switch(p[i])
@@ -669,31 +672,27 @@ float mglBase::GetA(float a)
 mglPoint GetX(const mglDataA *x, int i, int j, int k)
 {
 	k = k<x->GetNz() ? k : 0;
-	if(x->GetNy()>j && x->GetNx()>i && x->GetNy()>1)
+	if(x->GetNy()>1)
 		return mglPoint(x->v(i,j,k),x->dvx(i,j,k),x->dvy(i,j,k));
-	else if(x->GetNx()>i)
+	else
 		return mglPoint(x->v(i),x->dvx(i),0);
-	return mglPoint(0);
 }
 //-----------------------------------------------------------------------------
 mglPoint GetY(const mglDataA *y, int i, int j, int k)
 {
 	k = k<y->GetNz() ? k : 0;
-	if(y->GetNy()>j && y->GetNx()>i && y->GetNy()>1)
+	if(y->GetNy()>1)
 		return mglPoint(y->v(i,j,k),y->dvx(i,j,k),y->dvy(i,j,k));
-	else if(y->GetNx()>j)
+	else
 		return mglPoint(y->v(j),0,y->dvx(j));
-	return mglPoint(0);
 }
 //-----------------------------------------------------------------------------
 mglPoint GetZ(const mglDataA *z, int i, int j, int k)
 {
-	k = k<z->GetNz() ? k : 0;
-	if(z->GetNy()>j && z->GetNx()>i && z->GetNy()>1)
+	if(z->GetNy()>1)
 		return mglPoint(z->v(i,j,k),z->dvx(i,j,k),z->dvy(i,j,k));
-	else if(z->GetNx()>k)
+	else
 		return mglPoint(z->v(k),0,0);
-	return mglPoint(0);
 }
 //-----------------------------------------------------------------------------
 void mglBase::vect_plot(long p1, long p2)	// position in pntC

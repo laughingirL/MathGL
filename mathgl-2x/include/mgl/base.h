@@ -195,6 +195,7 @@ public:
 	float BarWidth;		///< Relative width of rectangles in Bars().
 	int MeshNum;		///< Set approximate number of lines in Mesh and Grid. By default (=0) it draw all lines.
 	char Arrow1, Arrow2;///< Style of arrows at end and at start of curve
+	long InUse;			///< Smart pointer (number of users)
 
 	/// Set values of mglGraph::Min and mglGraph::Max
 	inline void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0, float c1=0, float c2=0)

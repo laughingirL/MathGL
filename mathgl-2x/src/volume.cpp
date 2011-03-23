@@ -53,19 +53,10 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 	long pos = (n/tx)*(m/ty)*(l/tz);
 	pos = dot ? gr->ReserveC(pos) : gr->ReserveN(pos);
 	mglPoint p,q=mglPoint(NAN);
-	if(both)	for(k=0;k<l;k+=tz)	for(j=0;j<m;j+=ty)	for(i=0;i<n;i+=tx)
+	for(k=0;k<l;k+=tz)	for(j=0;j<m;j+=ty)	for(i=0;i<n;i+=tx)
 	{
-		p = mglPoint(x->v(i,j,k), y->v(i,j,k), z->v(i,j,k));	gr->ScalePoint(p);
-		aa = gr->GetA(a->v(i,j,k));
-		if(inv)	bb = (1-aa)*(1-aa)*alpha;
-		else	bb = aa*aa*alpha;
-		gr->AddPntN(p,gr->GetC(ss,aa,false),q,bb);
-	}
-	// x, y, z -- vectors
-	else		for(k=0;k<l;k+=tz)	for(j=0;j<m;j+=ty)	for(i=0;i<n;i+=tx)
-	{
-		p = mglPoint(x->v(i), y->v(j), z->v(k));	gr->ScalePoint(p);
-		aa = gr->GetA(a->v(i,j,k));
+		p = both ? mglPoint(x->v(i,j,k),y->v(i,j,k),z->v(i,j,k)) : mglPoint(x->v(i),y->v(j),z->v(k));
+		gr->ScalePoint(p);	aa = gr->GetA(a->v(i,j,k));
 		if(inv)	bb = (1-aa)*(1-aa)*alpha;
 		else	bb = aa*aa*alpha;
 		gr->AddPntN(p,gr->GetC(ss,aa,false),q,bb);
@@ -117,10 +108,10 @@ mglPoint mgl_normal_3d(const mglDataA *a, mglPoint p, bool inv)
 
 	if(i<n-1)	nx = a->dvx(i,j,k)*(1-x) + a->dvx(i+1,j,k)*x;
 	else		nx = a->dvx(i,j,k);
-	if(j<m-1)	nx = a->dvy(i,j,k)*(1-y) + a->dvy(i,j+1,k)*y;
-	else		nx = a->dvy(i,j,k);
-	if(k<l-1)	nx = a->dvz(i,j,k)*(1-z) + a->dvz(i,j,k+1)*z;
-	else		nx = a->dvz(i,j,k);
+	if(j<m-1)	ny = a->dvy(i,j,k)*(1-y) + a->dvy(i,j+1,k)*y;
+	else		ny = a->dvy(i,j,k);
+	if(k<l-1)	nz = a->dvz(i,j,k)*(1-z) + a->dvz(i,j,k+1)*z;
+	else		nz = a->dvz(i,j,k);
 	return inv ? mglPoint(nx,ny,nz) : mglPoint(-nx,-ny,-nz);
 }
 //-----------------------------------------------------------------------------
@@ -130,6 +121,24 @@ float mgl_normal_1d(const mglDataA *a, float x, bool inv)
 	float nx = a->dvx(i);
 	if(i<n-1)	nx = nx*(1-x) + a->dvx(i+1)*x;
 	return inv ? nx : -nx;
+}
+//-----------------------------------------------------------------------------
+mglPoint mgl_find_norm(bool both, HCDT x, HCDT y, HCDT z, HCDT a, mglPoint u, bool inv)
+{
+	mglPoint s = mgl_normal_3d(a,u,inv), t, q;
+	if(both)
+	{
+		t = mgl_normal_3d(x,u,true);	q.x = (s*t)/(t*t);
+		t = mgl_normal_3d(y,u,true);	q.y = (s*t)/(t*t);
+		t = mgl_normal_3d(z,u,true);	q.z = (s*t)/(t*t);
+	}
+	else
+	{
+		q.x = s.x/mgl_normal_1d(x,u.x,true);
+		q.y = s.y/mgl_normal_1d(y,u.y,true);
+		q.z = s.z/mgl_normal_1d(z,u.z,true);
+	}
+	return q;
 }
 //-----------------------------------------------------------------------------
 inline float mgl_cos_pp(mglPoint *kk,long i0,long i1,long i2)
@@ -199,24 +208,6 @@ void mgl_surf3_plot(HMGL gr, long posN, long n,long m,long *kx1,long *kx2,long *
 			gr->trig_plot(p1, p2, posN+id[jj]);	p2 = posN+id[jj];
 		}
 	}
-}
-//-----------------------------------------------------------------------------
-mglPoint mgl_find_norm(bool both, HCDT x, HCDT y, HCDT z, HCDT a, mglPoint u, bool inv)
-{
-	mglPoint s = mgl_normal_3d(a,u,inv), t, q;
-	if(both)
-	{
-		t = mgl_normal_3d(x,u,true);	q.x = (s*t)/(t*t);
-		t = mgl_normal_3d(y,u,true);	q.y = (s*t)/(t*t);
-		t = mgl_normal_3d(z,u,true);	q.z = (s*t)/(t*t);
-	}
-	else
-	{
-		q.x = s.x/mgl_normal_1d(x,u.x,true);
-		q.y = s.y/mgl_normal_1d(y,u.y,true);
-		q.z = s.z/mgl_normal_1d(z,u.z,true);
-	}
-	return q;
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch)

@@ -188,3 +188,8 @@ void mgl_load_state(HMGL gr)	{	gr->LoadState();	}
 void mgl_save_state_(uintptr_t *gr)	{	_GR_->SaveState();	}
 void mgl_load_state_(uintptr_t *gr)	{	_GR_->LoadState();	}
 //---------------------------------------------------------------------------
+long mgl_use_graph(HMGL gr, int inc)
+{	gr->InUse+=inc;	return gr->InUse;	}
+long mgl_use_graph_(uintptr_t *gr, int *inc)
+{	_GR_->InUse+=*inc;	return _GR_->InUse;	}
+//---------------------------------------------------------------------------

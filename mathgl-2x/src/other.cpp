@@ -50,8 +50,8 @@ void mgl_dens_x(HMGL gr, HCDT a, const char *sch, float sv)
 	else
 	{	xx.Create(n,m);	yy.Create(n,m);	zz.Create(n,m);	}
 	xx.Fill(sv, sv);
-	yy.Fill(gr->Min.y, gr->Max.y);
-	zz.Fill(gr->Min.z, gr->Max.z);
+	yy.Fill(gr->Min.y, gr->Max.y,'x');
+	zz.Fill(gr->Min.z, gr->Max.z,'y');
 	mgl_surfc_xy(gr,&xx,&yy,&zz,a,sch);
 }
 //-----------------------------------------------------------------------------
@@ -77,8 +77,8 @@ void mgl_dens_y(HMGL gr, HCDT a, const char *sch, float sv)
 	else
 	{	xx.Create(n,m);	yy.Create(n,m);	zz.Create(n,m);	}
 	yy.Fill(sv, sv);
-	xx.Fill(gr->Min.x, gr->Max.x);
-	zz.Fill(gr->Min.z, gr->Max.z);
+	xx.Fill(gr->Min.x, gr->Max.x,'x');
+	zz.Fill(gr->Min.z, gr->Max.z,'y');
 	mgl_surfc_xy(gr,&xx,&yy,&zz,a,sch);
 }
 //-----------------------------------------------------------------------------
@@ -103,8 +103,8 @@ void mgl_dens_z(HMGL gr, HCDT a, const char *sch, float sv)
 		a = &aa;
 	}
 	zz.Fill(sv, sv);
-	yy.Fill(gr->Min.y, gr->Max.y);
-	xx.Fill(gr->Min.x, gr->Max.x);
+	yy.Fill(gr->Min.y, gr->Max.y,'y');
+	xx.Fill(gr->Min.x, gr->Max.x,'x');
 	mgl_surfc_xy(gr,&xx,&yy,&zz,a,sch);
 }
 //-----------------------------------------------------------------------------
@@ -154,8 +154,8 @@ void mgl_cont_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	else
 	{	xx.Create(n,m);	yy.Create(n,m);	zz.Create(n,m);	}
 	xx.Fill(sv, sv);
-	yy.Fill(gr->Min.y, gr->Max.y);
-	zz.Fill(gr->Min.z, gr->Max.z);
+	yy.Fill(gr->Min.y, gr->Max.y,'x');
+	zz.Fill(gr->Min.z, gr->Max.z,'y');
 	for(i=0;i<v->GetNx();i++)
 	{
 		register float v0 = v->v(i);
@@ -191,8 +191,8 @@ void mgl_cont_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	else
 	{	xx.Create(n,m);	yy.Create(n,m);	zz.Create(n,m);	}
 	yy.Fill(sv, sv);
-	xx.Fill(gr->Min.x, gr->Max.x);
-	zz.Fill(gr->Min.z, gr->Max.z);
+	xx.Fill(gr->Min.x, gr->Max.x,'x');
+	zz.Fill(gr->Min.z, gr->Max.z,'y');
 	for(i=0;i<v->GetNx();i++)
 	{
 		register float v0 = v->v(i);
@@ -227,8 +227,8 @@ void mgl_cont_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 		a = &aa;
 	}
 	zz.Fill(sv, sv);
-	yy.Fill(gr->Min.y, gr->Max.y);
-	xx.Fill(gr->Min.x, gr->Max.x);
+	yy.Fill(gr->Min.y, gr->Max.y,'y');
+	xx.Fill(gr->Min.x, gr->Max.x,'x');
 	for(i=0;i<v->GetNx();i++)
 	{
 		register float v0 = v->v(i);
@@ -314,8 +314,8 @@ void mgl_contf_x_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	else
 	{	xx.Create(n,m);	yy.Create(n,m);	zz.Create(n,m);	}
 	xx.Fill(sv, sv);
-	yy.Fill(gr->Min.y, gr->Max.y);
-	zz.Fill(gr->Min.z, gr->Max.z);
+	yy.Fill(gr->Min.y, gr->Max.y,'x');
+	zz.Fill(gr->Min.z, gr->Max.z,'y');
 	for(i=0;i<v->GetNx()-1;i++)
 	{
 		register float v0 = v->v(i);
@@ -348,8 +348,8 @@ void mgl_contf_y_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 	else
 	{	xx.Create(n,m);	yy.Create(n,m);	zz.Create(n,m);	}
 	yy.Fill(sv, sv);
-	xx.Fill(gr->Min.x, gr->Max.x);
-	zz.Fill(gr->Min.z, gr->Max.z);
+	xx.Fill(gr->Min.x, gr->Max.x,'x');
+	zz.Fill(gr->Min.z, gr->Max.z,'y');
 	for(i=0;i<v->GetNx()-1;i++)
 	{
 		register float v0 = v->v(i);
@@ -381,8 +381,8 @@ void mgl_contf_z_val(HMGL gr, HCDT v, HCDT a, const char *sch, float sv)
 		a = &aa;
 	}
 	zz.Fill(sv, sv);
-	yy.Fill(gr->Min.y, gr->Max.y);
-	xx.Fill(gr->Min.x, gr->Max.x);
+	yy.Fill(gr->Min.y, gr->Max.y,'y');
+	xx.Fill(gr->Min.x, gr->Max.x,'x');
 	for(i=0;i<v->GetNx()-1;i++)
 	{
 		register float v0 = v->v(i);

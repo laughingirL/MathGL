@@ -30,17 +30,19 @@ const float pi = M_PI;
 class mglGraph
 {
 	HMGL gr;
-	bool cl;
 public:
 	mglGraph(int kind=0, int width=600, int height=400)
 	{
 		if(kind==1)		gr=mgl_create_graph_gl();
 //		else if(kind==2)gr=mgl_create_graph_idtf();
 		else	gr=mgl_create_graph(width, height);
-		cl = true;
 	}
-	mglGraph(HMGL graph)	{	gr = graph;		cl = false;	}
-	~mglGraph()			{	if(cl)	mgl_delete_graph(gr);	}
+	mglGraph(const mglGraph &graph)
+	{	gr = graph.gr;	mgl_use_graph(gr,1);	}
+	mglGraph(HMGL graph)
+	{	gr = graph;		mgl_use_graph(gr,1);	}
+	~mglGraph()
+	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
 	inline HMGL Self()	{	return gr;	}
 
 	inline int  GetWarn()			{	return mgl_get_warn(gr);}
