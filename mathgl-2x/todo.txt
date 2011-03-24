@@ -1,4 +1,23 @@
-TODO: FrameBox(const char *title,const char *stl="#",float size=-2); -- title and box around InPlot; auto resize inplot; 2 colors define to highlited stripe near title; text can be aligned left,right,center
+============= TEST =============
+1. Triangulation
+2. Text
+	* printing itself
+	* export as text (EPS, SVG, TeX ...)
+3. Axis
+	* grid lines
+	* colors
+	* ticks (rotation and skipping)
+	* time ticks (test)
+4. legend
+5. parser
+6. opengl
+7. widgets
+8. stfa
+9. build system
+
+============= NEW  =============
+
+01. FrameBox(const char *title,const char *stl="#",float size=-2); -- title and box around InPlot; auto resize inplot; 2 colors define to highlited stripe near title; text can be aligned left,right,center
 |---------------------------|
 |			Title			|
 |---------------------------|
@@ -10,22 +29,66 @@ TODO: FrameBox(const char *title,const char *stl="#",float size=-2); -- title an
 |							|
 |---------------------------|
 
-TODO: MultiPlot(int nx,int ny,int i,int dx,int dy,const char *pos=0); -- like SubPlot(), but for several (dx*dy) cells
+02. MultiPlot(int nx,int ny,int i,int dx,int dy,const char *pos=0); -- like SubPlot(), but for several (dx*dy) cells
+03. Arrows at flow lines ?!!
+04. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
+05. mgl_circle_ext(x,y,z,r,col,dx,dy,dz) + mgl_circle(x,y,r,col) as primitive (here d={dx,dy,dz} is focal half-distance --> a^2=r^2+d^2 and )
+06. Box() + edges + half-transparent
+07. parallelisation of drawing
+08. Add plot Circle() as Error() but with marks instead of error boxes (default 'o') + alpha-transpared if filled
+09. Export to LaTeX formats - (pgf/tikz) or metapost if possible (like EPS).
+10. Export to CALLADA
+11. Export to X3D
+12. Export to JavaScript (WebGL)
+13. Add apperture for light (partially is done)
+14. Add diffusive light (no dependence of normale but have direction)
+15. Pipes in mgl2png, mgl2eps, ... (stdin, stdout)
+16. Venn() diagram-like -- transparent circles with manual colors and sizes -- may be a variant of Mark()???
+17. swap color and font style in text option ('bR:r' -> 'r:bR')
+18. Quaternary diagrams plotted in a tetrahedron: equivalent to ternary diagrams, but in 3D.
+19. Allow interpolation in MGL if argument is not integer ???
+20. Import/Export via GIF (as 3d data) ??? + 16bit PNG
+21. Contour label should not rotated on ~180 degree
 
-TODO: Arrows at flow lines ?!?
+============= UNSURE ===========
 
-TODO: BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
+1. 3D-like solid marks
+2. Problem with \calB and so on (\calH, ...) -- they are present only in italic font :(.
+3. create PWT fonts
+4. Plot for isolines of vector fields ???
+5. Named arguments in MGL ???
+6. \dfrac for normal size and centering  (sample \big\big{\frac{1}{2}}) ???
+7. "Cut off" curves if text is printed inside it (for contour labels) ?!?
+8. Check if widget functions can be added to mgl_w.h !?! -- use #define ??!
+9. Save id of subplots and axis for getting value of click coordinates arbitrary inplot -- fill only part which is overlapped. Clear it at Clf() + update for any Rotate, Aspect, InPlot, SetRanges,
+10. Save ALL plot styles for each curve (0...N) for each subplot (0...M) in format \leg{N_M} ?!?
+11. Add TeX command \leg{plot style} for line+mark of specified style.
+12. GTK and WX window/widgets
+13. Use Hershey as built-in font ???
+14. Add "colorbar x y ['sch'='' w=1 h=1]" + "colorbar x y dat ['sch'='' w=1 h=1]" -- NO because need w,h !
 
-TODO: mgl_circle_ext(x,y,z,r,col,dx,dy,dz) + mgl_circle(x,y,r,col) as primitive
+============= DOCS =============
 
-TODO: Box + edges + half-transparent
+1. Write "Quick start" userguide
+2. FAQ about sizes of plot (parametrical, or Min*Max)
+3. FAQ about MinGW -- http://www.mingw.org/wiki/FAQ
+4. MGL docs -- text what formulas are applicable for scalars too.
+5. Manual labels in string with '\n' separator
+6. tune colors as {} -- for example, '{b3}'
+7. Sample about pthread using.
+8. Add help about cmake and GIF/JPEG to the "Installation and using"
+9. Regroup pictures in WWW by big classes + combo plots
+10. Add '[' as separator in string
+11. On which things the subplot influence
+12. About unrotated text
+13. Add "Howto" section in web site.
+14. "Data plotting", "Data plot", "Scientific visualtization", "Surface", "Cloud","Plot", "statistical graphics" to website
+15. Examples of animation, u3d, x3d, js and so on
+16. Example of inverted axis, minus-log axis
 
-TODO: 3D-like solid marks
+============= BUGS =============
 
-TODO: Write "Quick start" userguide
+1. утилиты (mgl2png и пр.) вылетают, если в коментариях русские буквы
+2. Last ' isn't send as call argument!!!
+3. "Chaos" in area.png (near axis) ???
 
-TODO: FAQ about sizes of plot (parametrical, or Min*Max)
-
-TODO: Check: crust (triplot, tricont, triangulation), axis (grid), legend, parser, stfa, contd(?)
-
-TODO: FAQ about MinGW -- http://www.mingw.org/wiki/FAQ
