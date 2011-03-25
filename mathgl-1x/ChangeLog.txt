@@ -1,4 +1,4 @@
-1.11.1 Released 18 March 2011
+1.11.1 Released 25 March 2011
 	- Improve IDTF export
 	- Minor changes and bugfixes
 
