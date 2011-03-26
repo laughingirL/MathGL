@@ -90,8 +90,8 @@ public:
 	/// Clear up the frame
 	virtual void Clf(mglColor back=WC);
 	/// Put further plotting in some region of whole frame surface.
-	void SubPlot(int nx,int ny,int m, float dx=0, float dy=0);
-	void SubPlot(int nx,int ny,int m, const char *style);
+	void SubPlot(int nx, int ny, int m, float dx=0, float dy=0);
+	void SubPlot(int nx, int ny, int m, const char *style);
 	/// Like SubPlot bot "join" several cells
 	void MultiPlot(int nx,int ny,int m, int dx, int dy, const char *style);
 	/// Put further plotting in column cell of previous subplot
@@ -186,8 +186,10 @@ public:
 	virtual void Ambient(float bright=0.5);
 
 	/// Set ticks position and text (\n separated). Use n=0 to disable this feature.
+	void SetTicksVal(char dir, const char *lbl);
 	void SetTicksVal(char dir, HCDT v, const char *lbl);
 	void SetTicksVal(char dir, HCDT v, const char **lbl);
+	void SetTicksVal(char dir, const wchar_t *lbl);
 	void SetTicksVal(char dir, HCDT v, const wchar_t *lbl);
 	void SetTicksVal(char dir, HCDT v, const wchar_t **lbl);
 	/// Set templates for ticks

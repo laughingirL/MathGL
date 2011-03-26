@@ -40,19 +40,19 @@ int test(mglGraph *gr)
 	mglParse *parser = new mglParse;
 	mglData &d =(parser->AddVar("dat"))->d;
 	d.Set(a,100); // set data to variable
-	parser->Execute(*gr, "plot dat; xrange 0 1\nbox\naxis");
+	parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
 	// you may break script at any line do something
 	// and continue after that
-	parser->Execute(*gr, "xlabel 'x'\nylabel 'y'\nbox");
+	parser->Execute(gr, "xlabel 'x'\nylabel 'y'\nbox");
 	// also you may use cycles or conditions in script
-	parser->Execute(*gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+	parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
 	delete parser;
 	return 0;
 
 	mglParse par;
 	par.AllowSetSize = true;
 	FILE *fp=fopen("test.mgl","rt");
-	par.Execute(*gr,fp,true);
+	par.Execute(gr,fp,true);
 	fclose(fp);
 /*	gr->SetDrawReg(2,2,1);
 	gr->Rotate(40,60);
@@ -1628,12 +1628,12 @@ void smgl_parser(mglGraph *gr)	// example of MGL parsing
 	mglParse *parser = new mglParse;
 	mglData &d =(parser->AddVar("dat"))->d;
 	d.Set(a,100); // set data to variable
-	parser->Execute(*gr, "plot dat; xrange 0 1\nbox\naxis");
+	parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
 	// you may break script at any line do something
 	// and continue after that
-	parser->Execute(*gr, "xlabel 'x'\nylabel 'y'\nbox");
+	parser->Execute(gr, "xlabel 'x'\nylabel 'y'\nbox");
 	// also you may use cycles or conditions in script
-	parser->Execute(*gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+	parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
 	delete parser;
 }
 //-----------------------------------------------------------------------------

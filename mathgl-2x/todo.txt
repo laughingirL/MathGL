@@ -9,11 +9,10 @@
 	* ticks (rotation and skipping)
 	* time ticks (test)
 4. legend
-5. parser
-6. opengl
-7. widgets
-8. stfa
-9. build system
+5. opengl
+6. widgets
+7. stfa
+8. build system
 
 ============= NEW  =============
 
@@ -29,7 +28,6 @@
 |							|
 |---------------------------|
 
-02. MultiPlot(int nx,int ny,int i,int dx,int dy,const char *pos=0); -- like SubPlot(), but for several (dx*dy) cells
 03. Arrows at flow lines ?!!
 04. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
 05. mgl_circle_ext(x,y,z,r,col,dx,dy,dz) + mgl_circle(x,y,r,col) as primitive (here d={dx,dy,dz} is focal half-distance --> a^2=r^2+d^2 and )
@@ -49,6 +47,8 @@
 19. Allow interpolation in MGL if argument is not integer ???
 20. Import/Export via GIF (as 3d data) ??? + 16bit PNG
 21. Contour label should not rotated on ~180 degree
+22. Extend mglData to read strings (i.e. sth in "" or '' -- only one column per file + HDF5 import/export)
+23. Exclude BaseLineWidth (do proportional to minimal image size)
 
 ============= UNSURE ===========
 
@@ -66,6 +66,7 @@
 12. GTK and WX window/widgets
 13. Use Hershey as built-in font ???
 14. Add "colorbar x y ['sch'='' w=1 h=1]" + "colorbar x y dat ['sch'='' w=1 h=1]" -- NO because need w,h !
+15. String variables in MGL + readstr command.
 
 ============= DOCS =============
 

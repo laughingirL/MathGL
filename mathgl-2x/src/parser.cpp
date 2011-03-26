@@ -122,7 +122,7 @@ mglCommand *mglParse::FindCommand(const wchar_t *com, bool prog)
 }
 //-----------------------------------------------------------------------------
 // return values : 0 -- OK, 1 -- wrong arguments, 2 -- wrong command, 3 -- unclosed string
-int mglParse::Exec(mglGraph gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var)
+int mglParse::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var)
 {
 	int k[10], i;
 	for(i=0;i<10;i++)	k[i] = i<n ? a[i].type + 1 : 0;
@@ -218,7 +218,7 @@ bool mglParse::AddParam(int n, const char *str, bool isstr)
 	delete []wcs;	return r;
 }
 //-----------------------------------------------------------------------------
-int mglParse::Parse(mglGraph gr, const char *str, long pos)
+int mglParse::Parse(mglGraph *gr, const char *str, long pos)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -375,7 +375,7 @@ bool mgls_suffix(const wchar_t *p, mglData *d, mreal *v)
 //-----------------------------------------------------------------------------
 // convert substrings to arguments
 mglData mglFormulaCalc(const wchar_t *string, mglParse *arg);
-void mglParse::FillArg(mglGraph gr, int k, wchar_t **arg, mglArg *a)
+void mglParse::FillArg(mglGraph *gr, int k, wchar_t **arg, mglArg *a)
 {
 	register long n;
 	for(n=1;n<k;n++)
@@ -430,7 +430,7 @@ void mglParse::FillArg(mglGraph gr, int k, wchar_t **arg, mglArg *a)
 //-----------------------------------------------------------------------------
 // return values: 0 - not found, 1 - OK, 2 - wrong arguments,
 //				3 - wrong command, 4 - string too long
-int mglParse::PreExec(mglGraph , long k, wchar_t **arg, mglArg *a)
+int mglParse::PreExec(mglGraph *, long k, wchar_t **arg, mglArg *a)
 {
 	long n=0;
 	mglVar *v;
@@ -530,7 +530,7 @@ void mglParse::PutArg(const wchar_t *string, wchar_t *str, bool def)
 }
 //-----------------------------------------------------------------------------
 // return values: 0 - OK, 1 - wrong arguments, 2 - wrong command, 3 - string too long, 4 -- unclosed string
-int mglParse::Parse(mglGraph gr, const wchar_t *string, long pos)
+int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 {
 	if(Stop)	return 0;
 	wchar_t *str, *s = new wchar_t[wcslen(string)+1+40*parlen],*arg[1024],*t;
@@ -545,7 +545,7 @@ int mglParse::Parse(mglGraph gr, const wchar_t *string, long pos)
 		if(str[n]=='(' && k%2==0)	m++;
 		if(str[n]==')' && k%2==0)	m--;
 		if(str[n]=='#' && k%2==0)	break;
-		if(str[n]==':' && k%2==0 && m==0)
+		if((str[n]==':' || str[n]=='\n') && k%2==0 && m==0)
 		{
 			str[n]=0;
 			int res=Parse(gr,str,pos);
@@ -634,7 +634,7 @@ int mglParse::Parse(mglGraph gr, const wchar_t *string, long pos)
 		if(*t=='$' && t[1]>='a' && t[1]<='z')	*t = ' ';
 	}
 
-	gr.SaveState();	// save state before command execution
+	gr->SaveState();	// save state before command execution
 	// parse arguments (parameters $1, ..., $9)
 	PutArg(string,str,false);	wcstrim_mgl(str);
 
@@ -684,8 +684,8 @@ int mglParse::Parse(mglGraph gr, const wchar_t *string, long pos)
 				mgl_wcstombs(a[0].s, a[0].w, 1024);		n=-IsFunc(a[0].w,&na);
 				if(n && k!=na+2)
 				{
-					if(gr.Self()->Message)
-						sprintf(gr.Self()->Message,"Bad arguments for %ls: %ld instead of %d\n",
+					if(gr->Self()->Message)
+						sprintf(gr->Self()->Message,"Bad arguments for %ls: %ld instead of %d\n",
 								a[0].w,k-2,na);
 					n = 1;
 				}
@@ -768,7 +768,7 @@ int mglParse::Parse(mglGraph gr, const wchar_t *string, long pos)
 }
 //-----------------------------------------------------------------------------
 // return values: 0 - OK, 1 - wrong arguments, 2 - wrong command, 3 - string too long, 4 -- unclosed string
-int mglParse::ParseDat(mglGraph gr, const wchar_t *string, mglData &res)
+int mglParse::ParseDat(mglGraph *gr, const wchar_t *string, mglData &res)
 {
 	wchar_t *str, *s = new wchar_t[wcslen(string)+1+parlen],*arg[32];
 	str = s;
@@ -809,7 +809,7 @@ int mglParse::ParseDat(mglGraph gr, const wchar_t *string, mglData &res)
 	return n;
 }
 //-----------------------------------------------------------------------------
-int mglParse::FlowExec(mglGraph , const wchar_t *com, long m, mglArg *a)
+int mglParse::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 {
 	int n=-1;
 	if(!ifskip() && !wcscmp(com,L"once"))
@@ -940,7 +940,7 @@ void mgl_error_print(int line, int r, char *Message)
 	if(r==4)	printf("Unbalanced ' in line %d\n", line);
 	if(Message)	Message[0]=0;
 }
-void mglParse::Execute(mglGraph gr, FILE *fp, bool print)
+void mglParse::Execute(mglGraph *gr, FILE *fp, bool print)
 {
 	if(fp==0)	return;
 	fseek(fp,0,SEEK_END);	// get file size
@@ -957,7 +957,7 @@ void mglParse::Execute(mglGraph gr, FILE *fp, bool print)
 	delete []str;
 }
 //-----------------------------------------------------------------------------
-void mglParse::Execute(mglGraph gr, int n, const wchar_t **text, void (*error)(int line, int kind, char *mes))
+void mglParse::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(int line, int kind, char *mes))
 {
 	if(n<1 || text==0)	return;
 	long i, r;
@@ -971,12 +971,12 @@ void mglParse::Execute(mglGraph gr, int n, const wchar_t **text, void (*error)(i
 		if(error)
 		{
 			if(r>0)	error(i+1, r, 0);
-			if(gr.Self()->Message && gr.Self()->Message[0])	error(i,0,gr.Self()->Message);
+			if(gr->Self()->Message && gr->Self()->Message[0])	error(i,0,gr->Self()->Message);
 		}
 	}
 }
 //-----------------------------------------------------------------------------
-void mglParse::Execute(mglGraph gr, const wchar_t *text, void (*error)(int line, int kind, char *mes))
+void mglParse::Execute(mglGraph *gr, const wchar_t *text, void (*error)(int line, int kind, char *mes))
 {
 	unsigned s = wcslen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -992,7 +992,7 @@ void mglParse::Execute(mglGraph gr, const wchar_t *text, void (*error)(int line,
 	delete []wcs;	free(str);
 }
 //-----------------------------------------------------------------------------
-void mglParse::Execute(mglGraph gr, const char *text, void (*error)(int line, int kind, char *mes))
+void mglParse::Execute(mglGraph *gr, const char *text, void (*error)(int line, int kind, char *mes))
 {
 	unsigned s = strlen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -1001,7 +1001,7 @@ void mglParse::Execute(mglGraph gr, const char *text, void (*error)(int line, in
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-int mglParse::Export(wchar_t cpp_out[1024], mglGraph gr, const wchar_t *str)
+int mglParse::Export(wchar_t cpp_out[1024], mglGraph *gr, const wchar_t *str)
 {
 	*op1 = *op2 = 0;
 	out = cpp_out;
@@ -1010,22 +1010,22 @@ int mglParse::Export(wchar_t cpp_out[1024], mglGraph gr, const wchar_t *str)
 	return res;
 }
 //-----------------------------------------------------------------------------
-void mglParse::ProcOpt(mglGraph gr, wchar_t *str)
+void mglParse::ProcOpt(mglGraph *gr, wchar_t *str)
 {
 	wchar_t buf[256]=L"";
 	if(str==0 && opt)
 	{
-		gr.LoadState();
-		if(out)	mglprintf(buf,256,L"\tgr.LoadState();");
+		gr->LoadState();
+		if(out)	mglprintf(buf,256,L"\tgr->LoadState();");
 		wcscat(op2,buf);	opt=false;
 	}
 	else if(str==0 && opt_leg)
 	{
-		gr.AddLegend(leg, "");
-		if(out)	mglprintf(buf,256,L"\tgr.AddLegend(\"%s\", \"\");", leg);
+		gr->AddLegend(leg, "");
+		if(out)	mglprintf(buf,256,L"\tgr->AddLegend(\"%s\", \"\");", leg);
 		wcscat(op2,buf);
 	}
-	else
+	else if(str)
 	{
 		wchar_t *q=str,*s,*a,*b,*c;
 		long n;
@@ -1054,57 +1054,57 @@ void mglParse::ProcOpt(mglGraph gr, wchar_t *str)
 				ss = mglFormulaCalc(c, this);
 				if(a[0]=='x')
 				{
-					gr.SetAutoRanges(bb.a[0], ss.a[0], 0,0, 0,0, 0,0);	opt=true;
-					if(out)	mglprintf(buf,256,L"gr.SetAutoRanges(%g,%g,0,0,0,0,0,0);", wcstod(b,0), wcstod(s,0));
+					gr->SetAutoRanges(bb.a[0], ss.a[0], 0,0, 0,0, 0,0);	opt=true;
+					if(out)	mglprintf(buf,256,L"gr->SetAutoRanges(%g,%g,0,0,0,0,0,0);", wcstod(b,0), wcstod(s,0));
 					wcscat(op1,buf);
 				}
 				else if(a[0]=='y')
 				{
-					gr.SetAutoRanges(0,0, bb.a[0], ss.a[0], 0,0, 0,0);	opt=true;
-					if(out)	mglprintf(buf,256,L"gr.SetAutoRanges(0,0,%g,%g,0,0,0,0);", wcstod(b,0), wcstod(s,0));
+					gr->SetAutoRanges(0,0, bb.a[0], ss.a[0], 0,0, 0,0);	opt=true;
+					if(out)	mglprintf(buf,256,L"gr->SetAutoRanges(0,0,%g,%g,0,0,0,0);", wcstod(b,0), wcstod(s,0));
 					wcscat(op1,buf);
 				}
 				else if(a[0]=='z')
 				{
-					gr.SetAutoRanges(0,0, 0,0, bb.a[0], ss.a[0], 0,0);	opt=true;
-					if(out)	mglprintf(buf,256,L"gr.SetAutoRanges(0,0,0,0,%g,%g,0,0);", wcstod(b,0), wcstod(s,0));
+					gr->SetAutoRanges(0,0, 0,0, bb.a[0], ss.a[0], 0,0);	opt=true;
+					if(out)	mglprintf(buf,256,L"gr->SetAutoRanges(0,0,0,0,%g,%g,0,0);", wcstod(b,0), wcstod(s,0));
 					wcscat(op1,buf);
 				}
 				else if(a[0]=='c')
 				{
-					gr.SetAutoRanges(0,0, 0,0, 0,0, bb.a[0], ss.a[0]);	opt=true;
-					if(out)	mglprintf(buf,256,L"gr.SetAutoRanges(0,0,0,0,0,0,%g,%g);", wcstod(b,0), wcstod(s,0));
+					gr->SetAutoRanges(0,0, 0,0, 0,0, bb.a[0], ss.a[0]);	opt=true;
+					if(out)	mglprintf(buf,256,L"gr->SetAutoRanges(0,0,0,0,0,0,%g,%g);", wcstod(b,0), wcstod(s,0));
 					wcscat(op1,buf);
 				}
 			}
 			else if(!wcscmp(a,L"cut"))
 			{
-				gr.SetCut(ff!=0 || !wcsncmp(s,L"on",2));	opt=true;
-				if(out)	mglprintf(buf,256,L"gr.SetCur(%s);", ff!=0 || !wcsncmp(s,L"on",2)?"true":"false");
+				gr->SetCut(ff!=0 || !wcsncmp(s,L"on",2));	opt=true;
+				if(out)	mglprintf(buf,256,L"gr->SetCur(%s);", ff!=0 || !wcsncmp(s,L"on",2)?"true":"false");
 				wcscat(op1,buf);
 			}
 			else if(!wcscmp(a,L"meshnum"))
 			{
-				gr.SetMeshNum(ff);		opt=true;
-				if(out)	mglprintf(buf,256,L"gr.SetMeshNum(%d);", int(ff));
+				gr->SetMeshNum(ff);		opt=true;
+				if(out)	mglprintf(buf,256,L"gr->SetMeshNum(%d);", int(ff));
 				wcscat(op1,buf);
 			}
 			else if(!wcscmp(a,L"alphadef") || !wcscmp(a,L"alpha"))
 			{
-				gr.SetAlphaDef(ff);	opt=true;
-				if(out)	mglprintf(buf,256,L"gr.SetAlphaDef(%g);", ff);
+				gr->SetAlphaDef(ff);	opt=true;
+				if(out)	mglprintf(buf,256,L"gr->SetAlphaDef(%g);", ff);
 				wcscat(op1,buf);
 			}
 			else if(!wcscmp(a,L"ambient"))
 			{
-				gr.SetAmbient(ff);		opt=true;
-				if(out)	mglprintf(buf,256,L"gr.SetAmbient(%g);", ff);
+				gr->SetAmbient(ff);		opt=true;
+				if(out)	mglprintf(buf,256,L"gr->SetAmbient(%g);", ff);
 				wcscat(op1,buf);
 			}
 			else if(!wcscmp(a,L"marksize"))
 			{
-				gr.SetMarkSize(ff/50);	opt=true;
-				if(out)	mglprintf(buf,256,L"gr.SetMarkSize(%g/50);", ff);
+				gr->SetMarkSize(ff/50);	opt=true;
+				if(out)	mglprintf(buf,256,L"gr->SetMarkSize(%g/50);", ff);
 				wcscat(op1,buf);
 			}
 			else if(!wcscmp(a,L"legend"))	// TODO: parsing of string tail (other options???)
@@ -1177,10 +1177,10 @@ void mgl_add_param(HMPR p, int id, const char *str)			{	p->AddParam(id,str);	}
 void mgl_add_paramw(HMPR p, int id, const wchar_t *str)		{	p->AddParam(id,str);	}
 HMDT mgl_add_var(HMPR p, const char *name)	{	mglVar *v=p->AddVar(name);	return &(v->d);	}
 HMDT mgl_find_var(HMPR p, const char *name)	{	mglVar *v=p->FindVar(name);	return &(v->d);	}
-int mgl_parse(HMGL gr, HMPR p, const char *str, int pos)	{	return p->Parse(gr, str, pos);	}
-int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos){	return p->Parse(gr, str, pos);	}
-void mgl_parse_text(HMGL gr, HMPR p, const char *str)	{	p->Execute(gr, str);	}
-void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str){	p->Parse(gr, str);	}
+int mgl_parse(HMGL gr, HMPR p, const char *str, int pos)
+{	return p->Parse(gr, str, pos);	}
+int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos)
+{	return p->Parse(gr, str, pos);	}
 void mgl_restore_once(HMPR p)	{	p->RestoreOnce();	}
 void mgl_parser_allow_setsize(HMPR p, int a)	{	p->AllowSetSize = a;	}
 void mgl_scan_func(HMPR p, const wchar_t *line)	{	p->ScanFunc(line);	}
@@ -1211,11 +1211,6 @@ int mgl_parse_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l)
 {
 	char *s=new char[l+1];		memcpy(s,str,l);	s[l]=0;
 	int r = _PR_->Parse(_GR_, s, *pos);	delete []s;	return r;
-}
-void mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, int l)
-{
-	char *s=new char[l+1];		memcpy(s,str,l);	s[l]=0;
-	_PR_->Execute(_GR_, s);		delete []s;
 }
 void mgl_restore_once_(uintptr_t* p)	{	_PR_->RestoreOnce();	}
 void mgl_parser_allow_setsize_(uintptr_t* p, int *a)

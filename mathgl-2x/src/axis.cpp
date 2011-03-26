@@ -126,6 +126,26 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const wchar_t *lbl)
 	}
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::SetTicksVal(char dir, const char *lbl)
+{
+	register long i,j,len=strlen(lbl);
+	for(i=0,j=1;j<len;j++)
+		if(lbl[j]=='\n' || (lbl[j]=='n' && lbl[j-1]=='\\'))	i++;
+	if(i>63)	i=63;
+	mglData val(i+1);	val.Fill(Min.x,Max.x);
+	SetTicksVal(dir, &val, lbl);
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::SetTicksVal(char dir, const wchar_t *lbl)
+{
+	register long i,j,len=wcslen(lbl);
+	for(i=0,j=1;j<len;j++)
+		if(lbl[j]=='\n' || (lbl[j]=='n' && lbl[j-1]=='\\'))	i++;
+	if(i>63)	i=63;
+	mglData val(i+1);	val.Fill(Min.x,Max.x);
+	SetTicksVal(dir, &val, lbl);
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::SetTicksVal(char dir, HCDT v, const wchar_t **lbl)
 {
 	mglAxis &aa=ax;

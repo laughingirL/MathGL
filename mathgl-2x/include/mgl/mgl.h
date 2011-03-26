@@ -60,6 +60,10 @@ public:
 	{	mgl_set_axis_stl(gr, stl, tck, sub);	}
 	inline void SetTickTime(char dir, float d, const char *t="%F")
 	{	mgl_set_tick_time(gr,dir,d,t);	}
+	inline void SetTicksVal(char dir, const char *lbl)
+	{	mgl_set_ticks_str(gr,dir,lbl);	}
+	inline void SetTicksVal(char dir, const wchar_t *lbl)
+	{	mgl_set_ticks_wcs(gr,dir,lbl);	}
 	inline void SetTicksVal(char dir, const mglDataA &v, const char *lbl)
 	{	mgl_set_ticks_val(gr,dir,&v,lbl);	}
 	inline void SetTicksVal(char dir, const mglDataA &v, const wchar_t *lbl)
@@ -182,6 +186,8 @@ public:
 	{	mgl_subplot_d(gr, nx, ny, m, dx, dy);	}
 	inline void SubPlot(int nx,int ny,int m, const char *style)
 	{	mgl_subplot_s(gr, nx, ny, m, style);	}
+	inline void MultiPlot(int nx,int ny,int m, int dx, int dy, const char *style)
+	{	mgl_multiplot(gr, nx, ny, m, dx, dy, style);	}
 	inline void InPlot(float x1,float x2,float y1,float y2, bool rel=true)
 	{	if(rel)	mgl_inplot(gr, x1, x2, y1, y2);
 		else	mgl_relplot(gr, x1, x2, y1, y2);	}

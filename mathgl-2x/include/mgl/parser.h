@@ -41,7 +41,7 @@ struct mglCommand
 	const wchar_t *desc;	///< Short command description (can be NULL)
 	const wchar_t *form;	///< Format of command arguments (can be NULL)
 	/// Function for executing (plotting)
-	int (*exec)(mglGraph gr, long n, mglArg *a, int k[10]);
+	int (*exec)(mglGraph *gr, long n, mglArg *a, int k[10]);
 	/// Function for exporting in C++ (can be NULL)
 	void (*save)(wchar_t out[1024], long n, mglArg *a, int k[10]);
 	bool create;	///< Should parser create 1st the array automatically
@@ -116,19 +116,33 @@ public:
 	/// Find the command by the keyword name
 	mglCommand *FindCommand(const wchar_t *name, bool prog=false);
 	/// Parse and execute the string of MGL script
-	int Parse(mglGraph gr, const char *str, long pos=0);
+	inline int Parse(HMGL gr, const char *str, long pos=0)
+	{	mglGraph GR(gr);	return Parse(&GR,str,pos);	}
+	int Parse(mglGraph *gr, const char *str, long pos=0);
 	/// Parse and execute the unicode string of MGL script
-	int Parse(mglGraph gr, const wchar_t *str, long pos=0);
+	inline int Parse(HMGL gr, const wchar_t *str, long pos=0)
+	{	mglGraph GR(gr);	return Parse(&GR,str,pos);	}
+	int Parse(mglGraph *gr, const wchar_t *str, long pos=0);
 	/// Parse, execute and export it in C++ code the string of MGL script
-	int Export(wchar_t cpp_out[1024], mglGraph gr, const wchar_t *str);
+	inline 	int Export(wchar_t cpp_out[1024], HMGL gr, const wchar_t *str)
+	{	mglGraph GR(gr);	return Export(out,&GR,str);	}
+	int Export(wchar_t cpp_out[1024], mglGraph *gr, const wchar_t *str);
 	/// Execute MGL script file \a fname
-	void Execute(mglGraph gr, FILE *fp, bool print=false);
+	inline void Execute(HMGL gr, FILE *fp, bool print=false)
+	{	mglGraph GR(gr);	Execute(&GR,fp,print);	}
+	void Execute(mglGraph *gr, FILE *fp, bool print=false);
 	/// Execute MGL script from array of lines
-	void Execute(mglGraph gr, int num, const wchar_t **text, void (*error)(int line, int kind, char *mes)=NULL);
+	inline void Execute(HMGL gr, int num, const wchar_t **text, void (*error)(int line, int kind, char *mes)=NULL)
+	{	mglGraph GR(gr);	Execute(&GR,num,text,error);	}
+	void Execute(mglGraph *gr, int num, const wchar_t **text, void (*error)(int line, int kind, char *mes)=NULL);
 	/// Execute MGL script text with '\n' separated lines
-	void Execute(mglGraph gr, const wchar_t *text, void (*error)(int line, int kind, char *mes)=NULL);
+	inline void Execute(HMGL gr, const wchar_t *text, void (*error)(int line, int kind, char *mes)=NULL)
+	{	mglGraph GR(gr);	Execute(&GR,text,error);	}
+	void Execute(mglGraph *gr, const wchar_t *text, void (*error)(int line, int kind, char *mes)=NULL);
 	/// Execute MGL script text with '\n' separated lines
-	void Execute(mglGraph gr, const char *text, void (*error)(int line, int kind, char *mes)=NULL);
+	inline void Execute(HMGL gr, const char *text, void (*error)(int line, int kind, char *mes)=NULL)
+	{	mglGraph GR(gr);	Execute(&GR,text,error);	}
+	void Execute(mglGraph *gr, const char *text, void (*error)(int line, int kind, char *mes)=NULL);
 	/// Scan for functions (use NULL for reset)
 	void ScanFunc(const wchar_t *line);
 	/// Check if name is function and return its address (or 0 if no)
@@ -184,17 +198,17 @@ private:
 	bool for_br;	///< Break is switched on (skip all comands until 'next')
 
 	/// Parse command
-	int Exec(mglGraph gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var);
+	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var);
 	/// Fill arguments \a a from strings
-	void FillArg(mglGraph gr, int n, wchar_t **arg, mglArg *a);
+	void FillArg(mglGraph *gr, int n, wchar_t **arg, mglArg *a);
 	/// PreExecute stage -- parse some commands and create variables
-	int PreExec(mglGraph gr, long n, wchar_t **arg, mglArg *a);
+	int PreExec(mglGraph *gr, long n, wchar_t **arg, mglArg *a);
 	/// Process optional arguments
-	void ProcOpt(mglGraph gr, wchar_t *str);
+	void ProcOpt(mglGraph *gr, wchar_t *str);
 	/// Execute program-flow control commands
-	int FlowExec(mglGraph gr, const wchar_t *com, long n, mglArg *a);
+	int FlowExec(mglGraph *gr, const wchar_t *com, long n, mglArg *a);
 	/// Parse and execute the unicode string of MGL script
-	int ParseDat(mglGraph gr, const wchar_t *str, mglData &res);
+	int ParseDat(mglGraph *gr, const wchar_t *str, mglData &res);
 	/// Parse $N arguments
 	void PutArg(const wchar_t *string, wchar_t *str, bool def);
 	/// In skip mode
@@ -219,8 +233,6 @@ HMDT mgl_add_var(HMPR, const char *name);
 HMDT mgl_find_var(HMPR, const char *name);
 int mgl_parse(HMGL gr, HMPR p, const char *str, int pos);
 int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos);
-void mgl_parse_text(HMGL gr, HMPR p, const char *str);
-void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str);
 void mgl_restore_once(HMPR p);
 void mgl_parser_allow_setsize(HMPR p, int a);
 /*****************************************************************************/
@@ -232,7 +244,6 @@ uintptr_t mgl_add_var_(uintptr_t* p, const char *name, int l);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
 uintptr_t mgl_find_var_(uintptr_t* p, const char *name, int l);
 int mgl_parse_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l);
-void mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, int l);
 void mgl_restore_once_(uintptr_t* p);
 void mgl_parser_allow_setsize_(uintptr_t* p, int *a);
 /*****************************************************************************/

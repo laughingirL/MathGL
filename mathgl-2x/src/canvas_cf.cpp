@@ -60,6 +60,8 @@ void mgl_subplot_d(HMGL gr, int nx,int ny,int m,float dx,float dy)
 {	_Gr_->SubPlot(nx,ny,m,dx,dy);	}
 void mgl_subplot_s(HMGL gr, int nx,int ny,int m,const char *style)
 {	_Gr_->SubPlot(nx,ny,m,style);	}
+void mgl_multiplot(HMGL gr, int nx,int ny,int m,int dx,int dy,const char *style)
+{	_Gr_->MultiPlot(nx,ny,m,dx,dy,style);	}
 void mgl_inplot(HMGL gr, float x1,float x2,float y1,float y2)
 {	_Gr_->InPlot(x1,x2,y1,y2,false);	}
 void mgl_relplot(HMGL gr, float x1,float x2,float y1,float y2)
@@ -112,6 +114,9 @@ void mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,float *dx,float *dy)
 void mgl_subplot_s_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st,int l)
 {	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
 	_GR_->SubPlot(*nx,*ny,*m,s);	delete []s;	}
+void mgl_multiplot_(uintptr_t *gr, int *nx,int *ny,int *m,int *dx,int *dy,const char *st,int l)
+{	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
+	_GR_->MultiPlot(*nx,*ny,*m,*dx,*dy,s);	delete []s;	}
 void mgl_inplot_(uintptr_t *gr, float *x1,float *x2,float *y1,float *y2)
 {	_GR_->InPlot(*x1,*x2,*y1,*y2,false);	}
 void mgl_relplot_(uintptr_t *gr, float *x1,float *x2,float *y1,float *y2)
@@ -159,6 +164,10 @@ void mgl_adjust_ticks(HMGL gr, const char *dir)
 {	_Gr_->AdjustTicks(dir);	}
 void mgl_set_ticks(HMGL gr, char dir, float d, int ns, float org)
 {	_Gr_->SetTicks(dir,d,ns,org);	}
+void mgl_set_ticks_str(HMGL gr, char dir, const char *lbl)
+{	_Gr_->SetTicksVal(dir,lbl);	}
+void mgl_set_ticks_wcs(HMGL gr, char dir, const wchar_t *lbl)
+{	_Gr_->SetTicksVal(dir,lbl);	}
 void mgl_set_ticks_val(HMGL gr, char dir, HCDT val, const char *lbl)
 {	_Gr_->SetTicksVal(dir,val,lbl);	}
 void mgl_set_ticks_valw(HMGL gr, char dir, HCDT val, const wchar_t *lbl)
@@ -233,6 +242,9 @@ void mgl_adjust_ticks_(uintptr_t *gr, const char *dir, int l)
 	_GR_->AdjustTicks(s);	delete []s;	}
 void mgl_set_ticks_(uintptr_t *gr, char *dir, float *d, int *ns, float *org, int)
 {	_GR_->SetTicks(*dir, *d, *ns, *org);	}
+void mgl_set_ticks_str_(uintptr_t *gr, const char *dir, const char *lbl,int,int l)
+{	char *s=new char[l+1];	memcpy(s,lbl,l);	s[l]=0;
+	_GR_->SetTicksVal(*dir,s);	delete []s;	}
 void mgl_set_ticks_val_(uintptr_t *gr, const char *dir, uintptr_t *val, const char *lbl,int,int l)
 {	char *s=new char[l+1];	memcpy(s,lbl,l);	s[l]=0;
 	_GR_->SetTicksVal(*dir,_DA_(val),s);	delete []s;	}
