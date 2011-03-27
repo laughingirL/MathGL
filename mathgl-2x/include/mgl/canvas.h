@@ -353,6 +353,7 @@ private:
 	float stack[MGL_STACK_ENTRY*13];	// stack for transformation matrixes
 	int st_pos;
 	float font_factor;
+	bool NoAutoFactor;
 	int dr_nx1, dr_nx2, dr_ny1, dr_ny2;	// Allowed drawing region
 	GifFileType *gif;
 	float fscl,ftet;	///< last scale and rotation for glyphs
@@ -397,17 +398,19 @@ struct mglPrim
 	float s;			///< size (if applicable) or fscl
 	float w;			///< width (if applicable) or ftet
 	wchar_t m;			///< mark or symbol id (if applicable)
-	int type;			///< type of primitive (0 - point, 1 - line, 2 - trig, 3 - quad, 4 - glyph, 5 - arrow)
+	int type;			///< type of primitive (0 - point, 1 - line, 2 - trig, 3 - quad, 4 - glyph, 5 - arrow, 6 - text)
 	int style;			///< style of pen
 	int id;				///< object id
 	mglCanvas *gr;		///< pointer to owner
+	wchar_t *text;
+	char font[16];
 
 	void Draw();
 	bool IsSame(float wp,float *cp,int st);
 	float inline xx()	{	return gr->pntC[7*n1];		}
 	float inline yy()	{	return gr->pntC[7*n1+1];	}
 	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	}
-//	~mglPrim()	{	if(raw)	delete []raw;	};
+	~mglPrim()	{	if(text)	delete []text;	};
 	inline void operator=(mglPrim &a)	{	memcpy(this,&a,sizeof(mglPrim));	}
 };
 //-----------------------------------------------------------------------------

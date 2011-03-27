@@ -18,12 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <stdlib.h>
+#include <wchar.h>
 #include "mgl/canvas.h"
 //-----------------------------------------------------------------------------
 mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
 	G=0;	SetSize(w,h);	Quality = MGL_DRAW_NORM;
 	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';
+	NoAutoFactor = false;
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
 	az.dir = mglPoint(0,0,1);	az.a = mglPoint(0,1,0);	az.b = mglPoint(1,0,0);	az.ch='z';
@@ -39,8 +41,12 @@ mglCanvas::~mglCanvas()
 //-----------------------------------------------------------------------------
 void mglCanvas::DefaultPlotParam()
 {
-//	LegendMarks = 1;
-//	FontSize = 5;			BaseLineWidth = 1;
+//		BaseLineWidth = 1;
+//	ScalePuts = true;
+//	CloudFactor = 1;
+//	AutoOrg = true;
+//	CirclePnts=40;	FitPnts=100;	GridPnts=50;
+	LegendMarks = 1;		FontSize = 5;
 	Ambient();				Ternary(0);
 	PlotId = "frame";		SetPenPal("k-1");
 	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
@@ -54,17 +60,13 @@ void mglCanvas::DefaultPlotParam()
 	TranspType = 0;			MeshNum = 0;
 	RotatedText = true;		CurrPal = 0;
 	SetAxisStl();
-//	CloudFactor = 1;
-//	ClearLegend();			LegendBox = true;
+	ClearLegend();			LegendBox = true;
 	SetCutBox(mglPoint(0,0,0), mglPoint(0,0,0));
-//	AutoOrg = true;
-//	CirclePnts=40;	FitPnts=100;	GridPnts=50;
 	_tetx=_tety=_tetz=0;
 	TuneTicks= true;		//_sx=_sy=_sz =st_t = 1;
 	Alpha(false);	Fog(0);	FactorPos = 1.15;
 	ax.t[0]=ay.t[0]=az.t[0]=ac.t[0]=0;
 	AutoPlotFactor = true;	PlotFactor = 1.55;
-//	ScalePuts = true;
 	TickLen = 0.1;	Cut = true;
 	TickStl[0] = SubTStl[0] = '-';
 	TickStl[1] = SubTStl[1] = 0;
@@ -241,11 +243,57 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 	}
 }
 //-----------------------------------------------------------------------------
+float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float size,float sh)
+{
+	if(isnan(pntN[8*p]))	return 0;
+	if(size<0)	size = -size*FontSize;
+	if(!(Quality&4))	// add text itself
+	{
+		mglPrim a(6);
+		a.n1 = p;	a.z = pntN[8*p+2];
+		a.text = new wchar_t[wcslen(text)+1];
+		wcscpy(a.text,text);
+		strncpy(a.font,font,16);
+		a.s = size;	a.w = sh;
+		add_prim(a);
+	}
+	// text drawing itself
+	Push();
+	float shift = sh+0.07, fsize=size/8.*font_factor;
+	if(strchr(font,'t'))	shift = -sh-0.07;
+
+	shift *= fsize/2;
+
+	float *pp=pntN+8*p, ll=pp[5]*pp[5]+pp[6]*pp[6];
+	B[11]= pp[2];
+	if(isnan(ll))
+	{
+		memset(B,0,12*sizeof(float));
+		B[0] = B[4] = B[8] = fsize;
+		fscl = fsize;	ftet = 0;
+		B[9] = pp[0] - B[1]*0.02f;
+		B[10]= pp[1] - B[4]*0.02f - shift;
+	}
+	else
+	{
+		if(ll==0)	{	Pop();	return 0;	}
+		float tet = 180*atan2(pp[6],pp[5])/M_PI;
+		memset(B,0,12*sizeof(float));
+		B[0] = B[4] = B[8] = fsize;
+		fscl = fsize;	ftet = -tet;
+		NoAutoFactor=true;	RotateN(-tet,0,0,1);	NoAutoFactor=false;
+		B[9] = pp[0]+shift*pp[6]/sqrt(ll) - B[1]*0.02f;
+		B[10]= pp[1]-shift*pp[5]/sqrt(ll) - B[4]*0.02f;
+	}
+	fsize = fnt->Puts(text,font)*size/8.;
+	Pop();	return fsize;
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::Glyph(float x, float y, float f, int s, long j, char col)
 {
 	mglPrim a(4);
 	a.s = fscl/PlotFactor;	a.w = ftet;
-	float cc = AddTexture(col);
+	float cc = AddTexture(col);	// TODO: use real color
 	if(cc<0)	cc = CDef;
 	a.n1 = AddPntC(mglPoint((B[9]-zoomx1*Width) /zoomx2, (B[10]-zoomy1*Height)/zoomy2, B[11]), cc);
 	a.n2 = AddPntC(mglPoint(x,y,f/fnt->GetFact(s&3)),cc);
@@ -281,11 +329,10 @@ void mglPrim::Draw()
 	{
 	case 0:	gr->mark_draw(gr->pntC+4*n1,m,s);	break;
 	case 1:	gr->PDef=style;	gr->pPos=s;	gr->PenWidth=w;
-			if(m)	gr->line_draw(gr->pntN+8*n1,gr->pntN+8*n2);
-			else	gr->line_draw(gr->pntC+4*n1,gr->pntC+4*n2);
-			break;
+			gr->line_draw(gr->pntC+4*n1,gr->pntC+4*n2);	break;
 	case 2:	gr->trig_draw(gr->pntN+8*n1,gr->pntN+8*n2,gr->pntN+8*n3,true);	break;
 	case 3:	gr->quad_draw(gr->pntN+8*n1,gr->pntN+8*n2,gr->pntN+8*n3,gr->pntN+8*n4);	break;
+	case 4:	gr->glyph_draw(gr->pntC+4*n2,gr->pntC[4*n2+2],style,m);	break;
 	}
 	gr->PDef=pdef;	gr->pPos=ss;	gr->PenWidth=ww;
 }
@@ -376,7 +423,7 @@ void mglCanvas::RotateN(float Tet,float x,float y,float z)
 	B[6] = C[0]*R[6] + C[3]*R[7] + C[6]*R[8];
 	B[7] = C[1]*R[6] + C[4]*R[7] + C[7]*R[8];
 	B[8] = C[2]*R[6] + C[5]*R[7] + C[8]*R[8];
-	if(AutoPlotFactor)
+	if(AutoPlotFactor && !NoAutoFactor)
 	{
 		float m=(fabs(B[3])+fabs(B[4])+fabs(B[5]))/inH;
 		float n=(fabs(B[0])+fabs(B[1])+fabs(B[2]))/inW;
@@ -393,7 +440,7 @@ void mglCanvas::Perspective(float a)	// I'm too lazy for using 4*4 matrix
 void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 {
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
-	memset(B,0,9*sizeof(float));
+	memset(B,0,12*sizeof(float));
 	if(rel)
 	{
 		B[9] = B1[9] + (x1+x2-1)/2*B1[0];

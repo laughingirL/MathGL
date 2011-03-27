@@ -45,9 +45,10 @@ const mreal mgl_fgen = 4*14;
 extern mglTeXsymb mgl_tex_symb[];
 mglFont mglDefFont;
 //-----------------------------------------------------------------------------
-mreal mglFont::Puts(const char *str,const char *how, char col)
+mreal mglFont::Puts(const char *str,const char *how)
 {
 	int font=0, align=1;
+	char col='k';	// TODO: real color here
 	if(how)
 	{
 		if(strchr(how,'R'))	align = 2;
@@ -60,7 +61,12 @@ mreal mglFont::Puts(const char *str,const char *how, char col)
 		if(strchr(how,'o'))	font = font|MGL_FONT_OLINE;
 		if(strchr(how,'u'))	font = font|MGL_FONT_ULINE;
 	}
-	return Puts(str, font, align, col);
+	unsigned size = strlen(str)+1;
+	wchar_t *wcs = new wchar_t[size];
+	mbstowcs(wcs,str,size);
+	mreal w = Puts(wcs,font,align,col);
+	delete []wcs;
+	return w;
 }
 //-----------------------------------------------------------------------------
 mreal mglFont::Width(const char *str,const char *how)
@@ -74,12 +80,18 @@ mreal mglFont::Width(const char *str,const char *how)
 		if(strchr(how,'o'))	font = font|MGL_FONT_OLINE;
 		if(strchr(how,'u'))	font = font|MGL_FONT_ULINE;
 	}
-	return Width(str, font);
+	unsigned size = strlen(str)+1;
+	wchar_t *wcs = new wchar_t[size];
+	mbstowcs(wcs,str,size);
+	mreal w = Width(wcs,font);
+	delete []wcs;
+	return w;
 }
 //-----------------------------------------------------------------------------
-mreal mglFont::Puts(const wchar_t *str,const char *how, char col)
+mreal mglFont::Puts(const wchar_t *str,const char *how)
 {
 	int font=0, align=1;
+	char col='k';	// TODO: real color here
 	if(how)
 	{
 		if(strchr(how,'R'))	align = 2;
@@ -107,26 +119,6 @@ mreal mglFont::Width(const wchar_t *str,const char *how)
 		if(strchr(how,'u'))	font = font|MGL_FONT_ULINE;
 	}
 	return Width(str, font);
-}
-//-----------------------------------------------------------------------------
-mreal mglFont::Puts(const char *str,int font,int align, char col)
-{
-	unsigned size = strlen(str)+1;
-	wchar_t *wcs = new wchar_t[size];
-	mbstowcs(wcs,str,size);
-	mreal w = Puts(wcs,font,align,col);
-	delete []wcs;
-	return w;
-}
-//-----------------------------------------------------------------------------
-mreal mglFont::Width(const char *str,int font)
-{
-	unsigned size = strlen(str)+1;
-	wchar_t *wcs = new wchar_t[size];
-	mbstowcs(wcs,str,size);
-	mreal w = Width(wcs,font);
-	delete []wcs;
-	return w;
 }
 //-----------------------------------------------------------------------------
 mreal mglFont::Puts(const wchar_t *str,int font,int align, char col)

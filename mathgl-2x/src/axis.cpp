@@ -693,12 +693,6 @@ void mglCanvas::Box(const char *col, bool ticks)
 	Org=o;	TickLen=tl;
 }
 //-----------------------------------------------------------------------------
-float mglCanvas::text_plot(long p,const wchar_t *text,const char *fnt,float size,float sh)
-{
-	// TODO: Add code here
-	return 0;
-}
-//-----------------------------------------------------------------------------
 void mglCanvas::colorbar(HCDT v, const mglColor *s, int where, float x, float y, float w, float h)
 {
 	// TODO: Add code here
