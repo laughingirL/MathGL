@@ -195,9 +195,10 @@ void mglCanvas::WriteEPS(const char *fname,const char *descr)
 			if(sd && sd[0])	mgl_printf(fp, gz, "%s [%s] %g sd dr\n",str,sd,P[i].w*P[i].s);
 			else			mgl_printf(fp, gz, "%s d0 dr\n",str);
 		}
-		else if(P[i].type==4)	// glyph	// TODO: add after font enabled
+		else if(P[i].type==4)	// glyph
 		{
-			float ss = P[i].s/2, xx = pntC[4*P[i].n2], yy = pntC[4*P[i].n2+1], zz = pntC[4*P[i].n2+2];
+			float 	ss = P[i].s/P[i].p/1.1, 	xx = pntC[4*P[i].n2],
+					yy = pntC[4*P[i].n2+1], zz = pntC[4*P[i].n2+2];
 			mgl_printf(fp, gz, "gsave\t%g %g translate %g %g scale %g rotate %s\n",
 				pntC[4*P[i].n1], pntC[4*P[i].n1+1], ss, ss, -P[i].w, str);
 			if(P[i].style&8)	// this is "line"

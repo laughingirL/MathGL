@@ -35,8 +35,11 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
-	gr->Puts(mglPoint(0,0),"test");
+	gr->Puts(mglPoint(0,0),"Test","t");
+	gr->Puts(mglPoint(0,0),"Test","T");
+	gr->Line(mglPoint(0),mglPoint(1),"r");
 	gr->Puts(mglPoint(-1,0),mglPoint(1,1),"angle");
+	gr->Line(mglPoint(-1,0),mglPoint(1,1),"r");
 	gr->Axis();
 	return 0;
 

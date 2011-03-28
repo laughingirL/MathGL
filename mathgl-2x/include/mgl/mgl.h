@@ -213,6 +213,14 @@ public:
 	{	mgl_set_range_val(gr, dir, c1, c2);	}
 	inline void SetRange(char dir, const mglDataA &dat, bool add=false)
 	{	mgl_set_range_dat(gr, dir, &dat, add);	}
+	inline void SetRanges(const mglData &xx, const mglData &yy, const mglData &zz, const mglData &cc)
+	{	mgl_set_range_dat(gr,'x',&xx,0);	mgl_set_range_dat(gr,'y',&yy,0);
+		mgl_set_range_dat(gr,'z',&zz,0);	mgl_set_range_dat(gr,'c',&cc,0);	}
+	inline void SetRanges(const mglData &xx, const mglData &yy, const mglData &zz)
+	{	mgl_set_range_dat(gr,'x',&xx,0);	mgl_set_range_dat(gr,'y',&yy,0);
+		mgl_set_range_dat(gr,'z',&zz,0);	mgl_set_range_dat(gr,'c',&zz,0);	}
+	inline void SetRanges(const mglData &xx, const mglData &yy)
+	{	mgl_set_range_dat(gr,'x',&xx,0);	mgl_set_range_dat(gr,'y',&yy,0);	}
 	inline void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0)
 	{	mgl_set_ranges(gr, x1, x2, y1, y2, z1, z2);	}
 	inline void SetRanges(mglPoint p1, mglPoint p2)

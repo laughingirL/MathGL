@@ -688,19 +688,29 @@ void mglCanvas::mark_draw(const float *q, char type, float size)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::glyph_draw(float *p, float f, int s, long j)
+void mglCanvas::glyph_draw(const mglPrim *P)
 {
-	int ss=s&3;
-	if(s&8)
+	float *p = pntC+4*P->n2, f = pntC[4*P->n2+2];
+	Push();
+	B[0] = B[4] = B[8] = P->s*P->p;	PlotFactor = P->p;
+	NoAutoFactor=false;	RotateN(P->w,0,0,1);	NoAutoFactor=false;
+	B[9] = pntC[4*P->n1];
+	B[10]= pntC[4*P->n1+1];
+	B[11]= pntC[4*P->n1+2];
+	p[2]=0;
+
+	int ss=P->style&3;
+	if(P->style&8)
 	{
-		if(!(s&4))	glyph_line(p,f,true);
+		if(!(P->style&4))	glyph_line(p,f,true);
 		glyph_line(p,f,false);
 	}
 	else
 	{
-		if(!(s&4))	glyph_fill(p,f,fnt->GetNt(ss,j),fnt->GetTr(ss,j));
-		glyph_wire(p,f,fnt->GetNl(ss,j),fnt->GetLn(ss,j));
+		if(!(P->style&4))	glyph_fill(p,f,fnt->GetNt(ss,P->m),fnt->GetTr(ss,P->m));
+		glyph_wire(p,f,fnt->GetNl(ss,P->m),fnt->GetLn(ss,P->m));
 	}
+	Pop();	p[2]=f;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_fill(float *pp, float f, int nt, const short *trig)

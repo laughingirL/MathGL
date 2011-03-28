@@ -49,6 +49,7 @@
 21. Contour label should not rotated on ~180 degree
 22. Extend mglData to read strings (i.e. sth in "" or '' -- only one column per file + HDF5 import/export)
 23. Exclude BaseLineWidth (do proportional to minimal image size)
+24. Labels at TriCont()
 
 ============= UNSURE ===========
 

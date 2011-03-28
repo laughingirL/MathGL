@@ -259,10 +259,10 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	}
 	// text drawing itself
 	Push();
-	float shift = sh+0.07, fsize=size/8.*font_factor;
-	if(strchr(font,'t'))	shift = -sh-0.07;
+	float shift = -sh-0.2, fsize=size/8.*font_factor, h = fnt->Height(font)*fsize;
+	if(strchr(font,'T'))	shift = sh+0.3;
 
-	shift *= fsize/2;
+	shift *= h;
 
 	float *pp=pntN+8*p, ll=pp[5]*pp[5]+pp[6]*pp[6];
 	B[11]= pp[2];
@@ -292,7 +292,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 void mglCanvas::Glyph(float x, float y, float f, int s, long j, char col)
 {
 	mglPrim a(4);
-	a.s = fscl/PlotFactor;	a.w = ftet;
+	a.s = fscl/PlotFactor;	a.w = ftet;	a.p = PlotFactor;
 	float cc = AddTexture(col);	// TODO: use real color
 	if(cc<0)	cc = CDef;
 	a.n1 = AddPntC(mglPoint((B[9]-zoomx1*Width) /zoomx2, (B[10]-zoomy1*Height)/zoomy2, B[11]), cc);
@@ -300,7 +300,7 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, char col)
 	a.style = s;	a.m = j;
 	a.z = B[11];
 	add_prim(a);
-	if(Quality&4)	glyph_draw(pntC+4*a.n1,f/fnt->GetFact(s&3),s,j);
+	if(Quality&4)	glyph_draw(&a);
 	else	add_prim(a);
 }
 //-----------------------------------------------------------------------------
@@ -332,7 +332,7 @@ void mglPrim::Draw()
 			gr->line_draw(gr->pntC+4*n1,gr->pntC+4*n2);	break;
 	case 2:	gr->trig_draw(gr->pntN+8*n1,gr->pntN+8*n2,gr->pntN+8*n3,true);	break;
 	case 3:	gr->quad_draw(gr->pntN+8*n1,gr->pntN+8*n2,gr->pntN+8*n3,gr->pntN+8*n4);	break;
-	case 4:	gr->glyph_draw(gr->pntC+4*n2,gr->pntC[4*n2+2],style,m);	break;
+	case 4:	gr->glyph_draw(this);	break;
 	}
 	gr->PDef=pdef;	gr->pPos=ss;	gr->PenWidth=ww;
 }
@@ -506,6 +506,7 @@ void mglCanvas::Pop()
 {
 	if(st_pos<0)	return;
 	memcpy(B,stack+13*st_pos,12*sizeof(float));
+	PlotFactor = stack[13*st_pos+12];
 	st_pos--;
 }
 //-----------------------------------------------------------------------------
@@ -514,6 +515,7 @@ void mglCanvas::Push()
 	st_pos = st_pos<9 ? st_pos+1:9;
 	if(st_pos<0)	st_pos=0;
 	memcpy(stack+13*st_pos,B,12*sizeof(float));
+	stack[13*st_pos+12] = PlotFactor;
 }
 //-----------------------------------------------------------------------------
 //	Lighting and transparency

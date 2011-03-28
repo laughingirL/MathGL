@@ -345,7 +345,7 @@ protected:
 	virtual void trig_draw(const float *p1, const float *p2, const float *p3, bool anorm=false);
 	virtual void quad_draw(const float *p1, const float *p2, const float *p3, const float *p4);
 	virtual void pnt_draw(const float *p);
-	void glyph_draw(float *p, float f, int style, long icode);
+	void glyph_draw(const mglPrim *P);
 	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 
 private:
@@ -397,6 +397,7 @@ struct mglPrim
 	float z;			///< z-position
 	float s;			///< size (if applicable) or fscl
 	float w;			///< width (if applicable) or ftet
+	float p;
 	wchar_t m;			///< mark or symbol id (if applicable)
 	int type;			///< type of primitive (0 - point, 1 - line, 2 - trig, 3 - quad, 4 - glyph, 5 - arrow, 6 - text)
 	int style;			///< style of pen
