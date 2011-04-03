@@ -28,6 +28,7 @@ mglBase::mglBase()
 	pntC=(float *)malloc(4*numC*sizeof(float));
 	pntN=(float *)malloc(8*numC*sizeof(float));
 	txt = (mglTexture *)malloc(2*sizeof(mglTexture));
+	memset(txt,0,2*sizeof(mglTexture));
 	// Always create default palette txt[0] and default scheme txt[1]
 	txt[0].Set(MGL_DEF_PAL,-1);		txt[1].Set("BbcyrR",1);	numT=2;
 	last_style[0]='k';	last_style[1]='-';	last_style[2]='0';	last_style[3]=last_style[4]=0;

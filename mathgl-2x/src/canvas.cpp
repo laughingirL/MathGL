@@ -29,13 +29,14 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
 	az.dir = mglPoint(0,0,1);	az.a = mglPoint(0,1,0);	az.b = mglPoint(1,0,0);	az.ch='z';
+	P = 0;	P_txt=0;	P_len=P_cur=0;
 	DefaultPlotParam();
 }
 //-----------------------------------------------------------------------------
 mglCanvas::~mglCanvas()
 {
 	delete fnt;
-	if(P)	delete []P;
+	if(P)	delete []P;		if(P_txt)	delete []P_txt;
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []OI;	}
 }
 //-----------------------------------------------------------------------------
@@ -243,6 +244,25 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 	}
 }
 //-----------------------------------------------------------------------------
+const wchar_t *mglCanvas::add_text(const wchar_t *str)
+{
+	if(!str || !str[0])	return 0;
+	long len = wcslen(str);
+	if(!P_txt)
+	{
+		P_len=len+1;	P_cur=0;
+		P_txt = (wchar_t *)malloc(P_len*sizeof(wchar_t));
+	}
+	else if(P_cur+len+1>=P_len)
+	{
+		P_len = P_cur+len+1;
+		P_txt = (wchar_t *)realloc(P_txt, P_len*sizeof(wchar_t));
+	}
+	wcscpy(P_txt+P_cur,str);
+	P_cur += len+1;
+	return P_txt+P_cur-len-1;
+}
+//-----------------------------------------------------------------------------
 float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float size,float sh)
 {
 	if(isnan(pntN[8*p]))	return 0;
@@ -251,8 +271,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	{
 		mglPrim a(6);
 		a.n1 = p;	a.z = pntN[8*p+2];
-		a.text = new wchar_t[wcslen(text)+1];
-		wcscpy(a.text,text);
+		a.txt = add_text(text);
 		strncpy(a.font,font,16);
 		a.s = size;	a.w = sh;
 		add_prim(a);

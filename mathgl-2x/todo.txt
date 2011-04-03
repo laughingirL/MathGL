@@ -13,6 +13,8 @@
 6. widgets
 7. stfa
 8. build system
+9. unify plotting functions as ({req.arg},const char *style="", const char *option=""), where "option" is the same as in MGL (i.e. [xyzc]range; alpha; value; meshnum; ...)
+10. memset(??",0,???) after each malloc(), realloc() !
 
 ============= NEW  =============
 

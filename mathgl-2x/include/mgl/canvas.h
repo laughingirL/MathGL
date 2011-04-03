@@ -260,6 +260,9 @@ protected:
 	unsigned char *G4;	///< Final picture in RGBA format. Prepared in Finish().
 	unsigned char *G;	///< Final picture in RGB format. Prepared in Finish().
 	mglPrim *P;			///< Primitives (lines, triangles and so on)
+	wchar_t *P_txt;		///< buffer of text for mglPrim
+	long P_len;			///< length of buffer for mglPrim
+	long P_cur;			///< position in buffer for mglPrim
 	long pNum;			///< Actual number of primitives
 	long pMax;			///< Maximal number of primitives
 	float PlotFactor;	///< Factor for sizing overall plot (should be >1.5, default is =1.55)
@@ -358,6 +361,8 @@ private:
 	GifFileType *gif;
 	float fscl,ftet;	///< last scale and rotation for glyphs
 
+	/// Add string to the buffer
+	const wchar_t *add_text(const wchar_t *str);
 	/// Draw generic colorbar
 	void colorbar(HCDT v, const mglColor *s, int where, float x, float y, float w, float h);
 	/// Draw labels for ticks
@@ -403,7 +408,7 @@ struct mglPrim
 	int style;			///< style of pen
 	int id;				///< object id
 	mglCanvas *gr;		///< pointer to owner
-	wchar_t *text;
+	const wchar_t *txt;
 	char font[16];
 
 	void Draw();
@@ -411,7 +416,7 @@ struct mglPrim
 	float inline xx()	{	return gr->pntC[7*n1];		}
 	float inline yy()	{	return gr->pntC[7*n1+1];	}
 	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	}
-	~mglPrim()	{	if(text)	delete []text;	};
+//	~mglPrim()	{	if(text)	delete []text;	};
 	inline void operator=(mglPrim &a)	{	memcpy(this,&a,sizeof(mglPrim));	}
 };
 //-----------------------------------------------------------------------------
