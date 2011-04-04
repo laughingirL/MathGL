@@ -83,7 +83,7 @@ public:
 	mglData(const HMDT aa, bool copy=true)
 	{	if(copy)	{	a=mgl_create_data();	if(aa)	mgl_data_set(a,aa);	}	else	a=aa;	del=copy;	};
 	mglData(const char *fname)	{	a=mgl_create_data_file(fname);	del=true;	}
-	~mglData()	{	if(a && del)	mgl_delete_data(a);	};
+	virtual ~mglData()	{	if(a && del)	mgl_delete_data(a);	};
 	mglData(const mglData &d)	{	a=mgl_create_data();	mgl_data_set(a,d.a);	del=true;	};
 
 	mglData(int size, const float *d)
@@ -290,7 +290,7 @@ public:
 		else if(kind==3)	self=mgl_create_graph_idtf();
 		else		self=mgl_create_graph_zb(width, height);
 	};
-	~mglGraph()	{	mgl_delete_graph(self);	};
+	virtual ~mglGraph()	{	mgl_delete_graph(self);	};
 	inline HMGL Self()	{	return self;	};
 
 	inline int  GetWarn()	{	return mgl_get_warn(self);	};

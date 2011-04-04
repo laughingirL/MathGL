@@ -327,7 +327,7 @@ public:
 	/// Allocate the memory for data array and initialize it zero
 	inline mglData(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
 	/// Delete the array
-	~mglData()	{	if(id && a)	delete []id;	if(!link && a)	delete []a;	}
+	virtual ~mglData()	{	if(id && a)	delete []id;	if(!link && a)	delete []a;	}
 	/// Get sizes
 	inline long GetNx() const	{	return nx;	}
 	inline long GetNy() const	{	return ny;	}

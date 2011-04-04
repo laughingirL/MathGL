@@ -48,7 +48,7 @@ using mglGraphAB::Window;
 	QMainWindow *Wnd;	///< Pointer to window
 
 	mglGraphQT();
-	~mglGraphQT();
+	virtual ~mglGraphQT();
 
 	void SetSize(int w,int h);
 	void EndFrame();
@@ -93,7 +93,7 @@ public:
 	int animDelay;		///< Animation delay in ms
 
 	QMathGL(QWidget *parent = 0, Qt::WindowFlags f = 0);
-	~QMathGL();
+	virtual ~QMathGL();
 	double getRatio()	{	return double(graph->GetWidth())/graph->GetHeight();	};
 	void setPopup(QMenu *p)	{	popup = p;	};	///< Set popup menu pointer
 	void setSize(int w, int h);		///< Set window/picture sizes

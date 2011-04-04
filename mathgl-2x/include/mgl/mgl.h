@@ -31,17 +31,17 @@ class mglGraph
 {
 	HMGL gr;
 public:
-	mglGraph(int kind=0, int width=600, int height=400)
+	inline mglGraph(int kind=0, int width=600, int height=400)
 	{
 		if(kind==1)		gr=mgl_create_graph_gl();
 //		else if(kind==2)gr=mgl_create_graph_idtf();
 		else	gr=mgl_create_graph(width, height);
 	}
-	mglGraph(const mglGraph &graph)
+	inline mglGraph(const mglGraph &graph)
 	{	gr = graph.gr;	mgl_use_graph(gr,1);	}
-	mglGraph(HMGL graph)
+	inline mglGraph(HMGL graph)
 	{	gr = graph;		mgl_use_graph(gr,1);	}
-	~mglGraph()
+	virtual ~mglGraph()
 	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
 	inline HMGL Self()	{	return gr;	}
 

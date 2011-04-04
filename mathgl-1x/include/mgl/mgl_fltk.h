@@ -51,7 +51,7 @@ using mglGraphAB::Window;
 	Fl_Window *Wnd;	///< Pointer to window
 
 	mglGraphFLTK();
-	~mglGraphFLTK();
+	virtual ~mglGraphFLTK();
 
 	void SetSize(int w,int h);
 	void EndFrame();
@@ -101,7 +101,7 @@ public:
 	int (*draw_func)(mglGraph *gr, void *par);
 
 	Fl_MathGL(int x, int y, int w, int h, char *label=0);
-	~Fl_MathGL();
+	virtual ~Fl_MathGL();
 
 	/// Update (redraw) plot
 	void update(mglGraph *gr=0);

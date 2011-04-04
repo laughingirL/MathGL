@@ -34,7 +34,7 @@ friend void _mgl_timer(int);
 public:
 using mglGraphAB::Window;
 	mglGraphGLUT();
-	~mglGraphGLUT();
+	virtual ~mglGraphGLUT();
 	//void WriteEPS(const char *fname,const char *descr=0);	// экспорт в EPS
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Служебные ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Create a window for plotting. Now implemeted only for GLUT.

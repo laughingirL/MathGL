@@ -35,7 +35,7 @@ public:
 	int AnimDelay;		///< Animation delay in ms
 
 	wxMathGL(wxWindow *parent, wxWindowID id=-1, const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize, long style=0, const wxString& name=wxPanelNameStr);
-	~wxMathGL();
+	virtual ~wxMathGL();
 	double GetRatio()	{	return double(graph->GetWidth())/graph->GetHeight();	};
 	void SetPopup(wxMenu *p)	{	popup = p;	};	///< Set popup menu pointer
 	void SetSize(int w, int h);		///< Set window/picture sizes
@@ -140,7 +140,7 @@ using mglGraphAB::Window;
 	wxWindow *Wnd;		///< Pointer to window
 
 	mglGraphWX();
-	~mglGraphWX();
+	virtual ~mglGraphWX();
 
 	void EndFrame();
 	void SetSize(int w,int h);
