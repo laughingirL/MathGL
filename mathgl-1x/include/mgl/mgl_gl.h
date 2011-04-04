@@ -38,7 +38,7 @@ class mglGraphGL : public mglGraphAB
 {
 public:
 	mglGraphGL();
-	~mglGraphGL();
+	virtual ~mglGraphGL();
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	void Flush() {glFlush();};
 	void Finish(){glFinish();};

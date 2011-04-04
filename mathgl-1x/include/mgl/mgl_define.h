@@ -21,7 +21,7 @@
 #ifndef _MGL_DEFINE_H_
 #define _MGL_DEFINE_H_
 //-----------------------------------------------------------------------------
-#ifdef WIN32 //_MSC_VER needs this before math.h 
+#ifdef WIN32 //_MSC_VER needs this before math.h
 #define	_USE_MATH_DEFINES
 #endif
 
@@ -142,7 +142,7 @@ struct mglThread
 //	unsigned char r[4];	// default color
 	mreal res;		// result of operation
 	mglThread();
-	~mglThread();
+	virtual ~mglThread();
 };
 /// Start several thread for the task
 mreal mglStartThread(void *(*func)(void *), mreal (*fres)(mreal,mreal), int n, mreal *z, long *p, void *v);

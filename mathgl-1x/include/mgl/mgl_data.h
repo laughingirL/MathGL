@@ -98,7 +98,7 @@ public:
 	/// Allocate the memory for data array and initialize it zero
 	mglData(int xx=1,int yy=1,int zz=1)	{	a=0;	Create(xx,yy,zz);	};
 	/// Delete the array
-	~mglData()			{	if(a)	{	delete []a;	delete []id;	}	};
+	virtual ~mglData()	{	if(a)	{	delete []a;	delete []id;	}	};
 	// ~~~~~~~~~~~~~~~~~~~~ операции ~~~~~~~~~~~~~~~~~~~~
 	// Get sizes
 	inline long GetNx()	{	return nx;	};
@@ -116,7 +116,7 @@ public:
 	/// Allocate memory and copy the data from the (float **) array
 	void Set(const float **A,int N1,int N2);
 	/// Allocate memory and copy the data from the (double **) array
-	void Set(const double **A,int N1,int N2); 
+	void Set(const double **A,int N1,int N2);
 	/// Allocate memory and copy the data from the (float ***) array
 	void Set(const float ***A,int N1,int N2,int N3);
 	/// Allocate memory and copy the data from the (double ***) array

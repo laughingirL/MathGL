@@ -39,7 +39,7 @@ friend void *mgl_thr_trin(void *p);
 public:
 	/// Initialize ZBuffer drawing and allocate the memory for image with size [Width x Height].
 	mglGraphZB(int w=600, int h=400);
-	~mglGraphZB();
+	virtual ~mglGraphZB();
 	/// write n-th slice (for testing)
 	void WriteSlice(int n);
 	void Finish();

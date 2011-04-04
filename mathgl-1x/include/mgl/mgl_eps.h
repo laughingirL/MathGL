@@ -54,7 +54,7 @@ class mglGraphPS : public mglGraphAB
 friend struct mglPrim;
 public:
 	mglGraphPS(int w=600, int h=400);
-	~mglGraphPS();
+	virtual ~mglGraphPS();
 	void WriteEPS(const char *fname,const char *descr=0);
 	void WriteSVG(const char *fname,const char *descr=0);
 	virtual void Finish();

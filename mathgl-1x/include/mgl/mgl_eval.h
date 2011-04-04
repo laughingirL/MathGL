@@ -50,7 +50,7 @@ public:
 	/// Parse the formula \a str and create formula-tree
 	mglFormula(const char *str);
 	/// Clean up formula-tree
-	~mglFormula();
+	virtual ~mglFormula();
 protected:
 	mreal CalcIn(const mreal *a1) const;
 	mreal CalcDIn(int id, const mreal *a1) const;

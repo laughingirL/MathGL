@@ -47,7 +47,7 @@ struct mglCommand
 	/// Function for exporting in C++ (can be NULL)
 	void (*save)(wchar_t out[1024], long n, mglArg *a, int k[10]);
 	bool create;	///< Should parser create 1st the array automatically
-	int type;		///< Type of command: 0 - data plot, 1 - other plot, 
+	int type;		///< Type of command: 0 - data plot, 1 - other plot,
 					///	2 - setup, 3 - data handle, 4 - subplot, 5 - program
 };
 extern mglCommand mgls_base_cmd[];
@@ -64,7 +64,7 @@ struct mglVar
 	void (*func)(void *);	///< Callback function for destroying
 
 	mglVar()	{	o=0;	s[0]=0;		next=prev=0;	func=0;	temp=false;	};
-	~mglVar();
+	virtual ~mglVar();
 	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
 	void MoveAfter(mglVar *var);
 };
@@ -77,7 +77,7 @@ struct mglNum
 	mglNum *next;	///< Pointer to next instance in list
 	mglNum *prev;	///< Pointer to prev instance in list
 	mglNum()	{	d=0;	s[0]=0;		next=prev=0;	};
-	~mglNum();
+	virtual ~mglNum();
 	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
 	void MoveAfter(mglNum *var);
 };
@@ -114,7 +114,7 @@ public:
 	wchar_t *op1, *op2;	///< Buffer for options (are used if out!=NULL)
 
 	mglParse(bool setsize=false);
-	~mglParse();
+	virtual ~mglParse();
 	/// Find the command by the keyword name
 	mglCommand *FindCommand(const wchar_t *name, bool prog=false);
 	/// Parse and execute the string of MGL script

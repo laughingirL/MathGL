@@ -44,7 +44,7 @@ public:
 	/// Parse the formula \a str and create formula-tree
 	mglFormulaC(const char *str);
 	/// Clean up formula-tree
-	~mglFormulaC();
+	virtual ~mglFormulaC();
 protected:
 	dual CalcIn(const dual *a1) const;
 	mglFormulaC *Left,*Right;	// first and second argument of the function

@@ -56,7 +56,7 @@ class mglFont
 public:
 	mglGraph *gr;	///< mglGraph class used for drawing characters
 	mglFont(const char *name=0, const char *path=0);
-	~mglFont();
+	virtual ~mglFont();
 	bool parse;		///< Parse LaTeX symbols
 
 	/// Load font data to memory. Normally used by constructor.

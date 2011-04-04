@@ -363,7 +363,9 @@ unsigned char* mglGraphAB::col2int(mreal *c,mreal *n,unsigned char *r)
 }
 //-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-20)*v + (r3+30-r1-r2)*u*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y) and selected one pair which 0<u<1 and 0<v<1.*/
-void mglGraphAB::quad_plot(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
+void mglGraphAB::quad_plot(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,mreal *cc0,mreal *cc1,mreal *cc2,mreal *cc3)
+{	quad_draw(pp0,pp1,pp2,pp3,cc0,cc1,cc2,cc3);	}
+void mglGraphAB::quad_draw(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 					mreal *cc0,mreal *cc1,mreal *cc2,mreal *cc3)
 {
 	Finished = false;
@@ -593,8 +595,9 @@ void mglGraphAB::quad_plot_a(mreal *pp0,mreal *pp1,mreal *pp2,mreal *pp3,
 }
 //-----------------------------------------------------------------------------
 /* Linear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-20)*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined for each point (x,y). Point plotted is u>0 and v>0 and u+v<1.*/
-void mglGraphAB::trig_plot(mreal *pp0,mreal *pp1,mreal *pp2,
-					mreal *cc0,mreal *cc1,mreal *cc2)
+void mglGraphAB::trig_plot(mreal *pp0,mreal *pp1,mreal *pp2,mreal *cc0,mreal *cc1,mreal *cc2)
+{	trig_draw(pp0,pp1,pp2,cc0,cc1,cc2);	}
+void mglGraphAB::trig_draw(mreal *pp0,mreal *pp1,mreal *pp2,mreal *cc0,mreal *cc1,mreal *cc2)
 {
 	Finished = false;
 	unsigned char r[4];
@@ -725,6 +728,8 @@ void mglGraphAB::trig_plot_n(mreal *pp0,mreal *pp1,mreal *pp2,
 }*/
 //-----------------------------------------------------------------------------
 void mglGraphAB::line_plot(mreal *pp0,mreal *pp1,mreal *cc0,mreal *cc1,bool all)
+{	line_draw(pp0,pp1,cc0,cc1,all);	}
+void mglGraphAB::line_draw(mreal *pp0,mreal *pp1,mreal *cc0,mreal *cc1,bool all)
 {
 //	if(!DrawFace && FastNoFace)	{	line_plot_s(pp0,pp1,cc0,cc1,all);	return;	}
 	Finished = false;

@@ -41,7 +41,7 @@ using mglGraph::Legend;
 
 	/// Initialize ZBuffer drawing and allocate the memory for image with size [Width x Height].
 	mglGraphAB(int w=600, int h=400);
-	~mglGraphAB();
+	virtual ~mglGraphAB();
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ��������� ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //	virtual void WriteEPS(const char *fname,const char *descr=0);
 	virtual void WriteSVG(const char *fname,const char *descr=0);
@@ -177,7 +177,7 @@ protected:
 	/// Set default color
 	void DefColor(mglColor c, mreal alpha=-1);
 	void colorbar(const mglData &v, const mglColor *s, int where, mreal x, mreal y, mreal w, mreal h);
-	
+
 	/// Plot point \a p with color \a c
 	virtual void pnt_plot(long x,long y,mreal z,unsigned char c[4]);
 	/// Transform mglColor and alpha value to bits format
@@ -186,11 +186,14 @@ protected:
 	unsigned char* col2int(mreal *c,mreal *n,unsigned char *r);
 	/// Draw line between points \a p1,\a p2 with color \a c1, \a c2 at edges
 	virtual void line_plot(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all=false);
+	virtual void line_draw(mreal *p1,mreal *p2,mreal *c1,mreal *c2,bool all=false);
 	/// Draws the point (ball) at position \a p with color \a c.
 	virtual void ball(mreal *p,mreal *c);
 
 	/// Draw triangle between points \a p0,\a p1,\a p2 with color \a c0, \a c1, \a c2 at edges
 	virtual void trig_plot(mreal *p0,mreal *p1,mreal *p2,
+		mreal *c0,mreal *c1,mreal *c2);
+	virtual void trig_draw(mreal *p0,mreal *p1,mreal *p2,
 		mreal *c0,mreal *c1,mreal *c2);
 	/// Draw triangle between points \a p0,\a p1,\a p2 with color \a c0, \a c1, \a c2 at edges
 	virtual void trig_plot_n(mreal *p0,mreal *p1,mreal *p2,
@@ -198,6 +201,8 @@ protected:
 	    mreal *n0,mreal *n1,mreal *n2);
 	/// Draw face of points \a p0,\a p1,\a p2,\a p3 with color \a c0, \a c1, \a c2, \a c3 at edges
 	virtual void quad_plot(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
+					mreal *c0,mreal *c1,mreal *c2,mreal *c3);
+	virtual void quad_draw(mreal *p0,mreal *p1,mreal *p2,mreal *p3,
 					mreal *c0,mreal *c1,mreal *c2,mreal *c3);
 	/// Draw face of points \a p0,\a p1,\a p2,\a p3 with values \a a0, \a a1, \a a2, \a a3 at edges
 	virtual void quad_plot_a(mreal *p0,mreal *p1,mreal *p2,mreal *p3,

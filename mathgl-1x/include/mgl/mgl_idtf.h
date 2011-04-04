@@ -271,7 +271,7 @@ class mglGraphIDTF : public mglGraphAB
 {
 public:
 	mglGraphIDTF();
-	~mglGraphIDTF();
+	virtual ~mglGraphIDTF();
 	using mglGraph::Mark;
 	using mglGraph::Ball;
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
