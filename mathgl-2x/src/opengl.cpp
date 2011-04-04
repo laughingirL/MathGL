@@ -7,6 +7,7 @@
 #include <GL/gl.h>
 #endif
 #include "mgl/canvas_gl.h"
+int mgl_compare_prim(const void *p1, const void *p2);
 //-----------------------------------------------------------------------------
 /// Create mglGraph object in OpenGL mode.
 HMGL mgl_create_graph_gl()
@@ -19,7 +20,19 @@ mglCanvasGL::mglCanvasGL() : mglCanvas(1,1)	{}
 //-----------------------------------------------------------------------------
 mglCanvasGL::~mglCanvasGL(){}
 //-----------------------------------------------------------------------------
-void mglCanvasGL::Finish()	{	glFinish();	}
+void mglCanvasGL::Finish()
+{
+	register long i;
+	if(P && pNum>0)
+	{
+		qsort(P,pNum,sizeof(mglPrim),mgl_compare_prim);
+		glVertexPointer(3, GL_FLOAT, 12, pnt);
+		glNormalPointer(GL_FLOAT, 12, pnt+5);
+		glColorPointer(4, GL_FLOAT, 12, pnt+8);
+		for(i=0;i<pNum;i++)	P[i].Draw();
+	}
+	glFinish();
+}
 //-----------------------------------------------------------------------------
 bool mglCanvasGL::Alpha(bool enable)
 {
@@ -192,48 +205,72 @@ unsigned char **mglCanvasGL::GetRGBLines(long &width, long &height, unsigned cha
 void mglCanvasGL::trig_draw(const float *p1, const float *p2, const float *p3, bool anorm)
 {
 	float c[4];
+	long k1=(p1-pnt)/12, k2=(p2-pnt)/12, k3=(p3-pnt)/12;
 	glBegin(GL_TRIANGLES);
-	txt[long(p1[3])].GetC(p1[3],p1[4],c);
-	glColor4f(c[1],c[1],c[2],c[3]);	glVertex3f(p1[0],p1[1],p1[2]);
-	txt[long(p2[3])].GetC(p2[3],p2[4],c);
-	glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p2[0],p2[1],p2[2]);
-	txt[long(p3[3])].GetC(p3[3],p3[4],c);
-	glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p3[0],p3[1],p3[2]);
+	if(k1>=0 && k1<num && k2>=0 && k2<num && k3>=0 && k3<num)
+	{	glArrayElement(k1);	glArrayElement(k2);	glArrayElement(k3);	}
+	else	// this is mark or glyph
+	{
+		txt[long(p1[3])].GetC(p1[3],p1[4],c);
+		glColor4f(c[1],c[1],c[2],c[3]);	glVertex3f(p1[0],p1[1],p1[2]);
+		txt[long(p2[3])].GetC(p2[3],p2[4],c);
+		glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p2[0],p2[1],p2[2]);
+		txt[long(p3[3])].GetC(p3[3],p3[4],c);
+		glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p3[0],p3[1],p3[2]);
+	}
 	glEnd();
 }
 //-----------------------------------------------------------------------------
 void mglCanvasGL::quad_draw(const float *p0, const float *p1, const float *p2, const float *p3)
 {
 	float c[4];
+	long k1=(p0-pnt)/12, k2=(p1-pnt)/12, k3=(p3-pnt)/12, k4=(p2-pnt)/12;
 	glBegin(GL_QUADS);
-	txt[long(p0[3])].GetC(p0[3],p0[4],c);
-	glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p0[0],p0[1],p0[2]);
-	txt[long(p1[3])].GetC(p1[3],p1[4],c);
-	glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p1[0],p1[1],p1[2]);
-	txt[long(p3[3])].GetC(p3[3],p3[4],c);
-	glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p3[0],p3[1],p3[2]);
-	txt[long(p2[3])].GetC(p2[3],p2[4],c);
-	glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p2[0],p2[1],p2[2]);
+	if(k1>=0 && k1<num && k2>=0 && k2<num && k3>=0 && k3<num && k4>=0 && k4<num)
+	{	glArrayElement(k1);	glArrayElement(k2);	glArrayElement(k3);	glArrayElement(k4);	}
+	else	// this is mark or glyph
+	{
+		txt[long(p0[3])].GetC(p0[3],p0[4],c);
+		glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p0[0],p0[1],p0[2]);
+		txt[long(p1[3])].GetC(p1[3],p1[4],c);
+		glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p1[0],p1[1],p1[2]);
+		txt[long(p3[3])].GetC(p3[3],p3[4],c);
+		glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p3[0],p3[1],p3[2]);
+		txt[long(p2[3])].GetC(p2[3],p2[4],c);
+		glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p2[0],p2[1],p2[2]);
+	}
 	glEnd();
 }
 //-----------------------------------------------------------------------------
 void mglCanvasGL::line_draw(const float *p1, const float *p2)
 {
 	float c[4];
+	long k1=(p1-pnt)/12, k2=(p2-pnt)/12;
 	glBegin(GL_LINES);
-	txt[long(p1[3])].GetC(p1[3],0,c);
-	glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p1[0],p1[1],p1[2]);
-	txt[long(p2[3])].GetC(p2[3],0,c);
-	glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p2[0],p2[1],p2[2]);
+	if(k1>=0 && k1<num && k2>=0 && k2<num)
+	{	glArrayElement(k1);	glArrayElement(k2);	}
+	else	// this is mark or glyph
+	{
+		txt[long(p1[3])].GetC(p1[3],0,c);
+		glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p1[0],p1[1],p1[2]);
+		txt[long(p2[3])].GetC(p2[3],0,c);
+		glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p2[0],p2[1],p2[2]);
+	}
 	glEnd();
 }
 //-----------------------------------------------------------------------------
 void mglCanvasGL::pnt_draw(const float *p)
 {
 	float c[4];
-	txt[long(p[3])].GetC(p[3],0,c);
+	long k1=(p-pnt)/12;
 	glBegin(GL_POINTS);
-	glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p[0],p[1],p[2]);
+	if(k1>=0 && k1<num)
+	{	glArrayElement(k1);	}
+	else	// this is mark or glyph
+	{
+		txt[long(p[3])].GetC(p[3],0,c);
+		glColor4f(c[0],c[1],c[2],c[3]);	glVertex3f(p[0],p[1],p[2]);
+	}
 	glEnd();
 }
 //-----------------------------------------------------------------------------

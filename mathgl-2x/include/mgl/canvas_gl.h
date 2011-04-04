@@ -29,6 +29,7 @@ public:
 	mglCanvasGL();
 	virtual ~mglCanvasGL();
 
+	virtual void SetQuality(int qual=0)	{	Quality=2;	}
 	virtual void Finish();
 	virtual void SetSize(int w,int h)	{}
 	virtual void View(float tetX,float tetY,float tetZ);

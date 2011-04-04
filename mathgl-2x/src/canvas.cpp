@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
-	G=0;	SetSize(w,h);	Quality = MGL_DRAW_NORM;
+	G=0;	SetSize(w,h);	SetQuality(MGL_DRAW_NORM);
 	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';
 	NoAutoFactor = false;
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
@@ -184,14 +184,14 @@ float mglCanvas::GetOrgZ(char dir)
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_plot(long p, char type, float size)
 {
-	if(isnan(pntC[4*p]))	return;
+	if(isnan(pnt[12*p]))	return;
 	if(size>=0)	size *= MarkSize;
-	if(Quality&4)	mark_draw(pntC+4*p,type,size?size:MarkSize);
+	if(Quality&4)	mark_draw(pnt+12*p,type,size?size:MarkSize);
 	else
 	{
 		mglPrim a;
 		a.w = fabs(PenWidth);	a.s = size?size:MarkSize;
-		a.n1 = p;	a.m = type;	a.z = pntC[4*p+2];
+		a.n1 = p;	a.m = type;	a.z = pnt[12*p+2];
 		add_prim(a);
 	}
 }
@@ -199,47 +199,47 @@ void mglCanvas::mark_plot(long p, char type, float size)
 void mglCanvas::line_plot(long p1, long p2)
 {
 	if(PDef==0)	return;
-	if(isnan(pntC[4*p1]) || isnan(pntC[4*p2]))	return;
+	if(isnan(pnt[12*p1]) || isnan(pnt[12*p2]))	return;
 	float pw = fabs(PenWidth),d;
-	if(Quality&4)	line_draw(pntC+4*p1,pntC+4*p2);
+	if(Quality&4)	line_draw(pnt+12*p1,pnt+12*p2);
 	else
 	{
 		mglPrim a(1);	a.w = pw;
-		a.z = (pntC[4*p1+2]+pntC[4*p2+2])/2;
+		a.z = (pnt[12*p1+2]+pnt[12*p2+2])/2;
 		if(pw>1)		a.z += pw-1;
 		a.style=PDef;	a.s = pPos;
 		a.n1 = p1;		a.n2 = p2;
 		add_prim(a);
 	}
-	d = hypot(pntC[4*p1]-pntC[4*p2], pntC[4*p1+1]-pntC[4*p2+1]);
+	d = hypot(pnt[12*p1]-pnt[12*p2], pnt[12*p1+1]-pnt[12*p2+1]);
 	pPos = fmod(pPos+d/pw/1.5, 16);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
-	if(isnan(pntN[8*p1]) || isnan(pntN[8*p2]) || isnan(pntN[8*p3]))	return;
-	if(Quality&4)	trig_draw(pntN+8*p1,pntN+8*p2,pntN+8*p3,true);
+	if(isnan(pnt[12*p1]) || isnan(pnt[12*p2]) || isnan(pnt[12*p3]))	return;
+	if(Quality&4)	trig_draw(pnt+12*p1,pnt+12*p2,pnt+12*p3,true);
 	else
 	{
 		mglPrim a(2);
 		a.n1 = p1;	a.n2 = p2;	a.n3 = p3;
-		a.z = (pntN[8*p1+2]+pntN[8*p2+2]+pntN[8*p3+2])/3;
+		a.z = (pnt[12*p1+2]+pnt[12*p2+2]+pnt[12*p3+2])/3;
 		add_prim(a);
 	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 {
-	if(isnan(pntN[8*p1]))	{	trig_plot(p4,p2,p3);	return;	}
-	if(isnan(pntN[8*p2]))	{	trig_plot(p1,p4,p3);	return;	}
-	if(isnan(pntN[8*p3]))	{	trig_plot(p1,p2,p4);	return;	}
-	if(isnan(pntN[8*p4]))	{	trig_plot(p1,p2,p3);	return;	}
-	if(Quality&4)	quad_draw(pntN+8*p1,pntN+8*p2,pntN+8*p3,pntN+8*p4);
+	if(isnan(pnt[12*p1]))	{	trig_plot(p4,p2,p3);	return;	}
+	if(isnan(pnt[12*p2]))	{	trig_plot(p1,p4,p3);	return;	}
+	if(isnan(pnt[12*p3]))	{	trig_plot(p1,p2,p4);	return;	}
+	if(isnan(pnt[12*p4]))	{	trig_plot(p1,p2,p3);	return;	}
+	if(Quality&4)	quad_draw(pnt+12*p1,pnt+12*p2,pnt+12*p3,pnt+12*p4);
 	else
 	{
 		mglPrim a(3);
 		a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;
-		a.z = (pntN[8*p1+2]+pntN[8*p2+2]+pntN[8*p3+2]+pntN[8*p4+2])/4;
+		a.z = (pnt[12*p1+2]+pnt[12*p2+2]+pnt[12*p3+2]+pnt[12*p4+2])/4;
 		add_prim(a);
 	}
 }
@@ -265,12 +265,12 @@ const wchar_t *mglCanvas::add_text(const wchar_t *str)
 //-----------------------------------------------------------------------------
 float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float size,float sh)
 {
-	if(isnan(pntN[8*p]))	return 0;
+	if(isnan(pnt[12*p]))	return 0;
 	if(size<0)	size = -size*FontSize;
 	if(!(Quality&4))	// add text itself
 	{
 		mglPrim a(6);
-		a.n1 = p;	a.z = pntN[8*p+2];
+		a.n1 = p;	a.z = pnt[12*p+2];
 		a.txt = add_text(text);
 		strncpy(a.font,font,16);
 		a.s = size;	a.w = sh;
@@ -283,7 +283,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 
 	shift *= h;
 
-	float *pp=pntN+8*p, ll=pp[5]*pp[5]+pp[6]*pp[6];
+	float *pp=pnt+12*p, ll=pp[5]*pp[5]+pp[6]*pp[6];
 	B[11]= pp[2];
 	if(isnan(ll))
 	{
@@ -314,8 +314,8 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, char col)
 	a.s = fscl/PlotFactor;	a.w = ftet;	a.p = PlotFactor;
 	float cc = AddTexture(col);	// TODO: use real color
 	if(cc<0)	cc = CDef;
-	a.n1 = AddPntC(mglPoint((B[9]-zoomx1*Width) /zoomx2, (B[10]-zoomy1*Height)/zoomy2, B[11]), cc);
-	a.n2 = AddPntC(mglPoint(x,y,f/fnt->GetFact(s&3)),cc);
+	a.n1 = AddPnt(mglPoint((B[9]-zoomx1*Width) /zoomx2, (B[10]-zoomy1*Height)/zoomy2, B[11]), cc);
+	a.n2 = AddPnt(mglPoint(x,y,f/fnt->GetFact(s&3)),cc);
 	a.style = s;	a.m = j;
 	a.z = B[11];
 	add_prim(a);
@@ -346,11 +346,11 @@ void mglPrim::Draw()
 	gr->PDef=style;	gr->pPos=s;	gr->PenWidth=w;
 	switch(type)
 	{
-	case 0:	gr->mark_draw(gr->pntC+4*n1,m,s);	break;
+	case 0:	gr->mark_draw(gr->pnt+12*n1,m,s);	break;
 	case 1:	gr->PDef=style;	gr->pPos=s;	gr->PenWidth=w;
-			gr->line_draw(gr->pntC+4*n1,gr->pntC+4*n2);	break;
-	case 2:	gr->trig_draw(gr->pntN+8*n1,gr->pntN+8*n2,gr->pntN+8*n3,true);	break;
-	case 3:	gr->quad_draw(gr->pntN+8*n1,gr->pntN+8*n2,gr->pntN+8*n3,gr->pntN+8*n4);	break;
+			gr->line_draw(gr->pnt+12*n1,gr->pnt+12*n2);	break;
+	case 2:	gr->trig_draw(gr->pnt+12*n1,gr->pnt+12*n2,gr->pnt+12*n3,true);	break;
+	case 3:	gr->quad_draw(gr->pnt+12*n1,gr->pnt+12*n2,gr->pnt+12*n3,gr->pnt+12*n4);	break;
 	case 4:	gr->glyph_draw(this);	break;
 	}
 	gr->PDef=pdef;	gr->pPos=ss;	gr->PenWidth=ww;
@@ -568,12 +568,12 @@ void mglCanvas::AddLight(int n, mglPoint p, char col, float br, bool inf, float 
 void mglCanvas::arrow_plot(long n1, long n2,char st)
 {
 	if(!strchr("AVKSDTIO",st))	return;
-	float *p1=pntC+4*n1, *p2=pntC+4*n2;
+	float *p1=pnt+12*n1, *p2=pnt+12*n2;
 	float lx=p1[0]-p2[0], ly=p1[1]-p2[1], ll, kx,ky;
 	ll = hypot(lx,ly)/(PenWidth*ArrowSize*0.35*font_factor);
 	if(ll==0)	return;
 	lx /= ll;	ly /= ll;	kx = ly;	ky = -lx;
-	ReserveC(2);	ReserveN(4);
+	Reserve(6);
 	mglPoint q1,q2,q3,q4,nn=mglPoint(NAN,NAN,NAN);
 	long k1,k2,k3,k4;
 
@@ -581,50 +581,50 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 	switch(st)
 	{
 	case 'I':
-		q1 = mglPoint(p1[0]+kx, p1[1]+ky, p1[2]);	k1=AddPntC(q1,CDef);
-		q2 = mglPoint(p1[0]-kx, p1[1]-ky, p1[2]);	k2=AddPntC(q2,CDef);
+		q1 = mglPoint(p1[0]+kx, p1[1]+ky, p1[2]);	k1=AddPnt(q1,CDef);
+		q2 = mglPoint(p1[0]-kx, p1[1]-ky, p1[2]);	k2=AddPnt(q2,CDef);
 		line_plot(k1,k2);	break;
 	case 'D':
-		q1 = mglPoint(p1[0]+kx, p1[1]+ky, p1[2]);	k1=AddPntN(q1,CDef,nn);
-		q2 = mglPoint(p1[0]+lx, p1[1]+ly, p1[2]);	k2=AddPntN(q2,CDef,nn);
-		q3 = mglPoint(p1[0]-kx, p1[1]-ky, p1[2]);	k3=AddPntN(q3,CDef,nn);
-		q4 = mglPoint(p1[0]-lx, p1[1]-ly, p1[2]);	k4=AddPntN(q4,CDef,nn);
+		q1 = mglPoint(p1[0]+kx, p1[1]+ky, p1[2]);	k1=AddPnt(q1,CDef,nn);
+		q2 = mglPoint(p1[0]+lx, p1[1]+ly, p1[2]);	k2=AddPnt(q2,CDef,nn);
+		q3 = mglPoint(p1[0]-kx, p1[1]-ky, p1[2]);	k3=AddPnt(q3,CDef,nn);
+		q4 = mglPoint(p1[0]-lx, p1[1]-ly, p1[2]);	k4=AddPnt(q4,CDef,nn);
 		quad_plot(k1,k2,k3,k4);	break;
 	case 'S':
-		q1 = mglPoint(p1[0]+kx-lx, p1[1]+ky-ly, p1[2]);	k1=AddPntN(q1,CDef,nn);
-		q2 = mglPoint(p1[0]-kx-lx, p1[1]-ky-ly, p1[2]);	k2=AddPntN(q2,CDef,nn);
-		q3 = mglPoint(p1[0]-kx+lx, p1[1]-ky+ly, p1[2]);	k3=AddPntN(q3,CDef,nn);
-		q4 = mglPoint(p1[0]+kx+lx, p1[1]+ky+ly, p1[2]);	k4=AddPntN(q4,CDef,nn);
+		q1 = mglPoint(p1[0]+kx-lx, p1[1]+ky-ly, p1[2]);	k1=AddPnt(q1,CDef,nn);
+		q2 = mglPoint(p1[0]-kx-lx, p1[1]-ky-ly, p1[2]);	k2=AddPnt(q2,CDef,nn);
+		q3 = mglPoint(p1[0]-kx+lx, p1[1]-ky+ly, p1[2]);	k3=AddPnt(q3,CDef,nn);
+		q4 = mglPoint(p1[0]+kx+lx, p1[1]+ky+ly, p1[2]);	k4=AddPnt(q4,CDef,nn);
 		quad_plot(k1,k2,k3,k4);	break;
 	case 'T':
-		q1 = mglPoint(p1[0]+kx-lx, p1[1]+ky-ly, p1[2]);	k1=AddPntN(q1,CDef,nn);
-		q2 = mglPoint(p1[0]-kx-lx, p1[1]-ky-ly, p1[2]);	k2=AddPntN(q2,CDef,nn);
-		q3 = mglPoint(p1[0]+lx, p1[1]+ly, p1[2]);		k3=AddPntN(q3,CDef,nn);
+		q1 = mglPoint(p1[0]+kx-lx, p1[1]+ky-ly, p1[2]);	k1=AddPnt(q1,CDef,nn);
+		q2 = mglPoint(p1[0]-kx-lx, p1[1]-ky-ly, p1[2]);	k2=AddPnt(q2,CDef,nn);
+		q3 = mglPoint(p1[0]+lx, p1[1]+ly, p1[2]);		k3=AddPnt(q3,CDef,nn);
 		trig_plot(k1,k2,k3);	break;
 	case 'A':
-		q1 = mglPoint(p1[0], p1[1], p1[2]);					k1=AddPntN(q1,CDef,nn);
-		q2 = mglPoint(p1[0]-kx-2*lx, p1[1]-ky-2*ly, p1[2]);	k2=AddPntN(q2,CDef,nn);
-		q3 = mglPoint(p1[0]-1.5*lx, p1[1]-1.5*ly, p1[2]);	k3=AddPntN(q3,CDef,nn);
-		q4 = mglPoint(p1[0]+kx-2*lx, p1[1]+ky-2*ly, p1[2]);	k4=AddPntN(q4,CDef,nn);
+		q1 = mglPoint(p1[0], p1[1], p1[2]);					k1=AddPnt(q1,CDef,nn);
+		q2 = mglPoint(p1[0]-kx-2*lx, p1[1]-ky-2*ly, p1[2]);	k2=AddPnt(q2,CDef,nn);
+		q3 = mglPoint(p1[0]-1.5*lx, p1[1]-1.5*ly, p1[2]);	k3=AddPnt(q3,CDef,nn);
+		q4 = mglPoint(p1[0]+kx-2*lx, p1[1]+ky-2*ly, p1[2]);	k4=AddPnt(q4,CDef,nn);
 		quad_plot(k1,k2,k3,k4);	break;
 	case 'K':
-		q1 = mglPoint(p1[0], p1[1], p1[2]);					k1=AddPntN(q1,CDef,nn);
-		q2 = mglPoint(p1[0]-kx-2*lx, p1[1]-ky-2*ly, p1[2]);	k2=AddPntN(q2,CDef,nn);
-		q3 = mglPoint(p1[0]-1.5*lx, p1[1]-1.5*ly, p1[2]);	k3=AddPntN(q3,CDef,nn);
-		q4 = mglPoint(p1[0]+kx-2*lx, p1[1]+ky-2*ly, p1[2]);	k4=AddPntN(q4,CDef,nn);
+		q1 = mglPoint(p1[0], p1[1], p1[2]);					k1=AddPnt(q1,CDef,nn);
+		q2 = mglPoint(p1[0]-kx-2*lx, p1[1]-ky-2*ly, p1[2]);	k2=AddPnt(q2,CDef,nn);
+		q3 = mglPoint(p1[0]-1.5*lx, p1[1]-1.5*ly, p1[2]);	k3=AddPnt(q3,CDef,nn);
+		q4 = mglPoint(p1[0]+kx-2*lx, p1[1]+ky-2*ly, p1[2]);	k4=AddPnt(q4,CDef,nn);
 		quad_plot(k1,k2,k3,k4);
-		q1 = mglPoint(p1[0]+kx, p1[1]+ky, p1[2]);	k1=AddPntC(q1,CDef);
-		q2 = mglPoint(p1[0]-kx, p1[1]-ky, p1[2]);	k2=AddPntC(q2,CDef);
+		q1 = mglPoint(p1[0]+kx, p1[1]+ky, p1[2]);	k1=AddPnt(q1,CDef);
+		q2 = mglPoint(p1[0]-kx, p1[1]-ky, p1[2]);	k2=AddPnt(q2,CDef);
 		line_plot(k1,k2);	break;
 	case 'V':
-		q1 = mglPoint(p1[0], p1[1], p1[2]);					k1=AddPntN(q1,CDef,nn);
-		q2 = mglPoint(p1[0]-kx+2*lx, p1[1]-ky+2*ly, p1[2]);	k2=AddPntN(q2,CDef,nn);
-		q3 = mglPoint(p1[0]+1.5*lx, p1[1]+1.5*ly, p1[2]);	k3=AddPntN(q3,CDef,nn);
-		q4 = mglPoint(p1[0]+kx+2*lx, p1[1]+ky+2*ly, p1[2]);	k4=AddPntN(q4,CDef,nn);
+		q1 = mglPoint(p1[0], p1[1], p1[2]);					k1=AddPnt(q1,CDef,nn);
+		q2 = mglPoint(p1[0]-kx+2*lx, p1[1]-ky+2*ly, p1[2]);	k2=AddPnt(q2,CDef,nn);
+		q3 = mglPoint(p1[0]+1.5*lx, p1[1]+1.5*ly, p1[2]);	k3=AddPnt(q3,CDef,nn);
+		q4 = mglPoint(p1[0]+kx+2*lx, p1[1]+ky+2*ly, p1[2]);	k4=AddPnt(q4,CDef,nn);
 		quad_plot(k1,k2,k3,k4);	break;
 	case 'O':
 		{
-			q1 = mglPoint(p1[0], p1[1], p1[2]);		k1=AddPntN(q1,CDef,nn);
+			q1 = mglPoint(p1[0], p1[1], p1[2]);		k1=AddPnt(q1,CDef,nn);
 			double t,c,s;
 			for(int i=0;i<16;i++)
 			{
@@ -632,7 +632,7 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 				q2 = mglPoint(p1[0]+kx*s+lx*c, p1[1]+ky*s+ly*c, p1[2]);
 				t = M_PI*(i+1)/8.;	s=sin(t);	c=cos(t);
 				q3 = mglPoint(p1[0]+kx*s+lx*c, p1[1]+ky*s+ly*c, p1[2]);
-				k2=AddPntN(q2,CDef,nn);	k3=AddPntN(q3,CDef,nn);
+				k2=AddPnt(q2,CDef,nn);	k3=AddPnt(q3,CDef,nn);
 				trig_plot(k1,k2,k3);
 			}
 			break;

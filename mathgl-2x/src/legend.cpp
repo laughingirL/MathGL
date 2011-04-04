@@ -112,16 +112,16 @@ void mglCanvas::Legend(int n, wchar_t **text, char **style, float x, float y, co
 	if((pA=strchr(ff,'A')))	{	*pA = 'L';	rel = false;	}
 	Push();	Identity(rel);	//	memcpy(B,B1,9*sizeof(float));
 
-	long k1,k2,k3,k4,i1,i2,i3,i4;
+	long k1,k2,k3,k4;
 	mglPoint p,q=mglPoint(NAN);
 	float c1=AddTexture('w'), c2=AddTexture('k');
 	if(TranspType==2)	{	float cc=c1;	c2=c2;	c2=cc;	};
 	if(LegendBox)	// draw bounding box
 	{
-		p = mglPoint(x,y,s3-0.01);		k1=AddPntN(p,c1,q);	i1=AddPntC(p,c2);
-		p = mglPoint(x+w,y,s3-0.01);	k2=AddPntN(p,c1,q);	i2=AddPntC(p,c2);
-		p = mglPoint(x,y+h*n,s3-0.01);	k3=AddPntN(p,c1,q);	i3=AddPntC(p,c2);
-		p = mglPoint(x+w,y+h*n,s3-0.01);k4=AddPntN(p,c1,q);	i4=AddPntC(p,c2);
+		p = mglPoint(x,y,s3-0.01);		k1=AddPnt(p,c1,q);
+		p = mglPoint(x+w,y,s3-0.01);	k2=AddPnt(p,c1,q);
+		p = mglPoint(x,y+h*n,s3-0.01);	k3=AddPnt(p,c1,q);
+		p = mglPoint(x+w,y+h*n,s3-0.01);k4=AddPnt(p,c1,q);
 		quad_plot(k1,k2,k3,k4);
 		line_plot(k1,k2);	line_plot(k2,k4);
 		line_plot(k4,k3);	line_plot(k3,k1);
@@ -129,16 +129,16 @@ void mglCanvas::Legend(int n, wchar_t **text, char **style, float x, float y, co
 	for(i=0;i<n;i++)	// draw lines and legend
 	{
 		char m=SetPenPal(style[i]);
-		p = mglPoint(x+0.1*llen,y+i*h+0.45*h,s3);	k1=AddPntC(p,CDef);
-		p = mglPoint(x+0.9*llen,y+i*h+0.45*h,s3);	k2=AddPntC(p,CDef);
+		p = mglPoint(x+0.1*llen,y+i*h+0.45*h,s3);	k1=AddPnt(p,CDef);
+		p = mglPoint(x+0.9*llen,y+i*h+0.45*h,s3);	k2=AddPnt(p,CDef);
 		pPos=0;	line_plot(k1,k2);
 		if(m)	for(int j=0;j<LegendMarks;j++)
 		{
 			p.x = x+0.1f*llen + (j+1)*0.8f*llen/(1.+LegendMarks);
-			mark_plot(AddPntC(p,CDef),m);
+			mark_plot(AddPnt(p,CDef),m);
 		}
 		p = mglPoint(x+(style[i][0]!=0?llen:0), y+i*h+0.3f*h, s3);
-		k1 = AddPntN(p,-1,q);
+		k1 = AddPnt(p,-1,q);
 		text_plot(k1, text[i], ff, size);
 	}
 	Pop();	EndGroup();	delete []ff;

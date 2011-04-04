@@ -296,22 +296,17 @@ public:
 
 
 	// ~~~~~~~~~~~~~~~~~~~~~~ Developer functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// NOTE! Following 5 functions are NOT thread-safe!!!
-	long AddPntC(mglPoint p, float c);	///< Add point to the pntC and return its position
+	// NOTE! Following 3 functions are NOT thread-safe!!!
 	/// Add point to the pntN and return its position
-	long AddPntN(mglPoint p, float c, mglPoint n, float a=-1, bool scl=true);
-	long ReserveC(long n);		///< Allocate n-cells for pntC and return current position
-	long ReserveN(long n);		///< Allocate n-cells for pntC and return current position
-	long CopyNtoC(long from, float c=NAN);
+	long AddPnt(mglPoint p, float c, mglPoint n=mglPoint(NAN), float a=-1, bool scl=true);
+	long CopyNtoC(long k, float c);
+	long Reserve(long n);		///< Allocate n-cells for pntC and return current position
 
-	inline long GetPosC()	{	return posC;	}
-	inline long GetPosN()	{	return posN;	}
-	inline mglPoint GetPntC(long i)
-	{	return mglPoint(pntC[4*i],pntC[4*i+1],pntC[4*i+2]);	}
-	inline mglPoint GetPntN(long i)
-	{	return mglPoint(pntN[8*i],pntN[8*i+1],pntN[8*i+2]);	}
+	inline long GetPos()	{	return pos;	}
+	inline mglPoint GetPnt(long i)
+	{	return mglPoint(pnt[12*i],pnt[12*i+1],pnt[12*i+2]);	}
 	inline float GetClrC(long i)
-	{	return pntC[4*i+3];	}
+	{	return pnt[12*i+3];	}
 	/// Scale coordinates and cut off some points
 	virtual bool ScalePoint(mglPoint &p, bool use_nan=true);
 
@@ -334,7 +329,7 @@ public:
 
 	virtual void mark_plot(long p, char type, float size=1)=0;		// position in pntC
 	virtual void arrow_plot(long p1, long p2, char st)=0;			// position in pntC
-	virtual void line_plot(long p1, long p2)=0;	// position in pntC
+	virtual void line_plot(long p1, long p2)=0;						// position in pntC
 	virtual void trig_plot(long p1, long p2, long p3)=0;			// position in pntN
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;	// position in pntN
 	virtual void Glyph(float x, float y, float f, int style, long icode, char col)=0;
@@ -344,9 +339,9 @@ public:
 protected:
 	mglPoint Org;		///< Center of axis cross section.
 	int WarnCode;		///< Warning code
-	float *pntC, *pntN;	///< Pointer to {coor*3,color*4,[normale*3]} of the data
-	long numC, numN;	///< Number of allocated points in pntC, pntN
-	long posC, posN;	///< Current position in pntC, pntN
+	float *pnt;			///< Pointer to {coor*3,texture*2,normale*3,color*4} of the data
+	long num;			///< Number of allocated points in pnt
+	long pos;			///< Current position in pnt
 	int TernAxis;		///< Flag that Ternary axis is used
 	unsigned PDef;		///< Pen bit mask
 	float pPos;			///< Current position in pen mask

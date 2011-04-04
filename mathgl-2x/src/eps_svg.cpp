@@ -137,7 +137,7 @@ void mglCanvas::WriteEPS(const char *fname,const char *descr)
 
 		if(P[i].type==0)	// mark
 		{
-			float x0 = pntC[4*P[i].n1],y0 = pntC[4*P[i].n1+1];
+			float x0 = pnt[12*P[i].n1],y0 = pnt[12*P[i].n1+1];
 			sprintf(str,"1 lw %.2g %.2g %.2g rgb ", cp[0],cp[1],cp[2]);
 			wp=1;
 			if(P[i].s!=MarkSize)
@@ -180,12 +180,12 @@ void mglCanvas::WriteEPS(const char *fname,const char *descr)
 		}
 		else if(P[i].type==3)	// quad
 			mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll %g %g ll cp %sfill\n",
-						pntN[8*P[i].n1], pntN[8*P[i].n1+1], pntN[8*P[i].n2], pntN[8*P[i].n2+1],
-						pntN[8*P[i].n4], pntN[8*P[i].n4+1], pntN[8*P[i].n3], pntN[8*P[i].n3+1], str);
+						pnt[12*P[i].n1], pnt[12*P[i].n1+1], pnt[12*P[i].n2], pnt[12*P[i].n2+1],
+						pnt[12*P[i].n4], pnt[12*P[i].n4+1], pnt[12*P[i].n3], pnt[12*P[i].n3+1], str);
 		else if(P[i].type==2)	// trig
 			mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll cp %sfill\n",
-						pntN[8*P[i].n1], pntN[8*P[i].n1+1], pntN[8*P[i].n2], pntN[8*P[i].n2+1],
-						pntN[8*P[i].n3], pntN[8*P[i].n3+1], str);
+						pnt[12*P[i].n1], pnt[12*P[i].n1+1], pnt[12*P[i].n2], pnt[12*P[i].n2+1],
+						pnt[12*P[i].n3], pnt[12*P[i].n3+1], str);
 		else if(P[i].type==1)	// line
 		{
 			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", P[i].w>1 ? P[i].w:1., cp[0],cp[1],cp[2]);
@@ -197,10 +197,10 @@ void mglCanvas::WriteEPS(const char *fname,const char *descr)
 		}
 		else if(P[i].type==4)	// glyph
 		{
-			float 	ss = P[i].s/P[i].p/1.1, 	xx = pntC[4*P[i].n2],
-					yy = pntC[4*P[i].n2+1], zz = pntC[4*P[i].n2+2];
+			float 	ss = P[i].s/P[i].p/1.1, 	xx = pnt[12*P[i].n2],
+					yy = pnt[12*P[i].n2+1], zz = pnt[12*P[i].n2+2];
 			mgl_printf(fp, gz, "gsave\t%g %g translate %g %g scale %g rotate %s\n",
-				pntC[4*P[i].n1], pntC[4*P[i].n1+1], ss, ss, -P[i].w, str);
+				pnt[12*P[i].n1], pnt[12*P[i].n1+1], ss, ss, -P[i].w, str);
 			if(P[i].style&8)	// this is "line"
 			{
 				float dy = 0.004,f=fabs(zz);
@@ -253,7 +253,7 @@ void mglCanvas::WriteSVG(const char *fname,const char *descr)
 		put_color(cp, P+i);
 		if(P[i].type==0)
 		{
-			float x=pntC[4*P[i].n1],y=pntC[4*P[i].n1+1],s=0.4*font_factor*P[i].s;
+			float x=pnt[12*P[i].n1],y=pnt[12*P[i].n1+1],s=0.4*font_factor*P[i].s;
 			if(!strchr("xsSoO",P[i].m))	s *= 1.1;
 			wp = 1;
 			if(strchr("SDVTLR",P[i].m))
@@ -323,16 +323,16 @@ void mglCanvas::WriteSVG(const char *fname,const char *descr)
 			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n",
 				int(255*cp[0]),int(255*cp[1]),int(255*cp[2]),cp[3]);
 			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g Z\"/> </g>\n",
-				pntN[8*P[i].n1], Height-pntN[8*P[i].n1+1], pntN[8*P[i].n2], Height-pntN[8*P[i].n2+1],
-				pntN[8*P[i].n3], Height-pntN[8*P[i].n3+1]);
+				pnt[12*P[i].n1], Height-pnt[12*P[i].n1+1], pnt[12*P[i].n2], Height-pnt[12*P[i].n2+1],
+				pnt[12*P[i].n3], Height-pnt[12*P[i].n3+1]);
 		}
 		else if(P[i].type==3 && cp[3]>0)
 		{
 			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n",
 				int(255*cp[0]),int(255*cp[1]),int(255*cp[2]),cp[3]);
 			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %g Z\"/> </g>\n",
-				pntN[8*P[i].n1], Height-pntN[8*P[i].n1+1], pntN[8*P[i].n2], Height-pntN[8*P[i].n2+1],
-				pntN[8*P[i].n3], Height-pntN[8*P[i].n3+1], pntN[8*P[i].n4], Height-pntN[8*P[i].n4+1]);
+				pnt[12*P[i].n1], Height-pnt[12*P[i].n1+1], pnt[12*P[i].n2], Height-pnt[12*P[i].n2+1],
+				pnt[12*P[i].n3], Height-pnt[12*P[i].n3+1], pnt[12*P[i].n4], Height-pnt[12*P[i].n4+1]);
 		}
 		else if(P[i].type==1)
 		{
@@ -349,13 +349,13 @@ void mglCanvas::WriteSVG(const char *fname,const char *descr)
 			put_line(fp,gz,i,wp,cp,st, "><path d=\" M %g %g", " L %g %g", true);
 			mgl_printf(fp, gz, "\"/> </g>\n");
 		}
-		else if(P[i].type==4)	// TODO: add after font enabled
+		else if(P[i].type==4)
 		{
-			float ss = P[i].s/2, xx = pntC[4*P[i].n2], yy = pntC[4*P[i].n2+1], zz = pntC[4*P[i].n2+2];
+			float ss = P[i].s/2, xx = pnt[12*P[i].n2], yy = pnt[12*P[i].n2+1], zz = pnt[12*P[i].n2+2];
 			if(P[i].style&8)	// this is "line"
 			{
 				mgl_printf(fp, gz, "<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"",
-					pntC[4*P[i].n1], Height-pntC[4*P[i].n1+1], ss, -ss, -P[i].w);
+					pnt[12*P[i].n1], Height-pnt[12*P[i].n1+1], ss, -ss, -P[i].w);
 				if(P[i].style&4)
 					mgl_printf(fp, gz, " stroke=\"#%02x%02x%02x\">", int(255*cp[0]),int(255*cp[1]),int(255*cp[2]));
 				else
@@ -368,7 +368,7 @@ void mglCanvas::WriteSVG(const char *fname,const char *descr)
 			{
 				ss *= zz;
 				mgl_printf(fp, gz, "<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"",
-					pntC[4*P[i].n1], Height-pntC[4*P[i].n1+1], ss, -ss, -P[i].w);
+					pnt[12*P[i].n1], Height-pnt[12*P[i].n1+1], ss, -ss, -P[i].w);
 				if(P[i].style&4)
 					mgl_printf(fp, gz, " stroke=\"#%02x%02x%02x\">", int(255*cp[0]),int(255*cp[1]),int(255*cp[2]));
 				else
@@ -385,8 +385,8 @@ void mglCanvas::WriteSVG(const char *fname,const char *descr)
 	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
 }
 //-----------------------------------------------------------------------------
-#define xx(i,n)	(pntC[4*P[i].n])
-#define yy(i,n)	(pntC[4*P[i].n+1])
+#define xx(i,n)	(pnt[12*P[i].n])
+#define yy(i,n)	(pnt[12*P[i].n+1])
 void mglCanvas::put_line(void *fp, bool gz, long i, float wp, float *cp,int st, const char *ifmt, const char *nfmt, bool neg)
 {
 	long k = i,j;	// first point
@@ -477,13 +477,9 @@ void mglCanvas::put_desc(void *fp, bool gz, const char *pre, const char *ln1, co
 //-----------------------------------------------------------------------------
 void mglCanvas::put_color(float *c, mglPrim *p)
 {
-	float n[3]={NAN,NAN,NAN},u,v=0;
+	float n[3]={NAN,NAN,NAN};
 	register long i, j = p->type==1 ? p->n2:p->n1;
-	if(p->type==2 || p->type==3)
-	{	u=pntN[8*j+3];	v=pntN[8*j+4];
-		memcpy(n,pntN+8*j+5,3*sizeof(float));	}
-	else	u=pntC[4*j+3];
-	txt[long(u)].GetC(u,v,c);
+	memcpy(c,pnt+12*j+8,4*sizeof(float));
 
 	if(UseLight && !isnan(n[0]))
 	{

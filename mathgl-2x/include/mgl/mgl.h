@@ -163,10 +163,10 @@ public:
 		return mglPoint(xs,ys);
 	}
 
-	inline void Compression(bool){}		// TODO: Add later -- IDTF
-	inline void VertexColor(bool){}		// TODO: Add later -- IDTF
-	inline void DoubleSided(bool){}		// TODO: Add later -- IDTF
-	inline void TextureColor(bool){}	// TODO: Add later -- IDTF
+	inline void Compression(bool){}		// NOTE: Add later -- IDTF
+	inline void VertexColor(bool){}		// NOTE: Add later -- IDTF
+	inline void DoubleSided(bool){}		// NOTE: Add later -- IDTF
+	inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
 	inline void StartGroup(const char *name)		{	mgl_start_group(gr, name);	}
 	inline void EndGroup()					{	mgl_end_group(gr);	}
 

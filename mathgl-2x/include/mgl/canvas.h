@@ -73,7 +73,7 @@ public:
 	inline void SetPlotFactor(float val)
 	{	PlotFactor = val>0?val:1.55;	AutoPlotFactor=(val<=0);	}
 	/// Set plot quality
-	inline void SetQuality(int qual=MGL_DRAW_NORM)	{	Quality=qual;	}
+	virtual void SetQuality(int qual=MGL_DRAW_NORM)	{	Quality=qual;	}
 
 	///< Set default parameter for plotting
 	void DefaultPlotParam();
@@ -413,8 +413,8 @@ struct mglPrim
 
 	void Draw();
 	bool IsSame(float wp,float *cp,int st);
-	float inline xx()	{	return gr->pntC[7*n1];		}
-	float inline yy()	{	return gr->pntC[7*n1+1];	}
+	float inline xx()	{	return gr->pnt[12*n1];		}
+	float inline yy()	{	return gr->pnt[12*n1+1];	}
 	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	}
 //	~mglPrim()	{	if(text)	delete []text;	};
 	inline void operator=(mglPrim &a)	{	memcpy(this,&a,sizeof(mglPrim));	}

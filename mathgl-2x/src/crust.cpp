@@ -39,30 +39,30 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 	long nc = a->GetNx();
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
-		gr->ReserveN(m*3);
+		gr->Reserve(m*3);
 		for(i=0;i<m;i++)
 		{
 			k = long(nums->v(0,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			gr->ScalePoint(p);	k1 = gr->AddPntN(p,gr->GetC(ss,a->v(k)),q);
+			gr->ScalePoint(p);	k1 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
 			k = long(nums->v(1,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			gr->ScalePoint(p);	k2 = gr->AddPntN(p,gr->GetC(ss,a->v(k)),q);
+			gr->ScalePoint(p);	k2 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
 			k = long(nums->v(2,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			gr->ScalePoint(p);	k3 = gr->AddPntN(p,gr->GetC(ss,a->v(k)),q);
+			gr->ScalePoint(p);	k3 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
 			gr->trig_plot(k1,k2,k3);
 		}
 	}
 	else if(nc>=n)		// colors per point
 	{
-		gr->ReserveN(n);
+		gr->Reserve(n);
 		long *kk = new long[n];
 		for(k=0;k<n;k++)
 		{
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
 			gr->ScalePoint(p);
-			kk[k] = gr->AddPntN(p,gr->GetC(ss,a->v(k)),q);
+			kk[k] = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
 		}
 		for(i=0;i<m;i++)
 		{
@@ -115,33 +115,33 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 	long nc = a->GetNx();
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
-		gr->ReserveN(m*4);
+		gr->Reserve(m*4);
 		for(i=0;i<m;i++)
 		{
 			k = long(nums->v(0,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			gr->ScalePoint(p);	k1 = gr->AddPntN(p,gr->GetC(ss,a->v(k)),q);
+			gr->ScalePoint(p);	k1 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
 			k = long(nums->v(1,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			gr->ScalePoint(p);	k2 = gr->AddPntN(p,gr->GetC(ss,a->v(k)),q);
+			gr->ScalePoint(p);	k2 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
 			k = long(nums->v(2,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			gr->ScalePoint(p);	k3 = gr->AddPntN(p,gr->GetC(ss,a->v(k)),q);
+			gr->ScalePoint(p);	k3 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
 			k = long(nums->v(3,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			gr->ScalePoint(p);	k4 = gr->AddPntN(p,gr->GetC(ss,a->v(k)),q);
+			gr->ScalePoint(p);	k4 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}
 	else if(nc>=n)		// colors per point
 	{
-		gr->ReserveN(n);
+		gr->Reserve(n);
 		long *kk = new long[n];
 		for(k=0;k<n;k++)
 		{
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
 			gr->ScalePoint(p);
-			kk[k] = gr->AddPntN(p,gr->GetC(ss,a->v(k)),q);
+			kk[k] = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
 		}
 		for(i=0;i<m;i++)
 		{
@@ -199,7 +199,7 @@ void mgl_tricont_line(HMGL gr, float val, long i, long k1, long k2, long k3, HCD
 				isnan(zVal)?z->v(k1)*(1-d2)+z->v(k3)*d2:zVal);
 	if(!gr->ScalePoint(p2))	return;
 
-	k1 = gr->AddPntC(p1,c);	k2 = gr->AddPntC(p2,c);
+	k1 = gr->AddPnt(p1,c);	k2 = gr->AddPnt(p2,c);
 	gr->line_plot(k1,k2);
 }
 //-----------------------------------------------------------------------------
@@ -269,13 +269,13 @@ void mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch)
 	char mk=gr->SetPenPal(sch);
 	long ss=gr->AddTexture(sch), pp;
 	if(mk==0)	mk='.';
-	gr->ReserveC(n);
+	gr->Reserve(n);
 	mglPoint p;
 
 	for(long i=0;i<n;i++)
 	{
 		p = mglPoint(x->v(i),y->v(i),z->v(i));	gr->ScalePoint(p);
-		pp = gr->AddPntC(p,gr->GetC(ss,a->v(i)));
+		pp = gr->AddPnt(p,gr->GetC(ss,a->v(i)));
 		gr->mark_plot(pp, mk);
 	}
 	gr->EndGroup();
@@ -398,8 +398,7 @@ long mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
 }
 //-----------------------------------------------------------------------------
 long mgl_crust(long n,mglPoint *pp,long **nn,float ff)
-{	// NOTE: very slow variant!
-	// TODO: update to normal algorithm
+{	// TODO: update to normal algorithm
 	register long i,j;
 	register float r,rm,rs;
 	if(ff<=0)	ff=2;

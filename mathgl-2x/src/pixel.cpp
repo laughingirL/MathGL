@@ -68,6 +68,7 @@ void mglCanvas::LightScale()
 //-----------------------------------------------------------------------------
 void mglCanvas::NormScale(mglPoint &p)
 {
+	if(isnan(p.x))	return;
 	mglPoint y=p;
 	p.x = (y.x*B[0] + y.y*B[1] + y.z*B[2])/zoomx2;
 	p.y = (y.x*B[3] + y.y*B[4] + y.z*B[5])/zoomy2;
@@ -183,7 +184,7 @@ void mglCanvas::Finish()
 void mglCanvas::Clf(mglColor Back)
 {
 	Fog(0);
-	posN = posC = pNum = pPos = 0;
+	pos = pNum = pPos = 0;
 	PDef = 0xffff;
 	if(Back==0)			Back = 'w';
 	if(TranspType==2)	Back = 'k';
@@ -240,9 +241,11 @@ unsigned char* mglCanvas::col2int(float uu,float vv,float *n,unsigned char *r)
 {
 	register long i,j;
 	static unsigned char u[4];
-	float c[4];	txt[long(uu)].GetC(uu,vv,c);
+	float c[4];
+//if(long(uu)>=numT)	{	printf("q:%g\n",uu);	fflush(stdout);	}	else
+	txt[long(uu)].GetC(uu,vv,c);
 	register float b0=c[0],b1=c[1],b2=c[2];
-	if(r==0) r = u;
+	if(r==0) r = u;	// NOTE: Not thread safe !!!
 	if(c[3]<=0)	{	memset(r,0,4*sizeof(unsigned char));	return r;	}
 	if(UseLight && n && !isnan(n[0]))
 	{
@@ -447,7 +450,7 @@ void mglCanvas::line_draw(const float *p1, const float *p2)
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 
-	float d[4],c[4],uu, pw = PenWidth, dxu,dxv,dyu,dyv,dd;
+	float d[4],uu, pw = PenWidth, dxu,dxv,dyu,dyv,dd;
 	for(int i=0;i<4;i++)	d[i] = p2[i]-p1[i];
 	bool hor = fabs(d[0])>fabs(d[1]);
 
@@ -478,11 +481,7 @@ void mglCanvas::line_draw(const float *p1, const float *p2)
 			else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
 			if(v>pw*pw)		continue;
 			if(!(PDef & (1<<long(fmod(pPos+u/pw/1.5, 16)))))	continue;
-			u /= dd;	uu = p1[3]+d[3]*u;
-			txt[long(uu)].GetC(uu,0,c);
-			r[0] = (unsigned char)(255*c[0]);
-			r[1] = (unsigned char)(255*c[1]);
-			r[2] = (unsigned char)(255*c[2]);
+			u /= dd;	uu = p1[3]+d[3]*u;	col2int(uu,1,0,r);
 			r[3] = (unsigned char)(255/cosh(3.f*sqrt(v/pw/pw)));
 			pnt_plot(i,j,p1[2]+d[2]*u+pw,r);
 		}
@@ -502,11 +501,7 @@ void mglCanvas::line_draw(const float *p1, const float *p2)
 			else if(u>dd)	{	v += (u-dd)*(u-dd);	u = dd;	}
 			if(v>pw*pw)		continue;
 			if(!(PDef & (1<<long(fmod(pPos+u/pw/1.5, 16)))))		continue;
-			u /= dd;	uu = p1[3]+d[3]*u;
-			txt[long(uu)].GetC(uu,0,c);
-			r[0] = (unsigned char)(255*c[0]);
-			r[1] = (unsigned char)(255*c[1]);
-			r[2] = (unsigned char)(255*c[2]);
+			u /= dd;	uu = p1[3]+d[3]*u;	col2int(uu,1,0,r);
 			r[3] = (unsigned char)(255/cosh(3.f*sqrt(v/pw/pw)));
 			pnt_plot(i,j,p1[2]+d[2]*u+pw,r);
 		}
@@ -517,8 +512,7 @@ void mglCanvas::line_draw(const float *p1, const float *p2)
 void mglCanvas::fast_draw(const float *p1, const float *p2)
 {
 	Finished = false;
-	float c[4];	txt[long(p1[3])].GetC(p1[3],0,c);
-	unsigned char r[4]={255*c[0], 255*c[1], 255*c[2], 255};
+	unsigned char r[4];	col2int(p1[3],1,0,r);
 	long y1,x1,y2,x2;
 
 	float d[3]={p2[0]-p1[0], p2[1]-p1[1], p2[2]-p1[2]}, pw = PenWidth;
@@ -547,14 +541,13 @@ void mglCanvas::pnt_draw(const float *p)
 {
 	bool aa=UseAlpha;	UseAlpha = true;
 	register long i,j,s;
-	float v,c[4];
-	txt[long(p[3])].GetC(p[3],1,c);
-	unsigned char cs[4]={255*c[0],255*c[1],255*c[2],255*c[3]};
+	register float v;
+	unsigned char cs[4], cc;	col2int(p[3],1,0,cs);	cc = cs[3];
 	s = long(5.5+fabs(PenWidth));
 	for(j=-s;j<=s;j++)	for(i=-s;i<=s;i++)
 	{
 		v = (i*i+j*j)/(9*PenWidth*PenWidth);
-		cs[3] = (unsigned char)(255*c[3]*exp(-6*v));
+		cs[3] = (unsigned char)(cc*exp(-6*v));
 		if(cs[3]==0)	continue;
 		pnt_plot(p[0]+i,p[1]+j,p[2],cs);
 	}
@@ -563,8 +556,7 @@ void mglCanvas::pnt_draw(const float *p)
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_draw(const float *q, char type, float size)
 {
-	float c[4];	txt[long(q[3])].GetC(q[3],0,c);
-	unsigned char cs[4]={255*c[0], 255*c[1], 255*c[2], size>0 ? 255 : 255*q[6]};
+	unsigned char cs[4];	col2int(q[3],1,0,cs);	cs[3] = size>0 ? 255 : 255*q[4];
 	float p[8], ss=fabs(size)*0.35*font_factor;
 	float pp[32];
 	register long i,j;
@@ -690,13 +682,13 @@ void mglCanvas::mark_draw(const float *q, char type, float size)
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_draw(const mglPrim *P)
 {
-	float *p = pntC+4*P->n2, f = pntC[4*P->n2+2];
+	float *p = pnt+12*P->n2, f = pnt[12*P->n2+2];
 	Push();
 	B[0] = B[4] = B[8] = P->s*P->p;	PlotFactor = P->p;
 	NoAutoFactor=false;	RotateN(P->w,0,0,1);	NoAutoFactor=false;
-	B[9] = pntC[4*P->n1];
-	B[10]= pntC[4*P->n1+1];
-	B[11]= pntC[4*P->n1+2];
+	B[9] = pnt[12*P->n1];
+	B[10]= pnt[12*P->n1+1];
+	B[11]= pnt[12*P->n1+2];
 	p[2]=0;
 
 	int ss=P->style&3;

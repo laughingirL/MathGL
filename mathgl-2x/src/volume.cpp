@@ -51,7 +51,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 
 	// x, y, z -- have the same size as a
 	long pos = (n/tx)*(m/ty)*(l/tz);
-	pos = dot ? gr->ReserveC(pos) : gr->ReserveN(pos);
+	pos = dot ? gr->Reserve(pos) : gr->Reserve(pos);
 	mglPoint p,q=mglPoint(NAN);
 	for(k=0;k<l;k+=tz)	for(j=0;j<m;j+=ty)	for(i=0;i<n;i+=tx)
 	{
@@ -59,7 +59,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 		gr->ScalePoint(p);	aa = gr->GetA(a->v(i,j,k));
 		if(inv)	bb = (1-aa)*(1-aa)*alpha;
 		else	bb = aa*aa*alpha;
-		gr->AddPntN(p,gr->GetC(ss,aa,false),q,bb);
+		gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);
 	}
 	n /= tx;	m /= ty;	l /= tz;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
@@ -229,7 +229,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 	ky1 = new long[n*m];	ky2 = new long[n*m];
 	kz  = new long[n*m];
 	float c=gr->GetC(ss,val);
-	long numK = n*m, posN = gr->GetPosN(), pos;
+	long numK = n*m, posN = gr->GetPos(), pos;
 	mglPoint *kk = (mglPoint *)malloc(numK*sizeof(mglPoint));
 
 	mglPoint p,q,u;
@@ -238,7 +238,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
-		gr->ReserveN(n*m);	gr->ReserveC(n*m);
+		gr->Reserve(n*m);	gr->Reserve(n*m);
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			i1 = i+n*j;
@@ -254,7 +254,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPntN(p,c,q)-posN;
+					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -275,7 +275,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPntN(p,c,q)-posN;
+					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -296,7 +296,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPntN(p,c,q)-posN;
+					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -383,7 +383,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	ky1 = new long[n*m];	ky2 = new long[n*m];
 	kz  = new long[n*m];
 	float c=gr->GetC(ss,val),aa;
-	long numK = n*m, posN = gr->GetPosN(), pos;
+	long numK = n*m, posN = gr->GetPos(), pos;
 	mglPoint *kk = (mglPoint *)malloc(numK*sizeof(mglPoint));
 
 	mglPoint p,q,u;
@@ -392,7 +392,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
-		gr->ReserveN(n*m);	gr->ReserveC(n*m);
+		gr->Reserve(n*m);	gr->Reserve(n*m);
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			i1 = i+n*j;
@@ -409,7 +409,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPntN(p,c,q,aa)-posN;
+					pos = gr->AddPnt(p,c,q,aa)-posN;	// NOTE: Not thread-safe!!!
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -431,7 +431,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPntN(p,c,q,aa)-posN;
+					pos = gr->AddPnt(p,c,q,aa)-posN;	// NOTE: Not thread-safe!!!
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -453,7 +453,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPntN(p,c,q,aa)-posN;
+					pos = gr->AddPnt(p,c,q,aa)-posN;	// NOTE: Not thread-safe!!!
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -540,7 +540,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	ky1 = new long[n*m];	ky2 = new long[n*m];
 	kz  = new long[n*m];
 	float c;
-	long numK = n*m, posN = gr->GetPosN(), pos;
+	long numK = n*m, posN = gr->GetPos(), pos;
 	mglPoint *kk = (mglPoint *)malloc(numK*sizeof(mglPoint));
 
 	mglPoint p,q,u;
@@ -549,7 +549,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
-		gr->ReserveN(n*m);	gr->ReserveC(n*m);
+		gr->Reserve(n*m);	gr->Reserve(n*m);
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			i1 = i+n*j;
@@ -566,7 +566,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPntN(p,c,q)-posN;
+					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -588,7 +588,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPntN(p,c,q)-posN;
+					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -610,7 +610,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPntN(p,c,q)-posN;
+					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));

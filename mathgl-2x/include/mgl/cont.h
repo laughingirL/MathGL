@@ -33,7 +33,6 @@ void mgl_text_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *text, const char 
 void mgl_text_xy(HMGL gr, HCDT x, HCDT y, const char *text, const char *font, float size);
 void mgl_text_y(HMGL gr, HCDT y, const char *text, const char *font, float size);
 
-// NOTE! All data in mgl_cont[f]_gen() MUST have the same size! Only first slice is used!
 void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, const char *stl);
 void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, const char *stl);
 

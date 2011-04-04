@@ -113,7 +113,7 @@ void mgl_mesh_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	gr->SetPenPal("-");
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
-	gr->ReserveC(n*m*z->GetNz());
+	gr->Reserve(n*m*z->GetNz());
 
 	mglPoint p;
 	float c;
@@ -123,7 +123,7 @@ void mgl_mesh_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, z->v(i,j,k));
 			c = gr->GetC(ss,p.z);	gr->ScalePoint(p);
-			pos[i+n*j] = gr->AddPntC(p,c);
+			pos[i+n*j] = gr->AddPnt(p,c);
 		}
 		mgl_mesh_plot(gr,pos,n,m,3);
 	}
@@ -164,7 +164,7 @@ void mgl_fall_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	gr->SetPenPal("-");
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
-	gr->ReserveC(n*m*z->GetNz());
+	gr->Reserve(n*m*z->GetNz());
 
 	mglPoint p;
 	float c;
@@ -174,7 +174,7 @@ void mgl_fall_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, z->v(i,j,k));
 			c = gr->GetC(ss,p.z);	gr->ScalePoint(p);
-			pos[i+n*j] = gr->AddPntC(p,c);
+			pos[i+n*j] = gr->AddPnt(p,c);
 		}
 		mgl_mesh_plot(gr,pos,n,m, (sch && strchr(sch,'x')) ? 2:1);
 	}
@@ -215,7 +215,7 @@ void mgl_grid_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 	if(isnan(zVal))	zVal = gr->Min.z;
 	gr->SetPenPal(sch?sch:"k-");
 	long *pos = new long[n*m];
-	gr->ReserveC(n*m*z->GetNz());
+	gr->Reserve(n*m*z->GetNz());
 
 	mglPoint p;
 	for(k=0;k<z->GetNz();k++)
@@ -224,7 +224,7 @@ void mgl_grid_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
-			gr->ScalePoint(p);	pos[i+n*j] = gr->AddPntC(p,gr->CDef);
+			gr->ScalePoint(p);	pos[i+n*j] = gr->AddPnt(p,gr->CDef);
 		}
 		mgl_mesh_plot(gr,pos,n,m,3);
 	}
@@ -264,7 +264,8 @@ void mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	static int cgid=1;	gr->StartGroup("Surf",cgid++);
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
-	gr->ReserveN(n*m*z->GetNz());
+	bool wire = (sch && strchr(sch,'#'));
+	gr->Reserve(n*m*z->GetNz()*(wire?2:1));
 
 	mglPoint p,q,s,xx,yy;
 	float c;
@@ -277,12 +278,12 @@ void mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
 			c = gr->GetC(ss,p.z);	gr->ScalePoint(p);
-			pos[i+n*j] = gr->AddPntN(p,c,q^s);
+			pos[i+n*j] = gr->AddPnt(p,c,q^s);
 		}
 		mgl_surf_plot(gr,pos,n,m);
-		if(sch && strchr(sch,'#'))
+		if(wire)
 		{
-			gr->ReserveC(n*m);	gr->SetPenPal("k-");
+			gr->SetPenPal("k-");
 			for(i=0;i<n*m;i++)
 				pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
 			mgl_mesh_plot(gr,pos,n,m,3);
@@ -325,7 +326,7 @@ void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[2*(n>m?n:m)];
-	gr->ReserveN(2*n*m*z->GetNz());
+	gr->Reserve(2*n*m*z->GetNz());
 	bool how = !(sch && strchr(sch,'x'));
 
 	mglPoint p1,p2,q,s,xx,yy;
@@ -342,8 +343,8 @@ void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 				q = mglPoint(xx.y, yy.y, 0);	s = q^s;
 				c = gr->GetC(ss,p1.z);
 				p2 = mglPoint(GetX(x,i+1,j,k).x,GetY(y,i+1,j,k).x,p1.z);
-				gr->ScalePoint(p1);	pos[2*j] = gr->AddPntN(p1,c,s);
-				gr->ScalePoint(p2);	pos[2*j+1]=gr->AddPntN(p2,c,s);
+				gr->ScalePoint(p1);	pos[2*j] = gr->AddPnt(p1,c,s);
+				gr->ScalePoint(p2);	pos[2*j+1]=gr->AddPnt(p2,c,s);
 			}
 			mgl_surf_plot(gr,pos,2,m);
 		}
@@ -357,8 +358,8 @@ void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 				s = mglPoint(xx.z, yy.z, 0);	s = q^s;
 				c = gr->GetC(ss,p1.z);
 				p2 = mglPoint(GetX(x,i,j+1,k).x,GetY(y,i,j+1,k).x,p1.z);
-				gr->ScalePoint(p1);	pos[2*i] = gr->AddPntN(p1,c,s);
-				gr->ScalePoint(p2);	pos[2*i+1]=gr->AddPntN(p2,c,s);
+				gr->ScalePoint(p1);	pos[2*i] = gr->AddPnt(p1,c,s);
+				gr->ScalePoint(p2);	pos[2*i+1]=gr->AddPnt(p2,c,s);
 			}
 			mgl_surf_plot(gr,pos,2,n);
 		}
@@ -401,7 +402,7 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
-	gr->ReserveN(n*m*z->GetNz());
+	gr->Reserve(n*m*z->GetNz());
 
 	mglPoint p,s=mglPoint(0,0,1);
 	float zz, c;
@@ -414,12 +415,12 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
 			zz = z->v(i,j,k);	c = gr->GetC(ss,zz);
 			gr->ScalePoint(p);	if(isnan(zz))	p.x = NAN;
-			pos[i+n*j] = gr->AddPntN(p,c,s);
+			pos[i+n*j] = gr->AddPnt(p,c,s);
 		}
 		mgl_surf_plot(gr,pos,n,m);
 		if(sch && strchr(sch,'#'))
 		{
-			gr->ReserveC(n*m);	gr->SetPenPal("k-");
+			gr->Reserve(n*m);	gr->SetPenPal("k-");
 			for(i=0;i<n*m;i++)
 				pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
 			mgl_mesh_plot(gr,pos,n,m,3);
@@ -481,7 +482,7 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
-	gr->ReserveN(n*m*z->GetNz());
+	gr->Reserve(n*m*z->GetNz());
 	float col;
 
 	mglPoint p,q,s,xx,yy;
@@ -495,12 +496,12 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
 			col = gr->GetC(ss,c->v(i,j,k));
 			gr->ScalePoint(p);
-			pos[i+n*j] = gr->AddPntN(p,col,q^s);
+			pos[i+n*j] = gr->AddPnt(p,col,q^s);
 		}
 		mgl_surf_plot(gr,pos,n,m);
 		if(sch && strchr(sch,'#'))
 		{
-			gr->ReserveC(n*m);	gr->SetPenPal("k-");
+			gr->Reserve(n*m);	gr->SetPenPal("k-");
 			for(i=0;i<n*m;i++)
 				pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
 			mgl_mesh_plot(gr,pos,n,m,3);
@@ -546,7 +547,7 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 
 	long ss = gr->AddTexture(sch);
 	long *pos = new long[n*m];
-	gr->ReserveN(n*m*z->GetNz());
+	gr->Reserve(n*m*z->GetNz());
 
 	mglPoint p,q,s,xx,yy;
 	for(k=0;k<z->GetNz();k++)
@@ -557,14 +558,13 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch)
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
-			// NOTE: before was c.a ~ a^2 !!!
 			gr->ScalePoint(p);
-			pos[i+n*j] = gr->AddPntN(p,gr->GetC(ss,z->v(i,j,k)),q^s,gr->GetA(c->v(i,j,k)));
+			pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,z->v(i,j,k)),q^s,gr->GetA(c->v(i,j,k)));
 		}
 		mgl_surf_plot(gr,pos,n,m);
 		if(sch && strchr(sch,'#'))
 		{
-			gr->ReserveC(n*m);	gr->SetPenPal("k-");
+			gr->Reserve(n*m);	gr->SetPenPal("k-");
 			for(i=0;i<n*m;i++)
 				pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
 			mgl_mesh_plot(gr,pos,n,m,3);
@@ -607,7 +607,7 @@ void mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 	if(isnan(zVal))	zVal = gr->GetOrgZ('x');
 
 	long ss = gr->AddTexture(sch);
-	gr->ReserveN(12*n*m*z->GetNz());
+	gr->Reserve(12*n*m*z->GetNz());
 
 	mglPoint p1,p2,p3,p4,q,s,t=mglPoint(0,0,1),xx,yy;
 	float zz,z1,z2,x1,y1,c;
@@ -622,20 +622,20 @@ void mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch,float zVal)
 			z1 = z->v(i+1,j,k);		z2 = z->v(i,j+1,k);
 			q = mglPoint(xx.y,yy.y,0);
 			s = mglPoint(xx.z,yy.z,0);
-			p1 = mglPoint(xx.x,yy.x,zz);	gr->ScalePoint(p1);	k1 = gr->AddPntN(p1,c,t);
-			p2 = mglPoint(x1,yy.x,zz);		gr->ScalePoint(p2);	k2 = gr->AddPntN(p2,c,t);
-			p3 = mglPoint(xx.x,y1,zz);		gr->ScalePoint(p3);	k3 = gr->AddPntN(p3,c,t);
-			p4 = mglPoint(x1,y1,zz);		gr->ScalePoint(p4);	k4 = gr->AddPntN(p4,c,t);
+			p1 = mglPoint(xx.x,yy.x,zz);	gr->ScalePoint(p1);	k1 = gr->AddPnt(p1,c,t);
+			p2 = mglPoint(x1,yy.x,zz);		gr->ScalePoint(p2);	k2 = gr->AddPnt(p2,c,t);
+			p3 = mglPoint(xx.x,y1,zz);		gr->ScalePoint(p3);	k3 = gr->AddPnt(p3,c,t);
+			p4 = mglPoint(x1,y1,zz);		gr->ScalePoint(p4);	k4 = gr->AddPnt(p4,c,t);
 			gr->quad_plot(k1,k2,k3,k4);
-			p1 = mglPoint(x1,yy.x,zz);		gr->ScalePoint(p1);	k1 = gr->AddPntN(p1,c,q);
-			p2 = mglPoint(x1,y1,zz);		gr->ScalePoint(p2);	k2 = gr->AddPntN(p2,c,q);
-			p3 = mglPoint(x1,yy.x,z1);		gr->ScalePoint(p3);	k3 = gr->AddPntN(p3,c,q);
-			p4 = mglPoint(x1,y1,z1);		gr->ScalePoint(p4);	k4 = gr->AddPntN(p4,c,q);
+			p1 = mglPoint(x1,yy.x,zz);		gr->ScalePoint(p1);	k1 = gr->AddPnt(p1,c,q);
+			p2 = mglPoint(x1,y1,zz);		gr->ScalePoint(p2);	k2 = gr->AddPnt(p2,c,q);
+			p3 = mglPoint(x1,yy.x,z1);		gr->ScalePoint(p3);	k3 = gr->AddPnt(p3,c,q);
+			p4 = mglPoint(x1,y1,z1);		gr->ScalePoint(p4);	k4 = gr->AddPnt(p4,c,q);
 			gr->quad_plot(k1,k2,k3,k4);
-			p1 = mglPoint(xx.x,y1,zz);		gr->ScalePoint(p1);	k1 = gr->AddPntN(p1,c,s);
-			p2 = mglPoint(x1,y1,zz);		gr->ScalePoint(p2);	k2 = gr->AddPntN(p2,c,s);
-			p3 = mglPoint(xx.x,y1,z2);		gr->ScalePoint(p3);	k3 = gr->AddPntN(p3,c,s);
-			p4 = mglPoint(x1,y1,z2);		gr->ScalePoint(p4);	k4 = gr->AddPntN(p4,c,s);
+			p1 = mglPoint(xx.x,y1,zz);		gr->ScalePoint(p1);	k1 = gr->AddPnt(p1,c,s);
+			p2 = mglPoint(x1,y1,zz);		gr->ScalePoint(p2);	k2 = gr->AddPnt(p2,c,s);
+			p3 = mglPoint(xx.x,y1,z2);		gr->ScalePoint(p3);	k3 = gr->AddPnt(p3,c,s);
+			p4 = mglPoint(x1,y1,z2);		gr->ScalePoint(p4);	k4 = gr->AddPnt(p4,c,s);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}
@@ -675,7 +675,7 @@ void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 	static int cgid=1;	gr->StartGroup("Tile",cgid++);
 
 	long ss = gr->AddTexture(sch);
-	gr->ReserveN(4*n*m*z->GetNz());
+	gr->Reserve(4*n*m*z->GetNz());
 
 	mglPoint p1,p2,p3,p4,s=mglPoint(0,0,1);
 	float zz,x1,x2,y1,y2,c;
@@ -687,10 +687,10 @@ void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch)
 			zz = z->v(i,j,k);		c = gr->GetC(ss,zz);
 			x1 = GetX(x,i,j,k).x;	y1 = GetY(y,i,j,k).x;
 			x2 = GetX(x,i+1,j,k).x;	y2 = GetY(y,i,j+1,k).x;
-			p1 = mglPoint(x1,y1,zz);	gr->ScalePoint(p1);	k1 = gr->AddPntN(p1,c,s);
-			p2 = mglPoint(x2,y1,zz);	gr->ScalePoint(p2);	k2 = gr->AddPntN(p2,c,s);
-			p3 = mglPoint(x1,y2,zz);	gr->ScalePoint(p3);	k3 = gr->AddPntN(p3,c,s);
-			p4 = mglPoint(x2,y2,zz);	gr->ScalePoint(p4);	k4 = gr->AddPntN(p4,c,s);
+			p1 = mglPoint(x1,y1,zz);	gr->ScalePoint(p1);	k1 = gr->AddPnt(p1,c,s);
+			p2 = mglPoint(x2,y1,zz);	gr->ScalePoint(p2);	k2 = gr->AddPnt(p2,c,s);
+			p3 = mglPoint(x1,y2,zz);	gr->ScalePoint(p3);	k3 = gr->AddPnt(p3,c,s);
+			p4 = mglPoint(x2,y2,zz);	gr->ScalePoint(p4);	k4 = gr->AddPnt(p4,c,s);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}
@@ -727,7 +727,7 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch)
 	static int cgid=1;	gr->StartGroup("TileS",cgid++);
 
 	long cc = gr->AddTexture(sch);
-	gr->ReserveN(4*n*m*z->GetNz());
+	gr->Reserve(4*n*m*z->GetNz());
 
 	mglPoint p1,p2,p3,p4,t=mglPoint(0,0,1);
 	float zz,x1,x2,x3,x4,y1,y2,y3,y4,ss,sm,c;
@@ -747,13 +747,13 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch)
 			y3 = GetY(y,i+1,j+1,k).x-y2-y4-y1;
 
 			p1 = mglPoint(x1+x2*ss+x4*ss+x3*ss*ss, y1+y2*ss+y4*ss+y3*ss*ss, zz);
-			gr->ScalePoint(p1);	k1 = gr->AddPntN(p1,c,t);
+			gr->ScalePoint(p1);	k1 = gr->AddPnt(p1,c,t);
 			p2 = mglPoint(x1+x2*sm+x4*ss+x3*ss*sm, y1+y2*sm+y4*ss+y3*ss*sm, zz);
-			gr->ScalePoint(p2);	k2 = gr->AddPntN(p2,c,t);
+			gr->ScalePoint(p2);	k2 = gr->AddPnt(p2,c,t);
 			p3 = mglPoint(x1+x2*ss+x4*sm+x3*ss*sm, y1+y2*ss+y4*sm+y3*ss*sm, zz);
-			gr->ScalePoint(p3);	k3 = gr->AddPntN(p3,c,t);
+			gr->ScalePoint(p3);	k3 = gr->AddPnt(p3,c,t);
 			p4 = mglPoint(x1+x2*sm+x4*sm+x3*sm*sm, y1+y2*sm+y4*sm+y3*sm*sm, zz);
-			gr->ScalePoint(p4);	k4 = gr->AddPntN(p4,c,t);
+			gr->ScalePoint(p4);	k4 = gr->AddPnt(p4,c,t);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}
@@ -800,7 +800,7 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, int 
 	float xdy,xdx,ydx,ydy,xx,yy;
 	mglPoint p,t=mglPoint(NAN);
 	long *pos = new long[n*m], kk=x->GetNz()>=ks?ks:0;
-	gr->ReserveN(n*m);
+	gr->Reserve(n*m);
 
 	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
@@ -826,14 +826,9 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, int 
 		if(xx<0)	xx=0;	if(xx>=1)	xx=1/MGL_FLT_EPS;
 		if(yy<0)	yy=0;	if(yy>=1)	yy=1/MGL_FLT_EPS;
 		gr->ScalePoint(p);
-		pos[i+n*j] = gr->AddPntN(p,gr->GetC(ss,xx,false),t,yy);
+		pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,xx,false),t,yy);
 	}
-	if(pnts)
-	{
-		gr->ReserveC(n*m);
-		for(i=0;i<n*m;i++)
-		gr->mark_plot(gr->CopyNtoC(pos[i]),'.',-1);
-	}
+	if(pnts)	for(i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.',-1);
 	else	mgl_surf_plot(gr,pos,n,m);
 	delete []pos;	gr->EndGroup();
 }

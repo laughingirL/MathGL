@@ -24,9 +24,8 @@
 mglBase::mglBase()
 {
 	memset(this,0,sizeof(mglBase));	InUse = 1;
-	posC=posN=0;	numC=numN=1024;
-	pntC=(float *)malloc(4*numC*sizeof(float));
-	pntN=(float *)malloc(8*numC*sizeof(float));
+	pos=0;	num=1024;
+	pnt = (float *)malloc(12*num*sizeof(float));
 	txt = (mglTexture *)malloc(2*sizeof(mglTexture));
 	memset(txt,0,2*sizeof(mglTexture));
 	// Always create default palette txt[0] and default scheme txt[1]
@@ -37,7 +36,7 @@ mglBase::mglBase()
 mglBase::~mglBase()
 {
 	for(long i=0;i<numT;i++)	txt[i].Clear();
-	free(pntC);	free(pntN);	free(txt);	ClearEq();
+	free(pnt);	free(txt);	ClearEq();
 }
 //-----------------------------------------------------------------------------
 void mglBase::StartGroup(const char *name, int id)
@@ -73,47 +72,36 @@ void mglBase::SetWarn(int code, const char *who)
 //-----------------------------------------------------------------------------
 //		Add points to the buffer
 //-----------------------------------------------------------------------------
-long mglBase::AddPntC(mglPoint p, float c)	// NOTE: this is not-thread-safe!!!
-{
-	float pp[4]={p.x,p.y,p.z,c};
-	if(posC>numC-2)
-	{	numC+=1024;	pntC=(float *)realloc(pntC,4*numC*sizeof(float));	}
-	memcpy(pntC+posC*4,pp,4*sizeof(float));	posC++;
-	return posC-1;
-}
-//-----------------------------------------------------------------------------
-long mglBase::AddPntN(mglPoint p, float c, mglPoint n, float a, bool scl)	// NOTE: this is not-thread-safe!!!
+long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, bool scl)	// NOTE: this is not-thread-safe!!!
 {
 	if(scl)	NormScale(n);	// Usually p was scaled before, but n should be scaled now!
 	a = (a>=0 && a<=1) ? a : AlphaDef;
-	float pp[8]={p.x,p.y,p.z,c,a,n.x,n.y,n.z};
-	if(posN>numN-2)
-	{	numN+=1024;	pntN=(float *)realloc(pntN,8*numN*sizeof(float));	}
-	memcpy(pntN+posN*8,pp,8*sizeof(float));	posN++;
-	return posN-1;
+	if(isnan(n.x))	a=1;
+	c = (c>=0) ? c:CDef;
+	// NOTE: RGBA color for OpenGL and EPS/SVG modes only!
+	float pp[12]={p.x,p.y,p.z,c, a,n.x,n.y,n.z, 0,0,0,0};
+	txt[long(c)].GetC(c,a,pp+8);
+	if(pos>=num)
+	{	num+=1024;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
+	memcpy(pnt+pos*12,pp,12*sizeof(float));	pos++;
+	return pos-1;
 }
 //-----------------------------------------------------------------------------
-long mglBase::ReserveC(long n)
+long mglBase::CopyNtoC(long from, float c)	// NOTE: this is not-thread-safe!!!
 {
-	if(posC+n>numC)
-	{	numC=posC+n;	pntC=(float *)realloc(pntC,4*numC*sizeof(float));	}
-	return posC;
+	if(pos+1>num)
+	{	num=pos+1;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
+	memcpy(pnt+12*pos, pnt+12*from, 12*sizeof(float));
+	if(!isnan(c))
+	{	pnt[12*pos+3]=c;	pnt[12*pos+4]=0;	txt[long(c)].GetC(c,0,pnt+12*pos+8);	}
+	pos++;			return pos-1;
 }
 //-----------------------------------------------------------------------------
-long mglBase::ReserveN(long n)
+long mglBase::Reserve(long n)	// NOTE: this is not-thread-safe!!!
 {
-	if(posN+n>numN)
-	{	numN=posN+n;	pntN=(float *)realloc(pntN,8*numN*sizeof(float));	}
-	return posN;
-}
-//-----------------------------------------------------------------------------
-long mglBase::CopyNtoC(long from, float c)
-{
-	if(posC+1>numC)
-	{	numC=posC+1;	pntC=(float *)realloc(pntC,4*numC*sizeof(float));	}
-	memcpy(pntC+4*posC, pntN+8*from, 4*sizeof(float));
-	if(!isnan(c))	pntC[4*posC+3]=c;
-	posC++;			return posC-1;
+	if(pos+n>num)
+	{	num=pos+n;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
+	return pos;
 }
 //-----------------------------------------------------------------------------
 //		Boundaries and scaling
@@ -550,7 +538,7 @@ void mglTexture::GetC(float u,float v,float cc[4])
 	cc[0] = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
 	cc[1] = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
 	cc[2] = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
-	cc[3] = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// NOTE: for alpha use inverted
+	cc[3] = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// for alpha use inverted
 }
 //-----------------------------------------------------------------------------
 bool mglTexture::IsSame(mglTexture &t)
@@ -698,20 +686,20 @@ mglPoint GetZ(const mglDataA *z, int i, int j, int k)
 //-----------------------------------------------------------------------------
 void mglBase::vect_plot(long p1, long p2)	// position in pntC
 {
-	float pp[8], *pp1=pntC+4*p1, *pp2=pntC+4*p2;
-	memcpy(pp,pp2,4*sizeof(float));	memcpy(pp+4,pp2,4*sizeof(float));
+	float pp[24], *pp1=pnt+12*p1, *pp2=pnt+12*p2;
+	memcpy(pp,pp2,12*sizeof(float));	memcpy(pp+12,pp2,12*sizeof(float));
 	pp[0] = pp1[0]+0.8*(pp2[0]-pp1[0]) + 0.1*(pp2[1]-pp1[1]);
-	pp[4] = pp1[0]+0.8*(pp2[0]-pp1[0]) - 0.1*(pp2[1]-pp1[1]);
+	pp[12]= pp1[0]+0.8*(pp2[0]-pp1[0]) - 0.1*(pp2[1]-pp1[1]);
 	pp[1] = pp1[1]+0.8*(pp2[1]-pp1[1]) - 0.1*(pp2[0]-pp1[0]);
-	pp[5] = pp1[1]+0.8*(pp2[1]-pp1[1]) + 0.1*(pp2[0]-pp1[0]);
-	pp[2] = pp[6] = pp1[2]+0.8*(pp2[2]-pp1[2]);
+	pp[13]= pp1[1]+0.8*(pp2[1]-pp1[1]) + 0.1*(pp2[0]-pp1[0]);
+	pp[2] = pp[14] = pp1[2]+0.8*(pp2[2]-pp1[2]);
 
-	if(posC>numC-3)
-	{	numC+=1024;	pntC=(float *)realloc(pntC,4*numC*sizeof(float));	}
-	memcpy(pntC+posC*4,pp,8*sizeof(float));	posC+=2;
+	if(pos>num-3)
+	{	num+=1024;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
+	memcpy(pnt+pos*12,pp,24*sizeof(float));	pos+=2;
 	line_plot(p1,p2);
-	line_plot(posC-2,p2);
-	line_plot(p2,posC-1);
+	line_plot(pos-2,p2);
+	line_plot(p2,pos-1);
 }
 //-----------------------------------------------------------------------------
 void mglBase::SaveState()

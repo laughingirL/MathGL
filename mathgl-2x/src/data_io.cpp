@@ -90,11 +90,11 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)
 //-----------------------------------------------------------------------------
 void mgl_data_set(HMDT d, HCDT a)
 {
-	const mglData *dd = dynamic_cast<const mglData *>(a);	// NOTE: faster for mglData
+	const mglData *dd = dynamic_cast<const mglData *>(a);	// faster for mglData
 	mgl_data_create(d, a->GetNx(), a->GetNy(), a->GetNz());
 	if(dd)	// this one should be much faster
 		memcpy(d->a, dd->a, d->nx*d->ny*d->nz*sizeof(mreal));
-	else	// NOTE: very inefficient!!!
+	else	// very inefficient!!!
 	{
 		register long i,j,k;
 		for(k=0;k<d->nz;k++)	for(j=0;j<d->ny;j++)	for(i=0;i<d->nx;i++)

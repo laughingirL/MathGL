@@ -48,19 +48,19 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 	register long i,k,h,pp;
 
 	h=f;	k=nn[f];	// print string symbol-by-symbol
-	mglPoint p0=gr->GetPntC(ff[h]),n0=gr->GetPntC(ff[k])-p0, pa;
+	mglPoint p0=gr->GetPnt(ff[h]),n0=gr->GetPnt(ff[k])-p0, pa;
 	float c=gr->GetClrC(ff[h]);
 
 	for(unsigned j=0;j<wcslen(text);j++)
 	{
 		L[0] = text[j];	pa = pos>0 ? p0 : p0-wg*(!n0);
-		gr->ScalePoint(pa);	pp = gr->AddPntN(pa,c,n0,0,false);
+		gr->ScalePoint(pa);	pp = gr->AddPnt(pa,c,n0,0,false);
 		ww = gr->text_plot(pp,text,font,size);
 		p1 = p0+(ww/Norm(n0))*n0;
 		// let find closest point
 		for(r=1e10,i=0;i<n;i++)
 		{
-			n1 = gr->GetPntC(ff[i]);
+			n1 = gr->GetPnt(ff[i]);
 			w = Norm(p1-n1);
 			if(w<r)	{	r=w;	k=i;	}
 		}
@@ -70,18 +70,18 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 		if(k<0 || h>=n || !same_chain(f,i,nn))	{	p0=p1;	continue;	}
 		// if last point let change it to previous one
 		if(k<0)	{	k=i;	i=h;	}
-		p2 = gr->GetPntC(ff[i]);	n1 = gr->GetPntC(ff[k])-p2;
+		p2 = gr->GetPnt(ff[i]);	n1 = gr->GetPnt(ff[k])-p2;
 		w = (p1-p2)*n1;
 		// go in wrong direction, let turn back
 		if((w<0 || w>n1*n1) && i!=h)
-		{	p2 = gr->GetPntC(ff[h]);n1 = gr->GetPntC(ff[i])-p2;	k = i;	}
+		{	p2 = gr->GetPnt(ff[h]);n1 = gr->GetPnt(ff[i])-p2;	k = i;	}
 		// under maximum and should skip some points
 		if(n1.x*n0.y>n1.y*n0.x && pos<0)
 		{
 			p1 = p0+((ww/Norm(n0))*n0) + ((wg/Norm(n0)/3)*mglPoint(n0.y,-n0.x,n0.z));
 			for(r=1e10,i=0;i<n;i++)	// let find closest point
 			{
-				n1 = gr->GetPntC(ff[i]);
+				n1 = gr->GetPnt(ff[i]);
 				w = Norm(p1-n1);
 				if(w<r)	{	r=w;	k=i;	}
 			}
@@ -90,10 +90,10 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 			if(k<0 || h>=n || !same_chain(f,i,nn))
 			{	p0 = p0+(ww/Norm(n0))*n0;	continue;	}
 			if(k<0)	{	k=i;	i=h;	}
-			p2 = gr->GetPntC(ff[i]);	n1 = gr->GetPntC(ff[k])-p2;
+			p2 = gr->GetPnt(ff[i]);	n1 = gr->GetPnt(ff[k])-p2;
 			w = (p1-p2)*n1;
 			if((w<0 || w>n1*n1) && i!=h)
-			{	p2 = gr->GetPntC(ff[h]);n1 = gr->GetPntC(ff[i])-p2;	k = i;	}
+			{	p2 = gr->GetPnt(ff[h]);n1 = gr->GetPnt(ff[i])-p2;	k = i;	}
 		}
 		// above minimum and should skip some points
 		if(n1.x*n0.y<n1.y*n0.x && pos>0)
@@ -101,7 +101,7 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 			p1 = p0+((ww/Norm(n0))*n0) - ((wg/Norm(n0)/3)*mglPoint(n0.y,-n0.x,n0.z));
 			for(r=1e10,i=0;i<n;i++)	// let find closest point
 			{
-				n1 = gr->GetPntC(ff[i]);
+				n1 = gr->GetPnt(ff[i]);
 				w = Norm(p1-n1);
 				if(w<r)	{	r=w;	k=i;	}
 			}
@@ -110,10 +110,10 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 			if(k<0 || h>=n || !same_chain(f,i,nn))
 			{	p0 = p0+(ww/Norm(n0))*n0;	continue;	}
 			if(k<0)	{	k=i;	i=h;	}
-			p2 = gr->GetPntC(ff[i]);	n1 = gr->GetPntC(ff[k])-p2;
+			p2 = gr->GetPnt(ff[i]);	n1 = gr->GetPnt(ff[k])-p2;
 			w = (p1-p2)*n1;
 			if((w<0 || w>n1*n1) && i!=h)
-			{	p2 = gr->GetPntC(ff[h]);n1 = gr->GetPntC(ff[i])-p2;	k = i;	}
+			{	p2 = gr->GetPnt(ff[h]);n1 = gr->GetPnt(ff[i])-p2;	k = i;	}
 		}
 		// OK, next point will be
 		p0 = p2 + n1*(((p1-p2)*n1)/(n1*n1));
@@ -134,7 +134,7 @@ void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *text, const ch
 	for(i=0;i<n;i++)
 	{
 		p = mglPoint(x->v(i),y->v(i),z->v(i));
-		gr->ScalePoint(p);	ff[i] = gr->AddPntC(p,-1);
+		gr->ScalePoint(p);	ff[i] = gr->AddPnt(p,-1);
 	}
 	for(i=1;i<n;i++)	nn[i-1] = i;
 	nn[n-1]=-1;
@@ -216,8 +216,8 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 	mglPoint *kk = new mglPoint[2*n*m],p;
 	float d, r, kx, ky;
 	register long i,j,k, pc=0;
-	// NOTE. Usually number of points is much smaller. So, there is no reservation.
-//	gr->ReserveC(2*n*m);
+	// Usually number of points is much smaller. So, there is no reservation.
+//	gr->Reserve(2*n*m);
 
 	// add intersection point of isoline and Y axis
 	for(i=0;i<n-1;i++)	for(j=0;j<m;j++)
@@ -229,7 +229,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 						y->v(i,j)*(1-d)+y->v(i+1,j)*d,
 						z->v(i,j)*(1-d)+z->v(i+1,j)*d);
 			if(gr->ScalePoint(p))
-				kk[pc] = mglPoint(i+d,j,gr->AddPntC(p,c));	pc++;
+				kk[pc] = mglPoint(i+d,j,gr->AddPnt(p,c));	pc++;
 		}
 	}
 	// add intersection point of isoline and X axis
@@ -242,7 +242,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 						y->v(i,j)*(1-d)+y->v(i,j+1)*d,
 						z->v(i,j)*(1-d)+z->v(i,j+1)*d);
 			if(gr->ScalePoint(p))
-				kk[pc] = mglPoint(i,j+d,gr->AddPntC(p,c));	pc++;
+				kk[pc] = mglPoint(i,j+d,gr->AddPnt(p,c));	pc++;
 		}
 	}
 	// deallocate arrays and finish if no point
@@ -299,13 +299,13 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 		del = del>1 ? del:1;
 		long k=1,i,j;
 		bool less;
-		p[0] =	gr->GetPntC(ff[0]);
+		p[0] =	gr->GetPnt(ff[0]);
 		mgl_string_curve(gr,0,pc,ff,nn,wcs,size,"t");
 		for(i=1;i<pc;i++)	// print it several times (for contours)
 		{
 			if(nn[i]<0)	continue;
 			less = false;
-			t = gr->GetPntC(ff[i]);
+			t = gr->GetPnt(ff[i]);
 			for(j=0;j<k;j++)	if(Norm(t-p[j])<del)	{	less=true;	break;	}
 			if(less)	continue;
 			p[k] = t;	k++;
@@ -419,7 +419,7 @@ long mgl_add_pnt(HMGL gr, float d, HCDT x, HCDT y, HCDT z, long i1, long j1, lon
 					 y->dvy(i1,j1)*(1-d)+y->dvy(i2,j2)*d,
 					 z->dvy(i1,j1)*(1-d)+z->dvy(i2,j2)*d);
 		gr->ScalePoint(p);
-		res = gr->AddPntN(p,c,u^v);
+		res = gr->AddPnt(p,c,u^v);
 	}
 	return res;
 }
@@ -455,7 +455,7 @@ void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, 
 	{	gr->SetWarn(mglWarnDim,"ContFGen");	return;	}
 
 	register long i,j;
-	gr->ReserveN(n*m);
+	gr->Reserve(n*m);
 	long *kk = new long[4*n], l1,l2, r1,r2, t1,t2, u1,u2, b1,b2, d1,d2, p[8],num;
 	memset(kk,-1,2*n*sizeof(long));
 	for(i=0;i<n-1;i++)	// add intersection points for first line
@@ -988,7 +988,7 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float c
 	register long i,j,k;
 	float fi,si,co;
 	long p1,p2,p3,p4;
-	if(wire)	gr->ReserveC(pc*82);	else	gr->ReserveN(pc*82);
+	if(wire)	gr->Reserve(pc*82);	else	gr->Reserve(pc*82);
 	for(i=0;i<pc;i++)
 	{
 		k = mgl_find_prev(i,pc,nn);
@@ -997,9 +997,9 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float c
 		q2 = nn[nn[i]]<0 ? ff[nn[i]]-ff[i]  : (ff[nn[nn[i]]]-ff[i])*0.5;
 
 		p = a*ff[i].y + c*ff[i].x;			gr->ScalePoint(p);
-		p1 = wire ? gr->AddPntC(p,cc) : gr->AddPntN(p,cc,(a*q1.y + c*q1.x)^b);
+		p1 = wire ? gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q1.y + c*q1.x)^b);
 		p = a*ff[nn[i]].y + c*ff[nn[i]].x;	gr->ScalePoint(p);
-		p2 = wire ? gr->AddPntC(p,cc) : gr->AddPntN(p,cc,(a*q2.y + c*q2.x)^b);
+		p2 = wire ? gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q2.y + c*q2.x)^b);
 		if(wire)	gr->line_plot(p1,p2);
 
 		for(j=1;j<41;j++)
@@ -1008,10 +1008,10 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float c
 			fi = j*M_PI/20;		si = sin(fi);	co = cos(fi);
 			p = a*ff[i].y + b*(si*ff[i].x) +  c*(co*ff[i].x);
 			gr->ScalePoint(p);
-			p1 = wire ?	gr->AddPntC(p,cc) : gr->AddPntN(p,cc,(a*q1.y + b*(si*q1.x) +  c*(co*q1.x))^(b*co-c*si));
+			p1 = wire ?	gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q1.y + b*(si*q1.x) +  c*(co*q1.x))^(b*co-c*si));
 			p = a*ff[nn[i]].y + b*(si*ff[nn[i]].x) +  c*(co*ff[nn[i]].x);
 			gr->ScalePoint(p);
-			p2 = wire ?	gr->AddPntC(p,cc) : gr->AddPntN(p,cc,(a*q2.y + b*(si*q2.x) +  c*(co*q2.x))^(b*co-c*si));
+			p2 = wire ?	gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q2.y + b*(si*q2.x) +  c*(co*q2.x))^(b*co-c*si));
 			if(wire)
 			{	gr->line_plot(p1,p2);	gr->line_plot(p1,p3);
 				gr->line_plot(p4,p2);	gr->line_plot(p4,p3);	}
@@ -1030,8 +1030,8 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir
 	mglPoint *kk = new mglPoint[2*n*m],*pp = new mglPoint[2*n*m],p;
 	float d, kx, ky;
 	register long i,j,k, pc=0;
-	// NOTE. Usually number of points is much smaller. So, there is no reservation.
-//	gr->ReserveC(2*n*m);
+	// Usually number of points is much smaller. So, there is no reservation.
+//	gr->Reserve(2*n*m);
 
 	// add intersection point of isoline and Y axis
 	for(j=0;j<m;j++)	for(i=0;i<n-1;i++)

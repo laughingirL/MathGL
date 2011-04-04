@@ -41,7 +41,7 @@ void mgl_surf3c_val(HMGL graph, float Val, HCDT a, HCDT b, const char *stl);
 void mgl_surf3c_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *stl, int num);
 void mgl_surf3c(HMGL graph, HCDT a, HCDT b, const char *stl, int num);
 
-// NOTE! now style '.' draws dots instead of faces
+// NOTE: now style '.' draws dots instead of faces
 void mgl_cloud_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, const char *stl, float alpha);
 void mgl_cloud(HMGL graph, HCDT a, const char *stl, float alpha);
 

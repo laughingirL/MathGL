@@ -35,6 +35,10 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
+	mglData a;	mgls_prepare2d(&a);
+	gr->Mesh(a);
+	return 0;
+
 	gr->Puts(mglPoint(0,0),"Test","t");
 	gr->Puts(mglPoint(0,0),"Test","T");
 	gr->Line(mglPoint(0),mglPoint(1),"r");
@@ -1867,8 +1871,8 @@ mglSample samp[] = {
 	{"mesh", smgl_mesh},
 	{"mesh_cont", smgl_mesh_cont},
 	{"mirror", smgl_mirror},
-	{"molecule", smgl_molecule},
-//	{"parser", smgl_parser},	// TODO: enable later
+//	{"molecule", smgl_molecule},	// TODO: enable sample later
+//	{"parser", smgl_parser},		// TODO: enable sample later
 	{"pde", smgl_pde},
 	{"pie_chart", smgl_pie_chart},
 	{"pipe", smgl_pipe},
@@ -1893,7 +1897,7 @@ mglSample samp[] = {
 	{"sampleb", smgl_sampleb},
 	{"samplec", smgl_samplec},
 	{"sampled", smgl_sampled},
-	{"samplee", smgl_samplee},
+//	{"samplee", smgl_samplee},	// TODO: enable sample later
 	{"semilog", smgl_semilog},
 	{"several_light", smgl_several_light},
 	{"sew", smgl_sew},
@@ -1905,7 +1909,6 @@ mglSample samp[] = {
 	{"surf", smgl_surf},
 	{"surf3", smgl_surf3},
 	{"surf3_cutoff", smgl_surf3_cutoff},
-//	{"surf3_rgbd", smgl_surf3_rgbd},
 	{"surf3a", smgl_surf3a},
 	{"surf3c", smgl_surf3c},
 	{"surf_alpha", smgl_surf_alpha},

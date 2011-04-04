@@ -1045,7 +1045,7 @@ void mgl_data_norm_slice(HMDT d, float v1,float v2,char dir,long keep_en,long sy
 void mgl_data_norm_slice_(uintptr_t *d, float *v1,float *v2,char *dir,int *keep_en,int *sym,int )
 {	mgl_data_norm_slice(_DT_,*v1,*v2,*dir,*keep_en,*sym);	}
 //-----------------------------------------------------------------------------
-const char *mgl_data_info(HCDT d)	// NOTE: Non-thread safe function!
+const char *mgl_data_info(HCDT d)	// NOTE: Not thread safe function!
 {
 	static char buf[512];
 	char s[128];	buf[0]=0;

@@ -185,7 +185,7 @@ void mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Plot");	return;	}
 	static int cgid=1;	gr->StartGroup("Plot",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
-	char mk=gr->SetPenPal(pen,&pal);	gr->ReserveC(2*n*m);
+	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	bool t1,t2,t3,inan,onan;
 	mglPoint p1,p2,p3;
 	long n1=-1,n2=-1,n3=-1;
@@ -201,7 +201,7 @@ void mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 			if(i>0)	{	n2=n1;	p2=p1;	t2=t1;	onan=inan;	}
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
 			inan = p1.IsNAN();	t1 = gr->ScalePoint(p1);
-			n1 = gr->AddPntC(p1,gr->CDef);	// NOT thread-safe!!!
+			n1 = gr->AddPnt(p1,gr->CDef);	// NOT thread-safe!!!
 			if(mk && t1)	gr->mark_plot(n1,mk);
 			if(t1 && t2)
 			{
@@ -223,7 +223,7 @@ void mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 					if((t1 && t3) || (t2 && !t1))	i2 = ii;
 					else	i1 = ii;
 				} while(fabs(i2-i1)>1e-3);
-				n1 = gr->AddPntC(p1,gr->CDef);	// NOT thread-safe!!!
+				n1 = gr->AddPnt(p1,gr->CDef);	// NOT thread-safe!!!
 				if(t2)	gr->line_plot(n1,n2);
 				else	gr->line_plot(n3,n1);
 			}
@@ -275,7 +275,7 @@ void mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *pen)
 	if(n<2)					{	gr->SetWarn(mglWarnLow,"Tens");	return;	}
 	static int cgid=1;	gr->StartGroup("Tens",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
-	char mk=gr->SetPenPal(pen, &pal);	gr->ReserveC(2*n*m);
+	char mk=gr->SetPenPal(pen, &pal);	gr->Reserve(2*n*m);
 	long ss=gr->AddTexture(pen);
 	bool t1,t2,t3,inan,onan;
 	mglPoint p1,p2,p3;
@@ -292,7 +292,7 @@ void mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *pen)
 			if(i>0)	{	n2=n1;	p2=p1;	t2=t1;	onan=inan;	}
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz), c->v(i,mc));
 			inan = p1.IsNAN();	t1 = gr->ScalePoint(p1);
-			n1 = gr->AddPntC(p1,gr->GetC(ss,p1.c));	// NOT thread-safe!!!
+			n1 = gr->AddPnt(p1,gr->GetC(ss,p1.c));	// NOT thread-safe!!!
 			if(mk && t1)	gr->mark_plot(n1,mk);
 			if(t1 && t2)
 			{
@@ -315,7 +315,7 @@ void mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *pen)
 					if((t1 && t3) || (t2 && !t1))	i2 = ii;
 					else	i1 = ii;
 				} while(fabs(i2-i1)>1e-3);
-				n1 = gr->AddPntC(p1,gr->GetC(ss,p1.c));	// NOT thread-safe!!!
+				n1 = gr->AddPnt(p1,gr->GetC(ss,p1.c));	// NOT thread-safe!!!
 				if(t2)	gr->line_plot(n1,n2);
 				else	gr->line_plot(n3,n1);
 			}
@@ -371,7 +371,7 @@ void mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 	float c1,c2;
 	mglPoint p1,p2,p3,p4,nn;
 	long n1,n2,n3,n4;
-	gr->SetPenPal(pen,&pal);	gr->ReserveN(2*n*m);
+	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	long s=gr->AddTexture(pen,1);
 	for(j=0;j<m;j++)
 	{
@@ -385,16 +385,16 @@ void mgl_area_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 		p2 = mglPoint(x->v(0,mx),y->v(0,my),z0);
 
 		nn = mglPoint(-y->dvx(0,my),x->dvx(0,mx));
-		gr->ScalePoint(p1);	n1 = gr->AddPntN(p1,c1,nn);
-		gr->ScalePoint(p2);	n2 = gr->AddPntN(p2,c2,nn);
+		gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,c1,nn);
+		gr->ScalePoint(p2);	n2 = gr->AddPnt(p2,c2,nn);
 		for(i=1;i<n;i++)
 		{
 			p3=p1;	p4=p2;	n3=n1;	n4=n2;
 			p1 = mglPoint(x->v(i,mx),y->v(i,my),z->v(i,mz));
 			p2 = mglPoint(x->v(i,mx),y->v(i,my),z0);
 			nn = mglPoint(-y->dvx(i,my),x->dvx(i,mx));
-			gr->ScalePoint(p1);	n1 = gr->AddPntN(p1,c1,nn);
-			gr->ScalePoint(p2);	n2 = gr->AddPntN(p2,c2,nn);
+			gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,c1,nn);
+			gr->ScalePoint(p2);	n2 = gr->AddPnt(p2,c2,nn);
 			gr->quad_plot(n1,n2,n3,n4);
 		}
 	}
@@ -416,7 +416,7 @@ void mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 	float *f=new float[n];	memset(f,0,n*sizeof(float));
 	bool sum = pen && strchr(pen,'a')!=0;
 
-	gr->SetPenPal(pen,&pal);	gr->ReserveN(2*n*m);
+	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	long s=gr->AddTexture(pen,1);
 	for(j=0;j<m;j++)
 	{
@@ -428,15 +428,15 @@ void mgl_area_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 
 		p1 = mglPoint(x->v(0,mx),y->v(0,my),z0);
 		p2 = mglPoint(x->v(0,mx),sum?0:y0,z0);
-		gr->ScalePoint(p1);	n1 = gr->AddPntN(p1,c1,nn);
-		gr->ScalePoint(p2);	n2 = gr->AddPntN(p2,c2,nn);
+		gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,c1,nn);
+		gr->ScalePoint(p2);	n2 = gr->AddPnt(p2,c2,nn);
 		for(i=1;i<n;i++)
 		{
 			p3=p1;	p4=p2;	n3=n1;	n4=n2;
 			p1 = mglPoint(x->v(i,mx),sum?f[i]:y->v(i,my),z0);
 			p2 = mglPoint(x->v(i,mx),sum?f[i]:y0,z0);
-			gr->ScalePoint(p1);	n1 = gr->AddPntN(p1,c1,nn);
-			gr->ScalePoint(p2);	n2 = gr->AddPntN(p2,c2,nn);
+			gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,c1,nn);
+			gr->ScalePoint(p2);	n2 = gr->AddPnt(p2,c2,nn);
 			gr->quad_plot(n1,n2,n3,n4);	f[i]+=y->v(i,my);
 		}
 	}
@@ -483,7 +483,7 @@ void mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen, int insid
 	long n1,n2,n3,n4;
 	float xx,f1,f2,f3,f4;
 
-	gr->SetPenPal(pen,&pal);	gr->ReserveN(2*n*m);
+	gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	long s=gr->AddTexture(pen,1);
 	for(j=0;j<m;j++)
 	{
@@ -495,15 +495,15 @@ void mgl_region_xy(HMGL gr, HCDT x, HCDT y1, HCDT y2, const char *pen, int insid
 
 		f1 = y1->v(0,j);	f2 = y2->v(0,j);	xx = x->v(0,mx);
 		p1 = mglPoint(xx,f1,z0);	p2 = mglPoint(xx,f2,z0);
-		gr->ScalePoint(p1);	n1 = gr->AddPntN(p1,c1,nn);
-		gr->ScalePoint(p2);	n2 = gr->AddPntN(p2,c2,nn);
+		gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,c1,nn);
+		gr->ScalePoint(p2);	n2 = gr->AddPnt(p2,c2,nn);
 		for(i=1;i<n;i++)
 		{
 			p3=p1;	p4=p2;	n3=n1;	n4=n2;	f3=f1;	f4=f2;
 			f1 = y1->v(i,j);	f2 = y2->v(i,j);	xx = x->v(i,mx);
 			p1 = mglPoint(xx,f1,z0);	p2 = mglPoint(xx,f2,z0);
-			gr->ScalePoint(p1);	n1 = gr->AddPntN(p1,c1,nn);
-			gr->ScalePoint(p2);	n2 = gr->AddPntN(p2,c2,nn);
+			gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,c1,nn);
+			gr->ScalePoint(p2);	n2 = gr->AddPnt(p2,c2,nn);
 			if(!inside || (f2>f1 && f4>f3))
 				gr->quad_plot(n1,n2,n3,n4);
 		}
@@ -539,7 +539,7 @@ void mgl_step_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 	static int cgid=1;	gr->StartGroup("Step3",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 
-	char mk=gr->SetPenPal(pen,&pal);	gr->ReserveC(2*n*m);
+	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	bool t1,t2;
 	mglPoint p1,p2;
 	long n1,n2;
@@ -548,13 +548,13 @@ void mgl_step_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;
 		mz = j<z->GetNy() ? j:0;	gr->NextColor(pal);
 		p1 = mglPoint(x->v(0,mx), y->v(0,my), z->v(0,mz));
-		t1 = gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+		t1 = gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,gr->CDef);
 		if(mk && t1)	gr->mark_plot(n1,mk);
 		for(i=1;i<n;i++)
 		{
 			p2 = p1;	t2 = t1;	n2 = n1;	// horizontal
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), z->v(i-1,mz));
-			t1 = gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+			t1 = gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,gr->CDef);
 			if(t1 && t2)
 			{
 				gr->line_plot(n1,n2);
@@ -562,7 +562,7 @@ void mgl_step_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 			}
 			p2 = p1;	t2 = t1;	n2 = n1;	// vertical
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
-			t1 = gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+			t1 = gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,gr->CDef);
 			if(mk && t1)	gr->mark_plot(n1,mk);
 			if(t1 && t2)
 			{
@@ -583,7 +583,7 @@ void mgl_step_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
 
 	float zVal = gr->Min.z;
-	char mk=gr->SetPenPal(pen,&pal);	gr->ReserveC(2*n*m);
+	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	bool t1,t2;
 	mglPoint p1,p2;
 	long n1,n2;
@@ -592,13 +592,13 @@ void mgl_step_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;
 		gr->NextColor(pal);
 		p1 = mglPoint(x->v(0,mx), y->v(0,my), zVal);
-		t1 = gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+		t1 = gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,gr->CDef);
 		if(mk && t1)	gr->mark_plot(n1,mk);
 		for(i=1;i<n;i++)
 		{
 			p2 = p1;	t2 = t1;	n2 = n1;	// horizontal
 			p1 = mglPoint(x->v(i,mx), y->v(i-1,my), zVal);
-			t1 = gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+			t1 = gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,gr->CDef);
 			if(t1 && t2)
 			{
 				gr->line_plot(n1,n2);
@@ -606,7 +606,7 @@ void mgl_step_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 			}
 			p2 = p1;	t2 = t1;	n2 = n1;	// vertical
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), zVal);
-			t1 = gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+			t1 = gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,gr->CDef);
 			if(mk && t1)	gr->mark_plot(n1,mk);
 			if(t1 && t2)
 			{
@@ -651,7 +651,7 @@ void mgl_stem_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 
 	float z0=gr->GetOrgZ('x');
-	char mk=gr->SetPenPal(pen,&pal);	gr->ReserveC(2*n*m);
+	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	mglPoint p1,p2;
 	long n1,n2;
 	for(j=0;j<m;j++)
@@ -661,10 +661,10 @@ void mgl_stem_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 		for(i=0;i<n;i++)
 		{
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), z->v(i-1,mz));
-			gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+			gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,gr->CDef);
 			if(mk)	gr->mark_plot(n1,mk);
 			p2 = mglPoint(x->v(i,mx), y->v(i,my), z0);
-			gr->ScalePoint(p2);	n2 = gr->AddPntC(p2,gr->CDef);
+			gr->ScalePoint(p2);	n2 = gr->AddPnt(p2,gr->CDef);
 			gr->line_plot(n1,n2);
 		}
 	}
@@ -681,7 +681,7 @@ void mgl_stem_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 
 	float zVal = gr->Min.z;
 	float y0=gr->GetOrgY('x');
-	char mk=gr->SetPenPal(pen,&pal);	gr->ReserveC(2*n*m);
+	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(2*n*m);
 	mglPoint p1,p2;
 	long n1,n2;
 	for(j=0;j<m;j++)
@@ -691,10 +691,10 @@ void mgl_stem_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 		for(i=0;i<n;i++)
 		{
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), zVal);
-			gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+			gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,gr->CDef);
 			if(mk)	gr->mark_plot(n1,mk);
 			p2 = mglPoint(x->v(i,mx), y0, zVal);
-			gr->ScalePoint(p2);	n2 = gr->AddPntC(p2,gr->CDef);
+			gr->ScalePoint(p2);	n2 = gr->AddPnt(p2,gr->CDef);
 			gr->line_plot(n1,n2);
 		}
 	}
@@ -743,7 +743,7 @@ void mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 	memset(dd,0,n*sizeof(float));
 
 	gr->SetPenPal(pen,&pal);
-	if(wire)	gr->ReserveC(4*n*m);	else	gr->ReserveN(4*n*m);
+	if(wire)	gr->Reserve(4*n*m);	else	gr->Reserve(4*n*m);
 	for(j=0;j<m;j++)
 	{
 		gr->NextColor(pal);	c2=c1=gr->CDef;
@@ -782,15 +782,15 @@ void mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen)
 			p4 = mglPoint(x2,y2,zz);	gr->ScalePoint(p4);
 			if(wire)
 			{
-				n1 = gr->AddPntC(p1,c);	n2 = gr->AddPntC(p2,c);
-				n3 = gr->AddPntC(p3,c);	n4 = gr->AddPntC(p4,c);
+				n1 = gr->AddPnt(p1,c);	n2 = gr->AddPnt(p2,c);
+				n3 = gr->AddPnt(p3,c);	n4 = gr->AddPnt(p4,c);
 				gr->line_plot(n1,n2);	gr->line_plot(n1,n4);
 				gr->line_plot(n3,n2);	gr->line_plot(n3,n4);
 			}
 			else
 			{
-				n1 = gr->AddPntN(p1,c,nn);	n2 = gr->AddPntN(p2,c,nn);
-				n3 = gr->AddPntN(p3,c,nn);	n4 = gr->AddPntN(p4,c,nn);
+				n1 = gr->AddPnt(p1,c,nn);	n2 = gr->AddPnt(p2,c,nn);
+				n3 = gr->AddPnt(p3,c,nn);	n4 = gr->AddPnt(p4,c,nn);
 				gr->quad_plot(n1,n2,n4,n3);
 			}
 		}
@@ -817,7 +817,7 @@ void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 
 	float zVal = gr->Min.z;
 	gr->SetPenPal(pen,&pal);
-	if(wire)	gr->ReserveC(4*n*m);	else	gr->ReserveN(4*n*m);
+	if(wire)	gr->Reserve(4*n*m);	else	gr->Reserve(4*n*m);
 	for(j=0;j<m;j++)
 	{
 		gr->NextColor(pal);	c2=c1=gr->CDef;
@@ -844,15 +844,15 @@ void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 			p4 = mglPoint(x2,yy,zVal);	gr->ScalePoint(p4);
 			if(wire)
 			{
-				n1 = gr->AddPntC(p1,c);	n2 = gr->AddPntC(p2,c);
-				n3 = gr->AddPntC(p3,c);	n4 = gr->AddPntC(p4,c);
+				n1 = gr->AddPnt(p1,c);	n2 = gr->AddPnt(p2,c);
+				n3 = gr->AddPnt(p3,c);	n4 = gr->AddPnt(p4,c);
 				gr->line_plot(n1,n2);	gr->line_plot(n1,n4);
 				gr->line_plot(n3,n2);	gr->line_plot(n3,n4);
 			}
 			else
 			{
-				n1 = gr->AddPntN(p1,c,nn);	n2 = gr->AddPntN(p2,c,nn);
-				n3 = gr->AddPntN(p3,c,nn);	n4 = gr->AddPntN(p4,c,nn);
+				n1 = gr->AddPnt(p1,c,nn);	n2 = gr->AddPnt(p2,c,nn);
+				n3 = gr->AddPnt(p3,c,nn);	n4 = gr->AddPnt(p4,c,nn);
 				gr->quad_plot(n1,n2,n4,n3);
 			}
 		}
@@ -906,7 +906,7 @@ void mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen)
 
 	float zVal = gr->Min.z;
 	gr->SetPenPal(pen,&pal);
-	if(wire)	gr->ReserveC(4*n*m);	else	gr->ReserveN(4*n*m);
+	if(wire)	gr->Reserve(4*n*m);	else	gr->Reserve(4*n*m);
 	for(j=0;j<m;j++)
 	{
 		gr->NextColor(pal);	c2=c1=gr->CDef;
@@ -933,15 +933,15 @@ void mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen)
 			p4 = mglPoint(x0,y1,zVal);	gr->ScalePoint(p4);
 			if(wire)
 			{
-				n1 = gr->AddPntC(p1,c);	n2 = gr->AddPntC(p2,c);
-				n3 = gr->AddPntC(p3,c);	n4 = gr->AddPntC(p4,c);
+				n1 = gr->AddPnt(p1,c);	n2 = gr->AddPnt(p2,c);
+				n3 = gr->AddPnt(p3,c);	n4 = gr->AddPnt(p4,c);
 				gr->line_plot(n1,n2);	gr->line_plot(n1,n4);
 				gr->line_plot(n3,n2);	gr->line_plot(n3,n4);
 			}
 			else
 			{
-				n1 = gr->AddPntN(p1,c,nn);	n2 = gr->AddPntN(p2,c,nn);
-				n3 = gr->AddPntN(p3,c,nn);	n4 = gr->AddPntN(p4,c,nn);
+				n1 = gr->AddPnt(p1,c,nn);	n2 = gr->AddPnt(p2,c,nn);
+				n3 = gr->AddPnt(p3,c,nn);	n4 = gr->AddPnt(p4,c,nn);
 				gr->quad_plot(n1,n2,n4,n3);
 			}
 		}
@@ -1001,7 +1001,7 @@ void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 
 	mglPoint p1,p2;
 	long n1,n2,pal;
-	gr->SetPenPal(pen,&pal);	gr->NextColor(pal);	gr->ReserveC(18*n);
+	gr->SetPenPal(pen,&pal);	gr->NextColor(pal);	gr->Reserve(18*n);
 	for(i=0;i<n;i++)
 	{
 		i0 = 54*i;
@@ -1011,22 +1011,22 @@ void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen)
 		else		x1 = x->v(i);
 		for(j=0;j<5;j++)	// horizontal lines
 		{
-			p1=mglPoint(x1,b[i+j*n],zVal);	gr->ScalePoint(p1);	n1=gr->AddPntC(p1,gr->CDef);
-			p2=mglPoint(x2,b[i+j*n],zVal);	gr->ScalePoint(p2);	n2=gr->AddPntC(p2,gr->CDef);
+			p1=mglPoint(x1,b[i+j*n],zVal);	gr->ScalePoint(p1);	n1=gr->AddPnt(p1,gr->CDef);
+			p2=mglPoint(x2,b[i+j*n],zVal);	gr->ScalePoint(p2);	n2=gr->AddPnt(p2,gr->CDef);
 			gr->line_plot(n1,n2);
 		}
 		//vertical lines
-		p1=mglPoint(x1,b[i+n],zVal);		gr->ScalePoint(p1);	n1=gr->AddPntC(p1,gr->CDef);
-		p2=mglPoint(x1,b[i+3*n],zVal);		gr->ScalePoint(p2);	n2=gr->AddPntC(p2,gr->CDef);
+		p1=mglPoint(x1,b[i+n],zVal);		gr->ScalePoint(p1);	n1=gr->AddPnt(p1,gr->CDef);
+		p2=mglPoint(x1,b[i+3*n],zVal);		gr->ScalePoint(p2);	n2=gr->AddPnt(p2,gr->CDef);
 		gr->line_plot(n1,n2);
-		p1=mglPoint(x2,b[i+n],zVal);		gr->ScalePoint(p1);	n1=gr->AddPntC(p1,gr->CDef);
-		p2=mglPoint(x2,b[i+3*n],zVal);		gr->ScalePoint(p2);	n2=gr->AddPntC(p2,gr->CDef);
+		p1=mglPoint(x2,b[i+n],zVal);		gr->ScalePoint(p1);	n1=gr->AddPnt(p1,gr->CDef);
+		p2=mglPoint(x2,b[i+3*n],zVal);		gr->ScalePoint(p2);	n2=gr->AddPnt(p2,gr->CDef);
 		gr->line_plot(n1,n2);
-		p1=mglPoint(x->v(i),b[i],zVal);		gr->ScalePoint(p1);	n1=gr->AddPntC(p1,gr->CDef);
-		p2=mglPoint(x->v(i),b[i+n],zVal);	gr->ScalePoint(p2);	n2=gr->AddPntC(p2,gr->CDef);
+		p1=mglPoint(x->v(i),b[i],zVal);		gr->ScalePoint(p1);	n1=gr->AddPnt(p1,gr->CDef);
+		p2=mglPoint(x->v(i),b[i+n],zVal);	gr->ScalePoint(p2);	n2=gr->AddPnt(p2,gr->CDef);
 		gr->line_plot(n1,n2);
-		p1=mglPoint(x->v(i),b[i+3*n],zVal);	gr->ScalePoint(p1);	n1=gr->AddPntC(p1,gr->CDef);
-		p2=mglPoint(x->v(i),b[i+4*n],zVal);	gr->ScalePoint(p2);	n2=gr->AddPntC(p2,gr->CDef);
+		p1=mglPoint(x->v(i),b[i+3*n],zVal);	gr->ScalePoint(p1);	n1=gr->AddPnt(p1,gr->CDef);
+		p2=mglPoint(x->v(i),b[i+4*n],zVal);	gr->ScalePoint(p2);	n2=gr->AddPnt(p2,gr->CDef);
 		gr->line_plot(n1,n2);
 	}
 	gr->EndGroup();
@@ -1063,7 +1063,7 @@ void mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen)
 	m = ey->GetNy() > m ? ey->GetNy() : m;
 
 	float zVal = gr->Min.z;
-	char mk=gr->SetPenPal(pen,&pal);	gr->ReserveC(5*n*m);
+	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(5*n*m);
 	mglPoint p1,p2;
 	long n1,n2;
 	bool t1,t2;
@@ -1075,18 +1075,18 @@ void mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen)
 		for(i=0;i<n;i++)
 		{
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), zVal);
-			t1 = gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+			t1 = gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,gr->CDef);
 			if(t1&&mk)	gr->mark_plot(n1,mk);
 			p1 = mglPoint(x->v(i,mx), y->v(i,my)+ey->v(i,m2), zVal);
-			t1 = gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+			t1 = gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,gr->CDef);
 			p2 = mglPoint(x->v(i,mx), y->v(i,my)-ey->v(i,m2), zVal);
-			t2 = gr->ScalePoint(p2);	n2 = gr->AddPntC(p2,gr->CDef);
+			t2 = gr->ScalePoint(p2);	n2 = gr->AddPnt(p2,gr->CDef);
 			if(t1&&t2)
 			{	gr->line_plot(n1,n2);	gr->arrow_plot(n1,n2,'i');	gr->arrow_plot(n2,n1,'i');	}
 			p1 = mglPoint(x->v(i,mx)+ex->v(i,m1), y->v(i,my), zVal);
-			t1 = gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+			t1 = gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,gr->CDef);
 			p2 = mglPoint(x->v(i,mx)-ex->v(i,m1), y->v(i,my), zVal);
-			t2 = gr->ScalePoint(p2);	n2 = gr->AddPntC(p2,gr->CDef);
+			t2 = gr->ScalePoint(p2);	n2 = gr->AddPnt(p2,gr->CDef);
 			if(t1&&t2)
 			{	gr->line_plot(n1,n2);	gr->arrow_plot(n1,n2,'i');	gr->arrow_plot(n2,n1,'i');	}
 		}
@@ -1131,11 +1131,11 @@ void face_plot(mglBase *gr, mglPoint o, mglPoint d1, mglPoint d2, float c, bool 
 	d1 = d1/num;	d2 = d2/num;
 	register long i,j,i0,n=num+1;
 	long *id=new long[n*n];
-	gr->ReserveN(n*n);
+	gr->Reserve(n*n);
 	for(j=0;j<n;j++)	for(i=0;i<n;i++)
 	{
 		p = o+d1*i+d2*j;	gr->ScalePoint(p);
-		id[i+n*j] = gr->AddPntN(p,c,nn);
+		id[i+n*j] = gr->AddPnt(p,c,nn);
 	}
 	for(i=0;i<num;i++)	for(j=0;j<num;j++)
 	{
@@ -1144,7 +1144,7 @@ void face_plot(mglBase *gr, mglPoint o, mglPoint d1, mglPoint d2, float c, bool 
 	}
 	if(wire)
 	{
-		gr->ReserveC(4*n);	gr->SetPenPal("k-");
+		gr->Reserve(4*n);	gr->SetPenPal("k-");
 		long *jj=id+n+1;
 		jj[0] = jj[1] = gr->CopyNtoC(id[0],gr->CDef);
 		jj[2] = jj[3] = gr->CopyNtoC(id[n*n-1],gr->CDef);
@@ -1226,7 +1226,7 @@ void mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen)
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Mark");	return;	}
 	static int cgid=1;	gr->StartGroup("Mark",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
-	char mk=gr->SetPenPal(pen,&pal);	gr->ReserveC(n*m);
+	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(n*m);
 	if(mk==0)	return;
 
 	mglPoint p1;
@@ -1239,7 +1239,7 @@ void mgl_mark_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen)
 		for(int i=0;i<n;i++)
 		{
 			p1 = mglPoint(x->v(i,mx),y->v(i,my),z->v(i,mz));
-			gr->ScalePoint(p1);	n1 = gr->AddPntC(p1,gr->CDef);
+			gr->ScalePoint(p1);	n1 = gr->AddPnt(p1,gr->CDef);
 			gr->mark_plot(n1,mk,r->v(i,mr));
 		}
 	}
@@ -1291,7 +1291,7 @@ void mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen)
 
 	const int num=41;
 	gr->SetPenPal(pen,&pal);
-	long pos=gr->ReserveN(n*m*num);
+	long pos=gr->Reserve(n*m*num);
 	mglPoint p,l,t,u,q,d;
 	for(j=0;j<m;j++)
 	{
@@ -1310,7 +1310,7 @@ void mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen)
 				ff = k*2*M_PI/(num-1);	co = cos(ff);	si = sin(ff);
 				p = q + t*(rr*co) + u*(rr*si);
 				d = (t*si - u*co)^(l + t*(dr*co) + u*(dr*si));
-				gr->ScalePoint(p);	gr->AddPntN(p,gr->CDef,d);
+				gr->ScalePoint(p);	gr->AddPnt(p,gr->CDef,d);
 			}
 		}
 		for(k=0;k<num-1;k++)	for(i=0;i<n-1;i++)

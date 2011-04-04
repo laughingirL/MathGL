@@ -426,17 +426,17 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr)
 	SetPenPal(AxisStl);
 
 	register long i,k1,k2;
-	p = o + d*aa.v1;	ScalePoint(p);	k1 = AddPntC(p,CDef);
+	p = o + d*aa.v1;	ScalePoint(p);	k1 = AddPnt(p,CDef);
 	for(i=1;i<31;i++)	// axis itself
 	{
 		p = o + d*(aa.v1+(aa.v2-aa.v1)*i/30.);	ScalePoint(p);
-		k2 = k1;	k1 = AddPntC(p,CDef);
+		k2 = k1;	k1 = AddPnt(p,CDef);
 		line_plot(k2,k1);
 	}
 	if(arr)
 	{
 		p = o + d*(aa.v1+(aa.v2-aa.v1)*1.05);	ScalePoint(p);
-		k2 = k1;	k1 = AddPntC(p,CDef);
+		k2 = k1;	k1 = AddPnt(p,CDef);
 		arrow_plot(k1,k2,arr);
 	}
 
@@ -462,7 +462,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	if(n>0)	for(i=0;i<n;i++)	// TODO: Add labels "rotation", "missing" and so on
 	{
 		p = o+d*aa.val[i];
-		ScalePoint(p,false);	k1 = AddPntN(p,-1,aa.dir,0);
+		ScalePoint(p,false);	k1 = AddPnt(p,-1,aa.dir,0);
 		text_plot(k1, aa.str[i], s.y>q.y ? "T":"t", -1);
 	}
 }
@@ -476,9 +476,9 @@ void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f)
 
 	if(*TickStl && !f)	SetPenPal(TickStl);
 	if(*SubTStl && f)	SetPenPal(SubTStl);
-	p = o+d1*v;	ScalePoint(p);	k1 = AddPntC(p,CDef);
-	p = o;		ScalePoint(p);	k2 = AddPntC(p,CDef);
-	p = o+d2*v;	ScalePoint(p);	k3 = AddPntC(p,CDef);
+	p = o+d1*v;	ScalePoint(p);	k1 = AddPnt(p,CDef);
+	p = o;		ScalePoint(p);	k2 = AddPnt(p,CDef);
+	p = o+d2*v;	ScalePoint(p);	k3 = AddPnt(p,CDef);
 	line_plot(k1,k2);	line_plot(k2,k3);
 }
 //-----------------------------------------------------------------------------
@@ -506,25 +506,25 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 	register long i,j,n=aa.num,k1,k2;
 	float v;
 
-	ReserveC(62*n);
+	Reserve(62*n);
 	if(n>0)	for(i=0;i<n;i++)
 	{
 		q = oa+d*aa.val[i];	p = q+da1;	// lines along 'a'
-		ScalePoint(p);		k1 = AddPntC(p,CDef);
+		ScalePoint(p);		k1 = AddPnt(p,CDef);
 		for(j=1;j<31;j++)
 		{
 			v = i/30.;
 			p = q+da1*(1-v)+da2*v;	ScalePoint(p);
-			k2 = k1;	k1 = AddPntC(p,CDef);
+			k2 = k1;	k1 = AddPnt(p,CDef);
 			line_plot(k2,k1);
 		}
 		q = ob+d*aa.val[i];	p = q+db1;	// lines along 'b'
-		ScalePoint(p);		k1 = AddPntC(p,CDef);
+		ScalePoint(p);		k1 = AddPnt(p,CDef);
 		for(j=1;j<31;j++)
 		{
 			v = i/30.;
 			p = q+db1*(1-v)+db2*v;	ScalePoint(p);
-			k2 = k1;	k1 = AddPntC(p,CDef);
+			k2 = k1;	k1 = AddPnt(p,CDef);
 			line_plot(k2,k1);
 		}
 	}
@@ -622,7 +622,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float size, flo
 		p = mglPoint(x0,y0,t);	q = mglPoint(0,0,1);
 	}
 	ScalePoint(p);
-	text_plot(AddPntN(p,-1,q,0),text,font,size,1+shift);
+	text_plot(AddPnt(p,-1,q,0),text,font,size,1+shift);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Label(float x, float y, const char *str, const char *fnt, float size, bool rel)
@@ -644,7 +644,7 @@ void mglCanvas::Labelw(float x, float y, const wchar_t *text, const char *fnt, f
 	for(int i=0;f[i];i++)	if(f[i]=='a' || f[i]=='A')	f[i]=' ';
 	mglPoint p((Min.x+Max.x)/2+PlotFactor*(Max.x-Min.x)*(x-0.5),
 				(Min.y+Max.y)/2+PlotFactor*(Max.y-Min.y)*(y-0.5), Max.z);
-	ScalePoint(p);	text_plot(AddPntN(p,-1,mglPoint(NAN),0),text,f,size);
+	ScalePoint(p);	text_plot(AddPnt(p,-1,mglPoint(NAN),0),text,f,size);
 	delete []f;	fx=ox;	fy=oy;	fz=oz;	Pop();
 }
 //-----------------------------------------------------------------------------
@@ -654,7 +654,7 @@ void mglCanvas::Title(const wchar_t *str,const char *font,float size)
 	mglFormula *ox=fx, *oy=fy, *oz=fz;
 	fx = fy = fz = NULL;
 	mglPoint p((Min.x+Max.x)/2, Max.y+(Max.y-Min.y)*0.15, (Min.z+Max.z)/2);
-	ScalePoint(p);	text_plot(AddPntN(p,-1,mglPoint(NAN),0), str, font, size);
+	ScalePoint(p);	text_plot(AddPnt(p,-1,mglPoint(NAN),0), str, font, size);
 	fx=ox;	fy=oy;	fz=oz;	Pop();
 }
 //-----------------------------------------------------------------------------
