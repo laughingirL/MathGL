@@ -408,22 +408,22 @@ public:
 	{	mgl_tube(gr, &y, r, pen, opt);	}
 
 
-	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *text, const char *fnt="")
-	{	mgl_textmark_xyzr(gr, &x, &y, &z, &r, text, fnt);	}
-	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &r, const char *text, const char *fnt="")
-	{	mgl_textmark_xyr(gr, &x, &y, &r, text, fnt);	}
-	inline void TextMark(const mglDataA &y, const mglDataA &r, const char *text, const char *fnt="")
-	{	mgl_textmark_yr(gr, &y, &r, text, fnt);	}
-	inline void TextMark(const mglDataA &y, const char *text, const char *fnt="")
-	{	mgl_textmark(gr, &y, text, fnt);	}
-	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const wchar_t *text, const char *fnt="")
-	{	mgl_textmarkw_xyzr(gr, &x, &y, &z, &r, text, fnt);	}
-	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &r, const wchar_t *text, const char *fnt="")
-	{	mgl_textmarkw_xyr(gr, &x, &y, &r, text, fnt);	}
-	inline void TextMark(const mglDataA &y, const mglDataA &r, const wchar_t *text, const char *fnt="")
-	{	mgl_textmarkw_yr(gr, &y, &r, text, fnt);	}
-	inline void TextMark(const mglDataA &y, const wchar_t *text, const char *fnt="")
-	{	mgl_textmarkw(gr, &y, text, fnt);	}
+	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *text, const char *fnt="", const char *opt="")
+	{	mgl_textmark_xyzr(gr, &x, &y, &z, &r, text, fnt, opt);	}
+	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &r, const char *text, const char *fnt="", const char *opt="")
+	{	mgl_textmark_xyr(gr, &x, &y, &r, text, fnt, opt);	}
+	inline void TextMark(const mglDataA &y, const mglDataA &r, const char *text, const char *fnt="", const char *opt="")
+	{	mgl_textmark_yr(gr, &y, &r, text, fnt, opt);	}
+	inline void TextMark(const mglDataA &y, const char *text, const char *fnt="", const char *opt="")
+	{	mgl_textmark(gr, &y, text, fnt, opt);	}
+	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const wchar_t *text, const char *fnt="", const char *opt="")
+	{	mgl_textmarkw_xyzr(gr, &x, &y, &z, &r, text, fnt, opt);	}
+	inline void TextMark(const mglDataA &x, const mglDataA &y, const mglDataA &r, const wchar_t *text, const char *fnt="", const char *opt="")
+	{	mgl_textmarkw_xyr(gr, &x, &y, &r, text, fnt, opt);	}
+	inline void TextMark(const mglDataA &y, const mglDataA &r, const wchar_t *text, const char *fnt="", const char *opt="")
+	{	mgl_textmarkw_yr(gr, &y, &r, text, fnt, opt);	}
+	inline void TextMark(const mglDataA &y, const wchar_t *text, const char *fnt="", const char *opt="")
+	{	mgl_textmarkw(gr, &y, text, fnt, opt);	}
 	inline void Text(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *text, const char *font="", const char *opt="")
 	{	mgl_text_xyz(gr, &x, &y, &z, text, font, opt);	}
 	inline void Text(const mglDataA &x, const mglDataA &y, const char *text, const char *font="", const char *opt="")
@@ -437,46 +437,46 @@ public:
 	inline void Text(const mglDataA &y, const wchar_t *text, const char *font="", const char *opt="")
 	{	mgl_textw_y(gr, &y, text, font, opt);	}
 
-	inline void Surf(const char *fz, const char *stl="", int n=100)
-	{	mgl_fsurf(gr, fz, stl, n);	}
-	inline void Surf(const char *fx, const char *fy, const char *fz, const char *stl="", int n=100)
-	{	mgl_fsurf_xyz(gr, fx, fy, fz, stl, n);	}
-	inline void Grid(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", float zVal=NAN)
-	{	mgl_grid_xy(gr, &x, &y, &z, stl, zVal);	}
-	inline void Grid(const mglDataA &z, const char *stl="", float zVal=NAN)
-	{	mgl_grid(gr, &z, stl, zVal);	}
-	inline void Mesh(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="")
-	{	mgl_mesh_xy(gr, &x, &y, &z, stl);	}
-	inline void Mesh(const mglDataA &z, const char *stl="")
-	{	mgl_mesh(gr, &z, stl);	}
-	inline void Fall(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="")
-	{	mgl_fall_xy(gr, &x, &y, &z, stl);	}
-	inline void Fall(const mglDataA &z, const char *stl="")
-	{	mgl_fall(gr, &z, stl);	}
-	inline void Belt(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="")
-	{	mgl_belt_xy(gr, &x, &y, &z, stl);	}
-	inline void Belt(const mglDataA &z, const char *stl="")
-	{	mgl_belt(gr, &z, stl);	}
-	inline void Surf(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="")
-	{	mgl_surf_xy(gr, &x, &y, &z, stl);	}
-	inline void Surf(const mglDataA &z, const char *stl="")
-	{	mgl_surf(gr, &z, stl);	}
-	inline void Tile(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="")
-	{	mgl_tile_xy(gr, &x, &y, &z, stl);	}
-	inline void Tile(const mglDataA &z, const char *stl="")
-	{	mgl_tile(gr, &z, stl);	}
-	inline void TileS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *stl="")
-	{	mgl_tiles_xy(gr, &x, &y, &z, &r, stl);	}
-	inline void TileS(const mglDataA &z, const mglDataA &r, const char *stl="")
-	{	mgl_tiles(gr, &z, &r, stl);	}
-	inline void Dens(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", float zVal=NAN)
-	{	mgl_dens_xy(gr, &x, &y, &z, stl, zVal);	}
-	inline void Dens(const mglDataA &z, const char *stl="", float zVal=NAN)
-	{	mgl_dens(gr, &z, stl, zVal);	}
-	inline void Boxs(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", float zVal=NAN)
-	{	mgl_boxs_xy(gr, &x, &y, &z, stl, zVal);	}
-	inline void Boxs(const mglDataA &z, const char *stl="", float zVal=NAN)
-	{	mgl_boxs(gr, &z, stl, zVal);	}
+	inline void Surf(const char *fz, const char *stl="", const char *opt="")
+	{	mgl_fsurf(gr, fz, stl, opt);	}
+	inline void Surf3(const char *fx, const char *fy, const char *fz, const char *stl="", const char *opt="")
+	{	mgl_fsurf_xyz(gr, fx, fy, fz, stl, opt);	}
+	inline void Grid(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_grid_xy(gr, &x, &y, &z, stl, opt);	}
+	inline void Grid(const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_grid(gr, &z, stl, opt);	}
+	inline void Mesh(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_mesh_xy(gr, &x, &y, &z, stl, opt);	}
+	inline void Mesh(const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_mesh(gr, &z, stl, opt);	}
+	inline void Fall(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_fall_xy(gr, &x, &y, &z, stl, opt);	}
+	inline void Fall(const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_fall(gr, &z, stl, opt);	}
+	inline void Belt(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_belt_xy(gr, &x, &y, &z, stl, opt);	}
+	inline void Belt(const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_belt(gr, &z, stl, opt);	}
+	inline void Surf(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_surf_xy(gr, &x, &y, &z, stl, opt);	}
+	inline void Surf(const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_surf(gr, &z, stl, opt);	}
+	inline void Tile(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_tile_xy(gr, &x, &y, &z, stl, opt);	}
+	inline void Tile(const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_tile(gr, &z, stl, opt);	}
+	inline void TileS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *stl="", const char *opt="")
+	{	mgl_tiles_xy(gr, &x, &y, &z, &r, stl, opt);	}
+	inline void TileS(const mglDataA &z, const mglDataA &r, const char *stl="", const char *opt="")
+	{	mgl_tiles(gr, &z, &r, stl, opt);	}
+	inline void Dens(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_dens_xy(gr, &x, &y, &z, stl, opt);	}
+	inline void Dens(const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_dens(gr, &z, stl, opt);	}
+	inline void Boxs(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_boxs_xy(gr, &x, &y, &z, stl, opt);	}
+	inline void Boxs(const mglDataA &z, const char *stl="", const char *opt="")
+	{	mgl_boxs(gr, &z, stl, opt);	}
 
 	inline void Cont(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
 	{	mgl_cont_xy_val(gr, &v, &x, &y, &z, sch, opt);	}
@@ -514,90 +514,90 @@ public:
 	inline void Axial(const mglDataA &z, const char *sch="", const char *opt="")
 	{	mgl_axial(gr, &z, sch, opt);	}
 
-	inline void SurfC(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="")
-	{	mgl_surfc_xy(gr, &x, &y, &z, &c, sch);	}
-	inline void SurfC(const mglDataA &z, const mglDataA &c, const char *sch="")
-	{	mgl_surfc(gr, &z, &c, sch);	}
-	inline void SurfA(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="")
-	{	mgl_surfa_xy(gr, &x, &y, &z, &c, sch);	}
-	inline void SurfA(const mglDataA &z, const mglDataA &c, const char *sch="")
-	{	mgl_surfa(gr, &z, &c, sch);	}
-	inline void STFA(const mglDataA &x, const mglDataA &y, const mglDataA &re, const mglDataA &im, int dn, const char *sch="", float zVal=NAN)
-	{	mgl_stfa_xy(gr, &x, &y, &re, &im, dn, sch, zVal);	}
-	inline void STFA(const mglDataA &re, const mglDataA &im, int dn, const char *sch="", float zVal=NAN)
-	{	mgl_stfa(gr, &re, &im, dn, sch, zVal);	}
+	inline void SurfC(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
+	{	mgl_surfc_xy(gr, &x, &y, &z, &c, sch,opt);	}
+	inline void SurfC(const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
+	{	mgl_surfc(gr, &z, &c, sch,opt);	}
+	inline void SurfA(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
+	{	mgl_surfa_xy(gr, &x, &y, &z, &c, sch,opt);	}
+	inline void SurfA(const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
+	{	mgl_surfa(gr, &z, &c, sch,opt);	}
+	inline void STFA(const mglDataA &x, const mglDataA &y, const mglDataA &re, const mglDataA &im, int dn, const char *sch="", const char *opt="")
+	{	mgl_stfa_xy(gr, &x, &y, &re, &im, dn, sch, opt);	}
+	inline void STFA(const mglDataA &re, const mglDataA &im, int dn, const char *sch="", const char *opt="")
+	{	mgl_stfa(gr, &re, &im, dn, sch, opt);	}
 
-	inline void Dew(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", float zVal=NAN)
-	{	mgl_dew_xy(gr, &x, &y, &ax, &ay, sch, zVal);	}
-	inline void Dew(const mglDataA &ax, const mglDataA &ay, const char *sch="", float zVal=NAN)
-	{	mgl_dew_2d(gr, &ax, &ay, sch, zVal);	}
-	inline void Traj(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", float zVal=NAN, float len=0)
-	{	mgl_traj_xy(gr, &x, &y, &ax, &ay, sch, zVal, len);	}
-	inline void Traj(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", float len=0)
-	{	mgl_traj_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, len);	}
-	inline void Vect(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", float zVal=NAN, int flag=0)
-	{	mgl_vect_xy(gr, &x, &y, &ax, &ay, sch, zVal, flag);	}
-	inline void Vect(const mglDataA &ax, const mglDataA &ay, const char *sch="", float zVal=NAN, int flag=0)
-	{	mgl_vect_2d(gr, &ax, &ay, sch, zVal, flag);	}
-	inline void Vect(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", int flag=0)
-	{	mgl_vect_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, flag);	}
-	inline void Vect(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", int flag=0)
-	{	mgl_vect_3d(gr, &ax, &ay, &az, sch, flag);	}
-	inline void Map(const mglDataA &x, const mglDataA &y, const mglDataA &a, const mglDataA &b, const char *sch="", int ks=0, bool pnts=true)
-	{	mgl_map_xy(gr, &x, &y, &a, &b, sch, ks, pnts);	}
-	inline void Map(const mglDataA &a, const mglDataA &b, const char *sch="", int ks=0, bool pnts=true)
-	{	mgl_map(gr, &a, &b, sch, ks, pnts);	}
+	inline void Dew(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_dew_xy(gr, &x, &y, &ax, &ay, sch, opt);	}
+	inline void Dew(const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_dew_2d(gr, &ax, &ay, sch, opt);	}
+	inline void Traj(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_traj_xy(gr, &x, &y, &ax, &ay, sch, opt);	}
+	inline void Traj(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
+	{	mgl_traj_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, opt);	}
+	inline void Vect(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_vect_xy(gr, &x, &y, &ax, &ay, sch, opt);	}
+	inline void Vect(const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_vect_2d(gr, &ax, &ay, sch, opt);	}
+	inline void Vect(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
+	{	mgl_vect_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, opt);	}
+	inline void Vect(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
+	{	mgl_vect_3d(gr, &ax, &ay, &az, sch, opt);	}
+	inline void Map(const mglDataA &x, const mglDataA &y, const mglDataA &a, const mglDataA &b, const char *sch="", const char *opt="")
+	{	mgl_map_xy(gr, &x, &y, &a, &b, sch, opt);	}
+	inline void Map(const mglDataA &a, const mglDataA &b, const char *sch="", const char *opt="")
+	{	mgl_map(gr, &a, &b, sch, opt);	}
 
-	inline void Surf3A(float Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="")
-	{	mgl_surf3a_xyz_val(gr, Val, &x, &y, &z, &a, &b, stl);	}
-	inline void Surf3A(float Val, const mglDataA &a, const mglDataA &b, const char *stl="")
-	{	mgl_surf3a_val(gr, Val, &a, &b, stl);	}
-	inline void Surf3A(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", int num=3)
-	{	mgl_surf3a_xyz(gr, &x, &y, &z, &a, &b, stl, num);	}
-	inline void Surf3A(const mglDataA &a, const mglDataA &b, const char *stl="", int num=3)
-	{	mgl_surf3a(gr, &a, &b, stl, num);	}
-	inline void Surf3C(float Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="")
-	{	mgl_surf3c_xyz_val(gr, Val, &x, &y, &z, &a, &b, stl);	}
-	inline void Surf3C(float Val, const mglDataA &a, const mglDataA &b, const char *stl="")
-	{	mgl_surf3c_val(gr, Val, &a, &b, stl);	}
-	inline void Surf3C(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", int num=3)
-	{	mgl_surf3c_xyz(gr, &x, &y, &z, &a, &b, stl, num);	}
-	inline void Surf3C(const mglDataA &a, const mglDataA &b, const char *stl="", int num=3)
-	{	mgl_surf3c(gr, &a, &b, stl, num);	}
+	inline void Surf3A(float Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
+	{	mgl_surf3a_xyz_val(gr, Val, &x, &y, &z, &a, &b, stl, opt);	}
+	inline void Surf3A(float Val, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
+	{	mgl_surf3a_val(gr, Val, &a, &b, stl, opt);	}
+	inline void Surf3A(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
+	{	mgl_surf3a_xyz(gr, &x, &y, &z, &a, &b, stl, opt);	}
+	inline void Surf3A(const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
+	{	mgl_surf3a(gr, &a, &b, stl, opt);	}
+	inline void Surf3C(float Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
+	{	mgl_surf3c_xyz_val(gr, Val, &x, &y, &z, &a, &b, stl,opt);	}
+	inline void Surf3C(float Val, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
+	{	mgl_surf3c_val(gr, Val, &a, &b, stl, opt);	}
+	inline void Surf3C(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
+	{	mgl_surf3c_xyz(gr, &x, &y, &z, &a, &b, stl, opt);	}
+	inline void Surf3C(const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
+	{	mgl_surf3c(gr, &a, &b, stl, opt);	}
 
-	inline void Flow(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", int num=5, float zVal=NAN)
-	{	mgl_flow_xy(gr, &x, &y, &ax, &ay, sch, num, zVal);	}
-	inline void Flow(const mglDataA &ax, const mglDataA &ay, const char *sch="", int num=5, float zVal=NAN)
-	{	mgl_flow_2d(gr, &ax, &ay, sch, num, zVal);	}
-	inline void Flow(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", int num=3)
-	{	mgl_flow_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, num);	}
-	inline void Flow(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", int num=3)
-	{	mgl_flow_3d(gr, &ax, &ay, &az, sch, num);	}
+	inline void Flow(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_flow_xy(gr, &x, &y, &ax, &ay, sch, opt);	}
+	inline void Flow(const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_flow_2d(gr, &ax, &ay, sch, opt);	}
+	inline void Flow(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
+	{	mgl_flow_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, opt);	}
+	inline void Flow(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
+	{	mgl_flow_3d(gr, &ax, &ay, &az, sch, opt);	}
 
-	inline void FlowP(mglPoint p, const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="")
-	{	mgl_flowp_xy(gr, p.x, p.y, p.z, &x, &y, &ax, &ay, sch);	}
-	inline void FlowP(mglPoint p, const mglDataA &ax, const mglDataA &ay, const char *sch="")
-	{	mgl_flowp_2d(gr, p.x, p.y, p.z, &ax, &ay, sch);	}
-	inline void FlowP(mglPoint p, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="")
-	{	mgl_flowp_xyz(gr, p.x, p.y, p.z, &x, &y, &z, &ax, &ay, &az, sch);	}
-	inline void FlowP(mglPoint p, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="")
-	{	mgl_flowp_3d(gr, p.x, p.y, p.z, &ax, &ay, &az, sch);	}
+	inline void FlowP(mglPoint p, const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_flowp_xy(gr, p.x, p.y, p.z, &x, &y, &ax, &ay, sch, opt);	}
+	inline void FlowP(mglPoint p, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_flowp_2d(gr, p.x, p.y, p.z, &ax, &ay, sch, opt);	}
+	inline void FlowP(mglPoint p, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
+	{	mgl_flowp_xyz(gr, p.x, p.y, p.z, &x, &y, &z, &ax, &ay, &az, sch, opt);	}
+	inline void FlowP(mglPoint p, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
+	{	mgl_flowp_3d(gr, p.x, p.y, p.z, &ax, &ay, &az, sch, opt);	}
 
-	inline void Grad(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &phi, const char *sch=0, int num=3)
-	{	mgl_grad_xyz(gr,&x,&y,&z,&phi,sch,num);	}
-	inline void Grad(const mglDataA &x, const mglDataA &y, const mglDataA &phi, const char *sch=0, int num=5, mreal zVal=NAN)
-	{	mgl_grad_xy(gr,&x,&y,&phi,sch,num,zVal);	}
-	inline void Grad(const mglDataA &phi, const char *sch=0, int num=5, mreal zVal=NAN)
-	{	mgl_grad(gr,&phi,sch,num,zVal);	}
+	inline void Grad(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &phi, const char *sch="", const char *opt="")
+	{	mgl_grad_xyz(gr,&x,&y,&z,&phi,sch,opt);	}
+	inline void Grad(const mglDataA &x, const mglDataA &y, const mglDataA &phi, const char *sch="", const char *opt="")
+	{	mgl_grad_xy(gr,&x,&y,&phi,sch,opt);	}
+	inline void Grad(const mglDataA &phi, const char *sch="", const char *opt="")
+	{	mgl_grad(gr,&phi,sch,opt);	}
 
-	inline void Pipe(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", float r0=0.05, int num=5, float zVal=NAN)
-	{	mgl_pipe_xy(gr, &x, &y, &ax, &ay, sch, r0, num, zVal);	}
-	inline void Pipe(const mglDataA &ax, const mglDataA &ay, const char *sch="", float r0=0.05, int num=5, float zVal=NAN)
-	{	mgl_pipe_2d(gr, &ax, &ay, sch, r0, num, zVal);	}
-	inline void Pipe(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", float r0=0.05, int num=3)
-	{	mgl_pipe_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, r0, num);	}
-	inline void Pipe(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", float r0=0.05, int num=3)
-	{	mgl_pipe_3d(gr, &ax, &ay, &az, sch, r0, num);	}
+	inline void Pipe(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", float r0=0.05, const char *opt="")
+	{	mgl_pipe_xy(gr, &x, &y, &ax, &ay, sch, r0, opt);	}
+	inline void Pipe(const mglDataA &ax, const mglDataA &ay, const char *sch="", float r0=0.05, const char *opt="")
+	{	mgl_pipe_2d(gr, &ax, &ay, sch, r0, opt);	}
+	inline void Pipe(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", float r0=0.05, const char *opt="")
+	{	mgl_pipe_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, r0, opt);	}
+	inline void Pipe(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", float r0=0.05, const char *opt="")
+	{	mgl_pipe_3d(gr, &ax, &ay, &az, sch, r0, opt);	}
 
 	inline void Grid3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *stl="", const char *opt="")
 	{	mgl_grid3_xyz(gr, &x, &y, &z, &a, dir, sVal, stl, opt);	}
@@ -608,18 +608,19 @@ public:
 	inline void Dens3(const mglDataA &a, char dir, float sVal=-1, const char *stl="", const char *opt="")
 	{	mgl_dens3(gr, &a, dir, sVal, stl, opt);	}
 
-	inline void Surf3(float Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="")
-	{	mgl_surf3_xyz_val(gr, Val, &x, &y, &z, &a, stl);	}
-	inline void Surf3(float Val, const mglDataA &a, const char *stl="")
-	{	mgl_surf3_val(gr, Val, &a, stl);	}
-	inline void Surf3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", int num=3)
-	{	mgl_surf3_xyz(gr, &x, &y, &z, &a, stl, num);	}
-	inline void Surf3(const mglDataA &a, const char *stl="", int num=3)
-	{	mgl_surf3(gr, &a, stl, num);	}
-	inline void Cloud(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", float alpha=1)
-	{	mgl_cloud_xyz(gr, &x, &y, &z, &a, stl, alpha);	}
-	inline void Cloud(const mglDataA &a, const char *stl="", float alpha=1)
-	{	mgl_cloud(gr, &a, stl, alpha);	}
+	inline void Surf3(float Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", const char *opt="")
+	{	mgl_surf3_xyz_val(gr, Val, &x, &y, &z, &a, stl, opt);	}
+	inline void Surf3(float Val, const mglDataA &a, const char *stl="", const char *opt="")
+	{	mgl_surf3_val(gr, Val, &a, stl, opt);	}
+	inline void Surf3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", const char *opt="")
+	{	mgl_surf3_xyz(gr, &x, &y, &z, &a, stl, opt);	}
+	inline void Surf3(const mglDataA &a, const char *stl="", const char *opt="")
+	{	mgl_surf3(gr, &a, stl, opt);	}
+
+	inline void Cloud(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", const char *opt="")
+	{	mgl_cloud_xyz(gr, &x, &y, &z, &a, stl, opt);	}
+	inline void Cloud(const mglDataA &a, const char *stl="", const char *opt="")
+	{	mgl_cloud(gr, &a, stl, opt);	}
 
 	inline void Cont3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *sch="", const char *opt="")
 	{	mgl_cont3_xyz_val(gr, &v, &x, &y, &z, &a, dir, sVal, sch, opt);	}
@@ -645,126 +646,126 @@ public:
 	{	mgl_beam_val(gr,val,&tr,&g1,&g2,&a,r,stl,flag);	}
 
 
-	inline void TriPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="")
-	{	mgl_triplot_xyzc(gr, &nums, &x, &y, &z, &c, sch);	}
-	inline void TriPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="")
-	{	mgl_triplot_xyz(gr, &nums, &x, &y, &z, sch);	}
-	inline void TriPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const char *sch="", float zVal=NAN)
-	{	mgl_triplot_xy(gr, &nums, &x, &y, sch, zVal);	}
-	inline void QuadPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="")
-	{	mgl_quadplot_xyzc(gr, &nums, &x, &y, &z, &c, sch);	}
-	inline void QuadPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="")
-	{	mgl_quadplot_xyz(gr, &nums, &x, &y, &z, sch);	}
-	inline void QuadPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const char *sch="", float zVal=NAN)
-	{	mgl_quadplot_xy(gr, &nums, &x, &y, sch, zVal);	}
+	inline void TriPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
+	{	mgl_triplot_xyzc(gr, &nums, &x, &y, &z, &c, sch, opt);	}
+	inline void TriPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_triplot_xyz(gr, &nums, &x, &y, &z, sch, opt);	}
+	inline void TriPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const char *sch="", const char *opt="")
+	{	mgl_triplot_xy(gr, &nums, &x, &y, sch, opt);	}
+	inline void QuadPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
+	{	mgl_quadplot_xyzc(gr, &nums, &x, &y, &z, &c, sch, opt);	}
+	inline void QuadPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_quadplot_xyz(gr, &nums, &x, &y, &z, sch, opt);	}
+	inline void QuadPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const char *sch="", const char *opt="")
+	{	mgl_quadplot_xy(gr, &nums, &x, &y, sch, opt);	}
 
-	inline void TriCont(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch=0,int num=7,mreal zVal=NAN)
-	{	mgl_tricont_xyc(gr, &nums, &x, &y, &z, sch, num, zVal);	}
-	inline void TriContV(const mglDataA &v, const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch=0,mreal zVal=NAN)
-	{	mgl_tricont_xycv(gr, &v, &nums, &x, &y, &z, sch, zVal);	}
-	inline void TriCont(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch=0,int num=7,mreal zVal=NAN)
-	{	mgl_tricont_xyzc(gr, &nums, &x, &y, &z, &a, sch, num, zVal);	}
-	inline void TriContV(const mglDataA &v, const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch=0,mreal zVal=NAN)
-	{	mgl_tricont_xyzcv(gr, &v, &nums, &x, &y, &z, &a, sch, zVal);	}
+	inline void TriCont(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_tricont_xyc(gr, &nums, &x, &y, &z, sch, opt);	}
+	inline void TriContV(const mglDataA &v, const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_tricont_xycv(gr, &v, &nums, &x, &y, &z, sch, opt);	}
+	inline void TriCont(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_tricont_xyzc(gr, &nums, &x, &y, &z, &a, sch, opt);	}
+	inline void TriContV(const mglDataA &v, const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_tricont_xyzcv(gr, &v, &nums, &x, &y, &z, &a, sch, opt);	}
 
-	inline void Dots(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="")
-	{	mgl_dots(gr, &x, &y, &z, sch);	}
-	inline void Dots(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="")
-	{	mgl_dots_a(gr, &x, &y, &z, &a, sch);	}
-	inline void Crust(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", float er=0)
-	{	mgl_crust(gr, &x, &y, &z, sch, er);	}
+	inline void Dots(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_dots(gr, &x, &y, &z, sch, opt);	}
+	inline void Dots(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_dots_a(gr, &x, &y, &z, &a, sch, opt);	}
+	inline void Crust(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_crust(gr, &x, &y, &z, sch, opt);	}
 
-	inline void DensX(const mglDataA &a, const char *stl="", float sVal=NAN)
-	{	mgl_dens_x(gr, &a, stl, sVal);	}
-	inline void DensY(const mglDataA &a, const char *stl="", float sVal=NAN)
-	{	mgl_dens_y(gr, &a, stl, sVal);	}
-	inline void DensZ(const mglDataA &a, const char *stl="", float sVal=NAN)
-	{	mgl_dens_z(gr, &a, stl, sVal);	}
-	inline void ContX(const mglDataA &a, const char *stl="", float sVal=NAN, int Num=7)
-	{	mgl_cont_x(gr, &a, stl, sVal, Num);	}
-	inline void ContY(const mglDataA &a, const char *stl="", float sVal=NAN, int Num=7)
-	{	mgl_cont_y(gr, &a, stl, sVal, Num);	}
-	inline void ContZ(const mglDataA &a, const char *stl="", float sVal=NAN, int Num=7)
-	{	mgl_cont_z(gr, &a, stl, sVal, Num);	}
-	inline void ContX(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NAN)
-	{	mgl_cont_x_val(gr, &v, &a, stl, sVal);	}
-	inline void ContY(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NAN)
-	{	mgl_cont_y_val(gr, &v, &a, stl, sVal);	}
-	inline void ContZ(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NAN)
-	{	mgl_cont_z_val(gr, &v, &a, stl, sVal);	}
-	inline void ContFX(const mglDataA &a, const char *stl="", float sVal=NAN, int Num=7)
-	{	mgl_contf_x(gr, &a, stl, sVal, Num);	}
-	inline void ContFY(const mglDataA &a, const char *stl="", float sVal=NAN, int Num=7)
-	{	mgl_contf_y(gr, &a, stl, sVal, Num);	}
-	inline void ContFZ(const mglDataA &a, const char *stl="", float sVal=NAN, int Num=7)
-	{	mgl_contf_z(gr, &a, stl, sVal, Num);	}
-	inline void ContFX(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NAN)
-	{	mgl_contf_x_val(gr, &v, &a, stl, sVal);	}
-	inline void ContFY(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NAN)
-	{	mgl_contf_y_val(gr, &v, &a, stl, sVal);	}
-	inline void ContFZ(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NAN)
-	{	mgl_contf_z_val(gr, &v, &a, stl, sVal);	}
+	inline void DensX(const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_dens_x(gr, &a, stl, sVal, opt);	}
+	inline void DensY(const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_dens_y(gr, &a, stl, sVal, opt);	}
+	inline void DensZ(const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_dens_z(gr, &a, stl, sVal, opt);	}
+	inline void ContX(const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_cont_x(gr, &a, stl, sVal, opt);	}
+	inline void ContY(const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_cont_y(gr, &a, stl, sVal, opt);	}
+	inline void ContZ(const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_cont_z(gr, &a, stl, sVal, opt);	}
+	inline void ContX(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_cont_x_val(gr, &v, &a, stl, sVal, opt);	}
+	inline void ContY(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_cont_y_val(gr, &v, &a, stl, sVal, opt);	}
+	inline void ContZ(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_cont_z_val(gr, &v, &a, stl, sVal, opt);	}
+	inline void ContFX(const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_contf_x(gr, &a, stl, sVal, opt);	}
+	inline void ContFY(const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_contf_y(gr, &a, stl, sVal, opt);	}
+	inline void ContFZ(const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_contf_z(gr, &a, stl, sVal, opt);	}
+	inline void ContFX(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_contf_x_val(gr, &v, &a, stl, sVal, opt);	}
+	inline void ContFY(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_contf_y_val(gr, &v, &a, stl, sVal, opt);	}
+	inline void ContFZ(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NAN, const char *opt="")
+	{	mgl_contf_z_val(gr, &v, &a, stl, sVal, opt);	}
 
-	inline mglData Hist(const mglDataA &x, const mglDataA &a)
-	{	return mglData(true, mgl_hist_x(gr, &x, &a));	}
-	inline mglData Hist(const mglDataA &x, const mglDataA &y, const mglDataA &a)
-	{	return mglData(true, mgl_hist_xy(gr, &x, &y, &a));	}
-	inline mglData Hist(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a)
-	{	return mglData(true, mgl_hist_xyz(gr, &x, &y, &z, &a));	}
+	inline mglData Hist(const mglDataA &x, const mglDataA &a, const char *opt="")
+	{	return mglData(true, mgl_hist_x(gr, &x, &a, opt));	}
+	inline mglData Hist(const mglDataA &x, const mglDataA &y, const mglDataA &a, const char *opt="")
+	{	return mglData(true, mgl_hist_xy(gr, &x, &y, &a, opt));	}
+	inline mglData Hist(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *opt="")
+	{	return mglData(true, mgl_hist_xyz(gr, &x, &y, &z, &a, opt));	}
 
-	inline mglData Fit(const mglDataA &y, const char *eq, const char *var)
-	{	return mglData(true,mgl_fit_1(gr, &y, eq,var,0));	}
-	inline mglData Fit(const mglDataA &y, const char *eq, const char *var, mglData &ini)
-	{	return mglData(true,mgl_fit_1(gr, &y, eq, var, &ini));	}
-	inline mglData Fit2(const mglDataA &z, const char *eq, const char *var)
-	{	return mglData(true,mgl_fit_2(gr, &z, eq, var,0));	}
-	inline mglData Fit2(const mglDataA &z, const char *eq, const char *var, mglData &ini)
-	{	return mglData(true,mgl_fit_2(gr, &z, eq, var, &ini));	}
-	inline mglData Fit3(const mglDataA &a, const char *eq, const char *var)
-	{	return mglData(true,mgl_fit_3(gr, &a, eq, var,0));	}
-	inline mglData Fit3(const mglDataA &a, const char *eq, const char *var, mglData &ini)
-	{	return mglData(true,mgl_fit_3(gr, &a, eq, var, &ini));	}
-	inline mglData Fit(const mglDataA &x, const mglDataA &y, const char *eq, const char *var)
-	{	return mglData(true,mgl_fit_xy(gr, &x, &y, eq, var,0));	}
-	inline mglData Fit(const mglDataA &x, const mglDataA &y, const char *eq, const char *var, mglData &ini)
-	{	return mglData(true,mgl_fit_xy(gr, &x, &y, eq, var, &ini));	}
-	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *eq, const char *var)
-	{	return mglData(true,mgl_fit_xyz(gr, &x, &y, &z, eq, var,0));	}
-	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *eq, const char *var, mglData &ini)
-	{	return mglData(true,mgl_fit_xyz(gr, &x, &y, &z, eq, var, &ini));	}
-	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *eq, const char *var)
-	{	return mglData(true,mgl_fit_xyza(gr, &x, &y, &z, &a, eq, var,0));	}
-	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *eq, const char *var, mglData &ini)
-	{	return mglData(true,mgl_fit_xyza(gr, &x, &y, &z, &a, eq,var, &ini));	}
-	inline mglData FitS(const mglDataA &y, const mglDataA &s, const char *eq, const char *var)
-	{	return mglData(true,mgl_fit_ys(gr, &y, &s, eq, var,0));	}
-	inline mglData FitS(const mglDataA &y, const mglDataA &s, const char *eq, const char *var, mglData &ini)
-	{	return mglData(true,mgl_fit_ys(gr, &y, &s, eq, var, &ini));	}
-	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *eq, const char *var)
-	{	return mglData(true,mgl_fit_xys(gr, &x, &y, &s, eq, var,0));	}
-	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *eq, const char *var, mglData &ini)
-	{	return mglData(true,mgl_fit_xys(gr, &x, &y, &s, eq, var, &ini));	}
-	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *eq, const char *var)
-	{	return mglData(true,mgl_fit_xyzs(gr, &x, &y, &z, &s, eq, var,0));	}
-	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *eq, const char *var, mglData &ini)
-	{	return mglData(true,mgl_fit_xyzs(gr, &x, &y, &z, &s, eq, var, &ini));	}
-	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var)
-	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, var,0));	}
-	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var, mglData &ini)
-	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, var, &ini));	}
+	inline mglData Fit(const mglDataA &y, const char *eq, const char *var, const char *opt="")
+	{	return mglData(true,mgl_fit_1(gr, &y, eq,var,0, opt));	}
+	inline mglData Fit(const mglDataA &y, const char *eq, const char *var, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_1(gr, &y, eq, var, &ini, opt));	}
+	inline mglData Fit2(const mglDataA &z, const char *eq, const char *var, const char *opt="")
+	{	return mglData(true,mgl_fit_2(gr, &z, eq, var,0, opt));	}
+	inline mglData Fit2(const mglDataA &z, const char *eq, const char *var, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_2(gr, &z, eq, var, &ini, opt));	}
+	inline mglData Fit3(const mglDataA &a, const char *eq, const char *var, const char *opt="")
+	{	return mglData(true,mgl_fit_3(gr, &a, eq, var,0, opt));	}
+	inline mglData Fit3(const mglDataA &a, const char *eq, const char *var, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_3(gr, &a, eq, var, &ini, opt));	}
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const char *eq, const char *var, const char *opt="")
+	{	return mglData(true,mgl_fit_xy(gr, &x, &y, eq, var,0, opt));	}
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const char *eq, const char *var, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_xy(gr, &x, &y, eq, var, &ini, opt));	}
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *eq, const char *var, const char *opt="")
+	{	return mglData(true,mgl_fit_xyz(gr, &x, &y, &z, eq, var,0, opt));	}
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *eq, const char *var, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_xyz(gr, &x, &y, &z, eq, var, &ini, opt));	}
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *eq, const char *var, const char *opt="")
+	{	return mglData(true,mgl_fit_xyza(gr, &x, &y, &z, &a, eq, var,0, opt));	}
+	inline mglData Fit(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *eq, const char *var, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_xyza(gr, &x, &y, &z, &a, eq,var, &ini, opt));	}
+	inline mglData FitS(const mglDataA &y, const mglDataA &s, const char *eq, const char *var, const char *opt="")
+	{	return mglData(true,mgl_fit_ys(gr, &y, &s, eq, var,0, opt));	}
+	inline mglData FitS(const mglDataA &y, const mglDataA &s, const char *eq, const char *var, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_ys(gr, &y, &s, eq, var, &ini, opt));	}
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *eq, const char *var, const char *opt="")
+	{	return mglData(true,mgl_fit_xys(gr, &x, &y, &s, eq, var,0, opt));	}
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &s, const char *eq, const char *var, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_xys(gr, &x, &y, &s, eq, var, &ini, opt));	}
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *eq, const char *var, const char *opt="")
+	{	return mglData(true,mgl_fit_xyzs(gr, &x, &y, &z, &s, eq, var,0, opt));	}
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &s, const char *eq, const char *var, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_xyzs(gr, &x, &y, &z, &s, eq, var, &ini, opt));	}
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var, const char *opt="")
+	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, var,0, opt));	}
+	inline mglData FitS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &s, const char *eq, const char *var, mglData &ini, const char *opt="")
+	{	return mglData(true,mgl_fit_xyzas(gr, &x, &y, &z, &a, &s, eq, var, &ini, opt));	}
 	inline void PutsFit(mglPoint p, const char *prefix=0, const char *font=0, float size=-1)
 	{	mgl_puts_fit(gr, p.x, p.y, p.z, prefix, font, size);	}
 	inline const char *GetFit()
 	{	return mgl_get_fit(gr);	}
 
-	inline mglData PDE(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, float dz=0.1, float k0=100)
-	{	return mglData(true,mgl_pde_solve(gr,ham,&ini_re,&ini_im,dz,k0));	}
-	inline void Fill(mglData &u, const char *eq)
-	{	mgl_data_fill_eq(gr, &u, eq, 0, 0);	}
-	inline void Fill(mglData &u, const char *eq, const mglDataA &v)
-	{	mgl_data_fill_eq(gr, &u, eq, &v, 0);	}
-	inline void Fill(mglData &u, const char *eq, const mglDataA &v, const mglDataA &w)
-	{	mgl_data_fill_eq(gr, &u, eq, &v, &w);	}
+	inline mglData PDE(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, float dz=0.1, float k0=100, const char *opt="")
+	{	return mglData(true,mgl_pde_solve(gr,ham,&ini_re,&ini_im,dz,k0, opt));	}
+	inline void Fill(mglData &u, const char *eq, const char *opt="")
+	{	mgl_data_fill_eq(gr, &u, eq, 0, 0, opt);	}
+	inline void Fill(mglData &u, const char *eq, const mglDataA &v, const char *opt="")
+	{	mgl_data_fill_eq(gr, &u, eq, &v, 0, opt);	}
+	inline void Fill(mglData &u, const char *eq, const mglDataA &v, const mglDataA &w, const char *opt="")
+	{	mgl_data_fill_eq(gr, &u, eq, &v, &w, opt);	}
 };
 //-----------------------------------------------------------------------------
 /*class mglParse

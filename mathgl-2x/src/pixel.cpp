@@ -457,7 +457,7 @@ void mglCanvas::line_draw(const float *p1, const float *p2)
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 
-	float d[4],uu, pw = PenWidth*font_factor/600, dxu,dxv,dyu,dyv,dd;
+	float d[4],uu, pw=PenWidth*sqrt(font_factor/400), dxu,dxv,dyu,dyv,dd;
 	for(int i=0;i<4;i++)	d[i] = p2[i]-p1[i];
 	bool hor = fabs(d[0])>fabs(d[1]);
 
@@ -522,7 +522,8 @@ void mglCanvas::fast_draw(const float *p1, const float *p2)
 	unsigned char r[4];	col2int(p1[3],1,0,r);
 	long y1,x1,y2,x2;
 
-	float d[3]={p2[0]-p1[0], p2[1]-p1[1], p2[2]-p1[2]}, pw = PenWidth*font_factor/600;
+	float d[3]={p2[0]-p1[0], p2[1]-p1[1], p2[2]-p1[2]};
+	float pw = PenWidth*sqrt(font_factor/400);
 	bool hor = fabs(d[0])>fabs(d[1]);
 
 	x1 = long(fmin(p1[0],p2[0]));	y1 = long(fmin(p1[1],p2[1]));	// bounding box
@@ -548,7 +549,7 @@ void mglCanvas::pnt_draw(const float *p)
 {
 	bool aa=UseAlpha;	UseAlpha = true;
 	register long i,j,s;
-	register float v,pw=PenWidth*font_factor/600;
+	register float v,pw=PenWidth*sqrt(font_factor/400);
 	unsigned char cs[4], cc;	col2int(p+8,0,cs);	cc = cs[3];
 	s = long(5.5+fabs(pw));
 	for(j=-s;j<=s;j++)	for(i=-s;i<=s;i++)

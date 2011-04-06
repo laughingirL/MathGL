@@ -247,13 +247,13 @@ void smgl_map(mglGraph *gr)	// example of mapping
 	gr->SubPlot(2, 1, 0);
 	gr->Fill(a,"x");	gr->Fill(b,"y");
 	gr->Puts(mglPoint(0, 1.1), "\\{x, y\\}", "C", -2);		gr->Box();
-	gr->Map(a, b, "brgk", 0, false);
+	gr->Map(a, b, "brgk");
 
 	gr->SubPlot(2, 1, 1);
 	gr->Fill(a,"(x^3+y^3)/2");	gr->Fill(b,"(x-y)/2");
 	gr->Puts(mglPoint(0, 1.1), "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", "C", -2);
 	gr->Box();
-	gr->Map(a, b, "brgk", 0, false);
+	gr->Map(a, b, "brgk");
 }
 //-----------------------------------------------------------------------------
 void smgl_color_schemes(mglGraph *gr)	// Color table
@@ -1255,13 +1255,13 @@ void smgl_vect(mglGraph *gr)
 void smgl_vectl(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2v(&a,&b);
-	gr->Box();	gr->Vect(a,b,"",NAN, MGL_VECTL);
+	gr->Box();	gr->Vect(a,b,"","value 49");
 }
 //-----------------------------------------------------------------------------
 void smgl_vectc(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2v(&a,&b);
-	gr->Box();	gr->Vect(a,b,"",NAN, MGL_VECTC);
+	gr->Box();	gr->Vect(a,b,"","value 50");
 }
 //-----------------------------------------------------------------------------
 void smgl_flow(mglGraph *gr)
@@ -1339,14 +1339,14 @@ void smgl_vectl3(mglGraph *gr)
 {
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
 	gr->Rotate(40,60);
-	gr->Box();	gr->Box();	gr->Vect(ex,ey,ez,"bwr", MGL_VECTL);
+	gr->Box();	gr->Box();	gr->Vect(ex,ey,ez,"bwr","value 49");
 }
 //-----------------------------------------------------------------------------
 void smgl_vectc3(mglGraph *gr)
 {
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
 	gr->Rotate(40,60);
-	gr->Box();	gr->Box();	gr->Vect(ex,ey,ez,"bwr", MGL_VECTC);
+	gr->Box();	gr->Box();	gr->Vect(ex,ey,ez,"bwr","value 50");
 }
 //-----------------------------------------------------------------------------
 void smgl_pipe3(mglGraph *gr)
@@ -1649,8 +1649,7 @@ void smgl_flow_dens(mglGraph *gr)	// flow threads and density plot
 {
 	mglData a,b,d;	mgls_prepare2v(&a,&b);	d = a;
 	for(int i=0;i<a.nx*a.ny;i++)	d.a[i] = hypot(a.a[i],b.a[i]);
-	gr->Flow(a,b,"br",5,(type==5 || type==9 || type==10)?-0.99:NAN);
-	gr->Dens(d,"BbcyrR");	gr->Box();
+	gr->Flow(a,b,"br");	gr->Dens(d,"BbcyrR");	gr->Box();
 }
 //-----------------------------------------------------------------------------
 void smgl_surf_cont(mglGraph *gr)	// contour lines over surface

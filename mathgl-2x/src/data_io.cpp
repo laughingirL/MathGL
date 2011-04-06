@@ -769,23 +769,26 @@ void *mgl_fill_f(void *par)
 	}
 	return 0;
 }
-void mgl_data_fill_eq(HMGL gr, HMDT d, const char *eq, HCDT vdat, HCDT wdat)
+void mgl_data_fill_eq(HMGL gr, HMDT d, const char *eq, HCDT vdat, HCDT wdat, const char *opt)
 {
 	const mglData *v = dynamic_cast<const mglData *>(vdat);	// NOTE: only for mglData
 	const mglData *w = dynamic_cast<const mglData *>(wdat);
 	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
 	if(v && v->nx*v->ny*v->nz!=nn)	return;
 	if(w && w->nx*w->ny*w->nz!=nn)	return;
+	gr->SaveState(opt);
 	mreal xx[6]={gr->Min.x,0, gr->Min.y,0, gr->Min.z,0};
 	if(d->nx>1)	xx[1] = (gr->Max.x-gr->Min.x)/(d->nx-1.);
 	if(d->ny>1)	xx[3] = (gr->Max.y-gr->Min.y)/(d->ny-1.);
 	if(d->nz>1)	xx[5] = (gr->Max.z-gr->Min.z)/(d->nz-1.);
 	mglFormula f(eq);
 	mglStartThread(mgl_fill_f,0,nn,d->a,v?v->a:0,w?w->a:0,par,&f,xx);
+	gr->LoadState();
 }
-void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l)
+void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,eq,l);	s[l]=0;
-	mgl_data_fill_eq(_GR_,_DT_,s,_DA_(v),_DA_(w));	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_data_fill_eq(_GR_,_DT_,s,_DA_(v),_DA_(w),o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 {

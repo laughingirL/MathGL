@@ -41,9 +41,9 @@ struct mglCommand
 	const wchar_t *desc;	///< Short command description (can be NULL)
 	const wchar_t *form;	///< Format of command arguments (can be NULL)
 	/// Function for executing (plotting)
-	int (*exec)(mglGraph *gr, long n, mglArg *a, int k[10]);
+	int (*exec)(mglGraph *gr, long n, mglArg *a, int k[10], const char *opt);
 	/// Function for exporting in C++ (can be NULL)
-	void (*save)(wchar_t out[1024], long n, mglArg *a, int k[10]);
+	void (*save)(wchar_t out[1024], long n, mglArg *a, int k[10], const char *opt);
 	bool create;	///< Should parser create 1st the array automatically
 	int type;		///< Type of command: 0 - data plot, 1 - other plot,
 					///	2 - setup, 3 - data handle, 4 - subplot, 5 - program
@@ -198,7 +198,7 @@ private:
 	bool for_br;	///< Break is switched on (skip all comands until 'next')
 
 	/// Parse command
-	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var);
+	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var, const char *opt);
 	/// Fill arguments \a a from strings
 	void FillArg(mglGraph *gr, int n, wchar_t **arg, mglArg *a);
 	/// PreExecute stage -- parse some commands and create variables

@@ -86,7 +86,7 @@ HMDT mgl_data_subdata_ext(HCDT dat, HCDT xx, HCDT yy, HCDT zz);
 HMDT mgl_data_column(HCDT dat, const char *eq);
 void mgl_data_set_id(HMDT d, const char *id);
 void mgl_data_fill(HMDT dat, float x1,float x2,char dir);
-void mgl_data_fill_eq(HMGL gr, HMDT dat, const char *eq, HCDT vdat, HCDT wdat);
+void mgl_data_fill_eq(HMGL gr, HMDT dat, const char *eq, HCDT vdat, HCDT wdat,const char *opt);
 void mgl_data_put_val(HMDT dat, mreal val, long i, long j, long k);
 void mgl_data_put_dat(HMDT dat, HCDT val, long i, long j, long k);
 void mgl_data_modify(HMDT dat, const char *eq,long dim);
@@ -156,7 +156,7 @@ void mgl_data_div_num(HMDT dat, float d);
 void mgl_data_add_num(HMDT dat, float d);
 void mgl_data_sub_num(HMDT dat, float d);
 /*****************************************************************************/
-HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz, float k0);
+HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz, float k0,const char *opt);
 HMDT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray, float r, float k0, HMDT xx, HMDT yy);
 HMDT mgl_ray_trace(const char *ham, float x0, float y0, float z0, float px, float py, float pz, float dt, float tmax);
 HMDT mgl_jacobian_2d(HCDT x, HCDT y);
@@ -199,7 +199,7 @@ uintptr_t mgl_data_subdata_ext_(uintptr_t *dat, uintptr_t *xx,uintptr_t *yy,uint
 uintptr_t mgl_data_column_(uintptr_t *dat, const char *eq,int l);
 void mgl_data_set_id_(uintptr_t *dat, const char *id,int l);
 void mgl_data_fill_(uintptr_t *dat, float *x1,float *x2,const char *dir,int);
-void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *dat, const char *eq, uintptr_t *vdat, uintptr_t *wdat, int);
+void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *dat, const char *eq, uintptr_t *vdat, uintptr_t *wdat,const char *opt, int, int);
 void mgl_data_put_val_(uintptr_t *dat, float *val, int *i, int *j, int *k);
 void mgl_data_put_dat_(uintptr_t *dat, uintptr_t *val, int *i, int *j, int *k);
 void mgl_data_modify_(uintptr_t *dat, const char *eq,int *dim,int);
@@ -270,10 +270,9 @@ void mgl_data_sub_num_(uintptr_t *dat, float *d);
 /*****************************************************************************/
 /*		Nonlinear fitting													 */
 /*****************************************************************************/
-uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, float *dz, float *k0,int);
+uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, float *dz, float *k0,const char *opt,int,int);
 uintptr_t mgl_qo2d_solve_(const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, uintptr_t* ray, float *r, float *k0, uintptr_t* xx, uintptr_t* yy, int);
 uintptr_t mgl_ray_trace_(const char *ham, float *x0, float *y0, float *z0, float *px, float *py, float *pz, float *dt, float *tmax,int);
-void mgl_data_fill_eq_(uintptr_t* gr, uintptr_t* res, const char *eq, uintptr_t* vdat, uintptr_t* wdat,int);
 uintptr_t mgl_jacobian_2d_(uintptr_t* x, uintptr_t* y);
 uintptr_t mgl_jacobian_3d_(uintptr_t* x, uintptr_t* y, uintptr_t* z);
 
@@ -286,7 +285,6 @@ uintptr_t mgl_triangulation_3d_(uintptr_t *x, uintptr_t *y, uintptr_t *z, float 
 uintptr_t mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y, float *er);
 /*****************************************************************************/
 int mgl_data_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n);
-void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *w,int l);
 void mgl_data_link_(uintptr_t *d, float *A, int *nx,int *ny,int *nz);
 void mgl_data_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *rewrite,int l,int n);
 int mgl_data_read_range_(uintptr_t *d, const char *fname, double *from, double *to, double *step, bool *as_slice,int l);
@@ -454,8 +452,8 @@ public:
 	inline void Modify(const char *eq,const mglData &v)
 	{	mgl_data_modify_vw(this,eq,&v,0);	}
 	/// Modify the data by specified formula assuming x,y,z in range [r1,r2]
-	inline void FillEq(mglBase *gr, const char *eq, const mglData *v=0, const mglData *w=0)
-	{	mgl_data_fill_eq(gr,this,eq,v,w);	}
+	inline void FillEq(mglBase *gr, const char *eq, const mglData *v=0, const mglData *w=0,const char *opt="")
+	{	mgl_data_fill_eq(gr,this,eq,v,w,opt);	}
 	/// Eqidistantly fill the data to range [x1,x2] in direction \a dir
 	inline void Fill(mreal x1,mreal x2,char dir='x')
 	{	return mgl_data_fill(this,x1,x2,dir);	}
@@ -674,8 +672,8 @@ inline mglData mglSTFA(const mglDataA &re, const mglDataA &im, long dn, char dir
 {	return mglData(true, mgl_data_stfa(&re,&im,dn,dir));	}
 //-----------------------------------------------------------------------------
 /// Saves result of PDE solving (|u|^2) for "Hamiltonian" \a ham with initial conditions \a ini
-inline mglData mglPDE(mglBase *gr, const char *ham, const mglData &ini_re, const mglData &ini_im, mreal dz=0.1, mreal k0=100)
-{	return mglData(true, mgl_pde_solve(gr,ham, &ini_re, &ini_im, dz, k0));	}
+inline mglData mglPDE(mglBase *gr, const char *ham, const mglData &ini_re, const mglData &ini_im, mreal dz=0.1, mreal k0=100,const char *opt="")
+{	return mglData(true, mgl_pde_solve(gr,ham, &ini_re, &ini_im, dz, k0,opt));	}
 /// Saves result of PDE solving for "Hamiltonian" \a ham with initial conditions \a ini along a curve \a ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
 inline mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, mreal r=1, mreal k0=100, mglData *xx=0, mglData *yy=0)
 {	return mglData(true, mgl_qo2d_solve(ham, &ini_re, &ini_im, &ray, r, k0, xx, yy));	}

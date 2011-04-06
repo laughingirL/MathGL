@@ -110,7 +110,7 @@ mglCommand *mglParse::FindCommand(const wchar_t *com, bool prog)
 }
 //-----------------------------------------------------------------------------
 // return values : 0 -- OK, 1 -- wrong arguments, 2 -- wrong command, 3 -- unclosed string
-int mglParse::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var)
+int mglParse::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var, const char *opt)
 {
 	int k[10], i;
 	for(i=0;i<10;i++)	k[i] = i<n ? a[i].type + 1 : 0;
@@ -128,8 +128,8 @@ int mglParse::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wc
 		mgl_wcstombs(a[0].s, a[0].w, 1024);
 //		wcstombs(a[0].s, a[0].w, 1024);
 	}
-	if(out)	rts->save(out, n, a, k);
-	return rts->exec(gr, n, a, k);
+	if(out)	rts->save(out, n, a, k,opt);	// TODO Add options
+	return rts->exec(gr, n, a, k,opt);	// TODO Add options
 }
 //-----------------------------------------------------------------------------
 void mglVar::MoveAfter(mglVar *var)
@@ -640,8 +640,6 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		str[n]=0;	arg[k] = str;//	k++;
 		str = str+n+1;	mgl_wcstrim(str);
 	}
-	gr->Self()->SaveState(opt);	// save state before command execution
-	if(opt)	delete []opt;
 	// try to find last argument
 	if(str[0]!=0 && str[0]!='#' && str[0]!=';')	{	arg[k] = str;	k++;	}
 	if(k<1) n =0;
@@ -652,11 +650,14 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		FillArg(gr, k, arg, a);
 		// execute first special (program-flow-control) commands
 		if(!skip() && !wcscmp(arg[0],L"stop"))
-		{	Stop = true;	delete []s;	delete []a;	return 0;	}
-		if(!wcscmp(arg[0],L"func"))	{	delete []s;	delete []a;	return 0;	}
+		{	Stop = true;	delete []s;	delete []a;
+			if(opt)	delete []opt;	return 0;	}
+		if(!wcscmp(arg[0],L"func"))
+		{	delete []s;	delete []a;
+			if(opt)	delete []opt;	return 0;	}
 		n = FlowExec(gr, arg[0],k-1,a);
-		if(n)		{	delete []s;	delete []a;	return n-1;	}
-		if(skip())	{	delete []s;	delete []a;	return 0;	}
+		if(n)		{	delete []s;	delete []a;	if(opt)	delete []opt;	return n-1;	}
+		if(skip())	{	delete []s;	delete []a;	if(opt)	delete []opt;	return 0;	}
 		if(!wcscmp(arg[0],L"define"))
 		{
 			if(k==3)
@@ -665,7 +666,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 				mglData d=mglFormulaCalc(arg[2],this);
 				v->d = d.a[0];
 			}
-			delete []s;	delete []a;	return k==3?0:1;
+			delete []s;	delete []a;	if(opt)	delete []opt;	return k==3?0:1;
 		}
 		if(!wcscmp(arg[0],L"call"))
 		{
@@ -701,7 +702,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 					else	n=1;
 				}
 			}
-			delete []s;	delete []a;	return n;
+			delete []s;	delete []a;	if(opt)	delete []opt;	return n;
 		}
 		if(!wcscmp(arg[0],L"for"))
 		{
@@ -737,13 +738,13 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 					AddParam(r, buf,true);	fval[r].ny = 1;
 				}
 			}
-			delete []s;	delete []a;	return n;
+			delete []s;	delete []a;	if(opt)	delete []opt;	return n;
 		}
 		// alocate new arrays and execute the command itself
 		n = PreExec(gr, k, arg, a);
 		if(n>0)	n--;
 		else if(!wcscmp(L"setsize",arg[0]) && !AllowSetSize)	n = 2;
-		else	n = Exec(gr, arg[0],k-1,a, arg[1]);
+		else	n = Exec(gr, arg[0],k-1,a, arg[1], opt);
 		delete []a;
 	}
 	mglVar *v = DataList, *u;
@@ -754,9 +755,9 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		v = u;
 	}
 	// restore plot settings if it was changed
+	if(opt)	delete []opt;
 	ProcOpt(gr,0);
-	delete []s;
-	return n;
+	delete []s;	return n;
 }
 //-----------------------------------------------------------------------------
 // return values: 0 - OK, 1 - wrong arguments, 2 - wrong command, 3 - string too long, 4 -- unclosed string
@@ -792,8 +793,8 @@ int mglParse::ParseDat(mglGraph *gr, const wchar_t *string, mglData &res)
 		for(i=0;i<=k;i++)	mgl_wcstombs(a[i].s, a[i].w, 1024);
 		mglCommand *rts=FindCommand(arg[0]);
 		if(!rts || !rts->create)	return 2;
-		if(out)	rts->save(out, k, a, kk);
-		n = rts->exec(gr, k, a, kk);
+		if(out)	rts->save(out, k, a, kk,0);
+		n = rts->exec(gr, k, a, kk,0);
 		delete []a;
 	}
 	// restore plot settings if it was changed

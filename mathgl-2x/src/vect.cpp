@@ -337,7 +337,7 @@ void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
 	float r = gr->SaveState(opt);
 	if(isnan(r))	r = gr->PrevValue();
-	long num = isnan(r)?7:long(r+0.5);
+	long num = isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow",cgid++);
 
 	long ss = gr->AddTexture(sch);
@@ -449,7 +449,7 @@ void mgl_flowp_2d(HMGL gr, float x0, float y0, float z0, HCDT ax, HCDT ay, const
 	mglData x(ax->GetNx()), y(ax->GetNy());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
-	mgl_flowp_xy(gr,x0,y0,z0,&x,&y,ax,ay,sch);
+	mgl_flowp_xy(gr,x0,y0,z0,&x,&y,ax,ay,sch,0);
 }
 //-----------------------------------------------------------------------------
 void mgl_flowp_xy_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *x, uintptr_t *y, uintptr_t *ax, uintptr_t *ay, const char *sch, const char *opt, int l,int lo)
@@ -541,7 +541,7 @@ void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
 	float r = gr->SaveState(opt);
 	if(isnan(r))	r = gr->PrevValue();
-	long num = isnan(r)?7:long(r+0.5);
+	long num = isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow3",cgid++);
 	bool cnt=(num>0);	num = abs(num);	// redefine central parater
 	long ss = gr->AddTexture(sch);
@@ -836,7 +836,7 @@ void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, flo
 	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
 	float r = gr->SaveState(opt);
 	if(isnan(r))	r = gr->PrevValue();
-	long num = isnan(r)?7:long(r+0.5);
+	long num = isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe",cgid++);
 
 	long ss = gr->AddTexture(sch);
@@ -994,7 +994,7 @@ void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
 	float r = gr->SaveState(opt);
 	if(isnan(r))	r = gr->PrevValue();
-	long num = isnan(r)?7:long(r+0.5);
+	long num = isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe3",cgid++);
 
 	long ss = gr->AddTexture(sch);

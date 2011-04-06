@@ -74,8 +74,9 @@ void *mgl_pde_hprep(void *par)
 	return 0;
 }
 // Solve equation du/dz = ham(p,q,x,y,z,|u|)[u] where p=d/dx, q=d/dy. At this moment simplified form of ham is supported: ham = f(p,q,z) + g(x,y,z,'u'), where variable 'u'=|u| (for allowing solve nonlinear problems). You may specify imaginary part like ham = p^2 + i*x*(x>0) but only if dependence on variable 'i' is linear (i.e. ham = hre+i*him).
-HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz, float k0)
+HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz, float k0, const char *opt)
 {
+	gr->SaveState(opt);
 	mglPoint Min=gr->Min, Max=gr->Max;
 	mglData *res=new mglData;
 	int nx=ini_re->GetNx(), ny=ini_re->GetNy();
@@ -166,6 +167,7 @@ HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz,
 	delete []hxy;	delete []hxv;	delete []huy;	delete []huv;
 	delete []hx;	delete []hy;	delete []hu;	delete []hv;
 #endif
+	gr->LoadState();
 	return res;
 }
 //-----------------------------------------------------------------------------
@@ -503,10 +505,11 @@ HMDT mgl_jacobian_3d(HCDT x, HCDT y, HCDT z)
 	return r;
 }
 //-----------------------------------------------------------------------------
-uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0, int l)
+uintptr_t mgl_pde_solve_(uintptr_t* gr, const char *ham, uintptr_t* ini_re, uintptr_t* ini_im, mreal *dz, mreal *k0, const char *opt, int l, int lo)
 {	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
-	uintptr_t res = uintptr_t(mgl_pde_solve(_GR_, s, _DA_(ini_re), _DA_(ini_im), *dz, *k0));
-	delete []s;	return res;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	uintptr_t res = uintptr_t(mgl_pde_solve(_GR_, s, _DA_(ini_re), _DA_(ini_im), *dz, *k0, o));
+	delete []o;	delete []s;	return res;	}
 uintptr_t mgl_ray_trace_(const char *ham, mreal *x0, mreal *y0, mreal *z0, mreal *px, mreal *py, mreal *pz, mreal *dt, mreal *tmax,int l)
 {	char *s=new char[l+1];	memcpy(s,ham,l);	s[l]=0;
 	uintptr_t res = uintptr_t(mgl_ray_trace(s, *x0,*y0,*z0, *px,*py,*pz, *dt,*tmax));

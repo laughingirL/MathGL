@@ -116,7 +116,7 @@ void mgl_fplot_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, c
 void mgl_fplot_(uintptr_t *gr, const char *fy, const char *stl, const char *opt, int ly, int ls, int lo)
 {	char *s=new char[ly+1];	memcpy(s,fy,ly);	s[ly]=0;
 	char *p=new char[ls+1];	memcpy(p,stl,ls);	p[ls]=0;
-	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_fplot(_GR_, s, p, o);
 	delete []s;		delete []p;	delete []o;	}
 //-----------------------------------------------------------------------------
