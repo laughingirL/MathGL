@@ -378,8 +378,8 @@ void mglGraphAB::Putsw(mglPoint p, const wchar_t *wcs, const char *font, mreal s
 	{
 		wcl = new wchar_t[wn+1];	memcpy(wcl,wcs,wn*sizeof(wchar_t));
 		wcl[wn]=0;	Putsw(p, wcl, font, size, dir, sh);
-		wnl = wcs[wn]=='\n'?wnl+1:wnl+2;
-		if(*wnl<=' ')	wnl++;
+		wnl = (*wnl=='\n')?wnl+1:wnl+2;
+		if(*wnl<=' ' && *wnl>0)	wnl++;
 		nl_shift++;	Putsw(p, wnl, font, size, dir, sh);	nl_shift--;
 		return;
 	}

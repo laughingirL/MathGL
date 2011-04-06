@@ -78,15 +78,19 @@ void mglGraph::TriPlot(const mglData &nums, const mglData &x, const mglData &y, 
 //	TriCont series
 //
 //-----------------------------------------------------------------------------
-void mglGraph::tricont_line(mreal val, long i, long k1, long k2, long k3, const mglData &x, const mglData &y, 
-					const mglData &z, const mglData &a, mreal zVal)
+void mglGraph::tricont_line(mreal val, long i, long k1, long k2, long k3, const mglData &x, const mglData &y, const mglData &z, const mglData &a, mreal zVal)
 {
 	mreal d1,d2,pp[6];
 	mglColor q1,q2,q3;
-	d1 = _d(val,z.a[k1],z.a[k2]);
-	d2 = _d(val,z.a[k1],z.a[k3]);
+	d1 = _d(val,a.a[k1],a.a[k2]);
+	d2 = _d(val,a.a[k1],a.a[k3]);
 	if(d1<0 || d1>1 || d2<0 || d2>1)	return;
-	pp[2] = pp[5] = zVal;
+	if(isnan(zVal))
+	{
+		pp[2] = z.a[k1]*(1-d1)+z.a[k2]*d1;
+		pp[5] = z.a[k1]*(1-d2)+z.a[k3]*d2;
+	}
+	else	pp[2] = pp[5] = zVal;
 
 	pp[0] = x.a[k1]*(1-d1)+x.a[k2]*d1;
 	pp[1] = y.a[k1]*(1-d1)+y.a[k2]*d1;
@@ -104,7 +108,6 @@ void mglGraph::TriContV(const mglData &v, const mglData &nums, const mglData &x,
 	if(a.nx!=m && a.nx!=n)	{	SetWarn(mglWarnLow,"TriCont");	return;	}
 	SetScheme(sch);
 	static int cgid=1;	StartGroup("TriCont",cgid++);
-	mreal val;
 	register long i,k;
 	long k1,k2,k3;
 	for(k=0;k<v.nx;k++)	for(i=0;i<m;i++)
@@ -112,11 +115,11 @@ void mglGraph::TriContV(const mglData &v, const mglData &nums, const mglData &x,
 		k1 = long(nums.a[3*i]+0.1);		if(k1<0 || k1>=n)	continue;
 		k2 = long(nums.a[3*i+1]+0.1);	if(k2<0 || k2>=n)	continue;
 		k3 = long(nums.a[3*i+2]+0.1);	if(k3<0 || k3>=n)	continue;
-		val = isnan(zVal) ? v.a[k] : zVal;
+//		val = isnan(zVal) ? v.a[k] : zVal;
 		DefColor(GetC(v.a[k]));
-		tricont_line(v.a[k], i,k1,k2,k3,x,y,z,a,val);
-		tricont_line(v.a[k], i,k2,k1,k3,x,y,z,a,val);
-		tricont_line(v.a[k], i,k3,k2,k1,x,y,z,a,val);
+		tricont_line(v.a[k], i,k1,k2,k3,x,y,z,a,zVal);
+		tricont_line(v.a[k], i,k2,k1,k3,x,y,z,a,zVal);
+		tricont_line(v.a[k], i,k3,k2,k1,x,y,z,a,zVal);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -131,7 +134,7 @@ void mglGraph::TriCont(const mglData &nums, const mglData &x, const mglData &y, 
 void mglGraph::TriCont(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const char *sch, int Num, mreal zVal)
 {	TriCont(nums,x,y,z,z,sch,Num,zVal);	}
 //-----------------------------------------------------------------------------
-void mglGraph::TriContV(const mglData &v, const mglData &nums, const mglData &x, 
+void mglGraph::TriContV(const mglData &v, const mglData &nums, const mglData &x,
 						const mglData &y, const mglData &z, const char *sch,mreal zVal)
 {	TriContV(v,nums,x,y,z,z,sch,zVal);	}
 //-----------------------------------------------------------------------------
@@ -405,7 +408,7 @@ void mgl_add_trig(long i1,long i2,long n,const mreal *pp,long **nn,long *c,long 
 //		if(co<cm && f<fm)	{	cm=co;	im=i;	}
 	}
 	bool ok=(im>0);	// try best variant
-	register long k[3]={i1,i2,im};
+	long k[3]={i1,i2,im};
 	if(i2<i1)		{k[0]=i2;	k[1]=i1;}	// sort vertexes
 	if(im<k[0])		{k[2]=k[1];	k[0]=im;}
 	if(k[2]<k[1])	{i=k[1];	k[1]=k[2];	k[2]=i;	}
@@ -417,7 +420,7 @@ printf("B(%g,%g,%d):%ld,%ld,%ld -- %ld of %ld\n",g,fm,ok,i1,i2,im,*c,n);
 	if(!ok)			// try worse variant
 	{
 		im=ii;		ok=(im>0);
-		register long k[3]={i1,i2,im};
+		long k[3]={i1,i2,im};
 		if(i2<i1)		{k[0]=i2;	k[1]=i1;}	// sort vertexes
 		if(im<k[0])		{k[2]=k[1];	k[0]=im;}
 		if(k[2]<k[1])	{i=k[1];	k[1]=k[2];	k[2]=i;	}
@@ -427,7 +430,7 @@ printf("B(%g,%g,%d):%ld,%ld,%ld -- %ld of %ld\n",g,fm,ok,i1,i2,im,*c,n);
 	}
 printf("B(%g,%g,%d):%ld,%ld,%ld -- %ld of %ld\n",g,fm,ok,i1,i2,im,*c,n);
 	if(!ok)	return;
-	
+
 	if(*c>=*m)			// trig is OK -- add it
 	{
 		*m+=n;

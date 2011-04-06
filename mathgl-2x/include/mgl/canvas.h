@@ -182,8 +182,6 @@ public:
 	virtual void Light(int n, bool enable);
 	/// Add a light source.
 	virtual void AddLight(int n,mglPoint p, char c='w', float bright=0.5, bool infty=true, float ap=0);
-	/// Set ambient light brightness
-	virtual void Ambient(float bright=0.5);
 
 	/// Set ticks position and text (\n separated). Use n=0 to disable this feature.
 	void SetTicksVal(char dir, const char *lbl);
@@ -216,15 +214,15 @@ public:
 	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
 	void Grid(const char *dir="xyzt",const char *pen="B-");
 	/// Print the label \a text for axis \a dir.
-	void Label(char dir, const char *text, float pos=0, float size=-1.4, float shift=0);
-	void Labelw(char dir, const wchar_t *text, float pos=0, float size=-1.4, float shift=0);
+	void Label(char dir, const char *text, float pos=0, float shift=0);
+	void Labelw(char dir, const wchar_t *text, float pos=0, float shift=0);
 
 	/// Print the \a text at arbitrary position of the picture \a x, \a y in range [0,1]x[0,1].
-	void Label(float x, float y, const char *text, const char *fnt=0, float size=-1.4, bool rel=false);
-	void Labelw(float x, float y, const wchar_t *text, const char *fnt=0, float size=-1.4, bool rel=false);
-	/// Print the title text for the picture
-	void Title(const wchar_t *text,const char *font=0,float size=-2);
-	void Title(const char *text,const char *font=0,float size=-2);
+	void Label(float x, float y, const char *text, const char *fnt=0, bool rel=false);
+	void Labelw(float x, float y, const wchar_t *text, const char *fnt=0, bool rel=false);
+//	/// Print the title text for the picture
+//	void Title(const wchar_t *text,const char *font=0);
+//	void Title(const char *text,const char *font=0);
 
 	/// Draw colorbar at edge of axis
 	void Colorbar(const char *sch=0,int where=0);
@@ -304,7 +302,6 @@ protected:
 	float aLight[10];	///< Aperture of light sources
 	float bLight[10];	///< Brightness of light sources
 	float cLight[30];	///< Color of light sources
-	float AmbBr;		///< Default ambient light brightness
 	float FogDist;		/// Inverse fog distance (fog ~ exp(-FogDist*Z))
 	float FogDz;		/// Relative shift of fog
 
@@ -339,7 +336,7 @@ protected:
 	void trig_plot(long p1, long p2, long p3);			// position in pntN
 	void quad_plot(long p1, long p2, long p3, long p4);	// position in pntN
 	void Glyph(float x, float y, float f, int style, long icode, char col);
-	float text_plot(long p,const wchar_t *text,const char *fnt,float size,float sh=0);	// position in pntN
+	float text_plot(long p,const wchar_t *text,const char *fnt,float sh=0);	// position in pntN
 
 	void add_prim(mglPrim &a);	///< add primitive to list
 	void mark_draw(const float *p, char type, float size);
@@ -373,7 +370,8 @@ private:
 	void pnt_plot(long x,long y,float z,const unsigned char c[4]);
 	float FindOptOrg(char dir, int ind);
 	/// Transform float color and alpha to bits format
-	unsigned char* col2int(float u, float v,float *n,unsigned char *r);
+	unsigned char* col2int(float u, float v, const float *n, unsigned char *r);
+	unsigned char* col2int(const float *c, const float *n, unsigned char *r);
 	/// Combine colors in 2 plane.
 	void combine(unsigned char *c1,unsigned char *c2);
 	/// Fast drawing of line between 2 points

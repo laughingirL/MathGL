@@ -165,33 +165,9 @@ double mgl_rnd()
 #endif
 }
 //-----------------------------------------------------------------------------
-char *mgl_strdup(const char *s)
-{
-	char *r = (char *)malloc((strlen(s)+1)*sizeof(char));
-	memcpy(r,s,(strlen(s)+1)*sizeof(char));
-	return r;
-}
-//-----------------------------------------------------------------------------
-void mgl_strtrim(char *str)
-{
-	char *c = mgl_strdup(str);
-	unsigned long n=strlen(str);
-	long k;
-	for(k=0;k<long(strlen(str));k++)	// óäàëÿåì íà÷àëüíûå ïðîáåëû
-		if(str[k]>' ')	break;
-	strcpy(c,&(str[k]));
-	n = strlen(c);
-	for(k=n-1;k>=0;k--)	// óäàëÿåì íà÷àëüíûå ïðîáåëû
-		if(c[k]>' ')		break;
-	c[k+1] = 0;
-	strcpy(str,c);	free(c);
-}
-//-----------------------------------------------------------------------------
-void mgl_strlwr(char *str)
-{
-	for(long k=0;k<(long)strlen(str);k++)	// óäàëÿåì íà÷àëüíûå ïðîáåëû
-		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
-}
+void mgl_strtrim(char *str);
+void mgl_strlwr(char *str);
+char *mgl_strdup(const char *s);
 //-----------------------------------------------------------------------------
 // äåñòðóêòîð ôîðìóëû
 mglFormula::~mglFormula()

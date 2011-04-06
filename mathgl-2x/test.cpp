@@ -363,7 +363,7 @@ void smgl_qo2d(mglGraph *gr)
 	gr->Plot("-x", "k|");
 	gr->Puts(mglPoint(0, 0.85), "absorption: (x+y)/2 for x+y>0");
 	gr->Puts(mglPoint(0.7, -0.05), "central ray");
-	gr->Title("Beam and ray tracing", "C", -1.5);
+	gr->Puts(mglPoint(0,1.1),"Beam and ray tracing");
 	gr->Compression(false);  //put setting back
 }
 //-----------------------------------------------------------------------------
@@ -382,7 +382,7 @@ void smgl_pde(mglGraph *gr)	// PDE and Ray sample
 	gr->Dens(a,"wyrRk");
 	gr->Plot("-x", "k|");
 	gr->Puts(mglPoint(0, 0.85), "absorption: (x+z)/2 for x+z>0");
-	gr->Title("Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0", "C", -float(width)/height);
+	gr->Puts(mglPoint(0,1.1),"Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0");
 	gr->Compression(false);  //put setting back
 }
 //-----------------------------------------------------------------------------
@@ -1666,7 +1666,7 @@ void smgl_mesh_cont(mglGraph *gr)	// contours under mesh
 {
 	mglData a;	mgls_prepare2d(&a);
 	gr->Rotate(40,60);
-	gr->Box();	gr->Mesh(a);	gr->Cont(a, 0, 7, -1);
+	gr->Box();	gr->Mesh(a);	gr->Cont(a, 0, "zrange -1 -1");
 }
 //-----------------------------------------------------------------------------
 void smgl_surf_cont_y(mglGraph *gr)	// contours on the surface

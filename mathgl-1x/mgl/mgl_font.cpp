@@ -688,11 +688,13 @@ bool mglFont::Load(const char *base, const char *path)
 	unsigned cur=0;
 
 	if(!path)
+	{
 		if (strlen(MGL_FONT_PATH)!=0)
 			path = MGL_FONT_PATH;
 		else
 			path = ".";
-	
+	}
+
 	if(base)
 	{
 		buf = new char[strlen(base)+1];

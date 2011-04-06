@@ -183,13 +183,11 @@ void mgl_test_txt(const char *str, ...)
 void mgl_set_test_mode(int enable)
 {	mglTestMode=enable;	}
 //---------------------------------------------------------------------------
-void mgl_save_state(HMGL gr)	{	gr->SaveState();	}
-void mgl_load_state(HMGL gr)	{	gr->LoadState();	}
-void mgl_save_state_(uintptr_t *gr)	{	_GR_->SaveState();	}
-void mgl_load_state_(uintptr_t *gr)	{	_GR_->LoadState();	}
-//---------------------------------------------------------------------------
 long mgl_use_graph(HMGL gr, int inc)
 {	gr->InUse+=inc;	return gr->InUse;	}
 long mgl_use_graph_(uintptr_t *gr, int *inc)
 {	_GR_->InUse+=*inc;	return _GR_->InUse;	}
+//---------------------------------------------------------------------------
+void mgl_set_ambbr(HMGL gr, float i)		{	gr->SetAmbient(i);	}
+void mgl_set_ambbr_(uintptr_t *gr, float *i){	_GR_->SetAmbient(*i);	}
 //---------------------------------------------------------------------------

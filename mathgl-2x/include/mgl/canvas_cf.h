@@ -49,10 +49,10 @@ void mgl_box_str(HMGL graph, const char *col, int ticks);
 void mgl_axis(HMGL graph, const char *dir);
 void mgl_axis_grid(HMGL graph, const char *dir,const char *pen);
 void mgl_label(HMGL graph, char dir, const char *text);
-void mgl_label_ext(HMGL graph, char dir, const char *text, float pos, float size, float shift);
-void mgl_labelw_ext(HMGL graph, char dir, const wchar_t *text, float pos, float size, float shift);
-void mgl_label_xy(HMGL graph, float x, float y, const char *text, const char *fnt, float size);
-void mgl_labelw_xy(HMGL graph, float x, float y, const wchar_t *text, const char *fnt, float size);
+void mgl_label_ext(HMGL graph, char dir, const char *text, float pos, float shift);
+void mgl_labelw_ext(HMGL graph, char dir, const wchar_t *text, float pos, float shift);
+void mgl_label_xy(HMGL graph, float x, float y, const char *text, const char *fnt);
+void mgl_labelw_xy(HMGL graph, float x, float y, const wchar_t *text, const char *fnt);
 
 void mgl_colorbar(HMGL graph, const char *sch,int where);
 void mgl_colorbar_ext(HMGL graph, const char *sch, int where, float x, float y, float w, float h);
@@ -100,7 +100,6 @@ void mgl_set_light(HMGL graph, int enable);
 void mgl_set_light_n(HMGL gr, int n, int enable);
 void mgl_add_light(HMGL graph, int n, float x, float y, float z, char c);
 void mgl_add_light_ext(HMGL graph, int n, float x, float y, float z, char c, float br, bool inf, float ap);
-void mgl_set_ambbr(HMGL gr, float i);
 
 void mgl_mat_pop(HMGL gr);
 void mgl_mat_push(HMGL gr);
@@ -121,9 +120,6 @@ void mgl_aspect(HMGL graph, float Ax,float Ay,float Az);
 void mgl_rotate(HMGL graph, float TetX,float TetZ,float TetY);
 void mgl_rotate_vector(HMGL graph, float Tet,float x,float y,float z);
 void mgl_perspective(HMGL graph, float val);
-
-void mgl_title(HMGL graph, const char *text, const char *fnt, float size);
-void mgl_titlew(HMGL graph, const wchar_t *text, const char *fnt, float size);
 
 /*****************************************************************************/
 uintptr_t mgl_create_graph_(int *width, int *height);
@@ -147,8 +143,8 @@ void mgl_box_str_(uintptr_t *gr, const char *col, int *ticks, int l);
 void mgl_axis_(uintptr_t *gr, const char *dir,int l);
 void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen,int l,int n);
 void mgl_label_(uintptr_t *gr, const char *dir, const char *text,int,int l);
-void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, float *pos, float *size, float *shift,int,int l);
-void mgl_label_xy_(uintptr_t *gr, float *x, float *y, const char *txt, const char *fnt, float *size,int l,int n);
+void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, float *pos, float *shift,int,int l);
+void mgl_label_xy_(uintptr_t *gr, float *x, float *y, const char *txt, const char *fnt,int l,int n);
 //-----------------------------------------------------------------------------
 void mgl_colorbar_(uintptr_t *gr, const char *sch,int *where,int l);
 void mgl_colorbar_ext_(uintptr_t *gr, const char *sch,int *where, float *x, float *y, float *w, float *h, int l);
@@ -196,7 +192,6 @@ void mgl_set_light_n_(uintptr_t *gr, int *n, int *enable);
 void mgl_add_light_(uintptr_t *graph, int *n, float *x, float *y, float *z, char *c, int);
 void mgl_add_light(HMGL graph, int n, float x, float y, float z, char c);
 void mgl_add_light_ext_(uintptr_t *graph, int *n, float *x, float *y, float *z, char *c, float *br, int *inf, float *ap, int);
-void mgl_set_ambbr_(uintptr_t *gr, float *i);
 
 void mgl_mat_push_(uintptr_t *gr);
 void mgl_mat_pop_(uintptr_t *gr);
@@ -218,7 +213,10 @@ void mgl_rotate_(uintptr_t *graph, float *TetX,float *TetZ,float *TetY);
 void mgl_rotate_vector_(uintptr_t *graph, float *Tet,float *x,float *y,float *z);
 void mgl_perspective_(uintptr_t *graph, float val);
 
-void mgl_title_(uintptr_t *graph, const char *text, const char *fnt, float *size, int,int);
+
+/*void mgl_title(HMGL graph, const char *text, const char *fnt, float size);
+void mgl_titlew(HMGL graph, const wchar_t *text, const char *fnt, float size);
+void mgl_title_(uintptr_t *graph, const char *text, const char *fnt, float *size, int,int);*/
 
 /*****************************************************************************/
 #ifdef __cplusplus

@@ -21,10 +21,37 @@
 #include "mgl/base.h"
 #include "mgl/define.h"
 //-----------------------------------------------------------------------------
+char *mgl_strdup(const char *s)
+{
+	char *r = (char *)malloc((strlen(s)+1)*sizeof(char));
+	memcpy(r,s,(strlen(s)+1)*sizeof(char));
+	return r;
+}
+//-----------------------------------------------------------------------------
+void mgl_strtrim(char *str)
+{
+	char *c = mgl_strdup(str);
+	unsigned long n=strlen(str);
+	long k;
+	for(k=0;k<long(strlen(str));k++)	// óäàëÿåì íà÷àëüíûå ïðîáåëû
+		if(str[k]>' ')	break;
+	strcpy(c,&(str[k]));
+	n = strlen(c);
+	for(k=n-1;k>=0;k--)	// óäàëÿåì íà÷àëüíûå ïðîáåëû
+		if(c[k]>' ')		break;
+	c[k+1] = 0;
+	strcpy(str,c);	free(c);
+}
+//-----------------------------------------------------------------------------
+void mgl_strlwr(char *str)
+{
+	for(long k=0;k<(long)strlen(str);k++)	// óäàëÿåì íà÷àëüíûå ïðîáåëû
+		str[k] = (str[k]>='A' && str[k]<='Z') ? str[k]+'a'-'A' : str[k];
+}
+//-----------------------------------------------------------------------------
 mglBase::mglBase()
 {
-	memset(this,0,sizeof(mglBase));	InUse = 1;
-	pos=0;	num=1024;
+	memset(this,0,sizeof(mglBase));	InUse = 1;	num=1024;
 	pnt = (float *)malloc(12*num*sizeof(float));
 	txt = (mglTexture *)malloc(2*sizeof(mglTexture));
 	memset(txt,0,2*sizeof(mglTexture));
@@ -68,6 +95,7 @@ void mglBase::SetWarn(int code, const char *who)
 	if(Message && code>0 && code<mglWarnEnd)
 		sprintf(Message,mglWarn[code-1],who?who:"UNKNOWN");
 	else if(Message)	Message[0]=0;
+	LoadState();
 }
 //-----------------------------------------------------------------------------
 //		Add points to the buffer
@@ -702,17 +730,77 @@ void mglBase::vect_plot(long p1, long p2)	// position in pntC
 	line_plot(p2,pos-1);
 }
 //-----------------------------------------------------------------------------
-void mglBase::SaveState()
+int mglFindArg(const char *str)
 {
+	register long l=0,k=0,i;//,j,len=strlen(lst);
+	for(i=0;i<long(strlen(str));i++)
+	{
+		if(str[i]=='\'') l++;
+		if(str[i]=='{') k++;
+		if(str[i]=='}') k--;
+		if(l%2==0 && k==0 && (str[i]=='#' || str[i]==';'))	return -i;
+		if(l%2==0 && k==0 && (str[i]<=' '))	return i;
+	}
+	return 0;
+}
+//-----------------------------------------------------------------------------
+void mglBase::SetAmbient(float bright)	{	AmbBr = bright;	}
+//-----------------------------------------------------------------------------
+float mglBase::SaveState(const char *opt)
+{
+	if(!opt || !opt[0])	return NAN;
 	MSS=MarkSize;	ASS=ArrowSize;
 	FSS=FontSize;	ADS=AlphaDef;
-	MNS=MeshNum;	CSS=Cut;
-	MinS=Min;	MaxS=Max;
+	MNS=MeshNum;	CSS=Cut;	LSS=AmbBr;
+	MinS=Min;		MaxS=Max;	saved=true;
+	// parse option
+	char *q=mgl_strdup(opt),*s,*a,*b,*c;
+	long n;
+	float res=NAN;
+	mgl_strtrim(q);
+	// NOTE: not consider '#' inside legend entry !!!
+	s=strchr(q,'#');	if(s)	*s=0;
+	while(q && *q)
+	{
+		s=q;	q=strchr(s,';');
+		if(q)	{	*q=0;	q++;	}
+		mgl_strtrim(s);		a=s;
+		n=mglFindArg(s);	if(n>0)	{	s[n]=0;		s=s+n+1;	}
+		mgl_strtrim(a);		b=s;
+		n=mglFindArg(s);	if(n>0)	{	s[n]=0;		s=s+n+1;	}
+		mgl_strtrim(b);
+
+		float ff=atof(b),ss;
+		if(!strcmp(a+1,"range"))
+		{
+			n=mglFindArg(s);	c=s;
+			if(n>0)	{	s[n]=0;	s=s+n+1;	}
+			mgl_strtrim(c);		ss = atof(c);
+			if(a[0]=='x')		{	Min.x=ff;	Max.x=ss;	}
+			else if(a[0]=='y')	{	Min.y=ff;	Max.y=ss;	}
+			else if(a[0]=='z')	{	Min.z=ff;	Max.z=ss;	}
+			else if(a[0]=='c')	{	Min.c=ff;	Max.c=ss;	}
+		}
+		else if(!strcmp(a,"cut"))		SetCut(ff!=0 || !strncmp(s,"on",2));
+		else if(!strcmp(a,"meshnum"))	SetMeshNum(ff);
+		else if(!strcmp(a,"alpha"))		SetAlphaDef(ff);
+		else if(!strcmp(a,"ambient"))	SetAmbient(ff);
+		else if(!strcmp(a,"marksize"))	SetMarkSize(ff);
+		else if(!strcmp(a,"fontsize"))	SetFontSize(ff);
+		else if(!strcmp(a,"arrowsize"))	SetArrowSize(ff);
+		else if(!strcmp(a,"size"))
+		{	SetMarkSize(ff);	SetFontSize(ff);	SetArrowSize(ff);	}
+		else if(!strcmp(a,"num") || !strcmp(a,"number"))	res = ff;
+	}
+	free(q);	return res;
 }
+//-----------------------------------------------------------------------------
 void mglBase::LoadState()
 {
+	if(!saved)	return;
 	MarkSize=MSS;	ArrowSize=ASS;
 	FontSize=FSS;	AlphaDef=ADS;
-	MeshNum=MNS;	Cut=CSS;
-	Min=MinS;	Max=MaxS;
+	MeshNum=MNS;	Cut=CSS;	AmbBr=LSS;
+	Min=MinS;		Max=MaxS;	saved=false;
 }
+//-----------------------------------------------------------------------------

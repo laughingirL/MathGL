@@ -35,15 +35,15 @@ wchar_t *mgl_wcsdup(const wchar_t *s)
 	return r;
 }
 //-----------------------------------------------------------------------------
-void wcstrim_mgl(wchar_t *str)
+void mgl_wcstrim(wchar_t *str)
 {
 	wchar_t *c = mgl_wcsdup(str);
 	unsigned long n=wcslen(str);
 	long k;
-	for(k=0;k<long(wcslen(str));k++)	if(!isspace(str[k]))	break;
+	for(k=0;k<long(wcslen(str));k++)		if(str[k]>' ')	break;
 	wcscpy(c,&(str[k]));
 	n = wcslen(c);
-	for(k=n-1;k>=0;k--)	if(!isspace(c[k]))	break;
+	for(k=n-1;k>=0;k--)	if(c[k]>' ')	break;
 	c[k+1] = 0;
 	wcscpy(str,c);	free(c);
 }
@@ -389,7 +389,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 		{
 			if(aa.t[0])	mglprintf(buf, 64, aa.t, fabs(v)<aa.dv/100 ? 0 : v);
 			else	mgl_tick_text(v,v0,aa.dv/100,w,kind,buf);
-			wcstrim_mgl(buf);	aa.AddLabel(v,buf);
+			mgl_wcstrim(buf);	aa.AddLabel(v,buf);
 		}
 		if(kind&2)	aa.AddLabel(FactorPos*(aa.v2-aa.v1)+aa.v1,s);
 	}
@@ -579,16 +579,16 @@ void mglCanvas::Colorbar(HCDT v, const char *sch, int where, float x, float y, f
 	delete []c;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Label(char dir, const char *str, float pos, float size, float shift)
+void mglCanvas::Label(char dir, const char *str, float pos, float shift)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
-	Labelw(dir, wcs, pos, size, shift);
+	Labelw(dir, wcs, pos, shift);
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float size, float shift)
+void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 {
 	float t, x0, y0, z0;
 	x0 = GetOrgX(dir);	y0 = GetOrgY(dir);	z0 = GetOrgZ(dir);
@@ -622,19 +622,20 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float size, flo
 		p = mglPoint(x0,y0,t);	q = mglPoint(0,0,1);
 	}
 	ScalePoint(p);
-	text_plot(AddPnt(p,-1,q,0),text,font,size,1+shift);
+	float fs = FontSize;	FontSize*=1.4;
+	text_plot(AddPnt(p,-1,q,0),text,font,1+shift);	FontSize=fs;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Label(float x, float y, const char *str, const char *fnt, float size, bool rel)
+void mglCanvas::Label(float x, float y, const char *str, const char *fnt, bool rel)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
-	Labelw(x,y,wcs, fnt, size, rel);
+	Labelw(x,y,wcs, fnt, rel);
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Labelw(float x, float y, const wchar_t *text, const char *fnt, float size, bool rel)
+void mglCanvas::Labelw(float x, float y, const wchar_t *text, const char *fnt, bool rel)
 {
 	Push();	Identity(rel);
 	mglFormula *ox=fx, *oy=fy, *oz=fz;
@@ -644,11 +645,13 @@ void mglCanvas::Labelw(float x, float y, const wchar_t *text, const char *fnt, f
 	for(int i=0;f[i];i++)	if(f[i]=='a' || f[i]=='A')	f[i]=' ';
 	mglPoint p((Min.x+Max.x)/2+PlotFactor*(Max.x-Min.x)*(x-0.5),
 				(Min.y+Max.y)/2+PlotFactor*(Max.y-Min.y)*(y-0.5), Max.z);
-	ScalePoint(p);	text_plot(AddPnt(p,-1,mglPoint(NAN),0),text,f,size);
+	ScalePoint(p);
+	float fs = FontSize;	FontSize*=1.4;
+	text_plot(AddPnt(p,-1,mglPoint(NAN),0),text,f);	FontSize=fs;
 	delete []f;	fx=ox;	fy=oy;	fz=oz;	Pop();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Title(const wchar_t *str,const char *font,float size)
+/*void mglCanvas::Title(const wchar_t *str,const char *font)
 {
 	Push();	Identity();
 	mglFormula *ox=fx, *oy=fy, *oz=fz;
@@ -658,14 +661,14 @@ void mglCanvas::Title(const wchar_t *str,const char *font,float size)
 	fx=ox;	fy=oy;	fz=oz;	Pop();
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Title(const char *str,const char *font,float size)
+void mglCanvas::Title(const char *str,const char *font)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
 	Title(wcs, font, size);
 	delete []wcs;
-}
+}*/
 //-----------------------------------------------------------------------------
 void mglCanvas::Box(const char *col, bool ticks)
 {

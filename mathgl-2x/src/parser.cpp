@@ -20,9 +20,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <wchar.h>
-
+//-----------------------------------------------------------------------------
 #include "mgl/parser.h"
-
+//-----------------------------------------------------------------------------
 #ifdef WIN32
 #include <io.h>
 wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim)	{	return wcstok(wcs,delim);	}
@@ -30,8 +30,9 @@ wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim)	{	return wcstok(wcs,delim
 #else
 #include <unistd.h>
 #endif
-
+//-----------------------------------------------------------------------------
 wchar_t *mgl_wcsdup(const wchar_t *s);
+void mgl_wcstrim(wchar_t *str);
 //-----------------------------------------------------------------------------
 mglFunc::mglFunc(long p, const wchar_t *f, mglFunc *prev)
 {
@@ -66,19 +67,6 @@ void mglParse::ScanFunc(const wchar_t *line)
 	register long i;
 	for(i=4;line[i]<=' ' || line[i]=='\'';i++);
 	func = new mglFunc(num-1, line+i, func);
-}
-//-----------------------------------------------------------------------------
-void mgl_wcstrim(wchar_t *str)
-{
-	wchar_t *c = mgl_wcsdup(str);
-	unsigned long n=wcslen(str);
-	long k;
-	for(k=0;k<long(wcslen(str));k++)		if(str[k]>' ')	break;
-	wcscpy(c,&(str[k]));
-	n = wcslen(c);
-	for(k=n-1;k>=0;k--)	if(c[k]>' ')	break;
-	c[k+1] = 0;
-	wcscpy(str,c);	free(c);
 }
 //-----------------------------------------------------------------------------
 wchar_t *mgl_str_copy(const char *s)
@@ -335,9 +323,6 @@ int mglFindArg(const wchar_t *str)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-void wcstrim_mgl(wchar_t *str);
-void wcslwr_mgl(wchar_t *str);
-//-----------------------------------------------------------------------------
 bool mgls_suffix(const wchar_t *p, mglData *d, mreal *v)
 {
 	mreal x,y,z,k;
@@ -536,7 +521,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	wchar_t *str, *s = new wchar_t[wcslen(string)+1+40*parlen],*arg[1024],*t;
 	str = s;
 	wcscpy(str,string);
-	wcstrim_mgl(str);
+	mgl_wcstrim(str);
 	long n,k=0,m=0;
 	// try parse ':'
 	for(n=k=0;n<long(wcslen(str));n++)
@@ -562,7 +547,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		PutArg(string,str,true);
 		if(!wcsncmp(str+3,L"ine",3))
 		{
-			wchar_t *ss=str+7;	wcstrim_mgl(ss);//	int res = 1;
+			wchar_t *ss=str+7;	mgl_wcstrim(ss);//	int res = 1;
 			if(*ss=='$' && ss[1]>='0' && ss[1]<='9')
 			{
 				int n=ss[1]-'0';//	res = 0;
@@ -580,7 +565,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		}
 		if(!wcsncmp(str+3,L"num",3))
 		{
-			str += 7;	wcstrim_mgl(str);	int res = 1;
+			str += 7;	mgl_wcstrim(str);	int res = 1;
 			if(*str=='$' && str[1]>='0' && str[1]<='9')
 			{
 				int n=str[1]-'0';	res = 0;
@@ -605,7 +590,7 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		}
 		if(!wcsncmp(str+3,L"chr",3))
 		{
-			str += 7;	wcstrim_mgl(str);	int res = 1;
+			str += 7;	mgl_wcstrim(str);	int res = 1;
 			if(*str=='$' && str[1]>='0' && str[1]<='9')
 			{
 				int n=str[1]-'0';	res = 0;
@@ -634,22 +619,29 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		if(*t=='$' && t[1]>='a' && t[1]<='z')	*t = ' ';
 	}
 
-	gr->SaveState();	// save state before command execution
 	// parse arguments (parameters $1, ..., $9)
-	PutArg(string,str,false);	wcstrim_mgl(str);
+	PutArg(string,str,false);	mgl_wcstrim(str);
 
+	char *opt=0;
 	for(k=0;k<1024;k++)	// parse string to substrings (by spaces)
 	{
 		n = mglFindArg(str);
 		if(n<1)
 		{
-			if(str[-n]==';')	ProcOpt(gr,str-n);
+			if(str[-n]==';')
+			{
+				ProcOpt(gr,str-n);	long l = wcslen(str-n);
+				opt = new char[l+1];
+				wcstombs(opt,str-n,l+1);	opt[l]=0;
+			}
 			if(n<0)	str[-n]=0;
 			break;
 		}
 		str[n]=0;	arg[k] = str;//	k++;
-		str = str+n+1;	wcstrim_mgl(str);
+		str = str+n+1;	mgl_wcstrim(str);
 	}
+	gr->Self()->SaveState(opt);	// save state before command execution
+	if(opt)	delete []opt;
 	// try to find last argument
 	if(str[0]!=0 && str[0]!='#' && str[0]!=';')	{	arg[k] = str;	k++;	}
 	if(k<1) n =0;
@@ -772,7 +764,7 @@ int mglParse::ParseDat(mglGraph *gr, const wchar_t *string, mglData &res)
 {
 	wchar_t *str, *s = new wchar_t[wcslen(string)+1+parlen],*arg[32];
 	str = s;
-	wcscpy(str,string);	wcstrim_mgl(str);
+	wcscpy(str,string);	mgl_wcstrim(str);
 	long n,k=0;
 	for(k=0;k<32;k++)	// parse string to substrings (by spaces)
 	{
@@ -784,7 +776,7 @@ int mglParse::ParseDat(mglGraph *gr, const wchar_t *string, mglData &res)
 			break;
 		}
 		str[n]=0;	arg[k] = str;//	k++;
-		str = str+n+1;	wcstrim_mgl(str);
+		str = str+n+1;	mgl_wcstrim(str);
 	}
 	// try to find last argument
 	if(str[0]!=0 && str[0]!='#' && str[0]!=';')	{	arg[k] = str;	k++;	}
@@ -1013,23 +1005,17 @@ int mglParse::Export(wchar_t cpp_out[1024], mglGraph *gr, const wchar_t *str)
 void mglParse::ProcOpt(mglGraph *gr, wchar_t *str)
 {
 	wchar_t buf[256]=L"";
-	if(str==0 && opt)
-	{
-		gr->LoadState();
-		if(out)	mglprintf(buf,256,L"\tgr->LoadState();");
-		wcscat(op2,buf);	opt=false;
-	}
-	else if(str==0 && opt_leg)
+	if(str==0 && opt_leg)
 	{
 		gr->AddLegend(leg, "");
 		if(out)	mglprintf(buf,256,L"\tgr->AddLegend(\"%s\", \"\");", leg);
 		wcscat(op2,buf);
 	}
-	else if(str)
+	else if(str)	// TODO: Add evaluation of arguments to numbers
 	{
-		wchar_t *q=str,*s,*a,*b,*c;
+		wchar_t *q=str,*s,*a,*b;
 		long n;
-		wcstrim_mgl(q);		q++;
+		mgl_wcstrim(q);		q++;
 		// NOTE: not consider '#' inside legend entry !!!
 		s=wcschr(q,'#');	if(s)	*s=0;
 		while(q && *q)
@@ -1037,77 +1023,10 @@ void mglParse::ProcOpt(mglGraph *gr, wchar_t *str)
 			// NOTE: not consider ';' inside legend entry !!!
 			s=q;	q=wcschr(s,';');
 			if(q)	{	*q=0;	q++;	}
-			wcstrim_mgl(s);		a=s;
+			mgl_wcstrim(s);		a=s;
 			n=mglFindArg(s);	if(n>0)	{	s[n]=0;		s=s+n+1;	}
-			wcstrim_mgl(a);		b=s;
-			n=mglFindArg(s);	if(n>0)	{	s[n]=0;		s=s+n+1;	}
-			wcstrim_mgl(b);
-
-			mglData bb,ss;
-			bb = mglFormulaCalc(b, this);
-			mreal ff = bb.a[0];
-			if(!wcscmp(a+1,L"range"))
-			{
-				n=mglFindArg(s);	c=s;
-				if(n>0)	{	s[n]=0;		s=s+n+1;	}
-				wcstrim_mgl(c);
-				ss = mglFormulaCalc(c, this);
-				if(a[0]=='x')
-				{
-					gr->SetAutoRanges(bb.a[0], ss.a[0], 0,0, 0,0, 0,0);	opt=true;
-					if(out)	mglprintf(buf,256,L"gr->SetAutoRanges(%g,%g,0,0,0,0,0,0);", wcstod(b,0), wcstod(s,0));
-					wcscat(op1,buf);
-				}
-				else if(a[0]=='y')
-				{
-					gr->SetAutoRanges(0,0, bb.a[0], ss.a[0], 0,0, 0,0);	opt=true;
-					if(out)	mglprintf(buf,256,L"gr->SetAutoRanges(0,0,%g,%g,0,0,0,0);", wcstod(b,0), wcstod(s,0));
-					wcscat(op1,buf);
-				}
-				else if(a[0]=='z')
-				{
-					gr->SetAutoRanges(0,0, 0,0, bb.a[0], ss.a[0], 0,0);	opt=true;
-					if(out)	mglprintf(buf,256,L"gr->SetAutoRanges(0,0,0,0,%g,%g,0,0);", wcstod(b,0), wcstod(s,0));
-					wcscat(op1,buf);
-				}
-				else if(a[0]=='c')
-				{
-					gr->SetAutoRanges(0,0, 0,0, 0,0, bb.a[0], ss.a[0]);	opt=true;
-					if(out)	mglprintf(buf,256,L"gr->SetAutoRanges(0,0,0,0,0,0,%g,%g);", wcstod(b,0), wcstod(s,0));
-					wcscat(op1,buf);
-				}
-			}
-			else if(!wcscmp(a,L"cut"))
-			{
-				gr->SetCut(ff!=0 || !wcsncmp(s,L"on",2));	opt=true;
-				if(out)	mglprintf(buf,256,L"gr->SetCur(%s);", ff!=0 || !wcsncmp(s,L"on",2)?"true":"false");
-				wcscat(op1,buf);
-			}
-			else if(!wcscmp(a,L"meshnum"))
-			{
-				gr->SetMeshNum(ff);		opt=true;
-				if(out)	mglprintf(buf,256,L"gr->SetMeshNum(%d);", int(ff));
-				wcscat(op1,buf);
-			}
-			else if(!wcscmp(a,L"alphadef") || !wcscmp(a,L"alpha"))
-			{
-				gr->SetAlphaDef(ff);	opt=true;
-				if(out)	mglprintf(buf,256,L"gr->SetAlphaDef(%g);", ff);
-				wcscat(op1,buf);
-			}
-			else if(!wcscmp(a,L"ambient"))
-			{
-				gr->SetAmbient(ff);		opt=true;
-				if(out)	mglprintf(buf,256,L"gr->SetAmbient(%g);", ff);
-				wcscat(op1,buf);
-			}
-			else if(!wcscmp(a,L"marksize"))
-			{
-				gr->SetMarkSize(ff/50);	opt=true;
-				if(out)	mglprintf(buf,256,L"gr->SetMarkSize(%g/50);", ff);
-				wcscat(op1,buf);
-			}
-			else if(!wcscmp(a,L"legend"))	// TODO: parsing of string tail (other options???)
+			mgl_wcstrim(a);
+			if(!wcscmp(a,L"legend"))	// TODO: parsing of string tail (other options???)
 			{
 				b = wcschr(s+1,'\'');	if(b)	*b=0;
 				opt_leg=true;	wcscpy(leg,s+1);

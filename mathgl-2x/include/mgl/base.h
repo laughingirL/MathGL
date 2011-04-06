@@ -218,8 +218,8 @@ public:
 	/// Set axis origin
 	inline void SetOrigin(float x0, float y0, float z0=NAN, float c0=NAN)
 	{	Org=mglPoint(x0,y0,z0,c0);	}
-	/// Save ranges into internal variable
-	void SaveState();
+	/// Save ranges into internal variable and put parsed
+	float SaveState(const char *opt);
 	/// Load ranges from internal variable
 	void LoadState();
 
@@ -239,6 +239,8 @@ public:
 	{	CutMin=mglPoint(x1,y1,z1);	CutMax=mglPoint(x2,y2,z2);	}
 	inline void SetCutBox(mglPoint v1, mglPoint v2)	{	CutMin=v1;	CutMax=v2;	}
 
+	/// Set ambient light brightness
+	virtual void SetAmbient(float bright=0.5);
 	/// Set default value of alpha-channel
 	inline void SetAlphaDef(float val)	{	AlphaDef=val;	};
 	/// Set default palette
@@ -265,7 +267,7 @@ public:
 	virtual void StartGroup (const char *){}
 	virtual void StartAutoGroup (const char *){}
 	void StartGroup(const char *name, int id);
-	virtual void EndGroup(){}
+	virtual void EndGroup()	{	LoadState();	}
 
 	/// Set FontSize by size in pt and picture DPI (default is 16 pt for dpi=72)
 	virtual void SetFontSizePT(float pt, int dpi=72){	FontSize = pt*27.f/dpi;	}
@@ -285,7 +287,7 @@ public:
 	/// Copy font from another mglGraph instance
 	inline void CopyFont(mglBase *gr)	{	fnt->Copy(gr->GetFont());	};
 	/// Set default font size
-	inline void SetFontSize(float val)	{	FontSize=val;	};
+	inline void SetFontSize(float val)	{	FontSize=val>0 ? val:FontSize*val;	};
 	inline float GetFontSize()		{	return FontSize;	};
 	inline float TextWidth(const wchar_t *text)	{	return fnt->Width(text,FontDef);	};
 	inline float TextHeight()	{	return fnt->Height(FontDef); };
@@ -333,7 +335,7 @@ public:
 	virtual void trig_plot(long p1, long p2, long p3)=0;			// position in pntN
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;	// position in pntN
 	virtual void Glyph(float x, float y, float f, int style, long icode, char col)=0;
-	virtual float text_plot(long p,const wchar_t *text,const char *fnt,float size,float sh=0)=0;	// position in pntN
+	virtual float text_plot(long p,const wchar_t *text,const char *fnt,float sh=0)=0;	// position in pntN
 	void vect_plot(long p1, long p2);	// position in pntC
 
 protected:
@@ -348,6 +350,7 @@ protected:
 	float PenWidth;		///< Pen width for further line plotting (must be >0 !!!)
 	mglTexture *txt;	///< Pointer to textures
 	long numT;			///< Number of textures
+	float AmbBr;		///< Default ambient light brightness
 
 	mglFont *fnt;		///< Class for printing vector text
 	float FontSize;		///< The size of font for tick and axis labels
@@ -372,7 +375,8 @@ protected:
 private:
 	mglPoint MinS;		///< Saved lower edge of bounding box for graphics.
 	mglPoint MaxS;		///< Saved upper edge of bounding box for graphics.
-	float MSS, ASS, FSS, ADS, MNS, CSS;	///< Saved state
+	float MSS, ASS, FSS, ADS, MNS, CSS, LSS;	///< Saved state
+	bool saved;			///< State is saved
 
 	mglPoint FMin;		///< Actual lower edge after transformation formulas.
 	mglPoint FMax;		///< Actual upper edge after transformation formulas.

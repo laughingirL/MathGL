@@ -41,7 +41,6 @@ void mgl_reset_frames(HMGL gr)	{	_Gr_->ResetFrames();	}
 void mgl_set_transp_type(HMGL gr, int type)			{	_Gr_->SetTranspType(type);	}
 void mgl_set_alpha(HMGL gr, int enable)				{	_Gr_->Alpha(enable);	}
 void mgl_set_fog(HMGL gr, float d, float dz)		{	_Gr_->Fog(d,dz);	}
-void mgl_set_ambbr(HMGL gr, float i)				{	_Gr_->Ambient(i);	}
 void mgl_set_light(HMGL gr, int enable)				{	_Gr_->Light(enable);	}
 void mgl_set_light_n(HMGL gr, int n, int enable)	{	_Gr_->Light(n, enable);	}
 void mgl_add_light_ext(HMGL gr, int n, float x, float y, float z, char c, float br, bool inf, float ap)
@@ -96,8 +95,6 @@ void mgl_add_light_(uintptr_t *gr, int *n, float *x, float *y, float *z, char *c
 {	_GR_->AddLight(*n,mglPoint(*x,*y,*z),*c);	}
 void mgl_add_light_ext_(uintptr_t *gr, int *n, float *x, float *y, float *z, char *c, float *br, int *inf, float *ap, int)
 {	_GR_->AddLight(*n,mglPoint(*x,*y,*z),*c,*br,*inf,*ap);	}
-void mgl_set_ambbr_(uintptr_t *gr, float *i)
-{	_GR_->Ambient(*i);	}
 //-----------------------------------------------------------------------------
 void mgl_mat_push_(uintptr_t *gr)	{	_GR_->Push();	}
 void mgl_mat_pop_(uintptr_t *gr)	{	_GR_->Pop();	}
@@ -188,14 +185,14 @@ void mgl_axis_grid(HMGL gr, const char *dir,const char *pen)
 {	_Gr_->Grid(dir,pen);	}
 void mgl_label(HMGL gr, char dir, const char *text)
 {	_Gr_->Label(dir,text);	}
-void mgl_label_ext(HMGL gr, char dir, const char *text, float pos, float size, float shift)
-{	_Gr_->Label(dir,text,pos,size,shift);	}
-void mgl_labelw_ext(HMGL gr, char dir, const wchar_t *text, float pos, float size, float shift)
-{	_Gr_->Labelw(dir,text,pos,size,shift);	}
-void mgl_label_xy(HMGL gr, float x, float y, const char *text, const char *fnt, float size)
-{	_Gr_->Label(x,y,text,fnt,size);	}
-void mgl_labelw_xy(HMGL gr, float x, float y, const wchar_t *text, const char *fnt, float size)
-{	_Gr_->Labelw(x,y,text,fnt,size);	}
+void mgl_label_ext(HMGL gr, char dir, const char *text, float pos, float shift)
+{	_Gr_->Label(dir,text,pos,shift);	}
+void mgl_labelw_ext(HMGL gr, char dir, const wchar_t *text, float pos, float shift)
+{	_Gr_->Labelw(dir,text,pos,shift);	}
+void mgl_label_xy(HMGL gr, float x, float y, const char *text, const char *fnt)
+{	_Gr_->Label(x,y,text,fnt);	}
+void mgl_labelw_xy(HMGL gr, float x, float y, const wchar_t *text, const char *fnt)
+{	_Gr_->Labelw(x,y,text,fnt);	}
 //-----------------------------------------------------------------------------
 void mgl_colorbar(HMGL gr, const char *sch,int where)
 {	_Gr_->Colorbar(sch,where);	}
@@ -270,13 +267,13 @@ void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen,int l,int n)
 void mgl_label_(uintptr_t *gr, const char *dir, const char *text,int,int l)
 {	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	_GR_->Label(*dir, s);	delete []s;	}
-void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, float *pos, float *size, float *shift,int,int l)
+void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, float *pos, float *shift,int,int l)
 {	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
-	_GR_->Label(*dir, s, *pos, *size, *shift);	delete []s;	}
-void mgl_label_xy_(uintptr_t *gr, float *x, float *y, const char *txt, const char *fnt, float *size,int l,int n)
+	_GR_->Label(*dir, s, *pos, *shift);	delete []s;	}
+void mgl_label_xy_(uintptr_t *gr, float *x, float *y, const char *txt, const char *fnt,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,txt,l);	s[l]=0;
 	char *p=new char[n+1];	memcpy(p,fnt,n);	p[n]=0;
-	_GR_->Label(*x,*y,s,p,*size);	delete []s;	delete []p;	}
+	_GR_->Label(*x,*y,s,p);	delete []s;	delete []p;	}
 //-----------------------------------------------------------------------------
 void mgl_colorbar_(uintptr_t *gr, const char *sch,int *where,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
@@ -307,12 +304,12 @@ void mgl_set_legend_box_(uintptr_t *gr, int *enable)
 void mgl_set_legend_marks_(uintptr_t *gr, int *num)
 {	_GR_->SetLegendMarks(*num);	}
 //-----------------------------------------------------------------------------
-void mgl_title(HMGL gr, const char *text, const char *font, float size)
+/*void mgl_title(HMGL gr, const char *text, const char *font, float size)
 {	_Gr_->Title(text,font,size);	}
 void mgl_titlew(HMGL gr, const wchar_t *text, const char *font, float size)
 {	_Gr_->Title(text,font,size);	}
 void mgl_title_(uintptr_t *gr, const char *text, const char *fnt, float *size, int l,int n)
 {	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
-	_GR_->Title(s,f, *size);	delete []s;	delete []f;	}
+	_GR_->Title(s,f, *size);	delete []s;	delete []f;	}*/
 //-----------------------------------------------------------------------------

@@ -38,14 +38,13 @@ void mgl_set_palette(HMGL gr, const char *colors);
 void mgl_set_alpha_default(HMGL graph, float alpha);
 void mgl_set_bar_width(HMGL graph, float width);
 void mgl_set_meshnum(HMGL graph, int num);
+void mgl_set_ambbr(HMGL gr, float i);
 
 void mgl_set_cut(HMGL graph, int cut);
 void mgl_set_cut_box(HMGL gr, float x1,float y1,float z1,float x2,float y2,float z2);
 void mgl_set_ranges(HMGL graph, float x1, float x2, float y1, float y2, float z1, float z2);
 void mgl_set_range_val(HMGL gr, char dir, float v1,float v2);
 void mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add);
-void mgl_save_state(HMGL gr);
-void mgl_load_state(HMGL gr);
 
 void mgl_set_origin(HMGL graph, float x0, float y0, float z0);
 void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, float z2, float c1, float c2);
@@ -81,14 +80,13 @@ void mgl_set_pal_num_(uintptr_t *graph, int *num);
 void mgl_set_alpha_default_(uintptr_t *graph, float *alpha);
 void mgl_set_bar_width_(uintptr_t *graph, float *width);
 void mgl_set_meshnum_(uintptr_t *graph, int *num);
+void mgl_set_ambbr_(uintptr_t *gr, float *i);
 
 void mgl_set_cut_(uintptr_t *graph, int *cut);
 void mgl_set_cut_box_(uintptr_t *gr, float *x1,float *y1,float *z1,float *x2,float *y2,float *z2);
 void mgl_set_ranges_(uintptr_t *graph, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2);
 void mgl_set_range_val_(uintptr_t *gr, const char *dir, float *v1,float *v2,int);
 void mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,int);
-void mgl_save_state_(uintptr_t *gr);
-void mgl_load_state_(uintptr_t *gr);
 
 void mgl_set_origin_(uintptr_t *gr, float *x0, float *y0, float *z0);
 void mgl_set_auto_(uintptr_t *gr, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2, float *c1, float *c2);
