@@ -26,7 +26,7 @@
 //	CloudQ series
 //
 //-----------------------------------------------------------------------------
-void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, float alpha)
+void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	register int i0;
@@ -34,6 +34,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim);	return;	}
+	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Cloud",cgid++);
 
 	int tx=1,ty=1,tz=1;
@@ -41,7 +42,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	tz=(l-1)/(gr->MeshNum-1);}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;	if(tz<1)	tz=1;
 
-	if(alpha<0)	alpha = gr->AlphaDef;
+	float	alpha = gr->AlphaDef;
 	bool inv = sch && strchr(sch,'-');
 	bool dot = sch && strchr(sch,'.');
 	alpha /= pow(n/tx*m/ty*l/tz,1./3)/5;
@@ -72,25 +73,27 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, flo
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
-void mgl_cloud(HMGL gr, HCDT a, const char *sch, float alpha)
+void mgl_cloud(HMGL gr, HCDT a, const char *sch, const char *opt)
 {
 	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)
 	{	gr->SetWarn(mglWarnLow,"Cloud");	return;	}
+	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
-	mgl_cloud_xyz(gr,&x,&y,&z,a,sch,alpha);
+	mgl_cloud_xyz(gr,&x,&y,&z,a,sch,0);
 }
 //-----------------------------------------------------------------------------
-void mgl_cloud_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a,
-			const char *sch, float *alpha,int l)
+void mgl_cloud_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_cloud_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, *alpha);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_cloud_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_cloud_(uintptr_t *gr, uintptr_t *a, const char *sch, float *alpha,int l)
+void mgl_cloud_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_cloud(_GR_, _DA_(a), s, *alpha);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_cloud(_GR_, _DA_(a), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
 //	Surf3 series
@@ -210,7 +213,7 @@ void mgl_surf3_plot(HMGL gr, long posN, long n,long m,long *kx1,long *kx2,long *
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch)
+void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
@@ -220,6 +223,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 	both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,"Surf3");	return;	}
+	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
@@ -313,57 +317,64 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 	delete []ky2;	delete []kz;	free(kk);
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3_val(HMGL gr, float val, HCDT a, const char *sch)
+void mgl_surf3_val(HMGL gr, float val, HCDT a, const char *sch, const char *opt)
 {
 	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)	{	gr->SetWarn(mglWarnLow,"Surf3");	return;	}
+	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
-	mgl_surf3_xyz_val(gr,val,&x,&y,&z,a,sch);
+	mgl_surf3_xyz_val(gr,val,&x,&y,&z,a,sch,0);
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, int num)
+void mgl_surf3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
-	num = num<=0 ? 1 : num;
+	float r = gr->SaveState(opt);
+	long num = isnan(r)?3:long(r+0.5);
 	for(long i=0;i<num;i++)
 	{
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
-		mgl_surf3_xyz_val(gr,v,x,y,z,a,sch);
+		mgl_surf3_xyz_val(gr,v,x,y,z,a,sch,0);
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3(HMGL gr, HCDT a, const char *sch, int num)
+void mgl_surf3(HMGL gr, HCDT a, const char *sch, const char *opt)
 {
-	num = num<=0 ? 1 : num;
+	float r = gr->SaveState(opt);
+	long num = isnan(r)?3:long(r+0.5);
 	for(long i=0;i<num;i++)
 	{
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
-		mgl_surf3_val(gr,v,a,sch);
+		mgl_surf3_val(gr,v,a,sch,0);
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3_xyz_val_(uintptr_t *gr, float *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch,int l)
+void mgl_surf3_xyz_val_(uintptr_t *gr, float *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_surf3_xyz_val(_GR_, *Val, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surf3_xyz_val(_GR_, *Val, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_surf3_val_(uintptr_t *gr, float *Val, uintptr_t *a, const char *sch,int l)
+void mgl_surf3_val_(uintptr_t *gr, float *Val, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_surf3_val(_GR_, *Val, _DA_(a), s);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surf3_val(_GR_, *Val, _DA_(a), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_surf3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, int *num,int l)
+void mgl_surf3_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_surf3_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, *num);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surf3_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_surf3_(uintptr_t *gr, uintptr_t *a, const char *sch, int *num,int l)
+void mgl_surf3_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_surf3(_GR_, _DA_(a), s, *num);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surf3(_GR_, _DA_(a), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
 //	Surf3A series
 //
 //-----------------------------------------------------------------------------
-void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch)
+void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
@@ -374,6 +385,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,"Surf3A");	return;	}
 	if(b->GetNx()*b->GetNy()*b->GetNz()!=n*m*l)	{	gr->SetWarn(mglWarnDim,"Surf3A");	return;	}
+	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
@@ -470,57 +482,66 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	delete []ky2;	delete []kz;	free(kk);
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3a_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch)
+void mgl_surf3a_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)	{	gr->SetWarn(mglWarnLow,"Surf3A");	return;	}
+	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
-	mgl_surf3a_xyz_val(gr,val,&x,&y,&z,a,b,sch);
+	mgl_surf3a_xyz_val(gr,val,&x,&y,&z,a,b,sch,0);
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3a_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, int num)
+void mgl_surf3a_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, const char *opt)
 {
-	num = num<=0 ? 1 : num;
+	float r = gr->SaveState(opt);
+	long num = isnan(r)?3:long(r+0.5);
 	for(long i=0;i<num;i++)
 	{
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
-		mgl_surf3a_xyz_val(gr,v,x,y,z,a,b,sch);
+		mgl_surf3a_xyz_val(gr,v,x,y,z,a,b,sch,0);
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3a(HMGL gr, HCDT a, HCDT b, const char *sch, int num)
+void mgl_surf3a(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
 {
-	num = num<=0 ? 1 : num;
+	float r = gr->SaveState(opt);
+	long num = isnan(r)?3:long(r);
 	for(long i=0;i<num;i++)
 	{
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
-		mgl_surf3a_val(gr,v,a,b,sch);
+		mgl_surf3a_val(gr,v,a,b,sch,0);
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3a_xyz_val_(uintptr_t *gr, float *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch,int l)
+void mgl_surf3a_xyz_val_(uintptr_t *gr, float *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_surf3a_xyz_val(_GR_, *Val, _DA_(x), _DA_(y), _DA_(z), _DA_(a), _DA_(b), s);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surf3a_xyz_val(_GR_, *Val, _DA_(x), _DA_(y), _DA_(z), _DA_(a), _DA_(b), s, o);
+	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_surf3a_val_(uintptr_t *gr, float *Val, uintptr_t *a, uintptr_t *b, const char *sch,int l)
+void mgl_surf3a_val_(uintptr_t *gr, float *Val, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	 mgl_surf3a_val(_GR_, *Val, _DA_(a), _DA_(b), s);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	 mgl_surf3a_val(_GR_, *Val, _DA_(a), _DA_(b), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_surf3a_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch, int *num,int l)
+void mgl_surf3a_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_surf3a_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), _DA_(b), s, *num);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surf3a_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), _DA_(b), s, o);
+	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_surf3a_(uintptr_t *gr, uintptr_t *a, uintptr_t *b, const char *sch, int *num,int l)
+void mgl_surf3a_(uintptr_t *gr, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_surf3a(_GR_, _DA_(a), _DA_(b), s, *num);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surf3a(_GR_, _DA_(a), _DA_(b), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
 //	Surf3C series
 //
 //-----------------------------------------------------------------------------
-void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch)
+void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	long i,j,k,i1,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	long *kx1,*kx2,*ky1,*ky2,*kz;
@@ -531,6 +552,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,"Surf3A");	return;	}
 	if(b->GetNx()*b->GetNy()*b->GetNz()!=n*m*l)	{	gr->SetWarn(mglWarnDim,"Surf3A");	return;	}
+	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
@@ -627,51 +649,60 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	delete []ky2;	delete []kz;	free(kk);
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3c_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch)
+void mgl_surf3c_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)	{	gr->SetWarn(mglWarnLow,"Surf3C");	return;	}
+	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	z.Fill(gr->Min.z,gr->Max.z);
-	mgl_surf3c_xyz_val(gr,val,&x,&y,&z,a,b,sch);
+	mgl_surf3c_xyz_val(gr,val,&x,&y,&z,a,b,sch,0);
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3c_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, int num)
+void mgl_surf3c_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char *sch, const char *opt)
 {
-	num = num<=0 ? 1 : num;
+	float r = gr->SaveState(opt);
+	long num = isnan(r)?3:long(r+0.5);
 	for(long i=0;i<num;i++)
 	{
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
-		mgl_surf3c_xyz_val(gr,v,x,y,z,a,b,sch);
+		mgl_surf3c_xyz_val(gr,v,x,y,z,a,b,sch,0);
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3c(HMGL gr, HCDT a, HCDT b, const char *sch, int num)
+void mgl_surf3c(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
 {
-	num = num<=0 ? 1 : num;
+	float r = gr->SaveState(opt);
+	long num = isnan(r)?3:long(r+0.5);
 	for(long i=0;i<num;i++)
 	{
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
-		mgl_surf3c_val(gr,v,a,b,sch);
+		mgl_surf3c_val(gr,v,a,b,sch,0);
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3c_xyz_val_(uintptr_t *gr, float *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch,int l)
+void mgl_surf3c_xyz_val_(uintptr_t *gr, float *Val, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_surf3c_xyz_val(_GR_, *Val, _DA_(x), _DA_(y), _DA_(z), _DA_(a), _DA_(b), s);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surf3c_xyz_val(_GR_, *Val, _DA_(x), _DA_(y), _DA_(z), _DA_(a), _DA_(b), s, o);
+	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_surf3c_val_(uintptr_t *gr, float *Val, uintptr_t *a, uintptr_t *b, const char *sch,int l)
+void mgl_surf3c_val_(uintptr_t *gr, float *Val, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	 mgl_surf3c_val(_GR_, *Val, _DA_(a), _DA_(b), s);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	 mgl_surf3c_val(_GR_, *Val, _DA_(a), _DA_(b), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_surf3c_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch, int *num,int l)
+void mgl_surf3c_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_surf3c_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), _DA_(b), s, *num);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surf3c_xyz(_GR_, _DA_(x), _DA_(y), _DA_(z), _DA_(a), _DA_(b), s, o);
+	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_surf3c_(uintptr_t *gr, uintptr_t *a, uintptr_t *b, const char *sch, int *num,int l)
+void mgl_surf3c_(uintptr_t *gr, uintptr_t *a, uintptr_t *b, const char *sch, const char *opt,int l,int lo)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	mgl_surf3c(_GR_, _DA_(a), _DA_(b), s, *num);	delete []s;	}
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_surf3c(_GR_, _DA_(a), _DA_(b), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
 //	Beam series
@@ -725,7 +756,7 @@ void mgl_beam_val(HMGL gr, float val, HCDT tr, HCDT g1, HCDT g2, HCDT a, float r
 			if(flag & 2)	x.a[i0] = hypot(x.a[i0],y.a[i0]);
 		}
 	}
-	mgl_surf3_xyz_val(gr,val,&x,&y,&z,&b,stl);
+	mgl_surf3_xyz_val(gr,val,&x,&y,&z,&b,stl,0);
 }
 //-----------------------------------------------------------------------------
 void mgl_beam(HMGL gr, HCDT tr, HCDT g1, HCDT g2, HCDT a, float r, const char *stl, int flag, int num)
@@ -738,13 +769,11 @@ void mgl_beam(HMGL gr, HCDT tr, HCDT g1, HCDT g2, HCDT a, float r, const char *s
 	}
 }
 //-----------------------------------------------------------------------------
-void mgl_beam_val_(uintptr_t *gr, float *val, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintptr_t *a,
-					float *r, const char *sch, int *norm,int l)
+void mgl_beam_val_(uintptr_t *gr, float *val, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintptr_t *a, float *r, const char *sch, int *norm,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	mgl_beam_val(_GR_, *val,_DA_(tr),_DA_(g1),_DA_(g2),_DA_(a),*r,s,*norm);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_beam_(uintptr_t *gr, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintptr_t *a, float *r,
-				const char *sch, int *norm, int *num,int l)
+void mgl_beam_(uintptr_t *gr, uintptr_t *tr, uintptr_t *g1, uintptr_t *g2, uintptr_t *a, float *r, const char *sch, int *norm, int *num,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
 	mgl_beam(_GR_, _DA_(tr), _DA_(g1), _DA_(g2), _DA_(a), *r,s,*norm,*num);	delete []s;	}
 //-----------------------------------------------------------------------------

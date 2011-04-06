@@ -51,7 +51,7 @@ void mgl_strlwr(char *str)
 //-----------------------------------------------------------------------------
 mglBase::mglBase()
 {
-	memset(this,0,sizeof(mglBase));	InUse = 1;	num=1024;
+	memset(this,0,sizeof(mglBase));	InUse = 1;	num=1024;	prev_val = NAN;
 	pnt = (float *)malloc(12*num*sizeof(float));
 	txt = (mglTexture *)malloc(2*sizeof(mglTexture));
 	memset(txt,0,2*sizeof(mglTexture));
@@ -792,7 +792,7 @@ float mglBase::SaveState(const char *opt)
 		{	SetMarkSize(ff);	SetFontSize(ff);	SetArrowSize(ff);	}
 		else if(!strcmp(a,"num") || !strcmp(a,"number"))	res = ff;
 	}
-	free(q);	return res;
+	free(q);	prev_val=res;	return res;
 }
 //-----------------------------------------------------------------------------
 void mglBase::LoadState()

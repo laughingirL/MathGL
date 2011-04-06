@@ -98,14 +98,14 @@ public:
 //-----------------------------------------------------------------------------
 inline float mgl_d(float v,float v1,float v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }
 //-----------------------------------------------------------------------------
-mglPoint GetX(const mglDataA *x, int i, int j, int k);
-mglPoint GetY(const mglDataA *y, int i, int j, int k);
-mglPoint GetZ(const mglDataA *z, int i, int j, int k);
-inline mglPoint GetX(const mglDataA &x, int i, int j, int k)
+mglPoint GetX(const mglDataA *x, int i, int j, int k=0);
+mglPoint GetY(const mglDataA *y, int i, int j, int k=0);
+mglPoint GetZ(const mglDataA *z, int i, int j, int k=0);
+inline mglPoint GetX(const mglDataA &x, int i, int j, int k=0)
 {	return GetX(&x,i,j,k);	}
-inline mglPoint GetY(const mglDataA &y, int i, int j, int k)
+inline mglPoint GetY(const mglDataA &y, int i, int j, int k=0)
 {	return GetY(&y,i,j,k);	}
-inline mglPoint GetZ(const mglDataA &z, int i, int j, int k)
+inline mglPoint GetZ(const mglDataA &z, int i, int j, int k=0)
 {	return GetZ(&z,i,j,k);	}
 //-----------------------------------------------------------------------------
 /// Class for incapsulating color
@@ -220,6 +220,8 @@ public:
 	{	Org=mglPoint(x0,y0,z0,c0);	}
 	/// Save ranges into internal variable and put parsed
 	float SaveState(const char *opt);
+	/// Return previous value of SaveState()
+	inline float PrevValue()	{	return prev_val;	};
 	/// Load ranges from internal variable
 	void LoadState();
 
@@ -377,6 +379,7 @@ private:
 	mglPoint MaxS;		///< Saved upper edge of bounding box for graphics.
 	float MSS, ASS, FSS, ADS, MNS, CSS, LSS;	///< Saved state
 	bool saved;			///< State is saved
+	float prev_val;		///< previous value or zero (if no one)
 
 	mglPoint FMin;		///< Actual lower edge after transformation formulas.
 	mglPoint FMax;		///< Actual upper edge after transformation formulas.

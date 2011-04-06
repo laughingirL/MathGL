@@ -380,7 +380,7 @@ void mgl_cont_val(HMGL gr, HCDT v, HCDT z, const char *sch, const char *opt)
 void mgl_cont_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = isnan(r)?7:long(r);
+	long Num = isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
@@ -390,7 +390,7 @@ void mgl_cont_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 void mgl_cont(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = isnan(r)?7:long(r);
+	long Num = isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
@@ -578,7 +578,7 @@ void mgl_contf_val(HMGL gr, HCDT v, HCDT z, const char *sch, const char *opt)
 void mgl_contf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = isnan(r)?7:long(r);
+	long Num = isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
 	mglData v(Num);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf_xy_val(gr,&v,x,y,z,sch,0);
@@ -587,7 +587,7 @@ void mgl_contf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *
 void mgl_contf(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = isnan(r)?7:long(r);
+	long Num = isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
 	mglData v(Num);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf_val(gr,&v,z,sch,0);
@@ -844,7 +844,7 @@ void mgl_cont3_val(HMGL gr, HCDT v, HCDT a, char dir, float sVal, const char *sc
 void mgl_cont3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, char dir, float sVal, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = isnan(r)?7:long(r);
+	long Num = isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont3");	return;	}
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
@@ -854,7 +854,7 @@ void mgl_cont3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, char dir, float sVal
 void mgl_cont3(HMGL gr, HCDT a, char dir, float sVal, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = isnan(r)?7:long(r);
+	long Num = isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont3");	return;	}
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
@@ -1007,7 +1007,7 @@ void mgl_contf3_val(HMGL gr, HCDT v, HCDT a, char dir, float sVal, const char *s
 void mgl_contf3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, char dir, float sVal, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = isnan(r)?7:long(r);
+	long Num = isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"ContF3");	return;	}
 	mglData v(Num+2);
 	for(long i=0;i<Num+2;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i)/(Num+1);
@@ -1017,7 +1017,7 @@ void mgl_contf3_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, char dir, float sVa
 void mgl_contf3(HMGL gr, HCDT a, char dir, float sVal, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = isnan(r)?7:long(r);
+	long Num = isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"ContF3");	return;	}
 	mglData v(Num+2);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf3_val(gr,&v,a,dir,sVal,sch,0);
@@ -1228,7 +1228,7 @@ void mgl_axial_val(HMGL gr, HCDT v, HCDT a, const char *sch, const char *opt)
 void mgl_axial_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = isnan(r)?3:long(r);
+	long Num = isnan(r)?3:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Axial");	return;	}
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
@@ -1238,7 +1238,7 @@ void mgl_axial_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *sch, const char *
 void mgl_axial(HMGL gr, HCDT a, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
-	long Num = isnan(r)?3:long(r);
+	long Num = isnan(r)?3:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Axial");	return;	}
 	mglData v(Num);
 	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
