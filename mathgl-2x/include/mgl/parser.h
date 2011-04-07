@@ -198,13 +198,11 @@ private:
 	bool for_br;	///< Break is switched on (skip all comands until 'next')
 
 	/// Parse command
-	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var, const char *opt);
+	int Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wchar_t *var, const wchar_t *opt);
 	/// Fill arguments \a a from strings
 	void FillArg(mglGraph *gr, int n, wchar_t **arg, mglArg *a);
 	/// PreExecute stage -- parse some commands and create variables
 	int PreExec(mglGraph *gr, long n, wchar_t **arg, mglArg *a);
-	/// Process optional arguments
-	void ProcOpt(mglGraph *gr, wchar_t *str);
 	/// Execute program-flow control commands
 	int FlowExec(mglGraph *gr, const wchar_t *com, long n, mglArg *a);
 	/// Parse and execute the unicode string of MGL script
