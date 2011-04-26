@@ -55,6 +55,14 @@ AC_ARG_ENABLE(all,
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-all) ;;
 esac],[all=false])
 
+AC_ARG_ENABLE(langall,
+[  --enable-langall    Turn on all language interfaces],
+[case "${enableval}" in
+  yes) langall=true ;;
+  no)  langall=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-langall) ;;
+esac],[langall=false])
+
 AC_ARG_ENABLE(pthread,
 [  --enable-pthread    Turn on pthread support in MathGL library],
 [case "${enableval}" in
@@ -263,6 +271,46 @@ if (test x$all = xtrue || test x$qt = xtrue) ;then
 fi
 AM_CONDITIONAL(USE_QT, test x$test_qt = xtrue)
 
+AC_ARG_ENABLE(python,
+[  --enable-python    Turn on interface to python],
+[case "${enableval}" in
+  yes) python=true ;;
+  no)  python=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-python) ;;
+esac],[python=false])
+if (test x$langall = xtrue || test x$python = xtrue) ;then
+    AC_CHECK_PROG(PYTHON_HEADERS,python-config,`python-config --cflags`)
+    AC_CHECK_PROG(HAVE_SWIG,swig$EXEEXT,true)
+    if (test "$PYTHON_HEADERS" && test "$HAVE_SWIG") ;then
+        test_python=true
+        AM_PATH_PYTHON()
+    else
+        echo Please install python-dev and swig packages
+        exit
+    fi 
+fi
+AM_CONDITIONAL(USE_PYTHON, test x$test_python = xtrue )
+
+AC_ARG_ENABLE(octave,
+[  --enable-octave    Turn on interface to octave],
+[case "${enableval}" in
+  yes) octave=true ;;
+  no)  octave=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-octave) ;;
+esac],[octave=false])
+if (test x$langall = xtrue || test x$octave = xtrue) ;then
+    AC_CHECK_PROG([OCTAVE],[octave-config],[octave-config])
+# find Octave arch
+    AC_MSG_CHECKING([for Octave arch])
+    OCTAVE_ARCH=`$OCTAVE -p CANONICAL_HOST_TYPE`-`$OCTAVE -p API_VERSION`
+    OCTAVE_INCFLAGS="-I`$OCTAVE -p OCTINCLUDEDIR`"
+    AC_MSG_RESULT([$OCTAVE_ARCH])
+    AC_SUBST(OCTAVE_ARCH,[$OCTAVE_ARCH])
+    AC_SUBST(OCTAVE_INCFLAGS,[$OCTAVE_INCFLAGS])
+    test_octave=true
+fi
+AM_CONDITIONAL(USE_OCTAVE, test x$test_octave = xtrue )
+
 AM_CXXFLAGS="$AM_CXXFLAGS -Wall $GSL_FLAGS"
 AC_SUBST(AM_CXXFLAGS)
 
@@ -271,6 +319,7 @@ Makefile
 src/Makefile
 include/Makefile
 widget/Makefile
+lang/Makefile
 ])
 AC_OUTPUT
 

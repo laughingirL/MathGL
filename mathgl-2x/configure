@@ -677,6 +677,24 @@ am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
 AM_CXXFLAGS
+USE_OCTAVE_FALSE
+USE_OCTAVE_TRUE
+OCTAVE_INCFLAGS
+OCTAVE_ARCH
+OCTAVE
+USE_PYTHON_FALSE
+USE_PYTHON_TRUE
+pkgpyexecdir
+pyexecdir
+pkgpythondir
+pythondir
+PYTHON_PLATFORM
+PYTHON_EXEC_PREFIX
+PYTHON_PREFIX
+PYTHON_VERSION
+PYTHON
+HAVE_SWIG
+PYTHON_HEADERS
 USE_QT_FALSE
 USE_QT_TRUE
 QT_VERSION
@@ -860,6 +878,7 @@ with_sysroot
 enable_libtool_lock
 enable_double
 enable_all
+enable_langall
 enable_pthread
 enable_gsl
 enable_hdf5
@@ -871,6 +890,8 @@ enable_pdf
 enable_fltk
 enable_qt
 with_qt
+enable_python
+enable_octave
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1515,6 +1536,7 @@ Optional Features:
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --enable-double    Turn on double precision in MathGL library
   --enable-all    Turn on all features
+  --enable-langall    Turn on all language interfaces
   --enable-pthread    Turn on pthread support in MathGL library
   --enable-gsl    Turn on gsl functions
   --enable-hdf5    Turn on hdf5
@@ -1525,6 +1547,8 @@ Optional Features:
   --enable-pdf    Turn on u3d and pdf functions
   --enable-fltk    Turn on fltk
   --enable-qt    Turn on Qt
+  --enable-python    Turn on interface to python
+  --enable-octave    Turn on interface to octave
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -8655,10 +8679,6 @@ _lt_linker_boilerplate=`cat conftest.err`
 $RM -r conftest*
 
 
-## CAVEAT EMPTOR:
-## There is no encapsulation within the following macros, do not change
-## the running order or otherwise move them around unless you know exactly
-## what you are doing...
 if test -n "$compiler"; then
 
 lt_prog_compiler_no_builtin_flag=
@@ -15450,6 +15470,18 @@ else
 fi
 
 
+# Check whether --enable-langall was given.
+if test "${enable_langall+set}" = set; then :
+  enableval=$enable_langall; case "${enableval}" in
+  yes) langall=true ;;
+  no)  langall=false ;;
+  *) as_fn_error $? "bad value ${enableval} for --enable-langall" "$LINENO" 5 ;;
+esac
+else
+  langall=false
+fi
+
+
 # Check whether --enable-pthread was given.
 if test "${enable_pthread+set}" = set; then :
   enableval=$enable_pthread; case "${enableval}" in
@@ -17067,10 +17099,357 @@ else
 fi
 
 
+# Check whether --enable-python was given.
+if test "${enable_python+set}" = set; then :
+  enableval=$enable_python; case "${enableval}" in
+  yes) python=true ;;
+  no)  python=false ;;
+  *) as_fn_error $? "bad value ${enableval} for --enable-python" "$LINENO" 5 ;;
+esac
+else
+  python=false
+fi
+
+if (test x$langall = xtrue || test x$python = xtrue) ;then
+    # Extract the first word of "python-config", so it can be a program name with args.
+set dummy python-config; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_PYTHON_HEADERS+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$PYTHON_HEADERS"; then
+  ac_cv_prog_PYTHON_HEADERS="$PYTHON_HEADERS" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_PYTHON_HEADERS="`python-config --cflags`"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+PYTHON_HEADERS=$ac_cv_prog_PYTHON_HEADERS
+if test -n "$PYTHON_HEADERS"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PYTHON_HEADERS" >&5
+$as_echo "$PYTHON_HEADERS" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+    # Extract the first word of "swig$EXEEXT", so it can be a program name with args.
+set dummy swig$EXEEXT; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_HAVE_SWIG+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$HAVE_SWIG"; then
+  ac_cv_prog_HAVE_SWIG="$HAVE_SWIG" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_HAVE_SWIG="true"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+HAVE_SWIG=$ac_cv_prog_HAVE_SWIG
+if test -n "$HAVE_SWIG"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $HAVE_SWIG" >&5
+$as_echo "$HAVE_SWIG" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+    if (test "$PYTHON_HEADERS" && test "$HAVE_SWIG") ;then
+        test_python=true
+
+
+
+
+        # Find any Python interpreter.
+    if test -z "$PYTHON"; then
+      for ac_prog in python python2 python3 python3.0 python2.5 python2.4 python2.3 python2.2 python2.1 python2.0
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_PYTHON+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $PYTHON in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PYTHON="$PYTHON" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_PYTHON="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+PYTHON=$ac_cv_path_PYTHON
+if test -n "$PYTHON"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PYTHON" >&5
+$as_echo "$PYTHON" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+  test -n "$PYTHON" && break
+done
+test -n "$PYTHON" || PYTHON=":"
+
+    fi
+    am_display_PYTHON=python
+
+
+  if test "$PYTHON" = :; then
+      as_fn_error $? "no suitable Python interpreter found" "$LINENO" 5
+  else
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $am_display_PYTHON version" >&5
+$as_echo_n "checking for $am_display_PYTHON version... " >&6; }
+if ${am_cv_python_version+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  am_cv_python_version=`$PYTHON -c "import sys; sys.stdout.write(sys.version[:3])"`
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_python_version" >&5
+$as_echo "$am_cv_python_version" >&6; }
+  PYTHON_VERSION=$am_cv_python_version
+
+
+
+  PYTHON_PREFIX='${prefix}'
+
+  PYTHON_EXEC_PREFIX='${exec_prefix}'
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $am_display_PYTHON platform" >&5
+$as_echo_n "checking for $am_display_PYTHON platform... " >&6; }
+if ${am_cv_python_platform+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  am_cv_python_platform=`$PYTHON -c "import sys; sys.stdout.write(sys.platform)"`
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_python_platform" >&5
+$as_echo "$am_cv_python_platform" >&6; }
+  PYTHON_PLATFORM=$am_cv_python_platform
+
+
+
+
+                { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $am_display_PYTHON script directory" >&5
+$as_echo_n "checking for $am_display_PYTHON script directory... " >&6; }
+if ${am_cv_python_pythondir+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test "x$prefix" = xNONE
+     then
+       am_py_prefix=$ac_default_prefix
+     else
+       am_py_prefix=$prefix
+     fi
+     am_cv_python_pythondir=`$PYTHON -c "import sys; from distutils import sysconfig; sys.stdout.write(sysconfig.get_python_lib(0,0,prefix='$am_py_prefix'))" 2>/dev/null ||
+     echo "$PYTHON_PREFIX/lib/python$PYTHON_VERSION/site-packages"`
+     case $am_cv_python_pythondir in
+     $am_py_prefix*)
+       am__strip_prefix=`echo "$am_py_prefix" | sed 's|.|.|g'`
+       am_cv_python_pythondir=`echo "$am_cv_python_pythondir" | sed "s,^$am__strip_prefix,$PYTHON_PREFIX,"`
+       ;;
+     *)
+       case $am_py_prefix in
+         /usr|/System*) ;;
+         *)
+	  am_cv_python_pythondir=$PYTHON_PREFIX/lib/python$PYTHON_VERSION/site-packages
+	  ;;
+       esac
+       ;;
+     esac
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_python_pythondir" >&5
+$as_echo "$am_cv_python_pythondir" >&6; }
+  pythondir=$am_cv_python_pythondir
+
+
+
+  pkgpythondir=\${pythondir}/$PACKAGE
+
+
+            { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $am_display_PYTHON extension module directory" >&5
+$as_echo_n "checking for $am_display_PYTHON extension module directory... " >&6; }
+if ${am_cv_python_pyexecdir+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test "x$exec_prefix" = xNONE
+     then
+       am_py_exec_prefix=$am_py_prefix
+     else
+       am_py_exec_prefix=$exec_prefix
+     fi
+     am_cv_python_pyexecdir=`$PYTHON -c "import sys; from distutils import sysconfig; sys.stdout.write(sysconfig.get_python_lib(1,0,prefix='$am_py_exec_prefix'))" 2>/dev/null ||
+     echo "$PYTHON_EXEC_PREFIX/lib/python$PYTHON_VERSION/site-packages"`
+     case $am_cv_python_pyexecdir in
+     $am_py_exec_prefix*)
+       am__strip_prefix=`echo "$am_py_exec_prefix" | sed 's|.|.|g'`
+       am_cv_python_pyexecdir=`echo "$am_cv_python_pyexecdir" | sed "s,^$am__strip_prefix,$PYTHON_EXEC_PREFIX,"`
+       ;;
+     *)
+       case $am_py_exec_prefix in
+         /usr|/System*) ;;
+         *)
+	   am_cv_python_pyexecdir=$PYTHON_EXEC_PREFIX/lib/python$PYTHON_VERSION/site-packages
+	   ;;
+       esac
+       ;;
+     esac
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_python_pyexecdir" >&5
+$as_echo "$am_cv_python_pyexecdir" >&6; }
+  pyexecdir=$am_cv_python_pyexecdir
+
+
+
+  pkgpyexecdir=\${pyexecdir}/$PACKAGE
+
+
+
+  fi
+
+
+    else
+        echo Please install python-dev and swig packages
+        exit
+    fi
+fi
+ if test x$test_python = xtrue ; then
+  USE_PYTHON_TRUE=
+  USE_PYTHON_FALSE='#'
+else
+  USE_PYTHON_TRUE='#'
+  USE_PYTHON_FALSE=
+fi
+
+
+# Check whether --enable-octave was given.
+if test "${enable_octave+set}" = set; then :
+  enableval=$enable_octave; case "${enableval}" in
+  yes) octave=true ;;
+  no)  octave=false ;;
+  *) as_fn_error $? "bad value ${enableval} for --enable-octave" "$LINENO" 5 ;;
+esac
+else
+  octave=false
+fi
+
+if (test x$langall = xtrue || test x$octave = xtrue) ;then
+    # Extract the first word of "octave-config", so it can be a program name with args.
+set dummy octave-config; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_OCTAVE+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$OCTAVE"; then
+  ac_cv_prog_OCTAVE="$OCTAVE" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_OCTAVE="octave-config"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+OCTAVE=$ac_cv_prog_OCTAVE
+if test -n "$OCTAVE"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $OCTAVE" >&5
+$as_echo "$OCTAVE" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+# find Octave arch
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for Octave arch" >&5
+$as_echo_n "checking for Octave arch... " >&6; }
+    OCTAVE_ARCH=`$OCTAVE -p CANONICAL_HOST_TYPE`-`$OCTAVE -p API_VERSION`
+    OCTAVE_INCFLAGS="-I`$OCTAVE -p OCTINCLUDEDIR`"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $OCTAVE_ARCH" >&5
+$as_echo "$OCTAVE_ARCH" >&6; }
+    OCTAVE_ARCH=$OCTAVE_ARCH
+
+    OCTAVE_INCFLAGS=$OCTAVE_INCFLAGS
+
+    test_octave=true
+fi
+ if test x$test_octave = xtrue ; then
+  USE_OCTAVE_TRUE=
+  USE_OCTAVE_FALSE='#'
+else
+  USE_OCTAVE_TRUE='#'
+  USE_OCTAVE_FALSE=
+fi
+
+
 AM_CXXFLAGS="$AM_CXXFLAGS -Wall $GSL_FLAGS"
 
 
-ac_config_files="$ac_config_files Makefile src/Makefile include/Makefile widget/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile include/Makefile widget/Makefile lang/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -17239,6 +17618,14 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${USE_QT_TRUE}" && test -z "${USE_QT_FALSE}"; then
   as_fn_error $? "conditional \"USE_QT\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${USE_PYTHON_TRUE}" && test -z "${USE_PYTHON_FALSE}"; then
+  as_fn_error $? "conditional \"USE_PYTHON\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${USE_OCTAVE_TRUE}" && test -z "${USE_OCTAVE_FALSE}"; then
+  as_fn_error $? "conditional \"USE_OCTAVE\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -18231,6 +18618,7 @@ do
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "include/Makefile") CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
     "widget/Makefile") CONFIG_FILES="$CONFIG_FILES widget/Makefile" ;;
+    "lang/Makefile") CONFIG_FILES="$CONFIG_FILES lang/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
