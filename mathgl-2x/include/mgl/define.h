@@ -59,7 +59,7 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define isnan(a)		((a)!=(a))
 #endif
 //-----------------------------------------------------------------------------
-//#include <mgl/config.h>
+#include <mgl/config.h>
 //-----------------------------------------------------------------------------
 #if(MGL_USE_DOUBLE==1)
 typedef double mreal;

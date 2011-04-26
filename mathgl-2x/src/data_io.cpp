@@ -793,13 +793,13 @@ void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v
 void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 {
 #ifdef HAVE_HDF4
-	long sd = SDstart(fname,DFACC_READ), nn, i;
+	int32 sd = SDstart(fname,DFACC_READ), nn, i;
 	if(sd==-1)	return;	// is not a HDF4 file
 	char name[64];
 	SDfileinfo(sd,&nn,&i);
 	for(i=0;i<nn;i++)
 	{
-		long sds, rank, dims[32], type, attr, in[2]={0,0};
+		int32 sds, rank, dims[32], type, attr, in[2]={0,0};
 		sds = SDselect(sd,i);
 		SDgetinfo(sds,name,&rank,dims,&type,&attr);
 		if(!strcmp(name,data))	// as I understand there are possible many datas with the same name

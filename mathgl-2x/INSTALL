@@ -1,0 +1,7 @@
+Installation is simple. Just execute:
+./configure
+make
+make install
+
+Sometimes you also need to update yours library list. To do that just execute:
+ldconfig
