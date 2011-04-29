@@ -439,7 +439,7 @@ void mgl_flowp_xy(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT ax
 		}
 	}
 	mglData xx(x), yy(y), bx(ax), by(ay);
-	flow(false, p.z, u, v, xx, yy, bx, by,ss);
+	flow(gr, p.z, u, v, xx, yy, bx, by,ss);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -658,7 +658,7 @@ void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z
 		}
 	}
 	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
-	flow(false, u, v, w, xx, yy, zz, bx, by, bz,ss);
+	flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------

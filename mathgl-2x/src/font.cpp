@@ -600,19 +600,22 @@ bool mglFont::read_data(const char *fname, float *ff, short *wdt, short *numl,
 	char str[256];
 	int tmpw, tmpnl, tmpnt;
 	unsigned s,n, tmpi, tmppl, tmppt;
-	register long i,j,ch;
+	register long i,j,ch,retVal;
 	fp = gzopen(fname,"r");	if(!fp)	return false;	// false if no file
 	// first string is comment (not used), second string have information
 	if(!gzgets(fp,str,256) || !gzgets(fp,str,256))
 	{	gzclose(fp);	return false;	}
-	sscanf(str, "%u%f%d", &n, ff, &s);
+	retVal = sscanf(str, "%u%f%d", &n, ff, &s);
+	//Check sscanf read all data  (3 items)
+	if(retVal != 3)	{	gzclose(fp);	return false;	}
 	buf = (short *)realloc(buf, (cur+s)*sizeof(short));	// prealocate buffer
-	if(!buf)	{	gzclose(fp);	return false;	}
+	if(!buf)		{	gzclose(fp);	return false;	}
 
 	for(i=0;i<n;i++)
 	{
 		gzgets(fp,str,256);
-		sscanf(str,"%u%d%d%u%d%u", &tmpi, &tmpw, &tmpnl, &tmppl, &tmpnt, &tmppt);
+		retVal = sscanf(str,"%u%d%d%u%d%u", &tmpi, &tmpw, &tmpnl, &tmppl, &tmpnt, &tmppt);
+		if(retVal != 6)	{	gzclose(fp);	free(buf);	return false;	}
 		j=Internal(unsigned(tmpi));	if(j<0)	continue;
 		if(wdt)	wdt[j] = tmpw;
 		numl[j] = tmpnl;	posl[j] = tmppl+cur;
@@ -676,7 +679,7 @@ bool mglFont::Load(const char *base, const char *path)
 	sep='\\';
 #endif
 	char str[256];
-	setlocale(LC_NUMERIC,"C");
+	const char *oldLocale = setlocale(LC_NUMERIC,"C");
 	unsigned cur=0;
 	if(!path)	path = MGL_FONT_PATH;
 	if(base)
@@ -694,7 +697,8 @@ bool mglFont::Load(const char *base, const char *path)
 
 	sprintf(str,"%s%c%s.vfm",path,sep,base);
 	if(!base || !read_main(str,cur))
-	{	read_def(cur);	if(buf)	delete []buf;	return true;	}
+	{	read_def(cur);	setlocale(LC_NUMERIC,oldLocale);
+		if(buf)	delete []buf;	return true;	}
 
 	//================== bold ===========================================
 	sprintf(str,"%s%c%s_b.vfm",path,sep,base);	// this file may absent
@@ -721,6 +725,7 @@ bool mglFont::Load(const char *base, const char *path)
 	// Finally normalize all factors
 	fact[0] *= mgl_fgen;	fact[1] *= mgl_fgen;
 	fact[2] *= mgl_fgen;	fact[3] *= mgl_fgen;
+	setlocale(LC_NUMERIC,oldLocale);
 	if(buf)	delete []buf;
 	return true;
 }
