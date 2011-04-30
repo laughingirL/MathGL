@@ -517,7 +517,7 @@ LoopStartSSE2:
 }
 #endif
 
-#if defined( __GNUC__ ) && ( defined( LINUX ) || defined( MAC32 ) || defined( __linux__ ) || defined( __APPLE__ ) )
+#if defined( __GNUC__ ) && ( defined( LINUX ) || defined( MAC32 ) || defined( __linux__ ) || defined( __APPLE__ ) || defined( __MINGW32__ ) )
 void UpdateCumulativeCountSSE2(U32 uLoopCount, U16 *pu16Start)
 {
   asm __volatile__ (
@@ -649,7 +649,7 @@ LoopStartRED4:
 }
 #endif
 
-#if defined( __GNUC__ ) && ( defined( LINUX ) || defined( MAC32 ) || defined( __linux__ ) || defined( __APPLE__ ) )
+#if defined( __GNUC__ ) && ( defined( LINUX ) || defined( MAC32 ) || defined( __linux__ ) || defined( __APPLE__ ) || defined( __MINGW32__ ) )
 void UpdateCumulativeCountMMX(U32 uLoopCount, U16 *pu16Start)
 {
   asm __volatile__ (

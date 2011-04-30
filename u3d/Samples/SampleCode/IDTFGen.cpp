@@ -119,11 +119,7 @@ using namespace U3D_IDTF;
   @return  int   The last result code.
 */
 
-#ifdef WIN32
-int wmain(int argc, wchar_t* argw[])
-#else
-int main(int argc, char* argv[])
-#endif
+int main()
 {		
 	IFXRESULT result = IFX_OK;
 

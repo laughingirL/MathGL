@@ -23,6 +23,10 @@
 #include <wchar.h>
 #include "IFXVertexWeight.h"
 
+#if __MINGW32__
+#define swprintf _snwprintf
+#endif
+
 /**
 	Generates a string representing the contents of this VertexWeight. 
 

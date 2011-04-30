@@ -31,6 +31,9 @@
 #include "IFXOSLoader.h"
 #include <wtypes.h>
 
+#if __MINGW32__
+#define swprintf _snwprintf
+#endif
 
 //***************************************************************************
 //	Local data

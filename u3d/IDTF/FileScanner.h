@@ -49,7 +49,7 @@ namespace U3D_IDTF
 //  Constants
 //***************************************************************************
 
-const U32 MAX_STRING_LENGTH = 256;
+const U32 MAX_STRING_LENGTH = 128*256;
 
 const U32 IDTF_INVALID = 0;
 const U32 IDTF_BEGIN_BLOCK = '{';

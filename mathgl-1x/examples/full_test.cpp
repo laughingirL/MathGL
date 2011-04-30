@@ -45,9 +45,7 @@ mglTestMode=true;
 	parser->Execute(gr, "xlabel 'x'\nylabel 'y'\nbox");
 	// also you may use cycles or conditions in script
 	parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
-mglTest("7");
 	delete parser;
-mglTest("8");
 	return 0;
 
 	mglParse par;

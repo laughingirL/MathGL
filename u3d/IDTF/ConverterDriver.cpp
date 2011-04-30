@@ -116,12 +116,20 @@ FILE *stdmsg = stdout;
 #endif
 
 #ifdef WIN32
+#ifdef __MINGW32__
+int main()
+#else
 int wmain(int argc, wchar_t* argw[])
+#endif
 #else
 int main(int argc, char* argv[])
 #endif
 {		
 	IFXRESULT result = IFX_OK;
+#ifdef __MINGW32__
+	wchar_t **argw = NULL;
+	int argc=0;
+#endif
 #ifndef WIN32
 	wchar_t **argw = NULL;
 	int i;
@@ -132,6 +140,9 @@ int main(int argc, char* argv[])
 
 	if( IFXSUCCESS(result) )
 	{
+#ifdef __MINGW32__
+		argw = CommandLineToArgvW(GetCommandLineW(), &argc);
+#endif
 #ifndef WIN32
 		argw = (wchar_t**)malloc(argc*sizeof(wchar_t*));
 		if (argw == NULL)
@@ -258,6 +269,9 @@ int main(int argc, char* argv[])
 	
 	IFXDEBUG_SHUTDOWN();
 
+#ifdef __MINGW32__
+	LocalFree(argw);
+#endif
 #ifndef WIN32
 	if (argw != NULL)
 	{
