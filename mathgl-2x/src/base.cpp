@@ -54,6 +54,7 @@ mglBase::mglBase()
 	memset(this,0,sizeof(mglBase));	InUse = 1;	num=1024;	prev_val = NAN;
 	pnt = (float *)malloc(12*num*sizeof(float));
 	txt = (mglTexture *)malloc(2*sizeof(mglTexture));
+	memset(pnt,0,12*num*sizeof(float));
 	memset(txt,0,2*sizeof(mglTexture));
 	// Always create default palette txt[0] and default scheme txt[1]
 	txt[0].Set(MGL_DEF_PAL,-1);		txt[1].Set("BbcyrR",1);	numT=2;
@@ -110,7 +111,8 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, bool scl)	// NOTE
 	float pp[12]={p.x,p.y,p.z,c, a,n.x,n.y,n.z, 0,0,0,0};
 	txt[long(c)].GetC(c,a,pp+8);
 	if(pos>=num)
-	{	num+=1024;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
+	{	num+=1024;	pnt=(float *)realloc(pnt,12*num*sizeof(float));
+		memset(pnt+12*(num-1024),0,12*1024*sizeof(float));	}
 	memcpy(pnt+pos*12,pp,12*sizeof(float));	pos++;
 	return pos-1;
 }
@@ -596,6 +598,7 @@ float mglBase::AddTexture(char col)
 	// add new texture
 	txt = (mglTexture *)realloc(txt,(numT+1)*sizeof(mglTexture));
 	mglTexture *t=txt+numT;
+	memset(t,0,sizeof(mglTexture));
 	for(i=0;i<514;i++)	t->col[i]=c;	numT++;
 	return numT-1;
 }

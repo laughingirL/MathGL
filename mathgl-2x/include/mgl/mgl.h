@@ -287,6 +287,13 @@ public:
 	inline void Error(mglPoint p, mglPoint e, const char *pen="k")
 	{	mgl_error_box(gr, p.x, p.y, p.z, e.x, e.y, e.z, pen);	}
 
+	inline void Ellipse(mglPoint p1, mglPoint p2, float r, const char *stl="r")
+	{	mgl_ellipse(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, r,stl);	}
+	inline void Circle(mglPoint p, float r, const char *stl="r")
+	{	mgl_ellipse(gr, p.x, p.y, p.z, p.x, p.y, p.z, r,stl);	}
+	inline void Rhomb(mglPoint p1, mglPoint p2, float r, const char *stl="r")
+	{	mgl_rhomb(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, r,stl);	}
+
 	inline void Putsw(mglPoint p,const wchar_t *text,const char *font="C",float size=-1)
 	{	mgl_putsw(gr, p.x, p.y, p.z, text, font, size);	}
 	inline void Puts(mglPoint p,const char *text,const char *font="C",float size=-1)

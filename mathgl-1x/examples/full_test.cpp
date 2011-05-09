@@ -204,6 +204,7 @@ void smgl_fonts(mglGraph *gr)	// ticks features
 	gr->LoadFont("pagella");	gr->Puts(mglPoint(0,h-7*d), "pagella font");
 	gr->LoadFont("schola");		gr->Puts(mglPoint(0,h-8*d), "schola font");
 	gr->LoadFont("termes");		gr->Puts(mglPoint(0,h-9*d), "termes font");
+	gr->LoadFont("STIX");
 }
 //-----------------------------------------------------------------------------
 void smgl_stick(mglGraph *gr)	// column plot

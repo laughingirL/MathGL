@@ -240,6 +240,67 @@ void mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal 
 	mgl_cone(_GR_, *x1,*y1,*z1, *x2,*y2,*z2,*r1,*r2,s,*edge);	delete []s;	}
 //-----------------------------------------------------------------------------
 //
+//	Ellipse & Rhomb
+//
+//-----------------------------------------------------------------------------
+void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl)
+{
+	const int n = 41;
+	long pal,n0,n1=-1,n2,m1=-1,m2;
+	gr->SetPenPal(stl,&pal);
+	float c=gr->NextColor(pal);
+	float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
+	bool wire = !(stl && strchr(stl,'#'));
+
+	gr->Reserve(2*n+1);
+	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), v=p2-p1, u=mglPoint(0,0,1)^v, q=u^v, p, s;
+	u = (r/Norm(u))*u;	s = (p1+p2)/2.;	v *=0.5+r/Norm(v);
+	// central point first
+	p = p1;	gr->ScalePoint(p,false);	n0 = gr->AddPnt(p,c,q);
+	for(long i=0;i<n;i++)
+	{
+		float t = i*2*M_PI/(n-1.);
+		p = s+v*cos(t)+u*sin(t);	gr->ScalePoint(p,false);
+		n2 = n1;	n1 = gr->AddPnt(p,c,q);
+		m2 = m1;	m1 = gr->CopyNtoC(n1,k);
+		if(i>0)
+		{
+			if(wire)	gr->trig_plot(n0,n1,n2);
+			gr->line_plot(m1,m2);
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+void mgl_rhomb(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl)
+{
+	long pal, n1,n2,n3,n4;
+	gr->SetPenPal(stl,&pal);
+	float c=gr->NextColor(pal);
+	float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
+	bool wire = !(stl && strchr(stl,'#'));
+	gr->Reserve(8);
+	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), u=mglPoint(0,0,1)^(p1-p2), q=u^(p1-p2), p, s;
+	u = (r/Norm(u))*u;	s = (p1+p2)/2.;
+	p = p1;		gr->ScalePoint(p,false);	n1 = gr->AddPnt(p,c,q);
+	p = s+u;	gr->ScalePoint(p,false);	n2 = gr->AddPnt(p,c,q);
+	p = p2;		gr->ScalePoint(p,false);	n3 = gr->AddPnt(p,c,q);
+	p = s-u;	gr->ScalePoint(p,false);	n4 = gr->AddPnt(p,c,q);
+	if(wire)	gr->quad_plot(n1,n2,n3,n4);
+	n1 = gr->CopyNtoC(n1,k);	n2 = gr->CopyNtoC(n2,k);
+	n3 = gr->CopyNtoC(n3,k);	n4 = gr->CopyNtoC(n4,k);
+	gr->line_plot(n1,n2);	gr->line_plot(n2,n3);
+	gr->line_plot(n3,n4);	gr->line_plot(n4,n1);
+}
+//-----------------------------------------------------------------------------
+void mgl_ellipse_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r, const char *stl,int l)
+{	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	mgl_ellipse(_GR_,*x1,*y1,*z1,*x2,*y2,*z2,*r,s);	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_rhomb_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r, const char *stl,int l)
+{	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
+	mgl_rhomb(_GR_,*x1,*y1,*z1,*x2,*y2,*z2,*r,s);	delete []s;	}
+//-----------------------------------------------------------------------------
+//
 //	Sphere & Drop
 //
 //-----------------------------------------------------------------------------

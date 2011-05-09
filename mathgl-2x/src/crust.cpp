@@ -375,11 +375,13 @@ long mgl_insert_trig(long i1,long i2,long i3,long **n)
 	{
 		Max = 1024;		Cur = 0;
 		*n = (long *)malloc(Max*3*sizeof(long));
+		memset(*n,0,Max*3*sizeof(long));
 	}
 	if(Cur>=Max)
 	{
 		Max += 1024;
 		*n = (long *)realloc(*n,Max*3*sizeof(long));
+		memset(*n+3*(Max-1024),0,3*1024*sizeof(long));
 	}
 	long *nn = *n;
 	register long i,ii,k1;

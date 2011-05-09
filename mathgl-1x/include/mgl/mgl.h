@@ -186,7 +186,7 @@ public:
 	/// Write the frame in file (depending extension, write current frame if fname is empty)
 	void WriteFrame(const char *fname=0, const char *descr=0);
 	/// Show currently produced image by Qt or FLTK library
-	void ShowImage(const char *viewer=0, bool keep=false);
+	void ShowImage(const char *viewer, bool keep=false);
 	//@}
 	/// Create new frame.
 	virtual int NewFrame();

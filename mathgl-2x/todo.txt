@@ -12,9 +12,8 @@
 5. opengl
 6. widgets
 7. stfa
-8. build system
-9. unify plotting functions as ({req.arg},const char *style="", const char *option=""), where "option" is the same as in MGL (i.e. [xyzc]range; alpha; value; meshnum; ...)
-10. memset(??",0,???) after each malloc(), realloc() !
+8. ScalePoint() into AddPnt() + scaling both p & n
+9. Bugfix for colors in trig_plot, line_plot inside glyph
 
 ============= NEW  =============
 
@@ -32,7 +31,7 @@
 
 03. Arrows at flow lines ?!!
 04. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
-05. mgl_circle_ext(x,y,z,r,col,dx,dy,dz) + mgl_circle(x,y,r,col) as primitive (here d={dx,dy,dz} is focal half-distance --> a^2=r^2+d^2 and )
+05. Check Ellipse(), Rhomb(), Circle() and add dual colors + color from Texture (?)
 06. Box() + edges + half-transparent
 07. parallelisation of drawing
 08. Add plot Circle() as Error() but with marks instead of error boxes (default 'o') + alpha-transpared if filled
@@ -43,7 +42,7 @@
 13. Add apperture for light (partially is done)
 14. Add diffusive light (no dependence of normale but have direction)
 15. Pipes in mgl2png, mgl2eps, ... (stdin, stdout)
-16. Venn() diagram-like -- transparent circles with manual colors and sizes -- may be a variant of Mark()???
+16. Venn() diagram sample
 17. swap color and font style in text option ('bR:r' -> 'r:bR')
 18. Quaternary diagrams plotted in a tetrahedron: equivalent to ternary diagrams, but in 3D.
 19. Allow interpolation in MGL if argument is not integer ???

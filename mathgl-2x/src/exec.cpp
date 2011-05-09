@@ -659,10 +659,83 @@ void mglc_cone(wchar_t out[1024], long , mglArg *a, int [10], const char *)
 	if(ok)
 	{
 		if(a[7].type==2)
-			mglprintf(out,1024,L"gr->Cone(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, %g, \"%s\", %s);", a[0].v,a[1].v,a[2].v, a[3].v,a[4].v,a[5].v, a[6].v, a[7].v, (a[8].type==1) ? a[8].s : "", (a[9].type==2 && a[9].v!=0) ? "true" : "false");
+			mglprintf(out,1024,L"gr->Cone(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, %g, \"%s\", %s);", a[0].v,a[1].v,a[2].v, a[3].v,a[4].v,a[5].v, a[6].v, a[7].v, (a[8].type==2) ? a[8].s : "", (a[9].type==2 && a[9].v!=0) ? "true" : "false");
 		else
-			mglprintf(out,1024,L"gr->Cone(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, -1, \"%s\", %s);", a[0].v,a[1].v,a[2].v, a[3].v,a[4].v,a[5].v, a[6].v, (a[7].type==1) ? a[7].s : "", (a[8].type==2 && a[8].v!=0)? "true" : "false");
+			mglprintf(out,1024,L"gr->Cone(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, -1, \"%s\", %s);", a[0].v,a[1].v,a[2].v, a[3].v,a[4].v,a[5].v, a[6].v, (a[7].type==2) ? a[7].s : "", (a[8].type==2 && a[8].v!=0)? "true" : "false");
 	}
+}
+//-----------------------------------------------------------------------------
+int mgls_ellipse(mglGraph *gr, long , mglArg *a, int [10], const char *)
+{
+	int i;
+	for(i=0;i<7;i++)	if(a[i].type!=2)
+	{	i--;	break;	}
+	if(i==6)
+		gr->Ellipse(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v),
+				a[6].v, a[7].type==2?a[7].s:"r");
+	else if(i==4)
+		gr->Ellipse(mglPoint(a[0].v,a[1].v), mglPoint(a[2].v,a[3].v),
+				a[4].v, a[5].type==2?a[5].s:"r");
+	else	return 1;
+	return 0;
+}
+void mglc_ellipse(wchar_t out[1024], long , mglArg *a, int [10], const char *)
+{
+	int i;
+	for(i=0;i<7;i++)	if(a[i].type!=2)	{	i--;	break;	}
+	if(i==6)
+		mglprintf(out,1024,L"gr->Ellipse(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, \"%s\");", a[0].v,a[1].v,a[2].v, a[3].v,a[4].v,a[5].v, a[6].v, (a[7].type==2) ? a[7].s : "r");
+	else if(i==4)
+		mglprintf(out,1024,L"gr->Ellipse(mglPoint(%g, %g), mglPoint(%g, %g), %g, \"%s\");", a[0].v,a[1].v,a[2].v,a[3].v,a[4].v, (a[5].type==2) ? a[5].s : "r");
+}
+//-----------------------------------------------------------------------------
+int mgls_circle(mglGraph *gr, long , mglArg *a, int [10], const char *)
+{
+	int i;
+	for(i=0;i<4;i++)	if(a[i].type!=2)	{	i--;	break;	}
+	if(i==3)
+		gr->Ellipse(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[0].v,a[1].v,a[2].v),
+				a[3].v, a[4].type==2?a[4].s:"r");
+	else if(i==2)
+		gr->Ellipse(mglPoint(a[0].v,a[1].v), mglPoint(a[0].v,a[1].v),
+				a[2].v, a[3].type==2?a[3].s:"r");
+	else	return 1;
+	return 0;
+}
+void mglc_circle(wchar_t out[1024], long , mglArg *a, int [10], const char *)
+{
+	int i;
+	for(i=0;i<4;i++)	if(a[i].type!=2)
+	{	i--;	break;	}
+	if(i==3)
+		mglprintf(out,1024,L"gr->Ellipse(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, \"%s\");", a[0].v,a[1].v,a[2].v, a[0].v,a[1].v,a[2].v, a[3].v, (a[4].type==2) ? a[4].s : "r");
+	else if(i==2)
+		mglprintf(out,1024,L"gr->Ellipse(mglPoint(%g, %g), mglPoint(%g, %g), %g, \"%s\");", a[0].v,a[1].v,a[0].v,a[1].v, a[2].v, (a[3].type==2) ? a[3].s : "r");
+}
+//-----------------------------------------------------------------------------
+int mgls_rhomb(mglGraph *gr, long , mglArg *a, int [10], const char *)
+{
+	int i;
+	for(i=0;i<7;i++)	if(a[i].type!=2)
+	{	i--;	break;	}
+	if(i==6)
+		gr->Rhomb(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v),
+				a[6].v, a[7].type==2?a[7].s:"r");
+	else if(i==4)
+		gr->Rhomb(mglPoint(a[0].v,a[1].v), mglPoint(a[2].v,a[3].v),
+				a[4].v, a[5].type==2?a[5].s:"r");
+	else	return 1;
+	return 0;
+}
+void mglc_rhomb(wchar_t out[1024], long , mglArg *a, int [10], const char *)
+{
+	int i;
+	for(i=0;i<7;i++)	if(a[i].type!=2)
+	{	i--;	break;	}
+	if(i==6)
+		mglprintf(out,1024,L"gr->Rhomb(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, \"%s\");", a[0].v,a[1].v,a[2].v, a[3].v,a[4].v,a[5].v, a[6].v, (a[7].type==2) ? a[7].s : "r");
+	else if(i==4)
+		mglprintf(out,1024,L"gr->Rhomb(mglPoint(%g, %g), mglPoint(%g, %g), %g, \"%s\");", a[0].v,a[1].v,a[2].v, a[3].v,a[4].v, (a[5].type==2) ? a[5].s : "r");
 }
 //-----------------------------------------------------------------------------
 int mgls_dens(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)

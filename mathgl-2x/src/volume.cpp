@@ -235,6 +235,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 	float c=gr->GetC(ss,val);
 	long numK = n*m, posN = gr->GetPos(), pos;
 	mglPoint *kk = (mglPoint *)malloc(numK*sizeof(mglPoint));
+	memset(kk,0,numK*sizeof(mglPoint));
 
 	mglPoint p,q,u;
 	for(k=0;k<l;k++)
@@ -397,6 +398,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	float c=gr->GetC(ss,val),aa;
 	long numK = n*m, posN = gr->GetPos(), pos;
 	mglPoint *kk = (mglPoint *)malloc(numK*sizeof(mglPoint));
+	memset(kk,0,numK*sizeof(mglPoint));
 
 	mglPoint p,q,u;
 	for(k=0;k<l;k++)
@@ -564,6 +566,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	float c;
 	long numK = n*m, posN = gr->GetPos(), pos;
 	mglPoint *kk = (mglPoint *)malloc(numK*sizeof(mglPoint));
+	memset(kk,0,numK*sizeof(mglPoint));
 
 	mglPoint p,q,u;
 	for(k=0;k<l;k++)

@@ -42,6 +42,8 @@ void mgl_facez(HMGL gr, float x0, float y0, float z0, float wx, float wy, const 
 void mgl_sphere(HMGL gr, float x, float y, float z, float r, const char *stl);
 void mgl_drop(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl, float shift, float ap);
 void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl, int edge);
+void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl);
+void mgl_rhomb(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl);
 
 void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, const char *opt);
 void mgl_dew_2d(HMGL gr, HCDT ax, HCDT ay, const char *sch, const char *optl);
@@ -80,6 +82,8 @@ void mgl_facez_(uintptr_t* gr, float *x0, float *y0, float *z0, float *wx, float
 void mgl_sphere_(uintptr_t* gr, float *x, float *y, float *z, float *r, const char *stl, int);
 void mgl_drop_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r, const char *stl, float *shift, float *ap, int);
 void mgl_cone_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r1, float *r2, const char *stl, int *edge, int);
+void mgl_ellipse_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r, const char *stl, int);
+void mgl_rhomb_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r, const char *stl, int);
 
 void mgl_puts_(uintptr_t *graph, float *x, float *y, float *z,const char *text, const char *font, float *size, int, int);
 void mgl_puts_dir_(uintptr_t *graph, float *x, float *y, float *z, float *dx, float *dy, float *dz, const char *text, const char *font, float *size, int, int);

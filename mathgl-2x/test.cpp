@@ -35,15 +35,11 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
-	mglData a;	mgls_prepare2d(&a);
-	gr->Mesh(a);
-	return 0;
-
 	gr->Puts(mglPoint(0,0),"Test","t");
 	gr->Puts(mglPoint(0,0),"Test","T");
 	gr->Line(mglPoint(0),mglPoint(1),"r");
 	gr->Puts(mglPoint(-1,0),mglPoint(1,1),"angle");
-	gr->Line(mglPoint(-1,0),mglPoint(1,1),"r");
+	gr->Line(mglPoint(-1,0),mglPoint(0,1),"r");
 	gr->Axis();
 	return 0;
 
@@ -1788,6 +1784,7 @@ int main(int argc,char **argv)
 
 	if(dotest)
 	{
+//		gr->SetSize(600,600);
 		mgl_set_test_mode(true);	test(gr);
 		gr->WritePNG("test.png","",false);
 		gr->WriteEPS("test.eps");

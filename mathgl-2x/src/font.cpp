@@ -574,6 +574,7 @@ bool mglFont::read_def(unsigned &cur)
 	// copy default factor for other font styles;
 	fact[1] = fact[2] = fact[3] = fact[0] = mgl_fact*mgl_fgen;
 	buf = (short *)malloc(cur*sizeof(short));	// prealocate buffer
+	memset(buf,0,cur*sizeof(short));
 	// now allocate memory for all fonts
 	mem_alloc();
 	// and load symbols itself
@@ -646,6 +647,7 @@ bool mglFont::read_main(const char *fname, unsigned &cur)
 	sscanf(str, "%u%f%u", &numg, fact, &s);
 	fact[1] = fact[2] = fact[3] = fact[0];	// copy default factor for other font styles;
 	buf = (short *)malloc(s*sizeof(short));	// prealocate buffer
+	memset(buf,0,s*sizeof(short));
 	if(!buf)	{	gzclose(fp);	return false;	}
 	// now allocate memory for all fonts
 	mem_alloc();

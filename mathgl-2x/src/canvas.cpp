@@ -252,6 +252,7 @@ const wchar_t *mglCanvas::add_text(const wchar_t *str)
 	{
 		P_len=len+1;	P_cur=0;
 		P_txt = (wchar_t *)malloc(P_len*sizeof(wchar_t));
+		memset(P_txt,0,P_len*sizeof(wchar_t));
 	}
 	else if(P_cur+len+1>=P_len)
 	{
@@ -295,11 +296,12 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float sh)
 	else
 	{
 		if(ll==0)	{	Pop();	return 0;	}
+		// TODO Check rotation here
 		float tet = 180*atan2(pp[6],pp[5])/M_PI;
 		memset(B,0,12*sizeof(float));
 		B[0] = B[4] = B[8] = fsize;
 		fscl = fsize;	ftet = -tet;
-		NoAutoFactor=true;	RotateN(-tet,0,0,1);	NoAutoFactor=false;
+//		NoAutoFactor=true;	RotateN(-tet,0,0,1);	NoAutoFactor=false;
 		B[9] = pp[0]+shift*pp[6]/sqrt(ll) - B[1]*0.02f;
 		B[10]= pp[1]-shift*pp[5]/sqrt(ll) - B[4]*0.02f;
 	}
@@ -328,11 +330,13 @@ void mglCanvas::add_prim(mglPrim &a)		// NOTE: this is not-thread-safe!!!
 	{
 		pMax = 1000;
 		P = (mglPrim *)malloc(pMax*sizeof(mglPrim));
+		memset(P,0,pMax*sizeof(mglPrim));
 	}
 	else if(pNum+1>pMax)
 	{
 		pMax += 1000;
 		P = (mglPrim *)realloc(P, pMax*sizeof(mglPrim));
+		memset(P+pMax-1000,0,1000*sizeof(mglPrim));
 	}
 	a.id = ObjId;	a.gr = this;	P[pNum]=a;
 	pNum++;		Finished = false;
@@ -469,12 +473,12 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 	}
 	else
 	{
-		B1[9] = B[9] = (x1+x2)/2*Width;
-		B1[10]= B[10]= (y1+y2)/2*Height;
+		B[9] = (x1+x2)/2*Width;
+		B[10]= (y1+y2)/2*Height;
 		B[0] = Width*(x2-x1);	B[4] = Height*(y2-y1);
 		B[8] = sqrt(B[0]*B[4]);
-		B1[11]= B[11]= (1.f-B[8]/(2*Depth))*Depth;
-		memcpy(B1,B,9*sizeof(float));
+		B[11]= (1.f-B[8]/(2*Depth))*Depth;
+		memcpy(B1,B,12*sizeof(float));
 	}
 	inW = B[0];	inH=B[4];
 	font_factor = B[0] < B[4] ? B[0] : B[4];

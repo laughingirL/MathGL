@@ -341,6 +341,8 @@ public:
 	void vect_plot(long p1, long p2);	// position in pntC
 
 protected:
+	mglPoint FMin;		///< Actual lower edge after transformation formulas.
+	mglPoint FMax;		///< Actual upper edge after transformation formulas.
 	mglPoint Org;		///< Center of axis cross section.
 	int WarnCode;		///< Warning code
 	float *pnt;			///< Pointer to {coor*3,texture*2,normale*3,color*4} of the data
@@ -381,8 +383,6 @@ private:
 	bool saved;			///< State is saved
 	float prev_val;		///< previous value or zero (if no one)
 
-	mglPoint FMin;		///< Actual lower edge after transformation formulas.
-	mglPoint FMax;		///< Actual upper edge after transformation formulas.
 	mglPoint CutMin;	///< Lower edge of bounding box for cut off.
 	mglPoint CutMax;	///< Upper edge of bounding box for cut off.
 

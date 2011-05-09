@@ -651,10 +651,12 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 				{
 					if(!fn_stack)
 					{	fn_num = 100;
-						fn_stack = (mglFnStack*)malloc(fn_num*sizeof(mglFnStack));	}
+						fn_stack = (mglFnStack*)malloc(fn_num*sizeof(mglFnStack));
+						memset(fn_stack,0,fn_num*sizeof(mglFnStack));	}
 					if(fn_pos >= fn_num)
 					{	fn_num+= 100;
-						fn_stack = (mglFnStack*)realloc(fn_stack,fn_num*sizeof(mglFnStack));	}
+						fn_stack = (mglFnStack*)realloc(fn_stack,fn_num*sizeof(mglFnStack));
+						memset(fn_stack+fn_num-100,0,100*sizeof(mglFnStack));	}
 					memcpy(fn_stack[fn_pos].par,par+1,9*sizeof(wchar_t*));
 					memset(par+1,0,9*sizeof(wchar_t*));
 					for(int i=1;i<k-1;i++)	AddParam(i,arg[i+1]);

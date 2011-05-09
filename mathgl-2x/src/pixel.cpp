@@ -31,7 +31,8 @@ void mglCanvas::SetSize(int w,int h)
 	C = new unsigned char[w*h*12];
 	Z = new float[w*h*3];	// only 3 planes
 	OI= new int[w*h];
-	InPlot(0,1,0,1);	SetDrawReg(1,1,0);	Persp = 0;
+	InPlot(0,1,0,1,false);
+	SetDrawReg(1,1,0);	Persp = 0;
 	Clf();
 }
 //-----------------------------------------------------------------------------
@@ -52,15 +53,20 @@ void mglCanvas::PostScale(mglPoint &p)
 void mglCanvas::LightScale()
 {
 	float *x;
-	register float nn;
+	register float nn,xx,yy,zz;
 	register long i,j;
 	for(i=0;i<10;i++)
 	{
 		if(!nLight[i])	continue;
 		j=3*i;		x = rLight+j;
-		pLight[j] = (x[0]*B[0] + x[1]*B[1] + x[2]*B[2])/zoomx2;
-		pLight[j+1] = (x[0]*B[3] + x[1]*B[4] + x[2]*B[5])/zoomy2;
-		pLight[j+2] = (x[0]*B[6] + x[1]*B[7] + x[2]*B[8])/sqrt(zoomx2*zoomy2);
+		// NOTE: I neglect curved coordinates here!!!
+		xx = x[0]/(2*PlotFactor*(FMax.x-FMin.x));
+		yy = x[1]/(2*PlotFactor*(FMax.y-FMin.y));
+		zz = x[2]/(2*PlotFactor*(FMax.z-FMin.z));
+
+		pLight[j]  = (xx*B[0] + yy*B[1] + zz*B[2])/zoomx2;
+		pLight[j+1]= (xx*B[3] + yy*B[4] + zz*B[5])/zoomy2;
+		pLight[j+2]= (xx*B[6] + yy*B[7] + zz*B[8])/sqrt(zoomx2*zoomy2);
 		nn=sqrt(pLight[j]*pLight[j]+pLight[j+1]*pLight[j+1]+pLight[j+2]*pLight[j+2]);
 		pLight[j] /= nn;	pLight[j+1] /= nn;	pLight[j+2] /= nn;
 	}
@@ -69,7 +75,11 @@ void mglCanvas::LightScale()
 void mglCanvas::NormScale(mglPoint &p)
 {
 	if(isnan(p.x))	return;
-	mglPoint y=p;
+	mglPoint y;
+	// NOTE: I neglect curved coordinates here!!!
+	y.x = p.x/(2*PlotFactor*(FMax.x-FMin.x));
+	y.y = p.y/(2*PlotFactor*(FMax.y-FMin.y));
+	y.z = p.z/(2*PlotFactor*(FMax.z-FMin.z));
 	p.x = (y.x*B[0] + y.y*B[1] + y.z*B[2])/zoomx2;
 	p.y = (y.x*B[3] + y.y*B[4] + y.z*B[5])/zoomy2;
 	p.z = (y.x*B[6] + y.y*B[7] + y.z*B[8])/sqrt(zoomx2*zoomy2);
