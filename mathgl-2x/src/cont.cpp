@@ -54,7 +54,7 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 	for(unsigned j=0;j<wcslen(text);j++)
 	{
 		L[0] = text[j];	pa = pos>0 ? p0 : p0-wg*(!n0);
-		gr->ScalePoint(pa);	pp = gr->AddPnt(pa,c,n0,0,false);
+		pp = gr->AddPnt(pa,c,n0,0,false);
 		ww = gr->text_plot(pp,text,font);
 		p1 = p0+(ww/Norm(n0))*n0;
 		// let find closest point
@@ -135,7 +135,7 @@ void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *text, const ch
 	for(i=0;i<n;i++)
 	{
 		p = mglPoint(x->v(i),y->v(i),z->v(i));
-		gr->ScalePoint(p);	ff[i] = gr->AddPnt(p,-1);
+		ff[i] = gr->AddPnt(p,-1);
 	}
 	for(i=1;i<n;i++)	nn[i-1] = i;
 	nn[n-1]=-1;
@@ -235,8 +235,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 			p = mglPoint(x->v(i,j)*(1-d)+x->v(i+1,j)*d,
 						y->v(i,j)*(1-d)+y->v(i+1,j)*d,
 						z->v(i,j)*(1-d)+z->v(i+1,j)*d);
-			if(gr->ScalePoint(p))
-				kk[pc] = mglPoint(i+d,j,gr->AddPnt(p,c));	pc++;
+			kk[pc] = mglPoint(i+d,j,gr->AddPnt(p,c));	pc++;
 		}
 	}
 	// add intersection point of isoline and X axis
@@ -248,8 +247,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 			p = mglPoint(x->v(i,j)*(1-d)+x->v(i,j+1)*d,
 						y->v(i,j)*(1-d)+y->v(i,j+1)*d,
 						z->v(i,j)*(1-d)+z->v(i,j+1)*d);
-			if(gr->ScalePoint(p))
-				kk[pc] = mglPoint(i,j+d,gr->AddPnt(p,c));	pc++;
+			kk[pc] = mglPoint(i,j+d,gr->AddPnt(p,c));	pc++;
 		}
 	}
 	// deallocate arrays and finish if no point
@@ -437,7 +435,6 @@ long mgl_add_pnt(HMGL gr, float d, HCDT x, HCDT y, HCDT z, long i1, long j1, lon
 		v = mglPoint(x->dvy(i1,j1)*(1-d)+x->dvy(i2,j2)*d,
 					 y->dvy(i1,j1)*(1-d)+y->dvy(i2,j2)*d,
 					 z->dvy(i1,j1)*(1-d)+z->dvy(i2,j2)*d);
-		gr->ScalePoint(p);
 		res = gr->AddPnt(p,c,u^v);
 	}
 	return res;
@@ -1074,9 +1071,9 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float c
 		q1 = k<0 ? ff[nn[i]]-ff[i]  : (ff[nn[i]]-ff[k])*0.5;
 		q2 = nn[nn[i]]<0 ? ff[nn[i]]-ff[i]  : (ff[nn[nn[i]]]-ff[i])*0.5;
 
-		p = a*ff[i].y + c*ff[i].x;			gr->ScalePoint(p);
+		p = a*ff[i].y + c*ff[i].x;
 		p1 = wire ? gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q1.y + c*q1.x)^b);
-		p = a*ff[nn[i]].y + c*ff[nn[i]].x;	gr->ScalePoint(p);
+		p = a*ff[nn[i]].y + c*ff[nn[i]].x;
 		p2 = wire ? gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q2.y + c*q2.x)^b);
 		if(wire)	gr->line_plot(p1,p2);
 
@@ -1085,10 +1082,8 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float c
 			p3 = p1;	p4 = p2;
 			fi = j*M_PI/20;		si = sin(fi);	co = cos(fi);
 			p = a*ff[i].y + b*(si*ff[i].x) +  c*(co*ff[i].x);
-			gr->ScalePoint(p);
 			p1 = wire ?	gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q1.y + b*(si*q1.x) +  c*(co*q1.x))^(b*co-c*si));
 			p = a*ff[nn[i]].y + b*(si*ff[nn[i]].x) +  c*(co*ff[nn[i]].x);
-			gr->ScalePoint(p);
 			p2 = wire ?	gr->AddPnt(p,cc) : gr->AddPnt(p,cc,(a*q2.y + b*(si*q2.x) +  c*(co*q2.x))^(b*co-c*si));
 			if(wire)
 			{	gr->line_plot(p1,p2);	gr->line_plot(p1,p3);

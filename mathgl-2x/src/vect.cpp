@@ -71,8 +71,7 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 
 			p1 = mglPoint(x->v(i,nx), y->v(i,ny), z->v(i,nz));
 			p2 = mglPoint(x->v(i,nx)+dd*ax->v(i,mx), y->v(i,ny)+dd*ay->v(i,my), z->v(i,nz)+dd*az->v(i,mz));
-			gr->ScalePoint(p1);		nx = gr->AddPnt(p1,gr->CDef);
-			gr->ScalePoint(p2);		ny = gr->AddPnt(p2,gr->CDef);
+			nx = gr->AddPnt(p1,gr->CDef);	ny = gr->AddPnt(p2,gr->CDef);
 			gr->vect_plot(nx,ny);
 		}
 	}
@@ -155,8 +154,7 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 			{	p1 = mglPoint(xx,yy,zVal);	p2 = mglPoint(xx+dx,yy+dy,zVal);	}
 			if(flag&MGL_VEC_COL)	{	c1 = c2 = ss;	}	else
 			{	c1=gr->GetC(ss,dd*xm*1.5-1,false);	c2=gr->GetC(ss,dd*xm*1.5-0.5,false);}
-			gr->ScalePoint(p1);		n1=gr->AddPnt(p1,c1);
-			gr->ScalePoint(p2);		n2=gr->AddPnt(p2,c2);
+			n1=gr->AddPnt(p1,c1);	n2=gr->AddPnt(p2,c2);
 			if(flag & MGL_VEC_DOT)	gr->line_plot(n1,n2);
 			else	gr->vect_plot(n1,n2);
 		}
@@ -240,8 +238,7 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 		{	p1 = mglPoint(xx,yy,zz);	p2 = mglPoint(xx+dx,yy+dy,zz+dz);	}
 		if(flag&MGL_VEC_COL)	{	c1 = c2 = ss;	}	else
 		{	c1=gr->GetC(ss,dd*xm*1.5-1,false);	c2=gr->GetC(ss,dd*xm*1.5-0.5,false);	}
-		gr->ScalePoint(p1);		n1=gr->AddPnt(p1,c1);
-		gr->ScalePoint(p2);		n2=gr->AddPnt(p2,c2);
+		n1=gr->AddPnt(p1,c1);	n2=gr->AddPnt(p2,c2);
 		if(flag & MGL_VEC_DOT)	gr->line_plot(n1,n2);
 		else	gr->vect_plot(n1,n2);
 	}
@@ -315,14 +312,9 @@ void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mgl
 	if(k>1)
 	{
 		long i,j,jj;
-		gr->Reserve(k);
-		gr->ScalePoint(pp[0]);	j = gr->AddPnt(pp[0],cc[0]);
+		gr->Reserve(k);		j = gr->AddPnt(pp[0],cc[0]);
 		for(i=1;i<k;i++)
-		{
-			gr->ScalePoint(pp[i]);	jj=j;
-			j = gr->AddPnt(pp[i],cc[i]);
-			gr->line_plot(jj,j);
-		}
+		{	jj=j;	j = gr->AddPnt(pp[i],cc[i]);	gr->line_plot(jj,j);	}
 	}
 	delete []pp;	delete []cc;
 }
@@ -515,14 +507,9 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 	if(k>1)
 	{
 		long i,j,jj;
-		gr->Reserve(k);
-		gr->ScalePoint(pp[0]);	j = gr->AddPnt(pp[0],cc[0]);
+		gr->Reserve(k);		j = gr->AddPnt(pp[0],cc[0]);
 		for(i=1;i<k;i++)
-		{
-			gr->ScalePoint(pp[i]);	jj=j;
-			j = gr->AddPnt(pp[i],cc[i]);
-			gr->line_plot(jj,j);
-		}
+		{	jj=j;	j = gr->AddPnt(pp[i],cc[i]);	gr->line_plot(jj,j);	}
 	}
 	delete []pp;
 	delete []cc;
@@ -803,7 +790,7 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 			fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
 			p = pp[0] + t*(rr*co) + q*(rr*si);
 			d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-			gr->ScalePoint(p);	id[j] = gr->AddPnt(p,cc[0],d);
+			id[j] = gr->AddPnt(p,cc[0],d);
 		}
 		for(i=1;i<k;i++)
 		{
@@ -817,7 +804,7 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 				fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
 				p = pp[i] + t*(rr*co) + q*(rr*si);
 				d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-				gr->ScalePoint(p);	id[j] = gr->AddPnt(p,cc[i],d);
+				id[j] = gr->AddPnt(p,cc[i],d);
 				if(j>0)	gr->quad_plot(id[j-1],id[j],id[j+num-1],id[j+num]);
 			}
 		}
@@ -958,7 +945,7 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 			fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
 			p = pp[0] + t*(rr*co) + q*(rr*si);
 			d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-			gr->ScalePoint(p);	id[j] = gr->AddPnt(p,cc[0],d);
+			id[j] = gr->AddPnt(p,cc[0],d);
 		}
 		for(i=1;i<k;i++)
 		{
@@ -972,7 +959,7 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 				fi = j*2*M_PI/(num-1);	co = cos(fi);	si = sin(fi);
 				p = pp[i] + t*(rr*co) + q*(rr*si);
 				d = (t*si - q*co)^(l + t*(dr*co) + q*(dr*si));
-				gr->ScalePoint(p);	id[j] = gr->AddPnt(p,cc[i],d);
+				id[j] = gr->AddPnt(p,cc[i],d);
 				if(j>0)	gr->quad_plot(id[j-1],id[j],id[j+num-1],id[j+num]);
 			}
 		}

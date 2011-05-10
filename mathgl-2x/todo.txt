@@ -12,8 +12,7 @@
 5. opengl
 6. widgets
 7. stfa
-8. ScalePoint() into AddPnt() + scaling both p & n
-9. Bugfix for colors in trig_plot, line_plot inside glyph
+8. Bugfix for colors in trig_plot, line_plot inside glyph
 
 ============= NEW  =============
 
@@ -51,6 +50,8 @@
 22. Extend mglData to read strings (i.e. sth in "" or '' -- only one column per file + HDF5 import/export)
 23. Exclude BaseLineWidth (do proportional to minimal image size)
 24. Labels at TriCont()
+25. Cones() -- like Bars() but by Cone()
+
 
 ============= UNSURE ===========
 

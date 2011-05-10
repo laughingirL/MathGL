@@ -57,7 +57,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 	for(k=0;k<l;k+=tz)	for(j=0;j<m;j+=ty)	for(i=0;i<n;i+=tx)
 	{
 		p = both ? mglPoint(x->v(i,j,k),y->v(i,j,k),z->v(i,j,k)) : mglPoint(x->v(i),y->v(j),z->v(k));
-		gr->ScalePoint(p);	aa = gr->GetA(a->v(i,j,k));
+		aa = gr->GetA(a->v(i,j,k));
 		if(inv)	bb = (1-aa)*(1-aa)*alpha;
 		else	bb = aa*aa*alpha;
 		gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);
@@ -256,7 +256,6 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 									y->v(i,j,k)*(1-d)+y->v(i+1,j,k)*d,
 									z->v(i,j,k)*(1-d)+z->v(i+1,j,k)*d);
 					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
-					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
@@ -277,7 +276,6 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 									y->v(i,j,k)*(1-d)+y->v(i,j+1,k)*d,
 									z->v(i,j,k)*(1-d)+z->v(i,j+1,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
-					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
@@ -298,7 +296,6 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 									y->v(i,j,k-1)*(1-d)+y->v(i,j,k)*d,
 									z->v(i,j,k-1)*(1-d)+z->v(i,j,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
-					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
@@ -420,7 +417,6 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 									z->v(i,j,k)*(1-d)+z->v(i+1,j,k)*d);
 					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
 					aa = gr->GetA(b->v(i,j,k)*(1-d)+b->v(i+1,j,k)*d);
-					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q,aa)-posN;	// NOTE: Not thread-safe!!!
@@ -442,7 +438,6 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 									z->v(i,j,k)*(1-d)+z->v(i,j+1,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
 					aa = gr->GetA(b->v(i,j,k)*(1-d)+b->v(i,j+1,k)*d);
-					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q,aa)-posN;	// NOTE: Not thread-safe!!!
@@ -464,7 +459,6 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 									z->v(i,j,k-1)*(1-d)+z->v(i,j,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
 					aa = gr->GetA(b->v(i,j,k-1)*(1-d)+b->v(i,j,k)*d);
-					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q,aa)-posN;	// NOTE: Not thread-safe!!!
@@ -588,7 +582,6 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 									z->v(i,j,k)*(1-d)+z->v(i+1,j,k)*d);
 					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
 					c = gr->GetC(ss,b->v(i,j,k)*(1-d)+b->v(i+1,j,k)*d);
-					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
@@ -610,7 +603,6 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 									z->v(i,j,k)*(1-d)+z->v(i,j+1,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
 					c = gr->GetC(ss,b->v(i,j,k)*(1-d)+b->v(i,j+1,k)*d);
-					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
@@ -632,7 +624,6 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 									z->v(i,j,k-1)*(1-d)+z->v(i,j,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
 					c = gr->GetC(ss,b->v(i,j,k-1)*(1-d)+b->v(i,j,k)*d);
-					if(!gr->ScalePoint(p))	continue;
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!

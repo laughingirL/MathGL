@@ -103,7 +103,8 @@ void mglBase::SetWarn(int code, const char *who)
 //-----------------------------------------------------------------------------
 long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, bool scl)	// NOTE: this is not-thread-safe!!!
 {
-	if(scl)	NormScale(n);	// Usually p was scaled before, but n should be scaled now!
+//	if(scl)	NormScale(n);	// Usually p was scaled before, but n should be scaled now!
+	if(scl)	ScalePoint(p,n);
 	a = (a>=0 && a<=1) ? a : AlphaDef;
 	if(isnan(n.x))	a=1;
 	c = (c>=0) ? c:CDef;
@@ -209,7 +210,7 @@ void mglBase::SetFBord(float x,float y,float z)
 	}
 }
 //-----------------------------------------------------------------------------
-bool mglBase::ScalePoint(mglPoint &p, bool use_nan)
+bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 {
 	float &x=p.x, &y=p.y, &z=p.z;
 	if(isnan(x) || isnan(y) || isnan(z))	{	x=NAN;	return false;	}
@@ -235,27 +236,34 @@ bool mglBase::ScalePoint(mglPoint &p, bool use_nan)
 		if(y1<Min.y)	y=Min.y;	if(y2>Max.y)	y=Max.y;
 		if(z1<Min.z)	z=Min.z;	if(z2>Max.z)	z=Max.z;
 	}
-
-	if(fx)	x1 = fx->Calc(x,y,z);	else	x1=x;
-	if(fy)	y1 = fy->Calc(x,y,z);	else	y1=y;
-	if(fz)	z1 = fz->Calc(x,y,z);	else	z1=z;
-	if(isnan(x1) || isnan(y1) || isnan(z1))	{	x=NAN;	return false;	}
-
-	x = (2*x1 - FMin.x - FMax.x)/(FMax.x - FMin.x);
-	y = (2*y1 - FMin.y - FMax.y)/(FMax.y - FMin.y);
-	z = (2*z1 - FMin.z - FMax.z)/(FMax.z - FMin.z);
-	if(TernAxis)
+	if(res)
 	{
-		if(x+y>0)
+		x1=x;	y1=y;	z1=z;
+		if(fx)	{	x1 = fx->Calc(x,y,z);	n.x *= fx->CalcD('x',x,y,z);	}
+		if(fy)	{	y1 = fy->Calc(x,y,z);	n.y *= fy->CalcD('y',x,y,z);	}
+		if(fz)	{	z1 = fz->Calc(x,y,z);	n.z *= fz->CalcD('z',x,y,z);	}
+		if(isnan(x1) || isnan(y1) || isnan(z1))	{	x=NAN;	return false;	}
+
+		x = (2*x1 - FMin.x - FMax.x)/(FMax.x - FMin.x);
+		y = (2*y1 - FMin.y - FMax.y)/(FMax.y - FMin.y);
+		z = (2*z1 - FMin.z - FMax.z)/(FMax.z - FMin.z);
+		n.x *= 2/(FMax.x - FMin.x);
+		n.y *= 2/(FMax.y - FMin.y);
+		n.z *= 2/(FMax.z - FMin.z);
+		if(TernAxis)
 		{
-			if(Cut)	res = false;
-			else	y = -x;
+			if(x+y>0)
+			{
+				if(Cut)	res = false;
+				else	y = -x;
+			}
+			x = x + (y+1)/2;
+			n.x=n.x + n.y/2;
 		}
-		x = x + (y+1)/2;
+//		if(fabs(x)>MGL_FLT_EPS)	res = false;
+//		if(fabs(y)>MGL_FLT_EPS)	res = false;
+//		if(fabs(z)>MGL_FLT_EPS)	res = false;
 	}
-	if(fabs(x)>MGL_FLT_EPS)	res = false;
-	if(fabs(y)>MGL_FLT_EPS)	res = false;
-	if(fabs(z)>MGL_FLT_EPS)	res = false;
 	if(!res && use_nan)	x = NAN;	// extra sign that point shouldn't be plotted
 	return res;
 }

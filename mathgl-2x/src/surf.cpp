@@ -124,8 +124,7 @@ void mgl_mesh_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, z->v(i,j,k));
-			c = gr->GetC(ss,p.z);	gr->ScalePoint(p);
-			pos[i+n*j] = gr->AddPnt(p,c);
+			c = gr->GetC(ss,p.z);		pos[i+n*j] = gr->AddPnt(p,c);
 		}
 		mgl_mesh_plot(gr,pos,n,m,3);
 	}
@@ -177,8 +176,7 @@ void mgl_fall_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, z->v(i,j,k));
-			c = gr->GetC(ss,p.z);	gr->ScalePoint(p);
-			pos[i+n*j] = gr->AddPnt(p,c);
+			c = gr->GetC(ss,p.z);	pos[i+n*j] = gr->AddPnt(p,c);
 		}
 		mgl_mesh_plot(gr,pos,n,m, (sch && strchr(sch,'x')) ? 2:1);
 	}
@@ -230,7 +228,7 @@ void mgl_grid_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
-			gr->ScalePoint(p);	pos[i+n*j] = gr->AddPnt(p,gr->CDef);
+			pos[i+n*j] = gr->AddPnt(p,gr->CDef);
 		}
 		mgl_mesh_plot(gr,pos,n,m,3);
 	}
@@ -285,7 +283,7 @@ void mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
-			c = gr->GetC(ss,p.z);	gr->ScalePoint(p);
+			c = gr->GetC(ss,p.z);
 			pos[i+n*j] = gr->AddPnt(p,c,q^s);
 		}
 		mgl_surf_plot(gr,pos,n,m);
@@ -353,8 +351,8 @@ void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 				q = mglPoint(xx.y, yy.y, 0);	s = q^s;
 				c = gr->GetC(ss,p1.z);
 				p2 = mglPoint(GetX(x,i+1,j,k).x,GetY(y,i+1,j,k).x,p1.z);
-				gr->ScalePoint(p1);	pos[2*j] = gr->AddPnt(p1,c,s);
-				gr->ScalePoint(p2);	pos[2*j+1]=gr->AddPnt(p2,c,s);
+				pos[2*j] = gr->AddPnt(p1,c,s);
+				pos[2*j+1]=gr->AddPnt(p2,c,s);
 			}
 			mgl_surf_plot(gr,pos,2,m);
 		}
@@ -368,8 +366,8 @@ void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 				s = mglPoint(xx.z, yy.z, 0);	s = q^s;
 				c = gr->GetC(ss,p1.z);
 				p2 = mglPoint(GetX(x,i,j+1,k).x,GetY(y,i,j+1,k).x,p1.z);
-				gr->ScalePoint(p1);	pos[2*i] = gr->AddPnt(p1,c,s);
-				gr->ScalePoint(p2);	pos[2*i+1]=gr->AddPnt(p2,c,s);
+				pos[2*i] = gr->AddPnt(p1,c,s);
+				pos[2*i+1]=gr->AddPnt(p2,c,s);
 			}
 			mgl_surf_plot(gr,pos,2,n);
 		}
@@ -426,7 +424,7 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 		{
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
 			zz = z->v(i,j,k);	c = gr->GetC(ss,zz);
-			gr->ScalePoint(p);	if(isnan(zz))	p.x = NAN;
+			if(isnan(zz))	p.x = NAN;
 			pos[i+n*j] = gr->AddPnt(p,c,s);
 		}
 		mgl_surf_plot(gr,pos,n,m);
@@ -511,7 +509,6 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
 			col = gr->GetC(ss,c->v(i,j,k));
-			gr->ScalePoint(p);
 			pos[i+n*j] = gr->AddPnt(p,col,q^s);
 		}
 		mgl_surf_plot(gr,pos,n,m);
@@ -576,7 +573,6 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
 			s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
-			gr->ScalePoint(p);
 			pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,z->v(i,j,k)),q^s,gr->GetA(c->v(i,j,k)));
 		}
 		mgl_surf_plot(gr,pos,n,m);
@@ -641,20 +637,20 @@ void mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 			z1 = z->v(i+1,j,k);		z2 = z->v(i,j+1,k);
 			q = mglPoint(xx.y,yy.y,0);
 			s = mglPoint(xx.z,yy.z,0);
-			p1 = mglPoint(xx.x,yy.x,zz);	gr->ScalePoint(p1);	k1 = gr->AddPnt(p1,c,t);
-			p2 = mglPoint(x1,yy.x,zz);		gr->ScalePoint(p2);	k2 = gr->AddPnt(p2,c,t);
-			p3 = mglPoint(xx.x,y1,zz);		gr->ScalePoint(p3);	k3 = gr->AddPnt(p3,c,t);
-			p4 = mglPoint(x1,y1,zz);		gr->ScalePoint(p4);	k4 = gr->AddPnt(p4,c,t);
+			p1 = mglPoint(xx.x,yy.x,zz);	k1 = gr->AddPnt(p1,c,t);
+			p2 = mglPoint(x1,yy.x,zz);		k2 = gr->AddPnt(p2,c,t);
+			p3 = mglPoint(xx.x,y1,zz);		k3 = gr->AddPnt(p3,c,t);
+			p4 = mglPoint(x1,y1,zz);		k4 = gr->AddPnt(p4,c,t);
 			gr->quad_plot(k1,k2,k3,k4);
-			p1 = mglPoint(x1,yy.x,zz);		gr->ScalePoint(p1);	k1 = gr->AddPnt(p1,c,q);
-			p2 = mglPoint(x1,y1,zz);		gr->ScalePoint(p2);	k2 = gr->AddPnt(p2,c,q);
-			p3 = mglPoint(x1,yy.x,z1);		gr->ScalePoint(p3);	k3 = gr->AddPnt(p3,c,q);
-			p4 = mglPoint(x1,y1,z1);		gr->ScalePoint(p4);	k4 = gr->AddPnt(p4,c,q);
+			p1 = mglPoint(x1,yy.x,zz);		k1 = gr->AddPnt(p1,c,q);
+			p2 = mglPoint(x1,y1,zz);		k2 = gr->AddPnt(p2,c,q);
+			p3 = mglPoint(x1,yy.x,z1);		k3 = gr->AddPnt(p3,c,q);
+			p4 = mglPoint(x1,y1,z1);		k4 = gr->AddPnt(p4,c,q);
 			gr->quad_plot(k1,k2,k3,k4);
-			p1 = mglPoint(xx.x,y1,zz);		gr->ScalePoint(p1);	k1 = gr->AddPnt(p1,c,s);
-			p2 = mglPoint(x1,y1,zz);		gr->ScalePoint(p2);	k2 = gr->AddPnt(p2,c,s);
-			p3 = mglPoint(xx.x,y1,z2);		gr->ScalePoint(p3);	k3 = gr->AddPnt(p3,c,s);
-			p4 = mglPoint(x1,y1,z2);		gr->ScalePoint(p4);	k4 = gr->AddPnt(p4,c,s);
+			p1 = mglPoint(xx.x,y1,zz);		k1 = gr->AddPnt(p1,c,s);
+			p2 = mglPoint(x1,y1,zz);		k2 = gr->AddPnt(p2,c,s);
+			p3 = mglPoint(xx.x,y1,z2);		k3 = gr->AddPnt(p3,c,s);
+			p4 = mglPoint(x1,y1,z2);		k4 = gr->AddPnt(p4,c,s);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}
@@ -708,10 +704,10 @@ void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 			zz = z->v(i,j,k);		c = gr->GetC(ss,zz);
 			x1 = GetX(x,i,j,k).x;	y1 = GetY(y,i,j,k).x;
 			x2 = GetX(x,i+1,j,k).x;	y2 = GetY(y,i,j+1,k).x;
-			p1 = mglPoint(x1,y1,zz);	gr->ScalePoint(p1);	k1 = gr->AddPnt(p1,c,s);
-			p2 = mglPoint(x2,y1,zz);	gr->ScalePoint(p2);	k2 = gr->AddPnt(p2,c,s);
-			p3 = mglPoint(x1,y2,zz);	gr->ScalePoint(p3);	k3 = gr->AddPnt(p3,c,s);
-			p4 = mglPoint(x2,y2,zz);	gr->ScalePoint(p4);	k4 = gr->AddPnt(p4,c,s);
+			p1 = mglPoint(x1,y1,zz);	k1 = gr->AddPnt(p1,c,s);
+			p2 = mglPoint(x2,y1,zz);	k2 = gr->AddPnt(p2,c,s);
+			p3 = mglPoint(x1,y2,zz);	k3 = gr->AddPnt(p3,c,s);
+			p4 = mglPoint(x2,y2,zz);	k4 = gr->AddPnt(p4,c,s);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}
@@ -770,13 +766,13 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch, cons
 			y3 = GetY(y,i+1,j+1,k).x-y2-y4-y1;
 
 			p1 = mglPoint(x1+x2*ss+x4*ss+x3*ss*ss, y1+y2*ss+y4*ss+y3*ss*ss, zz);
-			gr->ScalePoint(p1);	k1 = gr->AddPnt(p1,c,t);
+			k1 = gr->AddPnt(p1,c,t);
 			p2 = mglPoint(x1+x2*sm+x4*ss+x3*ss*sm, y1+y2*sm+y4*ss+y3*ss*sm, zz);
-			gr->ScalePoint(p2);	k2 = gr->AddPnt(p2,c,t);
+			k2 = gr->AddPnt(p2,c,t);
 			p3 = mglPoint(x1+x2*ss+x4*sm+x3*ss*sm, y1+y2*ss+y4*sm+y3*ss*sm, zz);
-			gr->ScalePoint(p3);	k3 = gr->AddPnt(p3,c,t);
+			k3 = gr->AddPnt(p3,c,t);
 			p4 = mglPoint(x1+x2*sm+x4*sm+x3*sm*sm, y1+y2*sm+y4*sm+y3*sm*sm, zz);
-			gr->ScalePoint(p4);	k4 = gr->AddPnt(p4,c,t);
+			k4 = gr->AddPnt(p4,c,t);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}
@@ -849,7 +845,6 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 		}
 		if(xx<0)	xx=0;	if(xx>=1)	xx=1/MGL_FLT_EPS;
 		if(yy<0)	yy=0;	if(yy>=1)	yy=1/MGL_FLT_EPS;
-		gr->ScalePoint(p);
 		pos[i+n*j] = gr->AddPnt(p,gr->GetC(ss,xx,false),t,yy);
 	}
 	if(sch && strchr(sch,'.'))	for(i=0;i<n*m;i++)	gr->mark_plot(pos[i],'.',-1);

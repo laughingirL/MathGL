@@ -312,7 +312,7 @@ public:
 	inline float GetClrC(long i)
 	{	return pnt[12*i+3];	}
 	/// Scale coordinates and cut off some points
-	virtual bool ScalePoint(mglPoint &p, bool use_nan=true);
+	virtual bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true);
 
 	virtual float GetOrgX(char dir)=0;	///< Get Org.x (parse NAN value)
 	virtual float GetOrgY(char dir)=0;	///< Get Org.y (parse NAN value)
@@ -373,7 +373,6 @@ protected:
 	char last_style[64];///< Last pen style
 
 	virtual void LightScale()=0;			///< Scale positions of light sources
-	virtual void NormScale(mglPoint &n)=0;	///< Scale normale
 	virtual void SetPen(char style,float width);
 
 private:

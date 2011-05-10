@@ -321,11 +321,9 @@ protected:
 		ax.v1=Min.x;	ay.v1=Min.y;	az.v1=Min.z;	ac.v1=Min.c;
 		ax.v2=Max.x;	ay.v2=Max.y;	az.v2=Max.z;	ac.v2=Max.c;	}
 	/// Scale coordinates and cut off some points
-	bool ScalePoint(mglPoint &p, bool use_nan=true)
-	{	bool res=mglBase::ScalePoint(p, use_nan);	PostScale(p);	return res;	}
+	bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true);
 	void LightScale();	///< Additionally scale positions of light sources
-	/// Additionally scale normals \a n
-	void NormScale(mglPoint &n);
+
 	float GetOrgX(char dir);	///< Get Org.x (parse NAN value)
 	float GetOrgY(char dir);	///< Get Org.y (parse NAN value)
 	float GetOrgZ(char dir);	///< Get Org.z (parse NAN value)
@@ -380,8 +378,6 @@ private:
 	/// Additionally scale points \a p (array with length 3*n) for positioning in image
 	void PostScale(mglPoint &p);
 	inline void PostScale(mglPoint *p,long n)	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
-	/// Additionally scale normals \a s (array with length 3*n)
-	void NormScale(float *s,long n);
 
 	void InPlot(float x1,float x2,float y1,float y2, const char *style);
 	void put_line(void *fp, bool gz, long i, float wp,float *cp,int st, const char *ifmt, const char *nfmt, bool neg);

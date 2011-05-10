@@ -50,6 +50,18 @@ void mglCanvas::PostScale(mglPoint &p)
 	}
 }
 //-----------------------------------------------------------------------------
+bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
+{
+	bool res = mglBase::ScalePoint(p,n,use_nan);
+	PostScale(p);
+
+	mglPoint y=n/(2*PlotFactor);
+	n.x = (y.x*B[0] + y.y*B[1] + y.z*B[2])/zoomx2;
+	n.y = (y.x*B[3] + y.y*B[4] + y.z*B[5])/zoomy2;
+	n.z = (y.x*B[6] + y.y*B[7] + y.z*B[8])/sqrt(zoomx2*zoomy2);
+	return res;
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::LightScale()
 {
 	float *x;
@@ -70,19 +82,6 @@ void mglCanvas::LightScale()
 		nn=sqrt(pLight[j]*pLight[j]+pLight[j+1]*pLight[j+1]+pLight[j+2]*pLight[j+2]);
 		pLight[j] /= nn;	pLight[j+1] /= nn;	pLight[j+2] /= nn;
 	}
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::NormScale(mglPoint &p)
-{
-	if(isnan(p.x))	return;
-	mglPoint y;
-	// NOTE: I neglect curved coordinates here!!!
-	y.x = p.x/(2*PlotFactor*(FMax.x-FMin.x));
-	y.y = p.y/(2*PlotFactor*(FMax.y-FMin.y));
-	y.z = p.z/(2*PlotFactor*(FMax.z-FMin.z));
-	p.x = (y.x*B[0] + y.y*B[1] + y.z*B[2])/zoomx2;
-	p.y = (y.x*B[3] + y.y*B[4] + y.z*B[5])/zoomy2;
-	p.z = (y.x*B[6] + y.y*B[7] + y.z*B[8])/sqrt(zoomx2*zoomy2);
 }
 //-----------------------------------------------------------------------------
 // NOTE: Perspective, transformation formulas and lists are not support just now !!! Also it use LAST InPlot parameters!!!
@@ -119,7 +118,8 @@ mglPoint mglCanvas::CalcXYZ(int xs, int ys)
 //-----------------------------------------------------------------------------
 void mglCanvas::CalcScr(mglPoint p, int *xs, int *ys)
 {
-	ScalePoint(p);
+	mglPoint n;
+	ScalePoint(p,n);
 	if(xs)	*xs=int(p.x);
 	if(ys)	*ys=int(p.y);
 }
@@ -789,7 +789,7 @@ void mglCanvas::glyph_wire(float *pp, float f, int nl, const short *line)
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_line(float *pp, float f, bool solid)
 {
-	float p[40], pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
+	float p[48], pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 	unsigned pdef=PDef;	PDef = 0xffff;
 	float opw=PenWidth;	PenWidth=1;
 	p[3]=p[13]=p[23]=p[33]=pp[3];
