@@ -337,7 +337,7 @@ public:
 	virtual void trig_plot(long p1, long p2, long p3)=0;			// position in pntN
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;	// position in pntN
 	virtual void Glyph(float x, float y, float f, int style, long icode, char col)=0;
-	virtual float text_plot(long p,const wchar_t *text,const char *fnt,float sh=0)=0;	// position in pntN
+	virtual float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0)=0;	// position in pntN
 	void vect_plot(long p1, long p2);	// position in pntC
 
 protected:

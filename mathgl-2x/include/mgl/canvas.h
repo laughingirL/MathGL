@@ -334,7 +334,7 @@ protected:
 	void trig_plot(long p1, long p2, long p3);			// position in pntN
 	void quad_plot(long p1, long p2, long p3, long p4);	// position in pntN
 	void Glyph(float x, float y, float f, int style, long icode, char col);
-	float text_plot(long p,const wchar_t *text,const char *fnt,float sh=0);	// position in pntN
+	float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0);	// position in pntN
 
 	void add_prim(mglPrim &a);	///< add primitive to list
 	void mark_draw(const float *p, char type, float size);

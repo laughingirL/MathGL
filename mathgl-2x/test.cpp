@@ -40,6 +40,7 @@ int test(mglGraph *gr)
 	gr->Line(mglPoint(0),mglPoint(1),"r");
 	gr->Puts(mglPoint(-1,0),mglPoint(1,1),"angle");
 	gr->Line(mglPoint(-1,0),mglPoint(0,1),"r");
+	gr->Label('x',"X axis");	gr->Label('y',"Y axis");
 	gr->Axis();
 	return 0;
 

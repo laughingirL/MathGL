@@ -53,7 +53,7 @@ void mglStartThread(void *(*func)(void *), void (*post)(mglThread *,mreal *), lo
 		pthread_t *tmp=new pthread_t[mglNumThr];
 		mglThread *par=new mglThread[mglNumThr];
 		register long i;
-		for(i=0;i<mglNumThr;i++)
+		for(i=0;i<mglNumThr;i++)	// put parameters into the structure
 		{	par[i].n=n;	par[i].a=a;	par[i].b=b;	par[i].c=c;	par[i].d=d;
 			par[i].p=p;	par[i].v=v;	par[i].s=s;	par[i].e=e;	par[i].id=i;	}
 		for(i=0;i<mglNumThr;i++)	pthread_create(tmp+i, 0, func, par+i);

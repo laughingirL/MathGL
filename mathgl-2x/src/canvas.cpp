@@ -264,21 +264,23 @@ const wchar_t *mglCanvas::add_text(const wchar_t *str)
 	return P_txt+P_cur-len-1;
 }
 //-----------------------------------------------------------------------------
-float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float sh)
+float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float size,float sh)
 {
 	if(isnan(pnt[12*p]))	return 0;
+	if(size<0)	size *= -FontSize;
+
 	if(!(Quality&4))	// add text itself
 	{
 		mglPrim a(6);
 		a.n1 = p;	a.z = pnt[12*p+2];
 		a.txt = add_text(text);
 		strncpy(a.font,font,16);
-		a.s = FontSize;	a.w = sh;
+		a.s = size;	a.w = sh;
 		add_prim(a);
 	}
 	// text drawing itself
 	Push();
-	float shift = -sh-0.2, fsize=FontSize/8.*font_factor, h = fnt->Height(font)*fsize;
+	float shift = -sh-0.2, fsize=size/8.*font_factor, h = fnt->Height(font)*fsize;
 	if(strchr(font,'T'))	shift = sh+0.3;
 
 	shift *= h;
@@ -305,7 +307,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float sh)
 		B[9] = pp[0]+shift*pp[6]/sqrt(ll) - B[1]*0.02f;
 		B[10]= pp[1]-shift*pp[5]/sqrt(ll) - B[4]*0.02f;
 	}
-	fsize = fnt->Puts(text,font)*FontSize/8.;
+	fsize = fnt->Puts(text,font)*size/8.;
 	Pop();	return fsize;
 }
 //-----------------------------------------------------------------------------

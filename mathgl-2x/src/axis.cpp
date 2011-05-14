@@ -455,15 +455,15 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 {
 	aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
 	mglPoint d = aa.dir, o = aa.org - d*(aa.org*d);	// "transverse" org
-	mglPoint p, s=(Min+Max)/2, q=aa.org, nn;
-	ScalePoint(s,nn,false);	ScalePoint(q,nn,false);
+	mglPoint p, s=(Min+Max)/2, nn;
+	s = s - d*(s*d);
 
 	register long i,k1,n = aa.num;
 	if(n>0)	for(i=0;i<n;i++)	// TODO: Add labels "rotation", "missing" and so on
 	{
-		p = o+d*aa.val[i];	k1 = AddPnt(p,-1,aa.dir,0);
-// TODO		ScalePoint(p,n,false);
-		text_plot(k1, aa.str[i], s.y>q.y ? "T":"t", -1);
+		p = o+d*aa.val[i];	k1 = AddPnt(p,-1,d,0);
+		nn = s-o;	ScalePoint(p,nn,false);
+		text_plot(k1, aa.str[i], (nn.y>0 || nn.x<0) ? "T":"t",-1,0.07);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -592,19 +592,14 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 {
 	float t, x0, y0, z0;
 	x0 = GetOrgX(dir);	y0 = GetOrgY(dir);	z0 = GetOrgZ(dir);
-	mglPoint p,s=(Min+Max)/2,q(x0,y0,z0),nn;
-	ScalePoint(s,nn,false);	ScalePoint(q,nn,false);
-
-	char font[33]="C";
-	if(pos<-0.2)	font[0]='L';	if(pos>0.2)	font[0]='R';
-	strcat(font,FontDef);
-	strcat(font,s.y>q.y ? "T":"t");
+	mglPoint p,ss=(Min+Max)/2,q,qq,nn;
 
 	if(dir=='x')	//	TODO: Tern axis & colorbar labels!!!
 	{
 		AdjustTicks(ax,fx);
 		if(ax.dv)	t = (Min.x+Max.x+pos*(Max.x-Min.x))/2;
 		else	t = Min.x*pow(Max.x/Min.x, (pos+1)/2);
+		nn = mglPoint(0,ss.y-y0,ss.z-z0);
 		p = mglPoint(t,y0,z0);	q = mglPoint(1,0,0);
 	}
 	if(dir=='y')
@@ -612,6 +607,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 		AdjustTicks(ay,fy);
 		if(ay.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
+		nn = mglPoint(ss.x-x0,0,ss.z-z0);
 		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);
 	}
 	if(dir=='z')
@@ -619,10 +615,15 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 		AdjustTicks(az,fz);
 		if(az.dv)	t = (Min.z+Max.z+pos*(Max.z-Min.z))/2;
 		else	t = Min.z*pow(Max.z/Min.z, (pos+1)/2);
+		nn = mglPoint(ss.x-x0,ss.y-y0,0);
 		p = mglPoint(x0,y0,t);	q = mglPoint(0,0,1);
 	}
-	float fs = FontSize;	FontSize*=1.4;
-	text_plot(AddPnt(p,-1,q,0),text,font,1+shift);	FontSize=fs;
+	ss = p;	ScalePoint(ss,nn,false);
+	char font[33]="C";
+	if(pos<-0.2)	font[0]='L';	if(pos>0.2)	font[0]='R';
+	strcat(font,FontDef);
+	strcat(font,nn.y>0 || nn.x<0 ? "T":"t");
+	text_plot(AddPnt(p,-1,q,0),text,font,-1.4,0.4+shift);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Label(float x, float y, const char *str, const char *fnt, bool rel)
@@ -639,13 +640,12 @@ void mglCanvas::Labelw(float x, float y, const wchar_t *text, const char *fnt, b
 	Push();	Identity(rel);
 	mglFormula *ox=fx, *oy=fy, *oz=fz;
 	fx = fy = fz = NULL;
-	char *f = new char[strlen(fnt)+1];
+	char *f = new char[strlen(fnt)+1];	memset(f,0,strlen(fnt)+1);
 	strcpy(f,fnt);
 	for(int i=0;f[i];i++)	if(f[i]=='a' || f[i]=='A')	f[i]=' ';
 	mglPoint p((Min.x+Max.x)/2+PlotFactor*(Max.x-Min.x)*(x-0.5),
 				(Min.y+Max.y)/2+PlotFactor*(Max.y-Min.y)*(y-0.5), Max.z);
-	float fs = FontSize;	FontSize*=1.4;
-	text_plot(AddPnt(p,-1,mglPoint(NAN),0),text,f);	FontSize=fs;
+	text_plot(AddPnt(p,-1,mglPoint(NAN),0),text,f,-1.4,1);
 	delete []f;	fx=ox;	fy=oy;	fz=oz;	Pop();
 }
 //-----------------------------------------------------------------------------
