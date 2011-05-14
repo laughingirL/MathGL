@@ -737,11 +737,12 @@ void mglCanvas::glyph_draw(const mglPrim *P)
 void mglCanvas::glyph_fill(float *pp, float f, int nt, const short *trig)
 {
 	long ik,ii;
-	float p[30], pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
+	float *p=new float[36], pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 	if(!trig || nt<=0)	return;
-	p[3]=p[13]=p[23]=pp[3];
-	p[4]=p[14]=p[24]=0;
-	p[5]=p[15]=p[25]=NAN;
+	txt[long(pp[3])].GetC(pp[3],0,p+8);
+	p[3]=pp[3];	p[4]=0;	p[5]=NAN;
+	memcpy(p+12,p,12*sizeof(float));
+	memcpy(p+24,p,12*sizeof(float));
 	mglPoint p1,p2,p3;
 	for(ik=0;ik<nt;ik++)
 	{
@@ -749,18 +750,21 @@ void mglCanvas::glyph_fill(float *pp, float f, int nt, const short *trig)
 		ii+=2;		p2 = mglPoint(f*trig[ii]+pp[0],f*trig[ii+1]+pp[1],0);	PostScale(p2);
 		ii+=2;		p3 = mglPoint(f*trig[ii]+pp[0],f*trig[ii+1]+pp[1],0);	PostScale(p3);
 		p[0] =p1.x;	p[1] =p1.y;	p[2] =p1.z+pw;
-		p[10]=p2.x;	p[11]=p2.y;	p[12]=p2.z+pw;
-		p[20]=p3.x;	p[21]=p3.y;	p[22]=p3.z+pw;
-		trig_draw(p,p+10,p+20);
+		p[12]=p2.x;	p[13]=p2.y;	p[14]=p2.z+pw;
+		p[24]=p3.x;	p[25]=p3.y;	p[26]=p3.z+pw;
+		trig_draw(p,p+12,p+24);
 	}
+	delete []p;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_wire(float *pp, float f, int nl, const short *line)
 {
 	if(!line || nl<=0)	return;
 	long ik,ii,il=0;
-	float p[14];
-	p[3]=p[10]=pp[3];
+	float *p=new float[24];
+	txt[long(pp[3])].GetC(pp[3],0,p+8);
+	p[3]=pp[3];	p[4]=0;	p[5]=NAN;
+	memcpy(p+12,p,12*sizeof(float));
 	unsigned pdef=PDef;	PDef = 0xffff;
 	float opw=PenWidth;	PenWidth=0.75;
 	mglPoint p1,p2;
@@ -781,20 +785,22 @@ void mglCanvas::glyph_wire(float *pp, float f, int nl, const short *line)
 		}
 		PostScale(p1);	PostScale(p2);
 		p[0]=p1.x;	p[1]=p1.y;	p[2]=p1.z;
-		p[7]=p2.x;	p[8]=p2.y;	p[9]=p2.z;
-		line_draw(p,p+7);
+		p[12]=p2.x;	p[13]=p2.y;	p[14]=p2.z;
+		line_draw(p,p+12);
 	}
-	PDef = pdef;	PenWidth = opw;
+	PDef = pdef;	PenWidth = opw;	delete []p;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_line(float *pp, float f, bool solid)
 {
-	float p[48], pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
+	float *p=new float[48], pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 	unsigned pdef=PDef;	PDef = 0xffff;
 	float opw=PenWidth;	PenWidth=1;
-	p[3]=p[13]=p[23]=p[33]=pp[3];
-	p[4]=p[14]=p[24]=p[34]=0;
-	p[5]=p[15]=p[25]=p[35]=NAN;
+	txt[long(pp[3])].GetC(pp[3],0,p+8);
+	p[3]=pp[3];	p[4]=0;	p[5]=NAN;
+	memcpy(p+12,p,12*sizeof(float));
+	memcpy(p+24,p,12*sizeof(float));
+	memcpy(p+36,p,12*sizeof(float));
 	mglPoint p1,p2,p3,p4;
 
 	float dy = 0.004;
@@ -802,15 +808,21 @@ void mglCanvas::glyph_line(float *pp, float f, bool solid)
 	p2 = mglPoint(pp[0],pp[1]+dy,0);	PostScale(p2);
 	p3 = mglPoint(fabs(f)+pp[0],pp[1]-dy,0);	PostScale(p3);
 	p4 = mglPoint(fabs(f)+pp[0],pp[1]-dy,0);	PostScale(p4);
+
+	p[0] =p1.x;	p[1] =p1.y;	p[2] =p1.z;
+	p[12]=p2.x;	p[13]=p2.y;	p[14]=p2.z;
+	p[24]=p3.x;	p[25]=p3.y;	p[26]=p3.z;
+	p[36]=p3.x;	p[36]=p3.y;	p[38]=p3.z;
+
 	if(solid)
 	{
-		p[2]+=pw;	p[12]+=pw;	p[22]+=pw;	p[32]+=pw;
-		quad_draw(p,p+10,p+20,p+30);
+		p[2]+=pw;	p[14]+=pw;	p[26]+=pw;	p[38]+=pw;
+		quad_draw(p,p+12,p+24,p+36);
 	}
 	else
 	{
-		line_draw(p,p+19);	line_draw(p+30,p+10);
-		line_draw(p,p+20);	line_draw(p+30,p+20);
+		line_draw(p,p+12);	line_draw(p+36,p+12);
+		line_draw(p,p+24);	line_draw(p+36,p+24);
 	}
 	PDef = pdef;	PenWidth=opw;
 }

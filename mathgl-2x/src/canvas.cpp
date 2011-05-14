@@ -315,8 +315,8 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, char col)
 	a.s = fscl/PlotFactor;	a.w = ftet;	a.p = PlotFactor;
 	float cc = AddTexture(col);	// TODO: use real color
 	if(cc<0)	cc = CDef;
-	a.n1 = AddPnt(mglPoint((B[9]-zoomx1*Width) /zoomx2, (B[10]-zoomy1*Height)/zoomy2, B[11]), cc);
-	a.n2 = AddPnt(mglPoint(x,y,f/fnt->GetFact(s&3)),cc);
+	a.n1 = AddPnt(mglPoint((B[9]-zoomx1*Width) /zoomx2, (B[10]-zoomy1*Height)/zoomy2, B[11]), cc, mglPoint(NAN), 0, false);
+	a.n2 = AddPnt(mglPoint(x,y,f/fnt->GetFact(s&3)), cc, mglPoint(NAN), 0, false);
 	a.style = s;	a.m = j;
 	a.z = B[11];
 	add_prim(a);
