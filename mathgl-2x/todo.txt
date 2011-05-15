@@ -1,11 +1,9 @@
 ============= TEST =============
 1. Triangulation
 2. Text
-	* printing itself
 	* export as text (EPS, SVG, TeX ...)
 3. Axis
-	* grid lines
-	* colors
+	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
 	* ticks (rotation and skipping)
 	* time ticks (test)
 4. legend
@@ -13,6 +11,7 @@
 6. widgets
 7. stfa
 8. Bugfix for colors in trig_plot, line_plot inside glyph
+9. arrow_plot()
 
 ============= NEW  =============
 
@@ -52,7 +51,6 @@
 24. Labels at TriCont()
 25. Cones() -- like Bars() but by Cone()
 
-
 ============= UNSURE ===========
 
 1. 3D-like solid marks
@@ -70,6 +68,7 @@
 13. Use Hershey as built-in font ???
 14. Add "colorbar x y ['sch'='' w=1 h=1]" + "colorbar x y dat ['sch'='' w=1 h=1]" -- NO because need w,h !
 15. String variables in MGL + readstr command.
+16. Pool of threads for speeding up ???
 
 ============= DOCS =============
 

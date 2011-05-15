@@ -58,7 +58,7 @@ void mglCanvas::DefaultPlotParam()
 	BarWidth = 0.7;			//fit_res[0] = 0;
 	MarkSize = 0.02;		ArrowSize = 0.03;
 	AlphaDef = 0.5;			FontDef[0]=0;
-	TranspType = 0;			MeshNum = 0;
+	SetTranspType(0);		MeshNum = 0;
 	RotatedText = true;		CurrPal = 0;
 	SetAxisStl();
 	ClearLegend();			LegendBox = true;
@@ -69,8 +69,6 @@ void mglCanvas::DefaultPlotParam()
 	ax.t[0]=ay.t[0]=az.t[0]=ac.t[0]=0;
 	AutoPlotFactor = true;	PlotFactor = 1.55;
 	TickLen = 0.1;	Cut = true;
-	TickStl[0] = SubTStl[0] = '-';
-	TickStl[1] = SubTStl[1] = 0;
 
 	for(int i=0;i<10;i++)	{	AddLight(i, mglPoint(0,0,1));	Light(i,false);	}
 	Light(0,true);			Light(false);

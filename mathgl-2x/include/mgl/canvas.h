@@ -173,7 +173,7 @@ public:
 	virtual bool Alpha(bool enable);
 	/// Set the transparency type
 	inline void SetTranspType(int val)
-	{	TranspType=val;	SetAxisStl(val==2?"w":"k");	}
+	{	TranspType=val;	SetAxisStl(val==2?"w-":"k-");	}
 	/// Set the fog distance or switch it off (if d=0).
 	virtual void Fog(float d, float dz=0.25);
 	/// Set the using of light on/off.

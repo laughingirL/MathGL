@@ -713,6 +713,7 @@ void mglCanvas::glyph_draw(const mglPrim *P)
 {
 	float *p = pnt+12*P->n2, f = pnt[12*P->n2+2];
 	Push();
+	memset(B,0,12*sizeof(float));
 	B[0] = B[4] = B[8] = P->s*P->p;	PlotFactor = P->p;
 	NoAutoFactor=false;	RotateN(P->w,0,0,1);	NoAutoFactor=false;
 	B[9] = pnt[12*P->n1];
@@ -804,15 +805,15 @@ void mglCanvas::glyph_line(float *pp, float f, bool solid)
 	mglPoint p1,p2,p3,p4;
 
 	float dy = 0.004;
-	p1 = mglPoint(pp[0],pp[1]+dy,0);	PostScale(p1);
+	p1 = mglPoint(pp[0],pp[1]-dy,0);	PostScale(p1);
 	p2 = mglPoint(pp[0],pp[1]+dy,0);	PostScale(p2);
-	p3 = mglPoint(fabs(f)+pp[0],pp[1]-dy,0);	PostScale(p3);
+	p3 = mglPoint(fabs(f)+pp[0],pp[1]+dy,0);	PostScale(p3);
 	p4 = mglPoint(fabs(f)+pp[0],pp[1]-dy,0);	PostScale(p4);
 
 	p[0] =p1.x;	p[1] =p1.y;	p[2] =p1.z;
 	p[12]=p2.x;	p[13]=p2.y;	p[14]=p2.z;
 	p[24]=p3.x;	p[25]=p3.y;	p[26]=p3.z;
-	p[36]=p3.x;	p[36]=p3.y;	p[38]=p3.z;
+	p[36]=p4.x;	p[37]=p4.y;	p[38]=p4.z;
 
 	if(solid)
 	{

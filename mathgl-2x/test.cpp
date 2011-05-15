@@ -35,13 +35,14 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
+	gr->Rotate(40,60);
 	gr->Puts(mglPoint(0,0),"Test","t");
 	gr->Puts(mglPoint(0,0),"Test","T");
 	gr->Line(mglPoint(0),mglPoint(1),"r");
 	gr->Puts(mglPoint(-1,0),mglPoint(1,1),"angle");
 	gr->Line(mglPoint(-1,0),mglPoint(0,1),"r");
 	gr->Label('x',"X axis");	gr->Label('y',"Y axis");
-	gr->Axis();
+	gr->Axis(); gr->Grid();
 	return 0;
 
 	mglParse par;
@@ -201,6 +202,7 @@ void smgl_fonts(mglGraph *gr)	// ticks features
 	gr->LoadFont("pagella");	gr->Puts(mglPoint(0,h-7*d), "pagella font");
 	gr->LoadFont("schola");		gr->Puts(mglPoint(0,h-8*d), "schola font");
 	gr->LoadFont("termes");		gr->Puts(mglPoint(0,h-9*d), "termes font");
+	gr->LoadFont("STIX");
 }
 //-----------------------------------------------------------------------------
 void smgl_stick(mglGraph *gr)	// column plot

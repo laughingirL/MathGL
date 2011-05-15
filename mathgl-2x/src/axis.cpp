@@ -513,7 +513,7 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 		k1 = AddPnt(p,CDef);
 		for(j=1;j<31;j++)
 		{
-			v = i/30.;
+			v = j/30.;
 			p = q+da1*(1-v)+da2*v;
 			k2 = k1;	k1 = AddPnt(p,CDef);
 			line_plot(k2,k1);
@@ -522,7 +522,7 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 		k1 = AddPnt(p,CDef);
 		for(j=1;j<31;j++)
 		{
-			v = i/30.;
+			v = j/30.;
 			p = q+db1*(1-v)+db2*v;
 			k2 = k1;	k1 = AddPnt(p,CDef);
 			line_plot(k2,k1);
