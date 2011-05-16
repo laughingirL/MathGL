@@ -75,13 +75,20 @@ long mglCanvas::ProjScale(int nf, mglPoint pp, mglPoint nn, float c, float a)
 	if(isnan(pp.x))	return -1;
 	mglPoint q=pp/(2*PlotFactor), p, n=nn;
 	register float w=B1[0], h=B1[4], xx=B1[9]-zoomx1*Width, yy=B1[10]-zoomy1*Height;
-	if(TernAxis&2)
+	if((TernAxis&3)==1)	// usual ternary axis
 	{
-
+		if(nf==0)
+		{	p.x = (xx+w/2 + (q.x+(q.y+1)/2)*w/2)/zoomx2;
+			n.x = (nn.x+nn.y/2)*w/2/zoomx2;
+			p.y = (yy+h + q.y*h/2)/zoomy2;	n.y = nn.y*h/2/zoomy2;	}
 	}
-	else if(TernAxis&1)
+	else if((TernAxis&3)==2)	// quaternary axis
 	{
-
+		if(nf==0)
+		{	p.x = (xx+w/2 + (q.x+1+(q.y+q.z)/2)*w/2)/zoomx2;
+			n.x = (nn.x+(nn.y+nn.z)/2)*w/2/zoomx2;
+			p.y = (yy+h + (q.y+(q.z+1)/3)*h/2)/zoomy2;
+			n.y = (nn.y+nn.z/3)*h/2/zoomy2;	}
 	}
 	else
 	{

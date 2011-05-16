@@ -48,7 +48,7 @@ void mglCanvas::DefaultPlotParam()
 //	AutoOrg = true;
 //	CirclePnts=40;	FitPnts=100;	GridPnts=50;
 	LegendMarks = 1;		FontSize = 5;
-	SetAmbient();				Ternary(0);
+	SetAmbient();			Ternary(0);
 	PlotId = "frame";		SetPenPal("k-1");
 	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
