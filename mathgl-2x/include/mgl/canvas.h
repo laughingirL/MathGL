@@ -375,8 +375,10 @@ private:
 	/// Fast drawing of line between 2 points
 	void fast_draw(const float *p1, const float *p2);
 
-	/// Additionally scale points \a p (array with length 3*n) for positioning in image
+	/// Additionally scale points \a p for positioning in image
 	void PostScale(mglPoint &p);
+	/// Scale points \a p for projection to the face number \a nface in image
+	long ProjScale(int nface, mglPoint p, mglPoint n, float c, float a);
 	inline void PostScale(mglPoint *p,long n)	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
 
 	void InPlot(float x1,float x2,float y1,float y2, const char *style);

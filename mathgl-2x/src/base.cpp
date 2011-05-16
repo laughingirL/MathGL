@@ -250,15 +250,24 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 		n.x *= 2/(FMax.x - FMin.x);
 		n.y *= 2/(FMax.y - FMin.y);
 		n.z *= 2/(FMax.z - FMin.z);
-		if(TernAxis)
+		if(TernAxis&3)	// usual ternary axis
 		{
 			if(x+y>0)
 			{
 				if(Cut)	res = false;
 				else	y = -x;
 			}
-			x = x + (y+1)/2;
-			n.x=n.x + n.y/2;
+			x += (y+1)/2;	n.x += n.y/2;
+		}
+		if(TernAxis&2)	// quaternary axis
+		{
+			if(x+y+z>0)
+			{
+				if(Cut)	res = false;
+				else	z = -y-x;
+			}
+			x += (z+1)/2;	y += (z+1)/3;
+			n.x += n.z/2;	n.y += n.z/3;
 		}
 //		if(fabs(x)>MGL_FLT_EPS)	res = false;
 //		if(fabs(y)>MGL_FLT_EPS)	res = false;

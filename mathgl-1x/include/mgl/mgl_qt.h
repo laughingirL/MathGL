@@ -24,8 +24,8 @@
 #ifndef MGL_QT_H
 #define MGL_QT_H
 //-----------------------------------------------------------------------------
-#include <QWidget>
-#include <QPixmap>
+#include <QtGui/QWidget>
+#include <QtGui/QPixmap>
 #include <mgl/mgl_zb.h>
 //-----------------------------------------------------------------------------
 class QTextEdit;

@@ -59,7 +59,44 @@ bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 	n.x = (y.x*B[0] + y.y*B[1] + y.z*B[2])/zoomx2;
 	n.y = (y.x*B[3] + y.y*B[4] + y.z*B[5])/zoomy2;
 	n.z = (y.x*B[6] + y.y*B[7] + y.z*B[8])/sqrt(zoomx2*zoomy2);
+	if(Persp)
+	{
+		register float d = (1-Persp*Depth/2)/(1-Persp*p.z);
+		// NOTE: No d* since I use transformed p here.
+		register float dd = Persp*n.z/(1-Persp*p.z);
+		n.x = d*n.x + dd*(p.x-Width/2);
+		n.y = d*n.y + dd*(p.y-Height/2);
+	}
 	return res;
+}
+//-----------------------------------------------------------------------------
+long mglCanvas::ProjScale(int nf, mglPoint pp, mglPoint nn, float c, float a)
+{
+	if(isnan(pp.x))	return -1;
+	mglPoint q=pp/(2*PlotFactor), p, n=nn;
+	register float w=B1[0], h=B1[4], xx=B1[9]-zoomx1*Width, yy=B1[10]-zoomy1*Height;
+	if(TernAxis&2)
+	{
+
+	}
+	else if(TernAxis&1)
+	{
+
+	}
+	else
+	{
+		if(nf==0)
+		{	p.x = (xx + q.x*w/2)/zoomx2;	n.x = nn.x*w/2/zoomx2;
+			p.y = (yy + q.y*h/2)/zoomy2;	n.y = nn.y*h/2/zoomy2;	}
+		else if(nf==1)
+		{	p.x = (xx + q.x*w/2)/zoomx2;	n.x = nn.x*w/2/zoomx2;
+			p.y = (yy + q.z*h/2+h)/zoomy2;	n.y = nn.z*h/2/zoomy2;	}
+		else if(nf==2)
+		{	p.x = (xx + q.z*w/2+w)/zoomx2;	n.x = nn.z*w/2/zoomx2;
+			p.y = (yy + q.y*h/2)/zoomy2;	n.y = nn.y*h/2/zoomy2;	}
+		else	return -1;
+	}
+	return AddPnt(p,c,n,a,false);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::LightScale()
