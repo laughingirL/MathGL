@@ -24,7 +24,7 @@ mglCanvasW::mglCanvasW() : mglCanvas()
 {
 	AutoClf=true;	ClfOnUpdate=true;
 	Delay=0.5;		ShowMousePos=false;
-	NumFig=0;	LoadFunc=0;	FuncPar=0;	DrawFunc=0;
+	LoadFunc=0;	FuncPar=0;	DrawFunc=0;
 }
 //-----------------------------------------------------------------------------
 int mgl_draw_class(mglBase *gr, void *p)

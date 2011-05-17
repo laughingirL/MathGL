@@ -54,10 +54,10 @@ int main(int argc,char **argv)
 	}
 	return 0;   // finish calculations and close the window*/
 #else
-	mglCanvasFL gr;
 	char key = 0;
 	if(argc>1)	key = (argv[1][0]!='-') ? argv[1][0] : argv[1][1];
 	if(!key)	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
+	mglCanvasFL gr;
 	switch(key)
 	{
 	case '1':	gr.Window(argc,argv,sample_1,"1D plots");	break;
