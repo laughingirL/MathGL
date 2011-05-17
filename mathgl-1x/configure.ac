@@ -247,12 +247,12 @@ AS_IF([test "x$pdf" == xtrue],
   [AC_CHECK_LIB([hpdf], [main],
    [],
    [AC_MSG_FAILURE(
-   [--enable-pdf was given, but test for libharu failed])]
+   [--enable-pdf was given, but test for libharu or libhpdf failed])]
   )])
 AS_IF([test "x$pdf" == xtrue],
   [AC_CHECK_HEADERS([hpdf.h], [],
   [AC_MSG_FAILURE(
-  [--enable-pdf was given, but test for headers failed])]
+  [--enable-pdf was given, but test for libharu or libhpdf headers failed])]
   )])
 AM_CONDITIONAL(USE_PDF, test x$pdf = xtrue)
 
