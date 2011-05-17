@@ -18,6 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "mgl/window.h"
+#include "mgl/mgl.h"
+//-----------------------------------------------------------------------------
+mglCanvasW::mglCanvasW() : mglCanvas()
+{
+	AutoClf=true;	ClfOnUpdate=true;
+	Delay=0.5;		ShowMousePos=false;
+	NumFig=0;	LoadFunc=0;	FuncPar=0;	DrawFunc=0;
+}
 //-----------------------------------------------------------------------------
 int mgl_draw_class(mglBase *gr, void *p)
 {	return p ? ((mglDraw *)p)->Draw(gr) : 0;	}
@@ -25,6 +33,16 @@ void mgl_reload_class(int next, void *p)
 {	if(p)	((mglDraw *)p)->Reload(next);	}
 void mglCanvasW::Window(int argc, char **argv, const char *title, mglDraw *draw, bool maximize)
 {	Window(argc, argv, mgl_draw_class, title, draw, mgl_reload_class, maximize);	}
+//-----------------------------------------------------------------------------
+typedef int (*draw_func)(mglGraph *gr);
+int mgl_draw_graph(mglBase *gr, void *p)
+{
+	mglGraph g(gr);
+	draw_func func = (draw_func)(p);
+	return func ? func(&g) : 0;
+}
+void mglCanvasW::Window(int argc, char **argv, int (*draw)(mglGraph *gr), const char *title, bool maximize)
+{	Window(argc,argv,mgl_draw_graph,title,(void*)draw,0,maximize);	}
 //-----------------------------------------------------------------------------
 void mgl_wnd_set_delay(HMGL gr, mreal dt)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->Delay = dt;	}

@@ -568,8 +568,8 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 
 	if(Wnd)	{	Wnd->label(title);	Wnd->show();	return;	}
 
-	Fl_Window *w1=new Fl_Double_Window(0,0,630,460,title);
-	menu = new Fl_Menu_Bar(0, 0, 630, 30);
+	Fl_Window *w1=new Fl_Double_Window(0,0,830,660,title);
+	menu = new Fl_Menu_Bar(0, 0, 830, 30);
 	menu->copy(menuitems, this);
 
 	Fl_Group *g = new Fl_Group(0,30,410,30);
@@ -642,9 +642,9 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 
 	g->end();	g->resizable(0);
 
-	scroll = new Fl_Scroll(30, 60, 600, 400);
+	scroll = new Fl_Scroll(30, 60, 800, 600);
 	//scroll->begin();
-	FMGL = new Fl_MathGL(30, 60, 600, 400);
+	FMGL = new Fl_MathGL(30, 60, 800, 600);
 	FMGL->tet_val = tet;
 	FMGL->phi_val = phi;
 	FMGL->set_popup(pop_graph,w1,this);

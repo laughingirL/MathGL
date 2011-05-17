@@ -33,15 +33,19 @@ struct mglDraw
 	virtual ~mglDraw()	{};
 };
 //-----------------------------------------------------------------------------
+class mglGraph;
+//-----------------------------------------------------------------------------
 /// Base class for windows containing MathGL graphics
 class mglCanvasW : public mglCanvas
 {
 public:
 	bool AutoClf;		///< Clear canvas between drawing
-	mreal Delay;		///< Delay for animation in seconds
+	float Delay;		///< Delay for animation in seconds
 	bool ShowMousePos;	///< Switch to show or not mouse click position
 	mglPoint LastMousePos;	///< Last mouse position
 	bool ClfOnUpdate;	///< Clear plot before Update()
+
+	mglCanvasW();
 
 	virtual void ToggleAlpha()=0;	///< Switch on/off transparency (do not overwrite user settings)
 	virtual void ToggleLight()=0;	///< Switch on/off lighting (do not overwrite user settings)
@@ -58,6 +62,8 @@ public:
 	virtual void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),
 						const char *title, void *par=NULL,
 						void (*reload)(int next, void *p)=NULL, bool maximize=false)=0;
+	void Window(int argc, char **argv, int (*draw)(mglGraph *gr),
+						const char *title, bool maximize=false);
 	/// Create a window for plotting based on class mglDraw.
 	void Window(int argc, char **argv, const char *title, mglDraw *draw, bool maximize=false);
 

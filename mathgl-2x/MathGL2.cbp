@@ -38,6 +38,8 @@
 		<Linker>
 			<Add option="-lgsl -lgslcblas -lpthread -lz -lpng -lGL -lfltk" />
 		</Linker>
+		<Unit filename="examples/fltk_example.cpp" />
+		<Unit filename="examples/wnd_samples.cpp" />
 		<Unit filename="include/mgl/base.h" />
 		<Unit filename="include/mgl/base_cf.h" />
 		<Unit filename="include/mgl/canvas.h" />
@@ -119,7 +121,6 @@
 		<Unit filename="src/tex_table.cpp" />
 		<Unit filename="src/vect.cpp" />
 		<Unit filename="src/volume.cpp" />
-		<Unit filename="test.cpp" />
 		<Unit filename="todo.txt" />
 		<Unit filename="widget/fltk.cpp" />
 		<Unit filename="widget/window.cpp" />
