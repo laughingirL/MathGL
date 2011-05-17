@@ -1154,11 +1154,14 @@ void mglData::operator=(mreal v)
 {	for(long i=0;i<nx*ny*nz;i++)	a[i]=v;	}
 //-----------------------------------------------------------------------------
 void mglData::Set(const std::vector<int> &d)
-{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+{	if(d.size()<1)	return;
+	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
 void mglData::Set(const std::vector<float> &d)
-{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+{	if(d.size()<1)	return;
+	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
 void mglData::Set(const std::vector<double> &d)
-{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+{	if(d.size()<1)	return;
+	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
 //-----------------------------------------------------------------------------
 void mglData::NewId()
 {	delete []id;	id=new char[nx];	memset(id,0,nx*sizeof(char));	}

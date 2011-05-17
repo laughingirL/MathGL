@@ -371,11 +371,14 @@ public:
 	inline void Set(const mglData &dat)	{	mgl_data_set(this, &dat);	}
 	/// Allocate memory and copy data from std::vector<T>
 	inline void Set(const std::vector<int> &d)
-	{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+	{	if(d.size()<1)	return;
+		Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
 	inline void Set(const std::vector<float> &d)
-	{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+	{	if(d.size()<1)	return;
+		Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
 	inline void Set(const std::vector<double> &d)
-	{	Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+	{	if(d.size()<1)	return;
+		Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
 	/// Rearange data dimensions
 	inline void Rearrange(long mx, long my=0, long mz=0)
 	{	mgl_data_rearrange(this,mx,my,mz);	}

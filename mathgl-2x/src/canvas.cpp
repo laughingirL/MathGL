@@ -280,17 +280,17 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	Push();
 	float shift = -sh-0.2, fsize=size/8.*font_factor, h = fnt->Height(font)*fsize;
 	if(strchr(font,'T'))	shift = sh+0.3;
-
-	shift *= h;
+	shift *= h;		B[11]= pp[2];
 
 	float *pp=pnt+12*p, ll=pp[5]*pp[5]+pp[6]*pp[6];
-	B[11]= pp[2];
+	if(pp[5]<0)	{	pp[5]=-pp[5];	pp[6]=-pp[6];	pp[7]=-pp[7];	}
+
 	if(isnan(ll))
 	{
 		memset(B,0,12*sizeof(float));
 		B[0] = B[4] = B[8] = fsize;
 		fscl = fsize;	ftet = 0;
-		B[9] = pp[0] - B[1]*0.02f;
+		B[9] = pp[0] - B[0]*0.02f;
 		B[10]= pp[1] - B[4]*0.02f - shift;
 	}
 	else
@@ -302,7 +302,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 		B[0] = B[4] = B[8] = fsize;
 		fscl = fsize;	ftet = -tet;
 //		NoAutoFactor=true;	RotateN(-tet,0,0,1);	NoAutoFactor=false;
-		B[9] = pp[0]+shift*pp[6]/sqrt(ll) - B[1]*0.02f;
+		B[9] = pp[0]+shift*pp[6]/sqrt(ll) - B[0]*0.02f;
 		B[10]= pp[1]-shift*pp[5]/sqrt(ll) - B[4]*0.02f;
 	}
 	fsize = fnt->Puts(text,font)*size/8.;
