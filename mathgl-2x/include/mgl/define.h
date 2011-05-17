@@ -147,6 +147,8 @@ enum{	// Codes for warnings/messages
 #define MGL_DEF_PAL	"bgrcmyhlnqeupH"	// default palette
 #endif
 //-----------------------------------------------------------------------------
+#define mgl_realloc(T,o,no,nn) {T *_tmp = new T[nn]; memcpy(_tmp,o,(no)*sizeof(T)); delete []o; o=_tmp;}
+//-----------------------------------------------------------------------------
 struct mglThread
 {
 	mreal *a;		// float* array with parameters or results

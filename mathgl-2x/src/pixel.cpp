@@ -53,6 +53,7 @@ void mglCanvas::PostScale(mglPoint &p)
 bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 {
 	bool res = mglBase::ScalePoint(p,n,use_nan);
+	if(TernAxis&4)	return res;
 	PostScale(p);
 
 	mglPoint y=n/(2*PlotFactor);
@@ -70,8 +71,10 @@ bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 	return res;
 }
 //-----------------------------------------------------------------------------
-long mglCanvas::ProjScale(int nf, mglPoint pp, mglPoint nn, float c, float a)
+long mglCanvas::ProjScale(int nf, long id)
 {
+	float *p0=pnt+12*id;
+	mglPoint pp(p0[0],p0[1],p0[2]), nn(p0[5],p0[6],p0[7]);
 	if(isnan(pp.x))	return -1;
 	mglPoint q=pp/(2*PlotFactor), p, n=nn;
 	register float w=B1[0], h=B1[4], xx=B1[9]-zoomx1*Width, yy=B1[10]-zoomy1*Height;
@@ -85,6 +88,21 @@ long mglCanvas::ProjScale(int nf, mglPoint pp, mglPoint nn, float c, float a)
 	else if((TernAxis&3)==2)	// quaternary axis
 	{
 		if(nf==0)
+		{	p.x = (xx+w/2 + (q.x+(q.y+1)/2)*w/2)/zoomx2;
+			n.x = (nn.x+nn.y/2)*w/2/zoomx2;
+			p.y = (yy+h + q.y*h/2)/zoomy2;
+			n.y = nn.y*h/2/zoomy2;	}
+		else if(nf==1)
+		{	p.x = (xx+w/2 + (q.x+(1-q.z)/2)*w/2)/zoomx2;
+			n.x = (nn.x-nn.z/2)*w/2/zoomx2;
+			p.y = (yy+h - q.z*h/2)/zoomy2;
+			n.y = -nn.z*h/2/zoomy2;	}
+		else if(nf==2)
+		{	p.x = (xx+w/2 + (q.y-q.z)/2*w/2)/zoomx2;
+			n.x = (nn.y-nn.z/2)*w/2/zoomx2;
+			p.y = (yy+h + (q.y+q.z)*h/2)/zoomy2;
+			n.y = (nn.y+nn.z)/2*h/2/zoomy2;	}
+		else
 		{	p.x = (xx+w/2 + (q.x+1+(q.y+q.z)/2)*w/2)/zoomx2;
 			n.x = (nn.x+(nn.y+nn.z)/2)*w/2/zoomx2;
 			p.y = (yy+h + (q.y+(q.z+1)/3)*h/2)/zoomy2;
@@ -92,18 +110,37 @@ long mglCanvas::ProjScale(int nf, mglPoint pp, mglPoint nn, float c, float a)
 	}
 	else
 	{
+//		q = q/2.+0.5;
 		if(nf==0)
-		{	p.x = (xx + q.x*w/2)/zoomx2;	n.x = nn.x*w/2/zoomx2;
-			p.y = (yy + q.y*h/2)/zoomy2;	n.y = nn.y*h/2/zoomy2;	}
+		{	p.x = (xx + (q.x-1)*B1[0]/2)/zoomx2;
+			p.y = (yy + (q.y-1)*B1[4]/2)/zoomy2;
+			p.z = (B1[11]+ (q.z-1)*B1[8]/2)/sqrt(zoomx2*zoomy2);
+			n.x = (nn.x*B[0])/zoomx2/2;
+			n.y = (nn.y*B[4])/zoomy2/2;
+			n.z = (nn.z*B[8])/sqrt(zoomx2*zoomy2)/2;	}
 		else if(nf==1)
-		{	p.x = (xx + q.x*w/2)/zoomx2;	n.x = nn.x*w/2/zoomx2;
-			p.y = (yy + q.z*h/2+h)/zoomy2;	n.y = nn.z*h/2/zoomy2;	}
+		{	p.x = (xx + (q.x-1)*B1[0]/2)/zoomx2;
+			p.y = (yy + (q.z+1)*B1[4]/2)/zoomy2;
+			p.z = (B1[11]+ (q.y-1)*B1[8]/2)/sqrt(zoomx2*zoomy2);
+			n.x = (nn.x*B[0])/zoomx2/2;
+			n.y = (nn.z*B[4])/zoomy2/2;
+			n.z = (nn.y*B[8])/sqrt(zoomx2*zoomy2)/2;	}
 		else if(nf==2)
-		{	p.x = (xx + q.z*w/2+w)/zoomx2;	n.x = nn.z*w/2/zoomx2;
-			p.y = (yy + q.y*h/2)/zoomy2;	n.y = nn.y*h/2/zoomy2;	}
-		else	return -1;
+		{	p.x = (xx + (q.z+1)*B1[0]/2)/zoomx2;
+			p.y = (yy + (q.y-1)*B1[4]/2)/zoomy2;
+			p.z = (B1[11]+ (q.x-1)*B1[8]/2)/sqrt(zoomx2*zoomy2);
+			n.x = (nn.z*B[0])/zoomx2/2;
+			n.y = (nn.y*B[4])/zoomy2/2;
+			n.z = (nn.x*B[8])/sqrt(zoomx2*zoomy2)/2;	}
+		else
+		{	p.x = (xx + q.x*B[0]/2 + q.y*B[1]/2 + q.z*B[2]/2 + w/2)/zoomx2;
+			p.y = (yy + q.x*B[3]/2 + q.y*B[4]/2 + q.z*B[5]/2 + h/2)/zoomy2;
+			p.z = (B[11]+ q.x*B[6]/2 + q.y*B[7]/2 + q.z*B[8]/2)/sqrt(zoomx2*zoomy2);
+			n.x = (nn.x*B[0] + nn.y*B[1] + nn.z*B[2])/zoomx2/2;
+			n.y = (nn.x*B[3] + nn.y*B[4] + nn.z*B[5])/zoomy2/2;
+			n.z = (nn.x*B[6] + nn.y*B[7] + nn.z*B[8])/sqrt(zoomx2*zoomy2)/2;	}
 	}
-	return AddPnt(p,c,n,a,false);
+	return CopyProj(id,p,n);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::LightScale()

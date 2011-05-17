@@ -128,8 +128,19 @@ long mglBase::CopyNtoC(long from, float c)	// NOTE: this is not-thread-safe!!!
 	pos++;			return pos-1;
 }
 //-----------------------------------------------------------------------------
+long mglBase::CopyProj(long from, mglPoint p, mglPoint n)	// NOTE: this is not-thread-safe!!!
+{
+	if(pos+1>num)
+	{	num=pos+1;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
+	memcpy(pnt+12*pos, &p, 3*sizeof(float));
+	memcpy(pnt+12*pos+3, pnt+12*from+3, 9*sizeof(float));
+	memcpy(pnt+12*pos+5, &n, 3*sizeof(float));
+	pos++;			return pos-1;
+}
+//-----------------------------------------------------------------------------
 long mglBase::Reserve(long n)	// NOTE: this is not-thread-safe!!!
 {
+	if(TernAxis&4)	n*=4;
 	if(pos+n>num)
 	{	num=pos+n;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
 	return pos;

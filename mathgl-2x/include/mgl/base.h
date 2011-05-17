@@ -304,6 +304,7 @@ public:
 	/// Add point to the pntN and return its position
 	long AddPnt(mglPoint p, float c, mglPoint n=mglPoint(NAN), float a=-1, bool scl=true);
 	long CopyNtoC(long k, float c);
+	long CopyProj(long from, mglPoint p, mglPoint n);	// NOTE: this is not-thread-safe!!!
 	long Reserve(long n);		///< Allocate n-cells for pntC and return current position
 
 	inline long GetPos()	{	return pos;	}

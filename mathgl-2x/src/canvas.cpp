@@ -180,66 +180,66 @@ float mglCanvas::GetOrgZ(char dir)
 //-----------------------------------------------------------------------------
 //	Put primitives
 //-----------------------------------------------------------------------------
+#define MGL_MARK_PLOT	if(Quality&4)	mark_draw(pnt+12*p,type,size?size:MarkSize);else	\
+						{	mglPrim a;	a.w = fabs(PenWidth);	a.s = size?size:MarkSize;	\
+							a.n1 = p;	a.m = type;	a.z = pnt[12*p+2];	add_prim(a);	}
 void mglCanvas::mark_plot(long p, char type, float size)
 {
 	if(isnan(pnt[12*p]))	return;
+	long pp=p;
 	if(size>=0)	size *= MarkSize;
-	if(Quality&4)	mark_draw(pnt+12*p,type,size?size:MarkSize);
-	else
-	{
-		mglPrim a;
-		a.w = fabs(PenWidth);	a.s = size?size:MarkSize;
-		a.n1 = p;	a.m = type;	a.z = pnt[12*p+2];
-		add_prim(a);
-	}
+	if(TernAxis&4) for(int i=0;i<4;i++)
+	{	p = ProjScale(i, pp);	MGL_MARK_PLOT	}
+	else	{	MGL_MARK_PLOT	}
 }
 //-----------------------------------------------------------------------------
+#define MGL_LINE_PLOT	if(Quality&4)	line_draw(pnt+12*p1,pnt+12*p2);else	\
+						{	mglPrim a(1);	a.z = (pnt[12*p1+2]+pnt[12*p2+2])/2;	\
+							if(pw>1)	a.z += pw-1;	a.style=PDef;	a.s = pPos;	\
+							a.n1 = p1;	a.n2 = p2;	a.w = pw;	add_prim(a);	}
 void mglCanvas::line_plot(long p1, long p2)
 {
 	if(PDef==0)	return;
 	if(isnan(pnt[12*p1]) || isnan(pnt[12*p2]))	return;
+	long pp1=p1,pp2=p2;
 	float pw = fabs(PenWidth),d;
-	if(Quality&4)	line_draw(pnt+12*p1,pnt+12*p2);
-	else
-	{
-		mglPrim a(1);	a.w = pw;
-		a.z = (pnt[12*p1+2]+pnt[12*p2+2])/2;
-		if(pw>1)		a.z += pw-1;
-		a.style=PDef;	a.s = pPos;
-		a.n1 = p1;		a.n2 = p2;
-		add_prim(a);
-	}
+	if(TernAxis&4) for(int i=0;i<4;i++)
+	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
+		MGL_LINE_PLOT	}
+	else	{	MGL_LINE_PLOT	}
 	d = hypot(pnt[12*p1]-pnt[12*p2], pnt[12*p1+1]-pnt[12*p2+1]);
 	pPos = fmod(pPos+d/pw/1.5, 16);
 }
 //-----------------------------------------------------------------------------
+#define MGL_TRIG_PLOT	if(Quality&4)	trig_draw(pnt+12*p1,pnt+12*p2,pnt+12*p3,true);else	\
+						{	mglPrim a(2);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	\
+							a.z = (pnt[12*p1+2]+pnt[12*p2+2]+pnt[12*p3+2])/3;	add_prim(a);}
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
 	if(isnan(pnt[12*p1]) || isnan(pnt[12*p2]) || isnan(pnt[12*p3]))	return;
-	if(Quality&4)	trig_draw(pnt+12*p1,pnt+12*p2,pnt+12*p3,true);
-	else
-	{
-		mglPrim a(2);
-		a.n1 = p1;	a.n2 = p2;	a.n3 = p3;
-		a.z = (pnt[12*p1+2]+pnt[12*p2+2]+pnt[12*p3+2])/3;
-		add_prim(a);
-	}
+	long pp1=p1,pp2=p2,pp3=p3;
+	if(TernAxis&4) for(int i=0;i<4;i++)
+	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
+		p3 = ProjScale(i, pp3);	MGL_TRIG_PLOT	}
+	else	{	MGL_TRIG_PLOT	}
 }
 //-----------------------------------------------------------------------------
+#define MGL_QUAD_PLOT	if(Quality&4)	quad_draw(pnt+12*p1,pnt+12*p2,pnt+12*p3,pnt+12*p4);else	\
+						{	mglPrim a(3);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;	\
+							a.z = (pnt[12*p1+2]+pnt[12*p2+2]+pnt[12*p3+2]+pnt[12*p4+2])/4;	\
+							add_prim(a);	}
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 {
 	if(isnan(pnt[12*p1]))	{	trig_plot(p4,p2,p3);	return;	}
 	if(isnan(pnt[12*p2]))	{	trig_plot(p1,p4,p3);	return;	}
 	if(isnan(pnt[12*p3]))	{	trig_plot(p1,p2,p4);	return;	}
 	if(isnan(pnt[12*p4]))	{	trig_plot(p1,p2,p3);	return;	}
-	if(Quality&4)	quad_draw(pnt+12*p1,pnt+12*p2,pnt+12*p3,pnt+12*p4);
-	else
-	{
-		mglPrim a(3);
-		a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;
-		a.z = (pnt[12*p1+2]+pnt[12*p2+2]+pnt[12*p3+2]+pnt[12*p4+2])/4;
-		add_prim(a);
-	}
+	long pp1=p1,pp2=p2,pp3=p3,pp4=p4;
+	if(TernAxis&4) for(int i=0;i<4;i++)
+	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
+		p3 = ProjScale(i, pp3);	p4 = ProjScale(i, pp4);
+		MGL_QUAD_PLOT	}
+	else	{	MGL_QUAD_PLOT	}
 }
 //-----------------------------------------------------------------------------
 const wchar_t *mglCanvas::add_text(const wchar_t *str)
@@ -267,6 +267,14 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	if(isnan(pnt[12*p]))	return 0;
 	if(size<0)	size *= -FontSize;
 
+	if(TernAxis&4)	// text at projections
+	{
+		TernAxis = TernAxis&(~4);
+		for(int i=0;i<4;i++)
+			text_plot(ProjScale(i,p),text,font,size/2,sh);
+		TernAxis = TernAxis|4;
+	}
+
 	if(!(Quality&4))	// add text itself
 	{
 		mglPrim a(6);
@@ -280,12 +288,12 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	Push();
 	float shift = -sh-0.2, fsize=size/8.*font_factor, h = fnt->Height(font)*fsize;
 	if(strchr(font,'T'))	shift = sh+0.3;
-	shift *= h;		B[11]= pp[2];
 
 	float *pp=pnt+12*p, ll=pp[5]*pp[5]+pp[6]*pp[6];
 	if(pp[5]<0)	{	pp[5]=-pp[5];	pp[6]=-pp[6];	pp[7]=-pp[7];	}
+	shift *= h;		B[11]= pp[2];
 
-	if(isnan(ll))
+	if(isnan(ll) || ll==0)
 	{
 		memset(B,0,12*sizeof(float));
 		B[0] = B[4] = B[8] = fsize;

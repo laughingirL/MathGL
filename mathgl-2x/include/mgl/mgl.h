@@ -236,7 +236,7 @@ public:
 	inline void SetFunc(const char *EqX, const char *EqY, const char *EqZ=NULL, const char *EqA=NULL)
 	{	mgl_set_func_ext(gr, EqX, EqY, EqZ,EqA);	}
 	inline void SetCoor(int how)		{	mgl_set_coor(gr, how);	}
-	inline void Ternary(bool val)		{	mgl_set_ternary(gr, val);	}
+	inline void Ternary(int val)		{	mgl_set_ternary(gr, val);	}
 	inline void CutOff(const char *EqC)	{	mgl_set_cutoff(gr, EqC);	}
 
 	inline void Box(const char *col="k", bool ticks=true)
