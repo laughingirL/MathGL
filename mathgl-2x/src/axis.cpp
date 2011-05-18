@@ -622,7 +622,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 	char font[33]="C";
 	if(pos<-0.2)	font[0]='L';	if(pos>0.2)	font[0]='R';
 	strcat(font,FontDef);
-	strcat(font,nn.y>0 || nn.x<0 ? "T":"t");
+	strcat(font,nn.y>1e-5 || nn.x<0 ? "T":"t");
 	text_plot(AddPnt(p,-1,q,0),text,font,-1.4,0.4+shift);
 }
 //-----------------------------------------------------------------------------
@@ -674,7 +674,16 @@ void mglCanvas::Box(const char *col, bool ticks)
 	float tl=TickLen;
 	if(!ticks)	TickLen=0;
 	Org = Min;	Axis("xyz_");
-	if(TernAxis==0)
+	if(TernAxis&1)
+	{
+		Axis("t_");
+		Org.z=Max.z;	Axis("xyt_");
+		Org.x=Max.x;	Axis("z_");
+		Org.x=Min.x;	Org.y=Max.y;	Axis("z_");
+	}
+	else if(TernAxis&2)
+		Axis("tuv_");
+	else
 	{
 		Org.z=Max.z;	Axis("xy_");
 		Org = Max;		Axis("xyz_");
@@ -682,15 +691,6 @@ void mglCanvas::Box(const char *col, bool ticks)
 		Org.x=Min.x;	DrawAxis(az,0,0);
 		Org.x=Max.x;	Org.y=Min.y;	DrawAxis(az,0,0);
 	}
-	else if(TernAxis==1)
-	{
-		Axis("t_");
-		Org.z=Max.z;	Axis("xyt_");
-		Org.x=Max.x;	Axis("z_");
-		Org.x=Min.x;	Org.y=Max.y;	Axis("z_");
-	}
-	else if(TernAxis==2)
-		Axis("tuv_");
 	Org=o;	TickLen=tl;
 }
 //-----------------------------------------------------------------------------

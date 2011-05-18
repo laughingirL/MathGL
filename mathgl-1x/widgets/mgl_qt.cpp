@@ -288,9 +288,9 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 	ev->accept();
 }
 //-----------------------------------------------------------------------------
-QString setExtension(QString &fname, const char *ext)
+QString setExtension(const QString &fname, const char *ext)
 {
-	QString oname;
+	QString oname=fname;
 	if(fname.right(4)!="."+QString(ext))	oname = fname+"."+QString(ext);
 	return oname;
 }

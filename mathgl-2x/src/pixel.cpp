@@ -77,15 +77,15 @@ long mglCanvas::ProjScale(int nf, long id)
 	mglPoint pp(p0[0],p0[1],p0[2]), nn(p0[5],p0[6],p0[7]);
 	if(isnan(pp.x))	return -1;
 	mglPoint q=pp/(2*PlotFactor), p, n=nn;
-	register float w=B1[0], h=B1[4], xx=B1[9]-zoomx1*Width, yy=B1[10]-zoomy1*Height;
-	if((TernAxis&3)==1)	// usual ternary axis
+	register float w=B1[0]/2, h=B1[4]/2, d=B1[8]/2, xx=B1[9]-zoomx1*Width-w/2, yy=B1[10]-zoomy1*Height-h/2;
+	if(TernAxis&1)	// usual ternary axis
 	{
 		if(nf==0)
 		{	p.x = (xx+w/2 + (q.x+(q.y+1)/2)*w/2)/zoomx2;
 			n.x = (nn.x+nn.y/2)*w/2/zoomx2;
 			p.y = (yy+h + q.y*h/2)/zoomy2;	n.y = nn.y*h/2/zoomy2;	}
 	}
-	else if((TernAxis&3)==2)	// quaternary axis
+	else if(TernAxis&2)	// quaternary axis
 	{
 		if(nf==0)
 		{	p.x = (xx+w/2 + (q.x+(q.y+1)/2)*w/2)/zoomx2;
@@ -110,31 +110,30 @@ long mglCanvas::ProjScale(int nf, long id)
 	}
 	else
 	{
-//		q = q/2.+0.5;
 		if(nf==0)
-		{	p.x = (xx + (q.x-1)*B1[0]/2)/zoomx2;
-			p.y = (yy + (q.y-1)*B1[4]/2)/zoomy2;
-			p.z = (B1[11]+ (q.z-1)*B1[8]/2)/sqrt(zoomx2*zoomy2);
-			n.x = (nn.x*B[0])/zoomx2/2;
-			n.y = (nn.y*B[4])/zoomy2/2;
-			n.z = (nn.z*B[8])/sqrt(zoomx2*zoomy2)/2;	}
+		{	p.x = (xx + q.x*w)/zoomx2;
+			p.y = (yy + q.y*h)/zoomy2;
+			p.z = (B1[11]+ q.z*d)/sqrt(zoomx2*zoomy2);
+			n.x = (nn.x*w)/zoomx2/2;
+			n.y = (nn.y*h)/zoomy2/2;
+			n.z = (nn.z*d)/sqrt(zoomx2*zoomy2)/2;	}
 		else if(nf==1)
-		{	p.x = (xx + (q.x-1)*B1[0]/2)/zoomx2;
-			p.y = (yy + (q.z+1)*B1[4]/2)/zoomy2;
-			p.z = (B1[11]+ (q.y-1)*B1[8]/2)/sqrt(zoomx2*zoomy2);
-			n.x = (nn.x*B[0])/zoomx2/2;
-			n.y = (nn.z*B[4])/zoomy2/2;
-			n.z = (nn.y*B[8])/sqrt(zoomx2*zoomy2)/2;	}
+		{	p.x = (xx + q.x*w)/zoomx2;
+			p.y = (yy+h + q.z*h)/zoomy2;
+			p.z = (B1[11]+ q.y*d)/sqrt(zoomx2*zoomy2);
+			n.x = (nn.x*w)/zoomx2/2;
+			n.y = (nn.z*h)/zoomy2/2;
+			n.z = (nn.y*d)/sqrt(zoomx2*zoomy2)/2;	}
 		else if(nf==2)
-		{	p.x = (xx + (q.z+1)*B1[0]/2)/zoomx2;
-			p.y = (yy + (q.y-1)*B1[4]/2)/zoomy2;
-			p.z = (B1[11]+ (q.x-1)*B1[8]/2)/sqrt(zoomx2*zoomy2);
-			n.x = (nn.z*B[0])/zoomx2/2;
-			n.y = (nn.y*B[4])/zoomy2/2;
-			n.z = (nn.x*B[8])/sqrt(zoomx2*zoomy2)/2;	}
+		{	p.x = (xx+w + q.z*w)/zoomx2;
+			p.y = (yy + q.y*h)/zoomy2;
+			p.z = (B1[11]+ q.x*d)/sqrt(zoomx2*zoomy2);
+			n.x = (nn.z*w)/zoomx2/2;
+			n.y = (nn.y*h)/zoomy2/2;
+			n.z = (nn.x*d)/sqrt(zoomx2*zoomy2)/2;	}
 		else
-		{	p.x = (xx + q.x*B[0]/2 + q.y*B[1]/2 + q.z*B[2]/2 + w/2)/zoomx2;
-			p.y = (yy + q.x*B[3]/2 + q.y*B[4]/2 + q.z*B[5]/2 + h/2)/zoomy2;
+		{	p.x = (xx+w + q.x*B[0]/2 + q.y*B[1]/2 + q.z*B[2]/2)/zoomx2;
+			p.y = (yy+h + q.x*B[3]/2 + q.y*B[4]/2 + q.z*B[5]/2)/zoomy2;
 			p.z = (B[11]+ q.x*B[6]/2 + q.y*B[7]/2 + q.z*B[8]/2)/sqrt(zoomx2*zoomy2);
 			n.x = (nn.x*B[0] + nn.y*B[1] + nn.z*B[2])/zoomx2/2;
 			n.y = (nn.x*B[3] + nn.y*B[4] + nn.z*B[5])/zoomy2/2;

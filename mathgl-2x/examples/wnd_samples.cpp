@@ -30,11 +30,12 @@ int test(mglGraph *gr)
 	gr->Rotate(40,60);
 	gr->Puts(mglPoint(0,0),"Test","t");
 	gr->Puts(mglPoint(0,0),"Test","T");
-	gr->Line(mglPoint(0),mglPoint(1),"r");
+	gr->Line(mglPoint(0),mglPoint(1),"m2");
 	gr->Puts(mglPoint(-1,0),mglPoint(1,1),"angle");
 	gr->Line(mglPoint(-1,0),mglPoint(0,1),"r");
-	gr->Label('x',"X axis");	gr->Label('y',"Y axis");
-	gr->Axis(); gr->Grid();
+	gr->Line(mglPoint(-1,-1,-1),mglPoint(1,1,0.5),"b2");
+	gr->Label('x',"X axis");	gr->Label('y',"Y axis");	gr->Label('z',"Z axis");
+	gr->Axis();	gr->Box(); //gr->Grid();
 	return 0;
 
 	mglParse par;

@@ -411,7 +411,7 @@ void mglBase::Ternary(int t)
 	static mglPoint x1(-1,-1,-1),x2(1,1,1),o(NAN,NAN,NAN);
 	static bool c = true;
 	TernAxis = t;
-	if(t)
+	if(t&3)
 	{
 		x1 = Min;	x2 = Max;	o = Org;	c = Cut;
 		Cut = false;
@@ -646,7 +646,7 @@ char mglBase::SetPenPal(const char *p, long *Id)
 {
 	char mk=0, pp=0;
 
-	Arrow1 = Arrow2 = 0;
+	Arrow1 = Arrow2 = 0;	PenWidth = 1;
 	if(p && *p!=0)
 	{
 //		const char *col = "wkrgbcymhRGBCYMHWlenuqpLENUQP";

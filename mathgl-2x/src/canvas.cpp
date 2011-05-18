@@ -269,10 +269,12 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 
 	if(TernAxis&4)	// text at projections
 	{
+		float res;
 		TernAxis = TernAxis&(~4);
 		for(int i=0;i<4;i++)
-			text_plot(ProjScale(i,p),text,font,size/2,sh);
+			res = text_plot(ProjScale(i,p),text,font,size/2,sh);
 		TernAxis = TernAxis|4;
+		return res;
 	}
 
 	if(!(Quality&4))	// add text itself
@@ -292,8 +294,9 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	float *pp=pnt+12*p, ll=pp[5]*pp[5]+pp[6]*pp[6];
 	if(pp[5]<0)	{	pp[5]=-pp[5];	pp[6]=-pp[6];	pp[7]=-pp[7];	}
 	shift *= h;		B[11]= pp[2];
+	if(ll==0)	return 0;
 
-	if(isnan(ll) || ll==0)
+	if(isnan(ll))
 	{
 		memset(B,0,12*sizeof(float));
 		B[0] = B[4] = B[8] = fsize;
