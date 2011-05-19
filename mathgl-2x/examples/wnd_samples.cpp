@@ -26,7 +26,7 @@
 #include "mgl/parser.h"
 int test(mglGraph *gr)
 {
-	gr->Ternary(4);
+	gr->Ternary(1);
 	gr->Rotate(40,60);
 	gr->Puts(mglPoint(0,0),"Test","t");
 	gr->Puts(mglPoint(0,0),"Test","T");
