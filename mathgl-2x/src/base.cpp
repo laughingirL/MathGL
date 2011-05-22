@@ -51,7 +51,8 @@ void mgl_strlwr(char *str)
 //-----------------------------------------------------------------------------
 mglBase::mglBase()
 {
-	memset(this,0,sizeof(mglBase));	InUse = 1;	num=1024;	prev_val = NAN;
+	memset(this,0,sizeof(mglBase));	// since mglBase is abstract then I can do it?!!
+	InUse = 1;	num=1024;	prev_val = NAN;
 	pnt = (float *)malloc(12*num*sizeof(float));
 	txt = (mglTexture *)malloc(2*sizeof(mglTexture));
 	memset(pnt,0,12*num*sizeof(float));

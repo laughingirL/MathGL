@@ -331,10 +331,10 @@ public:
 	inline long GetNy() const	{	return ny;	}
 	inline long GetNz() const	{	return nz;	}
 	/// Get the value in given cell of the data with border checking
-	inline float v(long i,long j=0,long k=0) const
+	inline mreal v(long i,long j=0,long k=0) const
 	{	i = i>=0 ? (i<nx ? i:nx-1):0;	j = j>=0 ? (j<ny ? j:ny-1):0;
 		k = k>=0 ? (k<nz ? k:nz-1):0;	return a[i+nx*(j+ny*k)];	}
-	inline float vthr(long i) const {	return a[i];	}
+	inline mreal vthr(long i) const {	return a[i];	}
 
 	/// Link external data array (don't delete it at exit)
 	inline void Link(mreal *A, long NX, long NY=1, long NZ=1)
@@ -612,8 +612,10 @@ public:
 	{	return mgl_data_linear(this,x*(nx-1),y*(ny-1),z*(nz-1));	}
 
 	/// Copy data from other mglData variable
-	inline void operator=(const mglData &d)	{	Set(d.a,d.nx,d.ny,d.nz);	}
-	inline void operator=(mreal v)	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=v;	}
+	inline mglData &operator=(const mglData &d)
+	{	if(this!=&d)	Set(d.a,d.nx,d.ny,d.nz);	return *this;	}
+	inline mglData &operator=(mreal v)
+	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=v;		return *this;	}
 	/// Multiplicate the data by other one for each element
 	inline void operator*=(const mglData &d)	{	mgl_data_mul_dat(this,&d);	}
 	/// Divide the data by other one for each element
@@ -630,6 +632,7 @@ public:
 	inline void operator+=(mreal d)		{	mgl_data_add_num(this,d);	}
 	/// Substract the number
 	inline void operator-=(mreal d)		{	mgl_data_sub_num(this,d);	}
+	// NOTE see 13.10 for operator(), operator[] -- m.b. I should add it ???
 };
 //-----------------------------------------------------------------------------
 inline mglData operator*(const mglData &b, const mglData &d)

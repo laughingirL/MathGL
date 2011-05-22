@@ -413,7 +413,8 @@ struct mglPrim
 	float inline yy()	{	return gr->pnt[12*n1+1];	}
 	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	}
 //	~mglPrim()	{	if(text)	delete []text;	};
-	inline void operator=(mglPrim &a)	{	memcpy(this,&a,sizeof(mglPrim));	}
+	inline mglPrim &operator=(mglPrim &a)
+	{	if(this!=&a)	memcpy(this,&a,sizeof(mglPrim));	return *this;	}
 };
 //-----------------------------------------------------------------------------
 #endif
