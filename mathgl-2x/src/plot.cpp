@@ -1005,7 +1005,7 @@ void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	static int cgid=1;	gr->StartGroup("BoxPlot",cgid++);
 	float *b = new float[5*n], *d = new float[m], x1, x2;
 	float zVal = gr->Min.z;
-	register long i,j,i0;
+	register long i,j;
 	for(i=0;i<n;i++)	// find quartiles by itself
 	{
 		register long mm,k;
@@ -1025,7 +1025,6 @@ void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->SetPenPal(pen,&pal);	gr->NextColor(pal);	gr->Reserve(18*n);
 	for(i=0;i<n;i++)
 	{
-		i0 = 54*i;
 		if(i<n-1)	x2 = x->v(i) + gr->BarWidth*(x->v(i+1)-x->v(i))/2;
 		else		x2 = x->v(i);
 		if(i>0)		x1 = x->v(i) - gr->BarWidth*(x->v(i)-x->v(i-1))/2;
@@ -1198,7 +1197,7 @@ void mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Chart",cgid++);
 	bool wire = false;	// draw edges
-	register long n=a->GetNx(),i,j,m;
+	register long n=a->GetNx(),i,j;
 	if(cols && !strcmp(cols,"#"))	{	wire = true;	cols = 0;	}
 	if(!cols)	cols = MGL_DEF_PAL;
 	float *c = new float[strlen(cols)+1],cc;
@@ -1220,7 +1219,7 @@ void mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
 		if(ss==0)	continue;
 		for(cs=0,i=0;i<n;i++)
 		{
-			dx = a->v(i,j)/ss;	m = 2+long(38*dx+0.9);	cc = c[i%nc];
+			dx = a->v(i,j)/ss;	cc = c[i%nc];
 			if(dx==0)	continue;
 			x1 = gr->Min.x + (gr->Max.x-gr->Min.x)*cs/ss;	dx *= (gr->Max.x-gr->Min.x);
 			if(cc>=0)

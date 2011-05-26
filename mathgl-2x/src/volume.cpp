@@ -102,12 +102,12 @@ void mgl_cloud_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,in
 mglPoint mgl_normal_3d(const mglDataA *a, mglPoint p, bool inv)
 {
 	long n=a->GetNx(), m=a->GetNy(), l=a->GetNz();
-	register long i,j,k,i0;
+	register long i,j,k;
 	register float x=p.x, y=p.y, z=p.z;
 	float nx=0, ny=0, nz=0;
 	i=long(x);	j=long(y);	k=long(z);
 	i = i<n-1 ? i:n-2;	j = j<m-1 ? j:m-2;	k = k<l-1 ? k:l-2;
-	x-=i;	y-=j;	z-=k;	i0=i+n*(j+m*k);
+	x-=i;	y-=j;	z-=k;
 
 	if(i<n-1)	nx = a->dvx(i,j,k)*(1-x) + a->dvx(i+1,j,k)*x;
 	else		nx = a->dvx(i,j,k);

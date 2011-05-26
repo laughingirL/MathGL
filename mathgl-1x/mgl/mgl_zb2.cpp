@@ -602,7 +602,7 @@ void mglGraphAB::lines_plot(long n,mreal *pp,mreal *cc,bool *tt, bool b,bool grd
 void mglGraphAB::vects_plot(long n,mreal *pp,mreal *cc,bool *tt, bool grd)
 {
 	register long i;
-	mreal s1[4],s2[4],*p,q[6],d;
+	mreal s1[4],s2[4],*p,q[6];
 	mglColor col,c1=cmap[0],c2=(grd && NumCol>1)?cmap[1]:cmap[0];
 	s1[3] = s2[3] = AlphaDef;
 	PostScale(pp,2*n);
@@ -629,7 +629,7 @@ void mglGraphAB::vects_plot(long n,mreal *pp,mreal *cc,bool *tt, bool grd)
 		}
 		memcpy(CDef,s1,4*sizeof(mreal));
 
-		d = hypot(p[3]-p[0],p[4]-p[1]);	// make arrow
+//		d = hypot(p[3]-p[0],p[4]-p[1]);	// make arrow
 		q[0] = p[0]+0.8*(p[3]-p[0]) + 0.1*(p[4]-p[1]);
 		q[3] = p[0]+0.8*(p[3]-p[0]) - 0.1*(p[4]-p[1]);
 		q[1] = p[1]+0.8*(p[4]-p[1]) - 0.1*(p[3]-p[0]);

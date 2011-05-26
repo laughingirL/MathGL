@@ -425,7 +425,7 @@ void mglGraph::Map(const mglData &ax, const mglData &ay, const char *sch, int ks
 //-----------------------------------------------------------------------------
 void mglGraph::Dew(const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, const char *sch, mreal zVal)
 {
-	long i,j,n=ax.nx,m=ax.ny,k,ix,iy,jj,i0;
+	long i,j,n=ax.nx,m=ax.ny,k,ix,iy,jj;
 	if(n*m*ax.nz!=ay.nx*ay.ny*ay.nz)	{	SetWarn(mglWarnDim,"Dew");	return;	}
 	if(n<2 || m<2)						{	SetWarn(mglWarnLow,"Dew");	return;	}
 	bool both = x.nx==n && y.nx==n && x.ny==m && y.ny==m;
@@ -455,7 +455,7 @@ void mglGraph::Dew(const mglData &x, const mglData &y, const mglData &ax, const 
 		if(ax.nz>1)	zVal = Min.z+(Max.z-Min.z)*mreal(k)/(ax.nz-1);
 		for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 		{
-			jj = i+n*(j+m*k);	i0 = i+n*j;
+			jj = i+n*(j+m*k);
 			if(both)
 			{	ix = x.nz>k ? jj : i+n*j;	iy = y.nz>k ? jj : i+n*j;	}
 			else

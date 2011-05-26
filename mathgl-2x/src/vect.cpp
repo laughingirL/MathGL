@@ -606,13 +606,12 @@ void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z
 	long ss = gr->AddTexture(sch);
 
 	// find coordinates u, v, w
-	register long i,j,k,ii;
+	register long i,j,k;
 	register float d, dm=1e7;
 	long i0=0,j0=0,k0=0;
 	float dx,dy,dz;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)	// first find closest
 	{
-		ii = i+n*(j+m*k);
 		if(both)
 		{	dx = x->v(i,j,k)-p.x;	dy = y->v(i,j,k)-p.y;	dz = x->v(i,j,k)-p.z;	}
 		else
@@ -627,7 +626,6 @@ void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z
 		float dxu,dxv,dxw,dyu,dyv,dyw,dzu,dzv,dzw;
 		if(both)
 		{
-			ii = i0+n*j0;
 			dx = x->v(i0,j0,k0)-p.x;	dy = y->v(i0,j0,k0)-p.y;	dz = z->v(i0,j0,k0)-p.z;
 			dxu= x->dvx(i0,j0,k0);		dyu= y->dvx(i0,j0,k0);		dzu= z->dvx(i0,j0,k0);
 			dxv= x->dvy(i0,j0,k0);		dyv= y->dvy(i0,j0,k0);		dzv= z->dvy(i0,j0,k0);

@@ -339,9 +339,6 @@ void mglGraph::ContFX(const mglData &v, const mglData &a, const char *sch, mreal
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContFX");	return;	}
 	if(sVal<Min.x || sVal>Max.x){	SetWarn(mglWarnSlc,"ContFX");	return;	}
 	static int cgid=1;	StartGroup("ContFX",cgid++);
-	long text=0;
-	if(sch && strchr(sch,'t'))	text=-1;
-	if(sch && strchr(sch,'T'))	text=+1;
 	SetScheme(sch);
 	mreal *b = a.a, d;
 	bool bb = false;
@@ -381,9 +378,6 @@ void mglGraph::ContFY(const mglData &v, const mglData &a, const char *sch, mreal
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContFY");	return;	}
 	if(sVal<Min.y || sVal>Max.y){	SetWarn(mglWarnSlc,"ContFY");	return;	}
 	static int cgid=1;	StartGroup("ContFY",cgid++);
-	long text=0;
-	if(sch && strchr(sch,'t'))	text=-1;
-	if(sch && strchr(sch,'T'))	text=+1;
 	SetScheme(sch);
 	mreal *b = a.a, d;
 	bool bb = false;
@@ -423,9 +417,6 @@ void mglGraph::ContFZ(const mglData &v, const mglData &a, const char *sch, mreal
 	if(a.nx<2 || a.ny<2)		{	SetWarn(mglWarnLow,"ContFZ");	return;	}
 	if(sVal<Min.z || sVal>Max.z){	SetWarn(mglWarnSlc,"ContFZ");	return;	}
 	static int cgid=1;	StartGroup("ContFZ",cgid++);
-	long text=0;
-	if(sch && strchr(sch,'t'))	text=-1;
-	if(sch && strchr(sch,'T'))	text=+1;
 	SetScheme(sch);
 	mreal *b = a.a, d;
 	bool bb = false;
