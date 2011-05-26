@@ -59,6 +59,7 @@ void mglGraph::DensX(const mglData &a, const char *sch,mreal sVal)
 		col = GetC(b[i+n*j]);
 		cc[4*i0+0] = col.r;	cc[4*i0+1] = col.g;
 		cc[4*i0+2] = col.b;	cc[4*i0+3] = Transparent ? AlphaDef : 1;
+		ScalePoint(pp[3*i0+0],pp[3*i0+1],pp[3*i0+2]);
 	}
 	surf_plot(n, m, pp, cc, 0);
 	EndGroup();
@@ -100,6 +101,7 @@ void mglGraph::DensY(const mglData &a, const char *sch,mreal sVal)
 		col = GetC(b[i+n*j]);
 		cc[4*i0+0] = col.r;	cc[4*i0+1] = col.g;
 		cc[4*i0+2] = col.b;	cc[4*i0+3] = Transparent ? AlphaDef : 1;
+		ScalePoint(pp[3*i0+0],pp[3*i0+1],pp[3*i0+2]);
 	}
 	surf_plot(n, m, pp, cc, 0);
 	EndGroup();
@@ -140,6 +142,7 @@ void mglGraph::DensZ(const mglData &a, const char *sch,mreal sVal)
 		col = GetC(b[i+n*j]);
 		cc[4*i0+0] = col.r;	cc[4*i0+1] = col.g;
 		cc[4*i0+2] = col.b;	cc[4*i0+3] = Transparent ? AlphaDef : 1;
+		ScalePoint(pp[3*i0+0],pp[3*i0+1],pp[3*i0+2]);
 	}
 	surf_plot(n, m, pp, cc, 0);
 	EndGroup();
