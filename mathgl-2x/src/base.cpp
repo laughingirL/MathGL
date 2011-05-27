@@ -273,10 +273,10 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 		}
 		else if((TernAxis&3)==2)	// quaternary axis
 		{
-			if(x+y+z>0)
+			if(x+y+z>-1)
 			{
 				if(Cut)	res = false;
-				else	z = -y-x;
+				else	z = -1-y-x;
 			}
 			x += 1+(y+z)/2;		y += (z+1)/3;
 			n.x += (n.y+n.z)/2;	n.y += n.z/3;

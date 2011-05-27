@@ -2294,13 +2294,13 @@ void mglc_tricont(wchar_t out[1024], long , mglArg *a, int k[10])
 //-----------------------------------------------------------------------------
 int mgls_ternary(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	if(k[0]==3)	gr->Ternary(a[0].v!=0);
+	if(k[0]==3)	gr->Ternary(int(a[0].v));
 	else	return 1;
 	return 0;
 }
 void mglc_ternary(wchar_t out[1024], long , mglArg *a, int k[10])
 {
-	if(k[0]==3)	mglprintf(out,1024,L"gr->Ternary(%s);", a[0].v!=0?"true":"false");
+	if(k[0]==3)	mglprintf(out,1024,L"gr->Ternary(%d);", int(a[0].v));
 }
 //-----------------------------------------------------------------------------
 int mgls_transpose(mglGraph *, long , mglArg *a, int k[10])
@@ -3119,7 +3119,8 @@ void mglc_fsurf(wchar_t out[1024], long , mglArg *a, int k[10])
 //-----------------------------------------------------------------------------
 int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10])
 {
-	char buf[1024];
+	const long size=1024;
+	char buf[size];
 	FILE *fp;
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
 	{
@@ -3130,8 +3131,9 @@ int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10])
 			if(gr->Message)	sprintf(gr->Message,"Wrong file %s",a[3].s);
 			return 0;
 		}
-		for(i=0;i<n;i++)	if(!fgets(buf,1024,fp))	continue;
-		if(!fgets(buf,1024,fp))
+		for(i=0;i<n;i++)	if(!fgets(buf,size,fp))	continue;
+		memset(buf,0,size);
+		if(!fgets(buf,size,fp))
 		{
 			if(gr->Message)	sprintf(gr->Message,"Couldn't read %d-th string of file %s",n,a[3].s);
 			fclose(fp);	return 0;

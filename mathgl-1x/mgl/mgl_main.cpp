@@ -214,7 +214,25 @@ bool mglGraph::ScalePoint(mreal &x,mreal &y,mreal &z)
 	x = (2*x1 - FMin.x - FMax.x)/(FMax.x - FMin.x);
 	y = (2*y1 - FMin.y - FMax.y)/(FMax.y - FMin.y);
 	z = (2*z1 - FMin.z - FMax.z)/(FMax.z - FMin.z);
-	if(TernAxis)
+	if((TernAxis&3)==1)			// usual ternary axis
+	{
+		if(x+y>0)
+		{
+			if(Cut)	res = false;
+			else	y = -x;
+		}
+		x += (y+1)/2;
+	}
+	else if((TernAxis&3)==2)	// quaternary axis
+	{
+		if(x+y+z>-1)
+		{
+			if(Cut)	res = false;
+			else	z = -1-y-x;
+		}
+		x += 1+(y+z)/2;		y += (z+1)/3;
+	}
+/*	if(TernAxis)
 	{
 		if(x+y>0)
 		{
@@ -222,7 +240,7 @@ bool mglGraph::ScalePoint(mreal &x,mreal &y,mreal &z)
 			else	y = -x;
 		}
 		x = x + (y+1)/2;
-	}
+	}*/
 	if(fabs(x)>FLT_EPS)	res = false;
 	if(fabs(y)>FLT_EPS)	res = false;
 	if(fabs(z)>FLT_EPS)	res = false;

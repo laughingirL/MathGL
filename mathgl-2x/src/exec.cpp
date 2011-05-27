@@ -2198,13 +2198,13 @@ void mglc_tricont(wchar_t out[1024], long , mglArg *a, int k[10], const char *op
 //-----------------------------------------------------------------------------
 int mgls_ternary(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3)	gr->Ternary(a[0].v!=0);
+	if(k[0]==3)	gr->Ternary(int(a[0].v));
 	else	return 1;
 	return 0;
 }
 void mglc_ternary(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3)	mglprintf(out,1024,L"gr->Ternary(%s);", a[0].v!=0?"true":"false");
+	if(k[0]==3)	mglprintf(out,1024,L"gr->Ternary(%d);", int(a[0].v));
 }
 //-----------------------------------------------------------------------------
 int mgls_transpose(mglGraph *, long , mglArg *a, int k[10], const char *)
@@ -2974,6 +2974,7 @@ int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 			return 0;
 		}
 		for(i=0;i<n;i++)	if(!fgets(buf,1024,fp))	continue;
+		memset(buf,0,1024);
 		if(!fgets(buf,1024,fp))
 		{
 			if(gr->Self()->Message)	sprintf(gr->Self()->Message,"Couldn't read %d-th string of file %s",n,a[j+2].s);

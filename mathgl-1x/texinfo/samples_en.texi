@@ -5423,6 +5423,7 @@ subplot 2 2 3: rotate 40 60: axial a: box
 * Mirrored surface sample::     
 * Cont with labels sample::     
 * Ternary plot sample::         
+* Quaternary plot sample::         
 * Coloring by coordinates sample::  
 * Drops sample::                
 * Molecules drawing sample::    
@@ -5980,7 +5981,7 @@ gr.Cont(a,"BbcyrRt");
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Ternary plot sample, Coloring by coordinates sample, Cont with labels sample, Additional features
+@node Ternary plot sample, Quaternary plot sample, Cont with labels sample, Additional features
 @subsection Ternary plot sample
 @cindex Ternary
 @float
@@ -5996,7 +5997,7 @@ x.Modify("0.25*(1+cos(2*pi*x))");
 y.Modify("0.25*(1+sin(2*pi*x))");
 rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
 gr->Text(mglPoint(-0.8,1.3), "Ternary plot (x+y+t=1)");
-gr->Ternary(true);
+gr->Ternary(1);
 gr->Plot(x,y,"r2");
 gr->Plot(rx,ry,"q^ ");
 gr->Cont(a);
@@ -6020,7 +6021,7 @@ modify y '0.25*(1+sin(2*pi*x))'
 modify rx 'rnd'
 modify ry 'rnd*(1-v)' rx
 text -0.8 1.3 'Ternary plot (x+y+t=1)'
-ternary on
+ternary 1
 plot x y 'r2'
 plot rx ry 'q^ '
 cont a
@@ -6097,7 +6098,7 @@ a.Modify("4*x*y");
 x.Modify("0.25*(1+cos(2*pi*x))");   y.Modify("0.25*(1+sin(2*pi*x))");
 rx.Modify("rnd");   ry.Modify("(1-v)*rnd",rx);
 gr.Puts(-0.8,1.3,0,"Ternary plot (x+y+t=1)","C",-1.4);
-gr.Ternary(True);
+gr.Ternary(1);
 gr.Plot(x,y,"r2");  gr.Plot(rx,ry,"q^ ");   gr.Cont(a);
 gr.Line(0.5,0,0,0,0.75,0,"g2");
 gr.Axis();          gr.Grid("xyz","B;");
@@ -6107,7 +6108,81 @@ gr.Label("t","t comp.");
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Coloring by coordinates sample, Drops sample, Ternary plot sample, Additional features
+
+
+@node Quaternary plot sample, Coloring by coordinates sample, Ternary plot sample, Additional features
+@subsection Quaternary plot sample
+@cindex Ternary
+@float
+@image{../png/quaternary, 7cm}
+@c @caption{Example of Ternary plot. @tdref{ternary}}
+@end float
+@ifclear UDAV
+@strong{C++ code}
+@verbatim
+mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
+a.Modify("x*y*(1-x-y)^2*30");
+x.Modify("0.25*(1-x)*(1+cos(2*pi*x))");
+y.Modify("0.25*(1-x)*(1+sin(2*pi*x))");
+z.Modify("x");
+
+gr->Text(mglPoint(0,1.3), "Quaternary plot (x+y+z+t=1)");
+gr->Rotate(60,70);      gr->Light(true);
+gr->Ternary(2);         gr->SetCut(true);
+gr->Plot(x,y,z,"r2");	gr->Surf(a,"#");
+gr->Axis(); gr->Grid();	gr->Box();
+gr->SetRotatedText(false);
+gr->Label('t',"A",1);	gr->Label('x',"B",1);
+gr->Label('y',"C",1);	gr->Label('z',"D",1);
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+new x 50:new y 50:new z 50:new a 20 30
+modify a 'x*y*(1-x-y)^2*30'
+modify x '0.25*(1-x)*(1+cos(2*pi*x))'
+modify y '0.25*(1-x)*(1+sin(2*pi*x))'
+
+text 0 1.3 'Quaternary plot (x+y+z+t=1)'
+rotate 60 70:light on
+ternary 2:cut on
+plot x y z 'r2':surf a '#'
+axis:box:grid
+rotatetext off
+tlabel 'A' 1:xlabel 'B' 1
+ylabel 'C' 1:zlabel 'D' 1
+@end verbatim
+@ifclear UDAV
+@strong{Pure C code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Fortran code}
+@verbatim
+TO BE DONE
+@end verbatim
+@strong{Python}
+@verbatim
+x, y, z, a = mglData(50), mglData(50), mglData(50), mglData(20,30);
+a.Modify("x*y*(1-x-y)^2*30");
+x.Modify("0.25*(1-x)*(1+cos(2*pi*x))");
+y.Modify("0.25*(1-x)*(1+sin(2*pi*x))");
+z.Modify("x");
+
+gr.Text(mglPoint(0,1.3), "Quaternary plot (x+y+z+t=1)");
+gr.Rotate(60,70);       gr.Light(True);
+gr.Ternary(2);          gr.SetCut(True);
+gr.Plot(x,y,z,"r2");    gr.Surf(a,"#");
+gr.Axis(); gr->Grid();  gr.Box();
+gr.SetRotatedText(0);
+gr.Label('t',"A",1);    gr.Label('x',"B",1);
+gr.Label('y',"C",1);    gr.Label('z',"D",1);
+@end verbatim
+@end ifclear
+@c ------------------------------------------------------------------
+
+
+@node Coloring by coordinates sample, Drops sample, Quaternary plot sample, Additional features
 @subsection Coloring by coordinates sample
 @cindex Surf3
 @float

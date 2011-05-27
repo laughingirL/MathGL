@@ -67,19 +67,19 @@ mreal mgl_okrugl(mreal x,int k)
 void mglGraph::DrawXGridLine(mreal t, mreal y0, mreal z0)
 {
 	register int i;
-	mreal *pp = new mreal[3*GridPnts+3];
+	mreal *pp = new mreal[3*GridPnts+3],dd;
 	bool *tt = new bool[GridPnts+1];
+	dd = (Max.z-Min.z - (TernAxis&2 ? t:0))/GridPnts;
 	for(i=0;i<GridPnts+1;i++)
 	{
-		pp[3*i]=t;		pp[3*i+1]=y0;
-		pp[3*i+2]=Min.z+(Max.z-Min.z)*i/GridPnts;
+		pp[3*i]=t;	pp[3*i+1]=y0;	pp[3*i+2]=Min.z+dd*i;
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
+	dd = (Max.y-Min.y - (TernAxis ? t-Min.x:0))/GridPnts;
 	for(i=0;i<GridPnts+1;i++)
 	{
-		pp[3*i]=t;	pp[3*i+2]=z0;
-		pp[3*i+1]=Min.y+(Max.y-(TernAxis ? Min.y+t-Min.x:Min.y))*i/GridPnts;
+		pp[3*i]=t;	pp[3*i+2]=z0;	pp[3*i+1]=Min.y+dd*i;
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
@@ -89,20 +89,23 @@ void mglGraph::DrawXGridLine(mreal t, mreal y0, mreal z0)
 void mglGraph::DrawYGridLine(mreal t, mreal x0, mreal z0)
 {
 	register int i;
-	mreal *pp = new mreal[3*GridPnts+3];
+	mreal *pp = new mreal[3*GridPnts+3],dd;
 	bool *tt = new bool[GridPnts+1];
-	for(i=0;i<GridPnts+1;i++)
+	if(!(TernAxis&2))
 	{
-		pp[3*i]=TernAxis ? Max.x-t+Min.y:x0;
-		pp[3*i+1]=t;
-		pp[3*i+2]=Min.z+(Max.z-Min.z)*i/GridPnts;
-		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+		dd = (Max.z-Min.z)/GridPnts;
+		for(i=0;i<GridPnts+1;i++)
+		{
+			pp[3*i]=TernAxis ? Max.x-t+Min.y:x0;
+			pp[3*i+1]=t;	pp[3*i+2]=Min.z+dd*i;
+			tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+		}
+		curv_plot(GridPnts+1,pp,tt);
 	}
-	curv_plot(GridPnts+1,pp,tt);
+	dd = (Max.x-Min.x - (TernAxis ? t-Min.y:0))/GridPnts;
 	for(i=0;i<GridPnts+1;i++)
 	{
-		pp[3*i+2]=z0;	pp[3*i+1]=t;
-		pp[3*i]=Min.x+(Max.x-(TernAxis ? Min.x+Min.y-t : Min.x))*i/GridPnts;
+		pp[3*i+2]=z0;	pp[3*i+1]=t;	pp[3*i]=Min.x+dd*i;
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
@@ -112,19 +115,19 @@ void mglGraph::DrawYGridLine(mreal t, mreal x0, mreal z0)
 void mglGraph::DrawZGridLine(mreal t, mreal x0, mreal y0)
 {
 	register int i;
-	mreal *pp = new mreal[3*GridPnts+3];
+	mreal *pp = new mreal[3*GridPnts+3], dd;
 	bool *tt = new bool[GridPnts+1];
+	dd = (Max.x-Min.x - (TernAxis&2 ? t:0))/GridPnts;
 	for(i=0;i<GridPnts+1;i++)
 	{
-		pp[3*i+1]=y0;	pp[3*i+2]=t;
-		pp[3*i]=Min.x+(Max.x-Min.x)*i/GridPnts;
+		pp[3*i+1]=y0;	pp[3*i+2]=t;	pp[3*i]=Min.x+dd*i;
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
+	dd = (Max.y-Min.y - (TernAxis&2 ? t:0))/GridPnts;
 	for(i=0;i<GridPnts+1;i++)
 	{
-		pp[3*i]=x0;	pp[3*i+2]=t;
-		pp[3*i+1]=Min.y+(Max.y-Min.y)*i/GridPnts;
+		pp[3*i]=x0;		pp[3*i+2]=t;	pp[3*i+1]=Min.y+dd*i;
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
@@ -135,7 +138,7 @@ void mglGraph::DrawTGridLine(mreal t, mreal z0)
 {
 	if(!TernAxis)	return;
 	register int i;
-	mreal *pp = new mreal[3*GridPnts+3];
+	mreal *pp = new mreal[3*GridPnts+3],dd;
 	bool *tt = new bool[GridPnts+1];
 	for(i=0;i<GridPnts+1;i++)
 	{
@@ -145,10 +148,10 @@ void mglGraph::DrawTGridLine(mreal t, mreal z0)
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
+	dd = (Max.z-Min.z - (TernAxis&2 ? t:0))/GridPnts;
 	for(i=0;i<GridPnts+1;i++)
 	{
-		pp[3*i]=Min.x;		pp[3*i+1]=Min.y+t;
-		pp[3*i+2]=Min.z+(Max.z-Min.z)*i/GridPnts;
+		pp[3*i]=Min.x;	pp[3*i+1]=Min.y+t;	pp[3*i+2]=Min.z+dd*i;
 		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	curv_plot(GridPnts+1,pp,tt);
@@ -910,23 +913,44 @@ void mglGraph::Box(mglColor p,bool ticks)
 	if(p.Valid())	Pen(p,'-',BaseLineWidth);
 	else			Pen(TranspType!=2 ? BC:WC,'-',BaseLineWidth);
 	mglFormula *tt = fc;	fc = 0;
-	Line(mglPoint(x1,y1,z1), mglPoint(x1,y1,z2), 0, 100);
-	Line(mglPoint(x1,y2,z1), mglPoint(x1,y2,z2), 0, 100);
-	Line(mglPoint(x2,y1,z1), mglPoint(x2,y1,z2), 0, 100);
-	Line(mglPoint(x1,y1,z1), mglPoint(x1,y2,z1), 0, 100);
-	Line(mglPoint(x1,y1,z1), mglPoint(x2,y1,z1), 0, 100);
-	Line(mglPoint(x1,y1,z2), mglPoint(x1,y2,z2), 0, 100);
-	Line(mglPoint(x1,y1,z2), mglPoint(x2,y1,z2), 0, 100);
-	if(TernAxis)
+	if((TernAxis&3)==1)			// usual ternary axis
 	{
+		Line(mglPoint(x1,y1,z1), mglPoint(x1,y1,z2), 0, 100);
+		Line(mglPoint(x1,y2,z1), mglPoint(x1,y2,z2), 0, 100);
+		Line(mglPoint(x2,y1,z1), mglPoint(x2,y1,z2), 0, 100);
+		
+		Line(mglPoint(x1,y1,z1), mglPoint(x1,y2,z1), 0, 100);
+		Line(mglPoint(x1,y1,z1), mglPoint(x2,y1,z1), 0, 100);
 		Line(mglPoint(x1,y2,z1), mglPoint(x2,y1,z1), 0, 100);
+		
+		Line(mglPoint(x1,y1,z2), mglPoint(x1,y2,z2), 0, 100);
+		Line(mglPoint(x1,y1,z2), mglPoint(x2,y1,z2), 0, 100);
 		Line(mglPoint(x1,y2,z2), mglPoint(x2,y1,z2), 0, 100);
+	}
+	else if((TernAxis&3)==2)	// quaternary axis
+	{
+		Line(mglPoint(x1,y1,z1), mglPoint(x1,y2,z1), 0, 100);
+		Line(mglPoint(x1,y1,z1), mglPoint(x2,y1,z1), 0, 100);
+		Line(mglPoint(x1,y2,z1), mglPoint(x2,y1,z1), 0, 100);
+		
+		Line(mglPoint(x1,y1,z1), mglPoint(x1,y1,z2), 0, 100);
+		Line(mglPoint(x1,y2,z1), mglPoint(x1,y1,z2), 0, 100);
+		Line(mglPoint(x2,y1,z1), mglPoint(x1,y1,z2), 0, 100);
 	}
 	else
 	{
+		Line(mglPoint(x1,y1,z1), mglPoint(x1,y1,z2), 0, 100);
+		Line(mglPoint(x1,y2,z1), mglPoint(x1,y2,z2), 0, 100);
+		Line(mglPoint(x2,y1,z1), mglPoint(x2,y1,z2), 0, 100);
 		Line(mglPoint(x2,y2,z1), mglPoint(x2,y2,z2), 0, 100);
+		
+		Line(mglPoint(x1,y1,z1), mglPoint(x1,y2,z1), 0, 100);
+		Line(mglPoint(x1,y1,z1), mglPoint(x2,y1,z1), 0, 100);
 		Line(mglPoint(x1,y2,z1), mglPoint(x2,y2,z1), 0, 100);
 		Line(mglPoint(x2,y1,z1), mglPoint(x2,y2,z1), 0, 100);
+		
+		Line(mglPoint(x1,y1,z2), mglPoint(x1,y2,z2), 0, 100);
+		Line(mglPoint(x1,y1,z2), mglPoint(x2,y1,z2), 0, 100);
 		Line(mglPoint(x1,y2,z2), mglPoint(x2,y2,z2), 0, 100);
 		Line(mglPoint(x2,y1,z2), mglPoint(x2,y2,z2), 0, 100);
 	}
@@ -995,7 +1019,7 @@ void mglGraph::Ternary(int t)
 	{
 		x1 = Min;	x2 = Max;	o = Org;	c = Cut;
 		Cut = false;	OrgT = mglPoint(NAN,NAN,NAN);
-		Axis(mglPoint(0,0,0),mglPoint(1,1,1),mglPoint(0,0,0));
+		Axis(mglPoint(0,0,0),mglPoint(1,1,t==2?1:0),mglPoint(0,0,0));
 	}
 	else	{	Axis(x1,x2,o);	Cut = c;	}
 }
