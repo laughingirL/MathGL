@@ -27,7 +27,7 @@
 
 #include <math.h>
 
-#define MGL_VERSION	11.0
+#define MGL_VERSION	11.2
 
 //#ifdef WIN32
 #ifdef _MSC_VER
