@@ -133,6 +133,9 @@ extern "C"
                             IFXAllocateFunction*    pAllocateFunction,
                             IFXDeallocateFunction*  pDeallocateFunction,
                             IFXReallocateFunction*  pReallocateFunction );
+    typedef void*     ( IFXAPI JFXAllocateFunction )( size_t byteCount );
+    typedef void      ( IFXAPI JFXDeallocateFunction )( void* pMemory );
+    typedef void*     ( IFXAPI JFXReallocateFunction )( void* pMemory, size_t byteCount );
 }
 
 
@@ -146,9 +149,9 @@ static IFXCoreLib s_coreLib;
 static IFXCOMInitializeFunction      *gs_pIFXCOMInitializeFunction      = NULL;
 static IFXCOMUninitializeFunction    *gs_pIFXCOMUninitializeFunction    = NULL;
 static IFXCreateComponentFunction    *gs_pIFXCreateComponentFunction    = NULL;
-static IFXAllocateFunction           *gs_pIFXAllocateFunction           = NULL;
-static IFXDeallocateFunction         *gs_pIFXDeallocateFunction         = NULL;
-static IFXReallocateFunction         *gs_pIFXReallocateFunction         = NULL;
+static JFXAllocateFunction           *gs_pIFXAllocateFunction           = NULL;
+static JFXDeallocateFunction         *gs_pIFXDeallocateFunction         = NULL;
+static JFXReallocateFunction         *gs_pIFXReallocateFunction         = NULL;
 static IFXRegisterComponentFunction  *gs_pIFXRegisterComponentFunction  = NULL;
 static IFXGetMemoryFunctionsFunction *gs_pIFXGetMemoryFunctionsFunction = NULL;
 static IFXSetMemoryFunctionsFunction *gs_pIFXSetMemoryFunctionsFunction = NULL;
@@ -198,7 +201,7 @@ IFXRESULT IFXAPI IFXCOMInitialize()
     if( IFXSUCCESS( result ) )
     {
       gs_pIFXAllocateFunction =
-        ( IFXAllocateFunction* ) s_coreLib.GetFuncPtr( "IFXAllocate" );
+        ( JFXAllocateFunction* ) s_coreLib.GetFuncPtr( "IFXAllocate" );
       if ( NULL == gs_pIFXAllocateFunction )
         result = IFX_E_INVALID_POINTER;
     }
@@ -206,7 +209,7 @@ IFXRESULT IFXAPI IFXCOMInitialize()
     if( IFXSUCCESS( result ) )
     {
       gs_pIFXDeallocateFunction =
-        ( IFXDeallocateFunction* ) s_coreLib.GetFuncPtr( "IFXDeallocate" );
+        ( JFXDeallocateFunction* ) s_coreLib.GetFuncPtr( "IFXDeallocate" );
       if ( NULL == gs_pIFXDeallocateFunction )
         result = IFX_E_INVALID_POINTER;
     }
@@ -214,7 +217,7 @@ IFXRESULT IFXAPI IFXCOMInitialize()
     if( IFXSUCCESS( result ) )
     {
       gs_pIFXReallocateFunction =
-        ( IFXReallocateFunction* ) s_coreLib.GetFuncPtr( "IFXReallocate" );
+        ( JFXReallocateFunction* ) s_coreLib.GetFuncPtr( "IFXReallocate" );
       if ( NULL == gs_pIFXReallocateFunction )
         result = IFX_E_INVALID_POINTER;
     }

@@ -5,7 +5,7 @@ There is a C++ library to produce U3D files and a converter from IDTF, a verbose
 You need libpng (http://www.libpng.org/), jpeg library (http://www.ijg.org/) and zlib (http://www.zlib.net/)
 installed to compile U3D lib using autotools.
 
-For cmake build there is option to use bundled versions of the above tools.
+The cmake build uses bundled versions of the above tools.
 
 This is just a port of Intel U3D library to the GNU Build System and cmake,
 with rendering part thrown out.
@@ -22,8 +22,8 @@ thus supressing compression.
 To IDTF I have added one more parameter - TEXTURE_LAYER_REPEAT: "UV", "U", "V" or "NONE",
 with "UV" being default. The name says what it does.
 
-I have also dissected IDTFConverter and made a static library from the converter part
-(discarding IDTF file parser), it can be used to eliminate intermediatery IDTF files that
+I have also dissected IDTFConverter and made a library from the converter part
+(discarding IDTF file parser), it can be used to eliminate intermediate IDTF files that
 may be really lengthy and slow to create and than parse with IDTFConverter.
 
 "History of the U3D File Format" at http://www.okino.com/conv/imp_u3d.htm is a good read on what U3D is and where it comes from.

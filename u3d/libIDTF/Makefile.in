@@ -262,7 +262,8 @@ INCLUDES = -I../RTL/Component/Include -I../RTL/Kernel/Include -I../RTL/Platform/
 	-I../IDTF/Common 
 
 lib_LTLIBRARIES = libIDTF.la
-libIDTF_la_LDFLAGS = -static
+# libIDTF_la_LDFLAGS = -static
+libIDTF_la_LDFLAGS = -no-undefined -avoid-version
 libIDTF_la_CXXFLAGS = -DLIBIDTF -DU3DPluginsPath=\".\" -DU3DCorePath=\"$(libdir)\" $(AM_CXXFLAGS)
 libIDTF_la_SOURCES = \
 	../libIDTF/SceneConverterLib.cpp	\
