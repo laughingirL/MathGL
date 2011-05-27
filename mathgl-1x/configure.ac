@@ -1,6 +1,6 @@
-AC_INIT([mathgl], [1.11], [mathgl.abalakin@gmail.com])
+AC_INIT([mathgl], [1.11.2], [mathgl.abalakin@gmail.com])
 
-MGL_RELEASE=1.11
+MGL_RELEASE=1.11.2
 AC_SUBST(MGL_RELEASE)
 
 AC_CONFIG_MACRO_DIR([config])
