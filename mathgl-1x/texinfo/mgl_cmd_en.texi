@@ -3,6 +3,48 @@
 
 MathGL library supports the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of UDAV, mgl2png, mgl2eps, mgl2svg programs and others, @pxref{Utilities}) or in the frame of the library using.
 
+@menu
+* MGL basics::        
+@ifset UDAV
+* General concepts::             
+@end ifset
+* Graphics setup @MGL{}::        
+* Axis settings @MGL{}::         
+* Transformation matrix @MGL{}::  
+* Export to file @MGL{}::        
+* Primitives drawing @MGL{}::    
+* Text printing @MGL{}::         
+* Axis and Colorbar @MGL{}::     
+* Legend @MGL{}::                
+* 1D plotting @MGL{}::           
+* 2D plotting @MGL{}::           
+* 3D plotting @MGL{}::           
+* Dual plotting @MGL{}::         
+* Vector fields @MGL{}::         
+* Other plotting @MGL{}::        
+* Nonlinear fitting @MGL{}::     
+* Data create @MGL{}::           
+* Data filling @MGL{}::          
+* Rearrange data @MGL{}::        
+* File I/O @MGL{}::              
+* Make another data @MGL{}::     
+* Change data @MGL{}::  
+* Operators @MGL{}::             
+* Program flow @MGL{}::          
+* Command options @MGL{}::       
+* Suffixes::                    
+* Utilities::                   
+@end menu
+
+@c ##################################################################
+@ifset UDAV
+@node  MGL basics, General concepts, , MGL interface
+@end ifset
+@ifclear UDAV
+@node MGL basics, Graphics setup @MGL{}, , MGL interface
+@end ifclear
+
+@section MGL basics
 MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is sufficient, i.e. variables @var{a} and @var{A} are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when @samp{#} is a part of some string. Also options can be specified after symbol @samp{;} (@pxref{Command options @MGL{}}). Symbol @samp{:} starts new command (like new line character) if it is not placed inside a string or inside brackets.
 
 If string contain references to external parameters (substrings @samp{$0}, @samp{$1} ... @samp{$9}) or definitions (substrings @samp{$a}, @samp{$b} ... @samp{$z}) then before execution the values of parameter/definition will be substituted instead of reference. It allows to use the same MGL script for different parameters (filenames, paths, condition and so on).
@@ -41,41 +83,10 @@ Command may have several set of possible arguments (for example, @code{plot ydat
 
 All MGL commands can be divided on several groups. I will use the following notation for a command description: command names are bold, strings are denoted by commas, variable names are italic, numbers are typewriter. Optional arguments are placed in square brackets and default values for them are shown. Detailed description of color, line styles (@pxref{Line styles}), color schemes (@pxref{Color scheme}), font types, TeX-like symbols (@pxref{Font styles}) and formulas (@pxref{Textual formulas}) can be found in corresponding section.
 
-@menu
-@ifset UDAV
-* General concepts::             
-@end ifset
-* Graphics setup @MGL{}::        
-* Axis settings @MGL{}::         
-* Transformation matrix @MGL{}::  
-* Export to file @MGL{}::        
-* Primitives drawing @MGL{}::    
-* Text printing @MGL{}::         
-* Axis and Colorbar @MGL{}::     
-* Legend @MGL{}::                
-* 1D plotting @MGL{}::           
-* 2D plotting @MGL{}::           
-* 3D plotting @MGL{}::           
-* Dual plotting @MGL{}::         
-* Vector fields @MGL{}::         
-* Other plotting @MGL{}::        
-* Nonlinear fitting @MGL{}::     
-* Data create @MGL{}::           
-* Data filling @MGL{}::          
-* Rearrange data @MGL{}::        
-* File I/O @MGL{}::              
-* Make another data @MGL{}::     
-* Change data @MGL{}::  
-* Operators @MGL{}::             
-* Program flow @MGL{}::          
-* Command options @MGL{}::       
-* Suffixes::                    
-* Utilities::                   
-@end menu
 
 @c ##################################################################
 @ifset UDAV
-@node  General concepts, , Utilities, MGL interface
+@node  General concepts, Graphics setup @MGL{}, MGL basics, MGL interface
 @section General concepts
 
 The set of MathGL features is rather rich -- just the number of basic graphics types is larger than 40. Also there are functions for data handling, plot setup and so on. In spite of it I tried to keep a similar style in command names and in the order of arguments. Mostly it is used for different drawing functions.
@@ -109,7 +120,7 @@ In addition to the general concepts I want to comment on some non-trivial or les
 @ifclear UDAV
 
 @c ##################################################################
-@node Graphics setup @MGL{}, Axis settings @MGL{}, , MGL interface
+@node Graphics setup @MGL{}, Axis settings @MGL{}, MGL basics, MGL interface
 @end ifclear
 @section Graphics setup @MGL{}
 
