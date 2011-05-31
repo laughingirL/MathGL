@@ -1,3 +1,7 @@
+1.11.2 Released 30 May 2011
+	- Add Quaternary coordinates
+	- Bugfixes
+
 1.11.1 Released 25 March 2011
 	- Improve IDTF export
 	- Minor changes and bugfixes
