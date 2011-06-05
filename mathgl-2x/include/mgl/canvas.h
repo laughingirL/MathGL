@@ -359,7 +359,7 @@ private:
 	/// Add string to the buffer
 	const wchar_t *add_text(const wchar_t *str);
 	/// Draw generic colorbar
-	void colorbar(HCDT v, const mglColor *s, int where, float x, float y, float w, float h);
+	void colorbar(HCDT v, const float *s, int where, float x, float y, float w, float h);
 	/// Draw labels for ticks
 	void DrawLabels(mglAxis &aa);
 	/// Draw tick

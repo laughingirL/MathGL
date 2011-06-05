@@ -363,7 +363,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 			aa.AddLabel(v,buf);
 		}
 	}
-	else if(aa.dv==0 && aa.v2<0)
+	else if(aa.dv==0 && aa.v2<0)	// negative log-scale
 	{
 		v0 = -exp(M_LN10*floor(0.1+log10(-aa.v2)));
 		for(v=v0;v>=aa.v1*MGL_FLT_EPS;v*=10)	if(v*MGL_FLT_EPS<=aa.v2)
@@ -553,7 +553,7 @@ void mglCanvas::Colorbar(int where, float x, float y, float w, float h, long s)
 	{	v.Fill(log(Min.c), log(Max.c));	v.Modify("exp(u)");		}
 	else if(Min.c<Max.c && Max.c<0)
 	{	v.Fill(log(-Min.c), log(-Max.c));	v.Modify("-exp(u)");	}
-	mglColor *c=new mglColor[n];
+	float *c=new float[n];
 	for(long i=0;i<n;i++)	c[i] = GetC(s,v.a[i]);
 	colorbar(&v, c, where, x, y, w, h);
 	delete []c;
@@ -572,9 +572,12 @@ void mglCanvas::Colorbar(HCDT v, const char *sch,int where)
 //-----------------------------------------------------------------------------
 void mglCanvas::Colorbar(HCDT v, const char *sch, int where, float x, float y, float w, float h)
 {
-	mglColor *c=new mglColor[v->GetNx()];
+	float *c=new float[v->GetNx()];
 	if(!sch || !(*sch))	sch = MGL_DEF_PAL;
-	for(long i=0;i<v->GetNx();i++)	c[i] = mglColor(sch[i%strlen(sch)]);
+	long s = AddTexture(sch);	// TODO Check it
+	int nc = GetNumPal(s*256);
+	float dc = nc>1 ? 1/(MGL_FLT_EPS*(nc-1)):0;
+	for(long i=0;i<v->GetNx();i++)	c[i] = s+i*dc;
 	colorbar(v, c, where, x, y, w, h);
 	delete []c;
 }
@@ -694,8 +697,63 @@ void mglCanvas::Box(const char *col, bool ticks)
 	Org=o;	TickLen=tl;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::colorbar(HCDT v, const mglColor *s, int where, float x, float y, float w, float h)
+void mglCanvas::colorbar(HCDT vv, const float *c, int where, float x, float y, float w, float h)
 {
-	// TODO: Add code here
+	static int cgid=1;	StartGroup("Colorbar",cgid++);
+	register long i,n=vv->GetNx();
+	long n1,n2,n3,n4;
+	float d,s3=PlotFactor,ss=s3*0.9;
+	mglPoint p1,p2;
+
+	Push();	memcpy(B,B1,9*sizeof(mreal));
+	x = 2*x-1;	y = 2*y-1;
+	for(i=0;i<n-1;i++)
+	{
+		d = GetA(vv->v(i));
+		p1 = p2 = mglPoint((ss*d+s3)*w+x*s3, (ss*d+s3)*h+y*s3, s3);
+		switch(where)
+		{
+			case 1:	p1.x = x*s3;	p2.x = (x+0.1*w)*s3;	break;
+			case 2:	p1.y = (y-0.1*h)*s3;	p2.y = y*s3;	break;
+			case 3:	p1.y = y*s3;	p2.y = (y+0.1*h)*s3;	break;
+			default:p1.x = (x-0.1*w)*s3;	p2.x = x*s3;	break;
+		}
+		n1 = AddPnt(p1,c[i]);	n2 = AddPnt(p2,c[i]);
+		d = GetA(vv->v(i+1));
+		p1 = p2 = mglPoint((ss*d+s3)*w+x*s3, (ss*d+s3)*h+y*s3, s3);
+		switch(where)
+		{
+			case 1:	p1.x = x*s3;	p2.x = (x+0.1*w)*s3;	break;
+			case 2:	p1.y = (y-0.1*h)*s3;	p2.y = y*s3;	break;
+			case 3:	p1.y = y*s3;	p2.y = (y+0.1*h)*s3;	break;
+			default:p1.x = (x-0.1*w)*s3;	p2.x = x*s3;	break;
+		}
+		n3 = AddPnt(p1,c[i]);	n4 = AddPnt(p2,c[i]);
+		quad_plot(n1,n2,n3,n4);
+	}
+	if(n<64)
+	{
+		wchar_t buf[64];
+		for(i=0;i<n;i++)
+		{
+			d = vv->v(i);
+			mglprintf(buf,64,ac.t[0]?ac.t:(fabs(d)<1 ? L"%.2g" :  L"%.3g"),d);
+			ac.AddLabel(d, buf);
+		}
+	}
+	else	LabelTicks(ac);
+	// hint for using standard label drawing function
+	for(i=0;i<ac.num;i++)	ac.val[i] = GetA(ac.val[i]);
+	ac.dir = mglPoint(ss*w,ss*h,0);
+	ac.org = mglPoint(s3*(w+x),s3*(h+y),s3+1);
+	switch(where)
+	{
+		case 1:	ac.dir.x = 0;	ac.org.x = (x+0.13*w)*s3;	break;
+		case 2:	ac.dir.y = 0;	ac.org.y = (y-0.13*h)*s3;	break;
+		case 3:	ac.dir.y = 0;	ac.org.y = (y+0.13*h)*s3;	break;
+		default:ac.dir.x = 0;	ac.org.x = (x-0.13*w)*s3;	break;
+	}
+	DrawLabels(ac);
+	Pop();	EndGroup();
 }
 //-----------------------------------------------------------------------------

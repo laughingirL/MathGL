@@ -649,7 +649,7 @@ void mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 		x = &xx;	y = &yy;
 	}
 	// x, y -- have the same size z
-	float z0, v0, dc = nc>1 ? 1/(MGL_FLT_EPS*(n-1)) : 0;
+	float z0, v0, dc = nc>1 ? 1/(MGL_FLT_EPS*(nc-1)) : 0;
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx()-1;i++)
 	{
 		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
