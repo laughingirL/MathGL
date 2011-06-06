@@ -52,7 +52,7 @@ void mglCanvas::PostScale(mglPoint &p)
 //-----------------------------------------------------------------------------
 bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 {
-	bool res = mglBase::ScalePoint(p,n,use_nan);
+	bool res = DisScaling || mglBase::ScalePoint(p,n,use_nan);
 	if(TernAxis&4)	return res;
 	PostScale(p);
 

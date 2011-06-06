@@ -305,6 +305,8 @@ protected:
 	float FogDist;		/// Inverse fog distance (fog ~ exp(-FogDist*Z))
 	float FogDz;		/// Relative shift of fog
 
+	bool DisScaling;
+
 	/// Draw colorbar at edge of axis
 	void Colorbar(int where, float x, float y, float w, float h, long s=0);
 	/// Auto adjust ticks

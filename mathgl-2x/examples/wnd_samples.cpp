@@ -26,6 +26,15 @@
 #include "mgl/parser.h"
 int test(mglGraph *gr)
 {
+	gr->Rotate(0,0);
+//	gr->SetOrigin(-1,-1,-1);	gr->Axis();
+//	gr->SetOrigin( 1, 1, 1);	gr->Axis();
+	gr->Colorbar("",0);
+	gr->Colorbar("",1);
+	gr->Colorbar("",2);
+	gr->Colorbar("",3);
+	return 0;
+
 	gr->Ternary(1);
 	gr->Rotate(40,60);
 	gr->Puts(mglPoint(0,0),"Test","t");

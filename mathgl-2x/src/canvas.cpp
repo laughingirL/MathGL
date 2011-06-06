@@ -29,7 +29,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
 	az.dir = mglPoint(0,0,1);	az.a = mglPoint(0,1,0);	az.b = mglPoint(1,0,0);	az.ch='z';
-	P = 0;	P_txt=0;	P_len=P_cur=0;
+	P = 0;	P_txt=0;	P_len=P_cur=0;	DisScaling=false;
 	DefaultPlotParam();
 }
 //-----------------------------------------------------------------------------
@@ -42,11 +42,6 @@ mglCanvas::~mglCanvas()
 //-----------------------------------------------------------------------------
 void mglCanvas::DefaultPlotParam()
 {
-//		BaseLineWidth = 1;
-//	ScalePuts = true;
-//	CloudFactor = 1;
-//	AutoOrg = true;
-//	CirclePnts=40;	FitPnts=100;	GridPnts=50;
 	LegendMarks = 1;		FontSize = 5;
 	SetAmbient();			Ternary(0);
 	PlotId = "frame";		SetPenPal("k-1");
@@ -73,6 +68,7 @@ void mglCanvas::DefaultPlotParam()
 	for(int i=0;i<10;i++)	{	AddLight(i, mglPoint(0,0,1));	Light(i,false);	}
 	Light(0,true);			Light(false);
 	InPlot(0,1,0,1,false);	Zoom(0,0,1,1);
+	st_pos = 0;
 }
 //-----------------------------------------------------------------------------
 //	Optimal axis position
@@ -294,7 +290,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	float *pp=pnt+12*p, ll=pp[5]*pp[5]+pp[6]*pp[6];
 	if(pp[5]<0)	{	pp[5]=-pp[5];	pp[6]=-pp[6];	pp[7]=-pp[7];	}
 	shift *= h;		B[11]= pp[2];
-	if(ll==0)	return 0;
+	if(ll==0)	{	Pop();	return 0;	}
 
 	if(isnan(ll))
 	{

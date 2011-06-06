@@ -543,10 +543,11 @@ void mglCanvas::Colorbar(const char *sch,int where)
 //-----------------------------------------------------------------------------
 void mglCanvas::Colorbar(int where, float x, float y, float w, float h, long s)
 {
-	float d = fabs(Max.c-Min.c);
-	d = floor(d*pow(10,-floor(log10(d))));
-	long n = 50*(d<4?int(2*d+0.5):int(d+0.5))+1;
-	if(d==1.f)	n = 101;
+//	float d = fabs(Max.c-Min.c);
+//	d = floor(d*pow(10,-floor(log10(d))));
+//	long n = 50*(d<4?int(2*d+0.5):int(d+0.5))+1;
+//	if(d==1.f)	n = 101;
+	long n=256;
 	mglData v(n);
 	if(ac.d || Min.c*Max.c<=0)	v.Fill(Min.c,Max.c);
 	else if(Max.c>Min.c && Min.c>0)
@@ -702,14 +703,14 @@ void mglCanvas::colorbar(HCDT vv, const float *c, int where, float x, float y, f
 	static int cgid=1;	StartGroup("Colorbar",cgid++);
 	register long i,n=vv->GetNx();
 	long n1,n2,n3,n4;
-	float d,s3=PlotFactor,ss=s3*0.9;
+	float d,s3=PlotFactor,ss=1;		// NOTE: colorbar was wider ss=s3*0.9;
 	mglPoint p1,p2;
 
-	Push();	memcpy(B,B1,9*sizeof(mreal));
+	Push();	memcpy(B,B1,12*sizeof(mreal));	DisScaling=true;
 	x = 2*x-1;	y = 2*y-1;
 	for(i=0;i<n-1;i++)
 	{
-		d = GetA(vv->v(i));
+		d = GetA(vv->v(i))*2-1;
 		p1 = p2 = mglPoint((ss*d+s3)*w+x*s3, (ss*d+s3)*h+y*s3, s3);
 		switch(where)
 		{
@@ -719,7 +720,7 @@ void mglCanvas::colorbar(HCDT vv, const float *c, int where, float x, float y, f
 			default:p1.x = (x-0.1*w)*s3;	p2.x = x*s3;	break;
 		}
 		n1 = AddPnt(p1,c[i]);	n2 = AddPnt(p2,c[i]);
-		d = GetA(vv->v(i+1));
+		d = GetA(vv->v(i+1))*2-1;
 		p1 = p2 = mglPoint((ss*d+s3)*w+x*s3, (ss*d+s3)*h+y*s3, s3);
 		switch(where)
 		{
@@ -741,9 +742,9 @@ void mglCanvas::colorbar(HCDT vv, const float *c, int where, float x, float y, f
 			ac.AddLabel(d, buf);
 		}
 	}
-	else	LabelTicks(ac);
+	else	{	UpdateAxis();	AdjustTicks(ac,fa);	LabelTicks(ac);	}
 	// hint for using standard label drawing function
-	for(i=0;i<ac.num;i++)	ac.val[i] = GetA(ac.val[i]);
+	for(i=0;i<ac.num;i++)	ac.val[i] = GetA(ac.val[i])*2-1;
 	ac.dir = mglPoint(ss*w,ss*h,0);
 	ac.org = mglPoint(s3*(w+x),s3*(h+y),s3+1);
 	switch(where)
@@ -754,6 +755,6 @@ void mglCanvas::colorbar(HCDT vv, const float *c, int where, float x, float y, f
 		default:ac.dir.x = 0;	ac.org.x = (x-0.13*w)*s3;	break;
 	}
 	DrawLabels(ac);
-	Pop();	EndGroup();
+	Pop();	DisScaling=false;	EndGroup();
 }
 //-----------------------------------------------------------------------------
