@@ -347,7 +347,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 	aa.num=0;	aa.str[0]=aa.buf;
 	if(aa.f==1)	// time ticks
 	{
-		for(v=aa.v1; v<=aa.v2; v+=aa.dv)
+		if(aa.v1+aa.dv!=aa.v1 && aa.v2+aa.dv!=aa.v2)	for(v=aa.v1; v<=aa.v2; v+=aa.dv)
 		{
 			time_t tt = v;	tm tp;
 			localtime_r(&tt,&tp);	wcsftime(buf,64,aa.t,&tp);
@@ -385,7 +385,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 		else
 		{	v1 = aa.v1;		v0 = v0 - aa.dv*floor((v0-aa.v2)/aa.dv+1e-3);	}
 
-		for(v=v0;v<=v1;v+=aa.dv)
+		if(v0+aa.dv!=v0 && v1+aa.dv!=v1)	for(v=v0;v<=v1;v+=aa.dv)
 		{
 			if(aa.t[0])	mglprintf(buf, 64, aa.t, fabs(v)<aa.dv/100 ? 0 : v);
 			else	mgl_tick_text(v,v0,aa.dv/100,w,kind,buf);
@@ -444,8 +444,8 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr)
 	if(k2>0)	for(i=0;i<k2;i++)
 	{
 		p = o+d*aa.val[i];	tick_draw(p,da,db,0);
-		register float v;
-		if(text)	for(v=aa.val[i]+aa.ds; v <= (i<k2-1 ? aa.val[i+1]:aa.v2); v+=aa.ds)
+		register float v, v1=aa.val[i]+aa.ds, v2=(i<k2-1 ? aa.val[i+1]:aa.v2);
+		if(text && v1+aa.ds!=v1 && v2+aa.ds!=v2)	for(v=v1; v<=v2; v+=aa.ds)
 			tick_draw(o+d*v,da,db,1);
 	}
 	if(text)	DrawLabels(aa);
