@@ -102,10 +102,11 @@ void mglBase::SetWarn(int code, const char *who)
 //-----------------------------------------------------------------------------
 //		Add points to the buffer
 //-----------------------------------------------------------------------------
-long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, bool scl)	// NOTE: this is not-thread-safe!!!
+long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)	// NOTE: this is not-thread-safe!!!
 {
 //	if(scl)	NormScale(n);	// Usually p was scaled before, but n should be scaled now!
-	if(scl)	ScalePoint(p,n);
+	if(scl)	ScalePoint(p,n,!(scl&2));
+	if(isnan(p.x))	return -1;
 	a = (a>=0 && a<=1) ? a : AlphaDef;
 	if(isnan(n.x))	a=1;
 	c = (c>=0) ? c:CDef;
@@ -121,6 +122,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, bool scl)	// NOTE
 //-----------------------------------------------------------------------------
 long mglBase::CopyNtoC(long from, float c)	// NOTE: this is not-thread-safe!!!
 {
+	if(from<0)	return -1;
 	if(pos+1>num)
 	{	num=pos+1;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
 	memcpy(pnt+12*pos, pnt+12*from, 12*sizeof(float));
@@ -131,6 +133,7 @@ long mglBase::CopyNtoC(long from, float c)	// NOTE: this is not-thread-safe!!!
 //-----------------------------------------------------------------------------
 long mglBase::CopyProj(long from, mglPoint p, mglPoint n)	// NOTE: this is not-thread-safe!!!
 {
+	if(from<0)	return -1;
 	if(pos+1>num)
 	{	num=pos+1;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
 	memcpy(pnt+12*pos, &p, 3*sizeof(float));

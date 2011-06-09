@@ -197,8 +197,8 @@ void mglCanvas::WriteEPS(const char *fname,const char *descr)
 		}
 		else if(P[i].type==4)	// glyph
 		{
-			float 	ss = P[i].s/P[i].p/1.1, 	xx = pnt[12*P[i].n2],
-					yy = pnt[12*P[i].n2+1], zz = pnt[12*P[i].n2+2];
+			float 	ss = P[i].s/P[i].p/1.1,	xx = pnt[12*P[i].n1+5],
+					yy = pnt[12*P[i].n1+6], zz = pnt[12*P[i].n1+7];
 			mgl_printf(fp, gz, "gsave\t%g %g translate %g %g scale %g rotate %s\n",
 				pnt[12*P[i].n1], pnt[12*P[i].n1+1], ss, ss, -P[i].w, str);
 			if(P[i].style&8)	// this is "line"
@@ -351,7 +351,7 @@ void mglCanvas::WriteSVG(const char *fname,const char *descr)
 		}
 		else if(P[i].type==4)
 		{
-			float ss = P[i].s/2, xx = pnt[12*P[i].n2], yy = pnt[12*P[i].n2+1], zz = pnt[12*P[i].n2+2];
+			float ss = P[i].s/2, xx = pnt[12*P[i].n1+5], yy = pnt[12*P[i].n1+6], zz = pnt[12*P[i].n1+7];
 			if(P[i].style&8)	// this is "line"
 			{
 				mgl_printf(fp, gz, "<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"",

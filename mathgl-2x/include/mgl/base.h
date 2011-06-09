@@ -302,7 +302,7 @@ public:
 	// ~~~~~~~~~~~~~~~~~~~~~~ Developer functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// NOTE! Following 3 functions are NOT thread-safe!!!
 	/// Add point to the pntN and return its position
-	long AddPnt(mglPoint p, float c, mglPoint n=mglPoint(NAN), float a=-1, bool scl=true);
+	long AddPnt(mglPoint p, float c=-1, mglPoint n=mglPoint(NAN), float a=-1, int scl=1);
 	long CopyNtoC(long k, float c);
 	long CopyProj(long from, mglPoint p, mglPoint n);	// NOTE: this is not-thread-safe!!!
 	long Reserve(long n);		///< Allocate n-cells for pntC and return current position

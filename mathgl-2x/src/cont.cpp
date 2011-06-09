@@ -54,7 +54,7 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 	for(unsigned j=0;j<wcslen(text);j++)
 	{
 		L[0] = text[j];	pa = pos>0 ? p0 : p0-wg*(!n0);
-		pp = gr->AddPnt(pa,c,n0,0,false);
+		pp = gr->AddPnt(pa,c,n0,0,false);	// TODO: Check it!!!
 		ww = gr->text_plot(pp,L,font);
 		p1 = p0+(ww/Norm(n0))*n0;
 		// let find closest point

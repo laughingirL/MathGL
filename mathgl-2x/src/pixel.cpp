@@ -791,15 +791,13 @@ void mglCanvas::mark_draw(const float *q, char type, float size)
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_draw(const mglPrim *P)
 {
-	float *p = pnt+12*P->n2, f = pnt[12*P->n2+2];
+	float *p = pnt+12*P->n1+3, f = pnt[12*P->n1+7];
 	Push();
 	memset(B,0,12*sizeof(float));
 	B[0] = B[4] = B[8] = P->s*P->p;	PlotFactor = P->p;
 	NoAutoFactor=false;	RotateN(P->w,0,0,1);	NoAutoFactor=false;
-	B[9] = pnt[12*P->n1];
-	B[10]= pnt[12*P->n1+1];
-	B[11]= pnt[12*P->n1+2];
-	p[2]=0;
+	B[9] = pnt[12*P->n1];		B[10]= pnt[12*P->n1+1];
+	B[11]= pnt[12*P->n1+2];		p[2]=0;
 
 	int ss=P->style&3;
 	if(P->style&8)
@@ -820,16 +818,16 @@ void mglCanvas::glyph_fill(float *pp, float f, int nt, const short *trig)
 	long ik,ii;
 	float *p=new float[36], pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 	if(!trig || nt<=0)	return;
-	txt[long(pp[3])].GetC(pp[3],0,p+8);
-	p[3]=pp[3];	p[4]=0;	p[5]=NAN;
+	memcpy(p+8,pp+5,4*sizeof(float));	// use manual color
+	p[3]=pp[0];	p[4]=pp[1];	p[5]=NAN;	// TODO
 	memcpy(p+12,p,12*sizeof(float));
 	memcpy(p+24,p,12*sizeof(float));
 	mglPoint p1,p2,p3;
 	for(ik=0;ik<nt;ik++)
 	{
-		ii = 6*ik;	p1 = mglPoint(f*trig[ii]+pp[0],f*trig[ii+1]+pp[1],0);	PostScale(p1);
-		ii+=2;		p2 = mglPoint(f*trig[ii]+pp[0],f*trig[ii+1]+pp[1],0);	PostScale(p2);
-		ii+=2;		p3 = mglPoint(f*trig[ii]+pp[0],f*trig[ii+1]+pp[1],0);	PostScale(p3);
+		ii = 6*ik;	p1 = mglPoint(f*trig[ii]+pp[2],f*trig[ii+1]+pp[3],0);	PostScale(p1);
+		ii+=2;		p2 = mglPoint(f*trig[ii]+pp[2],f*trig[ii+1]+pp[3],0);	PostScale(p2);
+		ii+=2;		p3 = mglPoint(f*trig[ii]+pp[2],f*trig[ii+1]+pp[3],0);	PostScale(p3);
 		p[0] =p1.x;	p[1] =p1.y;	p[2] =p1.z+pw;
 		p[12]=p2.x;	p[13]=p2.y;	p[14]=p2.z+pw;
 		p[24]=p3.x;	p[25]=p3.y;	p[26]=p3.z+pw;
@@ -843,8 +841,8 @@ void mglCanvas::glyph_wire(float *pp, float f, int nl, const short *line)
 	if(!line || nl<=0)	return;
 	long ik,ii,il=0;
 	float *p=new float[24];
-	txt[long(pp[3])].GetC(pp[3],0,p+8);
-	p[3]=pp[3];	p[4]=0;	p[5]=NAN;
+	memcpy(p+8,pp+5,4*sizeof(float));	// use manual color
+	p[3]=pp[0];	p[4]=pp[1];	p[5]=NAN;	// TODO
 	memcpy(p+12,p,12*sizeof(float));
 	unsigned pdef=PDef;	PDef = 0xffff;
 	float opw=PenWidth;	PenWidth=0.75;
@@ -856,13 +854,13 @@ void mglCanvas::glyph_wire(float *pp, float f, int nl, const short *line)
 		{	il = ik+1;	continue;	}
 		else if(ik==nl-1 || (line[ii+2]==0x3fff && line[ii+3]==0x3fff))
 		{	// enclose the circle. May be in future this block should be commented
-			p1 = mglPoint(f*line[ii]+pp[0],f*line[ii+1]+pp[1],0);	ii=2*il;
-			p2 = mglPoint(f*line[ii]+pp[0],f*line[ii+1]+pp[1],0);
+			p1 = mglPoint(f*line[ii]+pp[2],f*line[ii+1]+pp[3],0);	ii=2*il;
+			p2 = mglPoint(f*line[ii]+pp[2],f*line[ii+1]+pp[3],0);
 		}
 		else
 		{	// normal line
-			p1 = mglPoint(f*line[ii]+pp[0],f*line[ii+1]+pp[1],0);	ii+=2;
-			p2 = mglPoint(f*line[ii]+pp[0],f*line[ii+1]+pp[1],0);
+			p1 = mglPoint(f*line[ii]+pp[2],f*line[ii+1]+pp[3],0);	ii+=2;
+			p2 = mglPoint(f*line[ii]+pp[2],f*line[ii+1]+pp[3],0);
 		}
 		PostScale(p1);	PostScale(p2);
 		p[0]=p1.x;	p[1]=p1.y;	p[2]=p1.z;
@@ -877,18 +875,18 @@ void mglCanvas::glyph_line(float *pp, float f, bool solid)
 	float *p=new float[48], pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 	unsigned pdef=PDef;	PDef = 0xffff;
 	float opw=PenWidth;	PenWidth=1;
-	txt[long(pp[3])].GetC(pp[3],0,p+8);
-	p[3]=pp[3];	p[4]=0;	p[5]=NAN;
+	memcpy(p+8,pp+5,4*sizeof(float));	// use manual color
+	p[3]=pp[0];	p[4]=pp[1];	p[5]=NAN;	// TODO
 	memcpy(p+12,p,12*sizeof(float));
 	memcpy(p+24,p,12*sizeof(float));
 	memcpy(p+36,p,12*sizeof(float));
 	mglPoint p1,p2,p3,p4;
 
 	float dy = 0.004;
-	p1 = mglPoint(pp[0],pp[1]-dy,0);	PostScale(p1);
-	p2 = mglPoint(pp[0],pp[1]+dy,0);	PostScale(p2);
-	p3 = mglPoint(fabs(f)+pp[0],pp[1]+dy,0);	PostScale(p3);
-	p4 = mglPoint(fabs(f)+pp[0],pp[1]-dy,0);	PostScale(p4);
+	p1 = mglPoint(pp[2],pp[3]-dy,0);	PostScale(p1);
+	p2 = mglPoint(pp[2],pp[3]+dy,0);	PostScale(p2);
+	p3 = mglPoint(fabs(f)+pp[2],pp[3]+dy,0);	PostScale(p3);
+	p4 = mglPoint(fabs(f)+pp[2],pp[3]-dy,0);	PostScale(p4);
 
 	p[0] =p1.x;	p[1] =p1.y;	p[2] =p1.z;
 	p[12]=p2.x;	p[13]=p2.y;	p[14]=p2.z;

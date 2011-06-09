@@ -260,6 +260,7 @@ void mglCanvasFL::SetSize(int w,int h)
 {
 	if(GG)	free(GG);	GG = 0;
 	mglCanvas::SetSize(w,h);
+//	if(Wnd)	Wnd->size(w,h);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasFL::EndFrame()

@@ -38,8 +38,15 @@
 		<Linker>
 			<Add option="-lgsl -lgslcblas -lpthread -lz -lpng -lGL -lfltk" />
 		</Linker>
-		<Unit filename="examples/fltk_example.cpp" />
-		<Unit filename="examples/wnd_samples.cpp" />
+		<Unit filename="examples/fltk_example.cpp">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="examples/full_test.cpp">
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="examples/wnd_samples.cpp">
+			<Option target="Debug" />
+		</Unit>
 		<Unit filename="include/mgl/base.h" />
 		<Unit filename="include/mgl/base_cf.h" />
 		<Unit filename="include/mgl/canvas.h" />
