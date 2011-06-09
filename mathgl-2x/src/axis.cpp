@@ -414,7 +414,8 @@ void mglCanvas::Axis(const char *dir, bool adjust)
 //-----------------------------------------------------------------------------
 void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr)
 {
-	aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
+	if(strchr("xyztuvw",aa.ch))
+		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
 	if(aa.ch=='x')	aa.v0 = aa.org.x;
 	if(aa.ch=='y')	aa.v0 = aa.org.y;
 	if(aa.ch=='z')	aa.v0 = aa.org.z;
@@ -453,17 +454,21 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr)
 //-----------------------------------------------------------------------------
 void mglCanvas::DrawLabels(mglAxis &aa)
 {
-	aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
+	if(strchr("xyztuvw",aa.ch))
+		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
 	mglPoint d = aa.dir, o = aa.org - d*(aa.org*d);	// "transverse" org
 	mglPoint p, s=(Min+Max)/2, nn;
 	s = s - d*(s*d);
 
 	register long i,k1,n = aa.num;
+	char pos[2]="t";
+	if(DisScaling && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
 	if(n>0)	for(i=0;i<n;i++)	// TODO: Add labels "rotation", "missing" and so on
 	{
 		p = o+d*aa.val[i];	k1 = AddPnt(p,-1,d,0);
 		nn = s-o;	ScalePoint(p,nn,false);
-		text_plot(k1, aa.str[i], (nn.y>0 || nn.x<0) ? "T":"t",-1,0.07);
+		if(!DisScaling)	pos[0]=(nn.y>0 || nn.x<0) ? 'T':'t';
+		text_plot(k1, aa.str[i], pos, -1, 0.07);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -744,15 +749,29 @@ void mglCanvas::colorbar(HCDT vv, const float *c, int where, float x, float y, f
 	}
 	else	{	UpdateAxis();	AdjustTicks(ac,fa);	LabelTicks(ac);	}
 	// hint for using standard label drawing function
-	for(i=0;i<ac.num;i++)	ac.val[i] = GetA(ac.val[i])*2-1;
+	float cc=AddTexture('k');
+	for(i=0;i<ac.num;i++)
+	{
+		d = ac.val[i] = GetA(ac.val[i])*2-1;
+		p1 = p2 = mglPoint((ss*d+s3)*w+x*s3, (ss*d+s3)*h+y*s3, s3);
+		switch(where)
+		{
+			case 1:	p1.x = x*s3;	p2.x = (x+0.1*w)*s3;	break;
+			case 2:	p1.y = (y-0.1*h)*s3;	p2.y = y*s3;	break;
+			case 3:	p1.y = y*s3;	p2.y = (y+0.1*h)*s3;	break;
+			default:p1.x = (x-0.1*w)*s3;	p2.x = x*s3;	break;
+		}
+		n1 = AddPnt(p1,cc);	n2 = AddPnt(p2,cc);
+		line_plot(n1,n2);
+	}
 	ac.dir = mglPoint(ss*w,ss*h,0);
 	ac.org = mglPoint(s3*(w+x),s3*(h+y),s3+1);
 	switch(where)
 	{
-		case 1:	ac.dir.x = 0;	ac.org.x = (x+0.13*w)*s3;	break;
-		case 2:	ac.dir.y = 0;	ac.org.y = (y-0.13*h)*s3;	break;
-		case 3:	ac.dir.y = 0;	ac.org.y = (y+0.13*h)*s3;	break;
-		default:ac.dir.x = 0;	ac.org.x = (x-0.13*w)*s3;	break;
+		case 1:	ac.dir.x = 0;	ac.org.x = (x+0.1*w)*s3;	break;
+		case 2:	ac.dir.y = 0;	ac.org.y = (y-0.1*h)*s3;	break;
+		case 3:	ac.dir.y = 0;	ac.org.y = (y+0.1*h)*s3;	break;
+		default:ac.dir.x = 0;	ac.org.x = (x-0.1*w)*s3;	break;
 	}
 	DrawLabels(ac);
 	Pop();	DisScaling=false;	EndGroup();

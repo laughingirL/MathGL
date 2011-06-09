@@ -286,6 +286,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	Push();
 	float shift = -sh-0.2, fsize=size/8.*font_factor, h = fnt->Height(font)*fsize;
 	if(strchr(font,'T'))	shift = sh+0.3;
+	shift += 0.11;	// Correction for glyph rotation around proper point
 
 	float *pp=pnt+12*p, ll=pp[5]*pp[5]+pp[6]*pp[6];
 	if(pp[5]<0)	{	pp[5]=-pp[5];	pp[6]=-pp[6];	pp[7]=-pp[7];	}
@@ -297,20 +298,18 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 		memset(B,0,12*sizeof(float));
 		B[0] = B[4] = B[8] = fsize;
 		fscl = fsize;	ftet = 0;
-		B[9] = pp[0] - B[0]*0.02f;
-		B[10]= pp[1] - B[4]*0.02f - shift;
+		B[9] = pp[0];
+		B[10]= pp[1] - shift;
 	}
 	else
 	{
 		if(ll==0)	{	Pop();	return 0;	}
-		// TODO Check rotation here
 		float tet = 180*atan2(pp[6],pp[5])/M_PI;
 		memset(B,0,12*sizeof(float));
 		B[0] = B[4] = B[8] = fsize;
 		fscl = fsize;	ftet = -tet;
-//		NoAutoFactor=true;	RotateN(-tet,0,0,1);	NoAutoFactor=false;
-		B[9] = pp[0]+shift*pp[6]/sqrt(ll) - B[0]*0.02f;
-		B[10]= pp[1]-shift*pp[5]/sqrt(ll) - B[4]*0.02f;
+		B[9] = pp[0]+shift*pp[6]/sqrt(ll);
+		B[10]= pp[1]-shift*pp[5]/sqrt(ll);
 	}
 	fsize = fnt->Puts(text,font)*size/8.;
 	Pop();	return fsize;
