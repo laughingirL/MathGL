@@ -1,80 +1,109 @@
-# FindMathGL.cmake - Check for the presence of MathGL
+# - FindMathGL.cmake
+# This module can be used to find MathGL and several of its optional components.
 #
-# The following variables are set when MathGL is found:
-#  HAVE_MATHGL       = Set to true, if all components of MathGL have been found.
-#  MATHGL_INCLUDES   = Include path for the header files of MathGL
-#  MATHGL_LIBRARIES  = Link these to use MathGL
-#  MATHGL_LFLAGS     = Linker flags (optional)
+# You can specify one or more component as you call this find module.
+# Possible components are: FLTK, GLUT, Qt, WX.
+#
+# The following variables will be defined for your use:
+#
+#  MATHGL_FOUND           = MathGL and all specified components found
+#  MATHGL_INCLUDE_DIRS    = The MathGL include directories
+#  MATHGL_LIBRARIES       = The libraries to link against to use MathGL
+#                           and all specified components
+#  MATHGL_VERSION_STRING  = A human-readable version of the MathGL (e.g. 1.11)
+#  MATHGL_XXX_FOUND       = Component XXX found (replace XXX with uppercased
+#                           component name -- for example, QT or FLTK)
+#
+# The minimum required version and needed components can be specified using
+# the standard find_package()-syntax, here are some examples:
+#  find_package(MathGL 1.11 Qt REQUIRED) - 1.11 + Qt interface, required
+#  find_package(MathGL 1.10 REQUIRED)    - 1.10 (no interfaces), required
+#  find_package(MathGL 1.10 Qt WX)       - 1.10 + Qt and WX interfaces, optional
+#  find_package(MathGL 1.11)             - 1.11 (no interfaces), optional
+#
+# Typical usage could be something like this:
+#   find_package(MathGL 1.11 GLUT REQUIRED)
+#   include_directories(${MATHGL_INCLUDE_DIRS})
+#   add_executable(myexe main.cpp)
+#   target_link_libraries(myexe ${MATHGL_LIBRARIES})
+#
 
-## -----------------------------------------------------------------------------
-## Search locations
+#=============================================================================
+# Copyright (c) 2011 Denis Pesotsky <denis@kde.ru>
+#
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-MODULES for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
 
-set (include_locations
-    /usr/include
-    /usr/local/include)
+FIND_PATH(MATHGL_INCLUDE_DIR
+          NAMES mgl/mgl.h
+          DOC "The MathGL include directory")
+FIND_LIBRARY(MATHGL_LIBRARY
+             NAMES mgl
+             PATHS ${MATHGL_LIBRARY_DIR}
+             DOC "The MathGL include directory")
 
-set (lib_locations
-    /usr/local/lib64
-    /usr/local/lib
-    /usr/lib64
-    /usr/lib)
+GET_FILENAME_COMPONENT(MATHGL_LIBRARY_DIR ${MATHGL_LIBRARY} PATH)
 
-## -----------------------------------------------------------------------------
-## Check for the header files
+SET(MATHGL_LIBRARIES ${MATHGL_LIBRARY})
+SET(MATHGL_INCLUDE_DIRS ${MATHGL_INCLUDE_DIR})
 
-find_path (MATHGL_INCLUDES mgl/mgl.h mgl/mgl_data.h
-  PATHS ${include_locations}
-  NO_DEFAULT_PATH)
+IF(MATHGL_INCLUDE_DIR)
+  SET(_CONFIG_FILE_NAME "mgl/config.h")
+  SET(_CONFIG_FILE_PATH "${MATHGL_INCLUDE_DIR}/${_CONFIG_FILE_NAME}")
+  SET(_VERSION_ERR "Cannot determine MathGL version")
+  IF(EXISTS "${_CONFIG_FILE_PATH}")
+    FILE(STRINGS "${_CONFIG_FILE_PATH}"
+         MATHGL_VERSION_STRING REGEX "^#define PACKAGE_VERSION \"[^\"]*\"$")
+    IF(MATHGL_VERSION_STRING)
+      STRING(REGEX
+             REPLACE "^#define PACKAGE_VERSION \"([^\"]*)\"$" "\\1"
+             MATHGL_VERSION_STRING ${MATHGL_VERSION_STRING})
+    ELSE()
+      MESSAGE(FATAL_ERROR "${_VERSION_ERR}: ${_CONFIG_FILE_NAME} parse error")
+    ENDIF()
+  ELSE()
+    MESSAGE(FATAL_ERROR "${_VERSION_ERR}: ${_CONFIG_FILE_NAME} not found")
+  ENDIF()
+ENDIF()
 
-## -----------------------------------------------------------------------------
-## Check for the various libraries
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(MathGL
+                                  REQUIRED_VARS MATHGL_LIBRARY
+                                                MATHGL_INCLUDE_DIR
+                                  VERSION_VAR MATHGL_VERSION_STRING)
 
-set (MATHGL_LIBRARIES "")
+FOREACH(_Component ${MathGL_FIND_COMPONENTS})
+  STRING(TOLOWER ${_Component} _component)
+  STRING(TOUPPER ${_Component} _COMPONENT)
+  
+  SET(MathGL_${_Component}_FIND_REQUIRED ${MathGL_FIND_REQUIRED})
+  SET(MathGL_${_Component}_FIND_QUIETLY true)
+  
+  FIND_PATH(MATHGL_${_COMPONENT}_INCLUDE_DIR
+            NAMES mgl/mgl_${_component}.h
+            PATHS ${MATHGL_INCLUDE_DIR} NO_DEFAULT_PATH)
+  FIND_LIBRARY(MATHGL_${_COMPONENT}_LIBRARY
+               NAMES mgl-${_component}
+               PATHS ${MATHGL_LIBRARY_DIR} NO_DEFAULT_PATH)
 
-## libmgl
+  FIND_PACKAGE_HANDLE_STANDARD_ARGS(MathGL_${_Component} DEFAULT_MSG
+                                    MATHGL_${_COMPONENT}_LIBRARY
+                                    MATHGL_${_COMPONENT}_INCLUDE_DIR)
+  
+  IF(MATHGL_${_COMPONENT}_FOUND)
+    SET(MATHGL_LIBRARIES
+        ${MATHGL_LIBRARIES} ${MATHGL_${_COMPONENT}_LIBRARY})
+    SET(MATHGL_INCLUDE_DIRS
+        ${MATHGL_INCLUDE_DIRS} ${MATHGL_${_COMPONENT}_INCLUDE_DIR})
+  ENDIF()
 
-find_library (HAVE_LIBMGL mgl
-  PATHS ${lib_locations}
-  NO_DEFAULT_PATH)
-if (HAVE_LIBMGL)
-  list (APPEND MATHGL_LIBRARIES ${HAVE_LIBMGL})
-endif (HAVE_LIBMGL)
+  MARK_AS_ADVANCED(MATHGL_${_COMPONENT}_INCLUDE_DIR
+                   MATHGL_${_COMPONENT}_LIBRARY)
+ENDFOREACH()
 
-## -----------------------------------------------------------------------------
-## Actions taken when all components have been found
-
-if (MATHGL_INCLUDES AND MATHGL_LIBRARIES)
-  set (HAVE_MATHGL TRUE)
-else (MATHGL_INCLUDES AND MATHGL_LIBRARIES)
-  set (HAVE_MATHGL FALSE)
-  if (NOT MATHGL_FIND_QUIETLY)
-    if (NOT MATHGL_INCLUDES)
-      message (STATUS "Unable to find MATHGL header files!")
-    endif (NOT MATHGL_INCLUDES)
-    if (NOT MATHGL_LIBRARIES)
-      message (STATUS "Unable to find MATHGL library files!")
-    endif (NOT MATHGL_LIBRARIES)
-  endif (NOT MATHGL_FIND_QUIETLY)
-endif (MATHGL_INCLUDES AND MATHGL_LIBRARIES)
-
-if (HAVE_MATHGL)
-  if (NOT MATHGL_FIND_QUIETLY)
-    message (STATUS "Found components for MATHGL")
-    message (STATUS "MATHGL_INCLUDES  = ${MATHGL_INCLUDES}")
-    message (STATUS "MATHGL_LIBRARIES = ${MATHGL_LIBRARIES}")
-  endif (NOT MATHGL_FIND_QUIETLY)
-else (HAVE_MATHGL)
-  if (MATHGL_FIND_REQUIRED)
-    message (FATAL_ERROR "Could not find MATHGL!")
-  endif (MATHGL_FIND_REQUIRED)
-endif (HAVE_MATHGL)
-
-## -----------------------------------------------------------------------------
-## Mark advanced variables
-
-mark_as_advanced (
-  MATHGL_INCLUDES
-  MATHGL_LIBRARIES
-)
-
-# EOF FindMathGL.cmake
+MARK_AS_ADVANCED(MATHGL_INCLUDE_DIR MATHGL_LIBRARY)
