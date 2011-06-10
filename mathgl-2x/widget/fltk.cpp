@@ -100,7 +100,7 @@ void Fl_MathGL::update(mglCanvas *gr)
 		gr->Alpha(flag&1);
 		gr->Light(flag&2);
 		gr->View(tet,phi);
-		gr->Zoom(x1,y1,x2,y2);
+		gr->Clf();
 //		gr->DrawFace = !rotate;		// TODO: switch to fast drawing here
 		draw_func(gr, draw_par);
 		if(gr->Message[0] != 0)			fl_message("%s",gr->Message);

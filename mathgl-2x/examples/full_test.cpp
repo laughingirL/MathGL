@@ -231,7 +231,7 @@ void smgl_column(mglGraph *gr)	// column plot
 		gr->ColumnPlot(4,i);
 		gr->Box();
 		sprintf(str,"Plot %d of 4",i);
-		gr->Puts(mglPoint(-0.5,0.5),str);
+		gr->Puts(mglPoint(-0.5,0.5),str,"",-2);
 		sprintf(str,"sin(pi*x+pi*%d/2)",i);
 		gr->Plot(str);
 	}

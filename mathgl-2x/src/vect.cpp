@@ -33,7 +33,7 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	if(n!=x->GetNx() || z->GetNx()!=n || y->GetNx()!=n || ay->GetNx()!=n || az->GetNx()!=n)
 	{	gr->SetWarn(mglWarnDim,"Traj");	return;	}
 	float len=gr->SaveState(opt);
-	if(isnan(len))	len = isnan(gr->PrevValue()) ? gr->PrevValue():0;
+	if(isnan(len))	len = 0;	//isnan(gr->PrevValue()) ? 0:gr->PrevValue();
 	static int cgid=1;	gr->StartGroup("Traj",cgid++);
 
 	register long i, j;
@@ -71,7 +71,7 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 
 			p1 = mglPoint(x->v(i,nx), y->v(i,ny), z->v(i,nz));
 			p2 = mglPoint(x->v(i,nx)+dd*ax->v(i,mx), y->v(i,ny)+dd*ay->v(i,my), z->v(i,nz)+dd*az->v(i,mz));
-			nx = gr->AddPnt(p1,gr->CDef);	ny = gr->AddPnt(p2,gr->CDef);
+			nx = gr->AddPnt(p1);	ny = gr->AddPnt(p2);
 			gr->vect_plot(nx,ny);
 		}
 	}

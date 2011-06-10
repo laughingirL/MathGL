@@ -39,9 +39,9 @@ void mglCanvas::SetSize(int w,int h)
 void mglCanvas::PostScale(mglPoint &p)
 {
 	mglPoint q=p/(2*PlotFactor);
-	p.x = (B[9] + q.x*B[0] + q.y*B[1] + q.z*B[2] - zoomx1*Width)/zoomx2;
-	p.y = (B[10]+ q.x*B[3] + q.y*B[4] + q.z*B[5] - zoomy1*Height)/zoomy2;
-	p.z = (B[11]+ q.x*B[6] + q.y*B[7] + q.z*B[8])/sqrt(zoomx2*zoomy2);
+	p.x = B[9] + q.x*B[0] + q.y*B[1] + q.z*B[2];
+	p.y = B[10]+ q.x*B[3] + q.y*B[4] + q.z*B[5];
+	p.z = B[11]+ q.x*B[6] + q.y*B[7] + q.z*B[8];
 	if(Persp)
 	{
 		register float d = (1-Persp*Depth/2)/(1-Persp*p.z);
@@ -57,9 +57,9 @@ bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 	PostScale(p);
 
 	mglPoint y=n/(2*PlotFactor);
-	n.x = (y.x*B[0] + y.y*B[1] + y.z*B[2])/zoomx2;
-	n.y = (y.x*B[3] + y.y*B[4] + y.z*B[5])/zoomy2;
-	n.z = (y.x*B[6] + y.y*B[7] + y.z*B[8])/sqrt(zoomx2*zoomy2);
+	n.x = y.x*B[0] + y.y*B[1] + y.z*B[2];
+	n.y = y.x*B[3] + y.y*B[4] + y.z*B[5];
+	n.z = y.x*B[6] + y.y*B[7] + y.z*B[8];
 	if(Persp)
 	{
 		register float d = (1-Persp*Depth/2)/(1-Persp*p.z);
@@ -77,67 +77,58 @@ long mglCanvas::ProjScale(int nf, long id)
 	mglPoint pp(p0[0],p0[1],p0[2]), nn(p0[5],p0[6],p0[7]);
 	if(isnan(pp.x))	return -1;
 	mglPoint q=pp/(2*PlotFactor), p, n=nn;
-	register float w=B1[0]/2, h=B1[4]/2, d=B1[8]/2, xx=B1[9]-zoomx1*Width-w/2, yy=B1[10]-zoomy1*Height-h/2;
+	register float w=B1[0]/2, h=B1[4]/2, d=B1[8]/2, xx=B1[9]-w/2, yy=B1[10]-h/2;
 	if(TernAxis&1)	// usual ternary axis
 	{
 		if(nf==0)
-		{	p.x = (xx+w/2 + (q.x+(q.y+1)/2)*w/2)/zoomx2;
-			n.x = (nn.x+nn.y/2)*w/2/zoomx2;
-			p.y = (yy+h + q.y*h/2)/zoomy2;	n.y = nn.y*h/2/zoomy2;	}
+		{	p.x = xx+w/2 + (q.x+(q.y+1)/2)*w/2;
+			n.x = (nn.x+nn.y/2)*w/2;
+			p.y = yy+h + q.y*h/2;	n.y = nn.y*h/2;	}
 	}
 	else if(TernAxis&2)	// quaternary axis
 	{
 		if(nf==0)
-		{	p.x = (xx+w/2 + (q.x+(q.y+1)/2)*w/2)/zoomx2;
-			n.x = (nn.x+nn.y/2)*w/2/zoomx2;
-			p.y = (yy+h + q.y*h/2)/zoomy2;
-			n.y = nn.y*h/2/zoomy2;	}
+		{	p.x = xx+w/2 + (q.x+(q.y+1)/2)*w/2;
+			n.x = (nn.x+nn.y/2)*w/2;
+			p.y = yy+h + q.y*h/2;
+			n.y = nn.y*h/2;	}
 		else if(nf==1)
-		{	p.x = (xx+w/2 + (q.x+(1-q.z)/2)*w/2)/zoomx2;
-			n.x = (nn.x-nn.z/2)*w/2/zoomx2;
-			p.y = (yy+h - q.z*h/2)/zoomy2;
-			n.y = -nn.z*h/2/zoomy2;	}
+		{	p.x = xx+w/2 + (q.x+(1-q.z)/2)*w/2;
+			n.x = (nn.x-nn.z/2)*w/2;
+			p.y = yy+h - q.z*h/2;
+			n.y = -nn.z*h/2;	}
 		else if(nf==2)
-		{	p.x = (xx+w/2 + (q.y-q.z)/2*w/2)/zoomx2;
-			n.x = (nn.y-nn.z/2)*w/2/zoomx2;
-			p.y = (yy+h + (q.y+q.z)*h/2)/zoomy2;
-			n.y = (nn.y+nn.z)/2*h/2/zoomy2;	}
+		{	p.x = xx+w/2 + (q.y-q.z)/2*w/2;
+			n.x = (nn.y-nn.z/2)*w/2;
+			p.y = yy+h + (q.y+q.z)*h/2;
+			n.y = (nn.y+nn.z)/2*h/2;	}
 		else
-		{	p.x = (xx+w/2 + (q.x+1+(q.y+q.z)/2)*w/2)/zoomx2;
-			n.x = (nn.x+(nn.y+nn.z)/2)*w/2/zoomx2;
-			p.y = (yy+h + (q.y+(q.z+1)/3)*h/2)/zoomy2;
-			n.y = (nn.y+nn.z/3)*h/2/zoomy2;	}
+		{	p.x = xx+w/2 + (q.x+1+(q.y+q.z)/2)*w/2;
+			n.x = (nn.x+(nn.y+nn.z)/2)*w/2;
+			p.y = yy+h + (q.y+(q.z+1)/3)*h/2;
+			n.y = (nn.y+nn.z/3)*h/2;	}
 	}
 	else
 	{
 		if(nf==0)
-		{	p.x = (xx + q.x*w)/zoomx2;
-			p.y = (yy + q.y*h)/zoomy2;
-			p.z = (B1[11]+ q.z*d)/sqrt(zoomx2*zoomy2);
-			n.x = (nn.x*w)/zoomx2/2;
-			n.y = (nn.y*h)/zoomy2/2;
-			n.z = (nn.z*d)/sqrt(zoomx2*zoomy2)/2;	}
+		{	p.x = xx + q.x*w;		n.x = nn.x*w/2;
+			p.y = yy + q.y*h;		n.y = nn.y*h/2;
+			p.z = B1[11]+ q.z*d;	n.z = nn.z*d/2;	}
 		else if(nf==1)
-		{	p.x = (xx + q.x*w)/zoomx2;
-			p.y = (yy+h + q.z*h)/zoomy2;
-			p.z = (B1[11]+ q.y*d)/sqrt(zoomx2*zoomy2);
-			n.x = (nn.x*w)/zoomx2/2;
-			n.y = (nn.z*h)/zoomy2/2;
-			n.z = (nn.y*d)/sqrt(zoomx2*zoomy2)/2;	}
+		{	p.x = xx + q.x*w;		n.x = nn.x*w/2;
+			p.y = yy+h + q.z*h;		n.y = nn.z*h/2;
+			p.z = B1[11]+ q.y*d;	n.z = nn.y*d/2;	}
 		else if(nf==2)
-		{	p.x = (xx+w + q.z*w)/zoomx2;
-			p.y = (yy + q.y*h)/zoomy2;
-			p.z = (B1[11]+ q.x*d)/sqrt(zoomx2*zoomy2);
-			n.x = (nn.z*w)/zoomx2/2;
-			n.y = (nn.y*h)/zoomy2/2;
-			n.z = (nn.x*d)/sqrt(zoomx2*zoomy2)/2;	}
+		{	p.x = xx+w + q.z*w;		n.x = nn.z*w/2;
+			p.y = yy + q.y*h;		n.y = nn.y*h/2;
+			p.z = B1[11]+ q.x*d;	n.z = nn.x*d/2;	}
 		else
-		{	p.x = (xx+w + q.x*B[0]/2 + q.y*B[1]/2 + q.z*B[2]/2)/zoomx2;
-			p.y = (yy+h + q.x*B[3]/2 + q.y*B[4]/2 + q.z*B[5]/2)/zoomy2;
-			p.z = (B[11]+ q.x*B[6]/2 + q.y*B[7]/2 + q.z*B[8]/2)/sqrt(zoomx2*zoomy2);
-			n.x = (nn.x*B[0] + nn.y*B[1] + nn.z*B[2])/zoomx2/2;
-			n.y = (nn.x*B[3] + nn.y*B[4] + nn.z*B[5])/zoomy2/2;
-			n.z = (nn.x*B[6] + nn.y*B[7] + nn.z*B[8])/sqrt(zoomx2*zoomy2)/2;	}
+		{	p.x = xx+w + q.x*B[0]/2 + q.y*B[1]/2 + q.z*B[2]/2;
+			p.y = yy+h + q.x*B[3]/2 + q.y*B[4]/2 + q.z*B[5]/2;
+			p.z = B[11]+ q.x*B[6]/2 + q.y*B[7]/2 + q.z*B[8]/2;
+			n.x = (nn.x*B[0] + nn.y*B[1] + nn.z*B[2])/2;
+			n.y = (nn.x*B[3] + nn.y*B[4] + nn.z*B[5])/2;
+			n.z = (nn.x*B[6] + nn.y*B[7] + nn.z*B[8])/2;	}
 	}
 	return CopyProj(id,p,n);
 }
@@ -154,9 +145,9 @@ void mglCanvas::LightScale()
 		yy = light[i].r.y/(2*PlotFactor*(FMax.y-FMin.y));
 		zz = light[i].r.z/(2*PlotFactor*(FMax.z-FMin.z));
 
-		light[i].p.x = (xx*B[0] + yy*B[1] + zz*B[2])/zoomx2;
-		light[i].p.y = (xx*B[3] + yy*B[4] + zz*B[5])/zoomy2;
-		light[i].p.z = (xx*B[6] + yy*B[7] + zz*B[8])/sqrt(zoomx2*zoomy2);
+		light[i].p.x = xx*B[0] + yy*B[1] + zz*B[2];
+		light[i].p.y = xx*B[3] + yy*B[4] + zz*B[5];
+		light[i].p.z = xx*B[6] + yy*B[7] + zz*B[8];
 		light[i].p /= Norm(light[i].p);
 	}
 }
@@ -164,10 +155,9 @@ void mglCanvas::LightScale()
 // NOTE: Perspective, transformation formulas and lists are not support just now !!! Also it use LAST InPlot parameters!!!
 mglPoint mglCanvas::CalcXYZ(int xs, int ys)
 {
-	float s3 = 2*PlotFactor, x, y, z;
+	float s3 = 2*PlotFactor, x, y, z;	// TODO: Take into account z-value of z-buffer
 	ys = Height - ys;
-	float xx = xs*zoomx2 - B[9] + zoomx1*Width;
-	float yy = ys*zoomy2 - B[10]+ zoomy1*Height;
+	float xx = xs-B[9], yy = ys-B[10];
 	float d1=B[0]*B[4]-B[1]*B[3], d2=B[1]*B[5]-B[2]*B[4], d3=B[0]*B[5]-B[2]*B[3];
 	if(fabs(d1) > fabs(d2) && fabs(d1) > fabs(d3))	// x-y plane
 	{
@@ -786,8 +776,8 @@ void mglCanvas::glyph_draw(const mglPrim *P)
 	float *p = pnt+12*P->n1+3, f = pnt[12*P->n1+7];
 	Push();
 	memset(B,0,12*sizeof(float));
-	B[0] = B[4] = B[8] = P->s*P->p;	PlotFactor = P->p;
-	NoAutoFactor=false;	RotateN(P->w,0,0,1);	NoAutoFactor=false;
+	B[0] = B[4] = B[8] = P->s*P->p;
+	RotateN(P->w,0,0,1);	PlotFactor = P->p;
 	memcpy(B+9,pnt+12*P->n1,3*sizeof(float));
 
 	int ss=P->style&3;

@@ -76,8 +76,6 @@ public:
 	inline void SetFontDef(char *fnt)		{	mgl_set_font_def(gr, fnt);	}
 	inline void SetAlphaDef(float alpha)	{	mgl_set_alpha_default(gr, alpha);	}
 	inline void SetMeshNum(int num)			{	mgl_set_meshnum(gr, num);		}
-	inline void Zoom(float x1, float y1, float x2, float y2)
-	{	mgl_set_zoom(gr, x1, y1, x2, y2);	}
 	inline void SetLegendBox(bool enable)	{	mgl_set_legend_box(gr, enable);	}
 	inline void SetLegendMarks(int num)		{	mgl_set_legend_marks(gr, num);	}
 	inline void LoadFont(const char *name, const char *path=NULL)

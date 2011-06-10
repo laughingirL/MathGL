@@ -2464,19 +2464,6 @@ void mglc_ztick(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 	else if(k[0]==2)	mglprintf(out,1024,L"gr->SetTickTempl('z',L\"%ls\");", a[0].s);
 }
 //-----------------------------------------------------------------------------
-int mgls_zoom(mglGraph *gr, long , mglArg *a, int k[10], const char *)
-{
-	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
-		gr->Zoom(a[0].v, a[1].v, a[2].v, a[3].v);
-	else	return 1;
-	return 0;
-}
-void mglc_zoom(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
-{
-	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
-		mglprintf(out,1024,L"gr->Zoom(%g, %g, %g, %g);", a[0].v, a[1].v, a[2].v, a[3].v);
-}
-//-----------------------------------------------------------------------------
 int mgls_error(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
@@ -3521,7 +3508,6 @@ mglCommand mgls_base_cmd[] = {
 	{L"yrange",L"Set range for y-axis",L"yrange Dat [add] | y1 y2", mgls_yrange, mglc_yrange, false, 2},
 	{L"ytick",L"Set ticks for y-axis",L"ytick dy [sy ty] | 'tmpl'", mgls_ytick, mglc_ytick, false, 2},
 	{L"zlabel",L"Draw label for z-axis",L"zlabel 'txt' [pos size shift]", mgls_zlabel, mglc_zlabel, false, 1},
-	{L"zoom",L"Zoom in/out plot",L"zoom x1 y1 x2 y2", mgls_zoom, mglc_zoom, false, 5},
 	{L"zrange",L"Set range for z-axis",L"yrange Dat [add] | z1 z2", mgls_zrange, mglc_zrange, false, 2},
 	{L"ztick",L"Set ticks for z-axis",L"ztick dz [sz tz] | 'tmpl'", mgls_ztick, mglc_ztick, false, 2},
 {L"",0,0,0,0,0,0}};

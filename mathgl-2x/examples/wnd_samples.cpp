@@ -63,12 +63,11 @@ void mgls_prepare3d(mglData *a, mglData *b=0)
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
-	mglData x,y,y1,y2;	mgls_prepare1d(&y,&y1,&y2,&x);
-	gr->Box();	gr->Plot(x,y);
-	gr->Traj(x,y,y1,y2);
-	return 0;
+/*	mglData a(256,2);	a.Fill(-1,1);
+	gr->SubPlot(2,10,0,0.2);	gr->Dens(a,"kw");
+	gr->Puts(mglPoint(-1.4, -0.3), "kw", "C", -8);
+	return 0;*/
 
-//	gr->SetSize(800,800);
 	gr->Rotate(0,0);
 	gr->SetOrigin(-1,-1,-1);	gr->Axis();
 	gr->SetOrigin( 1, 1, 1);	gr->Axis();

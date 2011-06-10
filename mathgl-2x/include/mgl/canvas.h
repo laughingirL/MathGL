@@ -91,8 +91,6 @@ public:
 	void DefaultPlotParam();
 	/// Set angle of view indepently from mglCanvas::Rotate().
 	virtual void View(float tetx,float tetz,float tety=0);
-	/// Zoom in or zoom out (if Zoom(0, 0, 1, 1)) a part of picture
-	void Zoom(float x1, float y1, float x2, float y2);
 	/// Clear transformation matrix.
 	inline void Identity(bool rel=false)	{	InPlot(0,1,0,1,rel);	}
 	/// Push transformation matrix into stack
@@ -277,7 +275,6 @@ protected:
 	long pMax;			///< Maximal number of primitives
 	float PlotFactor;	///< Factor for sizing overall plot (should be >1.5, default is =1.55)
 	bool AutoPlotFactor;///< Enable autochange PlotFactor
-	float zoomx1, zoomy1, zoomx2, zoomy2;
 	unsigned char BDef[4];	///< Background color
 	mglAxis ax,ay,az,ac;///< Axis parameters
 
@@ -358,7 +355,6 @@ private:
 	float stack[MGL_STACK_ENTRY*13];	// stack for transformation matrixes
 	int st_pos;
 	float font_factor;
-	bool NoAutoFactor;
 	int dr_nx1, dr_nx2, dr_ny1, dr_ny2;	// Allowed drawing region
 	GifFileType *gif;
 	float fscl,ftet;	///< last scale and rotation for glyphs

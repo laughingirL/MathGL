@@ -24,8 +24,7 @@
 mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
 	G=0;	SetSize(w,h);	SetQuality(MGL_DRAW_NORM);
-	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';
-	NoAutoFactor = false;	NumLeg=0;
+	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';	NumLeg=0;
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
 	az.dir = mglPoint(0,0,1);	az.a = mglPoint(0,1,0);	az.b = mglPoint(1,0,0);	az.ch='z';
@@ -67,8 +66,7 @@ void mglCanvas::DefaultPlotParam()
 
 	for(int i=0;i<10;i++)	{	AddLight(i, mglPoint(0,0,1));	Light(i,false);	}
 	Light(0,true);			Light(false);
-	InPlot(0,1,0,1,false);	Zoom(0,0,1,1);
-	st_pos = 0;
+	InPlot(0,1,0,1,false);	st_pos = 0;
 }
 //-----------------------------------------------------------------------------
 //	Optimal axis position
@@ -295,21 +293,16 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 
 	if(isnan(ll))
 	{
-		memset(B,0,12*sizeof(float));
-		B[0] = B[4] = B[8] = fsize;
 		fscl = fsize;	ftet = 0;
-		B[9] = pp[0];
-		B[10]= pp[1] - shift;
+		B[9] = pp[0];	B[10]= pp[1] - shift;	B[11] = pp[2];
 	}
 	else
 	{
 		if(ll==0)	{	Pop();	return 0;	}
-		float tet = 180*atan2(pp[6],pp[5])/M_PI;
-		memset(B,0,12*sizeof(float));
-		B[0] = B[4] = B[8] = fsize;
-		fscl = fsize;	ftet = -tet;
 		B[9] = pp[0]+shift*pp[6]/sqrt(ll);
 		B[10]= pp[1]-shift*pp[5]/sqrt(ll);
+		fscl = fsize;	B[11] = pp[2];
+		ftet = -180*atan2(pp[6],pp[5])/M_PI;
 	}
 	fsize = fnt->Puts(text,font)*size/8.;
 	Pop();	return fsize;
@@ -321,7 +314,7 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, char col)
 	a.s = fscl/PlotFactor;	a.w = ftet;	a.p = PlotFactor;
 	float cc = AddTexture(col);	// TODO: use real color
 	if(cc<0)	cc = CDef;
-	a.n1 = AddPnt(mglPoint((B[9]-zoomx1*Width) /zoomx2, (B[10]-zoomy1*Height)/zoomy2, B[11]), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), 0, 0);
+	a.n1 = AddPnt(mglPoint(B[9],B[10],B[11]), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), 0, 0);
 	a.style = s;	a.m = j;
 	a.z = B[11];
 	add_prim(a);
@@ -365,16 +358,6 @@ void mglPrim::Draw()
 }
 //-----------------------------------------------------------------------------
 //	Plot positioning functions
-//-----------------------------------------------------------------------------
-void mglCanvas::Zoom(float x1, float y1, float x2, float y2)
-{
-	if(x1==x2 || y1==y2)	{	x1=y1=0;	x2=y2=1;	}
-	Clf();
-	if(x1<x2)	{	zoomx1=x1;	zoomx2=x2-x1;	}
-	else		{	zoomx1=x2;	zoomx2=x1-x2;	}
-	if(y1<y2)	{	zoomy1=y1;	zoomy2=y2-y1;	}
-	else		{	zoomy1=y2;	zoomy2=y1-y2;	}
-}
 //-----------------------------------------------------------------------------
 void mglCanvas::SubPlot(int nx,int ny,int m, float dx, float dy)
 {
@@ -450,7 +433,7 @@ void mglCanvas::RotateN(float Tet,float x,float y,float z)
 	B[6] = C[0]*R[6] + C[3]*R[7] + C[6]*R[8];
 	B[7] = C[1]*R[6] + C[4]*R[7] + C[7]*R[8];
 	B[8] = C[2]*R[6] + C[5]*R[7] + C[8]*R[8];
-	if(AutoPlotFactor && !NoAutoFactor)
+	if(AutoPlotFactor)
 	{
 		float m=(fabs(B[3])+fabs(B[4])+fabs(B[5]))/inH;
 		float n=(fabs(B[0])+fabs(B[1])+fabs(B[2]))/inW;
