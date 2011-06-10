@@ -54,7 +54,7 @@ void mgl_set_coor(HMGL gr, int how);
 void mgl_set_ternary(HMGL gr, int enable);
 void mgl_set_cutoff(HMGL graph, const char *EqC);
 
-float mgl_data_get_value(HCDT d, int i, int j, int k);
+float mgl_data_get_value(HCDT d, long i, long j, long k);
 long mgl_data_get_nx(HCDT d);
 long mgl_data_get_ny(HCDT d);
 long mgl_data_get_nz(HCDT d);

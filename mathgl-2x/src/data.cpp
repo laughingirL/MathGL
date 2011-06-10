@@ -1522,3 +1522,8 @@ void mgl_data_diff_par(HMDT d, HCDT v1, HCDT v2, HCDT v3)
 void mgl_data_diff_par_(uintptr_t *d, uintptr_t *v1, uintptr_t *v2, uintptr_t *v3)
 {	mgl_data_diff_par(_DT_,_DA_(v1),_DA_(v2),_DA_(v3));	}
 //-----------------------------------------------------------------------------
+void mgl_data_set_value(HMDT dat, float v, long i, long j, long k)
+{	dat->a[i+dat->nx*(j+dat->ny*k)]=v;	}
+void mgl_data_set_value_(uintptr_t *d, float *v, int *i, int *j, int *k)
+{	mgl_data_set_value(_DT_,*v,*i,*j,*k);	}
+//-----------------------------------------------------------------------------

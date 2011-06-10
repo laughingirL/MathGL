@@ -58,10 +58,9 @@ void mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ)
 {	gr->SetFunc(EqX,EqY,EqZ);	}
 void mgl_set_func_ext(HMGL gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA)
 {	gr->SetFunc(EqX,EqY,EqZ,EqA);	}
-void mgl_set_coor(HMGL gr, int how)				{	gr->SetCoor(how);	}
+void mgl_set_coor(HMGL gr, int how)	{	gr->SetCoor(how);	}
 //-----------------------------------------------------------------------------
-float mgl_data_get_value(HCDT d, int i, int j, int k)
-{	return _Da_(d).v(i,j,k);	}
+float mgl_data_get_value(HCDT d, long i, long j, long k)	{	return _Da_(d).v(i,j,k);	}
 long mgl_data_get_nx(HCDT d)	{	return	_Da_(d).GetNx();	}
 long mgl_data_get_ny(HCDT d)	{	return	_Da_(d).GetNy();	}
 long mgl_data_get_nz(HCDT d)	{	return	_Da_(d).GetNz();	}
