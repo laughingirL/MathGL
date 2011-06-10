@@ -478,28 +478,27 @@ void mglCanvas::put_desc(void *fp, bool gz, const char *pre, const char *ln1, co
 void mglCanvas::put_color(float *c, mglPrim *p)
 {
 	float n[3]={NAN,NAN,NAN};
-	register long i, j = p->type==1 ? p->n2:p->n1;
-	memcpy(c,pnt+12*j+8,4*sizeof(float));
+	memcpy(c,pnt+12*(p->type==1 ? p->n2:p->n1)+8,4*sizeof(float));
 
 	if(UseLight && !isnan(n[0]))
 	{
 		float d0,d1,d2,nn;
 		c[0] *= AmbBr;	c[1] *= AmbBr;	c[2] *= AmbBr;
+		register long i;
 		for(i=0;i<10;i++)
 		{
-			if(!nLight[i])	continue;
-			j = 3*i;
-			nn = 2*(n[0]*pLight[j]+n[1]*pLight[j+1]+n[2]*pLight[j+2]) /
+			if(!light[i].n)	continue;
+			nn = 2*(n[0]*light[i].p.x+n[1]*light[i].p.y+n[2]*light[i].p.z) /
 					(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]+1e-6);
-			d0 = pLight[j] - n[0]*nn;
-			d1 = pLight[j+1]-n[1]*nn;
-			d2 = pLight[j+2]-n[2]*nn;
+			d0 = light[i].p.x - n[0]*nn;
+			d1 = light[i].p.y - n[1]*nn;
+			d2 = light[i].p.z - n[2]*nn;
 			nn = 1 + d2/sqrt(d0*d0+d1*d1+d2*d2+1e-6);
 
-			nn = exp(-aLight[i]*nn)*bLight[i]*2;
-			c[0] += nn*cLight[j];
-			c[1] += nn*cLight[j+1];
-			c[2] += nn*cLight[j+2];
+			nn = exp(-light[i].a*nn)*light[i].b*2;
+			c[0] += nn*light[i].c.r;
+			c[1] += nn*light[i].c.g;
+			c[2] += nn*light[i].c.b;
 		}
 		c[0] = c[0]<1 ? c[0] : 1;
 		c[1] = c[1]<1 ? c[1] : 1;

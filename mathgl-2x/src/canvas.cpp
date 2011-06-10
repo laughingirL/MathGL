@@ -29,14 +29,14 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
 	az.dir = mglPoint(0,0,1);	az.a = mglPoint(0,1,0);	az.b = mglPoint(1,0,0);	az.ch='z';
-	P = 0;	P_txt=0;	P_len=P_cur=0;	DisScaling=false;
+	P = 0;	Ptxt=0;	pNum=pMax=Plen=Pcur=0;	DisScaling=false;
 	DefaultPlotParam();
 }
 //-----------------------------------------------------------------------------
 mglCanvas::~mglCanvas()
 {
 	delete fnt;
-	if(P)	delete []P;		if(P_txt)	delete []P_txt;
+	if(P)	delete []P;		if(Ptxt)	delete []Ptxt;
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []OI;	}
 }
 //-----------------------------------------------------------------------------
@@ -242,20 +242,20 @@ const wchar_t *mglCanvas::add_text(const wchar_t *str)
 {
 	if(!str || !str[0])	return 0;
 	long len = wcslen(str);
-	if(!P_txt)
+	if(!Ptxt)
 	{
-		P_len=len+1;	P_cur=0;
-		P_txt = (wchar_t *)malloc(P_len*sizeof(wchar_t));
-		memset(P_txt,0,P_len*sizeof(wchar_t));
+		Plen=len+1;	Pcur=0;
+		Ptxt = (wchar_t *)malloc(Plen*sizeof(wchar_t));
+		memset(Ptxt,0,Plen*sizeof(wchar_t));
 	}
-	else if(P_cur+len+1>=P_len)
+	else if(Pcur+len+1>=Plen)
 	{
-		P_len = P_cur+len+1;
-		P_txt = (wchar_t *)realloc(P_txt, P_len*sizeof(wchar_t));
+		Plen = Pcur+len+1;
+		Ptxt = (wchar_t *)realloc(Ptxt, Plen*sizeof(wchar_t));
 	}
-	wcscpy(P_txt+P_cur,str);
-	P_cur += len+1;
-	return P_txt+P_cur-len-1;
+	wcscpy(Ptxt+Pcur,str);
+	Pcur += len+1;
+	return Ptxt+Pcur-len-1;
 }
 //-----------------------------------------------------------------------------
 float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float size,float sh)
@@ -558,17 +558,15 @@ bool mglCanvas::Light(bool enable)
 void mglCanvas::Light(int n, bool enable)
 {
 	if(n<0 || n>9)	{	SetWarn(mglWarnLId);	return;	}
-	nLight[n] = enable;
+	light[n].n = enable;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::AddLight(int n, mglPoint p, char col, float br, bool inf, float ap)
 {
 	if(n<0 || n>9)	{	SetWarn(mglWarnLId);	return;	}
-	nLight[n] = true;	aLight[n] = ap>0?ap*ap:3;
-	bLight[n] = br;		iLight[n] = inf;
-	rLight[3*n] = p.x;	rLight[3*n+1] = p.y;	rLight[3*n+2] = p.z;
-	mglColor c = mglColor(col);
-	cLight[3*n] = c.r;	cLight[3*n+1] = c.g;	cLight[3*n+2] = c.b;
+	light[n].n = true;	light[n].a = ap>0?ap*ap:3;
+	light[n].b = br;	light[n].i = inf;
+	light[n].r = p;		light[n].c = mglColor(col);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::arrow_plot(long n1, long n2,char st)

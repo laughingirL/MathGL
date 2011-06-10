@@ -144,23 +144,20 @@ long mglCanvas::ProjScale(int nf, long id)
 //-----------------------------------------------------------------------------
 void mglCanvas::LightScale()
 {
-	float *x;
-	register float nn,xx,yy,zz;
-	register long i,j;
+	register float xx,yy,zz;
+	register long i;
 	for(i=0;i<10;i++)
 	{
-		if(!nLight[i])	continue;
-		j=3*i;		x = rLight+j;
+		if(!light[i].n)	continue;
 		// NOTE: I neglect curved coordinates here!!!
-		xx = x[0]/(2*PlotFactor*(FMax.x-FMin.x));
-		yy = x[1]/(2*PlotFactor*(FMax.y-FMin.y));
-		zz = x[2]/(2*PlotFactor*(FMax.z-FMin.z));
+		xx = light[i].r.x/(2*PlotFactor*(FMax.x-FMin.x));
+		yy = light[i].r.y/(2*PlotFactor*(FMax.y-FMin.y));
+		zz = light[i].r.z/(2*PlotFactor*(FMax.z-FMin.z));
 
-		pLight[j]  = (xx*B[0] + yy*B[1] + zz*B[2])/zoomx2;
-		pLight[j+1]= (xx*B[3] + yy*B[4] + zz*B[5])/zoomy2;
-		pLight[j+2]= (xx*B[6] + yy*B[7] + zz*B[8])/sqrt(zoomx2*zoomy2);
-		nn=sqrt(pLight[j]*pLight[j]+pLight[j+1]*pLight[j+1]+pLight[j+2]*pLight[j+2]);
-		pLight[j] /= nn;	pLight[j+1] /= nn;	pLight[j+2] /= nn;
+		light[i].p.x = (xx*B[0] + yy*B[1] + zz*B[2])/zoomx2;
+		light[i].p.y = (xx*B[3] + yy*B[4] + zz*B[5])/zoomy2;
+		light[i].p.z = (xx*B[6] + yy*B[7] + zz*B[8])/sqrt(zoomx2*zoomy2);
+		light[i].p /= Norm(light[i].p);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -278,7 +275,6 @@ void mglCanvas::Clf(mglColor Back)
 	PDef = 0xffff;
 	if(Back==0)			Back = 'w';
 	if(TranspType==2)	Back = 'k';
-//	col2int(Back,1,BDef);
 	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;	BDef[2]=Back.b*255;	BDef[3]=0;
 	register long i,n=Width*Height;
 	memset(C,0,12*n);	memset(OI,0,n*sizeof(int));
@@ -340,22 +336,21 @@ unsigned char* mglCanvas::col2int(const float *c,const float *n,unsigned char *r
 	{
 		b0 *= AmbBr;		b1 *= AmbBr;		b2 *= AmbBr;
 		float d0,d1,d2,nn;
-		register long i,j;
+		register long i;
 		for(i=0;i<10;i++)
 		{
-			if(!nLight[i])	continue;
-			j = 3*i;
-			nn = 2*(n[0]*pLight[j]+n[1]*pLight[j+1]+n[2]*pLight[j+2]) /
+			if(!light[i].n)	continue;
+			nn = 2*(n[0]*light[i].p.x+n[1]*light[i].p.y+n[2]*light[i].p.z) /
 					(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]+1e-6);
-			d0 = pLight[j] - n[0]*nn;
-			d1 = pLight[j+1]-n[1]*nn;
-			d2 = pLight[j+2]-n[2]*nn;
+			d0 = light[i].p.x - n[0]*nn;
+			d1 = light[i].p.y - n[1]*nn;
+			d2 = light[i].p.z - n[2]*nn;
 			nn = 1 + d2/sqrt(d0*d0+d1*d1+d2*d2+1e-6);
 
-			nn = exp(-aLight[i]*nn)*bLight[i]*2;
-			b0 += nn*cLight[j];
-			b1 += nn*cLight[j+1];
-			b2 += nn*cLight[j+2];
+			nn = exp(-light[i].a*nn)*light[i].b*2;
+			b0 += nn*light[i].c.r;
+			b1 += nn*light[i].c.g;
+			b2 += nn*light[i].c.b;
 		}
 		b0 = b0<1 ? b0 : 1;
 		b1 = b1<1 ? b1 : 1;
@@ -479,12 +474,9 @@ void mglCanvas::quad_draw(const float *p1, const float *p2, const float *p3, con
 		s = u*v;
 		p[2] = p1[2]+d1[2]*u+d2[2]*v+d3[2]*s;
 		for(g=5;g<12;g++)	p[g] = p1[g]+d1[g]*u+d2[g]*v+d3[g]*s;
-//		for(g=2;g<8;g++)	p[g] = p1[g]+d1[g]*u+d2[g]*v+d3[g]*s;
 		if(isnan(p[5]))
 		{	p[5] = nr.x;	p[6] = nr.y;	p[7] = nr.z;	}
 		pnt_plot(i,j,p[2],col2int(p+8,p+5,r));
-// TODO: Check what is faster textures (below) or 12 iterations
-//		pnt_plot(i,j,p[2],col2int(p[3],p[4],p+5,r));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -796,8 +788,7 @@ void mglCanvas::glyph_draw(const mglPrim *P)
 	memset(B,0,12*sizeof(float));
 	B[0] = B[4] = B[8] = P->s*P->p;	PlotFactor = P->p;
 	NoAutoFactor=false;	RotateN(P->w,0,0,1);	NoAutoFactor=false;
-	B[9] = pnt[12*P->n1];		B[10]= pnt[12*P->n1+1];
-	B[11]= pnt[12*P->n1+2];		p[2]=0;
+	memcpy(B+9,pnt+12*P->n1,3*sizeof(float));
 
 	int ss=P->style&3;
 	if(P->style&8)
@@ -810,7 +801,7 @@ void mglCanvas::glyph_draw(const mglPrim *P)
 		if(!(P->style&4))	glyph_fill(p,f,fnt->GetNt(ss,P->m),fnt->GetTr(ss,P->m));
 		glyph_wire(p,f,fnt->GetNl(ss,P->m),fnt->GetLn(ss,P->m));
 	}
-	Pop();	p[2]=f;
+	Pop();
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_fill(float *pp, float f, int nt, const short *trig)
@@ -819,7 +810,7 @@ void mglCanvas::glyph_fill(float *pp, float f, int nt, const short *trig)
 	float *p=new float[36], pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 	if(!trig || nt<=0)	return;
 	memcpy(p+8,pp+5,4*sizeof(float));	// use manual color
-	p[3]=pp[0];	p[4]=pp[1];	p[5]=NAN;	// TODO
+	p[3]=pp[0];	p[4]=pp[1];	p[5]=NAN;
 	memcpy(p+12,p,12*sizeof(float));
 	memcpy(p+24,p,12*sizeof(float));
 	mglPoint p1,p2,p3;
@@ -842,7 +833,7 @@ void mglCanvas::glyph_wire(float *pp, float f, int nl, const short *line)
 	long ik,ii,il=0;
 	float *p=new float[24];
 	memcpy(p+8,pp+5,4*sizeof(float));	// use manual color
-	p[3]=pp[0];	p[4]=pp[1];	p[5]=NAN;	// TODO
+	p[3]=pp[0];	p[4]=pp[1];	p[5]=NAN;
 	memcpy(p+12,p,12*sizeof(float));
 	unsigned pdef=PDef;	PDef = 0xffff;
 	float opw=PenWidth;	PenWidth=0.75;
@@ -876,7 +867,7 @@ void mglCanvas::glyph_line(float *pp, float f, bool solid)
 	unsigned pdef=PDef;	PDef = 0xffff;
 	float opw=PenWidth;	PenWidth=1;
 	memcpy(p+8,pp+5,4*sizeof(float));	// use manual color
-	p[3]=pp[0];	p[4]=pp[1];	p[5]=NAN;	// TODO
+	p[3]=pp[0];	p[4]=pp[1];	p[5]=NAN;
 	memcpy(p+12,p,12*sizeof(float));
 	memcpy(p+24,p,12*sizeof(float));
 	memcpy(p+36,p,12*sizeof(float));

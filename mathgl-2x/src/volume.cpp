@@ -28,6 +28,7 @@
 //-----------------------------------------------------------------------------
 void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const char *opt)
 {
+	if(!(gr->GetQuality()&3))	return;	// do nothing in fast_draw
 	long i,j,k,n=a->GetNx(),m=a->GetNy(),l=a->GetNz();
 	register int i0;
 	if(n<2 || m<2 || l<2)	{	gr->SetWarn(mglWarnLow,"Cloud");	return;	}
@@ -45,14 +46,14 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 	float	alpha = gr->AlphaDef;
 	bool inv = sch && strchr(sch,'-');
 	bool dot = sch && strchr(sch,'.');
-	alpha /= pow(n/tx*m/ty*l/tz,1./3)/5;
+	alpha /= pow(n/tx*m/ty*l/tz,1./3)/20;
 	float aa,bb;
 	if(alpha>1)	alpha = 1;
 	long ss = gr->AddTexture(sch);
 
 	// x, y, z -- have the same size as a
 	long pos = (n/tx)*(m/ty)*(l/tz);
-	pos = dot ? gr->Reserve(pos) : gr->Reserve(pos);
+	pos = gr->Reserve(pos);
 	mglPoint p,q=mglPoint(NAN);
 	for(k=0;k<l;k+=tz)	for(j=0;j<m;j+=ty)	for(i=0;i<n;i+=tx)
 	{
@@ -60,10 +61,11 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 		aa = gr->GetA(a->v(i,j,k));
 		if(inv)	bb = (1-aa)*(1-aa)*alpha;
 		else	bb = aa*aa*alpha;
-		gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);
+		gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);	// NOTE: Not thread safe!!!
 	}
 	n /= tx;	m /= ty;	l /= tz;
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
+	if(dot)	for(i=0;i<n*m*l;i++)	gr->mark_plot(pos+i,'.');
+	else	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
 	{
 		i0 = pos + i+n*(j+m*k);
 		if(i<n-1 && j<m-1)	gr->quad_plot(i0,i0+1,i0+n,i0+n+1);

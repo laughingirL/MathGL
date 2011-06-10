@@ -298,6 +298,9 @@ public:
 	/// Set default font style and color
 	inline void SetFontDef(const char *fnt)	{	strncpy(FontDef, fnt, 31);	};
 
+	/// Set plot quality
+	virtual void SetQuality(int qual=MGL_DRAW_NORM)	{	Quality=qual;	}
+	inline int GetQuality()	{	return Quality;	}
 
 	// ~~~~~~~~~~~~~~~~~~~~~~ Developer functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// NOTE! Following 3 functions are NOT thread-safe!!!
@@ -361,6 +364,7 @@ protected:
 	float FontSize;		///< The size of font for tick and axis labels
 	char FontDef[32];	///< Font specification (see mglGraph::Puts). Default is Roman with align at center.
 	bool RotatedText;	///< Use text rotation along axis
+	int Quality;		///< Quality of plot (0x0-pure, 0x1-fast; 0x2-fine; 0x4 - low memory)
 
 	mglFormula *fx;		///< Transformation formula for x direction.
 	mglFormula *fy;		///< Transformation formula for y direction.

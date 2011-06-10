@@ -33,6 +33,7 @@ struct GifFileType;
 //-----------------------------------------------------------------------------
 struct mglPrim;
 //-----------------------------------------------------------------------------
+/// Structure for drawing axis and ticks
 struct mglAxis
 {
 	mglAxis();
@@ -57,6 +58,19 @@ struct mglAxis
 	char ch;		///< Character of axis (like 'x','y','z','c')
 };
 //-----------------------------------------------------------------------------
+/// Structure for light source
+struct mglLight
+{
+	mglLight()	{	memset(this,0,sizeof(mglLight));	}
+	bool n;			///< Availability of light sources
+	bool i;			///< Infinity/local position of light sources
+	mglPoint r;		///< Position of light sources
+	mglPoint p;		///< Actual position of light sources (filled by LightScale() function)
+	float a;		///< Aperture of light sources
+	float b;		///< Brightness of light sources
+	mglColor c;		///< Color of light sources
+};
+//-----------------------------------------------------------------------------
 /// Class contains all functionality for creating different mathematical plots
 class mglCanvas : public mglBase
 {
@@ -72,8 +86,6 @@ public:
 	/// Set PlotFactor
 	inline void SetPlotFactor(float val)
 	{	PlotFactor = val>0?val:1.55;	AutoPlotFactor=(val<=0);	}
-	/// Set plot quality
-	virtual void SetQuality(int qual=MGL_DRAW_NORM)	{	Quality=qual;	}
 
 	///< Set default parameter for plotting
 	void DefaultPlotParam();
@@ -258,9 +270,9 @@ protected:
 	unsigned char *G4;	///< Final picture in RGBA format. Prepared in Finish().
 	unsigned char *G;	///< Final picture in RGB format. Prepared in Finish().
 	mglPrim *P;			///< Primitives (lines, triangles and so on)
-	wchar_t *P_txt;		///< buffer of text for mglPrim
-	long P_len;			///< length of buffer for mglPrim
-	long P_cur;			///< position in buffer for mglPrim
+	wchar_t *Ptxt;		///< buffer of text for mglPrim
+	long Plen;			///< length of buffer for mglPrim
+	long Pcur;			///< position in buffer for mglPrim
 	long pNum;			///< Actual number of primitives
 	long pMax;			///< Maximal number of primitives
 	float PlotFactor;	///< Factor for sizing overall plot (should be >1.5, default is =1.55)
@@ -283,7 +295,6 @@ protected:
 	wchar_t *LegStr[100];	///< String array with legend text (see mglGraph::AddLegend)
 	char *LegStl[100];	///< String array with legend style (see mglGraph::AddLegend)
 
-	int Quality;		///< Quality of plot (0x0-pure, 0x1-fast; 0x2-fine; 0x4 - low memory)
 	int TranspType;		/// Type of transparency (no full support in OpenGL mode).
 	int CurFrameId;		///< Number of automaticle created frames
 	float Persp;		///< Perspective factor (=0 is perspective off)
@@ -295,13 +306,7 @@ protected:
 	float inW, inH;		///< Relative width and height of last InPlot
 	bool UseAlpha;		///< Flag that Alpha is used
 	bool UseLight;		///< Flag of using lightning
-	bool nLight[10];	///< Availability of light sources
-	bool iLight[10];	///< Infinity/local position of light sources
-	float rLight[30];	///< Position of light sources
-	float pLight[30];	///< Actual position of light sources (filled by LightScale() function)
-	float aLight[10];	///< Aperture of light sources
-	float bLight[10];	///< Brightness of light sources
-	float cLight[30];	///< Color of light sources
+	mglLight light[10];	///< Light sources
 	float FogDist;		/// Inverse fog distance (fog ~ exp(-FogDist*Z))
 	float FogDz;		/// Relative shift of fog
 

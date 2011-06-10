@@ -107,8 +107,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)	// NOTE:
 //	if(scl)	NormScale(n);	// Usually p was scaled before, but n should be scaled now!
 	if(scl)	ScalePoint(p,n,!(scl&2));
 	if(isnan(p.x))	return -1;
-	a = (a>=0 && a<=1) ? a : AlphaDef;
-	if(isnan(n.x))	a=1;
+	a = (a>=0 && a<=1) ? a : (isnan(n.x) ? 1:AlphaDef);
 	c = (c>=0) ? c:CDef;
 	// NOTE: RGBA color for OpenGL and EPS/SVG modes only!
 	float pp[12]={p.x,p.y,p.z,c, a,n.x,n.y,n.z, 0,0,0,0};

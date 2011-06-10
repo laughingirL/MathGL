@@ -108,15 +108,15 @@ bool mglCanvasGL::Light(bool enable)
 void mglCanvasGL::LightScale()
 {
 	mglCanvas::LightScale();
-	GLenum light[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
+	GLenum ll[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 			GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
 	float pos[4]={0,0,0,0};
 	for(int i=0;i<8;i++)
 	{
-		pos[0] = pLight[3*i];
-		pos[1] = pLight[3*i+1];
-		pos[2] = pLight[3*i+2];
-		if(nLight[i])	glLightfv(light[i], GL_POSITION, pos);
+		pos[0] = light[3*i].p.x;
+		pos[1] = light[3*i].p.y;
+		pos[2] = light[3*i].p.z;
+		if(light[i].n)	glLightfv(ll[i], GL_POSITION, pos);
 	}
 }
 //-----------------------------------------------------------------------------

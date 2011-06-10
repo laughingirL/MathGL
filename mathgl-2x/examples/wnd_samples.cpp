@@ -24,8 +24,29 @@
 //-----------------------------------------------------------------------------
 #include "mgl/mgl.h"
 #include "mgl/parser.h"
+//-----------------------------------------------------------------------------
+void mgls_prepare3d(mglData *a, mglData *b=0)
+{
+	register long i,j,k,n=60,m=50,l=40,i0;
+	if(a)	a->Create(n,m,l);		if(b)	b->Create(n,m,l);
+	mreal x,y,z;
+	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
+	{
+		x=2*i/(n-1.)-1;	y=2*j/(m-1.)-1;	z=2*k/(l-1.)-1;	i0 = i+n*(j+m*k);
+		if(a)	a->a[i0] = -2*(x*x + y*y + z*z*z*z - z*z - 0.1);
+		if(b)	b->a[i0] = 1-2*tanh((x+y)*(x+y));
+	}
+}
+//-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
+	mglData c;	mgls_prepare3d(&c);
+	gr->Rotate(40,60);	gr->Light(true);	gr->Alpha(true);
+	gr->VertexColor(false);	gr->Compression(false);
+	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
+	gr->Box();	gr->Surf3(c);
+	return 0;
+
 //	gr->SetSize(800,800);
 	gr->Rotate(0,0);
 	gr->SetOrigin(-1,-1,-1);	gr->Axis();
