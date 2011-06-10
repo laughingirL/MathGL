@@ -98,7 +98,7 @@ void mgl_set_fog(HMGL graph, float d, float dz);
 void mgl_set_light(HMGL graph, int enable);
 void mgl_set_light_n(HMGL gr, int n, int enable);
 void mgl_add_light(HMGL graph, int n, float x, float y, float z, char c);
-void mgl_add_light_ext(HMGL graph, int n, float x, float y, float z, char c, float br, bool inf, float ap);
+void mgl_add_light_ext(HMGL graph, int n, float x, float y, float z, char c, float br, int inf, float ap);
 
 void mgl_mat_pop(HMGL gr);
 void mgl_mat_push(HMGL gr);

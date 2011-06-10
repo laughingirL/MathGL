@@ -25,10 +25,10 @@
 #include <stdio.h>
 #include <math.h>
 #include "mgl/define.h"
-#include "mgl/eval.h"
-#include "mgl/font.h"
 /*****************************************************************************/
 #ifdef __cplusplus
+#include "mgl/eval.h"
+#include "mgl/font.h"
 //-----------------------------------------------------------------------------
 /// Class for incapsulating point in space
 struct mglPoint

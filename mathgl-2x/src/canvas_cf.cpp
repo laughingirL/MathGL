@@ -43,7 +43,7 @@ void mgl_set_alpha(HMGL gr, int enable)				{	_Gr_->Alpha(enable);	}
 void mgl_set_fog(HMGL gr, float d, float dz)		{	_Gr_->Fog(d,dz);	}
 void mgl_set_light(HMGL gr, int enable)				{	_Gr_->Light(enable);	}
 void mgl_set_light_n(HMGL gr, int n, int enable)	{	_Gr_->Light(n, enable);	}
-void mgl_add_light_ext(HMGL gr, int n, float x, float y, float z, char c, float br, bool inf, float ap)
+void mgl_add_light_ext(HMGL gr, int n, float x, float y, float z, char c, float br, int inf, float ap)
 {	_Gr_->AddLight(n,mglPoint(x,y,z),c,br,inf,ap);	}
 void mgl_add_light(HMGL gr, int n, float x, float y, float z, char c)
 {	_Gr_->AddLight(n,mglPoint(x,y,z),c,0.5);	}

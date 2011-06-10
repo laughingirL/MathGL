@@ -830,7 +830,7 @@ void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 }
 //-----------------------------------------------------------------------------
 #ifdef HAVE_HDF5
-void mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,bool rewrite)
+void mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 {
 	const mglData *d = dynamic_cast<const mglData *>(dat);	// NOTE: only for mglData
 	hid_t hf,hd,hs;
@@ -933,7 +933,7 @@ int mgl_datas_hdf(const char *fname, char *buf, long size)
 	return i;
 }
 #else
-void mgl_data_save_hdf(HCDT d,const char *fname,const char *data,bool rewrite){}
+void mgl_data_save_hdf(HCDT d,const char *fname,const char *data,int rewrite){}
 int mgl_datas_hdf(const char *fname, char *buf, long size){return 0;}
 int mgl_data_read_hdf(HMDT d,const char *fname,const char *data){return false;}
 #endif
@@ -985,7 +985,7 @@ bool mgl_add_file(long &kx,long &ky, long &kz, mreal *&b, mglData *d,bool as_sli
 	return true;
 }
 //-----------------------------------------------------------------------------
-int mgl_data_read_range(HMDT dat, const char *templ, double from, double to, double step, bool as_slice)
+int mgl_data_read_range(HMDT dat, const char *templ, double from, double to, double step, int as_slice)
 {
 	mglData d;
 	mreal t = from, *b;
@@ -1012,11 +1012,11 @@ int mgl_data_read_range(HMDT dat, const char *templ, double from, double to, dou
 	delete []fname;		free(b);
 	return true;
 }
-int mgl_data_read_range_(uintptr_t *d, const char *fname, double *from, double *to, double *step, bool *as_slice,int l)
+int mgl_data_read_range_(uintptr_t *d, const char *fname, double *from, double *to, double *step, int *as_slice,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_data_read_range(_DT_,s,*from,*to,*step,*as_slice);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
-int mgl_data_read_all(HMDT dat, const char *templ, bool as_slice)
+int mgl_data_read_all(HMDT dat, const char *templ, int as_slice)
 {
 #ifndef WIN32
 	mglData d;
@@ -1051,7 +1051,7 @@ int mgl_data_read_all(HMDT dat, const char *templ, bool as_slice)
 	return false;
 #endif
 }
-int mgl_data_read_all_(uintptr_t *d, const char *fname, bool *as_slice,int l)
+int mgl_data_read_all_(uintptr_t *d, const char *fname, int *as_slice,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_data_read_all(_DT_,s,*as_slice);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------

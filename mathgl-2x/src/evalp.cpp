@@ -21,7 +21,7 @@
 #include <time.h>
 #include <math.h>
 #include <wchar.h>
-#include "mgl/mgl_parse.h"
+#include "mgl/parser.h"
 #ifndef NO_GSL
 #include <gsl/gsl_sf.h>
 #include <gsl/gsl_errno.h>

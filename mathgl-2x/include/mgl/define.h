@@ -149,6 +149,7 @@ enum{	// Codes for warnings/messages
 //-----------------------------------------------------------------------------
 #define mgl_realloc(T,o,no,nn) {T *_tmp = new T[nn]; memcpy(_tmp,o,(no)*sizeof(T)); delete []o; o=_tmp;}
 //-----------------------------------------------------------------------------
+#ifdef __cplusplus
 struct mglThread
 {
 	mreal *a;		// float* array with parameters or results
@@ -163,6 +164,8 @@ struct mglThread
 void mglStartThread(void *(*func)(void *), void (*post)(mglThread *,mreal *), long n, mreal *a=0, const mreal *b=0, const mreal *c=0, const long *p=0, void *v=0, const mreal *d=0, const mreal *e=0, char *s=0);
 void mglSetNumThr(int n=0);	///< Set number of thread for plotting and data handling
 extern int mglNumThr;		///< Number of thread for plotting and data handling
+#endif
+//-----------------------------------------------------------------------------
 #ifndef MGL_NTH_DEF
 #define MGL_NTH_DEF		2
 #endif

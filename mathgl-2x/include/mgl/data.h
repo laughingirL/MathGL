@@ -66,13 +66,13 @@ void mgl_data_set_value(HMDT dat, float v, long i, long j, long k);
 void mgl_data_set_values(HMDT dat, const char *val, long nx, long ny, long nz);
 
 int mgl_data_read_hdf(HMDT d,const char *fname,const char *data);
-void mgl_data_save_hdf(HCDT d,const char *fname,const char *data,bool rewrite=false);
+void mgl_data_save_hdf(HCDT d,const char *fname,const char *data,int rewrite);
 int mgl_datas_hdf(const char *fname, char *buf, long size);
 int mgl_data_read(HMDT dat, const char *fname);
 int mgl_data_read_mat(HMDT dat, const char *fname, long dim);
 int mgl_data_read_dim(HMDT dat, const char *fname,long mx,long my,long mz);
-int mgl_data_read_range(HMDT d, const char *templ, double from, double to, double step, bool as_slice);
-int mgl_data_read_all(HMDT dat, const char *templ, bool as_slice);
+int mgl_data_read_range(HMDT d, const char *templ, double from, double to, double step, int as_slice);
+int mgl_data_read_all(HMDT dat, const char *templ, int as_slice);
 void mgl_data_save(HCDT dat, const char *fname,long ns);
 void mgl_data_export(HCDT dat, const char *fname, const char *scheme,float v1,float v2,long ns);
 void mgl_data_import(HMDT dat, const char *fname, const char *scheme,float v1,float v2);
@@ -287,8 +287,8 @@ uintptr_t mgl_triangulation_2d_(uintptr_t *x, uintptr_t *y, float *er);
 int mgl_data_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n);
 void mgl_data_link_(uintptr_t *d, float *A, int *nx,int *ny,int *nz);
 void mgl_data_save_hdf_(uintptr_t *d, const char *fname, const char *data, int *rewrite,int l,int n);
-int mgl_data_read_range_(uintptr_t *d, const char *fname, double *from, double *to, double *step, bool *as_slice,int l);
-int mgl_data_read_all_(uintptr_t *d, const char *fname, bool *as_slice,int l);
+int mgl_data_read_range_(uintptr_t *d, const char *fname, double *from, double *to, double *step, int *as_slice,int l);
+int mgl_data_read_all_(uintptr_t *d, const char *fname, int *as_slice,int l);
 
 /*****************************************************************************/
 #ifdef __cplusplus
