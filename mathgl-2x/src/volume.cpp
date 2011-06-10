@@ -261,6 +261,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
+					if(pos<0)	continue;
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -281,6 +282,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
+					if(pos<0)	continue;
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -301,6 +303,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
+					if(pos<0)	continue;
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -422,6 +425,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q,aa)-posN;	// NOTE: Not thread-safe!!!
+					if(pos<0)	continue;
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -443,6 +447,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q,aa)-posN;	// NOTE: Not thread-safe!!!
+					if(pos<0)	continue;
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -464,6 +469,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q,aa)-posN;	// NOTE: Not thread-safe!!!
+					if(pos<0)	continue;
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -587,6 +593,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
+					if(pos<0)	continue;
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -608,6 +615,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
+					if(pos<0)	continue;
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
@@ -629,6 +637,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
 					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
+					if(pos<0)	continue;
 					if(pos>=numK)
 					{
 						numK += n*m*(1+(pos/(n*m)));
