@@ -45,20 +45,19 @@ char *mgl_get_dash(unsigned short d, float w)
 	return s;
 }
 //-----------------------------------------------------------------------------
-bool mglPrim::IsSame(float wp,float *cp,int st)
+bool mglPrim::IsSame(mglCanvas *gr,float wp,mglColor cp,int st)
 {
 	if(abs(type)!=1)	return false;
 	if(w>=1 && wp!=w)	return false;
 	if(w<1 && wp!=1)	return false;
-	if(st!=style)		return false;
-	float c[4];
-	gr->put_color(c,this);
-	return (cp[0]==c[0] && cp[1]==c[1] && cp[2]==c[2]);
+	if(st!=n3)			return false;
+	mglColor c=gr->put_color(*this);
+	return (cp==c);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::WriteEPS(const char *fname,const char *descr)
 {
-	if(!P)	return;
+	if(Prm.size()<1)	return;
 	if(!Finished)	Finish();
 	time_t now;
 	time(&now);
@@ -83,21 +82,21 @@ void mglCanvas::WriteEPS(const char *fname,const char *descr)
 		m_s=false,m_a=false,m_o=false,m_T=false,
 		m_V=false,m_S=false,m_D=false,m_Y=false,m_l=false,
 		m_L=false,m_r=false,m_R=false,m_X=false,m_P=false;
-	register long i;
+	register unsigned long i;
 	// add mark definition if present
-	for(i=0;i<pNum;i++)
+	for(i=0;i<Prm.size();i++)
 	{
-		if(P[i].type>0)	continue;		if(P[i].m=='+')	m_p = true;
-		if(P[i].m=='x')	m_x = true;		if(P[i].m=='s')	m_s = true;
-		if(P[i].m=='d')	m_d = true;		if(P[i].m=='v')	m_v = true;
-		if(P[i].m=='^')	m_t = true;		if(P[i].m=='*')	m_a = true;
-		if(P[i].m=='o' || P[i].m=='O' || P[i].m=='C')	m_o = true;
-		if(P[i].m=='S')	m_S = true;		if(P[i].m=='D')	m_D = true;
-		if(P[i].m=='V')	m_V = true;		if(P[i].m=='T')	m_T = true;
-		if(P[i].m=='<')	m_l = true;		if(P[i].m=='L')	m_L = true;
-		if(P[i].m=='>')	m_r = true;		if(P[i].m=='R')	m_R = true;
-		if(P[i].m=='Y')	m_Y = true;
-		if(P[i].m=='P')	m_P = true;		if(P[i].m=='X')	m_X = true;
+		if(Prm[i].type>0)	continue;		if(Prm[i].n4=='+')	m_p = true;
+		if(Prm[i].n4=='x')	m_x = true;		if(Prm[i].n4=='s')	m_s = true;
+		if(Prm[i].n4=='d')	m_d = true;		if(Prm[i].n4=='v')	m_v = true;
+		if(Prm[i].n4=='^')	m_t = true;		if(Prm[i].n4=='*')	m_a = true;
+		if(Prm[i].n4=='o' || Prm[i].n4=='O' || Prm[i].n4=='C')	m_o = true;
+		if(Prm[i].n4=='S')	m_S = true;		if(Prm[i].n4=='D')	m_D = true;
+		if(Prm[i].n4=='V')	m_V = true;		if(Prm[i].n4=='T')	m_T = true;
+		if(Prm[i].n4=='<')	m_l = true;		if(Prm[i].n4=='L')	m_L = true;
+		if(Prm[i].n4=='>')	m_r = true;		if(Prm[i].n4=='R')	m_R = true;
+		if(Prm[i].n4=='Y')	m_Y = true;
+		if(Prm[i].n4=='P')	m_P = true;		if(Prm[i].n4=='X')	m_X = true;
 	}
 	if(m_P)	{	m_p=true;	m_s=true;	}
 	if(m_X)	{	m_x=true;	m_s=true;	}
@@ -126,27 +125,28 @@ void mglCanvas::WriteEPS(const char *fname,const char *descr)
 	// write definition for all glyphs
 	put_desc(fp,gz,"/%c%c_%04x { np\n", "\t%d %d mt ", "%d %d ll ", "cp\n", "} def\n");
 	// write primitives
-	float cp[4],wp=-1;
+	float wp=-1;
+	mglColor cp;
 	int st=0;
 	char str[256]="";
-	for(i=0;i<pNum;i++)
+	for(i=0;i<Prm.size();i++)
 	{
-		if(P[i].type<0)	continue;
-		put_color(cp, P+i);
-		if(P[i].type>1)	sprintf(str,"%.2g %.2g %.2g rgb ", cp[0],cp[1],cp[2]);
+		if(Prm[i].type<0)	continue;
+		cp = put_color(Prm[i]);
+		if(Prm[i].type>1)	sprintf(str,"%.2g %.2g %.2g rgb ", cp.r,cp.g,cp.b);
 
-		if(P[i].type==0)	// mark
+		if(Prm[i].type==0)	// mark
 		{
-			float x0 = pnt[12*P[i].n1],y0 = pnt[12*P[i].n1+1];
-			sprintf(str,"1 lw %.2g %.2g %.2g rgb ", cp[0],cp[1],cp[2]);
+			float x0 = Pnt[Prm[i].n1].x,y0 = Pnt[Prm[i].n1].y;
+			sprintf(str,"1 lw %.2g %.2g %.2g rgb ", cp.r,cp.g,cp.b);
 			wp=1;
-			if(P[i].s!=MarkSize)
+			if(Prm[i].s!=MarkSize)
 			{
-				mgl_printf(fp, gz, "/ss {%g} def\n",P[i].s*0.4*font_factor);
-				mgl_printf(fp, gz, "/s2 {%g} def\n",P[i].s*0.8*font_factor);
-				mgl_printf(fp, gz, "/sm {-%g} def\n",P[i].s*0.4*font_factor);
+				mgl_printf(fp, gz, "/ss {%g} def\n",Prm[i].s*0.4*font_factor);
+				mgl_printf(fp, gz, "/s2 {%g} def\n",Prm[i].s*0.8*font_factor);
+				mgl_printf(fp, gz, "/sm {-%g} def\n",Prm[i].s*0.4*font_factor);
 			}
-			switch(P[i].m)
+			switch(Prm[i].n4)
 			{
 			case '+':	mgl_printf(fp, gz, "np %g %g mt m_p %sdr\n",x0,y0,str);	break;
 			case 'x':	mgl_printf(fp, gz, "np %g %g mt m_x %sdr\n",x0,y0,str);	break;
@@ -171,37 +171,37 @@ void mglCanvas::WriteEPS(const char *fname,const char *descr)
 			case 'C':	mgl_printf(fp, gz, "%g %g m_o %g %g m_c %sdr\n",x0,y0,x0,y0,str);	break;
 			default:	mgl_printf(fp, gz, "%g %g m_c %sfill\n",x0,y0,str);
 			}
-			if(P[i].s!=MarkSize)
+			if(Prm[i].s!=MarkSize)
 			{
 				mgl_printf(fp, gz, "/ss {%g} def\n",MarkSize*0.4*font_factor);
 				mgl_printf(fp, gz, "/s2 {%g} def\n",MarkSize*0.8*font_factor);
 				mgl_printf(fp, gz, "/sm {-%g} def\n",MarkSize*0.4*font_factor);
 			}
 		}
-		else if(P[i].type==3)	// quad
+		else if(Prm[i].type==3)	// quad
 			mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll %g %g ll cp %sfill\n",
-						pnt[12*P[i].n1], pnt[12*P[i].n1+1], pnt[12*P[i].n2], pnt[12*P[i].n2+1],
-						pnt[12*P[i].n4], pnt[12*P[i].n4+1], pnt[12*P[i].n3], pnt[12*P[i].n3+1], str);
-		else if(P[i].type==2)	// trig
+						Pnt[Prm[i].n1].x, Pnt[Prm[i].n1].y, Pnt[Prm[i].n2].x, Pnt[Prm[i].n2].y,
+						Pnt[Prm[i].n4].x, Pnt[Prm[i].n4].y, Pnt[Prm[i].n3].x, Pnt[Prm[i].n3].y, str);
+		else if(Prm[i].type==2)	// trig
 			mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll cp %sfill\n",
-						pnt[12*P[i].n1], pnt[12*P[i].n1+1], pnt[12*P[i].n2], pnt[12*P[i].n2+1],
-						pnt[12*P[i].n3], pnt[12*P[i].n3+1], str);
-		else if(P[i].type==1)	// line
+						Pnt[Prm[i].n1].x, Pnt[Prm[i].n1].y, Pnt[Prm[i].n2].x, Pnt[Prm[i].n2].y,
+						Pnt[Prm[i].n3].x, Pnt[Prm[i].n3].y, str);
+		else if(Prm[i].type==1)	// line
 		{
-			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", P[i].w>1 ? P[i].w:1., cp[0],cp[1],cp[2]);
-			wp = P[i].w>1  ? P[i].w:1;	st = P[i].style;
+			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", Prm[i].w>1 ? Prm[i].w:1., cp.r,cp.g,cp.b);
+			wp = Prm[i].w>1  ? Prm[i].w:1;	st = Prm[i].n3;
 			put_line(fp,gz,i,wp,cp,st, "np %g %g mt ", "%g %g ll ", false);
-			const char *sd = mgl_get_dash(P[i].style,P[i].w);
-			if(sd && sd[0])	mgl_printf(fp, gz, "%s [%s] %g sd dr\n",str,sd,P[i].w*P[i].s);
+			const char *sd = mgl_get_dash(Prm[i].n3,Prm[i].w);
+			if(sd && sd[0])	mgl_printf(fp, gz, "%s [%s] %g sd dr\n",str,sd,Prm[i].w*Prm[i].s);
 			else			mgl_printf(fp, gz, "%s d0 dr\n",str);
 		}
-		else if(P[i].type==4)	// glyph
+		else if(Prm[i].type==4)	// glyph
 		{
-			float 	ss = P[i].s/P[i].p/1.1,	xx = pnt[12*P[i].n1+5],
-					yy = pnt[12*P[i].n1+6], zz = pnt[12*P[i].n1+7];
+			float 	ss = Prm[i].s/Prm[i].p/1.1,	xx = Pnt[Prm[i].n1].u,
+					yy = Pnt[Prm[i].n1].v, zz = Pnt[Prm[i].n1].w;
 			mgl_printf(fp, gz, "gsave\t%g %g translate %g %g scale %g rotate %s\n",
-				pnt[12*P[i].n1], pnt[12*P[i].n1+1], ss, ss, -P[i].w, str);
-			if(P[i].style&8)	// this is "line"
+				Pnt[Prm[i].n1].x, Pnt[Prm[i].n1].y, ss, ss, -Prm[i].w, str);
+			if(Prm[i].n3&8)	// this is "line"
 			{
 				float dy = 0.004,f=fabs(zz);
 				mgl_printf(fp, gz, "np %g %g mt %g %g ll %g %g ll %g %g ll cp ",
@@ -209,21 +209,21 @@ void mglCanvas::WriteEPS(const char *fname,const char *descr)
 			}
 			else
 				mgl_printf(fp, gz, "%.3g %.3g translate %g %g scale %c%c_%04x ",
-					xx, yy, zz, zz, P[i].style&1?'b':'n',
-					P[i].style&2?'i':'n', P[i].m);
-			if(P[i].style&4)	mgl_printf(fp, gz, "dr");
+					xx, yy, zz, zz, Prm[i].n3&1?'b':'n',
+					Prm[i].n3&2?'i':'n', Prm[i].n4);
+			if(Prm[i].n3&4)	mgl_printf(fp, gz, "dr");
 			else	mgl_printf(fp, gz, "eofill");
 			mgl_printf(fp, gz, " grestore\n");
 		}
 	}
-	for(i=0;i<pNum;i++)		if(P[i].type==-1)	P[i].type = 1;
+	for(i=0;i<Prm.size();i++)		if(Prm[i].type==-1)	Prm[i].type = 1;
 	mgl_printf(fp, gz, "\nshowpage\n%%%%EOF\n");
 	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::WriteSVG(const char *fname,const char *descr)
 {
-	if(!P)	return;
+	if(Prm.size()<1)	return;
 	if(!Finished)	Finish();
 	time_t now;
 	time(&now);
@@ -244,25 +244,26 @@ void mglCanvas::WriteSVG(const char *fname,const char *descr)
 	// currentColor -> inherit ???
 	mgl_printf(fp, gz, "<g fill=\"none\" stroke=\"none\" stroke-width=\"0.5\">\n");
 	// write primitives
-	float cp[4],wp=-1;
-	register long i;
+	float wp=-1;
+	register unsigned long i;
 	int st=0;
+	mglColor cp;
 
-	for(i=0;i<pNum;i++)
+	for(i=0;i<Prm.size();i++)
 	{
-		put_color(cp, P+i);
-		if(P[i].type==0)
+		cp = put_color(Prm[i]);
+		if(Prm[i].type==0)
 		{
-			float x=pnt[12*P[i].n1],y=pnt[12*P[i].n1+1],s=0.4*font_factor*P[i].s;
-			if(!strchr("xsSoO",P[i].m))	s *= 1.1;
+			float x=Pnt[Prm[i].n1].x,y=Pnt[Prm[i].n1].y,s=0.4*font_factor*Prm[i].s;
+			if(!strchr("xsSoO",Prm[i].n4))	s *= 1.1;
 			wp = 1;
-			if(strchr("SDVTLR",P[i].m))
+			if(strchr("SDVTLR",Prm[i].n4))
 				mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\">\n",
-					int(255*cp[0]),int(255*cp[1]),int(255*cp[2]));
+					int(255*cp.r),int(255*cp.g),int(255*cp.b));
 			else
 				mgl_printf(fp, gz, "<g stroke=\"#%02x%02x%02x\">\n",
-					int(255*cp[0]),int(255*cp[1]),int(255*cp[2]));
-			switch(P[i].m)
+					int(255*cp.r),int(255*cp.g),int(255*cp.b));
+			switch(Prm[i].n4)
 			{
 			case 'P':
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g L %g %g L %g %g L %g %g\"/>\n", x-s,y,x+s,y,x,y-s,x,y+s, x-s,y-s,x+s,y-s,x+s,y+s,x-s,y+s,x-s,y-s);	break;
@@ -302,64 +303,63 @@ void mglCanvas::WriteSVG(const char *fname,const char *descr)
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g M %g %g L %g %g\"/>\n",
 						x,y+s, x,y, x+s,y-s, x,y, x-s,y-s);	break;
 			case 'C':
-				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"0.15\"/>\n<circle cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n", int(255*cp[0]),int(255*cp[1]),int(255*cp[2]),x,y,x,y,s);	break;
+				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"0.15\"/>\n<circle cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n", int(255*cp.r),int(255*cp.g),int(255*cp.b),x,y,x,y,s);	break;
 			case 'o':
 				mgl_printf(fp, gz, "<circle cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n",
 						x,y,s);	break;
 			case 'O':
 				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"%g\"/>\n",
-						int(255*cp[0]),int(255*cp[1]),int(255*cp[2]),x,y,s);	break;
+						int(255*cp.r),int(255*cp.g),int(255*cp.b),x,y,s);	break;
 			case '*':
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g M %g %g L %g %g M %g %g L %g %g\"/>\n",
 						x-s,y,x+s,y,x-0.8*s,y-1.6*s,x+0.8*s,y+1.6*s,x+0.8*s,y-1.6*s,x-0.8*s,y+1.6*s);	break;
 			default:
 				mgl_printf(fp, gz, "<circle style=\"fill:#%02x%02x%02x\" cx=\"%g\" cy=\"%g\" r=\"0.15\"/>\n",
-						int(255*cp[0]),int(255*cp[1]),int(255*cp[2]),x,y);	break;
+						int(255*cp.r),int(255*cp.g),int(255*cp.b),x,y);	break;
 			}
 			mgl_printf(fp, gz, "</g>\n");
 		}
-		else if(P[i].type==2 && cp[3]>0)
+		else if(Prm[i].type==2 && cp.a>0)
 		{
 			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n",
-				int(255*cp[0]),int(255*cp[1]),int(255*cp[2]),cp[3]);
+				int(255*cp.r),int(255*cp.g),int(255*cp.b),cp.a);
 			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g Z\"/> </g>\n",
-				pnt[12*P[i].n1], Height-pnt[12*P[i].n1+1], pnt[12*P[i].n2], Height-pnt[12*P[i].n2+1],
-				pnt[12*P[i].n3], Height-pnt[12*P[i].n3+1]);
+				Pnt[Prm[i].n1].x, Height-Pnt[Prm[i].n1].y, Pnt[Prm[i].n2].x, Height-Pnt[Prm[i].n2].y,
+				Pnt[Prm[i].n3].x, Height-Pnt[Prm[i].n3].y);
 		}
-		else if(P[i].type==3 && cp[3]>0)
+		else if(Prm[i].type==3 && cp.a>0)
 		{
 			mgl_printf(fp, gz, "<g fill=\"#%02x%02x%02x\" opacity=\"%g\">\n",
-				int(255*cp[0]),int(255*cp[1]),int(255*cp[2]),cp[3]);
+				int(255*cp.r),int(255*cp.g),int(255*cp.b),cp.a);
 			mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %g Z\"/> </g>\n",
-				pnt[12*P[i].n1], Height-pnt[12*P[i].n1+1], pnt[12*P[i].n2], Height-pnt[12*P[i].n2+1],
-				pnt[12*P[i].n3], Height-pnt[12*P[i].n3+1], pnt[12*P[i].n4], Height-pnt[12*P[i].n4+1]);
+				Pnt[Prm[i].n1].x, Height-Pnt[Prm[i].n1].y, Pnt[Prm[i].n2].x, Height-Pnt[Prm[i].n2].y,
+				Pnt[Prm[i].n3].x, Height-Pnt[Prm[i].n3].y, Pnt[Prm[i].n4].x, Height-Pnt[Prm[i].n4].y);
 		}
-		else if(P[i].type==1)
+		else if(Prm[i].type==1)
 		{
 //			const char *dash[]={"", "8 8","4 4","1 3","7 4 1 4","3 2 1 2"};
-			mgl_printf(fp, gz, "<g stroke=\"#%02x%02x%02x\"",
-					int(255*cp[0]),int(255*cp[1]),int(255*cp[2]));
-			if(P[i].style)
+			mgl_printf(fp,gz,"<g stroke=\"#%02x%02x%02x\"",int(255*cp.r),int(255*cp.g),int(255*cp.b));
+			if(Prm[i].n3)
 			{
-				mgl_printf(fp, gz, " stroke-dasharray=\"%s\"", mgl_get_dash(P[i].style,P[i].w));
-				mgl_printf(fp, gz, " stroke-dashoffset=\"%g\"", P[i].s*P[i].w);
+				mgl_printf(fp, gz, " stroke-dasharray=\"%s\"", mgl_get_dash(Prm[i].n3,Prm[i].w));
+				mgl_printf(fp, gz, " stroke-dashoffset=\"%g\"", Prm[i].s*Prm[i].w);
 			}
-			if(P[i].w>1)	mgl_printf(fp, gz, " stroke-width=\"%g\"", P[i].w);
-			wp = P[i].w>1  ? P[i].w:1;	st = P[i].style;
+			if(Prm[i].w>1)	mgl_printf(fp, gz, " stroke-width=\"%g\"", Prm[i].w);
+			wp = Prm[i].w>1  ? Prm[i].w:1;	st = Prm[i].n3;
 			put_line(fp,gz,i,wp,cp,st, "><path d=\" M %g %g", " L %g %g", true);
 			mgl_printf(fp, gz, "\"/> </g>\n");
 		}
-		else if(P[i].type==4)
+		else if(Prm[i].type==4)
 		{
-			float ss = P[i].s/2, xx = pnt[12*P[i].n1+5], yy = pnt[12*P[i].n1+6], zz = pnt[12*P[i].n1+7];
-			if(P[i].style&8)	// this is "line"
+			float ss = Prm[i].s/2, xx = Pnt[Prm[i].n1].u, yy = Pnt[Prm[i].n1].v, zz = Pnt[Prm[i].n1].w;
+			if(Prm[i].n3&8)	// this is "line"
 			{
 				mgl_printf(fp, gz, "<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"",
-					pnt[12*P[i].n1], Height-pnt[12*P[i].n1+1], ss, -ss, -P[i].w);
-				if(P[i].style&4)
-					mgl_printf(fp, gz, " stroke=\"#%02x%02x%02x\">", int(255*cp[0]),int(255*cp[1]),int(255*cp[2]));
+					Pnt[Prm[i].n1].x, Height-Pnt[Prm[i].n1].y, ss, -ss, -Prm[i].w);
+				if(Prm[i].n3&4)
+					mgl_printf(fp, gz, " stroke=\"#%02x%02x%02x\">", int(255*cp.r),int(255*cp.g),int(255*cp.b));
 				else
-					mgl_printf(fp, gz, " fill=\"#%02x%02x%02x\">", int(255*cp[0]),int(255*cp[1]),int(255*cp[2]));
+					mgl_printf(fp, gz, " fill=\"#%02x%02x%02x\">", int(255*cp.r),int(255*cp.g),int(255*cp.b));
 				float dy = 0.004,f=fabs(zz);
 				mgl_printf(fp, gz, "<path d=\"M %g %g L %g %g L %g %g L %g %g\"/></g>\n",
 					xx,yy+dy, xx+f,yy+dy, xx+f,yy-dy, xx,yy-dy);
@@ -368,58 +368,58 @@ void mglCanvas::WriteSVG(const char *fname,const char *descr)
 			{
 				ss *= zz;
 				mgl_printf(fp, gz, "<g transform=\"translate(%g,%g) scale(%.3g,%.3g) rotate(%g)\"",
-					pnt[12*P[i].n1], Height-pnt[12*P[i].n1+1], ss, -ss, -P[i].w);
-				if(P[i].style&4)
-					mgl_printf(fp, gz, " stroke=\"#%02x%02x%02x\">", int(255*cp[0]),int(255*cp[1]),int(255*cp[2]));
+					Pnt[Prm[i].n1].x, Height-Pnt[Prm[i].n1].y, ss, -ss, -Prm[i].w);
+				if(Prm[i].n3&4)
+					mgl_printf(fp, gz, " stroke=\"#%02x%02x%02x\">", int(255*cp.r),int(255*cp.g),int(255*cp.b));
 				else
-					mgl_printf(fp, gz, " fill=\"#%02x%02x%02x\">", int(255*cp[0]),int(255*cp[1]),int(255*cp[2]));
+					mgl_printf(fp, gz, " fill=\"#%02x%02x%02x\">", int(255*cp.r),int(255*cp.g),int(255*cp.b));
 				mgl_printf(fp, gz, "<use x=\"%g\" y=\"%g\" xlink:href=\"#%c%c_%04x\"/></g>\n",
-					xx/zz, yy/zz, P[i].style&1?'b':'n',
-					P[i].style&2?'i':'n', P[i].m);
+					xx/zz, yy/zz, Prm[i].n3&1?'b':'n',
+					Prm[i].n3&2?'i':'n', Prm[i].n4);
 			}
 		}
 	}
 
-	for(i=0;i<pNum;i++)		if(P[i].type==-1)	P[i].type = 1;
+	for(i=0;i<Prm.size();i++)	if(Prm[i].type==-1)	Prm[i].type = 1;
 	mgl_printf(fp, gz, "</g></svg>");
 	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
 }
 //-----------------------------------------------------------------------------
-#define xx(i,n)	(pnt[12*P[i].n])
-#define yy(i,n)	(pnt[12*P[i].n+1])
-void mglCanvas::put_line(void *fp, bool gz, long i, float wp, float *cp,int st, const char *ifmt, const char *nfmt, bool neg)
+#define xx(i,n)	(Pnt[Prm[i].n].x)
+#define yy(i,n)	(Pnt[Prm[i].n].y)
+void mglCanvas::put_line(void *fp, bool gz, long i, float wp, mglColor cp,int st, const char *ifmt, const char *nfmt, bool neg)
 {
-	long k = i,j;	// first point
 	float x0=xx(i,n1), y0=yy(i,n1);
 	bool ok=true;
+	register unsigned long k = i,j;	// first point
 	while(ok)
 	{
-		for(ok=false,j=i+1;j<pNum && P[j].type<2;j++)
-			if(P[j].IsSame(wp,cp,st) && P[j].type==1)
+		for(ok=false,j=i+1;j<Prm.size() && Prm[j].type<2;j++)
+			if(Prm[j].IsSame(this,wp,cp,st) && Prm[j].type==1)
 			{	// previous point
 				if(xx(j,n2)==x0 && yy(j,n2)==y0)
 				{
-					k=j;	ok=true;	P[k].type = -2;
+					k=j;	ok=true;	Prm[k].type = -2;
 					x0 = xx(k,n1);	y0=yy(k,n1);
 				}
 				else if(xx(j,n1)==x0 && yy(j,n1)==y0)
 				{
-					k=j;	ok=true;	P[k].type = -2;
+					k=j;	ok=true;	Prm[k].type = -2;
 					x0 = xx(k,n2);	y0=yy(k,n2);
 				}
 			}
 	}
-	for(j=i;j<pNum ;j++)	if(P[j].type==-2)	P[j].type = 1;
+	for(j=i;j<Prm.size() ;j++)	if(Prm[j].type==-2)	Prm[j].type = 1;
 	mgl_printf(fp, gz, ifmt,x0,neg?Height-y0:y0);	ok=true;
 	long m=1;
 	while(ok)
 	{
-		for(ok=false,j=i;j<pNum && P[j].type<2;j++)
-			if(P[j].IsSame(wp,cp,st) && P[j].type==1)
+		for(ok=false,j=i;j<Prm.size() && Prm[j].type<2;j++)
+			if(Prm[j].IsSame(this,wp,cp,st) && Prm[j].type==1)
 			{
 				if(xx(j,n1)==x0 && yy(j,n1)==y0)
 				{
-					k=j;	P[k].type = -1;
+					k=j;	Prm[k].type = -1;
 					x0 = xx(k,n2);	y0=yy(k,n2);
 					mgl_printf(fp, gz, nfmt,x0,neg?Height-y0:y0);
 					if(m>10)	{	m=0;	mgl_printf(fp, gz, "\n");	}
@@ -427,7 +427,7 @@ void mglCanvas::put_line(void *fp, bool gz, long i, float wp, float *cp,int st, 
 				}
 				else if(xx(j,n2)==x0 && yy(j,n2)==y0)
 				{
-					k=j;	P[k].type = -1;
+					k=j;	Prm[k].type = -1;
 					x0 = xx(k,n1);	y0=yy(k,n1);
 					mgl_printf(fp, gz, nfmt,x0,neg?Height-y0:y0);
 					if(m>10)	{	m=0;	mgl_printf(fp, gz, "\n");	}
@@ -441,24 +441,24 @@ void mglCanvas::put_line(void *fp, bool gz, long i, float wp, float *cp,int st, 
 //"np %d %d mt ", "%d %d ll ", "cp dr\n", "} def")
 void mglCanvas::put_desc(void *fp, bool gz, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf)
 {
-	register long i,j,n;
+	register unsigned long i,j,n;
 	wchar_t *g;
 	int *s;
-	for(n=i=0;i<pNum;i++)	if(P[i].type==4)	n++;
+	for(n=i=0;i<Prm.size();i++)	if(Prm[i].type==4)	n++;
 	if(n==0)	return;		// no glyphs
 	g = new wchar_t[n];	s = new int[n];
-	for(n=i=0;i<pNum;i++)
+	for(n=i=0;i<Prm.size();i++)
 	{
-		if(P[i].type!=4 || (P[i].style&8))	continue;	// not a glyph
+		if(Prm[i].type!=4 || (Prm[i].n3&8))	continue;	// not a glyph
 		bool is=false;
-		for(j=0;j<n;j++)	if(g[j]==P[i].m && s[j]==(P[i].style&7))	is = true;
+		for(j=0;j<n;j++)	if(g[j]==Prm[i].n4 && s[j]==(Prm[i].n3&7))	is = true;
 		if(is)	continue;		// glyph is described
 		// have to describe
-		g[n]=P[i].m;	s[n]=P[i].style&7;	n++;	// add to list of described
+		g[n]=Prm[i].n4;	s[n]=Prm[i].n3&7;	n++;	// add to list of described
 		// "%c%c%c_%04x {"
-		mgl_printf(fp, gz, pre, P[i].style&1?'b':'n', P[i].style&2?'i':'n', P[i].m);
-		int nl=fnt->GetNl(P[i].style&3,P[i].m);	// TODO: add after font enabled
-		const short *ln=fnt->GetLn(P[i].style&3,P[i].m);
+		mgl_printf(fp, gz, pre, Prm[i].n3&1?'b':'n', Prm[i].n3&2?'i':'n', Prm[i].n4);
+		int nl=fnt->GetNl(Prm[i].n3&3,Prm[i].n4);	// TODO: add after font enabled
+		const short *ln=fnt->GetLn(Prm[i].n3&3,Prm[i].n4);
 		long ik,ii;
 		bool np=true;
 		if(ln && nl>0)	for(ik=0;ik<nl;ik++)
@@ -475,35 +475,34 @@ void mglCanvas::put_desc(void *fp, bool gz, const char *pre, const char *ln1, co
 	delete []g;		delete []s;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::put_color(float *c, mglPrim *p)
+mglColor mglCanvas::put_color(const mglPrim &p)
 {
-	float n[3]={NAN,NAN,NAN};
-	memcpy(c,pnt+12*(p->type==1 ? p->n2:p->n1)+8,4*sizeof(float));
+	const mglPnt &q=Pnt[(p.type==1 ? p.n2:p.n1)];
+	mglColor c(q.r,q.g,q.b,q.a);
 
-	if(UseLight && !isnan(n[0]))
+	if(UseLight && !isnan(q.u))
 	{
 		float d0,d1,d2,nn;
-		c[0] *= AmbBr;	c[1] *= AmbBr;	c[2] *= AmbBr;
+		c *= AmbBr;
 		register long i;
 		for(i=0;i<10;i++)
 		{
 			if(!light[i].n)	continue;
-			nn = 2*(n[0]*light[i].p.x+n[1]*light[i].p.y+n[2]*light[i].p.z) /
-					(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]+1e-6);
-			d0 = light[i].p.x - n[0]*nn;
-			d1 = light[i].p.y - n[1]*nn;
-			d2 = light[i].p.z - n[2]*nn;
+			nn = 2*(q.u*light[i].p.x+q.v*light[i].p.y+q.w*light[i].p.z) /
+					(q.u*q.u+q.v*q.v+q.w*q.w+1e-6);
+			d0 = light[i].p.x - q.u*nn;
+			d1 = light[i].p.y - q.v*nn;
+			d2 = light[i].p.z - q.w*nn;
 			nn = 1 + d2/sqrt(d0*d0+d1*d1+d2*d2+1e-6);
 
 			nn = exp(-light[i].a*nn)*light[i].b*2;
-			c[0] += nn*light[i].c.r;
-			c[1] += nn*light[i].c.g;
-			c[2] += nn*light[i].c.b;
+			c += nn*light[i].c;
 		}
-		c[0] = c[0]<1 ? c[0] : 1;
-		c[1] = c[1]<1 ? c[1] : 1;
-		c[2] = c[2]<1 ? c[2] : 1;
+		c.r = c.r<1 ? c.r : 1;
+		c.g = c.g<1 ? c.g : 1;
+		c.b = c.b<1 ? c.b : 1;
 	}
+	return c;
 }
 //-----------------------------------------------------------------------------
 #undef _GR_

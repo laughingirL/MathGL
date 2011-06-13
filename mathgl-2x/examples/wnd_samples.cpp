@@ -25,49 +25,11 @@
 #include "mgl/mgl.h"
 #include "mgl/parser.h"
 //-----------------------------------------------------------------------------
-void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0)
-{
-	register long i,n=50;
-	if(y)	y->Create(n,3);
-	if(x1)	x1->Create(n);		if(x2)	x2->Create(n);
-	if(y1)	y1->Create(n);		if(y2)	y2->Create(n);
-	mreal xx;
-	for(i=0;i<n;i++)
-	{
-		xx = i/(n-1.);
-		if(y)
-		{
-			y->a[i] = 0.7*sin(2*M_PI*xx) + 0.5*cos(3*M_PI*xx) + 0.2*sin(M_PI*xx);
-			y->a[i+n] = sin(2*M_PI*xx);
-			y->a[i+2*n] = cos(2*M_PI*xx);
-		}
-		if(y1)	y1->a[i] = 0.5+0.3*cos(2*M_PI*xx);
-		if(y2)	y2->a[i] = 0.3*sin(2*M_PI*xx);
-		if(x1)	x1->a[i] = xx*2-1;
-		if(x2)	x2->a[i] = 0.05+0.03*cos(2*M_PI*xx);
-	}
-}
+void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0);
+void mgls_prepare3d(mglData *a, mglData *b=0);
 //-----------------------------------------------------------------------------
-void mgls_prepare3d(mglData *a, mglData *b=0)
+int test_wnd(mglGraph *gr)
 {
-	register long i,j,k,n=60,m=50,l=40,i0;
-	if(a)	a->Create(n,m,l);		if(b)	b->Create(n,m,l);
-	mreal x,y,z;
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
-	{
-		x=2*i/(n-1.)-1;	y=2*j/(m-1.)-1;	z=2*k/(l-1.)-1;	i0 = i+n*(j+m*k);
-		if(a)	a->a[i0] = -2*(x*x + y*y + z*z*z*z - z*z - 0.1);
-		if(b)	b->a[i0] = 1-2*tanh((x+y)*(x+y));
-	}
-}
-//-----------------------------------------------------------------------------
-int test(mglGraph *gr)
-{
-/*	mglData a(256,2);	a.Fill(-1,1);
-	gr->SubPlot(2,10,0,0.2);	gr->Dens(a,"kw");
-	gr->Puts(mglPoint(-1.4, -0.3), "kw", "C", -8);
-	return 0;*/
-
 	gr->Rotate(0,0);
 	gr->SetOrigin(-1,-1,-1);	gr->Axis();
 	gr->SetOrigin( 1, 1, 1);	gr->Axis();

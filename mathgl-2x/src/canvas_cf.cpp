@@ -309,3 +309,6 @@ void mgl_title_(uintptr_t *gr, const char *text, const char *fnt, float *size, i
 	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
 	_GR_->Title(s,f, *size);	delete []s;	delete []f;	}*/
 //-----------------------------------------------------------------------------
+void mgl_set_quality(HMGL gr, int qual)			{	_Gr_->SetQuality(qual);	}
+void mgl_set_quality_(uintptr_t *gr, int *qual)	{	_GR_->SetQuality(*qual);	}
+//-----------------------------------------------------------------------------

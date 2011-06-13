@@ -652,8 +652,8 @@ void mglCanvas::Labelw(float x, float y, const wchar_t *text, const char *fnt, b
 	char *f = new char[strlen(fnt)+1];	memset(f,0,strlen(fnt)+1);
 	strcpy(f,fnt);
 	for(int i=0;f[i];i++)	if(f[i]=='a' || f[i]=='A')	f[i]=' ';
-	mglPoint p((Min.x+Max.x)/2+PlotFactor*(Max.x-Min.x)*(x-0.5),
-				(Min.y+Max.y)/2+PlotFactor*(Max.y-Min.y)*(y-0.5), Max.z);
+	mglPoint p((Min.x+Max.x)/2+B.pf*(Max.x-Min.x)*(x-0.5),
+				(Min.y+Max.y)/2+B.pf*(Max.y-Min.y)*(y-0.5), Max.z);
 	text_plot(AddPnt(p,-1,mglPoint(NAN),0),text,f,-1.4,1);
 	delete []f;	fx=ox;	fy=oy;	fz=oz;	Pop();
 }
@@ -708,10 +708,10 @@ void mglCanvas::colorbar(HCDT vv, const float *c, int where, float x, float y, f
 	static int cgid=1;	StartGroup("Colorbar",cgid++);
 	register long i,n=vv->GetNx();
 	long n1,n2,n3,n4;
-	float d,s3=PlotFactor,ss=1;		// NOTE: colorbar was wider ss=s3*0.9;
+	float d,s3=B.pf,ss=1;		// NOTE: colorbar was wider ss=s3*0.9;
 	mglPoint p1,p2;
 
-	Push();	memcpy(B,B1,12*sizeof(mreal));	DisScaling=true;
+	Push();	DisScaling=true;	B=B1;	B.pf=s3;
 	x = 2*x-1;	y = 2*y-1;
 	for(i=0;i<n-1;i++)
 	{

@@ -21,7 +21,7 @@
 #include "mgl/mgl.h"
 #include "mgl/mgl_fltk.h"
 //-----------------------------------------------------------------------------
-int test(mglGraph *gr);
+int test_wnd(mglGraph *gr);
 int sample(mglGraph *gr);
 int sample_1(mglGraph *gr);
 int sample_2(mglGraph *gr);
@@ -64,7 +64,7 @@ int main(int argc,char **argv)
 	case '2':	gr.Window(argc,argv,sample_2,"2D plots");	break;
 	case '3':	gr.Window(argc,argv,sample_3,"3D plots");	break;
 	case 'd':	gr.Window(argc,argv,sample_d,"Dual plots");	break;
-	case 't':	gr.Window(argc,argv,test,"Testing");	break;
+	case 't':	gr.Window(argc,argv,test_wnd,"Testing");	break;
 	default:	gr.Window(argc,argv,sample,"Example of molecules");	break;
 	}
 	mgl_fltk_run();

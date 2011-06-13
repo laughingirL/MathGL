@@ -29,6 +29,7 @@ HMGL mgl_create_graph(int width, int height);
 void mgl_delete_graph(HMGL graph);
 void mgl_set_size(HMGL graph, int width, int height);
 void mgl_set_def_param(HMGL gr);
+void mgl_set_quality(HMGL gr, int qual);
 
 void mgl_set_tick_len(HMGL graph, float len, float stt);
 void mgl_set_axis_stl(HMGL gr, const char *stl, const char *tck, const char *sub);
@@ -125,6 +126,7 @@ uintptr_t mgl_create_graph_(int *width, int *height);
 void mgl_delete_graph_(uintptr_t *graph);
 void mgl_set_size_(uintptr_t *graph, int *width, int *height);
 void mgl_set_def_param_(uintptr_t *gr);
+void mgl_set_quality_(uintptr_t *gr, int *qual);
 
 void mgl_set_tick_len_(uintptr_t *graph, float *len, float *stt);
 void mgl_set_axis_stl_(uintptr_t *graph, const char *stl, const char *tck, const char *sub, int,int,int);

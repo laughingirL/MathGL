@@ -317,7 +317,8 @@ void mgl_drop(HMGL gr, mglPoint p, mglPoint q, float r, float c, float sh, float
 	static int cgid=1;	gr->StartGroup("Drop",cgid++);
 	const int n = 41;
 	register long i,j;
-	long pos=gr->Reserve(n*n);
+	gr->Reserve(n*n);
+	long *nn=new long[2*n];
 
 	float u,v,x,y,z,rr,dr, co,si;
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)
@@ -330,11 +331,10 @@ void mgl_drop(HMGL gr, mglPoint p, mglPoint q, float r, float c, float sh, float
 		z = r*(1+sh)*(co+sh);
 		pp = p + p1*x + p2*y + q*z;
 		qq = (p1*sin(v)-p2*cos(v))^(p1*(dr*cos(v)) + p2*(dr*sin(v)) - q*(r*(1+sh)*si));
-		gr->AddPnt(pp,c,qq,-1,3);	// NOTE: Not thread safe!!!
+		nn[j+n]=nn[j];	nn[j]=gr->AddPnt(pp,c,qq,-1,3);
+		if(i*j>0)	gr->quad_plot(nn[j-1], nn[j], nn[j+n-1], nn[j+n]);
 	}
-	for(i=0;i<n-1;i++)	for(j=0;j<n-1;j++)
-		gr->quad_plot(pos+j+i*n, pos+j+i*n+1, pos+j+i*n+n, pos+j+i*n+n+1);
-	gr->EndGroup();
+	delete []nn;	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_drop(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl, float sh, float a)

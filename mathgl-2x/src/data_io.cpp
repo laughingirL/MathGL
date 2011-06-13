@@ -344,8 +344,8 @@ int mgl_data_read_(uintptr_t *d, const char *fname,int l)
 void mgl_data_create(HMDT d,long mx,long my,long mz)
 {
 	d->nx = mx>0 ? mx:1;	d->ny = my>0 ? my:1;	d->nz = mz>0 ? mz:1;
-	if(d->id && d->a)	delete []d->id;
-	if(!d->link && d->a)	delete []d->a;
+	if(d->a && d->id)	delete []d->id;
+	if(d->a && !d->link)	delete []d->a;
 	d->a = new mreal[mx*my*mz];
 	d->id = new char[mx];	d->link=false;
 	memset(d->a,0,mx*my*mz*sizeof(mreal));

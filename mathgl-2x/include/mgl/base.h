@@ -27,6 +27,8 @@
 #include "mgl/define.h"
 /*****************************************************************************/
 #ifdef __cplusplus
+#include <vector>
+#include <string>
 #include "mgl/eval.h"
 #include "mgl/font.h"
 //-----------------------------------------------------------------------------
@@ -137,6 +139,10 @@ struct mglColor
 	{	return (r==c.r && g==c.g && b==c.b && a==c.a);	}
 	inline bool operator!=(const mglColor &c)
 	{	return (r!=c.r || g!=c.g || b!=c.b || a!=c.a);	}
+	// transparency still the same
+	inline void operator*=(float v)				{	r*=v;	g*=v;	b*=v;	}
+	inline void operator+=(const mglColor &c)	{	r+=c.r;	g+=c.g;	b+=c.b;	}
+	inline void operator-=(const mglColor &c)	{	r-=c.r;	g-=c.g;	b-=c.b;	}
 };
 inline mglColor operator+(const mglColor &a, const mglColor &b)
 {	return mglColor(a.r+b.r, a.g+b.g, a.b+b.b, a.a+b.a);	}
@@ -151,16 +157,46 @@ inline mglColor operator/(const mglColor &a, float b)
 inline mglColor operator!(const mglColor &a)
 {	return mglColor(1-a.r, 1-a.g, 1-a.b, a.a);	}
 //-----------------------------------------------------------------------------
+/// Structure for internal point represenatation
+struct mglPnt
+{
+	float x,y,z;	// coordinates
+	float c,t;		// index in color scheme
+	float u,v,w;	// normales
+	float r,g,b,a;	// RGBA color
+	mglPnt()	{	memset(this,0,sizeof(mglPnt));	}
+};
+inline mglPnt operator+(const mglPnt &a, const mglPnt &b)
+{	mglPnt c;
+	c.x=a.x+b.x;	c.y=a.y+b.y;	c.z=a.z+b.z;	c.c=a.c+b.c;
+	c.t=a.t+b.t;	c.u=a.u+b.u;	c.v=a.v+b.v;	c.w=a.w+b.w;
+	c.r=a.r+b.r;	c.g=a.g+b.g;	c.b=a.b+b.b;	c.a=a.a+b.a;	return c;	}
+inline mglPnt operator-(const mglPnt &a, const mglPnt &b)
+{	mglPnt c;
+	c.x=a.x-b.x;	c.y=a.y-b.y;	c.z=a.z-b.z;	c.c=a.c-b.c;
+	c.t=a.t-b.t;	c.u=a.u-b.u;	c.v=a.v-b.v;	c.w=a.w-b.w;
+	c.r=a.r-b.r;	c.g=a.g-b.g;	c.b=a.b-b.b;	c.a=a.a-b.a;	return c;	}
+inline mglPnt operator*(const mglPnt &a, float b)
+{	mglPnt c;
+	c.x=a.x*b;	c.y=a.y*b;	c.z=a.z*b;	c.c=a.c*b;
+	c.t=a.t*b;	c.u=a.u*b;	c.v=a.v*b;	c.w=a.w*b;
+	c.r=a.r*b;	c.g=a.g*b;	c.b=a.b*b;	c.a=a.a*b;	return c;	}
+inline mglPnt operator*(float b, const mglPnt &a)
+{	mglPnt c;
+	c.x=a.x*b;	c.y=a.y*b;	c.z=a.z*b;	c.c=a.c*b;
+	c.t=a.t*b;	c.u=a.u*b;	c.v=a.v*b;	c.w=a.w*b;
+	c.r=a.r*b;	c.g=a.g*b;	c.b=a.b*b;	c.a=a.a*b;	return c;	}
+//-----------------------------------------------------------------------------
 struct mglTexture
 {
 	mglColor col[514];
 	long n;			///< Number of initial colors along u
-	mglTexture()	{	memset(this,0,sizeof(mglTexture));	}
-	~mglTexture()	{	Clear();	}
-	void Clear()	{	memset(this,0,sizeof(mglTexture));	}
-//	void Set(int nn, mglColor *cc, float a=0);
+	mglTexture()	{	n=0;	}
+	mglTexture(const char *cols, int smooth=0,float alpha=1)
+	{	n=0;	Set(cols,smooth,alpha);	}
+	void Clear()	{	n=0;	memset(col,0,514*sizeof(mglColor));	}
 	void Set(const char *cols, int smooth=0,float alpha=1);
-	void GetC(float u,float v,float c[4]);
+	void GetC(float u,float v,mglPnt &p);
 	bool IsSame(mglTexture &t);
 private:
 };
@@ -178,6 +214,7 @@ struct mglColorID
 };
 extern mglColorID mglColorIds[];
 //-----------------------------------------------------------------------------
+/// Base class for canvas which handle all basic drawing
 class mglBase
 {
 public:
@@ -247,11 +284,11 @@ public:
 	inline void SetAlphaDef(float val)	{	AlphaDef=val;	};
 	/// Set default palette
 	inline void SetPalette(const char *colors)
-	{	txt[0].Set((colors && *colors)?colors:MGL_DEF_PAL,-1);	}
-	inline long GetNumPal(long id)	{	return txt[abs(id)/256].n;	}
+	{	Txt[0].Set((colors && *colors)?colors:MGL_DEF_PAL,-1);	}
+	inline long GetNumPal(long id)	{	return Txt[abs(id)/256].n;	}
 	/// Set default color scheme
 	inline void SetDefScheme(const char *colors)
-	{	txt[1].Set((colors && *colors)?colors:"BbcyrR");	}
+	{	Txt[1].Set((colors && *colors)?colors:"BbcyrR");	}
 
 	/// Set number of mesh lines
 	inline void SetMeshNum(int val)	{	MeshNum=val;	};
@@ -280,23 +317,23 @@ public:
 	/// Set font typeface. Note that each mglFont instance can be used with ONLY ONE mglGraph instance at a moment of time!
 	void SetFont(mglFont *f);
 	/// Get current typeface. Note that this variable can be deleted at next SetFont() call!
-	inline mglFont *GetFont()	{	return fnt;	};
+	inline mglFont *GetFont()	{	return fnt;	}
 	/// Restore font
-	inline void RestoreFont()	{	fnt->Restore();	};
+	inline void RestoreFont()	{	fnt->Restore();	}
 	/// Load font from file
 	inline void LoadFont (const char *name, const char *path=NULL)
 	{	fnt->Load(name,path);	};
 	/// Copy font from another mglGraph instance
-	inline void CopyFont(mglBase *gr)	{	fnt->Copy(gr->GetFont());	};
+	inline void CopyFont(mglBase *gr)	{	fnt->Copy(gr->GetFont());	}
 	/// Set default font size
-	inline void SetFontSize(float val)	{	FontSize=val>0 ? val:FontSize*val;	};
+	inline void SetFontSize(float val)	{	FontSize=val>0 ? val:FontSize*val;	}
 	inline float GetFontSize()		{	return FontSize;	};
-	inline float TextWidth(const wchar_t *text)	{	return fnt->Width(text,FontDef);	};
-	inline float TextHeight()	{	return fnt->Height(FontDef); };
+	inline float TextWidth(const wchar_t *text)	{	return fnt->Width(text,FontDef);	}
+	inline float TextHeight()	{	return fnt->Height(FontDef); }
 	/// Set to use or not text rotation
-	inline void SetRotatedText(bool val)	{	RotatedText=val;	};
+	inline void SetRotatedText(bool val)	{	RotatedText=val;	}
 	/// Set default font style and color
-	inline void SetFontDef(const char *fnt)	{	strncpy(FontDef, fnt, 31);	};
+	inline void SetFontDef(const char *fnt)	{	strncpy(FontDef, fnt, 31);	}
 
 	/// Set plot quality
 	virtual void SetQuality(int qual=MGL_DRAW_NORM)	{	Quality=qual;	}
@@ -308,13 +345,13 @@ public:
 	long AddPnt(mglPoint p, float c=-1, mglPoint n=mglPoint(NAN), float a=-1, int scl=1);
 	long CopyNtoC(long k, float c);
 	long CopyProj(long from, mglPoint p, mglPoint n);	// NOTE: this is not-thread-safe!!!
-	long Reserve(long n);		///< Allocate n-cells for pntC and return current position
+	virtual void Reserve(long n);		///< Allocate n-cells for pntC and return current position
 
-	inline long GetPos()	{	return pos;	}
+//	inline long GetPos()	{	return Pnt.size()-1;	}
 	inline mglPoint GetPnt(long i)
-	{	return mglPoint(pnt[12*i],pnt[12*i+1],pnt[12*i+2]);	}
+	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}
 	inline float GetClrC(long i)
-	{	return pnt[12*i+3];	}
+	{	return Pnt[i].c;	}
 	/// Scale coordinates and cut off some points
 	virtual bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true);
 
@@ -349,15 +386,14 @@ protected:
 	mglPoint FMax;		///< Actual upper edge after transformation formulas.
 	mglPoint Org;		///< Center of axis cross section.
 	int WarnCode;		///< Warning code
-	float *pnt;			///< Pointer to {coor*3,texture*2,normale*3,color*4} of the data
-	long num;			///< Number of allocated points in pnt
-	long pos;			///< Current position in pnt
+	std::vector<mglPnt> Pnt;	///< Internal points
+
 	int TernAxis;		///< Flag that Ternary axis is used
 	unsigned PDef;		///< Pen bit mask
 	float pPos;			///< Current position in pen mask
 	float PenWidth;		///< Pen width for further line plotting (must be >0 !!!)
-	mglTexture *txt;	///< Pointer to textures
-	long numT;			///< Number of textures
+	std::vector<mglTexture> Txt;	///< Pointer to textures
+//	long numT;			///< Number of textures
 	float AmbBr;		///< Default ambient light brightness
 
 	mglFont *fnt;		///< Class for printing vector text

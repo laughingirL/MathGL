@@ -52,21 +52,15 @@ void mgl_strlwr(char *str)
 mglBase::mglBase()
 {
 	memset(this,0,sizeof(mglBase));	// since mglBase is abstract then I can do it?!!
-	InUse = 1;	num=1024;	prev_val = NAN;
-	pnt = (float *)malloc(12*num*sizeof(float));
-	txt = (mglTexture *)malloc(2*sizeof(mglTexture));
-	memset(pnt,0,12*num*sizeof(float));
-	memset(txt,0,2*sizeof(mglTexture));
+	InUse = 1;	prev_val = NAN;
 	// Always create default palette txt[0] and default scheme txt[1]
-	txt[0].Set(MGL_DEF_PAL,-1);		txt[1].Set("BbcyrR",1);	numT=2;
-	last_style[0]='k';	last_style[1]='-';	last_style[2]='0';	last_style[3]=last_style[4]=0;
+	Txt.push_back(mglTexture(MGL_DEF_PAL,-1));
+	Txt.push_back(mglTexture("BbcyrR",1));
+	last_style[0]='k';	last_style[1]='-';	last_style[2]='0';
+	last_style[3]=last_style[4]=0;
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
 }
-mglBase::~mglBase()
-{
-	for(long i=0;i<numT;i++)	txt[i].Clear();
-	free(pnt);	free(txt);	ClearEq();
-}
+mglBase::~mglBase()	{	ClearEq();	}
 //-----------------------------------------------------------------------------
 void mglBase::StartGroup(const char *name, int id)
 {
@@ -110,43 +104,34 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)	// NOTE:
 	a = (a>=0 && a<=1) ? a : (isnan(n.x) ? 1:AlphaDef);
 	c = (c>=0) ? c:CDef;
 	// NOTE: RGBA color for OpenGL and EPS/SVG modes only!
-	float pp[12]={p.x,p.y,p.z,c, a,n.x,n.y,n.z, 0,0,0,0};
-	txt[long(c)].GetC(c,a,pp+8);
-	if(pos>=num)
-	{	num+=1024;	pnt=(float *)realloc(pnt,12*num*sizeof(float));
-		memset(pnt+12*(num-1024),0,12*1024*sizeof(float));	}
-	memcpy(pnt+pos*12,pp,12*sizeof(float));	pos++;
-	return pos-1;
+	mglPnt q;
+	q.x=p.x;	q.y=p.y;	q.z=p.z;	q.c=c;
+	q.t=a;		q.u=n.x;	q.v=n.y;	q.w=n.z;
+	Txt[long(c)].GetC(c,a,q);
+	Pnt.push_back(q);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
 long mglBase::CopyNtoC(long from, float c)	// NOTE: this is not-thread-safe!!!
 {
 	if(from<0)	return -1;
-	if(pos+1>num)
-	{	num=pos+1;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
-	memcpy(pnt+12*pos, pnt+12*from, 12*sizeof(float));
-	if(!isnan(c))
-	{	pnt[12*pos+3]=c;	pnt[12*pos+4]=0;	txt[long(c)].GetC(c,0,pnt+12*pos+8);	}
-	pos++;			return pos-1;
+	mglPnt p=Pnt[from];
+	if(!isnan(c))	{	p.c=c;	p.t=0;	Txt[long(c)].GetC(c,0,p);	}
+	Pnt.push_back(p);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
 long mglBase::CopyProj(long from, mglPoint p, mglPoint n)	// NOTE: this is not-thread-safe!!!
 {
 	if(from<0)	return -1;
-	if(pos+1>num)
-	{	num=pos+1;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
-	memcpy(pnt+12*pos, &p, 3*sizeof(float));
-	memcpy(pnt+12*pos+3, pnt+12*from+3, 9*sizeof(float));
-	memcpy(pnt+12*pos+5, &n, 3*sizeof(float));
-	pos++;			return pos-1;
+	mglPnt q=Pnt[from];
+	q.x=p.x;	q.y=p.y;	q.z=p.z;
+	q.u=n.x;	q.v=n.y;	q.w=n.z;
+	Pnt.push_back(q);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
-long mglBase::Reserve(long n)	// NOTE: this is not-thread-safe!!!
+void mglBase::Reserve(long n)	// NOTE: this is not-thread-safe!!!
 {
 	if(TernAxis&4)	n*=4;
-	if(pos+n>num)
-	{	num=pos+n;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
-	return pos;
+	Pnt.reserve(n);
 }
 //-----------------------------------------------------------------------------
 //		Boundaries and scaling
@@ -591,15 +576,15 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 	delete []c;
 }
 //-----------------------------------------------------------------------------
-void mglTexture::GetC(float u,float v,float cc[4])
+void mglTexture::GetC(float u,float v,mglPnt &p)
 {
 	u -= long(u);
 	register long i=long(256*u);	u = u*256-i;
 	mglColor *s=col+2*i;
-	cc[0] = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
-	cc[1] = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
-	cc[2] = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
-	cc[3] = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// for alpha use inverted
+	p.r = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
+	p.g = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
+	p.b = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
+	p.a = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// for alpha use inverted
 }
 //-----------------------------------------------------------------------------
 bool mglTexture::IsSame(mglTexture &t)
@@ -607,38 +592,35 @@ bool mglTexture::IsSame(mglTexture &t)
 //-----------------------------------------------------------------------------
 long mglBase::AddTexture(const char *cols, int smooth)
 {
-	mglTexture *t=new mglTexture;	t->Set(cols,smooth);
-	if(t->n==0)	return smooth<0 ? 0:1;
+	mglTexture t(cols,smooth);
+	if(t.n==0)	return smooth<0 ? 0:1;
 	// check if already exist
-	for(long i=0;i<numT;i++)	if(t->IsSame(txt[i]))	return i;
+	for(unsigned long i=0;i<Txt.size();i++)	if(t.IsSame(Txt[i]))	return i;
 	// create new one
-	txt = (mglTexture *)realloc(txt,(numT+1)*sizeof(mglTexture));
-	memcpy(txt+numT, t, sizeof(mglTexture));	numT++;
-	delete t;
-	return numT-1;
+	Txt.push_back(t);
+	return Txt.size()-1;
 }
 //-----------------------------------------------------------------------------
 float mglBase::AddTexture(char col)
 {
 	mglColor c(col);
-	register long i,j;
+	register unsigned long i,j;
 	if(!c.Valid())	return -1;
 	// first lets try an existed one
-	for(i=0;i<numT;i++)	for(j=0;j<256;j++)
-		if(c==txt[i].col[2*j])	return i+j/255.;
+	for(i=0;i<Txt.size();i++)	for(j=0;j<256;j++)
+		if(c==Txt[i].col[2*j])	return i+j/255.;
 	// add new texture
-	txt = (mglTexture *)realloc(txt,(numT+1)*sizeof(mglTexture));
-	mglTexture *t=txt+numT;
-	memset(t,0,sizeof(mglTexture));
-	for(i=0;i<514;i++)	t->col[i]=c;	numT++;
-	return numT-1;
+	mglTexture t;
+	for(i=0;i<514;i++)	t.col[i]=c;
+	Txt.push_back(t);
+	return Txt.size()-1;
 }
 //-----------------------------------------------------------------------------
 //		Coloring and palette
 //-----------------------------------------------------------------------------
 float mglBase::NextColor(long &id)
 {
-	long i=abs(id)/256, n=txt[i].n, p=abs(id)&0xff;
+	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
 	if(id>=0)	{	p=(p+1)%n;	id = 256*i+p;	}
 	last_style[0]=MGL_DEF_PAL[p%strlen(MGL_DEF_PAL)];	// TODO: last_style correctly !!!
 	CDef = i + (n>0 ? (p+0.5)/n : 0);	CurrPal++;
@@ -704,7 +686,7 @@ char mglBase::SetPenPal(const char *p, long *Id)
 	}
 	last_style[3]=mk;	SetPen(pp, PenWidth);
 	long tt, n;
-	tt = AddTexture(p,-1);	n=txt[tt].n;
+	tt = AddTexture(p,-1);	n=Txt[tt].n;
 	CDef = tt+((n+CurrPal-1)%n+0.5)/n;
 	if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
 	return mk;
@@ -748,20 +730,18 @@ mglPoint GetZ(const mglDataA *z, int i, int j, int k)
 //-----------------------------------------------------------------------------
 void mglBase::vect_plot(long p1, long p2)	// position in pntC
 {
-	float pp[24], *pp1=pnt+12*p1, *pp2=pnt+12*p2;
-	memcpy(pp,pp2,12*sizeof(float));	memcpy(pp+12,pp2,12*sizeof(float));
-	pp[0] = pp1[0]+0.8*(pp2[0]-pp1[0]) + 0.1*(pp2[1]-pp1[1]);
-	pp[12]= pp1[0]+0.8*(pp2[0]-pp1[0]) - 0.1*(pp2[1]-pp1[1]);
-	pp[1] = pp1[1]+0.8*(pp2[1]-pp1[1]) - 0.1*(pp2[0]-pp1[0]);
-	pp[13]= pp1[1]+0.8*(pp2[1]-pp1[1]) + 0.1*(pp2[0]-pp1[0]);
-	pp[2] = pp[14] = pp1[2]+0.8*(pp2[2]-pp1[2]);
-
-	if(pos>num-3)
-	{	num+=1024;	pnt=(float *)realloc(pnt,12*num*sizeof(float));	}
-	memcpy(pnt+pos*12,pp,24*sizeof(float));	pos+=2;
-	line_plot(p1,p2);
-	line_plot(pos-2,p2);
-	line_plot(p2,pos-1);
+	if(p1<0 || p2<0)	return;
+	const mglPnt &q1=Pnt[p1], &q2=Pnt[p2];
+	mglPnt s1=q2,s2=q2;
+	s1.x = q1.x+0.8*(q2.x-q1.x) + 0.1*(q2.y-q1.y);
+	s2.x = q1.x+0.8*(q2.x-q1.x) - 0.1*(q2.y-q1.y);
+	s1.y = q1.y+0.8*(q2.y-q1.y) - 0.1*(q2.x-q1.x);
+	s2.y = q1.y+0.8*(q2.y-q1.y) + 0.1*(q2.x-q1.x);
+	s1.z = s2.z = q1.z+0.8*(q2.z-q1.z);
+	long n1,n2;
+	n1=Pnt.size();	Pnt.push_back(s1);
+	n2=Pnt.size();	Pnt.push_back(s2);
+	line_plot(p1,p2);	line_plot(n1,p2);	line_plot(p2,n2);
 }
 //-----------------------------------------------------------------------------
 int mglFindArg(const char *str)

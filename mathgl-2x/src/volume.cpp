@@ -21,6 +21,7 @@
 #include "mgl/volume.h"
 #include "mgl/data.h"
 #include "mgl/eval.h"
+#include <vector>
 //-----------------------------------------------------------------------------
 //
 //	CloudQ series
@@ -52,8 +53,8 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 	long ss = gr->AddTexture(sch);
 
 	// x, y, z -- have the same size as a
-	long pos = (n/tx)*(m/ty)*(l/tz);
-	pos = gr->Reserve(pos);
+	long nn=(n/tx)*(m/ty)*(l/tz), *pos=new long[(n/tx)*(m/ty)*(l/tz)];
+	gr->Reserve(nn);
 	mglPoint p,q=mglPoint(NAN);
 	for(k=0;k<l;k+=tz)	for(j=0;j<m;j+=ty)	for(i=0;i<n;i+=tx)
 	{
@@ -61,18 +62,18 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 		aa = gr->GetA(a->v(i,j,k));
 		if(inv)	bb = (1-aa)*(1-aa)*alpha;
 		else	bb = aa*aa*alpha;
-		gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);	// NOTE: Not thread safe!!!
+		pos[i+(n/tx)*(j+(m/ty)*k)] = gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);
 	}
 	n /= tx;	m /= ty;	l /= tz;
-	if(dot)	for(i=0;i<n*m*l;i++)	gr->mark_plot(pos+i,'.');
+	if(dot)	for(i=0;i<nn;i++)	gr->mark_plot(pos[i],'.');
 	else	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
 	{
-		i0 = pos + i+n*(j+m*k);
-		if(i<n-1 && j<m-1)	gr->quad_plot(i0,i0+1,i0+n,i0+n+1);
-		if(i<n-1 && k<l-1)	gr->quad_plot(i0,i0+1,i0+n*m,i0+n*m+1);
-		if(k<l-1 && j<m-1)	gr->quad_plot(i0,i0+n,i0+n+n*m,i0+n+n*m);
+		i0 = i+n*(j+m*k);
+		if(i<n-1 && j<m-1)	gr->quad_plot(pos[i0],pos[i0+1],pos[i0+n],pos[i0+n+1]);
+		if(i<n-1 && k<l-1)	gr->quad_plot(pos[i0],pos[i0+1],pos[i0+n*m],pos[i0+n*m+1]);
+		if(k<l-1 && j<m-1)	gr->quad_plot(pos[i0],pos[i0+n],pos[i0+n+n*m],pos[i0+n+n*m]);
 	}
-	gr->EndGroup();
+	delete []pos;	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
 void mgl_cloud(HMGL gr, HCDT a, const char *sch, const char *opt)
@@ -146,14 +147,14 @@ mglPoint mgl_find_norm(bool both, HCDT x, HCDT y, HCDT z, HCDT a, mglPoint u, bo
 	return q;
 }
 //-----------------------------------------------------------------------------
-inline float mgl_cos_pp(mglPoint *kk,long i0,long i1,long i2)
+inline float mgl_cos_pp(std::vector<mglPoint> kk,long i0,long i1,long i2)
 {
 	mglPoint dp1 = kk[i1]-kk[i0], dp2 = kk[i2]-kk[i0];
 	float p1=dp1*dp1,p2=dp2*dp2,pc=dp1*dp2;
 	return p1*p2>1e-10 ? pc/sqrt(p1*p2) : NAN;
 }
 //-----------------------------------------------------------------------------
-void mgl_surf3_plot(HMGL gr, long posN, long n,long m,long *kx1,long *kx2,long *ky1,long *ky2, long *kz, mglPoint *kk, bool wire)
+void mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *ky1,long *ky2, long *kz, std::vector<mglPoint> kk, bool wire)
 {
 	register long i,j,k,i0,ii,jj;
 	long id[12],us[12],ni;
@@ -195,7 +196,7 @@ void mgl_surf3_plot(HMGL gr, long posN, long n,long m,long *kx1,long *kx2,long *
 			if(d<d0)	{	d0=d;	jj=ii;	}
 		}
 		// copy first 2 points as base
-		long p1 = posN+id[0], p2 = posN+id[jj];
+		long p1 = long(kk[id[0]].c+0.5), p2 = long(kk[id[jj]].c+0.5), p3;
 		// select the same orientation of all triangles of the surface
 		us[0] = us[jj] = 1;
 		// find all triangles
@@ -210,7 +211,8 @@ void mgl_surf3_plot(HMGL gr, long posN, long n,long m,long *kx1,long *kx2,long *
 			}
 			if(i0<0)	break;	// no more triangles. NOTE: should be never here
 			jj = i0;	us[jj]=1;
-			gr->trig_plot(p1, p2, posN+id[jj]);	p2 = posN+id[jj];
+			p3 = long(kk[id[jj]].c+0.5);
+			gr->trig_plot(p1, p2, p3);	p2 = p3;
 		}
 	}
 }
@@ -229,15 +231,13 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 	static int cgid=1;	gr->StartGroup("Surf3",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
-	long ss = gr->AddTexture(sch);
+	long ss = gr->AddTexture(sch), pos;
 
 	kx1 = new long[n*m];	kx2 = new long[n*m];
 	ky1 = new long[n*m];	ky2 = new long[n*m];
 	kz  = new long[n*m];
 	float c=gr->GetC(ss,val);
-	long numK = n*m, posN = gr->GetPos(), pos;
-	mglPoint *kk = (mglPoint *)malloc(numK*sizeof(mglPoint));
-	memset(kk,0,numK*sizeof(mglPoint));
+	std::vector<mglPoint> kk;
 
 	mglPoint p,q,u;
 	for(k=0;k<l;k++)
@@ -260,14 +260,9 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
+					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
-					if(pos>=numK)
-					{
-						numK += n*m*(1+(pos/(n*m)));
-						kk = (mglPoint *)realloc(kk,numK*sizeof(mglPoint));
-					}
-					kk[pos] = u;	kx2[i1] = pos;
+					kk.push_back(u);	kx2[i1] = kk.size()-1;
 				}
 			}
 			if(j<m-1)
@@ -281,14 +276,9 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
+					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
-					if(pos>=numK)
-					{
-						numK += n*m*(1+(pos/(n*m)));
-						kk = (mglPoint *)realloc(kk,numK*sizeof(mglPoint));
-					}
-					kk[pos] = u;	ky2[i1] = pos;
+					kk.push_back(u);	ky2[i1] = kk.size()-1;
 				}
 			}
 			if(k>0)
@@ -302,22 +292,17 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
+					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
-					if(pos>=numK)
-					{
-						numK += n*m*(1+(pos/(n*m)));
-						kk = (mglPoint *)realloc(kk,numK*sizeof(mglPoint));
-					}
-					kk[pos] = u;	kz[i1] = pos;
+					kk.push_back(u);	kz[i1] = kk.size()-1;
 				}
 			}
 		}
-		if(k>0)	mgl_surf3_plot(gr,posN,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
+		if(k>0)	mgl_surf3_plot(gr,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
 	}
 	gr->EndGroup();
 	delete []kx1;	delete []kx2;	delete []ky1;
-	delete []ky2;	delete []kz;	free(kk);
+	delete []ky2;	delete []kz;
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3_val(HMGL gr, float val, HCDT a, const char *sch, const char *opt)
@@ -392,15 +377,13 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
-	long ss = gr->AddTexture(sch);
+	long ss = gr->AddTexture(sch), pos;
 
 	kx1 = new long[n*m];	kx2 = new long[n*m];
 	ky1 = new long[n*m];	ky2 = new long[n*m];
 	kz  = new long[n*m];
 	float c=gr->GetC(ss,val),aa;
-	long numK = n*m, posN = gr->GetPos(), pos;
-	mglPoint *kk = (mglPoint *)malloc(numK*sizeof(mglPoint));
-	memset(kk,0,numK*sizeof(mglPoint));
+	std::vector<mglPoint> kk;
 
 	mglPoint p,q,u;
 	for(k=0;k<l;k++)
@@ -424,14 +407,9 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					aa = gr->GetA(b->v(i,j,k)*(1-d)+b->v(i+1,j,k)*d);
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPnt(p,c,q,aa)-posN;	// NOTE: Not thread-safe!!!
+					pos = gr->AddPnt(p,c,q,aa);	u.c=pos;
 					if(pos<0)	continue;
-					if(pos>=numK)
-					{
-						numK += n*m*(1+(pos/(n*m)));
-						kk = (mglPoint *)realloc(kk,numK*sizeof(mglPoint));
-					}
-					kk[pos] = u;	kx2[i1] = pos;
+					kk.push_back(u);	kx2[i1] = kk.size()-1;
 				}
 			}
 			if(j<m-1)
@@ -446,14 +424,9 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					aa = gr->GetA(b->v(i,j,k)*(1-d)+b->v(i,j+1,k)*d);
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPnt(p,c,q,aa)-posN;	// NOTE: Not thread-safe!!!
+					pos = gr->AddPnt(p,c,q,aa);	u.c=pos;
 					if(pos<0)	continue;
-					if(pos>=numK)
-					{
-						numK += n*m*(1+(pos/(n*m)));
-						kk = (mglPoint *)realloc(kk,numK*sizeof(mglPoint));
-					}
-					kk[pos] = u;	ky2[i1] = pos;
+					kk.push_back(u);	ky2[i1] = kk.size()-1;
 				}
 			}
 			if(k>0)
@@ -468,22 +441,17 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					aa = gr->GetA(b->v(i,j,k-1)*(1-d)+b->v(i,j,k)*d);
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPnt(p,c,q,aa)-posN;	// NOTE: Not thread-safe!!!
+					pos = gr->AddPnt(p,c,q,aa);	u.c=pos;
 					if(pos<0)	continue;
-					if(pos>=numK)
-					{
-						numK += n*m*(1+(pos/(n*m)));
-						kk = (mglPoint *)realloc(kk,numK*sizeof(mglPoint));
-					}
-					kk[pos] = u;	kz[i1] = pos;
+					kk.push_back(u);	kz[i1] = kk.size()-1;
 				}
 			}
 		}
-		if(k>0)	mgl_surf3_plot(gr,posN,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
+		if(k>0)	mgl_surf3_plot(gr,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
 	}
 	gr->EndGroup();
 	delete []kx1;	delete []kx2;	delete []ky1;
-	delete []ky2;	delete []kz;	free(kk);
+	delete []ky2;	delete []kz;
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3a_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch, const char *opt)
@@ -560,15 +528,13 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
-	long ss = gr->AddTexture(sch);
+	long ss = gr->AddTexture(sch), pos;
 
 	kx1 = new long[n*m];	kx2 = new long[n*m];
 	ky1 = new long[n*m];	ky2 = new long[n*m];
 	kz  = new long[n*m];
 	float c;
-	long numK = n*m, posN = gr->GetPos(), pos;
-	mglPoint *kk = (mglPoint *)malloc(numK*sizeof(mglPoint));
-	memset(kk,0,numK*sizeof(mglPoint));
+	std::vector<mglPoint> kk;
 
 	mglPoint p,q,u;
 	for(k=0;k<l;k++)
@@ -592,14 +558,9 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					c = gr->GetC(ss,b->v(i,j,k)*(1-d)+b->v(i+1,j,k)*d);
 					u = mglPoint(i+d,j,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
+					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
-					if(pos>=numK)
-					{
-						numK += n*m*(1+(pos/(n*m)));
-						kk = (mglPoint *)realloc(kk,numK*sizeof(mglPoint));
-					}
-					kk[pos] = u;	kx2[i1] = pos;
+					kk.push_back(u);	kx2[i1] = kk.size()-1;
 				}
 			}
 			if(j<m-1)
@@ -614,14 +575,9 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					c = gr->GetC(ss,b->v(i,j,k)*(1-d)+b->v(i,j+1,k)*d);
 					u = mglPoint(i,j+d,k);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
+					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
-					if(pos>=numK)
-					{
-						numK += n*m*(1+(pos/(n*m)));
-						kk = (mglPoint *)realloc(kk,numK*sizeof(mglPoint));
-					}
-					kk[pos] = u;	ky2[i1] = pos;
+					kk.push_back(u);	ky2[i1] = kk.size()-1;
 				}
 			}
 			if(k>0)
@@ -636,22 +592,17 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 					c = gr->GetC(ss,b->v(i,j,k-1)*(1-d)+b->v(i,j,k)*d);
 					u = mglPoint(i,j,k+d-1);
 					q = mgl_find_norm(both, x,y,z,a, u, inv);
-					pos = gr->AddPnt(p,c,q)-posN;	// NOTE: Not thread-safe!!!
+					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
-					if(pos>=numK)
-					{
-						numK += n*m*(1+(pos/(n*m)));
-						kk = (mglPoint *)realloc(kk,numK*sizeof(mglPoint));
-					}
-					kk[pos] = u;	kz[i1] = pos;
+					kk.push_back(u);	kz[i1] = kk.size()-1;
 				}
 			}
 		}
-		if(k>0)	mgl_surf3_plot(gr,posN,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
+		if(k>0)	mgl_surf3_plot(gr,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
 	}
 	gr->EndGroup();
 	delete []kx1;	delete []kx2;	delete []ky1;
-	delete []ky2;	delete []kz;	free(kk);
+	delete []ky2;	delete []kz;
 }
 //-----------------------------------------------------------------------------
 void mgl_surf3c_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch, const char *opt)

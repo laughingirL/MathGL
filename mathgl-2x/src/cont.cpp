@@ -251,7 +251,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 		}
 	}
 	// deallocate arrays and finish if no point
-	if(pc==0)	{	free(kk);	return;	}
+	if(pc==0)	{	delete []kk;	return;	}
 	// allocate arrays for curve (nn - next, ff - prev)
 	long *nn = new long[pc], *ff = new long[pc];
 	// -1 is not parsed, -2 starting
@@ -1129,7 +1129,7 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir
 		}
 	}
 	// deallocate arrays and finish if no point
-	if(pc==0)	{	free(kk);	return;	}
+	if(pc==0)	{	delete []kk;	return;	}
 	// allocate arrays for curve
 	long *nn = new long[pc], *ff = new long[pc];
 	for(i=0;i<pc;i++)	nn[i] = ff[i] = -1;

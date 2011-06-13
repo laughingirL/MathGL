@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <vector>
 #include "mgl/mgl.h"
 //#include <mgl/mgl_idtf.h>
 #include "mgl/parser.h"
@@ -1791,7 +1792,7 @@ int main(int argc,char **argv)
 		mgl_set_test_mode(true);	test(gr);
 		gr->WritePNG("test.png","",false);
 		gr->WriteEPS("test.eps");
-		return 0;
+		delete gr;	return 0;
 	}
 
 	if(srnd)	mgl_srnd(1);
@@ -1815,7 +1816,8 @@ int main(int argc,char **argv)
 		}
 		else	printf("no sample %s\n",name);
 	}
-	printf("\n");	return 0;
+	printf("\n");
+	delete gr;	return 0;
 }
 //-----------------------------------------------------------------------------
 mglSample samp[] = {

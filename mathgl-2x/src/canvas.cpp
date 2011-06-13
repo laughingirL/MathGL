@@ -23,19 +23,31 @@
 //-----------------------------------------------------------------------------
 mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
-	G=0;	SetSize(w,h);	SetQuality(MGL_DRAW_NORM);
-	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';	NumLeg=0;
+	Finished=AutoPlotFactor=LegendBox=true;
+	UseAlpha=UseLight=DisScaling=false;
+	Z=0;	C=G=G4=0;	OI=0;	PlotId=0;	gif=0;
+	B.pf=FactorPos=TickLen=st_t=1;
+	LegendMarks=1;
+
+	TuneTicks=TranspType=CurFrameId=0;
+	Width=Height=Depth=st_pos=ObjId=0;
+	AxisStl[0]=TickStl[0]=SubTStl[0]=0;
+	Persp=inW=inH=FogDist=FogDz=0;
+
+	_tetx=_tety=_tetz=font_factor=fscl=ftet=0;
+	dr_nx1=dr_nx2=dr_ny1=dr_ny2=0;	// Allowed drawing region
+
+	SetSize(w,h);	SetQuality(MGL_DRAW_NORM);
+	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
 	az.dir = mglPoint(0,0,1);	az.a = mglPoint(0,1,0);	az.b = mglPoint(1,0,0);	az.ch='z';
-	P = 0;	Ptxt=0;	pNum=pMax=Plen=Pcur=0;	DisScaling=false;
 	DefaultPlotParam();
 }
 //-----------------------------------------------------------------------------
 mglCanvas::~mglCanvas()
 {
 	delete fnt;
-	if(P)	delete []P;		if(Ptxt)	delete []Ptxt;
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []OI;	}
 }
 //-----------------------------------------------------------------------------
@@ -61,7 +73,7 @@ void mglCanvas::DefaultPlotParam()
 	TuneTicks= true;		//_sx=_sy=_sz =st_t = 1;
 	Alpha(false);	Fog(0);	FactorPos = 1.15;
 	ax.t[0]=ay.t[0]=az.t[0]=ac.t[0]=0;
-	AutoPlotFactor = true;	PlotFactor = 1.55;
+	AutoPlotFactor = true;	B.pf = 1.55;
 	TickLen = 0.1;	Cut = true;
 
 	for(int i=0;i<10;i++)	{	AddLight(i, mglPoint(0,0,1));	Light(i,false);	}
@@ -74,15 +86,15 @@ void mglCanvas::DefaultPlotParam()
 float mglCanvas::FindOptOrg(char dir, int ind)
 {
 	static mglPoint px, py, pz, m1, m2;
-	static float	bb[9]={1e30,0,0, 0,0,0, 0,0,0};
+	static mglMatrix bb;	bb.b[0]=1e30;
 	mglPoint nn[8]={mglPoint(0,0,0), mglPoint(0,0,1), mglPoint(0,1,0), mglPoint(0,1,1),
 					mglPoint(1,0,0), mglPoint(1,0,1), mglPoint(1,1,0), mglPoint(1,1,1)}, pp[8];
 	memcpy(pp, nn, 8*sizeof(mglPoint));
 	// do nothing if transformation matrix the same
-	if(memcmp(B,bb,9*sizeof(float)) || m1!=Min || m2!=Max)
+	if(memcmp(B.b,bb.b,9*sizeof(float)) || m1!=Min || m2!=Max)
 	{
-		m1 = Min;	m2 = Max;
-		memcpy(bb,B,9*sizeof(float));	PostScale(pp,8);
+		m1 = Min;	m2 = Max;	memcpy(&bb,&B,sizeof(mglMatrix));
+		PostScale(pp,8);
 		// find point with minimal y
 		register long i,j;
 		for(i=j=0;i<8;i++)	if(pp[i].y<pp[j].y)	j=i;
@@ -143,7 +155,7 @@ float mglCanvas::GetOrgX(char dir)
 	{
 		if(strchr("xyz",dir))	res = FindOptOrg(dir,0);
 		else if(dir=='t')		res = Min.x;
-		else res = B[6]>0 ? Max.x:Min.x;
+		else res = B.b[6]>0 ? Max.x:Min.x;
 	}
 	return res;
 }
@@ -155,7 +167,7 @@ float mglCanvas::GetOrgY(char dir)
 	{
 		if(strchr("xyz",dir))	res = FindOptOrg(dir,1);
 		else if(dir=='t')	res = Min.y;
-		else res = B[7]>0 ? Max.y:Min.y;
+		else res = B.b[7]>0 ? Max.y:Min.y;
 	}
 	return res;
 }
@@ -167,19 +179,19 @@ float mglCanvas::GetOrgZ(char dir)
 	{
 		if(strchr("xyz",dir))	res = FindOptOrg(dir,2);
 		else if(dir=='t')	res = Min.z;
-		else res = B[8]>0 ? Max.z:Min.z;
+		else res = B.b[8]>0 ? Max.z:Min.z;
 	}
 	return res;
 }
 //-----------------------------------------------------------------------------
 //	Put primitives
 //-----------------------------------------------------------------------------
-#define MGL_MARK_PLOT	if(Quality&4)	mark_draw(pnt+12*p,type,size?size:MarkSize);else	\
+#define MGL_MARK_PLOT	if(Quality&4)	mark_draw(p,type,size?size:MarkSize);else	\
 						{	mglPrim a;	a.w = fabs(PenWidth);	a.s = size?size:MarkSize;	\
-							a.n1 = p;	a.m = type;	a.z = pnt[12*p+2];	add_prim(a);	}
+							a.n1 = p;	a.n4 = type;	a.z = Pnt[p].z;	add_prim(a);	}
 void mglCanvas::mark_plot(long p, char type, float size)
 {
-	if(p<0 || isnan(pnt[12*p]))	return;
+	if(p<0 || isnan(Pnt[p].x))	return;
 	long pp=p;
 	if(size>=0)	size *= MarkSize;
 	if(TernAxis&4) for(int i=0;i<4;i++)
@@ -187,30 +199,30 @@ void mglCanvas::mark_plot(long p, char type, float size)
 	else	{	MGL_MARK_PLOT	}
 }
 //-----------------------------------------------------------------------------
-#define MGL_LINE_PLOT	if(Quality&4)	line_draw(pnt+12*p1,pnt+12*p2);else	\
-						{	mglPrim a(1);	a.z = (pnt[12*p1+2]+pnt[12*p2+2])/2;	\
-							if(pw>1)	a.z += pw-1;	a.style=PDef;	a.s = pPos;	\
+#define MGL_LINE_PLOT	if(Quality&4)	line_draw(p1,p2);else	\
+						{	mglPrim a(1);	a.z = (Pnt[p1].z+Pnt[p2].z)/2;	\
+							if(pw>1)	a.z += pw-1;	a.n3=PDef;	a.s = pPos;	\
 							a.n1 = p1;	a.n2 = p2;	a.w = pw;	add_prim(a);	}
 void mglCanvas::line_plot(long p1, long p2)
 {
 	if(PDef==0)	return;
-	if(p1<0 || p2<0 || isnan(pnt[12*p1]) || isnan(pnt[12*p2]))	return;
+	if(p1<0 || p2<0 || isnan(Pnt[p1].x) || isnan(Pnt[p2].x))	return;
 	long pp1=p1,pp2=p2;
 	float pw = fabs(PenWidth),d;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		MGL_LINE_PLOT	}
 	else	{	MGL_LINE_PLOT	}
-	d = hypot(pnt[12*p1]-pnt[12*p2], pnt[12*p1+1]-pnt[12*p2+1]);
+	d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
 	pPos = fmod(pPos+d/pw/1.5, 16);
 }
 //-----------------------------------------------------------------------------
-#define MGL_TRIG_PLOT	if(Quality&4)	trig_draw(pnt+12*p1,pnt+12*p2,pnt+12*p3,true);else	\
+#define MGL_TRIG_PLOT	if(Quality&4)	trig_draw(p1,p2,p3,true);else	\
 						{	mglPrim a(2);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	\
-							a.z = (pnt[12*p1+2]+pnt[12*p2+2]+pnt[12*p3+2])/3;	add_prim(a);}
+							a.z = (Pnt[p1].z+Pnt[p2].z+Pnt[p3].z)/3;	add_prim(a);}
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
-	if(p1<0 || p2<0 || p3<0 || isnan(pnt[12*p1]) || isnan(pnt[12*p2]) || isnan(pnt[12*p3]))	return;
+	if(p1<0 || p2<0 || p3<0 || isnan(Pnt[p1].x) || isnan(Pnt[p2].x) || isnan(Pnt[p3].x))	return;
 	long pp1=p1,pp2=p2,pp3=p3;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
@@ -218,16 +230,16 @@ void mglCanvas::trig_plot(long p1, long p2, long p3)
 	else	{	MGL_TRIG_PLOT	}
 }
 //-----------------------------------------------------------------------------
-#define MGL_QUAD_PLOT	if(Quality&4)	quad_draw(pnt+12*p1,pnt+12*p2,pnt+12*p3,pnt+12*p4);else	\
+#define MGL_QUAD_PLOT	if(Quality&4)	quad_draw(p1,p2,p3,p4);else	\
 						{	mglPrim a(3);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;	\
-							a.z = (pnt[12*p1+2]+pnt[12*p2+2]+pnt[12*p3+2]+pnt[12*p4+2])/4;	\
+							a.z = (Pnt[p1].z+Pnt[p2].z+Pnt[p3].z+Pnt[p4].z)/4;	\
 							add_prim(a);	}
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 {
-	if(p1<0 || isnan(pnt[12*p1]))	{	trig_plot(p4,p2,p3);	return;	}
-	if(p2<0 || isnan(pnt[12*p2]))	{	trig_plot(p1,p4,p3);	return;	}
-	if(p3<0 || isnan(pnt[12*p3]))	{	trig_plot(p1,p2,p4);	return;	}
-	if(p4<0 || isnan(pnt[12*p4]))	{	trig_plot(p1,p2,p3);	return;	}
+	if(p1<0 || isnan(Pnt[p1].x))	{	trig_plot(p4,p2,p3);	return;	}
+	if(p2<0 || isnan(Pnt[p2].x))	{	trig_plot(p1,p4,p3);	return;	}
+	if(p3<0 || isnan(Pnt[p3].x))	{	trig_plot(p1,p2,p4);	return;	}
+	if(p4<0 || isnan(Pnt[p4].x))	{	trig_plot(p1,p2,p3);	return;	}
 	long pp1=p1,pp2=p2,pp3=p3,pp4=p4;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
@@ -236,29 +248,9 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 	else	{	MGL_QUAD_PLOT	}
 }
 //-----------------------------------------------------------------------------
-const wchar_t *mglCanvas::add_text(const wchar_t *str)
-{
-	if(!str || !str[0])	return 0;
-	long len = wcslen(str);
-	if(!Ptxt)
-	{
-		Plen=len+1;	Pcur=0;
-		Ptxt = (wchar_t *)malloc(Plen*sizeof(wchar_t));
-		memset(Ptxt,0,Plen*sizeof(wchar_t));
-	}
-	else if(Pcur+len+1>=Plen)
-	{
-		Plen = Pcur+len+1;
-		Ptxt = (wchar_t *)realloc(Ptxt, Plen*sizeof(wchar_t));
-	}
-	wcscpy(Ptxt+Pcur,str);
-	Pcur += len+1;
-	return Ptxt+Pcur-len-1;
-}
-//-----------------------------------------------------------------------------
 float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float size,float sh)
 {
-	if(p<0 || isnan(pnt[12*p]))	return 0;
+	if(p<0 || isnan(Pnt[p].x))	return 0;
 	if(size<0)	size *= -FontSize;
 
 	if(TernAxis&4)	// text at projections
@@ -274,9 +266,10 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	if(!(Quality&4))	// add text itself
 	{
 		mglPrim a(6);
-		a.n1 = p;	a.z = pnt[12*p+2];
-		a.txt = add_text(text);
-		strncpy(a.font,font,16);
+		a.n1 = p;	a.z = Pnt[p].z;
+		mglText txt(text,font);
+		Ptx.push_back(txt);
+		a.n3 = Ptx.size()-1;
 		a.s = size;	a.w = sh;
 		add_prim(a);
 	}
@@ -286,23 +279,24 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	if(strchr(font,'T'))	shift = sh+0.3;
 	shift += 0.11;	// Correction for glyph rotation around proper point
 
-	float *pp=pnt+12*p, ll=pp[5]*pp[5]+pp[6]*pp[6];
-	if(pp[5]<0)	{	pp[5]=-pp[5];	pp[6]=-pp[6];	pp[7]=-pp[7];	}
-	shift *= h;		B[11]= pp[2];
+	mglPnt q=Pnt[p];
+	float ll = q.u*q.u+q.v*q.v;
+	if(q.u<0)	{	q.u=-q.u;	q.v=-q.v;	q.w=-q.w;	}
+	shift *= h;		B.z= q.z;
 	if(ll==0)	{	Pop();	return 0;	}
 
 	if(isnan(ll))
 	{
 		fscl = fsize;	ftet = 0;
-		B[9] = pp[0];	B[10]= pp[1] - shift;	B[11] = pp[2];
+		B.x = q.x;	B.y= q.y - shift;
 	}
 	else
 	{
 		if(ll==0)	{	Pop();	return 0;	}
-		B[9] = pp[0]+shift*pp[6]/sqrt(ll);
-		B[10]= pp[1]-shift*pp[5]/sqrt(ll);
-		fscl = fsize;	B[11] = pp[2];
-		ftet = -180*atan2(pp[6],pp[5])/M_PI;
+		B.x = q.x+shift*q.v/sqrt(ll);
+		B.y= q.y-shift*q.u/sqrt(ll);
+		fscl = fsize;
+		ftet = -180*atan2(q.v,q.u)/M_PI;
 	}
 	fsize = fnt->Puts(text,font)*size/8.;
 	Pop();	return fsize;
@@ -311,48 +305,29 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 void mglCanvas::Glyph(float x, float y, float f, int s, long j, char col)
 {
 	mglPrim a(4);
-	a.s = fscl/PlotFactor;	a.w = ftet;	a.p = PlotFactor;
+	a.s = fscl/B.pf;	a.w = ftet;	a.p = B.pf;
 	float cc = AddTexture(col);	// TODO: use real color
 	if(cc<0)	cc = CDef;
-	a.n1 = AddPnt(mglPoint(B[9],B[10],B[11]), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), 0, 0);
-	a.style = s;	a.m = j;
-	a.z = B[11];
+	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), 0, 0);
+	a.n3 = s;	a.n4 = j;	a.z = B.z;
 	add_prim(a);
 	if(Quality&4)	glyph_draw(&a);
 	else	add_prim(a);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::add_prim(mglPrim &a)		// NOTE: this is not-thread-safe!!!
-{
-	if(!P)
-	{
-		pMax = 1000;
-		P = (mglPrim *)malloc(pMax*sizeof(mglPrim));
-		memset(P,0,pMax*sizeof(mglPrim));
-	}
-	else if(pNum+1>pMax)
-	{
-		pMax += 1000;
-		P = (mglPrim *)realloc(P, pMax*sizeof(mglPrim));
-		memset(P+pMax-1000,0,1000*sizeof(mglPrim));
-	}
-	a.id = ObjId;	a.gr = this;	P[pNum]=a;
-	pNum++;		Finished = false;
-}
-//-----------------------------------------------------------------------------
-void mglPrim::Draw()
+void mglPrim::Draw(mglCanvas *gr)
 {
 	int pdef=gr->PDef;
 	float ss=gr->pPos, ww=gr->PenWidth;
-	gr->PDef=style;	gr->pPos=s;	gr->PenWidth=w;
+	gr->PDef=n3;	gr->pPos=s;	gr->PenWidth=w;
 	switch(type)
 	{
-	case 0:	gr->mark_draw(gr->pnt+12*n1,m,s);	break;
-	case 1:	gr->PDef=style;	gr->pPos=s;	gr->PenWidth=w;
-			gr->line_draw(gr->pnt+12*n1,gr->pnt+12*n2);	break;
-	case 2:	gr->trig_draw(gr->pnt+12*n1,gr->pnt+12*n2,gr->pnt+12*n3,true);	break;
-	case 3:	gr->quad_draw(gr->pnt+12*n1,gr->pnt+12*n2,gr->pnt+12*n3,gr->pnt+12*n4);	break;
-	case 4:	gr->glyph_draw(this);	break;
+	case 0:	gr->mark_draw(n1,n4,s);			break;
+	case 1:	gr->PDef=n3;	gr->pPos=s;	gr->PenWidth=w;
+			gr->line_draw(n1,n2);			break;
+	case 2:	gr->trig_draw(n1,n2,n3,true);	break;
+	case 3:	gr->quad_draw(n1,n2,n3,n4);		break;
+	case 4:	gr->glyph_draw(this);			break;
 	}
 	gr->PDef=pdef;	gr->pPos=ss;	gr->PenWidth=ww;
 }
@@ -423,21 +398,21 @@ void mglCanvas::RotateN(float Tet,float x,float y,float z)
 	C[0] = x*x*r+c;		C[1] = x*y*r-z*s;	C[2] = x*z*r+y*s;
 	C[3] = x*y*r+z*s;	C[4] = y*y*r+c;		C[5] = y*z*r-x*s;
 	C[6] = x*z*r-y*s;	C[7] = y*z*r+x*s;	C[8] = z*z*r+c;
-	memcpy(R,B,9*sizeof(float));
-	B[0] = C[0]*R[0] + C[3]*R[1] + C[6]*R[2];
-	B[1] = C[1]*R[0] + C[4]*R[1] + C[7]*R[2];
-	B[2] = C[2]*R[0] + C[5]*R[1] + C[8]*R[2];
-	B[3] = C[0]*R[3] + C[3]*R[4] + C[6]*R[5];
-	B[4] = C[1]*R[3] + C[4]*R[4] + C[7]*R[5];
-	B[5] = C[2]*R[3] + C[5]*R[4] + C[8]*R[5];
-	B[6] = C[0]*R[6] + C[3]*R[7] + C[6]*R[8];
-	B[7] = C[1]*R[6] + C[4]*R[7] + C[7]*R[8];
-	B[8] = C[2]*R[6] + C[5]*R[7] + C[8]*R[8];
+	memcpy(R,B.b,9*sizeof(float));
+	B.b[0] = C[0]*R[0] + C[3]*R[1] + C[6]*R[2];
+	B.b[1] = C[1]*R[0] + C[4]*R[1] + C[7]*R[2];
+	B.b[2] = C[2]*R[0] + C[5]*R[1] + C[8]*R[2];
+	B.b[3] = C[0]*R[3] + C[3]*R[4] + C[6]*R[5];
+	B.b[4] = C[1]*R[3] + C[4]*R[4] + C[7]*R[5];
+	B.b[5] = C[2]*R[3] + C[5]*R[4] + C[8]*R[5];
+	B.b[6] = C[0]*R[6] + C[3]*R[7] + C[6]*R[8];
+	B.b[7] = C[1]*R[6] + C[4]*R[7] + C[7]*R[8];
+	B.b[8] = C[2]*R[6] + C[5]*R[7] + C[8]*R[8];
 	if(AutoPlotFactor)
 	{
-		float m=(fabs(B[3])+fabs(B[4])+fabs(B[5]))/inH;
-		float n=(fabs(B[0])+fabs(B[1])+fabs(B[2]))/inW;
-		PlotFactor = 1.55+0.6147*(m<n ? (n-1):(m-1));
+		float m=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/inH;
+		float n=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/inW;
+		B.pf = 1.55+0.6147*(m<n ? (n-1):(m-1));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -450,28 +425,27 @@ void mglCanvas::Perspective(float a)	// I'm too lazy for using 4*4 matrix
 void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 {
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
-	memset(B,0,12*sizeof(float));
+	B.clear();
+	if(AutoPlotFactor) B.pf = 1.55;	// Automatically change plot factor !!!
 	if(rel)
 	{
-		B[9] = B1[9] + (x1+x2-1)/2*B1[0];
-		B[10]= B1[10]+ (y1+y2-1)/2*B1[4];
-		B[0] = B1[0]*(x2-x1);	B[4] = B1[4]*(y2-y1);
-		B[8] = sqrt(B[0]*B[4]);
-		B[11]= B1[11]+ (1.f-B[8]/(2*Depth))*B1[8];
+		B.x = B1.x + (x1+x2-1)/2*B1.b[0];
+		B.y = B1.y + (y1+y2-1)/2*B1.b[4];
+		B.b[0] = B1.b[0]*(x2-x1);	B.b[4] = B1.b[4]*(y2-y1);
+		B.b[8] = sqrt(B.b[0]*B.b[4]);
+		B.z = B1.z + (1.f-B.b[8]/(2*Depth))*B1.b[8];
 	}
 	else
 	{
-		B[9] = (x1+x2)/2*Width;
-		B[10]= (y1+y2)/2*Height;
-		B[0] = Width*(x2-x1);	B[4] = Height*(y2-y1);
-		B[8] = sqrt(B[0]*B[4]);
-		B[11]= (1.f-B[8]/(2*Depth))*Depth;
-		memcpy(B1,B,12*sizeof(float));
+		B.x = (x1+x2)/2*Width;
+		B.y = (y1+y2)/2*Height;
+		B.b[0] = Width*(x2-x1);	B.b[4] = Height*(y2-y1);
+		B.b[8] = sqrt(B.b[0]*B.b[4]);
+		B.z = (1.f-B.b[8]/(2*Depth))*Depth;
+		B1=B;
 	}
-	inW = B[0];	inH=B[4];
-	font_factor = B[0] < B[4] ? B[0] : B[4];
-	if(AutoPlotFactor) PlotFactor = 1.55;	// Automatically change plot factor !!!
-	Persp = 0;
+	inW = B.b[0];	inH=B.b[4];		Persp = 0;
+	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Aspect(float Ax,float Ay,float Az)
@@ -480,9 +454,9 @@ void mglCanvas::Aspect(float Ax,float Ay,float Az)
 	a = a > fabs(Az) ? a : fabs(Az);
 	if(a==0)	{	SetWarn(mglWarnZero,"Aspect");	return;	}
 	Ax/=a;	Ay/=a;	Az/=a;
-	B[0] *= Ax;		B[3] *= Ax;		B[6] *= Ax;
-	B[1] *= Ay;		B[4] *= Ay;		B[7] *= Ay;
-	B[2] *= Az;		B[5] *= Az;		B[8] *= Az;
+	B.b[0] *= Ax;		B.b[3] *= Ax;		B.b[6] *= Ax;
+	B.b[1] *= Ay;		B.b[4] *= Ay;		B.b[7] *= Ay;
+	B.b[2] *= Az;		B.b[5] *= Az;		B.b[8] *= Az;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::StickPlot(int num, int id, float tet, float phi)
@@ -507,25 +481,9 @@ void mglCanvas::StickPlot(int num, int id, float tet, float phi)
 //-----------------------------------------------------------------------------
 void mglCanvas::ColumnPlot(int num, int i, float dd)
 {
-	float d = i/(num+PlotFactor-1);
-	float w = PlotFactor/(num+PlotFactor-1);
+	float d = i/(num+B.pf-1);
+	float w = B.pf/(num+B.pf-1);
 	InPlot(0,1,d,d+w*(1-dd),true);
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::Pop()
-{
-	if(st_pos<0)	return;
-	memcpy(B,stack+13*st_pos,12*sizeof(float));
-	PlotFactor = stack[13*st_pos+12];
-	st_pos--;
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::Push()
-{
-	st_pos = st_pos<9 ? st_pos+1:9;
-	if(st_pos<0)	st_pos=0;
-	memcpy(stack+13*st_pos,B,12*sizeof(float));
-	stack[13*st_pos+12] = PlotFactor;
 }
 //-----------------------------------------------------------------------------
 //	Lighting and transparency
@@ -555,76 +513,77 @@ void mglCanvas::AddLight(int n, mglPoint p, char col, float br, bool inf, float 
 void mglCanvas::arrow_plot(long n1, long n2,char st)
 {
 	if(!strchr("AVKSDTIO",st))	return;
-	float *p1=pnt+12*n1, *p2=pnt+12*n2;
-	float lx=p1[0]-p2[0], ly=p1[1]-p2[1], ll, kx,ky;
+	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
+	mglPnt q1=p1,q2=p1,q3=p1,q4=p1;
+	q1.u=q2.u=q3.u=q4.u=NAN;
+
+	float lx=p1.x-p2.x, ly=p1.y-p2.y, ll, kx,ky;
 	ll = hypot(lx,ly)/(PenWidth*ArrowSize*0.35*font_factor);
 	if(ll==0)	return;
 	lx /= ll;	ly /= ll;	kx = ly;	ky = -lx;
 	Reserve(6);
-	mglPoint q1,q2,q3,q4,nn=mglPoint(NAN,NAN,NAN);
 	long k1,k2,k3,k4;
 
-	bool ul = UseLight;		UseLight = false;
 	switch(st)
 	{
 	case 'I':
-		q1 = mglPoint(p1[0]+kx, p1[1]+ky, p1[2]);	k1=AddPnt(q1,CDef);
-		q2 = mglPoint(p1[0]-kx, p1[1]-ky, p1[2]);	k2=AddPnt(q2,CDef);
+		q1.x = p1.x+kx;		q1.y = p1.y+ky;		k1=Pnt.size();	Pnt.push_back(q1);
+		q2.x = p1.x-kx;		q2.y = p1.y-ky;		k2=Pnt.size();	Pnt.push_back(q2);
 		line_plot(k1,k2);	break;
 	case 'D':
-		q1 = mglPoint(p1[0]+kx, p1[1]+ky, p1[2]);	k1=AddPnt(q1,CDef,nn);
-		q2 = mglPoint(p1[0]+lx, p1[1]+ly, p1[2]);	k2=AddPnt(q2,CDef,nn);
-		q3 = mglPoint(p1[0]-kx, p1[1]-ky, p1[2]);	k3=AddPnt(q3,CDef,nn);
-		q4 = mglPoint(p1[0]-lx, p1[1]-ly, p1[2]);	k4=AddPnt(q4,CDef,nn);
+		q1.x = p1.x+kx;		q1.y = p1.y+ky;		k1=Pnt.size();	Pnt.push_back(q1);
+		q2.x = p1.x+lx;		q2.y = p1.y+ly;		k2=Pnt.size();	Pnt.push_back(q2);
+		q3.x = p1.x-kx;		q3.y = p1.y-ky;		k3=Pnt.size();	Pnt.push_back(q3);
+		q4.x = p1.x-lx;		q4.y = p1.y-ly;		k4=Pnt.size();	Pnt.push_back(q4);
 		quad_plot(k1,k2,k3,k4);	break;
 	case 'S':
-		q1 = mglPoint(p1[0]+kx-lx, p1[1]+ky-ly, p1[2]);	k1=AddPnt(q1,CDef,nn);
-		q2 = mglPoint(p1[0]-kx-lx, p1[1]-ky-ly, p1[2]);	k2=AddPnt(q2,CDef,nn);
-		q3 = mglPoint(p1[0]-kx+lx, p1[1]-ky+ly, p1[2]);	k3=AddPnt(q3,CDef,nn);
-		q4 = mglPoint(p1[0]+kx+lx, p1[1]+ky+ly, p1[2]);	k4=AddPnt(q4,CDef,nn);
+		q1.x = p1.x+kx-lx;	q1.y = p1.y+ky-ly;	k1=Pnt.size();	Pnt.push_back(q1);
+		q2.x = p1.x-kx-lx;	q2.y = p1.y-ky-ly;	k2=Pnt.size();	Pnt.push_back(q2);
+		q3.x = p1.x-kx+lx;	q3.y = p1.y-ky+ly;	k3=Pnt.size();	Pnt.push_back(q3);
+		q4.x = p1.x+kx+lx;	q4.y = p1.y+ky+ly;	k4=Pnt.size();	Pnt.push_back(q4);
 		quad_plot(k1,k2,k3,k4);	break;
 	case 'T':
-		q1 = mglPoint(p1[0]+kx-lx, p1[1]+ky-ly, p1[2]);	k1=AddPnt(q1,CDef,nn);
-		q2 = mglPoint(p1[0]-kx-lx, p1[1]-ky-ly, p1[2]);	k2=AddPnt(q2,CDef,nn);
-		q3 = mglPoint(p1[0]+lx, p1[1]+ly, p1[2]);		k3=AddPnt(q3,CDef,nn);
+		q1.x = p1.x+kx-lx;	q1.y = p1.y+ky-ly;	k1=Pnt.size();	Pnt.push_back(q1);
+		q2.x = p1.x-kx-lx;	q2.y = p1.y-ky-ly;	k2=Pnt.size();	Pnt.push_back(q2);
+		q3.x = p1.x+lx;		q3.y = p1.y+ly;		k3=Pnt.size();	Pnt.push_back(q3);
 		trig_plot(k1,k2,k3);	break;
 	case 'A':
-		q1 = mglPoint(p1[0], p1[1], p1[2]);					k1=AddPnt(q1,CDef,nn);
-		q2 = mglPoint(p1[0]-kx-2*lx, p1[1]-ky-2*ly, p1[2]);	k2=AddPnt(q2,CDef,nn);
-		q3 = mglPoint(p1[0]-1.5*lx, p1[1]-1.5*ly, p1[2]);	k3=AddPnt(q3,CDef,nn);
-		q4 = mglPoint(p1[0]+kx-2*lx, p1[1]+ky-2*ly, p1[2]);	k4=AddPnt(q4,CDef,nn);
+		q1.x = p1.x;			q1.y = p1.y;			k1=Pnt.size();	Pnt.push_back(q1);
+		q2.x = p1.x-kx-2*lx;	q2.y = p1.y-ky-2*ly;	k2=Pnt.size();	Pnt.push_back(q2);
+		q3.x = p1.x-1.5*lx;		q3.y = p1.y-1.5*ly;		k3=Pnt.size();	Pnt.push_back(q3);
+		q4.x = p1.x+kx-2*lx;	q4.y = p1.y+ky-2*ly;	k4=Pnt.size();	Pnt.push_back(q4);
 		quad_plot(k1,k2,k3,k4);	break;
 	case 'K':
-		q1 = mglPoint(p1[0], p1[1], p1[2]);					k1=AddPnt(q1,CDef,nn);
-		q2 = mglPoint(p1[0]-kx-2*lx, p1[1]-ky-2*ly, p1[2]);	k2=AddPnt(q2,CDef,nn);
-		q3 = mglPoint(p1[0]-1.5*lx, p1[1]-1.5*ly, p1[2]);	k3=AddPnt(q3,CDef,nn);
-		q4 = mglPoint(p1[0]+kx-2*lx, p1[1]+ky-2*ly, p1[2]);	k4=AddPnt(q4,CDef,nn);
+		q1.x = p1.x;			q1.y = p1.y;			k1=Pnt.size();	Pnt.push_back(q1);
+		q2.x = p1.x-kx-2*lx;	q2.y = p1.y-ky-2*ly;	k2=Pnt.size();	Pnt.push_back(q2);
+		q3.x = p1.x-1.5*lx;		q3.y = p1.y-1.5*ly;		k3=Pnt.size();	Pnt.push_back(q3);
+		q4.x = p1.x+kx-2*lx;	q4.y = p1.y+ky-2*ly;	k4=Pnt.size();	Pnt.push_back(q4);
 		quad_plot(k1,k2,k3,k4);
-		q1 = mglPoint(p1[0]+kx, p1[1]+ky, p1[2]);	k1=AddPnt(q1,CDef);
-		q2 = mglPoint(p1[0]-kx, p1[1]-ky, p1[2]);	k2=AddPnt(q2,CDef);
+		q1.x = p1.x+kx;			q1.y = p1.y+ky;			k1=Pnt.size();	Pnt.push_back(q1);
+		q2.x = p1.x-kx;			q2.y = p1.y-ky;			k2=Pnt.size();	Pnt.push_back(q2);
 		line_plot(k1,k2);	break;
 	case 'V':
-		q1 = mglPoint(p1[0], p1[1], p1[2]);					k1=AddPnt(q1,CDef,nn);
-		q2 = mglPoint(p1[0]-kx+2*lx, p1[1]-ky+2*ly, p1[2]);	k2=AddPnt(q2,CDef,nn);
-		q3 = mglPoint(p1[0]+1.5*lx, p1[1]+1.5*ly, p1[2]);	k3=AddPnt(q3,CDef,nn);
-		q4 = mglPoint(p1[0]+kx+2*lx, p1[1]+ky+2*ly, p1[2]);	k4=AddPnt(q4,CDef,nn);
+		q1.x = p1.x;			q1.y = p1.y;			k1=Pnt.size();	Pnt.push_back(q1);
+		q2.x = p1.x-kx+2*lx;	q2.y = p1.y-ky+2*ly;	k2=Pnt.size();	Pnt.push_back(q2);
+		q3.x = p1.x+1.5*lx;		q3.y = p1.y+1.5*ly;		k3=Pnt.size();	Pnt.push_back(q3);
+		q4.x = p1.x+kx+2*lx;	q4.y = p1.y+ky+2*ly;	k4=Pnt.size();	Pnt.push_back(q4);
 		quad_plot(k1,k2,k3,k4);	break;
 	case 'O':
 		{
-			q1 = mglPoint(p1[0], p1[1], p1[2]);		k1=AddPnt(q1,CDef,nn);
+			q1.x = p1.x;	q1.y = p1.y;	k1=Pnt.size();	Pnt.push_back(q1);
 			double t,c,s;
 			for(int i=0;i<16;i++)
 			{
 				t = M_PI*i/8.;		s=sin(t);	c=cos(t);
-				q2 = mglPoint(p1[0]+kx*s+lx*c, p1[1]+ky*s+ly*c, p1[2]);
+				q2.x = p1.x+kx*s+lx*c;	q2.y = p1.y+ky*s+ly*c;
+				k2=Pnt.size();	Pnt.push_back(q2);
 				t = M_PI*(i+1)/8.;	s=sin(t);	c=cos(t);
-				q3 = mglPoint(p1[0]+kx*s+lx*c, p1[1]+ky*s+ly*c, p1[2]);
-				k2=AddPnt(q2,CDef,nn);	k3=AddPnt(q3,CDef,nn);
+				q3.x = p1.x+kx*s+lx*c;	q3.y = p1.y+ky*s+ly*c;
+				k3=Pnt.size();	Pnt.push_back(q3);
 				trig_plot(k1,k2,k3);
 			}
 			break;
 		}
 	}
-	UseLight = ul;
 }
 //-----------------------------------------------------------------------------

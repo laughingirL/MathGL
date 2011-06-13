@@ -37,27 +37,19 @@ void mglCanvas::AddLegend(const char *str,const char *style)
 void mglCanvas::AddLegend(const wchar_t *text,const char *style)
 {
 	if(!text)	return;
-	if(NumLeg>=100)	{	SetWarn(mglWarnLegA);	return;	}
-	LegStr[NumLeg] = mgl_wcsdup(text);
-	if(style && *style)	LegStl[NumLeg] = mgl_strdup(style);
-	else	LegStl[NumLeg] = mgl_strdup(last_style);
-	NumLeg++;
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::ClearLegend()
-{
-	for(long i=0;i<NumLeg;i++)	{	free(LegStr[i]);	free(LegStl[i]);	}
-	NumLeg = 0;
+	mglText t(text,style);
+	Leg.push_back(t);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Legend(float x, float y, const char *font, float size, float llen)
-{	Legend(NumLeg,LegStr,LegStl,x,y,font,size,llen);	}
+{	Legend(Leg,x,y,font,size,llen);	}
 //-----------------------------------------------------------------------------
 void mglCanvas::Legend(int where, const char *font, float size, float llen)
-{	Legend(NumLeg,LegStr,LegStl,where,font,size,llen);	}
+{	Legend(Leg,where,font,size,llen);	}
 //-----------------------------------------------------------------------------
-void mglCanvas::Legend(int n, wchar_t **text, char **style, int where, const char *font, float size, float llen)
+void mglCanvas::Legend(std::vector<mglText> leg, int where, const char *font, float size, float llen)
 {
+	long n=leg.size();
 	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
 	if(isnan(llen))	llen=0.1;
 	if(size<0)	size = -size*FontSize;
@@ -68,8 +60,8 @@ void mglCanvas::Legend(int n, wchar_t **text, char **style, int where, const cha
 	float h=fnt->Height(font)*rh, x, y, dx = 0.06, dy = 0.06;
 	for(long i=0;i<n;i++)		// find text length
 	{
-		x = fnt->Width(text[i],font)*rw;
-		if(style[i][0]==0)	x -= llen;
+		x = fnt->Width(leg[i].text.c_str(),font)*rw;
+		if(leg[i].stl.empty())	x -= llen;
 		w = w>x ? w:x;
 	}
 	w = (w + 1.1f*llen*1.5);	// add space for lines
@@ -81,16 +73,17 @@ void mglCanvas::Legend(int n, wchar_t **text, char **style, int where, const cha
 	case 2:		x = dx-1;	y = 1-h*n-dy;	break;
 	default:	x = 1-w-dx;	y = 1-h*n-dy;	break;
 	}
-	Legend(n,text,style,(x+1)/2,(y+1)/2,font,size,llen);
+	Legend(leg,(x+1)/2,(y+1)/2,font,size,llen);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Legend(int n, wchar_t **text, char **style, float x, float y, const char *font, float size, float llen)
+void mglCanvas::Legend(std::vector<mglText> leg, float x, float y, const char *font, float size, float llen)
 {
+	long n=leg.size();
 	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
 	x = 2*x-1;	y = 2*y-1;
 	if(isnan(llen))	llen=0.1;
 	static int cgid=1;	StartGroup("Legend",cgid++);
-	float r=GetRatio(), rh, rw, s3=PlotFactor;
+	float r=GetRatio(), rh, rw, s3=B.pf;
 	if(size<=0)	size = -size*FontSize;
 	if(!font || !(*font))	font="L";
 	char *pA, *ff = new char[strlen(font)+1];	strcpy(ff,font);
@@ -102,8 +95,8 @@ void mglCanvas::Legend(int n, wchar_t **text, char **style, float x, float y, co
 	register long i;
 	for(i=0;i<n;i++)		// find text length
 	{
-		j = fnt->Width(text[i],font)*rw;
-		if(style[i][0]==0)	j -= llen;
+		j = fnt->Width(leg[i].text.c_str(),font)*rw;
+		if(leg[i].stl.empty())	j -= llen;
 		w = w>j ? w:j;
 	}
 	w = (w + llen*1.1f);	// add space for lines
@@ -128,7 +121,7 @@ void mglCanvas::Legend(int n, wchar_t **text, char **style, float x, float y, co
 	}
 	for(i=0;i<n;i++)	// draw lines and legend
 	{
-		char m=SetPenPal(style[i]);
+		char m=SetPenPal(leg[i].stl.c_str());
 		p = mglPoint(x+0.1*llen,y+i*h+0.45*h,s3);	k1=AddPnt(p,CDef);
 		p = mglPoint(x+0.9*llen,y+i*h+0.45*h,s3);	k2=AddPnt(p,CDef);
 		pPos=0;	line_plot(k1,k2);
@@ -137,9 +130,9 @@ void mglCanvas::Legend(int n, wchar_t **text, char **style, float x, float y, co
 			p.x = x+0.1f*llen + (j+1)*0.8f*llen/(1.+LegendMarks);
 			mark_plot(AddPnt(p,CDef),m);
 		}
-		p = mglPoint(x+(style[i][0]!=0?llen:0), y+i*h+0.3f*h, s3);
+		p = mglPoint(x+((!leg[i].stl.empty())?llen:0), y+i*h+0.3f*h, s3);
 		k1 = AddPnt(p,-1,q);
-		text_plot(k1, text[i], ff, size);
+		text_plot(k1, leg[i].text.c_str(), ff, size);
 	}
 	Pop();	EndGroup();	delete []ff;
 }

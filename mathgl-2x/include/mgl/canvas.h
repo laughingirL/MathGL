@@ -30,8 +30,36 @@
 #else
 struct GifFileType;
 #endif
+class mglCanvas;
 //-----------------------------------------------------------------------------
-struct mglPrim;
+/// Structure for simplest primitive
+struct mglPrim
+{
+	// NOTE: n4 is used as mark; n3 -- as pen style for type=0,1,4
+	// NOTE: n3 is used as position of txt,font in Ptxt for type=6
+	long n1,n2,n3,n4;	///< coordinates of corners
+	int type;		///< primitive type (0-point, 1-line, 2-trig, 3-quad, 4-glyph, 5-arrow, 6-text)
+	int id;			///< object id
+	float z;		///< z-position
+	float s;		///< size (if applicable) or fscl
+	float w;		///< width (if applicable) or ftet
+	float p;
+
+	void Draw(mglCanvas *gr);
+	bool IsSame(mglCanvas *gr,float wp,mglColor cp,int st);
+	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	}
+};
+bool operator<(const mglPrim &a,const mglPrim &b);
+bool operator>(const mglPrim &a,const mglPrim &b);
+//-----------------------------------------------------------------------------
+/// Structure for transformation matrix
+struct mglMatrix
+{
+	float b[9];
+	float x,y,z,pf;
+	mglMatrix()	{	clear();	}
+	inline void clear()	{	memset(this,0,sizeof(mglMatrix));	}
+};
 //-----------------------------------------------------------------------------
 /// Structure for drawing axis and ticks
 struct mglAxis
@@ -71,6 +99,14 @@ struct mglLight
 	mglColor c;		///< Color of light sources
 };
 //-----------------------------------------------------------------------------
+/// Structure for text label
+struct mglText
+{
+	std::wstring text;
+	std::string stl;
+	mglText(const wchar_t *txt=0, const char *fnt=0)	{	text=txt;	stl=fnt;	}
+};
+//-----------------------------------------------------------------------------
 /// Class contains all functionality for creating different mathematical plots
 class mglCanvas : public mglBase
 {
@@ -85,7 +121,7 @@ public:
 
 	/// Set PlotFactor
 	inline void SetPlotFactor(float val)
-	{	PlotFactor = val>0?val:1.55;	AutoPlotFactor=(val<=0);	}
+	{	B.pf = val>0?val:1.55;	AutoPlotFactor=(val<=0);	}
 
 	///< Set default parameter for plotting
 	void DefaultPlotParam();
@@ -94,9 +130,9 @@ public:
 	/// Clear transformation matrix.
 	inline void Identity(bool rel=false)	{	InPlot(0,1,0,1,rel);	}
 	/// Push transformation matrix into stack
-	void Push();
+	inline void Push()	{	stack.push_back(B);	}
 	/// Pop transformation matrix from stack
-	void Pop();
+	inline void Pop()	{	B = stack.back(); stack.pop_back();	}
 	/// Clear up the frame
 	virtual void Clf(mglColor back=WC);
 	/// Put further plotting in some region of whole frame surface.
@@ -246,15 +282,15 @@ public:
 	void AddLegend(const char *text,const char *style);
 	void AddLegend(const wchar_t *text,const char *style);
 	/// Clear saved legend string
-	void ClearLegend();
+	inline void ClearLegend()	{	Leg.clear();	}
 	/// Draw legend of accumulated strings at position (x, y) by \a font with \a size
 	void Legend(float x, float y, const char *font="rL", float size=-0.8, float llen=0.1);
 	/// Draw legend of accumulated strings by \a font with \a size
 	void Legend(int where=0x3, const char *font="rL", float size=-0.8, float llen=0.1);
 	/// Draw legend strings \a text at position (x, y) by \a font with \a size
-	void Legend(int n, wchar_t **text, char **style, float x, float y, const char *font="rL", float size=-0.8, float llen=0.1);
+	void Legend(std::vector<mglText> leg, float x, float y, const char *font="rL", float size=-0.8, float llen=0.1);
 	/// Draw legend of accumulated strings by \a font with \a size
-	void Legend(int n, wchar_t **text, char **style, int where=0x3, const char *font="rL", float size=-0.8, float llen=0.1);
+	void Legend(std::vector<mglText> leg, int where=0x3, const char *font="rL", float size=-0.8, float llen=0.1);
 	/// Switch on/off box around legend
 	inline void SetLegendBox(bool val)		{	LegendBox=val;	};
 	/// Number of marks in legend sample
@@ -267,13 +303,13 @@ protected:
 	int *OI;			///< ObjId arrays
 	unsigned char *G4;	///< Final picture in RGBA format. Prepared in Finish().
 	unsigned char *G;	///< Final picture in RGB format. Prepared in Finish().
-	mglPrim *P;			///< Primitives (lines, triangles and so on)
-	wchar_t *Ptxt;		///< buffer of text for mglPrim
-	long Plen;			///< length of buffer for mglPrim
-	long Pcur;			///< position in buffer for mglPrim
-	long pNum;			///< Actual number of primitives
-	long pMax;			///< Maximal number of primitives
-	float PlotFactor;	///< Factor for sizing overall plot (should be >1.5, default is =1.55)
+
+	std::vector<mglPrim> Prm;	///< Primitives (lines, triangles and so on)
+	std::vector<mglText> Ptx;	///< Text labels for mglPrim
+	std::vector<mglText> Leg;	///< Text labels for legend
+	bool LegendBox;		///< Set on/off drawing legend box.
+	int LegendMarks;	///< Number of marks in the Legend
+
 	bool AutoPlotFactor;///< Enable autochange PlotFactor
 	unsigned char BDef[4];	///< Background color
 	mglAxis ax,ay,az,ac;///< Axis parameters
@@ -286,20 +322,14 @@ protected:
 	char SubTStl[32];	///< Subtick line style. Default is "k"
 	float st_t;			///< Subtick-to-tick ratio (ls=lt/sqrt(1+st_t)). Default is 1.
 
-	bool LegendBox;		///< Set on/off drawing legend box.
-	int LegendMarks;	///< Number of marks in the Legend
-	int NumLeg;			///< Number of used positions in LegStr and LegStl arrays
-	wchar_t *LegStr[100];	///< String array with legend text (see mglGraph::AddLegend)
-	char *LegStl[100];	///< String array with legend style (see mglGraph::AddLegend)
-
 	int TranspType;		/// Type of transparency (no full support in OpenGL mode).
 	int CurFrameId;		///< Number of automaticle created frames
 	float Persp;		///< Perspective factor (=0 is perspective off)
 	int Width;			///< Width of the image
 	int Height;			///< Height of the image
 	int Depth;			///< Depth of the image
-	float B[12];		///< Transformation matrix
-	float B1[12];		///< Transformation matrix for colorbar
+	mglMatrix B;		///< Transformation matrix
+	mglMatrix B1;		///< Transformation matrix for colorbar
 	float inW, inH;		///< Relative width and height of last InPlot
 	bool UseAlpha;		///< Flag that Alpha is used
 	bool UseLight;		///< Flag of using lightning
@@ -340,27 +370,26 @@ protected:
 	void Glyph(float x, float y, float f, int style, long icode, char col);
 	float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0);	// position in pntN
 
-	void add_prim(mglPrim &a);	///< add primitive to list
-	void mark_draw(const float *p, char type, float size);
-	void arrow_draw(const float *p1, const float *p2, char st, float size);
-	virtual void line_draw(const float *p1, const float *p2);
-	virtual void trig_draw(const float *p1, const float *p2, const float *p3, bool anorm=false);
-	virtual void quad_draw(const float *p1, const float *p2, const float *p3, const float *p4);
-	virtual void pnt_draw(const float *p);
+	inline void add_prim(mglPrim &a)	///< add primitive to list
+	{	a.id = ObjId;	Prm.push_back(a);	Finished = false;	}
+	void mark_draw(long p, char type, float size);
+	void arrow_draw(long p1, long p2, char st, float size);
+	virtual void line_draw(long p1, long p2);
+	virtual void trig_draw(long p1, long p2, long p3, bool anorm=false);
+	virtual void quad_draw(long p1, long p2, long p3, long p4);
+	virtual void pnt_draw(long p);
 	void glyph_draw(const mglPrim *P);
 	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
 
 private:
-	float _tetx,_tety,_tetz;			// extra angles
-	float stack[MGL_STACK_ENTRY*13];	// stack for transformation matrixes
+	float _tetx,_tety,_tetz;		// extra angles
+	std::vector<mglMatrix> stack;	///< stack for transformation matrixes
 	int st_pos;
 	float font_factor;
 	int dr_nx1, dr_nx2, dr_ny1, dr_ny2;	// Allowed drawing region
 	GifFileType *gif;
 	float fscl,ftet;	///< last scale and rotation for glyphs
 
-	/// Add string to the buffer
-	const wchar_t *add_text(const wchar_t *str);
 	/// Draw generic colorbar
 	void colorbar(HCDT v, const float *s, int where, float x, float y, float w, float h);
 	/// Draw labels for ticks
@@ -371,12 +400,11 @@ private:
 	void pnt_plot(long x,long y,float z,const unsigned char c[4]);
 	float FindOptOrg(char dir, int ind);
 	/// Transform float color and alpha to bits format
-	unsigned char* col2int(float u, float v, const float *n, unsigned char *r);
-	unsigned char* col2int(const float *c, const float *n, unsigned char *r);
+	unsigned char* col2int(const mglPnt &p, unsigned char *r);
 	/// Combine colors in 2 plane.
 	void combine(unsigned char *c1,unsigned char *c2);
 	/// Fast drawing of line between 2 points
-	void fast_draw(const float *p1, const float *p2);
+	void fast_draw(long p1, long p2);
 
 	/// Additionally scale points \a p for positioning in image
 	void PostScale(mglPoint &p);
@@ -385,39 +413,13 @@ private:
 	inline void PostScale(mglPoint *p,long n)	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
 
 	void InPlot(float x1,float x2,float y1,float y2, const char *style);
-	void put_line(void *fp, bool gz, long i, float wp,float *cp,int st, const char *ifmt, const char *nfmt, bool neg);
+	void put_line(void *fp, bool gz, long i, float wp,mglColor cp,int st, const char *ifmt, const char *nfmt, bool neg);
 	void put_desc(void *fp, bool gz, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf);
-	void put_color(float *c, mglPrim *p);
+	mglColor put_color(const mglPrim &p);
 
-	void glyph_fill(mreal *p, mreal f, int nt, const short *trig);
-	void glyph_wire(mreal *p, mreal f, int nl, const short *line);
-	void glyph_line(mreal *p, mreal f, bool solid);
-};
-//-----------------------------------------------------------------------------
-/// Structure for simplest primitive
-struct mglPrim
-{
-	long n1,n2,n3,n4;	///< coordinates of corners
-	float z;			///< z-position
-	float s;			///< size (if applicable) or fscl
-	float w;			///< width (if applicable) or ftet
-	float p;
-	wchar_t m;			///< mark or symbol id (if applicable)
-	int type;			///< type of primitive (0 - point, 1 - line, 2 - trig, 3 - quad, 4 - glyph, 5 - arrow, 6 - text)
-	int style;			///< style of pen
-	int id;				///< object id
-	mglCanvas *gr;		///< pointer to owner
-	const wchar_t *txt;
-	char font[16];
-
-	void Draw();
-	bool IsSame(float wp,float *cp,int st);
-	float inline xx()	{	return gr->pnt[12*n1];		}
-	float inline yy()	{	return gr->pnt[12*n1+1];	}
-	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	}
-//	~mglPrim()	{	if(text)	delete []text;	};
-	inline mglPrim &operator=(mglPrim &a)
-	{	if(this!=&a)	memcpy(this,&a,sizeof(mglPrim));	return *this;	}
+	void glyph_fill(const mglPnt &p, float f, int nt, const short *trig);
+	void glyph_wire(const mglPnt &p, float f, int nl, const short *line);
+	void glyph_line(const mglPnt &p, float f, bool solid);
 };
 //-----------------------------------------------------------------------------
 #endif
