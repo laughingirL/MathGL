@@ -192,7 +192,7 @@ void mgl_quadplot_xy_(uintptr_t *gr, uintptr_t *nums, uintptr_t *x, uintptr_t *y
 //	TriCont series
 //
 //-----------------------------------------------------------------------------
-void mgl_tricont_line(HMGL gr, float val, long i, long k1, long k2, long k3, HCDT x, HCDT y, HCDT z, HCDT a, bool zVal,float c)
+void mgl_tricont_line(HMGL gr, float val, long k1, long k2, long k3, HCDT x, HCDT y, HCDT z, HCDT a, bool zVal,float c)
 {
 	float d1,d2;
 	mglPoint p1,p2,n;
@@ -229,9 +229,9 @@ void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT 
 		k3 = long(nums->v(2,i)+0.1);	if(k3<0 || k3>=n)	continue;
 		val = v->v(k);
 		float c = gr->GetC(ss,val);
-		mgl_tricont_line(gr,val, i,k1,k2,k3,x,y,z,a,zVal,c);
-		mgl_tricont_line(gr,val, i,k2,k1,k3,x,y,z,a,zVal,c);
-		mgl_tricont_line(gr,val, i,k3,k2,k1,x,y,z,a,zVal,c);
+		mgl_tricont_line(gr,val, k1,k2,k3,x,y,z,a,zVal,c);
+		mgl_tricont_line(gr,val, k2,k1,k3,x,y,z,a,zVal,c);
+		mgl_tricont_line(gr,val, k3,k2,k1,x,y,z,a,zVal,c);
 	}
 }
 //-----------------------------------------------------------------------------

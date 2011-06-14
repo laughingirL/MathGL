@@ -83,8 +83,8 @@ public:
 	/// Return number of glyphs
 	inline unsigned GetNumGlyph()	{	return numg;	};
 	/// Return some of pointers
-	inline const short *GetTr(int s, long j)	{	return buf+tr[s][j];	};
-	inline const short *GetLn(int s, long j)	{	return buf+ln[s][j];	};
+	inline const short *GetTr(int s, long j)	{	return Buf+tr[s][j];	};
+	inline const short *GetLn(int s, long j)	{	return Buf+ln[s][j];	};
 	inline int GetNt(int s, long j)	{	return numt[s][j];	};
 	inline int GetNl(int s, long j)	{	return numl[s][j];	};
 	inline float GetFact(int s)		{	return fact[s];	};
@@ -97,7 +97,7 @@ protected:
 	short *width[4];	///< Width of glyph for wire font
 	float fact[4];		///< Divider for width of glyph
 	unsigned numg;		///< Number of glyphs
-	short *buf;			///< Buffer for glyph descriptions
+	short *Buf;			///< Buffer for glyph descriptions
 	long numb;			///< Buffer size
 
 	/// Print text string for font specified by integer constant

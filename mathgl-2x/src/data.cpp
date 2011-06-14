@@ -85,6 +85,8 @@ double mgl_ipow(double x,int n)
 	return t;
 }
 //-----------------------------------------------------------------------------
+mglData::~mglData()	{	if(id && a)	delete []id;	if(!link && a)	delete []a;	}
+//-----------------------------------------------------------------------------
 void *mgl_smth_x(void *par)
 {
 	mglThread *t=(mglThread *)par;

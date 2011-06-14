@@ -393,26 +393,26 @@ void mglCanvas::Rotate(float TetX,float TetZ,float TetY)
 //-----------------------------------------------------------------------------
 void mglCanvas::RotateN(float Tet,float x,float y,float z)
 {
-	float R[9],C[9],c=cos(Tet*M_PI/180),s=-sin(Tet*M_PI/180),r=1-c,n=sqrt(x*x+y*y+z*z);
+	float R[9],T[9],c=cos(Tet*M_PI/180),s=-sin(Tet*M_PI/180),r=1-c,n=sqrt(x*x+y*y+z*z);
 	x/=n;	y/=n;	z/=n;
-	C[0] = x*x*r+c;		C[1] = x*y*r-z*s;	C[2] = x*z*r+y*s;
-	C[3] = x*y*r+z*s;	C[4] = y*y*r+c;		C[5] = y*z*r-x*s;
-	C[6] = x*z*r-y*s;	C[7] = y*z*r+x*s;	C[8] = z*z*r+c;
+	T[0] = x*x*r+c;		T[1] = x*y*r-z*s;	T[2] = x*z*r+y*s;
+	T[3] = x*y*r+z*s;	T[4] = y*y*r+c;		T[5] = y*z*r-x*s;
+	T[6] = x*z*r-y*s;	T[7] = y*z*r+x*s;	T[8] = z*z*r+c;
 	memcpy(R,B.b,9*sizeof(float));
-	B.b[0] = C[0]*R[0] + C[3]*R[1] + C[6]*R[2];
-	B.b[1] = C[1]*R[0] + C[4]*R[1] + C[7]*R[2];
-	B.b[2] = C[2]*R[0] + C[5]*R[1] + C[8]*R[2];
-	B.b[3] = C[0]*R[3] + C[3]*R[4] + C[6]*R[5];
-	B.b[4] = C[1]*R[3] + C[4]*R[4] + C[7]*R[5];
-	B.b[5] = C[2]*R[3] + C[5]*R[4] + C[8]*R[5];
-	B.b[6] = C[0]*R[6] + C[3]*R[7] + C[6]*R[8];
-	B.b[7] = C[1]*R[6] + C[4]*R[7] + C[7]*R[8];
-	B.b[8] = C[2]*R[6] + C[5]*R[7] + C[8]*R[8];
+	B.b[0] = T[0]*R[0] + T[3]*R[1] + T[6]*R[2];
+	B.b[1] = T[1]*R[0] + T[4]*R[1] + T[7]*R[2];
+	B.b[2] = T[2]*R[0] + T[5]*R[1] + T[8]*R[2];
+	B.b[3] = T[0]*R[3] + T[3]*R[4] + T[6]*R[5];
+	B.b[4] = T[1]*R[3] + T[4]*R[4] + T[7]*R[5];
+	B.b[5] = T[2]*R[3] + T[5]*R[4] + T[8]*R[5];
+	B.b[6] = T[0]*R[6] + T[3]*R[7] + T[6]*R[8];
+	B.b[7] = T[1]*R[6] + T[4]*R[7] + T[7]*R[8];
+	B.b[8] = T[2]*R[6] + T[5]*R[7] + T[8]*R[8];
 	if(AutoPlotFactor)
 	{
-		float m=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/inH;
-		float n=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/inW;
-		B.pf = 1.55+0.6147*(m<n ? (n-1):(m-1));
+		float w=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/inH;
+		float h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/inW;
+		B.pf = 1.55+0.6147*(w<h ? (h-1):(w-1));
 	}
 }
 //-----------------------------------------------------------------------------

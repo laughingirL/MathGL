@@ -691,7 +691,7 @@ char mglBase::SetPenPal(const char *p, long *Id)
 	return mk;
 }
 //-----------------------------------------------------------------------------
-void mglBase::SetPen(char style,float width)	{}
+void mglBase::SetPen(char ,float )	{}
 //-----------------------------------------------------------------------------
 float mglBase::GetA(float a)
 {

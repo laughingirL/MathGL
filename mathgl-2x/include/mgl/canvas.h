@@ -65,7 +65,7 @@ struct mglMatrix
 struct mglAxis
 {
 	mglAxis();
-	~mglAxis()	{	delete []buf;	}
+	~mglAxis();
 	void AddLabel(float val, const wchar_t *b);
 
 	float dv,ds;	///< Actual step for ticks and subticks.

@@ -478,7 +478,7 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 		else if(s==unsigned(-4))	MGL_CLEAR_STYLE	// should be never here but if I miss sth ...
 		else if(s==unsigned(-14))	// script symbols
 		{
-			register long j,k=1;
+			k=1;
 			if(str[i+1]==unsigned(-3))	for(j=i+2;k>0 && str[j];j++)
 			{
 				if(str[j]==unsigned(-3))	k++;
@@ -508,8 +508,7 @@ mreal mglFont::Puts(const unsigned *text, mreal x,mreal y,mreal f,int style,char
 						else					gr->Glyph(x,yy,ff,a,j,ccol);
 					}
 				}
-				else
-					j = Internal('!');
+				else	j = Internal('!');
 				ww = ff*width[a][j]/fact[a];
 				if(gr && !(style&0x10))	// add under-/over- line now
 					draw_ouline(st,x,y,f,fact[a],ww,ccol);
@@ -573,8 +572,8 @@ bool mglFont::read_def(unsigned &cur)
 	numg = mgl_numg;	cur = mgl_cur;
 	// copy default factor for other font styles;
 	fact[1] = fact[2] = fact[3] = fact[0] = mgl_fact*mgl_fgen;
-	buf = (short *)malloc(cur*sizeof(short));	// prealocate buffer
-	memset(buf,0,cur*sizeof(short));
+	Buf = (short *)malloc(cur*sizeof(short));	// prealocate buffer
+	memset(Buf,0,cur*sizeof(short));
 	// now allocate memory for all fonts
 	mem_alloc();
 	// and load symbols itself
@@ -588,14 +587,14 @@ bool mglFont::read_def(unsigned &cur)
 		numt[0][i] = mgl_gen_fnt[i][4];
 		tr[0][i] = mgl_gen_fnt[i][5];
 	}
-	memcpy(buf, mgl_buf_fnt, cur*sizeof(short));
+	memcpy(Buf, mgl_buf_fnt, cur*sizeof(short));
 	numb = cur;
 	main_copy();	// copy normal style as default for other styles
 	return true;
 }
 //-----------------------------------------------------------------------------
-bool mglFont::read_data(const char *fname, float *ff, short *wdt, short *numl,
-						unsigned *posl, short *numt, unsigned *post, unsigned &cur)
+bool mglFont::read_data(const char *fname, float *ff, short *wdt, short *lnum,
+						unsigned *posl, short *tnum, unsigned *post, unsigned &cur)
 {
 	gzFile fp;
 	char str[256];
@@ -609,24 +608,24 @@ bool mglFont::read_data(const char *fname, float *ff, short *wdt, short *numl,
 	retVal = sscanf(str, "%u%f%d", &n, ff, &s);
 	//Check sscanf read all data  (3 items)
 	if(retVal != 3)	{	gzclose(fp);	return false;	}
-	buf = (short *)realloc(buf, (cur+s)*sizeof(short));	// prealocate buffer
-	if(!buf)		{	gzclose(fp);	return false;	}
+	Buf = (short *)realloc(Buf, (cur+s)*sizeof(short));	// prealocate buffer
+	if(!Buf)		{	gzclose(fp);	return false;	}
 
 	for(i=0;i<n;i++)
 	{
 		gzgets(fp,str,256);
 		retVal = sscanf(str,"%u%d%d%u%d%u", &tmpi, &tmpw, &tmpnl, &tmppl, &tmpnt, &tmppt);
-		if(retVal != 6)	{	gzclose(fp);	free(buf);	return false;	}
+		if(retVal != 6)	{	gzclose(fp);	free(Buf);	return false;	}
 		j=Internal(unsigned(tmpi));	if(j<0)	continue;
 		if(wdt)	wdt[j] = tmpw;
-		numl[j] = tmpnl;	posl[j] = tmppl+cur;
-		numt[j] = tmpnt;	post[j] = tmppt+cur;
+		lnum[j] = tmpnl;	posl[j] = tmppl+cur;
+		tnum[j] = tmpnt;	post[j] = tmppt+cur;
 	}
 	for(j=i=0;i<int(s);i++)
 	{
 		for(j=0;j<256;j++)
 		{	str[j] = ch = gzgetc(fp);	if(ch<=' ')	break;	}
-		buf[i+cur] = atoi(str);
+		Buf[i+cur] = atoi(str);
 	}
 	cur += s;
 	gzclose(fp);		// finish wire normal font
@@ -646,9 +645,9 @@ bool mglFont::read_main(const char *fname, unsigned &cur)
 	{	gzclose(fp);	return false;	}
 	sscanf(str, "%u%f%u", &numg, fact, &s);
 	fact[1] = fact[2] = fact[3] = fact[0];	// copy default factor for other font styles;
-	buf = (short *)malloc(s*sizeof(short));	// prealocate buffer
-	memset(buf,0,s*sizeof(short));
-	if(!buf)	{	gzclose(fp);	return false;	}
+	Buf = (short *)malloc(s*sizeof(short));	// prealocate buffer
+	memset(Buf,0,s*sizeof(short));
+	if(!Buf)	{	gzclose(fp);	return false;	}
 	// now allocate memory for all fonts
 	mem_alloc();
 	// and load symbols itself
@@ -665,7 +664,7 @@ bool mglFont::read_main(const char *fname, unsigned &cur)
 	{
 		for(j=0;j<256;j++)
 		{	str[j] = ch = gzgetc(fp);	if(ch<=' ')	break;	}
-		buf[i] = atoi(str);
+		Buf[i] = atoi(str);
 	}
 	gzclose(fp);	// finish wire normal font
 	cur += s;		numb = cur;
@@ -748,7 +747,7 @@ void mglFont::Clear()
 //	if(gr)	gr->Clf();
 	if(numg)
 	{
-		delete []id;		free(buf);			numg = 0;
+		delete []id;		free(Buf);			numg = 0;
 		delete []width[0];	delete []width[1];	delete []width[2];	delete []width[3];
 		delete []tr[0];		delete []tr[1];		delete []tr[2];		delete []tr[3];
 		delete []ln[0];		delete []ln[1];		delete []ln[2];		delete []ln[3];
@@ -787,7 +786,7 @@ void mglFont::Copy(mglFont *f)
 	memcpy(numl[3],f->numl[3],numg*sizeof(short));
 	memcpy(fact,f->fact,4*sizeof(mreal));
 	// now copy symbols descriptions
-	buf = (short *)malloc(numb*sizeof(short));
-	memcpy(buf, f->buf, numb*sizeof(short));
+	Buf = (short *)malloc(numb*sizeof(short));
+	memcpy(Buf, f->Buf, numb*sizeof(short));
 }
 //-----------------------------------------------------------------------------

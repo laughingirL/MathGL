@@ -147,7 +147,7 @@ mglPoint mgl_find_norm(bool both, HCDT x, HCDT y, HCDT z, HCDT a, mglPoint u, bo
 	return q;
 }
 //-----------------------------------------------------------------------------
-inline float mgl_cos_pp(std::vector<mglPoint> kk,long i0,long i1,long i2)
+inline float mgl_cos_pp(const mglPoint *kk,long i0,long i1,long i2)
 {
 	mglPoint dp1 = kk[i1]-kk[i0], dp2 = kk[i2]-kk[i0];
 	float p1=dp1*dp1,p2=dp2*dp2,pc=dp1*dp2;
@@ -157,7 +157,8 @@ inline float mgl_cos_pp(std::vector<mglPoint> kk,long i0,long i1,long i2)
 void mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *ky1,long *ky2, long *kz, std::vector<mglPoint> kk, bool wire)
 {
 	register long i,j,k,i0,ii,jj;
-	long id[12],us[12],ni;
+	long id[12],us[12],pd[12],ni;
+	mglPoint pp[12];
 	float d,d0;
 
 	for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
@@ -178,10 +179,13 @@ void mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *ky1,long *k
 		if(kx2[i0+n]>=0)	id[ni++] = kx2[i0+n];
 		if(ky2[i0+1]>=0)	id[ni++] = ky2[i0+1];
 		if(ni<3)	continue;
+
+		for(jj=0;jj<ni;jj++)
+		{	pp[jj]=kk[id[jj]];	pd[jj]=long(pp[jj].c+0.5);	}
 		// remove points which is too close to first one
 		for(jj=1;jj<ni;)
 		{
-			d = Norm(kk[id[jj]] - kk[id[0]]);
+			d = Norm(pp[jj] - pp[0]);
 			if(d>1e-5)	jj++;
 			else
 			{	ni--;	for(ii=jj;ii<ni;ii++)	id[ii]=id[ii+1];	}
@@ -192,11 +196,11 @@ void mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *ky1,long *k
 		// firstly let find most outstanding point
 		for(jj=1,ii=2,d0=2;ii<ni;ii++)
 		{
-			d = mgl_cos_pp(kk,id[0],id[ii],id[1]);
+			d = mgl_cos_pp(pp,0,ii,1);
 			if(d<d0)	{	d0=d;	jj=ii;	}
 		}
 		// copy first 2 points as base
-		long p1 = long(kk[id[0]].c+0.5), p2 = long(kk[id[jj]].c+0.5), p3;
+		long p1 = pd[0], p2 = pd[jj], p3;
 		// select the same orientation of all triangles of the surface
 		us[0] = us[jj] = 1;
 		// find all triangles
@@ -206,13 +210,19 @@ void mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *ky1,long *k
 			for(i0=-1,ii=1,d0=-2;ii<ni;ii++)
 			{
 				if(us[ii])	continue;
-				d = mgl_cos_pp(kk,id[0],id[ii],id[jj]);
+				d = mgl_cos_pp(pp,0,ii,jj);
 				if(d>d0)	{	d0=d;	i0=ii;	}
 			}
 			if(i0<0)	break;	// no more triangles. NOTE: should be never here
-			jj = i0;	us[jj]=1;
-			p3 = long(kk[id[jj]].c+0.5);
-			gr->trig_plot(p1, p2, p3);	p2 = p3;
+			jj = i0;	us[jj]=1;	p3 = pd[jj];
+			if(wire)
+			{
+				gr->line_plot(p1, p2);
+				gr->line_plot(p1, p3);
+				gr->line_plot(p2, p3);
+			}
+			else	gr->trig_plot(p1, p2, p3);
+			p2 = p3;
 		}
 	}
 }
@@ -231,7 +241,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 	static int cgid=1;	gr->StartGroup("Surf3",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
-	long ss = gr->AddTexture(sch), pos, nn=0, nk=0;
+	long ss = gr->AddTexture(sch), pos;
 
 	kx1 = new long[n*m];	kx2 = new long[n*m];
 	ky1 = new long[n*m];	ky2 = new long[n*m];
@@ -243,7 +253,6 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 	mglPoint p,q,u;
 	for(k=0;k<l;k++)
 	{
-printf("k=%ld of %ld\n",k,l);	fflush(stdout);
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
@@ -300,7 +309,6 @@ printf("k=%ld of %ld\n",k,l);	fflush(stdout);
 				}
 			}
 		}
-		nk=nn;	nn=kk.size();	if(nn>nk)	gr->Reserve(nn-nk);
 		if(k>0)	mgl_surf3_plot(gr,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
 	}
 	gr->EndGroup();
@@ -380,7 +388,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
-	long ss = gr->AddTexture(sch), pos, nk=0,nn=0;
+	long ss = gr->AddTexture(sch), pos;
 
 	kx1 = new long[n*m];	kx2 = new long[n*m];
 	ky1 = new long[n*m];	ky2 = new long[n*m];
@@ -392,7 +400,6 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	mglPoint p,q,u;
 	for(k=0;k<l;k++)
 	{
-printf("k=%ld of %ld\n",k,l);	fflush(stdout);
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
@@ -452,7 +459,6 @@ printf("k=%ld of %ld\n",k,l);	fflush(stdout);
 				}
 			}
 		}
-		nk=nn;	nn=kk.size();	if(nn>nk)	gr->Reserve(nn-nk);
 		if(k>0)	mgl_surf3_plot(gr,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
 	}
 	gr->EndGroup();
@@ -557,7 +563,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
-	long ss = gr->AddTexture(sch), pos, nn=0,nk=0;
+	long ss = gr->AddTexture(sch), pos;
 
 	kx1 = new long[n*m];	kx2 = new long[n*m];
 	ky1 = new long[n*m];	ky2 = new long[n*m];
@@ -628,7 +634,6 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 				}
 			}
 		}
-		nk=nn;	nn=kk.size();	if(nn>nk)	gr->Reserve(nn-nk);
 		if(k>0)	mgl_surf3_plot(gr,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
 	}
 	gr->EndGroup();

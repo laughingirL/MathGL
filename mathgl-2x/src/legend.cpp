@@ -91,13 +91,13 @@ void mglCanvas::Legend(std::vector<mglText> leg, float x, float y, const char *f
 
 	rh=(r<1?r:1.)*size/6.;	rw=(r>1?1./r:1.)*size/8.;
 //	rh=size/6.;	rw=size/24.;
-	float w=0, h=fnt->Height(font)*rh, j;
+	float w=0, h=fnt->Height(font)*rh, l;
 	register long i;
 	for(i=0;i<n;i++)		// find text length
 	{
-		j = fnt->Width(leg[i].text.c_str(),font)*rw;
-		if(leg[i].stl.empty())	j -= llen;
-		w = w>j ? w:j;
+		l = fnt->Width(leg[i].text.c_str(),font)*rw;
+		if(leg[i].stl.empty())	l -= llen;
+		w = w>l ? w:l;
 	}
 	w = (w + llen*1.1f);	// add space for lines
 

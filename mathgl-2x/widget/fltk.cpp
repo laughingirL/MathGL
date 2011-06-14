@@ -68,7 +68,7 @@ Fl_Pixmap xpm_r1(rotate_xpm), xpm_r2(rotate_on_xpm);
 //		class Fl_MathGL
 //
 //-----------------------------------------------------------------------------
-Fl_MathGL::Fl_MathGL(int x, int y, int w, int h, char *label) : Fl_Widget(x,y,w,h,label)
+Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, char *lbl) : Fl_Widget(xx,yy,ww,hh,lbl)
 {
 	graph = 0;
 	tet=phi=x1=y1=0;	x2=y2=1;
@@ -111,8 +111,8 @@ void Fl_MathGL::update(mglCanvas *gr)
 	redraw();	Fl::flush();
 }
 //-----------------------------------------------------------------------------
-void Fl_MathGL::resize(int x, int y, int w, int h)
-{	Fl_Widget::resize(x,y,w,h);	}
+void Fl_MathGL::resize(int xx, int yy, int ww, int hh)
+{	Fl_Widget::resize(xx,yy,ww,hh);	}
 //-----------------------------------------------------------------------------
 int Fl_MathGL::handle(int code)
 {

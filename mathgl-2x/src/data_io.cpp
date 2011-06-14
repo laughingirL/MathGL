@@ -266,7 +266,7 @@ void mgl_data_save(HCDT d, const char *fname,long ns)
 			for(j=0;j<nx;j++)	fprintf(fp,"%g\t",d->v(j,i,ns));
 			fprintf(fp,"\n");
 		}
-		else if(ns<ny)	for(long j=0;j<nx;j++)
+		else if(ns<ny)	for(j=0;j<nx;j++)
 			fprintf(fp,"%g\t",d->v(j,ns));
 	}
 	fclose(fp);
@@ -790,9 +790,9 @@ void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_data_fill_eq(_GR_,_DT_,s,_DA_(v),_DA_(w),o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
+#ifdef HAVE_HDF4
 void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 {
-#ifdef HAVE_HDF4
 	int32 sd = SDstart(fname,DFACC_READ), nn, i;
 	if(sd==-1)	return;	// is not a HDF4 file
 	char name[64];
@@ -826,8 +826,10 @@ void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 		SDendaccess(sds);
 	}
 	SDend(sd);
-#endif
 }
+#else
+void mgl_data_read_hdf4(HMDT ,const char *,const char *){}
+#endif
 //-----------------------------------------------------------------------------
 #ifdef HAVE_HDF5
 void mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
@@ -933,9 +935,9 @@ int mgl_datas_hdf(const char *fname, char *buf, long size)
 	return i;
 }
 #else
-void mgl_data_save_hdf(HCDT d,const char *fname,const char *data,int rewrite){}
-int mgl_datas_hdf(const char *fname, char *buf, long size){return 0;}
-int mgl_data_read_hdf(HMDT d,const char *fname,const char *data){return false;}
+void mgl_data_save_hdf(HCDT ,const char *,const char *,int ){}
+int mgl_datas_hdf(const char *, char *, long ){return 0;}
+int mgl_data_read_hdf(HMDT ,const char *,const char *){return false;}
 #endif
 //-----------------------------------------------------------------------------
 int mgl_data_read_hdf_(uintptr_t *d, const char *fname, const char *data,int l,int n)

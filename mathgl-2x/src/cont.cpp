@@ -298,21 +298,20 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 	{
 		wchar_t wcs[64];
 		mglprintf(wcs,64,L"%4.3g",val);
-		mglPoint p[25],t;
+		mglPoint q[25],t;
 		float del = gr->TextWidth(wcs)*gr->GetFontSize()/16.;
 		del = del>1 ? del:1;
-		long k=1,i,j;
 		bool less;
-		p[0] =	gr->GetPnt(ff[0]);
+		q[0] =	gr->GetPnt(ff[0]);
 		mgl_string_curve(gr,0,pc,ff,nn,wcs,"t");
-		for(i=1;i<pc;i++)	// print it several times (for contours)
+		for(i=k=1;i<pc;i++)	// print it several times (for contours)
 		{
 			if(nn[i]<0)	continue;
 			less = false;
 			t = gr->GetPnt(ff[i]);
-			for(j=0;j<k;j++)	if(Norm(t-p[j])<del)	{	less=true;	break;	}
+			for(j=0;j<k;j++)	if(Norm(t-q[j])<del)	{	less=true;	break;	}
 			if(less)	continue;
-			p[k] = t;	k++;
+			q[k] = t;	k++;
 			mgl_string_curve(gr,i,pc,ff,nn,wcs,"t");
 			if(k>=25)	break;
 		}

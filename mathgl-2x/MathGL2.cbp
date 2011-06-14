@@ -30,12 +30,20 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-Wshadow" />
+			<Add option="-Wunreachable-code" />
+			<Add option="-Wmissing-include-dirs" />
+			<Add option="-Wswitch-enum" />
+			<Add option="-Wextra" />
 			<Add option="-Wall" />
+			<Add option="-pg" />
+			<Add option="-g" />
 			<Add option="-fexceptions" />
 			<Add option="-DHAVE_PTHREAD" />
 			<Add directory="include" />
 		</Compiler>
 		<Linker>
+			<Add option="-pg" />
 			<Add option="-lgsl -lgslcblas -lpthread -lz -lpng -lGL -lfltk" />
 		</Linker>
 		<Unit filename="examples/fltk_example.cpp">

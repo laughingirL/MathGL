@@ -56,12 +56,12 @@ bool mglCanvasGL::Alpha(bool enable)
 	return t;
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::AddLight(int n,mglPoint p,char cc, float br,bool infty,float ap)
+void mglCanvasGL::AddLight(int n,mglPoint p,char cc, float br,bool infty,float /*ap*/)
 {
 	mglColor c(cc);
 	mglColor AmbLight = mglColor(AmbBr,AmbBr,AmbBr);
 	mglColor DifLight = mglColor(br,br,br);
-	GLenum light[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
+	GLenum lght[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 			GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
 	float amb[4], pos[4],dif[4];
 	if(n<0 || n>7)	{	SetWarn(mglWarnLId);	return;	}
@@ -80,19 +80,19 @@ void mglCanvasGL::AddLight(int n,mglPoint p,char cc, float br,bool infty,float a
 	//glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 5.0);
 	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, pos);
 
-	glLightfv(light[n], GL_AMBIENT, amb);
-	glLightfv(light[n], GL_DIFFUSE, dif);
-	//glLightfv(light[n], GL_SPECULAR, spc);
-	glLightfv(light[n], GL_POSITION, pos);
-	glEnable(light[n]);
+	glLightfv(lght[n], GL_AMBIENT, amb);
+	glLightfv(lght[n], GL_DIFFUSE, dif);
+	//glLightfv(lght[n], GL_SPECULAR, spc);
+	glLightfv(lght[n], GL_POSITION, pos);
+	glEnable(lght[n]);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasGL::Light(int n, bool enable)
 {
-	GLenum light[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
+	GLenum lght[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 			GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
-	if(enable)	glEnable(light[n]);
-	else		glDisable(light[n]);
+	if(enable)	glEnable(lght[n]);
+	else		glDisable(lght[n]);
 }
 //-----------------------------------------------------------------------------
 bool mglCanvasGL::Light(bool enable)
@@ -201,7 +201,7 @@ unsigned char **mglCanvasGL::GetRGBLines(long &width, long &height, unsigned cha
 	return p;
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::trig_draw(long k1, long k2, long k3, bool anorm)
+void mglCanvasGL::trig_draw(long k1, long k2, long k3, bool )
 {
 	glBegin(GL_TRIANGLES);
 	glArrayElement(k1);	glArrayElement(k2);	glArrayElement(k3);

@@ -50,11 +50,12 @@ void mgl_wcstrim(wchar_t *str)
 //-----------------------------------------------------------------------------
 mglAxis::mglAxis()
 {	memset(this,0,sizeof(mglAxis));	str[0] = buf = new wchar_t[4096];	}
+mglAxis::~mglAxis()	{	delete []buf;	}
 //-----------------------------------------------------------------------------
-void mglAxis::AddLabel(float v, const wchar_t *b)
+void mglAxis::AddLabel(float v, const wchar_t *lbl)
 {
-	wcscpy(str[num],b);		val[num] = v;	num++;
-	if(num<64)	str[num] = str[num-1]+wcslen(b)+1;
+	wcscpy(str[num],lbl);	val[num] = v;	num++;
+	if(num<64)	str[num] = str[num-1]+wcslen(lbl)+1;
 }
 //-----------------------------------------------------------------------------
 //		Ticks setup
@@ -624,22 +625,22 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 	text_plot(AddPnt(p,-1,q,0),text,font,-1.4,0.4+shift);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Label(float x, float y, const char *str, const char *fnt, bool rel)
+void mglCanvas::Label(float x, float y, const char *str, const char *font, bool rel)
 {
 	unsigned s = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,str,s);
-	Labelw(x,y,wcs, fnt, rel);
+	Labelw(x,y,wcs, font, rel);
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Labelw(float x, float y, const wchar_t *text, const char *fnt, bool rel)
+void mglCanvas::Labelw(float x, float y, const wchar_t *text, const char *font, bool rel)
 {
 	Push();	Identity(rel);
 	mglFormula *ox=fx, *oy=fy, *oz=fz;
 	fx = fy = fz = NULL;
-	char *f = new char[strlen(fnt)+1];	memset(f,0,strlen(fnt)+1);
-	strcpy(f,fnt);
+	char *f = new char[strlen(font)+1];	memset(f,0,strlen(font)+1);
+	strcpy(f,font);
 	for(int i=0;f[i];i++)	if(f[i]=='a' || f[i]=='A')	f[i]=' ';
 	mglPoint p((Min.x+Max.x)/2+B.pf*(Max.x-Min.x)*(x-0.5),
 				(Min.y+Max.y)/2+B.pf*(Max.y-Min.y)*(y-0.5), Max.z);
@@ -666,6 +667,7 @@ void mglCanvas::Title(const char *str,const char *font)
 	delete []wcs;
 }*/
 //-----------------------------------------------------------------------------
+//void mglCanvas::Box(const char *col, bool ticks)	// TODO: Add color
 void mglCanvas::Box(const char *col, bool ticks)
 {
 	mglPoint o = Org;

@@ -125,7 +125,7 @@ void mglc_axial(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 		mglprintf(out,1024,L"gr->Axial(%s, %s, %s, \"%s\", \"%s\");", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
 }
 //-----------------------------------------------------------------------------
-int mgls_axis(mglGraph *gr, long n, mglArg *a, int k[10], const char *)
+int mgls_axis(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==2 && k[1]==2)	gr->SetFunc(a[0].s,a[1].s,k[2]==2?a[2].s:"",k[3]==2?a[3].s:"");
 	else if(k[0]==2)	gr->Axis(a[0].s, k[1]==3 && a[1].v!=0);
@@ -134,7 +134,7 @@ int mgls_axis(mglGraph *gr, long n, mglArg *a, int k[10], const char *)
 	else return 1;
 	return 0;
 }
-void mglc_axis(wchar_t out[1024], long n, mglArg *a, int k[10], const char *)
+void mglc_axis(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==2 && k[1]==2 && k[2]==2)
 		mglprintf(out,1024,L"gr->SetFunc(\"%s\", \"%s\", \"%s\", \"%s\");", a[0].s,a[1].s,a[2].s,k[2]==2?a[2].s:"",k[3]==2?a[3].s:"");
@@ -3510,5 +3510,5 @@ mglCommand mgls_base_cmd[] = {
 	{L"zlabel",L"Draw label for z-axis",L"zlabel 'txt' [pos size shift]", mgls_zlabel, mglc_zlabel, false, 1},
 	{L"zrange",L"Set range for z-axis",L"yrange Dat [add] | z1 z2", mgls_zrange, mglc_zrange, false, 2},
 	{L"ztick",L"Set ticks for z-axis",L"ztick dz [sz tz] | 'tmpl'", mgls_ztick, mglc_ztick, false, 2},
-{L"",0,0,0,0,0,0}};
+{L"",L"",L"",NULL,NULL,0,0}};
 //-----------------------------------------------------------------------------

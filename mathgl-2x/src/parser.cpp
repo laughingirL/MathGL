@@ -130,7 +130,7 @@ int mglParse::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const wc
 	if(opt && opt[0])	// TODO: parse arguments of options
 	{
 		long len = wcslen(opt);
-		char *o = new char[len+1];
+		o = new char[len+1];
 		wcstombs(o,opt,len);	o[len]=0;
 	}
 	if(out)	rts->save(out, n, a, k, o);
@@ -330,8 +330,8 @@ bool mgls_suffix(const wchar_t *p, mglData *d, mreal *v)
 	mreal x,y,z,k;
 	bool ok=false;
 	if(!wcscmp(p,L"a"))			{	ok = true;	*v = d->a[0];	}
-	else if(!wcscmp(p,L"fst"))	{	ok = true;	long i=-1,j=-1,k=-1;	*v = d->Find(0,i,j,k);	}
-	else if(!wcscmp(p,L"lst"))	{	ok = true;	long i=-1,j=-1,k=-1;	*v = d->Last(0,i,j,k);	}
+	else if(!wcscmp(p,L"fst"))	{	ok = true;	long i=-1,j=-1,l=-1;	*v = d->Find(0,i,j,l);	}
+	else if(!wcscmp(p,L"lst"))	{	ok = true;	long i=-1,j=-1,l=-1;	*v = d->Last(0,i,j,l);	}
 	else if(!wcscmp(p,L"nx"))	{	ok = true;	*v=d->nx;	}
 	else if(!wcscmp(p,L"ny"))	{	ok = true;	*v=d->ny;	}
 	else if(!wcscmp(p,L"nz"))	{	ok = true;	*v=d->nz;	}
@@ -547,8 +547,8 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		if(!wcsncmp(str+3,L"ine",3))
 		{
 			str += 7;	mgl_wcstrim(str);//	int res = 1;
-			int n = str[1]<='9' ? str[1]-'0' : (str[1]>='a' ? str[1]-'a'+10:-1);
-			if(*str=='$' && n>=0 && n<='z'-'a'+10)
+			int nn = str[1]<='9' ? str[1]-'0' : (str[1]>='a' ? str[1]-'a'+10:-1);
+			if(*str=='$' && nn>=0 && nn<='z'-'a'+10)
 			{
 				str +=2;	mgl_wcstrim(str);
 				AddParam(n, str);	delete []s;	return 0;
@@ -557,8 +557,8 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		if(!wcsncmp(str+3,L"num",3))
 		{
 			str += 7;	mgl_wcstrim(str);	int res = 1;
-			int n = str[1]<='9' ? str[1]-'0' : (str[1]>='a' ? str[1]-'a'+10:-1);
-			if(*str=='$' && n>=0 && n<='z'-'a'+10)
+			int nn = str[1]<='9' ? str[1]-'0' : (str[1]>='a' ? str[1]-'a'+10:-1);
+			if(*str=='$' && nn>=0 && nn<='z'-'a'+10)
 			{
 				res = 0;	str +=2;	mgl_wcstrim(str);
 				const mglData &d=mglFormulaCalc(str, this);
@@ -571,8 +571,8 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 		if(!wcsncmp(str+3,L"chr",3))
 		{
 			str += 7;	mgl_wcstrim(str);	int res = 1;
-			int n = str[1]<='9' ? str[1]-'0' : (str[1]>='a' ? str[1]-'a'+10:-1);
-			if(*str=='$' && n>=0 && n<='z'-'a'+10)
+			int nn = str[1]<='9' ? str[1]-'0' : (str[1]>='a' ? str[1]-'a'+10:-1);
+			if(*str=='$' && nn>=0 && nn<='z'-'a'+10)
 			{
 				res = 0;	str +=2;	mgl_wcstrim(str);
 				const mglData &d=mglFormulaCalc(str, this);
@@ -688,11 +688,11 @@ int mglParse::Parse(mglGraph *gr, const wchar_t *string, long pos)
 				else if(a[1].type==2 && a[2].type==2 && a[2].v>a[1].v)
 				{
 					mreal step = a[3].type==2?a[3].v:1;
-					int m = int(step>0 ? (a[2].v-a[1].v)/step : 0);
-					if(m>0)
+					int mm = int(step>0 ? (a[2].v-a[1].v)/step : 0);
+					if(mm>0)
 					{
-						n=0;	fval[r].Create(m+1);
-						for(int ii=0;ii<m+1;ii++)
+						n=0;	fval[r].Create(mm+1);
+						for(int ii=0;ii<mm+1;ii++)
 							fval[r].a[ii] = a[1].v + step*ii;
 					}
 				}

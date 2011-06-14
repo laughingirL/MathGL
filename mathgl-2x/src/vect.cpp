@@ -895,6 +895,8 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 	nn = (ax.nx > ax.ny ? ax.nx : ax.ny);
 	nn = (nn > ax.nz ? nn : ax.nz);
 	float dt = 0.2/nn, e,f,g,ee[4],ff[4],gg[4],h,s=1,u1,v1,w1;
+	float ss = 	4/mgl_ipow(gr->Max.c - gr->Min.c,2);
+
 	if(u<0 || v<0 || w<0)
 	{	dt = -dt;	u = -u;		v = -v;		w = -w;		s = -1;}
 	register long k=0,m;
@@ -907,6 +909,7 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 			if(Norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
 		e = ax.Linear1(u,v,w);	f = ay.Linear1(u,v,w);	g = az.Linear1(u,v,w);
 		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(sc,s*h);
+		pp[k].c = r0>0 ? r0*sqrt(1e-2+ss*h*h)/2 : -r0/sqrt(1e-2+ss*h*h)/5;
 		if(h<1e-5)	break;	// stationary point
 		k++;
 		// find next point by midpoint method

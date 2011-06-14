@@ -36,7 +36,8 @@
 struct mglPoint
 {
 	float x,y,z,c;
- 	mglPoint(float X=0,float Y=0,float Z=0,float C=0){x=X;y=Y;z=Z;c=C;}
+ 	mglPoint()	{memset(this,0,sizeof(mglPoint));}
+ 	mglPoint(float X,float Y=0,float Z=0,float C=0){x=X;y=Y;z=Z;c=C;}
 	inline bool IsNAN()		{	return (x!=x || y!=y || z!=z || c!=c);	}
 	inline float val(int i)	{	return (i<2 ? (i==0 ? x:y) : (i==2 ? z:c));	}
 
@@ -333,7 +334,7 @@ public:
 	/// Set to use or not text rotation
 	inline void SetRotatedText(bool val)	{	RotatedText=val;	}
 	/// Set default font style and color
-	inline void SetFontDef(const char *fnt)	{	strncpy(FontDef, fnt, 31);	}
+	inline void SetFontDef(const char *font)	{	strncpy(FontDef, font, 31);	}
 
 	/// Set plot quality
 	virtual void SetQuality(int qual=MGL_DRAW_NORM)	{	Quality=qual;	}

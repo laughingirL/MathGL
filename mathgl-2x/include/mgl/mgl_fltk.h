@@ -120,8 +120,8 @@ public:
 	/// Get pointer to grapher
 	inline mglCanvas *get_graph()	{	return graph;	};
 	/// Set popup menu pointer
-	inline void set_popup(const Fl_Menu_Item *pmenu, Fl_Widget *w, void *v)
-	{	popup = pmenu;	wpar = w;	vpar = v;	}
+	inline void set_popup(const Fl_Menu_Item *pmenu, Fl_Widget *wdg, void *v)
+	{	popup = pmenu;	wpar = wdg;	vpar = v;	}
 protected:
 	const Fl_Menu_Item *popup;	///< pointer to popup menu items
 	Fl_Widget *wpar;			///< widget for popup menu

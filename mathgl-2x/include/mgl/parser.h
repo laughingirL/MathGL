@@ -125,7 +125,7 @@ public:
 	int Parse(mglGraph *gr, const wchar_t *str, long pos=0);
 	/// Parse, execute and export it in C++ code the string of MGL script
 	inline 	int Export(wchar_t cpp_out[1024], HMGL gr, const wchar_t *str)
-	{	mglGraph GR(gr);	return Export(out,&GR,str);	}
+	{	mglGraph GR(gr);	return Export(cpp_out,&GR,str);	}
 	int Export(wchar_t cpp_out[1024], mglGraph *gr, const wchar_t *str);
 	/// Execute MGL script file \a fname
 	inline void Execute(HMGL gr, FILE *fp, bool print=false)

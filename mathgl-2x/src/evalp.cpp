@@ -225,8 +225,8 @@ mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
 		mglData d = mglFormulaCalc(Buf, arg);
 		const wchar_t *p=Buf+n+1;
 		if(!wcscmp(p,L"a"))			v = d.a[0];
-		else if(!wcscmp(p,L"fst"))	{	long i=-1,j=-1,k=-1;	v = d.Find(0,i,j,k);	}
-		else if(!wcscmp(p,L"lst"))	{	long i=-1,j=-1,k=-1;	v = d.Last(0,i,j,k);	}
+		else if(!wcscmp(p,L"fst"))	{	long i=-1,j=-1,l=-1;	v = d.Find(0,i,j,l);	}
+		else if(!wcscmp(p,L"lst"))	{	long i=-1,j=-1,l=-1;	v = d.Last(0,i,j,l);	}
 		else if(!wcscmp(p,L"nx"))	v=d.nx;
 		else if(!wcscmp(p,L"ny"))	v=d.ny;
 		else if(!wcscmp(p,L"nz"))	v=d.nz;

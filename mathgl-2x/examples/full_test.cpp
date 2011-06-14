@@ -36,14 +36,25 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
-	gr->Rotate(40,60);
-	gr->Puts(mglPoint(0,0),"Test","t");
-	gr->Puts(mglPoint(0,0),"Test","T");
-	gr->Line(mglPoint(0),mglPoint(1),"r");
-	gr->Puts(mglPoint(-1,0),mglPoint(1,1),"angle");
-	gr->Line(mglPoint(-1,0),mglPoint(0,1),"r");
-	gr->Label('x',"X axis");	gr->Label('y',"Y axis");
-	gr->Axis(); gr->Grid();
+	int N=256;
+	double *buf=new double[2*N*N*N];
+printf("Init done\n");fflush(stdout);
+	FILE *fq=fopen("/home/balakin/tmp/mgl/Psi_800.bin","r");
+printf("Open done (%p)\n",fq);fflush(stdout);
+	fread(buf,2*sizeof(double),N*N*N,fq);
+printf("Read done\n");fflush(stdout);
+	fclose(fq);
+printf("Close done\n");fflush(stdout);
+	mglData a(N,N,N);
+	for(long i=0;i<N*N*N;i++)   a.a[i]=buf[2*i]*buf[2*i]+buf[2*i+1]*buf[2*i+1];
+printf("Convert done\n");fflush(stdout);
+	gr->Alpha(true);
+	gr->SetAlphaDef(1);		gr->SetTranspType(1);
+	gr->SetRange('c',a);	gr->Clf();
+printf("Setup done\n");fflush(stdout);
+	gr->Surf3A(a,a,"wyrRk");
+printf("Plot done\n");fflush(stdout);
+//	gr->Cloud(a,"wyrRk");
 	return 0;
 
 	mglParse par;
@@ -82,7 +93,7 @@ int height = 400;
 int mini = 0;
 int big  = 0;
 int srnd = 0;
-mglData s;
+mglData sdat;
 //-----------------------------------------------------------------------------
 static struct option longopts[] =
 {

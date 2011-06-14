@@ -325,7 +325,7 @@ public:
 	/// Allocate the memory for data array and initialize it zero
 	inline mglData(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
 	/// Delete the array
-	virtual ~mglData()	{	if(id && a)	delete []id;	if(!link && a)	delete []a;	}
+	virtual ~mglData();
 	/// Get sizes
 	inline long GetNx() const	{	return nx;	}
 	inline long GetNy() const	{	return ny;	}
@@ -341,7 +341,7 @@ public:
 	{	mgl_data_link(this,A,NX,NY,NZ);	}
 	inline void Link(mglData *d)	{	Link(d->a,d->nx,d->ny,d->nz);	}
 	/// Allocate memory and copy the data from the gsl_vector
-	inline void Set(gsl_vector *v)	{	mgl_data_set_vector(this,v);	}
+	inline void Set(gsl_vector *m)	{	mgl_data_set_vector(this,m);	}
 	/// Allocate memory and copy the data from the gsl_matrix
 	inline void Set(gsl_matrix *m)	{	mgl_data_set_matrix(this,m);	}
 
@@ -449,14 +449,14 @@ public:
 	inline void Modify(const char *eq,long dim=0)
 	{	mgl_data_modify(this, eq, dim);	}
 	/// Modify the data by specified formula
-	inline void Modify(const char *eq,const mglData &v, const mglData &w)
-	{	mgl_data_modify_vw(this,eq,&v,&w);	}
+	inline void Modify(const char *eq,const mglData &vdat, const mglData &wdat)
+	{	mgl_data_modify_vw(this,eq,&vdat,&wdat);	}
 	/// Modify the data by specified formula
-	inline void Modify(const char *eq,const mglData &v)
-	{	mgl_data_modify_vw(this,eq,&v,0);	}
+	inline void Modify(const char *eq,const mglData &vdat)
+	{	mgl_data_modify_vw(this,eq,&vdat,0);	}
 	/// Modify the data by specified formula assuming x,y,z in range [r1,r2]
-	inline void FillEq(mglBase *gr, const char *eq, const mglData *v=0, const mglData *w=0,const char *opt="")
-	{	mgl_data_fill_eq(gr,this,eq,v,w,opt);	}
+	inline void FillEq(mglBase *gr, const char *eq, const mglData *vdat=0, const mglData *wdat=0,const char *opt="")
+	{	mgl_data_fill_eq(gr,this,eq,vdat,wdat,opt);	}
 	/// Eqidistantly fill the data to range [x1,x2] in direction \a dir
 	inline void Fill(mreal x1,mreal x2,char dir='x')
 	{	return mgl_data_fill(this,x1,x2,dir);	}
@@ -614,8 +614,8 @@ public:
 	/// Copy data from other mglData variable
 	inline mglData &operator=(const mglData &d)
 	{	if(this!=&d)	Set(d.a,d.nx,d.ny,d.nz);	return *this;	}
-	inline mglData &operator=(mreal v)
-	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=v;		return *this;	}
+	inline mglData &operator=(mreal val)
+	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return *this;	}
 	/// Multiplicate the data by other one for each element
 	inline void operator*=(const mglData &d)	{	mgl_data_mul_dat(this,&d);	}
 	/// Divide the data by other one for each element
