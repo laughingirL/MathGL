@@ -71,7 +71,7 @@ void mglCanvas::DefaultPlotParam()
 	SetCutBox(mglPoint(0,0,0), mglPoint(0,0,0));
 	_tetx=_tety=_tetz=0;
 	TuneTicks= true;		//_sx=_sy=_sz =st_t = 1;
-	Alpha(false);	Fog(0);	FactorPos = 1.15;
+	Alpha(false);	Fog(0);	FactorPos = 1.07;
 	ax.t[0]=ay.t[0]=az.t[0]=ac.t[0]=0;
 	AutoPlotFactor = true;	B.pf = 1.55;
 	TickLen = 0.1;	Cut = true;
@@ -535,13 +535,13 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 		q2.x = p1.x+lx;		q2.y = p1.y+ly;		k2=Pnt.size();	Pnt.push_back(q2);
 		q3.x = p1.x-kx;		q3.y = p1.y-ky;		k3=Pnt.size();	Pnt.push_back(q3);
 		q4.x = p1.x-lx;		q4.y = p1.y-ly;		k4=Pnt.size();	Pnt.push_back(q4);
-		quad_plot(k1,k2,k3,k4);	break;
+		quad_plot(k1,k2,k4,k3);	break;
 	case 'S':
 		q1.x = p1.x+kx-lx;	q1.y = p1.y+ky-ly;	k1=Pnt.size();	Pnt.push_back(q1);
 		q2.x = p1.x-kx-lx;	q2.y = p1.y-ky-ly;	k2=Pnt.size();	Pnt.push_back(q2);
 		q3.x = p1.x-kx+lx;	q3.y = p1.y-ky+ly;	k3=Pnt.size();	Pnt.push_back(q3);
 		q4.x = p1.x+kx+lx;	q4.y = p1.y+ky+ly;	k4=Pnt.size();	Pnt.push_back(q4);
-		quad_plot(k1,k2,k3,k4);	break;
+		quad_plot(k1,k2,k4,k3);	break;
 	case 'T':
 		q1.x = p1.x+kx-lx;	q1.y = p1.y+ky-ly;	k1=Pnt.size();	Pnt.push_back(q1);
 		q2.x = p1.x-kx-lx;	q2.y = p1.y-ky-ly;	k2=Pnt.size();	Pnt.push_back(q2);
@@ -552,13 +552,13 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 		q2.x = p1.x-kx-2*lx;	q2.y = p1.y-ky-2*ly;	k2=Pnt.size();	Pnt.push_back(q2);
 		q3.x = p1.x-1.5*lx;		q3.y = p1.y-1.5*ly;		k3=Pnt.size();	Pnt.push_back(q3);
 		q4.x = p1.x+kx-2*lx;	q4.y = p1.y+ky-2*ly;	k4=Pnt.size();	Pnt.push_back(q4);
-		quad_plot(k1,k2,k3,k4);	break;
+		quad_plot(k1,k2,k4,k3);	break;
 	case 'K':
 		q1.x = p1.x;			q1.y = p1.y;			k1=Pnt.size();	Pnt.push_back(q1);
 		q2.x = p1.x-kx-2*lx;	q2.y = p1.y-ky-2*ly;	k2=Pnt.size();	Pnt.push_back(q2);
 		q3.x = p1.x-1.5*lx;		q3.y = p1.y-1.5*ly;		k3=Pnt.size();	Pnt.push_back(q3);
 		q4.x = p1.x+kx-2*lx;	q4.y = p1.y+ky-2*ly;	k4=Pnt.size();	Pnt.push_back(q4);
-		quad_plot(k1,k2,k3,k4);
+		quad_plot(k1,k2,k4,k3);
 		q1.x = p1.x+kx;			q1.y = p1.y+ky;			k1=Pnt.size();	Pnt.push_back(q1);
 		q2.x = p1.x-kx;			q2.y = p1.y-ky;			k2=Pnt.size();	Pnt.push_back(q2);
 		line_plot(k1,k2);	break;
@@ -567,7 +567,7 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 		q2.x = p1.x-kx+2*lx;	q2.y = p1.y-ky+2*ly;	k2=Pnt.size();	Pnt.push_back(q2);
 		q3.x = p1.x+1.5*lx;		q3.y = p1.y+1.5*ly;		k3=Pnt.size();	Pnt.push_back(q3);
 		q4.x = p1.x+kx+2*lx;	q4.y = p1.y+ky+2*ly;	k4=Pnt.size();	Pnt.push_back(q4);
-		quad_plot(k1,k2,k3,k4);	break;
+		quad_plot(k1,k2,k4,k3);	break;
 	case 'O':
 		{
 			q1.x = p1.x;	q1.y = p1.y;	k1=Pnt.size();	Pnt.push_back(q1);

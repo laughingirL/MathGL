@@ -2933,7 +2933,7 @@ void mglc_fplot(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_fsurf(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==2 && k[1]==2 && k[2]==2)	gr->Surf3(a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:0,opt);
+	if(k[0]==2 && k[1]==2 && k[2]==2)	gr->SurfPar(a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:0,opt);
 	else if(k[0]==2)	gr->Surf(a[0].s, k[1]==2?a[1].s:0,opt);
 	else	return 1;
 	return 0;
@@ -2941,7 +2941,7 @@ int mgls_fsurf(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 void mglc_fsurf(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==2 && k[1]==2 && k[2]==2)
-		mglprintf(out,1024,L"gr->Surf3(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\");", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
+		mglprintf(out,1024,L"gr->SurfPar(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\");", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
 	else if(k[0]==2)
 		mglprintf(out,1024,L"gr->Surf(\"%s\", \"%s\", \"%s\");", a[0].s, k[1]==2?a[1].s:"",opt);
 }

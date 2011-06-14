@@ -456,7 +456,8 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 //-----------------------------------------------------------------------------
 void mgl_surf3a_val(HMGL gr, float val, HCDT a, HCDT b, const char *sch, const char *opt)
 {
-	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)	{	gr->SetWarn(mglWarnLow,"Surf3A");	return;	}
+	if(a->GetNx()<2 || a->GetNy()<2 || a->GetNz()<2)
+    {	gr->SetWarn(mglWarnLow,"Surf3A");	return;	}
 	gr->SaveState(opt);
 	mglData x(a->GetNx()), y(a->GetNy()),z(a->GetNz());
 	x.Fill(gr->Min.x,gr->Max.x);
@@ -469,7 +470,18 @@ void mgl_surf3a_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char 
 {
 	float r = gr->SaveState(opt);
 	long num = isnan(r)?3:long(r+0.5);
-	for(long i=0;i<num;i++)
+	if(b->GetNx()==num && b->GetNy()==1 && b->GetNz()==1)
+	{
+		float v,a0=gr->AlphaDef;
+		for(long i=0;i<num;i++)
+		{
+			v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
+			gr->AlphaDef = b->v(i);
+			mgl_surf3_xyz_val(gr,v,x,y,z,a,sch,0);
+		}
+		gr->AlphaDef = a0;
+	}
+	else for(long i=0;i<num;i++)
 	{
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
 		mgl_surf3a_xyz_val(gr,v,x,y,z,a,b,sch,0);
@@ -480,7 +492,18 @@ void mgl_surf3a(HMGL gr, HCDT a, HCDT b, const char *sch, const char *opt)
 {
 	float r = gr->SaveState(opt);
 	long num = isnan(r)?3:long(r);
-	for(long i=0;i<num;i++)
+	if(b->GetNx()==num && b->GetNy()==1 && b->GetNz()==1)
+	{
+		float v,a0=gr->AlphaDef;
+		for(long i=0;i<num;i++)
+		{
+			v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
+			gr->AlphaDef = b->v(i);
+			mgl_surf3_val(gr,v,a,sch,0);
+		}
+		gr->AlphaDef = a0;
+	}
+	else for(long i=0;i<num;i++)
 	{
 		float v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
 		mgl_surf3a_val(gr,v,a,b,sch,0);

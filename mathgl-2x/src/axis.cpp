@@ -75,13 +75,13 @@ void mglCanvas::SetTickLen(float tlen, float stt)
 void mglCanvas::SetTicks(char dir, float d, int ns, float org)
 {
 	if(dir=='x')
-	{	ax.d=d;	ax.f=0;	ax.ns=ns;	ax.o=org;	ax.num=0;	ax.upd=false;	}
+	{	ax.d=d;	ax.f=0;	ax.ns=ns;	ax.o=org;	ax.num=0;	}
 	else if(dir=='y')
-	{	ay.d=d;	ay.f=0;	ay.ns=ns;	ay.o=org;	ay.num=0;	ay.upd=false;	}
+	{	ay.d=d;	ay.f=0;	ay.ns=ns;	ay.o=org;	ay.num=0;	}
 	else if(dir=='z')
-	{	az.d=d;	az.f=0;	az.ns=ns;	az.o=org;	az.num=0;	az.upd=false;	}
+	{	az.d=d;	az.f=0;	az.ns=ns;	az.o=org;	az.num=0;	}
 	else if(dir=='c' || dir=='a')
-	{	ac.d=d;	ac.f=0;	ac.ns=ns;	ac.o=org;	ac.num=0;	ac.upd=false;	}
+	{	ac.d=d;	ac.f=0;	ac.ns=ns;	ac.o=org;	ac.num=0;	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTicksVal(char dir, HCDT v, const char *lbl)
@@ -101,7 +101,6 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const wchar_t *lbl)
 	else if(dir=='y')	aa = ay;
 	else if(dir=='z')	aa = az;
 	else return;
-	aa.upd = false;
 
 	if(!v || !lbl || !lbl[0])	{	aa.f = aa.num = 0;	return;	}
 
@@ -154,7 +153,6 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const wchar_t **lbl)
 	else if(dir=='y')	aa = ay;
 	else if(dir=='z')	aa = az;
 	else return;
-	aa.upd = false;
 
 	if(!v || !lbl)	{	aa.f = aa.num=0;	return;	}
 	long len=0, n=v->GetNx();
@@ -177,7 +175,6 @@ void mglCanvas::SetTicksVal(char dir, HCDT v, const char **lbl)
 	else if(dir=='y')	aa = ay;
 	else if(dir=='z')	aa = az;
 	else return;
-	aa.upd = false;
 
 	if(!v || !lbl)	{	aa.f = aa.num = 0;	return;	}
 	long len=0, n=v->GetNx();
@@ -200,7 +197,6 @@ void mglCanvas::SetTickTempl(char dir, const wchar_t *t)
 	else if(dir=='y')	aa = ay;
 	else if(dir=='z')	aa = az;
 	else return;
-	aa.upd = false;
 
 	if(aa.f==1)	aa.f = 0;	// remove time ticks
 	if(wcslen(t)<255) wcscpy(aa.t,t);
@@ -214,7 +210,6 @@ void mglCanvas::SetTickTempl(char dir, const char *t)
 	else if(dir=='y')	aa = ay;
 	else if(dir=='z')	aa = az;
 	else return;
-	aa.upd = false;
 
 	if(aa.f==1)	aa.f = 0;	// remove time ticks
 	if(strlen(t)<255) mbstowcs(aa.t,t,strlen(t)+1);
@@ -228,7 +223,6 @@ void mglCanvas::SetTickTime(char dir, float d, const char *t)
 	else if(dir=='y')	aa = ay;
 	else if(dir=='z')	aa = az;
 	else return;
-	aa.upd = false;
 
 	aa.dv = d;	aa.f = 1;
 	if(strlen(t)<255) mbstowcs(aa.t,t,strlen(t)+1);
@@ -238,23 +232,19 @@ void mglCanvas::AdjustTicks(const char *dir, bool force)
 {
 	UpdateAxis();	TuneTicks = true;
 	if(strchr(dir,'x'))
-	{	if(force)	{	ax.d=0;	ax.upd=false;	}
-		AdjustTicks(ax,fx);	}
+	{	if(force)	ax.d=0;	AdjustTicks(ax,fx);	}
 	if(strchr(dir,'y'))
-	{	if(force)	{	ay.d=0;	ay.upd=false;	}
-		AdjustTicks(ay,fy);	}
+	{	if(force)	ay.d=0;	AdjustTicks(ay,fy);	}
 	if(strchr(dir,'z'))
-	{	if(force)	{	az.d=0;	az.upd=false;	}
-		AdjustTicks(az,fz);	}
+	{	if(force)	az.d=0;	AdjustTicks(az,fz);	}
 	if(strchr(dir,'a') || strchr(dir,'c'))
-	{	if(force)	{	ac.d=0;	ac.upd=false;	}
-		AdjustTicks(ac,fa);	}
+	{	if(force)	ac.d=0;	AdjustTicks(ac,fa);	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 {
 	float d = fabs(aa.v2-aa.v1), n;
-	if(aa.f>0 || aa.upd)	return;
+	if(aa.f>0)	return;
 	if(ff && islog(aa.v1,aa.v2))
 	{	aa.dv = 0;	aa.ds=1;	}
 	else if(aa.d>0)
@@ -343,7 +333,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 {
 	wchar_t buf[64];
 	float v,v0,v1,w;
-	if(aa.f==2 || aa.upd)	return;
+	if(aa.f==2)	return;
 	aa.num=0;	aa.str[0]=aa.buf;
 	if(aa.f==1)	// time ticks
 	{
@@ -393,7 +383,6 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 		}
 		if(kind&2)	aa.AddLabel(FactorPos*(aa.v2-aa.v1)+aa.v1,s);
 	}
-	aa.upd = true;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Axis(const char *dir, bool adjust)
@@ -465,7 +454,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	if(DisScaling && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
 	if(n>0)	for(i=0;i<n;i++)	// TODO: Add labels "rotation", "missing" and so on
 	{
-		p = o+d*aa.val[i];	k1 = AddPnt(p,-1,d,0);
+		p = o+d*aa.val[i];	k1 = AddPnt(p,-1,d,0,3);
 		nn = s-o;	ScalePoint(p,nn,false);
 		if(!DisScaling)	pos[0]=(nn.y>0 || nn.x<0) ? 'T':'t';
 		text_plot(k1, aa.str[i], pos, -1, 0.07);

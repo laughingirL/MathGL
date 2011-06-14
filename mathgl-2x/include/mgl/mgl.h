@@ -444,7 +444,7 @@ public:
 
 	inline void Surf(const char *fz, const char *stl="", const char *opt="")
 	{	mgl_fsurf(gr, fz, stl, opt);	}
-	inline void Surf3(const char *fx, const char *fy, const char *fz, const char *stl="", const char *opt="")
+	inline void SurfPar(const char *fx, const char *fy, const char *fz, const char *stl="", const char *opt="")
 	{	mgl_fsurf_xyz(gr, fx, fy, fz, stl, opt);	}
 	inline void Grid(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *stl="", const char *opt="")
 	{	mgl_grid_xy(gr, &x, &y, &z, stl, opt);	}

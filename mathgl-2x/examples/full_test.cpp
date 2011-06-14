@@ -434,7 +434,7 @@ void smgl_samplee(mglGraph *gr)	// TeX sample
 //-----------------------------------------------------------------------------
 void smgl_sampled(mglGraph *gr)	// arrow styles
 {
-	mreal a=0.1,b=0.4,c=0.5;
+	float a=0.1,b=0.4,c=0.5;
 	gr->Line(mglPoint(a,1),mglPoint(b,1),"k-A");		gr->Puts(mglPoint(c,1),"Style 'A' or 'A\\_'","rL");
 	gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"k-V");	gr->Puts(mglPoint(c,0.8),"Style 'V' or 'V\\_'","rL");
 	gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"k-K");	gr->Puts(mglPoint(c,0.6),"Style 'K' or 'K\\_'","rL");

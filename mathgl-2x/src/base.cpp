@@ -235,43 +235,42 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 		if(y1<Min.y)	y=Min.y;	if(y2>Max.y)	y=Max.y;
 		if(z1<Min.z)	z=Min.z;	if(z2>Max.z)	z=Max.z;
 	}
-	if(res)
-	{
-		x1=x;	y1=y;	z1=z;
-		if(fx)	{	x1 = fx->Calc(x,y,z);	n.x *= fx->CalcD('x',x,y,z);	}
-		if(fy)	{	y1 = fy->Calc(x,y,z);	n.y *= fy->CalcD('y',x,y,z);	}
-		if(fz)	{	z1 = fz->Calc(x,y,z);	n.z *= fz->CalcD('z',x,y,z);	}
-		if(isnan(x1) || isnan(y1) || isnan(z1))	{	x=NAN;	return false;	}
 
-		x = (2*x1 - FMin.x - FMax.x)/(FMax.x - FMin.x);
-		y = (2*y1 - FMin.y - FMax.y)/(FMax.y - FMin.y);
-		z = (2*z1 - FMin.z - FMax.z)/(FMax.z - FMin.z);
-		n.x *= 2/(FMax.x - FMin.x);
-		n.y *= 2/(FMax.y - FMin.y);
-		n.z *= 2/(FMax.z - FMin.z);
-		if((TernAxis&3)==1)	// usual ternary axis
-		{
-			if(x+y>0)
-			{
-				if(Cut)	res = false;
-				else	y = -x;
-			}
-			x += (y+1)/2;	n.x += n.y/2;
-		}
-		else if((TernAxis&3)==2)	// quaternary axis
-		{
-			if(x+y+z>-1)
-			{
-				if(Cut)	res = false;
-				else	z = -1-y-x;
-			}
-			x += 1+(y+z)/2;		y += (z+1)/3;
-			n.x += (n.y+n.z)/2;	n.y += n.z/3;
-		}
-//		if(fabs(x)>MGL_FLT_EPS)	res = false;
-//		if(fabs(y)>MGL_FLT_EPS)	res = false;
-//		if(fabs(z)>MGL_FLT_EPS)	res = false;
-	}
+    x1=x;	y1=y;	z1=z;
+    if(fx)	{	x1 = fx->Calc(x,y,z);	n.x *= fx->CalcD('x',x,y,z);	}
+    if(fy)	{	y1 = fy->Calc(x,y,z);	n.y *= fy->CalcD('y',x,y,z);	}
+    if(fz)	{	z1 = fz->Calc(x,y,z);	n.z *= fz->CalcD('z',x,y,z);	}
+    if(isnan(x1) || isnan(y1) || isnan(z1))	{	x=NAN;	return false;	}
+
+    x = (2*x1 - FMin.x - FMax.x)/(FMax.x - FMin.x);
+    y = (2*y1 - FMin.y - FMax.y)/(FMax.y - FMin.y);
+    z = (2*z1 - FMin.z - FMax.z)/(FMax.z - FMin.z);
+    n.x *= 2/(FMax.x - FMin.x);
+    n.y *= 2/(FMax.y - FMin.y);
+    n.z *= 2/(FMax.z - FMin.z);
+    if((TernAxis&3)==1)	// usual ternary axis
+    {
+        if(x+y>0)
+        {
+            if(Cut)	res = false;
+            else	y = -x;
+        }
+        x += (y+1)/2;	n.x += n.y/2;
+    }
+    else if((TernAxis&3)==2)	// quaternary axis
+    {
+        if(x+y+z>-1)
+        {
+            if(Cut)	res = false;
+            else	z = -1-y-x;
+        }
+        x += 1+(y+z)/2;		y += (z+1)/3;
+        n.x += (n.y+n.z)/2;	n.y += n.z/3;
+    }
+//	if(fabs(x)>MGL_FLT_EPS)	res = false;
+//	if(fabs(y)>MGL_FLT_EPS)	res = false;
+//	if(fabs(z)>MGL_FLT_EPS)	res = false;
+
 	if(!res && use_nan)	x = NAN;	// extra sign that point shouldn't be plotted
 	return res;
 }
@@ -804,7 +803,7 @@ float mglBase::SaveState(const char *opt)
 		else if(!strcmp(a,"arrowsize"))	SetArrowSize(ff);
 		else if(!strcmp(a,"size"))
 		{	SetMarkSize(ff);	SetFontSize(ff);	SetArrowSize(ff);	}
-		else if(!strcmp(a,"num") || !strcmp(a,"number"))	res = ff;
+		else if(!strcmp(a,"num") || !strcmp(a,"number") || !strcmp(a,"value"))	res = ff;
 	}
 	free(q);	prev_val=res;	return res;
 }

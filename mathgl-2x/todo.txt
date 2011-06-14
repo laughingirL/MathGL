@@ -10,8 +10,9 @@
 5. opengl
 6. widgets
 7. stfa
-8. Bugfix for colors in trig_plot, line_plot inside glyph
-9. arrow_plot()
+8. Axis ticks,labels miss position sometimes
+12. Grid seems to be not adjusted
+13. Drop() -- rays
 
 ============= NEW  =============
 
@@ -88,6 +89,7 @@
 14. "Data plotting", "Data plot", "Scientific visualtization", "Surface", "Cloud","Plot", "statistical graphics" to website
 15. Examples of animation, u3d, x3d, js and so on
 16. Example of inverted axis, minus-log axis
+14. Surf3A -- data a can be vector with size as number of isosurfaces
 
 ============= BUGS =============
 

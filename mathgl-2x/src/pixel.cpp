@@ -817,7 +817,7 @@ void mglCanvas::glyph_fill(const mglPnt &pp, float f, int nt, const short *trig)
 		p.x = p1.x;	p.y = p1.y;	p.z = p1.z+pw;	Pnt.push_back(p);
 		p.x = p2.x;	p.y = p2.y;	p.z = p2.z+pw;	Pnt.push_back(p);
 		p.x = p3.x;	p.y = p3.y;	p.z = p3.z+pw;	Pnt.push_back(p);
-		ii = pos+3*ik;	trig_draw(ii,ii+1,ii+2);
+		ii = Pnt.size()-3;	trig_draw(ii,ii+1,ii+2);
 	}
 	Pnt.erase(Pnt.begin()+pos,Pnt.end());
 }
@@ -848,7 +848,7 @@ void mglCanvas::glyph_wire(const mglPnt &pp, float f, int nl, const short *line)
 		PostScale(p1);	PostScale(p2);
 		p.x = p1.x;	p.y = p1.y;	p.z = p1.z;	Pnt.push_back(p);
 		p.x = p2.x;	p.y = p2.y;	p.z = p2.z;	Pnt.push_back(p);
-		ii = pos+2*ik;	line_draw(ii,ii+1);
+		ii = Pnt.size()-2;	line_draw(ii,ii+1);
 	}
 	PDef = pdef;	PenWidth = opw;
 	Pnt.erase(Pnt.begin()+pos,Pnt.end());

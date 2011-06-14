@@ -81,7 +81,7 @@ struct mglAxis
 	int num;		///< Number of manual ticks
 	wchar_t *buf;	///< Buffer for manual ticks
 	wchar_t *str[64];	///< Position of manual ticks
-	bool upd;		///< Last label is ticks factor
+//	bool upd;		///< Last label is ticks factor
 	float val[64];	///< Values of manual ticks
 	char ch;		///< Character of axis (like 'x','y','z','c')
 };
