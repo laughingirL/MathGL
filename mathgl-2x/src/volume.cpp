@@ -231,17 +231,19 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 	static int cgid=1;	gr->StartGroup("Surf3",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
-	long ss = gr->AddTexture(sch), pos;
+	long ss = gr->AddTexture(sch), pos, nn=0, nk=0;
 
 	kx1 = new long[n*m];	kx2 = new long[n*m];
 	ky1 = new long[n*m];	ky2 = new long[n*m];
 	kz  = new long[n*m];
 	float c=gr->GetC(ss,val);
 	std::vector<mglPoint> kk;
+	kk.reserve(n*m*l);
 
 	mglPoint p,q,u;
 	for(k=0;k<l;k++)
 	{
+printf("k=%ld of %ld\n",k,l);	fflush(stdout);
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
@@ -298,6 +300,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 				}
 			}
 		}
+		nk=nn;	nn=kk.size();	if(nn>nk)	gr->Reserve(nn-nk);
 		if(k>0)	mgl_surf3_plot(gr,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
 	}
 	gr->EndGroup();
@@ -377,17 +380,19 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
-	long ss = gr->AddTexture(sch), pos;
+	long ss = gr->AddTexture(sch), pos, nk=0,nn=0;
 
 	kx1 = new long[n*m];	kx2 = new long[n*m];
 	ky1 = new long[n*m];	ky2 = new long[n*m];
 	kz  = new long[n*m];
 	float c=gr->GetC(ss,val),aa;
 	std::vector<mglPoint> kk;
+	kk.reserve(n*m*l);
 
 	mglPoint p,q,u;
 	for(k=0;k<l;k++)
 	{
+printf("k=%ld of %ld\n",k,l);	fflush(stdout);
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
 		memcpy(ky1,ky2,n*m*sizeof(long));	memset(ky2,-1,n*m*sizeof(long));
 		memset(kz ,-1,n*m*sizeof(long));
@@ -447,6 +452,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 				}
 			}
 		}
+		nk=nn;	nn=kk.size();	if(nn>nk)	gr->Reserve(nn-nk);
 		if(k>0)	mgl_surf3_plot(gr,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
 	}
 	gr->EndGroup();
@@ -551,13 +557,14 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	static int cgid=1;	gr->StartGroup("Surf3A",cgid++);
 
 	bool inv = (sch && strchr(sch,'-'));
-	long ss = gr->AddTexture(sch), pos;
+	long ss = gr->AddTexture(sch), pos, nn=0,nk=0;
 
 	kx1 = new long[n*m];	kx2 = new long[n*m];
 	ky1 = new long[n*m];	ky2 = new long[n*m];
 	kz  = new long[n*m];
 	float c;
 	std::vector<mglPoint> kk;
+	kk.reserve(n*m*l);
 
 	mglPoint p,q,u;
 	for(k=0;k<l;k++)
@@ -621,6 +628,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 				}
 			}
 		}
+		nk=nn;	nn=kk.size();	if(nn>nk)	gr->Reserve(nn-nk);
 		if(k>0)	mgl_surf3_plot(gr,n,m,kx1,kx2,ky1,ky2,kz,kk,wire);
 	}
 	gr->EndGroup();

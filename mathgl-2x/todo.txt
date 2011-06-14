@@ -11,8 +11,9 @@
 6. widgets
 7. stfa
 8. Axis ticks,labels miss position sometimes
-12. Grid seems to be not adjusted
-13. Drop() -- rays
+9. Grid seems to be not adjusted
+10. Drop() -- rays
+11. Add alpha channel as float (in z-buffer)
 
 ============= NEW  =============
 

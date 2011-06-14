@@ -112,9 +112,9 @@ void mglCanvasGL::LightScale()
 	float pos[4]={0,0,0,0};
 	for(int i=0;i<8;i++)
 	{
-		pos[0] = light[3*i].p.x;
-		pos[1] = light[3*i].p.y;
-		pos[2] = light[3*i].p.z;
+		pos[0] = light[i].p.x;
+		pos[1] = light[i].p.y;
+		pos[2] = light[i].p.z;
 		if(light[i].n)	glLightfv(ll[i], GL_POSITION, pos);
 	}
 }
