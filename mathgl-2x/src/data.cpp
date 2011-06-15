@@ -559,9 +559,24 @@ float mgl_data_linear(HCDT d, float x,float y,float z)
 	register long kx=long(x), ky=long(y), kz=long(z);
 	register mreal b0,b1;
 	x -= kx;	y -= ky;	z -= kz;
-	b0 = d->v(kx,ky,kz)*(1-x-y+x*y) + x*(1-y)*d->v(kx+1,ky,kz) + y*(1-x)*d->v(kx,ky+1,kz) + x*y*d->v(kx+1,ky+1,kz);
-	kz++;
-	b1 = d->v(kx,ky,kz)*(1-x-y+x*y) + x*(1-y)*d->v(kx+1,ky,kz) + y*(1-x)*d->v(kx,ky+1,kz) + x*y*d->v(kx+1,ky+1,kz);
+	const mglData *dd=dynamic_cast<const mglData *>(d);
+	if(dd)
+	{
+		register long n=dd->nx, i0 = kx+n*(ky+dd->ny*kz);
+		b0 = dd->a[i0]*(1-x-y+x*y) + x*(1-y)*dd->a[i0+1] +
+			y*(1-x)*dd->a[i0+n] + x*y*dd->a[i0+1+n];
+		i0 += n*dd->ny;
+		b1 = dd->a[i0]*(1-x-y+x*y) + x*(1-y)*dd->a[i0+1] +
+			y*(1-x)*dd->a[i0+n] + x*y*dd->a[i0+1+n];
+	}
+	else
+	{
+		b0 = d->v(kx,ky,kz)*(1-x-y+x*y) + x*(1-y)*d->v(kx+1,ky,kz) +
+			y*(1-x)*d->v(kx,ky+1,kz) + x*y*d->v(kx+1,ky+1,kz);
+		kz++;
+		b1 = d->v(kx,ky,kz)*(1-x-y+x*y) + x*(1-y)*d->v(kx+1,ky,kz) +
+			y*(1-x)*d->v(kx,ky+1,kz) + x*y*d->v(kx+1,ky+1,kz);
+	}
 	return b0 + z*(b1-b0);
 }
 //-----------------------------------------------------------------------------
@@ -1498,7 +1513,7 @@ void *mgl_diff_1(void *par)
 	return 0;
 }
 void mgl_data_diff_par(HMDT d, HCDT v1, HCDT v2, HCDT v3)
-{
+{	// NOTE: only for mglData!!!
 	const mglData *x = dynamic_cast<const mglData *>(v1);
 	const mglData *y = dynamic_cast<const mglData *>(v2);
 	const mglData *z = dynamic_cast<const mglData *>(v3);

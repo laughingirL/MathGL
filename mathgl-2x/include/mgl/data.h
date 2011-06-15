@@ -330,11 +330,20 @@ public:
 	inline long GetNx() const	{	return nx;	}
 	inline long GetNy() const	{	return ny;	}
 	inline long GetNz() const	{	return nz;	}
-	/// Get the value in given cell of the data with border checking
+	/// Get the value in given cell of the data without border checking
 	inline mreal v(long i,long j=0,long k=0) const
-	{	i = i>=0 ? (i<nx ? i:nx-1):0;	j = j>=0 ? (j<ny ? j:ny-1):0;
-		k = k>=0 ? (k<nz ? k:nz-1):0;	return a[i+nx*(j+ny*k)];	}
+	{	return a[i+nx*(j+ny*k)];	}
 	inline mreal vthr(long i) const {	return a[i];	}
+	// add for speeding up !!!
+	inline float dvx(long i,long j=0,long k=0) const
+	{   register long i0=i+nx*(j+ny*k);
+    	return i>0? (i<nx-1? (a[i0+1]-a[i0-1])/2:a[i0]-a[i0-1]) : a[i0+1]-a[i0];	}
+	inline float dvy(long i,long j=0,long k=0) const
+	{   register long i0=i+nx*(j+ny*k);
+    	return j>0? (j<ny-1? (a[i0+nx]-a[i0-nx])/2:a[i0]-a[i0-nx]) : a[i0+nx]-a[i0];}
+	inline float dvz(long i,long j=0,long k=0) const
+	{   register long i0=i+nx*(j+ny*k), n=nx*ny;
+    	return k>0? (k<nz-1? (a[i0+n]-a[i0-n])/2:a[i0]-a[i0-n]) : a[i0+n]-a[i0];	}
 
 	/// Link external data array (don't delete it at exit)
 	inline void Link(mreal *A, long NX, long NY=1, long NZ=1)

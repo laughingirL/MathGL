@@ -425,16 +425,26 @@ int mgl_data_read_mat_(uintptr_t *d, const char *fname,int *dim,int l)
 //-----------------------------------------------------------------------------
 mreal mgl_data_max(HCDT d)
 {
-	register mreal m=-1e10;
-	for(long i=0;i<d->GetNN();i++)	m = m > d->vthr(i) ? m : d->vthr(i);
+	register mreal m=-1e10, v;
+	register long nn=d->GetNN();
+	const mglData *b = dynamic_cast<const mglData *>(d);
+	if(b)	for(long i=0;i<nn;i++)
+	{	v = b->a[i];	if(!isnan(v))	m = m>v ? m:v;	}
+	else	for(long i=0;i<nn;i++)
+	{	v = d->vthr(i);	if(!isnan(v))	m = m>v ? m:v;	}
 	return m;
 }
 mreal mgl_data_max_(uintptr_t *d)	{	return mgl_data_max(_DT_);	}
 //-----------------------------------------------------------------------------
 mreal mgl_data_min(HCDT d)
 {
-	register mreal m=1e10;
-	for(long i=0;i<d->GetNN();i++)	m = m < d->vthr(i) ? m : d->vthr(i);
+	register mreal m=1e10, v;
+	register long nn=d->GetNN();
+	const mglData *b = dynamic_cast<const mglData *>(d);
+	if(b)	for(long i=0;i<nn;i++)
+	{	v = b->a[i];	if(!isnan(v))	m = m<v ? m:v;	}
+	else	for(long i=0;i<nn;i++)
+	{	v = d->vthr(i);	if(!isnan(v))	m = m<v ? m:v;	}
 	return m;
 }
 mreal mgl_data_min_(uintptr_t *d)	{	return mgl_data_min(_DT_);	}
@@ -442,8 +452,8 @@ mreal mgl_data_min_(uintptr_t *d)	{	return mgl_data_min(_DT_);	}
 mreal mgl_data_max_int(HCDT d, long *i, long *j, long *k)
 {
 	register mreal m=-1e10, v;
-	long nx=d->GetNx(), ny=d->GetNy();
-	for(long ii=0;ii<d->GetNN();ii++)
+	long nx=d->GetNx(), ny=d->GetNy(), nn=d->GetNN();
+	for(long ii=0;ii<nn;ii++)
 	{
 		v = d->vthr(ii);
 		if(!isnan(v) && m < v)
@@ -458,8 +468,8 @@ mreal mgl_data_max_int_(uintptr_t *d, int *i, int *j, int *k)
 mreal mgl_data_min_int(HCDT d, long *i, long *j, long *k)
 {
 	register mreal m=1e10, v;
-	long nx=d->GetNx(), ny=d->GetNy();
-	for(long ii=0;ii<d->GetNN();ii++)
+	long nx=d->GetNx(), ny=d->GetNy(), nn=d->GetNN();
+	for(long ii=0;ii<nn;ii++)
 	{
 		v = d->vthr(ii);
 		if(!isnan(v) && m > v)
@@ -739,8 +749,8 @@ void mgl_data_modify_(uintptr_t *d, const char *eq,int *dim,int l)
 	mgl_data_modify(_DT_,s,*dim);	delete []s;	}
 //-----------------------------------------------------------------------------
 void mgl_data_modify_vw(HMDT d, const char *eq,HCDT vdat,HCDT wdat)
-{
-	const mglData *v = dynamic_cast<const mglData *>(vdat);	// NOTE: only for mglData
+{	// NOTE: only for mglData
+	const mglData *v = dynamic_cast<const mglData *>(vdat);
 	const mglData *w = dynamic_cast<const mglData *>(wdat);
 	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
 	mglFormula f(eq);
@@ -770,8 +780,8 @@ void *mgl_fill_f(void *par)
 	return 0;
 }
 void mgl_data_fill_eq(HMGL gr, HMDT d, const char *eq, HCDT vdat, HCDT wdat, const char *opt)
-{
-	const mglData *v = dynamic_cast<const mglData *>(vdat);	// NOTE: only for mglData
+{	// NOTE: only for mglData
+	const mglData *v = dynamic_cast<const mglData *>(vdat);
 	const mglData *w = dynamic_cast<const mglData *>(wdat);
 	long nn = d->nx*d->ny*d->nz, par[3]={d->nx,d->ny,d->nz};
 	if(v && v->nx*v->ny*v->nz!=nn)	return;

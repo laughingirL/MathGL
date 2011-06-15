@@ -89,14 +89,12 @@ public:
 	inline long GetNN() const {	return GetNx()*GetNy()*GetNz();	}
 	virtual float Maximal() const = 0;
 	virtual float Minimal() const = 0;
-	inline float dvx(long i,long j=0,long k=0) const
-	{	return i>0 ? (i<GetNx()-1 ? (v(i+1,j,k)-v(i-1,j,k))/2 : v(i,j,k)-v(i-1,j,k)) : v(1,j,k)-v(0,j,k);	}
-	inline float dvy(long i,long j=0,long k=0) const
-	{	return j>0 ? (j<GetNy()-1 ? (v(i,j+1,k)-v(i,j-1,k))/2 : v(i,j,k)-v(i,j-1,k)) : v(i,1,k)-v(i,0,k);	}
-	inline float dvz(long i,long j=0,long k=0) const
-	{	return k>0 ? (k<GetNz()-1 ? (v(i,j,k+1)-v(i,j,k-1))/2 : v(i,j,k)-v(i,j,k-1)) : v(i,j,1)-v(i,j,0);	}
-
-
+	virtual float dvx(long i,long j=0,long k=0) const = 0;
+//	{	return i>0 ? (i<GetNx()-1 ? (v(i+1,j,k)-v(i-1,j,k))/2 : v(i,j,k)-v(i-1,j,k)) : v(1,j,k)-v(0,j,k);	}
+	virtual float dvy(long i,long j=0,long k=0) const = 0;
+//	{	return j>0 ? (j<GetNy()-1 ? (v(i,j+1,k)-v(i,j-1,k))/2 : v(i,j,k)-v(i,j-1,k)) : v(i,1,k)-v(i,0,k);	}
+	virtual float dvz(long i,long j=0,long k=0) const = 0;
+//	{	return k>0 ? (k<GetNz()-1 ? (v(i,j,k+1)-v(i,j,k-1))/2 : v(i,j,k)-v(i,j,k-1)) : v(i,j,1)-v(i,j,0);	}
 };
 //-----------------------------------------------------------------------------
 inline float mgl_d(float v,float v1,float v2) { return v2!=v1?(v-v1)/(v2-v1):NAN; }

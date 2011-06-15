@@ -38,22 +38,16 @@ int test(mglGraph *gr)
 {
 	int N=256;
 	double *buf=new double[2*N*N*N];
-printf("Init done\n");fflush(stdout);
 	FILE *fq=fopen("/home/balakin/tmp/mgl/Psi_800.bin","r");
-printf("Open done (%p)\n",fq);fflush(stdout);
 	fread(buf,2*sizeof(double),N*N*N,fq);
-printf("Read done\n");fflush(stdout);
 	fclose(fq);
-printf("Close done\n");fflush(stdout);
 	mglData a(N,N,N);
 	for(long i=0;i<N*N*N;i++)   a.a[i]=buf[2*i]*buf[2*i]+buf[2*i+1]*buf[2*i+1];
-printf("Convert done\n");fflush(stdout);
 	gr->Alpha(true);
 	gr->SetAlphaDef(1);		gr->SetTranspType(1);
-	gr->SetRange('c',a);	gr->Clf();
-printf("Setup done\n");fflush(stdout);
+	gr->SetRange('c',a);
+	gr->Clf();
 	gr->Surf3A(a,a,"wyrRk");
-printf("Plot done\n");fflush(stdout);
 //	gr->Cloud(a,"wyrRk");
 	return 0;
 

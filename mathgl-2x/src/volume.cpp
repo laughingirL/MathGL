@@ -102,9 +102,8 @@ void mgl_cloud_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,in
 //	Surf3 series
 //
 //-----------------------------------------------------------------------------
-mglPoint mgl_normal_3d(const mglDataA *a, mglPoint p, bool inv)
+mglPoint mgl_normal_3d(const mglDataA *a, mglPoint p, bool inv, long n,long m,long l)
 {
-	long n=a->GetNx(), m=a->GetNy(), l=a->GetNz();
 	register long i,j,k;
 	register float x=p.x, y=p.y, z=p.z;
 	float nx=0, ny=0, nz=0;
@@ -121,28 +120,28 @@ mglPoint mgl_normal_3d(const mglDataA *a, mglPoint p, bool inv)
 	return inv ? mglPoint(nx,ny,nz) : mglPoint(-nx,-ny,-nz);
 }
 //-----------------------------------------------------------------------------
-float mgl_normal_1d(const mglDataA *a, float x, bool inv)
+float mgl_normal_1d(const mglDataA *a, float x, bool inv, long n)
 {
-	register long n=a->GetNx(), i=long(x);	x-=i;
+	register long i=long(x);	x-=i;
 	float nx = a->dvx(i);
 	if(i<n-1)	nx = nx*(1-x) + a->dvx(i+1)*x;
 	return inv ? nx : -nx;
 }
 //-----------------------------------------------------------------------------
-mglPoint mgl_find_norm(bool both, HCDT x, HCDT y, HCDT z, HCDT a, mglPoint u, bool inv)
+mglPoint mgl_find_norm(bool both, HCDT x, HCDT y, HCDT z, HCDT a, mglPoint u, bool inv, long n,long m,long l)
 {
-	mglPoint s = mgl_normal_3d(a,u,inv), t, q;
+	mglPoint s = mgl_normal_3d(a,u,inv,n,m,l), t, q;
 	if(both)
 	{
-		t = mgl_normal_3d(x,u,true);	q.x = (s*t)/(t*t);
-		t = mgl_normal_3d(y,u,true);	q.y = (s*t)/(t*t);
-		t = mgl_normal_3d(z,u,true);	q.z = (s*t)/(t*t);
+		t = mgl_normal_3d(x,u,true,n,m,l);	q.x = (s*t)/(t*t);
+		t = mgl_normal_3d(y,u,true,n,m,l);	q.y = (s*t)/(t*t);
+		t = mgl_normal_3d(z,u,true,n,m,l);	q.z = (s*t)/(t*t);
 	}
 	else
 	{
-		q.x = s.x/mgl_normal_1d(x,u.x,true);
-		q.y = s.y/mgl_normal_1d(y,u.y,true);
-		q.z = s.z/mgl_normal_1d(z,u.z,true);
+		q.x = s.x/mgl_normal_1d(x,u.x,true,n);
+		q.y = s.y/mgl_normal_1d(y,u.y,true,m);
+		q.z = s.z/mgl_normal_1d(z,u.z,true,l);
 	}
 	return q;
 }
@@ -251,6 +250,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 	kk.reserve(n*m*l);
 
 	mglPoint p,q,u;
+	float a0;
 	for(k=0;k<l;k++)
 	{
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
@@ -259,10 +259,10 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 		gr->Reserve(n*m);	gr->Reserve(n*m);
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
-			i1 = i+n*j;
+			i1 = i+n*j;		a0 = a->v(i,j,k);
 			if(i<n-1)
 			{
-				d = mgl_d(val,a->v(i,j,k),a->v(i+1,j,k));
+				d = mgl_d(val,a0,a->v(i+1,j,k));
 				if(d>=0 && d<1)
 				{
 					if(both)	p = mglPoint(x->v(i,j,k)*(1-d)+x->v(i+1,j,k)*d,
@@ -270,7 +270,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 									z->v(i,j,k)*(1-d)+z->v(i+1,j,k)*d);
 					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
 					u = mglPoint(i+d,j,k);
-					q = mgl_find_norm(both, x,y,z,a, u, inv);
+					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
 					kk.push_back(u);	kx2[i1] = kk.size()-1;
@@ -278,7 +278,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 			}
 			if(j<m-1)
 			{
-				d = mgl_d(val,a->v(i,j,k),a->v(i,j+1,k));
+				d = mgl_d(val,a0,a->v(i,j+1,k));
 				if(d>=0 && d<1)
 				{
 					if(both)	p = mglPoint(x->v(i,j,k)*(1-d)+x->v(i,j+1,k)*d,
@@ -286,7 +286,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 									z->v(i,j,k)*(1-d)+z->v(i,j+1,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
 					u = mglPoint(i,j+d,k);
-					q = mgl_find_norm(both, x,y,z,a, u, inv);
+					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
 					kk.push_back(u);	ky2[i1] = kk.size()-1;
@@ -294,7 +294,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 			}
 			if(k>0)
 			{
-				d = mgl_d(val,a->v(i,j,k-1),a->v(i,j,k));
+				d = mgl_d(val,a->v(i,j,k-1),a0);
 				if(d>=0 && d<1)
 				{
 					if(both)	p = mglPoint(x->v(i,j,k-1)*(1-d)+x->v(i,j,k)*d,
@@ -302,7 +302,7 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 									z->v(i,j,k-1)*(1-d)+z->v(i,j,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
 					u = mglPoint(i,j,k+d-1);
-					q = mgl_find_norm(both, x,y,z,a, u, inv);
+					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
 					kk.push_back(u);	kz[i1] = kk.size()-1;
@@ -398,6 +398,7 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	kk.reserve(n*m*l);
 
 	mglPoint p,q,u;
+	float a0,b0;
 	for(k=0;k<l;k++)
 	{
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
@@ -407,18 +408,19 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			i1 = i+n*j;
+			a0 = a->v(i,j,k);	b0 = b->v(i,j,k);
 			if(i<n-1)
 			{
-				d = mgl_d(val,a->v(i,j,k),a->v(i+1,j,k));
+				d = mgl_d(val,a0,a->v(i+1,j,k));
 				if(d>=0 && d<1)
 				{
 					if(both)	p = mglPoint(x->v(i,j,k)*(1-d)+x->v(i+1,j,k)*d,
 									y->v(i,j,k)*(1-d)+y->v(i+1,j,k)*d,
 									z->v(i,j,k)*(1-d)+z->v(i+1,j,k)*d);
 					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
-					aa = gr->GetA(b->v(i,j,k)*(1-d)+b->v(i+1,j,k)*d);
+					aa = gr->GetA(b0*(1-d)+b->v(i+1,j,k)*d);
 					u = mglPoint(i+d,j,k);
-					q = mgl_find_norm(both, x,y,z,a, u, inv);
+					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q,aa);	u.c=pos;
 					if(pos<0)	continue;
 					kk.push_back(u);	kx2[i1] = kk.size()-1;
@@ -426,16 +428,16 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 			}
 			if(j<m-1)
 			{
-				d = mgl_d(val,a->v(i,j,k),a->v(i,j+1,k));
+				d = mgl_d(val,a0,a->v(i,j+1,k));
 				if(d>=0 && d<1)
 				{
 					if(both)	p = mglPoint(x->v(i,j,k)*(1-d)+x->v(i,j+1,k)*d,
 									y->v(i,j,k)*(1-d)+y->v(i,j+1,k)*d,
 									z->v(i,j,k)*(1-d)+z->v(i,j+1,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
-					aa = gr->GetA(b->v(i,j,k)*(1-d)+b->v(i,j+1,k)*d);
+					aa = gr->GetA(b0*(1-d)+b->v(i,j+1,k)*d);
 					u = mglPoint(i,j+d,k);
-					q = mgl_find_norm(both, x,y,z,a, u, inv);
+					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q,aa);	u.c=pos;
 					if(pos<0)	continue;
 					kk.push_back(u);	ky2[i1] = kk.size()-1;
@@ -443,16 +445,16 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 			}
 			if(k>0)
 			{
-				d = mgl_d(val,a->v(i,j,k-1),a->v(i,j,k));
+				d = mgl_d(val,a->v(i,j,k-1),a0);
 				if(d>=0 && d<1)
 				{
 					if(both)	p = mglPoint(x->v(i,j,k-1)*(1-d)+x->v(i,j,k)*d,
 									y->v(i,j,k-1)*(1-d)+y->v(i,j,k)*d,
 									z->v(i,j,k-1)*(1-d)+z->v(i,j,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
-					aa = gr->GetA(b->v(i,j,k-1)*(1-d)+b->v(i,j,k)*d);
+					aa = gr->GetA(b->v(i,j,k-1)*(1-d)+b0*d);
 					u = mglPoint(i,j,k+d-1);
-					q = mgl_find_norm(both, x,y,z,a, u, inv);
+					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q,aa);	u.c=pos;
 					if(pos<0)	continue;
 					kk.push_back(u);	kz[i1] = kk.size()-1;
@@ -573,6 +575,7 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 	kk.reserve(n*m*l);
 
 	mglPoint p,q,u;
+	float a0,b0;
 	for(k=0;k<l;k++)
 	{
 		memcpy(kx1,kx2,n*m*sizeof(long));	memset(kx2,-1,n*m*sizeof(long));
@@ -582,18 +585,19 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			i1 = i+n*j;
+			a0 = a->v(i,j,k);	b0 = b->v(i,j,k);
 			if(i<n-1)
 			{
-				d = mgl_d(val,a->v(i,j,k),a->v(i+1,j,k));
+				d = mgl_d(val,a0,a->v(i+1,j,k));
 				if(d>=0 && d<1)
 				{
 					if(both)	p = mglPoint(x->v(i,j,k)*(1-d)+x->v(i+1,j,k)*d,
 									y->v(i,j,k)*(1-d)+y->v(i+1,j,k)*d,
 									z->v(i,j,k)*(1-d)+z->v(i+1,j,k)*d);
 					else	p = mglPoint(x->v(i)*(1-d)+x->v(i+1)*d, y->v(j), z->v(k));
-					c = gr->GetC(ss,b->v(i,j,k)*(1-d)+b->v(i+1,j,k)*d);
+					c = gr->GetC(ss,b0*(1-d)+b->v(i+1,j,k)*d);
 					u = mglPoint(i+d,j,k);
-					q = mgl_find_norm(both, x,y,z,a, u, inv);
+					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
 					kk.push_back(u);	kx2[i1] = kk.size()-1;
@@ -601,16 +605,16 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 			}
 			if(j<m-1)
 			{
-				d = mgl_d(val,a->v(i,j,k),a->v(i,j+1,k));
+				d = mgl_d(val,a0,a->v(i,j+1,k));
 				if(d>=0 && d<1)
 				{
 					if(both)	p = mglPoint(x->v(i,j,k)*(1-d)+x->v(i,j+1,k)*d,
 									y->v(i,j,k)*(1-d)+y->v(i,j+1,k)*d,
 									z->v(i,j,k)*(1-d)+z->v(i,j+1,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j)*(1-d)+y->v(j+1)*d, z->v(k));
-					c = gr->GetC(ss,b->v(i,j,k)*(1-d)+b->v(i,j+1,k)*d);
+					c = gr->GetC(ss,b0*(1-d)+b->v(i,j+1,k)*d);
 					u = mglPoint(i,j+d,k);
-					q = mgl_find_norm(both, x,y,z,a, u, inv);
+					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
 					kk.push_back(u);	ky2[i1] = kk.size()-1;
@@ -618,16 +622,16 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 			}
 			if(k>0)
 			{
-				d = mgl_d(val,a->v(i,j,k-1),a->v(i,j,k));
+				d = mgl_d(val,a->v(i,j,k-1),a0);
 				if(d>=0 && d<1)
 				{
 					if(both)	p = mglPoint(x->v(i,j,k-1)*(1-d)+x->v(i,j,k)*d,
 									y->v(i,j,k-1)*(1-d)+y->v(i,j,k)*d,
 									z->v(i,j,k-1)*(1-d)+z->v(i,j,k)*d);
 					else	p = mglPoint(x->v(i), y->v(j), z->v(k-1)*(1-d)+z->v(k)*d);
-					c = gr->GetC(ss,b->v(i,j,k-1)*(1-d)+b->v(i,j,k)*d);
+					c = gr->GetC(ss,b->v(i,j,k-1)*(1-d)+b0*d);
 					u = mglPoint(i,j,k+d-1);
-					q = mgl_find_norm(both, x,y,z,a, u, inv);
+					q = mgl_find_norm(both, x,y,z,a, u, inv,n,m,l);
 					pos = gr->AddPnt(p,c,q);	u.c=pos;
 					if(pos<0)	continue;
 					kk.push_back(u);	kz[i1] = kk.size()-1;

@@ -102,7 +102,7 @@ HMDT mgl_data_trace(HCDT d)
 uintptr_t mgl_data_trace_(uintptr_t *d)
 {	return uintptr_t(mgl_data_trace(_DT_));	}
 //-----------------------------------------------------------------------------
-HMDT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
+HMDT mgl_data_subdata_ext_slow(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 {
 	long n=0,m=0,l=0,i,j,k,i0,x,y,z;
 	mglData *r=new mglData;
@@ -183,6 +183,94 @@ HMDT mgl_data_subdata_ext(HCDT d, HCDT xx, HCDT yy, HCDT zz)
 	return r;
 }
 //-----------------------------------------------------------------------------
+HMDT mgl_data_subdata_ext(HCDT dd, HCDT xd, HCDT yd, HCDT zd)
+{
+	const mglData *d,*xx,*yy,*zz;
+	d = dynamic_cast<const mglData *>(dd);
+	xx= dynamic_cast<const mglData *>(xd);
+	yy= dynamic_cast<const mglData *>(yd);
+	zz= dynamic_cast<const mglData *>(zd);
+	if((dd && !d) || (xd && !xx) || (yd && !yy) || (zd && !zz))
+		return mgl_data_subdata_ext_slow(dd,xd,yd,zd);
+	long n=0,m=0,l=0,i,j,k,i0,x,y,z;
+	mglData *r=new mglData;
+	bool ix=false, iy=false, iz=false;
+	if(xx->nz>1)	// 3d data
+	{
+		n = xx->nx;	m = xx->ny;	l = xx->nz;
+		j = yy->nx*yy->ny*yy->nz;	if(j>1 && j!=n*m*l)	return r;	// wrong sizes
+		k = zz->nx*zz->ny*zz->nz;	if(k>1 && k!=n*m*l)	return r;	// wrong sizes
+		ix = true;	iy = j>1;	iz = k>1;
+	}
+	else if(yy->nz>1)
+	{
+		n = yy->nx;	m = yy->ny;	l = yy->nz;
+		j = xx->nx*xx->ny*xx->nz;	if(j>1 && j!=n*m*l)	return r;	// wrong sizes
+		k = zz->nx*zz->ny*zz->nz;	if(k>1 && k!=n*m*l)	return r;	// wrong sizes
+		iy = true;	ix = j>1;	iz = k>1;
+	}
+	else if(zz->nz>1)
+	{
+		n = zz->nx;	m = zz->ny;	l = zz->nz;
+		j = yy->nx*yy->ny*yy->nz;	if(j>1 && j!=n*m*l)	return r;	// wrong sizes
+		k = xx->nx*xx->ny*xx->nz;	if(k>1 && k!=n*m*l)	return r;	// wrong sizes
+		iz = true;	iy = j>1;	ix = k>1;
+	}
+	else if(xx->ny>1)	// 2d data
+	{
+		n = xx->nx;	m = xx->ny;	l = 1;
+		j = yy->nx*yy->ny;	if(j>1 && j!=n*m)	return r;	// wrong sizes
+		k = zz->nx*zz->ny;	if(k>1 && k!=n*m)	return r;	// wrong sizes
+		ix = true;	iy = j>1;	iz = k>1;
+	}
+	else if(yy->ny>1)
+	{
+		n = yy->nx;	m = yy->ny;	l = 1;
+		j = xx->nx*xx->ny;	if(j>1 && j!=n*m)	return r;	// wrong sizes
+		k = zz->nx*zz->ny;	if(k>1 && k!=n*m)	return r;	// wrong sizes
+		iy = true;	ix = j>1;	iz = k>1;
+	}
+	else if(zz->ny>1)
+	{
+		n = zz->nx;	m = zz->ny;	l = 1;
+		j = yy->nx*yy->ny;	if(j>1 && j!=n*m)	return r;	// wrong sizes
+		k = xx->nx*xx->ny;	if(k>1 && k!=n*m)	return r;	// wrong sizes
+		iz = true;	iy = j>1;	ix = k>1;
+	}
+	long nx=d->nx,ny=d->ny,nz=d->nz;
+	mreal vx=xx->a[0], vy=yy->a[0], vz=zz->a[0];
+	if(n*m*l>1)	// this is 2d or 3d data
+	{
+		r->Create(n,m,l);
+		for(i0=0;i0<n*m*l;i0++)
+		{
+			i = long((ix?xx->a[i0]:vx)+0.5);	if(i<0)i=0;	if(i>=nx)i=nx-1;
+			j = long((iy?yy->a[i0]:vy)+0.5);	if(j<0)j=0;	if(j>=ny)j=ny-1;
+			k = long((iz?zz->a[i0]:vz)+0.5);	if(k<0)k=0;	if(k>=nz)k=nz-1;
+			r->a[i0] = d->a[i+nx*(j+ny*k)];
+		}
+		return r;
+	}
+	// this is 1d data -> try as normal SubData()
+	if(xx->nx>1 || vx>=0)	{	n=xx->nx;	ix=true;	}
+	else	{	n=nx;	ix=false;	}
+	if(yy->nx>1 || vy>=0)	{	m=yy->nx;	iy=true;	}
+	else	{	m=ny;	iy=false;	}
+	if(zz->nx>1 || vz>=0)	{	l=zz->nx;	iz=true;	}
+	else	{	l=nz;	iz=false;	}
+	r->Create(n,m,l);
+	for(k=0;k<l;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
+	{
+		x = ix?long(xx->a[i]+0.5):i;	if(x<0)x=0;	if(x>=nx)x=nx-1;
+		y = iy?long(yy->a[j]+0.5):j;	if(y<0)y=0;	if(y>=ny)y=ny-1;
+		z = iz?long(zz->a[k]+0.5):k;	if(z<0)z=0;	if(z>=nz)z=nz-1;
+		r->a[i+n*(j+m*k)] = d->a[x+nx*(y+ny*z)];
+	}
+	if(m==1)	{	r->ny=r->nz;	r->nz=1;	}// "squeeze" dimensions
+	if(n==1)	{	r->nx=r->ny;	r->ny=r->nz;	r->nz=1;	r->NewId();}
+	return r;
+}
+//-----------------------------------------------------------------------------
 HMDT mgl_data_subdata(HCDT d, long xx,long yy,long zz)
 {
 	mglData x,y,z;
@@ -212,8 +300,8 @@ void *mgl_column(void *par)
 	}
 	return 0;
 }
-HMDT mgl_data_column(HCDT dat, const char *eq)	// NOTE: only for mglData (for speeding up)
-{
+HMDT mgl_data_column(HCDT dat, const char *eq)
+{	// NOTE: only for mglData (for speeding up)
 	long nx=dat->GetNx(),ny=dat->GetNy(),nz=dat->GetNz();
 	mglFormula f(eq);
 	mglData *r=new mglData(ny,nz);
@@ -240,8 +328,8 @@ void *mgl_resize(void *par)
 	}
 	return 0;
 }
-HMDT mgl_data_resize_box(HCDT dat, long mx,long my,long mz, float x1,float x2, float y1,float y2, float z1,float z2)	// NOTE: only for mglData (for speeding up)
-{
+HMDT mgl_data_resize_box(HCDT dat, long mx,long my,long mz, float x1,float x2, float y1,float y2, float z1,float z2)
+{	// NOTE: only for mglData (for speeding up)
 	mx = mx<1 ? 1:mx;	my = my<1 ? 1:my;	mz = mz<1 ? 1:mz;
 	mglData *r=new mglData(mx,my,mz);
 	const mglData *d=dynamic_cast<const mglData *>(dat);
@@ -270,8 +358,8 @@ void *mgl_combine(void *par)
 	for(i0=t->id;i0<t->n;i0+=mglNumThr)	b[i0] = c[i0%nx]*d[i0/nx];
 	return 0;
 }
-HMDT mgl_data_combine(HCDT d1, HCDT d2)	// NOTE: only for mglData (for speeding up)
-{
+HMDT mgl_data_combine(HCDT d1, HCDT d2)
+{	// NOTE: only for mglData (for speeding up)
 	const mglData *a=dynamic_cast<const mglData *>(d1);
 	const mglData *b=dynamic_cast<const mglData *>(d2);
 
@@ -569,8 +657,8 @@ void *mgl_mom_x(void *par)
 	}
 	return 0;
 }
-HMDT mgl_data_momentum(HCDT dat, char dir, const char *how)	// NOTE: only for mglData (for speeding up)
-{
+HMDT mgl_data_momentum(HCDT dat, char dir, const char *how)
+{	// NOTE: only for mglData (for speeding up)
 	long nx=dat->GetNx(),ny=dat->GetNy(),nz=dat->GetNz();
 	const mglData *d=dynamic_cast<const mglData *>(dat);
 	mglData *b=new mglData;
@@ -604,8 +692,8 @@ void *mgl_eval(void *par)
 	}
 	return 0;
 }
-HMDT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm)	// NOTE: only for mglData (for speeding up)
-{
+HMDT mgl_data_evaluate(HCDT dat, HCDT idat, HCDT jdat, HCDT kdat, int norm)
+{	// NOTE: only for mglData (for speeding up)
 	mglData *r=new mglData;
 	const mglData *d=dynamic_cast<const mglData *>(dat);
 	const mglData *i=dynamic_cast<const mglData *>(idat);
