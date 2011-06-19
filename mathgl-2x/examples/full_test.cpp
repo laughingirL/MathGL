@@ -43,12 +43,14 @@ int test(mglGraph *gr)
 	fclose(fq);
 	mglData a(N,N,N);
 	for(long i=0;i<N*N*N;i++)   a.a[i]=buf[2*i]*buf[2*i]+buf[2*i+1]*buf[2*i+1];
+	delete []buf;
+
 	gr->Alpha(true);
 	gr->SetAlphaDef(1);		gr->SetTranspType(1);
 	gr->SetRange('c',a);
 	gr->Clf();
-	gr->Surf3A(a,a,"wyrRk");
-//	gr->Cloud(a,"wyrRk");
+//	gr->Surf3A(a,a,"wyrRk","value 30");
+	gr->Cloud(a,"wyrRk");
 	return 0;
 
 	mglParse par;

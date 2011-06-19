@@ -79,6 +79,14 @@ typedef float mreal;
 #define MGL_DEF_VIEWER "evince"
 #endif
 //-----------------------------------------------------------------------------
+#ifndef MGL_FONT_PATH
+#ifdef WIN32
+#define MGL_FONT_PATH "."	// path to fonts
+#else
+#define MGL_FONT_PATH "/usr/local/share/mathgl/fonts"	// path to fonts
+#endif
+#endif
+//-----------------------------------------------------------------------------
 #define mgl_min(a,b)	(((a)>(b)) ? (b) : (a))
 #define mgl_max(a,b)	(((a)>(b)) ? (a) : (b))
 //-----------------------------------------------------------------------------

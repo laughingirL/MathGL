@@ -273,8 +273,8 @@ void mglCanvas::Finish()
 //-----------------------------------------------------------------------------
 void mglCanvas::Clf(mglColor Back)
 {
-	Fog(0);
-	PDef = 0xffff;		Prm.clear();	pPos = 0;
+	Fog(0);			PDef = 0xffff;	pPos = 0;
+	Pnt.clear();	Prm.clear();	Ptx.clear();
 	if(Back==0)			Back = 'w';
 	if(TranspType==2)	Back = 'k';
 	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;BDef[2]=Back.b*255;	BDef[3]=0;
