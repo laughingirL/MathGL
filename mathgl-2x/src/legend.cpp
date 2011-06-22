@@ -86,7 +86,7 @@ void mglCanvas::Legend(std::vector<mglText> leg, float x, float y, const char *f
 	float r=GetRatio(), rh, rw, s3=B.pf;
 	if(size<=0)	size = -size*FontSize;
 	if(!font || !(*font))	font="L";
-	char *pA, *ff = new char[strlen(font)+1];	strcpy(ff,font);
+	char *pA, *ff = new char[strlen(font)+3];	strcpy(ff,font);
 	llen *= 1.5;
 
 	rh=(r<1?r:1.)*size/6.;	rw=(r>1?1./r:1.)*size/8.;
@@ -102,7 +102,7 @@ void mglCanvas::Legend(std::vector<mglText> leg, float x, float y, const char *f
 	w = (w + llen*1.1f);	// add space for lines
 
 	bool rel = true;
-	if((pA=strchr(ff,'A')))	{	*pA = 'L';	rel = false;	}
+	if((pA=strchr(ff,'A')))	{	*pA = ' ';	strcat(ff,":L");	rel = false;	}
 	Push();	Identity(rel);	//	memcpy(B,B1,9*sizeof(float));
 
 	long k1,k2,k3,k4;

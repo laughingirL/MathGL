@@ -48,6 +48,7 @@ public:
 	inline int  GetWarn()			{	return mgl_get_warn(gr);}
 	inline void SetWarn(int code)	{	mgl_set_warn(gr, code);	}
 	inline void DefaultPlotParam()	{	mgl_set_def_param(gr);	}
+	inline void SetQuality(int qual=MGL_DRAW_NORM)	{	mgl_set_quality(gr, qual);	}
 
 	inline void SetPalette(const char *colors)	{	mgl_set_palette(gr, colors);	}
 	inline void SetRotatedText(bool rotated)	{	mgl_set_rotated_text(gr, rotated);	}
@@ -160,12 +161,18 @@ public:
 		mgl_calc_scr(gr,p.x,p.y,p.z,&xs,&ys);
 		return mglPoint(xs,ys);
 	}
+	/// Set object/subplot id
+	inline void SetObjId(long id)	{	mgl_set_obj_id(gr,id);	}
+	/// Get object id
+	inline int GetObjId(long x,long y)	{	return mgl_get_obj_id(gr,x,y);	}
+	/// Get subplot id
+	inline int GetSplId(long x,long y)	{	return mgl_get_spl_id(gr,x,y);	}
 
 	inline void Compression(bool){}		// NOTE: Add later -- IDTF
 	inline void VertexColor(bool){}		// NOTE: Add later -- IDTF
 	inline void DoubleSided(bool){}		// NOTE: Add later -- IDTF
 	inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
-	inline void StartGroup(const char *name)		{	mgl_start_group(gr, name);	}
+	inline void StartGroup(const char *name){	mgl_start_group(gr, name);	}
 	inline void EndGroup()					{	mgl_end_group(gr);	}
 
 	inline void SetTranspType(int type)		{	mgl_set_transp_type(gr, type);}
@@ -292,17 +299,17 @@ public:
 	inline void Rhomb(mglPoint p1, mglPoint p2, float r, const char *stl="r")
 	{	mgl_rhomb(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, r,stl);	}
 
-	inline void Putsw(mglPoint p,const wchar_t *text,const char *font="C",float size=-1)
+	inline void Putsw(mglPoint p,const wchar_t *text,const char *font=":C",float size=-1)
 	{	mgl_putsw(gr, p.x, p.y, p.z, text, font, size);	}
-	inline void Puts(mglPoint p,const char *text,const char *font="C",float size=-1)
+	inline void Puts(mglPoint p,const char *text,const char *font=":C",float size=-1)
 	{	mgl_puts(gr, p.x, p.y, p.z, text, font, size);	}
-	inline void Putsw(mglPoint p, mglPoint d, const wchar_t *text, const char *font="C", float size=-1)
+	inline void Putsw(mglPoint p, mglPoint d, const wchar_t *text, const char *font=":C", float size=-1)
 	{	mgl_putsw_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, text, font, size);	}
-	inline void Puts(mglPoint p, mglPoint d, const char *text, const char *font="C", float size=-1)
+	inline void Puts(mglPoint p, mglPoint d, const char *text, const char *font=":C", float size=-1)
 	{	mgl_puts_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, text, font, size);	}
-/*	inline void Title(const char *text, const char *font="C", float size=-2)
+/*	inline void Title(const char *text, const char *font=":C", float size=-2)
 	{	mgl_title(gr, text, font, size);	}
-	inline void Title(const wchar_t *text, const char *font="C", float size=-2)
+	inline void Title(const wchar_t *text, const char *font=":C", float size=-2)
 	{	mgl_titlew(gr, text, font, size);	}*/
 
 	inline void Colorbar(const char *sch="",int where=0)

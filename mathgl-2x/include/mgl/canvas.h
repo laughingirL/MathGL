@@ -176,6 +176,12 @@ public:
 	/// Calculate screen point {xs,ys} for 3D coordinate {x,y,z}
 	void CalcScr(mglPoint p, int *xs, int *ys);
 	mglPoint CalcScr(mglPoint p);
+	/// Set object/subplot id
+	inline void SetObjId(long id)	{	ObjId = id;	}
+	/// Get object id
+	inline int GetObjId(long x,long y)	{	return OI[x+Width*y];	}
+	/// Get subplot id
+	int GetSplId(long x,long y);
 
 	/// Write the frame in file using JPEG format
 	void WriteJPEG(const char *fname,const char *descr=0);
@@ -304,6 +310,7 @@ protected:
 	unsigned char *G4;	///< Final picture in RGBA format. Prepared in Finish().
 	unsigned char *G;	///< Final picture in RGB format. Prepared in Finish().
 
+	std::vector<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
 	std::vector<mglPrim> Prm;	///< Primitives (lines, triangles and so on)
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	std::vector<mglText> Leg;	///< Text labels for legend

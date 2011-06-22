@@ -618,9 +618,9 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 		p = mglPoint(x0,y0,t);	q = mglPoint(0,0,1);
 	}
 	ss = p;	ScalePoint(ss,nn,false);
-	char font[33]="C";
-	if(pos<-0.2)	font[0]='L';	if(pos>0.2)	font[0]='R';
-	strcat(font,FontDef);
+	char font[33],ff[3]=":C";
+	if(pos<-0.2)	ff[1]='L';	if(pos>0.2)	ff[1]='R';
+	strcpy(font,FontDef);	strcat(font,ff);
 	strcat(font,nn.y>1e-5 || nn.x<0 ? "T":"t");
 	text_plot(AddPnt(p,-1,q,0),text,font,-1.4,0.4+shift);
 }
@@ -673,6 +673,7 @@ void mglCanvas::Box(const char *col, bool ticks)
 	mglPoint o = Org;
 	float tl=TickLen;
 	if(!ticks)	TickLen=0;
+	SetPenPal(col);
 	Org = Min;	Axis("xyz_");
 	if(TernAxis&1)
 	{

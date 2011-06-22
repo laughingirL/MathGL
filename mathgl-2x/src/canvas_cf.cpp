@@ -32,6 +32,9 @@ void mgl_calc_xyz(HMGL gr, int xs, int ys, mreal *x, mreal *y, mreal *z)
 {	mglPoint p = _Gr_->CalcXYZ(xs,ys);	*x = p.x;	*y = p.y;	*z = p.z;	}
 void mgl_calc_scr(HMGL gr, mreal x, mreal y, mreal z, int *xs, int *ys)
 {	_Gr_->CalcScr(mglPoint(x,y,z),xs,ys);	}
+int mgl_set_obj_id(HMGL gr, int id)	{	_Gr_->SetObjId(id);	}
+int mgl_get_obj_id(HMGL gr, long x, long y)	{	return _Gr_->GetObjId(x,y);	}
+int mgl_get_spl_id(HMGL gr, long x, long y)	{	return _Gr_->GetSplId(x,y);	}
 //-----------------------------------------------------------------------------
 int mgl_new_frame(HMGL gr)		{	return _Gr_->NewFrame();	}
 void mgl_end_frame(HMGL gr)		{	_Gr_->EndFrame();	}
@@ -141,6 +144,9 @@ void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, mreal *x, mreal *y, mreal *z
 {	mglPoint p = _GR_->CalcXYZ(*xs,*ys);	*x = p.x;	*y = p.y;	*z = p.z;	}
 void mgl_calc_scr_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, int *xs, int *ys)
 {	_GR_->CalcScr(mglPoint(*x,*y,*z),xs,ys);	}
+int mgl_set_obj_id_(uintptr_t *gr, int *id)	{	_GR_->SetObjId(*id);	}
+int mgl_get_obj_id_(uintptr_t *gr, int *x, int *y)	{	return _GR_->GetObjId(*x,*y);	}
+int mgl_get_spl_id_(uintptr_t *gr, int *x, int *y)	{	return _GR_->GetSplId(*x,*y);	}
 //-----------------------------------------------------------------------------
 HMGL mgl_create_graph(int width, int height)
 {	return new mglCanvas(width,height);	}

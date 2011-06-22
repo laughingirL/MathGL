@@ -96,6 +96,7 @@ void Fl_MathGL::update(mglCanvas *gr)
 	if(draw_func)
 	{
 		if(gr!=graph || graph->ClfOnUpdate)	gr->DefaultPlotParam();
+		gr->ResetFrames();
 		gr->Message = new char[2048];	gr->Message[0] = 0;
 		gr->Alpha(flag&1);
 		gr->Light(flag&2);

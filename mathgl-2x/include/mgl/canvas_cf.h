@@ -83,6 +83,9 @@ void mgl_close_gif(HMGL graph);
 
 const unsigned char *mgl_get_rgb(HMGL graph);
 const unsigned char *mgl_get_rgba(HMGL graph);
+int mgl_set_obj_id(HMGL graph, int id);
+int mgl_get_obj_id(HMGL graph, long x, long y);
+int mgl_get_spl_id(HMGL graph, long x, long y);
 int mgl_get_width(HMGL graph);
 int mgl_get_height(HMGL graph);
 void mgl_calc_xyz(HMGL gr, int xs, int ys, float *x, float *y, float *z);
@@ -174,6 +177,9 @@ void mgl_close_gif_(uintptr_t *graph);
 
 const unsigned char *mgl_get_rgb_(uintptr_t *graph);
 const unsigned char *mgl_get_rgba_(uintptr_t *graph);
+int mgl_set_obj_id_(uintptr_t *graph, int *id);
+int mgl_get_obj_id_(uintptr_t *graph, int *x, int *y);
+int mgl_get_spl_id_(uintptr_t *graph, int *x, int *y);
 int mgl_get_width_(uintptr_t *graph);
 int mgl_get_height_(uintptr_t *graph);
 void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, float *x, float *y, float *z);

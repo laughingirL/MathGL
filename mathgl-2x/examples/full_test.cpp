@@ -248,17 +248,17 @@ void smgl_column(mglGraph *gr)	// column plot
 void smgl_map(mglGraph *gr)	// example of mapping
 {
 	mglData a(50, 40), b(50, 40);
-	gr->Puts(mglPoint(0, 0), "\\to", "C", -1.4);
+	gr->Puts(mglPoint(0, 0), "\\to", ":C", -1.4);
 	gr->SetRanges(-1,1,-1,1,-2,2);
 
 	gr->SubPlot(2, 1, 0);
 	gr->Fill(a,"x");	gr->Fill(b,"y");
-	gr->Puts(mglPoint(0, 1.1), "\\{x, y\\}", "C", -2);		gr->Box();
+	gr->Puts(mglPoint(0, 1.1), "\\{x, y\\}", ":C", -2);		gr->Box();
 	gr->Map(a, b, "brgk");
 
 	gr->SubPlot(2, 1, 1);
 	gr->Fill(a,"(x^3+y^3)/2");	gr->Fill(b,"(x-y)/2");
-	gr->Puts(mglPoint(0, 1.1), "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", "C", -2);
+	gr->Puts(mglPoint(0, 1.1), "\\{\\frac{x^3+y^3}{2}, \\frac{x-y}{2}\\}", ":C", -2);
 	gr->Box();
 	gr->Map(a, b, "brgk");
 }
@@ -267,91 +267,91 @@ void smgl_color_schemes(mglGraph *gr)	// Color table
 {
 	mglData a(256,2);	a.Fill(-1,1);
 	gr->SubPlot(2,10,0,0.2);	gr->Dens(a,"kw");
-	gr->Puts(mglPoint(-1.4, -0.3), "kw", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "kw", ":C", -8);
 	gr->SubPlot(2,10,1,0.2);	gr->Dens(a,"wk");
-	gr->Puts(mglPoint(-1.4, -0.3), "wk", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "wk", ":C", -8);
 	gr->SubPlot(2,10,2,0.2);	gr->Dens(a,"kHCcw");
-	gr->Puts(mglPoint(-1.4, -0.3), "kHCcw", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "kHCcw", ":C", -8);
 	gr->SubPlot(2,10,3,0.2);	gr->Dens(a,"kBbcw");
-	gr->Puts(mglPoint(-1.4, -0.3), "kBbcw", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "kBbcw", ":C", -8);
 	gr->SubPlot(2,10,4,0.2);	gr->Dens(a,"kRryw");
-	gr->Puts(mglPoint(-1.4, -0.3), "kRryw", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "kRryw", ":C", -8);
 	gr->SubPlot(2,10,5,0.2);	gr->Dens(a,"kGgew");
-	gr->Puts(mglPoint(-1.4, -0.3), "kGgew", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "kGgew", ":C", -8);
 	gr->SubPlot(2,10,6,0.2);	gr->Dens(a,"BbwrR");
-	gr->Puts(mglPoint(-1.4, -0.3), "BbwrR", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "BbwrR", ":C", -8);
 	gr->SubPlot(2,10,7,0.2);	gr->Dens(a,"BbwgG");
-	gr->Puts(mglPoint(-1.4, -0.3), "BbwgG", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "BbwgG", ":C", -8);
 	gr->SubPlot(2,10,8,0.2);	gr->Dens(a,"GgwmM");
-	gr->Puts(mglPoint(-1.4, -0.3), "GgwmM", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "GgwmM", ":C", -8);
 	gr->SubPlot(2,10,9,0.2);	gr->Dens(a,"UuwqR");
-	gr->Puts(mglPoint(-1.4, -0.3), "UuwqR", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "UuwqR", ":C", -8);
 	gr->SubPlot(2,10,10,0.2);	gr->Dens(a,"QqwcC");
-	gr->Puts(mglPoint(-1.4, -0.3), "QqwcC", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "QqwcC", ":C", -8);
 	gr->SubPlot(2,10,11,0.2);	gr->Dens(a,"CcwyY");
-	gr->Puts(mglPoint(-1.4, -0.3), "CcwyY", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "CcwyY", ":C", -8);
 	gr->SubPlot(2,10,12,0.2);	gr->Dens(a,"bcwyr");
-	gr->Puts(mglPoint(-1.4, -0.3), "bcwyr", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "bcwyr", ":C", -8);
 	gr->SubPlot(2,10,13,0.2);	gr->Dens(a,"bwr");
-	gr->Puts(mglPoint(-1.4, -0.3), "bwr", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "bwr", ":C", -8);
 	gr->SubPlot(2,10,14,0.2);	gr->Dens(a,"BbcyrR");
-	gr->Puts(mglPoint(-1.4, -0.3), "BbcyrR", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "BbcyrR", ":C", -8);
 	gr->SubPlot(2,10,15,0.2);	gr->Dens(a,"UbcyqR");
-	gr->Puts(mglPoint(-1.4, -0.3), "UbcyqR", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "UbcyqR", ":C", -8);
 	gr->SubPlot(2,10,16,0.2);	gr->Dens(a,"BbcwyrR");
-	gr->Puts(mglPoint(-1.4, -0.3), "BbcwyrR", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "BbcwyrR", ":C", -8);
 	gr->SubPlot(2,10,17,0.2);	gr->Dens(a,"bcyr");
-	gr->Puts(mglPoint(-1.4, -0.3), "bcyr", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "bcyr", ":C", -8);
 	gr->SubPlot(2,10,18,0.2);	gr->Dens(a,"BbcyrR|");
-	gr->Puts(mglPoint(-1.4, -0.3), "BbcyrR|", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "BbcyrR|", ":C", -8);
 	gr->SubPlot(2,10,19,0.2);	gr->Dens(a,"bgr");
-	gr->Puts(mglPoint(-1.4, -0.3), "bgr", "C", -8);
+	gr->Puts(mglPoint(-1.4, -0.3), "bgr", ":C", -8);
 }
 //-----------------------------------------------------------------------------
 void smgl_colors(mglGraph *gr)	// Color table
 {
 	//#LENUQ
-	gr->FaceZ(mglPoint(-1,	-1), 0.4, 0.3, "L#");	gr->Puts(mglPoint(-0.8,-0.9), "L", "C:w", -1.4);
-	gr->FaceZ(mglPoint(-0.6,-1), 0.4, 0.3, "E#");	gr->Puts(mglPoint(-0.4,-0.9), "E", "C:w", -1.4);
-	gr->FaceZ(mglPoint(-0.2,-1), 0.4, 0.3, "N#");	gr->Puts(mglPoint(0,  -0.9), "N", "C:w", -1.4);
-	gr->FaceZ(mglPoint(0.2,	-1), 0.4, 0.3, "U#");	gr->Puts(mglPoint(0.4,-0.9), "U", "C:w", -1.4);
-	gr->FaceZ(mglPoint(0.6,	-1), 0.4, 0.3, "Q#");	gr->Puts(mglPoint(0.8,-0.9), "Q", "C:w", -1.4);
+	gr->FaceZ(mglPoint(-1,	-1), 0.4, 0.3, "L#");	gr->Puts(mglPoint(-0.8,-0.9), "L", "w:C", -1.4);
+	gr->FaceZ(mglPoint(-0.6,-1), 0.4, 0.3, "E#");	gr->Puts(mglPoint(-0.4,-0.9), "E", "w:C", -1.4);
+	gr->FaceZ(mglPoint(-0.2,-1), 0.4, 0.3, "N#");	gr->Puts(mglPoint(0,  -0.9), "N", "w:C", -1.4);
+	gr->FaceZ(mglPoint(0.2,	-1), 0.4, 0.3, "U#");	gr->Puts(mglPoint(0.4,-0.9), "U", "w:C", -1.4);
+	gr->FaceZ(mglPoint(0.6,	-1), 0.4, 0.3, "Q#");	gr->Puts(mglPoint(0.8,-0.9), "Q", "w:C", -1.4);
 	//#lenuq
-	gr->FaceZ(mglPoint(-1,	-0.7), 0.4, 0.3, "l#");	gr->Puts(mglPoint(-0.8,-0.6), "l", "C:k", -1.4);
-	gr->FaceZ(mglPoint(-0.6,-0.7), 0.4, 0.3, "e#");	gr->Puts(mglPoint(-0.4,-0.6), "e", "C:k", -1.4);
-	gr->FaceZ(mglPoint(-0.2,-0.7), 0.4, 0.3, "n#");	gr->Puts(mglPoint(0,  -0.6), "n", "C:k", -1.4);
-	gr->FaceZ(mglPoint(0.2,	-0.7), 0.4, 0.3, "u#");	gr->Puts(mglPoint(0.4,-0.6), "u", "C:k", -1.4);
-	gr->FaceZ(mglPoint(0.6,	-0.7), 0.4, 0.3, "q#");	gr->Puts(mglPoint(0.8,-0.6), "q", "C:k", -1.4);
+	gr->FaceZ(mglPoint(-1,	-0.7), 0.4, 0.3, "l#");	gr->Puts(mglPoint(-0.8,-0.6), "l", "k:C", -1.4);
+	gr->FaceZ(mglPoint(-0.6,-0.7), 0.4, 0.3, "e#");	gr->Puts(mglPoint(-0.4,-0.6), "e", "k:C", -1.4);
+	gr->FaceZ(mglPoint(-0.2,-0.7), 0.4, 0.3, "n#");	gr->Puts(mglPoint(0,  -0.6), "n", "k:C", -1.4);
+	gr->FaceZ(mglPoint(0.2,	-0.7), 0.4, 0.3, "u#");	gr->Puts(mglPoint(0.4,-0.6), "u", "k:C", -1.4);
+	gr->FaceZ(mglPoint(0.6,	-0.7), 0.4, 0.3, "q#");	gr->Puts(mglPoint(0.8,-0.6), "q", "k:C", -1.4);
 	//#CMYkP
-	gr->FaceZ(mglPoint(-1,	-0.4), 0.4, 0.3, "C#");	gr->Puts(mglPoint(-0.8,-0.3), "C", "C:w", -1.4);
-	gr->FaceZ(mglPoint(-0.6,-0.4), 0.4, 0.3, "M#");	gr->Puts(mglPoint(-0.4,-0.3), "M", "C:w", -1.4);
-	gr->FaceZ(mglPoint(-0.2,-0.4), 0.4, 0.3, "Y#");	gr->Puts(mglPoint(0,  -0.3), "Y", "C:w", -1.4);
-	gr->FaceZ(mglPoint(0.2,	-0.4), 0.4, 0.3, "k#");	gr->Puts(mglPoint(0.4,-0.3), "k", "C:w", -1.4);
-	gr->FaceZ(mglPoint(0.6,	-0.4), 0.4, 0.3, "P#");	gr->Puts(mglPoint(0.8,-0.3), "P", "C:w", -1.4);
+	gr->FaceZ(mglPoint(-1,	-0.4), 0.4, 0.3, "C#");	gr->Puts(mglPoint(-0.8,-0.3), "C", "w:C", -1.4);
+	gr->FaceZ(mglPoint(-0.6,-0.4), 0.4, 0.3, "M#");	gr->Puts(mglPoint(-0.4,-0.3), "M", "w:C", -1.4);
+	gr->FaceZ(mglPoint(-0.2,-0.4), 0.4, 0.3, "Y#");	gr->Puts(mglPoint(0,  -0.3), "Y", "w:C", -1.4);
+	gr->FaceZ(mglPoint(0.2,	-0.4), 0.4, 0.3, "k#");	gr->Puts(mglPoint(0.4,-0.3), "k", "w:C", -1.4);
+	gr->FaceZ(mglPoint(0.6,	-0.4), 0.4, 0.3, "P#");	gr->Puts(mglPoint(0.8,-0.3), "P", "w:C", -1.4);
 	//#cmywp
-	gr->FaceZ(mglPoint(-1,	-0.1), 0.4, 0.3, "c#");	gr->Puts(mglPoint(-0.8, 0), "c", "C:k", -1.4);
-	gr->FaceZ(mglPoint(-0.6,-0.1), 0.4, 0.3, "m#");	gr->Puts(mglPoint(-0.4, 0), "m", "C:k", -1.4);
-	gr->FaceZ(mglPoint(-0.2,-0.1), 0.4, 0.3, "y#");	gr->Puts(mglPoint(0,   0), "y", "C:k", -1.4);
-	gr->FaceZ(mglPoint(0.2,	-0.1), 0.4, 0.3, "w#");	gr->Puts(mglPoint(0.4, 0), "w", "C:k", -1.4);
-	gr->FaceZ(mglPoint(0.6,	-0.1), 0.4, 0.3, "p#");	gr->Puts(mglPoint(0.8, 0), "p", "C:k", -1.4);
+	gr->FaceZ(mglPoint(-1,	-0.1), 0.4, 0.3, "c#");	gr->Puts(mglPoint(-0.8, 0), "c", "k:C", -1.4);
+	gr->FaceZ(mglPoint(-0.6,-0.1), 0.4, 0.3, "m#");	gr->Puts(mglPoint(-0.4, 0), "m", "k:C", -1.4);
+	gr->FaceZ(mglPoint(-0.2,-0.1), 0.4, 0.3, "y#");	gr->Puts(mglPoint(0,   0), "y", "k:C", -1.4);
+	gr->FaceZ(mglPoint(0.2,	-0.1), 0.4, 0.3, "w#");	gr->Puts(mglPoint(0.4, 0), "w", "k:C", -1.4);
+	gr->FaceZ(mglPoint(0.6,	-0.1), 0.4, 0.3, "p#");	gr->Puts(mglPoint(0.8, 0), "p", "k:C", -1.4);
 	//#BGRHW
-	gr->FaceZ(mglPoint(-1,	0.2), 0.4, 0.3, "B#");	gr->Puts(mglPoint(-0.8, 0.3), "B", "C:w", -1.4);
-	gr->FaceZ(mglPoint(-0.6,0.2), 0.4, 0.3, "G#");	gr->Puts(mglPoint(-0.4, 0.3), "G", "C:w", -1.4);
-	gr->FaceZ(mglPoint(-0.2,0.2), 0.4, 0.3, "R#");	gr->Puts(mglPoint(0,   0.3), "R", "C:w", -1.4);
-	gr->FaceZ(mglPoint(0.2,	0.2), 0.4, 0.3, "H#");	gr->Puts(mglPoint(0.4, 0.3), "H", "C:w", -1.4);
-	gr->FaceZ(mglPoint(0.6,	0.2), 0.4, 0.3, "W#");	gr->Puts(mglPoint(0.8, 0.3), "W", "C:w", -1.4);
+	gr->FaceZ(mglPoint(-1,	0.2), 0.4, 0.3, "B#");	gr->Puts(mglPoint(-0.8, 0.3), "B", "w:C", -1.4);
+	gr->FaceZ(mglPoint(-0.6,0.2), 0.4, 0.3, "G#");	gr->Puts(mglPoint(-0.4, 0.3), "G", "w:C", -1.4);
+	gr->FaceZ(mglPoint(-0.2,0.2), 0.4, 0.3, "R#");	gr->Puts(mglPoint(0,   0.3), "R", "w:C", -1.4);
+	gr->FaceZ(mglPoint(0.2,	0.2), 0.4, 0.3, "H#");	gr->Puts(mglPoint(0.4, 0.3), "H", "w:C", -1.4);
+	gr->FaceZ(mglPoint(0.6,	0.2), 0.4, 0.3, "W#");	gr->Puts(mglPoint(0.8, 0.3), "W", "w:C", -1.4);
 	//#bgrhw
-	gr->FaceZ(mglPoint(-1,	0.5), 0.4, 0.3, "b#");	gr->Puts(mglPoint(-0.8, 0.6), "b", "C:k", -1.4);
-	gr->FaceZ(mglPoint(-0.6,0.5), 0.4, 0.3, "g#");	gr->Puts(mglPoint(-0.4, 0.6), "g", "C:k", -1.4);
-	gr->FaceZ(mglPoint(-0.2,0.5), 0.4, 0.3, "r#");	gr->Puts(mglPoint(0,   0.6), "r", "C:k", -1.4);
-	gr->FaceZ(mglPoint(0.2,	0.5), 0.4, 0.3, "h#");	gr->Puts(mglPoint(0.4, 0.6), "h", "C:k", -1.4);
-	gr->FaceZ(mglPoint(0.6,	0.5), 0.4, 0.3, "w#");	gr->Puts(mglPoint(0.8, 0.6), "w", "C:k", -1.4);
+	gr->FaceZ(mglPoint(-1,	0.5), 0.4, 0.3, "b#");	gr->Puts(mglPoint(-0.8, 0.6), "b", "k:C", -1.4);
+	gr->FaceZ(mglPoint(-0.6,0.5), 0.4, 0.3, "g#");	gr->Puts(mglPoint(-0.4, 0.6), "g", "k:C", -1.4);
+	gr->FaceZ(mglPoint(-0.2,0.5), 0.4, 0.3, "r#");	gr->Puts(mglPoint(0,   0.6), "r", "k:C", -1.4);
+	gr->FaceZ(mglPoint(0.2,	0.5), 0.4, 0.3, "h#");	gr->Puts(mglPoint(0.4, 0.6), "h", "k:C", -1.4);
+	gr->FaceZ(mglPoint(0.6,	0.5), 0.4, 0.3, "w#");	gr->Puts(mglPoint(0.8, 0.6), "w", "k:C", -1.4);
 	//#brighted
-	gr->FaceZ(mglPoint(-1,	0.8), 0.4, 0.3, "{r1}#");	gr->Puts(mglPoint(-0.8, 0.9), "\\{r1\\}", "C:w", -1.4);
-	gr->FaceZ(mglPoint(-0.6,0.8), 0.4, 0.3, "{r3}#");	gr->Puts(mglPoint(-0.4, 0.9), "\\{r3\\}", "C:w", -1.4);
-	gr->FaceZ(mglPoint(-0.2,0.8), 0.4, 0.3, "{r5}#");	gr->Puts(mglPoint(0,   0.9), "\\{r5\\}", "C:k", -1.4);
-	gr->FaceZ(mglPoint(0.2,	0.8), 0.4, 0.3, "{r7}#");	gr->Puts(mglPoint(0.4, 0.9), "\\{r7\\}", "C:k", -1.4);
-	gr->FaceZ(mglPoint(0.6,	0.8), 0.4, 0.3, "{r9}#");	gr->Puts(mglPoint(0.8, 0.9), "\\{r9\\}", "C:k", -1.4);
+	gr->FaceZ(mglPoint(-1,	0.8), 0.4, 0.3, "{r1}#");	gr->Puts(mglPoint(-0.8, 0.9), "\\{r1\\}", "w:C", -1.4);
+	gr->FaceZ(mglPoint(-0.6,0.8), 0.4, 0.3, "{r3}#");	gr->Puts(mglPoint(-0.4, 0.9), "\\{r3\\}", "w:C", -1.4);
+	gr->FaceZ(mglPoint(-0.2,0.8), 0.4, 0.3, "{r5}#");	gr->Puts(mglPoint(0,   0.9), "\\{r5\\}", "k:C", -1.4);
+	gr->FaceZ(mglPoint(0.2,	0.8), 0.4, 0.3, "{r7}#");	gr->Puts(mglPoint(0.4, 0.9), "\\{r7\\}", "k:C", -1.4);
+	gr->FaceZ(mglPoint(0.6,	0.8), 0.4, 0.3, "{r9}#");	gr->Puts(mglPoint(0.8, 0.9), "\\{r9\\}", "k:C", -1.4);
 }
 //-----------------------------------------------------------------------------
 void smgl_qo2d(mglGraph *gr)
@@ -442,30 +442,30 @@ void smgl_samplee(mglGraph *gr)	// TeX sample
 void smgl_sampled(mglGraph *gr)	// arrow styles
 {
 	float a=0.1,b=0.4,c=0.5;
-	gr->Line(mglPoint(a,1),mglPoint(b,1),"k-A");		gr->Puts(mglPoint(c,1),"Style 'A' or 'A\\_'","rL");
-	gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"k-V");	gr->Puts(mglPoint(c,0.8),"Style 'V' or 'V\\_'","rL");
-	gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"k-K");	gr->Puts(mglPoint(c,0.6),"Style 'K' or 'K\\_'","rL");
-	gr->Line(mglPoint(a,0.4),mglPoint(b,0.4),"k-I");	gr->Puts(mglPoint(c,0.4),"Style 'I' or 'I\\_'","rL");
-	gr->Line(mglPoint(a,0.2),mglPoint(b,0.2),"k-D");	gr->Puts(mglPoint(c,0.2),"Style 'D' or 'D\\_'","rL");
-	gr->Line(mglPoint(a,0),mglPoint(b,0),"k-S");		gr->Puts(mglPoint(c,0),"Style 'S' or 'S\\_'","rL");
-	gr->Line(mglPoint(a,-0.2),mglPoint(b,-0.2),"k-O");	gr->Puts(mglPoint(c,-0.2),"Style 'O' or 'O\\_'","rL");
-	gr->Line(mglPoint(a,-0.4),mglPoint(b,-0.4),"k-T");	gr->Puts(mglPoint(c,-0.4),"Style 'T' or 'T\\_'","rL");
-	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-_");	gr->Puts(mglPoint(c,-0.6),"Style '\\_' or none","rL");
-	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-AS");	gr->Puts(mglPoint(c,-0.8),"Style 'AS'","rL");
-	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-_A");		gr->Puts(mglPoint(c,-1),"Style '\\_A'","rL");
+	gr->Line(mglPoint(a,1),mglPoint(b,1),"k-A");		gr->Puts(mglPoint(c,1),"Style 'A' or 'A\\_'",":rL");
+	gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"k-V");	gr->Puts(mglPoint(c,0.8),"Style 'V' or 'V\\_'",":rL");
+	gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"k-K");	gr->Puts(mglPoint(c,0.6),"Style 'K' or 'K\\_'",":rL");
+	gr->Line(mglPoint(a,0.4),mglPoint(b,0.4),"k-I");	gr->Puts(mglPoint(c,0.4),"Style 'I' or 'I\\_'",":rL");
+	gr->Line(mglPoint(a,0.2),mglPoint(b,0.2),"k-D");	gr->Puts(mglPoint(c,0.2),"Style 'D' or 'D\\_'",":rL");
+	gr->Line(mglPoint(a,0),mglPoint(b,0),"k-S");		gr->Puts(mglPoint(c,0),"Style 'S' or 'S\\_'",":rL");
+	gr->Line(mglPoint(a,-0.2),mglPoint(b,-0.2),"k-O");	gr->Puts(mglPoint(c,-0.2),"Style 'O' or 'O\\_'",":rL");
+	gr->Line(mglPoint(a,-0.4),mglPoint(b,-0.4),"k-T");	gr->Puts(mglPoint(c,-0.4),"Style 'T' or 'T\\_'",":rL");
+	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-_");	gr->Puts(mglPoint(c,-0.6),"Style '\\_' or none",":rL");
+	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-AS");	gr->Puts(mglPoint(c,-0.8),"Style 'AS'",":rL");
+	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-_A");		gr->Puts(mglPoint(c,-1),"Style '\\_A'",":rL");
 
 	a=-1;	b=-0.7;	c=-0.6;
-	gr->Line(mglPoint(a,1),mglPoint(b,1),"kAA");		gr->Puts(mglPoint(c,1),"Style 'AA'","rL");
-	gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"kVV");	gr->Puts(mglPoint(c,0.8),"Style 'VV'","rL");
-	gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"kKK");	gr->Puts(mglPoint(c,0.6),"Style 'KK'","rL");
-	gr->Line(mglPoint(a,0.4),mglPoint(b,0.4),"kII");	gr->Puts(mglPoint(c,0.4),"Style 'II'","rL");
-	gr->Line(mglPoint(a,0.2),mglPoint(b,0.2),"kDD");	gr->Puts(mglPoint(c,0.2),"Style 'DD'","rL");
-	gr->Line(mglPoint(a,0),mglPoint(b,0),"kSS");		gr->Puts(mglPoint(c,0),"Style 'SS'","rL");
-	gr->Line(mglPoint(a,-0.2),mglPoint(b,-0.2),"kOO");	gr->Puts(mglPoint(c,-0.2),"Style 'OO'","rL");
-	gr->Line(mglPoint(a,-0.4),mglPoint(b,-0.4),"kTT");	gr->Puts(mglPoint(c,-0.4),"Style 'TT'","rL");
-	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-__");	gr->Puts(mglPoint(c,-0.6),"Style '\\_\\_'","rL");
-	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-VA");	gr->Puts(mglPoint(c,-0.8),"Style 'VA'","rL");
-	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-AV");		gr->Puts(mglPoint(c,-1),"Style 'AV'","rL");
+	gr->Line(mglPoint(a,1),mglPoint(b,1),"kAA");		gr->Puts(mglPoint(c,1),"Style 'AA'",":rL");
+	gr->Line(mglPoint(a,0.8),mglPoint(b,0.8),"kVV");	gr->Puts(mglPoint(c,0.8),"Style 'VV'",":rL");
+	gr->Line(mglPoint(a,0.6),mglPoint(b,0.6),"kKK");	gr->Puts(mglPoint(c,0.6),"Style 'KK'",":rL");
+	gr->Line(mglPoint(a,0.4),mglPoint(b,0.4),"kII");	gr->Puts(mglPoint(c,0.4),"Style 'II'",":rL");
+	gr->Line(mglPoint(a,0.2),mglPoint(b,0.2),"kDD");	gr->Puts(mglPoint(c,0.2),"Style 'DD'",":rL");
+	gr->Line(mglPoint(a,0),mglPoint(b,0),"kSS");		gr->Puts(mglPoint(c,0),"Style 'SS'",":rL");
+	gr->Line(mglPoint(a,-0.2),mglPoint(b,-0.2),"kOO");	gr->Puts(mglPoint(c,-0.2),"Style 'OO'",":rL");
+	gr->Line(mglPoint(a,-0.4),mglPoint(b,-0.4),"kTT");	gr->Puts(mglPoint(c,-0.4),"Style 'TT'",":rL");
+	gr->Line(mglPoint(a,-0.6),mglPoint(b,-0.6),"k-__");	gr->Puts(mglPoint(c,-0.6),"Style '\\_\\_'",":rL");
+	gr->Line(mglPoint(a,-0.8),mglPoint(b,-0.8),"k-VA");	gr->Puts(mglPoint(c,-0.8),"Style 'VA'",":rL");
+	gr->Line(mglPoint(a,-1),mglPoint(b,-1),"k-AV");		gr->Puts(mglPoint(c,-1),"Style 'AV'",":rL");
 }
 //-----------------------------------------------------------------------------
 void smgl_samplec(mglGraph *gr)	// error boxes
@@ -636,43 +636,43 @@ void smgl_sample6(mglGraph *gr)	// differentiate
 //-----------------------------------------------------------------------------
 void smgl_sample5(mglGraph *gr)	// pen styles
 {
-	if(type==5 || type==9 || type==10)	gr->Puts(mglPoint(0,1.2),"line styles not supported","rL");
+	if(type==5 || type==9 || type==10)	gr->Puts(mglPoint(0,1.2),"line styles not supported",":rL");
 	mreal d,x1,x2,x0,y=0.95;
 	d=0.3, x0=0.2, x1=0.5, x2=0.6;
-	gr->Line(mglPoint(x0,1-0*d),mglPoint(x1,1-0*d),"k-");	gr->Puts(mglPoint(x2,y-0*d),"Solid '-'","rL");
-	gr->Line(mglPoint(x0,1-1*d),mglPoint(x1,1-1*d),"k|");	gr->Puts(mglPoint(x2,y-1*d),"Long Dash '|'","rL");
-	gr->Line(mglPoint(x0,1-2*d),mglPoint(x1,1-2*d),"k;");	gr->Puts(mglPoint(x2,y-2*d),"Dash ';'","rL");
-	gr->Line(mglPoint(x0,1-3*d),mglPoint(x1,1-3*d),"k=");	gr->Puts(mglPoint(x2,y-3*d),"Small dash '='","rL");
-	gr->Line(mglPoint(x0,1-4*d),mglPoint(x1,1-4*d),"kj");	gr->Puts(mglPoint(x2,y-4*d),"Dash-dot 'j'","rL");
-	gr->Line(mglPoint(x0,1-5*d),mglPoint(x1,1-5*d),"ki");	gr->Puts(mglPoint(x2,y-5*d),"Small dash-dot 'i'","rL");
-	gr->Line(mglPoint(x0,1-6*d),mglPoint(x1,1-6*d),"k:");	gr->Puts(mglPoint(x2,y-6*d),"Dots ':'","rL");
-	gr->Line(mglPoint(x0,1-7*d),mglPoint(x1,1-7*d),"k ");	gr->Puts(mglPoint(x2,y-7*d),"None ' '","rL");
+	gr->Line(mglPoint(x0,1-0*d),mglPoint(x1,1-0*d),"k-");	gr->Puts(mglPoint(x2,y-0*d),"Solid '-'",":rL");
+	gr->Line(mglPoint(x0,1-1*d),mglPoint(x1,1-1*d),"k|");	gr->Puts(mglPoint(x2,y-1*d),"Long Dash '|'",":rL");
+	gr->Line(mglPoint(x0,1-2*d),mglPoint(x1,1-2*d),"k;");	gr->Puts(mglPoint(x2,y-2*d),"Dash ';'",":rL");
+	gr->Line(mglPoint(x0,1-3*d),mglPoint(x1,1-3*d),"k=");	gr->Puts(mglPoint(x2,y-3*d),"Small dash '='",":rL");
+	gr->Line(mglPoint(x0,1-4*d),mglPoint(x1,1-4*d),"kj");	gr->Puts(mglPoint(x2,y-4*d),"Dash-dot 'j'",":rL");
+	gr->Line(mglPoint(x0,1-5*d),mglPoint(x1,1-5*d),"ki");	gr->Puts(mglPoint(x2,y-5*d),"Small dash-dot 'i'",":rL");
+	gr->Line(mglPoint(x0,1-6*d),mglPoint(x1,1-6*d),"k:");	gr->Puts(mglPoint(x2,y-6*d),"Dots ':'",":rL");
+	gr->Line(mglPoint(x0,1-7*d),mglPoint(x1,1-7*d),"k ");	gr->Puts(mglPoint(x2,y-7*d),"None ' '",":rL");
 
 	d=0.25; x1=-1; x0=-0.8;	y = -0.05;
-	gr->Mark(mglPoint(x1,5*d),".");		gr->Puts(mglPoint(x0,y+5*d),"'.'","rL");
-	gr->Mark(mglPoint(x1,4*d),"+");		gr->Puts(mglPoint(x0,y+4*d),"'+'","rL");
-	gr->Mark(mglPoint(x1,3*d),"x");		gr->Puts(mglPoint(x0,y+3*d),"'x'","rL");
-	gr->Mark(mglPoint(x1,2*d),"*");		gr->Puts(mglPoint(x0,y+2*d),"'*'","rL");
-	gr->Mark(mglPoint(x1,d),"s");		gr->Puts(mglPoint(x0,y+d),"'s'","rL");
-	gr->Mark(mglPoint(x1,0),"d");		gr->Puts(mglPoint(x0,y),"'d'","rL");
-	gr->Mark(mglPoint(x1,-d,0),"o");	gr->Puts(mglPoint(x0,y-d),"'o'","rL");
-	gr->Mark(mglPoint(x1,-2*d,0),"^");	gr->Puts(mglPoint(x0,y-2*d),"'\\^'","rL");
-	gr->Mark(mglPoint(x1,-3*d,0),"v");	gr->Puts(mglPoint(x0,y-3*d),"'v'","rL");
-	gr->Mark(mglPoint(x1,-4*d,0),"<");	gr->Puts(mglPoint(x0,y-4*d),"'<'","rL");
-	gr->Mark(mglPoint(x1,-5*d,0),">");	gr->Puts(mglPoint(x0,y-5*d),"'>'","rL");
+	gr->Mark(mglPoint(x1,5*d),".");		gr->Puts(mglPoint(x0,y+5*d),"'.'",":rL");
+	gr->Mark(mglPoint(x1,4*d),"+");		gr->Puts(mglPoint(x0,y+4*d),"'+'",":rL");
+	gr->Mark(mglPoint(x1,3*d),"x");		gr->Puts(mglPoint(x0,y+3*d),"'x'",":rL");
+	gr->Mark(mglPoint(x1,2*d),"*");		gr->Puts(mglPoint(x0,y+2*d),"'*'",":rL");
+	gr->Mark(mglPoint(x1,d),"s");		gr->Puts(mglPoint(x0,y+d),"'s'",":rL");
+	gr->Mark(mglPoint(x1,0),"d");		gr->Puts(mglPoint(x0,y),"'d'",":rL");
+	gr->Mark(mglPoint(x1,-d,0),"o");	gr->Puts(mglPoint(x0,y-d),"'o'",":rL");
+	gr->Mark(mglPoint(x1,-2*d,0),"^");	gr->Puts(mglPoint(x0,y-2*d),"'\\^'",":rL");
+	gr->Mark(mglPoint(x1,-3*d,0),"v");	gr->Puts(mglPoint(x0,y-3*d),"'v'",":rL");
+	gr->Mark(mglPoint(x1,-4*d,0),"<");	gr->Puts(mglPoint(x0,y-4*d),"'<'",":rL");
+	gr->Mark(mglPoint(x1,-5*d,0),">");	gr->Puts(mglPoint(x0,y-5*d),"'>'",":rL");
 
 	d=0.25; x1=-0.5; x0=-0.3;	y = -0.05;
-	gr->Mark(mglPoint(x1,5*d),"C");		gr->Puts(mglPoint(x0,y+5*d),"'\\#.'","rL");
-	gr->Mark(mglPoint(x1,4*d),"P");		gr->Puts(mglPoint(x0,y+4*d),"'\\#+'","rL");
-	gr->Mark(mglPoint(x1,3*d),"X");		gr->Puts(mglPoint(x0,y+3*d),"'\\#x'","rL");
-	gr->Mark(mglPoint(x1,2*d),"Y");		gr->Puts(mglPoint(x0,y+2*d),"'\\#*'","rL");
-	gr->Mark(mglPoint(x1,d),"S");		gr->Puts(mglPoint(x0,y+d),"'\\#s'","rL");
-	gr->Mark(mglPoint(x1,0),"D");		gr->Puts(mglPoint(x0,y),"'\\#d'","rL");
-	gr->Mark(mglPoint(x1,-d,0),"O");	gr->Puts(mglPoint(x0,y-d),"'\\#o'","rL");
-	gr->Mark(mglPoint(x1,-2*d,0),"T");	gr->Puts(mglPoint(x0,y-2*d),"'\\#\\^'","rL");
-	gr->Mark(mglPoint(x1,-3*d,0),"V");	gr->Puts(mglPoint(x0,y-3*d),"'\\#v'","rL");
-	gr->Mark(mglPoint(x1,-4*d,0),"L");	gr->Puts(mglPoint(x0,y-4*d),"'\\#<'","rL");
-	gr->Mark(mglPoint(x1,-5*d,0),"R");	gr->Puts(mglPoint(x0,y-5*d),"'\\#>'","rL");
+	gr->Mark(mglPoint(x1,5*d),"C");		gr->Puts(mglPoint(x0,y+5*d),"'\\#.'",":rL");
+	gr->Mark(mglPoint(x1,4*d),"P");		gr->Puts(mglPoint(x0,y+4*d),"'\\#+'",":rL");
+	gr->Mark(mglPoint(x1,3*d),"X");		gr->Puts(mglPoint(x0,y+3*d),"'\\#x'",":rL");
+	gr->Mark(mglPoint(x1,2*d),"Y");		gr->Puts(mglPoint(x0,y+2*d),"'\\#*'",":rL");
+	gr->Mark(mglPoint(x1,d),"S");		gr->Puts(mglPoint(x0,y+d),"'\\#s'",":rL");
+	gr->Mark(mglPoint(x1,0),"D");		gr->Puts(mglPoint(x0,y),"'\\#d'",":rL");
+	gr->Mark(mglPoint(x1,-d,0),"O");	gr->Puts(mglPoint(x0,y-d),"'\\#o'",":rL");
+	gr->Mark(mglPoint(x1,-2*d,0),"T");	gr->Puts(mglPoint(x0,y-2*d),"'\\#\\^'",":rL");
+	gr->Mark(mglPoint(x1,-3*d,0),"V");	gr->Puts(mglPoint(x0,y-3*d),"'\\#v'",":rL");
+	gr->Mark(mglPoint(x1,-4*d,0),"L");	gr->Puts(mglPoint(x0,y-4*d),"'\\#<'",":rL");
+	gr->Mark(mglPoint(x1,-5*d,0),"R");	gr->Puts(mglPoint(x0,y-5*d),"'\\#>'",":rL");
 }
 //-----------------------------------------------------------------------------
 void smgl_sample4(mglGraph *gr)	// font features
@@ -776,7 +776,7 @@ void smgl_sample1(mglGraph *gr)	// transformation
 {
 	gr->SubPlot(2,2,0);  // just new axis without rotation and aspects
 	gr->Box();
-	gr->Puts(mglPoint(-1,1.1,1),"Just box","rL");
+	gr->Puts(mglPoint(-1,1.1,1),"Just box",":rL");
 	gr->InPlot(0.2,0.5,0.7,1,false);
 	gr->Box();
 	gr->Puts(mglPoint(0,1.2,1),"InPlot example");
@@ -784,7 +784,7 @@ void smgl_sample1(mglGraph *gr)	// transformation
 	gr->Rotate(60,40);
 	gr->Aspect(1,1,1);
 	gr->Box();
-	gr->Puts(mglPoint(1,1,1.5),"Rotate only","rR");
+	gr->Puts(mglPoint(1,1,1.5),"Rotate only",":rR");
 	gr->SubPlot(2,2,2);  // aspect in other direction
 	gr->Rotate(60,40);
 	gr->Aspect(1,1,2);
@@ -1619,9 +1619,9 @@ void smgl_fit(mglGraph *gr)	// nonlinear fitting
 	gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", Ini);
 	gr->Plot(res, "r");
 	gr->Plot(in, "b");
-	gr->Puts(mglPoint(-1, -1.3), "fitted:", "L:r", -1);
-	gr->PutsFit(mglPoint(0, -1.8), "y = ", "C:r", -1);
-	gr->Puts(mglPoint(0, 2.2), "initial: y = 0.3+sin(2\\pi x)", "C:b", -1);
+	gr->Puts(mglPoint(-1, -1.3), "fitted:", "r:L", -1);
+	gr->PutsFit(mglPoint(0, -1.8), "y = ", "r:C", -1);
+	gr->Puts(mglPoint(0, 2.2), "initial: y = 0.3+sin(2\\pi x)", "b:C", -1);
 	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));	gr->SetOrigin(0,0,0);
 }
 //-----------------------------------------------------------------------------
@@ -1912,7 +1912,7 @@ mglSample samp[] = {
 	{"stem", smgl_stem},
 	{"step", smgl_step},
 	{"stereo", smgl_stereo},
-	{"stfa", smgl_stfa},
+//	{"stfa", smgl_stfa},	// TODO add later
 	{"stick", smgl_stick},
 	{"surf", smgl_surf},
 	{"surf3", smgl_surf3},

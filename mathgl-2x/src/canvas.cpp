@@ -446,6 +446,21 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 	}
 	inW = B.b[0];	inH=B.b[4];		Persp = 0;
 	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
+	mglPrim p;	p.id = ObjId;
+	p.n1=B.x;	p.n2=B.x+inW;	p.n3=B.y;	p.n4=B.y+inH;
+	Sub.push_back(p);
+}
+//-----------------------------------------------------------------------------
+int mglCanvas::GetSplId(long x,long y)
+{
+	register long i,id=-1;
+	for(i=Sub.size()-1;i>=0;i--)
+	{
+		const mglPrim &p = Sub[i];
+		if(p.n1<=x && p.n2>=x && p.n3<=y && p.n4>=y)
+		{	id=p.id;	break;	}
+	}
+	return id;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Aspect(float Ax,float Ay,float Az)
