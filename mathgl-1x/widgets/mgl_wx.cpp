@@ -160,7 +160,7 @@ void wxMathGL::Update(mglGraph *gr)
 {
 	if(gr==0)	gr = graph;
 	if(gr==0 || draw_func==0)	return;
-	gr->DefaultPlotParam();
+	gr->DefaultPlotParam();	gr->ResetFrames();
 	gr->Alpha(alpha);	gr->Light(light);
 	gr->View(tet,phi);	gr->Org = mglPoint(NAN,NAN,NAN);
 	gr->Perspective(per);

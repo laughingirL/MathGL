@@ -312,14 +312,6 @@ void mglGraphAB::Light(int n, mglPoint p, mglColor c, mreal br, bool inf, mreal 
 	cLight[3*n] = c.r;	cLight[3*n+1] = c.g;	cLight[3*n+2] = c.b;
 }
 //-----------------------------------------------------------------------------
-int mglGraphAB::NewFrame()
-{
-	Clf();
-	Identity();
-	CurFrameId++;
-	return CurFrameId-1;
-}
-//-----------------------------------------------------------------------------
 mreal mglGraphAB::Putsw(mglPoint p,mglPoint n,const wchar_t *str,char font,mreal size)
 {
 	static int cgid=1;	StartGroup("PutswL",cgid++);

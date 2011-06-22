@@ -192,7 +192,17 @@ void QMathGL::update(mglGraph *gr)
 	if(gr==0)	gr = graph;
 	if(gr==0)	return;
 	if(draw_func==0)	{	refresh();	return;	}
+
+/*	CurFrameId = 0;
+	int n = draw ? draw(this,par) : 0;
+	if(n<NumFig && n>=0)	NumFig = n;
+	DrawFunc = draw;		FuncPar = par;
+*/
+
+//	if(graph->NumFig>0)	{	gr->DefaultPlotParam();	gr->ResetFrames();	}
 	if(gr!=graph || graph->ClfOnUpdate)	gr->DefaultPlotParam();
+	gr->ResetFrames();
+	
 	char *buf=new char[2048];	buf[0]=0;	gr->Message = buf;
 
 	gr->Alpha(alpha);	gr->Light(light);
@@ -537,8 +547,9 @@ void mglGraphQT::ReLoad(bool o)	{	if(LoadFunc){LoadFunc(o, FuncPar);Update();}	}
 //-----------------------------------------------------------------------------
 void mglGraphQT::Adjust()
 {
-	SetSize(scroll->width(), scroll->height());
-	QMGL->setSize(scroll->width(), scroll->height());
+	const int s=3;
+	SetSize(scroll->width()-s, scroll->height()-s);
+	QMGL->setSize(scroll->width()-s, scroll->height()-s);
 	Update();
 }
 //-----------------------------------------------------------------------------
