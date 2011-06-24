@@ -527,7 +527,7 @@ void mglCanvas::AddLight(int n, mglPoint p, char col, float br, bool inf, float 
 //-----------------------------------------------------------------------------
 void mglCanvas::arrow_plot(long n1, long n2,char st)
 {
-	if(!strchr("AVKSDTIO",st))	return;
+	if(n1<0 || n2<0 || !strchr("AVKSDTIO",st))	return;
 	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
 	mglPnt q1=p1,q2=p1,q3=p1,q4=p1;
 	q1.u=q2.u=q3.u=q4.u=NAN;

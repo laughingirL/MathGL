@@ -190,7 +190,7 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 void smgl_tval(mglGraph *gr)	// ticks features
 {
 	gr->SetRanges(-M_PI,M_PI, 0, 2);
-	mreal val[]={-M_PI, -M_PI/2, 0, 0.886, M_PI/2, M_PI};
+	float val[]={-M_PI, -M_PI/2, 0, 0.886, M_PI/2, M_PI};
 	mglData xt(6,val);
 	gr->SetTicksVal('x', xt, "-\\pi\n-\\pi/2\n\n0\nx^*\n\\pi/2\n\\pi");
 	gr->Axis();	gr->Grid();
@@ -637,7 +637,7 @@ void smgl_sample6(mglGraph *gr)	// differentiate
 void smgl_sample5(mglGraph *gr)	// pen styles
 {
 	if(type==5 || type==9 || type==10)	gr->Puts(mglPoint(0,1.2),"line styles not supported",":rL");
-	mreal d,x1,x2,x0,y=0.95;
+	float d,x1,x2,x0,y=0.95;
 	d=0.3, x0=0.2, x1=0.5, x2=0.6;
 	gr->Line(mglPoint(x0,1-0*d),mglPoint(x1,1-0*d),"k-");	gr->Puts(mglPoint(x2,y-0*d),"Solid '-'",":rL");
 	gr->Line(mglPoint(x0,1-1*d),mglPoint(x1,1-1*d),"k|");	gr->Puts(mglPoint(x2,y-1*d),"Long Dash '|'",":rL");
@@ -662,17 +662,17 @@ void smgl_sample5(mglGraph *gr)	// pen styles
 	gr->Mark(mglPoint(x1,-5*d,0),">");	gr->Puts(mglPoint(x0,y-5*d),"'>'",":rL");
 
 	d=0.25; x1=-0.5; x0=-0.3;	y = -0.05;
-	gr->Mark(mglPoint(x1,5*d),"C");		gr->Puts(mglPoint(x0,y+5*d),"'\\#.'",":rL");
-	gr->Mark(mglPoint(x1,4*d),"P");		gr->Puts(mglPoint(x0,y+4*d),"'\\#+'",":rL");
-	gr->Mark(mglPoint(x1,3*d),"X");		gr->Puts(mglPoint(x0,y+3*d),"'\\#x'",":rL");
-	gr->Mark(mglPoint(x1,2*d),"Y");		gr->Puts(mglPoint(x0,y+2*d),"'\\#*'",":rL");
-	gr->Mark(mglPoint(x1,d),"S");		gr->Puts(mglPoint(x0,y+d),"'\\#s'",":rL");
-	gr->Mark(mglPoint(x1,0),"D");		gr->Puts(mglPoint(x0,y),"'\\#d'",":rL");
-	gr->Mark(mglPoint(x1,-d,0),"O");	gr->Puts(mglPoint(x0,y-d),"'\\#o'",":rL");
-	gr->Mark(mglPoint(x1,-2*d,0),"T");	gr->Puts(mglPoint(x0,y-2*d),"'\\#\\^'",":rL");
-	gr->Mark(mglPoint(x1,-3*d,0),"V");	gr->Puts(mglPoint(x0,y-3*d),"'\\#v'",":rL");
-	gr->Mark(mglPoint(x1,-4*d,0),"L");	gr->Puts(mglPoint(x0,y-4*d),"'\\#<'",":rL");
-	gr->Mark(mglPoint(x1,-5*d,0),"R");	gr->Puts(mglPoint(x0,y-5*d),"'\\#>'",":rL");
+	gr->Mark(mglPoint(x1,5*d),"#.");	gr->Puts(mglPoint(x0,y+5*d),"'\\#.'",":rL");
+	gr->Mark(mglPoint(x1,4*d),"#+");	gr->Puts(mglPoint(x0,y+4*d),"'\\#+'",":rL");
+	gr->Mark(mglPoint(x1,3*d),"#x");	gr->Puts(mglPoint(x0,y+3*d),"'\\#x'",":rL");
+	gr->Mark(mglPoint(x1,2*d),"#*");	gr->Puts(mglPoint(x0,y+2*d),"'\\#*'",":rL");
+	gr->Mark(mglPoint(x1,d),"#s");		gr->Puts(mglPoint(x0,y+d),"'\\#s'",":rL");
+	gr->Mark(mglPoint(x1,0),"#d");		gr->Puts(mglPoint(x0,y),"'\\#d'",":rL");
+	gr->Mark(mglPoint(x1,-d,0),"#o");	gr->Puts(mglPoint(x0,y-d),"'\\#o'",":rL");
+	gr->Mark(mglPoint(x1,-2*d,0),"#^");	gr->Puts(mglPoint(x0,y-2*d),"'\\#\\^'",":rL");
+	gr->Mark(mglPoint(x1,-3*d,0),"#v");	gr->Puts(mglPoint(x0,y-3*d),"'\\#v'",":rL");
+	gr->Mark(mglPoint(x1,-4*d,0),"#<");	gr->Puts(mglPoint(x0,y-4*d),"'\\#<'",":rL");
+	gr->Mark(mglPoint(x1,-5*d,0),"#>");	gr->Puts(mglPoint(x0,y-5*d),"'\\#>'",":rL");
 }
 //-----------------------------------------------------------------------------
 void smgl_sample4(mglGraph *gr)	// font features
@@ -804,7 +804,7 @@ void mgls_prepare1d(mglData *y, mglData *y1, mglData *y2, mglData *x1, mglData *
 	if(y)	y->Create(n,3);
 	if(x1)	x1->Create(n);		if(x2)	x2->Create(n);
 	if(y1)	y1->Create(n);		if(y2)	y2->Create(n);
-	mreal xx;
+	float xx;
 	for(i=0;i<n;i++)
 	{
 		xx = i/(n-1.);
@@ -958,7 +958,7 @@ void smgl_error(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
 	mglData x0(10), y0(10), ex0(10), ey0(10);
-	mreal x;
+	float x;
 	for(int i=0;i<10;i++)
 	{
 		x = i/9.;
@@ -998,7 +998,7 @@ void mgls_prepare2d(mglData *a, mglData *b, mglData *v)
 	register long i,j,n=50,m=40,i0;
 	if(a)	a->Create(n,m);		if(b)	b->Create(n,m);
 	if(v)	{	v->Create(9);	v->Fill(-1,1);	}
-	mreal x,y;
+	float x,y;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)
 	{
 		x = i/(n-1.);	y = j/(m-1.);	i0 = i+n*j;
@@ -1154,7 +1154,7 @@ void mgls_prepare3d(mglData *a, mglData *b)
 {
 	register long i,j,k,n=60,m=50,l=40,i0;
 	if(a)	a->Create(n,m,l);		if(b)	b->Create(n,m,l);
-	mreal x,y,z;
+	float x,y,z;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
 	{
 		x=2*i/(n-1.)-1;	y=2*j/(m-1.)-1;	z=2*k/(l-1.)-1;	i0 = i+n*(j+m*k);
@@ -1244,7 +1244,7 @@ void mgls_prepare2v(mglData *a, mglData *b)
 {
 	register long i,j,n=20,m=30,i0;
 	if(a)	a->Create(n,m);		if(b)	b->Create(n,m);
-	mreal x,y;
+	float x,y;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)
 	{
 		x=i/(n-1.);	y=j/(m-1.);	i0 = i+n*j;
@@ -1316,7 +1316,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 	register long i,j,k,n=10,i0;
 	if(!ex || !ey || !ez)	return;
 	ex->Create(n,n,n);	ey->Create(n,n,n);	ez->Create(n,n,n);
-	mreal x,y,z, r1,r2;
+	float x,y,z, r1,r2;
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)	for(k=0;k<n;k++)
 	{
 		x=2*i/(n-1.)-1;	y=2*j/(n-1.)-1;	z=2*k/(n-1.)-1;	i0 = i+n*(j+k*n);
@@ -1382,7 +1382,7 @@ void smgl_dots(mglGraph *gr)
 void smgl_legend(mglGraph *gr)
 {
 	mglData f(50,3);
-	mreal x;
+	float x;
 	for(int i=0;i<50;i++)
 	{
 		x=i/49.;
@@ -1614,7 +1614,7 @@ void smgl_fit(mglGraph *gr)	// nonlinear fitting
 	gr->Plot(rnd, ". ");
 	gr->Box();
 
-	mreal ini[3] = {1,1,3};
+	float ini[3] = {1,1,3};
 	mglData Ini(3,ini);
 	gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", Ini);
 	gr->Plot(res, "r");
@@ -1628,7 +1628,7 @@ void smgl_fit(mglGraph *gr)	// nonlinear fitting
 #include "mgl/parser.h"
 void smgl_parser(mglGraph *gr)	// example of MGL parsing
 {
-	mreal a[100];   // let a_i = sin(4*pi*x), x=0...1
+	float a[100];   // let a_i = sin(4*pi*x), x=0...1
 	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
 	mglParse *parser = new mglParse;
 	mglData &d =(parser->AddVar("dat"))->d;
@@ -1672,7 +1672,8 @@ void smgl_mesh_cont(mglGraph *gr)	// contours under mesh
 {
 	mglData a;	mgls_prepare2d(&a);
 	gr->Rotate(40,60);
-	gr->Box();	gr->Mesh(a);	gr->Cont(a, 0, "zrange -1 -1");
+	gr->Box();	gr->Mesh(a);	gr->Cont(a, "_");
+//	gr->Cont(a, 0, "zrange -1 -1");	//	Also possible variant
 }
 //-----------------------------------------------------------------------------
 void smgl_surf_cont_y(mglGraph *gr)	// contours on the surface
@@ -1718,7 +1719,7 @@ void mgls_preparecc(mglData *c)
 {
 	register long i,j,k,n=61,m=51,l=40,i0;
 	if(!c)	return;		c->Create(n,m,l);
-	mreal x,y,z;
+	float x,y,z;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
 	{
 		x=2*i/(n-1.)-1;	y=2*j/(m-1.)-1;	z=2*k/(l-1.)-1;	i0 = i+n*(j+m*k);

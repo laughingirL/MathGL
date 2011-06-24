@@ -225,9 +225,9 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 	if(Cut || !use_nan)
 	{
 //		if(x1<Min.x || x2>Max.x || y1<Min.y || y2>Max.y || z1<Min.z || z2>Max.z)	res = false;
-		if((x1-Min.x)*(x1-Max.x)>0 && (x2-Min.x)*(x2-Max.x)>0)	res = false;
-		if((y1-Min.y)*(y1-Max.y)>0 && (y2-Min.y)*(y2-Max.y)>0)	res = false;
-		if((z1-Min.z)*(z1-Max.z)>0 && (z2-Min.z)*(z2-Max.z)>0)	res = false;
+		if((x1-Min.x)*(x1-Max.x)>0 && (x2-Min.x)*(x2-Max.x)>0 && Min.x!=Max.x)	res = false;
+		if((y1-Min.y)*(y1-Max.y)>0 && (y2-Min.y)*(y2-Max.y)>0 && Min.y!=Max.y)	res = false;
+		if((z1-Min.z)*(z1-Max.z)>0 && (z2-Min.z)*(z2-Max.z)>0 && Min.z!=Max.z)	res = false;
 	}
 	else
 	{
@@ -514,13 +514,8 @@ void mglColor::Set(char p, float bright)
 //-----------------------------------------------------------------------------
 void mglTexture::Set(const char *s, int smooth, float alpha)
 {
-	bool sm;		///< Use smoothed color
-	mglColor *c;	///< Colors itself
-
 	// NOTE: New syntax -- colors are CCCCC or {CNCNCCCN}; options inside []
 	if(!s || !s[0])	return;
-	if(strchr(s,'|') && !smooth)	smooth = -1;
-	sm = smooth>=0;
 	register long i,j=0,m=0,l=strlen(s);
 	const char *cols = "kwrgbcymhWRGBCYMHlenpquLENPQU";
 	for(i=0;i<l;i++)		// find number of colors
@@ -528,9 +523,16 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
 		if(strchr(cols,s[i]) && j<1)	n++;
 	}
-	if(!n)	return;
-	c = new mglColor[2*n];
-	bool map = (smooth==2);
+	if(!n)
+	{
+		// it seems to be the only case where new color scheme should be
+		if(strchr(s,'|') && !smooth)
+		{	n=l=6;	s="BbcyrR";	smooth = -1;	}
+		else	return;
+	}
+	if(strchr(s,'|') && !smooth)	smooth = -1;
+	mglColor *c = new mglColor[2*n];		// Colors itself
+	bool map = (smooth==2), sm = smooth>=0;	// Use mapping, smoothed colors
 	for(i=j=n=0;i<l;i++)	// fill colors
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
@@ -761,7 +763,7 @@ void mglBase::SetAmbient(float bright)	{	AmbBr = bright;	}
 //-----------------------------------------------------------------------------
 float mglBase::SaveState(const char *opt)
 {
-	if(!opt || !opt[0])	return NAN;
+	if(!opt || !opt[0] || saved)	return NAN;
 	MSS=MarkSize;	ASS=ArrowSize;
 	FSS=FontSize;	ADS=AlphaDef;
 	MNS=MeshNum;	CSS=Cut;	LSS=AmbBr;

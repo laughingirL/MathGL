@@ -41,12 +41,38 @@ void mgls_prepare3d(mglData *a, mglData *b)
 	}
 }
 //-----------------------------------------------------------------------------
+void mgls_prepare2d(mglData *a, mglData *b=0, mglData *v=0)
+{
+	register long i,j,n=50,m=40,i0;
+	if(a)	a->Create(n,m);		if(b)	b->Create(n,m);
+	if(v)	{	v->Create(9);	v->Fill(-1,1);	}
+	mreal x,y;
+	for(i=0;i<n;i++)	for(j=0;j<m;j++)
+	{
+		x = i/(n-1.);	y = j/(m-1.);	i0 = i+n*j;
+		if(a)	a->a[i0] = 0.6*sin(2*M_PI*x)*sin(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
+		if(b)	b->a[i0] = 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
+	}
+}
+//-----------------------------------------------------------------------------
+void mgls_prepare2v(mglData *a, mglData *b)
+{
+	register long i,j,n=20,m=30,i0;
+	if(a)	a->Create(n,m);		if(b)	b->Create(n,m);
+	float x,y;
+	for(i=0;i<n;i++)	for(j=0;j<m;j++)
+	{
+		x=i/(n-1.);	y=j/(m-1.);	i0 = i+n*j;
+		if(a)	a->a[i0] = 0.6*sin(2*M_PI*x)*sin(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
+		if(b)	b->a[i0] = 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
+	}
+}
+//-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr)
 {
-	mglData c;	mgls_prepare3d(&c);
-	gr->Rotate(40,60);	gr->Light(true);	gr->Alpha(true);
+	mglData a,b;	mgls_prepare2v(&a,&b);
 	gr->Box();
-	gr->Surf3(c,"","value 5");
+	gr->Flow(a,b);
 	return 0;
 
 	gr->Rotate(0,0);

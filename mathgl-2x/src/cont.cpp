@@ -338,7 +338,7 @@ void mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, c
 	static int cgid=1;	gr->StartGroup("Cont",cgid++);
 
 	bool text=(sch && strchr(sch,'t'));
-	bool fixed=(sch && strchr(sch,'_'));
+	bool fixed=(sch && strchr(sch,'_')) || (gr->Min.z==gr->Max.z);
 	long s=gr->AddTexture(sch);
 	gr->SetPenPal(sch);
 
@@ -538,7 +538,7 @@ void mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	static int cgid=1;	gr->StartGroup("ContF",cgid++);
 	long s=gr->AddTexture(sch);
 
-	bool fixed=(sch && strchr(sch,'_'));
+	bool fixed=(sch && strchr(sch,'_')) || (gr->Min.z==gr->Max.z);
 	mglData xx, yy, zz(z->GetNx(), z->GetNy());
 	if(!both)	// make
 	{
@@ -637,7 +637,7 @@ void mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	long s = gr->AddTexture(sch,1);
 	int nc = gr->GetNumPal(s*256);
 
-	bool fixed=(sch && strchr(sch,'_'));
+	bool fixed=(sch && strchr(sch,'_')) || (gr->Min.z==gr->Max.z);
 	mglData xx, yy, zz(z->GetNx(), z->GetNy());
 	if(!both)	// make
 	{
