@@ -25,6 +25,45 @@ mglCanvasW::mglCanvasW() : mglCanvas()
 	AutoClf=true;	ClfOnUpdate=true;
 	Delay=0.5;		ShowMousePos=false;
 	LoadFunc=0;	FuncPar=0;	DrawFunc=0;
+	GG = 0;		NumFig = 0;	CurFig = -1;
+}
+//-----------------------------------------------------------------------------
+mglCanvasW::~mglCanvasW()	{	if(GG) free(GG);	}
+//-----------------------------------------------------------------------------
+void mglCanvasW::Clf(mglColor Back)	{	if(AutoClf)	mglCanvas::Clf(Back);	}
+//-----------------------------------------------------------------------------
+void mglCanvasW::SetSize(int w,int h)
+{
+	if(GG)	free(GG);	GG = 0;
+	mglCanvas::SetSize(w,h);
+	//	if(Wnd)	Wnd->size(w,h);
+}
+//-----------------------------------------------------------------------------
+void mglCanvasW::EndFrame()
+{
+	CurFig = CurFrameId-1;
+	if(!GG)
+	{
+		GG = (unsigned char *)malloc(3*Width*Height);
+		NumFig = 1;		CurFig = 0;
+	}
+	else if(CurFig>NumFig-1)
+	{
+		GG = (unsigned char *)realloc(GG,3*(NumFig+1)*Width*Height);
+		NumFig++;
+	}
+	mglCanvas::EndFrame();
+	memcpy(GG + CurFig*Width*Height*3,G,3*Width*Height);
+	CurFig++;
+}
+//-----------------------------------------------------------------------------
+const unsigned char *mglCanvasW::GetBits()
+{
+	Finish();
+	unsigned char *g = G;
+	if(GG && NumFig>0 && CurFig<NumFig && CurFig>=0)
+		g = GG + CurFig*Width*Height*3;
+	return g;
 }
 //-----------------------------------------------------------------------------
 int mgl_draw_class(mglBase *gr, void *p)

@@ -249,51 +249,7 @@ int Fl_MathGL::handle(int code)
 //-----------------------------------------------------------------------------
 mglCanvasFL::mglCanvasFL() : mglCanvasW()
 {
-	GG = 0;		Wnd = 0;
-	NumFig = 0;	CurFig = -1;
-	alpha = light = sshow = 0;
-}
-//-----------------------------------------------------------------------------
-mglCanvasFL::~mglCanvasFL()
-{	if(GG) free(GG);	}
-//-----------------------------------------------------------------------------
-void mglCanvasFL::SetSize(int w,int h)
-{
-	if(GG)	free(GG);	GG = 0;
-	mglCanvas::SetSize(w,h);
-//	if(Wnd)	Wnd->size(w,h);
-}
-//-----------------------------------------------------------------------------
-void mglCanvasFL::EndFrame()
-{
-	CurFig = CurFrameId-1;
-	if(!GG)
-	{
-		GG = (unsigned char *)malloc(3*Width*Height);
-		NumFig = 1;		CurFig = 0;
-	}
-	else if(CurFig>NumFig-1)
-	{
-		GG = (unsigned char *)realloc(GG,3*(NumFig+1)*Width*Height);
-		NumFig++;
-	}
-	mglCanvas::EndFrame();
-	memcpy(GG + CurFig*Width*Height*3,G,3*Width*Height);
-	CurFig++;
-}
-//-----------------------------------------------------------------------------
-void mglCanvasFL::Clf(mglColor Back)
-{
-	if(AutoClf)	mglCanvas::Clf(Back);
-}
-//-----------------------------------------------------------------------------
-const unsigned char *mglCanvasFL::GetBits()
-{
-	Finish();
-	unsigned char *g = G;
-	if(GG && NumFig>0 && CurFig<NumFig && CurFig>=0)
-		g = GG + CurFig*Width*Height*3;
-	return g;
+	Wnd = 0;	alpha = light = sshow = 0;
 }
 //-----------------------------------------------------------------------------
 void mglCanvasFL::NextFrame()

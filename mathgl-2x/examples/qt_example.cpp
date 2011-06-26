@@ -18,19 +18,20 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <stdio.h>
-#include <mgl/mgl_qt.h>
+#include "mgl/mgl.h"
+#include "mgl/mgl_qt.h"
 //-----------------------------------------------------------------------------
-int test(mglGraph *gr, void *);
-int sample(mglGraph *gr, void *);
-int sample_1(mglGraph *gr, void *);
-int sample_2(mglGraph *gr, void *);
-int sample_3(mglGraph *gr, void *);
-int sample_d(mglGraph *gr, void *);
+int test_wnd(mglGraph *gr);
+int sample(mglGraph *gr);
+int sample_1(mglGraph *gr);
+int sample_2(mglGraph *gr);
+int sample_3(mglGraph *gr);
+int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
 #include <pthread.h>
 #include <unistd.h>
 mglPoint pnt;  // some global variable for changable data
-void *mgl_qt_tmp(void *)	{	mglQtRun();	return 0;	}
+void *mgl_qt_tmp(void *);
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
@@ -53,7 +54,7 @@ int main(int argc,char **argv)
 	}
 	return 0;   // finish calculations and close the window
 #else
-	mglGraphQT gr;
+	mglCanvasQT gr;
 	char key = 0;
 	if(argc>1 && argv[1][0]!='-')	key = argv[1][0];
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
@@ -63,10 +64,10 @@ int main(int argc,char **argv)
 	case '2':	gr.Window(argc,argv,sample_2,"2D plots");	break;
 	case '3':	gr.Window(argc,argv,sample_3,"3D plots");	break;
 	case 'd':	gr.Window(argc,argv,sample_d,"Dual plots");	break;
-	case 't':	gr.Window(argc,argv,test,"Testing");	break;
+	case 't':	gr.Window(argc,argv,test_wnd,"Testing");	break;
 	default:	gr.Window(argc,argv,sample,"Example of molecules");	break;
 	}
-	return mglQtRun();
+	mgl_qt_run();	return 0;
 #endif
 }
 //-----------------------------------------------------------------------------

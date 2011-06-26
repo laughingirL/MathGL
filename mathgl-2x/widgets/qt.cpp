@@ -65,7 +65,7 @@ const QString scriptName("default");
 QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 {
 	autoResize = false;	draw_par = 0;	draw_func = 0;
-	graph = new mglGraphZB;
+	graph = new mglCanvasQT;
 	popup = 0;		grBuf = 0;
 	phi = tet = per = 0;
 	x1 = y1 = 0;	x2 = y2 = 1;
@@ -86,10 +86,10 @@ void QMathGL::setGraph(mglCanvasW *gr)
 	delete graph;	graph=gr;
 }
 //-----------------------------------------------------------------------------
-void QMathGL::setDraw(int (*func)(mglGraph *gr, void *par), void *par)
+void QMathGL::setDraw(int (*func)(mglBase *gr, void *par), void *par)
 {	draw_func = func;	draw_par = par;	}
 //-----------------------------------------------------------------------------
-int mgl_draw_class(mglGraph *gr, void *p);
+int mgl_draw_class(mglBase *gr, void *p);
 void QMathGL::setDraw(mglDraw *dr)
 {	draw_func = mgl_draw_class;	draw_par = dr;	}
 //-----------------------------------------------------------------------------
@@ -179,7 +179,7 @@ void QMathGL::zoomOut()
 	update();
 }
 //-----------------------------------------------------------------------------
-void QMathGL::update(mglGraph *gr)
+void QMathGL::update(mglCanvas *gr)
 {
 	if(gr==0)	gr = graph;
 	if(gr==0)	return;
@@ -188,10 +188,7 @@ void QMathGL::update(mglGraph *gr)
 	char *buf=new char[2048];	buf[0]=0;	gr->Message = buf;
 
 	gr->Alpha(alpha);	gr->Light(light);
-	gr->View(tet,phi);	gr->Org = mglPoint(NAN,NAN,NAN);
-	gr->Perspective(per);
-	gr->Zoom(x1,y1,x2,y2);
-	gr->DrawFace = !rotate;
+	gr->View(tet,phi);	gr->Perspective(per);
 	draw_func(gr, draw_par);
 
 	if(buf[0] != 0)	QMessageBox::warning(this, appName, buf);
@@ -298,7 +295,7 @@ void QMathGL::exportPNGs(QString fname)
 {
 	if(fname.isEmpty())	fname = scriptName;
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	graph->WritePNG(setExtension(fname,"png").toAscii(), appName.toAscii(), false);
+	else	graph->WritePNGs(setExtension(fname,"png").toAscii(), appName.toAscii());
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportJPG(QString fname)
@@ -407,7 +404,7 @@ void QMathGL::animation(bool st)
 //-----------------------------------------------------------------------------
 void QMathGL::about()
 {
-	QString s = tr("MathGL v. 1.") + QString::number(MGL_VERSION) + tr("\n(c) Alexey Balakin, 2007\nhttp://mathgl.sourceforge.net/");
+	QString s = tr("MathGL v. 2.") + QString::number(MGL_VER2) + tr("\n(c) Alexey Balakin, 2007\nhttp://mathgl.sourceforge.net/");
 	QMessageBox::about(this, tr("MathGL - about"), s);
 }
 //-----------------------------------------------------------------------------
@@ -437,52 +434,8 @@ void QMathGL::print()
 //		class mglCanvasQT
 //
 //-----------------------------------------------------------------------------
-mglCanvasQT::mglCanvasQT() : mglGraphZB()
-{
-	GG = 0;	Wnd = 0;	anim=0;
-	NumFig = 0;	CurFig = -1;
-}
-//-----------------------------------------------------------------------------
-mglCanvasQT::~mglCanvasQT()
-{	if(GG) free(GG);	}
-//-----------------------------------------------------------------------------
-void mglCanvasQT::SetSize(int w,int h)
-{
-	if(GG)	free(GG);	GG = 0;
-	mglGraphZB::SetSize(w,h);
-}
-//-----------------------------------------------------------------------------
-void mglCanvasQT::EndFrame()
-{
-	CurFig = CurFrameId-1;
-	if(!GG)
-	{
-		GG = (unsigned char *)malloc(3*Width*Height);
-		NumFig = 1;		CurFig = 0;
-	}
-	else if(CurFig>NumFig-1)
-	{
-		GG = (unsigned char *)realloc(GG,3*(NumFig+1)*Width*Height);
-		NumFig++;
-	}
-	mglGraph::EndFrame();
-	memcpy(GG + CurFig*Width*Height*3,G,3*Width*Height);
-	CurFig++;
-}
-//-----------------------------------------------------------------------------
-void mglCanvasQT::Clf(mglColor Back)
-{
-	if(AutoClf)	mglGraphZB::Clf(Back);
-}
-//-----------------------------------------------------------------------------
-const unsigned char *mglCanvasQT::GetBits()
-{
-	Finish();
-	unsigned char *g = G;
-	if(GG && NumFig>0 && CurFig<NumFig && CurFig>=0)
-		g = GG + CurFig*Width*Height*3;
-	return g;
-}
+mglCanvasQT::mglCanvasQT() : mglCanvasW()
+{	Wnd = 0;	anim=0;	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::NextFrame()
 {
@@ -521,12 +474,12 @@ void mglCanvasQT::ReLoad(bool o)	{	if(LoadFunc){LoadFunc(o, FuncPar);Update();}	
 //-----------------------------------------------------------------------------
 void mglCanvasQT::Adjust()
 {
-	SetSize(scroll->width(), scroll->height());
-	QMGL->setSize(scroll->width(), scroll->height());
+	SetSize(scroll->width()-3, scroll->height()-3);
+	QMGL->setSize(scroll->width()-3, scroll->height()-3);
 	Update();
 }
 //-----------------------------------------------------------------------------
-void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglGraph *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p), bool maximize)
+void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p), bool maximize)
 {
 	NumFig=0;	CurFig=0;
 	CurFrameId = 0;
@@ -588,16 +541,16 @@ uintptr_t mgl_create_graph_qt_(const char *title, int l)
 	return uintptr_t(g);
 }
 //-----------------------------------------------------------------------------
-void *mgl_qt_tmp(void *)	{	mglQtRun();	return 0;	}
-/*void mgl_qt_thread()
-{
-	static pthread_t tmp;
-	pthread_create(&tmp, 0, mgl_qt_tmp, 0);
-	pthread_detach(tmp);
-}*/
-//-----------------------------------------------------------------------------
-void mgl_qt_run()	{	return qApp ? qApp->exec():0;	}
+void mgl_qt_run()	{	if(qApp) qApp->exec();	}
 void mgl_qt_run_()	{	mgl_qt_run();	}
+//-----------------------------------------------------------------------------
+void *mgl_qt_tmp(void *)	{	mgl_qt_run();	return 0;	}
+/*void mgl_qt_thread()
+ * {
+ *	static pthread_t tmp;
+ *	pthread_create(&tmp, 0, mgl_qt_tmp, 0);
+ *	pthread_detach(tmp);
+ }*/
 //-----------------------------------------------------------------------------
 #define TR	QObject::tr
 void mglCanvasQT::makeMenu()

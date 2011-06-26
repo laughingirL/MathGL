@@ -44,8 +44,15 @@ public:
 	bool ShowMousePos;	///< Switch to show or not mouse click position
 	mglPoint LastMousePos;	///< Last mouse position
 	bool ClfOnUpdate;	///< Clear plot before Update()
+	int CurFig;		///< Current figure in the list.
 
 	mglCanvasW();
+    virtual ~mglCanvasW();
+
+	void SetSize(int w,int h);
+	void EndFrame();
+	const unsigned char *GetBits();
+	void Clf(mglColor Back=NC);
 
 	virtual void ToggleAlpha()=0;	///< Switch on/off transparency (do not overwrite user settings)
 	virtual void ToggleLight()=0;	///< Switch on/off lighting (do not overwrite user settings)
@@ -68,6 +75,7 @@ public:
 	void Window(int argc, char **argv, const char *title, mglDraw *draw, bool maximize=false);
 
 protected:
+	unsigned char *GG;	///< images for all frames (may be too LARGE !!!)
 	int NumFig;			///< Number of figures in the list. If 0 then no list and mglCanvas::DrawFunc will called for each drawing.
 	void (*LoadFunc)(int next, void *par);
 	void *FuncPar;		///< Parameters for drawing function mglCanvas::DrawFunc.

@@ -67,8 +67,7 @@ int main(int argc,char **argv)
 	case 't':	gr.Window(argc,argv,test_wnd,"Testing");	break;
 	default:	gr.Window(argc,argv,sample,"Example of molecules");	break;
 	}
-	mgl_fltk_run();
-	return 0;
+	mgl_fltk_run();	return 0;
 #endif
 }
 //-----------------------------------------------------------------------------

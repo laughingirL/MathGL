@@ -18,15 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 //-----------------------------------------------------------------------------
-#ifndef _MGL_WINDOW_H_
-#define _MGL_WINDOW_H_
+#ifndef _MGL_QT_H_
+#define _MGL_QT_H_
 /*****************************************************************************/
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
+#include "mgl/window.h"
 #include <QtGui/QWidget>
 #include <QtGui/QPixmap>
-//-----------------------------------------------------------------------------
-#include "mgl/window.h"
 //-----------------------------------------------------------------------------
 class QTextEdit;
 class QMenu;
@@ -44,16 +43,10 @@ public:
 using mglCanvasW::Window;
 	int sshow;		///< Current state of animation switch (toggle button)
 	QMathGL *QMGL;	///< Control which draw graphics
-	int CurFig;		///< Current figure in the list.
 	QMainWindow *Wnd;	///< Pointer to window
 
 	mglCanvasQT();
-	~mglCanvasQT();
 
-	void SetSize(int w,int h);
-	void EndFrame();
-	const unsigned char *GetBits();
-	void Clf(mglColor Back=NC);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Ñëóæåáíûå ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),
@@ -74,7 +67,6 @@ using mglCanvasW::Window;
 	void Animation();	///< Run slideshow (animation) of frames
 
 protected:
-	unsigned char *GG;	///< images for all frames (may be too LARGE !!!)
 	QScrollArea *scroll;	///< Scrolling area
 	QMenu *popup;			///< Popup menu
 	QSpinBox *tet, *phi;	///< Spin box for angles
@@ -113,7 +105,7 @@ public:
 
 public slots:
 	void refresh();
-	void update(mglBase *gr=0);	///< Update picture
+	void update(mglCanvas *gr=0);	///< Update picture
 	void copy();			///< copy graphics to clipboard
 	void print();			///< Print plot
 //	void stop();			///< Stop execution

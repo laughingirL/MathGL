@@ -45,16 +45,10 @@ public:
 using mglCanvasW::Window;
 	int sshow;		///< Current state of animation switch (toggle button)
 	Fl_MathGL *FMGL;///< Control which draw graphics
-	int CurFig;		///< Current figure in the list.
 	Fl_Window *Wnd;	///< Pointer to window
 
 	mglCanvasFL();
-	~mglCanvasFL();
 
-	void SetSize(int w,int h);
-	void EndFrame();
-	const unsigned char *GetBits();
-	void Clf(mglColor Back=NC);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Ñëóæåáíûå ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),
@@ -75,8 +69,6 @@ using mglCanvasW::Window;
 	void Animation();	///< Run slideshow (animation) of frames
 
 protected:
-	unsigned char *GG;	///< images for all frames (may be too LARGE !!!)
-
 	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *zoom_bt, *anim_bt;
 	Fl_Counter *tet, *phi;
 	Fl_Scroll	*scroll;
