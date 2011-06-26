@@ -798,29 +798,6 @@ void smgl_sample1(mglGraph *gr)	// transformation
 	gr->Rotate(0,0); // for unrotate in IDTF
 }
 //-----------------------------------------------------------------------------
-void mgls_prepare1d(mglData *y, mglData *y1, mglData *y2, mglData *x1, mglData *x2)
-{
-	register long i,n=50;
-	if(y)	y->Create(n,3);
-	if(x1)	x1->Create(n);		if(x2)	x2->Create(n);
-	if(y1)	y1->Create(n);		if(y2)	y2->Create(n);
-	float xx;
-	for(i=0;i<n;i++)
-	{
-		xx = i/(n-1.);
-		if(y)
-		{
-			y->a[i] = 0.7*sin(2*M_PI*xx) + 0.5*cos(3*M_PI*xx) + 0.2*sin(M_PI*xx);
-			y->a[i+n] = sin(2*M_PI*xx);
-			y->a[i+2*n] = cos(2*M_PI*xx);
-		}
-		if(y1)	y1->a[i] = 0.5+0.3*cos(2*M_PI*xx);
-		if(y2)	y2->a[i] = 0.3*sin(2*M_PI*xx);
-		if(x1)	x1->a[i] = xx*2-1;
-		if(x2)	x2->a[i] = 0.05+0.03*cos(2*M_PI*xx);
-	}
-}
-//-----------------------------------------------------------------------------
 void smgl_plot(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
@@ -993,20 +970,6 @@ void smgl_pie_chart(mglGraph *gr)
 	gr->Box();	gr->Chart(ch,"bgr cmy#");
 }
 //-----------------------------------------------------------------------------
-void mgls_prepare2d(mglData *a, mglData *b, mglData *v)
-{
-	register long i,j,n=50,m=40,i0;
-	if(a)	a->Create(n,m);		if(b)	b->Create(n,m);
-	if(v)	{	v->Create(9);	v->Fill(-1,1);	}
-	float x,y;
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)
-	{
-		x = i/(n-1.);	y = j/(m-1.);	i0 = i+n*j;
-		if(a)	a->a[i0] = 0.6*sin(2*M_PI*x)*sin(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
-		if(b)	b->a[i0] = 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
-	}
-}
-//-----------------------------------------------------------------------------
 void smgl_grad(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
@@ -1150,19 +1113,6 @@ void smgl_surfa(mglGraph *gr)
 	gr->Box();	gr->SurfA(a,b);
 }
 //-----------------------------------------------------------------------------
-void mgls_prepare3d(mglData *a, mglData *b)
-{
-	register long i,j,k,n=60,m=50,l=40,i0;
-	if(a)	a->Create(n,m,l);		if(b)	b->Create(n,m,l);
-	float x,y,z;
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
-	{
-		x=2*i/(n-1.)-1;	y=2*j/(m-1.)-1;	z=2*k/(l-1.)-1;	i0 = i+n*(j+m*k);
-		if(a)	a->a[i0] = -2*(x*x + y*y + z*z*z*z - z*z - 0.1);
-		if(b)	b->a[i0] = 1-2*tanh((x+y)*(x+y));
-	}
-}
-//-----------------------------------------------------------------------------
 /*void smgl_surf3_rgbd(mglGraph *gr)
 {
 	mglData c;	mgls_prepare3d(&c);
@@ -1240,19 +1190,6 @@ void smgl_cloud(mglGraph *gr)
 	gr->Box();	gr->Cloud(c,"wyrRk");
 }
 //-----------------------------------------------------------------------------
-void mgls_prepare2v(mglData *a, mglData *b)
-{
-	register long i,j,n=20,m=30,i0;
-	if(a)	a->Create(n,m);		if(b)	b->Create(n,m);
-	float x,y;
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)
-	{
-		x=i/(n-1.);	y=j/(m-1.);	i0 = i+n*j;
-		if(a)	a->a[i0] = 0.6*sin(2*M_PI*x)*sin(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
-		if(b)	b->a[i0] = 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
-	}
-}
-//-----------------------------------------------------------------------------
 void smgl_vect(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2v(&a,&b);
@@ -1309,23 +1246,6 @@ void smgl_dew2(mglGraph *gr)
 	gr->Box();	gr->SetMeshNum(10);	gr->Dew(a,b);
 	gr->DoubleSided(true);
 	gr->Compression(false);  //put setting back
-}
-//-----------------------------------------------------------------------------
-void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
-{
-	register long i,j,k,n=10,i0;
-	if(!ex || !ey || !ez)	return;
-	ex->Create(n,n,n);	ey->Create(n,n,n);	ez->Create(n,n,n);
-	float x,y,z, r1,r2;
-	for(i=0;i<n;i++)	for(j=0;j<n;j++)	for(k=0;k<n;k++)
-	{
-		x=2*i/(n-1.)-1;	y=2*j/(n-1.)-1;	z=2*k/(n-1.)-1;	i0 = i+n*(j+k*n);
-		r1 = pow(x*x+y*y+(z-0.3)*(z-0.3),1.5);
-		r2 = pow(x*x+y*y+(z+0.3)*(z+0.3),1.5);
-		ex->a[i0]=0.2*x/r1 - 0.2*x/r2;
-		ey->a[i0]=0.2*y/r1 - 0.2*y/r2;
-		ez->a[i0]=0.2*(z-0.3)/r1 - 0.2*(z+0.3)/r2;
-	}
 }
 //-----------------------------------------------------------------------------
 void smgl_flow3(mglGraph *gr)
@@ -1715,21 +1635,9 @@ void smgl_several_light(mglGraph *gr)	// several light sources
 //	gr->Light(1,false);	gr->Light(2,false);	gr->Light(3,false);
 }
 //-----------------------------------------------------------------------------
-void mgls_preparecc(mglData *c)
-{
-	register long i,j,k,n=61,m=51,l=40,i0;
-	if(!c)	return;		c->Create(n,m,l);
-	float x,y,z;
-	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
-	{
-		x=2*i/(n-1.)-1;	y=2*j/(m-1.)-1;	z=2*k/(l-1.)-1;	i0 = i+n*(j+m*k);
-		c->a[i0] = -2*(x*x + y*y + z*z*z*z - z*z - 0.1);
-	}
-}
-//-----------------------------------------------------------------------------
 void smgl_cutminmax2(mglGraph *gr)	// CutMin CutMax example
 {
-	mglData c;	mgls_preparecc(&c);
+	mglData c;	mgls_prepare3d(&c);
 	mglData v(10);	v.Fill(-0.5,1);
 	gr->Rotate(40,60);	gr->Light(true);
 	gr->VertexColor(false);	gr->Compression(false);
@@ -1741,7 +1649,7 @@ void smgl_cutminmax2(mglGraph *gr)	// CutMin CutMax example
 //-----------------------------------------------------------------------------
 void smgl_cutminmax(mglGraph *gr)	// CutMin CutMax example
 {
-	mglData c;	mgls_preparecc(&c);
+	mglData c;	mgls_prepare3d(&c);
 	gr->Rotate(40,60);	gr->Light(true);	gr->Alpha(true);
 	gr->VertexColor(false);	gr->Compression(false);
 	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
@@ -1750,7 +1658,7 @@ void smgl_cutminmax(mglGraph *gr)	// CutMin CutMax example
 //-----------------------------------------------------------------------------
 void smgl_surf3_cutoff(mglGraph *gr)	// CutMin CutMax example
 {
-	mglData c;	mgls_preparecc(&c);
+	mglData c;	mgls_prepare3d(&c);
 	gr->Rotate(40,60);	gr->Light(true);	gr->Alpha(true);
 	gr->VertexColor(false);	gr->Compression(false);
 	gr->CutOff("(z>(x+0.5*y-1)^2-1) & (z>(x-0.5*y-1)^2-1)");

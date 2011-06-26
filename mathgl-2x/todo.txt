@@ -14,6 +14,8 @@
 9. Grid seems to be not adjusted
 10. Drop() -- rays
 11. Add alpha channel as float (in z-buffer)
+12. Add Candle plot -- see gmail.com
+13. Add ',' as separator for data files
 
 ============= NEW  =============
 

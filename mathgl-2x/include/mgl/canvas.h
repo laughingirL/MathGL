@@ -30,9 +30,8 @@
 #else
 struct GifFileType;
 #endif
-class mglCanvas;
 //-----------------------------------------------------------------------------
-/// Structure for simplest primitive
+/// Structure for simplest primitives
 struct mglPrim
 {
 	// NOTE: n4 is used as mark; n3 -- as pen style for type=0,1,4
@@ -45,8 +44,6 @@ struct mglPrim
 	float w;		///< width (if applicable) or ftet
 	float p;
 
-	void Draw(mglCanvas *gr);
-	bool IsSame(mglCanvas *gr,float wp,mglColor cp,int st);
 	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	}
 };
 bool operator<(const mglPrim &a,const mglPrim &b);
@@ -387,6 +384,8 @@ protected:
 	virtual void pnt_draw(long p);
 	void glyph_draw(const mglPrim *P);
 	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
+	bool IsSame(const mglPrim &pr,float wp,mglColor cp,int st);
+	void Draw(const mglPrim &p);
 
 private:
 	float _tetx,_tety,_tetz;		// extra angles

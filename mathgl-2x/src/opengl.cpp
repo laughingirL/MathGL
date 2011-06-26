@@ -28,7 +28,7 @@ void mglCanvasGL::Finish()
 		glVertexPointer(3, GL_FLOAT, 12, &(Pnt[0].x));
 		glNormalPointer(GL_FLOAT, 12, &(Pnt[0].u));
 		glColorPointer(4, GL_FLOAT, 12, &(Pnt[0].r));
-		for(unsigned long i=0;i<Prm.size();i++)	Prm[i].Draw(this);
+		for(unsigned long i=0;i<Prm.size();i++)	Draw(Prm[i]);
 	}
 	glFinish();
 }

@@ -315,21 +315,21 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, char col)
 	else	add_prim(a);
 }
 //-----------------------------------------------------------------------------
-void mglPrim::Draw(mglCanvas *gr)
+void mglCanvas::Draw(const mglPrim &p)
 {
-	int pdef=gr->PDef;
-	float ss=gr->pPos, ww=gr->PenWidth;
-	gr->PDef=n3;	gr->pPos=s;	gr->PenWidth=w;
-	switch(type)
+	int pdef=PDef;
+	float ss=pPos, ww=PenWidth;
+	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
+	switch(p.type)
 	{
-	case 0:	gr->mark_draw(n1,n4,s);			break;
-	case 1:	gr->PDef=n3;	gr->pPos=s;	gr->PenWidth=w;
-			gr->line_draw(n1,n2);			break;
-	case 2:	gr->trig_draw(n1,n2,n3,true);	break;
-	case 3:	gr->quad_draw(n1,n2,n3,n4);		break;
-	case 4:	gr->glyph_draw(this);			break;
+	case 0:	mark_draw(p.n1,p.n4,p.s);	break;
+	case 1:	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
+		line_draw(p.n1,p.n2);			break;
+	case 2:	trig_draw(p.n1,p.n2,p.n3,true);	break;
+	case 3:	quad_draw(p.n1,p.n2,p.n3,p.n4);		break;
+	case 4:	glyph_draw(&p);			break;
 	}
-	gr->PDef=pdef;	gr->pPos=ss;	gr->PenWidth=ww;
+	PDef=pdef;	pPos=ss;	PenWidth=ww;
 }
 //-----------------------------------------------------------------------------
 //	Plot positioning functions

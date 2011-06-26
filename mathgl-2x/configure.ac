@@ -318,7 +318,7 @@ AC_CONFIG_FILES([
 Makefile
 src/Makefile
 include/Makefile
-widget/Makefile
+widgets/Makefile
 lang/Makefile
 ])
 AC_OUTPUT

@@ -45,13 +45,13 @@ char *mgl_get_dash(unsigned short d, float w)
 	return s;
 }
 //-----------------------------------------------------------------------------
-bool mglPrim::IsSame(mglCanvas *gr,float wp,mglColor cp,int st)
+bool mglCanvas::IsSame(const mglPrim &pr,float wp,mglColor cp,int st)
 {
-	if(abs(type)!=1)	return false;
-	if(w>=1 && wp!=w)	return false;
-	if(w<1 && wp!=1)	return false;
-	if(st!=n3)			return false;
-	mglColor c=gr->put_color(*this);
+	if(abs(pr.type)!=1)	return false;
+	if(pr.w>=1 && wp!=pr.w)	return false;
+	if(pr.w<1 && wp!=1)	return false;
+	if(st!=pr.n3)			return false;
+	mglColor c=put_color(pr);
 	return (cp==c);
 }
 //-----------------------------------------------------------------------------
@@ -395,7 +395,7 @@ void mglCanvas::put_line(void *fp, bool gz, long i, float wp, mglColor cp,int st
 	while(ok)
 	{
 		for(ok=false,j=i+1;j<Prm.size() && Prm[j].type<2;j++)
-			if(Prm[j].IsSame(this,wp,cp,st) && Prm[j].type==1)
+			if(IsSame(Prm[j],wp,cp,st) && Prm[j].type==1)
 			{	// previous point
 				if(xx(j,n2)==x0 && yy(j,n2)==y0)
 				{
@@ -415,7 +415,7 @@ void mglCanvas::put_line(void *fp, bool gz, long i, float wp, mglColor cp,int st
 	while(ok)
 	{
 		for(ok=false,j=i;j<Prm.size() && Prm[j].type<2;j++)
-			if(Prm[j].IsSame(this,wp,cp,st) && Prm[j].type==1)
+			if(IsSame(Prm[j],wp,cp,st) && Prm[j].type==1)
 			{
 				if(xx(j,n1)==x0 && yy(j,n1)==y0)
 				{

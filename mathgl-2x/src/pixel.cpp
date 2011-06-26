@@ -250,7 +250,7 @@ void mglCanvas::Finish()
 	if(!(Quality&4) && Prm.size()>0)
 	{
 		std::sort(Prm.begin(), Prm.end());
-		for(unsigned long i=0;i<Prm.size();i++)	Prm[i].Draw(this);
+		for(unsigned long i=0;i<Prm.size();i++)	Draw(Prm[i]);
 	}
 	long n=Width*Height;
 	unsigned char c[4],alf=TranspType!=2 ? 0:255,*cc;
