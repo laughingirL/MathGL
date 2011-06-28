@@ -311,6 +311,10 @@ protected:
 	std::vector<mglPrim> Prm;	///< Primitives (lines, triangles and so on)
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	std::vector<mglText> Leg;	///< Text labels for legend
+#ifdef HAVE_PTHREAD
+	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexLeg, mutexStack;
+#endif
+
 	bool LegendBox;		///< Set on/off drawing legend box.
 	int LegendMarks;	///< Number of marks in the Legend
 
@@ -375,7 +379,7 @@ protected:
 	float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0);	// position in pntN
 
 	inline void add_prim(mglPrim &a)	///< add primitive to list
-	{	a.id = ObjId;	Prm.push_back(a);	Finished = false;	}
+	{	a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);	Finished = false;	}
 	void mark_draw(long p, char type, float size);
 	void arrow_draw(long p1, long p2, char st, float size);
 	virtual void line_draw(long p1, long p2);

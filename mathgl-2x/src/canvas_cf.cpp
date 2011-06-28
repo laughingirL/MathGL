@@ -144,7 +144,7 @@ void mgl_calc_xyz_(uintptr_t *gr, int *xs, int *ys, mreal *x, mreal *y, mreal *z
 {	mglPoint p = _GR_->CalcXYZ(*xs,*ys);	*x = p.x;	*y = p.y;	*z = p.z;	}
 void mgl_calc_scr_(uintptr_t *gr, mreal *x, mreal *y, mreal *z, int *xs, int *ys)
 {	_GR_->CalcScr(mglPoint(*x,*y,*z),xs,ys);	}
-int mgl_set_obj_id_(uintptr_t *gr, int *id)	{	_GR_->SetObjId(*id);	}
+void mgl_set_obj_id_(uintptr_t *gr, int *id)		{	_GR_->SetObjId(*id);	}
 int mgl_get_obj_id_(uintptr_t *gr, int *x, int *y)	{	return _GR_->GetObjId(*x,*y);	}
 int mgl_get_spl_id_(uintptr_t *gr, int *x, int *y)	{	return _GR_->GetSplId(*x,*y);	}
 //-----------------------------------------------------------------------------

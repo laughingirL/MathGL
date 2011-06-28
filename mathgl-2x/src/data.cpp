@@ -23,11 +23,7 @@
 #include "mgl/data.h"
 #include "mgl/eval.h"
 
-#ifdef HAVE_PTHREAD
-#include <pthread.h>
-#endif
-
-int mglNumThr=1;
+int mglNumThr=0;
 void mglFillP(long x,long y, const mreal *a,long nx,long ny,mreal _p[4][4]);
 void mglFillP(long x, const mreal *a,long nx,mreal _p[4]);
 void mglFillP5(long x,long y, const mreal *a,long nx,long ny,mreal _p[6][6]);
@@ -47,7 +43,7 @@ void mglStartThread(void *(*func)(void *), void (*post)(mglThread *,mreal *), lo
 {
 	if(!func)	return;
 #ifdef HAVE_PTHREAD
-	if(mglNumThr<1)	mglNumThr = MGL_NTH_DEF;
+	if(mglNumThr<1)	mglSetNumThr(0);
 	if(mglNumThr>1)
 	{
 		pthread_t *tmp=new pthread_t[mglNumThr];

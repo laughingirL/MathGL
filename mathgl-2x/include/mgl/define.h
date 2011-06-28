@@ -174,12 +174,11 @@ void mglSetNumThr(int n=0);	///< Set number of thread for plotting and data hand
 extern int mglNumThr;		///< Number of thread for plotting and data handling
 #endif
 //-----------------------------------------------------------------------------
-#ifndef MGL_NTH_DEF
-#define MGL_NTH_DEF		2
-#endif
-#ifndef HAVE_PTHREAD
-#undef MGL_NTH_DEF
-#define MGL_NTH_DEF		1
+#ifdef HAVE_PTHREAD
+#include <pthread.h>
+#define MGL_PUSH(a,v,m)		{pthread_mutex_lock(&m);	a.push_back(v);	pthread_mutex_unlock(&m);}
+#else
+#define MGL_PUSH(a,v,m)		a.push_back(v);
 #endif
 //-----------------------------------------------------------------------------
 #endif

@@ -51,9 +51,7 @@
 		<Unit filename="examples/full_test.cpp">
 			<Option target="Release" />
 		</Unit>
-		<Unit filename="examples/wnd_samples.cpp">
-			<Option target="Debug" />
-		</Unit>
+		<Unit filename="examples/wnd_samples.cpp" />
 		<Unit filename="include/mgl/base.h" />
 		<Unit filename="include/mgl/base_cf.h" />
 		<Unit filename="include/mgl/canvas.h" />
@@ -135,9 +133,11 @@
 		<Unit filename="src/tex_table.cpp" />
 		<Unit filename="src/vect.cpp" />
 		<Unit filename="src/volume.cpp" />
+		<Unit filename="src/window.cpp" />
 		<Unit filename="todo.txt" />
-		<Unit filename="widget/fltk.cpp" />
-		<Unit filename="widget/window.cpp" />
+		<Unit filename="widgets/fltk.cpp">
+			<Option target="Debug" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />

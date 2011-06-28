@@ -59,6 +59,7 @@ mglBase::mglBase()
 	last_style[0]='k';	last_style[1]='-';	last_style[2]='0';
 	last_style[3]=last_style[4]=0;
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
+//	mutexPnt = PTHREAD_MUTEX_INITIALIZER;	mutexTxt = PTHREAD_MUTEX_INITIALIZER;
 }
 mglBase::~mglBase()	{	ClearEq();	}
 //-----------------------------------------------------------------------------
@@ -108,7 +109,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)	// NOTE:
 	q.x=p.x;	q.y=p.y;	q.z=p.z;	q.c=c;
 	q.t=a;		q.u=n.x;	q.v=n.y;	q.w=n.z;
 	Txt[long(c)].GetC(c,a,q);
-	Pnt.push_back(q);	return Pnt.size()-1;
+	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
 long mglBase::CopyNtoC(long from, float c)	// NOTE: this is not-thread-safe!!!
@@ -116,7 +117,7 @@ long mglBase::CopyNtoC(long from, float c)	// NOTE: this is not-thread-safe!!!
 	if(from<0)	return -1;
 	mglPnt p=Pnt[from];
 	if(!isnan(c))	{	p.c=c;	p.t=0;	Txt[long(c)].GetC(c,0,p);	}
-	Pnt.push_back(p);	return Pnt.size()-1;
+	MGL_PUSH(Pnt,p,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
 long mglBase::CopyProj(long from, mglPoint p, mglPoint n)	// NOTE: this is not-thread-safe!!!
@@ -125,7 +126,7 @@ long mglBase::CopyProj(long from, mglPoint p, mglPoint n)	// NOTE: this is not-t
 	mglPnt q=Pnt[from];
 	q.x=p.x;	q.y=p.y;	q.z=p.z;
 	q.u=n.x;	q.v=n.y;	q.w=n.z;
-	Pnt.push_back(q);	return Pnt.size()-1;
+	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
 void mglBase::Reserve(long n)	// NOTE: this is not-thread-safe!!!
@@ -598,8 +599,7 @@ long mglBase::AddTexture(const char *cols, int smooth)
 	// check if already exist
 	for(unsigned long i=0;i<Txt.size();i++)	if(t.IsSame(Txt[i]))	return i;
 	// create new one
-	Txt.push_back(t);
-	return Txt.size()-1;
+	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
 }
 //-----------------------------------------------------------------------------
 float mglBase::AddTexture(char col)
@@ -613,8 +613,7 @@ float mglBase::AddTexture(char col)
 	// add new texture
 	mglTexture t;
 	for(i=0;i<514;i++)	t.col[i]=c;
-	Txt.push_back(t);
-	return Txt.size()-1;
+	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
 }
 //-----------------------------------------------------------------------------
 //		Coloring and palette
@@ -740,8 +739,8 @@ void mglBase::vect_plot(long p1, long p2)	// position in pntC
 	s2.y = q1.y+0.8*(q2.y-q1.y) + 0.1*(q2.x-q1.x);
 	s1.z = s2.z = q1.z+0.8*(q2.z-q1.z);
 	long n1,n2;
-	n1=Pnt.size();	Pnt.push_back(s1);
-	n2=Pnt.size();	Pnt.push_back(s2);
+	n1=Pnt.size();	MGL_PUSH(Pnt,s1,mutexPnt);
+	n2=Pnt.size();	MGL_PUSH(Pnt,s2,mutexPnt);
 	line_plot(p1,p2);	line_plot(n1,p2);	line_plot(p2,n2);
 }
 //-----------------------------------------------------------------------------

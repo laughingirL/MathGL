@@ -38,7 +38,7 @@ void mglCanvas::AddLegend(const wchar_t *text,const char *style)
 {
 	if(!text)	return;
 	mglText t(text,style);
-	Leg.push_back(t);
+	MGL_PUSH(Leg,t,mutexLeg);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Legend(float x, float y, const char *font, float size, float llen)

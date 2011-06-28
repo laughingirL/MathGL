@@ -386,6 +386,9 @@ protected:
 	mglPoint Org;		///< Center of axis cross section.
 	int WarnCode;		///< Warning code
 	std::vector<mglPnt> Pnt;	///< Internal points
+#ifdef HAVE_PTHREAD
+	pthread_mutex_t mutexPnt, mutexTxt;
+#endif
 
 	int TernAxis;		///< Flag that Ternary axis is used
 	unsigned PDef;		///< Pen bit mask

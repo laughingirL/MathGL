@@ -177,7 +177,7 @@ void mgl_close_gif_(uintptr_t *graph);
 
 const unsigned char *mgl_get_rgb_(uintptr_t *graph);
 const unsigned char *mgl_get_rgba_(uintptr_t *graph);
-int mgl_set_obj_id_(uintptr_t *graph, int *id);
+void mgl_set_obj_id_(uintptr_t *graph, int *id);
 int mgl_get_obj_id_(uintptr_t *graph, int *x, int *y);
 int mgl_get_spl_id_(uintptr_t *graph, int *x, int *y);
 int mgl_get_width_(uintptr_t *graph);
