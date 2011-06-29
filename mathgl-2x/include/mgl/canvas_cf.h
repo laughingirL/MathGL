@@ -83,7 +83,7 @@ void mgl_close_gif(HMGL graph);
 
 const unsigned char *mgl_get_rgb(HMGL graph);
 const unsigned char *mgl_get_rgba(HMGL graph);
-int mgl_set_obj_id(HMGL graph, int id);
+void mgl_set_obj_id(HMGL graph, int id);
 int mgl_get_obj_id(HMGL graph, long x, long y);
 int mgl_get_spl_id(HMGL graph, long x, long y);
 int mgl_get_width(HMGL graph);

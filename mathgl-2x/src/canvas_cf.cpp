@@ -32,7 +32,7 @@ void mgl_calc_xyz(HMGL gr, int xs, int ys, mreal *x, mreal *y, mreal *z)
 {	mglPoint p = _Gr_->CalcXYZ(xs,ys);	*x = p.x;	*y = p.y;	*z = p.z;	}
 void mgl_calc_scr(HMGL gr, mreal x, mreal y, mreal z, int *xs, int *ys)
 {	_Gr_->CalcScr(mglPoint(x,y,z),xs,ys);	}
-int mgl_set_obj_id(HMGL gr, int id)	{	_Gr_->SetObjId(id);	}
+void mgl_set_obj_id(HMGL gr, int id)	{	_Gr_->SetObjId(id);	}
 int mgl_get_obj_id(HMGL gr, long x, long y)	{	return _Gr_->GetObjId(x,y);	}
 int mgl_get_spl_id(HMGL gr, long x, long y)	{	return _Gr_->GetSplId(x,y);	}
 //-----------------------------------------------------------------------------

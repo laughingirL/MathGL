@@ -39,11 +39,16 @@
 			<Add option="-g" />
 			<Add option="-fexceptions" />
 			<Add option="-DHAVE_PTHREAD" />
+			<Add option="-DHAVE_JPEG" />
+			<Add option="-DHAVE_GIF" />
+			<Add option="-DHAVE_HDF5" />
+			<Add option="-DHAVE_HDF4" />
 			<Add directory="include" />
 		</Compiler>
 		<Linker>
 			<Add option="-pg" />
 			<Add option="-lgsl -lgslcblas -lpthread -lz -lpng -lGL -lfltk" />
+			<Add option="-ljpeg -lgif -lhdf5 -lmfhdf -ldf" />
 		</Linker>
 		<Unit filename="examples/fltk_example.cpp">
 			<Option target="Debug" />

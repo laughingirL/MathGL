@@ -817,17 +817,17 @@ void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 			if(rank==1)			{	dims[2]=dims[0];	dims[0]=dims[1]=1;	}
 			else if(rank==2)	{	dims[2]=dims[1];	dims[1]=dims[0];	dims[0]=1;	}
 //			else if(rank>3)		continue;
-			long nn=dims[0]*dims[1]*dims[2];
+			long mm=dims[0]*dims[1]*dims[2];
 			if(type==DFNT_FLOAT32)
 			{
-				float *b = new float[nn];
+				float *b = new float[mm];
 				SDreaddata(sds,in,0,dims,b);
 				mgl_data_set_float(d,b,dims[2],dims[1],dims[0]);
 				delete []b;
 			}
 			if(type==DFNT_FLOAT64)
 			{
-				double *b = new double[nn];
+				double *b = new double[mm];
 				SDreaddata(sds,in,0,dims,b);
 				mgl_data_set_double(d,b,dims[2],dims[1],dims[0]);
 				delete []b;

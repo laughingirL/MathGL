@@ -301,7 +301,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 		fscl = fsize;
 		ftet = -180*atan2(q.v,q.u)/M_PI;
 	}
-	fsize = fnt->Puts(text,font)*size/8.;
+	fsize *= fnt->Puts(text,font)/2;
 	Pop();	return fsize;
 }
 //-----------------------------------------------------------------------------

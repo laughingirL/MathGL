@@ -36,23 +36,6 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
-	int N=256;
-	double *buf=new double[2*N*N*N];
-	FILE *fq=fopen("/home/balakin/tmp/mgl/Psi_800.bin","r");
-	fread(buf,2*sizeof(double),N*N*N,fq);
-	fclose(fq);
-	mglData a(N,N,N);
-	for(long i=0;i<N*N*N;i++)   a.a[i]=buf[2*i]*buf[2*i]+buf[2*i+1]*buf[2*i+1];
-	delete []buf;
-
-	gr->Alpha(true);
-	gr->SetAlphaDef(1);		gr->SetTranspType(1);
-	gr->SetRange('c',a);
-	gr->Clf();
-//	gr->Surf3A(a,a,"wyrRk","value 30");
-	gr->Cloud(a,"wyrRk");
-	return 0;
-
 	mglParse par;
 	par.AllowSetSize = true;
 	FILE *fp=fopen("test.mgl","rt");

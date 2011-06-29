@@ -33,9 +33,10 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr)
 {
-	mglData a,b;	mgls_prepare2v(&a,&b);
-	gr->Box();
-	gr->Flow(a,b);
+	mglData y;	mgls_prepare1d(&y);
+	gr->Box();	gr->Plot(y.SubData(-1,0));
+	gr->Text(y,"This is very very long string drawn along a curve",":k");
+//	gr->Text(y,"Another string drawn above a curve","T:r");
 	return 0;
 
 	gr->Rotate(0,0);
