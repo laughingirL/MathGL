@@ -44,22 +44,36 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 	wchar_t L[2]=L"a";
 	mglPoint p1,n1,p2;
 
-	float w, r, ww, wg=gr->TextHeight();//*font_factor;
+	float w, r, ww, wg=gr->TextHeight();
 	register long i,k,h;
 
+	char cc=mglGetStyle(font,0,&align);		align = align&3;
+	float c=cc ? -cc : gr->GetClrC(ff[f]);
+	long len = wcslen(text),j,m;
+	float *wdt=new float[len];
+	long *pt=new long[len], *pp=new long[n];
+	// get widths
+	for(j=0;j<len;j++)	{	L[0] = text[j];	wdt[j] = gr->TextWidth(L);	}
+	// find number of points and construct inverse curve
+	pp[nn[f]]=f;
+	for(k=nn[f],m=1;k!=f && k>=0;m++)	{	i=nn[k];	pp[i]=k;	k=i;	}
+	// find positions (slow variant)
+/*	if(align==0)
+	{
+		pt[0] = f;
+		for(j=1;j<len;j++)
+		{
+
+		}
+	}*/
+
+
+	// find positions (slow variant)
 	h=f;	k=nn[f];	// print string symbol-by-symbol
 	mglPoint p0=gr->GetPnt(ff[h]),n0=gr->GetPnt(ff[k])-p0, pa;
-	char cc=mglGetStyle(font,0,&align);
-	float c=cc ? -cc : gr->GetClrC(ff[h]);
-	long len = wcslen(text),j;
-	float *wdt=new float[len];
-	long *pt=new long[len];
-	long *pp=new long[n];
-	// get widths
-	for(j=0;j<len;j++)	{	L[0] = text[j];	wdt[i] = gr->TextWidth(L);	}
-
 	for(j=0;j<len;j++)
 	{
+
 		pa = pos>0 ? p0 : p0-wg*(!n0);
 		pt[j] = gr->AddPnt(pa,c,n0,0,false);
 		ww = wdt[j];
@@ -309,11 +323,11 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 		wchar_t wcs[64];
 		mglprintf(wcs,64,L"%4.3g",val);
 		mglPoint q[25],t;
-		float del = gr->TextWidth(wcs)*gr->GetFontSize()/16.;
+		float del = gr->TextWidth(wcs);
 		del = del>1 ? del:1;
 		bool less;
 		q[0] =	gr->GetPnt(ff[0]);
-		mgl_string_curve(gr,0,pc,ff,nn,wcs,"t");
+		mgl_string_curve(gr,0,pc,ff,nn,wcs,"t:L");
 		for(i=k=1;i<pc;i++)	// print it several times (for contours)
 		{
 			if(nn[i]<0)	continue;
@@ -322,7 +336,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 			for(j=0;j<k;j++)	if(Norm(t-q[j])<del)	{	less=true;	break;	}
 			if(less)	continue;
 			q[k] = t;	k++;
-			mgl_string_curve(gr,i,pc,ff,nn,wcs,"t");
+			mgl_string_curve(gr,i,pc,ff,nn,wcs,"t:L");
 			if(k>=25)	break;
 		}
 	}
