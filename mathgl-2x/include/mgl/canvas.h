@@ -375,8 +375,8 @@ protected:
 	void line_plot(long p1, long p2);	// position in pntC
 	void trig_plot(long p1, long p2, long p3);			// position in pntN
 	void quad_plot(long p1, long p2, long p3, long p4);	// position in pntN
-	void Glyph(float x, float y, float f, int style, long icode, char col);
-	float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0);	// position in pntN
+	void Glyph(float x, float y, float f, int style, long icode, float col);
+	float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'));	// position in pntN
 
 	inline void add_prim(mglPrim &a)	///< add primitive to list
 	{	a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);	Finished = false;	}
@@ -395,7 +395,6 @@ private:
 	float _tetx,_tety,_tetz;		// extra angles
 	std::vector<mglMatrix> stack;	///< stack for transformation matrixes
 	int st_pos;
-	float font_factor;
 	int dr_nx1, dr_nx2, dr_ny1, dr_ny2;	// Allowed drawing region
 	GifFileType *gif;
 	float fscl,ftet;	///< last scale and rotation for glyphs

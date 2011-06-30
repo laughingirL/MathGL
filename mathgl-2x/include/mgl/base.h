@@ -327,8 +327,8 @@ public:
 	/// Set default font size
 	inline void SetFontSize(float val)	{	FontSize=val>0 ? val:FontSize*val;	}
 	inline float GetFontSize()		{	return FontSize;	};
-	inline float TextWidth(const wchar_t *text)	{	return fnt->Width(text,FontDef);	}
-	inline float TextHeight()	{	return fnt->Height(FontDef); }
+	inline float TextWidth(const wchar_t *text)	{	return FontSize*font_factor*fnt->Width(text,FontDef)/8;	}
+	inline float TextHeight()	{	return FontSize*font_factor*fnt->Height(FontDef)/8; }
 	/// Set to use or not text rotation
 	inline void SetRotatedText(bool val)	{	RotatedText=val;	}
 	/// Set default font style and color
@@ -371,14 +371,14 @@ public:
 	/// Set next color from palette
 	float NextColor(long &id);
 
-	virtual void mark_plot(long p, char type, float size=1)=0;		// position in pntC
-	virtual void arrow_plot(long p1, long p2, char st)=0;			// position in pntC
-	virtual void line_plot(long p1, long p2)=0;						// position in pntC
-	virtual void trig_plot(long p1, long p2, long p3)=0;			// position in pntN
-	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;	// position in pntN
-	virtual void Glyph(float x, float y, float f, int style, long icode, char col)=0;
-	virtual float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0)=0;	// position in pntN
-	void vect_plot(long p1, long p2);	// position in pntC
+	virtual void mark_plot(long p, char type, float size=1)=0;
+	virtual void arrow_plot(long p1, long p2, char st)=0;
+	virtual void line_plot(long p1, long p2)=0;
+	virtual void trig_plot(long p1, long p2, long p3)=0;
+	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;
+	virtual void Glyph(float x, float y, float f, int style, long icode, float col)=0;
+	virtual float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'))=0;
+	void vect_plot(long p1, long p2);
 
 protected:
 	mglPoint FMin;		///< Actual lower edge after transformation formulas.
@@ -414,6 +414,7 @@ protected:
 	float MarkSize;		///< The size of marks for 1D plots.
 	float ArrowSize;	///< The size of arrows.
 	char last_style[64];///< Last pen style
+	float font_factor;	///< Font scaling factor
 
 	virtual void LightScale()=0;			///< Scale positions of light sources
 	virtual void SetPen(char style,float width);

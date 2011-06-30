@@ -45,6 +45,8 @@
 #endif
 //-----------------------------------------------------------------------------
 struct mglTeXsymb	{	unsigned kod;	const wchar_t *tex;	};
+/// Get font color, style and align for internal parser
+char mglGetStyle(const char *how, int *font, int *align=0);
 class mglBase;
 //-----------------------------------------------------------------------------
 /// Class for incapsulating font plotting procedures
@@ -72,11 +74,11 @@ public:
 	/// Get height of text
 	float Height(const char *how);
 	/// Print text string for font specified by string
-	float Puts(const char *str,const char *how);
+	float Puts(const char *str,const char *how,float col);
 	/// Get width of text string for font specified by string
 	float Width(const char *str,const char *how);
 	/// Print text string for font specified by string
-	float Puts(const wchar_t *str,const char *how);
+	float Puts(const wchar_t *str,const char *how,float col);
 	/// Get width of text string for font specified by string
 	float Width(const wchar_t *str,const char *how);
 
@@ -101,7 +103,7 @@ protected:
 	long numb;			///< Buffer size
 
 	/// Print text string for font specified by integer constant
-	float Puts(const wchar_t *str,int font=0,int align=0, char col='k');
+	float Puts(const wchar_t *str,int font,int align, float col);
 	/// Get width of text string for font specified by integer constant
 	float Width(const wchar_t *str,int font=0);
 	/// Replace TeX symbols by its UTF code and add font styles
@@ -109,7 +111,7 @@ protected:
 
 	/// Draw string recursively
 	/* x,y - position, f - factor, style: 0x1 - italic, 0x2 - bold, 0x4 - overline, 0x8 - underline, 0x10 - empty (not draw) */
-	float Puts(const unsigned *str, float x,float y,float f,int style,char col);
+	float Puts(const unsigned *str, float x,float y,float f,int style,float col);
 	/// Parse LaTeX command
 	unsigned Parse(const wchar_t *s);
 	/// Get internal code for symbol
@@ -124,7 +126,7 @@ private:
 	bool read_main(const char *fname, unsigned &cur);
 	void mem_alloc();
 	bool read_def(unsigned &cur);
-	void draw_ouline(int st, float x, float y, float f, float g, float ww, char ccol);
+	void draw_ouline(int st, float x, float y, float f, float g, float ww, float ccol);
 };
 //-----------------------------------------------------------------------------
 #endif

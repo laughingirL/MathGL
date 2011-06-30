@@ -251,7 +251,7 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 	else	{	MGL_QUAD_PLOT	}
 }
 //-----------------------------------------------------------------------------
-float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float size,float sh)
+float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float size,float sh,float col)
 {
 	if(p<0 || isnan(Pnt[p].x))	return 0;
 	if(size<0)	size *= -FontSize;
@@ -261,7 +261,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 		float res;
 		TernAxis = TernAxis&(~4);
 		for(int i=0;i<4;i++)
-			res = text_plot(ProjScale(i,p),text,font,size/2,sh);
+			res = text_plot(ProjScale(i,p),text,font,size/2,sh,col);
 		TernAxis = TernAxis|4;
 		return res;
 	}
@@ -273,7 +273,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 		mglText txt(text,font);
 		MGL_PUSH(Ptx,txt,mutexPtx);
 		a.n3 = Ptx.size()-1;
-		a.s = size;	a.w = sh;
+		a.s = size;	a.w = sh;	a.p=col;
 		add_prim(a);
 	}
 	// text drawing itself
@@ -301,15 +301,15 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 		fscl = fsize;
 		ftet = -180*atan2(q.v,q.u)/M_PI;
 	}
-	fsize *= fnt->Puts(text,font)/2;
+	fsize *= fnt->Puts(text,font,col)/2;
 	Pop();	return fsize;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Glyph(float x, float y, float f, int s, long j, char col)
+void mglCanvas::Glyph(float x, float y, float f, int s, long j, float col)
 {
 	mglPrim a(4);
 	a.s = fscl/B.pf;	a.w = ftet;	a.p = B.pf;
-	float cc = AddTexture(col);	// TODO: use real color
+	float cc = col<0 ? AddTexture(char(0.5-col)):col;
 	if(cc<0)	cc = CDef;
 	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), 0, 0);
 	a.n3 = s;	a.n4 = j;	a.z = B.z;

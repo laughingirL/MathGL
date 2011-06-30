@@ -40,22 +40,29 @@ bool same_chain(long f,long i,long *nn)
 //-----------------------------------------------------------------------------
 void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t *text, const char *font)
 {
-	int pos = font && strchr(font,'T');
+	int pos = font && strchr(font,'T'), align;
 	wchar_t L[2]=L"a";
 	mglPoint p1,n1,p2;
 
-	float w, r, ww, wg=gr->TextHeight()*gr->GetFontSize()/8.;//*font_factor;
-	register long i,k,h,pp;
+	float w, r, ww, wg=gr->TextHeight();//*font_factor;
+	register long i,k,h;
 
 	h=f;	k=nn[f];	// print string symbol-by-symbol
 	mglPoint p0=gr->GetPnt(ff[h]),n0=gr->GetPnt(ff[k])-p0, pa;
-	float c=gr->GetClrC(ff[h]);
+	char cc=mglGetStyle(font,0,&align);
+	float c=cc ? -cc : gr->GetClrC(ff[h]);
+	long len = wcslen(text),j;
+	float *wdt=new float[len];
+	long *pt=new long[len];
+	long *pp=new long[n];
+	// get widths
+	for(j=0;j<len;j++)	{	L[0] = text[j];	wdt[i] = gr->TextWidth(L);	}
 
-	for(unsigned j=0;j<wcslen(text);j++)
+	for(j=0;j<len;j++)
 	{
-		L[0] = text[j];	pa = pos>0 ? p0 : p0-wg*(!n0);
-		pp = gr->AddPnt(pa,c,n0,0,false);	// TODO: Check it!!!
-		ww = gr->text_plot(pp,L,font);
+		pa = pos>0 ? p0 : p0-wg*(!n0);
+		pt[j] = gr->AddPnt(pa,c,n0,0,false);
+		ww = wdt[j];
 		p1 = p0+(ww/Norm(n0))*n0;
 		// let find closest point
 		for(r=1e10,i=0;i<n;i++)
@@ -119,6 +126,9 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 		p0 = p2 + n1*(((p1-p2)*n1)/(n1*n1));
 		n0 = n1;
 	}
+	for(j=0;j<len;j++)
+	{	L[0] = text[j];	gr->text_plot(pt[j],L,font,-1,0,c);	}
+	delete []wdt;	delete []pt;	delete []pp;
 }
 //-----------------------------------------------------------------------------
 void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *text, const char *font, const char *opt)

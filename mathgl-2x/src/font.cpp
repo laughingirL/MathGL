@@ -41,10 +41,10 @@ const float mgl_fgen = 4*14;
 extern mglTeXsymb mgl_tex_symb[];
 mglFont mglDefFont;
 //-----------------------------------------------------------------------------
-char mglGetStyle(const char *how, int *font, int *align=0)
+char mglGetStyle(const char *how, int *font, int *align)
 {
 	const char *cols = "kwrgbcymhWRGBCYMHlenpquLENPQU";
-	char col='k';
+	char col=0;
 	if(!how || *how==0)	return col;
 	// NOTE: no brightness for text color
 	for(;*how && *how!=':';how++)
@@ -67,14 +67,14 @@ char mglGetStyle(const char *how, int *font, int *align=0)
 	return col;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Puts(const char *str,const char *how)
+float mglFont::Puts(const char *str,const char *how,float col)
 {
 	int font=0, align=1;
-	char col=mglGetStyle(how,&font,&align);
+	char cc=mglGetStyle(how,&font,&align);
 	unsigned size = strlen(str)+1;
 	wchar_t *wcs = new wchar_t[size];
 	mbstowcs(wcs,str,size);
-	float w = Puts(wcs,font,align,col);
+	float w = Puts(wcs,font,align,cc?-cc:col);
 	delete []wcs;
 	return w;
 }
@@ -91,11 +91,11 @@ float mglFont::Width(const char *str,const char *how)
 	return w;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Puts(const wchar_t *str,const char *how)
+float mglFont::Puts(const wchar_t *str,const char *how,float col)
 {
 	int font=0, align=1;
-	char col=mglGetStyle(how,&font,&align);
-	return Puts(str, font, align,col);
+	char cc=mglGetStyle(how,&font,&align);
+	return Puts(str, font, align,cc?-cc:col);
 }
 //-----------------------------------------------------------------------------
 float mglFont::Width(const wchar_t *str,const char *how)
@@ -105,7 +105,7 @@ float mglFont::Width(const wchar_t *str,const char *how)
 	return Width(str, font);
 }
 //-----------------------------------------------------------------------------
-float mglFont::Puts(const wchar_t *str,int font,int align, char col)
+float mglFont::Puts(const wchar_t *str,int font,int align, float col)
 {
 	if(numg==0)	return 0;
 	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0;
@@ -341,7 +341,7 @@ float mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float
 	return w1>w2 ? w1 : w2;
 }
 //-----------------------------------------------------------------------------
-void mglFont::draw_ouline(int st, float x, float y, float f, float g, float ww, char ccol)
+void mglFont::draw_ouline(int st, float x, float y, float f, float g, float ww, float ccol)
 {
 	if(st&MGL_FONT_OLINE)
 		gr->Glyph(x,y+499*f/g, ww*g, (st&MGL_FONT_WIRE)?12:8, 0, ccol);
@@ -350,7 +350,7 @@ void mglFont::draw_ouline(int st, float x, float y, float f, float g, float ww, 
 }
 //-----------------------------------------------------------------------------
 #define MGL_CLEAR_STYLE {st = style;	yy = y;	ff = f;	ccol=col;	a = (st/MGL_FONT_BOLD)&3;}
-float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char col)
+float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,float col)
 {
 	if(numg==0)	return 0;
 	register long j,k;
@@ -361,7 +361,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char
 	unsigned *b1, *b2;		// pointer to substring
 	unsigned *str;			// string itself
 	float yy=y, ff=f, ww, w1, w2;
-	char ccol=col;
+	float ccol=col;
 	int a = (st/MGL_FONT_BOLD)&3;
 	for(i=0;text[i];i++);
 	str = new unsigned[i+1];
@@ -476,7 +476,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,char
 		else if(s==unsigned(-1))	// set normal font
 			st = style & MGL_FONT_ROMAN;
 		else if((s&MGL_COLOR_MASK)==MGL_COLOR_MASK)	// color specification
-			ccol = s&0xff;
+			ccol = -(s&0xff);
 		else
 		{
 			ss = s&MGL_FONT_MASK;
