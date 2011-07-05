@@ -349,8 +349,8 @@ public:
 //	inline long GetPos()	{	return Pnt.size()-1;	}
 	inline mglPoint GetPnt(long i)
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}
-	inline float GetClrC(long i)
-	{	return Pnt[i].c;	}
+	inline float GetClrC(long i)	{	return Pnt[i].c;	}
+	inline long GetPntNum()			{	return Pnt.size();	}
 	/// Scale coordinates and cut off some points
 	virtual bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true);
 

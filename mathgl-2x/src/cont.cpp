@@ -40,24 +40,39 @@ bool same_chain(long f,long i,long *nn)
 //-----------------------------------------------------------------------------
 void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t *text, const char *font)
 {
-	int pos = font && strchr(font,'T'), align;
+	bool pos = font && strchr(font,'t');
+	int align;
 	wchar_t L[2]=L"a";
 	mglPoint p1,n1,p2;
 
 	float w, r, ww, wg=gr->TextHeight();
-	register long i,k,h;
+	register long i,j,k;
 
 	char cc=mglGetStyle(font,0,&align);		align = align&3;
 	float c=cc ? -cc : gr->GetClrC(ff[f]);
-	long len = wcslen(text),j,m;
+	long len = wcslen(text),m;
 	float *wdt=new float[len];
-	long *pt=new long[len], *pp=new long[n];
+	long *pt=new long[len], *pp=new long[n], g,h;
 	// get widths
 	for(j=0;j<len;j++)	{	L[0] = text[j];	wdt[j] = gr->TextWidth(L);	}
-	// find number of points and construct inverse curve
-	pp[nn[f]]=f;
-	for(k=nn[f],m=1;k!=f && k>=0;m++)	{	i=nn[k];	pp[i]=k;	k=i;	}
+	// construct inverse curve
+	for(k=0;k<n;k++)	{	i=nn[k];	if(i>=0)	pp[i]=k;	}
+	// find number of points and last point
+	for(k=f,m=0;;m++)	{	k=nn[k];	if(k>=0 && k!=f)	g=k;	else	break;	}
+	// find middle point (for 'C' text)
+	for(h=f,i=0;i<m/2;i++)	h=nn[h];
 	// find positions (slow variant)
+	if(pos) // below curve
+	{
+		j = align==1?len/2:0;
+		if(align<2)
+		{
+
+		}
+	}
+	else // above curve
+	{
+	}
 /*	if(align==0)
 	{
 		pt[0] = f;

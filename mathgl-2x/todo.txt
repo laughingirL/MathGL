@@ -2,20 +2,20 @@
 1. Triangulation
 2. Text
 	* export as text (EPS, SVG, TeX ...)
+	* curved text
 3. Axis
 	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
 	* ticks (rotation and skipping)
 	* time ticks (test)
 4. legend
 5. opengl
-6. widgets
-7. stfa
-8. Axis ticks,labels miss position sometimes
-9. Grid seems to be not adjusted
-10. Drop() -- rays
-11. Add alpha channel as float (in z-buffer)
-12. Add Candle plot -- see gmail.com
-13. Add ',' as separator for data files
+6. stfa
+7. Axis ticks,labels miss position sometimes
+8. Smooth()
+9. Drop() -- rays
+10. Add alpha channel as float (in z-buffer)
+11. Add Candle plot -- see gmail.com
+12. Add ',' as separator for data files
 
 ============= NEW  =============
 
@@ -31,13 +31,14 @@
 |							|
 |---------------------------|
 
-03. Arrows at flow lines ?!!
-04. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
-05. Check Ellipse(), Rhomb(), Circle() and add dual colors + color from Texture (?)
-06. Box() + edges + half-transparent
-07. parallelisation of drawing
-08. Add plot Circle() as Error() but with marks instead of error boxes (default 'o') + alpha-transpared if filled
-09. Export to LaTeX formats - (pgf/tikz) or metapost if possible (like EPS).
+02. Arrows at flow lines ?!!
+03. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
+04. Check Ellipse(), Rhomb(), Circle() and add dual colors + color from Texture (?)
+05. Box() + edges + half-transparent
+06. parallelisation of drawing
+07. Add plot Circle() as Error() but with marks instead of error boxes (default 'o') + alpha-transpared if filled
+08. Export to LaTeX formats - (pgf/tikz) or metapost if possible (like EPS).
+09. Drops as mglPrim -- not accurate but smaller memory and faster
 10. Export to CALLADA
 11. Export to X3D
 12. Export to JavaScript (WebGL)
@@ -45,22 +46,16 @@
 14. Add diffusive light (no dependence of normale but have direction)
 15. Pipes in mgl2png, mgl2eps, ... (stdin, stdout)
 16. Venn() diagram sample
-17. swap color and font style in text option ('bR:r' -> 'r:bR')
-18. Quaternary diagrams plotted in a tetrahedron: equivalent to ternary diagrams, but in 3D.
-19. Allow interpolation in MGL if argument is not integer ???
-20. Import/Export via GIF (as 3d data) ??? + 16bit PNG
-21. Contour label should not rotated on ~180 degree
-22. Extend mglData to read strings (i.e. sth in "" or '' -- only one column per file + HDF5 import/export)
-23. Exclude BaseLineWidth (do proportional to minimal image size)
-24. Labels at TriCont()
-25. Cones() -- like Bars() but by Cone()
+17. Allow interpolation in MGL if argument is not integer ???
+18. Import/Export via GIF (as 3d data) ??? + 16bit PNG
+19. Contour label should not rotated on ~180 degree
+20. Labels at TriCont()
+21. Cones() -- like Bars() but by Cone()
 
 ============= UNSURE ===========
 
-1. 3D-like solid marks
 2. Problem with \calB and so on (\calH, ...) -- they are present only in italic font :(.
 3. create PWT fonts
-4. Plot for isolines of vector fields ???
 5. Named arguments in MGL ???
 6. \dfrac for normal size and centering  (sample \big\big{\frac{1}{2}}) ???
 7. "Cut off" curves if text is printed inside it (for contour labels) ?!?
@@ -93,6 +88,7 @@
 15. Examples of animation, u3d, x3d, js and so on
 16. Example of inverted axis, minus-log axis
 14. Surf3A -- data a can be vector with size as number of isosurfaces
+17. swap color and font style in text option ('bR:r' -> 'r:bR')
 
 ============= BUGS =============
 

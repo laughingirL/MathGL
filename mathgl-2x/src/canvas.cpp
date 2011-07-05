@@ -313,7 +313,7 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, float col)
 	if(cc<0)	cc = CDef;
 	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), 0, 0);
 	a.n3 = s;	a.n4 = j;	a.z = B.z;
-	add_prim(a);
+	if(a.n1<0)	return;
 	if(Quality&4)	glyph_draw(&a);
 	else	add_prim(a);
 }

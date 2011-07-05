@@ -780,7 +780,8 @@ void mglCanvas::mark_draw(long k, char type, float size)
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_draw(const mglPrim *P)
 {
-	const mglPnt &p=Pnt[P->n1];
+	if(P->n1<0)	return;	// Should be never here
+	mglPnt p=Pnt[P->n1];
 	float f = p.w;
 	Push();		B.clear();
 	B.b[0] = B.b[4] = B.b[8] = P->s*P->p;

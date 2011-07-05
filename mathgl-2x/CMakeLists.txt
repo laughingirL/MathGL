@@ -144,7 +144,7 @@ if(NOT GIF_FOUND)
 	endif(use_gif)
 endif(NOT GIF_FOUND)
 
-find_library(HDF4_LIB mfhdf)
+find_library(HDF4_LIB df)
 find_library(HDF4MF_LIB mfhdf)
 find_path(HDF4_INCLUDE_DIR hdf/mfhdf.h)
 if(NOT HDF4_LIB OR NOT HDF4MF_LIB OR NOT HDF4_INCLUDE_DIR)
