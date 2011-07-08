@@ -149,7 +149,7 @@ void mglCanvas::LightScale()
 		light[i].p.x = xx*B.b[0] + yy*B.b[1] + zz*B.b[2];
 		light[i].p.y = xx*B.b[3] + yy*B.b[4] + zz*B.b[5];
 		light[i].p.z = xx*B.b[6] + yy*B.b[7] + zz*B.b[8];
-		light[i].p /= Norm(light[i].p);
+		light[i].p /= light[i].p.norm();
 	}
 }
 //-----------------------------------------------------------------------------

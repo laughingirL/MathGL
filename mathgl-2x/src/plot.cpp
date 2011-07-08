@@ -1282,7 +1282,7 @@ void mgl_tube_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const char *pen, con
 		for(i=0;i<n;i++)
 		{
 			l = mglPoint(x->dvx(i,mx),y->dvx(i,my),z->dvx(i,mz));
-			t = !l;		t /= Norm(t);	u = t^l;	u /= Norm(u);
+			t = !l;		t.Normalize();	u = t^l;	u.Normalize();
 			q = mglPoint(x->v(i,mx),y->v(i,my),z->v(i,mz));
 			float si,co,ff, rr=r->v(i,mr), dr=r->dvx(i,mr);
 			for(k=0;k<num;k++)

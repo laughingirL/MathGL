@@ -37,7 +37,6 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	_tetx=_tety=_tetz=font_factor=fscl=ftet=0;
 	dr_nx1=dr_nx2=dr_ny1=dr_ny2=0;	// Allowed drawing region
 
-	SetSize(w,h);	SetQuality(MGL_DRAW_NORM);
 	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
@@ -45,7 +44,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	memset(&mutexSub,0,sizeof(pthread_mutex_t));	memset(&mutexLeg,0,sizeof(pthread_mutex_t));
 	memset(&mutexPrm,0,sizeof(pthread_mutex_t));	memset(&mutexPtx,0,sizeof(pthread_mutex_t));
 	memset(&mutexStack,0,sizeof(pthread_mutex_t));
-	DefaultPlotParam();
+	SetSize(w,h);	SetQuality(MGL_DRAW_NORM);	DefaultPlotParam();
 }
 //-----------------------------------------------------------------------------
 mglCanvas::~mglCanvas()

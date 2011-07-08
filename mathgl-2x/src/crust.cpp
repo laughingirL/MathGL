@@ -414,7 +414,7 @@ long mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
 	for(i=0;i<n;i++)
 	{
 		if(i==k1 || set[i]>0)	continue;
-		r = Norm(qq[i]-qq[k1]);
+		r = mgl_norm(qq[i]-qq[k1]);
 		if(r<rm)	{	rm=r;	j=i;	}
 	}
 	return j;
@@ -430,7 +430,7 @@ long mgl_crust(long n,mglPoint *pp,long **nn,float ff)
 		for(rm = FLT_MAX,j=0;j<n;j++)
 		{
 			if(i==j)	continue;
-			r = Norm(pp[i]-pp[j]);
+			r = mgl_norm(pp[i]-pp[j]);
 			if(rm>r)	rm = r;
 		}
 		rs += sqrt(rm);
@@ -444,14 +444,14 @@ long mgl_crust(long n,mglPoint *pp,long **nn,float ff)
 		memset(set,0,100*sizeof(long));
 		for(ii=0,j=0;j<n;j++)	// find close vertexes
 		{
-			r = Norm(pp[i]-pp[j]);
+			r = mgl_norm(pp[i]-pp[j]);
 			if(r<=rs && j!=i)	{	ind[ii] = j;	ii++;	if(ii==99)	break;}
 		}
 		if(ii<3)	continue;	// nothing to do
 		for(j=0;j<ii;j++)
 		{
 			k1 = j;	k2 = ind[j];	k3 = i;
-			qq[k1] = pp[k2] - pp[k3];	r = Norm(qq[k1]);
+			qq[k1] = pp[k2] - pp[k3];	r = qq[k1].norm();
 			qq[k1] /= r;
 		}
 		k1 = 0;

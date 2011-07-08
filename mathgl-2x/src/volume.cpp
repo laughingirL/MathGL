@@ -184,7 +184,7 @@ void mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *ky1,long *k
 		// remove points which is too close to first one
 		for(jj=1;jj<ni;)
 		{
-			d = Norm(pp[jj] - pp[0]);
+			d = mgl_norm(pp[jj] - pp[0]);
 			if(d>1e-5)	jj++;
 			else
 			{	ni--;	for(ii=jj;ii<ni;ii++)	id[ii]=id[ii+1];	}

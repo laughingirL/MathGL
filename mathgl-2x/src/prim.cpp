@@ -197,7 +197,7 @@ void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 
 	static int cgid=1;	gr->StartGroup("Cone",cgid++);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), p,q, d=p2-p1,a,b;
-	a=!d;	a/=Norm(a);		b=d^a;	b/=Norm(b);
+	a=!d;	a.Normalize();		b=d^a;	b.Normalize();
 	long ss=gr->AddTexture(stl);
 	float c1=gr->GetC(ss,p1.z), c2=gr->GetC(ss,p2.z);
 	long *kk=new long[164],k1=-1,k2=-1;
@@ -251,7 +251,7 @@ void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, floa
 
 	gr->Reserve(2*n+1);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), v=p2-p1, u=mglPoint(0,0,1)^v, q=u^v, p, s;
-	u = (r/Norm(u))*u;	s = (p1+p2)/2.;	v *=0.5+r/Norm(v);
+	u = (r/u.norm())*u;	s = (p1+p2)/2.;	v *=0.5+r/v.norm();
 	// central point first
 	n0 = gr->AddPnt(p1,c,q,-1,3);
 	for(long i=0;i<n;i++)
@@ -277,7 +277,7 @@ void mgl_rhomb(HMGL gr, float x1, float y1, float z1, float x2, float y2, float 
 	bool wire = !(stl && strchr(stl,'#'));
 	gr->Reserve(8);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), u=mglPoint(0,0,1)^(p1-p2), q=u^(p1-p2), p, s,qq;
-	u = (r/Norm(u))*u;	s = (p1+p2)/2.;
+	u = (r/u.norm())*u;	s = (p1+p2)/2.;
 	p = p1;	q = qq;	n1 = gr->AddPnt(p,c,qq,-1,3);
 	p = s+u;q = qq;	n2 = gr->AddPnt(p,c,qq,-1,3);
 	p = p2;	q = qq;	n3 = gr->AddPnt(p,c,qq,-1,3);
@@ -311,8 +311,8 @@ void mgl_sphere_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, mreal *r, const ch
 void mgl_drop(HMGL gr, mglPoint p, mglPoint q, float r, float c, float sh, float a)
 {
 	mglPoint p1,p2,pp,qq;
-	if(Norm(q)==0)	{	q = mglPoint(1,0,0);	sh=0;	}
-	q = q/Norm(q);	p1 = !q;	p2 = q^p1;	r /= 2;
+	if(q.norm()==0)	{	q = mglPoint(1,0,0);	sh=0;	}
+	q.Normalize();	p1 = !q;	p2 = q^p1;	r /= 2;
 
 	static int cgid=1;	gr->StartGroup("Drop",cgid++);
 	const int n = 41;
@@ -389,7 +389,7 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 
 			p = mglPoint(xx, yy, zVal);
 			q = inv ? mglPoint(-ax->v(i,j,k),-ay->v(i,j,k),0) : mglPoint(ax->v(i,j,k),ay->v(i,j,k),0);
-			p = mglPoint(xx, yy, zVal);		dd = Norm(q);
+			p = mglPoint(xx, yy, zVal);		dd = q.norm();
 			float ccc = gr->GetC(ss,dd*xm,false);
 			mgl_drop(gr,p,q,(dx<dy?dx:dy)/2,ccc,dd*xm,1);
 		}

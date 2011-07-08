@@ -288,7 +288,7 @@ void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mgl
 		pp[k].y = both ? y.Spline1(u,v,0):y.Spline1(v,0,0);
 		pp[k].z = zVal;
 		for(m=0;m<k-1;m++)	// determines encircle
-			if(Norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
+			if(mgl_norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
 		f = ax.Linear1(u,v,0);	g = ay.Linear1(u,v,0);
 		h = hypot(f,g);	cc[k] = gr->GetC(ss,s*h);
 		if(h<1e-5)	break;	// stationary point
@@ -479,7 +479,7 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 		pp[k].y = both ? y.Spline1(u,v,w):y.Spline1(v,0,0);
 		pp[k].z = both ? z.Spline1(u,v,w):z.Spline1(w,0,0);
 		for(m=0;m<k-1;m++)	// determines encircle
-			if(Norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
+			if(mgl_norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
 		e = ax.Linear1(u,v,w);	f = ay.Linear1(u,v,w);	g = az.Linear1(u,v,w);
 		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(ss,s*h);
 		if(h<1e-5)	break;	// stationary point
@@ -752,7 +752,7 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 		pp[k].y = both ? y.Spline1(u,v,0):y.Spline1(v,0,0);
 		pp[k].z = zVal;
 		for(m=0;m<k-1;m++)	// determines encircle
-			if(Norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
+			if(mgl_norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
 		f = ax.Linear1(u,v,0);	g = ay.Linear1(u,v,0);
 		h = hypot(f,g);	cc[k] = gr->GetC(sc,s*h);
 		pp[k].c = r0>0 ? r0*sqrt(1e-2+ss*h*h)/2 : -r0/sqrt(1e-2+ss*h*h)/5;
@@ -779,7 +779,7 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 		const int num=41;
 		long i,j,*id=new long[2*num];
 		mglPoint p,l=pp[1]-pp[0],t,q,d;
-		t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
+		t = !l;	t.Normalize();	q = t^l;	q.Normalize();
 		float si,co,fi, rr=pp[0].c,dr=l.c;
 		gr->Reserve(num*k);
 
@@ -794,7 +794,7 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 		{
 			if(i<k-1)	l = pp[i+1]-pp[i-1];
 			else	l = pp[i]-pp[i-1];
-			t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
+			t = !l;	t.Normalize();	q = t^l;	q.Normalize();
 			rr=pp[i].c;	dr=l.c;
 			memcpy(id+num,id,num*sizeof(long));
 			for(j=0;j<num;j++)
@@ -906,7 +906,7 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 		pp[k].y = both ? y.Spline1(u,v,w):y.Spline1(v,0,0);
 		pp[k].z = both ? z.Spline1(u,v,w):z.Spline1(w,0,0);
 		for(m=0;m<k-1;m++)	// determines encircle
-			if(Norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
+			if(mgl_norm((pp[k]-pp[m])/dx)<dt/10.)	{	end = true;	break;	}
 		e = ax.Linear1(u,v,w);	f = ay.Linear1(u,v,w);	g = az.Linear1(u,v,w);
 		h = sqrt(e*e+f*f+g*g);	cc[k] = gr->GetC(sc,s*h);
 		pp[k].c = r0>0 ? r0*sqrt(1e-2+ss*h*h)/2 : -r0/sqrt(1e-2+ss*h*h)/5;
@@ -937,7 +937,7 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 		const int num=41;
 		long i,j,*id=new long[2*num];
 		mglPoint p,l=pp[1]-pp[0],t,q,d;
-		t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
+		t = !l;	t.Normalize();	q = t^l;	q.Normalize();
 		float si,co,fi, rr=pp[0].c,dr=l.c;
 		gr->Reserve(num*k);
 
@@ -952,7 +952,7 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 		{
 			if(i<k-1)	l = pp[i+1]-pp[i-1];
 			else	l = pp[i]-pp[i-1];
-			t = !l;	t/=Norm(t);		q = t^l;	q/=Norm(q);
+			t = !l;	t.Normalize();	q = t^l;	q.Normalize();
 			rr=pp[i].c;	dr=l.c;
 			memcpy(id+num,id,num*sizeof(long));
 			for(j=0;j<num;j++)

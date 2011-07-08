@@ -40,9 +40,11 @@ struct mglPoint
  	mglPoint(float X,float Y=0,float Z=0,float C=0){x=X;y=Y;z=Z;c=C;}
 	inline bool IsNAN()		{	return (x!=x || y!=y || z!=z || c!=c);	}
 	inline float val(int i)	{	return (i<2 ? (i==0 ? x:y) : (i==2 ? z:c));	}
+	inline float norm()		{	return sqrt(x*x+y*y+z*z);	}
+	inline void Normalize()	{	float v=norm();	x/=v;	y/=v;	z/=v;	}
 
-	inline void operator+=(const mglPoint &a)	{	x+=a.x;	y+=a.y;	z+=a.z;	}
-	inline void operator-=(const mglPoint &a)	{	x-=a.x;	y-=a.y;	z-=a.z;	}
+	inline void operator+=(const mglPoint &a)	{	x+=a.x;	y+=a.y;	z+=a.z;	c+=a.c;	}
+	inline void operator-=(const mglPoint &a)	{	x-=a.x;	y-=a.y;	z-=a.z;	c-=a.c;	}
 	inline void operator+=(float a)	{	x+=a;	y+=a;	z+=a;	}
 	inline void operator-=(float a)	{	x-=a;	y-=a;	z-=a;	}
 	inline void operator*=(float a)	{	x*=a;	y*=a;	z*=a;	}
@@ -74,7 +76,7 @@ inline bool operator==(const mglPoint &a, const mglPoint &b)
 {	return !memcmp(&a, &b, sizeof(mglPoint));	}
 inline bool operator!=(const mglPoint &a, const mglPoint &b)
 {	return memcmp(&a, &b, sizeof(mglPoint));	}
-inline float Norm(const mglPoint &p)
+inline float mgl_norm(const mglPoint &p)
 {	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);	}
 //-----------------------------------------------------------------------------
 /// Abstract class for data array
