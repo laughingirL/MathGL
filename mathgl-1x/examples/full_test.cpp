@@ -33,6 +33,7 @@
 extern mglTeXsymb mgl_tex_symb[];
 int test(mglGraphAB *gr)
 {
+gr->SetTickLen(-0.1); gr->Axis(); gr->Box(); return 0;
 mglTestMode=true;
 	mreal a[100];   // let a_i = sin(4*pi*x), x=0...1
 	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
