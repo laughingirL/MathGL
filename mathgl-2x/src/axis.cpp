@@ -252,8 +252,8 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 	{	aa.ds = aa.d/(aa.ns+1);	}
 	else if(aa.d>-1.5)	// like =0 or =-1
 	{
-		n = floor(log10(d));	d = floor(d*pow(10,-n));
-		n = pow(10,n);			aa.o=0;
+		n = floor(log10(d));	d = floor(d*pow(10.,-n));
+		n = pow(10.,n);			aa.o=0;
 		if(d==1)	{	aa.dv = n/5;	aa.ds=n/10;	}
 		else if(d<4){	aa.dv = n/2;	aa.ds=n/10;	}
 		else if(d<7){	aa.dv = n;		aa.ds=n/5;	}
@@ -262,9 +262,9 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 	else	// TODO: Check it!!!
 	{
 		d /= -aa.d;		n = floor(log10(d));
-		int k = int(d*pow(10,-n)+0.5);
-		aa.dv = pow(10,n)*k;
-		aa.o=0;	aa.ds = pow(10,n);
+		int k = int(d*pow(10.,-n)+0.5);
+		aa.dv = pow(10.,n)*k;
+		aa.o=0;	aa.ds = pow(10.,n);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -278,13 +278,13 @@ int mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
 		if(v>100.f)
 		{
 			int k=int(log10(v)-0.01);
-			kind=3;		v=mgl_ipow(10,k);
+			kind=3;		v=mgl_ipow(10.,k);
 			mglprintf(s, 32, L"(@{\\times{}10^{%d}})", k);
 		}
 		if(v<1e-2f)
 		{
 			int k=int(log10(v)-0.01)-1;
-			kind=3;		v=mgl_ipow(10,k);
+			kind=3;		v=mgl_ipow(10.,k);
 			mglprintf(s, 32, L"(@{\\times{}10^{%d}})", k);
 		}
 	}
@@ -295,14 +295,14 @@ int mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
 		{
 			kind = 2;
 			int k=int(log10(v)-0.01);
-			v=mgl_ipow(10,k);
+			v=mgl_ipow(10.,k);
 			mglprintf(s, 32, L"\\times 10^{%d}", k);
 		}
 		if(v<1e-2f)
 		{
 			kind = 2;
 			int k=int(log10(v)-0.01)-1;
-			v=mgl_ipow(10,k);
+			v=mgl_ipow(10.,k);
 			mglprintf(s, 32, L"\\times 10^{%d}", k);
 		}
 	}

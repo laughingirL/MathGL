@@ -25,7 +25,7 @@
 #define _MGL_PS_H_
 #include "mgl/mgl_ab.h"
 //-----------------------------------------------------------------------------
-struct mglGraphPS;
+class mglGraphPS;
 struct mglPrim
 {
 	mreal x[4], y[4], zz[4];	///< coordinates of corners

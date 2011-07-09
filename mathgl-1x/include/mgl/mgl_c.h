@@ -35,7 +35,7 @@ extern "C" {
 /*****************************************************************************/
 //#ifdef _MGL_DATA_H_
 #ifdef __cplusplus
-class mglDraw;
+struct mglDraw;
 typedef mglDraw* HMDR;
 class mglGraph;
 typedef mglGraph* HMGL;

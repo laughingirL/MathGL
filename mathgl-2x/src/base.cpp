@@ -602,9 +602,8 @@ long mglBase::AddTexture(const char *cols, int smooth)
 	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
 }
 //-----------------------------------------------------------------------------
-float mglBase::AddTexture(char col)
+float mglBase::AddTexture(mglColor c)
 {
-	mglColor c(col);
 	register unsigned long i,j;
 	if(!c.Valid())	return -1;
 	// first lets try an existed one

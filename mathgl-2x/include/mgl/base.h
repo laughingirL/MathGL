@@ -20,10 +20,12 @@
 #ifndef _MGL_BASE_H_
 #define _MGL_BASE_H_
 #include <string.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#ifndef _MSC_VER
+#include <stdint.h>
+#endif
 #include "mgl/define.h"
 /*****************************************************************************/
 #ifdef __cplusplus
@@ -369,7 +371,9 @@ public:
 	char SetPenPal(const char *stl, long *id=0);
 	/// Add texture (like color scheme) and return the position of first color
 	long AddTexture(const char *cols, int smooth=0);
-	float AddTexture(char col);
+//	inline float AddTexture(char col)	{	return AddTexture(mglColor(col));	};
+	float AddTexture(mglColor col);
+	inline void DefColor(mglColor col)	{	CDef = AddTexture(col);	}
 	/// Set next color from palette
 	float NextColor(long &id);
 

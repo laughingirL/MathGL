@@ -20,8 +20,9 @@
 #ifndef _MGL_F_H_
 #define _MGL_F_H_
 
+#ifndef _MSC_VER
 #include <stdint.h>
-
+#endif
 #include <mgl/config.h>
 
 #if(MGL_USE_DOUBLE==1)

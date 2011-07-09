@@ -204,11 +204,13 @@ public:
 	virtual void Flush();
 	/// Finish plotting. Normally this function is called internaly.
 	virtual void Finish();
+	/// Set the default color
+	virtual void DefColor(mglColor c, mreal alpha=-1)=0;
 	/// Set the transparency on/off.
 	virtual bool Alpha(bool enable)=0;
 	/// Set default value of alpha-channel
 	inline void SetAlphaDef(float val)	{	AlphaDef=val;	};
-	/// Temporary switches transparency on/off 
+	/// Temporary switches transparency on/off
 	inline void SetTransparent(bool val)	{	Transparent=val;	};
 	/// Set the transparency type
 	inline void SetTranspType(int val)	{	TranspType=val;	};
@@ -805,7 +807,7 @@ public:
 	void ContF(const mglData &x, const mglData &y, const mglData &z, const char *sch=0, int Num=7, mreal zVal=NAN);
 	/// Draw several solid contours for 2d data
 	void ContF(const mglData &z, const char *sch=0, int Num=7, mreal zVal=NAN);
-	
+
 	/// Draw solid contours for 2d data specified parametrically with manual colors
 	void ContD(const mglData &v, const mglData &x, const mglData &y, const mglData &z, const char *sch=0, mreal zVal=NAN);
 	/// Draw solid contours for 2d data with manual colors
@@ -1109,8 +1111,6 @@ protected:
 	virtual mreal GetOrgZ(char dir);
 	/// Set the parameter lines directly (internaly used by mglGraph::SelectPen)
 	virtual void Pen(mglColor col, char style,mreal width);	//=0
-	/// Set the default color
-	virtual void DefColor(mglColor c, mreal alpha=-1)=0;
 	/// draw mark with different type at position {x,y,z} (no scaling)
 	virtual void Mark(mreal x,mreal y,mreal z,char mark='.')=0;
 

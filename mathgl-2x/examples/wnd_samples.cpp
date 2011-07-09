@@ -34,8 +34,8 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 int test_wnd(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
-	gr->Box();	gr->Plot(y.SubData(-1,0));
-	gr->Text(y,"This is very very long string drawn along a curve",":LTk");
+	gr->Box();	gr->Plot(y.SubData(-1,0),"b.");
+	gr->Text(y,"This is very very long string drawn along a curve","k:Lt");
 //	gr->Text(y,"Another string drawn above a curve","T:r");
 	return 0;
 

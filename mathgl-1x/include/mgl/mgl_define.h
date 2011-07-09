@@ -31,6 +31,9 @@
 
 //#ifdef WIN32
 #ifdef _MSC_VER
+#define hypot _hypot
+#define getcwd _getcwd
+#define isfinite _finite
 #define chdir	_chdir // BORLAND has chdir
 #include <float.h>
 const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
@@ -39,7 +42,7 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #if(MGL_USE_DOUBLE==1)
 #define NAN		NANd
 #else
-#define NAN		NANd
+#define NAN		NANf
 #endif
 #endif
 

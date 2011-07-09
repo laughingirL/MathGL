@@ -470,7 +470,9 @@ void mgl_data_fill_eq(HMGL gr, HMDT dat, const char *eq, const HMDT vdat, const 
 void mgl_set_ticks_vals(HMGL gr, char dir, int n, mreal *val, const char **lbl)
 {	gr->SetTicksVal(dir,n,val,lbl);	}
 //-----------------------------------------------------------------------------
+#ifndef _MSC_VER
 #include <stdint.h>
+#endif
 int mgl_fortran_func(HMGL gr, void *f)
 {
 	typedef int (*func_draw)(uintptr_t *gr);
