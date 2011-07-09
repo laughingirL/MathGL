@@ -71,7 +71,7 @@ void mglCanvas::SetAxisStl(const char *stl, const char *tck, const char *sub)
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTickLen(float tlen, float stt)
-{	TickLen=fabs(tlen)>0?tlen:0.1;	st_t=stt>0?stt:1;	}
+{	TickLen = tlen==0?tlen:0.1;	st_t=stt>0?stt:1;	}
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTicks(char dir, float d, int ns, float org)
 {

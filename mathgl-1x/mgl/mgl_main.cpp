@@ -667,7 +667,7 @@ void mglGraph::SetTickStl(const char *stl, const char *sub)
 }
 //-----------------------------------------------------------------------------
 void mglGraph::SetTickLen(mreal tlen, mreal stt)
-{	TickLen=fabs(tlen)>0?tlen:0.1;	st_t=stt>0?stt:1;	}
+{	TickLen = tlen==0?tlen:0.1;	st_t=stt>0?stt:1;	}
 //-----------------------------------------------------------------------------
 void mglGraph::SimplePlot(const mglData &a, int type, const char *stl)
 {
