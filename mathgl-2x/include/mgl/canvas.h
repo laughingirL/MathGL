@@ -58,12 +58,24 @@ struct mglMatrix
 	inline void clear()	{	memset(this,0,sizeof(mglMatrix));	}
 };
 //-----------------------------------------------------------------------------
+/// Structure for text label
+struct mglText
+{
+	std::wstring text;
+	std::string stl;
+	float val;
+	mglText(const wchar_t *txt=0, const char *fnt=0, float v=0)	{	text=txt;	stl=fnt;	val=v;	}
+	mglText(const std::wstring &txt, float v=0)	{	text=txt;	val=v;	}
+};
+//-----------------------------------------------------------------------------
 /// Structure for drawing axis and ticks
 struct mglAxis
 {
-	mglAxis();
-	~mglAxis();
-	void AddLabel(float val, const wchar_t *b);
+	mglAxis()	{	memset(this,0,sizeof(mglAxis));	}
+	inline void AddLabel(const wchar_t *b, float v)
+	{	txt.push_back(mglText(b,0,v));	}
+	inline void AddLabel(const std::wstring &b, float v)
+	{	txt.push_back(mglText(b,v));	}
 
 	float dv,ds;	///< Actual step for ticks and subticks.
 	float d;		///< Step for axis ticks (if positive) or its number (if negative).
@@ -75,11 +87,7 @@ struct mglAxis
 	float v0,v1,v2;	///< Center of axis cross section and its range.
 	float o;		///< Point of starting ticks numbering (if NAN then Org is used).
 	int f;			///< Flag 0x1 - time, 0x2 - manual, 0x4 - fixed dv
-	int num;		///< Number of manual ticks
-	wchar_t *buf;	///< Buffer for manual ticks
-	wchar_t *str[64];	///< Position of manual ticks
-//	bool upd;		///< Last label is ticks factor
-	float val[64];	///< Values of manual ticks
+	std::vector<mglText> txt;	///< Axis labels
 	char ch;		///< Character of axis (like 'x','y','z','c')
 };
 //-----------------------------------------------------------------------------
@@ -94,14 +102,6 @@ struct mglLight
 	float a;		///< Aperture of light sources
 	float b;		///< Brightness of light sources
 	mglColor c;		///< Color of light sources
-};
-//-----------------------------------------------------------------------------
-/// Structure for text label
-struct mglText
-{
-	std::wstring text;
-	std::string stl;
-	mglText(const wchar_t *txt=0, const char *fnt=0)	{	text=txt;	stl=fnt;	}
 };
 //-----------------------------------------------------------------------------
 /// Class contains all functionality for creating different mathematical plots

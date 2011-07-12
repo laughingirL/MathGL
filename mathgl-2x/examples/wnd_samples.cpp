@@ -34,17 +34,15 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 int test_wnd(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
-	gr->Box();	gr->Plot(y.SubData(-1,0),"b.");
-	gr->Text(y,"This is very very long string drawn along a curve","k:Lt");
-//	gr->Text(y,"Another string drawn above a curve","T:r");
-	return 0;
 
 	gr->Rotate(0,0);
 	gr->SetOrigin(-1,-1,-1);	gr->Axis();
 	gr->Label('x',"x axis");
 	gr->Label('y',"y axis");
 
-	gr->SetOrigin( 1, 1, 1);	gr->Axis();
+	gr->SetTickLen(-0.1);
+	gr->SetOrigin( 1, 1, 1);
+	gr->Axis();
 	gr->Label('x',"X axis");
 	gr->Label('y',"Y axis");
 

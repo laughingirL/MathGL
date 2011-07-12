@@ -2,7 +2,6 @@
 1. Triangulation
 2. Text
 	* export as text (EPS, SVG, TeX ...)
-	* curved text
 3. Axis
 	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
 	* ticks (rotation and skipping)
@@ -13,9 +12,7 @@
 7. Axis ticks,labels miss position sometimes
 8. Smooth()
 9. Drop() -- rays
-10. Add alpha channel as float (in z-buffer)
-11. Add Candle plot -- see gmail.com
-12. Add ',' as separator for data files
+10. Add Candle plot -- see gmail.com
 
 ============= NEW  =============
 

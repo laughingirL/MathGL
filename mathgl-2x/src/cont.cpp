@@ -41,19 +41,21 @@ bool same_chain(long f,long i,long *nn)
 #include <mgl/canvas_cf.h>
 void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t *text, const char *font)
 {
-	bool pos = font && strchr(font,'t');
+	int pos = font && strchr(font,'t') ? 1:-1;
 	int align;
 	wchar_t L[2]=L"a";
-	mglPoint p1,n1,p2,l1,pc;
+	mglPoint p1,n1,q1,q2,q,u;
 
 	register long i,j,k;
 
 	char cc=mglGetStyle(font,0,&align);		align = align&3;
-	float c=cc ? -cc : gr->GetClrC(ff[f]),wg=gr->TextHeight()/2, tet,t,opt;
+	float c=cc ? -cc : gr->GetClrC(ff[f]), tet,t,opt;
 	long len = wcslen(text),m;
-	float *wdt=new float[len+1];	memset(wdt,0,(len+1)*sizeof(float));
+	float *wdt=new float[len];
 	long *pt=new long[len], *pp=new long[n];
-	long g=-1,h,s;	// f - start, g - end, h - mid, s -cur.start
+	memset(pt,-1,len*sizeof(long));
+	memset(pp,-1,len*sizeof(long));
+	long g=-1,h;	// f - start, g - end, h - mid, s -cur.start
 	// get widths
 	for(j=0;j<len;j++)	{	L[0] = text[j];	wdt[j] = gr->TextWidth(L)/2;	}
 	// construct inverse curve
@@ -62,117 +64,58 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 	for(k=f,m=0;;m++)	{	k=nn[k];	if(k>=0 && k!=f)	g=k;	else	break;	}
 	// find middle point (for 'C' text)
 	for(h=f,i=0;i<m/2;i++)	h=nn[h];
-	// find positions (slow variant)
-	if(pos) // below curve
+	// first left to right
+	if(align==1)	{	j=len/2;	k=h;	}
+	else	{	j=0;	k=f;	}
+	p1=gr->GetPnt(ff[k]);		// prepare starting point
+	n1=gr->GetPnt(ff[nn[k]])-p1;	tet=atan2(n1.y, n1.x);
+	if(align==1)	p1-=n1/2.;	// shift for centering
+	if(align<2)	for(;;j++)
 	{
-		// first left to right
-		if(align==1)	{	j=len/2;	k=s=h;	}
-		else	{	j=0;	k=s=f;	}
-		// prepare starting point
-		p1 = gr->GetPnt(ff[k]);	p2=gr->GetPnt(ff[nn[k]]);
-		n1 = p2-p1;			tet=atan2(n1.y, n1.x);
-		if(align==1)	p1-=n1/2.;	// shift for centering
-		if(align<2)	for(;j<len;j++)
+		n1 = mglPoint(wdt[j]*cos(tet),wdt[j]*sin(tet));
+		pt[j] = gr->AddPnt(p1,c,n1,0,false);
+		if(j>=len-1)	break;
+		q = p1+(wdt[j]+wdt[j+1]/2)*mglPoint(cos(tet), sin(tet));	// estimate for new point
+		for(i=k,opt=-10;nn[i]>=0 && (i!=k || opt<-7);i=nn[i])		// find optimal angle (projection)
 		{
-			n1 = mglPoint(wdt[j]*cos(tet),wdt[j]*sin(tet));
-			l1 = mglPoint(-wg*sin(tet), wg*cos(tet));
-			p2 = p1+n1;
-			pt[j] = gr->AddPnt(p1,c,n1,0,false);
-{	L[0] = text[j];	gr->text_plot(pt[j],L,font,-1,0,c);	mgl_write_png_solid(gr, "1.png","");	}
-			// find optimal angle
-			for(i=nn[k],opt=-10;i>=0 && i!=k;i=nn[i])
+			q1=gr->GetPnt(ff[i]);	q2=gr->GetPnt(ff[nn[i]]);	u=q2-q1;
+			if(q1*u<=q*u && q*u<q2*u)
 			{
-				pc = gr->GetPnt(ff[i])-p2;
-				if(n1*pc<0)	continue;	// wrong direction
-				t = atan2(pc.y, pc.x);
-				if(t<=tet && pc.norm()>wdt[j+1])	continue;
-				if(t>tet && pc.norm()>wdt[j+1]*cos(t-tet)+wg*sin(t-tet))	continue;
-				if(t>opt)	opt=t;
+				u.Normalize();	opt = atan2(u.y, u.x);
+				q = p1+n1;	q2 = q-q1;	t = q2.x*u.y-q2.y*u.x;
+				if(opt>tet && pos*t<0)	q = q1+(q2*u)*u;
+				break;
 			}
-			if(opt<-M_PI)	opt=tet;
-			p1 += n1;	tet = opt;
 		}
-		// now right to  left
-		if(align==1)	{	j=len/2;	k=s=nn[h];	}
-		else	{	j=0;	k=s=g;	}
-		// prepare starting point
-		p1 = gr->GetPnt(ff[k]);	p2=gr->GetPnt(ff[pp[k]]);
-		n1 = p2-p1;			tet=atan2(n1.y, n1.x);
-		if(align==1)	p1-=n1/2.;	// shift for centering
-		if(align<2)	for(;j>=0;j--)
-		{
-			n1 = mglPoint(-wdt[j]*cos(tet),-wdt[j]*sin(tet));
-			l1 = mglPoint(-wg*sin(tet), wg*cos(tet));
-			p2 = p1+n1;
-			pt[j] = gr->AddPnt(p1,c,n1,0,false);
-			// find optimal angle
-			for(i=nn[k],opt=-10;i>=0 && i!=k;i=pp[i])
-			{
-				pc = gr->GetPnt(ff[i])-p2;
-				if(n1*pc<0)	continue;	// wrong direction
-				t = atan2(pc.y, pc.x);
-				if(t<=tet && pc.norm()>wdt[j+1])	continue;
-				if(t>tet && pc.norm()>wdt[j+1]*cos(t-tet)+wg*sin(t-tet))	continue;
-				if(t>opt)	opt=t;
-			}
-			if(opt<-M_PI)	opt=tet;
-			p1 += n1;	tet = opt;
-		}
+		if(opt<-M_PI)	p1 += n1;		// keep previous angle if not found new
+		else	{	p1 = q;	tet = opt;	}
 	}
-	else // above curve
+	// now right to  left
+	if(align==1)	{	j=len/2;	k=nn[h];	}
+	else	{	j=len-1;	k=g;	}
+	// prepare starting point
+	p1=gr->GetPnt(ff[k]);	n1=gr->GetPnt(ff[pp[k]])-p1;	tet=atan2(n1.y, n1.x);
+	if(align==1)	p1-=(gr->GetPnt(ff[nn[k]])-p1)/2.;	// shift for centering
+	if(align>0)	for(;;j--)
 	{
-		// first left to right
-		if(align==1)	{	j=len/2;	k=s=h;	}
-		else	{	j=0;	k=s=f;	}
-		// prepare starting point
-		p1 = gr->GetPnt(ff[k]);	p2=gr->GetPnt(ff[nn[k]]);
-		n1 = p2-p1;			tet=atan2(n1.y, n1.x);
-		if(align==1)	p1-=n1/2.;	// shift for centering
-		if(align<2)	for(;j<len;j++)
+		n1 = mglPoint(wdt[j]*cos(tet),wdt[j]*sin(tet));
+		pt[j] = gr->AddPnt(p1,c,n1,0,false);
+		if(j<=0)	break;
+		q = p1+(wdt[j]+wdt[j-1]/2)*mglPoint(cos(tet), sin(tet));	// estimate for new point
+//		if(align==1)	{	n1 = (wdt[j]/2+wdt[j-1]/2)*mglPoint(cos(tet), sin(tet));	q = p1+n1;	}
+		for(i=k,opt=-10;pp[i]>=0 && (i!=k || opt<-7);i=pp[i])		// find optimal angle (projection)
 		{
-			n1 = mglPoint(wdt[j]*cos(tet),wdt[j]*sin(tet));
-			l1 = mglPoint(-wg*sin(tet), wg*cos(tet));
-			p2 = p1+n1;
-			pt[j] = gr->AddPnt(p1,c,n1,0,false);
-			// find optimal angle
-			for(i=nn[k],opt=-10;i>=0 && i!=k;i=nn[i])
+			q1=gr->GetPnt(ff[i]);	q2=gr->GetPnt(ff[pp[i]]);	u=q2-q1;
+			if(q1*u<=q*u && q*u<q2*u)
 			{
-				pc = gr->GetPnt(ff[i])-p2;
-				if(n1*pc<0)	continue;	// wrong direction
-				t = atan2(pc.y, pc.x);
-				if(t<=tet && pc.norm()>wdt[j+1])	continue;
-				if(t>tet && pc.norm()>wdt[j+1]*cos(t-tet)+wg*sin(t-tet))	continue;
-				if(t>opt)	opt=t;
+				u.Normalize();	opt = atan2(u.y, u.x);
+				q = p1+n1;	q2 = q-q1;	t = q2.x*u.y-q2.y*u.x;
+				if(opt<tet && pos*t<0)	q = q1-(q2*u)*u;
+				break;
 			}
-			if(opt<-M_PI)	opt=tet;
-			p1 += n1;	tet = opt;
 		}
-		// now right to  left
-		if(align==1)	{	j=len/2;	k=s=nn[h];	}
-		else	{	j=0;	k=s=g;	}
-		// prepare starting point
-		p1 = gr->GetPnt(ff[k]);	p2=gr->GetPnt(ff[pp[k]]);
-		n1 = p2-p1;			tet=atan2(n1.y, n1.x);
-		if(align==1)	p1-=n1/2.;	// shift for centering
-		if(align<2)	for(;j>=0;j--)
-		{
-			n1 = mglPoint(-wdt[j]*cos(tet),-wdt[j]*sin(tet));
-			l1 = mglPoint(-wg*sin(tet), wg*cos(tet));
-			p2 = p1+n1;
-			pt[j] = gr->AddPnt(p1,c,n1,0,false);
-			// find optimal angle
-			for(i=nn[k],opt=-10;i>=0 && i!=k;i=pp[i])
-			{
-				pc = gr->GetPnt(ff[i])-p2;
-				if(n1*pc<0)	continue;	// wrong direction
-				t = atan2(pc.y, pc.x);
-				if(t<=tet && pc.norm()>wdt[j+1])	continue;
-				if(t>tet && pc.norm()>wdt[j+1]*cos(t-tet)+wg*sin(t-tet))	continue;
-				if(t>opt)	opt=t;
-			}
-			if(opt<-M_PI)	opt=tet;
-			p1 += n1;	tet = opt;
-		}
+		if(opt<-M_PI)	p1 += n1;		// keep previous angle if not found new
+		else	{	p1 = q;	tet = opt;	}
 	}
 	for(j=0;j<len;j++)	// draw text
 	{	L[0] = text[j];	gr->text_plot(pt[j],L,font,-1,0,c);	}

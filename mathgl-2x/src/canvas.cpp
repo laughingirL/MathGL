@@ -26,7 +26,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	Finished=AutoPlotFactor=LegendBox=true;
 	UseAlpha=UseLight=DisScaling=false;
 	Z=0;	C=G=G4=0;	OI=0;	PlotId=0;	gif=0;
-	B.pf=FactorPos=TickLen=st_t=1;
+	B.pf=FactorPos=st_t=1;
 	LegendMarks=1;
 
 	TuneTicks=TranspType=CurFrameId=0;
@@ -278,7 +278,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	// text drawing itself
 	Push();
 	float shift = -sh-0.2, fsize=size/8.*font_factor, h = fnt->Height(font)*fsize;
-	if(strchr(font,'T'))	shift = sh+0.3;
+	if(strchr(font,'T'))	shift = sh+0.2;
 	shift += 0.11;	// Correction for glyph rotation around proper point
 
 	mglPnt q=Pnt[p];

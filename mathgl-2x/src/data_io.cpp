@@ -81,7 +81,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)
 			while(buf[j]<=' ' && j<nb)	j++;
 		}
 		char *s=buf+j;
-		while(buf[j]>' ' && j<nb)	j++;
+		while(buf[j]>' ' && buf[j]!=',' && j<nb)	j++;
 		buf[j]=0;
 		d->a[i] = atof(s);
 		i++;	if(i>=NX*NY*NZ)	break;
@@ -306,10 +306,10 @@ int mgl_data_read(HMDT d, const char *fname)
 	buf[i+1]=0;	nb = i;		// remove tailing spaces
 	for(i=0;i<nb-1 && !isn(buf[i]);i++)	// determine nx
 	{
-		if(buf[i]=='#')		while(!isn(buf[i]) && i<nb)	i++;
+		while(buf[i]=='#')	{	while(!isn(buf[i]) && i<nb)	i++;	}
 		ch = buf[i];
 		if(ch>' ' && !first)	first=true;
-		if(first && (ch==' ' || ch=='\t') && buf[i+1]>' ') k++;
+		if(first && (ch==' ' || ch=='\t' || ch==',') && buf[i+1]>' ') k++;
 	}
 	first = false;
 	for(i=0;i<nb-1;i++)					// determine ny
