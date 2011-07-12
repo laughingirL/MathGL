@@ -33,10 +33,9 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr)
 {
-	mglData y;	mgls_prepare1d(&y);
-
 	gr->Rotate(0,0);
-	gr->SetOrigin(-1,-1,-1);	gr->Axis();
+	gr->SetOrigin(-1,-1,-1);
+	gr->Axis();
 	gr->Label('x',"x axis");
 	gr->Label('y',"y axis");
 

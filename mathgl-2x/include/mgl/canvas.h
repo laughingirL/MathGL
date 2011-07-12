@@ -72,10 +72,10 @@ struct mglText
 struct mglAxis
 {
 	mglAxis()	{	memset(this,0,sizeof(mglAxis));	}
-	inline void AddLabel(const wchar_t *b, float v)
-	{	txt.push_back(mglText(b,0,v));	}
-	inline void AddLabel(const std::wstring &b, float v)
-	{	txt.push_back(mglText(b,v));	}
+	inline void AddLabel(const wchar_t *lbl, float v)
+	{	txt.push_back(mglText(lbl,"",v));	}
+	inline void AddLabel(const std::wstring &lbl, float v)
+	{	txt.push_back(mglText(lbl,v));	}
 
 	float dv,ds;	///< Actual step for ticks and subticks.
 	float d;		///< Step for axis ticks (if positive) or its number (if negative).

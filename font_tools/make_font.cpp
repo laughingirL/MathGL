@@ -481,7 +481,7 @@ int main ( int argc, char **argv )
     sprintf(fname,"%s.vfm",filename);
     fout   = fopen ( fname,"w" );
     // some general comments
-    fprintf ( fout, "# font %s has %zu glyphs \n", filename, TriangleFont.size() );
+    fprintf ( fout, "# font %s has %u glyphs \n", filename, TriangleFont.size() );
     double d1 = 500./fontT->Ascender(), d2 = -500./fontT->Descender(), d3 = 1000./ww, dx;
     dx = d1<d2 ? d1:d2;        dx = dx<d3 ? dx:d3;
     unsigned i, *ids, *posl, *post, len, cur, numg=TriangleFont.size();

@@ -13,6 +13,7 @@
 8. Smooth()
 9. Drop() -- rays
 10. Add Candle plot -- see gmail.com
+14. Draw wire font too for OpenGL mode
 
 ============= NEW  =============
 
@@ -48,6 +49,8 @@
 19. Contour label should not rotated on ~180 degree
 20. Labels at TriCont()
 21. Cones() -- like Bars() but by Cone()
+22. TextBox() -- for boxed text.
+23. Text aspect ration in OpenGL mode
 
 ============= UNSURE ===========
 
@@ -65,6 +68,7 @@
 14. Add "colorbar x y ['sch'='' w=1 h=1]" + "colorbar x y dat ['sch'='' w=1 h=1]" -- NO because need w,h !
 15. String variables in MGL + readstr command.
 16. Pool of threads for speeding up ???
+17. Read DICOM files.
 
 ============= DOCS =============
 
@@ -84,8 +88,10 @@
 14. "Data plotting", "Data plot", "Scientific visualtization", "Surface", "Cloud","Plot", "statistical graphics" to website
 15. Examples of animation, u3d, x3d, js and so on
 16. Example of inverted axis, minus-log axis
-14. Surf3A -- data a can be vector with size as number of isosurfaces
 17. swap color and font style in text option ('bR:r' -> 'r:bR')
+18. Surf3A -- data a can be vector with size as number of isosurfaces
+19. Rename 'roman' font style to 'regular'
+
 
 ============= BUGS =============
 

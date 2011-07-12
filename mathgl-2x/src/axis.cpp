@@ -603,7 +603,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 	if(pos<-0.2)	ff[1]='L';	if(pos>0.2)	ff[1]='R';
 	strcpy(font,FontDef);	strcat(font,ff);
 	strcat(font,nn.y>1e-5 || nn.x<0 ? "T":"t");
-	text_plot(AddPnt(p,-1,q,0),text,font,-1.4,0.4+shift);
+	text_plot(AddPnt(p,-1,q,0),text,font,-1.4,0.3+shift);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Label(float x, float y, const char *str, const char *font, bool rel)
