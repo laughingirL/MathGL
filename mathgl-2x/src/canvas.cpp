@@ -23,18 +23,11 @@
 //-----------------------------------------------------------------------------
 mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
-	Finished=AutoPlotFactor=LegendBox=true;
-	UseAlpha=UseLight=DisScaling=false;
+	DisScaling=false;
 	Z=0;	C=G=G4=0;	OI=0;	PlotId=0;	gif=0;
-	B.pf=FactorPos=st_t=1;
-	LegendMarks=1;
-
-	TuneTicks=TranspType=CurFrameId=0;
-	Width=Height=Depth=st_pos=ObjId=0;
-	AxisStl[0]=TickStl[0]=SubTStl[0]=0;
-	Persp=inW=inH=FogDist=FogDz=0;
-
-	_tetx=_tety=_tetz=font_factor=fscl=ftet=0;
+	CurFrameId=0;
+	Width=Height=Depth=ObjId=0;
+	fscl=ftet=0;
 	dr_nx1=dr_nx2=dr_ny1=dr_ny2=0;	// Allowed drawing region
 
 	fnt = new mglFont;	fnt->gr = this;		ac.ch='c';
@@ -55,32 +48,41 @@ mglCanvas::~mglCanvas()
 //-----------------------------------------------------------------------------
 void mglCanvas::DefaultPlotParam()
 {
-	LegendMarks = 1;		FontSize = 4;
-	SetAmbient();			Ternary(0);
-	PlotId = "frame";		SetPenPal("k-1");
-	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
-	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
-	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
+/* NOTE: following variables and mutex will not be changed
+std::vector<mglTexture> Txt;	///< Pointer to textures
+char *Message;		///< Buffer for receiving messages
+long InUse;			///< Smart pointer (number of users)
+mglPoint LastMousePos;	///< Last mouse position
+mglFont *fnt;		///< Class for printing vector text
+int Quality;		///< Quality of plot (0x0-pure, 0x1-fast; 0x2-fine; 0x4 - low memory)
+int Width;			///< Width of the image
+int Height;			///< Height of the image
+int Depth;			///< Depth of the image
+int CurFrameId;		///< Number of automaticle created frames
+GifFileType *gif;
+*/
+	SetWarn(mglWarnNone);	ObjId = 0;
 	SetFunc(0,0);			CutOff(0);
-	SetWarn(mglWarnNone);	Message = 0;
-	BarWidth = 0.7;			//fit_res[0] = 0;
-	MarkSize = 0.02;		ArrowSize = 0.03;
-	AlphaDef = 0.5;			FontDef[0]=0;
-	SetTranspType(0);		MeshNum = 0;
-	RotatedText = true;		CurrPal = 0;
-	SetAxisStl();
-	ClearLegend();			LegendBox = true;
-	SetCutBox(mglPoint(0,0,0), mglPoint(0,0,0));
-	_tetx=_tety=_tetz=0;
-	TuneTicks= true;		//_sx=_sy=_sz =st_t = 1;
-	Alpha(false);	Fog(0);	FactorPos = 1.07;
-	ax.t[0]=ay.t[0]=az.t[0]=ac.t[0]=0;
-	AutoPlotFactor = true;	B.pf = 1.55;
-	TickLen = 0.1;	Cut = true;	AdjustTicks("xyzc",true);
+	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
+	SetBarWidth(0.7);	SetMarkSize(1);	SetArrowSize(1);
+	SetAlphaDef(0.5);		FontDef[0]=0;
+	SetTranspType(0);		SetMeshNum(0);
+	SetRotatedText(true);	CurrPal = 0;
+	SetLegendMarks();		SetFontSize(4);
+	SetLegendBox(true);		SetTuneTicks(true);
+	Clf();	SetAmbient();	Ternary(0);
+	PlotId = "frame";		SetPenPal("k-1");
+	SetDefScheme("BbcyrR");	DisScaling=false;
+	SetPalette(MGL_DEF_PAL);
+	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
+	_tetx=_tety=_tetz=0;	stack.clear();
+	Alpha(false);		FactorPos = 1.07;
+	SetTickLen(0);	SetCut(true);
+	AdjustTicks("xyzc",true);
 
 	for(int i=0;i<10;i++)	{	AddLight(i, mglPoint(0,0,1));	Light(i,false);	}
 	Light(0,true);			Light(false);
-	InPlot(0,1,0,1,false);	st_pos = 0;
+	SetPlotFactor(0);		InPlot(0,1,0,1,false);
 }
 //-----------------------------------------------------------------------------
 //	Optimal axis position

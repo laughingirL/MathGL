@@ -61,7 +61,7 @@ void mglCanvas::SetAxisStl(const char *stl, const char *tck, const char *sub)
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTickLen(float tlen, float stt)
-{	TickLen = tlen?tlen:0.1;	st_t=stt>0?stt:1;	}
+{	TickLen = tlen?tlen:0.02;	st_t=stt>0?stt:1;	}
 //-----------------------------------------------------------------------------
 void mglCanvas::SetTicks(char dir, float d, int ns, float org)
 {
@@ -264,7 +264,7 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 	float d = fabs(aa.v2-aa.v1), n;
 	if(aa.f>0)	return;
 	if(ff && islog(aa.v1,aa.v2))
-	{	aa.dv = 0;	aa.ds=1;	}
+	{	aa.dv = 0;	aa.ds=0;	}
 	else if(aa.d>0)
 	{	aa.ds = aa.d/(aa.ns+1);	}
 	else if(aa.d>-1.5)	// like =0 or =-1
@@ -427,7 +427,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr)
 
 	mglPoint d = aa.dir, o = aa.org - d*(aa.org*d);	// "transverse" org
 	mglPoint av=(Min+Max)/2, dv,da,db, p;
-	dv = mglPoint(sign(av.x-o.x)*ax.dv, sign(av.y-o.y)*ay.dv, sign(av.z-o.z)*az.dv);
+	dv = mglPoint(sign(av.x-o.x), sign(av.y-o.y), sign(av.z-o.z));
 	da = aa.a*(dv*aa.a);	db = aa.b*(dv*aa.b);
 	SetPenPal(AxisStl);
 
@@ -488,15 +488,17 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f)
 {
 	if(TickLen==0)	return;
-	float v = TickLen/sqrt(1+f);
-	mglPoint p;
+	float v = font_factor*TickLen/sqrt(1+f*st_t);
+	mglPoint p=o;
 	long k1,k2,k3;
 
 	if(*TickStl && !f)	SetPenPal(TickStl);
 	if(*SubTStl && f)	SetPenPal(SubTStl);
-	p = o+d1*v;	k1 = AddPnt(p, CDef, mglPoint(NAN), 0, 2);
-	p = o;		k2 = AddPnt(p, CDef, mglPoint(NAN), 0, 2);
-	p = o+d2*v;	k3 = AddPnt(p, CDef, mglPoint(NAN), 0, 2);
+	ScalePoint(o, d1, false);	d1.Normalize();
+	ScalePoint(p, d2, false);	d2.Normalize();
+	k2 = AddPnt(p, CDef, mglPoint(NAN), 0, 0);
+	p += d1*v;	k1 = AddPnt(p, CDef, mglPoint(NAN), 0, 0);
+	p = o+d2*v;	k3 = AddPnt(p, CDef, mglPoint(NAN), 0, 0);
 	line_plot(k1,k2);	line_plot(k2,k3);
 }
 //-----------------------------------------------------------------------------

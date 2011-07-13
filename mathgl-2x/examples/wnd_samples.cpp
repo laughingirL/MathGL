@@ -33,63 +33,16 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr)
 {
-	gr->Rotate(0,0);
-/*	gr->SetOrigin(-1,-1,-1);
+	mglData x(2000), y(2000);
+	x.Modify("pow(10,6*x-3)"); y.Modify("sqrt(1+v^2)",x);
 
-	gr->SetTickTime('x',0.5);
-
-	gr->Axis();
-	gr->Label('x',"x axis");
-	gr->Label('y',"y axis");*/
-
-	gr->SetTicks('x');
-	mglData tv(2);	tv.Fill(-1/M_PI,1/M_PI);
-//	gr->SetTicksVal('x',tv,"-1/\\pi\\n1/\\pi",true);
-
-//	gr->SetTickLen(-0.1);
-	gr->SetOrigin( 1, 1, 1);
-	gr->Axis("x");
-//	gr->Label('x',"X axis");
-//	gr->Label('y',"Y axis");
-	return 0;
-
-
-	gr->Line(mglPoint(0,0.5),mglPoint(0,1),"m2");
-	gr->Puts(mglPoint(0,0.5),mglPoint(0,1),"Test angle","T");
-	gr->Puts(mglPoint(0,0.5),mglPoint(0,1),"Test angle","t");
-
-	gr->Line(mglPoint(0.5),mglPoint(1),"r2");
-	gr->Puts(mglPoint(0.5),mglPoint(1),"Test angle","T");
-	gr->Puts(mglPoint(0.5),mglPoint(1),"Test angle","t");
-
-	gr->Line(mglPoint(0.5,0.5),mglPoint(1,1),"b2");
-	gr->Puts(mglPoint(0.5,0.5),mglPoint(1,1),"Test angle","T");
-	gr->Puts(mglPoint(0.5,0.5),mglPoint(1,1),"Test angle","t");
-
-	gr->Colorbar("",0);
-	gr->Colorbar("",1);
-	gr->Colorbar("",2);
-	gr->Colorbar("",3);
-	return 0;
-
-	gr->Ternary(1);
-	gr->Rotate(40,60);
-	gr->Puts(mglPoint(0,0),"Test","t");
-	gr->Puts(mglPoint(0,0),"Test","T");
-	gr->Line(mglPoint(0),mglPoint(0,1),"m2");
-	gr->Puts(mglPoint(-1,0),mglPoint(0,1),"Test angle","T");
-	gr->Puts(mglPoint(-1,0),mglPoint(0,1),"Test angle","t");
-	gr->Line(mglPoint(-1,0),mglPoint(0,1),"r");
-	gr->Line(mglPoint(-1,-1,-1),mglPoint(1,1,0.5),"b2");
-	gr->Label('x',"X axis");	gr->Label('y',"Y axis");	gr->Label('z',"Z axis");
-	gr->Axis();	gr->Box(); //gr->Grid();
-	return 0;
-
-	mglParse par;
-	par.AllowSetSize = true;
-	FILE *fp=fopen("test.mgl","rt");
-	par.Execute(gr,fp,true);
-	fclose(fp);
+	gr->SetRanges(mglPoint(0.001,0.1),mglPoint(1000,1000));
+	gr->SetFunc("lg(x)","lg(y)",0);
+	gr->SetTicks('x', 0);
+	gr->SetTicks('y', 0);
+	gr->Box();	gr->Axis(); gr->Grid("xy","g;");
+	gr->Plot(x,y,"b2");
+	gr->Label('x',"x",0); gr->Label('y', "y=\\sqrt{1+x^2}",0);
 	return 0;
 }
 //-----------------------------------------------------------------------------

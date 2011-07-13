@@ -109,7 +109,6 @@ class mglCanvas : public mglBase
 {
 friend struct mglPrim;
 public:
-	int ObjId;				///< object id for mglPrim
 	mglPoint LastMousePos;	///< Last mouse position
 	const char *PlotId;	///< Id of plot for saving filename (in GLUT window for example)
 
@@ -342,10 +341,10 @@ protected:
 	bool UseAlpha;		///< Flag that Alpha is used
 	bool UseLight;		///< Flag of using lightning
 	mglLight light[10];	///< Light sources
-	float FogDist;		/// Inverse fog distance (fog ~ exp(-FogDist*Z))
-	float FogDz;		/// Relative shift of fog
+	float FogDist;		///< Inverse fog distance (fog ~ exp(-FogDist*Z))
+	float FogDz;		///< Relative shift of fog
 
-	bool DisScaling;
+	bool DisScaling;	///< Temporary flag for disable scaling (used for axis)
 
 	/// Draw colorbar at edge of axis
 	void Colorbar(int where, float x, float y, float w, float h, long s=0);
@@ -394,7 +393,6 @@ protected:
 private:
 	float _tetx,_tety,_tetz;		// extra angles
 	std::vector<mglMatrix> stack;	///< stack for transformation matrixes
-	int st_pos;
 	int dr_nx1, dr_nx2, dr_ny1, dr_ny2;	// Allowed drawing region
 	GifFileType *gif;
 	float fscl,ftet;	///< last scale and rotation for glyphs

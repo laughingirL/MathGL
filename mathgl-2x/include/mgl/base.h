@@ -298,9 +298,9 @@ public:
 	/// Set relative width of rectangles in Bars, Barh, BoxPlot
 	inline void SetBarWidth(float val)	{	BarWidth=val;	};
 	/// Set size of marks
-	inline void SetMarkSize(float val)	{	MarkSize=val;	}
+	inline void SetMarkSize(float val)	{	MarkSize=0.02*val;	}
 	/// Set size of arrows
-	inline void SetArrowSize(float val)	{	ArrowSize=val;	}
+	inline void SetArrowSize(float val)	{	ArrowSize=0.03*val;	}
 
 	/// Set warning code ant fill Message
 	void SetWarn(int code, const char *who="");
