@@ -59,16 +59,16 @@ public:
 	{	mgl_set_tick_len(gr, len, stt);	}
 	inline void SetAxisStl(const char *stl="k", const char *tck=0, const char *sub=0)
 	{	mgl_set_axis_stl(gr, stl, tck, sub);	}
-	inline void SetTickTime(char dir, float d, const char *t="%F")
+	inline void SetTickTime(char dir, float d, const char *t="")
 	{	mgl_set_tick_time(gr,dir,d,t);	}
-	inline void SetTicksVal(char dir, const char *lbl)
-	{	mgl_set_ticks_str(gr,dir,lbl);	}
-	inline void SetTicksVal(char dir, const wchar_t *lbl)
-	{	mgl_set_ticks_wcs(gr,dir,lbl);	}
-	inline void SetTicksVal(char dir, const mglDataA &v, const char *lbl)
-	{	mgl_set_ticks_val(gr,dir,&v,lbl);	}
-	inline void SetTicksVal(char dir, const mglDataA &v, const wchar_t *lbl)
-	{	mgl_set_ticks_valw(gr,dir,&v,lbl);	}
+	inline void SetTicksVal(char dir, const char *lbl, bool add=false)
+	{	mgl_set_ticks_str(gr,dir,lbl,add);	}
+	inline void SetTicksVal(char dir, const wchar_t *lbl, bool add=false)
+	{	mgl_set_ticks_wcs(gr,dir,lbl,add);	}
+	inline void SetTicksVal(char dir, const mglDataA &v, const char *lbl, bool add=false)
+	{	mgl_set_ticks_val(gr,dir,&v,lbl,add);	}
+	inline void SetTicksVal(char dir, const mglDataA &v, const wchar_t *lbl, bool add=false)
+	{	mgl_set_ticks_valw(gr,dir,&v,lbl,add);	}
 	inline void SetSize(int width, int height)	{	mgl_set_size(gr, width, height);	}
 	inline void SetBarWidth(float width)	{	mgl_set_bar_width(gr, width);	}
 	inline void SetMarkSize(float size)		{	mgl_set_mark_size(gr, size);	}
@@ -247,7 +247,7 @@ public:
 	inline void Box(const char *col="k", bool ticks=true)
 	{	mgl_box_str(gr, col, ticks);	}
 	inline void Axis(const char *dir="xyzt", bool adjust=false)
-	{	if(adjust)	mgl_adjust_ticks(gr,dir);	mgl_axis(gr, dir);	}
+	{	mgl_axis(gr, dir,adjust);	}
 	inline void Grid(const char *dir="xyzt",const char *pen="B")
 	{	mgl_axis_grid(gr, dir, pen);	}
 	inline void Label(char dir, const char *text, float pos=+1, float shift=0)

@@ -233,17 +233,17 @@ public:
 	virtual void AddLight(int n,mglPoint p, char c='w', float bright=0.5, bool infty=true, float ap=0);
 
 	/// Set ticks position and text (\n separated). Use n=0 to disable this feature.
-	void SetTicksVal(char dir, const char *lbl);
-	void SetTicksVal(char dir, HCDT v, const char *lbl);
-	void SetTicksVal(char dir, HCDT v, const char **lbl);
-	void SetTicksVal(char dir, const wchar_t *lbl);
-	void SetTicksVal(char dir, HCDT v, const wchar_t *lbl);
-	void SetTicksVal(char dir, HCDT v, const wchar_t **lbl);
+	void SetTicksVal(char dir, const char *lbl, bool add=false);
+	void SetTicksVal(char dir, HCDT v, const char *lbl, bool add=false);
+	void SetTicksVal(char dir, HCDT v, const char **lbl, bool add=false);
+	void SetTicksVal(char dir, const wchar_t *lbl, bool add=false);
+	void SetTicksVal(char dir, HCDT v, const wchar_t *lbl, bool add=false);
+	void SetTicksVal(char dir, HCDT v, const wchar_t **lbl, bool add=false);
 	/// Set templates for ticks
 	void SetTickTempl(char dir, const wchar_t *t);
 	void SetTickTempl(char dir, const char *t);
 	/// Set templates for ticks
-	void SetTickTime(char dir, float d, const char *t="%F");
+	void SetTickTime(char dir, float d, const char *t="");
 	/// Set the ticks parameters
 	void SetTicks(char dir, float d=0, int ns=0, float org=NAN);
 	/// Auto adjust ticks

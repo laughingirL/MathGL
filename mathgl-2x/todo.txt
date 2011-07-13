@@ -2,10 +2,11 @@
 1. Triangulation
 2. Text
 	* export as text (EPS, SVG, TeX ...)
+	* curved text
 3. Axis
 	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
 	* ticks (rotation and skipping)
-	* time ticks (test)
+	* log-scale -- test
 4. legend
 5. opengl
 6. stfa

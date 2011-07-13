@@ -64,7 +64,10 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 	for(k=f,m=0;;m++)	{	k=nn[k];	if(k>=0 && k!=f)	g=k;	else	break;	}
 	// find middle point (for 'C' text)
 	for(h=f,i=0;i<m/2;i++)	h=nn[h];
-	// first left to right
+
+	// TODO: this variant TOO SLOW!!!
+
+/*	// first left to right
 	if(align==1)	{	j=len/2;	k=h;	}
 	else	{	j=0;	k=f;	}
 	p1=gr->GetPnt(ff[k]);		// prepare starting point
@@ -118,7 +121,7 @@ void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t 
 		else	{	p1 = q;	tet = opt;	}
 	}
 	for(j=0;j<len;j++)	// draw text
-	{	L[0] = text[j];	gr->text_plot(pt[j],L,font,-1,0,c);	}
+	{	L[0] = text[j];	gr->text_plot(pt[j],L,font,-1,0,c);	}*/
 	delete []wdt;	delete []pt;	delete []pp;
 }
 //-----------------------------------------------------------------------------

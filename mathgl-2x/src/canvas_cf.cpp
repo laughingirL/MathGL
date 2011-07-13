@@ -165,14 +165,14 @@ void mgl_adjust_ticks(HMGL gr, const char *dir)
 {	_Gr_->AdjustTicks(dir);	}
 void mgl_set_ticks(HMGL gr, char dir, float d, int ns, float org)
 {	_Gr_->SetTicks(dir,d,ns,org);	}
-void mgl_set_ticks_str(HMGL gr, char dir, const char *lbl)
-{	_Gr_->SetTicksVal(dir,lbl);	}
-void mgl_set_ticks_wcs(HMGL gr, char dir, const wchar_t *lbl)
-{	_Gr_->SetTicksVal(dir,lbl);	}
-void mgl_set_ticks_val(HMGL gr, char dir, HCDT val, const char *lbl)
-{	_Gr_->SetTicksVal(dir,val,lbl);	}
-void mgl_set_ticks_valw(HMGL gr, char dir, HCDT val, const wchar_t *lbl)
-{	_Gr_->SetTicksVal(dir,val,lbl);	}
+void mgl_set_ticks_str(HMGL gr, char dir, const char *lbl, int add)
+{	_Gr_->SetTicksVal(dir,lbl,add);	}
+void mgl_set_ticks_wcs(HMGL gr, char dir, const wchar_t *lbl, int add)
+{	_Gr_->SetTicksVal(dir,lbl,add);	}
+void mgl_set_ticks_val(HMGL gr, char dir, HCDT val, const char *lbl, int add)
+{	_Gr_->SetTicksVal(dir,val,lbl,add);	}
+void mgl_set_ticks_valw(HMGL gr, char dir, HCDT val, const wchar_t *lbl, int add)
+{	_Gr_->SetTicksVal(dir,val,lbl,add);	}
 void mgl_set_tick_templ(HMGL gr, char dir, const char *templ)
 {	_Gr_->SetTickTempl(dir,templ);	}
 void mgl_set_tick_templw(HMGL gr, char dir, const wchar_t *templ)
@@ -183,8 +183,8 @@ void mgl_set_tick_time(HMGL gr, char dir, float d, const char *t)
 void mgl_box(HMGL gr)	{	_Gr_->Box();	}
 void mgl_box_str(HMGL gr, const char *col, int ticks)
 {	_Gr_->Box(col,ticks);	}
-void mgl_axis(HMGL gr, const char *dir)
-{	_Gr_->Axis(dir);	}
+void mgl_axis(HMGL gr, const char *dir, int adj)
+{	_Gr_->Axis(dir,adj);	}
 void mgl_axis_grid(HMGL gr, const char *dir,const char *pen)
 {	_Gr_->Grid(dir,pen);	}
 void mgl_label(HMGL gr, char dir, const char *text)
@@ -241,12 +241,12 @@ void mgl_adjust_ticks_(uintptr_t *gr, const char *dir, int l)
 	_GR_->AdjustTicks(s);	delete []s;	}
 void mgl_set_ticks_(uintptr_t *gr, char *dir, float *d, int *ns, float *org, int)
 {	_GR_->SetTicks(*dir, *d, *ns, *org);	}
-void mgl_set_ticks_str_(uintptr_t *gr, const char *dir, const char *lbl,int,int l)
+void mgl_set_ticks_str_(uintptr_t *gr, const char *dir, const char *lbl, int *add,int,int l)
 {	char *s=new char[l+1];	memcpy(s,lbl,l);	s[l]=0;
-	_GR_->SetTicksVal(*dir,s);	delete []s;	}
-void mgl_set_ticks_val_(uintptr_t *gr, const char *dir, uintptr_t *val, const char *lbl,int,int l)
+	_GR_->SetTicksVal(*dir,s,*add);	delete []s;	}
+void mgl_set_ticks_val_(uintptr_t *gr, const char *dir, uintptr_t *val, const char *lbl, int *add,int,int l)
 {	char *s=new char[l+1];	memcpy(s,lbl,l);	s[l]=0;
-	_GR_->SetTicksVal(*dir,_DA_(val),s);	delete []s;	}
+	_GR_->SetTicksVal(*dir,_DA_(val),s,*add);	delete []s;	}
 void mgl_tune_ticks_(uintptr_t *gr, int *tune, float *fact_pos)
 {	_GR_->SetTuneTicks(*tune, *fact_pos);	}
 void mgl_set_tick_templ_(uintptr_t *gr, const char *dir, const char *templ,int,int l)
@@ -260,8 +260,8 @@ void mgl_box_(uintptr_t *gr)	{	_GR_->Box();	}
 void mgl_box_str_(uintptr_t *gr, const char *col, int *ticks, int l)
 {	char *s=new char[l+1];	memcpy(s,col,l);	s[l]=0;
 	_GR_->Box(s,*ticks);	delete []s;	}
-void mgl_axis_(uintptr_t *gr, const char *dir,int l)
-{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;	_GR_->Axis(s);	delete []s;	}
+void mgl_axis_(uintptr_t *gr, const char *dir, int *adj,int l)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;	_GR_->Axis(s,*adj);	delete []s;	}
 void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	char *p=new char[n+1];	memcpy(p,pen,n);	p[n]=0;

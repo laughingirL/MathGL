@@ -76,7 +76,7 @@ void mglCanvas::DefaultPlotParam()
 	Alpha(false);	Fog(0);	FactorPos = 1.07;
 	ax.t[0]=ay.t[0]=az.t[0]=ac.t[0]=0;
 	AutoPlotFactor = true;	B.pf = 1.55;
-	TickLen = 0.1;	Cut = true;
+	TickLen = 0.1;	Cut = true;	AdjustTicks("xyzc",true);
 
 	for(int i=0;i<10;i++)	{	AddLight(i, mglPoint(0,0,1));	Light(i,false);	}
 	Light(0,true);			Light(false);

@@ -34,16 +34,24 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 int test_wnd(mglGraph *gr)
 {
 	gr->Rotate(0,0);
-	gr->SetOrigin(-1,-1,-1);
+/*	gr->SetOrigin(-1,-1,-1);
+
+	gr->SetTickTime('x',0.5);
+
 	gr->Axis();
 	gr->Label('x',"x axis");
-	gr->Label('y',"y axis");
+	gr->Label('y',"y axis");*/
 
-	gr->SetTickLen(-0.1);
+	gr->SetTicks('x');
+	mglData tv(2);	tv.Fill(-1/M_PI,1/M_PI);
+//	gr->SetTicksVal('x',tv,"-1/\\pi\\n1/\\pi",true);
+
+//	gr->SetTickLen(-0.1);
 	gr->SetOrigin( 1, 1, 1);
-	gr->Axis();
-	gr->Label('x',"X axis");
-	gr->Label('y',"Y axis");
+	gr->Axis("x");
+//	gr->Label('x',"X axis");
+//	gr->Label('y',"Y axis");
+	return 0;
 
 
 	gr->Line(mglPoint(0,0.5),mglPoint(0,1),"m2");
