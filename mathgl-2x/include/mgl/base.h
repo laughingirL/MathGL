@@ -73,7 +73,7 @@ inline mglPoint operator|(const mglPoint &a, const mglPoint &b)
 inline mglPoint operator^(const mglPoint &a, const mglPoint &b)
 {	return mglPoint(a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x);	}
 inline mglPoint operator!(const mglPoint &a)
-{	return (a.x==0 && a.y==0)?mglPoint(0,1,0):mglPoint(-a.y/hypot(a.x,a.y), a.x/hypot(a.x,a.y), 0);	}
+{	float f=hypot(a.x,a.y);	return f==0?mglPoint(0,1,0):mglPoint(-a.y/f, a.x/f, 0);	}
 inline bool operator==(const mglPoint &a, const mglPoint &b)
 {	return !memcmp(&a, &b, sizeof(mglPoint));	}
 inline bool operator!=(const mglPoint &a, const mglPoint &b)

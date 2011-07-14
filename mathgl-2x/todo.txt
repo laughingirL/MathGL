@@ -6,7 +6,6 @@
 3. Axis
 	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
 	* ticks (rotation and skipping)
-	* log-scale -- test
 4. legend
 5. opengl
 6. stfa
@@ -14,7 +13,7 @@
 8. Smooth()
 9. Drop() -- rays
 10. Add Candle plot -- see gmail.com
-14. Draw wire font too for OpenGL mode
+11. Draw wire font too for OpenGL mode
 
 ============= NEW  =============
 

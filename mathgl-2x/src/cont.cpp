@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <wchar.h>
+#include <algorithm>
 #include "mgl/surf.h"
 #include "mgl/cont.h"
 #include "mgl/data.h"
@@ -39,90 +40,63 @@ bool same_chain(long f,long i,long *nn)
 }
 //-----------------------------------------------------------------------------
 #include <mgl/canvas_cf.h>
-void mgl_string_curve(mglBase *gr,long f,long n,long *ff,long *nn,const wchar_t *text, const char *font)
+void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *text, const char *font)
 {
-	int pos = font && strchr(font,'t') ? 1:-1;
-	int align;
-	wchar_t L[2]=L"a";
-	mglPoint p1,n1,q1,q2,q,u;
-
-	register long i,j,k;
-
+	if(nn[f]==-1)	return;	// do nothing since there is no curve
+	int pos = font && strchr(font,'t') ? 1:-1, align;
 	char cc=mglGetStyle(font,0,&align);		align = align&3;
-	float c=cc ? -cc : gr->GetClrC(ff[f]), tet,t,opt;
-	long len = wcslen(text),m;
-	float *wdt=new float[len];
-	long *pt=new long[len], *pp=new long[n];
-	memset(pt,-1,len*sizeof(long));
-	memset(pp,-1,len*sizeof(long));
-	long g=-1,h;	// f - start, g - end, h - mid, s -cur.start
-	// get widths
+	float c=cc ? -cc : gr->GetClrC(ff[f]);
+	long len = wcslen(text);
+	float *wdt=new float[len+1], h=gr->TextHeight()/4, tet, tt;	// TODO optimaze ratio
+	mglPoint *pt=new mglPoint[len+1];
+	wchar_t L[2]=L"a";
+	register long i,j,k,m;
 	for(j=0;j<len;j++)	{	L[0] = text[j];	wdt[j] = gr->TextWidth(L)/2;	}
-	// construct inverse curve
-	for(k=0;k<n;k++)	{	i=nn[k];	if(i>=0)	pp[i]=k;	}
-	// find number of points and last point
-	for(k=f,m=0;;m++)	{	k=nn[k];	if(k>=0 && k!=f)	g=k;	else	break;	}
-	// find middle point (for 'C' text)
-	for(h=f,i=0;i<m/2;i++)	h=nn[h];
+	wdt[len]=0;
 
-	// TODO: this variant TOO SLOW!!!
+	std::vector<mglPoint> qa, qb;	// curve above and below original
+	// construct curves
+	mglPoint p=gr->GetPnt(ff[f]), q=p, s=gr->GetPnt(ff[nn[f]]), l=!(s-q), t=l;
+	qa.push_back(q+l*h);	qb.push_back(q-l*h);
+	for(i=nn[f];i!=-1 && i!=f;i=nn[i])
+	{
+		p=q;	q=s;	l=t;
+		if(nn[i]>=0)	{	s=gr->GetPnt(ff[nn[i]]);	t=!(s-q);	}
+		tet = t.x*l.y-t.y*l.x;
+		tt = 1+fabs(t.x*l.x+t.y*l.y);
+		if(tet>0)			// TODO: Add index to original points for "jumps"
+		{	qa.push_back(q+l*h);	qa.push_back(q+t*h);	qb.push_back(q-(l+t)*(h/tt));	}
+		else if(tet<0)
+		{	qb.push_back(q-l*h);	qb.push_back(q-t*h);	qa.push_back(q+(l+t)*(h/tt));	}
+		else
+		{	qa.push_back(q+l*h);	qb.push_back(q-l*h);	}
+	}
+	if(align==2)	// Reverse points for writting right to left
+	{	reverse(qa.begin(),qa.end());	reverse(qb.begin(),qb.end());	}
+	if(pos<0)	qa=qb;	// TODO: This is too robust, allow jumps in future
 
-/*	// first left to right
-	if(align==1)	{	j=len/2;	k=h;	}
-	else	{	j=0;	k=f;	}
-	p1=gr->GetPnt(ff[k]);		// prepare starting point
-	n1=gr->GetPnt(ff[nn[k]])-p1;	tet=atan2(n1.y, n1.x);
-	if(align==1)	p1-=n1/2.;	// shift for centering
-	if(align<2)	for(;;j++)
+	// place glyphs points
+	pt[0] = qa[0];	m = qa.size();
+	float a,b,d,w,t1,t2;
+	for(i=j=0,tt=0;j<len;j++)
 	{
-		n1 = mglPoint(wdt[j]*cos(tet),wdt[j]*sin(tet));
-		pt[j] = gr->AddPnt(p1,c,n1,0,false);
-		if(j>=len-1)	break;
-		q = p1+(wdt[j]+wdt[j+1]/2)*mglPoint(cos(tet), sin(tet));	// estimate for new point
-		for(i=k,opt=-10;nn[i]>=0 && (i!=k || opt<-7);i=nn[i])		// find optimal angle (projection)
-		{
-			q1=gr->GetPnt(ff[i]);	q2=gr->GetPnt(ff[nn[i]]);	u=q2-q1;
-			if(q1*u<=q*u && q*u<q2*u)
-			{
-				u.Normalize();	opt = atan2(u.y, u.x);
-				q = p1+n1;	q2 = q-q1;	t = q2.x*u.y-q2.y*u.x;
-				if(opt>tet && pos*t<0)	q = q1+(q2*u)*u;
-				break;
-			}
-		}
-		if(opt<-M_PI)	p1 += n1;		// keep previous angle if not found new
-		else	{	p1 = q;	tet = opt;	}
+		w = align==1 ? wdt[j] : (wdt[j]+wdt[j+1])/2;	p = pt[j];
+		for(k=i+1;k<m;k++)	if((p-qa[k]).norm()>w)	break;
+		if(k>i+1 && k<m)	tt=-1;
+		i = k>=m ? m-2 : k-1;		// check if end of curve
+		q = qa[i];	s = qa[i+1];	// points of line segment
+		a = (q-s)*(q-s);	b = (q-p)*(q-s);	d = (q-p)*(q-p)-w*w;
+		w = sqrt(b*b-a*d);		// NOTE: b*b>a*d should be here!
+		if(b*b>1e3*a*c)	{	t1 = d/(b+w);	t2 = d/(b-w);	}	// keep precision
+		else			{	t1 = (b-w)/a;	t2 = (b+w)/a;	}
+		if(t1<0 || t1<tt)	t1=t2;	// t1<t2 should be here!
+		tt=t1;	pt[j+1] = q+(s-q)*tt;
 	}
-	// now right to  left
-	if(align==1)	{	j=len/2;	k=nn[h];	}
-	else	{	j=len-1;	k=g;	}
-	// prepare starting point
-	p1=gr->GetPnt(ff[k]);	n1=gr->GetPnt(ff[pp[k]])-p1;	tet=atan2(n1.y, n1.x);
-	if(align==1)	p1-=(gr->GetPnt(ff[nn[k]])-p1)/2.;	// shift for centering
-	if(align>0)	for(;;j--)
-	{
-		n1 = mglPoint(wdt[j]*cos(tet),wdt[j]*sin(tet));
-		pt[j] = gr->AddPnt(p1,c,n1,0,false);
-		if(j<=0)	break;
-		q = p1+(wdt[j]+wdt[j-1]/2)*mglPoint(cos(tet), sin(tet));	// estimate for new point
-//		if(align==1)	{	n1 = (wdt[j]/2+wdt[j-1]/2)*mglPoint(cos(tet), sin(tet));	q = p1+n1;	}
-		for(i=k,opt=-10;pp[i]>=0 && (i!=k || opt<-7);i=pp[i])		// find optimal angle (projection)
-		{
-			q1=gr->GetPnt(ff[i]);	q2=gr->GetPnt(ff[pp[i]]);	u=q2-q1;
-			if(q1*u<=q*u && q*u<q2*u)
-			{
-				u.Normalize();	opt = atan2(u.y, u.x);
-				q = p1+n1;	q2 = q-q1;	t = q2.x*u.y-q2.y*u.x;
-				if(opt<tet && pos*t<0)	q = q1-(q2*u)*u;
-				break;
-			}
-		}
-		if(opt<-M_PI)	p1 += n1;		// keep previous angle if not found new
-		else	{	p1 = q;	tet = opt;	}
-	}
+	if(align==2)	pos=-pos;
 	for(j=0;j<len;j++)	// draw text
-	{	L[0] = text[j];	gr->text_plot(pt[j],L,font,-1,0,c);	}*/
-	delete []wdt;	delete []pt;	delete []pp;
+	{	L[0] = text[align!=2?j:len-1-j];	s = pt[j+1]-pt[j];	l = !s;
+		gr->text_plot(gr->AddPnt(pt[j]-(pos*h)*l,c,s,0,0),L,font,-1,0,c);	}
+	delete []wdt;	delete []pt;
 }
 //-----------------------------------------------------------------------------
 void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *text, const char *font, const char *opt)

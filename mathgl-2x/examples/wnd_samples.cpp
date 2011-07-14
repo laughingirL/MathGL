@@ -33,16 +33,10 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr)
 {
-	mglData x(2000), y(2000);
-	x.Modify("pow(10,6*x-3)"); y.Modify("sqrt(1+v^2)",x);
-
-	gr->SetRanges(mglPoint(0.001,0.1),mglPoint(1000,1000));
-	gr->SetFunc("lg(x)","lg(y)",0);
-	gr->SetTicks('x', 0);
-	gr->SetTicks('y', 0);
-	gr->Box();	gr->Axis(); gr->Grid("xy","g;");
-	gr->Plot(x,y,"b2");
-	gr->Label('x',"x",0); gr->Label('y', "y=\\sqrt{1+x^2}",0);
+	mglData y;	mgls_prepare1d(&y);
+	gr->Box();	gr->Plot(y.SubData(-1,0));
+	gr->Text(y,"This is very very long string drawn along a curve","k:R");
+	gr->Text(y,"Another string drawn above a curve","r:TR");
 	return 0;
 }
 //-----------------------------------------------------------------------------
