@@ -2,14 +2,12 @@
 1. Triangulation
 2. Text
 	* export as text (EPS, SVG, TeX ...)
-	* curved text
 3. Axis
 	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
 	* ticks (rotation and skipping)
 4. legend
 5. opengl
 6. stfa
-7. Axis ticks,labels miss position sometimes
 8. Smooth()
 9. Drop() -- rays
 10. Add Candle plot -- see gmail.com

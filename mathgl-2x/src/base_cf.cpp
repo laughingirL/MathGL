@@ -34,7 +34,7 @@ void mgl_set_palette(HMGL gr, const char *colors)
 void mgl_set_meshnum(HMGL gr, int num)	{	gr->SetMeshNum(num);	}
 void mgl_set_alpha_default(HMGL gr, float alpha)	{	gr->SetAlphaDef(alpha);	}
 //-----------------------------------------------------------------------------
-void mgl_set_cut(HMGL gr, int cut)		{	gr->Cut = cut;	}
+void mgl_set_cut(HMGL gr, int cut)		{	gr->SetCut(cut);	}
 void mgl_set_cut_box(HMGL gr, float x1,float y1,float z1,float x2,float y2,float z2)
 {	gr->SetCutBox(x1,y1,z1,x2,y2,z2);	}
 void mgl_set_cutoff(HMGL gr, const char *EqC)	{	gr->CutOff(EqC);	}
@@ -85,12 +85,12 @@ void mgl_set_alpha_default_(uintptr_t *gr, float *alpha)	{	_GR_->SetAlphaDef(*al
 //-----------------------------------------------------------------------------
 void mgl_set_cut_box_(uintptr_t *gr, float *x1,float *y1,float *z1,float *x2,float *y2,float *z2)
 {	_GR_->SetCutBox(*x1,*y1,*z1,*x2,*y2,*z2);	}
-void mgl_set_cut_(uintptr_t *gr, int *cut)					{	_GR_->Cut = *cut;	}
+void mgl_set_cut_(uintptr_t *gr, int *cut)	{	_GR_->SetCut(*cut);	}
 void mgl_set_cutoff_(uintptr_t *gr, const char *EqC, int l)
 {	char *s=new char[l+1];	memcpy(s,EqC,l);	s[l]=0;
 	_GR_->CutOff(s);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_set_ternary_(uintptr_t *gr, int *enable)			{	_GR_->Ternary(*enable);	}
+void mgl_set_ternary_(uintptr_t *gr, int *enable)	{	_GR_->Ternary(*enable);	}
 void mgl_set_range_val_(uintptr_t *gr, const char *dir, float *v1,float *v2,int)
 {
 	if(*dir=='c')		_GR_->CRange(*v1,*v2);

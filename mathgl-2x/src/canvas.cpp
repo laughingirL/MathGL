@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
-	DisScaling=false;
+	clr(MGL_DISABLE_SCALE);
 	Z=0;	C=G=G4=0;	OI=0;	PlotId=0;	gif=0;
 	CurFrameId=0;
 	Width=Height=Depth=ObjId=0;
@@ -72,7 +72,7 @@ GifFileType *gif;
 	SetLegendBox(true);		SetTuneTicks(true);
 	Clf();	SetAmbient();	Ternary(0);
 	PlotId = "frame";		SetPenPal("k-1");
-	SetDefScheme("BbcyrR");	DisScaling=false;
+	SetDefScheme("BbcyrR");	clr(MGL_DISABLE_SCALE);
 	SetPalette(MGL_DEF_PAL);
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
 	_tetx=_tety=_tetz=0;	stack.clear();
@@ -289,7 +289,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	shift *= h;		B.z= q.z;
 	if(ll==0)	{	Pop();	return 0;	}
 
-	if(isnan(ll))
+	if(isnan(ll) || get(MGL_ENABLE_RTEXT))
 	{
 		fscl = fsize;	ftet = 0;
 		B.x = q.x;	B.y= q.y - shift;
@@ -342,7 +342,7 @@ void mglCanvas::SubPlot(int nx,int ny,int m, float dx, float dy)
 {
 	float x1,x2,y1,y2;
 	int mx = m%nx, my = m/nx;
-	if(AutoPlotFactor)	{	dx /= 1.55;	dy /= 1.55;	}
+	if(get(MGL_AUTO_FACTOR))	{	dx /= 1.55;	dy /= 1.55;	}
 	else	{	dx /= 2;	dy /= 2;	}
 	x1 = (mx+dx)/nx;		x2 = (mx+1+dx)/nx;
 	y2 = 1.f-(my+dy)/ny;	y1 = 1.f-(my+1+dy)/ny;
@@ -412,7 +412,7 @@ void mglCanvas::RotateN(float Tet,float x,float y,float z)
 	B.b[6] = T[0]*R[6] + T[3]*R[7] + T[6]*R[8];
 	B.b[7] = T[1]*R[6] + T[4]*R[7] + T[7]*R[8];
 	B.b[8] = T[2]*R[6] + T[5]*R[7] + T[8]*R[8];
-	if(AutoPlotFactor)
+	if(get(MGL_AUTO_FACTOR))
 	{
 		float w=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/inH;
 		float h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/inW;
@@ -430,7 +430,7 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 {
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
 	B.clear();
-	if(AutoPlotFactor) B.pf = 1.55;	// Automatically change plot factor !!!
+	if(get(MGL_AUTO_FACTOR)) B.pf = 1.55;	// Automatically change plot factor !!!
 	if(rel)
 	{
 		B.x = B1.x + (x1+x2-1)/2*B1.b[0];
@@ -510,10 +510,10 @@ void mglCanvas::ColumnPlot(int num, int i, float dd)
 void mglCanvas::Fog(float d, float dz)	{	FogDist=d;	FogDz = dz;	}
 //-----------------------------------------------------------------------------
 bool mglCanvas::Alpha(bool enable)
-{	bool t=UseAlpha;	UseAlpha=enable;	return t;	}
+{	bool t=get(MGL_ENABLE_ALPHA);	set(enable,MGL_ENABLE_ALPHA);	return t;	}
 //-----------------------------------------------------------------------------
 bool mglCanvas::Light(bool enable)
-{	bool t=UseLight;	UseLight=enable;	return t;	}
+{	bool t=get(MGL_ENABLE_LIGHT);	set(enable,MGL_ENABLE_LIGHT);	return t;	}
 //-----------------------------------------------------------------------------
 void mglCanvas::Light(int n, bool enable)
 {

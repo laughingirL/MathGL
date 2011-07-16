@@ -721,9 +721,9 @@ As previously I did not specify the style of lines. As a result, MathGL again us
         mglData x(50);  	x.Modify("cos(pi*2*x-pi)");
         gr->Plot(x,y0,"Y+");
 @end verbatim
-Note that solid line is used because I did not specify the type of line. The same picture can be achieved by @code{Plot2()} function. Let us draw ellipse by orange dash line:
+Note that solid line is used because I did not specify the type of line. The same picture can be achieved by @code{Plot()} and @code{SubData())} functions. Let us draw ellipse by orange dash line:
 @verbatim
-        gr->Plot2(y1,"q|");
+        gr->Plot(y1.SubData(-1,0),y1.SubData(-1,1),"q|");
 @end verbatim
 
 Drawing in 3D space is mostly the same. Let us draw spiral with default line style. Now its color is 4-th color from palette (this is cyan):
@@ -732,11 +732,11 @@ Drawing in 3D space is mostly the same. Let us draw spiral with default line sty
         mglData z(50);  	z.Modify("2*x-1");
         gr->Plot(x,y0,z);	gr->Box();
 @end verbatim
-Function @code{Plot3()} does 3D curve plot but for single array. Use it to put circle marks on the previous plot:
+Functions @code{Plot()} and @code{SubData())} make 3D curve plot but for single array. Use it to put circle marks on the previous plot:
 @verbatim
         mglData y2(10,3);	y2.Modify("cos(pi*(2*x-1+y))");
         y2.Modify("2*x-1",2);
-        gr->Plot3(y2,"bo ");
+        gr->Plot(y2.SubData(-1,0),y2.SubData(-1,1),y2.SubData(-1,2),"bo ");
 @end verbatim
 Note that line style is empty @samp{ } here. Usage of other 1D plotting functions looks similar:
 @verbatim

@@ -226,7 +226,6 @@ public:
 
 	mglPoint Min;		///< Lower edge of bounding box for graphics.
 	mglPoint Max;		///< Upper edge of bounding box for graphics.
-	bool Cut;			///< Flag which determines how points outside bounding box are drown.
 	char *Message;		///< Buffer for receiving messages
 	int ObjId;			///< object id for mglPrim
 
@@ -236,6 +235,12 @@ public:
 	int MeshNum;		///< Set approximate number of lines in Mesh and Grid. By default (=0) it draw all lines.
 	char Arrow1, Arrow2;///< Style of arrows at end and at start of curve
 	long InUse;			///< Smart pointer (number of users)
+	long Flag;			///< Flags for controlling drawing
+
+	inline bool get(long fl)	{	return Flag&fl;	}
+	inline void set(long fl)	{	Flag |= fl;	}
+	inline void clr(long fl)	{	Flag &=~fl;	}
+	inline void set(bool v,long fl)	{	Flag = v ? Flag|fl : Flag&(~fl);	}
 
 	/// Set values of mglGraph::Min and mglGraph::Max
 	inline void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0, float c1=0, float c2=0)
@@ -275,7 +280,7 @@ public:
 	void Ternary(int tern);
 
 	/// Set cutting for points outside of bounding box
-	inline void SetCut(bool val)	{	Cut=val;	}
+	inline void SetCut(bool val)	{	set(val, MGL_ENABLE_CUT);	}
 	/// Set additional cutting box
 	inline void SetCutBox(float x1, float y1, float z1, float x2, float y2, float z2)
 	{	CutMin=mglPoint(x1,y1,z1);	CutMax=mglPoint(x2,y2,z2);	}
@@ -334,7 +339,7 @@ public:
 	inline float TextWidth(const wchar_t *text)	{	return FontSize*font_factor*fnt->Width(text,FontDef)/8;	}
 	inline float TextHeight()	{	return FontSize*font_factor*fnt->Height(FontDef)/8; }
 	/// Set to use or not text rotation
-	inline void SetRotatedText(bool val)	{	RotatedText=val;	}
+	inline void SetRotatedText(bool val)	{	set(val,MGL_ENABLE_RTEXT);	}
 	/// Set default font style and color
 	inline void SetFontDef(const char *font)	{	strncpy(FontDef, font, 31);	}
 
@@ -407,7 +412,6 @@ protected:
 	mglFont *fnt;		///< Class for printing vector text
 	float FontSize;		///< The size of font for tick and axis labels
 	char FontDef[32];	///< Font specification (see mglGraph::Puts). Default is Roman with align at center.
-	bool RotatedText;	///< Use text rotation along axis
 	int Quality;		///< Quality of plot (0x0-pure, 0x1-fast; 0x2-fine; 0x4 - low memory)
 
 	mglFormula *fx;		///< Transformation formula for x direction.

@@ -117,7 +117,7 @@ public:
 
 	/// Set PlotFactor
 	inline void SetPlotFactor(float val)
-	{	B.pf = val>0?val:1.55;	AutoPlotFactor=(val<=0);	}
+	{	if(val<=0)	{B.pf=1.55;	set(MGL_AUTO_FACTOR);}	else {B.pf=val;	clr(MGL_AUTO_FACTOR);}	}
 
 	///< Set default parameter for plotting
 	void DefaultPlotParam();
@@ -221,7 +221,7 @@ public:
 	virtual bool Alpha(bool enable);
 	/// Set the transparency type
 	inline void SetTranspType(int val)
-	{	TranspType=val;	SetAxisStl(val==2?"w-":"k-");	}
+	{	Flag=(Flag&(~3)) + (val&3);	SetAxisStl(val==2?"w-":"k-");	}
 	/// Set the fog distance or switch it off (if d=0).
 	virtual void Fog(float d, float dz=0.25);
 	/// Set the using of light on/off.
@@ -294,12 +294,11 @@ public:
 	/// Draw legend of accumulated strings by \a font with \a size
 	void Legend(std::vector<mglText> leg, int where=0x3, const char *font="rL", float size=-0.8, float llen=0.1);
 	/// Switch on/off box around legend
-	inline void SetLegendBox(bool val)		{	LegendBox=val;	};
+	inline void SetLegendBox(bool val)		{	set(val,MGL_LEGEND_BOX);	};
 	/// Number of marks in legend sample
 	inline void SetLegendMarks(int num=1)	{	LegendMarks = num>0?num:1;	};
 
 protected:
-	bool Finished;		///< Flag that final picture \a mglCanvasZB::G is ready
 	float *Z;			///< Height for given level in Z-direction
 	unsigned char *C;	///< Picture for given level in Z-direction
 	int *OI;			///< ObjId arrays
@@ -314,10 +313,7 @@ protected:
 	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexLeg, mutexStack;
 #endif
 
-	bool LegendBox;		///< Set on/off drawing legend box.
 	int LegendMarks;	///< Number of marks in the Legend
-
-	bool AutoPlotFactor;///< Enable autochange PlotFactor
 	unsigned char BDef[4];	///< Background color
 	mglAxis ax,ay,az,ac;///< Axis parameters
 
@@ -329,7 +325,6 @@ protected:
 	char SubTStl[32];	///< Subtick line style. Default is "k"
 	float st_t;			///< Subtick-to-tick ratio (ls=lt/sqrt(1+st_t)). Default is 1.
 
-	int TranspType;		/// Type of transparency (no full support in OpenGL mode).
 	int CurFrameId;		///< Number of automaticle created frames
 	float Persp;		///< Perspective factor (=0 is perspective off)
 	int Width;			///< Width of the image
@@ -338,13 +333,9 @@ protected:
 	mglMatrix B;		///< Transformation matrix
 	mglMatrix B1;		///< Transformation matrix for colorbar
 	float inW, inH;		///< Relative width and height of last InPlot
-	bool UseAlpha;		///< Flag that Alpha is used
-	bool UseLight;		///< Flag of using lightning
 	mglLight light[10];	///< Light sources
 	float FogDist;		///< Inverse fog distance (fog ~ exp(-FogDist*Z))
 	float FogDz;		///< Relative shift of fog
-
-	bool DisScaling;	///< Temporary flag for disable scaling (used for axis)
 
 	/// Draw colorbar at edge of axis
 	void Colorbar(int where, float x, float y, float w, float h, long s=0);
@@ -378,7 +369,7 @@ protected:
 	float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'));	// position in pntN
 
 	inline void add_prim(mglPrim &a)	///< add primitive to list
-	{	a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);	Finished = false;	}
+	{	a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);	clr(MGL_FINISHED);	}
 	void mark_draw(long p, char type, float size);
 	void arrow_draw(long p1, long p2, char st, float size);
 	virtual void line_draw(long p1, long p2);

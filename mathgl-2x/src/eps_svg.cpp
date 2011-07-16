@@ -58,7 +58,7 @@ bool mglCanvas::IsSame(const mglPrim &pr,float wp,mglColor cp,int st)
 void mglCanvas::WriteEPS(const char *fname,const char *descr)
 {
 	if(Prm.size()<1)	return;
-	if(!Finished)	Finish();
+	if(!get(MGL_FINISHED))	Finish();
 	time_t now;
 	time(&now);
 
@@ -224,7 +224,7 @@ void mglCanvas::WriteEPS(const char *fname,const char *descr)
 void mglCanvas::WriteSVG(const char *fname,const char *descr)
 {
 	if(Prm.size()<1)	return;
-	if(!Finished)	Finish();
+	if(!get(MGL_FINISHED))	Finish();
 	time_t now;
 	time(&now);
 
@@ -480,7 +480,7 @@ mglColor mglCanvas::put_color(const mglPrim &p)
 	const mglPnt &q=Pnt[(p.type==1 ? p.n2:p.n1)];
 	mglColor c(q.r,q.g,q.b,q.a);
 
-	if(UseLight && !isnan(q.u))
+	if(get(MGL_ENABLE_LIGHT) && !isnan(q.u))
 	{
 		float d0,d1,d2,nn;
 		c *= AmbBr;

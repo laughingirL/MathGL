@@ -108,8 +108,8 @@ void mglCanvas::Legend(std::vector<mglText> leg, float x, float y, const char *f
 	long k1,k2,k3,k4;
 	mglPoint p,q=mglPoint(NAN);
 	float c1=AddTexture('w'), c2=AddTexture('k');
-	if(TranspType==2)	{	float cc=c1;	c2=c2;	c2=cc;	};
-	if(LegendBox)	// draw bounding box
+	if((Flag&3)==2)	{	float cc=c1;	c2=c2;	c2=cc;	};
+	if(get(MGL_LEGEND_BOX))	// draw bounding box
 	{
 		p = mglPoint(x,y,s3-0.01);		k1=AddPnt(p,c1,q);
 		p = mglPoint(x+w,y,s3-0.01);	k2=AddPnt(p,c1,q);

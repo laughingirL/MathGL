@@ -223,7 +223,7 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 		z2>CutMin.z && z1<CutMax.z)	res = false;
 	if(fc && fc->Calc(x,y,z))	res = false;
 
-	if(Cut || !use_nan)
+	if(get(MGL_ENABLE_CUT) || !use_nan)
 	{
 //		if(x1<Min.x || x2>Max.x || y1<Min.y || y2>Max.y || z1<Min.z || z2>Max.z)	res = false;
 		if((x1-Min.x)*(x1-Max.x)>0 && (x2-Min.x)*(x2-Max.x)>0 && Min.x!=Max.x)	res = false;
@@ -253,7 +253,7 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
     {
         if(x+y>0)
         {
-            if(Cut)	res = false;
+            if(get(MGL_ENABLE_CUT))	res = false;
             else	y = -x;
         }
         x += (y+1)/2;	n.x += n.y/2;
@@ -262,7 +262,7 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
     {
         if(x+y+z>-1)
         {
-            if(Cut)	res = false;
+            if(get(MGL_ENABLE_CUT))	res = false;
             else	z = -1-y-x;
         }
         x += 1+(y+z)/2;		y += (z+1)/3;
@@ -401,12 +401,12 @@ void mglBase::Ternary(int t)
 	TernAxis = t;
 	if(t&3)
 	{
-		x1 = Min;	x2 = Max;	o = Org;	c = Cut;
-		Cut = false;
+		x1 = Min;	x2 = Max;	o = Org;
+		c = get(MGL_ENABLE_CUT);	clr(MGL_ENABLE_CUT);
 		SetRanges(mglPoint(0,0,0),mglPoint(1,1,t==1?0:1));
 		Org=mglPoint(0,0,0);
 	}
-	else	{	SetRanges(x1,x2);	Org=o;	Cut=c;	}
+	else	{	SetRanges(x1,x2);	Org=o;	SetCut(c);	}
 }
 //-----------------------------------------------------------------------------
 //		Transformation functions
@@ -764,7 +764,7 @@ float mglBase::SaveState(const char *opt)
 	if(!opt || !opt[0] || saved)	return NAN;
 	MSS=MarkSize;	ASS=ArrowSize;
 	FSS=FontSize;	ADS=AlphaDef;
-	MNS=MeshNum;	CSS=Cut;	LSS=AmbBr;
+	MNS=MeshNum;	CSS=get(MGL_ENABLE_CUT);	LSS=AmbBr;
 	MinS=Min;		MaxS=Max;	saved=true;
 	// parse option
 	char *q=mgl_strdup(opt),*s,*a,*b,*c;
@@ -813,7 +813,7 @@ void mglBase::LoadState()
 	if(!saved)	return;
 	MarkSize=MSS;	ArrowSize=ASS;
 	FontSize=FSS;	AlphaDef=ADS;
-	MeshNum=MNS;	Cut=CSS;	AmbBr=LSS;
-	Min=MinS;		Max=MaxS;	saved=false;
+	MeshNum=MNS;	SetCut(CSS);	AmbBr=LSS;
+	Min=MinS;		Max=MaxS;		saved=false;
 }
 //-----------------------------------------------------------------------------

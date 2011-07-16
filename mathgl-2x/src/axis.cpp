@@ -475,14 +475,30 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 
 	register long i,k1,n = aa.txt.size();
 	char pos[2]="t";
-	if(DisScaling && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
-	if(n>0)	for(i=0;i<n;i++)	// TODO: Add labels "rotation", "missing" and so on
+	if(get(MGL_DISABLE_SCALE) && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
+	float *w=new float[n], h = TextHeight()/4, c=NAN, l=NAN, tet=0;	// find sizes
+	for(i=0;i<n;i++)
 	{
-		p = o+d*aa.txt[i].val;	k1 = AddPnt(p,-1,d,0,3);
+		w[i] = TextWidth(aa.txt[i].text.c_str())/2;
+		c = c>aa.txt[i].val ? aa.txt[i].val : c;
+		l = l>w[i] ? w[i]:l;
+	}
+	c /= 1.1;
+	if(!get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE))	// try rotate first
+	{	tet = c>h ? asin(h/c) : M_PI/2;
+		l=h/sin(tet);	for(i=0;i<n;i++)	w[i]=l;	}
+	// TODO: do smater points exclusion (i.e. longest and so on)
+	long k = get(MGL_TICKS_SKIP) ? 1+l/c : 1;
+	if(n>0)	for(i=0;i<n;i++)
+	{
+		c = aa.txt[i].val;
+		if(c>aa.v1 && c<aa.v2 && i%k!=0)	continue;
+		p = o+d*c;	k1 = AddPnt(p,-1,d,0,3);
 		nn = s-o;	ScalePoint(p,nn,false);
-		if(!DisScaling)	pos[0]=(nn.y>0 || nn.x<0) ? 'T':'t';
+		if(!get(MGL_DISABLE_SCALE))	pos[0]=(nn.y>0 || nn.x<0) ? 'T':'t';
 		text_plot(k1, aa.txt[i].text.c_str(), pos, -1, 0.07);
 	}
+	delete []w;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f)
@@ -727,7 +743,7 @@ void mglCanvas::colorbar(HCDT vv, const float *c, int where, float x, float y, f
 	float d,s3=B.pf,ss=1;		// NOTE: colorbar was wider ss=s3*0.9;
 	mglPoint p1,p2;
 
-	Push();	DisScaling=true;	B=B1;	B.pf=s3;
+	Push();	set(MGL_DISABLE_SCALE);	B=B1;	B.pf=s3;
 	x = 2*x-1;	y = 2*y-1;
 	for(i=0;i<n-1;i++)
 	{
@@ -790,6 +806,6 @@ void mglCanvas::colorbar(HCDT vv, const float *c, int where, float x, float y, f
 		default:ac.dir.x = 0;	ac.org.x = (x-0.1*w)*s3;	break;
 	}
 	DrawLabels(ac);
-	Pop();	DisScaling=false;	EndGroup();
+	Pop();	clr(MGL_DISABLE_SCALE);	EndGroup();
 }
 //-----------------------------------------------------------------------------

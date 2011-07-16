@@ -35,25 +35,24 @@ void mglCanvasGL::Finish()
 //-----------------------------------------------------------------------------
 bool mglCanvasGL::Alpha(bool enable)
 {
-	bool t = UseAlpha;
 	if(enable)
 	{
-		UseAlpha = true;
+		set(MGL_ENABLE_ALPHA);
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_ALPHA_TEST);
 		glEnable(GL_BLEND);
-		if(TranspType==1)	glBlendFunc(GL_DST_COLOR, GL_ZERO);
-//		else if(TranspType==2) glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		if((Flag&3)==1)	glBlendFunc(GL_DST_COLOR, GL_ZERO);
+		else if((Flag&3)==2) glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		else glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 	else
 	{
-		UseAlpha = false;
+		clr(MGL_ENABLE_ALPHA);
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_ALPHA_TEST);
 		glDisable(GL_BLEND);
 	}
-	return t;
+	return mglCanvas::Alpha(enable);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasGL::AddLight(int n,mglPoint p,char cc, float br,bool infty,float /*ap*/)
@@ -97,11 +96,9 @@ void mglCanvasGL::Light(int n, bool enable)
 //-----------------------------------------------------------------------------
 bool mglCanvasGL::Light(bool enable)
 {
-	bool t = UseLight;
-	UseLight = enable;
 	if(enable)	{	glEnable(GL_LIGHTING);	glEnable(GL_NORMALIZE);}
 	else		{	glDisable(GL_LIGHTING);	glDisable(GL_NORMALIZE);	}
-	return t;
+	return mglCanvas::Light(enable);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasGL::LightScale()

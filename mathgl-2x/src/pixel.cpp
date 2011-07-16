@@ -53,7 +53,7 @@ void mglCanvas::PostScale(mglPoint &p)
 //-----------------------------------------------------------------------------
 bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 {
-	bool res = DisScaling || mglBase::ScalePoint(p,n,use_nan);
+	bool res = get(MGL_DISABLE_SCALE) || mglBase::ScalePoint(p,n,use_nan);
 	if(TernAxis&4)	return res;
 	PostScale(p);
 
@@ -253,7 +253,7 @@ void mglCanvas::Finish()
 		for(unsigned long i=0;i<Prm.size();i++)	Draw(Prm[i]);
 	}
 	long n=Width*Height;
-	unsigned char c[4],alf=TranspType!=2 ? 0:255,*cc;
+	unsigned char c[4],alf=(Flag&3)!=2 ? 0:255,*cc;
 	register long i;
 	if(Quality&2)	for(i=0;i<n;i++)
 	{
@@ -268,7 +268,7 @@ void mglCanvas::Finish()
 		c[0]=BDef[0];	c[1]=BDef[1];	c[2]=BDef[2];	c[3]=255;
 		combine(c,G4+4*i);	memcpy(G+3*i,c,3);
 	}
-	Finished = true;
+	set(MGL_FINISHED);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Clf(mglColor Back)
@@ -276,12 +276,12 @@ void mglCanvas::Clf(mglColor Back)
 	Fog(0);			PDef = 0xffff;	pPos = 0;
 	Pnt.clear();	Prm.clear();	Ptx.clear();	Sub.clear();	Leg.clear();
 	if(Back==0)			Back = 'w';
-	if(TranspType==2)	Back = 'k';
+	if((Flag&3)==2)	Back = 'k';
 	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;BDef[2]=Back.b*255;	BDef[3]=0;
 	register long i,n=Width*Height;
 	memset(C,0,12*n);	memset(OI,0,n*sizeof(int));
 	for(i=0;i<3*n;i++)	Z[i] = -1e20f;	// TODO: Parallelization ?!?
-	Finished = false;
+	clr(MGL_FINISHED);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_plot(long x,long y,float z,const unsigned char ci[4])
@@ -330,7 +330,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
 	if(!r)	return r;
 	if(p.a<=0)	{	memset(r,0,4*sizeof(unsigned char));	return r;	}
 	register float b0=p.r,b1=p.g,b2=p.b;
-	if(UseLight && !isnan(p.u))
+	if(get(MGL_ENABLE_LIGHT) && !isnan(p.u))
 	{
 		b0 *= AmbBr;		b1 *= AmbBr;		b2 *= AmbBr;
 		float d0,d1,d2,nn;
@@ -357,7 +357,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
 	r[0] = (unsigned char)(255*b0);	r[1] = (unsigned char)(255*b1);
 	r[2] = (unsigned char)(255*b2);
 	// p.a should be <1 but I additionally check it here
-	r[3] = UseAlpha && p.a<1 ? (unsigned char)(256*p.a) : 255;
+	r[3] = get(MGL_ENABLE_ALPHA) && p.a<1 ? (unsigned char)(256*p.a) : 255;
 	return r;
 }
 //-----------------------------------------------------------------------------
@@ -367,21 +367,21 @@ void mglCanvas::combine(unsigned char *c1,unsigned char *c2)
 	if(!c2[3])	return;
 	register unsigned int a1=c1[3], a2=c2[3],b1=255-a2;
 	if(a1==0 || a2==255)	{	memcpy(c1,c2,4);	return; }
-	if(TranspType==0)
+	if((Flag&3)==0)
 	{
 		c1[0] = (c1[0]*b1 + c2[0]*a2)/256;
 		c1[1] = (c1[1]*b1 + c2[1]*a2)/256;
 		c1[2] = (c1[2]*b1 + c2[2]*a2)/256;
 		c1[3] = (unsigned char)(a2+a1*b1/255);
 	}
-	else if(TranspType==1)
+	else if((Flag&3)==1)
 	{
 		c1[0] = (unsigned char)((255-a1*(255-c1[0])/256)*(255-a2*(255-c2[0])/256)/256);
 		c1[1] = (unsigned char)((255-a1*(255-c1[1])/256)*(255-a2*(255-c2[1])/256)/256);
 		c1[2] = (unsigned char)((255-a1*(255-c1[2])/256)*(255-a2*(255-c2[2])/256)/256);
 		c1[3] = 255;
 	}
-	else if(TranspType==2)
+	else if((Flag&3)==2)
 	{
 		unsigned int b2,b3;
 		b1 = (c1[0]*a1 + c2[0]*a2)/256;		c1[0] = b1<255 ? b1 : 255;
@@ -395,7 +395,7 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 {
 	long d = alpha ? 4:3;
 	unsigned char **p;
-	if(!Finished)	Finish();
+	if(!get(MGL_FINISHED))	Finish();
 	p = (unsigned char **)malloc(Height * sizeof(unsigned char *));
 	for(long i=0;i<Height;i++)	p[i] = (alpha?G4:G)+d*Width*i;
 	w = Width;	h = Height;		f = 0;
@@ -403,10 +403,10 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 }
 //-----------------------------------------------------------------------------
 const unsigned char *mglCanvas::GetBits()
-{	if(!Finished)	Finish();	return G;	}
+{	if(!get(MGL_FINISHED))	Finish();	return G;	}
 //-----------------------------------------------------------------------------
 const unsigned char *mglCanvas::GetRGBA()
-{	if(!Finished)	Finish();	return G4;	}
+{	if(!get(MGL_FINISHED))	Finish();	return G4;	}
 //-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-r0)*v + (r3+r0-r1-r2)*u*v is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined 	for each point (x,y) and selected one pair which 0<u<1 and 0<v<1.*/
 void mglCanvas::quad_draw(long k1, long k2, long k3, long k4)
@@ -416,7 +416,7 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4)
 		fast_draw(k1,k2);	fast_draw(k1,k3);
 		fast_draw(k4,k2);	fast_draw(k4,k3);	return;
 	}
-	Finished = false;
+	clr(MGL_FINISHED);
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 	float dd,dsx,dsy;
@@ -480,7 +480,7 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm)
 		fast_draw(k1,k2);	fast_draw(k1,k3);
 		fast_draw(k2,k3);	return;
 	}
-	Finished = false;
+	clr(MGL_FINISHED);
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 	float dxu,dxv,dyu,dyv;
@@ -525,7 +525,7 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm)
 void mglCanvas::line_draw(long k1, long k2)
 {
 	if(!(Quality&3))	{	fast_draw(k1,k2);	return;	}
-	Finished = false;
+	clr(MGL_FINISHED);
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 
@@ -544,10 +544,10 @@ void mglCanvas::line_draw(long k1, long k2)
 	dxv = d.y/dd;	dyv =-d.x/dd;
 	dxu = d.x/dd;	dyu = d.y/dd;
 
-	bool aa=UseAlpha;
+	bool aa=get(MGL_ENABLE_ALPHA);
 	register float u,v,xx,yy;
 	register long i,j;
-	UseAlpha = true;
+	set(MGL_ENABLE_ALPHA);
 	if(hor)	for(i=x1;i<=x2;i++)
 	{
 		y1 = int(p1.y+d.y*(i-p1.x)/d.x - pw - 3.5);
@@ -586,12 +586,12 @@ void mglCanvas::line_draw(long k1, long k2)
 			pnt_plot(i,j,p.z+pw,r);
 		}
 	}
-	UseAlpha = aa;
+	set(aa,MGL_ENABLE_ALPHA);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::fast_draw(long k1, long k2)
 {
-	Finished = false;
+	clr(MGL_FINISHED);
 	const mglPnt &p1=Pnt[k1], &p2=Pnt[k2];
 	mglPnt d=p2-p1;
 	unsigned char r[4];	col2int(p1,r);
@@ -615,7 +615,7 @@ void mglCanvas::fast_draw(long k1, long k2)
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_draw(long k)
 {
-	bool aa=UseAlpha;	UseAlpha = true;
+	bool aa=get(MGL_ENABLE_ALPHA);	set(MGL_ENABLE_ALPHA);
 	register long i,j,s;
 	register float v,pw=PenWidth*sqrt(font_factor/400);
 	const mglPnt &p=Pnt[k];
@@ -628,7 +628,7 @@ void mglCanvas::pnt_draw(long k)
 		if(cs[3]==0)	continue;
 		pnt_plot(p.x+i,p.y+j,p.z,cs);
 	}
-	UseAlpha = aa;
+	set(aa,MGL_ENABLE_ALPHA);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_draw(long k, char type, float size)
