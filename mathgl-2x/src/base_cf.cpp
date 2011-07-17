@@ -1,5 +1,5 @@
 /***************************************************************************
- * base.cpp is part of Math Graphic Library
+ * base.cpp is part of Math gric Library
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -131,7 +131,12 @@ long mgl_data_get_nx_(uintptr_t *d)	{	return	_DA_(d)->GetNx();	}
 long mgl_data_get_ny_(uintptr_t *d)	{	return	_DA_(d)->GetNy();	}
 long mgl_data_get_nz_(uintptr_t *d)	{	return	_DA_(d)->GetNz();	}
 //-----------------------------------------------------------------------------
-void mgl_set_rotated_text(HMGL gr, int rotated)	{	gr->SetRotatedText(rotated);	}
+void mgl_set_tick_rotate(HMGL gr, int enable){	gr->SetTickRotate(enable);	}
+void mgl_set_tick_skip(HMGL gr, int enable)	{	gr->SetTickSkip(enable);	}
+void mgl_set_tick_rotate_(uintptr_t *gr,int *enable){	_GR_->SetTickRotate(*enable);	}
+void mgl_set_tick_skip_(uintptr_t *gr, int *enable)	{	_GR_->SetTickSkip(*enable);	}
+//-----------------------------------------------------------------------------
+void mgl_set_rotated_text(HMGL gr, int enable)	{	gr->SetRotatedText(enable);	}
 void mgl_set_mark_size(HMGL gr, mreal size)		{	gr->SetMarkSize(size);	}
 void mgl_set_arrow_size(HMGL gr, mreal size)	{	gr->SetArrowSize(size);	}
 void mgl_set_font_size(HMGL gr, mreal size)		{	gr->SetFontSize(size);	}

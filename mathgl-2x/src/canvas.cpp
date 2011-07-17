@@ -61,6 +61,7 @@ int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;
 */
+	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone);	ObjId = 0;
 	SetFunc(0,0);			CutOff(0);
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
@@ -289,7 +290,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	shift *= h;		B.z= q.z;
 	if(ll==0)	{	Pop();	return 0;	}
 
-	if(isnan(ll) || get(MGL_ENABLE_RTEXT))
+	if(isnan(ll) || !get(MGL_ENABLE_RTEXT))
 	{
 		fscl = fsize;	ftet = 0;
 		B.x = q.x;	B.y= q.y - shift;

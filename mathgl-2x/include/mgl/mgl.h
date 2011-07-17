@@ -55,10 +55,14 @@ public:
 	inline void SetCut(bool cut)				{	mgl_set_cut(gr, cut);	}
 	inline void SetCutBox(mglPoint p1, mglPoint p2)
 	{	mgl_set_cut_box(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);	}
+
+	inline void SetTickRotate(bool val)	{	mgl_set_tick_rotate(gr,val);	}
+	inline void SetTickSkip(bool val)	{	mgl_set_tick_skip(gr,val);	}
 	inline void SetTickLen(float len, float stt=1)
 	{	mgl_set_tick_len(gr, len, stt);	}
 	inline void SetAxisStl(const char *stl="k", const char *tck=0, const char *sub=0)
 	{	mgl_set_axis_stl(gr, stl, tck, sub);	}
+
 	inline void SetTickTime(char dir, float d, const char *t="")
 	{	mgl_set_tick_time(gr,dir,d,t);	}
 	inline void SetTicksVal(char dir, const char *lbl, bool add=false)
@@ -69,6 +73,7 @@ public:
 	{	mgl_set_ticks_val(gr,dir,&v,lbl,add);	}
 	inline void SetTicksVal(char dir, const mglDataA &v, const wchar_t *lbl, bool add=false)
 	{	mgl_set_ticks_valw(gr,dir,&v,lbl,add);	}
+
 	inline void SetSize(int width, int height)	{	mgl_set_size(gr, width, height);	}
 	inline void SetBarWidth(float width)	{	mgl_set_bar_width(gr, width);	}
 	inline void SetMarkSize(float size)		{	mgl_set_mark_size(gr, size);	}
@@ -79,6 +84,7 @@ public:
 	inline void SetMeshNum(int num)			{	mgl_set_meshnum(gr, num);		}
 	inline void SetLegendBox(bool enable)	{	mgl_set_legend_box(gr, enable);	}
 	inline void SetLegendMarks(int num)		{	mgl_set_legend_marks(gr, num);	}
+
 	inline void LoadFont(const char *name, const char *path=NULL)
 	{	mgl_load_font(gr, name, path);	}
 	inline void CopyFont(mglGraph *GR)		{	mgl_copy_font(gr, GR->Self());}

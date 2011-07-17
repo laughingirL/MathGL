@@ -342,6 +342,10 @@ public:
 	inline void SetRotatedText(bool val)	{	set(val,MGL_ENABLE_RTEXT);	}
 	/// Set default font style and color
 	inline void SetFontDef(const char *font)	{	strncpy(FontDef, font, 31);	}
+	/// Set to use or not text rotation
+	inline void SetTickRotate(bool val)	{	set(val,MGL_TICKS_ROTATE);	}
+	/// Set to use or not text rotation
+	inline void SetTickSkip(bool val)	{	set(val,MGL_TICKS_SKIP);	}
 
 	/// Set plot quality
 	virtual void SetQuality(int qual=MGL_DRAW_NORM)	{	Quality=qual;	}

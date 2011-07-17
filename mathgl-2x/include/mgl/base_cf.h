@@ -53,6 +53,9 @@ void mgl_set_coor(HMGL gr, int how);
 void mgl_set_ternary(HMGL gr, int enable);
 void mgl_set_cutoff(HMGL graph, const char *EqC);
 
+void mgl_set_tick_rotate(HMGL graph, int enable);
+void mgl_set_tick_skip(HMGL graph, int enable);
+
 float mgl_data_get_value(HCDT d, long i, long j, long k);
 long mgl_data_get_nx(HCDT d);
 long mgl_data_get_ny(HCDT d);
@@ -62,7 +65,7 @@ void mgl_set_mark_size(HMGL graph, float size);
 void mgl_set_arrow_size(HMGL graph, float size);
 void mgl_set_font_size(HMGL graph, float size);
 void mgl_set_font_def(HMGL graph, const char *fnt);
-void mgl_set_rotated_text(HMGL graph, int rotated);
+void mgl_set_rotated_text(HMGL graph, int enable);
 void mgl_load_font(HMGL gr, const char *name, const char *path);
 void mgl_copy_font(HMGL gr, HMGL gr_from);
 void mgl_restore_font(HMGL gr);
@@ -95,6 +98,9 @@ void mgl_set_coor_(uintptr_t *gr, int *how);
 void mgl_set_ternary_(uintptr_t *graph, int *enable);
 void mgl_set_cutoff_(uintptr_t *graph, const char *EqC, int);
 
+void mgl_set_tick_rotate_(uintptr_t *graph, int *enable);
+void mgl_set_tick_skip_(uintptr_t *graph, int *enable);
+
 float mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k);
 long mgl_data_get_nx_(uintptr_t *d);
 long mgl_data_get_ny_(uintptr_t *d);
@@ -104,7 +110,7 @@ void mgl_set_mark_size_(uintptr_t *graph, float *size);
 void mgl_set_arrow_size_(uintptr_t *graph, float *size);
 void mgl_set_font_size_(uintptr_t *graph, float *size);
 void mgl_set_font_def_(uintptr_t *graph, const char *fnt, int);
-void mgl_set_rotated_text_(uintptr_t *graph, int *rotated);
+void mgl_set_rotated_text_(uintptr_t *graph, int *enable);
 void mgl_load_font_(uintptr_t *gr, char *name, char *path, int l, int n);
 void mgl_copy_font_(uintptr_t *gr, uintptr_t *gr_from);
 void mgl_restore_font_(uintptr_t *gr);

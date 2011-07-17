@@ -266,7 +266,7 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 	if(ff && islog(aa.v1,aa.v2))
 	{	aa.dv = 0;	aa.ds=0;	}
 	else if(aa.d>0)
-	{	aa.ds = aa.d/(aa.ns+1);	}
+	{	aa.dv = aa.d;	aa.ds = aa.d/(fabs(aa.ns)+1);	}
 	else if(aa.d>-1.5)	// like =0 or =-1
 	{
 		n = floor(log10(d));	d = floor(d*pow(10.,-n));
@@ -393,8 +393,10 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 
 		if(v0+aa.dv!=v0 && v1+aa.dv!=v1)	for(v=v0;v<=v1;v+=aa.dv)
 		{
-			if(aa.t[0])	mglprintf(buf, 64, aa.t, fabs(v)<aa.dv/100 ? 0 : v);
-			else	mgl_tick_text(v,v0,aa.dv/100,w,kind,buf);
+			if(aa.t[0])
+				mglprintf(buf, 64, aa.t, fabs(v)<aa.dv/100 ? 0 : v);
+			else
+				mgl_tick_text(v,v0,aa.dv/100,w,kind,buf);
 			mgl_wcstrim(buf);	aa.AddLabel(buf,v);
 		}
 		if(kind&2)	aa.AddLabel(s,FactorPos*(aa.v2-aa.v1)+aa.v1);
@@ -470,18 +472,20 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	if(strchr("xyztuvw",aa.ch))
 		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
 	mglPoint d = aa.dir, o = aa.org - d*(aa.org*d);	// "transverse" org
-	mglPoint p, s=(Min+Max)/2, nn;
+	mglPoint p,q, s=(Min+Max)/2, nn;
 	s = s - d*(s*d);
 
 	register long i,k1,n = aa.txt.size();
 	char pos[2]="t";
 	if(get(MGL_DISABLE_SCALE) && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
-	float *w=new float[n], h = TextHeight()/4, c=NAN, l=NAN, tet=0;	// find sizes
+	float *w=new float[n], h = TextHeight()/4, c=NAN, l=NAN, tet=0, v;	// find sizes
+	long *kk=new long[n];
 	for(i=0;i<n;i++)
 	{
 		w[i] = TextWidth(aa.txt[i].text.c_str())/2;
-		c = c>aa.txt[i].val ? aa.txt[i].val : c;
-		l = l>w[i] ? w[i]:l;
+		v = aa.txt[i].val;	kk[i] = AddPnt(o+d*v,-1,d,0,3);
+		q=p;	p = GetPnt(kk[i]);	v = i>0 ? (p-q).norm() : NAN;
+		c = c<v ? c:v;	l = l<w[i] ? l:w[i];
 	}
 	c /= 1.1;
 	if(!get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE))	// try rotate first
@@ -498,7 +502,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		if(!get(MGL_DISABLE_SCALE))	pos[0]=(nn.y>0 || nn.x<0) ? 'T':'t';
 		text_plot(k1, aa.txt[i].text.c_str(), pos, -1, 0.07);
 	}
-	delete []w;
+	delete []w;	delete []kk;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f)
