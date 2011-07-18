@@ -33,9 +33,9 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr)
 {
-	gr->SetTickTempl('x',"%.6g");
+	gr->SetTickTempl('x',"aa %.6g");
 	gr->SetTicks('x',1/3.);
-	gr->Axis();
+	gr->Axis("xy");
 	return 0;
 }
 //-----------------------------------------------------------------------------
