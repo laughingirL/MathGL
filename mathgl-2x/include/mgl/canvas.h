@@ -282,7 +282,8 @@ public:
 
 	/// Add string to legend
 	void AddLegend(const char *text,const char *style);
-	void AddLegend(const wchar_t *text,const char *style);
+	void AddLegend(const wchar_t *text,const char *style)
+	{	if(text)	MGL_PUSH(Leg,mglText(text,style),mutexLeg);	}
 	/// Clear saved legend string
 	inline void ClearLegend()	{	Leg.clear();	}
 	/// Draw legend of accumulated strings at position (x, y) by \a font with \a size
