@@ -286,13 +286,16 @@ public:
 	/// Clear saved legend string
 	inline void ClearLegend()	{	Leg.clear();	}
 	/// Draw legend of accumulated strings at position (x, y) by \a font with \a size
-	void Legend(float x, float y, const char *font="rL", float size=-0.8, float llen=0.1);
+	inline void Legend(float x, float y, const char *font="", float size=-0.8, float llen=0.1)
+	{	Legend(Leg,x,y,font,size,llen);	}
 	/// Draw legend of accumulated strings by \a font with \a size
-	void Legend(int where=0x3, const char *font="rL", float size=-0.8, float llen=0.1);
+	inline void Legend(int where=0x3, const char *font="", float size=-0.8, float llen=0.1)
+	{	Legend(Leg,(where&1)?1:0,(where&2)?1:0,font,size,llen);	}
+	/// Draw legend of accumulated strings by \a font with \a size
+	inline void Legend(const std::vector<mglText> &leg, int where=3, const char *font="", float size=-0.8, float llen=0)
+	{	Legend(leg,(where&1)?1:0,(where&2)?1:0,font,size,llen);	}
 	/// Draw legend strings \a text at position (x, y) by \a font with \a size
-	void Legend(std::vector<mglText> leg, float x, float y, const char *font="rL", float size=-0.8, float llen=0.1);
-	/// Draw legend of accumulated strings by \a font with \a size
-	void Legend(std::vector<mglText> leg, int where=0x3, const char *font="rL", float size=-0.8, float llen=0.1);
+	void Legend(const std::vector<mglText> &leg, float x, float y, const char *font="", float size=-0.8, float llen=0);
 	/// Switch on/off box around legend
 	inline void SetLegendBox(bool val)		{	set(val,MGL_LEGEND_BOX);	};
 	/// Number of marks in legend sample

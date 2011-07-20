@@ -269,7 +269,7 @@ public:
 
 	inline void SetTickTempl(char dir, const wchar_t *t)
 	{	mgl_set_tick_templw(gr,dir,t);	}
-	inline void SetTickTempl(char dir, char *t)
+	inline void SetTickTempl(char dir, const char *t)
 	{	mgl_set_tick_templ(gr,dir,t);	}
 
 	inline void Ball(mglPoint p, char c)
@@ -335,9 +335,9 @@ public:
 	{	mgl_add_legendw(gr, text, style);	}
 	inline void ClearLegend()
 	{	mgl_clear_legend(gr);	}
-	inline void Legend(float x, float y, const char *font="L", float size=-0.8, float llen=0.1)
+	inline void Legend(float x, float y, const char *font="", float size=-0.8, float llen=0)
 	{	mgl_legend_xy(gr, x, y, font, size, llen);	}
-	inline void Legend(int where=3, const char *font="L", float size=-0.8, float llen=0.1)
+	inline void Legend(int where=3, const char *font="", float size=-0.8, float llen=0)
 	{	mgl_legend(gr, where, font, size, llen);	}
 
 	inline void Plot(const char *fy, const char *stl="", const char *opt="")

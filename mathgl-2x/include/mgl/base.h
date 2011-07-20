@@ -336,8 +336,10 @@ public:
 	/// Set default font size
 	inline void SetFontSize(float val)	{	FontSize=val>0 ? val:FontSize*val;	}
 	inline float GetFontSize()		{	return FontSize;	};
-	inline float TextWidth(const wchar_t *text)	{	return FontSize*font_factor*fnt->Width(text,FontDef)/8;	}
-	inline float TextHeight()	{	return FontSize*font_factor*fnt->Height(FontDef)/8; }
+	inline float TextWidth(const wchar_t *text, const char *font=NULL)
+	{	return FontSize*font_factor*fnt->Width(text,font?font:FontDef)/8;	}
+	inline float TextHeight(const char *font=NULL)
+	{	return FontSize*font_factor*fnt->Height(font?font:FontDef)/8; }
 	/// Set to use or not text rotation
 	inline void SetRotatedText(bool val)	{	set(val,MGL_ENABLE_RTEXT);	}
 	/// Set default font style and color

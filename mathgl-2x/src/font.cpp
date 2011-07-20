@@ -582,14 +582,14 @@ bool mglFont::read_data(const char *fname, float *ff, short *wdt, short *lnum,
 {
 	gzFile fp;
 	char str[256];
-	int tmpw, tmpnl, tmpnt;
-	unsigned s,n, tmpi, tmppl, tmppt;
+	int n, tmpw, tmpnl, tmpnt;
+	unsigned s, tmpi, tmppl, tmppt;
 	register long i,j,ch,retVal;
 	fp = gzopen(fname,"r");	if(!fp)	return false;	// false if no file
 	// first string is comment (not used), second string have information
 	if(!gzgets(fp,str,256) || !gzgets(fp,str,256))
 	{	gzclose(fp);	return false;	}
-	retVal = sscanf(str, "%u%f%d", &n, ff, &s);
+	retVal = sscanf(str, "%d%f%d", &n, ff, &s);
 	//Check sscanf read all data  (3 items)
 	if(retVal != 3)	{	gzclose(fp);	return false;	}
 	Buf = (short *)realloc(Buf, (cur+s)*sizeof(short));	// prealocate buffer
