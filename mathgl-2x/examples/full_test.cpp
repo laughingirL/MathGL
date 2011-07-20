@@ -591,11 +591,11 @@ void smgl_sample8(mglGraph *gr)	// 1d plot
 void smgl_sample7(mglGraph *gr)	// smoothing
 {
 	mglData y0(30),y1,y2,y3;
-	y0.Modify("0.4*sin(2*pi*x) + 0.3*cos(3*pi*x) - 0.4*sin(4*pi*x)+0.2*rnd");
+	y0.Modify("0.4*sin(2*pi*x) + 0.3*cos(3*pi*x) - 0.4*sin(4*pi*x)+0.4*rnd");
 
-	y1=y0;	y1.Smooth("3");
-	y2=y0;	y2.Smooth("5");
-	y3=y0;	y3.Smooth("");
+	y1=y0;	y1.Smooth("x3");
+	y2=y0;	y2.Smooth("x5");
+	y3=y0;	y3.Smooth("x");
 
 	gr->Plot(y0,"k");	gr->AddLegend("NONE","k");
 	gr->Plot(y1,"r");	gr->AddLegend("LINE\\_3","r");

@@ -33,14 +33,12 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr)
 {
-	gr->AddLegend("sin(\\pi {x^2})","b");	gr->AddLegend("sin(\\pi x)","g*");
-	gr->AddLegend("sin(\\pi \\sqrt{x})","r+");
-	gr->SubPlot(2,2,0);
-	gr->Box();	gr->Legend();
-	gr->SubPlot(2,2,1);
-	gr->Box();	gr->Legend(3,"A");
-	gr->SubPlot(2,2,2);
-	gr->Box();	gr->Legend();
+	for(int i=0;i<9;i++)
+	{
+		gr->SubPlot(3,3,i,"");
+		if(i==4)	gr->FrameBox("Title","#R");
+		gr->Box();
+	}
 	return 0;
 }
 //-----------------------------------------------------------------------------

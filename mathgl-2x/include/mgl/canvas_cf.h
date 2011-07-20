@@ -119,6 +119,9 @@ void mgl_relplot(HMGL gr, float x1,float x2,float y1,float y2);
 void mgl_columnplot(HMGL gr, int num, int ind);
 void mgl_columnplot_d(HMGL gr, int num, int ind, float d);
 void mgl_stickplot(HMGL gr, int num, int ind, float tet, float phi);
+void mgl_frame_box(HMGL gr, const char *title, const char *stl, float size);
+void mgl_frame_box_w(HMGL gr, const wchar_t *title, const char *stl, float size);
+
 void mgl_aspect(HMGL gr, float Ax,float Ay,float Az);
 void mgl_rotate(HMGL gr, float TetX,float TetZ,float TetY);
 void mgl_rotate_vector(HMGL gr, float Tet,float x,float y,float z);
@@ -214,6 +217,8 @@ void mgl_relplot_(uintptr_t *graph, float *x1,float *x2,float *y1,float *y2);
 void mgl_columnplot_(uintptr_t *graph, int *num, int *i);
 void mgl_columnplot_d_(uintptr_t *graph, int *num, int *i, float *d);
 void mgl_stickplot_(uintptr_t *graph, int *num, int *i, float *tet, float *phi);
+
+void mgl_frame_box_(uintptr_t *gr, const char *title, const char *stl, float *size, int,int);
 void mgl_aspect_(uintptr_t *graph, float *Ax,float *Ay,float *Az);
 void mgl_rotate_(uintptr_t *graph, float *TetX,float *TetZ,float *TetY);
 void mgl_rotate_vector_(uintptr_t *graph, float *Tet,float *x,float *y,float *z);

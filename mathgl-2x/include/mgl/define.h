@@ -141,7 +141,6 @@ enum{	// Codes for warnings/messages
 	mglWarnFile,	// No file or wrong data dimensions
 	mglWarnMem,		// Not enough memory
 	mglWarnZero,	// Data values are zero
-	mglWarnLegA,	// Too many legend entries
 	mglWarnLeg,		// No legend entries
 	mglWarnSlc,		// Slice value is out of range
 	mglWarnCnt,		// Number of contours is zero or negative
@@ -151,6 +150,7 @@ enum{	// Codes for warnings/messages
 	mglWarnFmt,		// Format is not supported for that build
 	mglWarnTern,	// Axis ranges are incompatible
 	mglWarnNull,	// Pointer is NULL
+	mglWarnSpc,		// Not enough space for plot
 	mglWarnEnd		// Maximal number of warnings (must be last)
 };
 //-----------------------------------------------------------------------------

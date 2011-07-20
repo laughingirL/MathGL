@@ -126,7 +126,6 @@
 		<Unit filename="src/export.cpp" />
 		<Unit filename="src/fit.cpp" />
 		<Unit filename="src/font.cpp" />
-		<Unit filename="src/legend.cpp" />
 		<Unit filename="src/opengl.cpp" />
 		<Unit filename="src/other.cpp" />
 		<Unit filename="src/parser.cpp" />

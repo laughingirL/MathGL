@@ -95,7 +95,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 	if(align==2)	pos=-pos;
 	for(j=0;j<len;j++)	// draw text
 	{	L[0] = text[align!=2?j:len-1-j];	s = pt[j+1]-pt[j];	l = !s;
-		gr->text_plot(gr->AddPnt(pt[j]-(pos*h)*l,c,s,0,0),L,font,-1,0,c);	}
+		gr->text_plot(gr->AddPnt(pt[j]-(pos*h)*l,c,s,-1,0),L,font,-1,0,c);	}
 	delete []wdt;	delete []pt;
 }
 //-----------------------------------------------------------------------------

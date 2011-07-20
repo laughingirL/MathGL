@@ -82,6 +82,10 @@ void mgl_rotate_vector(HMGL gr, float Tet,float x,float y,float z)
 {	_Gr_->RotateN(Tet,x,y,z);	}
 void mgl_perspective(HMGL gr, float val)
 {	_Gr_->Perspective(val);	}
+void mgl_frame_box(HMGL gr, const char *title, const char *stl, float size)
+{	_Gr_->FrameBox(title,stl,size);	}
+void mgl_frame_box_w(HMGL gr, const wchar_t *title, const char *stl, float size)
+{	_Gr_->FrameBox(title,stl,size);	}
 //-----------------------------------------------------------------------------
 int mgl_new_frame_(uintptr_t *gr)		{	return _GR_->NewFrame();	}
 void mgl_end_frame_(uintptr_t *gr)		{	_GR_->EndFrame();	}
@@ -127,6 +131,11 @@ void mgl_columnplot_d_(uintptr_t *gr, int *num, int *i, float *d)
 {	_GR_->ColumnPlot(*num,*i,*d);	}
 void mgl_stickplot_(uintptr_t *gr, int *num, int *i, float *tet, float *phi)
 {	_GR_->StickPlot(*num, *i, *tet, *phi);	}
+
+void mgl_frame_box_(uintptr_t *gr, const char *title, const char *stl, float *size, int l,int m)
+{	char *t=new char[l+1];	memcpy(t,title,l);	t[l]=0;
+	char *s=new char[m+1];	memcpy(s,stl,m);	s[m]=0;
+	_GR_->FrameBox(t,s,*size);	delete []s;	delete []t;	}
 void mgl_aspect_(uintptr_t *gr, float *Ax,float *Ay,float *Az)
 {	_GR_->Aspect(*Ax,*Ay,*Az);	}
 void mgl_rotate_(uintptr_t *gr, float *TetX,float *TetZ,float *TetY)
@@ -233,8 +242,8 @@ void mgl_set_tick_len_(uintptr_t *gr, float *len, float *stt)
 {	_GR_->SetTickLen(*len, *stt);	}
 void mgl_set_axis_stl_(uintptr_t *gr, const char *stl, const char *tck, const char *sub, int l,int m,int n)
 {	char *a=new char[l+1];	memcpy(a,stl,l);	a[l]=0;
-	char *t=new char[l+1];	memcpy(t,tck,l);	t[m]=0;
-	char *s=new char[m+1];	memcpy(s,sub,m);	s[n]=0;
+	char *t=new char[m+1];	memcpy(t,tck,m);	t[m]=0;
+	char *s=new char[n+1];	memcpy(s,sub,n);	s[n]=0;
 	_GR_->SetAxisStl(a,t,s);	delete []a;	delete []s;	delete []t;	}
 void mgl_adjust_ticks_(uintptr_t *gr, const char *dir, int l)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;

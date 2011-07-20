@@ -115,10 +115,6 @@ public:
 	mglCanvas(int w=800, int h=600);
 	virtual ~mglCanvas();
 
-	/// Set PlotFactor
-	inline void SetPlotFactor(float val)
-	{	if(val<=0)	{B.pf=1.55;	set(MGL_AUTO_FACTOR);}	else {B.pf=val;	clr(MGL_AUTO_FACTOR);}	}
-
 	///< Set default parameter for plotting
 	void DefaultPlotParam();
 	/// Set angle of view indepently from mglCanvas::Rotate().
@@ -127,10 +123,14 @@ public:
 	inline void Identity(bool rel=false)	{	InPlot(0,1,0,1,rel);	}
 	/// Push transformation matrix into stack
 	inline void Push()	{	stack.push_back(B);	}
+	/// Set PlotFactor
+	inline void SetPlotFactor(float val)
+	{	if(val<=0)	{B.pf=1.55;	set(MGL_AUTO_FACTOR);}	else {B.pf=val;	clr(MGL_AUTO_FACTOR);}	}
 	/// Pop transformation matrix from stack
 	inline void Pop()	{	B = stack.back(); stack.pop_back();	}
 	/// Clear up the frame
 	virtual void Clf(mglColor back=WC);
+
 	/// Put further plotting in some region of whole frame surface.
 	void SubPlot(int nx, int ny, int m, float dx=0, float dy=0);
 	void SubPlot(int nx, int ny, int m, const char *style);
@@ -142,6 +142,9 @@ public:
 	void StickPlot(int num, int i, float tet, float phi);
 	/// Put further plotting in some region of whole frame surface.
 	void InPlot(float x1,float x2,float y1,float y2,bool rel=true);
+	/// Add title for current subplot/inplot
+	void FrameBox(const char *title,const char *stl="#",float size=-2);
+	void FrameBox(const wchar_t *title,const char *stl="#",float size=-2);
 	/// Set aspect ratio for further plotting.
 	void Aspect(float Ax,float Ay,float Az);
 	/// Rotate a further plotting.
@@ -336,7 +339,7 @@ protected:
 	int Depth;			///< Depth of the image
 	mglMatrix B;		///< Transformation matrix
 	mglMatrix B1;		///< Transformation matrix for colorbar
-	float inW, inH;		///< Relative width and height of last InPlot
+	float inW, inH;		///< Width and height of last InPlot
 	mglLight light[10];	///< Light sources
 	float FogDist;		///< Inverse fog distance (fog ~ exp(-FogDist*Z))
 	float FogDz;		///< Relative shift of fog

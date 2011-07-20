@@ -51,6 +51,7 @@ char mglGetStyle(const char *how, int *font, int *align)
 		if(strchr(cols,*how))	col=*how;
 	if(align)
 	{
+		*align = 1;
 		if(strchr(how,'R'))	*align = 2;
 		if(strchr(how,'C'))	*align = 1;
 		if(strchr(how,'L'))	*align = 0;
@@ -58,6 +59,7 @@ char mglGetStyle(const char *how, int *font, int *align)
 	}
 	if(font)
 	{
+		*font = 0;
 		if(strchr(how,'b'))	*font = *font|MGL_FONT_BOLD;
 		if(strchr(how,'i'))	*font = *font|MGL_FONT_ITAL;
 		if(strchr(how,'w'))	*font = *font|MGL_FONT_WIRE;

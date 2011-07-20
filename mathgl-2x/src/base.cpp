@@ -608,7 +608,8 @@ float mglBase::AddTexture(mglColor c)
 	if(!c.Valid())	return -1;
 	// first lets try an existed one
 	for(i=0;i<Txt.size();i++)	for(j=0;j<256;j++)
-		if(c==Txt[i].col[2*j])	return i+j/255.;
+		if(c==Txt[i].col[2*j])
+			return i+j/256.;
 	// add new texture
 	mglTexture t;
 	for(i=0;i<514;i++)	t.col[i]=c;

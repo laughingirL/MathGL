@@ -4,30 +4,13 @@
 	* export as text (EPS, SVG, TeX ...)
 3. Axis
 	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
-	* ticks (rotation and skipping)
-4. legend
-5. opengl
-6. stfa
-8. Smooth()
-9. Drop() -- rays
-10. Add Candle plot -- see gmail.com
-11. Draw wire font too for OpenGL mode
+4. opengl
+5. stfa
+6. Drop() -- rays
+7. Draw wire font too for OpenGL mode
 
 ============= NEW  =============
 
-01. FrameBox(const char *title,const char *stl="#",float size=-2); -- title and box around InPlot; auto resize inplot; 2 colors define to highlited stripe near title; text can be aligned left,right,center
-|---------------------------|
-|			Title			|
-|---------------------------|
-|							|
-|							|
-|			Plot			|
-|							|
-|							|
-|							|
-|---------------------------|
-
-02. Arrows at flow lines ?!!
 03. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
 04. Check Ellipse(), Rhomb(), Circle() and add dual colors + color from Texture (?)
 05. Box() + edges + half-transparent
@@ -47,11 +30,13 @@
 19. Contour label should not rotated on ~180 degree
 20. Labels at TriCont()
 21. Cones() -- like Bars() but by Cone()
-22. TextBox() -- for boxed text.
+22. '@' -- draw boxed text.
 23. Text aspect ration in OpenGL mode
+24. Add Candle plot -- see gmail.com
 
 ============= UNSURE ===========
 
+1. Arrows at flow lines ?!!
 2. Problem with \calB and so on (\calH, ...) -- they are present only in italic font :(.
 3. create PWT fonts
 5. Named arguments in MGL ???

@@ -206,6 +206,9 @@ public:
 	{	mgl_columnplot_d(gr,num,ind,d);	}
 	inline void StickPlot(int num, int i, float tet, float phi)
 	{	mgl_stickplot(gr,num,i,tet,phi);	}
+
+	inline 	void FrameBox(const char *title,const char *stl="#",float size=-2)
+	{	mgl_frame_box(gr,title,stl,size);	}
 	inline void Aspect(float Ax,float Ay,float Az)
 	{	mgl_aspect(gr, Ax, Ay, Az);		}
 	inline void Rotate(float TetX,float TetZ=0,float TetY=0)

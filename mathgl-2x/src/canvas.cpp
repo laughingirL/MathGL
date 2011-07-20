@@ -313,7 +313,7 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, float col)
 	a.s = fscl/B.pf;	a.w = ftet;	a.p = B.pf;
 	float cc = col<0 ? AddTexture(char(0.5-col)):col;
 	if(cc<0)	cc = CDef;
-	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), 0, 0);
+	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), -1, 0);
 	a.n3 = s;	a.n4 = j;	a.z = B.z;
 	if(a.n1<0)	return;
 	if(Quality&4)	glyph_draw(&a);
@@ -329,10 +329,10 @@ void mglCanvas::Draw(const mglPrim &p)
 	{
 	case 0:	mark_draw(p.n1,p.n4,p.s);	break;
 	case 1:	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
-		line_draw(p.n1,p.n2);			break;
+		line_draw(p.n1,p.n2);	break;
 	case 2:	trig_draw(p.n1,p.n2,p.n3,true);	break;
 	case 3:	quad_draw(p.n1,p.n2,p.n3,p.n4);		break;
-	case 4:	glyph_draw(&p);			break;
+	case 4:	glyph_draw(&p);		break;
 	}
 	PDef=pdef;	pPos=ss;	PenWidth=ww;
 }
@@ -372,7 +372,13 @@ void mglCanvas::MultiPlot(int nx,int ny,int m, int dx, int dy, const char *style
 //-----------------------------------------------------------------------------
 void mglCanvas::InPlot(float x1,float x2,float y1,float y2, const char *st)
 {
+	if(Width<=0 || Height<=0 || Depth<=0)	return;
 	if(!st)		{	InPlot(x1,x2,y1,y2,false);	return;	}
+	inW = Width*(x2-x1);	inH = Height*(y2-y1);	Persp = 0;
+	mglPrim p;	p.id = ObjId;
+	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
+	MGL_PUSH(Sub,p,mutexSub);
+
 	if(strchr(st,'T'))	{	y1*=0.9;	y2*=0.9;	}	// general title
 	bool r = !(strchr(st,'r') || strchr(st,'R') || strchr(st,'>') || strchr(st,'g'));
 	bool l = !(strchr(st,'l') || strchr(st,'L') || strchr(st,'<') || strchr(st,'g'));
@@ -386,7 +392,44 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, const char *st)
 	if(a && u)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f1;	}
 	else if(a)	{	y2=ys+(y2-ys)*f1;	y1=ys+(y1-ys)*f2;	}
 	else if(u)	{	y2=ys+(y2-ys)*f2;	y1=ys+(y1-ys)*f1;	}
-	InPlot(x1,x2,y1,y2,false);
+
+	B.clear();
+	if(get(MGL_AUTO_FACTOR)) B.pf = 1.55;	// Automatically change plot factor !!!
+	B.x = (x1+x2)/2*Width;
+	B.y = (y1+y2)/2*Height;
+	B.b[0] = Width*(x2-x1);	B.b[4] = Height*(y2-y1);
+	B.b[8] = sqrt(B.b[0]*B.b[4]);
+	B.z = (1.f-B.b[8]/(2*Depth))*Depth;
+	B1=B;	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
+{
+	if(Width<=0 || Height<=0 || Depth<=0)	return;
+	B.clear();
+	if(get(MGL_AUTO_FACTOR)) B.pf = 1.55;	// Automatically change plot factor !!!
+	if(rel)
+	{
+		B.x = B1.x + (x1+x2-1)/2*B1.b[0];
+		B.y = B1.y + (y1+y2-1)/2*B1.b[4];
+		B.b[0] = B1.b[0]*(x2-x1);	B.b[4] = B1.b[4]*(y2-y1);
+		B.b[8] = sqrt(B.b[0]*B.b[4]);
+		B.z = B1.z + (1.f-B.b[8]/(2*Depth))*B1.b[8];
+	}
+	else
+	{
+		B.x = (x1+x2)/2*Width;
+		B.y = (y1+y2)/2*Height;
+		B.b[0] = Width*(x2-x1);	B.b[4] = Height*(y2-y1);
+		B.b[8] = sqrt(B.b[0]*B.b[4]);
+		B.z = (1.f-B.b[8]/(2*Depth))*Depth;
+		B1=B;
+	}
+	inW = B.b[0];	inH=B.b[4];		Persp = 0;
+	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
+	mglPrim p;	p.id = ObjId;
+	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
+	MGL_PUSH(Sub,p,mutexSub);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Rotate(float TetX,float TetZ,float TetY)
@@ -415,8 +458,8 @@ void mglCanvas::RotateN(float Tet,float x,float y,float z)
 	B.b[8] = T[2]*R[6] + T[5]*R[7] + T[8]*R[8];
 	if(get(MGL_AUTO_FACTOR))
 	{
-		float w=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/inH;
-		float h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/inW;
+		float w=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B1.b[4];
+		float h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B1.b[0];
 		B.pf = 1.55+0.6147*(w<h ? (h-1):(w-1));
 	}
 }
@@ -426,35 +469,6 @@ void mglCanvas::View(float tetx,float tetz,float tety)
 //-----------------------------------------------------------------------------
 void mglCanvas::Perspective(float a)	// I'm too lazy for using 4*4 matrix
 {	Persp = fabs(a)/Depth;	}
-//-----------------------------------------------------------------------------
-void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
-{
-	if(Width<=0 || Height<=0 || Depth<=0)	return;
-	B.clear();
-	if(get(MGL_AUTO_FACTOR)) B.pf = 1.55;	// Automatically change plot factor !!!
-	if(rel)
-	{
-		B.x = B1.x + (x1+x2-1)/2*B1.b[0];
-		B.y = B1.y + (y1+y2-1)/2*B1.b[4];
-		B.b[0] = B1.b[0]*(x2-x1);	B.b[4] = B1.b[4]*(y2-y1);
-		B.b[8] = sqrt(B.b[0]*B.b[4]);
-		B.z = B1.z + (1.f-B.b[8]/(2*Depth))*B1.b[8];
-	}
-	else
-	{
-		B.x = (x1+x2)/2*Width;
-		B.y = (y1+y2)/2*Height;
-		B.b[0] = Width*(x2-x1);	B.b[4] = Height*(y2-y1);
-		B.b[8] = sqrt(B.b[0]*B.b[4]);
-		B.z = (1.f-B.b[8]/(2*Depth))*Depth;
-		B1=B;
-	}
-	inW = B.b[0];	inH=B.b[4];		Persp = 0;
-	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
-	mglPrim p;	p.id = ObjId;
-	p.n1=B.x;	p.n2=B.x+inW;	p.n3=B.y;	p.n4=B.y+inH;
-	MGL_PUSH(Sub,p,mutexSub);
-}
 //-----------------------------------------------------------------------------
 int mglCanvas::GetSplId(long x,long y)
 {
@@ -485,14 +499,14 @@ void mglCanvas::StickPlot(int num, int id, float tet, float phi)
 	mglPoint p1(-1,0,0), p2(1,0,0);
 	InPlot(0,1,0,1,true);	Rotate(tet, phi);
 	PostScale(p1);	PostScale(p2);
-	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/inW);	dx=(p2.x-p1.x)*w0/inW;
-	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/inH);	dy=(p2.y-p1.y)*h0/inH;
+	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/B1.b[0]);	dx=(p2.x-p1.x)*w0/B1.b[0];
+	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/B1.b[4]);	dy=(p2.y-p1.y)*h0/B1.b[4];
 
 	p1 = mglPoint(-1,0,0);	p2 = mglPoint(1,0,0);
 	InPlot(dx>0?0:1-w0, dx>0?w0:1, dy>0?0:1-h0, dy>0?h0:1, true);
 	Rotate(tet,phi);	PostScale(p1);	PostScale(p2);
-	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/inW);	dx=(p2.x-p1.x)*w0/inW;
-	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/inH);	dy=(p2.y-p1.y)*h0/inH;
+	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/B1.b[0]);	dx=(p2.x-p1.x)*w0/B1.b[0];
+	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/B1.b[4]);	dy=(p2.y-p1.y)*h0/B1.b[4];
 
 	float x1=dx>0?dx*id:1-w0+dx*id, x2=dx>0?w0+dx*id:1+dx*id;
 	float y1=dy>0?dy*id:1-h0+dy*id, y2=dy>0?h0+dy*id:1+dy*id;
@@ -632,11 +646,12 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 	strcpy(ff,font);	strcat(ff,":L");	Push();
 	if((pA=strchr(ff,'A')))	{	*pA = ' ';	InPlot(0,1,0,1,false);	}
 	// find sizes
-	float h=TextHeight(font)/2, dx = 0.03*inW, dy = 0.03*inH, w=0, t;
+	float s = size/FontSize/1.6, h=TextHeight(font)*s;
+	float dx = 0.03*inW, dy = 0.03*inH, w=0, t;
 	register long i,j;
 	for(i=0;i<n;i++)		// find text length
 	{
-		t = TextWidth(leg[i].text.c_str(),font)/4;
+		t = TextWidth(leg[i].text.c_str(),font)*s;
 		if(leg[i].stl.empty())	t -= ll;
 		w = w>t ? w:t;
 	}
@@ -646,14 +661,14 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 	// draw it
 	long k1,k2,k3,k4;
 	mglPoint p,q=mglPoint(NAN);
-	float c1=AddTexture('w'), c2=AddTexture('k'), s3=Depth;
+	float c1=AddTexture('w'), c2=AddTexture('k');
 	if((Flag&3)==2)	{	float cc=c1;	c2=c2;	c2=cc;	};
 	if(get(MGL_LEGEND_BOX))	// draw bounding box
 	{
-		k1=AddPnt(mglPoint(x,y,s3),c1,q,0,0);
-		k2=AddPnt(mglPoint(x+w,y,s3),c1,q,0,0);
-		k3=AddPnt(mglPoint(x,y+h*n,s3),c1,q,0,0);
-		k4=AddPnt(mglPoint(x+w,y+h*n,s3),c1,q,0,0);
+		k1=AddPnt(mglPoint(x,y,Depth),c1,q,-1,0);
+		k2=AddPnt(mglPoint(x+w,y,Depth),c1,q,-1,0);
+		k3=AddPnt(mglPoint(x,y+h*n,Depth),c1,q,-1,0);
+		k4=AddPnt(mglPoint(x+w,y+h*n,Depth),c1,q,-1,0);
 		quad_plot(k1,k2,k3,k4);
 		k1=CopyNtoC(k1,c2);	k2=CopyNtoC(k2,c2);
 		k3=CopyNtoC(k3,c2);	k4=CopyNtoC(k4,c2);
@@ -663,17 +678,62 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 	for(i=0;i<n;i++)	// draw lines and legend
 	{
 		char m=SetPenPal(leg[i].stl.c_str());
-		k1=AddPnt(mglPoint(x+0.1*ll,y+i*h+0.45*h,s3),CDef,q,0,0);
-		k2=AddPnt(mglPoint(x+0.9*ll,y+i*h+0.45*h,s3),CDef,q,0,0);
+		k1=AddPnt(mglPoint(x+0.1*ll,y+i*h+0.45*h,Depth),CDef,q,-1,0);
+		k2=AddPnt(mglPoint(x+0.9*ll,y+i*h+0.45*h,Depth),CDef,q,-1,0);
 		pPos=0;	line_plot(k1,k2);
 		if(m)	for(j=0;j<LegendMarks;j++)
 		{
-			p = mglPoint(x+0.1f*ll + (j+1)*0.8f*ll/(1.+LegendMarks),y+i*h+0.45*h,s3);
-			mark_plot(AddPnt(p,CDef,q,0,0),m);
+			p = mglPoint(x+0.1f*ll + (j+1)*0.8f*ll/(1.+LegendMarks),y+i*h+0.45*h,Depth);
+			mark_plot(AddPnt(p,CDef,q,-1,0),m);
 		}
-		p = mglPoint(x+((!leg[i].stl.empty())?ll:0), y+i*h+0.15*h, s3);
-		text_plot(AddPnt(p,-1,q,0,0), leg[i].text.c_str(), ff, size);
+		p = mglPoint(x+((!leg[i].stl.empty())?ll:0), y+i*h+0.15*h, Depth);
+		text_plot(AddPnt(p,-1,q,-1,0), leg[i].text.c_str(), ff, size);
 	}
 	Pop();	EndGroup();	delete []ff;
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::FrameBox(const char *title,const char *stl,float size)
+{
+	wchar_t *wcs = 0;
+	if(title)
+	{
+		unsigned s = strlen(title)+1;
+		wcs = new wchar_t[s];
+		mbstowcs(wcs,title,s);
+	}
+	FrameBox(wcs, stl,size);
+	if(wcs)	delete []wcs;
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::FrameBox(const wchar_t *title,const char *stl,float size)
+{
+	float s = size>0 ? size/FontSize:-size, h=TextHeight(stl)*s/2;
+	if(h>=inH)	{	SetWarn(mglWarnSpc,"FrameBox");	return;	}
+	bool box=(stl && strchr(stl,'#'));
+	int align;	mglGetStyle(stl,0,&align);	align = align&3;
+	float x=B1.x-inW/2, y=B1.y+inH/2-h;
+	mglPoint p(B1.x + inW/2.1*(align-1),y,Depth),q(NAN);
+	if(title)	text_plot(AddPnt(p,-1,q,-1,0),title,stl,size);
+	if(box)	//	draw boungind box
+	{
+		float c1=AddTexture('w'), c2=AddTexture('k');
+		if((Flag&3)==2)	{	float cc=c1;	c2=c2;	c2=cc;	};
+		long k1,k2,k3,k4;
+		k1=AddPnt(mglPoint(x,y,Depth),c1,q,-1,0);
+		k2=AddPnt(mglPoint(x+inW,y,Depth),c1,q,-1,0);
+		k3=AddPnt(mglPoint(x,y+h,Depth),c1,q,-1,0);
+		k4=AddPnt(mglPoint(x+inW,y+h,Depth),c1,q,-1,0);
+		quad_plot(k1,k2,k3,k4);
+		k1=CopyNtoC(k1,c2);	k2=CopyNtoC(k2,c2);
+		k3=CopyNtoC(k3,c2);	k4=CopyNtoC(k4,c2);
+		line_plot(k1,k2);	line_plot(k2,k4);
+		line_plot(k4,k3);	line_plot(k3,k1);
+	}
+
+	B.clear();	B=B1;
+	B.y = B1.y - h/2;
+	B.b[4] = B1.b[4]-h;
+	inH-=h;		Persp = 0;
+	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
 }
 //-----------------------------------------------------------------------------
