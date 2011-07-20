@@ -97,6 +97,6 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 		p = mglPoint(x+((!leg[i].stl.empty())?ll:0), y+i*h+0.15*h, s3);
 		text_plot(AddPnt(p,-1,q,0,0), leg[i].text.c_str(), ff, size);
 	}
-	Pop();	EndGroup();
+	Pop();	EndGroup();	delete []ff;
 }
 //-----------------------------------------------------------------------------
