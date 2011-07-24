@@ -634,6 +634,7 @@ HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, voi
 	g->Window(0,0,draw,title,par);
 	return g;
 }
+void mgl_fltk_run()		{	Fl::run();	}
 //-----------------------------------------------------------------------------
 void *mgl_fl_tmp(void *)	{	Fl::run();	return 0;	}
 /*void mgl_fltk_thread()
@@ -642,18 +643,4 @@ void *mgl_fl_tmp(void *)	{	Fl::run();	return 0;	}
 	pthread_create(&tmp, 0, mgl_fl_tmp, 0);
 	pthread_detach(tmp);
 }*/
-//-----------------------------------------------------------------------------
-//uintptr_t mgl_create_graph_fltk_(int (*draw)(uintptr_t *gr), const char *title, int l)
-uintptr_t mgl_create_graph_fltk_(const char *title, int l)
-{
-	mglCanvasFL *g = new mglCanvasFL;
-	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
-//	g->Window(0,0,mgl_fortran_func,s,(void*)draw);
-	g->Window(0,0,0,s,0,0);
-	delete []s;
-	return uintptr_t(g);
-}
-//-----------------------------------------------------------------------------
-void mgl_fltk_run()		{	Fl::run();	}
-void mgl_fltk_run_()	{	mgl_fltk_run();	}
 //-----------------------------------------------------------------------------

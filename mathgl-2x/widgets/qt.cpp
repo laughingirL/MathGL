@@ -524,34 +524,6 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	else	Wnd->showMaximized();
 }
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par)
-{
-	mglCanvasQT *g = new mglCanvasQT;
-	g->Window(0,0,draw,title,par);
-	return g;
-}
-//-----------------------------------------------------------------------------
-uintptr_t mgl_create_graph_qt_(const char *title, int l)
-{
-	mglCanvasQT *g = new mglCanvasQT;
-	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
-//	g->Window(0,0,mgl_fortran_func,s,(void*)draw);
-	g->Window(0,0,0,s,0,0);
-	delete []s;
-	return uintptr_t(g);
-}
-//-----------------------------------------------------------------------------
-void mgl_qt_run()	{	if(qApp) qApp->exec();	}
-void mgl_qt_run_()	{	mgl_qt_run();	}
-//-----------------------------------------------------------------------------
-void *mgl_qt_tmp(void *)	{	mgl_qt_run();	return 0;	}
-/*void mgl_qt_thread()
- * {
- *	static pthread_t tmp;
- *	pthread_create(&tmp, 0, mgl_qt_tmp, 0);
- *	pthread_detach(tmp);
- }*/
-//-----------------------------------------------------------------------------
 #define TR	QObject::tr
 void mglCanvasQT::makeMenu()
 {
@@ -701,4 +673,20 @@ void mglCanvasQT::makeMenu()
 	o->addAction(TR("About"), QMGL, SLOT(about()));
 	o->addAction(TR("About &Qt"), QMGL, SLOT(aboutQt()));
 }
+//-----------------------------------------------------------------------------
+HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par)
+{
+	mglCanvasQT *g = new mglCanvasQT;
+	g->Window(0,0,draw,title,par);
+	return g;
+}
+void mgl_qt_run()	{	if(qApp) qApp->exec();	}
+//-----------------------------------------------------------------------------
+void *mgl_qt_tmp(void *)	{	mgl_qt_run();	return 0;	}
+/*void mgl_qt_thread()
+ * {
+ *	static pthread_t tmp;
+ *	pthread_create(&tmp, 0, mgl_qt_tmp, 0);
+ *	pthread_detach(tmp);
+ }*/
 //-----------------------------------------------------------------------------

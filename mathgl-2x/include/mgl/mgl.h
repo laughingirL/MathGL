@@ -29,6 +29,7 @@ const float pi = M_PI;
 /// Wrapper class for all graphics
 class mglGraph
 {
+protected:
 	HMGL gr;
 public:
 	inline mglGraph(int kind=0, int width=600, int height=400)
@@ -47,6 +48,7 @@ public:
 
 	inline int  GetWarn()			{	return mgl_get_warn(gr);}
 	inline void SetWarn(int code)	{	mgl_set_warn(gr, code);	}
+	inline void Message(char *buf)	{	mgl_buf_warn(gr, buf);	}
 	inline void DefaultPlotParam()	{	mgl_set_def_param(gr);	}
 	inline void SetQuality(int qual=MGL_DRAW_NORM)	{	mgl_set_quality(gr, qual);	}
 

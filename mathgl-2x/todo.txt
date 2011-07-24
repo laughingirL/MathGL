@@ -8,6 +8,7 @@
 5. stfa
 6. Drop() -- rays
 7. Draw wire font too for OpenGL mode
+8. Add comments to mgl.h
 
 ============= NEW  =============
 

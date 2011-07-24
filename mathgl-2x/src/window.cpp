@@ -67,21 +67,16 @@ const unsigned char *mglCanvasW::GetBits()
 }
 //-----------------------------------------------------------------------------
 int mgl_draw_class(mglBase *gr, void *p)
-{	return p ? ((mglDraw *)p)->Draw(gr) : 0;	}
+{	mglGraph g(gr);	return p ? ((mglDraw *)p)->Draw(&g) : 0;	}
 void mgl_reload_class(int next, void *p)
 {	if(p)	((mglDraw *)p)->Reload(next);	}
-void mglCanvasW::Window(int argc, char **argv, const char *title, mglDraw *draw, bool maximize)
-{	Window(argc, argv, mgl_draw_class, title, draw, mgl_reload_class, maximize);	}
 //-----------------------------------------------------------------------------
-typedef int (*draw_func)(mglGraph *gr);
 int mgl_draw_graph(mglBase *gr, void *p)
 {
 	mglGraph g(gr);
 	draw_func func = (draw_func)(p);
 	return func ? func(&g) : 0;
 }
-void mglCanvasW::Window(int argc, char **argv, int (*draw)(mglGraph *gr), const char *title, bool maximize)
-{	Window(argc,argv,mgl_draw_graph,title,(void*)draw,0,maximize);	}
 //-----------------------------------------------------------------------------
 void mgl_wnd_set_delay(HMGL gr, mreal dt)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->Delay = dt;	}
@@ -159,4 +154,32 @@ void mgl_wnd_prev_frame_(uintptr_t *gr)
 void mgl_wnd_animation_(uintptr_t *gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
 	if(g)	g->Animation();	}
+//-----------------------------------------------------------------------------
+#ifndef HAVE_FLTK
+HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *, void *)
+{	return NULL;	}
+void mgl_fltk_run(){}
+#endif
+//-----------------------------------------------------------------------------
+uintptr_t mgl_create_graph_fltk_(const char *title, int l)
+{
+	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
+	uintptr_t t = uintptr_t(mgl_create_graph_fltk(0,s,0));
+	delete []s;	return t;
+}
+void mgl_fltk_run_()	{	mgl_fltk_run();	}
+//-----------------------------------------------------------------------------
+#ifndef HAVE_QT
+HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *, void *)
+{	return NULL;	}
+void mgl_qt_run(){}
+#endif
+//-----------------------------------------------------------------------------
+uintptr_t mgl_create_graph_qt_(const char *title, int l)
+{
+	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
+	uintptr_t t = uintptr_t(mgl_create_graph_qt(0,s,0));
+	delete []s;	return t;
+}
+void mgl_qt_run_()	{	mgl_qt_run();	}
 //-----------------------------------------------------------------------------

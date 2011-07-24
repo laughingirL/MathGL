@@ -27,6 +27,7 @@ extern "C" {
 /*****************************************************************************/
 int mgl_get_warn(HMGL gr);
 void mgl_set_warn(HMGL gr, int code);
+void mgl_buf_warn(HMGL gr, char *buf);
 long mgl_use_graph(HMGL gr, int inc);
 void mgl_start_group(HMGL gr, const char *);
 void mgl_end_group(HMGL gr);

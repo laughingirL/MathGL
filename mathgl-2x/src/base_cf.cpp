@@ -27,6 +27,7 @@ void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, flo
 {	gr->SetAutoRanges(x1,x2,y1,y2,z1,z2,c1,c2);	}
 int mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}
 void mgl_set_warn(HMGL gr, int code)	{	return gr->SetWarn(code);	}
+void mgl_buf_warn(HMGL gr, char *buf)	{	gr->Message = buf;	}
 void mgl_set_origin(HMGL gr, float x0, float y0, float z0)
 {	gr->SetOrigin(x0,y0,z0);	}
 void mgl_set_palette(HMGL gr, const char *colors)

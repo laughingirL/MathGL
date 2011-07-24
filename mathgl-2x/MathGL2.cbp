@@ -27,6 +27,17 @@
 					<Add option="-O2" />
 				</Compiler>
 			</Target>
+			<Target title="mglview">
+				<Option output="bin/Release/mglview" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-march=core2" />
+					<Add option="-O3" />
+					<Add option="-O2" />
+				</Compiler>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wshadow" />
@@ -43,6 +54,7 @@
 			<Add option="-DHAVE_GIF" />
 			<Add option="-DHAVE_HDF5" />
 			<Add option="-DHAVE_HDF4" />
+			<Add option="-DHAVE_FLTK" />
 			<Add directory="include" />
 		</Compiler>
 		<Linker>
@@ -56,7 +68,10 @@
 		<Unit filename="examples/full_test.cpp">
 			<Option target="Release" />
 		</Unit>
-		<Unit filename="examples/wnd_samples.cpp" />
+		<Unit filename="examples/wnd_samples.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
 		<Unit filename="include/mgl/base.h" />
 		<Unit filename="include/mgl/base_cf.h" />
 		<Unit filename="include/mgl/canvas.h" />
@@ -72,7 +87,6 @@
 		<Unit filename="include/mgl/mgl_cf.h" />
 		<Unit filename="include/mgl/mgl_fltk.h" />
 		<Unit filename="include/mgl/mgl_qt.h" />
-		<Unit filename="include/mgl/mgl_txt.h" />
 		<Unit filename="include/mgl/other.h" />
 		<Unit filename="include/mgl/parser.h" />
 		<Unit filename="include/mgl/plot.h" />
@@ -139,9 +153,10 @@
 		<Unit filename="src/volume.cpp" />
 		<Unit filename="src/window.cpp" />
 		<Unit filename="todo.txt" />
-		<Unit filename="widgets/fltk.cpp">
-			<Option target="Debug" />
+		<Unit filename="utils/mglview.cpp">
+			<Option target="mglview" />
 		</Unit>
+		<Unit filename="widgets/fltk.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

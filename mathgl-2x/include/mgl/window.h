@@ -23,17 +23,123 @@
 /*****************************************************************************/
 #ifdef __cplusplus
 #include "mgl/canvas.h"
+#include "mgl/mgl.h"
+//-----------------------------------------------------------------------------
+extern "C" {
+#endif
+/*****************************************************************************/
+int mgl_fortran_func(HMGL gr, void *);
+HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par);
+HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par);
+void mgl_fltk_run();
+void mgl_qt_run();
+/*****************************************************************************/
+uintptr_t mgl_create_graph_qt_(const char *title, int);
+uintptr_t mgl_create_graph_fltk_(const char *title, int);
+void mgl_fltk_run_();
+void mgl_qt_run_();
+/*****************************************************************************/
+void mgl_wnd_set_delay(HMGL gr, float dt);
+void mgl_setup_window(HMGL gr, int autoclf, int showpos, int clf_upd);
+void mgl_wnd_toggle_alpha(HMGL gr);
+void mgl_wnd_toggle_light(HMGL gr);
+void mgl_wnd_toggle_zoom(HMGL gr);
+void mgl_wnd_toggle_rotate(HMGL gr);
+void mgl_wnd_toggle_no(HMGL gr);
+void mgl_wnd_update(HMGL gr);
+void mgl_wnd_reload(HMGL gr, int o);
+void mgl_wnd_adjust(HMGL gr);
+void mgl_wnd_next_frame(HMGL gr);
+void mgl_wnd_prev_frame(HMGL gr);
+void mgl_wnd_animation(HMGL gr);
+void mgl_get_last_mouse_pos(HMGL gr, float *x, float *y, float *z);
+/*****************************************************************************/
+void mgl_get_last_mouse_pos_(uintptr_t *gr, float *x, float *y, float *z);
+void mgl_wnd_set_delay_(uintptr_t *gr, float *dt);
+void mgl_setup_window_(uintptr_t *gr, int *autoclf, int *showpos, int *clf_upd);
+void mgl_wnd_toggle_alpha_(uintptr_t *gr);
+void mgl_wnd_toggle_light_(uintptr_t *gr);
+void mgl_wnd_toggle_zoom_(uintptr_t *gr);
+void mgl_wnd_toggle_rotate_(uintptr_t *gr);
+void mgl_wnd_toggle_no_(uintptr_t *gr);
+void mgl_wnd_update_(uintptr_t *gr);
+void mgl_wnd_reload_(uintptr_t *gr, int *o);
+void mgl_wnd_adjust_(uintptr_t *gr);
+void mgl_wnd_next_frame_(uintptr_t *gr);
+void mgl_wnd_prev_frame_(uintptr_t *gr);
+void mgl_wnd_animation_(uintptr_t *gr);
+/*****************************************************************************/
+#ifdef __cplusplus
 //-----------------------------------------------------------------------------
 /// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
 /// Make inherited class and redefine Draw() function if you don't want to use function pointers.
 struct mglDraw
 {
-	virtual int Draw(mglBase *)	{	return 0;	};
+	virtual int Draw(mglGraph *)	{	return 0;	};
 	virtual void Reload(int)	{};
 	virtual ~mglDraw()	{};
 };
+int mgl_draw_class(mglBase *gr, void *p);
+void mgl_reload_class(int next, void *p);
+typedef int (*draw_func)(mglGraph *gr);
+int mgl_draw_graph(mglBase *gr, void *p);
 //-----------------------------------------------------------------------------
-class mglGraph;
+class mglWindow : public mglGraph
+{
+protected:
+	int wnd;	///< Type of window
+public:
+	mglWindow(int kind, int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL)
+	{
+		wnd=kind;
+		if(wnd==1)	gr = mgl_create_graph_qt(draw,title,par);
+		else		gr = mgl_create_graph_fltk(draw,title,par);
+	}
+	mglWindow(int kind, int (*draw)(mglGraph *gr), const char *title="MathGL")
+	{
+		wnd=kind;
+		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_graph,title,(void*)draw);
+		else		gr = mgl_create_graph_fltk(mgl_draw_graph,title,(void*)draw);
+	}
+	mglWindow(int kind=0, mglDraw *dr=NULL, const char *title="MathGL")
+	{
+		wnd=kind;
+		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_class,title,dr);
+		else		gr = mgl_create_graph_fltk(mgl_draw_class,title,dr);
+	}
+	inline void Run()
+	{	if(wnd==1)	mgl_qt_run();	else	mgl_fltk_run();	}
+
+	inline 	void ToggleAlpha()	///< Switch on/off transparency (do not overwrite user settings)
+	{	mgl_wnd_toggle_alpha(gr);	}
+	inline void ToggleLight()	///< Switch on/off lighting (do not overwrite user settings)
+	{	mgl_wnd_toggle_light(gr);	}
+	inline void ToggleZoom()	///< Switch on/off zooming by mouse
+	{	mgl_wnd_toggle_zoom(gr);	}
+	inline void ToggleRotate()	///< Switch on/off rotation by mouse
+	{	mgl_wnd_toggle_rotate(gr);	}
+	inline void ToggleNo()		///< Switch off all zooming and rotation
+	{	mgl_wnd_toggle_no(gr);	}
+	inline void Update()		///< Update picture by calling user drawing function
+	{	mgl_wnd_update(gr);	}
+	inline void ReLoad(bool o)	///< Reload user data and update picture
+	{	mgl_wnd_reload(gr, o);	}
+	inline void Adjust()		///< Adjust size of bitmap to window size
+	{	mgl_wnd_adjust(gr);	}
+	inline void NextFrame()		///< Show next frame (if one)
+	{	mgl_wnd_next_frame(gr);	}
+	inline void PrevFrame()		///< Show previous frame (if one)
+	{	mgl_wnd_prev_frame(gr);	}
+	inline void Animation()		///< Run slideshow (animation) of frames
+	{	mgl_wnd_animation(gr);	}
+
+	inline void SetDelay(float dt)	///< Delay for animation in seconds
+	{	mgl_wnd_set_delay(gr, dt);	}
+	inline void Setup(bool autoclf, bool showpos, bool clf_upd)
+	{	mgl_setup_window(gr, autoclf, showpos, clf_upd);	}
+	inline mglPoint LastMousePos()	///< Last mouse position
+	{	mglPoint p;	mgl_get_last_mouse_pos(gr,&p.x,&p.y,&p.z);	return p;	}
+};
 //-----------------------------------------------------------------------------
 /// Base class for windows containing MathGL graphics
 class mglCanvasW : public mglCanvas
@@ -70,9 +176,11 @@ public:
 						const char *title, void *par=NULL,
 						void (*reload)(int next, void *p)=NULL, bool maximize=false)=0;
 	void Window(int argc, char **argv, int (*draw)(mglGraph *gr),
-						const char *title, bool maximize=false);
+						const char *title, bool maximize=false)
+	{	Window(argc,argv,mgl_draw_graph,title,(void*)draw,0,maximize);	}
 	/// Create a window for plotting based on class mglDraw.
-	void Window(int argc, char **argv, const char *title, mglDraw *draw, bool maximize=false);
+	void Window(int argc, char **argv, const char *title, mglDraw *draw, bool maximize=false)
+	{	Window(argc, argv, mgl_draw_class, title, draw, mgl_reload_class, maximize);	}
 
 protected:
 	unsigned char *GG;	///< images for all frames (may be too LARGE !!!)
@@ -83,55 +191,6 @@ protected:
 	int (*DrawFunc)(mglBase *gr, void *par);
 };
 //-----------------------------------------------------------------------------
-extern "C" {
-#endif
-/*****************************************************************************/
-int mgl_fortran_func(HMGL gr, void *);
-/*HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par);
-HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par);
-HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par);
-HMGL mgl_create_graph_glut_dr(HMDR dr, const char *title);
-HMGL mgl_create_graph_fltk_dr(HMDR dr, const char *title);
-HMGL mgl_create_graph_qt_dr(HMDR dr, const char *title);
-void mgl_fltk_run();
-void mgl_qt_run();*/
-
-void mgl_wnd_set_delay(HMGL gr, float dt);
-void mgl_setup_window(HMGL gr, int autoclf, int showpos, int clf_upd);
-void mgl_wnd_toggle_alpha(HMGL gr);
-void mgl_wnd_toggle_light(HMGL gr);
-void mgl_wnd_toggle_zoom(HMGL gr);
-void mgl_wnd_toggle_rotate(HMGL gr);
-void mgl_wnd_toggle_no(HMGL gr);
-void mgl_wnd_update(HMGL gr);
-void mgl_wnd_reload(HMGL gr, int o);
-void mgl_wnd_adjust(HMGL gr);
-void mgl_wnd_next_frame(HMGL gr);
-void mgl_wnd_prev_frame(HMGL gr);
-void mgl_wnd_animation(HMGL gr);
-
-void mgl_set_show_mouse_pos(HMGL gr, int enable);
-void mgl_get_last_mouse_pos(HMGL gr, float *x, float *y, float *z);
-/*****************************************************************************/
-void mgl_get_last_mouse_pos_(uintptr_t *gr, float *x, float *y, float *z);
-void mgl_set_show_mouse_pos_(uintptr_t *gr, int *enable);
-
-void mgl_wnd_set_delay_(uintptr_t *gr, float *dt);
-void mgl_setup_window_(uintptr_t *gr, int *autoclf, int *showpos, int *clf_upd);
-void mgl_wnd_toggle_alpha_(uintptr_t *gr);
-void mgl_wnd_toggle_light_(uintptr_t *gr);
-void mgl_wnd_toggle_zoom_(uintptr_t *gr);
-void mgl_wnd_toggle_rotate_(uintptr_t *gr);
-void mgl_wnd_toggle_no_(uintptr_t *gr);
-void mgl_wnd_update_(uintptr_t *gr);
-void mgl_wnd_reload_(uintptr_t *gr, int *o);
-void mgl_wnd_adjust_(uintptr_t *gr);
-void mgl_wnd_next_frame_(uintptr_t *gr);
-void mgl_wnd_prev_frame_(uintptr_t *gr);
-void mgl_wnd_animation_(uintptr_t *gr);
-/*****************************************************************************/
-#ifdef __cplusplus
 }
 #endif
-/*****************************************************************************/
 #endif
