@@ -64,7 +64,6 @@ void mgl_add_legendw(HMGL gr, const wchar_t *text,const char *style);
 void mgl_clear_legend(HMGL graph);
 void mgl_legend_xy(HMGL gr, float x, float y, const char *font, float size, float llen);
 void mgl_legend(HMGL gr, int where, const char *font, float size, float llen);
-void mgl_set_legend_box(HMGL gr, int enable);
 void mgl_set_legend_marks(HMGL gr, int num);
 
 
@@ -161,7 +160,6 @@ void mgl_add_legend_(uintptr_t *gr, const char *text,const char *style,int l,int
 void mgl_clear_legend_(uintptr_t *gr);
 void mgl_legend_xy_(uintptr_t *gr, float *x, float *y, const char *font, float *size, float *llen,int l);
 void mgl_legend_(uintptr_t *gr, int *where, const char *font, float *size, float *llen,int l);
-void mgl_set_legend_box_(uintptr_t *gr, int *enable);
 void mgl_set_legend_marks_(uintptr_t *gr, int *num);
 
 

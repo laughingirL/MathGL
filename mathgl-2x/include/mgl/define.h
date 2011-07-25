@@ -163,12 +163,11 @@ enum{	// Codes for warnings/messages
 #define MGL_TRANSP_LAMP		0x0002
 #define MGL_ENABLE_CUT		0x0004	///< Flag which determines how points outside bounding box are drown.
 #define MGL_ENABLE_RTEXT	0x0008	///< Use text rotation along axis
-#define MGL_LEGEND_BOX		0x0010	///< Set on/off drawing legend box.
-#define MGL_AUTO_FACTOR		0x0020	///< Enable autochange PlotFactor
-#define MGL_ENABLE_ALPHA	0x0040	///< Flag that Alpha is used
-#define MGL_ENABLE_LIGHT	0x0080	///< Flag of using lightning
-#define MGL_TICKS_ROTATE	0x0100	///< Allow ticks rotation
-#define MGL_TICKS_SKIP		0x0200	///< Allow ticks rotation
+#define MGL_AUTO_FACTOR		0x0010	///< Enable autochange PlotFactor
+#define MGL_ENABLE_ALPHA	0x0020	///< Flag that Alpha is used
+#define MGL_ENABLE_LIGHT	0x0040	///< Flag of using lightning
+#define MGL_TICKS_ROTATE	0x0080	///< Allow ticks rotation
+#define MGL_TICKS_SKIP		0x0100	///< Allow ticks rotation
 // flags for internal use only
 #define MGL_DISABLE_SCALE	0x1000	///< Temporary flag for disable scaling (used for axis)
 #define MGL_FINISHED		0x2000	///< Flag that final picture \a mglCanvas::G is ready

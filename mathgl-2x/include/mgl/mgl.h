@@ -84,7 +84,6 @@ public:
 	inline void SetFontDef(char *fnt)		{	mgl_set_font_def(gr, fnt);	}
 	inline void SetAlphaDef(float alpha)	{	mgl_set_alpha_default(gr, alpha);	}
 	inline void SetMeshNum(int num)			{	mgl_set_meshnum(gr, num);		}
-	inline void SetLegendBox(bool enable)	{	mgl_set_legend_box(gr, enable);	}
 	inline void SetLegendMarks(int num)		{	mgl_set_legend_marks(gr, num);	}
 
 	inline void LoadFont(const char *name, const char *path=NULL)
@@ -340,9 +339,9 @@ public:
 	{	mgl_add_legendw(gr, text, style);	}
 	inline void ClearLegend()
 	{	mgl_clear_legend(gr);	}
-	inline void Legend(float x, float y, const char *font="", float size=-0.8, float llen=0)
+	inline void Legend(float x, float y, const char *font="#", float size=-0.8, float llen=0)
 	{	mgl_legend_xy(gr, x, y, font, size, llen);	}
-	inline void Legend(int where=3, const char *font="", float size=-0.8, float llen=0)
+	inline void Legend(int where=3, const char *font="#", float size=-0.8, float llen=0)
 	{	mgl_legend(gr, where, font, size, llen);	}
 
 	inline void Plot(const char *fy, const char *stl="", const char *opt="")

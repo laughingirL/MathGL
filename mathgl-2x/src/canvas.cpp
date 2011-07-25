@@ -70,7 +70,7 @@ GifFileType *gif;
 	SetTranspType(0);		SetMeshNum(0);
 	SetRotatedText(true);	CurrPal = 0;
 	SetLegendMarks();		SetFontSize(4);
-	SetLegendBox(true);		SetTuneTicks(true);
+	SetTuneTicks(true);
 	Clf();	SetAmbient();	Ternary(0);
 	PlotId = "frame";		SetPenPal("k-1");
 	SetDefScheme("BbcyrR");	clr(MGL_DISABLE_SCALE);
@@ -655,7 +655,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 	ll *=font_factor;
 	if(size<0)	size = -size*FontSize;
 	// setup font and parse absolute coordinates
-	if(!font)	font="";
+	if(!font)	font="#";
 	char *pA, *ff = new char[strlen(font)+3];
 	strcpy(ff,font);	strcat(ff,":L");	Push();
 	if((pA=strchr(ff,'A')))	{	*pA = ' ';	InPlot(0,1,0,1,false);	}
@@ -677,7 +677,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 	mglPoint p,q=mglPoint(NAN);
 	float c1=AddTexture('w'), c2=AddTexture('k');
 	if((Flag&3)==2)	{	float cc=c1;	c2=c2;	c2=cc;	};
-	if(get(MGL_LEGEND_BOX))	// draw bounding box
+	if(strchr(font,'#'))	// draw bounding box
 	{
 		k1=AddPnt(mglPoint(x,y,Depth),c1,q,-1,0);
 		k2=AddPnt(mglPoint(x+w,y,Depth),c1,q,-1,0);

@@ -1309,17 +1309,6 @@ void mglc_barwidth(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 	if(k[0]==3)	mglprintf(out,1024,L"gr->SetBarWidth(%g);", a[0].v);
 }
 //-----------------------------------------------------------------------------
-int mgls_legendbox(mglGraph *gr, long , mglArg *a, int k[10], const char *)
-{
-	if(k[0]==3)	gr->SetLegendBox(a[0].v!=0);
-	else	return 1;
-	return 0;
-}
-void mglc_legendbox(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
-{
-	if(k[0]==3)	mglprintf(out,1024,L"gr->SetLegendBox(%s);", (a[0].v!=0)?"true":"false");
-}
-//-----------------------------------------------------------------------------
 int mgls_legendmarks(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3)	gr->SetLegendMarks(iint(a[0].v));
@@ -3411,8 +3400,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"jacobian",L"Get Jacobian",L"jacobian Res Xdat Ydat [Zdat]", mgls_jacobian, mglc_jacobian, true, 3},
 	{L"label",L"Draw label at arbitrary position",L"label x y 'txt' ['fmt' size]", mgls_label, mglc_label, false, 1},
 	{L"legend",L"Draw legend",L"legend [pos 'fmt' size llen]|x y ['fmt' size llen]", mgls_legend, mglc_legend, false, 1},
-	{L"legendbox",L"Switch on/off drawing box in legend",L"legendbox val", mgls_legendbox, mglc_legendbox, false, 2},
-	{L"legendmarks",L"Set number of marks in the legend",L"legendmarks val", mgls_legendbox, mglc_legendbox, false, 2},
+	{L"legendmarks",L"Set number of marks in the legend",L"legendmarks val", mgls_legendmarks, mglc_legendmarks, false, 2},
 	{L"light",L"Setup light",L"light [val] | val num | num xpos ypos zpos ['fmt' br]", mgls_light, mglc_light, false, 2},
 	{L"line",L"Draw line",L"line x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_line, mglc_line, false, 1},
 	{L"loadfont",L"Load fontfaces",L"loadfont ['fmt']", mgls_loadfont, mglc_loadfont, false, 2},

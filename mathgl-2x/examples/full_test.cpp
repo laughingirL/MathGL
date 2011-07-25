@@ -1301,7 +1301,6 @@ void smgl_legend(mglGraph *gr)
 	}
 	gr->SetRanges(mglPoint(0), mglPoint(1));
 	gr->Box();	gr->Plot(f);	gr->Axis("xy");
-	if(type==5 || type==9 || type==10)	gr->SetLegendBox(false);
 	gr->AddLegend("sin(\\pi {x^2})","b");	gr->AddLegend("sin(\\pi x)","g*");
 	gr->AddLegend("sin(\\pi \\sqrt{x})","r+");	gr->Legend();
 }

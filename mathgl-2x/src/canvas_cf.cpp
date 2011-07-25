@@ -226,8 +226,6 @@ void mgl_legend_xy(HMGL gr, float x, float y, const char *font, float size, floa
 {	_Gr_->Legend(x,y,font,size,llen);	}
 void mgl_legend(HMGL gr, int where, const char *font, float size, float llen)
 {	_Gr_->Legend(where,font,size,llen);	}
-void mgl_set_legend_box(HMGL gr, int enable)
-{	_Gr_->SetLegendBox(enable);	}
 void mgl_set_legend_marks(HMGL gr, int num)
 {	_Gr_->SetLegendMarks(num);	}
 //-----------------------------------------------------------------------------
@@ -310,19 +308,8 @@ void mgl_legend_xy_(uintptr_t *gr, float *x, float *y, const char *font, float *
 void mgl_legend_(uintptr_t *gr, int *where, const char *font, float *size, float *llen,int l)
 {	char *s=new char[l+1];	memcpy(s,font,l);	s[l]=0;
 	if(gr)	_GR_->Legend(*where, s, *size,*llen);	delete []s;	}
-void mgl_set_legend_box_(uintptr_t *gr, int *enable)
-{	_GR_->SetLegendBox(*enable);	}
 void mgl_set_legend_marks_(uintptr_t *gr, int *num)
 {	_GR_->SetLegendMarks(*num);	}
-//-----------------------------------------------------------------------------
-/*void mgl_title(HMGL gr, const char *text, const char *font, float size)
-{	_Gr_->Title(text,font,size);	}
-void mgl_titlew(HMGL gr, const wchar_t *text, const char *font, float size)
-{	_Gr_->Title(text,font,size);	}
-void mgl_title_(uintptr_t *gr, const char *text, const char *fnt, float *size, int l,int n)
-{	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
-	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
-	_GR_->Title(s,f, *size);	delete []s;	delete []f;	}*/
 //-----------------------------------------------------------------------------
 void mgl_set_quality(HMGL gr, int qual)			{	_Gr_->SetQuality(qual);	}
 void mgl_set_quality_(uintptr_t *gr, int *qual)	{	_GR_->SetQuality(*qual);	}
