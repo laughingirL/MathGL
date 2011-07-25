@@ -23,60 +23,40 @@
 #include "mgl/window.h"
 #include "mgl/parser.h"
 //-----------------------------------------------------------------------------
-char fname[256];
+std::wstring str;
 mglParse p(true);
-char str[8192];
-char buf[2048];
+void mgl_error_print(int line, int r, char *Message);
 //-----------------------------------------------------------------------------
 int show(mglGraph *gr)
 {
-	FILE *fp = fopen(fname,"rb");
-	p.Execute(gr, fp, true);
-	fclose(fp);
+	p.Execute(gr,str.c_str(),mgl_error_print);
 	return 0;
 }
 //-----------------------------------------------------------------------------
 int main(int narg, char **arg)
 {
-	if(narg==1)
+	long i,j=-1;
+	for(i=1;i<narg;i++)	// add arguments for the script
 	{
-		printf("mglview show MGL script in FLTK window.\n");
-		printf("Current version is 2.%g\n",MGL_VER2);
-		printf("Usage:\tmglview scriptfile [parameter(s)]\n");
-		printf("\tParameters have format \"-Nval\".\n");
-		printf("\tHere N=0,1...9 is parameter ID and val is its value.\n");
-		printf("\tOption -Lval set locale to val.\n");
-	}
-	else
-	{
-		FILE *fp = fopen(arg[1],"rb");
-		if(fp==0)	printf("Couldn't open file %s\n",arg[1]);
-		else
+		if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
+			p.AddParam(arg[i][1]-'0',arg[i]+2);
+		if(arg[i][0]=='-' && arg[i][1]=='L')
+			setlocale(LC_CTYPE, arg[i]+2);
+		if(arg[i][0]=='-' && (arg[i][1]=='h' || (arg[i][1]=='-' && arg[i][2]=='h')))
 		{
-			register long i,j;
-			for(i=2;i<narg;i++)	// add arguments for the script
-			{
-				if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
-				{	p.AddParam(arg[i][1]-'0',arg[i]+2);	arg[i][0]=0;	}
-				if(arg[i][0]=='-' && arg[i][1]=='L')
-				{	setlocale(LC_CTYPE, arg[i]+2);		arg[i][0]=0;	}
-			}
-			strncpy(fname,arg[1],256);
-			fclose(fp);
-			arg[1][0] = 0;
-			for(i=narg-1;i>=0;i--)
-			{
-				if(arg[i][0]==0)
-				{
-					for(j=i;j<narg-1;j++)	arg[j] = arg[j+1];
-					narg--;
-				}
-			}
-			mglWindow gr(0,show,fname);
-//			gr.Window(narg,arg,show,fname);
-			gr.Run();	return 0;
+			printf("mglview show MGL script in FLTK window.\n");
+			printf("Current version is 2.%g\n",MGL_VER2);
+			printf("Usage:\tmgl2png scriptfile [outputfile parameter(s)]\n");
+			printf("\tParameters have format \"-Nval\".\n");
+			printf("\tHere N=0,1...9 is parameter ID and val is its value.\n");
+			printf("\tOption -Lval set locale to val.\n");
 		}
+		if(arg[i][0]!='-' && j<0)	j=i;
 	}
-	return 0;
+	FILE *fp = j>0?fopen(arg[j],"r"):stdin;
+	while(!feof(fp))	str.push_back(fgetwc(fp));
+	if(j>0)	fclose(fp);
+	mglWindow gr(0,show,j>0?arg[j]:"mglview");
+	gr.Run();	return 0;
 }
 //-----------------------------------------------------------------------------

@@ -156,7 +156,7 @@ void mgl_wnd_animation_(uintptr_t *gr)
 	if(g)	g->Animation();	}
 //-----------------------------------------------------------------------------
 #ifndef HAVE_FLTK
-HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *, void *)
+HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *)
 {	return NULL;	}
 void mgl_fltk_run(){}
 #endif
@@ -170,7 +170,7 @@ uintptr_t mgl_create_graph_fltk_(const char *title, int l)
 void mgl_fltk_run_()	{	mgl_fltk_run();	}
 //-----------------------------------------------------------------------------
 #ifndef HAVE_QT
-HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *, void *)
+HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *)
 {	return NULL;	}
 void mgl_qt_run(){}
 #endif

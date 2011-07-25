@@ -243,11 +243,11 @@ void mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal 
 void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl)
 {
 	const int n = 41;
-	long pal,n0,n1=-1,n2,m1=-1,m2;
+	long pal=0,n0,n1=-1,n2,m1=-1,m2;
 	gr->SetPenPal(stl,&pal);
 	float c=gr->NextColor(pal);
 	float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
-	bool wire = !(stl && strchr(stl,'#'));
+	bool wire = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !wire;
 
 	gr->Reserve(2*n+1);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), v=p2-p1, u=mglPoint(0,0,1)^v, q=u^v, p, s;
@@ -263,30 +263,32 @@ void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, floa
 		if(i>0)
 		{
 			if(wire)	gr->trig_plot(n0,n1,n2);
-			gr->line_plot(m1,m2);
+			if(box)		gr->line_plot(m1,m2);
 		}
 	}
 }
 //-----------------------------------------------------------------------------
 void mgl_rhomb(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r, const char *stl)
 {
-	long pal, n1,n2,n3,n4;
+	long pal=0, n1,n2,n3,n4;
 	gr->SetPenPal(stl,&pal);
 	float c=gr->NextColor(pal);
 	float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
-	bool wire = !(stl && strchr(stl,'#'));
+	float b=(gr->GetNumPal(pal)>2)?gr->NextColor(pal):c;
+	bool wire = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !wire;
 	gr->Reserve(8);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), u=mglPoint(0,0,1)^(p1-p2), q=u^(p1-p2), p, s,qq;
 	u = (r/u.norm())*u;	s = (p1+p2)/2.;
 	p = p1;	q = qq;	n1 = gr->AddPnt(p,c,qq,-1,3);
-	p = s+u;q = qq;	n2 = gr->AddPnt(p,c,qq,-1,3);
-	p = p2;	q = qq;	n3 = gr->AddPnt(p,c,qq,-1,3);
-	p = s-u;q = qq;	n4 = gr->AddPnt(p,c,qq,-1,3);
-	if(wire)	gr->quad_plot(n1,n2,n3,n4);
+	p = s+u;q = qq;	n2 = gr->AddPnt(p,b==c?c:k,qq,-1,3);
+	p = p2;	q = qq;	n3 = gr->AddPnt(p,b,qq,-1,3);
+	p = s-u;q = qq;	n4 = gr->AddPnt(p,b==c?c:k,qq,-1,3);
+	if(wire)	gr->quad_plot(n1,n2,n4,n3);
 	n1 = gr->CopyNtoC(n1,k);	n2 = gr->CopyNtoC(n2,k);
 	n3 = gr->CopyNtoC(n3,k);	n4 = gr->CopyNtoC(n4,k);
-	gr->line_plot(n1,n2);	gr->line_plot(n2,n3);
-	gr->line_plot(n3,n4);	gr->line_plot(n4,n1);
+	if(box)
+	{	gr->line_plot(n1,n2);	gr->line_plot(n2,n3);
+		gr->line_plot(n3,n4);	gr->line_plot(n4,n1);	}
 }
 //-----------------------------------------------------------------------------
 void mgl_ellipse_(uintptr_t* gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2, float *r, const char *stl,int l)

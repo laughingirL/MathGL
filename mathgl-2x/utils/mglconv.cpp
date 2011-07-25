@@ -20,16 +20,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <locale.h>
-#include "mgl/mgl_zb.h"
-#include "mgl/mgl_parse.h"
+#include "mgl/mgl.h"
+#include "mgl/parser.h"
+void mgl_error_print(int line, int r, char *Message);
 //-----------------------------------------------------------------------------
 int main(int narg, char **arg)
 {
-	mglGraphZB gr;
+	mglGraph gr;
 	mglParse p(true);
 
-	char str[8192], buf[2048];
-	long i,j=-1,k=-1;
+	long i,j=-1,k=-1,n;
 	for(i=1;i<narg;i++)	// add arguments for the script
 	{
 		if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
@@ -39,7 +39,7 @@ int main(int narg, char **arg)
 		if(arg[i][0]=='-' && (arg[i][1]=='h' || (arg[i][1]=='-' && arg[i][2]=='h')))
 		{
 			printf("mgl2png convert mgl script to bitmap png file.\n");
-			printf("Current version is 1.%g\n",MGL_VERSION);
+			printf("Current version is 2.%g\n",MGL_VER2);
 			printf("Usage:\tmgl2png scriptfile [outputfile parameter(s)]\n");
 			printf("\tParameters have format \"-Nval\".\n");
 			printf("\tHere N=0,1...9 is parameter ID and val is its value.\n");
@@ -48,17 +48,54 @@ int main(int narg, char **arg)
 		if(arg[i][0]!='-' && j<0)	j=i;
 		if(arg[i][0]!='-' && j>0)	k=i;
 	}
-	gr.Message = buf;	*buf=0;
+	// prepare for animation
+	std::wstring str;
 	FILE *fp = j>0?fopen(arg[j],"r"):stdin;
-	p.Execute(&gr,fp,true);
+	while(!feof(fp))	str.push_back(fgetwc(fp));
 	if(j>0)	fclose(fp);
-	if(k>0)	strcpy(str,arg[k]);
+	std::vector<std::wstring> var;
+	for(i=0;;)	// collect exact values
+	{
+		n = str.find(L"##a ",i);
+		if(n==std::string::npos)	break;
+		i = n+4;	var.push_back(str.substr(i,str.find('\n',i)));
+	}
+	n = str.find(L"##c ");
+	if(n!=std::string::npos)
+	{
+		float v1,v2,dv,v;
+		wscanf(str.c_str()+n+4,L"%g%g%g",&v1,&v2,&dv);
+		wchar_t ss[64];
+		for(v=v1;v<=v2;v+=dv)
+		{	swprintf(ss,64,L"%g",v);	var.push_back(ss);	}
+	}
+	char buf[2048],fname[256];
+	if(k>0)	strcpy(fname,arg[k]);
+	else
+	{	strcpy(fname,j>0?arg[j]:"out");	strcat(fname,".png");	}
+	bool gif= !strcmp(fname+strlen(fname)-4,".gif");
+	if(var.size()>1)	// there is animation
+	{
+		if(gif)	gr.StartGIF(fname);
+		for(i=0;i!=var.size()-1;i++)
+		{
+			gr.NewFrame();
+			p.AddParam(0,var[i].c_str());
+			gr.Message(buf);	*buf=0;
+			p.Execute(&gr,str.c_str(),mgl_error_print);
+			gr.EndFrame();
+			sprintf(buf,"%s-%ld",fname,i);
+			if(!gif)	gr.WriteFrame(buf);
+		}
+		if(gif)	gr.CloseGIF();
+	}
 	else
 	{
-		strcpy(str,j>0?arg[j]:"out");	strcat(str,".png");
-		printf("Write output to %s\n",str);
+		gr.Message(buf);	*buf=0;
+		p.Execute(&gr,str.c_str(),mgl_error_print);
+		gr.WriteFrame(fname);
 	}
-	gr.WritePNG(str);
+	printf("Write output to %s\n",fname);
 	return 0;
 }
 //-----------------------------------------------------------------------------

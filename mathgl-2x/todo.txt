@@ -12,28 +12,23 @@
 
 ============= NEW  =============
 
-03. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
-04. Check Ellipse(), Rhomb(), Circle() and add dual colors + color from Texture (?)
-05. Box() + edges + half-transparent
-06. parallelisation of drawing
-07. Add plot Circle() as Error() but with marks instead of error boxes (default 'o') + alpha-transpared if filled
-08. Export to LaTeX formats - (pgf/tikz) or metapost if possible (like EPS).
-09. Drops as mglPrim -- not accurate but smaller memory and faster
-10. Export to CALLADA
-11. Export to X3D
-12. Export to JavaScript (WebGL)
-13. Add apperture for light (partially is done)
-14. Add diffusive light (no dependence of normale but have direction)
-15. Pipes in mgl2png, mgl2eps, ... (stdin, stdout)
-16. Venn() diagram sample
-17. Allow interpolation in MGL if argument is not integer ???
-18. Import/Export via GIF (as 3d data) ??? + 16bit PNG
-19. Contour label should not rotated on ~180 degree
-20. Labels at TriCont()
-21. Cones() -- like Bars() but by Cone()
-22. '@' -- draw boxed text.
-23. Text aspect ration in OpenGL mode
-24. Add Candle plot -- see gmail.com
+01. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
+02. Box() + edges + half-transparent
+03. parallelisation of drawing
+04. Export to LaTeX formats - (pgf/tikz) or metapost if possible (like EPS).
+05. Export to CALLADA
+06. Export to X3D
+07. Export to JavaScript (WebGL)
+08. Pipes in mgl2png, mgl2eps, ... (stdin, stdout)
+09. Allow interpolation in MGL if argument is not integer ???
+10. Import/Export via GIF (as 3d data) ??? + 16bit PNG
+11. Contour label should not rotated on ~180 degree
+12. Labels at TriCont()
+13. Cones() -- like Bars() but by Cone()
+14. Text aspect ration in OpenGL mode
+15. Add Candle() plot -- see gmail.com
+16. Error() draw "big" transpared marks if '@' is specified
+17. Add diffusive light (no dependence of normale but have direction)
 
 ============= UNSURE ===========
 
@@ -49,10 +44,10 @@
 11. Add TeX command \leg{plot style} for line+mark of specified style.
 12. GTK and WX window/widgets
 13. Use Hershey as built-in font ???
-14. Add "colorbar x y ['sch'='' w=1 h=1]" + "colorbar x y dat ['sch'='' w=1 h=1]" -- NO because need w,h !
-15. String variables in MGL + readstr command.
-16. Pool of threads for speeding up ???
-17. Read DICOM files.
+14. String variables in MGL + readstr command.
+15. Pool of threads for speeding up ???
+16. Read DICOM files.
+17. Drops as mglPrim -- not accurate but smaller memory and faster
 
 ============= DOCS =============
 
@@ -75,6 +70,9 @@
 17. swap color and font style in text option ('bR:r' -> 'r:bR')
 18. Surf3A -- data a can be vector with size as number of isosurfaces
 19. Rename 'roman' font style to 'regular'
+20. Venn() diagram sample
+21. '@' -- draw boxed text.
+22. Rhomb() can have gradient if 3 colors is specified (1st, border, 2nd); Ellipse() and Rhomb() parse '#' and '@' flags
 
 
 ============= BUGS =============

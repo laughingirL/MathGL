@@ -257,6 +257,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 {
 	if(p<0 || isnan(Pnt[p].x))	return 0;
 	if(size<0)	size *= -FontSize;
+	if(!font)	font="";
 
 	if(TernAxis&4)	// text at projections
 	{
@@ -278,9 +279,22 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 		a.s = size;	a.w = sh;	a.p=col;
 		add_prim(a);
 	}
+	float shift = -sh-0.2, fsize=size/8.*font_factor, h = fnt->Height(font)*fsize, w;
+	if(strchr(font,'@'))	// draw box around text
+	{
+		long k1,k2,k3,k4;
+		w = fnt->Width(text,font)*fsize;
+		mglPnt pp=Pnt[p], pt;
+		int align;	mglGetStyle(font,0,&align);	align = align&3;
+		float d=-w*align/2.;
+		pt = pp;	pt.x+= d;	MGL_PUSH(Pnt,pt,mutexPnt);	k1=Pnt.size()-1;
+		pt = pp;	pt.x+= w+d;	MGL_PUSH(Pnt,pt,mutexPnt);	k2=Pnt.size()-1;
+		pt = pp;	pt.x+= d;	pt.y+= h/2;	MGL_PUSH(Pnt,pt,mutexPnt);	k3=Pnt.size()-1;
+		pt = pp;	pt.x+= w+d;	pt.y+= h/2;	MGL_PUSH(Pnt,pt,mutexPnt);	k4=Pnt.size()-1;
+		line_plot(k1,k2);	line_plot(k1,k3);	line_plot(k4,k2);	line_plot(k4,k3);
+	}
 	// text drawing itself
 	Push();
-	float shift = -sh-0.2, fsize=size/8.*font_factor, h = fnt->Height(font)*fsize;
 	if(strchr(font,'T'))	shift = sh+0.2;
 	shift += 0.11;	// Correction for glyph rotation around proper point
 

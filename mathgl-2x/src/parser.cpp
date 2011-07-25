@@ -890,19 +890,10 @@ void mgl_error_print(int line, int r, char *Message)
 }
 void mglParse::Execute(mglGraph *gr, FILE *fp, bool print)
 {
-	if(fp==0)	return;
-	fseek(fp,0,SEEK_END);	// get file size
-	long len=ftell(fp),cur=0;
-	fseek(fp,0,SEEK_SET);	// restore back
-	wchar_t *str=new wchar_t[len+1];
-	if(len>0)	for(cur=0;cur<len;cur++)
-	{
-		str[cur] = fgetwc(fp);
-		if(cur==0 && str[cur]==wchar_t(-1))	cur--;	// Shaytan, but it works!!!
-	}
-	str[len]=0;
-	Execute(gr,str,print?mgl_error_print:NULL);
-	delete []str;
+	if(gr==0 || fp==0)	return;
+	std::wstring str;
+	while(!feof(fp))	str.push_back(fgetwc(fp));
+	Execute(gr,str.c_str(),print?mgl_error_print:NULL);
 }
 //-----------------------------------------------------------------------------
 void mglParse::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(int line, int kind, char *mes))

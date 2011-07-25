@@ -33,12 +33,8 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr)
 {
-	for(int i=0;i<9;i++)
-	{
-		gr->SubPlot(3,3,i,"");
-		if(i==4)	gr->FrameBox("Title","#R");
-		gr->Box();
-	}
+	gr->Ellipse(mglPoint(-0.5),mglPoint(0.5),0.2,"rg@");
+	gr->Rhomb(mglPoint(-0.5,0,1),mglPoint(0.5,0,1),0.2,"ckm@");
 	return 0;
 }
 //-----------------------------------------------------------------------------

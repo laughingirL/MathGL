@@ -599,6 +599,7 @@ long mglBase::AddTexture(const char *cols, int smooth)
 	// check if already exist
 	for(unsigned long i=0;i<Txt.size();i++)	if(t.IsSame(Txt[i]))	return i;
 	// create new one
+	if(smooth<0)	CurrPal=0;
 	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
 }
 //-----------------------------------------------------------------------------

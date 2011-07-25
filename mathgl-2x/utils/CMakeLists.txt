@@ -6,31 +6,13 @@ else(use_gsl)
 	add_definitions(-DNO_GSL)
 endif(use_gsl)
 
-add_executable(mgl2png mgl2png.cpp)
-target_link_libraries(mgl2png mgl)
-
-add_executable(mgl2eps mgl2eps.cpp)
-target_link_libraries(mgl2eps mgl)
-
-add_executable(mgl2svg mgl2svg.cpp)
-target_link_libraries(mgl2svg mgl)
-
-add_executable(mgl2cpp mgl2cpp.cpp)
-target_link_libraries(mgl2cpp mgl)
+add_executable(mglconv mglconv.cpp)
+target_link_libraries(mglconv mgl)
 
 install(
-	TARGETS mgl2png mgl2eps mgl2svg mgl2cpp
+	TARGETS mglconv
 	RUNTIME DESTINATION bin
 )
-
-if(use_gif)
-add_executable(mgl2gif mgl2gif.cpp)
-target_link_libraries(mgl2gif mgl)
-install(
-	TARGETS mgl2gif
-	RUNTIME DESTINATION bin
-)
-endif(use_gif)
 
 if(use_fltk)
 add_executable(mglview mglview.cpp)
