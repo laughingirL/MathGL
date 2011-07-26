@@ -163,6 +163,14 @@ void mgl_delete_graph(HMGL gr)	{	delete gr;	}
 void mgl_set_size(HMGL gr, int width, int height)
 {	_Gr_->SetSize(width, height);	}
 void mgl_set_def_param(HMGL gr)	{	_Gr_->DefaultPlotParam();	}
+void mgl_set_draw_reg(HMGL gr, int m, int n, int k)
+{	_Gr_->SetDrawReg(m,n,k);	}
+void mgl_put_draw_reg(HMGL gr, int m, int n, int k, HMGL in)
+{	const mglCanvas *gg = dynamic_cast<const mglCanvas *>(in);
+	if(gg)	_Gr_->PutDrawReg(m,n,k,gg);	}
+void mgl_combine_gr(HMGL gr, HMGL in)
+{	const mglCanvas *gg = dynamic_cast<const mglCanvas *>(in);
+	if(gg)	_Gr_->Combine(gg);	}
 //-----------------------------------------------------------------------------
 void mgl_set_tick_len(HMGL gr, float len, float stt)
 {	_Gr_->SetTickLen(len,stt);	}
@@ -235,6 +243,12 @@ void mgl_delete_graph_(uintptr_t *gr)	{	delete _GR_;	}
 void mgl_set_size_(uintptr_t *gr, int *width, int *height)
 {	_GR_->SetSize(*width,*height);	}
 void mgl_set_def_param_(uintptr_t *gr)	{	_GR_->DefaultPlotParam();	}
+void mgl_set_draw_reg_(uintptr_t *gr, int *m, int *n, int *k)
+{	_GR_->SetDrawReg(*m,*n,*k);	}
+void mgl_put_draw_reg_(uintptr_t *gr, int *m, int *n, int *k, uintptr_t *in)
+{	_GR_->PutDrawReg(*m,*n,*k,(mglCanvas *)in);	}
+void mgl_combine_gr_(uintptr_t *gr, uintptr_t *in)
+{	_GR_->Combine((mglCanvas *)in);	}
 //-----------------------------------------------------------------------------
 void mgl_set_tick_len_(uintptr_t *gr, float *len, float *stt)
 {	_GR_->SetTickLen(*len, *stt);	}

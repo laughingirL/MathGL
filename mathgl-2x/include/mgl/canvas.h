@@ -169,7 +169,10 @@ public:
 	/// Set allowed drawing region (for multithreading, like subplots)
 	void SetDrawReg(int m, int n, int k);
 	/// Put drawing from other mglCanvasZB (for multithreading, like subplots)
-	void PutDrawReg(int m, int n, int k, mglCanvas *gr);
+	void PutDrawReg(int m, int n, int k, const mglCanvas *gr);
+	/// Combine plots from 2 canvases. Result will be saved into this.
+	void Combine(const mglCanvas *gr);
+
 	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
 	mglPoint CalcXYZ(int xs, int ys);
 	/// Calculate screen point {xs,ys} for 3D coordinate {x,y,z}

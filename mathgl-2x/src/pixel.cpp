@@ -37,6 +37,29 @@ void mglCanvas::SetSize(int w,int h)
 	Clf();
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::SetDrawReg(int nx, int ny, int m)
+{
+	int mx = m%nx, my = m/nx;
+	dr_nx1 = Width*mx/nx;		dr_ny1 = Height-Height*(my+1)/ny;
+	dr_nx2 = Width*(mx+1)/nx;	dr_ny2 = Height-Height*my/ny;
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::PutDrawReg(int nx, int ny, int m, const mglCanvas *gr)
+{
+	if(!gr)	return;
+	int mx = m%nx, my = m/nx, x1, x2, y1, y2;
+	x1 = Width*mx/nx;		y1 = Height-Height*(my+1)/ny;
+	x2 = Width*(mx+1)/nx;	y2 = Height-Height*my/ny;
+	register long i,j;
+	for(j=y1;j<y2;j++)
+	{
+		i = x1+Width*(Height-1-j);
+		memcpy(OI+i,gr->OI+i,(x2-x1)*sizeof(int));
+		memcpy(Z+3*i,gr->Z+3*i,3*(x2-x1)*sizeof(float));
+		memcpy(C+12*i,gr->C+12*i,12*(x2-x1));
+	}
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::PostScale(mglPoint &p)
 {
 	mglPoint q=p/(2*B.pf);
@@ -195,28 +218,6 @@ void mglCanvas::CalcScr(mglPoint p, int *xs, int *ys)
 mglPoint mglCanvas::CalcScr(mglPoint p)
 {	int x,y;	CalcScr(p,&x,&y);	return mglPoint(x,y);	}
 //-----------------------------------------------------------------------------
-void mglCanvas::SetDrawReg(int nx, int ny, int m)
-{
-	int mx = m%nx, my = m/nx;
-	dr_nx1 = Width*mx/nx;		dr_ny1 = Height-Height*(my+1)/ny;
-	dr_nx2 = Width*(mx+1)/nx;	dr_ny2 = Height-Height*my/ny;
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::PutDrawReg(int nx, int ny, int m, mglCanvas *gr)
-{
-	if(!gr)	return;
-	int mx = m%nx, my = m/nx, x1, x2, y1, y2;
-	x1 = Width*mx/nx;		y1 = Height-Height*(my+1)/ny;
-	x2 = Width*(mx+1)/nx;	y2 = Height-Height*my/ny;
-	register long i,j;
-	for(j=y1;j<y2;j++)
-	{
-		i = x1+Width*(Height-1-j);
-		memcpy(Z+8*i,gr->Z+8*i,3*(x2-x1)*sizeof(float));
-		memcpy(C+12*i,gr->C+12*i,12*(x2-x1));
-	}
-}
-//-----------------------------------------------------------------------------
 //mglCanvas *mgl_tmp_gr;
 bool operator<(const mglPrim &a, const mglPrim &b)
 {
@@ -284,6 +285,22 @@ void mglCanvas::Clf(mglColor Back)
 	clr(MGL_FINISHED);
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::Combine(const mglCanvas *gr)
+{
+	if(Width!=gr->Width || Height!=gr->Height)	return;	// wrong sizes
+	register long i,j,i0;
+	for(i=0;i<Width;i++)	for(j=0;j<Height;j++)
+	{
+		i0=i+Width*(Height-1-j);
+		if(Quality&2)
+		{
+			pnt_plot(i,j,gr->Z[3*i0+2],gr->C+12*i0+8);
+			pnt_plot(i,j,gr->Z[3*i0+1],gr->C+12*i0+4);
+		}
+		pnt_plot(i,j,gr->Z[3*i0],gr->C+12*i0);
+	}
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::pnt_plot(long x,long y,float z,const unsigned char ci[4])
 {
 	long i0=x+Width*(Height-1-y);
@@ -304,10 +321,8 @@ void mglCanvas::pnt_plot(long x,long y,float z,const unsigned char ci[4])
 		{
 			zz[2] = zz[1];	combine(cc+8,cc+4);
 			if(z>zz[0])
-			{
-				zz[1] = zz[0];	zz[0] = z;	OI[i0]=ObjId;
-				memcpy(cc+4,cc,4);	memcpy(cc,c,4);
-			}
+			{	zz[1] = zz[0];	zz[0] = z;	OI[i0]=ObjId;
+				memcpy(cc+4,cc,4);	memcpy(cc,c,4);		}
 			else	{	zz[1] = z;	memcpy(cc+4,c,4);	}
 		}
 		else

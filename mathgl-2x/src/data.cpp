@@ -554,19 +554,29 @@ float mgl_data_linear(HCDT d, float x,float y,float z)
 {
 	register long kx=long(x), ky=long(y), kz=long(z);
 	register mreal b0,b1;
-	x -= kx;	y -= ky;	z -= kz;
 	const mglData *dd=dynamic_cast<const mglData *>(d);
 	if(dd)
 	{
-		register long n=dd->nx, i0 = kx+n*(ky+dd->ny*kz);
-		b0 = dd->a[i0]*(1-x-y+x*y) + x*(1-y)*dd->a[i0+1] +
-			y*(1-x)*dd->a[i0+n] + x*y*dd->a[i0+1+n];
-		i0 += n*dd->ny;
-		b1 = dd->a[i0]*(1-x-y+x*y) + x*(1-y)*dd->a[i0+1] +
-			y*(1-x)*dd->a[i0+n] + x*y*dd->a[i0+1+n];
+		register long nx=dd->nx, ny=dd->ny, nz=dd->nz;
+		kx = (kx>=0 ? (kx<nx-1 ? kx:nx-2):0);
+		ky = (ky>=0 ? (ky<ny-1 ? ky:ny-2):0);
+		kz = (kz>=0 ? (kz<nz-1 ? kz:nz-2):0);
+		x -= kx;	y -= ky;	z -= kz;
+
+		register long i0 = kx+nx*(ky+ny*kz);
+		const mreal *aa=dd->a+i0;
+		b0 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[nx] + x*y*aa[1+nx];
+		i0 += nx*ny;
+		b1 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[nx] + x*y*aa[1+nx];
 	}
 	else
 	{
+		register long n=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
+		kx = (kx>=0 ? (kx<n ? kx:n -1):0);
+		ky = (ky>=0 ? (ky<ny? ky:ny-1):0);
+		kz = (kz>=0 ? (kz<nz? kz:nz-1):0);
+		x -= kx;	y -= ky;	z -= kz;
+
 		b0 = d->v(kx,ky,kz)*(1-x-y+x*y) + x*(1-y)*d->v(kx+1,ky,kz) +
 			y*(1-x)*d->v(kx,ky+1,kz) + x*y*d->v(kx+1,ky+1,kz);
 		kz++;

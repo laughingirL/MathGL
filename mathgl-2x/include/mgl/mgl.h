@@ -77,6 +77,11 @@ public:
 	{	mgl_set_ticks_valw(gr,dir,&v,lbl,add);	}
 
 	inline void SetSize(int width, int height)	{	mgl_set_size(gr, width, height);	}
+	inline void SetDrawReg(int m, int n, int k)	{	mgl_set_draw_reg(gr,m,n,k);	}
+	inline void PutDrawReg(int m, int n, int k, const mglGraph *g)
+	{	mgl_put_draw_reg(gr,m,n,k,g->gr);	}
+	inline void Combine(const mglGraph *g)	{	mgl_combine_gr(gr,g->gr);	}
+
 	inline void SetBarWidth(float width)	{	mgl_set_bar_width(gr, width);	}
 	inline void SetMarkSize(float size)		{	mgl_set_mark_size(gr, size);	}
 	inline void SetArrowSize(float size)	{	mgl_set_arrow_size(gr, size);	}
