@@ -5,10 +5,10 @@
 3. Axis
 	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
 4. opengl
+	* draw wire font too for OpenGL mode
 5. stfa
 6. Drop() -- rays
-7. Draw wire font too for OpenGL mode
-8. Add comments to mgl.h
+7. Add comments to mgl.h
 
 ============= NEW  =============
 
@@ -26,7 +26,7 @@
 12. Labels at TriCont()
 13. Cones() -- like Bars() but by Cone()
 15. Add Candle() plot -- see gmail.com
-16. Error() draw "big" transpared marks if '@' is specified
+16. MPISend(), MPIReceive()
 17. Add diffusive light (no dependence of normale but have direction)
 
 ============= UNSURE ===========
@@ -75,6 +75,7 @@
 	* MPI level -- Combine()
 	* MathGL level -- pthread in mglData, ???
 25. Allow interpolation in SubData and in MGL if argument is not integer
+26. Error() draw "big" transpared marks if '@' is specified
 
 ============= BUGS =============
 

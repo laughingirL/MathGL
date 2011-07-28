@@ -771,7 +771,7 @@ void mglCanvas::mark_draw(long k, char type, float size)
 				pnt_plot(long(q.x)+i,long(q.y)+j,q.z+1,cs);
 			}
 		case 'o':
-			for(i=0;i<40;i++)
+			for(i=0;i<=20;i++)
 			{
 				p.x = q.x+ss*cos(i*M_PI/10);	p.y = q.y+ss*sin(i*M_PI/10);
 				MGL_PUSH(Pnt,p,mutexPnt);
@@ -780,7 +780,7 @@ void mglCanvas::mark_draw(long k, char type, float size)
 			break;
 		case 'C':
 			pnt_draw(k);
-			for(i=0;i<40;i++)
+			for(i=0;i<=20;i++)
 			{
 				p.x = q.x+ss*cos(i*M_PI/10);	p.y = q.y+ss*sin(i*M_PI/10);
 				MGL_PUSH(Pnt,p,mutexPnt);

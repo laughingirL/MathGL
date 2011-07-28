@@ -44,129 +44,189 @@ public:
 	{	gr = graph;		mgl_use_graph(gr,1);	}
 	virtual ~mglGraph()
 	{	if(mgl_use_graph(gr,-1)<1)	mgl_delete_graph(gr);	}
+	/// Get pointer to internal mglCanvas object
 	inline HMGL Self()	{	return gr;	}
 
+	/// Get last warning code
 	inline int  GetWarn()			{	return mgl_get_warn(gr);}
+	/// Set warning code ant fill message
 	inline void SetWarn(int code)	{	mgl_set_warn(gr, code);	}
+	/// Set buffer for warning messages
 	inline void Message(char *buf)	{	mgl_buf_warn(gr, buf);	}
+	/// Set default parameter for plotting
 	inline void DefaultPlotParam()	{	mgl_set_def_param(gr);	}
+	/// Set plot quality
 	inline void SetQuality(int qual=MGL_DRAW_NORM)	{	mgl_set_quality(gr, qual);	}
 
+	/// Set default palette
 	inline void SetPalette(const char *colors)	{	mgl_set_palette(gr, colors);	}
+	/// Set to use or not text rotation
 	inline void SetRotatedText(bool rotated)	{	mgl_set_rotated_text(gr, rotated);	}
+	/// Set cutting for points outside of bounding box
 	inline void SetCut(bool cut)				{	mgl_set_cut(gr, cut);	}
+	/// Set additional cutting box
 	inline void SetCutBox(mglPoint p1, mglPoint p2)
 	{	mgl_set_cut_box(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);	}
 
+	/// Set to use or not tick labels rotation
 	inline void SetTickRotate(bool val)	{	mgl_set_tick_rotate(gr,val);	}
+	/// Set to use or not tick labels skipping
 	inline void SetTickSkip(bool val)	{	mgl_set_tick_skip(gr,val);	}
+	/// Set tick length
 	inline void SetTickLen(float len, float stt=1)
 	{	mgl_set_tick_len(gr, len, stt);	}
+	/// Set axis and ticks style
 	inline void SetAxisStl(const char *stl="k", const char *tck=0, const char *sub=0)
 	{	mgl_set_axis_stl(gr, stl, tck, sub);	}
 
+	/// Set time templates for ticks
 	inline void SetTickTime(char dir, float d, const char *t="")
 	{	mgl_set_tick_time(gr,dir,d,t);	}
+	/// Set ticks text (\n separated). Use "" to disable this feature.
 	inline void SetTicksVal(char dir, const char *lbl, bool add=false)
 	{	mgl_set_ticks_str(gr,dir,lbl,add);	}
 	inline void SetTicksVal(char dir, const wchar_t *lbl, bool add=false)
 	{	mgl_set_ticks_wcs(gr,dir,lbl,add);	}
+	/// Set ticks position and text (\n separated). Use "" to disable this feature.
 	inline void SetTicksVal(char dir, const mglDataA &v, const char *lbl, bool add=false)
 	{	mgl_set_ticks_val(gr,dir,&v,lbl,add);	}
 	inline void SetTicksVal(char dir, const mglDataA &v, const wchar_t *lbl, bool add=false)
 	{	mgl_set_ticks_valw(gr,dir,&v,lbl,add);	}
+	/// Set the ticks parameters
+	inline void SetTicks(char dir, float d=-5, int ns=0, float org=NAN)
+	{	mgl_set_ticks(gr, dir, d, ns, org);	}
+	/// Auto adjust ticks
+	inline void AdjustTicks(const char *dir="xyzc")
+	{	mgl_adjust_ticks(gr, dir);	}
+	/// Set templates for ticks
+	inline void SetTickTempl(char dir, const char *t)
+	{	mgl_set_tick_templ(gr,dir,t);	}
+	inline void SetTickTempl(char dir, const wchar_t *t)
+	{	mgl_set_tick_templw(gr,dir,t);	}
+	/// Tune ticks
+	inline void SetTuneTicks(int tune, float fact_pos=1.15)
+	{	mgl_tune_ticks(gr, tune, fact_pos);	}
 
+	/// Set size of frame in pixels. Normally this function is called internaly.
 	inline void SetSize(int width, int height)	{	mgl_set_size(gr, width, height);	}
+	/// Set allowed drawing region (for multithreading, like subplots)
 	inline void SetDrawReg(int m, int n, int k)	{	mgl_set_draw_reg(gr,m,n,k);	}
+	/// Put drawing from other mglCanvas (for multithreading, like subplots)
 	inline void PutDrawReg(int m, int n, int k, const mglGraph *g)
 	{	mgl_put_draw_reg(gr,m,n,k,g->gr);	}
+	/// Combine plots from 2 canvases. Result will be saved into this.
 	inline void Combine(const mglGraph *g)	{	mgl_combine_gr(gr,g->gr);	}
 
+	/// Set relative width of rectangles in Bars, Barh, BoxPlot
 	inline void SetBarWidth(float width)	{	mgl_set_bar_width(gr, width);	}
+	/// Set size of marks
 	inline void SetMarkSize(float size)		{	mgl_set_mark_size(gr, size);	}
+	/// Set size of arrows
 	inline void SetArrowSize(float size)	{	mgl_set_arrow_size(gr, size);	}
+	/// Set default font size
 	inline void SetFontSize(float size)		{	mgl_set_font_size(gr, size);	}
+	/// Set default font style and color
 	inline void SetFontDef(char *fnt)		{	mgl_set_font_def(gr, fnt);	}
+	/// Set default value of alpha-channel
 	inline void SetAlphaDef(float alpha)	{	mgl_set_alpha_default(gr, alpha);	}
+	/// Set number of mesh lines
 	inline void SetMeshNum(int num)			{	mgl_set_meshnum(gr, num);		}
-	inline void SetLegendMarks(int num)		{	mgl_set_legend_marks(gr, num);	}
 
+	/// Load font from file
 	inline void LoadFont(const char *name, const char *path=NULL)
 	{	mgl_load_font(gr, name, path);	}
+	/// Copy font from another mglGraph instance
 	inline void CopyFont(mglGraph *GR)		{	mgl_copy_font(gr, GR->Self());}
+	/// Restore font
 	inline void RestoreFont()				{	mgl_restore_font(gr);	}
 
-	inline void ShowImage(const char *viewer=0, bool keep=0)
+	/// Show currently produced image by Qt or FLTK library
+	inline void ShowImage(const char *viewer, bool keep=0)
 	{	mgl_show_image(gr, viewer, keep);	}
+	/// Write the frame in file (depending extension, write current frame if fname is empty)
 	inline void WriteFrame(const char *fname,const char *descr="")
 	{	mgl_write_frame(gr, fname, descr);	}
+	/// Write the frame in file using IDTF format
 	inline void WriteIDTF(const char *fname,const char *descr="")
 	{	mgl_write_idtf(gr, fname, descr);	}
+	/// Write the frame in file using JPEG format
 	inline void WriteJPEG(const char *fname,const char *descr="")
 	{	mgl_write_jpg(gr, fname, descr);	}
+	/// Write the frame in file using PNG format with transparency
 	inline void WritePNG(const char *fname,const char *descr="", bool alpha=true)
 	{	if(alpha)	mgl_write_png(gr, fname, descr);
 		else	mgl_write_png_solid(gr, fname, descr);	}
+	/// Write the frame in file using BMP format
+	inline void WriteBMP(const char *fname,const char *descr="")
+	{	mgl_write_bmp(gr, fname, descr);	}
+	/// Write the frame in file using PostScript format
 	inline void WriteEPS(const char *fname,const char *descr="")
 	{	mgl_write_eps(gr, fname, descr);	}
+	/// Write the frame in file using PostScript format as bitmap
+	void WriteBPS(const char *fname,const char *descr="")
+	{	mgl_write_eps(gr, fname, descr);	}
+	/// Write the frame in file using SVG format
 	inline void WriteSVG(const char *fname,const char *descr="")
 	{	mgl_write_svg(gr, fname, descr);	}
+	/// Write the frame in file using GIF format (only for current frame!)
 	inline void WriteGIF(const char *fname,const char *descr="")
 	{	mgl_write_gif(gr, fname, descr);	}
+
+	/// Create new frame.
+	inline void NewFrame()		{	mgl_new_frame(gr);	}
+	/// Finish frame drawing
+	inline void EndFrame()		{	mgl_end_frame(gr);	}
+	/// Get the number of created frames
+	inline int GetNumFrame()	{	return mgl_get_num_frame(gr);	}
+	/// Reset frames counter (start it from zero)
+	inline void ResetFrames()	{	mgl_reset_frames(gr);	}
+	/// Start write frames to cinema using GIF format
 	inline void StartGIF(const char *fname, int ms=100)
 	{	mgl_start_gif(gr, fname,ms);	}
+	/// Stop writing cinema using GIF format
 	inline void CloseGIF()		{	mgl_close_gif(gr);	}
-	inline void NewFrame()		{	mgl_new_frame(gr);	}
-	inline void EndFrame()		{	mgl_end_frame(gr);	}
-	inline int GetNumFrame()	{	return mgl_get_num_frame(gr);	}
-	inline void ResetFrames()	{	mgl_reset_frames(gr);	}
 
+	/// Copy RGB values into array which is allocated by user
 	inline void GetRGB(char *imgdata, int imglen)
 	{
 		int w=mgl_get_width(gr);
 		int h=mgl_get_height(gr);
-		if(imglen>=3*w*h)
-		{
-			imglen=3*w*h;
-			memcpy(imgdata, mgl_get_rgb(gr),imglen);
-		}
+		if(imglen>=3*w*h)	memcpy(imgdata, mgl_get_rgb(gr),3*w*h);
 	}
+	/// Copy RGBA values into array which is allocated by user
 	inline void GetRGBA(char *imgdata, int imglen)
 	{
 		int w=mgl_get_width(gr);
 		int h=mgl_get_height(gr);
-		if(imglen>=4*w*h)
-		{
-			imglen=4*w*h;
-			memcpy(imgdata, mgl_get_rgba(gr),imglen);
-		}
+		if(imglen>=4*w*h)	memcpy(imgdata, mgl_get_rgba(gr),4*w*h);
 	}
+	/// Copy BGRN values into array which is allocated by user
 	inline void GetBGRN(char *imgdata, int imglen)
 	{
 		int w,h,i;
 		w=mgl_get_width(gr);
 		h=mgl_get_height(gr);
 		const char *buf=(const char *)mgl_get_rgb(gr);
-		if(imglen>=4*w*h)
+		if(imglen>=4*w*h)	for(i=0;i<w*h;i++)
 		{
-			imglen=4*w*h;
-			for(i=0;i<w*h;i++)
-			{
-				imgdata[4*i]   = buf[3*i+2];
-				imgdata[4*i+1] = buf[3*i+1];
-				imgdata[4*i+2] = buf[3*i];
-				imgdata[4*i+3] = 255;
-			}
+			imgdata[4*i]   = buf[3*i+2];
+			imgdata[4*i+1] = buf[3*i+1];
+			imgdata[4*i+2] = buf[3*i];
+			imgdata[4*i+3] = 255;
 		}
 	}
+	/// Get width of the image
 	inline int GetWidth()	{	return mgl_get_width(gr);	}
+	/// Get height of the image
 	inline int GetHeight()	{	return mgl_get_height(gr);}
+	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
 	inline mglPoint CalcXYZ(int xs, int ys)
 	{
 		mreal x,y,z;
 		mgl_calc_xyz(gr,xs,ys,&x,&y,&z);
 		return mglPoint(x,y,z);
 	}
+	/// Calculate screen point {xs,ys} for 3D coordinate {x,y,z}
 	inline mglPoint CalcScr(mglPoint p)
 	{
 		int xs,ys;
@@ -184,102 +244,131 @@ public:
 	inline void VertexColor(bool){}		// NOTE: Add later -- IDTF
 	inline void DoubleSided(bool){}		// NOTE: Add later -- IDTF
 	inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
+	/// Start group of objects (used for IDTF mostly)
 	inline void StartGroup(const char *name){	mgl_start_group(gr, name);	}
+	/// End group of objects (used for IDTF mostly)
 	inline void EndGroup()					{	mgl_end_group(gr);	}
 
+	/// Set the transparency type (0 - usual, 1 - glass, 2 - lamp)
 	inline void SetTranspType(int type)		{	mgl_set_transp_type(gr, type);}
+	/// Set the transparency on/off.
 	inline void Alpha(bool enable)			{	mgl_set_alpha(gr, enable);	}
+	/// Set the fog distance or switch it off (if d=0).
 	inline void Fog(float d, float dz=0.25)	{	mgl_set_fog(gr, d, dz);		}
+	/// Set the using of light on/off.
 	inline void Light(bool enable)			{	mgl_set_light(gr, enable);	}
+	/// Switch on/off the specified light source.
 	inline void Light(int n,bool enable)	{	mgl_set_light_n(gr, n, enable);	}
+	/// Add a light source.
 	inline void AddLight(int n, mglPoint p, char col='w', float bright=0.5, bool infty=true, float ap=0)
 	{	mgl_add_light_ext(gr, n, p.x, p.y, p.z, col, bright, infty, ap);	}
+	/// Set ambient light brightness
 	inline void SetAmbient(float i)			{	mgl_set_ambbr(gr, i);	}
 
+	/// Clear transformation matrix.
 	inline void Identity(bool rel=false)	{	mgl_identity(gr, rel);	}
+	/// Clear up the frame
 	inline void Clf(float r=1, float g=1, float b=1)
 	{	mgl_clf_rgb(gr, r, g, b);	}
+	/// Put further plotting in some region of whole frame surface.
 	inline void SubPlot(int nx,int ny,int m, float dx=0, float dy=0)
 	{	mgl_subplot_d(gr, nx, ny, m, dx, dy);	}
+	/// Put further plotting in some region of whole frame surface (adjust size according reservations).
 	inline void SubPlot(int nx,int ny,int m, const char *style)
 	{	mgl_subplot_s(gr, nx, ny, m, style);	}
+	/// Like SubPlot bot "join" several cells
 	inline void MultiPlot(int nx,int ny,int m, int dx, int dy, const char *style)
 	{	mgl_multiplot(gr, nx, ny, m, dx, dy, style);	}
+	/// Put further plotting in some region of whole frame surface.
 	inline void InPlot(float x1,float x2,float y1,float y2, bool rel=true)
 	{	if(rel)	mgl_inplot(gr, x1, x2, y1, y2);
 		else	mgl_relplot(gr, x1, x2, y1, y2);	}
+	/// Put further plotting in column cell of previous subplot
 	inline void ColumnPlot(int num, int ind, float d=0)
 	{	mgl_columnplot_d(gr,num,ind,d);	}
+	/// Put further plotting in cell of stick rotated on angles tet, phi
 	inline void StickPlot(int num, int i, float tet, float phi)
 	{	mgl_stickplot(gr,num,i,tet,phi);	}
 
+	/// Add title for current subplot/inplot
 	inline 	void FrameBox(const char *title,const char *stl="#",float size=-2)
 	{	mgl_frame_box(gr,title,stl,size);	}
+	inline 	void FrameBox(const wchar_t *title,const char *stl="#",float size=-2)
+	{	mgl_frame_box_w(gr,title,stl,size);	}
+	/// Set aspect ratio for further plotting.
 	inline void Aspect(float Ax,float Ay,float Az)
 	{	mgl_aspect(gr, Ax, Ay, Az);		}
+	/// Rotate a further plotting.
 	inline void Rotate(float TetX,float TetZ=0,float TetY=0)
 	{	mgl_rotate(gr, TetX, TetZ, TetY);	}
+	/// Rotate a further plotting around vector {x,y,z}.
 	inline void RotateN(float Tet,float x,float y,float z)
 	{	mgl_rotate_vector(gr, Tet, x, y, z);	}
+	/// Set perspective (in range [0,1)) for plot. Set to zero for switching off.
 	inline void Perspective(float val)
 	{	mgl_perspective(gr, val);	}
 
-	inline void SetTicks(char dir, float d=-5, int ns=0, float org=NAN)
-	{	mgl_set_ticks(gr, dir, d, ns, org);	}
-	inline void AdjustTicks(const char *dir="xyzc")
-	{	mgl_adjust_ticks(gr, dir);	}
-
+	/// Set range in direction dir as [c1, c2]
 	inline void SetRange(char dir, float c1, float c2)
 	{	mgl_set_range_val(gr, dir, c1, c2);	}
+	/// Set range in direction dir as minimal and maximal values of data a
 	inline void SetRange(char dir, const mglDataA &dat, bool add=false)
 	{	mgl_set_range_dat(gr, dir, &dat, add);	}
+	/// Set values of mglGraph::Min and mglGraph::Max as minimal and maximal values of datas
 	inline void SetRanges(const mglData &xx, const mglData &yy, const mglData &zz, const mglData &cc)
 	{	mgl_set_range_dat(gr,'x',&xx,0);	mgl_set_range_dat(gr,'y',&yy,0);
 		mgl_set_range_dat(gr,'z',&zz,0);	mgl_set_range_dat(gr,'c',&cc,0);	}
+	/// Set values of mglGraph::Min and mglGraph::Max as minimal and maximal values of datas
 	inline void SetRanges(const mglData &xx, const mglData &yy, const mglData &zz)
 	{	mgl_set_range_dat(gr,'x',&xx,0);	mgl_set_range_dat(gr,'y',&yy,0);
 		mgl_set_range_dat(gr,'z',&zz,0);	mgl_set_range_dat(gr,'c',&zz,0);	}
+	/// Set values of mglGraph::Min and mglGraph::Max as minimal and maximal values of datas
 	inline void SetRanges(const mglData &xx, const mglData &yy)
 	{	mgl_set_range_dat(gr,'x',&xx,0);	mgl_set_range_dat(gr,'y',&yy,0);	}
+	/// Set values of mglGraph::Min and mglGraph::Max
 	inline void SetRanges(float x1, float x2, float y1, float y2, float z1=0, float z2=0)
 	{	mgl_set_ranges(gr, x1, x2, y1, y2, z1, z2);	}
+	/// Set values of mglGraph::Min and mglGraph::Max
 	inline void SetRanges(mglPoint p1, mglPoint p2)
 	{	mgl_set_ranges(gr, p1.x, p2.x, p1.y, p2.y, p1.z, p2.z);	}
+	/// Set ranges for automatic variables
 	inline void SetAutoRanges(float x1, float x2, float y1=0, float y2=0, float z1=0, float z2=0, float c1=0, float c2=0)
 	{	mgl_set_auto(gr, x1, x2, y1, y2, z1, z2, c1, c2);	}
 
-
+	/// Set axis origin
 	inline void SetOrigin(mglPoint p)
 	{	mgl_set_origin(gr, p.x, p.y, p.z);	}
 	inline void SetOrigin(float x0, float y0, float z0=NAN)
 	{	mgl_set_origin(gr, x0, y0, z0);	}
+	/// Set the transformation formulas for coordinate
 	inline void SetFunc(const char *EqX, const char *EqY, const char *EqZ=NULL, const char *EqA=NULL)
 	{	mgl_set_func_ext(gr, EqX, EqY, EqZ,EqA);	}
+	/// Set one of predefined transformation rule
 	inline void SetCoor(int how)		{	mgl_set_coor(gr, how);	}
+	/// Set to draw Ternary axis (triangle like axis, grid and so on)
 	inline void Ternary(int val)		{	mgl_set_ternary(gr, val);	}
+	/// Set the cutting off condition (formula)
 	inline void CutOff(const char *EqC)	{	mgl_set_cutoff(gr, EqC);	}
 
+	/// Draws bounding box outside the plotting volume with color \a c.
 	inline void Box(const char *col="k", bool ticks=true)
 	{	mgl_box_str(gr, col, ticks);	}
+	/// Draw axises with ticks in directions determined by string parameter \a dir.
 	inline void Axis(const char *dir="xyzt", bool adjust=false)
 	{	mgl_axis(gr, dir,adjust);	}
+	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
 	inline void Grid(const char *dir="xyzt",const char *pen="B")
 	{	mgl_axis_grid(gr, dir, pen);	}
+	/// Print the label \a text for axis \a dir.
 	inline void Label(char dir, const char *text, float pos=+1, float shift=0)
 	{	mgl_label_ext(gr, dir, text, pos, shift);	}
 	inline void Label(char dir, const wchar_t *text, float pos=0, float shift=0)
 	{	mgl_labelw_ext(gr, dir, text, pos, shift);	}
+	/// Print the label \a text at arbitrary position {x,y} of plot.
 	void Label(double x, double y, const char *text, const char *fnt=0)
 	{	mgl_label_xy(gr,x,y,text,fnt);	}
 	void Label(double x, double y, const wchar_t *text, const char *fnt=0)
 	{	mgl_labelw_xy(gr,x,y,text,fnt);	}
-	inline void SetTuneTicks(int tune, float fact_pos=1.15)
-	{	mgl_tune_ticks(gr, tune, fact_pos);	}
-
-	inline void SetTickTempl(char dir, const wchar_t *t)
-	{	mgl_set_tick_templw(gr,dir,t);	}
-	inline void SetTickTempl(char dir, const char *t)
-	{	mgl_set_tick_templ(gr,dir,t);	}
 
 	inline void Ball(mglPoint p, char c)
 	{	char s[3]={'.',c,0};	mgl_mark(gr, p.x, p.y, p.z, s);	}
@@ -322,10 +411,6 @@ public:
 	{	mgl_putsw_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, text, font, size);	}
 	inline void Puts(mglPoint p, mglPoint d, const char *text, const char *font=":C", float size=-1)
 	{	mgl_puts_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, text, font, size);	}
-/*	inline void Title(const char *text, const char *font=":C", float size=-2)
-	{	mgl_title(gr, text, font, size);	}
-	inline void Title(const wchar_t *text, const char *font=":C", float size=-2)
-	{	mgl_titlew(gr, text, font, size);	}*/
 
 	inline void Colorbar(const char *sch="",int where=0)
 	{	mgl_colorbar(gr, sch, where);	}
@@ -348,6 +433,7 @@ public:
 	{	mgl_legend_xy(gr, x, y, font, size, llen);	}
 	inline void Legend(int where=3, const char *font="#", float size=-0.8, float llen=0)
 	{	mgl_legend(gr, where, font, size, llen);	}
+	inline void SetLegendMarks(int num)		{	mgl_set_legend_marks(gr, num);	}
 
 	inline void Plot(const char *fy, const char *stl="", const char *opt="")
 	{	mgl_fplot(gr, fy, stl, opt);	}

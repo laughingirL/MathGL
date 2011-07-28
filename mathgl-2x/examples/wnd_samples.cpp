@@ -33,8 +33,19 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr)
 {
-	gr->Ellipse(mglPoint(-0.5),mglPoint(0.5),0.2,"rg@");
-	gr->Rhomb(mglPoint(-0.5,0,1),mglPoint(0.5,0,1),0.2,"ckm@");
+	mglData y;	mgls_prepare1d(&y);
+	mglData x0(10), y0(10), ex0(10), ey0(10);
+	float x;
+	for(int i=0;i<10;i++)
+	{
+		x = i/9.;
+		x0.a[i] = 2*x-1 + 0.1*mgl_rnd()-0.05;
+		y0.a[i] = 0.7*sin(2*M_PI*x)+0.5*cos(3*M_PI*x)+0.2*sin(M_PI*x)+0.2*mgl_rnd()-0.1;
+		ey0.a[i]=0.2;	ex0.a[i]=0.1;
+	}
+	gr->Box();
+	gr->Plot(y.SubData(-1,0));
+	gr->Error(x0,y0,ex0,ey0,"r@#o");
 	return 0;
 }
 //-----------------------------------------------------------------------------

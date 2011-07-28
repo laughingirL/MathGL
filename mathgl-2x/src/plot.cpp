@@ -1030,7 +1030,7 @@ void mgl_boxplot_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,
 //-----------------------------------------------------------------------------
 void mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, const char *opt)
 {
-	long i,j,m,mx,my,m1,m2,n=ey->GetNx(),pal;
+	long i,j,k,m,mx,my,m1,m2,n=ey->GetNx(),pal;
 	if(x->GetNx()!=n || y->GetNx()!=n || ex->GetNx()!=n )
 	{	gr->SetWarn(mglWarnDim,"Error");	return;	}
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Error");	return;	}
@@ -1040,15 +1040,96 @@ void mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, c
 	m = ex->GetNy() > m ? ex->GetNy() : m;
 	m = ey->GetNy() > m ? ey->GetNy() : m;
 
-	float zVal = gr->Min.z;
-	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(5*n*m);
-	long n1,n2;
+	bool ma = pen && strchr(pen,'@');
+	char mk = gr->SetPenPal(pen,&pal);
+	float zVal=gr->Min.z;	gr->Reserve(5*n*m);
+	if(ma && !strchr("PXsSdD+xoOC",mk))	mk = 'S';
+	long n1,n2,n3,n4;
 	for(j=0;j<m;j++)
 	{
 		mx = j<x->GetNy() ? j:0;		my = j<y->GetNy() ? j:0;
 		m1 = j<ex->GetNy() ? j:0;	m2 = j<ey->GetNy() ? j:0;
 		gr->NextColor(pal);
-		for(i=0;i<n;i++)
+		if(ma)
+		{
+			if(strchr("PXsS",mk))	for(i=0;i<n;i++)	// boundary of square
+			{
+				n1 = gr->AddPnt(mglPoint(x->v(i,mx)-ex->v(i,m1), y->v(i,my)+ey->v(i,m2), zVal));
+				n2 = gr->AddPnt(mglPoint(x->v(i,mx)-ex->v(i,m1), y->v(i,my)-ey->v(i,m2), zVal));
+				n3 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1), y->v(i,my)+ey->v(i,m2), zVal));
+				n4 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1), y->v(i,my)-ey->v(i,m2), zVal));
+				gr->line_plot(n1,n2);	gr->line_plot(n1,n3);
+				gr->line_plot(n4,n2);	gr->line_plot(n4,n3);
+			}
+			if(strchr("dD",mk))	for(i=0;i<n;i++)	// boundary of rhomb
+			{
+				n1 = gr->AddPnt(mglPoint(x->v(i,mx), y->v(i,my)+ey->v(i,m2), zVal));
+				n2 = gr->AddPnt(mglPoint(x->v(i,mx)-ex->v(i,m1), y->v(i,my), zVal));
+				n3 = gr->AddPnt(mglPoint(x->v(i,mx), y->v(i,my)-ey->v(i,m2), zVal));
+				n4 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1), y->v(i,my), zVal));
+				gr->line_plot(n1,n2);	gr->line_plot(n2,n3);
+				gr->line_plot(n3,n4);	gr->line_plot(n4,n1);
+			}
+			if(strchr("oOC",mk))	for(i=0;i<n;i++)	// circle
+			{
+				for(k=0,n2=-1;k<=40;k++)
+				{
+					n1 = n2;
+					n2 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1)*cos(k*M_PI/20),
+											y->v(i,my)+ey->v(i,m2)*sin(k*M_PI/20), zVal));
+					if(k>0)	gr->line_plot(n1,n2);
+				}
+			}
+			switch(mk)
+			{
+			case 'P':	case '+':	for(i=0;i<n;i++)
+				{
+					n1 = gr->AddPnt(mglPoint(x->v(i,mx), y->v(i,my)+ey->v(i,m2), zVal));
+					n2 = gr->AddPnt(mglPoint(x->v(i,mx)-ex->v(i,m1), y->v(i,my), zVal));
+					n3 = gr->AddPnt(mglPoint(x->v(i,mx), y->v(i,my)-ey->v(i,m2), zVal));
+					n4 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1), y->v(i,my), zVal));
+					gr->line_plot(n1,n3);	gr->line_plot(n2,n4);
+				}	break;
+			case 'X':	case 'x':	for(i=0;i<n;i++)
+				{
+					n1 = gr->AddPnt(mglPoint(x->v(i,mx)-ex->v(i,m1), y->v(i,my)+ey->v(i,m2), zVal));
+					n2 = gr->AddPnt(mglPoint(x->v(i,mx)-ex->v(i,m1), y->v(i,my)-ey->v(i,m2), zVal));
+					n3 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1), y->v(i,my)+ey->v(i,m2), zVal));
+					n4 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1), y->v(i,my)-ey->v(i,m2), zVal));
+					gr->line_plot(n1,n3);	gr->line_plot(n2,n4);
+				}	break;
+			case 'S':	for(i=0;i<n;i++)
+				{
+					n1 = gr->AddPnt(mglPoint(x->v(i,mx)-ex->v(i,m1), y->v(i,my)+ey->v(i,m2), zVal));
+					n2 = gr->AddPnt(mglPoint(x->v(i,mx)-ex->v(i,m1), y->v(i,my)-ey->v(i,m2), zVal));
+					n3 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1), y->v(i,my)+ey->v(i,m2), zVal));
+					n4 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1), y->v(i,my)-ey->v(i,m2), zVal));
+					gr->quad_plot(n1,n2,n3,n4);
+				}	break;
+			case 'D':	for(i=0;i<n;i++)
+				{
+					n1 = gr->AddPnt(mglPoint(x->v(i,mx), y->v(i,my)+ey->v(i,m2), zVal));
+					n2 = gr->AddPnt(mglPoint(x->v(i,mx)-ex->v(i,m1), y->v(i,my), zVal));
+					n3 = gr->AddPnt(mglPoint(x->v(i,mx), y->v(i,my)-ey->v(i,m2), zVal));
+					n4 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1), y->v(i,my), zVal));
+					gr->quad_plot(n1,n2,n3,n4);
+				}	break;
+			case 'O':	for(i=0;i<n;i++)
+				{
+					n3 = gr->AddPnt(mglPoint(x->v(i,mx),y->v(i,my),zVal));
+					for(k=0,n2=-1;k<=40;k++)
+					{
+						n1 = n2;
+						n2 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1)*cos(k*M_PI/20),
+												y->v(i,my)+ey->v(i,m2)*sin(k*M_PI/20), zVal));
+						if(k>0)	gr->trig_plot(n1,n2,n3);
+					}
+				}	break;
+			case 'C':	for(i=0;i<n;i++)
+				gr->mark_plot(gr->AddPnt(mglPoint(x->v(i,mx),y->v(i,my),zVal)), '.');
+			}
+		}
+		else	for(i=0;i<n;i++)
 		{
 			if(mk)	gr->mark_plot(gr->AddPnt(mglPoint(x->v(i,mx),y->v(i,my),zVal)), mk);
 

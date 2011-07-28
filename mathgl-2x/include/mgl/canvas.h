@@ -115,7 +115,7 @@ public:
 	mglCanvas(int w=800, int h=600);
 	virtual ~mglCanvas();
 
-	///< Set default parameter for plotting
+	/// Set default parameter for plotting
 	void DefaultPlotParam();
 	/// Set angle of view indepently from mglCanvas::Rotate().
 	virtual void View(float tetx,float tetz,float tety=0);
@@ -168,7 +168,7 @@ public:
 	int GetHeight()	{	return Height;	};
 	/// Set allowed drawing region (for multithreading, like subplots)
 	void SetDrawReg(int m, int n, int k);
-	/// Put drawing from other mglCanvasZB (for multithreading, like subplots)
+	/// Put drawing from other mglCanvas (for multithreading, like subplots)
 	void PutDrawReg(int m, int n, int k, const mglCanvas *gr);
 	/// Combine plots from 2 canvases. Result will be saved into this.
 	void Combine(const mglCanvas *gr);
@@ -247,7 +247,7 @@ public:
 	/// Set templates for ticks
 	void SetTickTempl(char dir, const wchar_t *t);
 	void SetTickTempl(char dir, const char *t);
-	/// Set templates for ticks
+	/// Set time templates for ticks
 	void SetTickTime(char dir, float d, const char *t="");
 	/// Set the ticks parameters
 	void SetTicks(char dir, float d=0, int ns=0, float org=NAN);

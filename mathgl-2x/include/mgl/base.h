@@ -272,7 +272,7 @@ public:
 
 	/// Safetly set the transformation formulas for coordinate.
 	void SetFunc(const char *EqX, const char *EqY, const char *EqZ=0, const char *EqA=0);
-	/// Set the predefined transformation rules
+	/// Set one of predefined transformation rule
 	void SetCoor(int how);
 	/// Safetly set the cutting off condition (formula).
 	void CutOff(const char *EqCut);

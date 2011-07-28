@@ -558,15 +558,17 @@ float mgl_data_linear(HCDT d, float x,float y,float z)
 	if(dd)
 	{
 		register long nx=dd->nx, ny=dd->ny, nz=dd->nz;
-		kx = (kx>=0 ? (kx<nx-1 ? kx:nx-2):0);
-		ky = (ky>=0 ? (ky<ny-1 ? ky:ny-2):0);
-		kz = (kz>=0 ? (kz<nz-1 ? kz:nz-2):0);
-		x -= kx;	y -= ky;	z -= kz;
+		kx = kx<nx-1 ? kx:nx-2;	kx = kx>=0 ? kx:0;
+		ky = ky<ny-1 ? ky:ny-2;	ky = ky>=0 ? ky:0;
+		kz = kz<nz-1 ? kz:nz-2;	kz = kz>=0 ? kz:0;
+		x -= kx;	if(nx==1)	x=0;
+		y -= ky;	if(ny==1)	y=0;
+		z -= kz;	if(nz==1)	z=0;
 
 		register long i0 = kx+nx*(ky+ny*kz);
 		const mreal *aa=dd->a+i0;
 		b0 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[nx] + x*y*aa[1+nx];
-		i0 += nx*ny;
+		aa = dd->a + i0 + nx*ny;
 		b1 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[nx] + x*y*aa[1+nx];
 	}
 	else
