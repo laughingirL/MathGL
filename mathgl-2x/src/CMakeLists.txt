@@ -3,7 +3,7 @@ axis.cpp base_cf.cpp base.cpp canvas_cf.cpp canvas.cpp cont.cpp crust.cpp
 data.cpp data_io.cpp data_new.cpp data_op.cpp data_png.cpp def_font.cpp
 eps_svg.cpp eval.cpp evalp.cpp exec.cpp export.cpp fit.cpp font.cpp
 opengl.cpp other.cpp parser.cpp pde.cpp pixel.cpp plot.cpp
-prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp window.cpp
+prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp
 )
 
 add_library(mgl SHARED ${mgl_src})
@@ -87,7 +87,7 @@ if(UNIX)
 	add_definitions(-DNO_COLOR_ARRAY)
 endif(UNIX)
 
-set_target_properties(mgl PROPERTIES SOVERSION 5.0.0)
+set_target_properties(mgl PROPERTIES SOVERSION 6.0.0)
 install(
 	TARGETS mgl mgl-static
 	RUNTIME DESTINATION bin

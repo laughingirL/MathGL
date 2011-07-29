@@ -56,7 +56,12 @@ int main(int narg, char **arg)
 	FILE *fp = j>0?fopen(arg[j],"r"):stdin;
 	while(!feof(fp))	str.push_back(fgetwc(fp));
 	if(j>0)	fclose(fp);
-	mglWindow gr(0,show,j>0?arg[j]:"mglview");
+#if defined(HAVE_FLTK)
+	int kind=0;
+#elif defined(HAVE_QT)
+	int kind=1;
+#endif
+	mglWindow gr(kind,show,j>0?arg[j]:"mglview");
 	gr.Run();	return 0;
 }
 //-----------------------------------------------------------------------------

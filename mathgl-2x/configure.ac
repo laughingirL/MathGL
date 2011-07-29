@@ -320,6 +320,8 @@ src/Makefile
 include/Makefile
 widgets/Makefile
 lang/Makefile
+utils/Makefile
+examples/Makefile
 ])
 AC_OUTPUT
 

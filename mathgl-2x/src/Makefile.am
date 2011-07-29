@@ -2,18 +2,11 @@ AM_CXXFLAGS += -I$(top_srcdir)/include -I$(top_builddir)/include
 
 lib_LTLIBRARIES = libmgl.la
 
-WIDGETS =
-if USE_QT
-WIDGETS += -DWITH_QT
-endif
-if USE_FLTK
-WIDGETS += -DWITH_FLTK
-endif
 
 libmgl_la_LIBADD = $(PNG_LIBS) $(GL_LIBS) $(LOPENMP)
 libmgl_la_LDFLAGS = -no-undefined -version-info $(MGL_CURRENT):$(MGL_REVISION):$(MGL_AGE)
 
-libmgl_la_CXXFLAGS = $(WIDGETS) \
+libmgl_la_CXXFLAGS = \
     -DMOD_LIB_DIR=\"$(libdir)/mgl/\" $(HDF5_FLAGS) $(HDF4_FLAGS) $(JPEG_FLAGS) \
     $(PNG_FLAGS) $(FLTK_FLAGS) $(ADDON_FLAGS) $(AM_CXXFLAGS) $(PTHREAD_FLAGS)
 
@@ -47,5 +40,5 @@ cont.cpp	crust.cpp	data.cpp	data_io.cpp	data_new.cpp \
 data_op.cpp	data_png.cpp	def_font.cpp	eps_svg.cpp	eval.cpp \
 evalp.cpp	exec.cpp	export.cpp	fit.cpp		font.cpp \
 opengl.cpp	other.cpp	parser.cpp	tex_table.cpp	pde.cpp \
-pixel.cpp	plot.cpp	prim.cpp	surf.cpp \
-vect.cpp	volume.cpp	window.cpp
+pixel.cpp	plot.cpp	prim.cpp	surf.cpp	vect.cpp \
+volume.cpp

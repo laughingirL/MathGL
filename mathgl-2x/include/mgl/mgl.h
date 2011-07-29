@@ -139,7 +139,7 @@ public:
 	/// Restore font
 	inline void RestoreFont()				{	mgl_restore_font(gr);	}
 
-	/// Show currently produced image by Qt or FLTK library
+	/// Show currently produced image
 	inline void ShowImage(const char *viewer, bool keep=0)
 	{	mgl_show_image(gr, viewer, keep);	}
 	/// Write the frame in file (depending extension, write current frame if fname is empty)
