@@ -8,7 +8,6 @@
 	* draw wire font too for OpenGL mode
 5. stfa
 6. Drop() -- rays
-7. Add comments to mgl.h
 
 ============= NEW  =============
 
@@ -76,6 +75,7 @@
 	* MathGL level -- pthread in mglData, ???
 25. Allow interpolation in SubData and in MGL if argument is not integer
 26. Error() draw "big" transpared marks if '@' is specified
+27. 'half-transparent' -> 'semitransparent'
 
 ============= BUGS =============
 
