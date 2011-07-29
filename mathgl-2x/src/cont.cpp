@@ -40,18 +40,18 @@ bool same_chain(long f,long i,long *nn)
 }
 //-----------------------------------------------------------------------------
 #include <mgl/canvas_cf.h>
-void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *text, const char *font)
+void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *text, const char *font, float size)
 {
 	if(nn[f]==-1)	return;	// do nothing since there is no curve
 	int pos = font && strchr(font,'t') ? 1:-1, align;
 	char cc=mglGetStyle(font,0,&align);		align = align&3;
 	float c=cc ? -cc : gr->GetClrC(ff[f]);
 	long len = wcslen(text);
-	float *wdt=new float[len+1], h=gr->TextHeight()/4, tet, tt;	// TODO optimaze ratio
+	float *wdt=new float[len+1], h=gr->TextHeight(font,size)/4, tet, tt;	// TODO optimaze ratio
 	mglPoint *pt=new mglPoint[len+1];
 	wchar_t L[2]=L"a";
 	register long i,j,k,m;
-	for(j=0;j<len;j++)	{	L[0] = text[j];	wdt[j] = gr->TextWidth(L)/2;	}
+	for(j=0;j<len;j++)	{	L[0] = text[j];	wdt[j] = gr->TextWidth(L,font,size)/2;	}
 	wdt[len]=0;
 
 	std::vector<mglPoint> qa, qb;	// curve above and below original
@@ -95,7 +95,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 	if(align==2)	pos=-pos;
 	for(j=0;j<len;j++)	// draw text
 	{	L[0] = text[align!=2?j:len-1-j];	s = pt[j+1]-pt[j];	l = !s;
-		gr->text_plot(gr->AddPnt(pt[j]-(pos*h)*l,c,s,-1,0),L,font,-1,0,c);	}
+		gr->text_plot(gr->AddPnt(pt[j]-(pos*h)*l,c,s,-1,0),L,font,size,0,c);	}
 	delete []wdt;	delete []pt;
 }
 //-----------------------------------------------------------------------------
@@ -117,7 +117,7 @@ void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *text, const ch
 	}
 	for(i=1;i<n;i++)	nn[i-1] = i;
 	nn[n-1]=-1;
-	mgl_string_curve(gr,0,n,ff,nn,text,font);
+	mgl_string_curve(gr,0,n,ff,nn,text,font,-1);
 	gr->EndGroup();
 	delete []ff;	delete []nn;
 }
@@ -277,12 +277,12 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 		wchar_t wcs[64];
 		mglprintf(wcs,64,L"%4.3g",val);
 		mglPoint q[25],t;
-		float del = gr->TextWidth(wcs);
+		float del = gr->TextWidth(wcs,"",-0.5);
 		del = del>1 ? del:1;
 		bool less;
 		q[0] =	gr->GetPnt(ff[0]);
-		mgl_string_curve(gr,0,pc,ff,nn,wcs,"t:L");
-		for(i=k=1;i<pc;i++)	// print it several times (for contours)
+		mgl_string_curve(gr,0,pc,ff,nn,wcs,"t:L",-0.5);
+/*		for(i=k=1;i<pc;i++)	// TODO: print it several times (for contours)
 		{
 			if(nn[i]<0)	continue;
 			less = false;
@@ -292,7 +292,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 			q[k] = t;	k++;
 			mgl_string_curve(gr,i,pc,ff,nn,wcs,"t:L");
 			if(k>=25)	break;
-		}
+		}*/
 	}
 	for(i=0;i<pc;i++)	if(nn[i]>=0)	gr->line_plot(ff[i], ff[nn[i]]);
 	delete []kk;	delete []nn;	delete []ff;

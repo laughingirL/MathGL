@@ -660,12 +660,12 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 	strcpy(ff,font);	strcat(ff,":L");	Push();
 	if((pA=strchr(ff,'A')))	{	*pA = ' ';	InPlot(0,1,0,1,false);	}
 	// find sizes
-	float s = size/FontSize/1.6, h=TextHeight(font)*s;
+	float h=TextHeight(font,size)/2;
 	float dx = 0.03*inW, dy = 0.03*inH, w=0, t;
 	register long i,j;
 	for(i=0;i<n;i++)		// find text length
 	{
-		t = TextWidth(leg[i].text.c_str(),font)*s;
+		t = TextWidth(leg[i].text.c_str(),font,size)/2;
 		if(leg[i].stl.empty())	t -= ll;
 		w = w>t ? w:t;
 	}
@@ -721,7 +721,7 @@ void mglCanvas::FrameBox(const char *title,const char *stl,float size)
 //-----------------------------------------------------------------------------
 void mglCanvas::FrameBox(const wchar_t *title,const char *stl,float size)
 {
-	float s = size>0 ? size/FontSize:-size, h=TextHeight(stl)*s/2;
+	float s = size>0 ? size/FontSize:-size, h=TextHeight(stl,size)*s/2;
 	if(h>=inH)	{	SetWarn(mglWarnSpc,"FrameBox");	return;	}
 	bool box=(stl && strchr(stl,'#'));
 	int align;	mglGetStyle(stl,0,&align);	align = align&3;

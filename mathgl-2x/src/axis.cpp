@@ -451,11 +451,11 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	register long i,n = aa.txt.size();
 	char pos[4]="t:C";
 	if(get(MGL_DISABLE_SCALE) && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
-	float *w=new float[n], h = TextHeight()/4, c=NAN, l=NAN, tet=0, v;	// find sizes
+	float *w=new float[n], h = TextHeight(FontDef,-1)/4, c=NAN, l=NAN, tet=0, v;	// find sizes
 	long *kk=new long[n];
 	for(i=0;i<n;i++)
 	{
-		w[i] = TextWidth(aa.txt[i].text.c_str())/2;
+		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1)/2;
 		v = aa.txt[i].val;	kk[i] = AddPnt(o+d*v,-1,d,0,3);
 		q=p;	p = GetPnt(kk[i]);	v = i>0 ? (p-q).norm() : NAN;
 		c = c<v ? c:v;	l = l>w[i] ? l:w[i];
