@@ -327,6 +327,8 @@ public:
 	/// Delete the array
 	virtual ~mglData();
 	/// Get sizes
+	inline mreal GetVal(long i)	{	return a[i];}
+	inline void SetVal(mreal f, long i)	{	a[i]=f;	}
 	inline long GetNx() const	{	return nx;	}
 	inline long GetNy() const	{	return ny;	}
 	inline long GetNz() const	{	return nz;	}

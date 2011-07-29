@@ -36,8 +36,7 @@
 
 %{
 #define SWIG_FILE_WITH_INIT
-//#include "mgl/mgl_c.h"
-#include "mgl/mgl_w.h"
+#include "mgl/mgl.h"
 %}
 
 #ifdef SWIGOCTAVE
@@ -78,7 +77,8 @@ import_array();
 %apply (int DIM1, int DIM2, int DIM3, double* IN_ARRAY3) {(int rows, int cols, int slc, const double* d)};
 #endif
 
-%include "mgl/mgl_w.h"
+%include "mgl/data.h"
+%include "mgl/mgl.h"
 %extend mglData
 {
 	float __getitem__( int i)	{	return self->GetVal(i);	};

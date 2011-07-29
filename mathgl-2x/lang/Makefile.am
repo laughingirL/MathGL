@@ -15,7 +15,7 @@ _mathgl_la_LDFLAGS = -avoid-version -module
 CLEANFILES += mgl_python.cpp mathgl.py
 BUILT_SOURCES += mathgl.py mgl_python.cpp
 
-mgl_python.cpp mathgl.py: $(srcdir)/mgl.i $(top_srcdir)/include/mgl/mgl_c.h $(top_srcdir)/include/mgl/mgl_w.h
+mgl_python.cpp mathgl.py: $(srcdir)/mgl.i $(top_srcdir)/include/mgl/data.h $(top_srcdir)/include/mgl/mgl.h
 	swig -python -c++ -I$(top_srcdir)/include -I$(top_builddir)/include -o mgl_python.cpp $(srcdir)/mgl.i
 #mathgl.py: $(top_srcdir)/lang/mgl.i $(top_srcdir)/include/mgl/mgl_c.h $(top_srcdir)/include/mgl/mgl_w.h
 #	swig -python -c++ -I$(top_srcdir)/include -o mgl_python.cpp $(top_srcdir)/lang/mgl.i
@@ -42,7 +42,7 @@ mathgl.tar.gz: $(PKG_OCT_FILES) $(PKG_OTHER_FILES)
 
 MY_MKOCTFILE=$(CXX) -O0 -g -shared $(OCTAVE_INCFLAGS)
 
-mgl_octave.cpp: $(srcdir)/mgl.i $(top_srcdir)/include/mgl/mgl_c.h $(top_srcdir)/include/mgl/mgl_w.h
+mgl_octave.cpp: $(srcdir)/mgl.i $(top_srcdir)/include/mgl/data.h $(top_srcdir)/include/mgl/mgl.h
 	swig -octave -c++ -I$(top_srcdir)/include -I$(top_builddir)/include -o mgl_octave.cpp $(srcdir)/mgl.i
 mathgl.oct: mgl_octave.cpp
 	$(MY_MKOCTFILE) -o $@ $^ -fPIC -I$(top_srcdir)/include -I$(top_builddir)/include -L$(top_builddir)/src/.libs/ -lmgl
