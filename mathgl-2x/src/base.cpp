@@ -63,6 +63,8 @@ mglBase::mglBase()
 }
 mglBase::~mglBase()	{	ClearEq();	}
 //-----------------------------------------------------------------------------
+float mglBase::GetRatio()	{	return 1;	}
+//-----------------------------------------------------------------------------
 void mglBase::StartGroup(const char *name, int id)
 {
 	LightScale();

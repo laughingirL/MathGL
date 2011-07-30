@@ -28,7 +28,6 @@
 15. Add Candle() plot -- see gmail.com
 16. MPISend(), MPIReceive()
 17. Add diffusive light (no dependence of normale but have direction)
-18. mglview should use any widget (FLTK,Qt,Wx,... - this order) if one of them is installed.
 
 ============= UNSURE ===========
 

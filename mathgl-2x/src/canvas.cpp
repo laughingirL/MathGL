@@ -46,6 +46,8 @@ mglCanvas::~mglCanvas()
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []OI;	}
 }
 //-----------------------------------------------------------------------------
+float mglCanvas::GetRatio()	{	return inW/inH;	}
+//-----------------------------------------------------------------------------
 void mglCanvas::DefaultPlotParam()
 {
 /* NOTE: following variables and mutex will not be changed

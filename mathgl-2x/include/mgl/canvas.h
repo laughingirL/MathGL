@@ -157,7 +157,7 @@ public:
 	/// Set size of frame in pixels. Normally this function is called internaly.
 	virtual void SetSize(int w,int h);
 	/// Get ratio (float width)/(float height).
-	inline float GetRatio()	{	return Width/Height;	};
+	float GetRatio();
 	/// Get RGB bitmap of current state image.
 	const unsigned char *GetBits();
 	/// Get RGBA bitmap of current state image.

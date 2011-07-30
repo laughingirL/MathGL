@@ -340,6 +340,8 @@ public:
 	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/8;	}
 	inline float TextHeight(const char *font, float size)
 	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Height(font?font:FontDef)/8; }
+	inline float FontFactor()	{	return font_factor;	}
+	virtual float GetRatio();
 	/// Set to use or not text rotation
 	inline void SetRotatedText(bool val)	{	set(val,MGL_ENABLE_RTEXT);	}
 	/// Set default font style and color

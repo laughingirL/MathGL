@@ -58,7 +58,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 	// construct curves
 	mglPoint p=gr->GetPnt(ff[f]), q=p, s=gr->GetPnt(ff[nn[f]]), l=!(s-q), t=l;
 	qa.push_back(q+l*h);	qb.push_back(q-l*h);
-	for(i=nn[f];i!=-1 && i!=f;i=nn[i])
+	for(i=nn[f];i>=0 && i!=f;i=nn[i])
 	{
 		p=q;	q=s;	l=t;
 		if(nn[i]>=0)	{	s=gr->GetPnt(ff[nn[i]]);	t=!(s-q);	}
@@ -272,27 +272,34 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 	}while(j>=0);
 	for(i=0;i<pc;i++)	{	ff[i] = long(0.5+kk[i].z);	}	// return to PntC numbering
 
-	if(text)
+	if(text && pc>1)
 	{
 		wchar_t wcs[64];
 		mglprintf(wcs,64,L"%4.3g",val);
-		mglPoint q[25],t;
-		float del = gr->TextWidth(wcs,"",-0.5);
-		del = del>1 ? del:1;
-		bool less;
-		q[0] =	gr->GetPnt(ff[0]);
-		mgl_string_curve(gr,0,pc,ff,nn,wcs,"t:L",-0.5);
-/*		for(i=k=1;i<pc;i++)	// TODO: print it several times (for contours)
+		mglPoint t;
+		float del = 2*gr->TextWidth(wcs,"",-0.5);
+		// find width and height of drawing area
+		float ar=gr->GetRatio(), w=gr->FontFactor(), h;
+		if(del<w/5)	del = w/5;
+		if(ar<1) h=w/ar;	else {	h=w;	w*=ar;	}
+		m=long(2*w/del)+1;	n=long(2*h/del)+1;	// don't need data size anymore
+		long *oo=new long[n*m];
+		float *rr=new float[n*m];
+		for(i=0;i<n*m;i++)	{	oo[i]=-1;	rr[i]=del*del/8;	}
+
+		for(k=0;k<pc;k++)	// print label several times if possible
 		{
-			if(nn[i]<0)	continue;
-			less = false;
-			t = gr->GetPnt(ff[i]);
-			for(j=0;j<k;j++)	if(mgl_norm(t-q[j])<del)	{	less=true;	break;	}
-			if(less)	continue;
-			q[k] = t;	k++;
-			mgl_string_curve(gr,i,pc,ff,nn,wcs,"t:L");
-			if(k>=25)	break;
-		}*/
+			if(nn[k]<0)	continue;
+			t = gr->GetPnt(ff[k]);
+			i = long(t.x/del);	t.x -= i*del;
+			j = long(t.y/del);	t.y -= j*del;
+			if(i<0 || i>=m || j<0 || j>=n)	continue;	// never should be here!
+			r = t.x*t.x+t.y*t.y;	i += m*j;
+			if(rr[i]>r)	{	rr[i]=r;	oo[i]=k;	}
+		}
+		for(i=0;i<n*m;i++)	if(oo[i]>=0)
+			mgl_string_curve(gr,oo[i],pc,ff,nn,wcs,"t:L",-0.5);
+		delete []oo;	delete []rr;
 	}
 	for(i=0;i<pc;i++)	if(nn[i]>=0)	gr->line_plot(ff[i], ff[nn[i]]);
 	delete []kk;	delete []nn;	delete []ff;
