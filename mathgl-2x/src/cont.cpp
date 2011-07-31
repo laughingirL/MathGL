@@ -43,37 +43,45 @@ bool same_chain(long f,long i,long *nn)
 void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *text, const char *font, float size)
 {
 	if(nn[f]==-1)	return;	// do nothing since there is no curve
-	int pos = font && strchr(font,'t') ? 1:-1, align;
+	if(!font)	font="";
+	int pos = strchr(font,'t') ? 1:-1, align;
 	char cc=mglGetStyle(font,0,&align);		align = align&3;
 	float c=cc ? -cc : gr->GetClrC(ff[f]);
 	long len = wcslen(text);
+	char *fnt = new char[strlen(font)+3];	strcpy(fnt,font);
 	float *wdt=new float[len+1], h=gr->TextHeight(font,size)/4, tet, tt;	// TODO optimaze ratio
 	mglPoint *pt=new mglPoint[len+1];
 	wchar_t L[2]=L"a";
 	register long i,j,k,m;
-	for(j=0;j<len;j++)	{	L[0] = text[j];	wdt[j] = gr->TextWidth(L,font,size)/2;	}
-	wdt[len]=0;
 
-	std::vector<mglPoint> qa, qb;	// curve above and below original
-	// construct curves
+	std::vector<mglPoint> qa, qb;	// curves above and below original
 	mglPoint p=gr->GetPnt(ff[f]), q=p, s=gr->GetPnt(ff[nn[f]]), l=!(s-q), t=l;
 	qa.push_back(q+l*h);	qb.push_back(q-l*h);
-	for(i=nn[f];i>=0 && i!=f;i=nn[i])
+	for(i=nn[f];i>=0 && i!=f;i=nn[i])	// construct curves
 	{
 		p=q;	q=s;	l=t;
 		if(nn[i]>=0)	{	s=gr->GetPnt(ff[nn[i]]);	t=!(s-q);	}
 		tet = t.x*l.y-t.y*l.x;
 		tt = 1+fabs(t.x*l.x+t.y*l.y);
-		if(tet>0)			// TODO: Add index to original points for "jumps"
+		if(tet>0)
 		{	qa.push_back(q+l*h);	qa.push_back(q+t*h);	qb.push_back(q-(l+t)*(h/tt));	}
 		else if(tet<0)
 		{	qb.push_back(q-l*h);	qb.push_back(q-t*h);	qa.push_back(q+(l+t)*(h/tt));	}
 		else
 		{	qa.push_back(q+l*h);	qb.push_back(q-l*h);	}
 	}
-	if(align==2)	// Reverse points for writting right to left
-	{	reverse(qa.begin(),qa.end());	reverse(qb.begin(),qb.end());	}
-	if(pos<0)	qa=qb;	// TODO: This is too robust, allow jumps in future
+	if(pos<0)	qa=qb;
+	// adjust text direction
+	bool rev = align==2;
+	if(qa[0].x>qa[1].x)
+	{
+		if(align==0){	strcat(fnt,":R");	align=2;	}
+		else if(align==1)	rev = true;
+		else		{	strcat(fnt,":L");	align=0;	}
+	}
+	if(rev)	reverse(qa.begin(),qa.end());
+	for(j=0;j<len;j++)	{	L[0]=text[j];	wdt[j]=gr->TextWidth(L,font,size)/2;	}
+	wdt[len]=0;
 
 	// place glyphs points
 	pt[0] = qa[0];	m = qa.size();
@@ -83,7 +91,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 		w = align==1 ? wdt[j] : (wdt[j]+wdt[j+1])/2;	p = pt[j];
 		for(k=i+1;k<m;k++)	if((p-qa[k]).norm()>w)	break;
 		if(k>i+1 && k<m)	tt=-1;
-		i = k>=m ? m-2 : k-1;		// check if end of curve
+		i = k<m ? k-1 : m-2;		// check if end of curve
 		q = qa[i];	s = qa[i+1];	// points of line segment
 		a = (q-s)*(q-s);	b = (q-p)*(q-s);	d = (q-p)*(q-p)-w*w;
 		w = sqrt(b*b-a*d);		// NOTE: b*b>a*d should be here!
@@ -92,11 +100,11 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 		if(t1<0 || t1<tt)	t1=t2;	// t1<t2 should be here!
 		tt=t1;	pt[j+1] = q+(s-q)*tt;
 	}
-	if(align==2)	pos=-pos;
+	if(rev)	pos=-pos;
 	for(j=0;j<len;j++)	// draw text
 	{	L[0] = text[align!=2?j:len-1-j];	s = pt[j+1]-pt[j];	l = !s;
 		gr->text_plot(gr->AddPnt(pt[j]-(pos*h)*l,c,s,-1,0),L,font,size,0,c);	}
-	delete []wdt;	delete []pt;
+	delete []wdt;	delete []pt;	delete []fnt;
 }
 //-----------------------------------------------------------------------------
 void mgl_textw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z,const wchar_t *text, const char *font, const char *opt)
@@ -191,6 +199,48 @@ void mgl_text_y_(uintptr_t *gr, uintptr_t *y, const char *text, const char *font
 //	Cont series
 //
 //-----------------------------------------------------------------------------
+struct mglSegment
+{
+	long next,prev;
+	mglPoint p1,p2;
+	mglSegment(mglPoint q1,mglPoint q2)	{p1=q1;p2=q2;next=prev=-1;}
+};
+// function for connecting arbitrary line segments
+void mgl_connect(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, int text,long ak)
+{
+	long n=a->GetNx(), m=a->GetNy();
+	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
+	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
+	std::vector<mglSegment> ss;
+
+	register long i,j;
+	float d1,d2,d3,d4;
+	bool o1,o2,o3,o4;
+	mglPoint p1,p2,p3,p4,q1,q2,q3,q4;
+	for(i=0;i<n;i++)	for(j=0;j<m;j++)	// prepare segments
+	{
+		d1 = mgl_d(val,a->v(i,j,ak),a->v(i+1,j,ak));		o1 = d1>=0 && d1<1;
+		d2 = mgl_d(val,a->v(i,j,ak),a->v(i,j+1,ak));		o2 = d2>=0 && d2<1;
+		d3 = mgl_d(val,a->v(i+1,j+1,ak),a->v(i+1,j,ak));	o3 = d3>=0 && d3<1;
+		d4 = mgl_d(val,a->v(i+1,j+1,ak),a->v(i,j+1,ak));	o4 = d4>=0 && d4<1;
+		p1 = mglPoint(x->v(i,j), y->v(i,j),z->v(i,j));
+		p2 = mglPoint(x->v(i+1,j), y->v(i+1,j),z->v(i+1,j));
+		p3 = mglPoint(x->v(i,j+1), y->v(i,j+1),z->v(i,j+1));
+		p4 = mglPoint(x->v(i+1,j+1), y->v(i+1,j+1),z->v(i+1,j+1));
+		q1 = p1*(1-d1)+p2*d1;	q2 = p1*(1-d2)+p3*d1;
+		q3 = p4*(1-d3)+p2*d3;	q4 = p4*(1-d4)+p3*d4;
+		if(o1 && o2)	{	o1 = o2 = false;	ss.push_back(mglSegment(q1,q2));	}
+		if(o1 && o3)	{	o1 = o3 = false;	ss.push_back(mglSegment(q1,q3));	}
+		if(o1 && o4)	{	o1 = o4 = false;	ss.push_back(mglSegment(q1,q4));	}
+		if(o2 && o3)	{	o2 = o3 = false;	ss.push_back(mglSegment(q2,q3));	}
+		if(o2 && o4)	{	o2 = o4 = false;	ss.push_back(mglSegment(q2,q4));	}
+		if(o3 && o4)	{	o3 = o4 = false;	ss.push_back(mglSegment(q3,q4));	}
+	}
+	if(ss.size()==0)	return;
+	// connect it
+
+}
+
 // NOTE! All data MUST have the same size! Only first slice is used!
 void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, int text,long ak)
 {
@@ -285,7 +335,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 		m=long(2*w/del)+1;	n=long(2*h/del)+1;	// don't need data size anymore
 		long *oo=new long[n*m];
 		float *rr=new float[n*m];
-		for(i=0;i<n*m;i++)	{	oo[i]=-1;	rr[i]=del*del/8;	}
+		for(i=0;i<n*m;i++)	{	oo[i]=-1;	rr[i]=del*del/4;	}
 
 		for(k=0;k<pc;k++)	// print label several times if possible
 		{
@@ -298,7 +348,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 			if(rr[i]>r)	{	rr[i]=r;	oo[i]=k;	}
 		}
 		for(i=0;i<n*m;i++)	if(oo[i]>=0)
-			mgl_string_curve(gr,oo[i],pc,ff,nn,wcs,"t:L",-0.5);
+			mgl_string_curve(gr,oo[i],pc,ff,nn,wcs,"t:C",-0.5);
 		delete []oo;	delete []rr;
 	}
 	for(i=0;i<pc;i++)	if(nn[i]>=0)	gr->line_plot(ff[i], ff[nn[i]]);
