@@ -24,7 +24,7 @@ endif(use_fltk)
 
 if(use_glut)
 	add_executable(mgl_glut_example wnd_samples.cpp glut_example.cpp)
-	target_link_libraries(mgl_glut_example mgl-wnd)
+	target_link_libraries(mgl_glut_example mgl-glut)
 	install(
 		TARGETS mgl_glut_example
 		RUNTIME DESTINATION bin

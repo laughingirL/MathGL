@@ -76,7 +76,6 @@
 		<Unit filename="include/mgl/base_cf.h" />
 		<Unit filename="include/mgl/canvas.h" />
 		<Unit filename="include/mgl/canvas_cf.h" />
-		<Unit filename="include/mgl/canvas_gl.h" />
 		<Unit filename="include/mgl/cont.h" />
 		<Unit filename="include/mgl/data.h" />
 		<Unit filename="include/mgl/define.h" />
@@ -87,6 +86,7 @@
 		<Unit filename="include/mgl/mgl_cf.h" />
 		<Unit filename="include/mgl/mgl_fltk.h" />
 		<Unit filename="include/mgl/mgl_qt.h" />
+		<Unit filename="include/mgl/opengl.h" />
 		<Unit filename="include/mgl/other.h" />
 		<Unit filename="include/mgl/parser.h" />
 		<Unit filename="include/mgl/plot.h" />

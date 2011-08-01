@@ -6,7 +6,7 @@
 #else
 #include <GL/gl.h>
 #endif
-#include "mgl/canvas_gl.h"
+#include "mgl/opengl.h"
 #include <algorithm>
 //-----------------------------------------------------------------------------
 /// Create mglGraph object in OpenGL mode.

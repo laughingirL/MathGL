@@ -177,6 +177,80 @@ void mgl_radar_(uintptr_t *gr, uintptr_t *a, const char *pen, const char *opt, i
 	mgl_radar(_GR_, _DA_(a),s,o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
 //
+//	Candle series
+//
+//-----------------------------------------------------------------------------
+void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt)
+{
+	long i,n=v1->GetNx(),pal;
+	bool d1=false,d2=false;
+	if(!y1)	{	y1 = new mglData(n);	d1=true;	((mglData *)y1)->Fill(NAN,NAN);	}
+	if(!y2)	{	y2 = new mglData(n);	d2=true;	((mglData *)y2)->Fill(NAN,NAN);	}
+	if(n<2)	{	gr->SetWarn(mglWarnLow,"Candle");	return;	}
+	if(x->GetNx()!=n || v2->GetNx()!=n || y1->GetNx()!=n || y2->GetNx()!=n)
+	{	gr->SetWarn(mglWarnDim,"Candle");	return;	}
+	static int cgid=1;	gr->StartGroup("Candle",cgid++);
+	gr->SaveState(opt);	gr->SetPenPal(pen,&pal);
+	gr->NextColor(pal);	gr->Reserve(8*n);
+
+	long n1,n2,n3,n4;
+	float m1,m2,xx,x1,x2;
+	for(i=0;i<n;i++)
+	{
+		m1=v1->v(i);	m2 = v2->v(i);	xx = x->v(i);
+		n1 = gr->AddPnt(mglPoint(xx,y1->v(i),gr->Min.z));
+		n2 = gr->AddPnt(mglPoint(xx,m1,gr->Min.z));
+		gr->line_plot(n1,n2);
+		n3 = gr->AddPnt(mglPoint(xx,y2->v(i),gr->Min.z));
+		n4 = gr->AddPnt(mglPoint(xx,m2,gr->Min.z));
+		gr->line_plot(n3,n4);
+
+		x1 = xx - (i>0  ? gr->BarWidth*(xx-x->v(i-1))/2 : 0);
+		x2 = xx + (i<n-1? gr->BarWidth*(x->v(i+1)-xx)/2 : 0);
+		n1 = gr->AddPnt(mglPoint(x1,m1,gr->Min.z));
+		n2 = gr->AddPnt(mglPoint(x2,m1,gr->Min.z));
+		n3 = gr->AddPnt(mglPoint(x1,m2,gr->Min.z));
+		n4 = gr->AddPnt(mglPoint(x2,m2,gr->Min.z));
+		gr->line_plot(n1,n2);	gr->line_plot(n1,n3);
+		gr->line_plot(n4,n2);	gr->line_plot(n4,n3);
+		if(m1>m2)	gr->quad_plot(n1,n2,n3,n4);
+	}
+	if(d1)	delete y1;	if(d2)	delete y2;
+}
+//-----------------------------------------------------------------------------
+void mgl_candle_yv(HMGL gr, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt)
+{
+	if(v1->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"Candle");	return;	}
+	gr->SaveState(opt);
+	mglData x(v1->GetNx());
+	x.Fill(gr->Min.x,gr->Max.x);
+	mgl_candle_xyv(gr,&x,v1,v2,y1,y2,pen,0);
+}
+//-----------------------------------------------------------------------------
+void mgl_candle(HMGL gr, HCDT v1, HCDT y1, HCDT y2, const char *pen, const char *opt)
+{
+	mglData v2(v1);
+	v2.Roll('x',1);	v2.a[0]=NAN;
+	mgl_candle_yv(gr,v1,&v2,y1,y2,pen,opt);
+}
+//-----------------------------------------------------------------------------
+void mgl_candle_xyv_(uintptr_t *gr, uintptr_t *x, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_candle_xyv(_GR_,_DA_(x),_DA_(v1),_DA_(v2),_DA_(y1),_DA_(y2),s,o);	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------
+void mgl_candle_yv_(uintptr_t *gr, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_candle_yv(_GR_,_DA_(v1),_DA_(v2),_DA_(y1),_DA_(y2),s,o);	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------
+void mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_candle(_GR_,_DA_(y),_DA_(y1),_DA_(y2),s,o);
+	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------
+//
 //	Plot series
 //
 //-----------------------------------------------------------------------------

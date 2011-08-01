@@ -518,6 +518,17 @@ public:
 	{	mgl_barh_yx(gr, &y, &v, pen, opt);	}
 	inline void Barh(const mglDataA &v, const char *pen="", const char *opt="")
 	{	mgl_barh(gr, &v, pen, opt);	}
+	/// Draw candle plot
+	inline void Candle(const mglDataA &x, const mglDataA &v1, const mglDataA &v2, const mglDataA &y1, const mglDataA &y2, const char *pen="", const char *opt="")
+	{	mgl_candle_xyv(gr, &x, &v1, &v2, &y1, &y2, pen, opt);	}
+	inline void Candle(const mglDataA &v1, const mglDataA &v2, const mglDataA &y1, const mglDataA &y2, const char *pen="", const char *opt="")
+	{	mgl_candle_yv(gr, &v1, &v2, &y1, &y2, pen, opt);	}
+	inline void Candle(const mglDataA &v1, const mglDataA &v2, const char *pen="", const char *opt="")
+	{	mgl_candle_yv(gr, &v1, &v2, NULL, NULL, pen, opt);	}
+	inline void Candle(const mglDataA &y, const mglDataA &y1, const mglDataA &y2, const char *pen="", const char *opt="")
+	{	mgl_candle(gr, &y, &y1, &y2, pen, opt);	}
+	inline void Candle(const mglDataA &y, const char *pen="", const char *opt="")
+	{	mgl_candle(gr, &y, NULL, NULL, pen, opt);	}
 	/// Fill area between curves y1 and y2 specified parametrically
 	inline void Region(const mglDataA &y1, const mglDataA &y2, const char *pen="", const char *opt="")
 	{	mgl_region(gr, &y1, &y2, pen, opt);	}
@@ -983,6 +994,19 @@ public:
 	inline mglData Hist(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *opt="")
 	{	return mglData(true, mgl_hist_xyz(gr, &x, &y, &z, &a, opt));	}
 };
+//-----------------------------------------------------------------------------
+/// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
+/// Make inherited class and redefine Draw() function if you don't want to use function pointers.
+struct mglDraw
+{
+	virtual int Draw(mglGraph *)	{	return 0;	};
+	virtual void Reload(int)	{};
+	virtual ~mglDraw()	{};
+};
+int mgl_draw_class(mglBase *gr, void *p);
+void mgl_reload_class(int next, void *p);
+typedef int (*draw_func)(mglGraph *gr);
+int mgl_draw_graph(mglBase *gr, void *p);
 //-----------------------------------------------------------------------------
 /*class mglParse
 {

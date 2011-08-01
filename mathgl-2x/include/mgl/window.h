@@ -70,19 +70,7 @@ void mgl_wnd_prev_frame_(uintptr_t *gr);
 void mgl_wnd_animation_(uintptr_t *gr);
 /*****************************************************************************/
 #ifdef __cplusplus
-//-----------------------------------------------------------------------------
-/// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
-/// Make inherited class and redefine Draw() function if you don't want to use function pointers.
-struct mglDraw
-{
-	virtual int Draw(mglGraph *)	{	return 0;	};
-	virtual void Reload(int)	{};
-	virtual ~mglDraw()	{};
-};
-int mgl_draw_class(mglBase *gr, void *p);
-void mgl_reload_class(int next, void *p);
-typedef int (*draw_func)(mglGraph *gr);
-int mgl_draw_graph(mglBase *gr, void *p);
+}
 //-----------------------------------------------------------------------------
 class mglWindow : public mglGraph
 {
@@ -191,6 +179,5 @@ protected:
 	int (*DrawFunc)(mglBase *gr, void *par);
 };
 //-----------------------------------------------------------------------------
-}
 #endif
 #endif

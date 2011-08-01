@@ -732,16 +732,17 @@ mglPoint GetZ(const mglDataA *z, int i, int j, int k)
 		return mglPoint(z->v(k),0,0);
 }
 //-----------------------------------------------------------------------------
-void mglBase::vect_plot(long p1, long p2)	// position in pntC
+void mglBase::vect_plot(long p1, long p2, float s)
 {
 	if(p1<0 || p2<0)	return;
 	const mglPnt &q1=Pnt[p1], &q2=Pnt[p2];
 	mglPnt s1=q2,s2=q2;
-	s1.x = q1.x+0.8*(q2.x-q1.x) + 0.1*(q2.y-q1.y);
-	s2.x = q1.x+0.8*(q2.x-q1.x) - 0.1*(q2.y-q1.y);
-	s1.y = q1.y+0.8*(q2.y-q1.y) - 0.1*(q2.x-q1.x);
-	s2.y = q1.y+0.8*(q2.y-q1.y) + 0.1*(q2.x-q1.x);
-	s1.z = s2.z = q1.z+0.8*(q2.z-q1.z);
+	s = s<=0 ? 0.1 : s*0.1;
+	s1.x = q2.x - 3*s*(q2.x-q1.x) + s*(q2.y-q1.y);
+	s2.x = q2.x - 3*s*(q2.x-q1.x) - s*(q2.y-q1.y);
+	s1.y = q2.y - 3*s*(q2.y-q1.y) - s*(q2.x-q1.x);
+	s2.y = q2.y - 3*s*(q2.y-q1.y) + s*(q2.x-q1.x);
+	s1.z = s2.z = q2.z - 3*s*(q2.z-q1.z);
 	long n1,n2;
 	n1=Pnt.size();	MGL_PUSH(Pnt,s1,mutexPnt);
 	n2=Pnt.size();	MGL_PUSH(Pnt,s2,mutexPnt);

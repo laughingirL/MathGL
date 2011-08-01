@@ -89,6 +89,10 @@ void mgl_tube_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, float r, const char *pen, 
 void mgl_tube_xy(HMGL graph, HCDT x, HCDT y, float r, const char *penl, const char *opt);
 void mgl_tube(HMGL graph, HCDT y, float r, const char *pen, const char *opt);
 /*****************************************************************************/
+void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt);
+void mgl_candle_yv(HMGL gr, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen, const char *opt);
+void mgl_candle(HMGL gr, HCDT v, HCDT y1, HCDT y2, const char *pen, const char *opt);
+/*****************************************************************************/
 void mgl_boxplot_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int,int);
 void mgl_boxplot_(uintptr_t *graph, uintptr_t *y, const char *pen, const char *opt,int,int);
 void mgl_area_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int,int);
@@ -122,6 +126,9 @@ void mgl_tube_r_(uintptr_t *graph, uintptr_t *y, uintptr_t *r, const char *pen, 
 void mgl_tube_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, float *r, const char *pen, const char *opt,int,int);
 void mgl_tube_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, float *r, const char *pen,int);
 void mgl_tube_(uintptr_t *graph, uintptr_t *y, float *r, const char *pen, const char *opt,int,int);
+void mgl_candle_xyv_(uintptr_t *gr, uintptr_t *x, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo);
+void mgl_candle_yv_(uintptr_t *gr, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo);
+void mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo);
 /*****************************************************************************/
 #ifdef __cplusplus
 }

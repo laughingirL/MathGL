@@ -397,7 +397,7 @@ public:
 	virtual void quad_plot(long p1, long p2, long p3, long p4)=0;
 	virtual void Glyph(float x, float y, float f, int style, long icode, float col)=0;
 	virtual float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'))=0;
-	void vect_plot(long p1, long p2);
+	void vect_plot(long p1, long p2, float s=1);
 
 protected:
 	mglPoint FMin;		///< Actual lower edge after transformation formulas.

@@ -3500,3 +3500,15 @@ mglCommand mgls_base_cmd[] = {
 	{L"ztick",L"Set ticks for z-axis",L"ztick dz [sz tz] | 'tmpl'", mgls_ztick, mglc_ztick, false, 2},
 {L"",L"",L"",NULL,NULL,0,0}};
 //-----------------------------------------------------------------------------
+int mgl_draw_class(mglBase *gr, void *p)
+{	mglGraph g(gr);	return p ? ((mglDraw *)p)->Draw(&g) : 0;	}
+void mgl_reload_class(int next, void *p)
+{	if(p)	((mglDraw *)p)->Reload(next);	}
+//-----------------------------------------------------------------------------
+int mgl_draw_graph(mglBase *gr, void *p)
+{
+	mglGraph g(gr);
+	draw_func func = (draw_func)(p);
+	return func ? func(&g) : 0;
+}
+//-----------------------------------------------------------------------------

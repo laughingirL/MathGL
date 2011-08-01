@@ -7,8 +7,7 @@
 4. opengl
 	* draw wire font too for OpenGL mode
 5. stfa
-6. Drop() -- rays
-7. Add GLUT window
+6. Add GLUT window
 
 ============= NEW  =============
 
@@ -22,16 +21,13 @@
 08. GTK and WX window/widgets
 09. Import/Export via GIF (as 3d data) ??? + 16bit PNG
 10. Read DICOM files.
-11. Contour label should not rotated on ~180 degree
 12. Labels at TriCont()
 13. Cones() -- like Bars() but by Cone()
-15. Add Candle() plot -- see gmail.com
 16. MPISend(), MPIReceive()
 17. Add diffusive light (no dependence of normale but have direction)
 
 ============= UNSURE ===========
 
-1. Arrows at flow lines ?!!
 2. Problem with \calB and so on (\calH, ...) -- they are present only in italic font :(.
 3. create PWT fonts
 4. \dfrac for normal size and centering  (sample \big\big{\frac{1}{2}}) ???
@@ -77,6 +73,8 @@
 25. Allow interpolation in SubData and in MGL if argument is not integer
 26. Error() draw "big" transpared marks if '@' is specified
 27. 'half-transparent' -> 'semitransparent'
+28. Style 'v' draw arrows at flow lines
+29. Add Candle() plot
 
 ============= BUGS =============
 

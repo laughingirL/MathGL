@@ -270,7 +270,7 @@ void mgl_vect_3d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, uintptr_t *az, co
 //	Flow 2d series
 //
 //-----------------------------------------------------------------------------
-void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay,long ss)
+void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mglData &y, const mglData &ax, const mglData &ay, long ss, bool vv)
 {
 	long n=10*(ax.nx+ax.ny);
 	bool both = x.nx==ax.nx && y.nx==ax.nx && x.ny==ax.ny && y.ny==ax.ny;
@@ -311,10 +311,18 @@ void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mgl
 	} while(!end);
 	if(k>1)
 	{
-		long i,j,jj;
+		long i,j,jj,a=long(1./fabs(dt));
 		gr->Reserve(k);		j = gr->AddPnt(pp[0],cc[0]);
 		for(i=1;i<k;i++)
-		{	jj=j;	j = gr->AddPnt(pp[i],cc[i]);	gr->line_plot(jj,j);	}
+		{
+			jj=j;	j = gr->AddPnt(pp[i],cc[i]);
+			if(vv && i%a==0)
+			{
+				if(dt<0)	gr->vect_plot(j,jj,a/5);
+				else		gr->vect_plot(jj,j,a/5);
+			}
+			else	gr->line_plot(jj,j);
+		}
 	}
 	delete []pp;	delete []cc;
 }
@@ -333,6 +341,7 @@ void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	static int cgid=1;	gr->StartGroup("Flow",cgid++);
 
 	long ss = gr->AddTexture(sch);
+	bool vv = sch && strchr(sch,'v');
 	// allocate memory
 	float zVal = gr->Min.z;
 	bool cnt=(num>0);
@@ -345,25 +354,25 @@ void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 		for(long i=0;i<num;i++)
 		{
 			u = 0;	v = (i+1.)/(num+1.);
-			flow(gr, zVal, u, v, xx, yy, bx, by,ss);
-			flow(gr, zVal, -u, -v, xx, yy, bx, by,ss);
+			flow(gr, zVal, u, v, xx, yy, bx, by,ss,vv);
+			flow(gr, zVal, -u, -v, xx, yy, bx, by,ss,vv);
 			u = 1;	v = (i+1.)/(num+1.);
-			flow(gr, zVal, u, v, xx, yy, bx, by,ss);
-			flow(gr, zVal, -u, -v, xx, yy, bx, by,ss);
+			flow(gr, zVal, u, v, xx, yy, bx, by,ss,vv);
+			flow(gr, zVal, -u, -v, xx, yy, bx, by,ss,vv);
 			u = (i+1.)/(num+1.);	v = 0;
-			flow(gr, zVal, u, v, xx, yy, bx, by,ss);
-			flow(gr, zVal, -u, -v, xx, yy, bx, by,ss);
+			flow(gr, zVal, u, v, xx, yy, bx, by,ss,vv);
+			flow(gr, zVal, -u, -v, xx, yy, bx, by,ss,vv);
 			u = (i+1.)/(num+1.);	v = 1;
-			flow(gr, zVal, u, v, xx, yy, bx, by,ss);
-			flow(gr, zVal, -u, -v, xx, yy, bx, by,ss);
+			flow(gr, zVal, u, v, xx, yy, bx, by,ss,vv);
+			flow(gr, zVal, -u, -v, xx, yy, bx, by,ss,vv);
 			if(cnt)
 			{
 				u = 0.5;	v = (i+1.)/(num+1.);
-				flow(gr, zVal, u, v, xx, yy, bx, by,ss);
-				flow(gr, zVal, -u, -v, xx, yy, bx, by,ss);
+				flow(gr, zVal, u, v, xx, yy, bx, by,ss,vv);
+				flow(gr, zVal, -u, -v, xx, yy, bx, by,ss,vv);
 				u = (i+1.)/(num+1.);	v = 0.5;
-				flow(gr, zVal, u, v, xx, yy, bx, by,ss);
-				flow(gr, zVal, -u, -v, xx, yy, bx, by,ss);
+				flow(gr, zVal, u, v, xx, yy, bx, by,ss,vv);
+				flow(gr, zVal, -u, -v, xx, yy, bx, by,ss,vv);
 			}
 		}
 	}
@@ -401,6 +410,7 @@ void mgl_flowp_xy(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT ax
 	static int cgid=1;	gr->StartGroup("FlowP",cgid++);
 
 	long ss = gr->AddTexture(sch);
+	bool vv = sch && strchr(sch,'v');
 	// find coordinates u, v
 	register long i,j;
 	register float d, dm=1e7;
@@ -431,7 +441,7 @@ void mgl_flowp_xy(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT ax
 		}
 	}
 	mglData xx(x), yy(y), bx(ax), by(ay);
-	flow(gr, p.z, u, v, xx, yy, bx, by,ss);
+	flow(gr, p.z, u, v, xx, yy, bx, by,ss,vv);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------
@@ -458,7 +468,7 @@ void mgl_flowp_2d_(uintptr_t *gr, float *x0, float *y0, float *z0, uintptr_t *ax
 //	Flow 3d series
 //
 //-----------------------------------------------------------------------------
-void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az,long ss)
+void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglData &y, const mglData &z, const mglData &ax, const mglData &ay, const mglData &az,long ss,bool vv)
 {
 	static long n=10*(ax.nx+ax.ny);
 	long nn = ax.nx*ax.ny*ax.nz;
@@ -506,10 +516,18 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 	} while(!end);
 	if(k>1)
 	{
-		long i,j,jj;
+		long i,j,jj,a=long(1./fabs(dt));
 		gr->Reserve(k);		j = gr->AddPnt(pp[0],cc[0]);
 		for(i=1;i<k;i++)
-		{	jj=j;	j = gr->AddPnt(pp[i],cc[i]);	gr->line_plot(jj,j);	}
+		{
+			jj=j;	j = gr->AddPnt(pp[i],cc[i]);
+			if(vv && i%a==0)
+			{
+				if(dt<0)	gr->vect_plot(j,jj,a/5);
+				else		gr->vect_plot(jj,j,a/5);
+			}
+			else	gr->line_plot(jj,j);
+		}
 	}
 	delete []pp;
 	delete []cc;
@@ -532,39 +550,40 @@ void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	static int cgid=1;	gr->StartGroup("Flow3",cgid++);
 	bool cnt=(num>0);	num = abs(num);	// redefine central parater
 	long ss = gr->AddTexture(sch);
+	bool vv = sch && strchr(sch,'v');
 
 	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
 	for(i=0;i<num;i++)	for(j=0;j<num;j++)
 	{
 		u = (i+1.)/(num+1.);	v = (j+1.)/(num+1.);	w = 0;
-		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss);
-		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss);
+		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss,vv);
+		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss,vv);
 		u = (i+1.)/(num+1.);	v = (j+1.)/(num+1.);	w = 1;
-		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss);
-		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss);
+		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss,vv);
+		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss,vv);
 		u = 0;	v = (j+1.)/(num+1.);	w = (i+1.)/(num+1.);
-		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss);
-		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss);
+		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss,vv);
+		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss,vv);
 		u = 1;	v = (j+1.)/(num+1.);	w = (i+1.)/(num+1.);
-		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss);
-		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss);
+		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss,vv);
+		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss,vv);
 		u = (i+1.)/(num+1.);	v = 0;	w = (j+1.)/(num+1.);
-		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss);
-		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss);
+		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss,vv);
+		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss,vv);
 		u = (i+1.)/(num+1.);	v = 1;	w = (j+1.)/(num+1.);
-		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss);
-		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss);
+		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss,vv);
+		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss,vv);
 		if(cnt)
 		{
 			u = (i+1.)/(num+1.);	v = (j+1.)/(num+1.);	w = 0.5;
-			flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss);
-			flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss);
+			flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss,vv);
+			flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss,vv);
 			u = 0.5;	v = (j+1.)/(num+1.);	w = (i+1.)/(num+1.);
-			flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss);
-			flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss);
+			flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss,vv);
+			flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss,vv);
 			u = (i+1.)/(num+1.);	v = 0.5;	w = (j+1.)/(num+1.);
-			flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss);
-			flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss);
+			flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss,vv);
+			flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss,vv);
 		}
 	}
 	gr->EndGroup();
@@ -604,6 +623,7 @@ void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("FlowP3",cgid++);
 	long ss = gr->AddTexture(sch);
+	bool vv = sch && strchr(sch,'v');
 
 	// find coordinates u, v, w
 	register long i,j,k;
@@ -643,7 +663,7 @@ void mgl_flowp_xyz(HMGL gr, float x0, float y0, float z0, HCDT x, HCDT y, HCDT z
 		}
 	}
 	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
-	flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss);
+	flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss,vv);
 	gr->EndGroup();
 }
 //-----------------------------------------------------------------------------

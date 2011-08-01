@@ -787,6 +787,15 @@ void smgl_sample1(mglGraph *gr)	// transformation
 	gr->Rotate(0,0); // for unrotate in IDTF
 }
 //-----------------------------------------------------------------------------
+void smgl_candle(mglGraph *gr)
+{
+	mglData y(50);	gr->Fill(y,"sin(2*pi*x)^2");
+	mglData y1(50);	gr->Fill(y1,"v/2",y);
+	mglData y2(50);	gr->Fill(y2,"(1+v)/2",y);
+	gr->SetRange('y',0,1);	gr->Box();
+	gr->Candle(y,y1,y2);
+}
+//-----------------------------------------------------------------------------
 void smgl_plot(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
@@ -1737,6 +1746,7 @@ mglSample samp[] = {
 	{"belt", smgl_belt},
 	{"boxplot", smgl_boxplot},
 	{"boxs", smgl_boxs},
+	{"candle", smgl_candle},
 	{"chart", smgl_chart},
 	{"cloud", smgl_cloud},
 	{"color_schemes", smgl_color_schemes},

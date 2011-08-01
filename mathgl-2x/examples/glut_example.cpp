@@ -18,29 +18,32 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <stdio.h>
-#include <mgl/mgl_glut.h>
+#include "mgl/glut.h"
 //-----------------------------------------------------------------------------
-int test(mglGraph *gr, void *);
-int sample(mglGraph *gr, void *);
-int sample_1(mglGraph *gr, void *);
-int sample_2(mglGraph *gr, void *);
-int sample_3(mglGraph *gr, void *);
-int sample_d(mglGraph *gr, void *);
+int test(mglGraph *gr);
+int sample(mglGraph *gr);
+int sample_1(mglGraph *gr);
+int sample_2(mglGraph *gr);
+int sample_3(mglGraph *gr);
+int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
-	mglGraphGLUT gr;
 	char key = 0;
 	if(argc>1 && argv[1][0]!='-')	key = argv[1][0];
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting");
+
+	const char *desc;
+	draw_func func;
 	switch(key)
 	{
-	case '1':	gr.Window(0,0,sample_1,"1D plots");	break;
-	case '2':	gr.Window(0,0,sample_2,"2D plots");	break;
-	case '3':	gr.Window(0,0,sample_3,"3D plots");	break;
-	case 'd':	gr.Window(0,0,sample_d,"Dual plots");	break;
-	default:	gr.Window(0,0,sample,"Example of molecules");	break;
+	case '1':	func = sample_1;	desc = "1D plots";	break;
+	case '2':	func = sample_2;	desc = "2D plots";	break;
+	case '3':	func = sample_3;	desc = "3D plots";	break;
+	case 'd':	func = sample_d;	desc = "Dual plots";	break;
+	default:	func = sample;	desc = "Example of molecules";	break;
 	}
+	mglGLUT gr(func,desc);
 	return 0;
 }
 //-----------------------------------------------------------------------------

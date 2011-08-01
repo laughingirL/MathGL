@@ -17,7 +17,23 @@ endif(use_fltk)
 if(use_glut)
 	add_definitions(-DHAVE_GLUT)
 	include_directories(${GLUT_INCLUDE_DIR})
-	set(mgl_wnd_src ${mgl_wnd_src} glut.cpp)
+	set(mgl_glut_src glut.cpp)
+
+	add_library(mgl-glut SHARED ${mgl_glut_src})
+	add_library(mgl-glut-static STATIC ${mgl_glut_src})
+	set_target_properties(mgl-glut-static PROPERTIES OUTPUT_NAME "mgl-glut")
+	set_target_properties(mgl-glut PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-glut-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+	set_target_properties(mgl-glut PROPERTIES SOVERSION 6.0.0)
+	target_link_libraries(mgl-glut mgl)
+	target_link_libraries(mgl-glut ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
+
+	install(
+		TARGETS mgl-glut mgl-glut-static
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION lib
+		LIBRARY DESTINATION lib
+	)
 endif(use_glut)
 
 if(use_wx)
@@ -47,10 +63,6 @@ target_link_libraries(mgl-wnd mgl)
 if(use_fltk)
 	target_link_libraries(mgl-wnd ${FLTK_LIBRARIES})
 endif(use_fltk)
-
-if(use_glut)
-	target_link_libraries(mgl-wnd ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
-endif(use_glut)
 
 if(use_wx)
 	target_link_libraries(mgl-wnd ${wxWidgets_LIBRARIES})
