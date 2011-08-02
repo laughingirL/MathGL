@@ -1787,7 +1787,7 @@ mglSample samp[] = {
 	{"mesh_cont", smgl_mesh_cont},
 	{"mirror", smgl_mirror},
 	{"molecule", smgl_molecule},
-//	{"parser", smgl_parser},	// TODO: enable later
+	{"parser", smgl_parser},	// TODO: enable later
 	{"pde", smgl_pde},
 	{"pie_chart", smgl_pie_chart},
 	{"pipe", smgl_pipe},

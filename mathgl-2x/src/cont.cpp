@@ -39,7 +39,6 @@ bool same_chain(long f,long i,long *nn)
 	}
 }
 //-----------------------------------------------------------------------------
-#include <mgl/canvas_cf.h>
 void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *text, const char *font, float size)
 {
 	if(nn[f]==-1)	return;	// do nothing since there is no curve

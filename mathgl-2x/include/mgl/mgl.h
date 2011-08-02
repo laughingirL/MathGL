@@ -1002,7 +1002,6 @@ struct mglDraw
 {
 	virtual int Draw(mglGraph *)	{	return 0;	};
 	virtual void Reload(int)	{};
-	virtual ~mglDraw()	{};
 };
 int mgl_draw_class(mglBase *gr, void *p);
 void mgl_reload_class(int next, void *p);

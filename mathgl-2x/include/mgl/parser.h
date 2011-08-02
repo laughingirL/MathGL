@@ -112,7 +112,7 @@ public:
 	wchar_t *op1, *op2;	///< Buffer for options (are used if out!=NULL)
 
 	mglParse(bool setsize=false);
-	virtual ~mglParse();
+	~mglParse();
 	/// Find the command by the keyword name
 	mglCommand *FindCommand(const wchar_t *name, bool prog=false);
 	/// Parse and execute the string of MGL script
