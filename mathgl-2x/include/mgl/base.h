@@ -38,7 +38,7 @@
 struct mglPoint
 {
 	float x,y,z,c;
- 	mglPoint()	{memset(this,0,sizeof(mglPoint));}
+ 	mglPoint()	{	x=y=z=c=0;	}
  	mglPoint(float X,float Y=0,float Z=0,float C=0){x=X;y=Y;z=Z;c=C;}
 	inline bool IsNAN()		{	return (x!=x || y!=y || z!=z || c!=c);	}
 	inline float val(int i)	{	return (i<2 ? (i==0 ? x:y) : (i==2 ? z:c));	}
@@ -126,7 +126,7 @@ struct mglColor
 	/// Constructor set color from character id
 	mglColor(char c='k', float bright=1)		{	Set(c,bright);	}
 	/// Set color as Red, Green, Blue values
-	void Set(float R,float G,float B,float A=1)	{r=R;	g=G;	b=B;	a=A;	}
+	void Set(float R,float G,float B,float A=1)	{	r=R;	g=G;	b=B;	a=A;	}
 	/// Set color as Red, Green, Blue values
 	void Set(mglColor c, float bright=1);
 	/// Check if color is valid

@@ -6,7 +6,7 @@
 	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
 4. opengl
 	* draw wire font too for OpenGL mode
-5. stfa
+5. Check parser
 6. Add GLUT window
 
 ============= NEW  =============
@@ -21,10 +21,10 @@
 08. GTK and WX window/widgets
 09. Import/Export via GIF (as 3d data) ??? + 16bit PNG
 10. Read DICOM files.
-12. Labels at TriCont()
-13. Cones() -- like Bars() but by Cone()
-16. MPISend(), MPIReceive()
-17. Add diffusive light (no dependence of normale but have direction)
+11. Labels at TriCont()
+12. Cones() -- like Bars() but by Cone()
+13. MPISend(), MPIReceive()
+14. Add diffusive light (no dependence of normale but have direction)
 
 ============= UNSURE ===========
 

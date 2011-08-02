@@ -77,19 +77,19 @@ class mglWindow : public mglGraph
 protected:
 	int wnd;	///< Type of window
 public:
-	mglWindow(int kind, int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL)
+	mglWindow(int kind, int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL) : mglGraph(-1)
 	{
 		wnd=kind;
 		if(wnd==1)	gr = mgl_create_graph_qt(draw,title,par);
 		else		gr = mgl_create_graph_fltk(draw,title,par);
 	}
-	mglWindow(int kind, int (*draw)(mglGraph *gr), const char *title="MathGL")
+	mglWindow(int kind, int (*draw)(mglGraph *gr), const char *title="MathGL") : mglGraph(-1)
 	{
 		wnd=kind;
 		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_graph,title,(void*)draw);
 		else		gr = mgl_create_graph_fltk(mgl_draw_graph,title,(void*)draw);
 	}
-	mglWindow(int kind=0, mglDraw *dr=NULL, const char *title="MathGL")
+	mglWindow(int kind=0, mglDraw *dr=NULL, const char *title="MathGL") : mglGraph(-1)
 	{
 		wnd=kind;
 		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_class,title,dr);

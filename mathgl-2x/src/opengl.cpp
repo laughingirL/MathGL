@@ -16,7 +16,7 @@ HMGL mgl_create_graph_gl()
 uintptr_t mgl_create_graph_gl_()
 {	return uintptr_t(new mglCanvasGL);	}
 //-----------------------------------------------------------------------------
-mglCanvasGL::mglCanvasGL() : mglCanvas(1,1)	{}
+mglCanvasGL::mglCanvasGL() : mglCanvas(100,100)	{}
 //-----------------------------------------------------------------------------
 mglCanvasGL::~mglCanvasGL(){}
 //-----------------------------------------------------------------------------

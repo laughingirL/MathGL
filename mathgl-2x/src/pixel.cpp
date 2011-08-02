@@ -890,11 +890,11 @@ void mglCanvas::glyph_line(const mglPnt &pp, float f, bool solid)
 	p.x = p3.x;	p.y = p3.y;	p.z = p3.z+(solid?pw:0);	MGL_PUSH(Pnt,p,mutexPnt);
 	p.x = p4.x;	p.y = p4.y;	p.z = p4.z+(solid?pw:0);	MGL_PUSH(Pnt,p,mutexPnt);
 
-	if(solid)	quad_draw(pos,pos+1,pos+2,pos+3);
+	if(solid)	quad_draw(pos,pos+1,pos+3,pos+2);
 	else
 	{
-		line_draw(pos,pos+1);	line_draw(pos+3,pos+1);
-		line_draw(pos,pos+2);	line_draw(pos+3,pos+2);
+		line_draw(pos,pos+1);	line_draw(pos+2,pos+1);
+		line_draw(pos,pos+3);	line_draw(pos+2,pos+3);
 	}
 	PDef = pdef;	PenWidth=opw;
 	Pnt.erase(Pnt.begin()+pos,Pnt.end());

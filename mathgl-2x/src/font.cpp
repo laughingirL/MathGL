@@ -478,7 +478,7 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 		else if(s==unsigned(-1))	// set normal font
 			st = style & MGL_FONT_ROMAN;
 		else if((s&MGL_COLOR_MASK)==MGL_COLOR_MASK)	// color specification
-			ccol = -(s&0xff);
+			ccol = -float(s & 0xff);
 		else
 		{
 			ss = s&MGL_FONT_MASK;

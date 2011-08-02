@@ -33,9 +33,17 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr)
 {
-	mglData a;	mgls_prepare2d(&a);
-	gr->Box();
-	gr->Cont(a,"t");
+	float a[100];   // let a_i = sin(4*pi*x), x=0...1
+	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
+	mglParse *parser = new mglParse;
+	mglData &d =(parser->AddVar("dat"))->d;
+	d.Set(a,100); // set data to variable
+	parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
+	// you may break script at any line do something
+	// and continue after that
+	parser->Execute(gr, "xlabel 'x'\nylabel 'y'\nbox");
+	// also you may use cycles or conditions in script
+	parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
 	return 0;
 }
 //-----------------------------------------------------------------------------

@@ -722,7 +722,7 @@ HMDT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir)
 				{	ff = 0.5*(k-dd/2.)/dd;	ff=0.5+ff*(3-ff*ff);	}
 				else if(k>=3*dd)
 				{	ff = 0.5*(k-3.5*dd)/dd;	ff=0.5-ff*(3-ff*ff);	}
-				a[2*k] = re->v(i,i0)*ff;	a[2*k+1] = im->v(i,i0)*ff;
+				a[2*k] = re->v(i0,j)*ff;	a[2*k+1] = im->v(i0,j)*ff;
 			}
 			gsl_fft_complex_forward(a, 1, 2*dn, wt, ws);
 			for(k=0;k<dd;k++)

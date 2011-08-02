@@ -1786,8 +1786,8 @@ mglSample samp[] = {
 	{"mesh", smgl_mesh},
 	{"mesh_cont", smgl_mesh_cont},
 	{"mirror", smgl_mirror},
-//	{"molecule", smgl_molecule},	// TODO: enable sample later
-//	{"parser", smgl_parser},		// TODO: enable sample later
+	{"molecule", smgl_molecule},
+//	{"parser", smgl_parser},	// TODO: enable later
 	{"pde", smgl_pde},
 	{"pie_chart", smgl_pie_chart},
 	{"pipe", smgl_pipe},
@@ -1812,14 +1812,14 @@ mglSample samp[] = {
 	{"sampleb", smgl_sampleb},
 	{"samplec", smgl_samplec},
 	{"sampled", smgl_sampled},
-//	{"samplee", smgl_samplee},	// TODO: enable sample later
+	{"samplee", smgl_samplee},
 	{"semilog", smgl_semilog},
 	{"several_light", smgl_several_light},
 	{"sew", smgl_sew},
 	{"stem", smgl_stem},
 	{"step", smgl_step},
 	{"stereo", smgl_stereo},
-//	{"stfa", smgl_stfa},	// TODO add later
+	{"stfa", smgl_stfa},
 	{"stick", smgl_stick},
 	{"surf", smgl_surf},
 	{"surf3", smgl_surf3},

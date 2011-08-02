@@ -34,7 +34,8 @@ public:
 	inline mglGraph(int kind=0, int width=600, int height=400)
 	{
 		if(kind==1)		gr=mgl_create_graph_gl();
-//		else if(kind==2)gr=mgl_create_graph_idtf();
+		else if(kind==-1)	gr=NULL;
+//		else if(kind==2)	gr=mgl_create_graph_idtf();
 		else	gr=mgl_create_graph(width, height);
 	}
 	inline mglGraph(const mglGraph &graph)

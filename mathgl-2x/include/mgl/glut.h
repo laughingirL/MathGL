@@ -82,11 +82,11 @@ private:
 class mglGLUT: public mglGraph
 {
 public:
-	mglGLUT(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL)
+	mglGLUT(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL) : mglGraph(-1)
 	{	gr = mgl_create_graph_glut(draw,title,par);	}
-	mglGLUT(int (*draw)(mglGraph *gr), const char *title="MathGL")
+	mglGLUT(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglGraph(-1)
 	{	gr = mgl_create_graph_glut(mgl_draw_graph,title,(void*)draw);	}
-	mglGLUT(mglDraw *dr=NULL, const char *title="MathGL")
+	mglGLUT(mglDraw *dr=NULL, const char *title="MathGL") : mglGraph(-1)
 	{	mgl_create_graph_glut(mgl_draw_class,title,dr);	}
 };
 //-----------------------------------------------------------------------------
