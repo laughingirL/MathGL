@@ -25,7 +25,7 @@
 #include <unistd.h>
 //#include <pthread.h>
 
-#include "mgl/mgl_fltk.h"
+#include "mgl/fltk.h"
 
 #ifdef USE_GETTEXT
 	#include <libintl.h>

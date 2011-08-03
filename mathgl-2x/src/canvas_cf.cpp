@@ -78,6 +78,8 @@ void mgl_aspect(HMGL gr, float Ax,float Ay,float Az)
 {	_Gr_->Aspect(Ax,Ay,Az);	}
 void mgl_rotate(HMGL gr, float TetX,float TetZ,float TetY)
 {	_Gr_->Rotate(TetX,TetZ,TetY);	}
+void mgl_view(HMGL gr, float TetX,float TetZ,float TetY)
+{	_Gr_->View(TetX,TetZ,TetY);	}
 void mgl_rotate_vector(HMGL gr, float Tet,float x,float y,float z)
 {	_Gr_->RotateN(Tet,x,y,z);	}
 void mgl_perspective(HMGL gr, float val)
@@ -140,6 +142,8 @@ void mgl_aspect_(uintptr_t *gr, float *Ax,float *Ay,float *Az)
 {	_GR_->Aspect(*Ax,*Ay,*Az);	}
 void mgl_rotate_(uintptr_t *gr, float *TetX,float *TetZ,float *TetY)
 {	_GR_->Rotate(*TetX,*TetZ,*TetY);	}
+void mgl_view_(uintptr_t *gr, float *TetX,float *TetZ,float *TetY)
+{	_GR_->View(*TetX,*TetZ,*TetY);	}
 void mgl_rotate_vector_(uintptr_t *gr, float *Tet,float *x,float *y,float *z)
 {	_GR_->RotateN(*Tet,*x,*y,*z);	}
 void mgl_perspective_(uintptr_t *gr, float val)

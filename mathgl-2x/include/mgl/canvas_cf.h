@@ -126,6 +126,7 @@ void mgl_frame_box_w(HMGL gr, const wchar_t *title, const char *stl, float size)
 
 void mgl_aspect(HMGL gr, float Ax,float Ay,float Az);
 void mgl_rotate(HMGL gr, float TetX,float TetZ,float TetY);
+void mgl_view(HMGL gr, float TetX,float TetZ,float TetY);
 void mgl_rotate_vector(HMGL gr, float Tet,float x,float y,float z);
 void mgl_perspective(HMGL gr, float val);
 
@@ -225,6 +226,7 @@ void mgl_stickplot_(uintptr_t *graph, int *num, int *i, float *tet, float *phi);
 void mgl_frame_box_(uintptr_t *gr, const char *title, const char *stl, float *size, int,int);
 void mgl_aspect_(uintptr_t *graph, float *Ax,float *Ay,float *Az);
 void mgl_rotate_(uintptr_t *graph, float *TetX,float *TetZ,float *TetY);
+void mgl_view_(uintptr_t *graph, float *TetX,float *TetZ,float *TetY);
 void mgl_rotate_vector_(uintptr_t *graph, float *Tet,float *x,float *y,float *z);
 void mgl_perspective_(uintptr_t *graph, float val);
 

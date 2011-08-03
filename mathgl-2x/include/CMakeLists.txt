@@ -13,6 +13,7 @@ install(DIRECTORY mgl/ DESTINATION ${MGL_INCLUDE_PATH}
                         PATTERN "glut.h" EXCLUDE
                         PATTERN "wx.h" EXCLUDE
                         PATTERN "qt.h" EXCLUDE
+                        PATTERN "*~" EXCLUDE
                         PATTERN "*.fs"
                         PATTERN "*.pas"
                         PATTERN "*.h")

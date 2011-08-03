@@ -36,7 +36,7 @@
 #include <QPrintDialog>
 #include <QFileDialog>
 #include <stdio.h>
-#include "mgl/mgl_qt.h"
+#include "mgl/qt.h"
 //-----------------------------------------------------------------------------
 #include "xpm/fileprint.xpm"
 #include "xpm/copy.xpm"

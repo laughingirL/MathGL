@@ -144,7 +144,7 @@ public:
 	inline void ShowImage(const char *viewer, bool keep=0)
 	{	mgl_show_image(gr, viewer, keep);	}
 	/// Write the frame in file (depending extension, write current frame if fname is empty)
-	inline void WriteFrame(const char *fname,const char *descr="")
+	inline void WriteFrame(const char *fname=0,const char *descr="")
 	{	mgl_write_frame(gr, fname, descr);	}
 	/// Write the frame in file using IDTF format
 	inline void WriteIDTF(const char *fname,const char *descr="")
@@ -307,6 +307,9 @@ public:
 	/// Set perspective (in range [0,1)) for plot. Set to zero for switching off.
 	inline void Perspective(float val)
 	{	mgl_perspective(gr, val);	}
+	/// Set angle of view indepently from mglCanvas::Rotate().
+	inline void View(float TetX,float TetZ=0,float TetY=0)
+	{	mgl_view(gr, TetX, TetZ, TetY);	}
 
 	/// Set range in direction dir as [c1, c2]
 	inline void SetRange(char dir, float c1, float c2)

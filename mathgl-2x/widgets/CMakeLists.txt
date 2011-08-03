@@ -45,7 +45,7 @@ endif(use_wx)
 if(use_qt)
 	include(${QT_USE_FILE})
 	add_definitions(-DHAVE_QT)
-	qt_wrap_cpp(mgl-qt MGL_MOC_FILES ../include/mgl/mgl_qt.h)
+	qt_wrap_cpp(mgl-qt MGL_MOC_FILES ../include/mgl/qt.h)
 	set(mgl_wnd_src ${mgl_wnd_src} qt.cpp ${MGL_MOC_FILES})
 endif(use_qt)
 

@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include <stdio.h>
 #include "mgl/mgl.h"
-#include "mgl/mgl_qt.h"
+#include "mgl/qt.h"
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr);
 int sample(mglGraph *gr);
