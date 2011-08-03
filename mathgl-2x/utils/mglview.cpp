@@ -61,7 +61,10 @@ int main(int narg, char **arg)
 #elif defined(HAVE_QT)
 	int kind=1;
 #endif
+#if defined(HAVE_FLTK) || defined(HAVE_QT)
 	mglWindow gr(kind,show,j>0?arg[j]:"mglview");
-	gr.Run();	return 0;
+	gr.Run();
+#endif
+	return 0;
 }
 //-----------------------------------------------------------------------------

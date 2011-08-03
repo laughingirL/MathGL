@@ -35,12 +35,12 @@ include $(top_srcdir)/config/autotroll.mk
 ACLOCAL_AMFLAGS = -I $(top_srcdir)/config/
 
 bin_PROGRAMS += mgl_qt_example
-mgl_qt_example_SOURCES = wnd_samples.cpp $(top_builddir)/include/mgl/mgl_qt.moc.cpp $(top_srcdir)/include/mgl/mgl_qt.h qt_example.cpp
+mgl_qt_example_SOURCES = wnd_samples.cpp $(top_builddir)/include/mgl/qt.moc.cpp $(top_srcdir)/include/mgl/qt.h qt_example.cpp
 mgl_qt_example_LDADD = $(QT_LIBS) $(top_builddir)/widgets/libmgl-wnd.la $(top_builddir)/src/libmgl.la
 mgl_qt_example_LDFLAGS = $(QT_LDFLAGS)
 mgl_qt_example_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS)
 mgl_qt_example_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
 
-BUILT_SOURCES = $(top_builddir)/include/mgl/mgl_qt.moc.cpp
+BUILT_SOURCES = $(top_builddir)/include/mgl/qt.moc.cpp
 CLEANFILES = $(BUILT_SOURCES)
 endif

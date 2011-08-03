@@ -30,8 +30,8 @@ libmgl_wnd_la_LDFLAGS += $(QT_LDFLAGS)
 libmgl_wnd_la_LIBADD += $(QT_LIBS)
 libmgl_wnd_la_CPPFLAGS += $(QT_CPPFLAGS)
 libmgl_wnd_la_CXXFLAGS += $(QT_CXXFLAGS)
-libmgl_wnd_la_SOURCES += $(top_builddir)/include/mgl/mgl_qt.moc.cpp qt.cpp $(top_srcdir)/include/mgl/mgl_qt.h
+libmgl_wnd_la_SOURCES += $(top_builddir)/include/mgl/qt.moc.cpp qt.cpp $(top_srcdir)/include/mgl/qt.h
 
-BUILT_SOURCES = $(top_builddir)/include/mgl/mgl_qt.moc.cpp
+BUILT_SOURCES = $(top_builddir)/include/mgl/qt.moc.cpp
 CLEANFILES = $(BUILT_SOURCES)
 endif
