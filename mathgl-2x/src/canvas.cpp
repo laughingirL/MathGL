@@ -515,14 +515,14 @@ void mglCanvas::StickPlot(int num, int id, float tet, float phi)
 	mglPoint p1(-1,0,0), p2(1,0,0);
 	InPlot(0,1,0,1,true);	Rotate(tet, phi);
 	PostScale(p1);	PostScale(p2);
-	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/B1.b[0]);	dx=(p2.x-p1.x)*w0/B1.b[0];
-	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/B1.b[4]);	dy=(p2.y-p1.y)*h0/B1.b[4];
+	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/inW);	dx=(p2.x-p1.x)*w0/inW;
+	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/inH);	dy=(p2.y-p1.y)*h0/inH;
 
 	p1 = mglPoint(-1,0,0);	p2 = mglPoint(1,0,0);
 	InPlot(dx>0?0:1-w0, dx>0?w0:1, dy>0?0:1-h0, dy>0?h0:1, true);
 	Rotate(tet,phi);	PostScale(p1);	PostScale(p2);
-	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/B1.b[0]);	dx=(p2.x-p1.x)*w0/B1.b[0];
-	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/B1.b[4]);	dy=(p2.y-p1.y)*h0/B1.b[4];
+	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/inW);	dx=(p2.x-p1.x)*w0/inW;
+	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/inH);	dy=(p2.y-p1.y)*h0/inH;
 
 	float x1=dx>0?dx*id:1-w0+dx*id, x2=dx>0?w0+dx*id:1+dx*id;
 	float y1=dy>0?dy*id:1-h0+dy*id, y2=dy>0?h0+dy*id:1+dy*id;

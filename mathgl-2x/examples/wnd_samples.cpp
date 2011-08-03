@@ -33,17 +33,19 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr)
 {
-	float a[100];   // let a_i = sin(4*pi*x), x=0...1
-	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
-	mglParse *parser = new mglParse;
-	mglData &d =(parser->AddVar("dat"))->d;
-	d.Set(a,100); // set data to variable
-	parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
-	// you may break script at any line do something
-	// and continue after that
-	parser->Execute(gr, "xlabel 'x'\nylabel 'y'\nbox");
-	// also you may use cycles or conditions in script
-	parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+//	gr->SubPlot(1,1,0,"<>^_");
+//	gr->SubPlot(1,1,0,"");
+	gr->SetRanges(-1, 1, -1, 1, 0, 1);	gr->Light(true);
+	gr->StickPlot(3, 0, 40, 30);		gr->Axis("xyz_");
+	gr->Surf("exp(-10*y^2-6*x^2)");
+	gr->Puts(mglPoint(0.2, 0, 1.2), "z=0", "", -2);
+	gr->StickPlot(3, 1, 40, 30);		gr->Axis("xyz_");
+	gr->Surf("exp(-10*y^2/2-6*x^2)/sqrt(2)");
+	gr->Puts(mglPoint(0.2, 0, 1.2), "z=1", "", -2);
+	gr->StickPlot(3, 2, 40, 30);		gr->Axis("xyz_");
+	gr->Surf("exp(-10*y^2/5-6*x^2)/sqrt(5)");
+	gr->Puts(mglPoint(0.2, 0, 1.2), "z=2", "", -2);
+	gr->Label('x',"\\tau", 0);	gr->Label('y', "\\rho");
 	return 0;
 }
 //-----------------------------------------------------------------------------
