@@ -189,8 +189,14 @@ struct mglThread
 void mglStartThread(void *(*func)(void *), void (*post)(mglThread *,mreal *), long n, mreal *a=0, const mreal *b=0, const mreal *c=0, const long *p=0, void *v=0, const mreal *d=0, const mreal *e=0, char *s=0);
 void mglSetNumThr(int n=0);	///< Set number of thread for plotting and data handling
 extern int mglNumThr;		///< Number of thread for plotting and data handling
+
+extern "C" {
 #endif
-//-----------------------------------------------------------------------------
+void mgl_test_txt(const char *str, ...);
+void mgl_set_test_mode(int enable);
+#ifdef __cplusplus
+}
+#endif
 #ifdef HAVE_PTHREAD
 #include <pthread.h>
 #define MGL_PUSH(a,v,m)		{pthread_mutex_lock(&m);	a.push_back(v);	pthread_mutex_unlock(&m);}

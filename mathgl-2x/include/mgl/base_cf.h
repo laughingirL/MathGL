@@ -31,8 +31,6 @@ void mgl_buf_warn(HMGL gr, char *buf);
 long mgl_use_graph(HMGL gr, int inc);
 void mgl_start_group(HMGL gr, const char *);
 void mgl_end_group(HMGL gr);
-void mgl_test_txt(const char *str, ...);
-void mgl_set_test_mode(int enable);
 
 void mgl_set_palette(HMGL gr, const char *colors);
 void mgl_set_alpha_default(HMGL graph, float alpha);

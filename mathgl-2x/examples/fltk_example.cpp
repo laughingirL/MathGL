@@ -57,6 +57,7 @@ int main(int argc,char **argv)
 	char key = 0;
 	if(argc>1)	key = (argv[1][0]!='-') ? argv[1][0] : argv[1][1];
 	if(!key)	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
+mgl_set_test_mode(true);
 	mglCanvasFL gr;
 	switch(key)
 	{

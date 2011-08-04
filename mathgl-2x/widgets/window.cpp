@@ -21,6 +21,7 @@
 //-----------------------------------------------------------------------------
 mglCanvasW::mglCanvasW() : mglCanvas()
 {
+mgl_test_txt("mglCanvasW constructor: G = %p\n",G);
 	AutoClf=true;	ClfOnUpdate=true;
 	Delay=0.5;		ShowMousePos=false;
 	LoadFunc=0;	FuncPar=0;	DrawFunc=0;
@@ -59,6 +60,7 @@ void mglCanvasW::EndFrame()
 const unsigned char *mglCanvasW::GetBits()
 {
 	const unsigned char *g = mglCanvas::GetBits();
+mgl_test_txt("GetBits(): g = %p, G = %p\n",g,G);
 	if(GG && NumFig>0 && CurFig<NumFig && CurFig>=0)
 		g = GG + CurFig*Width*Height*3;
 	return g;

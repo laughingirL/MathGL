@@ -38,6 +38,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	memset(&mutexPrm,0,sizeof(pthread_mutex_t));	memset(&mutexPtx,0,sizeof(pthread_mutex_t));
 	memset(&mutexStack,0,sizeof(pthread_mutex_t));
 	SetSize(w,h);	SetQuality(MGL_DRAW_NORM);	DefaultPlotParam();
+mgl_test_txt("mglCanvas constructor: G = %p\n",G);
 }
 //-----------------------------------------------------------------------------
 mglCanvas::~mglCanvas()

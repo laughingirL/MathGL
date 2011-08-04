@@ -98,19 +98,17 @@
 		<Unit filename="include/mgl/define.h" />
 		<Unit filename="include/mgl/eval.h" />
 		<Unit filename="include/mgl/fit.h" />
+		<Unit filename="include/mgl/fltk.h" />
 		<Unit filename="include/mgl/font.h" />
-		<Unit filename="include/mgl/glut.h">
-			<Option target="GLUT" />
-		</Unit>
+		<Unit filename="include/mgl/glut.h" />
 		<Unit filename="include/mgl/mgl.h" />
 		<Unit filename="include/mgl/mgl_cf.h" />
-		<Unit filename="include/mgl/mgl_fltk.h" />
-		<Unit filename="include/mgl/mgl_qt.h" />
 		<Unit filename="include/mgl/opengl.h" />
 		<Unit filename="include/mgl/other.h" />
 		<Unit filename="include/mgl/parser.h" />
 		<Unit filename="include/mgl/plot.h" />
 		<Unit filename="include/mgl/prim.h" />
+		<Unit filename="include/mgl/qt.h" />
 		<Unit filename="include/mgl/surf.h" />
 		<Unit filename="include/mgl/vect.h" />
 		<Unit filename="include/mgl/volume.h" />
