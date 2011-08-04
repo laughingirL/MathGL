@@ -58,7 +58,6 @@ using mglCanvasW::Window;
 	void ToggleAlpha();
 	/// Switch on/off lighting (do not overwrite switches in user drawing function)
 	void ToggleLight();
-	void ToggleZoom();	///< Switch on/off zooming by mouse
 	void ToggleRotate();///< Switch on/off rotation by mouse
 	void ToggleNo();	///< Switch off all zooming and rotation
 	void Update();		///< Update picture by calling user drawing function
@@ -69,14 +68,14 @@ using mglCanvasW::Window;
 	void Animation();	///< Run slideshow (animation) of frames
 
 protected:
-	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *zoom_bt, *anim_bt;
+	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *anim_bt;
 	Fl_Counter *tet, *phi;
 	Fl_Scroll	*scroll;
 	Fl_Menu_Bar	*menu;
 
 	int alpha;		///< Current state of alpha switch (toggle button)
 	int light;		///< Current state of light switch (toggle button)
-	bool zoom, rotate;
+	bool rotate;
 };
 //-----------------------------------------------------------------------------
 /// Class is FLTK widget which display MathGL graphics
@@ -102,13 +101,7 @@ public:
 	/// Set bitwise flags for general state (1-Alpha, 2-Light)
 	inline void set_state(int f)			{	flag = f;	};
 	/// Set flags for handling mouse
-	void set_state(bool z, bool r)	{	zoom = z;	rotate = r;	};
-	/// Set zoom in/out region
-	inline void set_zoom(mreal X1, mreal Y1, mreal X2, mreal Y2)
-	{	x1 = X1;	x2 = X2;	y1 = Y1;	y2 = Y2;	};
-	/// Get zoom region
-	inline void get_zoom(mreal *X1, mreal *Y1, mreal *X2, mreal *Y2)
-	{	*X1 = x1;	*X2 = x2;	*Y1 = y1;	*Y2 = y2;	};
+	void set_state(bool r)	{	rotate = r;	};
 	/// Get pointer to grapher
 	inline mglCanvas *get_graph()	{	return graph;	};
 	/// Set popup menu pointer
@@ -118,9 +111,8 @@ protected:
 	const Fl_Menu_Item *popup;	///< pointer to popup menu items
 	Fl_Widget *wpar;			///< widget for popup menu
 	void *vpar;					///< parameter for popup menu
-	mreal tet,phi;				///< rotation angles
-	mreal x1,x2,y1,y2;			///< zoom in region
-	bool zoom, rotate;			///< flag for handle mouse
+	float tet,phi;				///< rotation angles
+	bool rotate;				///< flag for handle mouse
 	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
 	int x0,y0,xe,ye;			///< mouse position
 	char pos[128];

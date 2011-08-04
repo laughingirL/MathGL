@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "mgl/window.h"
-#include "mgl/mgl.h"
 //-----------------------------------------------------------------------------
 mglCanvasW::mglCanvasW() : mglCanvas()
 {
@@ -59,8 +58,7 @@ void mglCanvasW::EndFrame()
 //-----------------------------------------------------------------------------
 const unsigned char *mglCanvasW::GetBits()
 {
-	Finish();
-	unsigned char *g = G;
+	const unsigned char *g = mglCanvas::GetBits();
 	if(GG && NumFig>0 && CurFig<NumFig && CurFig>=0)
 		g = GG + CurFig*Width*Height*3;
 	return g;
@@ -78,8 +76,8 @@ void mgl_wnd_toggle_alpha(HMGL gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleAlpha();	}
 void mgl_wnd_toggle_light(HMGL gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleLight();	}
-void mgl_wnd_toggle_zoom(HMGL gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleZoom();	}
+//void mgl_wnd_toggle_zoom(HMGL gr)
+//{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleZoom();	}
 void mgl_wnd_toggle_rotate(HMGL gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleRotate();	}
 void mgl_wnd_toggle_no(HMGL gr)
@@ -115,9 +113,9 @@ void mgl_wnd_toggle_alpha_(uintptr_t *gr)
 void mgl_wnd_toggle_light_(uintptr_t *gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
 	if(g)	g->ToggleLight();	}
-void mgl_wnd_toggle_zoom_(uintptr_t *gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
-	if(g)	g->ToggleZoom();	}
+//void mgl_wnd_toggle_zoom_(uintptr_t *gr)
+//{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+//	if(g)	g->ToggleZoom();	}
 void mgl_wnd_toggle_rotate_(uintptr_t *gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
 	if(g)	g->ToggleRotate();	}

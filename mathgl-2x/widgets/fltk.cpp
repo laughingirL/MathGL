@@ -39,28 +39,28 @@
 //-----------------------------------------------------------------------------
 #include "xpm/alpha_on.xpm"
 #include "xpm/light_on.xpm"
-#include "xpm/zoom_on.xpm"
+//#include "xpm/zoom_on.xpm"
 #include "xpm/show_on.xpm"
 #include "xpm/rotate_on.xpm"
 #include "xpm/show_sl.xpm"
 #include "xpm/next_sl.xpm"
 #include "xpm/prev_sl.xpm"
-#include "xpm/left_1.xpm"
-#include "xpm/right_1.xpm"
-#include "xpm/down_1.xpm"
-#include "xpm/norm_1.xpm"
-#include "xpm/zoom_1.xpm"
-#include "xpm/up_1.xpm"
+//#include "xpm/left_1.xpm"
+//#include "xpm/right_1.xpm"
+//#include "xpm/down_1.xpm"
+//#include "xpm/norm_1.xpm"
+//#include "xpm/zoom_1.xpm"
+//#include "xpm/up_1.xpm"
 #include "xpm/alpha.xpm"
 #include "xpm/light.xpm"
-#include "xpm/zoom_in.xpm"
+//#include "xpm/zoom_in.xpm"
 #include "xpm/zoom_out.xpm"
 #include "xpm/rotate.xpm"
 #include "xpm/ok.xpm"
 //-----------------------------------------------------------------------------
 Fl_Pixmap xpm_a1(alpha_xpm), xpm_a2(alpha_on_xpm);
 Fl_Pixmap xpm_l1(light_on_xpm), xpm_l2(light_xpm);
-Fl_Pixmap xpm_z1(zoom_in_xpm), xpm_z2(zoom_on_xpm);
+//Fl_Pixmap xpm_z1(zoom_in_xpm), xpm_z2(zoom_on_xpm);
 Fl_Pixmap xpm_s1(show_sl_xpm), xpm_s2(show_on_xpm);
 Fl_Pixmap xpm_r1(rotate_xpm), xpm_r2(rotate_on_xpm);
 //-----------------------------------------------------------------------------
@@ -70,9 +70,8 @@ Fl_Pixmap xpm_r1(rotate_xpm), xpm_r2(rotate_on_xpm);
 //-----------------------------------------------------------------------------
 Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, char *lbl) : Fl_Widget(xx,yy,ww,hh,lbl)
 {
-	graph = 0;
-	tet=phi=x1=y1=0;	x2=y2=1;
-	zoom = rotate = false;
+	graph = 0;	tet=phi=0;
+	rotate = false;
 	flag=x0=y0=xe=ye=0;
 	tet_val = phi_val = 0;
 	draw_par = 0;	draw_func = 0;
@@ -82,11 +81,8 @@ Fl_MathGL::~Fl_MathGL()	{}
 //-----------------------------------------------------------------------------
 void Fl_MathGL::draw()
 {
-	if(zoom && x0!=xe && y0!=ye)
-		fl_rect(x0<xe?x0:xe, y0<ye?y0:ye, abs(xe-x0), abs(ye-y0));
 	const unsigned char *g = graph ? graph->GetBits() : 0;
-	if(g)
-		fl_draw_image(g, x(), y(), graph->GetWidth(), graph->GetHeight(), 3);
+	if(g)	fl_draw_image(g, x(), y(), graph->GetWidth(), graph->GetHeight(), 3);
 }
 //-----------------------------------------------------------------------------
 void Fl_MathGL::update(mglCanvas *gr)
@@ -97,15 +93,14 @@ void Fl_MathGL::update(mglCanvas *gr)
 	{
 		if(gr!=graph || graph->ClfOnUpdate)	gr->DefaultPlotParam();
 		gr->ResetFrames();
-		gr->Message = new char[2048];	gr->Message[0] = 0;
-		gr->Alpha(flag&1);
-		gr->Light(flag&2);
-		gr->View(tet,phi);
-		gr->Clf();
+		char *buf = new char[2048];	*buf = 0;
+		gr->Message = buf;
+		gr->Alpha(flag&1);	gr->Light(flag&2);
+		gr->View(tet,phi);	gr->Clf();
 //		gr->DrawFace = !rotate;		// TODO: switch to fast drawing here
 		draw_func(gr, draw_par);
-		if(gr->Message[0] != 0)			fl_message("%s",gr->Message);
-		delete []gr->Message;			gr->Message = 0;
+		if(*buf)	fl_message("%s",buf);
+		gr->Message = 0;	delete []buf;
 	}
 	if(gr==graph && (graph->GetWidth()!=w() || graph->GetHeight()!=h()))
 		size(graph->GetWidth(), graph->GetHeight());
@@ -122,14 +117,14 @@ int Fl_MathGL::handle(int code)
 		const Fl_Menu_Item *m = popup->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
 		if(m)	m->do_callback(wpar, vpar);
 	}
-	if(graph->ShowMousePos && !zoom && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
+	if(graph->ShowMousePos && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
 	{
 		mglPoint p = graph->CalcXYZ(Fl::event_x()-x(), Fl::event_y()-y());
 		char s[128];
 		sprintf(s,"x=%g, y=%g, z=%g",p.x,p.y,p.z);
 		draw();	fl_color(FL_BLACK);		fl_draw(s,40,70);
 	}
-	if((!zoom && !rotate) || Fl::event_button()!=FL_LEFT_MOUSE)
+	if(!rotate || Fl::event_button()!=FL_LEFT_MOUSE)
 	{
 		if(code==FL_FOCUS || code==FL_UNFOCUS)	return 1;
 		if(code==FL_KEYUP)
@@ -220,24 +215,8 @@ int Fl_MathGL::handle(int code)
 	}
 	if(code==FL_RELEASE)
 	{
-		if(zoom)
-		{
-			int w1=w(),h1=h();
-			mreal _x1,_x2,_y1,_y2;
-			_x1 = x1+(x2-x1)*(x0-x())/mreal(w1);
-			_y1 = y2-(y2-y1)*(ye-y())/mreal(h1);
-			_x2 = x1+(x2-x1)*(xe-x())/mreal(w1);
-			_y2 = y2-(y2-y1)*(y0-y())/mreal(h1);
-			x1=_x1;		x2=_x2;		y1=_y1;		y2=_y2;
-			if(x1>x2)	{	_x1=x1;	x1=x2;	x2=_x1;	}
-			if(y1>y2)	{	_x1=y1;	y1=y2;	y2=_x1;	}
-			update();
-		}
-		else
-		{
-			if(tet_val)	tet_val->value(tet);
-			if(phi_val)	phi_val->value(phi);
-		}
+		if(tet_val)	tet_val->value(tet);
+		if(phi_val)	phi_val->value(phi);
 		redraw();
 	}
 	return 1;
@@ -248,9 +227,7 @@ int Fl_MathGL::handle(int code)
 //
 //-----------------------------------------------------------------------------
 mglCanvasFL::mglCanvasFL() : mglCanvasW()
-{
-	Wnd = 0;	alpha = light = sshow = 0;
-}
+{	Wnd = 0;	alpha = light = sshow = 0;	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::NextFrame()
 {
@@ -290,29 +267,15 @@ void draw_cb(Fl_Widget*, void* v)	{	((mglCanvasFL*)v)->Update();	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::ToggleNo()
 {
-	zoom_bt->value(0);		zoom_bt->image(xpm_z1);		zoom_bt->redraw();
 	rotate_bt->value(0);	rotate_bt->image(xpm_r1);	rotate_bt->redraw();
-
 	tet->value(0);			phi->value(0);
-	zoom = rotate = false;
-	FMGL->set_zoom(0,0,1,1);
-	Update();
+	rotate = false;			Update();
 }
 void norm_cb(Fl_Widget*, void* v)	{	((mglCanvasFL*)v)->ToggleNo();	}
 //-----------------------------------------------------------------------------
-void mglCanvasFL::ToggleZoom()
-{
-	rotate_bt->value(0);	rotate_bt->image(xpm_r1);	rotate_bt->redraw();
-	FMGL->set_state(zoom_bt->value(), false);
-	zoom_bt->image(zoom_bt->value()?xpm_z2:xpm_z1);
-	zoom_bt->redraw();
-}
-void zoom_cb(Fl_Widget*, void* v)	{	((mglCanvasFL*)v)->ToggleZoom();	}
-//-----------------------------------------------------------------------------
 void mglCanvasFL::ToggleRotate()
 {
-	zoom_bt->value(0);	zoom_bt->image(xpm_z1);	zoom_bt->redraw();
-	FMGL->set_state(false, rotate_bt->value()!=0);
+	FMGL->set_state(rotate_bt->value()!=0);
 	rotate_bt->image(rotate_bt->value()?xpm_r2:xpm_r1);
 	rotate_bt->redraw();
 	if(!rotate_bt->value())	Update();
@@ -321,7 +284,7 @@ void rotate_cb(Fl_Widget*, void* v)	{	((mglCanvasFL*)v)->ToggleRotate();	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Update()
 {
-	FMGL->set_state(zoom_bt->value(), rotate_bt->value());
+	FMGL->set_state(rotate_bt->value());
 	FMGL->set_state(alpha + 2*light);
 	FMGL->set_angle(tet->value(), phi->value());
 	CurFig=0;
@@ -373,68 +336,6 @@ void export_eps_cb(Fl_Widget*, void* v)
 void mglCanvasFL::ReLoad(bool o)
 {	if(LoadFunc)	{	LoadFunc(o, FuncPar);	Update();	}	}
 void oncemore_cb(Fl_Widget*, void*v)	{	((mglCanvasFL*)v)->ReLoad(true);	}
-//-----------------------------------------------------------------------------
-void su_cb(Fl_Widget*, void* v)
-{
-	mglCanvasFL* e = (mglCanvasFL*)v;
-	mreal x1,x2,y1,y2,d;
-	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
-	d = (y2-y1)/3;	y1 += d;	y2 += d;
-	e->FMGL->set_zoom(x1,y1,x2,y2);
-	e->Update();
-}
-//-----------------------------------------------------------------------------
-void sd_cb(Fl_Widget*, void* v)
-{
-	mglCanvasFL* e = (mglCanvasFL*)v;
-	mreal x1,x2,y1,y2,d;
-	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
-	d = (y2-y1)/3;	y1 -= d;	y2 -= d;
-	e->FMGL->set_zoom(x1,y1,x2,y2);
-	e->Update();
-}
-//-----------------------------------------------------------------------------
-void sr_cb(Fl_Widget*, void* v)
-{
-	mglCanvasFL* e = (mglCanvasFL*)v;
-	mreal x1,x2,y1,y2,d;
-	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
-	d = (x2-x1)/3;	x1 += d;	x2 += d;
-	e->FMGL->set_zoom(x1,y1,x2,y2);
-	e->Update();
-}
-//-----------------------------------------------------------------------------
-void sl_cb(Fl_Widget*, void* v)
-{
-	mglCanvasFL* e = (mglCanvasFL*)v;
-	mreal x1,x2,y1,y2,d;
-	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
-	d = (x2-x1)/3;	x1 -= d;	x2 -= d;
-	e->FMGL->set_zoom(x1,y1,x2,y2);
-	e->Update();
-}
-//-----------------------------------------------------------------------------
-void sz_cb(Fl_Widget*, void* v)
-{
-	mglCanvasFL* e = (mglCanvasFL*)v;
-	mreal x1,x2,y1,y2,d;
-	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
-	d = (y2-y1)/4;	y1 += d;	y2 -= d;
-	d = (x2-x1)/4;	x1 += d;	x2 -= d;
-	e->FMGL->set_zoom(x1,y1,x2,y2);
-	e->Update();
-}
-//-----------------------------------------------------------------------------
-void so_cb(Fl_Widget*, void* v)
-{
-	mglCanvasFL* e = (mglCanvasFL*)v;
-	mreal x1,x2,y1,y2,d;
-	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
-	d = (y2-y1)/2;	y1 -= d;	y2 += d;
-	d = (x2-x1)/2;	x1 -= d;	x2 += d;
-	e->FMGL->set_zoom(x1,y1,x2,y2);
-	e->Update();
-}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Adjust()
 {
@@ -546,10 +447,6 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	rotate_bt->image(xpm_r1);	rotate_bt->callback(rotate_cb,this);
 	rotate_bt->tooltip(gettext("Rotate picture by holding left mouse button"));
 	rotate_bt->box(FL_PLASTIC_UP_BOX);			rotate_bt->down_box(FL_PLASTIC_DOWN_BOX);
-	zoom_bt = new Fl_Button(80, 31, 25, 25);		zoom_bt->type(FL_TOGGLE_BUTTON);
-	zoom_bt->image(xpm_z1);	zoom_bt->callback(zoom_cb,this);
-	zoom_bt->tooltip(gettext("Zoom in selected region of the picture"));
-	zoom_bt->box(FL_PLASTIC_UP_BOX);				zoom_bt->down_box(FL_PLASTIC_DOWN_BOX);
 	o = new Fl_Button(105, 31, 25, 25);	o->tooltip(gettext("Return picture to normal zoom"));
 	o->image(new Fl_Pixmap(zoom_out_xpm));	o->callback(norm_cb,this);
 	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
@@ -568,33 +465,14 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	g->end();	g->resizable(0);
 
 	g = new Fl_Group(0,60,30,260);
-	o = new Fl_Button(1, 60, 25, 25);		o->tooltip(gettext("Shift the picture up"));
-	o->image(new Fl_Pixmap(up_1_xpm));		o->callback(su_cb,this);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(1, 85, 25, 25);		o->tooltip(gettext("Shift the picture left"));
-	o->image(new Fl_Pixmap(left_1_xpm));	o->callback(sl_cb,this);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(1, 110, 25, 25);		o->tooltip(gettext("Zoom in the picture"));
-	o->image(new Fl_Pixmap(zoom_1_xpm));	o->callback(sz_cb,this);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(1, 135, 25, 25);		o->tooltip(gettext("Zoom out the picture"));
-	o->image(new Fl_Pixmap(norm_1_xpm));	o->callback(so_cb,this);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(1, 160, 25, 25);		o->tooltip(gettext("Shift the picture right"));
-	o->image(new Fl_Pixmap(right_1_xpm));	o->callback(sr_cb,this);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(1, 185, 25, 25);		o->tooltip(gettext("Shift the picture down"));
-	o->image(new Fl_Pixmap(down_1_xpm));	o->callback(sd_cb,this);
-	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-
-	o = new Fl_Button(1, 215, 25, 25);		o->tooltip(gettext("Show previous frame in slideshow"));
+	o = new Fl_Button(1, 60, 25, 25);		o->tooltip(gettext("Show previous frame in slideshow"));
 	o->image(new Fl_Pixmap(prev_sl_xpm));	o->callback(sprev_cb,this);
 	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
-	anim_bt = new Fl_Button(1, 240, 25, 25);		anim_bt->type(FL_TOGGLE_BUTTON);
+	anim_bt = new Fl_Button(1, 85, 25, 25);		anim_bt->type(FL_TOGGLE_BUTTON);
 	anim_bt->image(xpm_s1);	anim_bt->callback(sshow_cb,this);
 	anim_bt->tooltip(gettext("Run/Stop slideshow (graphics animation)"));
 	anim_bt->box(FL_PLASTIC_UP_BOX);		anim_bt->down_box(FL_PLASTIC_DOWN_BOX);
-	o = new Fl_Button(1, 265, 25, 25);		o->tooltip(gettext("Show next frame in slideshow"));
+	o = new Fl_Button(1, 110, 25, 25);		o->tooltip(gettext("Show next frame in slideshow"));
 	o->image(new Fl_Pixmap(next_sl_xpm));	o->callback(snext_cb,this);
 	o->box(FL_PLASTIC_UP_BOX);	o->down_box(FL_PLASTIC_DOWN_BOX);
 

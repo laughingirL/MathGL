@@ -43,7 +43,7 @@ void mgl_wnd_set_delay(HMGL gr, float dt);
 void mgl_setup_window(HMGL gr, int autoclf, int showpos, int clf_upd);
 void mgl_wnd_toggle_alpha(HMGL gr);
 void mgl_wnd_toggle_light(HMGL gr);
-void mgl_wnd_toggle_zoom(HMGL gr);
+//void mgl_wnd_toggle_zoom(HMGL gr);
 void mgl_wnd_toggle_rotate(HMGL gr);
 void mgl_wnd_toggle_no(HMGL gr);
 void mgl_wnd_update(HMGL gr);
@@ -59,7 +59,7 @@ void mgl_wnd_set_delay_(uintptr_t *gr, float *dt);
 void mgl_setup_window_(uintptr_t *gr, int *autoclf, int *showpos, int *clf_upd);
 void mgl_wnd_toggle_alpha_(uintptr_t *gr);
 void mgl_wnd_toggle_light_(uintptr_t *gr);
-void mgl_wnd_toggle_zoom_(uintptr_t *gr);
+//void mgl_wnd_toggle_zoom_(uintptr_t *gr);
 void mgl_wnd_toggle_rotate_(uintptr_t *gr);
 void mgl_wnd_toggle_no_(uintptr_t *gr);
 void mgl_wnd_update_(uintptr_t *gr);
@@ -102,8 +102,8 @@ public:
 	{	mgl_wnd_toggle_alpha(gr);	}
 	inline void ToggleLight()	///< Switch on/off lighting (do not overwrite user settings)
 	{	mgl_wnd_toggle_light(gr);	}
-	inline void ToggleZoom()	///< Switch on/off zooming by mouse
-	{	mgl_wnd_toggle_zoom(gr);	}
+//	inline void ToggleZoom()	///< Switch on/off zooming by mouse
+//	{	mgl_wnd_toggle_zoom(gr);	}
 	inline void ToggleRotate()	///< Switch on/off rotation by mouse
 	{	mgl_wnd_toggle_rotate(gr);	}
 	inline void ToggleNo()		///< Switch off all zooming and rotation
@@ -150,7 +150,7 @@ public:
 
 	virtual void ToggleAlpha()=0;	///< Switch on/off transparency (do not overwrite user settings)
 	virtual void ToggleLight()=0;	///< Switch on/off lighting (do not overwrite user settings)
-	virtual void ToggleZoom()=0;	///< Switch on/off zooming by mouse
+//	virtual void ToggleZoom()=0;	///< Switch on/off zooming by mouse
 	virtual void ToggleRotate()=0;	///< Switch on/off rotation by mouse
 	virtual void ToggleNo()=0;		///< Switch off all zooming and rotation
 	virtual void Update()=0;		///< Update picture by calling user drawing function

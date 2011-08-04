@@ -19,8 +19,8 @@
  ***************************************************************************/
 #include <stdlib.h>
 #include <math.h>
-#include "mgl/canvas.h"
 #include <algorithm>
+#include "mgl/canvas.h"
 //-----------------------------------------------------------------------------
 void mglCanvas::SetSize(int w,int h)
 {
