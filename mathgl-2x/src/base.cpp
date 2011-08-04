@@ -51,7 +51,15 @@ void mgl_strlwr(char *str)
 //-----------------------------------------------------------------------------
 mglBase::mglBase()
 {
-	memset(this,0,sizeof(mglBase));	// since mglBase is abstract then I can do it?!!
+//	memset(this,0,sizeof(mglBase));	// since mglBase is abstract then I can do it?!!
+	Message=0;	Flag=0;	saved=false;	prev_val=0;
+#ifdef HAVE_PTHREAD
+	memset(&mutexPnt,0,sizeof(pthread_mutex_t));
+	memset(&mutexTxt,0,sizeof(pthread_mutex_t));
+#endif
+	fnt=0;	*FontDef=*last_style=0;
+	fx=fy=fz=fa=fc=0;
+
 	InUse = 1;	prev_val = NAN;
 	// Always create default palette txt[0] and default scheme txt[1]
 	Txt.push_back(mglTexture(MGL_DEF_PAL,-1));
@@ -59,7 +67,6 @@ mglBase::mglBase()
 	last_style[0]='k';	last_style[1]='-';	last_style[2]='0';
 	last_style[3]=last_style[4]=0;
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
-//	mutexPnt = PTHREAD_MUTEX_INITIALIZER;	mutexTxt = PTHREAD_MUTEX_INITIALIZER;
 }
 mglBase::~mglBase()	{	ClearEq();	}
 //-----------------------------------------------------------------------------

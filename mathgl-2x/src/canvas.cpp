@@ -34,9 +34,11 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
 	az.dir = mglPoint(0,0,1);	az.a = mglPoint(0,1,0);	az.b = mglPoint(1,0,0);	az.ch='z';
+#ifdef HAVE_PTHREAD
 	memset(&mutexSub,0,sizeof(pthread_mutex_t));	memset(&mutexLeg,0,sizeof(pthread_mutex_t));
 	memset(&mutexPrm,0,sizeof(pthread_mutex_t));	memset(&mutexPtx,0,sizeof(pthread_mutex_t));
 	memset(&mutexStack,0,sizeof(pthread_mutex_t));
+#endif
 	SetSize(w,h);	SetQuality(MGL_DRAW_NORM);	DefaultPlotParam();
 mgl_test_txt("mglCanvas constructor: G = %p\n",G);
 }
