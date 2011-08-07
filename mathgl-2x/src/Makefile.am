@@ -37,8 +37,8 @@ endif
 libmgl_la_SOURCES = \
 axis.cpp	base_cf.cpp	base.cpp	canvas_cf.cpp	canvas.cpp \
 cont.cpp	crust.cpp	data.cpp	data_io.cpp	data_new.cpp \
-data_op.cpp	data_png.cpp	def_font.cpp	eps_svg.cpp	eval.cpp \
+data_op.cpp	data_png.cpp	def_font.cpp	export_2d.cpp	eval.cpp \
 evalp.cpp	exec.cpp	export.cpp	fit.cpp		font.cpp \
 opengl.cpp	other.cpp	parser.cpp	tex_table.cpp	pde.cpp \
 pixel.cpp	plot.cpp	prim.cpp	surf.cpp	vect.cpp \
-volume.cpp
+volume.cpp	export_3d.cpp

@@ -311,10 +311,9 @@ public:
 	void SetWarn(int code, const char *who="");
 	int inline GetWarn()	{	return WarnCode;	}
 
-	virtual void StartGroup (const char *){}
-	virtual void StartAutoGroup (const char *){}
+	virtual void StartAutoGroup (const char *)=0;
 	void StartGroup(const char *name, int id);
-	virtual void EndGroup()	{	LoadState();	}
+	virtual void EndGroup()=0;	//	{	LoadState();	}
 
 	/// Set FontSize by size in pt and picture DPI (default is 16 pt for dpi=72)
 	virtual void SetFontSizePT(float pt, int dpi=72){	FontSize = pt*27.f/dpi;	}

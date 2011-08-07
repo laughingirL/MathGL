@@ -58,6 +58,15 @@ struct mglMatrix
 	inline void clear()	{	memset(this,0,sizeof(mglMatrix));	}
 };
 //-----------------------------------------------------------------------------
+/// Structure for group of primitives
+struct mglGroup
+{
+	std::vector<long> p;///< list of primitives (filled by Finish())
+	int Id;				///< Current list of primitives
+	std::string Lbl;	///< Group label
+	mglGroup(const char *lbl="", int id=0)	{	Lbl=lbl;	Id=id;	}
+};
+//-----------------------------------------------------------------------------
 /// Structure for text label
 struct mglText
 {
@@ -208,6 +217,14 @@ public:
 	/// Show currently produced image by Qt or FLTK library
 	void ShowImage(const char *viewer=0, bool keep=false);
 
+	/// Write the frame in file using TeX (pgf/tikz) format
+	void WriteTeX(const char *fname,const char *descr=0);
+	/// Write the frame in file using WebGL (javascript) format
+	void WriteWGL(const char *fname,const char *descr=0);
+	/// Write the frame in file using OBJ/MTL format
+	void WriteOBJ(const char *fname,const char *descr=0);
+
+
 	/// Create new frame.
 	virtual int NewFrame();
 	/// Finish frame drawing
@@ -306,6 +323,9 @@ public:
 	/// Number of marks in legend sample
 	inline void SetLegendMarks(int num=1)	{	LegendMarks = num>0?num:1;	};
 
+	void StartAutoGroup (const char *);
+	void EndGroup();
+
 protected:
 	float *Z;			///< Height for given level in Z-direction
 	unsigned char *C;	///< Picture for given level in Z-direction
@@ -317,6 +337,7 @@ protected:
 	std::vector<mglPrim> Prm;	///< Primitives (lines, triangles and so on)
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	std::vector<mglText> Leg;	///< Text labels for legend
+	std::vector<mglGroup> Grp;	///< List of groups with names
 #ifdef HAVE_PTHREAD
 	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexLeg, mutexStack;
 #endif

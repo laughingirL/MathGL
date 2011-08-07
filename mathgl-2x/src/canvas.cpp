@@ -26,7 +26,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	clr(MGL_DISABLE_SCALE);
 	Z=0;	C=G=G4=0;	OI=0;	PlotId=0;	gif=0;
 	CurFrameId=0;
-	Width=Height=Depth=ObjId=0;
+	Width=Height=Depth=0;	ObjId=-1;
 	fscl=ftet=0;
 	dr_nx1=dr_nx2=dr_ny1=dr_ny2=0;	// Allowed drawing region
 
@@ -755,4 +755,14 @@ void mglCanvas::FrameBox(const wchar_t *title,const char *stl,float size)
 	inH-=h;		Persp = 0;
 	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
 }
+//-----------------------------------------------------------------------------
+void mglCanvas::StartAutoGroup (const char *lbl)
+{
+	static int id=1;
+	if(lbl==NULL)	{	id=1;	return;	}
+	if(ObjId<0)	{	ObjId = -id;	id++;	}
+	Grp.push_back(mglGroup(lbl,ObjId));
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::EndGroup()	{	LoadState();	}
 //-----------------------------------------------------------------------------

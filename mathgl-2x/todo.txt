@@ -1,13 +1,8 @@
 ============= TEST =============
 1. Triangulation
-2. Text
-	* export as text (EPS, SVG, TeX ...)
-3. Axis
+2. Axis
 	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
-4. opengl
-	* draw wire font too for OpenGL mode
-5. Check parser
-6. Add GLUT window
+3. Add GLUT window
 
 ============= NEW  =============
 

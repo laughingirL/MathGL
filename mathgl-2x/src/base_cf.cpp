@@ -163,11 +163,11 @@ void mgl_copy_font_(uintptr_t *gr, uintptr_t *gr_from)
 {	_GR_->GetFont()->Copy(((mglBase *)(*gr_from))->GetFont());	}
 void mgl_restore_font_(uintptr_t *gr)	{	_GR_->GetFont()->Restore();	}
 //-----------------------------------------------------------------------------
-void mgl_start_group(HMGL gr, const char *s)	{	gr->StartGroup(s);	}
+void mgl_start_group(HMGL gr, const char *s)	{	gr->StartAutoGroup(s);	}
 void mgl_end_group(HMGL gr)	{	gr->EndGroup();	}
 void mgl_start_group_(uintptr_t *gr, const char *name,int l)
 {	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
-	_GR_->StartGroup(s);	delete []s;	}
+	_GR_->StartAutoGroup(s);	delete []s;	}
 void mgl_end_group_(uintptr_t *gr)	{	_GR_->EndGroup();	}
 //-----------------------------------------------------------------------------
 #include <stdarg.h>

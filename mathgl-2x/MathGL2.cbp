@@ -151,11 +151,12 @@
 		<Unit filename="src/data_op.cpp" />
 		<Unit filename="src/data_png.cpp" />
 		<Unit filename="src/def_font.cpp" />
-		<Unit filename="src/eps_svg.cpp" />
 		<Unit filename="src/eval.cpp" />
 		<Unit filename="src/evalp.cpp" />
 		<Unit filename="src/exec.cpp" />
 		<Unit filename="src/export.cpp" />
+		<Unit filename="src/export_2d.cpp" />
+		<Unit filename="src/export_3d.cpp" />
 		<Unit filename="src/fit.cpp" />
 		<Unit filename="src/font.cpp" />
 		<Unit filename="src/opengl.cpp" />
