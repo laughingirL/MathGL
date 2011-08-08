@@ -51,6 +51,17 @@
 					<Add option="-lglut -lXmu -lXi -lGLU -lGL -lSM -lICE -lX11 -lXext" />
 				</Linker>
 			</Target>
+			<Target title="mglconv">
+				<Option output="bin/Release/mglconv" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-march=core2" />
+					<Add option="-O3" />
+					<Add option="-O2" />
+				</Compiler>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wshadow" />
@@ -170,18 +181,23 @@
 		<Unit filename="src/tex_table.cpp" />
 		<Unit filename="src/vect.cpp" />
 		<Unit filename="src/volume.cpp" />
+		<Unit filename="src/window.cpp" />
 		<Unit filename="todo.txt" />
 		<Unit filename="utils/mglconv.cpp">
-			<Option target="&lt;{~None~}&gt;" />
+			<Option target="mglconv" />
 		</Unit>
 		<Unit filename="utils/mglview.cpp">
 			<Option target="mglview" />
 		</Unit>
-		<Unit filename="widgets/fltk.cpp" />
+		<Unit filename="widgets/fltk.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="mglview" />
+			<Option target="GLUT" />
+		</Unit>
 		<Unit filename="widgets/glut.cpp">
 			<Option target="GLUT" />
 		</Unit>
-		<Unit filename="widgets/window.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

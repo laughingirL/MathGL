@@ -165,10 +165,6 @@ double mgl_rnd()
 #endif
 }
 //-----------------------------------------------------------------------------
-void mgl_strtrim(char *str);
-void mgl_strlwr(char *str);
-char *mgl_strdup(const char *s);
-//-----------------------------------------------------------------------------
 // äåñòðóêòîð ôîðìóëû
 mglFormula::~mglFormula()
 {

@@ -27,7 +27,6 @@
 
 #include "mgl/parser.h"
 #define iint(x)	floor((x)+0.5)
-char *mgl_strdup(const char *s);
 wchar_t *mgl_str_copy(const char *s);
 //-----------------------------------------------------------------------------
 int mgls_addlegend(mglGraph *gr, long , mglArg *a, int k[10], const char *)

@@ -103,8 +103,6 @@ void mgl_set_alpha(HMGL gr, int enable);
 void mgl_set_fog(HMGL gr, float d, float dz);
 void mgl_set_light(HMGL gr, int enable);
 void mgl_set_light_n(HMGL gr, int n, int enable);
-void mgl_add_light(HMGL gr, int n, float x, float y, float z, char c);
-void mgl_add_light_ext(HMGL gr, int n, float x, float y, float z, char c, float br, int inf, float ap);
 
 void mgl_mat_pop(HMGL gr);
 void mgl_mat_push(HMGL gr);
@@ -206,6 +204,7 @@ void mgl_set_light_n_(uintptr_t *gr, int *n, int *enable);
 void mgl_add_light_(uintptr_t *graph, int *n, float *x, float *y, float *z, char *c, int);
 void mgl_add_light(HMGL gr, int n, float x, float y, float z, char c);
 void mgl_add_light_ext_(uintptr_t *graph, int *n, float *x, float *y, float *z, char *c, float *br, int *inf, float *ap, int);
+void mgl_add_light_ext(HMGL gr, int n, float x, float y, float z, char c, float br, int inf, float ap);
 
 void mgl_mat_push_(uintptr_t *gr);
 void mgl_mat_pop_(uintptr_t *gr);
@@ -229,12 +228,47 @@ void mgl_rotate_(uintptr_t *graph, float *TetX,float *TetZ,float *TetY);
 void mgl_view_(uintptr_t *graph, float *TetX,float *TetZ,float *TetY);
 void mgl_rotate_vector_(uintptr_t *graph, float *Tet,float *x,float *y,float *z);
 void mgl_perspective_(uintptr_t *graph, float val);
-
-
-/*void mgl_title(HMGL gr, const char *text, const char *fnt, float size);
-void mgl_titlew(HMGL gr, const wchar_t *text, const char *fnt, float size);
-void mgl_title_(uintptr_t *graph, const char *text, const char *fnt, float *size, int,int);*/
-
+/*****************************************************************************/
+int mgl_fortran_func(HMGL gr, void *);
+HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par);
+HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par);
+void mgl_fltk_run();
+void mgl_qt_run();
+/*****************************************************************************/
+uintptr_t mgl_create_graph_qt_(const char *title, int);
+uintptr_t mgl_create_graph_fltk_(const char *title, int);
+void mgl_fltk_run_();
+void mgl_qt_run_();
+/*****************************************************************************/
+void mgl_wnd_set_delay(HMGL gr, float dt);
+void mgl_setup_window(HMGL gr, int autoclf, int showpos, int clf_upd);
+void mgl_wnd_toggle_alpha(HMGL gr);
+void mgl_wnd_toggle_light(HMGL gr);
+//void mgl_wnd_toggle_zoom(HMGL gr);
+void mgl_wnd_toggle_rotate(HMGL gr);
+void mgl_wnd_toggle_no(HMGL gr);
+void mgl_wnd_update(HMGL gr);
+void mgl_wnd_reload(HMGL gr, int o);
+void mgl_wnd_adjust(HMGL gr);
+void mgl_wnd_next_frame(HMGL gr);
+void mgl_wnd_prev_frame(HMGL gr);
+void mgl_wnd_animation(HMGL gr);
+void mgl_get_last_mouse_pos(HMGL gr, float *x, float *y, float *z);
+/*****************************************************************************/
+void mgl_get_last_mouse_pos_(uintptr_t *gr, float *x, float *y, float *z);
+void mgl_wnd_set_delay_(uintptr_t *gr, float *dt);
+void mgl_setup_window_(uintptr_t *gr, int *autoclf, int *showpos, int *clf_upd);
+void mgl_wnd_toggle_alpha_(uintptr_t *gr);
+void mgl_wnd_toggle_light_(uintptr_t *gr);
+//void mgl_wnd_toggle_zoom_(uintptr_t *gr);
+void mgl_wnd_toggle_rotate_(uintptr_t *gr);
+void mgl_wnd_toggle_no_(uintptr_t *gr);
+void mgl_wnd_update_(uintptr_t *gr);
+void mgl_wnd_reload_(uintptr_t *gr, int *o);
+void mgl_wnd_adjust_(uintptr_t *gr);
+void mgl_wnd_next_frame_(uintptr_t *gr);
+void mgl_wnd_prev_frame_(uintptr_t *gr);
+void mgl_wnd_animation_(uintptr_t *gr);
 /*****************************************************************************/
 #ifdef __cplusplus
 }

@@ -23,7 +23,6 @@
 #include <FL/fl_draw.H>
 #include <FL/Fl_File_Chooser.H>
 #include <unistd.h>
-//#include <pthread.h>
 
 #include "mgl/fltk.h"
 
@@ -91,7 +90,7 @@ void Fl_MathGL::update(mglCanvas *gr)
 	if(gr==0)	return;
 	if(draw_func)
 	{
-		if(gr!=graph || graph->ClfOnUpdate)	gr->DefaultPlotParam();
+		if(gr!=graph || graph->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
 		gr->ResetFrames();
 		char *buf = new char[2048];	*buf = 0;
 		gr->Message = buf;
@@ -117,7 +116,7 @@ int Fl_MathGL::handle(int code)
 		const Fl_Menu_Item *m = popup->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
 		if(m)	m->do_callback(wpar, vpar);
 	}
-	if(graph->ShowMousePos && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
+	if(graph->get(MGL_SHOW_POS) && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
 	{
 		mglPoint p = graph->CalcXYZ(Fl::event_x()-x(), Fl::event_y()-y());
 		char s[128];
@@ -231,12 +230,14 @@ mglCanvasFL::mglCanvasFL() : mglCanvasW()
 //-----------------------------------------------------------------------------
 void mglCanvasFL::NextFrame()
 {
-	if(NumFig>0)	{	CurFig = CurFig>NumFig-1 ? 0 : CurFig+1;	FMGL->redraw();	}
+	if(GetNumFig()>0)
+	{	SetCurFig(GetCurFig()>GetNumFig()-1 ? 0 : GetCurFig()+1);	FMGL->redraw();	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvasFL::PrevFrame()
 {
-	if(NumFig>0)	{	CurFig = CurFig<0 ? NumFig-1 : CurFig-1;	FMGL->redraw();	}
+	if(GetNumFig()>0)
+	{	SetCurFig(GetCurFig()<0 ? GetNumFig()-1 : GetCurFig()-1);	FMGL->redraw();	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvasFL::ToggleAlpha()
@@ -287,7 +288,7 @@ void mglCanvasFL::Update()
 	FMGL->set_state(rotate_bt->value());
 	FMGL->set_state(alpha + 2*light);
 	FMGL->set_angle(tet->value(), phi->value());
-	CurFig=0;
+	SetCurFig(0);
 	FMGL->update();
 }
 //-----------------------------------------------------------------------------
@@ -333,8 +334,6 @@ void export_eps_cb(Fl_Widget*, void* v)
 	((mglCanvasFL*)v)->WriteEPS(fname);
 }
 //-----------------------------------------------------------------------------
-void mglCanvasFL::ReLoad(bool o)
-{	if(LoadFunc)	{	LoadFunc(o, FuncPar);	Update();	}	}
 void oncemore_cb(Fl_Widget*, void*v)	{	((mglCanvasFL*)v)->ReLoad(true);	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Adjust()
@@ -356,18 +355,18 @@ void time_cb(void *v)
 	mglCanvasFL *e = (mglCanvasFL*)v;
 	if(!e->sshow)	return;
 	e->NextFrame();
-	Fl::repeat_timeout(e->Delay, time_cb, v);
+	Fl::repeat_timeout(e->GetDelay(), time_cb, v);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Animation()
 {
-	sshow = NumFig<2 ? 0 : 1-sshow;
+	sshow = GetNumFig()<2 ? 0 : 1-sshow;
 	anim_bt->value(sshow);
 	anim_bt->image(sshow?xpm_s2:xpm_s1);	anim_bt->redraw();
 	Fl_Menu_Item *m = (Fl_Menu_Item *)menu->find_item(gettext("Animate/Slideshow"));
 	if(m && sshow)	m->set();
 	if(m && !sshow)	m->clear();
-	if(sshow)	Fl::add_timeout(Delay, time_cb, this);
+	if(sshow)	Fl::add_timeout(GetDelay(), time_cb, this);
 }
 void sshow_cb(Fl_Widget *, void *v)	{	((mglCanvasFL*)v)->Animation();	}
 void no_cb(Fl_Widget *, void *)	{}
@@ -418,13 +417,7 @@ Fl_Menu_Item menuitems[] = {
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p), bool maximize)
 {
-	NumFig=0;	CurFig=0;
-	CurFrameId = 0;
-	int n = draw ? draw(this,par) : 0;
-	if(n<NumFig && n>=0)	NumFig = n;
-	DrawFunc = draw;		FuncPar = par;
-	LoadFunc = reload;
-
+	SetDrawFunc(draw, par, reload);
 	if(Wnd)	{	Wnd->label(title);	Wnd->show();	return;	}
 
 	Fl_Window *w1=new Fl_Double_Window(0,0,830,660,title);
@@ -513,6 +506,14 @@ HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, voi
 	return g;
 }
 void mgl_fltk_run()		{	Fl::run();	}
+//-----------------------------------------------------------------------------
+uintptr_t mgl_create_graph_fltk_(const char *title, int l)
+{
+	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
+	uintptr_t t = uintptr_t(mgl_create_graph_fltk(0,s,0));
+	delete []s;	return t;
+}
+void mgl_fltk_run_()	{	mgl_fltk_run();	}
 //-----------------------------------------------------------------------------
 void *mgl_fl_tmp(void *)	{	Fl::run();	return 0;	}
 /*void mgl_fltk_thread()

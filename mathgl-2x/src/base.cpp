@@ -54,8 +54,8 @@ mglBase::mglBase()
 //	memset(this,0,sizeof(mglBase));	// since mglBase is abstract then I can do it?!!
 	Message=0;	Flag=0;	saved=false;	prev_val=0;
 #ifdef HAVE_PTHREAD
-	memset(&mutexPnt,0,sizeof(pthread_mutex_t));
-	memset(&mutexTxt,0,sizeof(pthread_mutex_t));
+	pthread_mutex_init(&mutexPnt,0);
+	pthread_mutex_init(&mutexTxt,0);
 #endif
 	fnt=0;	*FontDef=*last_style=0;
 	fx=fy=fz=fa=fc=0;
@@ -659,7 +659,6 @@ char mglBase::SetPenPal(const char *p, long *Id)
 			{
 				switch(p[i])
 				{
-				case '-': PDef = 0xffff;	break;
 				case '|': PDef = 0x00ff;	break;
 				case ';': PDef = 0x0f0f;	break;
 				case '=': PDef = 0x3333;	break;
@@ -667,6 +666,7 @@ char mglBase::SetPenPal(const char *p, long *Id)
 				case 'j': PDef = 0x087f;	break;
 				case 'i': PDef = 0x2727;	break;
 				case ' ': PDef = 0x0000;	break;
+				default:  PDef = 0xffff;	break;	// '-'
 				}
 				pp = last_style[1]=p[i];
 			}

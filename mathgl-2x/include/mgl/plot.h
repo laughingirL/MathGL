@@ -101,7 +101,6 @@ void mgl_area_s_(uintptr_t *graph, uintptr_t *y, const char *pen, const char *op
 void mgl_area_(uintptr_t *graph, uintptr_t *y, const char *pen, const char *opt,int,int);
 void mgl_region_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int, int);
 void mgl_region_(uintptr_t *graph, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int, int);
-void mgl_mark_(uintptr_t *graph, float *x,float *y,float *z,const char *mark,int);
 void mgl_stem_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int,int);
 void mgl_stem_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int,int);
 void mgl_stem_(uintptr_t *graph, uintptr_t *y,	const char *pen, const char *opt,int,int);
@@ -124,11 +123,11 @@ void mgl_tube_xyzr_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, 
 void mgl_tube_xyr_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int,int);
 void mgl_tube_r_(uintptr_t *graph, uintptr_t *y, uintptr_t *r, const char *pen, const char *opt,int,int);
 void mgl_tube_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, float *r, const char *pen, const char *opt,int,int);
-void mgl_tube_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, float *r, const char *pen,int);
+void mgl_tube_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, float *r, const char *pen, const char *opt,int,int);
 void mgl_tube_(uintptr_t *graph, uintptr_t *y, float *r, const char *pen, const char *opt,int,int);
-void mgl_candle_xyv_(uintptr_t *gr, uintptr_t *x, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo);
-void mgl_candle_yv_(uintptr_t *gr, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo);
-void mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int l,int lo);
+void mgl_candle_xyv_(uintptr_t *gr, uintptr_t *x, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int,int);
+void mgl_candle_yv_(uintptr_t *gr, uintptr_t *v1, uintptr_t *v2, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int,int);
+void mgl_candle_(uintptr_t *gr, uintptr_t *y, uintptr_t *y1, uintptr_t *y2, const char *pen, const char *opt,int,int);
 /*****************************************************************************/
 #ifdef __cplusplus
 }

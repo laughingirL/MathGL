@@ -480,7 +480,7 @@ void mgl_start_gif_(uintptr_t *gr, const char *fname,int *ms,int l)
 	_GR_->StartGIF(s,*ms);	delete []s;	}
 //-----------------------------------------------------------------------------
 void mgl_close_gif(HMGL gr)			{	_Gr_->CloseGIF();	}
-void mgl_start_gif_(uintptr_t *gr)	{	_GR_->CloseGIF();	}
+void mgl_close_gif_(uintptr_t *gr)	{	_GR_->CloseGIF();	}
 //-----------------------------------------------------------------------------
 void mgl_write_frame(HMGL gr, const char *fname,const char *descr)
 {	_Gr_->WriteFrame(fname,descr);	}

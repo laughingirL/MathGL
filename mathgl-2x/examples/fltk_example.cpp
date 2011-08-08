@@ -28,7 +28,6 @@ int sample_2(mglGraph *gr);
 int sample_3(mglGraph *gr);
 int sample_d(mglGraph *gr);
 //-----------------------------------------------------------------------------
-#include <pthread.h>
 #include <unistd.h>
 mglPoint pnt;  // some global variable for changable data
 void *mgl_fltk_tmp(void *)	{	mgl_fltk_run();	return 0;	}
@@ -57,7 +56,6 @@ int main(int argc,char **argv)
 	char key = 0;
 	if(argc>1)	key = (argv[1][0]!='-') ? argv[1][0] : argv[1][1];
 	if(!key)	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
-mgl_set_test_mode(true);
 	mglCanvasFL gr;
 	switch(key)
 	{
@@ -68,7 +66,8 @@ mgl_set_test_mode(true);
 	case 't':	gr.Window(argc,argv,test_wnd,"Testing");	break;
 	default:	gr.Window(argc,argv,sample,"Example of molecules");	break;
 	}
-	mgl_fltk_run();	return 0;
+	mgl_fltk_run();
+	return 0;
 #endif
 }
 //-----------------------------------------------------------------------------

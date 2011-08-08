@@ -17,20 +17,18 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "mgl/window.h"
+#include "mgl/canvas.h"
 //-----------------------------------------------------------------------------
 mglCanvasW::mglCanvasW() : mglCanvas()
 {
-mgl_test_txt("mglCanvasW constructor: G = %p\n",G);
-	AutoClf=true;	ClfOnUpdate=true;
-	Delay=0.5;		ShowMousePos=false;
+	Setup(true,false,true);	Delay=0.5;
 	LoadFunc=0;	FuncPar=0;	DrawFunc=0;
 	GG = 0;		NumFig = 0;	CurFig = -1;
 }
 //-----------------------------------------------------------------------------
 mglCanvasW::~mglCanvasW()	{	if(GG) free(GG);	}
 //-----------------------------------------------------------------------------
-void mglCanvasW::Clf(mglColor Back)	{	if(AutoClf)	mglCanvas::Clf(Back);	}
+void mglCanvasW::Clf(mglColor Back)	{	if(get(MGL_AUTO_CLF))	mglCanvas::Clf(Back);	}
 //-----------------------------------------------------------------------------
 void mglCanvasW::SetSize(int w,int h)
 {
@@ -57,23 +55,29 @@ void mglCanvasW::EndFrame()
 	CurFig++;
 }
 //-----------------------------------------------------------------------------
+void mglCanvasW::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, void (*reload)(int next, void *p))
+{
+	NumFig=0;	CurFig=0;
+	CurFrameId = 0;
+	int n = draw ? draw(this,par) : 0;
+	if(n<NumFig && n>=0)	NumFig = n;
+	DrawFunc = draw;		FuncPar = par;
+	LoadFunc = reload;
+}
+//-----------------------------------------------------------------------------
 const unsigned char *mglCanvasW::GetBits()
 {
 	const unsigned char *g = mglCanvas::GetBits();
-mgl_test_txt("GetBits(): g = %p, G = %p\n",g,G);
 	if(GG && NumFig>0 && CurFig<NumFig && CurFig>=0)
 		g = GG + CurFig*Width*Height*3;
 	return g;
 }
 //-----------------------------------------------------------------------------
+void mglCanvasW::ReLoad(bool o)
+{	if(LoadFunc)	{	LoadFunc(o, FuncPar);	Update();	}	}
+//-----------------------------------------------------------------------------
 void mgl_wnd_set_delay(HMGL gr, mreal dt)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->Delay = dt;	}
-void mgl_wnd_set_auto_clf(HMGL gr, int val)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->AutoClf = val;	}
-void mgl_wnd_set_show_mouse_pos(HMGL gr, int val)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ShowMousePos = val;	}
-void mgl_wnd_set_clf_update(HMGL gr, int val)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ClfOnUpdate = val;	}
+{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->SetDelay(dt);	}
 void mgl_wnd_toggle_alpha(HMGL gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleAlpha();	}
 void mgl_wnd_toggle_light(HMGL gr)
@@ -99,16 +103,7 @@ void mgl_wnd_animation(HMGL gr)
 //-----------------------------------------------------------------------------
 void mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
-	if(g)	g->Delay = *dt;	}
-void mgl_wnd_set_auto_clf_(uintptr_t *gr, int *val)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
-	if(g)	g->AutoClf = *val;	}
-void mgl_wnd_set_show_mouse_pos_(uintptr_t *gr, int *val)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
-	if(g)	g->ShowMousePos = *val;	}
-void mgl_wnd_set_clf_update_(uintptr_t *gr, int *val)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
-	if(g)	g->ClfOnUpdate = *val;	}
+	if(g)	g->SetDelay(*dt);	}
 void mgl_wnd_toggle_alpha_(uintptr_t *gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
 	if(g)	g->ToggleAlpha();	}
@@ -147,7 +142,6 @@ void mgl_wnd_animation_(uintptr_t *gr)
 HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *)
 {	return NULL;	}
 void mgl_fltk_run(){}
-#endif
 //-----------------------------------------------------------------------------
 uintptr_t mgl_create_graph_fltk_(const char *title, int l)
 {
@@ -156,12 +150,12 @@ uintptr_t mgl_create_graph_fltk_(const char *title, int l)
 	delete []s;	return t;
 }
 void mgl_fltk_run_()	{	mgl_fltk_run();	}
+#endif
 //-----------------------------------------------------------------------------
 #ifndef HAVE_QT
 HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *)
 {	return NULL;	}
 void mgl_qt_run(){}
-#endif
 //-----------------------------------------------------------------------------
 uintptr_t mgl_create_graph_qt_(const char *title, int l)
 {
@@ -170,4 +164,5 @@ uintptr_t mgl_create_graph_qt_(const char *title, int l)
 	delete []s;	return t;
 }
 void mgl_qt_run_()	{	mgl_qt_run();	}
+#endif
 //-----------------------------------------------------------------------------

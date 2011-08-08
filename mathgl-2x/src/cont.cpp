@@ -753,12 +753,9 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 {
 	register long i,j,i0,n=a->GetNx(),m=a->GetNy(),l=a->GetNz(), nx=1,ny=1,p;
 
-	switch(dir)		// îáùàÿ ÷àñòü
-	{
-	case 'x':	nx = m;	ny = l;	if(d<0)	d = n/2;	break;
-	case 'y':	nx = n;	ny = l;	if(d<0)	d = m/2;	break;
-	case 'z':	nx = n;	ny = m;	if(d<0)	d = l/2;	break;
-	}
+	if(dir=='x')	{	nx = m;	ny = l;	if(d<0)	d = n/2;	}
+	if(dir=='y')	{	nx = n;	ny = l;	if(d<0)	d = m/2;	}
+	if(dir=='z')	{	nx = n;	ny = m;	if(d<0)	d = l/2;	}
 	s.x.Create(nx,ny);	s.y.Create(nx,ny);
 	s.z.Create(nx,ny);	s.a.Create(nx,ny);
 	p = long(d);	d -= p;
@@ -766,45 +763,35 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 
 	if(both)
 	{
-		switch(dir)
+		if(dir=='x')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 		{
-		case 'x':
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-			{
-				i0 = i+nx*j;
-				s.x.a[i0] = x->v(p,i,j)*(1-d) + x->v(p+1,i,j)*d;
-				s.y.a[i0] = y->v(p,i,j)*(1-d) + y->v(p+1,i,j)*d;
-				s.z.a[i0] = z->v(p,i,j)*(1-d) + z->v(p+1,i,j)*d;
-				s.a.a[i0] = a->v(p,i,j)*(1-d) + a->v(p+1,i,j)*d;
-			}
-			break;
-		case 'y':
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-			{
-				i0 = i+nx*j;
-				s.x.a[i0] = x->v(i,p,j)*(1-d) + x->v(i,p+1,j)*d;
-				s.y.a[i0] = y->v(i,p,j)*(1-d) + y->v(i,p+1,j)*d;
-				s.z.a[i0] = z->v(i,p,j)*(1-d) + z->v(i,p+1,j)*d;
-				s.a.a[i0] = a->v(i,p,j)*(1-d) + a->v(i,p+1,j)*d;
-			}
-			break;
-		case 'z':
-			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
-			{
-				i0 = i+nx*j;
-				s.x.a[i0] = x->v(i,j,p)*(1-d) + x->v(i,j,p+1)*d;
-				s.y.a[i0] = y->v(i,j,p)*(1-d) + y->v(i,j,p+1)*d;
-				s.z.a[i0] = z->v(i,j,p)*(1-d) + z->v(i,j,p+1)*d;
-				s.a.a[i0] = a->v(i,j,p)*(1-d) + a->v(i,j,p+1)*d;
-			}
-			break;
+			i0 = i+nx*j;
+			s.x.a[i0] = x->v(p,i,j)*(1-d) + x->v(p+1,i,j)*d;
+			s.y.a[i0] = y->v(p,i,j)*(1-d) + y->v(p+1,i,j)*d;
+			s.z.a[i0] = z->v(p,i,j)*(1-d) + z->v(p+1,i,j)*d;
+			s.a.a[i0] = a->v(p,i,j)*(1-d) + a->v(p+1,i,j)*d;
+		}
+		if(dir=='y')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;
+			s.x.a[i0] = x->v(i,p,j)*(1-d) + x->v(i,p+1,j)*d;
+			s.y.a[i0] = y->v(i,p,j)*(1-d) + y->v(i,p+1,j)*d;
+			s.z.a[i0] = z->v(i,p,j)*(1-d) + z->v(i,p+1,j)*d;
+			s.a.a[i0] = a->v(i,p,j)*(1-d) + a->v(i,p+1,j)*d;
+		}
+		if(dir=='z')	for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
+		{
+			i0 = i+nx*j;
+			s.x.a[i0] = x->v(i,j,p)*(1-d) + x->v(i,j,p+1)*d;
+			s.y.a[i0] = y->v(i,j,p)*(1-d) + y->v(i,j,p+1)*d;
+			s.z.a[i0] = z->v(i,j,p)*(1-d) + z->v(i,j,p+1)*d;
+			s.a.a[i0] = a->v(i,j,p)*(1-d) + a->v(i,j,p+1)*d;
 		}
 	}
 	else	// x, y, z -- vectors
 	{
-		switch(dir)
+		if(dir=='x')
 		{
-		case 'x':
 			v = x->v(p)*(1-d)+x->v(p+1)*d;
 			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 			{
@@ -812,8 +799,9 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 				s.y.a[i0] = y->v(i);	s.z.a[i0] = z->v(j);
 				s.a.a[i0] = a->v(p,i,j)*(1-d) + a->v(p+1,i,j)*d;
 			}
-			break;
-		case 'y':
+		}
+		if(dir=='y')
+		{
 			v = y->v(p)*(1-d)+y->v(p+1)*d;
 			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 			{
@@ -821,8 +809,9 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 				s.x.a[i0] = x->v(i);	s.z.a[i0] = z->v(j);
 				s.a.a[i0] = a->v(i,p,j)*(1-d) + a->v(i,p+1,j)*d;
 			}
-			break;
-		case 'z':
+		}
+		if(dir=='z')
+		{
 			v = z->v(p)*(1-d)+z->v(p+1)*d;
 			for(j=0;j<ny;j++)	for(i=0;i<nx;i++)
 			{
@@ -830,7 +819,6 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 				s.x.a[i0] = x->v(i);	s.y.a[i0] = y->v(j);
 				s.a.a[i0] = a->v(i,j,p)*(1-d) + a->v(i,j,p+1)*d;
 			}
-			break;
 		}
 	}
 }

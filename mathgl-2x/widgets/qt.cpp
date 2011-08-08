@@ -99,7 +99,7 @@ void QMathGL::paintEvent(QPaintEvent *)
 	paint.begin(this);
 	paint.drawPixmap(0,0,pic);
 	if(zoom)	paint.drawRect(x0,y0,xe-x0,ye-y0);
-	if(graph->ShowMousePos && !mousePos.isEmpty())
+	if(graph->get(MGL_SHOW_POS) && !mousePos.isEmpty())
 		paint.drawText(0,12,mousePos);
 	paint.end();
 }
@@ -184,7 +184,7 @@ void QMathGL::update(mglCanvas *gr)
 	if(gr==0)	gr = graph;
 	if(gr==0)	return;
 	if(draw_func==0)	{	refresh();	return;	}
-	if(gr!=graph || graph->ClfOnUpdate)	gr->DefaultPlotParam();
+	if(gr!=graph || graph->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
 	char *buf=new char[2048];	buf[0]=0;	gr->Message = buf;
 
 	gr->Alpha(alpha);	gr->Light(light);
@@ -398,7 +398,7 @@ void QMathGL::prevSlide()	{	graph->PrevFrame();	}
 void QMathGL::animation(bool st)
 {
 	mglCanvasQT *gr = dynamic_cast<mglCanvasQT *>(graph);
-	if(st)	timer->start(gr ? int(gr->Delay*1000) : animDelay);
+	if(st)	timer->start(gr ? int(gr->GetDelay()*1000) : animDelay);
 	else	timer->stop();
 }
 //-----------------------------------------------------------------------------
@@ -439,13 +439,14 @@ mglCanvasQT::mglCanvasQT() : mglCanvasW()
 //-----------------------------------------------------------------------------
 void mglCanvasQT::NextFrame()
 {
-	if(NumFig>0)	{	CurFig = CurFig>NumFig-1 ? 0 : CurFig+1;	QMGL->refresh();	}
+	if(GetNumFig()>0)
+	{	SetCurFig(GetCurFig()>GetNumFig()-1 ? 0 : GetCurFig()+1);	QMGL->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvasQT::PrevFrame()
 {
-	if(NumFig>0)
-	{	CurFig = CurFig<0 ? NumFig-1 : CurFig-1;	QMGL->refresh();	}
+	if(GetNumFig()>0)
+	{	SetCurFig(GetCurFig()<0 ? GetNumFig()-1 : GetCurFig()-1);	QMGL->refresh();	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvasQT::Animation()
@@ -462,15 +463,13 @@ void mglCanvasQT::ToggleAlpha()	{	QMGL->setAlpha(!QMGL->getAlpha());	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::ToggleLight()	{	QMGL->setLight(!QMGL->getLight());	}
 //-----------------------------------------------------------------------------
-void mglCanvasQT::ToggleNo()		{	QMGL->restore();	}
+void mglCanvasQT::ToggleNo()	{	QMGL->restore();	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::ToggleZoom()	{	QMGL->setZoom(!QMGL->getZoom());	}
 //-----------------------------------------------------------------------------
-void mglCanvasQT::ToggleRotate()	{	QMGL->setRotate(!QMGL->getRotate());}
+void mglCanvasQT::ToggleRotate(){	QMGL->setRotate(!QMGL->getRotate());}
 //-----------------------------------------------------------------------------
-void mglCanvasQT::Update()		{	CurFig=0;	QMGL->restore();	}
-//-----------------------------------------------------------------------------
-void mglCanvasQT::ReLoad(bool o)	{	if(LoadFunc){LoadFunc(o, FuncPar);Update();}	}
+void mglCanvasQT::Update()		{	SetCurFig(0);	QMGL->restore();	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::Adjust()
 {
@@ -481,12 +480,7 @@ void mglCanvasQT::Adjust()
 //-----------------------------------------------------------------------------
 void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p), bool maximize)
 {
-	NumFig=0;	CurFig=0;
-	CurFrameId = 0;
-	int n = draw ? draw(this,par) : 0;
-	if(n<NumFig && n>=0)	NumFig = n;
-	DrawFunc = draw;		FuncPar = par;
-	LoadFunc = reload;
+	SetDrawFunc(draw, par, reload);
 	if(Wnd)
 	{
 		Wnd->setWindowTitle(title);
@@ -681,6 +675,14 @@ HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void 
 	return g;
 }
 void mgl_qt_run()	{	if(qApp) qApp->exec();	}
+//-----------------------------------------------------------------------------
+uintptr_t mgl_create_graph_qt_(const char *title, int l)
+{
+	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
+	uintptr_t t = uintptr_t(mgl_create_graph_qt(0,s,0));
+	delete []s;	return t;
+}
+void mgl_qt_run_()	{	mgl_qt_run();	}
 //-----------------------------------------------------------------------------
 void *mgl_qt_tmp(void *)	{	mgl_qt_run();	return 0;	}
 /*void mgl_qt_thread()

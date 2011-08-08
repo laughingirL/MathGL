@@ -999,18 +999,6 @@ public:
 	{	return mglData(true, mgl_hist_xyz(gr, &x, &y, &z, &a, opt));	}
 };
 //-----------------------------------------------------------------------------
-/// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
-/// Make inherited class and redefine Draw() function if you don't want to use function pointers.
-struct mglDraw
-{
-	virtual int Draw(mglGraph *)	{	return 0;	};
-	virtual void Reload(int)	{};
-};
-int mgl_draw_class(mglBase *gr, void *p);
-void mgl_reload_class(int next, void *p);
-typedef int (*draw_func)(mglGraph *gr);
-int mgl_draw_graph(mglBase *gr, void *p);
-//-----------------------------------------------------------------------------
 /*class mglParse
 {
 	HMPR gr;

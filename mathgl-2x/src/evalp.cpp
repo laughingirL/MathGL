@@ -27,7 +27,6 @@
 #include <gsl/gsl_errno.h>
 #endif
 //-----------------------------------------------------------------------------
-double mgl_ipow(double x,int n);
 void mgl_wcstrim(wchar_t *str);
 void mgl_wcslwr(wchar_t *str);
 void mgl_wcstombs(char *dst, const wchar_t *src, int size);
@@ -94,9 +93,9 @@ double mul(double a,double b);//	{return a&&b?a*b:0;}
 double div(double a,double b);//	{return b?a/b:NAN;}
 double ipw(double a,double b);//	{return mgl_ipow(a,int(b));}
 double llg(double a,double b);//	{return log(a)/log(b);}
-double asinh(double x);//	{	return log(x+sqrt(x*x+1));	}
-double acosh(double x);//	{	return x>1 ? log(x+sqrt(x*x-1)) : NAN;	}
-double atanh(double x);//	{	return fabs(x)<1 ? log((1+x)/(1-x))/2 : NAN;	}
+//double asinh(double x);//	{	return log(x+sqrt(x*x+1));	}
+//double acosh(double x);//	{	return x>1 ? log(x+sqrt(x*x-1)) : NAN;	}
+//double atanh(double x);//	{	return fabs(x)<1 ? log((1+x)/(1-x))/2 : NAN;	}
 double gslEllE(double a,double b);//	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE);}
 double gslEllF(double a,double b);//	{return gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE);}
 double gslLegP(double a,double b);//	{return gsl_sf_legendre_Pl(int(a),b);}

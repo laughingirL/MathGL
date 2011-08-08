@@ -169,8 +169,11 @@ enum{	// Codes for warnings/messages
 #define MGL_TICKS_ROTATE	0x0080	///< Allow ticks rotation
 #define MGL_TICKS_SKIP		0x0100	///< Allow ticks rotation
 // flags for internal use only
-#define MGL_DISABLE_SCALE	0x1000	///< Temporary flag for disable scaling (used for axis)
-#define MGL_FINISHED		0x2000	///< Flag that final picture \a mglCanvas::G is ready
+#define MGL_DISABLE_SCALE	0x0200	///< Temporary flag for disable scaling (used for axis)
+#define MGL_FINISHED		0x0400	///< Flag that final picture \a mglCanvas::G is ready
+#define MGL_AUTO_CLF		0x0800	///< Clear canvas between drawing
+#define MGL_SHOW_POS		0x1000	///< Switch to show or not mouse click position
+#define MGL_CLF_ON_UPD		0x2000	///< Clear plot before Update()
 //-----------------------------------------------------------------------------
 //#define mgl_realloc(T,o,no,nn) {T *_tmp = new T[nn]; memcpy(_tmp,o,(no)*sizeof(T)); delete []o; o=_tmp;}
 //-----------------------------------------------------------------------------
@@ -186,10 +189,26 @@ struct mglThread
 	char *s;
 };
 /// Start several thread for the task
-void mglStartThread(void *(*func)(void *), void (*post)(mglThread *,mreal *), long n, mreal *a=0, const mreal *b=0, const mreal *c=0, const long *p=0, void *v=0, const mreal *d=0, const mreal *e=0, char *s=0);
+void mglStartThread(void *(*func)(void *), void (*post)(mglThread *,mreal *), long n,
+					mreal *a=0, const mreal *b=0, const mreal *c=0, const long *p=0,
+					void *v=0, const mreal *d=0, const mreal *e=0, char *s=0);
 void mglSetNumThr(int n=0);	///< Set number of thread for plotting and data handling
 extern int mglNumThr;		///< Number of thread for plotting and data handling
-
+//-----------------------------------------------------------------------------
+class mglGraph;
+class mglBase;
+/// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
+/// Make inherited class and redefine Draw() function if you don't want to use function pointers.
+struct mglDraw
+{
+	virtual int Draw(mglGraph *)	{	return 0;	};
+	virtual void Reload(int)	{};
+};
+int mgl_draw_class(mglBase *gr, void *p);
+void mgl_reload_class(int next, void *p);
+typedef int (*draw_func)(mglGraph *gr);
+int mgl_draw_graph(mglBase *gr, void *p);
+//-----------------------------------------------------------------------------
 extern "C" {
 #endif
 void mgl_test_txt(const char *str, ...);

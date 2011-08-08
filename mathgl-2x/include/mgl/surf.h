@@ -55,7 +55,7 @@ void mgl_map_xy(HMGL graph, HCDT x, HCDT y, HCDT a, HCDT b, const char *sch, con
 void mgl_map(HMGL graph, HCDT a, HCDT b, const char *sch, const char *opt);
 /*****************************************************************************/
 void mgl_fsurf_(uintptr_t *graph, const char *fz, const char *stl, const char *opt,int,int,int);
-void mgl_fsurf_xyz_(uintptr_t *graph, const char *fx, const char *fy, const char *fz, const char *stl, const char *opt, int, int, int, int);
+void mgl_fsurf_xyz_(uintptr_t *graph, const char *fx, const char *fy, const char *fz, const char *stl, const char *opt, int, int, int, int, int);
 void mgl_grid_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *stl, const char *opt,int,int);
 void mgl_grid_(uintptr_t *graph, uintptr_t *a,const char *stl, const char *opt,int,int);
 void mgl_mesh_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int,int);
@@ -70,7 +70,7 @@ void mgl_dens_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, co
 void mgl_dens_(uintptr_t *graph, uintptr_t *z, const char *sch, const char *opt,int,int);
 void mgl_boxs_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch, const char *opt,int,int);
 void mgl_boxs_(uintptr_t *graph, uintptr_t *z, const char *sch, const char *opt,int,int);
-void mgl_tile_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *sch,int);
+void mgl_tile_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int,int);
 void mgl_tile_(uintptr_t *graph, uintptr_t *z, const char *sch, const char *opt,int,int);
 void mgl_tiles_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *c, const char *sch, const char *opt,int,int);
 void mgl_tiles_(uintptr_t *graph, uintptr_t *z, uintptr_t *r, const char *sch, const char *opt,int,int);

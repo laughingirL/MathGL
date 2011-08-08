@@ -35,12 +35,11 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
 	az.dir = mglPoint(0,0,1);	az.a = mglPoint(0,1,0);	az.b = mglPoint(1,0,0);	az.ch='z';
 #ifdef HAVE_PTHREAD
-	memset(&mutexSub,0,sizeof(pthread_mutex_t));	memset(&mutexLeg,0,sizeof(pthread_mutex_t));
-	memset(&mutexPrm,0,sizeof(pthread_mutex_t));	memset(&mutexPtx,0,sizeof(pthread_mutex_t));
-	memset(&mutexStack,0,sizeof(pthread_mutex_t));
+	pthread_mutex_init(&mutexSub,0);	pthread_mutex_init(&mutexLeg,0);
+	pthread_mutex_init(&mutexPrm,0);	pthread_mutex_init(&mutexPtx,0);
+	pthread_mutex_init(&mutexStk,0);
 #endif
 	SetSize(w,h);	SetQuality(MGL_DRAW_NORM);	DefaultPlotParam();
-mgl_test_txt("mglCanvas constructor: G = %p\n",G);
 }
 //-----------------------------------------------------------------------------
 mglCanvas::~mglCanvas()
@@ -761,7 +760,7 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 	static int id=1;
 	if(lbl==NULL)	{	id=1;	return;	}
 	if(ObjId<0)	{	ObjId = -id;	id++;	}
-	Grp.push_back(mglGroup(lbl,ObjId));
+	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::EndGroup()	{	LoadState();	}

@@ -60,7 +60,6 @@ using mglCanvasW::Window;
 	void ToggleRotate();///< Switch on/off rotation by mouse
 	void ToggleNo();	///< Switch off all zooming and rotation
 	void Update();		///< Update picture by calling user drawing function
-	void ReLoad(bool o);///< Reload user data and update picture
 	void Adjust();		///< Adjust size of bitmap to window size
 	void NextFrame();	///< Show next frame (if one)
 	void PrevFrame();	///< Show previous frame (if one)
