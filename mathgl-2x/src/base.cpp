@@ -62,6 +62,7 @@ mglBase::mglBase()
 
 	InUse = 1;	prev_val = NAN;
 	// Always create default palette txt[0] and default scheme txt[1]
+	Txt.reserve(3);
 	Txt.push_back(mglTexture(MGL_DEF_PAL,-1));
 	Txt.push_back(mglTexture("BbcyrR",1));
 	last_style[0]='k';	last_style[1]='-';	last_style[2]='0';

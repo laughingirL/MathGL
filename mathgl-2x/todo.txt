@@ -3,6 +3,7 @@
 2. Axis
 	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
 3. Add GLUT window
+4. Use std::vector in parser
 
 ============= NEW  =============
 

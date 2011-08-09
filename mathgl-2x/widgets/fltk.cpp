@@ -227,6 +227,7 @@ int Fl_MathGL::handle(int code)
 //-----------------------------------------------------------------------------
 mglCanvasFL::mglCanvasFL() : mglCanvasW()
 {	Wnd = 0;	alpha = light = sshow = 0;	}
+mglCanvasFL::~mglCanvasFL()	{	if(Wnd)	delete Wnd;	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::NextFrame()
 {

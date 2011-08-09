@@ -178,7 +178,15 @@ mglNum::~mglNum()
 //-----------------------------------------------------------------------------
 mglParse::mglParse(bool setsize)
 {
-	memset(this,0,sizeof(mglParse));
+	DataList=0;	NumList=0;	func=0;	fn_stack=0;
+//	wchar_t *par[40];	///< Parameter for substituting instead of $1, ..., $9
+	out=0;	*leg=0;
+	opt=opt_leg=Skip=Stop=for_br=false;
+	memset(for_stack,0,40*sizeof(int));
+	memset(if_stack,0,40*sizeof(int));
+	memset(if_for,0,40*sizeof(int));
+	if_pos=fn_pos=fn_num=for_addr=0;
+
 	Cmd = mgls_base_cmd;
 	AllowSetSize=setsize;
 	Once = true;	parlen=320;
@@ -888,6 +896,7 @@ void mgl_error_print(int line, int r, char *Message)
 	if(r==4)	printf("Unbalanced ' in line %d\n", line);
 	if(Message)	Message[0]=0;
 }
+#include <string>
 void mglParse::Execute(mglGraph *gr, FILE *fp, bool print)
 {
 	if(gr==0 || fp==0)	return;

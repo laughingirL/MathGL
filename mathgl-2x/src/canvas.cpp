@@ -49,6 +49,10 @@ mglCanvas::~mglCanvas()
 }
 //-----------------------------------------------------------------------------
 float mglCanvas::GetRatio()	{	return inW/inH;	}
+void mglCanvas::AddLegend(const wchar_t *text,const char *style)
+{	if(text)	MGL_PUSH(Leg,mglText(text,style),mutexLeg);	}
+void mglCanvas::add_prim(mglPrim &a)
+{	a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);	clr(MGL_FINISHED);	}
 //-----------------------------------------------------------------------------
 void mglCanvas::DefaultPlotParam()
 {
@@ -76,9 +80,9 @@ GifFileType *gif;
 	SetLegendMarks();		SetFontSize(4);
 	SetTuneTicks(true);
 	Clf();	SetAmbient();	Ternary(0);
-	PlotId = "frame";		SetPenPal("k-1");
-	SetDefScheme("BbcyrR");	clr(MGL_DISABLE_SCALE);
-	SetPalette(MGL_DEF_PAL);
+	PlotId = "frame";		clr(MGL_DISABLE_SCALE);
+	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
+	SetPenPal("k-1");
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
 	_tetx=_tety=_tetz=0;	stack.clear();
 	Alpha(false);		FactorPos = 1.07;

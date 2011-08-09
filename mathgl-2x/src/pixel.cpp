@@ -263,8 +263,7 @@ void mglCanvas::Finish()
 			Draw(Prm[i]);	m = Prm[i].id-m1;
 			// collect data for groups
 			// it is rather expensive (extra 4b per primitive) but need for export to 3D
-			if(m>=0 && m<m2-m1+1)
-				Grp[ng[m]].p.push_back(i);
+//			if(m>=0 && m<m2-m1+1)	Grp[ng[m]].p.push_back(i);
 		}
 	}
 	delete []ng;

@@ -48,6 +48,7 @@ using mglCanvasW::Window;
 	Fl_Window *Wnd;	///< Pointer to window
 
 	mglCanvasFL();
+	~mglCanvasFL();
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Ñëóæåáíûå ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Create a window for plotting. Now implemeted only for GLUT.

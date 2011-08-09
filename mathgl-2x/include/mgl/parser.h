@@ -61,7 +61,7 @@ struct mglVar
 	bool temp;		///< This temporar variable
 	void (*func)(void *);	///< Callback function for destroying
 
-	mglVar()	{	o=0;	s[0]=0;		next=prev=0;	func=0;	temp=false;	};
+	mglVar()	{	o=0;	*s=0;	next=prev=0;	func=0;	temp=false;	};
 	~mglVar();
 	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
 	void MoveAfter(mglVar *var);
@@ -74,7 +74,7 @@ struct mglNum
 	wchar_t s[256];	///< Number name
 	mglNum *next;	///< Pointer to next instance in list
 	mglNum *prev;	///< Pointer to prev instance in list
-	mglNum()	{	d=0;	s[0]=0;		next=prev=0;	};
+	mglNum()	{	d=0;	*s=0;	next=prev=0;	};
 	~mglNum();
 	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
 	void MoveAfter(mglNum *var);

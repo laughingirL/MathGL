@@ -50,8 +50,6 @@ if(use_qt)
 	set(mgl_wnd_src ${mgl_wnd_src} qt.cpp ${MGL_MOC_FILES})
 endif(use_qt)
 
-
-
 add_library(mgl-wnd SHARED ${mgl_wnd_src})
 add_library(mgl-wnd-static STATIC ${mgl_wnd_src})
 set_target_properties(mgl-wnd-static PROPERTIES OUTPUT_NAME "mgl-wnd")
@@ -60,6 +58,12 @@ set_target_properties(mgl-wnd-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(mgl-wnd PROPERTIES SOVERSION 6.0.0)
 target_link_libraries(mgl-wnd mgl)
 
+
+if(use_pthread)
+	target_link_libraries(mgl-wnd ${CMAKE_THREAD_LIBS_INIT})
+	target_link_libraries(mgl-glut ${CMAKE_THREAD_LIBS_INIT})
+	add_definitions(-DHAVE_PTHREAD)
+endif(use_pthread)
 
 if(use_fltk)
 	target_link_libraries(mgl-wnd ${FLTK_LIBRARIES})

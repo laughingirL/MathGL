@@ -26,6 +26,8 @@
 #endif
 
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define MGL_VER2	0.0
 
@@ -36,10 +38,11 @@
 #define isfinite _finite
 #define chdir	_chdir // BORLAND has chdir
 #include <float.h>
-const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
+
+extern mglData s;const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define NANd	(*(double*)mgl_nan)
 #define NANf	(*(float*)&(mgl_nan[1]))
-#if(MGL_USE_DOUBLE==1)
+#if (MGL_USE_DOUBLE==1)
 #define NAN		NANd
 #else
 #define NAN		NANd
@@ -64,7 +67,7 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 //-----------------------------------------------------------------------------
 #include <mgl/config.h>
 //-----------------------------------------------------------------------------
-#if(MGL_USE_DOUBLE==1)
+#if (MGL_USE_DOUBLE==1)
 typedef double mreal;
 #else
 typedef float mreal;
@@ -178,6 +181,38 @@ enum{	// Codes for warnings/messages
 //#define mgl_realloc(T,o,no,nn) {T *_tmp = new T[nn]; memcpy(_tmp,o,(no)*sizeof(T)); delete []o; o=_tmp;}
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
+template<typename T> int mgl_cmp(const void *x, const void *y)
+{
+	const T *a=(const T*)x, *b=(const T*)y;
+	return *a>*b ? -1:1;
+}
+template<typename T> class mglArray {
+public:
+	mglArray()	{	dat = 0;	len=pos=0;	}
+	~mglArray()	{	free(dat); }
+	mglArray(const mglArray<T>& A)	{	*this=A;	}
+	mglArray<T>& operator= (const mglArray<T>& A)
+	{	free(dat);	len=A.len;	pos=A.pos;	dat=(T*)realloc(0,sizeof(T));
+		memccpy(dat,A.dat,len*sizeof(T));	return *this;	}
+	T const& operator[](int i) const{	return dat[i]; }
+	T&       operator[](int i)		{	return dat[i]; }
+	long size() const	{	return pos;	}
+	void erase(long p)	{	if(p>0 && p<=len)	pos = p-1;	}
+	T const& pop_back()
+	{	T const&d=dat[pos];	if(pos>0)	pos--;	return d;	}
+	void push_back(T const& d)
+	{	reserve(pos+2-len);	dat[pos]=d;	pos++;	}
+	void reserve(long d)
+	{	if(d>0)	{	len+=d;	dat=(T*)realloc(dat,len*sizeof(T));	}	}
+	void clear()
+	{	pos=0;	len=1;	if(dat)	free(dat);	dat = (T*)realloc(0,sizeof(T));	}
+	void sort()
+	{	qsort(dat,pos,sizeof(T),mgl_cmp<T>);	}
+private:
+	long len, pos;
+	T*  dat;
+};
+//-----------------------------------------------------------------------------
 struct mglThread
 {
 	mreal *a;		// float* array with parameters or results

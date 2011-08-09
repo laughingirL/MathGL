@@ -44,7 +44,7 @@ struct mglPrim
 	float w;		///< width (if applicable) or ftet
 	float p;
 
-	mglPrim(int t=0)	{	memset(this,0,sizeof(mglPrim));	type = t;	}
+	mglPrim(int t=0)	{	n1=n2=n3=n4=id=0;	z=s=w=p=0;	type = t;	}
 };
 bool operator<(const mglPrim &a,const mglPrim &b);
 bool operator>(const mglPrim &a,const mglPrim &b);
@@ -55,7 +55,7 @@ struct mglMatrix
 	float b[9];
 	float x,y,z,pf;
 	mglMatrix()	{	clear();	}
-	inline void clear()	{	memset(this,0,sizeof(mglMatrix));	}
+	inline void clear()	{	x=y=z=pf=0;	memset(b,0,9*sizeof(float));	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for group of primitives
@@ -80,7 +80,7 @@ struct mglText
 /// Structure for drawing axis and ticks
 struct mglAxis
 {
-	mglAxis()	{	memset(this,0,sizeof(mglAxis));	}
+	mglAxis()	{	dv=ds=d=v0=v1=v2=o=0;	ns=f=ch=*t=0;	}
 	inline void AddLabel(const wchar_t *lbl, float v)
 	{	txt.push_back(mglText(lbl,"",v));	}
 	inline void AddLabel(const std::wstring &lbl, float v)
@@ -103,7 +103,7 @@ struct mglAxis
 /// Structure for light source
 struct mglLight
 {
-	mglLight()	{	memset(this,0,sizeof(mglLight));	}
+	mglLight()	{	n=i=false;	a=b=0;	}
 	bool n;			///< Availability of light sources
 	bool i;			///< Infinity/local position of light sources
 	mglPoint r;		///< Position of light sources
@@ -305,8 +305,7 @@ public:
 
 	/// Add string to legend
 	void AddLegend(const char *text,const char *style);
-	void AddLegend(const wchar_t *text,const char *style)
-	{	if(text)	MGL_PUSH(Leg,mglText(text,style),mutexLeg);	}
+	void AddLegend(const wchar_t *text,const char *style);
 	/// Clear saved legend string
 	inline void ClearLegend()	{	Leg.clear();	}
 	/// Draw legend of accumulated strings at position (x, y) by \a font with \a size
@@ -397,8 +396,7 @@ protected:
 	void Glyph(float x, float y, float f, int style, long icode, float col);
 	float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'));	// position in pntN
 
-	inline void add_prim(mglPrim &a)	///< add primitive to list
-	{	a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);	clr(MGL_FINISHED);	}
+	void add_prim(mglPrim &a);	///< add primitive to list
 	void mark_draw(long p, char type, float size);
 	void arrow_draw(long p1, long p2, char st, float size);
 	virtual void line_draw(long p1, long p2);

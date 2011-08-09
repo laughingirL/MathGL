@@ -167,7 +167,7 @@ struct mglPnt
 	float c,t;		// index in color scheme
 	float u,v,w;	// normales
 	float r,g,b,a;	// RGBA color
-	mglPnt()	{	memset(this,0,sizeof(mglPnt));	}
+	mglPnt()	{	x=y=z=c=t=u=v=w=r=g=b=a=0;	}
 };
 inline mglPnt operator+(const mglPnt &a, const mglPnt &b)
 {	mglPnt c;
@@ -197,7 +197,7 @@ struct mglTexture
 	mglTexture()	{	n=0;	}
 	mglTexture(const char *cols, int smooth=0,float alpha=1)
 	{	n=0;	Set(cols,smooth,alpha);	}
-	void Clear()	{	n=0;	memset(col,0,514*sizeof(mglColor));	}
+	void Clear()	{	n=0;	}
 	void Set(const char *cols, int smooth=0,float alpha=1);
 	void GetC(float u,float v,mglPnt &p);
 	bool IsSame(mglTexture &t);
