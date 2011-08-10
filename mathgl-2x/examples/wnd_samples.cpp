@@ -46,6 +46,9 @@ int test_wnd(mglGraph *gr)
 	gr->Surf("exp(-10*y^2/5-6*x^2)/sqrt(5)");
 	gr->Puts(mglPoint(0.2, 0, 1.2), "z=2", "", -2);
 	gr->Label('x',"\\tau", 0);	gr->Label('y', "\\rho");
+	gr->WriteTGA("test.tga");
+	gr->WriteBMP("test.bmp");
+	gr->WriteBPS("test.eps");
 	return 0;
 }
 //-----------------------------------------------------------------------------

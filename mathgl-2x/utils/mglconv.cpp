@@ -29,7 +29,8 @@ int main(int narg, char **arg)
 	mglGraph gr;
 	mglParse p(true);
 
-	long i,j=-1,k=-1,n;
+	long i,j=-1,k=-1;
+	unsigned long n;
 	for(i=1;i<narg;i++)	// add arguments for the script
 	{
 		if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')

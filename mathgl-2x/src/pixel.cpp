@@ -249,24 +249,11 @@ bool operator>(const mglPrim &a, const mglPrim &b)
 void mglCanvas::Finish()
 {
 	register unsigned long i;
-	long m1=0,m2=0,m;
-	for(i=0;i<Grp.size();i++)	// prepare array of indirect indexing
-	{	m = Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
-	long *ng = new long[m2-m1+1];
-	for(i=0;i<Grp.size();i++)	ng[Grp[i].Id-m1] = i;
-
 	if(!(Quality&4) && Prm.size()>0)
 	{
 		std::sort(Prm.begin(), Prm.end());
-		for(i=0;i<Prm.size();i++)
-		{
-			Draw(Prm[i]);	m = Prm[i].id-m1;
-			// collect data for groups
-			// it is rather expensive (extra 4b per primitive) but need for export to 3D
-//			if(m>=0 && m<m2-m1+1)	Grp[ng[m]].p.push_back(i);
-		}
+		for(i=0;i<Prm.size();i++)	Draw(Prm[i]);
 	}
-	delete []ng;
 
 	unsigned long n=Width*Height;
 	unsigned char c[4],alf=(Flag&3)!=2 ? 0:255,*cc;

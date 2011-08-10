@@ -72,12 +72,17 @@ void mgl_set_legend_marks(HMGL gr, int num);
 
 void mgl_show_image(HMGL gr, const char *viewer, int keep);
 void mgl_write_frame(HMGL gr, const char *fname,const char *descr);
+void mgl_write_tga(HMGL gr, const char *fname,const char *descr);
 void mgl_write_bmp(HMGL gr, const char *fname,const char *descr);
 void mgl_write_jpg(HMGL gr, const char *fname,const char *descr);
 void mgl_write_png(HMGL gr, const char *fname,const char *descr);
 void mgl_write_png_solid(HMGL gr, const char *fname,const char *descr);
+void mgl_write_bps(HMGL gr, const char *fname,const char *descr);
 void mgl_write_eps(HMGL gr, const char *fname,const char *descr);
 void mgl_write_svg(HMGL gr, const char *fname,const char *descr);
+void mgl_write_tex(HMGL gr, const char *fname,const char *descr);
+void mgl_write_obj(HMGL gr, const char *fname,const char *descr);
+void mgl_write_wgl(HMGL gr, const char *fname,const char *descr);
 void mgl_write_idtf(HMGL gr, const char *fname,const char *descr);
 void mgl_write_gif(HMGL gr, const char *fname,const char *descr);
 void mgl_start_gif(HMGL gr, const char *fname,int ms);
@@ -170,6 +175,7 @@ void mgl_set_legend_marks_(uintptr_t *gr, int *num);
 
 void mgl_show_image_(uintptr_t *graph, const char *viewer, int *keep, int);
 void mgl_write_frame_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
+void mgl_write_tga_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_bmp_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_jpg_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_png_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);

@@ -201,7 +201,7 @@ struct mglTexture
 	void Set(const char *cols, int smooth=0,float alpha=1);
 	void GetC(float u,float v,mglPnt &p);
 	bool IsSame(mglTexture &t);
-private:
+	void GetRGBA(unsigned char *f);	// Write as BGRA for fastest export to TGA
 };
 //-----------------------------------------------------------------------------
 const mglColor NC(-1,-1,-1);

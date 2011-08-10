@@ -1,5 +1,5 @@
 /***************************************************************************
- * eps_svg.cpp is part of Math Graphic Library
+ * export_2d.cpp is part of Math Graphic Library
  * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -510,13 +510,13 @@ mglColor mglCanvas::put_color(const mglPrim &p)
 #define _Gr_	((mglCanvas *)(gr))
 void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 {	_Gr_->WriteEPS(fname,descr);	}
-void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
-{	_Gr_->WriteSVG(fname,descr);	}
-//-----------------------------------------------------------------------------
 void mgl_write_eps_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	_GR_->WriteEPS(s,d);	delete []s;		delete []d;	}
+//-----------------------------------------------------------------------------
+void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
+{	_Gr_->WriteSVG(fname,descr);	}
 void mgl_write_svg_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;

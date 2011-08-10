@@ -61,7 +61,7 @@ struct mglMatrix
 /// Structure for group of primitives
 struct mglGroup
 {
-	std::vector<long> p;///< list of primitives (filled by Finish())
+	std::vector<long> p;///< list of primitives (not filled!!!)
 	int Id;				///< Current list of primitives
 	std::string Lbl;	///< Group label
 	mglGroup(const char *lbl="", int id=0)	{	Lbl=lbl;	Id=id;	}
@@ -223,6 +223,8 @@ public:
 	void WriteWGL(const char *fname,const char *descr=0);
 	/// Write the frame in file using OBJ/MTL format
 	void WriteOBJ(const char *fname,const char *descr=0);
+	/// Write the frame in file using TGA format
+	void WriteTGA(const char *fname,const char *descr=0);
 
 
 	/// Create new frame.
@@ -404,7 +406,7 @@ protected:
 	virtual void quad_draw(long p1, long p2, long p3, long p4);
 	virtual void pnt_draw(long p);
 	void glyph_draw(const mglPrim *P);
-	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
+	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool alpha=false);
 	bool IsSame(const mglPrim &pr,float wp,mglColor cp,int st);
 	void Draw(const mglPrim &p);
 

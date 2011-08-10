@@ -35,6 +35,7 @@ extern "C" {
 #include "mgl/canvas.h"
 #include "mgl/canvas_cf.h"
 
+int mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_bps_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_png_save(const char *fname, int w, int h, unsigned char **p);
@@ -89,6 +90,18 @@ void mglCanvas::WriteBMP(const char *fname,const char *)
 	if(p)
 	{
 		if(mgl_bmp_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
+		free(p);	if(f)	free(f);
+	}
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::WriteTGA(const char *fname,const char *)
+{
+	long w,h;
+	unsigned char *f=0, **p=0;
+	p = GetRGBLines(w,h,f,true);
+	if(p)
+	{
+		if(mgl_tga_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
 		free(p);	if(f)	free(f);
 	}
 }
@@ -174,20 +187,45 @@ int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
 	fwrite("BM",2,1,fp);	fwrite(&u,4,1,fp);
 	fwrite(z,4,1,fp);	u=54;	fwrite(&u,4,1,fp);
 	// BITMAPINFOHEADER
-	u=40;	fwrite(&u,4,1,fp);	fwrite(&(w),4,1,fp);	fwrite(&(h),4,1,fp);
+	u=40;	fwrite(&u,4,1,fp);	fwrite(&w,4,1,fp);	fwrite(&h,4,1,fp);
 	unsigned short pp=1;
 	fwrite(&pp,2,1,fp);	pp=24;	fwrite(&pp,2,1,fp);	u = w*h*3;
 	fwrite(z,4,1,fp);	fwrite(&u,4,1,fp);
 	fwrite(z,4,1,fp);	fwrite(z,4,1,fp);
 	fwrite(z,4,1,fp);	fwrite(z,4,1,fp);
 	// image
-//	for(int i=h-1;i>=0;i--)	fwrite(p[i],3*w,1,fp);
+	const unsigned char *q;
 	register int i,j;
 	for(i=h-1;i>=0;i--)	for(j=0;j<w;j++)
 	{
-		fwrite(p[i]+3*j+2,1,1,fp);
-		fwrite(p[i]+3*j+1,1,1,fp);
-		fwrite(p[i]+3*j+0,1,1,fp);
+		q = p[i]+3*j;
+		fwrite(q+2,1,1,fp);
+		fwrite(q+1,1,1,fp);
+		fwrite(q+0,1,1,fp);
+	}
+	fclose(fp);
+	return 0;
+}
+//-----------------------------------------------------------------------------
+int mgl_tga_save(const char *fname, int w, int h, unsigned char **p)
+{
+	FILE *fp = fopen(fname,"wb");
+	if (!fp)	return 1;
+	// header
+	char head[14]={0,0,2, 0,0,0,0,0, 0,0,0,0, 32,0};
+	fwrite(head,12,1,fp);
+	fwrite(&w,2,1,fp);	fwrite(&h,2,1,fp);
+	fwrite(head+12,2,1,fp);
+	// image
+	register int i,j;
+	const unsigned char *q;
+	for(i=h-1;i>=0;i--)	for(j=0;j<w;j++)
+	{
+		q = p[i]+4*j;
+		fwrite(q+2,1,1,fp);
+		fwrite(q+1,1,1,fp);
+		fwrite(q+0,1,1,fp);
+		fwrite(q+3,1,1,fp);
 	}
 	fclose(fp);
 	return 0;
@@ -396,6 +434,7 @@ void mglCanvas::WriteFrame(const char *fname, const char *descr)
 	if(!strcmp(fname+len-4,".svg"))	WriteSVG(fname,descr);
 	if(!strcmp(fname+len-4,".gif"))	WriteGIF(fname,descr);
 	if(!strcmp(fname+len-4,".bmp"))	WriteBMP(fname,descr);
+	if(!strcmp(fname+len-4,".tga"))	WriteTGA(fname,descr);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::ShowImage(const char *viewer, bool keep)
@@ -452,12 +491,26 @@ void mgl_write_jpg_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	_GR_->WriteJPEG(s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
+void mgl_write_tga(HMGL gr, const char *fname,const char *descr)
+{	_Gr_->WriteTGA(fname,descr);	}
+void mgl_write_tga_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
+	_GR_->WriteTGA(s,f);	delete []s;		delete []f;	}
+//-----------------------------------------------------------------------------
 void mgl_write_bmp(HMGL gr, const char *fname,const char *descr)
 {	_Gr_->WriteBMP(fname,descr);	}
 void mgl_write_bmp_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	_GR_->WriteBMP(s,f);	delete []s;		delete []f;	}
+//-----------------------------------------------------------------------------
+void mgl_write_bps(HMGL gr, const char *fname,const char *descr)
+{	_Gr_->WriteBPS(fname,descr);	}
+void mgl_write_bps_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
+	_GR_->WriteBPS(s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
 void mgl_write_idtf(HMGL gr, const char *fname,const char *descr)
 {	_Gr_->WriteIDTF(fname,descr);	}

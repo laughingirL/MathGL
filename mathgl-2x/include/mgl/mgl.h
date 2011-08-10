@@ -159,12 +159,15 @@ public:
 	/// Write the frame in file using BMP format
 	inline void WriteBMP(const char *fname,const char *descr="")
 	{	mgl_write_bmp(gr, fname, descr);	}
+	/// Write the frame in file using BMP format
+	inline void WriteTGA(const char *fname,const char *descr="")
+	{	mgl_write_tga(gr, fname, descr);	}
 	/// Write the frame in file using PostScript format
 	inline void WriteEPS(const char *fname,const char *descr="")
 	{	mgl_write_eps(gr, fname, descr);	}
 	/// Write the frame in file using PostScript format as bitmap
 	void WriteBPS(const char *fname,const char *descr="")
-	{	mgl_write_eps(gr, fname, descr);	}
+	{	mgl_write_bps(gr, fname, descr);	}
 	/// Write the frame in file using SVG format
 	inline void WriteSVG(const char *fname,const char *descr="")
 	{	mgl_write_svg(gr, fname, descr);	}
