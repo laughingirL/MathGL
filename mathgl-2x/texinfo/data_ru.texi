@@ -1,0 +1,737 @@
+@c ------------------------------------------------------------------
+@chapter Класс mglData
+
+Это класс для работы с массивами данных, определенный в @code{#include <mgl/mgl_data.h>}. Он содержит функции для выделения памяти и изменения размера данных, чтения данных из файла, численного дифференцирования/интегрирования/интерполяции и пр., заполнения по текстовой формуле и т.д. Класс позволяет работать с данными размерности не более 3 (как функции от трех переменных -- x,y,z). По умолчанию внутреннее представление данных -- float, выбранный в силу меньшего размера занимаемой памяти и достаточной для построения графиков точности. Базовый тип можно сменить на этапе установки (@pxref{Installation and usage}) указав опцию @code{--enable-double}. Однако, в дальнейшем в документации будет использован тип @code{float}.
+
+@menu
+* Public variables::            
+* Create and delete::           
+* Fill::                        
+* Rearrange::                   
+* File I/O::                    
+* Make another data::           
+* Change data::      
+* Interpolation::               
+* Informational functions::     
+* Operators::                   
+* Global functions::            
+@end menu
+
+@c ------------------------------------------------------------------
+@node Public variables, Create and delete, , mglData class
+@section Переменные
+
+@deftypecv {Variable} mglData @code{float *} a
+Указатель на массив данных. Это одномерный массив. Например, матрица [nx x ny x nz] представляется одномерным массивом длиной nx*ny*nz, где элемент с индексами @{i, j, k@} находится как a[i+nx*j+nx*ny*k] (индексы отсчитываются от нуля).
+@end deftypecv
+@deftypecv {Variable} mglData @code{int} nx
+Размер массива по 1-ой размерности ('x' размерности).
+@end deftypecv
+@deftypecv {Variable} mglData @code{int} ny
+Размер массива по 2-ой размерности ('y' размерности).
+@end deftypecv
+@deftypecv {Variable} mglData @code{int} nz
+Размер массива по 3-ей размерности ('z' размерности).
+@end deftypecv
+@deftypecv {Variable} mglData @code{char *} id
+Имена колонки (или среза при nz>1) -- один символ на колонку.
+@end deftypecv
+
+
+@c ------------------------------------------------------------------
+@node Create and delete, Fill, Public variables, mglData class
+@section Создание и удаление
+@cindex mglData
+@cindex Set
+
+@defop Конструктор @code{mglData} @code{} mglData (@code{int} mx=@code{1}, @code{int} my=@code{1}, @code{int} mz=@code{1})
+Конструктор по умолчанию. Выделяет память для массива данных и заполняет ее нулями.
+@end defop
+@defop Конструктор @code{mglData} @code{} mglData (@code{const char *}fname)
+Читает данные из файла.
+@end defop
+@defop Конструктор @code{mglData} @code{} mglData (@code{const mglData} &dat)
+Копирует данные из другого экземпляра @code{mglData}.
+@end defop
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Create (@code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_data_create (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
+Создает/пересоздает массив данных указанного размера и заполняет его нулями. Ничего не делает при @var{mx}, @var{my}, @var{mz} отрицательных или равных нулю.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++)} @code{void} Set (@code{const float *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
+@deftypefnx {Метод класса @code{mglData} (C++)} @code{void} Set (@code{const double *}A, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_data_set_float (@code{HMDT} dat, @code{const float *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
+@deftypefnx {Функция С} @code{void} mgl_data_set_double (@code{HMDT} dat, @code{const double *}A, @code{int} NX, @code{int} NY, @code{int} NZ)
+Выделяет память и копирует данные из массивов типа @code{float*} или @code{double*}, т.е. из массивов определенных как @code{float a[NX*NY*NZ];}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++)} @code{void} Set (@code{const float **}A, @code{int} N1, @code{int} N2)
+@deftypefnx {Метод класса @code{mglData} (C++)} @code{void} Set (@code{const double **}A, @code{int} N1, @code{int} N2)
+@deftypefnx {Функция С} @code{void} mgl_data_set_float2 (@code{HMDT} dat, @code{const float **}A, @code{int} N1, @code{int} N2)
+@deftypefnx {Функция С} @code{void} mgl_data_set_double2 (@code{HMDT} dat, @code{const double **}A, @code{int} N1, @code{int} N2)
+Выделяет память и копирует данные из массивов типа @code{float**} или @code{double**} с размерностями @var{N1}, @var{N2}, т.е. из массивов определенных как @code{float a[N1][N2];}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++)} @code{void} Set (@code{const float ***}A, @code{int} N1, @code{int} N2)
+@deftypefnx {Метод класса @code{mglData} (C++)} @code{void} Set (@code{const double ***}A, @code{int} N1, @code{int} N2)
+@deftypefnx {Функция С} @code{void} mgl_data_set_float3 (@code{HMDT} dat, @code{const float ***}A, @code{int} N1, @code{int} N2)
+@deftypefnx {Функция С} @code{void} mgl_data_set_double3 (@code{HMDT} dat, @code{const double ***}A, @code{int} N1, @code{int} N2)
+Выделяет память и копирует данные из массивов типа @code{float***} или @code{double***} с размерностями @var{N1}, @var{N2}, @var{N3}, т.е. из массивов определенных как @code{float a[N1][N2][N3];}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++)} @code{void} Set (@code{gsl_vector *}v)
+@deftypefnx {Функция С} @code{void} mgl_data_set_vector (@code{HMDT} dat, @code{gsl_vector *}v)
+Выделяет память и копирует данные из структуры типа @code{gsl_vector *}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++)} @code{void} Set (@code{gsl_matrix *}m)
+@deftypefnx {Функция С} @code{void} mgl_data_set_matrix (@code{HMDT} dat, @code{gsl_matrix *}m)
+Выделяет память и копирует данные из структуры типа @code{gsl_matrix *}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{inline void} Set (@code{const mglData &}from)
+@deftypefnx {Функция С} @code{void} mgl_data_set (@code{HMDT} dat, @code{const HMDT} from)
+Выделяет память и копирует данные из другого экземпляра @var{from}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++)} @code{void} Set (@code{const std::vector<int> &}d)
+@deftypefnx {Метод класса @code{mglData} (C++)} @code{void} Set (@code{const std::vector<float> &}d)
+@deftypefnx {Метод класса @code{mglData} (C++)} @code{void} Set (@code{const std::vector<double> &}d)
+Выделяет память и копирует данные из массива типа @code{std::vector<T>}.
+@end deftypefn
+
+
+@deftypefn {Метод класса @code{mglData} (C+, Python)} @code{void} Set (@code{const char *}str, @code{int} NX, @code{int} NY=@code{1}, @code{int} NZ=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_data_set_values (@code{const char *}str, @code{int} NX, @code{int} NY, @code{int} NZ)
+Выделяет память и сканирует (scanf) данные из строки.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node Fill, Rearrange, Create and delete, mglData class
+@section Заполнение данных
+@cindex Fill
+@cindex Modify
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Fill (@code{float} x1, @code{float} x2, @code{char} dir=@code{'x'})
+@deftypefnx {Функция С} @code{void} mgl_data_fill (@code{HMDT} dat, @code{float} x1, @code{float} x2, @code{char} dir)
+Заполняет значениями равно распределенными в диапазоне [@var{x1}, @var{x2}] в направлении @var{dir}=@{@samp{x},@samp{y},@samp{z}@}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Fill (@code{const char *}eq, @code{mglPoint} Min, @code{mglPoint} Max, @code{const mglData *}vdat=0, @code{const mglData *}wdat=0)
+@deftypefnx {Функция С} @code{void} mgl_data_fill (@code{HMGL} gr, @code{HMDT} dat, @code{const char *}eq, @code{const HMDT *}vdat, @code{const HMDT *}wdat)
+Заполняет значениями вычисленными по формуле @var{eq}. Формула представляет собой произвольное выражение, зависящее от переменных @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Координаты @samp{x}, @samp{y}, @samp{z} полагаются меняющимися в диапазоне @var{Min} x @var{Max} (в отличие от функции @code{Modify}). Переменная @samp{u} -- значения исходного массива, переменные @samp{v}, @samp{w} -- значения массивов @var{vdat}, @var{wdat}. Последние могут быть @code{NULL}, т.е. опущены.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Modify (@code{const char *}eq, @code{int} dim=@code{0})
+@deftypefnx {Метод класса @code{mglData} (C++, Python)} @code{void} Modify (@code{const char *}eq, @code{const mglData &}v)
+@deftypefnx {Метод класса @code{mglData} (C++, Python)} @code{void} Modify (@code{const char *}eq, @code{const mglData &}v, @code{const mglData &}w)
+@deftypefnx {Функция С} @code{void} mgl_data_modify (@code{HMDT} dat, @code{const char *}eq, @code{int} dim)
+@deftypefnx {Функция С} @code{void} mgl_data_modify_vw (@code{HMDT} dat, @code{const char *}eq, @code{const HMDT} v, @code{const HMDT} w)
+Заполняет значениями вычисленными по формуле @var{eq}. Формула представляет собой произвольное выражение, зависящее от переменных @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Координаты @samp{x}, @samp{y}, @samp{z} полагаются меняющимися в диапазоне [0,1] (в отличие от функции @code{Fill}). Переменная @samp{u} -- значения исходного массива, переменные @samp{v}, @samp{w} -- значения массивов @var{vdat}, @var{wdat}. Последние могут быть @code{NULL}, т.е. опущены. Если указан @var{dim}>0, то изменяются только слои >=@var{dim}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Put (@code{float} val, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
+@deftypefnx mglData @code{void} mgl_data_put_val (@code{HMDT} a, @code{float} val, @code{int} i, @code{int} j, @code{int} k)
+Присваивает значения (под-)массива @var{dat}[@var{i}, @var{j}, @var{k}] = @var{val}. Индексы @var{i}, @var{j}, @var{k} равные @samp{-1} задают значениия @var{val} для всего диапазона соответствующего направления(ий). Например, @code{Put(val,-1,0,-1);} задает a[i,0,j]=@var{val} для i=0...(nx-1), j=0...(nz-1).
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Put (@code{const mglData &}v, @code{int} i=@code{-1}, @code{int} j=@code{-1}, @code{int} k=@code{-1})
+@deftypefnx mglData @code{void} mgl_data_put_dat (@code{HMDT} a, @code{const HMDT} v, @code{int} i, @code{int} j, @code{int} k)
+Копирует значения из массива @var{v} в диапазон значений данного массива. Индексы @var{i}, @var{j}, @var{k} равные @samp{-1} задают диапазон изменения значений в соответствующих направление(ях). Младшие размерности массива @var{v} должны быть больше выбранного диапазона массива. Например, @code{Put(v,-1,0,-1);} присвоитa[i,0,j]=@var{v}.ny>nz ? @var{v}.a[i,j] : @var{v}.a[i], где i=0...(nx-1), j=0...(nz-1) и условие v.nx>=nx выполнено.
+@end deftypefn
+
+@deftypefn {Функция С} @code{void} mgl_data_set_value (@code{HMDT} dat, @code{float} v, @code{int} i, @code{int} j, @code{int} k)
+Присваивает значение выбранной ячейке массива данных.
+@end deftypefn
+
+@deftypefn {Функция С} @code{float} mgl_data_get_value (@code{HMDT} dat, @code{int} i, @code{int} j, @code{int} k)
+Возвращает значение выбранной ячейки массива данных.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C+, Python)} @code{void} GetNx ()
+@deftypefnx {Функция С} @code{float} mgl_data_get_nx (@code{HMDT} dat)
+Возвращает размер по x-направлению.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C+, Python)} @code{void} GetNy ()
+@deftypefnx {Функция С} @code{float} mgl_data_get_ny (@code{HMDT} dat)
+Возвращает размер по y-направлению.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C+, Python)} @code{void} GetNz ()
+@deftypefnx {Функция С} @code{float} mgl_data_get_nz (@code{HMDT} dat)
+Возвращает размер по z-направлению.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node Rearrange, File I/O, Fill, mglData class
+@section Изменение размеров данных
+@cindex Rearrange
+@cindex Extend
+@cindex Transpose
+@cindex Squeeze
+@cindex Crop
+@cindex InsertRows
+@cindex InsertColumns
+@cindex InsertSlices
+@cindex DeleteRows
+@cindex DeleteColumns
+@cindex DeleteSlices
+@cindex Insert
+@cindex Delete
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Rearrange (@code{int} mx, @code{int} my=@code{0}, @code{int} mz=@code{0})
+@deftypefnx {Функция С} @code{void} mgl_data_rearrange (@code{HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
+Изменяет размерность данных без изменения самого массива данных, так что результирующий массив @var{mx}*@var{my}*@var{mz} < nx*ny*nz. Если один из параметров @var{my} или @var{mz} ноль, то он будет выбран оптимальным образом. Например, если @var{my}=0, то будет @var{my}=nx*ny*nz/@var{mx} и @var{mz}=1.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Extend (@code{int} n1, @code{int} n2=@code{0})
+@deftypefnx {Функция С} @code{void} mgl_data_extend (@code{HMDT} dat, @code{int} n1, @code{int} n2)
+Увеличивает размер данных путем вставки (|@var{n1}|+1) новых срезов после (для @var{n1}>0) или перед (для @var{n1}<0) существующими данными. Можно добавить сразу 2 размерности для 1d массива, используя второй параметр @var{n2}. Данные в новые срезы будут скопированы из существующих. Например, для @var{n1}>0 новый массив будет
+@iftex
+@math{a_{ij}^{new} = a_i^{old}} where j=0...@var{n1}. Соответственно, для @var{n1}<0 новый массив будет @math{a_{ij}^{new} = a_j^{old}}, где i=0...|@var{n1}|.
+@end iftex
+@ifnottex
+a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @var{n1}<0 новый массив будет a_ij^new = a_j^old, где i=0...|@var{n1}|.
+@end ifnottex
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Transpose (@code{const char *}dim=@code{"yx"})
+@deftypefnx {Функция С} @code{void} mgl_data_transpose (@code{const char *}dim)
+Транспонирует (меняет порядок размерностей) массив данных. Новый порядок размерностей задается строкой @var{dim}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Squeeze (@code{int} rx, @code{int} ry=@code{1}, @code{int} rz=@code{1}, @code{bool} smooth=@code{false})
+@deftypefnx {Функция С} @code{void} mgl_data_squeeze (@code{HMDT} dat, @code{int} rx, @code{int} ry, @code{int} rz, @code{int} smooth)
+Уменьшает размер данных путем удаления элементов с индексами не кратными @var{rx}, @var{ry}, @var{rz} соответственно. Параметр @var{smooth} задает использовать сглаживания
+@iftex
+(т.е. @math{a_{out}[i]=\sum_{j=i,i+r}a[j]/r}) или нет (т.е. @math{a_{out}[i]=a[j*r]}).
+@end iftex
+@ifnottex
+(т.е. out[i]=\sum_@{j=i,i+r@} a[j]/r) или нет (т.е. out[i]=a[j*r]).
+@end ifnottex
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Crop (@code{int} n1, @code{int} n2, @code{char} dir=@code{'x'})
+@deftypefnx {Функция С} @code{void} mgl_data_crop (@code{HMDT} dat, @code{int} n1, @code{int} n2, @code{char} dir)
+Обрезает границы данных при @var{i}<@var{n1} и @var{i}>@var{n2} (при @var{n2}>0) или @var{i}>@code{n[xyz]}-@var{n2} (при @var{n2}<=0) вдоль направления @var{dir}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} InsertRows (@code{int} at, @code{int} num=@code{1}, @code{const char *}eq=@code{NULL})
+Вставляет @var{num} срезов вдоль направления 'y' (строк) с позиции @var{at} и заполняет их по формуле @var{eq} (при @var{eq}!=0) или нулями.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} InsertColumns (@code{int} at, @code{int} num=@code{1}, @code{const char *}eq=@code{NULL})
+Вставляет @var{num} срезов вдоль направления 'x' (колонок) с позиции @var{at} и заполняет их по формуле @var{eq} (при @var{eq}!=0) или нулями.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} InsertSlices (@code{int} at, @code{int} num=@code{1}, @code{const char *}eq=@code{NULL})
+Вставляет @var{num} срезов вдоль направления 'z' с позиции @var{at} и заполняет их по формуле @var{eq} (при @var{eq}!=0) или нулями.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} DeleteRows (@code{int} at, @code{int} num=@code{1})
+Удаляет @var{num} срезов вдоль направления 'y' (строк) с позиции @var{at}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} DeleteColumns (@code{int} at, @code{int} num=@code{1})
+Удаляет @var{num} срезов вдоль направления 'x' (колонок) с позиции @var{at}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} DeleteSlices (@code{int} at, @code{int} num=@code{1})
+Удаляет @var{num} срезов вдоль направления 'z' с позиции @var{at}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Insert (@code{char} dir, @code{int} pos=@code{0}, @code{int} num=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_data_insert (@code{HMDT} dat, @code{char} dir, @code{int} pos, @code{char} num)
+Вставляет @var{num} срезов вдоль направления @var{dir} с позиции @var{pos} и заполняет их нулями.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Delete (@code{char} dir, @code{int} pos=@code{0}, @code{int} num=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_data_delete (@code{HMDT} dat, @code{char} dir, @code{int} pos, @code{char} num)
+Удаляет @var{num} срезов вдоль направления @var{dir} с позиции @var{pos}.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node File I/O, Make another data, Rearrange, mglData class
+@section Чтение/сохранение данных
+@cindex Read
+@cindex ReadMat
+@cindex ReadAll
+@cindex ReadRange
+@cindex ReadHDF
+@cindex Save
+@cindex SaveHDF
+@cindex Export
+@cindex Import
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Read (@code{const char *}fname)
+@deftypefnx {Функция С} @code{void} mgl_data_read (@code{HMDT} dat, @code{const char *}fname)
+Читает данные из текстового файла с разделителями символом пробела/табуляции с автоматическим определением размера массива. Двойной перевод строки начинает новый срез данных (по направлению z).
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Read (@code{const char *}fname, @code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_data_read_dim (@code{HMDT} dat, @code{const char *}fname, @code{int} mx, @code{int} my, @code{int} mz)
+Читает данные из текстового файла с заданными размерами. Ничего не делается если параметры @var{mx}, @var{my} или @var{mz} равны нулю или отрицательны.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} ReadMat (@code{const char *}fname, @code{int} dim=@code{2})
+@deftypefnx {Функция С} @code{void} mgl_data_read_mat (@code{HMDT} dat, @code{const char *}fname, @code{int} dim)
+Читает данные из текстового файла с размерами, указанными в первых @var{dim} числах файла. При этом переменная @var{dim} задает размерность (1d, 2d, 3d) данных.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} ReadRange (@code{const char *}templ, @code{float} from, @code{float} to, @code{float} step=@code{1.f}, @code{bool} as_slice=@code{false})
+Объединяет данные из нескольких текстовых файлов. Имена файлов определяются вызовом функции @code{sprintf(fname,templ,val);}, где @var{val} меняется от @var{from} до @var{to} с шагом @var{step}. Данные загружаются один за другим в один и тот же срез данных (при @var{as_slice}=@code{false}) или срез-за-срезом (при @var{as_slice}=@code{true}).
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} ReadAll (@code{const char *}templ, @code{bool} as_slice=@code{false})
+Объединяет данные из нескольких текстовых файлов, чьи имена удовлетворяют шаблону @var{templ} (например, @var{templ}=@code{"t_*.dat"}). Данные загружаются один за другим в один и тот же срез данных (при @var{as_slice}=@code{false}) или срез-за-срезом (при @var{as_slice}=@code{true}).
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Save (@code{const char *}fname, @code{int} ns=@code{-1}) @code{const}
+@deftypefnx {Функция С} @code{void} mgl_data_save (@code{const HMDT} dat, @code{const char *}fname, @code{int} ns)
+Сохраняет весь массив данных при @var{ns}=@code{-1} или только @var{ns}-ый срез в текстовый файл.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} ReadHDF (@code{const char *}fname, @code{const char *}dname)
+Читает массив с именем @var{dname} из HDF5 или HDF4 файла @var{fname}. Функция ничего не делает если библиотека была собрана с флагами NO_HDF5|NO_HDF4.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} SaveHDF (@code{const char *}fname, @code{const char *}dname, @code{bool} rewrite=@code{false}) @code{const}
+Сохраняет массив под именем @var{dname} в HDF5 или HDF4 файл @var{fname}. Функция ничего не делает если библиотека была собрана с флагами NO_HDF5|NO_HDF4.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Import (@code{const char *}fname, @code{const char *}scheme, @code{float} v1=@code{0}, float v2=@code{1})
+@deftypefnx {Функция С} @code{void} mgl_data_import (@code{HMDT} dat, @code{const char *}fname, @code{const char *}scheme, @code{float} v1, float v2)
+Читает данные из растрового файла. RGB значения пикселов преобразуются в число в диапазоне [@var{v1}, @var{v2}] используя цветовую схему @var{sch} (@pxref{Color scheme}).
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Export (@code{const char *}fname, @code{const char *}scheme, @code{float} v1=@code{0}, float v2=@code{0}, @code{int} ns=@code{-1}) const
+@deftypefnx {Функция С} @code{void} mgl_data_export (@code{HMDT} dat, @code{const char *}fname, @code{const char *}scheme, @code{float} v1, float v2, @code{int} ns) const
+Сохраняет данные в растровый файл. Числовые значения, нормированные в диапазон [@var{v1}, @var{v2}], преобразуются в RGB значения пикселов, используя цветовую схему @var{sch} (@pxref{Color scheme}). Если @var{v1}>=@var{v2}, то значения @var{v1}, @var{v2} определяются автоматически как минимальное и максимальное значение данных.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node Make another data, Change data, File I/O, mglData class
+@section Создание новых данных
+@cindex SubData
+@cindex Column
+@cindex SetColumnId
+@cindex Hist
+@cindex Momentum
+@cindex Sum
+@cindex Max
+@cindex Min
+@cindex Combine
+@cindex Evaluate
+@cindex Resize
+@cindex Trace
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} SubData (@code{int} xx, @code{int} yy=@code{-1}, @code{int} zz=@code{-1}) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_subdata (@code{const HMDT} dat, @code{int} xx, @code{int} yy, @code{int} zz)
+Возвращает в @var{res} подмассив массива данных @var{dat} с фиксированными значениями индексов с положительными значениями. Например, @code{SubData(-1,2)} выделяет третью строку (индексы начинаются с нуля), @code{SubData(4,-1)} выделяет 5-ую колонку, @code{SubData(-1,-1,3)} выделяет 4-ый срез и т.д.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} SubData (@code{const mglData &}xx, @code{const mglData &}yy, @code{const mglData &}zz) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_subdata_ext (@code{const HMDT} dat, @code{const HMDT} xx, @code{const HMDT} yy, @code{const HMDT} zz)
+Extracts sub-array data from the original data array for indexes specified by arrays @var{xx}, @var{yy}, @var{zz} (indirect access). The resulting array have the same dimensions as input arrays for 2D and 3D arguments. This function work like previous one for 1D arguments (or numbers). The dimensions of all argument must be the same if they are 2D or 3D arrays.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} Column (@code{const char *}eq) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_column (@code{const HMDT} dat, @code{const char *}eq)
+Возвращает массив данных заполненный по формуле @var{eq}, вычисленной для именованных колонок (или срезов). Например, @code{Column("n*w^2/exp(t)");}. Имена колонок задается функцией @code{SetColumnId()} или при чтении файлов данных.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} SetColumnId (@code{const char *}ids)
+@deftypefnx {Функция С} @code{void} mgl_data_set_id (@code{HMDT} dat, @code{const char *}ids)
+Устанавливает символьные обозначения для колонок данных. Строка должна содержать символы 'a'...'z' один на колонку (без пробелов).
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} Trace () @code{const}
+Возвращает массив диагональных элементов a[i,i] (для 2D данных) или a[i,i,i] (для 3D данных) где i=0...nx-1. В 1D случае возвращается сам массив данных. Размеры массива данных должен быть ny,nz >= nx или ny,nz = 1.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} Hist (@code{int} n, @code{float} v1=@code{0}, @code{float} v2=@code{1}, @code{int} nsub=@code{0}) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_hist (@code{const HMDT} dat, @code{int} n, @code{float} v1, @code{float} v2, @code{int} nsub)
+Возвращает распределение (гистограмму) из @var{n} точек от значений массива в диапазоне [@var{v1}, @var{v2}]. Параметр @var{nsub} задает число дополнительных точек интерполяции (для сглаживания получившейся гистограммы).
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} Hist (@code{const mglData &}w, @code{int} n, @code{float} v1=@code{0}, @code{float} v2=@code{1}, @code{int} nsub=@code{0}) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_hist_w (@code{const HMDT} dat, @code{const HMDT} w, @code{int} n, @code{float} v1, @code{float} v2, @code{int} nsub)
+Возвращает распределение (гистограмму) из @var{n} точек от значений массива в диапазоне [@var{v1}, @var{v2}]. Массив @var{w} задает веса элементов. Параметр @var{nsub} задает число дополнительных точек интерполяции (для сглаживания получившейся гистограммы).
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} Momentum (@code{char} dir, @code{const char *}how) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_momentum (@code{const HMDT} dat, @code{char} dir, @code{const char *}how)
+Возвращает момент (1d массив) данных вдоль направления @var{dir}. Строка @var{how} определяет тип момента. Момент определяется как
+@iftex
+@math{res_k = \sum_{ij} how(x_i,y_j,z_k) a_{ij}/\sum_{ij} a_{ij}}
+@end iftex
+@ifnottex
+res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
+@end ifnottex
+если @var{dir}=@samp{z} и т.д. Координаты @samp{x}, @samp{y}, @samp{z} -- индексы массива в диапазоне [0,1].
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} Sum (@code{const char *}dir) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_sum (@code{const HMDT} dat, @code{const char *}dir)
+Возвращает результат суммирования данных вдоль направления(ий) @var{dir}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} Max (@code{const char *}dir) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_max_dir (@code{const HMDT} dat, @code{const char *}dir)
+Возвращает максимальное значение данных вдоль направления(ий) @var{dir}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} Min (@code{const char *}dir) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_min_dir (@code{const HMDT} dat, @code{const char *}dir)
+Возвращает минимальное значение данных вдоль направления(ий) @var{dir}.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} Combine (@code{const mglData &}a) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_combine (@code{const HMDT} dat, @code{const HMDT} a)
+Возвращает прямое произведение массивов (наподобие, res[i,j] = adat[i]*bdat[j] и т.д.).
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} Evaluate (@code{const mglData &}idat, @code{bool} norm=@code{true}) @code{const}
+@deftypefnx {Метод класса @code{mglData} (C++, Python)} @code{mglData} Evaluate (@code{const mglData &}idat, @code{const mglData &}jdat, @code{bool} norm=@code{true}) @code{const}
+@deftypefnx {Метод класса @code{mglData} (C++, Python)} @code{mglData} Evaluate (@code{const mglData &}idat, @code{const mglData &}jdat, @code{const mglData &}kdat, @code{bool} norm=@code{true}) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_evaluate_i (@code{const HMDT} dat, @code{const HMDT} idat, @code{int} norm)
+@deftypefnx {Функция С} @code{HMDT} mgl_data_evaluate_ij (@code{const HMDT} dat, @code{const HMDT} idat, @code{const HMDT} jdat, @code{int} norm)
+@deftypefnx {Функция С} @code{HMDT} mgl_data_evaluate_ijk (@code{const HMDT} dat, @code{const HMDT} idat, @code{const HMDT} jdat, @code{const HMDT} kdat, @code{int} norm)
+Возвращает массив данных, полученный в результате интерполяции исходного массива в точках других массивов (например, res[i,j]=dat[idat[i,j],jdat[i,j]]). Размеры массивов @var{idat}, @var{jdat}, @var{kdat} должны совпадать. Координаты в @var{idat}, @var{jdat}, @var{kdat} полагаются нормированными в диапазон [0,1] (при @var{norm}=@code{true}) или в диапазоны [0,nx], [0,ny], [0,nz] соответственно.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{mglData} Resize (@code{int} mx, @code{int} my=@code{1}, @code{int} mz=@code{1}, @code{float} x1=@code{0}, @code{float} x2=@code{1}, @code{float} y1=@code{0}, @code{float} y2=@code{1}, @code{float} z1=@code{0}, @code{float} z2=@code{1}) @code{const}
+@deftypefnx {Функция С} @code{HMDT} mgl_data_resize (@code{const HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz)
+@deftypefnx {Функция С} @code{HMDT} mgl_data_resize_box (@code{const HMDT} dat, @code{int} mx, @code{int} my, @code{int} mz, @code{float} x1, @code{float} x2, @code{float} y1, @code{float} y2, @code{float} z1, @code{float} z2)
+Возвращает массив данных размером @var{mx}, @var{my}, @var{mz} со значениями полученными интерполяцией значений из части [@var{x1},@var{x2}] x [@var{y1},@var{y2}] x [@var{z1},@var{z2}] исходного массива. Величины x,y,z полагаются нормированными в диапазоне [0,1].
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node Change data, Interpolation, Make another data, mglData class
+@section Изменение данных
+
+Эти функции изменяют данные вдоль заданного направления(ий) типа например дифференцирования, интегрирования и т.д. Направление указывается строкой @var{dir}, которая может содержать символы @samp{x}, @samp{y} и/или @samp{z}, вдоль которых изменения будут применены.
+
+@cindex CumSum
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} CumSum (@code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_data_cumsum (@code{HMDT} dat, @code{const char *}dir)
+Суммирует с накоплением в выбранном направлении(ях).
+@end deftypefn
+
+@cindex Integral
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Integral (@code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_data_integral (@code{HMDT} dat, @code{const char *}dir)
+Выполняет интегрирование (подобно суммированию с накоплением) в выбранном направлении(ях).
+@end deftypefn
+
+@cindex Diff
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Diff (@code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_data_diff (@code{HMDT} dat, @code{const char *}dir)
+Выполняет дифференцирование в выбранном направлении(ях).
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Diff (@code{const mglData &}x, @code{const mglData &}y)
+@deftypefnx {Метод класса @code{mglData} (C++, Python)} @code{void} Diff (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z)
+@deftypefnx {Функция С} @code{void} mgl_data_diff_par (@code{HMDT} dat, @code{const HMDT} x, @code{const HMDT}y, @code{const HMDT}z)
+Выполняет дифференцирование данных, параметрически зависящих от координат, в направлении @var{x} с @var{y}, @var{z}=constant. Параметр @var{z} может быть опущен, что соответствует 2D случаю. Используются следующие формулы (2D случай): @math{da/dx = (a_j*y_i-a_i*y_j)/(x_j*y_i-x_i*y_j)}, где @math{a_i=da/di, a_j=da/dj} обозначает дифференцирование вдоль 1-ой и 2-ой размерности. Похожие формулы используются и в 3D случае. Порядок аргументов можно менять -- например, если данные a(i,j) зависят от координат @{x(i,j), y(i,j)@}, то обычная производная по @samp{x} будет равна @code{Diff(x,y);}, а обычная производная по @samp{y} будет равна @code{Diff(y,x);}.
+@end deftypefn
+
+
+@cindex Diff2
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Diff2 (@code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_data_diff2 (@code{const char *}dir)
+Выполняет двойное дифференцирование (как в операторе Лапласа) в выбранном направлении(ях).
+@end deftypefn
+
+@cindex SinFFT
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} SinFFT (@code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_data_sinfft (@code{HMDT} dat, @code{const char *}dir)
+Выполняет синус преобразование в выбранном направлении(ях). Синус преобразование есть @math{\sum a_i \sin(k i)}.
+@end deftypefn
+
+@cindex CosFFT
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} CosFFT (@code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_data_cosfft (@code{HMDT} dat, @code{const char *}dir)
+Выполняет косинус преобразование в выбранном направлении(ях). Синус преобразование есть @math{\sum a_i \cos(k i)}.
+@end deftypefn
+
+@cindex Hankel
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Hankel (@code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_data_hankel (@code{HMDT} dat, @code{const char *}dir)
+Выполняет преобразование Ханкеля в выбранном направлении(ях). Преобразование Ханкеля есть @math{\sum a_i J_0(k i)}.
+@end deftypefn
+
+
+@cindex Swap
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Swap (@code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_data_swap (@code{HMDT} dat, @code{const char *}dir)
+Меняет местами левую и правую части данных в выбранном направлении(ях). Полезно для отображения результата FFT.
+@end deftypefn
+
+@cindex Roll
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Roll (@code{char} dir, @code{num})
+@deftypefnx {Функция С} @code{void} mgl_data_roll (@code{HMDT} dat, @code{char} dir, @code{num})
+Сдвигает данные на @var{num} ячеек в выбранном направлении(ях). Соответствует замене индекса на @var{i}->(@var{i}+@var{num})%@var{n}.
+@end deftypefn
+
+@cindex Mirror
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Mirror (@code{const char *}dir)
+@deftypefnx {Функция С} @code{void} mgl_data_mirror (@code{HMDT} dat, @code{const char *}dir)
+Отражает данные в выбранном направлении(ях). Соответствует замене индекса на @var{i}->@var{n}-@var{i}.
+@end deftypefn
+
+@cindex Sew
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Sew (@code{const char *}dir, @code{float} da=@code{2*M_PI})
+@deftypefnx {Функция С} @code{void} mgl_data_sew (@code{HMDT} dat, @code{const char *}dir, @code{float} da)
+Удаляет скачки данных (например, скачки фазы после обратных тригонометрических функций) с периодом @var{da} в выбранном направлении(ях).
+@end deftypefn
+
+@cindex Smooth
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Smooth (@code{int} Type, @code{const char *}dir, @code{float} delta=@code{0})
+@deftypefnx {Функция С} @code{void} mgl_data_smooth (@code{HMDT} dat, @code{int} Type, @code{float} delt, @code{const char *}dirs)
+Сглаживает данные в выбранном направлении(ях) @var{dir} методом @var{Type}. Сейчас поддерживаются 4 метода: @code{SMOOTH_NONE=0} ничего не делает при @var{delta}=0 или сдвигает данные к нулю на шагом @var{delta}, @code{SMOOTH_LINE_3=1} линейное усреднение по 3 точкам, @code{SMOOTH_LINE_5=2} линейное усреднение по 5 точкам, @code{SMOOTH_QUAD_5=3} квадратичное усреднение по 5 точкам. Параметр @var{delta} запрещает изменение значений на величину большую @var{delta}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Smooth (@code{const char *}dir)
+Smooths the data on specified direction(s). This is the same as @code{Smooth()} but argument @var{Type} is specified in string as @samp{0} for @code{SMOOTH_NONE}, @samp{3} for @code{SMOOTH_LINE_3}, @samp{5} for @code{SMOOTH_LINE_5}. If string @var{dir} don't contain digits @samp{035} then @var{Type}=@code{SMOOTH_QUAD_5} is used.
+@end deftypefn
+
+@cindex Envelop
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Envelop (@code{char} dir=@code{'x'})
+@deftypefnx {Функция С} @code{void} mgl_data_envelop (@code{HMDT} dat, @code{char} dir)
+Находит огибающую данных в выбранном направлении @var{dir}.
+@end deftypefn
+
+@cindex Norm
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} Norm (@code{float} v1=@code{0}, @code{float} v2=@code{1}, @code{bool} sym=@code{false}, @code{int} dim=@code{0})
+Нормирует данные в интервал [@var{v1},@var{v2}]. Если @var{sym}=@code{true}, то используется симметричный интервал [-max(|v1|,|v2|), max(|v1|,|v2|)]. Изменения применяются только к срезам >=@var{dim}.
+@end deftypefn
+
+@cindex NormSl
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} NormSl (@code{float} v1=@code{0}, @code{float} v2=@code{1}, @code{char} dir=@code{'z'}, @code{bool} keep_en=@code{true}, @code{bool} sym=@code{false})
+@deftypefnx {Функция С} @code{void} mgl_data_norm_slice (@code{HMDT} dat, @code{float} v1, @code{float} v2, @code{char} dir, @code{int} keep_en, @code{int} sym)
+Нормирует данные срез-за-срезом в выбранном направлении @var{dir} в интервал [@var{v1},@var{v2}]. Если @var{sym}=@code{true}, то используется симметричный интервал [-max(|v1|,|v2|), max(|v1|,|v2|)]. Если @var{keep}=@code{true}, то максимальное значение k-го среза ограничено величиной
+@iftex
+@math{\sqrt{\sum a_{ij}(k)/\sum a_{ij}(0)}}.
+@end iftex
+@ifnottex
+@math{\sqrt@{\sum a_ij(k)/\sum a_ij(0)@}}.
+@end ifnottex
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node Interpolation, Informational functions, Change data, mglData class
+@section Интерполяция
+@cindex Spline
+@deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Spline (@code{float} x, @code{float} y=@code{0}, @code{float} z=@code{0}) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_spline (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
+Интерполирует данные кубическим сплайном в точке @var{x} в [0...nx-1], @var{y} в [0...ny-1], @var{z} в [0...nz-1].
+@end deftypefn
+@cindex Spline1
+@deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Spline1 (@code{float} x, @code{float} y=@code{0}, @code{float} z=@code{0}) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_spline1 (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
+Интерполирует данные кубическим сплайном в точке @var{x}, @var{y}, @var{z}, где координаты полагаются в интервале [0, 1].
+@end deftypefn
+@cindex Linear
+@deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Linear (@code{float} x, @code{float} y=@code{0}, @code{float} z=@code{0}) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_linear (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
+Интерполирует данные линейной функцией в точке @var{x} в [0...nx-1], @var{y} в [0...ny-1], @var{z} в [0...nz-1].
+@end deftypefn
+@cindex Linear1
+@deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Linear1 (@code{float} x, @code{float} y=@code{0}, @code{float} z=@code{0}) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_linear1 (@code{const HMDT} dat, @code{float} x, @code{float} y, @code{float} z)
+Интерполирует данные линейной функцией в точке @var{x}, @var{y}, @var{z}, где координаты полагаются в интервале [0, 1].
+@end deftypefn
+@cindex v
+@deftypefn {Method on @code{mglData} (C++, Python)} @code{float} v (@code{int} i, @code{int} j=@code{0}, @code{int} k=@code{0}) @code{const}
+@deftypefnx {C function} @code{float} mgl_data_get_value (@code{const HMDT} dat, @code{int} i, @code{int} j, @code{int} k)
+Возвращает значение ячейки с проверкой на границы массива данных.
+@end deftypefn
+@cindex Spline5
+@deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Spline5 (@code{float} x, @code{float} y, @code{float} z, @code{float} &dx, @code{float} &dy, @code{float} &dz) @code{const}
+Интерполирует данные сплайном 5-го порядка в точке @var{x}, @var{y}, @var{z}, где координаты полагаются в интервале [0, 1].
+@end deftypefn
+
+@deftypefn {C function} @code{float *} mgl_data_value (@code{HMDT} dat, @code{int} i, @code{int} j, @code{int} k)
+Возвращает указатель на ячейку данных. Может быть не действителен после вызова любой функции изменяющей данные.
+@end deftypefn
+@deftypefn {C function} @code{const float *} mgl_data_data (@code{const HMDT} dat)
+Возвращает указатель на весь массив данных. Может быть не действителен после вызова любой функции изменяющей данные.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node Informational functions, Operators, Interpolation, mglData class
+@section Информационные функции
+@cindex PrintInfo
+@deftypefn {Метод класса @code{mglData} (C++)} @code{void} PrintInfo (@code{char *}buf, @code{bool} all=@code{false}) @code{const}
+Печатает информацию о данных (размеры, моменты и пр.) в строку @var{buf}. Параметр @var{all} устанавливает печатать ли подробную информацию (если @code{true}) или только базовую информацию.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++)} @code{void} PrintInfo (@code{FILE *}fp) @code{const}
+Аналогично, но выводит в файл (или, например, в stdout).
+@end deftypefn
+
+@cindex Maximal
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{float} Maximal () @code{const}
+@deftypefnx {Функция С} @code{float} mgl_data_max (@code{const HMDT} dat)
+Возвращает максимальное значение массива данных.
+@end deftypefn
+@cindex Minimal
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{float} Minimal () @code{const}
+@deftypefnx {Функция С} @code{float} mgl_data_min (@code{HMDT} dat) @code{const}
+Возвращает минимальное значение массива данных.
+@end deftypefn
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{float} Maximal (@code{int} &i, @code{int} &j, @code{int} &k) @code{const}
+@deftypefnx {Функция С} @code{float} mgl_data_max_int (@code{const HMDT} dat, @code{int} *i, @code{int} *j, @code{int} *k)
+Возвращает максимальное значение массива данных и его положение в переменные @var{i}, @var{j}, @var{k}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{float} Minimal (@code{int} &i, @code{int} &j, @code{int} &k) @code{const}
+@deftypefnx {Функция С} @code{float} mgl_data_min_int (@code{const HMDT} dat, @code{int} *i, @code{int} *j, @code{int} *k)
+Возвращает минимальное значение массива данных и его положение в переменные @var{i}, @var{j}, @var{k}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{float} Maximal (@code{float} &i, @code{float} &j, @code{float} &k) @code{const}
+@deftypefnx {Функция С} @code{float} mgl_data_max_real (@code{const HMDT} dat, @code{float} *x, @code{float} *y, @code{float} *z)
+Возвращает максимальное значение массива данных и его приближенное (интерполированное) положение в переменные @var{i}, @var{j}, @var{k}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{float} Minimal (@code{float} &i, @code{float} &j, @code{float} &k) @code{const}
+@deftypefnx {Функция С} @code{float} mgl_data_min_real (@code{const HMDT} dat, @code{float} *x, @code{float} *y, @code{float} *z)
+Возвращает минимальное значение массива данных и его приближенное (интерполированное) положение в переменные @var{i}, @var{j}, @var{k}.
+@end deftypefn
+
+@cindex Momentum
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{float} Momentum (@code{char} dir, @code{float} &m, @code{float} &w) @code{const}
+@deftypefnx {Функция С} @code{float} mgl_data_momentum_mw (@code{const HMDT} dat, @code{char} dir, @code{float} *m, @code{float} *w)
+Возвращает нулевой момент (энергию, @math{I=\sum a_i}) и записывает первый (среднее, @math{m = \sum \xi_i a_i/I}) и второй момент (ширину, @math{w^2 = \sum (\xi_i-m)^2 a_i/I}). Здесь @math{\xi} -- соответствующая кордината если @var{dir} равно @samp{'x'}, @samp{'y'}, @samp{'z'}. В противном случае среднее и ширина равны @math{m = \sum a_i/N}, @math{w^2 = \sum (a_i-m)^2/N}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++)} @code{float} Momentum (@code{char} dir, @code{float} &m, @code{float} &w, @code{float} &s, @code{float} &k) @code{const}
+Возвращает нулевой момент (энергию, @math{I=\sum a_i}) и записывает первый (среднее, @math{m = \sum \xi_i a_i/I}), второй (ширину, @math{w^2 = \sum (\xi_i-m)^2 a_i/I}), третий (асимметрия, @math{s = \sum (\xi_i-m)^3 a_i/ I w^3}) и четвертый моменты (эксцесс, @math{k = \sum (\xi_i-m)^4 a_i / 3 I w^4})). Здесь @math{\xi} -- соответствующая кордината если @var{dir} равно @samp{'x'}, @samp{'y'}, @samp{'z'}. В противном случае среднее, ширина, асимметрия, эксцесс равны @math{m = \sum a_i/N}, @math{w^2 = \sum (a_i-m)^2/N} и т.д.
+@end deftypefn
+
+@cindex Find
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{float} Find (@code{const char *}cond, @code{int} &i, @code{int} &j, @code{int} &k) @code{const}
+@deftypefnx {Функция С} @code{float} mgl_data_first (@code{const HMDT} dat, @code{const char *}cond, @code{int} *i, @code{int} *j, @code{int} *k)
+Находит положение (после заданного в @var{i}, @var{j}, @var{k}) первого не нулевого значения формулы @var{cond}. Функция возвращает найденное значение и записывает его положение в @var{i}, @var{j}, @var{k}.
+@end deftypefn
+@cindex Last
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{float} Last (@code{const char *}cond, @code{int} &i, @code{int} &j, @code{int} &k) @code{const}
+@deftypefnx {Функция С} @code{float} mgl_data_last (@code{const HMDT} dat, @code{const char *}cond, @code{int} *i, @code{int} *j, @code{int} *k)
+Находит положение (перед заданного в @var{i}, @var{j}, @var{k}) последнего не нулевого значения формулы @var{cond}. Функция возвращает найденное значение и записывает его положение в @var{i}, @var{j}, @var{k}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{int} Find (@code{const char *}cond, @code{char} dir, @code{int} i=@code{0}, @code{int} j=@code{0}, @code{int} k=@code{0}) @code{const}
+@deftypefnx {Функция С} @code{float} mgl_data_find (@code{const HMDT} dat, @code{const char *}cond, @code{int} i, @code{int} j, @code{int} k)
+Возвращает положение первого в направлении @var{dir} не нулевого значения формулы @var{cond}. Поиск начинается с точки @{i,j,k@}.
+@end deftypefn
+@cindex FindAny
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{bool} FindAny (@code{const char *}cond) @code{const}
+@deftypefnx {Функция С} @code{float} mgl_data_find_any (@code{const HMDT} dat, @code{const char *}cond)
+Определяет есть ли хоть одно значение массива, удовлетворяющее условию @var{cond}.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node Operators, Global functions, Informational functions, mglData class
+@section Операторы
+
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} operator= (@code{const mglData &}d)
+Копирует данные из другого экземпляра.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} operator*= (@code{const mglData &}d)
+@deftypefnx {Функция С} @code{void} mgl_data_mul_dat (@code{HMDT} dat, @code{const HMDT} d)
+Поэлементно умножает массив @var{d}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} operator/= (@code{const mglData &}d)
+@deftypefnx {Функция С} @code{void} mgl_data_div_dat (@code{HMDT} dat, @code{const HMDT} d)
+Поэлементно делит массив @var{d}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} operator+= (@code{const mglData &}d)
+@deftypefnx {Функция С} @code{void} mgl_data_add_dat (@code{HMDT} dat, @code{const HMDT} d)
+Поэлементно прибавляет @var{d}.
+Adds the other data.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} operator-= (@code{const mglData &}d)
+@deftypefnx {Функция С} @code{void} mgl_data_sub_dat (@code{HMDT} dat, @code{const HMDT} d)
+Поэлементно вычитает @var{d}.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} operator*= (@code{float} d)
+@deftypefnx {Функция С} @code{void} mgl_data_mul_num (@code{HMDT} dat, @code{float} d)
+Умножает каждый элемент на число.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} operator/= (@code{float} d)
+@deftypefnx {Функция С} @code{void} mgl_data_div_num (@code{HMDT} dat, @code{float} d)
+Делит каждый элемент на число.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} operator+= (@code{float} d)
+@deftypefnx {Функция С} @code{void} mgl_data_add_num (@code{HMDT} dat, @code{float} d)
+Прибавляет число к каждому элементу.
+@end deftypefn
+@deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} operator-= (@code{float} d)
+@deftypefnx {Функция С} @code{void} mgl_data_sub_num (@code{HMDT} dat, @code{float} d)
+Вычитает число из каждого элемента.
+@end deftypefn
+
+
+@deftypefn {Функция библиотеки} mglData operator+ (@code{const mglData &}a, @code{const mglData &}b)
+Возвращает поэлементную сумму данных.
+@end deftypefn
+@deftypefn {Функция библиотеки} mglData operator+ (@code{float} a, @code{const mglData &}b)
+@deftypefnx {Функция библиотеки} mglData operator+ (@code{const mglData &}a, @code{float} b)
+Возвращает поэлементную сумму данных и числа.
+@end deftypefn
+
+@deftypefn {Функция библиотеки} mglData operator- (@code{const mglData &}a, @code{const mglData &}b)
+Возвращает поэлементную разность данных.
+@end deftypefn
+@deftypefn {Функция библиотеки} mglData operator- (@code{float} a, @code{const mglData &}b)
+@deftypefnx {Функция библиотеки} mglData operator- (@code{const mglData &}a, @code{float} b)
+Возвращает поэлементную разность числа и данных.
+@end deftypefn
+
+@deftypefn {Функция библиотеки} mglData operator* (@code{const mglData &}a, @code{const mglData &}b)
+Возвращает поэлементное произведение данных.
+@end deftypefn
+@deftypefn {Функция библиотеки} mglData operator* (@code{float} a, @code{const mglData &}b)
+@deftypefnx {Функция библиотеки} mglData operator* (@code{const mglData &}a, @code{float} b)
+Возвращает поэлементное произведение данных на число.
+@end deftypefn
+
+@deftypefn {Функция библиотеки} mglData operator/ (@code{const mglData &}a, @code{const mglData &}b)
+Возвращает поэлементное деление данных.
+@end deftypefn
+@deftypefn {Функция библиотеки} mglData operator/ (@code{const mglData &}a, @code{float} b)
+Возвращает поэлементное деление данных на число.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node Global functions, , Operators, mglData class
+@section Глобальные функции
+
+Эти функции не методы класса @code{mglData}, но они дают дополнительные возможности по обработке данных. Поэтому я поместил их в эту главу.
+
+@deftypefn {Функция библиотеки} @code{mglData} mglTransform (@code{const mglData &}real, @code{const mglData &}imag, @code{const char *}type)
+@deftypefnx {Функция С} @code{HMDT} mgl_transform (@code{const HMDT} real, @code{const HMDT} imag, @code{const char *}type)
+Выполняет интегральное преобразование комплексных данных @var{real}, @var{imag} в выбранном направлении и возвращает модуль результата. Порядок и тип преобразований задается строкой @var{type}: первый символ для x-направления, второй для y-направления, третий для z-направления. Возможные символы: @samp{f} -- прямое преобразование Фурье, @samp{i} -- обратное преобразование Фурье, @samp{s} -- синус преобразование, @samp{c} -- косинус преобразование, @samp{h} -- преобразование Ханкеля, @samp{n} или @samp{ } -- нет преобразования.
+@end deftypefn
+
+@deftypefn {Функция библиотеки} @code{mglData} mglTransformA @code{const mglData &}ampl, @code{const mglData &}phase, @code{const char *}type)
+@deftypefnx {Функция С} @code{HMDT} mgl_transform_a @code{const HMDT} ampl, @code{const HMDT} phase, @code{const char *}type)
+Аналогично предыдущему с заданными амплитудой @var{ampl} и фазой @var{phase} комплексных чисел.
+@end deftypefn
+
+@deftypefn {Функция библиотеки} @code{mglData} mglSTFA (@code{const mglData &}real, @code{const mglData &}imag, @code{int} dn, @code{char} dir=@code{'x'})
+@deftypefnx {Функция С} @code{HMDT} mgl_data_stfa (@code{const HMDT} real, @code{const HMDT} imag, @code{int} dn,@code{char} dir)
+Выполняет оконное преобразование Фурье длиной @var{dn} для комплексных данных @var{real}, @var{imag} и возвращает модуль результата. Например, для @var{dir}=@samp{x} результат будет иметь размер @{int(nx/dn), dn, ny@} и будет равен @math{res[i,j,k]=|\sum_d^dn exp(I*j*d)*(real[i*dn+d,k]+I*imag[i*dn+d,k])|/dn}.
+@end deftypefn
+
+@deftypefn {Функция библиотеки} @code{mglData} mglPDE (@code{const char *}ham, @code{const mglData &}ini_re, @code{const mglData &}ini_im, @code{mglPoint} Min, @code{mglPoint} Max, @code{float} dz=@code{0.1}, @code{float} k0=@code{100})
+@deftypefnx {Функция С} @code{HMDT} mgl_pde_solve (@code{HMGL} gr, @code{const char *}ham, @code{const HMDT} ini_re, @code{const HMDT} ini_im, @code{float} dz, @code{float} k0)
+Решает уравнение в частных производных du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], где p=-i/k0*d/dx, q=-i/k0*d/dy -- псевдо-дифференциальные операторы. Параметры @var{ini_re}, @var{ini_im} задают начальное распределение поля. Координаты в уравнении и в решении полагаются в диапазоне осей координат. Замечу, что внутри этот диапазон увеличивается в 3/2 раза для уменьшения отражения от границ расчетного интервала. Параметр @var{dz} задает шаг по эволюционной координате z. В данный момент использован упрощенный алгоритм, когда все ``смешанные'' члена (типа @samp{x*p}->x*d/dx) исключаются. Например, в 2D случае это функции типа @math{ham = f(p,z) + g(x,z,u)}. При этом допускаются коммутирующие комбинации (типа @samp{x*q}->x*d/dy). Переменная @samp{u} используется для обозначения амплитуды поля |u|. Это позволяет решать нелинейные задачи -- например, нелинейное уравнение Шредингера @code{ham='p^2+q^2-u^2'}. Также можно указать мнимую часть для поглощения (типа @code{ham = 'p^2+i*x*(x>0)'}), но только если зависимость от @samp{i} линейная, т.е. @math{ham = hre+i*him}. @sref{PDE sample}
+@end deftypefn
+
+@deftypefn {Функция библиотеки} @code{mglData} mglRay (@code{const char *}ham, @code{mglPoint} r0, @code{mglPoint} p0, @code{float} dt=@code{0.1}, @code{float} tmax=@code{10})
+@deftypefnx {Функция С} @code{HMDT} mgl_ray_trace (@code{const char *}ham, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} px, @code{float} py, @code{float} pz, @code{float} dt, @code{float} tmax)
+Решает систему геометрооптических уравнений d@emph{r}/dt = d @var{ham}/d@emph{p}, d@emph{p}/dt = -d @var{ham}/d@emph{r}. Это гамильтоновы уравнения для траектории частицы в 3D случае. Гамильтониан @var{ham} может зависеть от координат @samp{x}, @samp{y}, @samp{z}, импульсов @samp{p}=px, @samp{q}=py, @samp{v}=pz и времени @samp{t}: @math{ham = H(x,y,z,p,q,v,t)}. Начальная точка (при @code{t=0}) задается переменными @{@var{x0}, @var{y0}, @var{z0}, @var{p0}, @var{q0}, @var{v0}@}. Параметры @var{dt} и @var{tmax} задают шаг и максимальное время интегрирования. Результат -- массив @{x,y,z,p,q,v,t@} с размером @{7 * int(@var{tmax}/@var{dt}+1) @}. @sref{Beam tracing sample}
+@end deftypefn
+
+@deftypefn {Функция библиотеки} @code{mglData} mglQO2d (@code{const char *}ham, @code{const mglData &}ini_re, @code{const mglData &}ini_im, @code{const mglData &}ray, @code{float} r=@code{1}, @code{float} k0=@code{100}, @code{mglData *}xx=@code{0}, @code{mglData *}yy=@code{0}, @code{bool} UseR=@code{true})
+@deftypefnx {Функция С} @code{HMDT} mgl_qo2d_solve (@code{const char *}ham, @code{const HMDT} ini_re, @code{const HMDT} ini_im, @code{const HMDT} ray, @code{float} r, @code{float} k0, @code{HMDT} xx, @code{HMDT} yy)
+Решает уравнение в частных производных du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u] в сопровождающей системе координат, где p=-i/k0*d/dx, q=-i/k0*d/dy -- псевдо-дифференциальные операторы. Параметры @var{ini_re}, @var{ini_im} задают начальное распределение поля. Параметр @var{ray} задает опорный луч для сопровождающей системы координат. Можно использовать луч найденный с помощью @code{mglRay()}. Опорный луч должен быть достаточно гладкий, чтобы система координат была однозначной и для исключения ошибок интегрирования. Если массивы @var{xx} и @var{yy} указаны, то в них записываются декартовы координаты для каждой точки найденного решения. См. также @code{mglPDE()}. @sref{Beam tracing sample}
+@end deftypefn
+
+@deftypefn {Функция библиотеки} @code{mglData} mglJacobian (@code{const mglData &}x, @code{const mglData &}y)
+@deftypefnx {Функция библиотеки} @code{mglData} mglJacobian (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z)
+@deftypefnx {Функция С} @code{HMDT} mgl_jacobian_2d (@code{const HMDT} x, @code{const HMDT} y)
+@deftypefnx {Функция С} @code{HMDT} mgl_jacobian_3d (@code{const HMDT} x, @code{const HMDT} y, @code{const HMDT} z)
+Вычисляет якобиан преобразования @{i,j,k@} в @{@var{x},@var{y},@var{z}@}, где координаты @{i,j,k@} полагаются нормированными в интервал [0,1]. Якобиан находится по формуле det||@math{dr_\alpha/d\xi_\beta}||, где @math{r}=@{@var{x},@var{y},@var{z}@} и @math{\xi}=@{i,j,k@}. Все размерности всех массивов должны быть одинаковы. Данные должны быть трехмерными если указаны все 3 массива @{@var{x},@var{y},@var{z}@} или двумерными если только 2 массива @{@var{x},@var{y}@}.
+@end deftypefn
+

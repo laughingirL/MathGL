@@ -1,0 +1,121 @@
+/***************************************************************************
+ *   Copyright (C) 2008 by Alexey Balakin                                  *
+ *   mathgl.abalakin@gmail.com                                             *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+#ifndef DAT_PNL_H
+#define DAT_PNL_H
+//-----------------------------------------------------------------------------
+#include <QWidget>
+//-----------------------------------------------------------------------------
+class mglVar;
+class QMenu;
+class QBoxLayout;
+class QTableWidget;
+class QSpinBox;
+class InfoDialog;
+//-----------------------------------------------------------------------------
+/// Window for viewing, handling and editing the data array
+class DatPanel : public QWidget
+{
+Q_OBJECT
+public:
+	QMenu *menu;
+	InfoDialog *infoDlg;	///< NOTE: Reference to dialog !!!
+	DatPanel(InfoDialog *inf, QWidget *parent = 0);
+	~DatPanel();
+
+	void refresh();	///< Refresh table with new data values
+	void setVar(mglVar *v);
+	inline long GetNz()	{	return nz;	}	///< Get number of slices
+	QString dataName();
+
+signals:
+	void sliceChanged(int);
+	void nzChanged(int);
+
+private slots:
+	void setSlice(int k);
+	void putValue(int r, int c);
+	// menu genereal
+	void load();
+	void save();
+	void imprt();
+	void exprt();
+	void copy();
+	void paste();
+	void plot();
+	void list();
+	// menu fill
+	void byformula();
+	void inrange();
+	void norm();
+	void normsl();
+	// menu resize
+	void create();
+	void reSize();
+	void squize();
+	void crop();
+	void transp();
+	void rearrange();
+	// menu change
+	void smooth();
+	void cumsum();
+	void integr();
+	void diff();
+	void diff2();
+	void swap();
+	void mirror();
+	// menu another ???
+	void sumof();
+	void maxof();
+	void minof();
+	void momentx();
+	void momenty();
+	void momentz();
+	void hist();
+	// menu operations
+	void addto();
+	void subto();
+	void divto();
+	void multo();
+	// menu navigation
+	void first();
+	void last();
+	void next();
+	void prev();
+	void gosl();
+	void setNz(int nz);
+
+private:
+	int nx,ny,nz;	///< Data sizes
+	QString id;
+	QTableWidget *tab;	///< Table itself
+	int kz;			///< Current z-slice
+	mglVar *var;	///< Variable with data
+//	QSpinBox *sb;	///< SpinBox for selecting slice
+	bool ready;		///< Data is refreshed
+	QSpinBox *sb;
+
+	bool sizesDialog(const QString &cap, const QString &lab, const QString &desc1, const QString &desc2, const QString &desc3, QString &val1, QString &val2, QString &val3);
+	bool namesDialog(const QString &cap, const QString &lab, QString &name, QString &val);
+	void toolTop(QBoxLayout *l);
+	void toolLeft(QBoxLayout *l);
+};
+//-----------------------------------------------------------------------------
+#endif // DAT_PNL_H
+//-----------------------------------------------------------------------------

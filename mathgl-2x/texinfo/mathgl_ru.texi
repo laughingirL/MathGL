@@ -1,0 +1,135 @@
+\input texinfo
+@setfilename mathgl_ru.info
+@c @documentlanguage ru
+@documentencoding UTF-8
+@set VERSION 1.11
+@settitle MathGL @value{VERSION}
+@syncodeindex pg cp
+@comment %**end of header
+
+@copying
+Это документация для MathGL (версии @value{VERSION}) -- библиотеки классов и функций для построения научной графики. Пожалуйста сообщайте о любых ошибках в этом руководстве на @email{mathgl.abalakin@@gmail.org}.
+
+Copyright @copyright{} 2009 Алексей Балакин.
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with the Front-Cover Texts being ``A GNU Manual,''
+and with the Back-Cover Texts as in (a) below.  A copy of the
+license is included in the section entitled ``GNU Free Documentation
+License.''
+
+(a) The FSF's Back-Cover Text is: ``You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom.''
+@end quotation
+@end copying
+
+@c @dircategory MathGL documentation system
+@c @direntry
+@c * MathGL: (mathgl). The library for scientific graphics.
+@c @end direntry
+
+@titlepage
+@title MathGL
+@subtitle версия @value{VERSION}
+@author А.А. Балакин (@uref{http://mathgl.sourceforge.net/})
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@contents
+
+@ifnottex
+@node Top
+@top MathGL
+
+Это документация для MathGL (версии @value{VERSION}) -- библиотеки классов и функций для построения научной графики. Пожалуйста сообщайте о любых ошибках в этом руководстве на @email{mathgl.abalakin@@gmail.org}. Дополнительную информацию о MathGL можно найти на домашней странице проекта @uref{http://mathgl.sourceforge.net/}.
+
+Copyright @copyright{} 2009 Алексей Балакин. 
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with the Front-Cover Texts being ``A GNU Manual,''
+and with the Back-Cover Texts as in (a) below.  A copy of the
+license is included in the section entitled ``GNU Free Documentation
+License.''
+
+(a) The FSF's Back-Cover Text is: ``You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom.''
+@end quotation
+
+@end ifnottex
+
+@menu
+* Overview::
+* Examples::
+* MathGL core::
+* Plotter classes::
+* Widget classes::
+* mglData class::
+* Other classes::
+* MGL interface::
+* Samples::
+* TeX-like symbols::
+* Copying This Manual::
+* Index::
+@end menu
+
+@rmacro sref {arg}
+См. раздел @ref{\arg\}, для примеров кода и графика.
+@end rmacro
+@macro tdref{nam}
+@uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
+@end macro
+@macro MGL
+(MGL)
+@end macro
+
+@node Overview, Examples, , Top
+@include overview_ru.texi
+
+@node Examples, MathGL core, Overview, Top
+@include example_ru.texi
+
+@node MathGL core, Plotter classes, Examples, Top
+@include core_ru.texi
+
+@node Plotter classes, Widget classes, MathGL core, Top
+@include class_ru.texi
+
+@node Widget classes, mglData class, Plotter classes, Top
+@include widget_ru.texi
+
+@node mglData class, Other classes, Widget classes, Top
+@include data_ru.texi
+
+@node Other classes, MGL interface, mglData class, Top
+@include other_ru.texi
+
+@node MGL interface, Samples, Other classes, Top
+@include mgl_cmd_ru.texi
+
+@node Samples, TeX-like symbols, MGL interface, Top
+@include samples_ru.texi
+
+@node TeX-like symbols, Copying This Manual, Samples, Top
+@appendix Символы TeX
+@include appendix_ru.texi
+
+@node Copying This Manual, Index, TeX-like symbols, Top
+@appendix GNU Free Documentation License
+@include fdl.texi
+
+@node Index, , Copying This Manual, Top
+@unnumbered Индекс
+
+@printindex cp
+
+@bye

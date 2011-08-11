@@ -1,0 +1,290 @@
+
+@c ------------------------------------------------------------------
+@chapter ``Оконные'' классы
+@cindex mglGraphFLTK
+@cindex mglGraphQT
+@cindex mglGraphGLUT
+@cindex Fl_MathGL
+@cindex QMathGL
+@cindex window
+@cindex widgets
+
+Есть целый набор ``оконных'' классов для создания окон с графикой MathGL: @code{mglGraphFLTK}, @code{mglGraphQT}, @code{mglGraphGLUT}. Все эти классы позволяют пользователю просмотривать, вращать, экспортировать рисунок. Большинство из них (кроме @code{mglGraphGLUT}) являются наследниками класса @code{mglGraphZB} и используют ``присоединенный'' класс для центрального виджета окна. Все оконные классы имеют схожий набор функций (@pxref{mglGraphAB class}). Ниже приведен список классов с краткими комментариями.
+
+@deftp {Class} mglGraphFLTK
+Создает окно используя библиотеку FLTK. Окно имеет панель инструментов и меню  для упрощения действий с графиками. ``Присоединенный'' класс элемента интерфейса -- @code{Fl_MathGL}. Класс определен в @code{#include <mgl/mgl_fltk.h>}.
+@end deftp
+
+@deftp {Class} Fl_MathGL
+Класс реализует элемент интерфейса FLTK для отображения графики MathGL. Класс определен в @code{#include <mgl/mgl_fltk.h>}.
+@end deftp
+
+@float
+@image{fltk, 7cm}
+@caption{Пример окна FLTK с графикой MathGL.}
+@end float
+
+@deftp {Class} mglGraphQT
+Создает окно используя библиотеку Qt. Окно имеет панель инструментов и меню  для упрощения действий с графиками. ``Присоединенный'' класс элемента интерфейса -- @code{QMathGL}. Класс определен в @code{#include <mgl/mgl_qt.h>}.
+@end deftp
+
+@deftp {Class} QMathGL
+Класс реализует элемент интерфейса Qt для отображения графики MathGL. Класс определен в @code{#include <mgl/mgl_qt.h>}.
+@end deftp
+
+@float
+@image{qt, 7cm}
+@caption{Пример окна Qt с графикой MathGL.}
+@end float
+
+@deftp {Class} mglGraphGLUT
+Создает окно используя библиотеку GLUT. Класс определен в @code{#include <mgl/mgl_glut.h>}.
+@end deftp
+
+@float
+@image{glut, 7cm}
+@caption{Пример окна GLUT с графикой MathGL.}
+@end float
+
+@menu
+* Fl_MathGL class::             
+* QMathGL class::               
+@end menu
+
+@c ------------------------------------------------------------------
+@node Fl_MathGL class, QMathGL class, , Widget classes
+@section Класс Fl_MathGL
+@cindex Fl_MathGL
+@cindex widgets
+
+Класс реализует элемент интерфейса FLTK для отображения графики MathGL (определен в @code{#include <mgl/mgl_fltk.h>}).
+
+@deftypemethod Fl_MathGL @code{void} set_draw (@code{mglDraw *}dr)
+Задает функцию рисования из класса производного от @code{mglDraw}.
+@end deftypemethod
+@deftypemethod Fl_MathGL @code{void} update (@code{mglGraph *}gr=@code{NULL})
+Обновляет (перерисовывает) график, используя экземпляр класса @var{gr} (по умолчанию встроенный).
+@end deftypemethod
+@deftypemethod Fl_MathGL @code{void} set_angle (@code{float} t, @code{float} p)
+Задает углы для дополнительного вращения графика.
+@end deftypemethod
+@deftypemethod Fl_MathGL @code{void} set_state (@code{int} f)
+Задает битовые флаги для: 1 - прозрачности, 2 - освещения.
+@end deftypemethod
+@deftypemethod Fl_MathGL @code{void} set_state (@code{bool} z, @code{bool} r)
+Задает флаги обработки движений мыши: @var{z}=@code{true} -- разрешает приближение выделения, @var{r}=@code{true} разрешает вращение/сдвиг/приближение/перспективу.
+@end deftypemethod
+@deftypemethod Fl_MathGL @code{void} set_zoom (@code{float} X1, @code{float} Y1, @code{float} X2, @code{float} Y2)
+Задает область приближения.
+@end deftypemethod
+@deftypemethod Fl_MathGL @code{void} get_zoom (@code{float *}X1, @code{float *}Y1, @code{float *}X2, @code{float *}Y2)
+Возвращает область приближения.
+@end deftypemethod
+@deftypemethod Fl_MathGL @code{void} set_popup (@code{const Fl_Menu_Item *}pmenu, @code{Fl_Widget *}w, @code{void *}v)
+Задает указатель на всплывающее меню.
+@end deftypemethod
+@deftypemethod Fl_MathGL @code{mglGraph *} get_graph ()
+Возвращает указатель на класс, строящий графики.
+@end deftypemethod
+
+@deftypecv {Widget option} Fl_MathGL @code{Fl_Valuator *} tet_val
+Указатель на внешний элемент управления для изменения угла tet.
+@end deftypecv
+@deftypecv {Widget option} Fl_MathGL @code{Fl_Valuator *} phi_val
+Указатель на внешний элемент управления для изменения угла phi.
+@end deftypecv
+@deftypecv {Widget option} Fl_MathGL @code{mglGraphAB *} graph
+Указатель на экземпляр класса для построения графиков.
+@end deftypecv
+@deftypecv {Widget option} Fl_MathGL @code{void *} draw_par
+Параметр для функции рисования.
+@end deftypecv
+@deftypecv {Widget option} Fl_MathGL @code{int (*} draw_func @code{)(mglGraph *gr, void *par)}
+Указатель на функцию рисования.
+@end deftypecv
+
+@c ------------------------------------------------------------------
+@node QMathGL class, , Fl_MathGL class, Widget classes
+@section QMathGL class
+@cindex QMathGL
+@cindex widgets
+
+Класс реализует элемент интерфейса Qt для отображения графики MathGL (определен в @code{#include <mgl/mgl_qt.h>}).
+
+@deftypemethod QMathGL @code{void} setDraw (@code{mglDraw *}dr)
+Задает функцию рисования из класса производного от @code{mglDraw}.
+@end deftypemethod
+@deftypemethod QMathGL @code{void} setDraw (@code{int (*}draw)(@code{mglGraph *}gr, @code{void *}p), @code{void *}par=@code{NULL})
+Задает функцию рисования @var{draw} и укзатель @var{par} на параметр для нее.
+@end deftypemethod
+
+@deftypemethod QMathGL @code{void} setGraph (@code{mglGraphAB *}gr)
+Устанавливает указатель на внешний экземпляр класса для рисования (вместо встроенного @code{mglGraphZB}). Отмечу, что QMathGL автоматически удалит этот объект при удалении элемента интерфейса или при новом вызове @code{setGraph()}.
+@end deftypemethod
+
+@deftypemethod QMathGL @code{void} setPopup (@code{QMenu *}p)
+Задает указатель на всплывающее меню.
+@end deftypemethod
+@deftypemethod QMathGL @code{void} setSize (@code{int} w, @code{int} h)
+Задает размеры элемента управления и картинки.
+@end deftypemethod
+@deftypemethod QMathGL @code{double} getRatio ()
+Возвращает соотношение сторон рисунка.
+@end deftypemethod
+
+@deftypemethod QMathGL @code{int} getPer ()
+Возвращает величину перспективы в процентах.
+@end deftypemethod
+@deftypemethod QMathGL @code{int} getPhi ()
+Возвращает величину угла Phi в градусах.
+@end deftypemethod
+@deftypemethod QMathGL @code{int} getTet ()
+Возвращает величину угла Theta в градусах.
+@end deftypemethod
+@deftypemethod QMathGL @code{bool} getAlpha ()
+Возвращает состояние переключателя прозрачности.
+@end deftypemethod
+@deftypemethod QMathGL @code{bool} getLight ()
+Возвращает состояние переключателя освещения.
+@end deftypemethod
+@deftypemethod QMathGL @code{bool} getZoom ()
+Возвращает состояние переключателя приближения мышью.
+@end deftypemethod
+@deftypemethod QMathGL @code{bool} getRotate ()
+Возвращает состояние переключателя вращения мышью.
+@end deftypemethod
+
+@defop Slot QMathGL @code{void} refresh ()
+Перерисовывает (обновляет) элемент управления без вызова функции рисования.
+@end defop
+@defop Slot QMathGL @code{void} update (@code{mglGraph *}gr=@code{NULL})
+Обновляет рисунок путем вызова функции рисования.
+@end defop
+@defop Slot QMathGL @code{void} copy ()
+Копирует график в буфер обмена.
+@end defop
+@defop Slot QMathGL @code{void} setPer (@code{int} val)
+Задает величину перспективы.
+@end defop
+@defop Slot QMathGL @code{void} setPhi (@code{int} val)
+Задает величину угла Phi.
+@end defop
+@defop Slot QMathGL @code{void} setTet (@code{int} val)
+Задает величину угла Theta.
+@end defop
+@defop Slot QMathGL @code{void} setAlpha (@code{bool} val)
+Включает/выключает прозрачность.
+@end defop
+@defop Slot QMathGL @code{void} setLight (@code{bool} val)
+Включает/выключает освещение.
+@end defop
+@defop Slot QMathGL @code{void} setZoom (@code{bool} val)
+Включает/выключает приближение мышью.
+@end defop
+@defop Slot QMathGL @code{void} setRotate (@code{bool} val)
+Включает/выключает вращение мышью.
+@end defop
+@defop Slot QMathGL @code{void} zoomIn ()
+Приблиажет график.
+@end defop
+@defop Slot QMathGL @code{void} zoomOut ()
+Отдаляет график.
+@end defop
+@defop Slot QMathGL @code{void} restore ()
+Восстанавливает приближение и поворот графика в значения по умолчанию.
+@end defop
+@defop Slot QMathGL @code{void} reload ()
+Обновляет данные и перерисовывает график.
+@end defop
+@defop Slot QMathGL @code{void} shiftLeft ()
+Сдвигает график влево.
+@end defop
+@defop Slot QMathGL @code{void} shiftRight ()
+Сдвигает график вправо.
+@end defop
+@defop Slot QMathGL @code{void}shiftUp  ()
+Сдвигает график вверх.
+@end defop
+@defop Slot QMathGL @code{void} shiftDown ()
+Сдвигает график вниз.
+@end defop
+@defop Slot QMathGL @code{void} exportPNG (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в PNG файл.
+@end defop
+@defop Slot QMathGL @code{void} exportPNGs (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в PNG файл без прозрачности.
+@end defop
+@defop Slot QMathGL @code{void} exportJPG (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в JPEG файл.
+@end defop
+@defop Slot QMathGL @code{void} exportBPS (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в растровый EPS файл.
+Export current picture to bitmap EPS file.
+@end defop
+@defop Slot QMathGL @code{void} exportEPS (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в векторный EPS файл.
+@end defop
+@defop Slot QMathGL @code{void} exportSVG (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в векторный SVG файл.
+@end defop
+@defop Slot QMathGL @code{void} exportIDTF (@code{QString} fname=@code{""})
+Сохраняет текущий рисунок в IDTF файл.
+@end defop
+@defop Slot QMathGL @code{void} setMGLFont (@code{QString} path)
+Восстанавливает (@var{path}=@code{""}) или загружает файлы шрифтов.
+@end defop
+@defop Slot QMathGL @code{void} print ()
+Печатает текущий рисунок.
+@end defop
+@defop Slot QMathGL @code{void} adjust ()
+Подгоняет размер картинки под размер окна. Функция выполняется только если graph -- экземпляр класса mglGraphQT.
+@end defop
+@defop Slot QMathGL @code{void} nextSlide ()
+Показывает следующий кадр. Функция выполняется только если graph -- экземпляр класса mglGraphQT.
+@end defop
+@defop Slot QMathGL @code{void} prevSlide ()
+Показывает предыдущий кадр. Функция выполняется только если graph -- экземпляр класса mglGraphQT.
+@end defop
+@defop Slot QMathGL @code{void} animation (@code{bool} st=@code{true})
+Запускает анимацию. Функция выполняется только если graph -- экземпляр класса mglGraphQT.
+@end defop
+@defop Slot QMathGL @code{void} about ()
+Показывает информацию о программе.
+@end defop
+@defop Slot QMathGL @code{void} aboutQt ()
+Показывает информацию о версии Qt.
+@end defop
+
+@defop Signal QMathGL @code{void} phiChanged (@code{int} val)
+Угол Phi изменен.
+@end defop
+@defop Signal QMathGL @code{void} tetChanged (@code{int} val)
+Угол Tet изменен.
+@end defop
+@defop Signal QMathGL @code{void} perChanged (@code{int} val)
+Перспектива изменена.
+@end defop
+@defop Signal QMathGL @code{void} alphaChanged (@code{bool} val)
+Прозрачность изменена.
+@end defop
+@defop Signal QMathGL @code{void} lightChanged (@code{bool} val)
+Освещение изменено.
+@end defop
+@defop Signal QMathGL @code{void} zoomChanged (@code{bool} val)
+Режим приближения мышью изменен.
+@end defop
+@defop Signal QMathGL @code{void} rotateChanged (@code{bool} val)
+Режим вращения мышью изменен.
+@end defop
+
+@deftypecv {Widget option} QMathGL @code{QString} appName
+Имя приложения для окон сообщений.
+@end deftypecv
+@deftypecv {Widget option} QMathGL @code{bool} autoResize
+Разрешить изменять размер рисунка (по умолчанию false).
+@end deftypecv
+@deftypecv {Widget option} QMathGL @code{int} animDelay
+Задержка анимации в мсек.
+@end deftypecv
+
+

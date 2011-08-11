@@ -204,12 +204,12 @@ public:
 		if(imglen>=4*w*h)	memcpy(imgdata, mgl_get_rgba(gr),4*w*h);
 	}
 	/// Copy BGRN values into array which is allocated by user
-	inline void GetBGRN(char *imgdata, int imglen)
+	inline void GetBGRN(unsigned char *imgdata, int imglen)
 	{
 		int w,h,i;
 		w=mgl_get_width(gr);
 		h=mgl_get_height(gr);
-		const char *buf=(const char *)mgl_get_rgb(gr);
+		const unsigned char *buf=mgl_get_rgb(gr);
 		if(imglen>=4*w*h)	for(i=0;i<w*h;i++)
 		{
 			imgdata[4*i]   = buf[3*i+2];

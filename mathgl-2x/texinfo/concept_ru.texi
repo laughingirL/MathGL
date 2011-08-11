@@ -1,0 +1,169 @@
+
+
+@node Coordinate axes, Line styles, , General concepts
+@subsection Оси координат
+
+Представление системы координат в MathGL состоит из двух частей. Вначале координаты нормируются в интервал @var{Min}x@var{Max} (@pxref{Axis settings}). Если флаг @var{Cut} установлен, то точки вне интервала отбрасываются, в противном случае, они проецируются на ограничивающий параллелепипед (@pxref{Cutting}). Кроме того, отбрасываются точки внутри границ, определенных переменными @var{CutMin}x@var{CutMax} и точки, для которых значение функции @code{CutOff}() не равно нулю. После этого формулы перехода в криволинейную систему координат @code{SetFunc()}применяются к каждой точке. Наконец, точка данных отображается с помощью одной из графических функций.
+
+Величины @var{Max}, @var{Min} можно изменять вручную. Однако, после этого необходимо вызвать функцию @code{RecalcBorder()} для настройки графика. Более удобный и безопасный путь состоит в вызове функций @code{Axis(), SetRanges()} и др. В последнем случае функция @code{RecalcBorder()} вызывается автоматически. Размеры осей можно задавать и автоматически по минимальному и максимальному значениям массива данных. Для этого предназначены функции @code{XRange(), YRange(), ZRange()}. Второй не обязательный аргумент указывает, заменять ли новые значения диапазона изменения оси координат (по умолчанию) или только расширить уже существующий диапазон.
+
+Точка пересечения осей координат задается переменной @var{Org} и действует на последующие вызовы функций рисования осей координат и сетки. По умолчанию, если точка пересечения осей координат попадает вне диапазона осей координат, то она проецируется на границу области. Изменить такое поведение можно, задав @var{AutoOrg}=@code{false}. В случае, если одно из значений @var{Org} равно NAN, то соответствующее значение будет выбрано автоматически.
+
+Кроме привычных осей @emph{x, y, z} есть еще одна ось -- цветовая шкала -- ось @emph{c}. Она используется при окрашивании поверхностей и задает границы изменения функции при окрашивании. При вызове @code{Axis()} ее границы автоматически устанавливаются равными Min.z и Max.z. Возможно и ручное изменение границ цветового интервала посредством вызова функции @code{CAxis()} или изменение границ по заданному массиву @code{CRange()}. Используйте @code{Colorbar()} для отображения цветовой шкалы.
+
+Вид меток по осям определяется функцией @code{SetTicks()} (@pxref{Axis settings}). Она имеет 3 аргумента: первый @var{d} задает шаг меток (если положительны) или их число (если отрицательны) или логарифмические метки (если равны нулю); второ @var{ns} задает число "подметок"; последний определяет начальную точку для меток (по умолчанию это точка пересечения осей). Функция @var{SetTuneTicks} включает/выключает выделение общего множителя (большого или малого факторов в диапазоне) для меток осей координат. Наконец, если стандартный вид меток не устраивает пользователя, то их шаблон можно задать явно (можно использовать и ТеХ символы), воспользовавшись функциями  @code{SetXTT(), SetYTT(). SetZTT(). SetCTT()}. Кроме того, в качестве меток можно вывести произвольный текст использовав функцию @code{SetTicksVal()}.
+
+@node Line styles, Color scheme, Coordinate axes, General concepts
+@subsection Стиль линий
+
+@cindex Стиль линий
+@cindex Стиль маркеров
+@cindex Стиль стрелок
+
+Стиль линии задается строкой, которая может содержать символ цвета (@samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}), тип пунктира (@samp{-|;:ji} или пробел), ширину линии (@samp{0123456789}) и тип маркера (@samp{o+xsd.^v} и модификатор @samp{#}). Если пропущен цвет или тип пунктира, то используется значение по умолчанию с последним указанным цветом или значение из палитры (для @pxref{1D plotting}). 
+@ifhtml
+@html
+По умолчанию палитры содержит следующие цвета: <span style="color: rgb(76, 76, 76);">темно серый</span> &lsquo;<samp>H</samp>&rsquo;, <span style="color: rgb(0, 0, 255);">синий</span> &lsquo;<samp>b</samp>&rsquo;, <span style="color: rgb(0, 255, 0);">зеленый</span> &lsquo;<samp>g</samp>&rsquo;, <span style="color: rgb(255, 0, 0);">красный</span> &lsquo;<samp>r</samp>&rsquo;, <span style="color: rgb(0, 255, 255);">голубой</span> &lsquo;<samp>c</samp>&rsquo;, <span style="color: rgb(255, 0, 255);">пурпурный</span> &lsquo;<samp>m</samp>&rsquo;, <span style="color: rgb(255, 255, 0);">yellow</span> &lsquo;<samp>y</samp>&rsquo;, <span style="color: rgb(127, 127, 127);">серый</span> &lsquo;<samp>h</samp>&rsquo;, <span style="color: rgb(0, 255, 127);">сине-зеленый</span> &lsquo;<samp>l</samp>&rsquo;, <span style="color: rgb(0, 127, 255);">небесно-синий</span> &lsquo;<samp>n</samp>&rsquo;, <span style="color: rgb(255, 127, 0);">оранжевый</span> &lsquo;<samp>q</samp>&rsquo;, <span style="color: rgb(127, 255, 0);">желто-зеленый</span> &lsquo;<samp>e</samp>&rsquo;, <span style="color: rgb(127, 0, 255);">сине-фиолетовый</span> &lsquo;<samp>u</samp>&rsquo;, <span style="color: rgb(255, 0, 127);">фиолетовый</span> &lsquo;<samp>p</samp>&rsquo;.
+
+<p>Символы цвета: &lsquo;<samp>k</samp>&rsquo; -- черный, &lsquo;<samp>r</samp>&rsquo; -- <span style="color: rgb(255, 0, 0);">красный</span>, &lsquo;<samp>R</samp>&rsquo; -- <span style="color: rgb(127, 0, 0);">темно красный</span>, &lsquo;<samp>g</samp>&rsquo; -- <span style="color: rgb(0, 255, 0);">зеленый</span>, &lsquo;<samp>G</samp>&rsquo; -- <span style="color: rgb(0, 127, 0);">темно зеленый</span>, &lsquo;<samp>b</samp>&rsquo; -- <span style="color: rgb(0, 0, 255);">синий</span>, &lsquo;<samp>B</samp>&rsquo; -- <span style="color: rgb(0, 0, 127);">темно синий</span>, &lsquo;<samp>c</samp>&rsquo; -- <span style="color: rgb(0, 255, 255);">голубой</span>, &lsquo;<samp>C</samp>&rsquo; -- <span style="color: rgb(0, 127, 127);">темно голубой</span>, &lsquo;<samp>m</samp>&rsquo; -- <span style="color: rgb(255, 0, 255);">пурпурный</span>, &lsquo;<samp>M</samp>&rsquo; -- <span style="color: rgb(127, 0, 127);">темно пурпурный</span>, &lsquo;<samp>y</samp>&rsquo; -- <span style="color: rgb(255, 255, 0);">желтый</span>, &lsquo;<samp>Y</samp>&rsquo; -- <span style="color: rgb(127, 127, 0);">темно желтый (золотой)</span>, &lsquo;<samp>h</samp>&rsquo; -- <span style="color: rgb(127, 127, 127);">серый</span>, &lsquo;<samp>H</samp>&rsquo; -- <span style="color: rgb(76, 76, 76);">темно серый</span>, &lsquo;<samp>w</samp>&rsquo; -- белый, &lsquo;<samp>W</samp>&rsquo; -- <span style="color: rgb(178, 178, 178);">светло серый</span>, &lsquo;<samp>l</samp>&rsquo; -- <span style="color: rgb(0, 255, 127);">сине-зеленый</span>, &lsquo;<samp>L</samp>&rsquo; -- <span style="color: rgb(0, 127, 63);">темно сине-зеленый</span>, &lsquo;<samp>e</samp>&rsquo; -- <span style="color: rgb(127, 255, 0);">желто-зеленый</span>, &lsquo;<samp>E</samp>&rsquo; -- <span style="color: rgb(63, 127, 0);">темно желто-зеленый</span>, &lsquo;<samp>n</samp>&rsquo; -- <span style="color: rgb(0, 127, 255);">небесно-синий</span>, &lsquo;<samp>N</samp>&rsquo; -- <span style="color: rgb(0, 63, 127);">темно небесно-синий</span>, &lsquo;<samp>u</samp>&rsquo; -- <span style="color: rgb(127, 0, 255);">сине-фиолетовый</span>, &lsquo;<samp>U</samp>&rsquo; -- <span style="color: rgb(63, 0, 127);">темно сине-фиолетовый</span>, &lsquo;<samp>p</samp>&rsquo; -- <span style="color: rgb(255, 0, 127);">фиолетовый</span>, &lsquo;<samp>P</samp>&rsquo; -- <span style="color: rgb(127, 0, 63);">темно фиолетовый</span>, &lsquo;<samp>q</samp>&rsquo; -- <span style="color: rgb(255, 127, 0);">оранжевый</span>, &lsquo;<samp>Q</samp>&rsquo; -- <span style="color: rgb(127, 63, 0);">темно оранжевый (коричневый)</span>.</p>
+
+Тип пунктира: пробел -- нет линии (для рисования только маркеров), &lsquo;<samp>-</samp>&rsquo; -- сплошная линия (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;), &lsquo;<samp>|</samp>&rsquo; -- длинный пунктир (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>;</samp>&rsquo; -- пунктир (&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>=</samp>&rsquo; -- короткий пунктир (&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;), &lsquo;<samp>:</samp>&rsquo; -- точки (&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;), &lsquo;<samp>j</samp>&rsquo; -- пунктир с точками  (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>i</samp>&rsquo; -- мелкий пунктир с точками (&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;).
+@end html
+@end ifhtml
+@ifnothtml
+По умолчанию палитры содержит следующие цвета: темно серый @samp{H}, синий @samp{b}, зеленый @samp{g}, красный @samp{r}, голубой @samp{c}, пурпурный @samp{m}, yellow @samp{y}, серый @samp{h}, сине-зеленый @samp{l}, небесно-синий @samp{n}, оранжевый @samp{q}, желто-зеленый @samp{e}, сине-фиолетовый @samp{u}, фиолетовый @samp{p}.
+
+Символы цвета те же, что и в классе mglColor (@pxref{mglColor class}): @samp{k} -- черный, @samp{r} -- красный, @samp{R} -- темно красный, @samp{g} -- зеленый, @samp{G} -- темно зеленый, @samp{b} -- синий, @samp{B} -- темно синий, @samp{c} -- голубой, @samp{C} -- темно голубой, @samp{m} -- пурпурный, @samp{M} -- темно пурпурный, @samp{y} -- желтый, @samp{Y} -- темно желтый (золотой), @samp{h} -- серый, @samp{H} -- темно серый, @samp{w} -- белый, @samp{W} -- светло серый, @samp{l} -- сине-зеленый, @samp{L} -- темно сине-зеленый, @samp{e} -- желто-зеленый, @samp{E} -- темно желто-зеленый, @samp{n} -- небесно-синий, @samp{N} -- темно небесно-синий, @samp{u} -- сине-фиолетовый, @samp{U} -- темно сине-фиолетовый, @samp{p} -- фиолетовый, @samp{P} -- темно фиолетовый, @samp{q} -- оранжевый, @samp{Q} -- темно оранжевый (коричневый).
+
+Тип пунктира: пробел -- нет линии (для рисования только маркеров), @samp{-} -- сплошная линия (################), @samp{|} -- длинный пунктир (########________), @samp{;} -- пунктир (####____####____), @samp{=} -- короткий пунктир (##__##__##__##__), @samp{:} -- точки (#___#___#___#___), @samp{j} -- пунктир с точками  (#######____#____), @samp{i} -- мелкий пунктир с точками (###__#__###__#__).
+@end ifnothtml
+
+Типы маркеров: @samp{o} -- окружность, @samp{+} -- крест, @samp{x} -- косой крест, @samp{s} - квадрат, @samp{d} - ромб, @samp{.} -- точка, @samp{^} -- треугольник вверх, @samp{v} -- треугольник вниз, @samp{<} -- треугольник влево, @samp{>} -- треугольник вправо, @samp{#*} -- знак Y, @samp{#+} -- крест в квадрате, @samp{#x} -- косой крест в квадрате, @samp{#.} -- точка в окружности. Если в строке присутствует символ @samp{#}, то используются символы с заполнением.
+
+@float
+@image{../png/sample5, 7cm}
+@caption{Стили линий и маркеров.}
+@end float
+
+На конце и в начале линии можно выводить специальный символ (стрелку), если в строке указать один из символов: @samp{A} -- стрелка наружу, @samp{V} -- стрелка внутрь, @samp{I} -- поперечная черта, @samp{K} -- стрелка с чертой, @samp{T} -- треугольник, @samp{S} -- квадрат, @samp{D} -- ромб, @samp{O} -- круг, @samp{_} -- нет стрелки (по умолчанию). При этом действует следующее правило: первый символ определяет стрелку на конце линии, второй символ -- стрелку в начале линии. Например, @samp{r-A} -- красная сплошная линия со стрелкой на конце, @samp{b|AI} -- синий пунктир со стрелкой на конце и чертой вначале, @samp{_O} -- линия с текущим стилем и кружком вначале. Эти стили действуют и при построении графиков (например, @ref{1D plotting}).
+
+@float
+@image{../png/sampled, 7cm}
+@caption{Стили стрелок.}
+@end float
+
+@node Color scheme, Font styles, Line styles, General concepts
+@subsection Цветовая схема
+
+@cindex Цветовая схема
+
+Цветовая схема используется для определения цвета поверхностей, линий уровня и пр. Цветовая схема задается строкой @emph{s}, которая содержит символы цвета (@pxref{Line styles}) или символы @samp{d#:|}. Символ @samp{d} указывает на определение цвета в зависимости от положения точки в пространстве, а не по амплитуде данных. Символ @samp{#} переключает рисование поверхности на сетчатое (для трехмерных поверхностей) или включает рисование сетки на поверхности. Символ @samp{|} отключает интерполяцию цвета в цветовой схеме. Это может быть полезно для ``резких'' цветов, например, при рисовании матриц. Если в строке встречается символ @samp{:}, то он принудительно заканчивает разбор строки для стиля поверхности. После этого символа могут идти описание стиля текста или оси вращения кривой/линий уровня. Цветовая схема может содержать до 32 значений цвета.
+
+В цветовой схеме можно использовать тональные (``подсвеченные'') цвета (@emph{не в стиле линий!}). Тональный цвет задается двумя символами: первый -- обычный цвет, второй -- его яркость цифрой. Цифра может быть в диапазоне @samp{1}...@samp{9}. При этом @samp{5} соответствует нормальному цвету, @samp{1} -- очень темная версия цвета (почти черный), @samp{9} -- очень светлая версия цвета (почти белый). Например цветовая схема может быть @samp{b2b7wr7r2}.
+
+@float
+@image{../png/colors, 7cm}
+@caption{Цвета и их идентификаторы.}
+@end float
+
+При определении цвета по @emph{амплитуде} (наиболее часто используется) окончательный цвет определяется путем линейной интерполяции массива цветов. Массив цветов формируется из цветов, указанных в строке спецификации. Аргумент -- амплитуда, нормированная между @var{Cmin} -- @var{Cmax} (@pxref{Axis settings}). Например, строка из 4 символов @samp{bcyr} соответствует изменению цвета от синего (минимальное значение) через голубой и желтый (промежуточные значения) к красному (максимальное значение). Строка @samp{kw} соответствует изменению цвета от черного (минимальное значение) к белому (максимальное значение). Строка из одного символа (например, @samp{g}) соответствует однотонному цвету (в данному случае зеленому).
+
+Есть несколько полезных цветовых схем. Строка @samp{kw} дает обычную серую (черно-белую) схему, когда большие значения светлее. Строка @samp{wk} представляет обратную серую схему, когда большие значения темнее. Строки @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} представляют собой хорошо известные схемы @emph{hot}, @emph{summer} и @emph{winter}. Строки @samp{BbwrR} и @samp{bBkRr} позволяют рисовать двухцветные фигуры на белом или черном фоне, когда отрицательные значения показаны синим цветом, а положительные -- красным. Строка @samp{BbcyrR} дает цветовую схему, близкую к хорошо известной схеме @emph{jet}.
+
+
+@float
+@image{../png/color_schemes, 7cm}
+@caption{Наиболее популярные цветовые схемы.}
+@end float
+
+При определении цвета по @emph{положению точки в пространстве} окончательный цвет определяется по формуле c=x*c[1] + y*c[2] + z*c[3]. Здесь c[1], c[2], c[3] -- первые три цвета в цветовом массиве; x, y, z -- координаты точки, нормированные на @var{Min}x@var{Max}. Такой тип определения цвета полезен, например, при построении поверхностей уровня, когда цвет дает представление о положении точки в пространстве.
+
+@node Font styles, Textual formulas, Color scheme, General concepts
+@subsection Стиль текста
+
+@cindex Стиль текста
+
+Стиль текста задается строкой, которая может содержать несколько символов: тип шрифта (@samp{ribwou}) и/или выравнивания (@samp{LRC}), а также цвет текста @samp{wkrgbcymhRGBCYMHW} (@pxref{Line styles}) после символа @samp{:}. Например, @samp{biC:b} соответствует жирному курсиву с выравниванием по центру синего цвета.
+
+Начертания шрифта: @samp{r} -- прямой шрифт, @samp{i} -- курсив, @samp{b} -- жирный. По умолчанию используется прямой шрифт. Типы выравнивания текста: @samp{L} -- по левому краю (по умолчанию), @samp{C} -- по центру, @samp{R} -- по правому краю. Дополнительные эффекты шрифта: @samp{w} -- контурный, @samp{o} -- надчеркнутый, @samp{u} -- подчеркнутый. 
+@c Синтаксический разбор LaTeX-их команд по умолчанию включен (подробнее см. @pxref{mglFont class} и @ref{Font settings}).
+
+Синтаксический разбор LaTeX-их команд по умолчанию включен. Это команды смены стиля текста (например, \b для жирного текста): \a или \overline -- надчеркивание, \b или \textbf -- жирный, \i или \textit -- курсив, \r или \textrm -- прямой (отменяет стили жирного и курсива), \u или \underline -- подчеркнутый, \w или \wire -- контурный, \big -- большего размера, @@ -- меньшего размера. Нижний и верхний индексы задаются символами @samp{_} и @samp{^}. При этом изменение стиля применяется только к следующему символу или к символам в фигурных скобках @{@}, которые понимаются как единый блок. Например, сравните строки @samp{sin (x^@{2^3@})} и @samp{sin (x^2^3)}. Можно также менять цвет текста внутри строки с помощью команд #? или \color?, где @samp{?} -- символ цвета (@pxref{Line styles}). Например, слова @samp{Blue} и @samp{red} будут окрашены в соответствующий цвет в строке @samp{#b@{Blue@} and \colorr@{red@} text}. Большинство функций понимает символ новой строки @samp{\n} и позволяет выводить много строчный текст. Наконец, можно использовать символы с произвольным UTF кодом с помощью команды @code{\utf0x????}. Например, @code{\utf0x3b1} даст символ 
+@ifhtml
+@html
+&alpha;.
+@end html
+@end ifhtml
+@ifnothtml
+@math{\alpha}.
+@end ifnothtml
+
+Распознаются также большинство символов TeX и AMSTeX, команды смены стиля текста (\textrm, \textbf, \textit, \textsc, \overline, \underline), акценты (\hat, \tilde, \dot, \ddot, \acute, \check, \grave, \bar, \breve) и корни (\sqrt, \sqrt3, \sqrt4). Полный список содержит около 2000 символов. Отмечу, что первый пробел (пробел, табуляция и пр.) после команды игнорируется, а все остальные пробелы печатаются обычным образом. Например, следующие строки дают одинаковый результат @math{\tilde a}: @samp{\tilde@{a@}}; @samp{\tilde a}; @samp{\tilde@{@}a}.
+
+@ifhtml
+@html
+В частности, распознаются греческие буквы: &alpha; &ndash; \alpha, &beta; &ndash; \beta, &gamma; &ndash; \gamma, &delta; &ndash; \delta, &epsilon; &ndash; \epsilon, &eta; &ndash; \eta, &iota; &ndash; \iota, &chi; &ndash; \chi, &kappa; &ndash; \kappa, &lambda; &ndash; \lambda, &mu; &ndash; \mu, &nu; &ndash; \nu, o &ndash; \o, &omega; &ndash; \omega, &#981; &ndash; \phi, &pi; &ndash; \pi, &psi; &ndash; \psi, &rho; &ndash; \rho, &sigma; &ndash; \sigma, &theta; &ndash; \theta, &tau; &ndash; \tau, &upsilon; &ndash; \upsilon, &xi; &ndash; \xi, &zeta; &ndash; \zeta, &sigmaf; &ndash; \varsigma, &#603; &ndash; \varepsilon, &thetasym; &ndash; \vartheta, &phi; &ndash; \varphi, &#1008; &ndash; \varkappa; A &ndash; \Alpha, B &ndash; \Beta, &Gamma; &ndash; \Gamma, &Delta; &ndash; \Delta, E &ndash; \Epsilon, H &ndash; \Eta, I &ndash; \Iota, C &ndash; \Chi, K &ndash; \Kappa, &Lambda; &ndash; \Lambda, M &ndash; \Mu, N &ndash; \Nu, O &ndash; \O, &Omega; &ndash; \Omega, &Phi; &ndash; \Phi, &Pi; &ndash; \Pi, &Psi; &ndash; \Psi, R &ndash; \Rho, &Sigma; &ndash; \Sigma, &Theta; &ndash; \Theta, T &ndash; \Tau, &Upsilon; &ndash; \Upsilon, &Xi; &ndash; \Xi, Z &ndash; \Zeta.
+
+<p>Еще примеры наиболее общеупотребительных TeX-их символов: &ang; &ndash; \angle, &sdot; &ndash; \cdot, &clubs; &ndash; \clubsuit, &#10003; &ndash; \checkmark, &cup; &ndash; \cup, &cap; &ndash; \cap, &#9826; &ndash; \diamondsuit, &#9671; &ndash; \diamond, &divide;
+ &ndash; \div, 
+&darr; &ndash; \downarrow, &dagger; &ndash; \dag, &Dagger; &ndash; \ddag, &equiv; &ndash; \equiv, &exist; &ndash; \exists, &#8994; &ndash; \frown, &#9837; &ndash; \flat, &ge; &ndash; \ge, &ge; &ndash; \geq, &#8807; &ndash; \geqq, &larr; &ndash; \gets, &#9825; &ndash; \heartsuit, &infin; &ndash; \infty, &int; &ndash; \int, \Int, &image;  &ndash; \Im, &#9826; &ndash; \lozenge, &#10216; &ndash; \langle, &le; &ndash; \le, &le; &ndash; \leq, &#8806; &ndash; \leqq, &larr; &ndash; \leftarrow, &#8723; &ndash; \mp, &nabla; &ndash; \nabla, &ne; &ndash; \ne, &ne; &ndash; \neq, &#9838; &ndash; \natural, &#8750; &ndash; \oint, &#8857; &ndash; \odot, &oplus; &ndash; \oplus, &part; &ndash; \partial, &#8741; &ndash; \parallel, &perp; &ndash;\perp, &plusmn; &ndash; \pm, &prop; &ndash; \propto, &prod; &ndash; \prod, &real; &ndash; \Re, &rarr; &ndash; \rightarrow, &#10217; &ndash; \rangle, &spades; &ndash; \spadesuit, ~ &ndash; \sim, &#8995; &ndash; \smile, &sub;  &ndash; \subset, &sup; &ndash; \supset, &radic; &ndash; \sqrt or \surd, &sect; &ndash; \S, &#9839; &ndash; \sharp, &sum; &ndash; \sum, &times; &ndash; \times, &rarr; &ndash; \to, &there4; &ndash; \therefore, &uarr; &ndash; \uparrow, &weierp; &ndash; \wp. </p>
+@end html
+@end ifhtml
+@ifnothtml
+В частности, распознаются греческие буквы: @math{\alpha} -- \alpha, @math{\beta} -- \beta, @math{\gamma} -- \gamma, @math{\delta} -- \delta, @math{\epsilon} -- \epsilon, @math{\eta} -- \eta, @math{\iota} -- \iota, @math{\chi} -- \chi, @math{\kappa} -- \kappa, @math{\lambda} -- \lambda, @math{\mu} -- \mu, @math{\nu} -- \nu, @math{o} -- \o, @math{\omega} -- \omega, @math{\phi} -- \phi, @math{\pi} -- \pi, @math{\psi} -- \psi, @math{\rho} -- \rho, @math{\sigma} -- \sigma, @math{\theta} -- \theta, @math{\tau} -- \tau, @math{\upsilon} -- \upsilon, @math{\xi} -- \xi, @math{\zeta} -- \zeta, @math{\varsigma} -- \varsigma, @math{\varepsilon} -- \varepsilon, @math{\vartheta} -- \vartheta, @math{\varphi} -- \varphi, A -- \Alpha, B -- \Beta, @math{\Gamma} -- \Gamma, @math{\Delta} -- \Delta, E -- \Epsilon, H -- \Eta, I -- \Iota, C -- \Chi, K -- \Kappa, @math{\Lambda} -- \Lambda, M -- \Mu, N -- \Nu, O -- \O, @math{\Omega} -- \Omega, @math{\Phi} -- \Phi, @math{\Pi} -- \Pi, @math{\Psi} -- \Psi, R -- \Rho, @math{\Sigma} -- \Sigma, @math{\Theta} -- \Theta, T -- \Tau, @math{\Upsilon} -- \Upsilon, @math{\Xi} -- \Xi, Z -- \Zeta.
+
+Еще примеры наиболее общеупотребительных TeX-их символов: @math{\angle} -- \angle, @math{\aleph} -- \aleph, @math{\cdot} -- \cdot, @math{\clubsuit} -- \clubsuit, @math{\cup} -- \cup, @math{\cap} -- \cap, @math{\diamondsuit} -- \diamondsuit, @math{\diamond} -- \diamond, @math{\div} -- \div, @math{\downarrow} -- \downarrow, @math{\dag} -- \dag, @math{\ddag} -- \ddag, @math{\equiv} -- \equiv, @math{\exists} -- \exists, @math{\frown} -- \frown, @math{\flat} -- \flat, @math{\ge} -- \ge, @math{\geq} -- \geq, @math{\gets} -- \gets, @math{\heartsuit} -- \heartsuit, @math{\infty} -- \infty, @math{\in} -- \in, @math{\int} -- \int, @math{\Im} -- \Im, @math{\langle} -- \langle, @math{\le} -- \le, @math{\leq} -- \leq, @math{\leftarrow} -- \leftarrow, @math{\mp} -- \mp, @math{\nabla} -- \nabla, @math{\ne} -- \ne, @math{\neq} -- \neq, @math{\natural} -- \natural, @math{\oint} -- \oint, @math{\odot} -- \odot, @math{\oplus} -- \oplus, @math{\partial} -- \partial, @math{\parallel} -- \parallel, @math{\perp} -- \perp, @math{\pm} -- \pm, @math{\propto} -- \propto, @math{\prod} -- \prod, @math{\Re} -- \Re, @math{\rightarrow} -- \rightarrow, @math{\rangle} -- \rangle, @math{\spadesuit} -- \spadesuit, @math{\sim} -- \sim, @math{\smile} -- \smile, @math{\subset} -- \subset, @math{\supset} -- \supset, @math{\surd} -- \sqrt or \surd, @math{\S} -- \S, @math{\sharp} -- \sharp, @math{\sum} -- \sum, @math{\times} -- \times, @math{\to} -- \to, @math{\uparrow} -- \uparrow, @math{\wp} -- \wp and so on. 
+@end ifnothtml
+
+Размер текста может быть задан явно (если @var{size}>0) или относительно базового размера шрифта для рисунка |@var{size}|*@var{FontSize} при @var{size}<0. Значение @var{size}=0 указывает, что соответствующая строка выводиться не будет. Базовый размер шрифта измеряется во внутренних единицах. Специальные функции @code{SetFontSizePT(), SetFontSizeCM(), SetFontSizeIN()} позволяют задавать его в более ``привычных'' единицах.
+
+@node Textual formulas, , Font styles, General concepts
+@subsection Текстовые формулы
+
+@cindex Текстовые формулы
+
+MathGL имеет быстрый парсер текстовых формул
+@ifclear UDAV
+ (@pxref{mglFormula class})
+@end ifclear
+, понимающий большое число функций и операций. Базовые операции: @samp{+} -- сложение, @samp{-} -- вычитание, @samp{*} -- умножение, @samp{/} -- деление, @samp{^} -- возведение в целосичленную степень. Также есть логические операции: @samp{<} -- истина если if x<y, @samp{>} -- истина если x>y, @samp{=} -- истина если x=y, @samp{&} -- истина если x и y оба не равны нулю, @samp{|} -- истина если x или y не нуль. Логические операции имеют наинизший приоритет и возвращают 1 если истина или 0 если ложно.
+
+Базовые функции: @samp{sqrt(x)} -- квадратный корень из @var{x}, @samp{pow(x,y)} -- @var{x} в степени @var{y}, @samp{ln(x)} -- натуральный логарифм @var{x}, @samp{lg(x)} -- десятичный логарифм @var{x}, @samp{log(a,x)} -- логарифм по основанию @var{a} от @var{x}, @samp{abs(x)} -- модуль @var{x}, @samp{sign(x)} -- знак @var{x}, @samp{mod(x,y)} -- остаток от деления x на y, @samp{step(x)} -- ступенчатая функция, @samp{int(x)} -- целая часть @var{x}, @samp{rnd} -- случайное число, @samp{pi} -- число 
+@ifhtml
+@html
+&pi; = 3.1415926&hellip;
+@end html
+@end ifhtml
+@ifnothtml
+@math{\pi=3.1415926...}
+@end ifnothtml
+
+Тригонометрические функции: @samp{sin(x)}, @samp{cos(x)}, @samp{tan(x)} (или @samp{tg(x)}). Обратные тригонометрические функции: @samp{asin(x)}, @samp{acos(x)}, @samp{atan(x)}. Гиперболические функции: @samp{sinh(x)} (или @samp{sh(x)}), @samp{cosh(x)} (или @samp{ch(x)}), @samp{tanh(x)} (или @samp{th(x)}). Обратные гиперболические функции: @samp{asinh(x)}, @samp{acosh(x)}, @samp{atanh(x)}.
+
+@ifhtml
+@html
+<p>Специальные функции: &lsquo;<samp>gamma(x)</samp>&rsquo; &ndash; гамма функция &Gamma;(x) = &int;<sub>0</sub><sup>&infin;</sup> t<sup>x-1</sup> exp(-t) dt, &lsquo;<samp>psi(x)</samp>&rsquo; &ndash; дигамма функция &psi;(x) = &Gamma;&prime;(x)/&Gamma;(x) для x&ne;0, &lsquo;<samp>ai(x)</samp>&rsquo; &ndash; Эйри функция Ai(x), &lsquo;<samp>bi(x)</samp>&rsquo; &ndash; Эйри функция Bi(x), &lsquo;<samp>cl(x)</samp>&rsquo; &ndash; функция Клаузена, &lsquo;<samp>li2(x)</samp>&rsquo; (или &lsquo;<samp>dilog(x)</samp>&rsquo;) &ndash; дилогарифм Li<sub>2</sub>(x) = -&real;&int;<sub>0</sub><sup>x</sup>ds log(1-s)/s, &lsquo;<samp>sinc(x)</samp>&rsquo; &ndash; функция sinc(x) = sin(&pi;x)/(&pi;x) для любых x, &lsquo;<samp>zeta(x)</samp>&rsquo; &ndash; зета функция Римана &zeta;(s) = &sum;<sub>k=1</sub><sup>&infin;</sup>k<sup>-s</sup> для s&ne;1, &lsquo;<samp>eta(x)</samp>&rsquo; &ndash; эта функция &eta;(s) = (1 - 2<sup>1-s</sup>)&zeta;(s) для произвольного s, &lsquo;<samp>lp(l,x)</samp>&rsquo; &ndash; полином Лежандра P<sub>l</sub>(x), (|x|&le;1, l&ge;0), &lsquo;<samp>w0(x)</samp>&rsquo;, &lsquo;<samp>w1(x)</samp>&rsquo; &ndash; функции Ламберта W. Функции W(x) определены как решение уравнения: W exp(W) = x. </p>
+
+<p>Экспоненциальные интегралы: &lsquo;<samp>ci(x)</samp>&rsquo; &ndash; cos-интеграл Ci(x) = &int;<sub>0</sub><sup>x</sup>dt cos(t)/t, &lsquo;<samp>si(x)</samp>&rsquo; &ndash; sin-интеграл Si(x) = &int;<sub>0</sub><sup>x</sup>dt sin(t)/t, &lsquo;<samp>erf(x)</samp>&rsquo; &ndash; функция ошибки erf(x) = (2/&radic;&pi;) &int;<sub>0</sub><sup>x</sup>dt exp(-t<sup>2</sup>) , &lsquo;<samp>ei(x)</samp>&rsquo; &ndash; интеграл Ei(x) = -PV(&int;<sub>-x</sub><sup>&infin;</sup>dt exp(-t)/t) (где PV обозначает главное значение), &lsquo;<samp>e1(x)</samp>&rsquo; &ndash; интеграл E<sub>1</sub>(x) = &real;&int;<sub>1</sub><sup>&infin;</sup>dt exp(-xt)/t, &lsquo;<samp>e2(x)</samp>&rsquo; &ndash; интеграл E<sub>2</sub>(x) = &real;&int;<sub>1</sub>&infin;</sup>dt exp(-xt)/t<sup>2</sup>, &lsquo;<samp>ei3(x)</samp>&rsquo; &ndash; интеграл Ei<sub>3</sub>(x) = &int;<sub>0</sub><sup>x</sup>dt exp(-t<sup>3</sup>) для x&ge;0. </p>
+
+<p>Функции Бесселя: &lsquo;<samp>j(nu,x)</samp>&rsquo; &ndash; функция Бесселя первого рода, &lsquo;<samp>y(nu,x)</samp>&rsquo; &ndash; функция Бесселя второго рода, &lsquo;<samp>i(nu,x)</samp>&rsquo; &ndash; модифицированная функция Бесселя первого рода, &lsquo;<samp>k(nu,x)</samp>&rsquo; &ndash; модифицированная функция Бесселя второго рода. </p>
+
+<p>Эллиптические интегралы: &lsquo;<samp>ee(k)</samp>&rsquo; &ndash; полный эллиптический интеграл E(k) = E(&pi;/2,k), &lsquo;<samp>ek(k)</samp>&rsquo; &ndash; полный эллиптический интеграл K(k) = F(&pi;/2,k), &lsquo;<samp>e(phi,k)</samp>&rsquo; &ndash; эллиптический интеграл E(&phi;,k) = &int;<sub>0</sub><sup>&phi;</sup>dt &radic;(1 - k<sup>2</sup>sin<sup>2</sup>(t)), &lsquo;<samp>f(phi,k)</samp>&rsquo; &ndash; эллиптический интеграл F(&phi;,k) = &int;<sub>0</sub><sup>&phi;</sup>dt 1/&radic;(1 - k<sup>2</sup>sin<sup>2</sup>(t))</p>
+@end html
+@end ifhtml
+@ifnothtml
+Специальные функции: @samp{gamma(x)} -- гамма функция @math{\Gamma(x) = \int_0^\infty dt t^@{x-1@} \exp(-t)} , @samp{psi(x)} -- дигамма функция @math{\psi(x) = \Gamma'(x)/\Gamma(x)} для x!=0, @samp{ai(x)} -- Эйри функция Ai(x), @samp{bi(x)} -- Эйри функция Bi(x), @samp{cl(x)} -- функция Клаузена, @samp{li2(x)} (или @samp{dilog(x)}) -- дилогарифм @math{Li_2(x) = - \Re \int_0^x ds \log(1-s)/s}, @samp{sinc(x)} -- функция @math{sinc(x) = \sin(\pi x) / (\pi x)} для любых x, @samp{zeta(x)} -- зета функция Римана @math{\zeta(s) = \sum_@{k=1@}^\infty k^@{-s@}} для s!=1, @samp{eta(x)} -- эта функция @math{\eta(s) = (1-2^@{1-s@}) \zeta(s)} для произвольного s, @samp{lp(l,x)} -- полином Лежандра @math{P_l(x)}, (|x|<=1, l>=0), @samp{w0(x)}, @samp{w1(x)} -- функции Ламберта @var{W}. Функции W(x) определены как решение уравнения @math{W \exp(W) = x}.
+
+Экспоненциальные интегралы: @samp{ci(x)} -- cos-интеграл @math{Ci(x) = \int_0^x dt \cos(t)/t}, @samp{si(x)} -- sin-интеграл @math{Si(x) = \int_0^x dt \sin(t)/t}, @samp{erf(x)} -- функция ошибки @math{erf(x) = (2/\sqrt(\pi)) \int_0^x dt \exp(-t^2)}, @samp{ei(x)} -- интеграл @math{Ei(x) := - PV(\int_@{-x@}^\infty dt \exp(-t)/t)} (где PV обозначает главное значение), @samp{e1(x)} -- интеграл @math{E_1(x) := Re \int_1^\infty dt \exp(-xt)/t} , @samp{e2(x)} -- интеграл @math{E_2(x) := Re \int_1^\infty dt \exp(-xt)/t^2}, @samp{ei3(x)} -- интеграл @math{Ei_3(x) = \int_0^x dt \exp(-t^3)} для x>=0.
+
+Функции Бесселя: @samp{j(nu,x)} -- функция Бесселя первого рода, @samp{y(nu,x)} -- функция Бесселя второго рода, @samp{i(nu,x)} -- модифицированная функция Бесселя первого рода, @samp{k(nu,x)} -- модифицированная функция Бесселя второго рода.
+
+Эллиптические интегралы: @samp{ee(k)} -- полный эллиптический интеграл @math{E(k) = E(\pi/2, k)}, @samp{ek(k)} -- полный эллиптический интеграл @math{K(k) = F(\pi/2, k)}, @samp{e(phi,k)} -- эллиптический интеграл @math{E(\phi,k) = \int_0^\phi dt \sqrt((1 - k^2 \sin^2(t)))}, @samp{f(phi,k)} -- эллиптический интеграл @math{F(\phi,k) = \int_0^\phi dt 1/\sqrt((1 - k^2 \sin^2(t)))}.
+@end ifnothtml
+
+Функции Якоби: @samp{sn(u,m)}, @samp{cn(u,m)}, @samp{dn(u,m)}, @samp{sc(u,m)}, @samp{sd(u,m)}, @samp{ns(u,m)}, @samp{cs(u,m)}, @samp{cd(u,m)}, @samp{nc(u,m)}, @samp{ds(u,m)}, @samp{dc(u,m)}, @samp{nd(u,m)}.
+
+Некоторые из функций могут быть недоступны если флаг NO_GSL был определен при компиляции библиотеки MathGL. 
+
+При разборе формул нет различия между верхним и нижним регистром. Если аргумент лежит вне области определения функции, то возвращается NaN.
+
