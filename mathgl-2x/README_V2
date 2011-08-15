@@ -45,7 +45,7 @@ mglBase --> mglCanvas --> mglCanvasW  --> mglCanvasQT, mglCanvasFL
    brightness. Also the transparency can be changed by adding '{AN}'.
 
 *  Text styles is reverted now -- to be unified with any other styles.
-   Color is placed firstly, then separator ':', and after it font stiles
+   Color is placed firstly, then separator ':', and after it font styles
    (bold, italic, wire, ...).
 
 Also there are a lot of other (not so general) changes and improvements.

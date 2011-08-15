@@ -23,8 +23,6 @@
 //		C interfaces
 //
 //-----------------------------------------------------------------------------
-void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, float z2, float c1, float c2)
-{	gr->SetAutoRanges(x1,x2,y1,y2,z1,z2,c1,c2);	}
 int mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}
 void mgl_set_warn(HMGL gr, int code)	{	return gr->SetWarn(code);	}
 void mgl_buf_warn(HMGL gr, char *buf)	{	gr->Message = buf;	}
@@ -55,9 +53,7 @@ void mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add)
 	else if(dir=='z')	gr->ZRange(_Da_(a),add);	}
 void mgl_set_ranges(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2)
 {	gr->SetRanges(x1,y1,z1,x2,y2,z2);	}
-void mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ)
-{	gr->SetFunc(EqX,EqY,EqZ);	}
-void mgl_set_func_ext(HMGL gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA)
+void mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA)
 {	gr->SetFunc(EqX,EqY,EqZ,EqA);	}
 void mgl_set_coor(HMGL gr, int how)	{	gr->SetCoor(how);	}
 //-----------------------------------------------------------------------------
@@ -72,8 +68,6 @@ void mgl_set_bar_width(HMGL gr, float width)	{	gr->SetBarWidth(width);	}
 //		Fortran interfaces
 //
 //-----------------------------------------------------------------------------
-void mgl_set_auto_(uintptr_t *gr, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2, float *c1, float *c2)
-{	_GR_->SetAutoRanges(*x1,*x2,*y1,*y2,*z1,*z2,*c1,*c2);	}
 void mgl_set_origin_(uintptr_t *gr, float *x0, float *y0, float *z0)
 {	_GR_->SetOrigin(*x0,*y0,*z0);	}
 int mgl_get_warn_(uintptr_t *gr)	{	return _GR_->GetWarn();	}
@@ -106,15 +100,7 @@ void mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,i
 	else if(*dir=='z')	_GR_->ZRange(*_DA_(a),*add);	}
 void mgl_set_ranges_(uintptr_t *gr, float *x1, float *y1, float *z1, float *x2, float *y2, float *z2)
 {	_GR_->SetRanges(*x1,*y1,*z1,*x2,*y2,*z2);	}
-void mgl_set_func_(uintptr_t *gr, const char *EqX,const char *EqY,const char *EqZ,int lx,int ly,int lz)
-{
-	char *sx=new char[lx+1];	memcpy(sx,EqX,lx);	sx[lx]=0;
-	char *sy=new char[ly+1];	memcpy(sy,EqY,ly);	sy[ly]=0;
-	char *sz=new char[lz+1];	memcpy(sz,EqZ,lz);	sz[lz]=0;
-	_GR_->SetFunc(sx,sy,sz);
-	delete []sx;	delete []sy;	delete []sz;
-}
-void mgl_set_func_ext_(uintptr_t *gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA,int lx,int ly,int lz,int la)
+void mgl_set_func_(uintptr_t *gr, const char *EqX,const char *EqY,const char *EqZ,const char *EqA,int lx,int ly,int lz,int la)
 {
 	char *sx=new char[lx+1];	memcpy(sx,EqX,lx);	sx[lx]=0;
 	char *sy=new char[ly+1];	memcpy(sy,EqY,ly);	sy[ly]=0;

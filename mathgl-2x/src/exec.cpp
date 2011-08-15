@@ -79,9 +79,9 @@ void mglc_ambient(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_area(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Area(*(a[0].d),k[1]==2?a[1].s:0,opt);
-	else if(k[2]!=1)	gr->Area(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
-	else 				gr->Area(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+	else if(k[1]!=1)	gr->Area(*(a[0].d),k[1]==2?a[1].s:"",opt);
+	else if(k[2]!=1)	gr->Area(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
+	else 				gr->Area(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	return 0;
 }
 void mglc_area(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
@@ -109,9 +109,9 @@ void mglc_aspect(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_axial(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Axial(*(a[0].d),k[1]==2?a[1].s:0,opt);
+	else if(k[1]!=1)	gr->Axial(*(a[0].d),k[1]==2?a[1].s:"",opt);
 	else if(k[1]==1 && k[2]==1)
-		gr->Axial(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+		gr->Axial(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -145,18 +145,18 @@ void mglc_axis(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_ball(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3)
-		gr->Ball(mglPoint(a[0].v,a[1].v,a[2].v),k[3]==2 ? a[3].s[0]:'r');
+		gr->Mark(mglPoint(a[0].v,a[1].v,a[2].v),k[3]==2 ? a[3].s:"r.");
 	else if(k[0]==3 && k[1]==3)
-		gr->Ball(mglPoint(a[0].v,a[1].v),k[2]==2 ? a[2].s[0]:'r');
+		gr->Mark(mglPoint(a[0].v,a[1].v),k[2]==2 ? a[2].s:"r.");
 	else	return 1;
 	return 0;
 }
 void mglc_ball(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3)
-		mglprintf(out,1024,L"gr->Ball(mglPoint(%g, %g, %g), '%c');", a[0].v,a[1].v,a[2].v,k[3]==2 ? a[3].s[0]:'r');
+		mglprintf(out,1024,L"gr->Mark(mglPoint(%g, %g, %g), \"%s\");", a[0].v,a[1].v,a[2].v,k[3]==2 ? a[3].s:"r.");
 	else if(k[0]==3 && k[1]==3)
-		mglprintf(out,1024,L"gr->Ball(mglPoint(%g, %g), '%c');", a[0].v, a[1].v, k[2]==2 ? a[2].s[0]:'r');
+		mglprintf(out,1024,L"gr->Mark(mglPoint(%g, %g), \"%s\");", a[0].v, a[1].v, k[2]==2 ? a[2].s:"r.");
 }
 //-----------------------------------------------------------------------------
 int mgls_box(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -169,9 +169,9 @@ void mglc_box(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_bars(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Bars(*(a[0].d), k[1]==2?a[1].s:0,opt);
-	else if(k[2]!=1)	gr->Bars(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:0,opt);
-	else 				gr->Bars(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:0,opt);
+	else if(k[1]!=1)	gr->Bars(*(a[0].d), k[1]==2?a[1].s:"",opt);
+	else if(k[2]!=1)	gr->Bars(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:"",opt);
+	else 				gr->Bars(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:"",opt);
 	return 0;
 }
 void mglc_bars(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
@@ -188,8 +188,8 @@ void mglc_bars(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_barh(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Barh(*(a[0].d), k[1]==2?a[1].s:0,opt);
-	else	gr->Barh(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:0,opt);
+	else if(k[1]!=1)	gr->Barh(*(a[0].d), k[1]==2?a[1].s:"",opt);
+	else	gr->Barh(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:"",opt);
 	return 0;
 }
 void mglc_barh(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
@@ -204,8 +204,8 @@ void mglc_barh(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_belt(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)			gr->Belt(*(a[0].d),k[1]==2?a[1].s:0,opt);
-	else if(k[1]==1 && k[2]==1)	gr->Belt(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+	else if(k[1]!=1)			gr->Belt(*(a[0].d),k[1]==2?a[1].s:"",opt);
+	else if(k[1]==1 && k[2]==1)	gr->Belt(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -221,8 +221,8 @@ void mglc_belt(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_boxs(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)			gr->Boxs(*(a[0].d),k[1]==2?a[1].s:0,opt);
-	else if(k[1]==1 && k[2]==1)	gr->Boxs(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+	else if(k[1]!=1)			gr->Boxs(*(a[0].d),k[1]==2?a[1].s:"",opt);
+	else if(k[1]==1 && k[2]==1)	gr->Boxs(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -239,7 +239,7 @@ int mgls_beam(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==3)
 		gr->Beam(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].v,
-				k[5]==2? a[5].s:0,k[6]==3?iint(a[6].v):0, iint(k[7]==3?a[7].v:3));
+				k[5]==2? a[5].s:"",k[6]==3?iint(a[6].v):0, iint(k[7]==3?a[7].v:3));
 	else	return 1;
 	return 0;
 }
@@ -261,7 +261,7 @@ void mglc_clf(wchar_t out[1024], long , mglArg *, int [10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_chart(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)	gr->Chart(*(a[0].d), k[1]==2?a[1].s:0,opt);
+	if(k[0]==1)	gr->Chart(*(a[0].d), k[1]==2?a[1].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -273,9 +273,9 @@ void mglc_chart(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_cloud(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Cloud(*(a[0].d),k[1]==2?a[1].s:0,opt);
+	else if(k[1]!=1)	gr->Cloud(*(a[0].d),k[1]==2?a[1].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1)
-		gr->Cloud(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+		gr->Cloud(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	return 0;
 }
 void mglc_cloud(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
@@ -373,7 +373,7 @@ void mglc_cut(wchar_t out[1024], long n, mglArg *a, int k[10], const char *)
 int mgls_crust(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1)
-		gr->Crust(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+		gr->Crust(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -387,8 +387,8 @@ int mgls_colorbar(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==2 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3)
 		gr->Colorbar(a[0].s, iint(a[1].v), a[2].v, a[3].v, a[4].v, a[5].v);
-	else if(k[0]==1)	gr->Colorbar(*(a[0].d), k[1]==2 ? a[1].s:0, k[2]==3 ? iint(a[2].v):0);
-	else	gr->Colorbar(k[0]==2 ? a[0].s:0, k[1]==3 ? iint(a[1].v):0);
+	else if(k[0]==1)	gr->Colorbar(*(a[0].d), k[1]==2 ? a[1].s:"", k[2]==3 ? iint(a[2].v):0);
+	else	gr->Colorbar(k[0]==2 ? a[0].s:"", k[1]==3 ? iint(a[1].v):0);
 	return 0;
 }
 void mglc_colorbar(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
@@ -432,13 +432,13 @@ void mglc_copy(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_cont(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Cont(*(a[0].d),k[1]==2?a[1].s:0,opt);
+	else if(k[1]!=1)	gr->Cont(*(a[0].d),k[1]==2?a[1].s:"",opt);
 	else if(k[1]==1 && k[2]!=1)
-		gr->Cont(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:0,opt);
+		gr->Cont(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]!=1)
-		gr->Cont(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:0,opt);
+		gr->Cont(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]!=1)
-		gr->Cont(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), k[4]==2?a[4].s:0,opt);
+		gr->Cont(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), k[4]==2?a[4].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -459,13 +459,13 @@ int mgls_contf(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
 	else if(k[1]!=1)
-		gr->ContF(*(a[0].d),k[1]==2?a[1].s:0,opt);
+		gr->ContF(*(a[0].d),k[1]==2?a[1].s:"",opt);
 	else if(k[1]==1 && k[2]!=1)
-		gr->ContF(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:0,opt);
+		gr->ContF(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]!=1)
-		gr->ContF(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:0,opt);
+		gr->ContF(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]!=1)
-		gr->ContF(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), k[4]==2?a[4].s:0,opt);
+		gr->ContF(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), k[4]==2?a[4].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -486,13 +486,13 @@ int mgls_contd(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
 	else if(k[1]!=1)
-		gr->ContD(*(a[0].d),k[1]==2?a[1].s:0,opt);
+		gr->ContD(*(a[0].d),k[1]==2?a[1].s:"",opt);
 	else if(k[1]==1 && k[2]!=1)
-		gr->ContD(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:0,opt);
+		gr->ContD(*(a[0].d), *(a[1].d), k[2]==2?a[2].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]!=1)
-		gr->ContD(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:0,opt);
+		gr->ContD(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]!=1)
-		gr->ContD(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), k[4]==2?a[4].s:0,opt);
+		gr->ContD(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), k[4]==2?a[4].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -513,13 +513,13 @@ int mgls_cont3(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
 	else if(k[1]==2)
-		gr->Cont3(*(a[0].d), a[1].s[0], k[2]==3?iint(a[2].v):-1, k[3]==2?a[3].s:0,opt);
+		gr->Cont3(*(a[0].d), a[1].s[0], k[2]==3?iint(a[2].v):-1, k[3]==2?a[3].s:"",opt);
 	else if(k[1]==1 && k[2]==2)
-		gr->Cont3(*(a[0].d), *(a[1].d), a[2].s[0], k[3]==3?iint(a[3].v):-1, k[4]==2?a[4].s:0,opt);
+		gr->Cont3(*(a[0].d), *(a[1].d), a[2].s[0], k[3]==3?iint(a[3].v):-1, k[4]==2?a[4].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
-		gr->Cont3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), a[4].s[0], k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s:0,opt);
+		gr->Cont3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), a[4].s[0], k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==2)
-		gr->Cont3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s[0], k[6]==3?iint(a[6].v):-1, k[7]==2?a[7].s:0,opt);
+		gr->Cont3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s[0], k[6]==3?iint(a[6].v):-1, k[7]==2?a[7].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -540,13 +540,13 @@ int mgls_contf3(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
 	else if(k[1]==2)
-		gr->ContF3(*(a[0].d), a[1].s[0], k[2]==3?iint(a[2].v):-1, k[3]==2?a[3].s:0,opt);
+		gr->ContF3(*(a[0].d), a[1].s[0], k[2]==3?iint(a[2].v):-1, k[3]==2?a[3].s:"",opt);
 	else if(k[1]==1 && k[2]==2)
-		gr->ContF3(*(a[0].d), *(a[1].d), a[2].s[0], k[3]==3?iint(a[3].v):-1, k[4]==2?a[4].s:0,opt);
+		gr->ContF3(*(a[0].d), *(a[1].d), a[2].s[0], k[3]==3?iint(a[3].v):-1, k[4]==2?a[4].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
-		gr->ContF3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), a[4].s[0], k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s:0,opt);
+		gr->ContF3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), a[4].s[0], k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==2)
-		gr->ContF3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s[0], k[6]==3?iint(a[6].v):-1, k[7]==2?a[7].s:0,opt);
+		gr->ContF3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s[0], k[6]==3?iint(a[6].v):-1, k[7]==2?a[7].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -565,7 +565,7 @@ void mglc_contf3(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt
 //-----------------------------------------------------------------------------
 int mgls_contx(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)	gr->ContX(*(a[0].d),k[1]==2?a[1].s:0,k[2]==3?a[2].v:NAN,opt);
+	if(k[0]==1)	gr->ContX(*(a[0].d),k[1]==2?a[1].s:"",k[2]==3?a[2].v:NAN,opt);
 	else	return 1;
 	return 0;
 }
@@ -577,7 +577,7 @@ void mglc_contx(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_contfx(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)	gr->ContFX(*(a[0].d),k[1]==2?a[1].s:0,k[2]==3?a[2].v:NAN,opt);
+	if(k[0]==1)	gr->ContFX(*(a[0].d),k[1]==2?a[1].s:"",k[2]==3?a[2].v:NAN,opt);
 	else	return 1;
 	return 0;
 }
@@ -589,7 +589,7 @@ void mglc_contfx(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt
 //-----------------------------------------------------------------------------
 int mgls_conty(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)	gr->ContY(*(a[0].d),k[1]==2?a[1].s:0,k[2]==3?a[2].v:NAN,opt);
+	if(k[0]==1)	gr->ContY(*(a[0].d),k[1]==2?a[1].s:"",k[2]==3?a[2].v:NAN,opt);
 	else	return 1;
 	return 0;
 }
@@ -601,7 +601,7 @@ void mglc_conty(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_contfy(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)	gr->ContFY(*(a[0].d),k[1]==2?a[1].s:0,k[2]==3?a[2].v:NAN,opt);
+	if(k[0]==1)	gr->ContFY(*(a[0].d),k[1]==2?a[1].s:"",k[2]==3?a[2].v:NAN,opt);
 	else	return 1;
 	return 0;
 }
@@ -613,7 +613,7 @@ void mglc_contfy(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt
 //-----------------------------------------------------------------------------
 int mgls_contz(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)	gr->ContZ(*(a[0].d),k[1]==2?a[1].s:0,k[2]==3?a[2].v:NAN,opt);
+	if(k[0]==1)	gr->ContZ(*(a[0].d),k[1]==2?a[1].s:"",k[2]==3?a[2].v:NAN,opt);
 	else	return 1;
 	return 0;
 }
@@ -625,7 +625,7 @@ void mglc_contz(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_contfz(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)	gr->ContFZ(*(a[0].d),k[1]==2?a[1].s:0,k[2]==3?a[2].v:NAN,opt);
+	if(k[0]==1)	gr->ContFZ(*(a[0].d),k[1]==2?a[1].s:"",k[2]==3?a[2].v:NAN,opt);
 	else	return 1;
 	return 0;
 }
@@ -693,11 +693,9 @@ int mgls_circle(mglGraph *gr, long , mglArg *a, int [10], const char *)
 	int i;
 	for(i=0;i<4;i++)	if(a[i].type!=2)	{	i--;	break;	}
 	if(i==3)
-		gr->Ellipse(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[0].v,a[1].v,a[2].v),
-				a[3].v, a[4].type==2?a[4].s:"r");
+		gr->Circle(mglPoint(a[0].v,a[1].v,a[2].v), a[3].v, a[4].type==2?a[4].s:"r");
 	else if(i==2)
-		gr->Ellipse(mglPoint(a[0].v,a[1].v), mglPoint(a[0].v,a[1].v),
-				a[2].v, a[3].type==2?a[3].s:"r");
+		gr->Circle(mglPoint(a[0].v,a[1].v), a[2].v, a[3].type==2?a[3].s:"r");
 	else	return 1;
 	return 0;
 }
@@ -707,9 +705,9 @@ void mglc_circle(wchar_t out[1024], long , mglArg *a, int [10], const char *)
 	for(i=0;i<4;i++)	if(a[i].type!=2)
 	{	i--;	break;	}
 	if(i==3)
-		mglprintf(out,1024,L"gr->Ellipse(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, \"%s\");", a[0].v,a[1].v,a[2].v, a[0].v,a[1].v,a[2].v, a[3].v, (a[4].type==2) ? a[4].s : "r");
+		mglprintf(out,1024,L"gr->Circle(mglPoint(%g, %g, %g), %g, \"%s\");", a[0].v,a[1].v,a[2].v, a[3].v, (a[4].type==2) ? a[4].s : "r");
 	else if(i==2)
-		mglprintf(out,1024,L"gr->Ellipse(mglPoint(%g, %g), mglPoint(%g, %g), %g, \"%s\");", a[0].v,a[1].v,a[0].v,a[1].v, a[2].v, (a[3].type==2) ? a[3].s : "r");
+		mglprintf(out,1024,L"gr->Circle(mglPoint(%g, %g), %g, \"%s\");", a[0].v,a[1].v, a[2].v, (a[3].type==2) ? a[3].s : "r");
 }
 //-----------------------------------------------------------------------------
 int mgls_rhomb(mglGraph *gr, long , mglArg *a, int [10], const char *)
@@ -740,9 +738,9 @@ void mglc_rhomb(wchar_t out[1024], long , mglArg *a, int [10], const char *)
 int mgls_dens(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Dens(*(a[0].d),k[1]==2?a[1].s:0,opt);
+	else if(k[1]!=1)	gr->Dens(*(a[0].d),k[1]==2?a[1].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]!=1)
-		gr->Dens(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:0,opt);
+		gr->Dens(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -759,10 +757,10 @@ int mgls_dens3(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
 	else if(k[1]==2)
-		gr->Dens3(*(a[0].d),a[1].s[0],k[2]==3?iint(a[2].v):-1,k[3]==2?a[3].s:0,opt);
+		gr->Dens3(*(a[0].d),a[1].s[0],k[2]==3?iint(a[2].v):-1,k[3]==2?a[3].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
 		gr->Dens3(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].s[0],
-				k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s:0,opt);
+				k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -777,7 +775,7 @@ void mglc_dens3(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_densx(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)	gr->DensX(*(a[0].d),k[1]==2?a[1].s:0,k[2]==3?a[2].v:NAN,opt);
+	if(k[0]==1)	gr->DensX(*(a[0].d),k[1]==2?a[1].s:"",k[2]==3?a[2].v:NAN,opt);
 	else	return 1;
 	return 0;
 }
@@ -788,7 +786,7 @@ void mglc_densx(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_densy(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)	gr->DensY(*(a[0].d),k[1]==2?a[1].s:0,k[2]==3?a[2].v:NAN,opt);
+	if(k[0]==1)	gr->DensY(*(a[0].d),k[1]==2?a[1].s:"",k[2]==3?a[2].v:NAN,opt);
 	else	return 1;
 	return 0;
 }
@@ -799,7 +797,7 @@ void mglc_densy(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_densz(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)	gr->DensZ(*(a[0].d),k[1]==2?a[1].s:0,k[2]==3?a[2].v:NAN,opt);
+	if(k[0]==1)	gr->DensZ(*(a[0].d),k[1]==2?a[1].s:"",k[2]==3?a[2].v:NAN,opt);
 	else	return 1;
 	return 0;
 }
@@ -850,9 +848,9 @@ void mglc_subto(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_dots(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-		gr->Dots(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+		gr->Dots(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1)
-		gr->Dots(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+		gr->Dots(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -918,8 +916,8 @@ void mglc_drop(wchar_t out[1024], long n, mglArg *a, int k[10], const char *)
 int mgls_dew(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-		gr->Dew(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
-	else if(k[0]==1 && k[1]==1)	gr->Dew(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
+		gr->Dew(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
+	else if(k[0]==1 && k[1]==1)	gr->Dew(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -934,8 +932,8 @@ void mglc_dew(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_fall(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)			gr->Fall(*(a[0].d),k[1]==2?a[1].s:0,opt);
-	else if(k[1]==1 && k[2]==1)	gr->Fall(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+	else if(k[1]!=1)			gr->Fall(*(a[0].d),k[1]==2?a[1].s:"",opt);
+	else if(k[1]==1 && k[2]==1)	gr->Fall(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -951,8 +949,8 @@ void mglc_fall(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_mesh(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)			gr->Mesh(*(a[0].d),k[1]==2?a[1].s:0,opt);
-	else if(k[1]==1 && k[2]==1)	gr->Mesh(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+	else if(k[1]!=1)			gr->Mesh(*(a[0].d),k[1]==2?a[1].s:"",opt);
+	else if(k[1]==1 && k[2]==1)	gr->Mesh(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -968,8 +966,8 @@ void mglc_mesh(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_surf(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)			gr->Surf(*(a[0].d),k[1]==2?a[1].s:0,opt);
-	else if(k[1]==1 && k[2]==1)	gr->Surf(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+	else if(k[1]!=1)			gr->Surf(*(a[0].d),k[1]==2?a[1].s:"",opt);
+	else if(k[1]==1 && k[2]==1)	gr->Surf(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -985,8 +983,8 @@ void mglc_surf(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_surfc(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1 || k[1]!=1)	return 1;
-	else if(k[2]!=1)			gr->SurfC(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
-	else if(k[2]==1 && k[3]==1)	gr->SurfC(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+	else if(k[2]!=1)			gr->SurfC(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
+	else if(k[2]==1 && k[3]==1)	gr->SurfC(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1002,8 +1000,8 @@ void mglc_surfc(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_surfa(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1 || k[1]!=1)	return 1;
-	else if(k[2]!=1)			gr->SurfA(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
-	else if(k[2]==1 && k[3]==1)	gr->SurfA(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+	else if(k[2]!=1)			gr->SurfA(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
+	else if(k[2]==1 && k[3]==1)	gr->SurfA(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1021,25 +1019,25 @@ int mgls_flow(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 	int i;
 	for(i=0;i<7;i++)	if(k[i]!=1)	break;
 	if(i==2)
-		gr->Flow(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
+		gr->Flow(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
 	else if(i==4)
-		gr->Flow(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+		gr->Flow(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	else if(i==3)
-		gr->Flow(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+		gr->Flow(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else if(i==6)
-		gr->Flow(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:0,opt);
+		gr->Flow(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:"",opt);
 	else if(k[0]==3 && k[1]==3 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==1)
 		gr->FlowP(mglPoint(a[0].v,a[1].v,k[7]==3?a[7].v:NAN),
-			*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:0,opt);
+			*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:"",opt);
 	else if(k[0]==3 && k[1]==3 && k[2]==1 && k[3]==1)
 		gr->FlowP(mglPoint(a[0].v,a[1].v,k[5]==3?a[5].v:NAN),
-			*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+			*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==1 && k[4]==1 && k[5]==1 && k[6]==1 && k[7]==1 && k[8]==1)
 		gr->FlowP(mglPoint(a[0].v,a[1].v,a[2].v),
-			*(a[3].d),*(a[4].d),*(a[5].d),*(a[6].d),*(a[7].d),*(a[8].d),k[9]==2?a[9].s:0,opt);
+			*(a[3].d),*(a[4].d),*(a[5].d),*(a[6].d),*(a[7].d),*(a[8].d),k[9]==2?a[9].s:"",opt);
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==1 && k[4]==1 && k[5]==1)
 		gr->FlowP(mglPoint(a[0].v,a[1].v,a[2].v),
-			*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:0,opt);
+			*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1074,11 +1072,11 @@ int mgls_grad(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 	int i;
 	for(i=0;i<7;i++)	if(k[i]!=1)	break;
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-		gr->Grad(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), k[4]==2?a[4].s:0,opt);
+		gr->Grad(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), k[4]==2?a[4].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1)
-		gr->Grad(*(a[0].d),*(a[1].d),*(a[2].d), k[3]==2?a[3].s:0,opt);
+		gr->Grad(*(a[0].d),*(a[1].d),*(a[2].d), k[3]==2?a[3].s:"",opt);
 	else if(k[0]==1)
-		gr->Grad(*(a[0].d), k[1]==2?a[1].s:0,opt);
+		gr->Grad(*(a[0].d), k[1]==2?a[1].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1182,8 +1180,8 @@ void mglc_grid(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_grid2(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]!=1)
-		gr->Grid(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:0,opt);
-	else if(k[0]==1)	gr->Grid(*(a[0].d),k[1]==2?a[1].s:0,opt);
+		gr->Grid(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s:"",opt);
+	else if(k[0]==1)	gr->Grid(*(a[0].d),k[1]==2?a[1].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1199,10 +1197,10 @@ int mgls_grid3(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
 	else if(k[1]==2)
-		gr->Grid3(*(a[0].d),a[1].s[0],k[2]==3?iint(a[2].v):-1,k[3]==2?a[3].s:0,opt);
+		gr->Grid3(*(a[0].d),a[1].s[0],k[2]==3?iint(a[2].v):-1,k[3]==2?a[3].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
 		gr->Grid3(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].s[0],
-				k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s:0,opt);
+				k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1386,6 +1384,16 @@ void mglc_meshnum(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 	if(k[0]==3)	mglprintf(out,1024,L"gr->SetMeshNum(%d);", iint(a[0].v));
 }
 //-----------------------------------------------------------------------------
+int mgls_quality(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3)	gr->SetQuality(a[0].v);		else	return 1;
+	return 0;
+}
+void mglc_quality(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3)	mglprintf(out,1024,L"gr->SetQuality(%d);", iint(a[0].v));
+}
+//-----------------------------------------------------------------------------
 int mgls_marksize(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3)	gr->SetMarkSize(a[0].v/50);	else	return 1;
@@ -1399,9 +1407,9 @@ void mglc_marksize(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_mark(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1 || k[1]!=1)	return 1;
-	else if(k[2]!=1)	gr->Mark(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
-	else if(k[3]!=1)	gr->Mark(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
-	else 				gr->Mark(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+	else if(k[2]!=1)	gr->Mark(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
+	else if(k[3]!=1)	gr->Mark(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
+	else 				gr->Mark(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	return 0;
 }
 void mglc_mark(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
@@ -1418,9 +1426,9 @@ void mglc_mark(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_map(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-		gr->Map(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+		gr->Map(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	else if(k[0]==1 && k[1]==1)
-		gr->Map(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
+		gr->Map(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1653,9 +1661,9 @@ void mglc_idset(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_stem(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Stem(*(a[0].d),k[1]==2?a[1].s:0,opt);
-	else if(k[2]!=1)	gr->Stem(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
-	else 				gr->Stem(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+	else if(k[1]!=1)	gr->Stem(*(a[0].d),k[1]==2?a[1].s:"",opt);
+	else if(k[2]!=1)	gr->Stem(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
+	else 				gr->Stem(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	return 0;
 }
 void mglc_stem(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
@@ -1671,9 +1679,9 @@ void mglc_stem(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_step(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Step(*(a[0].d),k[1]==2?a[1].s:0,opt);
-	else if(k[2]!=1)	gr->Step(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
-	else 				gr->Step(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+	else if(k[1]!=1)	gr->Step(*(a[0].d),k[1]==2?a[1].s:"",opt);
+	else if(k[2]!=1)	gr->Step(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
+	else 				gr->Step(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	return 0;
 }
 void mglc_step(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
@@ -1689,9 +1697,9 @@ void mglc_step(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_plot(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Plot(*(a[0].d),k[1]==2?a[1].s:0,opt);
-	else if(k[2]!=1)	gr->Plot(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
-	else 				gr->Plot(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+	else if(k[1]!=1)	gr->Plot(*(a[0].d),k[1]==2?a[1].s:"",opt);
+	else if(k[2]!=1)	gr->Plot(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
+	else 				gr->Plot(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	return 0;
 }
 void mglc_plot(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
@@ -1707,8 +1715,8 @@ void mglc_plot(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_boxplot(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->BoxPlot(*(a[0].d),k[1]==2?a[1].s:0,opt);
-	else if(k[2]!=1)	gr->BoxPlot(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
+	else if(k[1]!=1)	gr->BoxPlot(*(a[0].d),k[1]==2?a[1].s:"",opt);
+	else if(k[2]!=1)	gr->BoxPlot(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
 	return 0;
 }
 void mglc_boxplot(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
@@ -1720,9 +1728,39 @@ void mglc_boxplot(wchar_t out[1024], long , mglArg *a, int k[10], const char *op
 		mglprintf(out,1024,L"gr->BoxPlot(%s, %s, \"%s\", \"%s\");", a[0].s, a[1].s, k[2]==2?a[2].s:"",opt);
 }
 //-----------------------------------------------------------------------------
+int mgls_candle(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
+{
+	if(k[0]!=1)	return 1;
+	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		gr->Candle(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),k[5]==2?a[5].s:"",opt);
+	else if(k[1]==1 && k[2]==1 && k[3]==1)
+		gr->Candle(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
+	else if(k[1]==1 && k[2]==1)
+		gr->Candle(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
+	else if(k[1]==1)
+		gr->Candle(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
+	else
+		gr->Candle(*(a[0].d),k[1]==2?a[1].s:"",opt);
+	return 0;
+}
+void mglc_candle(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
+{
+	if(k[0]!=1)	return;
+	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		mglprintf(out,1024,L"gr->Candle(%s, %s, %s, %s, %s, \"%s\", \"%s\");",a[0].s, a[1].s, a[2].s, a[3].s, a[4].s, k[5]==2?a[5].s:"",opt);
+	else if(k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"gr->Candle(%s, %s, %s, %s, \"%s\", \"%s\");",a[0].s, a[1].s, a[2].s, a[3].s,k[4]==2?a[4].s:"",opt);
+	else if(k[1]==1 && k[2]==1)
+		mglprintf(out,1024,L"gr->Candle(%s, %s, %s, \"%s\", \"%s\");",a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
+	else if(k[1]==1)
+		mglprintf(out,1024,L"gr->Candle(%s, %s, \"%s\", \"%s\");",a[0].s, a[1].s, k[2]==2?a[2].s:"", opt);
+	else
+		mglprintf(out,1024,L"gr->Candle(%s, \"%s\", \"%s\");",a[0].s, k[1]==2?a[1].s:"", opt);
+}
+//-----------------------------------------------------------------------------
 int mgls_radar(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)	gr->Radar(*(a[0].d), k[1]==2?a[1].s:0,opt);
+	if(k[0]==1)	gr->Radar(*(a[0].d), k[1]==2?a[1].s:"",opt);
 	else return 1;
 	return 0;
 }
@@ -1796,9 +1834,9 @@ void mglc_sphere(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_stfa(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==3)
-		gr->STFA(*(a[0].d),*(a[1].d), iint(a[2].v), k[3]==2?a[3].s:0,opt);
+		gr->STFA(*(a[0].d),*(a[1].d), iint(a[2].v), k[3]==2?a[3].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==3)
-		gr->STFA(*(a[0].d),*(a[1].d), *(a[2].d),*(a[3].d), iint(a[4].v), k[5]==2?a[5].s:0,opt);
+		gr->STFA(*(a[0].d),*(a[1].d), *(a[2].d),*(a[3].d), iint(a[4].v), k[5]==2?a[5].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1816,11 +1854,11 @@ int mgls_surf3(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 	else if(k[1]==0)	gr->Surf3(*(a[0].d),opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==3)
 		gr->Surf3(a[4].v,*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),
-				k[5]==2? a[5].s:0,opt);
-	else if(k[1]==3)	gr->Surf3(a[1].v,*(a[0].d),k[2]==2? a[2].s:0,opt);
+				k[5]==2? a[5].s:"",opt);
+	else if(k[1]==3)	gr->Surf3(a[1].v,*(a[0].d),k[2]==2? a[2].s:"",opt);
 	else if(k[1]==2)	gr->Surf3(*(a[0].d),a[1].s,opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1)
-		gr->Surf3(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), k[4]==2? a[4].s:0,opt);
+		gr->Surf3(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), k[4]==2? a[4].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1844,11 +1882,11 @@ int mgls_surf3c(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 	else if(k[2]==0)	gr->Surf3C(*(a[0].d),*(a[1].d),opt);
 	else if(k[2]==1 && k[3]==1 && k[4]==1 && k[5]==3)
 		gr->Surf3C(a[5].v,*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),
-				k[6]==2? a[6].s:0,opt);
-	else if(k[2]==3)	gr->Surf3C(a[2].v,*(a[0].d),*(a[1].d),k[3]==2? a[3].s:0,opt);
+				k[6]==2? a[6].s:"",opt);
+	else if(k[2]==3)	gr->Surf3C(a[2].v,*(a[0].d),*(a[1].d),k[3]==2? a[3].s:"",opt);
 	else if(k[2]==2)	gr->Surf3C(*(a[0].d),*(a[1].d),a[2].s,opt);
 	else if(k[2]==1 && k[3]==1 && k[4]==1)
-		gr->Surf3C(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d), k[5]==2? a[5].s:0,opt);
+		gr->Surf3C(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d), k[5]==2? a[5].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1872,12 +1910,12 @@ int mgls_surf3a(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 	else if(k[2]==0)	gr->Surf3A(*(a[0].d),*(a[1].d),opt);
 	else if(k[2]==1 && k[3]==1 && k[4]==1 && k[5]==3)
 		gr->Surf3A(a[5].v,*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),
-				k[6]==2? a[6].s:0,opt);
-	else if(k[2]==3)	gr->Surf3A(a[2].v,*(a[0].d),*(a[1].d),k[3]==2? a[3].s:0,opt);
+				k[6]==2? a[6].s:"",opt);
+	else if(k[2]==3)	gr->Surf3A(a[2].v,*(a[0].d),*(a[1].d),k[3]==2? a[3].s:"",opt);
 	else if(k[2]==2)	gr->Surf3A(*(a[0].d),*(a[1].d),a[2].s,opt);
 	else if(k[2]==1 && k[3]==1 && k[4]==1)
 		gr->Surf3A(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),
-				k[5]==2? a[5].s:0,opt);
+				k[5]==2? a[5].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1912,6 +1950,31 @@ void mglc_subplot(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 		mglprintf(out,1024,L"gr->SubPlot(%d, %d, %d, %g, %g);", iint(a[0].v), iint(a[1].v), iint(a[2].v), k[3]==3?a[3].v:0, k[4]==3?a[4].v:0);
 }
 //-----------------------------------------------------------------------------
+int mgls_multiplot(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3)
+		gr->MultiPlot(iint(a[0].v), iint(a[1].v), iint(a[2].v), iint(a[3].v), iint(a[4].v), k[5]==2?a[3].s:"<>_^");
+	else	return 1;
+	return 0;
+}
+void mglc_multiplot(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3)
+		mglprintf(out,1024,L"gr->MultiPlot(%d, %d, %d, %d, %d, \"%s\");", iint(a[0].v), iint(a[1].v), iint(a[2].v), iint(a[3].v), iint(a[4].v), k[5]==2?a[3].s:"<>_^");
+}
+//-----------------------------------------------------------------------------
+int mgls_title(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==2)	gr->Title(a[0].w, k[1]==2?a[1].s:"#", k[2]==2?a[2].v:-2);
+	else	return 1;
+	return 0;
+}
+void mglc_title(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==2)
+		mglprintf(out,1024,L"gr->Title(L\"%ls\", \"%s\", %g);", a[0].w, k[1]==2?a[1].s:"#", k[2]==2?a[2].v:-2);
+}
+//-----------------------------------------------------------------------------
 int mgls_subdata(mglGraph *, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==3)
@@ -1939,9 +2002,9 @@ void mglc_trace(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_tile(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]!=1)	gr->Tile(*(a[0].d), k[1]==2? a[1].s:0,opt);
+	else if(k[1]!=1)	gr->Tile(*(a[0].d), k[1]==2? a[1].s:"",opt);
 	else if(k[1]==1 && k[2]==1)
-		gr->Tile(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2? a[3].s:0,opt);
+		gr->Tile(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2? a[3].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1958,9 +2021,9 @@ int mgls_tiles(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
 	else if(k[1]==1 && k[2]!=1)
-		gr->TileS(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
+		gr->TileS(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
 	else if(k[1]==1 && k[2]==1 && k[3]==1)
-		gr->TileS(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2? a[4].s:0,opt);
+		gr->TileS(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2? a[4].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -1977,33 +2040,33 @@ int mgls_text(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
 		gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v),a[3].w,
-			(k[4]==2 && a[4].s[0]!=0)?a[4].s:0,k[5]==3?a[5].v:-1.4);
+			(k[4]==2 && a[4].s[0]!=0)?a[4].s:"",k[5]==3?a[5].v:-1);
 	else if(k[0]==3 && k[1]==3 && k[2]==2)
 		gr->Putsw(mglPoint(a[0].v,a[1].v),a[2].w,
-			(k[3]==2 && a[3].s[0]!=0)?a[3].s:0,k[4]==3?a[4].v:-1.4);
+			(k[3]==2 && a[3].s[0]!=0)?a[3].s:"",k[4]==3?a[4].v:-1);
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3 && k[6]==2)
-		gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].w, "t", k[8]==3?a[8].v:-1.4);
+		gr->Putsw(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v), a[6].w, k[7]==2?a[7].s:":L", k[8]==3?a[8].v:-1);
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==2)
-		gr->Putsw(mglPoint(a[0].v,a[1].v), mglPoint(a[2].v,a[3].v), a[4].w, "t", k[6]==3?a[6].v:-1.4);
+		gr->Putsw(mglPoint(a[0].v,a[1].v), mglPoint(a[2].v,a[3].v), a[4].w, k[5]==2?a[5].s:":L", k[6]==3?a[6].v:-1);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
-		gr->Text(*(a[0].d),*(a[1].d),*(a[2].d),a[3].w,k[4]==2?a[4].s:0,opt);
+		gr->Text(*(a[0].d),*(a[1].d),*(a[2].d),a[3].w,k[4]==2?a[4].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==2)
-		gr->Text(*(a[0].d),*(a[1].d),a[2].w,k[3]==2?a[3].s:0,opt);
+		gr->Text(*(a[0].d),*(a[1].d),a[2].w,k[3]==2?a[3].s:"",opt);
 	else if(k[0]==1 && k[1]==2)
-		gr->Text(*(a[0].d),a[1].w,k[2]==2?a[2].s:0,opt);
+		gr->Text(*(a[0].d),a[1].w,k[2]==2?a[2].s:"",opt);
 	else	return 1;
 	return 0;
 }
 void mglc_text(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
-		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), L\"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].v, a[3].w, (k[4]==2 && a[4].s[0]!=0)?a[4].s:"", k[5]==3?a[5].v:-1.4);
+		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), L\"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].v, a[3].w, (k[4]==2 && a[4].s[0]!=0)?a[4].s:"", k[5]==3?a[5].v:-1);
 	else if(k[0]==3 && k[1]==3 && k[2]==2)
-		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g), L\"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].w, (k[3]==2 && a[3].s[0]!=0)?a[3].s:"", k[4]==3?a[4].v:-1.4);
+		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g), L\"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].w, (k[3]==2 && a[3].s[0]!=0)?a[3].s:"", k[4]==3?a[4].v:-1);
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3 && k[6]==2)
-		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), L\"%ls\", \"t\", %g);", a[0].v, a[1].v, a[2].v, a[3].v, a[4].v, a[5].v, a[6].w, k[8]==3?a[8].v:-1.4);
+		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), L\"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].v, a[3].v, a[4].v, a[5].v, a[6].w, k[7]==2?a[7].s:":L", k[8]==3?a[8].v:-1);
 	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==2)
-		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g), mglPoint(%g, %g), L\"%ls\", \"t\", %g);", a[0].v, a[1].v, a[2].v, a[3].v, a[4].w, k[6]==3?a[6].v:-1.4);
+		mglprintf(out,1024,L"gr->Puts(mglPoint(%g, %g), mglPoint(%g, %g), L\"%ls\", \"%s\", %g);", a[0].v, a[1].v, a[2].v, a[3].v, a[4].w, k[5]==2?a[5].s:":L", k[6]==3?a[6].v:-1);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
 		mglprintf(out,1024,L"gr->Text(%s, %s, %s, L\"%ls\", \"%s\", \"%s\");",  a[0].s, a[1].s, a[2].s, a[3].w, k[4]==2?a[4].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==2)
@@ -2014,7 +2077,7 @@ void mglc_text(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_torus(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1 && k[1]==1)	gr->Torus(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
+	if(k[0]==1 && k[1]==1)	gr->Torus(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -2063,17 +2126,17 @@ void mglc_transforma(wchar_t out[1024], long , mglArg *a, int k[10], const char 
 int mgls_tube(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-		gr->Tube(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+		gr->Tube(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==3)
-		gr->Tube(*(a[0].d),*(a[1].d),*(a[2].d),a[3].v,k[4]==2?a[4].s:0,opt);
+		gr->Tube(*(a[0].d),*(a[1].d),*(a[2].d),a[3].v,k[4]==2?a[4].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1)
-		gr->Tube(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+		gr->Tube(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==3)
-		gr->Tube(*(a[0].d),*(a[1].d),a[2].v,k[3]==2?a[3].s:0,opt);
+		gr->Tube(*(a[0].d),*(a[1].d),a[2].v,k[3]==2?a[3].s:"",opt);
 	else if(k[0]==1 && k[1]==1)
-		gr->Tube(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
+		gr->Tube(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
 	else if(k[0]==1 && k[1]==3)
-		gr->Tube(*(a[0].d),a[1].v,k[2]==2?a[2].s:0,opt);
+		gr->Tube(*(a[0].d),a[1].v,k[2]==2?a[2].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -2096,13 +2159,13 @@ void mglc_tube(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_textmark(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
-		gr->TextMark(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].w,k[5]==2?a[5].s:0,opt);
+		gr->TextMark(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].w,k[5]==2?a[5].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
-		gr->TextMark(*(a[0].d),*(a[1].d),*(a[2].d),a[3].w,k[4]==2?a[4].s:0,opt);
+		gr->TextMark(*(a[0].d),*(a[1].d),*(a[2].d),a[3].w,k[4]==2?a[4].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==2)
-		gr->TextMark(*(a[0].d),*(a[1].d),a[2].w,k[3]==2?a[3].s:0,opt);
+		gr->TextMark(*(a[0].d),*(a[1].d),a[2].w,k[3]==2?a[3].s:"",opt);
 	else if(k[0]==1 && k[1]==2)
-		gr->TextMark(*(a[0].d),a[1].w,k[2]==2?a[2].s:0,opt);
+		gr->TextMark(*(a[0].d),a[1].w,k[2]==2?a[2].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -2121,11 +2184,11 @@ void mglc_textmark(wchar_t out[1024], long , mglArg *a, int k[10], const char *o
 int mgls_triplot(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
-		gr->TriPlot(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),k[5]==2?a[5].s:0,opt);
+		gr->TriPlot(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),k[5]==2?a[5].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-		gr->TriPlot(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+		gr->TriPlot(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1)
-		gr->TriPlot(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+		gr->TriPlot(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -2142,11 +2205,11 @@ void mglc_triplot(wchar_t out[1024], long , mglArg *a, int k[10], const char *op
 int mgls_quadplot(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
-		gr->QuadPlot(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),k[5]==2?a[5].s:0,opt);
+		gr->QuadPlot(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),k[5]==2?a[5].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-		gr->QuadPlot(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+		gr->QuadPlot(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1)
-		gr->QuadPlot(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+		gr->QuadPlot(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -2163,11 +2226,11 @@ void mglc_quadplot(wchar_t out[1024], long , mglArg *a, int k[10], const char *o
 int mgls_tricont(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==1)
-		gr->TriContV(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:0,opt);
+		gr->TriContV(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
-		gr->TriContV(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),k[5]==2?a[5].s:0,opt);
+		gr->TriContV(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),k[5]==2?a[5].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-		gr->TriCont(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+		gr->TriCont(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -2211,13 +2274,13 @@ int mgls_vect(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 	int i;
 	for(i=0;i<7;i++)	if(k[i]!=1)	break;
 	if(i==2)
-		gr->Vect(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
+		gr->Vect(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
 	else if(i==4)
-		gr->Vect(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+		gr->Vect(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	else if(i==3)
-		gr->Vect(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+		gr->Vect(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else if(i==6)
-		gr->Vect(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:0,opt);
+		gr->Vect(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -2240,9 +2303,9 @@ int mgls_traj(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 	int i;
 	for(i=0;i<7;i++)	if(k[i]!=1)	break;
 	if(i==4)
-		gr->Traj(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,opt);
+		gr->Traj(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",opt);
 	else if(i==6)
-		gr->Traj(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:0,opt);
+		gr->Traj(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),k[6]==2?a[6].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -2258,7 +2321,7 @@ void mglc_traj(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_xlabel(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==2)	gr->Label('x', a[0].w, k[1]==3?a[1].v:0, k[2]==3?a[2].v:0);
+	if(k[0]==2)	gr->Label('x', a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
 	else	return 1;
 	return 0;
 }
@@ -2269,7 +2332,7 @@ void mglc_xlabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_ylabel(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==2)	gr->Label('y', a[0].w, k[1]==3?a[1].v:0, k[2]==3?a[2].v:0);
+	if(k[0]==2)	gr->Label('y', a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
 	else	return 1;
 	return 0;
 }
@@ -2280,7 +2343,7 @@ void mglc_ylabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_zlabel(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==2)	gr->Label('z', a[0].w, k[1]==3?a[1].v:0, k[2]==3?a[2].v:0);
+	if(k[0]==2)	gr->Label('z', a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
 	else	return 1;
 	return 0;
 }
@@ -2291,7 +2354,7 @@ void mglc_zlabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_tlabel(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==2)	gr->Label('t', a[0].w, k[1]==3?a[1].v:0, k[2]==3?a[2].v:0);
+	if(k[0]==2)	gr->Label('t', a[0].w, k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
 	else	return 1;
 	return 0;
 }
@@ -2303,14 +2366,14 @@ void mglc_tlabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_label(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==2)
-		gr->Label(a[0].v, a[1].v, a[2].w, k[3]==2?a[3].s:0);
+		gr->Label(a[0].v, a[1].v, a[2].w, k[3]==2?a[3].s:"");
 	else	return 1;
 	return 0;
 }
 void mglc_label(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==2)
-		mglprintf(out,1024,L"gr->Label(%g, %g, \"%s\", \"%s\");", a[0].v, a[1].v, a[2].w, k[3]==2?a[3].s:0);
+		mglprintf(out,1024,L"gr->Label(%g, %g, \"%s\", \"%s\");", a[0].v, a[1].v, a[2].w, k[3]==2?a[3].s:"");
 }
 //-----------------------------------------------------------------------------
 int mgls_xrange(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -2455,11 +2518,11 @@ void mglc_ztick(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_error(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-		gr->Error(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), k[4]==2?a[4].s:0,opt);
+		gr->Error(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), k[4]==2?a[4].s:"",opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==1)
-		gr->Error(*(a[0].d),*(a[1].d),*(a[2].d), k[3]==2?a[3].s:0,opt);
+		gr->Error(*(a[0].d),*(a[1].d),*(a[2].d), k[3]==2?a[3].s:"",opt);
 	else if(k[0]==1 && k[1]==1)
-		gr->Error(*(a[0].d),*(a[1].d), k[2]==2?a[2].s:0,opt);
+		gr->Error(*(a[0].d),*(a[1].d), k[2]==2?a[2].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -2553,14 +2616,14 @@ int mgls_pipe(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 	int i;
 	for(i=0;i<7;i++)	if(k[i]!=1)	break;
 	if(i==2)
-		gr->Pipe(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,k[3]==3?a[3].v:0.05,opt);
+		gr->Pipe(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",k[3]==3?a[3].v:0.05,opt);
 	else if(i==4)
-		gr->Pipe(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:0,k[5]==3?a[5].v:0.05,opt);
+		gr->Pipe(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s:"",k[5]==3?a[5].v:0.05,opt);
 	else if(i==3)
-		gr->Pipe(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,k[4]==3?a[4].v:0.05,opt);
+		gr->Pipe(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",k[4]==3?a[4].v:0.05,opt);
 	else if(i==6)
 		gr->Pipe(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),*(a[4].d),*(a[5].d),
-			k[6]==2?a[6].s:0,k[7]==3?a[7].v:0.05,opt);
+			k[6]==2?a[6].s:"",k[7]==3?a[7].v:0.05,opt);
 	else	return 1;
 	return 0;
 }
@@ -2712,7 +2775,7 @@ void mglc_perspective(wchar_t out[1024], long , mglArg *a, int k[10], const char
 int mgls_facex(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3)
-		gr->FaceX(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v, k[5]==2?a[5].s:0, k[6]==3?a[6].v:0, k[7]==3?a[7].v:0);
+		gr->FaceX(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v, k[5]==2?a[5].s:"", k[6]==3?a[6].v:0, k[7]==3?a[7].v:0);
 	else	return 1;
 	return 0;
 }
@@ -2725,7 +2788,7 @@ void mglc_facex(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_facey(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3)
-		gr->FaceY(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v, k[5]==2?a[5].s:0, k[6]==3?a[6].v:0, k[7]==3?a[7].v:0);
+		gr->FaceY(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v, k[5]==2?a[5].s:"", k[6]==3?a[6].v:0, k[7]==3?a[7].v:0);
 	else	return 1;
 	return 0;
 }
@@ -2738,7 +2801,7 @@ void mglc_facey(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_facez(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3)
-		gr->FaceZ(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v, k[5]==2?a[5].s:0, k[6]==3?a[6].v:0, k[7]==3?a[7].v:0);
+		gr->FaceZ(mglPoint(a[0].v, a[1].v, a[2].v), a[3].v, a[4].v, k[5]==2?a[5].s:"", k[6]==3?a[6].v:0, k[7]==3?a[7].v:0);
 	else	return 1;
 	return 0;
 }
@@ -2843,9 +2906,9 @@ void mglc_fits(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_putsfit(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3)
-		gr->PutsFit(mglPoint(a[0].v,a[1].v,a[2].v), k[3]==2?a[3].s:0, k[4]==2?a[4].s:0, k[5]==3?a[5].v:-1);
+		gr->PutsFit(mglPoint(a[0].v,a[1].v,a[2].v), k[3]==2?a[3].s:"", k[4]==2?a[4].s:"", k[5]==3?a[5].v:-1);
 	else if(k[0]==3 && k[1]==3)
-		gr->PutsFit(mglPoint(a[0].v,a[1].v), k[2]==2?a[2].s:0, k[3]==2?a[3].s:0, k[4]==3?a[4].v:-1);
+		gr->PutsFit(mglPoint(a[0].v,a[1].v), k[2]==2?a[2].s:"", k[3]==2?a[3].s:"", k[4]==3?a[4].v:-1);
 	else	return 1;
 	return 0;
 }
@@ -2906,8 +2969,8 @@ void mglc_ctick(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_fplot(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==2 && k[1]==2 && k[2]==2)
-		gr->Plot3(a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:0,opt);
-	else if(k[0]==2)	gr->Plot(a[0].s, k[1]==2?a[1].s:0,opt);
+		gr->Plot3(a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
+	else if(k[0]==2)	gr->Plot(a[0].s, k[1]==2?a[1].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -2921,8 +2984,8 @@ void mglc_fplot(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_fsurf(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==2 && k[1]==2 && k[2]==2)	gr->SurfPar(a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:0,opt);
-	else if(k[0]==2)	gr->Surf(a[0].s, k[1]==2?a[1].s:0,opt);
+	if(k[0]==2 && k[1]==2 && k[2]==2)	gr->SurfPar(a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
+	else if(k[0]==2)	gr->Surf(a[0].s, k[1]==2?a[1].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -3004,9 +3067,9 @@ void mglc_write(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_region(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==1)
-		gr->Region(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:0,opt);
+		gr->Region(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s:"",opt);
 	else if(k[0]==1 && k[1]==1)
-		gr->Region(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:0,opt);
+		gr->Region(*(a[0].d),*(a[1].d),k[2]==2?a[2].s:"",opt);
 	else	return 1;
 	return 0;
 }
@@ -3017,17 +3080,6 @@ void mglc_region(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt
 	else if(k[0]==1 && k[1]==1)
 		mglprintf(out,1024,L"gr->Region(%s, %s, \"%s\", \"%s\");", a[0].s, a[1].s, k[2]==2?a[2].s:"",opt);
 }
-//-----------------------------------------------------------------------------
-/*int mgls_title(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
-{
-	if(k[0]==2)	gr->Title(a[0].s, k[1]==2?a[1].s:0, k[2]==3?a[2].v:-2);
-	else	return 1;
-	return 0;
-}
-void mglc_title(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
-{
-	if(k[0]==2)	mglprintf(out,1024,L"gr->Title(\"%s\", \"%s\", %g);", a[0].s, k[1]==2?a[1].s:"", k[2]==3?a[2].v:-2);
-}*/
 //-----------------------------------------------------------------------------
 int mgls_envelop(mglGraph *, long , mglArg *a, int k[10], const char *)
 {
@@ -3167,9 +3219,9 @@ void mglc_jacobian(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_tens(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1 || k[1]!=1)	return 1;
-	else if(k[2]!=1)	gr->Tens(*(a[0].d),*(a[1].d), k[2]==2?a[2].s:0,opt);
-	else if(k[3]!=1)	gr->Tens(*(a[0].d),*(a[1].d),*(a[2].d), k[3]==2?a[3].s:0,opt);
-	else 				gr->Tens(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), k[4]==2?a[4].s:0,opt);
+	else if(k[2]!=1)	gr->Tens(*(a[0].d),*(a[1].d), k[2]==2?a[2].s:"",opt);
+	else if(k[3]!=1)	gr->Tens(*(a[0].d),*(a[1].d),*(a[2].d), k[3]==2?a[3].s:"",opt);
+	else 				gr->Tens(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d), k[4]==2?a[4].s:"",opt);
 	return 0;
 }
 void mglc_tens(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
@@ -3244,9 +3296,9 @@ void mglc_ranges(wchar_t out[1024], long n, mglArg *a, int k[10], const char *)
 }
 //-----------------------------------------------------------------------------
 int mgls_adjust(mglGraph *gr, long , mglArg *a, int k[10], const char *)
-{	gr->AdjustTicks(k[0]==2?a[0].s:"xyzc");	return 0;	}
+{	gr->Adjust(k[0]==2?a[0].s:"xyzc");	return 0;	}
 void mglc_adjust(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
-{	mglprintf(out,1024,L"gr->AdjustTicks(\"%s\");",k[0]==2?a[0].s:"xyzc");	}
+{	mglprintf(out,1024,L"gr->Adjust(\"%s\");",k[0]==2?a[0].s:"xyzc");	}
 //-----------------------------------------------------------------------------
 int mgls_insert(mglGraph *, long , mglArg *a, int k[10], const char *)
 {
@@ -3308,21 +3360,22 @@ mglCommand mgls_base_cmd[] = {
 	{L"alpha",L"Switch on/off transparency",L"alpha [val]", mgls_alpha, mglc_alpha, false, 2},
 	{L"alphadef",L"Set default transparency",L"alphadef val", mgls_alphadef, mglc_alphadef, false, 2},
 	{L"ambient",L"Set ambient light brightness",L"ambient val", mgls_ambient, mglc_ambient, false, 2},
-	{L"area",L"Draw area plot for 1D data",L"area Ydat ['fmt' zval]|Xdat Ydat ['fmt' zval]|Xdat Ydat Zdat ['fmt']", mgls_area, mglc_area, false, 0},
+	{L"area",L"Draw area plot for 1D data",L"area Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_area, mglc_area, false, 0},
 	{L"arrowsize",L"Set size of arrows",L"arrowsize val", mgls_arrowsize, mglc_arrowsize, false, 2},
 	{L"aspect",L"Set aspect ration",L"aspect valx valy [valz]", mgls_aspect, mglc_aspect, false, 4},
 	{L"axial",L"Draw surfaces of contour lines rotation",L"axial Zdat ['fmt' num]|Xdat Ydat Zdat ['fmt' num]", mgls_axial, mglc_axial, false, 0},
 	{L"axis",L"Setup or draw axis",L"axis ['dir' adjust]|'fx' 'fy' ['fz' 'fc']|how", mgls_axis, mglc_axis, false, 1},
 	{L"axisstl",L"Set axis and tick style",L"axisstl 'stl' ['sub']", mgls_axisstl, mglc_axisstl, false, 2},
 	{L"ball",L"Draw point (ball)",L"ball posx posy ['fmt']|posx posy posz ['fmt']", mgls_ball, mglc_ball, false, 1},
-	{L"barh",L"Draw horizontal bars for 1D data", L"barh Ydat ['fmt' zval above]|Xdat Ydat ['fmt' zval above]", mgls_barh, mglc_barh, false, 0},
-	{L"bars",L"Draw bars for 1D data",L"bars Ydat ['fmt' zval above]|Xdat Ydat ['fmt' zval above]|Xdat Ydat Zdat ['fmt' above]", mgls_bars, mglc_bars, false, 0},
+	{L"barh",L"Draw horizontal bars for 1D data", L"barh Ydat ['fmt' above]|Xdat Ydat ['fmt' above]", mgls_barh, mglc_barh, false, 0},
+	{L"bars",L"Draw bars for 1D data",L"bars Ydat ['fmt' above]|Xdat Ydat ['fmt' above]|Xdat Ydat Zdat ['fmt' above]", mgls_bars, mglc_bars, false, 0},
 	{L"barwidth",L"Set default bars width",L"barwidth val", mgls_barwidth, mglc_barwidth, false, 2},
 	{L"beam",L"Draw quasioptical beam",L"beam Tr G1 G2 Adat r ['sch' flag num] ", mgls_beam, mglc_beam, false, 0},
 	{L"belt",L"Draw belts",L"belt Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_belt, mglc_belt, false, 0},
 	{L"box",L"Draw bounding box",L"box ['fmt' ticks]", mgls_box, mglc_box, false, 1},
 	{L"boxplot",L"Draw boxplot for 2D data",L"boxplot Ydat ['fmt']|Xdat Ydat ['fmt']", mgls_boxplot, mglc_boxplot, false, 0},
 	{L"boxs",L"Draw boxes",L"boxs Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_boxs, mglc_boxs, false, 0},
+	{L"candle",L"Draw candlestick chart",L"candle candle Vdat1 ['fmt']|Vdat1 Vdat2 ['fmt']|Vdat1 Ydat1 Ydat2 ['fmt']||Vdat1 Vdat2 Ydat1 Ydat2 ['fmt']|Xdat Vdat1 Vdat2 Ydat1 Ydat2 ['fmt']", mgls_candle, mglc_candle, false, 0},
 	{L"chart",L"Draw chart",L"chart Dat ['fmt']", mgls_chart, mglc_chart, false, 0},
 	{L"chdir",L"Change current directory",L"chdir 'dir'", mgls_chdir, mglc_chdir, false, 5},
 	{L"clearlegend",L"Clear legend antries",L"clearlegend", mgls_clearlegend, mglc_clearlegend, false, 2},
@@ -3365,7 +3418,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"dots",L"Draw dots for arbitrary data points",L"dots Xdat Ydat Zdat ['fmt']", mgls_dots, mglc_dots, false, 0},
 	{L"drop",L"Draw drop",L"drop x0 y0 dx dy r ['col' sh asp]|x0 y0 z0 dx dy dz r ['col' sh asp]", mgls_drop, mglc_drop, false, 0},
 	{L"envelop",L"Find envelop for the data",L"envelop Dat ['dir']", mgls_envelop, mglc_envelop, false, 3},
-	{L"error",L"Draw error boxes",L"error Ydat Yerr ['fmt' zval]|Xdat Ydat Yerr ['fmt' zval]|Xdat Ydat Xerr Yerr ['fmt' zval]", mgls_error, mglc_error, false, 0},
+	{L"error",L"Draw error boxes",L"error Ydat Yerr ['fmt']|Xdat Ydat Yerr ['fmt']|Xdat Ydat Xerr Yerr ['fmt']", mgls_error, mglc_error, false, 0},
 	{L"evaluate",L"Evaluate (interpolate) values of array Dat at points i=idat,j=jdat,k=kdat",L"evaluate Res Dat Idat [norm]|Res Dat Idat Jdat [norm]|Res Dat Idat Jdat Kdat [norm]", mgls_evaluate, mglc_evaluate, true, 3},
 	{L"export",L"Export data to PNG picture",L"export Dat 'fname' 'sch' [v1 v2]", mgls_import, mglc_import, false, 3},
 	{L"extend",L"Extend data array",L"extend Dat dim1 [dim2]", mgls_extend, mglc_extend, false, 3},
@@ -3378,13 +3431,13 @@ mglCommand mgls_base_cmd[] = {
 	{L"fillsample",L"Fill x-,k-samples for transforms",L"fillsample Var num 'how'", mgls_fillsample, mglc_fillsample, false, 3},
 	{L"fit",L"Fit data to formula",L"fit Res A 'eq' 'var' [Ini]|Res X A 'eq' 'var' [Ini]|Res X Y A 'eq' 'var' [Ini]|Res X Y Z A 'eq' 'var' [Ini]", mgls_fit, mglc_fit, true, 3},
 	{L"fits",L"Fit data to formula",L"fits Res A S 'eq' 'var' [Ini]|Res X A S 'eq' 'var' [Ini]|Res X Y A S 'eq' 'var' [Ini]|Res X Y Z A S 'eq' 'var' [Ini]", mgls_fits, mglc_fits, true, 3},
-	{L"flow",L"Draw flow threads for vector field",L"flow Udat Vdat ['fmt' num zval]|Xdat Ydat Udat Vdat ['fmt' num zval]|Udat Vdat Wdat ['fmt' num]|Xdat Ydat Zdat Udat Vdat ['fmt' num]|\
-			x0 y0 Udat Vdat ['fmt' zval]|x0 y0 Xdat Ydat Udat Vdat ['fmt' zval]|x0 y0 z0 Udat Vdat Wdat ['fmt']|x0 y0 z0 Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_flow, mglc_flow, false, 0},
+	{L"flow",L"Draw flow threads for vector field",L"flow Udat Vdat ['fmt' num]|Xdat Ydat Udat Vdat ['fmt' num]|Udat Vdat Wdat ['fmt' num]|Xdat Ydat Zdat Udat Vdat ['fmt' num]|\
+			x0 y0 Udat Vdat ['fmt']|x0 y0 Xdat Ydat Udat Vdat ['fmt']|x0 y0 z0 Udat Vdat Wdat ['fmt']|x0 y0 z0 Xdat Ydat Zdat Udat Vdat Wdat ['fmt']", mgls_flow, mglc_flow, false, 0},
 	{L"fog",L"Switch on/off fog",L"fog val [pos]", mgls_fog, mglc_fog, false, 2},
 	{L"font",L"Setup font",L"font 'fmt' [size]", mgls_font, mglc_font, false, 2},
-	{L"fplot",L"Plot curve by formula",L"fplot 'y(x)' ['fmt' zval num]|'x(t)' 'y(t)' 'z(t)' ['fmt' num]", mgls_fplot, mglc_fplot, false, 1},
+	{L"fplot",L"Plot curve by formula",L"fplot 'y(x)' ['fmt' num]|'x(t)' 'y(t)' 'z(t)' ['fmt' num]", mgls_fplot, mglc_fplot, false, 1},
 	{L"fsurf",L"Plot surface by formula",L"fsurf 'z(x,y)' ['fmt' num]|'x(u,v)' 'y(u,v)' 'z(u,v)' ['fmt' num]", mgls_fsurf, mglc_fsurf, false, 1},
-	{L"grad",L"Draw gradient lines for scalar field",L"grad Phi ['fmt' num zval]|Xdat Ydat Phi ['fmt' num zval]|Xdat Ydat Zdat Phi ['fmt' num]", mgls_grad, mglc_grad, false, 0},
+	{L"grad",L"Draw gradient lines for scalar field",L"grad Phi ['fmt' num]|Xdat Ydat Phi ['fmt' num]|Xdat Ydat Zdat Phi ['fmt' num]", mgls_grad, mglc_grad, false, 0},
 	{L"grid",L"Draw grid",L"grid ['dir' 'fmt']", mgls_grid, mglc_grid, false, 0},
 	{L"grid2",L"Draw grid for data array(s)",L"grid Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_grid2, mglc_grid2, false, 0},
 	{L"grid3",L"Draw grid at slices of 3D data",L"grid3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_grid3, mglc_grid3, false, 0},
@@ -3404,7 +3457,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"line",L"Draw line",L"line x1 y1 x2 y2 ['fmt']|x1 y1 z1 x2 y2 z2 ['fmt']", mgls_line, mglc_line, false, 1},
 	{L"loadfont",L"Load fontfaces",L"loadfont ['fmt']", mgls_loadfont, mglc_loadfont, false, 2},
 	{L"map",L"Draw mapping plot",L"map Udat Vdat ['fmt']|Xdat Ydat Udat Vdat ['fmt']", mgls_map, mglc_map, false, 0},
-	{L"mark",L"Draw mark plot for 1D data",L"mark Ydat Rdat ['fmt' zval]|Xdat Ydat Rdat ['fmt' zval]|Xdat Ydat Zdat Rdat ['fmt']", mgls_mark, mglc_mark, false, 0},
+	{L"mark",L"Draw mark plot for 1D data",L"mark Ydat Rdat ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_mark, mglc_mark, false, 0},
 	{L"marksize",L"Set size of markers",L"marksize val", mgls_marksize, mglc_marksize, false, 2},
 	{L"max",L"Find maximal value over direction",L"max Res Dat 'dir'", mgls_max, mglc_max, true, 3},
 	{L"mesh",L"Draw mesh surface",L"mesh Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_mesh, mglc_mesh, false, 0},
@@ -3413,6 +3466,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"mirror",L"Mirror data at some direction",L"mirror Dat 'dir'", mgls_mirror, mglc_mirror, false, 3},
 	{L"modify",L"Modify data values by formula",L"modify Dat 'eq' [num] | Dat 'eq' Vdat [Wdat]", mgls_modify, mglc_modify, false, 3},
 	{L"momentum",L"Get momentum along direction",L"momentum Res Dat 'how' ['dir']", mgls_momentum, mglc_momentum, true, 3},
+	{L"multiplot",L"Set position of plot",L"multiplot m n pos dx dy 'style'", mgls_multiplot, mglc_multiplot, false, 4},
 	{L"multo",L"Multiply by data or number",L"multo Var Dat|Var num", mgls_multo, mglc_multo, false, 3},
 	{L"new",L"Create new data",L"new Dat nx [ny nz]", mgls_new, mglc_new, true, 3},
 	{L"norm",L"Normalize data",L"norm Dat v1 v2 [sym dim]", mgls_norm, mglc_norm, false, 3},
@@ -3421,12 +3475,13 @@ mglCommand mgls_base_cmd[] = {
 	{L"palette",L"Set palette for 1D plots",L"palette 'colors'", mgls_palette, mglc_palette, false, 2},
 	{L"pde",L"Solve PDE",L"pde Res 'ham' IniRe IniIm [dz k0]", mgls_pde, mglc_pde, true, 3},
 	{L"perspective",L"Set perspective",L"perspective val", mgls_perspective, mglc_perspective, false, 2},
-	{L"pipe",L"Draw flow pipes for vector field",L"pipe Udat Vdat ['fmt' rad num zval]|Xdat Ydat Udat Vdat ['fmt' rad num zval]|Udat Vdat Wdat ['fmt' rad num]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' rad num]", mgls_pipe, mglc_pipe, false, 0},
-	{L"plot",L"Draw usual plot for 1D data",L"plot Ydat ['fmt' zval]|Xdat Ydat ['fmt' zval]|Xdat Ydat Zdat ['fmt']", mgls_plot, mglc_plot, false, 0},
+	{L"pipe",L"Draw flow pipes for vector field",L"pipe Udat Vdat ['fmt' rad num]|Xdat Ydat Udat Vdat ['fmt' rad num]|Udat Vdat Wdat ['fmt' rad num]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' rad num]", mgls_pipe, mglc_pipe, false, 0},
+	{L"plot",L"Draw usual plot for 1D data",L"plot Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_plot, mglc_plot, false, 0},
 	{L"put",L"Put value (numeric or array) to given data element",L"put Dat val [i j k] | Dat Val [i j k]", mgls_put, mglc_put, false, 3},
 	{L"putsfit",L"Print fitted formula",L"putsfit x y ['pre' 'font' size]|x y z ['pre' 'font' size]", mgls_putsfit, mglc_putsfit, false, 0},
 	{L"qo2d",L"Solve PDE in accompanied coordinates",L"qo2d Res 'ham' IniRe IniIm Ray [r k0 Xout Yout]", mgls_qo2d, mglc_qo2d, true, 3},
 	{L"quadplot",L"Draw surface of quadrangles",L"quadplot Idat Xdat Ydat ['fmt']|Idat Xdat Ydat Zdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_quadplot, mglc_quadplot, false, 0},
+	{L"quality",L"Set plot quality",L"quality val", mgls_quality, mglc_quality, false, 2},
 	{L"radar",L"Draw radar chart",L"radar Rdat ['fmt']", mgls_radar, mglc_radar, false, 0},
 	{L"ranges",L"Set axis ranges",L"ranges x1 x2 y1 y2 [z1 z2]", mgls_ranges, mglc_ranges, false, 2},
 	{L"ray",L"Solve Hamiltonian ODE (find GO ray or trajectory)",L"ray Res 'ham' x0 y0 z0 px0 py0 pz0 [dz=0.1 tmax=10]", mgls_ray, mglc_ray, true, 3},
@@ -3449,8 +3504,8 @@ mglCommand mgls_base_cmd[] = {
 	{L"smooth",L"Smooth data",L"smooth Dat [kind 'dir']", mgls_smooth, mglc_smooth, false, 3},
 	{L"sphere",L"Draw sphere",L"sphere x0 y0 r ['fmt']|x0 y0 z0 r ['fmt']", mgls_sphere, mglc_sphere, false, 1},
 	{L"squeeze",L"Squeeze data",L"squeeze Dat kx [ky kz]", mgls_squeeze, mglc_squeeze, false, 3},
-	{L"stem",L"Draw stem plot for 1D data",L"stem Ydat ['fmt' zval]|Xdat Ydat ['fmt' zval]|Xdat Ydat Zdat ['fmt']", mgls_stem, mglc_stem, false, 0},
-	{L"step",L"Draw step plot for 1D data",L"step Ydat ['fmt' zval]|Xdat Ydat ['fmt' zval]|Xdat Ydat Zdat ['fmt']", mgls_step, mglc_step, false, 0},
+	{L"stem",L"Draw stem plot for 1D data",L"stem Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_stem, mglc_stem, false, 0},
+	{L"step",L"Draw step plot for 1D data",L"step Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_step, mglc_step, false, 0},
 	{L"stfa",L"Draw STFA diagram",L"stfa Udat Vdat dn ['fmt']|Xdat Ydat Udat Vdat dn ['fmt']", mgls_stfa, mglc_stfa, false, 0},
 	{L"stfad",L"Do STFA transform",L"stfad Res Real Imag dn ['dir']", mgls_stfad, mglc_stfad, true, 3},
 	{L"stickplot",L"Set position of plot inside cell of stick", L"stickplot num ind tet phi", mgls_stickplot, mglc_stickplot, false, 4},
@@ -3465,18 +3520,18 @@ mglCommand mgls_base_cmd[] = {
 	{L"surfa",L"Draw solid surface transpared by other data",L"surfa Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_surfa, mglc_surfa, false, 0},
 	{L"surfc",L"Draw solid surface colored by other data",L"surfc Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_surfc, mglc_surfc, false, 0},
 	{L"swap",L"Swap data (usefull after Fourier transform)",L"swap Dat 'dir'", mgls_swap, mglc_swap, false, 0},
-	{L"tens",L"Draw tension plot for 1D data",L"tens Ydat Cdat ['fmt' zval]|Xdat Ydat Cdat ['fmt' zval]|Xdat Ydat Zdat Cdat ['fmt']", mgls_tens, mglc_tens, false, 0},
+	{L"tens",L"Draw tension plot for 1D data",L"tens Ydat Cdat ['fmt']|Xdat Ydat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_tens, mglc_tens, false, 0},
 	{L"ternary",L"Switch on/off to use ternary axis",L"ternary val", mgls_ternary, mglc_ternary, false, 2},
-	{L"text",L"Draw text at some position or along curve",L"text x y 'txt' ['fmt' size]|x y z 'txt' ['fmt' size]|x y dx dy 'txt' ['fmt' size]|x y z dx dy dz 'txt' ['fmt' size]|Ydat 'txt' ['font' sise zval]|Xdat Ydat 'txt' ['font' sise zval]", mgls_text, mglc_text, false, 0},
-	{L"textmark",L"Draw TeX mark at point position",L"textmark Ydat Rdat 'text' ['fmt' zval]|Xdat Ydat Rdat 'text' ['fmt' zval]|Xdat Ydat Zdat Rdat 'text' ['fmt']", mgls_textmark, mglc_textmark, false, 0},
+	{L"text",L"Draw text at some position or along curve",L"text x y 'txt' ['fmt' size]|x y z 'txt' ['fmt' size]|x y dx dy 'txt' ['fmt' size]|x y z dx dy dz 'txt' ['fmt' size]|Ydat 'txt' ['font' sise]|Xdat Ydat 'txt' ['font' sise]", mgls_text, mglc_text, false, 0},
+	{L"textmark",L"Draw TeX mark at point position",L"textmark Ydat Rdat 'text' ['fmt']|Xdat Ydat Rdat 'text' ['fmt']|Xdat Ydat Zdat Rdat 'text' ['fmt']", mgls_textmark, mglc_textmark, false, 0},
 	{L"ticklen",L"Set tick length",L"ticklen val [stt]", mgls_ticklen, mglc_ticklen, false, 2},
 	{L"tile",L"Draw horizontal tiles",L"tile Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tile, mglc_tile, false, 0},
 	{L"tiles",L"Draw horizontal tiles with variable size",L"tiles Zdat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_tiles, mglc_tiles, false, 0},
-//	{L"title",L"Print title for the picture",L"title 'text' ['fmt' size]", mgls_title, mglc_title, false, 1},
+	{L"title",L"Add title for current subplot/inplot",L"title 'txt' ['fmt' size]", mgls_title, mglc_title, false, 0},
 	{L"tlabel",L"Draw label for t-axis",L"tlabel 'txt' [pos size shift]", mgls_tlabel, mglc_tlabel, false, 1},
 	{L"torus",L"Draw surface of curve rotation",L"torus Rdat ['fmt']|Zdat Rdat ['fmt']", mgls_torus, mglc_torus, false, 0},
 	{L"trace",L"Get trace of array",L"trace Res Dat", mgls_trace, mglc_trace, true, 3},
-	{L"traj",L"Draw vectors along a curve",L"traj Xdat Ydat Udat Vdat ['fmt' zval len]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' len]", mgls_traj, mglc_traj, false, 0},
+	{L"traj",L"Draw vectors along a curve",L"traj Xdat Ydat Udat Vdat ['fmt' len]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' len]", mgls_traj, mglc_traj, false, 0},
 	{L"transform",L"Do integral transform of data",L"transform Res 'how' Rdat Idat", mgls_transform, mglc_transform, true, 3},
 	{L"transforma",L"Do integral transform of data",L"transforma Res 'how' Adat Pdat", mgls_transforma, mglc_transforma, true, 3},
 	{L"transpose",L"Transpose data array",L"transpose Dat ['dir']", mgls_transpose, mglc_transpose, false, 3},
@@ -3484,9 +3539,9 @@ mglCommand mgls_base_cmd[] = {
 	{L"triangulate",L"Find triangles of randomly placed points",L"triangulate Res Xdat Ydat [er]|Res Xdat Ydat Zdat [er]", mgls_triangulate, mglc_triangulate, true, 3},
 	{L"tricont",L"Draw contour lines for surface of triangles",L"tricont Vdat Idat Xdat Ydat ['fmt']|Vdat Idat Xdat Ydat Zdat ['fmt']|Vdat Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_tricont, mglc_tricont, false, 0},
 	{L"triplot",L"Draw surface of triangles",L"triplot Idat Xdat Ydat ['fmt']|Idat Xdat Ydat Zdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_triplot, mglc_triplot, false, 0},
-	{L"tube",L"Draw curve by tube",L"tube Ydat Rdat ['fmt' zval]|Ydat rval ['fmt' zval]|Xdat Ydat Rdat ['fmt' zval]|Xdat Ydat rval ['fmt' zval]|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat rval ['fmt']", mgls_tube, mglc_tube, false, 0},
+	{L"tube",L"Draw curve by tube",L"tube Ydat Rdat ['fmt']|Ydat rval ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat rval ['fmt']|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat rval ['fmt']", mgls_tube, mglc_tube, false, 0},
 	{L"var",L"Create new 1D data and fill it in range",L"var Dat nx x1 [x2]", mgls_var, mglc_var, true, 3},
-	{L"vect",L"Draw vector field",L"vect Udat Vdat ['fmt' zval kind]|Xdat Ydat Udat Vdat ['fmt' zval kind]|Udat Vdat Wdat ['fmt' kind]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' kind]", mgls_vect, mglc_vect, false, 0},
+	{L"vect",L"Draw vector field",L"vect Udat Vdat ['fmt' kind]|Xdat Ydat Udat Vdat ['fmt' kind]|Udat Vdat Wdat ['fmt' kind]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' kind]", mgls_vect, mglc_vect, false, 0},
 	{L"write",L"Write current image to graphical file",L"write 'fname' [solid]", mgls_write, mglc_write, false, 5},
 	{L"xlabel",L"Draw label for x-axis",L"xlabel 'txt' [pos size shift]", mgls_xlabel, mglc_xlabel, false, 1},
 	{L"xrange",L"Set range for x-axis",L"xrange Dat [add] | x1 x2", mgls_xrange, mglc_xrange, false, 2},

@@ -119,7 +119,7 @@ class mglCanvas : public mglBase
 friend struct mglPrim;
 public:
 	mglPoint LastMousePos;	///< Last mouse position
-	const char *PlotId;	///< Id of plot for saving filename (in GLUT window for example)
+	std::string PlotId;		///< Id of plot for saving filename (in GLUT window for example)
 
 	mglCanvas(int w=800, int h=600);
 	virtual ~mglCanvas();
@@ -152,8 +152,8 @@ public:
 	/// Put further plotting in some region of whole frame surface.
 	void InPlot(float x1,float x2,float y1,float y2,bool rel=true);
 	/// Add title for current subplot/inplot
-	void FrameBox(const char *title,const char *stl="#",float size=-2);
-	void FrameBox(const wchar_t *title,const char *stl="#",float size=-2);
+	void Title(const char *title,const char *stl="#",float size=-2);
+	void Title(const wchar_t *title,const char *stl="#",float size=-2);
 	/// Set aspect ratio for further plotting.
 	void Aspect(float Ax,float Ay,float Az);
 	/// Rotate a further plotting.
@@ -181,6 +181,10 @@ public:
 	void PutDrawReg(int m, int n, int k, const mglCanvas *gr);
 	/// Combine plots from 2 canvases. Result will be saved into this.
 	void Combine(const mglCanvas *gr);
+	/// Send graphical information to node id using MPI
+	void MPI_Send(int id)	{}	// TODO: add later
+	/// Receive graphical information from node id using MPI
+	void MPI_Recv(int id)	{}	// TODO: add later
 
 	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
 	mglPoint CalcXYZ(int xs, int ys);

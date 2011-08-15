@@ -65,7 +65,7 @@ The ``interactive'' way of drawing in MathGL consists in window creation  with h
         return mglFlRun();
     }
 @end verbatim
-Here function @code{sample} is defined. This function does all drawing. Other function @code{main} is entry point function for console program. Arguments of @code{main} should be transfered to @code{Window()} since it may contain OS specific information (@pxref{mglGraphAB class}).
+Here function @code{sample} is defined. This function does all drawing. Other function @code{main} is entry point function for console program. Arguments of @code{main} should be transfered to @code{Window()} since it may contain OS specific information.
 
 Alternatively you can create yours own class inherited from class @code{mglDraw} and re-implement the function @code{Draw()} in it:
 @verbatim
@@ -123,13 +123,13 @@ First, the function creates a frame @code{NewFrame()} for rotated axes and draws
 @node Drawing to file, Drawing in memory, Using FLTK/GLUT window, Basic usage
 @subsection Drawing to file
 
-Another way of using MathGL library is the direct picture writing to file. It is most usable for plot creating during calculation or for using of small programs (like Matlab or Scilab scripts) for visualizing repetitive sets of data. But the speed of drawing is much higher in comparison with a script language. There are two classes for exporting in file: class @code{mglGraphZB} saves in bitmap format (like PNG), @code{mglGraphPS} saves in vector PostScript format (@pxref{Plotter classes}).
+Another way of using MathGL library is the direct picture writing to file. It is most usable for plot creating during calculation or for using of small programs (like Matlab or Scilab scripts) for visualizing repetitive sets of data. But the speed of drawing is much higher in comparison with a script language.
 
 The following code produces a bitmap PNG picture:
 @verbatim
     int main(int ,char **)
     {
-        mglGraphZB gr;
+        mglGraph gr;
         gr.Alpha(true);
         gr.Light(true);             gr.Light(0,mglPoint(1,0,-1));
         sample(&gr,NULL);           // The same drawing function.
@@ -143,28 +143,26 @@ The code for export in vector EPS file looks the same:
 @verbatim
     int main(int ,char **)
     {
-        mglGraphPS gr;
+        mglGraph gr;
         gr.Light(true);             gr.Light(0,mglPoint(1,0,-1));
         sample(&gr,NULL);           // The same drawing function.
         gr.WriteEPS("test.eps");    // Don't forget to save the result!
         return 0;
     }
 @end verbatim
-The differences from the using of bitmap picture are: applying of the other class @code{mglGraphPS}, and writing to other format (function @code{WriteEPS()} instead of function @code{WritePNG()}). Moreover, there is no switching of the plot transparency @code{Alpha} since EPS format does not support it. Possibly I shall include transparency in future by program emulation.
-
-Classes @code{mglGraphZB} and @code{mglGraphPS} have some merits and demerits. Class @code{mglGraphZB} draws beautiful surface with transparency, smoothed colors and lightning, but the output picture is @emph{bitmap}, that leads to a bad scalability. On the contrary, class @code{mglGraphPS} creates vector file with excellent scalability. But file has large size (especially for surfaces), it does not support transparency and color smoothing. So, vector picture looks stylish but a bit angularly.
+The difference from the previous one is using other function @code{WriteEPS() for EPS format instead of function @code{WritePNG()}. Moreover, there is no switching of the plot transparency @code{Alpha} since EPS format does not support it. Possibly I shall include transparency in future by program emulation.
 
 @c ------------------------------------------------------------------
 @node Drawing in memory, Using QMathGL, Drawing to file, Basic usage
 @subsection Drawing in memory
 
-The last way of MathGL using is the drawing in memory. Class @code{mglGraphZB} allows one  to create a bitmap picture in memory. Further this picture can be displayed in window by some window libraries (like wxWidgets, FLTK, Windows GDI and so on). For example, the code for drawing in wxWidget library looks like:
+The last way of MathGL using is the drawing in memory. Class @code{mglGraph} allows one  to create a bitmap picture in memory. Further this picture can be displayed in window by some window libraries (like wxWidgets, FLTK, Windows GDI and so on). For example, the code for drawing in wxWidget library looks like:
 @verbatim
     void MyForm::OnPaint(wxPaintEvent& event)
     {
         int w,h,x,y;
         GetClientSize(&w,&h);   // size of the picture
-        mglGraphZB gr(w,h);
+        mglGraph gr(w,h);
 
         gr.Alpha(true);         // draws something using MathGL
         gr.Light(true);         gr.Light(0,mglPoint(1,0,-1));
@@ -177,13 +175,12 @@ The last way of MathGL using is the drawing in memory. Class @code{mglGraphZB} a
     }
 @end verbatim
 The drawing in other libraries is most the same.
-@c Moreover, I excluded the support of TIFF and JPEG files from MathGL by default for compatibility with wxWidgets library.
 
 For example, FLTK code will look like
 @verbatim
     void Fl_MyWidget::draw()
     {
-        mglGraphZB gr(w(),h());
+        mglGraph gr(w(),h());
         gr.Alpha(true);         // draws something using MathGL
         gr.Light(true);         gr.Light(0,mglPoint(1,0,-1));
         sample(&gr,NULL);
@@ -194,7 +191,7 @@ Qt code will look like
 @verbatim
     void MyWidget::paintEvent(QPaintEvent *)
     {
-        mglGraphZB gr(w(),h());
+        mglGraph gr(w(),h());
         gr.Alpha(true);         // draws something using MathGL
         gr.Light(true);         gr.Light(0,mglPoint(1,0,-1));
         sample(&gr,NULL);
@@ -464,7 +461,7 @@ Another example demonstrate the features of TeX formula parsing.
 @caption{Example of TeX formula parsing}
 @end float
 
-Finally you can change font during execution (this work well for mglGraphZB class only).
+Finally you can change font during execution.
 @verbatim
     int sample(mglGraph *gr, void *)
     {
@@ -542,7 +539,7 @@ Finally, you can use @code{mgl2gif} tool for doing the same with MGL scripts (@p
 @node Data handling, Data plotting, Advanced usage, Examples
 @section Data handling
 
-Class @code{mglData} contains all functions for the data handling in MathGL (@pxref{mglData class}). There are several matters why I use class @code{mglData} but not a single array: it does not depend on type of data (float or double), sizes of data arrays are kept with data, memory working is simpler and safer.
+Class @code{mglData} contains all functions for the data handling in MathGL (@pxref{Data processing}). There are several matters why I use class @code{mglData} but not a single array: it does not depend on type of data (float or double), sizes of data arrays are kept with data, memory working is simpler and safer.
 
 @menu
 * Array creation::              
@@ -627,7 +624,7 @@ The only non-obvious thing here is using multidimensional arrays in C/C++, i.e. 
 @node Data changing, , Array creation, Data handling
 @subsection Data changing
 
-MathGL has functions for data processing: differentiating, integrating, smoothing and so on (for more detail, @pxref{mglData class}). Let us consider some examples. The simplest ones are integration and differentiation. The direction in which operation will be performed is specified by textual string, which may contain symbols @samp{x}, @samp{y} or @samp{z}. For example, the call of @code{Diff("x")} will differentiate data along @samp{x} direction; the call of @code{Integral("xy")} perform the double integration of data along @samp{x} and @samp{y} directions; the call of @code{Diff2("xyz")} will apply 3d Laplace operator to data and so on. Example of this operations on 2d array a=x*y is presented in code:
+MathGL has functions for data processing: differentiating, integrating, smoothing and so on (for more detail, @pxref{Data processing}). Let us consider some examples. The simplest ones are integration and differentiation. The direction in which operation will be performed is specified by textual string, which may contain symbols @samp{x}, @samp{y} or @samp{z}. For example, the call of @code{Diff("x")} will differentiate data along @samp{x} direction; the call of @code{Integral("xy")} perform the double integration of data along @samp{x} and @samp{y} directions; the call of @code{Diff2("xyz")} will apply 3d Laplace operator to data and so on. Example of this operations on 2d array a=x*y is presented in code:
 @verbatim
     int sample(mglGraph *gr, void *)
     {

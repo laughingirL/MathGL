@@ -753,9 +753,9 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 {
 	register long i,j,i0,n=a->GetNx(),m=a->GetNy(),l=a->GetNz(), nx=1,ny=1,p;
 
-	if(dir=='x')	{	nx = m;	ny = l;	if(d<0)	d = n/2;	}
-	if(dir=='y')	{	nx = n;	ny = l;	if(d<0)	d = m/2;	}
-	if(dir=='z')	{	nx = n;	ny = m;	if(d<0)	d = l/2;	}
+	if(dir=='x')	{	nx = m;	ny = l;	if(d<0)	d = n/2.;	}
+	if(dir=='y')	{	nx = n;	ny = l;	if(d<0)	d = m/2.;	}
+	if(dir=='z')	{	nx = n;	ny = m;	if(d<0)	d = l/2.;	}
 	s.x.Create(nx,ny);	s.y.Create(nx,ny);
 	s.z.Create(nx,ny);	s.a.Create(nx,ny);
 	p = long(d);	d -= p;

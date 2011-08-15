@@ -4,21 +4,21 @@
 Это класс для работы с массивами данных, определенный в @code{#include <mgl/mgl_data.h>}. Он содержит функции для выделения памяти и изменения размера данных, чтения данных из файла, численного дифференцирования/интегрирования/интерполяции и пр., заполнения по текстовой формуле и т.д. Класс позволяет работать с данными размерности не более 3 (как функции от трех переменных -- x,y,z). По умолчанию внутреннее представление данных -- float, выбранный в силу меньшего размера занимаемой памяти и достаточной для построения графиков точности. Базовый тип можно сменить на этапе установки (@pxref{Installation and usage}) указав опцию @code{--enable-double}. Однако, в дальнейшем в документации будет использован тип @code{float}.
 
 @menu
-* Public variables::            
-* Create and delete::           
-* Fill::                        
-* Rearrange::                   
-* File I/O::                    
-* Make another data::           
-* Change data::      
-* Interpolation::               
-* Informational functions::     
-* Operators::                   
-* Global functions::            
+* Public variables::
+* Data create::
+* Fill::
+* Rearrange::
+* File I/O::
+* Make another data::
+* Change data::
+* Interpolation::
+* Informational functions::
+* Operators::
+* Global functions::
 @end menu
 
 @c ------------------------------------------------------------------
-@node Public variables, Create and delete, , mglData class
+@node Public variables, Data create, , Data processing
 @section Переменные
 
 @deftypecv {Variable} mglData @code{float *} a
@@ -39,7 +39,7 @@
 
 
 @c ------------------------------------------------------------------
-@node Create and delete, Fill, Public variables, mglData class
+@node Data create, Fill, Public variables, Data processing
 @section Создание и удаление
 @cindex mglData
 @cindex Set
@@ -105,7 +105,7 @@
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Fill, Rearrange, Create and delete, mglData class
+@node Fill, Rearrange, Data create, Data processing
 @section Заполнение данных
 @cindex Fill
 @cindex Modify
@@ -162,7 +162,7 @@
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Rearrange, File I/O, Fill, mglData class
+@node Rearrange, File I/O, Fill, Data processing
 @section Изменение размеров данных
 @cindex Rearrange
 @cindex Extend
@@ -246,7 +246,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node File I/O, Make another data, Rearrange, mglData class
+@node File I/O, Make another data, Rearrange, Data processing
 @section Чтение/сохранение данных
 @cindex Read
 @cindex ReadMat
@@ -304,7 +304,7 @@ a_ij^new = a_i^old where j=0...@var{n1}. Соответственно, для @v
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Make another data, Change data, File I/O, mglData class
+@node Make another data, Change data, File I/O, Data processing
 @section Создание новых данных
 @cindex SubData
 @cindex Column
@@ -400,7 +400,7 @@ res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Change data, Interpolation, Make another data, mglData class
+@node Change data, Interpolation, Make another data, Data processing
 @section Изменение данных
 
 Эти функции изменяют данные вдоль заданного направления(ий) типа например дифференцирования, интегрирования и т.д. Направление указывается строкой @var{dir}, которая может содержать символы @samp{x}, @samp{y} и/или @samp{z}, вдоль которых изменения будут применены.
@@ -512,7 +512,7 @@ Smooths the data on specified direction(s). This is the same as @code{Smooth()} 
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Interpolation, Informational functions, Change data, mglData class
+@node Interpolation, Informational functions, Change data, Data processing
 @section Интерполяция
 @cindex Spline
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Spline (@code{float} x, @code{float} y=@code{0}, @code{float} z=@code{0}) @code{const}
@@ -552,7 +552,7 @@ Smooths the data on specified direction(s). This is the same as @code{Smooth()} 
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Informational functions, Operators, Interpolation, mglData class
+@node Informational functions, Operators, Interpolation, Data processing
 @section Информационные функции
 @cindex PrintInfo
 @deftypefn {Метод класса @code{mglData} (C++)} @code{void} PrintInfo (@code{char *}buf, @code{bool} all=@code{false}) @code{const}
@@ -620,7 +620,7 @@ Smooths the data on specified direction(s). This is the same as @code{Smooth()} 
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Operators, Global functions, Informational functions, mglData class
+@node Operators, Global functions, Informational functions, Data processing
 @section Операторы
 
 @deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} operator= (@code{const mglData &}d)
@@ -693,7 +693,7 @@ Adds the other data.
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Global functions, , Operators, mglData class
+@node Global functions, , Operators, Data processing
 @section Глобальные функции
 
 Эти функции не методы класса @code{mglData}, но они дают дополнительные возможности по обработке данных. Поэтому я поместил их в эту главу.

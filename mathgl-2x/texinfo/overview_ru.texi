@@ -16,7 +16,7 @@ MathGL это ...
 @end itemize
 
 @menu
-* Why I have written MathGL?::  
+* Why I have written MathGL?::
 * MathGL features::
 * Installation and usage::
 * General concepts::
@@ -30,7 +30,7 @@ MathGL это ...
 
 Код для создания качественной научной графики на различных платформах. Код для быстрой обработки и отображения больших массивов данных. Код для работы в графическом и консольном режимах и легкого интегрирования в другие программы. Код с большим обновляемым набором графиков и инструментами обработки данных. Именно такого кода мне не хватало в последние годы при работе на персональных компьютерах и на кластерах. И именно такой код я постарался создать в библиотеке MathGL.
 
-На данный момент (версия @value{VERSION}) MathGL это более 20000 строк кода, более 40 основных типов графиков для одно-, двух- и трехмерных массивов, возможность экспорта в растровые и векторные (EPS или SVG) файлы, интерфейс для OpenGL и возможность запуска в консольном режиме, функции для обработки данных и даже простейший командный (интерпретируемый) язык MGL для упрощения построения графиков. Кроме того, есть несколько типов прозрачности, гладкое освещение, векторные шрифты, TeX-ие команды в надписях, произвольные криволинейные системы координат и прочие полезные мелочи (см. раздел pictures на @uref{http://mathgl.sf.net/, домашней странице}). Ну, и, естественно, полная переносимость библиотеки и ее свободное распространение под лицензией GPL v.2.0 или более поздней.
+На данный момент (версия @value{VERSION}) MathGL это более 50 основных типов графиков для одно-, двух- и трехмерных массивов, возможность экспорта в растровые и векторные (EPS или SVG) файлы, интерфейс для OpenGL и возможность запуска в консольном режиме, функции для обработки данных и даже простейший командный (интерпретируемый) язык MGL для упрощения построения графиков. Кроме того, есть несколько типов прозрачности, гладкое освещение, векторные шрифты, TeX-ие команды в надписях, произвольные криволинейные системы координат и прочие полезные мелочи (см. раздел pictures на @uref{http://mathgl.sf.net/, домашней странице}). Ну, и, естественно, полная переносимость библиотеки и ее свободное распространение под лицензией GPL v.2.0 или более поздней.
 
 @node MathGL features, Installation and usage, Why I have written MathGL?, Overview
 @section Возможности MathGL
@@ -47,7 +47,7 @@ MathGL это ...
 рисование трехмерных массивов (Surf3, Dens3, Cont3, ContF3, Cloud-like, @pxref{3D plotting});
 
 @item
-рисование нескольких связанных массивов: векторные поля Vect и VectC, линии тока Flow, точечное отображение Map, поверхности с прозрачностью или цветом, определяемым другим массивом SurfA, SurfC, Surf3A, Surf3C (@pxref{Dual plotting});
+рисование нескольких связанных массивов: векторные поля Vect, линии тока Flow, точечное отображение Map, поверхности с прозрачностью или цветом, определяемым другим массивом SurfA, SurfC, Surf3A, Surf3C (@pxref{Dual plotting});
 
 @item
 и другие (см. @pxref{MathGL core}).
@@ -55,13 +55,13 @@ MathGL это ...
 
 Фактически, я постарался реализовать все известные мне типы научных графиков. Список графиков постоянно пополняется, и если Вам нужен какой-то новый вариант, пишите на @email{mathgl.abalakin@@gmail.com, e-mail}, и в новой версии библиотеки этот график появится.
 
-Я постарался сделать графики максимально красивыми -- поверхности могут быть прозрачными и освещены произвольно расположенными источниками света (максимальное их количество 10). Большинство функций рисования имеет два варианта: простой для быстрого построения картинки и более сложный для детальной настройки отображения, включающего в том числе возможность параметрического задания всех массивов. Получившееся изображение можно сохранить в растровом (с помощью классов mglGraphZB, mglGraphGL) формате PNG, JPEG, GIF, TIFF или BMP; в векторном EPS или SVG формате (с помощью класса mglGraphPS) и в IDTF формате (с помощью класса mglGraphIDTF), который можно конвертировать в U3D формат.
+Я постарался сделать графики максимально красивыми -- поверхности могут быть прозрачными и освещены произвольно расположенными источниками света (максимальное их количество 10). Большинство функций рисования имеет два варианта: простой для быстрого построения картинки и более сложный для детальной настройки отображения, включающего в том числе возможность параметрического задания всех массивов. Получившееся изображение можно сохранить в растровом формате PNG, JPEG, GIF, TGA или BMP; в векторном EPS, SVG или TeX формате, и в IDTF формате (с помощью класса mglGraphIDTF), который можно конвертировать в U3D формат.
 
-Все надписи выводятся векторным шрифтом, что обеспечивает их хорошую масштабируемость и переносимость. Текст может содержать команды для большинства ТеХ-их символов, изменения положения (верхний и нижний индексы) и стиля шрифта внутри строки текста (@pxref{mglFont class}). Текст меток поворачивается вместе с осями. На график можно вывести описание кривых (легенду) и поместить надпись в произвольную точку экрана или пустить ее вдоль кривой. Поддерживаются произвольные кодировки текста (с помощью стандартной функции @code{setlocale()}) и текст в кодировке UTF-16.
+Все надписи выводятся векторным шрифтом, что обеспечивает их хорошую масштабируемость и переносимость. Текст может содержать команды для большинства ТеХ-их символов, изменения положения (верхний и нижний индексы) и стиля шрифта внутри строки текста (@pxref{Font styles}). Текст меток поворачивается вместе с осями. На график можно вывести описание кривых (легенду) и поместить надпись в произвольную точку экрана или пустить ее вдоль кривой. Поддерживаются произвольные кодировки текста (с помощью стандартной функции @code{setlocale()}) и текст в кодировке UTF-16.
 
-Для представления данных используется специальный класс mglData (@pxref{mglData class}). Помимо безопасного создания и удаления массивов, он включает функции по их обработке (дифференцированию, интегрированию, сглаживанию, интерполяции и т.д.) и чтению текстового файла с автоматическим определением размеров данных. Класс mglData позволяет работать с массивами размерности вплоть до 3 (массивы, зависящие от трех независимых индексов @math{a_@{ijk@}}). Использование массивов с большим числом размерностей нецелесообразно, поскольку я не представляю, как их можно отобразить на экране. Заполнение или изменение значений массива можно выполнить как вручную, так и по формуле, заданной текстовой строкой.
+Для представления данных используется специальный класс mglData (@pxref{Data handling}). Помимо безопасного создания и удаления массивов, он включает функции по их обработке (дифференцированию, интегрированию, сглаживанию, интерполяции и т.д.) и чтению текстового файла с автоматическим определением размеров данных. Класс mglData позволяет работать с массивами размерности вплоть до 3 (массивы, зависящие от трех независимых индексов @math{a_@{ijk@}}). Использование массивов с большим числом размерностей нецелесообразно, поскольку я не представляю, как их можно отобразить на экране. Заполнение или изменение значений массива можно выполнить как вручную, так и по формуле, заданной текстовой строкой.
 
-Для @emph{быстрого} вычисления значения выражения, заданного текстовой строкой, используется класс mglFormula (@pxref{mglFormula class}). Он основан на компиляции строки в древоподобную структуру при создании экземпляра класса. На этапе вычисления происходит быстрый обход дерева с выдачей результата для конкретных значений переменных. Помимо изменения значений массива данных, текстовые формулы используются для рисования в @emph{произвольной} криволинейной системе координат. Набор таких координат ограничивается только фантазией пользователя, а не фиксированным числом (типа полярной, параболической, цилиндрической и т.д.).
+Для @emph{быстрого} вычисления значения выражения, заданного текстовой строкой (@pxref{Textual formulas}). Он основан на компиляции строки в древоподобную структуру при создании экземпляра класса. На этапе вычисления происходит быстрый обход дерева с выдачей результата для конкретных значений переменных. Помимо изменения значений массива данных, текстовые формулы используются для рисования в @emph{произвольной} криволинейной системе координат. Набор таких координат ограничивается только фантазией пользователя, а не фиксированным числом (типа полярной, параболической, цилиндрической и т.д.).
 
 @node Installation and usage, General concepts, MathGL features, Overview
 @section Установка MathGL
@@ -69,17 +69,17 @@ MathGL это ...
 Установка библиотеки возможна 4-мя способами.
 @enumerate
 @item
-Скомпилировать библиотеку непосредственно из исходных файлов. С библиотекой поставляется стандартный скрипт для autoconf/automake. Для его запуска достаточно в командной строке выполнить 3 команды: сначала @code{./configure} далее @code{make} и, наконец, с правами суперпользователя @code{make install}. Иногда после компиляции библиотеки может потребоваться обновление списка библиотека в системе -- выполните команду @code{ldconfig} с правами суперпользователя.
+Скомпилировать библиотеку непосредственно из исходных файлов. С библиотекой поставляется стандартный скрипт для autoconf/automake. Для его запуска достаточно в командной строке выполнить 3 команды: сначала @code{./configure} далее @code{make} и, наконец, с правами суперпользователя @code{make install}. Иногда после компиляции библиотеки может потребоваться обновление списка библиотека в системе -- выполните команду @code{ldconfig} с правами суперпользователя. Замечу, что если используется версия из SVN, то вначале (перед @code{./configure}) следует выполнить команду @code{./bootstrap}.
 
-Скрипт @code{./configure} имеет несколько дополнительных опций, которые по умолчанию отключены. К их числу относятся: @code{--enable-fltk, --enable-glut, --enable-qt} для поддержки FLTK, GLUT и/или Qt окон; @code{--enable-jpeg, --enable-tiff, --enable-hdf5} для поддержки соответствующих форматов; @code{--enable-all} для включения всех возможностей. Для использования типа @code{double} для внутреннего хранения данных используйте опцию @code{--enable-double}. Для создания интерфейсов к другим языкам (кроме С/Фортран/MGL) используйте опции @code{--enable-python, --enable-octave} или @code{--enable-langall} для всех поддерживаемых языков. Полный список опций можно увидеть, выполнив @code{./configure --help}.
+Скрипт @code{./configure} имеет несколько дополнительных опций, которые по умолчанию отключены. К их числу относятся: @code{--enable-fltk, --enable-glut, --enable-qt} для поддержки FLTK, GLUT и/или Qt окон; @code{--enable-jpeg, --enable-gif, --enable-hdf5} для поддержки соответствующих форматов; @code{--enable-all} для включения всех возможностей. Для использования типа @code{double} для внутреннего хранения данных используйте опцию @code{--enable-double}. Для создания интерфейсов к другим языкам (кроме С/Фортран/MGL) используйте опции @code{--enable-python, --enable-octave} или @code{--enable-langall} для всех поддерживаемых языков. Полный список опций можно увидеть, выполнив @code{./configure --help}.
 
 @item
-В случае если инструменты autoconf/automake не доступны (например, при компиляции под Windows или MacOS), то можно воспользоваться системой сборки cmake. В данном случае будет недоступна сборка документации, но сборка самой библиотеки и утилит возможна и не на GNU компиляторах.
+В случае если инструменты autoconf/automake не доступны (например, при компиляции под Windows или MacOS), то можно воспользоваться системой сборки CMake. В данном случае сборка самой библиотеки и утилит возможна и не на GNU компиляторах.
 
 @item
 Использовать предварительно скомпилированные файлы -- с библиотекой поставляются файлы для MinGW (платформа Win32). В скомпилированной версии достаточно распаковать заголовочные файлы в папку с заголовочными файлами и библиотеку libmgl.a в папку с библиотеками. По умолчанию, скомпилированная версия включают поддержку GSL (www.gsl.org), PNG, GIF и JPEG. Соответственно, при сборке программы эти библиотеки должны быть установлены (их можно найти на @uref{http://gnuwin32.sourceforge.net/packages.html}).
 @item
-Установить из стандартных пакетов (RPM, deb, DevPak и пр.). 
+Установить из стандартных пакетов (RPM, deb, DevPak и пр.).
 @end enumerate
 
 При сборке пользовательской программы достаточно указать ключ @code{-lmgl} для компиляции в консольной программе или с использованием внешней графической библиотеки. При использовании окон FLTK или GLUT надо указать/добавить ключи, включающие соответствующие библиотеки -- @code{-lmgl-fltk} или @code{-lmgl-glut}. Для использования в Фортране дополнительно надо указать опцию @code{-lstdc++} для библиотек C++.
@@ -92,13 +92,13 @@ MathGL это ...
 Всего основных концепций (базисных идей) шесть:
 @enumerate
 @item
-@strong{Все рисунки создаются в памяти.} Это могут быть как растровые картинки, так и векторные списки примитивов. Дальнейшая судьба рисунков определяется пользователем: можно сохранить в файл, вывести на экран, создать анимацию/кино, дополнительно отредактировать и т.д. Такой подход обеспечивает высокую переносимость библиотеки -- один и тот же программный код создаст в точности одинаковый рисунок на @emph{любой} операционной системе. Кроме того, при таком подходе рисунки можно создавать непосредственно в консольной программе -- графическое окно не нужно!
+@strong{Все рисунки создаются в памяти.} Это могут быть как растровые картинки (для @code{SetQuality(MGL_DRAW_LMEM)}), так и векторные списки примитивов (по умолчанию). Дальнейшая судьба рисунков определяется пользователем: можно сохранить в файл, вывести на экран, создать анимацию/кино, дополнительно отредактировать и т.д. Такой подход обеспечивает высокую переносимость библиотеки -- один и тот же программный код создаст в точности одинаковый рисунок на @emph{любой} операционной системе. Кроме того, при таком подходе рисунки можно создавать непосредственно в консольной программе -- графическое окно не нужно!
 @item
 @strong{Все настройки графиков (стиль линий, цветовые схемы поверхностей, стиль и цвет текста) задаются строками.} Это обеспечивает: удобство для пользователя -- короткую строку легче читать и здесь тяжелее ошибиться, чем в большом списке параметров; переносимость -- строки выглядят одинаково на всех платформах и не надо заботиться о типе и числе аргументов.
 @item
-@strong{Все функции имеют ``упрощенный'' и ``продвинутый'' варианты.} Сделано опять из-за удобства. В ``упрощенном'' варианте для построения графика нужны только один-два массив(а) данных, которые автоматически равнораспределяются в заданном диапазоне осей координат. В ``продвинутой'' версии можно не только указать явно диапазон построения графика, но и задать его параметрически. Последнее позволяет легко строить довольно сложные кривые и поверхности. В обоих вариантах функций порядок аргументов стандартен: сначала идут массивы данных, потом необязательный строковый параметр стиля графика, а далее -- второстепенные необязательные параметры для более точной настройки графика.
+@strong{Все функции имеют ``упрощенный'' и ``продвинутый'' варианты.} Сделано опять из-за удобства. В ``упрощенном'' варианте для построения графика нужны только один-два массив(а) данных, которые автоматически равнораспределяются в заданном диапазоне осей координат. В ``продвинутой'' версии можно не только указать явно диапазон построения графика, но и задать его параметрически. Последнее позволяет легко строить довольно сложные кривые и поверхности. В обоих вариантах функций порядок аргументов стандартен: сначала идут массивы данных, потом необязательный строковый параметр стиля графика, а далее строка опций для более точной настройки графика.
 @item
-@strong{Все данные передаются через экземпляры класса mglData.} Такой подход позволяет избежать ошибок при работе с памятью и единообразно передавать данные разных типов (float, double, данные из файла, заполненных пользователем и пр.) в функции рисования.
+@strong{Все данные передаются через экземпляры класса mglData(A).} Такой подход позволяет избежать ошибок при работе с памятью и единообразно передавать данные разных типов (float, double, данные из файла, заполненных пользователем и пр.) в функции рисования.
 @item
 @strong{Все элементы рисунков векторные.} Изначально библиотека MathGL была ориентированна на работу с научными данными, которые по своей природе векторные (линии, грани, матрицы и т.д.). Поэтому векторность используется во всех рисунках! Причем иногда даже в ущерб производительности (например, при выводе шрифтов). Помимо всего прочего, векторность позволяет легко масштабировать рисунок -- измените размер картинки в 2 раза, и рисунок пропорционально растянется.
 @item
@@ -108,11 +108,12 @@ MathGL это ...
 Кроме основных концепций я хотел бы остановиться на нескольких, как оказалось, нетривиальных моментах -- способе указания положения графика, осей координат и строковых параметров линий, поверхностей, текста.
 
 @menu
-* Coordinate axes::             
-* Line styles::                 
-* Color scheme::                
-* Font styles::                  
-* Textual formulas::            
+* Coordinate axes::
+* Line styles::
+* Color scheme::
+* Font styles::
+* Textual formulas::
+* Command options::
 @end menu
 
 @include concept_ru.texi
@@ -161,9 +162,7 @@ gr->Window(argc,argv,foo_draw,"Title",this);
 Есть три основных способа. Во-первых, можно вырезать точку, задав одну из ее координат равной @code{NAN}. Во-вторых, можно воспользоваться функцией @code{SetCutBox()} или @code{CutOff()} для удаления точек из некоторой области (@pxref{Cutting}). Наконец, можно сделать эти точки прозрачными (невидимыми) с помощью функций @code{SurfA()}, @code{Surf3A()} (@pxref{Dual plotting}). В последнем случае обеспечивается еще и плавность включения прозрачности.
 
 @item Я использую VisualStudio, CBuilder или другой компилятор (не MinGW/gcc). Как мне подключить библиотеку MathGL?
-Начиная с версии 1.10, можно использовать заголовочный файл @code{#include <mgl/mgl_w.h>}, содержащий C++ классы только с @code{inline} функциями. Такие классы должны быть совместимы с любым компилятором. Отмечу, что эти "интерфейсные" классы @strong{не совместимы} с классами в обычных заголовочных файлах и использоваться должны только одни из них! Я рекомендую использовать обычные заголовочные классы для компиляторов GNU (например для MinGW).
-
-@c @strong{Наконец!} Пожалуйста @emph{не спрашивайте} меня вопросы про Windows. Я не использую Windows. Я ничего не знаю о Visual Basic, Visual C++, CBuiled или .NET. Найдите подходящие форумы в интернете и задайте свой вопрос там.
+Начиная с версии 2.0, рекомендуемый к использованию класс mglGraph (заголовочный файл @code{#include <mgl/mgl.h>}) содержbn только с @code{inline} функции и может использоваться с любым компилятором без перекомпиляции бинарной версии библиотеки. Однако, если Вы планируете использовать низкоуровневые возможности (т.е. классы mglBase, mglCanvas и т.д.), то Вам следует перекомпилировать библиотеку MathGL с использованием Вашего компилятора.
 
 @item Как мне собрать MathGL под Windows?
 Простейший путь -- использование комбинации CMake и MinGW. Также Вам может потребоваться дополнительные библиотеки, такие как GSL, PNG, JPEG и пр. Все они могут быть найдены на @url{http://gnuwin32.sourceforge.net/packages.html}. После установки всех компонент, просто запустите конфигуратор CMake и соберите MathGL командой make.
@@ -172,13 +171,12 @@ gr->Window(argc,argv,foo_draw,"Title",this);
 Следует создать отдельный поток для обработки сообщений в окно. Кросс-платформенный путь -- использование библиотеки @code{pthread}. Обновление данных в окне можно выполнить вызовом функции @code{mglGraphFLTK::Update()}. Пример код имеет вид:
 @verbatim
 //-----------------------------------------------------------------------------
-#include <mgl/mgl_fltk.h>
+#include <mgl/window.h>
 #include <pthread.h>
-#include <unistd.h>
 
 mglPoint pnt;  // some global variable for changable data
 //-----------------------------------------------------------------------------
-int sample(mglGraph *gr, void *)
+int sample(mglGraph *gr)
 {
   gr->Box();  gr->Line(mglPoint(),pnt,"Ar2"); // just draw a vector
   return 0;
@@ -187,8 +185,7 @@ int sample(mglGraph *gr, void *)
 void *mgl_fltk_tmp(void *)      {       mglFlRun();     return 0;       }
 int main (int argc, char ** argv)
 {
-  mglGraphFLTK gr;
-  gr.Window(argc,argv,sample,"test");  // create window
+  mglWindow gr(0,sample,"test");  // create window
   static pthread_t tmp;
   pthread_create(&tmp, 0, mgl_fltk_tmp, 0);
   pthread_detach(tmp);    // run window handling in the separate thread
@@ -202,8 +199,32 @@ int main (int argc, char ** argv)
 }
 //-----------------------------------------------------------------------------
 @end verbatim
-
-
+В случае если требуется вывести статичную картинку с текущими результатами расчетов, то достаточно передать @code{NULL} вместо функции рисования и вызывать @code{Update()} по мере необходимости для обновления графика. Такой способ подходит и для пользователей фортрана.
+@verbatim
+//-----------------------------------------------------------------------------
+#include <mgl/window.h>
+//-----------------------------------------------------------------------------
+int sample(mglGraph *gr)
+{
+  gr->Box();  gr->Line(mglPoint(),pnt,"Ar2"); // just draw a vector
+  return 0;
+}
+//-----------------------------------------------------------------------------
+void *mgl_fltk_tmp(void *)      {       mglFlRun();     return 0;       }
+int main (int argc, char ** argv)
+{
+  mglWindow gr(0,NULL,"test");  // create window
+  for(int i=0;i<10;i++)   // do calculation
+  {
+    sleep(1);             // which can be very long
+    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+    sample(&gr);          // draw picture
+    gr.Update();          // update window
+  }
+  return 0;   // finish calculations and close the window
+}
+//-----------------------------------------------------------------------------
+@end verbatim
 
 @item Сколько человек участвовало в создании библиотеки?
 Большую часть библиотеки написал один человек. Это результат примерно года работы на написание ядра библиотеки и базовых функций (в основном вечерами и по выходным). Процесс усовершенствования продолжается и теперь :). Скрипты сборки в основном написаны Д.Кулагиным, а экспорт в IDTF написан М.Видассовым.
@@ -212,13 +233,13 @@ int main (int argc, char ** argv)
 Можно импортировать ее в экземпляр @code{mglData} и построить с помощью функции @code{Dens()}. Например, для черно-белого рисунка можно использовать код: @code{mglData bmp; bmp.Import("fname.png","wk"); gr->Dens(bmp,"wk");}.
 
 @item Как использовать MathGL в Qt, FLTK, wxWidgets ...?
-Есть специальные классы (виджеты) для этих библиотек: QMathGL для Qt, Fl_MathGL для FLTK и т.д. Если Вы не нашли подходящий класс, то можете создать свой собственный виджет, рисующий растровое изображение из mglGraphAB::GetBits().
+Есть специальные классы (виджеты) для этих библиотек: QMathGL для Qt, Fl_MathGL для FLTK и т.д. Если Вы не нашли подходящий класс, то можете создать свой собственный виджет, рисующий растровое изображение из mglCanvas::GetBits().
 
 @item Как мне создать U3D файл (3D in PDF)?
 Процедура состоит из двух шагов: создания файла IDTF и его конвертация в U3D. Можно использовать @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=300628, U3D tools} для конвертации IDTF в U3D. Ему требуется библиотека @uref{http://libharu.org, libharu} 2.1.0 или более поздняя. Для установки используйте обычную процедуру @code{./bootstrap, ./configure, make, sudo make install}. В результате появится программа IDTFConverter для конвертации файлов *.idtf в бинарные файлы *.u3d. Последние можно включить в PDF.
 
 @item Как сменить шрифт (семейство шрифтов)?
-Во-первых, надо загрузить файлы @uref{http://mathgl.sourceforge.net/download.html, отсюда} или @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, отсюда}. Далее, в экземпляре mglGraph загружаем шрифты: @code{gr->SetFont(new mglFont(fontname,path));}. Здесь @var{fontname} -- базовое имя шрифта, например @samp{STIX}, и @var{path} -- путь к папке с файлами шрифтов. Вызовите @code{gr->SetFont(NULL);} для использования шрифта по умолчанию.
+Во-первых, надо загрузить файлы @uref{http://mathgl.sourceforge.net/download.html, отсюда} или @uref{http://sourceforge.net/project/showfiles.php?group_id=152187&package_id=267177, отсюда}. Далее, в экземпляре mglGraph загружаем шрифты: @code{gr->LoadFont(fontname,path);}. Здесь @var{fontname} -- базовое имя шрифта, например @samp{STIX}, и @var{path} -- путь к папке с файлами шрифтов. Вызовите @code{gr->RestoreFont();} для использования шрифта по умолчанию.
 
 @item Как нарисовать метки оси снаружи от графика?
 Просто используйте отрицательные значения длины меток, например @code{gr->SetTickLen(-0.1);}.
@@ -230,174 +251,106 @@ int main (int argc, char ** argv)
 
 Библиотека MathGL имеет интерфейсы к целому ряду языков программирования. Большинство из них базируется на С интерфейсе и построены с помощью инструментария SWIG. Сюда входят Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, Tcl. Кроме того, есть отдельный интерфейс к Фортрану, имеющий похожий набор функций, но со слегка различным типом аргументов (использованы целые вместо указателей). Функции С и Фортран интерфейса помечены [функции С].
 @c ++++++++++
-Некоторое из языков представленных выше поддерживают объектное программирование (классы). Для них написан собственная оболочка и соответствующие функции/методы помечены (Python). Функции и методы доступные в С++ помечены (С++).
+Некоторые из языков представленных выше поддерживают объектное программирование (классы). Для них написан собственная оболочка и соответствующие функции/методы помечены (Python). Функции и методы доступные в С++ помечены (С++).
 @c ++++++++++
-Наконец, специальный командный язык MGL был написан для быстрого доступа к функциям C++ со всеми их возможностями. Скрипты MGL могут быть выполнены как из внешних программ (UDAV, mgl2png, mgl2eps и т.д.) так и из кода на C++/C/Python и пр. (@pxref{mglParse class}). Подробно эти команды описаны в @ref{MGL interface}.
+Наконец, специальный командный язык MGL был написан для быстрого доступа к функциям C++ со всеми их возможностями. Скрипты MGL могут быть выполнены как из внешних программ (UDAV, mglconv, mglview и т.д.) так и из кода на C++/C/Python и пр. (@pxref{mglParse class}).
 
 @menu
 * C interface::
 * Python interface::
+* MGL interface::
 @end menu
 
 @node C interface, Python interface, , Interfaces
-@subsection C интерфейс
+@subsection C/Фортран интерфейс
 
 C интерфейс является базовым для большинства других интерфейсов. Он содержит функции на чистом C для большинства методов классов MathGL. В отличие от членов-функций C++ классов, C функции в качестве аргументов должны явно иметь переменные типа HMGL (для графики) и/или HMDT (для массивов данных) для указания объекта рисования или данных. Таким образом, первым вызовом пользователя должно быть создание этих объектов с помощью функций @code{mgl_create_*()}, а последним -- их удаление с помощью функций @code{mgl_delete_*()}.
 
 Все функции описанны в заголовочном файле @code{#include <mgl/mgl_c.h>} и используют переменные для идентификаторов объектов рисования/данных следующих типов:
 @itemize
-@item 
+@item
 @code{HMGL} --- Указатель на класс @code{mglGraph} (@pxref{MathGL core}).
-@item 
-@code{HMDT} --- Указатель на класс @code{mglData} (@pxref{mglData class}).
-@item 
+@item
+@code{HMDT} --- Указатель на класс @code{mglData} (@pxref{Data handling}).
+@item
 @code{HMPR} --- Указатель на класс @code{mglParse} (@pxref{mglParse class})..
 @end itemize
-Эти переменные содержат идентификаторы объектов графики или данных. 
+Эти переменные содержат идентификаторы объектов графики или данных.
 
-Фортрановские функции имеют те же имена, что и функции C. Однако, есть различие: переменные типов @code{HMGL, HMDT} должны быть объявлены как целые достаточной разрядности (integer*4 на 32-битных системах или integer*8 на 64-битных системах). Все С функции являются процедурами для Фортрана (должны вызываться с помощью оператора call). Исключение составляют функции, возвращающие переменные типа @code{HMGL} или @code{HMDT}. Последние должны быть объявлены целыми  для использования в фортрановском коде. Также помните, что строки в фортране обозначаются одинарной кавычкой @code{</samp>&rsquo;}, а не двойной @code{"} как в С/С++.
+Фортрановские функции имеют те же имена, что и функции C. Однако, есть различие: переменные типов @code{HMGL, HMDT} должны быть объявлены как целые достаточной разрядности (integer*4 на 32-битных системах или integer*8 на 64-битных системах). Все С функции являются процедурами для Фортрана (должны вызываться с помощью оператора call). Исключение составляют функции, возвращающие переменные типа @code{HMGL} или @code{HMDT}. Последние должны быть объявлены целыми  для использования в фортрановском коде. Также помните, что строки в фортране обозначаются одинарной кавычкой @code{'}, а не двойной @code{"} как в С/С++.
 
-@strong{Создание и удаление графического объекта}
+@node Python interface, MGL interface, C interface, Interfaces
+@subsection C++/Python interface
 
+MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is named in this chapter's title. Exactly the same classes are used for high-level C++ API. Its feature is using only inline member-functions what make high-level API to be independent on compiler even for binary build.
+
+There are 2 classes in:
 @itemize
-@item Функции для рисования в памяти:
-@deftypefn {C function} @code{HMGL} mgl_create_graph_gl ()
-Создает экземпляр класса mglGraphGL.
-@end deftypefn
-@deftypefn {C function} @code{HMGL} mgl_create_graph_zb (@code{int} width, @code{int} height)
-Создает экземпляр класса mglGraphZB с указанными размерами.
-@end deftypefn
-@deftypefn {C function} @code{HMGL} mgl_create_graph_ps (@code{int} width, @code{int} height)
-Создает экземпляр класса mglGraphPS с указанными размерами.
-@end deftypefn
-@deftypefn {C function} @code{HMGL} mgl_create_graph_idtf ()
-Создает экземпляр класса mglGraphIDTF.
-@end deftypefn
-
-@item Функции для рисования в окне:
-@deftypefn {C function} @code{HMGL} mgl_create_graph_glut (@code{int (*}draw@code{)(HMGL gr, void *p)}, @code{const char *}title, @code{void *}par)
-Создает экземпляр класса mglGraphGLUT  и связанное с ним окно. Одновременно может быть открыто только одно окно. Описание аргументов функции см. в @ref{mglGraphAB class}.
-@end deftypefn
-@deftypefn {C function} @code{HMGL} mgl_create_graph_fltk (@code{int (*}draw@code{)(HMGL gr, void *p)}, @code{const char *}title, @code{void *}par)
-Создает экземпляр класса mglGraphFLTK и связанное с ним окно. Одновременно может быть открыто несколько окно. Однако Вы должны вызвать функцию @code{mgl_fltk_run()} для начала обработки сообщений окну. Описание аргументов функции см. в @ref{mglGraphAB class}. Замечу, что параметр @var{draw} может быть равным @code{NULL} для отображения текущей статической картинки (анимация и слайды не доступны).
-@end deftypefn
-@deftypefn {C function} @code{HMGL} mgl_create_graph_qt (@code{int (*}draw@code{)(HMGL gr, void *p)}, @code{const char *}title, @code{void *}par)
-Создает экземпляр класса mglGraphQT и связанное с ним окно. Одновременно может быть открыто несколько окно. Однако Вы должны вызвать функцию @code{mgl_qt_run()} для начала обработки сообщений окну. Описание аргументов функции см. в @ref{mglGraphAB class}. Замечу, что параметр @var{draw} может быть равным @code{NULL} для отображения текущей статической картинки (анимация и слайды не доступны).
-@end deftypefn
-@deftypefn {C function} @code{void} mgl_fltk_run ()
-Запускает цикл обработки сообщений FLTK. Обычно программа завершает функцию main() вызовом @code{return mgl_fltk_run();}.
-@end deftypefn
-@deftypefn {C function} @code{void} mgl_fltk_thread ()
-Запускает цикл обработки сообщений FLTK. В отличие от @code{mgl_fltk_run()} цикл запускается в отдельном потоке, так что основная программа продолжает выполнение сразу.
-@end deftypefn
-@deftypefn {C function} @code{void} mgl_qt_run ()
-Запускает цикл обработки сообщений Qt. Обычно программа завершает функцию main() вызовом @code{return mgl_qt_run();}.
-@end deftypefn
-@deftypefn {C function} @code{void} mgl_qt_thread ()
-Запускает цикл обработки сообщений Qt. В отличие от @code{mgl_qt_run()} цикл запускается в отдельном потоке, так что основная программа продолжает выполнение сразу.
-@end deftypefn
-@deftypefn {C function} @code{void} mgl_update (@code{HMGL} graph)
-Обновляет содержимое экрана.
-@end deftypefn
-
-@deftypefn {C function} @code{void} mgl_set_show_mouse_pos (@code{HMGL} graph, @code{int} enable)
-Switch to show or not in the widget the last mouse click position.
-@end deftypefn
-@deftypefn {C function} @code{void} mgl_get_last_mouse_pos (@code{HMGL} graph, @code{float *}x, @code{float *}y, @code{float *}z)
-Last position of mouse click.
-@end deftypefn
-@deftypefn {C function} @code{void} mgl_calc_xyz (@code{HMGL} graph, @code{int} xs, @code{int} ys, @code{float *}x, @code{float *}y, @code{float *}z)
-Calculate 3D coordinate @{x,y,z@} for screen point @{xs,ys@}. At this moment it ignore perspective and transformation formulas (curvilinear coordinates). The calculation are done for the last used InPlot (@pxref{Transformation matrix}).
-@end deftypefn
-
-
-@item Functions for data creation:
-@deftypefn {C function} @code{HMDT} mgl_create_data ()
-Create simple instance of class mglData.
-@end deftypefn
-@deftypefn {C function} @code{HMDT} mgl_create_data_size (@code{int} nx, @code{int} ny, @code{int} nz)
-Create instance of class mglData with specified sizes.
-@end deftypefn
-@deftypefn {C function} @code{HMDT} mgl_create_data_file (@code{const char *}fname)
-Create instance of class mglData and fill it by data from text file.
-@end deftypefn
-
-@item Each created object @strong{must} be deleted after usage by functions:
-@deftypefn {C function} @code{void} mgl_delete_graph (@code{HMGL} graph)
-Delete the instance of class. Must be used after plotting for every created graphical object.
-@end deftypefn
-@deftypefn {C function} @code{void} mgl_delete_data (@code{HMDT} dat)
-Delete the instance of class. Must be used after using for every created data object.
-@end deftypefn
+@item @code{mglGraph}
+-- provide most plotting functions (@pxref{MathGL core}).
+@item @code{mglData}
+-- provide base data processing (@pxref{Data handling}). It have an additional feature to access data values. You can use a construct like this: @code{dat[i]=sth;} or @code{sth=dat[i]} where flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1). You can also import NumPy arrays as input arguments in Python: @code{mgl_dat = mglData(numpy_dat);}.
+@c @item @code{mglParse} -- practically the same as C++ class @code{MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is denoted in the chapter title.
 @end itemize
 
-@node Python interface, , C interface, Interfaces
-@subsection Python интерфейс
-
-MathGL provide the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is denoted in the chapter title.
 
 To use Python classes just execute @samp{import mathgl}. The simplest example will be:
 @verbatim
 import mathgl
 a=mathgl.mglGraph()
 a.Box()
-a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
+a.WritePNG("test.png")
 @end verbatim
-Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes: 
+Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes like this:
 @verbatim
 from mathgl import *
 a=mglGraph()
 a.Box()
-a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
+a.WritePNG("test.png")
 @end verbatim
-It become useful if you will create many @code{mglData} object, for example.
+This becomes useful if you create many @code{mglData} objects, for example.
 
-There are 2 classes in Python interface:
-@itemize 
-@item @code{mglGraph}
--- provide practically the same functionality as C++ class @code{mglGraph} (@pxref{MathGL core}). But it is not abstract class and it allows one to select at construction stage which plotter (ZB or PS and so on) will be used.
-@item @code{mglData}
--- is absolutely the same class as C++ @code{mglData} (@pxref{mglData class}). But an additional feature to acess data values is added. You can use construction like this: @code{dat[i]=sth;} or @code{sth=dat[i]} at this flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1. Also you can import NumPy arrays as input arguments: @code{mgl_dat = mglData(numpy_dat);}.
-@c @item @code{mglParse} -- practically the same as C++ class @code{MathGL provide the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is denoted in the chapter title.
 
-To use Python classes just execute @samp{import mathgl}. The simplest example will be:
-@verbatim
-import mathgl
-a=mathgl.mglGraph()
-a.Box()
-a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
-@end verbatim
-Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes: 
-@verbatim
-from mathgl import *
-a=mglGraph()
-a.Box()
-a.WritePNG(</samp>&rsquo;test.png</samp>&rsquo;)
-@end verbatim
-It become useful if you will create many @code{mglData} object, for example.
+@node MGL interface, , Python interface, Interfaces
+@subsection MGL interface
 
-There are 2 classes in Python interface:
-@itemize 
-@item @code{mglGraph}
--- provide practically the same functionality as C++ class @code{mglGraph} (@pxref{MathGL core}). But it is not abstract class and it allows one to select at construction stage which plotter (ZB or PS and so on) will be used.
-@item @code{mglData}
--- is absolutely the same class as C++ @code{mglData} (@pxref{mglData class}). But an additional feature to acess data values is added. You can use construction like this: @code{dat[i]=sth;} or @code{sth=dat[i]} at this flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1.
-@c @item @code{mglParse} -- practically the same as C++ class @code{mglParse} (@pxref{mglParse class}).
+MathGL имеет встроенный скриптовый язык MGL для обработки и отображения данных. Скрипты MGL можно использовать как независимо (программами UDAV, mgl2png, mgl2eps, mgl2svg и пр., @pxref{Utilities}) так и вызовами библиотеки.
+
+Язык MGL достаточно простой. Каждая строка -- отдельная команда. Первое слово -- имя команды, а все остальные ее аргументы. Команда может иметь до 1000 аргументов (по крайней мере сейчас). Слова разделяются одно от другого пробелом или символом табуляции. Различий между верхним и нижним индексом нет, т.е. переменные @var{a} и @var{A} идентичны. Символ @samp{#} начинает комментарий -- все символы после него игнорируются до конца строки. Исключением является случай, когда @samp{#} входит в строку. Опции команды указываются после символа @samp{;} (@pxref{Command options}). Символ @samp{:} начинает новую команду (подобно переводу строки) если он расположен не внутри скобок или строки.
+
+Если строка содержит ссылки на внешние параметры (@samp{$0}, @samp{$1} ... @samp{$9}) или макроопределения (@samp{$a}, @samp{$b} ... @samp{$z}), то текущие значения параметров/макроопределений подставляются в строку вместо ссылки до выполнением команды. Это позволяет использовать один и тот же скрипт при различных входных параметрах командной строки или вводить макроопределения по ходу исполнения команд скрипта.
+
+Аргументы команды могут быть строками, переменными или числами.
+@itemize @bullet
+@item
+Строка -- произвольный набор символов между метками @samp{'}.
+
+@item
+Обычно переменная имеет имя, состоящее из букв и чисел (должно начинаться с буквы и не быть длиннее 64 символов). В качестве переменной можно использовать временные массивы, включающие в себя:
+@itemize @bullet
+@item
+срезы (``подмассивы'') массивов данных (подобно команде @ref{subdata}). Например, @code{a(1)} или @code{a(1,:)} или @code{a(1,:,:)} -- вторая строка массива @var{a}, @code{a(:,2)} или @code{a(:,2,:)} -- третий столбец, @code{a(:,:,0)} -- первый срез и т.д. Также можно выделить часть массива с m-го по n-ый элемент @code{a(m:n,:,:)} или просто @code{a(m:n)}.
+
+@item
+произвольные комбинации столбцов данных (например, @code{a('n*w^2/exp(t)')}), если столбцы данных были именованы командой @ref{idset} или в файле данных (в строке начинающейся с @code{##}).
+
+@item
+произвольное выражение из существующих переменных и констант. Например, @samp{sqrt(dat(:,5)+1)} даст временный массив данных с элементами равными @code{tmp[i,j] = sqrt(dat[i,5,j]+1)}.
+
+@item
+массивы с элементами заданными в квадратных скобках [], разделенные @samp{,}. При этом внутри выражения не должно быть пробелов! Например, @samp{[1,2,3]} даст временный массив из 3 элементов @{1, 2, 3@}; @samp{[[11,12],[21,22]]} даст матрицу 2*2 и т.д. Элементами такой конструкции могут быть и массивы если их размерности одинаковые, например @samp{[v1,v2,...,vn]}.
+
+@item
+результат команд построения новых данных (@pxref{Make another data}), если они заключены в фигурные скобки @{@}. Например, @samp{@{sum dat 'x'@}} даст временный массив, который есть результат суммирования @var{dat} вдоль 'x'. Это такой же массив как и @var{tmp}, полученный командой @samp{sum tmp dat 'x'}. При этом можно использовать вложенные конструкции, например @samp{@{sum @{max dat 'z'@} 'x'@}}.
 @end itemize
+Временные массивы не могут стоять в качестве первого аргумента команд, создающих массивы (например, @samp{new}, @samp{read}, @samp{hist} и т.д.).
 
-There is main difference from C++ classes -- Python class @code{mglGraph} don</samp>&rsquo;t have variables (options). All corresponding features are moved to methods.
-The core of MathGL Python class is @strong{mglGraph} class. It contains a lot of plotting functions for 1D, 2D and 3D plots. So most of sections is describe its methods. Its constructor have following arguments:
-
-@defop Constructor {mglGraph (Python)} @code{} mglGraph (@code{int} kind=@code{0}, @code{int} width=@code{600}, @code{int} height=@code{400})
-Create the instance of class mglGraph with specified sizes @var{width} and @var{height}. Parameter @var{type} may have following values: @samp{0} -- use @code{mglGraphZB} plotter (default), @samp{1} -- use @code{mglGraphPS} plotter, @samp{2} -- use @code{mglGraphGL} plotter, @samp{3} -- use @code{mglGraphIDTF} plotter.
-@end defop
+@item
+К скалярным переменным, кроме собственно чисел, относятся: специальные переменные @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1}, переменные с суффиксами (@pxref{Suffixes}), переменные определенные командой @ref{define}. Также массивы размером 1x1x1 считаются скалярами (например, @samp{pi/dat.nx}).
 @end itemize
+Перед первым использованием все переменные должны быть определены с помощью команд, создающих массивы (@ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} и др., @pxref{Data create} и @ref{Make another data}).
 
-There is main difference from C++ classes -- Python class @code{mglGraph} don</samp>&rsquo;t have variables (options). All corresponding features are moved to methods. The core of MathGL Python class is @strong{mglGraph} class. It contains a lot of plotting functions for 1D, 2D and 3D plots. So most of sections is describe its methods. Its constructor have following arguments:
-
-@defop Constructor {mglGraph (Python)} @code{} mglGraph (@code{int} kind=@code{0}, @code{int} width=@code{600}, @code{int} height=@code{400})
-Create the instance of class mglGraph with specified sizes @var{width} and @var{height}. Parameter @var{type} may have following values: @samp{0} -- use @code{mglGraphZB} plotter (default), @samp{1} -- use @code{mglGraphPS} plotter, @samp{2} -- use @code{mglGraphGL} plotter, @samp{3} -- use @code{mglGraphIDTF} plotter.
-@end defop
+Команды могут иметь несколько наборов аргументов (например, @code{plot ydat} и @code{plot xdat ydat}). Все аргументы команды для выбранного набора должны быть указаны, однако часть из них могут иметь значения по умолчанию. Такие аргументы в описании команд будут помещены в квадратные скобки [], например @code{plot ydat ['stl'='' zval=nan]}. При этом запись @code{[arg1 arg2 arg3 ...]} подразумевает @code{[arg1 [arg2 [arg3 ...]]]}, т.е. опускать можно только аргументы с конца, если вы согласны с их значениями по умолчанию. Например, @code{plot ydat '' 1} или @code{plot ydat ''} правильно, а @code{plot ydat 1} не правильно (аргумент @code{'stl'} пропущен).
 
 
 @node Thanks, , Interfaces, Overview
@@ -407,11 +360,11 @@ Create the instance of class mglGraph with specified sizes @var{width} and @var{
 @item
 My special thanks to Marina Balakina for the patience during library writing and for the help in documentation writing and spelling.
 @item
-I</samp>&rsquo;m thankful to D. Kulagin and S.M. Plis for making Debian packages.
+I'm thankful to D. Kulagin and S.M. Plis for making Debian packages.
 @item
-I</samp>&rsquo;m thankful to M. Vidassov for the help in handling solid UTF-8 fonts.
+I'm thankful to M. Vidassov for the help in handling solid UTF-8 fonts.
 @item
-I</samp>&rsquo;m thankful to N. Troickiy and V. Lipatov for making RPM packages.
+I'm thankful to N. Troickiy and V. Lipatov for making RPM packages.
 @item
-I</samp>&rsquo;m thankful to S. Skobelev, A. Korotkevich, V. Onuchin, S.M. Plis, R. Kiselev, A. Ivanov, M. Vidiassov and V. Lipatov for fruitful comments.
+I'm thankful to S. Skobelev, A. Korotkevich, V. Onuchin, S.M. Plis, R. Kiselev, A. Ivanov, M. Vidiassov and V. Lipatov for fruitful comments.
 @end itemize

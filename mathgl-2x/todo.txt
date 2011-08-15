@@ -19,8 +19,9 @@
 10. Read DICOM files.
 11. Labels at TriCont()
 12. Cones() -- like Bars() but by Cone()
-13. MPISend(), MPIReceive()
-14. Add diffusive light (no dependence of normale but have direction)
+13. MPI_Send(), MPI_Recv()
+14. Add diffusive light (no dependence of normals but have direction)
+15. SetCoor() -- add log-log, log-x, log-y predefined coordinates
 
 ============= UNSURE ===========
 
@@ -43,34 +44,26 @@
 2. FAQ about sizes of plot (parametrical, or Min*Max)
 3. FAQ about MinGW -- http://www.mingw.org/wiki/FAQ
 4. MGL docs -- text what formulas are applicable for scalars too.
-5. Manual labels in string with '\n' separator
 6. tune colors as {} -- for example, '{b3}'
 7. Sample about pthread using.
 8. Add help about cmake and GIF/JPEG to the "Installation and using"
 9. Regroup pictures in WWW by big classes + combo plots
-10. Add '[' as separator in string
 11. On which things the subplot influence
 12. About unrotated text
 13. Add "Howto" section in web site.
 14. "Data plotting", "Data plot", "Scientific visualtization", "Surface", "Cloud","Plot", "statistical graphics" to website
 15. Examples of animation, u3d, x3d, js and so on
 16. Example of inverted axis, minus-log axis
-17. swap color and font style in text option ('bR:r' -> 'r:bR')
 18. Surf3A -- data a can be vector with size as number of isosurfaces
-19. Rename 'roman' font style to 'regular'
 20. Venn() diagram sample
-21. '@' -- draw boxed text.
-22. Rhomb() can have gradient if 3 colors is specified (1st, border, 2nd); Ellipse() and Rhomb() parse '#' and '@' flags
 23. Pipes in mglview, mglconv (stdin)
 24. Parallelization:
 	* user level -- SetDrawReg(), PutDrawReg()
 	* MPI level -- Combine()
 	* MathGL level -- pthread in mglData, ???
 25. Allow interpolation in SubData and in MGL if argument is not integer
-26. Error() draw "big" transpared marks if '@' is specified
 27. 'half-transparent' -> 'semitransparent'
 28. Style 'v' draw arrows at flow lines
-29. Add Candle() plot
 
 ============= BUGS =============
 

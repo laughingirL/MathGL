@@ -53,7 +53,6 @@ void mgl_add_light(HMGL gr, int n, float x, float y, float z, char c)
 //-----------------------------------------------------------------------------
 void mgl_mat_push(HMGL gr)	{	_Gr_->Push();	}
 void mgl_mat_pop(HMGL gr)	{	_Gr_->Pop();	}
-void mgl_identity(HMGL gr, int rel)	{	_Gr_->Identity(rel);	}
 void mgl_clf(HMGL gr)	{	_Gr_->Clf();	}
 void mgl_clf_rgb(HMGL gr, float r, float g, float b){	_Gr_->Clf(mglColor(r,g,b));	}
 //-----------------------------------------------------------------------------
@@ -84,10 +83,10 @@ void mgl_rotate_vector(HMGL gr, float Tet,float x,float y,float z)
 {	_Gr_->RotateN(Tet,x,y,z);	}
 void mgl_perspective(HMGL gr, float val)
 {	_Gr_->Perspective(val);	}
-void mgl_frame_box(HMGL gr, const char *title, const char *stl, float size)
-{	_Gr_->FrameBox(title,stl,size);	}
-void mgl_frame_box_w(HMGL gr, const wchar_t *title, const char *stl, float size)
-{	_Gr_->FrameBox(title,stl,size);	}
+void mgl_title(HMGL gr, const char *title, const char *stl, float size)
+{	_Gr_->Title(title,stl,size);	}
+void mgl_titlew(HMGL gr, const wchar_t *title, const char *stl, float size)
+{	_Gr_->Title(title,stl,size);	}
 //-----------------------------------------------------------------------------
 int mgl_new_frame_(uintptr_t *gr)		{	return _GR_->NewFrame();	}
 void mgl_end_frame_(uintptr_t *gr)		{	_GR_->EndFrame();	}
@@ -107,7 +106,6 @@ void mgl_add_light_ext_(uintptr_t *gr, int *n, float *x, float *y, float *z, cha
 //-----------------------------------------------------------------------------
 void mgl_mat_push_(uintptr_t *gr)	{	_GR_->Push();	}
 void mgl_mat_pop_(uintptr_t *gr)	{	_GR_->Pop();	}
-void mgl_identity_(uintptr_t *gr, int *rel)	{	_GR_->Identity(*rel);	}
 void mgl_clf_(uintptr_t *gr)
 {	_GR_->Clf();	}
 void mgl_clf_rgb_(uintptr_t *gr, float *r, float *g, float *b)
@@ -134,10 +132,10 @@ void mgl_columnplot_d_(uintptr_t *gr, int *num, int *i, float *d)
 void mgl_stickplot_(uintptr_t *gr, int *num, int *i, float *tet, float *phi)
 {	_GR_->StickPlot(*num, *i, *tet, *phi);	}
 
-void mgl_frame_box_(uintptr_t *gr, const char *title, const char *stl, float *size, int l,int m)
+void mgl_title_(uintptr_t *gr, const char *title, const char *stl, float *size, int l,int m)
 {	char *t=new char[l+1];	memcpy(t,title,l);	t[l]=0;
 	char *s=new char[m+1];	memcpy(s,stl,m);	s[m]=0;
-	_GR_->FrameBox(t,s,*size);	delete []s;	delete []t;	}
+	_GR_->Title(t,s,*size);	delete []s;	delete []t;	}
 void mgl_aspect_(uintptr_t *gr, float *Ax,float *Ay,float *Az)
 {	_GR_->Aspect(*Ax,*Ay,*Az);	}
 void mgl_rotate_(uintptr_t *gr, float *TetX,float *TetZ,float *TetY)
@@ -318,17 +316,27 @@ void mgl_colorbar_val_ext_(uintptr_t *gr, uintptr_t *dat, const char *sch,int *w
 void mgl_add_legend_(uintptr_t *gr, const char *text,const char *style,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,style,n);	f[n]=0;
-	if(gr)	_GR_->AddLegend(s,f);	delete []s;	delete []f;	}
+	_GR_->AddLegend(s,f);	delete []s;	delete []f;	}
 void mgl_clear_legend_(uintptr_t *gr)	{	if(gr)	_GR_->ClearLegend();	}
 void mgl_legend_xy_(uintptr_t *gr, float *x, float *y, const char *font, float *size, float *llen,int l)
 {	char *s=new char[l+1];	memcpy(s,font,l);	s[l]=0;
-	if(gr)	_GR_->Legend(*x, *y, s, *size,*llen);	delete []s;	}
+	_GR_->Legend(*x, *y, s, *size,*llen);	delete []s;	}
 void mgl_legend_(uintptr_t *gr, int *where, const char *font, float *size, float *llen,int l)
 {	char *s=new char[l+1];	memcpy(s,font,l);	s[l]=0;
-	if(gr)	_GR_->Legend(*where, s, *size,*llen);	delete []s;	}
+	_GR_->Legend(*where, s, *size,*llen);	delete []s;	}
 void mgl_set_legend_marks_(uintptr_t *gr, int *num)
 {	_GR_->SetLegendMarks(*num);	}
 //-----------------------------------------------------------------------------
 void mgl_set_quality(HMGL gr, int qual)			{	_Gr_->SetQuality(qual);	}
 void mgl_set_quality_(uintptr_t *gr, int *qual)	{	_GR_->SetQuality(*qual);	}
+//-----------------------------------------------------------------------------
+void mgl_set_plotid(HMGL gr, const char *id,int l)	{	_Gr_->PlotId = id;	}
+void mgl_set_plotid_(uintptr_t *gr, const char *id,int l)
+{	char *s=new char[l+1];	memcpy(s,id,l);	s[l]=0;
+	_GR_->PlotId = s;	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_mpi_send(HMGL gr, int id)	{	_Gr_->MPI_Send(id);	}
+void mgl_mpi_recv(HMGL gr, int id)	{	_Gr_->MPI_Recv(id);	}
+void mgl_mpi_send_(uintptr_t *gr, int *id)	{	_GR_->MPI_Send(*id);	}
+void mgl_mpi_recv_(uintptr_t *gr, int *id)	{	_GR_->MPI_Recv(*id);	}
 //-----------------------------------------------------------------------------

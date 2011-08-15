@@ -1,4 +1,4 @@
-
+@c ------------------------------------------------------------------
 @node Coordinate axes, Line styles, , General concepts
 @subsection Coordinate axes
 
@@ -51,6 +51,7 @@ One may specify to draw a special symbol (an arrow) at the beginning and at the 
 @caption{Arrow styles.}
 @end float
 
+@c ------------------------------------------------------------------
 @node Color scheme, Font styles, Line styles, General concepts
 @subsection Color scheme
 
@@ -77,14 +78,15 @@ There are several useful combinations. String @samp{kw} corresponds to the simpl
 
 When coloring by @emph{coordinate}, the final color is determined by the position of the point in 3d space and is calculated from formula c=x*c[1] + y*c[2] + z*c[3]. Here, c[1], c[2], c[3] are the first three elements of color array; x, y, z are normalized to @var{Min} -- @var{Max} coordinates of the point. This type of coloring is useful for isosurface plot where color may show the exact position of a piece of surface.
 
+@c ------------------------------------------------------------------
 @node Font styles, Textual formulas, Color scheme, General concepts
 @subsection Font styles
 
 @cindex Font styles
 
-Text style is specified by the string which may contain several characters of font (@samp{ribwou}) and/or alignment (@samp{LRC}) specifications. The string also may contain the color id characters @samp{wkrgbcymhRGBCYMHW} (@pxref{Line styles}) after the symbol @samp{:}. For example, @samp{biC:b} sets the bold italic font text aligned at the center and with blue color.
+Text style is specified by the string which may contain several characters of font (@samp{ribwou}) and/or alignment (@samp{LRC}) specifications. The string also may contain the color id characters @samp{wkrgbcymhRGBCYMHW} (@pxref{Line styles}) after the symbol @samp{:}. For example, @samp{r:iCb} sets the bold italic font text aligned at the center and with red color.
 
-The font types are: @samp{r} -- roman font, @samp{i} -- italic style, @samp{b} -- bold style. By default roman roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Additional font effects are: @samp{w} -- wired, @samp{o} -- over-lined, @samp{u} -- underlined. 
+The font types are: @samp{r} -- roman (or regular) font, @samp{i} -- italic style, @samp{b} -- bold style. By default roman roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Additional font effects are: @samp{w} -- wired, @samp{o} -- over-lined, @samp{u} -- underlined. 
 @c Also a parsing of the LaTeX-like syntax is provided (for detail, @pxref{mglFont class} and @ref{Font settings}).
 
 Also a parsing of the LaTeX-like syntax is provided. There are commands for the font style changing inside the string (for example, use \b for bold font): \a or \overline -- over-lined, \b or \textbf -- bold, \i or \textit -- italic, \r or \textrm -- roman (disable bold and italic attributes), \u or \underline -- underlined, \w or \wire -- wired, \big -- bigger size, @@ -- smaller size. The lower and upper indexes are specified by @samp{_} and @samp{^} symbols. At this the changed font style is applied only on next symbol or symbols in braces @{@}. The text in braces @{@} are treated as single symbol that allow one to print the index of index. For example, compare the strings @samp{sin (x^@{2^3@})} and @samp{sin (x^2^3)}. You may also change text color inside string by command #? or by \color? where @samp{?} is symbolic id of the color (@pxref{Line styles}). For example, words @samp{Blue} and @samp{red} will be colored in the string @samp{#b@{Blue@} and \colorr@{red@} text}. The most of functions understand the newline symbol @samp{\n} and allows to print multi-line text. Finally, you can use arbitrary UTF codes by command @code{\utf0x????}. For example, @code{\utf0x3b1} will produce
@@ -117,7 +119,8 @@ The small part of most common special TeX symbols are: @math{\angle} -- \angle, 
 The font size can be defined explicitly (if @var{size}>0) or relative to a base font size as |@var{size}|*@var{FontSize} (if @var{size}<0). The value @var{size}=0 specifies that the string will not be printed. The base font size is measured in internal ``MathGL'' units. Special functions @code{SetFontSizePT(), SetFontSizeCM(), SetFontSizeIN()} allow one to set it in more ``common'' variables for a given dpi value of the picture.
 
 
-@node Textual formulas, , Font styles, General concepts
+@c ------------------------------------------------------------------
+@node Textual formulas, Command options, Font styles, General concepts
 @subsection Textual formulas
 
 @cindex Textual formulas
@@ -169,3 +172,62 @@ Note, some of these functions are unavailable if NO_GSL is defined during compil
 There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN.
 
 
+@c ------------------------------------------------------------------
+@node  Command options, , Textual formulas, General concepts
+@section Command options
+
+Command options allow the easy setup of the plot by changing of global settings only for this plot. Each option is separated from the previous text by symbol @samp{;}. Options work so that them remember the current settings, change settings as it being set in the option, execute command and return the original settings back. So, the options usage for data handling commands or for graphics setup commands is useless.
+
+The most useful options are @code{xrange, yrange, zrange}. They sets the boundaries for data change. This boundaries are used for automatically filled variables. So, these options allow one to change the position of some plots. For example, in command @code{Plot(y,"","xrange 0.1 0.9");} or @code{plot y; xrange 0.1 0.9} the x coordinate will be equidistantly distributed in range 0.1 ... 0.9.
+
+The full list of options are:
+@cindex alpha
+@cindex alphadef
+@deffn {MGL option} alpha @code{val}
+@deffnx {MGL option} alphadef @code{val}
+Sets alpha value (transparency) of the plot. The value should be in range [0, 1]. See also @ref{alphadef}.
+@end deffn
+@cindex ambient
+@deffn {MGL option} ambient @code{val}
+Sets brightness of ambient light for the plot. The value should be in range [0, 1]. See also @ref{ambient}.
+@end deffn
+@cindex crange
+@deffn {MGL option} crange @code{val1 val2}
+Sets boundaries of color change for the plot. See also @ref{crange}.
+@end deffn
+@cindex xrange
+@deffn {MGL option} xrange @code{val1 val2}
+Sets boundaries of x coordinate change for the plot. See also @ref{xrange}.
+@end deffn
+@cindex yrange
+@deffn {MGL option} yrange @code{val1 val2}
+Sets boundaries of y coordinate change for the plot. See also @ref{yrange}.
+@end deffn
+@cindex zrange
+@deffn {MGL option} zrange @code{val1 val2}
+Sets boundaries of z coordinate change for the plot. See also @ref{zrange}.
+@end deffn
+@cindex cut
+@deffn {MGL option} cut @code{val}
+Sets whether to cut or to project the plot points lying outside the bounding box. See also @ref{cut}.
+@end deffn
+@cindex fontsize
+@deffn {MGL option} fontsize @code{val}
+Sets the size of text. See also @ref{font}.
+@end deffn
+@cindex marksize
+@deffn {MGL option} marksize @code{val}
+Sets the size of marks. See also @ref{marksize}.
+@end deffn
+@cindex meshnum
+@deffn {MGL option} meshnum @code{val}
+Work like @ref{meshnum} command.
+@end deffn
+@cindex legend
+@deffn {MGL option} legend 'txt'
+Adds string 'txt' to internal legend accumulator. The style of described line and mark is taken from arguments of the last @ref{1D plotting} command. See also @ref{legend}.
+@end deffn
+@cindex value
+@deffn {MGL option} value @code{val}
+Set the value to be used as additional numeric parameter in plotting command.
+@end deffn

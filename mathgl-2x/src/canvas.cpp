@@ -24,7 +24,7 @@
 mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
 	clr(MGL_DISABLE_SCALE);
-	Z=0;	C=G=G4=0;	OI=0;	PlotId=0;	gif=0;
+	Z=0;	C=G=G4=0;	OI=0;	gif=0;
 	CurFrameId=0;
 	Width=Height=Depth=0;	ObjId=-1;
 	fscl=ftet=0;
@@ -714,7 +714,7 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 	Pop();	EndGroup();	delete []ff;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::FrameBox(const char *title,const char *stl,float size)
+void mglCanvas::Title(const char *title,const char *stl,float size)
 {
 	wchar_t *wcs = 0;
 	if(title)
@@ -723,11 +723,11 @@ void mglCanvas::FrameBox(const char *title,const char *stl,float size)
 		wcs = new wchar_t[s];
 		mbstowcs(wcs,title,s);
 	}
-	FrameBox(wcs, stl,size);
+	Title(wcs, stl,size);
 	if(wcs)	delete []wcs;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::FrameBox(const wchar_t *title,const char *stl,float size)
+void mglCanvas::Title(const wchar_t *title,const char *stl,float size)
 {
 	float s = size>0 ? size/FontSize:-size, h=TextHeight(stl,size)*s/2;
 	if(h>=inH)	{	SetWarn(mglWarnSpc,"FrameBox");	return;	}

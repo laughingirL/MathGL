@@ -1,24 +1,24 @@
 @c ------------------------------------------------------------------
-@chapter mglData class
+@chapter Data processing
 
 Class for working with data array. This class is defined in @code{#include <mgl/mgl_data.h>}. The class has functions for easy and safe allocation, resizing, loading and saving, modifying of data arrays. Also it can numerically differentiate and integrate data, interpolate, fill data by formula and so on. Class supports data with dimensions up to 3 (like function of 3 variables -- x,y,z). The internal representation of numbers is float. Float type was chosen because it has smaller size in memory and usually it has enough precision in plotting purposes. You can change it by selecting option @code{--enable-double} at the library configuring (@pxref{Installation and usage}).
 
 @menu
-* Public variables::            
-* Create and delete::           
-* Fill::                        
-* Rearrange::                   
-* File I/O::                    
-* Make another data::           
-* Change data::      
-* Interpolation::               
-* Informational functions::     
-* Operators::                   
-* Global functions::            
+* Public variables::
+* Data create::
+* Fill::
+* Rearrange::
+* File I/O::
+* Make another data::
+* Change data::
+* Interpolation::
+* Informational functions::
+* Operators::
+* Global functions::
 @end menu
 
 @c ------------------------------------------------------------------
-@node Public variables, Create and delete, , mglData class
+@node Public variables, Data create, , Data processing
 @section Public variables
 
 @deftypecv {Variable} mglData @code{float *} a
@@ -39,8 +39,8 @@ Column (or slice if nz>1) names -- one character per column.
 
 
 @c ------------------------------------------------------------------
-@node Create and delete, Fill, Public variables, mglData class
-@section Create and delete
+@node Data create, Fill, Public variables, Data processing
+@section Data create
 @cindex mglData
 @cindex Set
 
@@ -105,7 +105,7 @@ Allocates memory and scanf the data from the string.
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Fill, Rearrange, Create and delete, mglData class
+@node Fill, Rearrange, Data create, Data processing
 @section Fill
 @cindex Fill
 @cindex Modify
@@ -162,7 +162,7 @@ Gets the z-size of the data.
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Rearrange, File I/O, Fill, mglData class
+@node Rearrange, File I/O, Fill, Data processing
 @section Rearrange
 @cindex Rearrange
 @cindex Extend
@@ -184,7 +184,7 @@ Rearrange dimensions without changing data array so that resulting sizes should 
 @end deftypefn
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{void} Extend (@code{int} n1, @code{int} n2=@code{0})
 @deftypefnx {C function} @code{void} mgl_data_extend (@code{HMDT} dat, @code{int} n1, @code{int} n2)
-Increase the dimensions of the data by inserting new (|@var{n1}|+1)-th slices after (for @var{n1}>0) or before (for @var{n1}<0) of existed one. It is possible to insert 2 dimensions simultaneously for 1d data by using parameter @var{n2}. Data to new slices is copy from existed one. For example, for @var{n1}>0 new array will be 
+Increase the dimensions of the data by inserting new (|@var{n1}|+1)-th slices after (for @var{n1}>0) or before (for @var{n1}<0) of existed one. It is possible to insert 2 dimensions simultaneously for 1d data by using parameter @var{n2}. Data to new slices is copy from existed one. For example, for @var{n1}>0 new array will be
 @iftex
 @math{a_{ij}^{new} = a_i^{old}} where j=0...@var{n1}. Correspondingly, for @var{n1}<0 new array will be @math{a_{ij}^{new} = a_j^{old}} where i=0...|@var{n1}|.
 @end iftex
@@ -242,7 +242,7 @@ Delete @var{num} slices along @var{dir}-direction at position @var{pos}.
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node File I/O, Make another data, Rearrange, mglData class
+@node File I/O, Make another data, Rearrange, Data processing
 @section File I/O
 @cindex Read
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{void} Read (@code{const char *}fname)
@@ -295,7 +295,7 @@ Saves data matrix (or @code{ns}-th slice for 3d data) to bitmap file (now suppor
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Make another data, Change data, File I/O, mglData class
+@node Make another data, Change data, File I/O, Data processing
 @section Make another data
 
 @cindex SubData
@@ -389,7 +389,7 @@ Resizes the data to new size @var{mx}, @var{my}, @var{mz} from box (part) [@var{
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Change data, Interpolation, Make another data, mglData class
+@node Change data, Interpolation, Make another data, Data processing
 @section Change data
 
 These functions change the data in some direction like differentiations, integrations and so on. The direction in which the change will applied is specified by the string parameter, which may contain @samp{x}, @samp{y} or @samp{z} characters for 1-st, 2-nd and 3-d dimension correspondengly.
@@ -491,7 +491,7 @@ Normalizes the data to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} 
 @cindex NormSl
 @deftypefn {Метод класса @code{mglData} (C++, Python)} @code{void} NormSl (@code{float} v1=@code{0}, @code{float} v2=@code{1}, @code{char} dir=@code{'z'}, @code{bool} keep_en=@code{true}, @code{bool} sym=@code{false})
 @deftypefnx {Функция С} @code{void} mgl_data_norm_slice (@code{HMDT} dat, @code{float} v1, @code{float} v2, @code{char} dir, @code{int} keep_en, @code{int} sym)
-Normalizes data slice-by-slice along direction @var{dir} the data in slices to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} then symmetrical interval [-max(|v1|,|v2|), max(|v1|,|v2|)] is used. If @var{keep_en} is set then maximal value of k-th slice will be limited by 
+Normalizes data slice-by-slice along direction @var{dir} the data in slices to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{true} then symmetrical interval [-max(|v1|,|v2|), max(|v1|,|v2|)] is used. If @var{keep_en} is set then maximal value of k-th slice will be limited by
 @iftex
 @math{\sqrt{\sum a_{ij}(k)/\sum a_{ij}(0)}}.
 @end iftex
@@ -501,7 +501,7 @@ Normalizes data slice-by-slice along direction @var{dir} the data in slices to r
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Interpolation, Informational functions, Change data, mglData class
+@node Interpolation, Informational functions, Change data, Data processing
 @section Interpolation
 @cindex Spline
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{float} Spline (@code{float} x, @code{float} y=@code{0}, @code{float} z=@code{0}) @code{const}
@@ -541,7 +541,7 @@ Gets the pointer to internal data array.
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Informational functions, Operators, Interpolation, mglData class
+@node Informational functions, Operators, Interpolation, Data processing
 @section Informational functions
 @cindex PrintInfo
 @deftypefn {Метод класса @code{mglData} (C++)} @code{void} PrintInfo (@code{char *}buf, @code{bool} all=@code{false}) @code{const}
@@ -609,7 +609,7 @@ Determines if any nonzero value of formula in the data array.
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Operators, Global functions, Informational functions, mglData class
+@node Operators, Global functions, Informational functions, Data processing
 @section Operators
 
 @deftypefn {Method on @code{mglData} (C++, Python)} @code{void} operator= (@code{const mglData &}d)
@@ -687,7 +687,7 @@ Divides by the number.
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node Global functions, , Operators, mglData class
+@node Global functions, , Operators, Data processing
 @section Global functions
 
 These functions are not methods of @code{mglData} class. However it have additional functionality to handle data. So I put it in this chapter.
@@ -719,7 +719,7 @@ Solves GO ray equation like dr/dt = d @var{ham}/dp, dp/dt = -d @var{ham}/dr. Thi
 
 @deftypefn {Global function} @code{mglData} mglQO2d (@code{const char *}ham, @code{const mglData &}ini_re, @code{const mglData &}ini_im, @code{const mglData &}ray, @code{float} r=@code{1}, @code{float} k0=@code{100}, @code{mglData *}xx=@code{0}, @code{mglData *}yy=@code{0}, @code{bool} UseR=@code{true})
 @deftypefnx {C function} @code{HMDT} mgl_qo2d_solve (@code{const char *}ham, @code{const HMDT} ini_re, @code{const HMDT} ini_im, @code{const HMDT} ray, @code{float} r, @code{float} k0, @code{HMDT} xx, @code{HMDT} yy)
-Solves equation du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators (see @code{mglPDE()} for details). Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{ray} set the reference ray, i.e. the ray around which the accompanied coordinate system will be maked. You may use, for example, the array created by @code{mglRay()} function. Note, that the reference ray @strong{must be} smooth enough to make accompanied coodrinates unambiguity. Otherwise errors in the solution may appear. If @var{xx} and @var{yy} are non-zero then Cartesian coordinates for each point will be written into them. See also @code{mglPDE()}. @sref{Beam tracing sample} 
+Solves equation du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators (see @code{mglPDE()} for details). Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{ray} set the reference ray, i.e. the ray around which the accompanied coordinate system will be maked. You may use, for example, the array created by @code{mglRay()} function. Note, that the reference ray @strong{must be} smooth enough to make accompanied coodrinates unambiguity. Otherwise errors in the solution may appear. If @var{xx} and @var{yy} are non-zero then Cartesian coordinates for each point will be written into them. See also @code{mglPDE()}. @sref{Beam tracing sample}
 @end deftypefn
 
 @deftypefn {Global function} @code{mglData} mglJacobian (@code{const mglData &}x, @code{const mglData &}y)

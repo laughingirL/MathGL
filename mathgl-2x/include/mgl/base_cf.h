@@ -45,9 +45,7 @@ void mgl_set_range_val(HMGL gr, char dir, float v1,float v2);
 void mgl_set_range_dat(HMGL gr, char dir, HCDT a, int add);
 
 void mgl_set_origin(HMGL graph, float x0, float y0, float z0);
-void mgl_set_auto(HMGL gr, float x1, float x2, float y1, float y2, float z1, float z2, float c1, float c2);
-void mgl_set_func(HMGL graph, const char *EqX,const char *EqY,const char *EqZ);
-void mgl_set_func_ext(HMGL graph, const char *EqX,const char *EqY,const char *EqZ,const char *EqA);
+void mgl_set_func(HMGL graph, const char *EqX,const char *EqY,const char *EqZ,const char *EqA);
 void mgl_set_coor(HMGL gr, int how);
 void mgl_set_ternary(HMGL gr, int enable);
 void mgl_set_cutoff(HMGL graph, const char *EqC);
@@ -90,9 +88,7 @@ void mgl_set_range_val_(uintptr_t *gr, const char *dir, float *v1,float *v2,int)
 void mgl_set_range_dat_(uintptr_t *gr, const char *dir, uintptr_t *a, int *add,int);
 
 void mgl_set_origin_(uintptr_t *gr, float *x0, float *y0, float *z0);
-void mgl_set_auto_(uintptr_t *gr, float *x1, float *x2, float *y1, float *y2, float *z1, float *z2, float *c1, float *c2);
-void mgl_set_func_(uintptr_t *graph, const char *EqX, const char *EqY, const char *EqZ, int, int, int);
-void mgl_set_func_ext_(uintptr_t *graph, const char *EqX, const char *EqY, const char *EqZ, const char *EqA, int, int, int, int);
+void mgl_set_func_(uintptr_t *graph, const char *EqX, const char *EqY, const char *EqZ, const char *EqA, int, int, int, int);
 void mgl_set_coor_(uintptr_t *gr, int *how);
 void mgl_set_ternary_(uintptr_t *graph, int *enable);
 void mgl_set_cutoff_(uintptr_t *graph, const char *EqC, int);

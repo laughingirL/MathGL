@@ -1,7 +1,6 @@
 SUBDIRS				= png .
 
-CLEANFILES = mathgl_en.info mathgl_en.info-1 mathgl_en.info-2 mathgl_en.info-3 mgl_en.info \
-mathgl_ru.info mathgl_ru.info-1 mathgl_ru.info-2 mathgl_ru.info-3 mathgl_ru.info-4 mgl_ru.info
+CLEANFILES = m*.info*
 
 MAKEINFOHTML		= texi2html
 TEXI2PDF			= texi2pdf

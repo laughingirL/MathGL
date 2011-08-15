@@ -29,6 +29,11 @@ if(use_glut)
 	target_link_libraries(mgl-glut mgl)
 	target_link_libraries(mgl-glut ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
 
+	if(use_pthread)
+		target_link_libraries(mgl-glut ${CMAKE_THREAD_LIBS_INIT})
+		add_definitions(-DHAVE_PTHREAD)
+	endif(use_pthread)
+
 	install(
 		TARGETS mgl-glut mgl-glut-static
 		RUNTIME DESTINATION bin
@@ -62,7 +67,6 @@ target_link_libraries(mgl-wnd mgl)
 
 if(use_pthread)
 	target_link_libraries(mgl-wnd ${CMAKE_THREAD_LIBS_INIT})
-	target_link_libraries(mgl-glut ${CMAKE_THREAD_LIBS_INIT})
 	add_definitions(-DHAVE_PTHREAD)
 endif(use_pthread)
 

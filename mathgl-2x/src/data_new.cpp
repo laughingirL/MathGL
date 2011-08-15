@@ -245,11 +245,12 @@ HMDT mgl_data_resize_box(HCDT dat, long mx,long my,long mz, float x1,float x2, f
 	mglData *r=new mglData(mx,my,mz);
 	const mglData *d=dynamic_cast<const mglData *>(dat);
 	if(!d)	return r;
-	mreal par[6]={x1,0,y1,0,z1,0};
-	long nn[6]={mx,my,mz,d->nx,d->ny,d->nz};
-	if(mx>1)	par[1] = (x2-x1)/(mx-1);
-	if(my>1)	par[3] = (y2-y1)/(my-1);
-	if(mz>1)	par[5] = (z2-z1)/(mz-1);
+	register long nx = d->nx-1, ny = d->ny-1, nz = d->nz-1;
+	mreal par[6]={nx*x1,0,ny*y1,0,nz*z1,0};
+	long nn[6]={mx,my,mz,nx+1,ny+1,nz+1};
+	if(mx>1)	par[1] = nx*(x2-x1)/(mx-1);
+	if(my>1)	par[3] = ny*(y2-y1)/(my-1);
+	if(mz>1)	par[5] = nz*(z2-z1)/(mz-1);
 	mglStartThread(mgl_resize,0,mx*my*mz,r->a,d->a,par,nn);
 	return r;
 }

@@ -116,19 +116,19 @@ void _mgl_key_up(unsigned char ch,int ,int )
 	if(ch=='P')
 	{
 		char str[128];
-		sprintf(str,"%s_%d.png",_mgl_glwnd->PlotId,_mgl_glwnd->curr_fig);
+		sprintf(str,"%s_%d.png",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
 		_mgl_glwnd->WritePNG(str, "Math GL");
 	}
 	if(ch=='J')
 	{
 		char str[128];
-		sprintf(str,"%s_%d.jpg",_mgl_glwnd->PlotId,_mgl_glwnd->curr_fig);
+		sprintf(str,"%s_%d.jpg",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
 		_mgl_glwnd->WriteJPEG(str, "Math GL");
 	}
 	if(ch=='E')
 	{
 		char str[128];
-		sprintf(str,"%s_%d.eps",_mgl_glwnd->PlotId,_mgl_glwnd->curr_fig);
+		sprintf(str,"%s_%d.eps",_mgl_glwnd->PlotId.c_str(),_mgl_glwnd->curr_fig);
 		_mgl_glwnd->WriteEPS(str, "Math GL");
 	}
 	if(ch==' ')	_mgl_glwnd->Clf();

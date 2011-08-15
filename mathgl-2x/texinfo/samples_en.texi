@@ -2520,7 +2520,6 @@ gr.Colorbar();
 @menu
 * Surf3 sample::                
 * Cloud sample::               
-* CloudP sample::               
 * Dens3 sample::                
 * Cont3 sample::                
 * ContF3 sample::               
@@ -2594,7 +2593,7 @@ gr.Surf3(a);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Cloud sample, CloudP sample, Surf3 sample, 3D plotting samples
+@node Cloud sample, Dens3 sample, Surf3 sample, 3D plotting samples
 @subsection Cloud sample
 @cindex Cloud
 @float
@@ -2653,53 +2652,7 @@ gr.Cloud(a,"wyrRk");
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node CloudP sample, Dens3 sample, Cloud sample, 3D plotting samples
-@subsection CloudP sample
-@cindex CloudP
-@float
-@image{../png/cloudp, 7cm}
-@c @caption{Example of CloudP. @tdref{cloudp}}
-@end float
-@ifclear UDAV
-@strong{C++ code}
-@verbatim
-mglData a(60,50,40);
-a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-gr->Rotate(40,60);
-gr->Alpha(true);
-gr->Box();
-gr->CloudP(a,"wyrRk");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-Not available.
-@ifclear UDAV
-@strong{Pure C code}
-@verbatim
-HMDT a = mgl_create_data_size(60,50,40);
-mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_set_alpha(gr,1);
-mgl_box(gr,1);
-mgl_cloudp(gr,a,"wyrRk",1.);
-mgl_delete_data(a);
-@end verbatim
-@strong{Fortran code}
-@verbatim
-integer a, mgl_create_data_size
-a = mgl_create_data_size(60,50,40);
-call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-call mgl_rotate(gr,40.,60.,0.)
-call mgl_set_alpha(gr,1)
-call mgl_box(gr,1)
-call mgl_cloudp(gr,a,'wyrRk',1.)
-call mgl_delete_data(a)
-@end verbatim
-@strong{Python}
-Not available.
-@end ifclear
-@c ------------------------------------------------------------------
-@node Dens3 sample, Cont3 sample, CloudP sample, 3D plotting samples
+@node Dens3 sample, Cont3 sample, Cloud sample, 3D plotting samples
 @subsection Dens3 sample
 @cindex Dens3
 @cindex Axis
@@ -5424,7 +5377,6 @@ subplot 2 2 3: rotate 40 60: axial a: box
 * Cont with labels sample::     
 * Ternary plot sample::         
 * Quaternary plot sample::         
-* Coloring by coordinates sample::  
 * Drops sample::                
 * Molecules drawing sample::    
 @end menu
@@ -6110,7 +6062,7 @@ gr.Label("t","t comp.");
 @c ------------------------------------------------------------------
 
 
-@node Quaternary plot sample, Coloring by coordinates sample, Ternary plot sample, Additional features
+@node Quaternary plot sample, Drops sample, Ternary plot sample, Additional features
 @subsection Quaternary plot sample
 @cindex Ternary
 @float
@@ -6179,64 +6131,9 @@ gr.Label('t',"A",1);    gr.Label('x',"B",1);
 gr.Label('y',"C",1);    gr.Label('z',"D",1);
 @end verbatim
 @end ifclear
-@c ------------------------------------------------------------------
 
-
-@node Coloring by coordinates sample, Drops sample, Quaternary plot sample, Additional features
-@subsection Coloring by coordinates sample
-@cindex Surf3
-@float
-@image{../png/surf3_rgbd, 7cm}
-@c @caption{Example of Surf3 colored by coordinates. @tdref{surf3_rgbd}}
-@end float
-@ifclear UDAV
-@strong{C++ code}
-@verbatim
-mglData a(60,50,40);
-a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-gr->Rotate(40,60);
-gr->Box();
-gr->Surf3(a,"bgrd");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new a 60 50 40
-modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-rotate 40 60
-box
-surf3 a 'bgrd'
-@end verbatim
-@ifclear UDAV
-@strong{Pure C code}
-@verbatim
-HMDT a = mgl_create_data_size(60,50,40);
-mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_box(gr,1);
-mgl_surf3(gr,a,"bgrd",3);
-mgl_delete_data(a);
-@end verbatim
-@strong{Fortran code}
-@verbatim
-integer a, mgl_create_data_size
-a = mgl_create_data_size(60,50,40);
-call mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-call mgl_rotate(gr,40.,60.,0.)
-call mgl_box(gr,1)
-call mgl_surf3(gr,a,'bgrd',3)
-call mgl_delete_data(a)
-@end verbatim
-@strong{Python}
-@verbatim
-a = mglData(60,50,40);
-a.Modify("-2*((2*x-1)^2+(2*y-1)^2+(2*z-1)^4-(2*z-1)^2-0.1)");
-gr.Rotate(40,60);       gr.Box();
-gr.Surf3(a,"bgrd");
-@end verbatim
-@end ifclear
 @c ------------------------------------------------------------------
-@node Drops sample, Molecules drawing sample, Coloring by coordinates sample, Additional features
+@node Drops sample, Molecules drawing sample, Quaternary plot sample, Additional features
 @subsection Drops sample
 @cindex Drop
 @float

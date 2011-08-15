@@ -424,7 +424,7 @@ void mglCanvas::WriteFrame(const char *fname, const char *descr)
 {
 	char buf[64];
 	if(!fname || !fname[0])
-	{	sprintf(buf,"%s%04d.jpg",PlotId,CurFrameId);	fname = buf;	}
+	{	sprintf(buf,"%s%04d.jpg",PlotId.c_str(),CurFrameId);	fname = buf;	}
 	int len=strlen(fname);
 	if(!strcmp(fname+len-4,".jpg"))	WriteJPEG(fname,descr);
 	if(!strcmp(fname+len-5,".jpeg"))WriteJPEG(fname,descr);

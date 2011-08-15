@@ -29,6 +29,7 @@
 void mgl_mark(HMGL gr, float x,float y,float z,const char *mark)
 {
 	char mk = gr->SetPenPal(mark);
+	if(!mk)	mk = '.';
 	mglPoint p(x,y,z);
 	gr->mark_plot(gr->AddPnt(p,gr->CDef,mglPoint(NAN),-1,3),mk);
 }

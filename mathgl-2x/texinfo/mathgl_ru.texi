@@ -2,7 +2,7 @@
 @setfilename mathgl_ru.info
 @c @documentlanguage ru
 @documentencoding UTF-8
-@set VERSION 1.11
+@set VERSION 2.0
 @settitle MathGL @value{VERSION}
 @syncodeindex pg cp
 @comment %**end of header
@@ -27,10 +27,10 @@ supports it in developing GNU and promoting software freedom.''
 @end quotation
 @end copying
 
-@c @dircategory MathGL documentation system
-@c @direntry
-@c * MathGL: (mathgl). The library for scientific graphics.
-@c @end direntry
+@dircategory MathGL documentation system
+@direntry
+* MathGL: (mathgl). The library for scientific graphics.
+@end direntry
 
 @titlepage
 @title MathGL
@@ -49,7 +49,7 @@ supports it in developing GNU and promoting software freedom.''
 
 Это документация для MathGL (версии @value{VERSION}) -- библиотеки классов и функций для построения научной графики. Пожалуйста сообщайте о любых ошибках в этом руководстве на @email{mathgl.abalakin@@gmail.org}. Дополнительную информацию о MathGL можно найти на домашней странице проекта @uref{http://mathgl.sourceforge.net/}.
 
-Copyright @copyright{} 2009 Алексей Балакин. 
+Copyright @copyright{} 2009 Алексей Балакин.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -71,11 +71,9 @@ supports it in developing GNU and promoting software freedom.''
 * Overview::
 * Examples::
 * MathGL core::
-* Plotter classes::
 * Widget classes::
-* mglData class::
+* Data processing::
 * Other classes::
-* MGL interface::
 * Samples::
 * TeX-like symbols::
 * Copying This Manual::
@@ -88,9 +86,6 @@ supports it in developing GNU and promoting software freedom.''
 @macro tdref{nam}
 @uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
 @end macro
-@macro MGL
-(MGL)
-@end macro
 
 @node Overview, Examples, , Top
 @include overview_ru.texi
@@ -98,25 +93,19 @@ supports it in developing GNU and promoting software freedom.''
 @node Examples, MathGL core, Overview, Top
 @include example_ru.texi
 
-@node MathGL core, Plotter classes, Examples, Top
+@node MathGL core, Widget classes, Examples, Top
 @include core_ru.texi
 
-@node Plotter classes, Widget classes, MathGL core, Top
-@include class_ru.texi
-
-@node Widget classes, mglData class, Plotter classes, Top
+@node Widget classes, Data handling, MathGL core, Top
 @include widget_ru.texi
 
-@node mglData class, Other classes, Widget classes, Top
+@node Data processing, Other classes, Widget classes, Top
 @include data_ru.texi
 
-@node Other classes, MGL interface, mglData class, Top
+@node Other classes, Samples, Data handling, Top
 @include other_ru.texi
 
-@node MGL interface, Samples, Other classes, Top
-@include mgl_cmd_ru.texi
-
-@node Samples, TeX-like symbols, MGL interface, Top
+@node Samples, TeX-like symbols, Other classes, Top
 @include samples_ru.texi
 
 @node TeX-like symbols, Copying This Manual, Samples, Top
