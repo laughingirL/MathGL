@@ -22,6 +22,7 @@
 13. MPI_Send(), MPI_Recv()
 14. Add diffusive light (no dependence of normals but have direction)
 15. SetCoor() -- add log-log, log-x, log-y predefined coordinates
+16. Normal size of bars for first and last one (Bars, Barh,BoxPlot,Candle,Boxs, ...)
 
 ============= UNSURE ===========
 

@@ -330,7 +330,7 @@ void mgl_set_legend_marks_(uintptr_t *gr, int *num)
 void mgl_set_quality(HMGL gr, int qual)			{	_Gr_->SetQuality(qual);	}
 void mgl_set_quality_(uintptr_t *gr, int *qual)	{	_GR_->SetQuality(*qual);	}
 //-----------------------------------------------------------------------------
-void mgl_set_plotid(HMGL gr, const char *id,int l)	{	_Gr_->PlotId = id;	}
+void mgl_set_plotid(HMGL gr, const char *id)	{	_Gr_->PlotId = id;	}
 void mgl_set_plotid_(uintptr_t *gr, const char *id,int l)
 {	char *s=new char[l+1];	memcpy(s,id,l);	s[l]=0;
 	_GR_->PlotId = s;	delete []s;	}

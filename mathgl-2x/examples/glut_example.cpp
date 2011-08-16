@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include "mgl/glut.h"
 //-----------------------------------------------------------------------------
-int test(mglGraph *gr);
+int test_wnd(mglGraph *gr);
 int sample(mglGraph *gr);
 int sample_1(mglGraph *gr);
 int sample_2(mglGraph *gr);
@@ -30,7 +30,7 @@ int sample_d(mglGraph *gr);
 int main(int argc,char **argv)
 {
 	char key = 0;
-	if(argc>1 && argv[1][0]!='-')	key = argv[1][0];
+	if(argc>1)	key = argv[1][0]!='-' ? argv[1][0] : argv[1][1];
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting");
 
 	const char *desc;
@@ -41,6 +41,7 @@ int main(int argc,char **argv)
 	case '2':	func = sample_2;	desc = "2D plots";	break;
 	case '3':	func = sample_3;	desc = "3D plots";	break;
 	case 'd':	func = sample_d;	desc = "Dual plots";	break;
+	case 't':	func = test_wnd;	desc = "Testing";	break;
 	default:	func = sample;	desc = "Example of molecules";	break;
 	}
 	mglGLUT gr(func,desc);
