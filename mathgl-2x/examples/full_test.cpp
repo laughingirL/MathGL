@@ -47,12 +47,6 @@ int test(mglGraph *gr)
 	FILE *fp=fopen("test.mgl","rt");
 	par.Execute(gr,fp,true);
 	fclose(fp);
-/*	gr->SetDrawReg(2,2,1);
-	gr->Rotate(40,60);
-	gr->Surf("sin(x*y)");
-	gr->SubPlot(2,2,1);	gr->Box();*/
-
-//	gr->Box();
 	gr->ShowImage("",true);
 	return 0;
 }
@@ -183,7 +177,7 @@ void smgl_tval(mglGraph *gr)	// ticks features
 	mglData xt(6,val);
 	gr->SetTicksVal('x', xt, "-\\pi\n-\\pi/2\n\n0\nx^*\n\\pi/2\n\\pi");
 	gr->Axis();	gr->Grid();
-	gr->Plot("2*cos(x^2)^2", "r2");
+	gr->FPlot("2*cos(x^2)^2", "r2");
 }
 //-----------------------------------------------------------------------------
 void smgl_fonts(mglGraph *gr)	// ticks features
@@ -209,13 +203,13 @@ void smgl_stick(mglGraph *gr)	// column plot
 
 	gr->SetRanges(-1, 1, -1, 1, 0, 1);	gr->Light(true);
 	gr->StickPlot(3, 0, 40, 30);		gr->Axis("xyz_");
-	gr->Surf("exp(-10*y^2-6*x^2)");
+	gr->FSurf("exp(-10*y^2-6*x^2)");
 	gr->Puts(mglPoint(0.2, 0, 1.2), "z=0", "", -2);
 	gr->StickPlot(3, 1, 40, 30);		gr->Axis("xyz_");
-	gr->Surf("exp(-10*y^2/2-6*x^2)/sqrt(2)");
+	gr->FSurf("exp(-10*y^2/2-6*x^2)/sqrt(2)");
 	gr->Puts(mglPoint(0.2, 0, 1.2), "z=1", "", -2);
 	gr->StickPlot(3, 2, 40, 30);		gr->Axis("xyz_");
-	gr->Surf("exp(-10*y^2/5-6*x^2)/sqrt(5)");
+	gr->FSurf("exp(-10*y^2/5-6*x^2)/sqrt(5)");
 	gr->Puts(mglPoint(0.2, 0, 1.2), "z=2", "", -2);
 	gr->Label('x',"\\tau", 0);	gr->Label('y', "\\rho");
 }
@@ -230,7 +224,7 @@ void smgl_column(mglGraph *gr)	// column plot
 		sprintf(str,"Plot %d of 4",i);
 		gr->Puts(mglPoint(-0.5,0.5),str,"",-2);
 		sprintf(str,"sin(pi*x+pi*%d/2)",i);
-		gr->Plot(str);
+		gr->FPlot(str);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -356,7 +350,7 @@ void smgl_qo2d(mglGraph *gr)
 	a = mglQO2d(ham, re, im, r, 1, 30, &xx, &yy);
 	gr->SetRange('c',0, 1);
 	gr->Dens(xx, yy, a, "wyrRk");
-	gr->Plot("-x", "k|");
+	gr->FPlot("-x", "k|");
 	gr->Puts(mglPoint(0, 0.85), "absorption: (x+y)/2 for x+y>0");
 	gr->Puts(mglPoint(0.7, -0.05), "central ray");
 	gr->Puts(mglPoint(0,1.1),"Beam and ray tracing");
@@ -376,7 +370,7 @@ void smgl_pde(mglGraph *gr)	// PDE and Ray sample
 	a.Transpose("yxz");
 	gr->SetRange('c',0, 1);
 	gr->Dens(a,"wyrRk");
-	gr->Plot("-x", "k|");
+	gr->FPlot("-x", "k|");
 	gr->Puts(mglPoint(0, 0.85), "absorption: (x+z)/2 for x+z>0");
 	gr->Puts(mglPoint(0,1.1),"Equation: ik_0\\partial_zu + \\Delta u + x\\cdot u + i \\frac{x+z}{2}\\cdot u = 0");
 	gr->Compression(false);  //put setting back

@@ -65,7 +65,7 @@ const QString scriptName("default");
 QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 {
 	autoResize = false;	draw_par = 0;	draw_func = 0;
-	graph = new mglCanvasQT;
+	graph = new mglCanvas;
 	popup = 0;		grBuf = 0;
 	phi = tet = per = 0;
 	x1 = y1 = 0;	x2 = y2 = 1;
@@ -73,25 +73,16 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	resize(600, 400);
 //	resize(graph->GetWidth(), graph->GetHeight());
 //	convertFromGraph(pic, graph, &grBuf);
-
-	timer = new QTimer(this);	animDelay = 1000;
 	connect(timer, SIGNAL(timeout()), this, SLOT(nextSlide()));
 }
 //-----------------------------------------------------------------------------
 QMathGL::~QMathGL()	{	delete graph;	if(grBuf)	delete []grBuf;	}
 //-----------------------------------------------------------------------------
-void QMathGL::setGraph(mglCanvasW *gr)
+void QMathGL::setGraph(mglCanvas *gr)
 {
 	if(!gr)	return;
 	delete graph;	graph=gr;
 }
-//-----------------------------------------------------------------------------
-void QMathGL::setDraw(int (*func)(mglBase *gr, void *par), void *par)
-{	draw_func = func;	draw_par = par;	}
-//-----------------------------------------------------------------------------
-int mgl_draw_class(mglBase *gr, void *p);
-void QMathGL::setDraw(mglDraw *dr)
-{	draw_func = mgl_draw_class;	draw_par = dr;	}
 //-----------------------------------------------------------------------------
 void QMathGL::paintEvent(QPaintEvent *)
 {
@@ -129,18 +120,17 @@ void QMathGL::setAlpha(bool a)
 void QMathGL::setLight(bool l)
 {	if(light!=l)	{	light = l;	emit lightChanged(l);	update();	}	}
 //-----------------------------------------------------------------------------
-void QMathGL::setZoom(bool z)
-{
-	if(zoom!=z)
-	{	zoom=z;	rotate=false;	update();
-		emit zoomChanged(z);	emit rotateChanged(false);	}
-}
-//-----------------------------------------------------------------------------
 void QMathGL::setRotate(bool r)
 {
 	if(rotate!=r)
-	{	zoom=false;	rotate=r;	update();
-		emit zoomChanged(false);	emit rotateChanged(r);	}
+	{	zoom=false;	rotate=r;	update();	emit rotateChanged(r);	}
+}
+//-----------------------------------------------------------------------------
+/*void QMathGL::setZoom(bool z)
+{
+	if(zoom!=z)
+	{	zoom=z;	rotate=false;	update();
+	emit zoomChanged(z);	emit rotateChanged(false);	}
 }
 //-----------------------------------------------------------------------------
 void QMathGL::shiftDown()
@@ -155,14 +145,6 @@ void QMathGL::shiftRight()
 void QMathGL::shiftLeft()
 {	mreal d=(x2-x1)/3;	x1+=d;	x2+=d;	update();	}
 //-----------------------------------------------------------------------------
-void QMathGL::restore()
-{
-	setPhi(0);	setTet(0);	setPer(0);
-	x1=y1=0;	x2=y2=1;	zoom=rotate=false;
-	emit zoomChanged(false);	emit rotateChanged(false);
-	update();
-}
-//-----------------------------------------------------------------------------
 void QMathGL::zoomIn()
 {
 	mreal d;
@@ -176,6 +158,14 @@ void QMathGL::zoomOut()
 	mreal d;
 	d = (y2-y1)/2;	y1 -= d;	y2 += d;
 	d = (x2-x1)/2;	x1 -= d;	x2 += d;
+	update();
+}*/
+//-----------------------------------------------------------------------------
+void QMathGL::restore()
+{
+	setPhi(0);	setTet(0);	setPer(0);
+	x1=y1=0;	x2=y2=1;	zoom=rotate=false;
+	emit rotateChanged(false);
 	update();
 }
 //-----------------------------------------------------------------------------
@@ -192,8 +182,7 @@ void QMathGL::update(mglCanvas *gr)
 	draw_func(gr, draw_par);
 
 	if(buf[0] != 0)	QMessageBox::warning(this, appName, buf);
-	gr->Message = 0;		delete []buf;
-	mousePos="";
+	gr->Message = 0;	delete []buf;	mousePos="";
 	if(gr==graph)	refresh();
 }
 //-----------------------------------------------------------------------------
@@ -389,19 +378,6 @@ void QMathGL::setMGLFont(QString path)
 void QMathGL::setSize(int w, int h)
 {	graph->SetSize(w,h);	resize(w, h);	update();	};
 //-----------------------------------------------------------------------------
-void QMathGL::adjust()		{	graph->Adjust();	}
-//-----------------------------------------------------------------------------
-void QMathGL::nextSlide()	{	graph->NextFrame();	}
-//-----------------------------------------------------------------------------
-void QMathGL::prevSlide()	{	graph->PrevFrame();	}
-//-----------------------------------------------------------------------------
-void QMathGL::animation(bool st)
-{
-	mglCanvasQT *gr = dynamic_cast<mglCanvasQT *>(graph);
-	if(st)	timer->start(gr ? int(gr->GetDelay()*1000) : animDelay);
-	else	timer->stop();
-}
-//-----------------------------------------------------------------------------
 void QMathGL::about()
 {
 	QString s = tr("MathGL v. 2.") + QString::number(MGL_VER2) + tr("\n(c) Alexey Balakin, 2007\nhttp://mathgl.sourceforge.net/");
@@ -455,7 +431,8 @@ void mglCanvasQT::Animation()
 	{
 		bool s = anim->isChecked();
 		anim->setChecked(!s);
-		QMGL->animation(!s);
+		if(s)	timer->stop();
+		else	timer->start(int(GetDelay()*1000));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -464,8 +441,6 @@ void mglCanvasQT::ToggleAlpha()	{	QMGL->setAlpha(!QMGL->getAlpha());	}
 void mglCanvasQT::ToggleLight()	{	QMGL->setLight(!QMGL->getLight());	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::ToggleNo()	{	QMGL->restore();	}
-//-----------------------------------------------------------------------------
-void mglCanvasQT::ToggleZoom()	{	QMGL->setZoom(!QMGL->getZoom());	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::ToggleRotate(){	QMGL->setRotate(!QMGL->getRotate());}
 //-----------------------------------------------------------------------------
@@ -478,7 +453,7 @@ void mglCanvasQT::Adjust()
 	Update();
 }
 //-----------------------------------------------------------------------------
-void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p), bool maximize)
+void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(void *p), bool maximize)
 {
 	SetDrawFunc(draw, par, reload);
 	if(Wnd)
@@ -507,6 +482,8 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	Wnd = new QMainWindow;	Wnd->resize(650,480);
 	Wnd->setWindowTitle(title);
 	scroll = new QScrollArea(Wnd);
+	timer = new QTimer(Wnd);
+
 	QMGL = new QMathGL(Wnd);	makeMenu();
 	QMGL->setPopup(popup);	QMGL->setGraph(this);
 	QMGL->setDraw(draw, par);

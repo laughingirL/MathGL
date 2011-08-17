@@ -1,5 +1,5 @@
-#set(mgl_wnd_src window.cpp)
-set(mgl_wnd_src )
+set(mgl_wnd_src window.cpp)
+#set(mgl_wnd_src )
 
 if(use_gsl)
 #	target_link_libraries(mgl ${GSL_LIB} ${GSL_CBLAS_LIB} )

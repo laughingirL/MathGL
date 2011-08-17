@@ -69,14 +69,20 @@ Fl_Pixmap xpm_r1(rotate_xpm), xpm_r2(rotate_on_xpm);
 //-----------------------------------------------------------------------------
 Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, char *lbl) : Fl_Widget(xx,yy,ww,hh,lbl)
 {
-	graph = 0;	tet=phi=0;
-	rotate = false;
+	graph = new mglCanvas;
+	rotate = false;		tet=phi=0;
 	flag=x0=y0=xe=ye=0;
 	tet_val = phi_val = 0;
 	draw_par = 0;	draw_func = 0;
 }
 //-----------------------------------------------------------------------------
 Fl_MathGL::~Fl_MathGL()	{}
+//-----------------------------------------------------------------------------
+void Fl_MathGL::set_graph(mglCanvas *gr)
+{
+	if(!gr)	return;
+	delete graph;	graph=gr;
+}
 //-----------------------------------------------------------------------------
 void Fl_MathGL::draw()
 {
@@ -131,9 +137,7 @@ int Fl_MathGL::handle(int code)
 			int key=Fl::event_key();
 			if(!strchr(" .,wasdrfx",key))	return 0;
 			if(key==' ')
-			{
-				update();	return 1;
-			}
+			{	update();	return 1;	}
 			if(key=='w')
 			{
 				tet += 10;
@@ -194,9 +198,7 @@ int Fl_MathGL::handle(int code)
 		return 0;
 	}
 	if(code==FL_PUSH)
-	{
-		xe=x0=Fl::event_x();	ye=y0=Fl::event_y();
-	}
+	{	xe=x0=Fl::event_x();	ye=y0=Fl::event_y();	}
 	if(code==FL_DRAG)
 	{
 		xe=Fl::event_x();	ye=Fl::event_y();
@@ -251,7 +253,8 @@ void mglCanvasFL::ToggleAlpha()
 	if(m && !alpha)	m->clear();
 	Update();
 }
-void alpha_cb(Fl_Widget*, void* v)	{	((mglCanvasFL*)v)->ToggleAlpha();	}
+void alpha_cb(Fl_Widget*, void* v)
+{	mglCanvasFL *g=dynamic_cast<mglCanvasFL*>((mglCanvas*)v);	if(g)	g->ToggleAlpha();	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::ToggleLight()
 {
@@ -263,9 +266,11 @@ void mglCanvasFL::ToggleLight()
 	if(m && !light)	m->clear();
 	Update();
 }
-void light_cb(Fl_Widget*, void* v)	{	((mglCanvasFL*)v)->ToggleLight();	}
+void light_cb(Fl_Widget*, void* v)
+{	mglCanvasFL *g=dynamic_cast<mglCanvasFL*>((mglCanvas*)v);	if(g)	g->ToggleLight();	}
 //-----------------------------------------------------------------------------
-void draw_cb(Fl_Widget*, void* v)	{	((mglCanvasFL*)v)->Update();	}
+void draw_cb(Fl_Widget*, void* v)
+{	mglCanvasFL *g=dynamic_cast<mglCanvasFL*>((mglCanvas*)v);	if(g)	g->Update();	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::ToggleNo()
 {
@@ -273,7 +278,8 @@ void mglCanvasFL::ToggleNo()
 	tet->value(0);			phi->value(0);
 	rotate = false;			Update();
 }
-void norm_cb(Fl_Widget*, void* v)	{	((mglCanvasFL*)v)->ToggleNo();	}
+void norm_cb(Fl_Widget*, void* v)
+{	mglCanvasFL *g=dynamic_cast<mglCanvasFL*>((mglCanvas*)v);	if(g)	g->ToggleNo();	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::ToggleRotate()
 {
@@ -282,12 +288,13 @@ void mglCanvasFL::ToggleRotate()
 	rotate_bt->redraw();
 	if(!rotate_bt->value())	Update();
 }
-void rotate_cb(Fl_Widget*, void* v)	{	((mglCanvasFL*)v)->ToggleRotate();	}
+void rotate_cb(Fl_Widget*, void* v)
+{	mglCanvasFL *g=dynamic_cast<mglCanvasFL*>((mglCanvas*)v);	if(g)	g->ToggleRotate();	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Update()
 {
 	FMGL->set_state(rotate_bt->value());
-	FMGL->set_state(alpha + 2*light);
+	FMGL->set_flag(alpha + 2*light);
 	FMGL->set_angle(tet->value(), phi->value());
 	SetCurFig(0);
 	FMGL->update();
@@ -297,45 +304,46 @@ void export_png_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.png", 0);
 	if(!fname || !fname[0])	return;
-	((mglCanvasFL*)v)->WritePNG(fname);
+	((mglCanvas*)v)->WritePNG(fname);
 }
 //-----------------------------------------------------------------------------
 void export_bps_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.eps", 0);
 	if(!fname || !fname[0])	return;
-	((mglCanvasFL*)v)->WriteEPS(fname);
+	((mglCanvas*)v)->WriteEPS(fname);
 }
 //-----------------------------------------------------------------------------
 void export_pngn_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.png", 0);
 	if(!fname || !fname[0])	return;
-	((mglCanvasFL*)v)->WritePNGs(fname,0);
+	((mglCanvas*)v)->WritePNGs(fname,0);
 }
 //-----------------------------------------------------------------------------
 void export_jpeg_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.jpg", 0);
 	if(!fname || !fname[0])	return;
-	((mglCanvasFL*)v)->WriteJPEG(fname);
+	((mglCanvas*)v)->WriteJPEG(fname);
 }
 //-----------------------------------------------------------------------------
 void export_svg_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.svg", 0);
 	if(!fname || !fname[0])	return;
-	((mglCanvasFL*)v)->WriteSVG(fname);
+	((mglCanvas*)v)->WriteSVG(fname);
 }
 //-----------------------------------------------------------------------------
 void export_eps_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.eps", 0);
 	if(!fname || !fname[0])	return;
-	((mglCanvasFL*)v)->WriteEPS(fname);
+	((mglCanvas*)v)->WriteEPS(fname);
 }
 //-----------------------------------------------------------------------------
-void oncemore_cb(Fl_Widget*, void*v)	{	((mglCanvasFL*)v)->ReLoad(true);	}
+void oncemore_cb(Fl_Widget*, void*v)
+{	mglCanvasFL *g=dynamic_cast<mglCanvasFL*>((mglCanvas*)v);	if(g)	g->ReLoad();	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Adjust()
 {
@@ -343,20 +351,24 @@ void mglCanvasFL::Adjust()
 	FMGL->size(scroll->w(), scroll->h());
 	Update();
 }
-void adjust_cb(Fl_Widget*, void*v)	{	((mglCanvasFL*)v)->Adjust();	}
+void adjust_cb(Fl_Widget*, void*v)
+{	mglCanvasFL *g=dynamic_cast<mglCanvasFL*>((mglCanvas*)v);	if(g)	g->Adjust();	}
 //-----------------------------------------------------------------------------
-void quit_cb(Fl_Widget*, void*v)	{	((mglCanvasFL*)v)->Wnd->hide();	}
+void quit_cb(Fl_Widget*, void*v)
+{	mglCanvasFL *g=dynamic_cast<mglCanvasFL*>((mglCanvas*)v);	if(g)	g->Wnd->hide();	}
 //-----------------------------------------------------------------------------
-void snext_cb(Fl_Widget*, void* v)	{	((mglCanvasFL*)v)->NextFrame();	}
+void snext_cb(Fl_Widget*, void* v)
+{	mglCanvasFL *g=dynamic_cast<mglCanvasFL*>((mglCanvas*)v);	if(g)	g->NextFrame();	}
 //-----------------------------------------------------------------------------
-void sprev_cb(Fl_Widget*, void* v)	{	((mglCanvasFL*)v)->PrevFrame();	}
+void sprev_cb(Fl_Widget*, void* v)
+{	mglCanvasFL *g=dynamic_cast<mglCanvasFL*>((mglCanvas*)v);	if(g)	g->PrevFrame();	}
 //-----------------------------------------------------------------------------
 void time_cb(void *v)
 {
-	mglCanvasFL *e = (mglCanvasFL*)v;
-	if(!e->sshow)	return;
-	e->NextFrame();
-	Fl::repeat_timeout(e->GetDelay(), time_cb, v);
+	mglCanvasFL *g=dynamic_cast<mglCanvasFL*>((mglCanvas*)v);
+	if(!g || !g->sshow)	return;
+	g->NextFrame();
+	Fl::repeat_timeout(g->GetDelay(), time_cb, v);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Animation()
@@ -369,7 +381,8 @@ void mglCanvasFL::Animation()
 	if(m && !sshow)	m->clear();
 	if(sshow)	Fl::add_timeout(GetDelay(), time_cb, this);
 }
-void sshow_cb(Fl_Widget *, void *v)	{	((mglCanvasFL*)v)->Animation();	}
+void sshow_cb(Fl_Widget *, void *v)
+{	mglCanvasFL *g=dynamic_cast<mglCanvasFL*>((mglCanvas*)v);	if(g)	g->Animation();	}
 void no_cb(Fl_Widget *, void *)	{}
 //-----------------------------------------------------------------------------
 Fl_Menu_Item pop_graph[15] = {
@@ -416,7 +429,7 @@ Fl_Menu_Item menuitems[] = {
 	{ 0,0,0,0,0,0,0,0,0 }
 };
 //-----------------------------------------------------------------------------
-void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(int next, void *p), bool maximize)
+void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(void *p), bool maximize)
 {
 	SetDrawFunc(draw, par, reload);
 	if(Wnd)	{	Wnd->label(title);	Wnd->show();	return;	}
@@ -478,9 +491,8 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	FMGL->tet_val = tet;
 	FMGL->phi_val = phi;
 	FMGL->set_popup(pop_graph,w1,this);
-	FMGL->graph = this;
-	FMGL->draw_func = draw;
-	FMGL->draw_par = par;
+	FMGL->set_graph(this);
+	FMGL->set_draw(draw, par);
 	scroll->end();
 
 	w1->end();

@@ -81,8 +81,6 @@ double mgl_ipow(double x,int n)
 	return t;
 }
 //-----------------------------------------------------------------------------
-mglData::~mglData()	{	if(id && a)	delete []id;	if(!link && a)	delete []a;	}
-//-----------------------------------------------------------------------------
 void *mgl_smth_x(void *par)
 {
 	mglThread *t=(mglThread *)par;
@@ -1551,4 +1549,9 @@ void mgl_data_set_value(HMDT dat, float v, long i, long j, long k)
 {	dat->a[i+dat->nx*(j+dat->ny*k)]=v;	}
 void mgl_data_set_value_(uintptr_t *d, float *v, int *i, int *j, int *k)
 {	mgl_data_set_value(_DT_,*v,*i,*j,*k);	}
+//-----------------------------------------------------------------------------
+float mgl_data_get_value(HCDT dat, long i, long j, long k)
+{	return dat->v(i,j,k);	}
+float mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k)
+{	return mgl_data_get_value(_DT_,*i,*j,*k);	}
 //-----------------------------------------------------------------------------

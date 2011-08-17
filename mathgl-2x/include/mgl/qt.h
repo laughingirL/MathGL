@@ -30,68 +30,34 @@
 class QTextEdit;
 class QMenu;
 class QMainWindow;
-class QMathGL;
 class QScrollArea;
 class QSpinBox;
 class QTimer;
 //-----------------------------------------------------------------------------
-/// Base class for windows containing MathGL graphics
-class mglCanvasQT : public mglCanvasW
-{
-friend class QMathGL;
-public:
-using mglCanvasW::Window;
-	int sshow;		///< Current state of animation switch (toggle button)
-	QMathGL *QMGL;	///< Control which draw graphics
-	QMainWindow *Wnd;	///< Pointer to window
-
-	mglCanvasQT();
-
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Ñëóæåáíûå ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	/// Create a window for plotting. Now implemeted only for GLUT.
-	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),
-						const char *title,void *par=NULL,
-						void (*reload)(int next, void *p)=NULL, bool maximize=false);
-	/// Switch on/off transparency (do not overwrite switches in user drawing function)
-	void ToggleAlpha();
-	/// Switch on/off lighting (do not overwrite switches in user drawing function)
-	void ToggleLight();
-	void ToggleZoom();	///< Switch on/off zooming by mouse
-	void ToggleRotate();///< Switch on/off rotation by mouse
-	void ToggleNo();	///< Switch off all zooming and rotation
-	void Update();		///< Update picture by calling user drawing function
-	void Adjust();		///< Adjust size of bitmap to window size
-	void NextFrame();	///< Show next frame (if one)
-	void PrevFrame();	///< Show previous frame (if one)
-	void Animation();	///< Run slideshow (animation) of frames
-
-protected:
-	QScrollArea *scroll;	///< Scrolling area
-	QMenu *popup;			///< Popup menu
-	QSpinBox *tet, *phi;	///< Spin box for angles
-	QAction *anim;
-
-	void makeMenu();		///< Create menu, toolbar and popup menu
-};
-//-----------------------------------------------------------------------------
 /// Class is Qt widget which display MathGL graphics
 class QMathGL : public QWidget
 {
-Q_OBJECT
+	Q_OBJECT
 public:
 	QString appName;	///< Application name for message boxes
 	bool autoResize;	///< Allow auto resizing (default is false)
-	int animDelay;		///< Animation delay in ms
 
 	QMathGL(QWidget *parent = 0, Qt::WindowFlags f = 0);
 	~QMathGL();
 	double getRatio()	{	return double(graph->GetWidth())/graph->GetHeight();	};
 	void setPopup(QMenu *p)	{	popup = p;	};	///< Set popup menu pointer
 	void setSize(int w, int h);		///< Set window/picture sizes
-	void setGraph(mglCanvasW *gr);	///< Set grapher object
+	void setGraph(mglCanvas *gr);	///< Set grapher object
+	inline void setGraph(mglGraph *gr)
+	{	setGraph(dynamic_cast<mglCanvas *>(gr->Self()));	}
+	inline HMGL getGraph()	{	return graph;	}
 	/// Set drawing functions and its parameter
-	void setDraw(int (*func)(mglBase *gr, void *par),	void *par=0);
-	void setDraw(mglDraw *dr);		///< Set drawing functions from mglDraw class
+	inline void setDraw(int (*func)(mglBase *gr, void *par), void *par=0)
+	{	draw_func = func;	draw_par = par;	}
+	inline void setDraw(mglDraw *dr)
+	{	setDraw(mgl_draw_class,(void*)dr);	}
+	inline void setDraw(int (*draw)(mglGraph *gr))
+	{	setDraw(mgl_draw_graph,(void*)draw);	}
 
 
 	int getPer()	{return int(per);};	///< Get perspective value
@@ -113,16 +79,9 @@ public slots:
 	void setTet(int t);		///< Set Theta-angle value
 	void setAlpha(bool a);	///< Switch on/off transparency
 	void setLight(bool l);	///< Switch on/off lightning
-	void setZoom(bool z);	///< Switch on/off mouse zooming
 	void setRotate(bool r);	///< Switch on/off mouse rotation
-	void zoomIn();			///< Zoom in graphics
-	void zoomOut();			///< Zoom out graphics
 	void restore();			///< Restore zoom and rotation to default values
-//	void reload();			///< Reload data and execute script
-	void shiftLeft();		///< Shift graphics to left direction
-	void shiftRight();		///< Shift graphics to right direction
-	void shiftUp();			///< Shift graphics to up direction
-	void shiftDown();		///< Shift graphics to down direction
+	//	void reload();			///< Reload data and execute script
 	void exportPNG(QString fname="");	///< export to PNG file
 	void exportPNGs(QString fname="");	///< export to PNG file (no transparency)
 	void exportJPG(QString fname="");	///< export to JPEG file
@@ -131,11 +90,11 @@ public slots:
 	void exportSVG(QString fname="");	///< export to SVG file
 	void exportIDTF(QString fname="");	///< export to IDTF file
 	void setMGLFont(QString path);		///< restore/load font for graphics
-	//----These functions are executed only if graph is mglCanvasQT instance----
-	void adjust();		///< Adjust plot size to fill entire window
-	void nextSlide();	///< Show next slide
-	void prevSlide();	///< Show previous slide
-	void animation(bool st=true);	///< Start animation
+	/*	//----These functions are executed only if graph is mglCanvasQT instance----
+	 *	void adjust();		///< Adjust plot size to fill entire window
+	 *	void nextSlide();	///< Show next slide
+	 *	void prevSlide();	///< Show previous slide
+	 *	void animation(bool st=true);	///< Start animation*/
 	void about();		///< Show about information
 	void aboutQt();		///< Show information about Qt version
 signals:
@@ -144,7 +103,6 @@ signals:
 	void perChanged(int);	///< Perspective changed (by mouse or by toolbar)
 	void alphaChanged(bool);	///< Transparency changed (by toolbar)
 	void lightChanged(bool);	///< Lighting changed (by toolbar)
-	void zoomChanged(bool);		///< Zooming changed (by toolbar)
 	void rotateChanged(bool);	///< Rotation changed (by toolbar)
 	void mouseClick(float,float,float);	///< Position of mouse click
 protected:
@@ -154,7 +112,7 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *);
 	void mouseMoveEvent(QMouseEvent *);
 
-	mglCanvasW *graph;	///< Built-in mglCanvasQT-er instance (used by default)
+	mglCanvas *graph;	///< Built-in mglCanvasQT-er instance (used by default)
 	void *draw_par;		///< Parameters for drawing function mglCanvasW::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);
@@ -166,13 +124,50 @@ protected:
 	bool light;			///< Lightning state
 	bool zoom;			///< Mouse zoom state
 	bool rotate;		///< Mouse rotation state
-	mreal x1,x2,y1,y2;	///< Zoom in region
+	float x1,x2,y1,y2;	///< Zoom in region
 	bool showMessage;	///< Flag for showing messages (enabled by each execute())
 	QMenu *popup;		///< Pointer to pop-up menu
 	QTimer *timer;		///< Timer for animation
 private:
 	int x0, y0, xe, ye;		///< Temporary variables for mouse
 	uchar *grBuf;
+};
+//-----------------------------------------------------------------------------
+/// Base class for windows containing MathGL graphics
+class mglCanvasQT : public mglCanvasW
+{
+public:
+using mglCanvasW::Window;
+	int sshow;		///< Current state of animation switch (toggle button)
+	QMathGL *QMGL;	///< Control which draw graphics
+	QMainWindow *Wnd;	///< Pointer to window
+
+	mglCanvasQT();
+
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Ñëóæåáíûå ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	/// Create a window for plotting. Now implemeted only for GLUT.
+	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),const char *title,
+						void *par=NULL, void (*reload)(void *p)=NULL, bool maximize=false);
+	/// Switch on/off transparency (do not overwrite switches in user drawing function)
+	void ToggleAlpha();
+	/// Switch on/off lighting (do not overwrite switches in user drawing function)
+	void ToggleLight();
+	void ToggleRotate();///< Switch on/off rotation by mouse
+	void ToggleNo();	///< Switch off all zooming and rotation
+	void Update();		///< Update picture by calling user drawing function
+	void Adjust();		///< Adjust size of bitmap to window size
+	void NextFrame();	///< Show next frame (if one)
+	void PrevFrame();	///< Show previous frame (if one)
+	void Animation();	///< Run slideshow (animation) of frames
+
+protected:
+	QScrollArea *scroll;	///< Scrolling area
+	QMenu *popup;			///< Popup menu
+	QSpinBox *tet, *phi;	///< Spin box for angles
+	QAction *anim;
+	QTimer *timer;
+
+	void makeMenu();		///< Create menu, toolbar and popup menu
 };
 //-----------------------------------------------------------------------------
 /// Convert bitmap from mglCanvasW to QPixmap

@@ -237,10 +237,10 @@ class mglBase;
 struct mglDraw
 {
 	virtual int Draw(mglGraph *)	{	return 0;	};
-	virtual void Reload(int)	{};
+	virtual void Reload()	{};
 };
 int mgl_draw_class(mglBase *gr, void *p);
-void mgl_reload_class(int next, void *p);
+void mgl_reload_class(void *p);
 typedef int (*draw_func)(mglGraph *gr);
 int mgl_draw_graph(mglBase *gr, void *p);
 //-----------------------------------------------------------------------------

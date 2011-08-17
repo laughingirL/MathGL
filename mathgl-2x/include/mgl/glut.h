@@ -52,7 +52,7 @@ public:
 	/// Create a window for plotting. Now implemeted only for GLUT.
 	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),
 						const char *title,void *par=NULL,
-			   			void (*reload)(int next, void *p)=NULL, bool maximize=false);
+			   			void (*reload)(void *p)=NULL, bool maximize=false);
 	void Window(int argc, char **argv, int (*draw)(mglGraph *gr),
 				const char *title, bool maximize=false)
 	{	Window(argc,argv,mgl_draw_graph,title,(void*)draw,0,maximize);	}
@@ -70,7 +70,7 @@ public:
 	void PrevFrame()	{	_mgl_key_up(',',0,0);	}	///< Show previous frame (if one)
 	void Animation()	{	_mgl_key_up('m',0,0);	}	///< Run slideshow (animation) of frames
 private:
-	void (*LoadFunc)(int next, void *par);
+	void (*LoadFunc)(void *par);
 	void *FuncPar;		///< Parameters for drawing function mglCanvas::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*DrawFunc)(mglBase *gr, void *par);

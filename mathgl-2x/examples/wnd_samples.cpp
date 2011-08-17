@@ -37,13 +37,13 @@ int test_wnd(mglGraph *gr)
 //	gr->SubPlot(1,1,0,"");
 	gr->SetRanges(-1, 1, -1, 1, 0, 1);	gr->Light(true);
 	gr->StickPlot(3, 0, 40, 30);		gr->Axis("xyz_");
-	gr->Surf("exp(-10*y^2-6*x^2)");
+	gr->FSurf("exp(-10*y^2-6*x^2)");
 	gr->Puts(mglPoint(0.2, 0, 1.2), "z=0", "", -2);
 	gr->StickPlot(3, 1, 40, 30);		gr->Axis("xyz_");
-	gr->Surf("exp(-10*y^2/2-6*x^2)/sqrt(2)");
+	gr->FSurf("exp(-10*y^2/2-6*x^2)/sqrt(2)");
 	gr->Puts(mglPoint(0.2, 0, 1.2), "z=1", "", -2);
 	gr->StickPlot(3, 2, 40, 30);		gr->Axis("xyz_");
-	gr->Surf("exp(-10*y^2/5-6*x^2)/sqrt(5)");
+	gr->FSurf("exp(-10*y^2/5-6*x^2)/sqrt(5)");
 	gr->Puts(mglPoint(0.2, 0, 1.2), "z=2", "", -2);
 	gr->Label('x',"\\tau", 0);	gr->Label('y', "\\rho");
 	gr->WriteTGA("test.tga");

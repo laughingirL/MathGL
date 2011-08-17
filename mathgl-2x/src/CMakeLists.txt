@@ -3,7 +3,7 @@ axis.cpp base_cf.cpp base.cpp canvas_cf.cpp canvas.cpp cont.cpp crust.cpp
 data.cpp data_io.cpp data_new.cpp data_op.cpp data_png.cpp def_font.cpp
 export_2d.cpp export_3d.cpp eval.cpp evalp.cpp exec.cpp export.cpp
 fit.cpp font.cpp opengl.cpp other.cpp parser.cpp pde.cpp pixel.cpp
-plot.cpp prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp window.cpp
+plot.cpp prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp #window.cpp
 )
 
 add_library(mgl SHARED ${mgl_src})

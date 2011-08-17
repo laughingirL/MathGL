@@ -38,7 +38,7 @@ Class mglGraphIDTF implements plotting function for 1D, 2D and 3D plots  and exp
 @section mglGraphAB class
 @cindex mglGraphAB
 @cindex window
-#cindex mglDraw
+@c @cindex mglDraw
 
 Generally this class is a bit less abstract class than mglGraph class (@pxref{MathGL core}). It provide many protected methods for handling intermediate data from mglGraph methods and require a few methods to be defined by derived class. The developers of derived classes should look on file @samp{mgl_ab.h} and comments inside it or contact me.
 

@@ -102,14 +102,7 @@ void _mgl_key_up(unsigned char ch,int ,int )
 	if(ch=='[' && _mgl_glwnd->LoadFunc)
 	{
 		glDeleteLists(1,_mgl_glwnd->NumFig);
-		_mgl_glwnd->LoadFunc(false, 0);
-		(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
-		_mgl_glwnd->Finish();
-	}
-	if(ch==']' && _mgl_glwnd->LoadFunc)
-	{
-		glDeleteLists(1,_mgl_glwnd->NumFig);
-		_mgl_glwnd->LoadFunc(true, 0);
+		_mgl_glwnd->LoadFunc(_mgl_glwnd->FuncPar);
 		(_mgl_glwnd->DrawFunc)(_mgl_glwnd,_mgl_glwnd->FuncPar);
 		_mgl_glwnd->Finish();
 	}
@@ -164,7 +157,7 @@ void _mgl_display()
 //-----------------------------------------------------------------------------
 mglCanvasGLUT::~mglCanvasGLUT()	{	_mgl_glwnd = 0;	}
 //-----------------------------------------------------------------------------
-void mglCanvasGLUT::Window(int argc, char **argv,int (*draw)(mglBase *gr, void *p),const char *title, void *par, void (*reload)(int next, void *p), bool maximize)
+void mglCanvasGLUT::Window(int argc, char **argv,int (*draw)(mglBase *gr, void *p),const char *title, void *par, void (*reload)(void *p), bool maximize)
 {
 	NumFig=0;	curr_fig=1;	tt=0;
 	_mgl_glwnd = this;

@@ -697,7 +697,7 @@ Let me now show how to plot the data. MathGL generally has 2 types of plotting f
 
 Term ``1D data'' means that data depend on single index (parameter) like curve in parametric form @{x(i),y(i),z(i)@}, i=1...n. There are 5 generally different types of data representations: simple line plot, line plot with filling under it, stairs plot, bar plot and vertical lines (@pxref{1D plotting}). Each type of plotting has similar interface. There are 3D version and two 2D versions. One of last requires single array. The parameters of line and marks (@pxref{Line styles}) are specified by the string argument. If the string parameter is @code{NULL} then solid line with color from palette is used (@pxref{Palette and colors}).
 
-Below I shall show the features of 1D plotting on base of @code{Plot()} function (@pxref{Plot}). Let us start from sinus plot:
+Below I shall show the features of 1D plotting on base of @code{Plot()} function (see @ref{plot}). Let us start from sinus plot:
 @verbatim
     int sample(mglGraph *gr, void *)
     {

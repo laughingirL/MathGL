@@ -34,13 +34,63 @@
 #include <FL/Fl_Counter.H>
 #include <FL/Fl_Menu_Bar.H>
 //-----------------------------------------------------------------------------
-class Fl_MathGL;
+/// Class is FLTK widget which display MathGL graphics
+class Fl_MathGL : public Fl_Widget
+{
+public:
+	Fl_Valuator	*tet_val;	///< pointer to external tet-angle validator
+	Fl_Valuator	*phi_val;	///< pointer to external phi-angle validator
+
+	Fl_MathGL(int x, int y, int w, int h, char *label=0);
+	~Fl_MathGL();
+
+	/// Update (redraw) plot
+	void update(mglCanvas *gr=0);
+	/// Set angles for additional plot rotation
+	inline void set_angle(float t, float p){	tet = t;	phi = p;	}
+	/// Set bitwise flags for general state (1-Alpha, 2-Light)
+	inline void set_flag(int f)	{	flag = f;	}
+	/// Set flags for handling mouse
+	void set_graph(mglCanvas *gr);	///< Set grapher object
+	inline void set_graph(mglGraph *gr)
+	{	set_graph(dynamic_cast<mglCanvas *>(gr->Self()));	}
+	/// Get pointer to grapher
+	inline HMGL get_graph()	{	return graph;	}
+	/// Set drawing functions and its parameter
+	inline void set_draw(int (*func)(mglBase *gr, void *par), void *par=0)
+	{	draw_func = func;	draw_par = par;	}
+	inline void set_draw(mglDraw *dr)
+	{	set_draw(mgl_draw_class,(void*)dr);	}
+	inline void set_draw(int (*dr)(mglGraph *gr))
+	{	set_draw(mgl_draw_graph,(void*)dr);	}
+	void set_state(bool r)	{	rotate = r;	}
+	/// Set popup menu pointer
+	inline void set_popup(const Fl_Menu_Item *pmenu, Fl_Widget *wdg, void *v)
+	{	popup = pmenu;	wpar = wdg;	vpar = v;	}
+protected:
+	mglCanvas *graph;		///< pointer to grapher
+	void *draw_par;			///< Parameters for drawing function mglCanvasW::DrawFunc.
+	/// Drawing function for window procedure. It should return the number of frames.
+	int (*draw_func)(mglBase *gr, void *par);
+
+	const Fl_Menu_Item *popup;	///< pointer to popup menu items
+	Fl_Widget *wpar;			///< widget for popup menu
+	void *vpar;					///< parameter for popup menu
+	float tet,phi;				///< rotation angles
+	bool rotate;				///< flag for handle mouse
+	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
+	int x0,y0,xe,ye;			///< mouse position
+	char pos[128];
+
+	void draw();				///< quick drawing function
+	int handle(int code);		///< handle mouse events
+	void resize(int x, int y, int w, int h);	///< resize control
+};
 //-----------------------------------------------------------------------------
 /// Class allows the window creation for displaying plot bitmap with the help of FLTK library
 /** NOTE!!! All frames are saved in memory. So animation with many frames require a lot memory and CPU time (for example, for mouse rotation).*/
 class mglCanvasFL : public mglCanvasW
 {
-friend class Fl_MathGL;
 public:
 using mglCanvasW::Window;
 	int sshow;		///< Current state of animation switch (toggle button)
@@ -52,9 +102,8 @@ using mglCanvasW::Window;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Ñëóæåáíûå ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Create a window for plotting. Now implemeted only for GLUT.
-	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),
-						const char *title,void *par=NULL,
-						void (*reload)(int next, void *p)=NULL, bool maximize=false);
+	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title,
+						void *par=NULL, void (*reload)(void *p)=NULL, bool maximize=false);
 	/// Switch on/off transparency (do not overwrite switches in user drawing function)
 	void ToggleAlpha();
 	/// Switch on/off lighting (do not overwrite switches in user drawing function)
@@ -76,50 +125,6 @@ protected:
 	int alpha;		///< Current state of alpha switch (toggle button)
 	int light;		///< Current state of light switch (toggle button)
 	bool rotate;
-};
-//-----------------------------------------------------------------------------
-/// Class is FLTK widget which display MathGL graphics
-class Fl_MathGL : public Fl_Widget
-{
-public:
-	Fl_Valuator	*tet_val;	///< pointer to external tet-angle validator
-	Fl_Valuator	*phi_val;	///< pointer to external phi-angle validator
-	mglCanvasW *graph;		///< pointer to grapher
-	void *draw_par;			///< Parameters for drawing function mglCanvasW::DrawFunc.
-	/// Drawing function for window procedure. It should return the number of frames.
-	int (*draw_func)(mglBase *gr, void *par);
-
-	Fl_MathGL(int x, int y, int w, int h, char *label=0);
-	~Fl_MathGL();
-
-	/// Update (redraw) plot
-	void update(mglCanvas *gr=0);
-	/// Set drawing functions from the class
-	void set_draw(mglDraw *dr);
-	/// Set angles for additional plot rotation
-	inline void set_angle(mreal t, mreal p){	tet = t;	phi = p;	};
-	/// Set bitwise flags for general state (1-Alpha, 2-Light)
-	inline void set_state(int f)			{	flag = f;	};
-	/// Set flags for handling mouse
-	void set_state(bool r)	{	rotate = r;	};
-	/// Get pointer to grapher
-	inline mglCanvas *get_graph()	{	return graph;	};
-	/// Set popup menu pointer
-	inline void set_popup(const Fl_Menu_Item *pmenu, Fl_Widget *wdg, void *v)
-	{	popup = pmenu;	wpar = wdg;	vpar = v;	}
-protected:
-	const Fl_Menu_Item *popup;	///< pointer to popup menu items
-	Fl_Widget *wpar;			///< widget for popup menu
-	void *vpar;					///< parameter for popup menu
-	float tet,phi;				///< rotation angles
-	bool rotate;				///< flag for handle mouse
-	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
-	int x0,y0,xe,ye;			///< mouse position
-	char pos[128];
-
-	void draw();				///< quick drawing function
-	int handle(int code);		///< handle mouse events
-	void resize(int x, int y, int w, int h);	///< resize control
 };
 //-----------------------------------------------------------------------------
 #endif

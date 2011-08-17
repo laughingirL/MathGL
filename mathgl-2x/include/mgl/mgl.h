@@ -739,31 +739,11 @@ public:
 	inline void Beam(float val, const mglDataA &tr, const mglDataA &g1, const mglDataA &g2, const mglDataA &a, float r, const char *stl=NULL, int flag=0)
 	{	mgl_beam_val(gr,val,&tr,&g1,&g2,&a,r,stl,flag);	}
 
-
-
-
-
-
-
-	/// Draw curve for formula with x in range [Min.x, Max.x]
-	inline void Plot(const char *fy, const char *stl="", const char *opt="")
-	{	mgl_fplot(gr, fy, stl, opt);	}
-	/// Draw curve for formulas parametrically depended on t in range [0,1]
-	inline void Plot3(const char *fx, const char *fy, const char *fz, const char *stl="", const char *opt="")
-	{	mgl_fplot_xyz(gr, fx, fy, fz, stl, opt);	}
-	/// Draw surface by formula with x,y in range [Min, Max]
-	inline void Surf(const char *fz, const char *stl="", const char *opt="")
-	{	mgl_fsurf(gr, fz, stl, opt);	}
-	/// Draw surface by formulas parametrically depended on u,v in range [0,1]
-	inline void SurfPar(const char *fx, const char *fy, const char *fz, const char *stl="", const char *opt="")
-	{	mgl_fsurf_xyz(gr, fx, fy, fz, stl, opt);	}
-
 	/// Draw vertical tiles with variable size for 2d data specified parametrically
 	inline void TileS(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *stl="", const char *opt="")
 	{	mgl_tiles_xy(gr, &x, &y, &z, &r, stl, opt);	}
 	inline void TileS(const mglDataA &z, const mglDataA &r, const char *stl="", const char *opt="")
 	{	mgl_tiles(gr, &z, &r, stl, opt);	}
-
 	/// Draw surface for 2d data specified parametrically with color proportional to c
 	inline void SurfC(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
 	{	mgl_surfc_xy(gr, &x, &y, &z, &c, sch,opt);	}
@@ -774,36 +754,16 @@ public:
 	{	mgl_surfa_xy(gr, &x, &y, &z, &c, sch,opt);	}
 	inline void SurfA(const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
 	{	mgl_surfa(gr, &z, &c, sch,opt);	}
-	/// Draw density plot for spectra-gramm specified parametrically
-	inline void STFA(const mglDataA &x, const mglDataA &y, const mglDataA &re, const mglDataA &im, int dn, const char *sch="", const char *opt="")
-	{	mgl_stfa_xy(gr, &x, &y, &re, &im, dn, sch, opt);	}
-	inline void STFA(const mglDataA &re, const mglDataA &im, int dn, const char *sch="", const char *opt="")
-	{	mgl_stfa(gr, &re, &im, dn, sch, opt);	}
-
-	/// Plot dew drops for vector field {ax,ay} parametrically depended on coordinate {x,y}
-	inline void Dew(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
-	{	mgl_dew_xy(gr, &x, &y, &ax, &ay, sch, opt);	}
-	inline void Dew(const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
-	{	mgl_dew_2d(gr, &ax, &ay, sch, opt);	}
-	/// Plot vectors at position {x,y,z} along {ax,ay,az} with length/color proportional to |a|
-	inline void Traj(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
-	{	mgl_traj_xy(gr, &x, &y, &ax, &ay, sch, opt);	}
-	inline void Traj(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
-	{	mgl_traj_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, opt);	}
-	/// Plot vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with length/color proportional to |a|
-	inline void Vect(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
-	{	mgl_vect_xy(gr, &x, &y, &ax, &ay, sch, opt);	}
-	inline void Vect(const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
-	{	mgl_vect_2d(gr, &ax, &ay, sch, opt);	}
-	inline void Vect(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
-	{	mgl_vect_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, opt);	}
-	inline void Vect(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
-	{	mgl_vect_3d(gr, &ax, &ay, &az, sch, opt);	}
 	/// Color map of matrix a to matrix b, both matrix can parametrically depend on coordinates
 	inline void Map(const mglDataA &x, const mglDataA &y, const mglDataA &a, const mglDataA &b, const char *sch="", const char *opt="")
 	{	mgl_map_xy(gr, &x, &y, &a, &b, sch, opt);	}
 	inline void Map(const mglDataA &a, const mglDataA &b, const char *sch="", const char *opt="")
 	{	mgl_map(gr, &a, &b, sch, opt);	}
+	/// Draw density plot for spectra-gramm specified parametrically
+	inline void STFA(const mglDataA &x, const mglDataA &y, const mglDataA &re, const mglDataA &im, int dn, const char *sch="", const char *opt="")
+	{	mgl_stfa_xy(gr, &x, &y, &re, &im, dn, sch, opt);	}
+	inline void STFA(const mglDataA &re, const mglDataA &im, int dn, const char *sch="", const char *opt="")
+	{	mgl_stfa(gr, &re, &im, dn, sch, opt);	}
 
 	/// Draw isosurface(s) for 3d data specified parametrically with alpha proportional to b
 	inline void Surf3A(float Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
@@ -824,6 +784,26 @@ public:
 	inline void Surf3C(const mglDataA &a, const mglDataA &b, const char *stl="", const char *opt="")
 	{	mgl_surf3c(gr, &a, &b, stl, opt);	}
 
+	/// Plot dew drops for vector field {ax,ay} parametrically depended on coordinate {x,y}
+	inline void Dew(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_dew_xy(gr, &x, &y, &ax, &ay, sch, opt);	}
+	inline void Dew(const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_dew_2d(gr, &ax, &ay, sch, opt);	}
+	/// Plot vectors at position {x,y,z} along {ax,ay,az} with length/color proportional to |a|
+	inline void Traj(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_traj_xy(gr, &x, &y, &ax, &ay, sch, opt);	}
+	inline void Traj(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
+	{	mgl_traj_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, opt);	}
+	/// Plot vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with length/color proportional to |a|
+	inline void Vect(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_vect_xy(gr, &x, &y, &ax, &ay, sch, opt);	}
+	inline void Vect(const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
+	{	mgl_vect_2d(gr, &ax, &ay, sch, opt);	}
+	inline void Vect(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
+	{	mgl_vect_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, opt);	}
+	inline void Vect(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
+	{	mgl_vect_3d(gr, &ax, &ay, &az, sch, opt);	}
+
 	/// Plot flows for vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to |a|
 	inline void Flow(const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
 	{	mgl_flow_xy(gr, &x, &y, &ax, &ay, sch, opt);	}
@@ -833,7 +813,6 @@ public:
 	{	mgl_flow_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, opt);	}
 	inline void Flow(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", const char *opt="")
 	{	mgl_flow_3d(gr, &ax, &ay, &az, sch, opt);	}
-
 	/// Plot flow from point p for vector field {ax,ay,ay} parametrically depended on coordinate {x,y,z} with color proportional to |a|
 	inline void FlowP(mglPoint p, const mglDataA &x, const mglDataA &y, const mglDataA &ax, const mglDataA &ay, const char *sch="", const char *opt="")
 	{	mgl_flowp_xy(gr, p.x, p.y, p.z, &x, &y, &ax, &ay, sch, opt);	}
@@ -861,41 +840,6 @@ public:
 	{	mgl_pipe_xyz(gr, &x, &y, &z, &ax, &ay, &az, sch, r0, opt);	}
 	inline void Pipe(const mglDataA &ax, const mglDataA &ay, const mglDataA &az, const char *sch="", float r0=0.05, const char *opt="")
 	{	mgl_pipe_3d(gr, &ax, &ay, &az, sch, r0, opt);	}
-
-	/// Draw triangle mesh for points in arrays {x,y,z} with specified color c.
-	inline void TriPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
-	{	mgl_triplot_xyzc(gr, &nums, &x, &y, &z, &c, sch, opt);	}
-	inline void TriPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
-	{	mgl_triplot_xyz(gr, &nums, &x, &y, &z, sch, opt);	}
-	inline void TriPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const char *sch="", const char *opt="")
-	{	mgl_triplot_xy(gr, &nums, &x, &y, sch, opt);	}
-	/// Draw quad mesh for points in arrays {x,y,z} with specified color c.
-	inline void QuadPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
-	{	mgl_quadplot_xyzc(gr, &nums, &x, &y, &z, &c, sch, opt);	}
-	inline void QuadPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
-	{	mgl_quadplot_xyz(gr, &nums, &x, &y, &z, sch, opt);	}
-	inline void QuadPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const char *sch="", const char *opt="")
-	{	mgl_quadplot_xy(gr, &nums, &x, &y, sch, opt);	}
-
-	/// Draw contour lines for triangle mesh for points in arrays {x,y,z}.
-	inline void TriCont(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
-	{	mgl_tricont_xyc(gr, &nums, &x, &y, &z, sch, opt);	}
-	inline void TriContV(const mglDataA &v, const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
-	{	mgl_tricont_xycv(gr, &v, &nums, &x, &y, &z, sch, opt);	}
-	inline void TriCont(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
-	{	mgl_tricont_xyzc(gr, &nums, &x, &y, &z, &a, sch, opt);	}
-	inline void TriContV(const mglDataA &v, const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
-	{	mgl_tricont_xyzcv(gr, &v, &nums, &x, &y, &z, &a, sch, opt);	}
-
-	/// Draw dots in points {x,y,z}.
-	inline void Dots(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
-	{	mgl_dots(gr, &x, &y, &z, sch, opt);	}
-	/// Draw semitransparent dots in points {x,y,z}.
-	inline void Dots(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
-	{	mgl_dots_a(gr, &x, &y, &z, &a, sch, opt);	}
-	/// Draw surface reconstructed for points in arrays {x,y,z}.
-	inline void Crust(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
-	{	mgl_crust(gr, &x, &y, &z, sch, opt);	}
 
 	/// Draw density plot for data at x = sVal
 	inline void DensX(const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
@@ -936,6 +880,54 @@ public:
 	{	mgl_contf_z(gr, &a, stl, sVal, opt);	}
 	inline void ContFZ(const mglDataA &v, const mglDataA &a, const char *stl="", float sVal=NaN, const char *opt="")
 	{	mgl_contf_z_val(gr, &v, &a, stl, sVal, opt);	}
+
+	/// Draw curve for formula with x in range [Min.x, Max.x]
+	inline void FPlot(const char *fy, const char *stl="", const char *opt="")
+	{	mgl_fplot(gr, fy, stl, opt);	}
+	/// Draw curve for formulas parametrically depended on t in range [0,1]
+	inline void FPlot(const char *fx, const char *fy, const char *fz, const char *stl, const char *opt="")
+	{	mgl_fplot_xyz(gr, fx, fy, fz, stl, opt);	}
+	/// Draw surface by formula with x,y in range [Min, Max]
+	inline void FSurf(const char *fz, const char *stl="", const char *opt="")
+	{	mgl_fsurf(gr, fz, stl, opt);	}
+	/// Draw surface by formulas parametrically depended on u,v in range [0,1]
+	inline void FSurf(const char *fx, const char *fy, const char *fz, const char *stl, const char *opt="")
+	{	mgl_fsurf_xyz(gr, fx, fy, fz, stl, opt);	}
+
+	/// Draw triangle mesh for points in arrays {x,y,z} with specified color c.
+	inline void TriPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
+	{	mgl_triplot_xyzc(gr, &nums, &x, &y, &z, &c, sch, opt);	}
+	inline void TriPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_triplot_xyz(gr, &nums, &x, &y, &z, sch, opt);	}
+	inline void TriPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const char *sch="", const char *opt="")
+	{	mgl_triplot_xy(gr, &nums, &x, &y, sch, opt);	}
+	/// Draw quad mesh for points in arrays {x,y,z} with specified color c.
+	inline void QuadPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &c, const char *sch="", const char *opt="")
+	{	mgl_quadplot_xyzc(gr, &nums, &x, &y, &z, &c, sch, opt);	}
+	inline void QuadPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_quadplot_xyz(gr, &nums, &x, &y, &z, sch, opt);	}
+	inline void QuadPlot(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const char *sch="", const char *opt="")
+	{	mgl_quadplot_xy(gr, &nums, &x, &y, sch, opt);	}
+
+	/// Draw contour lines for triangle mesh for points in arrays {x,y,z}.
+	inline void TriCont(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_tricont_xyc(gr, &nums, &x, &y, &z, sch, opt);	}
+	inline void TriContV(const mglDataA &v, const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_tricont_xycv(gr, &v, &nums, &x, &y, &z, sch, opt);	}
+	inline void TriCont(const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_tricont_xyzc(gr, &nums, &x, &y, &z, &a, sch, opt);	}
+	inline void TriContV(const mglDataA &v, const mglDataA &nums, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_tricont_xyzcv(gr, &v, &nums, &x, &y, &z, &a, sch, opt);	}
+
+	/// Draw dots in points {x,y,z}.
+	inline void Dots(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_dots(gr, &x, &y, &z, sch, opt);	}
+	/// Draw semitransparent dots in points {x,y,z}.
+	inline void Dots(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", const char *opt="")
+	{	mgl_dots_a(gr, &x, &y, &z, &a, sch, opt);	}
+	/// Draw surface reconstructed for points in arrays {x,y,z}.
+	inline void Crust(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_crust(gr, &x, &y, &z, sch, opt);	}
 
 	/// Fit data along x-direction for each data row. Return array with values for found formula.
 	inline mglData Fit(const mglDataA &y, const char *eq, const char *var, const char *opt="")
@@ -993,6 +985,11 @@ public:
 	inline const char *GetFit()
 	{	return mgl_get_fit(gr);	}
 
+
+
+
+
+
 	/// Solve PDE with x,y,z in range [Min, Max]
 	inline mglData PDE(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, float dz=0.1, float k0=100, const char *opt="")
 	{	return mglData(true,mgl_pde_solve(gr,ham,&ini_re,&ini_im,dz,k0, opt));	}
@@ -1011,6 +1008,9 @@ public:
 	{	return mglData(true, mgl_hist_xy(gr, &x, &y, &a, opt));	}
 	inline mglData Hist(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *opt="")
 	{	return mglData(true, mgl_hist_xyz(gr, &x, &y, &z, &a, opt));	}
+
+
+
 
 	inline void Compression(bool){}		// NOTE: Add later -- IDTF
 	inline void VertexColor(bool){}		// NOTE: Add later -- IDTF

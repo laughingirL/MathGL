@@ -63,6 +63,7 @@ void mgl_data_set(HMDT dat, HCDT a);
 void mgl_data_set_vector(HMDT dat, gsl_vector *v);
 void mgl_data_set_matrix(HMDT dat, gsl_matrix *m);
 void mgl_data_set_value(HMDT dat, float v, long i, long j, long k);
+float mgl_data_get_value(HCDT dat, long i, long j, long k);
 void mgl_data_set_values(HMDT dat, const char *val, long nx, long ny, long nz);
 
 int mgl_data_read_hdf(HMDT d,const char *fname,const char *data);
@@ -184,6 +185,7 @@ void mgl_data_set_(uintptr_t *dat, uintptr_t *a);
 
 void mgl_data_set_value_(uintptr_t *d, float *v, int *i, int *j, int *k);
 void mgl_data_set_values_(uintptr_t *d, const char *val, int *nx, int *ny, int *nz, int l);
+float mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k);
 int mgl_data_read_(uintptr_t *d, const char *fname,int l);
 int mgl_data_read_mat_(uintptr_t *dat, const char *fname, int *dim, int);
 int mgl_data_read_dim_(uintptr_t *dat, const char *fname,int *mx,int *my,int *mz,int);
@@ -325,7 +327,7 @@ public:
 	/// Allocate the memory for data array and initialize it zero
 	inline mglData(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
 	/// Delete the array
-	virtual ~mglData();
+	virtual ~mglData()	{	if(id && a)	delete []id;	if(!link && a)	delete []a;	}
 	/// Get sizes
 	inline mreal GetVal(long i)	{	return a[i];}
 	inline void SetVal(mreal f, long i)	{	a[i]=f;	}
@@ -390,9 +392,29 @@ public:
 	inline void Set(const std::vector<double> &d)
 	{	if(d.size()<1)	return;
 		Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
+
+
+
+
+	/// Create or recreate the array with specified size and fill it by zero
+	inline void Create(long mx,long my=1,long mz=1)
+	{	mgl_data_create(this,mx,my,mz);	}
+	/// Extend data dimensions
+	inline void Extend(long n1, long n2=0)
+	{	mgl_data_extend(this,n1,n2);	}
+	/// Insert data
+	inline void Insert(char dir, long at=0, long num=1)
+	{	mgl_data_insert(this,dir,at,num);	}
+	/// Delete data
+	inline void Delete(char dir, long at=0, long num=1)
+	{	mgl_data_delete(this,dir,at,num);	}
 	/// Rearange data dimensions
 	inline void Rearrange(long mx, long my=0, long mz=0)
 	{	mgl_data_rearrange(this,mx,my,mz);	}
+
+
+
+
 
 	/// Read data from tab-separated text file with auto determining size
 	inline bool Read(const char *fname)
@@ -427,19 +449,6 @@ public:
 	/// Put HDF data names into buf as '\t' separated.
 	inline int DatasHDF(const char *fname, char *buf, long size)
 	{	return mgl_datas_hdf(fname,buf,size);	}
-
-	/// Create or recreate the array with specified size and fill it by zero
-	inline void Create(long mx,long my=1,long mz=1)
-	{	mgl_data_create(this,mx,my,mz);	}
-	/// Extend data dimensions
-	inline void Extend(long n1, long n2=0)
-	{	mgl_data_extend(this,n1,n2);	}
-	/// Insert data
-	inline void Insert(char dir, long at=0, long num=1)
-	{	mgl_data_insert(this,dir,at,num);	}
-	/// Delete data
-	inline void Delete(char dir, long at=0, long num=1)
-	{	mgl_data_delete(this,dir,at,num);	}
 
 	/// Transpose dimensions of the data (generalization of Transpose)
 	inline void Transpose(const char *dim="yx")

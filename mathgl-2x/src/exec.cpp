@@ -2969,32 +2969,32 @@ void mglc_ctick(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 int mgls_fplot(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==2 && k[1]==2 && k[2]==2)
-		gr->Plot3(a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
-	else if(k[0]==2)	gr->Plot(a[0].s, k[1]==2?a[1].s:"",opt);
+		gr->FPlot(a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
+	else if(k[0]==2)	gr->FPlot(a[0].s, k[1]==2?a[1].s:"",opt);
 	else	return 1;
 	return 0;
 }
 void mglc_fplot(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==2 && k[1]==2 && k[2]==2)
-		mglprintf(out,1024,L"gr->Plot3(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\");", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
+		mglprintf(out,1024,L"gr->FPlot(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\");", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
 	else if(k[0]==2)
-		mglprintf(out,1024,L"gr->Plot(\"%s\", \"%s\", \"%s\");", a[0].s, k[1]==2?a[1].s:"",opt);
+		mglprintf(out,1024,L"gr->FPlot(\"%s\", \"%s\", \"%s\");", a[0].s, k[1]==2?a[1].s:"",opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_fsurf(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==2 && k[1]==2 && k[2]==2)	gr->SurfPar(a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
-	else if(k[0]==2)	gr->Surf(a[0].s, k[1]==2?a[1].s:"",opt);
+	if(k[0]==2 && k[1]==2 && k[2]==2)	gr->FSurf(a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
+	else if(k[0]==2)	gr->FSurf(a[0].s, k[1]==2?a[1].s:"",opt);
 	else	return 1;
 	return 0;
 }
 void mglc_fsurf(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==2 && k[1]==2 && k[2]==2)
-		mglprintf(out,1024,L"gr->SurfPar(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\");", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
+		mglprintf(out,1024,L"gr->FSurf(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\");", a[0].s, a[1].s, a[2].s, k[3]==2?a[3].s:"",opt);
 	else if(k[0]==2)
-		mglprintf(out,1024,L"gr->Surf(\"%s\", \"%s\", \"%s\");", a[0].s, k[1]==2?a[1].s:"",opt);
+		mglprintf(out,1024,L"gr->FSurf(\"%s\", \"%s\", \"%s\");", a[0].s, k[1]==2?a[1].s:"",opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -3556,8 +3556,8 @@ mglCommand mgls_base_cmd[] = {
 //-----------------------------------------------------------------------------
 int mgl_draw_class(mglBase *gr, void *p)
 {	mglGraph g(gr);	return p ? ((mglDraw *)p)->Draw(&g) : 0;	}
-void mgl_reload_class(int next, void *p)
-{	if(p)	((mglDraw *)p)->Reload(next);	}
+void mgl_reload_class(void *p)
+{	if(p)	((mglDraw *)p)->Reload();	}
 //-----------------------------------------------------------------------------
 int mgl_draw_graph(mglBase *gr, void *p)
 {

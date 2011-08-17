@@ -382,29 +382,18 @@ long mgl_insert_trig(long i1,long i2,long i3,long **n)
 		memset(*n+3*(Max-1024),0,3*1024*sizeof(long));
 	}
 	long *nn = *n;
-	register long i,ii,k1;
+	register long i,k1;
 	if(i1>i3)	{	k1=i1;	i1=i3;	i3=k1;	}	// simple sorting
 	if(i1>i2)	{	k1=i1;	i1=i2;	i2=k1;	}
 	if(i2>i3)	{	k1=i2;	i2=i3;	i3=k1;	}
 	for(i=0;i<Cur;i++)	// check if it is unique
 	{
-		ii = 3*i;
-		if(nn[ii]==i1 && nn[ii+1]==i2 && nn[ii+2]==i3)	return Cur;
-/*		if(nn[ii]==i1 && nn[ii+1]==i2)
-		{
-			k2 = nn[ii+2];
-			if(i3<k2)	k1=i3;	else	{	k1=k2;	k2=i3;	}
-			for(j=i+1;j<Cur;j++)
-			{
-				jj = 3*j;
-				if()
-			}
-		}*/
+		nn = *n + 3*i;
+		if(nn[0]==i1 && nn[1]==i2 && nn[2]==i3)	return Cur;
 	}
-	i = 3*Cur;
-	nn[i]=i1;	nn[i+1]=i2;	nn[i+2]=i3;
-	Cur++;
-	return Cur;
+	nn = *n + 3*Cur;
+	nn[0]=i1;	nn[1]=i2;	nn[2]=i3;
+	Cur++;	return Cur;
 }
 //-----------------------------------------------------------------------------
 long mgl_get_next(long k1,long n,long *,long *set,mglPoint *qq)
