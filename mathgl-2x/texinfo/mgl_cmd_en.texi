@@ -146,22 +146,22 @@ There are several commands for setup transparency. The general command is @ref{a
 @anchor{alpha}
 @deftypefn {MGL command} {} alpha @code{[val=on]}
 Sets the transparency on/off. It is recommended to call this command before any plotting command. Default value is @code{off}. Use @code{transparent off} in particular plot to disable its transparency.
-@end deffn
+@end deftypefn
 @cindex alphadef
 @anchor{alphadef}
 @deftypefn {MGL command} {} alphadef @code{val}
 Default value of alpha channel (transparency) for all plotting commands. Initial value is 0.5.
-@end deffn
+@end deftypefn
 @cindex transparent
 @anchor{transparent}
 @deftypefn {MGL command} {} transparent @code{val}
 Temporary switches transparency on/off for the plot.
-@end deffn
+@end deftypefn
 @cindex transptype
 @anchor{transptype}
 @deftypefn {MGL command} {} transptype @code{val}
 This command set the transparency type. Normal transparency (@samp{0}) -- below things is less visible than upper ones. Glass-like transparency (@samp{1}) -- below and upper things are commutable and just decrease intensity of light by RGB channel. Lamp-like transparency (@samp{2}) -- below and upper things are commutable and are the source of some additional light. I recommend to set @code{alphadef 0.3} or less for lamp-like transparency. @xref{Normal transparency}, @ref{Glass-like transparency}, @ref{Lamp-like transparency}.
-@end deffn
+@end deftypefn
 
 @c ==================================================================
 @node Lighting @MGL{}, Fog @MGL{}, Transparency @MGL{}, Graphics setup @MGL{}
@@ -173,20 +173,20 @@ There are several commands for setup lighting. The general command is @ref{light
 @anchor{light}
 @deftypefn {MGL command} {} light @code{[val=on]}
 Sets the using of light on/off for overall plot. It is recommended to call this command before any plotting command. Default value is lightning off.
-@end deffn
+@end deftypefn
 @deftypefn {MGL command} {} light @code{num val}
 Switch on/off @var{num}-th light source separately.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} light @code{num xpos ypos zpos} ['col'='w' @code{br=0.5}]
 The command adds a light source with identification @var{num} at position @{@var{xpos}, @var{ypos}, @var{zpos}@}. The color of light is @var{col} (white by default). The brightness of light is @var{br} which must be in range [0,1].
-@end deffn
+@end deftypefn
 
 @cindex ambient
 @anchor{ambient}
 @deftypefn {MGL command} {} ambient @code{val}
 Sets the brightness of ambient light. The value should be in range [0,1]. Initial value is 0.5. 
-@end deffn
+@end deftypefn
 
 @c ==================================================================
 @node Fog @MGL{}, Default sizes @MGL{}, Lighting @MGL{}, Graphics setup @MGL{}
@@ -196,7 +196,7 @@ Sets the brightness of ambient light. The value should be in range [0,1]. Initia
 @anchor{fog}
 @deftypefn {MGL command} {} fog @code{val [dz=0.25]}
 Command imitate a fog in the plot. Fog start from relative distance @var{dz} from view point and its density growths exponentially in depth. So that the fog influence is determined by law ~@math{1-exp(-d*z)}. Here @emph{z} is normalized to 1 depth of the plot. If value @var{val}=@code{0} then the fog is absent. @sref{Surface in fog sample}
-@end deffn
+@end deftypefn
 
 @c ==================================================================
 @node Default sizes @MGL{}, Zooming @MGL{}, Fog @MGL{}, Graphics setup @MGL{}
@@ -208,37 +208,37 @@ These commands control the default (initial) values for most graphics parameters
 @anchor{barwidth}
 @deftypefn {MGL command} {} barwidth @code{val}
 Sets relative width of rectangles in @code{bars, barh, boxplot}. Default value is @code{0.7}.
-@end deffn
+@end deftypefn
 
 @cindex marksize
 @anchor{marksize}
 @deftypefn {MGL command} {} marksize @code{val}
 The size of marks. Default value is @code{1}.
-@end deffn
+@end deftypefn
 
 @cindex arrowsize
 @anchor{arrowsize}
 @deftypefn {MGL command} {} arrowsize @code{val}
 The size of arrows for lines and curves. Default value is @code{1}.
-@end deffn
+@end deftypefn
 
 @cindex linewidth
 @anchor{linewidth}
 @deftypefn {MGL command} {} linewidth @code{val}
 The variable define the base width for all lines. The value <1 is ignored. Increase of this variables is actual for large bitmap pictures. Default value is @code{1}.
-@end deffn
+@end deftypefn
 
 @cindex ticklen
 @anchor{ticklen}
 @deftypefn {MGL command} {} ticklen @code{val} [@code{stt=1}]
 The relative length of axis ticks. Default value is @code{0.1}. Parameter @var{stt}>0 set relative length of subticks which is in @code{sqrt(1+stt)} times smaller.
-@end deffn
+@end deftypefn
 
 @cindex tickstl
 @anchor{tickstl}
 @deftypefn {MGL command} {} tickstl 'stl' ['sub'='']
 The line style of axis ticks (@var{stl}) and subticks (@var{sub}). If @var{stl}='' then default style is used (@samp{k} or @samp{w} depending on transparency type). If @var{sub}='' then ticks style is used (i.e. @var{stl}).
-@end deffn
+@end deftypefn
 
 @c ==================================================================
 @node Zooming @MGL{}, Cutting @MGL{}, Default sizes @MGL{}, Graphics setup @MGL{}
@@ -250,13 +250,13 @@ These commands control the overall zooming of the picture or the sub-picture. No
 @anchor{plotfactor}
 @deftypefn {MGL command} {} plotfactor @code{val}
 The factor of plot size. It is not recommended to set it lower then 1.6. This is some analogue of command @ref{zoom} but applied not to overall image but for each @ref{inplot}. Use negative value to enable automatic @ref{plotfactor} selection.
-@end deffn
+@end deftypefn
 
 @cindex zoom
 @anchor{zoom}
 @deftypefn {MGL command} {} zoom @code{x1 y1 x2 y2}
 The command changes the scale of graphics that correspond to zoom in/out of the picture. After command call the current plot will be cleared and further the picture will contain plotting from its part [x1,x2]*[y1,y2]. Here picture coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} changes from 0 to 1. Use @code{zoom 0 0 1 1} to return default view.
-@end deffn
+@end deftypefn
 
 @c ==================================================================
 @node Cutting @MGL{}, Other settings @MGL{}, Zooming @MGL{}, Graphics setup @MGL{}
@@ -268,15 +268,15 @@ These commands set the condition when the points are excluded (cutted) from the 
 @anchor{cut}
 @deftypefn {MGL command} {} cut @code{val}
 Determines how points outside bounding box are drawn. If it is @code{on} then points are excluded from plot (it is default) otherwise the points are projected to edges of bounding box.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} cut @code{x1 y1 z1 x2 y2 z2}
 Lower and upper edge of the box in which never points are drawn. If both edges are the same (the variables are equal) then the cutting box is empty. @sref{CutMinMax sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} cut 'cond'
 Command set the cutting off condition by formula @var{cond}. This condition determine will point be plotted or not. If value of formula is nonzero then point is omitted, otherwise it plotted. Set argument as @code{''} to disable cutting off condition. @sref{CutOff sample}
-@end deffn
+@end deftypefn
 
 @c ==================================================================
 @node Other settings @MGL{}, , Cutting @MGL{}, Graphics setup @MGL{}
@@ -286,31 +286,31 @@ Command set the cutting off condition by formula @var{cond}. This condition dete
 @anchor{font}
 @deftypefn {MGL command} {} font 'fnt' [@code{val=6}]
 Font style for text and labels (see text). Initial style is 'fnt'='rC' give Roman font with centering. Parameter @code{val} sets the size of font for tick and axis labels. Default font size of axis labels is 1.4 times large than for tick labels. For more detail, @pxref{Font styles}.
-@end deffn
+@end deftypefn
 
 @cindex rotatetext
 @anchor{rotatetext}
 @deftypefn {MGL command} {} rotatetext @code{val}
 Set to use or not text rotation along axis. Initial value is @code{on}.
-@end deffn
+@end deftypefn
 
 @cindex palette
 @anchor{palette}
 @deftypefn {MGL command} {} palette 'colors'
 Set the palette as selected colors. Default value is @code{'Hbgrcmyhlnqeup'}. The palette is used mostly in 1D plots for curves which styles are not specified.
-@end deffn
+@end deftypefn
 
 @cindex meshnum
 @anchor{meshnum}
 @deftypefn {MGL command} {} meshnum @code{num}
 Sets approximate number of lines in @ref{mesh}, @ref{fall}, @ref{grid} and also the number of hachures in @ref{vect}, @ref{vectc}, @ref{dew} and the number of cells in @ref{cloud}. By default (=0) it draws all lines/hachures/cells.
-@end deffn
+@end deftypefn
 
 @cindex axialdir
 @anchor{axialdir}
 @deftypefn {MGL command} {} axialdir 'dir'
 Set direction around which curve rotated in @ref{axial}, @ref{torus}. Default value is 'z'.
-@end deffn
+@end deftypefn
 
 @c ==================================================================
 @node Axis settings @MGL{}, Transformation matrix @MGL{}, Graphics setup @MGL{}, MGL interface
@@ -326,33 +326,33 @@ These large set of commands control how the axis and ticks will be drawn. Note t
 @anchor{ranges}
 @deftypefnx {MGL command} {} ranges @code{x1 x2 y1 y2 [z1=0 z2=0]}
 Sets the ranges of coordinates changing. Also it sets the range for coloring (analogous to @code{caxis z1 z2}). Initial ranges are [-1, 1].
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} axis 'fx' 'fy' ['fz'='' 'fa'='']
 Sets the transformation formulas for curvilinear coordinates. Each string should contain mathematical expression for real coordinate depending on internal coordinates @samp{x}, @samp{y}, @samp{z} and @samp{a} or @samp{c} for colorbar. For example, the cylindrical coordinates are introduced as @code{axis 'x*cos(y)' 'x*sin(y)' 'z'}. For removing of formulas the corresponding parameter should be @code{''}. The using of transformation formulas will slightly slowing the program, i.e. @code{axis '' '' ''} is faster than @code{axis '1*x' '1*y' '1*z'}. Initially all formulas are absent (Cartesian coordinates are used). For more details about functions and formulas, @pxref{Textual formulas}.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} axis @code{how}
 Sets one of the predefined transformation formulas for curvilinear coordinate. Paramater @var{how} define the coordinates: @samp{0} -- Cartesian coordinates (no transformation); @samp{1} -- Polar coordiantes @math{x_n=x*cos(y),y_n=x*sin(y), z_n=z}; @samp{2} -- Spherical coordinates @math{x_n=x*sin(y)*cos(z), y_n=x*sin(y)*sin(z), z_n=x*cos(y)}; @samp{3} -- Parabolic coordinates @math{x_n=x*y, y_n=(x*x-y*y)/2, z_n=z}; @samp{4} -- Paraboloidal coordinates @math{x_n=(x*x-y*y)*cos(z)/2, y_n=(x*x-y*y)*sin(z)/2, z_n=x*y}; @samp{5} -- Oblate coordinates @math{x_n=cosh(x)*cos(y)*cos(z), y_n=cosh(x)*cos(y)*sin(z), z_n=sinh(x)*sin(y)}; @samp{6} -- Prolate coordinates @math{x_n=sinh(x)*sin(y)*cos(z), y_n=sinh(x)*sin(y)*sin(z), z_n=cosh(x)*cos(y)}; @samp{7} -- Elliptic coordinates @math{x_n=cosh(x)*cos(y), y_n=sinh(x)*sin(y), z_n=z}; @samp{8} -- Toroidal coordinates @math{x_n=sinh(x)*cos(z)/(cosh(x)-cos(y)), y_n=sinh(x)*sin(z)/(cosh(x)-cos(y)), z_n=sin(y)/(cosh(x)-cos(y))}; @samp{9} -- Bispherical coordinates @math{x_n=sin(y)*cos(z)/(cosh(x)-cos(y)), y_n=sin(y)*sin(z)/(cosh(x)-cos(y)), z_n=sinh(x)/(cosh(x)-cos(y))}; @samp{10} -- Bipolar coordinates @math{x_n=sinh(x)/(cosh(x)-cos(y)), y_n=sin(y)/(cosh(x)-cos(y)), z_n=z}.
-@end deffn
+@end deftypefn
 
 @cindex caxis
 @anchor{caxis}
 @deftypefn {MGL command} {} caxis @code{z1 z2}
 Sets the range for surface coloring. Initial range is [-1, 1].
-@end deffn
+@end deftypefn
 
 @cindex origin
 @anchor{origin}
 @deftypefn {MGL command} {} origin @code{x0 y0 [z0=nan]}
 Center of axis cross section. If one of values is @code{nan} then MathGL library try to select optimal axis position.
-@end deffn
+@end deftypefn
 
 @cindex ternary
 @anchor{ternary}
 @deftypefn {MGL command} {} ternary @code{val}
 The command sets to draws Ternary plot. This special plot is for 3 dependent coordinates (components) @var{a}, @var{b}, @var{c} so that @var{a}+@var{b}+@var{c}=1. MathGL uses only 2 independent coordinates @var{a}=x and @var{b}=y since it is enough to plot everything. At this third coordinate z act as another parameter to produce contour lines, surfaces and so on. @sref{Ternary plot sample}
-@end deffn
+@end deftypefn
 
 @cindex xrange
 @anchor{xrange}
@@ -367,14 +367,14 @@ The command sets to draws Ternary plot. This special plot is for 3 dependent coo
 @anchor{crange}
 @deftypefnx {MGL command} {} crange dat [@code{add=off fact=0}]
 Sets the range for x-,y-,z- coordinate or coloring as minimal and maximal values of data @var{dat}. Parameter @code{add=on} shows that the new range will be joined to existed one (nut will not replace it). Parameter @var{fact} add additional range increase on value (@var{Max}-@var{Min})*@var{fact}.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} xrange @code{x1 x2}
 @deftypefnx {MGL command} {} yrange @code{x1 x2}
 @deftypefnx {MGL command} {} zrange @code{x1 x2}
 @deftypefnx {MGL command} {} crange @code{x1 x2}
 Sets the range for x-,y-,z- coordinate or coloring. See also @ref{axis}.
-@end deffn
+@end deftypefn
 
 @cindex xtick
 @anchor{xtick}
@@ -389,26 +389,26 @@ Sets the range for x-,y-,z- coordinate or coloring. See also @ref{axis}.
 @anchor{ctick}
 @deftypefnx {MGL command} {} ctick @code{val}
 Sets step for x-, y-, z-axis ticks or colorbar ticks (if @var{val}>0) or it's number (if @var{val}<0) in corresponding direction. Zero value @var{val}=0 sets logarithmic ticks. Parameter @var{sub} sets the number of sub-ticks. Parameter @var{org} set the starting points for ticks. If not @code{org=nan} then the value from @ref{origin} is used.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} xtick 'templ'
 @deftypefnx {MGL command} {} ytick 'templ'
 @deftypefnx {MGL command} {} ztick 'templ'
 @deftypefnx {MGL command} {} ctick 'templ'
 Sets the template for x-, y-, z-axis ticks or colorbar ticks. It may contain TeX symbols also. If @var{templ}=@code{''} then default template is used (in simplest case it is @samp{%.2g}) with automatic detaching of common multiplier or common component.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} xtick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 @deftypefnx {MGL command} {} ytick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 @deftypefnx {MGL command} {} ztick @code{val1} 'lbl1' [@code{val2} 'lbl2' ...]
 Sets manual positions @var{val1},@var{val2},... and labels @var{lbl1},@var{lbl2},... for ticks along x-, y-, z-axis. Labels may contain TeX symbols also.
-@end deffn
+@end deftypefn
 
 @cindex adjust
 @anchor{adjust}
 @deftypefn {MGL command} {} adjust ['dir'='xyzc']
 Set the ticks step, number of sub-ticks and initial ticks position to be the most human readable for the axis along direction(s) @var{dir}.
-@end deffn
+@end deftypefn
 
 
 @c ##################################################################
@@ -421,51 +421,51 @@ These commands control how and where further plotting will be placed. There is a
 @anchor{subplot}
 @deftypefn {MGL command} {} subplot @code{nx ny m [dx=0 dy=0]}
 Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. This command set off any aspects or rotations. So it should be used first for creating the subplot. From the aesthetical point of view it is not recommended to use this command with different matrices in the same frame. The position of the cell can be shifted from its default position by relative size @var{dx}, @var{dy}.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} subplot @code{nx ny m} 'style'
 The same as previous but space reserved for axis/colorbar is saved only if @var{style} contain: @samp{L} or @samp{<} -- at left side, @samp{R} or @samp{>} -- at right side, @samp{A} or @samp{^} -- at top side, @samp{U} or @samp{_} -- at bottom side.
-@end deffn
+@end deftypefn
 
 @cindex inplot
 @anchor{inplot}
 @deftypefn {MGL command} {} inplot @code{x1 x2 y1 y2 [rel=off]}
 Puts further plotting in some region of the whole frame surface. This command allows one to create a plot in arbitrary place of the screen. The position is defined by rectangular coordinates [@var{x1}, @var{x2}]*[@var{y1}, @var{y2}]. The coordinates @var{x1}, @var{x2}, @var{y1}, @var{y2} are normalized to interval [0, 1]. If parameter @var{rel}=@code{on} then the relative position to current @ref{subplot} is used. This command set off any aspects or rotations. So it should be used first for creating subplot.
-@end deffn
+@end deftypefn
 
 @cindex columnplot
 @anchor{columnplot}
 @deftypefn {MGL command} {} columnplot @code{num ind [d=0]}
 Puts further plotting in @var{ind}-th cell of column with @var{num} cells. The position is relative to previous @ref{subplot} call (or @ref{inplot} with @code{rel=off}). Parameter @var{d} set extra gap between cells.
-@end deffn
+@end deftypefn
 
 @cindex stickplot
 @anchor{stickplot}
 @deftypefn {MGL command} {} stickplot @code{num ind tet phi}
 Puts further plotting in @var{ind}-th cell of stick with @var{num} cells. At this, stick is rotated on angles @var{tet}, @var{phi}. The position is relative to previous @ref{subplot} call (or @ref{inplot} with @code{rel=off}).
-@end deffn
+@end deftypefn
 
 @cindex rotate
 @anchor{rotate}
 @deftypefn {MGL command} {} rotate @code{tetz tetx [tety=0]}
 Rotates a further plotting relative to each axis (x, z, y) consecutively on angles @var{tetx}, @var{tetz}, @var{tety}.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} rotate @code{tet x y z}
 Rotates a further plotting around vector @{x,y,z@} on angle @var{tet}.
-@end deffn
+@end deftypefn
 
 @cindex aspect
 @anchor{aspect}
 @deftypefn {MGL command} {} aspect @code{ax ay [az=1]}
 Defines aspect ratio for the plot. The viewable axes will be related one to another as the ratio @var{ax:ay:az}. For the best effect it should be used after @ref{rotate} command.
-@end deffn
+@end deftypefn
 
 @cindex perspective
 @anchor{perspective}
 @deftypefn {MGL command} {} perspective @code{val}
 Add (switch on) the perspective to plot. The parameter @math{val ~ 1/z_@{eff@} \in [0,1)}. By default (@code{val=0}) the perspective is off.
-@end deffn
+@end deftypefn
 
 @c ##################################################################
 @node Export to file @MGL{}, Primitives drawing @MGL{}, Transformation matrix @MGL{}, MGL interface
@@ -475,13 +475,13 @@ Add (switch on) the perspective to plot. The parameter @math{val ~ 1/z_@{eff@} \
 @anchor{write}
 @deftypefn {MGL command} {} write 'fname' [@code{solid=off}]
 Exports current picture/frame to file 'fname' (file type is determined by extension). Solid (usually white) background will be used if @code{solid=on}. If 'fname'='' then the file @samp{frameNNNN.jpg} is used, where @samp{NNNN} is current frame id.
-@end deffn
+@end deftypefn
 
 @cindex setsize
 @anchor{setsize}
 @deftypefn {MGL command} {} setsize @code{w h}
 Sets size of picture in pixels. This function call @strong{must be} placed before any plotting command because it completely remove picture content. In some program the call of this function is forbidden.
-@end deffn
+@end deftypefn
 
 
 @c ##################################################################
@@ -494,28 +494,28 @@ These commands draw some simple objects like line, point, sphere, drop, cone and
 @anchor{clf}
 @deftypefn {MGL command} {} clf
 Clear the picture by removes all drawing from it. Does not change transformation matrix. 
-@end deffn
+@end deftypefn
 
 @cindex ball
 @anchor{ball}
 @deftypefn {MGL command} {} ball @code{x y} ['col'='r']
 @deftypefnx {MGL command} {} ball @code{x y z} ['col'='r']
 Draws a point (ball) at position @{@var{x}, @var{y}, @var{z}@} with color defined by string @var{col}.
-@end deffn
+@end deftypefn
 
 @cindex line
 @anchor{line}
 @deftypefn {MGL command} {} line @code{x1 y1 x2 y2} ['stl'='']
 @deftypefnx {MGL command} {} line @code{x1 y1 z1 x2 y2 z2} ['stl'='']
 Draws a geodesic line (straight line in Cartesian coordinates) from point @{@var{x1},@var{y1},@var{z1}@} to @{@var{x2},@var{y2},@var{z2}@} using line style @var{stl}.
-@end deffn
+@end deftypefn
 
 @cindex curve
 @anchor{curve}
 @deftypefn {MGL command} {} curve @code{x1 y1 dx1 dy1 x2 y2 dx2 dy2} ['stl'='']
 @deftypefnx {MGL command} {} curve @code{x1 y1 z1 dx1 dy1 dz1 x2 y2 z2 dx2 dy2 dz2} ['stl'='']
 Draws Bezier-like curve from point @{@var{x1},@var{y1},@var{z1}@} to @{@var{x2},@var{y2},@var{z2}@} using line style @var{stl}. At this tangent is co-directed with @{@var{dx1},@var{dy1},@var{dz1}@}, @{@var{dx2},@var{dy2},@var{dz2}@} and proportional to its amplitude.
-@end deffn
+@end deftypefn
 
 @cindex facex
 @anchor{facex}
@@ -527,34 +527,34 @@ Draws Bezier-like curve from point @{@var{x1},@var{y1},@var{z1}@} to @{@var{x2},
 @anchor{facez}
 @deftypefnx {MGL command} {} facez @code{x0 y0 z0 wx wy} ['stl'='' @code{d1=0 d2=0}]
 Draws the solid rectangle (face) perpendicular to [x,y,z]-axis correspondingly at position @{@var{x0}, @var{y0}, @var{z0}@} with color @var{stl} and with widths @var{wx}, @var{wy}, @var{wz} along corresponding directions. At this colors can be the same for all vertexes or different if all 4 colors are specified for each vertex. Parameters @var{d1}!=0, @var{d2}!=0 set additional shift of the last vertex (i.e. to draw quadrangle).
-@end deffn
+@end deftypefn
 
 @cindex sphere
 @anchor{sphere}
 @deftypefn {MGL command} {} sphere @code{x0 y0 r} ['col'='r']
 @deftypefnx {MGL command} {} sphere @code{x0 y0 z0 r} ['col'='r']
 Draw the sphere with radius @var{r} and center at point @{@var{x0}, @var{y0}, @var{z0}@} and color @var{stl}.
-@end deffn
+@end deftypefn
 
 @cindex drop
 @anchor{drop}
 @deftypefn {MGL command} {} drop @code{x0 y0 dx dy r} ['col'='b' @code{sh=1 asp=1}]
 @deftypefnx {MGL command} {} drop @code{x0 y0 z0 dx dy dz r} ['col'='b' @code{sh=1 asp=1}]
 Draw the drop with radius @var{r} at point @{@var{x0},@var{y0},@var{z0}@} elongated in direction @{@var{dx},@var{dy},@var{dz}@} and with color @var{col}. Parameter @var{sh} set the degree of drop oblongness: @samp{0} is sphere, @samp{1} is maximally oblongness drop. Parameter @var{asp} set relative width of the drop (this is analogue of ``ellipticity'' for the sphere). @sref{Drops sample}
-@end deffn
+@end deftypefn
 
 @cindex cone
 @anchor{cone}
 @deftypefn {MGL command} {} cone @code{x1 y1 z1 x2 y2 z2 r1} [@code{r2=-1} 'stl'='' @code{edge=off}]
 Draw tube (or truncated cone if @var{edge}=@code{off}) between points @{@var{x1},@var{y1},@var{z1}@}, @{@var{x2},@var{y2},@var{z2}@} with radiuses at the edges @var{r1}, @var{r2}. If @var{r2}<0 then it is supposed that @var{r2}=@var{r1}. The cone color is defined by string @var{stl}.
-@end deffn
+@end deftypefn
 
 @cindex rect
 @anchor{rect}
 @deftypefn {MGL command} {} rect @code{x1 y1 x2 y2} ['st'='']
 @deftypefnx {MGL command} {} rect @code{x1 y1 z1 x2 y2 z2} ['st'='']
 Draw rectangle from point @{@var{x1},@var{y1},@var{z1}@} to point @{@var{x2},@var{y2},@var{z2}@} using colors @var{stl}. If @var{stl} have 4 or more colors then it defines colors for each rectangle vertex (useful for making gradients, like @samp{wwrr}) else first color is used for whole rectangle.
-@end deffn
+@end deftypefn
 
 @c ##################################################################
 @node Text printing @MGL{}, Axis and Colorbar @MGL{}, Primitives drawing @MGL{}, MGL interface
@@ -567,31 +567,31 @@ These commands draw the text. There are commands for drawing text in arbitrary p
 @deftypefn {MGL command} {} text @code{x y} 'text' ['fnt'='' @code{size=-1.4}]
 @deftypefnx {MGL command} {} text @code{x y z} 'text' ['fnt'='' @code{size=-1.4}]
 Draws unrotated text string @var{text} at position @{@var{x},@var{y},@var{z}@} with specified style @var{fnt} and @var{size}. By default parameters from @code{font} command are used.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} text @code{x y dx dy} 'text' [@code{size=-1.4}]
 @deftypefnx {MGL command} {} text @code{x y z dx dy dz} 'text' [@code{size=-1.4}]
 The command plots the string @var{text} at position @{@var{x},@var{y},@var{z}@} along direction @{@var{dx},@var{dy},@var{dz}@} with specified style @var{fnt} and @var{size}. By default parameters from @code{font} command are used.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} text ydat 'text' ['fnt'='' @code{size=-1 zval=nan}]
 @deftypefnx {MGL command} {} text xdat ydat 'text' ['fnt'='' @code{size=-1 zval=nan}]
 @deftypefnx {MGL command} {} text xdat ydat zdat 'text' ['fnt'='' @code{size=-1}]
 The command draws @var{text} along the curve between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} by font style @var{fnt} and with size @var{size}. The string @var{fnt} may contain symbols @samp{t} for printing the text under the curve (default), or @samp{T} for printing the text above the curve. The sizes of 1st dimension must be equal for all arrays @var{xdat.nx=ydat.nx=zdat.nx}. If array @var{xdat} is not specified then its an automatic array is used with values equidistantly distributed along x. If array @var{zdat} is not specified then @var{z}[i] = @var{zval} is used. @sref{Text sample}
-@end deffn
+@end deftypefn
 
 @cindex title
 @anchor{title}
 @deftypefn {MGL command} {} title 'text' ['fnt'='' @code{size=-2}]
 Print string @var{text} as title of the picture (at the top of the picture). Can be used at any place (even inside @ref{subplot}).
-@end deffn
+@end deftypefn
 
 @cindex fgets
 @anchor{fgets}
 @deftypefn {MGL command} {} fgets @code{x y} 'fname' [@code{n=0} 'fnt'='' @code{size=-1.4}]
 @deftypefnx {MGL command} {} fgets @code{x y z} 'fname' [@code{n=0} 'fnt'='' @code{size=-1.4}]
 Draws unrotated @var{n}-th line of file @var{fname} at position @{@var{x},@var{y},@var{z}@} with specified @var{size}. By default parameters from @ref{font} command are used.
-@end deffn
+@end deftypefn
 
 
 @c ##################################################################
@@ -604,33 +604,33 @@ These commands draw the ``things for measuring'', like axis with ticks, colorbar
 @c @anchor{}
 @deftypefn {MGL command} {} axis ['dir'='xyz' @code{adjust=off}]
 Draws axes with ticks (@pxref{Axis settings @MGL{}}) in directions determined by string parameter @var{dir}.If string contain the symbol @samp{_} then tick labels are not printed. Font for ticks labels is determined by command @ref{font}. Ticks will be automatically adjusted if @var{adjust}=@code{on} (by call of @code{adjust 'dir'}).
-@end deffn
+@end deftypefn
 
 @cindex colorbar
 @anchor{colorbar}
 @deftypefn {MGL command} {} colorbar ['sch'='' @code{pos=0}]
 Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=''}) at edge of plot. Parameter @var{pos} specifies the position of colorbar: @samp{0} - at right (default), @samp{1} - at left, @samp{2} - at top, @samp{3} - at bottom. If string @var{sch} contains @samp{<>^_} then the parameter @var{pos} is defined as: @code{pos=0} for @samp{>} (right), @code{pos=1} for @samp{<} (left), @code{pos=2} for @samp{^} (top), @code{pos=3} for @samp{_} (bottom). If string have @samp{A} then absolute (relative to picture) coordinates is used. @sref{Dens sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} colorbar vdat ['sch'='' @code{pos=0}]
 The same as previous but with sharp colors @var{sch} (current palette if @code{sch=""}) for values @var{v}. @sref{ContD sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} colorbar 'sch' @code{pos x y w h}
 The same as first one but at arbitrary position of subplot @{@var{x}, @var{y}@} (supposed to be in range [0,1]). Parameters @var{w}, @var{h} set the relative width and height of the colorbar.
-@end deffn
+@end deftypefn
 
 @cindex grid
 @anchor{grid}
 @deftypefn {MGL command} {} grid ['dir'='xyz' 'pen'='B']
 Draws grid lines perpendicular to direction determined by string parameter @var{dir}. The step of grid lines is the same as tick step for an @code{axis}. The style of lines is determined by @var{pen} parameter.
-@end deffn
+@end deftypefn
 
 @cindex box
 @anchor{box}
 @deftypefn {MGL command} {} box ['stl'='k' @code{ticks=on}]
 Draws bounding box outside the plotting volume with line style 'stl'. If @code{ticks=on} then ticks are drawn with current axis setting.
-@end deffn
+@end deftypefn
 
 @cindex xlabel
 @anchor{xlabel}
@@ -645,7 +645,7 @@ Draws bounding box outside the plotting volume with line style 'stl'. If @code{t
 @anchor{tlabel}
 @deftypefnx {MGL command} {} tlabel 'text' [@code{pos=0 size=-1.4 shift=0}]
 Prints the label @var{text} for x-,y-,z-,t-axis (here @samp{t} is ``ternary'' axis @math{t=1-x-y}). The position of label is determined by @var{pos} parameter. If @var{pos}=0 then label is printed at the center of axis. If @var{pos}>0 then label is printed at the maximum of axis (default). If @var{pos}<0 then label is printed at the minimum of axis. The font size is 1.4 times larger than the one for ticks @code{font}. Parameter @code{shift} specify additional shifting of the label. @xref{Text printing @MGL{}}.
-@end deffn
+@end deftypefn
 
 @c ##################################################################
 @node Legend @MGL{}, 1D plotting @MGL{}, Axis and Colorbar @MGL{}, MGL interface
@@ -657,35 +657,35 @@ These commands draw legend to the graph (useful for @ref{1D plotting @MGL{}}). L
 @anchor{legend}
 @deftypefn {MGL command} {} legend [@code{pos=3} 'fnt'='rL' @code{size=-1 llen=0.1}]
 Draws legend of accumulated legend entries by font @var{fnt} with specified @var{size}. Parameter @var{pos} sets the position of the legend: @samp{0} is bottom left corner, @samp{1} is bottom right corner, @samp{2} is top left corner, @samp{3} is top right corner (is default).
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} legend @code{x y} ['fnt'='rL' @code{size=-1 llen=0.1}]
 Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Position of legend in the current subplot is determined by parameter @var{x}, @var{y} which supposed to be normalized to interval [0,1].
-@end deffn
+@end deftypefn
 
 @cindex addlegend
 @anchor{addlegend}
 @deftypefn {MGL command} {} addlegend 'text' 'stl'
 Adds string @var{text} to internal legend accumulator. The style of described line and mark is specified in string @var{stl} (@pxref{Line styles}). Maximal number of entries is 100.
-@end deffn
+@end deftypefn
 
 @cindex clearlegend
 @anchor{clearlegend}
 @deftypefn {MGL command} {} clearlegend
 Clears saved legend strings.
-@end deffn
+@end deftypefn
 
 @cindex legendbox
 @anchor{legendbox}
 @deftypefn {MGL command} {} legendbox @code{val}
 Switches on/off the drawing of a box near legend. By default, the box is drawn.
-@end deffn
+@end deftypefn
 
 @cindex legendmarks
 @anchor{legendmarks}
 @deftypefn {MGL command} {} legendmarks @code{val}
 Set the number of marks in the legend. By default 1 mark is used.
-@end deffn
+@end deftypefn
 
 @c ##################################################################
 @node 1D plotting @MGL{}, 2D plotting @MGL{}, Legend @MGL{}, MGL interface
@@ -701,14 +701,14 @@ The plots are drawn for each row if one of the data is the matrix. By any case t
 @deftypefnx {MGL command} {} plot xdat ydat ['stl'='']
 @deftypefnx {MGL command} {} plot xdat ydat zdat ['stl'='']
 Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. See also @ref{area}, @ref{step}, @ref{stem}, @ref{tube}, @ref{mark}, @ref{error}, @ref{belt}, @ref{tens}. @sref{Plot sample}
-@end deffn
+@end deftypefn
 
 
 @cindex radar
 @anchor{radar}
 @deftypefn {MGL command} {} radar adat ['stl'='' @code{r=-1}]
 Draws radar chart which is continuous lines between points located on an radial lines (like plot in Polar coordinates). The plots are drawn for each row if one of the data is the matrix. Parameter @var{r} set the additional shift of data (i.e. the data @var{adat}+@var{r} is used instead of @var{adat}). If @code{r<0} then @code{r=max(0, -min(adat)}. String @var{pen} specifies the color and style of line and marks (@pxref{Line styles}). By default (@code{stl=""}) solid line with color from palette is used (@pxref{Line styles}). If @var{pen} containt @samp{#} symbol then "grid" (radial lines and circle for @var{r}) is drawn See also @ref{plot}. @sref{Radar sample}
-@end deffn
+@end deftypefn
 
 @cindex tens
 @anchor{tens}
@@ -716,7 +716,7 @@ Draws radar chart which is continuous lines between points located on an radial 
 @deftypefnx {MGL command} {} tens xdat ydat cdat ['stl'='']
 @deftypefnx {MGL command} {} tens xdat ydat zdat cdat ['stl'='']
 Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} with color defined by @var{cdat}[i] (look like tension plot). See also @ref{plot}, @ref{mesh}, @ref{fall}. @sref{Tens sample}
-@end deffn
+@end deftypefn
 
 @cindex area
 @anchor{area}
@@ -724,14 +724,14 @@ Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}
 @deftypefnx {MGL command} {} area xdat ydat ['stl'='']
 @deftypefnx {MGL command} {} area xdat ydat zdat ['stl'='']
 Draws continuous lines between points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} and fills it down to axis (to axis plane in 3D). You can use gradient filling if number of specified colors is equal to 2*number of curves. If string contain symbol @samp{a} then lines are drawn one above another (like summation). See also @ref{plot}, @ref{bars}, @ref{stem}, @ref{region}. @sref{Area sample}
-@end deffn
+@end deftypefn
 
 @cindex region
 @anchor{region}
 @deftypefn {MGL command} {} region fdat gdat ['stl'='' @code{inside=off}]
 @deftypefnx {MGL command} {} region xdat fdat gdat ['stl'='' @code{inside=off}]
 Fills area between curves @{@var{xdat}[i], @var{fdat}[i]@} and @{@var{xdat}[i], @var{gdat}[i]@}. Parameter  @code{inside=off} set to fill are with y1<y<y2 else the area with y2<y<y1 will be also filled. You can use gradient filling if number of specified colors is equal to 2*number of curves. See also @ref{area}, @ref{bars}, @ref{stem}. @sref{Region sample}
-@end deffn
+@end deftypefn
 
 @cindex stem
 @anchor{stem}
@@ -739,7 +739,7 @@ Fills area between curves @{@var{xdat}[i], @var{fdat}[i]@} and @{@var{xdat}[i], 
 @deftypefnx {MGL command} {} stem xdat ydat ['stl'='']
 @deftypefnx {MGL command} {} stem xdat ydat zdat ['stl'='']
 Draws vertical lines from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} to axis (to axis plane in 3D). See also @ref{area}, @ref{bars}, @ref{plot}, @ref{mark}. @sref{Stem sample}
-@end deffn
+@end deftypefn
 
 @cindex bars
 @anchor{bars}
@@ -747,7 +747,7 @@ Draws vertical lines from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}
 @deftypefnx {MGL command} {} bars xdat ydat ['stl'='']
 @deftypefnx {MGL command} {} bars xdat ydat zdat ['stl'='']
 Draws vertical bars from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} to axis (to axis plane in 3D). If style contain symbol @samp{a} then lines are drawn one above another. If string contain symbol @samp{f} then waterfall chart is drawn for determining the cumulative effect of sequentially introduced positive or negative values. You can different colors for positive and negative values if number of specified colors is equal to 2*number of curves. See also @ref{barh}, @ref{area}, @ref{stem}, @ref{chart}. @sref{Bars sample}
-@end deffn
+@end deftypefn
 
 @cindex barh
 @anchor{barh}
@@ -755,13 +755,13 @@ Draws vertical bars from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} 
 @deftypefnx {MGL command} {} barh ydat vdat ['stl'='']
 Draws horizontal bars from points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@} to y-axis. If array @var{ydat} is not specified then its an automatic array is used with values equidistantly distributed along y. Marks at data points are not drawn. If style contain symbol @samp{a} then lines are drawn one above another. If string contain symbol @samp{f} then waterfall chart is drawn for determining the cumulative effect of sequentially introduced positive or negative values. You can different colors for positive and negative values if number of specified colors is equal to 2*number of curves.
 See also @ref{bars}. @sref{Barh sample}
-@end deffn
+@end deftypefn
 
 @cindex chart
 @anchor{chart}
 @deftypefn {MGL command} {} chart adat ['col'='']
 The command draws colored stripes (boxes) for data in array @var{adat}. The number of stripes is equal to the number of rows in @var{adat} (equal to @var{a.ny}). The color of each next stripe is cyclically changed from colors specified in string @var{col} or in palette. Spaces in colors denote transparent ``color'', i.e. if @var{col} contain space(s) then corresponding stripe(s) are not drawn. The stripe width is proportional to value of element in @var{a}. Chart is plotted only for data with non-negative elements. If string @var{col} have symbol @samp{#} then black border lines are drawn. The most nice form the chart have in 3d (after rotation of coordinates) or in cylindrical coordinates (becomes so called Pie chart). @sref{Chart sample}
-@end deffn
+@end deftypefn
 
 @cindex step
 @anchor{step}
@@ -769,14 +769,14 @@ The command draws colored stripes (boxes) for data in array @var{adat}. The numb
 @deftypefnx {MGL command} {} step xdat ydat ['stl'='']
 @deftypefnx {MGL command} {} step xdat ydat zdat ['stl'='']
 Draws continuous stairs for points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. See also @ref{plot}, @ref{stem}, @ref{tile}, @ref{boxs}. @sref{Step sample}
-@end deffn
+@end deftypefn
 
 @cindex torus
 @anchor{torus}
 @deftypefn {MGL command} {} torus zdat ['stl'='']
 @deftypefnx {MGL command} {} torus rdat zdat ['stl'='']
 Draws surface which is result of curve @{@var{rdat}[i], @var{zdat}[i], @var{zdat}[i]@} rotation around @ref{axialdir} axis. If array @var{rdat} is not specified then its an automatic array is used with values equidistantly distributed along x. See also @ref{plot}, @ref{axial}. @sref{Torus sample}
-@end deffn
+@end deftypefn
 
 @cindex tube
 @anchor{tube}
@@ -787,7 +787,7 @@ Draws surface which is result of curve @{@var{rdat}[i], @var{zdat}[i], @var{zdat
 @deftypefnx {MGL command} {} tube xdat ydat zdat rdat ['stl'='']
 @deftypefnx {MGL command} {} tube xdat ydat zdat @code{rval} ['stl'='']
 Draws tube with variable radius @var{rdat}[i] (or @var{rval}) at points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. See also @ref{plot}. @sref{Tube sample}
-@end deffn
+@end deftypefn
 
 @cindex mark
 @anchor{mark}
@@ -795,7 +795,7 @@ Draws tube with variable radius @var{rdat}[i] (or @var{rval}) at points @{@var{x
 @deftypefnx {MGL command} {} mark xdat ydat rdat ['stl'='']
 @deftypefnx {MGL command} {} mark xdat ydat zdat rdat ['stl'='']
 Draws  marks with size @var{rdat}[i]*@code{marksize} at points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. See also @ref{plot}, @ref{textmark}, @ref{stem}, @ref{error}. @sref{Mark sample}
-@end deffn
+@end deftypefn
 
 @cindex textmark
 @anchor{textmark}
@@ -804,7 +804,7 @@ Draws  marks with size @var{rdat}[i]*@code{marksize} at points @{@var{xdat}[i], 
 @deftypefnx {MGL command} {} textmark xdat ydat rdat 'txt' ['stl'='']
 @deftypefnx {MGL command} {} textmark xdat ydat zdat rdat 'txt' ['stl'='']
 Draws string @var{txt} as marks with size @var{rdat}[i]*@code{marksize} at points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If array @var{rdat} is not specified then @var{rdat}[i] = 1. See also @ref{plot}, @ref{mark}, @ref{stem}. @sref{Error sample}
-@end deffn
+@end deftypefn
 
 @cindex error
 @anchor{error}
@@ -812,14 +812,14 @@ Draws string @var{txt} as marks with size @var{rdat}[i]*@code{marksize} at point
 @deftypefnx {MGL command} {} error xdat ydat yerr ['stl'='']
 @deftypefnx {MGL command} {} error xdat ydat xerr yerr ['stl'='']
 Draws error boxes @{@var{xerr}[i], @var{yerr}[i]@} at points @{@var{xdat}[i], @var{ydat}[i], @var{zval}@}. See also @ref{plot}. @sref{TextMark sample}
-@end deffn
+@end deftypefn
 
 @cindex boxplot
 @anchor{boxplot}
 @deftypefn {MGL command} {} boxplot adat ['stl'='']
 @deftypefnx {MGL command} {} boxplot xdat adat ['stl'='']
 Draws boxplot (also known as a box-and-whisker diagram) at points @var{xdat} in plane z=@code{zval} (by default is at the bottom of the bounding box). This is five-number summaries of data <em>adat</em> (minimum, lower quartile (Q1), median (Q2), upper quartile (Q3) and maximum) along second (j-th) direction. See also @ref{plot}, @ref{error}, @ref{bars}. @sref{BoxPlot sample}
-@end deffn
+@end deftypefn
 
 @c ##################################################################
 @node 2D plotting @MGL{}, 3D plotting @MGL{}, 1D plotting @MGL{}, MGL interface
@@ -834,97 +834,97 @@ String parameter @var{sch} sets the color scheme (@pxref{Color scheme}). Previou
 @deftypefn {MGL command} {} surf zdat ['sch'='']
 @deftypefnx {MGL command} {} surf xdat ydat zdat ['sch'='']
 Draws surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@}. See also @ref{mesh}, @ref{dens}, @ref{belt}, @ref{tile}, @ref{boxs}, @ref{surfc}, @ref{surfa}. @sref{Surf sample}
-@end deffn
+@end deftypefn
 
 @cindex mesh
 @anchor{mesh}
 @deftypefn {MGL command} {} mesh zdat ['sch'='']
 @deftypefnx {MGL command} {} mesh xdat ydat zdat ['sch'='']
 Draws mesh lines for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@}. See also @ref{surf}, @ref{fall}, @ref{meshnum}, @ref{cont}, @ref{tens}. @sref{Mesh sample}
-@end deffn
+@end deftypefn
 
 @cindex fall
 @anchor{fall}
 @deftypefn {MGL command} {} fall zdat ['sch'='']
 @deftypefnx {MGL command} {} fall xdat ydat zdat ['sch'='']
 Draws fall lines for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@}. If @var{sch} contain @samp{x} then lines are drawn along x-direction else (by default) lines are drawn along y-direction. See also @ref{belt}, @ref{mesh}, @ref{tens}, @ref{meshnum}. @sref{Fall sample}
-@end deffn
+@end deftypefn
 
 @cindex belt
 @anchor{belt}
 @deftypefn {MGL command} {} belt zdat ['sch'='']
 @deftypefnx {MGL command} {} belt xdat ydat zdat ['sch'='']
 Draws belts for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@}. If @var{sch} contain @samp{x} then belts are drawn along x-direction else (by default) lines are drawn along y-direction. See also @ref{fall}, @ref{surf}, @ref{plot}, @ref{meshnum}. @sref{Belt sample}
-@end deffn
+@end deftypefn
 
 @cindex boxs
 @anchor{boxs}
 @deftypefn {MGL command} {} boxs zdat ['sch'='']
 @deftypefnx {MGL command} {} boxs xdat ydat zdat ['sch'='']
 Draws vertical boxes for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@}. See also @ref{surf}, @ref{dens}, @ref{tile}, @ref{step}. @sref{Boxs sample}
-@end deffn
+@end deftypefn
 
 @cindex tile
 @anchor{tile}
 @deftypefn {MGL command} {} tile zdat ['sch'='']
 @deftypefnx {MGL command} {} tile xdat ydat zdat ['sch'='']
 Draws horizontal tiles for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@}. Such plot can be used as 3d generalization of @ref{step}. See also @ref{surf}, @ref{boxs}, @ref{step}, @ref{tiles}. @sref{Tile sample}
-@end deffn
+@end deftypefn
 
 @cindex dens
 @anchor{dens}
 @deftypefn {MGL command} {} dens zdat ['sch'='']
 @deftypefnx {MGL command} {} dens xdat ydat zdat ['sch'='']
 Draws density plot for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} at @var{z} = @var{zVal}. See also @ref{surf}, @ref{cont}, @ref{contf}, @ref{boxs}, @ref{tile}, @code{dens[xyz]}. @sref{Dens sample}
-@end deffn
+@end deftypefn
 
 @cindex cont
 @anchor{cont}
 @deftypefn {MGL command} {} cont vdat zdat ['sch'='']
 @deftypefnx {MGL command} {} cont vdat xdat ydat zdat ['sch'='']
 Draws contour lines for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} at @var{z} = @var{zVal} (or for @var{z}=@var{vdat}[k] if). Contours are plotted for @var{zdat}[i,j]=@var{vdat}[k] for all k. If string @var{stl} contain 't' (or 'T') symbol then contour labels will be drawn below (or above) the contours. See also @ref{dens}, @ref{contf}, @ref{contd}, @ref{axial}, @code{cont[xyz]}. @sref{Cont sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} cont zdat ['sch'='' @code{num=7 zval=nan}]
 @deftypefnx {MGL command} {} cont xdat ydat zdat ['sch'='' @code{num=7 zval=nan}]
 The same as previous one with vector @var{vdat} of @var{num}-th elements equidistantly distributed in color range (see, @code{caxis}).
-@end deffn
+@end deftypefn
 
 @cindex contf
 @anchor{contf}
 @deftypefn {MGL command} {} contf vdat zdat ['sch'='']
 @deftypefnx {MGL command} {} contf vdat xdat ydat zdat ['sch'='']
 Draws solid (or filled) contours for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} at @var{z} = @var{zVal} (or for @var{z}=@var{vdat}[k] if). Contours are plotted for @var{zdat}[i,j]=@var{vdat}[k] for all k (must be @code{vdat.nx>2}). See also @ref{dens}, @ref{cont}, @ref{contd}, @code{contf[xyz]}. @sref{ContF sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} contf zdat ['sch'='' @code{num=7 zval=nan}]
 @deftypefnx {MGL command} {} contf xdat ydat zdat ['sch'='' @code{num=7 zval=nan}]
 The same as previous one with vector @var{vdat} of @var{num}-th elements equidistantly distributed in color range (see, @code{caxis}).
-@end deffn
+@end deftypefn
 
 @cindex contd
 @anchor{contd}
 @deftypefn {MGL command} {} contd vdat zdat ['sch'='']
 @deftypefnx {MGL command} {} contd vdat xdat ydat zdat ['sch'='']
 Draws solid (or filled) contours for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} at @var{z} = @var{zVal} (or for @var{z}=@var{vdat}[k] if) with manual colors. Contours are plotted for @var{zdat}[i,j]=@var{vdat}[k] for all k (must be @code{vdat.nx>2}). The color of k-th contour is @code{sch[k%strlen(sch)]}. See also @ref{dens}, @ref{cont}, @ref{contf}. @sref{ContD sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} contd zdat ['sch'='' @code{num=7 zval=nan}]
 @deftypefnx {MGL command} {} contd xdat ydat zdat ['sch'='' @code{num=7 zval=nan}]
 The same as previous one with vector @var{vdat} of @var{num}-th elements equidistantly distributed in color range (see, @code{caxis}).
-@end deffn
+@end deftypefn
 
 @cindex axial
 @anchor{axial}
 @deftypefn {MGL command} {} axial vdat zdat ['sch'='']
 @deftypefnx {MGL command} {} axial vdat xdat ydat zdat ['sch'='']
 Draws surface which is result of contour plot rotation surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@}. Contours are plotted for @var{zdat}[i,j]=@var{vdat}[k] for all k. If string @var{sch} have symbol @samp{#} then wire plot is produced. If string @var{sch} contain symbols @samp{x}, @samp{y} or @samp{z} then rotation axis @code{axialdir} will be set to specified direction. If string @var{sch} have symbol @samp{#} then wire plot is produced. See also @ref{cont}, @ref{contf}, @ref{torus}, @ref{surf3}. @sref{Axial sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} axial zdat ['sch'='' @code{num=3}]
 @deftypefnx {MGL command} {} axial xdat ydat zdat ['sch'='' @code{num=3}]
 The same as previous one with vector @var{vdat} of @var{num}-th elements equidistantly distributed in color range (see, @code{caxis}).
-@end deffn
+@end deftypefn
 
 @cindex grad
 @anchor{grad}
@@ -932,7 +932,7 @@ The same as previous one with vector @var{vdat} of @var{num}-th elements equidis
 @deftypefnx {MGL command} {} grad xdat ydat pdat ['sch'='' @code{num=5 zval=nan}]
 @deftypefnx {MGL command} {} grad xdat ydat zdat pdat ['sch'='' @code{num=5}]
 Draws gradient lines for scalar field @var{pdat} specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j]@} or @{@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. Number of lines is proportional to @var{num}. If @var{num}<0 then lines start from borders only. See also @ref{dens}, @ref{cont}, @ref{dens3}, @ref{cont3}, @ref{flow}. @sref{Grad sample}
-@end deffn
+@end deftypefn
 
 
 @cindex grid2
@@ -940,7 +940,7 @@ Draws gradient lines for scalar field @var{pdat} specified parametrically @{@var
 @deftypefn {MGL command} {} grid2 zdat ['sch'='']
 @deftypefnx {MGL command} {} grid2 xdat ydat zdat ['sch'='']
 Draws grid lines for density plot of surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} at @var{z} = @var{zVal}. See also @ref{dens}, @ref{cont}, @ref{contf}.
-@end deffn
+@end deftypefn
 
 
 @c ##################################################################
@@ -957,91 +957,91 @@ String paramter @var{sch} sets the color scheme (@pxref{Color scheme}). Previous
 @deftypefn {MGL command} {} surf3 adat @code{val} ['sch'='']
 @deftypefnx {MGL command} {} surf3 xdat ydat zdat adat @code{val} ['sch'='']
 Draws isosurface plot for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]) at @var{a}(x,y,z)=@var{val}. If string contain @samp{#} then wire plot is produced. See also @ref{cloud}, @ref{dens3}, @ref{surf3c}, @ref{surf3a}, @ref{axial}. @sref{Surf3 sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} surf3 adat ['sch'='' @code{num=5}]
 @deftypefnx {MGL command} {} surf3 xdat ydat zdat adat ['sch'='' @code{num=5}]
 Draws @var{num}-th uniformly distributed in color range (see @ref{caxis}) isosurfaces for 3d data specified parametrically.
-@end deffn
+@end deftypefn
 
 @cindex dens3
 @anchor{dens3}
 @deftypefn {MGL command} {} dens3 adat 'dir' [@code{sval=-1} 'sch'='']
 @deftypefnx {MGL command} {} dens3 xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='']
 Draws density plot for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]). Density is plotted at slice @var{sval} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. If string @var{stl} have symbol @samp{#} then grid lines are drawn. See also @ref{cont3}, @ref{contf3}, @ref{dens}, @ref{grid3}. @sref{Dens3 sample}
-@end deffn
+@end deftypefn
 
 @cindex densa
 @anchor{densa}
 @deftypefn {MGL command} {} densa adat ['sch'='']
 @deftypefnx {MGL command} {} densa xdat ydat zdat adat ['sch'='']
 Draws density plots at all central slices of the 3d data specified parametrically.
-@end deffn
+@end deftypefn
 
 @cindex cont3
 @anchor{cont3}
 @deftypefn {MGL command} {} cont3 vdat adat 'dir' [@code{sval=-1} 'sch'='']
 @deftypefnx {MGL command} {} cont3 vdat xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='']
 Draws contour plot for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]). Contours are plotted for values specified in array @var{vdat} at slice @var{sval} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. If string @var{stl} have symbol @samp{#} then grid lines are drawn. If string @var{stl} contain 't' (or 'T') symbol then contour labels will be drawn below (or above) the contours. See also @ref{dens3}, @ref{contf3}, @ref{cont}, @ref{grid3}. @sref{Cont3 sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} cont3 adat 'dir' [@code{sval=-1} 'sch'='' @code{num=7}]
 @deftypefnx {MGL command} {} cont3 xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='' @code{num=7}]
 The same as previous one with vector @var{vdat} of @var{num}-th elements equidistantly distributed in color range (see @code{caxis}).
-@end deffn
+@end deftypefn
 
 @cindex conta
 @anchor{conta}
 @deftypefn {MGL command} {} conta adat ['sch'='' @code{num=7}]
 @deftypefnx {MGL command} {} conta xdat ydat zdat adat ['sch'='' @code{num=7}]
 Draws contour plots at all central slices of the 3d data specified parametrically.
-@end deffn
+@end deftypefn
 
 @cindex contf3
 @anchor{contf3}
 @deftypefn {MGL command} {} contf3 vdat adat 'dir' [@code{sval=-1} 'sch'='']
 @deftypefnx {MGL command} {} contf3 vdat xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='']
 Draws solid contour plot for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]). Contours are plotted for values specified in array @var{vdat} at slice @var{sval} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. If string @var{stl} have symbol @samp{#} then grid lines are drawn. See also @ref{dens3}, @ref{cont3}, @ref{contf}, @ref{grid3}. @sref{ContF3 sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} contf3 adat 'dir' [@code{sval=-1} 'sch'='' @code{num=7}]
 @deftypefnx {MGL command} {} contf3 xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='' @code{num=7}]
 The same as previous one with vector @var{vdat} of @var{num}-th elements equidistantly distributed in color range (see @ref{caxis}).
-@end deffn
+@end deftypefn
 
 @cindex contfa
 @anchor{contfa}
 @deftypefn {MGL command} {} contfa adat ['sch'='' @code{num=7}]
 @deftypefnx {MGL command} {} contfa xdat ydat zdat adat ['sch'='' @code{num=7}]
 Draws solid contour plots at all central slices of the 3d data specified parametrically.
-@end deffn
+@end deftypefn
 
 @cindex grid3
 @anchor{grid3}
 @deftypefn {MGL command} {} grid3 adat 'dir' [@code{sval=-1} 'sch'='']
 @deftypefnx {MGL command} {} grid3 xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='']
 Draws grid for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]). Grid is plotted at slice @var{sval} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. See also @ref{cont3}, @ref{contf3}, @ref{dens3}, @ref{grid2}. @sref{Dens3 sample}
-@end deffn
+@end deftypefn
 
 @cindex grida
 @anchor{grida}
 @deftypefn {MGL command} {} grida adat ['sch'='']
 @deftypefnx {MGL command} {} grida xdat ydat zdat adat ['sch'='']
 Draws grids at all central slices of the 3d data specified parametrically.
-@end deffn
+@end deftypefn
 
 @cindex cloud
 @anchor{cloud}
 @deftypefn {MGL command} {} cloud adat ['sch'='']
 @deftypefnx {MGL command} {} cloud xdat ydat zdat adat ['sch'='']
 Draws cloud for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]). This plot is a set of cubes with color and transparency proportional to value of @var{adat}. The resulting plot is like cloud -- low value is transparent but higher ones are not. The number of plotting cells depend on @ref{meshnum}. Paramater @var{alpha} changes the overall transparency of plot. See also @ref{surf3}. @sref{Cloud sample}
-@end deffn
+@end deftypefn
 
 @cindex beam
 @anchor{beam}
 @deftypefn {MGL command} {} beam tr g1 g2 adat @code{rval} ['sch'='' @code{flag=0 num=3}]
 Draws  @var{num}-th uniformly distributed in color range (see @code{caxis}) isosurfaces for 3d array @var{adat}. This is special kind of plot for @var{adat} specified in accompanied coordinates along curve @var{tr} with orts @var{g1}, @var{g2} and with transverse scale @var{rval}. Variable @var{flag} is bitwise: @samp{0x1} - draw in accompanied (not laboratory) coordinates; @samp{0x2} - draw projection to @math{\rho-z} plane; @samp{0x4} - draw normalized in each slice field. The x-size of data arrays @var{tr}, @var{g1}, @var{g2} must be nx>2. The y-size of data arrays @var{tr}, @var{g1}, @var{g2} and z-size of the data array @var{a} must be equal. See also @ref{surf3}.
-@end deffn
+@end deftypefn
 
 
 @c ##################################################################
@@ -1057,59 +1057,59 @@ String paramter @var{sch} sets the color scheme (@pxref{Color scheme}). Previous
 @deftypefn {MGL command} {} surfc zdat cdat ['sch'='']
 @deftypefnx {MGL command} {} surfc xdat ydat zdat cdat ['sch'='']
 Draws surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} and color it by matrix @var{cdat}[i,j]. See also @ref{surf}, @ref{surfa}, @ref{surf3c}. @sref{SurfC sample}
-@end deffn
+@end deftypefn
 
 @cindex surf3c
 @anchor{surf3c}
 @deftypefn {MGL command} {} surf3c adat cdat @code{val} ['sch'='']
 @deftypefnx {MGL command} {} surf3c xdat ydat zdat adat cdat @code{val} ['sch'='']
 Draws isosurface plot for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} command but the color of isosurface depends on values of array @var{cdat}. If string contain @samp{#} then wire plot is produced. See also @ref{surf3}, @ref{surfc}, @ref{surf3a}. @sref{Surf3C sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} surf3c adat cdat ['sch'='' @code{num=5}]
 @deftypefnx {MGL command} {} surf3c xdat ydat zdat adat cdat ['sch'='' @code{num=5}]
 Draws @var{num}-th uniformly distributed in color range (see @code{caxis}) isosurfaces for 3d data specified parametrically.
-@end deffn
+@end deftypefn
 
 @cindex surfa
 @anchor{surfa}
 @deftypefn {MGL command} {} surfa zdat cdat ['sch'='']
 @deftypefnx {MGL command} {} surfa xdat ydat zdat cdat ['sch'='']
 Draws surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@} and transparent it by matrix @var{cdat}[i,j]. See also @ref{surf}, @ref{surfc}, @ref{surf3a}, @ref{tiles}. @sref{SurfA sample}
-@end deffn
+@end deftypefn
 
 @cindex surf3a
 @anchor{surf3a}
 @deftypefn {MGL command} {} surf3a adat cdat @code{val} ['sch'='']
 @deftypefnx {MGL command} {} surf3a xdat ydat zdat adat cdat @code{val} ['sch'='']
 Draws isosurface plot for 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]) at @var{a}(x,y,z)=@var{val}. It is mostly the same as @ref{surf3} command but the transparency of isosurface depends on values of array @var{cdat}. If string contain @samp{#} then wire plot is produced. See also @ref{surf3}, @ref{surfa}, @ref{surf3c}. @sref{Surf3A sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} surf3a adat cdat ['sch'='' @code{num=5}]
 @deftypefnx {MGL command} {} surf3a xdat ydat zdat adat cdat ['sch'='' @code{num=5}]
 Draws @var{num}-th uniformly distributed in color range (see @code{caxis}) isosurfaces for 3d data specified parametrically.
-@end deffn
+@end deftypefn
 
 @cindex tiles
 @anchor{tiles}
 @deftypefn {MGL command} {} tiles zdat rdat ['sch'='']
 @deftypefnx {MGL command} {} tiles xdat ydat zdat rdat ['sch'='']
 Draws horizontal tiles for surface specified parametrically @{@var{xdat}[i,j], @var{ydat}[i,j], @var{zdat}[i,j]@}. It is mostly the same as @ref{tile} but the size of tiles is determined by @var{rdat} array. See also @ref{surfa}, @ref{tile}. @sref{TileS sample}
-@end deffn
+@end deftypefn
 
 @cindex map
 @anchor{map}
 @deftypefn {MGL command} {} map udat vdat ['sch'='' @code{pnts=on}]
 @deftypefnx {MGL command} {} map xdat ydat udat vdat ['sch'='' @code{pnts=on}]
 Draws mapping plot for matrixes @{@var{udat}, @var{vdat} @} which parametrically depend on coordinates @var{xdat}, @var{ydat}. The previous position of the cell (point) is marked by color. Height is proportional to Jacobian(udat,vdat). This plot is like Arnold diagram ???. If @code{pnts=off} then face is drawn otherwise the color ball at matrix knots are drawn. The size of @var{udat} and @var{vdat} must be the same. @sref{Map sample}
-@end deffn
+@end deftypefn
 
 @cindex stfa
 @anchor{stfa}
 @deftypefn {MGL command} {} stfa re im @code{dn} ['sch'='' @code{pnts=on}]
 @deftypefnx {MGL command} {} stfa xdat ydat re im @code{dn} ['sch'='' @code{pnts=on}]
 Draws spectrogram of complex array @var{re}+i*@code{im} for Fourier size of @var{dn} points at plane @var{z=zVal}. Parameter @var{dn} is arbitrary even integer. For example in 1D case, result is density plot of data @math{res[i,j]=|\sum_d^dn exp(I*j*d)*(re[i*dn+d]+I*im[i*dn+d])|/dn} with size @{int(nx/dn), dn, ny@}. @sref{STFA sample}
-@end deffn
+@end deftypefn
 
 
 
@@ -1129,72 +1129,72 @@ The size of @var{udat}, @var{vdat} and @var{wdat} must be equal. The minor dimen
 @deftypefn {MGL command} {} traj xdat ydat udat vdat ['sch'='' @code{zval=nan len=0}]
 @deftypefnx {MGL command} {} traj xdat ydat zdat udat vdat wdat ['sch'='' @code{len=0}]
 Draws vectors @{@var{udat}, @var{vdat}, @var{wdat}@} along a curve @var{xdat}, @var{ydat}, @var{zdat}. The length and color of arrows are proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. See also @code{vect}. @sref{Traj sample}
-@end deffn
+@end deftypefn
 
 @cindex vect
 @anchor{vect}
 @deftypefn {MGL command} {} vect udat vdat ['sch'='' @code{zval=nan flag=0}]
 @deftypefnx {MGL command} {} vect xdat ydat udat vdat ['sch'='' @code{zval=nan flag=0}]
 Draws plane vector field plot for the field @{@var{udat}, @var{vdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat} at level @var{z=zval}. The length and color of arrows are proportional to @math{\sqrt@{udat^2+vdat^2@}}. The number of arrows depend on @ref{meshnum}. See also @ref{flow}, @ref{dew}, @ref{vectc}. @sref{Vect sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} vect udat vdat wdat ['sch'='' @code{flag=0}]
 @deftypefnx {MGL command} {} vect xdat ydat zdat udat vdat wdat ['sch'='' @code{flag=0}]
 This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the length and color of arrows are proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{Vect 3D sample}
-@end deffn
+@end deftypefn
 
 @cindex vectc
 @anchor{vectc}
 @deftypefn {MGL command} {} vectc udat vdat ['sch'='']
 @deftypefnx {MGL command} {} vectc xdat ydat udat vdat ['sch'='']
 Draws plane vector field plot for the field @{@var{udat}, @var{vdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat} at level @var{z=zVal}. The color of hachures is proportional to @math{\sqrt@{udat^2+vdat^2@}}. The number of hachures depend on @var{meshnum}. See also @code{vect, flow, pipe, dew}. @sref{VectC sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} vectc udat vdat wdat ['sch'='']
 @deftypefnx {MGL command} {} vectc xdat ydat zdat udat vdat wdat ['sch'='']
 This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the color of hachures is proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{VectC 3D sample}
-@end deffn
+@end deftypefn
 
 @cindex vectl
 @anchor{vectl}
 @deftypefn {MGL command} {} vectl udat vdat ['sch'='']
 @deftypefnx {MGL command} {} vectl xdat ydat udat vdat ['sch'='']
 Draws plane vector field plot for the field @{@var{udat}, @var{vdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat} at level @var{z=zVal}. The length of hachures is proportional to @math{\sqrt@{udat^2+vdat^2@}}. The number of hachures depend on @var{meshnum}. See also @code{vectc, flow, pipe, dew}. @sref{Vect sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} vectl udat vdat wdat ['sch'='']
 @deftypefnx {MGL command} {} vectl xdat ydat zdat udat vdat wdat ['sch'='']
 This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the length of hachures is proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{VectL 3D sample}
-@end deffn
+@end deftypefn
 
 @cindex dew
 @anchor{dew}
 @deftypefn {MGL command} {} dew udat vdat ['sch'='']
 @deftypefnx {MGL command} {} dew xdat ydat udat vdat ['sch'='']
 Draws dew-drops for plane vector field @{@var{udat}, @var{vdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat} at level @var{z=zval}. The color of drops is proportional to @math{\sqrt@{udat^2+vdat^2@}}. The number of drops depend on @ref{meshnum}. Note that this is very expensive plot in memory usage and creation time! See also @ref{vect}. @sref{Dew sample}
-@end deffn
+@end deftypefn
 
 @cindex flow
 @anchor{flow}
 @deftypefn {MGL command} {} flow udat vdat ['sch'='' @code{num=5 zval=nan}]
 @deftypefnx {MGL command} {} flow xdat ydat udat vdat ['sch'='' @code{num=5 zval=nan}]
 Draws plane flow threads for the vector field @{@var{udat}, @var{vdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat} at level @var{z=zVal}. Number of threads is proportional to @var{num}. The color of lines is proportional to @math{\sqrt@{udat^2+vdat^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). See also @code{vect, vectc, pipe}. @sref{Flow sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} flow udat vdat wdat ['sch'='' @code{num=3}]
 @deftypefnx {MGL command} {} flow xdat ydat zdat udat vdat wdat ['sch'='' @code{num=3}]
 This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the color is proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{Flow 3D sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} flow @code{x0 y0} udat vdat ['sch'='']
 @deftypefnx {MGL command} {} flow @code{x0 y0} xdat ydat udat vdat ['sch'='']
 Draws plane flow threads for the vector field @{@var{udat}, @var{vdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat} from point @{@var{x0}, @var{y0}@} at level @var{z=zVal}. The color of lines is proportional to @math{\sqrt@{udat^2+vdat^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). See also @code{vect, vectc, pipe}. @sref{Flow sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} flow @code{x0 y0 z0} udat vdat wdat ['sch'='']
 @deftypefnx {MGL command} {} flow @code{x0 y0 z0} xdat ydat zdat udat vdat wdat ['sch'='']
 Draws flow thread from point @{@var{x0}, @var{y0}, @var{z0}@}. Arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the color is proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{Flow 3D sample}
-@end deffn
+@end deftypefn
 
 
 @cindex pipe
@@ -1202,12 +1202,12 @@ Draws flow thread from point @{@var{x0}, @var{y0}, @var{z0}@}. Arrays @var{udat}
 @deftypefn {MGL command} {} pipe udat vdat ['sch'='' @code{r0=0.05 num=5 zval=nan}]
 @deftypefnx {MGL command} {} pipe xdat ydat udat vdat ['sch'='' @code{r0=0.05 num=5 zval=nan}]
 Draws plane flow pipes for the vector field @{@var{udat}, @var{vdat}@} depending parametrically on coordinates @var{xdat}, @var{ydat} at level @var{z=zVal}. Number of pipes is proportional to @var{num}. The color of pipes is proportional to @math{\sqrt@{udat^2+vdat^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). Parameter @var{r0} set the base pipe radius. If @var{r0}<0 then pipe radius is inverse proportional to amplitude. The size of @var{ax} and @var{ay} must be equal. See also @code{vect, vectc, pipe}. @sref{Pipe sample}
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} pipe udat vdat wdat ['sch'='' @code{r0=0.05 num=3}]
 @deftypefnx {MGL command} {} pipe xdat ydat zdat udat vdat wdat ['sch'='' @code{r0=0.05 num=3}]
 This is 3D version of the previous command. Here arrays @var{udat}, @var{vdat}, @var{wdat} must be 3-ranged tensors with equal sizes and the color is proportional to @math{\sqrt@{udat^2+vdat^2+wdat^2@}}. @sref{Pipe 3D sample}
-@end deffn
+@end deftypefn
 
 
 @c ##################################################################
@@ -1224,7 +1224,7 @@ These commands perform miscelaneous plotting. There is unstructured data points 
 @deftypefnx {MGL command} {} densy dat ['sch'='' @code{val=nan}]
 @deftypefnx {MGL command} {} densz dat ['sch'='' @code{val=nan}]
 These plotting commands draw density plot in x, y or z plain. If @var{dat} is a tensor (3-dimensional data) then interpolation to a given @var{val} is performed. These commands are useful for creating projections of the 3D data array to the bounding box. See also @code{cont[xyz], contf[xyz]}, @ref{dens}. @sref{Dens projection sample}
-@end deffn
+@end deftypefn
 
 @cindex contx
 @cindex conty
@@ -1234,7 +1234,7 @@ These plotting commands draw density plot in x, y or z plain. If @var{dat} is a 
 @deftypefnx {MGL command} {} conty dat ['sch'='' @code{val=nan num=7}]
 @deftypefnx {MGL command} {} contz dat ['sch'='' @code{val=nan num=7}]
 These plotting commands draw contour lines in x, y or z plain. If @var{dat} is a tensor (3-dimensional data) then interpolation to a given @var{val} is performed. These commands are useful for creating projections of the 3D data array to the bounding box. See also @code{dens[xyz], contf[xyz]}, @ref{cont}. @sref{Cont projection sample}
-@end deffn
+@end deftypefn
 
 @cindex contfx
 @cindex contfy
@@ -1244,20 +1244,20 @@ These plotting commands draw contour lines in x, y or z plain. If @var{dat} is a
 @deftypefnx {MGL command} {} contfy dat ['sch'='' @code{val=nan num=7}]
 @deftypefnx {MGL command} {} contfz dat ['sch'='' @code{val=nan num=7}]
 These plotting commands draw solid contours in x, y or z plain. If @var{dat} is a tensor (3-dimensional data) then interpolation to a given @var{val} is performed. These commands are useful for creating projections of the 3D data array to the bounding box. See also @code{dens[xyz], cont[xyz]}, @ref{contf}.
-@end deffn
+@end deftypefn
 
 @cindex dots
 @anchor{dots}
 @deftypefn {MGL command} {} dots xdat ydat zdat ['sch'='']
 @deftypefnx {MGL command} {} dots xdat ydat zdat adat ['sch'='']
 Draws the arbitrary placed points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. Variable @var{adat}[i] set transparency for dots. See also @ref{crust}, @ref{mark}, @ref{plot}. @sref{Dots sample}
-@end deffn
+@end deftypefn
 
 @cindex crust
 @anchor{crust}
 @deftypefn {MGL command} {} crust xdat ydat zdat ['sch'='']
 Reconstructs and draws the surface for arbitrary placed points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If string contain @samp{#} then wire plot is produced. See also @ref{dots}, @ref{triplot}. @sref{Crust sample}
-@end deffn
+@end deftypefn
 
 @cindex triplot
 @anchor{triplot}
@@ -1265,7 +1265,7 @@ Reconstructs and draws the surface for arbitrary placed points @{@var{xdat}[i], 
 @deftypefnx {MGL command} {} triplot idat xdat ydat zdat ['sch'='']
 @deftypefnx {MGL command} {} triplot idat xdat ydat zdat cdat ['sch'='']
 Draws the surface of triangles. Triangle vertexes are set by indexes @var{idat} of data points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If string contain @samp{#} then wire plot is produced. First dimensions of @var{idat} must be 3 or greater. See also @code{dots, crust, quadplot}. Parameter @var{cdat} set the colors of triangles (if @var{idat}.ny=@var{cdat}.nx) or colors of vertexes (if @var{xdat}.nx=@var{cdat}.nx). See also @ref{dots}, @ref{crust}, @ref{quadplot}, @ref{tricont}.
-@end deffn
+@end deftypefn
 
 @cindex tricont
 @anchor{tricont}
@@ -1273,7 +1273,7 @@ Draws the surface of triangles. Triangle vertexes are set by indexes @var{idat} 
 @deftypefnx {MGL command} {} tricont vdat idat xdat ydat zdat ['sch'='']
 @deftypefnx {MGL command} {} tricont idat xdat ydat zdat ['sch'='' @code{num=7 zval=nan}]
 Draws contour lines for surface of triangles at @var{z} = @var{zVal} (or for @var{z}=@var{vdat}[k] if). Triangle vertexes are set by indexes @var{idat} of data points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. Contours are plotted for @var{zdat}[i,j]=@var{vdat}[k] for all k (or @var{num} contours equidistantly distributed in range [@var{Cmin}, @var{Cmax}].). See also @ref{triplot}, @ref{cont}.
-@end deffn
+@end deftypefn
 
 @cindex quadplot
 @anchor{quadplot}
@@ -1281,27 +1281,27 @@ Draws contour lines for surface of triangles at @var{z} = @var{zVal} (or for @va
 @deftypefnx {MGL command} {} quadplot idat xdat ydat zdat ['sch'='']
 @deftypefnx {MGL command} {} quadplot idat xdat ydat zdat cdat ['sch'='']
 Draws the surface of quadrangles. Quadrangle vertexes are set by indexes @var{idat} of data points @{@var{xdat}[i], @var{ydat}[i], @var{zdat}[i]@}. If string contain @samp{#} then wire plot is produced. First dimensions of @var{idat} must be 4 or greater. See also @code{triplot, dots, crust}. Parameter @var{cdat} set the colors of triangles (if @var{idat}.ny=@var{cdat}.nx) or colors of vertexes (if @var{xdat}.nx=@var{cdat}.nx). See also @ref{triplot}.
-@end deffn
+@end deftypefn
 
 @cindex fplot
 @anchor{fplot}
 @deftypefn {MGL command} {} fplot 'y(x)' ['pen'='' @code{zval=nan num=100}]
 Draws command function @samp{y(x)} at plane z=@var{zval} where @samp{x} variable is changed in @code{xrange}. You do not need to create the data arrays to plot it. The parameter @var{num} set the minimal number of points along coordinate(s) for plots. See also @ref{plot}.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} fplot 'x(t)' 'y(t)' 'z(t)' ['pen'='' @code{num=100}]
 Draws command parametrical curve @{@samp{x(t)}, @samp{y(t)}, @samp{z(t)}@} where @samp{t} variable is changed in range [0, 1]. You do not need to create the data arrays to plot it. The parameter @var{num} set the minimal number of points along coordinate(s) for plots. See also @ref{plot}.
-@end deffn
+@end deftypefn
 
 @cindex fsurf
 @anchor{fsurf}
 @deftypefn {MGL command} {} fsurf 'z(x,y)' ['sch'='' @code{num=100}]
 Draws command surface for function @samp{z(x,y)} where @samp{x}, @samp{y} variable are changed in @code{xrange, yrange}. You do not need to create the data arrays to plot it. The parameter @var{num} set the minimal number of points along coordinate(s) for plots. See also @ref{surf}.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} fsurf 'x(u,v)' 'y(u,v)' 'z(u,v)' ['sch'='' @code{num=100}]
 Draws command parametrical surface @{@samp{x(u,v)}, @samp{y(u,v)}, @samp{z(u,v)}@} where @samp{u}, @samp{v} variable are changed in range [0, 1]. You do not need to create the data arrays to plot it. The parameter @var{num} set the minimal number of points along coordinate(s) for plots. See also @ref{surf}.
-@end deffn
+@end deftypefn
 
 
 @c ##################################################################
@@ -1322,7 +1322,7 @@ The dimensions of arrays must be at least the same as the number of specified ar
 @deftypefnx {MGL command} {} fits xdat ydat adat sdat 'func' 'var' [ini=0]
 @deftypefnx {MGL command} {} fits xdat ydat zdat adat sdat 'func' 'var' [ini=0]
 Fit data along x-, y- and z-directions for 1d-,2d- or 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]) with weight factor @var{sdat}[i,j,k].
-@end deffn
+@end deftypefn
 
 @cindex fit
 @anchor{fit}
@@ -1331,13 +1331,13 @@ Fit data along x-, y- and z-directions for 1d-,2d- or 3d array specified paramet
 @deftypefnx {MGL command} {} fit xdat ydat adat 'func' 'var' [ini=0]
 @deftypefnx {MGL command} {} fit xdat ydat zdat adat 'func' 'var' [ini=0]
 Fit data along x-, y- and z-directions for 1d-,2d- or 3d array specified parametrically @var{adat}[i,j,k](@var{xdat}[i,j,k], @var{ydat}[i,j,k], @var{zdat}[i,j,k]) with weight factor =1.
-@end deffn
+@end deftypefn
 
 @cindex putsfit
 @anchor{putsfit}
 @deftypefn {MGL command} {} putsfit @code{x y} ['pre'='' 'fnt'='' @code{size=-1}]
 Print last fitted formula with found coefficients (as numbers) at position @{@var{x}, @var{y}@}. The string @var{pre} will be printed before formula. All other parameters are the same as in @ref{Text printing @MGL{}}.
-@end deffn
+@end deftypefn
 
 
 @c ##################################################################
@@ -1348,7 +1348,7 @@ Print last fitted formula with found coefficients (as numbers) at position @{@va
 @anchor{new}
 @deftypefn {MGL command} {} new dat [@code{nx=1 ny=1 nz=1}]
 Creates or recreates the array @var{dat} with specified size and fills it by zero. This command does nothing if one of parameters @var{nx}, @var{ny}, @var{nz} is zero or negative.
-@end deffn
+@end deftypefn
 
 @cindex var
 @anchor{var}
@@ -1371,23 +1371,23 @@ Creates new variable with name @var{dat} and fills it by data values of arrays o
 @deftypefn {MGL command} {} copy dat1 dat2 ['eq'='' @code{on_axis=on}]
 @deftypefnx {MGL command} {} copy dat1 @code{val}
 Creates new variable with name @var{dat1} and fills it by data values of array @var{dat2}. At this, if parameter @var{eq} is specified then the data will be modified by corresponding formula by the same way as in @ref{fill} command (for @code{on_axis=on}) or in @ref{modify} command (for @code{on_axis=off}).
-@end deffn
+@end deftypefn
 
 @cindex idset
 @anchor{idset}
 @deftypefn {MGL command} {} idset dat 'ids'
 Set the symbol id for data columns. The string must contain one symbol 'a'...'z' per column (without spaces).
-@end deffn
+@end deftypefn
 
 @cindex info
 @anchor{info}
 @deftypefn {MGL command} {} info dat [@code{detail=off}]
 Display information (sizes, maximum/minimum, momentums and so on) about the data dat. Show brief information by default (if @code{detail=off}).
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} info 'text'
 Display @var{text} as information (warning).
-@end deffn
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node Data filling @MGL{}, Rearrange data @MGL{}, Data create @MGL{}, MGL interface
@@ -1399,13 +1399,13 @@ Display @var{text} as information (warning).
 @anchor{fill}
 @deftypefn {MGL command} {} fill dat v1 v2 ['dir'='x']
 Equidistantly fills the data values to range [@var{x1}, @var{x2}] in direction @var{dir}=@{@samp{x},@samp{y},@samp{z}@}.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} fill dat 'eq'
 @deftypefnx {MGL command} {} fill dat 'eq' vdat
 @deftypefnx {MGL command} {} fill dat 'eq' vdat wdat
 Command fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in @emph{bounding box} (in difference from @code{modify} commands). Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of @var{vdat}, @var{wdat}.
-@end deffn
+@end deftypefn
 
 @cindex modify
 @anchor{modify}
@@ -1413,18 +1413,18 @@ Command fills the value of array according to the formula in string @var{eq}. Fo
 @deftypefnx {MGL command} {} modify dat 'eq' vdat
 @deftypefnx {MGL command} {} modify dat 'eq' vdat wdat
 Command fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1]. Variable @samp{u} is the original value of the array. If @var{dim}>0 is specified then modification will be fulfilled only for slices >=@var{dim}.
-@end deffn
+@end deftypefn
 
 
 @cindex put
 @anchor{put}
 @deftypefn {MGL command} {} put dat @code{val [i=: j=: k=:]}
 Function sets value(s) of array @var{dat}[@var{i}, @var{j}, @var{k}] = @var{val}. Negative indexes @var{i}, @var{j}, @var{k}=@samp{:} set the value @var{val} to whole range in corresponding direction(s). For example, @code{put dat val : 0 :} sets @var{dat}[i,0,j]=@var{val} for i=0...(@var{dat}.nx-1), j=0...(@var{dat}.nz-1).
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} put dat vdat [@code{i=: j=: k=:}]
 Function copies value(s) from array @var{vdat} to the range of array @var{dat}. Negative indexes @var{i}, @var{j}, @var{k}=@samp{:} set the range in corresponding direction(s). At this minor dimensions of array @var{vdat} should be large than corresponding dimensions of array @var{dat}. For example, @code{put dat v : 0 :} sets @var{dat}[i,0,j]=@var{vdat}.ny>@var{dat}.nz ? @var{vdat}[i,j] : @var{vdat}[i], where i=0...(@var{dat}.nx-1), j=0...(@var{dat}.nz-1) and condition vdat.nx>=dat.nx is true.
-@end deffn
+@end deftypefn
 
 
 
@@ -1436,7 +1436,7 @@ Function copies value(s) from array @var{vdat} to the range of array @var{dat}. 
 @anchor{rearrange}
 @deftypefn {MGL command} {} rearrange dat @code{mx [my=0 mz=0]}
 Rearrange dimensions without changing data array so that resulting sizes should  be @var{mx}*@var{my}*@var{mz} < nx*ny*nz. If some of parameter @var{my} or @var{mz} are zero then it will be selected to optimal fill of data array. For example, if @var{my}=0 then it will be change to @var{my}=nx*ny*nz/@var{mx} and @var{mz} will be 1.
-@end deffn
+@end deftypefn
 
 @cindex extend
 @anchor{extend}
@@ -1448,13 +1448,13 @@ Increase the dimensions of the data by inserting new (|@var{n1}|+1)-th slices af
 @ifnottex
 a_ij^new = a_i^old where j=0...@var{n1}. Correspondingly, for @var{n1}<0 new array will be a_ij^new = a_j^old where i=0...|@var{n1}|.
 @end ifnottex
-@end deffn
+@end deftypefn
 
 @cindex transpose
 @anchor{transpose}
 @deftypefn {MGL command} {} transpose dat ['dim'='yxz']
 Transposes (shift order of) dimensions of the data. New order of dimensions is specified int string @var{dim}. This command may be useful also for the reading of one-dimensional data.
-@end deffn
+@end deftypefn
 
 @cindex squeeze
 @anchor{squeeze}
@@ -1466,29 +1466,29 @@ Reduces the data size by excluding data elements which indexes are not divisible
 @ifnottex
 (i.e. out[i]=\sum_@{j=i@}^@{i+r@} a[j]/r) or not (i.e. out[i]=a[j*r]).
 @end ifnottex
-@end deffn
+@end deftypefn
 
 @cindex crop
 @anchor{crop}
 @deftypefn {MGL command} {} crop dat @code{n1 n2} 'dir'
 Cuts off edges of the data @var{i}<@var{n1} and @var{i}>@var{n2} if @var{n2}>0 or @var{i}>@code{n[xyz]}-@var{n2} if @var{n2}<=0 along direction @var{dir}.
-@end deffn
+@end deftypefn
 
 @cindex delete
 @anchor{delete}
 @deftypefn {MGL command} {} delete dat
 Deletes variable @var{dat} and makes its memory free. Can be useful for huge data arrays.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} delete dat 'dir' @code{[pos=off num=0]}
 Delete @var{num} slices along @var{dir}-direction at position @var{pos}.
-@end deffn
+@end deftypefn
 
 @cindex insert
 @anchor{insert}
 @deftypefn {MGL command} {} insert dat 'dir' @code{[pos=off num=0]}
 Insert @var{num} slices along @var{dir}-direction at position @var{pos}.
-@end deffn
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node File I/O @MGL{}, Make another data @MGL{}, Rearrange data @MGL{}, MGL interface
@@ -1498,57 +1498,57 @@ Insert @var{num} slices along @var{dir}-direction at position @var{pos}.
 @anchor{read}
 @deftypefn {MGL command} {} read dat 'fname'
 Reads data from tab-separated text file with auto determining sizes of the data.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} read dat 'fname' @code{mx [my=1 mz=1]}
 Reads data from text file with specified data sizes. This command does nothing if one of parameters @var{mx}, @var{my} or @var{mz} is zero or negative.
-@end deffn
+@end deftypefn
 
 @cindex readmat
 @anchor{readmat}
 @deftypefn {MGL command} {} readmat dat 'fname' [@code{dim=2}]
 Read data from text file with size specified at beginning of the file by first @var{dim} numbers. At this, variable @var{dim} set data dimensions.
-@end deffn
+@end deftypefn
 
 @cindex readall
 @anchor{readall}
 @deftypefn {MGL command} {} readall dat 'templ' @code{v1 v2 [dv=1 slice=off]}
 Join data arrays from several text files. The file names are determined by function call @code{sprintf(fname,templ,val);}, where @var{val} changes from @var{v1} to @var{v2} with step @var{dv}. The data load one-by-one in the same slice if @var{slice}=@code{off} or as slice-by-slice if @var{slice}=@code{on}.
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} readall dat 'templ' @code{[slice=off]}
 Join data arrays from several text files which filenames satisfied the template @var{templ} (for example, @var{templ}=@code{"t_*.dat"}). The data load one-by-one in the same slice if @var{slice}=@code{off} or as slice-by-slice if @var{slice}=@code{on}.
-@end deffn
+@end deftypefn
 
 @cindex save
 @anchor{save}
 @deftypefn {MGL command} {} save dat 'fname'
 Saves the whole data array to tab-separated text file.
-@end deffn
+@end deftypefn
 
 @cindex readhdf
 @anchor{readhdf}
 @deftypefn {MGL command} {} readhdf dat 'fname' 'dname'
 Reads data array named @var{dname} from HDF5 or HDF4 file @var{fname}.
-@end deffn
+@end deftypefn
 
 @cindex savehdf
 @anchor{savehdf}
 @deftypefn {MGL command} {} savehdf dat 'fname' 'dname'
 Saves data array named @var{dname} from HDF5 or HDF4 file @var{fname}.
-@end deffn
+@end deftypefn
 
 @cindex import
 @anchor{import}
 @deftypefn {MGL command} {} import dat 'fname' 'sch' [@code{v1=0 v2=1}]
 Reads data from bitmap file. The RGB values of bitmap pixels are transformed to float values in range [@var{v1}, @var{v2}] using color scheme @var{sch} (@pxref{Color scheme}).
-@end deffn
+@end deftypefn
 
 @cindex export
 @anchor{export}
 @deftypefn {MGL command} {} export dat 'fname' 'sch' [@code{v1=0 v2=0}]
 Saves data matrix to bitmap file. The data values are transformed from range [@var{v1}, @var{v2}] to RGB pixels of bitmap using color scheme @var{sch} (@pxref{Color scheme}). If @var{v1}>=@var{v2} then the values of @var{v1}, @var{v2} are automatically determined as minimal and maximal value of the data array.
-@end deffn
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node Make another data @MGL{}, Change data @MGL{}, File I/O @MGL{}, MGL interface
@@ -1558,7 +1558,7 @@ Saves data matrix to bitmap file. The data values are transformed from range [@v
 @anchor{combine}
 @deftypefn {MGL command} {} combine res adat bdat
 Returns direct multiplication of arrays (like, res[i,j] = adat[i]*bdat[j] and so on).
-@end deffn
+@end deftypefn
 
 @cindex evaluate
 @anchor{evaluate}
@@ -1566,20 +1566,20 @@ Returns direct multiplication of arrays (like, res[i,j] = adat[i]*bdat[j] and so
 @deftypefnx {MGL command} {} evaluate res dat idat jdat [@code{norm=on}]
 @deftypefnx {MGL command} {} evaluate res dat idat jdat kdat [@code{norm=on}]
 Get array which values is result of interpolation of original array for coordinates from other arrays (for example, res[i,j]=dat[idat[i,j],jdat[i,j]]). All dimensions must be the same for data @var{idat}, @var{jdat}, @var{kdat}. Coordinates from @var{idat}, @var{jdat}, @var{kdat} are supposed to be normalized in range [0,1] (if @var{norm}=@code{true}) or in ranges [0,nx], [0,ny], [0,nz] correspondingly.
-@end deffn
+@end deftypefn
 
 @cindex hist
 @anchor{hist}
 @deftypefn {MGL command} {} hist res dat @code{num v1 v2 [nsub=0]}
 @deftypefnx {MGL command} {} hist res dat wdat @code{num v1 v2 [nsub=0]}
 Creates @var{num}-th points distribution @var{res} of the data values of @var{dat} in range [@var{v1}, @var{v2}]. Array @var{wdat} specifies weights of the data elements (all weight is 1 if @var{wdat} is not specified). Parameter @var{nsub} define the number of additional interpolated points (for smoothness of histogram).
-@end deffn
+@end deftypefn
 
 @deftypefn {MGL command} {} hist res xdat adat
 @deftypefnx {MGL command} {} hist res xdat ydat adat
 @deftypefnx {MGL command} {} hist res xdat ydat zdat adat
 Creates distribution @var{res} of the data values of @var{adat} in axis range [Min, Max]. Array @var{adat} look like weights of the data points.
-@end deffn
+@end deftypefn
 
 
 @cindex momentum
@@ -1593,83 +1593,83 @@ Get momentum (1D-array) of the data along direction @var{dir}. String @var{how} 
 res_k = \sum_ij how(x_i,y_j,z_k) a_ij/ \sum_ij a_ij
 @end ifnottex
 if @var{var}=@samp{z} and so on. Coordinates @samp{x}, @samp{y}, @samp{z} are data indexes normalized in range [0,1].
-@end deffn
+@end deftypefn
 
 @cindex sum
 @anchor{sum}
 @deftypefn {MGL command} {} sum res dat 'dir'
 Gets array which is the result of summation in given direction or direction(s).
-@end deffn
+@end deftypefn
 @cindex max
 @anchor{max}
 @deftypefn {MGL command} {} max res dat 'dir'
 Gets array which is the maximal data values in given direction or direction(s).
-@end deffn
+@end deftypefn
 @cindex min
 @anchor{min}
 @deftypefn {MGL command} {} min res dat 'dir'
 Gets array which is the minimal data values in given direction or direction(s).
-@end deffn
+@end deftypefn
 
 @cindex resize
 @anchor{resize}
 @deftypefn {MGL command} {} resize res dat @code{mx [my=1 mz=1]}
 Makes array @var{res} of sizes @var{mx}, @var{my}, @var{mz} with interpolated data of array @var{dat}. 
-@end deffn
+@end deftypefn
 
 @cindex subdata
 @anchor{subdata}
 @deftypefn {MGL command} {} subdata res dat @code{xx [yy=: zz=:]}
 Extracts sub-array data @var{res} from the original data @var{dat} array keeping fixed positive index. For example @code{subdata a b : 2} extracts 3d row (indexes are zero based), @code{subdata a b 4 :} extracts 5th column, @code{subdata a b : : 3} extracts 4th slice and so on. Note that symbol @samp{:} is defined @samp{:}=@code{-1} in MGL.
-@end deffn
+@end deftypefn
 
 @cindex trace
 @anchor{trace}
 @deftypefn {MGL command} {} trace res dat
 Gets array of diagonal elements @var{dat}[i,i] (for 2D case) or @var{dat}[i,i,i] (for 3D case) where i=0...nx-1. Function return copy of @var{dat} for 1D case. Data array must have dimensions @var{dat}.ny, @var{dat}.nz >= @var{dat}.nx or @var{dat}.ny, @var{dat}.nz = 1.
-@end deffn
+@end deftypefn
 
 @cindex transform
 @anchor{transform}
 @deftypefn {MGL command} {} transform dat 'type' real imag
 Do integral transformation of complex data @var{real}, @var{imag} on specified direction. The order of transformations is specified in string @var{type}: first character for x-dimension, second one for y-dimension, third one for z-dimension. The possible character are: @samp{f} is forward Fourier transformation, @samp{i} is inverse Fourier transformation, @samp{s} is Sine transform, @samp{c} is Cosine transform, @samp{h} is Hankel transform, @samp{n} or @samp{ } is no transformation.
-@end deffn
+@end deftypefn
 
 @cindex transforma
 @anchor{transforma}
 @deftypefn {MGL command} {} transforma dat 'type' ampl phase
 The same as previous but with specified amplitude @var{ampl} and phase @var{phase} of complex numbers.
-@end deffn
+@end deftypefn
 
 @cindex stfad
 @anchor{stfad}
 @deftypefn {MGL command} {} stfad res real imag @code{dn} ['dir'='x']
 Short time Fourier transformation for real and imaginary parts. Output  is amplitude of partial Fourier of length @var{dn}. For example if @var{dir}=@samp{x}, result will have size @{int(nx/dn), dn, ny@} and it will contain @math{res[i,j,k]=|\sum_d^dn exp(I*j*d)*(real[i*dn+d,k]+I*imag[i*dn+d,k])|/dn}.
-@end deffn
+@end deftypefn
 
 @cindex pde
 @anchor{pde}
 @deftypefn {MGL command} {} pde res 'ham' ini_re ini_im [@code{dz=0.1 k0=100}]
 Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Coordinates of the equation (and the solution) are supposed to be in the bounding box. Note, that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for field amplitude |u|. This allow one solve nonlinear problems -- for example, for non-linear Shrodinger equation you may set @code{ham='p^2+q^2-u^2'}. You may specify imaginary part for wave absorption, like @code{ham = 'p^2+i*x*(x>0)'}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}). @sref{PDE sample}
-@end deffn
+@end deftypefn
 
 @cindex ray
 @anchor{ray}
 @deftypefn {MGL command} {} ray res 'ham' @code{x0 y0 z0 p0 q0 v0 [dt=0.1 tmax=10]}
 Solves GO ray equation like d@emph{r}/dt = d @var{ham}/d@emph{p}, d@emph{p}/dt = -d @var{ham}/d@emph{r}. This is Hamiltonian equations for particle trajectory in 3D case. Here @var{ham} is Hamiltonian which may depend on coordiantes @samp{x}, @samp{y}, @samp{z}, momentums @samp{p}=px, @samp{q}=py, @samp{v}=pz and time @samp{t}: @math{ham = H(x,y,z,p,q,v,t)}. The starting point (at @code{t=0}) is defined by variables @{@var{x0}, @var{y0}, @var{z0}, @var{p0}, @var{q0}, @var{v0}@}. Parameters @var{dt} and @var{tmax} specify the integration step and maximal time for ray tracing. Result is array of @{x,y,z,p,q,v,t@} with dimensions @{7 * int(@var{tmax}/@var{dt}+1) @}. See also @ref{pde}. @sref{Beam tracing sample}
-@end deffn
+@end deftypefn
 
 @cindex qo2d
 @anchor{qo2d}
 @deftypefn {MGL command} {} qo2d res 'ham' ini_re ini_im ray [@code{r=1 k0=100} xx=0 yy=0]
 Solves equation du/dt = i*k0*@var{ham}(p,q,x,y,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{ray} set the reference ray, i.e. the ray around which the accompanied coordinate system will be maked. You may use, for example, the array created by @ref{ray} function. Note, that the reference ray @strong{must be} smooth enough to make accompanied coodrinates unambiguity. Otherwise errors in the solution may appear. If @var{xx} and @var{yy} are non-zero then Cartesian coordinates for each point will be written into them. @sref{Beam tracing sample} 
-@end deffn
+@end deftypefn
 
 @cindex jacobian
 @anchor{jacobian}
 @deftypefn {MGL command} {} jacobian res xdat ydat [zdat=0]
 Computates the Jacobian for transformation @{i,j,k@} to @{@var{xdat},@var{ydat},@var{zdat}@} where initial coordinates  @{i,j,k@} are data indexes normalized in range [0,1]. The Jacobian is determined by formula det||@math{dr_\alpha/d\xi_\beta}|| where @math{r}=@{@var{xdat},@var{ydat},@var{zdat}@} and @math{\  xi}=@{i,j,k@}. All dimensions must be the same for all data arrays. Data must be 3D if all 3 arrays @{@var{xdat},@var{ydat},@var{zdat}@} are specified or 2D if only 2 arrays @{@var{xdat},@var{ydat}@} are specified.
-@end deffn
+@end deftypefn
 
 
 
@@ -1683,77 +1683,77 @@ These commands change the data in some direction like differentiations, integrat
 @anchor{cumsum}
 @deftypefn {MGL command} {} cumsum dat 'dir'
 Cumulative summation of the data in given direction or directions.
-@end deffn
+@end deftypefn
 @cindex integrate
 @anchor{integrate}
 @deftypefn {MGL command} {} integrate dat 'dir'
 Integrates (like cumulative summation) the data in given direction or directions.
-@end deffn
+@end deftypefn
 @cindex diff
 @anchor{diff}
 @deftypefn {MGL command} {} diff dat 'dir'
 Differentiates the data in given direction or directions.
-@end deffn
+@end deftypefn
 @deftypefn {MGL command} {} diff dat xdat ydat [zdat=0]
 Differentiates the data @var{dat} specified parametrically in direction @var{xdat} with @var{ydat}, @var{zdat}=constant. Parameter @var{zdat} can be omitted that correspond to 2D case. Parametrical differentiation uses the formula (for 2D case): @math{da/dx = (a_j*y_i-a_i*y_j)/(x_j*y_i-x_i*y_j)} where @math{a_i=da/di, a_j=da/dj} denotes usual differentiation along 1st and 2nd dimensions. The similar formula is used for 3D case. Note, that you may change the order of arguments -- for example, if you have 2D data a(i,j) which depend on coordinates @{x(i,j), y(i,j)@} then usual derivative along @samp{x} will be @code{diff a x y} and usual derivative along @samp{y} will be @code{diff a y x}.
-@end deffn
+@end deftypefn
 
 @cindex diff2
 @anchor{diff2}
 @deftypefn {MGL command} {} diff2 dat 'dir'
 Double-differentiates (like Laplace operator) the data in given direction.
-@end deffn
+@end deftypefn
 
 @cindex sinfft
 @anchor{sinfft}
 @deftypefn {MGL command} {} sinfft dat 'dir'
 Do Sine transform of the data in given direction or directions. The Sine transform is @math{\sum a_i \sin(k i)}.
-@end deffn
+@end deftypefn
 @cindex cosfft
 @anchor{cosfft}
 @deftypefn {MGL command} {} cosfft dat 'dir'
 Do Cosine transform of the data in given direction or directions. The Cosine transform is @math{\sum a_i \cos(k i)}.
-@end deffn
+@end deftypefn
 @cindex hankel
 @anchor{hankel}
 @deftypefn {MGL command} {} hankel dat 'dir'
 Do Hankel transform of the data in given direction or directions. The Hankel transform is @math{\sum a_i J_0(k i)}.
-@end deffn
+@end deftypefn
 
 
 @cindex swap
 @anchor{swap}
 @deftypefn {MGL command} {} swap dat 'dir'
 Swaps the left and right part of the data in given direction (useful for Fourier spectrum).
-@end deffn
+@end deftypefn
 @cindex roll
 @anchor{roll}
 @deftypefn {MGL command} {} roll dat 'dir' num
 Rolls the data along direction 'dir'. Resulting array will be out[i] = ini[(i+num)%nx] if @code{dir='x'}.
-@end deffn
+@end deftypefn
 
 @cindex mirror
 @anchor{mirror}
 @deftypefn {MGL command} {} mirror dat 'dir'
 Mirror the left-to-right part of the data in given direction. Looks like change the value index @var{i}->@var{n-i}.
-@end deffn
+@end deftypefn
 
 @cindex sew
 @anchor{sew}
 @deftypefn {MGL command} {} sew dat ['dir'='xyz' @code{da=2*pi}]
 Remove value steps (like phase jumps after inverse trigonometric commands) with period @var{da} in given direction.
-@end deffn
+@end deftypefn
 @cindex smooth
 @anchor{smooth}
 @deftypefn {MGL command} {} smooth data @code{type} ['dir'='xyz']
 Smooths the data on specified direction or directions by method @var{Type}. Now 4 methods are supported: @samp{0} does nothing, @samp{1} linear averaging by 3 points, @samp{2} linear averaging by 5 points, @samp{3} quadratic averaging by 5 points.
-@end deffn
+@end deftypefn
 
 @cindex envelop
 @anchor{envelop}
 @deftypefn {MGL command} {} envelop dat ['dir'='x']
 Find envelop for data values along direction @var{dir}. Only one direction can be specified at once.
-@end deffn
+@end deftypefn
 
 @cindex normsl
 @anchor{normsl}
@@ -1765,13 +1765,13 @@ Normalizes data slice-by-slice along direction @var{dir} the data in slices to r
 @ifnottex
 @math{\sqrt@{\sum a_ij(k)/\sum a_ij(0)@}}.
 @end ifnottex
-@end deffn
+@end deftypefn
 
 @cindex norm
 @anchor{norm}
 @deftypefn {MGL command} {} norm dat @code{v1 v2 [sym=off dim=0]}
 Normalizes the data to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{on} then symmetrical interval [-max(|v1|,|v2|), max(|v1|,|v2|)] is used. Modification will be applied only for slices >=@var{dim}.
-@end deffn
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node Operators @MGL{}, Program flow @MGL{}, Change data @MGL{}, MGL interface
@@ -1781,37 +1781,37 @@ Normalizes the data to range [@var{v1},@var{v2}]. If flag @var{sym}=@code{on} th
 @anchor{multo}
 @deftypefn {MGL command} {} multo dat dat2
 Multiplies the data by the other one for each element.
-@end deffn
+@end deftypefn
 @deftypefn {MGL command} {} multo dat @code{val}
 Multiplies each element by the number.
-@end deffn
+@end deftypefn
 
 @cindex divto
 @anchor{divto}
 @deftypefn {MGL command} {} divto dat dat2
 Divides the data by the other one for each element.
-@end deffn
+@end deftypefn
 @deftypefn {MGL command} {} divto dat @code{val}
 Divides each element by the number.
-@end deffn
+@end deftypefn
 
 @cindex addto
 @anchor{addto}
 @deftypefn {MGL command} {} addto dat dat2
 Adds the other data.
-@end deffn
+@end deftypefn
 @deftypefn {MGL command} {} addto dat @code{val}
 Adds the number to each element.
-@end deffn
+@end deftypefn
 
 @cindex subto
 @anchor{subto}
 @deftypefn {MGL command} {} subto dat dat2
 Subtracts the other data.
-@end deffn
+@end deftypefn
 @deftypefn {MGL command} {} subto dat @code{val}
 Subtracts the number to each element.
-@end deffn
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node Program flow @MGL{}, Command options @MGL{}, Operators @MGL{}, MGL interface
@@ -1823,100 +1823,100 @@ These commands control program flow, like, conditions, cycles, define script arg
 @anchor{chdir}
 @deftypefn {MGL command} {} chdir 'path'
 Changes the current directory to @var{path}.
-@end deffn
+@end deftypefn
 
 @cindex define
 @anchor{define}
 @deftypefn {MGL command} {} define $N smth
 Sets @var{N}-th script argument to @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present). Here @var{N} is digit (0...9) or alpha (a...z).
-@end deffn
+@end deftypefn
 @deftypefn {MGL command} {} define name smth
 Create scalar variable @code{name} which have the numeric value of @code{smth}. Later you can use this variable as usual number. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deffn
+@end deftypefn
 @cindex defchr
 @anchor{defchr}
 @deftypefn {MGL command} {} defchr $N smth
 Sets @var{N}-th script argument to character with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deffn
+@end deftypefn
 @cindex defnum
 @anchor{defnum}
 @deftypefn {MGL command} {} defnum $N smth
 Sets @var{N}-th script argument to number with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deffn
+@end deftypefn
 @cindex defpal
 @anchor{defpal}
 @deftypefn {MGL command} {} defpal $N smth
 Sets @var{N}-th script argument to palette character at position evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deffn
+@end deftypefn
 
 @cindex call
 @anchor{call}
 @deftypefn {MGL command} {} call 'fname' [ARG1 ARG2 ... ARG9]
 Executes function @var{fname} (or script if function is not found). Optional arguments will be passed to functions. See also @ref{func}.
-@end deffn
+@end deftypefn
 @cindex func
 @anchor{func}
 @deftypefn {MGL command} {} func 'fname' [narg=0]
 Define the function @var{fname} and number of required arguments. The arguments will be placed in script parameters $1, $2, ... $9. Note, you should stop script execution before function definition(s) by command @ref{stop}. See also @ref{return}.
-@end deffn
+@end deftypefn
 @cindex return
 @anchor{return}
 @deftypefn {MGL command} {} return
 Return from the function. See also @ref{func}.
-@end deffn
+@end deftypefn
 
 
 @cindex if
 @anchor{if}
 @deftypefn {MGL command} {} if dat 'cond'
 Starts block which will be executed if @var{dat} satisfy to @var{cond}.
-@end deffn
+@end deftypefn
 @deftypefn {MGL command} {} if @code{val}
 Starts block which will be executed if @code{val} is nonzero.
-@end deffn
+@end deftypefn
 @cindex elseif
 @anchor{elseif}
 @deftypefn {MGL command} {} elseif dat 'cond'
 Starts block which will be executed if previous @code{if} or @code{elseif} is false and @var{dat} satisfy to @var{cond}.
-@end deffn
+@end deftypefn
 @deftypefn {MGL command} {} elseif @code{val}
 Starts block which will be executed if previous @code{if} or @code{elseif} is false and @code{val} is nonzero.
-@end deffn
+@end deftypefn
 @cindex else
 @anchor{else}
 @deftypefn {MGL command} {} else
 Starts block which will be executed if previous @code{if} or @code{elseif} is false.
-@end deffn
+@end deftypefn
 @cindex endif
 @anchor{endif}
 @deftypefn {MGL command} {} endif
 Finishes @code{if/elseif/else} block.
-@end deffn
+@end deftypefn
 
 @cindex for
 @anchor{for}
 @deftypefn {MGL command} {} for $N @code{v1 v2 [dv=1]}
 Starts cycle with $@var{N}-th argument changing from @var{v1} to @var{v2} with the step @var{dv}. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deffn
+@end deftypefn
 @deftypefn {MGL command} {} for $N dat
 Starts cycle with $@var{N}-th argument changing for @var{dat} values. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deffn
+@end deftypefn
 @cindex next
 @anchor{next}
 @deftypefn {MGL command} {} next
 Finishes @code{for} cycle.
-@end deffn
+@end deftypefn
 
 @cindex once
 @anchor{once}
 @deftypefn {MGL command} {} once @code{val}
 The code between @code{once on} and @code{once off} will be executed only once. Useful for large data manipulation in programs like UDAV.
-@end deffn
+@end deftypefn
 @cindex stop
 @anchor{stop}
 @deftypefn {MGL command} {} stop
 Terminate execution.
-@end deffn
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node  Command options @MGL{}, Suffixes, Program flow @MGL{}, MGL interface
@@ -1932,47 +1932,47 @@ The full list of options are:
 @deffn {MGL option} alpha @code{val}
 @deffnx {MGL option} alphadef @code{val}
 Sets alpha value (transparency) of the plot. The value should be in range [0, 1]. See also @ref{alphadef}.
-@end deffn
+@end deftypefn
 @cindex ambient
 @deffn {MGL option} ambient @code{val}
 Sets brightness of ambient light for the plot. The value should be in range [0, 1]. See also @ref{ambient}.
-@end deffn
+@end deftypefn
 @cindex crange
 @deffn {MGL option} crange @code{val1 val2}
 Sets boundaries of color change for the plot. See also @ref{crange}.
-@end deffn
+@end deftypefn
 @cindex xrange
 @deffn {MGL option} xrange @code{val1 val2}
 Sets boundaries of x coordinate change for the plot. See also @ref{xrange}.
-@end deffn
+@end deftypefn
 @cindex yrange
 @deffn {MGL option} yrange @code{val1 val2}
 Sets boundaries of y coordinate change for the plot. See also @ref{yrange}.
-@end deffn
+@end deftypefn
 @cindex zrange
 @deffn {MGL option} zrange @code{val1 val2}
 Sets boundaries of z coordinate change for the plot. See also @ref{zrange}.
-@end deffn
+@end deftypefn
 @cindex cut
 @deffn {MGL option} cut @code{val}
 Sets whether to cut or to project the plot points lying outside the bounding box. See also @ref{cut}.
-@end deffn
+@end deftypefn
 @cindex fontsize
 @deffn {MGL option} fontsize @code{val}
 Sets the size of text. See also @ref{font}.
-@end deffn
+@end deftypefn
 @cindex marksize
 @deffn {MGL option} marksize @code{val}
 Sets the size of marks. See also @ref{marksize}.
-@end deffn
+@end deftypefn
 @cindex meshnum
 @deffn {MGL option} meshnum @code{val}
 Work like @ref{meshnum} command.
-@end deffn
+@end deftypefn
 @cindex legend
 @deffn {MGL option} legend 'txt'
 Adds string 'txt' to internal legend accumulator. The style of described line and mark is taken from arguments of the last @ref{1D plotting @MGL{}} command. See also @ref{legend}.
-@end deffn
+@end deftypefn
 
 @c ------------------------------------------------------------------
 @node  Suffixes, Utilities, Command options @MGL{}, MGL interface

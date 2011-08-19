@@ -9,13 +9,13 @@
 
 01. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
 02. Box() + edges + half-transparent
-03. parallelisation of drawing (MathGL level)
+03. Parallelization of drawing (MathGL level)
 04. Export to LaTeX formats - (pgf/tikz) or metapost if possible (like EPS).
 05. Export to CALLADA
 06. Export to X3D
 07. Export to JavaScript (WebGL)
 08. GTK and WX window/widgets
-09. Import/Export via GIF (as 3d data) ??? + 16bit PNG
+09. Import/Export via GIF (as 3d data) ???
 10. Read DICOM files.
 11. Labels at TriCont()
 12. Cones() -- like Bars() but by Cone()
@@ -23,21 +23,20 @@
 14. Add diffusive light (no dependence of normals but have direction)
 15. SetCoor() -- add log-log, log-x, log-y predefined coordinates
 16. Normal size of bars for first and last one (Bars, Barh,BoxPlot,Candle,Boxs, ...)
+17. Use Hershey as built-in font ???
 
 ============= UNSURE ===========
 
-2. Problem with \calB and so on (\calH, ...) -- they are present only in italic font :(.
-3. create PWT fonts
-4. \dfrac for normal size and centering  (sample \big\big{\frac{1}{2}}) ???
-5. "Cut off" curves if text is printed inside it (for contour labels) ?!?
-6. Check if widget functions can be added to mgl_w.h !?! -- use #define ??!
-7. Save ALL plot styles for each curve (0...N) for each subplot (0...M) in format \leg{N_M} ?!?
-8. Add TeX command \leg{plot style} for line+mark of specified style.
-9. Use Hershey as built-in font ???
-10. String variables in MGL + readstr command.
-11. Pool of threads for speeding up ???
-12. Drops as mglPrim -- not accurate but smaller memory and faster
-13. Text aspect ratio in OpenGL mode
+1. Problem with \calB and so on (\calH, ...) -- they are present only in italic font :(.
+2. create PWT fonts
+3. \dfrac for normal size and centering  (sample \big\big{\frac{1}{2}}) ???
+4. "Cut off" curves if text is printed inside it (for contour labels) ?!?
+5. Save ALL plot styles for each curve (0...N) for each subplot (0...M) in format \leg{N_M} ?!?
+6. Add TeX command \leg{plot style} for line+mark of specified style.
+7. String variables in MGL + readstr command.
+8. Pool of threads for speeding up ???
+9. Drops as mglPrim -- not accurate but smaller memory and faster
+10. Text aspect ratio in OpenGL mode
 
 ============= DOCS =============
 
@@ -45,26 +44,22 @@
 2. FAQ about sizes of plot (parametrical, or Min*Max)
 3. FAQ about MinGW -- http://www.mingw.org/wiki/FAQ
 4. MGL docs -- text what formulas are applicable for scalars too.
-6. tune colors as {} -- for example, '{b3}'
-7. Sample about pthread using.
-8. Add help about cmake and GIF/JPEG to the "Installation and using"
-9. Regroup pictures in WWW by big classes + combo plots
-11. On which things the subplot influence
-12. About unrotated text
-13. Add "Howto" section in web site.
-14. "Data plotting", "Data plot", "Scientific visualtization", "Surface", "Cloud","Plot", "statistical graphics" to website
-15. Examples of animation, u3d, x3d, js and so on
-16. Example of inverted axis, minus-log axis
-18. Surf3A -- data a can be vector with size as number of isosurfaces
-20. Venn() diagram sample
-23. Pipes in mglview, mglconv (stdin)
-24. Parallelization:
+5.Sample about pthread using.
+6. Add help about cmake and GIF/JPEG to the "Installation and using"
+7. Regroup pictures in WWW by big classes + combo plots
+8. On which things the subplot influence
+9. About unrotated text
+10. Add "Howto" section in web site.
+11. "Data plotting", "Data plot", "Scientific visualtization", "Surface", "Cloud","Plot", "statistical graphics" to website
+12. Examples of animation, u3d, x3d, js and so on
+13. Example of inverted axis, minus-log axis
+14. Venn() diagram sample
+15. Primitives sample
+16. Candle() sample
+17. Parallelization:
 	* user level -- SetDrawReg(), PutDrawReg()
 	* MPI level -- Combine()
 	* MathGL level -- pthread in mglData, ???
-25. Allow interpolation in SubData and in MGL if argument is not integer
-27. 'half-transparent' -> 'semitransparent'
-28. Style 'v' draw arrows at flow lines
 
 ============= BUGS =============
 

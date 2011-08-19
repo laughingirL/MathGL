@@ -21,6 +21,7 @@ a library with large and growing set of graphics.
 * General concepts::
 * FAQ::
 * Interfaces::
+* Utilities::
 * Thanks::
 @end menu
 
@@ -250,7 +251,7 @@ Just set a negative value in @var{SetTickLen}. For example, use @code{gr->SetTic
 
 @end table
 
-@node Interfaces, Thanks, FAQ, Overview
+@node Interfaces, Utilities, FAQ, Overview
 @section Interfaces
 
 The MathGL library has interfaces for a set of languages. Most of them are based on the C interface via SWIG tool. There are Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, and Tcl interfaces. Also there is a Fortran interface which has a similar set of functions, but slightly different types of arguments (integers instead of pointers). These functions are marked as [C function].
@@ -356,8 +357,121 @@ Before the first using all variables must be defined with the help of commands, 
 
 Command may have several set of possible arguments (for example, @code{plot ydat} and @code{plot xdat ydat}). All command arguments for a selected set must be specified. However, some arguments can have default values. These argument are printed in [], like @code{plot ydat ['stl'='' zval=nan]}. At this, the record @code{[arg1 arg2 arg3 ...]} means @code{[arg1 [arg2 [arg3 ...]]]}, i.e. you can omit only tailing arguments if you agree with its default values. For example, @code{plot ydat '' 1} or @code{plot ydat ''} is correct, but @code{plot ydat 1} is incorrect (argument @code{'stl'} is missed).
 
+Below I show commands to control program flow, like, conditions, cycles, define script arguments and so on. Other commands can be found in chapters @ref{MathGL core} and @ref{Data processing}.
 
-@node Thanks, , Interfaces, Overview
+@cindex chdir
+@anchor{chdir}
+@deftypefn {MGL command} {} chdir 'path'
+Changes the current directory to @var{path}.
+@end deftypefn
+
+@cindex define
+@anchor{define}
+@deftypefn {MGL command} {} define $N smth
+Sets @var{N}-th script argument to @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present). Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@deftypefn {MGL command} {} define name smth
+Create scalar variable @code{name} which have the numeric value of @code{smth}. Later you can use this variable as usual number. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@cindex defchr
+@anchor{defchr}
+@deftypefn {MGL command} {} defchr $N smth
+Sets @var{N}-th script argument to character with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@cindex defnum
+@anchor{defnum}
+@deftypefn {MGL command} {} defnum $N smth
+Sets @var{N}-th script argument to number with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@cindex defpal
+@anchor{defpal}
+@deftypefn {MGL command} {} defpal $N smth
+Sets @var{N}-th script argument to palette character at position evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+
+@cindex call
+@anchor{call}
+@deftypefn {MGL command} {} call 'fname' [ARG1 ARG2 ... ARG9]
+Executes function @var{fname} (or script if function is not found). Optional arguments will be passed to functions. See also @ref{func}.
+@end deftypefn
+@cindex func
+@anchor{func}
+@deftypefn {MGL command} {} func 'fname' [narg=0]
+Define the function @var{fname} and number of required arguments. The arguments will be placed in script parameters $1, $2, ... $9. Note, you should stop script execution before function definition(s) by command @ref{stop}. See also @ref{return}.
+@end deftypefn
+@cindex return
+@anchor{return}
+@deftypefn {MGL command} {} return
+Return from the function. See also @ref{func}.
+@end deftypefn
+
+
+@cindex if
+@anchor{if}
+@deftypefn {MGL command} {} if dat 'cond'
+Starts block which will be executed if @var{dat} satisfy to @var{cond}.
+@end deftypefn
+@deftypefn {MGL command} {} if @code{val}
+Starts block which will be executed if @code{val} is nonzero.
+@end deftypefn
+@cindex elseif
+@anchor{elseif}
+@deftypefn {MGL command} {} elseif dat 'cond'
+Starts block which will be executed if previous @code{if} or @code{elseif} is false and @var{dat} satisfy to @var{cond}.
+@end deftypefn
+@deftypefn {MGL command} {} elseif @code{val}
+Starts block which will be executed if previous @code{if} or @code{elseif} is false and @code{val} is nonzero.
+@end deftypefn
+@cindex else
+@anchor{else}
+@deftypefn {MGL command} {} else
+Starts block which will be executed if previous @code{if} or @code{elseif} is false.
+@end deftypefn
+@cindex endif
+@anchor{endif}
+@deftypefn {MGL command} {} endif
+Finishes @code{if/elseif/else} block.
+@end deftypefn
+
+@cindex for
+@anchor{for}
+@deftypefn {MGL command} {} for $N @code{v1 v2 [dv=1]}
+Starts cycle with $@var{N}-th argument changing from @var{v1} to @var{v2} with the step @var{dv}. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@deftypefn {MGL command} {} for $N dat
+Starts cycle with $@var{N}-th argument changing for @var{dat} values. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@cindex next
+@anchor{next}
+@deftypefn {MGL command} {} next
+Finishes @code{for} cycle.
+@end deftypefn
+
+@cindex once
+@anchor{once}
+@deftypefn {MGL command} {} once @code{val}
+The code between @code{once on} and @code{once off} will be executed only once. Useful for large data manipulation in programs like UDAV.
+@end deftypefn
+@cindex stop
+@anchor{stop}
+@deftypefn {MGL command} {} stop
+Terminate execution.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node  Utilities, Thanks, Interfaces, Overview
+@section Utilities for parsing MGL
+
+MathGL library provides several tools for parsing MGL scripts. There is tools saving it to bitmap or vectorial images (@code{mgl2conv}). Tool @code{mglview} show MGL script and allow to rotate and setup the image. Also you can translate MGL script to C++ file by help of @code{mgl2cpp} tool.
+
+All of this tools have similar set of arguments. First argument is name of script file, next argument is optional output file name, last arguments are options. There are options for setting script parameters (it is @code{$0, $1, ... $9}) and locale settings. The script parameters have format @samp{-Nval}. Here N=0,1...9 is parameter ID and val is its value. For example, option @samp{-1test} set to substitute @samp{test} instead of @code{$1} in the script. Option -Lval set locale to val. For example, @samp{-Lutf8} will set UTF-8 locale for script.
+
+Both tools expect stdin input if script file is not specified. This allows to use Linux pipes to send script and produce plot.
+
+Additionally you can create animated GIF file or a set of JPEG files with names @samp{frameNNNN.jpg} (here @samp{NNNN} is frame index). You should use @code{mgl2gif} tool and specify the values of @code{$0} parameter for making animation. Values of the parameter @code{$0} can be specified inside the script by comment @code{##a val} for each value @code{val} (one comment for one value) or by option(s) @samp{-Aval}. Also you can specify a cycle for animation by comment @code{##c v1 v2 dv} or by option @code{-Cn1:n2}. Tool @code{mgl2gif} will execute script several times (once for each specified value of @code{$0}) and save result in animated GIF file. For saving each frame in JPEG just add command @code{write ''} at the end of the script.
+
+
+@node Thanks, , Utilities, Overview
 @section Thanks
 
 @itemize @bullet

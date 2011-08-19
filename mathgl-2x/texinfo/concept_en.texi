@@ -25,7 +25,22 @@ The line style is defined by the string which may contain specifications for col
 By default palette contain following colors: <span style="color: rgb(76, 76, 76);">dark gray</span> &lsquo;<samp>H</samp>&rsquo;, <span style="color: rgb(0, 0, 255);">blue</span> &lsquo;<samp>b</samp>&rsquo;, <span style="color: rgb(0, 255, 0);">green</span> &lsquo;<samp>g</samp>&rsquo;, <span style="color: rgb(255, 0, 0);">red</span> &lsquo;<samp>r</samp>&rsquo;, <span style="color: rgb(0, 255, 255);">cyan</span> &lsquo;<samp>c</samp>&rsquo;, <span style="color: rgb(255, 0, 255);">magenta</span> &lsquo;<samp>m</samp>&rsquo;, <span style="color: rgb(255, 255, 0);">yellow</span> &lsquo;<samp>y</samp>&rsquo;, <span style="color: rgb(127, 127, 127);">gray</span> &lsquo;<samp>h</samp>&rsquo;, <span style="color: rgb(0, 255, 127);">green-blue</span> &lsquo;<samp>l</samp>&rsquo;, <span style="color: rgb(0, 127, 255);">sky-blue</span> &lsquo;<samp>n</samp>&rsquo;, <span style="color: rgb(255, 127, 0);">orange</span> &lsquo;<samp>q</samp>&rsquo;, <span style="color: rgb(127, 255, 0);">green-yellow</span> &lsquo;<samp>e</samp>&rsquo;, <span style="color: rgb(127, 0, 255);">blue-violet</span> &lsquo;<samp>u</samp>&rsquo;, <span style="color: rgb(255, 0, 127);">purple</span> &lsquo;<samp>p</samp>&rsquo;.
 
 <p>The color types are: &lsquo;<samp>k</samp>&rsquo; -- black, &lsquo;<samp>r</samp>&rsquo; -- <span style="color: rgb(255, 0, 0);">red</span>, &lsquo;<samp>R</samp>&rsquo; -- <span style="color: rgb(127, 0, 0);">dark red</span>, &lsquo;<samp>g</samp>&rsquo; -- <span style="color: rgb(0, 255, 0);">green</span>, &lsquo;<samp>G</samp>&rsquo; -- <span style="color: rgb(0, 127, 0);">dark green</span>, &lsquo;<samp>b</samp>&rsquo; -- <span style="color: rgb(0, 0, 255);">blue</span>, &lsquo;<samp>B</samp>&rsquo; -- <span style="color: rgb(0, 0, 127);">dark blue</span>, &lsquo;<samp>c</samp>&rsquo; -- <span style="color: rgb(0, 255, 255);">cyan</span>, &lsquo;<samp>C</samp>&rsquo; -- <span style="color: rgb(0, 127, 127);">dark cyan</span>, &lsquo;<samp>m</samp>&rsquo; -- <span style="color: rgb(255, 0, 255);">magenta</span>, &lsquo;<samp>M</samp>&rsquo; -- <span style="color: rgb(127, 0, 127);">dark magenta</span>, &lsquo;<samp>y</samp>&rsquo; -- <span style="color: rgb(255, 255, 0);">yellow</span>, &lsquo;<samp>Y</samp>&rsquo; -- <span style="color: rgb(127, 127, 0);">dark yellow (gold)</span>, &lsquo;<samp>h</samp>&rsquo; -- <span style="color: rgb(127, 127, 127);">gray</span>, &lsquo;<samp>H</samp>&rsquo; -- <span style="color: rgb(76, 76, 76);">dark gray</span>, &lsquo;<samp>w</samp>&rsquo; -- white, &lsquo;<samp>W</samp>&rsquo; -- <span style="color: rgb(178, 178, 178);">bright gray</span>, &lsquo;<samp>l</samp>&rsquo; -- <span style="color: rgb(0, 255, 127);">green-blue</span>, &lsquo;<samp>L</samp>&rsquo; -- <span style="color: rgb(0, 127, 63);">dark green-blue</span>, &lsquo;<samp>e</samp>&rsquo; -- <span style="color: rgb(127, 255, 0);">green-yellow</span>, &lsquo;<samp>E</samp>&rsquo; -- <span style="color: rgb(63, 127, 0);">dark green-yellow</span>, &lsquo;<samp>n</samp>&rsquo; -- <span style="color: rgb(0, 127, 255);">sky-blue</span>, &lsquo;<samp>N</samp>&rsquo; -- <span style="color: rgb(0, 63, 127);">dark sky-blue</span>, &lsquo;<samp>u</samp>&rsquo; -- <span style="color: rgb(127, 0, 255);">blue-violet</span>, &lsquo;<samp>U</samp>&rsquo; -- <span style="color: rgb(63, 0, 127);">dark blue-violet</span>, &lsquo;<samp>p</samp>&rsquo; -- <span style="color: rgb(255, 0, 127);">purple</span>, &lsquo;<samp>P</samp>&rsquo; -- <span style="color: rgb(127, 0, 63);">dark purple</span>, &lsquo;<samp>q</samp>&rsquo; -- <span style="color: rgb(255, 127, 0);">orange</span>, &lsquo;<samp>Q</samp>&rsquo; -- <span style="color: rgb(127, 63, 0);">dark orange (brown)</span>.</p>
+@end html
+@end ifhtml
 
+
+You can also use ``lighted'' colors. The ``lighted'' color contain 2 symbols in brackets @samp{@{cN@}}: first one is the usual symbol for color specification, the second one is a digit for its brightness. The digit can be in range @samp{1}...@samp{9}.
+Number @samp{5} corresponds to a normal color, @samp{1} is a very dark version of the color (practically black), and @samp{9} is a very bright version of the color (practically white). For example, the colors can be @samp{@{b2@}} @samp{@{b7@}} @samp{@{r7@}} and so on.
+
+@float
+@image{../png/colors, 7cm}
+@caption{Colors and its ids.}
+@end float
+
+
+
+@ifhtml
+@html
 Dashing style has the following meaning: space -- no line (usable for plotting only marks), &lsquo;<samp>-</samp>&rsquo; -- solid line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;), &lsquo;<samp>|</samp>&rsquo; -- long dashed line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>;</samp>&rsquo; -- dashed line (&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>=</samp>&rsquo; -- small dashed line (&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;), &lsquo;<samp>:</samp>&rsquo; -- dotted line (&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;), &lsquo;<samp>j</samp>&rsquo; -- dash-dotted line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>i</samp>&rsquo; -- small dash-dotted line (&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;).
 @end html
 @end ifhtml
@@ -59,14 +74,6 @@ One may specify to draw a special symbol (an arrow) at the beginning and at the 
 
 The color scheme is used for determining the color of surfaces, isolines, isosurfaces and so on. The color scheme is defined by the string, which may contain several characters that are color id (@pxref{Line styles}) or characters @samp{d#:|}. Symbol @samp{d} denotes the interpolation by 3d position instead of the coloring by amplitude. Symbol @samp{#} switches to mesh drawing or to a wire plot. Symbol @samp{|} disables color interpolation in color scheme, which can be useful, for example, for sharp colors during matrix plotting. Symbol @samp{:} finishes the color scheme parsing. Following it, the user may put styles for the text, rotation axis for curves/isocontours, and so on. Color scheme may contain up to 32 color values.
 
-You may also use ``lighted'' colors in the color scheme specification (@emph{not in line style!}). The ``lighted'' color contain 2 symbols: first one is the usual symbol for color specification, the second one is a digit for its brightness. The digit can be in range @samp{1}...@samp{9}. 
-Number @samp{5} corresponds to a normal color, @samp{1} is a very dark version of the color (practically black), and @samp{9} is a very bright version of the color (practically white). For example, the color scheme can be @samp{b2b7wr7r2}.
-
-@float
-@image{../png/colors, 7cm}
-@caption{Colors and its ids.}
-@end float
-
 For coloring by @emph{amplitude} (most common) the final color is a linear interpolation of color array. The color array is constructed from the string ids. The argument is the amplitude normalized between @var{Cmin} -- @var{Cmax} (@pxref{Axis settings}). For example, string containing 4 characters @samp{bcyr} corresponds to a colorbar from blue (lowest value) through cyan (next value) through yellow (next value) to the red (highest value). String @samp{kw} corresponds to a colorbar from black (lowest value) to white (highest value). String @samp{m} corresponds to a simple magenta color.
 
 There are several useful combinations. String @samp{kw} corresponds to the simplest gray color scheme where higher values are brighter. String @samp{wk} presents the inverse gray color scheme where higher value is darker. Strings @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} present the well-known @emph{hot}, @emph{summer} and @emph{winter} color schemes. Strings @samp{BbwrR} and @samp{bBkRr} allow to view bi-color figure on white or black background, where negative values are blue and positive values are red. String @samp{BbcyrR} gives a color scheme similar to the well-known @emph{jet} color scheme.
@@ -76,7 +83,8 @@ There are several useful combinations. String @samp{kw} corresponds to the simpl
 @caption{Most popular color schemes.}
 @end float
 
-When coloring by @emph{coordinate}, the final color is determined by the position of the point in 3d space and is calculated from formula c=x*c[1] + y*c[2] + z*c[3]. Here, c[1], c[2], c[3] are the first three elements of color array; x, y, z are normalized to @var{Min} -- @var{Max} coordinates of the point. This type of coloring is useful for isosurface plot where color may show the exact position of a piece of surface.
+When coloring by @emph{coordinate} (used in @ref{map}), the final color is determined by the position of the point in 3d space and is calculated from formula c=x*c[1] + y*c[2]. Here, c[1], c[2] are the first two elements of color array; x, y are normalized to axis range coordinates of the point.
+@c This type of coloring is useful for isosurface plot where color may show the exact position of a piece of surface.
 
 @c ------------------------------------------------------------------
 @node Font styles, Textual formulas, Color scheme, General concepts

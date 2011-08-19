@@ -490,7 +490,7 @@ void mgl_surf3a_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, HCDT b, const char 
 		for(long i=0;i<num;i++)
 		{
 			v = gr->Max.c + (gr->Min.c-gr->Max.c)*(i+1.)/(num+1);
-			gr->AlphaDef = b->v(i);
+			gr->AlphaDef = gr->GetA(b->v(i));
 			mgl_surf3_xyz_val(gr,v,x,y,z,a,sch,0);
 		}
 		gr->AlphaDef = a0;

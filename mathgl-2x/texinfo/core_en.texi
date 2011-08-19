@@ -827,7 +827,7 @@ Sets quality of the plot depending on value @var{val}: @code{MGL_DRAW_WIRE=0} --
 @ifclear UDAV
 @deftypefn {Method on @code{mglGraph}} @code{void} StartGroup (const char *name)
 @deftypefnx {C function} @code{void} mgl_start_group (@code{HMGL} gr, @code{const char *}name)
-Starts group definition. Groups contain objects and other groups, they are used to select a part of a model to zoom to or to make invizible or to make transparent and so on.
+Starts group definition. Groups contain objects and other groups, they are used to select a part of a model to zoom to or to make invizible or to make semitransparent and so on.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} EndGroup ()
@@ -880,7 +880,7 @@ Exports current frame to a file @var{fname} which type is determined by the exte
 @deftypefn {Method on @code{mglGraph}} @code{void} WritePNG (@code{const char *}fname, @code{const char *}descr=@code{""}, @code{int} compr=@code{""}, @code{bool} alpha=@code{true})
 @deftypefnx {C function} @code{void} mgl_write_png (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
 @deftypefnx {C function} @code{void} mgl_write_png_solid (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
-Exports current frame to PNG file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file, @var{alpha} gives the transparency type. By default there are no description added and transparent image used. This function does nothing if NO_PNG is defined during compilation of MathGL library.
+Exports current frame to PNG file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file, @var{alpha} gives the transparency type. By default there are no description added and semitransparent image used. This function does nothing if NO_PNG is defined during compilation of MathGL library.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} WriteJPEG (@code{const char *}fname, @code{const char *}descr=@code{""})
@@ -915,7 +915,7 @@ Exports current frame to EPS file using bitmap representation. Parameter @var{fn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} WriteSVG (@code{const char *}fname, @code{const char *}descr=@code{""})
 @deftypefnx {C function} @code{void} mgl_write_svg (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
-Exports current frame to SVG (Scalable Vector Graphics) file using vector representation. In difference of EPS format, SVG format support transparency that allows to correctly draw half-transparent plot (like @ref{surfa}, @ref{surf3a} or @ref{cloud}). Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name). If file name is terminated by @samp{z} (for example, @samp{fname.svgz}) then file will be compressed in gzip format.
+Exports current frame to SVG (Scalable Vector Graphics) file using vector representation. In difference of EPS format, SVG format support transparency that allows to correctly draw semitransparent plot (like @ref{surfa}, @ref{surf3a} or @ref{cloud}). Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name). If file name is terminated by @samp{z} (for example, @samp{fname.svgz}) then file will be compressed in gzip format.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} WriteTEX (@code{const char *}fname, @code{const char *}descr=@code{""})
@@ -1673,7 +1673,7 @@ These functions draw candlestick chart at points @var{x}[i]. This is a combinati
 @deftypefnx {C function} @code{void} mgl_error_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ey, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_error_exy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ex, @code{HCDT} ey, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw error boxes @{@var{ex}[i], @var{ey}[i]@} at points @{@var{x}[i], @var{y}[i]@}. This can be useful, for example, in experimental points, or to show numeric error or some estimations and so on. If string @var{pen} contain symbol @samp{@@} than large semi-transparent mark is used instead of error box. See also @ref{plot}, @ref{plot}. @sref{Error sample}
+These functions draw error boxes @{@var{ex}[i], @var{ey}[i]@} at points @{@var{x}[i], @var{y}[i]@}. This can be useful, for example, in experimental points, or to show numeric error or some estimations and so on. If string @var{pen} contain symbol @samp{@@} than large semitransparent mark is used instead of error box. See also @ref{plot}, @ref{plot}. @sref{Error sample}
 @end deftypefn
 
 @anchor{mark}
@@ -2172,7 +2172,7 @@ The function draws isosurface plot for 3d array specified parametrically @var{a}
 @deftypefnx {C function} @code{void} mgl_surf3a (@code{HMGL} gr, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_surf3a_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 3).
+Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data. At this array @var{c} can be vector with values of transparency and @var{num}=@var{c}.nx. In opposite case @var{num} is equal to parameter @var{value} in options @var{opt} (default is 3).
 @end deftypefn
 
 @anchor{tiles}
