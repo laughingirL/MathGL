@@ -98,10 +98,15 @@ const char *mglWarn[mglWarnEnd] = {"%s: data dimension(s) is incompatible",
 //-----------------------------------------------------------------------------
 void mglBase::SetWarn(int code, const char *who)
 {
-	WarnCode = code;
-	if(Message && code>0 && code<mglWarnEnd)
-		sprintf(Message,mglWarn[code-1],who?who:"UNKNOWN");
-	else if(Message)	Message[0]=0;
+	WarnCode = code>0 ? code:0;
+	if(Message)
+	{
+		if(code>0 && code<mglWarnEnd)
+			sprintf(Message,mglWarn[code-1],who?who:"UNKNOWN");
+		else if(code<0 && who)
+			strcpy(Message,who);
+		else	*Message=0;
+	}
 	LoadState();
 }
 //-----------------------------------------------------------------------------

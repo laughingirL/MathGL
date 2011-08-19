@@ -56,14 +56,14 @@ if(use_doc)
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
 	)
 	add_custom_target(documentation ALL
-#		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.pdf
-#		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
+	#	DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.pdf
+	#	DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mgl_en
 #		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.pdf
 #		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.info
-		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru
-		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mgl_ru
+	#	DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru
+	#	DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mgl_ru
 	)
 	add_custom_target(clean
 		COMMAND rm -f mathgl*.[hali]* mathgl*.?? mathgl_*/* *~ png/*.png

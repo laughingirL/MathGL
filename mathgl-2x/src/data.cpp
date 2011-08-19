@@ -812,9 +812,9 @@ void mglFillP(long x, const mreal *a,long nx,mreal _p[4])
 }
 //-----------------------------------------------------------------------------
 float mgl_data_spline_(uintptr_t *d, float *x,float *y,float *z)
-{	return _DT_->Spline(*x,*y,*z);	}
+{	return mgl_data_spline(_DA_(d),*x,*y,*z);	}
 float mgl_data_linear_(uintptr_t *d, float *x,float *y,float *z)
-{	return _DT_->Linear(*x,*y,*z);	}
+{	return mgl_data_linear(_DA_(d),*x,*y,*z);	}
 //-----------------------------------------------------------------------------
 void mgl_data_crop(HMDT d, long n1, long n2, char dir)
 {
@@ -1553,5 +1553,5 @@ void mgl_data_set_value_(uintptr_t *d, float *v, int *i, int *j, int *k)
 float mgl_data_get_value(HCDT dat, long i, long j, long k)
 {	return dat->v(i,j,k);	}
 float mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k)
-{	return mgl_data_get_value(_DT_,*i,*j,*k);	}
+{	return mgl_data_get_value(_DA_(d),*i,*j,*k);	}
 //-----------------------------------------------------------------------------

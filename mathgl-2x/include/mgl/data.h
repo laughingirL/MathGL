@@ -393,28 +393,62 @@ public:
 	{	if(d.size()<1)	return;
 		Create(d.size());	for(long i=0;i<nx;i++)	a[i] = d[i];	}
 
-
-
-
 	/// Create or recreate the array with specified size and fill it by zero
 	inline void Create(long mx,long my=1,long mz=1)
 	{	mgl_data_create(this,mx,my,mz);	}
+	/// Rearange data dimensions
+	inline void Rearrange(long mx, long my=0, long mz=0)
+	{	mgl_data_rearrange(this,mx,my,mz);	}
+	/// Transpose dimensions of the data (generalization of Transpose)
+	inline void Transpose(const char *dim="yx")
+	{	mgl_data_transpose(this,dim);	}
 	/// Extend data dimensions
 	inline void Extend(long n1, long n2=0)
 	{	mgl_data_extend(this,n1,n2);	}
+	/// Reduce size of the data
+	inline void Squeeze(long rx,long ry=1,long rz=1,bool smooth=false)
+	{	mgl_data_squeeze(this,rx,ry,rz,smooth);	}
+	/// Crop the data
+	inline void Crop(long n1, long n2,char dir='x')
+	{	mgl_data_crop(this,n1,n2,dir);	}
 	/// Insert data
 	inline void Insert(char dir, long at=0, long num=1)
 	{	mgl_data_insert(this,dir,at,num);	}
 	/// Delete data
 	inline void Delete(char dir, long at=0, long num=1)
 	{	mgl_data_delete(this,dir,at,num);	}
-	/// Rearange data dimensions
-	inline void Rearrange(long mx, long my=0, long mz=0)
-	{	mgl_data_rearrange(this,mx,my,mz);	}
 
-
-
-
+	/// Modify the data by specified formula
+	inline void Modify(const char *eq,long dim=0)
+	{	mgl_data_modify(this, eq, dim);	}
+	/// Modify the data by specified formula
+	inline void Modify(const char *eq,const mglData &vdat, const mglData &wdat)
+	{	mgl_data_modify_vw(this,eq,&vdat,&wdat);	}
+	/// Modify the data by specified formula
+	inline void Modify(const char *eq,const mglData &vdat)
+	{	mgl_data_modify_vw(this,eq,&vdat,0);	}
+	/// Modify the data by specified formula assuming x,y,z in range [r1,r2]
+	inline void Fill(mglBase *gr, const char *eq, const char *opt="")
+	{	mgl_data_fill_eq(gr,this,eq,0,0,opt);	}
+	inline void Fill(mglBase *gr, const char *eq, const mglData &vdat, const char *opt="")
+	{	mgl_data_fill_eq(gr,this,eq,&vdat,0,opt);	}
+	inline void Fill(mglBase *gr, const char *eq, const mglData &vdat, const mglData &wdat,const char *opt="")
+	{	mgl_data_fill_eq(gr,this,eq,&vdat,&wdat,opt);	}
+	/// Eqidistantly fill the data to range [x1,x2] in direction \a dir
+	inline void Fill(mreal x1,mreal x2=NAN,char dir='x')
+	{	return mgl_data_fill(this,x1,x2,dir);	}
+	/// Put value to data element(s)
+	inline void Put(mreal val, long i=-1, long j=-1, long k=-1)
+	{	mgl_data_put_val(this,val,i,j,k);	}
+	/// Put array to data element(s)
+	inline void Put(const mglData &dat, long i=-1, long j=-1, long k=-1)
+	{	mgl_data_put_dat(this,&dat,i,j,k);	}
+	/// Set names for columns (slices)
+	inline void SetColumnId(const char *ids)
+	{	mgl_data_set_id(this,ids);	}
+	/// Make new id
+	inline void NewId()
+	{	delete []id;	id=new char[nx];	memset(id,0,nx*sizeof(char));	}
 
 	/// Read data from tab-separated text file with auto determining size
 	inline bool Read(const char *fname)
@@ -447,104 +481,10 @@ public:
 	inline void SaveHDF(const char *fname,const char *data,bool rewrite=false) const
 	{	mgl_data_save_hdf(this,fname,data,rewrite);	}
 	/// Put HDF data names into buf as '\t' separated.
-	inline int DatasHDF(const char *fname, char *buf, long size)
+	inline int DatasHDF(const char *fname, char *buf, long size) const
 	{	return mgl_datas_hdf(fname,buf,size);	}
 
-	/// Transpose dimensions of the data (generalization of Transpose)
-	inline void Transpose(const char *dim="yx")
-	{	mgl_data_transpose(this,dim);	}
-	/// Normalize the data to range [v1,v2]
-	inline void Norm(mreal v1=0,mreal v2=1,bool sym=false,long dim=0)
-	{	mgl_data_norm(this,v1,v2,sym,dim);	}
-	/// Normalize the data to range [v1,v2] slice by slice
-	inline void NormSl(mreal v1=0,mreal v2=1,char dir='z',bool keep_en=true,bool sym=false)
-	{	mgl_data_norm_slice(this,v1,v2,dir,keep_en,sym);	}
-	/// Put value to data element(s)
-	inline void Put(mreal val, long i=-1, long j=-1, long k=-1)
-	{	mgl_data_put_val(this,val,i,j,k);	}
-	/// Put array to data element(s)
-	inline void Put(const mglData &dat, long i=-1, long j=-1, long k=-1)
-	{	mgl_data_put_dat(this,&dat,i,j,k);	}
-	/// Modify the data by specified formula
-	inline void Modify(const char *eq,long dim=0)
-	{	mgl_data_modify(this, eq, dim);	}
-	/// Modify the data by specified formula
-	inline void Modify(const char *eq,const mglData &vdat, const mglData &wdat)
-	{	mgl_data_modify_vw(this,eq,&vdat,&wdat);	}
-	/// Modify the data by specified formula
-	inline void Modify(const char *eq,const mglData &vdat)
-	{	mgl_data_modify_vw(this,eq,&vdat,0);	}
-	/// Modify the data by specified formula assuming x,y,z in range [r1,r2]
-	inline void FillEq(mglBase *gr, const char *eq, const mglData *vdat=0, const mglData *wdat=0,const char *opt="")
-	{	mgl_data_fill_eq(gr,this,eq,vdat,wdat,opt);	}
-	/// Eqidistantly fill the data to range [x1,x2] in direction \a dir
-	inline void Fill(mreal x1,mreal x2,char dir='x')
-	{	return mgl_data_fill(this,x1,x2,dir);	}
-	/// Set names for columns (slices)
-	inline void SetColumnId(const char *ids)
-	{	mgl_data_set_id(this,ids);	}
-	/// Make new id
-	inline void NewId()
-	{	delete []id;	id=new char[nx];	memset(id,0,nx*sizeof(char));	}
-	/// Reduce size of the data
-	inline void Squeeze(long rx,long ry=1,long rz=1,bool smooth=false)
-	{	mgl_data_squeeze(this,rx,ry,rz,smooth);	}
-	/// Crop the data
-	inline void Crop(long n1, long n2,char dir='x')
-	{	mgl_data_crop(this,n1,n2,dir);	}
-
-	/// Get maximal value of the data
-	inline float Maximal() const	{	return mgl_data_max(this);	}
-	/// Get minimal value of the data
-	inline float Minimal() const	{	return mgl_data_min(this);	}
-	/// Get maximal value of the data and its position
-	inline mreal Maximal(long &i,long &j,long &k) const
-	{	return mgl_data_max_int(this,&i,&j,&k);	}
-	/// Get minimal value of the data and its position
-	inline mreal Minimal(long &i,long &j,long &k) const
-	{	return mgl_data_min_int(this,&i,&j,&k);	}
-	/// Get maximal value of the data and its approximated position
-	inline mreal Maximal(mreal &x,mreal &y,mreal &z) const
-	{	return mgl_data_max_real(this,&x,&y,&z);	}
-	/// Get minimal value of the data and its approximated position
-	inline mreal Minimal(mreal &x,mreal &y,mreal &z) const
-	{	return mgl_data_min_real(this,&x,&y,&z);	}
-	/// Get "energy" and find first (median) and second (width) momentums of data
-	inline mreal Momentum(char dir,mreal &m,mreal &w) const
-	{	return mgl_data_momentum_val(this,dir,&m,&w,0,0);	}
-	/// Get "energy and find 4 momentums of data: median, width, skewness, kurtosis
-	inline mreal Momentum(char dir,mreal &m,mreal &w,mreal &s,mreal &k) const
-	{	return mgl_data_momentum_val(this,dir,&m,&w,&s,&k);	}
-	/// Print information about the data (sizes and momentum) to string
-	inline const char *PrintInfo() const	{	return mgl_data_info(this);	}
-	/// Print information about the data (sizes and momentum) to FILE (for example, stdout)
-	inline void PrintInfo(FILE *fp) const
-	{	if(fp)	{	fprintf(fp,"%s",mgl_data_info(this));	fflush(fp);	}	}
-
-	/// Find position (after specified in i,j,k) of first nonzero value of formula
-	inline mreal Find(const char *cond, long &i, long &j, long &k) const
-	{	return mgl_data_first(this,cond,&i,&j,&k);	}
-	/// Find position (before specified in i,j,k) of last nonzero value of formula
-	inline mreal Last(const char *cond, long &i, long &j, long &k) const
-	{	return mgl_data_last(this,cond,&i,&j,&k);	}
-	/// Find position of first in direction 'dir' nonzero value of formula
-	inline long Find(const char *cond, char dir, long i=0, long j=0, long k=0) const
-	{	return mgl_data_find(this,cond,dir,i,j,k);	}
-	/// Find if any nonzero value of formula
-	inline bool FindAny(const char *cond) const
-	{	return mgl_data_find_any(this,cond);	}
-
-	/// Smooth the data on specified direction or directions
-	inline void Smooth(const char *dirs="xyz",mreal delta=0)
-	{	mgl_data_smooth(this,dirs,delta);	}
-	/// Set as the data envelop
-	inline void Envelop(char dir='x')
-	{	mgl_data_envelop(this,dir);	}
-	/// Remove phase jump
-	inline void Sew(const char *dirs="xyz", mreal da=2*M_PI)
-	{	mgl_data_sew(this,dirs,da);	}
-
-	/// Get column (or slice) of the data filled by formulas of other named columns
+	/// Get column (or slice) of the data filled by formulas of named columns
 	inline mglData Column(const char *eq) const
 	{	return mglData(true,mgl_data_column(this,eq));	}
 	/// Get momentum (1D-array) of data along direction 'dir'. String looks like "x1" for median in x-direction, "x2" for width in x-dir and so on.
@@ -573,12 +513,12 @@ public:
 	/// Get array which is result of minimal values in given direction or directions
 	inline mglData Min(const char *dir) const
 	{	return mglData(true,mgl_data_min_dir(this,dir));	}
-	/// Resize the data to new size of box [x1,x2]*[y1,y2]*[z1,z2]
-	inline mglData Resize(long mx,long my=1,long mz=1, mreal x1=0,mreal x2=1, mreal y1=0,mreal y2=1, mreal z1=0,mreal z2=1) const
-	{	return mglData(true,mgl_data_resize_box(this,mx,my,mz,x1,x2,y1,y2,z1,z2));	}
 	/// Get the data which is direct multiplication (like, d[i,j] = this[i]*a[j] and so on)
 	inline mglData Combine(const mglData &dat) const
 	{	return mglData(true,mgl_data_combine(this,&dat));	}
+	/// Resize the data to new size of box [x1,x2]*[y1,y2]*[z1,z2]
+	inline mglData Resize(long mx,long my=1,long mz=1, mreal x1=0,mreal x2=1, mreal y1=0,mreal y2=1, mreal z1=0,mreal z2=1) const
+	{	return mglData(true,mgl_data_resize_box(this,mx,my,mz,x1,x2,y1,y2,z1,z2));	}
 	/// Get array which values is result of interpolation this for coordinates from other arrays
 	inline mglData Evaluate(const mglData &idat, bool norm=true) const
 	{	return mglData(true,mgl_data_evaluate(this,&idat,0,0,norm));	}
@@ -601,12 +541,28 @@ public:
 	{	mgl_data_diff_par(this,&v1,&v2,&v3);	}
 	/// Double-differentiate (like laplace operator) the data in given direction
 	inline void Diff2(const char *dir)	{	mgl_data_diff2(this,dir);	}
+
 	/// Swap left and right part of the data in given direction (useful for fourier spectrums)
 	inline void Swap(const char *dir)	{	mgl_data_swap(this,dir);	}
 	/// Roll data along direction \a dir by \a num slices
 	inline void Roll(char dir, long num)	{	mgl_data_roll(this,dir,num);	}
 	/// Mirror the data in given direction (useful for fourier spectrums)
 	inline void Mirror(const char *dir)	{	mgl_data_mirror(this,dir);	}
+	/// Set as the data envelop
+	inline void Envelop(char dir='x')
+	{	mgl_data_envelop(this,dir);	}
+	/// Remove phase jump
+	inline void Sew(const char *dirs="xyz", mreal da=2*M_PI)
+	{	mgl_data_sew(this,dirs,da);	}
+	/// Smooth the data on specified direction or directions
+	inline void Smooth(const char *dirs="xyz",mreal delta=0)
+	{	mgl_data_smooth(this,dirs,delta);	}
+	/// Normalize the data to range [v1,v2]
+	inline void Norm(mreal v1=0,mreal v2=1,bool sym=false,long dim=0)
+	{	mgl_data_norm(this,v1,v2,sym,dim);	}
+	/// Normalize the data to range [v1,v2] slice by slice
+	inline void NormSl(mreal v1=0,mreal v2=1,char dir='z',bool keep_en=true,bool sym=false)
+	{	mgl_data_norm_slice(this,v1,v2,dir,keep_en,sym);	}
 
 	/// Hankel transform
 	inline void Hankel(const char *dir)	{	mgl_data_hankel(this,dir);	}
@@ -630,6 +586,46 @@ public:
 	/// Interpolate by line the data to given point \a x,\a y,\a z which normalized in range [0, 1]
 	inline mreal Linear1(mreal x,mreal y=0,mreal z=0) const
 	{	return mgl_data_linear(this,x*(nx-1),y*(ny-1),z*(nz-1));	}
+
+	/// Print information about the data (sizes and momentum) to string
+	inline const char *PrintInfo() const	{	return mgl_data_info(this);	}
+	/// Print information about the data (sizes and momentum) to FILE (for example, stdout)
+	inline void PrintInfo(FILE *fp) const
+	{	if(fp)	{	fprintf(fp,"%s",mgl_data_info(this));	fflush(fp);	}	}
+	/// Get maximal value of the data
+	inline float Maximal() const	{	return mgl_data_max(this);	}
+	/// Get minimal value of the data
+	inline float Minimal() const	{	return mgl_data_min(this);	}
+	/// Get maximal value of the data and its position
+	inline mreal Maximal(long &i,long &j,long &k) const
+	{	return mgl_data_max_int(this,&i,&j,&k);	}
+	/// Get minimal value of the data and its position
+	inline mreal Minimal(long &i,long &j,long &k) const
+	{	return mgl_data_min_int(this,&i,&j,&k);	}
+	/// Get maximal value of the data and its approximated position
+	inline mreal Maximal(mreal &x,mreal &y,mreal &z) const
+	{	return mgl_data_max_real(this,&x,&y,&z);	}
+	/// Get minimal value of the data and its approximated position
+	inline mreal Minimal(mreal &x,mreal &y,mreal &z) const
+	{	return mgl_data_min_real(this,&x,&y,&z);	}
+	/// Get "energy" and find first (median) and second (width) momentums of data
+	inline mreal Momentum(char dir,mreal &m,mreal &w) const
+	{	return mgl_data_momentum_val(this,dir,&m,&w,0,0);	}
+	/// Get "energy and find 4 momentums of data: median, width, skewness, kurtosis
+	inline mreal Momentum(char dir,mreal &m,mreal &w,mreal &s,mreal &k) const
+	{	return mgl_data_momentum_val(this,dir,&m,&w,&s,&k);	}
+	/// Find position (after specified in i,j,k) of first nonzero value of formula
+	inline mreal Find(const char *cond, long &i, long &j, long &k) const
+	{	return mgl_data_first(this,cond,&i,&j,&k);	}
+	/// Find position (before specified in i,j,k) of last nonzero value of formula
+	inline mreal Last(const char *cond, long &i, long &j, long &k) const
+	{	return mgl_data_last(this,cond,&i,&j,&k);	}
+	/// Find position of first in direction 'dir' nonzero value of formula
+	inline long Find(const char *cond, char dir, long i=0, long j=0, long k=0) const
+	{	return mgl_data_find(this,cond,dir,i,j,k);	}
+	/// Find if any nonzero value of formula
+	inline bool FindAny(const char *cond) const
+	{	return mgl_data_find_any(this,cond);	}
 
 	/// Copy data from other mglData variable
 	inline mglData &operator=(const mglData &d)
@@ -687,13 +683,13 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase
 inline mglData mglTransformA(const mglDataA &am, const mglDataA &ph, const char *tr)
 {	return mgl_transform_a(&am,&ph,tr);	}
-/// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for mreal and imaginary parts
+/// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for real and imaginary parts
 inline mglData mglTransform(const mglDataA &re, const mglDataA &im, const char *tr)
 {	return mgl_transform(&re,&im,tr);	}
 /// Apply Fourier transform for the data and save result into it
 inline void mglFourier(mglData &re, mglData &im, const char *dir)
 {	mgl_data_fourier(&re,&im,dir);	}
-/// Short time fourier analysis for mreal and imaginary parts. Output is amplitude of partial fourier (result will have size {dn, floor(nx/dn), ny} for dir='x'
+/// Short time Fourier analysis for real and imaginary parts. Output is amplitude of partial Fourier (result will have size {dn, floor(nx/dn), ny} for dir='x'
 inline mglData mglSTFA(const mglDataA &re, const mglDataA &im, long dn, char dir='x')
 {	return mglData(true, mgl_data_stfa(&re,&im,dn,dir));	}
 //-----------------------------------------------------------------------------
@@ -701,8 +697,10 @@ inline mglData mglSTFA(const mglDataA &re, const mglDataA &im, long dn, char dir
 inline mglData mglPDE(mglBase *gr, const char *ham, const mglData &ini_re, const mglData &ini_im, mreal dz=0.1, mreal k0=100,const char *opt="")
 {	return mglData(true, mgl_pde_solve(gr,ham, &ini_re, &ini_im, dz, k0,opt));	}
 /// Saves result of PDE solving for "Hamiltonian" \a ham with initial conditions \a ini along a curve \a ray (must have nx>=7 - x,y,z,px,py,pz,tau or nx=5 - x,y,px,py,tau)
-inline mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, mreal r=1, mreal k0=100, mglData *xx=0, mglData *yy=0)
-{	return mglData(true, mgl_qo2d_solve(ham, &ini_re, &ini_im, &ray, r, k0, xx, yy));	}
+inline mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, mreal r=1, mreal k0=100)
+{	return mglData(true, mgl_qo2d_solve(ham, &ini_re, &ini_im, &ray, r, k0, 0, 0));	}
+inline mglData mglQO2d(const char *ham, const mglData &ini_re, const mglData &ini_im, const mglData &ray, mglData &xx, mglData &yy, mreal r=1, mreal k0=100)
+{	return mglData(true, mgl_qo2d_solve(ham, &ini_re, &ini_im, &ray, r, k0, &xx, &yy));	}
 /// Prepares ray data for mglQO_PDE with starting point \a r0, \a p0
 inline mglData mglRay(const char *ham, mglPoint r0, mglPoint p0, mreal dt=0.1, mreal tmax=10)
 {	return mglData(true, mgl_ray_trace(ham, r0.x, r0.y, r0.z, p0.x, p0.y, p0.z, dt, tmax));	}
@@ -712,7 +710,7 @@ inline mglData mglJacobian(const mglData &x, const mglData &y)
 /// Calculate Jacobian determinant for D{x(u,v,w), y(u,v,w), z(u,v,w)}
 inline mglData mglJacobian(const mglData &x, const mglData &y, const mglData &z)
 {	return mglData(true, mgl_jacobian_3d(&x, &y, &z));	}
-// Do something like Delone triangulation
+/// Do something like Delone triangulation
 inline mglData mglTriangulation(const mglData &x, const mglData &y, const mglData &z, float er=0)
 {	return mglData(true,mgl_triangulation_3d(&x,&y,&z,er));	}
 inline mglData mglTriangulation(const mglData &x, const mglData &y, float er=0)

@@ -565,7 +565,7 @@ void *mgl_fill_x(void *par)
 }
 void mgl_data_fill(HMDT d, float x1,float x2,char dir)
 {
-	if(isnan(x2))	{	dir='x';	x2=x1;	}
+	if(isnan(x2))	x2=x1;
 	if(dir<'x' || dir>'z')	dir='x';
 	long par[2]={d->nx,d->ny};
 	mreal b[2]={x1,x2-x1};

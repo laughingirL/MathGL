@@ -227,7 +227,7 @@ HMDT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, const char 
 	for(long i=0;i<yy->GetNy()*yy->GetNz();i++)
 	{
 		if(ini && ini->nx>=fd.m)	in.Set(ini->a,fd.m);
-		else in.Fill(0,0);
+		else in.Fill(0.,0);
 		fd.a = y.a+i*m;		fd.x = x.a+(i%x.ny)*m;
 		fd.s = s.a+i*m;
 		res = mgl_fit_base(&fd,in.a);
@@ -273,7 +273,7 @@ HMDT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const char *eq, c
 	for(i=0;i<zz->GetNz();i++)
 	{
 		if(ini && ini->nx>=fd.m)	in.Set(ini->a,fd.m);
-		else in.Fill(0,0);
+		else in.Fill(0.,0);
 		fd.a = z.a+i*m*n;		fd.s = s.a+i*m*n;
 		res = mgl_fit_base(&fd,in.a);
 		for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
@@ -320,7 +320,7 @@ HMDT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT ss, const c
 	float val[MGL_VS], res = -1;
 
 	if(ini && ini->nx>=fd.m)	in.Set(ini->a,fd.m);
-	else in.Fill(0,0);
+	else in.Fill(0.,0);
 	res = mgl_fit_base(&fd,in.a);
 	for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
 	for(i=0;i<mglFitPnts;i++)	for(j=0;j<mglFitPnts*mglFitPnts;j++)

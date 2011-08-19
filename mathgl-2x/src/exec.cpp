@@ -1975,6 +1975,18 @@ void mglc_title(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 		mglprintf(out,1024,L"gr->Title(L\"%ls\", \"%s\", %g);", a[0].w, k[1]==2?a[1].s:"#", k[2]==2?a[2].v:-2);
 }
 //-----------------------------------------------------------------------------
+int mgls_column(mglGraph *, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==1 && k[1]==1 && k[2]==2)	*(a[0].d) = a[1].d->Column(a[2].s);
+	else	return 1;
+	return 0;
+}
+void mglc_column(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==1 && k[1]==1 && k[2]==2)
+		mglprintf(out,1024,L"%s = %s.Column(\"%s\");",  a[0].s, a[1].s, a[2].s);
+}
+//-----------------------------------------------------------------------------
 int mgls_subdata(mglGraph *, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==1 && k[1]==1 && k[2]==3)
@@ -2548,17 +2560,34 @@ void mglc_extend(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 		mglprintf(out,1024,L"%s.Extend(%d, %d);", a[0].s, iint(a[1].v), k[2]==3?iint(a[2].v):0);
 }
 //-----------------------------------------------------------------------------
+int mgls_datas(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==2)
+	{
+		char *buf=new char[1024];
+		mgl_datas_hdf(a[0].s,buf,1024);
+		gr->SetWarn(-1,buf);
+		delete []buf;
+	}
+	else	return 1;
+	return 0;
+}
+void mglc_datas(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==2)	mglprintf(out,1024,L"{char b[1024]; mgl_datas_hdf(\"%s\"s,b,1024); gr->SetWarn(-1,b);}",a[0].s);
+}
+//-----------------------------------------------------------------------------
 int mgls_info(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==1)	strcpy(gr->Self()->Message, a[0].d->PrintInfo());
-	else if(k[0]==2)	sprintf(gr->Self()->Message, "%ls",a[0].w);
+	if(k[0]==1)	gr->SetWarn(-1,a[0].d->PrintInfo());
+	else if(k[0]==2)	gr->SetWarn(-1,a[0].s);
 	else	return 1;
 	return 0;
 }
 void mglc_info(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==1)	mglprintf(out,1024,L"strcpy(gr->Self()->Message, %s.PrintInfo();", a[0].s);
-	if(k[0]==2)	mglprintf(out,1024,L"sprintf(gr->Self()->Message, L\"%ls\");",a[0].w);
+	if(k[0]==1)	mglprintf(out,1024,L"gr->SetWarn(-1,%s.PrintInfo());", a[0].s);
+	if(k[0]==2)	mglprintf(out,1024,L"gr->SetWarn(-1,\"%s\");",a[0].s);
 }
 //-----------------------------------------------------------------------------
 int mgls_integrate(mglGraph *, long , mglArg *a, int k[10], const char *)
@@ -3176,7 +3205,7 @@ void mglc_pde(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_qo2d(mglGraph *, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==1 && k[1]==2 && k[2]==1 && k[3]==1 && k[4]==1)
-		*(a[0].d) = mglQO2d(a[1].s, *(a[2].d), *(a[3].d), *(a[4].d), k[5]==3?a[5].v:1, k[6]==3?a[6].v:100, k[7]==1?a[7].d:0, k[8]==1?a[8].d:0);
+		*(a[0].d) = mglData(true, mgl_qo2d_solve(a[1].s, a[2].d, a[3].d, a[4].d, k[5]==3?a[5].v:1, k[6]==3?a[6].v:100, k[7]==1?a[7].d:0, k[8]==1?a[8].d:0));
 	else	return 1;
 	return 0;
 }
@@ -3382,6 +3411,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"clf",L"Clear picture",L"clf", mgls_clf, mglc_clf, false, 5},
 	{L"cloud",L"Draw cloud",L"cloud Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_cloud, mglc_cloud, false, 0},
 	{L"colorbar",L"Draw colorbar",L"colorbar ['fmt' pos]|Vdat ['fmt' pos]|'sch' pos x y w h ", mgls_colorbar, mglc_colorbar, false, 1},
+	{L"column",L"Get data column filled by formula on column ids",L"column Res Dat 'eq'", mgls_column, mglc_column, true, 3},
 	{L"columnplot",L"Set position of plot inside cell of column", L"columnplot num ind [d]", mgls_columnplot, mglc_columnplot, false, 4},
 	{L"combine", L"Direct multiplication of arrays", L"combine Res Adat Bdat", mgls_combine, mglc_combine, false, 3},
 	{L"cone",L"Draw cone",L"cone x1 y1 z1 x2 y2 z2 r1 [r2 'fmt' edge]", mgls_cone, mglc_cone, false, 1},
@@ -3405,6 +3435,7 @@ mglCommand mgls_base_cmd[] = {
 	{L"cumsum",L"Cumulative summation",L"cumsum Dat 'dir'", mgls_cumsum, mglc_cumsum, false, 3},
 	{L"curve",L"Draw curve",L"curve x1 y1 dx1 dy1 x2 y2 dx2 dy2 ['fmt']|x1 y1 z1 dx1 dy1 dz1 x2 y2 z2 dx2 dy2 dz2 ['fmt']", mgls_curve, mglc_curve, false, 1},
 	{L"cut",L"Setup plot points cutting",L"cut val|x1 y1 z1 x2 y2 z2|'cond'", mgls_cut, mglc_cut, false, 2},
+	{L"datas",L"Print list of data names in HDF file",L"datas 'fname'", mgls_datas, mglc_datas, false, 3},
 	{L"delete",L"Delete slice of data",L"delete Dat 'dir' [pos=0 num=1]", mgls_delete, mglc_delete, false, 3},
 	{L"dens",L"Draw density plot",L"dens Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' zpos]", mgls_dens, mglc_dens, false, 0},
 	{L"dens3",L"Draw density plot at slices of 3D data",L"dens3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_dens3, mglc_dens3, false, 0},

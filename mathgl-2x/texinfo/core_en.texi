@@ -3,7 +3,7 @@
 @cindex mglGraph
 
 @ifclear UDAV
-The core of MathGL is @strong{mglGraph} class defined in @code{#include <mgl/mgl.h>}. It contains a lot of plotting functions for 1D, 2D and 3D plots. It also encapsulates parameters for axes drawing. Moreover an arbitrary coordinate transformation may be used for each axis. All plotting functions use data encapsulated in mglData class (@pxref{Data handling}) that allows to check sizes of used arrays easily. Also it have many functions for data handling: modify it by formulas, find momentums and distribution (histogram), apply operator (differentiate, integrate, transpose, Fourier and so on), change data sizes (interpolate, squeeze, crop and so on). Additional information about colors, fonts, formula parsing can be found in @ref{Other classes}.
+The core of MathGL is @strong{mglGraph} class defined in @code{#include <mgl/mgl.h>}. It contains a lot of plotting functions for 1D, 2D and 3D plots. It also encapsulates parameters for axes drawing. Moreover an arbitrary coordinate transformation may be used for each axis. All plotting functions use data encapsulated in mglData class (@pxref{Data processing}) that allows to check sizes of used arrays easily. Also it have many functions for data handling: modify it by formulas, find momentums and distribution (histogram), apply operator (differentiate, integrate, transpose, Fourier and so on), change data sizes (interpolate, squeeze, crop and so on). Additional information about colors, fonts, formula parsing can be found in @ref{Other classes}.
 @end ifclear
 
 @menu
@@ -373,11 +373,13 @@ Sets the palette as selected colors. Default value is @code{"Hbgrcmyhlnqeup"} th
 
 Normally user should set it to zero by @code{SetWarn(0);} before plotting and check if @var{GetWarn} return non zero after plotting. Only last warning will be saved. All warnings/errors produced by MathGL is not critical -- the plot just will not be drawn.
 
-@deftypefn {Method on @code{mglGraph}} @code{void} SetWarn (@code{int} code)
-Set warning code. Normally you should call this function only for clearing the warning state, i.e. call @code{SetWarn(0);}.
+@deftypefn {Method on @code{mglGraph}} @code{void} SetWarn (@code{int} code, @code{const char *}info=@code{""})
+@deftypefnx {C function} @code{void} mgl_set_warn (@code{HMGL} gr, @code{int} code, @code{const char *}info)
+Set warning code. Normally you should call this function only for clearing the warning state, i.e. call @code{SetWarn(0);}. Text @var{info} will be printed as is if @var{code}<0.
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} Message (@code{char *}buf)
+@deftypefnx {C function} @code{void} mgl_buf_warn (@code{HMGL} gr, @code{const char *}buf)
 Set buffer for writing messages about matters why some plot are not drawn. Set to NULL to disable messages. The buffer length must be at least 1024. If @var{buf}[0]==0 then there are no messages.
 @end deftypefn
 
@@ -2649,9 +2651,9 @@ Get last fitted formula with found coefficients (as numbers).
 @section Data manipulation
 @cindex Hist
 
-@deftypefn {MGL command} {} hist res xdat adat
-@deftypefnx {MGL command} {} hist res xdat ydat adat
-@deftypefnx {MGL command} {} hist res xdat ydat zdat adat
+@deftypefn {MGL command} {} hist @sc{res} xdat adat
+@deftypefnx {MGL command} {} hist @sc{res} xdat ydat adat
+@deftypefnx {MGL command} {} hist @sc{res} xdat ydat zdat adat
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{mglData} Hist (@code{const mglData &}x, @code{const mglData &}a, @code{const char *}opt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{mglData} Hist (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}a, @code{const char *}opt=@code{""})
@@ -2676,8 +2678,7 @@ These functions make distribution (histogram) of data. They do not draw the obta
 Fills the value of array according to the formula in string @var{eq}. Formula is an arbitrary expression depending  on variables @samp{x}, @samp{y}, @samp{z}, @samp{u}, @samp{v}, @samp{w}. Coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in axis range. Variable @samp{u} is the original value of the array. Variables @samp{v} and @samp{w} are values of arrays @var{v}, @var{w} which can be @code{NULL} (i.e. can be omitted).
 @end deftypefn
 
-@anchor{pde}
-@deftypefn {MGL command} {} pde res 'ham' ini_re ini_im [@code{dz=0.1 k0=100}]
+@deftypefn {MGL command} {} pde @sc{res} 'ham' ini_re ini_im [@code{dz=0.1 k0=100}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{mglData} PDE (@code{const char *}ham, @code{const mglData &}ini_re, @code{const mglData &}ini_im, @code{float} dz=@code{0.1}, @code{float} k0=@code{100}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{HMDT} mgl_pde_solve (@code{HMGL} gr, @code{const char *}ham, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{float} dz, @code{float} k0, @code{const char *}opt)

@@ -58,7 +58,7 @@ I tried to make plots as nice looking as possible: e.g., a surface can be transp
 
 All texts are drawn by vector fonts, which allows for high scalability and portability. Texts may contain commands for: some of the TeX-like symbols, changing index (upper or lower indexes) and the style of font inside the text string (@pxref{Font styles}). Texts of ticks are rotated with axis rotation. It is possible to create a legend of plot and put text in an arbitrary position on the plot. Arbitrary text encoding (by the help of function @code{setlocale()}) and UTF-16 encoding are supported.
 
-Special class mglData is used for data encapsulation (@pxref{Data handling}). In addition to a safe creation and deletion of data arrays it includes functions for data processing (smoothing, differentiating, integrating, interpolating and so on) and reading of data files with automatic size determination. Class mglData can handle arrays with up to three dimensions (arrays which depend on up to 3 independent indexes @math{a_@{ijk@}}). Using an array with higher number of dimensions is not meaningful, because I do not know how it can be plotted. Data filling and modification may be done manually or by textual formulas.
+Special class mglData is used for data encapsulation (@pxref{Data processing}). In addition to a safe creation and deletion of data arrays it includes functions for data processing (smoothing, differentiating, integrating, interpolating and so on) and reading of data files with automatic size determination. Class mglData can handle arrays with up to three dimensions (arrays which depend on up to 3 independent indexes @math{a_@{ijk@}}). Using an array with higher number of dimensions is not meaningful, because I do not know how it can be plotted. Data filling and modification may be done manually or by textual formulas.
 
 There is fast evaluation of a textual mathematical expression (@pxref{Textual formulas}). It is based on string precompilation to tree-like code at the creation of class instance. At evaluation stage code performs only fast tree-walk and returns the value of the expression. In addition to changing data values, textual formulas are also used for drawing in @emph{arbitrary} curvilinear coordinates. A set of such curvilinear coordinates is limited only by user's imagination rather than a fixed list like: polar, parabolic, spherical, and so on.
 
@@ -255,9 +255,9 @@ Just set a negative value in @var{SetTickLen}. For example, use @code{gr->SetTic
 
 The MathGL library has interfaces for a set of languages. Most of them are based on the C interface via SWIG tool. There are Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, and Tcl interfaces. Also there is a Fortran interface which has a similar set of functions, but slightly different types of arguments (integers instead of pointers). These functions are marked as [C function].
 @c ++++++++++
-Some of the languages listed above support classes (like Python). For them, a special wrapper was written. These classes and functions are marked as (Python).
+Some of the languages listed above support classes (like C++ or Python). For them, a special wrapper was written.
 @c ++++++++++
-Finally, a special command language MGL was written for a faster access to C++ plotting functions. Corresponding scripts can be executed separately (by UDAV, mgl2png, mgl2eps and so on) or from the C++ code (@pxref{mglParse class}).
+Finally, a special command language MGL was written for a faster access to plotting functions. Corresponding scripts can be executed separately (by UDAV, mgl2png, mgl2eps and so on) or from the C/C++/Python/... code (@pxref{mglParse class}).
 
 @menu
 * C interface::
@@ -275,9 +275,9 @@ All C functions are described in the header file @code{#include <mgl/mgl_c.h>} a
 @item
 @code{HMGL} --- Pointer to class @code{mglGraph} (@pxref{MathGL core}).
 @item
-@code{HMDT} --- Pointer to class @code{mglData} (@pxref{Data handling}).
+@code{HMDT} --- Pointer to class @code{mglData} (@pxref{Data processing}).
 @item
-@code{HMPR} --- Pointer to class @code{mglParse} (@pxref{mglParse class})..
+@code{HMPR} --- Pointer to class @code{mglParse} (@pxref{mglParse class}).
 @end itemize
 These variables contain identifiers for graphics drawing objects and for the data objects.
 
@@ -293,7 +293,7 @@ There are 2 classes in:
 @item @code{mglGraph}
 -- provide most plotting functions (@pxref{MathGL core}).
 @item @code{mglData}
--- provide base data processing (@pxref{Data handling}). It have an additional feature to access data values. You can use a construct like this: @code{dat[i]=sth;} or @code{sth=dat[i]} where flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1). You can also import NumPy arrays as input arguments in Python: @code{mgl_dat = mglData(numpy_dat);}.
+-- provide base data processing (@pxref{Data processing}). It have an additional feature to access data values. You can use a construct like this: @code{dat[i]=sth;} or @code{sth=dat[i]} where flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1). You can also import NumPy arrays as input arguments in Python: @code{mgl_dat = mglData(numpy_dat);}.
 @c @item @code{mglParse} -- practically the same as C++ class @code{MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is denoted in the chapter title.
 @end itemize
 
@@ -350,9 +350,9 @@ result of code for making new data (@pxref{Make another data}) inside @{@}. For 
 Temporary variables can not be used as 1st argument for commands which create (return) the data (like @samp{new}, @samp{read}, @samp{hist} and so on).
 
 @item
-Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated as number if they were not redefined by user. Variables with suffixes are treated as numbers (@pxref{Suffixes}). Names defined by @ref{define} command are treated as number. Also results of formulas with sizes 1x1x1 are treated as number (for example, @samp{pi/dat.nx}).
+Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated as number if they were not redefined by user. Variables with suffixes are treated as numbers (@pxref{Data information}). Names defined by @ref{define} command are treated as number. Also results of formulas with sizes 1x1x1 are treated as number (for example, @samp{pi/dat.nx}).
 @end itemize
-Before the first using all variables must be defined with the help of commands, like, @ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} and so on (@pxref{Data create} and @ref{Make another data}).
+Before the first using all variables must be defined with the help of commands, like, @ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} and so on (see sections @ref{Data constructor}, @ref{Data filling} and @ref{Make another data}).
 
 Command may have several set of possible arguments (for example, @code{plot ydat} and @code{plot xdat ydat}). All command arguments for a selected set must be specified. However, some arguments can have default values. These argument are printed in [], like @code{plot ydat ['stl'='' zval=nan]}. At this, the record @code{[arg1 arg2 arg3 ...]} means @code{[arg1 [arg2 [arg3 ...]]]}, i.e. you can omit only tailing arguments if you agree with its default values. For example, @code{plot ydat '' 1} or @code{plot ydat ''} is correct, but @code{plot ydat 1} is incorrect (argument @code{'stl'} is missed).
 

@@ -23,9 +23,10 @@
 //		C interfaces
 //
 //-----------------------------------------------------------------------------
-int mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}
-void mgl_set_warn(HMGL gr, int code)	{	return gr->SetWarn(code);	}
 void mgl_buf_warn(HMGL gr, char *buf)	{	gr->Message = buf;	}
+int mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}
+void mgl_set_warn(HMGL gr, int code, const char *txt)
+{	gr->SetWarn(code,txt);	}
 void mgl_set_origin(HMGL gr, float x0, float y0, float z0)
 {	gr->SetOrigin(x0,y0,z0);	}
 void mgl_set_palette(HMGL gr, const char *colors)
@@ -57,7 +58,6 @@ void mgl_set_func(HMGL gr, const char *EqX,const char *EqY,const char *EqZ,const
 {	gr->SetFunc(EqX,EqY,EqZ,EqA);	}
 void mgl_set_coor(HMGL gr, int how)	{	gr->SetCoor(how);	}
 //-----------------------------------------------------------------------------
-float mgl_data_get_value(HCDT d, long i, long j, long k)	{	return _Da_(d).v(i,j,k);	}
 long mgl_data_get_nx(HCDT d)	{	return	_Da_(d).GetNx();	}
 long mgl_data_get_ny(HCDT d)	{	return	_Da_(d).GetNy();	}
 long mgl_data_get_nz(HCDT d)	{	return	_Da_(d).GetNz();	}
@@ -71,7 +71,9 @@ void mgl_set_bar_width(HMGL gr, float width)	{	gr->SetBarWidth(width);	}
 void mgl_set_origin_(uintptr_t *gr, float *x0, float *y0, float *z0)
 {	_GR_->SetOrigin(*x0,*y0,*z0);	}
 int mgl_get_warn_(uintptr_t *gr)	{	return _GR_->GetWarn();	}
-void mgl_set_warn_(uintptr_t *gr, int *code)	{	return _GR_->SetWarn(*code);	}
+void mgl_set_warn_(uintptr_t *gr, int *code, const char *txt, int l)
+{	char *s=new char[l+1];	memcpy(s,txt,l);	s[l]=0;
+	_GR_->SetWarn(*code, s);	delete []s;	}
 void mgl_set_palette_(uintptr_t *gr, const char *colors, int l)
 {	char *s=new char[l+1];	memcpy(s,colors,l);	s[l]=0;
 	_GR_->SetPalette(s);	delete []s;	}
@@ -112,8 +114,6 @@ void mgl_set_func_(uintptr_t *gr, const char *EqX,const char *EqY,const char *Eq
 void mgl_set_coor_(uintptr_t *gr, int *how)
 {	_GR_->SetCoor(*how);	}
 //-----------------------------------------------------------------------------
-float mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k)
-{	return _DA_(d)->v(*i,*j,*k);	}
 long mgl_data_get_nx_(uintptr_t *d)	{	return	_DA_(d)->GetNx();	}
 long mgl_data_get_ny_(uintptr_t *d)	{	return	_DA_(d)->GetNy();	}
 long mgl_data_get_nz_(uintptr_t *d)	{	return	_DA_(d)->GetNz();	}

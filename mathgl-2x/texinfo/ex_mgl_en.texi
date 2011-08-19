@@ -210,11 +210,11 @@ text 0 0 '\sqrt{\frac{\alpha^{\gamma^2}+\overset 1{\big\infty}}{\sqrt3{2+b}}}', 
 
 @menu
 * Array creation::              
-* Data changing::               
+* Change data::
 @end menu
 
 @c ------------------------------------------------------------------
-@node Array creation, Data changing, , Data handling
+@node Array creation, Change data, , Data handling
 @subsection Array creation
 
 One can put numbers into the data instance by several ways. Let us do it for sinus function:
@@ -288,8 +288,8 @@ or loaded from file.
 The only non-obvious thing here is using multidimensional arrays in C/C++, i.e. arrays defined like @code{float dat[40][30];}. Since, formaly this arrays element @code{dat[i]} can address the memory in arbitrary place you should use the proper function to convert such arrays to @code{mglData} object. For C++ this is functions like @code{mglData::Set(float **dat, int N1, int N2}. For C this is functions like @code{mgl_data_set_float2(HMDT d, const float **dat, int N1, int N2}. At this, you should keep in mind that @code{nx=N2} and @code{ny=N1} after conversion.
 
 @c ------------------------------------------------------------------
-@node Data changing, , Array creation, Data handling
-@subsection Data changing
+@node Change data, , Array creation, Data handling
+@subsection Change data
 
 MathGL has functions for data processing: differentiating, integrating, smoothing and so on. Let us consider some examples. The simplest ones are integration and differentiation. The direction in which operation will be performed is specified by textual string, which may contain symbols @samp{x}, @samp{y} or @samp{z}. For example, the call of @code{diff a 'x'} will differentiate data along @samp{x} direction; the call of @code{integrate a 'xy'} perform the double integration of data along @samp{x} and @samp{y} directions; the call of @code{diff2 a 'xyz'} will apply 3d Laplace operator to data and so on. Example of this operations on 2d array a=x*y is presented in code:
 @verbatim

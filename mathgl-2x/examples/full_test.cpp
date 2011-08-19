@@ -347,7 +347,7 @@ void smgl_qo2d(mglGraph *gr)
 	gr->Axis();	gr->Label('x', "\\i x");	gr->Label('y', "\\i z");
 	// now start beam tracing
 	gr->Fill(re,"exp(-48*x^2)");
-	a = mglQO2d(ham, re, im, r, 1, 30, &xx, &yy);
+	a = mglQO2d(ham, re, im, r, xx, yy, 1, 30);
 	gr->SetRange('c',0, 1);
 	gr->Dens(xx, yy, a, "wyrRk");
 	gr->FPlot("-x", "k|");

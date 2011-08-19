@@ -26,7 +26,7 @@ extern "C" {
 #endif
 /*****************************************************************************/
 int mgl_get_warn(HMGL gr);
-void mgl_set_warn(HMGL gr, int code);
+void mgl_set_warn(HMGL gr, int code, const char *text);
 void mgl_buf_warn(HMGL gr, char *buf);
 long mgl_use_graph(HMGL gr, int inc);
 void mgl_start_group(HMGL gr, const char *);
@@ -68,7 +68,7 @@ void mgl_copy_font(HMGL gr, HMGL gr_from);
 void mgl_restore_font(HMGL gr);
 /*****************************************************************************/
 int mgl_get_warn_(uintptr_t *gr);
-void mgl_set_warn_(uintptr_t *gr, int *code);
+void mgl_set_warn_(uintptr_t *gr, int *code, const char *text,int);
 long mgl_use_graph_(uintptr_t *gr, int *inc);
 void mgl_start_group_(uintptr_t *gr, const char *,int);
 void mgl_end_group_(uintptr_t *gr);

@@ -10,12 +10,11 @@ For compilation use: @code{g++ -o sample sample.cpp -lmgl}.
 #include <mgl/mgl_zb.h>
 int main()
 {
-    mglGraph *gr = new mglGraphZB;
+    mglGraph gr;
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // put sample code here
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    gr->ShowImage();    delete gr;
-    return 0;
+    gr.ShowImage(); return 0;
 }
 @end verbatim
 @strong{MGL code}

@@ -59,7 +59,7 @@ MathGL это ...
 
 Все надписи выводятся векторным шрифтом, что обеспечивает их хорошую масштабируемость и переносимость. Текст может содержать команды для большинства ТеХ-их символов, изменения положения (верхний и нижний индексы) и стиля шрифта внутри строки текста (@pxref{Font styles}). Текст меток поворачивается вместе с осями. На график можно вывести описание кривых (легенду) и поместить надпись в произвольную точку экрана или пустить ее вдоль кривой. Поддерживаются произвольные кодировки текста (с помощью стандартной функции @code{setlocale()}) и текст в кодировке UTF-16.
 
-Для представления данных используется специальный класс mglData (@pxref{Data handling}). Помимо безопасного создания и удаления массивов, он включает функции по их обработке (дифференцированию, интегрированию, сглаживанию, интерполяции и т.д.) и чтению текстового файла с автоматическим определением размеров данных. Класс mglData позволяет работать с массивами размерности вплоть до 3 (массивы, зависящие от трех независимых индексов @math{a_@{ijk@}}). Использование массивов с большим числом размерностей нецелесообразно, поскольку я не представляю, как их можно отобразить на экране. Заполнение или изменение значений массива можно выполнить как вручную, так и по формуле, заданной текстовой строкой.
+Для представления данных используется специальный класс mglData (@pxref{Data processing}). Помимо безопасного создания и удаления массивов, он включает функции по их обработке (дифференцированию, интегрированию, сглаживанию, интерполяции и т.д.) и чтению текстового файла с автоматическим определением размеров данных. Класс mglData позволяет работать с массивами размерности вплоть до 3 (массивы, зависящие от трех независимых индексов @math{a_@{ijk@}}). Использование массивов с большим числом размерностей нецелесообразно, поскольку я не представляю, как их можно отобразить на экране. Заполнение или изменение значений массива можно выполнить как вручную, так и по формуле, заданной текстовой строкой.
 
 Для @emph{быстрого} вычисления значения выражения, заданного текстовой строкой (@pxref{Textual formulas}). Он основан на компиляции строки в древоподобную структуру при создании экземпляра класса. На этапе вычисления происходит быстрый обход дерева с выдачей результата для конкретных значений переменных. Помимо изменения значений массива данных, текстовые формулы используются для рисования в @emph{произвольной} криволинейной системе координат. Набор таких координат ограничивается только фантазией пользователя, а не фиксированным числом (типа полярной, параболической, цилиндрической и т.д.).
 
@@ -271,7 +271,7 @@ C интерфейс является базовым для большинств
 @item
 @code{HMGL} --- Указатель на класс @code{mglGraph} (@pxref{MathGL core}).
 @item
-@code{HMDT} --- Указатель на класс @code{mglData} (@pxref{Data handling}).
+@code{HMDT} --- Указатель на класс @code{mglData} (@pxref{Data processing}).
 @item
 @code{HMPR} --- Указатель на класс @code{mglParse} (@pxref{mglParse class})..
 @end itemize
@@ -289,7 +289,7 @@ There are 2 classes in:
 @item @code{mglGraph}
 -- provide most plotting functions (@pxref{MathGL core}).
 @item @code{mglData}
--- provide base data processing (@pxref{Data handling}). It have an additional feature to access data values. You can use a construct like this: @code{dat[i]=sth;} or @code{sth=dat[i]} where flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1). You can also import NumPy arrays as input arguments in Python: @code{mgl_dat = mglData(numpy_dat);}.
+-- provide base data processing (@pxref{Data processing}). It have an additional feature to access data values. You can use a construct like this: @code{dat[i]=sth;} or @code{sth=dat[i]} where flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1). You can also import NumPy arrays as input arguments in Python: @code{mgl_dat = mglData(numpy_dat);}.
 @c @item @code{mglParse} -- practically the same as C++ class @code{MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is denoted in the chapter title.
 @end itemize
 
@@ -346,7 +346,7 @@ MathGL имеет встроенный скриптовый язык MGL для 
 Временные массивы не могут стоять в качестве первого аргумента команд, создающих массивы (например, @samp{new}, @samp{read}, @samp{hist} и т.д.).
 
 @item
-К скалярным переменным, кроме собственно чисел, относятся: специальные переменные @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1}, переменные с суффиксами (@pxref{Suffixes}), переменные определенные командой @ref{define}. Также массивы размером 1x1x1 считаются скалярами (например, @samp{pi/dat.nx}).
+К скалярным переменным, кроме собственно чисел, относятся: специальные переменные @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1}, переменные с суффиксами (@pxref{Data information}), переменные определенные командой @ref{define}. Также массивы размером 1x1x1 считаются скалярами (например, @samp{pi/dat.nx}).
 @end itemize
 Перед первым использованием все переменные должны быть определены с помощью команд, создающих массивы (@ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} и др., @pxref{Data create} и @ref{Make another data}).
 

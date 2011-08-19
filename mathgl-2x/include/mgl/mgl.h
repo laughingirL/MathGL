@@ -94,9 +94,9 @@ public:
 	/// Set FontSize by size in pt and picture DPI (default is 16 pt for dpi=72)
 	virtual void SetFontSizePT(float pt, int dpi=72){	SetFontSize(pt*27.f/dpi);	}
 	/// Set FontSize by size in centimeters and picture DPI (default is 0.56 cm = 16 pt)
-	inline void SetFontSizeCM(float cm, int dpi=72)	{	SetFontSizePT(cm*28.45f,dpi);	};
+	inline void SetFontSizeCM(float cm, int dpi=72)	{	SetFontSizePT(cm*28.45f,dpi);	}
 	/// Set FontSize by size in inch and picture DPI (default is 0.22 in = 16 pt)
-	inline void SetFontSizeIN(float in, int dpi=72)	{	SetFontSizePT(in*72.27f,dpi);	};
+	inline void SetFontSizeIN(float in, int dpi=72)	{	SetFontSizePT(in*72.27f,dpi);	}
 	/// Load font from file
 	inline void LoadFont(const char *name, const char *path=NULL)
 	{	mgl_load_font(gr, name, path);	}
@@ -113,7 +113,7 @@ public:
 	/// Get last warning code
 	inline int  GetWarn()			{	return mgl_get_warn(gr);}
 	/// Set warning code ant fill message
-	inline void SetWarn(int code)	{	mgl_set_warn(gr, code);	}
+	inline void SetWarn(int code, const char *info="")	{	mgl_set_warn(gr,code,info);	}
 	/// Set buffer for warning messages
 	inline void Message(char *buf)	{	mgl_buf_warn(gr, buf);	}
 
