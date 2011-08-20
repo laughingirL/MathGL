@@ -113,6 +113,14 @@ struct mglLight
 	mglColor c;		///< Color of light sources
 };
 //-----------------------------------------------------------------------------
+/// Structure for light source
+class mglCanvas;
+struct mglDrawReg
+{
+	int x1,x2,y1,y2;
+	void set(mglCanvas *gr, int nx, int ny, int m);
+};
+//-----------------------------------------------------------------------------
 /// Class contains all functionality for creating different mathematical plots
 class mglCanvas : public mglBase
 {
@@ -175,10 +183,6 @@ public:
 	int GetWidth()	{	return Width;	};
 	/// Get height of the image
 	int GetHeight()	{	return Height;	};
-	/// Set allowed drawing region (for multithreading, like subplots)
-	void SetDrawReg(int m, int n, int k);
-	/// Put drawing from other mglCanvas (for multithreading, like subplots)
-	void PutDrawReg(int m, int n, int k, const mglCanvas *gr);
 	/// Combine plots from 2 canvases. Result will be saved into this.
 	void Combine(const mglCanvas *gr);
 	/// Send graphical information to node id using MPI
@@ -403,16 +407,15 @@ protected:
 	float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'));	// position in pntN
 
 	void add_prim(mglPrim &a);	///< add primitive to list
-	void mark_draw(long p, char type, float size);
-	void arrow_draw(long p1, long p2, char st, float size);
-	virtual void line_draw(long p1, long p2);
-	virtual void trig_draw(long p1, long p2, long p3, bool anorm=false);
-	virtual void quad_draw(long p1, long p2, long p3, long p4);
-	virtual void pnt_draw(long p);
-	void glyph_draw(const mglPrim *P);
+	void mark_draw(long p, char type, float size, mglDrawReg *d);
+	void arrow_draw(long p1, long p2, char st, float size, mglDrawReg *d);
+	virtual void line_draw(long p1, long p2, mglDrawReg *d);
+	virtual void trig_draw(long p1, long p2, long p3, bool anorm, mglDrawReg *d);
+	virtual void quad_draw(long p1, long p2, long p3, long p4, mglDrawReg *d);
+	virtual void pnt_draw(long p, mglDrawReg *d);
+	void glyph_draw(const mglPrim *P, mglDrawReg *d);
 	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool alpha=false);
 	bool IsSame(const mglPrim &pr,float wp,mglColor cp,int st);
-	void Draw(const mglPrim &p);
 
 private:
 	float _tetx,_tety,_tetz;		// extra angles
@@ -435,7 +438,7 @@ private:
 	/// Combine colors in 2 plane.
 	void combine(unsigned char *c1,unsigned char *c2);
 	/// Fast drawing of line between 2 points
-	void fast_draw(long p1, long p2);
+	void fast_draw(long p1, long p2, mglDrawReg *d);
 
 	/// Additionally scale points \a p for positioning in image
 	void PostScale(mglPoint &p);
@@ -448,9 +451,25 @@ private:
 	void put_desc(void *fp, bool gz, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf);
 	mglColor put_color(const mglPrim &p);
 
-	void glyph_fill(const mglPnt &p, float f, int nt, const short *trig);
-	void glyph_wire(const mglPnt &p, float f, int nl, const short *line);
-	void glyph_line(const mglPnt &p, float f, bool solid);
+	void glyph_fill(const mglPnt &p, float f, int nt, const short *trig, mglDrawReg *d);
+	void glyph_wire(const mglPnt &p, float f, int nl, const short *line, mglDrawReg *d);
+	void glyph_line(const mglPnt &p, float f, bool solid, mglDrawReg *d);
+	void pxl_combine(unsigned long id, unsigned long n);
+	void pxl_memcpy(unsigned long id, unsigned long n);
+	void pxl_backgr(unsigned long id, unsigned long n);
+	void pxl_primdr(unsigned long id, unsigned long n);
+	/// Put drawing from other mglCanvas (for multithreading, like subplots)
+	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);
 };
+//-----------------------------------------------------------------------------
+struct mglThreadG
+{
+	mglCanvas *gr;		// grapher
+	void (mglCanvas::*f)(unsigned long i, unsigned long n);
+	unsigned id;		// thread id
+	unsigned long n;	// total number of iteration
+};
+/// Start several thread for the task
+void mglStartThread(void (mglCanvas::*func)(unsigned long i, unsigned long n), mglCanvas *gr, unsigned long n);
 //-----------------------------------------------------------------------------
 #endif

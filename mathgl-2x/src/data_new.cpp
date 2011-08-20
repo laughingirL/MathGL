@@ -196,7 +196,7 @@ uintptr_t mgl_data_subdata_ext_(uintptr_t *d, uintptr_t *xx, uintptr_t *yy, uint
 //-----------------------------------------------------------------------------
 void *mgl_column(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	mglFormula *f = (mglFormula *)t->v;
 	register long i,j, nx=t->p[0];
 	mreal *b=t->a, var[MGL_VS];
@@ -227,7 +227,7 @@ uintptr_t mgl_data_column_(uintptr_t *d, const char *eq,int l)
 //-----------------------------------------------------------------------------
 void *mgl_resize(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j,k,i0, nx=t->p[0], ny=t->p[1];
 	long n1=t->p[3],n2=t->p[4],n3=t->p[5];
 	mreal *b=t->a;
@@ -263,7 +263,7 @@ uintptr_t mgl_data_resize_box_(uintptr_t *d, int *mx,int *my,int *mz, float *x1,
 //-----------------------------------------------------------------------------
 void *mgl_combine(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i0, nx=t->p[0];
 	mreal *b=t->a;
 	const mreal *c=t->b, *d=t->c;
@@ -290,7 +290,7 @@ uintptr_t mgl_data_combine_(uintptr_t *a, uintptr_t *b)
 //-----------------------------------------------------------------------------
 void *mgl_sum_z(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j, nz=t->p[2], nn=t->n;
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -303,7 +303,7 @@ void *mgl_sum_z(void *par)
 }
 void *mgl_sum_y(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j,k, nx=t->p[0], ny=t->p[1], nn=t->n;
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -317,7 +317,7 @@ void *mgl_sum_y(void *par)
 }
 void *mgl_sum_x(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j,k, nx=t->p[0], nn=t->n;
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -365,7 +365,7 @@ uintptr_t mgl_data_sum_(uintptr_t *d, const char *dir,int l)
 //-----------------------------------------------------------------------------
 void *mgl_max_z(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j, nz=t->p[2], nn=t->n;
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -375,7 +375,7 @@ void *mgl_max_z(void *par)
 }
 void *mgl_max_y(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j,k, nx=t->p[0], ny=t->p[1], nn=t->n;
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -388,7 +388,7 @@ void *mgl_max_y(void *par)
 }
 void *mgl_max_x(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j,k, nx=t->p[0], nn=t->n;
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -435,7 +435,7 @@ uintptr_t mgl_data_max_dir_(uintptr_t *d, const char *dir,int l)
 //-----------------------------------------------------------------------------
 void *mgl_min_z(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j, nz=t->p[2], nn=t->n;
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -445,7 +445,7 @@ void *mgl_min_z(void *par)
 }
 void *mgl_min_y(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j,k, nx=t->p[0], ny=t->p[1], nn=t->n;
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -458,7 +458,7 @@ void *mgl_min_y(void *par)
 }
 void *mgl_min_x(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j,k, nx=t->p[0], nn=t->n;
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -505,7 +505,7 @@ uintptr_t mgl_data_min_dir_(uintptr_t *d, const char *dir,int l)
 //-----------------------------------------------------------------------------
 void *mgl_mom_z(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j,k,ii;
 	long nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
 	mreal *b=t->a, i0,i1,x,y,z;
@@ -527,7 +527,7 @@ void *mgl_mom_z(void *par)
 }
 void *mgl_mom_y(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j,k,ii;
 	long nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
 	mreal *b=t->a, i0,i1,x,y,z;
@@ -549,7 +549,7 @@ void *mgl_mom_y(void *par)
 }
 void *mgl_mom_x(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j,k,ii;
 	long nx=t->p[0], ny=t->p[1], nz=t->p[2], nn=t->n;
 	mreal *b=t->a, i0,i1,x,y,z;
@@ -592,7 +592,7 @@ uintptr_t mgl_data_momentum_(uintptr_t *d, char *dir, const char *how, int,int l
 //-----------------------------------------------------------------------------
 void *mgl_eval(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i, nx=t->p[0], ny=t->p[1], nz=t->p[2], n1=t->p[3], nn=t->n;
 	const mreal *a=t->b, *ii=t->c, *jj=t->d, *kk=t->e;
 	mreal *b=t->a,x,y,z;
@@ -1012,7 +1012,7 @@ uintptr_t mgl_transform_(uintptr_t *re, uintptr_t *im, const char *tr, int l)
 //-----------------------------------------------------------------------------
 void *mgl_eqmul(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i, nx=t->p[0];
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -1044,7 +1044,7 @@ void mgl_data_mul_num(HMDT d, float a)
 //-----------------------------------------------------------------------------
 void *mgl_eqdiv(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i, nx=t->p[0];
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -1076,7 +1076,7 @@ void mgl_data_div_num(HMDT d, float a)
 //-----------------------------------------------------------------------------
 void *mgl_eqadd(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i, nx=t->p[0];
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -1108,7 +1108,7 @@ void mgl_data_add_num(HMDT d, float a)
 //-----------------------------------------------------------------------------
 void *mgl_eqsub(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i, nx=t->p[0];
 	mreal *b=t->a;
 	const mreal *a=t->b;
@@ -1147,7 +1147,7 @@ void mgl_data_div_num_(uintptr_t *d, float *b)		{	mgl_data_div_num(_DT_, *b);	}
 void mgl_data_add_num_(uintptr_t *d, float *b)		{	mgl_data_add_num(_DT_, *b);	}
 void mgl_data_sub_num_(uintptr_t *d, float *b)		{	mgl_data_sub_num(_DT_, *b);	}
 //-----------------------------------------------------------------------------
-void mgl_hist_p(mglThread *t,mreal *a)
+void mgl_hist_p(mglThreadD *t,mreal *a)
 {
 	register long i,j,n=t[0].p[0];
 	mreal *b;
@@ -1160,7 +1160,7 @@ void mgl_hist_p(mglThread *t,mreal *a)
 }
 void *mgl_hist_1(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,k, nn=t->n, n = t->p[0];
 	mreal *b=new mreal[n], *v=(mreal *)t->v;
 	const mreal *a=t->b, *c=t->c;
@@ -1173,7 +1173,7 @@ void *mgl_hist_1(void *par)
 }
 void *mgl_hist_2(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,k, nn=t->n, n = t->p[0];
 	long ns=t->p[1], nx=t->p[2], ny=t->p[3], nz=t->p[4];
 	mreal *b=new mreal[n], *v=(mreal *)t->v, f,w=1, x,y,z, d=1./ns;

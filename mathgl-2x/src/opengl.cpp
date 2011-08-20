@@ -16,7 +16,7 @@ HMGL mgl_create_graph_gl()
 uintptr_t mgl_create_graph_gl_()
 {	return uintptr_t(new mglCanvasGL);	}
 //-----------------------------------------------------------------------------
-mglCanvasGL::mglCanvasGL() : mglCanvas(100,100)	{}
+mglCanvasGL::mglCanvasGL() : mglCanvas(1,1)	{}
 //-----------------------------------------------------------------------------
 mglCanvasGL::~mglCanvasGL(){}
 //-----------------------------------------------------------------------------
@@ -28,9 +28,29 @@ void mglCanvasGL::Finish()
 		glVertexPointer(3, GL_FLOAT, sizeof(mglPnt), &(Pnt[0].x));
 		glNormalPointer(GL_FLOAT, sizeof(mglPnt), &(Pnt[0].u));
 		glColorPointer(4, GL_FLOAT, sizeof(mglPnt), &(Pnt[0].r));
-		for(unsigned long i=0;i<Prm.size();i++)	Draw(Prm[i]);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_COLOR_ARRAY);
+
+		int pdef=PDef;
+		float ss=pPos, ww=PenWidth;
+		mglPrim p;
+		for(unsigned long i=0;i<Prm.size();i++)
+		{
+			p=Prm[i];	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
+			switch(p.type)
+			{
+			case 0:	mark_draw(p.n1,p.n4,p.s,0);	break;
+			case 1:	line_draw(p.n1,p.n2,0);		break;
+			case 2:	trig_draw(p.n1,p.n2,p.n3,true,0);	break;
+			case 3:	quad_draw(p.n1,p.n2,p.n3,p.n4,0);	break;
+			case 4:	glyph_draw(&p,0);	break;
+			}
+		}
+		PDef=pdef;	pPos=ss;	PenWidth=ww;
 	}
 	glFinish();
+//	glBegin(GL_LINES);	glColor3f(0,0,1);	glVertex2f(0.1,0.1);	glVertex2f(0.9,0.9);	glEnd();
 }
 //-----------------------------------------------------------------------------
 bool mglCanvasGL::Alpha(bool enable)
@@ -138,8 +158,7 @@ void mglCanvasGL::Fog(float , float)
 //-----------------------------------------------------------------------------
 void mglCanvasGL::Clf(mglColor Back)
 {
-	Fog(0);
-	if(Back==NC)	Back=mglColor(1,1,1);
+	mglCanvas::Clf(Back);
 //	glDepthFunc(GL_LESS);
 	glDepthFunc(GL_GREATER);
 //	back[0]=Back.r;	back[1]=Back.g;	back[2]=Back.b;
@@ -147,24 +166,24 @@ void mglCanvasGL::Clf(mglColor Back)
 	glClearDepth(-10.);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_COLOR_MATERIAL);
+
+	glMatrixMode(GL_MODELVIEW);//GL_MODELVIEW GL_VIEWPORT GL_PROJECTION
+	glLoadIdentity();
+	glScaled(2,2,1.5);
+	glTranslated(-0.5,-0.5,-0.5);
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::SetPen(char style,float width)
+void mglCanvasGL::set_pen(unsigned style,float width)
 {
 	if(style==0)	return;
-	if(style!='-')	switch(style)
+	if(style!=0xffff)
 	{
-	case '|': glLineStipple(int(width),0xff00);	break;
-	case ';': glLineStipple(int(width),0xf0f0);	break;
-	case ':': glLineStipple(int(width),0x8888);	break;
-	case 'j': glLineStipple(int(width),0xfe10);	break;
-	case 'i': glLineStipple(int(width),0xe4e4);	break;
-	case ' ': glLineStipple(int(width),0x0000);	break;
+		glEnable(GL_LINE_STIPPLE);
+		glLineStipple(int(width+0.5),style);
 	}
+	else	glDisable(GL_LINE_STIPPLE);
 	if(width>0)		glLineWidth(width);
 	else			glLineWidth(1);
-	if(style=='-')	glDisable(GL_LINE_STIPPLE);
-	else			glEnable(GL_LINE_STIPPLE);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasGL::EndFrame()
@@ -175,8 +194,7 @@ void mglCanvasGL::EndFrame()
 //-----------------------------------------------------------------------------
 int mglCanvasGL::NewFrame()
 {
-	Clf();
-	Identity();
+	Clf();	Identity();
 	glNewList(CurFrameId,GL_COMPILE);
 	CurFrameId++;
 	return CurFrameId-1;
@@ -198,30 +216,39 @@ unsigned char **mglCanvasGL::GetRGBLines(long &width, long &height, unsigned cha
 	return p;
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::trig_draw(long k1, long k2, long k3, bool )
+void mglCanvasGL::trig_draw(long k1, long k2, long k3, bool, mglDrawReg *)
 {
+	if(k1<0 || k2<0 || k3<0)	return;
 	glBegin(GL_TRIANGLES);
 	glArrayElement(k1);	glArrayElement(k2);	glArrayElement(k3);
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::quad_draw(long k1, long k2, long k3, long k4)
+void mglCanvasGL::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *)
 {
+	if(k1<0 || k2<0 || k3<0 || k4<0)	return;
 	glBegin(GL_QUADS);
 	glArrayElement(k1);	glArrayElement(k2);
-	glArrayElement(k3);	glArrayElement(k4);
+	glArrayElement(k4);	glArrayElement(k3);
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::line_draw(long k1, long k2)
+void mglCanvasGL::line_draw(long k1, long k2, mglDrawReg *)
 {
+	if(k1<0 || k2<0 || PDef==0)	return;
+	mglPnt p1=Pnt[k1], p2=Pnt[k2];
+/*	unsigned long pdef = PDef*0x10001;
+	pdef = pdef << (int(100*pPos+0.5)%16);
+	set_pen(pdef&0xffff,PenWidth);*/
+	set_pen(PDef,PenWidth);
 	glBegin(GL_LINES);
 	glArrayElement(k1);	glArrayElement(k2);
 	glEnd();
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::pnt_draw(long k1)
+void mglCanvasGL::pnt_draw(long k1, mglDrawReg *)
 {
+	if(k1<0)	return;
 	glBegin(GL_POINTS);
 	glArrayElement(k1);
 	glEnd();

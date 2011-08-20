@@ -199,20 +199,21 @@ float mglCanvas::GetOrgZ(char dir)
 //-----------------------------------------------------------------------------
 //	Put primitives
 //-----------------------------------------------------------------------------
-#define MGL_MARK_PLOT	if(Quality&4)	mark_draw(p,type,size?size:MarkSize);else	\
+#define MGL_MARK_PLOT	if(Quality&4)	mark_draw(p,type,size?size:MarkSize,&d);else	\
 						{	mglPrim a;	a.w = fabs(PenWidth);	a.s = size?size:MarkSize;	\
 							a.n1 = p;	a.n4 = type;	a.z = Pnt[p].z;	add_prim(a);	}
 void mglCanvas::mark_plot(long p, char type, float size)
 {
 	if(p<0 || isnan(Pnt[p].x))	return;
 	long pp=p;
+	mglDrawReg d;	d.set(this,1,1,0);
 	if(size>=0)	size *= MarkSize;
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p = ProjScale(i, pp);	MGL_MARK_PLOT	}
 	else	{	MGL_MARK_PLOT	}
 }
 //-----------------------------------------------------------------------------
-#define MGL_LINE_PLOT	if(Quality&4)	line_draw(p1,p2);else	\
+#define MGL_LINE_PLOT	if(Quality&4)	line_draw(p1,p2,&dd);else	\
 						{	mglPrim a(1);	a.z = (Pnt[p1].z+Pnt[p2].z)/2;	\
 							if(pw>1)	a.z += pw-1;	a.n3=PDef;	a.s = pPos;	\
 							a.n1 = p1;	a.n2 = p2;	a.w = pw;	add_prim(a);	}
@@ -220,30 +221,32 @@ void mglCanvas::line_plot(long p1, long p2)
 {
 	if(PDef==0)	return;
 	if(p1<0 || p2<0 || isnan(Pnt[p1].x) || isnan(Pnt[p2].x))	return;
+	mglDrawReg dd;	dd.set(this,1,1,0);
 	long pp1=p1,pp2=p2;
 	float pw = fabs(PenWidth),d;
+	d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		MGL_LINE_PLOT	}
 	else	{	MGL_LINE_PLOT	}
-	d = hypot(Pnt[p1].x-Pnt[p2].x, Pnt[p1].y-Pnt[p2].y);
 	pPos = fmod(pPos+d/pw/1.5, 16);
 }
 //-----------------------------------------------------------------------------
-#define MGL_TRIG_PLOT	if(Quality&4)	trig_draw(p1,p2,p3,true);else	\
+#define MGL_TRIG_PLOT	if(Quality&4)	trig_draw(p1,p2,p3,true,&d);else	\
 						{	mglPrim a(2);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	\
 							a.z = (Pnt[p1].z+Pnt[p2].z+Pnt[p3].z)/3;	add_prim(a);}
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
 	if(p1<0 || p2<0 || p3<0 || isnan(Pnt[p1].x) || isnan(Pnt[p2].x) || isnan(Pnt[p3].x))	return;
 	long pp1=p1,pp2=p2,pp3=p3;
+	mglDrawReg d;	d.set(this,1,1,0);
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	MGL_TRIG_PLOT	}
 	else	{	MGL_TRIG_PLOT	}
 }
 //-----------------------------------------------------------------------------
-#define MGL_QUAD_PLOT	if(Quality&4)	quad_draw(p1,p2,p3,p4);else	\
+#define MGL_QUAD_PLOT	if(Quality&4)	quad_draw(p1,p2,p3,p4,&d);else	\
 						{	mglPrim a(3);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;	\
 							a.z = (Pnt[p1].z+Pnt[p2].z+Pnt[p3].z+Pnt[p4].z)/4;	\
 							add_prim(a);	}
@@ -254,6 +257,7 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 	if(p3<0 || isnan(Pnt[p3].x))	{	trig_plot(p1,p2,p4);	return;	}
 	if(p4<0 || isnan(Pnt[p4].x))	{	trig_plot(p1,p2,p3);	return;	}
 	long pp1=p1,pp2=p2,pp3=p3,pp4=p4;
+	mglDrawReg d;	d.set(this,1,1,0);
 	if(TernAxis&4) for(int i=0;i<4;i++)
 	{	p1 = ProjScale(i, pp1);	p2 = ProjScale(i, pp2);
 		p3 = ProjScale(i, pp3);	p4 = ProjScale(i, pp4);
@@ -338,25 +342,9 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, float col)
 	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), -1, 0);
 	a.n3 = s;	a.n4 = j;	a.z = B.z;
 	if(a.n1<0)	return;
-	if(Quality&4)	glyph_draw(&a);
+	mglDrawReg d;	d.set(this,1,1,0);
+	if(Quality&4)	glyph_draw(&a,&d);
 	else	add_prim(a);
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::Draw(const mglPrim &p)
-{
-	int pdef=PDef;
-	float ss=pPos, ww=PenWidth;
-	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
-	switch(p.type)
-	{
-	case 0:	mark_draw(p.n1,p.n4,p.s);	break;
-	case 1:	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
-		line_draw(p.n1,p.n2);	break;
-	case 2:	trig_draw(p.n1,p.n2,p.n3,true);	break;
-	case 3:	quad_draw(p.n1,p.n2,p.n3,p.n4);		break;
-	case 4:	glyph_draw(&p);		break;
-	}
-	PDef=pdef;	pPos=ss;	PenWidth=ww;
 }
 //-----------------------------------------------------------------------------
 //	Plot positioning functions

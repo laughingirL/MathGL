@@ -117,7 +117,10 @@ enum{	// types of predefined curvelinear coordinate systems
 	mglElliptic,
 	mglToroidal,
 	mglBispherical,
-	mglBipolar
+	mglBipolar,
+	mglLogLog,
+	mglLogX,
+	mglLogY
 };
 //-----------------------------------------------------------------------------
 // types of drawing
@@ -181,50 +184,19 @@ enum{	// Codes for warnings/messages
 //#define mgl_realloc(T,o,no,nn) {T *_tmp = new T[nn]; memcpy(_tmp,o,(no)*sizeof(T)); delete []o; o=_tmp;}
 //-----------------------------------------------------------------------------
 #ifdef __cplusplus
-template<typename T> int mgl_cmp(const void *x, const void *y)
-{
-	const T *a=(const T*)x, *b=(const T*)y;
-	return *a>*b ? -1:1;
-}
-template<typename T> class mglArray {
-public:
-	mglArray()	{	dat = 0;	len=pos=0;	}
-	~mglArray()	{	free(dat); }
-	mglArray(const mglArray<T>& A)	{	*this=A;	}
-	mglArray<T>& operator= (const mglArray<T>& A)
-	{	free(dat);	len=A.len;	pos=A.pos;	dat=(T*)realloc(0,sizeof(T));
-		memccpy(dat,A.dat,len*sizeof(T));	return *this;	}
-	T const& operator[](int i) const{	return dat[i]; }
-	T&       operator[](int i)		{	return dat[i]; }
-	long size() const	{	return pos;	}
-	void erase(long p)	{	if(p>0 && p<=len)	pos = p-1;	}
-	T const& pop_back()
-	{	T const&d=dat[pos];	if(pos>0)	pos--;	return d;	}
-	void push_back(T const& d)
-	{	reserve(pos+2-len);	dat[pos]=d;	pos++;	}
-	void reserve(long d)
-	{	if(d>0)	{	len+=d;	dat=(T*)realloc(dat,len*sizeof(T));	}	}
-	void clear()
-	{	pos=0;	len=1;	if(dat)	free(dat);	dat = (T*)realloc(0,sizeof(T));	}
-	void sort()
-	{	qsort(dat,pos,sizeof(T),mgl_cmp<T>);	}
-private:
-	long len, pos;
-	T*  dat;
-};
 //-----------------------------------------------------------------------------
-struct mglThread
+struct mglThreadD
 {
 	mreal *a;		// float* array with parameters or results
-	const mreal *b,*c,*d,*e;	// float* array with parameters
-	const long *p;		// long* array with parameters
+	const mreal *b,*c,*d,*e;	// float* arrays with parameters
+	const long *p;	// long* array with parameters
 	void *v;		// pointer to data/grapher
 	int id;			// thread id
 	long n;			// total number of iteration
 	char *s;
 };
 /// Start several thread for the task
-void mglStartThread(void *(*func)(void *), void (*post)(mglThread *,mreal *), long n,
+void mglStartThread(void *(*func)(void *), void (*post)(mglThreadD *,mreal *), long n,
 					mreal *a=0, const mreal *b=0, const mreal *c=0, const long *p=0,
 					void *v=0, const mreal *d=0, const mreal *e=0, char *s=0);
 void mglSetNumThr(int n=0);	///< Set number of thread for plotting and data handling

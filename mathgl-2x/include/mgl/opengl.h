@@ -27,31 +27,31 @@ class mglCanvasGL : public mglCanvas
 {
 public:
 	mglCanvasGL();
-	virtual ~mglCanvasGL();
+	~mglCanvasGL();
 
-	virtual void SetQuality(int =0)	{	Quality=2;	}
-	virtual void Finish();
-	virtual void SetSize(int ,int )	{}
-	virtual void View(float tetX,float tetY,float tetZ);
-	virtual int NewFrame();
-	virtual void EndFrame();
+	void SetQuality(int =0)	{	Quality=2;	}
+	void Finish();
+	void SetSize(int ,int )	{}
+	void View(float tetX,float tetY,float tetZ);
+	int NewFrame();
+	void EndFrame();
 
-	virtual bool Alpha(bool enable);
-	virtual void Fog(float d, float dz=0.25);
-	virtual bool Light(bool enable);
-	virtual void Light(int n, bool enable);
-	virtual void AddLight(int n,mglPoint p, char c='w', float bright=0.5, bool infty=true, float ap=0);
-	virtual void Clf(mglColor Back=WC);
+	bool Alpha(bool enable);
+	void Fog(float d, float dz=0.25);
+	bool Light(bool enable);
+	void Light(int n, bool enable);
+	void AddLight(int n,mglPoint p, char c='w', float bright=0.5, bool infty=true, float ap=0);
+	void Clf(mglColor Back=WC);
 
 protected:
-	virtual void line_draw(long p1, long p2);
-	virtual void trig_draw(long p1, long p2, long p3, bool anorm=false);
-	virtual void quad_draw(long p1, long p2, long p3, long p4);
-	virtual void pnt_draw(long p);
+	void line_draw(long p1, long p2, mglDrawReg *d);
+	void trig_draw(long p1, long p2, long p3, bool anorm, mglDrawReg *d);
+	void quad_draw(long p1, long p2, long p3, long p4, mglDrawReg *d);
+	void pnt_draw(long p, mglDrawReg *d);
 
-	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
-	virtual void LightScale();
-	virtual void SetPen(char style,float width);
+	unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool solid=true);
+	void LightScale();
+	void set_pen(unsigned style,float width);
 };
 extern "C" {
 #endif

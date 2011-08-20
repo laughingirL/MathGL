@@ -2,8 +2,7 @@
 1. Triangulation
 2. Axis
 	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
-3. Add GLUT window
-4. Use std::vector in parser
+3. Use std::vector in parser
 
 ============= NEW  =============
 
@@ -21,9 +20,8 @@
 12. Cones() -- like Bars() but by Cone()
 13. MPI_Send(), MPI_Recv()
 14. Add diffusive light (no dependence of normals but have direction)
-15. SetCoor() -- add log-log, log-x, log-y predefined coordinates
-16. Normal size of bars for first and last one (Bars, Barh,BoxPlot,Candle,Boxs, ...)
-17. Use Hershey as built-in font ???
+15. Normal size of bars for first and last one (Bars, Barh,BoxPlot,Candle,Boxs, ...)
+16. Use Hershey as built-in font ???
 
 ============= UNSURE ===========
 
@@ -41,7 +39,7 @@
 ============= DOCS =============
 
 1. Write "Quick start" userguide
-2. FAQ about sizes of plot (parametrical, or Min*Max)
+2. FAQ about sizes of plot (parametrical+inverted, or Min*Max)
 3. FAQ about MinGW -- http://www.mingw.org/wiki/FAQ
 4. MGL docs -- text what formulas are applicable for scalars too.
 5.Sample about pthread using.
@@ -60,6 +58,7 @@
 	* user level -- SetDrawReg(), PutDrawReg()
 	* MPI level -- Combine()
 	* MathGL level -- pthread in mglData, ???
+18. SetCoor() -- add log-log, log-x, log-y predefined coordinates
 
 ============= BUGS =============
 

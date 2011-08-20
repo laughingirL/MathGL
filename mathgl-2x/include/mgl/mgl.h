@@ -346,11 +346,6 @@ public:
 	/// Get subplot id
 	inline int GetSplId(long x,long y)	{	return mgl_get_spl_id(gr,x,y);	}
 
-	/// Set allowed drawing region (for multithreading, like subplots)
-	inline void SetDrawReg(int m, int n, int k)	{	mgl_set_draw_reg(gr,m,n,k);	}
-	/// Put drawing from other mglCanvas (for multithreading, like subplots)
-	inline void PutDrawReg(int m, int n, int k, const mglGraph *g)
-	{	mgl_put_draw_reg(gr,m,n,k,g->gr);	}
 	/// Combine plots from 2 canvases. Result will be saved into this
 	inline void Combine(const mglGraph *g)	{	mgl_combine_gr(gr,g->gr);	}
 	/// Send graphical information to node id using MPI

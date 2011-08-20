@@ -35,7 +35,7 @@ struct mgl_pde_ham
 };
 void *mgl_pde_hprep(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	mgl_pde_ham *f = (mgl_pde_ham *)t->v;
 	mglFormula *eqs = f->eqs;
 	register long i,j,i0, nx=2*f->nx, ny=2*f->ny;
@@ -270,7 +270,7 @@ struct mgl_qo2d_ham
 };
 void *mgl_qo2d_hprep(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	mgl_qo2d_ham *f = (mgl_qo2d_ham *)t->v;
 	mgl_ap *ra = f->ra;
 	mglFormula *h = f->h;
@@ -404,7 +404,7 @@ HMDT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray_dat, flo
 //-----------------------------------------------------------------------------
 void *mgl_jacob2(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j,i0,ip,im,jp,jm, nx=t->p[0], ny=t->p[1];
 	mreal *r=t->a;
 	const mreal *x=t->b, *y=t->c;
@@ -449,7 +449,7 @@ HMDT mgl_jacobian_2d(HCDT x, HCDT y)
 //-----------------------------------------------------------------------------
 void *mgl_jacob3(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i,j,k,i0,ip,im,jp,jm,kp,km, nx=t->p[0], ny=t->p[1], nz=t->p[2];
 	mreal *r=t->a;
 	const mreal *x=t->b, *y=t->c, *z=t->d;

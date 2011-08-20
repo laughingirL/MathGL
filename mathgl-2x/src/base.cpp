@@ -431,16 +431,16 @@ void mglBase::SetFunc(const char *EqX,const char *EqY,const char *EqZ,const char
 {
 	if(fa)	delete fa;	if(fx)	delete fx;
 	if(fy)	delete fy;	if(fz)	delete fz;
-	if(EqX && EqX[0] && (EqX[0]!='x' || EqX[1]!=0))
+	if(EqX && *EqX && (EqX[0]!='x' || EqX[1]!=0))
 		fx = new mglFormula(EqX);
 	else	fx = 0;
-	if(EqY && EqY[0] && (EqY[0]!='y' || EqY[1]!=0))
+	if(EqY && *EqY && (EqY[0]!='y' || EqY[1]!=0))
 		fy = new mglFormula(EqY);
 	else	fy = 0;
-	if(EqZ && EqZ[0] && (EqZ[0]!='z' || EqZ[1]!=0))
+	if(EqZ && *EqZ && (EqZ[0]!='z' || EqZ[1]!=0))
 		fz = new mglFormula(EqZ);
 	else	fz = 0;
-	if(EqA && EqA[0] && ((EqA[0]!='c' && EqA[0]!='a') || EqA[1]!=0))
+	if(EqA && *EqA && ((EqA[0]!='c' && EqA[0]!='a') || EqA[1]!=0))
 		fa = new mglFormula(EqA);
 	else	fa = 0;
 	RecalcBorder();
@@ -480,6 +480,9 @@ void mglBase::SetCoor(int how)
 			"sinh(x)/(cosh(x)-cos(y))");	break;
 	case mglBipolar:
 		SetFunc("sinh(x)/(cosh(x)-cos(y))","sin(y)/(cosh(x)-cos(y))");	break;
+	case mglLogLog:	SetFunc("lg(x)","lg(y)");	break;
+	case mglLogX:	SetFunc("lg(x)","");	break;
+	case mglLogY:	SetFunc("","lg(y)");	break;
 	default:	SetFunc(0,0);	break;
 	}
 }
@@ -646,7 +649,9 @@ float mglBase::NextColor(long &id)
 //-----------------------------------------------------------------------------
 char mglBase::SetPenPal(const char *p, long *Id)
 {
-	char mk=0, pp=0;
+	char mk=0;
+	PDef = 0xffff;	// reset to solid line
+	last_style[1]='-';
 
 	Arrow1 = Arrow2 = 0;	PenWidth = 1;
 	if(p && *p!=0)
@@ -674,7 +679,7 @@ char mglBase::SetPenPal(const char *p, long *Id)
 				case ' ': PDef = 0x0000;	break;
 				default:  PDef = 0xffff;	break;	// '-'
 				}
-				pp = last_style[1]=p[i];
+				last_style[1]=p[i];
 			}
 			else if(strchr(mrk,p[i]))	mk = p[i];
 			else if(strchr(wdh,p[i]))
@@ -701,15 +706,13 @@ char mglBase::SetPenPal(const char *p, long *Id)
 			if(mk=='*')	mk = 'Y';
 		}
 	}
-	last_style[3]=mk;	SetPen(pp, PenWidth);
+	last_style[3]=mk;
 	long tt, n;
 	tt = AddTexture(p,-1);	n=Txt[tt].n;
 	CDef = tt+((n+CurrPal-1)%n+0.5)/n;
 	if(Id)	*Id=long(tt)*256+(n+CurrPal-1)%n;
 	return mk;
 }
-//-----------------------------------------------------------------------------
-void mglBase::SetPen(char ,float )	{}
 //-----------------------------------------------------------------------------
 float mglBase::GetA(float a)
 {

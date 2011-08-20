@@ -181,7 +181,6 @@
 		<Unit filename="src/tex_table.cpp" />
 		<Unit filename="src/vect.cpp" />
 		<Unit filename="src/volume.cpp" />
-		<Unit filename="src/window.cpp" />
 		<Unit filename="todo.txt" />
 		<Unit filename="utils/mglconv.cpp">
 			<Option target="mglconv" />
@@ -198,6 +197,7 @@
 		<Unit filename="widgets/glut.cpp">
 			<Option target="GLUT" />
 		</Unit>
+		<Unit filename="widgets/window.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -33,22 +33,39 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr)
 {
-//	gr->SubPlot(1,1,0,"<>^_");
-//	gr->SubPlot(1,1,0,"");
-	gr->SetRanges(-1, 1, -1, 1, 0, 1);	gr->Light(true);
-	gr->StickPlot(3, 0, 40, 30);		gr->Axis("xyz_");
-	gr->FSurf("exp(-10*y^2-6*x^2)");
-	gr->Puts(mglPoint(0.2, 0, 1.2), "z=0", "", -2);
-	gr->StickPlot(3, 1, 40, 30);		gr->Axis("xyz_");
-	gr->FSurf("exp(-10*y^2/2-6*x^2)/sqrt(2)");
-	gr->Puts(mglPoint(0.2, 0, 1.2), "z=1", "", -2);
-	gr->StickPlot(3, 2, 40, 30);		gr->Axis("xyz_");
-	gr->FSurf("exp(-10*y^2/5-6*x^2)/sqrt(5)");
-	gr->Puts(mglPoint(0.2, 0, 1.2), "z=2", "", -2);
-	gr->Label('x',"\\tau", 0);	gr->Label('y', "\\rho");
-	gr->WriteTGA("test.tga");
-	gr->WriteBMP("test.bmp");
-	gr->WriteBPS("test.eps");
+mgl_set_test_mode(true);
+	mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
+	a.Modify("x*y*(1-x-y)^2*30");
+	x.Modify("0.25*(1-x)*(1+cos(2*pi*x))");
+	y.Modify("0.25*(1-x)*(1+sin(2*pi*x))");
+	z.Modify("x");
+
+	gr->SubPlot(2,1,0);
+	gr->Puts(mglPoint(0,1.3), "Quaternary plot (x+y+z+t=1)");
+	gr->Rotate(60,70);		gr->Light(true);
+	gr->Ternary(2);			gr->SetCut(true);
+	gr->Plot(x,y,z,"r2|");	gr->Surf(a,"BbcyrR#");
+	gr->Axis(); gr->Grid();	gr->Box();
+//	gr->SetRotatedText(false);
+	gr->Label('t',"A",1);	gr->Label('x',"B",1);
+	gr->Label('y',"C",1);	gr->Label('z',"D",1);
+
+	a.Modify("4*x*y");
+	x.Modify("0.25*(1+cos(2*pi*x))");
+	y.Modify("0.25*(1+sin(2*pi*x))");
+	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
+
+	gr->SubPlot(2,1,1);
+	gr->Puts(mglPoint(-0.8,1.3), "Ternary plot (x+y+t=1)");
+	gr->Ternary(true);
+	gr->Plot(x,y,"r2");
+	gr->Plot(rx,ry,"q^ ");
+	gr->Cont(a,"BbcyrR");
+	gr->Line(mglPoint(0.5,0), mglPoint(0,0.75), "g2");
+	gr->Axis(); gr->Grid("xyz","B;");
+	gr->Label('x',"x comp.");
+	gr->Label('y',"y comp.");
+	gr->Label('t',"t comp.");
 	return 0;
 }
 //-----------------------------------------------------------------------------

@@ -551,7 +551,7 @@ mreal mgl_data_min_real_(uintptr_t *d, mreal *x, mreal *y, mreal *z)
 //-----------------------------------------------------------------------------
 void *mgl_fill_x(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	register long i0, nx=t->p[0],ny=t->p[1];
 	mreal *b=t->a, x1=t->b[0], dx=t->b[1];
 	register char dir = t->s[0];
@@ -715,7 +715,7 @@ void mgl_data_transpose_(uintptr_t *d, const char *dim,int l)
 //-----------------------------------------------------------------------------
 void *mgl_modify(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	mglFormula *f = (mglFormula *)(t->v);
 	register long i,j,k,i0, nx=t->p[0],ny=t->p[1],nz=t->p[2];
 	mreal *b=t->a, dx,dy,dz;
@@ -767,7 +767,7 @@ void mgl_data_modify_vw_(uintptr_t *d, const char *eq, uintptr_t *v, uintptr_t *
 //-----------------------------------------------------------------------------
 void *mgl_fill_f(void *par)
 {
-	mglThread *t=(mglThread *)par;
+	mglThreadD *t=(mglThreadD *)par;
 	mglFormula *f = (mglFormula *)(t->v);
 	register long i,j,k,i0, nx=t->p[0],ny=t->p[1];
 	mreal *b=t->a;

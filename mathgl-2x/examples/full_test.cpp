@@ -1419,6 +1419,25 @@ void smgl_molecule(mglGraph *gr)	// example of moleculas
 	gr->DoubleSided( true ); // put back
 }
 //-----------------------------------------------------------------------------
+void smgl_quaternary(mglGraph *gr)      // flag #
+{
+	mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
+	a.Modify("x*y*(1-x-y)^2*30");
+	x.Modify("0.25*(1-x)*(1+cos(2*pi*x))");
+	y.Modify("0.25*(1-x)*(1+sin(2*pi*x))");
+	z.Modify("x");
+
+	gr->Puts(mglPoint(0,1.3), "Quaternary plot (x+y+z+t=1)");
+	gr->Rotate(60,70);		gr->Light(true);
+	gr->Ternary(2);			gr->SetCut(true);
+	gr->Plot(x,y,z,"r2");	gr->Surf(a,"BbcyrR#");
+	gr->Axis(); gr->Grid();	gr->Box();
+	gr->SetRotatedText(false);
+	gr->Label('t',"A",1);	gr->Label('x',"B",1);
+	gr->Label('y',"C",1);	gr->Label('z',"D",1);
+	gr->Ternary(0);
+}
+//-----------------------------------------------------------------------------
 void smgl_ternary(mglGraph *gr)	// flag #
 {
 	mglData x(50),y(50),rx(10),ry(10), a(20,30);
@@ -1788,6 +1807,7 @@ mglSample samp[] = {
 	{"pipe2", smgl_pipe2},
 	{"pipe3", smgl_pipe3},
 	{"plot", smgl_plot},
+	{"quaternary", smgl_quaternary},
 	{"qo2d", smgl_qo2d},
 	{"radar", smgl_radar},
 	{"region", smgl_region},

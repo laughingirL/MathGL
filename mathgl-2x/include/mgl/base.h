@@ -434,7 +434,6 @@ protected:
 	float font_factor;	///< Font scaling factor
 
 	virtual void LightScale()=0;			///< Scale positions of light sources
-	virtual void SetPen(char style,float width);
 
 private:
 	mglPoint MinS;		///< Saved lower edge of bounding box for graphics.
