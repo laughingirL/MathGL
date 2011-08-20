@@ -132,7 +132,7 @@ void TextPanel::refreshData()
 	mglVar *v = parser.DataList;
 	while(v)
 	{
-		if(wcslen(v->s)>2)	vars<<QString::fromWCharArray(v->s);
+		if(v->s.length()>2)	vars<<QString::fromStdWString(v->s);
 		v = v->next;
 	}
 	delete completer;	completer = new QCompleter(vars, this);
@@ -334,7 +334,7 @@ void TextPanel::saveHDF5(const QString &fileName)
 	char name[256];
 	while(v)
 	{
-		wcstombs(name,v->s,wcslen(v->s)+1);
+		wcstombs(name,v->s.c_str(),v->s.length()+1);
 		if(v->d.nz==1 && v->d.ny == 1)
 		{	rank = 1;	dims[0] = v->d.nx;	}
 		else if(v->d.nz==1)

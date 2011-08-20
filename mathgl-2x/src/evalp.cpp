@@ -100,6 +100,15 @@ double gslEllE(double a,double b);//	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE
 double gslEllF(double a,double b);//	{return gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE);}
 double gslLegP(double a,double b);//	{return gsl_sf_legendre_Pl(int(a),b);}
 //-----------------------------------------------------------------------------
+// It seems that standard wcstombs() have a bug. So, I replace by my own.
+void mgl_wcstombs(char *dst, const wchar_t *src, int size)
+{
+	register int j;
+	for(j=0;j<size-1 && src[j]!=0;j++)
+		dst[j] = src[j]<0x7f ? src[j] : ' ';
+	dst[j] = 0;
+}
+//-----------------------------------------------------------------------------
 /// Parse string and substitute the script argument
 // All numbers are presented as mglData(1). Do boundary checking.
 // NOTE: In any case where number is required the mglData::a[0] is used.

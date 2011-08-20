@@ -722,7 +722,9 @@ void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
 	mglPnt p=q;
 	float ss=fabs(size)*0.35*font_factor;
 	register long i,j;
+#ifdef HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
+#endif
 	if(type=='.' || ss==0)	pnt_draw(k,d);
 	else
 	{
@@ -859,7 +861,9 @@ void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
 		PDef = pd;	PenWidth = pw;
 		Pnt.erase(Pnt.begin()+pos,Pnt.end());
 	}
+#ifdef HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPnt);
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
@@ -867,7 +871,9 @@ void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 	if(P->n1<0)	return;	// Should be never here
 	mglPnt p=Pnt[P->n1];
 	float f = p.w;
+#ifdef HAVE_PTHREAD
 	pthread_mutex_lock(&mutexPnt);
+#endif
 	Push();		B.clear();
 	B.b[0] = B.b[4] = B.b[8] = P->s*P->p;
 	RotateN(P->w,0,0,1);	B.pf = P->p;
@@ -885,7 +891,9 @@ void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 		glyph_wire(p,f,fnt->GetNl(ss,P->n4),fnt->GetLn(ss,P->n4), d);
 	}
 	Pop();
+#ifdef HAVE_PTHREAD
 	pthread_mutex_unlock(&mutexPnt);
+#endif
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_fill(const mglPnt &pp, float f, int nt, const short *trig, mglDrawReg *d)

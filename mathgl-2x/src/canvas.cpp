@@ -37,7 +37,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 #ifdef HAVE_PTHREAD
 	pthread_mutex_init(&mutexSub,0);	pthread_mutex_init(&mutexLeg,0);
 	pthread_mutex_init(&mutexPrm,0);	pthread_mutex_init(&mutexPtx,0);
-	pthread_mutex_init(&mutexStk,0);
+	pthread_mutex_init(&mutexStk,0);	pthread_mutex_init(&mutexGrp,0);
 #endif
 	SetSize(w,h);	SetQuality(MGL_DRAW_NORM);	DefaultPlotParam();
 }

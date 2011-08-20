@@ -22,14 +22,15 @@
 
 #ifdef __cplusplus
 #include "mgl/mgl.h"
+#include <string>
 //-----------------------------------------------------------------------------
 /// Structure for the command argument.
 struct mglArg
 {
 	int type;		///< Type of argument {0-data,1-string,2-number}
 	mglData *d;		///< Pointer to data (used if type==0)
-	wchar_t w[2048];///< String with parameters
-	char s[2048];	///< String with parameters
+	std::wstring w;	///< String with parameters
+	std::string s;	///< String with parameters
 	mreal v;		///< Numerical value (used if type==2)
 	mglArg()	{	type=-1;	d=0;	v=0;	s[0]=0;	w[0]=0;	};
 };
@@ -54,14 +55,14 @@ extern mglCommand mgls_base_cmd[];
 struct mglVar
 {
 	mglData d;		///< Data itself
-	wchar_t s[256];	///< Data name
+	std::wstring s;	///< Data name
 	void *o;		///< Pointer to external object
 	mglVar *next;	///< Pointer to next instance in list
 	mglVar *prev;	///< Pointer to prev instance in list
 	bool temp;		///< This temporar variable
 	void (*func)(void *);	///< Callback function for destroying
 
-	mglVar()	{	o=0;	*s=0;	next=prev=0;	func=0;	temp=false;	};
+	mglVar()	{	o=0;	next=prev=0;	func=0;	temp=false;	};
 	~mglVar();
 	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
 	void MoveAfter(mglVar *var);
@@ -71,10 +72,10 @@ struct mglVar
 struct mglNum
 {
 	mreal d;		///< Number itself
-	wchar_t s[256];	///< Number name
+	std::wstring s;	///< Number name
 	mglNum *next;	///< Pointer to next instance in list
 	mglNum *prev;	///< Pointer to prev instance in list
-	mglNum()	{	d=0;	*s=0;	next=prev=0;	};
+	mglNum()	{	d=0;	next=prev=0;	};
 	~mglNum();
 	/// Move variable after \a var and copy \a func from \a var (if \a func is 0)
 	void MoveAfter(mglNum *var);
@@ -85,7 +86,7 @@ struct mglFunc
 {
 	long pos;
 	int narg;
-	wchar_t func[32];
+	std::wstring func;
 	mglFunc *next;
 	mglFunc(long p, const wchar_t *f, mglFunc *prev=0);
 	~mglFunc()	{	if(next)	delete next;	};
@@ -182,7 +183,6 @@ private:
 	wchar_t *par[40];	///< Parameter for substituting instead of $1, ..., $9
 	wchar_t *out;		///< Buffer for writing C++ code (if not NULL)
 	wchar_t leg[128];	///< Buffer for legend
-	bool opt, opt_leg;	///< Set on/off optional parameters for command argument
 	bool Once;		///< Flag for command which should be executed only once
 	bool Skip;		///< Flag that commands should be skiped (inside 'once' block)
 	int if_stack[40];	///< Stack for if-else-endif commands

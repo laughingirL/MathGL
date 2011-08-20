@@ -1772,7 +1772,7 @@ mglSample samp[] = {
 	{"contf", smgl_contf},
 	{"contfa", smgl_contfa},
 	{"contt", smgl_contt},
-	{"crust", smgl_crust},
+//	{"crust", smgl_crust},	// TODO: open after triangulation
 	{"cutminmax", smgl_cutminmax},
 	{"cutminmax2", smgl_cutminmax2},
 	{"dens", smgl_dens},
@@ -1800,7 +1800,7 @@ mglSample samp[] = {
 	{"mesh_cont", smgl_mesh_cont},
 	{"mirror", smgl_mirror},
 	{"molecule", smgl_molecule},
-//	{"parser", smgl_parser},	// TODO: enable later
+	{"parser", smgl_parser},	// TODO: enable later
 	{"pde", smgl_pde},
 	{"pie_chart", smgl_pie_chart},
 	{"pipe", smgl_pipe},

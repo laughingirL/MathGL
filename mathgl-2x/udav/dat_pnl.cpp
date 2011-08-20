@@ -84,7 +84,7 @@ void DatPanel::refresh()
 		}
 		tab->setHorizontalHeaderLabels(head);
 	}
-	register long i,j,m=wcslen(var->s);
+	register long i,j,m=var->s.length();
 	register float f;
 	QString s,d;
 	if(rc)
@@ -120,7 +120,7 @@ void DatPanel::setVar(mglVar *v)
 	nx = ny = nz = kz = 0;
 	if(v)
 	{
-		QString s = QString::fromWCharArray(v->s);
+		QString s = QString::fromStdWString(v->s);
 		v->o = this;	v->func = deleteDat;
 		refresh();
 		setWindowTitle(s + tr(" - UDAV variable"));
@@ -856,6 +856,5 @@ void DatPanel::toolLeft(QBoxLayout *l)
 	l->addStretch(1);
 }
 //-----------------------------------------------------------------------------
-QString DatPanel::dataName()
-{	return QString::fromWCharArray(var->s);	}
+QString DatPanel::dataName()	{	return QString::fromStdWString(var->s);	}
 //-----------------------------------------------------------------------------

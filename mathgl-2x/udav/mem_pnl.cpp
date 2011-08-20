@@ -143,7 +143,7 @@ void MemPanel::infoData()
 	mglVar *v = parser.FindVar(tab->item(n,0)->text().toAscii());
 	if(!v)	return;
 	infoDlg->setVar(v);
-	QString s = QString::fromWCharArray(v->s);
+	QString s = QString::fromStdWString(v->s);
 	infoDlg->setWindowTitle(s + tr(" - UDAV preview"));
 	infoDlg->refresh();
 	infoDlg->show();
@@ -161,7 +161,7 @@ void MemPanel::refresh()
 	Qt::ItemFlags flags=Qt::ItemIsSelectable|Qt::ItemIsEnabled;
 	while(v)
 	{
-		s = QString::fromWCharArray(v->s);
+		s = QString::fromStdWString(v->s);
 		it = new QTableWidgetItem(s);
 		tab->setItem(n,0,it);	it->setFlags(flags);
 		s.sprintf("%ld * %ld * %ld", v->d.nx, v->d.ny, v->d.nz);

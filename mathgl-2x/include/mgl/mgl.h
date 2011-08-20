@@ -90,7 +90,7 @@ public:
 	/// Set default font size
 	inline void SetFontSize(float size)		{	mgl_set_font_size(gr, size);	}
 	/// Set default font style and color
-	inline void SetFontDef(char *fnt)		{	mgl_set_font_def(gr, fnt);	}
+	inline void SetFontDef(const char *fnt)		{	mgl_set_font_def(gr, fnt);	}
 	/// Set FontSize by size in pt and picture DPI (default is 16 pt for dpi=72)
 	virtual void SetFontSizePT(float pt, int dpi=72){	SetFontSize(pt*27.f/dpi);	}
 	/// Set FontSize by size in centimeters and picture DPI (default is 0.56 cm = 16 pt)
