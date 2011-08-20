@@ -300,17 +300,13 @@ void mglCanvas::pxl_combine(unsigned long id, unsigned long n)
 {
 	unsigned char c[4],*cc;
 	for(unsigned long i=id;i<n;i+=mglNumThr)
-	{
-		cc = C+12*i;		memcpy(c,BDef,4);
+	{	cc = C+12*i;		memcpy(c,BDef,4);
 		combine(c,cc+8);	combine(c,cc+4);
-		combine(c,cc);		memcpy(G4+4*i,c,4);
-	}
+		combine(c,cc);		memcpy(G4+4*i,c,4);	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_memcpy(unsigned long id, unsigned long n)
-{
-	for(unsigned long i=id;i<n;i+=mglNumThr)	memcpy(G4+4*i,C+12*i,4);
-}
+{	for(unsigned long i=id;i<n;i+=mglNumThr)	memcpy(G4+4*i,C+12*i,4);	}
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_backgr(unsigned long id, unsigned long n)
 {
@@ -726,6 +722,7 @@ void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
 	mglPnt p=q;
 	float ss=fabs(size)*0.35*font_factor;
 	register long i,j;
+	pthread_mutex_lock(&mutexPnt);
 	if(type=='.' || ss==0)	pnt_draw(k,d);
 	else
 	{
@@ -735,106 +732,106 @@ void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
 		switch(type)
 		{
 		case 'P':
-			p.x = q.x-ss;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(pos,pos+1,d);
-			p.x = q.x+ss;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(pos+1,pos+2,d);
-			p.x = q.x-ss;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(pos+2,pos+3,d);
+			p.x = q.x-ss;	p.y = q.y-ss;	Pnt.push_back(p);
+			p.x = q.x+ss;	p.y = q.y-ss;	Pnt.push_back(p);	line_draw(pos,pos+1,d);
+			p.x = q.x+ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(pos+1,pos+2,d);
+			p.x = q.x-ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(pos+2,pos+3,d);
 			line_draw(pos+3,pos,d);	qos+=4;
 		case '+':
-			p.x = q.x-ss;	p.y = q.y;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;	p.y = q.y;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos,qos+1,d);
-			p.x = q.x;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos+2,qos+3,d);
+			p.x = q.x-ss;	p.y = q.y;		Pnt.push_back(p);
+			p.x = q.x+ss;	p.y = q.y;		Pnt.push_back(p);	line_draw(qos,qos+1,d);
+			p.x = q.x;	p.y = q.y-ss;		Pnt.push_back(p);
+			p.x = q.x;	p.y = q.y+ss;		Pnt.push_back(p);	line_draw(qos+2,qos+3,d);
 			break;
 		case 'X':
-			p.x = q.x-ss;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(pos,pos+1,d);
-			p.x = q.x+ss;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(pos+1,pos+2,d);
-			p.x = q.x-ss;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(pos+2,pos+3,d);
+			p.x = q.x-ss;	p.y = q.y-ss;	Pnt.push_back(p);
+			p.x = q.x+ss;	p.y = q.y-ss;	Pnt.push_back(p);	line_draw(pos,pos+1,d);
+			p.x = q.x+ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(pos+1,pos+2,d);
+			p.x = q.x-ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(pos+2,pos+3,d);
 			line_draw(pos+3,pos,d);	qos+=4;
 		case 'x':
-			p.x = q.x-ss;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos,qos+1,d);
-			p.x = q.x+ss;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x-ss;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos+2,qos+3,d);
+			p.x = q.x-ss;	p.y = q.y-ss;	Pnt.push_back(p);
+			p.x = q.x+ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(qos,qos+1,d);
+			p.x = q.x+ss;	p.y = q.y-ss;	Pnt.push_back(p);
+			p.x = q.x-ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(qos+2,qos+3,d);
 			break;
 		case 'S':
-			p.x = q.x-ss;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x-ss;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x= q.x+ss;	p.y= q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
+			p.x = q.x-ss;	p.y = q.y-ss;	Pnt.push_back(p);
+			p.x = q.x-ss;	p.y = q.y+ss;	Pnt.push_back(p);
+			p.x= q.x+ss;	p.y= q.y+ss;	Pnt.push_back(p);
+			p.x = q.x+ss;	p.y = q.y-ss;	Pnt.push_back(p);
 			quad_draw(pos,pos+1,pos+3,pos+2,d);	qos+=4;
 		case 's':
-			p.x = q.x-ss;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos,qos+1,d);
-			p.x = q.x+ss;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos+1,qos+2,d);
-			p.x = q.x-ss;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos+2,qos+3,d);
+			p.x = q.x-ss;	p.y = q.y-ss;	Pnt.push_back(p);
+			p.x = q.x+ss;	p.y = q.y-ss;	Pnt.push_back(p);	line_draw(qos,qos+1,d);
+			p.x = q.x+ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(qos+1,qos+2,d);
+			p.x = q.x-ss;	p.y = q.y+ss;	Pnt.push_back(p);	line_draw(qos+2,qos+3,d);
 			line_draw(qos+3,qos,d);	break;
 		case 'D':
-			p.x = q.x;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;	p.y = q.y;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x= q.x;	p.y= q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x-ss;	p.y = q.y;	MGL_PUSH(Pnt,p,mutexPnt);
+			p.x = q.x;	p.y = q.y-ss;		Pnt.push_back(p);
+			p.x = q.x+ss;	p.y = q.y;		Pnt.push_back(p);
+			p.x= q.x;	p.y= q.y+ss;		Pnt.push_back(p);
+			p.x = q.x-ss;	p.y = q.y;		Pnt.push_back(p);
 			quad_draw(pos,pos+1,pos+3,pos+2,d);	qos+=4;
 		case 'd':
-			p.x = q.x;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;	p.y = q.y;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos,qos+1,d);
-			p.x = q.x;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos+1,qos+2,d);
-			p.x = q.x-ss;	p.y = q.y;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos+2,qos+3,d);
+			p.x = q.x;	p.y = q.y-ss;		Pnt.push_back(p);
+			p.x = q.x+ss;	p.y = q.y;		Pnt.push_back(p);	line_draw(qos,qos+1,d);
+			p.x = q.x;	p.y = q.y+ss;		Pnt.push_back(p);	line_draw(qos+1,qos+2,d);
+			p.x = q.x-ss;	p.y = q.y;		Pnt.push_back(p);	line_draw(qos+2,qos+3,d);
 			line_draw(qos+3,qos,d);	break;
 		case 'Y':
-			p.x = q.x;	p.y = q.y;		MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(pos,pos+1,d);
-			p.x = q.x-0.8*ss;	p.y = q.y+0.6*ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(pos,pos+2,d);
-			p.x = q.x+0.8*ss;	p.y = q.y+0.6*ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(pos,pos+3,d);
+			p.x = q.x;	p.y = q.y;			Pnt.push_back(p);
+			p.x = q.x;	p.y = q.y-ss;		Pnt.push_back(p);	line_draw(pos,pos+1,d);
+			p.x = q.x-0.8*ss;	p.y = q.y+0.6*ss;	Pnt.push_back(p);	line_draw(pos,pos+2,d);
+			p.x = q.x+0.8*ss;	p.y = q.y+0.6*ss;	Pnt.push_back(p);	line_draw(pos,pos+3,d);
 			break;
 		case '*':
-			p.x = q.x-ss;		p.y = q.y;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;		p.y = q.y;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(pos,pos+1,d);
-			p.x = q.x-0.6*ss;	p.y = q.y-0.8*ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+0.6*ss;	p.y = q.y+0.8*ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(pos+2,pos+3,d);
-			p.x = q.x-0.6*ss;	p.y = q.y+0.8*ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+0.6*ss;	p.y = q.y-0.8*ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(pos+4,pos+5,d);
+			p.x = q.x-ss;		p.y = q.y;	Pnt.push_back(p);
+			p.x = q.x+ss;		p.y = q.y;	Pnt.push_back(p);	line_draw(pos,pos+1,d);
+			p.x = q.x-0.6*ss;	p.y = q.y-0.8*ss;	Pnt.push_back(p);
+			p.x = q.x+0.6*ss;	p.y = q.y+0.8*ss;	Pnt.push_back(p);	line_draw(pos+2,pos+3,d);
+			p.x = q.x-0.6*ss;	p.y = q.y+0.8*ss;	Pnt.push_back(p);
+			p.x = q.x+0.6*ss;	p.y = q.y-0.8*ss;	Pnt.push_back(p);	line_draw(pos+4,pos+5,d);
 			break;
 		case 'T':
-			p.x = q.x-ss;	p.y = q.y-ss/2;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;	p.y = q.y-ss/2;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x= q.x;		p.y= q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);
+			p.x = q.x-ss;	p.y = q.y-ss/2;	Pnt.push_back(p);
+			p.x = q.x+ss;	p.y = q.y-ss/2;	Pnt.push_back(p);
+			p.x= q.x;		p.y= q.y+ss;	Pnt.push_back(p);
 			trig_draw(pos,pos+1,pos+2,false,d);	qos+=3;
 		case '^':
-			p.x = q.x-ss;	p.y = q.y-ss/2;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;	p.y = q.y-ss/2;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos,qos+1,d);
-			p.x= q.x;		p.y= q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos+1,qos+2,d);
+			p.x = q.x-ss;	p.y = q.y-ss/2;	Pnt.push_back(p);
+			p.x = q.x+ss;	p.y = q.y-ss/2;	Pnt.push_back(p);	line_draw(qos,qos+1,d);
+			p.x= q.x;		p.y= q.y+ss;	Pnt.push_back(p);	line_draw(qos+1,qos+2,d);
 			line_draw(qos+2,qos,d);		break;
 		case 'V':
-			p.x = q.x-ss;	p.y = q.y+ss/2;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;	p.y = q.y+ss/2;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x= q.x;		p.y= q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
+			p.x = q.x-ss;	p.y = q.y+ss/2;	Pnt.push_back(p);
+			p.x = q.x+ss;	p.y = q.y+ss/2;	Pnt.push_back(p);
+			p.x= q.x;		p.y= q.y-ss;	Pnt.push_back(p);
 			trig_draw(pos,pos+1,pos+2,false,d);	qos+=3;
 		case 'v':
-			p.x = q.x-ss;	p.y = q.y+ss/2;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss;	p.y = q.y+ss/2;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos,qos+1,d);
-			p.x= q.x;		p.y= q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos+1,qos+2,d);
+			p.x = q.x-ss;	p.y = q.y+ss/2;	Pnt.push_back(p);
+			p.x = q.x+ss;	p.y = q.y+ss/2;	Pnt.push_back(p);	line_draw(qos,qos+1,d);
+			p.x= q.x;		p.y= q.y-ss;	Pnt.push_back(p);	line_draw(qos+1,qos+2,d);
 			line_draw(qos+2,qos,d);		break;
 		case 'L':
-			p.x = q.x+ss/2;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss/2;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x= q.x-ss;	p.y= q.y;		MGL_PUSH(Pnt,p,mutexPnt);
+			p.x = q.x+ss/2;	p.y = q.y+ss;	Pnt.push_back(p);
+			p.x = q.x+ss/2;	p.y = q.y-ss;	Pnt.push_back(p);
+			p.x= q.x-ss;	p.y= q.y;		Pnt.push_back(p);
 			trig_draw(pos,pos+1,pos+2,false,d);	qos+=3;
 		case '<':
-			p.x = q.x+ss/2;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x+ss/2;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos,qos+1,d);
-			p.x= q.x-ss;	p.y= q.y;		MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos+1,qos+2,d);
+			p.x = q.x+ss/2;	p.y = q.y+ss;	Pnt.push_back(p);
+			p.x = q.x+ss/2;	p.y = q.y-ss;	Pnt.push_back(p);	line_draw(qos,qos+1,d);
+			p.x= q.x-ss;	p.y= q.y;		Pnt.push_back(p);	line_draw(qos+1,qos+2,d);
 			line_draw(qos+2,qos,d);		break;
 		case 'R':
-			p.x = q.x-ss/2;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x-ss/2;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x= q.x+ss;	p.y= q.y;		MGL_PUSH(Pnt,p,mutexPnt);
+			p.x = q.x-ss/2;	p.y = q.y+ss;	Pnt.push_back(p);
+			p.x = q.x-ss/2;	p.y = q.y-ss;	Pnt.push_back(p);
+			p.x= q.x+ss;	p.y= q.y;		Pnt.push_back(p);
 			trig_draw(pos,pos+1,pos+2,false,d);	qos+=3;
 		case '>':
-			p.x = q.x-ss/2;	p.y = q.y+ss;	MGL_PUSH(Pnt,p,mutexPnt);
-			p.x = q.x-ss/2;	p.y = q.y-ss;	MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos,qos+1,d);
-			p.x= q.x+ss;	p.y= q.y;		MGL_PUSH(Pnt,p,mutexPnt);	line_draw(qos+1,qos+2,d);
+			p.x = q.x-ss/2;	p.y = q.y+ss;	Pnt.push_back(p);
+			p.x = q.x-ss/2;	p.y = q.y-ss;	Pnt.push_back(p);	line_draw(qos,qos+1,d);
+			p.x= q.x+ss;	p.y= q.y;		Pnt.push_back(p);	line_draw(qos+1,qos+2,d);
 			line_draw(qos+2,qos,d);		break;
 		case 'O':
 			for(j=long(-ss);j<=long(ss);j++)	for(i=long(-ss);i<=long(ss);i++)
@@ -846,8 +843,7 @@ void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
 		case 'o':
 			for(i=0;i<=20;i++)
 			{
-				p.x = q.x+ss*cos(i*M_PI/10);	p.y = q.y+ss*sin(i*M_PI/10);
-				MGL_PUSH(Pnt,p,mutexPnt);
+				p.x = q.x+ss*cos(i*M_PI/10);	p.y = q.y+ss*sin(i*M_PI/10);	Pnt.push_back(p);
 				if(i>0)	line_draw(pos+i-1,pos+i,d);
 			}
 			break;
@@ -855,8 +851,7 @@ void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
 			pnt_draw(k,d);
 			for(i=0;i<=20;i++)
 			{
-				p.x = q.x+ss*cos(i*M_PI/10);	p.y = q.y+ss*sin(i*M_PI/10);
-				MGL_PUSH(Pnt,p,mutexPnt);
+				p.x = q.x+ss*cos(i*M_PI/10);	p.y = q.y+ss*sin(i*M_PI/10);	Pnt.push_back(p);
 				if(i>0)	line_draw(pos+i-1,pos+i,d);
 			}
 			break;
@@ -864,6 +859,7 @@ void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
 		PDef = pd;	PenWidth = pw;
 		Pnt.erase(Pnt.begin()+pos,Pnt.end());
 	}
+	pthread_mutex_unlock(&mutexPnt);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
@@ -871,7 +867,7 @@ void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 	if(P->n1<0)	return;	// Should be never here
 	mglPnt p=Pnt[P->n1];
 	float f = p.w;
-//	pthread_mutex_lock(&mutexGlyph);
+	pthread_mutex_lock(&mutexPnt);
 	Push();		B.clear();
 	B.b[0] = B.b[4] = B.b[8] = P->s*P->p;
 	RotateN(P->w,0,0,1);	B.pf = P->p;
@@ -889,7 +885,7 @@ void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 		glyph_wire(p,f,fnt->GetNl(ss,P->n4),fnt->GetLn(ss,P->n4), d);
 	}
 	Pop();
-//	pthread_mutex_unlock(&mutexGlyph);
+	pthread_mutex_unlock(&mutexPnt);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_fill(const mglPnt &pp, float f, int nt, const short *trig, mglDrawReg *d)
@@ -905,9 +901,9 @@ void mglCanvas::glyph_fill(const mglPnt &pp, float f, int nt, const short *trig,
 		ii = 6*ik;	p1 = mglPoint(f*trig[ii]+pp.u,f*trig[ii+1]+pp.v,0);	PostScale(p1);
 		ii+=2;		p2 = mglPoint(f*trig[ii]+pp.u,f*trig[ii+1]+pp.v,0);	PostScale(p2);
 		ii+=2;		p3 = mglPoint(f*trig[ii]+pp.u,f*trig[ii+1]+pp.v,0);	PostScale(p3);
-		p.x = p1.x;	p.y = p1.y;	p.z = p1.z+pw;	MGL_PUSH(Pnt,p,mutexPnt);
-		p.x = p2.x;	p.y = p2.y;	p.z = p2.z+pw;	MGL_PUSH(Pnt,p,mutexPnt);
-		p.x = p3.x;	p.y = p3.y;	p.z = p3.z+pw;	MGL_PUSH(Pnt,p,mutexPnt);
+		p.x = p1.x;	p.y = p1.y;	p.z = p1.z+pw;	Pnt.push_back(p);
+		p.x = p2.x;	p.y = p2.y;	p.z = p2.z+pw;	Pnt.push_back(p);
+		p.x = p3.x;	p.y = p3.y;	p.z = p3.z+pw;	Pnt.push_back(p);
 		ii = Pnt.size()-3;	trig_draw(ii,ii+1,ii+2,false,d);
 	}
 	Pnt.erase(Pnt.begin()+pos,Pnt.end());
@@ -937,8 +933,8 @@ void mglCanvas::glyph_wire(const mglPnt &pp, float f, int nl, const short *line,
 			p2 = mglPoint(f*line[ii]+pp.u,f*line[ii+1]+pp.v,0);
 		}
 		PostScale(p1);	PostScale(p2);
-		p.x = p1.x;	p.y = p1.y;	p.z = p1.z;	MGL_PUSH(Pnt,p,mutexPnt);
-		p.x = p2.x;	p.y = p2.y;	p.z = p2.z;	MGL_PUSH(Pnt,p,mutexPnt);
+		p.x = p1.x;	p.y = p1.y;	p.z = p1.z;	Pnt.push_back(p);
+		p.x = p2.x;	p.y = p2.y;	p.z = p2.z;	Pnt.push_back(p);
 		ii = Pnt.size()-2;	line_draw(ii,ii+1,d);
 	}
 	PDef = pdef;	PenWidth = opw;
@@ -960,10 +956,10 @@ void mglCanvas::glyph_line(const mglPnt &pp, float f, bool solid, mglDrawReg *d)
 	p3 = mglPoint(fabs(f)+pp.u,pp.v+dy,0);	PostScale(p3);
 	p4 = mglPoint(fabs(f)+pp.u,pp.v-dy,0);	PostScale(p4);
 
-	p.x = p1.x;	p.y = p1.y;	p.z = p1.z+(solid?pw:0);	MGL_PUSH(Pnt,p,mutexPnt);
-	p.x = p2.x;	p.y = p2.y;	p.z = p2.z+(solid?pw:0);	MGL_PUSH(Pnt,p,mutexPnt);
-	p.x = p3.x;	p.y = p3.y;	p.z = p3.z+(solid?pw:0);	MGL_PUSH(Pnt,p,mutexPnt);
-	p.x = p4.x;	p.y = p4.y;	p.z = p4.z+(solid?pw:0);	MGL_PUSH(Pnt,p,mutexPnt);
+	p.x = p1.x;	p.y = p1.y;	p.z = p1.z+(solid?pw:0);	Pnt.push_back(p);
+	p.x = p2.x;	p.y = p2.y;	p.z = p2.z+(solid?pw:0);	Pnt.push_back(p);
+	p.x = p3.x;	p.y = p3.y;	p.z = p3.z+(solid?pw:0);	Pnt.push_back(p);
+	p.x = p4.x;	p.y = p4.y;	p.z = p4.z+(solid?pw:0);	Pnt.push_back(p);
 
 	if(solid)	quad_draw(pos,pos+1,pos+3,pos+2,d);
 	else
