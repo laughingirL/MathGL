@@ -1,7 +1,7 @@
 /***************************************************************************
  * mgl.i is part of Math Graphic Library
- * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>, 
- *   Xavier Delacour <xavier.delacour@gmail.com>, 
+ * Copyright (C) 2007 Alexey Balakin <balakin@appl.sci-nnov.ru>,
+ *   Xavier Delacour <xavier.delacour@gmail.com>,
  *   Alexander Filov <alexander.filov@gmail.com>                           *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -36,6 +36,8 @@
 
 %{
 #define SWIG_FILE_WITH_INIT
+#include "mgl/type.h"
+#include "mgl/data.h"
 #include "mgl/mgl.h"
 %}
 
@@ -77,6 +79,7 @@ import_array();
 %apply (int DIM1, int DIM2, int DIM3, double* IN_ARRAY3) {(int rows, int cols, int slc, const double* d)};
 #endif
 
+%include "mgl/type.h"
 %include "mgl/data.h"
 %include "mgl/mgl.h"
 %extend mglData

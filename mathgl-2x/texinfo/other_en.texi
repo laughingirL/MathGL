@@ -5,9 +5,9 @@
 @menu
 * mglParse class::              
 * mglFormula class::            
-* mglFont class::               
 * mglColor class::              
 * mglPoint class::              
+* mglFont class::
 * mglVar class::                
 * mglCommand class::            
 * mglArg class::                
@@ -18,110 +18,89 @@
 @section mglParse class
 @cindex mglParse
 
-Class for parsing and executing MGL script. This class is defined in @code{#include <mgl/mgl_parse.h>}.
+Class for parsing and executing MGL script. This class is defined in @code{#include <mgl/mgl.h>}.
 
 Class mglParse is the interpreter for MGL scripts (@pxref{MGL interface}). The main function of mglParse class is @code{Parse()}. Exactly this function parses and executes the script string-by-string. Also there are two subservient functions for the finding and creation of a variable. These functions can be useful for displaying values of variables (arrays) in some external program (in window, for example). The variable @var{DataList} contains full list of variables in script. Flag @var{AllowSetSize} allows one to prevent changing the size of the  picture inside the script (forbids the MGL command @code{setsize}). 
 
-Note an important feature -- if user defines function @var{func} in variable then it will be called before the destroying of this variable (@pxref{mglVar class}).
+@c Note an important feature -- if user defines function @var{func} in variable then it will be called before the destroying of this variable (@pxref{mglVar class}).
 
-@deftypefn {Method on @code{mglParse} (C++, Python)} @code{} mglParse (@code{bool} setsize=@code{false})
+@deftypefn {Constructor on @code{mglParse}} @code{} mglParse (@code{bool} setsize=@code{false})
 @deftypefnx {C function} @code{HMPR} mgl_create_parser ()
 Constructor initializes all values with zero and set @var{AllowSetSize} value.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse} (C++, Python)} @code{} ~mglParse ()
+@deftypefn {Destructor on @code{mglParse}} @code{} ~mglParse ()
 @deftypefnx {C function} @code{void} mgl_delete_parser (@code{HMPR} p)
 Destructor delete parser
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse} (C++, Python)} @code{int} Parse (@code{mglGraph *}gr, @code{const char *}str, @code{long} pos=@code{0})
-@deftypefnx {Method on @code{mglParse} (C++)} @code{int} Parse (@code{mglGraph *}gr, @code{const wchar_t *}str, @code{long} pos=@code{0})
+@deftypefn {Method on @code{mglParse}} @code{int} Parse (@code{mglGraph *}gr, @code{const char *}str, @code{long} pos=@code{0})
+@deftypefnx {Method on @code{mglParse}} @code{int} Parse (@code{mglGraph *}gr, @code{const wchar_t *}str, @code{long} pos=@code{0})
 @deftypefnx {C function} @code{int} mgl_parse (@code{HMGL} gr, @code{HMPR} p, @code{const char *}str, @code{int} pos)
 @deftypefnx {C function} @code{int} mgl_parsew (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}str, @code{int} pos)
 Main function in the class. It parses the string @var{str} and executes it by  using @var{gr} as a graphics plotter. Returns the value depending on an error presence in the string @var{str}: 0 -- no error, 1 -- wrong command argument(s), 2 -- unknown command, 3 -- string is too long. Optional argument @var{pos} allows to save the string position in the document (or file) for using @code{for|next} command.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse} (C++)} @code{int} Export (@code{wchar_t} cpp_out@code{[1024]}, @code{mglGraph *}gr, @code{const wchar_t *}str)
-Function parses the string @var{str}, executes it by  using @var{gr} as a graphics plotter and exports it to C++ code. Returns the value depending on an error presence in the string @var{str}: 0 -- no error, 1 -- wrong command argument(s), 2 -- unknown command, 3 -- string is too long. Output C++ text will be placed in @var{out} variable. If string @var{str} have options (defined after ';' symbol) then the corresponding C++ texts are placed in variables @var{op1}, @var{op2}.
+@deftypefn {Method on @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{FILE *}fp, @code{bool} print=@code{false})
+@deftypefnx {C function} @code{int} mgl_parsew (@code{HMGL} gr, @code{HMPR} p, @code{FILE *}fp, @code{int} print)
+Function parse and execute line-by-line MGL script in file @var{fp}. If @var{print}=@code{true} then all warnings and information will be printed in stdout.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse} (C++)} @code{void} Execute (@code{mglGraph *}gr, @code{FILE *}fp, @code{bool} print=@code{false})
-Function parse and execute line-by-line MGL script in file @var{fp}. If @var{print}=@code{true} then all warnings and information will be printed in stdout. Also this function support the @code{for|next} MGL commands.
-@end deftypefn
-@deftypefn {Method on @code{mglParse} (C++)} @code{void} Execute (@code{mglGraph *}gr, @code{int} num, @code{const wchar_t **}text, @code{void (*} error @code{)(int line, int kind)=NULL})
-Function parse and execute line-by-line MGL script in array @var{text}. If @var{error} is not @code{NULL} then this function will be called for all warnings, information and other messages. Also this function support the @code{for|next} MGL commands.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse} (C++, Python)} @code{void} Execute (@code{mglGraph *}gr, @code{const char *}text, @code{void (*} error @code{)(int line, int kind)=NULL})
-@deftypefnx {Method on @code{mglParse} (C++)} @code{void} Execute (@code{mglGraph *}gr, @code{const wchar_t *}text, @code{void (*} error @code{)(int line, int kind)=NULL})
-@deftypefnx {C function} @code{void} mgl_parse_text (@code{HMGL} gr, @code{HMPR} p, @code{const char *}text)
-@deftypefnx {C function} @code{void} mgl_parsew_text (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}text)
-Function parse and execute line-by-line MGL script in string @var{text}. Lines are separated by @samp{\n} symbol as usual. If @var{error} is not @code{NULL} then this function will be called for all warnings, information and other messages. Also this function support the @code{for|next} MGL commands.
+@deftypefn {Method on @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{const char *}text, @code{void (*} error @code{)(int line, int kind, char *mes)=NULL})
+@deftypefnx{Method on @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{const wchar_t *}text, @code{void (*} error @code{)(int line, int kind, char *mes)=NULL})
+@deftypefnx {C function} @code{void} mgl_parse_text (@code{HMGL} gr, @code{HMPR} p, @code{const char *}text, @code{void (*} error @code{)(int line, int kind, char *mes)})
+@deftypefnx {C function} @code{void} mgl_parsew_text (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}text, @code{void (*} error @code{)(int line, int kind, char *mes)})
+Function parse and execute line-by-line MGL script in array @var{text}. Lines are separated by newline symbol @samp{\n} as usual. If @var{error} is not @code{NULL} then this function will be called for all warnings, information and other messages.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse} (C++, Python)} @code{bool} AddParam (@code{int} n, @code{const char *}str, @code{bool} isstr=@code{true})
+@deftypefn {Method on @code{mglParse}} @code{bool} AddParam (@code{int} n, @code{const char *}str, @code{bool} isstr=@code{true})
 @deftypefnx {Method on @code{mglParse} (C++)} @code{bool} AddParam (@code{int} n, @code{const wchar_t *}str, @code{bool} isstr=@code{true})
 @deftypefnx {C function} @code{void} mgl_add_param (@code{HMPR} p, @code{int} id, @code{const char *}val)
 @deftypefnx {C function} @code{void} mgl_add_paramw (@code{HMPR} p, @code{int} id, @code{const wchar_t *}val)
 Function set the value of @var{n}-th parameter as string @var{str} (@var{n}=0, 1 ... 9). It return @code{true} for success.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse} (C++, Python)} @code{mglVar *} FindVar (@code{const char *}name)
-@deftypefnx {Method on @code{mglParse} (C++)} @code{mglVar *} FindVar (@code{const wchar_t *}name)
-@deftypefnx {C function} @code{const HMDT} mgl_find_var  (@code{HMPR} p, @code{const char *}name)
-Function returns the pointer to variable with name @var{name} or zero if variable is absent. Use this function to put external data array to the script or get the data from the script.
+@deftypefn {Method on @code{mglParse}} @code{mglData *} FindVar (@code{const char *}name)
+@deftypefnx {C function} @code{HMDT} mgl_find_var  (@code{HMPR} p, @code{const char *}name)
+Function returns the pointer to variable with name @var{name} or zero if variable is absent. Use this function to put external data array to the script or get the data from the script. You must @strong{not delete} obtained data arrays!
 @end deftypefn
-@deftypefn {Method on @code{mglParse} (C++, Python)} @code{mglVar *} AddVar (@code{const char *}name)
-@deftypefnx {Method on @code{mglParse} (C++)} @code{mglVar *} AddVar (@code{const wchar_t *}name)
-@deftypefnx {C function} @code{const HMDT} mgl_add_var (@code{HMPR} p, @code{const char *}name)
-Function returns the pointer to variable with name @var{name}. If variable is absent then new variable is created with name @var{name}. Use this function to put external data array to the script or get the data from the script.
+@deftypefn {Method on @code{mglParse}} @code{mglData *} AddVar (@code{const char *}name)
+@deftypefnx {C function} @code{HMDT} mgl_add_var (@code{HMPR} p, @code{const char *}name)
+Function returns the pointer to variable with name @var{name}. If variable is absent then new variable is created with name @var{name}. Use this function to put external data array to the script or get the data from the script. You must @strong{not delete} obtained data arrays!
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{mglVar *}v)
-@deftypefnx {Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const char *}name)
-@deftypefnx {Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const wchar_t *}name)
+@deftypefn{Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const char *}name)
+@deftypefnx {C function} @code{void} mgl_del_var (@code{HMPR} p, @code{const char *}name)
 Function delete the variable specified by its name or by its pointer.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse} (C++, Python)} @code{inline void} RestoreOnce ()
+@deftypefn {Method on @code{mglParse}} @code{void} RestoreOnce ()
 @deftypefnx {C function} @code{void} mgl_restore_once (@code{HMPR} p)
 Restore Once flag.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse} (Python)} @code{void} AllowSetSize (@code{bool} a)
+@deftypefn {Method on @code{mglParse}} @code{void} AllowSetSize (@code{bool} a)
 @deftypefnx {C function} @code{void} mgl_parser_allow_setsize (@code{HMPR} p, @code{int} a)
 Allow to parse 'setsize' command or not.
 @end deftypefn
 
-@deftypefn {Method on @code{mglParse} (C++)} @code{void} AddCommand (@code{mglCommand *}cmd, @code{int} num=@code{0})
-Add @var{num} commands @var{cmd} to the defined MGL commands list. Parameter @var{cmd} is array of @code{mglCommand} structures. If parameter @var{num}=0 then it will be determined automatically. At this, array @var{cmd} @strong{must have} last element with @code{name=L""}
+@deftypefn {Method on @code{mglParse}} @code{void} Stop ()
+@deftypefnx {C function} @code{void} mgl_parser_stop (@code{HMPR} p)
+Sends stop signal which terminate execution at next command.
 @end deftypefn
 
-@deftypecv {Option} mglParse @code{mglVar *} DataList
-List of variables defined in script.
-@end deftypecv
-@deftypecv {Option} mglParse @code{bool} AllowSetSize
-Flag which allows/forbids the command @code{setsize} in scripts.
-@end deftypecv
-@deftypecv {Option} mglParse @code{bool} Stop
-Flag which interrupt script execution.
-@end deftypecv
-@deftypecv {Option} mglParse @code{mglCommand *} Cmd
-Table (array) of recognizable MGL commands (can be changed by user). Items in the table @strong{MUST be sorted} by @var{name} field !!! Last items must have empty name (i.e. @code{L""}).
-@end deftypecv
-@deftypecv {Option} mglParse @code{wchar_t *} op1
-These strings contain command options and should be placed before the command. These variables are used for MGL->C++ (or other language) conversion.
-@end deftypecv
-@deftypecv {Option} mglParse @code{wchar_t *} op2
-These strings contain command options and should be placed after the command. These variables are used for MGL->C++ (or other language) conversion.
-@end deftypecv
+
+@deftypefn {Method on @code{mglParse}} @code{void} Stop ()
+@deftypefnx {C function} @code{void} mgl_parser_stop (@code{HMPR} p)
+Sends stop signal which terminate execution at next command.
+@end deftypefn
 
 @c ------------------------------------------------------------------
-@node mglFormula class, mglFont class, mglParse class, Other classes
+@node mglFormula class, mglColor class, mglParse class, Other classes
 @section mglFormula class
 @cindex mglFormula
 
-Class for evaluating of formula specified by the string. This class is defined in @code{#include <mgl/mgl_eval.h>}.
+Class for evaluating of formula specified by the string. This class is defined in @code{#include <mgl/eval.h>}. This class is accessible only from C++ (and only from GNU compilers in default binary files).
 
 It is the fast variant of formula evaluation. At creation it will be recognized and compiled to tree-like internal code. At evaluation stage only fast calculations are performed. There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN. @xref{Textual formulas}.
 
@@ -144,12 +123,144 @@ Evaluates the formula derivation respect to @var{diff} for variables in array @v
 Returns error code: @code{0} means no error; @code{ERR_LOG} means error in logarithm or power functions; @code{ERR_ARC} means error in inverse functions (like asin); @code{ERR_SQRT} means error in sqrt function.
 @end deftypemethod
 
+
 @c ------------------------------------------------------------------
-@node mglFont class, mglColor class, mglFormula class, Other classes
+@node mglColor class, mglPoint class, mglFormula class, Other classes
+@section mglColor class
+@cindex mglColor
+
+Structure for working with colors. This structure is defined in @code{#include <mgl/type.h>}.
+
+There are two ways to set the color in MathGL. First one is using of float values of red, green and blue channels for precise color definition. The second way is the using of character id. There are a set of characters specifying frequently used colors. Normally capital letter gives more dark color than lowercase one. @xref{Line styles}.
+
+@deftypecv {Parameter} mglColor @code{float} {r, g, b, a}
+Reg, green and blue component of color.
+@end deftypecv
+
+@deftypemethod mglColor @code{} mglColor (@code{float} R, @code{float} G, @code{float} B, @code{float} A=@code{1})
+Constructor sets the color by float values of Red, Green, Blue and Alpha channels. These values should be in interval [0,1].
+@end deftypemethod
+@deftypemethod mglColor @code{} mglColor (@code{char} c=@code{'k'}, @code{float} bright=@code{1})
+Constructor sets the color from character id. The black color is used by default. Parameter @var{br} set additional ``lightness'' of color.
+@end deftypemethod
+@deftypemethod mglColor @code{void} Set (@code{float} R, @code{float} G, @code{float} B, @code{float} A=@code{1})
+Sets color from values of Red, Green, Blue and Alpha channels. These values should be in interval [0,1].
+@end deftypemethod
+@deftypemethod mglColor @code{void} Set (@code{mglColor} c, @code{float} bright=@code{1})
+Sets color as ``lighted'' version of color @var{c}.
+@end deftypemethod
+@deftypemethod mglColor @code{void} Set (@code{char} p, @code{float} bright=@code{1})
+Sets color from symbolic id.
+@end deftypemethod
+@deftypemethod mglColor @code{bool} Valid ()
+Checks correctness of the color.
+@end deftypemethod
+@deftypemethod mglColor @code{float} Norm ()
+Gets maximal of spectral component.
+@end deftypemethod
+@deftypemethod mglColor @code{bool} operator== (@code{const mglColor &}c)
+@deftypemethodx mglColor @code{bool} operator!= (@code{const mglColor &}c)
+Compare with another color
+@end deftypemethod
+
+
+@deftypefn {Library Function} {mglColor} operator+ (@code{const mglColor &}a, @code{const mglColor &}b)
+Adds colors by its RGB values.
+@end deftypefn
+@deftypefn {Library Function} @code{mglColor} operator- (@code{const mglColor &}a, @code{const mglColor &}b)
+Subtracts colors by its RGB values.
+@end deftypefn
+@deftypefn {Library Function} @code{mglColor} operator* (@code{const mglColor &}a, @code{float} b)
+@deftypefnx {Library Function} @code{mglColor} operator* (@code{float} a, @code{const mglColor &}b)
+Multiplies color by number.
+@end deftypefn
+@deftypefn {Library Function} @code{mglColor} operator/ (@code{const mglColor &}a, @code{float} b)
+Divide color by number.
+@end deftypefn
+@deftypefn {Library Function} @code{mglColor} operator! (@code{const mglColor &}a)
+Return inverted color.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node mglPoint class, mglFont class, mglColor class, Other classes
+@section mglPoint class
+@cindex mglPoint
+
+Structure describes point in space. This structure is defined in @code{#include <mgl/type.h>}
+
+@deftypecv {Parameter} mglPoint @code{float} {x, y, z, c}
+Point coordinates @{x,y,z@} and one extra value @var{c} used for amplitude, transparency and so on. By default all values are zero.
+@end deftypecv
+
+@deftypemethod mglPoint @code{} mglPoint (@code{float} X=@code{0}, @code{float} Y=@code{0}, @code{float} Z=@code{0}, @code{float} C=@code{0})
+Constructor sets the color by float values of Red, Green, Blue and Alpha channels. These values should be in interval [0,1].
+@end deftypemethod
+
+@deftypemethod mglPoint @code{bool} IsNAN ()
+Returns @code{true} if point contain NAN values.
+@end deftypemethod
+@deftypemethod mglPoint @code{float} norm ()
+Returns the norm @math{\sqrt@{x^2+y^2+z^2@}} of vector.
+@end deftypemethod
+@deftypemethod mglPoint @code{void} Normalize ()
+Normalizes vector to be unit vector.
+@end deftypemethod
+@deftypemethod mglPoint @code{float} val (@code{int} i)
+Returns point component: @var{x} for @var{i}=0, @var{y} for @var{i}=1, @var{z} for @var{i}=2, @var{c} for @var{i}=3.
+@end deftypemethod
+
+
+@deftypefn {Library Function} @code{mglPoint} operator+ (@code{const mglPoint &}a, @code{const mglPoint &}b)
+Point of summation (summation of vectors).
+@end deftypefn
+@deftypefn {Library Function} @code{mglPoint} operator- (@code{const mglPoint &}a, @code{const mglPoint &}b)
+Point of difference (difference of vectors).
+@end deftypefn
+@deftypefn {Library Function} @code{mglPoint} operator* (@code{float} a, @code{const mglPoint &}b)
+@deftypefnx {Library Function} @code{mglPoint} operator* (@code{const mglPoint &}a, @code{float} b)
+Multiplies (scale) points by number.
+@end deftypefn
+@deftypefn {Library Function} @code{mglPoint} operator/ (@code{const mglPoint &}a, @code{float} b)
+Multiplies (scale) points by number 1/b.
+@end deftypefn
+@deftypefn {Library Function} @code{float} operator* (@code{const mglPoint &}a, @code{const mglPoint &}b)
+Scalar product of vectors.
+@end deftypefn
+
+@deftypefn {Library Function} @code{mglPoint} operator/ (@code{const mglPoint &}a, @code{const mglPoint &}b)
+Return vector of element-by-element product.
+@end deftypefn
+
+@deftypefn {Library Function} @code{mglPoint} operator^ (@code{const mglPoint &}a, @code{const mglPoint &}b)
+Cross-product of vectors.
+@end deftypefn
+@deftypefn {Library Function} @code{mglPoint} operator& (@code{const mglPoint &}a, @code{const mglPoint &}b)
+The part of @var{a} which is perpendicular to vector @var{b}.
+@end deftypefn
+@deftypefn {Library Function} @code{mglPoint} operator| (@code{const mglPoint &}a, @code{const mglPoint &}b)
+The part of @var{a} which is parallel to vector @var{b}.
+@end deftypefn
+
+@deftypefn {Library Function} @code{mglPoint} operator! (@code{const mglPoint &}a)
+Return vector perpendicular to vector @var{a}.
+@end deftypefn
+@deftypefn {Library Function} @code{float} mgl_norm (@code{const mglPoint &}a)
+Return the norm sqrt(|@var{a}|^2) of vector @var{a}.
+@end deftypefn
+
+@deftypefn {Library Function} @code{bool} operator== (@code{const mglPoint &}a, @code{const mglPoint &}b)
+Return true if points are the same.
+@end deftypefn
+@deftypefn {Library Function} @code{bool} operator!= (@code{const mglPoint &}a, @code{const mglPoint &}b)
+Return true if points are different.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node mglFont class, mglVar class, mglPoint class, Other classes
 @section mglFont class
 @cindex mglFont
 
-Class for working with font: load, get metrics, parse and draw strings. This class is defined in @code{#include <mgl/mgl_font.h>}.
+Class for working with font: load, get metrics, parse and draw strings. This class is defined in @code{#include <mgl/font.h>}. This class is accessible only from C++ (and only from GNU compilers in default binary files).
 
 The class is based on loading and drawing of vector Hershey font. There are two styles of specifying of the font type and aligning: by integer parameters or by string.
 
@@ -159,7 +270,7 @@ The over way of font and alignment setting is the using of the integer constant.
 
 
 @menu
-* Format of font files::        
+* Format of font files::
 @end menu
 
 
@@ -172,16 +283,16 @@ Load font from file @var{path}/@var{base} into the memory. The font may contain 
 @deftypemethod mglFont @code{void} Restore ()
 Restore default font.
 @end deftypemethod
-@deftypemethod mglFont @code{void}  (@code{mglFont *} fnt)
+@deftypemethod mglFont @code{void} Copy (@code{mglFont *}fnt)
 Copy data from other font instance.
 @end deftypemethod
 @deftypemethod mglFont @code{void} Clear ()
 Clear memory by deleting the loaded font.
 @end deftypemethod
-@deftypemethod mglFont @code{inline unsigned} GetNumGlyph ()
+@deftypemethod mglFont @code{unsigned} GetNumGlyph ()
 Return the number of glyphs in the font.
 @end deftypemethod
-@deftypemethod mglFont @code{inline bool} Ready ()
+@deftypemethod mglFont @code{bool} Ready ()
 Return true if font is loaded and ready for use.
 @end deftypemethod
 
@@ -219,7 +330,7 @@ Prints Unicode text string for font specified by string.
 Gets width of Unicode text string for font specified by string.
 @end deftypemethod
 
-@deftypecv {Parameter} mglFont @code{mglGraph *} gr
+@deftypecv {Parameter} mglFont @code{HMGL} gr
 Instance of mglGraph class which is used for character drawing.
 @end deftypecv
 @deftypecv {Parameter} mglFont @code{bool} parse
@@ -248,128 +359,17 @@ Each font file can be compressed by gzip.
 
 Note: the closing contour line  is done automatically (so the last segment may be absent). For starting new contour use a point with coordinates @code{@{0x3fff, 0x3fff@}}.
 
-
 @c ------------------------------------------------------------------
-@node mglColor class, mglPoint class, mglFont class, Other classes
-@section mglColor class
-@cindex mglColor
-
-Structure for working with colors. This structure is defined in @code{#include <mgl/mgl.h>}.
-
-There are two ways to set the color in MathGL. First one is using of float values of red, green and blue channels for precise color definition. The second way is the using of character id. There are a set of characters specifying frequently used colors. Normally capital letter gives more dark color than lowercase one. @xref{Line styles}.
-
-@deftypecv {Parameter} mglVar @code{float} {r, g, b}
-Reg, green and blue component of color.
-@end deftypecv
-
-@deftypemethod mglColor @code{} mglColor (@code{float} R, @code{float} G, @code{float} B)
-Constructor sets the color by float values of Red, Green and Blue channels.
-@end deftypemethod
-@deftypemethod mglColor @code{} mglColor (@code{char} c=@code{'k'})
-Constructor sets the color from character id. The black color is used by default.
-@end deftypemethod
-@deftypemethod mglColor @code{void} Set (@code{float} R, @code{float} G, @code{float} B)
-Sets color from values of Red, Green and Blue channels. This values should be in interval [0,1].
-@end deftypemethod
-@deftypemethod mglColor @code{void} Set (@code{mglColor} c, @code{float} bright=@code{1})
-Sets color as ``lighted'' version of color @var{c}.
-@end deftypemethod
-@deftypemethod mglColor @code{void} Set (@code{char} p)
-Sets color from symbolic id.
-@end deftypemethod
-@deftypemethod mglColor @code{bool} Valid ()
-Checks correctness of the color.
-@end deftypemethod
-@deftypemethod mglColor @code{float} Norm ()
-Gets maximal of spectral component.
-@end deftypemethod
-@deftypemethod mglColor @code{bool} operator== (@code{const mglColor &}c)
-Compare with another color
-@end deftypemethod
-
-@deftypefn {Library Function} {inline mglColor} operator+ (@code{const mglColor &}a, @code{const mglColor &}b)
-Adds colors by its RGB values.
-@end deftypefn
-@deftypefn {Library Function} {inline mglColor} operator- (@code{const mglColor &}a, @code{const mglColor &}b)
-Subtracts colors by its RGB values.
-@end deftypefn
-@deftypefn {Library Function} {inline mglColor} operator* (@code{const mglColor &}a, @code{float} b)
-Multiplies color by number.
-@end deftypefn
-@deftypefn {Library Function} {inline mglColor} operator* (@code{float} a, @code{const mglColor &}b)
-Multiplies color by number.
-@end deftypefn
-@deftypefn {Library Function} {inline mglColor} operator/ (@code{const mglColor &}a, @code{float} b)
-Divide color by number.
-@end deftypefn
-@deftypefn {Library Function} {inline mglColor} operator! (@code{const mglColor &}a)
-Return inverted color.
-@end deftypefn
-
-@c ------------------------------------------------------------------
-@node mglPoint class, mglArg class, mglColor class, Other classes
-@section mglPoint class
-@cindex mglPoint
-
-Structure describes point in space. This structure is defined in @code{#include <mgl/mgl.h>}
-
-@deftypecv {Parameter} mglVar @code{float} {x, y, z}
-Point coordinates. By default all values are zero.
-@end deftypecv
-
-@deftypefn {Library Function} {inline mglPoint} operator+ (@code{const mglPoint &}a, @code{const mglPoint &}b)
-Point of summation (summation of vectors).
-@end deftypefn
-@deftypefn {Library Function} {inline mglPoint} operator- (@code{const mglPoint &}a, @code{const mglPoint &}b)
-Point of difference (difference of vectors).
-@end deftypefn
-@deftypefn {Library Function} {inline mglPoint} operator* (@code{float} a, @code{const mglPoint &}b)
-Multiplies (scale) points by number.
-@end deftypefn
-@deftypefn {Library Function} {inline mglPoint} operator* (@code{const mglPoint &}a, @code{float} b)
-Multiplies (scale) points by number.
-@end deftypefn
-@deftypefn {Library Function} {inline mglPoint} operator/ (@code{const mglPoint &}a, @code{float} b)
-Multiplies (scale) points by number 1/b.
-@end deftypefn
-@deftypefn {Library Function} {inline float} operator- (@code{const mglPoint &}a, @code{const mglPoint &}b)
-Scalar product of vectors.
-@end deftypefn
-@deftypefn {Library Function} {inline mglPoint} operator^ (@code{const mglPoint &}a, @code{const mglPoint &}b)
-Cross-product of vectors.
-@end deftypefn
-@deftypefn {Library Function} {inline mglPoint} operator& (@code{const mglPoint &}a, @code{const mglPoint &}b)
-The part of @var{a} which is perpendicular to vector @var{b}.
-@end deftypefn
-@deftypefn {Library Function} {inline mglPoint} operator| (@code{const mglPoint &}a, @code{const mglPoint &}b)
-The part of @var{a} which is parallel to vector @var{b}.
-@end deftypefn
-
-@deftypefn {Library Function} {inline mglPoint} operator! (@code{const mglPoint &}a)
-Return vector perpendicular to vector @var{a}.
-@end deftypefn
-@deftypefn {Library Function} {inline bool} Norm (@code{const mglPoint &}a)
-Return the norm |@var{a}|^2 of vector @var{a}.
-@end deftypefn
-
-@deftypefn {Library Function} {inline bool} operator== (@code{const mglPoint &}a, @code{const mglPoint &}b)
-Return true if points are the same.
-@end deftypefn
-@deftypefn {Library Function} {inline bool} operator!= (@code{const mglPoint &}a, @code{const mglPoint &}b)
-Return true if points are different.
-@end deftypefn
-
-@c ------------------------------------------------------------------
-@node mglVar class, mglCommand class, mglArg class, Other classes
+@node mglVar class, mglCommand class, mglFont class, Other classes
 @section mglVar class
 @cindex mglVar
 
-Structure describes variable of type @code{mglData} and its name in MGL script. This structure is used by @code{mglParse} and is defined in @code{#include <mgl/mgl_parse.h>}.
+Structure describes variable of type @code{mglData} and its name in MGL script. This structure is used by @code{mglParse} and is defined in @code{#include <mgl/parser.h>}. This class is accessible only from C++ (and only from GNU compilers in default binary files).
 
 @deftypecv {Parameter} mglVar @code{mglData} d
 Data itself
 @end deftypecv
-@deftypecv {Parameter} mglVar @code{wchar_t} s[256]
+@deftypecv {Parameter} mglVar @code{std::wstring} s
 Data name
 @end deftypecv
 @deftypecv {Parameter} mglVar @code{void *} o
@@ -394,11 +394,11 @@ Move variable after @var{var} and copy @code{func} from @code{var} (if @code{fun
 
 
 @c ------------------------------------------------------------------
-@node mglCommand class, , mglVar class, Other classes
+@node mglCommand class, mglArg class, mglVar class, Other classes
 @section mglCommand class
 @cindex mglCommand
 
-Structure describes MGL command, its name, short description, executable and export functions. The structure is used by @code{mglParse} and is defined in @code{#include <mgl/mgl_parse.h>}.
+Structure describes MGL command, its name, short description, executable and export functions. The structure is used by @code{mglParse} and is defined in @code{#include <mgl/parser.h>}. This class is accessible only from C++ (and only from GNU compilers in default binary files).
 
 @deftypecv {Parameter} mglCommand @code{const wchar_t *} name
 Name of command.
@@ -418,11 +418,11 @@ Function for exporting in C++ (can be NULL).
 
 
 @c ------------------------------------------------------------------
-@node mglArg class, mglVar class, mglPoint class, Other classes
+@node mglArg class, , mglCommand class, Other classes
 @section mglArg class
 @cindex mglArg
 
-Structure describes arguments of functions in the stucture @code{mglCommand}. It is defined in @code{#include <mgl/mgl_parse.h>}.
+Structure describes arguments of functions in the stucture @code{mglCommand}. It is defined in @code{#include <mgl/parser.h>}. This class is accessible only from C++ (and only from GNU compilers in default binary files).
 
 @deftypecv {Parameter} mglArg @code{int} type
 Type of argument: 0-data, 1-string, 2-number.
@@ -430,10 +430,10 @@ Type of argument: 0-data, 1-string, 2-number.
 @deftypecv {Parameter} mglArg @code{mglData *} d
 Pointer to data (used if type=0).
 @end deftypecv
-@deftypecv {Parameter} mglArg @code{wchar_t} w[2048]
+@deftypecv {Parameter} mglArg @code{std::wstring} w
 String with parameters (used if type=1 or if type=0 as variable name).
 @end deftypecv
-@deftypecv {Parameter} mglArg @code{char} s[2048]
+@deftypecv {Parameter} mglArg @code{std::string} s
 String with parameters (used if type=1).
 @end deftypecv
 @deftypecv {Parameter} mglArg @code{float} v

@@ -1001,6 +1001,7 @@ void mgl_add_param(HMPR p, int id, const char *str)			{	p->AddParam(id,str);	}
 void mgl_add_paramw(HMPR p, int id, const wchar_t *str)		{	p->AddParam(id,str);	}
 HMDT mgl_add_var(HMPR p, const char *name)	{	mglVar *v=p->AddVar(name);	return &(v->d);	}
 HMDT mgl_find_var(HMPR p, const char *name)	{	mglVar *v=p->FindVar(name);	return &(v->d);	}
+void mgl_del_var(HMPR p, const char *name)	{	p->DeleteVar(name);	}
 int mgl_parse(HMGL gr, HMPR p, const char *str, int pos)
 {	return p->Parse(gr, str, pos);	}
 int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos)
@@ -1012,8 +1013,8 @@ void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str, void (*error)(int line
 void mgl_parse_file(HMGL gr, HMPR p, FILE *fp, int print)
 {	p->Execute(gr,fp,print);	}
 void mgl_restore_once(HMPR p)	{	p->RestoreOnce();	}
+void mgl_parser_stop(HMPR p)	{	p->Stop = true;		}
 void mgl_parser_allow_setsize(HMPR p, int a)	{	p->AllowSetSize = a;	}
-void mgl_scan_func(HMPR p, const wchar_t *line)	{	p->ScanFunc(line);	}
 //-----------------------------------------------------------------------------
 #define _PR_	((mglParser *)(*p))
 uintptr_t mgl_create_parser_()	{	return uintptr_t(new mglParser);	}
@@ -1031,6 +1032,9 @@ uintptr_t mgl_find_var_(uintptr_t* p, const char *name, int l)
 {	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
 	mglVar *v=_PR_->FindVar(s);	delete []s;
 	return uintptr_t(&(v->d));	}
+void mgl_del_var_(uintptr_t* p, const char *name, int l)
+{	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
+	_PR_->DeleteVar(s);	delete []s;	}
 int mgl_parse_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l)
 {	char *s=new char[l+1];		memcpy(s,str,l);	s[l]=0;
 	int r = _PR_->Parse(_GR_, s, *pos);	delete []s;	return r;	}
@@ -1040,4 +1044,5 @@ int mgl_parse_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l)
 void mgl_restore_once_(uintptr_t* p)	{	_PR_->RestoreOnce();	}
 void mgl_parser_allow_setsize_(uintptr_t* p, int *a)
 {	_PR_->AllowSetSize = *a;	}
+void mgl_parser_stop_(uintptr_t* p)	{	_PR_->Stop = true;	}
 //-----------------------------------------------------------------------------

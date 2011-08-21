@@ -283,13 +283,13 @@ void mgl_mpi_recv_(uintptr_t *gr, int *id);
 /*****************************************************************************/
 HMPR mgl_create_parser();
 void mgl_delete_parser(HMPR p);
-void mgl_scan_func(HMPR p, const wchar_t *line);
 void mgl_add_param(HMPR p, int id, const char *str);
 void mgl_add_paramw(HMPR p, int id, const wchar_t *str);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-HMDT mgl_add_var(HMPR, const char *name);
+HMDT mgl_add_var(HMPR p, const char *name);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-HMDT mgl_find_var(HMPR, const char *name);
+HMDT mgl_find_var(HMPR p, const char *name);
+void mgl_del_var(HMPR p, const char *name);
 int mgl_parse(HMGL gr, HMPR p, const char *str, int pos);
 int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos);
 void mgl_parse_file(HMGL gr, HMPR p, FILE *fp, int print);
@@ -297,6 +297,7 @@ void mgl_parse_text(HMGL gr, HMPR p, const char *str, void (*error)(int line, in
 void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str, void (*error)(int line, int kind, char *mes));
 void mgl_restore_once(HMPR p);
 void mgl_parser_allow_setsize(HMPR p, int a);
+void mgl_parser_stop(HMPR p);
 /*****************************************************************************/
 uintptr_t mgl_create_parser_();
 void mgl_delete_parser_(uintptr_t* p);
@@ -305,10 +306,12 @@ void mgl_add_param_(uintptr_t* p, int *id, const char *str, int l);
 uintptr_t mgl_add_var_(uintptr_t* p, const char *name, int l);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
 uintptr_t mgl_find_var_(uintptr_t* p, const char *name, int l);
+void mgl_del_var_(uintptr_t* p, const char *name, int l);
 int mgl_parse_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l);
 void mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, int l);
 void mgl_restore_once_(uintptr_t* p);
 void mgl_parser_allow_setsize_(uintptr_t* p, int *a);
+void mgl_parser_stop_(uintptr_t* p);
 /*****************************************************************************/
 #ifdef __cplusplus
 }

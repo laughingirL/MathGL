@@ -90,6 +90,7 @@ void mglFromStr(HMDT d,char *buf,long NX,long NY,long NZ)
 //-----------------------------------------------------------------------------
 void mgl_data_set(HMDT d, HCDT a)
 {
+	if(!a)	return;
 	const mglData *dd = dynamic_cast<const mglData *>(a);	// faster for mglData
 	mgl_data_create(d, a->GetNx(), a->GetNy(), a->GetNz());
 	if(dd)	// this one should be much faster
