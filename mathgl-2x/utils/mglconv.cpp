@@ -21,7 +21,6 @@
 #include <string.h>
 #include <locale.h>
 #include "mgl/mgl.h"
-#include "mgl/parser.h"
 void mgl_error_print(int line, int r, char *Message);
 //-----------------------------------------------------------------------------
 int main(int narg, char **arg)

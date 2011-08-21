@@ -187,14 +187,14 @@ void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const c
 	if(!y1)	{	y1 = new mglData(n);	d1=true;	((mglData *)y1)->Fill(NAN,NAN);	}
 	if(!y2)	{	y2 = new mglData(n);	d2=true;	((mglData *)y2)->Fill(NAN,NAN);	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Candle");	return;	}
-	if(x->GetNx()!=n || v2->GetNx()!=n || y1->GetNx()!=n || y2->GetNx()!=n)
+	if(x->GetNx()<n || v2->GetNx()!=n || y1->GetNx()!=n || y2->GetNx()!=n)
 	{	gr->SetWarn(mglWarnDim,"Candle");	return;	}
 	static int cgid=1;	gr->StartGroup("Candle",cgid++);
 	gr->SaveState(opt);	gr->SetPenPal(pen,&pal);
 	gr->NextColor(pal);	gr->Reserve(8*n);
 
 	long n1,n2,n3,n4;
-	float m1,m2,xx,x1,x2;
+	float m1,m2,xx,x1,x2,d;
 	for(i=0;i<n;i++)
 	{
 		m1=v1->v(i);	m2 = v2->v(i);	xx = x->v(i);
@@ -205,8 +205,9 @@ void mgl_candle_xyv(HMGL gr, HCDT x, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const c
 		n4 = gr->AddPnt(mglPoint(xx,m2,gr->Min.z));
 		gr->line_plot(n3,n4);
 
-		x1 = xx - (i>0  ? gr->BarWidth*(xx-x->v(i-1))/2 : 0);
-		x2 = xx + (i<n-1? gr->BarWidth*(x->v(i+1)-xx)/2 : 0);
+		d = i<n-1 ? x->v(i+1)-xx : xx-x->v(i-1);
+		x1 = xx + d/2*(1-gr->BarWidth);
+		x2 = x1 + gr->BarWidth*d;
 		n1 = gr->AddPnt(mglPoint(x1,m1,gr->Min.z));
 		n2 = gr->AddPnt(mglPoint(x2,m1,gr->Min.z));
 		n3 = gr->AddPnt(mglPoint(x1,m2,gr->Min.z));
@@ -222,7 +223,7 @@ void mgl_candle_yv(HMGL gr, HCDT v1, HCDT v2, HCDT y1, HCDT y2, const char *pen,
 {
 	if(v1->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"Candle");	return;	}
 	gr->SaveState(opt);
-	mglData x(v1->GetNx());
+	mglData x(v1->GetNx()+1);
 	x.Fill(gr->Min.x,gr->Max.x);
 	mgl_candle_xyv(gr,&x,v1,v2,y1,y2,pen,0);
 }
@@ -798,7 +799,7 @@ void mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	float c1,c2,c;
 	mglPoint p1,p2,p3,p4,nn;
 	long n1,n2,n3,n4;
-	float *dd=new float[n], x1,x2,y1,y2,z0,zz,zp;
+	float *dd=new float[n], x1,x2,y1,y2,z0,zz,zp,d;
 	memset(dd,0,n*sizeof(float));
 
 	gr->SetPenPal(pen,&pal);
@@ -811,18 +812,11 @@ void mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 		zp = z0 = gr->GetOrgZ('x');
 		for(i=0;i<n;i++)
 		{
-			if(i<n-1)
-			{
-				x2 = x->v(i,mx) + gr->BarWidth*(x->v(i+1,mx)-x->v(i,mx))/2;
-				y2 = y->v(i,my) + gr->BarWidth*(y->v(i+1,my)-y->v(i,my))/2;
-			}
-			else	{	x2 = x->v(i,mx);	y2 = y->v(i,my);	}
-			if(i>0)
-			{
-				x1 = x->v(i,mx) - gr->BarWidth*(x->v(i,mx)-x->v(i-1,mx))/2;
-				y1 = y->v(i,my) - gr->BarWidth*(y->v(i,my)-y->v(i-1,my))/2;
-			}
-			else	{	x1 = x->v(i,mx);	y1 = y->v(i,my);	}
+			d = i<n-1 ? x->v(i+1,mx)-x->v(i,mx) : x->v(i,mx)-x->v(i-1,mx);
+			x1 = x->v(i,mx) + d/2*(1-gr->BarWidth);
+			d = i<n-1 ? y->v(i+1,my)-y->v(i,my) : y->v(i,my)-y->v(i-1,my);
+			y1 = y->v(i,my) + d/2*(1-gr->BarWidth);
+			x2 = x1 + gr->BarWidth*d;	y2 = y1 + gr->BarWidth*d;
 			zz = z->v(i,mz);
 			if(!above)
 			{
@@ -858,7 +852,7 @@ void mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,n=y->GetNx(),pal;
-	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Bars");	return;	}
+	if(x->GetNx()<n)	{	gr->SetWarn(mglWarnDim,"Bars");	return;	}
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Bars");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Bars",cgid++);
@@ -869,10 +863,9 @@ void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	if(above)	fall = false;
 	float c1,c2,c;
 	long n1,n2,n3,n4;
-	float *dd=new float[n], x1,x2,yy,y0,yp;
+	float *dd=new float[n], x1,x2,yy,y0,yp,d;
 	memset(dd,0,n*sizeof(float));
 
-	float zVal = gr->Min.z;
 	gr->SetPenPal(pen,&pal);
 	if(wire)	gr->Reserve(4*n*m);	else	gr->Reserve(4*n*m);
 	for(j=0;j<m;j++)
@@ -883,11 +876,9 @@ void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 		yp = y0 = gr->GetOrgZ('x');
 		for(i=0;i<n;i++)
 		{
-			if(i<n-1)	x2 = x->v(i,mx) + gr->BarWidth*(x->v(i+1,mx)-x->v(i,mx))/2;
-			else		x2 = x->v(i,mx);
-			if(i>0)		x1 = x->v(i,mx) - gr->BarWidth*(x->v(i,mx)-x->v(i-1,mx))/2;
-			else		x1 = x->v(i,mx);
-			yy = y->v(i,my);
+			d = i<n-1 ? x->v(i+1,mx)-x->v(i,mx) : x->v(i,mx)-x->v(i-1,mx);
+			x1 = x->v(i,mx) + d/2*(1-gr->BarWidth);
+			x2 = x1 + gr->BarWidth*d;	yy = y->v(i,my);
 			if(!above)
 			{	x2 = (x2-x1)/m;		x1 += j*x2;		x2 += x1;	}
 			else
@@ -895,10 +886,10 @@ void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 			if(fall)	{	y0 = yp;	yy += y0;	yp = yy;	}
 
 			c = (y->v(i,my)<0) ? c1 : c2;
-			n1 = gr->AddPnt(mglPoint(x1,yy,zVal),c);
-			n2 = gr->AddPnt(mglPoint(x1,y0,zVal),c);
-			n3 = gr->AddPnt(mglPoint(x2,y0,zVal),c);
-			n4 = gr->AddPnt(mglPoint(x2,yy,zVal),c);
+			n1 = gr->AddPnt(mglPoint(x1,yy,gr->Min.z),c);
+			n2 = gr->AddPnt(mglPoint(x1,y0,gr->Min.z),c);
+			n3 = gr->AddPnt(mglPoint(x2,y0,gr->Min.z),c);
+			n4 = gr->AddPnt(mglPoint(x2,yy,gr->Min.z),c);
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n1,n4);
@@ -914,7 +905,7 @@ void mgl_bars(HMGL gr, HCDT y,	const char *pen, const char *opt)
 {
 	if(y->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"Bars");	return;	}
 	gr->SaveState(opt);
-	mglData x(y->GetNx());
+	mglData x(y->GetNx()+1);
 	x.Fill(gr->Min.x,gr->Max.x);
 	mgl_bars_xy(gr,&x,y,pen,0);
 }
@@ -941,7 +932,7 @@ void mgl_bars_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int
 void mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char *opt)
 {
 	long i,j,m,mx,my,n=v->GetNx(),pal;
-	if(y->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Barh");	return;	}
+	if(y->GetNx()<n)	{	gr->SetWarn(mglWarnDim,"Barh");	return;	}
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Barh");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Barh",cgid++);
@@ -952,10 +943,9 @@ void mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char *opt)
 	if(above)	fall = false;
 	float c1,c2,c;
 	long n1,n2,n3,n4;
-	float *dd=new float[n], y1,y2,xx,x0,xp;
+	float *dd=new float[n], y1,y2,xx,x0,xp,d;
 	memset(dd,0,n*sizeof(float));
 
-	float zVal = gr->Min.z;
 	gr->SetPenPal(pen,&pal);
 	if(wire)	gr->Reserve(4*n*m);	else	gr->Reserve(4*n*m);
 	for(j=0;j<m;j++)
@@ -966,11 +956,9 @@ void mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char *opt)
 		xp = x0 = gr->GetOrgX('y');
 		for(i=0;i<n;i++)
 		{
-			if(i<n-1)	y2 = y->v(i,my) + gr->BarWidth*(y->v(i+1,my)-y->v(i,my))/2;
-			else		y2 = y->v(i,my);
-			if(i>0)		y1 = y->v(i,my) - gr->BarWidth*(y->v(i,my)-y->v(i-1,my))/2;
-			else		y1 = y->v(i,my);
-			xx = v->v(i,mx);
+			d = i<n-1 ? y->v(i+1,my)-y->v(i,my) : y->v(i,my)-y->v(i-1,my);
+			y1 = y->v(i,my) + d/2*(1-gr->BarWidth);
+			y2 = y1 + gr->BarWidth*d;	xx = v->v(i,mx);
 			if(!above)
 			{	y2 = (y2-y1)/m;		y1 += j*y2;		y2 += y1;	}
 			else
@@ -978,10 +966,10 @@ void mgl_barh_yx(HMGL gr, HCDT y, HCDT v, const char *pen, const char *opt)
 			if(fall)	{	x0 = xp;	xx += x0;	xp = xx;	}
 
 			c = (v->v(i,mx)<0) ? c1 : c2;
-			n1 = gr->AddPnt(mglPoint(xx,y1,zVal),c);
-			n2 = gr->AddPnt(mglPoint(xx,y2,zVal),c);
-			n3 = gr->AddPnt(mglPoint(x0,y2,zVal),c);
-			n4 = gr->AddPnt(mglPoint(x0,y1,zVal),c);
+			n1 = gr->AddPnt(mglPoint(xx,y1,gr->Min.z),c);
+			n2 = gr->AddPnt(mglPoint(xx,y2,gr->Min.z),c);
+			n3 = gr->AddPnt(mglPoint(x0,y2,gr->Min.z),c);
+			n4 = gr->AddPnt(mglPoint(x0,y1,gr->Min.z),c);
 			if(wire)
 			{
 				gr->line_plot(n1,n2);	gr->line_plot(n1,n4);
@@ -997,7 +985,7 @@ void mgl_barh(HMGL gr, HCDT v,	const char *pen, const char *opt)
 {
 	if(v->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"Barh");	return;	}
 	gr->SaveState(opt);
-	mglData y(v->GetNx());
+	mglData y(v->GetNx()+1);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_barh_yx(gr,&y,v,pen,0);
 }
@@ -1027,10 +1015,10 @@ int mgl_cmp_flt(const void *a, const void *b)
 void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 {
 	long n=y->GetNx(), m=y->GetNy();
-	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"BoxPlot");	return;	}
+	if(x->GetNx()<n)	{	gr->SetWarn(mglWarnDim,"BoxPlot");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("BoxPlot",cgid++);
-	float *b = new float[5*n], *d = new float[m], x1, x2;
+	float *b = new float[5*n], *d = new float[m], x1, x2, dd;
 	float zVal = gr->Min.z;
 	register long i,j;
 	for(i=0;i<n;i++)	// find quartiles by itself
@@ -1052,10 +1040,9 @@ void mgl_boxplot_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->SetPenPal(pen,&pal);	gr->NextColor(pal);	gr->Reserve(18*n);
 	for(i=0;i<n;i++)
 	{
-		if(i<n-1)	x2 = x->v(i) + gr->BarWidth*(x->v(i+1)-x->v(i))/2;
-		else		x2 = x->v(i);
-		if(i>0)		x1 = x->v(i) - gr->BarWidth*(x->v(i)-x->v(i-1))/2;
-		else		x1 = x->v(i);
+		dd = i<n-1 ? x->v(i+1)-x->v(i) : x->v(i)-x->v(i-1);
+		x1 = x->v(i) + dd/2*(1-gr->BarWidth);
+		x2 = x1 + gr->BarWidth*dd;
 		for(j=0;j<5;j++)	// horizontal lines
 		{
 			p1=mglPoint(x1,b[i+j*n],zVal);	n1=gr->AddPnt(p1,gr->CDef);
@@ -1083,7 +1070,7 @@ void mgl_boxplot(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
 	if(y->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"BoxPlot");	return;	}
 	gr->SaveState(opt);
-	mglData x(y->GetNx());
+	mglData x(y->GetNx()+1);
 	x.Fill(gr->Min.x,gr->Max.x);
 	mgl_boxplot_xy(gr,&x,y,pen,0);
 }

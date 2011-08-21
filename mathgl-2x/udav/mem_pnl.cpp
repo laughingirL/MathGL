@@ -32,7 +32,7 @@
 #include "xpm/preview.xpm"
 //-----------------------------------------------------------------------------
 extern bool mglAutoSave;
-extern mglParse parser;
+extern mglParser parser;
 //-----------------------------------------------------------------------------
 MemPanel::MemPanel(QWidget *parent) : QWidget(parent)
 {

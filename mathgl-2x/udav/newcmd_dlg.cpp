@@ -31,7 +31,7 @@
 #include "newcmd_dlg.h"
 #include "opt_dlg.h"
 #include "style_dlg.h"
-extern mglParse parser;
+extern mglParser parser;
 extern QString pathHelp;
 //-----------------------------------------------------------------------------
 NewCmdDialog::NewCmdDialog(QWidget *p) : QDialog(p,Qt::WindowStaysOnTopHint)

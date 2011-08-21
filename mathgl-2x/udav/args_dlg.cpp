@@ -23,7 +23,7 @@
 #include <QPushButton>
 #include <mgl/parser.h>
 #include "args_dlg.h"
-extern mglParse parser;
+extern mglParser parser;
 //-----------------------------------------------------------------------------
 ArgsDialog::ArgsDialog(QWidget *parent) : QDialog(parent)
 {

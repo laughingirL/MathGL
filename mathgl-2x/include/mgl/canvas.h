@@ -81,6 +81,11 @@ struct mglText
 struct mglAxis
 {
 	mglAxis()	{	dv=ds=d=v0=v1=v2=o=0;	ns=f=ch=*t=0;	}
+	mglAxis(const mglAxis &aa)
+	{	dv=aa.dv;	ds=aa.ds;	d=aa.d;		dir=aa.dir;
+		v0=aa.v0;	v1=aa.v1;	v2=aa.v2;	o=aa.o;
+		a = aa.a;	b = aa.b;	org=aa.org;	txt=aa.txt;
+		ns=aa.ns;	f=aa.f;		ch=aa.ch;	wcscpy(t,aa.t);	}
 	inline void AddLabel(const wchar_t *lbl, float v)
 	{	txt.push_back(mglText(lbl,"",v));	}
 	inline void AddLabel(const std::wstring &lbl, float v)

@@ -38,7 +38,7 @@
 #include "info_dlg.h"
 #include "xpm/table.xpm"
 //-----------------------------------------------------------------------------
-extern mglParse parser;
+extern mglParser parser;
 void updateDataItems();
 void deleteDat(void *o)	{	if(o)	delete ((DatPanel *)o);	}
 //-----------------------------------------------------------------------------

@@ -1013,27 +1013,30 @@ public:
 	inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
 };
 //-----------------------------------------------------------------------------
-/*class mglParse
+class mglParse
 {
-	HMPR gr;
+	HMPR pr;
 public:
-	mglParse()		{	gr=mgl_create_parser();	}
-	~mglParse()	{	mgl_delete_parser(gr);	}
-	inline void AddParam(int id, const char *str)	{	mgl_add_param(gr, id, str);	}
-	inline void AddParam(int id, const wchar_t *str){	mgl_add_paramw(gr, id, str);	}
-	inline mglData AddVar(const char *name)	{	return mglData(mgl_add_var(gr, name),false);	}
-	inline mglData FindVar(const char *name)	{	return mglData(mgl_find_var(gr, name),false);	}
+	mglParse(bool setsize=false)
+	{	pr=mgl_create_parser();	mgl_parser_allow_setsize(pr, setsize);	}
+	~mglParse()	{	mgl_delete_parser(pr);	}
+	inline void AddParam(int id, const char *str)	{	mgl_add_param(pr, id, str);	}
+	inline void AddParam(int id, const wchar_t *str){	mgl_add_paramw(pr, id, str);	}
+	inline mglData AddVar(const char *name)	{	return mglData(mgl_add_var(pr, name));	}
+	inline mglData FindVar(const char *name)	{	return mglData(mgl_find_var(pr, name));	}
 	inline int Parse(mglGraph *gr, const char *str, int pos)
-	{	return mgl_parse(gr->Self(), gr, str, pos);	}
+	{	return mgl_parse(gr->Self(), pr, str, pos);	}
 	inline int Parse(mglGraph *gr, const wchar_t *str, int pos)
-	{	return mgl_parsew(gr->Self(), gr, str, pos);	}
-	inline void ScanFunc(const wchar_t *line){	mgl_scan_func(gr, line);	}
-	inline void Execute(mglGraph *gr, const char *str)
-	{	mgl_parse_text(gr->Self(), gr, str);	}
-	inline void Execute(mglGraph *gr, const wchar_t *str)
-	{	mgl_parsew_text(gr->Self(), gr, str);	}
-	inline void RestoreOnce()	{	mgl_restore_once(gr);	}
-	inline void AllowSetSize(bool allow)	{	mgl_parser_allow_setsize(gr, allow);	}
-};*/
+	{	return mgl_parsew(gr->Self(), pr, str, pos);	}
+	inline void ScanFunc(const wchar_t *line){	mgl_scan_func(pr, line);	}
+	inline void Execute(mglGraph *gr, const char *str, void (*error)(int line, int kind, char *mes)=NULL)
+	{	mgl_parse_text(gr->Self(), pr, str, error);	}
+	inline void Execute(mglGraph *gr, const wchar_t *str, void (*error)(int line, int kind, char *mes)=NULL)
+	{	mgl_parsew_text(gr->Self(), pr, str, error);	}
+	inline void Execute(mglGraph *gr, FILE *fp, bool print=false)
+	{	mgl_parse_file(gr->Self(), pr, fp, print);	}
+	inline void RestoreOnce()	{	mgl_restore_once(pr);	}
+	inline void AllowSetSize(bool allow)	{	mgl_parser_allow_setsize(pr, allow);	}
+};
 //-----------------------------------------------------------------------------
 #endif

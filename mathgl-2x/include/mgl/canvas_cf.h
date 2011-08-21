@@ -132,11 +132,6 @@ void mgl_rotate_vector(HMGL gr, float Tet,float x,float y,float z);
 void mgl_perspective(HMGL gr, float val);
 
 /*****************************************************************************/
-void mgl_mpi_send(HMGL gr, int id);
-void mgl_mpi_recv(HMGL gr, int id);
-void mgl_mpi_send_(uintptr_t *gr, int *id);
-void mgl_mpi_recv_(uintptr_t *gr, int *id);
-/*****************************************************************************/
 uintptr_t mgl_create_graph_(int *width, int *height);
 void mgl_delete_graph_(uintptr_t *graph);
 void mgl_set_size_(uintptr_t *graph, int *width, int *height);
@@ -280,6 +275,40 @@ void mgl_wnd_adjust_(uintptr_t *gr);
 void mgl_wnd_next_frame_(uintptr_t *gr);
 void mgl_wnd_prev_frame_(uintptr_t *gr);
 void mgl_wnd_animation_(uintptr_t *gr);
+/*****************************************************************************/
+void mgl_mpi_send(HMGL gr, int id);
+void mgl_mpi_recv(HMGL gr, int id);
+void mgl_mpi_send_(uintptr_t *gr, int *id);
+void mgl_mpi_recv_(uintptr_t *gr, int *id);
+/*****************************************************************************/
+HMPR mgl_create_parser();
+void mgl_delete_parser(HMPR p);
+void mgl_scan_func(HMPR p, const wchar_t *line);
+void mgl_add_param(HMPR p, int id, const char *str);
+void mgl_add_paramw(HMPR p, int id, const wchar_t *str);
+/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
+HMDT mgl_add_var(HMPR, const char *name);
+/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
+HMDT mgl_find_var(HMPR, const char *name);
+int mgl_parse(HMGL gr, HMPR p, const char *str, int pos);
+int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos);
+void mgl_parse_file(HMGL gr, HMPR p, FILE *fp, int print);
+void mgl_parse_text(HMGL gr, HMPR p, const char *str, void (*error)(int line, int kind, char *mes));
+void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str, void (*error)(int line, int kind, char *mes));
+void mgl_restore_once(HMPR p);
+void mgl_parser_allow_setsize(HMPR p, int a);
+/*****************************************************************************/
+uintptr_t mgl_create_parser_();
+void mgl_delete_parser_(uintptr_t* p);
+void mgl_add_param_(uintptr_t* p, int *id, const char *str, int l);
+/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
+uintptr_t mgl_add_var_(uintptr_t* p, const char *name, int l);
+/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
+uintptr_t mgl_find_var_(uintptr_t* p, const char *name, int l);
+int mgl_parse_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l);
+void mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, int l);
+void mgl_restore_once_(uintptr_t* p);
+void mgl_parser_allow_setsize_(uintptr_t* p, int *a);
 /*****************************************************************************/
 #ifdef __cplusplus
 }

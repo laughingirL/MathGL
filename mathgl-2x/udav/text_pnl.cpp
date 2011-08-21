@@ -44,7 +44,7 @@ FilesDialog *files_dlg=0;
 QString defFontFamily;
 int defFontSize;
 bool mglAutoExecute = true;
-extern mglParse parser;
+extern mglParser parser;
 extern bool mglCompleter;
 //-----------------------------------------------------------------------------
 TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
@@ -93,7 +93,7 @@ void TextPanel::setCompleter(bool en)
 //	completer->setCompletionMode(en ? QCompleter::PopupCompletion : QCompleter::InlineCompletion);
 }
 //-----------------------------------------------------------------------------
-mglData mglFormulaCalc(const wchar_t *string, mglParse *arg);
+mglData mglFormulaCalc(const wchar_t *string, mglParser *arg);
 void TextPanel::insNVal()
 {
 	QString sel=edit->textCursor().selectedText();

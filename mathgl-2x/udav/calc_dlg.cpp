@@ -25,8 +25,8 @@
 #include <QComboBox>
 #include <mgl/parser.h>
 #include "calc_dlg.h"
-extern mglParse parser;
-mglData mglFormulaCalc(const wchar_t *string, mglParse *arg);
+extern mglParser parser;
+mglData mglFormulaCalc(const wchar_t *string, mglParser *arg);
 //-----------------------------------------------------------------------------
 //
 //	Calc dialog

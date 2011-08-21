@@ -388,36 +388,45 @@ void mglCanvas::Axis(const char *dir, bool adjust)
 	AdjustTicks(dir,adjust);
 	// TODO: Ternary axis labeling ...
 	if(strchr(dir,'x'))	DrawAxis(ax, text, arr);
-	if(strchr(dir,'y'))	DrawAxis(ay, text, arr);
 	if(strchr(dir,'z'))	DrawAxis(az, text, arr);
+	if((TernAxis&3))
+	{
+		mglAxis ty(ay);				ty.ch='T';
+		ty.dir = mglPoint(-1,1);	ty.org = mglPoint(1,0,ay.org.z);
+		DrawAxis(ty, text, arr);	ty.ch='t';
+		ty.dir = mglPoint(0,-1);	ty.org = mglPoint(0,1,ay.org.z);
+		DrawAxis(ty, text, arr);
+	}
+	else if(strchr(dir,'y'))	DrawAxis(ay, text, arr);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr)
 {
-	if(strchr("xyztuvw",aa.ch))
+	if(strchr("xyz",aa.ch))
 		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
 	if(aa.ch=='x')	aa.v0 = aa.org.x;
 	if(aa.ch=='y')	aa.v0 = aa.org.y;
 	if(aa.ch=='z')	aa.v0 = aa.org.z;
 
-	mglPoint d = aa.dir, o = aa.org - d*(aa.org*d);	// "transverse" org
+	mglPoint d = aa.dir, o = aa.org, q(NAN);	// "transverse" org
+	if(strchr("xyz",aa.ch))	o -= d*(o*d);
 	mglPoint av=(Min+Max)/2, dv,da,db, p;
 	dv = mglPoint(sign(av.x-o.x), sign(av.y-o.y), sign(av.z-o.z));
 	da = aa.a*(dv*aa.a);	db = aa.b*(dv*aa.b);
 	SetPenPal(AxisStl);
 
 	register long i,j,k1,k2;
-	p = o + d*aa.v1;	k1 = AddPnt(p,CDef);
+	p = o + d*aa.v1;	k1 = AddPnt(p,CDef,q,-1,3);
 	for(i=1;i<31;i++)	// axis itself
 	{
 		p = o + d*(aa.v1+(aa.v2-aa.v1)*i/30.);
-		k2 = k1;	k1 = AddPnt(p,CDef);
+		k2 = k1;	k1 = AddPnt(p,CDef,q,-1,3);
 		line_plot(k2,k1);
 	}
 	if(arr)
 	{
 		p = o + d*(aa.v1+(aa.v2-aa.v1)*1.05);
-		k2 = k1;	k1 = AddPnt(p,CDef);
+		k2 = k1;	k1 = AddPnt(p,CDef,q,-1,3);
 		arrow_plot(k1,k2,arr);
 	}
 
@@ -442,15 +451,17 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr)
 //-----------------------------------------------------------------------------
 void mglCanvas::DrawLabels(mglAxis &aa)
 {
-	if(strchr("xyztuvw",aa.ch))
+	if(strchr("xyz",aa.ch))
 		aa.org = mglPoint(GetOrgX(aa.ch), GetOrgY(aa.ch), GetOrgZ(aa.ch));
-	mglPoint d = aa.dir, o = aa.org - d*(aa.org*d);	// "transverse" org
+	mglPoint d = aa.dir, o = aa.org;	// "transverse" org
+	if(strchr("xyz",aa.ch))	o -= d*(o*d);
 	mglPoint p,q, s=(Min+Max)/2, nn;
 	s = s - d*(s*d);
 
 	register long i,n = aa.txt.size();
 	char pos[4]="t:C";
 	if(get(MGL_DISABLE_SCALE) && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
+	if(aa.ch=='T')	pos[0]='t';
 	float *w=new float[n], h = TextHeight(FontDef,-1)/4, c=NAN, l=NAN, tet=0, v;	// find sizes
 	long *kk=new long[n];
 	for(i=0;i<n;i++)
@@ -473,6 +484,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		if(c>aa.v1 && c<aa.v2 && i%k!=0)	continue;
 		p = o+d*c;	nn = s-o;	ScalePoint(p,nn);
 		if(!get(MGL_DISABLE_SCALE))	pos[0]=(nn.y>0 || nn.x<0) ? 'T':'t';
+		if(aa.ch=='T')	pos[0]='t';
 		mglPnt &qq = Pnt[kk[i]];	v = qq.u;
 		qq.u = v*cos(tet) + qq.v*sin(tet);
 		qq.v = qq.v*cos(tet) - v*sin(tet);
@@ -623,6 +635,16 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
 		nn = mglPoint(ss.x-x0,0,ss.z-z0);
 		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);
+		if(TernAxis&3)
+		{	q = mglPoint(-1,1,0);	pos=-pos;	}
+	}
+	if(dir=='t' && (TernAxis&3))
+	{
+		AdjustTicks(ay,fy);	pos = -pos;
+		if(ay.dv)	t = (Min.y+Max.y+pos*(Max.y-Min.y))/2;
+		else	t = Min.y*pow(Max.y/Min.y, (pos+1)/2);
+		nn = mglPoint(ss.x-x0,0,ss.z-z0);
+		p = mglPoint(x0,t,z0);	q = mglPoint(0,1,0);
 	}
 	if(dir=='z')
 	{
@@ -663,26 +685,6 @@ void mglCanvas::Labelw(float x, float y, const wchar_t *text, const char *font, 
 	delete []f;	fx=ox;	fy=oy;	fz=oz;	Pop();
 }
 //-----------------------------------------------------------------------------
-/*void mglCanvas::Title(const wchar_t *str,const char *font)
-{
-	Push();	Identity();
-	mglFormula *ox=fx, *oy=fy, *oz=fz;
-	fx = fy = fz = NULL;
-	mglPoint p((Min.x+Max.x)/2, Max.y+(Max.y-Min.y)*0.15, (Min.z+Max.z)/2);
-	ScalePoint(p);	text_plot(AddPnt(p,-1,mglPoint(NAN),0), str, font, size);
-	fx=ox;	fy=oy;	fz=oz;	Pop();
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::Title(const char *str,const char *font)
-{
-	unsigned s = strlen(str)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,str,s);
-	Title(wcs, font, size);
-	delete []wcs;
-}*/
-//-----------------------------------------------------------------------------
-//void mglCanvas::Box(const char *col, bool ticks)	// TODO: Add color
 void mglCanvas::Box(const char *col, bool ticks)
 {
 	mglPoint o = Org;
@@ -692,13 +694,25 @@ void mglCanvas::Box(const char *col, bool ticks)
 	Org = Min;	Axis("xyz_");
 	if(TernAxis&1)
 	{
-		Axis("t_");
-		Org.z=Max.z;	Axis("xyt_");
-		Org.x=Max.x;	Axis("z_");
+		Org.z=Max.z;	Org.x=Max.x;	Axis("xz_");
 		Org.x=Min.x;	Org.y=Max.y;	Axis("z_");
+
+		mglAxis ty(ay);				ty.ch='T';
+		ty.dir = mglPoint(-1,1);	ty.org = mglPoint(1,0,Max.z);
+		DrawAxis(ty, false, 0);	ty.ch='t';
+		ty.dir = mglPoint(0,-1);	ty.org = mglPoint(0,1,Max.z);
+		DrawAxis(ty, false, 0);
 	}
 	else if(TernAxis&2)
-		Axis("tuv_");
+	{
+		mglAxis ty(az);
+		ty.ch='T';	ty.a=mglPoint(1,0);	ty.b=mglPoint(-1,1);
+		ty.dir = mglPoint(-1,0,1);	ty.org = mglPoint(1,0,Max.z);
+		DrawAxis(ty, false, 0);
+		ty.ch='t';	ty.a=mglPoint(0,1);	ty.b=mglPoint(-1,1);
+		ty.dir = mglPoint(0,-1,1);	ty.org = mglPoint(0,1,Max.z);
+		DrawAxis(ty, false, 0);
+	}
 	else
 	{
 		Org.z=Max.z;	Axis("xy_");

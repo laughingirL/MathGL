@@ -34,52 +34,30 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 int test_wnd(mglGraph *gr)
 {
 mgl_set_test_mode(true);
-	float aa[100];   // let a_i = sin(4*pi*x), x=0...1
-	for(int i=0;i<100;i++)	aa[i]=sin(4*M_PI*i/99);
-	mglParse *parser = new mglParse;
-	mglData &d =(parser->AddVar("dat"))->d;
-	d.Set(aa,100); // set data to variable
-	parser->Execute(gr, "plot dat;;xrange 0 1:box\naxis");
-	// you may break script at any line do something
-	// and continue after that
-	parser->Execute(gr, "xlabel 'x'\nylabel 'y'");
-	// also you may use cycles or conditions in script
-	parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
-	delete parser;
-	return 0;
 
-	mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
-	a.Modify("x*y*(1-x-y)^2*30");
-	x.Modify("0.25*(1-x)*(1+cos(2*pi*x))");
-	y.Modify("0.25*(1-x)*(1+sin(2*pi*x))");
-	z.Modify("x");
-
-	gr->SubPlot(2,1,0);
-	gr->Puts(mglPoint(0,1.3), "Quaternary plot (x+y+z+t=1)");
-	gr->Rotate(60,70);		gr->Light(true);
-	gr->Ternary(2);			gr->SetCut(true);
-	gr->Plot(x,y,z,"r2|");	gr->Surf(a,"BbcyrR#");
-	gr->Axis(); gr->Grid();	gr->Box();
+	gr->SubPlot(2,2,0);
+	gr->Rotate(60,70);	gr->Ternary(2);
+	gr->Axis();
+	gr->Box();
 //	gr->SetRotatedText(false);
 	gr->Label('t',"A",1);	gr->Label('x',"B",1);
 	gr->Label('y',"C",1);	gr->Label('z',"D",1);
 
-	a.Modify("4*x*y");
-	x.Modify("0.25*(1+cos(2*pi*x))");
-	y.Modify("0.25*(1+sin(2*pi*x))");
-	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
-
-	gr->SubPlot(2,1,1);
-	gr->Puts(mglPoint(-0.8,1.3), "Ternary plot (x+y+t=1)");
-	gr->Ternary(true);
-	gr->Plot(x,y,"r2");
-	gr->Plot(rx,ry,"q^ ");
-	gr->Cont(a,"BbcyrR");
-	gr->Line(mglPoint(0.5,0), mglPoint(0,0.75), "g2");
-	gr->Axis(); gr->Grid("xyz","B;");
+	gr->SubPlot(2,2,1);
+	gr->Rotate(60,70);	gr->Ternary(1);
+	gr->Axis();
+	gr->Box();
 	gr->Label('x',"x comp.");
 	gr->Label('y',"y comp.");
 	gr->Label('t',"t comp.");
+
+	gr->SubPlot(2,2,3);
+	gr->Rotate(60,70);	gr->Ternary(0);
+	gr->Axis();
+	gr->Box();
+//	gr->SetRotatedText(false);
+	gr->Label('t',"A",1);	gr->Label('x',"X",1);
+	gr->Label('y',"Y",1);	gr->Label('z',"Z",1);
 	return 0;
 }
 //-----------------------------------------------------------------------------

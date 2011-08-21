@@ -29,7 +29,7 @@
 #include <mgl/parser.h>
 #include "open_dlg.h"
 int numDataOpened=0;
-extern mglParse parser;
+extern mglParser parser;
 QStringList dataScr;
 //-----------------------------------------------------------------------------
 DataOpenDialog::DataOpenDialog(QWidget *parent) : QDialog(parent)

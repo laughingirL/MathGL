@@ -100,7 +100,7 @@ struct mglFnStack
 };
 //-----------------------------------------------------------------------------
 /// Structure for the command argument (see mglGraph::Exec()).
-class mglParse
+class mglParser
 {
 friend void mgl_export(wchar_t *out, const wchar_t *in, int type);
 public:
@@ -112,8 +112,8 @@ public:
 	mglCommand *Cmd;	///< Table of recognizable MGL commands (can be changed by user). It MUST be sorted by 'name' field !!!
 	wchar_t *op1, *op2;	///< Buffer for options (are used if out!=NULL)
 
-	mglParse(bool setsize=false);
-	~mglParse();
+	mglParser(bool setsize=false);
+	~mglParser();
 	/// Find the command by the keyword name
 	mglCommand *FindCommand(const wchar_t *name, bool prog=false);
 	/// Parse and execute the string of MGL script
@@ -214,39 +214,5 @@ private:
 	bool inline skip()		{	return (Skip || ifskip() || for_br);	};
 };
 //-----------------------------------------------------------------------------
-typedef mglParse* HMPR;
-extern "C" {
-#else
-typedef void* HMPR;
 #endif
-/*****************************************************************************/
-HMPR mgl_create_parser();
-void mgl_delete_parser(HMPR p);
-void mgl_scan_func(HMPR p, const wchar_t *line);
-void mgl_add_param(HMPR p, int id, const char *str);
-void mgl_add_paramw(HMPR p, int id, const wchar_t *str);
-/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-HMDT mgl_add_var(HMPR, const char *name);
-/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-HMDT mgl_find_var(HMPR, const char *name);
-int mgl_parse(HMGL gr, HMPR p, const char *str, int pos);
-int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos);
-void mgl_restore_once(HMPR p);
-void mgl_parser_allow_setsize(HMPR p, int a);
-/*****************************************************************************/
-uintptr_t mgl_create_parser_();
-void mgl_delete_parser_(uintptr_t* p);
-void mgl_add_param_(uintptr_t* p, int *id, const char *str, int l);
-/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-uintptr_t mgl_add_var_(uintptr_t* p, const char *name, int l);
-/*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/
-uintptr_t mgl_find_var_(uintptr_t* p, const char *name, int l);
-int mgl_parse_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l);
-void mgl_restore_once_(uintptr_t* p);
-void mgl_parser_allow_setsize_(uintptr_t* p, int *a);
-/*****************************************************************************/
-#ifdef __cplusplus
-}
-#endif
-
 #endif

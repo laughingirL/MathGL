@@ -60,7 +60,7 @@ bool mglAutoPure = true;
 bool mglCompleter = true;
 bool showHint=true;
 bool loadInNewWnd = false;
-extern mglParse parser;
+extern mglParser parser;
 extern QColor mglColorScheme[9];
 extern QString defFontFamily;
 extern int defFontSize;

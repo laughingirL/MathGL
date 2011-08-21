@@ -1,7 +1,6 @@
 ============= TEST =============
 1. Triangulation
-2. Axis
-	* ternary, quaternary, projection (& ternary, quaternary projections -- change *_plot())
+2. Axis -- projection (ternary + quaternary)
 
 ============= NEW  =============
 
@@ -19,8 +18,8 @@
 12. Cones() -- like Bars() but by Cone()
 13. MPI_Send(), MPI_Recv()
 14. Add diffusive light (no dependence of normals but have direction)
-15. Normal size of bars for first and last one (Bars, Barh,BoxPlot,Candle,Boxs, ...)
-16. Use Hershey as built-in font ???
+15. Use Hershey as built-in font ???
+16. Add MGL command "ask $N 'question'" -- like interactive "define"
 
 ============= UNSURE ===========
 
@@ -28,9 +27,7 @@
 2. create PWT fonts
 3. \dfrac for normal size and centering  (sample \big\big{\frac{1}{2}}) ???
 4. "Cut off" curves if text is printed inside it (for contour labels) ?!?
-5. Save ALL plot styles for each curve (0...N) for each subplot (0...M) in format \leg{N_M} ?!?
-6. Add TeX command \leg{plot style} for line+mark of specified style.
-7. String variables in MGL + readstr command.
+5. String variables in MGL + readstr command.
 8. Pool of threads for speeding up ???
 9. Drops as mglPrim -- not accurate but smaller memory and faster
 10. Text aspect ratio in OpenGL mode
@@ -54,10 +51,12 @@
 15. Primitives sample
 16. Candle() sample
 17. Parallelization:
-	* user level -- SetDrawReg(), PutDrawReg()
+	* user level -- SetDrawReg(), PutDrawReg() -- remove!?!
 	* MPI level -- Combine()
 	* MathGL level -- pthread in mglData, ???
 18. SetCoor() -- add log-log, log-x, log-y predefined coordinates
+19. Boxs() styles: '#' for wire, '@' for full box. NOTE: use Boxs(a,"@"); for testing speed
+20. TernAxis=0 -- usual, =1 -- ternary, =2 -- quaternary, &4 -- projections
 
 ============= BUGS =============
 

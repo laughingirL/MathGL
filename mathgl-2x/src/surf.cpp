@@ -614,44 +614,79 @@ void mgl_surfa_(uintptr_t *gr, uintptr_t *z, uintptr_t *a, const char *sch, cons
 void mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
-	if(x->GetNx()!=z->GetNx())		{	gr->SetWarn(mglWarnDim,"Boxs");	return;	}
+	if(x->GetNx()<z->GetNx())		{	gr->SetWarn(mglWarnDim,"Boxs");	return;	}
 	if(z->GetNx()<2 || z->GetNy()<2){	gr->SetWarn(mglWarnLow,"Boxs");	return;	}
-	if(y->GetNx()!=z->GetNy() && (x->GetNy()!=z->GetNy() || y->GetNx()!=z->GetNx() || y->GetNy()!=z->GetNy()))
+	long ly = x->GetNy()>=z->GetNy() ? y->GetNy() : y->GetNx(), lx = x->GetNx();
+
+	if(y->GetNx()<z->GetNy() && (x->GetNy()<z->GetNy() || y->GetNx()<z->GetNx() || y->GetNy()<z->GetNy()))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Boxs",cgid++);
 
 	long ss = gr->AddTexture(sch);
-	gr->Reserve(12*n*m*z->GetNz());
+	bool wire = sch && strchr(sch,'#');
+	bool full = sch && strchr(sch,'@');
+	gr->Reserve(8*n*m*z->GetNz());
 
-	mglPoint p1,p2,p3,p4,q,s,t=mglPoint(0,0,1),xx,yy;
-	float zz,z1,z2,x1,y1,c;
-	long k1,k2,k3,k4;
+	mglPoint p1,p2,p3,p4,q,s,t(wire||full?NAN:0,0,1),xx,yy;
+	float zz,z1,z2,x1,y1,c,z0=gr->GetOrgZ('x');
+	long k1,k2,k3,k4,k5,k6,k7,k8;
 	for(k=0;k<z->GetNz();k++)
 	{
-		for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
+		for(i=0;i<n;i++)	for(j=0;j<m;j++)
 		{
 			zz = z->v(i,j,k);		c  = gr->GetC(ss,zz);
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
-			x1 = GetX(x,i+1,j,k).x;	y1 = GetY(y,i,j+1,k).x;
-			z1 = z->v(i+1,j,k);		z2 = z->v(i,j+1,k);
+			x1 = i<lx-1 ? GetX(x,i+1,j,k).x:NAN;
+			y1 = j<ly-1 ? GetY(y,i,j+1,k).x:NAN;
+			z1 = i<n-1?z->v(i+1,j,k):NAN;
+			z2 = j<m-1?z->v(i,j+1,k):NAN;
 			q = mglPoint(xx.y,yy.y,0);
 			s = mglPoint(xx.z,yy.z,0);
 			p1 = mglPoint(xx.x,yy.x,zz);	k1 = gr->AddPnt(p1,c,t);
 			p2 = mglPoint(x1,yy.x,zz);		k2 = gr->AddPnt(p2,c,t);
 			p3 = mglPoint(xx.x,y1,zz);		k3 = gr->AddPnt(p3,c,t);
 			p4 = mglPoint(x1,y1,zz);		k4 = gr->AddPnt(p4,c,t);
-			gr->quad_plot(k1,k2,k3,k4);
-			p1 = mglPoint(x1,yy.x,zz);		k1 = gr->AddPnt(p1,c,q);
-			p2 = mglPoint(x1,y1,zz);		k2 = gr->AddPnt(p2,c,q);
-			p3 = mglPoint(x1,yy.x,z1);		k3 = gr->AddPnt(p3,c,q);
-			p4 = mglPoint(x1,y1,z1);		k4 = gr->AddPnt(p4,c,q);
-			gr->quad_plot(k1,k2,k3,k4);
-			p1 = mglPoint(xx.x,y1,zz);		k1 = gr->AddPnt(p1,c,s);
-			p2 = mglPoint(x1,y1,zz);		k2 = gr->AddPnt(p2,c,s);
-			p3 = mglPoint(xx.x,y1,z2);		k3 = gr->AddPnt(p3,c,s);
-			p4 = mglPoint(x1,y1,z2);		k4 = gr->AddPnt(p4,c,s);
-			gr->quad_plot(k1,k2,k3,k4);
+			if(wire)
+			{
+				gr->line_plot(k1,k2);	gr->line_plot(k1,k3);
+				gr->line_plot(k4,k2);	gr->line_plot(k4,k3);
+			}
+			else	gr->quad_plot(k1,k2,k3,k4);
+
+			if(full)
+			{
+				p1 = mglPoint(xx.x,yy.x,z0);	k5 = gr->AddPnt(p1,c,t);
+				p2 = mglPoint(x1,yy.x,z0);		k6 = gr->AddPnt(p2,c,t);
+				p3 = mglPoint(xx.x,y1,z0);		k7 = gr->AddPnt(p3,c,t);
+				p4 = mglPoint(x1,y1,z0);		k8 = gr->AddPnt(p4,c,t);
+				if(wire)
+				{
+					gr->line_plot(k5,k6);	gr->line_plot(k5,k7);
+					gr->line_plot(k8,k6);	gr->line_plot(k8,k7);
+					gr->line_plot(k1,k5);	gr->line_plot(k3,k7);
+					gr->line_plot(k2,k6);	gr->line_plot(k4,k8);
+				}
+				else
+				{
+					gr->quad_plot(k1,k2,k5,k6);	gr->quad_plot(k1,k3,k5,k7);
+					gr->quad_plot(k4,k2,k8,k6);	gr->quad_plot(k4,k3,k8,k7);
+					gr->quad_plot(k5,k6,k7,k8);
+				}
+			}
+			else
+			{
+				p3 = mglPoint(x1,yy.x,z1);		k5 = gr->AddPnt(p3,c,wire?t:q);
+				p4 = mglPoint(x1,y1,z1);		k6 = gr->AddPnt(p4,c,wire?t:q);
+				if(wire)
+				{	gr->line_plot(k2,k5);	gr->line_plot(k6,k5);	gr->line_plot(k6,k4);	}
+				else	gr->quad_plot(k2,k4,k5,k6);
+				p3 = mglPoint(xx.x,y1,z2);		k7 = gr->AddPnt(p3,c,wire?t:s);
+				p4 = mglPoint(x1,y1,z2);		k8 = gr->AddPnt(p4,c,wire?t:s);
+				if(wire)
+				{	gr->line_plot(k3,k7);	gr->line_plot(k4,k8);	gr->line_plot(k7,k8);	}
+				else	gr->quad_plot(k3,k4,k7,k8);
+			}
 		}
 	}
 	gr->EndGroup();
@@ -661,7 +696,7 @@ void mgl_boxs(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
 	if(z->GetNx()<2 || z->GetNy()<2){	gr->SetWarn(mglWarnLow,"Boxs");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()), y(z->GetNy());
+	mglData x(z->GetNx()+1), y(z->GetNy()+1);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_boxs_xy(gr,&x,&y,z,sch,0);
@@ -684,9 +719,10 @@ void mgl_boxs_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,int
 void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
-	if(x->GetNx()!=z->GetNx())		{	gr->SetWarn(mglWarnDim,"Tile");	return;	}
+	if(x->GetNx()<z->GetNx())		{	gr->SetWarn(mglWarnDim,"Tile");	return;	}
 	if(z->GetNx()<2 || z->GetNy()<2){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
-	if(y->GetNx()!=z->GetNy() && (x->GetNy()!=z->GetNy() || y->GetNx()!=z->GetNx() || y->GetNy()!=z->GetNy()))
+	long ly = x->GetNy()>=z->GetNy() ? y->GetNy() : y->GetNx(), lx = x->GetNx();
+	if(y->GetNx()<z->GetNy() && (x->GetNy()<z->GetNy() || y->GetNx()<z->GetNx() || y->GetNy()<z->GetNy()))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Tile",cgid++);
@@ -703,7 +739,9 @@ void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 		{
 			zz = z->v(i,j,k);		c = gr->GetC(ss,zz);
 			x1 = GetX(x,i,j,k).x;	y1 = GetY(y,i,j,k).x;
-			x2 = GetX(x,i+1,j,k).x;	y2 = GetY(y,i,j+1,k).x;
+			x2 = i<lx-1 ? GetX(x,i+1,j,k).x:NAN;
+			y2 = j<ly-1 ? GetY(y,i,j+1,k).x:NAN;
+//			x2 = GetX(x,i+1,j,k).x;	y2 = GetY(y,i,j+1,k).x;
 			p1 = mglPoint(x1,y1,zz);	k1 = gr->AddPnt(p1,c,s);
 			p2 = mglPoint(x2,y1,zz);	k2 = gr->AddPnt(p2,c,s);
 			p3 = mglPoint(x1,y2,zz);	k3 = gr->AddPnt(p3,c,s);
@@ -718,7 +756,7 @@ void mgl_tile(HMGL gr, HCDT z, const char *sch, const char *opt)
 {
 	if(z->GetNx()<2 || z->GetNy()<2){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()), y(z->GetNy());
+	mglData x(z->GetNx()+1), y(z->GetNy()+1);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_tile_xy(gr,&x,&y,z,sch,0);
@@ -740,7 +778,8 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch, cons
 	if(x->GetNx()!=z->GetNx() || s->GetNx()*s->GetNy()*s->GetNz()!=z->GetNx()*z->GetNy()*z->GetNz())
 	{	gr->SetWarn(mglWarnDim,"Tile");	return;	}
 	if(z->GetNx()<2 || z->GetNy()<2){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
-	if(y->GetNx()!=z->GetNy() && (x->GetNy()!=z->GetNy() || y->GetNx()!=z->GetNx() || y->GetNy()!=z->GetNy()))
+	long ly = x->GetNy()>=z->GetNy() ? y->GetNy() : y->GetNx(), lx = x->GetNx();
+	if(y->GetNx()<z->GetNy() && (x->GetNy()<z->GetNy() || y->GetNx()<z->GetNx() || y->GetNy()<z->GetNy()))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TileS",cgid++);
@@ -759,11 +798,15 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch, cons
 			// TODO check it!!!
 			ss = (1-gr->GetA(s->v(i,j,k)))/2;	sm = 1-ss;
 
-			x1 = GetX(x,i,j,k).x;		y1 = GetY(y,i,j,k).x;
-			x2 = GetX(x,i+1,j,k).x-x1;	y2 = GetY(y,i+1,j,k).x-y1;
-			x4 = GetX(x,i,j+1,k).x-x1;	y4 = GetY(y,i,j+1,k).x-y1;
-			x3 = GetX(x,i+1,j+1,k).x-x2-x4-x1;
-			y3 = GetY(y,i+1,j+1,k).x-y2-y4-y1;
+			x1 = GetX(x,i,j,k).x;	y1 = GetY(y,i,j,k).x;
+			x2 = x3 = x4 = y2 = y3 = y4 = NAN;
+			if(i<lx-1)
+			{	x2 = GetX(x,i+1,j,k).x-x1;	y2 = GetY(y,i+1,j,k).x-y1;	}
+			if(j<ly-1)
+			{	x4 = GetX(x,i,j+1,k).x-x1;	y4 = GetY(y,i,j+1,k).x-y1;	}
+			if(i<lx-1 && j<ly-1)
+			{	x3 = GetX(x,i+1,j+1,k).x-x2-x4-x1;
+				y3 = GetY(y,i+1,j+1,k).x-y2-y4-y1;	}
 
 			p1 = mglPoint(x1+x2*ss+x4*ss+x3*ss*ss, y1+y2*ss+y4*ss+y3*ss*ss, zz);
 			k1 = gr->AddPnt(p1,c,t);
@@ -783,7 +826,7 @@ void mgl_tiles(HMGL gr, HCDT z, HCDT s, const char *sch, const char *opt)
 {
 	if(z->GetNx()<2 || z->GetNy()<2){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
 	gr->SaveState(opt);
-	mglData x(z->GetNx()), y(z->GetNy());
+	mglData x(z->GetNx()+1), y(z->GetNy()+1);
 	x.Fill(gr->Min.x,gr->Max.x);
 	y.Fill(gr->Min.y,gr->Max.y);
 	mgl_tiles_xy(gr,&x,&y,z,s,sch,0);

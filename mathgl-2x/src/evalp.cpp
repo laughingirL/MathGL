@@ -31,9 +31,9 @@ void mgl_wcstrim(wchar_t *str);
 void mgl_wcslwr(wchar_t *str);
 void mgl_wcstombs(char *dst, const wchar_t *src, int size);
 int mglFormulaError;
-mglData mglFormulaCalc(const wchar_t *string, mglParse *arg);
+mglData mglFormulaCalc(const wchar_t *string, mglParser *arg);
 //-----------------------------------------------------------------------------
-mglData mglApplyOper(const wchar_t *a1, const wchar_t *a2, mglParse *arg, double (*func)(double,double))
+mglData mglApplyOper(const wchar_t *a1, const wchar_t *a2, mglParser *arg, double (*func)(double,double))
 {
 	const mglData &a = mglFormulaCalc(a1,arg), &b = mglFormulaCalc(a2,arg);
 	long n = mgl_max(a.nx,b.nx), m = mgl_max(a.ny,b.ny), l = mgl_max(a.nz,b.nz);
@@ -114,7 +114,7 @@ void mgl_wcstombs(char *dst, const wchar_t *src, int size)
 // NOTE: In any case where number is required the mglData::a[0] is used.
 // String flag is binary 0x1 -> 'x', 0x2 -> 'y', 0x4 -> 'z'
 // NOTE: the speed is not a goal (mglFormula is faster). It is true interpreter!
-mglData mglFormulaCalc(const wchar_t *string, mglParse *arg)
+mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 {
 #ifndef NO_GSL
 	gsl_set_error_handler_off();

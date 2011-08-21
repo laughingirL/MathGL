@@ -42,8 +42,7 @@ int test(mglGraph *gr)
 //	gr->Text(y,"Another string drawn above a curve","T:r");
 	return 0;
 
-	mglParse par;
-	par.AllowSetSize = true;
+	mglParse par(true);
 	FILE *fp=fopen("test.mgl","rt");
 	par.Execute(gr,fp,true);
 	fclose(fp);
@@ -1561,7 +1560,7 @@ void smgl_parser(mglGraph *gr)	// example of MGL parsing
 	float a[100];   // let a_i = sin(4*pi*x), x=0...1
 	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
 	mglParse *parser = new mglParse;
-	mglData &d =(parser->AddVar("dat"))->d;
+	mglData d = parser->AddVar("dat");
 	d.Set(a,100); // set data to variable
 	parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
 	// you may break script at any line do something

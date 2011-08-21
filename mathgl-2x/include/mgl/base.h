@@ -460,12 +460,15 @@ private:
 #define _DT_	((mglData *)*d)
 //-----------------------------------------------------------------------------
 class mglData;
+class mglParser;
 typedef mglBase*  HMGL;
 typedef mglData* HMDT;
+typedef mglParser* HMPR;
 typedef const mglDataA* HCDT;
 #else
 typedef void *HMGL;
 typedef void *HMDT;
+typedef void *HMPR;
 typedef const void *HCDT;
 #endif
 /*****************************************************************************/

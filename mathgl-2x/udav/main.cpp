@@ -35,7 +35,7 @@
 #endif
 #endif
 //-----------------------------------------------------------------------------
-extern mglParse parser;
+extern mglParser parser;
 extern QString pathFont;
 int mgl_cmd_cmp(const void *a, const void *b);
 HintDialog *hintDialog=NULL;

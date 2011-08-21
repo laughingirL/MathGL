@@ -36,7 +36,7 @@
 #include "plot_pnl.h"
 #include "anim_dlg.h"
 extern bool mglAutoSave;
-extern mglParse parser;
+extern mglParser parser;
 int animDelay=500;
 void raisePanel(QWidget *w);
 //-----------------------------------------------------------------------------

@@ -34,7 +34,7 @@
 #include <mgl/parser.h>
 //#include <mgl/mgl_idtf.h> //TODO: Add later
 #include "qmglcanvas.h"
-extern mglParse parser;
+extern mglParser parser;
 extern bool mglAutoPure;
 //-----------------------------------------------------------------------------
 QMGLCanvas::QMGLCanvas(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
