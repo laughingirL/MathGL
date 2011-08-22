@@ -600,7 +600,7 @@ Set the ticks step, number of sub-ticks and initial ticks position to be the mos
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTicks (@code{char} dir, @code{float} d=@code{0}, @code{int} ns=@code{0}, @code{float} org=@code{NAN})
 @deftypefnx {C function} @code{void} mgl_set_ticks_dir (@code{HMGL} gr, @code{char} dir, @code{float} d, @code{int} ns, @code{float} org)
-@deftypefnx {C function} @code{void} mgl_set_ticks(@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} nz)
+@deftypefnx {C function} @code{void} mgl_set_ticks (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} nz)
 @end ifclear
 Set the ticks step @var{d}, number of sub-ticks @var{ns} and initial ticks position @var{org} for the axis along direction @var{dir} (use 'c' for colorbar ticks). Variable @var{d} set step for axis ticks (if positive) or it's number on the axis range (if negative). Zero value set automatic ticks. If @var{org} value is NAN then axis origin is used.
 @end deftypefn
@@ -1117,6 +1117,7 @@ Receive graphical information from node @var{id} using MPI. The width and height
 
 
 These functions draw some simple objects like line, point, sphere, drop, cone and so on.
+@c TODO @sref{Primitives sample}
 
 @anchor{clf}
 @deftypefn {MGL command} {} clf
@@ -1232,9 +1233,9 @@ Draw the circle with radius @var{r} and center at point @var{p}=@{@var{x0}, @var
 @deftypefnx {MGL command} {} ellipse @code{x1 y1 z1 x2 y2 z2 r} ['col'='r' @code{sh=1 asp=1}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Ellipse (@code{mglPoint} p1, @code{mglPoint} p2, @code{float} r, @code{const char *}col=@code{"r"})
-@deftypefnx {C function} @code{void} mgl_ellipse(@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} r, @code{const char *}col)
+@deftypefnx {C function} @code{void} mgl_ellipse (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} r, @code{const char *}col)
 @end ifclear
-Draw the ellipse with radius @var{r} and focal points @var{p1}, @var{p2} by color @var{col}. If @var{col} contain: @samp{#} then wire figure is drawn, @samp{@@} then boundary is drawn (by second color of @var{col} or by black). @sref{Ellipse sample}
+Draw the ellipse with radius @var{r} and focal points @var{p1}, @var{p2} by color @var{col}. If @var{col} contain: @samp{#} then wire figure is drawn, @samp{@@} then boundary is drawn (by second color of @var{col} or by black). 
 @end deftypefn
 
 @anchor{rhomb}
@@ -1242,9 +1243,9 @@ Draw the ellipse with radius @var{r} and focal points @var{p1}, @var{p2} by colo
 @deftypefnx {MGL command} {} rhomb @code{x1 y1 z1 x2 y2 z2 r} ['col'='r' @code{sh=1 asp=1}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Rhomb (@code{mglPoint} p1, @code{mglPoint} p2, @code{float} r, @code{const char *}col=@code{"r"})
-@deftypefnx {C function} @code{void} mgl_rhomb(@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} r, @code{const char *}col)
+@deftypefnx {C function} @code{void} mgl_rhomb (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} r, @code{const char *}col)
 @end ifclear
-Draw the rhombus with width @var{r} and edge points @var{p1}, @var{p2} by color @var{col}.  If @var{col} contain: @samp{#} then wire figure is drawn, @samp{@@} then boundary is drawn (by second color of @var{col} or by black). If @var{col} contain 3 colors then gradient filling is used. @sref{Rhomb sample}
+Draw the rhombus with width @var{r} and edge points @var{p1}, @var{p2} by color @var{col}.  If @var{col} contain: @samp{#} then wire figure is drawn, @samp{@@} then boundary is drawn (by second color of @var{col} or by black). If @var{col} contain 3 colors then gradient filling is used.
 @end deftypefn
 
 @c ##################################################################
@@ -1657,7 +1658,8 @@ These functions draw boxplot (also known as a box-and-whisker diagram) at points
 @deftypefnx {C function} @code{void} mgl_candle_yv (@code{HMGL} gr, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_candle_xyv (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw candlestick chart at points @var{x}[i]. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. Wire (or white) candle correspond to price growth @var{v1}[i]<@var{v2}[i], opposite case -- solid (or dark) candle. "Shadows" show the minimal @var{y1} and maximal @var{y2} prices. If @var{v2} is absent then it is determined as @var{v2}[i]=@var{v1}[i+1]. See also @ref{plot}, @ref{bars}, @ref{barwidth}. @sref{Candle sample}
+These functions draw candlestick chart at points @var{x}[i]. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. Wire (or white) candle correspond to price growth @var{v1}[i]<@var{v2}[i], opposite case -- solid (or dark) candle. "Shadows" show the minimal @var{y1} and maximal @var{y2} prices. If @var{v2} is absent then it is determined as @var{v2}[i]=@var{v1}[i+1]. See also @ref{plot}, @ref{bars}, @ref{barwidth}. 
+@c TODO @sref{Candle sample}
 @end deftypefn
 
 

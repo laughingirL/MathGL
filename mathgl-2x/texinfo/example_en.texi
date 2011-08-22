@@ -150,7 +150,7 @@ The code for export in vector EPS file looks the same:
         return 0;
     }
 @end verbatim
-The difference from the previous one is using other function @code{WriteEPS() for EPS format instead of function @code{WritePNG()}. Moreover, there is no switching of the plot transparency @code{Alpha} since EPS format does not support it. Possibly I shall include transparency in future by program emulation.
+The difference from the previous one is using other function @code{WriteEPS()} for EPS format instead of function @code{WritePNG()}. Moreover, there is no switching of the plot transparency @code{Alpha} since EPS format does not support it. Possibly I shall include transparency in future by program emulation.
 
 @c ------------------------------------------------------------------
 @node Drawing in memory, Using QMathGL, Drawing to file, Basic usage

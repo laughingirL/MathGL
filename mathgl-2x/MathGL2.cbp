@@ -121,6 +121,7 @@
 		<Unit filename="include/mgl/prim.h" />
 		<Unit filename="include/mgl/qt.h" />
 		<Unit filename="include/mgl/surf.h" />
+		<Unit filename="include/mgl/type.h" />
 		<Unit filename="include/mgl/vect.h" />
 		<Unit filename="include/mgl/volume.h" />
 		<Unit filename="include/mgl/window.h" />

@@ -258,8 +258,12 @@ The MathGL library has interfaces for a set of languages. Most of them are based
 @c ++++++++++
 Some of the languages listed above support classes (like C++ or Python). For them, a special wrapper was written.
 @c ++++++++++
-Finally, a special command language MGL was written for a faster access to plotting functions. Corresponding scripts can be executed separately (by UDAV, mgl2png, mgl2eps and so on) or from the C/C++/Python/... code (@pxref{mglParse class}).
+Finally, a special command language MGL was written for a faster access to plotting functions. Corresponding scripts can be executed separately (by UDAV, mgl2png, mgl2eps and so on)
+@ifclear UDAV
+ or from the C/C++/Python/... code (@pxref{mglParse class}).
+@end ifclear
 
+@ifclear UDAV
 @menu
 * C interface::
 * Python interface::
@@ -317,6 +321,7 @@ This becomes useful if you create many @code{mglData} objects, for example.
 
 
 @node MGL interface, , Python interface, Interfaces
+@end ifclear
 @subsection MGL interface
 
 MathGL library supports the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of UDAV, mglconv, mglview programs and others, @pxref{Utilities}) or in the frame of the library using.
