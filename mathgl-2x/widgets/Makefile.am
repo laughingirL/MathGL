@@ -13,8 +13,8 @@ libmgl_wnd_la_LDFLAGS = $(LDFLAGS) -no-undefined -version-info $(MGL_CURRENT):$(
 libmgl_wnd_la_LIBADD = $(top_builddir)/src/libmgl.la
 libmgl_wnd_la_CPPFLAGS = $(AM_CXXFLAGS) $(WIDGETS)
 libmgl_wnd_la_CXXFLAGS = $(AM_CXXFLAGS) $(WIDGETS)
-#libmgl_wnd_la_SOURCES = window.cpp
-libmgl_wnd_la_SOURCES = 
+libmgl_wnd_la_SOURCES = window.cpp
+#libmgl_wnd_la_SOURCES =
 
 
 if USE_FLTK

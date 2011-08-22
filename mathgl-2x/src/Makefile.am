@@ -41,4 +41,4 @@ data_op.cpp	data_png.cpp	def_font.cpp	export_2d.cpp	eval.cpp \
 evalp.cpp	exec.cpp	export.cpp	fit.cpp		font.cpp \
 opengl.cpp	other.cpp	parser.cpp	tex_table.cpp	pde.cpp \
 pixel.cpp	plot.cpp	prim.cpp	surf.cpp	vect.cpp \
-volume.cpp	export_3d.cpp	window.cpp
+volume.cpp	export_3d.cpp

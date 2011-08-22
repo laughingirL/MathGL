@@ -7,7 +7,7 @@
 01. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
 02. Box() + edges + half-transparent
 03. Parallelization of drawing (MathGL level)
-04. Export to LaTeX formats - (pgf/tikz) or metapost if possible (like EPS).
+04. Export to LaTeX formats - (pgf/tikz -- vector + bitmap).
 05. Export to CALLADA
 06. Export to X3D
 07. Export to JavaScript (WebGL)

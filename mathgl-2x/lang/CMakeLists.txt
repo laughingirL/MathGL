@@ -9,6 +9,8 @@ if(use_python)
 	SWIG_ADD_MODULE(mathgl python mgl.i ../include/mgl/type.h ../include/mgl/data.h ../include/mgl/mgl.h)
 	SWIG_LINK_LIBRARIES(mathgl ${PYTHON_LIBRARIES})
 
+#	INSTALL_FILES(/lib/python2.7/dist-packages/ mathgl)
+
 # 	add_custom_command(OUTPUT mgl_python.cpp mathgl.py
 # 		COMMAND ${SWIG_EXECUTABLE} -python -c++ -I${CMAKE_SOURCE_DIR}/include -o mgl_python.cpp ${CMAKE_SOURCE_DIR}/lang/mgl.i
 # 		MAIN_DEPENDENCY mgl.i
