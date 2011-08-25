@@ -67,24 +67,24 @@ void QMGLSyntax::highlightBlock(const QString &text)
 							"marksize","legend"};
 			int l[12] = {6, 6, 6, 6, 5, 3, 7, 7, 8, 8, 8, 6};
 			for(j=0;j<12;j++)
-				if(text.indexOf(o[j],i)==i && (text[i+l[j]].isSpace() || i+l[j]==text.length()))
+				if(text.indexOf(o[j],i)==i && (i+l[j]==text.length() || text[i+l[j]].isSpace()))
 					setFormat(i,l[j],mglColorScheme[3]);
 		}
-		else if(text[i]=='.' && text[i+1].isLetter())	// suffix
+		else if(text[i]=='.' && i+1<text.length() && text[i+1].isLetter())	// suffix
 		{
 			for(j=i;j<text.length() && !text[j].isSpace();j++){};
 			setFormat(i,j-i+1,mglColorScheme[4]);
 		}
 		else if(num.contains(text[i]))	// number
 			setFormat(i,1,mglColorScheme[5]);
-		else if((text[i]=='e' || text[i]=='E') && num.contains(text[i-1]) && num.contains(text[i+1]))
+		else if((text[i]=='e' || text[i]=='E') && i+1<text.length() && num.contains(text[i-1]) && num.contains(text[i+1]) )
 			setFormat(i,1,mglColorScheme[5]);
-		else					// number as its symbolic id
+		else		// number as its symbolic id
 		{
 			const char *o[]={"nan","pi","on","off"};
 			int l[4] = {3, 2, 2, 3};
 			for(j=0;j<4;j++)
-				if(text.indexOf(o[j],i)==i && (text[i+l[j]].isSpace() || i+l[j]==text.length()))
+				if(text.indexOf(o[j],i)==i && (i+l[j]==text.length() || text[i+l[j]].isSpace()))
 					setFormat(i,l[j],mglColorScheme[5]);
 		}
 		arg = nl = false;

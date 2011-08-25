@@ -1,3 +1,6 @@
+if(use_qt)
+
+
 #set(mgl_wnd_src window.cpp)
 set(udav_src anim_dlg.cpp find_dlg.cpp mem_pnl.cpp prop_dlg.cpp textedit.cpp args_dlg.cpp help_pnl.cpp newcmd_dlg.cpp qmglcanvas.cpp text_pnl.cpp calc_dlg.cpp hint_dlg.cpp open_dlg.cpp qmglsyntax.cpp udav_wnd.cpp dat_pnl.cpp info_dlg.cpp opt_dlg.cpp setup_dlg.cpp files_dlg.cpp main.cpp plot_pnl.cpp style_dlg.cpp)
 
@@ -34,3 +37,5 @@ install(
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib
 )
+
+endif(use_qt)
