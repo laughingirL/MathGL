@@ -99,7 +99,7 @@ void DatPanel::refresh()
 	}
 	for(i=0;i<nx;i++)	for(j=0;j<ny;j++)
 	{
-		f = var->d.a[i+nx*(j+ny*kz)];
+		f = var->d.GetVal(i,j,kz);
 		if(isnan(f))	s = "nan";
 		else	s.sprintf("%g",f);
 		tab->item(j,i)->setText(s);
@@ -148,12 +148,12 @@ void DatPanel::putValue(int r, int c)
 	QString s = tab->item(r,c)->text().toLower();
 	float f;
 	f = s=="nan" ? NAN : s.toDouble();
-	if(f!=var->d.a[c+nx*(r+ny*kz)])
+	if(f!=var->d.GetVal(c,r,kz))
 	{
 		if(isnan(f))	s="nan";	else	s.sprintf("%g", f);
 		tab->item(r,c)->setText(s);
 	}
-	var->d.a[c+nx*(r+ny*kz)] = f;
+	var->d.SetVal(f,c,r,kz);
 	infoDlg->refresh();
 }
 //-----------------------------------------------------------------------------
@@ -222,7 +222,7 @@ void DatPanel::paste()
 		{
 			t = s.section('\t',j,j,QString::SectionSkipEmpty);
 			if(t.isEmpty())	{	j=nx;	continue;	}
-			var->d.a[j+c+nx*(i+r+ny*kz)] = t.toDouble();
+			var->d.SetVal(t.toDouble(),j+c,i+r,kz);
 		}
 	}
 	refresh();

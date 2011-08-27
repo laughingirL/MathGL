@@ -1,0 +1,4 @@
+var x 10 -1 1
+#stop
+extend x -2
+surf x

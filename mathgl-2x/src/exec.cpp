@@ -3291,14 +3291,14 @@ int mgls_ranges(mglGraph *gr, long n, mglArg *a, int k[10], const char *)
 		if(ok)	gr->SetRanges(a[0].v,a[1].v,a[2].v, a[3].v,a[4].v,a[5].v);
 		else return 1;
 	}
-	else if(n==4)
-	{
-		if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)	gr->SetRanges(a[0].v,a[1].v, a[2].v,a[3].v);
-		if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)	gr->SetRanges(*(a[0].d),*(a[1].d), *(a[2].d),*(a[3].d));
-		else return 1;
-	}
-	else if(k[0]==1 && k[1]==1 && k[2]==1)	gr->SetRanges(*(a[0].d),*(a[1].d), *(a[2].d));
-	else if(k[0]==1 && k[1]==1)	gr->SetRanges(*(a[0].d),*(a[1].d));
+	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
+		gr->SetRanges(a[0].v,a[1].v, a[2].v,a[3].v);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		gr->SetRanges(*(a[0].d),*(a[1].d), *(a[2].d),*(a[3].d));
+	else if(k[0]==1 && k[1]==1 && k[2]==1)
+		gr->SetRanges(*(a[0].d),*(a[1].d), *(a[2].d));
+	else if(k[0]==1 && k[1]==1)
+		gr->SetRanges(*(a[0].d),*(a[1].d));
 	else return 1;
 	return 0;
 }
@@ -3309,19 +3309,16 @@ void mglc_ranges(wchar_t out[1024], long n, mglArg *a, int k[10], const char *)
 	{
 		bool ok=true;
 		for(i=0;i<6;i++)	if(k[i]!=3)	ok = false;
-		if(ok)	mglprintf(out,1024,L"gr->SetRanges(%g, %g, %g, %g, %g, %g);", a[0].v,a[1].v,a[2].v,a[3].v,a[4].v,a[5].v);
+		if(ok)	mglprintf(out,1024,L"gr->SetRanges(%g, %g, %g, %g, %g, %g);", a[0].v, a[1].v, a[2].v, a[3].v, a[4].v, a[5].v);
 	}
-	else if(n==4)
-	{
-		if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
-			mglprintf(out,1024,L"gr->SetRanges(%g, %g, %g, %g);", a[0].v,a[1].v,a[2].v,a[3].v);
-		if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
-			mglprintf(out,1024,L"gr->SetRanges(%s, %s, %s, %s);", a[0].s.c_str(),a[1].s.c_str(),a[2].s.c_str(),a[3].s.c_str());
-	}
+	else if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
+		mglprintf(out,1024,L"gr->SetRanges(%g, %g, %g, %g);", a[0].v, a[1].v, a[2].v, a[3].v);
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"gr->SetRanges(%s, %s, %s, %s);", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str());
 	else if(k[0]==1 && k[1]==1 && k[2]==1)
-		mglprintf(out,1024,L"gr->SetRanges(%s, %s, %s);", a[0].s.c_str(),a[1].s.c_str(),a[2].s.c_str());
+		mglprintf(out,1024,L"gr->SetRanges(%s, %s, %s);", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str());
 	else if(k[0]==1 && k[1]==1)
-		mglprintf(out,1024,L"gr->SetRanges(%s, %s);", a[0].s.c_str(),a[1].s.c_str());
+		mglprintf(out,1024,L"gr->SetRanges(%s, %s);", a[0].s.c_str(), a[1].s.c_str());
 }
 //-----------------------------------------------------------------------------
 int mgls_adjust(mglGraph *gr, long , mglArg *a, int k[10], const char *)

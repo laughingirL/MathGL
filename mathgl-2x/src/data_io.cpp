@@ -638,7 +638,7 @@ void mgl_data_extend(HMDT d, long n1, long n2)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	if(nz>2 || n1==0)	return;
-	long mx,my,mz;
+	long mx, my, mz;
 	mreal *b=0;
 	register long i,j;
 	if(n1>0) // extend to higher dimension(s)
@@ -656,16 +656,17 @@ void mgl_data_extend(HMDT d, long n1, long n2)
 		mx = -n1;	my = n2<0 ? -n2 : nx;	mz = n2<0 ? nx : ny;
 		if(n2>0 && ny==1)	mz = n2;
 		b = new mreal[mx*my*mz];
-		if(n2<0)	for(j=0;j<nx;j++)	for(i=0;i<mx*my;i++)
-			b[i+mx*my*j] = d->a[j];
-		else	for(j=0;j<nx*ny;j++)	for(i=0;i<mx;i++)
-			b[i+mx*j] = d->a[j];
+		register mreal v;
+		if(n2<0)	for(j=0;j<nx;j++)	for(i=0,v=d->a[j];i<mx*my;i++)
+			b[i+mx*my*j] = v;
+		else	for(j=0;j<nx*ny;j++)	for(i=0,v=d->a[j];i<mx;i++)
+			b[i+mx*j] = v;
 		if(n2>0 && ny==1)	for(i=0;i<n2;i++)
 			memcpy(b+i*mx*my, d->a, mx*my*sizeof(mreal));
 	}
-	if(b)
-	{	if(!d->link)	delete []d->a;
-		d->a=b;	d->nx=mx;	d->ny=my;	d->nz=mz;	d->NewId();	d->link=false;	}
+	if(!d->link)	delete [](d->a);
+	d->a=b;	d->nx=mx;	d->ny=my;	d->nz=mz;
+	d->NewId();		d->link=false;
 }
 void mgl_data_extend_(uintptr_t *d, int *n1, int *n2)
 {	mgl_data_extend(_DT_,*n1,*n2);	}

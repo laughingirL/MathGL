@@ -46,15 +46,11 @@
 class QCompleter;
 
 class TextEdit : public QTextEdit
-{
-	Q_OBJECT
-
+{	Q_OBJECT
 public:
 	TextEdit(QWidget *parent = 0);
-	~TextEdit();
-
 	void setCompleter(QCompleter *c);
-	QCompleter *completer() const;
+	QCompleter *completer() const {	return c;	}
 
 protected:
 	void keyPressEvent(QKeyEvent *e);

@@ -20,6 +20,7 @@
 14. Add diffusive light (no dependence of normals but have direction)
 15. Use Hershey as built-in font ???
 16. Add MGL command "ask $N 'question'" -- like interactive "define"
+17. Add mglData::Duplicate(char dir) which insert the same values (x[i] -> x[2*i], x[2*i+1])?!
 
 ============= UDAV =============
 
@@ -92,6 +93,7 @@ Remove other setting if data name is changed.
 18. SetCoor() -- add log-log, log-x, log-y predefined coordinates
 19. Boxs() styles: '#' for wire, '@' for full box. NOTE: use Boxs(a,"@"); for testing speed
 20. TernAxis=0 -- usual, =1 -- ternary, =2 -- quaternary, &4 -- projections
+21. mglData::SetVal(), GetVal()
 
 ============= BUGS =============
 

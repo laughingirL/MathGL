@@ -58,6 +58,12 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 	dataOpenDlg = new DataOpenDialog(this);
 	if(!files_dlg)	files_dlg= new FilesDialog;
 
+	register int i;
+	for(i=0;mgls_base_cmd[i].name[0];i++)
+		words<<QString::fromWCharArray(mgls_base_cmd[i].name);
+	completer = new QCompleter(words, this);
+	completer->setCaseSensitivity(Qt::CaseInsensitive);
+
 	connect(setupDlg, SIGNAL(putText(const QString &)), this, SLOT(animPutText(const QString &)));
 	connect(newCmdDlg, SIGNAL(result(const QString&)), this, SLOT(putLine(const QString&)));
 	connect(findDialog, SIGNAL(findText(const QString &, bool, bool)), this, SLOT(findText(const QString &, bool, bool)));
@@ -67,12 +73,6 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 	new QMGLSyntax(edit);
 	defFontFamily = edit->fontFamily();
 	defFontSize = int(edit->fontPointSize());
-
-	register int i;
-	for(i=0;mgls_base_cmd[i].name[0];i++)
-		words<<QString::fromWCharArray(mgls_base_cmd[i].name);
-	completer = new QCompleter(words, this);
-	completer->setCaseSensitivity(Qt::CaseInsensitive);
 //	completer->setCompletionMode(QCompleter::PopupCompletion);
 //	edit->setCompleter(completer);
 	edit->setLineWrapMode(QTextEdit::NoWrap);
@@ -102,7 +102,7 @@ void TextPanel::insNVal()
 	sel.toWCharArray(txt);	txt[sel.length()]=0;
 	mglData res=mglFormulaCalc(txt, &parser);
 	delete []txt;
-	edit->textCursor().insertText(QString::number(res.a[0]));
+	edit->textCursor().insertText(QString::number(res.GetVal(0)));
 }
 //-----------------------------------------------------------------------------
 void TextPanel::insFitF()
@@ -135,7 +135,8 @@ void TextPanel::refreshData()
 		if(v->s.length()>2)	vars<<QString::fromStdWString(v->s);
 		v = v->next;
 	}
-	delete completer;	completer = new QCompleter(vars, this);
+	if(completer)	delete completer;
+	completer = new QCompleter(vars, this);
 	completer->setCaseSensitivity(Qt::CaseInsensitive);
 	completer->setCompletionMode(QCompleter::PopupCompletion);
 	edit->setCompleter(completer);

@@ -177,7 +177,7 @@ void CalcDialog::evaluate()
 	setlocale(LC_ALL, "");
 //	result->setText(QString::fromWCharArray(txt));
 	delete []txt;
-	result->setText(QString::number(res.a[0]));
+	result->setText(QString::number(res.GetVal(0)));
 }
 //-----------------------------------------------------------------------------
 void CalcDialog::fillFuncName()

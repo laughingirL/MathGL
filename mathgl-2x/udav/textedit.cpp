@@ -47,30 +47,19 @@
 #include <QModelIndex>
 #include <QAbstractItemModel>
 #include <QScrollBar>
-
-TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent), c(0)
-{
-/*	setPlainText(tr("This TextEdit provides autocompletions for words that have more than"
-					" 3 characters. You can trigger autocompletion using ") +
-				 QKeySequence("Ctrl+E").toString(QKeySequence::NativeText));*/
-}
-
-TextEdit::~TextEdit()	{}
-
+//-----------------------------------------------------------------------------
+TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent), c(0)	{}
+//-----------------------------------------------------------------------------
 void TextEdit::setCompleter(QCompleter *completer)
 {
-	if (c)	QObject::disconnect(c, 0, this, 0);
-	c = completer;
-	if (!c)	return;
+	if(c)	QObject::disconnect(c, 0, this, 0);
+	c = completer;	if(!c)	return;
 	c->setWidget(this);
 	c->setCompletionMode(QCompleter::PopupCompletion);
 	c->setCaseSensitivity(Qt::CaseInsensitive);
 	QObject::connect(c, SIGNAL(activated(QString)), this, SLOT(insertCompletion(QString)));
 }
-
-QCompleter *TextEdit::completer() const
-{	return c;	}
-
+//-----------------------------------------------------------------------------
 void TextEdit::insertCompletion(const QString& completion)
 {
 	if (c->widget() != this)	return;
@@ -81,20 +70,17 @@ void TextEdit::insertCompletion(const QString& completion)
 	tc.insertText(completion.right(extra));
 	setTextCursor(tc);
 }
-
+//-----------------------------------------------------------------------------
 QString TextEdit::textUnderCursor() const
 {
 	QTextCursor tc = textCursor();
 	tc.select(QTextCursor::WordUnderCursor);
 	return tc.selectedText();
 }
-
+//-----------------------------------------------------------------------------
 void TextEdit::focusInEvent(QFocusEvent *e)
-{
-	if (c)	c->setWidget(this);
-	QTextEdit::focusInEvent(e);
-}
-
+{	if (c)	c->setWidget(this);	QTextEdit::focusInEvent(e);	}
+//-----------------------------------------------------------------------------
 void TextEdit::keyPressEvent(QKeyEvent *e)
 {
 	if (c && c->popup()->isVisible())
@@ -107,8 +93,7 @@ void TextEdit::keyPressEvent(QKeyEvent *e)
 		case Qt::Key_Escape:
 		case Qt::Key_Tab:
 		case Qt::Key_Backtab:
-			e->ignore();
-			return; // let the completer do default behavior
+			e->ignore();	return; // let the completer do default behavior
 		default:
 			break;
 		}
@@ -127,17 +112,16 @@ void TextEdit::keyPressEvent(QKeyEvent *e)
 	QString completionPrefix = textUnderCursor();
 
 	if (!isShortcut && (hasModifier || e->text().isEmpty()|| completionPrefix.length() < 3
-						|| eow.contains(e->text().right(1)))) {
-		c->popup()->hide();
-		return;
-	}
+						|| eow.contains(e->text().right(1))))
+	{	c->popup()->hide();		return;	}
 
-	if (completionPrefix != c->completionPrefix()) {
+	if (completionPrefix != c->completionPrefix())
+	{
 		c->setCompletionPrefix(completionPrefix);
 		c->popup()->setCurrentIndex(c->completionModel()->index(0, 0));
 	}
 	QRect cr = cursorRect();
-	cr.setWidth(c->popup()->sizeHintForColumn(0)
-				+ c->popup()->verticalScrollBar()->sizeHint().width());
+	cr.setWidth(c->popup()->sizeHintForColumn(0) + c->popup()->verticalScrollBar()->sizeHint().width());
 	c->complete(cr); // popup it up!
 }
+//-----------------------------------------------------------------------------
