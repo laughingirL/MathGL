@@ -23,7 +23,7 @@
 //		C interfaces
 //
 //-----------------------------------------------------------------------------
-void mgl_buf_warn(HMGL gr, char *buf)	{	gr->Message = buf;	}
+const char *mgl_get_mess(HMGL gr)	{	return gr->Mess.c_str();	}
 int mgl_get_warn(HMGL gr)	{	return gr->GetWarn();	}
 void mgl_set_warn(HMGL gr, int code, const char *txt)
 {	gr->SetWarn(code,txt);	}
@@ -34,7 +34,8 @@ void mgl_set_palette(HMGL gr, const char *colors)
 void mgl_set_meshnum(HMGL gr, int num)	{	gr->SetMeshNum(num);	}
 void mgl_set_alpha_default(HMGL gr, float alpha)	{	gr->SetAlphaDef(alpha);	}
 //-----------------------------------------------------------------------------
-void mgl_set_cut(HMGL gr, int cut)		{	gr->SetCut(cut);	}
+void mgl_highlight(HMGL gr)			{	gr->Highlight();	}
+void mgl_set_cut(HMGL gr, int cut)	{	gr->SetCut(cut);	}
 void mgl_set_cut_box(HMGL gr, float x1,float y1,float z1,float x2,float y2,float z2)
 {	gr->SetCutBox(x1,y1,z1,x2,y2,z2);	}
 void mgl_set_cutoff(HMGL gr, const char *EqC)	{	gr->CutOff(EqC);	}
@@ -68,6 +69,7 @@ void mgl_set_bar_width(HMGL gr, float width)	{	gr->SetBarWidth(width);	}
 //		Fortran interfaces
 //
 //-----------------------------------------------------------------------------
+void mgl_highlight_(uintptr_t *gr)	{	_GR_->Highlight();	}
 void mgl_set_origin_(uintptr_t *gr, float *x0, float *y0, float *z0)
 {	_GR_->SetOrigin(*x0,*y0,*z0);	}
 int mgl_get_warn_(uintptr_t *gr)	{	return _GR_->GetWarn();	}

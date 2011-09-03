@@ -75,7 +75,7 @@ GifFileType *gif;
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
 	SetBarWidth(0.7);	SetMarkSize(1);	SetArrowSize(1);
 	SetAlphaDef(0.5);		FontDef[0]=0;
-	SetTranspType(0);		SetMeshNum(0);
+	SetTranspType(0);		SetMeshNum(10);	// NOTE: default MeshNum=10
 	SetRotatedText(true);	CurrPal = 0;
 	SetLegendMarks();		SetFontSize(4);
 	SetTuneTicks(true);
@@ -755,5 +755,5 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::EndGroup()	{	LoadState();	}
+void mglCanvas::EndGroup()	{	LoadState();	clr(MGL_HIGHLIGHT);	}
 //-----------------------------------------------------------------------------

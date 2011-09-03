@@ -52,7 +52,7 @@ void mgl_strlwr(char *str)
 mglBase::mglBase()
 {
 //	memset(this,0,sizeof(mglBase));	// since mglBase is abstract then I can do it?!!
-	Message=0;	Flag=0;	saved=false;	prev_val=0;
+	Flag=0;	saved=false;	prev_val=0;
 #ifdef HAVE_PTHREAD
 	pthread_mutex_init(&mutexPnt,0);
 	pthread_mutex_init(&mutexTxt,0);
@@ -81,32 +81,35 @@ void mglBase::StartGroup(const char *name, int id)
 	StartAutoGroup(buf);
 }
 //-----------------------------------------------------------------------------
-const char *mglWarn[mglWarnEnd] = {"%s: data dimension(s) is incompatible",
-								"%s: data dimension(s) is too small",
-								"%s: minimal data value is negative",
-								"No file or wrong data dimensions",
-								"Not enough memory",
-								"%s: data values are zero",
-								"Too many legend entries",
-								"No legend entries",
-								"%s: slice value is out of range",
-								"%s: number of contours is zero or negative",
-								"Couldn't open file %s",
-								"Light: ID is out of range",
-								"Setsize: size(s) is zero or negative",
-								"Format %s is not supported for that build"};
+const char *mglWarn[mglWarnEnd] = {"data dimension(s) is incompatible",
+								"data dimension(s) is too small",
+								"minimal data value is negative",
+								"no file or wrong data dimensions",
+								"not enough memory",
+								"data values are zero",
+								"too many legend entries",
+								"no legend entries",
+								"slice value is out of range",
+								"number of contours is zero or negative",
+								"couldn't open file",
+								"light: ID is out of range",
+								"size(s) is zero or negative",
+								"format is not supported for that build",
+								"axis ranges are incompatible",
+								"pointer is NULL",
+								"not enough space for plot"};
 //-----------------------------------------------------------------------------
 void mglBase::SetWarn(int code, const char *who)
 {
 	WarnCode = code>0 ? code:0;
-	if(Message)
+	if(code>0 && code<mglWarnEnd)
 	{
-		if(code>0 && code<mglWarnEnd)
-			sprintf(Message,mglWarn[code-1],who?who:"UNKNOWN");
-		else if(code<0 && who)
-			strcpy(Message,who);
-		else	*Message=0;
+		if(who)	Mess = Mess+"\n"+who+": ";
+		else Mess += "\n";
+		Mess = Mess+mglWarn[code-1];
 	}
+	else if(!code)	Mess="";
+	else if(who)	Mess = Mess+(code==-2?"":"\n")+who;
 	LoadState();
 }
 //-----------------------------------------------------------------------------

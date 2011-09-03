@@ -159,65 +159,19 @@ QString QMGLCanvas::run(const QString &text, bool showm, mglGraph *gr, int line)
 	if(!isHidden())	QApplication::restoreOverrideCursor();
 	if(gr==graph)
 	{	convertFromGraph(pic, graph, &grBuf);	repaint();	}
-	return thr->mes;
+	return QString(gr->Message());
 }
 //-----------------------------------------------------------------------------
 void MGLThread::run()
 {
-	int i,r,n=text.count('\n')+1;
-	char *buf=new char[2048];
-	gr->Message(buf);	warn = "";
+	gr->DefaultPlotParam();
 	wchar_t *str = new wchar_t[text.length()+2];
-	QString cur;
-	bool high;
-	// Start parsing the text (just slightly modified copy from mgl_parse.cpp)
-	parser.ScanFunc(0);		for(i=0;i<n;i++)
-	{
-		cur = text.section('\n',i,i);	high = false;
-		r = cur.toWCharArray(str);	str[r] = 0;
-		parser.ScanFunc(str);
-	}
-	for(i=0;i<n && !parser.Stop;i++)
-	{
-		cur = text.section('\n',i,i);	high = false;
-
-		if(i==line)
-		{
-			wchar_t *s = new wchar_t[cur.length()+1];
-			register int j;
-			for(j=0;j<cur.length() && !cur[j].isSpace() && cur[j]!=':';j++)
-				s[j] = text[j].toLatin1();
-			s[j]=0;
-			mglCommand *rts = parser.FindCommand(s);
-			if(rts && (rts->type==0 || rts->type==1))	high = true;
-			delete []s;
-		}
-
-		r = cur.toWCharArray(str);	str[r] = 0;
-		buf[0] = 0;			gr->SetObjId(i+1);
-		setlocale(LC_ALL, "C");
-		r = parser.Parse(gr,str,i+1);
-		setlocale(LC_ALL, "");
-		if(r<0)	{	i = -r-2;	continue;	}
-		if(r>0)
-		{
-			mes = tr("In line ")+QString::number(i);
-			if(r==1)	mes += tr(" -- wrong argument(s):\t");
-			if(r==2)	mes += tr(" -- wrong command:\t");
-			if(r==3)	mes += tr(" -- string too long:\t");
-			if(r==4)	mes += tr(" -- unbalanced ' :\t");
-			mes += cur;
-			warn += mes + "\n";
-		}
-		if(buf && *buf)
-		{
-			mes = tr("In line ")+QString::number(i)+" :\t";
-			mes = mes + cur + "\n" + QString(buf) + "\n";
-			warn += mes + "\n";
-		}
-	}
-	mes = QString(buf);
-	gr->Message(0);	delete []buf;	delete []str;
+	text.toWCharArray(str);
+	setlocale(LC_ALL, "C");
+	parser.Execute(gr,str,NULL,line);
+	setlocale(LC_ALL, "");
+	const char *mess=gr->Message();
+	warn = mess?mess:"";	delete []str;
 }
 //-----------------------------------------------------------------------------
 void QMGLCanvas::mouseDoubleClickEvent(QMouseEvent *ev)

@@ -176,6 +176,5 @@ void MemPanel::refresh()
 		v = v->next;	n++;
 	}
 	tab->sortItems(colSort);
-	emit refreshData();
 }
 //-----------------------------------------------------------------------------

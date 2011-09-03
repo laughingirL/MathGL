@@ -17,7 +17,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-//-----------------------------------------------------------------------------
 #ifndef _MGL_DEFINE_H_
 #define _MGL_DEFINE_H_
 //-----------------------------------------------------------------------------
@@ -180,6 +179,7 @@ enum{	// Codes for warnings/messages
 #define MGL_AUTO_CLF		0x0800	///< Clear canvas between drawing
 #define MGL_SHOW_POS		0x1000	///< Switch to show or not mouse click position
 #define MGL_CLF_ON_UPD		0x2000	///< Clear plot before Update()
+#define MGL_HIGHLIGHT		0x4000	///< Highlight plot
 //-----------------------------------------------------------------------------
 //#define mgl_realloc(T,o,no,nn) {T *_tmp = new T[nn]; memcpy(_tmp,o,(no)*sizeof(T)); delete []o; o=_tmp;}
 //-----------------------------------------------------------------------------

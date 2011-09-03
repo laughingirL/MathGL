@@ -128,17 +128,16 @@ float mgl_fit_base(mglFitData *fd, float *ini)
 //-----------------------------------------------------------------------------
 void mglPrepareFitEq(mglBase *gr,float chi, const char *eq, const char *var, float *par)
 {
-	if(gr->Message)
-	{
-		sprintf(gr->Message,"chi=%g,\t",chi);
-		for(int i=0;i<int(strlen(var));i++)
-		{
-			sprintf(mglFitRes,"%c=%g,\t",var[i],par[i]);
-			strcat(gr->Message, mglFitRes);
-		}
-	}
-	memset(mglFitRes, 0, 1024);	//mglFitRes[0] = 0;
 	char buf[32]="";
+	sprintf(mglFitRes,"chi=%g",chi);
+	for(int i=0;i<int(strlen(var));i++)
+	{
+		sprintf(buf,", %c=%g",var[i],par[i]);
+		strcat(mglFitRes,buf);
+	}
+	gr->SetWarn(-1,mglFitRes);
+
+	memset(mglFitRes, 0, 1024);	//mglFitRes[0] = 0;
 	register long i,k,len=strlen(eq);
 	for(i=k=0;i<len;i++)
 	{

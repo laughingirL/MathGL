@@ -80,7 +80,7 @@ public:
 	inline void SetMeshNum(int num)			{	mgl_set_meshnum(gr, num);		}
 
 	/// Set cutting for points outside of bounding box
-	inline void SetCut(bool cut)				{	mgl_set_cut(gr, cut);	}
+	inline void SetCut(bool cut)			{	mgl_set_cut(gr, cut);	}
 	/// Set additional cutting box
 	inline void SetCutBox(mglPoint p1, mglPoint p2)
 	{	mgl_set_cut_box(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);	}
@@ -115,7 +115,7 @@ public:
 	/// Set warning code ant fill message
 	inline void SetWarn(int code, const char *info="")	{	mgl_set_warn(gr,code,info);	}
 	/// Set buffer for warning messages
-	inline void Message(char *buf)	{	mgl_buf_warn(gr, buf);	}
+	inline const char *Message()	{	return mgl_get_mess(gr);	}
 
 	/// Set range in direction dir as [v1, v2]
 	inline void SetRange(char dir, float v1, float v2)
@@ -239,9 +239,11 @@ public:
 	/// Set plot quality
 	inline void SetQuality(int qual=MGL_DRAW_NORM)	{	mgl_set_quality(gr, qual);	}
 	/// Start group of objects
-	inline void StartGroup(const char *name){	mgl_start_group(gr, name);	}
+	inline void StartGroup(const char *name)		{	mgl_start_group(gr, name);	}
 	/// End group of objects
-	inline void EndGroup()					{	mgl_end_group(gr);	}
+	inline void EndGroup()	{	mgl_end_group(gr);	}
+	/// Highlight next group
+	inline void Highlight()	{	mgl_highlight(gr);	}
 
 	/// Show currently produced image
 	inline void ShowImage(const char *viewer, bool keep=0)
@@ -1024,10 +1026,10 @@ public:
 	{	return mgl_parse(gr->Self(), pr, str, pos);	}
 	inline int Parse(mglGraph *gr, const wchar_t *str, int pos)
 	{	return mgl_parsew(gr->Self(), pr, str, pos);	}
-	inline void Execute(mglGraph *gr, const char *str, void (*error)(int line, int kind, char *mes)=NULL)
-	{	mgl_parse_text(gr->Self(), pr, str, error);	}
-	inline void Execute(mglGraph *gr, const wchar_t *str, void (*error)(int line, int kind, char *mes)=NULL)
-	{	mgl_parsew_text(gr->Self(), pr, str, error);	}
+	inline void Execute(mglGraph *gr, const char *str, void (*error)(const char *mes)=NULL, int high=-1)
+	{	mgl_parse_text(gr->Self(), pr, str, error, high);	}
+	inline void Execute(mglGraph *gr, const wchar_t *str, void (*error)(const char *mes)=NULL, int high=-1)
+	{	mgl_parsew_text(gr->Self(), pr, str, error, high);	}
 	inline void Execute(mglGraph *gr, FILE *fp, bool print=false)
 	{	mgl_parse_file(gr->Self(), pr, fp, print);	}
 

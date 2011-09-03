@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 void mglCanvas::SetSize(int w,int h)
 {
-	if(w<=0 || h<=0)	{	SetWarn(mglWarnSize);	return;	}
+	if(w<=0 || h<=0)	{	SetWarn(mglWarnSize,"SetSize");	return;	}
 	Width = w;	Height = h;	Depth = long(sqrt(w*h));
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []OI;	}
 	G = new unsigned char[w*h*3];
@@ -406,6 +406,8 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
 	if(!r)	return r;
 	if(p.a<=0)	{	memset(r,0,4*sizeof(unsigned char));	return r;	}
 	register float b0=p.r,b1=p.g,b2=p.b;
+	if(get(MGL_HIGHLIGHT))	{	b0*=0.7;	b1*=0.7;	b2*=0.7;	}
+
 	if(get(MGL_ENABLE_LIGHT) && !isnan(p.u))
 	{
 		b0 *= AmbBr;		b1 *= AmbBr;		b2 *= AmbBr;
@@ -610,6 +612,7 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 	long y1,x1,y2,x2;
 
 	float pw=PenWidth*sqrt(font_factor/400), dxu,dxv,dyu,dyv,dd;
+	if(get(MGL_HIGHLIGHT))	pw *= 2;
 	const mglPnt &p1=Pnt[k1], &p2=Pnt[k2];
 	mglPnt d=p2-p1, p;
 	bool hor = fabs(d.x)>fabs(d.y);

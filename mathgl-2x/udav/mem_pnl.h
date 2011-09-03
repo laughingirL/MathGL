@@ -35,7 +35,6 @@ public slots:
 	void refresh();		///< refresh list of variables
 signals:
 	void addPanel(QWidget *);
-	void refreshData();
 private slots:
 	void newTable();
 	void editData(int n=-1);

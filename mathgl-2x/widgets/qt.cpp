@@ -175,14 +175,14 @@ void QMathGL::update(mglCanvas *gr)
 	if(gr==0)	return;
 	if(draw_func==0)	{	refresh();	return;	}
 	if(gr!=graph || graph->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
-	char *buf=new char[2048];	buf[0]=0;	gr->Message = buf;
 
 	gr->Alpha(alpha);	gr->Light(light);
 	gr->View(tet,phi);	gr->Perspective(per);
 	draw_func(gr, draw_par);
 
-	if(buf[0] != 0)	QMessageBox::warning(this, appName, buf);
-	gr->Message = 0;	delete []buf;	mousePos="";
+	const char *buf=gr->Mess.c_str();
+	if(*buf != 0)	QMessageBox::warning(this, appName, buf);
+	mousePos="";
 	if(gr==graph)	refresh();
 }
 //-----------------------------------------------------------------------------

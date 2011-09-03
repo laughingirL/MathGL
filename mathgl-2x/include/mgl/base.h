@@ -133,7 +133,7 @@ public:
 
 	mglPoint Min;		///< Lower edge of bounding box for graphics.
 	mglPoint Max;		///< Upper edge of bounding box for graphics.
-	char *Message;		///< Buffer for receiving messages
+	std::string Mess;	///< Buffer for receiving messages
 	int ObjId;			///< object id for mglPrim
 
 	float CDef;			///< Default (current) color in texture
@@ -221,6 +221,8 @@ public:
 	virtual void StartAutoGroup (const char *)=0;
 	void StartGroup(const char *name, int id);
 	virtual void EndGroup()=0;	//	{	LoadState();	}
+	/// Highlight next group
+	inline void Highlight()	{	set(MGL_HIGHLIGHT);	}
 
 	/// Set FontSize by size in pt and picture DPI (default is 16 pt for dpi=72)
 	virtual void SetFontSizePT(float pt, int dpi=72){	FontSize = pt*27.f/dpi;	}

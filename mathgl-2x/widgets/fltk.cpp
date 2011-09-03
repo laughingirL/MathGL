@@ -98,14 +98,12 @@ void Fl_MathGL::update(mglCanvas *gr)
 	{
 		if(gr!=graph || graph->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
 		gr->ResetFrames();
-		char *buf = new char[2048];	*buf = 0;
-		gr->Message = buf;
 		gr->Alpha(flag&1);	gr->Light(flag&2);
 		gr->View(tet,phi);	gr->Clf();
 //		gr->DrawFace = !rotate;		// TODO: switch to fast drawing here
 		draw_func(gr, draw_par);
+		const char *buf = gr->Mess.c_str();
 		if(*buf)	fl_message("%s",buf);
-		gr->Message = 0;	delete []buf;
 	}
 	if(gr==graph && (graph->GetWidth()!=w() || graph->GetHeight()!=h()))
 		size(graph->GetWidth(), graph->GetHeight());

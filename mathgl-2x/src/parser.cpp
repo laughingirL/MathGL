@@ -633,10 +633,10 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 				n=-IsFunc(a[0].w.c_str(),&na);
 				if(n && k!=na+2)
 				{
-					if(gr->Self()->Message)
-						sprintf(gr->Self()->Message,"Bad arguments for %ls: %ld instead of %d\n",
-								a[0].w.c_str(),k-2,na);
-					n = 1;
+					char buf[64];
+					sprintf(buf,"Bad arguments for %ls: %ld instead of %d\n",
+							a[0].w.c_str(),k-2,na);
+					gr->SetWarn(-1,buf);	n = 1;
 				}
 				else if(n)
 				{
@@ -870,15 +870,8 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 	return n+1;
 }
 //-----------------------------------------------------------------------------
-void mgl_error_print(int line, int r, char *Message)
-{
-	if(r==0)	printf("%s\n",Message ? Message:"");
-	if(r==1)	printf("Wrong argument(s) in line %d\n", line);
-	if(r==2)	printf("Wrong command in line %d\n", line);
-	if(r==3)	printf("String too long in line %d\n", line);
-	if(r==4)	printf("Unbalanced ' in line %d\n", line);
-	if(Message)	Message[0]=0;
-}
+void mgl_error_print(const char *mess)
+{	if(mess && *mess)	printf("%s\n",mess);	}
 #include <string>
 void mglParser::Execute(mglGraph *gr, FILE *fp, bool print)
 {
@@ -888,25 +881,38 @@ void mglParser::Execute(mglGraph *gr, FILE *fp, bool print)
 	Execute(gr,str.c_str(),print?mgl_error_print:NULL);
 }
 //-----------------------------------------------------------------------------
-void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(int line, int kind, char *mes))
+void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(const char *mes), int high)
 {
 	if(n<1 || text==0)	return;
 	long i, r;
+	char buf[64];
 	for_br=Skip=false;	if_pos=fn_pos=0;	ScanFunc(0);
 	for(i=0;i<n;i++)	ScanFunc(text[i]);
 	for(i=0;i<n;i++)
 	{
+		gr->SetWarn(-1, NULL);
+		if(i==high)	gr->Highlight();
+		gr->SetObjId(i+1);
 		r = Parse(gr,text[i],i+1);
 		if(r<0)	{	i = -r-2;	continue;	}
-		if(error)
-		{
-			if(r>0)	error(i+1, r, 0);
-			if(gr->Self()->Message && gr->Self()->Message[0])	error(i,0,gr->Self()->Message);
-		}
+		if(r==1)
+			sprintf(buf,"\nWrong argument(s) in line %ld\n", i+1);
+		else if(r==2)
+			sprintf(buf,"\nWrong command in line %ld\n", i+1);
+		else if(r==3)
+			sprintf(buf,"\nString too long in line %ld\n", i+1);
+		else if(r==4)
+			sprintf(buf,"\nUnbalanced ' in line %ld\n", i+1);
+		else if(gr->GetWarn()>0)
+			sprintf(buf," in line %ld\n", i+1);
+		else *buf=0;
+		if(buf)	gr->SetWarn(-2,buf);
 	}
+	const char *mess=gr->Message();
+	if(error && mess && *mess)	error(mess);
 }
 //-----------------------------------------------------------------------------
-void mglParser::Execute(mglGraph *gr, const wchar_t *text, void (*error)(int line, int kind, char *mes))
+void mglParser::Execute(mglGraph *gr, const wchar_t *text, void (*error)(const char *mes), int high)
 {
 	unsigned s = wcslen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -918,16 +924,16 @@ void mglParser::Execute(mglGraph *gr, const wchar_t *text, void (*error)(int lin
 	str[0] = wcs;	n=1;
 	for(i=0;i<s;i++)	if(text[i]=='\n')
 	{	wcs[i]=0;	str[n] = wcs+i+1;	n++;	}
-	Execute(gr, n, str, error);
+	Execute(gr, n, str, error, high);
 	delete []wcs;	free(str);
 }
 //-----------------------------------------------------------------------------
-void mglParser::Execute(mglGraph *gr, const char *text, void (*error)(int line, int kind, char *mes))
+void mglParser::Execute(mglGraph *gr, const char *text, void (*error)(const char *mes), int high)
 {
 	unsigned s = strlen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,text,s);
-	Execute(gr, wcs, error);
+	Execute(gr, wcs, error, high);
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
@@ -1006,10 +1012,10 @@ int mgl_parse(HMGL gr, HMPR p, const char *str, int pos)
 {	return p->Parse(gr, str, pos);	}
 int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos)
 {	return p->Parse(gr, str, pos);	}
-void mgl_parse_text(HMGL gr, HMPR p, const char *str, void (*error)(int line, int kind, char *mes))
-{	p->Execute(gr, str, error);	}
-void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str, void (*error)(int line, int kind, char *mes))
-{	p->Execute(gr, str, error);	}
+void mgl_parse_text(HMGL gr, HMPR p, const char *str, void (*error)(const char *mes), int high)
+{	p->Execute(gr, str, error, high);	}
+void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str, void (*error)(const char *mes), int high)
+{	p->Execute(gr, str, error, high);	}
 void mgl_parse_file(HMGL gr, HMPR p, FILE *fp, int print)
 {	p->Execute(gr,fp,print);	}
 void mgl_restore_once(HMPR p)	{	p->RestoreOnce();	}

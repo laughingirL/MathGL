@@ -3037,14 +3037,15 @@ int mgls_fgets(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 		fp = fopen(a[j+2].s.c_str(),"rt");
 		if(!fp)
 		{
-			if(gr->Self()->Message)	sprintf(gr->Self()->Message,"Wrong file %s",a[j+2].s.c_str());
+			gr->SetWarn(mglWarnOpen,a[j+2].s.c_str());
 			return 0;
 		}
 		for(i=0;i<n;i++)	if(!fgets(buf,1024,fp))	continue;
 		memset(buf,0,1024);
 		if(!fgets(buf,1024,fp))
 		{
-			if(gr->Self()->Message)	sprintf(gr->Self()->Message,"Couldn't read %d-th string of file %s",n,a[j+2].s.c_str());
+			char b[32];	sprintf(b,"%d",n);
+			gr->SetWarn(mglWarnOpen,(a[j+2].s+" - line "+b).c_str());
 			fclose(fp);	return 0;
 		}
 		fclose(fp);

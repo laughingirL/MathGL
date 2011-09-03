@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 std::wstring str;
 mglParse p(true);
-void mgl_error_print(int line, int r, char *Message);
+void mgl_error_print(const char *Message);
 //-----------------------------------------------------------------------------
 int show(mglGraph *gr)
 {

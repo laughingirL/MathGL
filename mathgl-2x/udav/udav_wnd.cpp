@@ -144,7 +144,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(graph->mgl, SIGNAL(objChanged(int)), edit, SLOT(setCursorPosition(int)));
 	connect(graph->mgl, SIGNAL(posChanged(QString)), statusBar(), SLOT(showMessage(QString)));
 	connect(graph->mgl, SIGNAL(refreshData()), info, SLOT(refresh()));
-	connect(info, SIGNAL(refreshData()), this, SLOT(refreshData()));
+	connect(graph->mgl, SIGNAL(refreshData()), edit, SLOT(refreshData()));
 
 	connect(mess, SIGNAL(textChanged()), this, SLOT(warnChanged()));
 	connect(calc, SIGNAL(putNumber(QString)),edit,SLOT(putText(QString)));
@@ -227,12 +227,12 @@ void MainWindow::makeMenu()
 //-----------------------------------------------------------------------------
 void MainWindow::refreshData()
 {
-	for(int i=0; i<ltab->count(); i++)
+/*	for(int i=0; i<ltab->count(); i++)
 	{
 		DatPanel *w = dynamic_cast<DatPanel*>(ltab->widget(i));
 		if(w)	w->refresh();
 	}
-	edit->refreshData();
+	edit->refreshData();*/
 }
 //-----------------------------------------------------------------------------
 void MainWindow::closeEvent(QCloseEvent* ce)

@@ -21,7 +21,7 @@
 #include <string.h>
 #include <locale.h>
 #include "mgl/mgl.h"
-void mgl_error_print(int line, int r, char *Message);
+void mgl_error_print(const char *Message);
 //-----------------------------------------------------------------------------
 int main(int narg, char **arg)
 {
@@ -81,7 +81,6 @@ int main(int narg, char **arg)
 		{
 			gr.NewFrame();
 			p.AddParam(0,var[i].c_str());
-			gr.Message(buf);	*buf=0;
 			p.Execute(&gr,str.c_str(),mgl_error_print);
 			gr.EndFrame();
 			sprintf(buf,"%s-%ld",fname,i);
@@ -91,7 +90,6 @@ int main(int narg, char **arg)
 	}
 	else
 	{
-		gr.Message(buf);	*buf=0;
 		p.Execute(&gr,str.c_str(),mgl_error_print);
 		gr.WriteFrame(fname);
 	}

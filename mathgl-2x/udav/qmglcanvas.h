@@ -34,11 +34,11 @@ friend class QMGLCanvas;
 Q_OBJECT
 protected:
 	QMGLCanvas *cnv;
-		mglGraph *gr;
-	QString mes;	///< gr->Message after execution
+	mglGraph *gr;
+	QString warn;	///< gr->Message after execution
 	QString text;	///< text for parsing
 	int line;		///< line to highlite
-	QString warn;
+//	QString mes;
 	void run();
 };
 //-----------------------------------------------------------------------------
@@ -53,7 +53,7 @@ public:
 	QTextEdit *textMGL;		///< Editor with MGL script body
 	QTextEdit *warnMGL;		///< Buffer for messages and warnings
 	QString scriptName;		///< Default script name which used for exporting
-		mglGraph *graph;		///< Built-in mglGraph-er instance (used by default)
+	mglGraph *graph;		///< Built-in mglGraph-er instance (used by default)
 
 	QMGLCanvas(QWidget *parent = 0, Qt::WindowFlags f = 0);
 	~QMGLCanvas();
@@ -61,7 +61,7 @@ public:
 	void setPopup(QMenu *p)	{	popup = p;	};
 	void setSize(int w, int h);
 	/// Execute script from string
-		QString run(const QString &text, bool showm=true, mglGraph *gr=0, int line=-1);
+	QString run(const QString &text, bool showm=true, mglGraph *gr=0, int line=-1);
 	const QPixmap &getPic()	{	return pic;	};	///< Pixmap for drawing
 signals:
 	void refreshData();
