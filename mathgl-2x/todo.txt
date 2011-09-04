@@ -1,5 +1,5 @@
 ============= TEST =============
-1. Triangulation
+1. Triangulation + GridData (for interpolation to regular grid)
 2. Axis -- projection (ternary + quaternary)
 3. Check highlight
 4. Check fplot after box (box:axis:fplot 'sin(pi*x^2)')
@@ -25,6 +25,9 @@
 16. Add MGL command "ask $N 'question'" -- like interactive "define"
 17. Add mglData::Duplicate(char dir) which insert the same values (x[i] -> x[2*i], x[2*i+1])?!
 18. Add Highlighting of plots (black mesh or double pen width)
+19. Add option to change color from point to point in 1D plots (using palette)
+20. Custom labels below Bars(), Barh() for values (like, "%.2g %%") -- or as separate plot! May be include x-coordinate too.
+
 
 ============= UDAV =============
 
