@@ -87,7 +87,6 @@ Remove other setting if data name is changed.
 8. On which things the subplot influence
 9. About unrotated text
 10. Add "Howto" section in web site.
-11. "Data plotting", "Data plot", "Scientific visualtization", "Surface", "Cloud","Plot", "statistical graphics" to website
 12. Examples of animation, u3d, x3d, js and so on
 13. Example of inverted axis, minus-log axis
 14. Venn() diagram sample
