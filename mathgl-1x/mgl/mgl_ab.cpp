@@ -516,15 +516,16 @@ void mglGraphAB::Legend(int n, wchar_t **text,char **style, mreal x, mreal y,
 	Push();	Identity(rel);	//	memcpy(B,B1,9*sizeof(mreal));
 	if(LegendBox)	// draw bounding box
 	{
+		mreal mw = w*0.2f, mh = h*0.2f;
 		pp[2] = pp[5] = pp[8] = pp[11] = pp[14] = s3-0.01;
-		pp[0] = pp[9] = pp[12] = x;		pp[3] = pp[6] = x+w;
-		pp[1] = pp[4] = pp[13] = y-0.*h;		pp[7] = pp[10] = y+h*n;
+		pp[0] = pp[9] = pp[12] = x-mw;		pp[3] = pp[6] = x+w+mw;
+		pp[1] = pp[4] = pp[13] = y-0.*h-mh;	pp[7] = pp[10] = y+h*n+mh;
 //		for(i=0;i<5;i++)	ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 		SelectPen(TranspType!=2 ? "k-1":"w-1");
 		curv_plot(5,pp,0);	// bounding rectangle
 		pp[2] = pp[5] = pp[8] = pp[11] = s3-0.01;
-		pp[0] = pp[6] = x;			pp[3] = pp[9] = x+w;
-		pp[1] = pp[4] = y-0.*h;		pp[7] = pp[10] = y+h*n;
+		pp[0] = pp[6] = x-mw;		pp[3] = pp[9] = x+w+mw;
+		pp[1] = pp[4] = y-0.*h-mh;	pp[7] = pp[10] = y+h*n+mh;
 		DefColor(mglColor(1,1,1),1);
 //		for(i=0;i<4;i++)	ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 		surf_plot(2,2,pp,0,0);		// white rectangle below it

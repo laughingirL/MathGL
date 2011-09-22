@@ -19,7 +19,11 @@
  ***************************************************************************/
 #include <stdlib.h>
 #include <string.h>
+#if defined (__APPLE__) // || defined(__FreeBSD__)
+#include <unistd.h>
+#else
 #include <sys/sysinfo.h>
+#endif
 #include "mgl/data.h"
 #include "mgl/eval.h"
 
@@ -32,7 +36,11 @@ void mglFillP5(long x, const mreal *a,long nx,mreal _p[6]);
 void mglSetNumThr(int n)
 {
 #ifdef HAVE_PTHREAD
+#if defined (__APPLE__) // || defined(__FreeBSD__)
+	mglNumThr = n>0 ? n : sysconf(_SC_NPROCESSORS_CONF);
+#else
 	mglNumThr = n>0 ? n : get_nprocs_conf();
+#endif
 #else
 	mglNumThr = 1;
 #endif

@@ -799,7 +799,7 @@ void mglFont::Copy(mglFont *f)
 	memcpy(numl[1],f->numl[1],numg*sizeof(short));
 	memcpy(numl[2],f->numl[2],numg*sizeof(short));
 	memcpy(numl[3],f->numl[3],numg*sizeof(short));
-	memcpy(fact,f->fact,4*sizeof(mreal));
+	memcpy(fact,f->fact,4*sizeof(float));
 	// now copy symbols descriptions
 	buf = (short *)malloc(numb*sizeof(short));
 	memcpy(buf, f->buf, numb*sizeof(short));

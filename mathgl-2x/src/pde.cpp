@@ -177,10 +177,10 @@ HMDT mgl_ray_trace(const char *ham, float x0, float y0, float z0, float px, floa
 	mglData *res=new mglData;
 	if(tmax<dt)	return res;	// nothing to do
 	int nt = int(tmax/dt)+1;
-	mreal x[6], k1[6], k2[6], k3[6], hh=dt/2;
 	mgl_data_create(res,7,nt,1);
 	mgl_data_set_id(res,"xyzpqvt");
 #ifndef NO_GSL
+	mreal x[6], k1[6], k2[6], k3[6], hh=dt/2;
 	mglFormula eqs(ham);
 	// initial conditions
 	x[0] = res->a[0] = x0;	x[1] = res->a[1] = y0;	x[2] = res->a[2] = z0;

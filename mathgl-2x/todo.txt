@@ -4,6 +4,7 @@
 3. Check highlight
 4. Check fplot after box (box:axis:fplot 'sin(pi*x^2)')
 5. Check parse (empty string from UDAV)
+6. Check smgl_cutminmax2() for reading i=52, j=13, k=40 in data with nx=60, ny=50, nz=40.
 
 ============= NEW  =============
 
@@ -27,7 +28,8 @@
 18. Add Highlighting of plots (black mesh or double pen width)
 19. Add option to change color from point to point in 1D plots (using palette)
 20. Custom labels below Bars(), Barh() for values (like, "%.2g %%") -- or as separate plot! May be include x-coordinate too.
-
+21. Manual colors for text, boundary, background of Legend()
+22. Check "sysconf(_SC_NPROCESSORS_CONF);" under Linux/Windows
 
 ============= UDAV =============
 

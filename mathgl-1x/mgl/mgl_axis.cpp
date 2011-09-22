@@ -1005,6 +1005,7 @@ void mglGraph::Legend(int n, wchar_t **text,char **style, int where,
 		w = w>x ? w:x;
 	}
 	w = (w + 1.1f*llen*1.5);	// add space for lines
+//	w *= 1.2;	h *= 1.2;
 
 	switch(where)
 	{

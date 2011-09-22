@@ -62,7 +62,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 		aa = gr->GetA(a->v(i,j,k));
 		if(inv)	bb = (1-aa)*(1-aa)*alpha;
 		else	bb = aa*aa*alpha;
-		pos[i+(n/tx)*(j+(m/ty)*k)] = gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);
+		pos[i/tx+(n/tx)*(j/ty+(m/ty)*(k/tz))] = gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);
 	}
 	n /= tx;	m /= ty;	l /= tz;
 	if(dot)	for(i=0;i<nn;i++)	gr->mark_plot(pos[i],'.');
