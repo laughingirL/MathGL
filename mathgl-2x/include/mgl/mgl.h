@@ -279,6 +279,9 @@ public:
 	/// Write the frame in file using GIF format (only for current frame!)
 	inline void WriteGIF(const char *fname,const char *descr="")
 	{	mgl_write_gif(gr, fname, descr);	}
+	/// Write the frame in file using OBJ format
+	inline void WriteOBJ(const char *fname,const char *descr="")
+	{	mgl_write_obj(gr, fname, descr);	}
 
 	/// Create new frame.
 	inline void NewFrame()		{	mgl_new_frame(gr);	}

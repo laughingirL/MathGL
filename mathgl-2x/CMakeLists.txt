@@ -199,7 +199,7 @@ FIND_PACKAGE(SWIG)
 if(NOT SWIG_FOUND)
 	if(use_python OR use_octave)
 		message(SEND_ERROR "Couldn't find swig needed for interfaces compiling.")
-	endif(use_python)
+	endif(use_python OR use_octave)
 endif(NOT SWIG_FOUND)
 
 # include(FindPythonInterp)

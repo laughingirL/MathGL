@@ -6,6 +6,16 @@ fit.cpp font.cpp opengl.cpp other.cpp parser.cpp pde.cpp pixel.cpp
 plot.cpp prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp #window.cpp
 )
 
+set(mgl_hdr
+../include/mgl/base_cf.h    ../include/mgl/fit.h     ../include/mgl/plot.h
+../include/mgl/base.h       ../include/mgl/prim.h    ../include/mgl/canvas_cf.h
+../include/mgl/font.h       ../include/mgl/canvas.h  ../include/mgl/surf.h
+../include/mgl/config.h     ../include/mgl/mgl_cf.h  ../include/mgl/type.h
+../include/mgl/cont.h       ../include/mgl/mgl.h     ../include/mgl/vect.h
+../include/mgl/data.h       ../include/mgl/opengl.h  ../include/mgl/volume.h
+../include/mgl/define.h     ../include/mgl/other.h    ../include/mgl/eval.h
+../include/mgl/parser.h)
+
 add_library(mgl SHARED ${mgl_src})
 add_library(mgl-static STATIC ${mgl_src})
 set_target_properties(mgl-static PROPERTIES OUTPUT_NAME "mgl")
