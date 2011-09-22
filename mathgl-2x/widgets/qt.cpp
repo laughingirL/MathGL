@@ -99,7 +99,7 @@ void QMathGL::resizeEvent(QResizeEvent *ev)
 {
 	if(autoResize && ev->size().width()>0 && ev->size().height()>0)
 	{	graph->SetSize(ev->size().width(), ev->size().height());	update();	}
-	else	resize(graph->GetWidth(), graph->GetHeight());
+//	else	resize(graph->GetWidth(), graph->GetHeight());
 }
 //-----------------------------------------------------------------------------
 void QMathGL::setPer(int p)
