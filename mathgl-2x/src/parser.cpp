@@ -906,7 +906,7 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)
 		else if(gr->GetWarn()>0)
 			sprintf(buf," in line %ld\n", i+1);
 		else *buf=0;
-		if(buf)	gr->SetWarn(-2,buf);
+		if(*buf)	gr->SetWarn(-2,buf);
 	}
 	const char *mess=gr->Message();
 	if(error && mess && *mess)	error(mess);
