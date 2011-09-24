@@ -264,11 +264,10 @@ public:
 	inline int GetQuality()	{	return Quality;	}
 
 	// ~~~~~~~~~~~~~~~~~~~~~~ Developer functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// NOTE! Following 3 functions are NOT thread-safe!!!
 	/// Add point to the pntN and return its position
 	long AddPnt(mglPoint p, float c=-1, mglPoint n=mglPoint(NAN), float a=-1, int scl=1);
 	long CopyNtoC(long k, float c);
-	long CopyProj(long from, mglPoint p, mglPoint n);	// NOTE: this is not-thread-safe!!!
+	long CopyProj(long from, mglPoint p, mglPoint n);
 	virtual void Reserve(long n);		///< Allocate n-cells for pntC and return current position
 
 //	inline long GetPos()	{	return Pnt.size()-1;	}

@@ -78,7 +78,8 @@ void mglCanvas::WriteOBJ(const char *fname,const char *descr)
 			q = Prm[p[j]];
 			switch(q.type)
 			{
-			case 0:	fprintf(fp,"p %ld/%ld\n", q.n1,q.n1);	break;
+			// TODO: Add other marks drawing here
+			case 0:	fprintf(fp,"p %ld\n", q.n1);	break;
 			case 1:	fprintf(fp,"l %ld/%ld %ld/%ld\n", q.n1,q.n1, q.n2,q.n2);	break;
 			case 2:	fprintf(fp,"f %ld/%ld/%ld %ld/%ld/%ld %ld/%ld/%ld\n",
 								q.n1,q.n1,q.n1, q.n2,q.n2,q.n2, q.n3,q.n3,q.n3);	break;
@@ -121,7 +122,7 @@ void mglCanvas::WriteOBJ(const char *fname,const char *descr)
 	fprintf(fp,"map_Ka %s\nmap_Kd %s\nmap_Ks %s\n",tname,tname,tname);
 	fclose(fp);
 	// prepare texture file (TGA)
-	fp = fopen(tname,"wb");
+	fp = fopen(tname,"wb");		// TODO: Add possibility to save into PNG instead of TGA
 	char head[14]={0,0,2, 0,0,0,0,0, 0,0,0,0, 32,0};
 	short w = 256, h = 256*Txt.size();
 	fwrite(head,12,1,fp);

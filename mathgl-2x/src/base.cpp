@@ -115,7 +115,7 @@ void mglBase::SetWarn(int code, const char *who)
 //-----------------------------------------------------------------------------
 //		Add points to the buffer
 //-----------------------------------------------------------------------------
-long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)	// NOTE: this is not-thread-safe!!!
+long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 {
 //	if(scl)	NormScale(n);	// Usually p was scaled before, but n should be scaled now!
 	if(scl)	ScalePoint(p,n,!(scl&2));
@@ -123,7 +123,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)	// NOTE:
 //	a = (a>=0 && a<=1) ? a : (isnan(n.x) ? 1:AlphaDef);
 	a = (a>=0 && a<=1) ? a : AlphaDef;
 	c = (c>=0) ? c:CDef;
-	// NOTE: RGBA color for OpenGL and EPS/SVG modes only!
+	// RGBA color for OpenGL and EPS/SVG modes only!
 	mglPnt q;
 	q.x=p.x;	q.y=p.y;	q.z=p.z;	q.c=c;
 	q.t=a;		q.u=n.x;	q.v=n.y;	q.w=n.z;
@@ -131,7 +131,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)	// NOTE:
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
-long mglBase::CopyNtoC(long from, float c)	// NOTE: this is not-thread-safe!!!
+long mglBase::CopyNtoC(long from, float c)
 {
 	if(from<0)	return -1;
 	mglPnt p=Pnt[from];
@@ -139,7 +139,7 @@ long mglBase::CopyNtoC(long from, float c)	// NOTE: this is not-thread-safe!!!
 	MGL_PUSH(Pnt,p,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
-long mglBase::CopyProj(long from, mglPoint p, mglPoint n)	// NOTE: this is not-thread-safe!!!
+long mglBase::CopyProj(long from, mglPoint p, mglPoint n)
 {
 	if(from<0)	return -1;
 	mglPnt q=Pnt[from];
@@ -148,7 +148,7 @@ long mglBase::CopyProj(long from, mglPoint p, mglPoint n)	// NOTE: this is not-t
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
-void mglBase::Reserve(long n)	// NOTE: this is not-thread-safe!!!
+void mglBase::Reserve(long n)
 {
 	if(TernAxis&4)	n*=4;
 	Pnt.reserve(n);
@@ -545,6 +545,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
 		if(strchr(cols,s[i]) && j<1)	n++;
+//		if(smooth && s[i]==':')	break;	// NOTE: should use []
 	}
 	if(!n)
 	{

@@ -56,7 +56,7 @@ void mglCanvas::add_prim(mglPrim &a)
 //-----------------------------------------------------------------------------
 void mglCanvas::DefaultPlotParam()
 {
-/* NOTE: following variables and mutex will not be changed
+/* NOTE: following variables and mutex will not be changed by DefaultPlotParam()
 std::vector<mglTexture> Txt;	///< Pointer to textures
 char *Message;		///< Buffer for receiving messages
 long InUse;			///< Smart pointer (number of users)
@@ -67,8 +67,7 @@ int Width;			///< Width of the image
 int Height;			///< Height of the image
 int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
-GifFileType *gif;
-*/
+GifFileType *gif;*/
 	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone);	ObjId = 0;
 	SetFunc(0,0);			CutOff(0);

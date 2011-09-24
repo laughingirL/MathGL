@@ -101,26 +101,25 @@ static struct option longopts[] =
 //-----------------------------------------------------------------------------
 void usage()
 {
-	puts (	\
-		"-png			- output png\n"					\
-		"-width=num		- png picture width\n"			\
-		"-height=num	- png picture height\n"			\
-		"-mini			- png picture is 200x133\n"		\
-		"-big			- png picture is 1200x800\n"	\
-		"-idtf			- output idtf\n"				\
-		"-u3d			- output u3d\n"				\
-		"-pdf			- output pdf\n"				\
-		"-eps			- output EPS\n"					\
-		"-jpeg			- output JPEG\n"				\
-		"-solid			- output solid PNG\n"			\
-		"-svg			- output SVG\n"					\
-		"-none			- none output\n"				\
-		"-srnd			- use the same random numbers in any run\n"	\
-		"-kind=name		- produce only this picture"	\
-		"-thread=num	- number of threads used"		\
+	puts (
+		"-png			- output png\n"
+		"-width=num		- png picture width\n"
+		"-height=num	- png picture height\n"
+		"-mini			- png picture is 200x133\n"
+		"-big			- png picture is 1200x800\n"
+		"-idtf			- output idtf\n"
+		"-u3d			- output u3d\n"
+		"-pdf			- output pdf\n"
+		"-eps			- output EPS\n"
+		"-jpeg			- output JPEG\n"
+		"-solid			- output solid PNG\n"
+		"-svg			- output SVG\n"
+		"-none			- none output\n"
+		"-srnd			- use the same random numbers in any run\n"
+		"-kind=name		- produce only this picture"
+		"-thread=num	- number of threads used"
 		"-test			- perform test\n"
 		);
-//	exit(0);
 };
 //-----------------------------------------------------------------------------
 void save(mglGraph *gr,const char *name,const char *suf="")
@@ -1799,7 +1798,7 @@ mglSample samp[] = {
 	{"mesh_cont", smgl_mesh_cont},
 	{"mirror", smgl_mirror},
 	{"molecule", smgl_molecule},
-	{"parser", smgl_parser},	// TODO: enable later
+	{"parser", smgl_parser},
 	{"pde", smgl_pde},
 	{"pie_chart", smgl_pie_chart},
 	{"pipe", smgl_pipe},

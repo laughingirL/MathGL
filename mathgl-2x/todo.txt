@@ -30,7 +30,8 @@
 20. Custom labels below Bars(), Barh() for values (like, "%.2g %%") -- or as separate plot! May be include x-coordinate too.
 21. Manual colors for text, boundary, background of Legend()
 22. Check "sysconf(_SC_NPROCESSORS_CONF);" under Linux/Windows
-
+23. Zoom, View, Shift -- by extra matrix for post points processing -- don't change points with NAN!
+24. Export/Import points+primitives as *.mgld file & write tool for its preview + UDAV/mglview use "preview" for zooming|rotation|shift rather than redrawing!
 ============= UDAV =============
 
 1. Dialog for data inpuut

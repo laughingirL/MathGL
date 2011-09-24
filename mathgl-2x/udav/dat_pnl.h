@@ -35,7 +35,7 @@ class DatPanel : public QWidget
 Q_OBJECT
 public:
 	QMenu *menu;
-	InfoDialog *infoDlg;	///< NOTE: Reference to dialog !!!
+	InfoDialog *infoDlg;	///< Reference to dialog !!!
 	DatPanel(InfoDialog *inf, QWidget *parent = 0);
 	~DatPanel();
 

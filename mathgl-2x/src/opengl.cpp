@@ -144,16 +144,17 @@ void mglCanvasGL::View(float TetX,float TetY,float TetZ)
 	glRotated(TetZ,0.,0.,1.);
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::Fog(float , float)
+void mglCanvasGL::Fog(float d, float)
 {
-/*	if(d>0)		// TODO: Add fog to OpenGL mode
+	if(d>0)		// TODO: Check fog to OpenGL mode
 	{
+		float back[4]={BDef[0]/255.,BDef[1]/255.,BDef[2]/255.,BDef[3]/255.};
 		glFogf(GL_FOG_MODE,GL_EXP);
 		glFogf(GL_FOG_DENSITY,5*d);
 		glFogfv(GL_FOG_COLOR,back);
 		glEnable(GL_FOG);
 	}
-	else	glDisable(GL_FOG);*/
+	else	glDisable(GL_FOG);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasGL::Clf(mglColor Back)
