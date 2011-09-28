@@ -465,11 +465,13 @@ void mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const wchar_t *
 {
 	long j,m,mx,my,mz,mr,n=y->GetNx();
 	if(x->GetNx()!=n || z->GetNx()!=n || r->GetNx()!=n)
-	{	gr->SetWarn(mglWarnDim,"Mark");	return;	}
-	if(n<2)	{	gr->SetWarn(mglWarnLow,"Mark");	return;	}
+	{	gr->SetWarn(mglWarnDim,"TextMark");	return;	}
+	if(n<2)	{	gr->SetWarn(mglWarnLow,"TextMark");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TextMark",cgid++);
-	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
+	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();
+	m = z->GetNy() > m ? z->GetNy() : m;
+	m = r->GetNy() > m ? r->GetNy() : m;
 	gr->Reserve(n*m);
 
 	mglPoint p,q(NAN);
@@ -538,20 +540,20 @@ void mgl_textmark_xyzr_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z,
 	delete []o;	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
 void mgl_textmark_xyr_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *r, const char *text, const char *fnt, const char *opt, int l,int n,int lo)
-{	wchar_t *s=new wchar_t[l+1];	memcpy(s,text,l);	s[l]=0;
+{	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_textmarkw_xyr(_GR_, _DA_(x),_DA_(y),_DA_(r),s,f, o);
 	delete []o;	delete []s;	delete []f;	}
 //-----------------------------------------------------------------------------
 void mgl_textmark_yr_(uintptr_t *gr, uintptr_t *y, uintptr_t *r, const char *text, const char *fnt, const char *opt, int l,int n,int lo)
-{	wchar_t *s=new wchar_t[l+1];	memcpy(s,text,l);	s[l]=0;
+{	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_textmarkw_yr(_GR_, _DA_(y),_DA_(r),s,f, o);	delete []o;	delete []s;	delete []f;	}
 //-----------------------------------------------------------------------------
 void mgl_textmark_(uintptr_t *gr, uintptr_t *y, const char *text, const char *fnt, const char *opt, int l,int n,int lo)
-{	wchar_t *s=new wchar_t[l+1];	memcpy(s,text,l);	s[l]=0;
+{	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_textmarkw(_GR_, _DA_(y),s,f, o);	delete []o;	delete []s;	delete []f;	}
@@ -577,4 +579,94 @@ void mgl_puts_fit_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, const char *pref
 	mgl_puts_fit(_GR_, *x,*y,*z, s, d, *size);
 	delete []s;		delete []d;
 }
+//-----------------------------------------------------------------------------
+//
+//	TextMark series
+//
+//-----------------------------------------------------------------------------
+void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const char *fnt, const char *opt)
+{
+	long j,m,mx,my,mz,mr,n=y->GetNx();
+	if(x->GetNx()!=n || z->GetNx()!=n)
+	{	gr->SetWarn(mglWarnDim,"Label");	return;	}
+	if(n<2)	{	gr->SetWarn(mglWarnLow,"Label");	return;	}
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("Label",cgid++);
+	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
+
+	register long i,k,l;
+	for(i=k=0;i<wcslen(text);i++)	if(text[i]=='%')
+	{if(text[i+1]=='%')	k--;	else	k++;	}
+	wchar_t *buf = new wchar_t[wcslen(text)+10*k+1];
+	mglPoint p,q(NAN);
+	for(j=0;j<m;j++)
+	{
+		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
+		for(i=0;i<n;i++)
+		{
+			p = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
+			k = gr->AddPnt(p,-1,q);
+			for(k=l=0;k<wcslen(text);k++)
+			{
+				if(text[k]!='%')
+				{	buf[l]=text[k];	l++;	continue;	}
+				else if(text[k+1]=='%')	wprintf(buf+l,"%%");
+				else if(text[k+1]=='x')	wprintf(buf+l,"%g",x->v(i,mx));
+				else if(text[k+1]=='y')	wprintf(buf+l,"%g",y->v(i,my));
+				else if(text[k+1]=='z')	wprintf(buf+l,"%g",z->v(i,mz));
+				l=wcslen(buf);	k++;
+			}
+			gr->text_plot(k, buf, fnt);
+		}
+	}
+	delete []buf;	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+void mgl_labelw_xy(HMGL gr, HCDT x, HCDT y, const wchar_t *text, const char *fnt, const char *opt)
+{
+	gr->SaveState(opt);
+	mglData z(y->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
+	mgl_labelw_xyz(gr,x,y,&z,text,fnt,0);
+}
+//-----------------------------------------------------------------------------
+void mgl_labelw_y(HMGL gr, HCDT y, const wchar_t *text, const char *fnt, const char *opt)
+{
+	if(y->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"TextMark");	return;	}
+	gr->SaveState(opt);
+	mglData x(y->GetNx());	x.Fill(gr->Min.x,gr->Max.x);
+	mglData z(y->GetNx());	z.Fill(gr->Min.z,gr->Min.z);
+	mgl_labelw_xyz(gr,&x,y,&z,text,fnt,0);
+}
+//-----------------------------------------------------------------------------
+void mgl_label_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *str, const char *fnt, const char *opt)
+{	long s = strlen(str)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
+	mgl_labelw_xyz(gr, x, y, z, wcs, fnt, opt);	delete []wcs;	}
+//-----------------------------------------------------------------------------
+void mgl_label_xy(HMGL gr, HCDT x, HCDT y, const char *str, const char *fnt, const char *opt)
+{	long s = strlen(str)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
+	mgl_labelw_xy(gr, x, y, wcs, fnt, opt);	delete []wcs;	}
+//-----------------------------------------------------------------------------
+void mgl_label_y(HMGL gr, HCDT y, const char *str, const char *fnt, const char *opt)
+{	long s = strlen(str)+1;	wchar_t *wcs = new wchar_t[s];	mbstowcs(wcs,str,s);
+	mgl_labelw_y(gr, y, wcs, fnt, opt);	delete []wcs;	}
+//-----------------------------------------------------------------------------
+void mgl_label_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *text, const char *fnt, const char *opt, int l,int n,int lo)
+{	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_labelw_xyz(_GR_, _DA_(x),_DA_(y),_DA_(z),s,f, o);
+	delete []o;	delete []s;		delete []f;	}
+//-----------------------------------------------------------------------------
+void mgl_label_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *text, const char *fnt, const char *opt, int l,int n,int lo)
+{	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_labelw_xy(_GR_, _DA_(x),_DA_(y),s,f, o);
+	delete []o;	delete []s;	delete []f;	}
+//-----------------------------------------------------------------------------
+void mgl_label_y_(uintptr_t *gr, uintptr_t *y, const char *text, const char *fnt, const char *opt, int l,int n,int lo)
+{	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,fnt,n);	f[n]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_labelw_y(_GR_, _DA_(y),s,f, o);	delete []o;	delete []s;	delete []f;	}
 //-----------------------------------------------------------------------------

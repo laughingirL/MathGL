@@ -34,89 +34,6 @@ extern "C" {
 
 #include "mgl/canvas.h"
 #include "mgl/canvas_cf.h"
-
-int mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
-int mgl_bps_save(const char *fname, int w, int h, unsigned char **p);
-int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p);
-int mgl_png_save(const char *fname, int w, int h, unsigned char **p);
-int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
-int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p);
-//-----------------------------------------------------------------------------
-void mglCanvas::WriteJPEG(const char *fname,const char *)
-{
-#ifdef HAVE_JPEG
-	long w,h;
-	unsigned char *f=0, **p=0;
-	p = GetRGBLines(w,h,f);
-	if(p)
-	{
-		if(mgl_jpeg_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
-		free(p);	if(f)	free(f);
-	}
-#else
-	SetWarn(mglWarnFmt,"JPEG");
-#endif
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::WritePNGs(const char *fname,const char *)
-{
-	long w,h;
-	unsigned char *f=0, **p=0;
-	p = GetRGBLines(w,h,f,false);
-	if(p)
-	{
-		if(mgl_png_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
-		free(p);	if(f)	free(f);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::WritePNG(const char *fname,const char *)
-{
-	long w,h;
-	unsigned char *f=0, **p=0;
-	p = GetRGBLines(w,h,f,true);
-	if(p)
-	{
-		if(mgl_pnga_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
-		free(p);	if(f)	free(f);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::WriteBMP(const char *fname,const char *)
-{
-	long w,h;
-	unsigned char *f=0, **p=0;
-	p = GetRGBLines(w,h,f);
-	if(p)
-	{
-		if(mgl_bmp_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
-		free(p);	if(f)	free(f);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::WriteTGA(const char *fname,const char *)
-{
-	long w,h;
-	unsigned char *f=0, **p=0;
-	p = GetRGBLines(w,h,f,true);
-	if(p)
-	{
-		if(mgl_tga_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
-		free(p);	if(f)	free(f);
-	}
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::WriteBPS(const char *fname,const char *)
-{
-	long w,h;
-	unsigned char *f=0, **p=0;
-	p = GetRGBLines(w,h,f);
-	if(p)
-	{
-		if(mgl_bps_save(fname,w,h,p))	SetWarn(mglWarnOpen,fname);
-		free(p);	if(f)	free(f);
-	}
-}
 //-----------------------------------------------------------------------------
 int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 {
@@ -143,8 +60,10 @@ int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);
-#endif
 	return 0;
+#else
+	return 1;
+#endif
 }
 //-----------------------------------------------------------------------------
 int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
@@ -172,8 +91,10 @@ int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);
-#endif
 	return 0;
+#else
+	return 1;
+#endif
 }
 //-----------------------------------------------------------------------------
 int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
@@ -252,8 +173,10 @@ int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
 	jpeg_finish_compress(&cinfo);
 	jpeg_destroy_compress(&cinfo);
 	fclose(outfile);
-#endif
 	return 0;
+#else
+	return 1;
+#endif
 }
 //-----------------------------------------------------------------------------
 void mgl_printf(void *fp, bool gz, const char *str, ...)
@@ -288,6 +211,45 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 	mgl_printf(fp, gz, "\n\nshowpage\n%%%%EOF\n");
 	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
 	return 0;
+}
+//-----------------------------------------------------------------------------
+int mgl_gif_save(const char *fname, int w, int h, unsigned char **l)
+{
+#ifdef HAVE_GIF
+	GifFileType *fg = EGifOpenFileName(fname, 0);
+	// define colormap
+	GifColorType col[256];
+	memset(col,0,256*sizeof(GifColorType));
+	register long m;
+	register int i,j,k,ii;
+	for(i=0;i<6;i++)	for(j=0;j<6;j++)	for(k=0;k<6;k++)
+	{
+		m = i+6*(j+6*k);		// part 1
+		col[m].Red = 51*i;
+		col[m].Green=51*j;
+		col[m].Blue =51*k;
+	}
+	// write header
+	ColorMapObject *gmap = MakeMapObject(256, col);
+	EGifPutScreenDesc(fg, w, h, 256,0,gmap);
+	FreeMapObject(gmap);
+	// write frame
+	EGifPutImageDesc(fg, 0, 0, w, h, 0, 0);
+	GifPixelType *line = new GifPixelType[w*h];
+	for(m=0;m<w*h;m++)
+	{
+		ii = 3*(m%w);	k = m/w;
+		i = (l[k][ii]+25)/51;
+		j = (l[k][ii+1]+25)/51;
+		k = (l[k][ii+2]+25)/51;
+		line[m] = i+6*(j+6*k);
+	}
+	EGifPutLine(fg, line, w*h);
+	EGifCloseFile(fg);
+	delete []line;	return 0;
+#else
+	return 1;
+#endif
 }
 //-----------------------------------------------------------------------------
 //
@@ -373,178 +335,175 @@ void mglCanvas::EndFrame()
 #endif
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::WriteGIF(const char *fname,const char *)
-{
-#ifdef HAVE_GIF
-	// get picture sizes
-	long width, height, n;
-	unsigned char *f=0, **l=0;
-	l = GetRGBLines(width, height, f);
-	if(!l)	return;
-	n = width*height;
-
-	GifFileType *fg = EGifOpenFileName(fname, 0);
-	// define colormap
-	GifColorType col[256];
-	memset(col,0,256*sizeof(GifColorType));
-	register long m;
-	register int i,j,k,ii;
-	for(i=0;i<6;i++)	for(j=0;j<6;j++)	for(k=0;k<6;k++)
-	{
-		m = i+6*(j+6*k);		// part 1
-		col[m].Red = 51*i;
-		col[m].Green=51*j;
-		col[m].Blue =51*k;
-	}
-	// write header
-	ColorMapObject *gmap = MakeMapObject(256, col);
-	EGifPutScreenDesc(fg, width, height, 256,0,gmap);
-	FreeMapObject(gmap);
-	// write frame
-	EGifPutImageDesc(fg, 0, 0, width, height, 0, 0);
-	GifPixelType *line = new GifPixelType[n];
-	for(m=0;m<n;m++)
-	{
-		ii = 3*(m%width);	k = m/width;
-		i = (l[k][ii]+25)/51;
-		j = (l[k][ii+1]+25)/51;
-		k = (l[k][ii+2]+25)/51;
-		line[m] = i+6*(j+6*k);
-	}
-	EGifPutLine(fg, line, n);
-	EGifCloseFile(fg);
-	delete []line;	free(l);
-	if(f)	free(f);
-#endif
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::WriteIDTF(const char *,const char *)	{}
-//-----------------------------------------------------------------------------
-void mglCanvas::WriteFrame(const char *fname, const char *descr)
-{
-	char buf[64];
-	if(!fname || !fname[0])
-	{	sprintf(buf,"%s%04d.jpg",PlotId.c_str(),CurFrameId);	fname = buf;	}
-	int len=strlen(fname);
-	if(!strcmp(fname+len-4,".jpg"))	WriteJPEG(fname,descr);
-	if(!strcmp(fname+len-5,".jpeg"))WriteJPEG(fname,descr);
-	if(!strcmp(fname+len-5,".idtf"))WriteIDTF(fname,descr);
-	if(!strcmp(fname+len-4,".png"))	WritePNG(fname,descr);
-	if(!strcmp(fname+len-4,".eps"))	WriteEPS(fname,descr);
-	if(!strcmp(fname+len-4,".svg"))	WriteSVG(fname,descr);
-	if(!strcmp(fname+len-4,".gif"))	WriteGIF(fname,descr);
-	if(!strcmp(fname+len-4,".bmp"))	WriteBMP(fname,descr);
-	if(!strcmp(fname+len-4,".tga"))	WriteTGA(fname,descr);
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::ShowImage(const char *viewer, bool keep)
-{
-	char fname[128], *cmd = new char [128];
-	sprintf(fname,"%s.png", tmpnam(NULL));
-	WritePNGs(fname,"MathGL ShowImage file");
-	if(!viewer || !viewer[0])
-		viewer = MGL_DEF_VIEWER;
-#ifdef WIN32
-	if(keep)
-	{
-		sprintf(cmd,"%s %s &", viewer,fname);
-		if(system(cmd)==-1)	printf("Error to call external viewer\n");
-//		sleep(2);
-		sprintf(cmd,"del %s", fname);
-	}
-	else	sprintf(cmd,"%s %s; del %s", viewer,fname,fname);
-#else
-	if(keep)
-	{
-		sprintf(cmd,"%s %s &", viewer,fname);
-		if(system(cmd)==-1)	printf("Error to call external viewer\n");
-		sleep(2);
-		sprintf(cmd,"rm %s", fname);
-	}
-	else	sprintf(cmd,"%s %s; rm %s", viewer,fname,fname);
-#endif
-	if(system(cmd)==-1)	printf("Error to call external viewer\n");
-	delete []cmd;
-}
-//-----------------------------------------------------------------------------
 #undef _GR_
 #define _GR_	((mglCanvas *)(*gr))
 #define _Gr_	((mglCanvas *)(gr))
 //-----------------------------------------------------------------------------
 void mgl_write_png(HMGL gr, const char *fname,const char *descr)
-{	_Gr_->WritePNG(fname,descr);	}
+{
+	long w,h;	unsigned char *f=0, **p=0;
+	p =_Gr_->GetRGBLines(w,h,f);
+	if(p)
+	{
+		if(mgl_pnga_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
+		free(p);	if(f)	free(f);
+	}
+}
 void mgl_write_png_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-	_GR_->WritePNG(s,f);	delete []s;		delete []f;	}
+	mgl_write_png(_GR_,s,f);	delete []s;		delete []f;	}
+//-----------------------------------------------------------------------------
 void mgl_write_png_solid(HMGL gr, const char *fname,const char *descr)
-{	_Gr_->WritePNGs(fname,descr);	}
+{
+	long w,h;	unsigned char *f=0, **p=0;
+	p =_Gr_->GetRGBLines(w,h,f);
+	if(p)
+	{
+		if(mgl_png_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
+		free(p);	if(f)	free(f);
+	}
+}
 void mgl_write_png_solid_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-	_GR_->WritePNGs(s,f);	delete []s;		delete []f;	}
+	mgl_write_png_solid(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_write_jpg(HMGL gr, const char *fname,const char *descr)
-{	_Gr_->WriteJPEG(fname,descr);	}
+void mgl_write_jpg(HMGL gr, const char *fname,const char *)
+{
+	long w,h;	unsigned char *f=0, **p=0;
+	p =_Gr_->GetRGBLines(w,h,f);
+	if(p)
+	{
+		if(mgl_jpeg_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
+		free(p);	if(f)	free(f);
+	}
+}
 void mgl_write_jpg_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-	_GR_->WriteJPEG(s,f);	delete []s;		delete []f;	}
+	mgl_write_jpg(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
 void mgl_write_tga(HMGL gr, const char *fname,const char *descr)
-{	_Gr_->WriteTGA(fname,descr);	}
+{
+	long w,h;	unsigned char *f=0, **p=0;
+	p =_Gr_->GetRGBLines(w,h,f);
+	if(p)
+	{
+		if(mgl_tga_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
+		free(p);	if(f)	free(f);
+	}
+}
 void mgl_write_tga_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-	_GR_->WriteTGA(s,f);	delete []s;		delete []f;	}
+	mgl_write_tga(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
 void mgl_write_bmp(HMGL gr, const char *fname,const char *descr)
-{	_Gr_->WriteBMP(fname,descr);	}
+{
+	long w,h;	unsigned char *f=0, **p=0;
+	p =_Gr_->GetRGBLines(w,h,f);
+	if(p)
+	{
+		if(mgl_bmp_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
+		free(p);	if(f)	free(f);
+	}
+}
 void mgl_write_bmp_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-	_GR_->WriteBMP(s,f);	delete []s;		delete []f;	}
+	mgl_write_bmp(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
 void mgl_write_bps(HMGL gr, const char *fname,const char *descr)
-{	_Gr_->WriteBPS(fname,descr);	}
+{
+	long w,h;	unsigned char *f=0, **p=0;
+	p =_Gr_->GetRGBLines(w,h,f);
+	if(p)
+	{
+		if(mgl_bps_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
+		free(p);	if(f)	free(f);
+	}
+}
 void mgl_write_bps_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-	_GR_->WriteBPS(s,f);	delete []s;		delete []f;	}
-//-----------------------------------------------------------------------------
-void mgl_write_idtf(HMGL gr, const char *fname,const char *descr)
-{	_Gr_->WriteIDTF(fname,descr);	}
-void mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
-{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
-	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-	_GR_->WriteIDTF(s,f);	delete []s;		delete []f;	}
+	mgl_write_bps(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
 void mgl_write_gif(HMGL gr, const char *fname,const char *descr)
-{	_Gr_->WriteGIF(fname,descr);	}
+{
+	long w,h;	unsigned char *f=0, **p=0;
+	p =_Gr_->GetRGBLines(w,h,f);
+	if(p)
+	{
+		if(mgl_gif_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
+		free(p);	if(f)	free(f);
+	}
+}
 void mgl_write_gif_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-	_GR_->WriteGIF(s,f);	delete []s;		delete []f;	}
+	mgl_write_gif(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
 void mgl_start_gif(HMGL gr, const char *fname,int ms)
 {	_Gr_->StartGIF(fname,ms);	}
 void mgl_start_gif_(uintptr_t *gr, const char *fname,int *ms,int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
-	_GR_->StartGIF(s,*ms);	delete []s;	}
+	mgl_start_gif(_GR_,s,*ms);	delete []s;	}
 //-----------------------------------------------------------------------------
 void mgl_close_gif(HMGL gr)			{	_Gr_->CloseGIF();	}
-void mgl_close_gif_(uintptr_t *gr)	{	_GR_->CloseGIF();	}
+void mgl_close_gif_(uintptr_t *gr)	{	mgl_close_gif(_GR_);	}
 //-----------------------------------------------------------------------------
 void mgl_write_frame(HMGL gr, const char *fname,const char *descr)
-{	_Gr_->WriteFrame(fname,descr);	}
+{
+	char buf[64];
+	if(!fname || !fname[0])
+	{	sprintf(buf,"%s%04d.jpg",_Gr_->PlotId.c_str(),_Gr_->GetNumFrame());	fname = buf;	}
+	int len=strlen(fname);
+	if(!strcmp(fname+len-4,".jpg"))	mgl_write_jpg(gr,fname,descr);
+	if(!strcmp(fname+len-5,".jpeg"))mgl_write_jpg(gr,fname,descr);
+	if(!strcmp(fname+len-5,".idtf"))mgl_write_idtf(gr,fname,descr);
+	if(!strcmp(fname+len-4,".png"))	mgl_write_png(gr,fname,descr);
+	if(!strcmp(fname+len-4,".eps"))	mgl_write_eps(gr,fname,descr);
+	if(!strcmp(fname+len-4,".svg"))	mgl_write_svg(gr,fname,descr);
+	if(!strcmp(fname+len-4,".gif"))	mgl_write_gif(gr,fname,descr);
+	if(!strcmp(fname+len-4,".bmp"))	mgl_write_bmp(gr,fname,descr);
+	if(!strcmp(fname+len-4,".tga"))	mgl_write_tga(gr,fname,descr);
+}
 void mgl_write_frame_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-	_GR_->WriteFrame(s,f);	delete []s;		delete []f;}
+	mgl_write_frame(_GR_,s,f);	delete []s;		delete []f;}
 //-----------------------------------------------------------------------------
 void mgl_show_image(HMGL gr, const char *viewer, int keep)
-{	_Gr_->ShowImage(viewer,keep);	}
+{
+	char fname[128], *cmd = new char [128];
+	sprintf(fname,"%s.png", tmpnam(NULL));
+	mgl_write_png_solid(gr,fname,"MathGL ShowImage file");
+	if(!viewer || !viewer[0])
+		viewer = MGL_DEF_VIEWER;
+	#ifdef WIN32
+		if(keep)
+		{
+			sprintf(cmd,"%s %s &", viewer,fname);
+			if(system(cmd)==-1)	printf("Error to call external viewer\n");
+			//		sleep(2);
+			sprintf(cmd,"del %s", fname);
+		}
+		else	sprintf(cmd,"%s %s; del %s", viewer,fname,fname);
+		#else
+		if(keep)
+		{
+			sprintf(cmd,"%s %s &", viewer,fname);
+			if(system(cmd)==-1)	printf("Error to call external viewer\n");
+			sleep(2);
+			sprintf(cmd,"rm %s", fname);
+		}
+		else	sprintf(cmd,"%s %s; rm %s", viewer,fname,fname);
+		#endif
+		if(system(cmd)==-1)	printf("Error to call external viewer\n");
+		delete []cmd;
+}
 void mgl_show_image_(uintptr_t *gr, const char *viewer, int *keep, int l)
 {	char *s=new char[l+1];	memcpy(s,viewer,l);	s[l]=0;
-	_GR_->ShowImage(s,*keep);	delete []s;	}
+	mgl_show_image(_GR_,s,*keep);	delete []s;	}
 //-----------------------------------------------------------------------------

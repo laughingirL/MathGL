@@ -550,7 +550,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 	if(!n)
 	{
 		// it seems to be the only case where new color scheme should be
-		if(strchr(s,'|') && !smooth)
+		if((strchr(s,'|') || strchr(s,'!')) && !smooth)
 		{	n=l=6;	s="BbcyrR";	smooth = -1;	}
 		else	return;
 	}

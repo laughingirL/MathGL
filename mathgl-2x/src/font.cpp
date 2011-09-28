@@ -17,7 +17,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-//-----------------------------------------------------------------------------
 #include <stdlib.h>
 #include <locale.h>
 #include <ctype.h>
@@ -484,10 +483,11 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 			ss = s&MGL_FONT_MASK;
 			if(ss)	// draw symbol (glyph)
 			{
-				if(ss!=' ')
+				if(ss>' ')
 				{
 					j = Internal(ss);
 					if(j==-1)	continue;
+					if(s & MGL_FONT_ZEROW)	yy += 100*ff/fact[a];
 					if(gr && !(style&0x10))
 					{
 						if(st & MGL_FONT_WIRE)	gr->Glyph(x,yy,ff,a+4,j,ccol);

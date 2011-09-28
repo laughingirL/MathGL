@@ -67,6 +67,43 @@ inline mglPoint GetY(const mglDataA &y, int i, int j, int k=0)
 inline mglPoint GetZ(const mglDataA &z, int i, int j, int k=0)
 {	return GetZ(&z,i,j,k);	}
 //-----------------------------------------------------------------------------
+/// Structure for simplest primitives
+struct mglPrim
+{
+	// NOTE: n4 is used as mark; n3 -- as pen style for type=0,1,4
+	// NOTE: n3 is used as position of txt,font in Ptxt for type=6
+	long n1,n2,n3,n4;	///< coordinates of corners
+	int type;	///< primitive type (0-point, 1-line, 2-trig, 3-quad, 4-glyph, 6-text)
+	int id;		///< object id
+	float z;	///< z-position
+	float s;	///< size (if applicable) or fscl
+	float w;	///< width (if applicable) or ftet
+	float p;
+
+	mglPrim(int t=0)	{	n1=n2=n3=n4=id=0;	z=s=w=p=0;	type = t;	}
+};
+bool operator<(const mglPrim &a,const mglPrim &b);
+bool operator>(const mglPrim &a,const mglPrim &b);
+//-----------------------------------------------------------------------------
+/// Structure for group of primitives
+struct mglGroup
+{
+	std::vector<long> p;///< list of primitives (not filled!!!)
+	int Id;				///< Current list of primitives
+	std::string Lbl;	///< Group label
+	mglGroup(const char *lbl="", int id=0)	{	Lbl=lbl;	Id=id;	}
+};
+//-----------------------------------------------------------------------------
+/// Structure for text label
+struct mglText
+{
+	std::wstring text;
+	std::string stl;
+	float val;
+	mglText(const wchar_t *txt=0, const char *fnt=0, float v=0)	{	text=txt;	stl=fnt;	val=v;	}
+	mglText(const std::wstring &txt, float v=0)	{	text=txt;	val=v;	}
+};
+//-----------------------------------------------------------------------------
 /// Structure for internal point represenatation
 struct mglPnt
 {
@@ -135,6 +172,7 @@ public:
 	mglPoint Max;		///< Upper edge of bounding box for graphics.
 	std::string Mess;	///< Buffer for receiving messages
 	int ObjId;			///< object id for mglPrim
+	std::vector<mglGroup> Grp;	///< List of groups with names -- need for export
 
 	float CDef;			///< Default (current) color in texture
 	float AlphaDef;		///< Default value of alpha channel (transparency)
@@ -271,10 +309,17 @@ public:
 	virtual void Reserve(long n);		///< Allocate n-cells for pntC and return current position
 
 //	inline long GetPos()	{	return Pnt.size()-1;	}
-	inline mglPoint GetPnt(long i)
+	inline mglPoint GetPntP(long i)
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}
 	inline float GetClrC(long i)	{	return Pnt[i].c;	}
 	inline long GetPntNum()			{	return Pnt.size();	}
+	inline mglPnt GetPnt(long i)	{	return Pnt[i];		}
+	inline mglPrim &GetPrm(long i)	{	return Prm[i];		}
+	inline long GetPrmNum()			{	return Prm.size();	}
+	inline mglText GetPtx(long i)	{	return Ptx[i];		}
+	inline long GetPtxNum()			{	return Ptx.size();	}
+	inline mglTexture GetTxt(long i){	return Txt[i];		}
+	inline long GetTxtNum()			{	return Txt.size();	}
 	/// Scale coordinates and cut off some points
 	virtual bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true);
 
@@ -305,6 +350,7 @@ public:
 	virtual void Glyph(float x, float y, float f, int style, long icode, float col)=0;
 	virtual float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'))=0;
 	void vect_plot(long p1, long p2, float s=1);
+	inline float mark_size()	{	return MarkSize*font_factor;	}
 
 protected:
 	mglPoint FMin;		///< Actual lower edge after transformation formulas.
@@ -312,6 +358,10 @@ protected:
 	mglPoint Org;		///< Center of axis cross section.
 	int WarnCode;		///< Warning code
 	std::vector<mglPnt> Pnt;	///< Internal points
+	std::vector<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
+	std::vector<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
+	std::vector<mglText> Ptx;	///< Text labels for mglPrim
+	std::vector<mglText> Leg;	///< Text labels for legend
 #ifdef HAVE_PTHREAD
 	pthread_mutex_t mutexPnt, mutexTxt;
 #endif

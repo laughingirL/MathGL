@@ -19,11 +19,7 @@
  ***************************************************************************/
 #include <stdlib.h>
 #include <string.h>
-#if defined (__APPLE__) // || defined(__FreeBSD__)
 #include <unistd.h>
-#else
-#include <sys/sysinfo.h>
-#endif
 #include "mgl/data.h"
 #include "mgl/eval.h"
 
@@ -36,11 +32,7 @@ void mglFillP5(long x, const mreal *a,long nx,mreal _p[6]);
 void mglSetNumThr(int n)
 {
 #ifdef HAVE_PTHREAD
-#if defined (__APPLE__) // || defined(__FreeBSD__)
 	mglNumThr = n>0 ? n : sysconf(_SC_NPROCESSORS_CONF);
-#else
-	mglNumThr = n>0 ? n : get_nprocs_conf();
-#endif
 #else
 	mglNumThr = 1;
 #endif
@@ -1100,7 +1092,7 @@ void mgl_data_insert(HMDT d, char dir, long at, long num)
 {
 	if(num<1)	return;
 	at = at<0 ? 0:at;
-	register long k,nn;
+	register long i,k,nn;
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	mglData b;
 	if(dir=='x')
@@ -1111,6 +1103,7 @@ void mgl_data_insert(HMDT d, char dir, long at, long num)
 		{
 			if(at>0)	memcpy(b.a+nn*k, d->a+nx*k,at*sizeof(mreal));
 			if(at<nx)	memcpy(b.a+at+num+nn*k, d->a+at+nx*k,(nx-at)*sizeof(mreal));
+			for(i=0;i<num;i++)	b.a[nn*k+at+i]=d->a[nx*k+at];	// copy values
 		}
 		d->Set(b);	nx+=num;
 	}
@@ -1122,6 +1115,7 @@ void mgl_data_insert(HMDT d, char dir, long at, long num)
 		{
 			if(at>0)	memcpy(b.a+nx*nn*k, d->a+nx*ny*k,at*nx*sizeof(mreal));
 			if(at<ny)	memcpy(b.a+nx*(at+num+nn*k), d->a+nx*(at+ny*k),(ny-at)*nx*sizeof(mreal));
+			for(i=0;i<num;i++)	memcpy(b.a+nx*(nn*k+at+i),d->a+nx*(ny*k+at),nx*sizeof(mreal));
 		}
 		d->Set(b);	ny+=num;
 	}
@@ -1131,6 +1125,7 @@ void mgl_data_insert(HMDT d, char dir, long at, long num)
 		b.Create(nx,ny,nz+num);
 		if(at>0)	memcpy(b.a, d->a,at*nx*ny*sizeof(mreal));
 		if(at<nz)	memcpy(b.a+nx*ny*(at+num), d->a+nx*ny*at,(nz-at)*nx*ny*sizeof(mreal));
+		for(i=0;i<num;i++)	memcpy(b.a+nx*ny*(at+i),d->a+nx*ny*at,nx*ny*sizeof(mreal));
 		d->Set(b);	nz+=num;
 	}
 }

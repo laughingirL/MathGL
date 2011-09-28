@@ -5,12 +5,13 @@
 4. Check fplot after box (box:axis:fplot 'sin(pi*x^2)')
 5. Check parse (empty string from UDAV)
 6. Check smgl_cutminmax2() for reading i=52, j=13, k=40 in data with nx=60, ny=50, nz=40.
+7. Check export to SVG/EPS.
 
 ============= NEW  =============
 
 01. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
 02. Box() + edges + half-transparent
-03. Parallelization of drawing (MathGL level)
+03. Parallelization of drawing (MathGL level) -- bug with primitives drawing -- pixel.cpp
 04. Export to LaTeX formats - (pgf/tikz -- vector + bitmap).
 05. Export to CALLADA
 06. Export to X3D
@@ -24,14 +25,11 @@
 14. Add diffusive light (no dependence of normals but have direction)
 15. Use Hershey as built-in font ???
 16. Add MGL command "ask $N 'question'" -- like interactive "define"
-17. Add mglData::Duplicate(char dir) which insert the same values (x[i] -> x[2*i], x[2*i+1])?!
-18. Add Highlighting of plots (black mesh or double pen width)
-19. Add option to change color from point to point in 1D plots (using palette)
-20. Custom labels below Bars(), Barh() for values (like, "%.2g %%") -- or as separate plot! May be include x-coordinate too.
-21. Manual colors for text, boundary, background of Legend()
-22. Check "sysconf(_SC_NPROCESSORS_CONF);" under Linux/Windows
-23. Zoom, View, Shift -- by extra matrix for post points processing -- don't change points with NAN!
-24. Export/Import points+primitives as *.mgld file & write tool for its preview + UDAV/mglview use "preview" for zooming|rotation|shift rather than redrawing!
+17. Export to XGL
+18. Manual colors for text, boundary, background of Legend()
+19. Zoom, View, Shift -- by extra matrix for post points processing -- don't change points with NAN!
+20. Export/Import points+primitives as *.mgld file & write tool for its preview + UDAV/mglview use "preview" for zooming|rotation|shift rather than redrawing!
+
 ============= UDAV =============
 
 1. Dialog for data inpuut
@@ -104,6 +102,11 @@ Remove other setting if data name is changed.
 20. TernAxis=0 -- usual, =1 -- ternary, =2 -- quaternary, &4 -- projections
 21. mglData::SetVal(), GetVal()
 22. Highlight(), changes in Execute() -- highlighting
+23. Add and test mgl_label_xyz(), mgl_label_xy(), mgl_label_y(). Possible numbers are: "%x" for x-coor, "%y" for y-coor, "%z" for z-coor.
+24. Rename label_xy() to label_pos(), legend_xy() to legend_pos()
+25. Check mglData::Insert(): now copy values from original array (x[i] -> x[2*i], x[2*i+1], ...)
+26. Text about WriteOFF(), WriteSTL(), WriteXYZ() + link to format description (http://people.sc.fsu.edu/~jburkardt/data/data.html)
+27. Symbol '!' denote sharp colors even in 1d plots (like different colors for points)
 
 ============= BUGS =============
 

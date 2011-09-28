@@ -54,12 +54,12 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 	register long i,j,k,m;
 
 	std::vector<mglPoint> qa, qb;	// curves above and below original
-	mglPoint p=gr->GetPnt(ff[f]), q=p, s=gr->GetPnt(ff[nn[f]]), l=!(s-q), t=l;
+	mglPoint p=gr->GetPntP(ff[f]), q=p, s=gr->GetPntP(ff[nn[f]]), l=!(s-q), t=l;
 	qa.push_back(q+l*h);	qb.push_back(q-l*h);
 	for(i=nn[f];i>=0 && i!=f;i=nn[i])	// construct curves
 	{
 		p=q;	q=s;	l=t;
-		if(nn[i]>=0)	{	s=gr->GetPnt(ff[nn[i]]);	t=!(s-q);	}
+		if(nn[i]>=0)	{	s=gr->GetPntP(ff[nn[i]]);	t=!(s-q);	}
 		tet = t.x*l.y-t.y*l.x;
 		tt = 1+fabs(t.x*l.x+t.y*l.y);
 		if(tet>0)
@@ -339,7 +339,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 		for(k=0;k<pc;k++)	// print label several times if possible
 		{
 			if(nn[k]<0)	continue;
-			t = gr->GetPnt(ff[k]);
+			t = gr->GetPntP(ff[k]);
 			i = long(t.x/del);	t.x -= i*del;
 			j = long(t.y/del);	t.y -= j*del;
 			if(i<0 || i>=m || j<0 || j>=n)	continue;	// never should be here!

@@ -31,50 +31,13 @@
 struct GifFileType;
 #endif
 //-----------------------------------------------------------------------------
-/// Structure for simplest primitives
-struct mglPrim
-{
-	// NOTE: n4 is used as mark; n3 -- as pen style for type=0,1,4
-	// NOTE: n3 is used as position of txt,font in Ptxt for type=6
-	long n1,n2,n3,n4;	///< coordinates of corners
-	int type;		///< primitive type (0-point, 1-line, 2-trig, 3-quad, 4-glyph, 5-arrow, 6-text)
-	int id;			///< object id
-	float z;		///< z-position
-	float s;		///< size (if applicable) or fscl
-	float w;		///< width (if applicable) or ftet
-	float p;
-
-	mglPrim(int t=0)	{	n1=n2=n3=n4=id=0;	z=s=w=p=0;	type = t;	}
-};
-bool operator<(const mglPrim &a,const mglPrim &b);
-bool operator>(const mglPrim &a,const mglPrim &b);
-//-----------------------------------------------------------------------------
 /// Structure for transformation matrix
 struct mglMatrix
 {
 	float b[9];
 	float x,y,z,pf;
 	mglMatrix()	{	clear();	}
-	inline void clear()	{	x=y=z=pf=0;	memset(b,0,9*sizeof(float));	}
-};
-//-----------------------------------------------------------------------------
-/// Structure for group of primitives
-struct mglGroup
-{
-	std::vector<long> p;///< list of primitives (not filled!!!)
-	int Id;				///< Current list of primitives
-	std::string Lbl;	///< Group label
-	mglGroup(const char *lbl="", int id=0)	{	Lbl=lbl;	Id=id;	}
-};
-//-----------------------------------------------------------------------------
-/// Structure for text label
-struct mglText
-{
-	std::wstring text;
-	std::string stl;
-	float val;
-	mglText(const wchar_t *txt=0, const char *fnt=0, float v=0)	{	text=txt;	stl=fnt;	val=v;	}
-	mglText(const std::wstring &txt, float v=0)	{	text=txt;	val=v;	}
+	inline void clear()	{	x=y=z=pf=0;	memset(b,0,9*sizeof(float));	b[0]=b[4]=b[8]=1;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for drawing axis and ticks
@@ -139,8 +102,14 @@ public:
 
 	/// Set default parameter for plotting
 	void DefaultPlotParam();
-	/// Set angle of view indepently from mglCanvas::Rotate().
+
+	/// Set angle of view indepently from mglCanvas::Rotate()
 	virtual void View(float tetx,float tetz,float tety=0);
+	/// Zoom in or zoom out (if Zoom(0, 0, 1, 1)) a part of picture
+	virtual void Zoom(float x1, float y1, float x2, float y2);
+	/// Restore image after View() and Zoom()
+	virtual void Restore()	{	Bp.clear();	}
+
 	/// Clear transformation matrix.
 	inline void Identity(bool rel=false)	{	InPlot(0,1,0,1,rel);	}
 	/// Push transformation matrix into stack
@@ -180,6 +149,8 @@ public:
 	virtual void SetSize(int w,int h);
 	/// Get ratio (float width)/(float height).
 	float GetRatio();
+	/// Get bitmap data prepared for saving to file
+	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool alpha=false);
 	/// Get RGB bitmap of current state image.
 	const unsigned char *GetBits();
 	/// Get RGBA bitmap of current state image.
@@ -206,39 +177,6 @@ public:
 	inline int GetObjId(long x,long y)	{	return OI[x+Width*y];	}
 	/// Get subplot id
 	int GetSplId(long x,long y);
-
-	/// Write the frame in file using JPEG format
-	void WriteJPEG(const char *fname,const char *descr=0);
-	/// Write the frame in file using BMP format
-	void WriteBMP(const char *fname,const char *descr=0);
-	/// Write the frame in file using PNG format with transparency
-	void WritePNG(const char *fname,const char *descr=0);
-	/// Write the frame in file using PNG format no transparency
-	void WritePNGs(const char *fname,const char *descr=0);
-	/// Write the frame in file using PostScript format as bitmap
-	void WriteBPS(const char *fname,const char *descr=0);
-	/// Write the frame in file using PostScript format
-	void WriteEPS(const char *fname,const char *descr=0);
-	/// Write the frame in file using SVG format
-	void WriteSVG(const char *fname,const char *descr=0);
-	/// Write the frame in file using IDTF format
-	void WriteIDTF(const char *fname,const char *descr=0);
-	/// Write the frame in file using GIF format (only for current frame!)
-	void WriteGIF(const char *fname,const char *descr=0);
-	/// Write the frame in file (depending extension, write current frame if fname is empty)
-	void WriteFrame(const char *fname=0, const char *descr=0);
-	/// Show currently produced image by Qt or FLTK library
-	void ShowImage(const char *viewer=0, bool keep=false);
-
-	/// Write the frame in file using TeX (pgf/tikz) format
-	void WriteTeX(const char *fname,const char *descr=0);
-	/// Write the frame in file using WebGL (javascript) format
-	void WriteWGL(const char *fname,const char *descr=0);
-	/// Write the frame in file using OBJ/MTL format
-	void WriteOBJ(const char *fname,const char *descr=0);
-	/// Write the frame in file using TGA format
-	void WriteTGA(const char *fname,const char *descr=0);
-
 
 	/// Create new frame.
 	virtual int NewFrame();
@@ -339,6 +277,8 @@ public:
 
 	void StartAutoGroup (const char *);
 	void EndGroup();
+	/// Retur color for primitive depending lighting
+	mglColor GetColor(const mglPrim &p);
 
 protected:
 	float *Z;			///< Height for given level in Z-direction
@@ -346,12 +286,6 @@ protected:
 	int *OI;			///< ObjId arrays
 	unsigned char *G4;	///< Final picture in RGBA format. Prepared in Finish().
 	unsigned char *G;	///< Final picture in RGB format. Prepared in Finish().
-
-	std::vector<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
-	std::vector<mglPrim> Prm;	///< Primitives (lines, triangles and so on)
-	std::vector<mglText> Ptx;	///< Text labels for mglPrim
-	std::vector<mglText> Leg;	///< Text labels for legend
-	std::vector<mglGroup> Grp;	///< List of groups with names
 #ifdef HAVE_PTHREAD
 	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexLeg, mutexStk, mutexGrp;
 #endif
@@ -369,10 +303,11 @@ protected:
 	float st_t;			///< Subtick-to-tick ratio (ls=lt/sqrt(1+st_t)). Default is 1.
 
 	int CurFrameId;		///< Number of automaticle created frames
-	float Persp;		///< Perspective factor (=0 is perspective off)
+//	float Persp;		///< Perspective factor (=0 is perspective off)
 	int Width;			///< Width of the image
 	int Height;			///< Height of the image
 	int Depth;			///< Depth of the image
+	mglMatrix Bp;		///< Transformation matrix for View() and Zoom()
 	mglMatrix B;		///< Transformation matrix
 	mglMatrix B1;		///< Transformation matrix for colorbar
 	float inW, inH;		///< Width and height of last InPlot
@@ -419,11 +354,10 @@ protected:
 	virtual void quad_draw(long p1, long p2, long p3, long p4, mglDrawReg *d);
 	virtual void pnt_draw(long p, mglDrawReg *d);
 	void glyph_draw(const mglPrim *P, mglDrawReg *d);
-	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool alpha=false);
 	bool IsSame(const mglPrim &pr,float wp,mglColor cp,int st);
 
 private:
-	float _tetx,_tety,_tetz;		// extra angles
+//	float _tetx,_tety,_tetz;		// extra angles
 	std::vector<mglMatrix> stack;	///< stack for transformation matrixes
 	int dr_nx1, dr_nx2, dr_ny1, dr_ny2;	// Allowed drawing region
 	GifFileType *gif;
@@ -452,9 +386,6 @@ private:
 	inline void PostScale(mglPoint *p,long n)	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
 
 	void InPlot(float x1,float x2,float y1,float y2, const char *style);
-	void put_line(void *fp, bool gz, long i, float wp,mglColor cp,int st, const char *ifmt, const char *nfmt, bool neg);
-	void put_desc(void *fp, bool gz, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf);
-	mglColor put_color(const mglPrim &p);
 
 	void glyph_fill(const mglPnt &p, float f, int nt, const short *trig, mglDrawReg *d);
 	void glyph_wire(const mglPnt &p, float f, int nl, const short *line, mglDrawReg *d);

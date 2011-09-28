@@ -83,8 +83,8 @@ GifFileType *gif;*/
 	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
 	SetPenPal("k-1");
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
-	_tetx=_tety=_tetz=0;	stack.clear();
-	Alpha(false);		FactorPos = 1.07;
+	stack.clear();	Restore();
+	Alpha(false);	FactorPos = 1.07;
 	SetTickLen(0);	SetCut(true);
 	AdjustTicks("xyzc",true);
 
@@ -334,7 +334,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 //-----------------------------------------------------------------------------
 void mglCanvas::Glyph(float x, float y, float f, int s, long j, float col)
 {
-	mglPrim a(4);
+	mglPrim a(4);	// NOTE: no projection since text_plot() did it
 	a.s = fscl/B.pf;	a.w = ftet;	a.p = B.pf;
 	float cc = col<0 ? AddTexture(char(0.5-col)):col;
 	if(cc<0)	cc = CDef;
@@ -383,7 +383,7 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, const char *st)
 {
 	if(Width<=0 || Height<=0 || Depth<=0)	return;
 	if(!st)		{	InPlot(x1,x2,y1,y2,false);	return;	}
-	inW = Width*(x2-x1);	inH = Height*(y2-y1);	Persp = 0;
+	inW = Width*(x2-x1);	inH = Height*(y2-y1);
 	mglPrim p;	p.id = ObjId;
 	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
 	MGL_PUSH(Sub,p,mutexSub);
@@ -434,7 +434,7 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 		B.z = (1.f-B.b[8]/(2*Depth))*Depth;
 		B1=B;
 	}
-	inW = B.b[0];	inH=B.b[4];		Persp = 0;
+	inW = B.b[0];	inH=B.b[4];
 	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
 	mglPrim p;	p.id = ObjId;
 	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
@@ -443,9 +443,9 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 //-----------------------------------------------------------------------------
 void mglCanvas::Rotate(float TetX,float TetZ,float TetY)
 {
-	RotateN(TetX+_tetx,1.,0.,0.);
-	RotateN(TetY+_tety,0.,1.,0.);
-	RotateN(TetZ+_tetz,0.,0.,1.);
+	RotateN(TetX,1.,0.,0.);
+	RotateN(TetY,0.,1.,0.);
+	RotateN(TetZ,0.,0.,1.);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::RotateN(float Tet,float x,float y,float z)
@@ -474,10 +474,19 @@ void mglCanvas::RotateN(float Tet,float x,float y,float z)
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::View(float tetx,float tetz,float tety)
-{	_tetx=tetx;	_tety=tety;	_tetz=tetz;	}
+{	/*_tetx=tetx;	_tety=tety;	_tetz=tetz;*/	}	// TODO: write rotations
+//-----------------------------------------------------------------------------
+void mglCanvas::Zoom(float x1, float y1, float x2, float y2)
+{
+	if(x1==x2 || y1==y2)	{	x1=y1=0;	x2=y2=1;	}
+	if(x1<x2)	{	Bp.x=x1;	Bp.b[0]=x2-x1;	}
+	else		{	Bp.x=x2;	Bp.b[0]=x1-x2;	}
+	if(y1<y2)	{	Bp.y=y1;	Bp.b[4]=y2-y1;	}
+	else		{	Bp.y=y2;	Bp.b[4]=y1-y2;	}
+}
 //-----------------------------------------------------------------------------
 void mglCanvas::Perspective(float a)	// I'm too lazy for using 4*4 matrix
-{	Persp = fabs(a)/Depth;	}
+{	Bp.pf = fabs(a)/Depth;	}
 //-----------------------------------------------------------------------------
 int mglCanvas::GetSplId(long x,long y)
 {
@@ -742,8 +751,7 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,float size)
 	B.clear();	B=B1;
 	B.y = B1.y - h/2;
 	B.b[4] = B1.b[4]-h;
-	inH-=h;		Persp = 0;
-	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
+	inH-=h;	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::StartAutoGroup (const char *lbl)

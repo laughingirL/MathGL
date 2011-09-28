@@ -282,6 +282,15 @@ public:
 	/// Write the frame in file using OBJ format
 	inline void WriteOBJ(const char *fname,const char *descr="")
 	{	mgl_write_obj(gr, fname, descr);	}
+	/// Write the frame in file using XYZ format
+	inline void WriteXYZ(const char *fname,const char *descr="")
+	{	mgl_write_xyz(gr, fname, descr);	}
+	/// Write the frame in file using STL format (faces only)
+	inline void WriteSTL(const char *fname,const char *descr="")
+	{	mgl_write_stl(gr, fname, descr);	}
+	/// Write the frame in file using OFF format
+	inline void WriteOFF(const char *fname,const char *descr="")
+	{	mgl_write_off(gr, fname, descr);	}
 
 	/// Create new frame.
 	inline void NewFrame()		{	mgl_new_frame(gr);	}
@@ -420,9 +429,9 @@ public:
 	{	mgl_puts_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, text, font, size);	}
 	/// Print the label \a text at arbitrary position {x,y} of plot.
 	void Label(double x, double y, const char *text, const char *fnt=0)
-	{	mgl_label_xy(gr,x,y,text,fnt);	}
+	{	mgl_label_pos(gr,x,y,text,fnt);	}
 	void Label(double x, double y, const wchar_t *text, const char *fnt=0)
-	{	mgl_labelw_xy(gr,x,y,text,fnt);	}
+	{	mgl_labelw_pos(gr,x,y,text,fnt);	}
 
 	/// Print text along the curve
 	inline void Text(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *text, const char *font="", const char *opt="")
@@ -476,7 +485,7 @@ public:
 	{	mgl_clear_legend(gr);	}
 	/// Draw legend of accumulated strings at position {x,y}
 	inline void Legend(float x, float y, const char *font="#", float size=-0.8, float llen=0)
-	{	mgl_legend_xy(gr, x, y, font, size, llen);	}
+	{	mgl_legend_pos(gr, x, y, font, size, llen);	}
 	/// Draw legend of accumulated strings
 	inline void Legend(int where=3, const char *font="#", float size=-0.8, float llen=0)
 	{	mgl_legend(gr, where, font, size, llen);	}
@@ -590,6 +599,20 @@ public:
 	{	mgl_textmarkw_yr(gr, &y, &r, text, fnt, opt);	}
 	inline void TextMark(const mglDataA &y, const wchar_t *text, const char *fnt="", const char *opt="")
 	{	mgl_textmarkw(gr, &y, text, fnt, opt);	}
+
+	/// Draw labels for points coordinate(s) at points {x,y,z}
+	inline void Label(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *text, const char *fnt="", const char *opt="")
+	{	mgl_label_xyz(gr, &x, &y, &z, text, fnt, opt);	}
+	inline void Label(const mglDataA &x, const mglDataA &y, const char *text, const char *fnt="", const char *opt="")
+	{	mgl_label_xy(gr, &x, &y, text, fnt, opt);	}
+	inline void Label(const mglDataA &y, const char *text, const char *fnt="", const char *opt="")
+	{	mgl_label_y(gr, &y, text, fnt, opt);	}
+	inline void Label(const mglDataA &x, const mglDataA &y, const mglDataA &z, const wchar_t *text, const char *fnt="", const char *opt="")
+	{	mgl_labelw_xyz(gr, &x, &y, &z, text, fnt, opt);	}
+	inline void Label(const mglDataA &x, const mglDataA &y, const wchar_t *text, const char *fnt="", const char *opt="")
+	{	mgl_labelw_xy(gr, &x, &y, text, fnt, opt);	}
+	inline void Label(const mglDataA &y, const wchar_t *text, const char *fnt="", const char *opt="")
+	{	mgl_labelw_y(gr, &y, text, fnt, opt);	}
 
 	/// Draw tube with radius r for points in arrays {x,y,z}
 	inline void Tube(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &r, const char *pen="", const char *opt="")

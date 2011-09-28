@@ -468,7 +468,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	{
 		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1)/2;
 		v = aa.txt[i].val;	kk[i] = AddPnt(o+d*v,-1,d,0,3);
-		q=p;	p = GetPnt(kk[i]);	v = i>0 ? (p-q).norm() : NAN;
+		q=p;	p = GetPntP(kk[i]);	v = i>0 ? (p-q).norm() : NAN;
 		c = c<v ? c:v;	l = l>w[i] ? l:w[i];
 	}
 	c /= 1.1;

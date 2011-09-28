@@ -52,8 +52,8 @@ void mgl_axis_grid(HMGL gr, const char *dir,const char *pen);
 void mgl_label(HMGL gr, char dir, const char *text);
 void mgl_label_ext(HMGL gr, char dir, const char *text, float pos, float shift);
 void mgl_labelw_ext(HMGL gr, char dir, const wchar_t *text, float pos, float shift);
-void mgl_label_xy(HMGL gr, float x, float y, const char *text, const char *fnt);
-void mgl_labelw_xy(HMGL gr, float x, float y, const wchar_t *text, const char *fnt);
+void mgl_label_pos(HMGL gr, float x, float y, const char *text, const char *fnt);
+void mgl_labelw_pos(HMGL gr, float x, float y, const wchar_t *text, const char *fnt);
 
 void mgl_colorbar(HMGL gr, const char *sch,int where);
 void mgl_colorbar_ext(HMGL gr, const char *sch, int where, float x, float y, float w, float h);
@@ -63,7 +63,7 @@ void mgl_colorbar_val_ext(HMGL gr, HCDT dat, const char *sch,int where,float x, 
 void mgl_add_legend(HMGL gr, const char *text,const char *style);
 void mgl_add_legendw(HMGL gr, const wchar_t *text,const char *style);
 void mgl_clear_legend(HMGL graph);
-void mgl_legend_xy(HMGL gr, float x, float y, const char *font, float size, float llen);
+void mgl_legend_pos(HMGL gr, float x, float y, const char *font, float size, float llen);
 void mgl_legend(HMGL gr, int where, const char *font, float size, float llen);
 void mgl_set_legend_marks(HMGL gr, int num);
 
@@ -80,6 +80,11 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr);
 void mgl_write_svg(HMGL gr, const char *fname,const char *descr);
 void mgl_write_tex(HMGL gr, const char *fname,const char *descr);
 void mgl_write_obj(HMGL gr, const char *fname,const char *descr);
+void mgl_write_stl(HMGL gr, const char *fname,const char *descr);
+void mgl_write_off(HMGL gr, const char *fname,const char *descr);
+void mgl_write_xyz(HMGL gr, const char *fname,const char *descr);
+void mgl_write_xgl(HMGL gr, const char *fname,const char *descr);
+void mgl_write_x3d(HMGL gr, const char *fname,const char *descr);
 void mgl_write_wgl(HMGL gr, const char *fname,const char *descr);
 void mgl_write_idtf(HMGL gr, const char *fname,const char *descr);
 void mgl_write_gif(HMGL gr, const char *fname,const char *descr);
@@ -155,7 +160,7 @@ void mgl_axis_(uintptr_t *gr, const char *dir, int *adj,int l);
 void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen,int l,int n);
 void mgl_label_(uintptr_t *gr, const char *dir, const char *text,int,int l);
 void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, float *pos, float *shift,int,int l);
-void mgl_label_xy_(uintptr_t *gr, float *x, float *y, const char *txt, const char *fnt,int l,int n);
+void mgl_label_pos_(uintptr_t *gr, float *x, float *y, const char *txt, const char *fnt,int l,int n);
 /*****************************************************************************/
 void mgl_colorbar_(uintptr_t *gr, const char *sch,int *where,int l);
 void mgl_colorbar_ext_(uintptr_t *gr, const char *sch,int *where, float *x, float *y, float *w, float *h, int l);
@@ -164,7 +169,7 @@ void mgl_colorbar_val_ext_(uintptr_t *gr, uintptr_t *dat, const char *sch,int *w
 
 void mgl_add_legend_(uintptr_t *gr, const char *text,const char *style,int l,int n);
 void mgl_clear_legend_(uintptr_t *gr);
-void mgl_legend_xy_(uintptr_t *gr, float *x, float *y, const char *font, float *size, float *llen,int l);
+void mgl_legend_pos_(uintptr_t *gr, float *x, float *y, const char *font, float *size, float *llen,int l);
 void mgl_legend_(uintptr_t *gr, int *where, const char *font, float *size, float *llen,int l);
 void mgl_set_legend_marks_(uintptr_t *gr, int *num);
 
@@ -184,6 +189,11 @@ void mgl_start_gif_(uintptr_t *graph, const char *fname,int *ms,int l);
 void mgl_close_gif_(uintptr_t *graph);
 void mgl_write_tga_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_obj_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
+void mgl_write_stl_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
+void mgl_write_off_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
+void mgl_write_xyz_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
+void mgl_write_xgl_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
+void mgl_write_x3d_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_tex_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_wgl_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_set_plotid_(uintptr_t *gr, const char *id,int l);

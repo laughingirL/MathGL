@@ -91,7 +91,7 @@ endif(use_gsl)
 target_link_libraries(mgl ${OPENGL_LIBRARIES} ${PNG_LIBRARIES} m)
 include_directories(${OPENGL_INCLUDE_DIR} ${PNG_INCLUDE_DIR})
 file(TO_NATIVE_PATH $(MGL_FONT_PATH) MGL_FONT_PATH_SYS)
-add_definitions(-DMGL_FONT_PATH="${MGL_FONT_PATH_SYS}")
+#add_definitions(-DMGL_FONT_PATH="${MGL_FONT_PATH_SYS}")
 
 if(UNIX)
 	add_definitions(-DNO_COLOR_ARRAY)

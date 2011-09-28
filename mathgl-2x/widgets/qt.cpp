@@ -277,21 +277,21 @@ void QMathGL::exportPNG(QString fname)
 {
 	if(fname.isEmpty())	fname = scriptName;
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	graph->WritePNG(setExtension(fname,"png").toAscii(), appName.toAscii());
+	else	mgl_write_png(graph,setExtension(fname,"png").toAscii(), appName.toAscii());
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportPNGs(QString fname)
 {
 	if(fname.isEmpty())	fname = scriptName;
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	graph->WritePNGs(setExtension(fname,"png").toAscii(), appName.toAscii());
+	else	mgl_write_png_solid(graph,setExtension(fname,"png").toAscii(), appName.toAscii());
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportJPG(QString fname)
 {
 	if(fname.isEmpty())	fname = scriptName;
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
-	else	graph->WriteJPEG(setExtension(fname,"jpg").toAscii(), appName.toAscii());
+	else	mgl_write_jpg(graph,setExtension(fname,"jpg").toAscii(), appName.toAscii());
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportBPS(QString fname)
@@ -301,7 +301,7 @@ void QMathGL::exportBPS(QString fname)
 	else
 	{
 		setlocale(LC_ALL, "C");
-		graph->WriteEPS(setExtension(fname,"eps").toAscii(), appName.toAscii());
+		mgl_write_bps(graph,setExtension(fname,"eps").toAscii(), appName.toAscii());
 		setlocale(LC_ALL, "");
 	}
 }
@@ -313,7 +313,7 @@ void QMathGL::exportEPS(QString fname)
 	else
 	{
 		setlocale(LC_ALL, "C");
-		graph->WriteEPS(setExtension(fname,"eps").toAscii(), appName.toAscii());
+		mgl_write_eps(graph,setExtension(fname,"eps").toAscii(), appName.toAscii());
 		setlocale(LC_ALL, "");
 	}
 }
@@ -325,7 +325,7 @@ void QMathGL::exportSVG(QString fname)
 	else
 	{
 		setlocale(LC_ALL, "C");
-		graph->WriteSVG(setExtension(fname,"svg").toAscii(), appName.toAscii());
+		mgl_write_svg(graph,setExtension(fname,"svg").toAscii(), appName.toAscii());
 		setlocale(LC_ALL, "");
 	}
 }

@@ -32,9 +32,7 @@ void mglCanvas::SetSize(int w,int h)
 	C = new unsigned char[w*h*12];
 	Z = new float[w*h*3];	// only 3 planes
 	OI= new int[w*h];
-	InPlot(0,1,0,1,false);
-	Persp = 0;
-	Clf();
+	InPlot(0,1,0,1,false);	Clf();
 }
 //-----------------------------------------------------------------------------
 void mglDrawReg::set(mglCanvas *gr, int nx, int ny, int m)
@@ -64,12 +62,12 @@ void mglCanvas::PostScale(mglPoint &p)
 	p.x = B.x + q.x*B.b[0] + q.y*B.b[1] + q.z*B.b[2];
 	p.y = B.y+ q.x*B.b[3] + q.y*B.b[4] + q.z*B.b[5];
 	p.z = B.z+ q.x*B.b[6] + q.y*B.b[7] + q.z*B.b[8];
-	if(Persp)
+/*	if(Persp)
 	{
 		register float d = (1-Persp*Depth/2)/(1-Persp*p.z);
 		p.x = Width/2 + d*(p.x-Width/2);
 		p.y = Height/2 + d*(p.y-Height/2);
-	}
+	}*/
 }
 //-----------------------------------------------------------------------------
 bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
@@ -82,14 +80,14 @@ bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 	n.x = y.x*B.b[0] + y.y*B.b[1] + y.z*B.b[2];
 	n.y = y.x*B.b[3] + y.y*B.b[4] + y.z*B.b[5];
 	n.z = y.x*B.b[6] + y.y*B.b[7] + y.z*B.b[8];
-	if(Persp)
+/*	if(Persp)
 	{
 		register float d = (1-Persp*Depth/2)/(1-Persp*p.z);
 		// NOTE: No d* since I use transformed p here.
 		register float dd = Persp*n.z/(1-Persp*p.z);
 		n.x = d*n.x + dd*(p.x-Width/2);
 		n.y = d*n.y + dd*(p.y-Height/2);
-	}
+	}*/
 	return res;
 }
 //-----------------------------------------------------------------------------

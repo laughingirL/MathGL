@@ -302,42 +302,42 @@ void export_png_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.png", 0);
 	if(!fname || !fname[0])	return;
-	((mglCanvas*)v)->WritePNG(fname);
+	mgl_write_png((mglCanvas*)v,fname,0);
 }
 //-----------------------------------------------------------------------------
 void export_bps_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.eps", 0);
 	if(!fname || !fname[0])	return;
-	((mglCanvas*)v)->WriteEPS(fname);
+	mgl_write_bps((mglCanvas*)v,fname,0);
 }
 //-----------------------------------------------------------------------------
 void export_pngn_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.png", 0);
 	if(!fname || !fname[0])	return;
-	((mglCanvas*)v)->WritePNGs(fname,0);
+	mgl_write_png_solid((mglCanvas*)v,fname,0);
 }
 //-----------------------------------------------------------------------------
 void export_jpeg_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.jpg", 0);
 	if(!fname || !fname[0])	return;
-	((mglCanvas*)v)->WriteJPEG(fname);
+	mgl_write_jpg((mglCanvas*)v,fname,0);
 }
 //-----------------------------------------------------------------------------
 void export_svg_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.svg", 0);
 	if(!fname || !fname[0])	return;
-	((mglCanvas*)v)->WriteSVG(fname);
+	mgl_write_svg((mglCanvas*)v,fname,0);
 }
 //-----------------------------------------------------------------------------
 void export_eps_cb(Fl_Widget*, void* v)
 {
 	char *fname = fl_file_chooser(gettext("Save File As?"), "*.eps", 0);
 	if(!fname || !fname[0])	return;
-	((mglCanvas*)v)->WriteEPS(fname);
+	mgl_write_eps((mglCanvas*)v,fname,0);
 }
 //-----------------------------------------------------------------------------
 void oncemore_cb(Fl_Widget*, void*v)
