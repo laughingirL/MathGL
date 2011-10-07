@@ -52,7 +52,11 @@ float mglCanvas::GetRatio()	{	return inW/inH;	}
 void mglCanvas::AddLegend(const wchar_t *text,const char *style)
 {	if(text)	MGL_PUSH(Leg,mglText(text,style),mutexLeg);	}
 void mglCanvas::add_prim(mglPrim &a)
-{	a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);	clr(MGL_FINISHED);	}
+{
+	if(a.n1>=0)
+	{	a.z = Pnt[a.n1].z;	// this is a bit less accurate but simpler for transformation
+		a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);	clr(MGL_FINISHED);	}
+}
 //-----------------------------------------------------------------------------
 void mglCanvas::DefaultPlotParam()
 {
@@ -200,7 +204,7 @@ float mglCanvas::GetOrgZ(char dir)
 //-----------------------------------------------------------------------------
 #define MGL_MARK_PLOT	if(Quality&4)	mark_draw(p,type,size?size:MarkSize,&d);else	\
 						{	mglPrim a;	a.w = fabs(PenWidth);	a.s = size?size:MarkSize;	\
-							a.n1 = p;	a.n4 = type;	a.z = Pnt[p].z;	add_prim(a);	}
+							a.n1 = p;	a.n4 = type;	add_prim(a);	}
 void mglCanvas::mark_plot(long p, char type, float size)
 {
 	if(p<0 || isnan(Pnt[p].x))	return;
@@ -213,8 +217,7 @@ void mglCanvas::mark_plot(long p, char type, float size)
 }
 //-----------------------------------------------------------------------------
 #define MGL_LINE_PLOT	if(Quality&4)	line_draw(p1,p2,&dd);else	\
-						{	mglPrim a(1);	a.z = (Pnt[p1].z+Pnt[p2].z)/2;	\
-							if(pw>1)	a.z += pw-1;	a.n3=PDef;	a.s = pPos;	\
+						{	mglPrim a(1);	a.n3=PDef;	a.s = pPos;	\
 							a.n1 = p1;	a.n2 = p2;	a.w = pw;	add_prim(a);	}
 void mglCanvas::line_plot(long p1, long p2)
 {
@@ -232,8 +235,8 @@ void mglCanvas::line_plot(long p1, long p2)
 }
 //-----------------------------------------------------------------------------
 #define MGL_TRIG_PLOT	if(Quality&4)	trig_draw(p1,p2,p3,true,&d);else	\
-						{	mglPrim a(2);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	\
-							a.z = (Pnt[p1].z+Pnt[p2].z+Pnt[p3].z)/3;	add_prim(a);}
+						{	mglPrim a(2);	a.n1 = p1;	a.n2 = p2;	\
+							a.n3 = p3;	add_prim(a);}
 void mglCanvas::trig_plot(long p1, long p2, long p3)
 {
 	if(p1<0 || p2<0 || p3<0 || isnan(Pnt[p1].x) || isnan(Pnt[p2].x) || isnan(Pnt[p3].x))	return;
@@ -246,9 +249,8 @@ void mglCanvas::trig_plot(long p1, long p2, long p3)
 }
 //-----------------------------------------------------------------------------
 #define MGL_QUAD_PLOT	if(Quality&4)	quad_draw(p1,p2,p3,p4,&d);else	\
-						{	mglPrim a(3);	a.n1 = p1;	a.n2 = p2;	a.n3 = p3;	a.n4 = p4;	\
-							a.z = (Pnt[p1].z+Pnt[p2].z+Pnt[p3].z+Pnt[p4].z)/4;	\
-							add_prim(a);	}
+						{	mglPrim a(3);	a.n1 = p1;	a.n2 = p2;	\
+							a.n3 = p3;	a.n4 = p4;	add_prim(a);	}
 void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 {
 	if(p1<0 || isnan(Pnt[p1].x))	{	trig_plot(p4,p2,p3);	return;	}
@@ -282,8 +284,7 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 
 	if(!(Quality&4))	// add text itself
 	{
-		mglPrim a(6);
-		a.n1 = p;	a.z = Pnt[p].z;
+		mglPrim a(6);	a.n1 = p;
 		mglText txt(text,font);
 		MGL_PUSH(Ptx,txt,mutexPtx);
 		a.n3 = Ptx.size()-1;
@@ -339,7 +340,7 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, float col)
 	float cc = col<0 ? AddTexture(char(0.5-col)):col;
 	if(cc<0)	cc = CDef;
 	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), -1, 0);
-	a.n3 = s;	a.n4 = j;	a.z = B.z;
+	a.n3 = s;	a.n4 = j;
 	if(a.n1<0)	return;
 	mglDrawReg d;	d.set(this,1,1,0);
 	if(Quality&4)	glyph_draw(&a,&d);
@@ -441,11 +442,32 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 	MGL_PUSH(Sub,p,mutexSub);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Rotate(float TetX,float TetZ,float TetY)
+void mglCanvas::Rotate(float tetx,float tetz,float tety)
 {
-	RotateN(TetX,1.,0.,0.);
-	RotateN(TetY,0.,1.,0.);
-	RotateN(TetZ,0.,0.,1.);
+//	RotateN(TetX,1.,0.,0.);
+//	RotateN(TetY,0.,1.,0.);
+//	RotateN(TetZ,0.,0.,1.);
+	float R[9], O[9];
+	float cx=cos(tetx*M_PI/180), sx=sin(tetx*M_PI/180), cy=cos(tety*M_PI/180), sy=sin(tety*M_PI/180), cz=cos(tetz*M_PI/180), sz=sin(tetz*M_PI/180);
+	R[0] = cz*cx;	R[1] = sz*cx*sy-cy*sx;	R[2] = sx*sy+cy*cz*cx;
+	R[3] = cz*sx;	R[4] = cy*cx+sx*sy*sz;	R[5] = sz*sx*cy-sy*cx;
+	R[6] = -sz;		R[7] = cz*sy;			R[8] = cz*cy;
+	memcpy(O,B.b,9*sizeof(float));
+	B.b[0] = R[0]*O[0] + R[3]*O[1] + R[6]*O[2];
+	B.b[1] = R[1]*O[0] + R[4]*O[1] + R[7]*O[2];
+	B.b[2] = R[2]*O[0] + R[5]*O[1] + R[8]*O[2];
+	B.b[3] = R[0]*O[3] + R[3]*O[4] + R[6]*O[5];
+	B.b[4] = R[1]*O[3] + R[4]*O[4] + R[7]*O[5];
+	B.b[5] = R[2]*O[3] + R[5]*O[4] + R[8]*O[5];
+	B.b[6] = R[0]*O[6] + R[3]*O[7] + R[6]*O[8];
+	B.b[7] = R[1]*O[6] + R[4]*O[7] + R[7]*O[8];
+	B.b[8] = R[2]*O[6] + R[5]*O[7] + R[8]*O[8];
+	if(get(MGL_AUTO_FACTOR))
+	{
+		float w=(fabs(B.b[3])+fabs(B.b[4])+fabs(B.b[5]))/B1.b[4];
+		float h=(fabs(B.b[0])+fabs(B.b[1])+fabs(B.b[2]))/B1.b[0];
+		B.pf = 1.55+0.6147*(w<h ? (h-1):(w-1));
+	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::RotateN(float Tet,float x,float y,float z)
@@ -474,7 +496,25 @@ void mglCanvas::RotateN(float Tet,float x,float y,float z)
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::View(float tetx,float tetz,float tety)
-{	/*_tetx=tetx;	_tety=tety;	_tetz=tetz;*/	}	// TODO: write rotations
+{
+	float R[9], A[9];
+	float cx=cos(tetx*M_PI/180), sx=sin(tetx*M_PI/180);
+	float cy=cos(tety*M_PI/180), sy=sin(tety*M_PI/180);
+	float cz=cos(tetz*M_PI/180), sz=sin(tetz*M_PI/180);
+	R[0] = cz*cx;	R[1] = sz*cx*sy-cy*sx;	R[2] = sx*sy+cy*cz*cx;
+	R[3] = cz*sx;	R[4] = cy*cx+sx*sy*sz;	R[5] = sz*sx*cy-sy*cx;
+	R[6] = -sz;		R[7] = cz*sy;			R[8] = cz*cy;
+	memcpy(A,Bp.b,9*sizeof(float));
+	Bp.b[0] = R[0]*A[0] + R[3]*A[1] + R[6]*A[2];
+	Bp.b[1] = R[1]*A[0] + R[4]*A[1] + R[7]*A[2];
+	Bp.b[2] = R[2]*A[0] + R[5]*A[1] + R[8]*A[2];
+	Bp.b[3] = R[0]*A[3] + R[3]*A[4] + R[6]*A[5];
+	Bp.b[4] = R[1]*A[3] + R[4]*A[4] + R[7]*A[5];
+	Bp.b[5] = R[2]*A[3] + R[5]*A[4] + R[8]*A[5];
+	Bp.b[6] = R[0]*A[6] + R[3]*A[7] + R[6]*A[8];
+	Bp.b[7] = R[1]*A[6] + R[4]*A[7] + R[7]*A[8];
+	Bp.b[8] = R[2]*A[6] + R[5]*A[7] + R[8]*A[8];
+}
 //-----------------------------------------------------------------------------
 void mglCanvas::Zoom(float x1, float y1, float x2, float y2)
 {
@@ -484,9 +524,6 @@ void mglCanvas::Zoom(float x1, float y1, float x2, float y2)
 	if(y1<y2)	{	Bp.y=y1;	Bp.b[4]=y2-y1;	}
 	else		{	Bp.y=y2;	Bp.b[4]=y1-y2;	}
 }
-//-----------------------------------------------------------------------------
-void mglCanvas::Perspective(float a)	// I'm too lazy for using 4*4 matrix
-{	Bp.pf = fabs(a)/Depth;	}
 //-----------------------------------------------------------------------------
 int mglCanvas::GetSplId(long x,long y)
 {

@@ -79,6 +79,8 @@ void mgl_rotate(HMGL gr, float TetX,float TetZ,float TetY)
 {	_Gr_->Rotate(TetX,TetZ,TetY);	}
 void mgl_view(HMGL gr, float TetX,float TetZ,float TetY)
 {	_Gr_->View(TetX,TetZ,TetY);	}
+void mgl_zoom(HMGL gr, float x1, float y1, float x2, float y2)
+{	_Gr_->Zoom(x1,y1,x2,y2);	}
 void mgl_rotate_vector(HMGL gr, float Tet,float x,float y,float z)
 {	_Gr_->RotateN(Tet,x,y,z);	}
 void mgl_perspective(HMGL gr, float val)
@@ -142,6 +144,8 @@ void mgl_rotate_(uintptr_t *gr, float *TetX,float *TetZ,float *TetY)
 {	_GR_->Rotate(*TetX,*TetZ,*TetY);	}
 void mgl_view_(uintptr_t *gr, float *TetX,float *TetZ,float *TetY)
 {	_GR_->View(*TetX,*TetZ,*TetY);	}
+void mgl_zoom_(uintptr_t *gr, float *x1, float *y1, float *x2, float *y2)
+{	_GR_->Zoom(*x1,*y1,*x2,*y2);	}
 void mgl_rotate_vector_(uintptr_t *gr, float *Tet,float *x,float *y,float *z)
 {	_GR_->RotateN(*Tet,*x,*y,*z);	}
 void mgl_perspective_(uintptr_t *gr, float val)

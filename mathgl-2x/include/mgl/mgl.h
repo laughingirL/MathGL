@@ -233,6 +233,9 @@ public:
 	/// Set angle of view independently from Rotate().
 	inline void View(float TetX,float TetZ=0,float TetY=0)
 	{	mgl_view(gr, TetX, TetZ, TetY);	}
+	/// Zoom in or zoom out (if Zoom(0, 0, 1, 1)) a part of picture
+	inline void Zoom(float x1, float y1, float x2, float y2)
+	{	mgl_zoom(gr, x1, y1, x2, y2);	}
 
 	/// Set size of frame in pixels. Normally this function is called internaly.
 	inline void SetSize(int width, int height)	{	mgl_set_size(gr, width, height);	}

@@ -126,7 +126,7 @@ void QMathGL::setRotate(bool r)
 	{	zoom=false;	rotate=r;	update();	emit rotateChanged(r);	}
 }
 //-----------------------------------------------------------------------------
-/*void QMathGL::setZoom(bool z)
+void QMathGL::setZoom(bool z)
 {
 	if(zoom!=z)
 	{	zoom=z;	rotate=false;	update();
@@ -159,13 +159,13 @@ void QMathGL::zoomOut()
 	d = (y2-y1)/2;	y1 -= d;	y2 += d;
 	d = (x2-x1)/2;	x1 -= d;	x2 += d;
 	update();
-}*/
+}
 //-----------------------------------------------------------------------------
 void QMathGL::restore()
 {
 	setPhi(0);	setTet(0);	setPer(0);
 	x1=y1=0;	x2=y2=1;	zoom=rotate=false;
-	emit rotateChanged(false);
+	emit zoomChanged(false);	emit rotateChanged(false);
 	update();
 }
 //-----------------------------------------------------------------------------
@@ -177,7 +177,8 @@ void QMathGL::update(mglCanvas *gr)
 	if(gr!=graph || graph->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
 
 	gr->Alpha(alpha);	gr->Light(light);
-	gr->View(tet,phi);	gr->Perspective(per);
+	gr->View(tet,phi);	gr->Zoom(x1,y1,x2,y2);
+	gr->Perspective(per);
 	draw_func(gr, draw_par);
 
 	const char *buf=gr->Mess.c_str();
@@ -335,14 +336,10 @@ void QMathGL::exportIDTF(QString fname)
 	if(fname.isEmpty())	fname = scriptName;
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
-	{	// TODO: Add IDTF/U3D export
-/*		mglGraphIDTF *ps = new mglGraphIDTF;
-		ps->SetFont(graph->GetFont());
-		update(ps);
+	{
 		setlocale(LC_ALL, "C");
-		ps->WriteIDTF(setExtension(fname,"idtf").toAscii(), appName.toAscii());
+		mgl_write_idtf(graph,setExtension(fname,"svg").toAscii(), appName.toAscii());
 		setlocale(LC_ALL, "");
-		delete ps;*/
 	}
 }
 //-----------------------------------------------------------------------------
@@ -442,6 +439,8 @@ void mglCanvasQT::ToggleLight()	{	QMGL->setLight(!QMGL->getLight());	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::ToggleNo()	{	QMGL->restore();	}
 //-----------------------------------------------------------------------------
+void mglCanvasQT::ToggleZoom()	{	QMGL->setZoom(!QMGL->getZoom());	}
+//-----------------------------------------------------------------------------
 void mglCanvasQT::ToggleRotate(){	QMGL->setRotate(!QMGL->getRotate());}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::Update()		{	SetCurFig(0);	QMGL->restore();	}
@@ -484,7 +483,8 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	scroll = new QScrollArea(Wnd);
 	timer = new QTimer(Wnd);
 
-	QMGL = new QMathGL(Wnd);	makeMenu();
+	QMGL = new QMathGL(Wnd);
+	popup = mglMakeMenu(Wnd, QMGL, tet, phi, anim);
 	QMGL->setPopup(popup);	QMGL->setGraph(this);
 	QMGL->setDraw(draw, par);
 	qApp->processEvents();
@@ -496,13 +496,13 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 }
 //-----------------------------------------------------------------------------
 #define TR	QObject::tr
-void mglCanvasQT::makeMenu()
+QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi, QAction *anim)
 {
 	QAction *a;
 	QMenu *o, *oo;
 	QToolBar *bb;
 
-	popup = new QMenu(Wnd);
+	QMenu *popup = new QMenu(Wnd);
 	// file menu
 	{
 		o = Wnd->menuBar()->addMenu(TR("&File"));

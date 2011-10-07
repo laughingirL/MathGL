@@ -125,8 +125,8 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 	c = (c>=0) ? c:CDef;
 	// RGBA color for OpenGL and EPS/SVG modes only!
 	mglPnt q;
-	q.x=p.x;	q.y=p.y;	q.z=p.z;	q.c=c;
-	q.t=a;		q.u=n.x;	q.v=n.y;	q.w=n.z;
+	q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
+	q.c=c;	q.t=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	Txt[long(c)].GetC(c,a,q);
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
@@ -143,7 +143,7 @@ long mglBase::CopyProj(long from, mglPoint p, mglPoint n)
 {
 	if(from<0)	return -1;
 	mglPnt q=Pnt[from];
-	q.x=p.x;	q.y=p.y;	q.z=p.z;
+	q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
 	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
@@ -758,11 +758,11 @@ void mglBase::vect_plot(long p1, long p2, float s)
 	const mglPnt &q1=Pnt[p1], &q2=Pnt[p2];
 	mglPnt s1=q2,s2=q2;
 	s = s<=0 ? 0.1 : s*0.1;
-	s1.x = q2.x - 3*s*(q2.x-q1.x) + s*(q2.y-q1.y);
-	s2.x = q2.x - 3*s*(q2.x-q1.x) - s*(q2.y-q1.y);
-	s1.y = q2.y - 3*s*(q2.y-q1.y) - s*(q2.x-q1.x);
-	s2.y = q2.y - 3*s*(q2.y-q1.y) + s*(q2.x-q1.x);
-	s1.z = s2.z = q2.z - 3*s*(q2.z-q1.z);
+	s1.x=s1.xx = q2.x - 3*s*(q2.x-q1.x) + s*(q2.y-q1.y);
+	s2.x=s2.xx = q2.x - 3*s*(q2.x-q1.x) - s*(q2.y-q1.y);
+	s1.y=s1.yy = q2.y - 3*s*(q2.y-q1.y) - s*(q2.x-q1.x);
+	s2.y=s2.yy = q2.y - 3*s*(q2.y-q1.y) + s*(q2.x-q1.x);
+	s1.z=s1.zz=s2.z=s2.zz = q2.z - 3*s*(q2.z-q1.z);
 	long n1,n2;
 	n1=Pnt.size();	MGL_PUSH(Pnt,s1,mutexPnt);
 	n2=Pnt.size();	MGL_PUSH(Pnt,s2,mutexPnt);

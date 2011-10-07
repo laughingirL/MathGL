@@ -91,6 +91,8 @@ void mgl_write_gif(HMGL gr, const char *fname,const char *descr);
 void mgl_start_gif(HMGL gr, const char *fname,int ms);
 void mgl_close_gif(HMGL graph);
 void mgl_set_plotid(HMGL gr, const char *id);
+void mgl_export_mgld(HMGL gr, const char *fname,const char *descr);
+void mgl_import_mgld(HMGL gr, const char *fname, int add);
 
 const unsigned char *mgl_get_rgb(HMGL graph);
 const unsigned char *mgl_get_rgba(HMGL graph);
@@ -133,6 +135,7 @@ void mgl_titlew(HMGL gr, const wchar_t *title, const char *stl, float size);
 void mgl_aspect(HMGL gr, float Ax,float Ay,float Az);
 void mgl_rotate(HMGL gr, float TetX,float TetZ,float TetY);
 void mgl_view(HMGL gr, float TetX,float TetZ,float TetY);
+void mgl_zoom(HMGL gr, float x1, float y1, float x2, float y2);
 void mgl_rotate_vector(HMGL gr, float Tet,float x,float y,float z);
 void mgl_perspective(HMGL gr, float val);
 
@@ -197,6 +200,8 @@ void mgl_write_x3d_(uintptr_t *graph, const char *fname,const char *descr,int lf
 void mgl_write_tex_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_wgl_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_set_plotid_(uintptr_t *gr, const char *id,int l);
+void mgl_export_mgld_(uintptr_t *gr, const char *fname,const char *descr,int l,int n);
+void mgl_import_mgld_(uintptr_t *gr, const char *fname, int *add, int l);
 
 const unsigned char *mgl_get_rgb_(uintptr_t *graph);
 const unsigned char *mgl_get_rgba_(uintptr_t *graph);
@@ -242,6 +247,7 @@ void mgl_title_(uintptr_t *gr, const char *title, const char *stl, float *size, 
 void mgl_aspect_(uintptr_t *graph, float *Ax,float *Ay,float *Az);
 void mgl_rotate_(uintptr_t *graph, float *TetX,float *TetZ,float *TetY);
 void mgl_view_(uintptr_t *graph, float *TetX,float *TetZ,float *TetY);
+void mgl_zoom_(uintptr_t *graph, float *x1, float *y1, float *x2, float *y2);
 void mgl_rotate_vector_(uintptr_t *graph, float *Tet,float *x,float *y,float *z);
 void mgl_perspective_(uintptr_t *graph, float val);
 /*****************************************************************************/
@@ -260,7 +266,7 @@ void mgl_wnd_set_delay(HMGL gr, float dt);
 void mgl_setup_window(HMGL gr, int autoclf, int showpos, int clf_upd);
 void mgl_wnd_toggle_alpha(HMGL gr);
 void mgl_wnd_toggle_light(HMGL gr);
-//void mgl_wnd_toggle_zoom(HMGL gr);
+void mgl_wnd_toggle_zoom(HMGL gr);
 void mgl_wnd_toggle_rotate(HMGL gr);
 void mgl_wnd_toggle_no(HMGL gr);
 void mgl_wnd_update(HMGL gr);
@@ -276,7 +282,7 @@ void mgl_wnd_set_delay_(uintptr_t *gr, float *dt);
 void mgl_setup_window_(uintptr_t *gr, int *autoclf, int *showpos, int *clf_upd);
 void mgl_wnd_toggle_alpha_(uintptr_t *gr);
 void mgl_wnd_toggle_light_(uintptr_t *gr);
-//void mgl_wnd_toggle_zoom_(uintptr_t *gr);
+void mgl_wnd_toggle_zoom_(uintptr_t *gr);
 void mgl_wnd_toggle_rotate_(uintptr_t *gr);
 void mgl_wnd_toggle_no_(uintptr_t *gr);
 void mgl_wnd_update_(uintptr_t *gr);

@@ -247,7 +247,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 		for(j=0;j<p.size();j++)
 		{
 			const mglPrim q=gr->GetPrm(p[j]);
-			if(q.n1>=0)	mgl_obj_prim(q, gr->GetPnt(q.n1), fp, q.s*gr->FontFactor());
+			mgl_obj_prim(q, gr->GetPnt(q.n1), fp, q.s*gr->FontFactor());
 		}
 		gr->Grp[i].p.clear();	// we don't need indexes anymore
 	}
@@ -256,7 +256,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	for(i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim q=gr->GetPrm(p[j]);	m = q.id-m1;
-		if((m<0 || m>=m2-m1+1) && q.n1>=0)
+		if(m<0 || m>=m2-m1+1)
 			mgl_obj_prim(q, gr->GetPnt(q.n1), fp, q.s*gr->FontFactor());
 	}
 	fclose(fp);
@@ -299,7 +299,6 @@ void mgl_write_stl(HMGL gr, const char *fname,const char *descr)
 	for(i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim &q=gr->GetPrm(i);	j = q.n1;
-		if(j<0 || q.n2<0 || q.n3<0)	continue;
 		if(q.type==2)	//	triangles
 		{
 			pp = gr->GetPnt(j);
@@ -311,7 +310,7 @@ void mgl_write_stl(HMGL gr, const char *fname,const char *descr)
 			fprintf(fp,"vertex %.2g %.2g %.2g\n",pp.x,pp.y,pp.z);
 			fprintf(fp,"endloop\nendfacet\n");
 		}
-		if(q.type==3 && q.n4>=0)	//	triangles
+		if(q.type==3)	//	quadrangles
 		{
 			pp = gr->GetPnt(j);
 			fprintf(fp,"facet normal %.2g %.2g %.2g\nouter loop\n",pp.u,pp.v,pp.w);
@@ -358,12 +357,9 @@ void mgl_write_xyz(HMGL gr, const char *fname,const char *descr)
 	for(i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim q=gr->GetPrm(i);
-		if(q.n1<0 || q.n2<0)	continue;
 		if(q.type==1)	fprintf(fp,"%ld %ld\n",q.n1+1,q.n2+1);
-		if(q.type==2 && q.n3>=0)
-			fprintf(ff,"%ld %ld %ld\n",q.n1+1,q.n2+1,q.n3+1);
-		if(q.type==3 && q.n3>=0 && q.n4>=0)
-			fprintf(ff,"%ld %ld %ld %ld\n",q.n1+1,q.n2+1,q.n3+1,q.n4+1);
+		if(q.type==2)	fprintf(ff,"%ld %ld %ld\n",q.n1+1,q.n2+1,q.n3+1);
+		if(q.type==3)	fprintf(ff,"%ld %ld %ld %ld\n",q.n1+1,q.n2+1,q.n3+1,q.n4+1);
 	}
 	fclose(fp);	fclose(ff);	delete []tname;
 }
@@ -378,8 +374,7 @@ void mgl_write_off(HMGL gr, const char *fname,const char *descr)
 	for(i=0;i<gr->GetPrmNum();i++)	// find number of faces
 	{
 		const mglPrim q=gr->GetPrm(i);
-		if(q.n1<0 || q.n2<0 || q.n3<0)	continue;
-		if(q.type==2 || (q.type==3 && q.n4>=0))	nf++;
+		if(q.type==2 || q.type==3)	nf++;
 	}
 	if(nf<=0)	return;	// nothing to do
 
@@ -396,10 +391,8 @@ void mgl_write_off(HMGL gr, const char *fname,const char *descr)
 	for(i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim q=gr->GetPrm(i);
-		if(q.n1<0 || q.n2<0 || q.n3<0)	continue;
 		if(q.type==2)	fprintf(fp,"3 %ld %ld %ld\n",q.n1,q.n2,q.n3);
-		if(q.type==3 && q.n4>=0)
-			fprintf(fp,"4 %ld %ld %ld %ld\n",q.n1,q.n2,q.n3,q.n4);
+		if(q.type==3)	fprintf(fp,"4 %ld %ld %ld %ld\n",q.n1,q.n2,q.n3,q.n4);
 	}
 	fclose(fp);
 }
@@ -412,6 +405,80 @@ void mgl_write_idtf(HMGL gr, const char *fname,const char *descr)
 {	/*_Gr_->WriteIDTF(fname,descr);*/	}	// TODO: Add idtf support later
 void mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
-char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
-mgl_write_idtf(_GR_,s,f);	delete []s;		delete []f;	}
+	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
+	mgl_write_idtf(_GR_,s,f);	delete []s;		delete []f;	}
+//-----------------------------------------------------------------------------
+bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
+{
+	if(Pnt.size()<1 || Prm.size()<1)	return true;
+	FILE *fp=fopen(fname,"wt");
+	if(!fp)	return true;
+	fprintf(fp,"MGLD %ld %ld\n# %s\n", Pnt.size(), Prm.size(), descr ? descr : fname);
+	register long i;
+	fprintf(fp,"# Vertexes: x y z c t u v w r g b a\n");
+	for(i=0;i<Pnt.size();i++)
+	{
+		const mglPnt &q=Pnt[i];
+		fprintf(fp,"%.2g %.2g %.2g %.2g %.2g %.2g %.2g %.2g %.2g %.2g %.2g %.2g\n", q.x, q.y, q.z, q.c, q.t, q.u, q.v, q.w, q.r, q.g, q.b, q.a);
+	}
+	fprintf(fp,"# Primitives: type n1 n2 n3 n4 id s w p\n");
+	for(i=0;i<Prm.size();i++)
+	{
+		const mglPrim &q=Prm[i];
+		fprintf(fp,"%d %ld %ld %ld %ld %d %.2g %.2g %.2g\n", q.type, q.n1, q.n2, q.n3, q.n4, q.id, q.s, q.w, q.p);
+	}
+	fclose(fp);
+	return false;
+}
+//-----------------------------------------------------------------------------
+void mgl_export_mgld(HMGL gr, const char *fname,const char *descr)
+{	_Gr_->ExportMGLD(fname, descr);	}
+void mgl_export_mgld_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
+	mgl_export_mgld(_GR_,s,f);	delete []s;		delete []f;	}
+//-----------------------------------------------------------------------------
+bool mglCanvas::ImportMGLD(const char *fname, bool add)
+{
+	FILE *fp=fopen(fname,"rt");
+	if(!fp)	return true;
+	char *buf=new char[512];
+	fgets(buf,512,fp);
+	if(strncmp(buf,"MGLD",4))	{	delete []buf;	fclose(fp);	return true;	}
+	register long i,n,m;
+	sscanf(buf+5,"%ld%ld",&n,&m);
+	if(n<=0 || m<=0)	{	delete []buf;	fclose(fp);	return true;	}
+	if(!add)	{	Pnt.clear();	Prm.clear();	}
+	Pnt.reserve(n);	Prm.reserve(m);
+	mglPnt p;	mglPrim q;
+	for(i=0;i<n;)
+	{
+		do {	fgets(buf,512,fp);	mgl_strtrim(buf);	} while(*buf='#');
+		sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g", &p.x, &p.y, &p.z, &p.c, &p.t, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
+		Pnt.push_back(p);	i++;
+	}
+	for(i=0;i<m;)
+	{
+		do {	fgets(buf,512,fp);	mgl_strtrim(buf);	} while(*buf='#');
+		sscanf(buf,"%d%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
+		Prm.push_back(q);	i++;
+	}
+	delete []buf;	fclose(fp);	return false;
+}
+//-----------------------------------------------------------------------------
+void mgl_import_mgld(HMGL gr, const char *fname, int add)
+{	_Gr_->ImportMGLD(fname, add);	}
+void mgl_import_mgld_(uintptr_t *gr, const char *fname, int *add, int l)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	mgl_import_mgld(_GR_,s,*add);	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_write_xgl(HMGL gr, const char *fname,const char *descr)
+{
+	FILE *fp=fopen(fname,"wt");
+	fclose(fp);
+}
+void mgl_write_xgl_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
+	mgl_write_xgl(_GR_,s,d);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------

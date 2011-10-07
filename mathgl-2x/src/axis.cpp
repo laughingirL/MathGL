@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include "mgl/data.h"
 #include "mgl/canvas.h"
+#include "mgl/prim.h"
 //-----------------------------------------------------------------------------
 #define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
 #define sign(a)	((a)<0 ? -1:1)
@@ -720,6 +721,24 @@ void mglCanvas::Box(const char *col, bool ticks)
 		Org.z=Min.z;	Axis("xy_");
 		Org.x=Min.x;	DrawAxis(az,0,0);
 		Org.x=Max.x;	Org.y=Min.y;	DrawAxis(az,0,0);
+		if(col && strchr(col,'@'))
+		{
+			// edge points
+			mglPoint p[8]={Min,Min,Min,Min,Max,Max,Max,Max},nan=mglPoint(NAN),o[8];
+			p[1].x=Max.x;	p[2].y=Max.y;	p[3].z=Max.z;
+			p[4].x=Min.x;	p[5].y=Min.y;	p[6].z=Min.z;
+			float zm=1e5;	int im=0;
+			memcpy(o,p,8*sizeof(mglPoint));
+			for(int i=0;i<8;i++)	// find deepest point
+			{
+				ScalePoint(p[i],nan,false);
+				if(p[i].z<zm)	{	zm=p[i].z;	im=i;	}
+			}
+			// now draw faces	// TODO: replace to "w" color
+			mgl_facex(this, o[im].x, Min.y, Min.z, Max.y-Min.y, Max.z-Min.z, "y",0,0);
+			mgl_facey(this, Min.x, o[im].y, Min.z, Max.x-Min.x, Max.z-Min.z, "y",0,0);
+			mgl_facey(this, Min.x, Min.y, o[im].z, Max.x-Min.x, Max.y-Min.y, "y",0,0);
+		}
 	}
 	Org=o;	TickLen=tl;
 }

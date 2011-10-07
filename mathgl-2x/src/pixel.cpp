@@ -313,11 +313,40 @@ void mglCanvas::pxl_backgr(unsigned long id, unsigned long n)
 	{	memcpy(c,BDef,4);	combine(c,G4+4*i);	memcpy(G+3*i,c,3);	}
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::pxl_transform(unsigned long id, unsigned long n)
+{
+	for(unsigned long i=id;i<n;i+=mglNumThr)
+	{
+		mglPnt &p=Pnt[i];
+		p.x = Bp.x*Width + Bp.b[0]*p.xx + Bp.b[1]*p.yy + Bp.b[2]*p.zz;
+		p.y = Bp.y*Height+ Bp.b[3]*p.xx + Bp.b[4]*p.yy + Bp.b[5]*p.zz;
+		p.z = Bp.b[6]*p.xx + Bp.b[7]*p.yy + Bp.b[8]*p.zz;
+		if(Bp.pf)
+		{
+			register float d = (1-Bp.pf*Depth/2)/(1-Bp.pf*p.z);
+			p.x = Width/2 + d*(p.x-Width/2);
+			p.y = Height/2 + d*(p.y-Height/2);
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::pxl_setz(unsigned long id, unsigned long n)
+{
+	for(unsigned long i=id;i<n;i+=mglNumThr)
+	{	mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;	}
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::Finish()
 {
+	static mglMatrix bp;
+	if(memcmp(&Bp,&bp,sizeof(mglMatrix)) && !(Quality&4) && Prm.size()>0)
+		clr(MGL_FINISHED);
+	if(get(MGL_FINISHED))	return;	// nothing to do
 	if(!(Quality&4) && Prm.size()>0)
 	{
-		std::sort(Prm.begin(), Prm.end());
+		mglStartThread(&mglCanvas::pxl_transform,this,Pnt.size());
+		mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
+		std::sort(Prm.begin(), Prm.end());	bp=Bp;
 //		mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());	// TODO: check conflicts in pthreads
 		pxl_primdr(-1,Prm.size());
 	}
@@ -471,18 +500,12 @@ unsigned char **mglCanvas::GetRGBLines(long &w, long &h, unsigned char *&f, bool
 {
 	long d = alpha ? 4:3;
 	unsigned char **p;
-	if(!get(MGL_FINISHED))	Finish();
+	Finish();
 	p = (unsigned char **)malloc(Height * sizeof(unsigned char *));
 	for(long i=0;i<Height;i++)	p[i] = (alpha?G4:G)+d*Width*i;
 	w = Width;	h = Height;		f = 0;
 	return p;
 }
-//-----------------------------------------------------------------------------
-const unsigned char *mglCanvas::GetBits()
-{	if(!get(MGL_FINISHED))	Finish();	return G;	}
-//-----------------------------------------------------------------------------
-const unsigned char *mglCanvas::GetRGBA()
-{	if(!get(MGL_FINISHED))	Finish();	return G4;	}
 //-----------------------------------------------------------------------------
 /* Bilinear interpolation r(u,v) = r0 + (r1-r0)*u + (r2-r0)*v + (r3+r0-r1-r2)*u*v
 	is used (where r is one of {x,y,z,R,G,B,A}. Variables u,v are determined
@@ -869,7 +892,6 @@ void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_draw(const mglPrim *P, mglDrawReg *d)
 {
-	if(P->n1<0)	return;	// Should be never here
 	mglPnt p=Pnt[P->n1];
 	float f = p.w;
 #ifdef HAVE_PTHREAD

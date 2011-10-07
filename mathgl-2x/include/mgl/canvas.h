@@ -143,7 +143,7 @@ public:
 	/// Rotate a further plotting around vector {x,y,z}.
 	void RotateN(float Tet,float x,float y,float z);
 	/// Set perspective (in range [0,1)) for plot. Set to zero for switching off.
-	void Perspective(float a);
+	void Perspective(float a)	{	Bp.pf = fabs(a);	}
 
 	/// Set size of frame in pixels. Normally this function is called internaly.
 	virtual void SetSize(int w,int h);
@@ -152,9 +152,9 @@ public:
 	/// Get bitmap data prepared for saving to file
 	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool alpha=false);
 	/// Get RGB bitmap of current state image.
-	const unsigned char *GetBits();
+	const unsigned char *GetBits()	{	Finish();	return G;	}
 	/// Get RGBA bitmap of current state image.
-	const unsigned char *GetRGBA();
+	const unsigned char *GetRGBA()	{	Finish();	return G4;	}
 	/// Get width of the image
 	int GetWidth()	{	return Width;	};
 	/// Get height of the image
@@ -192,6 +192,10 @@ public:
 	void CloseGIF();
 	/// Finish plotting. Normally this function is called internaly.
 	virtual void Finish();
+	/// Export points and primitives in file using MGLD format
+	bool ExportMGLD(const char *fname, const char *descr=0);
+	/// Import points and primitives from file using MGLD format
+	bool ImportMGLD(const char *fname, bool add=false);
 
 	/// Set the transparency on/off.
 	virtual bool Alpha(bool enable);
@@ -303,7 +307,6 @@ protected:
 	float st_t;			///< Subtick-to-tick ratio (ls=lt/sqrt(1+st_t)). Default is 1.
 
 	int CurFrameId;		///< Number of automaticle created frames
-//	float Persp;		///< Perspective factor (=0 is perspective off)
 	int Width;			///< Width of the image
 	int Height;			///< Height of the image
 	int Depth;			///< Depth of the image
@@ -386,14 +389,17 @@ private:
 	inline void PostScale(mglPoint *p,long n)	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
 
 	void InPlot(float x1,float x2,float y1,float y2, const char *style);
-
+	// functions for glyph drawing
 	void glyph_fill(const mglPnt &p, float f, int nt, const short *trig, mglDrawReg *d);
 	void glyph_wire(const mglPnt &p, float f, int nl, const short *line, mglDrawReg *d);
 	void glyph_line(const mglPnt &p, float f, bool solid, mglDrawReg *d);
+	// functions for multi-threading
 	void pxl_combine(unsigned long id, unsigned long n);
 	void pxl_memcpy(unsigned long id, unsigned long n);
 	void pxl_backgr(unsigned long id, unsigned long n);
 	void pxl_primdr(unsigned long id, unsigned long n);
+	void pxl_transform(unsigned long id, unsigned long n);
+	void pxl_setz(unsigned long id, unsigned long n);
 	/// Put drawing from other mglCanvas (for multithreading, like subplots)
 	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);
 };

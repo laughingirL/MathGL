@@ -82,8 +82,8 @@ void mgl_wnd_toggle_alpha(HMGL gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleAlpha();	}
 void mgl_wnd_toggle_light(HMGL gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleLight();	}
-//void mgl_wnd_toggle_zoom(HMGL gr)
-//{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleZoom();	}
+void mgl_wnd_toggle_zoom(HMGL gr)
+{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleZoom();	}
 void mgl_wnd_toggle_rotate(HMGL gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleRotate();	}
 void mgl_wnd_toggle_no(HMGL gr)
@@ -110,9 +110,9 @@ void mgl_wnd_toggle_alpha_(uintptr_t *gr)
 void mgl_wnd_toggle_light_(uintptr_t *gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
 	if(g)	g->ToggleLight();	}
-//void mgl_wnd_toggle_zoom_(uintptr_t *gr)
-//{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
-//	if(g)	g->ToggleZoom();	}
+void mgl_wnd_toggle_zoom_(uintptr_t *gr)
+{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+	if(g)	g->ToggleZoom();	}
 void mgl_wnd_toggle_rotate_(uintptr_t *gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
 	if(g)	g->ToggleRotate();	}

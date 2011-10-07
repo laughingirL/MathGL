@@ -53,8 +53,8 @@ public:
 	{	mgl_wnd_toggle_alpha(gr);	}
 	inline void ToggleLight()	///< Switch on/off lighting (do not overwrite user settings)
 	{	mgl_wnd_toggle_light(gr);	}
-//	inline void ToggleZoom()	///< Switch on/off zooming by mouse
-//	{	mgl_wnd_toggle_zoom(gr);	}
+	inline void ToggleZoom()	///< Switch on/off zooming by mouse
+	{	mgl_wnd_toggle_zoom(gr);	}
 	inline void ToggleRotate()	///< Switch on/off rotation by mouse
 	{	mgl_wnd_toggle_rotate(gr);	}
 	inline void ToggleNo()		///< Switch off all zooming and rotation
@@ -103,7 +103,7 @@ public:
 
 	virtual void ToggleAlpha()=0;	///< Switch on/off transparency (do not overwrite user settings)
 	virtual void ToggleLight()=0;	///< Switch on/off lighting (do not overwrite user settings)
-	//	virtual void ToggleZoom()=0;	///< Switch on/off zooming by mouse
+	virtual void ToggleZoom()=0;	///< Switch on/off zooming by mouse
 	virtual void ToggleRotate()=0;	///< Switch on/off rotation by mouse
 	virtual void ToggleNo()=0;		///< Switch off all zooming and rotation
 	virtual void Update()=0;		///< Update picture by calling user drawing function

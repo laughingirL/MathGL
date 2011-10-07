@@ -5,34 +5,31 @@
 4. Check fplot after box (box:axis:fplot 'sin(pi*x^2)')
 5. Check parse (empty string from UDAV)
 6. Check smgl_cutminmax2() for reading i=52, j=13, k=40 in data with nx=60, ny=50, nz=40.
-7. Check export to SVG/EPS.
+7. Check export to SVG/EPS/MGLD.
 
 ============= NEW  =============
 
-01. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
-02. Box() + edges + half-transparent
-03. Parallelization of drawing (MathGL level) -- bug with primitives drawing -- pixel.cpp
-04. Export to LaTeX formats - (pgf/tikz -- vector + bitmap).
+01. Use Hershey as built-in font ???
+02. Import/Export via GIF (as 3d data) ???
+03. Read DICOM files.
+04. Parallelization of drawing (MathGL level) -- bug with primitives drawing -- pixel.cpp
 05. Export to CALLADA
 06. Export to X3D
-07. Export to JavaScript (WebGL)
-08. GTK and WX window/widgets
-09. Import/Export via GIF (as 3d data) ???
-10. Read DICOM files.
-11. Labels at TriCont()
-12. Cones() -- like Bars() but by Cone()
-13. MPI_Send(), MPI_Recv()
-14. Add diffusive light (no dependence of normals but have direction)
-15. Use Hershey as built-in font ???
-16. Add MGL command "ask $N 'question'" -- like interactive "define"
-17. Export to XGL
-18. Manual colors for text, boundary, background of Legend()
-19. Zoom, View, Shift -- by extra matrix for post points processing -- don't change points with NAN!
-20. Export/Import points+primitives as *.mgld file & write tool for its preview + UDAV/mglview use "preview" for zooming|rotation|shift rather than redrawing!
+07. Export to XGL
+08. Export to JavaScript (WebGL)
+09. GTK and WX window/widgets
+10. Labels at TriCont()
+11. MPI_Send(), MPI_Recv()
+12. Add diffusive light (no dependence of normals but have direction)
+13. Add MGL command "ask $N 'question'" -- like interactive "define"
+14. Manual colors for text, boundary, background of Legend()
+15. Write preview tool for MGLD
+16. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
+17. Cones() -- like Bars() but by Cone()
 
 ============= UDAV =============
 
-1. Dialog for data inpuut
+1. Dialog for data input
 -----------------------------------------------
 | [Data name |V|]				      |
 | [x1]     [x2]		[func]		{ADD} |
@@ -107,6 +104,10 @@ Remove other setting if data name is changed.
 25. Check mglData::Insert(): now copy values from original array (x[i] -> x[2*i], x[2*i+1], ...)
 26. Text about WriteOFF(), WriteSTL(), WriteXYZ() + link to format description (http://people.sc.fsu.edu/~jburkardt/data/data.html)
 27. Symbol '!' denote sharp colors even in 1d plots (like different colors for points)
+28. Check Zoom() + in widgets (ToggleZoom(),...)
+29. ExportMGLD(), ImportMGLD() points+primitives to *.mgld file.
+30. Box() draw faces if '@' is specified
+04. Check export to LaTeX.
 
 ============= BUGS =============
 

@@ -63,7 +63,13 @@ public:
 	{	set_draw(mgl_draw_class,(void*)dr);	}
 	inline void set_draw(int (*dr)(mglGraph *gr))
 	{	set_draw(mgl_draw_graph,(void*)dr);	}
-	void set_state(bool r)	{	rotate = r;	}
+	void set_state(bool z, bool r)	{	zoom = z;	rotate = r;	}
+	/// Set zoom in/out region
+	inline void set_zoom(mreal X1, mreal Y1, mreal X2, mreal Y2)
+	{	x1 = X1;	x2 = X2;	y1 = Y1;	y2 = Y2;	};
+	/// Get zoom region
+	inline void get_zoom(mreal *X1, mreal *Y1, mreal *X2, mreal *Y2)
+	{	*X1 = x1;	*X2 = x2;	*Y1 = y1;	*Y2 = y2;	};
 	/// Set popup menu pointer
 	inline void set_popup(const Fl_Menu_Item *pmenu, Fl_Widget *wdg, void *v)
 	{	popup = pmenu;	wpar = wdg;	vpar = v;	}
@@ -78,6 +84,8 @@ protected:
 	void *vpar;					///< parameter for popup menu
 	float tet,phi;				///< rotation angles
 	bool rotate;				///< flag for handle mouse
+	bool zoom;					///< flag for zoom by mouse
+	float x1,x2,y1,y2;			///< zoom region
 	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
 	int x0,y0,xe,ye;			///< mouse position
 	char pos[128];
@@ -109,6 +117,7 @@ using mglCanvasW::Window;
 	/// Switch on/off lighting (do not overwrite switches in user drawing function)
 	void ToggleLight();
 	void ToggleRotate();///< Switch on/off rotation by mouse
+	void ToggleZoom();	///< Switch on/off zooming by mouse
 	void ToggleNo();	///< Switch off all zooming and rotation
 	void Update();		///< Update picture by calling user drawing function
 	void Adjust();		///< Adjust size of bitmap to window size
@@ -117,14 +126,14 @@ using mglCanvasW::Window;
 	void Animation();	///< Run slideshow (animation) of frames
 
 protected:
-	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *anim_bt;
+	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *anim_bt, *zoom_bt;
 	Fl_Counter *tet, *phi;
 	Fl_Scroll	*scroll;
 	Fl_Menu_Bar	*menu;
 
 	int alpha;		///< Current state of alpha switch (toggle button)
 	int light;		///< Current state of light switch (toggle button)
-	bool rotate;
+	bool rotate,zoom;
 };
 //-----------------------------------------------------------------------------
 #endif

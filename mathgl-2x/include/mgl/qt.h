@@ -79,9 +79,16 @@ public slots:
 	void setTet(int t);		///< Set Theta-angle value
 	void setAlpha(bool a);	///< Switch on/off transparency
 	void setLight(bool l);	///< Switch on/off lightning
+	void setZoom(bool z);	///< Switch on/off mouse zooming
 	void setRotate(bool r);	///< Switch on/off mouse rotation
+	void zoomIn();			///< Zoom in graphics
+	void zoomOut();			///< Zoom out graphics
 	void restore();			///< Restore zoom and rotation to default values
 	//	void reload();			///< Reload data and execute script
+	void shiftLeft();		///< Shift graphics to left direction
+	void shiftRight();		///< Shift graphics to right direction
+	void shiftUp();			///< Shift graphics to up direction
+	void shiftDown();		///< Shift graphics to down direction
 	void exportPNG(QString fname="");	///< export to PNG file
 	void exportPNGs(QString fname="");	///< export to PNG file (no transparency)
 	void exportJPG(QString fname="");	///< export to JPEG file
@@ -103,6 +110,7 @@ signals:
 	void perChanged(int);	///< Perspective changed (by mouse or by toolbar)
 	void alphaChanged(bool);	///< Transparency changed (by toolbar)
 	void lightChanged(bool);	///< Lighting changed (by toolbar)
+	void zoomChanged(bool);		///< Zooming changed (by toolbar)
 	void rotateChanged(bool);	///< Rotation changed (by toolbar)
 	void mouseClick(float,float,float);	///< Position of mouse click
 protected:
@@ -153,6 +161,7 @@ using mglCanvasW::Window;
 	/// Switch on/off lighting (do not overwrite switches in user drawing function)
 	void ToggleLight();
 	void ToggleRotate();///< Switch on/off rotation by mouse
+	void ToggleZoom();	///< Switch on/off zooming by mouse
 	void ToggleNo();	///< Switch off all zooming and rotation
 	void Update();		///< Update picture by calling user drawing function
 	void Adjust();		///< Adjust size of bitmap to window size
@@ -166,12 +175,12 @@ protected:
 	QSpinBox *tet, *phi;	///< Spin box for angles
 	QAction *anim;
 	QTimer *timer;
-
-	void makeMenu();		///< Create menu, toolbar and popup menu
 };
 //-----------------------------------------------------------------------------
 /// Convert bitmap from mglCanvasW to QPixmap
 void convertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf);
+/// Make menu, toolbars and return popup menu for MainWindow
+QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi, QAction *anim);
 //-----------------------------------------------------------------------------
 #endif
 #endif
