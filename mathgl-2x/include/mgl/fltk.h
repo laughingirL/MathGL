@@ -45,7 +45,7 @@ public:
 	~Fl_MathGL();
 
 	/// Update (redraw) plot
-	void update(mglCanvas *gr=0);
+	void update();
 	/// Set angles for additional plot rotation
 	inline void set_angle(float t, float p){	tet = t;	phi = p;	}
 	/// Set bitwise flags for general state (1-Alpha, 2-Light)
@@ -55,7 +55,7 @@ public:
 	inline void set_graph(mglGraph *gr)
 	{	set_graph(dynamic_cast<mglCanvas *>(gr->Self()));	}
 	/// Get pointer to grapher
-	inline HMGL get_graph()	{	return graph;	}
+	inline HMGL get_graph()	{	return gr;	}
 	/// Set drawing functions and its parameter
 	inline void set_draw(int (*func)(mglBase *gr, void *par), void *par=0)
 	{	draw_func = func;	draw_par = par;	}
@@ -74,7 +74,7 @@ public:
 	inline void set_popup(const Fl_Menu_Item *pmenu, Fl_Widget *wdg, void *v)
 	{	popup = pmenu;	wpar = wdg;	vpar = v;	}
 protected:
-	mglCanvas *graph;		///< pointer to grapher
+	mglCanvas *gr;		///< pointer to grapher
 	void *draw_par;			///< Parameters for drawing function mglCanvasW::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);
@@ -121,9 +121,8 @@ using mglCanvasW::Window;
 	void ToggleNo();	///< Switch off all zooming and rotation
 	void Update();		///< Update picture by calling user drawing function
 	void Adjust();		///< Adjust size of bitmap to window size
-	void NextFrame();	///< Show next frame (if one)
-	void PrevFrame();	///< Show previous frame (if one)
-	void Animation();	///< Run slideshow (animation) of frames
+	void GotoFrame(int d);	///< Show arbitrary frame (use relative step)
+	void Animation();	///< Run animation (I'm too lasy to change it)
 
 protected:
 	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *anim_bt, *zoom_bt;

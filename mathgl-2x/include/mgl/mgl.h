@@ -62,9 +62,13 @@ public:
 	inline void Light(bool enable)			{	mgl_set_light(gr, enable);	}
 	/// Switch on/off the specified light source.
 	inline void Light(int n,bool enable)	{	mgl_set_light_n(gr, n, enable);	}
+	/// Use diffusive light (only for local light sources)
+	inline void SetDifLight(bool dif)		{	mgl_set_light_dif(gr, dif);	}
 	/// Add a light source.
-	inline void AddLight(int n, mglPoint p, char col='w', float bright=0.5, bool infty=true, float ap=0)
-	{	mgl_add_light_ext(gr, n, p.x, p.y, p.z, col, bright, infty, ap);	}
+	inline void AddLight(int n, mglPoint p, char col='w', float bright=0.5, float ap=0)
+	{	mgl_add_light_ext(gr, n, p.x, p.y, p.z, col, bright, ap);	}
+	inline void AddLight(int n, mglPoint r, mglPoint p, char col='w', float bright=0.5, float ap=0)
+	{	mgl_add_light_loc(gr, n, r.x, r.y, r.z, p.x, p.y, p.z, col, bright, ap);	}
 	/// Set ambient light brightness
 	inline void SetAmbient(float i)			{	mgl_set_ambbr(gr, i);	}
 	/// Set the fog distance or switch it off (if d=0).
@@ -254,9 +258,6 @@ public:
 	/// Write the frame in file (depending extension, write current frame if fname is empty)
 	inline void WriteFrame(const char *fname=0,const char *descr="")
 	{	mgl_write_frame(gr, fname, descr);	}
-	/// Write the frame in file using IDTF format
-	inline void WriteIDTF(const char *fname,const char *descr="")
-	{	mgl_write_idtf(gr, fname, descr);	}
 	/// Write the frame in file using JPEG format
 	inline void WriteJPEG(const char *fname,const char *descr="")
 	{	mgl_write_jpg(gr, fname, descr);	}
@@ -273,8 +274,11 @@ public:
 	/// Write the frame in file using PostScript format
 	inline void WriteEPS(const char *fname,const char *descr="")
 	{	mgl_write_eps(gr, fname, descr);	}
+	/// Write the frame in file using PostScript format
+	inline void WriteTEX(const char *fname,const char *descr="")
+	{	mgl_write_tex(gr, fname, descr);	}
 	/// Write the frame in file using PostScript format as bitmap
-	void WriteBPS(const char *fname,const char *descr="")
+	inline void WriteBPS(const char *fname,const char *descr="")
 	{	mgl_write_bps(gr, fname, descr);	}
 	/// Write the frame in file using SVG format
 	inline void WriteSVG(const char *fname,const char *descr="")
@@ -282,9 +286,10 @@ public:
 	/// Write the frame in file using GIF format (only for current frame!)
 	inline void WriteGIF(const char *fname,const char *descr="")
 	{	mgl_write_gif(gr, fname, descr);	}
+
 	/// Write the frame in file using OBJ format
-	inline void WriteOBJ(const char *fname,const char *descr="")
-	{	mgl_write_obj(gr, fname, descr);	}
+	inline void WriteOBJ(const char *fname,const char *descr="",bool use_png=false)
+	{	mgl_write_obj(gr, fname, descr, use_png);	}
 	/// Write the frame in file using XYZ format
 	inline void WriteXYZ(const char *fname,const char *descr="")
 	{	mgl_write_xyz(gr, fname, descr);	}
@@ -294,6 +299,15 @@ public:
 	/// Write the frame in file using OFF format
 	inline void WriteOFF(const char *fname,const char *descr="")
 	{	mgl_write_off(gr, fname, descr);	}
+	/// Write the frame in file using STL format (faces only)
+	inline void WriteXGL(const char *fname,const char *descr="")
+	{	mgl_write_xgl(gr, fname, descr);	}
+	/// Write the frame in file using OFF format
+	inline void WriteX3D(const char *fname,const char *descr="")
+	{	mgl_write_x3d(gr, fname, descr);	}
+	/// Write the frame in file using IDTF format
+	inline void WriteIDTF(const char *fname,const char *descr="")
+	{	mgl_write_idtf(gr, fname, descr);	}
 
 	/// Create new frame.
 	inline void NewFrame()		{	mgl_new_frame(gr);	}
@@ -308,27 +322,29 @@ public:
 	{	mgl_start_gif(gr, fname,ms);	}
 	/// Stop writing cinema using GIF format
 	inline void CloseGIF()		{	mgl_close_gif(gr);	}
+	/// Export points and primitives in file using MGLD format
+	inline bool ExportMGLD(const char *fname, const char *descr=0)
+	{	mgl_export_mgld(gr, fname, descr);	}
+	/// Import points and primitives from file using MGLD format
+	inline bool ImportMGLD(const char *fname, bool add=false)
+	{	mgl_import_mgld(gr, fname, add);	}
 
 	/// Copy RGB values into array which is allocated by user
 	inline void GetRGB(char *imgdata, int imglen)
 	{
-		int w=mgl_get_width(gr);
-		int h=mgl_get_height(gr);
+		long w=mgl_get_width(gr), h=mgl_get_height(gr);
 		if(imglen>=3*w*h)	memcpy(imgdata, mgl_get_rgb(gr),3*w*h);
 	}
 	/// Copy RGBA values into array which is allocated by user
 	inline void GetRGBA(char *imgdata, int imglen)
 	{
-		int w=mgl_get_width(gr);
-		int h=mgl_get_height(gr);
+		long w=mgl_get_width(gr), h=mgl_get_height(gr);
 		if(imglen>=4*w*h)	memcpy(imgdata, mgl_get_rgba(gr),4*w*h);
 	}
 	/// Copy BGRN values into array which is allocated by user
 	inline void GetBGRN(unsigned char *imgdata, int imglen)
 	{
-		int w,h,i;
-		w=mgl_get_width(gr);
-		h=mgl_get_height(gr);
+		long w=mgl_get_width(gr), h=mgl_get_height(gr), i;
 		const unsigned char *buf=mgl_get_rgb(gr);
 		if(imglen>=4*w*h)	for(i=0;i<w*h;i++)
 		{
@@ -1048,9 +1064,11 @@ class mglParse
 {
 	HMPR pr;
 public:
+	mglParse(HMPR p)		{	pr = p;		mgl_use_parser(pr,1);	}
+	mglParse(mglParse &p)	{	pr = p.pr;	mgl_use_parser(pr,1);	}
 	mglParse(bool setsize=false)
 	{	pr=mgl_create_parser();	mgl_parser_allow_setsize(pr, setsize);	}
-	~mglParse()	{	mgl_delete_parser(pr);	}
+	~mglParse()	{	if(mgl_use_parser(pr,-1)<1)	mgl_delete_parser(pr);	}
 	inline int Parse(mglGraph *gr, const char *str, int pos)
 	{	return mgl_parse(gr->Self(), pr, str, pos);	}
 	inline int Parse(mglGraph *gr, const wchar_t *str, int pos)

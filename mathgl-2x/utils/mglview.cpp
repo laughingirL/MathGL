@@ -44,7 +44,7 @@ int main(int narg, char **arg)
 			setlocale(LC_CTYPE, arg[i]+2);
 		if(arg[i][0]=='-' && (arg[i][1]=='h' || (arg[i][1]=='-' && arg[i][2]=='h')))
 		{
-			printf("mglview show MGL script in FLTK window.\n");
+			printf("mglview show MGL script and MGLD files in a window.\n");
 			printf("Current version is 2.%g\n",MGL_VER2);
 			printf("Usage:\tmgl2png scriptfile [outputfile parameter(s)]\n");
 			printf("\tParameters have format \"-Nval\".\n");
@@ -53,16 +53,22 @@ int main(int narg, char **arg)
 		}
 		if(arg[i][0]!='-' && j<0)	j=i;
 	}
-	FILE *fp = j>0?fopen(arg[j],"r"):stdin;
-	while(!feof(fp))	str.push_back(fgetwc(fp));
-	if(j>0)	fclose(fp);
 #if defined(HAVE_FLTK)
 	int kind=0;
 #elif defined(HAVE_QT)
 	int kind=1;
 #endif
+	bool mgld=(j>0 && arg[j][strlen(arg[j])]=='d');
+	if(!mgld)
+	{
+		FILE *fp = j>0?fopen(arg[j],"r"):stdin;
+		while(!feof(fp))	str.push_back(fgetwc(fp));
+		if(j>0)	fclose(fp);
+	}
 #if defined(HAVE_FLTK) || defined(HAVE_QT)
-	mglWindow gr(kind,show,j>0?arg[j]:"mglview");
+	mglWindow gr(kind, mgld?NULL:show ,j>0?arg[j]:"mglview");
+	if(mgld)
+	{	gr.ImportMGLD(arg[j]);	gr.Update();	}
 	gr.Run();
 #endif
 	return 0;

@@ -12,7 +12,7 @@
 01. Use Hershey as built-in font ???
 02. Import/Export via GIF (as 3d data) ???
 03. Read DICOM files.
-04. Parallelization of drawing (MathGL level) -- bug with primitives drawing -- pixel.cpp
+04. Parallelization of drawing (MathGL level) -- bug with primitives drawing --> pixel.cpp
 05. Export to CALLADA
 06. Export to X3D
 07. Export to XGL
@@ -20,12 +20,10 @@
 09. GTK and WX window/widgets
 10. Labels at TriCont()
 11. MPI_Send(), MPI_Recv()
-12. Add diffusive light (no dependence of normals but have direction)
-13. Add MGL command "ask $N 'question'" -- like interactive "define"
-14. Manual colors for text, boundary, background of Legend()
-15. Write preview tool for MGLD
-16. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
-17. Cones() -- like Bars() but by Cone()
+12. Add MGL command "ask $N 'question'" -- like interactive "define"
+13. Manual colors for text, boundary, background of Legend()
+14. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
+15. Cones() -- like Bars() but by Cone()
 
 ============= UDAV =============
 
@@ -107,7 +105,10 @@ Remove other setting if data name is changed.
 28. Check Zoom() + in widgets (ToggleZoom(),...)
 29. ExportMGLD(), ImportMGLD() points+primitives to *.mgld file.
 30. Box() draw faces if '@' is specified
-04. Check export to LaTeX.
+31. Check export to LaTeX.
+32. Reduce number of lights to 8
+33. Add DifLight() for diffusive light (for local sources only) + option "diffuse on|off" + local version of Light()/'light'. Default is diffuse light for local sources
+34. mglview can preview MGLD files too -- check it
 
 ============= BUGS =============
 

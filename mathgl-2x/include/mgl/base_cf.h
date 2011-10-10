@@ -38,6 +38,7 @@ void mgl_set_alpha_default(HMGL graph, float alpha);
 void mgl_set_bar_width(HMGL graph, float width);
 void mgl_set_meshnum(HMGL graph, int num);
 void mgl_set_ambbr(HMGL gr, float i);
+void mgl_set_light_dif(HMGL gr, int enable);
 
 void mgl_set_cut(HMGL graph, int cut);
 void mgl_set_cut_box(HMGL gr, float x1,float y1,float z1,float x2,float y2,float z2);
@@ -82,6 +83,7 @@ void mgl_set_alpha_default_(uintptr_t *graph, float *alpha);
 void mgl_set_bar_width_(uintptr_t *graph, float *width);
 void mgl_set_meshnum_(uintptr_t *graph, int *num);
 void mgl_set_ambbr_(uintptr_t *gr, float *i);
+void mgl_set_light_dif_(uintptr_t *graph, int *enable);
 
 void mgl_set_cut_(uintptr_t *graph, int *cut);
 void mgl_set_cut_box_(uintptr_t *gr, float *x1,float *y1,float *z1,float *x2,float *y2,float *z2);

@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 mglCanvasW::mglCanvasW() : mglCanvas()
 {
-	Setup(true,false,true);	Delay=0.5;
+	Setup(true,false,true);
 	LoadFunc=0;	FuncPar=0;	DrawFunc=0;
 	GG = 0;		NumFig = 0;	CurFig = -1;
 }
@@ -76,8 +76,6 @@ const unsigned char *mglCanvasW::GetBits()
 void mglCanvasW::ReLoad()
 {	if(LoadFunc)	{	LoadFunc(FuncPar);	Update();	}	}
 //-----------------------------------------------------------------------------
-void mgl_wnd_set_delay(HMGL gr, mreal dt)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->SetDelay(dt);	}
 void mgl_wnd_toggle_alpha(HMGL gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleAlpha();	}
 void mgl_wnd_toggle_light(HMGL gr)
@@ -101,9 +99,6 @@ void mgl_wnd_prev_frame(HMGL gr)
 void mgl_wnd_animation(HMGL gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->Animation();	}
 //-----------------------------------------------------------------------------
-void mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
-	if(g)	g->SetDelay(*dt);	}
 void mgl_wnd_toggle_alpha_(uintptr_t *gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
 	if(g)	g->ToggleAlpha();	}

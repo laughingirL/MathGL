@@ -25,7 +25,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 {
 	clr(MGL_DISABLE_SCALE);
 	Z=0;	C=G=G4=0;	OI=0;	gif=0;
-	CurFrameId=0;
+	CurFrameId=0;	Delay=0.5;
 	Width=Height=Depth=0;	ObjId=-1;
 	fscl=ftet=0;
 	dr_nx1=dr_nx2=dr_ny1=dr_ny2=0;	// Allowed drawing region
@@ -93,8 +93,8 @@ GifFileType *gif;*/
 	AdjustTicks("xyzc",true);
 
 	for(int i=0;i<10;i++)	{	AddLight(i, mglPoint(0,0,1));	Light(i,false);	}
-	Light(0,true);			Light(false);
-	SetPlotFactor(0);		InPlot(0,1,0,1,false);
+	Light(0,true);		Light(false);	SetDifLight(true);
+	SetPlotFactor(0);	InPlot(0,1,0,1,false);
 }
 //-----------------------------------------------------------------------------
 //	Optimal axis position
@@ -591,12 +591,12 @@ void mglCanvas::Light(int n, bool enable)
 	light[n].n = enable;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::AddLight(int n, mglPoint p, char col, float br, bool inf, float ap)
+void mglCanvas::AddLight(int n, mglPoint r, mglPoint d, char col, float br, float ap)
 {
 	if(n<0 || n>9)	{	SetWarn(mglWarnLId);	return;	}
 	light[n].n = true;	light[n].a = ap>0?ap*ap:3;
-	light[n].b = br;	light[n].i = inf;
-	light[n].r = p;		light[n].c = mglColor(col);
+	light[n].b = br;	light[n].r = r;
+	light[n].d = d;		light[n].c = mglColor(col);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::arrow_plot(long n1, long n2,char st)

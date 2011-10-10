@@ -69,7 +69,7 @@ Fl_Pixmap xpm_r1(rotate_xpm), xpm_r2(rotate_on_xpm);
 //-----------------------------------------------------------------------------
 Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, char *lbl) : Fl_Widget(xx,yy,ww,hh,lbl)
 {
-	graph = new mglCanvas;
+	gr = new mglCanvas;
 	tet=phi=x1=y1=0;	x2=y2=1;
 	zoom = rotate = false;
 	flag=x0=y0=xe=ye=0;
@@ -79,25 +79,23 @@ Fl_MathGL::Fl_MathGL(int xx, int yy, int ww, int hh, char *lbl) : Fl_Widget(xx,y
 //-----------------------------------------------------------------------------
 Fl_MathGL::~Fl_MathGL()	{}
 //-----------------------------------------------------------------------------
-void Fl_MathGL::set_graph(mglCanvas *gr)
+void Fl_MathGL::set_graph(mglCanvas *GR)
 {
-	if(!gr)	return;
-	delete graph;	graph=gr;
+	if(!GR)	return;
+	delete gr;	gr=GR;
 }
 //-----------------------------------------------------------------------------
 void Fl_MathGL::draw()
 {
-	const unsigned char *g = graph ? graph->GetBits() : 0;
-	if(g)	fl_draw_image(g, x(), y(), graph->GetWidth(), graph->GetHeight(), 3);
+	const unsigned char *g = gr ? gr->GetBits() : 0;
+	if(g)	fl_draw_image(g, x(), y(), gr->GetWidth(), gr->GetHeight(), 3);
 }
 //-----------------------------------------------------------------------------
-void Fl_MathGL::update(mglCanvas *gr)
+void Fl_MathGL::update()
 {
-	if(gr==0)	gr=graph;
-	if(gr==0)	return;
 	if(draw_func)
 	{
-		if(gr!=graph || graph->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
+		if(gr->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
 		gr->ResetFrames();
 		gr->Alpha(flag&1);	gr->Light(flag&2);
 		gr->View(tet,phi);	gr->Zoom(x1,y1,x2,y2);	gr->Clf();
@@ -106,8 +104,8 @@ void Fl_MathGL::update(mglCanvas *gr)
 		const char *buf = gr->Mess.c_str();
 		if(*buf)	fl_message("%s",buf);
 	}
-	if(gr==graph && (graph->GetWidth()!=w() || graph->GetHeight()!=h()))
-		size(graph->GetWidth(), graph->GetHeight());
+	if(gr->GetWidth()!=w() || gr->GetHeight()!=h())
+		size(gr->GetWidth(), gr->GetHeight());
 	redraw();	Fl::flush();
 }
 //-----------------------------------------------------------------------------
@@ -121,9 +119,9 @@ int Fl_MathGL::handle(int code)
 		const Fl_Menu_Item *m = popup->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
 		if(m)	m->do_callback(wpar, vpar);
 	}
-	if(graph->get(MGL_SHOW_POS) && !zoom && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
+	if(gr->get(MGL_SHOW_POS) && !zoom && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
 	{
-		mglPoint p = graph->CalcXYZ(Fl::event_x()-x(), Fl::event_y()-y());
+		mglPoint p = gr->CalcXYZ(Fl::event_x()-x(), Fl::event_y()-y());
 		char s[128];
 		sprintf(s,"x=%g, y=%g, z=%g",p.x,p.y,p.z);
 		draw();	fl_color(FL_BLACK);		fl_draw(s,40,70);
@@ -163,7 +161,7 @@ int Fl_MathGL::handle(int code)
 			}
 			if(key=='x')
 			{
-				mglCanvasFL *g=dynamic_cast<mglCanvasFL *>(graph);
+				mglCanvasFL *g=dynamic_cast<mglCanvasFL *>(gr);
 				if(g && g->FMGL==this)
 				{	g->Wnd->hide();	return 1;	}
 				else	return 0;
@@ -171,14 +169,14 @@ int Fl_MathGL::handle(int code)
 			}
 			if(key==',')
 			{
-				mglCanvasFL *g=dynamic_cast<mglCanvasFL *>(graph);
+				mglCanvasFL *g=dynamic_cast<mglCanvasFL *>(gr);
 				if(g && g->FMGL==this)
 				{	g->PrevFrame();	return 1;	}
 				else	return 0;
 			}
 			if(key=='.')
 			{
-				mglCanvasFL *g=dynamic_cast<mglCanvasFL *>(graph);
+				mglCanvasFL *g=dynamic_cast<mglCanvasFL *>(gr);
 				if(g && g->FMGL==this)
 				{	g->NextFrame();	return 1;	}
 				else	return 0;
@@ -246,16 +244,12 @@ mglCanvasFL::mglCanvasFL() : mglCanvasW()
 {	Wnd = 0;	alpha = light = sshow = 0;	}
 mglCanvasFL::~mglCanvasFL()	{	if(Wnd)	delete Wnd;	}
 //-----------------------------------------------------------------------------
-void mglCanvasFL::NextFrame()
+void mglCanvasFL::GotoFrame(int d)
 {
-	if(GetNumFig()>0)
-	{	SetCurFig(GetCurFig()>GetNumFig()-1 ? 0 : GetCurFig()+1);	FMGL->redraw();	}
-}
-//-----------------------------------------------------------------------------
-void mglCanvasFL::PrevFrame()
-{
-	if(GetNumFig()>0)
-	{	SetCurFig(GetCurFig()<0 ? GetNumFig()-1 : GetCurFig()-1);	FMGL->redraw();	}
+	int f = GetCurFig()+d;
+	if(f>=GetNumFig())	f = 0;
+	if(f<0)	f = GetNumFig()-1;
+	if(GetNumFig()>0 && d)	{	SetCurFig(f);	FMGL->redraw();	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvasFL::ToggleAlpha()

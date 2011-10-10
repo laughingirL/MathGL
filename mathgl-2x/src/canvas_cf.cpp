@@ -43,13 +43,15 @@ void mgl_reset_frames(HMGL gr)	{	_Gr_->ResetFrames();	}
 //-----------------------------------------------------------------------------
 void mgl_set_transp_type(HMGL gr, int type)			{	_Gr_->SetTranspType(type);	}
 void mgl_set_alpha(HMGL gr, int enable)				{	_Gr_->Alpha(enable);	}
-void mgl_set_fog(HMGL gr, float d, float dz)		{	_Gr_->Fog(d,dz);	}
+void mgl_set_fog(HMGL gr, float d, float dz)		{	_Gr_->Fog(d,dz);		}
 void mgl_set_light(HMGL gr, int enable)				{	_Gr_->Light(enable);	}
 void mgl_set_light_n(HMGL gr, int n, int enable)	{	_Gr_->Light(n, enable);	}
-void mgl_add_light_ext(HMGL gr, int n, float x, float y, float z, char c, float br, int inf, float ap)
-{	_Gr_->AddLight(n,mglPoint(x,y,z),c,br,inf,ap);	}
-void mgl_add_light(HMGL gr, int n, float x, float y, float z, char c)
-{	_Gr_->AddLight(n,mglPoint(x,y,z),c,0.5);	}
+void mgl_add_light_ext(HMGL gr, int n, float x, float y, float z, char c, float br, float ap)
+{	_Gr_->AddLight(n,mglPoint(x,y,z),c,br,ap);	}
+void mgl_add_light_loc(HMGL gr, int n, float x, float y, float z, float dx, float dy, float dz, char c, float br, float ap)
+{	_Gr_->AddLight(n,mglPoint(x,y,z),mglPoint(dx,dy,dz),c,br,ap);	}
+void mgl_add_light(HMGL gr, int n, float x, float y, float z)
+{	_Gr_->AddLight(n,mglPoint(x,y,z));	}
 //-----------------------------------------------------------------------------
 void mgl_mat_push(HMGL gr)	{	_Gr_->Push();	}
 void mgl_mat_pop(HMGL gr)	{	_Gr_->Pop();	}
@@ -97,14 +99,16 @@ void mgl_reset_frames_(uintptr_t *gr)	{	_GR_->ResetFrames();	}
 //-----------------------------------------------------------------------------
 void mgl_set_transp_type_(uintptr_t *gr, int *type)		{	_GR_->SetTranspType(*type);	}
 void mgl_set_alpha_(uintptr_t *gr, int *enable)			{	_GR_->Alpha(*enable);	}
-void mgl_set_fog_(uintptr_t *gr, float *d, float *dz)	{	_GR_->Fog(*d, *dz);	}
+void mgl_set_fog_(uintptr_t *gr, float *d, float *dz)	{	_GR_->Fog(*d, *dz);		}
 void mgl_set_light_(uintptr_t *gr, int *enable)			{	_GR_->Light(*enable);	}
 void mgl_set_light_n_(uintptr_t *gr, int *n, int *enable)
 {	_GR_->Light(*n, *enable);	}
-void mgl_add_light_(uintptr_t *gr, int *n, float *x, float *y, float *z, char *c, int)
-{	_GR_->AddLight(*n,mglPoint(*x,*y,*z),*c);	}
-void mgl_add_light_ext_(uintptr_t *gr, int *n, float *x, float *y, float *z, char *c, float *br, int *inf, float *ap, int)
-{	_GR_->AddLight(*n,mglPoint(*x,*y,*z),*c,*br,*inf,*ap);	}
+void mgl_add_light_(uintptr_t *gr, int *n, float *x, float *y, float *z)
+{	_GR_->AddLight(*n,mglPoint(*x,*y,*z));	}
+void mgl_add_light_ext_(uintptr_t *gr, int *n, float *x, float *y, float *z, char *c, float *br, float *ap, int)
+{	_GR_->AddLight(*n,mglPoint(*x,*y,*z),*c,*br,*ap);	}
+void mgl_add_light_loc_(uintptr_t *gr, int *n, float *x, float *y, float *z, float *dx, float *dy, float *dz, char *c, float *br, float *ap, int)
+{	_GR_->AddLight(*n,mglPoint(*x,*y,*z),mglPoint(*dx,*dy,*dz),*c,*br,*ap);	}
 //-----------------------------------------------------------------------------
 void mgl_mat_push_(uintptr_t *gr)	{	_GR_->Push();	}
 void mgl_mat_pop_(uintptr_t *gr)	{	_GR_->Pop();	}
@@ -334,4 +338,7 @@ void mgl_mpi_send(HMGL gr, int id)	{	_Gr_->MPI_Send(id);	}
 void mgl_mpi_recv(HMGL gr, int id)	{	_Gr_->MPI_Recv(id);	}
 void mgl_mpi_send_(uintptr_t *gr, int *id)	{	_GR_->MPI_Send(*id);	}
 void mgl_mpi_recv_(uintptr_t *gr, int *id)	{	_GR_->MPI_Recv(*id);	}
+//-----------------------------------------------------------------------------
+void mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt)	{	_GR_->SetDelay(*dt);	}
+void mgl_wnd_set_delay(HMGL gr, mreal dt)	{	_Gr_->SetDelay(dt);	}
 //-----------------------------------------------------------------------------

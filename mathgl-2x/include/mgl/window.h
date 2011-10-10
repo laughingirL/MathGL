@@ -93,9 +93,7 @@ public:
 	void Clf(mglColor Back=NC);
 	inline int GetNumFig()	{	return NumFig;	}
 	inline int GetCurFig()	{	return CurFig;	}
-	inline void SetCurFig(int c)	{	CurFig=c;	}			// stupid thing to pass G++ bug
-	inline float GetDelay()	{	return Delay;	}
-	inline void SetDelay(float d)	{	Delay=d;	}
+	inline void SetCurFig(int c){	CurFig=c;	}	// stupid thing to pass G++ bug
 	inline mglPoint GetMousePos()	{	return LastMousePos;}	// stupid thing to pass G++ bug
 	inline void SetMousePos(mglPoint p)	{	LastMousePos=p;	}
 	inline void Setup(bool autoclf, bool showpos, bool clf_upd)
@@ -108,8 +106,9 @@ public:
 	virtual void ToggleNo()=0;		///< Switch off all zooming and rotation
 	virtual void Update()=0;		///< Update picture by calling user drawing function
 	virtual void Adjust()=0;		///< Adjust size of bitmap to window size
-	virtual void NextFrame()=0;		///< Show next frame (if one)
-	virtual void PrevFrame()=0;		///< Show previous frame (if one)
+	virtual void GotoFrame(int d)=0;///< Show arbitrary frame (use relative step)
+	virtual void NextFrame()	{GotoFrame(+1);}	///< Show next frame (if one)
+	virtual void PrevFrame()	{GotoFrame(-1);}	///< Show previous frame (if one)
 	virtual void Animation()=0;		///< Run slideshow (animation) of frames
 	void ReLoad();			///< Reload user data and update picture
 	/// Create a window for plotting based on callback function (can be NULL).
@@ -124,7 +123,6 @@ public:
 	void SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par=NULL, void (*reload)(void *p)=NULL);
 
 private:
-	float Delay;		///< Delay for animation in seconds
 	mglPoint LastMousePos;	///< Last mouse position
 	int CurFig;		///< Current figure in the list.
 

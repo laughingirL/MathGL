@@ -109,8 +109,9 @@ public:
 	mglNum *NumList;	///< List with numbers and its names
 	bool AllowSetSize;	///< Allow using setsize command
 	bool Stop;			///< Stop command was. Flag prevent further execution
-	mglCommand *Cmd;	///< Table of recognizable MGL commands (can be changed by user). It MUST be sorted by 'name' field !!!
+	mglCommand *Cmd;	///< Table of MGL commands (can be changed by user). It MUST be sorted by 'name'!!!
 	wchar_t *op1, *op2;	///< Buffer for options (are used if out!=NULL)
+	long InUse;			///< Smart pointer (number of users)
 
 	mglParser(bool setsize=false);
 	~mglParser();

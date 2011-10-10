@@ -790,7 +790,7 @@ float mglBase::SaveState(const char *opt)
 	if(!opt || !opt[0] || saved)	return NAN;
 	MSS=MarkSize;	ASS=ArrowSize;
 	FSS=FontSize;	ADS=AlphaDef;
-	MNS=MeshNum;	CSS=get(MGL_ENABLE_CUT);	LSS=AmbBr;
+	MNS=MeshNum;	CSS=Flag;	LSS=AmbBr;
 	MinS=Min;		MaxS=Max;	saved=true;
 	// parse option
 	char *q=mgl_strdup(opt),*s,*a,*b,*c;
@@ -824,6 +824,7 @@ float mglBase::SaveState(const char *opt)
 		else if(!strcmp(a,"meshnum"))	SetMeshNum(ff);
 		else if(!strcmp(a,"alpha"))		SetAlphaDef(ff);
 		else if(!strcmp(a,"ambient"))	SetAmbient(ff);
+		else if(!strcmp(a,"diffuse"))	SetDifLight(ff);
 		else if(!strcmp(a,"marksize"))	SetMarkSize(ff);
 		else if(!strcmp(a,"fontsize"))	SetFontSize(ff);
 		else if(!strcmp(a,"arrowsize"))	SetArrowSize(ff);
@@ -839,7 +840,7 @@ void mglBase::LoadState()
 	if(!saved)	return;
 	MarkSize=MSS;	ArrowSize=ASS;
 	FontSize=FSS;	AlphaDef=ADS;
-	MeshNum=MNS;	SetCut(CSS);	AmbBr=LSS;
-	Min=MinS;		Max=MaxS;		saved=false;
+	MeshNum=MNS;	Flag=CSS;	AmbBr=LSS;
+	Min=MinS;		Max=MaxS;	saved=false;
 }
 //-----------------------------------------------------------------------------

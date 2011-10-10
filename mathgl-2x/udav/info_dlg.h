@@ -23,7 +23,8 @@
 #include <QDialog>
 #include <QMainWindow>
 //-----------------------------------------------------------------------------
-class QMGLCanvas;
+class QMathGL;
+class mglDrawScript;
 class mglVar;
 class QComboBox;
 class QTextEdit;
@@ -47,9 +48,10 @@ public slots:
 private:
 	int kz;
 	mglVar *var;
-	QMGLCanvas *mgl;
+	QMathGL *mgl;
 	QTextEdit *info;
 	QComboBox *kind;
+	mglDrawScript *draw;
 };
 //-----------------------------------------------------------------------------
 #endif

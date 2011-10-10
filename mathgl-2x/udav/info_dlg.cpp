@@ -22,9 +22,10 @@
 #include <QComboBox>
 #include <QTextEdit>
 #include <QTabWidget>
-#include <mgl/parser.h>
-#include "qmglcanvas.h"
+#include "mgl/parser.h"
+#include "mgl/qt.h"
 #include "info_dlg.h"
+extern mglParser parser;
 //-----------------------------------------------------------------------------
 InfoDialog::InfoDialog(QWidget *parent) : QDialog(parent)
 {
@@ -38,9 +39,12 @@ InfoDialog::InfoDialog(QWidget *parent) : QDialog(parent)
 	p = new QWidget(this);	v = new QVBoxLayout(p);
 	l = new QLabel(tr("Select kind of plot"),this);	v->addWidget(l);
 	kind = new QComboBox(this);	v->addWidget(kind);
-	mgl = new QMGLCanvas(this);	v->addWidget(mgl,1);
-	mgl->autoResize = true;
+	mgl = new QMathGL(this);	v->addWidget(mgl,1);
+	mgl->autoResize = true;		mgl->appName = tr("Data preview");
 	mgl->setToolTip(tr("Data preview for current slice."));
+
+	draw = new mglDrawScript(&parser);	mgl->setDraw(draw);
+
 	kind->addItem(tr("1D plot"));	kind->addItem(tr("2D plot"));
 	kind->setCurrentIndex(0);	//	kind->addItem(tr("3D plot"));
 	connect(kind, SIGNAL(currentIndexChanged(int)), this, SLOT(refresh()));
@@ -50,9 +54,10 @@ InfoDialog::InfoDialog(QWidget *parent) : QDialog(parent)
 	info = new QTextEdit(this);
 	info->setToolTip(tr("Short information about the data."));
 	tab->addTab(info, tr("Information"));
+	connect(mgl,SIGNAL(showWarn(QString)),info,SLOT(setText(QString)));
 }
 //-----------------------------------------------------------------------------
-InfoDialog::~InfoDialog()	{}
+InfoDialog::~InfoDialog()	{	delete draw;	}
 //-----------------------------------------------------------------------------
 #include <QMessageBox>
 void InfoDialog::refresh(bool force)
@@ -65,7 +70,7 @@ void InfoDialog::refresh(bool force)
 	if(i<1)	text = "yrange "+name+"\nplot "+name + sub;
 	else	text = "crange "+name+"\ndens "+name + sub;
 	text = "zoom 0.15 0.15 0.85 0.85\nbox\n" + text + "\ninfo "+name;
-	info->setText(mgl->run(text, false));
+	draw->text = text;	mgl->update();
 }
 //-----------------------------------------------------------------------------
 void InfoDialog::setVar(mglVar *v)

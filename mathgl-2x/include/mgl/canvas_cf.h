@@ -79,7 +79,7 @@ void mgl_write_bps(HMGL gr, const char *fname,const char *descr);
 void mgl_write_eps(HMGL gr, const char *fname,const char *descr);
 void mgl_write_svg(HMGL gr, const char *fname,const char *descr);
 void mgl_write_tex(HMGL gr, const char *fname,const char *descr);
-void mgl_write_obj(HMGL gr, const char *fname,const char *descr);
+void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png);
 void mgl_write_stl(HMGL gr, const char *fname,const char *descr);
 void mgl_write_off(HMGL gr, const char *fname,const char *descr);
 void mgl_write_xyz(HMGL gr, const char *fname,const char *descr);
@@ -190,7 +190,6 @@ void mgl_write_idtf_(uintptr_t *graph, const char *fname,const char *descr,int l
 void mgl_write_gif_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_start_gif_(uintptr_t *graph, const char *fname,int *ms,int l);
 void mgl_close_gif_(uintptr_t *graph);
-void mgl_write_tga_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_obj_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_stl_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_off_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
@@ -223,10 +222,12 @@ void mgl_set_alpha_(uintptr_t *graph, int *enable);
 void mgl_set_fog_(uintptr_t *graph, float *dist, float *dz);
 void mgl_set_light_(uintptr_t *graph, int *enable);
 void mgl_set_light_n_(uintptr_t *gr, int *n, int *enable);
-void mgl_add_light_(uintptr_t *graph, int *n, float *x, float *y, float *z, char *c, int);
-void mgl_add_light(HMGL gr, int n, float x, float y, float z, char c);
-void mgl_add_light_ext_(uintptr_t *graph, int *n, float *x, float *y, float *z, char *c, float *br, int *inf, float *ap, int);
-void mgl_add_light_ext(HMGL gr, int n, float x, float y, float z, char c, float br, int inf, float ap);
+void mgl_add_light_(uintptr_t *graph, int *n, float *x, float *y, float *z);
+void mgl_add_light(HMGL gr, int n, float x, float y, float z);
+void mgl_add_light_ext_(uintptr_t *graph, int *n, float *x, float *y, float *z, char *c, float *br, float *ap, int);
+void mgl_add_light_ext(HMGL gr, int n, float x, float y, float z, char c, float br, float ap);
+void mgl_add_light_loc_(uintptr_t *graph, int *n, float *x, float *y, float *z, float *dx, float *dy, float *dz, char *c, float *br, float *ap, int);
+void mgl_add_light_loc(HMGL gr, int n, float x, float y, float z, float dx, float dy, float dz, char c, float br, float ap);
 
 void mgl_mat_push_(uintptr_t *gr);
 void mgl_mat_pop_(uintptr_t *gr);
@@ -298,6 +299,7 @@ void mgl_mpi_send_(uintptr_t *gr, int *id);
 void mgl_mpi_recv_(uintptr_t *gr, int *id);
 /*****************************************************************************/
 HMPR mgl_create_parser();
+long mgl_use_parser(HMPR p, int inc);
 void mgl_delete_parser(HMPR p);
 void mgl_add_param(HMPR p, int id, const char *str);
 void mgl_add_paramw(HMPR p, int id, const wchar_t *str);
@@ -316,6 +318,7 @@ void mgl_parser_allow_setsize(HMPR p, int a);
 void mgl_parser_stop(HMPR p);
 /*****************************************************************************/
 uintptr_t mgl_create_parser_();
+long mgl_use_parser_(uintptr_t* , int *inc);
 void mgl_delete_parser_(uintptr_t* p);
 void mgl_add_param_(uintptr_t* p, int *id, const char *str, int l);
 /*===!!! NOTE !!! You must not delete obtained data arrays !!!===============*/

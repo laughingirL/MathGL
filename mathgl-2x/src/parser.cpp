@@ -22,6 +22,7 @@
 #include <wchar.h>
 //-----------------------------------------------------------------------------
 #include "mgl/parser.h"
+#include "mgl/canvas_cf.h"
 //-----------------------------------------------------------------------------
 #ifdef WIN32
 #include <io.h>
@@ -170,7 +171,7 @@ mglParser::mglParser(bool setsize)
 {
 	DataList=0;	NumList=0;	func=0;	fn_stack=0;
 //	wchar_t *par[40];	///< Parameter for substituting instead of $1, ..., $9
-	out=0;	*leg=0;
+	out=0;	*leg=0;	InUse = 1;
 	Skip=Stop=for_br=false;
 	memset(for_stack,0,40*sizeof(int));
 	memset(if_stack,0,40*sizeof(int));
@@ -1052,3 +1053,8 @@ void mgl_parser_allow_setsize_(uintptr_t* p, int *a)
 {	_PR_->AllowSetSize = *a;	}
 void mgl_parser_stop_(uintptr_t* p)	{	_PR_->Stop = true;	}
 //-----------------------------------------------------------------------------
+long mgl_use_parser(HMPR pr, int inc)
+{	pr->InUse+=inc;	return pr->InUse;	}
+long mgl_use_parser_(uintptr_t *p, int *inc)
+{	_PR_->InUse+=*inc;	return _PR_->InUse;	}
+//---------------------------------------------------------------------------

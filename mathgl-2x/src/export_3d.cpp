@@ -475,10 +475,20 @@ void mgl_import_mgld_(uintptr_t *gr, const char *fname, int *add, int l)
 void mgl_write_xgl(HMGL gr, const char *fname,const char *descr)
 {
 	FILE *fp=fopen(fname,"wt");
+	// TODO: Add export to XGL
 	fclose(fp);
 }
 void mgl_write_xgl_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_xgl(_GR_,s,d);	delete []s;		delete []d;	}
+//-----------------------------------------------------------------------------
+void mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
+{
+	// TODO: Add export to X3D
+}
+void mgl_write_x3d_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
+mgl_write_x3d(_GR_,s,d);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------

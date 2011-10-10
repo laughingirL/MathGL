@@ -44,13 +44,13 @@ public:
 
 	QMathGL(QWidget *parent = 0, Qt::WindowFlags f = 0);
 	~QMathGL();
-	double getRatio()	{	return double(graph->GetWidth())/graph->GetHeight();	};
+	double getRatio()	{	return double(gr->GetWidth())/gr->GetHeight();	};
 	void setPopup(QMenu *p)	{	popup = p;	};	///< Set popup menu pointer
 	void setSize(int w, int h);		///< Set window/picture sizes
-	void setGraph(mglCanvas *gr);	///< Set grapher object
-	inline void setGraph(mglGraph *gr)
-	{	setGraph(dynamic_cast<mglCanvas *>(gr->Self()));	}
-	inline HMGL getGraph()	{	return graph;	}
+	void setGraph(mglCanvas *GR);	///< Set grapher object
+	inline void setGraph(mglGraph *GR)
+	{	setGraph(dynamic_cast<mglCanvas *>(GR->Self()));	}
+	inline HMGL getGraph()	{	return gr;	}
 	/// Set drawing functions and its parameter
 	inline void setDraw(int (*func)(mglBase *gr, void *par), void *par=0)
 	{	draw_func = func;	draw_par = par;	}
@@ -58,7 +58,6 @@ public:
 	{	setDraw(mgl_draw_class,(void*)dr);	}
 	inline void setDraw(int (*draw)(mglGraph *gr))
 	{	setDraw(mgl_draw_graph,(void*)draw);	}
-
 
 	int getPer()	{return int(per);};	///< Get perspective value
 	int getPhi()	{return int(phi);};	///< Get Phi-angle value
@@ -70,7 +69,7 @@ public:
 
 public slots:
 	void refresh();
-	void update(mglCanvas *gr=0);	///< Update picture
+	void update();			///< Update picture
 	void copy();			///< copy graphics to clipboard
 	void print();			///< Print plot
 //	void stop();			///< Stop execution
@@ -79,6 +78,8 @@ public slots:
 	void setTet(int t);		///< Set Theta-angle value
 	void setAlpha(bool a);	///< Switch on/off transparency
 	void setLight(bool l);	///< Switch on/off lightning
+	void setGrid(bool r);	///< Switch on/off grid drawing
+
 	void setZoom(bool z);	///< Switch on/off mouse zooming
 	void setRotate(bool r);	///< Switch on/off mouse rotation
 	void zoomIn();			///< Zoom in graphics
@@ -89,30 +90,44 @@ public slots:
 	void shiftRight();		///< Shift graphics to right direction
 	void shiftUp();			///< Shift graphics to up direction
 	void shiftDown();		///< Shift graphics to down direction
+
 	void exportPNG(QString fname="");	///< export to PNG file
 	void exportPNGs(QString fname="");	///< export to PNG file (no transparency)
 	void exportJPG(QString fname="");	///< export to JPEG file
 	void exportBPS(QString fname="");	///< export to bitmap EPS file
 	void exportEPS(QString fname="");	///< export to vector EPS file
 	void exportSVG(QString fname="");	///< export to SVG file
+	void exportTEX(QString fname="");	///< export to SVG file
+	void exportTGA(QString fname="");	///< export to TGA file
+
+	void exportXYZ(QString fname="");	///< export to XYZ file
+	void exportOBJ(QString fname="");	///< export to OBJ file
+	void exportSTL(QString fname="");	///< export to STL file
+	void exportOFF(QString fname="");	///< export to OFF file
+	void exportXGL(QString fname="");	///< export to XGL file
+	void exportX3D(QString fname="");	///< export to XYZ file
 	void exportIDTF(QString fname="");	///< export to IDTF file
 	void setMGLFont(QString path);		///< restore/load font for graphics
-	/*	//----These functions are executed only if graph is mglCanvasQT instance----
-	 *	void adjust();		///< Adjust plot size to fill entire window
-	 *	void nextSlide();	///< Show next slide
-	 *	void prevSlide();	///< Show previous slide
-	 *	void animation(bool st=true);	///< Start animation*/
+
+	void adjust();		///< Adjust plot size to fill entire window
+	void nextSlide();	///< Show next slide
+	void prevSlide();	///< Show previous slide
+	void animation(bool st=true);	///< Start animation
 	void about();		///< Show about information
 	void aboutQt();		///< Show information about Qt version
 signals:
-	void phiChanged(int);	///< Phi angle changed (by mouse or by toolbar)
-	void tetChanged(int);	///< Tet angle changed (by mouse or by toolbar)
-	void perChanged(int);	///< Perspective changed (by mouse or by toolbar)
+	void gridChanged(int);		///< Grid drawing changed (by mouse or by toolbar)
+	void phiChanged(int);		///< Phi angle changed (by mouse or by toolbar)
+	void tetChanged(int);		///< Tet angle changed (by mouse or by toolbar)
+	void perChanged(int);		///< Perspective changed (by mouse or by toolbar)
 	void alphaChanged(bool);	///< Transparency changed (by toolbar)
 	void lightChanged(bool);	///< Lighting changed (by toolbar)
 	void zoomChanged(bool);		///< Zooming changed (by toolbar)
 	void rotateChanged(bool);	///< Rotation changed (by toolbar)
 	void mouseClick(float,float,float);	///< Position of mouse click
+	void frameChanged(int);		///< Need another frame to show
+	void showWarn(QString);		///< Show warnings
+
 protected:
 	void paintEvent(QPaintEvent *);
 	void resizeEvent(QResizeEvent *);
@@ -120,7 +135,7 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *);
 	void mouseMoveEvent(QMouseEvent *);
 
-	mglCanvas *graph;	///< Built-in mglCanvasQT-er instance (used by default)
+	mglCanvas *gr;		///< Built-in mglCanvasQT-er instance (used by default)
 	void *draw_par;		///< Parameters for drawing function mglCanvasW::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);
@@ -131,6 +146,7 @@ protected:
 	bool alpha;			///< Transparency state
 	bool light;			///< Lightning state
 	bool zoom;			///< Mouse zoom state
+	bool grid;			///< Grid drawing state
 	bool rotate;		///< Mouse rotation state
 	float x1,x2,y1,y2;	///< Zoom in region
 	bool showMessage;	///< Flag for showing messages (enabled by each execute())
@@ -165,22 +181,30 @@ using mglCanvasW::Window;
 	void ToggleNo();	///< Switch off all zooming and rotation
 	void Update();		///< Update picture by calling user drawing function
 	void Adjust();		///< Adjust size of bitmap to window size
-	void NextFrame();	///< Show next frame (if one)
-	void PrevFrame();	///< Show previous frame (if one)
-	void Animation();	///< Run slideshow (animation) of frames
+	void GotoFrame(int d);	///< Show arbitrary frame (use relative step)
+	void Animation();		///< Run slideshow (animation) of frames
 
 protected:
 	QScrollArea *scroll;	///< Scrolling area
 	QMenu *popup;			///< Popup menu
 	QSpinBox *tet, *phi;	///< Spin box for angles
-	QAction *anim;
-	QTimer *timer;
+};
+//-----------------------------------------------------------------------------
+/// Class for drawing the MGL script
+struct mglDrawScript : public mglDraw
+{
+	HMPR par;		///< Parser to be used
+	QString text;	///< Script to be drawn
+	long line;		///< Line which will be highlited
+	mglDrawScript(HMPR p)	{	par=p;	line=-1;	}
+	int Draw(mglGraph *gr)
+	{	mgl_parse_text(gr->Self(),par,text.toAscii(),NULL,line);	return 0;	}
 };
 //-----------------------------------------------------------------------------
 /// Convert bitmap from mglCanvasW to QPixmap
-void convertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf);
+void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf);
 /// Make menu, toolbars and return popup menu for MainWindow
-QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi, QAction *anim);
+QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi);
 //-----------------------------------------------------------------------------
 #endif
 #endif

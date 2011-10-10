@@ -160,14 +160,8 @@ void mglCanvas::LightScale()
 	for(i=0;i<10;i++)
 	{
 		if(!light[i].n)	continue;
-		// NOTE: I neglect curved coordinates here!!!
-		xx = light[i].r.x/(2*B.pf*(FMax.x-FMin.x));
-		yy = light[i].r.y/(2*B.pf*(FMax.y-FMin.y));
-		zz = light[i].r.z/(2*B.pf*(FMax.z-FMin.z));
-
-		light[i].p.x = xx*B.b[0] + yy*B.b[1] + zz*B.b[2];
-		light[i].p.y = xx*B.b[3] + yy*B.b[4] + zz*B.b[5];
-		light[i].p.z = xx*B.b[6] + yy*B.b[7] + zz*B.b[8];
+		light[i].p=light[i].d;	light[i].q=light[i].r;
+		ScalePoint(light[i].q,light[i].p,false);
 		light[i].p /= light[i].p.norm();
 	}
 }
@@ -243,8 +237,8 @@ bool operator>(const mglPrim &a, const mglPrim &b)
 }
 //-----------------------------------------------------------------------------
 void *mgl_canvas_thr(void *par)
-{	mglThreadG *t=(mglThreadG *)par;	(t->gr->*(t->f))(t->id, t->n);	return NULL;	}
-void mglStartThread(void (mglCanvas::*func)(unsigned long i, unsigned long n), mglCanvas *gr, unsigned long n)
+{	mglThreadG *t=(mglThreadG *)par;	(t->gr->*(t->f))(t->id, t->n, t->p);	return NULL;	}
+void mglStartThread(void (mglCanvas::*func)(unsigned long i, unsigned long n, const void *p), mglCanvas *gr, unsigned long n, const void *p=NULL)
 {
 	if(!func || !gr)	return;
 #ifdef HAVE_PTHREAD
@@ -255,17 +249,17 @@ void mglStartThread(void (mglCanvas::*func)(unsigned long i, unsigned long n), m
 		mglThreadG *par=new mglThreadG[mglNumThr];
 		register int i;
 		for(i=0;i<mglNumThr;i++)	// put parameters into the structure
-		{	par[i].gr=gr;	par[i].f=func;	par[i].n=n;	par[i].id=i;	}
+		{	par[i].gr=gr;	par[i].f=func;	par[i].n=n;	par[i].p=p;	par[i].id=i;	}
 		for(i=0;i<mglNumThr;i++)	pthread_create(tmp+i, 0, mgl_canvas_thr, par+i);
 		for(i=0;i<mglNumThr;i++)	pthread_join(tmp[i], 0);
 		delete []tmp;	delete []par;
 	}
 	else
 #endif
-	{	mglNumThr = 1;	(gr->*func)(0,n);	}
+	{	mglNumThr = 1;	(gr->*func)(0,n,p);	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_primdr(unsigned long id, unsigned long n)
+void mglCanvas::pxl_primdr(unsigned long id, unsigned long n, const void *)
 {
 	int nx=1,ny=1,pdef=PDef;
 	register unsigned long i;
@@ -294,7 +288,7 @@ void mglCanvas::pxl_primdr(unsigned long id, unsigned long n)
 	PDef=pdef;	pPos=ss;	PenWidth=ww;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_combine(unsigned long id, unsigned long n)
+void mglCanvas::pxl_combine(unsigned long id, unsigned long n, const void *)
 {
 	unsigned char c[4],*cc;
 	for(unsigned long i=id;i<n;i+=mglNumThr)
@@ -303,17 +297,17 @@ void mglCanvas::pxl_combine(unsigned long id, unsigned long n)
 		combine(c,cc);		memcpy(G4+4*i,c,4);	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_memcpy(unsigned long id, unsigned long n)
+void mglCanvas::pxl_memcpy(unsigned long id, unsigned long n, const void *)
 {	for(unsigned long i=id;i<n;i+=mglNumThr)	memcpy(G4+4*i,C+12*i,4);	}
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_backgr(unsigned long id, unsigned long n)
+void mglCanvas::pxl_backgr(unsigned long id, unsigned long n, const void *)
 {
 	unsigned char c[4];
 	for(unsigned long i=id;i<n;i+=mglNumThr)
 	{	memcpy(c,BDef,4);	combine(c,G4+4*i);	memcpy(G+3*i,c,3);	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_transform(unsigned long id, unsigned long n)
+void mglCanvas::pxl_transform(unsigned long id, unsigned long n, const void *)
 {
 	for(unsigned long i=id;i<n;i+=mglNumThr)
 	{
@@ -330,7 +324,7 @@ void mglCanvas::pxl_transform(unsigned long id, unsigned long n)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::pxl_setz(unsigned long id, unsigned long n)
+void mglCanvas::pxl_setz(unsigned long id, unsigned long n, const void *)
 {
 	for(unsigned long i=id;i<n;i+=mglNumThr)
 	{	mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;	}
@@ -348,7 +342,7 @@ void mglCanvas::Finish()
 		mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
 		std::sort(Prm.begin(), Prm.end());	bp=Bp;
 //		mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());	// TODO: check conflicts in pthreads
-		pxl_primdr(-1,Prm.size());
+		pxl_primdr(-1,Prm.size(),NULL);
 	}
 	unsigned long n=Width*Height;
 	BDef[3] = (Flag&3)!=2 ? 0:255;
@@ -373,20 +367,27 @@ void mglCanvas::Clf(mglColor Back)
 	clr(MGL_FINISHED);
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::pxl_other(unsigned long id, unsigned long n, const void *p)
+{
+	unsigned long i,j,k;
+	const mglCanvas *gr = (const mglCanvas *)p;
+	if(!gr)	return;
+	for(k=id;k<n;k+=mglNumThr)
+	{
+		i = k%Width;	j = Height-1-(k/Width);
+		if(Quality&2)
+		{
+			pnt_plot(i,j,gr->Z[3*k+2],gr->C+12*k+8);
+			pnt_plot(i,j,gr->Z[3*k+1],gr->C+12*k+4);
+		}
+		pnt_plot(i,j,gr->Z[3*k],gr->C+12*k);
+	}
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::Combine(const mglCanvas *gr)
 {
 	if(Width!=gr->Width || Height!=gr->Height)	return;	// wrong sizes
-	register long i,j,i0;
-	for(i=0;i<Width;i++)	for(j=0;j<Height;j++)
-	{
-		i0=i+Width*(Height-1-j);
-		if(Quality&2)
-		{
-			pnt_plot(i,j,gr->Z[3*i0+2],gr->C+12*i0+8);
-			pnt_plot(i,j,gr->Z[3*i0+1],gr->C+12*i0+4);
-		}
-		pnt_plot(i,j,gr->Z[3*i0],gr->C+12*i0);
-	}
+	mglStartThread(&mglCanvas::pxl_other,this,Width*Height,gr);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_plot(long x,long y,float z,const unsigned char ci[4])
@@ -432,37 +433,75 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
 {
 	if(!r)	return r;
 	if(p.a<=0)	{	memset(r,0,4*sizeof(unsigned char));	return r;	}
-	register float b0=p.r,b1=p.g,b2=p.b;
-	if(get(MGL_HIGHLIGHT))	{	b0*=0.7;	b1*=0.7;	b2*=0.7;	}
+	register float b0=0,b1=0,b2=0, ar,ag,ab;
+	ar = ag = ab = AmbBr;
 
 	if(get(MGL_ENABLE_LIGHT) && !isnan(p.u))
 	{
-		b0 *= AmbBr;		b1 *= AmbBr;		b2 *= AmbBr;
 		float d0,d1,d2,nn;
 		register long i;
 		for(i=0;i<10;i++)
 		{
 			if(!light[i].n)	continue;
-			nn = 2*(p.u*light[i].p.x+p.v*light[i].p.y+p.w*light[i].p.z) /
-					(p.u*p.u+p.v*p.v+p.w*p.w+1e-6);
-			d0 = light[i].p.x - p.u*nn;
-			d1 = light[i].p.y - p.v*nn;
-			d2 = light[i].p.z - p.w*nn;
-			nn = 1 + d2/sqrt(d0*d0+d1*d1+d2*d2+1e-6);
+			if(isnan(light[i].q.x))		// source at infinity
+			{
+				nn = 2*(p.u*light[i].p.x+p.v*light[i].p.y+p.w*light[i].p.z) /
+				(p.u*p.u+p.v*p.v+p.w*p.w+1e-6);
+				d0 = light[i].p.x - p.u*nn;
+				d1 = light[i].p.y - p.v*nn;
+				d2 = light[i].p.z - p.w*nn;
+				nn = 1 + d2/sqrt(d0*d0+d1*d1+d2*d2+1e-6);
 
-			nn = exp(-light[i].a*nn)*light[i].b*2;
-			b0 += nn*light[i].c.r;
-			b1 += nn*light[i].c.g;
-			b2 += nn*light[i].c.b;
+				nn = exp(-light[i].a*nn)*light[i].b*2;
+				b0 += nn*light[i].c.r;
+				b1 += nn*light[i].c.g;
+				b2 += nn*light[i].c.b;
+			}
+			if(get(MGL_DIFFUSIVE))		// diffuse light
+			{
+				d0 = light[i].q.x-p.x;	// direction to light source
+				d1 = light[i].q.y-p.y;
+				d2 = light[i].q.z-p.z;
+				nn = 2*(d0*light[i].p.x+d1*light[i].p.y+d2*light[i].p.z)/(d0*d0+d1*d1+d2*d2+1e-6);
+				nn = exp(-light[i].a*nn)*light[i].b*2;
+				ar += nn*light[i].c.r;
+				ag += nn*light[i].c.g;
+				ab += nn*light[i].c.b;
+			}
+			else						// specular light
+			{
+				d0 = light[i].q.x-p.x;	// direction to light source
+				d1 = light[i].q.y-p.y;
+				d2 = light[i].q.z-p.z;
+				nn = d0*d0 + d1*d1 + d2*d2 + 1e-6;
+				float bb = 2*(d0*light[i].p.x+d1*light[i].p.y+d2*light[i].p.z)/nn;
+				bb = exp(-light[i].a*nn)*light[i].b*2;
+				// now difference for angles between normale and direction to light
+				nn = 2*(p.u*d0+p.v*d1+p.w*d2)/(p.u*p.u+p.v*p.v+p.w*p.w+1e-6)/nn;
+				d0 -= p.u*nn;	d1 -= p.v*nn;	d2 -= p.w*nn;
+				nn = 1 + d2/sqrt(d0*d0+d1*d1+d2*d2+1e-6);
+				// NOTE: here should be another aperture, but for simplicity I use the same
+				nn = exp(-light[i].a*nn)*bb;
+				b0 += nn*light[i].c.r;
+				b1 += nn*light[i].c.g;
+				b2 += nn*light[i].c.b;
+			}
 		}
-		b0 = b0<1 ? b0 : 1;
+		b0 += (ar>1 ? 1:ar)*p.r;	// diffuse light
+		b1 += (ar>1 ? 1:ar)*p.g;
+		b2 += (ar>1 ? 1:ar)*p.b;
+		b0 = b0<1 ? b0 : 1;			// normalize components
 		b1 = b1<1 ? b1 : 1;
 		b2 = b2<1 ? b2 : 1;
 	}
-	r[0] = (unsigned char)(255*b0);	r[1] = (unsigned char)(255*b1);
+	else	{	b0=p.r;	b1=p.g;	b2=p.b;	}
+	// try to highlight faces
+	if(get(MGL_HIGHLIGHT))	{	b0*=0.7;	b1*=0.7;	b2*=0.7;	}
+	r[0] = (unsigned char)(255*b0);
+	r[1] = (unsigned char)(255*b1);
 	r[2] = (unsigned char)(255*b2);
-	// p.a should be <1 but I additionally check it here
-	r[3] = get(MGL_ENABLE_ALPHA) && p.a<1 ? (unsigned char)(256*p.a) : 255;
+	// p.a should be <1
+	r[3] = get(MGL_ENABLE_ALPHA) ? (unsigned char)(256*p.a) : 255;
 	return r;
 }
 //-----------------------------------------------------------------------------

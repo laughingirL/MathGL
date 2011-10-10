@@ -175,11 +175,12 @@ enum{	// Codes for warnings/messages
 #define MGL_TICKS_SKIP		0x0100	///< Allow ticks rotation
 // flags for internal use only
 #define MGL_DISABLE_SCALE	0x0200	///< Temporary flag for disable scaling (used for axis)
-#define MGL_FINISHED		0x0400	///< Flag that final picture \a mglCanvas::G is ready
+#define MGL_FINISHED		0x0400	///< Flag that final picture (i.e. mglCanvas::G) is ready
 #define MGL_AUTO_CLF		0x0800	///< Clear canvas between drawing
 #define MGL_SHOW_POS		0x1000	///< Switch to show or not mouse click position
 #define MGL_CLF_ON_UPD		0x2000	///< Clear plot before Update()
 #define MGL_HIGHLIGHT		0x4000	///< Highlight plot
+#define MGL_DIFFUSIVE		0x8000	///< Use diffusive light instead of specular
 //-----------------------------------------------------------------------------
 //#define mgl_realloc(T,o,no,nn) {T *_tmp = new T[nn]; memcpy(_tmp,o,(no)*sizeof(T)); delete []o; o=_tmp;}
 //-----------------------------------------------------------------------------
@@ -208,8 +209,8 @@ class mglBase;
 /// Make inherited class and redefine Draw() function if you don't want to use function pointers.
 struct mglDraw
 {
-	virtual int Draw(mglGraph *)	{	return 0;	};
-	virtual void Reload()	{};
+	virtual int Draw(mglGraph *)=0;
+	virtual void Reload(){}
 };
 int mgl_draw_class(mglBase *gr, void *p);
 void mgl_reload_class(void *p);

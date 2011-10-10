@@ -75,14 +75,15 @@ bool mglCanvasGL::Alpha(bool enable)
 	return mglCanvas::Alpha(enable);
 }
 //-----------------------------------------------------------------------------
-void mglCanvasGL::AddLight(int n,mglPoint p,char cc, float br,bool infty,float /*ap*/)
+void mglCanvasGL::AddLight(int n,mglPoint r,mglPoint d,char cc, float br,float /*ap*/)
 {
 	mglColor c(cc);
 	mglColor AmbLight = mglColor(AmbBr,AmbBr,AmbBr);
 	mglColor DifLight = mglColor(br,br,br);
 	GLenum lght[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 			GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
-	float amb[4], pos[4],dif[4];
+	float amb[4], pos[4],dif[4],dir[4];
+	bool inf = isnan(r.x);
 	if(n<0 || n>7)	{	SetWarn(mglWarnLId);	return;	}
 	if(c.Valid())
 	{
@@ -93,8 +94,11 @@ void mglCanvasGL::AddLight(int n,mglPoint p,char cc, float br,bool infty,float /
 	dif[2] = DifLight.b;	dif[3] = 1.;
 	amb[0] = AmbLight.r;	amb[1] = AmbLight.g;
 	amb[2] = AmbLight.b;	amb[3] = 1.;
-	pos[0] = p.x;		pos[1] = p.y;
-	pos[2] = p.z;		pos[3] = infty ? 0:1;
+	if(inf)
+	{	pos[0] = d.x;	pos[1] = d.y;	pos[2] = d.z;	pos[3] = 0;	}
+	else
+	{	pos[0] = r.x;	pos[1] = r.y;	pos[2] = r.z;	pos[3] = 1;	}
+	dir[0] = d.x;	dir[1] = d.y;	dir[2] = d.z;
 	glShadeModel(GL_SMOOTH);
 	//glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 5.0);
 	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, pos);
@@ -103,6 +107,7 @@ void mglCanvasGL::AddLight(int n,mglPoint p,char cc, float br,bool infty,float /
 	glLightfv(lght[n], GL_DIFFUSE, dif);
 	//glLightfv(lght[n], GL_SPECULAR, spc);
 	glLightfv(lght[n], GL_POSITION, pos);
+	if(!inf)	glLightfv(lght[n], GL_SPOT_DIRECTION, dir);
 	glEnable(lght[n]);
 }
 //-----------------------------------------------------------------------------

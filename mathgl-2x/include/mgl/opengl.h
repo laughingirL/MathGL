@@ -40,7 +40,7 @@ public:
 	void Fog(float d, float dz=0.25);
 	bool Light(bool enable);
 	void Light(int n, bool enable);
-	void AddLight(int n,mglPoint p, char c='w', float bright=0.5, bool infty=true, float ap=0);
+	void AddLight(int n,mglPoint r,mglPoint d, char c='w', float bright=0.5, float ap=0);
 	void Clf(mglColor Back=WC);
 
 protected:

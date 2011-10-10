@@ -234,6 +234,8 @@ public:
 
 	/// Set ambient light brightness
 	virtual void SetAmbient(float bright=0.5);
+	/// Use diffusive light (only for local light sources)
+	inline void SetDifLight(bool dif)	{	set(dif,MGL_DIFFUSIVE);	}
 	/// Set default value of alpha-channel
 	inline void SetAlphaDef(float val)	{	AlphaDef=val;	};
 	/// Set default palette
@@ -397,7 +399,8 @@ protected:
 private:
 	mglPoint MinS;		///< Saved lower edge of bounding box for graphics.
 	mglPoint MaxS;		///< Saved upper edge of bounding box for graphics.
-	float MSS, ASS, FSS, ADS, MNS, CSS, LSS;	///< Saved state
+	float MSS, ASS, FSS, ADS, MNS, LSS;	///< Saved state
+	long CSS;			///< Saved flags
 	bool saved;			///< State is saved
 	float prev_val;		///< previous value or zero (if no one)
 

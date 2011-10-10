@@ -33,6 +33,7 @@ void mgl_set_palette(HMGL gr, const char *colors)
 {	gr->SetPalette(colors);	}
 void mgl_set_meshnum(HMGL gr, int num)	{	gr->SetMeshNum(num);	}
 void mgl_set_alpha_default(HMGL gr, float alpha)	{	gr->SetAlphaDef(alpha);	}
+void mgl_set_light_dif(HMGL gr, int enable)		{	gr->SetDifLight(enable);	}
 //-----------------------------------------------------------------------------
 void mgl_highlight(HMGL gr)			{	gr->Highlight();	}
 void mgl_set_cut(HMGL gr, int cut)	{	gr->SetCut(cut);	}
@@ -81,6 +82,7 @@ void mgl_set_palette_(uintptr_t *gr, const char *colors, int l)
 	_GR_->SetPalette(s);	delete []s;	}
 void mgl_set_meshnum_(uintptr_t *gr, int *num)	{	_GR_->SetMeshNum(*num);	}
 void mgl_set_alpha_default_(uintptr_t *gr, float *alpha)	{	_GR_->SetAlphaDef(*alpha);	}
+void mgl_set_light_dif_(uintptr_t *gr, int *enable)			{	_GR_->SetDifLight(*enable);	}
 //-----------------------------------------------------------------------------
 void mgl_set_cut_box_(uintptr_t *gr, float *x1,float *y1,float *z1,float *x2,float *y2,float *z2)
 {	_GR_->SetCutBox(*x1,*y1,*z1,*x2,*y2,*z2);	}

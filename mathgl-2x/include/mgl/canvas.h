@@ -71,11 +71,12 @@ struct mglAxis
 /// Structure for light source
 struct mglLight
 {
-	mglLight()	{	n=i=false;	a=b=0;	}
+	mglLight()	{	n=false;	a=b=0;	}
 	bool n;			///< Availability of light sources
-	bool i;			///< Infinity/local position of light sources
-	mglPoint r;		///< Position of light sources
-	mglPoint p;		///< Actual position of light sources (filled by LightScale() function)
+	mglPoint d;		///< Direction of light sources
+	mglPoint r;		///< Position of light sources (NAN for infinity)
+	mglPoint q;		///< Actual position of light sources (filled by LightScale() function)
+	mglPoint p;		///< Actual direction of light sources (filled by LightScale() function)
 	float a;		///< Aperture of light sources
 	float b;		///< Brightness of light sources
 	mglColor c;		///< Color of light sources
@@ -165,6 +166,8 @@ public:
 	void MPI_Send(int /*id*/)	{}	// TODO: add later
 	/// Receive graphical information from node id using MPI
 	void MPI_Recv(int /*id*/)	{}	// TODO: add later
+	inline float GetDelay()	{	return Delay;	}
+	inline void SetDelay(float d)	{	Delay=d;	}
 
 	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
 	mglPoint CalcXYZ(int xs, int ys);
@@ -209,7 +212,9 @@ public:
 	/// Switch on/off the specified light source.
 	virtual void Light(int n, bool enable);
 	/// Add a light source.
-	virtual void AddLight(int n,mglPoint p, char c='w', float bright=0.5, bool infty=true, float ap=0);
+	virtual void AddLight(int n,mglPoint r, mglPoint d, char c='w', float bright=0.5, float ap=0);
+	inline void AddLight(int n,mglPoint d, char c='w', float bright=0.5, float ap=0)
+	{	AddLight(n,mglPoint(NAN),d,c,bright,ap);	}
 
 	/// Set ticks position and text (\n separated). Use n=0 to disable this feature.
 	void SetTicksVal(char dir, const char *lbl, bool add=false);
@@ -285,6 +290,7 @@ public:
 	mglColor GetColor(const mglPrim &p);
 
 protected:
+	float Delay;		///< Delay for animation in seconds
 	float *Z;			///< Height for given level in Z-direction
 	unsigned char *C;	///< Picture for given level in Z-direction
 	int *OI;			///< ObjId arrays
@@ -314,7 +320,7 @@ protected:
 	mglMatrix B;		///< Transformation matrix
 	mglMatrix B1;		///< Transformation matrix for colorbar
 	float inW, inH;		///< Width and height of last InPlot
-	mglLight light[10];	///< Light sources
+	mglLight light[8];	///< Light sources
 	float FogDist;		///< Inverse fog distance (fog ~ exp(-FogDist*Z))
 	float FogDz;		///< Relative shift of fog
 
@@ -394,12 +400,13 @@ private:
 	void glyph_wire(const mglPnt &p, float f, int nl, const short *line, mglDrawReg *d);
 	void glyph_line(const mglPnt &p, float f, bool solid, mglDrawReg *d);
 	// functions for multi-threading
-	void pxl_combine(unsigned long id, unsigned long n);
-	void pxl_memcpy(unsigned long id, unsigned long n);
-	void pxl_backgr(unsigned long id, unsigned long n);
-	void pxl_primdr(unsigned long id, unsigned long n);
-	void pxl_transform(unsigned long id, unsigned long n);
-	void pxl_setz(unsigned long id, unsigned long n);
+	void pxl_combine(unsigned long id, unsigned long n, const void *);
+	void pxl_memcpy(unsigned long id, unsigned long n, const void *);
+	void pxl_backgr(unsigned long id, unsigned long n, const void *);
+	void pxl_primdr(unsigned long id, unsigned long n, const void *);
+	void pxl_transform(unsigned long id, unsigned long n, const void *);
+	void pxl_setz(unsigned long id, unsigned long n, const void *);
+	void pxl_other(unsigned long id, unsigned long n, const void *p);
 	/// Put drawing from other mglCanvas (for multithreading, like subplots)
 	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);
 };
@@ -407,9 +414,10 @@ private:
 struct mglThreadG
 {
 	mglCanvas *gr;		// grapher
-	void (mglCanvas::*f)(unsigned long i, unsigned long n);
+	void (mglCanvas::*f)(unsigned long i, unsigned long n, const void *);
 	unsigned id;		// thread id
 	unsigned long n;	// total number of iteration
+	const void *p;		// external parameter
 };
 /// Start several thread for the task
 void mglStartThread(void (mglCanvas::*func)(unsigned long i, unsigned long n), mglCanvas *gr, unsigned long n);

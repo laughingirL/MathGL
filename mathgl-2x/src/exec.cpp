@@ -1218,9 +1218,10 @@ int mgls_light(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 	if(k[0]==0)			gr->Light(true);
 	else if(k[0]!=3)	return 1;
 	else if(k[1]!=3)	gr->Light(a[0].v!=0);
+	else if(k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3 && k[6]==3)
+		gr->AddLight(iint(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v),mglPoint(a[4].v,a[5].v,a[6].v), k[7]==2?a[7].s.c_str()[0]:'w',k[8]==3?a[8].v:0.5,k[9]==3?a[9].v:0);
 	else if(k[2]==3 && k[3]==3)
-		gr->AddLight(iint(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v),
-			k[4]==2?a[4].s.c_str()[0]:'w',k[5]==3?a[5].v:0.5,true,k[6]==3?a[6].v:0);
+		gr->AddLight(iint(a[0].v),mglPoint(a[1].v,a[2].v,a[3].v), k[4]==2?a[4].s.c_str()[0]:'w',k[5]==3?a[5].v:0.5,k[6]==3?a[6].v:0);
 	else	gr->Light(iint(a[0].v),a[1].v!=0);
 	return 0;
 }
@@ -1229,9 +1230,10 @@ void mglc_light(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 	if(k[0]==0)			mglprintf(out,1024,L"gr->Light(true);");
 	else if(k[0]!=3)	return;
 	else if(k[1]!=3)	mglprintf(out,1024,L"gr->Light(%s);", a[0].v!=0 ? "true":"false");
+	else if(k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3 && k[6]==3)
+		mglprintf(out,1024,L"gr->AddLight(%d, mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), '%c', %g, %g);", iint(a[0].v), a[1].v, a[2].v, a[3].v, a[4].v, a[5].v, a[6].v, k[7]==2?a[7].s.c_str()[0]:'w', k[8]==3?a[8].v:0.5, k[9]==3?a[9].v:0);
 	else if(k[2]==3 && k[3]==3)
-		mglprintf(out,1024,L"gr->AddLight(%d, mglPoint(%g, %g, %g), '%c', %g, true, %g);",
-		iint(a[0].v), a[1].v, a[2].v, a[3].v, k[4]==2?a[4].s.c_str()[0]:'w', k[5]==3?a[5].v:0.5, k[6]==3?a[6].v:0);
+		mglprintf(out,1024,L"gr->AddLight(%d, mglPoint(%g, %g, %g), '%c', %g, %g);", iint(a[0].v), a[1].v, a[2].v, a[3].v, k[4]==2?a[4].s.c_str()[0]:'w', k[5]==3?a[5].v:0.5, k[6]==3?a[6].v:0);
 	else	mglprintf(out,1024,L"gr->Light(%d, %s);", iint(a[0].v), a[1].v!=0 ? "true":"false");
 }
 //-----------------------------------------------------------------------------
