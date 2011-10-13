@@ -96,7 +96,6 @@ class mglCanvas : public mglBase
 friend struct mglPrim;
 public:
 	mglPoint LastMousePos;	///< Last mouse position
-	std::string PlotId;		///< Id of plot for saving filename (in GLUT window for example)
 
 	mglCanvas(int w=800, int h=600);
 	virtual ~mglCanvas();
@@ -320,7 +319,7 @@ protected:
 	mglMatrix B;		///< Transformation matrix
 	mglMatrix B1;		///< Transformation matrix for colorbar
 	float inW, inH;		///< Width and height of last InPlot
-	mglLight light[8];	///< Light sources
+	mglLight light[10];	///< Light sources
 	float FogDist;		///< Inverse fog distance (fog ~ exp(-FogDist*Z))
 	float FogDz;		///< Relative shift of fog
 

@@ -418,14 +418,14 @@ void QMathGL::exportSTL(QString fname)
 	}
 }
 //-----------------------------------------------------------------------------
-void QMathGL::exportXGL(QString fname)
+void QMathGL::exportWRL(QString fname)
 {
 	if(fname.isEmpty())	fname = gr->PlotId.c_str();
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
 		setlocale(LC_ALL, "C");
-		mgl_write_xgl(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
+		mgl_write_wrl(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
 		setlocale(LC_ALL, "");
 	}
 }
@@ -638,7 +638,7 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 		o->addMenu(oo);		popup->addMenu(oo);
 		oo = new QMenu(TR("&Export as 3D ..."),Wnd);
 		oo->addAction(TR("X3D"), QMGL, SLOT(exportX3D()));
-		oo->addAction(TR("XGL"), QMGL, SLOT(exportXGL()));
+		oo->addAction(TR("WRL"), QMGL, SLOT(exportWRL()));
 		oo->addAction(TR("XYZ"), QMGL, SLOT(exportXYZ()));
 		oo->addAction(TR("OBJ"), QMGL, SLOT(exportOBJ()));
 		oo->addAction(TR("STL"), QMGL, SLOT(exportSTL()));

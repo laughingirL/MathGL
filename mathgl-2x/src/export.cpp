@@ -261,6 +261,8 @@ void mglCanvas::StartGIF(const char *fname, int ms)
 #ifdef HAVE_GIF
 	if(gif)	EGifCloseFile(gif);
 	EGifSetGifVersion("89a");
+	std::string fn=fname;
+	if(fn.empty())	{	fn=PlotId+".gif";	fname = fn.c_str();	}
 	gif = EGifOpenFileName(fname, 0);
 	// get picture sizes
 	// NOTE: you shouldn't call SetSize() after StartGIF() !!!
@@ -302,8 +304,7 @@ void mglCanvas::CloseGIF()
 //-----------------------------------------------------------------------------
 int mglCanvas::NewFrame()
 {
-	Clf();	Identity();
-	CurFrameId++;
+	Clf();	Identity();	CurFrameId++;
 	return CurFrameId-1;
 }
 //-----------------------------------------------------------------------------
@@ -345,6 +346,8 @@ void mgl_write_png(HMGL gr, const char *fname,const char *descr)
 	p =_Gr_->GetRGBLines(w,h,f);
 	if(p)
 	{
+		std::string fn=fname;
+		if(fn.empty())	{	fn=gr->PlotId+".png";	fname = fn.c_str();	}
 		if(mgl_pnga_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
 		free(p);	if(f)	free(f);
 	}
@@ -360,6 +363,8 @@ void mgl_write_png_solid(HMGL gr, const char *fname,const char *descr)
 	p =_Gr_->GetRGBLines(w,h,f);
 	if(p)
 	{
+		std::string fn=fname;
+		if(fn.empty())	{	fn=gr->PlotId+".png";	fname = fn.c_str();	}
 		if(mgl_png_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
 		free(p);	if(f)	free(f);
 	}
@@ -375,6 +380,8 @@ void mgl_write_jpg(HMGL gr, const char *fname,const char *)
 	p =_Gr_->GetRGBLines(w,h,f);
 	if(p)
 	{
+		std::string fn=fname;
+		if(fn.empty())	{	fn=gr->PlotId+".jpg";	fname = fn.c_str();	}
 		if(mgl_jpeg_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
 		free(p);	if(f)	free(f);
 	}
@@ -390,6 +397,8 @@ void mgl_write_tga(HMGL gr, const char *fname,const char *descr)
 	p =_Gr_->GetRGBLines(w,h,f);
 	if(p)
 	{
+		std::string fn=fname;
+		if(fn.empty())	{	fn=gr->PlotId+".tga";	fname = fn.c_str();	}
 		if(mgl_tga_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
 		free(p);	if(f)	free(f);
 	}
@@ -405,6 +414,8 @@ void mgl_write_bmp(HMGL gr, const char *fname,const char *descr)
 	p =_Gr_->GetRGBLines(w,h,f);
 	if(p)
 	{
+		std::string fn=fname;
+		if(fn.empty())	{	fn=gr->PlotId+".bmp";	fname = fn.c_str();	}
 		if(mgl_bmp_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
 		free(p);	if(f)	free(f);
 	}
@@ -420,6 +431,8 @@ void mgl_write_bps(HMGL gr, const char *fname,const char *descr)
 	p =_Gr_->GetRGBLines(w,h,f);
 	if(p)
 	{
+		std::string fn=fname;
+		if(fn.empty())	{	fn=gr->PlotId+".eps";	fname = fn.c_str();	}
 		if(mgl_bps_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
 		free(p);	if(f)	free(f);
 	}
@@ -435,6 +448,8 @@ void mgl_write_gif(HMGL gr, const char *fname,const char *descr)
 	p =_Gr_->GetRGBLines(w,h,f);
 	if(p)
 	{
+		std::string fn=fname;
+		if(fn.empty())	{	fn=gr->PlotId+".gif";	fname = fn.c_str();	}
 		if(mgl_gif_save(fname,w,h,p))	gr->SetWarn(mglWarnOpen,fname);
 		free(p);	if(f)	free(f);
 	}

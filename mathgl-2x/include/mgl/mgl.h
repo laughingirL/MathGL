@@ -300,8 +300,8 @@ public:
 	inline void WriteOFF(const char *fname,const char *descr="")
 	{	mgl_write_off(gr, fname, descr);	}
 	/// Write the frame in file using STL format (faces only)
-	inline void WriteXGL(const char *fname,const char *descr="")
-	{	mgl_write_xgl(gr, fname, descr);	}
+	inline void WriteWRL(const char *fname,const char *descr="")
+	{	mgl_write_wrl(gr, fname, descr);	}
 	/// Write the frame in file using OFF format
 	inline void WriteX3D(const char *fname,const char *descr="")
 	{	mgl_write_x3d(gr, fname, descr);	}

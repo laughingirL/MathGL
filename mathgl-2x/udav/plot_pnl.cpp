@@ -29,10 +29,12 @@
 #include <QSpinBox>
 #include <QBoxLayout>
 #include <QMenuBar>
+#include <QMessageBox>
+#include <QTextEdit>
 
 #include <QMdiArea>
 #include <mgl/parser.h>
-#include "qmglcanvas.h"
+#include "mgl/qt.h"
 #include "plot_pnl.h"
 #include "anim_dlg.h"
 extern bool mglAutoSave;
@@ -51,7 +53,9 @@ PlotPanel::PlotPanel(QWidget *parent) : QWidget(parent)
 
 	menu = new QMenu(tr("&Graphics"),this);
 	popup = new QMenu(this);
-	mgl = new QMGLCanvas(this);
+	mgl = new QMathGL(this);
+	draw = new mglDrawScript(&parser);
+	mgl->setDraw(draw);
 
 	QBoxLayout *v,*h,*m;
 	v = new QVBoxLayout(this);
@@ -68,33 +72,15 @@ PlotPanel::~PlotPanel()	{	delete printer;	}
 //-----------------------------------------------------------------------------
 void PlotPanel::animText(const QString &txt)	{	animPutText(txt);	}
 //-----------------------------------------------------------------------------
-void PlotPanel::printPlot()
-{
-	printer->setOrientation(mgl->getRatio()>1 ? QPrinter::Landscape : QPrinter::Portrait);
-	QPrintDialog printDlg(printer, this);
-	if (printDlg.exec() == QDialog::Accepted)
-	{
-		setStatus(tr("Printing..."));
-		QRectF r = printer->pageRect(QPrinter::Inch);
-		int d1 = int(mgl->width()/r.width()), d2 = int(mgl->height()/r.height()), dpi = printer->resolution();
-		if(dpi<d1)	dpi=d1;		if(dpi<d2)	dpi=d2;		printer->setResolution(dpi);
-		QPainter p;
-		if(!p.begin(printer))	return;	// paint on printer
-		p.drawPixmap(0,0,mgl->getPic());
-		setStatus(tr("Printing completed"));
-	}
-	else	setStatus(tr("Printing aborted"));
-	emit giveFocus();
-}
+void PlotPanel::setCurPos(int pos)	{	curPos = pos;	execute();	}
 //-----------------------------------------------------------------------------
-void PlotPanel::setCurPos(int pos)	{	curPos = pos;	pressF5();	}
-//-----------------------------------------------------------------------------
-void PlotPanel::pressF5()
+void PlotPanel::execute()
 {
 	if(mglAutoSave)	save();
 	raisePanel(this);
 	QTime t;	t.start();
-	mgl->execute(0,curPos);
+	draw->text=textMGL->toPlainText();
+	draw->line=curPos;	mgl->update();
 	setStatus(QString(tr("Drawing time %1 ms")).arg(t.elapsed()*1e-3));
 	emit giveFocus();
 }
@@ -111,14 +97,17 @@ void PlotPanel::pressF9()
 	delete []str;
 
 	QTime t;	t.start();
-	mgl->reload();
+	parser.RestoreOnce();
+	draw->text=textMGL->toPlainText();
+	draw->line=curPos;	mgl->update();
 	setStatus(QString(tr("Drawing time %1 ms")).arg(t.elapsed()*1e-3));
 	emit giveFocus();
 }
 //-----------------------------------------------------------------------------
 void PlotPanel::animStart(bool st)
 {
-	if(!st)	{	timer->stop();	if(gifOn)	mgl->closeGIF();	return;	}
+	if(!st)
+	{	timer->stop();	if(gifOn)	mgl_close_gif(mgl->getGraph());	return;	}
 	if(animParam.isEmpty())
 	{
 		if(animDialog->exec())
@@ -130,7 +119,12 @@ void PlotPanel::animStart(bool st)
 		else	return;
 	}
 	timer->start(animDelay);
-	if(gifOn)	mgl->startGIF(animDelay);
+	if(gifOn)
+	{
+		mglGraph gr(mgl->getGraph());
+		gr.StartGIF("", animDelay);
+		gr.ResetFrames();
+	}
 	raisePanel(this);
 }
 //-----------------------------------------------------------------------------
@@ -161,15 +155,13 @@ void PlotPanel::next()
 	str[i] = 0;
 	parser.AddParam(0,str);
 	delete []str;
-	if(mgl->graph->GetNumFrame() >= n)
-		mgl->execute(0, curPos);
+	mglGraph gr(mgl->getGraph());
+	if(gr.GetNumFrame() >= n)	execute();
 	else
 	{
-		mgl->graph->NewFrame();
-		mgl->execute(0, curPos);
-		mgl->graph->EndFrame();
-		if(jpgOn)	mgl->graph->WriteFrame();
-		QString s;	s.sprintf("%d - %d of %d",mgl->graph->GetNumFrame(),animPos,n);
+		gr.NewFrame();	execute();	gr.EndFrame();
+		if(jpgOn)	gr.WriteFrame();
+		QString s;	s.sprintf("%d - %d of %d",gr.GetNumFrame(),animPos,n);
 		setStatus(QString(tr("Frame %1 of %2")).arg(animPos).arg(n));
 	}
 }
@@ -195,7 +187,7 @@ void PlotPanel::prevSlide()
 	str[i] = 0;
 	parser.AddParam(0,str);
 	delete []str;
-	mgl->execute(0, curPos);
+	execute();
 	emit giveFocus();
 }
 //-----------------------------------------------------------------------------
@@ -304,7 +296,7 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
 
 	a = new QAction(QPixmap(":/xpm/view-refresh.png"), tr("Re&draw"), this);
-	connect(a, SIGNAL(activated()), this, SLOT(pressF5()));
+	connect(a, SIGNAL(activated()), this, SLOT(execute()));
 	a->setToolTip(tr("Execute script and redraw graphics (F5)."));
 	a->setShortcut(Qt::Key_F5);
 	o->addAction(a);	popup->addAction(a);
@@ -465,7 +457,5 @@ void PlotPanel::toolLeft(QBoxLayout *l)
 	l->addStretch(1);
 }
 //-----------------------------------------------------------------------------
-void PlotPanel::execute()	{	mgl->execute();	}
-//-----------------------------------------------------------------------------
-QString PlotPanel::getFit()	{	return QString(mgl->graph->GetFit());	}
+QString PlotPanel::getFit()	{	return QString(mgl_get_fit(mgl->getGraph()));	}
 //-----------------------------------------------------------------------------

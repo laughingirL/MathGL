@@ -83,7 +83,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png);
 void mgl_write_stl(HMGL gr, const char *fname,const char *descr);
 void mgl_write_off(HMGL gr, const char *fname,const char *descr);
 void mgl_write_xyz(HMGL gr, const char *fname,const char *descr);
-void mgl_write_xgl(HMGL gr, const char *fname,const char *descr);
+void mgl_write_wrl(HMGL gr, const char *fname,const char *descr);
 void mgl_write_x3d(HMGL gr, const char *fname,const char *descr);
 void mgl_write_wgl(HMGL gr, const char *fname,const char *descr);
 void mgl_write_idtf(HMGL gr, const char *fname,const char *descr);
@@ -194,7 +194,7 @@ void mgl_write_obj_(uintptr_t *graph, const char *fname,const char *descr,int lf
 void mgl_write_stl_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_off_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_xyz_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
-void mgl_write_xgl_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
+void mgl_write_wrl_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_x3d_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_tex_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_wgl_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);

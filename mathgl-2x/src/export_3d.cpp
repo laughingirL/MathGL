@@ -472,16 +472,242 @@ void mgl_import_mgld_(uintptr_t *gr, const char *fname, int *add, int l)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	mgl_import_mgld(_GR_,s,*add);	delete []s;	}
 //-----------------------------------------------------------------------------
-void mgl_write_xgl(HMGL gr, const char *fname,const char *descr)
+/*void mgl_xgl_prim(const mglPrim &q, const mglPnt &p, FILE *fp, float size)
 {
-	FILE *fp=fopen(fname,"wt");
-	// TODO: Add export to XGL
-	fclose(fp);
+	char type = q.n4;	float ss=size*0.35;
+	register long i=q.n1,j;
+	switch(q.type)
+	{
+	case 0:
+		if(!strchr("xsSoO",type))	ss *= 1.1;
+		if(type=='.' || ss==0)	fprintf(fp,"p %ld\n", i);
+		else	switch(type)	// TODO: save mark by PATCH
+		{
+		case 'P':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y+ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y+ss,p.z);
+			fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -4/%ld\n", i,i);
+		case '+':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x,p.y+ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x,p.y+ss,p.z);
+			fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);	break;
+		case 'X':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y+ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y+ss,p.z);
+			fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -4/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -4/%ld\n", i,i);	break;
+		case 'x':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y+ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y+ss,p.z);
+			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -4/%ld\n", i,i);	break;
+		case 'S':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y+ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y+ss,p.z);
+			fprintf(fp,"f -4/%ld -3/%ld -2/%ld -1/%ld\n",i,i,i,i);	break;
+		case 's':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y+ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y+ss,p.z);
+			fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -4/%ld\n", i,i);	break;
+		case 'D':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x,p.y+ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y,p.z);
+			fprintf(fp,"f -4/%ld -3/%ld -2/%ld -1/%ld\n",i,i,i,i);	break;
+		case 'd':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x,p.y+ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y,p.z);
+			fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -4/%ld\n", i,i);	break;
+		case 'Y':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+0.8*ss,p.y+0.6*ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-0.8*ss,p.y+0.6*ss,p.z);
+			fprintf(fp,"l -3/%ld %ld/%ld\n", i,i,i);
+			fprintf(fp,"l -2/%ld %ld/%ld\n", i,i,i);
+			fprintf(fp,"l -1/%ld %ld/%ld\n", i,i,i);	break;
+		case '*':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y,p.z);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+0.6*ss,p.y+0.8*ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-0.6*ss,p.y-0.8*ss,p.z);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+0.6*ss,p.y-0.8*ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-0.6*ss,p.y+0.8*ss,p.z);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);		break;
+		case 'T':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y-ss/2,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y-ss/2,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x,p.y+ss,p.z);
+			fprintf(fp,"f -3/%ld -2/%ld -1/%ld\n", i,i,i);	break;
+		case '^':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y-ss/2,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y-ss/2,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x,p.y+ss,p.z);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
+		case 'V':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y+ss/2,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y+ss/2,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x,p.y-ss,p.z);
+			fprintf(fp,"f -3/%ld -2/%ld -1/%ld\n", i,i,i);	break;
+		case 'v':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y+ss/2,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y+ss/2,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x,p.y-ss,p.z);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
+		case 'L':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss/2,p.y+ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss/2,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y,p.z);
+			fprintf(fp,"f -3/%ld -2/%ld -1/%ld\n", i,i,i);	break;
+		case '<':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss/2,p.y+ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss/2,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss,p.y,p.z);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
+		case 'R':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss/2,p.y+ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss/2,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y,p.z);
+			fprintf(fp,"f -3/%ld -2/%ld -1/%ld\n", i,i,i);	break;
+		case '>':
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss/2,p.y+ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x-ss/2,p.y-ss,p.z);
+			fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss,p.y,p.z);
+			fprintf(fp,"l -3/%ld -2/%ld\n", i,i);
+			fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
+			fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
+		case 'O':
+			for(long j=0;j<=20;j++)
+				fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
+			for(long j=0;j<20;j++)
+				fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", j-21,i, j-20,i, i,i);
+			break;
+		case 'C':	fprintf(fp,"p %ld\n", i);
+		case 'o':
+			for(long j=0;j<=20;j++)
+				fprintf(fp,"v %.2g %.2g %.2g\n",p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
+			for(long j=0;j<20;j++)
+				fprintf(fp,"l %ld/%ld %ld/%ld\n", j-21,i, j-20,i);
+			break;
+		}
+		break;
+	case 1:	fprintf(fp,"l %ld/%ld %ld/%ld\n", q.n1,q.n1, q.n2,q.n2);	break;
+	case 2:	fprintf(fp,"f %ld/%ld/%ld %ld/%ld/%ld %ld/%ld/%ld\n",
+		q.n1,q.n1,q.n1, q.n2,q.n2,q.n2, q.n3,q.n3,q.n3);	break;
+	case 3:	fprintf(fp,"f %ld/%ld/%ld %ld/%ld/%ld %ld/%ld/%ld %ld/%ld/%ld\n",
+		q.n1,q.n1,q.n1, q.n2,q.n2,q.n2, q.n3,q.n3,q.n3, q.n4,q.n4,q.n4);	break;
+	case 4:	break;	// TODO: add glyphs export later
+	}
 }
+//-----------------------------------------------------------------------------
+void mglCanvas::WriteXGL(const char *fname,const char *descr)
+{
+	if(GetPrmNum()<=0)	return;	// nothing to do
+	FILE *fp=fopen(fname,"wt");
+	if(!fp)	return true;
+	fprintf(fp,"<WORLD>\n<NAME>%s</NAME>\n", descr?descr:fname);
+	fprintf(fp,"<BACKGROUND><BACKCOLOR>%.2g, %.2g, %.2g</BACKCOLOR></BACKGROUND>\n", BDef[0]/255., BDef[1]/255., BDef[2]/255.);
+	fprintf(fp,"<LIGHTING>\n<AMBIENT>%.2g, %.2g, %.2g</AMBIENT>\n",AmbBr, AmbBr, AmbBr);
+	register unsigned long i,j;
+	if(get(MGL_ENABLE_LIGHT))	for(i=0;i<10;i++)
+		if(light[i].n && isnan(light[i].r.x))
+		{
+			fprintf(fp, "<DIRECTIONALLIGHT>\n<DIRECTION>%.2g, %.2g, %.2g</DIRECTION>\n", light[i].d.x, light[i].d.y, light[i].d.z);
+			fprintf(fp, "<SPECULAR>%.2g, %.2g, %.2g</SPECULAR>\n</DIRECTIONALLIGHT>\n", light[i].c.r, light[i].c.g, light[i].c.b);
+		}
+	fprintf(fp,"</LIGHTING>");
+
+	// TODO: add textures
+
+	long m1=0,m2=0,m;
+	for(i=0;i<Grp.size();i++)	// prepare array of indirect indexing
+	{	m = Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
+	long *ng = new long[m2-m1+1];
+	for(i=0;i<Grp.size();i++)	ng[gr->Grp[i].Id-m1] = i;
+	for(i=0;i<GetPrmNum();i++)	// collect data for groups
+	// it is rather expensive (extra 4b per primitive) but need for export to 3D
+	{
+		m = GetPrm(i).id-m1;
+		if(m>=0 && m<m2-m1+1)	Grp[ng[m]].p.push_back(i);
+	}
+	delete []ng;
+
+	std::vector<long> p;
+	mglPrim q;
+	char *pg=new char[GetPntNum()];
+	for(i=0;i<Grp.size();i++)	// first write objects
+	{
+		p = Grp[i].p;	memset(pg,0,GetPntNum());
+		fprintf(fp,"<OBJECT>\n<NAME>%s</NAME>\n<MESH>\n",Grp[i].Lbl.c_str());
+		for(j=0;j<p.size();j++)		// collect Pnt for this object
+		{
+			const mglPrim q=GetPrm(p[j]);	pg[q.n1]=1;
+			if(q.type==3)	{	pg[q.n2]=1;	pg[q.n3]=1;	pg[q.n4]=1;	}
+			else if(q.type==1)	pg[q.n2]=1;
+			else if(q.type==2)	{	pg[q.n2]=1;	pg[q.n3]=1;	}
+		}
+		for(j=0;j<GetPntNum();j++)	if(pg[j])	// write Pnt for this object
+		{
+			const mglPnt s=Pnt[j];
+			fprintf(fp,"<P ID=\"%u\">%.2g, %.2g, %.2g</P>\n",j, s.x, s.y, s.z);
+			fprintf(fp,"<N ID=\"%u\">%.2g, %.2g, %.2g</N>\n",j, s.x, s.y, s.z);
+		}
+		// TODO: add line styles
+		for(j=0;j<p.size();j++)	// now write primitives itself
+		{
+			const mglPrim q=GetPrm(p[j]);
+			mgl_xgl_prim(q, GetPnt(q.n1), fp, q.s*FontFactor());
+		}
+		fprintf(fp,"</MESH>\n</OBJECT>");	// finish with this object
+		Grp[i].p.clear();	// we don't need indexes anymore
+	}
+	// TODO: try to save "ungrouped" primitives
+
+	fprintf(fp,"</WORLD>");	fclose(fp);	delete []pg;
+}
+//-----------------------------------------------------------------------------
+void mgl_write_xgl(HMGL gr, const char *fname,const char *descr)
+{	_Gr_->WriteXGL(fname,descr);	}
 void mgl_write_xgl_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
-	mgl_write_xgl(_GR_,s,d);	delete []s;		delete []d;	}
+	mgl_write_xgl(_GR_,s,d);	delete []s;		delete []d;	}*/
 //-----------------------------------------------------------------------------
 void mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 {
@@ -491,4 +717,13 @@ void mgl_write_x3d_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 mgl_write_x3d(_GR_,s,d);	delete []s;		delete []d;	}
+//-----------------------------------------------------------------------------
+void mgl_write_wrl(HMGL gr, const char *fname,const char *descr)
+{
+	// TODO: Add export to X3D
+}
+void mgl_write_wrl_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
+char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
+mgl_write_wrl(_GR_,s,d);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------

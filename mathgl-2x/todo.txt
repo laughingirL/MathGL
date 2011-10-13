@@ -5,7 +5,7 @@
 4. Check fplot after box (box:axis:fplot 'sin(pi*x^2)')
 5. Check parse (empty string from UDAV)
 6. Check smgl_cutminmax2() for reading i=52, j=13, k=40 in data with nx=60, ny=50, nz=40.
-7. Check export to SVG/EPS/MGLD.
+7. Check export to SVG/EPS/MGLD/TeX/OBJ/XGL/X3D/STL.
 
 ============= NEW  =============
 
@@ -13,9 +13,7 @@
 02. Import/Export via GIF (as 3d data) ???
 03. Read DICOM files.
 04. Parallelization of drawing (MathGL level) -- bug with primitives drawing --> pixel.cpp
-05. Export to CALLADA
-06. Export to X3D
-07. Export to XGL
+05. Export to X3D and VRML
 08. Export to JavaScript (WebGL)
 09. GTK and WX window/widgets
 10. Labels at TriCont()
@@ -24,10 +22,11 @@
 13. Manual colors for text, boundary, background of Legend()
 14. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
 15. Cones() -- like Bars() but by Cone()
+16. Drop + surface of circle waves --> as default plot in mglview
 
 ============= UDAV =============
 
-1. Dialog for data input
+01. Dialog for data input
 -----------------------------------------------
 | [Data name |V|]				      |
 | [x1]     [x2]		[func]		{ADD} |
@@ -39,19 +38,19 @@
 Ranges can be inverted.
 Remove other setting if data name is changed.
 
-2. Double click -> jump to string + setup dialog
-3. Dialog for InPlot(s):
+02. Double click -> jump to string + setup dialog
+03. Dialog for InPlot(s):
 {SubPlot,MultiPlot}	-- enable rotate,aspect,title
 {ColumnPlot}		-- enable rotate,several
 {StickPlot}		-- enable several
 {InPlot}		-- enable rotate,aspect,title
 
-4. Group/ungroup if command in single line, separated by ':'
-5. Hide plot/group by putting "#h " at beginning of line
-6. Annotation of plot/group -- comment before it
-7. Tree-like structure of script -- nodes for {(*)plot -- {if,for,...} -- groups}
-8. Add command "ask $N 'request'] for manual asking value of parameter -- Add the same to mglParse!!!
-9. Data change via menu/toolbar -- save to internal script => enable undo + save initial array(?)
+04. Group/ungroup if command in single line, separated by ':'
+05. Hide plot/group by putting "#h " at beginning of line
+06. Annotation of plot/group -- comment before it
+07. Tree-like structure of script -- nodes for {(*)plot -- {if,for,...} -- groups}
+08. Add command "ask $N 'request'] for manual asking value of parameter -- Add the same to mglParse!!!
+09. Data change via menu/toolbar -- save to internal script => enable undo + save initial array(?)
 10. Add primitives by mouse at beginning of script + change its size/position by mouse + "attraction" points
 11. Drag&drop plot/group between inplots
 12. Create default plot dependently of selected row/column/range in data table
@@ -59,6 +58,8 @@ Remove other setting if data name is changed.
 14. Rotate/perspective/lighting/... of primitive list (without script re-execution)
 
 15. QTreeWidgetItem -- ICON (if,for,once,subplot,...); Cmd text; LINE - POS in group/line. After editing/changing --> put text to editor.
+16. Use QMathGL as drawing widget.
+17. Setupable hot-keys ?!?
 
 ============= UNSURE ===========
 
@@ -67,9 +68,9 @@ Remove other setting if data name is changed.
 3. \dfrac for normal size and centering  (sample \big\big{\frac{1}{2}}) ???
 4. "Cut off" curves if text is printed inside it (for contour labels) ?!?
 5. String variables in MGL + readstr command.
-8. Pool of threads for speeding up ???
-9. Drops as mglPrim -- not accurate but smaller memory and faster
-10. Text aspect ratio in OpenGL mode
+6. Pool of threads for speeding up ???
+7. Drops as mglPrim -- not accurate but smaller memory and faster
+8. Text aspect ratio in OpenGL mode
 
 ============= DOCS =============
 
@@ -93,7 +94,7 @@ Remove other setting if data name is changed.
 	* MPI level -- Combine()
 	* MathGL level -- pthread in mglData, ???
 18. SetCoor() -- add log-log, log-x, log-y predefined coordinates
-19. Boxs() styles: '#' for wire, '@' for full box. NOTE: use Boxs(a,"@"); for testing speed
+19. Boxs() styles: '#' for wire, '@' for full box.
 20. TernAxis=0 -- usual, =1 -- ternary, =2 -- quaternary, &4 -- projections
 21. mglData::SetVal(), GetVal()
 22. Highlight(), changes in Execute() -- highlighting

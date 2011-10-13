@@ -28,7 +28,9 @@ class QSpinBox;
 class QPopupMenu;
 class QScrollArea;
 class QBoxLayout;
-class QMGLCanvas;
+class QTextEdit;
+class QMathGL;
+class mglDrawScript;
 class InfoDialog;
 class AnimParam;
 class DatPanel;
@@ -39,7 +41,9 @@ class PlotPanel : public QWidget
 Q_OBJECT
 public:
 	QMenu *menu;
-	QMGLCanvas *mgl;
+	QMathGL *mgl;
+	mglDrawScript *draw;		///< Class for drawing MGL script
+	const QTextEdit *textMGL;	///< Editor with MGL script body
 	PlotPanel(QWidget *wp=0);
 	~PlotPanel();
 	void setMGLFont(const QString &path);
@@ -59,14 +63,12 @@ signals:
 
 private slots:
 	void animText(const QString &);
-	void printPlot();
 	void next();
 	void nextSlide();
 	void prevSlide();
 	void animStart(bool st);
 	void animSetup();
 	void adjust();
-	void pressF5();
 	void pressF9();
 
 private:

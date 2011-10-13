@@ -174,6 +174,7 @@ public:
 	std::string Mess;	///< Buffer for receiving messages
 	int ObjId;			///< object id for mglPrim
 	std::vector<mglGroup> Grp;	///< List of groups with names -- need for export
+	std::string PlotId;	///< Id of plot for saving filename (in GLUT window for example)
 
 	float CDef;			///< Default (current) color in texture
 	float AlphaDef;		///< Default value of alpha channel (transparency)

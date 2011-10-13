@@ -33,6 +33,7 @@
 #include <QTextCodec>
 #include <mgl/parser.h>
 //-----------------------------------------------------------------------------
+#include "mgl/qt.h"
 #include "udav_wnd.h"
 #include "text_pnl.h"
 #include "textedit.h"
@@ -43,7 +44,6 @@
 #include "help_pnl.h"
 #include "prop_dlg.h"
 #include "qmglsyntax.h"
-#include "qmglcanvas.h"
 #include "calc_dlg.h"
 #include "hint_dlg.h"
 //-----------------------------------------------------------------------------
@@ -127,8 +127,8 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	hlp = new HelpPanel(this);
 	rtab->addTab(hlp,QPixmap(":/xpm/help-contents.png"),tr("Help"));
 	edit = new TextPanel(this);	edit->graph = graph;
-	graph->mgl->textMGL = edit->edit;
-	graph->mgl->warnMGL = mess;
+	graph->textMGL = edit->edit;
+	connect(graph->mgl,SIGNAL(showWarn(QString)),mess,SLOT(setText(QString)));
 	ltab->addTab(edit,QPixmap(":/xpm/text-x-generic.png"),tr("Script"));
 
 	makeMenu();
@@ -184,7 +184,7 @@ void MainWindow::makeMenu()
 	o->addSeparator();
 	o->addAction(tr("&Print script"), edit, SLOT(printText()));
 	a = new QAction(QPixmap(":/xpm/document-print.png"), tr("Print &graphics"), this);
-	connect(a, SIGNAL(activated()), graph, SLOT(printPlot()));
+	connect(a, SIGNAL(activated()), graph->mgl, SLOT(print()));
 	a->setToolTip(tr("Open printer dialog and print graphics\t(Ctrl+P)"));
 	a->setShortcut(Qt::CTRL+Qt::Key_P);	o->addAction(a);
 	o->addSeparator();
@@ -463,7 +463,7 @@ void MainWindow::readSettings()
 
 	defWidth = settings.value("/defWidth", 640).toInt();
 	defHeight = settings.value("/defHeight", 480).toInt();
-	graph->mgl->imgSize(defWidth, defHeight);
+	graph->mgl->setSize(defWidth, defHeight);
 
 	recentFiles = settings.value("/recentFiles").toStringList();
 	settings.endGroup();
@@ -476,7 +476,7 @@ void MainWindow::setStatus(const QString &txt)
 void MainWindow::setCurrentFile(const QString &fileName)
 {
 	filename = fileName;
-	graph->mgl->scriptName = filename;
+	graph->mgl->getGraph()->PlotId = (const char *)fileName.toAscii();
 	edit->setModified(false);
 	if(filename.isEmpty())
 		setWindowTitle(tr("untitled - UDAV"));

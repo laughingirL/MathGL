@@ -104,7 +104,7 @@ public slots:
 	void exportOBJ(QString fname="");	///< export to OBJ file
 	void exportSTL(QString fname="");	///< export to STL file
 	void exportOFF(QString fname="");	///< export to OFF file
-	void exportXGL(QString fname="");	///< export to XGL file
+	void exportWRL(QString fname="");	///< export to WRL file
 	void exportX3D(QString fname="");	///< export to XYZ file
 	void exportIDTF(QString fname="");	///< export to IDTF file
 	void setMGLFont(QString path);		///< restore/load font for graphics
