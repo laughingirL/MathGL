@@ -117,17 +117,15 @@ void mglBase::SetWarn(int code, const char *who)
 //-----------------------------------------------------------------------------
 long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 {
-//	if(scl)	NormScale(n);	// Usually p was scaled before, but n should be scaled now!
 	if(scl)	ScalePoint(p,n,!(scl&2));
 	if(isnan(p.x))	return -1;
-//	a = (a>=0 && a<=1) ? a : (isnan(n.x) ? 1:AlphaDef);
 	a = (a>=0 && a<=1) ? a : AlphaDef;
 	c = (c>=0) ? c:CDef;
-	// RGBA color for OpenGL and EPS/SVG modes only!
+
 	mglPnt q;
 	q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
 	q.c=c;	q.t=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
-	Txt[long(c)].GetC(c,a,q);
+	Txt[long(c)].GetC(c,a,q);	// RGBA color
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
@@ -245,9 +243,9 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 	if(get(MGL_ENABLE_CUT) || !use_nan)
 	{
 //		if(x1<Min.x || x2>Max.x || y1<Min.y || y2>Max.y || z1<Min.z || z2>Max.z)	res = false;
-		if((x1-Min.x)*(x1-Max.x)>0 && (x2-Min.x)*(x2-Max.x)>0 && Min.x!=Max.x)	res = false;
-		if((y1-Min.y)*(y1-Max.y)>0 && (y2-Min.y)*(y2-Max.y)>0 && Min.y!=Max.y)	res = false;
-		if((z1-Min.z)*(z1-Max.z)>0 && (z2-Min.z)*(z2-Max.z)>0 && Min.z!=Max.z)	res = false;
+		if((x1-Min.x)*(x1-Max.x)>0 && (x2-Min.x)*(x2-Max.x)>0)	res = false;
+		if((y1-Min.y)*(y1-Max.y)>0 && (y2-Min.y)*(y2-Max.y)>0)	res = false;
+		if((z1-Min.z)*(z1-Max.z)>0 && (z2-Min.z)*(z2-Max.z)>0)	res = false;
 	}
 	else
 	{
@@ -325,6 +323,7 @@ void mglBase::CRange(const mglDataA &a,bool add, float fact)
 {
 	float v1=a.Minimal(), v2=a.Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
+	if(v1==v2)	return;
 	if(!add)	{	Min.c = v1;	Max.c = v2;	}
 	else if(Min.c<Max.c)
 	{
@@ -346,6 +345,7 @@ void mglBase::XRange(const mglDataA &a,bool add,float fact)
 {
 	float v1=a.Minimal(), v2=a.Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
+	if(v1==v2)	return;
 	if(!add)	{	Min.x = v1;	Max.x = v2;	}
 	else if(Min.x<Max.x)
 	{
@@ -367,6 +367,7 @@ void mglBase::YRange(const mglDataA &a,bool add,float fact)
 {
 	float v1=a.Minimal(), v2=a.Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
+	if(v1==v2)	return;
 	if(!add)	{	Min.y = v1;	Max.y = v2;	}
 	else if(Min.y<Max.y)
 	{
@@ -388,6 +389,7 @@ void mglBase::ZRange(const mglDataA &a,bool add,float fact)
 {
 	float v1=a.Minimal(), v2=a.Maximal(), dv;
 	dv=(v2-v1)*fact;	v1 -= dv;	v2 += dv;
+	if(v1==v2)	return;
 	if(!add)	{	Min.z = v1;	Max.z = v2;	}
 	else if(Min.z<Max.z)
 	{

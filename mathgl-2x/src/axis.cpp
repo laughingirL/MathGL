@@ -263,17 +263,17 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 int mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
 {
 	int kind = 0;
-	if(fabs(a-b)<0.01*fabs(a))
+	if(fabs(a-b)<0.001*fabs(a))
 	{
 		kind = 1;
 		v = fabs(a-b);
-		if(v>100.f)
+		if(v>1000.f)
 		{
 			int k=int(log10(v)-0.01);
 			kind=3;		v=mgl_ipow(10.,k);
 			mglprintf(s, 32, L"(@{\\times{}10^{%d}})", k);
 		}
-		if(v<1e-2f)
+		if(v<1e-3f)
 		{
 			int k=int(log10(v)-0.01)-1;
 			kind=3;		v=mgl_ipow(10.,k);
@@ -283,14 +283,14 @@ int mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
 	else
 	{
 		v = fabs(b)>fabs(a)?fabs(b):fabs(a);
-		if(v>100.f)
+		if(v>1000.f)
 		{
 			kind = 2;
 			int k=int(log10(v)-0.01);
 			v=mgl_ipow(10.,k);
 			mglprintf(s, 32, L"\\times 10^{%d}", k);
 		}
-		if(v<1e-2f)
+		if(v<1e-3f)
 		{
 			kind = 2;
 			int k=int(log10(v)-0.01)-1;
@@ -469,8 +469,10 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	{
 		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1)/2;
 		v = aa.txt[i].val;	kk[i] = AddPnt(o+d*v,-1,d,0,3);
+		if(kk[i]<0)	continue;	// should be never here?!
 		q=p;	p = GetPntP(kk[i]);	v = i>0 ? (p-q).norm() : NAN;
-		c = c<v ? c:v;	l = l>w[i] ? l:w[i];
+		char ch=aa.txt[i].text[0];	// manually exclude factors
+		if(isalnum(ch) || ch=='-')	{	l = l>w[i] ? l:w[i];	c = c<v ? c:v;	}
 	}
 	c /= 1.1;
 	if(get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE) && l>c)	// try rotate first
@@ -478,9 +480,9 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		l=h/sin(tet);	for(i=0;i<n;i++)	w[i]=l;	}
 	// TODO: do smater points exclusion (i.e. longest and so on)
 	long k = get(MGL_TICKS_SKIP) ? 1+l/c : 1;
-//	q = mglPoint(d.x*cos(tet)+d.y*sin(tet),d.y*cos(tet)-d.x*sin(tet));
 	if(n>0)	for(i=0;i<n;i++)
 	{
+		if(kk[i]<0)	continue;	// should be never here?!
 		c = aa.txt[i].val;
 		if(c>aa.v1 && c<aa.v2 && i%k!=0)	continue;
 		p = o+d*c;	nn = s-o;	ScalePoint(p,nn);
@@ -497,6 +499,9 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f)
 {
 	if(TickLen==0)	return;
+	// try to exclude ticks out of axis range
+	if((o.x-Min.x)*(o.x-Max.x)>0 || (o.y-Min.y)*(o.y-Max.y)>0 || (o.z-Min.z)*(o.z-Max.z)>0)
+		return;
 	float v = font_factor*TickLen/sqrt(1+f*st_t);
 	mglPoint p=o;
 	long k1,k2,k3;

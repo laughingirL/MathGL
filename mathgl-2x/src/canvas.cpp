@@ -88,7 +88,7 @@ GifFileType *gif;*/
 	SetPenPal("k-1");
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
 	stack.clear();	Restore();
-	Alpha(false);	FactorPos = 1.07;
+	Alpha(false);	FactorPos = 1.1;
 	SetTickLen(0);	SetCut(true);
 	AdjustTicks("xyzc",true);
 
@@ -449,9 +449,9 @@ void mglCanvas::Rotate(float tetx,float tetz,float tety)
 //	RotateN(TetZ,0.,0.,1.);
 	float R[9], O[9];
 	float cx=cos(tetx*M_PI/180), sx=sin(tetx*M_PI/180), cy=cos(tety*M_PI/180), sy=sin(tety*M_PI/180), cz=cos(tetz*M_PI/180), sz=sin(tetz*M_PI/180);
-	R[0] = cz*cx;	R[1] = sz*cx*sy-cy*sx;	R[2] = sx*sy+cy*cz*cx;
-	R[3] = cz*sx;	R[4] = cy*cx+sx*sy*sz;	R[5] = sz*sx*cy-sy*cx;
-	R[6] = -sz;		R[7] = cz*sy;			R[8] = cz*cy;
+	R[0] = cx*cy;			R[1] = -cy*sx;			R[2] = sy;
+	R[3] = cx*sy*sz+cz*sx;	R[4] = cx*cz-sx*sy*sz;	R[5] =-cy*sz;
+	R[6] = sx*sz-cx*cz*sy;	R[7] = cx*sz+cz*sx*sy;	R[8] = cy*cz;
 	memcpy(O,B.b,9*sizeof(float));
 	B.b[0] = R[0]*O[0] + R[3]*O[1] + R[6]*O[2];
 	B.b[1] = R[1]*O[0] + R[4]*O[1] + R[7]*O[2];
@@ -501,10 +501,10 @@ void mglCanvas::View(float tetx,float tetz,float tety)
 	float cx=cos(tetx*M_PI/180), sx=sin(tetx*M_PI/180);
 	float cy=cos(tety*M_PI/180), sy=sin(tety*M_PI/180);
 	float cz=cos(tetz*M_PI/180), sz=sin(tetz*M_PI/180);
-	R[0] = cz*cx;	R[1] = sz*cx*sy-cy*sx;	R[2] = sx*sy+cy*cz*cx;
-	R[3] = cz*sx;	R[4] = cy*cx+sx*sy*sz;	R[5] = sz*sx*cy-sy*cx;
-	R[6] = -sz;		R[7] = cz*sy;			R[8] = cz*cy;
-	memcpy(A,Bp.b,9*sizeof(float));
+	R[0] = cx*cy;			R[1] = -cy*sx;			R[2] = sy;
+	R[3] = cx*sy*sz+cz*sx;	R[4] = cx*cz-sx*sy*sz;	R[5] =-cy*sz;
+	R[6] = sx*sz-cx*cz*sy;	R[7] = cx*sz+cz*sx*sy;	R[8] = cy*cz;
+	memcpy(A,Bp.b,9*sizeof(float));		ClfZB();
 	Bp.b[0] = R[0]*A[0] + R[3]*A[1] + R[6]*A[2];
 	Bp.b[1] = R[1]*A[0] + R[4]*A[1] + R[7]*A[2];
 	Bp.b[2] = R[2]*A[0] + R[5]*A[1] + R[8]*A[2];
@@ -518,6 +518,7 @@ void mglCanvas::View(float tetx,float tetz,float tety)
 //-----------------------------------------------------------------------------
 void mglCanvas::Zoom(float x1, float y1, float x2, float y2)
 {
+	Bp.clear();		ClfZB();
 	if(x1==x2 || y1==y2)	{	x1=y1=0;	x2=y2=1;	}
 	if(x1<x2)	{	Bp.x=x1;	Bp.b[0]=x2-x1;	}
 	else		{	Bp.x=x2;	Bp.b[0]=x1-x2;	}

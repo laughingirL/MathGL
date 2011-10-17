@@ -26,7 +26,7 @@
 #include "mgl/eval.h"
 #include "mgl/data.h"
 //-----------------------------------------------------------------------------
-int mglFitPnts;			///< Number of output points in fitting
+int mglFitPnts=100;		///< Number of output points in fitting
 char mglFitRes[1024];	///< Last fitted formula
 //-----------------------------------------------------------------------------
 /// Structure for keeping data and precompiled fitted formula
@@ -212,7 +212,9 @@ HMDT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, const char 
 	if(m<2)		{	gr->SetWarn(mglWarnLow,"Fit[S]");	return fit;	}
 	if(ss->GetNx()*ss->GetNy()*ss->GetNz() != m*yy->GetNy()*yy->GetNz())
 	{	gr->SetWarn(mglWarnDim,"FitS");	return fit;	}
-	gr->SaveState(opt);
+
+	long nn = long(0.5+gr->SaveState(opt));
+	if(nn<mglFitPnts)	nn = mglFitPnts;
 	mglData x(xx), y(yy), s(ss);
 	mglFitData fd;
 	fd.n = m;	fd.x = x.a;		fd.y = 0;
@@ -220,7 +222,7 @@ HMDT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, const char 
 	fd.var = var;	fd.m = strlen(var);
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m);
-	fit->Create(mglFitPnts, yy->GetNy(), yy->GetNz());
+	fit->Create(nn, yy->GetNy(), yy->GetNz());
 	float val[MGL_VS],res=-1;
 	register long j;
 	for(long i=0;i<yy->GetNy()*yy->GetNz();i++)
@@ -231,10 +233,10 @@ HMDT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, const char 
 		fd.s = s.a+i*m;
 		res = mgl_fit_base(&fd,in.a);
 		for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
-		for(j=0;j<mglFitPnts;j++)
+		for(j=0;j<nn;j++)
 		{
-			val['x'-'a'] = gr->Min.x+j*(gr->Max.x-gr->Min.x)/(mglFitPnts-1);
-			fit->a[j+i*mglFitPnts] = fd.eq->Calc(val);
+			val['x'-'a'] = gr->Min.x+j*(gr->Max.x-gr->Min.x)/(nn-1);
+			fit->a[j+i*nn] = fd.eq->Calc(val);
 		}
 		if(ini && ini->nx>=fd.m)	memcpy(ini->a,in.a,fd.m*sizeof(mreal));
 	}
@@ -253,7 +255,8 @@ HMDT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const char *eq, c
 	{	gr->SetWarn(mglWarnDim);	return fit;	}
 	if(m<2|| n<2)	{	gr->SetWarn(mglWarnLow,"Fit[S]");	return fit;	}
 
-	gr->SaveState(opt);
+	long nn = long(0.5+gr->SaveState(opt));
+	if(nn<mglFitPnts)	nn = mglFitPnts;
 	mglData x(m, n), y(m, n), z(zz), s(ss);
 	register long i,j;
 	for(i=0;i<m;i++)	for(j=0;j<n;j++)	// ñîçäàåì ìàññèâ òî÷åê
@@ -267,7 +270,7 @@ HMDT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const char *eq, c
 	fd.var = var;	fd.m = strlen(var);
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m);
-	fit->Create(mglFitPnts, mglFitPnts, zz->GetNz());
+	fit->Create(nn, nn, zz->GetNz());
 	float val[MGL_VS], res = -1;
 	for(i=0;i<zz->GetNz();i++)
 	{
@@ -276,11 +279,11 @@ HMDT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const char *eq, c
 		fd.a = z.a+i*m*n;		fd.s = s.a+i*m*n;
 		res = mgl_fit_base(&fd,in.a);
 		for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
-		for(j=0;j<mglFitPnts*mglFitPnts;j++)
+		for(j=0;j<nn*nn;j++)
 		{
-			val['x'-'a'] = gr->Min.x+(j%mglFitPnts)*(gr->Max.x-gr->Min.x)/(mglFitPnts-1);
-			val['y'-'a'] = gr->Min.y+(j/mglFitPnts)*(gr->Max.y-gr->Min.y)/(mglFitPnts-1);
-			fit->a[j+i*mglFitPnts*mglFitPnts] = fd.eq->Calc(val);
+			val['x'-'a'] = gr->Min.x+(j%nn)*(gr->Max.x-gr->Min.x)/(nn-1);
+			val['y'-'a'] = gr->Min.y+(j/nn)*(gr->Max.y-gr->Min.y)/(nn-1);
+			fit->a[j+i*nn*nn] = fd.eq->Calc(val);
 		}
 		if(ini && ini->nx>=fd.m)	memcpy(ini->a,in.a,fd.m*sizeof(mreal));
 	}
@@ -300,7 +303,8 @@ HMDT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT ss, const c
 	if(!(both || (xx->GetNx()==m && yy->GetNx()==n && zz->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,"Fit[S]");	return fit;	}
 
-	gr->SaveState(opt);
+	long nn = long(0.5+gr->SaveState(opt));
+	if(nn<mglFitPnts)	nn = mglFitPnts;
 	mglData x(aa), y(aa), z(aa), a(aa), s(ss);
 	for(i=0;i<m;i++)	for(j=0;j<n;j++)	for(k=0;k<l;k++)	// ñîçäàåì ìàññèâ òî÷åê
 	{
@@ -315,19 +319,19 @@ HMDT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT ss, const c
 	fd.var = var;	fd.m = strlen(var);
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m);
-	fit->Create(mglFitPnts, mglFitPnts, mglFitPnts);
+	fit->Create(nn, nn, nn);
 	float val[MGL_VS], res = -1;
 
 	if(ini && ini->nx>=fd.m)	in.Set(ini->a,fd.m);
 	else in.Fill(0.,0);
 	res = mgl_fit_base(&fd,in.a);
 	for(j=0;j<fd.m;j++)	val[var[j]-'a'] = in.a[j];
-	for(i=0;i<mglFitPnts;i++)	for(j=0;j<mglFitPnts*mglFitPnts;j++)
+	for(i=0;i<nn;i++)	for(j=0;j<nn*nn;j++)
 	{
-		val['x'-'a'] = gr->Min.x+(j%mglFitPnts)*(gr->Max.x-gr->Min.x)/(mglFitPnts-1);
-		val['y'-'a'] = gr->Min.y+(j/mglFitPnts)*(gr->Max.y-gr->Min.y)/(mglFitPnts-1);
-		val['z'-'a'] = gr->Min.z+i*(gr->Max.y-gr->Min.y)/(mglFitPnts-1);
-		fit->a[j+mglFitPnts*mglFitPnts*i] = fd.eq->Calc(val);
+		val['x'-'a'] = gr->Min.x+(j%nn)*(gr->Max.x-gr->Min.x)/(nn-1);
+		val['y'-'a'] = gr->Min.y+(j/nn)*(gr->Max.y-gr->Min.y)/(nn-1);
+		val['z'-'a'] = gr->Min.z+i*(gr->Max.y-gr->Min.y)/(nn-1);
+		fit->a[j+nn*nn*i] = fd.eq->Calc(val);
 	}
 	if(ini && ini->nx>=fd.m)	memcpy(ini->a,in.a,fd.m*sizeof(mreal));
 
@@ -337,52 +341,56 @@ HMDT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT ss, const c
 //-----------------------------------------------------------------------------
 HMDT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 {
-	mglData *res = new mglData(mglFitPnts);
 	long nn=a->GetNx()*a->GetNy()*a->GetNz();
-	if(nn!=x->GetNx()*x->GetNy()*x->GetNz())	{	gr->SetWarn(mglWarnDim);	return res;	}
-	gr->SaveState(opt);
+	if(nn!=x->GetNx()*x->GetNy()*x->GetNz())
+	{	gr->SetWarn(mglWarnDim);	return (new mglData);	}
+	long n = long(0.5+gr->SaveState(opt));
+	if(n<mglFitPnts)	n = mglFitPnts;
+	mglData *res = new mglData(n);
 	register long i,j1;
 	for(i=0;i<nn;i++)
 	{
-		j1 = long(mglFitPnts*(x->v(i)-gr->Min.x)/(gr->Max.x-gr->Min.x));
-		if(j1>=0 && j1<mglFitPnts)	res->a[j1] += a->v(i);
+		j1 = long(n*(x->v(i)-gr->Min.x)/(gr->Max.x-gr->Min.x));
+		if(j1>=0 && j1<n)	res->a[j1] += a->v(i);
 	}
 	gr->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 HMDT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 {
-	mglData *res = new mglData(mglFitPnts, mglFitPnts);
 	long nn=a->GetNx()*a->GetNy()*a->GetNz();
 	if(nn!=x->GetNx()*x->GetNy()*x->GetNz() || nn!=y->GetNx()*y->GetNy()*y->GetNz())
-	{	gr->SetWarn(mglWarnDim);	return res;	}
-	gr->SaveState(opt);
+	{	gr->SetWarn(mglWarnDim);	return (new mglData);	}
+	long n = long(0.5+gr->SaveState(opt));
+	if(n<mglFitPnts)	n = mglFitPnts;
+	mglData *res = new mglData(n, n);
 	register long i,j1,j2;
 	for(i=0;i<nn;i++)
 	{
-		j1 = long(mglFitPnts*(x->v(i)-gr->Min.x)/(gr->Max.x-gr->Min.x));
-		j2 = long(mglFitPnts*(y->v(i)-gr->Min.y)/(gr->Max.y-gr->Min.y));
-		if(j1>=0 && j1<mglFitPnts && j2>=0 && j2<mglFitPnts)
-			res->a[j1+mglFitPnts*j2] += a->v(i);
+		j1 = long(n*(x->v(i)-gr->Min.x)/(gr->Max.x-gr->Min.x));
+		j2 = long(n*(y->v(i)-gr->Min.y)/(gr->Max.y-gr->Min.y));
+		if(j1>=0 && j1<n && j2>=0 && j2<n)
+			res->a[j1+n*j2] += a->v(i);
 	}
 	gr->LoadState();	return res;
 }
 //-----------------------------------------------------------------------------
 HMDT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt)
 {
-	mglData *res = new mglData(mglFitPnts, mglFitPnts, mglFitPnts);
 	long nn=a->GetNx()*a->GetNy()*a->GetNz();
 	if(nn!=x->GetNx()*x->GetNy()*x->GetNz() || nn!=y->GetNx()*y->GetNy()*y->GetNz() || nn!=z->GetNx()*z->GetNy()*z->GetNz())
-	{	gr->SetWarn(mglWarnDim);	return res;	}
-	gr->SaveState(opt);
+	{	gr->SetWarn(mglWarnDim);	return (new mglData);	}
+	long n = long(0.5+gr->SaveState(opt));
+	if(n<mglFitPnts)	n = mglFitPnts;
+	mglData *res = new mglData(n, n, n);
 	register long i,j1,j2,j3;
 	for(i=0;i<nn;i++)
 	{
-		j1 = long(mglFitPnts*(x->v(i)-gr->Min.x)/(gr->Max.x-gr->Min.x));
-		j2 = long(mglFitPnts*(y->v(i)-gr->Min.y)/(gr->Max.y-gr->Min.y));
-		j3 = long(mglFitPnts*(z->v(i)-gr->Min.z)/(gr->Max.z-gr->Min.z));
-		if(j1>=0 && j1<mglFitPnts && j2>=0 && j2<mglFitPnts && j3>=0 && j3<mglFitPnts)
-			res->a[j1+mglFitPnts*(j2+mglFitPnts*j3)] += a->v(i);
+		j1 = long(n*(x->v(i)-gr->Min.x)/(gr->Max.x-gr->Min.x));
+		j2 = long(n*(y->v(i)-gr->Min.y)/(gr->Max.y-gr->Min.y));
+		j3 = long(n*(z->v(i)-gr->Min.z)/(gr->Max.z-gr->Min.z));
+		if(j1>=0 && j1<n && j2>=0 && j2<n && j3>=0 && j3<n)
+			res->a[j1+n*(j2+n*j3)] += a->v(i);
 	}
 	gr->LoadState();	return res;
 }

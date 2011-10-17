@@ -232,7 +232,7 @@ public:
 	/// Auto adjust ticks
 	void AdjustTicks(const char *dir="xyzc", bool force=false);
 	/// Tune ticks
-	inline void SetTuneTicks(int tune, float pos=1.15)
+	inline void SetTuneTicks(int tune, float pos=1.1)
 	{	TuneTicks = tune;	FactorPos = pos;	};
 	/// Set ticks styles
 	void SetAxisStl(const char *stl="k", const char *tck=0, const char *sub=0);
@@ -338,6 +338,8 @@ protected:
 	{	ax.v0=Org.x;	ay.v0=Org.y;	az.v0=Org.z;	ac.v0=Org.c;
 		ax.v1=Min.x;	ay.v1=Min.y;	az.v1=Min.z;	ac.v1=Min.c;
 		ax.v2=Max.x;	ay.v2=Max.y;	az.v2=Max.z;	ac.v2=Max.c;	}
+	/// Clear ZBuffer only
+	void ClfZB();
 	/// Scale coordinates and cut off some points
 	bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true);
 	void LightScale();	///< Additionally scale positions of light sources

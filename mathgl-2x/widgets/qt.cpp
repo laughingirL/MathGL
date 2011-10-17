@@ -68,7 +68,7 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 	phi = tet = per = 0;
 	x1 = y1 = 0;	x2 = y2 = 1;
 	alpha = light = zoom = rotate = grid = false;
-	resize(600, 400);
+	resize(600, 400);	gr->set(MGL_CLF_ON_UPD);
 	timer = new QTimer(this);
 //	resize(graph->GetWidth(), graph->GetHeight());
 //	mglConvertFromGraph(pic, graph, &grBuf);
@@ -199,7 +199,9 @@ void QMathGL::update()
 		if(gr->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
 		gr->Alpha(alpha);	gr->Light(light);
 		if(!isHidden())	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+		setlocale(LC_ALL, "C");	// NOTE: I'm not sure what I should selocale manually???
 		draw_func(gr, draw_par);
+		setlocale(LC_ALL, "");
 		if(!isHidden())	QApplication::restoreOverrideCursor();
 
 		QString buf = gr->Mess.c_str();

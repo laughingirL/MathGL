@@ -14,8 +14,8 @@
 03. Read DICOM files.
 04. Parallelization of drawing (MathGL level) -- bug with primitives drawing --> pixel.cpp
 05. Export to X3D and VRML
-08. Export to JavaScript (WebGL)
-09. GTK and WX window/widgets
+06. Export to JavaScript (WebGL)
+07. GTK and WX window/widgets
 10. Labels at TriCont()
 11. MPI_Send(), MPI_Recv()
 12. Add MGL command "ask $N 'question'" -- like interactive "define"
@@ -107,7 +107,6 @@ Remove other setting if data name is changed.
 29. ExportMGLD(), ImportMGLD() points+primitives to *.mgld file.
 30. Box() draw faces if '@' is specified
 31. Check export to LaTeX.
-32. Reduce number of lights to 8
 33. Add DifLight() for diffusive light (for local sources only) + option "diffuse on|off" + local version of Light()/'light'. Default is diffuse light for local sources
 34. mglview can preview MGLD files too -- check it
 

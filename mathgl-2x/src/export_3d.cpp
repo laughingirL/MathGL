@@ -17,6 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include <time.h>
+#include <zlib.h>
 #include "mgl/canvas.h"
 #include "mgl/canvas_cf.h"
 #undef _GR_
@@ -24,6 +26,7 @@
 #define _Gr_	((mglCanvas *)(gr))
 int mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_png_save(const char *fname, int w, int h, unsigned char **p);
+void mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
 void mglTexture::GetRGBA(unsigned char *f)
 {
@@ -711,7 +714,26 @@ void mgl_write_xgl_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 //-----------------------------------------------------------------------------
 void mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 {
-	// TODO: Add export to X3D
+	if(gr->GetPrmNum()<1)	return;
+	time_t now;	time(&now);
+
+	bool gz = fname[strlen(fname)-1]=='z';
+	void *fp = gz ? gzopen(fname,"wt") : fopen(fname,"wt");
+	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
+	mgl_printf(fp, gz, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+	mgl_printf(fp, gz, "<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 3.0//EN\" \"http://www.web3d.org/specifications/x3d-3.0.dtd\">\n");
+	mgl_printf(fp, gz, "<X3D profile='Immersive'>\n<head>\n<meta name='filename' content='%s'/>\n",fname);
+	mgl_printf(fp, gz, "<meta name='description' content='%s'/>\n",descr?descr:fname);
+	mgl_printf(fp, gz, "<meta name='created' content='%s'/>\n",ctime(&now));
+	mgl_printf(fp, gz, "<meta name='generator' content='MathGL, http://mathgl.sourceforge.net/'/>\n");
+	mgl_printf(fp, gz, "</head>\n<Scene>\n");
+
+
+
+
+
+	mgl_printf(fp, gz, "</Scene>\n");
+	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
 }
 void mgl_write_x3d_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
