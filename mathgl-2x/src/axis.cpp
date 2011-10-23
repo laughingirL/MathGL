@@ -332,23 +332,34 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 
 	wchar_t buf[64];
 	float v,v0,v1,w;
+	int d,ds;
 	if(aa.f)	return;
 	aa.txt.clear();
 	if(aa.dv==0 && aa.v1>0)	// positive log-scale
 	{
 		v0 = exp(M_LN10*floor(0.1+log10(aa.v1)));
+		ds = int(floor(0.1+log10(aa.v2/v0))/7)+1;
 		for(v=v0;v<=aa.v2*MGL_FLT_EPS;v*=10)	if(v*MGL_FLT_EPS>=aa.v1)
 		{
-			mglprintf(buf,64,L"10^{%d}",int(floor(0.1+log10(v))));
+			d = int(floor(0.1+log10(v)));
+			if(d==0)	wcscpy(buf,L"1");
+			else if(d==1)	wcscpy(buf,L"10");
+			else mglprintf(buf,64,L"10^{%d}",d);
+			if(d%ds!=0)	*buf=0;	//	remove too often log ticks
 			aa.AddLabel(buf,v);
 		}
 	}
 	else if(aa.dv==0 && aa.v2<0)	// negative log-scale
 	{
 		v0 = -exp(M_LN10*floor(0.1+log10(-aa.v2)));
+		ds = int(floor(0.1+log10(aa.v1/v0))/7)+1;
 		for(v=v0;v>=aa.v1*MGL_FLT_EPS;v*=10)	if(v*MGL_FLT_EPS<=aa.v2)
 		{
-			mglprintf(buf,64,L"-10^{%d}",int(floor(0.1+log10(-v))));
+			d = int(floor(0.1+log10(-v)));
+			if(d==0)	wcscpy(buf,L"-1");
+			else if(d==1)	wcscpy(buf,L"-10");
+			else mglprintf(buf,64,L"-10^{%d}",d);
+			if(d%ds!=0)	*buf=0;	//	remove too often log ticks
 			aa.AddLabel(buf,v);
 		}
 	}
@@ -469,12 +480,12 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	{
 		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1)/2;
 		v = aa.txt[i].val;	kk[i] = AddPnt(o+d*v,-1,d,0,3);
-		if(kk[i]<0)	continue;	// should be never here?!
+		if(aa.txt[i].text.empty() || kk[i]<0)	continue;	// do nothing with empty labels
 		q=p;	p = GetPntP(kk[i]);	v = i>0 ? (p-q).norm() : NAN;
 		char ch=aa.txt[i].text[0];	// manually exclude factors
 		if(isalnum(ch) || ch=='-')	{	l = l>w[i] ? l:w[i];	c = c<v ? c:v;	}
 	}
-	c /= 1.1;
+	c /= 1.1;	// add some extra space
 	if(get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE) && l>c)	// try rotate first
 	{	tet = c>h ? asin(h*1.1/c) : M_PI/2;	pos[2]='L';
 		l=h/sin(tet);	for(i=0;i<n;i++)	w[i]=l;	}

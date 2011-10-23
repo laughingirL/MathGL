@@ -2,10 +2,9 @@
 1. Triangulation + GridData (for interpolation to regular grid)
 2. Axis -- projection (ternary + quaternary)
 3. Check highlight
-4. Check fplot after box (box:axis:fplot 'sin(pi*x^2)')
-5. Check parse (empty string from UDAV)
-6. Check smgl_cutminmax2() for reading i=52, j=13, k=40 in data with nx=60, ny=50, nz=40.
-7. Check export to SVG/EPS/MGLD/TeX/OBJ/XGL/X3D/STL.
+4. Check smgl_cutminmax2() for reading i=52, j=13, k=40 in data with nx=60, ny=50, nz=40.
+5. Check export to SVG/EPS/MGLD/TeX/OBJ/XGL/X3D/STL.
+6. Parsing bug for numbers like 1.e-6
 
 ============= NEW  =============
 

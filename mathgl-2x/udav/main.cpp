@@ -21,7 +21,6 @@
 #include <QTranslator>
 #include <QSettings>
 #include <QTextCodec>
-#include <QTextCodec>
 #include "udav_wnd.h"
 #include "hint_dlg.h"
 #include <mgl/parser.h>
