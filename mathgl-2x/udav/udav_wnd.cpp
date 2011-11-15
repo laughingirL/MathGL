@@ -45,7 +45,6 @@
 #include "prop_dlg.h"
 #include "qmglsyntax.h"
 #include "calc_dlg.h"
-#include "hint_dlg.h"
 //-----------------------------------------------------------------------------
 extern HintDialog *hintDialog;
 extern bool mglAutoExecute;
@@ -58,7 +57,6 @@ bool editPosBottom = false;
 bool mglAutoSave = false;
 bool mglAutoPure = true;
 bool mglCompleter = true;
-bool showHint=true;
 bool loadInNewWnd = false;
 extern mglParser parser;
 extern QColor mglColorScheme[9];
@@ -219,7 +217,7 @@ void MainWindow::makeMenu()
 	a->setToolTip(tr("Show examples of MGL usage (Shift+F1)."));
 	a->setShortcut(Qt::SHIFT+Qt::Key_F1);	o->addAction(a);
 	a = new QAction(QPixmap(":/xpm/help-faq.png"), tr("H&ints"), this);
-	connect(a, SIGNAL(activated()), hintDialog, SLOT(exec()));
+	connect(a, SIGNAL(activated()), this, SLOT(showHint()));
 	a->setToolTip(tr("Show hints of MGL usage."));	o->addAction(a);
 	o->addAction(tr("&About"), this, SLOT(about()));
 	o->addAction(tr("About &Qt"), this, SLOT(aboutQt()));
@@ -449,7 +447,6 @@ void MainWindow::readSettings()
 	mglColorScheme[6] = QColor(settings.value("/colACKeyword","#7F007F").toString());
 	mglColorScheme[7] = QColor(settings.value("/colFCKeyword","#007F7F").toString());
 	mglColorScheme[8] = QColor(settings.value("/colReserved", "#0000FF").toString());
-	showHint = settings.value("/showHint",  true).toBool();
 	mglAutoSave = settings.value("/autoSave",  false).toBool();
 	mglAutoPure = settings.value("/autoPure",  true).toBool();
 	mglAutoExecute = settings.value("/autoExec",  true).toBool();

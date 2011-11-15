@@ -52,6 +52,7 @@ class TextPanel;
 //-----------------------------------------------------------------------------
 extern int MaxRecentFiles;
 extern int animDelay;
+void udavShowHint(QWidget *);
 //-----------------------------------------------------------------------------
 class MainWindow : public QMainWindow
 {
@@ -96,7 +97,7 @@ private slots:
 	void properties();
 	void setAsterix();
 	void warnChanged();
-
+	void showHint()	{	udavShowHint(this);	}
 
 	void setCurrentFile(const QString &);
 	void setStatus(const QString &txt);

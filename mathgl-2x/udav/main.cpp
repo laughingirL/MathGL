@@ -22,7 +22,6 @@
 #include <QSettings>
 #include <QTextCodec>
 #include "udav_wnd.h"
-#include "hint_dlg.h"
 #include <mgl/parser.h>
 #include <mgl/eval.h>
 //-----------------------------------------------------------------------------
@@ -37,18 +36,16 @@
 extern mglParser parser;
 extern QString pathFont;
 int mgl_cmd_cmp(const void *a, const void *b);
-HintDialog *hintDialog=NULL;
-QString pathHelp=MGL_DOC_DIR;
-extern bool showHint;
+QString pathHelp;
 //-----------------------------------------------------------------------------
 void udavLoadDefCommands();
+void udavShowHint(QWidget *);
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
 	QApplication a(argc, argv);
 	QTranslator translator;
 //QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-
 	QString lang="";
 	QSettings settings("udav","UDAV");
 	settings.setPath(QSettings::IniFormat, QSettings::UserScope, "UDAV");
@@ -56,6 +53,7 @@ int main(int argc, char **argv)
 	pathHelp = settings.value("/helpPath", MGL_DOC_DIR).toString();
 	pathFont = settings.value("/userFont", "").toString();
 	lang = settings.value("/udavLang", "").toString();
+	bool showHint = settings.value("/showHint", true).toBool();
 	settings.endGroup();
 	if(pathHelp.isEmpty())	pathHelp=MGL_DOC_DIR;
 
@@ -67,16 +65,15 @@ int main(int argc, char **argv)
 	}
 
 	udavLoadDefCommands();
-	hintDialog = new HintDialog();
 	MainWindow *mw = new MainWindow();
 	if(argc>1)
 	{
 		QTextCodec *codec = QTextCodec::codecForLocale();
 		mw->load(codec->toUnicode(argv[1]), true);
 	}
-	mw->show();//	mw->edit->setCursorPosition(0);
+	mw->show();
 	a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
-	if(showHint)	hintDialog->exec();
+	if(showHint)	udavShowHint(mw);
 	return a.exec();
 }
 //-----------------------------------------------------------------------------
@@ -104,31 +101,5 @@ void udavAddCommands(const mglCommand *cmd)
 	parser.Cmd = buf;
 }
 //-----------------------------------------------------------------------------
-void udavLoadDefCommands()
-{
-//	udavAddCommands(udav_base_cmd);
-}
-//-----------------------------------------------------------------------------
-#ifdef WIN32
-void udavLoadCommands(const char *, const char *)	{}
-#else
-void udavLoadCommands(const char *, const char *)	{}
-/*#include <ltdl.h>
-typedef const mglCommadns *(*udav_cmd) ();
-void udavLoadCommands(const char *lib, const char *func)
-{
-	void *jmodule=0;
-	udav_cmd ff;
-	if(lt_dlinit())	return;
-	errors=lt_dlsetsearchpath(MOD_LIB_DIR);
-	jmodule=lt_dlopenext(lib);
-	if(jmodule)
-	{
-		ff = (udav_cmd) lt_dlsym((lt_dlhandle) jmodule, func);
-		udavAddCommands(ff());
-		lt_dlclose((lt_dlhandle) jmodule);
-	}
-	lt_dlexit();
-}*/
-#endif
+void udavLoadDefCommands()	{}	//{	udavAddCommands(udav_base_cmd);	}
 //-----------------------------------------------------------------------------

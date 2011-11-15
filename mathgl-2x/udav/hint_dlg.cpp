@@ -22,14 +22,9 @@
 #include <QLayout>
 #include <QPushButton>
 #include <QTextEdit>
-#include "hint_dlg.h"
+#include <QDialog>
 //-----------------------------------------------------------------------------
-//
-//	Hint dialog
-//
-//-----------------------------------------------------------------------------
-#define qtr		HintDialog::tr
-int numHints=-1;
+#define qtr	QDialog::tr
 QString hints[] = {
 	qtr("You can rotate plot by mouse. Just press 'Rotate' toolbutton, click image and hold a mouse button: left button for rotation, right button for zooming/perspective, middle button for shifting."),
 	qtr("You may quickly draw the data from file. Just use: udav 'filename.dat' in command line."),
@@ -48,14 +43,38 @@ QString hints[] = {
 	qtr("The calculator can help you to put complex expression in the script. Just type the expression (which may depend on coordinates x,y,z and so on) and put it into the script."),
 	qtr("You can easely insert file or folder names, last fitted formula or numerical value of selection by using menu Edit|Insert."),
 	qtr("The special dialog (Edit|Insert|New Command) help you select the command, fill its arguments and put it into the script."),
-	qtr("")};
-
+	qtr("")
+};
+//-----------------------------------------------------------------------------
+/// Dialog for showing hints
+class HintDialog : public QDialog
+{
+Q_OBJECT
+public:
+	HintDialog(QWidget *parent = 0);
+	~HintDialog()	{};
+protected:
+	void closeEvent(QCloseEvent *event);
+private slots:
+	void nextClicked()
+	{	cur = (cur+1)%numHints;	text->setText(hints[cur]);	}
+	void prevClicked()
+	{	cur = (cur+numHints-1)%numHints;	text->setText(hints[cur]);	}
+private:
+	int cur;
+	int numHints;
+	QTextEdit *text;
+	QCheckBox *start;
+};
+//-----------------------------------------------------------------------------
+//
+//	Hint dialog
+//
 //-----------------------------------------------------------------------------
 extern "C"{double mgl_rnd();}
 HintDialog::HintDialog(QWidget *parent) : QDialog(parent)
 {
-	if(numHints<0)
-		for(numHints=0;!hints[numHints].isEmpty();numHints++){};
+	for(numHints=0;!hints[numHints].isEmpty();numHints++){};
 	cur = int(mgl_rnd()*numHints);
 	setWindowTitle(tr("UDAV - Hint"));
 	QHBoxLayout *a;
@@ -76,14 +95,6 @@ HintDialog::HintDialog(QWidget *parent) : QDialog(parent)
 	connect(b, SIGNAL(clicked()),this, SLOT(close()));
 }
 //-----------------------------------------------------------------------------
-HintDialog::~HintDialog()	{}
-//-----------------------------------------------------------------------------
-void HintDialog::nextClicked()
-{	cur = (cur+1)%numHints;	text->setText(hints[cur]);	}
-//-----------------------------------------------------------------------------
-void HintDialog::prevClicked()
-{	cur--;	if(cur<0)	cur=numHints-1;	text->setText(hints[cur]);	}
-//-----------------------------------------------------------------------------
 void HintDialog::closeEvent(QCloseEvent *)
 {
 	QSettings settings("udav","UDAV");
@@ -91,5 +102,11 @@ void HintDialog::closeEvent(QCloseEvent *)
 	settings.beginGroup("/UDAV");
 	settings.setValue("/showHint", start->isChecked());
 	settings.endGroup();
+}
+//-----------------------------------------------------------------------------
+void udavShowHint(QWidget *p)
+{
+	HintDialog *hd = new HintDialog(p);
+	hd->exec();
 }
 //-----------------------------------------------------------------------------
