@@ -68,7 +68,7 @@ public slots:
 	void setEditorFont(QFont *f=0);
 //	void setEditPos(bool bottom);
 	void animPutText(const QString &);
-	void putText(const QString &txt);
+//	void putText(const QString &txt);
 	void putLine(const QString &txt);
 	void setCursorPosition(int);
 

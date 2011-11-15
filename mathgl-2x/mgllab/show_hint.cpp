@@ -21,9 +21,10 @@
 #include <QCheckBox>
 #include <QLayout>
 #include <QPushButton>
-#include "hint_dlg.h"
+#include <QTextEdit>
+#include <QDialog>
 //-----------------------------------------------------------------------------
-#define qtr	HintDialog::tr
+#define qtr		HintDialog::tr
 QString hints[] = {
 	qtr("You can rotate plot by mouse. Just press 'Rotate' toolbutton, click image and hold a mouse button: left button for rotation, right button for zooming/perspective, middle button for shifting."),
 	qtr("You may quickly draw the data from file. Just use: udav 'filename.dat' in command line."),
@@ -43,6 +44,27 @@ QString hints[] = {
 	qtr("You can easely insert file or folder names, last fitted formula or numerical value of selection by using menu Edit|Insert."),
 	qtr("The special dialog (Edit|Insert|New Command) help you select the command, fill its arguments and put it into the script."),
 	qtr("")
+};
+//-----------------------------------------------------------------------------
+/// Dialog for showing hints
+class HintDialog : public QDialog
+{
+Q_OBJECT
+public:
+	HintDialog(QWidget *parent = 0);
+	~HintDialog()	{};
+protected:
+	void closeEvent(QCloseEvent *event);
+private slots:
+	void nextClicked()	
+	{	cur = (cur+1)%numHints;	text->setText(hints[cur]);	}
+	void prevClicked()	
+	{	cur = (cur+numHints-1)%numHints;	text->setText(hints[cur]);	}
+private:
+	int cur;
+	int numHints;
+	QTextEdit *text;
+	QCheckBox *start;
 };
 //-----------------------------------------------------------------------------
 //
@@ -88,3 +110,4 @@ void udavShowHint(QWidget *p)
 	hd->exec();
 }
 //-----------------------------------------------------------------------------
+

@@ -23,6 +23,7 @@
 #include <QPushButton>
 #include <QListView>
 #include <QComboBox>
+#include <QTextEdit>
 #include <mgl/parser.h>
 #include "calc_dlg.h"
 extern mglParser parser;
@@ -31,6 +32,13 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg);
 //
 //	Calc dialog
 //
+//-----------------------------------------------------------------------------
+QWidget *createCalcDlg(QWidget *p, QTextEdit *e)
+{
+	CalcDialog *c = new CalcDialog(p);
+	QObject::connect(c, SIGNAL(putNumber(QString)),e,SLOT(insertPlainText(QString)));
+	return c;
+}
 //-----------------------------------------------------------------------------
 CalcDialog::CalcDialog(QWidget *parent) : QWidget(parent)
 {

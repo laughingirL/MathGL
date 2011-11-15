@@ -199,8 +199,7 @@ void TextPanel::addOptions()
 void TextPanel::animPutText(const QString &s)
 {	edit->moveCursor(QTextCursor::Start);	edit->insertPlainText(s);	}
 //-----------------------------------------------------------------------------
-void TextPanel::putText(const QString &txt)
-{	edit->insertPlainText(txt);	}
+//void TextPanel::putText(const QString &txt)	{	edit->insertPlainText(txt);	}
 //-----------------------------------------------------------------------------
 void TextPanel::putLine(const QString &txt)
 {	edit->moveCursor(QTextCursor::StartOfLine);

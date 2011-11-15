@@ -17,62 +17,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef UDAV_WND_H
-#define UDAV_WND_H
+#ifndef HINT_DLG_H
+#define HINT_DLG_H
 //-----------------------------------------------------------------------------
-#include <QMainWindow>
+#include <QTextEdit>
+#include <QDialog>
+class QCheckBox;
+extern QString hints[];
 //-----------------------------------------------------------------------------
-#ifndef MGL_DOC_DIR
-#ifdef WIN32
-#define MGL_DOC_DIR ""
-#else
-#define MGL_DOC_DIR "/usr/local/share/doc/mathgl/"
-#endif
-#endif
-//-----------------------------------------------------------------------------
-class QSplitter;
-class QTabWidget;
-class QMenu;
-class QDockWidget;
-class DataOpenDialog;
-class QTextEdit;
-//-----------------------------------------------------------------------------
-extern int MaxRecentFiles;
-extern int animDelay;
-//-----------------------------------------------------------------------------
-class MainWindow : public QMainWindow
+/// Dialog for showing hints
+class HintDialog : public QDialog
 {
-	Q_OBJECT
+Q_OBJECT
 public:
-	MainWindow(QWidget *wp=0);
-	void load(const QString &fileName, bool noNewWnd=false);
-
+	HintDialog(QWidget *parent = 0);
+	~HintDialog()	{};
 protected:
-	void closeEvent ( QCloseEvent* );
-	void dropEvent ( QDropEvent* );
-	void dragEnterEvent( QDragEnterEvent* );
-
+	void closeEvent(QCloseEvent *event);
 private slots:
-	void newDoc();
-	void choose();
-	void save();
-	void saveAs();
-	void addPanel(QWidget *);
-
-	void about();
-	void aboutQt();
-	void openRecentFile();
-	void setAsterix();
-	void setCurrentFile(const QString &);
-	void setStatus(const QString &txt);
-
+	void nextClicked()
+	{	cur = (cur+1)%numHints;	text->setText(hints[cur]);	}
+	void prevClicked()
+	{	cur = (cur+numHints-1)%numHints;	text->setText(hints[cur]);	}
 private:
-	void updateRecentFileItems();
-	void updateRecent();
+	int cur;
+	int numHints;
+	QTextEdit *text;
+	QCheckBox *start;
 };
-//-----------------------------------------------------------------------------
-MainWindow *findMain(QWidget *w);
-void raisePanel(QWidget *w);
 //-----------------------------------------------------------------------------
 #endif
 //-----------------------------------------------------------------------------

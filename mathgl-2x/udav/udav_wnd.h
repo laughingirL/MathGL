@@ -45,7 +45,6 @@ class MemPanel;
 class HelpPanel;
 class DatPanel;
 class QDockWidget;
-class CalcDialog;
 class DataOpenDialog;
 class QTextEdit;
 class TextPanel;
@@ -111,7 +110,6 @@ private:
 	QString filename;
 	QMenu *fileMenu;
 	QDockWidget *messWnd, *calcWnd;
-	CalcDialog *calc;	///< Calculator dock window
 
 	void makeMenu();
 	void makeDataMenu();

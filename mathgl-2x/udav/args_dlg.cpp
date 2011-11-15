@@ -25,6 +25,8 @@
 #include "args_dlg.h"
 extern mglParser parser;
 //-----------------------------------------------------------------------------
+QDialog *createArgsDlg(QWidget *p)	{	return new ArgsDialog(p);	}
+//-----------------------------------------------------------------------------
 ArgsDialog::ArgsDialog(QWidget *parent) : QDialog(parent)
 {
 	setWindowTitle(tr("UDAV - Set script arguments"));

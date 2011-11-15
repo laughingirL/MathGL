@@ -2,7 +2,7 @@ if(use_qt)
 
 
 #set(mgl_wnd_src window.cpp)
-set(lab_src main_wnd.cpp)
+set(lab_src main_wnd.cpp show_hint.cpp)
 
 set(lab_moc_hdr main_wnd.h)
 

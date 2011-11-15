@@ -37,18 +37,14 @@
 #include "udav_wnd.h"
 #include "text_pnl.h"
 #include "textedit.h"
-#include "args_dlg.h"
 #include "plot_pnl.h"
 #include "mem_pnl.h"
 #include "dat_pnl.h"
 #include "help_pnl.h"
 #include "prop_dlg.h"
 #include "qmglsyntax.h"
-#include "calc_dlg.h"
 //-----------------------------------------------------------------------------
-extern HintDialog *hintDialog;
 extern bool mglAutoExecute;
-ArgsDialog *args_dlg=0;
 PropDialog *propDlg=0;
 int MainWindow::num_wnd=0;
 QStringList recentFiles;
@@ -66,12 +62,31 @@ extern QString pathHelp;
 extern QString pathFont;
 extern int defWidth, defHeight;
 //-----------------------------------------------------------------------------
+QWidget *createCalcDlg(QWidget *p, QTextEdit *e);
+QDialog *createArgsDlg(QWidget *p);
+//-----------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 {
 	setWindowTitle(tr("untitled - UDAV"));
 	setAttribute(Qt::WA_DeleteOnClose);
-	if(!args_dlg)	args_dlg = new ArgsDialog;
 
+	split = new QSplitter(this);
+	ltab = new QTabWidget(split);
+	ltab->setMovable(true);	ltab->setTabPosition(QTabWidget::South);
+	rtab = new QTabWidget(split);
+	rtab->setMovable(true);	rtab->setTabPosition(QTabWidget::South);
+
+	graph = new PlotPanel(this);
+	rtab->addTab(graph,QPixmap(":/xpm/x-office-presentation.png"),tr("Canvas"));
+	info = new MemPanel(this);
+	connect(info,SIGNAL(addPanel(QWidget*)),this,SLOT(addPanel(QWidget*)));
+	rtab->addTab(info,QPixmap(":/xpm/system-file-manager.png"),tr("Info"));
+	hlp = new HelpPanel(this);
+	rtab->addTab(hlp,QPixmap(":/xpm/help-contents.png"),tr("Help"));
+	edit = new TextPanel(this);	edit->graph = graph;
+	graph->textMGL = edit->edit;
+	connect(graph->mgl,SIGNAL(showWarn(QString)),mess,SLOT(setText(QString)));
+	ltab->addTab(edit,QPixmap(":/xpm/text-x-generic.png"),tr("Script"));
 
 	messWnd = new QDockWidget(tr("Messages and warnings"),this);
 	mess = new TextEdit(this);	messWnd->setWidget(mess);
@@ -81,7 +96,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(mess,SIGNAL(cursorPositionChanged()),this,SLOT(messClicked()));
 
 	calcWnd = new QDockWidget(tr("Calculator"),this);
-	calc = new CalcDialog();	calcWnd->setWidget(calc);
+	calcWnd->setWidget(createCalcDlg(this, edit->edit));
 	calcWnd->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
 	addDockWidget(Qt::BottomDockWidgetArea, calcWnd);
 	calcWnd->resize(size().width(), 200);
@@ -110,25 +125,6 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(messWnd, SIGNAL(visibilityChanged(bool)), a, SLOT(setChecked(bool)));
 	a->setChecked(false);	messWnd->setVisible(false);
 
-
-	split = new QSplitter(this);
-	ltab = new QTabWidget(split);
-	ltab->setMovable(true);	ltab->setTabPosition(QTabWidget::South);
-	rtab = new QTabWidget(split);
-	rtab->setMovable(true);	rtab->setTabPosition(QTabWidget::South);
-
-	graph = new PlotPanel(this);
-	rtab->addTab(graph,QPixmap(":/xpm/x-office-presentation.png"),tr("Canvas"));
-	info = new MemPanel(this);
-	connect(info,SIGNAL(addPanel(QWidget*)),this,SLOT(addPanel(QWidget*)));
-	rtab->addTab(info,QPixmap(":/xpm/system-file-manager.png"),tr("Info"));
-	hlp = new HelpPanel(this);
-	rtab->addTab(hlp,QPixmap(":/xpm/help-contents.png"),tr("Help"));
-	edit = new TextPanel(this);	edit->graph = graph;
-	graph->textMGL = edit->edit;
-	connect(graph->mgl,SIGNAL(showWarn(QString)),mess,SLOT(setText(QString)));
-	ltab->addTab(edit,QPixmap(":/xpm/text-x-generic.png"),tr("Script"));
-
 	makeMenu();
 	setCentralWidget(split);
 	setWindowIcon(QIcon(":/udav.png"));
@@ -145,7 +141,6 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(graph->mgl, SIGNAL(refreshData()), edit, SLOT(refreshData()));
 
 	connect(mess, SIGNAL(textChanged()), this, SLOT(warnChanged()));
-	connect(calc, SIGNAL(putNumber(QString)),edit,SLOT(putText(QString)));
 //	connect(mdi, SIGNAL(subWindowActivated(QMdiSubWindow *)), this, SLOT(subActivated(QMdiSubWindow *)));
 	connect(propDlg, SIGNAL(sizeChanged(int,int)), graph->mgl, SLOT(imgSize(int,int)));
 	connect(edit->edit,SIGNAL(textChanged()), this, SLOT(setAsterix()));
@@ -200,7 +195,7 @@ void MainWindow::makeMenu()
 	a = new QAction(QPixmap(":/xpm/preferences-system.png"), tr("Properties"), this);
 	connect(a, SIGNAL(activated()), this, SLOT(properties()));
 	a->setToolTip(tr("Show dialog for UDAV properties."));	o->addAction(a);
-	o->addAction(tr("Set ar&guments"), args_dlg, SLOT(exec()));
+	o->addAction(tr("Set ar&guments"), createArgsDlg(this), SLOT(exec()));
 
 	o->addAction(acalc);
 	o->addAction(ainfo);
