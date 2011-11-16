@@ -33,7 +33,6 @@ class OptionDialog;
 class StyleDialog;
 class SetupDialog;
 class NewCmdDialog;
-class DataOpenDialog;
 class PlotPanel;
 //-----------------------------------------------------------------------------
 #ifndef WIN32
@@ -96,7 +95,7 @@ private:
 	FindDialog *findDialog;
 	OptionDialog *optDialog;
 	StyleDialog *stlDialog;
-	DataOpenDialog *dataOpenDlg;
+	QWidget *dataOpenDlg;
 	SetupDialog *setupDlg;
 
 	void toolTop(QBoxLayout *l);

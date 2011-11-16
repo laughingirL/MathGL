@@ -36,7 +36,6 @@
 #include "files_dlg.h"
 #include "newcmd_dlg.h"
 #include "setup_dlg.h"
-#include "open_dlg.h"
 #include "text_pnl.h"
 #include "plot_pnl.h"
 //-----------------------------------------------------------------------------
@@ -46,6 +45,8 @@ int defFontSize;
 bool mglAutoExecute = true;
 extern mglParser parser;
 extern bool mglCompleter;
+QWidget *createDataOpenDlg(QWidget *p);
+QString getOpenDataFile(QWidget *w, QString filename);
 //-----------------------------------------------------------------------------
 TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 {
@@ -55,7 +56,7 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 	stlDialog = new StyleDialog(this);
 	newCmdDlg = new NewCmdDialog(this);
 	setupDlg = new SetupDialog(this);
-	dataOpenDlg = new DataOpenDialog(this);
+	dataOpenDlg = createDataOpenDlg(this);
 	if(!files_dlg)	files_dlg= new FilesDialog;
 
 	register int i;
@@ -359,11 +360,11 @@ void TextPanel::load(const QString &fileName)
 {
 	if(fileName.right(4).toLower()==".dat")
 	{
-		dataOpenDlg->setFile(fileName);
-		if(dataOpenDlg->exec())
+		QString code = getOpenDataFile(dataOpenDlg, fileName);
+		if(!code.isEmpty())
 		{
 			setCurrentFile(fileName.left(fileName.length()-3)+"mgl");
-			edit->setText(dataOpenDlg->getCode());
+			edit->setText(code);
 		}
 	}
 	else if(fileName.right(4).toLower()==".hdf" || fileName.right(3).toLower()==".h5")

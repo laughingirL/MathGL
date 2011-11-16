@@ -32,6 +32,18 @@ int numDataOpened=0;
 extern mglParser parser;
 QStringList dataScr;
 //-----------------------------------------------------------------------------
+QWidget *createDataOpenDlg(QWidget *p)	{	return new DataOpenDialog(p);	}
+QString getOpenDataFile(QWidget *w, QString filename)
+{
+	DataOpenDialog *d = dynamic_cast<DataOpenDialog *>(w);
+	if(d)
+	{
+		d->setFile(filename);
+		if(d->exec())	return d->getCode();
+	}
+	return QString();
+}
+//-----------------------------------------------------------------------------
 DataOpenDialog::DataOpenDialog(QWidget *parent) : QDialog(parent)
 {
 	setWindowTitle(tr("UDAV - Open data file"));
