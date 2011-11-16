@@ -22,19 +22,17 @@
 #include <QWidget>
 class mglVar;
 class InfoDialog;
-class DatPanel;
 class QTableWidget;
+class MainWindow;
 //-----------------------------------------------------------------------------
 class MemPanel : public QWidget
 {
 Q_OBJECT
 public:
+	MainWindow *wnd;
 	MemPanel(QWidget *parent = 0);
-	DatPanel *newWindow(mglVar *v=0);
 public slots:
 	void refresh();		///< refresh list of variables
-signals:
-	void addPanel(QWidget *);
 private slots:
 	void newTable();
 	void editData(int n=-1);

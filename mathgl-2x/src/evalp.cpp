@@ -194,7 +194,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 		delete []str;		return res;
 	}
 	n=mglFindInText(str,"+-");				// normal priority -- additions
-	if(n>=0 && (n<2 || str[n-1]!='e' || str[n-2]<'0' || str[n-2]>'9'))
+	if(n>=0 && (n<2 || str[n-1]!='e' || (str[n-2]!='.' && !isdigit(str[n-2]))))
 	{
 		wcscpy(Buf,str);	Buf[n]=0;
 		res = mglApplyOper(Buf,Buf+n+1,arg, str[n]=='+'?add:sub);

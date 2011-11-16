@@ -32,7 +32,6 @@ public:
 public slots:
 	void showExamples();
 	void showHelp(const QString &cmd=QString::null);
-	void setPath(const QString &path);
 	void zoomIn();
 	void zoomOut();
 private:

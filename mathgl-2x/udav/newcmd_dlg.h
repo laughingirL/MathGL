@@ -50,7 +50,6 @@ private slots:
 	void zoomOut();
 
 public slots:
-	void setPath(const QString &path);
 	void parseCmd(const QString &txt);
 
 signals:

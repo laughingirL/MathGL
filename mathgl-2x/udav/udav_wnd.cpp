@@ -31,16 +31,13 @@
 #include <QDockWidget>
 #include <QCloseEvent>
 #include <QTextCodec>
-#include <mgl/parser.h>
+#include <QTranslator>
 //-----------------------------------------------------------------------------
+#include "mgl/parser.h"
 #include "mgl/qt.h"
 #include "udav_wnd.h"
 #include "text_pnl.h"
-#include "textedit.h"
 #include "plot_pnl.h"
-#include "mem_pnl.h"
-#include "dat_pnl.h"
-#include "help_pnl.h"
 #include "prop_dlg.h"
 #include "qmglsyntax.h"
 //-----------------------------------------------------------------------------
@@ -64,6 +61,92 @@ extern int defWidth, defHeight;
 //-----------------------------------------------------------------------------
 QWidget *createCalcDlg(QWidget *p, QTextEdit *e);
 QDialog *createArgsDlg(QWidget *p);
+QWidget *createMemPanel(QWidget *p);
+QWidget *createHlpPanel(QWidget *p);
+void showHelpMGL(QWidget *hlp, QString s);
+void addDataPanel(MainWindow *wnd, QWidget *w, QString name)	{	wnd->addPanel(w, name);	}
+//-----------------------------------------------------------------------------
+#ifndef UDAV_DIR
+#ifdef WIN32
+#define UDAV_DIR ""
+#else
+#define UDAV_DIR "/usr/local/share/udav/"
+#endif
+#endif
+//-----------------------------------------------------------------------------
+extern mglParser parser;
+extern QString pathFont;
+int mgl_cmd_cmp(const void *a, const void *b);
+QString pathHelp;
+//-----------------------------------------------------------------------------
+void udavLoadDefCommands();
+void udavShowHint(QWidget *);
+//-----------------------------------------------------------------------------
+int main(int argc, char **argv)
+{
+	QApplication a(argc, argv);
+	QTranslator translator;
+//QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+	QString lang="";
+	QSettings settings("udav","UDAV");
+	settings.setPath(QSettings::IniFormat, QSettings::UserScope, "UDAV");
+	settings.beginGroup("/UDAV");
+	pathHelp = settings.value("/helpPath", MGL_DOC_DIR).toString();
+	pathFont = settings.value("/userFont", "").toString();
+	lang = settings.value("/udavLang", "").toString();
+	bool showHint = settings.value("/showHint", true).toBool();
+	settings.endGroup();
+	if(pathHelp.isEmpty())	pathHelp=MGL_DOC_DIR;
+
+	if(!lang.isEmpty())
+	{
+		if(!translator.load("udav_"+lang, UDAV_DIR))
+			translator.load("udav_"+lang, pathHelp);
+		a.installTranslator(&translator);
+	}
+
+	udavLoadDefCommands();
+	MainWindow *mw = new MainWindow();
+	if(argc>1)
+	{
+		QTextCodec *codec = QTextCodec::codecForLocale();
+		mw->load(codec->toUnicode(argv[1]), true);
+	}
+	mw->show();
+	a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
+	if(showHint)	udavShowHint(mw);
+	return a.exec();
+}
+//-----------------------------------------------------------------------------
+//
+//		mgl addon
+//
+//-----------------------------------------------------------------------------
+/*mglCommand udav_base_cmd[] = {
+	{L"fplot",L"Plot curve by formula",L"fplot 'func' ['stl'='' num=100]", mgls_fplot, mglc_fplot},
+	{L"fsurf",L"Plot surface by formula",L"fsurf 'func' ['stl'='' numx=100 numy=100]", mgls_fsurf, mglc_fsurf},
+	{L"fgets",L"Print string from file",L"fgets x y {z} 'fname' [pos=0 'stl'='' size=-1.4]", mgls_fgets, mglc_fgets},
+{L"",0,0,0,0}};*/
+//-----------------------------------------------------------------------------
+void udavAddCommands(const mglCommand *cmd)
+{
+	int i, mp, mc;
+	// determine the number of symbols
+	for(i=0;parser.Cmd[i].name[0];i++){};	mp = i;
+	for(i=0;cmd[i].name[0];i++){};			mc = i;
+	mglCommand *buf = new mglCommand[mp+mc+1];
+	memcpy(buf, parser.Cmd, mp*sizeof(mglCommand));
+	memcpy(buf+mp, cmd, (mc+1)*sizeof(mglCommand));
+	qsort(buf, mp+mc, sizeof(mglCommand), mgl_cmd_cmp);
+	if(parser.Cmd!=mgls_base_cmd)	delete []parser.Cmd;
+	parser.Cmd = buf;
+}
+//-----------------------------------------------------------------------------
+void udavLoadDefCommands()	{}	//{	udavAddCommands(udav_base_cmd);	}
+//-----------------------------------------------------------------------------
+//
+//	Class MainWindow
+//
 //-----------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 {
@@ -78,10 +161,9 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 
 	graph = new PlotPanel(this);
 	rtab->addTab(graph,QPixmap(":/xpm/x-office-presentation.png"),tr("Canvas"));
-	info = new MemPanel(this);
-	connect(info,SIGNAL(addPanel(QWidget*)),this,SLOT(addPanel(QWidget*)));
-	rtab->addTab(info,QPixmap(":/xpm/system-file-manager.png"),tr("Info"));
-	hlp = new HelpPanel(this);
+//	connect(info,SIGNAL(addPanel(QWidget*)),this,SLOT(addPanel(QWidget*)));
+	rtab->addTab(createMemPanel(this),QPixmap(":/xpm/system-file-manager.png"),tr("Info"));
+	hlp = createHlpPanel(this);
 	rtab->addTab(hlp,QPixmap(":/xpm/help-contents.png"),tr("Help"));
 	edit = new TextPanel(this);	edit->graph = graph;
 	graph->textMGL = edit->edit;
@@ -137,7 +219,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(graph,SIGNAL(giveFocus()),edit->edit,SLOT(setFocus()));
 	connect(graph->mgl, SIGNAL(objChanged(int)), edit, SLOT(setCursorPosition(int)));
 	connect(graph->mgl, SIGNAL(posChanged(QString)), statusBar(), SLOT(showMessage(QString)));
-	connect(graph->mgl, SIGNAL(refreshData()), info, SLOT(refresh()));
+	connect(graph->mgl, SIGNAL(refreshData()), this, SLOT(refresh()));
 	connect(graph->mgl, SIGNAL(refreshData()), edit, SLOT(refreshData()));
 
 	connect(mess, SIGNAL(textChanged()), this, SLOT(warnChanged()));
@@ -208,7 +290,7 @@ void MainWindow::makeMenu()
 	a->setToolTip(tr("Show help on MGL commands (F1)."));
 	a->setShortcut(Qt::Key_F1);	o->addAction(a);
 	a = new QAction(QPixmap(":/xpm/help-faq.png"), tr("&Examples"), this);
-	connect(a, SIGNAL(activated()), hlp, SLOT(showExamples()));
+	connect(a, SIGNAL(activated()), this, SLOT(showExamples()));
 	a->setToolTip(tr("Show examples of MGL usage (Shift+F1)."));
 	a->setShortcut(Qt::SHIFT+Qt::Key_F1);	o->addAction(a);
 	a = new QAction(QPixmap(":/xpm/help-faq.png"), tr("H&ints"), this);
@@ -216,16 +298,6 @@ void MainWindow::makeMenu()
 	a->setToolTip(tr("Show hints of MGL usage."));	o->addAction(a);
 	o->addAction(tr("&About"), this, SLOT(about()));
 	o->addAction(tr("About &Qt"), this, SLOT(aboutQt()));
-}
-//-----------------------------------------------------------------------------
-void MainWindow::refreshData()
-{
-/*	for(int i=0; i<ltab->count(); i++)
-	{
-		DatPanel *w = dynamic_cast<DatPanel*>(ltab->widget(i));
-		if(w)	w->refresh();
-	}
-	edit->refreshData();*/
 }
 //-----------------------------------------------------------------------------
 void MainWindow::closeEvent(QCloseEvent* ce)
@@ -320,7 +392,7 @@ void MainWindow::showHelp()
 	for(i=0;i<n;i++)	if(dlm.contains(s[i]))	break;
 	s.truncate(i);
 //	s = s.section(' ',0);
-	hlp->showHelp(s);
+	showHelpMGL(hlp,s);
 }
 //-----------------------------------------------------------------------------
 int mgl_cmd_cmp(const void *a, const void *b);
@@ -613,20 +685,13 @@ void MainWindow::setAsterix()
 void updateDataItems()
 {
 	foreach (QWidget *w, QApplication::topLevelWidgets())
-	{
-		if(w->inherits("MainWindow"))
-			((MainWindow *)w)->info->refresh();
-	}
+		if(w->inherits("MainWindow"))	((MainWindow *)w)->refresh();
 }
 //-----------------------------------------------------------------------------
-void MainWindow::addPanel(QWidget *w)
+void MainWindow::addPanel(QWidget *w, QString name)
 {
-	DatPanel *d = dynamic_cast<DatPanel*>(w);
-	if(d)
-	{
-		ltab->addTab(d,QPixmap(":/xpm/x-office-spreadsheet.png"),d->dataName());
-		ltab->setCurrentWidget(d);
-	}
+	ltab->addTab(w,QPixmap(":/xpm/x-office-spreadsheet.png"),name);
+	ltab->setCurrentWidget(w);
 }
 //-----------------------------------------------------------------------------
 MainWindow *findMain(QWidget *wnd)

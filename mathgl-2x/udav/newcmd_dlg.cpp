@@ -82,8 +82,7 @@ NewCmdDialog::NewCmdDialog(QWidget *p) : QDialog(p,Qt::WindowStaysOnTopHint)
 
 	o = new QVBoxLayout;	m->addLayout(o,1);
 	a = new QHBoxLayout;	o->addLayout(a);
-	help = new QTextBrowser(this);
-	help->setMinimumWidth(500);		setPath(pathHelp);
+	help = new QTextBrowser(this);		help->setMinimumWidth(500);
 	help->setOpenExternalLinks(false);	o->addWidget(help);
 	t = new QToolButton(p);	t->setIcon(QPixmap(":/xpm/go-previous.png"));
 	connect(t, SIGNAL(clicked()), help, SLOT(backward()));	a->addWidget(t);
@@ -228,18 +227,13 @@ mglCommand *getCmd(const QString &cmd)
 	delete []c;		return rts;
 }
 //-----------------------------------------------------------------------------
-void NewCmdDialog::setPath(const QString &path)
-{
-	QStringList s;	s<<(path+"/"+tr("mgl_en")+".html");
-	help->setSearchPaths(s);
-	help->setSource(tr("mgl_en")+"_1.html");
-}
-//-----------------------------------------------------------------------------
 void NewCmdDialog::nameChanged(int s)
 {
 	QString n=name->itemText(s), par, a;
 	int k;
 	if(n.isEmpty())	return;
+	QStringList ss;	ss<<(pathHelp+"/"+tr("mgl_en")+".html/");
+	help->setSearchPaths(ss);
 	help->setSource(tr("mgl_en")+"_1.html#"+n);
 	// clear old
 	kind->clear();	kinds.clear();	for(k=0;k<NUM_CH;k++)	argn[k].clear();

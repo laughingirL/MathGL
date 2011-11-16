@@ -34,10 +34,8 @@
 //-----------------------------------------------------------------------------
 #include "prop_dlg.h"
 #include "udav_wnd.h"
-#include "help_pnl.h"
 #include "plot_pnl.h"
 #include "text_pnl.h"
-#include "newcmd_dlg.h"
 //-----------------------------------------------------------------------------
 extern QColor mglColorScheme[9];
 extern QString defFontFamily;
@@ -174,24 +172,6 @@ PropDialog::PropDialog(QWidget *parent) : QDialog(parent)
 //-----------------------------------------------------------------------------
 PropDialog::~PropDialog()	{}
 //-----------------------------------------------------------------------------
-void PropDialog::setC0()	{	setC(0);	}
-//-----------------------------------------------------------------------------
-void PropDialog::setC1()	{	setC(1);	}
-//-----------------------------------------------------------------------------
-void PropDialog::setC2()	{	setC(2);	}
-//-----------------------------------------------------------------------------
-void PropDialog::setC3()	{	setC(3);	}
-//-----------------------------------------------------------------------------
-void PropDialog::setC4()	{	setC(4);	}
-//-----------------------------------------------------------------------------
-void PropDialog::setC5()	{	setC(5);	}
-//-----------------------------------------------------------------------------
-void PropDialog::setC6()	{	setC(6);	}
-//-----------------------------------------------------------------------------
-void PropDialog::setC7()	{	setC(7);	}
-//-----------------------------------------------------------------------------
-void PropDialog::setC8()	{	setC(8);	}
-//-----------------------------------------------------------------------------
 void PropDialog::getPathH()
 {
 	QString str = QFileDialog::getExistingDirectory(this,
@@ -254,8 +234,7 @@ void PropDialog::applyChanges()
 			MainWindow *s = (MainWindow *)w;
 			if(ok)	{	s->writeSettings();	ok = false;	}
 			s->edit->setEditorFont();
-			s->hlp->setPath(pathHelp);	s->edit->newCmdDlg->setPath(pathHelp);
-			if(s->hlp->isActiveWindow())	s->hlp->showHelp();
+//			if(s->hlp->isActiveWindow())	s->hlp->showHelp();	// TODO: may be should enabled later
 			s->graph->setMGLFont(pathFont);
 			s->setEditPos(editPosBottom);
 			s->edit->setCompleter(mglCompleter);

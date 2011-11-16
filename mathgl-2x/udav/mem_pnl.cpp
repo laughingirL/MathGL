@@ -26,13 +26,26 @@
 //-----------------------------------------------------------------------------
 #include "mem_pnl.h"
 #include "info_dlg.h"
-#include "dat_pnl.h"
 //-----------------------------------------------------------------------------
 #include "xpm/table.xpm"
 #include "xpm/preview.xpm"
 //-----------------------------------------------------------------------------
 extern bool mglAutoSave;
 extern mglParser parser;
+QWidget *newDataWnd(InfoDialog *inf, MainWindow *wnd, mglVar *v);
+void refreshData(QWidget *w);
+//-----------------------------------------------------------------------------
+QWidget *createMemPanel(QWidget *p)
+{
+	MemPanel *m = new MemPanel(p);
+	m->wnd = (MainWindow *)m;
+}
+//-----------------------------------------------------------------------------
+void refreshMemPanel(QWidget *p)
+{
+	MemPanel *m = dynamic_cast<MemPanel *>(p);
+	if(m)	m->refresh();
+}
 //-----------------------------------------------------------------------------
 MemPanel::MemPanel(QWidget *parent) : QWidget(parent)
 {
@@ -79,14 +92,6 @@ void MemPanel::tableClicked(int, int col)
 //-----------------------------------------------------------------------------
 void MemPanel::tableDClicked(int row, int)	{	editData(row);	}
 //-----------------------------------------------------------------------------
-DatPanel *MemPanel::newWindow(mglVar *v)
-{
-	DatPanel *t = new DatPanel(infoDlg);
-	if(v)	t->setVar(v);
-	addPanel(t);
-	return t;
-}
-//-----------------------------------------------------------------------------
 void MemPanel::newTable()
 {
 	bool ok;
@@ -94,9 +99,9 @@ void MemPanel::newTable()
 				tr("Enter name for new variable"), QLineEdit::Normal, "", &ok);
 	if(!ok || name.isEmpty())	return;
 	mglVar *v = parser.AddVar(name.toAscii());
-	DatPanel *t;
-	if(v->o)	t = (DatPanel *)v->o;
-	else		t = newWindow(v);
+	QWidget *t;
+	if(v->o)	t = (QWidget *)v->o;
+	else		t = newDataWnd(infoDlg,wnd,v);
 	t->showMaximized();	t->activateWindow();
 	refresh();
 }
@@ -108,9 +113,9 @@ void MemPanel::editData(int n)
 	if(n<0)	n = 0;
 	mglVar *v = parser.FindVar(tab->item(n,0)->text().toAscii());
 	if(!v)	return;
-	DatPanel *t;
-	if(v->o)	t = (DatPanel *)v->o;
-	else		t = newWindow(v);
+	QWidget *t;
+	if(v->o)	t = (QWidget *)v->o;
+	else		t = newDataWnd(infoDlg,wnd,v);
 	t->showMaximized();	t->activateWindow();
 }
 //-----------------------------------------------------------------------------
@@ -121,7 +126,7 @@ void MemPanel::delData()
 	if(n<0)	n = 0;
 	mglVar *v = parser.FindVar(tab->item(n,0)->text().toAscii());
 	if(!v)	return;
-	if(v->o)	((DatPanel *)v->o)->close();
+	if(v->o)	((QWidget *)v->o)->close();
 	parser.DeleteVar(v);
 	refresh();
 }
@@ -172,7 +177,7 @@ void MemPanel::refresh()
 		it = new QTableWidgetItem(s);
 		tab->setItem(n,2,it);	it->setFlags(flags);
 		it->setTextAlignment(Qt::AlignRight|Qt::AlignVCenter);
-		if(v->o)	((DatPanel *)v->o)->refresh();
+		if(v->o)	refreshData((QWidget *)v->o);
 		v = v->next;	n++;
 	}
 	tab->sortItems(colSort);

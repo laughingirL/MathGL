@@ -38,15 +38,15 @@ signals:
 	void sizeChanged(int w, int h);
 private slots:
 	void applyChanges();
-	void setC0();
-	void setC1();
-	void setC2();
-	void setC3();
-	void setC4();
-	void setC5();
-	void setC6();
-	void setC7();
-	void setC8();
+	void setC0()	{	setC(0);	}
+	void setC1()	{	setC(1);	}
+	void setC2()	{	setC(2);	}
+	void setC3()	{	setC(3);	}
+	void setC4()	{	setC(4);	}
+	void setC5()	{	setC(5);	}
+	void setC6()	{	setC(6);	}
+	void setC7()	{	setC(7);	}
+	void setC8()	{	setC(8);	}
 	void setF();
 	void getPathH();
 	void getPathF();

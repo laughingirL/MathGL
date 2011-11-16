@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <ctype.h>
 #include <string.h>
 #ifndef NO_GSL
 #include <gsl/gsl_sf.h>
@@ -28,7 +29,7 @@
 #endif
 #include "mgl/eval.h"
 //-----------------------------------------------------------------------------
-//	êîíñòàíòû äëÿ ðàñïîçíîâàíèÿ âûðàæåíèÿ
+//	constants for expression parsing
 enum{
 EQ_NUM=0,	// a variable substitution
 EQ_RND,		// random number
@@ -115,7 +116,7 @@ EQ_DN,		// Jacobian elliptic function dn(u|m)
 EQ_DS,		// Jacobian elliptic function dn(u|m)/sn(u|m)
 EQ_DC,		// Jacobian elliptic function dn(u|m)/cn(u|m)
 			// MUST BE LAST ELLIPTIC FUNCTION
-// non-ready
+// not-ready
 EQ_EN,
 EQ_CL,		// Clausen function
 };
@@ -165,14 +166,13 @@ double mgl_rnd()
 #endif
 }
 //-----------------------------------------------------------------------------
-// äåñòðóêòîð ôîðìóëû
 mglFormula::~mglFormula()
 {
 	if(Left) delete Left;
 	if(Right) delete Right;
 }
 //-----------------------------------------------------------------------------
-// êîíñòðóêòîð ôîðìóëû (àâòîìàòè÷åñêè ðàñïîçíàåò è "êîìïèëèðóåò" ôîðìóëó)
+// Formula constructor (automatically parse and "compile" formula)
 mglFormula::mglFormula(const char *string)
 {
 #ifndef NO_GSL
@@ -190,14 +190,14 @@ mglFormula::mglFormula(const char *string)
 	mgl_strlwr(str);
 	len=strlen(str);
 	if(str[0]==0) {	delete []str;	return;	}
-	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// åñëè âñå âûðàæåíèå â ñêîáàõ, òî óáèðàåì  èõ
+	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// remove braces
 	{
 		strcpy(Buf,str+1);
 		len-=2;	Buf[len]=0;
 		strcpy(str,Buf);
 	}
 	len=strlen(str);
-	n=mglFindInText(str,"&|");				// ìåíüøèé ïðèîðèòåò - ñëîæåíèå, âû÷èòàíèå
+	n=mglFindInText(str,"&|");				// lowest priority -- logical
 	if(n>=0)
 	{
 		if(str[n]=='|') Kod=EQ_OR;	else Kod=EQ_AND;
@@ -207,7 +207,7 @@ mglFormula::mglFormula(const char *string)
 		delete []str;
 		return;
 	}
-	n=mglFindInText(str,"<>=");				// ìåíüøèé ïðèîðèòåò - ñëîæåíèå, âû÷èòàíèå
+	n=mglFindInText(str,"<>=");				// low priority -- conditions
 	if(n>=0)
 	{
 		if(str[n]=='<') Kod=EQ_LT;
@@ -219,8 +219,8 @@ mglFormula::mglFormula(const char *string)
 		delete []str;
 		return;
 	}
-	n=mglFindInText(str,"+-");				// ìåíüøèé ïðèîðèòåò - ñëîæåíèå, âû÷èòàíèå
-	if(n>=0)
+	n=mglFindInText(str,"+-");				// normal priority -- additions
+	if(n>=0 && (n<2 || str[n-1]!='e' || (str[n-2]!='.' && !isdigit(str[n-2]))))
 	{
 		if(str[n]=='+') Kod=EQ_ADD; else Kod=EQ_SUB;
 		strcpy(Buf,str); Buf[n]=0;
@@ -229,7 +229,7 @@ mglFormula::mglFormula(const char *string)
 		delete []str;
 		return;
 	}
-	n=mglFindInText(str,"*/");				// ñðåäíèé ïðèîðèòåò - óìíîæåíèå, äåëåíèå
+	n=mglFindInText(str,"*/");				// high priority -- multiplications
 	if(n>=0)
 	{
 		if(str[n]=='*') Kod=EQ_MUL; else Kod=EQ_DIV;
@@ -239,7 +239,7 @@ mglFormula::mglFormula(const char *string)
 		delete []str;
 		return;
 	}
-	n=mglFindInText(str,"^");				// âûñîêèé ïðèîðèòåò - âîçâåäåíèå â ñòåïåíü
+	n=mglFindInText(str,"^");				// highest priority -- power
 	if(n>=0)
 	{
 		Kod=EQ_IPOW;
@@ -251,15 +251,15 @@ mglFormula::mglFormula(const char *string)
 	}
 
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
-	if(n>=len)							// ýòî ÷èñëî èëè ïåðåìåííàÿ
+	if(n>=len)							// this is number or variable
 	{
 		Kod = EQ_NUM;
 //		Left = Right = 0;
-		if(str[1]==0 && str[0]>='a' && str[0]<='z')	// äîñòóïíûå ïåðåìííûå
+		if(str[1]==0 && str[0]>='a' && str[0]<='z')	// avalible variables
 		{	Kod=EQ_A;	Res = str[0]-'a';	}
 		else if(!strcmp(str,"rnd")) Kod=EQ_RND;
 		else if(!strcmp(str,"pi")) Res=M_PI;
-		else Res=atof(str);				// ýòî ÷èñëî
+		else Res=atof(str);				// this is number
 	}
 	else
 	{
@@ -679,7 +679,7 @@ float mglFormula::CalcDIn(int id, const float *a1) const
 	return NAN;
 }
 //-----------------------------------------------------------------------------
-// ïðîâåðêà êîððåêòíîñòè ñêîáîê
+// Check braces correctness
 bool mglCheck(char *str,int n)
 {
 	register long s = 0,i;
@@ -692,7 +692,7 @@ bool mglCheck(char *str,int n)
 	return (s==0) ? true : false;
 }
 //-----------------------------------------------------------------------------
-// ïîèñê îäíîãî èç ñèìâîëîâ lst â ñòðîêå str
+// Try to find one of symbols lst in the string str
 int mglFindInText(char *str,const char *lst)
 {
 	register long l=0,r=0,i;//,j,len=strlen(lst);

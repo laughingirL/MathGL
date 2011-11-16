@@ -28,6 +28,10 @@
 extern QString pathHelp;
 void raisePanel(QWidget *w);
 //-----------------------------------------------------------------------------
+QWidget *createHlpPanel(QWidget *p)		{	return new HelpPanel(p);	}
+void showHelpMGL(QWidget *hlp,QString s){	((HelpPanel *)hlp)->showHelp(s);	}
+void showExMGL(QWidget *hlp)			{	((HelpPanel *)hlp)->showExamples();	}
+//-----------------------------------------------------------------------------
 HelpPanel::HelpPanel(QWidget *parent) : QWidget(parent)
 {
 	QPushButton *b;
@@ -35,7 +39,7 @@ HelpPanel::HelpPanel(QWidget *parent) : QWidget(parent)
 	QVBoxLayout *o = new QVBoxLayout(this);
 	QHBoxLayout *a = new QHBoxLayout();	o->addLayout(a);
 	help = new QTextBrowser(this);		o->addWidget(help);
-	help->setOpenExternalLinks(false);	setPath(pathHelp);
+	help->setOpenExternalLinks(false);
 
 	b = new QPushButton(QPixmap(":/xpm/go-previous.png"), tr("Backward"));
 	connect(b, SIGNAL(clicked()), help, SLOT(backward()));	a->addWidget(b);
@@ -53,17 +57,10 @@ HelpPanel::HelpPanel(QWidget *parent) : QWidget(parent)
 	setWindowTitle(tr("Help"));
 }
 //-----------------------------------------------------------------------------
-void HelpPanel::setPath(const QString &path)
-{
-	QStringList s;	s<<(path+"/"+tr("mgl_en")+".html/");
-	help->setSearchPaths(s);
-	help->setSource(tr("mgl_en")+"_1.html");
-//QString pp=path+"/"+tr("mgl_en")+".html/"+tr("mgl_en")+"_1.html";
-//printf("%s\n",pp.toAscii().constData());
-}
-//-----------------------------------------------------------------------------
 void HelpPanel::showExamples()
 {
+	QStringList s;	s<<(pathHelp+"/"+tr("mgl_en")+".html/");
+	help->setSearchPaths(s);
 	setWindowTitle("Examples");	raisePanel(this);
 	help->setSource(tr("mgl_en")+"_2.html");
 }
@@ -72,6 +69,8 @@ void HelpPanel::showHelp(const QString &txt)
 {
 	QString cmd=txt;
 	raisePanel(this);
+	QStringList s;	s<<(pathHelp+"/"+tr("mgl_en")+".html/");
+	help->setSearchPaths(s);
 	if(cmd.isEmpty())	cmd = entry->text().trimmed();
 	if(cmd.isEmpty())	help->setSource(tr("mgl_en")+"_1.html");
 	else	help->setSource(tr("mgl_en")+"_1.html#"+cmd);
@@ -79,12 +78,8 @@ void HelpPanel::showHelp(const QString &txt)
 }
 //-----------------------------------------------------------------------------
 void HelpPanel::zoomIn()
-{
-	QFont f(help->font());	f.setPointSize(f.pointSize()+1);	help->setFont(f);
-}
+{	QFont f(help->font());	f.setPointSize(f.pointSize()+1);	help->setFont(f);	}
 //-----------------------------------------------------------------------------
 void HelpPanel::zoomOut()
-{
-	QFont f(help->font());	f.setPointSize(f.pointSize()-1);	help->setFont(f);
-}
+{	QFont f(help->font());	f.setPointSize(f.pointSize()-1);	help->setFont(f);	}
 //-----------------------------------------------------------------------------

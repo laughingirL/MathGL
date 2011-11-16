@@ -39,8 +39,19 @@
 #include "xpm/table.xpm"
 //-----------------------------------------------------------------------------
 extern mglParser parser;
+class MainWindow;
 void updateDataItems();
-void deleteDat(void *o)	{	if(o)	delete ((DatPanel *)o);	}
+void addDataPanel(MainWindow *wnd, QWidget *w, QString name);
+void deleteDat(void *o)		{	if(o)	delete ((DatPanel *)o);	}
+void refreshData(QWidget *w)	{	((DatPanel *)w)->refresh();	}
+//-----------------------------------------------------------------------------
+QWidget *newDataWnd(InfoDialog *inf, MainWindow *wnd, mglVar *v)
+{
+	DatPanel *t = new DatPanel(inf);
+	if(v)	t->setVar(v);
+	addDataPanel(wnd,t,t->dataName());
+	return t;
+}
 //-----------------------------------------------------------------------------
 DatPanel::DatPanel(InfoDialog *inf, QWidget *parent) : QWidget(parent)
 {

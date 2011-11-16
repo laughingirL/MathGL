@@ -41,9 +41,7 @@ class SetupDialog;
 class InfoDialog;
 class HintDialog;
 class PlotPanel;
-class MemPanel;
 class HelpPanel;
-class DatPanel;
 class QDockWidget;
 class DataOpenDialog;
 class QTextEdit;
@@ -52,6 +50,8 @@ class TextPanel;
 extern int MaxRecentFiles;
 extern int animDelay;
 void udavShowHint(QWidget *);
+void refreshMemPanel(QWidget *p);
+void showExMGL(QWidget *hlp);
 //-----------------------------------------------------------------------------
 class MainWindow : public QMainWindow
 {
@@ -61,8 +61,8 @@ public:
 	QAction *ainfo, *acalc, *asave, *aload;
 	TextPanel *edit;
 	PlotPanel *graph;
-	MemPanel *info;
-	HelpPanel *hlp;
+	QWidget *info;
+	QWidget *hlp;
 	MainWindow(QWidget *wp=0);
 	void load(const QString &fileName, bool noNewWnd=false);
 	void writeSettings();
@@ -70,6 +70,8 @@ public:
 public slots:
 	void setEditPos(bool bottom);
 	void editPosChanged();
+	void refresh()	{	refreshMemPanel(info);	}
+	void addPanel(QWidget *w, QString name);
 
 signals:
 	void gotoLine(int n,int i);
@@ -84,19 +86,18 @@ private slots:
 	void choose();
 	void save();
 	void saveAs();
-	void addPanel(QWidget *);
 
 	void about();
 	void aboutQt();
 	void openRecentFile();
 	void showHelp();
 
-	void refreshData();		///< refresh data in variables
 	void messClicked();
 	void properties();
 	void setAsterix();
 	void warnChanged();
 	void showHint()	{	udavShowHint(this);	}
+	void showExamples()	{	showExMGL(hlp);	}
 
 	void setCurrentFile(const QString &);
 	void setStatus(const QString &txt);

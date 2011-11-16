@@ -8,20 +8,15 @@
 
 ============= NEW  =============
 
-01. Use Hershey as built-in font ???
-02. Import/Export via GIF (as 3d data) ???
-03. Read DICOM files.
-04. Parallelization of drawing (MathGL level) -- bug with primitives drawing --> pixel.cpp
-05. Export to X3D and VRML
-06. Export to JavaScript (WebGL)
-07. GTK and WX window/widgets
-10. Labels at TriCont()
-11. MPI_Send(), MPI_Recv()
-12. Add MGL command "ask $N 'question'" -- like interactive "define"
-13. Manual colors for text, boundary, background of Legend()
-14. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
-15. Cones() -- like Bars() but by Cone()
-16. Drop + surface of circle waves --> as default plot in mglview
+1. Parallelization of drawing (MathGL level) -- bug with primitives drawing --> pixel.cpp
+2. Export to X3D and VRML
+3. Labels at TriCont()
+4. Add MGL command "ask $N 'question'" -- like interactive "define"
+5. Manual colors for text, boundary, background of Legend()
+6. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
+7. Cones() -- like Bars() but by Cone()
+8. Drop + surface of circle waves --> as default plot in mglview
+9. Set curve "sharpness"
 
 ============= UDAV =============
 
@@ -37,7 +32,7 @@
 Ranges can be inverted.
 Remove other setting if data name is changed.
 
-02. Double click -> jump to string + setup dialog
+02. Double click -> jump to string + setup dialog (optionally)
 03. Dialog for InPlot(s):
 {SubPlot,MultiPlot}	-- enable rotate,aspect,title
 {ColumnPlot}		-- enable rotate,several
@@ -47,8 +42,7 @@ Remove other setting if data name is changed.
 04. Group/ungroup if command in single line, separated by ':'
 05. Hide plot/group by putting "#h " at beginning of line
 06. Annotation of plot/group -- comment before it
-07. Tree-like structure of script -- nodes for {(*)plot -- {if,for,...} -- groups}
-08. Add command "ask $N 'request'] for manual asking value of parameter -- Add the same to mglParse!!!
+08. Add command "ask $N ['request'] for manual asking value of parameter
 09. Data change via menu/toolbar -- save to internal script => enable undo + save initial array(?)
 10. Add primitives by mouse at beginning of script + change its size/position by mouse + "attraction" points
 11. Drag&drop plot/group between inplots
@@ -59,6 +53,15 @@ Remove other setting if data name is changed.
 15. QTreeWidgetItem -- ICON (if,for,once,subplot,...); Cmd text; LINE - POS in group/line. After editing/changing --> put text to editor.
 16. Use QMathGL as drawing widget.
 17. Setupable hot-keys ?!?
+
+============= FOR V.2.1 ========
+
+1. MPI_Send(), MPI_Recv()
+2. Use Hershey as built-in font ???
+3. Import/Export via GIF (as 3d data) ???
+4. Read DICOM files.
+5. Export to JavaScript (WebGL)
+6. GTK and WX window/widgets
 
 ============= UNSURE ===========
 
