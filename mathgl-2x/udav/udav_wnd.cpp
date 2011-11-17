@@ -51,11 +51,11 @@ bool mglAutoSave = false;
 bool mglAutoPure = true;
 bool mglCompleter = true;
 bool loadInNewWnd = false;
+QString pathHelp;
 extern mglParser parser;
 extern QColor mglColorScheme[9];
 extern QString defFontFamily;
 extern int defFontSize;
-extern QString pathHelp;
 extern QString pathFont;
 extern int defWidth, defHeight;
 //-----------------------------------------------------------------------------
@@ -74,11 +74,7 @@ void addDataPanel(MainWindow *wnd, QWidget *w, QString name)	{	wnd->addPanel(w, 
 #endif
 #endif
 //-----------------------------------------------------------------------------
-extern mglParser parser;
-extern QString pathFont;
 int mgl_cmd_cmp(const void *a, const void *b);
-QString pathHelp;
-//-----------------------------------------------------------------------------
 void udavLoadDefCommands();
 void udavShowHint(QWidget *);
 //-----------------------------------------------------------------------------
@@ -150,6 +146,7 @@ void udavLoadDefCommands()	{}	//{	udavAddCommands(udav_base_cmd);	}
 //-----------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 {
+	QAction *a;
 	setWindowTitle(tr("untitled - UDAV"));
 	setAttribute(Qt::WA_DeleteOnClose);
 
@@ -159,17 +156,6 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	rtab = new QTabWidget(split);
 	rtab->setMovable(true);	rtab->setTabPosition(QTabWidget::South);
 
-	graph = new PlotPanel(this);
-	rtab->addTab(graph,QPixmap(":/xpm/x-office-presentation.png"),tr("Canvas"));
-//	connect(info,SIGNAL(addPanel(QWidget*)),this,SLOT(addPanel(QWidget*)));
-	rtab->addTab(createMemPanel(this),QPixmap(":/xpm/system-file-manager.png"),tr("Info"));
-	hlp = createHlpPanel(this);
-	rtab->addTab(hlp,QPixmap(":/xpm/help-contents.png"),tr("Help"));
-	edit = new TextPanel(this);	edit->graph = graph;
-	graph->textMGL = edit->edit;
-	connect(graph->mgl,SIGNAL(showWarn(QString)),mess,SLOT(setText(QString)));
-	ltab->addTab(edit,QPixmap(":/xpm/text-x-generic.png"),tr("Script"));
-
 	messWnd = new QDockWidget(tr("Messages and warnings"),this);
 	mess = new TextEdit(this);	messWnd->setWidget(mess);
 	messWnd->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
@@ -178,12 +164,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(mess,SIGNAL(cursorPositionChanged()),this,SLOT(messClicked()));
 
 	calcWnd = new QDockWidget(tr("Calculator"),this);
-	calcWnd->setWidget(createCalcDlg(this, edit->edit));
-	calcWnd->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
-	addDockWidget(Qt::BottomDockWidgetArea, calcWnd);
-	calcWnd->resize(size().width(), 200);
 
-	QAction *a;
 	aload = a = new QAction(QPixmap(":/xpm/document-open.png"), tr("&Open file"), this);
 	connect(a, SIGNAL(activated()), this, SLOT(choose()));
 	a->setToolTip(tr("Open and execute/show script or data from file (Ctrl+O).\nYou may switch off automatic exection in UDAV properties."));
@@ -206,6 +187,22 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	connect(a, SIGNAL(toggled(bool)), messWnd, SLOT(setVisible(bool)));
 	connect(messWnd, SIGNAL(visibilityChanged(bool)), a, SLOT(setChecked(bool)));
 	a->setChecked(false);	messWnd->setVisible(false);
+
+	graph = new PlotPanel(this);
+	rtab->addTab(graph,QPixmap(":/xpm/x-office-presentation.png"),tr("Canvas"));
+	//	connect(info,SIGNAL(addPanel(QWidget*)),this,SLOT(addPanel(QWidget*)));
+	rtab->addTab(createMemPanel(this),QPixmap(":/xpm/system-file-manager.png"),tr("Info"));
+	hlp = createHlpPanel(this);
+	rtab->addTab(hlp,QPixmap(":/xpm/help-contents.png"),tr("Help"));
+	edit = new TextPanel(this);	edit->graph = graph;
+	graph->textMGL = edit->edit;
+	connect(graph->mgl,SIGNAL(showWarn(QString)),mess,SLOT(setText(QString)));
+	ltab->addTab(edit,QPixmap(":/xpm/text-x-generic.png"),tr("Script"));
+
+	calcWnd->setWidget(createCalcDlg(this, edit->edit));
+	calcWnd->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
+	addDockWidget(Qt::BottomDockWidgetArea, calcWnd);
+	calcWnd->resize(size().width(), 200);
 
 	makeMenu();
 	setCentralWidget(split);
