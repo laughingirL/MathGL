@@ -23,7 +23,6 @@
 # define FL_DLL
 #endif
 #include "udav.h"
-#include <mgl/mgl_parse.h>
 //-----------------------------------------------------------------------------
 int		changed = 0;
 char	filename[256] = "";

@@ -3,14 +3,14 @@
 @chapter Other classes
 
 @menu
-* mglParse class::              
-* mglFormula class::            
-* mglFont class::               
-* mglColor class::              
-* mglPoint class::              
-* mglVar class::                
-* mglCommand class::            
-* mglArg class::                
+* mglParse class::
+* mglFormula class::
+* mglFont class::
+* mglColor class::
+* mglPoint class::
+* mglVar class::
+* mglCommand class::
+* mglArg class::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -18,9 +18,9 @@
 @section mglParse class
 @cindex mglParse
 
-Class for parsing and executing MGL script. This class is defined in @code{#include <mgl/mgl_parse.h>}.
+Class for parsing and executing MGL script. This class is defined in @code{#include <mgl/parse.h>}.
 
-Class mglParse is the interpreter for MGL scripts (@pxref{MGL interface}). The main function of mglParse class is @code{Parse()}. Exactly this function parses and executes the script string-by-string. Also there are two subservient functions for the finding and creation of a variable. These functions can be useful for displaying values of variables (arrays) in some external program (in window, for example). The variable @var{DataList} contains full list of variables in script. Flag @var{AllowSetSize} allows one to prevent changing the size of the  picture inside the script (forbids the MGL command @code{setsize}). 
+Class mglParse is the interpreter for MGL scripts (@pxref{MGL interface}). The main function of mglParse class is @code{Parse()}. Exactly this function parses and executes the script string-by-string. Also there are two subservient functions for the finding and creation of a variable. These functions can be useful for displaying values of variables (arrays) in some external program (in window, for example). The variable @var{DataList} contains full list of variables in script. Flag @var{AllowSetSize} allows one to prevent changing the size of the  picture inside the script (forbids the MGL command @code{setsize}).
 
 Note an important feature -- if user defines function @var{func} in variable then it will be called before the destroying of this variable (@pxref{mglVar class}).
 
@@ -159,7 +159,7 @@ The over way of font and alignment setting is the using of the integer constant.
 
 
 @menu
-* Format of font files::        
+* Format of font files::
 @end menu
 
 
@@ -364,7 +364,7 @@ Return true if points are different.
 @section mglVar class
 @cindex mglVar
 
-Structure describes variable of type @code{mglData} and its name in MGL script. This structure is used by @code{mglParse} and is defined in @code{#include <mgl/mgl_parse.h>}.
+Structure describes variable of type @code{mglData} and its name in MGL script. This structure is used by @code{mglParse} and is defined in @code{#include <mgl/parse.h>}.
 
 @deftypecv {Parameter} mglVar @code{mglData} d
 Data itself
@@ -398,7 +398,7 @@ Move variable after @var{var} and copy @code{func} from @code{var} (if @code{fun
 @section mglCommand class
 @cindex mglCommand
 
-Structure describes MGL command, its name, short description, executable and export functions. The structure is used by @code{mglParse} and is defined in @code{#include <mgl/mgl_parse.h>}.
+Structure describes MGL command, its name, short description, executable and export functions. The structure is used by @code{mglParse} and is defined in @code{#include <mgl/parse.h>}.
 
 @deftypecv {Parameter} mglCommand @code{const wchar_t *} name
 Name of command.
@@ -422,7 +422,7 @@ Function for exporting in C++ (can be NULL).
 @section mglArg class
 @cindex mglArg
 
-Structure describes arguments of functions in the stucture @code{mglCommand}. It is defined in @code{#include <mgl/mgl_parse.h>}.
+Structure describes arguments of functions in the stucture @code{mglCommand}. It is defined in @code{#include <mgl/parse.h>}.
 
 @deftypecv {Parameter} mglArg @code{int} type
 Type of argument: 0-data, 1-string, 2-number.

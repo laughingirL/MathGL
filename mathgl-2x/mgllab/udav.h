@@ -42,15 +42,8 @@
 #include <Fl/Fl_Scroll.H>
 #include <FL/Fl_Tabs.H>
 #include <FL/Fl_Help_View.H>
-#include "Fl_Table.H"
-class mglGraphZB;
-class mglGraph;
-class mglVar;
-class mglFont;
-#ifndef UDAV_VERSION
-#define UDAV_VERSION	0.8
-#endif
-
+#include <Fl/Fl_Table.H>
+//-----------------------------------------------------------------------------
 #ifdef USE_PLASTIC
 	#define UDAV_UP_BOX			FL_PLASTIC_UP_BOX
 	#define UDAV_DOWN_BOX		FL_PLASTIC_DOWN_BOX
@@ -62,7 +55,8 @@ class mglFont;
 	#define UDAV_EDIT_BOX		FL_GTK_DOWN_BOX
 	#define UDAV_THIN_UP_BOX	FL_GTK_THIN_UP_BOX
 #endif
-#include <mgl/mgl_parse.h>
+//-----------------------------------------------------------------------------
+#include "mgl/parser.h"
 //-----------------------------------------------------------------------------
 extern mglParse *Parse;
 extern Fl_Menu_Item colors[];
@@ -127,7 +121,7 @@ public:
 	void get_zoom(float *X1, float *Y1, float *X2, float *Y2)
 	{	*X1 = x1;	*X2 = x2;	*Y1 = y1;	*Y2 = y2;	};
 	/// Get pointer to grapher
-	mglGraphZB *get_graph()	{	return graph;	};
+	mglGraph *get_graph()	{	return graph;	};
 	/// Set popup menu pointer
 	void set_popup(const Fl_Menu_Item *pmenu, Fl_Widget *w, Fl_Widget *v)
 	{	popup = pmenu;	wpar = w;	vpar = v;	};
@@ -138,7 +132,7 @@ public:
 protected:
 	const Fl_Menu_Item *popup;	///< pointer to popup menu items
 	Fl_Widget *wpar, *vpar;		///< parameter for popup menu
-	mglGraphZB	*graph;			///< pointer to grapher
+	mglGraph *graph;			///< pointer to grapher
 	float tet,phi,per;			///< rotation angles and perspective
 	float x1,x2,y1,y2;			///< zoom in region
 	bool zoom, rotate;			///< flag for handle mouse
