@@ -311,11 +311,13 @@ void mgl_del_var(HMPR p, const char *name);
 int mgl_parse(HMGL gr, HMPR p, const char *str, int pos);
 int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos);
 void mgl_parse_file(HMGL gr, HMPR p, FILE *fp, int print);
-void mgl_parse_text(HMGL gr, HMPR p, const char *str, void (*error)(const char *mes), int high);
-void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str, void (*error)(const char *mes), int high);
+void mgl_parse_text(HMGL gr, HMPR p, const char *str, void (*error)(const char *mes, void *par), int high, void *par);
+void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str, void (*error)(const char *mes, void *par), int high, void *par);
 void mgl_restore_once(HMPR p);
 void mgl_parser_allow_setsize(HMPR p, int a);
 void mgl_parser_stop(HMPR p);
+int mgl_parser_find_cmd(HMPR pr, const char *name);
+int mgl_parser_find_cmdw(HMPR pr, const wchar_t *name);
 /*****************************************************************************/
 uintptr_t mgl_create_parser_();
 long mgl_use_parser_(uintptr_t* , int *inc);
@@ -331,6 +333,7 @@ void mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, int l);
 void mgl_restore_once_(uintptr_t* p);
 void mgl_parser_allow_setsize_(uintptr_t* p, int *a);
 void mgl_parser_stop_(uintptr_t* p);
+int mgl_parser_find_cmd_(uintptr_t* p, const char *name, int l);
 /*****************************************************************************/
 #ifdef __cplusplus
 }

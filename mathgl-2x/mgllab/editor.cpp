@@ -90,9 +90,10 @@ char is_cmd(const char *s)	// command
 	char res=0;
 	mbstowcs(w,s,n);
 	for(i=0;i<n;i++)	if(!isalnum(s[i]))	w[i]=0;
-	mglCommand *rts = Parse->FindCommand(w);
-	if(rts)	res = rts->create ? 'G':'E';
-	if(Parse->FindCommand(w,true))	res = 'F';
+	int rts = Parse->FindCommand(w);
+	if(rts==5)		res = 'G';
+	else if(rts==7)	res = 'F';
+	else if(rts)	res = 'E';
 	delete []w;		return res;
 }
 //-----------------------------------------------------------------------------

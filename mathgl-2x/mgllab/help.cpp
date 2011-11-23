@@ -108,7 +108,7 @@ void help_out_cb(Fl_Widget*, void*v)
 void about_cb(Fl_Widget*, void*)
 {
 	static char s[128];
-	sprintf(s,gettext("UDAV v. %g\n(c) Alexey Balakin, 2007\nhttp://udav.sf.net/"), UDAV_VERSION);
+	sprintf(s,gettext("UDAV v. 2.%g\n(c) Alexey Balakin, 2007\nhttp://udav.sf.net/"), MGL_VER2);
 	Fl_Double_Window* w = new Fl_Double_Window(355, 130, "About UDAV");
 	Fl_Box* o = new Fl_Box(10, 15, 65, 65);
 	o->box(FL_UP_BOX);	o->color(55);	o->image(new Fl_Pixmap(udav_xpm));
@@ -207,10 +207,10 @@ void ScriptWindow::mem_init()
 {
 	char str[128];
 	var->clear();
-	mglVar *v=Parse->DataList;
+	mglVar *v=Parse->Self()->DataList;
 	while(v)
 	{
-		sprintf(str,"%ls\t%ld*%ld*%ld\t%ld\t", v->s, v->d.nx, v->d.ny,
+		sprintf(str,"%ls\t%ld*%ld*%ld\t%ld\t", v->s.c_str(), v->d.nx, v->d.ny,
 				v->d.nz, 4*v->d.nx*v->d.ny*v->d.nz);
 		var->add(str,v);
 		v = v->next;
@@ -230,7 +230,7 @@ void ScriptWindow::mem_pressed(int kind)
 		if(!w)
 		{
 			char ss[1024];
-			wcstombs(ss,v->s,1024);	ss[wcslen(v->s)]=0;
+			wcstombs(ss,v->s.c_str(),1024);	ss[v->s.length()]=0;
 			ltab->begin();
 			Fl_Group *gg = new Fl_Group(0,30,300,430);
 			w = new TableWindow(0,30,300,430);
@@ -240,21 +240,21 @@ void ScriptWindow::mem_pressed(int kind)
 	}
 	else if(kind==1)
 	{
-		if(v->d.nz>1)		sprintf(res,"box\nsurf3 %ls\n",v->s);
-		else if(v->d.ny>1)	sprintf(res,"box\nsurf %ls\n",v->s);
-		else				sprintf(res,"box\nplot %ls\n",v->s);
+		if(v->d.nz>1)		sprintf(res,"box\nsurf3 %ls\n",v->s.c_str());
+		else if(v->d.ny>1)	sprintf(res,"box\nsurf %ls\n",v->s.c_str());
+		else				sprintf(res,"box\nplot %ls\n",v->s.c_str());
 		textbuf->text(res);
 	}
 	else if(kind==2)
 	{
-		if(Parse->DataList==v)	Parse->DataList = v->next;
+		if(Parse->Self()->DataList==v)	Parse->Self()->DataList = v->next;
 		delete v;
 	}
 	else if(kind==3)
 	{
 		const char *name = fl_input(gettext("Enter name for new variable"),"dat");
 		if(!name)	return;
-		v = Parse->AddVar(name);
+		v = Parse->Self()->AddVar(name);
 
 		ltab->begin();
 		Fl_Group *gg = new Fl_Group(0,30,300,430);

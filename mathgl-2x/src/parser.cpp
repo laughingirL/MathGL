@@ -109,7 +109,7 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const w
 	for(i=0;i<n;i++)	a[i].s.assign(a[i].w.begin(),a[i].w.end());
 	mglCommand *rts=FindCommand(com);
 	if(!rts)	return 2;
-	if(rts->create)
+	if(rts->type == 4)
 	{
 		if(n<1 || check_for_name(var))	return 2;
 		mglVar *v = AddVar(var);
@@ -742,7 +742,7 @@ int mglParser::ParseDat(mglGraph *gr, const wchar_t *string, mglData &res)
 		for(i=0;i<10;i++)	kk[i] = i<=k ? a[i].type + 1 : 0;
 		for(i=0;i<=k;i++)	a[i].s.assign(a[i].w.begin(),a[i].w.end());
 		mglCommand *rts=FindCommand(arg[0]);
-		if(!rts || !rts->create)	return 2;
+		if(!rts || rts->type!=4)	return 2;
 		n = rts->exec(gr, k, a, kk, 0);
 		delete []a;
 	}
@@ -871,7 +871,7 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 	return n+1;
 }
 //-----------------------------------------------------------------------------
-void mgl_error_print(const char *mess)
+void mgl_error_print(const char *mess, void *)
 {	if(mess && *mess)	printf("%s\n",mess);	}
 #include <string>
 void mglParser::Execute(mglGraph *gr, FILE *fp, bool print)
@@ -882,7 +882,7 @@ void mglParser::Execute(mglGraph *gr, FILE *fp, bool print)
 	Execute(gr,str.c_str(),print?mgl_error_print:NULL);
 }
 //-----------------------------------------------------------------------------
-void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(const char *mes), int high)
+void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(const char *mes, void *par), int high, void *par)
 {
 	if(n<1 || text==0)	return;
 	long i, r;
@@ -896,24 +896,19 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)
 		gr->SetObjId(i+1);
 		r = Parse(gr,text[i],i+1);
 		if(r<0)	{	i = -r-2;	continue;	}
-		if(r==1)
-			sprintf(buf,"\nWrong argument(s) in line %ld\n", i+1);
-		else if(r==2)
-			sprintf(buf,"\nWrong command in line %ld\n", i+1);
-		else if(r==3)
-			sprintf(buf,"\nString too long in line %ld\n", i+1);
-		else if(r==4)
-			sprintf(buf,"\nUnbalanced ' in line %ld\n", i+1);
-		else if(gr->GetWarn()>0)
-			sprintf(buf," in line %ld\n", i+1);
+		if(r==1)		sprintf(buf,"\nWrong argument(s) in line %ld\n", i+1);
+		else if(r==2)	sprintf(buf,"\nWrong command in line %ld\n", i+1);
+		else if(r==3)	sprintf(buf,"\nString too long in line %ld\n", i+1);
+		else if(r==4)	sprintf(buf,"\nUnbalanced ' in line %ld\n", i+1);
+		else if(gr->GetWarn()>0)	sprintf(buf," in line %ld\n", i+1);
 		else *buf=0;
 		if(*buf)	gr->SetWarn(-2,buf);
 	}
 	const char *mess=gr->Message();
-	if(error && mess && *mess)	error(mess);
+	if(error && mess && *mess)	error(mess,par);
 }
 //-----------------------------------------------------------------------------
-void mglParser::Execute(mglGraph *gr, const wchar_t *text, void (*error)(const char *mes), int high)
+void mglParser::Execute(mglGraph *gr, const wchar_t *text, void (*error)(const char *mes, void *par), int high, void *par)
 {
 	unsigned s = wcslen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -925,16 +920,16 @@ void mglParser::Execute(mglGraph *gr, const wchar_t *text, void (*error)(const c
 	str[0] = wcs;	n=1;
 	for(i=0;i<s;i++)	if(text[i]=='\n')
 	{	wcs[i]=0;	str[n] = wcs+i+1;	n++;	}
-	Execute(gr, n, str, error, high);
+	Execute(gr, n, str, error, high, par);
 	delete []wcs;	free(str);
 }
 //-----------------------------------------------------------------------------
-void mglParser::Execute(mglGraph *gr, const char *text, void (*error)(const char *mes), int high)
+void mglParser::Execute(mglGraph *gr, const char *text, void (*error)(const char *mes, void *par), int high, void *par)
 {
 	unsigned s = strlen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,text,s);
-	Execute(gr, wcs, error, high);
+	Execute(gr, wcs, error, high, par);
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
@@ -982,25 +977,25 @@ void mglParser::AddCommand(mglCommand *cmd, int mc)
 }
 //-----------------------------------------------------------------------------
 mglCommand mglParser::Prg[]={
-	{L"break",L"Break for-cycle",L"break", 0, 0, 0, 5},
-	{L"call",L"Execute script in external file",L"call 'name' [args]", 0, 0, 0, 5},
-	{L"continue",L"Skip commands and iterate for-cycle again",L"continue", 0, 0, 0, 5},
-	{L"defchr",L"Define parameter as character",L"defchr $N val", 0, 0, 0, 5},
-	{L"define",L"Define constant or parameter",L"define $N sth | Var val", 0, 0, 0, 5},
-	{L"defnum",L"Define parameter as numerical value",L"defnum $N val", 0, 0, 0, 5},
-	{L"defpal",L"Define parameter as palette color",L"defpal $N val", 0, 0, 0, 5},
-	{L"delete",L"Deleta variable",L"delete Dat", 0, 0, 0, 5},
-	{L"else",L"Execute if condition is false",L"else", 0, 0, 0, 5},
-	{L"elseif",L"Conditional operator",L"elseif val|Dat ['cond']", 0, 0, 0, 5},
-	{L"endif",L"Finish if/else block",L"endif", 0, 0, 0, 5},
-	{L"for",L"For cycle",L"for $N v1 v2 [dv] | $N Dat", 0, 0, 0, 5},
-	{L"func",L"Start function definition and stop execution of main script",L"func 'name' [narg]", 0, 0, 0, 5},
-	{L"if",L"Conditional operator",L"if val|Dat ['cond']", 0, 0, 0, 5},
-	{L"next",L"Start next for-cycle iteration",L"next", 0, 0, 0, 5},
-	{L"once",L"Start/close commands which should executed only once",L"once val", 0, 0, 0, 5},
-	{L"return",L"Return from function",L"return", 0, 0, 0, 5},
-	{L"stop",L"Stop execution",L"stop", 0, 0, 0, 5},
-{L"",0,0, 0, 0, 0, 0}};
+	{L"break",L"Break for-cycle",L"break", 0, 0, 6},
+	{L"call",L"Execute script in external file",L"call 'name' [args]", 0, 0, 6},
+	{L"continue",L"Skip commands and iterate for-cycle again",L"continue", 0, 0, 6},
+	{L"defchr",L"Define parameter as character",L"defchr $N val", 0, 0, 6},
+	{L"define",L"Define constant or parameter",L"define $N sth | Var val", 0, 0, 6},
+	{L"defnum",L"Define parameter as numerical value",L"defnum $N val", 0, 0, 6},
+	{L"defpal",L"Define parameter as palette color",L"defpal $N val", 0, 0, 6},
+	{L"delete",L"Deleta variable",L"delete Dat", 0, 0, 6},
+	{L"else",L"Execute if condition is false",L"else", 0, 0, 6},
+	{L"elseif",L"Conditional operator",L"elseif val|Dat ['cond']", 0, 0, 6},
+	{L"endif",L"Finish if/else block",L"endif", 0, 0, 6},
+	{L"for",L"For cycle",L"for $N v1 v2 [dv] | $N Dat", 0, 0, 6},
+	{L"func",L"Start function definition and stop execution of main script",L"func 'name' [narg]", 0, 0, 6},
+	{L"if",L"Conditional operator",L"if val|Dat ['cond']", 0, 0, 6},
+	{L"next",L"Start next for-cycle iteration",L"next", 0, 0, 6},
+	{L"once",L"Start/close commands which should executed only once",L"once val", 0, 0, 6},
+	{L"return",L"Return from function",L"return", 0, 0, 6},
+	{L"stop",L"Stop execution",L"stop", 0, 0, 6},
+{L"",0,0, 0, 0, 0}};
 //-----------------------------------------------------------------------------
 HMPR mgl_create_parser()		{	return new mglParser;	}
 void mgl_delete_parser(HMPR p)	{	delete p;	}
@@ -1013,10 +1008,10 @@ int mgl_parse(HMGL gr, HMPR p, const char *str, int pos)
 {	return p->Parse(gr, str, pos);	}
 int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos)
 {	return p->Parse(gr, str, pos);	}
-void mgl_parse_text(HMGL gr, HMPR p, const char *str, void (*error)(const char *mes), int high)
-{	p->Execute(gr, str, error, high);	}
-void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str, void (*error)(const char *mes), int high)
-{	p->Execute(gr, str, error, high);	}
+void mgl_parse_text(HMGL gr, HMPR p, const char *str, void (*error)(const char *mes, void *par), int high, void *par)
+{	p->Execute(gr, str, error, high, par);	}
+void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str, void (*error)(const char *mes, void *par), int high, void *par)
+{	p->Execute(gr, str, error, high, par);	}
 void mgl_parse_file(HMGL gr, HMPR p, FILE *fp, int print)
 {	p->Execute(gr,fp,print);	}
 void mgl_restore_once(HMPR p)	{	p->RestoreOnce();	}
@@ -1045,7 +1040,7 @@ void mgl_del_var_(uintptr_t* p, const char *name, int l)
 int mgl_parse_(uintptr_t* gr, uintptr_t* p, const char *str, int *pos, int l)
 {	char *s=new char[l+1];		memcpy(s,str,l);	s[l]=0;
 	int r = _PR_->Parse(_GR_, s, *pos);	delete []s;	return r;	}
-	void mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, int l)
+void mgl_parse_text_(uintptr_t* gr, uintptr_t* p, const char *str, int l)
 {	char *s=new char[l+1];		memcpy(s,str,l);	s[l]=0;
 	_PR_->Execute(_GR_, s);	delete []s;	}
 void mgl_restore_once_(uintptr_t* p)	{	_PR_->RestoreOnce();	}
@@ -1057,4 +1052,22 @@ long mgl_use_parser(HMPR pr, int inc)
 {	pr->InUse+=inc;	return pr->InUse;	}
 long mgl_use_parser_(uintptr_t *p, int *inc)
 {	_PR_->InUse+=*inc;	return _PR_->InUse;	}
+//---------------------------------------------------------------------------
+int mgl_parser_find_cmd(HMPR pr, const char *name)
+{
+	int l = strlen(name)+1;
+	wchar_t *wcs=new wchar_t[l];	mbstowcs(wcs,name,l);
+	l = mgl_parser_find_cmdw(pr,wcs);	delete []wcs;
+	return l;
+}
+int mgl_parser_find_cmdw(HMPR pr, const wchar_t *name)
+{
+	mglCommand *cmd = pr->FindCommand(name);
+	if(cmd)	return cmd->type + 1;
+	cmd = pr->FindCommand(name,true);	// have to check program flow commands specially
+	return cmd ? cmd->type + 1 : 0;
+}
+int mgl_parser_find_cmd_(uintptr_t* p, const char *str, int l)
+{	wchar_t *s=new wchar_t[l+1];		mbstowcs(s,str,l);	s[l]=0;
+	l = mgl_parser_find_cmdw(_PR_, s);	delete []s;	return l;	}
 //---------------------------------------------------------------------------

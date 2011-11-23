@@ -57,6 +57,7 @@
 #endif
 //-----------------------------------------------------------------------------
 #include "mgl/parser.h"
+#include "mgl/fltk.h"
 //-----------------------------------------------------------------------------
 extern mglParse *Parse;
 extern Fl_Menu_Item colors[];
@@ -87,12 +88,10 @@ public:
     inline int cols() { return Fl_Table::cols(); }
 };
 //-----------------------------------------------------------------------------
-class Fl_MGL : public Fl_Widget
+class Fl_MGL : public Fl_MathGL
 {
 public:
 	mglParse	*parse;		///< pointer to external parser
-	Fl_Valuator	*tet_val;	///< pointer to external tet-angle validator
-	Fl_Valuator	*phi_val;	///< pointer to external phi-angle validator
 	Fl_Widget *status;		///< StatusBar for mouse coordinates
 	const char *AnimBuf;	///< buffer for animation
 	const char **AnimS0;
@@ -103,49 +102,23 @@ public:
 	~Fl_MGL();
 
 	/// Update (redraw) plot
-	void update(mglGraph *gr=0);
+	void update();
 	/// Set main \a scr and optional \a pre scripts for execution
 	void scripts(char *scr, char *pre);
 	/// Clear scripts internally saved
 	void clear_scripts();
-	/// Set angles for additional plot rotation
-	void set_angle(float t, float p){	tet = t;	phi = p;	};
-	/// Set bitwise flags for general state (1-Alpha, 2-Light)
-	void set_state(int f)			{	flag = f;	};
-	/// Set flags for handling mouse
-	void set_state(bool z, bool r)	{	zoom = z;	rotate = r;	};
-	/// Set zoom in/out region
-	void set_zoom(float X1, float Y1, float X2, float Y2)
-	{	x1 = X1;	x2 = X2;	y1 = Y1;	y2 = Y2;	};
-	/// Get zoom region
-	void get_zoom(float *X1, float *Y1, float *X2, float *Y2)
-	{	*X1 = x1;	*X2 = x2;	*Y1 = y1;	*Y2 = y2;	};
-	/// Get pointer to grapher
-	mglGraph *get_graph()	{	return graph;	};
-	/// Set popup menu pointer
-	void set_popup(const Fl_Menu_Item *pmenu, Fl_Widget *w, Fl_Widget *v)
-	{	popup = pmenu;	wpar = w;	vpar = v;	};
-	/// Set font
-	void set_font(const char *font, const char *path);
-	mglFont *get_font();
-	void set_font(mglFont *f);
-protected:
-	const Fl_Menu_Item *popup;	///< pointer to popup menu items
-	Fl_Widget *wpar, *vpar;		///< parameter for popup menu
-	mglGraph *graph;			///< pointer to grapher
-	float tet,phi,per;			///< rotation angles and perspective
-	float x1,x2,y1,y2;			///< zoom in region
-	bool zoom, rotate;			///< flag for handle mouse
-	bool wire;					///< flag for show absolute grid
-	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
-	int x0,y0,xe,ye;			///< mouse position
-	char *script;				///< main script
-	char *script_pre;			///< script with settings
-	char MouseBuf[128];			///< Text of mouse coordinates
+	/// Set extra flags
+	void set_state(long fl);
 
-	void draw();				///< quick drawing function
-	int handle(int code);		///< handle mouse events
-	void resize(int x, int y, int w, int h);	///< resize control
+protected:
+	bool wire;			///< flag for show absolute grid
+	bool alpha;			///< flag for manual transparency
+	bool light;			///< flag for manual lighting
+	char *script;		///< main script
+	char *script_pre;	///< script with settings
+	char MouseBuf[128];	///< Text of mouse coordinates
+
+	void draw();		///< quick drawing function
 };
 //-----------------------------------------------------------------------------
 struct TableWindow : public Fl_Window
@@ -229,7 +202,7 @@ public:
 //=============== Graphical part ==============================================
 	Fl_Button	*alpha_bt, *light_bt, *rotate_bt, *zoom_bt, *anim_bt, *wire_bt;
 	Fl_Counter	*phi, *tet;
-	Fl_MGL	*graph;
+	Fl_MGL		*graph;
 	Fl_Scroll	*scroll;
 
 	int alpha, light, sshow, wire;

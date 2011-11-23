@@ -45,9 +45,8 @@ struct mglCommand
 	int (*exec)(mglGraph *gr, long n, mglArg *a, int k[10], const char *opt);
 	/// Function for exporting in C++ (can be NULL)
 	void (*save)(wchar_t out[1024], long n, mglArg *a, int k[10], const char *opt);
-	bool create;	///< Should parser create 1st the array automatically
-	int type;		///< Type of command: 0 - data plot, 1 - other plot,
-					///	2 - setup, 3 - data handle, 4 - subplot, 5 - program
+	int type;	///< Type of command: 0 - data plot, 1 - other plot, 2 - setup,
+				/// 3 - data handle, 4 - data create, 5 - subplot, 6 - program
 };
 extern mglCommand mgls_base_cmd[];
 //-----------------------------------------------------------------------------
@@ -134,17 +133,17 @@ public:
 	{	mglGraph GR(gr);	Execute(&GR,fp,print);	}
 	void Execute(mglGraph *gr, FILE *fp, bool print=false);
 	/// Execute MGL script from array of lines
-	inline void Execute(HMGL gr, int num, const wchar_t **text, void (*error)(const char *mes)=NULL, int high=-1)
+	inline void Execute(HMGL gr, int num, const wchar_t **text, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL)
 	{	mglGraph GR(gr);	Execute(&GR,num,text,error,high);	}
-	void Execute(mglGraph *gr, int num, const wchar_t **text, void (*error)(const char *mes)=NULL, int high=-1);
+	void Execute(mglGraph *gr, int num, const wchar_t **text, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL);
 	/// Execute MGL script text with '\n' separated lines
-	inline void Execute(HMGL gr, const wchar_t *text, void (*error)(const char *mes)=NULL, int high=-1)
+	inline void Execute(HMGL gr, const wchar_t *text, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL)
 	{	mglGraph GR(gr);	Execute(&GR,text,error,high);	}
-	void Execute(mglGraph *gr, const wchar_t *text, void (*error)(const char *mes)=NULL, int high=-1);
+	void Execute(mglGraph *gr, const wchar_t *text, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL);
 	/// Execute MGL script text with '\n' separated lines
-	inline void Execute(HMGL gr, const char *text, void (*error)(const char *mes)=NULL, int high=-1)
+	inline void Execute(HMGL gr, const char *text, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL)
 	{	mglGraph GR(gr);	Execute(&GR,text,error,high);	}
-	void Execute(mglGraph *gr, const char *text, void (*error)(const char *mes)=NULL, int high=-1);
+	void Execute(mglGraph *gr, const char *text, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL);
 	/// Scan for functions (use NULL for reset)
 	void ScanFunc(const wchar_t *line);
 	/// Check if name is function and return its address (or 0 if no)

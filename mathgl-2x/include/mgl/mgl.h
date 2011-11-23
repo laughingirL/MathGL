@@ -335,12 +335,14 @@ public:
 		long w=mgl_get_width(gr), h=mgl_get_height(gr);
 		if(imglen>=3*w*h)	memcpy(imgdata, mgl_get_rgb(gr),3*w*h);
 	}
+	inline const unsigned char *GetRGB()		{	return mgl_get_rgb(gr);	}
 	/// Copy RGBA values into array which is allocated by user
 	inline void GetRGBA(char *imgdata, int imglen)
 	{
 		long w=mgl_get_width(gr), h=mgl_get_height(gr);
 		if(imglen>=4*w*h)	memcpy(imgdata, mgl_get_rgba(gr),4*w*h);
 	}
+	inline const unsigned char *GetRGBA()	{	return mgl_get_rgba(gr);	}
 	/// Copy BGRN values into array which is allocated by user
 	inline void GetBGRN(unsigned char *imgdata, int imglen)
 	{
@@ -1027,11 +1029,6 @@ public:
 	inline const char *GetFit()
 	{	return mgl_get_fit(gr);	}
 
-
-
-
-
-
 	/// Solve PDE with x,y,z in range [Min, Max]
 	inline mglData PDE(const char *ham, const mglDataA &ini_re, const mglDataA &ini_im, float dz=0.1, float k0=100, const char *opt="")
 	{	return mglData(true,mgl_pde_solve(gr,ham,&ini_re,&ini_im,dz,k0, opt));	}
@@ -1051,9 +1048,6 @@ public:
 	inline mglData Hist(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *opt="")
 	{	return mglData(true, mgl_hist_xyz(gr, &x, &y, &z, &a, opt));	}
 
-
-
-
 	inline void Compression(bool){}		// NOTE: Add later -- IDTF
 	inline void VertexColor(bool){}		// NOTE: Add later -- IDTF
 	inline void DoubleSided(bool){}		// NOTE: Add later -- IDTF
@@ -1069,16 +1063,21 @@ public:
 	mglParse(bool setsize=false)
 	{	pr=mgl_create_parser();	mgl_parser_allow_setsize(pr, setsize);	}
 	~mglParse()	{	if(mgl_use_parser(pr,-1)<1)	mgl_delete_parser(pr);	}
+	inline HMPR Self()	{	return pr;	}
 	inline int Parse(mglGraph *gr, const char *str, int pos)
 	{	return mgl_parse(gr->Self(), pr, str, pos);	}
 	inline int Parse(mglGraph *gr, const wchar_t *str, int pos)
 	{	return mgl_parsew(gr->Self(), pr, str, pos);	}
-	inline void Execute(mglGraph *gr, const char *str, void (*error)(const char *mes)=NULL, int high=-1)
-	{	mgl_parse_text(gr->Self(), pr, str, error, high);	}
-	inline void Execute(mglGraph *gr, const wchar_t *str, void (*error)(const char *mes)=NULL, int high=-1)
-	{	mgl_parsew_text(gr->Self(), pr, str, error, high);	}
+	inline void Execute(mglGraph *gr, const char *str, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL)
+	{	mgl_parse_text(gr->Self(), pr, str, error, high, par);	}
+	inline void Execute(mglGraph *gr, const wchar_t *str, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL)
+	{	mgl_parsew_text(gr->Self(), pr, str, error, high, par);	}
 	inline void Execute(mglGraph *gr, FILE *fp, bool print=false)
 	{	mgl_parse_file(gr->Self(), pr, fp, print);	}
+	inline int FindCommand(const char *name)
+	{	return mgl_parser_find_cmd(pr, name);	}
+	inline int FindCommand(const wchar_t *name)
+	{	return mgl_parser_find_cmdw(pr, name);	}
 
 	inline void AddParam(int id, const char *str)	{	mgl_add_param(pr, id, str);	}
 	inline void AddParam(int id, const wchar_t *str){	mgl_add_paramw(pr, id, str);	}

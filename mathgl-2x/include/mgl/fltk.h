@@ -45,7 +45,7 @@ public:
 	~Fl_MathGL();
 
 	/// Update (redraw) plot
-	void update();
+	virtual void update();
 	/// Set angles for additional plot rotation
 	inline void set_angle(float t, float p){	tet = t;	phi = p;	}
 	/// Set bitwise flags for general state (1-Alpha, 2-Light)
@@ -75,7 +75,7 @@ public:
 	{	popup = pmenu;	wpar = wdg;	vpar = v;	}
 protected:
 	mglCanvas *gr;		///< pointer to grapher
-	void *draw_par;			///< Parameters for drawing function mglCanvasW::DrawFunc.
+	void *draw_par;		///< Parameters for drawing function mglCanvasW::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);
 
@@ -90,7 +90,7 @@ protected:
 	int x0,y0,xe,ye;			///< mouse position
 	char pos[128];
 
-	void draw();				///< quick drawing function
+	virtual void draw();		///< quick drawing function
 	int handle(int code);		///< handle mouse events
 	void resize(int x, int y, int w, int h);	///< resize control
 };

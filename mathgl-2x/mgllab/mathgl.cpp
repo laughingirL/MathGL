@@ -14,9 +14,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <mgl/mgl_zb.h>
-#include <mgl/mgl_eps.h>
 #include <stdio.h>
+#include "mgl/mgl.h"
 #include "udav.h"
 //-----------------------------------------------------------------------------
 #include "xpm/alpha.xpm"
@@ -55,31 +54,22 @@ Fl_Pixmap xpm_z1(zoom_fit_best_xpm), xpm_z2(zoom_fit_best_r_xpm);
 Fl_Pixmap xpm_s1(film_b_xpm), xpm_s2(film_r_xpm);
 Fl_Pixmap xpm_r1(rotate_xpm), xpm_r2(rotate_on_xpm);
 //-----------------------------------------------------------------------------
-Fl_MGL::Fl_MGL(int x, int y, int w, int h, char *label) : Fl_Widget(x,y,w,h,label)
+Fl_MGL::Fl_MGL(int x, int y, int w, int h, char *label) : Fl_MathGL(x,y,w,h,label)
 {
 	if(!Parse)	Parse = new mglParse;
-	graph = new mglGraphZB(w,h);
 
 #ifdef WIN32
 //	setlocale(LC_TYPE,"russian_Russia.CP1251");
 	char *path;
 	get_doc_dir(path);
-	if(!graph->GetFont()->Load("STIX",path && path[0] ? path : "."))	graph->GetFont()->Load(0);
+	if(!graph->LoadFont("STIX",path && path[0] ? path : "."))	graph->RestoreFont();
 #endif
 
-	parse = Parse;	parse->AllowSetSize = true;
+	parse = Parse;	parse->AllowSetSize(true);
 	script = script_pre = 0;
-	tet=phi=per=x1=y1=0;	x2=y2=1;
-	zoom = rotate = false;
-	flag=x0=y0=xe=ye=0;
-	tet_val = phi_val = 0;
 }
 //-----------------------------------------------------------------------------
-Fl_MGL::~Fl_MGL()
-{
-	clear_scripts();
-	delete graph;
-}
+Fl_MGL::~Fl_MGL()	{	clear_scripts();	}
 //-----------------------------------------------------------------------------
 void Fl_MGL::clear_scripts()
 {
@@ -90,24 +80,13 @@ void Fl_MGL::clear_scripts()
 void Fl_MGL::scripts(char *scr, char *pre)
 {	clear_scripts();	script=scr;	script_pre=pre;	}
 //-----------------------------------------------------------------------------
-void Fl_MGL::set_font(const char *font, const char *path)
-{
-	if(!internal_font && font && font[0])
-		graph->GetFont()->Load(font,path);
-	else if(internal_font)
-		graph->GetFont()->Load(0);
-}
-mglFont *Fl_MGL::get_font()	{	return graph->GetFont();	};
-void Fl_MGL::set_font(mglFont *f)	{	graph->SetFont(f);	};
-//-----------------------------------------------------------------------------
 void Fl_MGL::draw()
 {
-	if(zoom && x0!=xe && y0!=ye)	fl_rect(x0<xe?x0:xe, y0<ye?y0:ye, abs(xe-x0), abs(ye-y0));
-	fl_draw_image(graph->GetBits(), x(), y(), graph->GetWidth(), graph->GetHeight(), 3);
+	Fl_MathGL::draw();
 	if(wire)
 	{
 		char str[5]="0.0";
-		int i, h=graph->GetHeight(), w=graph->GetWidth();
+		int i, h=gr->GetHeight(), w=gr->GetWidth();
 		fl_color(192,192,192);
 		for(i=1;i<10;i++)
 		{
@@ -123,19 +102,19 @@ void Fl_MGL::draw()
 void Fl_MGL::update(mglGraph *gr)
 {
 	if(!parse)	return;
-	parse->Stop = false;
+//	parse->Stop = false;
 	if(gr==0)	gr=graph;
 	gr->DefaultPlotParam();	gr->Fog(0);
 	wire = flag&4;
 	gr->Alpha(flag&1);	gr->Light(flag&2);
 	gr->View(tet,phi);	gr->Perspective(per);
 	gr->Zoom(x1,y1,x2,y2);
-	gr->DrawFace = !rotate;
+//	gr->DrawFace = !rotate;
 
 	if(!script || !strstr(script,"rotate"))	gr->Rotate(0,0);
 
 	char *s,*c,*t,*buf=new char[2048];
-	gr->Message = buf;
+//	gr->Message = buf;
 	long res,pos=0;
 	Fl_Text_Buffer tb;
 	if(script_pre)
@@ -147,11 +126,11 @@ void Fl_MGL::update(mglGraph *gr)
 			buf[0] = 0;
 			if(parse->Stop)	break;
 			res = parse->Parse(gr,c);
-			if(res==1)	sprintf(buf,gettext("Wrong argument(s) in %s"),c);
-			if(res==2)	sprintf(buf,gettext("Wrong command in %s"),c);
-			if(*buf)
+			if(res==1)	{sprintf(buf,gettext("Wrong argument(s) in %s - line (%ld)\n"),c,pos);	tb.append(buf);}
+			if(res==2)	{sprintf(buf,gettext("Wrong command in %s - line (%ld)\n"),c,pos);	tb.append(buf);}
+			if(gr->Message())
 			{
-				tb.append(buf);
+				tb.append(gr->Message());
 				sprintf(buf," - line (%ld)\n",pos);
 				tb.append(buf);
 			}
@@ -450,7 +429,7 @@ void ScriptWindow::update_pre()
 	graph->set_angle(tet->value(), phi->value());
 	graph->update();
 
-	mglVar *v = Parse->DataList;
+	mglVar *v = Parse->Self()->DataList;
 	while(v)
 	{
 		if(v->o)	((TableWindow *)v->o)->update(v);
@@ -467,80 +446,6 @@ void add_suffix(char *fname, const char *ext)
 
 }
 //-----------------------------------------------------------------------------
-void export_png_cb(Fl_Widget*w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	if(!filename[0])	saveas_cb(w,v);	// No filename - get one!
-	if(!filename[0])	return;
-	char *fname = new char[256];
-	strcpy(fname,filename);		add_suffix(fname, "png");
-	e->graph->get_graph()->WritePNG(fname);
-	delete []fname;
-}
-//-----------------------------------------------------------------------------
-void export_bps_cb(Fl_Widget*w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	if(!filename[0])	saveas_cb(w,v);	// No filename - get one!
-	if(!filename[0])	return;
-	char *fname = new char[256];
-	strcpy(fname,filename);		add_suffix(fname, "eps");
-	e->graph->get_graph()->WriteEPS(fname);
-	delete []fname;
-}
-//-----------------------------------------------------------------------------
-void export_pngn_cb(Fl_Widget*w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	if(!filename[0])	saveas_cb(w,v);	// No filename - get one!
-	if(!filename[0])	return;
-	char *fname = new char[256];
-	strcpy(fname,filename);		add_suffix(fname, "png");
-	e->graph->get_graph()->WritePNG(fname,0,false);
-	delete []fname;
-}
-//-----------------------------------------------------------------------------
-void export_jpeg_cb(Fl_Widget*w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	if(!filename[0])	saveas_cb(w,v);	// No filename - get one!
-	if(!filename[0])	return;
-	char *fname = new char[256];
-	strcpy(fname,filename);		add_suffix(fname, "jpg");
-	e->graph->get_graph()->WriteJPEG(fname);
-	delete []fname;
-}
-//-----------------------------------------------------------------------------
-void export_svg_cb(Fl_Widget*w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	if(!filename[0])	saveas_cb(w,v);	// No filename - get one!
-	if(!filename[0])	return;
-	char *fname = new char[256];
-	strcpy(fname,filename);		add_suffix(fname, "svg");
-	mglGraphPS *ps = new mglGraphPS(e->graph->w(), e->graph->h());
-
-	ps->SetFont(e->graph->get_font());
-	e->graph->update(ps);		ps->WriteSVG(fname);
-	delete []fname;
-	delete ps;
-}
-//-----------------------------------------------------------------------------
-void export_eps_cb(Fl_Widget*w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	if(!filename[0])	saveas_cb(w,v);	// No filename - get one!
-	if(!filename[0])	return;
-	char *fname = new char[256];
-	strcpy(fname,filename);		add_suffix(fname, "eps");
-	mglGraphPS *ps = new mglGraphPS(e->graph->w(), e->graph->h());
-
-	ps->SetFont(e->graph->get_font());
-	e->graph->update(ps);		ps->WriteEPS(fname);
-	delete []fname;
-	delete ps;
-}
-//-----------------------------------------------------------------------------
 void oncemore_cb(Fl_Widget*, void*v)
 {
 	Parse->RestoreOnce();
@@ -548,87 +453,8 @@ void oncemore_cb(Fl_Widget*, void*v)
 	e->update_pre();
 }
 //-----------------------------------------------------------------------------
-void su_cb(Fl_Widget*w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	float x1,x2,y1,y2,d;
-	e->graph->get_zoom(&x1,&y1,&x2,&y2);
-	d = (y2-y1)/3;	y1 += d;	y2 += d;
-	e->graph->set_zoom(x1,y1,x2,y2);
-	e->update_pre();
-}
-//-----------------------------------------------------------------------------
-void sd_cb(Fl_Widget*w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	float x1,x2,y1,y2,d;
-	e->graph->get_zoom(&x1,&y1,&x2,&y2);
-	d = (y2-y1)/3;	y1 -= d;	y2 -= d;
-	e->graph->set_zoom(x1,y1,x2,y2);
-	e->update_pre();
-}
-//-----------------------------------------------------------------------------
-void sr_cb(Fl_Widget*w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	float x1,x2,y1,y2,d;
-	e->graph->get_zoom(&x1,&y1,&x2,&y2);
-	d = (x2-x1)/3;	x1 += d;	x2 += d;
-	e->graph->set_zoom(x1,y1,x2,y2);
-	e->update_pre();
-}
-//-----------------------------------------------------------------------------
-void sl_cb(Fl_Widget*w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	float x1,x2,y1,y2,d;
-	e->graph->get_zoom(&x1,&y1,&x2,&y2);
-	d = (x2-x1)/3;	x1 -= d;	x2 -= d;
-	e->graph->set_zoom(x1,y1,x2,y2);
-	e->update_pre();
-}
-//-----------------------------------------------------------------------------
-void sz_cb(Fl_Widget*w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	float x1,x2,y1,y2,d;
-	e->graph->get_zoom(&x1,&y1,&x2,&y2);
-	d = (y2-y1)/4;	y1 += d;	y2 -= d;
-	d = (x2-x1)/4;	x1 += d;	x2 -= d;
-	e->graph->set_zoom(x1,y1,x2,y2);
-	e->update_pre();
-}
-//-----------------------------------------------------------------------------
-void so_cb(Fl_Widget*w, void* v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	float x1,x2,y1,y2,d;
-	e->graph->get_zoom(&x1,&y1,&x2,&y2);
-	d = (y2-y1)/2;	y1 -= d;	y2 += d;
-	d = (x2-x1)/2;	x1 -= d;	x2 += d;
-	e->graph->set_zoom(x1,y1,x2,y2);
-	e->update_pre();
-}
-//-----------------------------------------------------------------------------
 void adjust_cb(Fl_Widget*, void*v);
 void no_cb(Fl_Widget *, void *)	{}
-Fl_Menu_Item pop_graph[15] = {
-	{ gettext("Export"), 0, no_cb, 0, FL_SUBMENU },
-		{ gettext("... as PNG"),	0, export_png_cb },
-		{ gettext("... as PNG (solid)"),	0, export_pngn_cb },
-		{ gettext("... as JPEG"),	0, export_jpeg_cb },
-		{ gettext("... as SVG"),	0, export_svg_cb },
-		{ gettext("... as vector EPS"),	0, export_eps_cb },
-		{ gettext("... as bitmap EPS"),	0, export_bps_cb, 0, FL_MENU_DIVIDER },
-		{ 0 },
-	{ gettext("Settings"),		0, setup_cb },
-	{ gettext("Copy graphics"),	0, 0, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER},
-	{ gettext("Normal view"),	0, norm_cb },
-	{ gettext("Execute script"),	0, draw_cb },
-	{ gettext("Adjust size"),	0, adjust_cb },
-	{ gettext("Once more"),		0, oncemore_cb },
-	{ 0 }
-};
 //-----------------------------------------------------------------------------
 Fl_Widget *add_graph(ScriptWindow *w)
 {
