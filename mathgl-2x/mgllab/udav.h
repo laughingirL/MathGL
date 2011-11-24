@@ -43,6 +43,9 @@
 #include <FL/Fl_Tabs.H>
 #include <FL/Fl_Help_View.H>
 #include <Fl/Fl_Table.H>
+#include <Fl/Fl_Round_Button.H>
+#include <Fl/Fl_Float_Input.H>
+#include <Fl/Fl_Multiline_Input.H>
 //-----------------------------------------------------------------------------
 #ifdef USE_PLASTIC
 	#define UDAV_UP_BOX			FL_PLASTIC_UP_BOX
@@ -62,6 +65,7 @@
 extern mglParse *Parse;
 extern Fl_Menu_Item colors[];
 extern Fl_Preferences pref;
+class Fl_MGL;
 //-----------------------------------------------------------------------------
 class Fl_Data_Table : public Fl_Table
 {
@@ -88,10 +92,31 @@ public:
     inline int cols() { return Fl_Table::cols(); }
 };
 //-----------------------------------------------------------------------------
-class Fl_MGL : public Fl_MathGL
+struct AnimateDlg
 {
+	friend void animate_dlg_cb(Fl_Widget *, void *v);
+	friend void animate_rad_cb(Fl_Widget *, void *v);
+	friend void fill_animate(const char *text);
+	friend void animate_put_cb(Fl_Widget *, void *);
 public:
-	mglParse	*parse;		///< pointer to external parser
+	Fl_Window* wnd;
+	int OK;
+	AnimateDlg()	{	memset(this,0,sizeof(AnimateDlg));	create_dlg();	};
+	~AnimateDlg()	{	delete wnd;	};
+	void FillResult(Fl_MGL* e);
+protected:
+	bool swap;
+	Fl_Round_Button *rt, *rv;
+	Fl_Multiline_Input *txt;
+	Fl_Float_Input *x0, *x1, *dx, *dt;
+	Fl_Check_Button *save;
+	void create_dlg();
+};
+//-----------------------------------------------------------------------------
+class Fl_MGL : public Fl_MGLView, public mglDraw
+{
+friend class AnimateDlg;
+public:
 	Fl_Widget *status;		///< StatusBar for mouse coordinates
 	const char *AnimBuf;	///< buffer for animation
 	const char **AnimS0;
@@ -101,24 +126,25 @@ public:
 	Fl_MGL(int x, int y, int w, int h, char *label=0);
 	~Fl_MGL();
 
+	/// Drawing itself
+	int Draw(mglGraph *);
 	/// Update (redraw) plot
 	void update();
 	/// Set main \a scr and optional \a pre scripts for execution
 	void scripts(char *scr, char *pre);
 	/// Clear scripts internally saved
 	void clear_scripts();
-	/// Set extra flags
-	void set_state(long fl);
+	/// Show next frame
+	void next_frame();
+	/// Show prev frame
+	void prev_frame();
 
 protected:
-	bool wire;			///< flag for show absolute grid
-	bool alpha;			///< flag for manual transparency
-	bool light;			///< flag for manual lighting
+	char *Args[1000], *ArgBuf;
+	int NArgs, ArgCur;
+
 	char *script;		///< main script
 	char *script_pre;	///< script with settings
-	char MouseBuf[128];	///< Text of mouse coordinates
-
-	void draw();		///< quick drawing function
 };
 //-----------------------------------------------------------------------------
 struct TableWindow : public Fl_Window
@@ -200,19 +226,9 @@ public:
 	char		search[256];
 
 //=============== Graphical part ==============================================
-	Fl_Button	*alpha_bt, *light_bt, *rotate_bt, *zoom_bt, *anim_bt, *wire_bt;
-	Fl_Counter	*phi, *tet;
 	Fl_MGL		*graph;
-	Fl_Scroll	*scroll;
-
-	int alpha, light, sshow, wire;
-	bool zoom, rotate;
-
-	void update_pre();
 
 //=============== Animation ===================================================
-	char *Args[1000], *ArgBuf;
-	int NArgs, ArgCur;
 };
 //-----------------------------------------------------------------------------
 // Editor window functions
@@ -237,23 +253,12 @@ void saveas_cb(Fl_Widget*, void*);
 void help_cb(Fl_Widget*, void*);
 //-----------------------------------------------------------------------------
 // Graphical callback functions
-void export_png_cb(Fl_Widget *, void *);
-void export_pngn_cb(Fl_Widget *, void *);
-void export_jpeg_cb(Fl_Widget *, void *);
-void export_svg_cb(Fl_Widget *, void *);
-void export_eps_cb(Fl_Widget *, void *);
-void export_bps_cb(Fl_Widget *, void *);
-void alpha_cb(Fl_Widget *, void *);
-void light_cb(Fl_Widget *, void *);
 void setup_cb(Fl_Widget *, void *);
 void style_cb(Fl_Widget *, void *);
 void option_cb(Fl_Widget *, void *);
 void argument_cb(Fl_Widget *, void *);
 void variables_cb(Fl_Widget *, void *);
 void settings_cb(Fl_Widget *, void *);
-void norm_cb(Fl_Widget *, void *);
-void draw_cb(Fl_Widget *, void *);
-void oncemore_cb(Fl_Widget*, void*);
 void command_cb(Fl_Widget *, void *);
 //-----------------------------------------------------------------------------
 // Dialogs callback functions
@@ -268,15 +273,11 @@ int check_save(void);
 void load_file(char *newfile, int ipos);
 void save_file(char *newfile);
 Fl_Widget *add_editor(ScriptWindow *w);
-Fl_Widget *add_graph(ScriptWindow *w);
 Fl_Widget *add_mem(ScriptWindow *w);
 void set_title(Fl_Window* w);
 //-----------------------------------------------------------------------------
 // Animation
 void animate_cb(Fl_Widget *, void *v);
-void sshow_cb(Fl_Widget *, void *v);
-void snext_cb(Fl_Widget *, void *v);
-void sprev_cb(Fl_Widget *, void *v);
 void fill_animate(const char *text);
 //-----------------------------------------------------------------------------
 Fl_Widget *add_help(ScriptWindow *w);

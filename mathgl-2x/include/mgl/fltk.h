@@ -29,6 +29,7 @@
 #endif
 
 #include <FL/Fl.H>
+#include <Fl/Fl_Group.H>
 #include <Fl/Fl_Scroll.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Counter.H>
@@ -66,7 +67,7 @@ public:
 	void set_state(bool z, bool r)	{	zoom = z;	rotate = r;	}
 	/// Set zoom in/out region
 	inline void set_zoom(mreal X1, mreal Y1, mreal X2, mreal Y2)
-	{	x1 = X1;	x2 = X2;	y1 = Y1;	y2 = Y2;	};
+	{	x1 = X1;	x2 = X2;	y1 = Y1;	y2 = Y2;	update();	};
 	/// Get zoom region
 	inline void get_zoom(mreal *X1, mreal *Y1, mreal *X2, mreal *Y2)
 	{	*X1 = x1;	*X2 = x2;	*Y1 = y1;	*Y2 = y2;	};
@@ -85,6 +86,7 @@ protected:
 	float tet,phi;				///< rotation angles
 	bool rotate;				///< flag for handle mouse
 	bool zoom;					///< flag for zoom by mouse
+	bool wire;
 	float x1,x2,y1,y2;			///< zoom region
 	int flag;					///< bitwise flag for general state (1-Alpha, 2-Light)
 	int x0,y0,xe,ye;			///< mouse position
@@ -95,15 +97,51 @@ protected:
 	void resize(int x, int y, int w, int h);	///< resize control
 };
 //-----------------------------------------------------------------------------
+class Fl_MGLView : public Fl_Group
+{
+public:
+	Fl_MathGL *FMGL;		///< Control which draw graphics
+	Fl_Scroll *scroll;
+	Fl_Menu_Bar	*menu;
+
+	void *par;				///< Parameter for handling animation
+	void (*next)(void*);	///< Callback function for next frame
+	void (*prev)(void*);	///< Callback function for prev frame
+	float (*delay)(void*);	///< Callback function for delay
+	void (*reload)(void*);	///< Callback function for reloading
+
+	void toggle_alpha()	{	toggle(alpha, alpha_bt, "Graphics/Alpha");	}
+	void toggle_light()	{	toggle(light, light_bt, "Graphics/Light");	}
+	void toggle_sshow()	{	toggle(sshow, anim_bt, "Graphics/Slideshow");	}
+	void toggle_wire()	{	toggle(wire, wire_bt, "Graphics/Wire");	}
+	void toggle_zoom()	{	toggle(zoom, zoom_bt);	}
+	void toggle_rotate(){	toggle(rotate, rotate_bt);	}
+	void setoff_zoom()	{	setoff(zoom,zoom_bt);	}
+	void setoff_rotate(){	setoff(rotate, rotate_bt);	}
+	bool is_sshow()		{	return sshow;	}
+
+	Fl_MGLView(int x, int y, int w, int h, char *label=0);
+	~Fl_MGLView();
+	void update();			///< Update picture by calling user drawing function
+protected:
+	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *anim_bt, *zoom_bt, *wire_bt;
+//	Fl_Counter *tet, *phi;
+
+	int wire, alpha, light;	///< Current states of wire, alpha, light switches (toggle buttons)
+	int sshow, rotate, zoom;///< Current states of slideshow, rotate, zoom switches (toggle buttons)
+
+	void toggle(int &val, Fl_Button *b, const char *txt=NULL);
+	void setoff(int &val, Fl_Button *b, const char *txt=NULL);
+};
+//-----------------------------------------------------------------------------
 /// Class allows the window creation for displaying plot bitmap with the help of FLTK library
 /** NOTE!!! All frames are saved in memory. So animation with many frames require a lot memory and CPU time (for example, for mouse rotation).*/
 class mglCanvasFL : public mglCanvasW
 {
 public:
 using mglCanvasW::Window;
-	int sshow;		///< Current state of animation switch (toggle button)
-	Fl_MathGL *FMGL;///< Control which draw graphics
-	Fl_Window *Wnd;	///< Pointer to window
+	Fl_Window *Wnd;		///< Pointer to window
+	Fl_MGLView *mgl;	///< Pointer to MGL widget with buttons
 
 	mglCanvasFL();
 	~mglCanvasFL();
@@ -113,26 +151,16 @@ using mglCanvasW::Window;
 	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title,
 						void *par=NULL, void (*reload)(void *p)=NULL, bool maximize=false);
 	/// Switch on/off transparency (do not overwrite switches in user drawing function)
-	void ToggleAlpha();
+	void ToggleAlpha()	{	mgl->toggle_alpha();	}
 	/// Switch on/off lighting (do not overwrite switches in user drawing function)
-	void ToggleLight();
-	void ToggleRotate();///< Switch on/off rotation by mouse
-	void ToggleZoom();	///< Switch on/off zooming by mouse
-	void ToggleNo();	///< Switch off all zooming and rotation
-	void Update();		///< Update picture by calling user drawing function
-	void Adjust();		///< Adjust size of bitmap to window size
+	void ToggleLight()	{	mgl->toggle_light();	}
+	void ToggleRotate();	///< Switch on/off rotation by mouse
+	void ToggleZoom();		///< Switch on/off zooming by mouse
+	void ToggleNo();		///< Switch off all zooming and rotation
+	void Update(){mgl->update();}	///< Update picture by calling user drawing function
+	void Adjust();			///< Adjust size of bitmap to window size
 	void GotoFrame(int d);	///< Show arbitrary frame (use relative step)
 	void Animation();	///< Run animation (I'm too lasy to change it)
-
-protected:
-	Fl_Button *alpha_bt, *light_bt, *rotate_bt, *anim_bt, *zoom_bt;
-	Fl_Counter *tet, *phi;
-	Fl_Scroll	*scroll;
-	Fl_Menu_Bar	*menu;
-
-	int alpha;		///< Current state of alpha switch (toggle button)
-	int light;		///< Current state of light switch (toggle button)
-	bool rotate,zoom;
 };
 //-----------------------------------------------------------------------------
 #endif

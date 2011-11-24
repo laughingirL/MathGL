@@ -235,7 +235,7 @@ ScriptWindow *new_view()
 
 	tt = new Fl_Tabs(300,30,930,455,0);	tt->box(UDAV_UP_BOX);
 	gg = new Fl_Group(300,30,930,430);	gg->label(gettext("Canvas"));
-	add_graph(w);	gg->end();	w->gplot = gg;
+	w->graph = new Fl_MGL(300,30,630,430,0);	gg->end();	w->gplot = gg;
 	gg = new Fl_Group(300,30,930,430);	gg->label(gettext("Help"));
 	add_help(w);	gg->end();	w->ghelp = gg;
 	gg = new Fl_Group(300,30,930,430);	gg->label(gettext("Memory"));

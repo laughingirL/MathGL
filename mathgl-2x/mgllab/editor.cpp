@@ -255,17 +255,12 @@ ScriptWindow::ScriptWindow(int w, int h, const char* t) : Fl_Double_Window(w, h,
 
 	setup_dlg = new SetupDlg;
 	setup_dlg->CreateDlg();
-	alpha = light = sshow = wire = 0;
-	zoom = rotate = false;
-
-	ArgBuf = 0;	NArgs = ArgCur = 0;
 }
 //-----------------------------------------------------------------------------
 ScriptWindow::~ScriptWindow()
 {
 	delete replace_dlg;
 	delete setup_dlg->wnd;
-	if(ArgBuf)	delete []ArgBuf;
 }
 //-----------------------------------------------------------------------------
 int check_save(void)

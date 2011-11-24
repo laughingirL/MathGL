@@ -294,7 +294,7 @@ void setup_cb(Fl_Widget *, void *d)
 	s->wnd->set_modal();
 	s->wnd->show();
 	while(s->wnd->shown())	Fl::wait();
-	if(s->OK)	((ScriptWindow *)d)->update_pre();
+	if(s->OK)	((ScriptWindow *)d)->graph->update();
 }
 //-----------------------------------------------------------------------------
 Fl_Menu_Item colors[] = {
@@ -388,7 +388,7 @@ void PropDlg::finish()
 	}
 	pref.set("font_dir",fpath->value());
 	pref.set("font_name",font->value());
-	if(graph)	graph->set_font(font->value(),fpath->value());
+	if(graph)	mgl_load_font(graph->FMGL->get_graph(), font->value(), fpath->value());
 }
 //-----------------------------------------------------------------------------
 void prop_dlg_cb(Fl_Widget *, void *v)

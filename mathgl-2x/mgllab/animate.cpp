@@ -92,26 +92,7 @@ void argument_set(int n, const char *s)
 	argument_dlg.a[n]->value(s);
 }
 //-----------------------------------------------------------------------------
-struct AnimateDlg
-{
-friend void animate_dlg_cb(Fl_Widget *, void *v);
-friend void animate_rad_cb(Fl_Widget *, void *v);
-friend void fill_animate(const char *text);
-friend void animate_put_cb(Fl_Widget *, void *);
-public:
-	Fl_Window* wnd;
-	int OK;
-	AnimateDlg()	{	memset(this,0,sizeof(AnimateDlg));	create_dlg();	};
-	~AnimateDlg()	{	delete wnd;	};
-	void FillResult(ScriptWindow* e);
-protected:
-	bool swap;
-	Fl_Round_Button *rt, *rv;
-	Fl_Multiline_Input *txt;
-	Fl_Float_Input *x0, *x1, *dx, *dt;
-	Fl_Check_Button *save;
-	void create_dlg();
-} animate_dlg;
+AnimateDlg animate_dlg;
 //-----------------------------------------------------------------------------
 void animate_dlg_cb(Fl_Widget *, void *v)
 {
@@ -204,11 +185,11 @@ void AnimateDlg::create_dlg()
 	wnd->end();
 }
 //-----------------------------------------------------------------------------
-void AnimateDlg::FillResult(ScriptWindow* e)
+void AnimateDlg::FillResult(Fl_MGL* e)
 {
 	e->NArgs = e->ArgCur = 0;
 	if(e->ArgBuf)	delete []e->ArgBuf;	e->ArgBuf = 0;
-	e->graph->AnimDelay = atof(dt->value());
+	e->AnimDelay = atof(dt->value());
 	if(rt->value())
 	{
 		char *s;
@@ -254,69 +235,7 @@ void animate_cb(Fl_Widget *, void *v)
 	s->wnd->set_modal();
 	s->wnd->show();
 	while(s->wnd->shown())	Fl::wait();
-	if(s->OK)	s->FillResult(e);
-}
-//-----------------------------------------------------------------------------
-extern Fl_Pixmap xpm_s1, xpm_s2;
-void time_cb(void *v)
-{
-	ScriptWindow* e = (ScriptWindow* )v;
-	if(!e->sshow)	return;
-	e->ArgCur = (e->ArgCur+1) % e->NArgs;
-	Parse->AddParam(0,e->Args[e->ArgCur]);
-	e->update_pre();
-	Fl::repeat_timeout(e->graph->AnimDelay, time_cb, v);
-}
-//-----------------------------------------------------------------------------
-void sshow_cb(Fl_Widget *w, void *v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	e->sshow = 1-e->sshow;
-	e->anim_bt->value(e->sshow);
-	e->anim_bt->image(e->sshow?xpm_s2:xpm_s1);	e->anim_bt->redraw();
-	Fl_Menu_Item *m = (Fl_Menu_Item *)e->menu->find_item(gettext("Animate/Slideshow"));
-	if(m && e->sshow)	m->set();
-	if(m && !e->sshow)	m->clear();
-
-	if(e->NArgs==0)
-	{
-		animate_cb(w,v);
-		if(e->NArgs==0)
-		{
-			e->sshow = 0;				e->anim_bt->value(0);
-			e->anim_bt->image(xpm_s1);	e->anim_bt->redraw();
-			Fl_Menu_Item *m = (Fl_Menu_Item *)e->menu->find_item(gettext("Animate/Slideshow"));
-			if(m)	m->clear();
-			return;
-		}
-	}
-	if(e->sshow)	Fl::add_timeout(e->graph->AnimDelay, time_cb, e);
-}
-//-----------------------------------------------------------------------------
-void snext_cb(Fl_Widget *w, void *v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	if(e->NArgs==0)
-	{
-		animate_cb(w,v);
-		if(e->NArgs==0)	return;
-	}
-	e->ArgCur = (e->ArgCur+1) % e->NArgs;
-	Parse->AddParam(0,e->Args[e->ArgCur]);
-	e->update_pre();
-}
-//-----------------------------------------------------------------------------
-void sprev_cb(Fl_Widget *w, void *v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	if(e->NArgs==0)
-	{
-		animate_cb(w,v);
-		if(e->NArgs==0)	return;
-	}
-	e->ArgCur = e->ArgCur>0 ? e->ArgCur-1 : e->NArgs-1;
-	Parse->AddParam(0,e->Args[e->ArgCur]);
-	e->update_pre();
+	if(s->OK)	s->FillResult(e->graph);
 }
 //-----------------------------------------------------------------------------
 void cpy_arg_buf(const char *str, long *size, char **buf)

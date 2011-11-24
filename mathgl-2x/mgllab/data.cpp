@@ -155,11 +155,11 @@ void data_file(char *fn)
 	static int num=0;
 	static char name[32], res[256];
 	sprintf(name,"mgl_%d",num);	num++;
-	mglVar *v = Parse->AddVar(name);
-	v->d.Read(fn);
-	if(v->d.nz>1)
+	mglData *v = Parse->AddVar(name);
+	v->Read(fn);
+	if(v->nz>1)
 		sprintf(res,"#read %s '%s'\nrotate 40 60\ncrange %s\nbox\nsurf3 %s\n", name, fn, name, name);
-	else if(v->d.ny>1)
+	else if(v->ny>1)
 		sprintf(res,"#read %s '%s'\nrotate 40 60\ncrange %s\nzrange %s\nbox\nsurf %s\n", name, fn, name, name, name);
 	else
 		sprintf(res,"#read %s '%s'\nyrange %s\nbox\nplot %s\n", name, fn, name, name);
