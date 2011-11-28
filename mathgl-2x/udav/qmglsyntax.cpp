@@ -54,8 +54,7 @@ void QMGLSyntax::highlightBlock(const QString &text)
 				s[j-i] = text[j].toLatin1();
 			s[j-i]=0;
 			mglCommand *rts = parser.FindCommand(s);
-			if(rts)	setFormat(i,j-i+1,rts->type==4 ? mglColorScheme[6]:mglColorScheme[2]);
-			if(parser.FindCommand(s,true))	setFormat(i,j-i+1,mglColorScheme[7]);
+			if(rts)	setFormat(i,j-i+1,rts->type!=6 ? (rts->type==4 ? mglColorScheme[6] : mglColorScheme[2]) : mglColorScheme[7]);
 			delete []s;
 		}
 		else if(text[i]==';')	{	arg = true;	nl = false;	continue;	}

@@ -61,7 +61,7 @@ TextPanel::TextPanel(QWidget *parent) : QWidget(parent)
 
 	register int i;
 	for(i=0;mgls_base_cmd[i].name[0];i++)
-		words<<QString::fromWCharArray(mgls_base_cmd[i].name);
+		words<<QString::fromAscii(mgls_base_cmd[i].name);
 	completer = new QCompleter(words, this);
 	completer->setCaseSensitivity(Qt::CaseInsensitive);
 

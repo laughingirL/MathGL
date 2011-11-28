@@ -402,13 +402,10 @@ void MainWindow::editPosChanged()
 	text.truncate(i);	m = text.length();
 
 	for(n=0;parser.Cmd[n].name[0];n++){};	// determine the number of symbols in parser
-	mglCommand tst, *rts;
-	wchar_t *s = new wchar_t[m+1];
-	text.toWCharArray(s);	s[m]=0;	tst.name = s;
+	mglCommand tst, *rts;	tst.name = text.toAscii().data();
 	rts = (mglCommand *)bsearch(&tst, parser.Cmd, n, sizeof(mglCommand), mgl_cmd_cmp);
-	if(rts)	setStatus(QString::fromWCharArray(rts->desc)+": "+QString::fromWCharArray(rts->form));
+	if(rts)	setStatus(QString::fromAscii(rts->desc)+": "+QString::fromAscii(rts->form));
 	else	setStatus(tr("Not recognized"));
-	delete []s;
 }
 //-----------------------------------------------------------------------------
 void MainWindow::setEditPos(bool bottom)

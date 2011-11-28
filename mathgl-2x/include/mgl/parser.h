@@ -38,15 +38,14 @@ struct mglArg
 /// Structure for MGL command
 struct mglCommand
 {
-	const wchar_t *name;	///< Name of command
-	const wchar_t *desc;	///< Short command description (can be NULL)
-	const wchar_t *form;	///< Format of command arguments (can be NULL)
+	const char *name;	///< Name of command
+	const char *desc;	///< Short command description (can be NULL)
+	const char *form;	///< Format of command arguments (can be NULL)
 	/// Function for executing (plotting)
 	int (*exec)(mglGraph *gr, long n, mglArg *a, int k[10], const char *opt);
 	/// Function for exporting in C++ (can be NULL)
 	void (*save)(wchar_t out[1024], long n, mglArg *a, int k[10], const char *opt);
-	int type;	///< Type of command: 0 - data plot, 1 - other plot, 2 - setup,
-				/// 3 - data handle, 4 - data create, 5 - subplot, 6 - program
+	int type;	///< Type of command: 0 - data plot, 1 - other plot, 2 - setup, 3 - data handle, 4 - data create, 5 - subplot, 6 - program
 };
 extern mglCommand mgls_base_cmd[];
 //-----------------------------------------------------------------------------
@@ -103,7 +102,6 @@ class mglParser
 {
 friend void mgl_export(wchar_t *out, const wchar_t *in, int type);
 public:
-	static mglCommand Prg[];	///< List of program flow commands (parsed by itself)
 	mglVar *DataList;	///< List with data and its names
 	mglNum *NumList;	///< List with numbers and its names
 	bool AllowSetSize;	///< Allow using setsize command
@@ -115,7 +113,8 @@ public:
 	mglParser(bool setsize=false);
 	~mglParser();
 	/// Find the command by the keyword name
-	mglCommand *FindCommand(const wchar_t *name, bool prog=false);
+	mglCommand *FindCommand(const char *name);
+	mglCommand *FindCommand(const wchar_t *name);
 	/// Parse and execute the string of MGL script
 	inline int Parse(HMGL gr, const char *str, long pos=0)
 	{	mglGraph GR(gr);	return Parse(&GR,str,pos);	}

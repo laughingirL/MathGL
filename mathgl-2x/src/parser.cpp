@@ -83,7 +83,7 @@ int mgl_cmd_cmp(const void *a, const void *b)
 {
 	const mglCommand *aa = (const mglCommand *)a;
 	const mglCommand *bb = (const mglCommand *)b;
-	return wcscmp(aa->name, bb->name);
+	return strcmp(aa->name, bb->name);
 }
 //-----------------------------------------------------------------------------
 bool check_for_name(const wchar_t *s)
@@ -91,14 +91,20 @@ bool check_for_name(const wchar_t *s)
 	return !isalpha(s[0])||wcschr(s,'.')||wcschr(s,':')||wcschr(s,'(')||wcschr(s,')');
 }
 //-----------------------------------------------------------------------------
-mglCommand *mglParser::FindCommand(const wchar_t *com, bool prog)
+mglCommand *mglParser::FindCommand(const char *com)
 {
-	mglCommand tst, *rts, *cmd = prog?Prg:Cmd;
+	mglCommand tst, *rts, *cmd = Cmd;
 	long i;
 	for(i=0;cmd[i].name[0];i++);	// determine the number of symbols
 	tst.name = com;
 	rts = (mglCommand *) bsearch(&tst, cmd, i, sizeof(mglCommand), mgl_cmd_cmp);
 	return rts;
+}
+//-----------------------------------------------------------------------------
+mglCommand *mglParser::FindCommand(const wchar_t *com)
+{
+	char cmd[16];	wcstombs(cmd,com,wcslen(com)+1);
+	return FindCommand(cmd);
 }
 //-----------------------------------------------------------------------------
 // return values : 0 -- OK, 1 -- wrong arguments, 2 -- wrong command, 3 -- unclosed string
@@ -108,7 +114,7 @@ int mglParser::Exec(mglGraph *gr, const wchar_t *com, long n, mglArg *a, const w
 	for(i=0;i<10;i++)	k[i] = i<n ? a[i].type + 1 : 0;
 	for(i=0;i<n;i++)	a[i].s.assign(a[i].w.begin(),a[i].w.end());
 	mglCommand *rts=FindCommand(com);
-	if(!rts)	return 2;
+	if(!rts || rts->type==6)	return 2;
 	if(rts->type == 4)
 	{
 		if(n<1 || check_for_name(var))	return 2;
@@ -976,27 +982,6 @@ void mglParser::AddCommand(mglCommand *cmd, int mc)
 	Cmd = buf;
 }
 //-----------------------------------------------------------------------------
-mglCommand mglParser::Prg[]={
-	{L"break",L"Break for-cycle",L"break", 0, 0, 6},
-	{L"call",L"Execute script in external file",L"call 'name' [args]", 0, 0, 6},
-	{L"continue",L"Skip commands and iterate for-cycle again",L"continue", 0, 0, 6},
-	{L"defchr",L"Define parameter as character",L"defchr $N val", 0, 0, 6},
-	{L"define",L"Define constant or parameter",L"define $N sth | Var val", 0, 0, 6},
-	{L"defnum",L"Define parameter as numerical value",L"defnum $N val", 0, 0, 6},
-	{L"defpal",L"Define parameter as palette color",L"defpal $N val", 0, 0, 6},
-	{L"delete",L"Deleta variable",L"delete Dat", 0, 0, 6},
-	{L"else",L"Execute if condition is false",L"else", 0, 0, 6},
-	{L"elseif",L"Conditional operator",L"elseif val|Dat ['cond']", 0, 0, 6},
-	{L"endif",L"Finish if/else block",L"endif", 0, 0, 6},
-	{L"for",L"For cycle",L"for $N v1 v2 [dv] | $N Dat", 0, 0, 6},
-	{L"func",L"Start function definition and stop execution of main script",L"func 'name' [narg]", 0, 0, 6},
-	{L"if",L"Conditional operator",L"if val|Dat ['cond']", 0, 0, 6},
-	{L"next",L"Start next for-cycle iteration",L"next", 0, 0, 6},
-	{L"once",L"Start/close commands which should executed only once",L"once val", 0, 0, 6},
-	{L"return",L"Return from function",L"return", 0, 0, 6},
-	{L"stop",L"Stop execution",L"stop", 0, 0, 6},
-{L"",0,0, 0, 0, 0}};
-//-----------------------------------------------------------------------------
 HMPR mgl_create_parser()		{	return new mglParser;	}
 void mgl_delete_parser(HMPR p)	{	delete p;	}
 void mgl_add_param(HMPR p, int id, const char *str)			{	p->AddParam(id,str);	}
@@ -1053,21 +1038,23 @@ long mgl_use_parser(HMPR pr, int inc)
 long mgl_use_parser_(uintptr_t *p, int *inc)
 {	_PR_->InUse+=*inc;	return _PR_->InUse;	}
 //---------------------------------------------------------------------------
-int mgl_parser_find_cmd(HMPR pr, const char *name)
-{
-	int l = strlen(name)+1;
-	wchar_t *wcs=new wchar_t[l];	mbstowcs(wcs,name,l);
-	l = mgl_parser_find_cmdw(pr,wcs);	delete []wcs;
-	return l;
-}
-int mgl_parser_find_cmdw(HMPR pr, const wchar_t *name)
+int mgl_cmd_type(HMPR pr, const char *name)
 {
 	mglCommand *cmd = pr->FindCommand(name);
-	if(cmd)	return cmd->type + 1;
-	cmd = pr->FindCommand(name,true);	// have to check program flow commands specially
 	return cmd ? cmd->type + 1 : 0;
 }
-int mgl_parser_find_cmd_(uintptr_t* p, const char *str, int l)
-{	wchar_t *s=new wchar_t[l+1];		mbstowcs(s,str,l);	s[l]=0;
-	l = mgl_parser_find_cmdw(_PR_, s);	delete []s;	return l;	}
+int mgl_cmd_type_(uintptr_t* p, const char *str, int l)
+{	char *s=new char[l+1];	memcpy(s,str,l);	s[l]=0;
+	l = mgl_cmd_type(_PR_, s);	delete []s;	return l;	}
+//---------------------------------------------------------------------------
+const char *mgl_cmd_desc(HMPR pr, const char *name)
+{
+	mglCommand *cmd = pr->FindCommand(name);
+	return cmd ? cmd->desc : 0;
+}
+const char *mgl_cmd_frmt(HMPR pr, const char *name)
+{
+	mglCommand *cmd = pr->FindCommand(name);
+	return cmd ? cmd->form : 0;
+}
 //---------------------------------------------------------------------------

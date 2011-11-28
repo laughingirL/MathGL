@@ -1074,10 +1074,12 @@ public:
 	{	mgl_parsew_text(gr->Self(), pr, str, error, high, par);	}
 	inline void Execute(mglGraph *gr, FILE *fp, bool print=false)
 	{	mgl_parse_file(gr->Self(), pr, fp, print);	}
-	inline int FindCommand(const char *name)
-	{	return mgl_parser_find_cmd(pr, name);	}
-	inline int FindCommand(const wchar_t *name)
-	{	return mgl_parser_find_cmdw(pr, name);	}
+	inline int CmdType(const char *name)
+	{	return mgl_cmd_type(pr, name);	}
+	inline const char *CmdFormat(const char *name)
+	{	return mgl_cmd_frmt(pr, name);	}
+	inline const char *CmdDesc(const char *name)
+	{	return mgl_cmd_desc(pr, name);	}
 
 	inline void AddParam(int id, const char *str)	{	mgl_add_param(pr, id, str);	}
 	inline void AddParam(int id, const wchar_t *str){	mgl_add_paramw(pr, id, str);	}

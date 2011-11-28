@@ -163,7 +163,7 @@ public:
 	Fl_Menu_Bar	*menu;
 //	Fl_Output *main;
 	Fl_Counter *slice;
-	mglVar *var;
+	mglData *var;
 protected:
 //	long nx,ny,nz;
 	long nz;

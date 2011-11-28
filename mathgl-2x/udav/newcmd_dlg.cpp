@@ -223,7 +223,6 @@ mglCommand *getCmd(const QString &cmd)
 	wchar_t *c = new wchar_t[cmd.length()+1];
 	cmd.toWCharArray(c);	c[cmd.length()]=0;
 	mglCommand *rts = parser.FindCommand(c);
-	if(!rts)	rts = parser.FindCommand(c,true);
 	delete []c;		return rts;
 }
 //-----------------------------------------------------------------------------
@@ -240,9 +239,9 @@ void NewCmdDialog::nameChanged(int s)
 	// try to find the keyword
 	mglCommand *rts=getCmd(n);
 	if(!rts)	return;
-	info->setText(QString::fromWCharArray(rts->desc));
+	info->setText(QString::fromAscii(rts->desc));
 
-	par = QString::fromWCharArray(rts->form);
+	par = QString::fromAscii(rts->form);
 	int i0 = par.indexOf(' ');	// first space if present
 	if(i0<0)	{	kind->addItem(par);	return;	}	// no arguments
 	// parse kind of arguments

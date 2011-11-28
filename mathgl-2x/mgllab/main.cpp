@@ -77,7 +77,7 @@ void open_cb(Fl_Widget*, void *v)
 	if(newfile != NULL)
 	{
 		load_file(newfile, -1);
-		if(auto_exec)	((ScriptWindow*)v)->update_pre();
+		if(auto_exec)	((ScriptWindow*)v)->graph->update();
 	}
 }
 //-----------------------------------------------------------------------------
@@ -140,12 +140,6 @@ void view_cb(Fl_Widget*, void*)
 //-----------------------------------------------------------------------------
 void hint_cb(Fl_Widget*, void*)	{}
 //-----------------------------------------------------------------------------
-void adjust_cb(Fl_Widget*, void*v)
-{
-	ScriptWindow* e = (ScriptWindow*)v;
-	e->graph->size(e->scroll->w(),e->scroll->h());
-}
-//-----------------------------------------------------------------------------
 Fl_Menu_Item menuitems[] = {
 	{ gettext("File"), 0, 0, 0, FL_SUBMENU },
 		{ gettext("New File"),			0, new_cb },
@@ -153,14 +147,14 @@ Fl_Menu_Item menuitems[] = {
 		{ gettext("Insert File..."),	FL_CTRL + 'i', insert_cb },
 		{ gettext("Save File"),			FL_CTRL + 's', save_cb },
 		{ gettext("Save File As..."),	FL_CTRL + FL_SHIFT + 's', saveas_cb, 0, FL_MENU_DIVIDER },
-		{ gettext("Export"), 0, 0, 0, 	FL_SUBMENU },
+/*		{ gettext("Export"), 0, 0, 0, 	FL_SUBMENU },
 			{ gettext("... as PNG"),	FL_ALT + 'p', export_png_cb },
 			{ gettext("... as PNG (solid)"),	FL_ALT + 'f', export_pngn_cb },
 			{ gettext("... as JPEG"),	FL_ALT + 'j', export_jpeg_cb },
 			{ gettext("... as SVG"),	FL_ALT + 's', export_svg_cb },
 			{ gettext("... as vector EPS"),	FL_ALT + 'e', export_eps_cb },
 			{ gettext("... as bitmap EPS"),	0, export_bps_cb, 0, FL_MENU_DIVIDER },
-			{0},
+			{0},*/
 		{ gettext("New View"),		FL_ALT + 'w', view_cb },
 		{ gettext("Close View"),	FL_CTRL + 'w', close_cb, 0, FL_MENU_DIVIDER },
 		{ gettext("Exit"),			FL_ALT + 'x', quit_cb },
@@ -184,7 +178,7 @@ Fl_Menu_Item menuitems[] = {
 		{ gettext("Replace..."),	FL_CTRL + 'r', replace_cb },
 		{ gettext("Replace Again"), FL_F + 4, replace2_cb },
 		{ 0 },
-	{ gettext("Animate"), 0, 0, 0, FL_SUBMENU },
+/*	{ gettext("Animate"), 0, 0, 0, FL_SUBMENU },
 		{ gettext("Slideshow"),	FL_CTRL + FL_F + 5, sshow_cb, 0, FL_MENU_TOGGLE },
 		{ gettext("Next slide"),0, snext_cb },
 		{ gettext("Prev slide"),0, sprev_cb },
@@ -200,7 +194,7 @@ Fl_Menu_Item menuitems[] = {
 		{ gettext("Adjust size"),	FL_F + 6, adjust_cb },
 		{ gettext("Reload data"),	FL_F + 9, oncemore_cb },
 		{ gettext("Script arguments"),	0, argument_cb },
-		{ 0 },
+		{ 0 },*/
 /*	{ gettext("Data"), 0, 0, 0, FL_SUBMENU },
 		{ gettext("Edit data"),		FL_ALT + 'd', table_cb },
 		{ gettext("List of data"),	FL_ALT + 'v', variables_cb },
@@ -284,7 +278,7 @@ int main(int argc, char **argv)
 
 	pref.get("font_dir",buf2,"");
 	pref.get("font_name",buf,"");
-	w->graph->set_font(buf,buf2);
+	mgl_load_font(w->graph->FMGL->get_graph(),buf,buf2);
 	if(buf)		free(buf);
 	if(buf2)	free(buf2);
 
@@ -294,7 +288,7 @@ int main(int argc, char **argv)
 		if(argv[i][0]!='-')
 		{
 			load_file(argv[i], -1);
-			if(auto_exec)	w->update_pre();
+			if(auto_exec)	w->graph->update();
 		}
 		else
 		{

@@ -467,7 +467,7 @@ Fl_Menu_Item pop_graph[15] = {
 	{ 0,0,0,0,0,0,0,0,0 }
 };
 //-----------------------------------------------------------------------------
-Fl_Menu_Item menuitems[] = {
+Fl_Menu_Item mgl_menuitems[] = {
 	{ gettext("Export"), 0, 0, 0, FL_SUBMENU,0,0,0,0 },
 		{ gettext(".. as PNG"),	FL_ALT + 'p', mgl_export_png_cb,0,0,0,0,0,0 },
 		{ gettext(".. as PNG (solid)"),	FL_ALT + 'f', mgl_export_pngn_cb,0,0,0,0,0,0 },
@@ -611,7 +611,7 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	mgl = new Fl_MGLView(0,0,830,660);		mgl->par = this;
 
 	mgl->menu = new Fl_Menu_Bar(0, 0, 830, 30);
-	mgl->menu->copy(menuitems, this);
+	mgl->menu->copy(mgl_menuitems, this);
 	mgl->next = mgl_fl_next;	mgl->reload = mgl_fl_reload;
 	mgl->prev = mgl_fl_prev;	mgl->delay= mgl_fl_delay;
 	mgl->FMGL->set_graph(this);

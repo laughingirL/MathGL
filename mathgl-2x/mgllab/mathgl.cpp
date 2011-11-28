@@ -45,12 +45,6 @@
 extern int internal_font;
 mglParse *Parse=0;
 void get_doc_dir(char *&docdir);
-Fl_Pixmap xpm_a1(alpha_xpm), xpm_a2(alpha_on_xpm);
-Fl_Pixmap xpm_l1(light_xpm), xpm_l2(light_on_xpm);
-Fl_Pixmap xpm_z1(zoom_fit_best_xpm), xpm_z2(zoom_fit_best_r_xpm);
-Fl_Pixmap xpm_s1(film_b_xpm), xpm_s2(film_r_xpm);
-Fl_Pixmap xpm_r1(rotate_xpm), xpm_r2(rotate_on_xpm);
-void animate_cb(Fl_Widget *, void *v);
 //-----------------------------------------------------------------------------
 void udav_error(const char *Message, void *v)
 {	((Fl_MGL*)v)->status->label(Message);	}

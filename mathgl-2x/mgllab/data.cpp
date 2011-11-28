@@ -42,10 +42,10 @@ void VarDlg::init()
 {
 	char ss[1024];
 	var->clear();
-	mglVar *v=Parse->DataList;
+	mglVar *v=Parse->Self()->DataList;
 	while(v)
 	{
-		wcstombs(ss,v->s,1024);
+		wcstombs(ss,v->s.c_str(),1024);
 		var->add(ss,0,0,v);
 		v = v->next;
 	}
@@ -147,7 +147,7 @@ const char *cmds[]={
 "call|func|chdir|define|if|elseif|else|endif|for|next|once|stop|write|setsize",
 "fit|fits|putsfit",
 "fplot|fsurf|ball|cone|curve|drop|facex|facey|facez|line|rect|sphere"};
-const wchar_t *first[]={L"plot",L"surf",L"surf3",L"map",L"flow",L"contx",L"text",L"new",L"fill",L"combine",L"alpha",L"axis",L"subplot",L"call",L"fit",L"fplot"};
+const char *first[]={"plot", "surf", "surf3", "map", "flow", "contx", "text", "new", "fill", "combine", "alpha", "axis", "subplot", "call", "fit", "fplot"};
 const char *cmd_types="1D plots|2D plots|3D plots|Dual plots|Vector plots|Other plots|Text and legend|Create data and I-O|Data handling|Data extraction|Axis and colorbar|General setup|Axis setup|Scale and rotate|Program flow|Nonlinear fitting|Primitives";
 //-----------------------------------------------------------------------------
 void data_file(char *fn)
@@ -196,22 +196,15 @@ void type_cmd_cb(Fl_Widget *w, void *v)
 	if(val>=0 && val<16)
 	{
 		cmd_dlg.cmd->clear();	cmd_dlg.cmd->add(cmds[val]);
-
-		mglCommand *rts = Parse->FindCommand(first[val]);
-		if(!rts)	rts = Parse->FindCommand(first[val],true);
-
-		char *buf=new char[256];
-		memset(buf,0,256);	wcstombs(buf,rts->desc,256);
-		cmd_dlg.dsc->copy_label(buf);
-		memset(buf,0,256);	wcstombs(buf,rts->form,256);
-		cmd_dlg.fmt->copy_label(buf);
+		cmd_dlg.dsc->copy_label(Parse->CmdDesc(first[val]));
+		cmd_dlg.fmt->copy_label(Parse->CmdFormat(first[val]));
 
 		static char str[300];	// load help for command
 		char *docdir;	get_doc_dir(docdir);
 #ifdef WIN32
-		sprintf(str,"%s\\mgl_en.html\\mgl_en_1.html#%ls",docdir,first[val]);
+		sprintf(str,"%s\\mgl_en.html\\mgl_en_1.html#%s",docdir,first[val]);
 #else
-		sprintf(str,"%s/mgl_en.html/mgl_en_1.html#%ls",docdir,first[val]);
+		sprintf(str,"%s/mgl_en.html/mgl_en_1.html#%s",docdir,first[val]);
 #endif
 		free(docdir);	cmd_dlg.help->load(str);
 	}
@@ -220,24 +213,16 @@ void type_cmd_cb(Fl_Widget *w, void *v)
 //-----------------------------------------------------------------------------
 void desc_cmd_cb(Fl_Widget *w, void *v)
 {
-	wchar_t *name=new wchar_t[16];	memset(name,0,16*sizeof(wchar_t));
-	mbstowcs(name,cmd_dlg.cmd->mvalue()->text,16);
-
-	mglCommand *rts = Parse->FindCommand(name);
-	if(!rts)	rts = Parse->FindCommand(name,true);
-
-	char *buf=new char[256];
-	memset(buf,0,256);	wcstombs(buf,rts->desc,256);
-	cmd_dlg.dsc->copy_label(buf);
-	memset(buf,0,256);	wcstombs(buf,rts->form,256);
-	cmd_dlg.fmt->copy_label(buf);
+	const char *name = cmd_dlg.cmd->mvalue()->text;
+	cmd_dlg.dsc->copy_label(Parse->CmdDesc(name));
+	cmd_dlg.fmt->copy_label(Parse->CmdFormat(name));
 
 	static char str[300];	// load help for command
 	char *docdir;	get_doc_dir(docdir);
 #ifdef WIN32
-	sprintf(str,"%s\\mgl_en.html\\mgl_en_1.html#%ls",docdir,name);
+	sprintf(str,"%s\\mgl_en.html\\mgl_en_1.html#%s",docdir,name);
 #else
-	sprintf(str,"%s/mgl_en.html/mgl_en_1.html#%ls",docdir,name);
+	sprintf(str,"%s/mgl_en.html/mgl_en_1.html#%s",docdir,name);
 #endif
 	free(docdir);	cmd_dlg.help->load(str);
 }

@@ -86,11 +86,9 @@ bool is_num(const char *s)	// number
 char is_cmd(const char *s)	// command
 {
 	register long i,n=strlen(s)+1;
-	wchar_t *w=new wchar_t[n];
-	char res=0;
-	mbstowcs(w,s,n);
+	char res=0, *w=new char[n];
 	for(i=0;i<n;i++)	if(!isalnum(s[i]))	w[i]=0;
-	int rts = Parse->FindCommand(w);
+	int rts = Parse->CmdType(w);
 	if(rts==5)		res = 'G';
 	else if(rts==7)	res = 'F';
 	else if(rts)	res = 'E';
