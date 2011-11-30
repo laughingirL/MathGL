@@ -216,7 +216,7 @@ public:
 	Fl_Tabs *ltab, *rtab;
 	Fl_Help_View *hd;
 	Fl_Input *link_cmd;
-	Fl_Group *ghelp, *gplot;
+	Fl_Group *ghelp;
 	Fl_Browser *var;
 	Fl_Box *status;
 
@@ -224,11 +224,7 @@ public:
 	void mem_pressed(int n);
 	SetupDlg 	*setup_dlg;
 	char		search[256];
-
-//=============== Graphical part ==============================================
 	Fl_MGL		*graph;
-
-//=============== Animation ===================================================
 };
 //-----------------------------------------------------------------------------
 // Editor window functions

@@ -29,7 +29,7 @@
 #endif
 
 #include <FL/Fl.H>
-#include <Fl/Fl_Group.H>
+#include <Fl/Fl_Window.H>
 #include <Fl/Fl_Scroll.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Counter.H>
@@ -97,7 +97,7 @@ protected:
 	void resize(int x, int y, int w, int h);	///< resize control
 };
 //-----------------------------------------------------------------------------
-class Fl_MGLView : public Fl_Group
+class Fl_MGLView : public Fl_Window
 {
 public:
 	Fl_MathGL *FMGL;		///< Control which draw graphics

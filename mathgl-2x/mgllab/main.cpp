@@ -228,11 +228,10 @@ ScriptWindow *new_view()
 	tt->end();		w->ltab = tt;
 
 	tt = new Fl_Tabs(300,30,930,455,0);	tt->box(UDAV_UP_BOX);
-	gg = new Fl_Group(300,30,930,430);	gg->label(gettext("Canvas"));
-	w->graph = new Fl_MGL(300,30,630,430,0);	gg->end();	w->gplot = gg;
-	gg = new Fl_Group(300,30,930,430);	gg->label(gettext("Help"));
+	w->graph = new Fl_MGL(300,30,930,430,gettext("Canvas"));
+	gg = new Fl_Group(300,30,930,430,gettext("Help"));
 	add_help(w);	gg->end();	w->ghelp = gg;
-	gg = new Fl_Group(300,30,930,430);	gg->label(gettext("Memory"));
+	gg = new Fl_Group(300,30,930,430,gettext("Memory"));
 	add_mem(w);		gg->end();
 	tt->end();		w->rtab = tt;
 

@@ -494,7 +494,7 @@ Fl_Menu_Item mgl_menuitems[] = {
 	{ 0,0,0,0,0,0,0,0,0 }
 };
 //-----------------------------------------------------------------------------
-Fl_MGLView::Fl_MGLView(int x, int y, int w, int h, char *label) : Fl_Group(x,y,w,h,label)
+Fl_MGLView::Fl_MGLView(int x, int y, int w, int h, char *label) : Fl_Window(x,y,w,h,label)
 {
 	alpha = light = sshow = 0;	menu = 0;
 	next = prev = reload = NULL;	delay = NULL;
