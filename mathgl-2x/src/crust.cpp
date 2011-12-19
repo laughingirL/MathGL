@@ -124,16 +124,16 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 		gr->Reserve(m*4);
 		for(i=0;i<m;i++)
 		{
-			k = long(nums->v(0,i)+0.5);
+			k = floor(nums->v(0,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
 			k1 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
-			k = long(nums->v(1,i)+0.5);
+			k = floor(nums->v(1,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
 			k2 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
-			k = long(nums->v(2,i)+0.5);
+			k = floor(nums->v(2,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
 			k3 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
-			k = long(nums->v(3,i)+0.5);
+			k = floor(nums->v(3,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
 			k4 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
 			gr->quad_plot(k1,k2,k3,k4);
@@ -150,10 +150,10 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 		}
 		for(i=0;i<m;i++)
 		{
-			k1 = long(nums->v(0,i)+0.5);
-			k2 = long(nums->v(1,i)+0.5);
-			k3 = long(nums->v(2,i)+0.5);
-			k4 = long(nums->v(3,i)+0.5);
+			k1 = floor(nums->v(0,i)+0.5);
+			k2 = floor(nums->v(1,i)+0.5);
+			k3 = floor(nums->v(2,i)+0.5);
+			k4 = floor(nums->v(3,i)+0.5);
 			gr->quad_plot(kk[k1],kk[k2],kk[k3],kk[k4]);
 		}
 		delete []kk;

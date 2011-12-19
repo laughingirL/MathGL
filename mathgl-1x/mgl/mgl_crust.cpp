@@ -154,11 +154,11 @@ void mglGraph::QuadPlot(const mglData &nums, const mglData &x, const mglData &y,
 	}
 	for(i=j=0;i<m;i++)
 	{
-		k1 = long(nums.a[4*i]+0.1);		if(k1<0 || k1>=n)	continue;
-		k2 = long(nums.a[4*i+1]+0.1);	if(k2<0 || k2>=n)	continue;
-		k3 = long(nums.a[4*i+2]+0.1);	if(k3<0 || k3>=n)	continue;
-		k4 = long(nums.a[4*i+3]+0.1);	if(k4<0 || k4>=n)	continue;
-		nn[4*j]=k1;	nn[4*j+1]=k2;	nn[4*j+2]=k3;	nn[4*j+4]=k4;	j++;
+		k1 = floor(nums.a[4*i]+0.1);		if(k1<0 || k1>=n)	continue;
+		k2 = floor(nums.a[4*i+1]+0.1);	if(k2<0 || k2>=n)	continue;
+		k3 = floor(nums.a[4*i+2]+0.1);	if(k3<0 || k3>=n)	continue;
+		k4 = floor(nums.a[4*i+3]+0.1);	if(k4<0 || k4>=n)	continue;
+		nn[4*j]=k1;	nn[4*j+1]=k2;	nn[4*j+2]=k3;	nn[4*j+3]=k4;	j++;
 	}
 	quads_plot(j,nn,n,pp,cc,tt,sch && strchr(sch,'#'), a.nx==m);
 	EndGroup();

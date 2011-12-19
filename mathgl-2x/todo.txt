@@ -17,6 +17,8 @@
 7. Cones() -- like Bars() but by Cone()
 8. Drop + surface of circle waves --> as default plot in mglview
 9. Set curve "sharpness"
+10. Symbol '\' (or '&') at the end continue string in udav
+11. Number of frames can be changed at reload + manual call of draw_func if number of frames is 0.
 
 ============= UDAV =============
 
@@ -53,6 +55,7 @@ Remove other setting if data name is changed.
 15. QTreeWidgetItem -- ICON (if,for,once,subplot,...); Cmd text; LINE - POS in group/line. After editing/changing --> put text to editor.
 16. Use QMathGL as drawing widget.
 17. Setupable hot-keys ?!?
+18. Insert just filename (without path) by demand
 
 ============= FOR V.2.1 ========
 
@@ -111,6 +114,7 @@ Remove other setting if data name is changed.
 31. Check export to LaTeX.
 33. Add DifLight() for diffusive light (for local sources only) + option "diffuse on|off" + local version of Light()/'light'. Default is diffuse light for local sources
 34. mglview can preview MGLD files too -- check it
+35. Sample for TriPlot (piramid) and QuadPlot (cube)
 
 ============= BUGS =============
 

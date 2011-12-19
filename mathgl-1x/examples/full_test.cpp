@@ -33,6 +33,33 @@
 extern mglTeXsymb mgl_tex_symb[];
 int test(mglGraphAB *gr)
 {
+	gr->Axis(mglPoint(-1,-1,-1),mglPoint(2,2,2));
+
+	mglData f(4,6);
+	mglData x(8);
+	mglData y(8);
+	mglData z(8);
+
+	f.a[0]=0;	f.a[1]=2;	f.a[2]=6;	f.a[3]=4;
+	f.a[4]=1;	f.a[5]=3;	f.a[6]=7;	f.a[7]=5;
+	f.a[8]=0;	f.a[9]=4;	f.a[10]=5;	f.a[11]=1;
+	f.a[12]=2;	f.a[13]=6;	f.a[14]=7;	f.a[15]=3;
+	f.a[16]=0;	f.a[17]=1;	f.a[18]=3;	f.a[19]=2;
+	f.a[20]=4;	f.a[21]=5;	f.a[22]=7;	f.a[23]=5;
+
+	x.a[0]= 0;	y.a[0]= 0;	z.a[0]= 0;
+	x.a[1]= 1;	y.a[1]= 0;	z.a[1]= 0;
+	x.a[2]= 0;	y.a[2]= 1;	z.a[2]= 0;
+	x.a[3]= 1;	y.a[3]= 1;	z.a[3]= 0;
+	x.a[4]= 0;	y.a[4]= 0;	z.a[4]= 1;
+	x.a[5]= 1;	y.a[5]= 0;	z.a[5]= 1;
+	x.a[6]= 0;	y.a[6]= 1;	z.a[6]= 1;
+	x.a[7]= 1;	y.a[7]= 1;	z.a[7]= 1;
+
+	gr->Rotate(60,40);	gr->Box();	gr->Light(true);
+	gr->QuadPlot(f,x,y,z,"bgr");
+
+/*
 	gr->Clf(mglColor(0.5,1,1));
 gr->SetTickLen(-0.1); gr->Axis(); gr->Box(); return 0;
 mglTestMode=true;
@@ -54,7 +81,7 @@ mglTestMode=true;
 	par.AllowSetSize = true;
 	FILE *fp=fopen("test.mgl","rt");
 	par.Execute(gr,fp,true);
-	fclose(fp);
+	fclose(fp);*/
 /*	gr->SetDrawReg(2,2,1);
 	gr->Rotate(40,60);
 	gr->Surf("sin(x*y)");
