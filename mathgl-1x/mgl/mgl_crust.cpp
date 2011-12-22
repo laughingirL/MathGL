@@ -145,7 +145,7 @@ void mglGraph::TriContV(const mglData &v, const mglData &nums, const mglData &x,
 void mglGraph::QuadPlot(const mglData &nums, const mglData &x, const mglData &y, const mglData &z, const mglData &a, const char *sch)
 {
 	long n = x.nx, m = nums.ny;	if(y.nx!=n || z.nx!=n || nums.nx<4)	{	SetWarn(mglWarnLow,"QuadPlot");	return;	}	if(a.nx!=m && a.nx!=n)	{	SetWarn(mglWarnLow,"QuadPlot");	return;	}
-	SetScheme(sch);	static int cgid=1;	StartGroup("QuadPlot",cgid++);	mreal *pp = new mreal[3*n], *cc = new mreal[4*n];	bool *tt = new bool[n];	long *nn = new long[4*m];	mglColor c;	register long i,j,k1,k2,k3,k4;	for(i=0;i<n;i++)	{		pp[3*i] = x.a[i];	pp[3*i+1] = y.a[i];	pp[3*i+2] = z.a[i];		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
+	SetScheme(sch);	static int cgid=1;	StartGroup("QuadPlot",cgid++);	mreal *pp = new mreal[3*n], *cc = new mreal[4*a.nx];	bool *tt = new bool[n];	long *nn = new long[4*m];	mglColor c;	register long i,j,k1,k2,k3,k4;	for(i=0;i<n;i++)	{		pp[3*i] = x.a[i];	pp[3*i+1] = y.a[i];	pp[3*i+2] = z.a[i];		tt[i] = ScalePoint(pp[3*i],pp[3*i+1],pp[3*i+2]);
 	}
 	for(i=0;i<a.nx;i++)
 	{
@@ -154,7 +154,7 @@ void mglGraph::QuadPlot(const mglData &nums, const mglData &x, const mglData &y,
 	}
 	for(i=j=0;i<m;i++)
 	{
-		k1 = floor(nums.a[4*i]+0.1);		if(k1<0 || k1>=n)	continue;
+		k1 = floor(nums.a[4*i]+0.1);	if(k1<0 || k1>=n)	continue;
 		k2 = floor(nums.a[4*i+1]+0.1);	if(k2<0 || k2>=n)	continue;
 		k3 = floor(nums.a[4*i+2]+0.1);	if(k3<0 || k3>=n)	continue;
 		k4 = floor(nums.a[4*i+3]+0.1);	if(k4<0 || k4>=n)	continue;
