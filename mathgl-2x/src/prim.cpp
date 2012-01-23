@@ -61,6 +61,7 @@ void mgl_line(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 	k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);
 	for(i=1;i<n;i++)
 	{
+		if(gr->Stop)	return;
 		s = i/float(n-1);	p = p1*(1-s)+p2*s;	k2 = k1;
 		k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);
 		gr->line_plot(k2,k1);
@@ -88,6 +89,7 @@ void mgl_curve(HMGL gr, float x1, float y1, float z1, float dx1, float dy1, floa
 	k1=gr->AddPnt(p,gr->CDef,nn,-1,3);
 	for(i=0;i<n;i++)
 	{
+		if(gr->Stop)	return;
 		s = i/(n-1.);	p = p1+s*(d1+s*(a+s*b));	k2 = k1;
 		k1 = gr->AddPnt(p,gr->CDef,nn,-1,3);
 		gr->line_plot(k2,k1);
@@ -212,6 +214,7 @@ void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 	register long i;
 	for(i=0;i<41;i++)
 	{
+		if(gr->Stop)	{	delete []kk;	return;	}
 		f = i*M_PI/20;	co = cos(f);	si = sin(f);
 		p = p1+(r1*co)*a+(r1*si)*b;
 		q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);
@@ -223,6 +226,7 @@ void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 	}
 	for(i=0;i<40;i++)
 	{
+		if(gr->Stop)	{	delete []kk;	return;	}
 		gr->quad_plot(kk[i],kk[i+1],kk[i+41],kk[i+42]);
 		if(edge)
 		{
@@ -257,6 +261,7 @@ void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, floa
 	n0 = gr->AddPnt(p1,c,q,-1,3);
 	for(long i=0;i<n;i++)
 	{
+		if(gr->Stop)	return;
 		float t = i*2*M_PI/(n-1.);
 		p = s+v*cos(t)+u*sin(t);
 		n2 = n1;	n1 = gr->AddPnt(p,c,q,-1,3);
@@ -326,6 +331,7 @@ void mgl_drop(HMGL gr, mglPoint p, mglPoint q, float r, float c, float sh, float
 	float u,v,x,y,z,rr,dr, co,si;
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)
 	{
+		if(gr->Stop)	{	delete []nn;	return;	}
 		u = i*M_PI/(n-1.);	v = 2*M_PI*j/(n-1.)-1;
 		si = sin(u);	co = cos(u);
 		rr = r*a*si*(1.+sh*co)/(1+sh);
@@ -385,6 +391,7 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(ax->GetNz()-1);
 		for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 		{
+			if(gr->Stop)	return;
 			float xx=GetX(x,i,j,k).x, yy=GetY(y,i,j,k).x;
 			dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
 			dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
@@ -482,6 +489,7 @@ void mgl_textmarkw_xyzr(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT r, const wchar_t *
 		register long i,k;
 		for(i=0;i<n;i++)
 		{
+			if(gr->Stop)	return;
 			p = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
 			k = gr->AddPnt(p,-1,q);
 			gr->text_plot(k, text, fnt, -0.5*fabs(r->v(i,mr)));
@@ -604,6 +612,7 @@ void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const 
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
 		for(i=0;i<n;i++)
 		{
+			if(gr->Stop)	{	delete []buf;	return;	}
 			p = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
 			k = gr->AddPnt(p,-1,q);
 			for(k=l=0;k<wcslen(text);k++)

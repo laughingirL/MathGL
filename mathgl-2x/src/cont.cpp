@@ -58,6 +58,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 	qa.push_back(q+l*h);	qb.push_back(q-l*h);
 	for(i=nn[f];i>=0 && i!=f;i=nn[i])	// construct curves
 	{
+		if(gr->Stop)	{	delete []wdt;	delete []pt;	delete []fnt;	return;	}
 		p=q;	q=s;	l=t;
 		if(nn[i]>=0)	{	s=gr->GetPntP(ff[nn[i]]);	t=!(s-q);	}
 		tet = t.x*l.y-t.y*l.x;
@@ -87,6 +88,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 	float a,b,d,w,t1,t2;
 	for(i=j=0,tt=0;j<len;j++)
 	{
+		if(gr->Stop)	{	delete []wdt;	delete []pt;	delete []fnt;	return;	}
 		w = align==1 ? wdt[j] : (wdt[j]+wdt[j+1])/2;	p = pt[j];
 		for(k=i+1;k<m;k++)	if((p-qa[k]).norm()>w)	break;
 		if(k>i+1 && k<m)	tt=-1;
@@ -218,6 +220,7 @@ void mgl_connect(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, in
 	mglPoint p1,p2,p3,p4,q1,q2,q3,q4;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	// prepare segments
 	{
+		if(gr->Stop)	return;
 		d1 = mgl_d(val,a->v(i,j,ak),a->v(i+1,j,ak));		o1 = d1>=0 && d1<1;
 		d2 = mgl_d(val,a->v(i,j,ak),a->v(i,j+1,ak));		o2 = d2>=0 && d2<1;
 		d3 = mgl_d(val,a->v(i+1,j+1,ak),a->v(i+1,j,ak));	o3 = d3>=0 && d3<1;
@@ -237,7 +240,6 @@ void mgl_connect(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, in
 	}
 	if(ss.size()==0)	return;
 	// connect it
-
 }
 
 // NOTE! All data MUST have the same size! Only first slice is used!
@@ -250,12 +252,10 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 	mglPoint *kk = new mglPoint[2*n*m],p;
 	float d, r, kx, ky;
 	register long i,j,k, pc=0;
-	// Usually number of points is much smaller. So, there is no reservation.
-//	gr->Reserve(2*n*m);
-
 	// add intersection point of isoline and Y axis
 	for(i=0;i<n-1;i++)	for(j=0;j<m;j++)
 	{
+		if(gr->Stop)	{	delete []kk;	return;	}
 		d = mgl_d(val,a->v(i,j,ak),a->v(i+1,j,ak));
 		if(d>=0 && d<1)
 		{
@@ -268,6 +268,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 	// add intersection point of isoline and X axis
 	for(i=0;i<n;i++)	for(j=0;j<m-1;j++)
 	{
+		if(gr->Stop)	{	delete []kk;	return;	}
 		d = mgl_d(val,a->v(i,j,ak),a->v(i,j+1,ak));
 		if(d>=0 && d<1)
 		{
@@ -287,6 +288,7 @@ void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, i
 	long i11,i12,i21,i22,j11,j12,j21,j22;
 	j=-1;	// current point
 	do{
+		if(gr->Stop)	{	delete []kk;	delete []nn;	delete []ff;	return;	}
 		if(j>=0)
 		{
 			kx = kk[j].x;	ky = kk[j].y;	i = -1;
@@ -389,6 +391,7 @@ void mgl_cont_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, c
 	float z0, v0;
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
 	{
+		if(gr->Stop)	return;
 		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)
 			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*float(j)/(z->GetNz()-1);
@@ -509,6 +512,7 @@ void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, 
 	memset(kk,-1,2*n*sizeof(long));
 	for(i=0;i<n-1;i++)	// add intersection points for first line
 	{
+		if(gr->Stop)	{	delete []kk;	return;	}
 		mgl_add_range(gr,a,x,y,z, i,0,1,0, c,u1,u2, ak,v1,v2);
 		kk[4*i]=u1;		kk[4*i+1]=u2;
 		mgl_add_edges(gr,a,x,y,z, i,0,1,0, c,d1,d2, ak,v1,v2);
@@ -519,6 +523,7 @@ void mgl_contf_gen(HMGL gr, float v1, float v2, HCDT a, HCDT x, HCDT y, HCDT z, 
 		mgl_add_range(gr,a,x,y,z, 0,j-1,0,1, c,r1,r2, ak,v1,v2);
 		for(i=0;i<n-1;i++)
 		{
+			if(gr->Stop)	{	delete []kk;	return;	}
 			l1 = r1;		l2 = r2;	num=0;
 			t1 = kk[4*i];	t2 = kk[4*i+1];
 			b1 = kk[4*i+2];	b2 = kk[4*i+3];
@@ -586,6 +591,7 @@ void mgl_contf_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	float z0, v0;
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx()-1;i++)
 	{
+		if(gr->Stop)	return;
 		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)
 			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*float(j)/(z->GetNz()-1);
@@ -685,6 +691,7 @@ void mgl_contd_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	float z0, v0, dc = nc>1 ? 1/(MGL_FLT_EPS*(nc-1)) : 0;
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx()-1;i++)
 	{
+		if(gr->Stop)	return;
 		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)
 			z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*float(j)/(z->GetNz()-1);
@@ -1087,6 +1094,7 @@ void mgl_axial_plot(mglBase *gr,long pc, mglPoint *ff, long *nn,char dir,float c
 	if(wire)	gr->Reserve(pc*82);	else	gr->Reserve(pc*82);
 	for(i=0;i<pc;i++)
 	{
+		if(gr->Stop)	return;
 		k = mgl_find_prev(i,pc,nn);
 		if(nn[i]<0)	continue;
 		q1 = k<0 ? ff[nn[i]]-ff[i]  : (ff[nn[i]]-ff[k])*0.5;
@@ -1130,6 +1138,7 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir
 	// add intersection point of isoline and Y axis
 	for(j=0;j<m;j++)	for(i=0;i<n-1;i++)
 	{
+		if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
 		d = mgl_d(val,a->v(i,j,ak),a->v(i+1,j,ak));
 		if(d>=0 && d<1)
 		{
@@ -1141,6 +1150,7 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir
 	// add intersection point of isoline and X axis
 	for(j=0;j<m-1;j++)	for(i=0;i<n;i++)
 	{
+		if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
 		d = mgl_d(val,a->v(i,j,ak),a->v(i,j+1,ak));
 		if(d>=0 && d<1)
 		{
@@ -1150,7 +1160,7 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir
 		}
 	}
 	// deallocate arrays and finish if no point
-	if(pc==0)	{	delete []kk;	return;	}
+	if(pc==0)	{	delete []kk;	delete []pp;	return;	}
 	// allocate arrays for curve
 	long *nn = new long[pc], *ff = new long[pc];
 	for(i=0;i<pc;i++)	nn[i] = ff[i] = -1;
@@ -1158,6 +1168,7 @@ void mgl_axial_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, float c, char dir
 	long i11,i12,i21,i22,j11,j12,j21,j22;
 	j=-1;	// current point
 	do{
+		if(gr->Stop)	{	delete []kk;	delete []pp;	delete []nn;	delete []ff;	return;	}
 		if(j>=0)
 		{
 			kx = kk[j].x;	ky = kk[j].y;	i = -1;
@@ -1224,6 +1235,7 @@ void mgl_axial_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 	bool wire = sch && strchr(sch,'#');
 	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
 	{
+		if(gr->Stop)	return;
 		v0 = v->v(i);
 		mgl_axial_gen(gr,v0,z,x,y,gr->GetC(s,v0),dir,j,wire);
 	}

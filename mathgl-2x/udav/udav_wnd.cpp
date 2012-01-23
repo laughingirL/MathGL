@@ -191,7 +191,8 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	graph = new PlotPanel(this);
 	rtab->addTab(graph,QPixmap(":/xpm/x-office-presentation.png"),tr("Canvas"));
 	//	connect(info,SIGNAL(addPanel(QWidget*)),this,SLOT(addPanel(QWidget*)));
-	rtab->addTab(createMemPanel(this),QPixmap(":/xpm/system-file-manager.png"),tr("Info"));
+	info = createMemPanel(this);
+	rtab->addTab(info,QPixmap(":/xpm/system-file-manager.png"),tr("Info"));
 	hlp = createHlpPanel(this);
 	rtab->addTab(hlp,QPixmap(":/xpm/help-contents.png"),tr("Help"));
 	edit = new TextPanel(this);	edit->graph = graph;

@@ -43,6 +43,7 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 		gr->Reserve(m*3);
 		for(i=0;i<m;i++)
 		{
+			if(gr->Stop)	return;
 			k = long(nums->v(0,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
 			k1 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
@@ -59,13 +60,15 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 	{
 		gr->Reserve(n);
 		long *kk = new long[n];
-		for(k=0;k<n;k++)
+		for(k=0;k<n;k++)	// TODO: add averaged normales here
 		{
+			if(gr->Stop)	{	delete []kk;	return;	}
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
 			kk[k] = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
 		}
 		for(i=0;i<m;i++)
 		{
+			if(gr->Stop)	{	delete []kk;	return;	}
 			k1 = long(nums->v(0,i)+0.5);
 			k2 = long(nums->v(1,i)+0.5);
 			k3 = long(nums->v(2,i)+0.5);
@@ -124,6 +127,7 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 		gr->Reserve(m*4);
 		for(i=0;i<m;i++)
 		{
+			if(gr->Stop)	return;
 			k = floor(nums->v(0,i)+0.5);
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
 			k1 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
@@ -143,13 +147,15 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 	{
 		gr->Reserve(n);
 		long *kk = new long[n];
-		for(k=0;k<n;k++)
+		for(k=0;k<n;k++)	// TODO: add averaged normales here
 		{
+			if(gr->Stop)	{	delete []kk;	return;	}
 			p = mglPoint(x->v(k), y->v(k), z->v(k));
 			kk[k] = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
 		}
 		for(i=0;i<m;i++)
 		{
+			if(gr->Stop)	{	delete []kk;	return;	}
 			k1 = floor(nums->v(0,i)+0.5);
 			k2 = floor(nums->v(1,i)+0.5);
 			k3 = floor(nums->v(2,i)+0.5);
@@ -224,6 +230,7 @@ void mgl_tricont_xyzcv(HMGL gr, HCDT v, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT 
 	bool zVal = (sch && strchr(sch,'_'));
 	for(k=0;k<v->GetNx();k++)	for(i=0;i<m;i++)
 	{
+		if(gr->Stop)	return;
 		k1 = long(nums->v(0,i)+0.1);	if(k1<0 || k1>=n)	continue;
 		k2 = long(nums->v(1,i)+0.1);	if(k2<0 || k2>=n)	continue;
 		k3 = long(nums->v(2,i)+0.1);	if(k3<0 || k3>=n)	continue;
@@ -292,6 +299,7 @@ void mgl_dots_a(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, const 
 
 	for(long i=0;i<n;i++)
 	{
+		if(gr->Stop)	return;
 		p = mglPoint(x->v(i),y->v(i),z->v(i));
 		pp = gr->AddPnt(p,gr->GetC(ss,a->v(i)));
 		gr->mark_plot(pp, mk);

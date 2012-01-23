@@ -37,15 +37,10 @@
 class QSplitter;
 class QTabWidget;
 class QMenu;
-class SetupDialog;
-class InfoDialog;
-class HintDialog;
-class PlotPanel;
-class HelpPanel;
 class QDockWidget;
-class DataOpenDialog;
 class QTextEdit;
 class TextPanel;
+class PlotPanel;
 //-----------------------------------------------------------------------------
 extern int MaxRecentFiles;
 extern int animDelay;

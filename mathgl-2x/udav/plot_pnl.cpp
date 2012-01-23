@@ -74,6 +74,8 @@ void PlotPanel::animText(const QString &txt)	{	animPutText(txt);	}
 //-----------------------------------------------------------------------------
 void PlotPanel::setCurPos(int pos)	{	curPos = pos;	execute();	}
 //-----------------------------------------------------------------------------
+void PlotPanel::stop()	{	parser.Stop = true;	mgl->stop();	}
+//-----------------------------------------------------------------------------
 void PlotPanel::execute()
 {
 	if(mglAutoSave)	save();
@@ -313,7 +315,7 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	a->setShortcut(Qt::Key_F9);	o->addAction(a);	popup->addAction(a);
 
 	a = new QAction(QPixmap(":/xpm/process-stop.png"), tr("&Stop"), this);
-	connect(a, SIGNAL(activated()), mgl, SLOT(stop()));
+	connect(a, SIGNAL(activated()), this, SLOT(stop()));
 	a->setToolTip(tr("Stop script execution (F7)."));
 	a->setShortcut(Qt::Key_F7);	o->addAction(a);
 	bb = new QToolButton(this);	l->addWidget(bb);	bb->setDefaultAction(a);
@@ -360,7 +362,7 @@ void PlotPanel::toolTop(QBoxLayout *l)
 	oo->addAction(tr("bitmap EPS"), mgl, SLOT(exportBPS()));
 	oo->addAction(tr("vector EPS"), mgl, SLOT(exportEPS()),Qt::META+Qt::Key_E);
 	oo->addAction(tr("SVG"), mgl, SLOT(exportSVG()),Qt::META+Qt::Key_S);
-	oo->addAction(tr("C++"), mgl, SLOT(exportCPP()));
+//	oo->addAction(tr("C++"), mgl, SLOT(exportCPP()));	// TODO: Add later
 	oo->addAction(tr("IDTF"), mgl, SLOT(exportIDTF()));
 	o->addMenu(oo);
 	popup->addMenu(oo);

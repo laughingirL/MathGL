@@ -70,6 +70,7 @@ private slots:
 	void animSetup();
 	void adjust();
 	void pressF9();
+	void stop();
 
 private:
 	bool gifOn, jpgOn;

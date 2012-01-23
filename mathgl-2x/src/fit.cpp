@@ -350,6 +350,7 @@ HMDT mgl_hist_x(HMGL gr, HCDT x, HCDT a, const char *opt)
 	register long i,j1;
 	for(i=0;i<nn;i++)
 	{
+		if(gr->Stop)	{	delete res;	return 0;	}
 		j1 = long(n*(x->v(i)-gr->Min.x)/(gr->Max.x-gr->Min.x));
 		if(j1>=0 && j1<n)	res->a[j1] += a->v(i);
 	}
@@ -367,6 +368,7 @@ HMDT mgl_hist_xy(HMGL gr, HCDT x, HCDT y, HCDT a, const char *opt)
 	register long i,j1,j2;
 	for(i=0;i<nn;i++)
 	{
+		if(gr->Stop)	{	delete res;	return 0;	}
 		j1 = long(n*(x->v(i)-gr->Min.x)/(gr->Max.x-gr->Min.x));
 		j2 = long(n*(y->v(i)-gr->Min.y)/(gr->Max.y-gr->Min.y));
 		if(j1>=0 && j1<n && j2>=0 && j2<n)
@@ -386,6 +388,7 @@ HMDT mgl_hist_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *opt)
 	register long i,j1,j2,j3;
 	for(i=0;i<nn;i++)
 	{
+		if(gr->Stop)	{	delete res;	return 0;	}
 		j1 = long(n*(x->v(i)-gr->Min.x)/(gr->Max.x-gr->Min.x));
 		j2 = long(n*(y->v(i)-gr->Min.y)/(gr->Max.y-gr->Min.y));
 		j3 = long(n*(z->v(i)-gr->Min.z)/(gr->Max.z-gr->Min.z));

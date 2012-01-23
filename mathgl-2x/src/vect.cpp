@@ -56,6 +56,7 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 		gr->NextColor(pal);
 		for(i=0;i<n;i++)
 		{
+			if(gr->Stop)	return;
 			nx = j<x->GetNy() ? j:0;	ny = j<y->GetNy() ? j:0;	nz = j<z->GetNy() ? j:0;
 			mx = j<ax->GetNy() ? j:0;	my = j<ay->GetNy() ? j:0;	mz = j<az->GetNy() ? j:0;
 			da = sqrt(ax->v(i,mx)*ax->v(i,mx)+ay->v(i,my)*ay->v(i,my)+az->v(i,mz)*az->v(i,mz));
@@ -139,6 +140,7 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(ax->GetNz()-1);
 		for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 		{
+			if(gr->Stop)	return;
 			xx = GetX(x,i,j,k).x;	yy = GetY(y,i,j,k).x;
 			dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
 			dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
@@ -220,6 +222,7 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 
 	for(k=0;k<l;k+=tz)	for(i=0;i<n;i+=tx)	for(j=0;j<m;j+=ty)
 	{
+		if(gr->Stop)	return;
 		xx = GetX(x,i,j,k).x;	yy = GetY(y,i,j,k).x;	zz = GetZ(z,i,j,k).x;
 		dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
 		dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
@@ -284,6 +287,7 @@ void flow(mglBase *gr, float zVal, float u, float v, const mglData &x, const mgl
 	register long k=0,m;
 	bool end = false;
 	do{
+		if(gr->Stop)	{	delete []pp;	delete []cc;	return;	}
 		pp[k].x = both ? x.Spline1(u,v,0):x.Spline1(u,0,0);
 		pp[k].y = both ? y.Spline1(u,v,0):y.Spline1(v,0,0);
 		pp[k].z = zVal;
@@ -353,6 +357,7 @@ void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(ax->GetNz()-1);
 		for(long i=0;i<num;i++)
 		{
+			if(gr->Stop)	return;
 			u = 0;	v = (i+1.)/(num+1.);
 			flow(gr, zVal, u, v, xx, yy, bx, by,ss,vv);
 			flow(gr, zVal, -u, -v, xx, yy, bx, by,ss,vv);
@@ -485,6 +490,7 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 	register long k=0,m;
 	bool end = false;
 	do{
+		if(gr->Stop)	{	delete []pp;	delete []cc;	return;	}
 		pp[k].x = both ? x.Spline1(u,v,w):x.Spline1(u,0,0);
 		pp[k].y = both ? y.Spline1(u,v,w):y.Spline1(v,0,0);
 		pp[k].z = both ? z.Spline1(u,v,w):z.Spline1(w,0,0);
@@ -529,8 +535,7 @@ void flow(mglBase *gr, float u, float v, float w, const mglData &x, const mglDat
 			else	gr->line_plot(jj,j);
 		}
 	}
-	delete []pp;
-	delete []cc;
+	delete []pp;	delete []cc;
 }
 //-----------------------------------------------------------------------------
 void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, const char *sch, const char *opt)
@@ -555,6 +560,7 @@ void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
 	for(i=0;i<num;i++)	for(j=0;j<num;j++)
 	{
+		if(gr->Stop)	return;
 		u = (i+1.)/(num+1.);	v = (j+1.)/(num+1.);	w = 0;
 		flow(gr, u, v, w, xx, yy, zz, bx, by, bz,ss,vv);
 		flow(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,ss,vv);
@@ -768,6 +774,7 @@ void flowr(mglBase *gr, float zVal, float u, float v, const mglData &x, const mg
 	register long k=0,m;
 	bool end = false;
 	do{
+		if(gr->Stop)	{	delete []pp;	delete []cc;	return;	}
 		pp[k].x = both ? x.Spline1(u,v,0):x.Spline1(u,0,0);
 		pp[k].y = both ? y.Spline1(u,v,0):y.Spline1(v,0,0);
 		pp[k].z = zVal;
@@ -855,6 +862,7 @@ void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, flo
 		if(ax->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(ax->GetNz()-1);
 		for(long i=0;i<num;i++)
 		{
+			if(gr->Stop)	return;
 			u = 0;	v = (i+1.)/(num+1.);
 			flowr(gr, zVal, u, v, xx, yy, bx, by,r0,ss);
 			flowr(gr, zVal, -u, -v, xx, yy, bx, by,r0,ss);
@@ -922,6 +930,7 @@ void flowr(mglBase *gr, float u, float v, float w, const mglData &x, const mglDa
 	register long k=0,m;
 	bool end = false;
 	do{
+		if(gr->Stop)	{	delete []pp;	delete []cc;	return;	}
 		pp[k].x = both ? x.Spline1(u,v,w):x.Spline1(u,0,0);
 		pp[k].y = both ? y.Spline1(u,v,w):y.Spline1(v,0,0);
 		pp[k].z = both ? z.Spline1(u,v,w):z.Spline1(w,0,0);
@@ -1011,6 +1020,7 @@ void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
 	for(i=0;i<num;i++)	for(j=0;j<num;j++)
 	{
+		if(gr->Stop)	return;
 		u = (i+1.)/(num+1.);	v = (j+1.)/(num+1.);	w = 0;
 		flowr(gr, u, v, w, xx, yy, zz, bx, by, bz,r0,ss);
 		flowr(gr,-u,-v,-w, xx, yy, zz, bx, by, bz,r0,ss);

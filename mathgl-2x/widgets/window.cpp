@@ -74,7 +74,17 @@ const unsigned char *mglCanvasW::GetBits()
 }
 //-----------------------------------------------------------------------------
 void mglCanvasW::ReLoad()
-{	if(LoadFunc)	{	LoadFunc(FuncPar);	Update();	}	}
+{
+	if(LoadFunc)
+	{
+		LoadFunc(FuncPar);
+		// update number of slides
+		NumFig=0;	CurFig=0;	CurFrameId = 0;
+		int n = DrawFunc ? DrawFunc(this,FuncPar) : 0;
+		if(n<NumFig && n>=0)	NumFig = n;
+		Update();
+	}
+}
 //-----------------------------------------------------------------------------
 void mgl_wnd_toggle_alpha(HMGL gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleAlpha();	}

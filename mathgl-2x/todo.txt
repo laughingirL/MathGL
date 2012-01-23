@@ -4,21 +4,30 @@
 3. Check highlight
 4. Check smgl_cutminmax2() for reading i=52, j=13, k=40 in data with nx=60, ny=50, nz=40.
 5. Check export to SVG/EPS/MGLD/TeX/OBJ/XGL/X3D/STL.
-6. Parsing bug for numbers like 1.e-6
+6. FLTK example
+7. Qt example
 
 ============= NEW  =============
 
 1. Parallelization of drawing (MathGL level) -- bug with primitives drawing --> pixel.cpp
 2. Export to X3D and VRML
-3. Labels at TriCont()
+3. Set normales in TrigPlot and QuadPlot as average ones.
 4. Add MGL command "ask $N 'question'" -- like interactive "define"
 5. Manual colors for text, boundary, background of Legend()
 6. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
 7. Cones() -- like Bars() but by Cone()
-8. Drop + surface of circle waves --> as default plot in mglview
-9. Set curve "sharpness"
-10. Symbol '\' (or '&') at the end continue string in udav
-11. Number of frames can be changed at reload + manual call of draw_func if number of frames is 0.
+8. Set curve "sharpness" -- highlighting use smoother one.
+9. Symbol '\' (or '&') at the end continue string in udav
+
+============= FOR V.2.1 ========
+
+1. MPI_Send(), MPI_Recv()
+2. Use Hershey as built-in font ???
+3. Import/Export via GIF (as 3d data) ???
+4. Read DICOM files.
+5. Export to JavaScript (WebGL)
+6. GTK and WX window/widgets
+7. Labels at TriCont()
 
 ============= UDAV =============
 
@@ -53,18 +62,8 @@ Remove other setting if data name is changed.
 14. Rotate/perspective/lighting/... of primitive list (without script re-execution)
 
 15. QTreeWidgetItem -- ICON (if,for,once,subplot,...); Cmd text; LINE - POS in group/line. After editing/changing --> put text to editor.
-16. Use QMathGL as drawing widget.
 17. Setupable hot-keys ?!?
 18. Insert just filename (without path) by demand
-
-============= FOR V.2.1 ========
-
-1. MPI_Send(), MPI_Recv()
-2. Use Hershey as built-in font ???
-3. Import/Export via GIF (as 3d data) ???
-4. Read DICOM files.
-5. Export to JavaScript (WebGL)
-6. GTK and WX window/widgets
 
 ============= UNSURE ===========
 
@@ -115,6 +114,8 @@ Remove other setting if data name is changed.
 33. Add DifLight() for diffusive light (for local sources only) + option "diffuse on|off" + local version of Light()/'light'. Default is diffuse light for local sources
 34. mglview can preview MGLD files too -- check it
 35. Sample for TriPlot (piramid) and QuadPlot (cube)
+36. Handle mglBase::Stop everywhere
+37. Number of frames can be changed at reload + manual call of draw_func if number of frames is 0.
 
 ============= BUGS =============
 

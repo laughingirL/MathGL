@@ -53,7 +53,10 @@ void mgl_fsurf(HMGL gr, const char *eqZ, const char *sch, const char *opt)
 	register int i,j;
 	float dx = (gr->Max.x - gr->Min.x)/(n-1.), dy = (gr->Max.y - gr->Min.y)/(n-1.);
 	for(j=0;j<n;j++)	for(i=0;i<n;i++)
+	{
+		if(gr->Stop)	{	delete eq;	return;	}
 		z.a[i+n*j] = eq->Calc(gr->Min.x+i*dx, gr->Min.y+j*dy);
+	}
 	mgl_surf(gr, &z, sch,0);
 	delete eq;
 }
@@ -73,6 +76,7 @@ void mgl_fsurf_xyz(HMGL gr, const char *eqX, const char *eqY, const char *eqZ, c
 	register float u,v;
 	for(j=0;j<n;j++)	for(i=0;i<n;i++)
 	{
+		if(gr->Stop)	{	delete ex;	delete ey;	delete ez;	return;	}
 		v = i/(n-1.);	u = j/(n-1.);
 		x.a[i+n*j] = ex->Calc(0,v,0,u);
 		y.a[i+n*j] = ey->Calc(0,v,0,u);
@@ -123,6 +127,7 @@ void mgl_mesh_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	{
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
+			if(gr->Stop)	{	delete []pos;	return;	}
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, z->v(i,j,k));
 			c = gr->GetC(ss,p.z);		pos[i+n*j] = gr->AddPnt(p,c);
 		}
@@ -175,6 +180,7 @@ void mgl_fall_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	{
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
+			if(gr->Stop)	{	delete []pos;	return;	}
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, z->v(i,j,k));
 			c = gr->GetC(ss,p.z);	pos[i+n*j] = gr->AddPnt(p,c);
 		}
@@ -227,6 +233,7 @@ void mgl_grid_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 		if(z->GetNz()>1)	zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(z->GetNz()-1);
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
+			if(gr->Stop)	{	delete []pos;	return;	}
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
 			pos[i+n*j] = gr->AddPnt(p,gr->CDef);
 		}
@@ -279,6 +286,7 @@ void mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	{
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
+			if(gr->Stop)	{	delete []pos;	return;	}
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
@@ -290,8 +298,7 @@ void mgl_surf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 		if(wire)
 		{
 			gr->SetPenPal("k-");
-			for(i=0;i<n*m;i++)
-				pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
+			for(i=0;i<n*m;i++)	pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
 			mgl_mesh_plot(gr,pos,n,m,3);
 		}
 	}
@@ -345,6 +352,7 @@ void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 		{
 			for(j=0;j<m;j++)
 			{
+				if(gr->Stop)	{	delete []pos;	return;	}
 				xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
 				p1 = mglPoint(xx.x, yy.x, z->v(i,j,k));
 				s = mglPoint(xx.z, yy.z, z->dvy(i,j,k));
@@ -360,6 +368,7 @@ void mgl_belt_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 		{
 			for(i=0;i<n;i++)	// ñîçäàåì ìàññèâ òî÷åê
 			{
+				if(gr->Stop)	{	delete []pos;	return;	}
 				xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
 				p1 = mglPoint(xx.x, yy.x, z->v(i,j,k));
 				q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
@@ -422,6 +431,7 @@ void mgl_dens_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 			zVal = gr->Min.z+(gr->Max.z-gr->Min.z)*float(k)/(z->GetNz()-1);
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)	// ñîçäàåì ìàññèâ òî÷åê
 		{
+			if(gr->Stop)	{	delete []pos;	return;	}
 			p = mglPoint(GetX(x,i,j,k).x, GetY(y,i,j,k).x, zVal);
 			zz = z->v(i,j,k);	c = gr->GetC(ss,zz);
 			if(isnan(zz))	p.x = NAN;
@@ -504,6 +514,7 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 	{
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
+			if(gr->Stop)	{	delete []pos;	return;	}
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
@@ -515,8 +526,7 @@ void mgl_surfc_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 		if(sch && strchr(sch,'#'))
 		{
 			gr->Reserve(n*m);	gr->SetPenPal("k-");
-			for(i=0;i<n*m;i++)
-				pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
+			for(i=0;i<n*m;i++)	pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
 			mgl_mesh_plot(gr,pos,n,m,3);
 		}
 	}
@@ -569,6 +579,7 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 	{
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
+			if(gr->Stop)	{	delete []pos;	return;	}
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
 			p = mglPoint(xx.x, yy.x, z->v(i,j,k));
 			q = mglPoint(xx.y, yy.y, z->dvx(i,j,k));
@@ -579,8 +590,7 @@ void mgl_surfa_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *sch, cons
 		if(sch && strchr(sch,'#'))
 		{
 			gr->Reserve(n*m);	gr->SetPenPal("k-");
-			for(i=0;i<n*m;i++)
-				pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
+			for(i=0;i<n*m;i++)	pos[i] = gr->CopyNtoC(pos[i],gr->CDef);
 			mgl_mesh_plot(gr,pos,n,m,3);
 		}
 	}
@@ -635,6 +645,7 @@ void mgl_boxs_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	{
 		for(i=0;i<n;i++)	for(j=0;j<m;j++)
 		{
+			if(gr->Stop)	return;
 			zz = z->v(i,j,k);		c  = gr->GetC(ss,zz);
 			xx = GetX(x,i,j,k);		yy = GetY(y,i,j,k);
 			x1 = i<lx-1 ? GetX(x,i+1,j,k).x:NAN;
@@ -737,6 +748,7 @@ void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	{
 		for(j=0;j<m-1;j++)	for(i=0;i<n-1;i++)
 		{
+			if(gr->Stop)	return;
 			zz = z->v(i,j,k);		c = gr->GetC(ss,zz);
 			x1 = GetX(x,i,j,k).x;	y1 = GetY(y,i,j,k).x;
 			x2 = i<lx-1 ? GetX(x,i+1,j,k).x:NAN;
@@ -794,6 +806,7 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch, cons
 	{
 		for(j=0;j<m-1;j++)	for(i=0;i<n-1;i++)
 		{
+			if(gr->Stop)	return;
 			zz = z->v(i,j,k);	c = gr->GetC(cc,zz);
 			// TODO check it!!!
 			ss = (1-gr->GetA(s->v(i,j,k)))/2;	sm = 1-ss;
@@ -867,6 +880,7 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 
 	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
+		if(gr->Stop)	{	delete []pos;	return;	}
 		s1 = i>0 ? 1:0;		s2 = i<n-1 ? 1:0;
 		xdx = (ax->v(i+s2,j)-ax->v(i-s1,j))/(GetX(x,i+s2,j).x-GetX(x,i-s1,j).x);
 		ydx = (ay->v(i+s2,j)-ay->v(i-s1,j))/(GetX(x,i+s2,j).x-GetX(x,i-s1,j).x);

@@ -74,7 +74,7 @@ int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
 	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone);	ObjId = 0;
-	SetFunc(0,0);			CutOff(0);
+	SetFunc(0,0);	Stop=false;	CutOff(0);
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
 	SetBarWidth(0.7);	SetMarkSize(1);	SetArrowSize(1);
 	SetAlphaDef(0.5);		FontDef[0]=0;

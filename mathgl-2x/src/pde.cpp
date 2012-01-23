@@ -130,6 +130,10 @@ HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz,
 	gsl_fft_complex_workspace *wsy = gsl_fft_complex_workspace_alloc(2*ny);
 	for(k=1;k<nz;k++)
 	{
+		if(gr->Stop)
+		{	delete []a;		delete []dmp;	delete []hxy;	delete []hxv;
+			delete []huy;	delete []huv;	delete []hx;	delete []hy;
+			delete []hu;	delete []hv;	delete res;		return 0;	}
 		tmp.zz = Min.z+dz*k;
 		memset(hxy,0,4*nx*ny*sizeof(dual));	memset(hxv,0,4*nx*ny*sizeof(dual));
 		memset(huv,0,4*nx*ny*sizeof(dual));	memset(huy,0,4*nx*ny*sizeof(dual));

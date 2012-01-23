@@ -58,6 +58,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 	mglPoint p,q=mglPoint(NAN);
 	for(k=0;k<l;k+=tz)	for(j=0;j<m;j+=ty)	for(i=0;i<n;i+=tx)
 	{
+		if(gr->Stop)	{	delete []pos;	return;	}
 		p = both ? mglPoint(x->v(i,j,k),y->v(i,j,k),z->v(i,j,k)) : mglPoint(x->v(i),y->v(j),z->v(k));
 		aa = gr->GetA(a->v(i,j,k));
 		if(inv)	bb = (1-aa)*(1-aa)*alpha;
@@ -68,6 +69,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 	if(dot)	for(i=0;i<nn;i++)	gr->mark_plot(pos[i],'.');
 	else	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
 	{
+		if(gr->Stop)	{	delete []pos;	return;	}
 		i0 = i+n*(j+m*k);
 		if(i<n-1 && j<m-1)	gr->quad_plot(pos[i0],pos[i0+1],pos[i0+n],pos[i0+n+1]);
 		if(i<n-1 && k<l-1)	gr->quad_plot(pos[i0],pos[i0+1],pos[i0+n*m],pos[i0+n*m+1]);
@@ -162,6 +164,7 @@ void mgl_surf3_plot(HMGL gr, long n,long m,long *kx1,long *kx2,long *ky1,long *k
 
 	for(i=0;i<n-1;i++)	for(j=0;j<m-1;j++)
 	{
+		if(gr->Stop)	return;
 		i0 = i+n*j;
 		// find ID of points of Surf3 intersection with cell i0
 		memset(id,-1,12*sizeof(long));	ni = 0;
@@ -259,6 +262,8 @@ void mgl_surf3_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, const
 		gr->Reserve(n*m);	gr->Reserve(n*m);
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
+			if(gr->Stop)	{	delete []kx1;	delete []kx2;	delete []ky1;
+								delete []ky2;	delete []kz;	return;	}
 			i1 = i+n*j;		a0 = a->v(i,j,k);
 			if(i<n-1)
 			{
@@ -407,6 +412,8 @@ void mgl_surf3a_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 		gr->Reserve(n*m);	gr->Reserve(n*m);
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
+			if(gr->Stop)	{	delete []kx1;	delete []kx2;	delete []ky1;
+								delete []ky2;	delete []kz;	return;	}
 			i1 = i+n*j;
 			a0 = a->v(i,j,k);	b0 = b->v(i,j,k);
 			if(i<n-1)
@@ -584,6 +591,8 @@ void mgl_surf3c_xyz_val(HMGL gr, float val, HCDT x, HCDT y, HCDT z, HCDT a, HCDT
 		gr->Reserve(n*m);	gr->Reserve(n*m);
 		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
+			if(gr->Stop)	{	delete []kx1;	delete []kx2;	delete []ky1;
+								delete []ky2;	delete []kz;	return;	}
 			i1 = i+n*j;
 			a0 = a->v(i,j,k);	b0 = b->v(i,j,k);
 			if(i<n-1)
@@ -736,6 +745,7 @@ void mgl_beam_val(HMGL gr, float val, HCDT tr, HCDT g1, HCDT g2, HCDT a, float r
 		}
 		for(j=0;j<m;j++)	for(k=0;k<l;k++)
 		{
+			if(gr->Stop)	return;
 			i0 = j+m*(k+l*i);
 			if(flag & 1)
 			{

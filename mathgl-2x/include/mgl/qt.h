@@ -70,14 +70,16 @@ public slots:
 	void refresh();
 	void update();			///< Update picture
 	void copy();			///< copy graphics to clipboard
+	void copyClickCoor();	///< copy click coordinates to clipboard
 	void print();			///< Print plot
-//	void stop();			///< Stop execution
+	void stop();			///< Stop execution
 	void setPer(int p);		///< Set perspective value
 	void setPhi(int p);		///< Set Phi-angle value
 	void setTet(int t);		///< Set Theta-angle value
 	void setAlpha(bool a);	///< Switch on/off transparency
 	void setLight(bool l);	///< Switch on/off lightning
 	void setGrid(bool r);	///< Switch on/off grid drawing
+	void imgSize(int w, int h);	///< Set image size
 
 	void setZoom(bool z);	///< Switch on/off mouse zooming
 	void setRotate(bool r);	///< Switch on/off mouse rotation
@@ -92,6 +94,7 @@ public slots:
 
 	void exportPNG(QString fname="");	///< export to PNG file
 	void exportPNGs(QString fname="");	///< export to PNG file (no transparency)
+	void exportGIF(QString fname="");	///< export to GIF file
 	void exportJPG(QString fname="");	///< export to JPEG file
 	void exportBPS(QString fname="");	///< export to bitmap EPS file
 	void exportEPS(QString fname="");	///< export to vector EPS file
@@ -126,6 +129,9 @@ signals:
 	void mouseClick(float,float,float);	///< Position of mouse click
 	void frameChanged(int);		///< Need another frame to show
 	void showWarn(QString);		///< Show warnings
+	void posChanged(QString message);	///< user click to show mouse position
+	void objChanged(int objId);			///< User double-click to select object/line
+	void refreshData();
 
 protected:
 	void paintEvent(QPaintEvent *);

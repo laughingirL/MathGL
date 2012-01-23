@@ -35,10 +35,10 @@ extern mglParser parser;
 QWidget *newDataWnd(InfoDialog *inf, MainWindow *wnd, mglVar *v);
 void refreshData(QWidget *w);
 //-----------------------------------------------------------------------------
-QWidget *createMemPanel(QWidget *p)
+QWidget *createMemPanel(QWidget *p)	// NOTE: parent should be MainWindow
 {
 	MemPanel *m = new MemPanel(p);
-	m->wnd = (MainWindow *)m;
+	m->wnd = (MainWindow *)p;
 }
 //-----------------------------------------------------------------------------
 void refreshMemPanel(QWidget *p)

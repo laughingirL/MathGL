@@ -183,6 +183,7 @@ void QMathGL::restore()
 	refresh();
 }
 //-----------------------------------------------------------------------------
+void QMathGL::stop()	{	gr->Stop=true;	}	//{	thr->terminate();	}
 void QMathGL::update()
 {
 /*	if(!thr->isRunning())
@@ -203,6 +204,7 @@ void QMathGL::update()
 		draw_func(gr, draw_par);
 		setlocale(LC_ALL, "");
 		if(!isHidden())	QApplication::restoreOverrideCursor();
+		emit refreshData();
 
 		QString buf = gr->Mess.c_str();
 		if(!buf.isEmpty())
@@ -231,6 +233,8 @@ void QMathGL::mousePressEvent(QMouseEvent *ev)
 		mousePos.sprintf("x=%g, y=%g, z=%g",p.x,p.y,p.z);
 		repaint();
 		emit mouseClick(p.x,p.y,p.z);
+		emit posChanged(mousePos);
+		emit objChanged(gr->GetObjId(ev->x(),ev->y())-1);
 	}
 	xe=x0=ev->x();	ye=y0=ev->y();	ev->accept();
 }
@@ -296,11 +300,21 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 	ev->accept();
 }
 //-----------------------------------------------------------------------------
+void QMathGL::imgSize(int w, int h)
+{	if(w>0 && h>0)	{	gr->SetSize(w,h);	update();	}	}
+//-----------------------------------------------------------------------------
 QString setExtension(QString &fname, const char *ext)
 {
 	QString oname;
 	if(fname.right(4)!="."+QString(ext))	oname = fname+"."+QString(ext);
 	return oname;
+}
+//-----------------------------------------------------------------------------
+void QMathGL::exportGIF(QString fname)
+{
+	if(fname.isEmpty())	fname = gr->PlotId.c_str();
+	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
+	else	mgl_write_gif(gr,setExtension(fname,"png").toAscii(), appName.toAscii());
 }
 //-----------------------------------------------------------------------------
 void QMathGL::exportPNG(QString fname)
@@ -486,19 +500,18 @@ void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf)
 }
 //-----------------------------------------------------------------------------
 void QMathGL::copy()
-{
-	QClipboard *cb = QApplication::clipboard();
-	cb->setPixmap(pic, QClipboard::Clipboard);
-}
+{	QClipboard *cb = QApplication::clipboard();
+	cb->setPixmap(pic, QClipboard::Clipboard);		}
+//-----------------------------------------------------------------------------
+void QMathGL::copyClickCoor()
+{	QApplication::clipboard()->setText(mousePos);	}
 //-----------------------------------------------------------------------------
 void QMathGL::setMGLFont(QString path)
-{
-	if(path.isEmpty())	gr->GetFont()->Restore();
-	else	gr->GetFont()->Load(path.toAscii());
-}
+{	if(path.isEmpty())	gr->GetFont()->Restore();
+	else	gr->GetFont()->Load(path.toAscii());	}
 //-----------------------------------------------------------------------------
 void QMathGL::setSize(int w, int h)
-{	gr->SetSize(w,h);	resize(w, h);	update();	};
+{	gr->SetSize(w,h);	resize(w, h);	update();	}
 //-----------------------------------------------------------------------------
 void QMathGL::about()
 {

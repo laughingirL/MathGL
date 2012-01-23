@@ -169,6 +169,7 @@ public:
 	mglBase();
 	virtual ~mglBase();
 
+	bool Stop;			///< Flag that execution should be terminated.
 	mglPoint Min;		///< Lower edge of bounding box for graphics.
 	mglPoint Max;		///< Upper edge of bounding box for graphics.
 	std::string Mess;	///< Buffer for receiving messages
