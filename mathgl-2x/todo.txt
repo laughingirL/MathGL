@@ -14,10 +14,12 @@
 3. Set normales in TrigPlot and QuadPlot as average ones.
 4. Add MGL command "ask $N 'question'" -- like interactive "define"
 5. Manual colors for text, boundary, background of Legend()
-6. BeltP() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
+6. FlowN() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
+   Similarly, PlotN().
 7. Cones() -- like Bars() but by Cone()
 8. Set curve "sharpness" -- highlighting use smoother one.
 9. Symbol '\' (or '&') at the end continue string in udav
+10. ContV -- contours with vertical belts
 
 ============= FOR V.2.1 ========
 

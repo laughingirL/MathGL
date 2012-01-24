@@ -96,7 +96,7 @@ void mgl_data_squeeze(HMDT dat, long rx,long ry,long rz,long smooth);
 mreal mgl_data_max(HCDT dat);
 mreal mgl_data_min(HCDT dat);
 float *mgl_data_value(HMDT dat, long i,long j,long k);
-const float *mgl_data_data(HCDT dat);
+mreal *mgl_data_data(HMDT dat);
 
 float mgl_data_first(HCDT dat, const char *cond, long *i, long *j, long *k);
 float mgl_data_last(HCDT dat, const char *cond, long *i, long *j, long *k);
@@ -209,7 +209,6 @@ void mgl_data_modify_vw_(uintptr_t *dat, const char *eq, uintptr_t *vdat, uintpt
 void mgl_data_squeeze_(uintptr_t *dat, int *rx,int *ry,int *rz,int *smooth);
 float mgl_data_max_(uintptr_t *dat);
 float mgl_data_min_(uintptr_t *dat);
-const float *mgl_data_data_(uintptr_t *dat);
 
 float mgl_data_first_(uintptr_t *dat, const char *cond, int *i, int *j, int *k, int);
 float mgl_data_last_(uintptr_t *dat, const char *cond, int *i, int *j, int *k, int);

@@ -1558,3 +1558,5 @@ float mgl_data_get_value(HCDT dat, long i, long j, long k)
 float mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k)
 {	return mgl_data_get_value(_DA_(d),*i,*j,*k);	}
 //-----------------------------------------------------------------------------
+mreal *mgl_data_data(HMDT dat)	{	return dat->a;	}
+//-----------------------------------------------------------------------------
