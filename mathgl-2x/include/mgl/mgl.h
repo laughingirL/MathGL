@@ -720,6 +720,15 @@ public:
 	{	mgl_contd_xy(gr, &x, &y, &z, sch, opt);	}
 	inline void ContD(const mglDataA &z, const char *sch="", const char *opt="")
 	{	mgl_contd(gr, &z, sch, opt);	}
+	/// Draw contour lines for 2d data specified parametrically
+	inline void ContV(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_contv_xy_val(gr, &v, &x, &y, &z, sch, opt);	}
+	inline void ContV(const mglDataA &v, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_contv_val(gr, &v, &z, sch, opt);	}
+	inline void ContV(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_contv_xy(gr, &x, &y, &z, sch, opt);	}
+	inline void ContV(const mglDataA &z, const char *sch="", const char *opt="")
+	{	mgl_contv(gr, &z, sch, opt);	}
 	/// Draw axial-symmetric isosurfaces for 2d data specified parametrically
 	inline void Axial(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *sch="", const char *opt="")
 	{	mgl_axial_xy_val(gr, &v, &x, &y, &z, sch,opt);	}

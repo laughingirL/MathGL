@@ -751,6 +751,98 @@ void mgl_contd_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,in
 	mgl_contd(_GR_, _DA_(a), s, o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
 //
+//	ContV series
+//
+//-----------------------------------------------------------------------------
+void mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+{
+	register long i,j,n=z->GetNx(),m=z->GetNy();
+	if(x->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Cont");	return;	}
+	if(n<2 || m<2)		{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
+	bool both = x->GetNx()*x->GetNy()==m*n && y->GetNx()*y->GetNy()==m*n;
+	if(y->GetNx()!=z->GetNy() && !both)	{	gr->SetWarn(mglWarnDim, "Cont");	return;	}
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("Cont",cgid++);
+
+	bool text=(sch && strchr(sch,'t'));
+	bool fixed=(sch && strchr(sch,'_')) || (gr->Min.z==gr->Max.z);
+	long s=gr->AddTexture(sch);
+	gr->SetPenPal(sch);
+
+	mglData xx, yy, zz(z->GetNx(), z->GetNy());
+	if(!both)	// make
+	{
+		xx.Create(z->GetNx(), z->GetNy());
+		yy.Create(z->GetNx(), z->GetNy());
+		for(i=0;i<n;i++)	for(j=0;j<m;j++)
+		{	xx.a[i+n*j] = x->v(i);	yy.a[i+n*j] = y->v(j);	}
+		x = &xx;	y = &yy;
+	}
+	// x, y -- have the same size z
+	float z0, v0;
+	for(j=0;j<z->GetNz();j++)	for(i=0;i<v->GetNx();i++)
+	{
+		if(gr->Stop)	return;
+		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
+		if(z->GetNz()>1)	z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*float(j)/(z->GetNz()-1);
+		zz.Fill(z0,z0);
+		mgl_cont_gen(gr,v0,z,x,y,&zz,gr->GetC(s,v0),text,j);	// TODO: ContV -- change here!!!
+	}
+	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+void mgl_contv_val(HMGL gr, HCDT v, HCDT z, const char *sch, const char *opt)
+{
+	if(z->GetNx()<2 || z->GetNy()<2)	{	gr->SetWarn(mglWarnLow,"Cont");	return;	}
+	gr->SaveState(opt);
+	mglData x(z->GetNx(), z->GetNy()), y(z->GetNx(), z->GetNy());
+	x.Fill(gr->Min.x,gr->Max.x,'x');
+	y.Fill(gr->Min.y,gr->Max.y,'y');
+	mgl_contv_xy_val(gr,v,&x,&y,z,sch,0);
+}
+//-----------------------------------------------------------------------------
+void mgl_contv_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
+{
+	float r = gr->SaveState(opt);
+	long Num = isnan(r)?7:long(r+0.5);
+	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
+	mglData v(Num);
+	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
+	mgl_contv_xy_val(gr,&v,x,y,z,sch,0);
+}
+//-----------------------------------------------------------------------------
+void mgl_contv(HMGL gr, HCDT z, const char *sch, const char *opt)
+{
+	float r = gr->SaveState(opt);
+	long Num = isnan(r)?7:long(r+0.5);
+	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
+	mglData v(Num);
+	for(long i=0;i<Num;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
+	mgl_contv_val(gr,&v,z,sch,0);
+}
+//-----------------------------------------------------------------------------
+void mgl_contv_xy_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+mgl_contv_xy_val(_GR_, _DA_(v), _DA_(x), _DA_(y), _DA_(a), s, o);
+delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_contv_val_(uintptr_t *gr, uintptr_t *v, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+mgl_contv_val(_GR_, _DA_(v), _DA_(a), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_contv_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+mgl_contv_xy(_GR_, _DA_(x), _DA_(y), _DA_(a), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_contv_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
+char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+mgl_contv(_GR_, _DA_(a), s, o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+//
 //	Cont3 series
 //
 //-----------------------------------------------------------------------------

@@ -1,9 +1,9 @@
 set(mgl_src
-axis.cpp base_cf.cpp base.cpp canvas_cf.cpp canvas.cpp cont.cpp crust.cpp
+addon.cpp axis.cpp base_cf.cpp base.cpp canvas_cf.cpp canvas.cpp cont.cpp crust.cpp
 data.cpp data_io.cpp data_new.cpp data_op.cpp data_png.cpp def_font.cpp
 export_2d.cpp export_3d.cpp eval.cpp evalp.cpp exec.cpp export.cpp
 fit.cpp font.cpp opengl.cpp other.cpp parser.cpp pde.cpp pixel.cpp
-plot.cpp prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp #window.cpp
+plot.cpp prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp evalc.cpp #window.cpp
 )
 
 set(mgl_hdr
@@ -13,8 +13,8 @@ set(mgl_hdr
 ../include/mgl/config.h     ../include/mgl/mgl_cf.h  ../include/mgl/type.h
 ../include/mgl/cont.h       ../include/mgl/mgl.h     ../include/mgl/vect.h
 ../include/mgl/data.h       ../include/mgl/opengl.h  ../include/mgl/volume.h
-../include/mgl/define.h     ../include/mgl/other.h    ../include/mgl/eval.h
-../include/mgl/parser.h)
+../include/mgl/define.h     ../include/mgl/other.h   ../include/mgl/eval.h
+../include/mgl/parser.h     ../include/mgl/addon.h   ../include/mgl/evalc.h )
 
 add_library(mgl SHARED ${mgl_src})
 add_library(mgl-static STATIC ${mgl_src})

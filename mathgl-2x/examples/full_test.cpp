@@ -1058,6 +1058,13 @@ void smgl_cont(mglGraph *gr)
 	gr->Box();	gr->Cont(a);
 }
 //-----------------------------------------------------------------------------
+void smgl_contv(mglGraph *gr)
+{
+	mglData a;	mgls_prepare2d(&a);
+	gr->Rotate(40,60);
+	gr->Box();	gr->ContV(a);
+}
+//-----------------------------------------------------------------------------
 void smgl_surfc(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2d(&a,&b);
@@ -1770,6 +1777,7 @@ mglSample samp[] = {
 	{"contf", smgl_contf},
 	{"contfa", smgl_contfa},
 	{"contt", smgl_contt},
+	{"contv", smgl_contv},
 //	{"crust", smgl_crust},	// TODO: open after triangulation
 	{"cutminmax", smgl_cutminmax},
 	{"cutminmax2", smgl_cutminmax2},

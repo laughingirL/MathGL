@@ -442,13 +442,13 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 	MGL_PUSH(Sub,p,mutexSub);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Rotate(float tetx,float tetz,float tety)
+void mglCanvas::Rotate(float tetz,float tetx,float tety)
 {
 //	RotateN(TetX,1.,0.,0.);
 //	RotateN(TetY,0.,1.,0.);
 //	RotateN(TetZ,0.,0.,1.);
 	float R[9], O[9];
-	float cx=cos(tetx*M_PI/180), sx=sin(tetx*M_PI/180), cy=cos(tety*M_PI/180), sy=sin(tety*M_PI/180), cz=cos(tetz*M_PI/180), sz=sin(tetz*M_PI/180);
+	float cx=cos(tetx*M_PI/180), sx=-sin(tetx*M_PI/180), cy=cos(tety*M_PI/180), sy=-sin(tety*M_PI/180), cz=cos(tetz*M_PI/180), sz=-sin(tetz*M_PI/180);
 	R[0] = cx*cy;			R[1] = -cy*sx;			R[2] = sy;
 	R[3] = cx*sy*sz+cz*sx;	R[4] = cx*cz-sx*sy*sz;	R[5] =-cy*sz;
 	R[6] = sx*sz-cx*cz*sy;	R[7] = cx*sz+cz*sx*sy;	R[8] = cy*cz;
@@ -677,7 +677,6 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 	}
 }
 //-----------------------------------------------------------------------------
-wchar_t *mgl_wcsdup(const wchar_t *s);
 void mglCanvas::AddLegend(const char *str,const char *style)
 {
 	if(!str)	return;

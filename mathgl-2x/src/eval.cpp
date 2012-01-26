@@ -474,7 +474,7 @@ double add(double a,double b)	{return a+b;}
 double sub(double a,double b)	{return a-b;}
 double mul(double a,double b)	{return a&&b?a*b:0;}
 double div(double a,double b)	{return b?a/b:NAN;}
-double ipw(double a,double b)	{return mgl_ipow(a,int(b));}
+double ipw(double a,double b)	{return fabs(b-int(b))<1e-5 ? mgl_ipow(a,int(b)) : pow(a,b);}
 double llg(double a,double b)	{return log(a)/log(b);}
 #ifndef NO_GSL
 double gslEllE(double a,double b)	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE);}
@@ -573,7 +573,7 @@ double mul1(double ,double b)	{return b;}
 double mul2(double a,double )	{return a;}
 double div1(double ,double b)	{return b?1/b:NAN;}
 double div2(double a,double b)	{return b?-a/(b*b):NAN;}
-double ipw1(double a,double b)	{return int(b)*mgl_ipow(a,int(b-1));}
+double ipw1(double a,double b)	{return b*(fabs(b-int(b))<1e-5 ? mgl_ipow(a,int(b-1)) : pow(a,b-1));}
 double pow1(double a,double b)	{return b*pow(a,b-1);}
 double pow2(double a,double b)	{return log(a)*pow(a,b);}
 double llg1(double a,double b)	{return 1/(a*log(b));}
@@ -623,7 +623,7 @@ float mglFormula::CalcDIn(int id, const float *a1) const
 			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 		};
-	func_2 f22[22] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgm,mul2,div2,mgz2,pow2,mgz2,llg2, mgz2
+		func_2 f22[22] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgm,mul2,div2,pow2,pow2,mgz2,llg2, mgz2
 #ifndef NO_GSL
 			,gslJnuD,gslYnuD,gslInuD,gslKnuD,gslEllE2,gslEllF2,mgz2/*gslLegP*/,mgz2
 #else

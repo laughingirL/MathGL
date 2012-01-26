@@ -34,9 +34,9 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TriPlot",cgid++);
-	mglPoint p,q=mglPoint(NAN);
+	mglPoint p1,p2,p3,q;
 
-	register long i,k,k1,k2,k3;
+	register long i,k1,k2,k3;
 	long nc = a->GetNx();
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
@@ -44,15 +44,16 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 		for(i=0;i<m;i++)
 		{
 			if(gr->Stop)	return;
-			k = long(nums->v(0,i)+0.5);
-			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			k1 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
-			k = long(nums->v(1,i)+0.5);
-			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			k2 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
-			k = long(nums->v(2,i)+0.5);
-			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			k3 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
+			k1 = long(nums->v(0,i)+0.5);
+			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
+			k2 = long(nums->v(1,i)+0.5);
+			p2 = mglPoint(x->v(k2), y->v(k2), z->v(k2));
+			k3 = long(nums->v(2,i)+0.5);
+			p3 = mglPoint(x->v(k3), y->v(k3), z->v(k3));
+			q = (p2-p1) ^ (p3-p1);
+			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
+			k2 = gr->AddPnt(p2,gr->GetC(ss,a->v(k2)),q);
+			k3 = gr->AddPnt(p3,gr->GetC(ss,a->v(k3)),q);
 			gr->trig_plot(k1,k2,k3);
 		}
 	}
@@ -60,21 +61,34 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 	{
 		gr->Reserve(n);
 		long *kk = new long[n];
-		for(k=0;k<n;k++)	// TODO: add averaged normales here
+		mglPoint *pp = new mglPoint[n];
+		for(i=0;i<m;i++)	// add averaged normales
 		{
-			if(gr->Stop)	{	delete []kk;	return;	}
-			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			kk[k] = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
+			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
+			k1 = long(nums->v(0,i)+0.5);
+			k2 = long(nums->v(1,i)+0.5);
+			k3 = long(nums->v(2,i)+0.5);
+			q = mglPoint(x->v(k2)-x->v(k1), y->v(k2)-y->v(k1), z->v(k2)-z->v(k1)) ^ mglPoint(x->v(k3)-x->v(k1), y->v(k3)-y->v(k1), z->v(k3)-z->v(k1));
+			// try be sure that in the same direction ... but it is so slow :(
+			if(pp[k1]*q<0) q*=-1;	pp[k1] += q;
+			if(pp[k2]*q<0) q*=-1;	pp[k2] += q;
+			if(pp[k3]*q<0) q*=-1;	pp[k3] += q;
 		}
-		for(i=0;i<m;i++)
+		for(i=0;i<n;i++)	// add points
 		{
-			if(gr->Stop)	{	delete []kk;	return;	}
+			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
+			q = mglPoint(x->v(i), y->v(i), z->v(i));
+			kk[i] = gr->AddPnt(q,gr->GetC(ss,a->v(i)),pp[i]);
+		}
+		for(i=0;i<m;i++)	// draw triangles
+		{
+			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
 			k1 = long(nums->v(0,i)+0.5);
 			k2 = long(nums->v(1,i)+0.5);
 			k3 = long(nums->v(2,i)+0.5);
 			gr->trig_plot(kk[k1],kk[k2],kk[k3]);
 		}
-		delete []kk;
+		delete []kk;	delete []pp;
 	}
 	gr->EndGroup();
 }
@@ -118,9 +132,9 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("QuadPlot",cgid++);
-	mglPoint p,q=mglPoint(NAN);
+	mglPoint p1,p2,p3,p4,q;
 
-	register long i,k,k1,k2,k3,k4;
+	register long i,k1,k2,k3,k4;
 	long nc = a->GetNx();
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
@@ -128,18 +142,19 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 		for(i=0;i<m;i++)
 		{
 			if(gr->Stop)	return;
-			k = floor(nums->v(0,i)+0.5);
-			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			k1 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
-			k = floor(nums->v(1,i)+0.5);
-			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			k2 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
-			k = floor(nums->v(2,i)+0.5);
-			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			k3 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
-			k = floor(nums->v(3,i)+0.5);
-			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			k4 = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
+			k1 = long(nums->v(0,i)+0.5);
+			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
+			k2 = long(nums->v(1,i)+0.5);
+			p2 = mglPoint(x->v(k2), y->v(k2), z->v(k2));
+			k3 = long(nums->v(2,i)+0.5);
+			p3 = mglPoint(x->v(k3), y->v(k3), z->v(k3));
+			k4 = floor(nums->v(3,i)+0.5);
+			p4 = mglPoint(x->v(k4), y->v(k4), z->v(k4));
+			q = (p2-p1) ^ (p3-p1);
+			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
+			k2 = gr->AddPnt(p2,gr->GetC(ss,a->v(k2)),q);
+			k3 = gr->AddPnt(p3,gr->GetC(ss,a->v(k3)),q);
+			k4 = gr->AddPnt(p4,gr->GetC(ss,a->v(k4)),q);
 			gr->quad_plot(k1,k2,k3,k4);
 		}
 	}
@@ -147,22 +162,40 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 	{
 		gr->Reserve(n);
 		long *kk = new long[n];
-		for(k=0;k<n;k++)	// TODO: add averaged normales here
+		mglPoint *pp = new mglPoint[n];
+		for(i=0;i<m;i++)	// add averaged normales
 		{
-			if(gr->Stop)	{	delete []kk;	return;	}
-			p = mglPoint(x->v(k), y->v(k), z->v(k));
-			kk[k] = gr->AddPnt(p,gr->GetC(ss,a->v(k)),q);
+			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
+			k1 = long(nums->v(0,i)+0.5);
+			p1 = mglPoint(x->v(k1), y->v(k1), z->v(k1));
+			k2 = long(nums->v(1,i)+0.5);
+			p2 = mglPoint(x->v(k2), y->v(k2), z->v(k2));
+			k3 = long(nums->v(2,i)+0.5);
+			p3 = mglPoint(x->v(k3), y->v(k3), z->v(k3));
+			k4 = floor(nums->v(3,i)+0.5);
+			p4 = mglPoint(x->v(k4), y->v(k4), z->v(k4));
+
+			q = (p2-p1) ^ (p3-p1);	if(pp[k1]*q<0) q*=-1;	pp[k1] += q;
+			q = (p2-p4) ^ (p3-p4);	if(pp[k2]*q<0) q*=-1;	pp[k2] += q;
+			q = (p1-p2) ^ (p4-p2);	if(pp[k3]*q<0) q*=-1;	pp[k3] += q;
+			q = (p1-p4) ^ (p4-p3);	if(pp[k4]*q<0) q*=-1;	pp[k4] += q;
 		}
-		for(i=0;i<m;i++)
+		for(i=0;i<n;i++)	// add points
 		{
-			if(gr->Stop)	{	delete []kk;	return;	}
+			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
+			q = mglPoint(x->v(i), y->v(i), z->v(i));
+			kk[i] = gr->AddPnt(q,gr->GetC(ss,a->v(i)),pp[i]);
+		}
+		for(i=0;i<m;i++)	// draw quads
+		{
+			if(gr->Stop)	{	delete []kk;	delete []pp;	return;	}
 			k1 = floor(nums->v(0,i)+0.5);
 			k2 = floor(nums->v(1,i)+0.5);
 			k3 = floor(nums->v(2,i)+0.5);
 			k4 = floor(nums->v(3,i)+0.5);
 			gr->quad_plot(kk[k1],kk[k2],kk[k3],kk[k4]);
 		}
-		delete []kk;
+		delete []kk;	delete []pp;
 	}
 	gr->EndGroup();
 }

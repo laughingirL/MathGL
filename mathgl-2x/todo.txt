@@ -11,15 +11,12 @@
 
 1. Parallelization of drawing (MathGL level) -- bug with primitives drawing --> pixel.cpp
 2. Export to X3D and VRML
-3. Set normales in TrigPlot and QuadPlot as average ones.
+3. Manual colors for text, boundary, background of Legend()
 4. Add MGL command "ask $N 'question'" -- like interactive "define"
-5. Manual colors for text, boundary, background of Legend()
+5. ContV -- contours with vertical belts
 6. FlowN() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
    Similarly, PlotN().
 7. Cones() -- like Bars() but by Cone()
-8. Set curve "sharpness" -- highlighting use smoother one.
-9. Symbol '\' (or '&') at the end continue string in udav
-10. ContV -- contours with vertical belts
 
 ============= FOR V.2.1 ========
 
@@ -118,6 +115,7 @@ Remove other setting if data name is changed.
 35. Sample for TriPlot (piramid) and QuadPlot (cube)
 36. Handle mglBase::Stop everywhere
 37. Number of frames can be changed at reload + manual call of draw_func if number of frames is 0.
+38. Symbol '\' at the end continue string in MGL script
 
 ============= BUGS =============
 

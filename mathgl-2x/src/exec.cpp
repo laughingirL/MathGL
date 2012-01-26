@@ -455,6 +455,32 @@ void mglc_cont(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 		mglprintf(out,1024,L"gr->Cont(%s, %s, %s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), k[4]==2?a[4].s.c_str():"",opt);
 }
 //-----------------------------------------------------------------------------
+int mgls_contv(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
+{
+	if(k[0]!=1)	return 1;
+	else if(k[1]!=1)	gr->ContV(*(a[0].d),k[1]==2?a[1].s.c_str():"",opt);
+	else if(k[1]==1 && k[2]!=1)
+		gr->ContV(*(a[0].d), *(a[1].d), k[2]==2?a[2].s.c_str():"",opt);
+	else if(k[1]==1 && k[2]==1 && k[3]!=1)
+		gr->ContV(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s.c_str():"",opt);
+	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]!=1)
+		gr->ContV(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), k[4]==2?a[4].s.c_str():"",opt);
+	else	return 1;
+	return 0;
+}
+void mglc_contv(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
+{
+	if(k[0]!=1)	return;
+	else if(k[1]!=1)
+		mglprintf(out,1024,L"gr->ContV(%s, \"%s\", \"%s\");", a[0].s.c_str(), k[1]==2?a[1].s.c_str():"",opt);
+	else if(k[1]==1 && k[2]!=1)
+		mglprintf(out,1024,L"gr->ContV(%s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), k[2]==2?a[2].s.c_str():"",opt);
+	else if(k[1]==1 && k[2]==1 && k[3]!=1)
+		mglprintf(out,1024,L"gr->ContV(%s, %s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), k[3]==2?a[3].s.c_str():"",opt);
+	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]!=1)
+		mglprintf(out,1024,L"gr->ContV(%s, %s, %s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), k[4]==2?a[4].s.c_str():"",opt);
+}
+//-----------------------------------------------------------------------------
 int mgls_contf(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
@@ -3426,6 +3452,7 @@ mglCommand mgls_base_cmd[] = {
 	{"contfy","Draw solid contour lines at y-slice (or y-plane)","contfy Dat ['fmt' pos num]", mgls_contfy, mglc_contfy,0},
 	{"contfz","Draw solid contour lines at z-slice (or z-plane)","contfz Dat ['fmt' pos num]", mgls_contfz, mglc_contfz,0},
 	{"continue","Skip commands and iterate for-cycle again","continue", 0, 0, 6},
+	{"contv","Draw contour tubes","contv Zdat ['fmt' num zpos]|Vdat Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' num zpos]|Vdat Xdat Ydat Zdat ['fmt' zpos]", mgls_contv, mglc_contv,0},
 	{"contx","Draw contour lines at x-slice (or x-plane)","contx Dat ['fmt' pos num]", mgls_contx, mglc_contx,0},
 	{"conty","Draw contour lines at y-slice (or y-plane)","conty Dat ['fmt' pos num]", mgls_conty, mglc_conty,0},
 	{"contz","Draw contour lines at z-slice (or z-plane)","contz Dat ['fmt' pos num]", mgls_contz, mglc_contz,0},

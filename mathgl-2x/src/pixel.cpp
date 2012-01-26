@@ -461,7 +461,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
 				b1 += nn*light[i].c.g;
 				b2 += nn*light[i].c.b;
 			}
-			if(get(MGL_DIFFUSIVE))		// diffuse light
+			else if(get(MGL_DIFFUSIVE))		// diffuse light
 			{
 				d0 = light[i].q.x-p.x;	// direction to light source
 				d1 = light[i].q.y-p.y;
@@ -710,7 +710,8 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 			if(v>pw*pw)		continue;
 			if(!( PDef & ( 1<<long(fmod(pPos+u/pw/1.5, 16)) ) ))	continue;
 			p = p1+d*(u/dd);	col2int(p,r);
-			r[3] = (unsigned char)(255/cosh(3.f*sqrt(v/pw/pw)));
+//			r[3] = (unsigned char)(255/cosh(3.f*sqrt(v/pw/pw)));
+			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(3.f*(sqrt(v)+(1-pw)/2)));
 			pnt_plot(i,j,p.z+pw,r);
 		}
 	}
@@ -730,7 +731,10 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 			if(v>pw*pw)		continue;
 			if(!(PDef & (1<<long(fmod(pPos+u/pw/1.5, 16)))))		continue;
 			p = p1+d*(u/dd);	col2int(p,r);
-			r[3] = (unsigned char)(255/cosh(3.f*sqrt(v/pw/pw)));
+//			r[3] = (unsigned char)(255/cosh(3.f*sqrt(v/pw/pw)));
+//			r[3] = v<(pw-1)*(pw-1) ? 255 : (unsigned char)(255/cosh(3.f*(sqrt(v)+1-pw)));
+//			r[3] = v<pw*pw/4 ? 255 : (unsigned char)(255/cosh(3.f*(sqrt(v)-pw/2)));
+			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(3.f*(sqrt(v)+(1-pw)/2)));
 			pnt_plot(i,j,p.z+pw,r);
 		}
 	}

@@ -32,9 +32,6 @@ wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim)	{	return wcstok(wcs,delim
 #include <unistd.h>
 #endif
 //-----------------------------------------------------------------------------
-wchar_t *mgl_wcsdup(const wchar_t *s);
-void mgl_wcstrim(wchar_t *str);
-//-----------------------------------------------------------------------------
 mglFunc::mglFunc(long p, const wchar_t *f, mglFunc *prev)
 {
 	pos = p;	next = prev;
@@ -924,8 +921,22 @@ void mglParser::Execute(mglGraph *gr, const wchar_t *text, void (*error)(const c
 	str = (const wchar_t **)malloc(n*sizeof(wchar_t *));
 	memcpy(wcs, text, s*sizeof(wchar_t));
 	str[0] = wcs;	n=1;
-	for(i=0;i<s;i++)	if(text[i]=='\n')
-	{	wcs[i]=0;	str[n] = wcs+i+1;	n++;	}
+	long next=0;
+	for(i=0;i<s;i++)
+	{
+		if(text[i]=='\\')	next = i;
+		else if(text[i]>' ')next = 0;
+		if(text[i]=='\n')
+		{	// if string need to be continued then I but ' ' instead of 0x0 and
+			// pointer next string to 0x0. Last one for keeping number of strings.
+			if(next)
+			{	wcs[i]=wcs[next]=' ';	str[n] = wcs+s-1;	next=0;	}
+			else
+			{	wcs[i]=0;	str[n] = wcs+i+1;	}
+			n++;
+
+		}
+	}
 	Execute(gr, n, str, error, high, par);
 	delete []wcs;	free(str);
 }
