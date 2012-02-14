@@ -212,7 +212,7 @@ void mgl_connect(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, in
 	long n=a->GetNx(), m=a->GetNy();
 	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
 	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
-	std::vector<mglSegment> ss;
+	std::vector<mglSegment> ss,cc;
 
 	register long i,j;
 	float d1,d2,d3,d4;
@@ -238,10 +238,22 @@ void mgl_connect(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, in
 		if(o2 && o4)	{	o2 = o4 = false;	ss.push_back(mglSegment(q2,q4));	}
 		if(o3 && o4)	{	o3 = o4 = false;	ss.push_back(mglSegment(q3,q4));	}
 	}
-	if(ss.size()==0)	return;
 	// connect it
+	if(ss.size()==0)	return;
+	for(i=0;i<ss.size();i++)	// lets try most stupid algorithm (can be VERY slow)
+	{
+		mglSegment &s1=ss[i];
+		for(j=0;j<ss.size();j++)
+		{
+			mglSegment &s2=ss[j];
+			if(s2.prev<0 && s1.p2==s2.p1)	{	s1.next = j;	s2.prev=i;	continue;	}
+			if(s2.next<0 && s1.p1==s2.p2)	{	s1.prev = j;	s2.next=i;	continue;	}
+//			if(s2.prev<0 && s1.p2==s2.p1)
+//			{	s1.next = j;	s2.prev=i;	continue;	}
+		}
+	}
 }
-
+//-----------------------------------------------------------------------------
 // NOTE! All data MUST have the same size! Only first slice is used!
 void mgl_cont_gen(HMGL gr, float val, HCDT a, HCDT x, HCDT y, HCDT z, float c, int text,long ak)
 {
@@ -754,6 +766,120 @@ void mgl_contd_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,in
 //	ContV series
 //
 //-----------------------------------------------------------------------------
+// NOTE! All data MUST have the same size! Only first slice is used!
+void mgl_contv_gen(HMGL gr, float val, float dval, HCDT a, HCDT x, HCDT y, HCDT z, float c, int text,long ak)
+{
+	long n=a->GetNx(), m=a->GetNy();
+	if(n<2 || m<2 || x->GetNx()*x->GetNy()!=n*m || y->GetNx()*y->GetNy()!=n*m || z->GetNx()*z->GetNy()!=n*m)
+	{	gr->SetWarn(mglWarnDim,"ContGen");	return;	}
+
+	mglPoint *kk = new mglPoint[2*n*m],p;
+	float d, r, kx, ky;
+	register long i,j,k, pc=0;
+	// add intersection point of isoline and Y axis
+	for(i=0;i<n-1;i++)	for(j=0;j<m;j++)
+	{
+		if(gr->Stop)	{	delete []kk;	return;	}
+		d = mgl_d(val,a->v(i,j,ak),a->v(i+1,j,ak));
+		if(d>=0 && d<1)
+		{
+			p = mglPoint(x->v(i,j)*(1-d)+x->v(i+1,j)*d,
+						 y->v(i,j)*(1-d)+y->v(i+1,j)*d,
+						 z->v(i,j)*(1-d)+z->v(i+1,j)*d);
+			kk[pc] = mglPoint(i+d,j,gr->AddPnt(p,c));	pc++;
+		}
+	}
+	// add intersection point of isoline and X axis
+	for(i=0;i<n;i++)	for(j=0;j<m-1;j++)
+	{
+		if(gr->Stop)	{	delete []kk;	return;	}
+		d = mgl_d(val,a->v(i,j,ak),a->v(i,j+1,ak));
+		if(d>=0 && d<1)
+		{
+			p = mglPoint(x->v(i,j)*(1-d)+x->v(i,j+1)*d,
+						 y->v(i,j)*(1-d)+y->v(i,j+1)*d,
+						 z->v(i,j)*(1-d)+z->v(i,j+1)*d);
+			kk[pc] = mglPoint(i,j+d,gr->AddPnt(p,c));	pc++;
+		}
+	}
+	// deallocate arrays and finish if no point
+	if(pc==0)	{	delete []kk;	return;	}
+	// allocate arrays for curve (nn - next, ff - prev)
+	long *nn = new long[pc], *ff = new long[pc];
+	// -1 is not parsed, -2 starting
+	for(i=0;i<pc;i++)	nn[i] = ff[i] = -1;
+	// connect points to line
+	long i11,i12,i21,i22,j11,j12,j21,j22;
+	j=-1;	// current point
+	do{
+		if(gr->Stop)	{	delete []kk;	delete []nn;	delete []ff;	return;	}
+		if(j>=0)
+		{
+			kx = kk[j].x;	ky = kk[j].y;	i = -1;
+			i11 = long(kx+1e-5);	i12 = long(kx-1e-5);
+			j11 = long(ky+1e-5);	j12 = long(ky-1e-5);
+			r=10;
+			for(k=0;k<pc;k++)	// find closest point in grid
+			{
+				if(k==j || k==ff[j] || ff[k]!=-1)	continue;	// point is marked
+				i21 = long(kk[k].x+1e-5);	i22 = long(kk[k].x-1e-5);
+				j21 = long(kk[k].y+1e-5);	j22 = long(kk[k].y-1e-5);
+				// check if in the same cell
+				register bool cond = (i11==i21 || i11==i22 || i12==i21 || i12==i22) &&
+				(j11==j21 || j11==j22 || j12==j21 || j12==j22);
+				d = hypot(kk[k].x-kx,kk[k].y-ky);	// if several then select closest
+				if(cond && d<r)	{	r=d;	i=k;	}
+			}
+			if(i<0)	j = -1;	// no free close points
+			else			// mark the point
+			{	nn[j] = i;	ff[i] = j;	j = nn[i]<0 ? i : -1;	}
+		}
+		if(j<0)
+		{
+			for(k=0;k<pc;k++)	if(nn[k]==-1)	// first check edges
+			{
+				if(kk[k].x==0 || fabs(kk[k].x-n+1)<1e-5 || kk[k].y==0 || fabs(kk[k].y-m+1)<1e-5)
+				{	nn[k]=-2;	j = k;	break;	}
+			}
+			if(j<0)	for(k=0;k<pc;k++)	if(nn[k]==-1)	// or any points inside
+			{	j = k;	nn[k]=-2;	break;	}
+		}
+	}while(j>=0);
+	for(i=0;i<pc;i++)	{	ff[i] = long(0.5+kk[i].z);	}	// return to PntC numbering
+
+	if(text && pc>1)
+	{
+		wchar_t wcs[64];
+		mglprintf(wcs,64,L"%4.3g",val);
+		mglPoint t;
+		float del = 2*gr->TextWidth(wcs,"",-0.5);
+		// find width and height of drawing area
+		float ar=gr->GetRatio(), w=gr->FontFactor(), h;
+		if(del<w/5)	del = w/5;
+		if(ar<1) h=w/ar;	else {	h=w;	w*=ar;	}
+		m=long(2*w/del)+1;	n=long(2*h/del)+1;	// don't need data size anymore
+		long *oo=new long[n*m];
+		float *rr=new float[n*m];
+		for(i=0;i<n*m;i++)	{	oo[i]=-1;	rr[i]=del*del/4;	}
+
+		for(k=0;k<pc;k++)	// print label several times if possible
+		{
+			if(nn[k]<0)	continue;
+			t = gr->GetPntP(ff[k]);
+			i = long(t.x/del);	t.x -= i*del;
+			j = long(t.y/del);	t.y -= j*del;
+			if(i<0 || i>=m || j<0 || j>=n)	continue;	// never should be here!
+			r = t.x*t.x+t.y*t.y;	i += m*j;
+			if(rr[i]>r)	{	rr[i]=r;	oo[i]=k;	}
+		}
+		for(i=0;i<n*m;i++)	if(oo[i]>=0)
+			mgl_string_curve(gr,oo[i],pc,ff,nn,wcs,"t:C",-0.5);
+		delete []oo;	delete []rr;
+	}
+	for(i=0;i<pc;i++)	if(nn[i]>=0)	gr->line_plot(ff[i], ff[nn[i]]);
+	delete []kk;	delete []nn;	delete []ff;
+}
+//-----------------------------------------------------------------------------
 void mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
 	register long i,j,n=z->GetNx(),m=z->GetNy();
@@ -786,7 +912,7 @@ void mgl_contv_xy_val(HMGL gr, HCDT v, HCDT x, HCDT y, HCDT z, const char *sch, 
 		v0 = v->v(i);		z0 = fixed ? gr->Min.z : v0;
 		if(z->GetNz()>1)	z0 = gr->Min.z+(gr->Max.z-gr->Min.z)*float(j)/(z->GetNz()-1);
 		zz.Fill(z0,z0);
-		mgl_cont_gen(gr,v0,z,x,y,&zz,gr->GetC(s,v0),text,j);	// TODO: ContV -- change here!!!
+//		mgl_contv_gen(gr,v0,z,x,y,&zz,gr->GetC(s,v0),text,j);	// TODO: ContV -- change here!!!
 	}
 	gr->EndGroup();
 }

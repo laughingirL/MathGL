@@ -17,6 +17,7 @@
 6. FlowN() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
    Similarly, PlotN().
 7. Cones() -- like Bars() but by Cone()
+8. Add mgl_data_sort(HMDT dat, long idx, long idy); -- sort rows of x-y table (or slices of 3D data) by value of idx-column (and idy-row for nz>1)
 
 ============= FOR V.2.1 ========
 

@@ -712,6 +712,9 @@ void mgl_write_xgl_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 	char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 	mgl_write_xgl(_GR_,s,d);	delete []s;		delete []d;	}*/
 //-----------------------------------------------------------------------------
+void mgl_x3d_prim(const mglPrim &q, const mglPnt &p, void *fp,bool gz, float size)
+{}	// TODO
+//-----------------------------------------------------------------------------
 void mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 {
 	if(gr->GetPrmNum()<1)	return;
@@ -728,10 +731,107 @@ void mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 	mgl_printf(fp, gz, "<meta name='generator' content='MathGL, http://mathgl.sourceforge.net/'/>\n");
 	mgl_printf(fp, gz, "</head>\n<Scene>\n");
 
+	// 1. first we have to define proto for marks and glyphs
+	bool m_p=false,m_x=false,m_d=false,m_v=false,m_t=false,
+	m_s=false,m_a=false,m_o=false,m_T=false,
+	m_V=false,m_S=false,m_D=false,m_Y=false,m_l=false,
+	m_L=false,m_r=false,m_R=false,m_X=false,m_P=false;
+	register unsigned long i,j;
+	for(i=0;i<gr->GetPrmNum();i++)
+	{
+		const mglPrim q = gr->GetPrm(i);
+		if(q.type>0)	continue;		if(q.n4=='+')	m_p = true;
+		if(q.n4=='x')	m_x = true;		if(q.n4=='s')	m_s = true;
+		if(q.n4=='d')	m_d = true;		if(q.n4=='v')	m_v = true;
+		if(q.n4=='^')	m_t = true;		if(q.n4=='*')	m_a = true;
+		if(q.n4=='o' || q.n4=='O' || q.n4=='C')	m_o = true;
+		if(q.n4=='S')	m_S = true;		if(q.n4=='D')	m_D = true;
+		if(q.n4=='V')	m_V = true;		if(q.n4=='T')	m_T = true;
+		if(q.n4=='<')	m_l = true;		if(q.n4=='L')	m_L = true;
+		if(q.n4=='>')	m_r = true;		if(q.n4=='R')	m_R = true;
+		if(q.n4=='Y')	m_Y = true;
+		if(q.n4=='P')	m_P = true;		if(q.n4=='X')	m_X = true;
+	}
+	if(m_P)	{	m_p=true;	m_s=true;	}
+	if(m_X)	{	m_x=true;	m_s=true;	}
+	if(m_p)	mgl_printf(fp, gz, "<ProtoDeclare name='m_p'><ProtoInterface/>\n<ProtoBody>"
+								"<LineSet vertexCount=''>\n<Coordinate point='-1 0 0, 1 0 0, 0 -1 0, 0 1 0'/>"
+								"\n</LineSet></ProtoBody></ProtoDeclare>\n");
+	/*if(m_x)	mgl_printf(fp, gz, "/m_x {sm sm rm s2 s2 rl 0 sm 2 mul rm sm 2 mul s2 rl d0} def\n");	// TODO
+	if(m_s)	mgl_printf(fp, gz, "/m_s {sm sm rm 0 s2 rl s2 0 rl 0 sm 2 mul rl cp d0} def\n");
+	if(m_d)	mgl_printf(fp, gz, "/m_d {sm 0 rm ss ss rl ss sm rl sm sm rl cp d0} def\n");
+	if(m_v)	mgl_printf(fp, gz, "/m_v {sm ss 2 div rm s2 0 rl sm sm 1.5 mul rl d0 cp} def\n");
+	if(m_t)	mgl_printf(fp, gz, "/m_t {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl d0 cp} def\n");
+	if(m_a)	mgl_printf(fp, gz, "/m_a {sm 0 rm s2 0 rl sm 1.6 mul sm 0.8 mul rm ss 1.2 mul ss 1.6 mul rl 0 sm 1.6 mul rm sm 1.2 mul ss 1.6 mul rl d0} def\n");
+	if(m_o)	mgl_printf(fp, gz, "/m_o {ss 0 360 d0 arc} def\n");
+	if(m_S)	mgl_printf(fp, gz, "/m_S {sm sm rm 0 s2 rl s2 0 rl 0 sm 2 mul rl cp} def\n");
+	if(m_D)	mgl_printf(fp, gz, "/m_D {sm 0 rm ss ss rl ss sm rl sm sm rl cp} def\n");
+	if(m_V)	mgl_printf(fp, gz, "/m_V {sm ss 2 div rm s2 0 rl sm sm 1.5 mul rl cp} def\n");
+	if(m_T)	mgl_printf(fp, gz, "/m_T {sm sm 2 div rm s2 0 rl sm ss 1.5 mul rl cp} def\n");
+	if(m_Y)	mgl_printf(fp, gz, "/m_Y {0 sm rm 0 ss rl sm ss rl s2 0 rm sm sm rl d0} def\n");
+	if(m_r)	mgl_printf(fp, gz, "/m_r {sm 2 div sm rm 0 s2 rl ss 1.5 mul sm rl d0 cp} def\n");
+	if(m_l)	mgl_printf(fp, gz, "/m_l {ss 2 div sm rm 0 s2 rl sm 1.5 mul sm rl d0 cp} def\n");
+	if(m_R)	mgl_printf(fp, gz, "/m_R {sm 2 div sm rm 0 s2 rl ss 1.5 mul sm rl cp} def\n");
+	if(m_L)	mgl_printf(fp, gz, "/m_L {ss 2 div sm rm 0 s2 rl sm 1.5 mul sm rl cp} def\n");
+	if(m_P)	mgl_printf(fp, gz, "/m_P {m_p 0 sm rm m_s} def\n");
+	if(m_X)	mgl_printf(fp, gz, "/m_X {m_x ss sm rm m_s} def\n");*/
+	//	if(m_C)	mgl_printf(fp, gz, "/m_C {m_c m_o} def\n");
+	mgl_printf(fp, gz, "\n");
 
+	// 2 define coordinates, colors and so on
+	mgl_printf(fp, gz, "<Coordinate DEF='mypnts' point='");
+	for(i=0;i<gr->GetPntNum();i++)
+	{	const mglPnt &p=gr->GetPnt(i);	mgl_printf(fp, gz, "%g %g %g, ", p.x,p.y,p.z);	}
+	mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
+	mgl_printf(fp, gz, "<Color DEF='myclrs' color='");
+	for(i=0;i<gr->GetPntNum();i++)
+	{	const mglPnt &p=gr->GetPnt(i);	mgl_printf(fp, gz, "%g %g %g, ", p.r,p.g,p.b);	}
+	mgl_printf(fp, gz, "0.0 0.0 0.0'/>");
+/*	mgl_printf(fp, gz, "<Normal DEF='mynrms' vector='");	// Let X3D calculate normales by itself ?!?
+	for(i=0;i<gr->GetPntNum();i++)
+	{	const mglPnt &p=gr->GetPnt(i);
+		if(isnan(p.u) || isnan(p.v) || isnan(p.w))	mgl_printf(fp, gz, "0 0 0, ");
+		else	mgl_printf(fp, gz, "%g %g %g, ", p.u,p.v,p.w);	}
+	mgl_printf(fp, gz, "0.0 0.0 0.0'/>");*/
 
+	// now should be defined textures ... but since X3D support RGBA then omit this in this version
 
+	// 3. now find group for primitives
+	long m1=0,m2=0,m;
+	for(i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
+	{	m = gr->Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
+	long *ng = new long[m2-m1+1];
+	for(i=0;i<gr->Grp.size();i++)	ng[gr->Grp[i].Id-m1] = i;
+	for(i=0;i<gr->GetPrmNum();i++)	// collect data for groups
+	// it is rather expensive (extra 4b per primitive) but need for export to 3D
+	{
+		m = gr->GetPrm(i).id-m1;
+		if(m>=0 && m<m2-m1+1)	gr->Grp[ng[m]].p.push_back(i);
+	}
+	delete []ng;
 
+	// primitive definition in groups
+	std::vector<long> p;
+	mglPrim q;
+	for(i=0;i<gr->Grp.size();i++)
+	{
+		mgl_printf(fp,gz,"<Group><!--%s-->\n",gr->Grp[i].Lbl.c_str());	p = gr->Grp[i].p;
+		for(j=0;j<p.size();j++)
+		{
+			const mglPrim q=gr->GetPrm(p[j]);	// TODO: collect by type (quads,trig,line) and draw together???
+			mgl_x3d_prim(q, gr->GetPnt(q.n1), fp,gz, q.s*gr->FontFactor());
+		}
+		mgl_printf(fp,gz,"</Group><!--%s-->\n",gr->Grp[i].Lbl.c_str());
+		gr->Grp[i].p.clear();	// we don't need indexes anymore
+	}
+	// try to save "ungrouped" primitives
+	mgl_printf(fp,gz,"<!--ungrouped-->\n");
+	for(i=0;i<gr->GetPrmNum();i++)
+	{
+		const mglPrim q=gr->GetPrm(p[j]);	m = q.id-m1;
+		if(m<0 || m>=m2-m1+1)
+			mgl_x3d_prim(q, gr->GetPnt(q.n1), fp,gz, q.s*gr->FontFactor());
+	}
 	mgl_printf(fp, gz, "</Scene>\n");
 	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
 }
