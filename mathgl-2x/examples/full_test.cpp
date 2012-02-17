@@ -794,6 +794,16 @@ void smgl_plot(mglGraph *gr)
 	gr->Box();	gr->Plot(y);
 }
 //-----------------------------------------------------------------------------
+void smgl_tape(mglGraph *gr)
+{
+	mglData x(50), y(50), z(50);
+	y.Modify("sin(pi*(2*x-1))");
+	x.Modify("cos(pi*2*x-pi)");	z.Fill(-1,1);
+	gr->Rotate(40,60);
+	gr->Plot(x,y,z);		gr->Box();
+	gr->Tape(x,y,z);
+}
+//-----------------------------------------------------------------------------
 void smgl_area(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);
@@ -846,6 +856,12 @@ void smgl_barh(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
 	gr->SetOrigin(0,0,0);	gr->Box();	gr->Barh(ys);
+}
+//-----------------------------------------------------------------------------
+void smgl_cones(mglGraph *gr)
+{
+	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+	gr->SetOrigin(0,0,0);	gr->Box();	gr->Cones(ys);
 }
 //-----------------------------------------------------------------------------
 void smgl_tens(mglGraph *gr)
@@ -1770,6 +1786,7 @@ mglSample samp[] = {
 	{"color_schemes", smgl_color_schemes},
 	{"colors", smgl_colors},
 	{"column",	smgl_column},
+	{"cones", smgl_cones},
 	{"cont", smgl_cont},
 	{"cont_xyz", smgl_cont_xyz},
 	{"conta", smgl_conta},
@@ -1856,6 +1873,7 @@ mglSample samp[] = {
 	{"surf_sl", smgl_surf_sl},
 	{"surfa", smgl_surfa},
 	{"surfc", smgl_surfc},
+	{"tape", smgl_tape},
 	{"tens", smgl_tens},
 	{"ternary", smgl_ternary},
 	{"text", smgl_text},
