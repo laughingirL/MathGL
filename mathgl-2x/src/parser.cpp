@@ -31,6 +31,9 @@ wchar_t *wcstokw32(wchar_t *wcs, const wchar_t *delim)	{	return wcstok(wcs,delim
 #else
 #include <unistd.h>
 #endif
+void (*mgl_ask_func)(const wchar_t *, wchar_t *)=0;
+void mgl_ask_gets(const wchar_t *quest, wchar_t *res)
+{	printf("%ls\n",quest);	fgetws(res,1024,stdin);	}
 //-----------------------------------------------------------------------------
 mglFunc::mglFunc(long p, const wchar_t *f, mglFunc *prev)
 {
@@ -575,6 +578,21 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 				AddParam(n, buf);
 			}
 			delete []s;	return res;
+		}
+	}
+	if(!skip() && !wcsncmp(str,L"ask",3) && (str[3]==' ' || str[3]=='\t'))
+	{
+		PutArg(string,str,true);
+		str += 4;	mgl_wcstrim(str);//	int res = 1;
+		int nn = str[1]<='9' ? str[1]-'0' : (str[1]>='a' ? str[1]-'a'+10:-1);
+		if(*str=='$' && nn>=0 && nn<='z'-'a'+10)
+		{
+			static wchar_t res[1024];
+			str +=2;	mgl_wcstrim(str);
+			if(*str=='\'')	{	str++;	str[wcslen(str)-1]=0;	}
+			if(mgl_ask_func)
+			{	mgl_ask_func(str,res);	if(*res)	AddParam(nn, res);	}
+			delete []s;	return mgl_ask_func?0:1;
 		}
 	}
 	if(!skip() && !wcsncmp(str,L"for",3) && (str[3]==' ' || str[3]=='\t'))

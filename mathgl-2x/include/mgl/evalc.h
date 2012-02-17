@@ -22,8 +22,9 @@
 #define _MGL_EVALC_H_
 //---------------------------------------------------------------------------
 #include <complex>
-/// short name of complex numbers
-#define dual std::complex<double>
+#ifndef dual
+#define dual std::complex<double>	///< short name for complex numbers
+#endif
 #include "mgl/eval.h"
 //---------------------------------------------------------------------------
 /// Class for evaluating formula specified by the string

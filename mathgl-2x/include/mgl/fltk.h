@@ -163,5 +163,7 @@ using mglCanvasW::Window;
 	void Animation();	///< Run animation (I'm too lasy to change it)
 };
 //-----------------------------------------------------------------------------
+void mgl_ask_fltk(const wchar_t *quest, wchar_t *res);
+//-----------------------------------------------------------------------------
 #endif
 #endif

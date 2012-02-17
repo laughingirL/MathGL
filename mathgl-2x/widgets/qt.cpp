@@ -35,6 +35,7 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QFileDialog>
+#include <QInputDialog>
 #include <stdio.h>
 #include "mgl/qt.h"
 //-----------------------------------------------------------------------------
@@ -55,6 +56,10 @@
 #include "xpm/show_sl.xpm"
 #include "xpm/next_sl.xpm"
 #include "xpm/prev_sl.xpm"
+//-----------------------------------------------------------------------------
+void mgl_ask_qt(const wchar_t *quest, wchar_t *res)
+{	QInputDialog::getText(QApplication::activeWindow(), "MathGL",
+						QString::fromWCharArray(quest)).toWCharArray(res);	}
 //-----------------------------------------------------------------------------
 //
 //		class QMathGL

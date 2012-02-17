@@ -550,12 +550,12 @@ void mgl_data_mirror_(uintptr_t *d, const char *dir,int l)
 //-----------------------------------------------------------------------------
 float mgl_data_linear(HCDT d, float x,float y,float z)
 {
-	register long kx=long(x), ky=long(y), kz=long(z);
-	register mreal b0,b1;
+	long kx=long(x), ky=long(y), kz=long(z);
+	mreal b0,b1;
 	const mglData *dd=dynamic_cast<const mglData *>(d);
 	if(dd)
 	{
-		register long nx=dd->nx, ny=dd->ny, nz=dd->nz;
+		long nx=dd->nx, ny=dd->ny, nz=dd->nz, d=ny>1?nx:0;
 		kx = kx<nx-1 ? kx:nx-2;	kx = kx>=0 ? kx:0;
 		ky = ky<ny-1 ? ky:ny-2;	ky = ky>=0 ? ky:0;
 		kz = kz<nz-1 ? kz:nz-2;	kz = kz>=0 ? kz:0;
@@ -563,15 +563,13 @@ float mgl_data_linear(HCDT d, float x,float y,float z)
 		y -= ky;	if(ny==1)	y=0;
 		z -= kz;	if(nz==1)	z=0;
 
-		register long i0 = kx+nx*(ky+ny*kz);
-		const mreal *aa=dd->a+i0;
-		b0 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[nx] + x*y*aa[1+nx];
-		aa = dd->a + i0 + nx*ny;
-		b1 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[nx] + x*y*aa[1+nx];
+		const mreal *aa=dd->a+kx+nx*(ky+ny*kz), *bb = aa+(nz>1?nx*ny:0);
+		b0 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[d] + x*y*aa[1+d];
+		b1 = bb[0]*(1-x-y+x*y) + x*(1-y)*bb[1] + y*(1-x)*bb[d] + x*y*bb[1+d];
 	}
 	else
 	{
-		register long n=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
+		long n=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
 		kx = (kx>=0 ? (kx<n ? kx:n -1):0);
 		ky = (ky>=0 ? (ky<ny? ky:ny-1):0);
 		kz = (kz>=0 ? (kz<nz? kz:nz-1):0);

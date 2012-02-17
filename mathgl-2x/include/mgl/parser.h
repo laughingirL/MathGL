@@ -97,6 +97,9 @@ struct mglFnStack
 	wchar_t *par[9];
 };
 //-----------------------------------------------------------------------------
+/// Function for asking question in console mode
+void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
+//-----------------------------------------------------------------------------
 /// Structure for the command argument (see mglGraph::Exec()).
 class mglParser
 {

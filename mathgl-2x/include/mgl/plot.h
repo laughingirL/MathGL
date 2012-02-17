@@ -47,6 +47,13 @@ void mgl_tens_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, u
 void mgl_tens_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *c, const char *pen, const char *opt,int,int);
 void mgl_tens_(uintptr_t *graph, uintptr_t *y, uintptr_t *c, const char *pen, const char *opt,int,int);
 /*****************************************************************************/
+void mgl_tape_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt);
+void mgl_tape_xy(HMGL graph, HCDT x, HCDT y, const char *pen, const char *opt);
+void mgl_tape(HMGL graph, HCDT y, const char *pen, const char *opt);
+void mgl_tape_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int,int);
+void mgl_tape_xy_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int,int);
+void mgl_tape_(uintptr_t *graph, uintptr_t *y,	const char *pen, const char *opt,int,int);
+/*****************************************************************************/
 void mgl_boxplot_xy(HMGL graph, HCDT x, HCDT a, const char *pen, const char *opt);
 void mgl_boxplot(HMGL graph, HCDT a, const char *pen, const char *opt);
 /*****************************************************************************/

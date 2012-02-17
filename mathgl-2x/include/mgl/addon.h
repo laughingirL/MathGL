@@ -24,7 +24,9 @@
 #ifdef __cplusplus
 /***************************************************************************/
 #include <complex>
+#ifndef dual
 #define dual std::complex<double>
+#endif
 //---------------------------------------------------------------------------
 dual mgl_ipowc(dual x,int n);
 dual expi(dual a);

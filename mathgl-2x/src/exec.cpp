@@ -51,6 +51,17 @@ void mglc_addto(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 	else if(k[0]==1 && k[1]==3)	mglprintf(out,1024,L"%s += %g;",a[0].s.c_str(), a[1].v);
 }
 //-----------------------------------------------------------------------------
+int mgls_sort(mglGraph *, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==1 && k[1]==3)	a[0].d->Sort(a[1].v, k[2]==3?a[2].v:-1);
+	else	return 1;
+	return 0;
+}
+void mglc_sort(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==1 && k[1]==3)		mglprintf(out,1024,L"%s.Sort(%d,%d);",a[0].s.c_str(), a[1].v, k[2]==3?a[2].v:-1);
+}
+//-----------------------------------------------------------------------------
 int mgls_alpha(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	gr->Alpha(k[0]==3 ? a[0].v!=0 : true);	return 0;
@@ -199,6 +210,25 @@ void mglc_barh(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 		mglprintf(out,1024,L"gr->Barh(%s, \"%s\", \"%s\");", a[0].s.c_str(), k[1]==2?a[1].s.c_str():"",opt);
 	else
 		mglprintf(out,1024,L"gr->Barh(%s, %s, \"%s\", \"%s\");",a[0].s.c_str(), a[1].s.c_str(), k[2]==2?a[2].s.c_str():"",opt);
+}
+//-----------------------------------------------------------------------------
+int mgls_cones(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
+{
+	if(k[0]!=1)	return 1;
+	else if(k[1]!=1)	gr->Cones(*(a[0].d), k[1]==2?a[1].s.c_str():"",opt);
+	else if(k[2]!=1)	gr->Cones(*(a[0].d), *(a[1].d), k[2]==2?a[2].s.c_str():"",opt);
+	else 				gr->Cones(*(a[0].d), *(a[1].d), *(a[2].d), k[3]==2?a[3].s.c_str():"",opt);
+	return 0;
+}
+void mglc_cones(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
+{
+	if(k[0]!=1)	return;
+	else if(k[1]!=1)
+		mglprintf(out,1024,L"gr->Cones(%s, \"%s\", \"%s\");", a[0].s.c_str(), k[1]==2?a[1].s.c_str():"",opt);
+	else if(k[2]!=1)
+		mglprintf(out,1024,L"gr->Cones(%s, %s, \"%s\", \"%s\");",a[0].s.c_str(), a[1].s.c_str(), k[2]==2?a[2].s.c_str():"",opt);
+	else
+		mglprintf(out,1024,L"gr->Cones(%s, %s, %s, \"%s\", \"%s\");",a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), k[3]==2?a[3].s.c_str():"",opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_belt(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
@@ -1738,6 +1768,24 @@ void mglc_plot(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 	else if(k[2]!=1)
 		mglprintf(out,1024,L"gr->Plot(%s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), k[2]==2?a[2].s.c_str():"",opt);
 	else 	mglprintf(out,1024,L"gr->Plot(%s, %s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), k[3]==2?a[3].s.c_str():"",opt);
+}
+//-----------------------------------------------------------------------------
+int mgls_tape(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
+{
+	if(k[0]!=1)	return 1;
+	else if(k[1]!=1)	gr->Tape(*(a[0].d),k[1]==2?a[1].s.c_str():"",opt);
+	else if(k[2]!=1)	gr->Tape(*(a[0].d),*(a[1].d),k[2]==2?a[2].s.c_str():"",opt);
+	else 				gr->Tape(*(a[0].d),*(a[1].d),*(a[2].d),k[3]==2?a[3].s.c_str():"",opt);
+	return 0;
+}
+void mglc_tape(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
+{
+	if(k[0]!=1)	return;
+	else if(k[1]!=1)
+		mglprintf(out,1024,L"gr->Tape(%s, \"%s\", \"%s\");",a[0].s.c_str(), k[1]==2?a[1].s.c_str():"",opt);
+	else if(k[2]!=1)
+		mglprintf(out,1024,L"gr->Tape(%s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), k[2]==2?a[2].s.c_str():"",opt);
+	else 	mglprintf(out,1024,L"gr->Tape(%s, %s, %s, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), k[3]==2?a[3].s.c_str():"",opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_boxplot(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
@@ -3443,6 +3491,7 @@ mglCommand mgls_base_cmd[] = {
 	{"columnplot","Set position of plot inside cell of column", "columnplot num ind [d]", mgls_columnplot, mglc_columnplot,5},
 	{"combine", "Direct multiplication of arrays", "combine Res Adat Bdat", mgls_combine, mglc_combine,3},
 	{"cone","Draw cone","cone x1 y1 z1 x2 y2 z2 r1 [r2 'fmt' edge]", mgls_cone, mglc_cone,1},
+	{"cones","Draw cones for 1D data","cones Ydat ['fmt' above]|Xdat Ydat ['fmt' above]|Xdat Ydat Zdat ['fmt' above]", mgls_cones, mglc_cones,0},
 	{"cont","Draw contour lines","cont Zdat ['fmt' num zpos]|Vdat Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' num zpos]|Vdat Xdat Ydat Zdat ['fmt' zpos]", mgls_cont, mglc_cont,0},
 	{"cont3","Draw contour lines for 3D data","cont3 Adat 'dir' [val 'fmt' num]|Vdat Adat 'dir' [val 'fmt']|Xdat Ydat Zdat Adat 'dir' [val 'fmt' num]|Vdat Xdat Ydat Zdar Adat 'dir' [val 'fmt']", mgls_cont3, mglc_cont3,0},
 	{"contd","Draw solid contours with manual colors","contd Zdat ['fmt' num zpos]|Vdat Zdat ['fmt' zpos]|Xdat Ydat Zdat ['fmt' num zpos]|Vdat Xdat Ydat Zdat ['fmt' zpos]", mgls_contd, mglc_contd,0},
@@ -3576,6 +3625,7 @@ mglCommand mgls_base_cmd[] = {
 	{"sew","Remove jump into the data, like phase jumps","sew Dat ['dir' da]", mgls_sew, mglc_sew,3},
 	{"sinfft","Sin-Fourier transform at some direction","sinfft Dat 'dir'", mgls_sinfft, mglc_sinfft,3},
 	{"smooth","Smooth data","smooth Dat [kind 'dir']", mgls_smooth, mglc_smooth,3},
+	{"sort","Sort data by values in column","sort Dat idx [idy]", mgls_sort, mglc_sort,3},
 	{"sphere","Draw sphere","sphere x0 y0 r ['fmt']|x0 y0 z0 r ['fmt']", mgls_sphere, mglc_sphere,1},
 	{"squeeze","Squeeze data","squeeze Dat kx [ky kz]", mgls_squeeze, mglc_squeeze,3},
 	{"stem","Draw stem plot for 1D data","stem Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_stem, mglc_stem,0},
@@ -3595,6 +3645,7 @@ mglCommand mgls_base_cmd[] = {
 	{"surfa","Draw solid surface transpared by other data","surfa Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_surfa, mglc_surfa,0},
 	{"surfc","Draw solid surface colored by other data","surfc Zdat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_surfc, mglc_surfc,0},
 	{"swap","Swap data (usefull after Fourier transform)","swap Dat 'dir'", mgls_swap, mglc_swap,0},
+	{"tape","Draw binormales for 1D data","tape Ydat ['fmt']|Xdat Ydat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tape, mglc_tape,0},
 	{"tens","Draw tension plot for 1D data","tens Ydat Cdat ['fmt']|Xdat Ydat Cdat ['fmt']|Xdat Ydat Zdat Cdat ['fmt']", mgls_tens, mglc_tens,0},
 	{"ternary","Switch on/off to use ternary axis","ternary val", mgls_ternary, mglc_ternary,2},
 	{"text","Draw text at some position or along curve","text x y 'txt' ['fmt' size]|x y z 'txt' ['fmt' size]|x y dx dy 'txt' ['fmt' size]|x y z dx dy dz 'txt' ['fmt' size]|Ydat 'txt' ['font' sise]|Xdat Ydat 'txt' ['font' sise]", mgls_text, mglc_text,0},

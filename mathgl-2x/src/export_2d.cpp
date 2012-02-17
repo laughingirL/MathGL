@@ -363,7 +363,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		if(q.type==-1)	q.type = 1;
 	}
 	mgl_printf(fp, gz, "\nshowpage\n%%%%EOF\n");
-	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
+	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);
 }
 void mgl_write_eps_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
@@ -511,7 +511,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	for(i=0;i<gr->GetPrmNum();i++)
 	{	mglPrim &q=gr->GetPrm(i);	if(q.type==-1)	q.type = 1;	}
 	mgl_printf(fp, gz, "</g></svg>");
-	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
+	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);
 }
 void mgl_write_svg_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;

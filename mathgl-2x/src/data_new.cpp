@@ -1265,3 +1265,23 @@ mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mre
 	return b;
 }
 //-----------------------------------------------------------------------------
+long mgl_idx_var;
+int mgl_cmd_idx(const void *a, const void *b)
+{
+	mreal *aa = (mreal *)a, *bb = (mreal *)b;
+	return (aa[mgl_idx_var]>bb[mgl_idx_var] ? 1:(aa[mgl_idx_var]<bb[mgl_idx_var]?-1:0) );
+}
+void mgl_data_sort(HMDT dat, long idx, long idy)
+{
+	mglData *d = dynamic_cast<mglData *>(dat);
+	if(!d || idx>=d->nx || idx<0)	return;
+	bool single = (d->nz==1 || idy<0);
+	if(idy<0 || idy>d->ny)	idy=0;
+	mgl_idx_var = idx+d->nx*idy;	// NOTE: not thread safe!!!
+	if(single)	qsort(d->a, d->ny*d->nz, d->nx*sizeof(mreal), mgl_cmd_idx);
+	else		qsort(d->a, d->nz, d->ny*d->nx*sizeof(mreal), mgl_cmd_idx);
+}
+//-----------------------------------------------------------------------------
+void mgl_data_sort_(uintptr_t *d, int *idx, int *idy)
+{	mgl_data_sort(_DT_,*idx,*idy);	}
+//-----------------------------------------------------------------------------

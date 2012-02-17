@@ -26,6 +26,8 @@
 std::wstring str;
 mglParse p(true);
 void mgl_error_print(const char *Message, void *par);
+void mgl_ask_fltk(const wchar_t *quest, wchar_t *res);
+void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int show(mglGraph *gr)
 {
@@ -53,10 +55,11 @@ int main(int narg, char **arg)
 		}
 		if(arg[i][0]!='-' && j<0)	j=i;
 	}
+	mgl_ask_func = mgl_ask_gets;
 #if defined(HAVE_FLTK)
-	int kind=0;
+	int kind=0;		mgl_ask_func = mgl_ask_fltk;
 #elif defined(HAVE_QT)
-	int kind=1;
+	int kind=1;		mgl_ask_func = mgl_ask_qt;
 #endif
 	bool mgld=(j>0 && arg[j][strlen(arg[j])]=='d');
 	if(!mgld)

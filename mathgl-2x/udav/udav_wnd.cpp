@@ -77,9 +77,11 @@ void addDataPanel(MainWindow *wnd, QWidget *w, QString name)	{	wnd->addPanel(w, 
 int mgl_cmd_cmp(const void *a, const void *b);
 void udavLoadDefCommands();
 void udavShowHint(QWidget *);
+void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
+	mgl_ask_func = mgl_ask_qt;
 	QApplication a(argc, argv);
 	QTranslator translator;
 //QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));

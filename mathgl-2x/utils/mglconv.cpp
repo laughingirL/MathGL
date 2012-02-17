@@ -22,6 +22,7 @@
 #include <locale.h>
 #include "mgl/mgl.h"
 void mgl_error_print(const char *Message, void *par);
+void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int main(int narg, char **arg)
 {
@@ -48,6 +49,7 @@ int main(int narg, char **arg)
 		if(arg[i][0]!='-' && j<0)	j=i;
 		if(arg[i][0]!='-' && j>0)	k=i;
 	}
+	mgl_ask_func = mgl_ask_gets;
 	// prepare for animation
 	std::wstring str;
 	FILE *fp = j>0?fopen(arg[j],"r"):stdin;

@@ -186,14 +186,13 @@ void mgl_printf(void *fp, bool gz, const char *str, ...)
 	va_start(lst,str);
 	vsprintf(buf,str,lst);
 	va_end(lst);
-	if(gz)	gzprintf(fp, "%s", buf);
+	if(gz)	gzprintf((gzFile)fp, "%s", buf);
 	else	fprintf((FILE *)fp, "%s", buf);
 }
 //---------------------------------------------------------------------------
 int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 {
-	time_t now;
-	time(&now);
+	time_t now;	time(&now);
 	register long i,j;
 	bool gz = fname[strlen(fname)-1]=='z';
 
@@ -209,7 +208,7 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 		mgl_printf(fp, gz, "%02x%02x%02x",p[j][3*i],p[j][3*i+1],p[j][3*i+2]);
 	}
 	mgl_printf(fp, gz, "\n\nshowpage\n%%%%EOF\n");
-	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
+	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);
 	return 0;
 }
 //-----------------------------------------------------------------------------

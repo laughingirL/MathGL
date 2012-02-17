@@ -456,13 +456,13 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	mglPnt p;	mglPrim q;
 	for(i=0;i<n;)
 	{
-		do {	fgets(buf,512,fp);	mgl_strtrim(buf);	} while(*buf='#');
+		do {	fgets(buf,512,fp);	mgl_strtrim(buf);	} while(*buf=='#');
 		sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g", &p.x, &p.y, &p.z, &p.c, &p.t, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
 		Pnt.push_back(p);	i++;
 	}
 	for(i=0;i<m;)
 	{
-		do {	fgets(buf,512,fp);	mgl_strtrim(buf);	} while(*buf='#');
+		do {	fgets(buf,512,fp);	mgl_strtrim(buf);	} while(*buf=='#');
 		sscanf(buf,"%d%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
 		Prm.push_back(q);	i++;
 	}
@@ -833,7 +833,7 @@ void mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 			mgl_x3d_prim(q, gr->GetPnt(q.n1), fp,gz, q.s*gr->FontFactor());
 	}
 	mgl_printf(fp, gz, "</Scene>\n");
-	if(gz)	gzclose(fp);	else	fclose((FILE *)fp);
+	if(gz)	gzclose((gzFile)fp);	else	fclose((FILE *)fp);
 }
 void mgl_write_x3d_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;

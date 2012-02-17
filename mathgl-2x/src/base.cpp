@@ -648,7 +648,17 @@ float mglBase::NextColor(long &id)
 {
 	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
 	if(id>=0)	{	p=(p+1)%n;	id = 256*i+p;	}
-	last_style[0]=MGL_DEF_PAL[p%strlen(MGL_DEF_PAL)];	// TODO: last_style correctly !!!
+	mglColor c = Txt[i].col[2*p];
+	float dif, dmin=1;
+	for(long j=0;mglColorIds[j].id;j++)
+	{
+		dif = (c-mglColorIds[j].col).NormS();
+		if(dif<dmin)
+		{
+			last_style[0] = mglColorIds[j].id;
+			dmin=dif;
+		}
+	}
 	CDef = i + (n>0 ? (p+0.5)/n : 0);	CurrPal++;
 	return CDef;
 }

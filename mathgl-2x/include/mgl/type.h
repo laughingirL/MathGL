@@ -93,6 +93,8 @@ struct mglColor
 	/// Get maximal spectral component
 	inline float Norm()
 	{	return r>g ? r : (g>b ? g : b);	}
+	inline float NormS()
+	{	return r*r+g*g+b*b;	}
 	/// Set color from symbolic id
 	void Set(char p, float bright=1);
 	/// Copy color from other one

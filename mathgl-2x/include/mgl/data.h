@@ -127,6 +127,7 @@ void mgl_data_diff2(HMDT dat, const char *dir);
 void mgl_data_swap(HMDT dat, const char *dir);
 void mgl_data_roll(HMDT dat, char dir, long num);
 void mgl_data_mirror(HMDT dat, const char *dir);
+void mgl_data_sort(HMDT dat, long idx, long idy);
 
 void mgl_data_hankel(HMDT dat, const char *dir);
 void mgl_data_sinfft(HMDT dat, const char *dir);
@@ -239,6 +240,7 @@ void mgl_data_diff2_(uintptr_t *dat, const char *dir,int);
 void mgl_data_swap_(uintptr_t *dat, const char *dir,int);
 void mgl_data_roll_(uintptr_t *dat, const char *dir, int *num, int);
 void mgl_data_mirror_(uintptr_t *dat, const char *dir,int);
+void mgl_data_sort_(uintptr_t *dat, int *idx, int *idy);
 
 void mgl_data_hankel_(uintptr_t *dat, const char *dir,int);
 void mgl_data_sinfft_(uintptr_t *dat, const char *dir,int);
@@ -531,11 +533,14 @@ public:
 	inline void Diff2(const char *dir)	{	mgl_data_diff2(this,dir);	}
 
 	/// Swap left and right part of the data in given direction (useful for fourier spectrums)
-	inline void Swap(const char *dir)	{	mgl_data_swap(this,dir);	}
+	inline void Swap(const char *dir)		{	mgl_data_swap(this,dir);	}
 	/// Roll data along direction \a dir by \a num slices
 	inline void Roll(char dir, long num)	{	mgl_data_roll(this,dir,num);	}
 	/// Mirror the data in given direction (useful for fourier spectrums)
-	inline void Mirror(const char *dir)	{	mgl_data_mirror(this,dir);	}
+	inline void Mirror(const char *dir)		{	mgl_data_mirror(this,dir);	}
+	/// Sort rows (or slices) by values of specified column
+	inline void Sort(long idx, long idy=-1)	{	mgl_data_sort(this,idx,idy);	}
+
 	/// Set as the data envelop
 	inline void Envelop(char dir='x')
 	{	mgl_data_envelop(this,dir);	}

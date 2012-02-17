@@ -242,6 +242,83 @@ void mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal 
 	mgl_cone(_GR_, *x1,*y1,*z1, *x2,*y2,*z2,*r1,*r2,s,*edge);	delete []s;	}
 //-----------------------------------------------------------------------------
 //
+//	Bars series
+//
+//-----------------------------------------------------------------------------
+void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
+{
+	long i,j,m,mx,my,mz,n=z->GetNx(), pal;
+	if(x->GetNx()<n || y->GetNx()<n)	{	gr->SetWarn(mglWarnDim,"Cones");	return;	}
+	if(n<2)		{	gr->SetWarn(mglWarnLow,"Cones");	return;	}
+	gr->SaveState(opt);
+	static int cgid=1;	gr->StartGroup("Cones",cgid++);
+	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
+
+	bool above = pen && strchr(pen,'a');
+	float *dd=new float[2*n], x1,z0,zz,d;
+	memset(dd,0,n*sizeof(float));
+
+	gr->SetPenPal(pen,&pal);
+	char cols[3]={0,0.0};
+	memset(dd,0,2*n*sizeof(float));
+	z0 = gr->GetOrgZ('x');
+	for(i=0;i<n;i++)	for(j=0;j<m;j++)	dd[i] += z->v(i, j<z->GetNy() ? j:0);
+	for(j=0;j<m;j++)
+	{
+		gr->NextColor(pal);		cols[0]=gr->last_color();
+		if(gr->GetNumPal(pal)==2*m)	{	gr->NextColor(pal);	cols[1]=gr->last_color();	}
+		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
+		for(i=0;i<n;i++)
+		{
+			if(gr->Stop)	{	delete []dd;	return;	}
+			d = i<n-1 ? x->v(i+1,mx)-x->v(i,mx) : x->v(i,mx)-x->v(i-1,mx);
+			x1 = x->v(i,mx) + d/2*(1-gr->BarWidth);
+			if(above)
+			{
+				zz = j>0?dd[i+n]:z0;	dd[i+n] += z->v(i,mz);
+				mgl_cone(gr, x1,y->v(i,0),zz, x1,y->v(i,0),dd[i+n],
+						 gr->BarWidth*d*(dd[i]-zz)/(dd[i]-z0),
+						 gr->BarWidth*d*(dd[i]-dd[i+n])/(dd[i]-z0), cols,1);
+			}
+			else	mgl_cone(gr, x1,y->v(i,my),z0, x1,y->v(i,my),z->v(i,mz), gr->BarWidth*d,0, cols,1);
+		}
+	}
+	gr->EndGroup();	delete []dd;
+}
+//-----------------------------------------------------------------------------
+void mgl_cones_xz(HMGL gr, HCDT x, HCDT z, const char *pen, const char *opt)
+{
+	gr->SaveState(opt);
+	mglData y(z->GetNx()+1);
+	y.Fill(gr->Min.y,gr->Max.y,'y');
+	mgl_cones_xyz(gr,x,&y,z,pen,0);
+}
+//-----------------------------------------------------------------------------
+void mgl_cones(HMGL gr, HCDT z, const char *pen, const char *opt)
+{
+	if(z->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"Bars");	return;	}
+	gr->SaveState(opt);
+	mglData x(z->GetNx()+1);
+	x.Fill(gr->Min.x,gr->Max.x);
+	mgl_cones_xz(gr,&x,z,pen,0);
+}
+//-----------------------------------------------------------------------------
+void mgl_cones_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_cones_xyz(_GR_,_DA_(x),_DA_(y),_DA_(z),s,o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_cones_xz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_cones_xz(_GR_,_DA_(x),_DA_(y),s,o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+void mgl_cones_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
+	mgl_cones(_GR_,_DA_(y),s,o);	delete []o;	delete []s;	}
+//-----------------------------------------------------------------------------
+//
 //	Ellipse & Rhomb
 //
 //-----------------------------------------------------------------------------

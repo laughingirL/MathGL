@@ -23,6 +23,7 @@
 #include <FL/fl_draw.H>
 #include <FL/Fl_File_Chooser.H>
 #include <unistd.h>
+#include <wchar.h>
 //-----------------------------------------------------------------------------
 #ifdef USE_GETTEXT
 #include <libintl.h>
@@ -61,6 +62,14 @@ Fl_Pixmap xpm_l1(light_on_xpm), xpm_l2(light_xpm);
 Fl_Pixmap xpm_z1(zoom_in_xpm), xpm_z2(zoom_on_xpm);
 Fl_Pixmap xpm_s1(show_sl_xpm), xpm_s2(show_on_xpm);
 Fl_Pixmap xpm_r1(rotate_xpm), xpm_r2(rotate_on_xpm);
+//-----------------------------------------------------------------------------
+void mgl_ask_fltk(const wchar_t *quest, wchar_t *res)
+{
+	static char buf[1024];
+	fl_utf8fromwc(buf, 1024, quest, wcslen(quest)+1);
+	const char *str = fl_input(buf,"");
+	fl_utf8towc(str, strlen(str)+1, res, 1024);
+}
 //-----------------------------------------------------------------------------
 //
 //		class Fl_MathGL

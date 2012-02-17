@@ -356,6 +356,7 @@ public:
 	virtual float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'))=0;
 	void vect_plot(long p1, long p2, float s=1);
 	inline float mark_size()	{	return MarkSize*font_factor;	}
+	inline char last_color()	{	return *last_style;	}
 
 protected:
 	mglPoint FMin;		///< Actual lower edge after transformation formulas.

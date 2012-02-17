@@ -6,18 +6,15 @@
 5. Check export to SVG/EPS/MGLD/TeX/OBJ/XGL/X3D/STL.
 6. FLTK example
 7. Qt example
+8. Test Cones
+9. Test 'ask'
 
 ============= NEW  =============
 
 1. Parallelization of drawing (MathGL level) -- bug with primitives drawing --> pixel.cpp
 2. Export to X3D and VRML
 3. Manual colors for text, boundary, background of Legend()
-4. Add MGL command "ask $N 'question'" -- like interactive "define"
-5. ContV -- contours with vertical belts
-6. FlowN() -- analogue of FlowP() but by belt -- fixed and variable width of belt. Color depend on vector field.
-   Similarly, PlotN().
-7. Cones() -- like Bars() but by Cone()
-8. Add mgl_data_sort(HMDT dat, long idx, long idy); -- sort rows of x-y table (or slices of 3D data) by value of idx-column (and idy-row for nz>1)
+4. Option 'absolute' for coordinates in absolute range (i.e. [0,1]) ???
 
 ============= FOR V.2.1 ========
 
@@ -82,7 +79,7 @@ Remove other setting if data name is changed.
 2. FAQ about sizes of plot (parametrical+inverted, or Min*Max)
 3. FAQ about MinGW -- http://www.mingw.org/wiki/FAQ
 4. MGL docs -- text what formulas are applicable for scalars too.
-5.Sample about pthread using.
+5. Sample about pthread using.
 6. Add help about cmake and GIF/JPEG to the "Installation and using"
 7. Regroup pictures in WWW by big classes + combo plots
 8. On which things the subplot influence
@@ -117,6 +114,12 @@ Remove other setting if data name is changed.
 36. Handle mglBase::Stop everywhere
 37. Number of frames can be changed at reload + manual call of draw_func if number of frames is 0.
 38. Symbol '\' at the end continue string in MGL script
+39. ContV -- contours with vertical (cylindrical) belts
+40. Add mgl_data_sort(HMDT dat, long idx); -- sort rows of x-y table (or slices of 3D data) by value of idx-column (and idy-row for nz>1). Not thread safe!!!
+41. Add mgl_tape_*(), Tape() -- draw tapes which rotate as (bi)normale of curve. Width by value or depend on BarWidth
+42. Flow() and FlowP() draw tape of (bi)normales if character 'x' and/or 'z' is specified.
+43. Add MGL command "ask $N 'question'" -- like interactive "define". User (UDAV) must set mgl_ask_func to some non-zero value
+44. Cones() -- like Bars() but by Cone(). Support 'a' for above.
 
 ============= BUGS =============
 

@@ -520,6 +520,13 @@ public:
 	{	mgl_plot_xy(gr, &x, &y, pen,opt);	}
 	inline void Plot(const mglDataA &y, const char *pen="", const char *opt="")
 	{	mgl_plot(gr, &y, pen,opt);	}
+	/// Draw tape(s) which rotates as (bi-)normales of curve {x,y,z}
+	inline void Tape(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *pen="", const char *opt="")
+	{	mgl_tape_xyz(gr, &x, &y, &z, pen, opt);	}
+	inline void Tape(const mglDataA &x, const mglDataA &y, const char *pen="", const char *opt="")
+	{	mgl_tape_xy(gr, &x, &y, pen,opt);	}
+	inline void Tape(const mglDataA &y, const char *pen="", const char *opt="")
+	{	mgl_tape(gr, &y, pen,opt);	}
 	/// Draw radar chart (plot in curved coordinates)
 	inline void Radar(const mglDataA &a, const char *pen="", const char *opt="")
 	{	mgl_radar(gr, &a, pen, opt);	}
@@ -588,6 +595,13 @@ public:
 	{	mgl_candle(gr, &y, &y1, &y2, pen, opt);	}
 	inline void Candle(const mglDataA &y, const char *pen="", const char *opt="")
 	{	mgl_candle(gr, &y, NULL, NULL, pen, opt);	}
+	/// Draw cones from points {x,y,z} to axis plane
+	inline void Cones(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *pen="", const char *opt="")
+	{	mgl_cones_xyz(gr, &x, &y, &z, pen, opt);	}
+	inline void Cones(const mglDataA &x, const mglDataA &z, const char *pen="", const char *opt="")
+	{	mgl_cones_xz(gr, &x, &z, pen, opt);	}
+	inline void Cones(const mglDataA &z, const char *pen="", const char *opt="")
+	{	mgl_cones(gr, &z, pen, opt);	}
 
 	/// Draw error boxes {ex,ey} at points {x,y}
 	inline void Error(const mglDataA &y, const mglDataA &ey, const char *pen="", const char *opt="")
@@ -1063,6 +1077,10 @@ public:
 	inline void TextureColor(bool){}	// NOTE: Add later -- IDTF
 };
 //-----------------------------------------------------------------------------
+/// Callback function for asking user a question. Result shouldn't exceed 1024.
+extern void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
+//-----------------------------------------------------------------------------
+/// Wrapper class for MGL parsing
 class mglParse
 {
 	HMPR pr;

@@ -211,5 +211,7 @@ void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf);
 /// Make menu, toolbars and return popup menu for MainWindow
 QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi);
 //-----------------------------------------------------------------------------
+void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
+//-----------------------------------------------------------------------------
 #endif
 #endif

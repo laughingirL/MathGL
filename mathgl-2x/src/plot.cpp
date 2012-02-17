@@ -286,7 +286,7 @@ void mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 			if(gr->Stop)	return;
 			if(i>0)	{	n2=n1;	p2=p1;	t2=t1;	}
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
-			n1 = gr->AddPnt(p1);	t1 = n1>=0;	// NOT thread-safe!!!
+			n1 = gr->AddPnt(p1);	t1 = n1>=0;
 			if(mk && t1)	gr->mark_plot(n1,mk);
 			if(t1 && t2)
 			{
@@ -304,7 +304,7 @@ void mgl_plot_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 					p1.x = x->v(i,mx)*ii+x->v(i-1,mx)*(1-ii);
 					p1.y = y->v(i,my)*ii+y->v(i-1,my)*(1-ii);
 					p1.z = z->v(i,mz)*ii+z->v(i-1,mz)*(1-ii);
-					n1 = gr->AddPnt(p1);	t1 = n1>=0;	// NOT thread-safe!!!
+					n1 = gr->AddPnt(p1);	t1 = n1>=0;
 					if((t1 && t3) || (t2 && !t1))	i2 = ii;
 					else	i1 = ii;
 				} while(fabs(i2-i1)>1e-3);
@@ -380,7 +380,7 @@ void mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *pen, cons
 			if(gr->Stop)	return;
 			if(i>0)	{	n2=n1;	p2=p1;	t2=t1;	}
 			p1 = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz), c->v(i,mc));
-			n1 = gr->AddPnt(p1,gr->GetC(ss,p1.c));	t1 = n1>=0;	// NOT thread-safe!!!
+			n1 = gr->AddPnt(p1,gr->GetC(ss,p1.c));	t1 = n1>=0;
 			if(mk && t1)	gr->mark_plot(n1,mk);
 			if(t1 && t2)
 			{
@@ -399,7 +399,7 @@ void mgl_tens_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT c, const char *pen, cons
 					p1.y = y->v(i,my)*ii+y->v(i-1,my)*(1-ii);
 					p1.z = z->v(i,mz)*ii+z->v(i-1,mz)*(1-ii);
 					p1.c = c->v(i,mc)*ii+c->v(i-1,mc)*(1-ii);
-					n1 = gr->AddPnt(p1,gr->GetC(ss,p1.c));	t1 = n1>=0;	// NOT thread-safe!!!
+					n1 = gr->AddPnt(p1,gr->GetC(ss,p1.c));	t1 = n1>=0;
 					if((t1 && t3) || (t2 && !t1))	i2 = ii;
 					else	i1 = ii;
 				} while(fabs(i2-i1)>1e-3);
@@ -816,8 +816,8 @@ void mgl_stem_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int
 //-----------------------------------------------------------------------------
 void mgl_bars_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
-	long i,j,m,mx,my,mz,n=y->GetNx(), pal;
-	if(x->GetNx()!=n || z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Bars");	return;	}
+	long i,j,m,mx,my,mz,n=z->GetNx(), pal;
+	if(x->GetNx()<n || y->GetNx()<n)	{	gr->SetWarn(mglWarnDim,"Bars");	return;	}
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Bars");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Bars3",cgid++);
@@ -937,7 +937,7 @@ void mgl_bars_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
 	gr->EndGroup();	delete []dd;
 }
 //-----------------------------------------------------------------------------
-void mgl_bars(HMGL gr, HCDT y,	const char *pen, const char *opt)
+void mgl_bars(HMGL gr, HCDT y, const char *pen, const char *opt)
 {
 	if(y->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"Bars");	return;	}
 	gr->SaveState(opt);
@@ -1588,4 +1588,86 @@ void mgl_tube_(uintptr_t *gr, uintptr_t *y, float *r, const char *pen, const cha
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_tube(_GR_,_DA_(y),*r,s,o);
 	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------
+//
+//	Tape series
+//
+//-----------------------------------------------------------------------------
+void mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
+{
+	long j,m,mx,my,mz,n=y->GetNx(),pal;
+	if(x->GetNx()!=n || z->GetNx()!=n)	{	gr->SetWarn(mglWarnDim,"Tape");	return;	}
+	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tape");	return;	}
+	static int cgid=1;	gr->StartGroup("Tape",cgid++);
+	float ll, rr = gr->SaveState(opt);	if(isnan(rr))	rr = gr->PrevValue();
+	if(rr==0 || isnan(rr))	rr = mgl_norm(gr->Max-gr->Min)*gr->BarWidth/25;
+	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
+	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(4*n*m);
+	mglPoint p1,p2,q1,q2,l,nn;
+	long n1=-1,n2=-1,n3=-1,n4=-1, m1=-1,m2=-1,m3=-1,m4=-1;
+	bool sh = pen && strchr(pen,'!'), xo = pen && strchr(pen,'x'), zo = pen && strchr(pen,'z');
+	if(!xo && !zo)	xo = zo = true;
+
+	for(j=0;j<m;j++)
+	{
+		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;
+		mz = j<z->GetNy() ? j:0;	gr->NextColor(pal);
+		// initial values for normales
+		p2 = mglPoint(x->v(0,mx), y->v(0,my), z->v(0,mz));
+		l = mglPoint(x->v(1,mx), y->v(1,my), z->v(1,mz)) - p2;	l /= mgl_norm(l);
+		q1 = mglPoint(l.y,-l.x,0);	ll = mgl_norm(q1);
+		if(ll)	q1 /= ll;	else	q1 = mglPoint(0,1,0);
+		q2 = q1^l;
+		if(xo)	{	n1 = gr->AddPnt(p2,-1,q2);	n2 = gr->AddPnt(p2+rr*q1,-1,q2);	}
+		if(zo)	{	n3 = gr->AddPnt(p2,-1,q1);	n4 = gr->AddPnt(p2+rr*q2,-1,q1);	}
+		register long i;
+		for(i=1;i<n;i++)
+		{
+			if(gr->Stop)	return;
+			p1 = p2;	p2 = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
+			l = p2-p1;		l /= mgl_norm(l);
+			q1 -= l*(l*q1);	q1/= mgl_norm(q1);	q2 = q1^l;
+			m1 = n1;	m2 = n2;	m3 = n3;	m4 = n4;
+			if(xo)
+			{	n1 = gr->AddPnt(p2,-1,q2);	n2 = gr->AddPnt(p2+rr*q1,-1,q2);	gr->quad_plot(n1,n2,m1,m2);	}
+			if(zo)
+			{	n3 = gr->AddPnt(p2,-1,q1);	n4 = gr->AddPnt(p2+rr*q2,-1,q1);	gr->quad_plot(n3,n4,m3,m4);	}
+			if(sh)	gr->NextColor(pal);
+		}
+	}
+	gr->EndGroup();
+}
+//-----------------------------------------------------------------------------
+void mgl_tape_xy(HMGL gr, HCDT x, HCDT y, const char *pen, const char *opt)
+{
+	gr->SaveState(opt);
+	mglData z(y->GetNx());
+	z.Fill(gr->Min.z,gr->Min.z);
+	mgl_tape_xyz(gr,x,y,&z,pen,0);
+}
+//-----------------------------------------------------------------------------
+void mgl_tape(HMGL gr, HCDT y, const char *pen, const char *opt)
+{
+	if(y->GetNx()<2)	{	gr->SetWarn(mglWarnLow,"Plot");	return;	}
+	gr->SaveState(opt);
+	mglData x(y->GetNx()), z(y->GetNx());
+	x.Fill(gr->Min.x,gr->Max.x);
+	z.Fill(gr->Min.z,gr->Min.z);
+	mgl_tape_xyz(gr,&x,y,&z,pen,0);
+}
+//-----------------------------------------------------------------------------
+void mgl_tape_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z, const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
+	mgl_tape_xyz(_GR_, _DA_(x),_DA_(y),_DA_(z),s,o);	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------
+void mgl_tape_xy_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
+	mgl_tape_xy(_GR_, _DA_(x),_DA_(y),s,o);	delete []s;	delete []o;	}
+//-----------------------------------------------------------------------------
+void mgl_tape_(uintptr_t *gr, uintptr_t *y,	const char *pen, const char *opt,int l,int lo)
+{	char *s=new char[l+1];	memcpy(s,pen,l);	s[l]=0;
+	char *o=new char[lo+1];		memcpy(o,opt,lo);	o[lo]=0;
+	mgl_tape(_GR_, _DA_(y),s,o);	delete []s;	delete []o;	}
 //-----------------------------------------------------------------------------
