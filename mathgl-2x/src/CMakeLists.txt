@@ -16,8 +16,8 @@ set(mgl_hdr
 ../include/mgl/define.h     ../include/mgl/other.h   ../include/mgl/eval.h
 ../include/mgl/parser.h     ../include/mgl/addon.h   ../include/mgl/evalc.h )
 
-add_library(mgl SHARED ${mgl_src})
-add_library(mgl-static STATIC ${mgl_src})
+add_library(mgl SHARED ${mgl_src} ${mgl_hdr})
+add_library(mgl-static STATIC ${mgl_src} ${mgl_hdr})
 set_target_properties(mgl-static PROPERTIES OUTPUT_NAME "mgl")
 set_target_properties(mgl PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(mgl-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)

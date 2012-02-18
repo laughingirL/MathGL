@@ -199,7 +199,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	time_t now;	time(&now);
 
 	bool gz = fname[strlen(fname)-1]=='z';
-	void *fp = gz ? gzopen(fname,"wt") : fopen(fname,"wt");
+	void *fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n", _Gr_->GetWidth(), _Gr_->GetHeight());
 	mgl_printf(fp, gz, "%%%%Creator: MathGL library\n%%%%Title: %s\n",descr ? descr : fname);
@@ -378,7 +378,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 
 	bool gz = fname[strlen(fname)-1]=='z';
 	long hh = _Gr_->GetHeight();
-	void *fp = gz ? gzopen(fname,"wt") : fopen(fname,"wt");
+	void *fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	mgl_printf(fp, gz, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
 	mgl_printf(fp, gz, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20000303 Stylable//EN\" \"http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd\">\n");

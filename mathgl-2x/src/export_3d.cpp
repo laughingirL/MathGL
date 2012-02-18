@@ -721,7 +721,7 @@ void mgl_write_x3d(HMGL gr, const char *fname,const char *descr)
 	time_t now;	time(&now);
 
 	bool gz = fname[strlen(fname)-1]=='z';
-	void *fp = gz ? gzopen(fname,"wt") : fopen(fname,"wt");
+	void *fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	mgl_printf(fp, gz, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 	mgl_printf(fp, gz, "<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 3.0//EN\" \"http://www.web3d.org/specifications/x3d-3.0.dtd\">\n");

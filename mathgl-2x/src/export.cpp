@@ -196,7 +196,7 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 	register long i,j;
 	bool gz = fname[strlen(fname)-1]=='z';
 
-	void *fp = gz ? gzopen(fname,"wt") : fopen(fname,"wt");
+	void *fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",w,h);
 	mgl_printf(fp, gz, "%%%%Creator: MathGL library\n%%%%Title: %s\n", fname);
 	mgl_printf(fp, gz, "%%%%CreationDate: %s\n",ctime(&now));

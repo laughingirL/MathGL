@@ -13,7 +13,7 @@
 
 1. Parallelization of drawing (MathGL level) -- bug with primitives drawing --> pixel.cpp
 2. Export to X3D and VRML
-3. Manual colors for text, boundary, background of Legend()
+3. Manual colors for text, boundary, background of Legend() (1st - text, 2nd - border, 3d - background)
 4. Option 'absolute' for coordinates in absolute range (i.e. [0,1]) ???
 
 ============= FOR V.2.1 ========
@@ -50,7 +50,6 @@ Remove other setting if data name is changed.
 04. Group/ungroup if command in single line, separated by ':'
 05. Hide plot/group by putting "#h " at beginning of line
 06. Annotation of plot/group -- comment before it
-08. Add command "ask $N ['request'] for manual asking value of parameter
 09. Data change via menu/toolbar -- save to internal script => enable undo + save initial array(?)
 10. Add primitives by mouse at beginning of script + change its size/position by mouse + "attraction" points
 11. Drag&drop plot/group between inplots

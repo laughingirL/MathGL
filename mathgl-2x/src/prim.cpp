@@ -289,7 +289,7 @@ void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char 
 void mgl_cones_xz(HMGL gr, HCDT x, HCDT z, const char *pen, const char *opt)
 {
 	gr->SaveState(opt);
-	mglData y(z->GetNx()+1);
+	mglData y(z);
 	y.Fill(gr->Min.y,gr->Max.y,'y');
 	mgl_cones_xyz(gr,x,&y,z,pen,0);
 }
