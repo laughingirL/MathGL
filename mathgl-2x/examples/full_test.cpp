@@ -36,10 +36,9 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
-	mglData y;	mgls_prepare1d(&y);
-	gr->Box();	gr->Plot(y.SubData(-1,0));
-	gr->Text(y,"This is very very long string drawn along a curve",":k");
-//	gr->Text(y,"Another string drawn above a curve","T:r");
+	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+	gr->Rotate(40,60);	gr->Light(true);
+	gr->SetOrigin(0,0,0);	gr->Box();	gr->Cones(ys,"a");
 	return 0;
 
 	mglParse par(true);
@@ -861,6 +860,7 @@ void smgl_barh(mglGraph *gr)
 void smgl_cones(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+	gr->Rotate(40,60);	gr->Light(true);
 	gr->SetOrigin(0,0,0);	gr->Box();	gr->Cones(ys);
 }
 //-----------------------------------------------------------------------------

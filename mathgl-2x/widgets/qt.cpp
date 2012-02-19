@@ -82,12 +82,6 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 //-----------------------------------------------------------------------------
 QMathGL::~QMathGL()	{	delete gr;	if(grBuf)	delete []grBuf;	}
 //-----------------------------------------------------------------------------
-void QMathGL::setGraph(mglCanvas *Gr)
-{
-	if(!gr)	return;
-	delete gr;	gr=Gr;
-}
-//-----------------------------------------------------------------------------
 void QMathGL::paintEvent(QPaintEvent *)
 {
 	QPainter paint;
@@ -224,7 +218,7 @@ void QMathGL::update()
 //-----------------------------------------------------------------------------
 void QMathGL::refresh()
 {
-	gr->Zoom(x1,y1,x2,y2);	gr->View(tet,phi);	gr->Perspective(per);
+	gr->Zoom(x1,y1,x2,y2);	gr->View(phi,tet);	gr->Perspective(per);
 	mglConvertFromGraph(pic, gr, &grBuf);
 	if(pic.size()!=size())	setSize(pic.width(), pic.height());
 	repaint();
@@ -275,7 +269,7 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 		{
 			mreal ff = 240/sqrt(mreal(width()*height()));
 			phi += int((x0-xe)*ff);
-			tet += int((y0-ye)*ff);
+			tet -= int((y0-ye)*ff);
 			if(phi>180)	phi-=360;		if(phi<-180)	phi+=360;
 			if(tet>180)	tet-=360;		if(tet<-180)	tet+=360;
 			emit tetChanged(int(tet));		emit phiChanged(int(phi));
@@ -296,7 +290,7 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 		{
 			mreal ff = 1./sqrt(mreal(width()*height()));
 			mreal dx = (x0-xe)*ff*(x2-x1), dy = (y0-ye)*ff*(y2-y1);
-			x1 += dx;	x2 += dx;	y1 -= dy;	y2 -= dy;
+			x1 -= dx;	x2 -= dx;	y1 += dy;	y2 += dy;
 		}
 		x0 = xe;	y0 = ye;
 		refresh();
@@ -516,7 +510,10 @@ void QMathGL::setMGLFont(QString path)
 	else	gr->GetFont()->Load(path.toAscii());	}
 //-----------------------------------------------------------------------------
 void QMathGL::setSize(int w, int h)
-{	gr->SetSize(w,h);	resize(w, h);	update();	}
+{
+	resize(w, h);
+	if(w!=pic.width() || h!=pic.height())	{	gr->SetSize(w,h);	update();	}	// update only when image size is changed
+}
 //-----------------------------------------------------------------------------
 void QMathGL::about()
 {
@@ -546,8 +543,18 @@ void QMathGL::print()
 	delete printer;
 }
 //-----------------------------------------------------------------------------
-void QMathGL::nextSlide()	{	emit frameChanged(+1);	refresh();	}
-void QMathGL::prevSlide()	{	emit frameChanged(-1);	refresh();	}
+void QMathGL::nextSlide()
+{
+	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);
+	if(g && g->GetNumFig()>1)	g->NextFrame();
+	emit frameChanged(+1);
+}
+void QMathGL::prevSlide()
+{
+	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);
+	if(g && g->GetNumFig()>1)	g->PrevFrame();
+	emit frameChanged(-1);
+}
 //-----------------------------------------------------------------------------
 void QMathGL::animation(bool st)
 {
@@ -631,7 +638,7 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	qApp->processEvents();
 	scroll->setWidget(QMGL);
 	Wnd->setCentralWidget(scroll);
-	QMGL->update();
+	QMGL->refresh();
 	if(!maximize)	Wnd->show();
 	else	Wnd->showMaximized();
 }

@@ -331,6 +331,7 @@ void mglCanvas::EndFrame()
 	delete []line;	free(l);
 	if(f)	free(f);
 #else
+	if(get(MGL_USEDRWDAT))	PushDrwDat();
 	Finish();
 #endif
 }

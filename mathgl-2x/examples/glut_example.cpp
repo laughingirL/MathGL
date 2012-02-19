@@ -31,7 +31,7 @@ int main(int argc,char **argv)
 {
 	char key = 0;
 	if(argc>1)	key = argv[1][0]!='-' ? argv[1][0] : argv[1][1];
-	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting");
+	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
 
 	const char *desc;
 	draw_func func;

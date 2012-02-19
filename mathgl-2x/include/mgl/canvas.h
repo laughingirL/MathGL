@@ -82,12 +82,24 @@ struct mglLight
 	mglColor c;		///< Color of light sources
 };
 //-----------------------------------------------------------------------------
-/// Structure for light source
 class mglCanvas;
+/// Structure for light source
 struct mglDrawReg
 {
 	int x1,x2,y1,y2;
 	void set(mglCanvas *gr, int nx, int ny, int m);
+};
+//-----------------------------------------------------------------------------
+/// Structure contains everything for drawing
+struct mglDrawDat
+{
+	std::vector<mglGroup> Grp;	///< List of groups with names -- need for export
+	std::vector<mglPnt> Pnt;	///< Internal points
+	std::vector<mglPrim> Prm;	///< Primitives (lines, triangles and so on) -- need for export
+	std::vector<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
+	std::vector<mglText> Ptx;	///< Text labels for mglPrim
+	std::vector<mglText> Leg;	///< Text labels for legend
+	std::vector<mglTexture> Txt;///< Pointer to textures
 };
 //-----------------------------------------------------------------------------
 /// Class contains all functionality for creating different mathematical plots
@@ -152,7 +164,7 @@ public:
 	/// Get bitmap data prepared for saving to file
 	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool alpha=false);
 	/// Get RGB bitmap of current state image.
-	const unsigned char *GetBits()	{	Finish();	return G;	}
+	virtual const unsigned char *GetBits();
 	/// Get RGBA bitmap of current state image.
 	const unsigned char *GetRGBA()	{	Finish();	return G4;	}
 	/// Get width of the image
@@ -187,7 +199,8 @@ public:
 	/// Get the number of created frames
 	inline int GetNumFrame()	{	return CurFrameId;	}
 	/// Reset frames counter (start it from zero)
-	inline void ResetFrames()	{	CurFrameId=0;	}
+	inline void ResetFrames()	{	CurFrameId=0;	DrwDat.clear();	}
+
 	/// Start write frames to cinema using GIF format
 	void StartGIF(const char *fname, int ms=100);
 	/// Stop writing cinema using GIF format
@@ -295,6 +308,7 @@ protected:
 	int *OI;			///< ObjId arrays
 	unsigned char *G4;	///< Final picture in RGBA format. Prepared in Finish().
 	unsigned char *G;	///< Final picture in RGB format. Prepared in Finish().
+	std::vector<mglDrawDat> DrwDat;	///< Set of ALL drawing data for each frames
 #ifdef HAVE_PTHREAD
 	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexLeg, mutexStk, mutexGrp;
 #endif
@@ -338,11 +352,17 @@ protected:
 	{	ax.v0=Org.x;	ay.v0=Org.y;	az.v0=Org.z;	ac.v0=Org.c;
 		ax.v1=Min.x;	ay.v1=Min.y;	az.v1=Min.z;	ac.v1=Min.c;
 		ax.v2=Max.x;	ay.v2=Max.y;	az.v2=Max.z;	ac.v2=Max.c;	}
+
 	/// Clear ZBuffer only
 	void ClfZB();
 	/// Scale coordinates and cut off some points
 	bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true);
 	void LightScale();	///< Additionally scale positions of light sources
+
+	/// Push drawing data (for frames only). NOTE: can be VERY large
+	long PushDrwDat();
+	/// Get drawing data for i-th frame.
+	void GetDrwDat(long i);
 
 	float GetOrgX(char dir);	///< Get Org.x (parse NAN value)
 	float GetOrgY(char dir);	///< Get Org.y (parse NAN value)

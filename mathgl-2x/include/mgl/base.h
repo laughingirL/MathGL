@@ -368,6 +368,7 @@ protected:
 	std::vector<mglPrim> Sub;	///< InPlot regions {n1=x1,n2=x2,n3=y1,n4=y2,id}
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	std::vector<mglText> Leg;	///< Text labels for legend
+	std::vector<mglTexture> Txt;///< Pointer to textures
 #ifdef HAVE_PTHREAD
 	pthread_mutex_t mutexPnt, mutexTxt;
 #endif
@@ -376,7 +377,6 @@ protected:
 	unsigned PDef;		///< Pen bit mask
 	float pPos;			///< Current position in pen mask
 	float PenWidth;		///< Pen width for further line plotting (must be >0 !!!)
-	std::vector<mglTexture> Txt;	///< Pointer to textures
 //	long numT;			///< Number of textures
 	float AmbBr;		///< Default ambient light brightness
 

@@ -28,7 +28,7 @@ void mglCanvas::SetSize(int w,int h)
 	Width = w;	Height = h;	Depth = long(sqrt(w*h));
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []OI;	}
 	G = new unsigned char[w*h*3];
-	G4 = new unsigned char[w*h*4];
+	G4= new unsigned char[w*h*4];
 	C = new unsigned char[w*h*12];
 	Z = new float[w*h*3];	// only 3 planes
 	OI= new int[w*h];
@@ -309,12 +309,14 @@ void mglCanvas::pxl_backgr(unsigned long id, unsigned long n, const void *)
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_transform(unsigned long id, unsigned long n, const void *)
 {
+	register float x,y,z;
 	for(unsigned long i=id;i<n;i+=mglNumThr)
 	{
 		mglPnt &p=Pnt[i];
-		p.x = Bp.x*Width + Bp.b[0]*p.xx + Bp.b[1]*p.yy + Bp.b[2]*p.zz;
-		p.y = Bp.y*Height+ Bp.b[3]*p.xx + Bp.b[4]*p.yy + Bp.b[5]*p.zz;
-		p.z = Bp.b[6]*p.xx + Bp.b[7]*p.yy + Bp.b[8]*p.zz;
+		x = p.xx-Width/2.;	y = p.yy-Height/2.;	z = p.zz-Depth/2.;
+		p.x = Bp.x*Width + Width/2 + Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z;
+		p.y = Bp.y*Height+ Height/2+ Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z;
+		p.z = Depth/2. + Bp.b[6]*x + Bp.b[7]*y + Bp.b[8]*z;
 		if(Bp.pf)
 		{
 			register float d = (1-Bp.pf*Depth/2)/(1-Bp.pf*p.z);

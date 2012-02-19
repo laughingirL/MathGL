@@ -48,9 +48,29 @@ mglCanvas::~mglCanvas()
 	if(G)	{	delete []G;	delete []C;	delete []Z;	delete []G4;delete []OI;	}
 }
 //-----------------------------------------------------------------------------
+long mglCanvas::PushDrwDat()
+{
+	mglDrawDat d;
+	d.Grp=Grp;	d.Leg=Leg;	d.Pnt=Pnt;	d.Prm=Prm;
+	d.Ptx=Ptx;	d.Sub=Sub;	d.Txt=Txt;
+	DrwDat.push_back(d);
+	return DrwDat.size();
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::GetDrwDat(long i)
+{
+	mglDrawDat &d=DrwDat[i];
+	Grp=d.Grp;	Leg=d.Leg;	Pnt=d.Pnt;	Prm=d.Prm;
+	Ptx=d.Ptx;	Sub=d.Sub;	Txt=d.Txt;
+}
+//-----------------------------------------------------------------------------
+const unsigned char *mglCanvas::GetBits()	{	Finish();	return G;	}
+//-----------------------------------------------------------------------------
 float mglCanvas::GetRatio()	{	return inW/inH;	}
+//-----------------------------------------------------------------------------
 void mglCanvas::AddLegend(const wchar_t *text,const char *style)
 {	if(text)	MGL_PUSH(Leg,mglText(text,style),mutexLeg);	}
+//-----------------------------------------------------------------------------
 void mglCanvas::add_prim(mglPrim &a)
 {
 	if(a.n1>=0)

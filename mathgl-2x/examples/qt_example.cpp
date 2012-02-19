@@ -18,8 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <stdio.h>
-#include "mgl/mgl.h"
-#include "mgl/qt.h"
+#include "mgl/window.h"
 //-----------------------------------------------------------------------------
 int test_wnd(mglGraph *gr);
 int sample(mglGraph *gr);
@@ -36,8 +35,7 @@ void *mgl_qt_tmp(void *);
 int main(int argc,char **argv)
 {
 #ifdef PTHREAD_SAMPLE
-	mglGraphQT gr;
-	gr.Window(argc,argv,NULL,"test",0,0);  // create window
+	mglWindow gr(1,NULL,"test");  // create window
 	gr.ClfOnUpdate = false;
 	static pthread_t tmp;
 	pthread_create(&tmp, 0, mgl_qt_tmp, 0);
@@ -54,20 +52,20 @@ int main(int argc,char **argv)
 	}
 	return 0;   // finish calculations and close the window
 #else
-	mglCanvasQT gr;
+	mglWindow *gr;
 	char key = 0;
 	if(argc>1 && argv[1][0]!='-')	key = argv[1][0];
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
 	switch(key)
 	{
-	case '1':	gr.Window(argc,argv,sample_1,"1D plots");	break;
-	case '2':	gr.Window(argc,argv,sample_2,"2D plots");	break;
-	case '3':	gr.Window(argc,argv,sample_3,"3D plots");	break;
-	case 'd':	gr.Window(argc,argv,sample_d,"Dual plots");	break;
-	case 't':	gr.Window(argc,argv,test_wnd,"Testing");	break;
-	default:	gr.Window(argc,argv,sample,"Example of molecules");	break;
+	case '1':	gr = new mglWindow(1,sample_1,"1D plots");	break;
+	case '2':	gr = new mglWindow(1,sample_2,"2D plots");	break;
+	case '3':	gr = new mglWindow(1,sample_3,"3D plots");	break;
+	case 'd':	gr = new mglWindow(1,sample_d,"Dual plots");	break;
+	case 't':	gr = new mglWindow(1,test_wnd,"Testing");	break;
+	default:	gr = new mglWindow(1,sample,"Drop and waves");	break;
 	}
-	mgl_qt_run();	return 0;
+	gr->Run();	return 0;
 #endif
 }
 //-----------------------------------------------------------------------------

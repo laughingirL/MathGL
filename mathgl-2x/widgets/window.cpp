@@ -24,17 +24,27 @@ mglCanvasW::mglCanvasW() : mglCanvas()
 	Setup(true,false,true);
 	LoadFunc=0;	FuncPar=0;	DrawFunc=0;
 	GG = 0;		NumFig = 0;	CurFig = -1;
+//	set(MGL_USEDRWDAT);	// TODO: experimental feature -- test later
 }
 //-----------------------------------------------------------------------------
 mglCanvasW::~mglCanvasW()	{	if(GG) free(GG);	}
 //-----------------------------------------------------------------------------
 void mglCanvasW::Clf(mglColor Back)	{	if(get(MGL_AUTO_CLF))	mglCanvas::Clf(Back);	}
 //-----------------------------------------------------------------------------
-void mglCanvasW::SetSize(int w,int h)
+void mglCanvasW::SetCurFig(int c)	{	CurFig=c;	if(get(MGL_USEDRWDAT))	GetDrwDat(c);	}
+//-----------------------------------------------------------------------------
+void mglCanvasW::ClearFrames()
 {
 	if(GG)	free(GG);	GG = 0;
+	CurFrameId = NumFig = CurFig = 0;
+	DrwDat.clear();
+}
+//-----------------------------------------------------------------------------
+void mglCanvasW::SetSize(int w,int h)
+{
+	ClearFrames();
 	mglCanvas::SetSize(w,h);
-	//	if(Wnd)	Wnd->size(w,h);
+//	if(Wnd)	Wnd->size(w,h);
 }
 //-----------------------------------------------------------------------------
 void mglCanvasW::EndFrame()
@@ -57,8 +67,7 @@ void mglCanvasW::EndFrame()
 //-----------------------------------------------------------------------------
 void mglCanvasW::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, void (*reload)(void *p))
 {
-	NumFig=0;	CurFig=0;
-	CurFrameId = 0;
+	ClearFrames();
 	int n = draw ? draw(this,par) : 0;
 	if(n<NumFig && n>=0)	NumFig = n;
 	DrawFunc = draw;		FuncPar = par;
@@ -79,7 +88,7 @@ void mglCanvasW::ReLoad()
 	{
 		LoadFunc(FuncPar);
 		// update number of slides
-		NumFig=0;	CurFig=0;	CurFrameId = 0;
+		ClearFrames();
 		int n = DrawFunc ? DrawFunc(this,FuncPar) : 0;
 		if(n<NumFig && n>=0)	NumFig = n;
 		Update();

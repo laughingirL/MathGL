@@ -45,7 +45,7 @@ if(use_qt)
 	include(${QT_USE_FILE})
 	qt_wrap_cpp(mgl_qt_example MGL_MOC_EX_FILES ../include/mgl/qt.h)
 	add_executable(mgl_qt_example wnd_samples.cpp qt_example.cpp ${MGL_MOC_EX_FILES})
-	target_link_libraries(mgl_qt_example ${QT_LIBRARIES} mgl-wnd)
+	target_link_libraries(mgl_qt_example mgl-wnd ${QT_LIBRARIES})
 	install(
 		TARGETS mgl_qt_example
 		RUNTIME DESTINATION bin

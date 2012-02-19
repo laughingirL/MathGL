@@ -46,7 +46,8 @@ public:
 	double getRatio()	{	return double(gr->GetWidth())/gr->GetHeight();	};
 	void setPopup(QMenu *p)	{	popup = p;	};	///< Set popup menu pointer
 	void setSize(int w, int h);		///< Set window/picture sizes
-	void setGraph(mglCanvas *GR);	///< Set grapher object
+	void setGraph(mglCanvas *GR)	///< Set grapher object
+	{	if(gr)	{	delete gr;	gr=GR;	}	}
 	inline void setGraph(mglGraph *GR)
 	{	setGraph(dynamic_cast<mglCanvas *>(GR->Self()));	}
 	inline HMGL getGraph()	{	return gr;	}

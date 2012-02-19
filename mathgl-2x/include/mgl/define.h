@@ -163,24 +163,25 @@ enum{	// Codes for warnings/messages
 #define MGL_DEF_PAL	"bgrcmyhlnqeupH"	// default palette
 #endif
 //-----------------------------------------------------------------------------
-#define MGL_TRANSP_NORM		0x0000
-#define MGL_TRANSP_GLASS	0x0001
-#define MGL_TRANSP_LAMP		0x0002
-#define MGL_ENABLE_CUT		0x0004	///< Flag which determines how points outside bounding box are drown.
-#define MGL_ENABLE_RTEXT	0x0008	///< Use text rotation along axis
-#define MGL_AUTO_FACTOR		0x0010	///< Enable autochange PlotFactor
-#define MGL_ENABLE_ALPHA	0x0020	///< Flag that Alpha is used
-#define MGL_ENABLE_LIGHT	0x0040	///< Flag of using lightning
-#define MGL_TICKS_ROTATE	0x0080	///< Allow ticks rotation
-#define MGL_TICKS_SKIP		0x0100	///< Allow ticks rotation
+#define MGL_TRANSP_NORM		0x000000
+#define MGL_TRANSP_GLASS	0x000001
+#define MGL_TRANSP_LAMP		0x000002
+#define MGL_ENABLE_CUT		0x000004	///< Flag which determines how points outside bounding box are drown.
+#define MGL_ENABLE_RTEXT	0x000008	///< Use text rotation along axis
+#define MGL_AUTO_FACTOR		0x000010	///< Enable autochange PlotFactor
+#define MGL_ENABLE_ALPHA	0x000020	///< Flag that Alpha is used
+#define MGL_ENABLE_LIGHT	0x000040	///< Flag of using lightning
+#define MGL_TICKS_ROTATE	0x000080	///< Allow ticks rotation
+#define MGL_TICKS_SKIP		0x000100	///< Allow ticks rotation
 // flags for internal use only
-#define MGL_DISABLE_SCALE	0x0200	///< Temporary flag for disable scaling (used for axis)
-#define MGL_FINISHED		0x0400	///< Flag that final picture (i.e. mglCanvas::G) is ready
-#define MGL_AUTO_CLF		0x0800	///< Clear canvas between drawing
-#define MGL_SHOW_POS		0x1000	///< Switch to show or not mouse click position
-#define MGL_CLF_ON_UPD		0x2000	///< Clear plot before Update()
-#define MGL_HIGHLIGHT		0x4000	///< Highlight plot
-#define MGL_DIFFUSIVE		0x8000	///< Use diffusive light instead of specular
+#define MGL_DISABLE_SCALE	0x000200	///< Temporary flag for disable scaling (used for axis)
+#define MGL_FINISHED		0x000400	///< Flag that final picture (i.e. mglCanvas::G) is ready
+#define MGL_AUTO_CLF		0x000800	///< Clear canvas between drawing
+#define MGL_SHOW_POS		0x001000	///< Switch to show or not mouse click position
+#define MGL_CLF_ON_UPD		0x002000	///< Clear plot before Update()
+#define MGL_HIGHLIGHT		0x004000	///< Highlight plot
+#define MGL_DIFFUSIVE		0x008000	///< Use diffusive light instead of specular
+#define MGL_USEDRWDAT		0x010000	///< Use DrwDat to remember all data of frames
 //-----------------------------------------------------------------------------
 //#define mgl_realloc(T,o,no,nn) {T *_tmp = new T[nn]; memcpy(_tmp,o,(no)*sizeof(T)); delete []o; o=_tmp;}
 //-----------------------------------------------------------------------------

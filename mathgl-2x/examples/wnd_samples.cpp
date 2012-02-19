@@ -66,7 +66,7 @@ int sample(mglGraph *gr)
 	gr->Rotate(20,40);
 	gr->SetRanges(-2,2,-2,2,-1,3);
 	gr->FSurf("cos(2*pi*(x^2+y^2))/(x^2+y^2+1)^2/(x^2+y^2<4)");
-	gr->Drop(mglPoint(0,0,3),mglPoint(0,0,-1),0.7,"g");
+	gr->Drop(mglPoint(0,0,3),mglPoint(0,0,-1),0.7,"b");
 	return 0;
 }
 //-----------------------------------------------------------------------------

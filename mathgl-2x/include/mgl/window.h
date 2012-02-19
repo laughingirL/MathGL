@@ -93,7 +93,8 @@ public:
 	void Clf(mglColor Back=NC);
 	inline int GetNumFig()	{	return NumFig;	}
 	inline int GetCurFig()	{	return CurFig;	}
-	inline void SetCurFig(int c){	CurFig=c;	}	// stupid thing to pass G++ bug
+	void SetCurFig(int c);
+	void ClearFrames();
 	inline mglPoint GetMousePos()	{	return LastMousePos;}	// stupid thing to pass G++ bug
 	inline void SetMousePos(mglPoint p)	{	LastMousePos=p;	}
 	inline void Setup(bool autoclf, bool showpos, bool clf_upd)
@@ -110,7 +111,7 @@ public:
 	virtual void NextFrame()	{GotoFrame(+1);}	///< Show next frame (if one)
 	virtual void PrevFrame()	{GotoFrame(-1);}	///< Show previous frame (if one)
 	virtual void Animation()=0;		///< Run slideshow (animation) of frames
-	void ReLoad();			///< Reload user data and update picture
+	void ReLoad();					///< Reload user data and update picture
 	/// Create a window for plotting based on callback function (can be NULL).
 	virtual void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p),
 						const char *title, void *par=NULL,

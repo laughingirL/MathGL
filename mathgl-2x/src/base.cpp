@@ -648,7 +648,7 @@ float mglBase::NextColor(long &id)
 {
 	long i=abs(id)/256, n=Txt[i].n, p=abs(id)&0xff;
 	if(id>=0)	{	p=(p+1)%n;	id = 256*i+p;	}
-	mglColor c = Txt[i].col[2*p];
+	mglColor c = Txt[i].col[int(512*(p+0.5)/n)];
 	float dif, dmin=1;
 	for(long j=0;mglColorIds[j].id;j++)
 	{

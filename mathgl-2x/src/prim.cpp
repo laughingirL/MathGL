@@ -247,7 +247,7 @@ void mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal 
 //-----------------------------------------------------------------------------
 void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *opt)
 {
-	long i,j,m,mx,my,mz,n=z->GetNx(), pal;
+	long i,j,m,mx,my,mz,n=z->GetNx(),nx=x->GetNx(), pal;
 	if(x->GetNx()<n || y->GetNx()<n)	{	gr->SetWarn(mglWarnDim,"Cones");	return;	}
 	if(n<2)		{	gr->SetWarn(mglWarnLow,"Cones");	return;	}
 	gr->SaveState(opt);
@@ -271,8 +271,8 @@ void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char 
 		for(i=0;i<n;i++)
 		{
 			if(gr->Stop)	{	delete []dd;	return;	}
-			d = i<n-1 ? x->v(i+1,mx)-x->v(i,mx) : x->v(i,mx)-x->v(i-1,mx);
-			x1 = x->v(i,mx) + d/2*(1-gr->BarWidth);
+			d = i<nx-1 ? x->v(i+1,mx)-x->v(i,mx) : x->v(i,mx)-x->v(i-1,mx);
+			x1 = (n<nx?(x->v(i,mx)+x->v(i+1,mx))/2:x->v(i,mx)) + d/2*(1-gr->BarWidth);
 			if(above)
 			{
 				zz = j>0?dd[i+n]:z0;	dd[i+n] += z->v(i,mz);
