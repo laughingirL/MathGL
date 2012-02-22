@@ -20,7 +20,7 @@ setup (
     maintainer="Dmitry Kulagin",
     maintainer_email="dik@ufp.appl.sci-nnov.ru",
     author="Alexey Balakin",
-    author_email= "balakin@appl.sci-nnov.ru",
+    author_email= "mathgl.ablakin@gmail.com",
     license="Same terms as MathGL",
     platforms = ["any"],
     url = "http://mathgl.sf.net",

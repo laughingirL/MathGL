@@ -35,10 +35,6 @@ class SetupDialog;
 class NewCmdDialog;
 class PlotPanel;
 //-----------------------------------------------------------------------------
-#ifndef WIN32
-#define USE_HDF5	// Enable HDF "projects"
-#endif
-//-----------------------------------------------------------------------------
 class TextPanel : public QWidget
 {
 Q_OBJECT

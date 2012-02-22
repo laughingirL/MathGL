@@ -38,8 +38,6 @@ endif(use_pthread)
 install(
 	TARGETS udav
 	RUNTIME DESTINATION bin
-	ARCHIVE DESTINATION lib
-	LIBRARY DESTINATION lib
 )
 
 endif(use_qt)
