@@ -403,7 +403,7 @@ void mglCanvas::pnt_plot(long x,long y,float z,const unsigned char ci[4])
 	unsigned char *cc = C+12*i0, c[4];
 	memcpy(c,ci,4);
 	float *zz = Z+3*i0, zf = FogDist*(z/Depth-0.5-FogDz);
-	if(zf<0)
+	if(zf<0)	// add fog
 	{
 		int d = int(255.f-255.f*exp(5.f*zf));
 		unsigned char cb[4] = {BDef[0], BDef[1], BDef[2], d};
@@ -677,8 +677,8 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 	unsigned char r[4];
 	long y1,x1,y2,x2;
 
-	float pw=PenWidth*sqrt(font_factor/400), dxu,dxv,dyu,dyv,dd;
-	if(get(MGL_HIGHLIGHT))	pw *= 2;
+	float pw=PenWidth*sqrt(font_factor/400), dxu,dxv,dyu,dyv,dd,dpw=3;
+	if(get(MGL_HIGHLIGHT))	{	pw *= 2;	dpw=2;	}
 	const mglPnt &p1=Pnt[k1], &p2=Pnt[k2];
 	mglPnt d=p2-p1, p;
 	bool hor = fabs(d.x)>fabs(d.y);
@@ -712,8 +712,7 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 			if(v>pw*pw)		continue;
 			if(!( PDef & ( 1<<long(fmod(pPos+u/pw/1.5, 16)) ) ))	continue;
 			p = p1+d*(u/dd);	col2int(p,r);
-//			r[3] = (unsigned char)(255/cosh(3.f*sqrt(v/pw/pw)));
-			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(3.f*(sqrt(v)+(1-pw)/2)));
+			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(dpw*(sqrt(v)+(1-pw)/2)));
 			pnt_plot(i,j,p.z+pw,r);
 		}
 	}
@@ -733,10 +732,7 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 			if(v>pw*pw)		continue;
 			if(!(PDef & (1<<long(fmod(pPos+u/pw/1.5, 16)))))		continue;
 			p = p1+d*(u/dd);	col2int(p,r);
-//			r[3] = (unsigned char)(255/cosh(3.f*sqrt(v/pw/pw)));
-//			r[3] = v<(pw-1)*(pw-1) ? 255 : (unsigned char)(255/cosh(3.f*(sqrt(v)+1-pw)));
-//			r[3] = v<pw*pw/4 ? 255 : (unsigned char)(255/cosh(3.f*(sqrt(v)-pw/2)));
-			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(3.f*(sqrt(v)+(1-pw)/2)));
+			r[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(dpw*(sqrt(v)+(1-pw)/2)));
 			pnt_plot(i,j,p.z+pw,r);
 		}
 	}
@@ -769,22 +765,22 @@ void mglCanvas::fast_draw(long k1, long k2, mglDrawReg *dr)
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 {
-	bool aa=get(MGL_ENABLE_ALPHA);	set(MGL_ENABLE_ALPHA);
 	register long i,j,s,x,y;
-	register float v,pw=PenWidth*sqrt(font_factor/400);
+	register float v,pw=2*PenWidth*sqrt(font_factor/400),dpw=3;
+	if(get(MGL_HIGHLIGHT))	{	pw *= 2;	dpw=2;	}
 	const mglPnt &p=Pnt[k];
 	unsigned char cs[4], cc;	col2int(p,cs);	cc = cs[3];
 	s = long(5.5+fabs(pw));
 	for(j=-s;j<=s;j++)	for(i=-s;i<=s;i++)
 	{
-		v = (i*i+j*j)/(9*pw*pw);
-		cs[3] = (unsigned char)(cc*exp(-6*v));
+		v = i*i+j*j;
+		cs[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(dpw*(sqrt(v)+(1-pw)/2)));
+//		cs[3] = (unsigned char)(cc*exp(-6*v));
 		if(cs[3]==0)	continue;
 		x=p.x+i;	y=p.y+j;
 		if(x>=dr->x1 && x<=dr->x2 && y>=dr->y1 && y<=dr->y2)
 			pnt_plot(p.x+i,p.y+j,p.z,cs);
 	}
-	set(aa,MGL_ENABLE_ALPHA);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::mark_draw(long k, char type, float size, mglDrawReg *d)

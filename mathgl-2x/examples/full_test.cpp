@@ -26,6 +26,7 @@
 #include <getopt.h>
 #include <vector>
 #include "mgl/mgl.h"
+#include "mgl/eval.h"
 //#include <mgl/mgl_idtf.h>
 #include "mgl/parser.h"
 void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0);
@@ -36,17 +37,22 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int test(mglGraph *gr)
 {
-	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+	mglData c;	mgls_prepare3d(&c);
+	mglData v(10);	v.Fill(-0.5,1);
 	gr->Rotate(40,60);	gr->Light(true);
-	gr->SetOrigin(0,0,0);	gr->Box();	gr->Cones(ys,"a");
+	gr->VertexColor(false);	gr->Compression(false);
+	gr->Box();	gr->ContF3(v,c,'z',0);
+	gr->ContF3(v,c,'x');	gr->ContF3(v,c,'y');
+	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
+	gr->ContF3(v,c,'z',c.nz-1);	gr->Surf3(-0.5,c);
 	return 0;
 
-	mglParse par(true);
+/*	mglParse par(true);
 	FILE *fp=fopen("test.mgl","rt");
 	par.Execute(gr,fp,true);
 	fclose(fp);
 	gr->ShowImage("",true);
-	return 0;
+	return 0;*/
 }
 //=============================================================================
 struct mglSample	/// Structure for list of samples
@@ -780,9 +786,9 @@ void smgl_sample1(mglGraph *gr)	// transformation
 //-----------------------------------------------------------------------------
 void smgl_candle(mglGraph *gr)
 {
-	mglData y(50);	gr->Fill(y,"sin(2*pi*x)^2");
-	mglData y1(50);	gr->Fill(y1,"v/2",y);
-	mglData y2(50);	gr->Fill(y2,"(1+v)/2",y);
+	mglData y(30);	gr->Fill(y,"sin(2*pi*x)^2");
+	mglData y1(30);	gr->Fill(y1,"v/2",y);
+	mglData y2(30);	gr->Fill(y2,"(1+v)/2",y);
 	gr->SetRange('y',0,1);	gr->Box();
 	gr->Candle(y,y1,y2);
 }
@@ -796,8 +802,8 @@ void smgl_plot(mglGraph *gr)
 void smgl_tape(mglGraph *gr)
 {
 	mglData x(50), y(50), z(50);
-	y.Modify("sin(pi*(2*x-1))");
-	x.Modify("cos(pi*2*x-pi)");	z.Fill(-1,1);
+	y.Modify("sin(pi*(2*x-1))/2");
+	x.Modify("cos(pi*2*x-pi)/2");	z.Fill(-1,1);
 	gr->Rotate(40,60);
 	gr->Plot(x,y,z);		gr->Box();
 	gr->Tape(x,y,z);
@@ -934,7 +940,7 @@ void smgl_tube_3d(mglGraph *gr)
 void smgl_radar(mglGraph *gr)
 {
 	mglData yr(10,3);	yr.Modify("0.4*sin(pi*(2*x+y/2))+0.1*rnd");
-	gr->Box();	gr->Radar(yr,"#");
+	gr->Radar(yr,"#");
 }
 //-----------------------------------------------------------------------------
 void smgl_error(mglGraph *gr)
@@ -1099,8 +1105,7 @@ void smgl_surf_fog(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
 	gr->Light(true);	gr->Rotate(40,60);	gr->Fog(1);	gr->Box();
-	(type==5 || type==9 || type==10)?gr->Puts(mglPoint(),"Fog not supported") : gr->Surf(a);
-	gr->Fog(0);
+	gr->Surf(a);
 }
 //-----------------------------------------------------------------------------
 void smgl_surf_alpha(mglGraph *gr)
@@ -1567,11 +1572,11 @@ void smgl_fit(mglGraph *gr)	// nonlinear fitting
 
 	float ini[3] = {1,1,3};
 	mglData Ini(3,ini);
-	gr->Fit(res, rnd, "a+b*sin(c*x)", "abc", Ini);
+	res = gr->Fit(rnd, "a+b*sin(c*x)", "abc", Ini);
 	gr->Plot(res, "r");
 	gr->Plot(in, "b");
-	gr->Puts(mglPoint(-1, -1.3), "fitted:", "r:L", -1);
-	gr->PutsFit(mglPoint(0, -1.8), "y = ", "r:C", -1);
+	gr->Puts(mglPoint(-0.9, -1.7), "fitted:", "r:L", -1);
+	gr->PutsFit(mglPoint(-0.67, -1.7), "y = ", "r:L", -1);
 	gr->Puts(mglPoint(0, 2.2), "initial: y = 0.3+sin(2\\pi x)", "b:C", -1);
 	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));	gr->SetOrigin(0,0,0);
 }
@@ -1582,8 +1587,8 @@ void smgl_parser(mglGraph *gr)	// example of MGL parsing
 	float a[100];   // let a_i = sin(4*pi*x), x=0...1
 	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
 	mglParse *parser = new mglParse;
-	mglData d = parser->AddVar("dat");
-	d.Set(a,100); // set data to variable
+	mglData *d = parser->AddVar("dat");
+	d->Set(a,100); // set data to variable
 	parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
 	// you may break script at any line do something
 	// and continue after that
@@ -1672,10 +1677,10 @@ void smgl_cutminmax2(mglGraph *gr)	// CutMin CutMax example
 	mglData v(10);	v.Fill(-0.5,1);
 	gr->Rotate(40,60);	gr->Light(true);
 	gr->VertexColor(false);	gr->Compression(false);
+	gr->Box();	gr->ContF3(v,c,'z',0);
+	gr->ContF3(v,c,'x');	gr->ContF3(v,c,'y');
 	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
-	gr->Box();	gr->Surf3(-0.5,c);
-	gr->ContF3(v,c,'x',-1);	gr->ContF3(v,c,'y',-1);
-	gr->ContF3(v,c,'z',0);	gr->ContF3(v,c,'z',39);
+	gr->ContF3(v,c,'z',c.nz-1);	gr->Surf3(-0.5,c);
 }
 //-----------------------------------------------------------------------------
 void smgl_cutminmax(mglGraph *gr)	// CutMin CutMax example
@@ -1699,7 +1704,7 @@ void smgl_surf3_cutoff(mglGraph *gr)	// CutMin CutMax example
 void smgl_boxplot(mglGraph *gr)	// flow threads and density plot
 {
 	mglData a(10,7);	a.Modify("(2*rnd-1)^3/2");
-	gr->Box();	gr->BoxPlot(a);	gr->Plot(a," ko");
+	gr->Box();	gr->BoxPlot(a);
 }
 //-----------------------------------------------------------------------------
 int main(int argc,char **argv)

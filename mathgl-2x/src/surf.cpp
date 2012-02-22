@@ -730,9 +730,9 @@ void mgl_boxs_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,int
 void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *opt)
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
-	if(x->GetNx()<z->GetNx())		{	gr->SetWarn(mglWarnDim,"Tile");	return;	}
-	if(z->GetNx()<2 || z->GetNy()<2){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
-	long ly = x->GetNy()>=z->GetNy() ? y->GetNy() : y->GetNx(), lx = x->GetNx();
+	if(x->GetNx()<n)		{	gr->SetWarn(mglWarnDim,"Tile");	return;	}
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
+	long ly = x->GetNy()>=m ? y->GetNy() : y->GetNx(), lx = x->GetNx();
 	if(y->GetNx()<z->GetNy() && (x->GetNy()<z->GetNy() || y->GetNx()<z->GetNx() || y->GetNy()<z->GetNy()))
 	{	gr->SetWarn(mglWarnDim);	return;	}
 	gr->SaveState(opt);
@@ -746,7 +746,7 @@ void mgl_tile_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *o
 	long k1,k2,k3,k4;
 	for(k=0;k<z->GetNz();k++)
 	{
-		for(j=0;j<m-1;j++)	for(i=0;i<n-1;i++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			if(gr->Stop)	return;
 			zz = z->v(i,j,k);		c = gr->GetC(ss,zz);
@@ -787,9 +787,9 @@ void mgl_tile_(uintptr_t *gr, uintptr_t *a, const char *sch, const char *opt,int
 void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch, const char *opt)
 {
 	register long i,j,k,n=z->GetNx(),m=z->GetNy();
-	if(x->GetNx()!=z->GetNx() || s->GetNx()*s->GetNy()*s->GetNz()!=z->GetNx()*z->GetNy()*z->GetNz())
+	if(x->GetNx()<n || s->GetNx()*s->GetNy()*s->GetNz()!=n*m*z->GetNz())
 	{	gr->SetWarn(mglWarnDim,"Tile");	return;	}
-	if(z->GetNx()<2 || z->GetNy()<2){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
+	if(n<2 || m<2){	gr->SetWarn(mglWarnLow,"Tile");	return;	}
 	long ly = x->GetNy()>=z->GetNy() ? y->GetNy() : y->GetNx(), lx = x->GetNx();
 	if(y->GetNx()<z->GetNy() && (x->GetNy()<z->GetNy() || y->GetNx()<z->GetNx() || y->GetNy()<z->GetNy()))
 	{	gr->SetWarn(mglWarnDim);	return;	}
@@ -804,11 +804,10 @@ void mgl_tiles_xy(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT s, const char *sch, cons
 	long k1,k2,k3,k4;
 	for(k=0;k<z->GetNz();k++)
 	{
-		for(j=0;j<m-1;j++)	for(i=0;i<n-1;i++)
+		for(j=0;j<m;j++)	for(i=0;i<n;i++)
 		{
 			if(gr->Stop)	return;
 			zz = z->v(i,j,k);	c = gr->GetC(cc,zz);
-			// TODO check it!!!
 			ss = (1-gr->GetA(s->v(i,j,k)))/2;	sm = 1-ss;
 
 			x1 = GetX(x,i,j,k).x;	y1 = GetY(y,i,j,k).x;

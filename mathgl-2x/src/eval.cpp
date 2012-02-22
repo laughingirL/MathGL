@@ -648,10 +648,10 @@ float mglFormula::CalcDIn(int id, const float *a1) const
 	{
 		if(Kod<EQ_SIN)
 		{
-			double b = Right->CalcIn(a1);
-			return !isnan(b) ? f21[Kod-EQ_LT](a,b)*d + f22[Kod-EQ_LT](a,b)*Right->CalcDIn(id,a1) : NAN;
+			double b = Right->CalcIn(a1), c = Right->CalcDIn(id,a1);
+			return !isnan(b) ? (d?f21[Kod-EQ_LT](a,b)*d:0) + (c?f22[Kod-EQ_LT](a,b)*c:0) : NAN;
 		}
-		else if(Kod<EQ_SN)	return f11[Kod-EQ_SIN](a)*d;
+		else if(Kod<EQ_SN)	return (d?f11[Kod-EQ_SIN](a)*d:0);
 #ifndef NO_GSL
 		else if(Kod<=EQ_DC)
 		{

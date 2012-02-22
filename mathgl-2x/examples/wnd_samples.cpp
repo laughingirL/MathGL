@@ -471,7 +471,7 @@ void mgls_prepare2d(mglData *a, mglData *b, mglData *v)
 //-----------------------------------------------------------------------------
 void mgls_prepare3d(mglData *a, mglData *b)
 {
-	register long i,j,k,n=60,m=50,l=40,i0;
+	register long i,j,k,n=61,m=50,l=40,i0;
 	if(a)	a->Create(n,m,l);		if(b)	b->Create(n,m,l);
 	float x,y,z;
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)

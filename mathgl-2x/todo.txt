@@ -3,6 +3,7 @@
 2. Axis -- projection (ternary + quaternary)
 3. Check highlight
 4. Check export to SVG/EPS/MGLD/TeX/OBJ/XGL/X3D/STL.
+5. contd (clabels), molecule, quaternary, vect*, tval (rotated labels)
 
 ============= NEW  =============
 
@@ -10,8 +11,9 @@
 2. Export to X3D and VRML
 3. Manual colors for text, boundary, background of Legend() (1st - text, 2nd - border, 3d - background)
 
-4. Option 'absolute' for coordinates in absolute range (i.e. [0,1]) ???
-5. Save primitives for frames (not bitmap) ???
+6. Samples: inverted axis, minus-log axis, many axis, Venn() diagram, Primitives, subplots (without border - GridPlot, MultiPlot, ZoomingPlot)
+7. Add GridPlot -- Like ColumnPlot but grid
+8. Table(float x, float y, HCDT dat, char *xlabels, char *ylabels, char *stl) -- draw table with values (+ auto reduce font size?)
 
 ============= FOR V.2.1 ========
 
@@ -22,6 +24,9 @@
 5. Export to JavaScript (WebGL)
 6. GTK and WX window/widgets
 7. Labels at TriCont()
+
+8. Option 'absolute' for coordinates in absolute range (i.e. [0,1]) ???
+9. Save primitives for frames (not bitmap) ??? -- see MGL_USEDRWDAT
 
 ============= UDAV =============
 
@@ -82,7 +87,7 @@ Remove other setting if data name is changed.
 9. About unrotated text
 10. Add "Howto" section in web site.
 12. Examples of animation, u3d, x3d, js and so on
-13. Example of inverted axis, minus-log axis
+13. Example of inverted axis, minus-log axis, many axis
 14. Venn() diagram sample
 15. Primitives sample
 16. Candle() sample
@@ -116,6 +121,8 @@ Remove other setting if data name is changed.
 42. Flow() and FlowP() draw tape of (bi)normales if character 'x' and/or 'z' is specified.
 43. Add MGL command "ask $N 'question'" -- like interactive "define". User (UDAV) must set mgl_ask_func to some non-zero value
 44. Cones() -- like Bars() but by Cone(). Support 'a' for above.
+45. Add Class diagram for MathGL core
+46. Fog is influenced at image preparing (at Finish()) but not at surface creation!
 
 ============= BUGS =============
 
