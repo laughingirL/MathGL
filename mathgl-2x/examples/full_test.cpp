@@ -71,8 +71,8 @@ int mgl_cmd_smp(const void *a, const void *b)
 extern mglSample samp[];
 int type = 0;
 int dotest  = 0;
-int width  = 600;
-int height = 400;
+int width  = 1000;
+int height = 750;
 int mini = 0;
 int big  = 0;
 int srnd = 0;
@@ -110,8 +110,8 @@ void usage()
 		"-png			- output png\n"
 		"-width=num		- png picture width\n"
 		"-height=num	- png picture height\n"
-		"-mini			- png picture is 200x133\n"
-		"-big			- png picture is 1200x800\n"
+		"-mini			- png picture is 200x150\n"
+		"-big			- png picture is 1920x1440\n"
 		"-idtf			- output idtf\n"
 		"-u3d			- output u3d\n"
 		"-pdf			- output pdf\n"
@@ -1733,9 +1733,9 @@ int main(int argc,char **argv)
 	gr = new mglGraph;
 //	if(type==5 || type==9 || type==10)	{	u3d.unrotate_flag = true;	gr = &u3d;	}
 
-	if(mini)		{	gr->SetSize(200,133);	suf = "_sm";	}
+	if(mini)		{	gr->SetSize(200,150);	suf = "_sm";	}
 	else if(big)
-	{	gr->SetSize(1200,800);	suf = "_lg";	}
+	{	gr->SetSize(1920,1440);	suf = "_lg";	}
 	else	gr->SetSize(width,height);
 
 	if(dotest)

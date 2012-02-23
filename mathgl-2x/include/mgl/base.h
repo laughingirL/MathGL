@@ -234,10 +234,16 @@ public:
 	{	CutMin=mglPoint(x1,y1,z1);	CutMax=mglPoint(x2,y2,z2);	}
 	inline void SetCutBox(mglPoint v1, mglPoint v2)	{	CutMin=v1;	CutMax=v2;	}
 
+	/// Set the using of light on/off.
+	virtual bool Light(bool enable)
+	{	bool t=get(MGL_ENABLE_LIGHT);	set(enable,MGL_ENABLE_LIGHT);	return t;	}
 	/// Set ambient light brightness
 	virtual void SetAmbient(float bright=0.5);
 	/// Use diffusive light (only for local light sources)
 	inline void SetDifLight(bool dif)	{	set(dif,MGL_DIFFUSIVE);	}
+	/// Set the transparency on/off.
+	virtual bool Alpha(bool enable)
+	{	bool t=get(MGL_ENABLE_ALPHA);	set(enable,MGL_ENABLE_ALPHA);	return t;	}
 	/// Set default value of alpha-channel
 	inline void SetAlphaDef(float val)	{	AlphaDef=val;	};
 	/// Set default palette

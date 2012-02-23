@@ -126,6 +126,9 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 	q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
 	q.c=c;	q.t=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	Txt[long(c)].GetC(c,a,q);	// RGBA color
+
+	if(!get(MGL_ENABLE_ALPHA))	q.a=1;
+	if(!get(MGL_ENABLE_LIGHT))	q.u=q.v=NAN;
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
@@ -822,6 +825,7 @@ float mglBase::SaveState(const char *opt)
 		mgl_strtrim(b);
 
 		float ff=atof(b),ss;
+		if(!strcmp(b,"on"))	ff=1;
 		if(!strcmp(a+1,"range"))
 		{
 			n=mglFindArg(s);	c=s;
@@ -832,9 +836,10 @@ float mglBase::SaveState(const char *opt)
 			else if(a[0]=='z')	{	Min.z=ff;	Max.z=ss;	}
 			else if(a[0]=='c')	{	Min.c=ff;	Max.c=ss;	}
 		}
-		else if(!strcmp(a,"cut"))		SetCut(ff!=0 || !strncmp(s,"on",2));
+		else if(!strcmp(a,"cut"))		SetCut(ff!=0);
 		else if(!strcmp(a,"meshnum"))	SetMeshNum(ff);
-		else if(!strcmp(a,"alpha"))		SetAlphaDef(ff);
+		else if(!strcmp(a,"alpha"))		{SetAlphaDef(ff);	Alpha(true);}
+		else if(!strcmp(a,"light"))		Light(ff!=0);
 		else if(!strcmp(a,"ambient"))	SetAmbient(ff);
 		else if(!strcmp(a,"diffuse"))	SetDifLight(ff);
 		else if(!strcmp(a,"marksize"))	SetMarkSize(ff);

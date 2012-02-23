@@ -442,7 +442,8 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
 	register float b0=0,b1=0,b2=0, ar,ag,ab;
 	ar = ag = ab = AmbBr;
 
-	if(get(MGL_ENABLE_LIGHT) && !isnan(p.u))
+//	if(get(MGL_ENABLE_LIGHT) && !isnan(p.u))
+	if(!isnan(p.u))
 	{
 		float d0,d1,d2,nn;
 		register long i;
@@ -500,14 +501,15 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
 		b1 = b1<1 ? b1 : 1;
 		b2 = b2<1 ? b2 : 1;
 	}
-	else	{	b0=p.r;	b1=p.g;	b2=p.b;	}
+	else
+	{	b0=p.r;	b1=p.g;	b2=p.b;	}
 	// try to highlight faces
 	if(get(MGL_HIGHLIGHT))	{	b0*=0.7;	b1*=0.7;	b2*=0.7;	}
 	r[0] = (unsigned char)(255*b0);
 	r[1] = (unsigned char)(255*b1);
 	r[2] = (unsigned char)(255*b2);
-	// p.a should be <1
-	r[3] = get(MGL_ENABLE_ALPHA) ? (unsigned char)(256*p.a) : 255;
+//	r[3] = get(MGL_ENABLE_ALPHA) ? (unsigned char)(255*p.a) : 255;
+	r[3] = (unsigned char)(255*p.a);
 	return r;
 }
 //-----------------------------------------------------------------------------
@@ -612,7 +614,7 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 			if(g)	continue;	// second root bad
 		}
 		p = p1+d1*u+d2*v+d3*(u*v);
-		if(isnan(p.u))
+		if(isnan(p.u) && !isnan(p.v))
 		{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
 		pnt_plot(i,j,p.z,col2int(p,r));
 	}
@@ -662,7 +664,7 @@ void mglCanvas::trig_draw(long k1, long k2, long k3, bool anorm, mglDrawReg *d)
 		if(Quality&2)	// slow but accurate
 		{
 			p = p1+d1*u+d2*v;
-			if(isnan(p.u) && anorm)
+			if(isnan(p.u) && !isnan(p.v) && anorm)
 			{	p.u = nr.x;	p.v = nr.y;	p.w = nr.z;	}
 			pnt_plot(i,j,p.z,col2int(p,r));
 		}

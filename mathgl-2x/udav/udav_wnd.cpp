@@ -110,7 +110,7 @@ int main(int argc, char **argv)
 		QTextCodec *codec = QTextCodec::codecForLocale();
 		mw->load(codec->toUnicode(argv[1]), true);
 	}
-	mw->show();
+	mw->show();	parser.AllowSetSize = true;
 	a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
 	if(showHint)	udavShowHint(mw);
 	return a.exec();

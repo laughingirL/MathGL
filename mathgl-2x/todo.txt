@@ -4,6 +4,7 @@
 3. Check highlight
 4. Check export to SVG/EPS/MGLD/TeX/OBJ/XGL/X3D/STL.
 5. contd (clabels), molecule, quaternary, vect*, tval (rotated labels)
+6. setsize in UDAV
 
 ============= NEW  =============
 

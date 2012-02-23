@@ -107,6 +107,7 @@ class mglCanvas : public mglBase
 {
 friend struct mglPrim;
 public:
+using mglBase::Light;
 	mglPoint LastMousePos;	///< Last mouse position
 
 	mglCanvas(int w=800, int h=600);
@@ -212,15 +213,11 @@ public:
 	/// Import points and primitives from file using MGLD format
 	bool ImportMGLD(const char *fname, bool add=false);
 
-	/// Set the transparency on/off.
-	virtual bool Alpha(bool enable);
 	/// Set the transparency type
 	inline void SetTranspType(int val)
 	{	Flag=(Flag&(~3)) + (val&3);	SetAxisStl(val==2?"w-":"k-");	}
 	/// Set the fog distance or switch it off (if d=0).
 	virtual void Fog(float d, float dz=0.25);
-	/// Set the using of light on/off.
-	virtual bool Light(bool enable);
 	/// Switch on/off the specified light source.
 	virtual void Light(int n, bool enable);
 	/// Add a light source.

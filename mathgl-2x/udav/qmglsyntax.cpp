@@ -63,9 +63,9 @@ void QMGLSyntax::highlightBlock(const QString &text)
 		{
 			const char *o[]={"xrange","yrange","zrange","crange","alpha",
 							"cut","ambient","meshnum","fontsize","alphadef",
-							"marksize","legend"};
-			int l[12] = {6, 6, 6, 6, 5, 3, 7, 7, 8, 8, 8, 6};
-			for(j=0;j<12;j++)
+							"marksize","legend","light"};
+			int l[] = {6, 6, 6, 6, 5, 3, 7, 7, 8, 8, 8, 6, 5};
+			for(j=0;j<13;j++)
 				if(text.indexOf(o[j],i)==i && (i+l[j]==text.length() || text[i+l[j]].isSpace()))
 					setFormat(i,l[j],mglColorScheme[3]);
 		}

@@ -600,12 +600,6 @@ void mglCanvas::ColumnPlot(int num, int i, float dd)
 //-----------------------------------------------------------------------------
 void mglCanvas::Fog(float d, float dz)	{	FogDist=d;	FogDz = dz;	}
 //-----------------------------------------------------------------------------
-bool mglCanvas::Alpha(bool enable)
-{	bool t=get(MGL_ENABLE_ALPHA);	set(enable,MGL_ENABLE_ALPHA);	return t;	}
-//-----------------------------------------------------------------------------
-bool mglCanvas::Light(bool enable)
-{	bool t=get(MGL_ENABLE_LIGHT);	set(enable,MGL_ENABLE_LIGHT);	return t;	}
-//-----------------------------------------------------------------------------
 void mglCanvas::Light(int n, bool enable)
 {
 	if(n<0 || n>9)	{	SetWarn(mglWarnLId);	return;	}
@@ -625,7 +619,7 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 	if(n1<0 || n2<0 || !strchr("AVKSDTIO",st))	return;
 	const mglPnt &p1=Pnt[n1], &p2=Pnt[n2];
 	mglPnt q1=p1,q2=p1,q3=p1,q4=p1;
-	q1.u=q2.u=q3.u=q4.u=NAN;
+	q1.u=q1.v=q2.u=q2.v=q3.u=q3.v=q4.u=q4.v=NAN;
 
 	float lx=p1.x-p2.x, ly=p1.y-p2.y, ll, kx,ky;
 	ll = hypot(lx,ly)/(PenWidth*ArrowSize*0.35*font_factor);
