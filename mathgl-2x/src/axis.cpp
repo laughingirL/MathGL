@@ -27,7 +27,13 @@
 //-----------------------------------------------------------------------------
 #define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
 #define sign(a)	((a)<0 ? -1:1)
-
+//-----------------------------------------------------------------------------
+#ifdef WIN32	// NOTE: this is not thread safe!
+inline struct tm* localtime_r (const time_t *clock, struct tm *result)
+{	if (!clock || !result) return NULL;
+	memcpy(result,localtime(clock),sizeof(*result));
+	return result;	}
+#endif
 //-----------------------------------------------------------------------------
 wchar_t *mgl_wcsdup(const wchar_t *s)
 {
