@@ -970,7 +970,7 @@ void mglCanvas::glyph_fill(const mglPnt &pp, float f, int nt, const short *trig,
 {
 	if(!trig || nt<=0)	return;
 	long ik,ii,pos=Pnt.size();
-	mglPnt p=pp;	p.u=NAN;
+	mglPnt p=pp;	p.u=p.v=NAN;
 	float pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 
 	mglPoint p1,p2,p3;
@@ -991,7 +991,7 @@ void mglCanvas::glyph_wire(const mglPnt &pp, float f, int nl, const short *line,
 {
 	if(!line || nl<=0)	return;
 	long ik,ii,il=0,pos=Pnt.size();
-	mglPnt p=pp;	p.u=NAN;
+	mglPnt p=pp;	p.u=p.v=NAN;
 	unsigned pdef=PDef;	PDef = 0xffff;
 	float opw=PenWidth;	PenWidth=0.75;
 	mglPoint p1,p2;
@@ -1021,7 +1021,7 @@ void mglCanvas::glyph_wire(const mglPnt &pp, float f, int nl, const short *line,
 //-----------------------------------------------------------------------------
 void mglCanvas::glyph_line(const mglPnt &pp, float f, bool solid, mglDrawReg *d)
 {
-	mglPnt p=pp;	p.u=NAN;
+	mglPnt p=pp;	p.u=p.v=NAN;
 	float pw = Width>2 ? fabs(PenWidth) : 1e-5*Width;
 	unsigned pdef=PDef;	PDef = 0xffff;
 	float opw=PenWidth;	PenWidth=1;

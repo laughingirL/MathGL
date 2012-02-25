@@ -126,8 +126,8 @@ void mgl_subplot_s(HMGL gr, int nx,int ny,int m,const char *style);
 void mgl_multiplot(HMGL gr, int nx,int ny,int m,int dx,int dy,const char *style);
 void mgl_inplot(HMGL gr, float x1,float x2,float y1,float y2);
 void mgl_relplot(HMGL gr, float x1,float x2,float y1,float y2);
-void mgl_columnplot(HMGL gr, int num, int ind);
-void mgl_columnplot_d(HMGL gr, int num, int ind, float d);
+void mgl_columnplot(HMGL gr, int num, int ind, float d);
+void mgl_gridplot(HMGL gr, int nx, int ny, int m, float d);
 void mgl_stickplot(HMGL gr, int num, int ind, float tet, float phi);
 void mgl_title(HMGL gr, const char *title, const char *stl, float size);
 void mgl_titlew(HMGL gr, const wchar_t *title, const char *stl, float size);
@@ -240,8 +240,8 @@ void mgl_subplot_s_(uintptr_t *graph, int *nx,int *ny,int *m, const char *s,int)
 void mgl_multiplot_(uintptr_t *graph, int *nx,int *ny,int *m,int *dx,int *dy, const char *s,int);
 void mgl_inplot_(uintptr_t *graph, float *x1,float *x2,float *y1,float *y2);
 void mgl_relplot_(uintptr_t *graph, float *x1,float *x2,float *y1,float *y2);
-void mgl_columnplot_(uintptr_t *graph, int *num, int *i);
-void mgl_columnplot_d_(uintptr_t *graph, int *num, int *i, float *d);
+void mgl_columnplot_(uintptr_t *graph, int *num, int *i, float *d);
+void mgl_gridplot_(uintptr_t *graph, int *nx, int *ny, int *i, float *d);
 void mgl_stickplot_(uintptr_t *graph, int *num, int *i, float *tet, float *phi);
 
 void mgl_title_(uintptr_t *gr, const char *title, const char *stl, float *size, int,int);

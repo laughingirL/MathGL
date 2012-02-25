@@ -208,19 +208,22 @@ public:
 	{	mgl_multiplot(gr, nx, ny, m, dx, dy, style);	}
 	/// Put further plotting in some region of whole frame surface.
 	inline void InPlot(float x1,float x2,float y1,float y2, bool rel=true)
-	{	if(rel)	mgl_inplot(gr, x1, x2, y1, y2);
-		else	mgl_relplot(gr, x1, x2, y1, y2);	}
+	{	if(rel)	mgl_relplot(gr, x1, x2, y1, y2);
+		else	mgl_inplot(gr, x1, x2, y1, y2);	}
 	/// Put further plotting in column cell of previous subplot
 	inline void ColumnPlot(int num, int ind, float d=0)
-	{	mgl_columnplot_d(gr,num,ind,d);	}
+	{	mgl_columnplot(gr,num,ind,d);	}
+	/// Put further plotting in matrix cell of previous subplot
+	inline void GridPlot(int nx, int ny, int ind, float d=0)
+	{	mgl_gridplot(gr,nx,ny,ind,d);	}
 	/// Put further plotting in cell of stick rotated on angles tet, phi
 	inline void StickPlot(int num, int i, float tet, float phi)
 	{	mgl_stickplot(gr,num,i,tet,phi);	}
 
 	/// Add title for current subplot/inplot
-	inline 	void Title(const char *title,const char *stl="#",float size=-2)
+	inline 	void Title(const char *title,const char *stl="",float size=-2)
 	{	mgl_title(gr,title,stl,size);	}
-	inline 	void Title(const wchar_t *title,const char *stl="#",float size=-2)
+	inline 	void Title(const wchar_t *title,const char *stl="",float size=-2)
 	{	mgl_titlew(gr,title,stl,size);	}
 	/// Set aspect ratio for further plotting.
 	inline void Aspect(float Ax,float Ay,float Az)

@@ -58,23 +58,64 @@ void mgl_mat_pop(HMGL gr)	{	_Gr_->Pop();	}
 void mgl_clf(HMGL gr)	{	_Gr_->Clf();	}
 void mgl_clf_rgb(HMGL gr, float r, float g, float b){	_Gr_->Clf(mglColor(r,g,b));	}
 //-----------------------------------------------------------------------------
-void mgl_subplot(HMGL gr, int nx,int ny,int m)		{	_Gr_->SubPlot(nx,ny,m);	}
+void mgl_subplot(HMGL gr, int nx,int ny,int m)
+{	mgl_subplot_d(gr,nx,ny,m,0,0);	}
+//-----------------------------------------------------------------------------
 void mgl_subplot_d(HMGL gr, int nx,int ny,int m,float dx,float dy)
-{	_Gr_->SubPlot(nx,ny,m,dx,dy);	}
+{
+	float x1,x2,y1,y2;
+	int mx = m%nx, my = m/nx;
+	if(_Gr_->get(MGL_AUTO_FACTOR))	{	dx /= 1.55;	dy /= 1.55;	}
+	else	{	dx /= 2;	dy /= 2;	}
+	x1 = (mx+dx)/nx;		x2 = (mx+1+dx)/nx;
+	y2 = 1.f-(my+dy)/ny;	y1 = 1.f-(my+1+dy)/ny;
+	_Gr_->InPlot(x1,x2,y1,y2,false);
+}
+//-----------------------------------------------------------------------------
 void mgl_subplot_s(HMGL gr, int nx,int ny,int m,const char *style)
-{	_Gr_->SubPlot(nx,ny,m,style);	}
+{
+	float x1,x2,y1,y2;
+	int mx = m%nx, my = m/nx;
+	x1 = float(mx)/nx;		x2 = float(mx+1)/nx;
+	y2 = 1.f-float(my)/ny;	y1 = 1.f-float(my+1)/ny;
+	_Gr_->InPlot(x1,x2,y1,y2,style);
+}
+//-----------------------------------------------------------------------------
 void mgl_multiplot(HMGL gr, int nx,int ny,int m,int dx,int dy,const char *style)
-{	_Gr_->MultiPlot(nx,ny,m,dx,dy,style);	}
+{
+	float x1,x2,y1,y2;
+	int mx = m%nx, my = m/nx;
+	dx = (dx<1 || dx+mx>=nx) ? 1 : dx;
+	dy = (dy<1 || dy+my>=ny) ? 1 : dy;
+	x1 = float(mx)/nx;		x2 = float(mx+dx)/nx;
+	y2 = 1-float(my)/ny;	y1 = 1-float(my+dy)/ny;
+	_Gr_->InPlot(x1,x2,y1,y2,style);
+}
+//-----------------------------------------------------------------------------
 void mgl_inplot(HMGL gr, float x1,float x2,float y1,float y2)
 {	_Gr_->InPlot(x1,x2,y1,y2,false);	}
 void mgl_relplot(HMGL gr, float x1,float x2,float y1,float y2)
 {	_Gr_->InPlot(x1,x2,y1,y2,true);	}
-void mgl_columnplot(HMGL gr, int num, int i)
-{	_Gr_->ColumnPlot(num,i);	}
-void mgl_columnplot_d(HMGL gr, int num, int i, float d)
-{	_Gr_->ColumnPlot(num,i,d);	}
+//-----------------------------------------------------------------------------
+void mgl_columnplot(HMGL gr, int num, int i, float dd)
+{
+	float pf=_Gr_->GetPlotFactor();
+	float d = i/(num+pf-1), w = pf/(num+pf-1);
+	_Gr_->InPlot(0,1,d,d+w*(1-dd),true);
+}
+//-----------------------------------------------------------------------------
+void mgl_gridplot(HMGL gr, int nx, int ny, int i, float dd)
+{
+	int ix=i%nx, iy=i/nx;
+	float pf=_Gr_->GetPlotFactor();
+	float dx = ix/(nx+pf-1), wx = pf/(nx+pf-1);
+	float dy = iy/(ny+pf-1), wy = pf/(ny+pf-1);
+	_Gr_->InPlot(dx,dx+wx*(1-dd),dy,dy+wy*(1-dd),true);
+}
+//-----------------------------------------------------------------------------
 void mgl_stickplot(HMGL gr, int num, int i, float tet, float phi)
 {	_Gr_->StickPlot(num, i, tet, phi);	}
+//-----------------------------------------------------------------------------
 void mgl_aspect(HMGL gr, float Ax,float Ay,float Az)
 {	_Gr_->Aspect(Ax,Ay,Az);	}
 void mgl_rotate(HMGL gr, float TetX,float TetZ,float TetY)
@@ -118,23 +159,23 @@ void mgl_clf_rgb_(uintptr_t *gr, float *r, float *g, float *b)
 {	_GR_->Clf(mglColor(*r,*g,*b));	}
 //-----------------------------------------------------------------------------
 void mgl_subplot_(uintptr_t *gr, int *nx,int *ny,int *m)
-{	_GR_->SubPlot(*nx,*ny,*m);	}
+{	mgl_subplot_d(_GR_,*nx,*ny,*m,0,0);	}
 void mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,float *dx,float *dy)
-{	_GR_->SubPlot(*nx,*ny,*m,*dx,*dy);	}
+{	mgl_subplot_d(_GR_,*nx,*ny,*m,*dx,*dy);	}
 void mgl_subplot_s_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st,int l)
 {	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
-	_GR_->SubPlot(*nx,*ny,*m,s);	delete []s;	}
+	mgl_subplot_s(_GR_,*nx,*ny,*m,s);	delete []s;	}
 void mgl_multiplot_(uintptr_t *gr, int *nx,int *ny,int *m,int *dx,int *dy,const char *st,int l)
 {	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
-	_GR_->MultiPlot(*nx,*ny,*m,*dx,*dy,s);	delete []s;	}
+	mgl_multiplot(_GR_,*nx,*ny,*m,*dx,*dy,s);	delete []s;	}
 void mgl_inplot_(uintptr_t *gr, float *x1,float *x2,float *y1,float *y2)
 {	_GR_->InPlot(*x1,*x2,*y1,*y2,false);	}
 void mgl_relplot_(uintptr_t *gr, float *x1,float *x2,float *y1,float *y2)
 {	_GR_->InPlot(*x1,*x2,*y1,*y2,true);	}
-void mgl_columnplot_(uintptr_t *gr, int *num, int *i)
-{	_GR_->ColumnPlot(*num,*i);	}
-void mgl_columnplot_d_(uintptr_t *gr, int *num, int *i, float *d)
-{	_GR_->ColumnPlot(*num,*i,*d);	}
+void mgl_columnplot_(uintptr_t *gr, int *num, int *i, float *d)
+{	mgl_columnplot(_GR_,*num,*i,*d);	}
+void mgl_columnplot_d_(uintptr_t *gr, int *nx, int *ny, int *i, float *d)
+{	mgl_gridplot(_GR_,*nx,*ny,*i,*d);	}
 void mgl_stickplot_(uintptr_t *gr, int *num, int *i, float *tet, float *phi)
 {	_GR_->StickPlot(*num, *i, *tet, *phi);	}
 

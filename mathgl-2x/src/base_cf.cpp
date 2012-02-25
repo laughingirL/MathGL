@@ -133,7 +133,7 @@ void mgl_set_arrow_size(HMGL gr, mreal size)	{	gr->SetArrowSize(size);	}
 void mgl_set_font_size(HMGL gr, mreal size)		{	gr->SetFontSize(size);	}
 void mgl_set_font_def(HMGL gr, const char *fnt)	{	gr->SetFontDef(fnt);	}
 void mgl_load_font(HMGL gr, const char *name, const char *path)
-{	gr->GetFont()->Load(name,path);	}
+{	if(name && *name)	gr->GetFont()->Load(name,path);	else	gr->GetFont()->Restore();	}
 void mgl_copy_font(HMGL gr, HMGL gr_from)		{	gr->GetFont()->Copy(gr_from->GetFont());	}
 void mgl_restore_font(HMGL gr)	{	gr->GetFont()->Restore();	}
 //-----------------------------------------------------------------------------

@@ -312,19 +312,6 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 		add_prim(a);
 	}
 	float shift = -sh-0.2, fsize=size/8.*font_factor, h = fnt->Height(font)*fsize, w;
-	if(strchr(font,'@'))	// draw box around text
-	{
-		long k1,k2,k3,k4;
-		w = fnt->Width(text,font)*fsize;
-		mglPnt pp=Pnt[p], pt;
-		int align;	mglGetStyle(font,0,&align);	align = align&3;
-		float d=-w*align/2.;
-		pt = pp;	pt.x+= d;	MGL_PUSH(Pnt,pt,mutexPnt);	k1=Pnt.size()-1;
-		pt = pp;	pt.x+= w+d;	MGL_PUSH(Pnt,pt,mutexPnt);	k2=Pnt.size()-1;
-		pt = pp;	pt.x+= d;	pt.y+= h/2;	MGL_PUSH(Pnt,pt,mutexPnt);	k3=Pnt.size()-1;
-		pt = pp;	pt.x+= w+d;	pt.y+= h/2;	MGL_PUSH(Pnt,pt,mutexPnt);	k4=Pnt.size()-1;
-		line_plot(k1,k2);	line_plot(k1,k3);	line_plot(k4,k2);	line_plot(k4,k3);
-	}
 	// text drawing itself
 	Push();
 	if(strchr(font,'T'))	shift = sh+0.2;
@@ -349,6 +336,25 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 		fscl = fsize;
 		ftet = -180*atan2(q.v,q.u)/M_PI;
 	}
+	memset(B.b,0,9*sizeof(float));
+	B.b[0] = B.b[4] = B.b[8] = fscl;
+	RotateN(ftet,0,0,1);
+	if(strchr(font,'@'))	// draw box around text
+	{
+		long k1,k2,k3,k4;	mglPnt pt;	mglPoint p;
+		w = fnt->Width(text,font);	h = fnt->Height(font);
+		int align;	mglGetStyle(font,0,&align);	align = align&3;
+		float d=-w*align/2.-h*0.2;	w+=h*0.4;
+		pt = q;	p = mglPoint(d,-h*0.4);		PostScale(p);
+		pt.x=pt.xx=p.x;	pt.y=pt.yy=p.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k1=Pnt.size()-1;
+		pt = q;	p = mglPoint(w+d,-h*0.4);	PostScale(p);
+		pt.x=pt.xx=p.x;	pt.y=pt.yy=p.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k2=Pnt.size()-1;
+		pt = q;	p = mglPoint(d,h*1.2);	PostScale(p);
+		pt.x=pt.xx=p.x;	pt.y=pt.yy=p.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k3=Pnt.size()-1;
+		pt = q;	p = mglPoint(w+d,h*1.2);	PostScale(p);
+		pt.x=pt.xx=p.x;	pt.y=pt.yy=p.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k4=Pnt.size()-1;
+		line_plot(k1,k2);	line_plot(k1,k3);	line_plot(k4,k2);	line_plot(k4,k3);
+	}
 	fsize *= fnt->Puts(text,font,col)/2;
 	Pop();	return fsize;
 }
@@ -359,7 +365,7 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, float col)
 	a.s = fscl/B.pf;	a.w = ftet;	a.p = B.pf;
 	float cc = col<0 ? AddTexture(char(0.5-col)):col;
 	if(cc<0)	cc = CDef;
-	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), -1, 0);
+	a.n1 = AddPnt(mglPoint(B.x,B.y,B.z), cc, mglPoint(x,y,f/fnt->GetFact(s&3)), -1, -1);
 	a.n3 = s;	a.n4 = j;
 	if(a.n1<0)	return;
 	mglDrawReg d;	d.set(this,1,1,0);
@@ -368,37 +374,6 @@ void mglCanvas::Glyph(float x, float y, float f, int s, long j, float col)
 }
 //-----------------------------------------------------------------------------
 //	Plot positioning functions
-//-----------------------------------------------------------------------------
-void mglCanvas::SubPlot(int nx,int ny,int m, float dx, float dy)
-{
-	float x1,x2,y1,y2;
-	int mx = m%nx, my = m/nx;
-	if(get(MGL_AUTO_FACTOR))	{	dx /= 1.55;	dy /= 1.55;	}
-	else	{	dx /= 2;	dy /= 2;	}
-	x1 = (mx+dx)/nx;		x2 = (mx+1+dx)/nx;
-	y2 = 1.f-(my+dy)/ny;	y1 = 1.f-(my+1+dy)/ny;
-	InPlot(x1,x2,y1,y2,false);
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::SubPlot(int nx,int ny,int m, const char *style)
-{
-	float x1,x2,y1,y2;
-	int mx = m%nx, my = m/nx;
-	x1 = float(mx)/nx;		x2 = float(mx+1)/nx;
-	y2 = 1.f-float(my)/ny;	y1 = 1.f-float(my+1)/ny;
-	InPlot(x1,x2,y1,y2,style);
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::MultiPlot(int nx,int ny,int m, int dx, int dy, const char *style)
-{
-	float x1,x2,y1,y2;
-	int mx = m%nx, my = m/nx;
-	dx = (dx<1 || dx+mx>=nx) ? 1 : dx;
-	dy = (dy<1 || dy+my>=ny) ? 1 : dy;
-	x1 = float(mx)/nx;		x2 = float(mx+dx)/nx;
-	y2 = 1-float(my)/ny;	y1 = 1-float(my+dy)/ny;
-	InPlot(x1,x2,y1,y2,style);
-}
 //-----------------------------------------------------------------------------
 void mglCanvas::InPlot(float x1,float x2,float y1,float y2, const char *st)
 {
@@ -460,6 +435,26 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 	mglPrim p;	p.id = ObjId;
 	p.n1=x1*Width;	p.n2=x2*Width;	p.n3=y1*Height;	p.n4=y2*Height;
 	MGL_PUSH(Sub,p,mutexSub);
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::StickPlot(int num, int id, float tet, float phi)
+{
+	float dx,dy,w0,h0;
+	mglPoint p1(-1,0,0), p2(1,0,0);
+	InPlot(0,1,0,1,true);	Rotate(tet, phi);
+	PostScale(p1);	PostScale(p2);
+	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/inW);	dx=(p2.x-p1.x)*w0/inW;
+	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/inH);	dy=(p2.y-p1.y)*h0/inH;
+
+	p1 = mglPoint(-1,0,0);	p2 = mglPoint(1,0,0);
+	InPlot(dx>0?0:1-w0, dx>0?w0:1, dy>0?0:1-h0, dy>0?h0:1, true);
+	Rotate(tet,phi);	PostScale(p1);	PostScale(p2);
+	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/inW);	dx=(p2.x-p1.x)*w0/inW;
+	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/inH);	dy=(p2.y-p1.y)*h0/inH;
+
+	float x1=dx>0?dx*id:1-w0+dx*id, x2=dx>0?w0+dx*id:1+dx*id;
+	float y1=dy>0?dy*id:1-h0+dy*id, y2=dy>0?h0+dy*id:1+dy*id;
+	InPlot(x1, x2, y1, y2, true);	Rotate(tet,phi);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Rotate(float tetz,float tetx,float tety)
@@ -567,33 +562,6 @@ void mglCanvas::Aspect(float Ax,float Ay,float Az)
 	B.b[0] *= Ax;		B.b[3] *= Ax;		B.b[6] *= Ax;
 	B.b[1] *= Ay;		B.b[4] *= Ay;		B.b[7] *= Ay;
 	B.b[2] *= Az;		B.b[5] *= Az;		B.b[8] *= Az;
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::StickPlot(int num, int id, float tet, float phi)
-{
-	float dx,dy,w0,h0;
-	mglPoint p1(-1,0,0), p2(1,0,0);
-	InPlot(0,1,0,1,true);	Rotate(tet, phi);
-	PostScale(p1);	PostScale(p2);
-	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/inW);	dx=(p2.x-p1.x)*w0/inW;
-	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/inH);	dy=(p2.y-p1.y)*h0/inH;
-
-	p1 = mglPoint(-1,0,0);	p2 = mglPoint(1,0,0);
-	InPlot(dx>0?0:1-w0, dx>0?w0:1, dy>0?0:1-h0, dy>0?h0:1, true);
-	Rotate(tet,phi);	PostScale(p1);	PostScale(p2);
-	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/inW);	dx=(p2.x-p1.x)*w0/inW;
-	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/inH);	dy=(p2.y-p1.y)*h0/inH;
-
-	float x1=dx>0?dx*id:1-w0+dx*id, x2=dx>0?w0+dx*id:1+dx*id;
-	float y1=dy>0?dy*id:1-h0+dy*id, y2=dy>0?h0+dy*id:1+dy*id;
-	InPlot(x1, x2, y1, y2, true);	Rotate(tet,phi);
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::ColumnPlot(int num, int i, float dd)
-{
-	float d = i/(num+B.pf-1);
-	float w = B.pf/(num+B.pf-1);
-	InPlot(0,1,d,d+w*(1-dd),true);
 }
 //-----------------------------------------------------------------------------
 //	Lighting and transparency
@@ -776,8 +744,8 @@ void mglCanvas::Title(const char *title,const char *stl,float size)
 //-----------------------------------------------------------------------------
 void mglCanvas::Title(const wchar_t *title,const char *stl,float size)
 {
-	float s = size>0 ? size/FontSize:-size, h=TextHeight(stl,size)*s/2;
-	if(h>=inH)	{	SetWarn(mglWarnSpc,"FrameBox");	return;	}
+	float s = size>0 ? size/FontSize:-size, h=TextHeight(stl,size)*s/4;
+	if(h>=inH)	{	SetWarn(mglWarnSpc,"Title");	return;	}
 	bool box=(stl && strchr(stl,'#'));
 	int align;	mglGetStyle(stl,0,&align);	align = align&3;
 	float x=B1.x-inW/2, y=B1.y+inH/2-h;

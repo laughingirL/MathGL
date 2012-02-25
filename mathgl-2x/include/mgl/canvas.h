@@ -130,22 +130,18 @@ using mglBase::Light;
 	/// Set PlotFactor
 	inline void SetPlotFactor(float val)
 	{	if(val<=0)	{B.pf=1.55;	set(MGL_AUTO_FACTOR);}	else {B.pf=val;	clr(MGL_AUTO_FACTOR);}	}
+	/// Get PlotFactor
+	inline float GetPlotFactor()	{	return B.pf;	}
 	/// Pop transformation matrix from stack
 	inline void Pop()	{	B = stack.back(); stack.pop_back();	}
 	/// Clear up the frame
 	virtual void Clf(mglColor back=WC);
 
-	/// Put further plotting in some region of whole frame surface.
-	void SubPlot(int nx, int ny, int m, float dx=0, float dy=0);
-	void SubPlot(int nx, int ny, int m, const char *style);
-	/// Like SubPlot bot "join" several cells
-	void MultiPlot(int nx,int ny,int m, int dx, int dy, const char *style);
-	/// Put further plotting in column cell of previous subplot
-	void ColumnPlot(int num, int i, float d=0);
 	/// Put further plotting in cell of stick rotated on angles tet, phi
 	void StickPlot(int num, int i, float tet, float phi);
 	/// Put further plotting in some region of whole frame surface.
 	void InPlot(float x1,float x2,float y1,float y2,bool rel=true);
+	void InPlot(float x1,float x2,float y1,float y2, const char *style);
 	/// Add title for current subplot/inplot
 	void Title(const char *title,const char *stl="#",float size=-2);
 	void Title(const wchar_t *title,const char *stl="#",float size=-2);
@@ -412,7 +408,6 @@ private:
 	long ProjScale(int nface, long p);
 	inline void PostScale(mglPoint *p,long n)	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
 
-	void InPlot(float x1,float x2,float y1,float y2, const char *style);
 	// functions for glyph drawing
 	void glyph_fill(const mglPnt &p, float f, int nt, const short *trig, mglDrawReg *d);
 	void glyph_wire(const mglPnt &p, float f, int nl, const short *line, mglDrawReg *d);

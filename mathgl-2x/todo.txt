@@ -5,6 +5,7 @@
 4. Check export to SVG/EPS/MGLD/TeX/OBJ/XGL/X3D/STL.
 5. contd (clabels), molecule, quaternary, vect*, tval (rotated labels)
 6. setsize in UDAV
+7. curved text (in new sample)
 
 ============= NEW  =============
 
@@ -28,6 +29,7 @@
 
 8. Option 'absolute' for coordinates in absolute range (i.e. [0,1]) ???
 9. Save primitives for frames (not bitmap) ??? -- see MGL_USEDRWDAT
+10. Enable several fonts at the same picture
 
 ============= UDAV =============
 
@@ -124,6 +126,8 @@ Remove other setting if data name is changed.
 44. Cones() -- like Bars() but by Cone(). Support 'a' for above.
 45. Add Class diagram for MathGL core
 46. Fog is influenced at image preparing (at Finish()) but not at surface creation!
+47. 'new' now have optional argument for filling by formula
+48. Area don't have 'a' option from now.
 
 ============= BUGS =============
 

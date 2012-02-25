@@ -2702,6 +2702,18 @@ void mglc_columnplot(wchar_t out[1024], long , mglArg *a, int k[10], const char 
 		mglprintf(out,1024,L"gr->ColumnPlot(%d, %d, %g);", iint(a[0].v), iint(a[1].v), k[2]==3?a[2].v:0);
 }
 //-----------------------------------------------------------------------------
+int mgls_gridplot(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3 && k[1]==3 && k[2]==3)	gr->GridPlot(iint(a[0].v), iint(a[1].v), iint(a[2].v), k[3]==3?a[3].v:0);
+	else	return 1;
+	return 0;
+}
+void mglc_gridplot(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3 && k[1]==3)
+		mglprintf(out,1024,L"gr->GridPlot(%d, %d, %d, %g);", iint(a[0].v), iint(a[1].v), iint(a[2].v), k[3]==3?a[3].v:0);
+}
+//-----------------------------------------------------------------------------
 int mgls_stickplot(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==3)
@@ -2833,16 +2845,37 @@ int mgls_cosfft(mglGraph *, long , mglArg *a, int k[10], const char *)
 void mglc_cosfft(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {	if(k[0]==1 && k[1]==2)	mglprintf(out,1024,L"%s.CosFFT('%s');", a[0].s.c_str(), a[1].s.c_str());	}
 //-----------------------------------------------------------------------------
-int mgls_new(mglGraph *, long , mglArg *a, int k[10], const char *)
+int mgls_new(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)	a[0].d->Create(k[1]==3?iint(a[1].v):1, k[2]==3?iint(a[2].v):1, k[3]==3?iint(a[3].v):1);
+	if(k[0]==1 && k[1]==3 && k[2]==3 && k[2]==3)
+	{	a[0].d->Create(iint(a[1].v),iint(a[2].v),iint(a[3].v));
+		if(k[4]==2)	a[0].d->Fill(gr->Self(),a[4].s.c_str(),opt);	}
+	else if(k[0]==1 && k[1]==3 && k[2]==3)
+	{	a[0].d->Create(iint(a[1].v),iint(a[2].v));
+		if(k[3]==2)	a[0].d->Fill(gr->Self(),a[3].s.c_str(),opt);	}
+	else if(k[0]==1 && k[1]==3)
+	{	a[0].d->Create(iint(a[1].v));
+		if(k[2]==2)	a[0].d->Fill(gr->Self(),a[2].s.c_str(),opt);	}
 	else	return 1;
 	return 0;
 }
-void mglc_new(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+void mglc_new(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1)
-		mglprintf(out,1024,L"%s.Create(%d, %d, %d);", a[0].s.c_str(), k[1]==3?iint(a[1].v):1, k[2]==3?iint(a[2].v):1, k[3]==3?iint(a[3].v):1);
+	if(k[0]==1 && k[1]==3 && k[2]==3 && k[2]==3)
+	{
+		mglprintf(out,1024,L"%s.Create(%d, %d, %d);", a[0].s.c_str(), iint(a[1].v),iint(a[2].v),iint(a[3].v));
+		if(k[4]==2)	mglprintf(out,1024,L"%s.Fill(gr,\"%s\",\"%s\");",a[4].s.c_str(),opt);
+	}
+	else if(k[0]==1 && k[1]==3 && k[2]==3)
+	{
+		mglprintf(out,1024,L"%s.Create(%d, %d);", a[0].s.c_str(), iint(a[1].v),iint(a[2].v));
+		if(k[3]==2)	mglprintf(out,1024,L"%s.Fill(gr,\"%s\",\"%s\");",a[3].s.c_str(),opt);
+	}
+	else if(k[0]==1 && k[1]==3)
+	{
+		mglprintf(out,1024,L"%s.Create(%d);", a[0].s.c_str(), iint(a[1].v));
+		if(k[2]==2)	mglprintf(out,1024,L"%s.Fill(gr,\"%s\",\"%s\");",a[2].s.c_str(),opt);
+	}
 }
 //-----------------------------------------------------------------------------
 int mgls_var(mglGraph *, long , mglArg *a, int k[10], const char *)
@@ -3560,6 +3593,7 @@ mglCommand mgls_base_cmd[] = {
 	{"grid","Draw grid","grid ['dir' 'fmt']", mgls_grid, mglc_grid,0},
 	{"grid2","Draw grid for data array(s)","grid Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_grid2, mglc_grid2,0},
 	{"grid3","Draw grid at slices of 3D data","grid3 Adat 'dir' [pos 'fmt']|Xdat Ydat Zdat Adat 'dir' [pos 'fmt']", mgls_grid3, mglc_grid3,0},
+	{"gridplot","Set position of plot inside cell of matrix", "gridplot nx ny ind [d]", mgls_gridplot, mglc_gridplot,5},
 	{"hankel","Hankel transform at some direction","hankel Dat 'dir'", mgls_hankel, mglc_hankel,3},
 	{"hist","Create histogram (distribution) of data values","hist Res Dat num v1 v2 [nsub]|Res Dat Wdat num v1 v2 [nsub]", mgls_hist, mglc_hist,4},
 	{"idset","Set column id for data","idset Dat 'ids'", mgls_idset, mglc_idset,3},
@@ -3588,7 +3622,7 @@ mglCommand mgls_base_cmd[] = {
 	{"momentum","Get momentum along direction","momentum Res Dat 'how' ['dir']", mgls_momentum, mglc_momentum,4},
 	{"multiplot","Set position of plot","multiplot m n pos dx dy 'style'", mgls_multiplot, mglc_multiplot,5},
 	{"multo","Multiply by data or number","multo Var Dat|Var num", mgls_multo, mglc_multo,3},
-	{"new","Create new data","new Dat nx [ny nz]", mgls_new, mglc_new,4},
+	{"new","Create new data","new Dat nx ny nz ['eq']|new Dat nx ny ['eq']|new Dat nx ['eq']", mgls_new, mglc_new,4},
 	{"next","Start next for-cycle iteration","next", 0, 0, 6},
 	{"norm","Normalize data","norm Dat v1 v2 [sym dim]", mgls_norm, mglc_norm,3},
 	{"normsl","Normalize data slice by slice","normsl Dat v1 v2 ['dir' keep sym] ", mgls_normsl, mglc_normsl,3},

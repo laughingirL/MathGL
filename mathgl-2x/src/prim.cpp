@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include <wchar.h>
 #include <stdlib.h>
+#include "mgl/canvas.h"
 #include "mgl/prim.h"
 #include "mgl/data.h"
 //-----------------------------------------------------------------------------
@@ -509,9 +510,9 @@ void mgl_dew_2d_(uintptr_t *gr, uintptr_t *ax, uintptr_t *ay, const char *sch, c
 //
 //-----------------------------------------------------------------------------
 void mgl_puts(HMGL gr, float x, float y, float z,const char *text, const char *font, float size)
-{	mgl_puts_dir(gr, x, y, z, NAN, 0, 0, text, font, size);	}
+{	mgl_puts_dir(gr, x, y, z, NAN, NAN, 0, text, font, size);	}
 void mgl_putsw(HMGL gr, float x, float y, float z,const wchar_t *text, const char *font, float size)
-{	mgl_putsw_dir(gr, x, y, z, NAN, 0, 0, text, font, size);	}
+{	mgl_putsw_dir(gr, x, y, z, NAN, NAN, 0, text, font, size);	}
 //-----------------------------------------------------------------------------
 void mgl_puts_dir(HMGL gr, float x, float y, float z, float dx, float dy, float dz, const char *text, const char *font, float size)
 {
@@ -524,15 +525,20 @@ void mgl_puts_dir(HMGL gr, float x, float y, float z, float dx, float dy, float 
 //-----------------------------------------------------------------------------
 void mgl_putsw_dir(HMGL gr, float x, float y, float z, float dx, float dy, float dz, const wchar_t *text, const char *font, float size)
 {
-	mglPoint p(x,y,z), d(dx,dy,dz);
-	long k = gr->AddPnt(p,-1,d,-1,3);
+	mglPoint p(x,y,z), d(dx-x,dy-y,dz-z);
+	bool a=font && strchr(font,'a'), A=font && strchr(font,'A');
+	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
+	if(g && (a||A))	{	g->Push();	g->Identity(a);	gr->set(MGL_DISABLE_SCALE);	}
+	long k = gr->AddPnt(p,-1,d,-1,7);
+	gr->clr(MGL_DISABLE_SCALE);
+	if(g && (a||A))	g->Pop();
 	gr->text_plot(k,text,font,size);
 }
 //-----------------------------------------------------------------------------
 void mgl_puts_(uintptr_t *gr, float *x, float *y, float *z,const char *text, const char *font, float *size, int l, int n)
 {	wchar_t *s=new wchar_t[l+1];	mbstowcs(s,text,l);	s[l]=0;
 	char *f=new char[n+1];	memcpy(f,font,n);	f[n]=0;
-	mgl_putsw_dir(_GR_, *x, *y, *z, NAN, 0, 0, s, f, *size);
+	mgl_putsw_dir(_GR_, *x, *y, *z, NAN, NAN, 0, s, f, *size);
 	delete []s;	delete []f;	}
 //-----------------------------------------------------------------------------
 void mgl_puts_dir_(uintptr_t *gr, float *x, float *y, float *z, float *dx, float *dy, float *dz, const char *text, const char *font, float *size, int l, int n)

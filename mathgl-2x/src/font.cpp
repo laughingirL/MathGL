@@ -44,6 +44,7 @@ char mglGetStyle(const char *how, int *font, int *align)
 {
 	const char *cols = "kwrgbcymhWRGBCYMHlenpquLENPQU";
 	char col=0;
+	if(align)	*align = 1;	// centering text by default
 	if(!how || *how==0)	return col;
 	// NOTE: no brightness for text color
 	for(;*how && *how!=':';how++)

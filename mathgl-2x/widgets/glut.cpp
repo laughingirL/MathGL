@@ -144,7 +144,7 @@ void _mgl_display()
 //	glEnable(GL_LINE_SMOOTH);
 	_mgl_glwnd->CurFrameId = 1;
 	if(_mgl_glwnd->AutoClf)	_mgl_glwnd->Clf();
-	_mgl_glwnd->SubPlot(1,1,0);
+	_mgl_glwnd->InPlot(0,1,0,1,false);
 	if(_mgl_glwnd->NumFig>0)	glCallList(_mgl_glwnd->curr_fig);
 	else
 	{

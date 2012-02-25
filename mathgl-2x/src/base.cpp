@@ -117,7 +117,7 @@ void mglBase::SetWarn(int code, const char *who)
 //-----------------------------------------------------------------------------
 long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 {
-	if(scl)	ScalePoint(p,n,!(scl&2));
+	if(scl>0)	ScalePoint(p,n,!(scl&2));
 	if(isnan(p.x))	return -1;
 	a = (a>=0 && a<=1) ? a : AlphaDef;
 	c = (c>=0) ? c:CDef;
@@ -128,7 +128,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 	Txt[long(c)].GetC(c,a,q);	// RGBA color
 
 	if(!get(MGL_ENABLE_ALPHA))	q.a=1;
-	if(!get(MGL_ENABLE_LIGHT))	q.u=q.v=NAN;
+	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
 //-----------------------------------------------------------------------------
@@ -705,8 +705,8 @@ char mglBase::SetPenPal(const char *p, long *Id)
 			{	last_style[2] = p[i];	PenWidth = p[i]-'0';	}
 			else if(strchr(arr,p[i]))
 			{
-				if(!Arrow1)	Arrow1 = p[i];
-				else	Arrow2 = p[i];
+				if(!Arrow2)	Arrow2 = p[i];
+				else	Arrow1 = p[i];
 			}
 		}
 		if(Arrow1=='_')	Arrow1=0;	if(Arrow2=='_')	Arrow2=0;
