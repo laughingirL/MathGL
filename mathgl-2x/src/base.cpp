@@ -128,6 +128,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 	Txt[long(c)].GetC(c,a,q);	// RGBA color
 
 	if(!get(MGL_ENABLE_ALPHA))	q.a=1;
+	if(scl&8)	q.a=a;	// bypass palette for enabling alpha in Error()
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
@@ -838,7 +839,7 @@ float mglBase::SaveState(const char *opt)
 		}
 		else if(!strcmp(a,"cut"))		SetCut(ff!=0);
 		else if(!strcmp(a,"meshnum"))	SetMeshNum(ff);
-		else if(!strcmp(a,"alpha"))		{SetAlphaDef(ff);	Alpha(true);}
+		else if(!strcmp(a,"alpha"))		{Alpha(true);	SetAlphaDef(ff);}
 		else if(!strcmp(a,"light"))		Light(ff!=0);
 		else if(!strcmp(a,"ambient"))	SetAmbient(ff);
 		else if(!strcmp(a,"diffuse"))	SetDifLight(ff);

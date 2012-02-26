@@ -46,9 +46,27 @@ int srnd = 0;
 //-----------------------------------------------------------------------------
 void test(mglGraph *gr)
 {
-	mglData a(10,7);	a.Modify("(2*rnd-1)^3/2");
-	if(!mini)	{	gr->SubPlot(1,1,0,"");	gr->Title("Boxplot plot (default)");	}
-	gr->Box();	gr->BoxPlot(a);
+	mglData y;	mgls_prepare1d(&y);
+	mglData x0(10), y0(10), ex0(10), ey0(10);
+	float x;
+	for(int i=0;i<10;i++)
+	{
+		x = i/9.;
+		x0.a[i] = 2*x-1 + 0.1*mgl_rnd()-0.05;
+		y0.a[i] = 0.7*sin(2*M_PI*x)+0.5*cos(3*M_PI*x)+0.2*sin(M_PI*x)+0.2*mgl_rnd()-0.1;
+		ey0.a[i]=0.2;	ex0.a[i]=0.1;
+	}
+	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Error plot (default)");	}
+	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ex0,ey0,"ko");
+	if(mini)	return;
+	gr->SubPlot(2,2,1,"");	gr->Title("'!' style; no ex");
+	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ey0,"ko!rgb");
+	gr->SubPlot(2,2,2,"");	gr->Title("'\\@' style");
+	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ex0,ey0,"@","alpha 0.5");
+	gr->SubPlot(2,2,3);	gr->Title("3d variant");	gr->Rotate(50,60);
+	for(int i=0;i<10;i++)
+		gr->Error(mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1,2*mgl_rnd()-1), mglPoint(0.2,0.2,0.2),"bo");
+	gr->Axis();
 }
 //-----------------------------------------------------------------------------
 //		Sample functions (v.2.*0)
@@ -408,23 +426,36 @@ void smgl_region(mglGraph *gr)
 	gr->SubPlot(2,2,3,"");	gr->Title("'i' style");	gr->Box();	gr->Region(y1,y2,"ir");	gr->Plot(y1,"k2");	gr->Plot(y2,"k2");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_stem_step="origin 0 0 0:subplot 2 2 0 '':title 'Stem plot (default)':box:stem y 'o'\n"
-"new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 2 2 1:title '3d variant; \"!\" style':rotate 50 60:box:stem xc yc z 'x!rgb'\n"
-"subplot 2 2 2 '':title 'Step plot (default)':box:step y\n"
-"subplot 2 2 3:title '3d variant; \"!\" style':rotate 50 60:box:step xc yc z '!rgb'\n";
-void smgl_stem_step(mglGraph *gr)
+const char *mmgl_stem="origin 0 0 0:subplot 2 2 0 '':title 'Stem plot (default)':box:stem y\n"
+"new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 2 2 1:title '3d variant':rotate 50 60:box:stem xc yc z 'rx'\n"
+"subplot 2 2 2 '':title '\\\\'!\\\' style':box:stem y 'o!rgb'\n";
+void smgl_stem(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);	gr->SetOrigin(0,0,0);
 	mglData yc(30), xc(30), z(30);	z.Modify("2*x-1");
 	yc.Modify("sin(pi*(2*x-1))");	xc.Modify("cos(pi*2*x-pi)");
 	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Stem plot (default)");	}
-	gr->Box();	gr->Stem(y,"o");
+	gr->Box();	gr->Stem(y);
 	if(mini)	return;
-	gr->SubPlot(2,2,1);	gr->Title("3d variant; '!' style");	gr->Rotate(50,60);
-	gr->Box();	gr->Stem(xc,yc,z,"x!rgb");
-	gr->SubPlot(2,2,2,"");	gr->Title("Step plot (default)");	gr->Box();	gr->Step(y);
-	gr->SubPlot(2,2,3);	gr->Title("3d variant; '!' style");	gr->Rotate(50,60);
-	gr->Box();	gr->Step(xc,yc,z,"!rgb");
+	gr->SubPlot(2,2,1);	gr->Title("3d variant");	gr->Rotate(50,60);
+	gr->Box();	gr->Stem(xc,yc,z,"rx");
+	gr->SubPlot(2,2,2,"");	gr->Title("'!' style");	gr->Box();	gr->Stem(y,"o!rgb");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_step="origin 0 0 0:subplot 2 2 0 '':title 'Step plot (default)':box:step y\n"
+"new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 2 2 1:title '3d variant':rotate 50 60:box:step xc yc z 'r'\n"
+"subplot 2 2 2 '':title '\\\\'!\\\' style':box:step y 's!rgb'\n";
+void smgl_step(mglGraph *gr)
+{
+	mglData y;	mgls_prepare1d(&y);	gr->SetOrigin(0,0,0);
+	mglData yc(30), xc(30), z(30);	z.Modify("2*x-1");
+	yc.Modify("sin(pi*(2*x-1))");	xc.Modify("cos(pi*2*x-pi)");
+	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Step plot (default)");	}
+	gr->Box();	gr->Step(y);
+	if(mini)	return;
+	gr->SubPlot(2,2,1);	gr->Title("3d variant");	gr->Rotate(50,60);
+	gr->Box();	gr->Step(xc,yc,z,"r");
+	gr->SubPlot(2,2,2,"");	gr->Title("'!' style");	gr->Box();	gr->Step(y,"s!rgb");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_boxplot="new a 10 7 '(2*rnd-1)^3/2'\nsubplot 1 1 0 '':title 'Boxplot plot':box:boxplot a";
@@ -433,6 +464,184 @@ void smgl_boxplot(mglGraph *gr)	// flow threads and density plot
 	mglData a(10,7);	a.Modify("(2*rnd-1)^3/2");
 	if(!mini)	{	gr->SubPlot(1,1,0,"");	gr->Title("Boxplot plot");	}
 	gr->Box();	gr->BoxPlot(a);
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_type0="alpha on:light on:transptype 0:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
+"subplot 2 2 1:rotate 50 60:dens a:box\nsubplot 2 2 2:rotate 50 60:cont a:box\n"
+"subplot 2 2 3:rotate 50 60:axial a:box";	// TODO add later
+void smgl_type0(mglGraph *gr)	// TranspType = 0
+{
+	//	if(type==5 || type==9 || type==10)	return;
+	gr->Alpha(true);	gr->Light(true);
+	mglData a;	mgls_prepare2d(&a);
+	gr->SetTranspType(0);	gr->Clf();
+	gr->SubPlot(2,2,0);	gr->Rotate(50,60);	gr->Surf(a);	gr->Box();
+	gr->SubPlot(2,2,1);	gr->Rotate(50,60);	gr->Dens(a);	gr->Box();
+	gr->SubPlot(2,2,2);	gr->Rotate(50,60);	gr->Cont(a);	gr->Box();
+	gr->SubPlot(2,2,3);	gr->Rotate(50,60);	gr->Axial(a);	gr->Box();
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_type1="alpha on:light on:transptype 1:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
+"subplot 2 2 1:rotate 50 60:dens a:box\nsubplot 2 2 2:rotate 50 60:cont a:box\n"
+"subplot 2 2 3:rotate 50 60:axial a:box";	// TODO add later
+void smgl_type1(mglGraph *gr)	// TranspType = 1
+{
+	//	if(type==5 || type==9 || type==10)	return;
+	gr->Alpha(true);	gr->Light(true);
+	mglData a;	mgls_prepare2d(&a);
+	gr->SetTranspType(1);	gr->Clf();
+	gr->SubPlot(2,2,0);	gr->Rotate(50,60);	gr->Surf(a);	gr->Box();
+	gr->SubPlot(2,2,1);	gr->Rotate(50,60);	gr->Dens(a);	gr->Box();
+	gr->SubPlot(2,2,2);	gr->Rotate(50,60);	gr->Cont(a);	gr->Box();
+	gr->SubPlot(2,2,3);	gr->Rotate(50,60);	gr->Axial(a);	gr->Box();
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_type2="alpha on:light on:transptype 2:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
+"subplot 2 2 1:rotate 50 60:dens a:box\nsubplot 2 2 2:rotate 50 60:cont a:box\n"
+"subplot 2 2 3:rotate 50 60:axial a:box";	// TODO add later
+void smgl_type2(mglGraph *gr)	// TranspType = 2
+{
+	//	if(type==5 || type==9 || type==10)	return;
+	gr->Alpha(true);	gr->Light(true);
+	mglData a;	mgls_prepare2d(&a);
+	gr->SetTranspType(2);	gr->Clf();
+	gr->SubPlot(2,2,0);	gr->Rotate(50,60);	gr->Surf(a);	gr->Box();
+	gr->SubPlot(2,2,1);	gr->Rotate(50,60);	gr->Dens(a);	gr->Box();
+	gr->SubPlot(2,2,2);	gr->Rotate(50,60);	gr->Cont(a);	gr->Box();
+	gr->SubPlot(2,2,3);	gr->Rotate(50,60);	gr->Axial(a);	gr->Box();
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_molecule="alpha on:light on\n"
+"subplot 2 2 0 '':title 'Methane, CH_4':rotate 60 120\n"
+"sphere 0 0 0 0.25 'k':drop 0 0 0 0 0 1 0.35 'h' 1 2:sphere 0 0 0.7 0.25 'g'\n"
+"drop 0 0 0 -0.94 0 -0.33 0.35 'h' 1 2:sphere -0.66 0 -0.23 0.25 'g'\n"
+"drop 0 0 0 0.47 0.82 -0.33 0.35 'h' 1 2:sphere 0.33 0.57 -0.23 0.25 'g'\n"
+"drop 0 0 0 0.47 -0.82 -0.33 0.35 'h' 1 2:sphere 0.33 -0.57 -0.23 0.25 'g'\n"
+"subplot 2 2 1 '':title 'Water, H{_2}O':rotate 60 100\n"
+"sphere 0 0 0 0.25 'r':drop 0 0 0 0.3 0.5 0 0.3 'm' 1 2:sphere 0.3 0.5 0 0.25 'g'\n"
+"drop 0 0 0 0.3 -0.5 0 0.3 'm' 1 2:sphere 0.3 -0.5 0 0.25 'g'\n"
+"subplot 2 2 2 '':title 'Oxygen, O_2':rotate 60 120\n"
+"drop 0 0.5 0 0 -0.3 0 0.3 'm' 1 2:sphere 0 0.5 0 0.25 'r'\n"
+"drop 0 -0.5 0 0 0.3 0 0.3 'm' 1 2:sphere 0 -0.5 0 0.25 'r'\n"
+"subplot 2 2 3 '':title 'Ammonia, NH_3':rotate 60 120\n"
+"sphere 0 0 0 0.25 'b':drop 0 0 0 0.33 0.57 0 0.32 'n' 1 2\n"
+"sphere 0.33 0.57 0 0.25 'g':drop 0 0 0 0.33 -0.57 0 0.32 'n' 1 2\n"
+"sphere 0.33 -0.57 0 0.25 'g':drop 0 0 0 -0.65 0 0 0.32 'n' 1 2\n"
+"sphere -0.65 0 0 0.25 'g'\n";
+void smgl_molecule(mglGraph *gr)	// example of moleculas
+{
+	gr->VertexColor(false);	gr->Compression(false); // per-vertex colors and compression are detrimental to transparency
+	gr->DoubleSided(false); // we do not get into atoms, while rendering internal surface has negative impact on trasparency
+	gr->Alpha(true);	gr->Light(true);
+
+	gr->SubPlot(2,2,0,"");	gr->Title("Methane, CH_4");
+	gr->StartGroup("Methane");
+	gr->Rotate(60,120);
+	gr->Sphere(mglPoint(0,0,0),0.25,"k");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0,0,1),0.35,"h",1,2);
+	gr->Sphere(mglPoint(0,0,0.7),0.25,"g");
+	gr->Drop(mglPoint(0,0,0),mglPoint(-0.94,0,-0.33),0.35,"h",1,2);
+	gr->Sphere(mglPoint(-0.66,0,-0.23),0.25,"g");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0.47,0.82,-0.33),0.35,"h",1,2);
+	gr->Sphere(mglPoint(0.33,0.57,-0.23),0.25,"g");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0.47,-0.82,-0.33),0.35,"h",1,2);
+	gr->Sphere(mglPoint(0.33,-0.57,-0.23),0.25,"g");
+	gr->EndGroup();
+
+	gr->SubPlot(2,2,1,"");	gr->Title("Water, H_{2}O");
+	gr->StartGroup("Water");
+	gr->Rotate(60,100);
+	gr->StartGroup("Water_O");
+	gr->Sphere(mglPoint(0,0,0),0.25,"r");
+	gr->EndGroup();
+	gr->StartGroup("Water_Bond_1");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0.3,0.5,0),0.3,"m",1,2);
+	gr->EndGroup();
+	gr->StartGroup("Water_H_1");
+	gr->Sphere(mglPoint(0.3,0.5,0),0.25,"g");
+	gr->EndGroup();
+	gr->StartGroup("Water_Bond_2");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0.3,-0.5,0),0.3,"m",1,2);
+	gr->EndGroup();
+	gr->StartGroup("Water_H_2");
+	gr->Sphere(mglPoint(0.3,-0.5,0),0.25,"g");
+	gr->EndGroup();
+	gr->EndGroup();
+
+	gr->SubPlot(2,2,2,"");	gr->Title("Oxygen, O_2");
+	gr->StartGroup("Oxygen");
+	gr->Rotate(60,120);
+	gr->Drop(mglPoint(0,0.5,0),mglPoint(0,-0.3,0),0.3,"m",1,2);
+	gr->Sphere(mglPoint(0,0.5,0),0.25,"r");
+	gr->Drop(mglPoint(0,-0.5,0),mglPoint(0,0.3,0),0.3,"m",1,2);
+	gr->Sphere(mglPoint(0,-0.5,0),0.25,"r");
+	gr->EndGroup();
+
+	gr->SubPlot(2,2,3,"");	gr->Title("Ammonia, NH_3");
+	gr->StartGroup("Ammonia");
+	gr->Rotate(60,120);
+	gr->Sphere(mglPoint(0,0,0),0.25,"b");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0.33,0.57,0),0.32,"n",1,2);
+	gr->Sphere(mglPoint(0.33,0.57,0),0.25,"g");
+	gr->Drop(mglPoint(0,0,0),mglPoint(0.33,-0.57,0),0.32,"n",1,2);
+	gr->Sphere(mglPoint(0.33,-0.57,0),0.25,"g");
+	gr->Drop(mglPoint(0,0,0),mglPoint(-0.65,0,0),0.32,"n",1,2);
+	gr->Sphere(mglPoint(-0.65,0,0),0.25,"g");
+	gr->EndGroup();
+	gr->DoubleSided( true ); // put back
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_error="new y 50 '0.7*sin(pi*x-pi) + 0.5*cos(3*pi*(x+1)/2) + 0.2*sin(pi*(x+1)/2)'\n"
+"new x0 10 'x + 0.1*rnd-0.05':new ex 10 '0.1':new ey 10 '0.2'\n"
+"new y0 10 '0.7*sin(pi*x-pi) + 0.5*cos(3*pi*(x+1)/2) + 0.2*sin(pi*(x+1)/2) + 0.2*rnd-0.1'\n"
+"subplot 2 2 0 '':title 'Error plot (default)':box:plot y:error x0 y0 ex ey 'k'\n";
+void smgl_error(mglGraph *gr)
+{
+	mglData y;	mgls_prepare1d(&y);
+	mglData x0(10), y0(10), ex0(10), ey0(10);
+	float x;
+	for(int i=0;i<10;i++)
+	{
+		x = i/9.;
+		x0.a[i] = 2*x-1 + 0.1*mgl_rnd()-0.05;
+		y0.a[i] = 0.7*sin(2*M_PI*x)+0.5*cos(3*M_PI*x)+0.2*sin(M_PI*x)+0.2*mgl_rnd()-0.1;
+		ey0.a[i]=0.2;	ex0.a[i]=0.1;
+	}
+	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Error plot (default)");	}
+	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ex0,ey0,"ko");
+	if(mini)	return;
+	gr->SubPlot(2,2,1,"");	gr->Title("'!' style; no ex");
+	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ey0,"ko!rgb");
+	gr->SubPlot(2,2,2,"");	gr->Title("'@' style");
+	gr->Box();	gr->Plot(y.SubData(-1,0));	gr->Error(x0,y0,ex0,ey0,"o@");
+	gr->SubPlot(2,2,3);	gr->Title("3d variant");	gr->Rotate(50,60);
+	for(int i=0;i<10;i++)
+		gr->Error(mglPoint(mgl_rnd()-0.5,mgl_rnd()-0.5,mgl_rnd()-0.5), mglPoint(0.1,0.1,0.1),"bo");
+	gr->Axis();
+}
+//-----------------------------------------------------------------------------
+void smgl_chart(mglGraph *gr)
+{
+	mglData ch(7,2);	for(int i=0;i<7*2;i++)	ch.a[i]=mgl_rnd()+0.1;
+	gr->Light(true);	gr->Rotate(40,60);	gr->VertexColor(false);
+	gr->Box();	gr->Chart(ch,"#");
+}
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void smgl_ring_chart(mglGraph *gr)
+{
+	mglData ch(7,2);	for(int i=0;i<7*2;i++)	ch.a[i]=mgl_rnd()+0.1;
+	gr->Light(true);	gr->Rotate(40,60);	gr->VertexColor(false);
+	gr->SetFunc("(y+2)/3*cos(pi*x)","(y+2)/3*sin(pi*x)","");
+	gr->Box();	gr->Chart(ch,"bgr cmy#");
+}
+//-----------------------------------------------------------------------------
+void smgl_pie_chart(mglGraph *gr)
+{
+	mglData ch(7,2);	for(int i=0;i<7*2;i++)	ch.a[i]=mgl_rnd()+0.1;
+	gr->Light(true);	gr->Rotate(40,60);	gr->VertexColor(false);
+	gr->SetFunc("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)","");
+	gr->Box();	gr->Chart(ch,"bgr cmy#");
 }
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -596,40 +805,6 @@ void smgl_sew(mglGraph *gr)	// Phase reconstruction
 	a.Sew("xy", 0.1);
 	gr->Surf(a, "r");
 	gr->Box();
-}
-//-----------------------------------------------------------------------------
-void smgl_samplec(mglGraph *gr)	// error boxes
-{
-	mglData  x(10), y(10), ex(10), ey(10), y0(50);
-	x.Modify("2*x-1 + 0.2*rnd-0.1");
-	y.Modify("(2*x-1)^2 + 0.2*rnd-0.1");
-	y0.Modify("(2*x-1)^2");
-	ex.Modify("0.2");
-	ey.Modify("0.1");
-
-	gr->Clf();
-	gr->SubPlot(2,2,0);
-	gr->Error(y,ey,"ko");
-	gr->Plot(y0,"r");
-	gr->Axis();
-	gr->Puts(mglPoint(0,1.2,0),"Random \\i{y}");
-	gr->SubPlot(2,2,1);
-	gr->Error(x,y,ex,"ko");
-	gr->Plot(y0,"r");
-	gr->Axis();
-	gr->Puts(mglPoint(0,1.2,0),"Random \\i{x, y}");
-	gr->SubPlot(2,2,2);
-	gr->Error(x,y,ey,ey,"ko");
-	gr->Plot(y0,"r");
-	gr->Axis();
-	gr->Puts(mglPoint(0,1.2,0),"Random \\i{x, y} and 2d boxes");
-	gr->SubPlot(2,2,3);
-	gr->Puts(mglPoint(0,1.2,0),"Random point in 3d space");
-	gr->Rotate(40,60);
-	for(int i=0;i<10;i++)
-		gr->Error(mglPoint(mgl_rnd()-0.5,mgl_rnd()-0.5,mgl_rnd()-0.5), mglPoint(0.1,0.1,0.1),"bo");
-	gr->Axis();
-	gr->Rotate(0,0); // for unrotate in IDTF
 }
 //-----------------------------------------------------------------------------
 void smgl_sampleb(mglGraph *gr)	// Gaussian beam
@@ -903,45 +1078,6 @@ void smgl_radar(mglGraph *gr)
 {
 	mglData yr(10,3);	yr.Modify("0.4*sin(pi*(2*x+y/2))+0.1*rnd");
 	gr->Radar(yr,"#");
-}
-//-----------------------------------------------------------------------------
-void smgl_error(mglGraph *gr)
-{
-	mglData y;	mgls_prepare1d(&y);
-	mglData x0(10), y0(10), ex0(10), ey0(10);
-	float x;
-	for(int i=0;i<10;i++)
-	{
-		x = i/9.;
-		x0.a[i] = 2*x-1 + 0.1*mgl_rnd()-0.05;
-		y0.a[i] = 0.7*sin(2*M_PI*x)+0.5*cos(3*M_PI*x)+0.2*sin(M_PI*x)+0.2*mgl_rnd()-0.1;
-		ey0.a[i]=0.2;	ex0.a[i]=0.1;
-	}
-	gr->Box();	gr->Plot(y.SubData(-1,0));
-	gr->Error(x0,y0,ex0,ey0,"ko");
-}
-//-----------------------------------------------------------------------------
-void smgl_chart(mglGraph *gr)
-{
-	mglData ch(7,2);	for(int i=0;i<7*2;i++)	ch.a[i]=mgl_rnd()+0.1;
-	gr->Light(true);	gr->Rotate(40,60);	gr->VertexColor(false);
-	gr->Box();	gr->Chart(ch,"#");
-}
-//-----------------------------------------------------------------------------
-void smgl_ring_chart(mglGraph *gr)
-{
-	mglData ch(7,2);	for(int i=0;i<7*2;i++)	ch.a[i]=mgl_rnd()+0.1;
-	gr->Light(true);	gr->Rotate(40,60);	gr->VertexColor(false);
-	gr->SetFunc("(y+2)/3*cos(pi*x)","(y+2)/3*sin(pi*x)","");
-	gr->Box();	gr->Chart(ch,"bgr cmy#");
-}
-//-----------------------------------------------------------------------------
-void smgl_pie_chart(mglGraph *gr)
-{
-	mglData ch(7,2);	for(int i=0;i<7*2;i++)	ch.a[i]=mgl_rnd()+0.1;
-	gr->Light(true);	gr->Rotate(40,60);	gr->VertexColor(false);
-	gr->SetFunc("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)","");
-	gr->Box();	gr->Chart(ch,"bgr cmy#");
 }
 //-----------------------------------------------------------------------------
 void smgl_grad(mglGraph *gr)
@@ -1294,117 +1430,6 @@ void smgl_legend(mglGraph *gr)
 	gr->Box();	gr->Plot(f);	gr->Axis("xy");
 	gr->AddLegend("sin(\\pi {x^2})","b");	gr->AddLegend("sin(\\pi x)","g*");
 	gr->AddLegend("sin(\\pi \\sqrt{x})","r+");	gr->Legend();
-}
-//-----------------------------------------------------------------------------
-void smgl_type0(mglGraph *gr)	// TranspType = 0
-{
-//	if(type==5 || type==9 || type==10)	return;
-	gr->Alpha(true);	gr->Light(true);	gr->AddLight(0,mglPoint(0,0,1));
-	mglData a;	mgls_prepare2d(&a);
-	gr->SetTranspType(0);	gr->Clf();
-	gr->SubPlot(2,2,0);	gr->Rotate(40,60);	gr->Surf(a);	gr->Box();
-	gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Dens(a);	gr->Box();
-	gr->SubPlot(2,2,2);	gr->Rotate(40,60);	gr->Cont(a);	gr->Box();
-	gr->SubPlot(2,2,3);	gr->Rotate(40,60);	gr->Axial(a);	gr->Box();
-}
-//-----------------------------------------------------------------------------
-void smgl_type1(mglGraph *gr)	// TranspType = 1
-{
-//	if(type==5 || type==9 || type==10)	return;
-	gr->Alpha(true);	gr->Light(true);	gr->AddLight(0,mglPoint(0,0,1));
-	mglData a;	mgls_prepare2d(&a);
-	gr->SetTranspType(1);	gr->Clf();
-	gr->SubPlot(2,2,0);	gr->Rotate(40,60);	gr->Surf(a);	gr->Box();
-	gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Dens(a);	gr->Box();
-	gr->SubPlot(2,2,2);	gr->Rotate(40,60);	gr->Cont(a);	gr->Box();
-	gr->SubPlot(2,2,3);	gr->Rotate(40,60);	gr->Axial(a);	gr->Box();
-}
-//-----------------------------------------------------------------------------
-void smgl_type2(mglGraph *gr)	// TranspType = 2
-{
-//	if(type==5 || type==9 || type==10)	return;
-	gr->Alpha(true);	gr->Light(true);	gr->AddLight(0,mglPoint(0,0,1));
-	mglData a;	mgls_prepare2d(&a);
-	gr->SetTranspType(2);	gr->Clf();
-	gr->SubPlot(2,2,0);	gr->Rotate(40,60);	gr->Surf(a);	gr->Box();
-	gr->SubPlot(2,2,1);	gr->Rotate(40,60);	gr->Dens(a);	gr->Box();
-	gr->SubPlot(2,2,2);	gr->Rotate(40,60);	gr->Cont(a);	gr->Box();
-	gr->SubPlot(2,2,3);	gr->Rotate(40,60);	gr->Axial(a);	gr->Box();
-}
-//-----------------------------------------------------------------------------
-void smgl_molecule(mglGraph *gr)	// example of moleculas
-{
-	gr->VertexColor(false);	gr->Compression(false); // per-vertex colors and compression are detrimental to transparency
-	gr->DoubleSided(false); // we do not get into atoms, while rendering internal surface has negative impact on trasparency
-	gr->Alpha(true);	gr->Light(true);
-
-	gr->SubPlot(2,2,0);
-	gr->StartGroup("Methane");
-	gr->StartGroup("MetaneLabel");
-	gr->Puts(mglPoint(0,1.2),"Methane, CH_4",0,-2);
-	gr->EndGroup();
-	gr->Rotate(60,120);
-	gr->Sphere(mglPoint(0,0,0),0.25,"k");
-	gr->Drop(mglPoint(0,0,0),mglPoint(0,0,1),0.35,"h",1,2);
-	gr->Sphere(mglPoint(0,0,0.7),0.25,"g");
-	gr->Drop(mglPoint(0,0,0),mglPoint(-0.94,0,-0.33),0.35,"h",1,2);
-	gr->Sphere(mglPoint(-0.66,0,-0.23),0.25,"g");
-	gr->Drop(mglPoint(0,0,0),mglPoint(0.47,0.82,-0.33),0.35,"h",1,2);
-	gr->Sphere(mglPoint(0.33,0.57,-0.23),0.25,"g");
-	gr->Drop(mglPoint(0,0,0),mglPoint(0.47,-0.82,-0.33),0.35,"h",1,2);
-	gr->Sphere(mglPoint(0.33,-0.57,-0.23),0.25,"g");
-	gr->EndGroup();
-
-	gr->SubPlot(2,2,1);
-	gr->StartGroup("Water");
-	gr->StartGroup("WaterLabel");
-	gr->Puts(mglPoint(0,1.2),"Water, H_{2}O",0,-2);
-	gr->EndGroup();
-	gr->Rotate(60,100);
-	gr->StartGroup("Water_O");
-	gr->Sphere(mglPoint(0,0,0),0.25,"r");
-	gr->EndGroup();
-	gr->StartGroup("Water_Bond_1");
-	gr->Drop(mglPoint(0,0,0),mglPoint(0.3,0.5,0),0.3,"m",1,2);
-	gr->EndGroup();
-	gr->StartGroup("Water_H_1");
-	gr->Sphere(mglPoint(0.3,0.5,0),0.25,"g");
-	gr->EndGroup();
-	gr->StartGroup("Water_Bond_2");
-	gr->Drop(mglPoint(0,0,0),mglPoint(0.3,-0.5,0),0.3,"m",1,2);
-	gr->EndGroup();
-	gr->StartGroup("Water_H_2");
-	gr->Sphere(mglPoint(0.3,-0.5,0),0.25,"g");
-	gr->EndGroup();
-	gr->EndGroup();
-
-	gr->SubPlot(2,2,2);
-	gr->StartGroup("Oxygen");
-	gr->StartGroup("OxygenLabel");
-	gr->Puts(mglPoint(0,1.2),"Oxygen, O_2",0,-2);
-	gr->EndGroup();
-	gr->Rotate(60,120);
-	gr->Drop(mglPoint(0,0.5,0),mglPoint(0,-0.3,0),0.3,"m",1,2);
-	gr->Sphere(mglPoint(0,0.5,0),0.25,"r");
-	gr->Drop(mglPoint(0,-0.5,0),mglPoint(0,0.3,0),0.3,"m",1,2);
-	gr->Sphere(mglPoint(0,-0.5,0),0.25,"r");
-	gr->EndGroup();
-
-	gr->SubPlot(2,2,3);
-	gr->StartGroup("Ammonia");
-	gr->StartGroup("AmmoniaLabel");
-	gr->Puts(mglPoint(0,1.2),"Ammonia, NH_3",0,-2);
-	gr->EndGroup();
-	gr->Rotate(60,120);
-	gr->Sphere(mglPoint(0,0,0),0.25,"b");
-	gr->Drop(mglPoint(0,0,0),mglPoint(0.33,0.57,0),0.32,"n",1,2);
-	gr->Sphere(mglPoint(0.33,0.57,0),0.25,"g");
-	gr->Drop(mglPoint(0,0,0),mglPoint(0.33,-0.57,0),0.32,"n",1,2);
-	gr->Sphere(mglPoint(0.33,-0.57,0),0.25,"g");
-	gr->Drop(mglPoint(0,0,0),mglPoint(-0.65,0,0),0.32,"n",1,2);
-	gr->Sphere(mglPoint(-0.65,0,0),0.25,"g");
-	gr->EndGroup();
-	gr->DoubleSided( true ); // put back
 }
 //-----------------------------------------------------------------------------
 void smgl_quaternary(mglGraph *gr)      // flag #
@@ -1907,12 +1932,12 @@ mglSample samp[] = {
 	{"sample9", smgl_sample9},
 	{"samplea", smgl_samplea},
 	{"sampleb", smgl_sampleb},
-	{"samplec", smgl_samplec},
 	{"schemes", smgl_schemes},
 	{"semilog", smgl_semilog},
 	{"several_light", smgl_several_light},
 	{"sew", smgl_sew},
-	{"stem_step", smgl_stem_step},
+	{"stem", smgl_stem},
+	{"step", smgl_step},
 	{"stereo", smgl_stereo},
 	{"stfa", smgl_stfa},
 	{"stick", smgl_stick},

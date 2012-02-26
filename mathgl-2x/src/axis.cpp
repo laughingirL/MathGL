@@ -485,7 +485,7 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	for(i=0;i<n;i++)
 	{
 		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1)/2;
-		v = aa.txt[i].val;	kk[i] = AddPnt(o+d*v,-1,d,0,3);
+		v = aa.txt[i].val;	kk[i] = AddPnt(o+d*v,-1,d,0,7);
 		if(aa.txt[i].text.empty() || kk[i]<0)	continue;	// do nothing with empty labels
 		q=p;	p = GetPntP(kk[i]);	v = i>0 ? (p-q).norm() : NAN;
 		char ch=aa.txt[i].text[0];	// manually exclude factors

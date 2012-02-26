@@ -85,6 +85,11 @@ if(NOT PNG_FOUND)
 	message(SEND_ERROR "Couldn't find PNG libraries.")
 endif(NOT PNG_FOUND)
 
+include(FindZLIB)
+if(NOT ZLIB_FOUND)
+	message(SEND_ERROR "Couldn't find ZLIB libraries.")
+endif(NOT ZLIB_FOUND)
+
 find_library(GSL_LIB gsl)
 find_library(GSL_CBLAS_LIB gslcblas)
 find_path(GSL_INCLUDE_DIR gsl/gsl_fft_complex.h)
