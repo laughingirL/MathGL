@@ -42,7 +42,7 @@ mglFont mglDefFont;
 //-----------------------------------------------------------------------------
 char mglGetStyle(const char *how, int *font, int *align)
 {
-	const char *cols = "kwrgbcymhWRGBCYMHlenpquLENPQU";
+	const char *cols = MGL_COLORS;
 	char col=0;
 	if(align)	*align = 1;	// centering text by default
 	if(!how || *how==0)	return col;

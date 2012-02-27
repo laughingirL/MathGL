@@ -62,21 +62,21 @@ void mgl_axial(HMGL graph, HCDT a, const char *sch, const char *opt);
 
 void mgl_torus(HMGL graph, HCDT r, HCDT z, const char *col, const char *opt);
 
-void mgl_grid3_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, char dir, float sVal, const char *stl, const char *opt);
-void mgl_grid3(HMGL graph, HCDT a, char dir, float sVal, const char *stl, const char *opt);
+void mgl_grid3_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, const char *stl, float sVal, const char *opt);
+void mgl_grid3(HMGL graph, HCDT a, const char *stl, float sVal, const char *opt);
 
-void mgl_dens3_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, char dir, float sVal, const char *stl, const char *opt);
-void mgl_dens3(HMGL graph, HCDT a, char dir, float sVal, const char *stl, const char *opt);
+void mgl_dens3_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, const char *stl, float sVal, const char *opt);
+void mgl_dens3(HMGL graph, HCDT a, const char *stl, float sVal, const char *opt);
 
-void mgl_cont3_xyz_val(HMGL graph, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, char dir, float sVal, const char *sch, const char *opt);
-void mgl_cont3_val(HMGL graph, HCDT v, HCDT a, char dir, float sVal, const char *sch, const char *opt);
-void mgl_cont3_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, char dir, float sVal, const char *sch, const char *opt);
-void mgl_cont3(HMGL graph, HCDT a, char dir, float sVal, const char *sch, const char *opt);
+void mgl_cont3_xyz_val(HMGL graph, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, float sVal, const char *opt);
+void mgl_cont3_val(HMGL graph, HCDT v, HCDT a, const char *sch, float sVal, const char *opt);
+void mgl_cont3_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, float sVal, const char *opt);
+void mgl_cont3(HMGL graph, HCDT a, const char *sch, float sVal, const char *opt);
 
-void mgl_contf3_xyz_val(HMGL graph, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, char dir, float sVal, const char *sch, const char *opt);
-void mgl_contf3_val(HMGL graph, HCDT v, HCDT a, char dir, float sVal, const char *sch, const char *opt);
-void mgl_contf3_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, char dir, float sVal, const char *sch, const char *opt);
-void mgl_contf3(HMGL graph, HCDT a, char dir, float sVal, const char *sch, const char *opt);
+void mgl_contf3_xyz_val(HMGL graph, HCDT v, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, float sVal, const char *opt);
+void mgl_contf3_val(HMGL graph, HCDT v, HCDT a, const char *sch, float sVal, const char *opt);
+void mgl_contf3_xyz(HMGL graph, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, float sVal, const char *opt);
+void mgl_contf3(HMGL graph, HCDT a, const char *sch, float sVal, const char *opt);
 
 /*****************************************************************************/
 void mgl_text_xyz_(uintptr_t *gr, uintptr_t *x, uintptr_t *y, uintptr_t *z,const char *text,const char *font, const char *opt,int,int l,int n);
@@ -110,21 +110,21 @@ void mgl_axial_(uintptr_t *graph, uintptr_t *a, const char *sch, const char *opt
 
 void mgl_torus_(uintptr_t *graph, uintptr_t *r, uintptr_t *z, const char *pen, const char *opt,int,int);
 
-void mgl_grid3_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *dir, float *sVal, const char *stl, const char *opt,int,int,int);
-void mgl_grid3_(uintptr_t *graph, uintptr_t *a, const char *dir, float *sVal, const char *stl, const char *opt,int,int,int);
+void mgl_grid3_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, float *sVal, const char *opt,int,int);
+void mgl_grid3_(uintptr_t *graph, uintptr_t *a, const char *sch, float *sVal, const char *opt,int,int);
 
-void mgl_dens3_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *dir, float *sVal, const char *stl, const char *opt,int,int,int);
-void mgl_dens3_(uintptr_t *graph, uintptr_t *a, const char *dir, float *sVal, const char *stl, const char *opt,int,int,int);
+void mgl_dens3_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, float *sVal, const char *opt,int,int);
+void mgl_dens3_(uintptr_t *graph, uintptr_t *a, const char *sch, float *sVal, const char *opt,int,int);
 
-void mgl_cont3_xyz_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *dir, float *sVal, const char *sch, const char *opt,int,int,int);
-void mgl_cont3_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *a, const char *dir, float *sVal, const char *sch, const char *opt,int,int,int);
-void mgl_cont3_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *dir, float *sVal, const char *sch, const char *opt,int,int,int);
-void mgl_cont3_(uintptr_t *graph, uintptr_t *a, const char *dir, float *sVal, const char *sch, const char *opt,int,int,int);
+void mgl_cont3_xyz_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, float *sVal, const char *opt,int,int);
+void mgl_cont3_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *a, const char *sch, float *sVal, const char *opt,int,int);
+void mgl_cont3_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, float *sVal, const char *opt,int,int);
+void mgl_cont3_(uintptr_t *graph, uintptr_t *a, const char *sch, float *sVal, const char *opt,int,int);
 
-void mgl_contf3_xyz_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *dir, float *sVal, const char *sch, const char *opt,int,int,int);
-void mgl_contf3_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *a, const char *dir, float *sVal, const char *sch, const char *opt,int,int,int);
-void mgl_contf3_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *dir, float *sVal, const char *sch, const char *opt,int,int,int);
-void mgl_contf3_(uintptr_t *graph, uintptr_t *a, const char *dir, float *sVal, const char *sch, const char *opt,int,int,int);
+void mgl_contf3_xyz_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, float *sVal, const char *opt,int,int);
+void mgl_contf3_val_(uintptr_t *graph, uintptr_t *v, uintptr_t *a, const char *sch, float *sVal, const char *opt,int,int);
+void mgl_contf3_xyz_(uintptr_t *graph, uintptr_t *x, uintptr_t *y, uintptr_t *z, uintptr_t *a, const char *sch, float *sVal, const char *opt,int,int);
+void mgl_contf3_(uintptr_t *graph, uintptr_t *a, const char *sch, float *sVal, const char *opt,int,int);
 
 /*****************************************************************************/
 #ifdef __cplusplus

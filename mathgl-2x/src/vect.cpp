@@ -111,9 +111,13 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	if(n<2 || m<2)						{	gr->SetWarn(mglWarnLow,"Vect");	return;	}
 	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
 	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
-	float r = gr->SaveState(opt);
-	long flag = isnan(r) ? 0:long(r+0.5);
+
 	static int cgid=1;	gr->StartGroup("Vect",cgid++);
+	bool dot = sch && strchr(sch,'.');
+	bool fix = sch && strchr(sch,'f');
+	bool end = sch && strchr(sch,'>');
+	bool beg = sch && strchr(sch,'<');
+	bool grd = sch && strchr(sch,'=');
 
 	long ss = gr->AddTexture(sch);
 	gr->Reserve(4*n*m);
@@ -145,19 +149,16 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 			dx = i<n-1 ? (GetX(x,i+1,j,k).x-xx) : (xx-GetX(x,i-1,j,k).x);
 			dy = j<m-1 ? (GetY(y,i,j+1,k).x-yy) : (yy-GetY(y,i,j-1,k).x);
 			dx *= tx;	dy *= ty;	dd = hypot(ax->v(i,j,k),ay->v(i,j,k));
-			dx *= (flag&MGL_VEC_LEN) ? (dd>dm ? ax->v(i,j,k)/dd : 0) : ax->v(i,j,k)*xm;
-			dy *= (flag&MGL_VEC_LEN) ? (dd>dm ? ay->v(i,j,k)/dd : 0) : ay->v(i,j,k)*xm;
+			dx *= fix ? (dd>dm ? ax->v(i,j,k)/dd : 0) : ax->v(i,j,k)*xm;
+			dy *= fix ? (dd>dm ? ay->v(i,j,k)/dd : 0) : ay->v(i,j,k)*xm;
 
-			if(flag & MGL_VEC_END)
-			{	p1 = mglPoint(xx-dx,yy-dy,zVal);	p2 = mglPoint(xx,yy,zVal);	}
-			else if(flag & MGL_VEC_MID)
-			{	p1=mglPoint(xx-dx/2,yy-dy/2,zVal);	p2=mglPoint(xx+dx/2,yy+dy/2,zVal);	}
-			else
-			{	p1 = mglPoint(xx,yy,zVal);	p2 = mglPoint(xx+dx,yy+dy,zVal);	}
-			if(flag&MGL_VEC_COL)	{	c1 = c2 = ss;	}	else
-			{	c1=gr->GetC(ss,dd*xm*1.5-1,false);	c2=gr->GetC(ss,dd*xm*1.5-0.5,false);}
+			if(end)			{	p1 = mglPoint(xx-dx,yy-dy,zVal);	p2 = mglPoint(xx,yy,zVal);	}
+			else if(beg)	{	p1 = mglPoint(xx,yy,zVal);	p2 = mglPoint(xx+dx,yy+dy,zVal);	}
+			else	{	p1=mglPoint(xx-dx/2,yy-dy/2,zVal);	p2=mglPoint(xx+dx/2,yy+dy/2,zVal);	}
+			if(grd)	{	c1=gr->GetC(ss,dd*xm-0.5,false);	c2=gr->GetC(ss,dd*xm,false);}
+			else	c1 = c2 = gr->GetC(ss,dd*xm,false);
 			n1=gr->AddPnt(p1,c1);	n2=gr->AddPnt(p2,c2);
-			if(flag & MGL_VEC_DOT)	gr->line_plot(n1,n2);
+			if(dot)	{	gr->line_plot(n1,n2);	gr->mark_plot(n1,'.');	}
 			else	gr->vect_plot(n1,n2);
 		}
 	}
@@ -197,9 +198,12 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
-	float r = gr->SaveState(opt);
-	long flag = isnan(r) ? 0:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Vect3",cgid++);
+	bool dot = sch && strchr(sch,'.');
+	bool fix = sch && strchr(sch,'f');
+	bool end = sch && strchr(sch,'>');
+	bool beg = sch && strchr(sch,'<');
+	bool grd = sch && strchr(sch,'=');
 
 	float xm=0,ym,dx,dy,dz,dd,dm=(fabs(gr->Max.c)+fabs(gr->Min.c))*1e-5;
 	long ss = gr->AddTexture(sch);
@@ -229,20 +233,17 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 		dz = k<l-1 ? (GetZ(z,i,j,k+1).x-zz) : (zz-GetZ(z,i,j,k-1).x);
 		dx *= tx;	dy *= ty;	dz *= tz;
 		dd = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k)+az->v(i,j,k)*az->v(i,j,k));
-		dx *= (flag&MGL_VEC_LEN) ? (dd>dm ? ax->v(i,j,k)/dd : 0) : ax->v(i,j,k)*xm;
-		dy *= (flag&MGL_VEC_LEN) ? (dd>dm ? ay->v(i,j,k)/dd : 0) : ay->v(i,j,k)*xm;
-		dz *= (flag&MGL_VEC_LEN) ? (dd>dm ? az->v(i,j,k)/dd : 0) : az->v(i,j,k)*xm;
+		dx *= fix ? (dd>dm ? ax->v(i,j,k)/dd : 0) : ax->v(i,j,k)*xm;
+		dy *= fix ? (dd>dm ? ay->v(i,j,k)/dd : 0) : ay->v(i,j,k)*xm;
+		dz *= fix ? (dd>dm ? az->v(i,j,k)/dd : 0) : az->v(i,j,k)*xm;
 
-		if(flag & MGL_VEC_END)
-		{	p1 = mglPoint(xx-dx,yy-dy,zz-dz);	p2 = mglPoint(xx,yy,zz);	}
-		else if(flag & MGL_VEC_MID)
-		{	p1=mglPoint(xx-dx/2,yy-dy/2,zz-dz/2);	p2=mglPoint(xx+dx/2,yy+dy/2,zz+dz/2);	}
-		else
-		{	p1 = mglPoint(xx,yy,zz);	p2 = mglPoint(xx+dx,yy+dy,zz+dz);	}
-		if(flag&MGL_VEC_COL)	{	c1 = c2 = ss;	}	else
-		{	c1=gr->GetC(ss,dd*xm*1.5-1,false);	c2=gr->GetC(ss,dd*xm*1.5-0.5,false);	}
+		if(end)			{	p1 = mglPoint(xx-dx,yy-dy,zz-dz);	p2 = mglPoint(xx,yy,zz);	}
+		else if(beg)	{	p1 = mglPoint(xx,yy,zz);	p2 = mglPoint(xx+dx,yy+dy,zz+dz);	}
+		else	{	p1=mglPoint(xx-dx/2,yy-dy/2,zz-dz/2);	p2=mglPoint(xx+dx/2,yy+dy/2,zz+dz/2);	}
+		if(grd)	{	c1=gr->GetC(ss,dd*xm-0.5,false);	c2=gr->GetC(ss,dd*xm,false);	}
+		else	c1 = c2 = gr->GetC(ss,dd*xm,false);
 		n1=gr->AddPnt(p1,c1);	n2=gr->AddPnt(p2,c2);
-		if(flag & MGL_VEC_DOT)	gr->line_plot(n1,n2);
+		if(dot)	{	gr->line_plot(n1,n2);	gr->mark_plot(n1,'.');	}
 		else	gr->vect_plot(n1,n2);
 	}
 	gr->EndGroup();
@@ -872,6 +873,7 @@ void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, flo
 	// allocate memory
 	float zVal = gr->Min.z;
 	bool cnt=(num>0);	num = abs(num);
+	if(sch && strchr(sch,'i'))	r0 = -fabs(r0);
 
 	mglData xx(x), yy(y), bx(ax), by(ay);
 	for(long k=0;k<ax->GetNz();k++)
@@ -1030,6 +1032,7 @@ void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	if(isnan(r))	r = gr->PrevValue();
 	long num = isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe3",cgid++);
+	if(sch && strchr(sch,'i'))	r0 = -fabs(r0);
 
 	long ss = gr->AddTexture(sch);
 	bool cnt=(num>0);	num = abs(num);

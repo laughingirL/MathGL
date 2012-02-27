@@ -340,7 +340,7 @@ public:
 
 	/// Get color depending on single variable z, which should be scaled if scale=true
 	inline float GetC(long s,float z,bool scale = true)
-	{	return s+(scale?GetA(z):z);	}
+	{	return s+(scale?GetA(z):(z>0?z/MGL_FLT_EPS:0));	}
 	/// Get alpha value depending on single variable \a a
 	float GetA(float a);
 	/// Set pen/palette

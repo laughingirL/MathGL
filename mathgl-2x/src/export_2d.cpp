@@ -164,32 +164,21 @@ void put_desc(HMGL gr, void *fp, bool gz, const char *pre, const char *ln1, cons
 //-----------------------------------------------------------------------------
 mglColor mglCanvas::GetColor(const mglPrim &p)
 {
-	const mglPnt &q=Pnt[(p.type==1 ? p.n2:p.n1)];
-	mglColor c(q.r,q.g,q.b,q.a);
-
-	if(get(MGL_ENABLE_LIGHT) && !isnan(q.u))
+	unsigned char res[4],buf[4];
+	col2int(Pnt[p.type==1?p.n2:p.n1],res);
+	if(p.type==2 || p.type==3)
 	{
-		float d0,d1,d2,nn;
-		c *= AmbBr;
-		register long i;
-		for(i=0;i<10;i++)
-		{
-			if(!light[i].n)	continue;
-			nn = 2*(q.u*light[i].p.x+q.v*light[i].p.y+q.w*light[i].p.z) /
-					(q.u*q.u+q.v*q.v+q.w*q.w+1e-6);
-			d0 = light[i].p.x - q.u*nn;
-			d1 = light[i].p.y - q.v*nn;
-			d2 = light[i].p.z - q.w*nn;
-			nn = 1 + d2/sqrt(d0*d0+d1*d1+d2*d2+1e-6);
-
-			nn = exp(-light[i].a*nn)*light[i].b*2;
-			c += nn*light[i].c;
-		}
-		c.r = c.r<1 ? c.r : 1;
-		c.g = c.g<1 ? c.g : 1;
-		c.b = c.b<1 ? c.b : 1;
+		col2int(Pnt[p.n2],buf);			res[0]=(1L*res[0]+buf[0])/2;
+		res[1]=(1L*res[1]+buf[1])/2;	res[2]=(1L*res[2]+buf[2])/2;
+		col2int(Pnt[p.n3],buf);			res[0]=(2L*res[0]+buf[0])/3;
+		res[1]=(2L*res[1]+buf[1])/3;	res[2]=(2L*res[2]+buf[2])/3;
 	}
-	return c;
+	if(p.type==3)
+	{
+		col2int(Pnt[p.n4],buf);			res[0]=(3L*res[0]+buf[0])/4;
+		res[1]=(3L*res[1]+buf[1])/4;	res[2]=(3L*res[2]+buf[2])/4;
+	}
+	return mglColor(res[0]/255.,res[1]/255.,res[2]/255.,res[3]/255.);
 }
 //-----------------------------------------------------------------------------
 void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
@@ -340,7 +329,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		}
 		else if(q.type==4)	// glyph
 		{
-			float 	ss = q.s/q.p/1.1, xx = p1.u, yy = p1.v, zz = p1.w;
+			float 	ss = q.s/2, xx = p1.u, yy = p1.v, zz = p1.w;
 			mgl_printf(fp, gz, "gsave\t%g %g translate %g %g scale %g rotate %s\n",
 					   p1.x, p1.y, ss, ss, -q.w, str);
 			if(q.n3&8)	// this is "line"

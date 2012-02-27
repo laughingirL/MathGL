@@ -568,55 +568,49 @@ void mglc_contd(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_cont3(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]==2)
-		gr->Cont3(*(a[0].d), a[1].s.c_str()[0], k[2]==3?iint(a[2].v):-1, k[3]==2?a[3].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==2)
-		gr->Cont3(*(a[0].d), *(a[1].d), a[2].s.c_str()[0], k[3]==3?iint(a[3].v):-1, k[4]==2?a[4].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
-		gr->Cont3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), a[4].s.c_str()[0], k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==2)
-		gr->Cont3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s.c_str()[0], k[6]==3?iint(a[6].v):-1, k[7]==2?a[7].s.c_str():"",opt);
-	else	return 1;
+	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		gr->Cont3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), k[5]==2?a[5].s.c_str():"", k[6]==3?iint(a[6].v):-1, opt);
+	else if(k[1]==1 && k[2]==1 && k[3]==1)
+		gr->Cont3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), k[4]==2?a[4].s.c_str():"", k[5]==3?iint(a[5].v):-1, opt);
+	else if(k[1]==1)
+		gr->Cont3(*(a[0].d), *(a[1].d), k[2]==2?a[2].s.c_str():"", k[3]==3?iint(a[3].v):-1, opt);
+	else	gr->Cont3(*(a[0].d), k[1]==2?a[1].s.c_str():"", k[2]==3?iint(a[2].v):-1, opt);
 	return 0;
 }
 void mglc_cont3(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return;
-	else if(k[1]==2)
-		mglprintf(out,1024,L"gr->Cont3(%s, '%c', %d, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str()[0], k[2]==3?iint(a[2].v):-1, k[3]==2?a[3].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==2)
-		mglprintf(out,1024,L"gr->Cont3(%s, %s, '%c', %d, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str()[0], k[3]==3?iint(a[3].v):-1, k[4]==2?a[4].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
-		mglprintf(out,1024,L"gr->Cont3(%s, %s, %s, %s, '%c', %d, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str()[0], k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==2)
-		mglprintf(out,1024,L"gr->Cont3(%s, %s, %s, %s, %s, '%c', %d, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str(), a[5].s.c_str()[0], k[6]==3?iint(a[6].v):-1, k[7]==2?a[7].s.c_str():"",opt);
+	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		mglprintf(out,1024,L"gr->Cont3(%s, %s, %s, %s, %s, \"%s\", %d, \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str(), k[5]==2?a[5].s.c_str():"", k[6]==3?iint(a[6].v):-1, opt);
+	else if(k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"gr->Cont3(%s, %s, %s, %s, \"%s\", %d, \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), k[4]==2?a[4].s.c_str():"", k[5]==3?iint(a[5].v):-1, opt);
+	else if(k[1]==1)
+		mglprintf(out,1024,L"gr->Cont3(%s, %s, \"%s\", %d, \"%s\");", a[0].s.c_str(), a[1].s.c_str(), k[2]==2?a[2].s.c_str():"", k[3]==3?iint(a[3].v):-1, opt);
+	else	mglprintf(out,1024,L"gr->Cont3(%s, \"%s\", %d, \"%s\");", a[0].s.c_str(), k[1]==2?a[1].s.c_str():"", k[2]==3?iint(a[2].v):-1, opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_contf3(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]==2)
-		gr->ContF3(*(a[0].d), a[1].s.c_str()[0], k[2]==3?iint(a[2].v):-1, k[3]==2?a[3].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==2)
-		gr->ContF3(*(a[0].d), *(a[1].d), a[2].s.c_str()[0], k[3]==3?iint(a[3].v):-1, k[4]==2?a[4].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
-		gr->ContF3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), a[4].s.c_str()[0], k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==2)
-		gr->ContF3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), a[5].s.c_str()[0], k[6]==3?iint(a[6].v):-1, k[7]==2?a[7].s.c_str():"",opt);
-	else	return 1;
+	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		gr->ContF3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), *(a[4].d), k[5]==2?a[5].s.c_str():"", k[6]==3?iint(a[6].v):-1, opt);
+	else if(k[1]==1 && k[2]==1 && k[3]==1)
+		gr->ContF3(*(a[0].d), *(a[1].d), *(a[2].d), *(a[3].d), k[4]==2?a[4].s.c_str():"", k[5]==3?iint(a[5].v):-1, opt);
+	else if(k[1]==1)
+		gr->ContF3(*(a[0].d), *(a[1].d), k[2]==2?a[2].s.c_str():"", k[3]==3?iint(a[3].v):-1, opt);
+	else	gr->ContF3(*(a[0].d), k[1]==2?a[1].s.c_str():"", k[2]==3?iint(a[2].v):-1, opt);
 	return 0;
 }
 void mglc_contf3(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return;
-	else if(k[1]==2)
-		mglprintf(out,1024,L"gr->ContF3(%s, '%c', %d, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str()[0], k[2]==3?iint(a[2].v):-1, k[3]==2?a[3].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==2)
-		mglprintf(out,1024,L"gr->ContF3(%s, %s, '%c', %d, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str()[0], k[3]==3?iint(a[3].v):-1, k[4]==2?a[4].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
-		mglprintf(out,1024,L"gr->ContF3(%s, %s, %s, %s, '%c', %d, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str()[0], k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1 && k[5]==2)
-		mglprintf(out,1024,L"gr->ContF3(%s, %s, %s, %s, %s, '%c', %d, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str(), a[5].s.c_str()[0], k[6]==3?iint(a[6].v):-1, k[7]==2?a[7].s.c_str():"",opt);
+	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==1)
+		mglprintf(out,1024,L"gr->ContF3(%s, %s, %s, %s, %s, \"%s\", %d, \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str(), k[5]==2?a[5].s.c_str():"", k[6]==3?iint(a[6].v):-1, opt);
+	else if(k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"gr->ContF3(%s, %s, %s, %s, \"%s\", %d, \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), k[4]==2?a[4].s.c_str():"", k[5]==3?iint(a[5].v):-1, opt);
+	else if(k[1]==1)
+		mglprintf(out,1024,L"gr->ContF3(%s, %s, \"%s\", %d, \"%s\");", a[0].s.c_str(), a[1].s.c_str(), k[2]==2?a[2].s.c_str():"", k[3]==3?iint(a[3].v):-1, opt);
+	else	mglprintf(out,1024,L"gr->ContF3(%s, \"%s\", %d, \"%s\");", a[0].s.c_str(), k[1]==2?a[1].s.c_str():"", k[2]==3?iint(a[2].v):-1, opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_contx(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
@@ -812,21 +806,17 @@ void mglc_dens(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_dens3(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]==2)
-		gr->Dens3(*(a[0].d),a[1].s.c_str()[0],k[2]==3?iint(a[2].v):-1,k[3]==2?a[3].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
-		gr->Dens3(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].s.c_str()[0],
-				k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s.c_str():"",opt);
-	else	return 1;
+	else if(k[1]==1 && k[2]==1 && k[3]==1)
+		gr->Dens3(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s.c_str():"", k[5]==3?iint(a[5].v):-1, opt);
+	else	gr->Dens3(*(a[0].d),k[1]==2?a[1].s.c_str():"",k[2]==3?iint(a[2].v):-1,opt);
 	return 0;
 }
 void mglc_dens3(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return;
-	else if(k[1]==2)
-		mglprintf(out,1024,L"gr->Dens3(%s, '%c', %d, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str()[0], k[2]==3?iint(a[2].v):-1, k[3]==2?a[3].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
-		mglprintf(out,1024,L"gr->Dens3(%s, %s, %s, %s, '%c', %d, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str()[0], k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s.c_str():"",opt);
+	else if(k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"gr->Dens3(%s, %s, %s, %s, \"%s\", %d, \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), k[4]==2?a[4].s.c_str():"", k[5]==3?iint(a[5].v):-1, opt);
+	else	mglprintf(out,1024,L"gr->Dens3(%s, \"%s\", %d, \"%s\");", a[0].s.c_str(), k[1]==2?a[1].s.c_str():"",k[2]==3?iint(a[2].v):-1,opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_densx(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
@@ -1252,21 +1242,17 @@ void mglc_grid2(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_grid3(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return 1;
-	else if(k[1]==2)
-		gr->Grid3(*(a[0].d),a[1].s.c_str()[0],k[2]==3?iint(a[2].v):-1,k[3]==2?a[3].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
-		gr->Grid3(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),a[4].s.c_str()[0],
-				k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s.c_str():"",opt);
-	else	return 1;
+	else if(k[1]==1 && k[2]==1 && k[3]==1)
+		gr->Grid3(*(a[0].d),*(a[1].d),*(a[2].d),*(a[3].d),k[4]==2?a[4].s.c_str():"", k[5]==3?iint(a[5].v):-1, opt);
+	else	gr->Grid3(*(a[0].d),k[1]==2?a[1].s.c_str():"",k[2]==3?iint(a[2].v):-1,opt);
 	return 0;
 }
 void mglc_grid3(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]!=1)	return;
-	else if(k[1]==2)
-		mglprintf(out,1024,L"gr->Grid3(%s, '%c', %d, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str()[0], k[2]==3?iint(a[2].v):-1, k[3]==2?a[3].s.c_str():"",opt);
-	else if(k[1]==1 && k[2]==1 && k[3]==1 && k[4]==2)
-		mglprintf(out,1024,L"gr->Grid3(%s, %s, %s, %s, '%c', %d, \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), a[4].s.c_str()[0], k[5]==3?iint(a[5].v):-1, k[6]==2?a[6].s.c_str():"",opt);
+	else if(k[1]==1 && k[2]==1 && k[3]==1)
+		mglprintf(out,1024,L"gr->Grid3(%s, %s, %s, %s, \"%s\", %d, \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].s.c_str(), k[4]==2?a[4].s.c_str():"", k[5]==3?iint(a[5].v):-1, opt);
+	else	mglprintf(out,1024,L"gr->Grid3(%s, \"%s\", %d, \"%s\");", a[0].s.c_str(), k[1]==2?a[1].s.c_str():"",k[2]==3?iint(a[2].v):-1,opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_light(mglGraph *gr, long , mglArg *a, int k[10], const char *)

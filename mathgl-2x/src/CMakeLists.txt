@@ -19,6 +19,8 @@ set(mgl_hdr
 if(use_opengl)
 	set(mgl_src ${mgl_src} opengl.cpp )
 	set(mgl_hdr ${mgl_hdr} ../include/mgl/opengl.h )
+else(use_opengl)
+	add_definitions(-DNO_OPENGL)
 endif(use_opengl)
 
 add_library(mgl SHARED ${mgl_src} ${mgl_hdr})

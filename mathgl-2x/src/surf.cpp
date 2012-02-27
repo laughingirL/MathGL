@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 void mgl_mesh_plot(mglBase *gr, long *pos, long n, long m, int how)
 {
-	int d = gr->MeshNum>0 ? gr->MeshNum+1 : 1, dx = n>d?n/d:1, dy = m>d?m/d:1;
+	int d = gr->MeshNum>0 ? gr->MeshNum+1 : n*m, dx = n>d?n/d:1, dy = m>d?m/d:1;
 	register long i,j;
 	if(how&1)	for(j=0;j<m;j+=dy)	for(i=0;i<n-1;i++)
 		gr->line_plot(pos[n*j+i],pos[n*j+i+1]);

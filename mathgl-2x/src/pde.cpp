@@ -120,8 +120,8 @@ HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz,
 	mgl_pde_ham tmp;tmp.eqs = &eqs;
 	tmp.nx = nx;	tmp.ny = ny;	tmp.a=a;		tmp.hxy=hxy;
 	tmp.hxv=hxv;	tmp.huy=huy;	tmp.huv=huv;	tmp.dd = dd;
-	tmp.xx = Min.x;	tmp.xs = xs;	tmp.dx = dx;	tmp.dp = dp;
-	tmp.yy = Min.y;	tmp.ys = ys;	tmp.dy = dy;	tmp.dq = dq;
+	tmp.xx = Min.x-dx*(nx/2);	tmp.xs = xs;	tmp.dx = dx;	tmp.dp = dp;
+	tmp.yy = Min.y-dy*(ny/2);	tmp.ys = ys;	tmp.dy = dy;	tmp.dq = dq;
 
 	// prepare fft. NOTE: slow procedures due to unknown nx, ny.
 	gsl_fft_complex_wavetable *wtx = gsl_fft_complex_wavetable_alloc(2*nx);
@@ -137,7 +137,6 @@ HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz,
 		tmp.zz = Min.z+dz*k;
 		memset(hxy,0,4*nx*ny*sizeof(dual));	memset(hxv,0,4*nx*ny*sizeof(dual));
 		memset(huv,0,4*nx*ny*sizeof(dual));	memset(huy,0,4*nx*ny*sizeof(dual));
-mglNumThr=1;
 		mglStartThread(mgl_pde_hprep,0,4*nx*ny,0,0,0,0,&tmp);
 		for(i=0;i<2*nx;i++)	{	hx[i] = hxv[i];			hu[i] = huv[i];		}
 		for(j=0;j<2*ny;j++)	{	hy[j] = huy[2*nx*j];	hv[j] = huv[2*nx*j];}

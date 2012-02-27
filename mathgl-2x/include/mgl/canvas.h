@@ -203,7 +203,7 @@ using mglBase::Light;
 	/// Stop writing cinema using GIF format
 	void CloseGIF();
 	/// Finish plotting. Normally this function is called internaly.
-	virtual void Finish();
+	virtual void Finish(bool fast=true);
 	/// Export points and primitives in file using MGLD format
 	bool ExportMGLD(const char *fname, const char *descr=0);
 	/// Import points and primitives from file using MGLD format
@@ -248,7 +248,7 @@ using mglBase::Light;
 	/// Draws bounding box outside the plotting volume with color \a c.
 	void Box(const char *col=0, bool ticks=true);
 	/// Draw axises with ticks in directions determined by string parameter \a dir.
-	void Axis(const char *dir="xyzt", bool adjust=false);
+	void Axis(const char *dir="xyzt", bool adjust=false, const char *stl="");
 	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
 	void Grid(const char *dir="xyzt",const char *pen="B-");
 	/// Print the label \a text for axis \a dir.
@@ -337,7 +337,7 @@ protected:
 	/// Prepare labels for ticks
 	void LabelTicks(mglAxis &aa);
 	/// Draw axis
-	void DrawAxis(mglAxis &aa, bool text=true, char arr=0);
+	void DrawAxis(mglAxis &aa, bool text=true, char arr=0,const char *stl="");
 	/// Draw axis grid lines
 	void DrawGrid(mglAxis &aa);
 	/// Update axis ranges
@@ -391,7 +391,7 @@ private:
 	/// Draw labels for ticks
 	void DrawLabels(mglAxis &aa);
 	/// Draw tick
-	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f);
+	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const char *stl);
 	/// Plot point \a p with color \a c
 	void pnt_plot(long x,long y,float z,const unsigned char c[4]);
 	float FindOptOrg(char dir, int ind);
@@ -419,6 +419,7 @@ private:
 	void pxl_primdr(unsigned long id, unsigned long n, const void *);
 	void pxl_transform(unsigned long id, unsigned long n, const void *);
 	void pxl_setz(unsigned long id, unsigned long n, const void *);
+	void pxl_setz_adv(unsigned long id, unsigned long n, const void *);
 	void pxl_other(unsigned long id, unsigned long n, const void *p);
 	/// Put drawing from other mglCanvas (for multithreading, like subplots)
 	void PutDrawReg(mglDrawReg *d, const mglCanvas *gr);

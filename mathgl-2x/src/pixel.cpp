@@ -80,6 +80,7 @@ bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 	n.x = y.x*B.b[0] + y.y*B.b[1] + y.z*B.b[2];
 	n.y = y.x*B.b[3] + y.y*B.b[4] + y.z*B.b[5];
 	n.z = y.x*B.b[6] + y.y*B.b[7] + y.z*B.b[8];
+	n.Normalize();
 /*	if(Persp)
 	{
 		register float d = (1-Persp*Depth/2)/(1-Persp*p.z);
@@ -326,13 +327,24 @@ void mglCanvas::pxl_transform(unsigned long id, unsigned long n, const void *)
 	}
 }
 //-----------------------------------------------------------------------------
+void mglCanvas::pxl_setz_adv(unsigned long id, unsigned long n, const void *)
+{
+	for(unsigned long i=id;i<n;i+=mglNumThr)
+	{
+		mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;
+		if(q.type==1)	q.z = (q.z + Pnt[q.n2].z)/2;
+		if(q.type==2)	q.z = (q.z + Pnt[q.n2].z + Pnt[q.n3].z)/3;
+		if(q.type==3)	q.z = (q.z + Pnt[q.n2].z + Pnt[q.n3].z + Pnt[q.n4].z)/4;
+	}
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::pxl_setz(unsigned long id, unsigned long n, const void *)
 {
 	for(unsigned long i=id;i<n;i+=mglNumThr)
 	{	mglPrim &q=Prm[i];	q.z = Pnt[q.n1].z;	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Finish()
+void mglCanvas::Finish(bool fast)
 {
 	static mglMatrix bp;
 	if(memcmp(&Bp,&bp,sizeof(mglMatrix)) && !(Quality&4) && Prm.size()>0)
@@ -341,7 +353,8 @@ void mglCanvas::Finish()
 	if(!(Quality&4) && Prm.size()>0)
 	{
 		mglStartThread(&mglCanvas::pxl_transform,this,Pnt.size());
-		mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
+		if(fast)	mglStartThread(&mglCanvas::pxl_setz,this,Prm.size());
+		else	mglStartThread(&mglCanvas::pxl_setz_adv,this,Prm.size());
 		std::sort(Prm.begin(), Prm.end());	bp=Bp;
 //		mglStartThread(&mglCanvas::pxl_primdr,this,Prm.size());	// TODO: check conflicts in pthreads
 		pxl_primdr(-1,Prm.size(),NULL);
@@ -772,11 +785,12 @@ void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 	if(get(MGL_HIGHLIGHT))	{	pw *= 2;	dpw=2;	}
 	const mglPnt &p=Pnt[k];
 	unsigned char cs[4], cc;	col2int(p,cs);	cc = cs[3];
+	if(cc==0)	return;
 	s = long(5.5+fabs(pw));
 	for(j=-s;j<=s;j++)	for(i=-s;i<=s;i++)
 	{
 		v = i*i+j*j;
-		cs[3] = v<(pw-1)*(pw-1)/4 ? 255 : (unsigned char)(255/cosh(dpw*(sqrt(v)+(1-pw)/2)));
+		cs[3] = v<(pw-1)*(pw-1)/4 ? cc : (unsigned char)(cc/cosh(dpw*(sqrt(v)+(1-pw)/2)));
 //		cs[3] = (unsigned char)(cc*exp(-6*v));
 		if(cs[3]==0)	continue;
 		x=p.x+i;	y=p.y+j;

@@ -111,7 +111,7 @@ void mgl_error_box(HMGL gr, float x, float y, float z, float ex, float ey, float
 	mglPoint p(x,y,z), q,nn=mglPoint(NAN);
 	gr->Reserve(7);
 	long k1,k2;
-	q = p;	q.x += ex;	k1 = gr->AddPnt(q,gr->CDef,nn,0,3);
+	q = p;	q.x += ex;	k1 = gr->AddPnt(q,gr->CDef,nn,0,3);	// TODO draw lines to show cube (not just perp to line)
 	q = p;	q.x -= ex;	k2 = gr->AddPnt(q,gr->CDef,nn,0,3);
 	gr->line_plot(k1,k2);	gr->arrow_plot(k1,k2,'I');	gr->arrow_plot(k2,k1,'I');
 	q = p;	q.y += ey;	k1 = gr->AddPnt(q,gr->CDef,nn,0,3);

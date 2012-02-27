@@ -45,7 +45,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;	if(tz<1)	tz=1;
 
 	float	alpha = gr->AlphaDef;
-	bool inv = sch && strchr(sch,'-');
+	bool inv = sch && strchr(sch,'!');
 	bool dot = sch && strchr(sch,'.');
 	alpha /= pow(n/tx*m/ty*l/tz,1./3)/20;
 	float aa,bb;
@@ -63,6 +63,7 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 		aa = gr->GetA(a->v(i,j,k));
 		if(inv)	bb = (1-aa)*(1-aa)*alpha;
 		else	bb = aa*aa*alpha;
+		if(dot)	bb = sqrt(bb);
 		pos[i/tx+(n/tx)*(j/ty+(m/ty)*(k/tz))] = gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);
 	}
 	n /= tx;	m /= ty;	l /= tz;

@@ -128,7 +128,7 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 	Txt[long(c)].GetC(c,a,q);	// RGBA color
 
 	if(!get(MGL_ENABLE_ALPHA))	q.a=1;
-	if(scl&8)	q.a=a;	// bypass palette for enabling alpha in Error()
+	if(scl&8 && scl>0)	q.a=a;	// bypass palette for enabling alpha in Error()
 	if(!get(MGL_ENABLE_LIGHT) && !(scl&4))	q.u=q.v=NAN;
 	MGL_PUSH(Pnt,q,mutexPnt);	return Pnt.size()-1;
 }
@@ -253,9 +253,12 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 	}
 	else
 	{
-		if(x1<Min.x)	x=Min.x;	if(x2>Max.x)	x=Max.x;
-		if(y1<Min.y)	y=Min.y;	if(y2>Max.y)	y=Max.y;
-		if(z1<Min.z)	z=Min.z;	if(z2>Max.z)	z=Max.z;
+		if(x1<Min.x)	{x=Min.x;	n=mglPoint(1,0,0);}
+		if(x2>Max.x)	{x=Max.x;	n=mglPoint(1,0,0);}
+		if(y1<Min.y)	{y=Min.y;	n=mglPoint(0,1,0);}
+		if(y2>Max.y)	{y=Max.y;	n=mglPoint(0,1,0);}
+		if(z1<Min.z)	{z=Min.z;	n=mglPoint(0,0,1);}
+		if(z2>Max.z)	{z=Max.z;	n=mglPoint(0,0,1);}
 	}
 
     x1=x;	y1=y;	z1=z;
@@ -546,7 +549,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 	// NOTE: New syntax -- colors are CCCCC or {CNCNCCCN}; options inside []
 	if(!s || !s[0])	return;
 	register long i,j=0,m=0,l=strlen(s);
-	const char *cols = "kwrgbcymhWRGBCYMHlenpquLENPQU";
+	const char *cols = MGL_COLORS;
 	for(i=0;i<l;i++)		// find number of colors
 	{
 		if(s[i]=='[')	j++;	if(s[i]==']')	j--;
@@ -835,7 +838,7 @@ float mglBase::SaveState(const char *opt)
 			if(a[0]=='x')		{	Min.x=ff;	Max.x=ss;	}
 			else if(a[0]=='y')	{	Min.y=ff;	Max.y=ss;	}
 			else if(a[0]=='z')	{	Min.z=ff;	Max.z=ss;	}
-			else if(a[0]=='c')	{	Min.c=ff;	Max.c=ss;	}
+//			else if(a[0]=='c')	{	Min.c=ff;	Max.c=ss;	}	// Bad idea since there is formula for coloring
 		}
 		else if(!strcmp(a,"cut"))		SetCut(ff!=0);
 		else if(!strcmp(a,"meshnum"))	SetMeshNum(ff);

@@ -46,6 +46,8 @@ inline mglPoint operator+(const mglPoint &a, const mglPoint &b)
 {	return mglPoint(a.x+b.x, a.y+b.y, a.z+b.z, a.c+b.c);	}
 inline mglPoint operator-(const mglPoint &a, const mglPoint &b)
 {	return mglPoint(a.x-b.x, a.y-b.y, a.z-b.z, a.c-b.c);	}
+inline mglPoint operator-(const mglPoint &a)
+{	return mglPoint(-a.x, -a.y, -a.z, -a.c);	}
 inline mglPoint operator*(float b, const mglPoint &a)
 {	return mglPoint(a.x*b, a.y*b, a.z*b);	}
 inline mglPoint operator*(const mglPoint &a, float b)

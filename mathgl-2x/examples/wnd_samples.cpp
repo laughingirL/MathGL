@@ -373,14 +373,14 @@ int sample_3(mglGraph *gr)
 	gr->Puts(mglPoint(0,1.2,1),"Density at central slices");
 	gr->Rotate(40,60);
 	gr->Box();	gr->Axis();
-	gr->Dens3(a,'x');	gr->Dens3(a,'y');	gr->Dens3(a,'z');
+	gr->Dens3(a,"x");	gr->Dens3(a);	gr->Dens3(a,"z");
 	gr->EndFrame();
 
 	gr->NewFrame();
 	gr->Puts(mglPoint(0,1.2,1),"Contours at central slices");
 	gr->Rotate(40,60);
 	gr->Box();	gr->Axis();
-	gr->Cont3(a,'x');	gr->Cont3(a,'y');	gr->Cont3(a,'z');
+	gr->Cont3(a,"x");	gr->Cont3(a);	gr->Cont3(a,"z");
 	gr->EndFrame();
 
 	gr->NewFrame();
@@ -504,8 +504,8 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)	for(k=0;k<n;k++)
 	{
 		x=2*i/(n-1.)-1;	y=2*j/(n-1.)-1;	z=2*k/(n-1.)-1;	i0 = i+n*(j+k*n);
-		r1 = pow(x*x+y*y+(z-0.3)*(z-0.3),1.5);
-		r2 = pow(x*x+y*y+(z+0.3)*(z+0.3),1.5);
+		r1 = pow(x*x+y*y+(z-0.3)*(z-0.3)+0.03,1.5);
+		r2 = pow(x*x+y*y+(z+0.3)*(z+0.3)+0.03,1.5);
 		ex->a[i0]=0.2*x/r1 - 0.2*x/r2;
 		ey->a[i0]=0.2*y/r1 - 0.2*y/r2;
 		ez->a[i0]=0.2*(z-0.3)/r1 - 0.2*(z+0.3)/r2;

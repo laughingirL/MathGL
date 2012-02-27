@@ -128,16 +128,6 @@ enum{	// types of predefined curvelinear coordinate systems
 #define MGL_DRAW_NORM	2	// high quality, slower
 #define MGL_DRAW_LMEM	4	// low memory usage (direct to pixel)
 //-----------------------------------------------------------------------------
-// types of vector plot
-#define MGL_VEC_COL	1	// use 2 colors only
-#define MGL_VEC_LEN	2	// use fixed length
-#define MGL_VEC_END	4	// draw vector to point
-#define MGL_VEC_MID	8	// draw vector with point at center
-#define MGL_VEC_DOT	16	// draw dot instead of vector
-#define MGL_VEC_GRD	32	// enable color gradient along vector/dash
-#define MGL_VECTC MGL_VEC_LEN|MGL_VEC_DOT|MGL_VEC_GRD
-#define MGL_VECTL MGL_VEC_COL|MGL_VEC_DOT|MGL_VEC_GRD
-//-----------------------------------------------------------------------------
 enum{	// Codes for warnings/messages
 	mglWarnNone = 0,// Everything OK
 	mglWarnDim,		// Data dimension(s) is incompatible
@@ -162,6 +152,7 @@ enum{	// Codes for warnings/messages
 #ifndef MGL_DEF_PAL
 #define MGL_DEF_PAL	"bgrcmyhlnqeupH"	// default palette
 #endif
+#define MGL_COLORS	"kwrgbcymhWRGBCYMHlenpquLENPQU"
 //-----------------------------------------------------------------------------
 #define MGL_TRANSP_NORM		0x000000
 #define MGL_TRANSP_GLASS	0x000001

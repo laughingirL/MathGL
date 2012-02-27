@@ -98,7 +98,7 @@ GifFileType *gif;*/
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
 	SetBarWidth(0.7);	SetMarkSize(1);	SetArrowSize(1);
 	SetAlphaDef(0.5);		FontDef[0]=0;
-	SetTranspType(0);		SetMeshNum(10);	// NOTE: default MeshNum=10
+	SetTranspType(0);		SetMeshNum(0);	// NOTE: default MeshNum=0
 	SetRotatedText(true);	CurrPal = 0;
 	SetLegendMarks();		SetFontSize(4);
 	SetTuneTicks(true);
@@ -415,11 +415,11 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 	if(get(MGL_AUTO_FACTOR)) B.pf = 1.55;	// Automatically change plot factor !!!
 	if(rel)
 	{
-		B.x = B1.x + (x1+x2-1)/2*B1.b[0];
-		B.y = B1.y + (y1+y2-1)/2*B1.b[4];
-		B.b[0] = B1.b[0]*(x2-x1);	B.b[4] = B1.b[4]*(y2-y1);
-		B.b[8] = sqrt(B.b[0]*B.b[4]);
-		B.z = B1.z + (1.f-B.b[8]/(2*Depth))*B1.b[8];
+		B.x = B1.x + (x1+x2-1)/2*B1.b[0]/1.55;
+		B.y = B1.y + (y1+y2-1)/2*B1.b[4]/1.55;
+		B.b[0] = B1.b[0]*(x2-x1)/1.55;	B.b[4] = B1.b[4]*(y2-y1)/1.55;
+		B.b[8] = sqrt(B.b[0]*B.b[4])/1.55;
+		B.z = B1.z + (1.f-B.b[8]/(2*Depth))*B1.b[8]/1.55;
 	}
 	else
 	{

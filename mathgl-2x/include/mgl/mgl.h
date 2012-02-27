@@ -22,6 +22,9 @@
 
 #include "mgl/mgl_cf.h"
 #include "mgl/data.h"
+#ifndef NO_OPENGL
+#include "mgl/opengl.h"
+#endif
 //-----------------------------------------------------------------------------
 const float NaN = NAN;
 //-----------------------------------------------------------------------------
@@ -33,8 +36,10 @@ protected:
 public:
 	inline mglGraph(int kind=0, int width=600, int height=400)
 	{
-		if(kind==1)		gr=mgl_create_graph_gl();
-		else if(kind==-1)	gr=NULL;
+		if(kind==-1)	gr=NULL;
+#ifndef NO_OPENGL
+		else if(kind==1)		gr=mgl_create_graph_gl();
+#endif
 //		else if(kind==2)	gr=mgl_create_graph_idtf();
 		else	gr=mgl_create_graph(width, height);
 	}
@@ -757,15 +762,15 @@ public:
 	{	mgl_axial(gr, &z, sch, opt);	}
 
 	/// Draw grid lines for density plot at slice for 3d data specified parametrically
-	inline void Grid3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *stl="", const char *opt="")
-	{	mgl_grid3_xyz(gr, &x, &y, &z, &a, dir, sVal, stl, opt);	}
-	inline void Grid3(const mglDataA &a, char dir, float sVal=-1, const char *stl="", const char *opt="")
-	{	mgl_grid3(gr, &a, dir, sVal, stl, opt);	}
+	inline void Grid3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", float sVal=-1, const char *opt="")
+	{	mgl_grid3_xyz(gr, &x, &y, &z, &a, stl, sVal, opt);	}
+	inline void Grid3(const mglDataA &a, const char *stl="", float sVal=-1, const char *opt="")
+	{	mgl_grid3(gr, &a, stl, sVal, opt);	}
 	/// Draw density plot at slice for 3d data specified parametrically
-	inline void Dens3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *stl="", const char *opt="")
-	{	mgl_dens3_xyz(gr, &x, &y, &z, &a, dir, sVal, stl, opt);	}
-	inline void Dens3(const mglDataA &a, char dir, float sVal=-1, const char *stl="", const char *opt="")
-	{	mgl_dens3(gr, &a, dir, sVal, stl, opt);	}
+	inline void Dens3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", float sVal=-1, const char *opt="")
+	{	mgl_dens3_xyz(gr, &x, &y, &z, &a, stl, sVal, opt);	}
+	inline void Dens3(const mglDataA &a, const char *stl="", float sVal=-1, const char *opt="")
+	{	mgl_dens3(gr, &a, stl, sVal, opt);	}
 
 	/// Draw isosurface(s) for 3d data specified parametrically
 	inline void Surf3(float Val, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *stl="", const char *opt="")
@@ -784,24 +789,24 @@ public:
 	{	mgl_cloud(gr, &a, stl, opt);	}
 
 	/// Draw contour lines at slice for 3d data specified parametrically
-	inline void Cont3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *sch="", const char *opt="")
-	{	mgl_cont3_xyz_val(gr, &v, &x, &y, &z, &a, dir, sVal, sch, opt);	}
-	inline void Cont3(const mglDataA &v, const mglDataA &a, char dir, float sVal=-1, const char *sch="", const char *opt="")
-	{	mgl_cont3_val(gr, &v, &a, dir, sVal, sch, opt);	}
-	inline void Cont3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *sch="", const char *opt="")
-	{	mgl_cont3_xyz(gr, &x, &y, &z, &a, dir, sVal, sch, opt);	}
-	inline void Cont3(const mglDataA &a, char dir, float sVal=-1, const char *sch="", const char *opt="")
-	{	mgl_cont3(gr, &a, dir, sVal, sch, opt);	}
+	inline void Cont3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	{	mgl_cont3_xyz_val(gr, &v, &x, &y, &z, &a, sch, sVal, opt);	}
+	inline void Cont3(const mglDataA &v, const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	{	mgl_cont3_val(gr, &v, &a, sch, sVal, opt);	}
+	inline void Cont3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	{	mgl_cont3_xyz(gr, &x, &y, &z, &a, sch, sVal, opt);	}
+	inline void Cont3(const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	{	mgl_cont3(gr, &a, sch, sVal, opt);	}
 
 	/// Draw solid contours at slice for 3d data specified parametrically
-	inline void ContF3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *sch="", const char *opt="")
-	{	mgl_contf3_xyz_val(gr, &v, &x, &y, &z, &a, dir, sVal, sch, opt);	}
-	inline void ContF3(const mglDataA &v, const mglDataA &a, char dir, float sVal=-1, const char *sch="", const char *opt="")
-	{	mgl_contf3_val(gr, &v, &a, dir, sVal, sch, opt);	}
-	inline void ContF3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, char dir, float sVal=-1, const char *sch="", const char *opt="")
-	{	mgl_contf3_xyz(gr, &x, &y, &z, &a, dir, sVal, sch, opt);	}
-	inline void ContF3(const mglDataA &a, char dir, float sVal=-1, const char *sch="", const char *opt="")
-	{	mgl_contf3(gr, &a, dir, sVal, sch, opt);	}
+	inline void ContF3(const mglDataA &v, const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	{	mgl_contf3_xyz_val(gr, &v, &x, &y, &z, &a, sch, sVal, opt);	}
+	inline void ContF3(const mglDataA &v, const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	{	mgl_contf3_val(gr, &v, &a, sch, sVal, opt);	}
+	inline void ContF3(const mglDataA &x, const mglDataA &y, const mglDataA &z, const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	{	mgl_contf3_xyz(gr, &x, &y, &z, &a, sch, sVal, opt);	}
+	inline void ContF3(const mglDataA &a, const char *sch="", float sVal=-1, const char *opt="")
+	{	mgl_contf3(gr, &a, sch, sVal, opt);	}
 
 	/// Draw several isosurfaces for 3d beam in curvilinear coordinates
 	inline void Beam(const mglDataA &tr, const mglDataA &g1, const mglDataA &g2, const mglDataA &a, float r, const char *stl=0, int flag=0, int num=3)

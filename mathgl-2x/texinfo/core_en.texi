@@ -1235,7 +1235,7 @@ Draw the circle with radius @var{r} and center at point @var{p}=@{@var{x0}, @var
 @deftypefnx {Method on @code{mglGraph}} @code{void} Ellipse (@code{mglPoint} p1, @code{mglPoint} p2, @code{float} r, @code{const char *}col=@code{"r"})
 @deftypefnx {C function} @code{void} mgl_ellipse (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2, @code{float} r, @code{const char *}col)
 @end ifclear
-Draw the ellipse with radius @var{r} and focal points @var{p1}, @var{p2} by color @var{col}. If @var{col} contain: @samp{#} then wire figure is drawn, @samp{@@} then boundary is drawn (by second color of @var{col} or by black). 
+Draw the ellipse with radius @var{r} and focal points @var{p1}, @var{p2} by color @var{col}. If @var{col} contain: @samp{#} then wire figure is drawn, @samp{@@} then boundary is drawn (by second color of @var{col} or by black).
 @end deftypefn
 
 @anchor{rhomb}
@@ -1658,7 +1658,7 @@ These functions draw boxplot (also known as a box-and-whisker diagram) at points
 @deftypefnx {C function} @code{void} mgl_candle_yv (@code{HMGL} gr, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_candle_xyv (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw candlestick chart at points @var{x}[i]. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. Wire (or white) candle correspond to price growth @var{v1}[i]<@var{v2}[i], opposite case -- solid (or dark) candle. "Shadows" show the minimal @var{y1} and maximal @var{y2} prices. If @var{v2} is absent then it is determined as @var{v2}[i]=@var{v1}[i+1]. See also @ref{plot}, @ref{bars}, @ref{barwidth}. 
+These functions draw candlestick chart at points @var{x}[i]. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. Wire (or white) candle correspond to price growth @var{v1}[i]<@var{v2}[i], opposite case -- solid (or dark) candle. "Shadows" show the minimal @var{y1} and maximal @var{y2} prices. If @var{v2} is absent then it is determined as @var{v2}[i]=@var{v1}[i+1]. See also @ref{plot}, @ref{bars}, @ref{barwidth}.
 @c TODO @sref{Candle sample}
 @end deftypefn
 
@@ -2006,77 +2006,77 @@ Draws @var{num}-th uniformly distributed in color range isosurfaces for 3d data.
 @deftypefnx {C function} @code{void} mgl_cloud (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_cloud_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws cloud plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). This plot is a set of cubes with color and transparency proportional to value of @var{a}. The resulting plot is like cloud -- low value is transparent but higher ones are not. The number of plotting cells depend on @ref{MeshNum}. If string @var{sch} contain symbol @samp{.} then lower quality plot will produced with much low memory usage. If string @var{sch} contain symbol @samp{-} then transparency will be inversed, i.e. higher become transparent and lower become not transparent. See also @ref{surf3}. @sref{Cloud sample}
+The function draws cloud plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). This plot is a set of cubes with color and transparency proportional to value of @var{a}. The resulting plot is like cloud -- low value is transparent but higher ones are not. The number of plotting cells depend on @ref{MeshNum}. If string @var{sch} contain symbol @samp{.} then lower quality plot will produced with much low memory usage. If string @var{sch} contain symbol @samp{!} then transparency will be inversed, i.e. higher become transparent and lower become not transparent. See also @ref{surf3}. @sref{Cloud sample}
 @end deftypefn
 
 @anchor{dens3}
-@deftypefn {MGL command} {} dens3 adat 'dir' [@code{sval=-1} 'sch'='']
-@deftypefnx {MGL command} {} dens3 xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='']
+@deftypefn {MGL command} {} dens3 adat ['sch'='' @code{sval=-1}]
+@deftypefnx {MGL command} {} dens3 xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Dens3 (@code{const mglData &}a, @code{char} dir, @code{float} sVal=@code{-1}, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Dens3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{char} dir, @code{float} sVal=@code{-1}, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_dens3 (@code{HMGL} gr, @code{HCDT} a, @code{char} dir, @code{float} sVal, @code{const char *}sch, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_dens3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{char} dir, @code{float} sVal, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Dens3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Dens3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_dens3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_dens3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
 @end ifclear
-The function draws density plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Density is plotted at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. If string @var{stl} have symbol @samp{#} then grid lines are drawn. See also @ref{cont3}, @ref{contf3}, @ref{dens}, @ref{grid3}. @sref{Dens3 sample}
+The function draws density plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Density is plotted at slice @var{sVal} in direction @{@samp{x}, @samp{y}, @samp{z}@} if @var{sch} contain corresponding symbol (by default, @samp{y} direction is used). If string @var{stl} have symbol @samp{#} then grid lines are drawn. See also @ref{cont3}, @ref{contf3}, @ref{dens}, @ref{grid3}. @sref{Dens3 sample}
 @end deftypefn
 
 @anchor{cont3}
-@deftypefn {MGL command} {} cont3 vdat adat 'dir' [@code{sval=-1} 'sch'='']
-@deftypefnx {MGL command} {} cont3 vdat xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='']
+@deftypefn {MGL command} {} cont3 vdat adat ['sch'='' @code{sval=-1}]
+@deftypefnx {MGL command} {} cont3 vdat xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}v, @code{const mglData &}a, @code{char} dir, @code{float} sVal=@code{-1}, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{char} dir, @code{float} sVal=@code{-1}, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_cont3_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{char} dir, @code{float} sVal, @code{const char *}sch, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_cont3_xyz_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{char} dir, @code{float} sVal, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_cont3_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_cont3_xyz_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
 @end ifclear
-The function draws contour plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Contours are plotted for values specified in array @var{v} at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. If string @var{stl} have symbol @samp{#} then grid lines are drawn. If string @var{stl} have symbol @samp{t} or @samp{T} then contour labels will be drawn below (or above) the contours. See also @ref{dens3}, @ref{contf3}, @ref{cont}, @ref{grid3}. @sref{Cont3 sample}
+The function draws contour plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Contours are plotted for values specified in array @var{v} at slice @var{sVal} in direction @{@samp{x}, @samp{y}, @samp{z}@} if @var{sch} contain corresponding symbol (by default, @samp{y} direction is used). If string @var{stl} have symbol @samp{#} then grid lines are drawn. If string @var{stl} have symbol @samp{t} or @samp{T} then contour labels will be drawn below (or above) the contours. See also @ref{dens3}, @ref{contf3}, @ref{cont}, @ref{grid3}. @sref{Cont3 sample}
 @end deftypefn
 
-@deftypefn {MGL command} {} cont3 adat 'dir' [@code{sval=-1} 'sch'='']
-@deftypefnx {MGL command} {} cont3 xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='']
+@deftypefn {MGL command} {} cont3 adat ['sch'='' @code{sval=-1}]
+@deftypefnx {MGL command} {} cont3 xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}a, @code{char} dir, @code{float} sVal=@code{-1}, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{char} dir, @code{float} sVal=@code{-1}, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_cont3 (@code{HMGL} gr, @code{HCDT} a, @code{char} dir, @code{float} sVal, @code{const char *}sch, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_cont3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{char} dir, @code{float} sVal, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Cont3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_cont3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_cont3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
 @end ifclear
 The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 7).
 @end deftypefn
 
 @anchor{contf3}
-@deftypefn {MGL command} {} contf3 vdat adat 'dir' [@code{sval=-1} 'sch'='']
-@deftypefnx {MGL command} {} contf3 vdat xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='']
+@deftypefn {MGL command} {} contf3 vdat adat ['sch'='' @code{sval=-1}]
+@deftypefnx {MGL command} {} contf3 vdat xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}v, @code{const mglData &}a, @code{char} dir, @code{float} sVal=@code{-1}, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{char} dir, @code{float} sVal=@code{-1}, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_contf3_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{char} dir, @code{float} sVal, @code{const char *}sch, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_contf3_xyz_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{char} dir, @code{float} sVal, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}v, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contf3_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contf3_xyz_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
 @end ifclear
-The function draws solid (or filled) contour plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Contours are plotted for values specified in array @var{v} at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. If string @var{stl} have symbol @samp{#} then grid lines are drawn. If string @var{stl} have symbol @samp{t} or @samp{T} then contour labels will be drawn below (or above) the contours. See also @ref{dens3}, @ref{cont3}, @ref{contf}, @ref{grid3}. @sref{Cont3 sample}
+The function draws solid (or filled) contour plot for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Contours are plotted for values specified in array @var{v} at slice @var{sVal} in direction @{@samp{x}, @samp{y}, @samp{z}@} if @var{sch} contain corresponding symbol (by default, @samp{y} direction is used). If string @var{stl} have symbol @samp{#} then grid lines are drawn. If string @var{stl} have symbol @samp{t} or @samp{T} then contour labels will be drawn below (or above) the contours. See also @ref{dens3}, @ref{cont3}, @ref{contf}, @ref{grid3}. @sref{Cont3 sample}
 @end deftypefn
 
-@deftypefn {MGL command} {} contf3 adat 'dir' [@code{sval=-1} 'sch'='']
-@deftypefnx {MGL command} {} contf3 xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='']
+@deftypefn {MGL command} {} contf3 adat ['sch'='' @code{sval=-1}]
+@deftypefnx {MGL command} {} contf3 xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}a, @code{char} dir, @code{float} sVal=@code{-1}, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{char} dir, @code{float} sVal=@code{-1}, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_contf3 (@code{HMGL} gr, @code{HCDT} a, @code{char} dir, @code{float} sVal, @code{const char *}sch, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_contf3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{char} dir, @code{float} sVal, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Contf3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contf3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contf3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
 @end ifclear
 The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 7).
 @end deftypefn
 
 @anchor{grid3}
-@deftypefn {MGL command} {} grid3 adat 'dir' [@code{sval=-1} 'sch'='']
-@deftypefnx {MGL command} {} grid3 xdat ydat zdat adat 'dir' [@code{sval=-1} 'sch'='']
+@deftypefn {MGL command} {} grid3 adat ['sch'='' @code{sval=-1}]
+@deftypefnx {MGL command} {} grid3 xdat ydat zdat adat ['sch'='' @code{sval=-1}]
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Grid3 (@code{const mglData &}a, @code{char} dir, @code{float} sVal=@code{-1}, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {Method on @code{mglGraph}} @code{void} Grid3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{char} dir, @code{float} sVal=@code{-1}, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
-@deftypefnx {C function} @code{void} mgl_grid3 (@code{HMGL} gr, @code{HCDT} a, @code{char} dir, @code{float} sVal, @code{const char *}sch, @code{const char *}opt)
-@deftypefnx {C function} @code{void} mgl_grid3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{char} dir, @code{float} sVal, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Grid3 (@code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} Grid3 (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const mglData &}a, @code{const char *}sch=@code{""}, @code{float} sVal=@code{-1}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_grid3 (@code{HMGL} gr, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_grid3_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} a, @code{const char *}sch, @code{float} sVal, @code{const char *}opt)
 @end ifclear
-The function draws grid for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Grid is plotted at slice @var{sVal} in @var{dir}=@{@samp{x}, @samp{y}, @samp{z}@} direction. See also @ref{cont3}, @ref{contf3}, @ref{dens3}, @ref{grid2}, @ref{meshnum}.
+The function draws grid for 3d data specified parametrically @var{a}[i,j,k](@var{x}[i,j,k], @var{y}[i,j,k], @var{z}[i,j,k]). Grid is plotted at slice @var{sVal} in direction @{@samp{x}, @samp{y}, @samp{z}@} if @var{sch} contain corresponding symbol (by default, @samp{y} direction is used). See also @ref{cont3}, @ref{contf3}, @ref{dens3}, @ref{grid2}, @ref{meshnum}.
 @end deftypefn
 
 @anchor{beam}
@@ -2248,7 +2248,7 @@ The function draws vectors @{@var{ax}, @var{ay}, @var{az}@} along a curve @{@var
 @deftypefnx {C function} @code{void} mgl_vect_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_vect_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z}=@var{Min}.z. The length and color of arrows are proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of arrows depend on @ref{meshnum}. Parameter @var{value} in options is bitwise flag for setup the hachures (arrows): @code{MGL_VEC_COL=1} for drawing bi-color arrow, @code{MGL_VEC_LEN=2} for drawing fixed length arrows, @code{MGL_VEC_END=4} for drawing arrows to the cell point, @code{MGL_VEC_MID=8} for drawing arrows with center at cell point, @code{MGL_VEC_DOT=16} for drawing hachures with dots instead of arrows, @code{MGL_VEC_GRD=32} for enabling color gradient along arrows. See also @ref{flow}, @ref{dew}. @sref{Vect sample}
+The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} depending parametrically on coordinates @var{x}, @var{y} at level @var{z}=@var{Min}.z. The length and color of arrows are proportional to @math{\sqrt@{ax^2+ay^2@}}. The number of arrows depend on @ref{meshnum}. The apperance of the hachures (arrows) can be changed by symbols: @samp{f} for drawing fixed length arrows, @samp{>}, @samp{<} for drawing arrows to or from the cell point (default is centering), @samp{.} for drawing hachures with dots instead of arrows, @samp{=} for enabling color gradient along arrows. See also @ref{flow}, @ref{dew}. @sref{Vect sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} vect udat vdat wdat ['sch'='']
@@ -2343,7 +2343,7 @@ The function draws gradient lines for scalar field @var{phi}[i,j,k] specified pa
 @deftypefnx {C function} @code{void} mgl_pipe_2d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{float} r0, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_pipe_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{float} r0, @code{const char *}opt)
 @end ifclear
-The function draws flow pipes for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level @var{z} = @var{Min}.z. Number of pipes is proportional to @var{value} option (default is 5). If @var{value}<0 then pipes start only from edges of axis range. The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). Parameter @var{r0} set the base pipe radius. If @var{r0}<0 then pipe radius is inverse proportional to amplitude. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{flow}, @ref{vect}. @sref{Pipe sample}
+The function draws flow pipes for the plane vector field @{@var{ax}, @var{ay}@} parametrically depending on coordinates @var{x}, @var{y} at level @var{z} = @var{Min}.z. Number of pipes is proportional to @var{value} option (default is 5). If @var{value}<0 then pipes start only from edges of axis range. The color of lines is proportional to @math{\sqrt@{ax^2+ay^2@}}. Warm color corresponds to normal flow (like attractor). Cold one corresponds to inverse flow (like source). Parameter @var{r0} set the base pipe radius. If @var{r0}<0 or symbol @samp{i} is specified then pipe radius is inverse proportional to amplitude. The size of @var{ax} and @var{ay} must be equal. The minor dimensions of arrays @var{x}, @var{y} and @var{ax} must be equal too. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{ax}). The vector field is plotted for each z slice of @var{ax}, @var{ay}. See also @ref{flow}, @ref{vect}. @sref{Pipe sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} pipe udat vdat wdat ['sch'='' @code{r0=0.05}]
