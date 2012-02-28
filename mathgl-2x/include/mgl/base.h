@@ -39,19 +39,19 @@
 class mglDataA
 {
 public:
-	virtual float v(long i,long j=0,long k=0) const = 0;
-	virtual float vthr(long i) const = 0;
+	virtual mreal v(long i,long j=0,long k=0) const = 0;
+	virtual mreal vthr(long i) const = 0;
 	virtual long GetNx() const = 0;
 	virtual long GetNy() const = 0;
 	virtual long GetNz() const = 0;
 	inline long GetNN() const {	return GetNx()*GetNy()*GetNz();	}
-	virtual float Maximal() const = 0;
-	virtual float Minimal() const = 0;
-	virtual float dvx(long i,long j=0,long k=0) const = 0;
+	virtual mreal Maximal() const = 0;
+	virtual mreal Minimal() const = 0;
+	virtual mreal dvx(long i,long j=0,long k=0) const = 0;
 //	{	return i>0 ? (i<GetNx()-1 ? (v(i+1,j,k)-v(i-1,j,k))/2 : v(i,j,k)-v(i-1,j,k)) : v(1,j,k)-v(0,j,k);	}
-	virtual float dvy(long i,long j=0,long k=0) const = 0;
+	virtual mreal dvy(long i,long j=0,long k=0) const = 0;
 //	{	return j>0 ? (j<GetNy()-1 ? (v(i,j+1,k)-v(i,j-1,k))/2 : v(i,j,k)-v(i,j-1,k)) : v(i,1,k)-v(i,0,k);	}
-	virtual float dvz(long i,long j=0,long k=0) const = 0;
+	virtual mreal dvz(long i,long j=0,long k=0) const = 0;
 //	{	return k>0 ? (k<GetNz()-1 ? (v(i,j,k+1)-v(i,j,k-1))/2 : v(i,j,k)-v(i,j,k-1)) : v(i,j,1)-v(i,j,0);	}
 };
 //-----------------------------------------------------------------------------
