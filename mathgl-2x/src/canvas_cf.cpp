@@ -99,18 +99,15 @@ void mgl_relplot(HMGL gr, float x1,float x2,float y1,float y2)
 //-----------------------------------------------------------------------------
 void mgl_columnplot(HMGL gr, int num, int i, float dd)
 {
-	float pf=_Gr_->GetPlotFactor();
-	float d = i/(num+pf-1), w = pf/(num+pf-1);
-	_Gr_->InPlot(0,1,d,d+w*(1-dd),true);
+	register float w = 1./num;
+	_Gr_->InPlot(0,1,1-w*(i+1-dd),1-i*w,true);
 }
 //-----------------------------------------------------------------------------
 void mgl_gridplot(HMGL gr, int nx, int ny, int i, float dd)
 {
-	int ix=i%nx, iy=i/nx;
-	float pf=_Gr_->GetPlotFactor();
-	float dx = ix/(nx+pf-1), wx = pf/(nx+pf-1);
-	float dy = iy/(ny+pf-1), wy = pf/(ny+pf-1);
-	_Gr_->InPlot(dx,dx+wx*(1-dd),dy,dy+wy*(1-dd),true);
+	register int ix=i%nx, iy=i/nx;
+	register float wx = 1./nx, wy = 1./ny;
+	_Gr_->InPlot(ix*wx,wx*(ix+1-dd),1-wy*(iy+1-dd),1-iy*wy,true);
 }
 //-----------------------------------------------------------------------------
 void mgl_stickplot(HMGL gr, int num, int i, float tet, float phi)
@@ -246,8 +243,8 @@ void mgl_set_tick_time(HMGL gr, char dir, float d, const char *t)
 void mgl_box(HMGL gr)	{	_Gr_->Box();	}
 void mgl_box_str(HMGL gr, const char *col, int ticks)
 {	_Gr_->Box(col,ticks);	}
-void mgl_axis(HMGL gr, const char *dir, int adj)
-{	_Gr_->Axis(dir,adj);	}
+void mgl_axis(HMGL gr, const char *dir, const char *stl)
+{	_Gr_->Axis(dir,stl);	}
 void mgl_axis_grid(HMGL gr, const char *dir,const char *pen)
 {	_Gr_->Grid(dir,pen);	}
 void mgl_label(HMGL gr, char dir, const char *text)
@@ -323,8 +320,10 @@ void mgl_box_(uintptr_t *gr)	{	_GR_->Box();	}
 void mgl_box_str_(uintptr_t *gr, const char *col, int *ticks, int l)
 {	char *s=new char[l+1];	memcpy(s,col,l);	s[l]=0;
 	_GR_->Box(s,*ticks);	delete []s;	}
-void mgl_axis_(uintptr_t *gr, const char *dir, int *adj,int l)
-{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;	_GR_->Axis(s,*adj);	delete []s;	}
+void mgl_axis_(uintptr_t *gr, const char *dir, const char *stl,int l,int n)
+{	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
+	char *p=new char[n+1];	memcpy(p,stl,l);	p[n]=0;
+	_GR_->Axis(s,p);	delete []s;	delete []p;	}
 void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,dir,l);	s[l]=0;
 	char *p=new char[n+1];	memcpy(p,pen,n);	p[n]=0;

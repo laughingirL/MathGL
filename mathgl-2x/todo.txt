@@ -9,7 +9,6 @@
 7. curved text (in new sample) look not so good
 8. emulate fog in EPS/SVG
 9. line segment losses in EPS ???
-10. adjust relative inplot!!!
 
 ============= NEW  =============
 
@@ -17,7 +16,7 @@
 2. Export to X3D and VRML
 3. Manual colors for text, boundary, background of Legend() (1st - text, 2nd - border, 3d - background)
 
-4. Samples: inverted axis, minus-log axis, many axis, Venn() diagram, Primitives, subplots (without border - GridPlot, MultiPlot, ZoomingPlot)
+4. Samples: minus-log axis, Venn() diagram, Primitives, Hist+MultiPlot, axis adjust
 
 ============= FOR V.2.1 ========
 

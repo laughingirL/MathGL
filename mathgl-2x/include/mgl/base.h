@@ -196,16 +196,16 @@ public:
 	void SetRanges(mglPoint v1, mglPoint v2);
 	/// Set values of mglGraph::Cmin and mglGraph::Cmax as minimal and maximal values of data a
 	void CRange(const mglDataA &a, bool add = false, float fact=0);
-	inline void CRange(float v1,float v2)	{	Min.c=v1;	Max.c=v2;	RecalcCRange();	}
+	inline void CRange(float v1,float v2)	{	if(v1!=v2)	{Min.c=v1;	Max.c=v2;	RecalcCRange();}	}
 	/// Set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
 	void XRange(const mglDataA &a, bool add = false, float fact=0);
-	inline void XRange(float v1,float v2)	{	Min.x=v1;	Max.x=v2;	RecalcBorder();	}
+	inline void XRange(float v1,float v2)	{	if(v1!=v2)	{Min.x=v1;	Max.x=v2;	RecalcBorder();}	}
 	/// Set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
 	void YRange(const mglDataA &a, bool add = false, float fact=0);
-	inline void YRange(float v1,float v2)	{	Min.y=v1;	Max.y=v2;	RecalcBorder();	}
+	inline void YRange(float v1,float v2)	{	if(v1!=v2)	{Min.y=v1;	Max.y=v2;	RecalcBorder();}	}
 	/// Set values of mglGraph::Min.x and mglGraph::Max.x as minimal and maximal values of data a
 	void ZRange(const mglDataA &a, bool add = false, float fact=0);
-	inline void ZRange(float v1,float v2)	{	Min.z=v1;	Max.z=v2;	RecalcBorder();	}
+	inline void ZRange(float v1,float v2)	{	if(v1!=v2)	{Min.z=v1;	Max.z=v2;	RecalcBorder();}	}
 	/// Set ranges for automatic variables
 	void SetAutoRanges(float x1, float x2, float y1=0, float y2=0, float z1=0, float z2=0, float c1=0, float c2=0);
 	/// Set axis origin

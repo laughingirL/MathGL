@@ -417,9 +417,9 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 	{
 		B.x = B1.x + (x1+x2-1)/2*B1.b[0]/1.55;
 		B.y = B1.y + (y1+y2-1)/2*B1.b[4]/1.55;
-		B.b[0] = B1.b[0]*(x2-x1)/1.55;	B.b[4] = B1.b[4]*(y2-y1)/1.55;
-		B.b[8] = sqrt(B.b[0]*B.b[4])/1.55;
-		B.z = B1.z + (1.f-B.b[8]/(2*Depth))*B1.b[8]/1.55;
+		B.b[0] = B1.b[0]*(x2-x1);	B.b[4] = B1.b[4]*(y2-y1);
+		B.b[8] = sqrt(B.b[0]*B.b[4]);
+		B.z = B1.z + (1.f-B.b[8]/(2*Depth))*B1.b[8];
 	}
 	else
 	{
@@ -439,22 +439,23 @@ void mglCanvas::InPlot(float x1,float x2,float y1,float y2, bool rel)
 //-----------------------------------------------------------------------------
 void mglCanvas::StickPlot(int num, int id, float tet, float phi)
 {
-	float dx,dy,w0,h0;
+	float dx,dy,wx,wy,x1,y1,f1,f2;
 	mglPoint p1(-1,0,0), p2(1,0,0);
+	// first iteration
 	InPlot(0,1,0,1,true);	Rotate(tet, phi);
-	PostScale(p1);	PostScale(p2);
-	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/inW);	dx=(p2.x-p1.x)*w0/inW;
-	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/inH);	dy=(p2.y-p1.y)*h0/inH;
-
-	p1 = mglPoint(-1,0,0);	p2 = mglPoint(1,0,0);
-	InPlot(dx>0?0:1-w0, dx>0?w0:1, dy>0?0:1-h0, dy>0?h0:1, true);
-	Rotate(tet,phi);	PostScale(p1);	PostScale(p2);
-	w0=1/(1+(num-1)*fabs(p2.x-p1.x)/inW);	dx=(p2.x-p1.x)*w0/inW;
-	h0=1/(1+(num-1)*fabs(p2.y-p1.y)/inH);	dy=(p2.y-p1.y)*h0/inH;
-
-	float x1=dx>0?dx*id:1-w0+dx*id, x2=dx>0?w0+dx*id:1+dx*id;
-	float y1=dy>0?dy*id:1-h0+dy*id, y2=dy>0?h0+dy*id:1+dy*id;
-	InPlot(x1, x2, y1, y2, true);	Rotate(tet,phi);
+	PostScale(p1);	PostScale(p2);	f1 = B.pf;
+	dx=(p2.x-p1.x)*1.55/B1.b[0];	dy=(p2.y-p1.y)*1.55/B1.b[4];
+	wx=1/(1+(num-1)*fabs(dx));		wy=1/(1+(num-1)*fabs(dy));
+	x1=dx>0?dx*id:dx*(id-num+1);	y1=dy>0?dy*id:dy*(id-num+1);
+	InPlot(x1*wx,(x1+1)*wx,y1*wy,(y1+1)*wy,true);	Rotate(tet,phi);
+	f2 = B.pf;	dx*=f1/f2;	dy*=f1/f2;	// add correction due to PlotFactor
+	wx=1/(1+(num-1)*fabs(dx));		wy=1/(1+(num-1)*fabs(dy));
+	x1=dx>0?dx*id:dx*(id-num+1);	y1=dy>0?dy*id:dy*(id-num+1);
+	InPlot(x1*wx,(x1+1)*wx,y1*wy,(y1+1)*wy,true);	Rotate(tet,phi);
+	f1=f2;	f2 = B.pf;	dx*=f1/f2;	dy*=f1/f2;	// add correction due to PlotFactor
+	wx=1/(1+(num-1)*fabs(dx));		wy=1/(1+(num-1)*fabs(dy));
+	x1=dx>0?dx*id:dx*(id-num+1);	y1=dy>0?dy*id:dy*(id-num+1);
+	InPlot(x1*wx,(x1+1)*wx,y1*wy,(y1+1)*wy,true);	Rotate(tet,phi);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Rotate(float tetz,float tetx,float tety)
@@ -766,10 +767,7 @@ void mglCanvas::Title(const wchar_t *title,const char *stl,float size)
 		line_plot(k1,k2);	line_plot(k2,k4);
 		line_plot(k4,k3);	line_plot(k3,k1);
 	}
-
-	B.clear();	B=B1;
-	B.y = B1.y - h/2;
-	B.b[4] = B1.b[4]-h;
+	B1.y -= h/2;	B1.b[4] -= h;	B=B1;
 	inH-=h;	font_factor = B.b[0] < B.b[4] ? B.b[0] : B.b[4];
 }
 //-----------------------------------------------------------------------------

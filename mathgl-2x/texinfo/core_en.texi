@@ -1338,12 +1338,12 @@ The function draws @var{text} along the curve between points @{@var{x}[i], @var{
 These functions draw the ``things for measuring'', like axis with ticks, colorbar with ticks, grid along axis, bounding box and labels for axis. For more information @pxref{Axis settings}.
 
 @anchor{axis}
-@deftypefn {MGL command} {} axis ['dir'='xyz' @code{adjust=off}]
+@deftypefn {MGL command} {} axis ['dir'='xyz' 'stl'='']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Axis (@code{const char *}dir=@code{"xyz"}, @code{bool} adjust=@code{false})
-@deftypefnx {C function} @code{void} mgl_axis (@code{HMGL} gr, @code{const char *}dir, @code{int} adjust)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Axis (@code{const char *}dir=@code{"xyz"}, @code{const char *}stl=@code{""})
+@deftypefnx {C function} @code{void} mgl_axis (@code{HMGL} gr, @code{const char *}dir, @code{const char *}stl)
 @end ifclear
-Draws axes with ticks (@pxref{Axis settings}) in directions determined by string parameter @var{dir}.If string contain the symbol @samp{_} then tick labels are not printed. Font for ticks labels is determined by @var{FontDef} (@pxref{Font settings}). Ticks will be adjusted if @var{adjust}=@code{true} (by call of @code{AdjustTicks()}). You can specified an arrow at the end of axis (see @pxref{Line styles})
+Draws axes with ticks (@pxref{Axis settings}) in directions determined by string parameter @var{dir}.If string contain the symbol @samp{_} then tick labels are not printed. Font for ticks labels is determined by @var{FontDef} (@pxref{Font settings}). Ticks will be adjusted if @var{stl} contain @samp{a} (by call of @code{AdjustTicks()}). You can specified an arrow at the end of axis (see @pxref{Line styles}). Styles of ticks and axis can be overrided by using @var{stl} string.
 @end deftypefn
 
 @anchor{colorbar}

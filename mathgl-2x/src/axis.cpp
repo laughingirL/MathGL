@@ -394,7 +394,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Axis(const char *dir, bool adjust, const char *stl)
+void mglCanvas::Axis(const char *dir, const char *stl)
 {
 	if(!dir || !dir[0])	return;
 	bool text = !strchr(dir,'_');
@@ -402,6 +402,7 @@ void mglCanvas::Axis(const char *dir, bool adjust, const char *stl)
 	char arr=0;
 	for(unsigned i=0;i<strlen(ar);i++)
 		if(strchr(dir,ar[i]))	{	arr=ar[i];	break;	}
+	bool adjust = stl && strchr(stl,'a');
 
 	AdjustTicks(dir,adjust);
 	// TODO: Ternary axis labeling ...
@@ -431,7 +432,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 	mglPoint av=(Min+Max)/2, dv,da,db, p;
 	dv = mglPoint(sign(av.x-o.x), sign(av.y-o.y), sign(av.z-o.z));
 	da = aa.a*(dv*aa.a);	db = aa.b*(dv*aa.b);
-	SetPenPal(stl && *stl ? stl:AxisStl);
+	SetPenPal((stl && *stl) ? stl:AxisStl);		// TODO using something like HaveColor()
 
 	register long i,j,k1,k2;
 	p = o + d*aa.v1;	k1 = AddPnt(p,CDef,q,-1,3);
@@ -453,7 +454,9 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 	if(k2>0)	for(i=0;i<k2;i++)
 	{
 		v = aa.txt[i].val;	u = fabs(v);
-		tick_draw(o+d*v, da, db, 0, stl);
+		char ch=aa.txt[i].text[0];	// manually exclude factors
+		if(isalnum(ch) || ch=='-')	tick_draw(o+d*v, da, db, 0, stl);
+		else	tick_draw(o+d*v, da, db, 0, " ");
 		if(aa.dv==0 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
 			for(j=2;j<10 && v*j<aa.v2;j++)	tick_draw(o+d*(v*j),da,db,1,stl);
 	}
@@ -517,7 +520,7 @@ void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const cha
 {
 	if(TickLen==0)	return;
 	// try to exclude ticks out of axis range
-	if((o.x-Min.x)*(o.x-Max.x)>0 || (o.y-Min.y)*(o.y-Max.y)>0 || (o.z-Min.z)*(o.z-Max.z)>0)
+	if(f && ((o.x-Min.x)*(o.x-Max.x)>0 || (o.y-Min.y)*(o.y-Max.y)>0 || (o.z-Min.z)*(o.z-Max.z)>0))
 		return;
 	float v = font_factor*TickLen/sqrt(1+f*st_t);
 	mglPoint p=o;

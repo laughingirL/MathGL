@@ -304,14 +304,18 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
 //-----------------------------------------------------------------------------
 void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 {
-	if(m1.x<m2.x)	{	Min.x=m1.x;	Max.x = m2.x;	}
-	if(m1.x>m2.x)	{	Min.x=m2.x;	Max.x = m1.x;	}
-	if(m1.y<m2.y)	{	Min.y=m1.y;	Max.y = m2.y;	}
-	if(m1.y>m2.y)	{	Min.y=m2.y;	Max.y = m1.y;	}
-	if(m1.z<m2.z)	{	Min.z=m1.z;	Max.z = m2.z;	}
-	if(m1.z>m2.z)	{	Min.z=m2.z;	Max.z = m1.z;	}
-	if(m1.c<m2.c)	{	Min.c=m1.c;	Max.c = m2.c;	}
-	if(m1.c>m2.c)	{	Min.c=m2.c;	Max.c = m1.c;	}
+	if(m1.x!=m2.x)	{	Min.x=m1.x;	Max.x=m2.x;	}
+	if(m1.y!=m2.y)	{	Min.y=m1.y;	Max.y=m2.y;	}
+	if(m1.z!=m2.z)	{	Min.z=m1.z;	Max.z=m2.z;	}
+	if(m1.c!=m2.c)	{	Min.c=m1.c;	Max.c=m2.c;	}
+// 	if(m1.x<m2.x)	{	Min.x=m1.x;	Max.x = m2.x;	}
+// 	if(m1.x>m2.x)	{	Min.x=m2.x;	Max.x = m1.x;	}
+// 	if(m1.y<m2.y)	{	Min.y=m1.y;	Max.y = m2.y;	}
+// 	if(m1.y>m2.y)	{	Min.y=m2.y;	Max.y = m1.y;	}
+// 	if(m1.z<m2.z)	{	Min.z=m1.z;	Max.z = m2.z;	}
+// 	if(m1.z>m2.z)	{	Min.z=m2.z;	Max.z = m1.z;	}
+// 	if(m1.c<m2.c)	{	Min.c=m1.c;	Max.c = m2.c;	}
+// 	if(m1.c>m2.c)	{	Min.c=m2.c;	Max.c = m1.c;	}
 	if(Min.c==Max.c)	{	Min.c=Min.z;	Max.c=Max.z;	}
 //	if(AutoOrg)
 	{

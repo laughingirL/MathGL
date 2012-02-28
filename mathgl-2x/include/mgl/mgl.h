@@ -480,8 +480,8 @@ public:
 	inline void Box(const char *col="k", bool ticks=true)
 	{	mgl_box_str(gr, col, ticks);	}
 	/// Draw axises with ticks in directions determined by string parameter \a dir.
-	inline void Axis(const char *dir="xyzt", bool adjust=false)
-	{	mgl_axis(gr, dir,adjust);	}
+	inline void Axis(const char *dir="xyzt", const char *stl="")
+	{	mgl_axis(gr, dir,stl);	}
 	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
 	inline void Grid(const char *dir="xyzt",const char *pen="B")
 	{	mgl_axis_grid(gr, dir, pen);	}

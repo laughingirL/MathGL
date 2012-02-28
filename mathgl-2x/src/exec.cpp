@@ -138,7 +138,7 @@ void mglc_axial(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 int mgls_axis(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==2 && k[1]==2)	gr->SetFunc(a[0].s.c_str(),a[1].s.c_str(),k[2]==2?a[2].s.c_str():"",k[3]==2?a[3].s.c_str():"");
-	else if(k[0]==2)	gr->Axis(a[0].s.c_str(), k[1]==3 && a[1].v!=0);
+	else if(k[0]==2)	gr->Axis(a[0].s.c_str(), k[1]==2?a[1].s.c_str():"");
 	else if(k[0]==3)	gr->SetCoor(iint(a[0].v));
 	else if(k[0]==0)	gr->Axis("xyz");
 	else return 1;
@@ -148,7 +148,7 @@ void mglc_axis(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==2 && k[1]==2 && k[2]==2)
 		mglprintf(out,1024,L"gr->SetFunc(\"%s\", \"%s\", \"%s\", \"%s\");", a[0].s.c_str(),a[1].s.c_str(),a[2].s.c_str(),k[2]==2?a[2].s.c_str():"",k[3]==2?a[3].s.c_str():"");
-	else if(k[0]==2)	mglprintf(out,1024,L"gr->Axis(\"%s\");", a[0].s.c_str());
+	else if(k[0]==2)	mglprintf(out,1024,L"gr->Axis(\"%s\", \"%s\");", a[0].s.c_str(), k[1]==2?a[1].s.c_str():"");
 	else if(k[0]==3)	mglprintf(out,1024,L"gr->SetCoor(\"%d\");", iint(a[0].v));
 	else if(k[0]==0)	mglprintf(out,1024,L"gr->Axis(\"xyz\");");
 }

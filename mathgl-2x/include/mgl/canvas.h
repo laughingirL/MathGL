@@ -38,6 +38,8 @@ struct mglMatrix
 	float x,y,z,pf;
 	mglMatrix()	{	clear();	}
 	inline void clear()	{	x=y=z=pf=0;	memset(b,0,9*sizeof(float));	b[0]=b[4]=b[8]=1;	}
+	inline mglMatrix &operator=(mglMatrix &a)
+	{	x=a.x;	y=a.y;	z=a.z;	pf=a.pf;	memcpy(b,a.b,9*sizeof(float));	return *this;	}
 };
 //-----------------------------------------------------------------------------
 /// Structure for drawing axis and ticks
@@ -248,7 +250,7 @@ using mglBase::Light;
 	/// Draws bounding box outside the plotting volume with color \a c.
 	void Box(const char *col=0, bool ticks=true);
 	/// Draw axises with ticks in directions determined by string parameter \a dir.
-	void Axis(const char *dir="xyzt", bool adjust=false, const char *stl="");
+	void Axis(const char *dir="xyzt", const char *stl="");
 	/// Draw grid lines perpendicular to direction determined by string parameter \a dir.
 	void Grid(const char *dir="xyzt",const char *pen="B-");
 	/// Print the label \a text for axis \a dir.

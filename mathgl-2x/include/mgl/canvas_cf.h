@@ -47,7 +47,7 @@ void mgl_set_tick_time(HMGL gr, char dir, float d, const char *t);
 
 void mgl_box(HMGL graph);
 void mgl_box_str(HMGL gr, const char *col, int ticks);
-void mgl_axis(HMGL gr, const char *dir, int adj);
+void mgl_axis(HMGL gr, const char *dir, const char *stl);
 void mgl_axis_grid(HMGL gr, const char *dir,const char *pen);
 void mgl_label(HMGL gr, char dir, const char *text);
 void mgl_label_ext(HMGL gr, char dir, const char *text, float pos, float shift);
@@ -159,7 +159,7 @@ void mgl_set_tick_templ_(uintptr_t *gr, const char *dir, const char *templ,int,i
 void mgl_set_tick_time_(uintptr_t *gr, const char *dir, float *d, const char *t,int,int l);
 void mgl_box_(uintptr_t *gr);
 void mgl_box_str_(uintptr_t *gr, const char *col, int *ticks, int l);
-void mgl_axis_(uintptr_t *gr, const char *dir, int *adj,int l);
+void mgl_axis_(uintptr_t *gr, const char *dir, const char *stl,int,int);
 void mgl_axis_grid_(uintptr_t *gr, const char *dir,const char *pen,int l,int n);
 void mgl_label_(uintptr_t *gr, const char *dir, const char *text,int,int l);
 void mgl_label_ext_(uintptr_t *gr, const char *dir, const char *text, float *pos, float *shift,int,int l);

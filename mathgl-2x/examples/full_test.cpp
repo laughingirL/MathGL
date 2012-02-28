@@ -46,22 +46,21 @@ int srnd = 0;
 //-----------------------------------------------------------------------------
 void test(mglGraph *gr)
 {
-	gr->SubPlot(3,2,0);	gr->Title("StickPlot");	// NOTE not finished!!!
-	gr->StickPlot(3, 0, 50, 10);	gr->Box("r");	gr->Puts(mglPoint(0),"0","r");
-	gr->StickPlot(3, 1, 50, 10);	gr->Box("g");	gr->Puts(mglPoint(0),"1","g");
-	gr->StickPlot(3, 2, 50, 10);	gr->Box("b");	gr->Puts(mglPoint(0),"2","b");
-	gr->SubPlot(3,2,3);	gr->Title("ColumnPlot");
-	gr->ColumnPlot(3, 0);	gr->Box("r");	gr->Puts(mglPoint(0),"0","r");
-	gr->ColumnPlot(3, 1);	gr->Box("g");	gr->Puts(mglPoint(0),"1","g");
-	gr->ColumnPlot(3, 2);	gr->Box("b");	gr->Puts(mglPoint(0),"2","b");
-	gr->SubPlot(3,2,4);	gr->Title("GridPlot");
-	gr->GridPlot(2, 2, 0);	gr->Box("r");	gr->Puts(mglPoint(0),"0","r");
-	gr->GridPlot(2, 2, 1);	gr->Box("g");	gr->Puts(mglPoint(0),"1","g");
-	gr->GridPlot(2, 2, 2);	gr->Box("b");	gr->Puts(mglPoint(0),"2","b");
-	gr->GridPlot(2, 2, 3);	gr->Box("k");	gr->Puts(mglPoint(0),"3","k");
-	gr->SubPlot(3,2,5,"");	gr->Title("InPlot");	gr->Box();
-	gr->InPlot(0.5, 1, 0.5, 1, true);	gr->Box("r");
-	gr->MultiPlot(3,2,1, 2, 1);	gr->Title("MultiPlot");	gr->Box();
+	gr->SubPlot(3,2,0,"");	gr->Title("Usual axis");	gr->Axis();	// NOTE final
+	gr->SubPlot(3,2,2,"");	gr->Title("Too big/small range");
+	gr->SetRanges(-100,100,0,0.001);	gr->Axis();
+	gr->SubPlot(3,2,3,"");	gr->Title("Too narrow range");
+	gr->SetRanges(100,100.1,10,10.001);	gr->Axis();
+	gr->SubPlot(3,2,4,"");	gr->Title("Disable factors");	gr->SetTickTempl('x',"%g");
+	gr->SetRanges(100,100.1,10,10.001);	gr->Axis();
+
+	gr->SubPlot(3,2,1,"");	gr->Title("Manual ticks");	gr->SetRanges(-M_PI,M_PI, 0, 2);
+	float val[]={-M_PI, -M_PI/2, 0, 0.886, M_PI/2, M_PI};
+	gr->SetTicksVal('x', mglData(6,val), "-\\pi\n-\\pi/2\n\n0\nx^*\n\\pi/2\n\\pi");
+	gr->Axis();	gr->Grid();	gr->FPlot("2*cos(x^2)^2", "r2");
+
+	gr->SubPlot(3,2,5,"");	gr->Title("Time ticks");	gr->SetRange('x',0,1e5);
+	gr->SetTickTime('x',3600);	gr->Axis();
 }
 //-----------------------------------------------------------------------------
 //		Sample functions (v.2.*0)
@@ -1070,19 +1069,6 @@ void smgl_cut(mglGraph *gr)	// cutting
 	gr->Box();	gr->Surf3(c);	gr->CutOff("");	// switch it off
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_cutbox="new v 10:fill v -0.5 1:title 'CutBox sample':rotate 50 60:light on\n"
-"box:contf3 v c 'z' 0:contf3 v c 'x':contf3 v c\ncut 0 -1 -1 1 0 1.1\ncontf3 v c 'z' c.nz-1:surf3 -0.5 c\n";
-void smgl_cutbox(mglGraph *gr)	// CutMin CutMax example
-{
-	mglData c;	mgls_prepare3d(&c);
-	mglData v(10);	v.Fill(-0.5,1);
-	if(!mini)	gr->Title("CutBox sample");
-	gr->Rotate(50,60);	gr->Light(true);
-	gr->Box();	gr->ContF3(v,c,"z",0);	gr->ContF3(v,c,"x");	gr->ContF3(v,c);
-	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
-	gr->ContF3(v,c,"z",c.nz-1);	gr->Surf3(-0.5,c);
-}
-//-----------------------------------------------------------------------------
 const char *mmgl_traj="subplot 1 1 0 '':title 'Traj plot':box:plot x y:traj x y y1 y2\n";
 void smgl_traj(mglGraph *gr)
 {
@@ -1346,6 +1332,94 @@ void smgl_aspect(mglGraph *gr)	// transformation
 	gr->Rotate(50,60);	gr->Aspect(1,2,2);	gr->Box();
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_inplot="subplot 3 2 0:title 'StickPlot'\nstickplot 3 0 20 30:box 'r':text 0 0 '0' 'r'\n"
+"stickplot 3 1 20 30:box 'g':text 0 0 '1' 'g'\nstickplot 3 2 20 30:box 'b':text 0 0 '2' 'b'\n"
+"subplot 3 2 3 '':title 'ColumnPlot'\ncolumnplot 3 0:box 'r':text 0 0 '0' 'r'\n"
+"columnplot 3 1:box 'g':text 0 0 '1' 'g'\ncolumnplot 3 2:box 'b':text 0 0 '2' 'b'\n"
+"subplot 3 2 4 '':title 'GridPlot'\ngridplot 2 2 0:box 'r':text 0 0 '0' 'r'\n"
+"gridplot 2 2 1:box 'g':text 0 0 '1' 'g'\ngridplot 2 2 2:box 'b':text 0 0 '2' 'b'\n"
+"gridplot 2 2 3:box 'm':text 0 0 '3' 'm'\nsubplot 3 2 5 '':title 'InPlot':box\n"
+"inplot 0.4 1 0.6 1 on:box 'r'\nmultiplot 3 2 1 2 1 '':title 'MultiPlot':box\n";
+void smgl_inplot(mglGraph *gr)
+{
+	gr->SubPlot(3,2,0);	gr->Title("StickPlot");
+	gr->StickPlot(3, 0, 20, 30);	gr->Box("r");	gr->Puts(mglPoint(0),"0","r");
+	gr->StickPlot(3, 1, 20, 30);	gr->Box("g");	gr->Puts(mglPoint(0),"1","g");
+	gr->StickPlot(3, 2, 20, 30);	gr->Box("b");	gr->Puts(mglPoint(0),"2","b");
+	gr->SubPlot(3,2,3,"");	gr->Title("ColumnPlot");
+	gr->ColumnPlot(3, 0);	gr->Box("r");	gr->Puts(mglPoint(0),"0","r");
+	gr->ColumnPlot(3, 1);	gr->Box("g");	gr->Puts(mglPoint(0),"1","g");
+	gr->ColumnPlot(3, 2);	gr->Box("b");	gr->Puts(mglPoint(0),"2","b");
+	gr->SubPlot(3,2,4,"");	gr->Title("GridPlot");
+	gr->GridPlot(2, 2, 0);	gr->Box("r");	gr->Puts(mglPoint(0),"0","r");
+	gr->GridPlot(2, 2, 1);	gr->Box("g");	gr->Puts(mglPoint(0),"1","g");
+	gr->GridPlot(2, 2, 2);	gr->Box("b");	gr->Puts(mglPoint(0),"2","b");
+	gr->GridPlot(2, 2, 3);	gr->Box("m");	gr->Puts(mglPoint(0),"3","m");
+	gr->SubPlot(3,2,5,"");	gr->Title("InPlot");	gr->Box();
+	gr->InPlot(0.4, 1, 0.6, 1, true);	gr->Box("r");
+	gr->MultiPlot(3,2,1, 2, 1,"");	gr->Title("MultiPlot");	gr->Box();
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_combined="new v 10:fill v -0.5 1:copy d sqrt(a^2+b^2)\n"
+"subplot 2 2 0:title 'Surf + Cont':rotate 50 60:light on:box:surf a:cont a 'y'\n"
+"subplot 2 2 1 '':title 'Flow + Dens':box:flow a b 'br':dens d\n"
+"subplot 2 2 2:title 'Mesh + Cont':rotate 50 60:box:mesh a:cont a '_'\n"
+"subplot 2 2 3:title 'Surf3 + ContF3':rotate 50 60:light on\n"
+"box:contf3 v c 'z' 0:contf3 v c 'x':contf3 v c\ncut 0 -1 -1 1 0 1.1\ncontf3 v c 'z' c.nz-1:surf3 -0.5 c\n";
+void smgl_combined(mglGraph *gr)	// flow threads and density plot
+{
+	mglData a,b,d;	mgls_prepare2v(&a,&b);	d = a;
+	for(int i=0;i<a.nx*a.ny;i++)	d.a[i] = hypot(a.a[i],b.a[i]);
+	mglData c;	mgls_prepare3d(&c);
+	mglData v(10);	v.Fill(-0.5,1);
+	gr->SubPlot(2,2,1,"");	gr->Title("Flow + Dens");
+	gr->Flow(a,b,"br");	gr->Dens(d,"BbcyrR");	gr->Box();
+	gr->SubPlot(2,2,0);	gr->Title("Surf + Cont");	gr->Rotate(50,60);
+	gr->Light(true);	gr->Surf(a);	gr->Cont(a,"y");	gr->Box();
+	gr->SubPlot(2,2,2);	gr->Title("Mesh + Cont");	gr->Rotate(50,60);
+	gr->Box();	gr->Mesh(a);	gr->Cont(a,"_");
+	gr->SubPlot(2,2,3);	gr->Title("Surf3 + ContF3");gr->Rotate(50,60);
+	gr->Box();	gr->ContF3(v,c,"z",0);	gr->ContF3(v,c,"x");	gr->ContF3(v,c);
+	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
+	gr->ContF3(v,c,"z",c.nz-1);	gr->Surf3(-0.5,c);
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_axis="subplot 2 2 0:title 'Axis origin, Grid':origin 0 0:axis:grid:fplot 'x^3'\n"
+"subplot 2 2 1:title '2 axis':ranges -1 1 -1 1:origin -1 -1:axis:ylabel 'axis_1':fplot 'sin(pi*x)'\n"
+"ranges 0 1 0 1:origin 1 1:axis:ylabel 'axis_2':fplot 'cos(pi*x)'\n"
+"subplot 2 2 3:title 'More axis':origin nan nan:xrange -1 1:axis:xlabel 'x':ylabel 'y':fplot 'x^2' 'k'\n"
+"yrange -1 1:origin -1.3 -1:axis 'y' 'r':ylabel '#r{y_2}' 0.2:fplot 'x^3' 'r'\n\n"
+"subplot 2 2 2:title '4 segments, inverted axis':origin 0 0:\n"
+"inplot 0.5 1 0.5 1:ranges 0 10 0 2:axis\nfplot 'sqrt(x/2)':xlabel 'W' 1:ylabel 'U' 1\n"
+"inplot 0 0.5 0.5 1:ranges 1 0 0 2:axis 'x':fplot 'sqrt(x)+x^3':xlabel '\\tau' 1\n"
+"inplot 0.5 1 0 0.5:ranges 0 10 4 0:axis 'y':fplot 'x/4':ylabel 'L' -1\n"
+"inplot 0 0.5 0 0.5:ranges 1 0 4 0:fplot '4*x^2'\n";
+void smgl_axis(mglGraph *gr)
+{
+	gr->SubPlot(2,2,0);	gr->Title("Axis origin, Grid");	gr->SetOrigin(0,0);
+	gr->Axis();	gr->Grid();	gr->FPlot("x^3");
+
+	gr->SubPlot(2,2,1);	gr->Title("2 axis");
+	gr->SetRanges(-1,1,-1,1);	gr->SetOrigin(-1,-1,-1);	// first axis
+	gr->Axis();	gr->Label('y',"axis 1",0);	gr->FPlot("sin(pi*x)");
+	gr->SetRanges(0,1,0,1);		gr->SetOrigin(1,1,1);		// second axis
+	gr->Axis();	gr->Label('y',"axis 2",0);	gr->FPlot("cos(pi*x)");
+
+	gr->SubPlot(2,2,3);	gr->Title("More axis");	gr->SetOrigin(NAN,NAN);	gr->SetRange('x',-1,1);
+	gr->Axis();	gr->Label('x',"x",0);	gr->Label('y',"y_1",0);	gr->FPlot("x^2","k");
+	gr->SetRanges(-1,1,-1,1);	gr->SetOrigin(-1.3,-1);	// second axis
+	gr->Axis("y","r");	gr->Label('y',"#r{y_2}",0.2);	gr->FPlot("x^3","r");
+
+	gr->SubPlot(2,2,2);	gr->Title("4 segments, inverted axis");		gr->SetOrigin(0,0);
+	gr->InPlot(0.5,1,0.5,1);	gr->SetRanges(0,10,0,2);	gr->Axis();
+	gr->FPlot("sqrt(x/2)");		gr->Label('x',"W",1);	gr->Label('y',"U",1);
+	gr->InPlot(0,0.5,0.5,1);	gr->SetRanges(1,0,0,2);	gr->Axis("x");
+	gr->FPlot("sqrt(x)+x^3");	gr->Label('x',"\\tau",-1);
+	gr->InPlot(0.5,1,0,0.5);	gr->SetRanges(0,10,4,0);	gr->Axis("y");
+	gr->FPlot("x/4");	gr->Label('y',"L",-1);
+	gr->InPlot(0,0.5,0,0.5);	gr->SetRanges(1,0,4,0);	gr->FPlot("4*x^2");
+}
+//-----------------------------------------------------------------------------
 void smgl_dat_diff(mglGraph *gr)	// differentiate
 {
 	mglData a(30,40);	a.Modify("x*y");
@@ -1364,7 +1438,33 @@ void smgl_dat_diff(mglGraph *gr)	// differentiate
 	gr->Puts(mglPoint(0.7,1,1.2),"\\int {d^2}a/dxdy dx");
 }
 //-----------------------------------------------------------------------------
+void smgl_semilog(mglGraph *gr)	// semi-log axis
+{
+	mglData x(2000), y(2000);
+	x.Modify("0.01/(x+10^(-5))"); y.Modify("sin(1/v)",x);
 
+	gr->SetRanges(mglPoint(0.01,-1),mglPoint(1000,1));
+	gr->SetFunc("lg(x)",0,0); gr->SetTicks('x', 0);	gr->Box();
+	gr->Plot(x,y,"b2");
+	gr->Axis(); gr->Grid("xy","g");
+	gr->Label('x',"x",0); gr->Label('y', "y = sin 1/x",0);
+}
+//-----------------------------------------------------------------------------
+void smgl_loglog(mglGraph *gr)	// log-log axis
+{
+	mglData x(2000), y(2000);
+	x.Modify("pow(10,6*x-3)"); y.Modify("sqrt(1+v^2)",x);
+
+	gr->SetRanges(mglPoint(0.001,0.1),mglPoint(1000,1000));
+	gr->SetFunc("lg(x)","lg(y)",0);
+	gr->SetTicks('x', 0);
+	gr->SetTicks('y', 0);
+	gr->Box();	gr->Axis(); gr->Grid("xy","g;");
+	gr->Plot(x,y,"b2");
+	gr->Label('x',"x",0); gr->Label('y', "y=\\sqrt{1+x^2}",0);
+}
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -1375,46 +1475,6 @@ void smgl_dat_diff(mglGraph *gr)	// differentiate
 //-----------------------------------------------------------------------------
 //		Sample functions
 //-----------------------------------------------------------------------------
-void smgl_tval(mglGraph *gr)	// ticks features
-{
-	gr->SetRanges(-M_PI,M_PI, 0, 2);
-	float val[]={-M_PI, -M_PI/2, 0, 0.886, M_PI/2, M_PI};
-	mglData xt(6,val);
-	gr->SetTicksVal('x', xt, "-\\pi\n-\\pi/2\n\n0\nx^*\n\\pi/2\n\\pi");
-	gr->Axis();	gr->Grid();
-	gr->FPlot("2*cos(x^2)^2", "r2");
-}
-//-----------------------------------------------------------------------------
-void smgl_stick(mglGraph *gr)	// column plot
-{
-//	if(type==5 || type==9 || type==10)	gr->Puts(mglPoint(0,0),"Does not work in 3D\\n for reasons I do not care to investigate till 2.0");
-
-	gr->SetRanges(-1, 1, -1, 1, 0, 1);	gr->Light(true);
-	gr->StickPlot(3, 0, 40, 30);		gr->Axis("xyz_");
-	gr->FSurf("exp(-10*y^2-6*x^2)");
-	gr->Puts(mglPoint(0.2, 0, 1.2), "z=0", "", -2);
-	gr->StickPlot(3, 1, 40, 30);		gr->Axis("xyz_");
-	gr->FSurf("exp(-10*y^2/2-6*x^2)/sqrt(2)");
-	gr->Puts(mglPoint(0.2, 0, 1.2), "z=1", "", -2);
-	gr->StickPlot(3, 2, 40, 30);		gr->Axis("xyz_");
-	gr->FSurf("exp(-10*y^2/5-6*x^2)/sqrt(5)");
-	gr->Puts(mglPoint(0.2, 0, 1.2), "z=2", "", -2);
-	gr->Label('x',"\\tau", 0);	gr->Label('y', "\\rho");
-}
-//-----------------------------------------------------------------------------
-void smgl_column(mglGraph *gr)	// column plot
-{
-	char str[32];
-	for(int i=0;i<4;i++)
-	{
-		gr->ColumnPlot(4,i);
-		gr->Box();
-		sprintf(str,"Plot %d of 4",i);
-		gr->Puts(mglPoint(-0.5,0.5),str,"",-2);
-		sprintf(str,"sin(pi*x+pi*%d/2)",i);
-		gr->FPlot(str);
-	}
-}
 //-----------------------------------------------------------------------------
 void smgl_envelop(mglGraph *gr)	// Envelop reconstruction
 {
@@ -1576,57 +1636,6 @@ void smgl_mirror(mglGraph *gr)	// flag #
 	gr->Light(true);	gr->Box();
 	gr->Surf(x,y1,a,"r"); gr->Surf(x,y2,a,"b");
 	gr->VertexColor(false); gr->TextureColor(true); // set settings back
-}
-//-----------------------------------------------------------------------------
-void smgl_semilog(mglGraph *gr)	// semi-log axis
-{
-	mglData x(2000), y(2000);
-	x.Modify("0.01/(x+10^(-5))"); y.Modify("sin(1/v)",x);
-
-	gr->SetRanges(mglPoint(0.01,-1),mglPoint(1000,1));
-	gr->SetFunc("lg(x)",0,0); gr->SetTicks('x', 0);	gr->Box();
-	gr->Plot(x,y,"b2");
-	gr->Axis(); gr->Grid("xy","g");
-	gr->Label('x',"x",0); gr->Label('y', "y = sin 1/x",0);
-}
-//-----------------------------------------------------------------------------
-void smgl_loglog(mglGraph *gr)	// log-log axis
-{
-	mglData x(2000), y(2000);
-	x.Modify("pow(10,6*x-3)"); y.Modify("sqrt(1+v^2)",x);
-
-	gr->SetRanges(mglPoint(0.001,0.1),mglPoint(1000,1000));
-	gr->SetFunc("lg(x)","lg(y)",0);
-	gr->SetTicks('x', 0);
-	gr->SetTicks('y', 0);
-	gr->Box();	gr->Axis(); gr->Grid("xy","g;");
-	gr->Plot(x,y,"b2");
-	gr->Label('x',"x",0); gr->Label('y', "y=\\sqrt{1+x^2}",0);
-}
-//-----------------------------------------------------------------------------
-void smgl_2_axis(mglGraph *gr)	// 2 axis
-{
-	mglData y1,y2;	mgls_prepare1d(0,&y2,&y1);
-	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));	gr->SetOrigin(-1,-1,-1);
-	gr->Axis();	gr->Label('y',"axis 1",0);	gr->Plot(y1,"b");
-	// set up second axis
-	gr->SetRanges(mglPoint(0,0,0),mglPoint(1,1,1));		gr->SetOrigin(1,1,1);
-	gr->Axis();	gr->Label('y',"axis 2",0);	gr->Stem(y2,"r");
-}
-//-----------------------------------------------------------------------------
-void smgl_flow_dens(mglGraph *gr)	// flow threads and density plot
-{
-	mglData a,b,d;	mgls_prepare2v(&a,&b);	d = a;
-	for(int i=0;i<a.nx*a.ny;i++)	d.a[i] = hypot(a.a[i],b.a[i]);
-	gr->Flow(a,b,"br");	gr->Dens(d,"BbcyrR");	gr->Box();
-}
-//-----------------------------------------------------------------------------
-void smgl_mesh_cont(mglGraph *gr)	// contours under mesh
-{
-	mglData a;	mgls_prepare2d(&a);
-	gr->Rotate(40,60);
-	gr->Box();	gr->Mesh(a);	gr->Cont(a, "_");
-//	gr->Cont(a, 0, "zrange -1 -1");	//	Also possible variant
 }
 //-----------------------------------------------------------------------------
 //=============================================================================
@@ -1803,11 +1812,11 @@ int main(int argc,char **argv)
 }
 //-----------------------------------------------------------------------------
 mglSample samp[] = {
-	{"2_axis", smgl_2_axis},
 	{"alpha", smgl_alpha},
 	{"area", smgl_area},
 	{"aspect", smgl_aspect},
 	{"axial", smgl_axial},
+	{"axis", smgl_axis},
 	{"barh", smgl_barh},
 	{"bars", smgl_bars},
 	{"belt", smgl_belt},
@@ -1816,7 +1825,7 @@ mglSample samp[] = {
 	{"candle", smgl_candle},
 	{"chart", smgl_chart},
 	{"cloud", smgl_cloud},
-	{"column",	smgl_column},
+	{"combined", smgl_combined},
 	{"cones", smgl_cones},
 	{"cont", smgl_cont},
 	{"cont_xyz", smgl_cont_xyz},
@@ -1828,7 +1837,6 @@ mglSample samp[] = {
 	{"contv", smgl_contv},
 //	{"crust", smgl_crust},	// TODO: open after triangulation
 	{"curvcoor", smgl_curvcoor},
-	{"cutbox", smgl_cutbox},
 	{"dat_diff", smgl_dat_diff},
 	{"dens", smgl_dens},
 	{"dens_xyz", smgl_dens_xyz},
@@ -1841,16 +1849,15 @@ mglSample samp[] = {
 	{"fall", smgl_fall},
 	{"fit", smgl_fit},
 	{"flow", smgl_flow},
-	{"flow_dens", smgl_flow_dens},
 	{"fog", smgl_fog},
 //	{"fonts", smgl_fonts},	// TODO enable later
 	{"grad", smgl_grad},
+	{"inplot", smgl_inplot},
 	{"legend", smgl_legend},
 	{"loglog", smgl_loglog},
 	{"map",		smgl_map},
 	{"mark", smgl_mark},
 	{"mesh", smgl_mesh},
-	{"mesh_cont", smgl_mesh_cont},
 	{"mirror", smgl_mirror},
 	{"molecule", smgl_molecule},
 	{"parser", smgl_parser},
@@ -1870,7 +1877,6 @@ mglSample samp[] = {
 	{"step", smgl_step},
 	{"stereo", smgl_stereo},
 	{"stfa", smgl_stfa},
-	{"stick", smgl_stick},
 	{"style", smgl_style},
 	{"surf", smgl_surf},
 	{"surf3", smgl_surf3},
@@ -1887,7 +1893,6 @@ mglSample samp[] = {
 	{"torus", smgl_torus},
 	{"traj", smgl_traj},
 	{"tube", smgl_tube},
-	{"tval",	smgl_tval},
 	{"type0", smgl_type0},
 	{"type1", smgl_type1},
 	{"type2", smgl_type2},
