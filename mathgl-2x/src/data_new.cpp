@@ -1038,8 +1038,8 @@ void mgl_data_mul_dat(HMDT d, HCDT a)
 //-----------------------------------------------------------------------------
 void mgl_data_mul_num(HMDT d, float a)
 {
-	long n=1, nx=d->nx, ny=d->ny, nz=d->nz;
-	mglStartThread(mgl_eqmul,0,nx*ny*nz,d->a,&a,0,&n);
+	long n=1, nx=d->nx, ny=d->ny, nz=d->nz;	mreal aa=a;
+	mglStartThread(mgl_eqmul,0,nx*ny*nz,d->a,&aa,0,&n);
 }
 //-----------------------------------------------------------------------------
 void *mgl_eqdiv(void *par)
@@ -1070,8 +1070,8 @@ void mgl_data_div_dat(HMDT d, HCDT a)
 //-----------------------------------------------------------------------------
 void mgl_data_div_num(HMDT d, float a)
 {
-	long n=1, nx=d->nx, ny=d->ny, nz=d->nz;
-	mglStartThread(mgl_eqdiv,0,nx*ny*nz,d->a,&a,0,&n);
+	long n=1, nx=d->nx, ny=d->ny, nz=d->nz;	mreal aa=a;
+	mglStartThread(mgl_eqdiv,0,nx*ny*nz,d->a,&aa,0,&n);
 }
 //-----------------------------------------------------------------------------
 void *mgl_eqadd(void *par)
@@ -1102,8 +1102,8 @@ void mgl_data_add_dat(HMDT d, HCDT a)
 //-----------------------------------------------------------------------------
 void mgl_data_add_num(HMDT d, float a)
 {
-	long n=1, nx=d->nx, ny=d->ny, nz=d->nz;
-	mglStartThread(mgl_eqadd,0,nx*ny*nz,d->a,&a,0,&n);
+	long n=1, nx=d->nx, ny=d->ny, nz=d->nz;	mreal aa=a;
+	mglStartThread(mgl_eqadd,0,nx*ny*nz,d->a,&aa,0,&n);
 }
 //-----------------------------------------------------------------------------
 void *mgl_eqsub(void *par)
@@ -1134,8 +1134,8 @@ void mgl_data_sub_dat(HMDT d, HCDT a)
 //-----------------------------------------------------------------------------
 void mgl_data_sub_num(HMDT d, float a)
 {
-	long n=1, nx=d->nx, ny=d->ny, nz=d->nz;
-	mglStartThread(mgl_eqsub,0,nx*ny*nz,d->a,&a,0,&n);
+	long n=1, nx=d->nx, ny=d->ny, nz=d->nz;	mreal aa=a;
+	mglStartThread(mgl_eqsub,0,nx*ny*nz,d->a,&aa,0,&n);
 }
 //-----------------------------------------------------------------------------
 void mgl_data_mul_dat_(uintptr_t *d, uintptr_t *b)	{	mgl_data_mul_dat(_DT_, _DA_(b));	}

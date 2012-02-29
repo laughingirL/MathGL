@@ -168,24 +168,24 @@ void mgl_data_smooth(HMDT d, const char *dirs, float delta)
 	long nx=d->nx,ny=d->ny,nz=d->nz;
 //	if(Type == SMOOTH_NONE)	return;
 	long p[3]={nx,ny,Type};
-	mreal *b = new mreal[nx*ny*nz];
+	mreal *b = new mreal[nx*ny*nz],dd=delta;
 	// ����������� �� x
 	memset(b,0,nx*ny*nz*sizeof(mreal));
 	if(nx>4 && strchr(dirs,'x'))
 	{
-		mglStartThread(mgl_smth_x,0,nx*ny*nz,b,d->a,&delta,p);
+		mglStartThread(mgl_smth_x,0,nx*ny*nz,b,d->a,&dd,p);
 		memcpy(d->a,b,nx*ny*nz*sizeof(mreal));
 		memset(b,0,nx*ny*nz*sizeof(mreal));
 	}
 	if(ny>4 && strchr(dirs,'y'))
 	{
-		mglStartThread(mgl_smth_y,0,nx*ny*nz,b,d->a,&delta,p);
+		mglStartThread(mgl_smth_y,0,nx*ny*nz,b,d->a,&dd,p);
 		memcpy(d->a,b,nx*ny*nz*sizeof(mreal));
 		memset(b,0,nx*ny*nz*sizeof(mreal));
 	}
 	if(nz>4 && strchr(dirs,'z'))
 	{
-		mglStartThread(mgl_smth_z,0,nx*ny*nz,b,d->a,&delta,p);
+		mglStartThread(mgl_smth_z,0,nx*ny*nz,b,d->a,&dd,p);
 		memcpy(d->a,b,nx*ny*nz*sizeof(mreal));
 	}
 	delete []b;
@@ -937,7 +937,7 @@ int mgl_data_find_any_(uintptr_t *d, const char *cond, int l)
 {	char *s=new char[l+1];	memcpy(s,cond,l);	s[l]=0;
 	int res = mgl_data_find_any(_DT_,s);	delete []s;	return res;	}
 //-----------------------------------------------------------------------------
-mreal mgl_data_momentum_val(HCDT dd, char dir, mreal *x, mreal *w, mreal *s, mreal *k)
+float mgl_data_momentum_val(HCDT dd, char dir, mreal *x, mreal *w, mreal *s, mreal *k)
 {
 	long nx=dd->GetNx(),ny=dd->GetNy(),nz=dd->GetNz();
 	mreal i0=0,i1=0,i2=0,i3=0,i4=0,d,t,v;
@@ -1270,10 +1270,11 @@ void *mgl_sew_x(void *par)
 	for(i=t->id;i<nn;i+=mglNumThr)	mgl_omod(t->a+i*nx, t->b[0], nx, 1);
 	return 0;
 }
-void mgl_data_sew(HMDT d, const char *dirs, float da)
+void mgl_data_sew(HMDT d, const char *dirs, float delta)
 {
 	long nx=d->nx, ny=d->ny, nz=d->nz;
 	long p[3]={nx,ny,nz};
+	mreal da = delta;
 	if(strchr(dirs,'x') && nx>1)	mglStartThread(mgl_sew_x,0,nz*ny,d->a,&da,0,p);
 	if(strchr(dirs,'y') && ny>1)	mglStartThread(mgl_sew_y,0,nz*nx,d->a,&da,0,p);
 	if(strchr(dirs,'z') && nz>1)	mglStartThread(mgl_sew_z,0,nx*ny,d->a,&da,0,p);

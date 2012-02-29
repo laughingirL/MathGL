@@ -45,8 +45,8 @@ public:
 	virtual long GetNy() const = 0;
 	virtual long GetNz() const = 0;
 	inline long GetNN() const {	return GetNx()*GetNy()*GetNz();	}
-	virtual mreal Maximal() const = 0;
-	virtual mreal Minimal() const = 0;
+	virtual float Maximal() const = 0;
+	virtual float Minimal() const = 0;
 	virtual mreal dvx(long i,long j=0,long k=0) const = 0;
 //	{	return i>0 ? (i<GetNx()-1 ? (v(i+1,j,k)-v(i-1,j,k))/2 : v(i,j,k)-v(i-1,j,k)) : v(1,j,k)-v(0,j,k);	}
 	virtual mreal dvy(long i,long j=0,long k=0) const = 0;

@@ -35,17 +35,17 @@ class mglFormula					// îáúåêò äëÿ ââîäà è âû÷èñëåíèÿ �
 {
 public:
 	/// Evaluates the formula for 'x','r'=\a x, 'y','n'=\a y, 'z','t'=\a z, 'u'=\a u
-	float Calc(float x,float y=0,float z=0,float u=0) const;
+	mreal Calc(mreal x,mreal y=0,mreal z=0,mreal u=0) const;
 	/// Evaluates the formula for 'x, y, z, u, v, w'
-	float Calc(float x,float y,float z,float u,float v,float w) const;
+	mreal Calc(mreal x,mreal y,mreal z,mreal u,mreal v,mreal w) const;
 	/// Evaluates the formula for variables \a var
-	float Calc(const float var[MGL_VS]) const;
+	mreal Calc(const mreal var[MGL_VS]) const;
 	/// Evaluates the formula for 'x','r'=\a x, 'y','n'=\a y, 'z','t'=\a z, 'u'=\a u
-	float CalcD(char diff, float x,float y=0,float z=0,float u=0) const;
+	mreal CalcD(char diff, mreal x,mreal y=0,mreal z=0,mreal u=0) const;
 	/// Evaluates the formula for 'x, y, z, u, v, w'
-	float CalcD(char diff, float x,float y,float z,float u,float v,float w) const;
+	mreal CalcD(char diff, mreal x,mreal y,mreal z,mreal u,mreal v,mreal w) const;
 	/// Evaluates the derivates of the formula for variables \a var respect to variable \a diff
-	float CalcD(const float var[MGL_VS], char diff) const;
+	mreal CalcD(const mreal var[MGL_VS], char diff) const;
 	/// Return error code
 	int GetError() const;
 	/// Parse the formula \a str and create formula-tree
@@ -53,11 +53,11 @@ public:
 	/// Clean up formula-tree
 	~mglFormula();
 protected:
-	float CalcIn(const float *a1) const;
-	float CalcDIn(int id, const float *a1) const;
+	mreal CalcIn(const mreal *a1) const;
+	mreal CalcDIn(int id, const mreal *a1) const;
 	mglFormula *Left,*Right;	// first and second argument of the function
 	int Kod;					// the function ID
-	float Res;					// the number or the variable ID
+	mreal Res;					// the number or the variable ID
 	static int Error;
 };
 //---------------------------------------------------------------------------

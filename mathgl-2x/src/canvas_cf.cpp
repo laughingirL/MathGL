@@ -28,9 +28,9 @@ const unsigned char *mgl_get_rgb(HMGL gr)	{	return _Gr_->GetBits();	}
 const unsigned char *mgl_get_rgba(HMGL gr)	{	return _Gr_->GetRGBA();	}
 int mgl_get_width(HMGL gr)		{	return _Gr_->GetWidth();	}
 int mgl_get_height(HMGL gr)		{	return _Gr_->GetHeight();	}
-void mgl_calc_xyz(HMGL gr, int xs, int ys, mreal *x, mreal *y, mreal *z)
+void mgl_calc_xyz(HMGL gr, int xs, int ys, float *x, float *y, float *z)
 {	mglPoint p = _Gr_->CalcXYZ(xs,ys);	*x = p.x;	*y = p.y;	*z = p.z;	}
-void mgl_calc_scr(HMGL gr, mreal x, mreal y, mreal z, int *xs, int *ys)
+void mgl_calc_scr(HMGL gr, float x, float y, float z, int *xs, int *ys)
 {	_Gr_->CalcScr(mglPoint(x,y,z),xs,ys);	}
 void mgl_set_obj_id(HMGL gr, int id)	{	_Gr_->SetObjId(id);	}
 int mgl_get_obj_id(HMGL gr, long x, long y)	{	return _Gr_->GetObjId(x,y);	}

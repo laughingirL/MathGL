@@ -33,11 +33,11 @@ char mglFitRes[1024];	///< Last fitted formula
 struct mglFitData
 {
 	long n;				///< number of points
-	float *x;			///< x values
-	float *y;			///< y values
-	float *z;			///< z values
-	float *a;			///< function values
-	float *s;			///< value dispersions (sigma)
+	mreal *x;			///< x values
+	mreal *y;			///< y values
+	mreal *z;			///< z values
+	mreal *a;			///< function values
+	mreal *s;			///< value dispersions (sigma)
 	mglFormula *eq;		///< approximation formula
 	int m;				///< number of variables
 	const char *var;	///< variables for fitting
@@ -48,7 +48,7 @@ int	mgl_fit__f (const gsl_vector *x, void *data, gsl_vector *f)
 {
 	mglFitData *fd = (mglFitData *)data;
 	register long i;
-	float val[MGL_VS];
+	mreal val[MGL_VS];
 	for(i=0;i<fd->m;i++)	val[fd->var[i]-'a'] = gsl_vector_get(x,i);
 	for(i=0;i<fd->n;i++)
 	{
@@ -64,7 +64,7 @@ int mgl_fit__df (const gsl_vector * x, void *data, gsl_matrix * J)
 {
 	mglFitData *fd = (mglFitData *)data;
 	register long i,j;
-	float val[MGL_VS],s;
+	mreal val[MGL_VS],s;
 	for(i=0;i<fd->m;i++)	val[fd->var[i]-'a'] = gsl_vector_get(x,i);
 	for(i=0;i<fd->n;i++)
 	{
@@ -86,7 +86,7 @@ int mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f, gsl_matrix *
 #endif
 //-----------------------------------------------------------------------------
 /// GSL based fitting procedure for formula/arguments specified by string
-float mgl_fit_base(mglFitData *fd, float *ini)
+mreal mgl_fit_base(mglFitData *fd, mreal *ini)
 {
 #ifndef NO_GSL
 	register long i,m=fd->m,n=fd->n,iter=0;
@@ -114,7 +114,7 @@ float mgl_fit_base(mglFitData *fd, float *ini)
 	}
 	while ( status == GSL_CONTINUE && iter < 500 );
 	gsl_multifit_covar (s->J, 0.0, covar );
-	float res = gsl_blas_dnrm2(s->f);
+	mreal res = gsl_blas_dnrm2(s->f);
 	for(i=0;i<m;i++)	ini[i] = gsl_vector_get(s->x, i);
 	// free memory
 	gsl_multifit_fdfsolver_free (s);
@@ -126,7 +126,7 @@ float mgl_fit_base(mglFitData *fd, float *ini)
 #endif
 }
 //-----------------------------------------------------------------------------
-void mglPrepareFitEq(mglBase *gr,float chi, const char *eq, const char *var, float *par)
+void mglPrepareFitEq(mglBase *gr,mreal chi, const char *eq, const char *var, mreal *par)
 {
 	char buf[32]="";
 	sprintf(mglFitRes,"chi=%g",chi);
@@ -223,7 +223,7 @@ HMDT mgl_fit_xys(HMGL gr, HCDT xx, HCDT yy, HCDT ss, const char *eq, const char 
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m);
 	fit->Create(nn, yy->GetNy(), yy->GetNz());
-	float val[MGL_VS],res=-1;
+	mreal val[MGL_VS],res=-1;
 	register long j;
 	for(long i=0;i<yy->GetNy()*yy->GetNz();i++)
 	{
@@ -271,7 +271,7 @@ HMDT mgl_fit_xyzs(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT ss, const char *eq, c
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m);
 	fit->Create(nn, nn, zz->GetNz());
-	float val[MGL_VS], res = -1;
+	mreal val[MGL_VS], res = -1;
 	for(i=0;i<zz->GetNz();i++)
 	{
 		if(ini && ini->nx>=fd.m)	in.Set(ini->a,fd.m);
@@ -320,7 +320,7 @@ HMDT mgl_fit_xyzas(HMGL gr, HCDT xx, HCDT yy, HCDT zz, HCDT aa, HCDT ss, const c
 	fd.eq = new mglFormula(eq);
 	mglData in(fd.m);
 	fit->Create(nn, nn, nn);
-	float val[MGL_VS], res = -1;
+	mreal val[MGL_VS], res = -1;
 
 	if(ini && ini->nx>=fd.m)	in.Set(ini->a,fd.m);
 	else in.Fill(0.,0);

@@ -355,7 +355,7 @@ void mgl_data_create(HMDT d,long mx,long my,long mz)
 void mgl_data_create_(uintptr_t *d, int *nx,int *ny,int *nz)
 {	mgl_data_create(_DT_,*nx,*ny,*nz);	}
 //-----------------------------------------------------------------------------
-void mgl_data_link(HMDT d, float *A, long mx,long my,long mz)
+void mgl_data_link(HMDT d, mreal *A, long mx,long my,long mz)
 {
 	if(!A)	return;
 	if(d->id && d->a)		delete []d->id;
@@ -363,7 +363,7 @@ void mgl_data_link(HMDT d, float *A, long mx,long my,long mz)
 	d->nx = mx>0 ? mx:1;	d->ny = my>0 ? my:1;	d->nz = mz>0 ? mz:1;
 	d->link=true;	d->NewId();
 }
-void mgl_data_link_(uintptr_t *d, float *A, int *nx,int *ny,int *nz)
+void mgl_data_link_(uintptr_t *d, mreal *A, int *nx,int *ny,int *nz)
 {	mgl_data_link(_DT_,A,*nx,*ny,*nz);	}
 //-----------------------------------------------------------------------------
 int mgl_data_read_dim(HMDT d, const char *fname,long mx,long my,long mz)
@@ -424,7 +424,7 @@ int mgl_data_read_mat_(uintptr_t *d, const char *fname,int *dim,int l)
 {	char *s=new char[l+1];		memcpy(s,fname,l);	s[l]=0;
 	int r = mgl_data_read_mat(_DT_,s,*dim);	delete []s;	return r;	}
 //-----------------------------------------------------------------------------
-mreal mgl_data_max(HCDT d)
+float mgl_data_max(HCDT d)
 {
 	register mreal m=-1e10, v;
 	register long nn=d->GetNN();
@@ -435,9 +435,9 @@ mreal mgl_data_max(HCDT d)
 	{	v = d->vthr(i);	if(!isnan(v))	m = m>v ? m:v;	}
 	return m;
 }
-mreal mgl_data_max_(uintptr_t *d)	{	return mgl_data_max(_DT_);	}
+float mgl_data_max_(uintptr_t *d)	{	return mgl_data_max(_DT_);	}
 //-----------------------------------------------------------------------------
-mreal mgl_data_min(HCDT d)
+float mgl_data_min(HCDT d)
 {
 	register mreal m=1e10, v;
 	register long nn=d->GetNN();
@@ -448,9 +448,9 @@ mreal mgl_data_min(HCDT d)
 	{	v = d->vthr(i);	if(!isnan(v))	m = m<v ? m:v;	}
 	return m;
 }
-mreal mgl_data_min_(uintptr_t *d)	{	return mgl_data_min(_DT_);	}
+float mgl_data_min_(uintptr_t *d)	{	return mgl_data_min(_DT_);	}
 //-----------------------------------------------------------------------------
-mreal mgl_data_max_int(HCDT d, long *i, long *j, long *k)
+float mgl_data_max_int(HCDT d, long *i, long *j, long *k)
 {
 	register mreal m=-1e10, v;
 	long nx=d->GetNx(), ny=d->GetNy(), nn=d->GetNN();
@@ -462,11 +462,11 @@ mreal mgl_data_max_int(HCDT d, long *i, long *j, long *k)
 	}
 	return m;
 }
-mreal mgl_data_max_int_(uintptr_t *d, int *i, int *j, int *k)
+float mgl_data_max_int_(uintptr_t *d, int *i, int *j, int *k)
 {	long ii,jj,kk;	float res=mgl_data_max_int(_DT_,&ii,&jj,&kk);
 	*i=ii;	*j=jj;	*k=kk;	return res;	}
 //-----------------------------------------------------------------------------
-mreal mgl_data_min_int(HCDT d, long *i, long *j, long *k)
+float mgl_data_min_int(HCDT d, long *i, long *j, long *k)
 {
 	register mreal m=1e10, v;
 	long nx=d->GetNx(), ny=d->GetNy(), nn=d->GetNN();
@@ -478,11 +478,11 @@ mreal mgl_data_min_int(HCDT d, long *i, long *j, long *k)
 	}
 	return m;
 }
-mreal mgl_data_min_int_(uintptr_t *d, int *i, int *j, int *k)
+float mgl_data_min_int_(uintptr_t *d, int *i, int *j, int *k)
 {	long ii,jj,kk;	float res=mgl_data_min_int(_DT_,&ii,&jj,&kk);
 	*i=ii;	*j=jj;	*k=kk;	return res;	}
 //-----------------------------------------------------------------------------
-mreal mgl_data_max_real(HCDT d, mreal *x, mreal *y, mreal *z)
+float mgl_data_max_real(HCDT d, mreal *x, mreal *y, mreal *z)
 {
 	long im=-1,jm=-1,km=-1;
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
@@ -513,10 +513,10 @@ mreal mgl_data_max_real(HCDT d, mreal *x, mreal *y, mreal *z)
 	}
 	return m;
 }
-mreal mgl_data_max_real_(uintptr_t *d, mreal *x, mreal *y, mreal *z)
+float mgl_data_max_real_(uintptr_t *d, mreal *x, mreal *y, mreal *z)
 {	return mgl_data_max_real(_DT_,x,y,z);	}
 //-----------------------------------------------------------------------------
-mreal mgl_data_min_real(HCDT d, mreal *x, mreal *y, mreal *z)
+float mgl_data_min_real(HCDT d, mreal *x, mreal *y, mreal *z)
 {
 	long im=-1,jm=-1,km=-1;
 	long nx=d->GetNx(), ny=d->GetNy(), nz=d->GetNz();
@@ -547,7 +547,7 @@ mreal mgl_data_min_real(HCDT d, mreal *x, mreal *y, mreal *z)
 	}
 	return m;
 }
-mreal mgl_data_min_real_(uintptr_t *d, mreal *x, mreal *y, mreal *z)
+float mgl_data_min_real_(uintptr_t *d, mreal *x, mreal *y, mreal *z)
 {	return mgl_data_min_real(_DT_,x,y,z);	}
 //-----------------------------------------------------------------------------
 void *mgl_fill_x(void *par)
@@ -864,20 +864,16 @@ void mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 	else	{	rank=3;	dims[0]=d->nz;	dims[1]=d->ny;	dims[2]=d->nx;	}
 	hs = H5Screate_simple(rank, dims, 0);
 #if(MGL_USE_DOUBLE==1)
-#ifndef H5_USE_16_API
-	hd = H5Dcreate(hf, data, H5T_NATIVE_DOUBLE, hs, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-#else  /* ! HAVE_HDF5_18 */
-	hd = H5Dcreate(hf, data, H5T_NATIVE_DOUBLE, hs, H5P_DEFAULT);
-#endif /* HAVE_HDF5_18 */
-	H5Dwrite(hd, H5T_NATIVE_DOUBLE, hs, hs, H5P_DEFAULT, d->a);
+	hid_t mem_type_id = H5T_NATIVE_DOUBLE;
 #else
-#ifndef H5_USE_16_API
-	hd = H5Dcreate(hf, data, H5T_NATIVE_FLOAT, hs, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-#else  /* ! HAVE_HDF5_18 */
-	hd = H5Dcreate(hf, data, H5T_NATIVE_FLOAT, hs, H5P_DEFAULT);
-#endif /* HAVE_HDF5_18 */
-	H5Dwrite(hd, H5T_NATIVE_FLOAT, hs, hs, H5P_DEFAULT, d->a);
+	hid_t mem_type_id = H5T_NATIVE_FLOAT;
 #endif
+#ifndef H5_USE_16_API
+	hd = H5Dcreate(hf, data, mem_type_id, hs, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+#else  /* ! HAVE_HDF5_18 */
+	hd = H5Dcreate(hf, data, mem_type_id, hs, H5P_DEFAULT);
+#endif /* HAVE_HDF5_18 */
+	H5Dwrite(hd, mem_type_id, hs, hs, H5P_DEFAULT, d->a);
 	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
 }
 //-----------------------------------------------------------------------------
@@ -910,8 +906,9 @@ int mgl_data_read_hdf(HMDT d,const char *fname,const char *data)
 		H5Dread(hd, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, d->a);
 #endif
 	}
-	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);	return true;
+	H5Sclose(hs);	H5Dclose(hd);	H5Fclose(hf);	return true;
 }
+//-----------------------------------------------------------------------------
 int mgl_datas_hdf(const char *fname, char *buf, long size)
 {
 	hid_t hf,hg,hd,ht;

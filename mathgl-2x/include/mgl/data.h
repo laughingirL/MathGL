@@ -52,7 +52,7 @@ void mgl_delete_data_(uintptr_t *dat);
 /*		Data creation functions												 */
 /*****************************************************************************/
 void mgl_data_rearrange(HMDT dat, long mx,long my,long mz);
-void mgl_data_link(HMDT dat, float *A,long mx,long my,long mz);
+void mgl_data_link(HMDT dat, mreal *A,long mx,long my,long mz);
 void mgl_data_set_float(HMDT dat, const float *A,long mx,long my,long mz);
 void mgl_data_set_double(HMDT dat, const double *A,long mx,long my,long mz);
 void mgl_data_set_float2(HMDT d, const float **A,long N1,long N2);
@@ -93,8 +93,8 @@ void mgl_data_put_dat(HMDT dat, HCDT val, long i, long j, long k);
 void mgl_data_modify(HMDT dat, const char *eq,long dim);
 void mgl_data_modify_vw(HMDT dat, const char *eq,HCDT vdat,HCDT wdat);
 void mgl_data_squeeze(HMDT dat, long rx,long ry,long rz,long smooth);
-mreal mgl_data_max(HCDT dat);
-mreal mgl_data_min(HCDT dat);
+float mgl_data_max(HCDT dat);
+float mgl_data_min(HCDT dat);
 float *mgl_data_value(HMDT dat, long i,long j,long k);
 mreal *mgl_data_data(HMDT dat);
 
@@ -102,11 +102,11 @@ float mgl_data_first(HCDT dat, const char *cond, long *i, long *j, long *k);
 float mgl_data_last(HCDT dat, const char *cond, long *i, long *j, long *k);
 long mgl_data_find(HCDT dat, const char *cond, char dir, long i, long j, long k);
 int mgl_data_find_any(HCDT dat, const char *cond);
-mreal mgl_data_max_int(HCDT dat, long *i, long *j, long *k);
-mreal mgl_data_max_real(HCDT dat, mreal *x, mreal *y, mreal *z);
-mreal mgl_data_min_int(HCDT dat, long *i, long *j, long *k);
-mreal mgl_data_min_real(HCDT dat, mreal *x, mreal *y, mreal *z);
-mreal mgl_data_momentum_val(HCDT d, char dir, mreal *m, mreal *w, mreal *s, mreal *k);
+float mgl_data_max_int(HCDT dat, long *i, long *j, long *k);
+float mgl_data_max_real(HCDT dat, mreal *x, mreal *y, mreal *z);
+float mgl_data_min_int(HCDT dat, long *i, long *j, long *k);
+float mgl_data_min_real(HCDT dat, mreal *x, mreal *y, mreal *z);
+float mgl_data_momentum_val(HCDT d, char dir, mreal *m, mreal *w, mreal *s, mreal *k);
 
 HMDT mgl_data_combine(HCDT dat1, HCDT dat2);
 void mgl_data_extend(HMDT dat, long n1, long n2);
@@ -653,13 +653,13 @@ protected:
 #endif
 	inline mreal vthr(long i) const {	return a[i];	}
 	// add for speeding up !!!
-	inline float dvx(long i,long j=0,long k=0) const
+	inline mreal dvx(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k);
 	return i>0? (i<nx-1? (a[i0+1]-a[i0-1])/2:a[i0]-a[i0-1]) : a[i0+1]-a[i0];	}
-	inline float dvy(long i,long j=0,long k=0) const
+	inline mreal dvy(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k);
 	return j>0? (j<ny-1? (a[i0+nx]-a[i0-nx])/2:a[i0]-a[i0-nx]) : a[i0+nx]-a[i0];}
-	inline float dvz(long i,long j=0,long k=0) const
+	inline mreal dvz(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k), n=nx*ny;
 	return k>0? (k<nz-1? (a[i0+n]-a[i0-n])/2:a[i0]-a[i0-n]) : a[i0+n]-a[i0];	}
 };

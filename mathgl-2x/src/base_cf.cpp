@@ -128,9 +128,9 @@ void mgl_set_tick_rotate_(uintptr_t *gr,int *enable){	_GR_->SetTickRotate(*enabl
 void mgl_set_tick_skip_(uintptr_t *gr, int *enable)	{	_GR_->SetTickSkip(*enable);	}
 //-----------------------------------------------------------------------------
 void mgl_set_rotated_text(HMGL gr, int enable)	{	gr->SetRotatedText(enable);	}
-void mgl_set_mark_size(HMGL gr, mreal size)		{	gr->SetMarkSize(size);	}
-void mgl_set_arrow_size(HMGL gr, mreal size)	{	gr->SetArrowSize(size);	}
-void mgl_set_font_size(HMGL gr, mreal size)		{	gr->SetFontSize(size);	}
+void mgl_set_mark_size(HMGL gr, float size)		{	gr->SetMarkSize(size);	}
+void mgl_set_arrow_size(HMGL gr, float size)	{	gr->SetArrowSize(size);	}
+void mgl_set_font_size(HMGL gr, float size)		{	gr->SetFontSize(size);	}
 void mgl_set_font_def(HMGL gr, const char *fnt)	{	gr->SetFontDef(fnt);	}
 void mgl_load_font(HMGL gr, const char *name, const char *path)
 {	if(name && *name)	gr->GetFont()->Load(name,path);	else	gr->GetFont()->Restore();	}
@@ -139,9 +139,9 @@ void mgl_restore_font(HMGL gr)	{	gr->GetFont()->Restore();	}
 //-----------------------------------------------------------------------------
 void mgl_set_bar_width_(uintptr_t *gr, float *width)	{	_GR_->SetBarWidth(*width);	}
 void mgl_set_rotated_text_(uintptr_t *gr, int *rotated)	{	_GR_->SetRotatedText(*rotated);	}
-void mgl_set_mark_size_(uintptr_t *gr, mreal *size)		{	_GR_->SetMarkSize(*size);	}
-void mgl_set_arrow_size_(uintptr_t *gr, mreal *size)	{	_GR_->SetArrowSize(*size);	}
-void mgl_set_font_size_(uintptr_t *gr, mreal *size)		{	_GR_->SetFontSize(*size);	}
+void mgl_set_mark_size_(uintptr_t *gr, float *size)		{	_GR_->SetMarkSize(*size);	}
+void mgl_set_arrow_size_(uintptr_t *gr, float *size)	{	_GR_->SetArrowSize(*size);	}
+void mgl_set_font_size_(uintptr_t *gr, float *size)		{	_GR_->SetFontSize(*size);	}
 void mgl_set_font_def_(uintptr_t *gr, char *name, int l)
 {	char *s=new char[l+1];		memcpy(s,name,l);	s[l]=0;
 	_GR_->SetFontDef(s);	delete []s;	}
