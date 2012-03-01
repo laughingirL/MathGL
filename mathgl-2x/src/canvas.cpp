@@ -107,8 +107,7 @@ GifFileType *gif;*/
 	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
 	SetPenPal("k-1");
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
-	stack.clear();	Restore();
-	Alpha(false);	FactorPos = 1.1;
+	stack.clear();	Restore();	Alpha(false);
 	SetTickLen(0);	SetCut(true);
 	AdjustTicks("xyzc",true);
 
@@ -286,7 +285,7 @@ void mglCanvas::quad_plot(long p1, long p2, long p3, long p4)
 	else	{	MGL_QUAD_PLOT	}
 }
 //-----------------------------------------------------------------------------
-float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float size,float sh,float col)
+float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float size,float sh,float col,bool rot)
 {
 	if(p<0 || isnan(Pnt[p].x))	return 0;
 	if(size<0)	size *= -FontSize;
@@ -302,6 +301,11 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 		return res;
 	}
 
+	mglPnt q=Pnt[p];
+	float ll = q.u*q.u+q.v*q.v;
+	bool inv=false;
+	if(rot && (q.u<0 || (q.u==0 && q.v<0)))
+	{	q.u=-q.u;	q.v=-q.v;	q.w=-q.w;	inv=true;	}
 	if(!(Quality&4))	// add text itself
 	{
 		mglPrim a(6);	a.n1 = p;
@@ -314,12 +318,10 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	float shift = -sh-0.2, fsize=size/8.*font_factor, h = fnt->Height(font)*fsize, w;
 	// text drawing itself
 	Push();
-	if(strchr(font,'T'))	shift = sh+0.2;
+	inv = inv ^ (strchr(font,'T')!=0);
+	if(inv)	shift = sh+0.2;
 	shift += 0.11;	// Correction for glyph rotation around proper point
 
-	mglPnt q=Pnt[p];
-	float ll = q.u*q.u+q.v*q.v;
-	if(q.u<0)	{	q.u=-q.u;	q.v=-q.v;	q.w=-q.w;	}
 	shift *= h;		B.z= q.z;
 	if(ll==0)	{	Pop();	return 0;	}
 

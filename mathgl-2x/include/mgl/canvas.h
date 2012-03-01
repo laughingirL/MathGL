@@ -63,7 +63,9 @@ struct mglAxis
 	mglPoint dir;	///< Axis direction
 	mglPoint a,b;	///< Directions of over axis
 	mglPoint org;
-	float v0,v1,v2;	///< Center of axis cross section and its range.
+	float v0;		///< Center of axis cross section
+	float v1;		///< Minimal axis range.
+	float v2;		///< Maximal axis range.
 	float o;		///< Point of starting ticks numbering (if NAN then Org is used).
 	int f;			///< Flag 0x1 - time, 0x2 - manual, 0x4 - fixed dv
 	std::vector<mglText> txt;	///< Axis labels
@@ -234,13 +236,13 @@ using mglBase::Light;
 	void SetTickTempl(char dir, const wchar_t *t);
 	void SetTickTempl(char dir, const char *t);
 	/// Set time templates for ticks
-	void SetTickTime(char dir, float d, const char *t="");
+	void SetTickTime(char dir, float d=0, const char *t="");
 	/// Set the ticks parameters
 	void SetTicks(char dir, float d=0, int ns=0, float org=NAN);
 	/// Auto adjust ticks
 	void AdjustTicks(const char *dir="xyzc", bool force=false);
 	/// Tune ticks
-	inline void SetTuneTicks(int tune, float pos=1.1)
+	inline void SetTuneTicks(int tune, float pos=1.15)
 	{	TuneTicks = tune;	FactorPos = pos;	};
 	/// Set ticks styles
 	void SetAxisStl(const char *stl="k", const char *tck=0, const char *sub=0);
@@ -369,7 +371,7 @@ protected:
 	void trig_plot(long p1, long p2, long p3);			// position in pntN
 	void quad_plot(long p1, long p2, long p3, long p4);	// position in pntN
 	void Glyph(float x, float y, float f, int style, long icode, float col);
-	float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'));	// position in pntN
+	float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'), bool rot=true);	// position in pntN
 
 	void add_prim(mglPrim &a);	///< add primitive to list
 	void mark_draw(long p, char type, float size, mglDrawReg *d);

@@ -111,14 +111,22 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float col)
 {
 	if(numg==0)	return 0;
 	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0;
-	unsigned size = wcslen(str)+1;
+	unsigned size = wcslen(str)+1,i,num=0;
 	if(parse)
 	{
-		unsigned *wcs = new unsigned[size];
+		unsigned *wcs = new unsigned[size], *buf=wcs;
 		memcpy(wcs,str,size*sizeof(wchar_t));
 		Convert(str, wcs);
-		ww = w = Puts(wcs,0,0,1.f,0x10|font,col);	// find width
-		Puts(wcs,-w*(align&3)/2.f,-h,1.f,font,col);	// draw it really
+		for(i=0;wcs[i];i++)	if(wcs[i]=='\n')	// parse '\n' symbol
+		{
+			wcs[i]=0;	w = Puts(buf,0,0,1.f,0x10|font,col);	// find width
+			Puts(buf,-w*(align&3)/2.f,-h - 500.*num/fact[0],1.f,font,col);	// draw it really
+			buf=wcs+i+1;	num++;	if(w>ww)	ww=w;
+		}
+		// draw string itself
+		w = Puts(buf,0,0,1.f,0x10|font,col);	// find width
+		Puts(buf,-w*(align&3)/2.f,-h - 500.*num/fact[0],1.f,font,col);	// draw it really
+		if(w>ww)	ww=w;
 		delete []wcs;
 	}
 	else
@@ -151,14 +159,20 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float col)
 float mglFont::Width(const wchar_t *str,int font)
 {
 	if(numg==0)	return 0;
-	float w=0;
-	unsigned size = wcslen(str)+1;
+	float ww=0,w=0;
+	unsigned size = wcslen(str)+1,i;
 	if(parse)
 	{
-		unsigned *wcs = new unsigned[size];
+		unsigned *wcs = new unsigned[size], *buf=wcs;
 		memcpy(wcs,str,size*sizeof(wchar_t));
 		Convert(str, wcs);
-		w = Puts(wcs,0,0,1.,0x10+font,'k');
+		for(i=0;wcs[i];i++)	if(wcs[i]=='\n')	// parse '\n' symbol
+		{
+			wcs[i]=0;	w = Puts(buf,0,0,1.,0x10+font,'k');	// find width
+			buf=wcs+i+1;	if(w>ww)	ww=w;
+		}
+		w = Puts(buf,0,0,1.,0x10+font,'k');
+		if(w>ww)	ww=w;
 		delete []wcs;
 	}
 	else
@@ -260,6 +274,7 @@ unsigned mglFont::Parse(const wchar_t *s)
 	else if(!wcscmp(s,L"r"))		res = unsigned(-1);
 	else if(!wcscmp(s,L"a"))		res = MGL_FONT_OLINE;
 	else if(!wcscmp(s,L"u"))		res = MGL_FONT_ULINE;
+	else if(!wcscmp(s,L"n"))		res = '\n';
 	else if(!wcscmp(s,L"overline"))	res = MGL_FONT_OLINE;
 	else if(!wcscmp(s,L"underline"))res = MGL_FONT_ULINE;
 	else if(!wcscmp(s,L"textbf"))	res = MGL_FONT_BOLD;
@@ -298,7 +313,7 @@ void mglFont::Convert(const wchar_t *str, unsigned *res)
 				}
 			}
 		}
-		else if(ch<=' ')	res[j++] = ' ';	// no \t, no \n at this moment :(
+		else if(ch<=' ' && ch!='\n')	res[j++] = ' ';	// no \t at this moment :(
 		else if(ch=='_')	res[j++] = MGL_FONT_LOWER;
 		else if(ch=='^')	res[j++] = MGL_FONT_UPPER;
 		else if(ch=='@')	res[j++] = MGL_FONT_UPPER|MGL_FONT_LOWER;
@@ -384,6 +399,13 @@ float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,floa
 			ww = Puts(b1, x, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			if(gr && !(style&0x10))	// add under-/over- line now
 				draw_ouline(st,x,y,f,fact[a],ww,ccol);
+			MGL_CLEAR_STYLE
+		}
+		else if(s=='\n')	// newline
+		{
+			ww = get_ptr(i, str, &b1, &b2, w1, w2, ff, ff, st);
+			Puts(b1, x+(ww-w1)/2, yy, ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
+			Puts(b2, x+(ww-w2)/2, yy-600*ff/fact[a], ff, (st&(~MGL_FONT_OLINE)&(~MGL_FONT_ULINE)), ccol);
 			MGL_CLEAR_STYLE
 		}
 		else if(s==unsigned(-9))	// underset

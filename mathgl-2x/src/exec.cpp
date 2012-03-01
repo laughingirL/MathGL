@@ -1657,6 +1657,28 @@ void mglc_rotatetext(wchar_t out[1024], long , mglArg *a, int k[10], const char 
 	if(k[0]==3)	mglprintf(out,1024,L"gr->SetRotatedText(%s);", (a[0].v!=0)?"true":"false");
 }
 //-----------------------------------------------------------------------------
+int mgls_tuneticks(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3)	gr->SetTuneTicks(a[0].v!=0,k[1]==3?a[1].v:1.15);
+	else	return 1;
+	return 0;
+}
+void mglc_tuneticks(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3)	mglprintf(out,1024,L"gr->SetTuneTicks(%s, %g);", (a[0].v!=0)?"true":"false", k[1]==3?a[1].v:1.15);
+}
+//-----------------------------------------------------------------------------
+int mgls_ticktime(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==2)	gr->SetTickTime(a[0].s[0],k[1]==3?a[1].v:0,k[2]==2?a[2].s.c_str():"");
+	else	return 1;
+	return 0;
+}
+void mglc_ticktime(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==3)	mglprintf(out,1024,L"gr->SetTickTime('%c', %g, \"%s\");", a[0].s[0],k[1]==3?a[1].v:0,k[2]==2?a[2].s.c_str():"");
+}
+//-----------------------------------------------------------------------------
 int mgls_save(mglGraph *, long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==1 && k[1]==2)	a[0].d->Save(a[1].s.c_str());
@@ -2497,7 +2519,8 @@ void mglc_zrange(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_xtick(mglGraph *gr, long n, mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3 && k[1]==2)
+	if(k[0]==1 && k[1]==2)	gr->SetTicksVal('x', *(a[0].d), a[1].w.c_str(), k[2]==3 && a[2].v);
+	else if(k[0]==3 && k[1]==2)
 	{
 		mreal v[50];	wchar_t *s=new wchar_t[50*256];	int i;
 		for(i=0;i<50 && i<n/2;i++)
@@ -2529,7 +2552,8 @@ void mglc_xtick(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_ytick(mglGraph *gr, long n, mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3 && k[1]==2)
+	if(k[0]==1 && k[1]==2)	gr->SetTicksVal('x', *(a[0].d), a[1].w.c_str(), k[2]==3 && a[2].v);
+	else if(k[0]==3 && k[1]==2)
 	{
 		mreal v[50];	wchar_t *s=new wchar_t[50*256];	int i;
 		for(i=0;i<50 && i<n/2;i++)
@@ -2560,7 +2584,8 @@ void mglc_ytick(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_ztick(mglGraph *gr, long n, mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3 && k[1]==2)
+	if(k[0]==1 && k[1]==2)	gr->SetTicksVal('x', *(a[0].d), a[1].w.c_str(), k[2]==3 && a[2].v);
+	else if(k[0]==3 && k[1]==2)
 	{
 		mreal v[50];	wchar_t *s=new wchar_t[50*256];	int i;
 		for(i=0;i<50 && i<n/2;i++)
@@ -3671,6 +3696,7 @@ mglCommand mgls_base_cmd[] = {
 	{"text","Draw text at some position or along curve","text x y 'txt' ['fmt' size]|x y z 'txt' ['fmt' size]|x y dx dy 'txt' ['fmt' size]|x y z dx dy dz 'txt' ['fmt' size]|Ydat 'txt' ['font' sise]|Xdat Ydat 'txt' ['font' sise]", mgls_text, mglc_text,0},
 	{"textmark","Draw TeX mark at point position","textmark Ydat Rdat 'text' ['fmt']|Xdat Ydat Rdat 'text' ['fmt']|Xdat Ydat Zdat Rdat 'text' ['fmt']", mgls_textmark, mglc_textmark,0},
 	{"ticklen","Set tick length","ticklen val [stt]", mgls_ticklen, mglc_ticklen,2},
+	{"ticktime","Set ticks in time format","timetick 'dir' [dv 'tmpl']", mgls_ticktime, mglc_ticktime,2},
 	{"tile","Draw horizontal tiles","tile Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tile, mglc_tile,0},
 	{"tiles","Draw horizontal tiles with variable size","tiles Zdat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_tiles, mglc_tiles,0},
 	{"title","Add title for current subplot/inplot","title 'txt' ['fmt' size]", mgls_title, mglc_title,0},
@@ -3686,18 +3712,19 @@ mglCommand mgls_base_cmd[] = {
 	{"tricont","Draw contour lines for surface of triangles","tricont Vdat Idat Xdat Ydat ['fmt']|Vdat Idat Xdat Ydat Zdat ['fmt']|Vdat Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_tricont, mglc_tricont,0},
 	{"triplot","Draw surface of triangles","triplot Idat Xdat Ydat ['fmt']|Idat Xdat Ydat Zdat ['fmt']|Idat Xdat Ydat Zdat Cdat ['fmt'] ", mgls_triplot, mglc_triplot,0},
 	{"tube","Draw curve by tube","tube Ydat Rdat ['fmt']|Ydat rval ['fmt']|Xdat Ydat Rdat ['fmt']|Xdat Ydat rval ['fmt']|Xdat Ydat Zdat Rdat ['fmt']|Xdat Ydat Zdat rval ['fmt']", mgls_tube, mglc_tube,0},
+	{"tuneticks","Set ticks tuning","tuneticks val [fctr]", mgls_tuneticks, mglc_tuneticks,2},
 	{"var","Create new 1D data and fill it in range","var Dat nx x1 [x2]", mgls_var, mglc_var,4},
 	{"vect","Draw vector field","vect Udat Vdat ['fmt' kind]|Xdat Ydat Udat Vdat ['fmt' kind]|Udat Vdat Wdat ['fmt' kind]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' kind]", mgls_vect, mglc_vect,0},
 	{"write","Write current image to graphical file","write 'fname' [solid]", mgls_write, mglc_write,6},
 	{"xlabel","Draw label for x-axis","xlabel 'txt' [pos size shift]", mgls_xlabel, mglc_xlabel,1},
 	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2", mgls_xrange, mglc_xrange,2},
-	{"xtick","Set ticks for x-axis","xtick dx [sx tx] | 'tmpl'", mgls_xtick, mglc_xtick,2},
+	{"xtick","Set ticks for x-axis","xtick dx [sx tx] | 'tmpl' | Xdat 'lbl' [add] | v1 'lbl1' ...", mgls_xtick, mglc_xtick,2},
 	{"ylabel","Draw label for y-axis","ylabel 'txt' [pos size shift]", mgls_ylabel, mglc_ylabel,1},
 	{"yrange","Set range for y-axis","yrange Dat [add] | y1 y2", mgls_yrange, mglc_yrange,2},
-	{"ytick","Set ticks for y-axis","ytick dy [sy ty] | 'tmpl'", mgls_ytick, mglc_ytick,2},
+	{"ytick","Set ticks for y-axis","ytick dy [sy ty] | 'tmpl' | Ydat 'lbl' [add] | v1 'lbl1' ...", mgls_ytick, mglc_ytick,2},
 	{"zlabel","Draw label for z-axis","zlabel 'txt' [pos size shift]", mgls_zlabel, mglc_zlabel,1},
 	{"zrange","Set range for z-axis","yrange Dat [add] | z1 z2", mgls_zrange, mglc_zrange,2},
-	{"ztick","Set ticks for z-axis","ztick dz [sz tz] | 'tmpl'", mgls_ztick, mglc_ztick,2},
+	{"ztick","Set ticks for z-axis","ztick dz [sz tz] | 'tmpl' | Zdat 'lbl' [add] | v1 'lbl1' ...", mgls_ztick, mglc_ztick,2},
 {"","","",NULL,NULL,0}};
 //-----------------------------------------------------------------------------
 int mgl_draw_class(mglBase *gr, void *p)

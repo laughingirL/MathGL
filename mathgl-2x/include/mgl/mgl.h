@@ -175,7 +175,7 @@ public:
 	{	mgl_set_axis_stl(gr, stl, tck, sub);	}
 
 	/// Set time templates for ticks
-	inline void SetTickTime(char dir, float d, const char *t="")
+	inline void SetTickTime(char dir, float d=0, const char *t="")
 	{	mgl_set_tick_time(gr,dir,d,t);	}
 	/// Set ticks text (\n separated). Use "" to disable this feature.
 	inline void SetTicksVal(char dir, const char *lbl, bool add=false)
@@ -451,6 +451,10 @@ public:
 	{	mgl_putsw(gr, p.x, p.y, p.z, text, font, size);	}
 	inline void Puts(mglPoint p,const char *text,const char *font=":C",float size=-1)
 	{	mgl_puts(gr, p.x, p.y, p.z, text, font, size);	}
+	inline void Putsw(float x, float y,const wchar_t *text,const char *font=":AC",float size=-1)
+	{	mgl_putsw(gr, x, y, 0, text, font, size);	}
+	inline void Puts(float x, float y,const char *text,const char *font=":AC",float size=-1)
+	{	mgl_puts(gr, x, y, 0, text, font, size);	}
 	/// Print text in position p along direction d with specified font
 	inline void Putsw(mglPoint p, mglPoint d, const wchar_t *text, const char *font=":L", float size=-1)
 	{	mgl_putsw_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, text, font, size);	}

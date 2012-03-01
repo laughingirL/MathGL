@@ -191,17 +191,64 @@ void mglCanvas::SetTickTempl(char dir, const char *t)
 	else if(strlen(t)<255) mbstowcs(aa.t,t,strlen(t)+1);
 }
 //-----------------------------------------------------------------------------
+double mgl_adj_val(double v,float *ds=0)
+{
+	float n = floor(log10(v)), s;
+	v = floor(v*pow(10.,-n));	n = pow(10.,n);
+
+	if(v==1)	{	v = n/5;	s=n/10;	}
+	else if(v<4){	v = n/2;	s=n/10;	}
+	else if(v<7){	v = n;		s=n/5;	}
+	else		{	v = 2*n;	s=n/2;	}
+	if(ds)	*ds=s;
+	return v;
+}
+//-----------------------------------------------------------------------------
 void mglCanvas::SetTickTime(char dir, float d, const char *t)
 {
 	if(!strchr("xyzca",dir))	return;
 	mglAxis &aa = (dir=='x' ? ax : (dir=='y' ? ay : (dir=='z' ? az : ac)));
+	UpdateAxis();
 
-	if(!t || !t[0])	// adjust template
+	time_t tt;	tm t1,t2;
+	tt=aa.v1;	localtime_r(&tt,&t1);
+	tt=aa.v2;	localtime_r(&tt,&t2);
+	if(aa.v1<aa.v2)	// adjust periodic values
 	{
-		time_t tt;	tm t1,t2;
-		tt=aa.v1;	localtime_r(&tt,&t1);
-		tt=aa.v2;	localtime_r(&tt,&t2);
-		t = t1.tm_yday!=t2.tm_yday ? "%x" : "%X";
+		if(abs(t1.tm_year-t2.tm_year)==1)	t2.tm_yday += 365;
+		if(abs(t1.tm_yday-t2.tm_yday)==1)	t2.tm_hour += 24;
+		if(abs(t1.tm_hour-t2.tm_hour)==1)	t2.tm_min += 60;
+		if(abs(t1.tm_min-t2.tm_min)==1)		t2.tm_sec += 60;
+	}
+	else
+	{
+		if(abs(t1.tm_year-t2.tm_year)==1)	t1.tm_yday += 365;
+		if(abs(t1.tm_yday-t2.tm_yday)==1)	t1.tm_hour += 24;
+		if(abs(t1.tm_hour-t2.tm_hour)==1)	t1.tm_min += 60;
+		if(abs(t1.tm_min-t2.tm_min)==1)		t1.tm_sec += 60;
+	}
+	if(!t || !t[0])		// adjust template
+	{
+		t = fabs(t1.tm_yday-t2.tm_yday)>1 ? "%x" : "%X";
+		if(fabs(t1.tm_year-t2.tm_year)>3)	t = "%Y";
+	}
+	if(d==0)	// try to select opimal step
+	{
+
+		if(fabs(t1.tm_year-t2.tm_year)>1)
+			d = 365.25*24*3600*mgl_adj_val(fabs(t1.tm_year-t2.tm_year));	// number of second in year NOTE: improve it
+		// NOTE here should be months ... but it is too unregular ... so omit it now
+// 		else if(t1.tm_mon!=t2.tm_mon)	d = 30*24*3600;	// number of second in month
+		else if(fabs(t1.tm_yday-t2.tm_yday)>1)	// localtime("%x") cannot print time < 1 day
+		{	d = 24*3600*mgl_adj_val(fabs(t1.tm_yday-t2.tm_yday));	d = d>24*3600?d:24*3600;	}
+		else if(fabs(t1.tm_hour-t2.tm_hour)>1)
+			d = 3600*mgl_adj_val(fabs(t1.tm_hour-t2.tm_hour));
+		else if(fabs(t1.tm_min-t2.tm_min)>1)
+			d = 60*mgl_adj_val(fabs(t1.tm_min-t2.tm_min));
+		else if(fabs(t1.tm_sec-t2.tm_sec)>1)	// localtime("%X") cannot print time < 1 sec
+		{	d = mgl_adj_val(fabs(t1.tm_sec-t2.tm_sec));	d = d>1?d:1;	}
+		else	// adjust msec NOTE: this is not supported by localtime() !!!
+			d = mgl_adj_val(fabs(aa.v2-aa.v1));
 	}
 
 	aa.dv = d;	aa.f = 1;	aa.txt.clear();
@@ -228,7 +275,7 @@ void mglCanvas::SetTickTime(char dir, float d, const char *t)
 //-----------------------------------------------------------------------------
 void mglCanvas::AdjustTicks(const char *dir, bool force)
 {
-	UpdateAxis();	TuneTicks = true;
+	UpdateAxis();	//TuneTicks = true;
 	if(strchr(dir,'x'))
 	{	if(force)	ax.d=0;	AdjustTicks(ax,fx);	}
 	if(strchr(dir,'y'))
@@ -248,15 +295,8 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 	else if(aa.d>0)
 	{	aa.dv = aa.d;	aa.ds = aa.d/(fabs(aa.ns)+1);	}
 	else if(aa.d>-1.5)	// like =0 or =-1
-	{
-		n = floor(log10(d));	d = floor(d*pow(10.,-n));
-		n = pow(10.,n);			aa.o=0;
-		if(d==1)	{	aa.dv = n/5;	aa.ds=n/10;	}
-		else if(d<4){	aa.dv = n/2;	aa.ds=n/10;	}
-		else if(d<7){	aa.dv = n;		aa.ds=n/5;	}
-		else		{	aa.dv = 2*n;	aa.ds=n/2;	}
-	}
-	else	// TODO: Check it!!!
+	{	aa.dv = mgl_adj_val(d,&aa.ds);	aa.o=0;	}
+	else
 	{
 		d /= -aa.d;		n = floor(log10(d));
 		int k = int(d*pow(10.,-n)+0.5);
@@ -269,7 +309,7 @@ void mglCanvas::AdjustTicks(mglAxis &aa, bool ff)
 int mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
 {
 	int kind = 0;
-	if(fabs(a-b)<0.001*fabs(a))
+	if(fabs(a-b)<=0.001*fabs(a))
 	{
 		kind = 1;
 		v = fabs(a-b);
@@ -279,7 +319,7 @@ int mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
 			kind=3;		v=mgl_ipow(10.,k);
 			mglprintf(s, 32, L"(@{\\times{}10^{%d}})", k);
 		}
-		if(v<1e-3f)
+		if(v<0.02f)
 		{
 			int k=int(log10(v)-0.01)-1;
 			kind=3;		v=mgl_ipow(10.,k);
@@ -289,14 +329,14 @@ int mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
 	else
 	{
 		v = fabs(b)>fabs(a)?fabs(b):fabs(a);
-		if(v>1000.f)
+		if(v>=1000.f)
 		{
 			kind = 2;
 			int k=int(log10(v)-0.01);
 			v=mgl_ipow(10.,k);
 			mglprintf(s, 32, L"\\times 10^{%d}", k);
 		}
-		if(v<1e-3f)
+		if(v<=1e-3f)
 		{
 			kind = 2;
 			int k=int(log10(v)-0.01)-1;
@@ -307,7 +347,7 @@ int mgl_tick_ext(float a, float b, wchar_t s[32], float &v)
 	return kind;
 }
 //-----------------------------------------------------------------------------
-void mgl_tick_text(float z, float z0, float d, float v, int kind, wchar_t str[64])
+void mgl_tick_text(float z, float z0, float d, float v, int kind, wchar_t str[64], bool tune)
 {
 	float u = fabs(z)<d ? 0:z;
 	if((kind&1) && z>z0)	u = fabs(z-z0)<d ? 0:(z-z0);
@@ -315,16 +355,18 @@ void mgl_tick_text(float z, float z0, float d, float v, int kind, wchar_t str[64
 	if((kind&1) && z>z0)
 	{
 		int n1,n2;
-		mglprintf(str, 64, fabs(u)<1 ? L"@{(+%.2g)}" : L"@{(+%.3g)}",u);
+		mglprintf(str, 64, L"@{(+%.2g)}",u);
+//		mglprintf(str, 64, fabs(u)<1 ? L"@{(+%.2g)}" : L"@{(+%.3g)}",u);
 		n1=wcslen(str);	mglprintf(str, 64, L"@{(+%g)}",u);	n2=wcslen(str);
-		if(n1<n2)	mglprintf(str, 64, fabs(u)<1 ? L"@{(+%.2g)}" : L"@{(+%.3g)}",u);
+//		if(n1<n2)	mglprintf(str, 64, fabs(u)<1 ? L"@{(+%.2g)}" : L"@{(+%.3g)}",u);
+		if(n1<n2)	mglprintf(str, 64, L"@{(+%.2g)}",u);
 	}
 	else
 	{
 		int n1,n2;
 		mglprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);
 		n1=wcslen(str);	mglprintf(str, 64, L"%g",u);	n2=wcslen(str);
-		if(n1<n2)	mglprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);
+		if(n1<n2 && tune)	mglprintf(str, 64, fabs(u)<1 ? L"%.2g" :  L"%.3g",u);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -373,8 +415,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 	{
 		int kind=0;
 		wchar_t s[32]=L"";
-		if(aa.t[0]==0) kind = mgl_tick_ext(aa.v2, aa.v1, s, w);
-		if(!TuneTicks)	kind = 0;
+		if(aa.t[0]==0 && TuneTicks) kind = mgl_tick_ext(aa.v2, aa.v1, s, w);
 
 		v0 = isnan(aa.o) ? aa.v0 : aa.o;
 		if(aa.v2>aa.v1)
@@ -387,7 +428,7 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 			if(aa.t[0])
 				mglprintf(buf, 64, aa.t, fabs(v)<aa.dv/100 ? 0 : v);
 			else
-				mgl_tick_text(v,v0,aa.dv/100,w,kind,buf);
+				mgl_tick_text(v,v0,aa.dv/100,w,kind,buf,TuneTicks);
 			mgl_wcstrim(buf);	aa.AddLabel(buf,v);
 		}
 		if(kind&2)	aa.AddLabel(s,FactorPos*(aa.v2-aa.v1)+aa.v1);
@@ -432,9 +473,11 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 	mglPoint av=(Min+Max)/2, dv,da,db, p;
 	dv = mglPoint(sign(av.x-o.x), sign(av.y-o.y), sign(av.z-o.z));
 	da = aa.a*(dv*aa.a);	db = aa.b*(dv*aa.b);
-	SetPenPal((stl && *stl) ? stl:AxisStl);		// TODO using something like HaveColor()
 
 	register long i,j,k1,k2;
+	if(stl)	for(k1=k2=0;stl[k1];k1++)	if(strchr(MGL_COLORS,stl[k1]))	k2++;
+	SetPenPal((stl && *stl) ? stl:AxisStl);
+
 	p = o + d*aa.v1;	k1 = AddPnt(p,CDef,q,-1,3);
 	for(i=1;i<31;i++)	// axis itself
 	{
@@ -454,8 +497,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 	if(k2>0)	for(i=0;i<k2;i++)
 	{
 		v = aa.txt[i].val;	u = fabs(v);
-		char ch=aa.txt[i].text[0];	// manually exclude factors
-		if(isalnum(ch) || ch=='-')	tick_draw(o+d*v, da, db, 0, stl);
+		if(v>=aa.v1 && v<=aa.v2)	tick_draw(o+d*v, da, db, 0, stl);
 		else	tick_draw(o+d*v, da, db, 0, " ");
 		if(aa.dv==0 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
 			for(j=2;j<10 && v*j<aa.v2;j++)	tick_draw(o+d*(v*j),da,db,1,stl);
@@ -482,36 +524,47 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 	register long i,n = aa.txt.size();
 	char pos[4]="t:C";
 	if(get(MGL_DISABLE_SCALE) && ((aa.dir.x==0 && aa.org.x<0) || (aa.dir.y==0 && aa.org.y>0)))	pos[0]='T';
-	if(aa.ch=='T')	pos[0]='t';
-	float *w=new float[n], h = TextHeight(FontDef,-1)/4, c=NAN, l=NAN, tet=0, v;	// find sizes
+	if(aa.ch=='T')	pos[0]='T';
+	float *w=new float[n], h = TextHeight(FontDef,-1)/4, c=NAN, l=NAN, tet=0, v, vv;	// find sizes
 	long *kk=new long[n];
 	for(i=0;i<n;i++)
 	{
 		w[i] = TextWidth(aa.txt[i].text.c_str(),FontDef,-1)/2;
-		v = aa.txt[i].val;	kk[i] = AddPnt(o+d*v,-1,d,0,7);
-		if(aa.txt[i].text.empty() || kk[i]<0)	continue;	// do nothing with empty labels
-		q=p;	p = GetPntP(kk[i]);	v = i>0 ? (p-q).norm() : NAN;
-		char ch=aa.txt[i].text[0];	// manually exclude factors
-		if(isalnum(ch) || ch=='-')	{	l = l>w[i] ? l:w[i];	c = c<v ? c:v;	}
+		kk[i] = AddPnt(o+d*aa.txt[i].val,-1,d,0,7);
 	}
-	c /= 1.1;	// add some extra space
-	if(get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE) && l>c)	// try rotate first
-	{	tet = c>h ? asin(h*1.1/c) : M_PI/2;	pos[2]='L';
-		l=h/sin(tet);	for(i=0;i<n;i++)	w[i]=l;	}
+
+	for(l=c=0,i=0;i<n-1;i++)
+	{
+		// exclude factors
+		if(aa.txt[i].val<aa.v1 || aa.txt[i+1].val<aa.v1 || aa.txt[i].val>aa.v2 || aa.txt[i+1].val>aa.v2)
+			continue;
+		v = (GetPntP(kk[i+1])-GetPntP(kk[i])).norm();	// distance between ticks
+		vv = (w[i]+w[i+1])/2;	// length of labels
+		if(v>0 && l < vv/v)	l = vv/v;
+		if(c<v)	c = v;
+	}
+	if(get(MGL_ENABLE_RTEXT) && get(MGL_TICKS_ROTATE) && l>1 && c>0)	// try rotate first
+	{	tet = c>1.1*h ? asin(1.1*h/c) : M_PI/2;	pos[2]='L';
+		l=0.99*h/sin(tet)/c;	for(i=0;i<n;i++)	w[i]=l*c;	}
 	// TODO: do smater points exclusion (i.e. longest and so on)
-	long k = get(MGL_TICKS_SKIP) ? 1+l/c : 1;
+	long k = get(MGL_TICKS_SKIP) ? 1+l : 1;
 	if(n>0)	for(i=0;i<n;i++)
 	{
 		if(kk[i]<0)	continue;	// should be never here?!
 		c = aa.txt[i].val;
 		if(c>aa.v1 && c<aa.v2 && i%k!=0)	continue;
 		p = o+d*c;	nn = s-o;	ScalePoint(p,nn);
-		if(!get(MGL_DISABLE_SCALE))	pos[0]=(nn.y>0 || nn.x<0) ? 'T':'t';
-		if(aa.ch=='T')	pos[0]='t';
-		mglPnt &qq = Pnt[kk[i]];	v = qq.u;
-		qq.u = v*cos(tet) + qq.v*sin(tet);
-		qq.v = qq.v*cos(tet) - v*sin(tet);
-		text_plot(kk[i], aa.txt[i].text.c_str(), pos, -1, 0.07);
+		mglPnt &qq = Pnt[kk[i]];
+		float ax=qq.u*cos(tet) + qq.v*sin(tet), ay=qq.v*cos(tet) - qq.u*sin(tet);
+		if(qq.u*nn.x+qq.v*nn.y < ax*nn.x+ay*nn.y)
+		{	ax=qq.u*cos(tet) - qq.v*sin(tet);	ay=qq.v*cos(tet) + qq.u*sin(tet);	}
+		qq.u = ax;	qq.v = ay;
+
+		if(!get(MGL_DISABLE_SCALE))	pos[0]=(qq.u*nn.y-qq.v*nn.x>0) ? 'T':'t';
+//		if(!get(MGL_DISABLE_SCALE))	pos[0]=(nn.y>0 || nn.x<0) ? 'T':'t';
+		if(aa.ch=='T' && pos[0]=='T')	pos[0]='t';
+		if(aa.ch=='T' && pos[0]=='t')	pos[0]='T';
+		text_plot(kk[i], aa.txt[i].text.c_str(), pos, -1, 0.07,CDef,tet?false:true);
 	}
 	delete []w;	delete []kk;
 }
@@ -526,8 +579,10 @@ void mglCanvas::tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const cha
 	mglPoint p=o;
 	long k1,k2,k3;
 
-	if(*TickStl && !f)	SetPenPal(stl && *stl ? stl:TickStl);
-	if(*SubTStl && f)	SetPenPal(stl && *stl ? stl:SubTStl);
+	if(stl)	for(k1=k2=0;stl[k1];k1++)	if(strchr(MGL_COLORS,stl[k1]))	k2++;
+	if(*TickStl && !f)	SetPenPal(k2 ? stl:TickStl);
+	if(*SubTStl && f)	SetPenPal(k2 ? stl:SubTStl);
+
 	ScalePoint(o, d1, false);	d1.Normalize();
 	ScalePoint(p, d2, false);	d2.Normalize();
 	k2 = AddPnt(p, CDef, mglPoint(NAN), 0, 0);
@@ -759,9 +814,16 @@ void mglCanvas::Box(const char *col, bool ticks)
 				if(p[i].z<zm)	{	zm=p[i].z;	im=i;	}
 			}
 			// now draw faces	// TODO: replace to "w" color
-			mgl_facex(this, o[im].x, Min.y, Min.z, Max.y-Min.y, Max.z-Min.z, "y",0,0);
-			mgl_facey(this, Min.x, o[im].y, Min.z, Max.x-Min.x, Max.z-Min.z, "y",0,0);
-			mgl_facey(this, Min.x, Min.y, o[im].z, Max.x-Min.x, Max.y-Min.y, "y",0,0);
+			char clr[5]="{y9}";
+			register int i;	// first color used for faces, last one for edges
+			for(i=0;col[i];i++)	if(strchr(MGL_COLORS,col[i]))
+			{
+				if(i>1 && col[i-1]=='{')	{	clr[1]=col[i];	clr[2]=col[i+1];	break;	}
+				else	{	clr[0]=col[i];	clr[1]=0;	break;	}
+			}
+			mgl_facex(this, o[im].x, Min.y, Min.z, Max.y-Min.y, Max.z-Min.z, clr,0,0);
+			mgl_facey(this, Min.x, o[im].y, Min.z, Max.x-Min.x, Max.z-Min.z, clr,0,0);
+			mgl_facez(this, Min.x, Min.y, o[im].z, Max.x-Min.x, Max.y-Min.y, clr,0,0);
 		}
 	}
 	Org=o;	TickLen=tl;

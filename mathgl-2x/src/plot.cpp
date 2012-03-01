@@ -37,7 +37,13 @@ void mgl_fplot(HMGL gr, const char *eqY, const char *pen, const char *opt)
 	mglFormula *eq = new mglFormula(eqY);
 	register int i;
 	float d = (gr->Max.x - gr->Min.x)/(n-1.), xs, ys, yr, ym=fabs(gr->Max.y - gr->Min.y)/1000;
-	for(i=0;i<n;i++)	// initial data filling
+#define islog(a, b) (((a)>0 && (b)>10*(a)) || ((b)<0 && (a)<10*(b)))
+	// initial data filling
+	if(gr->Min.x>0 && gr->Max.x>100*gr->Min.x)	for(i=0,d=log(2*gr->Max.x/gr->Min.x)/(n-1);i<n;i++)
+	{	x[i]=2*gr->Max.x*exp(d*i)/(2*gr->Max.x/gr->Min.x+exp(d*i));	y[i]=eq->Calc(x[i]);	}
+	else if(gr->Max.x<0 && gr->Min.x<100*gr->Max.x)	for(i=0,d=log(2*gr->Min.x/gr->Max.x)/n;i<n;i++)
+	{	x[i]=2*gr->Min.x*exp(d*i)/(2*gr->Min.x/gr->Max.x+exp(d*i));	y[i]=eq->Calc(x[i]);	}
+	else for(i=0;i<n;i++)
 	{	x[i]=gr->Min.x + i*d;	y[i]=eq->Calc(x[i]);	}
 
 	for(i=0;i<n-1 && n<10000;)
