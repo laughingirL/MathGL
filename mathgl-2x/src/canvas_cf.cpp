@@ -258,14 +258,14 @@ void mgl_label_pos(HMGL gr, float x, float y, const char *text, const char *fnt)
 void mgl_labelw_pos(HMGL gr, float x, float y, const wchar_t *text, const char *fnt)
 {	_Gr_->Labelw(x,y,text,fnt);	}
 //-----------------------------------------------------------------------------
-void mgl_colorbar(HMGL gr, const char *sch,int where)
-{	_Gr_->Colorbar(sch,where);	}
-void mgl_colorbar_ext(HMGL gr, const char *sch, int where, float x, float y, float w, float h)
-{	_Gr_->Colorbar(sch,where,x,y,w,h);	}
-void mgl_colorbar_val(HMGL gr, HCDT dat, const char *sch,int where)
-{	_Gr_->Colorbar(dat,sch,where);	}
-void mgl_colorbar_val_ext(HMGL gr, HCDT dat, const char *sch,int where,float x, float y, float w, float h)
-{	_Gr_->Colorbar(dat,sch,where,x,y,w,h);	}
+void mgl_colorbar(HMGL gr, const char *sch)
+{	_Gr_->Colorbar(sch);	}
+void mgl_colorbar_ext(HMGL gr, const char *sch, float x, float y, float w, float h)
+{	_Gr_->Colorbar(sch,x,y,w,h);	}
+void mgl_colorbar_val(HMGL gr, HCDT dat, const char *sch)
+{	_Gr_->Colorbar(dat,sch);	}
+void mgl_colorbar_val_ext(HMGL gr, HCDT dat, const char *sch,float x, float y, float w, float h)
+{	_Gr_->Colorbar(dat,sch,x,y,w,h);	}
 //-----------------------------------------------------------------------------
 void mgl_add_legend(HMGL gr, const char *text,const char *style)
 {	_Gr_->AddLegend(text,style);	}
@@ -339,18 +339,18 @@ void mgl_label_pos_(uintptr_t *gr, float *x, float *y, const char *txt, const ch
 	char *p=new char[n+1];	memcpy(p,fnt,n);	p[n]=0;
 	_GR_->Label(*x,*y,s,p);	delete []s;	delete []p;	}
 //-----------------------------------------------------------------------------
-void mgl_colorbar_(uintptr_t *gr, const char *sch,int *where,int l)
+void mgl_colorbar_(uintptr_t *gr, const char *sch,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	_GR_->Colorbar(s,*where);	delete []s;	}
-void mgl_colorbar_ext_(uintptr_t *gr, const char *sch,int *where, float *x, float *y, float *w, float *h, int l)
+	_GR_->Colorbar(s);	delete []s;	}
+void mgl_colorbar_ext_(uintptr_t *gr, const char *sch, float *x, float *y, float *w, float *h, int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	_GR_->Colorbar(s,*where,*x,*y,*w,*h);	delete []s;	}
-void mgl_colorbar_val_(uintptr_t *gr, uintptr_t *dat, const char *sch,int *where,int l)
+	_GR_->Colorbar(s,*x,*y,*w,*h);	delete []s;	}
+void mgl_colorbar_val_(uintptr_t *gr, uintptr_t *dat, const char *sch,int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	_GR_->Colorbar(_DA_(dat), s,*where);	delete []s;	}
-void mgl_colorbar_val_ext_(uintptr_t *gr, uintptr_t *dat, const char *sch,int *where, float *x, float *y, float *w, float *h, int l)
+	_GR_->Colorbar(_DA_(dat), s);	delete []s;	}
+void mgl_colorbar_val_ext_(uintptr_t *gr, uintptr_t *dat, const char *sch, float *x, float *y, float *w, float *h, int l)
 {	char *s=new char[l+1];	memcpy(s,sch,l);	s[l]=0;
-	_GR_->Colorbar(_DA_(dat),s,*where,*x,*y,*w,*h);	delete []s;	}
+	_GR_->Colorbar(_DA_(dat),s,*x,*y,*w,*h);	delete []s;	}
 //-----------------------------------------------------------------------------
 void mgl_add_legend_(uintptr_t *gr, const char *text,const char *style,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,text,l);	s[l]=0;

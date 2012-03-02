@@ -194,7 +194,7 @@ void mgl_face_(uintptr_t* gr, float *x0, float *y0, float *z0, float *x1, float 
 //	Cone
 //
 //-----------------------------------------------------------------------------
-void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl, int edge)
+void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z2, float r1, float r2, const char *stl)
 {
 	if(r2<0)	r2=r1;
 	if(r1==0 && r2==0)	return;
@@ -205,6 +205,7 @@ void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 	long ss=gr->AddTexture(stl);
 	float c1=gr->GetC(ss,p1.z), c2=gr->GetC(ss,p2.z);
 	long *kk=new long[164],k1=-1,k2=-1;
+	bool edge = stl && strchr(stl,'@');
 	gr->Reserve(edge?166:82);
 	if(edge)
 	{
@@ -238,9 +239,9 @@ void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 	gr->EndGroup();	delete []kk;
 }
 //-----------------------------------------------------------------------------
-void mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r1, mreal *r2, const char *stl, int *edge, int l)
+void mgl_cone_(uintptr_t* gr, mreal *x1, mreal *y1, mreal *z1, mreal *x2, mreal *y2, mreal *z2, mreal *r1, mreal *r2, const char *stl, int l)
 {	char *s=new char[l+1];	memcpy(s,stl,l);	s[l]=0;
-	mgl_cone(_GR_, *x1,*y1,*z1, *x2,*y2,*z2,*r1,*r2,s,*edge);	delete []s;	}
+	mgl_cone(_GR_, *x1,*y1,*z1, *x2,*y2,*z2,*r1,*r2,s);	delete []s;	}
 //-----------------------------------------------------------------------------
 //
 //	Bars series
@@ -279,9 +280,9 @@ void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char 
 				zz = j>0?dd[i+n]:z0;	dd[i+n] += z->v(i,mz);
 				mgl_cone(gr, x1,y->v(i,0),zz, x1,y->v(i,0),dd[i+n],
 						 gr->BarWidth*d*(dd[i]-zz)/(dd[i]-z0),
-						 gr->BarWidth*d*(dd[i]-dd[i+n])/(dd[i]-z0), cols,1);
+						 gr->BarWidth*d*(dd[i]-dd[i+n])/(dd[i]-z0), cols);
 			}
-			else	mgl_cone(gr, x1,y->v(i,my),z0, x1,y->v(i,my),z->v(i,mz), gr->BarWidth*d,0, cols,1);
+			else	mgl_cone(gr, x1,y->v(i,my),z0, x1,y->v(i,my),z->v(i,mz), gr->BarWidth*d,0, cols);
 		}
 	}
 	gr->EndGroup();	delete []dd;
@@ -330,7 +331,8 @@ void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, floa
 	gr->SetPenPal(stl,&pal);
 	float c=gr->NextColor(pal);
 	float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
-	bool wire = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !wire;
+	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !fill;
+	if(!fill)	k=c;
 
 	gr->Reserve(2*n+1);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), v=p2-p1, u=mglPoint(0,0,1)^v, q=u^v, p, s;
@@ -346,7 +348,7 @@ void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, floa
 		m2 = m1;	m1 = gr->CopyNtoC(n1,k);
 		if(i>0)
 		{
-			if(wire)	gr->trig_plot(n0,n1,n2);
+			if(fill)	gr->trig_plot(n0,n1,n2);
 			if(box)		gr->line_plot(m1,m2);
 		}
 	}
@@ -359,7 +361,8 @@ void mgl_rhomb(HMGL gr, float x1, float y1, float z1, float x2, float y2, float 
 	float c=gr->NextColor(pal);
 	float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
 	float b=(gr->GetNumPal(pal)>2)?gr->NextColor(pal):c;
-	bool wire = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !wire;
+	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !fill;
+	if(!fill)	k=c;
 	gr->Reserve(8);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), u=mglPoint(0,0,1)^(p1-p2), q=u^(p1-p2), p, s,qq;
 	u = (r/u.norm())*u;	s = (p1+p2)/2.;
@@ -367,7 +370,7 @@ void mgl_rhomb(HMGL gr, float x1, float y1, float z1, float x2, float y2, float 
 	p = s+u;q = qq;	n2 = gr->AddPnt(p,b==c?c:k,qq,-1,3);
 	p = p2;	q = qq;	n3 = gr->AddPnt(p,b,qq,-1,3);
 	p = s-u;q = qq;	n4 = gr->AddPnt(p,b==c?c:k,qq,-1,3);
-	if(wire)	gr->quad_plot(n1,n2,n4,n3);
+	if(fill)	gr->quad_plot(n1,n2,n4,n3);
 	n1 = gr->CopyNtoC(n1,k);	n2 = gr->CopyNtoC(n2,k);
 	n3 = gr->CopyNtoC(n3,k);	n4 = gr->CopyNtoC(n4,k);
 	if(box)
@@ -681,14 +684,15 @@ void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const 
 	if(x->GetNx()!=n || z->GetNx()!=n)
 	{	gr->SetWarn(mglWarnDim,"Label");	return;	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Label");	return;	}
-	gr->SaveState(opt);
+	float size=gr->SaveState(opt);	if(isnan(size))	size=-0.7;
 	static int cgid=1;	gr->StartGroup("Label",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 
-	register long i,k,l;
-	for(i=k=0;i<wcslen(text);i++)	if(text[i]=='%')
+	register long i,k,kk,l,nn;
+	for(i=k=0;text[i];i++)	if(text[i]=='%')
 	{if(text[i+1]=='%')	k--;	else	k++;	}
-	wchar_t *buf = new wchar_t[wcslen(text)+10*k+1];
+	nn = wcslen(text)+10*k+1;
+	wchar_t *buf = new wchar_t[nn];
 	mglPoint p,q(NAN);
 	for(j=0;j<m;j++)
 	{
@@ -696,19 +700,20 @@ void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const 
 		for(i=0;i<n;i++)
 		{
 			if(gr->Stop)	{	delete []buf;	return;	}
-			p = mglPoint(x->v(i,mx), y->v(i,my), z->v(i,mz));
-			k = gr->AddPnt(p,-1,q);
-			for(k=l=0;k<wcslen(text);k++)
+			float xx=x->v(i,mx), yy=y->v(i,my), zz=z->v(i,mz);
+			p = mglPoint(xx,yy,zz);
+			kk = gr->AddPnt(p,-1,q);
+			memset(buf,0,nn*sizeof(wchar_t));
+			for(k=l=0;text[k];k++)
 			{
-				if(text[k]!='%')
-				{	buf[l]=text[k];	l++;	continue;	}
-				else if(text[k+1]=='%')	wprintf(buf+l,"%%");
-				else if(text[k+1]=='x')	wprintf(buf+l,"%g",x->v(i,mx));
-				else if(text[k+1]=='y')	wprintf(buf+l,"%g",y->v(i,my));
-				else if(text[k+1]=='z')	wprintf(buf+l,"%g",z->v(i,mz));
+				if(text[k]!='%')	{	buf[l]=text[k];	l++;	continue;	}
+				else if(text[k+1]=='%')	{	buf[l]='%';	l++;	continue;	}
+				else if(text[k+1]=='x')	swprintf(buf+l,nn-l,L"%.2g",xx);
+				else if(text[k+1]=='y')	swprintf(buf+l,nn-l,L"%.2g",yy);
+				else if(text[k+1]=='z')	swprintf(buf+l,nn-l,L"%.2g",zz);
 				l=wcslen(buf);	k++;
 			}
-			gr->text_plot(k, buf, fnt);
+			gr->text_plot(kk, buf, fnt, size, 0.03);
 		}
 	}
 	delete []buf;	gr->EndGroup();

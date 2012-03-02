@@ -637,55 +637,6 @@ void mglCanvas::DrawGrid(mglAxis &aa)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::Colorbar(const char *sch,int where)
-{	// ‘0’ - right, ‘1’ - left, ‘2’ - above, ‘3’ - under
-	if(sch && strchr(sch,'>'))	where = 0;
-	if(sch && strchr(sch,'<'))	where = 1;
-	if(sch && strchr(sch,'^'))	where = 2;
-	if(sch && strchr(sch,'_'))	where = 3;
-	if(sch && strchr(sch,'A'))	{	Push();	Identity();	}
-	Colorbar(where, where==0?1:0, where==2?1:0, 1, 1, AddTexture(sch));
-	if(sch && strchr(sch,'A'))	Pop();
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::Colorbar(int where, float x, float y, float w, float h, long s)
-{
-	long n=256;
-	mglData v(n);
-	if(ac.d || Min.c*Max.c<=0)	v.Fill(Min.c,Max.c);
-	else if(Max.c>Min.c && Min.c>0)
-	{	v.Fill(log(Min.c), log(Max.c));	v.Modify("exp(u)");		}
-	else if(Min.c<Max.c && Max.c<0)
-	{	v.Fill(log(-Min.c), log(-Max.c));	v.Modify("-exp(u)");	}
-	float *c=new float[n];
-	for(long i=0;i<n;i++)	c[i] = GetC(s,v.a[i]);
-	colorbar(&v, c, where, x, y, w, h);
-	delete []c;
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::Colorbar(HCDT v, const char *sch,int where)
-{
-	if(sch && strchr(sch,'>'))	where = 0;
-	if(sch && strchr(sch,'<'))	where = 1;
-	if(sch && strchr(sch,'^'))	where = 2;
-	if(sch && strchr(sch,'_'))	where = 3;
-	if(sch && strchr(sch,'A'))	{	Push();	Identity();	}
-	Colorbar(v,sch,where, where==0?1:0, where==2?1:0, 1, 1);
-	if(sch && strchr(sch,'A'))	Pop();
-}
-//-----------------------------------------------------------------------------
-void mglCanvas::Colorbar(HCDT v, const char *sch, int where, float x, float y, float w, float h)
-{
-	float *c=new float[v->GetNx()];
-	if(!sch || !(*sch))	sch = MGL_DEF_PAL;
-	long s = AddTexture(sch);	// TODO Check it
-	int nc = GetNumPal(s*256);
-	float dc = nc>1 ? 1/(MGL_FLT_EPS*(nc-1)):0;
-	for(long i=0;i<v->GetNx();i++)	c[i] = s+i*dc;
-	colorbar(v, c, where, x, y, w, h);
-	delete []c;
-}
-//-----------------------------------------------------------------------------
 void mglCanvas::Label(char dir, const char *str, float pos, float shift)
 {
 	unsigned s = strlen(str)+1;
@@ -827,6 +778,77 @@ void mglCanvas::Box(const char *col, bool ticks)
 		}
 	}
 	Org=o;	TickLen=tl;
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::Colorbar(const char *sch)
+{
+	bool in = sch && strchr(sch,'I');
+	int where = 0;		// ‘0’ - right, ‘1’ - left, ‘2’ - above, ‘3’ - under
+	if(sch && strchr(sch,'>'))	where = in?1:0;
+	if(sch && strchr(sch,'<'))	where = in?0:1;
+	if(sch && strchr(sch,'^'))	where = in?3:2;
+	if(sch && strchr(sch,'_'))	where = in?2:3;
+	float s3=B.pf, x=(where==0?1:0), y=(where==2?1:0);
+	if(in)	{	x=(where==0?-1:1)/s3;	y=(where==2?-1:1)/s3;	}
+	Colorbar(sch, x, y, 1, 1);
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::Colorbar(const char *sch, float x, float y, float w, float h)
+{
+	bool in = sch && strchr(sch,'I');
+	int where = 0;
+	if(sch && strchr(sch,'>'))	where = in?1:0;
+	if(sch && strchr(sch,'<'))	where = in?0:1;
+	if(sch && strchr(sch,'^'))	where = in?3:2;
+	if(sch && strchr(sch,'_'))	where = in?2:3;
+	if(sch && strchr(sch,'A'))	{	Push();	Identity();	}
+
+	long n=256, s = AddTexture(sch);
+	mglData v(n);
+	if(ac.d || Min.c*Max.c<=0)	v.Fill(Min.c,Max.c);
+	else if(Max.c>Min.c && Min.c>0)
+	{	v.Fill(log(Min.c), log(Max.c));	v.Modify("exp(u)");		}
+	else if(Min.c<Max.c && Max.c<0)
+	{	v.Fill(log(-Min.c), log(-Max.c));	v.Modify("-exp(u)");	}
+	float *c=new float[n];
+	for(long i=0;i<n;i++)	c[i] = GetC(s,v.a[i]);
+	colorbar(&v, c, where, x, y, w, h);
+	delete []c;
+	if(sch && strchr(sch,'A'))	Pop();
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::Colorbar(HCDT v, const char *sch)
+{
+	bool in = sch && strchr(sch,'I');
+	int where = 0;
+	if(sch && strchr(sch,'>'))	where = in?1:0;
+	if(sch && strchr(sch,'<'))	where = in?0:1;
+	if(sch && strchr(sch,'^'))	where = in?3:2;
+	if(sch && strchr(sch,'_'))	where = in?2:3;
+	float s3=B.pf, x=(where==0?1:0), y=(where==2?1:0);
+	if(in)	{	x=(where==0?-1:1)/s3;	y=(where==2?-1:1)/s3;	}
+	Colorbar(v, sch, x, y, 1, 1);
+}
+//-----------------------------------------------------------------------------
+void mglCanvas::Colorbar(HCDT v, const char *sch, float x, float y, float w, float h)
+{
+	bool in = sch && strchr(sch,'I');
+	int where = 0;
+	if(sch && strchr(sch,'>'))	where = in?1:0;
+	if(sch && strchr(sch,'<'))	where = in?0:1;
+	if(sch && strchr(sch,'^'))	where = in?3:2;
+	if(sch && strchr(sch,'_'))	where = in?2:3;
+	if(sch && strchr(sch,'A'))	{	Push();	Identity();	}
+
+	float *c=new float[v->GetNx()];
+	if(!sch || !(*sch))	sch = MGL_DEF_PAL;
+	long s = AddTexture(sch);
+	int nc = GetNumPal(s*256);
+	float dc = nc>1 ? 1/(MGL_FLT_EPS*(nc-1)):0;
+	for(long i=0;i<v->GetNx();i++)	c[i] = s+i*dc;
+	colorbar(v, c, where, x, y, w, h);
+	delete []c;
+	if(sch && strchr(sch,'A'))	Pop();
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::colorbar(HCDT vv, const float *c, int where, float x, float y, float w, float h)

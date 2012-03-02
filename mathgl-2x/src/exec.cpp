@@ -415,20 +415,24 @@ void mglc_crust(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_colorbar(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==2 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3)
-		gr->Colorbar(a[0].s.c_str(), iint(a[1].v), a[2].v, a[3].v, a[4].v, a[5].v);
-	else if(k[0]==1)	gr->Colorbar(*(a[0].d), k[1]==2 ? a[1].s.c_str():"", k[2]==3 ? iint(a[2].v):0);
-	else	gr->Colorbar(k[0]==2 ? a[0].s.c_str():"", k[1]==3 ? iint(a[1].v):0);
+	if(k[0]==1 && k[1]==2 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3)
+		gr->Colorbar(*(a[0].d), a[1].s.c_str(), a[2].v, a[3].v, a[4].v, a[5].v);
+	else if(k[0]==2 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3)
+		gr->Colorbar(a[0].s.c_str(), a[1].v, a[2].v, a[3].v, a[4].v);
+	else if(k[0]==1)	gr->Colorbar(*(a[0].d), k[1]==2 ? a[1].s.c_str():"");
+	else	gr->Colorbar(k[0]==2 ? a[0].s.c_str():"");
 	return 0;
 }
 void mglc_colorbar(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==2 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3)
-		mglprintf(out,1024,L"gr->Colorbar(\"%s\", %d, %g, %g, %g, %g);",a[0].s.c_str(), iint(a[1].v), a[2].v, a[3].v, a[4].v, a[5].v);
+	if(k[0]==1 && k[1]==2 && k[2]==3 && k[3]==3 && k[4]==3 && k[5]==3)
+		mglprintf(out,1024,L"gr->Colorbar(%s, \"%s\", %g, %g, %g, %g);",a[0].s.c_str(), a[1].s.c_str(), a[2].v, a[3].v, a[4].v, a[5].v);
+	else if(k[0]==2 && k[1]==3 && k[2]==3 && k[3]==3 && k[4]==3)
+		mglprintf(out,1024,L"gr->Colorbar(\"%s\", %g, %g, %g, %g);",a[0].s.c_str(), a[1].v, a[2].v, a[3].v, a[4].v);
 	else if(k[0]==1)
-		mglprintf(out,1024,L"gr->Colorbar(%s, \"%s\", %d);",a[0].s.c_str(), k[1]==2 ? a[1].s.c_str():"", k[2]==3 ? iint(a[2].v):0);
+		mglprintf(out,1024,L"gr->Colorbar(%s, \"%s\");",a[0].s.c_str(), k[1]==2 ? a[1].s.c_str():"");
 	else
-		mglprintf(out,1024,L"gr->Colorbar(\"%s\", %d);",k[0]==2 ? a[0].s.c_str():"", k[1]==3 ? iint(a[1].v):0);
+		mglprintf(out,1024,L"gr->Colorbar(\"%s\");",k[0]==2 ? a[0].s.c_str():"");
 }
 //-----------------------------------------------------------------------------
 int mgls_copy(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -693,10 +697,10 @@ int mgls_cone(mglGraph *gr, long , mglArg *a, int [10], const char *)
 	{
 		if(a[7].type==2)
 			gr->Cone(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v),
-				a[6].v, a[7].v, (a[8].type==1) ? a[8].s.c_str() : 0, (a[9].type==2) ? a[9].v!=0 : false);
+				a[6].v, a[7].v, (a[8].type==1) ? a[8].s.c_str() : 0);
 		else
 			gr->Cone(mglPoint(a[0].v,a[1].v,a[2].v), mglPoint(a[3].v,a[4].v,a[5].v),
-				a[6].v, -1, (a[7].type==1) ? a[7].s.c_str() : 0, (a[8].type==2) ? a[8].v!=0 : false);
+				a[6].v, -1, (a[7].type==1) ? a[7].s.c_str() : 0);
 	}
 	else	return 1;
 	return 0;
@@ -708,9 +712,9 @@ void mglc_cone(wchar_t out[1024], long , mglArg *a, int [10], const char *)
 	if(ok)
 	{
 		if(a[7].type==2)
-			mglprintf(out,1024,L"gr->Cone(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, %g, \"%s\", %s);", a[0].v,a[1].v,a[2].v, a[3].v,a[4].v,a[5].v, a[6].v, a[7].v, (a[8].type==2) ? a[8].s.c_str() : "", (a[9].type==2 && a[9].v!=0) ? "true" : "false");
+			mglprintf(out,1024,L"gr->Cone(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, %g, \"%s\");", a[0].v,a[1].v,a[2].v, a[3].v,a[4].v,a[5].v, a[6].v, a[7].v, (a[8].type==2) ? a[8].s.c_str() : "");
 		else
-			mglprintf(out,1024,L"gr->Cone(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, -1, \"%s\", %s);", a[0].v,a[1].v,a[2].v, a[3].v,a[4].v,a[5].v, a[6].v, (a[7].type==2) ? a[7].s.c_str() : "", (a[8].type==2 && a[8].v!=0)? "true" : "false");
+			mglprintf(out,1024,L"gr->Cone(mglPoint(%g, %g, %g), mglPoint(%g, %g, %g), %g, -1, \"%s\");", a[0].v,a[1].v,a[2].v, a[3].v,a[4].v,a[5].v, a[6].v, (a[7].type==2) ? a[7].s.c_str() : "");
 	}
 }
 //-----------------------------------------------------------------------------
@@ -3526,11 +3530,11 @@ mglCommand mgls_base_cmd[] = {
 	{"call","Execute script in external file","call 'name' [args]", 0, 0, 6},
 	{"candle","Draw candlestick chart","candle candle Vdat1 ['fmt']|Vdat1 Vdat2 ['fmt']|Vdat1 Ydat1 Ydat2 ['fmt']||Vdat1 Vdat2 Ydat1 Ydat2 ['fmt']|Xdat Vdat1 Vdat2 Ydat1 Ydat2 ['fmt']", mgls_candle, mglc_candle,0},
 	{"chart","Draw chart","chart Dat ['fmt']", mgls_chart, mglc_chart,0},
-	{"chdir","Change current directory","chdir 'dir'", mgls_chdir, mglc_chdir,6},
+	{"chdir","Change current directory","chdir 'dir'", mgls_chdir, mglc_chdir,2},
 	{"clearlegend","Clear legend antries","clearlegend", mgls_clearlegend, mglc_clearlegend,2},
-	{"clf","Clear picture","clf", mgls_clf, mglc_clf,6},
+	{"clf","Clear picture","clf", mgls_clf, mglc_clf,1},
 	{"cloud","Draw cloud","cloud Adat ['fmt']|Xdat Ydat Zdat Adat ['fmt']", mgls_cloud, mglc_cloud,0},
-	{"colorbar","Draw colorbar","colorbar ['fmt' pos]|Vdat ['fmt' pos]|'sch' pos x y w h ", mgls_colorbar, mglc_colorbar,1},
+	{"colorbar","Draw colorbar","colorbar ['fmt' pos]|Vdat ['fmt' pos]|'sch' pos x y w h|Vdat 'sch' pos x y w h", mgls_colorbar, mglc_colorbar,1},
 	{"column","Get data column filled by formula on column ids","column Res Dat 'eq'", mgls_column, mglc_column,4},
 	{"columnplot","Set position of plot inside cell of column", "columnplot num ind [d]", mgls_columnplot, mglc_columnplot,5},
 	{"combine", "Direct multiplication of arrays", "combine Res Adat Bdat", mgls_combine, mglc_combine,3},
@@ -3589,7 +3593,7 @@ mglCommand mgls_base_cmd[] = {
 	{"fall","Draw waterfalls","fall Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_fall, mglc_fall,0},
 	{"fgets","Print string from file","fgets x y z 'fname' [pos=0 'fmt' size]|x y z 'fname' [pos=0 'fmt' size]", mgls_fgets, mglc_fgets,1},
 	{"fill","Fill data linearly in range [v1, v2]","fill Var v1 v2 ['dir'] | Var 'eq' [Vdat Wdat]", mgls_fill, mglc_fill,3},
-	{"fillsample","Fill x-,k-samples for transforms","fillsample Var num 'how'", mgls_fillsample, mglc_fillsample,3},
+	{"fillsample","Fill x-,k-samples for transforms","fillsample Var num 'how'", mgls_fillsample, mglc_fillsample,4},
 	{"fit","Fit data to formula","fit Res A 'eq' 'var' [Ini]|Res X A 'eq' 'var' [Ini]|Res X Y A 'eq' 'var' [Ini]|Res X Y Z A 'eq' 'var' [Ini]", mgls_fit, mglc_fit,4},
 	{"fits","Fit data to formula","fits Res A S 'eq' 'var' [Ini]|Res X A S 'eq' 'var' [Ini]|Res X Y A S 'eq' 'var' [Ini]|Res X Y Z A S 'eq' 'var' [Ini]", mgls_fits, mglc_fits,4},
 	{"flow","Draw flow threads for vector field","flow Udat Vdat ['fmt' num]|Xdat Ydat Udat Vdat ['fmt' num]|Udat Vdat Wdat ['fmt' num]|Xdat Ydat Zdat Udat Vdat ['fmt' num]|\
@@ -3666,7 +3670,7 @@ mglCommand mgls_base_cmd[] = {
 	{"rotatetext","Set to auto rotate text or not","rotatetext val", mgls_rotatetext, mglc_rotatetext,2},
 	{"save","Save data to file","save Dat 'file'", mgls_save, mglc_save,3},
 	{"savehdf","Save data to HDF5 file","savehdf Dat 'file' 'id'", mgls_savehdf, mglc_savehdf,3},
-	{"setsize","Set picture size","setsize width height", mgls_setsize, mglc_setsize,6},
+	{"setsize","Set picture size","setsize width height", mgls_setsize, mglc_setsize,2},
 	{"sew","Remove jump into the data, like phase jumps","sew Dat ['dir' da]", mgls_sew, mglc_sew,3},
 	{"sinfft","Sin-Fourier transform at some direction","sinfft Dat 'dir'", mgls_sinfft, mglc_sinfft,3},
 	{"smooth","Smooth data","smooth Dat [kind 'dir']", mgls_smooth, mglc_smooth,3},
@@ -3715,7 +3719,7 @@ mglCommand mgls_base_cmd[] = {
 	{"tuneticks","Set ticks tuning","tuneticks val [fctr]", mgls_tuneticks, mglc_tuneticks,2},
 	{"var","Create new 1D data and fill it in range","var Dat nx x1 [x2]", mgls_var, mglc_var,4},
 	{"vect","Draw vector field","vect Udat Vdat ['fmt' kind]|Xdat Ydat Udat Vdat ['fmt' kind]|Udat Vdat Wdat ['fmt' kind]|Xdat Ydat Zdat Udat Vdat Wdat ['fmt' kind]", mgls_vect, mglc_vect,0},
-	{"write","Write current image to graphical file","write 'fname' [solid]", mgls_write, mglc_write,6},
+	{"write","Write current image to graphical file","write 'fname' [solid]", mgls_write, mglc_write,2},
 	{"xlabel","Draw label for x-axis","xlabel 'txt' [pos size shift]", mgls_xlabel, mglc_xlabel,1},
 	{"xrange","Set range for x-axis","xrange Dat [add] | x1 x2", mgls_xrange, mglc_xrange,2},
 	{"xtick","Set ticks for x-axis","xtick dx [sx tx] | 'tmpl' | Xdat 'lbl' [add] | v1 'lbl1' ...", mgls_xtick, mglc_xtick,2},

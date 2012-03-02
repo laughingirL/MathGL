@@ -434,8 +434,8 @@ public:
 	inline void Sphere(mglPoint p, float r, const char *col="r")
 	{	mgl_sphere(gr, p.x, p.y, p.z, r, col);	}
 	/// Draws the cone between points p1,p2 with radius r1,r2 with style stl
-	inline void Cone(mglPoint p1, mglPoint p2, float r1, float r2=-1, const char *stl="B", bool edge=false)
-	{	mgl_cone(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z,r1,r2,stl,edge);	}
+	inline void Cone(mglPoint p1, mglPoint p2, float r1, float r2=-1, const char *stl="r@")
+	{	mgl_cone(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z,r1,r2,stl);	}
 	/// Draws the ellipse between points p1,p2 with color stl and width r
 	inline void Ellipse(mglPoint p1, mglPoint p2, float r, const char *stl="r")
 	{	mgl_ellipse(gr, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, r,stl);	}
@@ -496,17 +496,15 @@ public:
 	{	mgl_labelw_ext(gr, dir, text, pos, shift);	}
 
 	/// Draw colorbar at edge of axis
-	inline void Colorbar(const char *sch="",int where=0)
-	{	mgl_colorbar(gr, sch, where);	}
-	inline void Colorbar(const char *sch,int where,float x,float y,float w,float h)
-	{	mgl_colorbar_ext(gr, sch, where,x,y,w,h);	}
-	inline void Colorbar(int where,float x,float y,float w,float h)
-	{	mgl_colorbar_ext(gr, 0, where,x,y,w,h);	}
+	inline void Colorbar(const char *sch="")
+	{	mgl_colorbar(gr, sch);	}
+	inline void Colorbar(const char *sch,float x,float y,float w,float h)
+	{	mgl_colorbar_ext(gr, sch, x,y,w,h);	}
 	/// Draw colorbar with manual colors at edge of axis
-	inline void Colorbar(const mglDataA &val, const char *sch="",int where=0)
-	{	mgl_colorbar_val(gr, &val, sch, where);	}
-	inline void Colorbar(const mglDataA &val, const char *sch,int where,float x,float y,float w,float h)
-	{	mgl_colorbar_val_ext(gr, &val, sch, where, x,y,w,h);	}
+	inline void Colorbar(const mglDataA &val, const char *sch="")
+	{	mgl_colorbar_val(gr, &val, sch);	}
+	inline void Colorbar(const mglDataA &val, const char *sch,float x,float y,float w,float h)
+	{	mgl_colorbar_val_ext(gr, &val, sch, x,y,w,h);	}
 
 	/// Add string to legend
 	inline void AddLegend(const char *text,const char *style)
@@ -608,11 +606,11 @@ public:
 	inline void Candle(const mglDataA &y, const char *pen="", const char *opt="")
 	{	mgl_candle(gr, &y, NULL, NULL, pen, opt);	}
 	/// Draw cones from points {x,y,z} to axis plane
-	inline void Cones(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *pen="", const char *opt="")
+	inline void Cones(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *pen="@", const char *opt="")
 	{	mgl_cones_xyz(gr, &x, &y, &z, pen, opt);	}
-	inline void Cones(const mglDataA &x, const mglDataA &z, const char *pen="", const char *opt="")
+	inline void Cones(const mglDataA &x, const mglDataA &z, const char *pen="@", const char *opt="")
 	{	mgl_cones_xz(gr, &x, &z, pen, opt);	}
-	inline void Cones(const mglDataA &z, const char *pen="", const char *opt="")
+	inline void Cones(const mglDataA &z, const char *pen="@", const char *opt="")
 	{	mgl_cones(gr, &z, pen, opt);	}
 
 	/// Draw error boxes {ex,ey} at points {x,y}

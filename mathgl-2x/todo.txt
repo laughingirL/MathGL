@@ -1,8 +1,8 @@
 ============= TEST =============
 1. MGL testing system
-3. Check highlight
+2. test pthread for windows
+3. Check highlight -- UDAV: set proper pos, correct dbl-click, dbl-click on messages
 4. Check export to SVG/EPS/MGLD/TeX/OBJ/XGL/X3D/STL.
-5. setsize in UDAV
 
 6. Check fontsize maximum ?!?
 7. curved text (in new sample) look not so good
@@ -11,6 +11,7 @@
 
 ============= NEW  =============
 
+1. ReadHDF5 -- add string argument for handling lowest dimension (like complex numbers): "sum" - sum, "arg" - arg, "0...9" read slice 0...9, "abs" - sqrt(sum []^2)
 2. Export to X3D and VRML
 3. Manual colors for text, boundary, background of Legend() (1st - text, 2nd - border, 3d - background)
 

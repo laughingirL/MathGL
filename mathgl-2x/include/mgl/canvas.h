@@ -267,12 +267,11 @@ using mglBase::Light;
 //	void Title(const char *text,const char *font=0);
 
 	/// Draw colorbar at edge of axis
-	void Colorbar(const char *sch=0,int where=0);
-	void inline Colorbar(const char *sch, int where, float x, float y, float w, float h)
-	{	Colorbar(where,x,y,w,h,AddTexture(sch));	};
+	void Colorbar(const char *sch=0);
+	void Colorbar(const char *sch, float x, float y, float w, float h);
 	/// Draw colorbar at edge of axis for manual colors
-	void Colorbar(HCDT v, const char *sch=0,int where=0);
-	void Colorbar(HCDT v, const char *sch, int where, float x, float y, float w, float h);
+	void Colorbar(HCDT v, const char *sch=0);
+	void Colorbar(HCDT v, const char *sch, float x, float y, float w, float h);
 
 	/// Add string to legend
 	void AddLegend(const char *text,const char *style);
@@ -334,8 +333,6 @@ protected:
 	float FogDist;		///< Inverse fog distance (fog ~ exp(-FogDist*Z))
 	float FogDz;		///< Relative shift of fog
 
-	/// Draw colorbar at edge of axis
-	void Colorbar(int where, float x, float y, float w, float h, long s=0);
 	/// Auto adjust ticks
 	void AdjustTicks(mglAxis &aa, bool ff);
 	/// Prepare labels for ticks

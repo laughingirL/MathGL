@@ -51,7 +51,7 @@ int main(int argc,char **argv)
 		gr.Text(mglPoint(),"");
 		gr.Update();       // update window
 	}
-	return 0;   // finish calculations and close the window*/
+	return 0;   // finish calculations and close the window
 #else
 	mglWindow *gr;
 	char key = 0;

@@ -1347,34 +1347,33 @@ Draws axes with ticks (@pxref{Axis settings}) in directions determined by string
 @end deftypefn
 
 @anchor{colorbar}
-@deftypefn {MGL command} {} colorbar ['sch'='' @code{pos=0}]
+@deftypefn {MGL command} {} colorbar ['sch'='']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Colorbar (@code{const char *}sch=@code{""}, @code{int} pos=@code{0})
-@deftypefnx {C function} @code{void} mgl_colorbar (@code{HMGL} gr, @code{const char *}sch, @code{int} pos)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Colorbar (@code{const char *}sch=@code{""})
+@deftypefnx {C function} @code{void} mgl_colorbar (@code{HMGL} gr, @code{const char *}sch)
 @end ifclear
-Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=""}) at edge of plot. Parameter @var{pos} specifies the position of the colorbar: @samp{0} - at right (default), @samp{1} - at left, @samp{2} - at top, @samp{3} - at bottom. If string @var{sch} contains @samp{<>^_} then the parameter @var{pos} is defined as: @code{pos=0} for @samp{>} (right), @code{pos=1} for @samp{<} (left), @code{pos=2} for @samp{^} (top), @code{pos=3} for @samp{_} (bottom). If string have @samp{A} then absolute (relative to picture) coordinates is used. @sref{Dens sample}
+Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=""}) at edge of plot. If string @var{sch} contains @samp{<>^_} then the parameter @var{pos} is defined as: @code{pos=0} for @samp{>} (right), @code{pos=1} for @samp{<} (left), @code{pos=2} for @samp{^} (top), @code{pos=3} for @samp{_} (bottom). If string have @samp{A} then absolute (relative to picture) coordinates is used. @sref{Dens sample}
 @end deftypefn
 
-@deftypefn {MGL command} {} colorbar vdat ['sch'='' @code{pos=0}]
+@deftypefn {MGL command} {} colorbar vdat ['sch'='']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Colorbar (@code{const mglData &}v, @code{const char *}sch=@code{""}, @code{int} pos=@code{0})
-@deftypefnx {C function} @code{void} mgl_colorbar_val (@code{HMGL} gr, @code{HCDT} v, @code{const char *}sch, @code{int} pos)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Colorbar (@code{const mglData &}v, @code{const char *}sch=@code{""})
+@deftypefnx {C function} @code{void} mgl_colorbar_val (@code{HMGL} gr, @code{HCDT} v, @code{const char *}sch)
 @end ifclear
 The same as previous but with sharp colors @var{sch} (current palette if @code{sch=""}) for values @var{v}. @sref{ContD sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} colorbar 'sch' @code{pos x y w h}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Colorbar (@code{const char *}sch, @code{int} pos, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
-@deftypefnx {Method on @code{mglGraph}} @code{void} Colorbar (@code{int} pos, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
-@deftypefnx {C function} @code{void} mgl_colorbar_ext (@code{HMGL} gr, @code{const char *}sch, @code{int} pos, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Colorbar (@code{const char *}sch, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+@deftypefnx {C function} @code{void} mgl_colorbar_ext (@code{HMGL} gr, @code{const char *}sch, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
 @end ifclear
 The same as first one but at arbitrary position of subplot @{@var{x}, @var{y}@} (supposed to be in range [0,1]). Parameters @var{w}, @var{h} set the relative width and height of the colorbar.
 @end deftypefn
 
 @ifclear UDAV
-@deftypefn {Method on @code{mglGraph}} @code{void} Colorbar (@code{const mglData &}v, @code{const char *}sch, @code{int} pos, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
-@deftypefnx {C function} @code{void} mgl_colorbar_val_ext (@code{HMGL} gr, @code{HCDT} v, @code{const char *}sch, @code{int} pos, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+@deftypefn {Method on @code{mglGraph}} @code{void} Colorbar (@code{const mglData &}v, @code{const char *}sch, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
+@deftypefnx {C function} @code{void} mgl_colorbar_val_ext (@code{HMGL} gr, @code{HCDT} v, @code{const char *}sch, @code{float} x, @code{float} y, @code{float} w, @code{float} h)
 The same as previous but with sharp colors @var{sch} (current palette if @code{sch=""}) for values @var{v}. @sref{ContD sample}
 @end deftypefn
 @end ifclear

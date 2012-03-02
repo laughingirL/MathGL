@@ -46,27 +46,16 @@ int srnd = 0;
 //-----------------------------------------------------------------------------
 void test(mglGraph *gr)
 {
-	mglData a(256,2);	a.Fill(-1,1);
-	gr->SubPlot(2,10,0,0.2);	gr->Dens(a,"kw");		gr->Puts(-1.3, 1.3, "kw", "A");
-	gr->SubPlot(2,10,1,0.2);	gr->Dens(a,"wk");		gr->Puts( 0.2, 1.3, "wk", "A");
-	gr->SubPlot(2,10,2,0.2);	gr->Dens(a,"kHCcw");	gr->Puts(-1.3, 0.99, "kHCcw", "A");
-	gr->SubPlot(2,10,3,0.2);	gr->Dens(a,"kBbcw");	gr->Puts( 0.2, 0.99, "kBbcw", "A");
-	gr->SubPlot(2,10,4,0.2);	gr->Dens(a,"kRryw");	gr->Puts(-1.3, 0.68, "kRryw", "A");
-	gr->SubPlot(2,10,5,0.2);	gr->Dens(a,"kGgew");	gr->Puts( 0.2, 0.68, "kGgew", "A");
-	gr->SubPlot(2,10,6,0.2);	gr->Dens(a,"BbwrR");	gr->Puts(-1.3, 0.37, "BbwrR", "A");
-	gr->SubPlot(2,10,7,0.2);	gr->Dens(a,"BbwgG");	gr->Puts( 0.2, 0.37, "BbwgG", "A");
-	gr->SubPlot(2,10,8,0.2);	gr->Dens(a,"GgwmM");	gr->Puts(-1.3, 0.06, "GgwmM", "A");
-	gr->SubPlot(2,10,9,0.2);	gr->Dens(a,"UuwqR");	gr->Puts( 0.2, 0.06, "UuwqR", "A");
-	gr->SubPlot(2,10,10,0.2);	gr->Dens(a,"QqwcC");	gr->Puts(-1.3,-0.25, "QqwcC", "A");
-	gr->SubPlot(2,10,11,0.2);	gr->Dens(a,"CcwyY");	gr->Puts( 0.2,-0.25, "CcwyY", "A");
-	gr->SubPlot(2,10,12,0.2);	gr->Dens(a,"bcwyr");	gr->Puts(-1.3,-0.56, "bcwyr", "A");
-	gr->SubPlot(2,10,13,0.2);	gr->Dens(a,"bwr");		gr->Puts( 0.2,-0.56, "bwr", "A");
-	gr->SubPlot(2,10,14,0.2);	gr->Dens(a,"BbcyrR");	gr->Puts(-1.3,-0.87, "BbcyrR", "A");
-	gr->SubPlot(2,10,15,0.2);	gr->Dens(a,"UbcyqR");	gr->Puts( 0.2,-0.87, "UbcyqR", "A");
-	gr->SubPlot(2,10,16,0.2);	gr->Dens(a,"BbcwyrR");	gr->Puts(-1.3,-1.18, "BbcwyrR", "A");
-	gr->SubPlot(2,10,17,0.2);	gr->Dens(a,"bcyr");		gr->Puts( 0.2,-1.18, "bcyr", "A");
-	gr->SubPlot(2,10,18,0.2);	gr->Dens(a,"BbcyrR|");	gr->Puts(-1.3,-1.49, "BbcyrR|", "A");
-	gr->SubPlot(2,10,19,0.2);	gr->Dens(a,"bgr");		gr->Puts( 0.2,-1.49, "bgr", "A");
+	gr->SubPlot(2,2,0);	gr->Title("Colorbar out of box");
+	gr->Colorbar("<");	gr->Colorbar(">");
+	gr->Colorbar("_");	gr->Colorbar("^");
+	gr->SubPlot(2,2,1);	gr->Title("Colorbar near box");
+	gr->Colorbar("<I");	gr->Colorbar(">I");
+	gr->Colorbar("_I");	gr->Colorbar("^I");
+	gr->SubPlot(2,2,2);	gr->Title("manual position");
+/*	gr->Colorbar("<");	gr->Colorbar(">");
+	gr->Colorbar("_");	gr->Colorbar("^");*/
+	gr->SubPlot(2,2,3);	gr->Title("manual colors");
 }
 //-----------------------------------------------------------------------------
 //		Sample functions (v.2.*0)
@@ -1499,30 +1488,63 @@ void smgl_hist(mglGraph *gr)
 	gr->SubPlot(3,3,2);		gr->Puts(mglPoint(0,0),"Hist and\nMultiPlot\nsample","a",-6);
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_drops="";	// TODO add later
-void smgl_drops(mglGraph *gr)	// flag #
+const char *mmgl_primitives="";	// TODO add later
+void smgl_primitives(mglGraph *gr)	// flag #
 {
-	gr->VertexColor(false);	// not strictly required, but looks better imho
-	gr->Light(true);	gr->Alpha(false);
-	gr->Puts(mglPoint(-1,1.2),"sh=0");
-	gr->Drop(mglPoint(-1,0),mglPoint(0,1),0.5,"r",0);
-	gr->Puts(mglPoint(-0.33,1.2),"sh=0.33");
-	gr->Drop(mglPoint(-0.33,0),mglPoint(0,1),0.5,"r",0.33);
-	gr->Puts(mglPoint(0.33,1.2),"sh=0.67");
-	gr->Drop(mglPoint(0.33,0),mglPoint(0,1),0.5,"r",0.67);
-	gr->Puts(mglPoint(1,1.2),"sh=1");
-	gr->Drop(mglPoint(1,0),mglPoint(0,1),0.5,"r",1);
-	gr->Ball(mglPoint(-1,0,1),'k');
-	gr->Ball(mglPoint(-0.33,0,1),'k');
-	gr->Ball(mglPoint(0.33,0,1),'k');
-	gr->Ball(mglPoint(1,0,1),'k');
-	gr->Line(mglPoint(-1,0,1),mglPoint(1,0,1),"b");
+	gr->SubPlot(2,2,0,"");	gr->Title("Line, Curve, Rhomb, Ellipse");
+	gr->Line(mglPoint(-1,-1),mglPoint(-0.5,1),"qAI");
+	gr->Curve(mglPoint(-0.6,-1),mglPoint(1,1),mglPoint(0,1),mglPoint(1,1),"rA");
+	gr->Rhomb(mglPoint(0,0.4),mglPoint(1,0.9),0.2,"b#");
+	gr->Rhomb(mglPoint(0,0),mglPoint(1,0.4),0.2,"cg@");
+	gr->Ellipse(mglPoint(0,-0.5),mglPoint(1,-0.1),0.2,"u#");
+	gr->Ellipse(mglPoint(0,-1),mglPoint(1,-0.6),0.2,"m@");
+	gr->Mark(mglPoint(0,-0.5),"*");	gr->Mark(mglPoint(1,-0.1),"*");
+
+	gr->Light(true);
+	gr->SubPlot(2,2,1);	gr->Title("Face[xyz]");	gr->Rotate(50,60);	gr->Box();
+	gr->FaceX(mglPoint(1,0,-1),1,1,"r");
+	gr->FaceY(mglPoint(-1,-1,-1),1,1,"g");
+	gr->FaceZ(mglPoint(1,-1,-1),-1,1,"b");
+	gr->Face(mglPoint(-1,-1,1),mglPoint(-1,1,1),mglPoint(1,-1,0),mglPoint(1,1,1),"m");
+
+	gr->SubPlot(2,2,3,"");	gr->Title("Cone");
+	gr->Cone(mglPoint(-0.7,-0.3),mglPoint(-0.7,0.7,0.5),0.2,0.1,"b");
+	gr->Puts(mglPoint(-0.7,-0.7),"no edges\n(default)");
+	gr->Cone(mglPoint(0,-0.3),mglPoint(0,0.7,0.5),0.2,0.1,"g@");
+	gr->Puts(mglPoint(0,-0.7),"with edges\n('\\@' style)");
+	gr->Cone(mglPoint(0.7,-0.3),mglPoint(0.7,0.7,0.5),0.2,0,"ry");
+	gr->Puts(mglPoint(0.7,-0.7),"'arrow' with\ngradient");
+
+	gr->SubPlot(2,2,2,"");	gr->Title("Sphere and Drop");
+	gr->Alpha(false);
+	gr->Puts(mglPoint(-0.9,-0.7),"sh=0");
+	gr->Drop(mglPoint(-0.9,0),mglPoint(0,1),0.5,"r",0);
+	gr->Puts(mglPoint(-0.3,-0.7),"sh=0.33");
+	gr->Drop(mglPoint(-0.3,0),mglPoint(0,1),0.5,"r",0.33);
+	gr->Puts(mglPoint(0.3,-0.7),"sh=0.67");
+	gr->Drop(mglPoint(0.3,0),mglPoint(0,1),0.5,"r",0.67);
+	gr->Puts(mglPoint(0.9,-0.7),"sh=1");
+	gr->Drop(mglPoint(0.9,0),mglPoint(0,1),0.5,"r",1);
+	gr->Ball(mglPoint(-0.9,0,1),'k');
+	gr->Ball(mglPoint(-0.3,0,1),'k');
+	gr->Ball(mglPoint(0.3,0,1),'k');
+	gr->Ball(mglPoint(0.9,0,1),'k');
+	gr->Line(mglPoint(-0.9,0,1),mglPoint(0.9,0,1),"b");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_label="new ys 10 '0.2*rnd-0.8*sin(pi*x)'\n"
+"subplot 1 1 0 '':title 'Label plot':box:plot ys ' *':label ys 'y=%y'\n";
+void smgl_label(mglGraph *gr)
+{
+	mglData ys(10);	ys.Modify("0.8*sin(pi*2*x)+0.2*rnd");
+	if(!mini)	{	gr->SubPlot(1,1,0,"");	gr->Title("Label plot");	}
+	gr->Box();	gr->Plot(ys," *");	gr->Label(ys,"y=%y");
 }
 //-----------------------------------------------------------------------------
 void smgl_dat_diff(mglGraph *gr)	// differentiate
 {
-	mglData a(30,40);	a.Modify("x*y");
 	gr->SetRanges(0,1,0,1,0,1);
+	mglData a(30,40);	a.Modify("x*y");
 	gr->SubPlot(2,2,0);	gr->Rotate(60,40);
 	gr->Surf(a);		gr->Box();
 	gr->Puts(mglPoint(0.7,1,1.2),"a(x,y)");
@@ -1873,7 +1895,6 @@ mglSample samp[] = {
 	{"dens_xyz", smgl_dens_xyz},
 	{"densa", smgl_densa},
 	{"dew", smgl_dew},
-	{"drops", smgl_drops},
 	{"envelop", smgl_envelop},
 	{"error", smgl_error},
 	{"fall", smgl_fall},
@@ -1884,6 +1905,7 @@ mglSample samp[] = {
 	{"grad", smgl_grad},
 	{"hist", smgl_hist},
 	{"inplot", smgl_inplot},
+	{"label", smgl_label},
 	{"legend", smgl_legend},
 	{"loglog", smgl_loglog},
 	{"map",		smgl_map},
@@ -1895,6 +1917,7 @@ mglSample samp[] = {
 	{"pde", smgl_pde},
 	{"pipe", smgl_pipe},
 	{"plot", smgl_plot},
+	{"primitives", smgl_primitives},
 	{"quaternary", smgl_quaternary},
 	{"qo2d", smgl_qo2d},
 	{"radar", smgl_radar},
@@ -1930,4 +1953,4 @@ mglSample samp[] = {
 	{"type2", smgl_type2},
 	{"vect", smgl_vect},
 	{"venn", smgl_venn},
-	{"", NULL}};
+{"", NULL}};
