@@ -79,7 +79,7 @@ protected:
 	void cell_click();
 
 public:
-	float *data;
+	mreal *data;
 	int nx, ny;
 
 	Fl_Data_Table(int x, int y, int w, int h, const char *l=0);

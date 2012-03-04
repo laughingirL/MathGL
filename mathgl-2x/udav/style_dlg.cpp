@@ -106,11 +106,11 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	l = new QLabel(tr("Line width"), p);	g->addWidget(l, 4, 0, Qt::AlignRight);
 	width = new QSpinBox(p);	g->addWidget(width, 4, 1);
 	width->setRange(1,9);	width->setValue(1);
-	connect(a1,SIGNAL(triggered()), this, SLOT(updatePic()));
-	connect(a2,SIGNAL(triggered()), this, SLOT(updatePic()));
-	connect(dash,SIGNAL(triggered()), this, SLOT(updatePic()));
-	connect(mark,SIGNAL(triggered()), this, SLOT(updatePic()));
-	connect(cline,SIGNAL(triggered()), this, SLOT(updatePic()));
+	connect(a1,SIGNAL(activated(int)), this, SLOT(updatePic()));
+	connect(a2,SIGNAL(activated(int)), this, SLOT(updatePic()));
+	connect(dash,SIGNAL(activated(int)), this, SLOT(updatePic()));
+	connect(mark,SIGNAL(activated(int)), this, SLOT(updatePic()));
+	connect(cline,SIGNAL(activated(int)), this, SLOT(updatePic()));
 	connect(width,SIGNAL(valueChanged(int)), this, SLOT(updatePic()));
 	tab->addTab(p, tr("Line style"));
 	// color scheme
@@ -129,7 +129,7 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 		nn[i]->setTickPosition(QSlider::TicksAbove);
 		nn[i]->setTickInterval(1);	nn[i]->setPageStep(2);
 		nn[i]->setOrientation(Qt::Horizontal);
-		connect(cc[i],SIGNAL(triggered()), this, SLOT(updatePic()));
+		connect(cc[i],SIGNAL(activated(int)), this, SLOT(updatePic()));
 		connect(nn[i],SIGNAL(valueChanged(int)), this, SLOT(updatePic()));
 	}
 	coor = new QCheckBox(tr("Colors along coordinates"),p);	v->addWidget(coor);
@@ -143,8 +143,8 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	ctext = new QComboBox(p);	g->addWidget(ctext, 1, 1);
 	ctext->addItem(tr("none"));	ctext->addItem(tr("under"));	ctext->addItem(tr("above"));
 	connect(coor,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
-	connect(axial,SIGNAL(triggered()), this, SLOT(updatePic()));
-	connect(ctext,SIGNAL(triggered()), this, SLOT(updatePic()));
+	connect(axial,SIGNAL(activated(int)), this, SLOT(updatePic()));
+	connect(ctext,SIGNAL(activated(int)), this, SLOT(updatePic()));
 	connect(swire,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	tab->addTab(p, tr("Color scheme"));
 	// font style
@@ -172,7 +172,7 @@ StyleDialog::StyleDialog(QWidget *parent) : QDialog(parent)
 	connect(wire,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	connect(uline,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	connect(oline,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
-	connect(cfont,SIGNAL(triggered()), this, SLOT(updatePic()));
+	connect(cfont,SIGNAL(activated(int)), this, SLOT(updatePic()));
 	connect(rbL,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	connect(rbC,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
 	connect(rbR,SIGNAL(toggled(bool)), this, SLOT(updatePic()));
