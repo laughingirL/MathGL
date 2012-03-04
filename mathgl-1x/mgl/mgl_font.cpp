@@ -654,7 +654,7 @@ bool mglFont::read_main(const char *fname, unsigned &cur)
 	sscanf(str, "%u%f%u", &numg, fact, &s);
 	fact[1] = fact[2] = fact[3] = fact[0];	// copy default factor for other font styles;
 	buf = (short *)malloc(s*sizeof(short));	// prealocate buffer
-	if(!buf)	{	gzclose(fp);	return false;	}
+	if(!buf)	{	gzclose(fp);	numg=0;	return false;	}
 	// now allocate memory for all fonts
 	mem_alloc();
 	// and load symbols itself
@@ -698,7 +698,7 @@ bool mglFont::Load(const char *base, const char *path)
 			path = ".";
 	}
 
-	if(base)
+	if(base && *base)
 	{
 		buf = new char[strlen(base)+1];
 		strcpy(buf,base);
@@ -712,7 +712,7 @@ bool mglFont::Load(const char *base, const char *path)
 	Clear();		// first clear old
 
 	sprintf(str,"%s%c%s.vfm",path,sep,base);
-	if(!base || !read_main(str,cur))
+	if(!(base && *base) || !read_main(str,cur))
 	{	read_def(cur);	setlocale(LC_NUMERIC,oldLocale);
 		if(buf)	delete []buf;	return true;	}
 
