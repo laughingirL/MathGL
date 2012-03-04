@@ -61,19 +61,19 @@ void test(mglGraph *gr)
 	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
 	gr->ContF3(v,c,"z",c.nz-1);	gr->Surf3(-0.5,c);
 
-	gr->WriteJPEG("test.jpg");
+/*	gr->WriteJPEG("test.jpg");
 	gr->WritePNG("test.png");
 	gr->WriteBMP("test.bmp");
 	gr->WriteTGA("test.tga");
 	gr->WriteEPS("test.eps");
-	gr->WriteTEX("test.tex");
 	gr->WriteSVG("test.svg");
-	gr->WriteGIF("test.gif");
+	gr->WriteGIF("test.gif");*/
 
-	gr->WriteOBJ("test.obj","",true);
 	gr->WriteXYZ("test.xyz");
 	gr->WriteSTL("test.stl");
 	gr->WriteOFF("test.off");
+	gr->WriteTEX("test.tex");
+	gr->WriteOBJ("test.obj","",true);
 	gr->WriteX3D("test.x3d");
 }
 //-----------------------------------------------------------------------------

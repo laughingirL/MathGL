@@ -343,7 +343,7 @@ void mglCanvas::EndFrame()
 void mgl_write_png(HMGL gr, const char *fname,const char *descr)
 {
 	long w,h;	unsigned char *f=0, **p=0;
-	p =_Gr_->GetRGBLines(w,h,f);
+	p =_Gr_->GetRGBLines(w,h,f,true);
 	if(p)
 	{
 		std::string fn=fname;
@@ -394,7 +394,7 @@ void mgl_write_jpg_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 void mgl_write_tga(HMGL gr, const char *fname,const char *descr)
 {
 	long w,h;	unsigned char *f=0, **p=0;
-	p =_Gr_->GetRGBLines(w,h,f);
+	p =_Gr_->GetRGBLines(w,h,f,true);
 	if(p)
 	{
 		std::string fn=fname;
