@@ -674,7 +674,7 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 
 		o->addSeparator();
 		a = new QAction(QPixmap(fileprint), TR("Print &graphics"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(print()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(print()));
 		a->setToolTip(TR("Open printer dialog and print graphics\t(CTRl+P)"));
 		a->setShortcut(Qt::CTRL+Qt::Key_P);	o->addAction(a);
 		o->addSeparator();
@@ -711,22 +711,22 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 		bb->addAction(a);
 		o->addSeparator();
 		a = new QAction(QPixmap(zoom_out_xpm), TR("Res&tore"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(restore()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(restore()));
 		a->setToolTip(TR("Restore default graphics rotation, zoom and perspective (Alt+Space)."));
 		a->setShortcut(Qt::ALT+Qt::Key_Space);
 		o->addAction(a);	bb->addAction(a);	popup->addAction(a);
 		bb->addSeparator();
 		a = new QAction(QPixmap(ok_xpm), TR("Re&draw"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(update()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(update()));
 		a->setToolTip(TR("Execute script and redraw graphics (F5)."));
 		a->setShortcut(Qt::Key_F5);
 		o->addAction(a);	bb->addAction(a);	popup->addAction(a);
 		a = new QAction(TR("&Adjust size"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(adjust()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(adjust()));
 		a->setToolTip(TR("Change canvas size to fill whole region (F6)."));
 		a->setShortcut(Qt::Key_F6);		o->addAction(a);
 		a = new QAction(QPixmap(copy_xpm), TR("&Copy plot"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(copy()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(copy()));
 		a->setToolTip(TR("Copy graphics to clipboard (CTRl+C)."));
 		a->setShortcut(Qt::CTRL+Qt::Key_C);
 		o->addAction(a);		bb->addAction(a);	popup->addAction(a);
@@ -750,27 +750,27 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 		bb = new QToolBar(TR("Zoom graphics"),Wnd);
 		Wnd->addToolBar(Qt::LeftToolBarArea, bb);
 		a = new QAction(QPixmap(left_1_xpm), TR("Move &left"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(shiftLeft()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftLeft()));
 		a->setToolTip(TR("Move graphics left by 1/3 of its width."));
 		bb->addAction(a);		oo->addAction(a);
 		a = new QAction(QPixmap(up_1_xpm), TR("Move &up"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(shiftUp()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftUp()));
 		a->setToolTip(TR("Move graphics up by 1/3 of its height."));
 		bb->addAction(a);		oo->addAction(a);
 		a = new QAction(QPixmap(zoom_1_xpm), TR("Zoom &in"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(zoomIn()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(zoomIn()));
 		a->setToolTip(TR("Zoom in graphics."));
 		bb->addAction(a);		oo->addAction(a);
 		a = new QAction(QPixmap(norm_1_xpm), TR("Zoom &out"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(zoomOut()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(zoomOut()));
 		a->setToolTip(TR("Zoom out graphics."));
 		bb->addAction(a);		oo->addAction(a);
 		a = new QAction(QPixmap(down_1_xpm), TR("Move &down"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(shiftDown()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftDown()));
 		a->setToolTip(TR("Move graphics up down 1/3 of its height."));
 		bb->addAction(a);		oo->addAction(a);
 		a = new QAction(QPixmap(right_1_xpm), TR("Move &right"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(shiftRight()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(shiftRight()));
 		a->setToolTip(TR("Move graphics right by 1/3 of its width."));
 		bb->addAction(a);		oo->addAction(a);
 	}
@@ -780,7 +780,7 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 		bb = new QToolBar(TR("Animation"),Wnd);
 		Wnd->addToolBar(Qt::LeftToolBarArea, bb);
 		a = new QAction(QPixmap(next_sl_xpm), TR("&Next slide"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(nextSlide()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(nextSlide()));
 		a->setToolTip(TR("Show next slide (Alt+Right)."));
 		a->setShortcut(Qt::ALT+Qt::Key_Right);	o->addAction(a);		bb->addAction(a);
 		a = new QAction(QPixmap(show_sl_xpm), TR("&Slideshow"), Wnd);
@@ -789,7 +789,7 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 		a->setToolTip(TR("Run slideshow (CTRl+F5)."));
 		a->setShortcut(Qt::CTRL+Qt::Key_F5);	o->addAction(a);		bb->addAction(a);
 		a = new QAction(QPixmap(prev_sl_xpm), TR("&Prev slide"), Wnd);
-		Wnd->connect(a, SIGNAL(activated()), QMGL, SLOT(prevSlide()));
+		Wnd->connect(a, SIGNAL(triggered()), QMGL, SLOT(prevSlide()));
 		a->setToolTip(TR("Show previous slide (Alt+Left)."));
 		a->setShortcut(Qt::ALT+Qt::Key_Left);	o->addAction(a);		bb->addAction(a);
 	}

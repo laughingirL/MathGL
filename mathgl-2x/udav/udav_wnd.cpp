@@ -168,12 +168,12 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	calcWnd = new QDockWidget(tr("Calculator"),this);
 
 	aload = a = new QAction(QPixmap(":/xpm/document-open.png"), tr("&Open file"), this);
-	connect(a, SIGNAL(activated()), this, SLOT(choose()));
+	connect(a, SIGNAL(triggered()), this, SLOT(choose()));
 	a->setToolTip(tr("Open and execute/show script or data from file (Ctrl+O).\nYou may switch off automatic exection in UDAV properties."));
 	a->setShortcut(Qt::CTRL+Qt::Key_O);
 
 	asave = a = new QAction(QPixmap(":/xpm/document-save.png"), tr("&Save script"), this);
-	connect(a, SIGNAL(activated()), this, SLOT(save()));
+	connect(a, SIGNAL(triggered()), this, SLOT(save()));
 	a->setToolTip(tr("Save script to a file (Ctrl+S)"));
 	a->setShortcut(Qt::CTRL+Qt::Key_S);
 
@@ -245,7 +245,7 @@ void MainWindow::makeMenu()
 	{
 	o = menuBar()->addMenu(tr("&File"));
 	a = new QAction(QPixmap(":/xpm/document-new.png"), tr("&New script"), this);
-	connect(a, SIGNAL(activated()), this, SLOT(newDoc()));
+	connect(a, SIGNAL(triggered()), this, SLOT(newDoc()));
 	a->setToolTip(tr("Create new empty script window (Ctrl+N)."));
 	a->setShortcut(Qt::CTRL+Qt::Key_N);	o->addAction(a);
 
@@ -253,13 +253,13 @@ void MainWindow::makeMenu()
 	o->addAction(asave);
 
 	a = new QAction(tr("Save &As ..."), this);
-	connect(a, SIGNAL(activated()), this, SLOT(saveAs()));
+	connect(a, SIGNAL(triggered()), this, SLOT(saveAs()));
 	o->addAction(a);
 
 	o->addSeparator();
 	o->addAction(tr("&Print script"), edit, SLOT(printText()));
 	a = new QAction(QPixmap(":/xpm/document-print.png"), tr("Print &graphics"), this);
-	connect(a, SIGNAL(activated()), graph->mgl, SLOT(print()));
+	connect(a, SIGNAL(triggered()), graph->mgl, SLOT(print()));
 	a->setToolTip(tr("Open printer dialog and print graphics\t(Ctrl+P)"));
 	a->setShortcut(Qt::CTRL+Qt::Key_P);	o->addAction(a);
 	o->addSeparator();
@@ -275,7 +275,7 @@ void MainWindow::makeMenu()
 	{
 	o = menuBar()->addMenu(tr("&Settings"));
 	a = new QAction(QPixmap(":/xpm/preferences-system.png"), tr("Properties"), this);
-	connect(a, SIGNAL(activated()), this, SLOT(properties()));
+	connect(a, SIGNAL(triggered()), this, SLOT(properties()));
 	a->setToolTip(tr("Show dialog for UDAV properties."));	o->addAction(a);
 	o->addAction(tr("Set ar&guments"), createArgsDlg(this), SLOT(exec()));
 
@@ -286,15 +286,15 @@ void MainWindow::makeMenu()
 	menuBar()->addSeparator();
 	o = menuBar()->addMenu(tr("&Help"));
 	a = new QAction(QPixmap(":/xpm/help-contents.png"), tr("MGL &help"), this);
-	connect(a, SIGNAL(activated()), this, SLOT(showHelp()));
+	connect(a, SIGNAL(triggered()), this, SLOT(showHelp()));
 	a->setToolTip(tr("Show help on MGL commands (F1)."));
 	a->setShortcut(Qt::Key_F1);	o->addAction(a);
 	a = new QAction(QPixmap(":/xpm/help-faq.png"), tr("&Examples"), this);
-	connect(a, SIGNAL(activated()), this, SLOT(showExamples()));
+	connect(a, SIGNAL(triggered()), this, SLOT(showExamples()));
 	a->setToolTip(tr("Show examples of MGL usage (Shift+F1)."));
 	a->setShortcut(Qt::SHIFT+Qt::Key_F1);	o->addAction(a);
 	a = new QAction(QPixmap(":/xpm/help-faq.png"), tr("H&ints"), this);
-	connect(a, SIGNAL(activated()), this, SLOT(showHint()));
+	connect(a, SIGNAL(triggered()), this, SLOT(showHint()));
 	a->setToolTip(tr("Show hints of MGL usage."));	o->addAction(a);
 	o->addAction(tr("&About"), this, SLOT(about()));
 	o->addAction(tr("About &Qt"), this, SLOT(aboutQt()));
