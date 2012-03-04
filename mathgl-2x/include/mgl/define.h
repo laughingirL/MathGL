@@ -173,6 +173,7 @@ enum{	// Codes for warnings/messages
 #define MGL_HIGHLIGHT		0x004000	///< Highlight plot
 #define MGL_DIFFUSIVE		0x008000	///< Use diffusive light instead of specular
 #define MGL_USEDRWDAT		0x010000	///< Use DrwDat to remember all data of frames
+#define MGL_REDUCEACC		0x020000	///< Reduce accuracy of points (to reduc size of output files)
 //-----------------------------------------------------------------------------
 //#define mgl_realloc(T,o,no,nn) {T *_tmp = new T[nn]; memcpy(_tmp,o,(no)*sizeof(T)); delete []o; o=_tmp;}
 //-----------------------------------------------------------------------------

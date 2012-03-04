@@ -46,6 +46,15 @@ int srnd = 0;
 //-----------------------------------------------------------------------------
 void test(mglGraph *gr)
 {
+	mglParse par;
+	par.AllowSetSize(true);
+	FILE *fp=fopen("test.mgl","rt");
+	par.Execute(gr,fp,true);
+	fclose(fp);
+}
+//-----------------------------------------------------------------------------
+void fexport(mglGraph *gr)
+{
 	mglData a,b,d;	mgls_prepare2v(&a,&b);	d = a;
 	for(int i=0;i<a.nx*a.ny;i++)	d.a[i] = hypot(a.a[i],b.a[i]);
 	mglData c;	mgls_prepare3d(&c);
@@ -62,19 +71,19 @@ void test(mglGraph *gr)
 	gr->ContF3(v,c,"z",c.nz-1);	gr->Surf3(-0.5,c);
 
 /*	gr->WriteJPEG("test.jpg");
-	gr->WritePNG("test.png");
-	gr->WriteBMP("test.bmp");
-	gr->WriteTGA("test.tga");
-	gr->WriteEPS("test.eps");
-	gr->WriteSVG("test.svg");
-	gr->WriteGIF("test.gif");*/
+*	gr->WritePNG("test.png");
+*	gr->WriteBMP("test.bmp");
+*	gr->WriteTGA("test.tga");
+*	gr->WriteEPS("test.eps");
+*	gr->WriteSVG("test.svg");
+*	gr->WriteGIF("test.gif");*/
 
 	gr->WriteXYZ("test.xyz");
 	gr->WriteSTL("test.stl");
 	gr->WriteOFF("test.off");
 	gr->WriteTEX("test.tex");
 	gr->WriteOBJ("test.obj","",true);
-	gr->WriteX3D("test.x3d");
+	//	gr->WriteX3D("test.x3d");
 }
 //-----------------------------------------------------------------------------
 //		Sample functions (v.2.*0)

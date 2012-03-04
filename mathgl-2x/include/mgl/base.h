@@ -323,6 +323,8 @@ public:
 	long CopyNtoC(long k, float c);
 	long CopyProj(long from, mglPoint p, mglPoint n);
 	virtual void Reserve(long n);		///< Allocate n-cells for pntC and return current position
+	/// Set to reduce accuracy of points (to reduc size of output files)
+	inline void SetReduceAcc(bool val)	{	set(val, MGL_REDUCEACC);	}
 
 //	inline long GetPos()	{	return Pnt.size()-1;	}
 	inline mglPoint GetPntP(long i)

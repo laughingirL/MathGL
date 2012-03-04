@@ -713,10 +713,10 @@ void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const 
 			{
 				if(text[k]!='%')	{	buf[l]=text[k];	l++;	continue;	}
 				else if(text[k+1]=='%')	{	buf[l]='%';	l++;	continue;	}
-				else if(text[k+1]=='n')	swprintf(buf+l,nn-l,L"%ld",i);
-				else if(text[k+1]=='x')	swprintf(buf+l,nn-l,L"%.2g",xx);
-				else if(text[k+1]=='y')	swprintf(buf+l,nn-l,L"%.2g",yy);
-				else if(text[k+1]=='z')	swprintf(buf+l,nn-l,L"%.2g",zz);
+				else if(text[k+1]=='n')	mglprintf(buf+l,nn-l,L"%ld",i);
+				else if(text[k+1]=='x')	mglprintf(buf+l,nn-l,L"%.2g",xx);
+				else if(text[k+1]=='y')	mglprintf(buf+l,nn-l,L"%.2g",yy);
+				else if(text[k+1]=='z')	mglprintf(buf+l,nn-l,L"%.2g",zz);
 				l=wcslen(buf);	k++;
 			}
 			gr->text_plot(kk, buf, fnt, size, 0.03);

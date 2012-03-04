@@ -122,7 +122,18 @@ long mglBase::AddPnt(mglPoint p, float c, mglPoint n, float a, int scl)
 	c = (c>=0) ? c:CDef;
 
 	mglPnt q;
-	q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
+	if(get(MGL_REDUCEACC))
+	{
+		q.x=q.xx=int(p.x*10)*0.1;	q.y=q.yy=int(p.y*10)*0.1;	q.z=q.zz=int(p.z*10)*0.1;
+		q.c=int(c*100)*0.01;	q.t=int(a*100)*0.01;
+		q.u=int(n.x*100)*0.01;	q.v=int(n.y*100)*0.01;	q.w=int(n.z*100)*0.01;
+	}
+	else
+	{
+		q.x=q.xx=p.x;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
+		q.c=c;	q.t=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
+	}
+	q.x=q.xx=int(p.x*100)*0.01;	q.y=q.yy=p.y;	q.z=q.zz=p.z;
 	q.c=c;	q.t=a;	q.u=n.x;	q.v=n.y;	q.w=n.z;
 	Txt[long(c)].GetC(c,a,q);	// RGBA color
 
