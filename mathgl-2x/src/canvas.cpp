@@ -68,9 +68,6 @@ const unsigned char *mglCanvas::GetBits()	{	Finish();	return G;	}
 //-----------------------------------------------------------------------------
 float mglCanvas::GetRatio()	{	return inW/inH;	}
 //-----------------------------------------------------------------------------
-void mglCanvas::AddLegend(const wchar_t *text,const char *style)
-{	if(text)	MGL_PUSH(Leg,mglText(text,style),mutexLeg);	}
-//-----------------------------------------------------------------------------
 void mglCanvas::add_prim(mglPrim &a)
 {
 	if(a.n1>=0)
@@ -662,19 +659,9 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::AddLegend(const char *str,const char *style)
-{
-	if(!str)	return;
-	unsigned s = strlen(str)+1;
-	wchar_t *wcs = new wchar_t[s];
-	mbstowcs(wcs,str,s);
-	AddLegend(wcs, style);
-	delete []wcs;
-}
-//-----------------------------------------------------------------------------
 void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const char *font, float size, float ll)
 {
-	long n=leg.size();
+	long n=leg.size(), iw, ih;
 	if(n<1)	{	SetWarn(mglWarnLeg);	return;	}
 	static int cgid=1;	StartGroup("Legend",cgid++);
 	if(ll<=0 || isnan(ll))	ll=0.1;
@@ -684,10 +671,12 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 	if(!font)	font="#";
 	char *pA, *ff = new char[strlen(font)+3];
 	strcpy(ff,font);	strcat(ff,":L");	Push();
-	if((pA=strchr(ff,'A')))	{	*pA = ' ';	InPlot(0,1,0,1,false);	}
+	if((pA=strchr(ff,'A')))
+	{	*pA = ' ';	InPlot(0,1,0,1,false);	iw=B1.b[0];	ih=B1.b[4];	}
+	else	{	iw=B1.b[0]/B1.pf;	ih=B1.b[4]/B1.pf;	}
 	// find sizes
 	float h=TextHeight(font,size)/2;
-	float dx = 0.03*inW, dy = 0.03*inH, w=0, t;
+	float dx = 0.03*iw, dy = 0.03*ih, w=0, t;
 	register long i,j;
 	for(i=0;i<n;i++)		// find text length
 	{
@@ -695,15 +684,26 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 		if(leg[i].stl.empty())	t -= ll;
 		w = w>t ? w:t;
 	}
-	w += ll+0.01*inW;	// add space for lines
-	x = x*(inW-w-2*dx)+B.x-inW/2+dx;	// NOTE: now legend is placed in absolute coordinates
-	y = y*(inH-h*n-2*dy)+B.y-inH/2+dy;
+	w += ll+0.01*iw;	// add space for lines
+	x = x*(iw-w-2*dx)+B.x-iw/2+dx;
+	y = y*(ih-h*n-2*dy)+B.y-ih/2+dy;
 	// draw it
-	long k1,k2,k3,k4;
+	long k1=0,k2=0,k3=0,k4=0;
 	mglPoint p,q=mglPoint(NAN);
-	float c1=AddTexture('w'), c2=AddTexture('k');
+
+	for(i=0;ff[i] && ff[i]!=':';i++)	if(strchr(MGL_COLORS,ff[i]))
+	{
+
+		if(k1 && k2)	{	k3=ff[i];	k4++;	}
+		if(k1 && !k2)	{	k2=ff[i];	k4++;	}
+		if(!k1)	{	k1=ff[i];	k4++;	}
+	}
+	if(k4==2)	k2=0;
+	if(k4==1)	k1=k2=0;
+	float c1=AddTexture(char(k1?k1:'w')), c2=AddTexture(char(k2?k2:'k'));
 	if((Flag&3)==2)	{	float cc=c1;	c2=c2;	c2=cc;	};
-	if(strchr(font,'#'))	// draw bounding box
+
+	if(strchr(ff,'#'))	// draw bounding box
 	{
 		k1=AddPnt(mglPoint(x,y,Depth),c1,q,-1,0);
 		k2=AddPnt(mglPoint(x+w,y,Depth),c1,q,-1,0);
@@ -718,15 +718,15 @@ void mglCanvas::Legend(const std::vector<mglText> &leg, float x, float y, const 
 	for(i=0;i<n;i++)	// draw lines and legend
 	{
 		char m=SetPenPal(leg[i].stl.c_str());
-		k1=AddPnt(mglPoint(x+0.1*ll,y+i*h+0.45*h,Depth),CDef,q,-1,0);
-		k2=AddPnt(mglPoint(x+0.9*ll,y+i*h+0.45*h,Depth),CDef,q,-1,0);
-		pPos=0;	line_plot(k1,k2);
+		k1=AddPnt(mglPoint(x+0.1*ll,y+(n-i-1)*h+0.45*h,Depth),CDef,q,-1,0);
+		k2=AddPnt(mglPoint(x+0.9*ll,y+(n-i-1)*h+0.45*h,Depth),CDef,q,-1,0);	pPos=0;
+		if(!leg[i].stl.empty())	line_plot(k1,k2);
 		if(m)	for(j=0;j<LegendMarks;j++)
 		{
-			p = mglPoint(x+0.1f*ll + (j+1)*0.8f*ll/(1.+LegendMarks),y+i*h+0.45*h,Depth);
+			p = mglPoint(x+0.1f*ll + (j+1)*0.8f*ll/(1.+LegendMarks),y+(n-i-1)*h+0.45*h,Depth);
 			mark_plot(AddPnt(p,CDef,q,-1,0),m);
 		}
-		p = mglPoint(x+((!leg[i].stl.empty())?ll:0), y+i*h+0.15*h, Depth);
+		p = mglPoint(x+((!leg[i].stl.empty())?ll:0.01*iw), y+(n-i-1)*h+0.15*h, Depth);
 		text_plot(AddPnt(p,-1,q,-1,0), leg[i].text.c_str(), ff, size);
 	}
 	Pop();	EndGroup();	delete []ff;

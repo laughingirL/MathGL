@@ -351,7 +351,7 @@ void *mgl_dif_y(void *par)
 		k = (i%nx)+nx*ny*(i/nx);
 		b[k] = -(3*a[k]-4*a[k+nx]+a[k+2*nx])*dd;
 		b[k+(ny-1)*nx] = (3*a[k+(ny-1)*nx]-4*a[k+(ny-2)*nx]+a[k+(ny-3)*nx])*dd;
-		for(j=1;j<ny;j++)	b[k+j*nx] = (a[k+j*nx+nx]-a[k+j*nx-nx])*dd;
+		for(j=1;j<ny-1;j++)	b[k+j*nx] = (a[k+j*nx+nx]-a[k+j*nx-nx])*dd;
 	}
 	return 0;
 }
@@ -366,7 +366,7 @@ void *mgl_dif_x(void *par)
 		k = i*nx;
 		b[k] = -(3*a[k]-4*a[k+1]+a[k+2])*dd;
 		b[k+nx-1] = (3*a[k+nx-1]-4*a[k+nx-2]+a[k+nx-3])*dd;
-		for(j=1;j<nx;j++)	b[j+k] = (a[j+k+1]-a[j+k-1])*dd;
+		for(j=1;j<nx-1;j++)	b[j+k] = (a[j+k+1]-a[j+k-1])*dd;
 	}
 	return 0;
 }
@@ -418,7 +418,7 @@ void *mgl_dif2_y(void *par)
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = (i%nx)+nx*ny*(i/nx);	b[k] = b[k+(ny-1)*nx] = 0;
-		for(j=1;j<ny;j++)	b[k+j*nx] = (a[k+j*nx+nx]+a[k+j*nx-nx]-2*a[k+j*nx])*dd;
+		for(j=1;j<ny-1;j++)	b[k+j*nx] = (a[k+j*nx+nx]+a[k+j*nx-nx]-2*a[k+j*nx])*dd;
 	}
 	return 0;
 }
@@ -431,7 +431,7 @@ void *mgl_dif2_x(void *par)
 	for(i=t->id;i<nn;i+=mglNumThr)
 	{
 		k = i*nx;			b[k] = b[k+nx-1] = 0;
-		for(j=1;j<nx;j++)	b[j+k] = (a[j+k+1]+a[j+k-1]-2*a[j+k])*dd;
+		for(j=1;j<nx-1;j++)	b[j+k] = (a[j+k+1]+a[j+k-1]-2*a[j+k])*dd;
 	}
 	return 0;
 }
@@ -600,8 +600,10 @@ mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mr
 	long kx=long(x),ky=long(y),kz=long(z);
 	bool dd = (dx && dy && dz);
 	mreal b=0;
-	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)
-		return 0;
+	x = x>0 ?(x<nx-1 ? x:nx-1):0;
+	y = y>0 ?(y<ny-1 ? y:ny-1):0;
+	z = z>0 ?(z<nz-1 ? z:nz-1):0;
+	//	if(x<0 || y<0 || z<0 || x>nx-1 || y>ny-1 || z>nz-1)		return 0;
 	if(dd)	{	*dx=*dy=*dz=0;	}
 	if(nz>1 && z!=kz)		// 3d interpolation
 	{						// TODO: add dx,dy,dz evaluation

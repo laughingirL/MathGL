@@ -504,6 +504,13 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez)
 	for(i=0;i<n;i++)	for(j=0;j<n;j++)	for(k=0;k<n;k++)
 	{
 		x=2*i/(n-1.)-1;	y=2*j/(n-1.)-1;	z=2*k/(n-1.)-1;	i0 = i+n*(j+k*n);
+/* 		r1 = 1./(x*x+y*y+z*z+0.01);	r2=exp(-0.01/r1/r1)*r1;
+ 		ex->a[i0]=z*y*r2*r2;
+ 		ey->a[i0]=x*y*r2*r2+1;
+ 		ez->a[i0]=y*x*r2*r2;*/
+/*		ex->a[i0]=3*z;
+		ey->a[i0]=1;
+		ez->a[i0]=-3*x;*/
 		r1 = pow(x*x+y*y+(z-0.3)*(z-0.3)+0.03,1.5);
 		r2 = pow(x*x+y*y+(z+0.3)*(z+0.3)+0.03,1.5);
 		ex->a[i0]=0.2*x/r1 - 0.2*x/r2;

@@ -498,12 +498,12 @@ public:
 	/// Draw colorbar at edge of axis
 	inline void Colorbar(const char *sch="")
 	{	mgl_colorbar(gr, sch);	}
-	inline void Colorbar(const char *sch,float x,float y,float w,float h)
+	inline void Colorbar(const char *sch,float x,float y,float w=1,float h=1)
 	{	mgl_colorbar_ext(gr, sch, x,y,w,h);	}
 	/// Draw colorbar with manual colors at edge of axis
 	inline void Colorbar(const mglDataA &val, const char *sch="")
 	{	mgl_colorbar_val(gr, &val, sch);	}
-	inline void Colorbar(const mglDataA &val, const char *sch,float x,float y,float w,float h)
+	inline void Colorbar(const mglDataA &val, const char *sch,float x,float y,float w=1,float h=1)
 	{	mgl_colorbar_val_ext(gr, &val, sch, x,y,w,h);	}
 
 	/// Add string to legend

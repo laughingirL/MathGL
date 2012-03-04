@@ -53,21 +53,19 @@ void mgl_cloud_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT a, const char *sch, con
 	long ss = gr->AddTexture(sch);
 
 	// x, y, z -- have the same size as a
-	long nn=(n/tx)*(m/ty)*(l/tz), *pos=new long[(n/tx)*(m/ty)*(l/tz)];
-	gr->Reserve(nn);
+	n /= tx;	m /= ty;	l /= tz;
+	long *pos=new long[n*m*l];		// TODO check if n<tx
+	gr->Reserve(n*m*l);
 	mglPoint p,q=mglPoint(NAN);
-	for(k=0;k<l;k+=tz)	for(j=0;j<m;j+=ty)	for(i=0;i<n;i+=tx)
+	for(k=0;k<l;k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
 		if(gr->Stop)	{	delete []pos;	return;	}
-		p = both ? mglPoint(x->v(i,j,k),y->v(i,j,k),z->v(i,j,k)) : mglPoint(x->v(i),y->v(j),z->v(k));
-		aa = gr->GetA(a->v(i,j,k));
-		if(inv)	bb = (1-aa)*(1-aa)*alpha;
-		else	bb = aa*aa*alpha;
-		if(dot)	bb = sqrt(bb);
-		pos[i/tx+(n/tx)*(j/ty+(m/ty)*(k/tz))] = gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);
+		p = both ? mglPoint(x->v(i*tx,j*ty,k*tz),y->v(i*tx,j*ty,k*tz),z->v(i*tx,j*ty,k*tz)) : mglPoint(x->v(i*tx),y->v(j*ty),z->v(k*tz));
+		aa = gr->GetA(a->v(i*tx,j*ty,k*tz));
+		bb = inv ? (1-aa)*(1-aa)*alpha : aa*aa*alpha;
+		pos[i+n*(j+m*k)] = gr->AddPnt(p,gr->GetC(ss,aa,false),q,bb);	// TODO check boundary
 	}
-	n /= tx;	m /= ty;	l /= tz;
-	if(dot)	for(i=0;i<nn;i++)	gr->mark_plot(pos[i],'.');
+	if(dot)	for(i=0;i<n*m*l;i++)	gr->mark_plot(pos[i],'.');
 	else	for(i=0;i<n;i++)	for(j=0;j<m;j++)	for(k=0;k<l;k++)
 	{
 		if(gr->Stop)	{	delete []pos;	return;	}

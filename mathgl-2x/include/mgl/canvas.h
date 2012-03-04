@@ -169,9 +169,9 @@ using mglBase::Light;
 	/// Get RGBA bitmap of current state image.
 	const unsigned char *GetRGBA()	{	Finish();	return G4;	}
 	/// Get width of the image
-	int GetWidth()	{	return Width;	};
+	int GetWidth()	{	return Width;	}
 	/// Get height of the image
-	int GetHeight()	{	return Height;	};
+	int GetHeight()	{	return Height;	}
 	/// Combine plots from 2 canvases. Result will be saved into this.
 	void Combine(const mglCanvas *gr);
 	/// Send graphical information to node id using MPI
@@ -273,11 +273,6 @@ using mglBase::Light;
 	void Colorbar(HCDT v, const char *sch=0);
 	void Colorbar(HCDT v, const char *sch, float x, float y, float w, float h);
 
-	/// Add string to legend
-	void AddLegend(const char *text,const char *style);
-	void AddLegend(const wchar_t *text,const char *style);
-	/// Clear saved legend string
-	inline void ClearLegend()	{	Leg.clear();	}
 	/// Draw legend of accumulated strings at position (x, y) by \a font with \a size
 	inline void Legend(float x, float y, const char *font="#", float size=-0.8, float llen=0.1)
 	{	Legend(Leg,x,y,font,size,llen);	}
@@ -306,7 +301,7 @@ protected:
 	unsigned char *G;	///< Final picture in RGB format. Prepared in Finish().
 	std::vector<mglDrawDat> DrwDat;	///< Set of ALL drawing data for each frames
 #ifdef HAVE_PTHREAD
-	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexLeg, mutexStk, mutexGrp;
+	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexStk, mutexGrp;
 #endif
 
 	int LegendMarks;	///< Number of marks in the Legend

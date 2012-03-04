@@ -32,8 +32,7 @@ void mgl_traj_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Traj");	return;	}
 	if(n!=x->GetNx() || z->GetNx()!=n || y->GetNx()!=n || ay->GetNx()!=n || az->GetNx()!=n)
 	{	gr->SetWarn(mglWarnDim,"Traj");	return;	}
-	float len=gr->SaveState(opt);
-	if(isnan(len))	len = 0;	//isnan(gr->PrevValue()) ? 0:gr->PrevValue();
+	float len=gr->SaveState(opt);	if(isnan(len))	len = 0;
 	static int cgid=1;	gr->StartGroup("Traj",cgid++);
 
 	register long i, j;
@@ -341,7 +340,6 @@ void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
 	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
 	float r = gr->SaveState(opt);
-	if(isnan(r))	r = gr->PrevValue();
 	long num = isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow",cgid++);
 
@@ -349,8 +347,7 @@ void mgl_flow_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	bool vv = sch && strchr(sch,'v');
 	// allocate memory
 	float zVal = gr->Min.z;
-	bool cnt=(num>0);
-	num = abs(num);
+	bool cnt=!(sch && strchr(sch,'#'));
 	mglData xx(x), yy(y), bx(ax), by(ay);
 
 	for(long k=0;k<ax->GetNz();k++)
@@ -568,10 +565,9 @@ void mgl_flow_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,"Flow");	return;	}
 	float r = gr->SaveState(opt);
-	if(isnan(r))	r = gr->PrevValue();
 	long num = isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Flow3",cgid++);
-	bool cnt=(num>0);	num = abs(num);	// redefine central parater
+	bool cnt=!(sch && strchr(sch,'#'));
 	long ss = gr->AddTexture(sch);
 	bool vv = sch && strchr(sch,'v'), xo = sch && strchr(sch,'x'), zo = sch && strchr(sch,'z');
 
@@ -865,14 +861,13 @@ void mgl_pipe_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, flo
 	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
 	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
 	float r = gr->SaveState(opt);
-	if(isnan(r))	r = gr->PrevValue();
 	long num = isnan(r)?5:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe",cgid++);
 
 	long ss = gr->AddTexture(sch);
 	// allocate memory
 	float zVal = gr->Min.z;
-	bool cnt=(num>0);	num = abs(num);
+	bool cnt=!(sch && strchr(sch,'#'));
 	if(sch && strchr(sch,'i'))	r0 = -fabs(r0);
 
 	mglData xx(x), yy(y), bx(ax), by(ay);
@@ -1029,13 +1024,12 @@ void mgl_pipe_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,"Pipe");	return;	}
 	float r = gr->SaveState(opt);
-	if(isnan(r))	r = gr->PrevValue();
 	long num = isnan(r)?3:long(r+0.5);
 	static int cgid=1;	gr->StartGroup("Pipe3",cgid++);
 	if(sch && strchr(sch,'i'))	r0 = -fabs(r0);
 
 	long ss = gr->AddTexture(sch);
-	bool cnt=(num>0);	num = abs(num);
+	bool cnt=!(sch && strchr(sch,'#'));
 
 	mglData xx(x), yy(y), zz(z), bx(ax), by(ay), bz(az);
 	for(i=0;i<num;i++)	for(j=0;j<num;j++)

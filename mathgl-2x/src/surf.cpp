@@ -869,7 +869,7 @@ void mgl_map_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Map",cgid++);
 
-	long ss = gr->AddTexture((sch && *sch)?sch:"rgb",2);
+	long ss = gr->AddTexture(mgl_have_color(sch)?sch:"rgb",2);
 	long s = both ? n:1, s1, s2;
 
 	float xdy,xdx,ydx,ydy,xx,yy;

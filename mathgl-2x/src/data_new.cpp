@@ -228,8 +228,8 @@ uintptr_t mgl_data_column_(uintptr_t *d, const char *eq,int l)
 void *mgl_resize(void *par)
 {
 	mglThreadD *t=(mglThreadD *)par;
-	register long i,j,k,i0, nx=t->p[0], ny=t->p[1];
-	long n1=t->p[3],n2=t->p[4],n3=t->p[5];
+	register long i,j,k,i0, nx=t->p[0]+0.1, ny=t->p[1]+0.1;
+	long n1=t->p[3]+0.1,n2=t->p[4]+0.1,n3=t->p[5]+0.1;
 	mreal *b=t->a;
 	const mreal *a=t->b, *c=t->c;
 	for(i0=t->id;i0<t->n;i0+=mglNumThr)

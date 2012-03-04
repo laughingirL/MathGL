@@ -52,21 +52,20 @@ void mgl_strlwr(char *str)
 mglBase::mglBase()
 {
 //	memset(this,0,sizeof(mglBase));	// since mglBase is abstract then I can do it?!!
-	Flag=0;	saved=false;	prev_val=0;
+	Flag=0;	saved=false;
 #ifdef HAVE_PTHREAD
 	pthread_mutex_init(&mutexPnt,0);
 	pthread_mutex_init(&mutexTxt,0);
 #endif
-	fnt=0;	*FontDef=*last_style=0;
+	fnt=0;	*FontDef==0;
 	fx=fy=fz=fa=fc=0;
 
-	InUse = 1;	prev_val = NAN;
+	InUse = 1;
 	// Always create default palette txt[0] and default scheme txt[1]
 	Txt.reserve(3);
 	Txt.push_back(mglTexture(MGL_DEF_PAL,-1));
 	Txt.push_back(mglTexture("BbcyrR",1));
-	last_style[0]='k';	last_style[1]='-';	last_style[2]='0';
-	last_style[3]=last_style[4]=0;
+	memcpy(last_style,"{k5}-1\0",8);
 	MinS=mglPoint(-1,-1,-1);	MaxS=mglPoint(1,1,1);
 }
 mglBase::~mglBase()	{	ClearEq();	}
@@ -308,7 +307,7 @@ void mglBase::SetRanges(mglPoint m1, mglPoint m2)
 	if(m1.y!=m2.y)	{	Min.y=m1.y;	Max.y=m2.y;	}
 	if(m1.z!=m2.z)	{	Min.z=m1.z;	Max.z=m2.z;	}
 	if(m1.c!=m2.c)	{	Min.c=m1.c;	Max.c=m2.c;	}
-	else			{	Min.c=m1.z;	Max.c=m2.z;	}
+	else			{	Min.c=Min.z;Max.c=Max.z;}
 //	if(AutoOrg)
 	{
 		if(Org.x<Min.x && !isnan(Org.x))	Org.x = Min.x;
@@ -426,11 +425,11 @@ void mglBase::Ternary(int t)
 	if(t&3)
 	{
 		x1 = Min;	x2 = Max;	o = Org;
-		c = get(MGL_ENABLE_CUT);	clr(MGL_ENABLE_CUT);
-		SetRanges(mglPoint(0,0,0),mglPoint(1,1,t==1?0:1));
+//		c = get(MGL_ENABLE_CUT);	clr(MGL_ENABLE_CUT);
+		SetRanges(mglPoint(0,0),mglPoint(1,1,t==1?0:1));
 		Org=mglPoint(0,0,0);
 	}
-	else	{	SetRanges(x1,x2);	Org=o;	SetCut(c);	}
+	else	{	SetRanges(x1,x2);	Org=o;	/*SetCut(c);*/	}
 }
 //-----------------------------------------------------------------------------
 //		Transformation functions
@@ -653,15 +652,20 @@ float mglBase::NextColor(long &id)
 	if(id>=0)	{	p=(p+1)%n;	id = 256*i+p;	}
 	mglColor c = Txt[i].col[int(512*(p+0.5)/n)];
 	float dif, dmin=1;
-	for(long j=0;mglColorIds[j].id;j++)
+	// try to find closest color
+	for(long j=0;mglColorIds[j].id;j++)	for(long k=1;k<10;k++)
 	{
-		dif = (c-mglColorIds[j].col).NormS();
+		mglColor cc;	cc.Set(mglColorIds[j].col,k/5.);
+		dif = (c-cc).NormS();
 		if(dif<dmin)
 		{
-			last_style[0] = mglColorIds[j].id;
+			last_style[1] = mglColorIds[j].id;
+			last_style[2] = k+'0';
 			dmin=dif;
 		}
 	}
+	if(!leg_str.empty())
+	{	AddLegend(leg_str.c_str(),last_style);	leg_str.clear();	}
 	CDef = i + (n>0 ? (p+0.5)/n : 0);	CurrPal++;
 	return CDef;
 }
@@ -670,10 +674,10 @@ char mglBase::SetPenPal(const char *p, long *Id)
 {
 	char mk=0;
 	PDef = 0xffff;	// reset to solid line
-	last_style[1]='-';
+	memcpy(last_style,"{k5}-1\0",8);
 
 	Arrow1 = Arrow2 = 0;	PenWidth = 1;
-	if(p && *p!=0)
+	if(p && *p)
 	{
 //		const char *col = "wkrgbcymhRGBCYMHWlenuqpLENUQP";
 		const char *stl = " -|;:ji=";
@@ -698,11 +702,11 @@ char mglBase::SetPenPal(const char *p, long *Id)
 				case ' ': PDef = 0x0000;	break;
 				default:  PDef = 0xffff;	break;	// '-'
 				}
-				last_style[1]=p[i];
+				last_style[4]=p[i];
 			}
 			else if(strchr(mrk,p[i]))	mk = p[i];
 			else if(strchr(wdh,p[i]))
-			{	last_style[2] = p[i];	PenWidth = p[i]-'0';	}
+			{	last_style[5] = p[i];	PenWidth = p[i]-'0';	}
 			else if(strchr(arr,p[i]))
 			{
 				if(!Arrow2)	Arrow2 = p[i];
@@ -725,7 +729,7 @@ char mglBase::SetPenPal(const char *p, long *Id)
 			if(mk=='*')	mk = 'Y';
 		}
 	}
-	last_style[3]=mk;
+	last_style[6]=mk;
 	long tt, n;
 	tt = AddTexture(p,-1);	n=Txt[tt].n;
 	CDef = tt+((n+CurrPal-1)%n+0.5)/n;
@@ -810,7 +814,6 @@ float mglBase::SaveState(const char *opt)
 	// parse option
 	char *q=mgl_strdup(opt),*s,*a,*b,*c;
 	long n;
-	float res=NAN;
 	mgl_strtrim(q);
 	// NOTE: not consider '#' inside legend entry !!!
 	s=strchr(q,'#');	if(s)	*s=0;
@@ -847,9 +850,11 @@ float mglBase::SaveState(const char *opt)
 		else if(!strcmp(a,"arrowsize"))	SetArrowSize(ff);
 		else if(!strcmp(a,"size"))
 		{	SetMarkSize(ff);	SetFontSize(ff);	SetArrowSize(ff);	}
-		else if(!strcmp(a,"num") || !strcmp(a,"number") || !strcmp(a,"value"))	res = ff;
+		else if(!strcmp(a,"num") || !strcmp(a,"number") || !strcmp(a,"value"))	return ff;
+		else if(!strcmp(a,"legend"))
+		{	if(*b=='\'')	{	b++;	b[strlen(b)-1]=0;	}	leg_str = b;	}
 	}
-	free(q);	prev_val=res;	return res;
+	free(q);	return NAN;
 }
 //-----------------------------------------------------------------------------
 void mglBase::LoadState()
@@ -859,5 +864,18 @@ void mglBase::LoadState()
 	FontSize=FSS;	AlphaDef=ADS;
 	MeshNum=MNS;	Flag=CSS;	AmbBr=LSS;
 	Min=MinS;		Max=MaxS;	saved=false;
+}
+//-----------------------------------------------------------------------------
+void mglBase::AddLegend(const wchar_t *text,const char *style)
+{	if(text)	MGL_PUSH(Leg,mglText(text,style),mutexLeg);	}
+//-----------------------------------------------------------------------------
+void mglBase::AddLegend(const char *str,const char *style)
+{
+	if(!str)	return;
+	unsigned s = strlen(str)+1;
+	wchar_t *wcs = new wchar_t[s];
+	mbstowcs(wcs,str,s);
+	AddLegend(wcs, style);
+	delete []wcs;
 }
 //-----------------------------------------------------------------------------

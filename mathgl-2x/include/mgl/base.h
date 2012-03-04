@@ -153,6 +153,7 @@ const mglColor NC(-1,-1,-1);
 const mglColor BC( 0, 0, 0);
 const mglColor WC( 1, 1, 1);
 const mglColor RC( 1, 0, 0);
+long mgl_have_color(const char *stl);
 //-----------------------------------------------------------------------------
 /// Structure for color ID
 struct mglColorID
@@ -213,8 +214,6 @@ public:
 	{	Org=mglPoint(x0,y0,z0,c0);	}
 	/// Save ranges into internal variable and put parsed
 	float SaveState(const char *opt);
-	/// Return previous value of SaveState()
-	inline float PrevValue()	{	return prev_val;	};
 	/// Load ranges from internal variable
 	void LoadState();
 
@@ -248,11 +247,11 @@ public:
 	inline void SetAlphaDef(float val)	{	AlphaDef=val;	};
 	/// Set default palette
 	inline void SetPalette(const char *colors)
-	{	Txt[0].Set((colors && *colors)?colors:MGL_DEF_PAL,-1);	}
+	{	Txt[0].Set(mgl_have_color(colors)?colors:MGL_DEF_PAL,-1);	}
 	inline long GetNumPal(long id)	{	return Txt[abs(id)/256].n;	}
 	/// Set default color scheme
 	inline void SetDefScheme(const char *colors)
-	{	Txt[1].Set((colors && *colors)?colors:"BbcyrR");	}
+	{	Txt[1].Set(mgl_have_color(colors)?colors:"BbcyrR");	}
 
 	/// Set number of mesh lines
 	inline void SetMeshNum(int val)	{	MeshNum=val;	};
@@ -307,6 +306,12 @@ public:
 	inline void SetTickRotate(bool val)	{	set(val,MGL_TICKS_ROTATE);	}
 	/// Set to use or not text rotation
 	inline void SetTickSkip(bool val)	{	set(val,MGL_TICKS_SKIP);	}
+
+	/// Add string to legend
+	void AddLegend(const char *text,const char *style);
+	void AddLegend(const wchar_t *text,const char *style);
+	/// Clear saved legend string
+	inline void ClearLegend()	{	Leg.clear();	}
 
 	/// Set plot quality
 	virtual void SetQuality(int qual=MGL_DRAW_NORM)	{	Quality=qual;	}
@@ -376,7 +381,7 @@ protected:
 	std::vector<mglText> Leg;	///< Text labels for legend
 	std::vector<mglTexture> Txt;///< Pointer to textures
 #ifdef HAVE_PTHREAD
-	pthread_mutex_t mutexPnt, mutexTxt;
+	pthread_mutex_t mutexPnt, mutexTxt, mutexLeg;
 #endif
 
 	int TernAxis;		///< Flag that Ternary axis is used
@@ -411,7 +416,7 @@ private:
 	float MSS, ASS, FSS, ADS, MNS, LSS;	///< Saved state
 	long CSS;			///< Saved flags
 	bool saved;			///< State is saved
-	float prev_val;		///< previous value or zero (if no one)
+	std::string leg_str;///< text to be save in legend
 
 	mglPoint CutMin;	///< Lower edge of bounding box for cut off.
 	mglPoint CutMax;	///< Upper edge of bounding box for cut off.

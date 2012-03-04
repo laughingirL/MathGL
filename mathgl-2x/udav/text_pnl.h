@@ -40,7 +40,7 @@ class TextPanel : public QWidget
 Q_OBJECT
 public:
 	QMenu *menu;
-	TextEdit *edit;	///< script itself
+	TextEdit *edit;		///< script itself
 	PlotPanel *graph;	///< NOTE: have to be filled!!!
 	NewCmdDialog *newCmdDlg;
 

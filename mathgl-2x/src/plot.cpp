@@ -1615,7 +1615,6 @@ void mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Tape");	return;	}
 	static int cgid=1;	gr->StartGroup("Tape",cgid++);
 	float ll, rr = gr->SaveState(opt);
-	if(isnan(rr))	rr = gr->PrevValue();
 	if(rr==0 || isnan(rr))	rr = mgl_norm(gr->Max-gr->Min)*gr->BarWidth/25;
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(4*n*m);

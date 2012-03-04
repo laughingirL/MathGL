@@ -46,16 +46,35 @@ int srnd = 0;
 //-----------------------------------------------------------------------------
 void test(mglGraph *gr)
 {
-	gr->SubPlot(2,2,0);	gr->Title("Colorbar out of box");
-	gr->Colorbar("<");	gr->Colorbar(">");
-	gr->Colorbar("_");	gr->Colorbar("^");
-	gr->SubPlot(2,2,1);	gr->Title("Colorbar near box");
-	gr->Colorbar("<I");	gr->Colorbar(">I");
-	gr->Colorbar("_I");	gr->Colorbar("^I");
-	gr->SubPlot(2,2,2);	gr->Title("manual position");
-/*	gr->Colorbar("<");	gr->Colorbar(">");
-	gr->Colorbar("_");	gr->Colorbar("^");*/
-	gr->SubPlot(2,2,3);	gr->Title("manual colors");
+	mglData a,b,d;	mgls_prepare2v(&a,&b);	d = a;
+	for(int i=0;i<a.nx*a.ny;i++)	d.a[i] = hypot(a.a[i],b.a[i]);
+	mglData c;	mgls_prepare3d(&c);
+	mglData v(10);	v.Fill(-0.5,1);
+	gr->SubPlot(2,2,1,"");	gr->Title("Flow + Dens");
+	gr->Flow(a,b,"br");	gr->Dens(d,"BbcyrR");	gr->Box();
+	gr->SubPlot(2,2,0);	gr->Title("Surf + Cont");	gr->Rotate(50,60);
+	gr->Light(true);	gr->Surf(a);	gr->Cont(a,"y");	gr->Box();
+	gr->SubPlot(2,2,2);	gr->Title("Mesh + Cont");	gr->Rotate(50,60);
+	gr->Box();	gr->Mesh(a);	gr->Cont(a,"_");
+	gr->SubPlot(2,2,3);	gr->Title("Surf3 + ContF_3");gr->Rotate(50,60);
+	gr->Box();	gr->ContF3(v,c,"z",0);	gr->ContF3(v,c,"x");	gr->ContF3(v,c);
+	gr->SetCutBox(mglPoint(0,-1,-1), mglPoint(1,0,1.1));
+	gr->ContF3(v,c,"z",c.nz-1);	gr->Surf3(-0.5,c);
+
+	gr->WriteJPEG("test.jpg");
+	gr->WritePNG("test.png");
+	gr->WriteBMP("test.bmp");
+	gr->WriteTGA("test.tga");
+	gr->WriteEPS("test.eps");
+	gr->WriteTEX("test.tex");
+	gr->WriteSVG("test.svg");
+	gr->WriteGIF("test.gif");
+
+	gr->WriteOBJ("test.obj","",true);
+	gr->WriteXYZ("test.xyz");
+	gr->WriteSTL("test.stl");
+	gr->WriteOFF("test.off");
+	gr->WriteX3D("test.x3d");
 }
 //-----------------------------------------------------------------------------
 //		Sample functions (v.2.*0)
@@ -86,26 +105,26 @@ const char *mmgl_schemes="call 'sch' 0 'kw'\ncall 'sch' 1 'wk'\ncall 'sch' 2 'kH
 void smgl_schemes(mglGraph *gr)	// Color table
 {
 	mglData a(256,2);	a.Fill(-1,1);
-	gr->SubPlot(2,10,0,0.2);	gr->Dens(a,"kw");		gr->Puts(-1.3, 1.3, "kw", "A");
-	gr->SubPlot(2,10,1,0.2);	gr->Dens(a,"wk");		gr->Puts( 0.2, 1.3, "wk", "A");
-	gr->SubPlot(2,10,2,0.2);	gr->Dens(a,"kHCcw");	gr->Puts(-1.3, 0.99, "kHCcw", "A");
-	gr->SubPlot(2,10,3,0.2);	gr->Dens(a,"kBbcw");	gr->Puts( 0.2, 0.99, "kBbcw", "A");
-	gr->SubPlot(2,10,4,0.2);	gr->Dens(a,"kRryw");	gr->Puts(-1.3, 0.68, "kRryw", "A");
-	gr->SubPlot(2,10,5,0.2);	gr->Dens(a,"kGgew");	gr->Puts( 0.2, 0.68, "kGgew", "A");
-	gr->SubPlot(2,10,6,0.2);	gr->Dens(a,"BbwrR");	gr->Puts(-1.3, 0.37, "BbwrR", "A");
-	gr->SubPlot(2,10,7,0.2);	gr->Dens(a,"BbwgG");	gr->Puts( 0.2, 0.37, "BbwgG", "A");
-	gr->SubPlot(2,10,8,0.2);	gr->Dens(a,"GgwmM");	gr->Puts(-1.3, 0.06, "GgwmM", "A");
-	gr->SubPlot(2,10,9,0.2);	gr->Dens(a,"UuwqR");	gr->Puts( 0.2, 0.06, "UuwqR", "A");
-	gr->SubPlot(2,10,10,0.2);	gr->Dens(a,"QqwcC");	gr->Puts(-1.3,-0.25, "QqwcC", "A");
-	gr->SubPlot(2,10,11,0.2);	gr->Dens(a,"CcwyY");	gr->Puts( 0.2,-0.25, "CcwyY", "A");
-	gr->SubPlot(2,10,12,0.2);	gr->Dens(a,"bcwyr");	gr->Puts(-1.3,-0.56, "bcwyr", "A");
-	gr->SubPlot(2,10,13,0.2);	gr->Dens(a,"bwr");		gr->Puts( 0.2,-0.56, "bwr", "A");
-	gr->SubPlot(2,10,14,0.2);	gr->Dens(a,"BbcyrR");	gr->Puts(-1.3,-0.87, "BbcyrR", "A");
-	gr->SubPlot(2,10,15,0.2);	gr->Dens(a,"UbcyqR");	gr->Puts( 0.2,-0.87, "UbcyqR", "A");
-	gr->SubPlot(2,10,16,0.2);	gr->Dens(a,"BbcwyrR");	gr->Puts(-1.3,-1.18, "BbcwyrR", "A");
-	gr->SubPlot(2,10,17,0.2);	gr->Dens(a,"bcyr");		gr->Puts( 0.2,-1.18, "bcyr", "A");
-	gr->SubPlot(2,10,18,0.2);	gr->Dens(a,"BbcyrR|");	gr->Puts(-1.3,-1.49, "BbcyrR|", "A");
-	gr->SubPlot(2,10,19,0.2);	gr->Dens(a,"bgr");		gr->Puts( 0.2,-1.49, "bgr", "A");
+	gr->SubPlot(2,10,0,0.2);	gr->Dens(a,"kw");		gr->Puts(0.07, 0.92, "kw", "A");
+	gr->SubPlot(2,10,1,0.2);	gr->Dens(a,"wk");		gr->Puts(0.57, 0.92, "wk", "A");
+	gr->SubPlot(2,10,2,0.2);	gr->Dens(a,"kHCcw");	gr->Puts(0.07, 0.82, "kHCcw", "A");
+	gr->SubPlot(2,10,3,0.2);	gr->Dens(a,"kBbcw");	gr->Puts(0.57, 0.82, "kBbcw", "A");
+	gr->SubPlot(2,10,4,0.2);	gr->Dens(a,"kRryw");	gr->Puts(0.07, 0.72, "kRryw", "A");
+	gr->SubPlot(2,10,5,0.2);	gr->Dens(a,"kGgew");	gr->Puts(0.57, 0.72, "kGgew", "A");
+	gr->SubPlot(2,10,6,0.2);	gr->Dens(a,"BbwrR");	gr->Puts(0.07, 0.62, "BbwrR", "A");
+	gr->SubPlot(2,10,7,0.2);	gr->Dens(a,"BbwgG");	gr->Puts(0.57, 0.62, "BbwgG", "A");
+	gr->SubPlot(2,10,8,0.2);	gr->Dens(a,"GgwmM");	gr->Puts(0.07, 0.52, "GgwmM", "A");
+	gr->SubPlot(2,10,9,0.2);	gr->Dens(a,"UuwqR");	gr->Puts(0.57, 0.52, "UuwqR", "A");
+	gr->SubPlot(2,10,10,0.2);	gr->Dens(a,"QqwcC");	gr->Puts(0.07, 0.42, "QqwcC", "A");
+	gr->SubPlot(2,10,11,0.2);	gr->Dens(a,"CcwyY");	gr->Puts(0.57, 0.42, "CcwyY", "A");
+	gr->SubPlot(2,10,12,0.2);	gr->Dens(a,"bcwyr");	gr->Puts(0.07, 0.32, "bcwyr", "A");
+	gr->SubPlot(2,10,13,0.2);	gr->Dens(a,"bwr");		gr->Puts(0.57, 0.32, "bwr", "A");
+	gr->SubPlot(2,10,14,0.2);	gr->Dens(a,"BbcyrR");	gr->Puts(0.07, 0.22, "BbcyrR", "A");
+	gr->SubPlot(2,10,15,0.2);	gr->Dens(a,"UbcyqR");	gr->Puts(0.57, 0.22, "UbcyqR", "A");
+	gr->SubPlot(2,10,16,0.2);	gr->Dens(a,"BbcwyrR");	gr->Puts(0.07, 0.12, "BbcwyrR", "A");
+	gr->SubPlot(2,10,17,0.2);	gr->Dens(a,"bcyr");		gr->Puts(0.57, 0.12, "bcyr", "A");
+	gr->SubPlot(2,10,18,0.2);	gr->Dens(a,"BbcyrR|");	gr->Puts(0.07, 0.02, "BbcyrR|", "A");
+	gr->SubPlot(2,10,19,0.2);	gr->Dens(a,"bgr");		gr->Puts(0.57, 0.02, "bgr", "A");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_curvcor="origin -1 1 -1\nsubplot 2 2 0:title 'Cartesian':rotate 50 60:fplot '2*t-1' '0.5' '0':axis:grid\n"
@@ -437,7 +456,7 @@ void smgl_boxplot(mglGraph *gr)	// flow threads and density plot
 //-----------------------------------------------------------------------------
 const char *mmgl_type0="alpha on:light on:transptype 0:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
 "subplot 2 2 1:rotate 50 60:dens a:box\nsubplot 2 2 2:rotate 50 60:cont a:box\n"
-"subplot 2 2 3:rotate 50 60:axial a:box";	// TODO add later
+"subplot 2 2 3:rotate 50 60:axial a:box";
 void smgl_type0(mglGraph *gr)	// TranspType = 0
 {
 	//	if(type==5 || type==9 || type==10)	return;
@@ -452,7 +471,7 @@ void smgl_type0(mglGraph *gr)	// TranspType = 0
 //-----------------------------------------------------------------------------
 const char *mmgl_type1="alpha on:light on:transptype 1:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
 "subplot 2 2 1:rotate 50 60:dens a:box\nsubplot 2 2 2:rotate 50 60:cont a:box\n"
-"subplot 2 2 3:rotate 50 60:axial a:box";	// TODO add later
+"subplot 2 2 3:rotate 50 60:axial a:box";
 void smgl_type1(mglGraph *gr)	// TranspType = 1
 {
 	//	if(type==5 || type==9 || type==10)	return;
@@ -467,7 +486,7 @@ void smgl_type1(mglGraph *gr)	// TranspType = 1
 //-----------------------------------------------------------------------------
 const char *mmgl_type2="alpha on:light on:transptype 2:clf\nsubplot 2 2 0:rotate 50 60:surf a:box\n"
 "subplot 2 2 1:rotate 50 60:dens a:box\nsubplot 2 2 2:rotate 50 60:cont a:box\n"
-"subplot 2 2 3:rotate 50 60:axial a:box";	// TODO add later
+"subplot 2 2 3:rotate 50 60:axial a:box";
 void smgl_type2(mglGraph *gr)	// TranspType = 2
 {
 	//	if(type==5 || type==9 || type==10)	return;
@@ -1541,6 +1560,55 @@ void smgl_label(mglGraph *gr)
 	gr->Box();	gr->Plot(ys," *");	gr->Label(ys,"y=%y");
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_colorbar="subplot 2 2 0:title 'Colorbar out of box':box\n"
+"colorbar '<':colorbar '>':colorbar '_':colorbar '^'\n"
+"subplot 2 2 0:title 'Colorbar near box':box\n"
+"colorbar '<I':colorbar '>I':colorbar '_I':colorbar '^I'\n"
+"subplot 2 2 0:title 'manual colors':box:contd v a\n"
+"colorbar v '<':colorbar v '>':colorbar v '_':colorbar v '^'\n"
+"subplot 2 2 0:title 'log-scale'\n"
+"colorbar '>' 0.5 0:text 0 1.2 'Normal scale':colorbar '>':text 1.3 1.2 'Log scale'\n";
+void smgl_colorbar(mglGraph *gr)
+{
+	gr->SubPlot(2,2,0);	gr->Title("Colorbar out of box");	gr->Box();
+	gr->Colorbar("<");	gr->Colorbar(">");	gr->Colorbar("_");	gr->Colorbar("^");
+	gr->SubPlot(2,2,1);	gr->Title("Colorbar near box");		gr->Box();
+	gr->Colorbar("<I");	gr->Colorbar(">I");	gr->Colorbar("_I");	gr->Colorbar("^I");
+	gr->SubPlot(2,2,2);	gr->Title("manual colors");
+	mglData a,v;	mgls_prepare2d(&a,0,&v);
+	gr->Box();	gr->ContD(v,a);
+	gr->Colorbar(v,"<");	gr->Colorbar(v,">");	gr->Colorbar(v,"_");	gr->Colorbar(v,"^");
+	gr->SubPlot(2,2,3);	gr->Title("log-scale");
+	gr->SetRange('c',0.01,1e3);
+	gr->Colorbar(">",0.5,0);	gr->Puts(mglPoint(0,1.2),"Normal scale");
+	gr->SetFunc("","","","lg(c)");
+	gr->Colorbar(">");		gr->Puts(mglPoint(1.3,1.2),"Log scale");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_legend="addlegend 'sin(\\pi {x^2})' 'b':addlegend 'sin(\\pi x)' 'g*'\n"
+"addlegend 'sin(\\pi \\sqrt{x})' 'rd':addlegend 'jsut text' ' ':addlegend 'no indent for this' ''\n"
+"subplot 2 2 0 '':title 'Legend (default)':box:legend\n"
+"legend 3 'A#':text 0.75 0.65 'Absolute position' 'A'\n"
+"subplot 2 2 2 '':title 'coloring':box:legend 0 'r#':legend 1 'Wb#':legend 2 'ygr#'\n"
+"subplot 2 2 3 '':title 'manual position':box:legend 0.5 0.5\n";
+void smgl_legend(mglGraph *gr)
+{
+	gr->AddLegend("sin(\\pi {x^2})","b");
+	gr->AddLegend("sin(\\pi x)","g*");
+	gr->AddLegend("sin(\\pi \\sqrt{x})","rd");
+	gr->AddLegend("just text"," ");
+	gr->AddLegend("no indent for this","");
+	if(!mini)	{gr->SubPlot(2,2,0,"");	gr->Title("Legend (default)");}
+	gr->Box();	gr->Legend();
+	if(mini)	return;
+	gr->Legend(3,"A#");
+	gr->Puts(mglPoint(0.75,0.65),"Absolute position","A");
+	gr->SubPlot(2,2,2,"");	gr->Title("coloring");	gr->Box();
+	gr->Legend(0,"r#");	gr->Legend(1,"Wb#");	gr->Legend(2,"ygr#");
+	gr->SubPlot(2,2,3,"");	gr->Title("manual position");	gr->Box();	gr->Legend(0.5,0.5);
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_data_diff="";		// TODO add later
 void smgl_dat_diff(mglGraph *gr)	// differentiate
 {
 	gr->SetRanges(0,1,0,1,0,1);
@@ -1559,6 +1627,83 @@ void smgl_dat_diff(mglGraph *gr)	// differentiate
 	gr->Puts(mglPoint(0.7,1,1.2),"\\int {d^2}a/dxdy dx");
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_data_extra="";		// TODO add later
+void smgl_dat_exta(mglGraph *gr)	// differentiate
+{
+	gr->SubPlot(2,2,0,"");	gr->Title("Envelop sample");
+	mglData d1(1000);	gr->Fill(d1,"exp(-8*x^2)*sin(10*pi*x)");
+	gr->Axis();			gr->Plot(d1, "b");
+	d1.Envelop('x');	gr->Plot(d1, "r");
+
+	gr->SubPlot(2,2,1,"");	gr->Title("Smooth sample");
+	mglData y0(30),y1,y2,y3;
+	gr->SetRanges(0,1,0,1);
+	gr->Fill(y0, "0.4*sin(pi*x) + 0.3*cos(1.5*pi*x) - 0.4*sin(2*pi*x)+0.5*rnd");
+
+	y1=y0;	y1.Smooth("x3");
+	y2=y0;	y2.Smooth("x5");
+	y3=y0;	y3.Smooth("x");
+
+	gr->Plot(y0,"{m7}:s", "legend 'none'");	//gr->AddLegend("none","k");
+	gr->Plot(y1,"r", "legend ''3' style'");
+	gr->Plot(y2,"g", "legend ''5' style'");
+	gr->Plot(y3,"b", "legend 'default'");
+	gr->Legend();		gr->Box();
+
+	gr->SubPlot(2,2,2);		gr->Title("Sew sample");
+	mglData d2(100, 100);	gr->Fill(d2, "mod((y^2-(1-x)^2)/2,0.1)");
+	gr->Rotate(50, 60);	gr->Light(true);	gr->Alpha(true);
+	gr->Box();			gr->Surf(d2, "b");
+	d2.Sew("xy", 0.1);	gr->Surf(d2, "r");
+
+	gr->SubPlot(2,2,3);		gr->Title("Resize sample (interpolation)");
+	mglData x0(10), v0(10), x1, v1;
+	gr->Fill(x0,"rnd");		gr->Fill(v0,"rnd");
+	x1 = x0.Resize(100);	v1 = v0.Resize(100);
+	gr->Plot(x0,v0,"b+ ");	gr->Plot(x1,v1,"r-");
+	gr->Label(x0,v0,"%n");
+}
+//-----------------------------------------------------------------------------
+const char *mmgl_ternary="";	// TODO add later
+void smgl_ternary(mglGraph *gr)	// flag #
+{
+	gr->SetRanges(0,1,0,1,0,1);
+	mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
+	a.Modify("30*x*y*(1-x-y)^2*(x+y<1)");
+	x.Modify("0.25*(1+cos(2*pi*x))");
+	y.Modify("0.25*(1+sin(2*pi*x))");
+	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
+	z.Modify("x");
+
+	gr->SubPlot(2,2,0);	gr->Title("Ordinary axis 3D");
+	gr->Rotate(50,60);		gr->Light(true);
+	gr->Plot(x,y,z,"r2");	gr->Surf(a,"BbcyrR#");
+	gr->Axis(); gr->Grid();	gr->Box();
+	gr->Label('x',"B",1);	gr->Label('y',"C",1);	gr->Label('z',"Z",1);
+
+	gr->SubPlot(2,2,1);	gr->Title("Ternary axis (x+y+t=1)");
+	gr->Ternary(1);
+	gr->Plot(x,y,"r2");	gr->Plot(rx,ry,"q^ ");	gr->Cont(a,"BbcyrR");
+	gr->Line(mglPoint(0.5,0), mglPoint(0,0.75), "g2");
+	gr->Axis(); gr->Grid("xyz","B;");
+	gr->Label('x',"B");	gr->Label('y',"C");	gr->Label('t',"A");
+
+	gr->SubPlot(2,2,2);	gr->Title("Quaternary axis 3D");
+	gr->Rotate(50,60);		gr->Light(true);
+	gr->Ternary(2);
+	gr->Plot(x,y,z,"r2");	gr->Surf(a,"BbcyrR#");
+	gr->Axis(); gr->Grid();	gr->Box();
+	gr->Label('t',"A",1);	gr->Label('x',"B",1);
+	gr->Label('y',"C",1);	gr->Label('z',"D",1);
+
+	gr->SubPlot(2,2,3);	gr->Title("Ternary axis 3D");
+	gr->Rotate(50,60);		gr->Light(true);
+	gr->Ternary(1);
+	gr->Plot(x,y,z,"r2");	gr->Surf(a,"BbcyrR#");
+	gr->Axis(); gr->Grid();	gr->Box();
+	gr->Label('t',"A",1);	gr->Label('x',"B",1);
+	gr->Label('y',"C",1);	gr->Label('z',"Z",1);
+}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -1572,46 +1717,6 @@ void smgl_dat_diff(mglGraph *gr)	// differentiate
 //		Sample functions
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void smgl_envelop(mglGraph *gr)	// Envelop reconstruction
-{
-	mglData a(1000);
-	gr->Fill(a,"exp(-8*x^2)*sin(10*pi*x)");
-	gr->Plot(a, "b");
-	a.Envelop('x');
-	gr->Plot(a, "r");
-	gr->Axis();
-}
-//-----------------------------------------------------------------------------
-void smgl_sew(mglGraph *gr)	// Phase reconstruction
-{
-	gr->VertexColor(false);
-	mglData a(100, 100);
-	a.Modify("mod((y^2-(1-x)^2)/2,0.1)");
-	gr->Rotate(40, 60);
-	gr->Light(true);
-	gr->Alpha(true);
-	gr->Surf(a, "b");
-	a.Sew("xy", 0.1);
-	gr->Surf(a, "r");
-	gr->Box();
-}
-//-----------------------------------------------------------------------------
-void smgl_sample7(mglGraph *gr)	// smoothing
-{
-	mglData y0(30),y1,y2,y3;
-	y0.Modify("0.4*sin(2*pi*x) + 0.3*cos(3*pi*x) - 0.4*sin(4*pi*x)+0.4*rnd");
-
-	y1=y0;	y1.Smooth("x3");
-	y2=y0;	y2.Smooth("x5");
-	y3=y0;	y3.Smooth("x");
-
-	gr->Plot(y0,"k");	gr->AddLegend("NONE","k");
-	gr->Plot(y1,"r");	gr->AddLegend("LINE\\_3","r");
-	gr->Plot(y2,"g");	gr->AddLegend("LINE\\_5","g");
-	gr->Plot(y3,"b");	gr->AddLegend("QUAD\\_5","b");
-	gr->Legend();		gr->Box();
-	gr->ClearLegend();	// clear legend strings
-}
 //-----------------------------------------------------------------------------
 /*void smgl_surf3_rgbd(mglGraph *gr)
 {
@@ -1619,63 +1724,6 @@ void smgl_sample7(mglGraph *gr)	// smoothing
 	gr->Rotate(40,60);	gr->VertexColor(true);
 	gr->Box();	gr->Surf3(c,"bgrd");
 }*/
-//-----------------------------------------------------------------------------
-void smgl_legend(mglGraph *gr)
-{
-	mglData f(50,3);
-	float x;
-	for(int i=0;i<50;i++)
-	{
-		x=i/49.;
-		f.a[i]=sin(2*M_PI*x*x);
-		f.a[i+50]=sin(2*M_PI*x);
-		f.a[i+100]=sin(2*M_PI*sqrt(x));
-	}
-	gr->SetRanges(mglPoint(0), mglPoint(1));
-	gr->Box();	gr->Plot(f);	gr->Axis("xy");
-	gr->AddLegend("sin(\\pi {x^2})","b");	gr->AddLegend("sin(\\pi x)","g*");
-	gr->AddLegend("sin(\\pi \\sqrt{x})","r+");	gr->Legend();
-}
-//-----------------------------------------------------------------------------
-void smgl_quaternary(mglGraph *gr)      // flag #
-{
-	mglData x(50),y(50),z(50),rx(10),ry(10), a(20,30);
-	a.Modify("x*y*(1-x-y)^2*30");
-	x.Modify("0.25*(1-x)*(1+cos(2*pi*x))");
-	y.Modify("0.25*(1-x)*(1+sin(2*pi*x))");
-	z.Modify("x");
-
-	gr->Puts(mglPoint(0,1.3), "Quaternary plot (x+y+z+t=1)");
-	gr->Rotate(60,70);		gr->Light(true);
-	gr->Ternary(2);			gr->SetCut(true);
-	gr->Plot(x,y,z,"r2");	gr->Surf(a,"BbcyrR#");
-	gr->Axis(); gr->Grid();	gr->Box();
-	gr->SetRotatedText(false);
-	gr->Label('t',"A",1);	gr->Label('x',"B",1);
-	gr->Label('y',"C",1);	gr->Label('z',"D",1);
-	gr->Ternary(0);
-}
-//-----------------------------------------------------------------------------
-void smgl_ternary(mglGraph *gr)	// flag #
-{
-	mglData x(50),y(50),rx(10),ry(10), a(20,30);
-	a.Modify("4*x*y");
-	x.Modify("0.25*(1+cos(2*pi*x))");
-	y.Modify("0.25*(1+sin(2*pi*x))");
-	rx.Modify("rnd"); ry.Modify("(1-v)*rnd",rx);
-
-	gr->Puts(mglPoint(-0.8,1.3), "Ternary plot (x+y+t=1)");
-	gr->Ternary(true);
-	gr->Plot(x,y,"r2");
-	gr->Plot(rx,ry,"q^ ");
-	gr->Cont(a,"BbcyrR");
-	gr->Line(mglPoint(0.5,0), mglPoint(0,0.75), "g2");
-	gr->Axis(); gr->Grid("xyz","B;");
-	gr->Label('x',"x comp.");
-	gr->Label('y',"y comp.");
-	gr->Label('t',"t comp.");
-	gr->Ternary(false);
-}
 //-----------------------------------------------------------------------------
 void smgl_mirror(mglGraph *gr)	// flag #
 {
@@ -1788,10 +1836,10 @@ void save(mglGraph *gr,const char *name,const char *suf="")
 			break;
 		case 9:	// U3D
 			sprintf(buf,"%s%s.u3d",name,suf);
-			//			gr->WriteU3D(buf);	break;	// TODO: Add IDTF support
+			//gr->WriteU3D(buf);	break;	// TODO: Add IDTF support
 		case 10:	// PDF
 			sprintf(buf,"%s%s.pdf",name,suf);
-			//			gr->WritePDF(buf);	break;	// TODO: Add IDTF support
+			//gr->WritePDF(buf);	break;	// TODO: Add IDTF support
 		default:// PNG (no alpha)
 			sprintf(buf,"%s%s.png",name,suf);
 			gr->WritePNG(buf,0,false);	break;
@@ -1878,6 +1926,7 @@ mglSample samp[] = {
 	{"candle", smgl_candle},
 	{"chart", smgl_chart},
 	{"cloud", smgl_cloud},
+	{"colorbar", smgl_colorbar},
 	{"combined", smgl_combined},
 	{"cones", smgl_cones},
 	{"cont", smgl_cont},
@@ -1891,11 +1940,11 @@ mglSample samp[] = {
 //	{"crust", smgl_crust},	// TODO: open after triangulation
 	{"curvcoor", smgl_curvcoor},
 	{"dat_diff", smgl_dat_diff},
+	{"dat_exta", smgl_dat_exta},
 	{"dens", smgl_dens},
 	{"dens_xyz", smgl_dens_xyz},
 	{"densa", smgl_densa},
 	{"dew", smgl_dew},
-	{"envelop", smgl_envelop},
 	{"error", smgl_error},
 	{"fall", smgl_fall},
 	{"fit", smgl_fit},
@@ -1918,14 +1967,11 @@ mglSample samp[] = {
 	{"pipe", smgl_pipe},
 	{"plot", smgl_plot},
 	{"primitives", smgl_primitives},
-	{"quaternary", smgl_quaternary},
 	{"qo2d", smgl_qo2d},
 	{"radar", smgl_radar},
 	{"region", smgl_region},
-	{"sample7", smgl_sample7},
 	{"schemes", smgl_schemes},
 	{"several_light", smgl_several_light},
-	{"sew", smgl_sew},
 	{"stem", smgl_stem},
 	{"step", smgl_step},
 	{"stereo", smgl_stereo},

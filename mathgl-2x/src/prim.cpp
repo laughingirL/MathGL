@@ -261,28 +261,28 @@ void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char 
 	memset(dd,0,n*sizeof(float));
 
 	gr->SetPenPal(pen,&pal);
-	char cols[3]={0,0.0};
+	char cols[4]={'@',0,0.0};
 	memset(dd,0,2*n*sizeof(float));
 	z0 = gr->GetOrgZ('x');
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	dd[i] += z->v(i, j<z->GetNy() ? j:0);
 	for(j=0;j<m;j++)
 	{
-		gr->NextColor(pal);		cols[0]=gr->last_color();
-		if(gr->GetNumPal(pal)==2*m)	{	gr->NextColor(pal);	cols[1]=gr->last_color();	}
+		gr->NextColor(pal);		cols[1]=gr->last_color();
+		if(gr->GetNumPal(pal)==2*m)	{	gr->NextColor(pal);	cols[2]=gr->last_color();	}
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
 		for(i=0;i<n;i++)
 		{
 			if(gr->Stop)	{	delete []dd;	return;	}
 			d = i<nx-1 ? x->v(i+1,mx)-x->v(i,mx) : x->v(i,mx)-x->v(i-1,mx);
-			x1 = (n<nx?(x->v(i,mx)+x->v(i+1,mx))/2:x->v(i,mx)) + d/2*(1-gr->BarWidth);
+			x1 = (n<nx?(x->v(i,mx)+x->v(i+1,mx))/2:x->v(i,mx)) + d/2*(1-0.7*gr->BarWidth);
 			if(above)
 			{
 				zz = j>0?dd[i+n]:z0;	dd[i+n] += z->v(i,mz);
 				mgl_cone(gr, x1,y->v(i,0),zz, x1,y->v(i,0),dd[i+n],
-						 gr->BarWidth*d*(dd[i]-zz)/(dd[i]-z0),
-						 gr->BarWidth*d*(dd[i]-dd[i+n])/(dd[i]-z0), cols);
+						 0.7*gr->BarWidth*d*(dd[i]-zz)/(dd[i]-z0),
+						 0.7*gr->BarWidth*d*(dd[i]-dd[i+n])/(dd[i]-z0), cols);
 			}
-			else	mgl_cone(gr, x1,y->v(i,my),z0, x1,y->v(i,my),z->v(i,mz), gr->BarWidth*d,0, cols);
+			else	mgl_cone(gr, x1,y->v(i,my),z0, x1,y->v(i,my),z->v(i,mz), 0.7*gr->BarWidth*d,0, cols);
 		}
 	}
 	gr->EndGroup();	delete []dd;
@@ -528,13 +528,18 @@ void mgl_puts_dir(HMGL gr, float x, float y, float z, float dx, float dy, float 
 //-----------------------------------------------------------------------------
 void mgl_putsw_dir(HMGL gr, float x, float y, float z, float dx, float dy, float dz, const wchar_t *text, const char *font, float size)
 {
-	mglPoint p(x,y,z), d(dx-x,dy-y,dz-z);
 	bool a=font && strchr(font,'a'), A=font && strchr(font,'A');
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
 	if(g && (a||A))	{	g->Push();	g->Identity(a);	gr->set(MGL_DISABLE_SCALE);	}
+	if(g && A)
+	{
+		register float s=g->GetPlotFactor();
+		x = (2*x-1)*s;	y = (2*y-1)*s;
+		dx= (2*dx-1)*s;	dy= (2*dy-1)*s;
+	}
+	mglPoint p(x,y,z), d(dx-x,dy-y,dz-z);
 	long k = gr->AddPnt(p,-1,d,-1,7);
-	gr->clr(MGL_DISABLE_SCALE);
-	if(g && (a||A))	g->Pop();
+	if(g && (a||A))	{	g->Pop();	gr->clr(MGL_DISABLE_SCALE);	}
 	gr->text_plot(k,text,font,size);
 }
 //-----------------------------------------------------------------------------
@@ -708,6 +713,7 @@ void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const 
 			{
 				if(text[k]!='%')	{	buf[l]=text[k];	l++;	continue;	}
 				else if(text[k+1]=='%')	{	buf[l]='%';	l++;	continue;	}
+				else if(text[k+1]=='n')	swprintf(buf+l,nn-l,L"%ld",i);
 				else if(text[k+1]=='x')	swprintf(buf+l,nn-l,L"%.2g",xx);
 				else if(text[k+1]=='y')	swprintf(buf+l,nn-l,L"%.2g",yy);
 				else if(text[k+1]=='z')	swprintf(buf+l,nn-l,L"%.2g",zz);
