@@ -302,9 +302,9 @@ bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
         x += 1+(y+z)/2;		y += (z+1)/3;
         n.x += (n.y+n.z)/2;	n.y += n.z/3;
     }
-//	if(fabs(x)>MGL_FLT_EPS)	res = false;
-//	if(fabs(y)>MGL_FLT_EPS)	res = false;
-//	if(fabs(z)>MGL_FLT_EPS)	res = false;
+	if(fabs(x)>MGL_FLT_EPS)	res = false;
+	if(fabs(y)>MGL_FLT_EPS)	res = false;
+	if(fabs(z)>MGL_FLT_EPS)	res = false;
 
 	if(!res && use_nan)	x = NAN;	// extra sign that point shouldn't be plotted
 	return res;
@@ -435,12 +435,12 @@ void mglBase::Ternary(int t)
 	TernAxis = t;
 	if(t&3)
 	{
-		x1 = Min;	x2 = Max;	o = Org;
+		if(c)	{	x1 = Min;	x2 = Max;	o = Org;	}
 //		c = get(MGL_ENABLE_CUT);	clr(MGL_ENABLE_CUT);
 		SetRanges(mglPoint(0,0),mglPoint(1,1,t==1?0:1));
-		Org=mglPoint(0,0,0);
+		Org=mglPoint(0,0,0);	c = false;
 	}
-	else	{	SetRanges(x1,x2);	Org=o;	/*SetCut(c);*/	}
+	else	{	SetRanges(x1,x2);	Org=o;	c=true;	}
 }
 //-----------------------------------------------------------------------------
 //		Transformation functions

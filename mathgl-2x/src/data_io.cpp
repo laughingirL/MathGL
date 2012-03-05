@@ -347,10 +347,10 @@ void mgl_data_create(HMDT d,long mx,long my,long mz)
 	d->nx = mx>0 ? mx:1;	d->ny = my>0 ? my:1;	d->nz = mz>0 ? mz:1;
 	if(d->a && d->id)	delete []d->id;
 	if(d->a && !d->link)	delete []d->a;
-	d->a = new mreal[mx*my*mz];
-	d->id = new char[mx];	d->link=false;
-	memset(d->a,0,mx*my*mz*sizeof(mreal));
-	memset(d->id,0,mx*sizeof(char));
+	d->a = new mreal[d->nx*d->ny*d->nz];
+	d->id = new char[d->nx];	d->link=false;
+	memset(d->a,0,d->nx*d->ny*d->nz*sizeof(mreal));
+	memset(d->id,0,d->nx*sizeof(char));
 }
 void mgl_data_create_(uintptr_t *d, int *nx,int *ny,int *nz)
 {	mgl_data_create(_DT_,*nx,*ny,*nz);	}
@@ -732,6 +732,7 @@ void *mgl_modify(void *par)
 }
 void mgl_data_modify(HMDT d, const char *eq,long dim)
 {
+mglNumThr=1;
 	long nx=d->nx, ny=d->ny, nz=d->nz, par[3]={nx,ny,nz};
 	mglFormula f(eq);
 	if(dim<0)	dim=0;

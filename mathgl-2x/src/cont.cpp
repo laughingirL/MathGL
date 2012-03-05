@@ -60,7 +60,7 @@ void mgl_string_curve(mglBase *gr,long f,long ,long *ff,long *nn,const wchar_t *
 	{
 		if(gr->Stop)	{	delete []wdt;	delete []pt;	delete []fnt;	return;	}
 		p=q;	q=s;	l=t;
-		if(nn[i]>=0)	{	s=gr->GetPntP(ff[nn[i]]);	t=!(s-q);	}
+		if(nn[i]>=0 && ff[nn[i]]>=0)	{	s=gr->GetPntP(ff[nn[i]]);	t=!(s-q);	}
 		tet = t.x*l.y-t.y*l.x;
 		tt = 1+fabs(t.x*l.x+t.y*l.y);
 		if(tet>0)

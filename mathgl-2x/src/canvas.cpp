@@ -91,22 +91,21 @@ int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
 	SetTickRotate(true);	SetTickSkip(true);
 	SetWarn(mglWarnNone);	ObjId = 0;
-	SetFunc(0,0);	Stop=false;	CutOff(0);
+	SetFunc(0,0);	Stop=false;	CutOff(0);	Ternary(0);
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
 	SetBarWidth(0.7);	SetMarkSize(1);	SetArrowSize(1);
 	SetAlphaDef(0.5);		FontDef[0]=0;
 	SetTranspType(0);		SetMeshNum(0);	// NOTE: default MeshNum=0
 	SetRotatedText(true);	CurrPal = 0;
 	SetLegendMarks();		SetFontSize(4);
-	SetTuneTicks(true);
-	Clf();	SetAmbient();	Ternary(0);
+	SetTuneTicks(true);	SetAmbient();
 	PlotId = "frame";		clr(MGL_DISABLE_SCALE);
 	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
 	SetPenPal("k-1");
 	SetTicks('x');	SetTicks('y');	SetTicks('z');	SetTicks('c');
 	stack.clear();	Restore();	Alpha(false);
 	SetTickLen(0);	SetCut(true);
-	AdjustTicks("xyzc",true);
+	AdjustTicks("xyzc",true);	Clf();
 
 	for(int i=0;i<10;i++)	{	AddLight(i, mglPoint(0,0,1));	Light(i,false);	}
 	Light(0,true);		Light(false);	SetDifLight(true);

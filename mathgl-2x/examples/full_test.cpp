@@ -46,9 +46,24 @@ int srnd = 0;
 //-----------------------------------------------------------------------------
 void test(mglGraph *gr)
 {
+	gr->Title("MGL parser sample");
+	float a[100];   // let a_i = sin(4*pi*x), x=0...1
+	for(int i=0;i<100;i++)a[i]=sin(4*M_PI*i/99);
+	mglParse *parser = new mglParse;
+	mglData *d = parser->AddVar("dat");
+	d->Set(a,100); // set data to variable
+	parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
+	// you may break script at any line do something
+	// and continue after that
+	parser->Execute(gr, "xlabel 'x'\nylabel 'y'\nbox");
+	// also you may use cycles or conditions in script
+	parser->Execute(gr, "for $0 -1 1 0.1\nline 0 0 -1 $0 'r'\nnext");
+	delete parser;
+	return;
+
 	mglParse par;
 	par.AllowSetSize(true);
-	FILE *fp=fopen("test.mgl","rt");
+	FILE *fp=fopen("/home/balakin/mgl/att/put.mgl","rt");
 	par.Execute(gr,fp,true);
 	fclose(fp);
 }
@@ -1513,7 +1528,7 @@ void smgl_hist(mglGraph *gr)
 	gr->MultiPlot(3,3,3,2,2,"");	gr->SetRanges(-1,1,-1,1,0,1);	gr->Box();	gr->Dots(x,y,z,"wyrRk");
 	gr->MultiPlot(3,3,0,2,1,"");	gr->SetRanges(-1,1,0,1);	gr->Box();	gr->Bars(xx);
 	gr->MultiPlot(3,3,5,1,2,"");	gr->SetRanges(0,1,-1,1);	gr->Box();	gr->Barh(yy);
-	gr->SubPlot(3,3,2);		gr->Puts(mglPoint(0,0),"Hist and\nMultiPlot\nsample","a",-6);
+	gr->SubPlot(3,3,2);		gr->Puts(mglPoint(0.5,0.5),"Hist and\nMultiPlot\nsample","a",-6);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_primitives="";	// TODO add later
@@ -1993,7 +2008,6 @@ mglSample samp[] = {
 	{"surfa", smgl_surfa},
 	{"surfc", smgl_surfc},
 	{"tape", smgl_tape},
-	{"tile", smgl_tile},
 	{"ternary", smgl_ternary},
 	{"text", smgl_text},
 	{"textmark", smgl_textmark},

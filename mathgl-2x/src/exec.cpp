@@ -2863,7 +2863,7 @@ void mglc_cosfft(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_new(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1 && k[1]==3 && k[2]==3 && k[2]==3)
+	if(k[0]==1 && k[1]==3 && k[2]==3 && k[3]==3)
 	{	a[0].d->Create(iint(a[1].v),iint(a[2].v),iint(a[3].v));
 		if(k[4]==2)	a[0].d->Fill(gr->Self(),a[4].s.c_str(),opt);	}
 	else if(k[0]==1 && k[1]==3 && k[2]==3)
@@ -2877,7 +2877,7 @@ int mgls_new(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 }
 void mglc_new(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==1 && k[1]==3 && k[2]==3 && k[2]==3)
+	if(k[0]==1 && k[1]==3 && k[2]==3 && k[3]==3)
 	{
 		mglprintf(out,1024,L"%s.Create(%d, %d, %d);", a[0].s.c_str(), iint(a[1].v),iint(a[2].v),iint(a[3].v));
 		if(k[4]==2)	mglprintf(out,1024,L"%s.Fill(gr,\"%s\",\"%s\");",a[4].s.c_str(),opt);

@@ -50,7 +50,7 @@ long mglParser::IsFunc(const wchar_t *name, int *na)
 	mglFunc *f=func;
 	while(f)
 	{
-		if(f->func==name)
+		if(!wcscmp(f->func.c_str(), name))
 		{	if(na)	*na=f->narg;	return f->pos;	}
 		f = f->next;
 	}
@@ -377,9 +377,9 @@ void mglParser::FillArg(mglGraph *gr, int k, wchar_t **arg, mglArg *a)
 		if(arg[n][0]=='|')	a[n-1].type = -1;
 		else if(arg[n][0]=='\'')
 		{	// this is string (simplest case)
-			a[n-1].type = 1;	arg[n][wcslen(arg[n])-1] = 0;
-			if(wcslen(arg[n]+1)>=2048)	arg[n][2048]=0;
-			a[n-1].w = arg[n]+1;
+			a[n-1].type = 1;		arg[n][wcslen(arg[n])-1] = 0;
+//			if(wcslen(arg[n]+1)>=2048)	arg[n][2048]=0;
+			a[n-1].w = arg[n]+1;	arg[n][wcslen(arg[n])] = '\'';
 		}
 		else if(arg[n][0]=='{')
 		{	// this is temp data
@@ -517,8 +517,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 	if(Stop)	return 0;
 	wchar_t *str, *s = new wchar_t[wcslen(string)+1+40*parlen],*arg[1024],*t;
 	str = s;
-	wcscpy(str,string);
-	mgl_wcstrim(str);
+	wcscpy(str,string);	mgl_wcstrim(str);
 	long n,k=0,m=0,mm=0;
 	// try parse ':' -- several commands in line
 	for(n=0;n<long(wcslen(str));n++)
@@ -549,7 +548,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			if(*str=='$' && nn>=0 && nn<='z'-'a'+10)
 			{
 				str +=2;	mgl_wcstrim(str);
-				AddParam(n, str);	delete []s;	return 0;
+				AddParam(nn, str);	delete []s;	return 0;
 			}
 		}
 		if(!wcsncmp(str+3,L"num",3))
@@ -562,7 +561,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 				const mglData &d=mglFormulaCalc(str, this);
 				char *buf=new char[128];
 				sprintf(buf,"%g",d.a[0]);
-				AddParam(n, buf);	delete []buf;
+				AddParam(nn, buf);	delete []buf;
 			}
 			delete []s;	return res;
 		}
@@ -575,7 +574,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 				res = 0;	str +=2;	mgl_wcstrim(str);
 				const mglData &d=mglFormulaCalc(str, this);
 				wchar_t buf[2]={0,0};	buf[0] = wchar_t(d.a[0]);
-				AddParam(n, buf);
+				AddParam(nn, buf);
 			}
 			delete []s;	return res;
 		}
@@ -595,6 +594,7 @@ int mglParser::Parse(mglGraph *gr, const wchar_t *string, long pos)
 			delete []s;	return mgl_ask_func?0:1;
 		}
 	}
+	wcscpy(str,string);			mgl_wcstrim(str);
 	if(!skip() && !wcsncmp(str,L"for",3) && (str[3]==' ' || str[3]=='\t'))
 	{
 		for(t=str+4;*t<=' ';t++);

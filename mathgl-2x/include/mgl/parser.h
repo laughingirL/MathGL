@@ -32,7 +32,7 @@ struct mglArg
 	std::wstring w;	///< String with parameters
 	std::string s;	///< String with parameters
 	mreal v;		///< Numerical value (used if type==2)
-	mglArg()	{	type=-1;	d=0;	v=0;	s[0]=0;	w[0]=0;	};
+	mglArg()	{	type=-1;	d=0;	v=0;	};
 };
 //-----------------------------------------------------------------------------
 /// Structure for MGL command

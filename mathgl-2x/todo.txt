@@ -5,6 +5,7 @@
 4. Check export to SVG/EPS/MGLD/TeX/OBJ/XGL/X3D/STL.
 5. check 'rotatetext off', 'fgets'
 6.font loading in udav
+7. add XInitThreads() from #include <X11/Xlib.h> into all GUI
 
 6. Check fontsize maximum ?!?
 7. curved text (in new sample) look not so good

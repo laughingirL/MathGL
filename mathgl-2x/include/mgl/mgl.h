@@ -481,7 +481,7 @@ public:
 	{	mgl_textw_y(gr, &y, text, font, opt);	}
 
 	/// Draws bounding box outside the plotting volume with color \a c.
-	inline void Box(const char *col="k", bool ticks=true)
+	inline void Box(const char *col="", bool ticks=true)
 	{	mgl_box_str(gr, col, ticks);	}
 	/// Draw axises with ticks in directions determined by string parameter \a dir.
 	inline void Axis(const char *dir="xyzt", const char *stl="")

@@ -530,10 +530,11 @@ void mgl_putsw_dir(HMGL gr, float x, float y, float z, float dx, float dy, float
 {
 	bool a=font && strchr(font,'a'), A=font && strchr(font,'A');
 	mglCanvas *g = dynamic_cast<mglCanvas *>(gr);
-	if(g && (a||A))	{	g->Push();	g->Identity(a);	gr->set(MGL_DISABLE_SCALE);	}
-	if(g && A)
+	if(g && (a||A))
 	{
-		register float s=g->GetPlotFactor();
+		g->Push();	g->Identity(a);
+		gr->set(MGL_DISABLE_SCALE);
+		register float s=a?1:g->GetPlotFactor();
 		x = (2*x-1)*s;	y = (2*y-1)*s;
 		dx= (2*dx-1)*s;	dy= (2*dy-1)*s;
 	}
