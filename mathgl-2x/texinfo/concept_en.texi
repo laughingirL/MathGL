@@ -199,10 +199,6 @@ Sets alpha value (transparency) of the plot. The value should be in range [0, 1]
 @deffn {MGL option} ambient @code{val}
 Sets brightness of ambient light for the plot. The value should be in range [0, 1]. See also @ref{ambient}.
 @end deffn
-@cindex crange
-@deffn {MGL option} crange @code{val1 val2}
-Sets boundaries of color change for the plot. See also @ref{crange}.
-@end deffn
 @cindex xrange
 @deffn {MGL option} xrange @code{val1 val2}
 Sets boundaries of x coordinate change for the plot. See also @ref{xrange}.

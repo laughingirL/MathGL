@@ -87,13 +87,15 @@ There are many functions, which can create data for output (see @ref{Data fillin
 @end ifset
 
 @anchor{new}
-@deftypefn {MGL command} {} new @sc{dat} [@code{nx=1 ny=1 nz=1}]
+@deftypefn {MGL command} {} new @sc{dat} [@code{nx=1} 'eq']
+@deftypefnx {MGL command} {} new @sc{dat} @code{nx ny} ['eq']
+@deftypefnx {MGL command} {} new @sc{dat} @code{nx ny nz} ['eq']
 @ifclear UDAV
 @deftypefnx {Constructor on @code{mglData}} {} mglData (@code{int} mx=@code{1}, @code{int} my=@code{1}, @code{int} mz=@code{1})
 @deftypefnx {C function} @code{HMDT} mgl_create_data ()
 @deftypefnx {C function} @code{HMDT} mgl_create_data_size (@code{int} mx, @code{int} my, @code{int} mz)
 @end ifclear
-Default constructor. Allocates the memory for data array and initializes it by zero.
+Default constructor. Allocates the memory for data array and initializes it by zero. If string @var{eq} is specified then data will be filled by corresponding formula as in @code{Fill()} function.
 @end deftypefn
 
 @anchor{copy}

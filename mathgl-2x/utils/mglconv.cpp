@@ -39,9 +39,9 @@ int main(int narg, char **arg)
 			setlocale(LC_CTYPE, arg[i]+2);
 		if(arg[i][0]=='-' && (arg[i][1]=='h' || (arg[i][1]=='-' && arg[i][2]=='h')))
 		{
-			printf("mgl2png convert mgl script to bitmap png file.\n");
+			printf("mglconv convert mgl script to bitmap png file.\n");
 			printf("Current version is 2.%g\n",MGL_VER2);
-			printf("Usage:\tmgl2png scriptfile [outputfile parameter(s)]\n");
+			printf("Usage:\tmglconv scriptfile [outputfile parameter(s)]\n");
 			printf("\tParameters have format \"-Nval\".\n");
 			printf("\tHere N=0,1...9 is parameter ID and val is its value.\n");
 			printf("\tOption -Lval set locale to val.\n");

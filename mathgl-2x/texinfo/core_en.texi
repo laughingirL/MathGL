@@ -181,7 +181,7 @@ Sets the brightness of ambient light. The value should be in range [0,1].
 @deftypefnx {Method on @code{mglGraph}} @code{void} Fog (@code{float} d, @code{float} dz=@code{0.25})
 @deftypefnx {C function} @code{void} mgl_set_fog (@code{HMGL} gr, @code{float} d, @code{float} dz)
 @end ifclear
-Function imitate a fog in the plot. Fog start from relative distance @var{dz} from view point and its density growths exponentially in depth. So that the fog influence is determined by law ~ 1-exp(-@emph{d*z}). Here @emph{z} is normalized to 1 depth of the plot. If value @var{d}=@code{0} then the fog is absent. @sref{Surface in fog sample}
+Function imitate a fog in the plot. Fog start from relative distance @var{dz} from view point and its density growths exponentially in depth. So that the fog influence is determined by law ~ 1-exp(-@emph{d*z}). Here @emph{z} is normalized to 1 depth of the plot. If value @var{d}=@code{0} then the fog is absent. Note, that fog was applied at stage of image creation, not at stage of drawing. @sref{Surface in fog sample}
 @end deftypefn
 
 @c ==================================================================
@@ -269,7 +269,7 @@ Flag which determines how points outside bounding box are drawn. If it is @code{
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetCutBox (@code{mglPoint} p1, @code{mglPoint} p1)
 @deftypefnx {C function} @code{void} mgl_set_cut_box (@code{HMGL} gr, @code{float} x1, @code{float} y1, @code{float} z1, @code{float} x2, @code{float} y2, @code{float} z2)
 @end ifclear
-Lower and upper edge of the box in which never points are drawn. If both edges are the same (the variables are equal) then the cutting box is empty. @sref{CutMinMax sample}
+Lower and upper edge of the box in which never points are drawn. If both edges are the same (the variables are equal) then the cutting box is empty. @sref{Cut sample}
 @end deftypefn
 
 @deftypefn {MGL command} {} cut 'cond'
@@ -277,7 +277,7 @@ Lower and upper edge of the box in which never points are drawn. If both edges a
 @deftypefnx {Method on @code{mglGraph}} @code{void} CutOff (@code{const char *}cond)
 @deftypefnx {C function} @code{void} mgl_set_cutoff (@code{HMGL} gr, @code{const char *}cond)
 @end ifclear
-Sets the cutting off condition by formula @var{cond}. This condition determine will point be plotted or not. If value of formula is nonzero then point is omitted, otherwise it plotted. Set argument as @code{""} to disable cutting off condition. @sref{CutOff sample}
+Sets the cutting off condition by formula @var{cond}. This condition determine will point be plotted or not. If value of formula is nonzero then point is omitted, otherwise it plotted. Set argument as @code{""} to disable cutting off condition. @sref{Cut sample}
 @end deftypefn
 
 @c ==================================================================
@@ -529,16 +529,16 @@ Sets transformation formulas for curvilinear coordinate. Each string should cont
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetCoor (@code{int} how)
 @deftypefnx {C function} @code{void} mgl_set_coor (@code{HMGL} gr, @code{int} how)
 @end ifclear
-Sets one of the predefined transformation formulas for curvilinear coordinate. Paramater @var{how} define the coordinates: @code{mglCartesian=0} -- Cartesian coordinates (no transformation); @code{mglPolar=1} -- Polar coordiantes @math{x_n=x*cos(y),y_n=x*sin(y), z_n=z}; @code{mglSpherical=2} -- Sperical coordinates @math{x_n=x*sin(y)*cos(z), y_n=x*sin(y)*sin(z), z_n=x*cos(y)}; @code{mglParabolic=3} -- Parabolic coordinates @math{x_n=x*y, y_n=(x*x-y*y)/2, z_n=z}; @code{mglParaboloidal=4} -- Paraboloidal coordinates @math{x_n=(x*x-y*y)*cos(z)/2, y_n=(x*x-y*y)*sin(z)/2, z_n=x*y}; @code{mglOblate=5} -- Oblate coordinates @math{x_n=cosh(x)*cos(y)*cos(z), y_n=cosh(x)*cos(y)*sin(z), z_n=sinh(x)*sin(y)}; @code{mglProlate=6} -- Prolate coordinates @math{x_n=sinh(x)*sin(y)*cos(z), y_n=sinh(x)*sin(y)*sin(z), z_n=cosh(x)*cos(y)}; @code{mglElliptic=7} -- Elliptic coordinates @math{x_n=cosh(x)*cos(y), y_n=sinh(x)*sin(y), z_n=z}; @code{mglToroidal=8} -- Toroidal coordinates @math{x_n=sinh(x)*cos(z)/(cosh(x)-cos(y)), y_n=sinh(x)*sin(z)/(cosh(x)-cos(y)), z_n=sin(y)/(cosh(x)-cos(y))}; @code{mglBispherical=9} -- Bispherical coordinates @math{x_n=sin(y)*cos(z)/(cosh(x)-cos(y)), y_n=sin(y)*sin(z)/(cosh(x)-cos(y)), z_n=sinh(x)/(cosh(x)-cos(y))}; @code{mglBipolar=10} -- Bipolar coordinates @math{x_n=sinh(x)/(cosh(x)-cos(y)), y_n=sin(y)/(cosh(x)-cos(y)), z_n=z}.
+Sets one of the predefined transformation formulas for curvilinear coordinate. Paramater @var{how} define the coordinates: @code{mglCartesian=0} -- Cartesian coordinates (no transformation); @code{mglPolar=1} -- Polar coordiantes @math{x_n=x*cos(y),y_n=x*sin(y), z_n=z}; @code{mglSpherical=2} -- Sperical coordinates @math{x_n=x*sin(y)*cos(z), y_n=x*sin(y)*sin(z), z_n=x*cos(y)}; @code{mglParabolic=3} -- Parabolic coordinates @math{x_n=x*y, y_n=(x*x-y*y)/2, z_n=z}; @code{mglParaboloidal=4} -- Paraboloidal coordinates @math{x_n=(x*x-y*y)*cos(z)/2, y_n=(x*x-y*y)*sin(z)/2, z_n=x*y}; @code{mglOblate=5} -- Oblate coordinates @math{x_n=cosh(x)*cos(y)*cos(z), y_n=cosh(x)*cos(y)*sin(z), z_n=sinh(x)*sin(y)}; @code{mglProlate=6} -- Prolate coordinates @math{x_n=sinh(x)*sin(y)*cos(z), y_n=sinh(x)*sin(y)*sin(z), z_n=cosh(x)*cos(y)}; @code{mglElliptic=7} -- Elliptic coordinates @math{x_n=cosh(x)*cos(y), y_n=sinh(x)*sin(y), z_n=z}; @code{mglToroidal=8} -- Toroidal coordinates @math{x_n=sinh(x)*cos(z)/(cosh(x)-cos(y)), y_n=sinh(x)*sin(z)/(cosh(x)-cos(y)), z_n=sin(y)/(cosh(x)-cos(y))}; @code{mglBispherical=9} -- Bispherical coordinates @math{x_n=sin(y)*cos(z)/(cosh(x)-cos(y)), y_n=sin(y)*sin(z)/(cosh(x)-cos(y)), z_n=sinh(x)/(cosh(x)-cos(y))}; @code{mglBipolar=10} -- Bipolar coordinates @math{x_n=sinh(x)/(cosh(x)-cos(y)), y_n=sin(y)/(cosh(x)-cos(y)), z_n=z}; @code{mglLogLog=11} -- log-log coordiantes @math{x_n=lg(x), y_n=lg(y), z_n=lg(z)}; @code{mglLogX=12} -- log-x coordiantes @math{x_n=lg(x), y_n=y, z_n=z}; @code{mglLogY=13} -- log-y coordiantes @math{x_n=x, y_n=lg(y), z_n=z}.
 @end deftypefn
 
 @anchor{ternary}
 @deftypefn {MGL command} {} ternary @code{val}
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} Ternary (@code{bool} tern)
+@deftypefnx {Method on @code{mglGraph}} @code{void} Ternary (@code{int} tern)
 @deftypefnx {C function} @code{void} mgl_set_ternary (@code{HMGL} gr, @code{int} tern)
 @end ifclear
-The function sets to draws Ternary plot. This special plot is for 3 dependent coordinates (components) @var{a}, @var{b}, @var{c} so that @var{a}+@var{b}+@var{c}=1. MathGL uses only 2 independent coordinates @var{a}=x and @var{b}=y since it is enough to plot everything. At this third coordinate z act as another parameter to produce contour lines, surfaces and so on. @sref{Ternary plot sample}
+The function sets to draws Ternary or Quaternary plot. Ternary plot is special plot for 3 dependent coordinates (components) @var{a}, @var{b}, @var{c} so that @var{a}+@var{b}+@var{c}=1. MathGL uses only 2 independent coordinates @var{a}=x and @var{b}=y since it is enough to plot everything. At this third coordinate z act as another parameter to produce contour lines, surfaces and so on. Correspondingly Quaternary plot is plot for 4 dependent coordinates @var{a}, @var{b}, @var{c} and @var{d} so that @var{a}+@var{b}+@var{c}+@var{d}=1. Use @code{Ternary(0)} for returning to usual axis. @sref{Ternary plot sample}
 @end deftypefn
 
 @c ------------------------------------------------------------------
@@ -645,12 +645,13 @@ Set template @var{templ} for x-,y-,z-axis ticks or colorbar ticks. It may contai
 Set time labels with step @var{val} and template @var{templ} for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also.
 @end deftypefn
 
-@ifclear UDAV
-@deftypefn {Method on @code{mglGraph}} @code{void} SetTuneTicks (@code{bool} tune, @code{float} pos=@code{1.15})
+@deftypefn {MGL command} {} tuneticks @code{val} [@code{pos=1.15}]
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetTuneTicks (@code{bool} tune, @code{float} pos=@code{1.15})
 @deftypefnx {C function} @code{void} mgl_tune_ticks (@code{HMGL} gr, @code{bool} tune, @code{float} pos)
 Switch on/off ticks enhancing by factoring common multiplier (for small, like from 0.001 to 0.002, or large, like from 1000 to 2000, coordinate values) or common component (for narrow range, like from 0.999 to 1.000). Also set the position @var{pos} of common multiplier/component on the axis: =0 at minimal axis value, =1 at maximal axis value. Default value is 1.15.
 @end deftypefn
 
+@ifclear UDAV
 @deftypefn {Method on @code{mglGraph}} @code{void} SetTickRotate (@code{bool} val)
 @deftypefnx {C function} @code{void} mgl_set_tick_rotate (@code{HMGL} gr, @code{bool} val)
 Enable/disable ticks rotation if there are too many ticks or ticks labels are too long.
@@ -923,10 +924,32 @@ Exports current frame to SVG (Scalable Vector Graphics) file using vector repres
 Exports current frame to LaTeX (package Tikz/PGF) file using vector representation. Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
 @end deftypefn
 
+
 @deftypefn {Method on @code{mglGraph}} @code{void} WriteOBJ (@code{const char *}fname, @code{const char *}descr=@code{""})
 @deftypefnx {C function} @code{void} mgl_write_obj (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
-Exports current frame to OBJ/MTL file using vector representation. Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
+Exports current frame to OBJ/MTL file using vector representation (see @url{http://en.wikipedia.org/wiki/Wavefront_.obj_file, OBJ format} for details). Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
 @end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{void} WriteXYZ (@code{const char *}fname, @code{const char *}descr=@code{""})
+@deftypefnx {C function} @code{void} mgl_write_xyz (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
+Exports current frame to XYZ/XYZL/XYZF files using vector representation (see @url{http://people.sc.fsu.edu/~jburkardt/data/xyz/xyz.html, XYZ format} for details). Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{void} WriteSTL (@code{const char *}fname, @code{const char *}descr=@code{""})
+@deftypefnx {C function} @code{void} mgl_write_obj (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
+Exports current frame to STL file using vector representation (see @url{http://en.wikipedia.org/wiki/STL_(file_format), STL format} for details). Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{void} WriteOFF (@code{const char *}fname, @code{const char *}descr=@code{""})
+@deftypefnx {C function} @code{void} mgl_write_obj (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
+Exports current frame to OFF file using vector representation (see @url{http://people.sc.fsu.edu/~jburkardt/data/off/off.html, OFF format} for details). Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
+@end deftypefn
+
+@deftypefn {Method on @code{mglGraph}} @code{void} WriteX3D (@code{const char *}fname, @code{const char *}descr=@code{""})
+@deftypefnx {C function} @code{void} mgl_write_obj (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
+Exports current frame to OBJ/MTL file using vector representation (see @url{http://en.wikipedia.org/wiki/X3d, X3D format} for details). Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
+@end deftypefn
+
 
 @deftypefn {Method on @code{mglGraph}} @code{void} WriteIDTF (@code{const char *}fname, @code{const char *}descr=@code{""})
 @deftypefnx {C function} @code{void} mgl_write_idtf (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
@@ -1299,8 +1322,8 @@ Draws unrotated @var{n}-th line of file @var{fname} at position @{@var{x},@var{y
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Label (@code{float} x, @code{float} y, @code{const char *}text, @code{const char *}fnt=@code{""})
 @deftypefnx {Method on @code{mglGraph}} @code{void} Labelw (@code{float} x, @code{float} y, @code{const wchar_t *}text, @code{const char *}fnt=@code{""})
-@deftypefnx {C function} @code{void} mgl_label_xy (@code{HMGL} gr, @code{float} x, @code{float} y, @code{const char *}text, @code{const char *}fnt)
-@deftypefnx {C function} @code{void} mgl_labelw_xy (@code{HMGL} gr, @code{float} x, @code{float} y, @code{const wchar_t *}text, @code{const char *}fnt)
+@deftypefnx {C function} @code{void} mgl_label_pos (@code{HMGL} gr, @code{float} x, @code{float} y, @code{const char *}text, @code{const char *}fnt)
+@deftypefnx {C function} @code{void} mgl_labelw_pos (@code{HMGL} gr, @code{float} x, @code{float} y, @code{const wchar_t *}text, @code{const char *}fnt)
 @end ifclear
 The function draws the string @var{text} at position @{@var{x}, @var{y}@} with fonts specifying by @var{fnt}. Coordinates @code{x, y} are supposed to be in range [0,1].
 @end deftypefn
@@ -1438,7 +1461,7 @@ Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Pa
 @deftypefn {MGL command} {} legend @code{x y} ['fnt'='#' @code{size=-1 llen=0.1}]
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} Legend (@code{float} x, @code{float} y, @code{const char *}fnt=@code{"#"}, @code{float} size=@code{-0.8}, @code{float} llen=@code{0.1})
-@deftypefnx {C function} @code{void} mgl_legend_xy (@code{HMGL} gr, @code{float} x, @code{float} y, @code{const char *}fnt, @code{float} size, @code{float} llen)
+@deftypefnx {C function} @code{void} mgl_legend_pos (@code{HMGL} gr, @code{float} x, @code{float} y, @code{const char *}fnt, @code{float} size, @code{float} llen)
 @end ifclear
 Draws legend of accumulated legend entries by font @var{fnt} with @var{size}. Position of legend is determined by parameter @var{x}, @var{y} which supposed to be normalized to interval [0,1].
 @end deftypefn
@@ -1548,7 +1571,7 @@ These functions draw continuous stairs for points to axis plane. See also @ref{p
 @deftypefnx {C function} @code{void} mgl_tens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_tens_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} with color defined by the special array @var{c}[i] (look like tension plot). String @var{pen} specifies the color scheme (@pxref{Color scheme}) and style and/or width of line (@pxref{Line styles}). By default (@code{pen=""}) solid line with current color scheme is used. See also @ref{plot}, @ref{mesh}, @ref{fall}. @sref{Tens sample}
+These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} with color defined by the special array @var{c}[i] (look like tension plot). String @var{pen} specifies the color scheme (@pxref{Color scheme}) and style and/or width of line (@pxref{Line styles}). By default (@code{pen=""}) solid line with current color scheme is used. See also @ref{plot}, @ref{mesh}, @ref{fall}. @sref{Plot sample}
 @end deftypefn
 
 @anchor{area}
@@ -1563,7 +1586,7 @@ These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @
 @deftypefnx {C function} @code{void} mgl_area_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_area_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw continuous lines between points and fills it to axis plane. Also you can use gradient filling if number of specified colors is equal to 2*number of curves. If string contain symbol @samp{a} then lines are drawn one above another (like summation) -- you can reach the same effect if call @code{y.CumSum("y");} before plot. See also @ref{plot}, @ref{bars}, @ref{stem}, @ref{region}. @sref{Area sample}
+These functions draw continuous lines between points and fills it to axis plane. Also you can use gradient filling if number of specified colors is equal to 2*number of curves. See also @ref{plot}, @ref{bars}, @ref{stem}, @ref{region}. @sref{Area sample}
 @end deftypefn
 
 @anchor{region}
@@ -1924,6 +1947,29 @@ The function draws solid (or filled) contour lines for surface specified paramet
 The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 7).
 @end deftypefn
 
+@anchor{contv}
+@deftypefn {MGL command} {} contv vdat zdat ['sch'='']
+@deftypefnx {MGL command} {} contv vdat xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContV (@code{const mglData &}v, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContV (@code{const mglData &}v, @code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contv_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contv_xy_val (@code{HMGL} gr, @code{HCDT} v, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+The function draws vertical cylinder at contour lines for surface specified parametrically @{@var{x}[i,j], @var{y}[i,j], @var{z}[i,j]@} at @var{z}=@var{v}[k] or at @var{z} = @var{Min}.z if @var{sch} contain symbol @samp{_}. Contours are plotted for @var{z}[i,j]=@var{v}[k] where @var{v}[k] are values of data array @var{v}. If string @var{sch} have symbol @samp{#} then grid lines are drawn. If string @var{sch} have symbol @samp{t} or @samp{T} then contour labels @var{v}[k] will be drawn below (or above) the contours. See also @ref{cont}, @ref{contf}. @sref{ContV sample}
+@end deftypefn
+
+@deftypefn {MGL command} {} contv zdat ['sch'='']
+@deftypefnx {MGL command} {} contv xdat ydat zdat ['sch'='']
+@ifclear UDAV
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContV (@code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {Method on @code{mglGraph}} @code{void} ContV (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
+@deftypefnx {C function} @code{void} mgl_contv (@code{HMGL} gr, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@deftypefnx {C function} @code{void} mgl_contv_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
+@end ifclear
+The same as previous with vector @var{v} of @var{num}-th elements equidistantly distributed in color range. Here @var{num} is equal to parameter @var{value} in options @var{opt} (default is 7).
+@end deftypefn
+
 @anchor{axial}
 @deftypefn {MGL command} {} axial vdat zdat ['sch'='']
 @deftypefnx {MGL command} {} axial vdat xdat ydat zdat ['sch'='']
@@ -2258,7 +2304,7 @@ The function draws plane vector field plot for the field @{@var{ax}, @var{ay}@} 
 @deftypefnx {C function} @code{void} mgl_vect_3d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_vect_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the length and color of arrows is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. @sref{Vect 3D sample}
+This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the length and color of arrows is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}.
 @end deftypefn
 
 @anchor{dew}
@@ -2293,7 +2339,7 @@ The function draws flow threads for the plane vector field @{@var{ax}, @var{ay}@
 @deftypefnx {C function} @code{void} mgl_flow_3d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_flow_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the color of line is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. @sref{Flow 3D sample}
+This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the color of line is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}.
 @end deftypefn
 
 @deftypefn {MGL command} {} flow @code{x0 y0} udat vdat ['sch'='']
@@ -2353,7 +2399,7 @@ The function draws flow pipes for the plane vector field @{@var{ax}, @var{ay}@} 
 @deftypefnx {C function} @code{void} mgl_pipe_3d (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{float} r0, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_pipe_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} ax, @code{HCDT} ay, @code{HCDT} az, @code{const char *}sch, @code{float} r0, @code{const char *}opt)
 @end ifclear
-This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the color of line is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}. @sref{Pipe 3D sample}
+This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{az} must be 3-ranged tensors with equal sizes and the color of line is proportional to @math{\sqrt@{ax^2+ay^2+az^2@}}.
 @end deftypefn
 
 

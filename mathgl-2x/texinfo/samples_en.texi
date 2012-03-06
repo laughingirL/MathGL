@@ -78,18 +78,12 @@ gr.ShowImage();
 @menu
 * Plot sample::                 
 * Radar sample::                
-* Tens sample::                 
 * Area sample::                 
-* Area gradient sample::   
 * Bars sample::                 
-* Bars 2 colors sample::                 
-* Bars above sample::                 
-* Bars fall sample::                 
 * Barh sample::                 
 * Step sample::                 
 * Stem sample::                 
 * Region sample::               
-* Region gradient sample::               
 * Error sample::                
 * BoxPlot sample::                
 * Mark sample::                 
@@ -98,8 +92,6 @@ gr.ShowImage();
 * Text sample::                 
 * Torus sample::                
 * Chart sample::                
-* Pie chart sample::            
-* Ring chart sample::            
 @end menu
 @c ------------------------------------------------------------------
 @node Plot sample, Radar sample, , 1D plotting samples
@@ -142,7 +134,7 @@ mgl_delete_data(y);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Radar sample, Tens sample, Plot sample, 1D plotting samples
+@node Radar sample, Area sample, Plot sample, 1D plotting samples
 @subsection Radar sample
 @cindex Radar
 @float
@@ -173,47 +165,7 @@ mgl_delete_data(y);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Tens sample, Area sample, Radar sample, 1D plotting samples
-@subsection Tens sample
-@cindex Tens
-@float
-@image{../png/tens, 7cm}
-@c @caption{Example of Tens. @tdref{tens}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData y(50), c(50);
-y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)");
-c.Modify("sin(2*pi*x)");
-gr.Box();
-gr.Tens(y,c);
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new y 50
-new c 50
-modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
-modify c 'sin(2*pi*x)'
-box
-tens y c
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT y = mgl_create_data_size(50,1,1);
-HMDT c = mgl_create_data_size(50,1,1);
-mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
-mgl_data_modify(c,"sin(2*pi*x)",0);
-mgl_box(gr,1);
-mgl_tens(gr,y,c,"");
-mgl_delete_data(y);
-mgl_delete_data(c);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Area sample, Area gradient sample, Tens sample, 1D plotting samples
+@node Area sample, Bars sample, Radar sample, 1D plotting samples
 @subsection Area sample
 @cindex Area
 @float
@@ -256,50 +208,7 @@ mgl_delete_data(y);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Area gradient sample, Bars sample, Area sample, 1D plotting samples
-@subsection Area with gradient filling sample
-@cindex Area
-@float
-@image{../png/area_2, 7cm}
-@c @caption{Example of Area. @tdref{area}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData y(50,3);
-y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
-y.Modify("sin(2*pi*x)",1);
-y.Modify("cos(2*pi*x)",2);
-gr.Org=mglPoint(0,0);
-gr.Box();
-gr.Area(y,"cbgGyr");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new y 50 3
-modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
-modify y 'sin(2*pi*x)' 1
-modify y 'cos(2*pi*x)' 2
-origin 0 0
-box
-area y 'cbgGyr'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT y = mgl_create_data_size(50,3,1);
-mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
-mgl_data_modify(y,"sin(2*pi*x)",1);
-mgl_data_modify(y,"cos(2*pi*x)",2);
-mgl_set_origin(gr,0.,0.,0.);
-mgl_box(gr,1);
-mgl_area(gr,y,"cbgGyr");
-mgl_delete_data(y);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Bars sample, Bars 2 colors sample, Area gradient sample, 1D plotting samples
+@node Bars sample, Barh sample, Area sample, 1D plotting samples
 @subsection Bars sample
 @cindex Bars
 @float
@@ -335,119 +244,9 @@ mgl_bars(gr,y,"");
 mgl_delete_data(y);
 @end verbatim
 @end ifclear
+
 @c ------------------------------------------------------------------
-@node Bars 2 colors sample, Bars above sample, Bars sample, 1D plotting samples
-@subsection Bars 2 colors sample
-@cindex Bars
-@float
-@image{../png/bars_2, 7cm}
-@c @caption{Example of Bars. @tdref{bars}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData y(10,3);
-y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-gr.Org=mglPoint(0,0);
-gr.Box();
-gr.Bars(y,"cbgGyr");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new y 10 3
-modify y '0.8*sin(pi*(2*x+y/2))+0.2*rnd'
-origin 0 0
-box
-bars y 'cbgGyr'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT y = mgl_create_data_size(10,3,1);
-mgl_data_modify(y,"0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-mgl_set_origin(gr,0.,0.,0.);
-mgl_box(gr,1);
-mgl_bars(gr,y,"cbgGyr");
-mgl_delete_data(y);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Bars above sample, Bars fall sample, Bars 2 colors sample, 1D plotting samples
-@subsection Bars above sample
-@cindex Bars
-@float
-@image{../png/bars_a, 7cm}
-@c @caption{Example of Bars. @tdref{bars}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData y(10,3);
-y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-gr.Org=mglPoint(0,0);
-gr.Box();
-gr.Bars(y,"a");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new y 10 3
-modify y '0.8*sin(pi*(2*x+y/2))+0.2*rnd'
-origin 0 0
-box
-bars y 'a'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT y = mgl_create_data_size(10,3,1);
-mgl_data_modify(y,"0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-mgl_set_origin(gr,0.,0.,0.);
-mgl_box(gr,1);
-mgl_bars(gr,y,"a");
-mgl_delete_data(y);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Bars fall sample, Barh sample, Bars above sample, 1D plotting samples
-@subsection Bars fall sample
-@cindex Bars
-@float
-@image{../png/bars_f, 7cm}
-@c @caption{Example of Bars. @tdref{bars}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData y(10,3);
-y.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-gr.Org=mglPoint(0,0);
-gr.Box();
-gr.Bars(y,"f");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new y 10 3
-modify y '0.8*sin(pi*(2*x+y/2))+0.2*rnd'
-origin 0 0
-box
-bars y 'f'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT y = mgl_create_data_size(10,3,1);
-mgl_data_modify(y,"0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-mgl_set_origin(gr,0.,0.,0.);
-mgl_box(gr,1);
-mgl_bars(gr,y,"f");
-mgl_delete_data(y);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Barh sample, Step sample, Bars fall sample, 1D plotting samples
+@node Barh sample, Step sample, Bars sample, 1D plotting samples
 @subsection Barh sample
 @cindex Barh
 @float
@@ -567,7 +366,7 @@ mgl_delete_data(y);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Region sample, Region gradient sample, Stem sample, 1D plotting samples
+@node Region sample, Error sample, Stem sample, 1D plotting samples
 @subsection Region sample
 @cindex Region
 @float
@@ -613,53 +412,7 @@ mgl_delete_data(y2);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Region gradient sample, Error sample, Region sample, 1D plotting samples
-@subsection Region gradient sample
-@cindex Region
-@float
-@image{../png/region_2, 7cm}
-@c @caption{Example of Region. @tdref{region}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData y1(50), y2(50);
-y1.Modify("0.3*sin(2*pi*x)");
-y2.Modify("0.5+0.3*cos(2*pi*x)");
-gr.Box();
-gr.Region(y1,y2,"yr");
-gr.Plot(y1,"k2");
-gr.Plot(y2,"k2");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new y1 50
-new y2 50
-modify y1 '0.3*sin(2*pi*x)'
-modify y2 '0.5+0.3*cos(2*pi*x)'
-box
-region y1 y2 'yr'
-plot y1 'k2'
-plot y2 'k2'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT y1 = mgl_create_data_size(50,1,1);
-HMDT y2 = mgl_create_data_size(50,1,1);
-mgl_data_modify(y1,"0.3*sin(2*pi*x)",0);
-mgl_data_modify(y2,"0.5+0.3*cos(2*pi*x)",0);
-mgl_box(gr,1);
-mgl_region(gr,y1,y2,"yr",1);
-mgl_plot(gr,y1,"k2");
-mgl_plot(gr,y2,"k2");
-mgl_delete_data(y1);
-mgl_delete_data(y2);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Error sample, BoxPlot sample, Region gradient sample, 1D plotting samples
+@node Error sample, BoxPlot sample, Region sample, 1D plotting samples
 @subsection Error sample
 @cindex Error
 @float
@@ -981,7 +734,7 @@ mgl_delete_data(y2);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Chart sample, Pie chart sample, Torus sample, 1D plotting samples
+@node Chart sample, , Torus sample, 1D plotting samples
 @subsection Chart sample
 @cindex Chart
 @float
@@ -1020,102 +773,12 @@ mgl_chart(gr,ch,"#");
 mgl_delete_data(ch);
 @end verbatim
 @end ifclear
-@c ------------------------------------------------------------------
-@node Pie chart sample, Ring chart sample, Chart sample, 1D plotting samples
-@subsection Pie chart sample
-@cindex Chart
-@cindex Axis
-@float
-@image{../png/pie_chart, 7cm}
-@c @caption{Example of Chart in cylindrical coordinates. @tdref{pie_chart}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData ch(7,2);
-ch.Modify("rnd+0.1");
-gr.Rotate(40,60);
-gr.Light(true);
-gr.SetFunc("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)");
-gr.Box();
-gr.Chart(ch,"bgr cmy#");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new ch 7 2
-modify ch 'rnd+0.1'
-rotate 40 60
-light on
-axis '(y+1)/2*cos(pi*x)' '(y+1)/2*sin(pi*x)' ''
-box
-chart ch 'bgr cmy#'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT ch = mgl_create_data_size(7,2,1);
-mgl_data_modify(ch,"rnd+0.1",0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_set_light(gr,1);
-mgl_set_func(gr,"(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)",0);
-mgl_box(gr,1);
-mgl_chart(gr,ch,"bgr cmy#");
-mgl_delete_data(ch);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Ring chart sample, , Pie chart sample, 1D plotting samples
-@subsection Ring chart sample
-@cindex Chart
-@cindex Axis
-@float
-@image{../png/ring_chart, 7cm}
-@c @caption{Example of Chart in cylindrical coordinates. @tdref{pie_chart}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData ch(7,2);
-ch.Modify("rnd+0.1");
-gr.Rotate(40,60);
-gr.Light(true);
-gr.SetFunc("(y+2)/3*cos(pi*x)","(y+2)/3*sin(pi*x)");
-gr.Box();
-gr.Chart(ch,"bgr cmy#");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new ch 7 2
-modify ch 'rnd+0.1'
-rotate 40 60
-light on
-axis '(y+2)/3*cos(pi*x)' '(y+2)/3*sin(pi*x)' ''
-box
-chart ch 'bgr cmy#'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT ch = mgl_create_data_size(7,2,1);
-mgl_data_modify(ch,"rnd+0.1",0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_set_light(gr,1);
-mgl_set_func(gr,"(y+2)/3*cos(pi*x)","(y+2)/3*sin(pi*x)",0);
-mgl_box(gr,1);
-mgl_chart(gr,ch,"bgr cmy#");
-mgl_delete_data(ch);
-@end verbatim
-@end ifclear
+
 @c ------------------------------------------------------------------
 @node 2D plotting samples, 3D plotting samples, 1D plotting samples, Samples
 @section 2D plotting samples
 @menu
 * Surf sample::                 
-* Transparent surface sample::  
-* Surface in fog sample::       
-* Sharp colors sample::         
 * Mesh sample::                 
 * Fall sample::                 
 * Belt sample::                 
@@ -1125,11 +788,12 @@ mgl_delete_data(ch);
 * Cont sample::                 
 * ContF sample::                
 * ContD sample::                
+* ContV sample::                 
 * Axial sample::                
 * Grad sample::                 
 @end menu
 @c ------------------------------------------------------------------
-@node Surf sample, Transparent surface sample, , 2D plotting samples
+@node Surf sample, Mesh sample, , 2D plotting samples
 @subsection Surf sample
 @cindex Surf
 @float
@@ -1169,135 +833,7 @@ mgl_delete_data(a);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Transparent surface sample, Surface in fog sample, Surf sample, 2D plotting samples
-@subsection Transparent surface sample
-@cindex Surf
-@cindex Alpha
-@float
-@image{../png/surf_alpha, 7cm}
-@c @caption{Example of Surf & Alpha. @tdref{surf_alpha}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData a(50,40);
-a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-gr.Rotate(40,60);
-gr.Light(true);
-gr.Alpha(true);
-gr.Box();
-gr.Surf(a);
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new a 50 40
-modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-rotate 40 60
-light on
-alpha on
-box
-surf a
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT a = mgl_create_data_size(50,40,1);
-mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_set_light(gr,1);
-mgl_set_alpha(gr,1);
-mgl_box(gr,1);
-mgl_surf(gr,a,0);
-mgl_delete_data(a);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Surface in fog sample, Sharp colors sample, Transparent surface sample, 2D plotting samples
-@subsection Surface in fog sample
-@cindex Surf
-@cindex Fog
-@float
-@image{../png/surf_fog, 7cm}
-@c @caption{Example of Surf & Fog. @tdref{surf_fog}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData a(50,40);
-a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-gr.Rotate(40,60);
-gr.Light(true);
-gr.Fog(1);
-gr.Box();
-gr.Surf(a);
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new a 50 40
-modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-rotate 40 60
-light on
-fog 1
-box
-surf a
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT a = mgl_create_data_size(50,40,1);
-mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_set_light(gr,1);
-mgl_set_fog(gr,1.,0.25);
-mgl_box(gr,1);
-mgl_surf(gr,a,0);
-mgl_delete_data(a);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Sharp colors sample, Mesh sample, Surface in fog sample, 2D plotting samples
-@subsection Sharp colors sample
-@cindex Surf
-@float
-@image{../png/surf_sl, 7cm}
-@c @caption{Example of sharp color scheme. @tdref{surf_sl}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData a(50,40);
-a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-gr.Rotate(40,60);
-gr.Light(true);
-gr.Box();
-gr.Surf(a,"BbcyrR|");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new a 50 40
-modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-rotate 40 60
-light on
-box
-surf a 'BbcyrR|'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT a = mgl_create_data_size(50,40,1);
-mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_set_light(gr,1);
-mgl_box(gr,1);
-mgl_surf(gr,a,"BbcyrR|");
-mgl_delete_data(a);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Mesh sample, Fall sample, Sharp colors sample, 2D plotting samples
+@node Mesh sample, Fall sample, Surf sample, 2D plotting samples
 @subsection Mesh sample
 @cindex Mesh
 @float
@@ -1607,7 +1143,7 @@ mgl_delete_data(a);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node ContD sample, Axial sample, ContF sample, 2D plotting samples
+@node ContD sample, ContV sample, ContF sample, 2D plotting samples
 @subsection ContD sample
 @cindex ContD
 @float
@@ -1646,6 +1182,43 @@ mgl_contd_val(gr,v,a,0,0);
 mgl_colorbar_val(gr,v,"",0);
 mgl_delete_data(a);
 mgl_delete_data(v);
+@end verbatim
+@end ifclear
+@c ------------------------------------------------------------------
+@node ContV sample, Axial sample, ContD sample, 2D plotting samples
+@subsection ContV sample
+@cindex Cont
+@float
+@image{../png/contv, 7cm}
+@c @caption{Example of Cont. @tdref{cont}}
+@end float
+@ifclear UDAV
+@strong{C++/Python code}
+@verbatim
+mglData a(50,40);
+a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+gr.Rotate(40,60);
+gr.Box();
+gr.ContV(a);
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+new a 50 40
+modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
+rotate 40 60
+box
+contv a
+@end verbatim
+@ifclear UDAV
+@strong{C/Fortran code}
+@verbatim
+HMDT a = mgl_create_data_size(50,40,1);
+mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
+mgl_rotate(gr,40.,60.,0.);
+mgl_box(gr,1);
+mgl_contv(gr,a,0,7,NAN);
+mgl_delete_data(a);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
@@ -1738,9 +1311,6 @@ mgl_delete_data(a);
 * ContF3 sample::               
 * Cont projection sample::      
 * Dens projection sample::      
-* CutMinMax sample::            
-* Isocaps sample::          
-* CutOff sample::               
 @end menu
 @c ------------------------------------------------------------------
 @node Surf3 sample, Cloud sample, , 3D plotting samples
@@ -1995,7 +1565,7 @@ mgl_delete_data(a);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Dens projection sample, CutMinMax sample, Cont projection sample, 3D plotting samples
+@node Dens projection sample, , Cont projection sample, 3D plotting samples
 @subsection Dens projection sample
 @cindex DensX
 @cindex DensY
@@ -2042,157 +1612,8 @@ s=mgl_data_sum(a,"z"); mgl_dens_z(gr,s,0,-1.); mgl_delete_data(s);
 mgl_delete_data(a);
 @end verbatim
 @end ifclear
-@c ------------------------------------------------------------------
-@node CutMinMax sample, Isocaps sample, Dens projection sample, 3D plotting samples
-@subsection CutMinMax sample
-@cindex Surf3
-@cindex CutMin
-@cindex CutMax
-@float
-@image{../png/cutminmax, 7cm}
-@c @caption{Example of Surf3 & CutMin, CutMax. @tdref{cutminmax}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData a(60,50,40);
-a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-gr.Rotate(40,60);
-gr.Light(true);
-gr.Alpha(true);
-gr.CutMin = mglPoint(0,-1,-1); gr.CutMax = mglPoint(1,0,1);
-gr.Box();
-gr.Surf3(a);
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new a 60 50 40
-modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-rotate 40 60
-light on
-alpha on
-cut 0 -1 -1 1 0 1
-box
-surf3 a
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT a = mgl_create_data_size(60,50,40);
-mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_set_light(gr,1);
-mgl_set_alpha(gr,1);
-mgl_set_cut_box(gr,0.,-1.,-1.,1.,0.,1.);
-mgl_box(gr,1);
-mgl_surf3(gr,a,0,3);
-mgl_delete_data(a);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Isocaps sample, CutOff sample, CutMinMax sample, 3D plotting samples
-@subsection ``Isocaps'' sample
-@cindex Surf3
-@cindex ContF3
-@cindex CutMin
-@cindex CutMax
-@float
-@image{../png/cutminmax2, 7cm}
-@c @caption{Example of ``Isocaps''. @tdref{cutminmax2}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData a(61,51,40);
-a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-gr.Rotate(40,60);
-gr.Light(true);
-gr.CutMin = mglPoint(0,-1,-1); gr.CutMax = mglPoint(1,0,1.1);
-gr.Box();
-gr.Surf3(-1,a);
-gr.ContF3(a,'x',-1); gr.ContF3(a,'y',-1);
-gr.ContF3(a,'z', 0); gr.ContF3(a,'z',39);
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new a 61 51 40
-modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-rotate 40 60
-light on
-cut 0 -1 -1 1 0 1.1
-box
-surf3 a -1
-contf3 a 'x' -1
-contf3 a 'y' -1
-contf3 a 'z' 0
-contf3 a 'z' 39
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT a = mgl_create_data_size(61,51,40);
-mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_set_light(gr,1);
-mgl_set_cut_box(gr,0.,-1.,-1.,1.,0.,1.1);
-mgl_box(gr,1);
-mgl_surf3_val(gr,-1.,a,0);
-mgl_contf3(gr,a,'x',-1, "", 7);
-mgl_contf3(gr,a,'y',-1, "", 7);
-mgl_contf3(gr,a,'z', 0, "", 7);
-mgl_contf3(gr,a,'z',39, "", 7);
-mgl_delete_data(a);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node CutOff sample, , Isocaps sample, 3D plotting samples
-@subsection CutOff sample
-@cindex Surf3
-@cindex CutOff
-@float
-@image{../png/surf3_cutoff, 7cm}
-@c @caption{Example of Surf3 & CutOff. @tdref{surf3_cutoff}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData a(60,50,40);
-a.Modify("-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)");
-gr.Rotate(40,60);
-gr.Light(true);
-gr.Alpha(true);
-gr.CutOff("(z>(x+0.5*y-1)^2-1) & (z>(x-0.5*y-1)^2-1)");
-gr.Box();
-gr.Surf3(a);
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new a 60 50 40
-modify a '-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)'
-rotate 40 60
-light on
-alpha on
-cut '(z>(x+0.5*y-1)^2-1) & (z>(x-0.5*y-1)^2-1)'
-box
-surf3 a
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT a = mgl_create_data_size(60,50,40);
-mgl_data_modify(a,"-2*((2*x-1)^2 + (2*y-1)^2 + (2*z-1)^4 - (2*z-1)^2 - 0.1)",0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_set_light(gr,1);
-mgl_set_alpha(gr,1);
-mgl_set_cutoff(gr,"(z>(x+0.5*y-1)^2-1) & (z>(x-0.5*y-1)^2-1)");
-mgl_box(gr,1);
-mgl_surf3(gr,a,0,3);
-mgl_delete_data(a);
-@end verbatim
-@end ifclear
+
+
 @c ------------------------------------------------------------------
 @node Dual plotting samples, Basic features, 3D plotting samples, Samples
 @section Dual plotting samples
@@ -2203,20 +1624,11 @@ mgl_delete_data(a);
 * Map sample::                  
 * Traj sample::                 
 * Vect sample::                 
-* VectL sample::                
-* VectC sample::                
 * Flow sample::                 
 * Pipe sample::                 
 * Dew sample::                  
 * Surf3C sample::               
 * Surf3A sample::               
-* Vect 3D sample::              
-* VectL 3D sample::             
-* VectC 3D sample::             
-* Flow 3D sample::              
-* Pipe 3D sample::              
-* Crust sample::                
-* Dots sample::                 
 @end menu
 @c ------------------------------------------------------------------
 @node SurfC sample, SurfA sample, , Dual plotting samples
@@ -2481,7 +1893,7 @@ mgl_delete_data(x);  mgl_delete_data(y2);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Vect sample, VectL sample, Traj sample, Dual plotting samples
+@node Vect sample, Flow sample, Traj sample, Dual plotting samples
 @subsection Vect sample
 @cindex Vect
 @float
@@ -2520,87 +1932,7 @@ mgl_delete_data(a); mgl_delete_data(b);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node VectL sample, VectC sample, Vect sample, Dual plotting samples
-@subsection VectL sample
-@cindex VectL
-@float
-@image{../png/vectl, 7cm}
-@c @caption{Example of VectL. @tdref{vectl}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData a(20,30), b(20,30);
-a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-gr.Box();
-gr.VectL(a,b);
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new a 20 30
-new b 20 30
-modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-box
-vectl a b
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT a, b;
-a = mgl_create_data_size(20,30,1);
-b = mgl_create_data_size(20,30,1);
-mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-mgl_box(gr,1);
-mgl_vectl_2d(gr,a,b,0,0.);
-mgl_delete_data(a); mgl_delete_data(b);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node VectC sample, Flow sample, VectL sample, Dual plotting samples
-@subsection VectC sample
-@cindex VectC
-@float
-@image{../png/vectc, 7cm}
-@c @caption{Example of VectC. @tdref{vectc}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData a(20,30), b(20,30);
-a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-b.Modify("0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))");
-gr.Box();
-gr.VectC(a,b);
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new a 20 30
-new b 20 30
-modify a '0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-modify b '0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))'
-box
-vectc a b
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT a, b;
-a = mgl_create_data_size(20,30,1);
-b = mgl_create_data_size(20,30,1);
-mgl_data_modify(a,"0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-mgl_data_modify(b,"0.6*cos(2*pi*x)*cos(3*pi*y) + 0.4*cos(3*pi*(x*y))",0);
-mgl_box(gr,1);
-mgl_vectc_2d(gr,a,b,0,0.);
-mgl_delete_data(a); mgl_delete_data(b);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Flow sample, Pipe sample, VectC sample, Dual plotting samples
+@node Flow sample, Pipe sample, Vect sample, Dual plotting samples
 @subsection Flow sample
 @cindex Flow
 @float
@@ -2771,7 +2103,7 @@ mgl_delete_data(a); mgl_delete_data(b);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Surf3A sample, Vect 3D sample, Surf3C sample, Dual plotting samples
+@node Surf3A sample, , Surf3C sample, Dual plotting samples
 @subsection Surf3A sample
 @cindex Surf3A
 @float
@@ -2818,357 +2150,6 @@ mgl_surf3a(gr,a,b,0,3);
 mgl_delete_data(a); mgl_delete_data(b);
 @end verbatim
 @end ifclear
-@c ------------------------------------------------------------------
-@node Vect 3D sample, VectL 3D sample, Surf3A sample, Dual plotting samples
-@subsection Vect 3D sample
-@cindex Vect
-@float
-@image{../png/vect3, 7cm}
-@c @caption{Example of Vect in 3D. @tdref{vect3}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-ex.Fill("0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-ey.Fill("0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-ez.Fill("0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-gr.Rotate(40,60);
-gr.Box();
-gr.Vect(ex, ey, ez, "bwr");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new ex 10 10 10
-new ey 10 10 10
-new ez 10 10 10
-fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
-fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
-fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
-rotate 40 60
-box
-vect ex ey ez 'bwr'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT ex, ey, ez;
-ex = mgl_create_data_size(10,10,10);
-ey = mgl_create_data_size(10,10,10);
-ez = mgl_create_data_size(10,10,10);
-mgl_data_fill_eq(gr, ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_box(gr,1);
-mgl_vect_3d(gr,ex,ey,ez,"bwr");
-mgl_delete_data(ex); mgl_delete_data(ey); mgl_delete_data(ez);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node VectL 3D sample, VectC 3D sample, Vect 3D sample, Dual plotting samples
-@subsection VectL 3D sample
-@cindex VectL
-@float
-@image{../png/vectl3, 7cm}
-@c @caption{Example of VectL in 3D. @tdref{vectl3}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-ex.Fill("0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-ey.Fill("0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-ez.Fill("0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-gr.Rotate(40,60);
-gr.Box();
-gr.VectL(ex, ey, ez, "bwr");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new ex 10 10 10
-new ey 10 10 10
-new ez 10 10 10
-fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
-fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
-fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
-rotate 40 60
-box
-vectl ex ey ez 'bwr'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT ex, ey, ez;
-ex = mgl_create_data_size(10,10,10);
-ey = mgl_create_data_size(10,10,10);
-ez = mgl_create_data_size(10,10,10);
-mgl_data_fill_eq(gr, ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_box(gr,1);
-mgl_vectl_3d(gr,ex,ey,ez,"bwr");
-mgl_delete_data(ex); mgl_delete_data(ey); mgl_delete_data(ez);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node VectC 3D sample, Flow 3D sample, VectL 3D sample, Dual plotting samples
-@subsection VectC 3D sample
-@cindex VectC
-@float
-@image{../png/vectc3, 7cm}
-@c @caption{Example of VectC in 3D. @tdref{vectc3}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-ex.Fill("0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-ey.Fill("0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-ez.Fill("0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-gr.Rotate(40,60);
-gr.Box();
-gr.VectC(ex, ey, ez, "bwr");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new ex 10 10 10
-new ey 10 10 10
-new ez 10 10 10
-fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
-fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
-fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
-rotate 40 60
-box
-vectc ex ey ez 'bwr'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT ex, ey, ez;
-ex = mgl_create_data_size(10,10,10);
-ey = mgl_create_data_size(10,10,10);
-ez = mgl_create_data_size(10,10,10);
-mgl_data_fill_eq(gr, ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_box(gr,1);
-mgl_vectc_3d(gr,ex,ey,ez,"bwr");
-mgl_delete_data(ex); mgl_delete_data(ey); mgl_delete_data(ez);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Flow 3D sample, Pipe 3D sample, VectC 3D sample, Dual plotting samples
-@subsection Flow 3D sample
-@cindex Flow
-@float
-@image{../png/flow3, 7cm}
-@c @caption{Example of Flow in 3D. @tdref{flow3}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData ex(30,30,30), ey(30,30,30), ez(30,30,30);
-ex.Fill("0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-ey.Fill("0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-ez.Fill("0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-gr.Rotate(40,60);
-gr.Box();
-gr.Flow(ex, ey, ez, "bwr");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new ex 30 30 30
-new ey 30 30 30
-new ez 30 30 30
-fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
-fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
-fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
-rotate 40 60
-box
-flow ex ey ez 'bwr'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT ex, ey, ez;
-ex = mgl_create_data_size(30,30,30);
-ey = mgl_create_data_size(30,30,30);
-ez = mgl_create_data_size(30,30,30);
-mgl_data_fill_eq(gr, ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_box(gr,1);
-mgl_flow_3d(gr,ex,ey,ez,"bwr",3,1);
-mgl_delete_data(ex); mgl_delete_data(ey); mgl_delete_data(ez);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Pipe 3D sample, Crust sample, Flow 3D sample, Dual plotting samples
-@subsection Pipe 3D sample
-@cindex Pipe
-@float
-@image{../png/pipe3, 7cm}
-@c @caption{Example of Pipe in 3D. @tdref{pipe3}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData ex(10,10,10), ey(10,10,10), ez(10,10,10);
-ex.Fill("0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-ey.Fill("0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-ez.Fill("0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)", gr.Min, gr.Max);
-gr.Rotate(40,60);
-gr.Light(true);
-gr.Box();
-gr.Pipe(ex, ey, ez, "bwr");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-new ex 10 10 10
-new ey 10 10 10
-new ez 10 10 10
-fill ex '0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)'
-fill ey '0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)'
-fill ez '0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - 0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)'
-rotate 40 60
-light on
-box
-pipe ex ey ez 'bwr'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT ex, ey, ez;
-ex = mgl_create_data_size(10,10,10);
-ey = mgl_create_data_size(10,10,10);
-ez = mgl_create_data_size(10,10,10);
-mgl_data_fill_eq(gr, ex, "0.2*x/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-        0.2*x/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_data_fill_eq(gr, ey, "0.2*y/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*y/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_data_fill_eq(gr, ez, "0.2*(z-0.3)/pow(x^2+y^2+(z-0.3)^2,1.5) - \
-         0.2*(z+0.3)/pow(x^2+y^2+(z+0.3)^2,1.5)",0,0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_set_light(gr,1);
-mgl_box(gr,1);
-mgl_pipe_3d(gr,ex,ey,ez,"bwr",0.05,3,1);
-mgl_delete_data(ex); mgl_delete_data(ey); mgl_delete_data(ez);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Crust sample, Dots sample, Pipe 3D sample, Dual plotting samples
-@subsection Crust sample
-@cindex Crust
-@float
-@image{../png/crust, 7cm}
-@c @caption{Example of Crust. @tdref{crust}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData a("hotdogs.pts");
-a.Norm(-1,1,true);
-gr.Rotate(40,60);
-gr.Light(true);
-gr.Box();
-gr.Crust(a,"p");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-read a 'hotdogs.pts'
-norm a -1 1 on
-rotate 40 60
-light on
-box
-crust a 'p'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT a = mgl_create_data_file("hotdogs.pts");
-mgl_data_norm(a,-1.,1.,1,0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_set_light(gr,1);
-mgl_box(gr,1);
-mgl_crust_tr(gr,a,"p",0.);
-mgl_delete_data(a);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
-@node Dots sample, , Crust sample, Dual plotting samples
-@subsection Dots sample
-@cindex Dots
-@float
-@image{../png/dots, 7cm}
-@c @caption{Example of Dots. @tdref{dots}}
-@end float
-@ifclear UDAV
-@strong{C++/Python code}
-@verbatim
-mglData a("hotdogs.pts");
-a.Norm(-1,1,true);
-gr.Rotate(40,60);
-gr.Box();
-gr.Dots(a,"p");
-@end verbatim
-@strong{MGL code}
-@end ifclear
-@verbatim
-read a 'hotdogs.pts'
-norm a -1 1 on
-rotate 40 60
-box
-dots a 'p'
-@end verbatim
-@ifclear UDAV
-@strong{C/Fortran code}
-@verbatim
-HMDT a = mgl_create_data_file("hotdogs.pts");
-mgl_data_norm(a,-1.,1.,1,0);
-mgl_rotate(gr,40.,60.,0.);
-mgl_box(gr,1);
-mgl_dots_tr(gr,a,"p");
-mgl_delete_data(a);
-@end verbatim
-@end ifclear
-@c ------------------------------------------------------------------
 
 @c ------------------------------------------------------------------
 @node Basic features, Additional features, Dual plotting samples, Samples

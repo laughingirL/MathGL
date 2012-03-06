@@ -2,10 +2,11 @@
 1. MGL testing system
 2. test pthread for windows
 3. Check highlight -- UDAV: set proper pos, correct dbl-click, dbl-click on messages
-4. Check export to SVG/EPS/MGLD/TeX/OBJ/XGL/X3D/STL.
+4. Check export to MGLD/TeX/OBJ/XGL/X3D/STL.
 5. check 'rotatetext off', 'fgets'
-6.font loading in udav
+6. font loading in udav
 7. add XInitThreads() from #include <X11/Xlib.h> into all GUI
+8, Fl::awake() for Update()?!? + similar for Qt
 
 6. Check fontsize maximum ?!?
 7. curved text (in new sample) look not so good
@@ -16,6 +17,7 @@
 
 1. ReadHDF5 -- add string argument for handling lowest dimension (like complex numbers): "sum" - sum, "arg" - arg, "0...9" read slice 0...9, "abs" - sqrt(sum []^2)
 2. Export to X3D and VRML
+3. Sample for TriPlot (piramid) and QuadPlot (cube)
 
 ============= FOR V.2.1 ========
 
@@ -34,6 +36,7 @@
 12. Parallelization of drawing (MathGL level) -- bug with primitives drawing --> pixel.cpp
 13. Triangulation + GridData (for interpolation to regular grid)
 14. Axis -- projection (ternary + quaternary)
+15. Examples of animation, u3d, x3d, js and so on
 
 ============= UDAV =============
 
@@ -67,6 +70,7 @@ Remove other setting if data name is changed.
 14. Rotate/perspective/lighting/... of primitive list (without script re-execution)
 
 15. QTreeWidgetItem -- ICON (if,for,once,subplot,...); Cmd text; LINE - POS in group/line. After editing/changing --> put text to editor.
+
 17. Setupable hot-keys ?!?
 18. Insert just filename (without path) by demand
 
@@ -87,59 +91,41 @@ Remove other setting if data name is changed.
 2. FAQ about sizes of plot (parametrical+inverted, or Min*Max)
 3. FAQ about MinGW -- http://www.mingw.org/wiki/FAQ
 4. MGL docs -- text what formulas are applicable for scalars too.
-5. Sample about pthread using.
 6. Add help about cmake and GIF/JPEG to the "Installation and using"
-7. Regroup pictures in WWW by big classes + combo plots
-8. On which things the subplot influence
-9. About unrotated text
-10. Add "Howto" section in web site.
-12. Examples of animation, u3d, x3d, js and so on
-13. Example of inverted axis, minus-log axis, many axis
-14. Venn() diagram sample
-15. Primitives sample
-16. Candle() sample
-17. Parallelization:
+7. On which things the subplot influence
+8. About unrotated text
+9. Add "Howto" section
+10. New samples + update old ones
+11. Parallelization:
 	* user level -- SetDrawReg(), PutDrawReg() -- remove!?!
 	* MPI level -- Combine()
 	* MathGL level -- pthread in mglData, ???
-18. SetCoor() -- add log-log, log-x, log-y predefined coordinates
-19. Boxs() styles: '#' for wire, '@' for full box.
-20. TernAxis=0 -- usual, =1 -- ternary, =2 -- quaternary, &4 -- projections
-21. mglData::SetVal(), GetVal()
-22. Highlight(), changes in Execute() -- highlighting
-23. Add and test mgl_label_xyz(), mgl_label_xy(), mgl_label_y(). Possible numbers are: "%x" for x-coor, "%y" for y-coor, "%z" for z-coor.
-24. Rename label_xy() to label_pos(), legend_xy() to legend_pos()
-25. Check mglData::Insert(): now copy values from original array (x[i] -> x[2*i], x[2*i+1], ...)
-26. Text about WriteOFF(), WriteSTL(), WriteXYZ() + link to format description (http://people.sc.fsu.edu/~jburkardt/data/data.html)
-27. Symbol '!' denote sharp colors even in 1d plots (like different colors for points)
-28. Check Zoom() + in widgets (ToggleZoom(),...)
-29. ExportMGLD(), ImportMGLD() points+primitives to *.mgld file.
-30. Box() draw faces if '@' is specified
-31. Check export to LaTeX.
-33. Add DifLight() for diffusive light (for local sources only) + option "diffuse on|off" + local version of Light()/'light'. Default is diffuse light for local sources
-34. mglview can preview MGLD files too -- check it
-35. Sample for TriPlot (piramid) and QuadPlot (cube)
-36. Handle mglBase::Stop everywhere
-37. Number of frames can be changed at reload + manual call of draw_func if number of frames is 0.
-38. Symbol '\' at the end continue string in MGL script
-39. ContV -- contours with vertical (cylindrical) belts
-40. Add mgl_data_sort(HMDT dat, long idx); -- sort rows of x-y table (or slices of 3D data) by value of idx-column (and idy-row for nz>1). Not thread safe!!!
-41. Add mgl_tape_*(), Tape() -- draw tapes which rotate as (bi)normale of curve. Width by value or depend on BarWidth
-42. Flow() and FlowP() draw tape of (bi)normales if character 'x' and/or 'z' is specified.
-43. Add MGL command "ask $N 'question'" -- like interactive "define". User (UDAV) must set mgl_ask_func to some non-zero value
-44. Cones() -- like Bars() but by Cone(). Support 'a' for above.
-45. Add Class diagram for MathGL core
-46. Fog is influenced at image preparing (at Finish()) but not at surface creation!
-47. 'new' now have optional argument for filling by formula
-48. Area() don't have 'a' option from now.
-49. Delete 'crange' from options.
-50. Add GridPlot -- Like ColumnPlot but grid
-51. Copy text about formats of SetTickTime from "man localtime" + comment about default values. Allow d=0 -- automatic step selection.
-52. Command 'tuneticks'
+12. Boxs() styles: '#' for wire, '@' for full box.
+13. mglData::SetVal(), GetVal()
+14. Highlight(), changes in Execute() -- highlighting
+15. Add mgl_label_xyz(), mgl_label_xy(), mgl_label_y(). Possible numbers are: "%x" for x-coor, "%y" for y-coor, "%z" for z-coor.
+16. Check mglData::Insert(): now copy values from original array (x[i] -> x[2*i], x[2*i+1], ...)
+17. Symbol '!' denote sharp colors even in 1d plots (like different colors for points)
+18. Check Zoom() + in widgets (ToggleZoom(),...)
+19. ExportMGLD(), ImportMGLD() points+primitives to *.mgld file.
+20. Box() draw faces if '@' is specified
+21. Check export to LaTeX.
+22. Add DifLight() for diffusive light (for local sources only) + option "diffuse on|off" + local version of Light()/'light'. Default is diffuse light for local sources
+23. mglview can preview MGLD files too -- check it
+24. Handle mglBase::Stop everywhere
+25. Number of frames can be changed at reload + manual call of draw_func if number of frames is 0.
+26. Symbol '\' at the end continue string in MGL script
+27. Add mgl_data_sort(HMDT dat, long idx); -- sort rows of x-y table (or slices of 3D data) by value of idx-column (and idy-row for nz>1). Not thread safe!!!
+28. Add mgl_tape_*(), Tape() -- draw tapes which rotate as (bi)normale of curve. Width by value or depend on BarWidth
+29. Flow() and FlowP() draw tape of (bi)normales if character 'x' and/or 'z' is specified.
+30. Add MGL command "ask $N 'question'" -- like interactive "define". User (UDAV) must set mgl_ask_func to some non-zero value
+31. Cones() -- like Bars() but by Cone(). Support 'a' for above.
+32. Add Class diagram for MathGL core
+33. Add GridPlot -- Like ColumnPlot but grid
+34. Copy text about formats of SetTickTime from "man localtime" + comment about default values. Allow d=0 -- automatic step selection.
+35. Add mglBase, mglCanvas in other_en.texi + small comments about developing new plots.
 
 ============= BUGS =============
 
 1. утилиты (mgl2png и пр.) вылетают, если в коментариях русские буквы
-2. Last ' isn't send as call argument!!!
-3. "Chaos" in area.png (near axis) ???
 
