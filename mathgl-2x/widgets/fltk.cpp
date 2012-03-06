@@ -288,9 +288,11 @@ void mgl_wire_cb(Fl_Widget*, void* v)
 //-------------------------------------------------------------------------
 void mgl_alpha_cb(Fl_Widget*, void* v)	// alpha?xpm_a2:xpm_a1
 {	if(v)	((Fl_MGLView*)v)->toggle_alpha();	}
+void mglCanvasFL::ToggleAlpha()	{	mgl->toggle_alpha();	}
 //-----------------------------------------------------------------------------
 void mgl_light_cb(Fl_Widget*, void* v)	// light?xpm_l2:xpm_l1
 {	if(v)	((Fl_MGLView*)v)->toggle_light();	}
+void mglCanvasFL::ToggleLight()	{	mgl->toggle_light();	}
 //-----------------------------------------------------------------------------
 void mgl_norm_cb(Fl_Widget*, void* v)
 {
@@ -323,6 +325,7 @@ void Fl_MGLView::update()
 }
 void mgl_draw_cb(Fl_Widget*, void* v)
 {	if(v)	((Fl_MGLView*)v)->update();	}
+void mglCanvasFL::Update()		{	mgl->update();	}
 //-----------------------------------------------------------------------------
 void mgl_export_png_cb(Fl_Widget*, void* v)
 {

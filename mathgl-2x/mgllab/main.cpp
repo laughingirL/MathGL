@@ -253,6 +253,7 @@ ScriptWindow *new_view()
 void argument_set(int n, const char *s);
 int main(int argc, char **argv)
 {
+//	Fl::lock();
 	mgl_ask_func = mgl_ask_fltk;
 	char *buf, *buf2;
 	pref.get("locale",buf,"ru_RU.cp1251");	setlocale(LC_CTYPE, buf);	free(buf);

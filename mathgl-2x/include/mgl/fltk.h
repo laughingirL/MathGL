@@ -151,13 +151,13 @@ using mglCanvasW::Window;
 	void Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title,
 						void *par=NULL, void (*reload)(void *p)=NULL, bool maximize=false);
 	/// Switch on/off transparency (do not overwrite switches in user drawing function)
-	void ToggleAlpha()	{	mgl->toggle_alpha();	}
+	void ToggleAlpha();
 	/// Switch on/off lighting (do not overwrite switches in user drawing function)
-	void ToggleLight()	{	mgl->toggle_light();	}
+	void ToggleLight();
 	void ToggleRotate();	///< Switch on/off rotation by mouse
 	void ToggleZoom();		///< Switch on/off zooming by mouse
 	void ToggleNo();		///< Switch off all zooming and rotation
-	void Update(){mgl->update();}	///< Update picture by calling user drawing function
+	void Update();			///< Update picture by calling user drawing function
 	void Adjust();			///< Adjust size of bitmap to window size
 	void GotoFrame(int d);	///< Show arbitrary frame (use relative step)
 	void Animation();	///< Run animation (I'm too lasy to change it)

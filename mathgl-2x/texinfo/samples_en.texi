@@ -78,6 +78,7 @@ gr.ShowImage();
 @menu
 * Plot sample::                 
 * Radar sample::                
+* Tens sample::                 
 * Area sample::                 
 * Bars sample::                 
 * Barh sample::                 
@@ -134,7 +135,7 @@ mgl_delete_data(y);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Radar sample, Area sample, Plot sample, 1D plotting samples
+@node Radar sample, Tens sample, Plot sample, 1D plotting samples
 @subsection Radar sample
 @cindex Radar
 @float
@@ -165,7 +166,47 @@ mgl_delete_data(y);
 @end verbatim
 @end ifclear
 @c ------------------------------------------------------------------
-@node Area sample, Bars sample, Radar sample, 1D plotting samples
+@node Tens sample, Area sample, Radar sample, 1D plotting samples
+@subsection Tens sample
+@cindex Tens
+@float
+@image{../png/tens, 7cm}
+@c @caption{Example of Plot. @tdref{plot}}
+@end float
+@ifclear UDAV
+@strong{C++/Python code}
+@verbatim
+mglData y(50,3);
+y.Modify("0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
+y.Modify("sin(2*pi*x)",1);
+y.Modify("cos(2*pi*x)",2);
+gr.Box();
+gr.Tens(y.SubData(-1,0), y.SubData(-1,1));
+@end verbatim
+@strong{MGL code}
+@end ifclear
+@verbatim
+new y 50 3
+modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
+modify y 'sin(2*pi*x)' 1
+modify y 'cos(2*pi*x)' 2
+box
+tens y(:.0) y(:,1)
+@end verbatim
+@ifclear UDAV
+@strong{C/Fortran code}
+@verbatim
+HMDT y = mgl_create_data_size(50,3,1);
+mgl_data_modify(y,"0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)",0);
+mgl_data_modify(y,"sin(2*pi*x)",1);
+mgl_data_modify(y,"cos(2*pi*x)",2);
+mgl_box(gr,1);
+mgl_plot(gr,y,"");
+mgl_delete_data(y);
+@end verbatim
+@end ifclear
+@c ------------------------------------------------------------------
+@node Area sample, Bars sample, Tens sample, 1D plotting samples
 @subsection Area sample
 @cindex Area
 @float

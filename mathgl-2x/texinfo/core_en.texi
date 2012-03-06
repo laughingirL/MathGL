@@ -1571,7 +1571,7 @@ These functions draw continuous stairs for points to axis plane. See also @ref{p
 @deftypefnx {C function} @code{void} mgl_tens_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_tens_xyz (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} with color defined by the special array @var{c}[i] (look like tension plot). String @var{pen} specifies the color scheme (@pxref{Color scheme}) and style and/or width of line (@pxref{Line styles}). By default (@code{pen=""}) solid line with current color scheme is used. See also @ref{plot}, @ref{mesh}, @ref{fall}. @sref{Plot sample}
+These functions draw continuous lines between points @{@var{x}[i], @var{y}[i], @var{z}[i]@} with color defined by the special array @var{c}[i] (look like tension plot). String @var{pen} specifies the color scheme (@pxref{Color scheme}) and style and/or width of line (@pxref{Line styles}). By default (@code{pen=""}) solid line with current color scheme is used. See also @ref{plot}, @ref{mesh}, @ref{fall}. @sref{Tens sample}
 @end deftypefn
 
 @anchor{area}
