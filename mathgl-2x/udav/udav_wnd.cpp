@@ -164,6 +164,7 @@ MainWindow::MainWindow(QWidget *wp) : QMainWindow(wp)
 	addDockWidget(Qt::BottomDockWidgetArea, messWnd);
 	messWnd->resize(size().width(), 0);	new MessSyntax(mess);
 	connect(mess,SIGNAL(cursorPositionChanged()),this,SLOT(messClicked()));
+	connect(mess,SIGNAL(selectionChanged()),this,SLOT(messClicked()));
 
 	calcWnd = new QDockWidget(tr("Calculator"),this);
 
@@ -423,13 +424,12 @@ void MainWindow::messClicked()
 	for(;p>=0;p--)
 	{
 		q = m.section('\n',p,p);
-		if(q.contains("In line "))
+		if(q.contains("in line "))
 		{
-			QString s = q.mid(8).section(' ',0,0);
-			int n = s.toInt();	if(n<0)	return;
+			QString s = q.section(' ',-1);
+			int n = s.toInt()-1;	if(n<0)	return;
 			edit->moveCursor(QTextCursor::Start);
 			for(int i=0;i<n;i++)	edit->moveCursor(QTextCursor::NextBlock);
-			edit->setFocus();
 		}
 	}
 	edit->setFocus();
@@ -437,8 +437,10 @@ void MainWindow::messClicked()
 //-----------------------------------------------------------------------------
 void MainWindow::warnChanged()
 {
-	if(mess->toPlainText().isEmpty())	return;
-	messWnd->show();	ainfo->setChecked(true);
+	if(mess->toPlainText().isEmpty())
+	{	messWnd->hide();	ainfo->setChecked(false);	}
+	else
+	{	messWnd->show();	ainfo->setChecked(true);	}
 }
 //-----------------------------------------------------------------------------
 void MainWindow::about()

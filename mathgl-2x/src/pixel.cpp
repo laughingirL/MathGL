@@ -276,7 +276,8 @@ void mglCanvas::pxl_primdr(unsigned long id, unsigned long n, const void *)
 	mglPrim p;
 	for(i=0;i<n;i++)
 	{
-		p=Prm[i];	PDef=p.n3;	pPos=p.s;	PenWidth=p.w;
+		p=Prm[i];	PDef=p.n3;	pPos=p.s;
+		ObjId = p.id;	PenWidth=p.w;
 		switch(p.type)
 		{
 		case 0:	mark_draw(p.n1,p.n4,p.s,&d);	break;
@@ -286,7 +287,7 @@ void mglCanvas::pxl_primdr(unsigned long id, unsigned long n, const void *)
 		case 4:	glyph_draw(&p,&d);	break;
 		}
 	}
-	PDef=pdef;	pPos=ss;	PenWidth=ww;
+	PDef=pdef;	pPos=ss;	PenWidth=ww;	ObjId=-1;
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_combine(unsigned long id, unsigned long n, const void *)
@@ -517,7 +518,7 @@ unsigned char* mglCanvas::col2int(const mglPnt &p,unsigned char *r)
 	else
 	{	b0=p.r;	b1=p.g;	b2=p.b;	}
 	// try to highlight faces
-	if(get(MGL_HIGHLIGHT))	{	b0*=0.7;	b1*=0.7;	b2*=0.7;	}
+	if(ObjId==HighId)	{	b0*=0.7;	b1*=0.7;	b2*=0.7;	}
 	r[0] = (unsigned char)(255*b0);
 	r[1] = (unsigned char)(255*b1);
 	r[2] = (unsigned char)(255*b2);
@@ -693,7 +694,7 @@ void mglCanvas::line_draw(long k1, long k2, mglDrawReg *dr)
 	long y1,x1,y2,x2;
 
 	float pw=PenWidth*sqrt(font_factor/400), dxu,dxv,dyu,dyv,dd,dpw=3;
-	if(get(MGL_HIGHLIGHT))	{	pw *= 2;	dpw=2;	}
+	if(ObjId==HighId)	{	pw *= 2;	dpw=2;	}
 	const mglPnt &p1=Pnt[k1], &p2=Pnt[k2];
 	mglPnt d=p2-p1, p;
 	bool hor = fabs(d.x)>fabs(d.y);
@@ -782,7 +783,7 @@ void mglCanvas::pnt_draw(long k, mglDrawReg *dr)
 {
 	register long i,j,s,x,y;
 	register float v,pw=2*PenWidth*sqrt(font_factor/400),dpw=3;
-	if(get(MGL_HIGHLIGHT))	{	pw *= 2;	dpw=2;	}
+	if(ObjId==HighId)	{	pw *= 2;	dpw=2;	}
 	const mglPnt &p=Pnt[k];
 	unsigned char cs[4], cc;	col2int(p,cs);	cc = cs[3];
 	if(cc==0)	return;

@@ -204,7 +204,7 @@ struct mglDrawScript : public mglDraw
 	long line;		///< Line which will be highlited
 	mglDrawScript(HMPR p)	{	par=p;	line=-1;	}
 	int Draw(mglGraph *gr)
-	{	mgl_parse_text(gr->Self(),par,text.toAscii(),NULL,line,NULL);	return 0;	}
+	{	gr->Highlight(line+1);	mgl_parse_text(gr->Self(),par,text.toAscii());	return 0;	}
 };
 //-----------------------------------------------------------------------------
 /// Convert bitmap from mglCanvasW to QPixmap

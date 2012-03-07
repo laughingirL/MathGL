@@ -258,7 +258,7 @@ public:
 	/// End group of objects
 	inline void EndGroup()	{	mgl_end_group(gr);	}
 	/// Highlight next group
-	inline void Highlight()	{	mgl_highlight(gr);	}
+	inline void Highlight(int id)	{	mgl_highlight(gr, id);	}
 
 	/// Show currently produced image
 	inline void ShowImage(const char *viewer, bool keep=0)
@@ -1105,10 +1105,10 @@ public:
 	{	return mgl_parse(gr->Self(), pr, str, pos);	}
 	inline int Parse(mglGraph *gr, const wchar_t *str, int pos)
 	{	return mgl_parsew(gr->Self(), pr, str, pos);	}
-	inline void Execute(mglGraph *gr, const char *str, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL)
-	{	mgl_parse_text(gr->Self(), pr, str, error, high, par);	}
-	inline void Execute(mglGraph *gr, const wchar_t *str, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL)
-	{	mgl_parsew_text(gr->Self(), pr, str, error, high, par);	}
+	inline void Execute(mglGraph *gr, const char *str)
+	{	mgl_parse_text(gr->Self(), pr, str);	}
+	inline void Execute(mglGraph *gr, const wchar_t *str)
+	{	mgl_parsew_text(gr->Self(), pr, str);	}
 	inline void Execute(mglGraph *gr, FILE *fp, bool print=false)
 	{	mgl_parse_file(gr->Self(), pr, fp, print);	}
 	inline int CmdType(const char *name)

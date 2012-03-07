@@ -175,6 +175,7 @@ public:
 	mglPoint Max;		///< Upper edge of bounding box for graphics.
 	std::string Mess;	///< Buffer for receiving messages
 	int ObjId;			///< object id for mglPrim
+	int HighId;			///< object id to be highlited
 	std::vector<mglGroup> Grp;	///< List of groups with names -- need for export
 	std::string PlotId;	///< Id of plot for saving filename (in GLUT window for example)
 
@@ -269,8 +270,8 @@ public:
 	virtual void StartAutoGroup (const char *)=0;
 	void StartGroup(const char *name, int id);
 	virtual void EndGroup()=0;	//	{	LoadState();	}
-	/// Highlight next group
-	inline void Highlight()	{	set(MGL_HIGHLIGHT);	}
+	/// Highlight group
+	inline void Highlight(int id)	{	HighId=id;	}
 
 	/// Set FontSize by size in pt and picture DPI (default is 16 pt for dpi=72)
 	virtual void SetFontSizePT(float pt, int dpi=72){	FontSize = pt*27.f/dpi;	}

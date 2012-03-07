@@ -135,17 +135,17 @@ public:
 	{	mglGraph GR(gr);	Execute(&GR,fp,print);	}
 	void Execute(mglGraph *gr, FILE *fp, bool print=false);
 	/// Execute MGL script from array of lines
-	inline void Execute(HMGL gr, int num, const wchar_t **text, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL)
-	{	mglGraph GR(gr);	Execute(&GR,num,text,error,high);	}
-	void Execute(mglGraph *gr, int num, const wchar_t **text, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL);
+	inline void Execute(HMGL gr, int num, const wchar_t **text)
+	{	mglGraph GR(gr);	Execute(&GR,num,text);	}
+	void Execute(mglGraph *gr, int num, const wchar_t **text);
 	/// Execute MGL script text with '\n' separated lines
-	inline void Execute(HMGL gr, const wchar_t *text, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL)
-	{	mglGraph GR(gr);	Execute(&GR,text,error,high);	}
-	void Execute(mglGraph *gr, const wchar_t *text, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL);
+	inline void Execute(HMGL gr, const wchar_t *text)
+	{	mglGraph GR(gr);	Execute(&GR,text);	}
+	void Execute(mglGraph *gr, const wchar_t *text);
 	/// Execute MGL script text with '\n' separated lines
-	inline void Execute(HMGL gr, const char *text, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL)
-	{	mglGraph GR(gr);	Execute(&GR,text,error,high);	}
-	void Execute(mglGraph *gr, const char *text, void (*error)(const char *mes, void *par)=NULL, int high=-1, void *par=NULL);
+	inline void Execute(HMGL gr, const char *text)
+	{	mglGraph GR(gr);	Execute(&GR,text);	}
+	void Execute(mglGraph *gr, const char *text);
 	/// Scan for functions (use NULL for reset)
 	void ScanFunc(const wchar_t *line);
 	/// Check if name is function and return its address (or 0 if no)

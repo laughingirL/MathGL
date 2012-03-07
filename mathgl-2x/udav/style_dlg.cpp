@@ -361,3 +361,13 @@ void StyleDialog::updatePic()
 	pic->setPixmap(p);
 }
 //-----------------------------------------------------------------------------
+void convertFromGraph(QPixmap &pic, mglGraph *gr, uchar **buf)
+{
+	register long w=gr->GetWidth(), h=gr->GetHeight();
+	if(*buf)	delete [](*buf);
+	*buf = new uchar[4*w*h];
+	gr->GetBGRN(*buf,4*w*h);
+	QImage img(*buf, w, h, QImage::Format_RGB32);
+	pic = QPixmap::fromImage(img);
+}
+//-----------------------------------------------------------------------------

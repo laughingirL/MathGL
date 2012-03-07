@@ -1,21 +1,13 @@
 ============= TEST =============
+
 1. MGL testing system
 2. test pthread for windows
-3. Check highlight -- UDAV: set proper pos, correct dbl-click, dbl-click on messages
-4. Check export to MGLD/TeX/OBJ/XGL/X3D/STL.
-5. check 'rotatetext off', 'fgets'
-6. font loading in udav
-7. add XInitThreads() from #include <X11/Xlib.h> into all GUI
-8, Fl::awake() for Update()?!? + similar for Qt
-
-6. Check fontsize maximum ?!?
-7. curved text (in new sample) look not so good
-8. emulate fog in EPS/SVG
-9. line segment losses in EPS ???
+3. Check export to MGLD/TeX/OBJ/XGL/X3D/STL.
+4. add XInitThreads() from #include <X11/Xlib.h> into all GUI
+5, Fl::lock() for Update()?!? + similar for Qt
 
 ============= NEW  =============
 
-1. ReadHDF5 -- add string argument for handling lowest dimension (like complex numbers): "sum" - sum, "arg" - arg, "0...9" read slice 0...9, "abs" - sqrt(sum []^2)
 2. Export to X3D and VRML
 3. Sample for TriPlot (piramid) and QuadPlot (cube)
 
@@ -37,6 +29,13 @@
 13. Triangulation + GridData (for interpolation to regular grid)
 14. Axis -- projection (ternary + quaternary)
 15. Examples of animation, u3d, x3d, js and so on
+
+16. Check fontsize maximum ?!?
+17. curved text (in new sample) look not so good
+18. emulate fog in EPS/SVG
+19. line segment losses in EPS ???
+
+20. ReadHDF5 -- add string argument for handling lowest dimension (like complex numbers): "sum" - sum, "arg" - arg, "0...9" read slice 0...9, "abs" - sqrt(sum []^2)
 
 ============= UDAV =============
 

@@ -206,11 +206,7 @@ void QMathGL::update()
 		emit refreshData();
 
 		QString buf = gr->Mess.c_str();
-		if(!buf.isEmpty())
-		{
-			emit showWarn(buf);
-//			QMessageBox::warning(this, appName, buf);
-		}
+		emit showWarn(buf);
 		mousePos="";
 	}
 	refresh();

@@ -31,7 +31,8 @@ void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
 int show(mglGraph *gr)
 {
-	p.Execute(gr,str.c_str(),mgl_error_print);
+	p.Execute(gr,str.c_str());
+	printf("%s\n",gr->Message());
 	return 0;
 }
 //-----------------------------------------------------------------------------

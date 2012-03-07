@@ -36,7 +36,7 @@ void mgl_set_alpha_default(HMGL gr, float alpha)	{	gr->SetAlphaDef(alpha);	}
 void mgl_set_light_dif(HMGL gr, int enable)		{	gr->SetDifLight(enable);	}
 //-----------------------------------------------------------------------------
 void mgl_set_rdc_acc(HMGL gr, int reduce)	{	gr->SetReduceAcc(reduce);	}
-void mgl_highlight(HMGL gr)			{	gr->Highlight();	}
+void mgl_highlight(HMGL gr, int id)			{	gr->Highlight(id);	}
 void mgl_set_cut(HMGL gr, int cut)	{	gr->SetCut(cut);	}
 void mgl_set_cut_box(HMGL gr, float x1,float y1,float z1,float x2,float y2,float z2)
 {	gr->SetCutBox(x1,y1,z1,x2,y2,z2);	}
@@ -73,7 +73,7 @@ void mgl_set_bar_width(HMGL gr, float width)	{	gr->SetBarWidth(width);	}
 //-----------------------------------------------------------------------------
 void mgl_set_rdc_acc_(uintptr_t *gr, int *reduce)
 {	_GR_->SetReduceAcc(*reduce);	}
-void mgl_highlight_(uintptr_t *gr)	{	_GR_->Highlight();	}
+void mgl_highlight_(uintptr_t *gr, int *id)	{	_GR_->Highlight(*id);	}
 void mgl_set_origin_(uintptr_t *gr, float *x0, float *y0, float *z0)
 {	_GR_->SetOrigin(*x0,*y0,*z0);	}
 int mgl_get_warn_(uintptr_t *gr)	{	return _GR_->GetWarn();	}

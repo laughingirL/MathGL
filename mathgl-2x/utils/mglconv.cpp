@@ -83,7 +83,8 @@ int main(int narg, char **arg)
 		{
 			gr.NewFrame();
 			p.AddParam(0,var[i].c_str());
-			p.Execute(&gr,str.c_str(),mgl_error_print);
+			p.Execute(&gr,str.c_str());
+			printf("%s\n",gr.Message());
 			gr.EndFrame();
 			sprintf(buf,"%s-%ld",fname,i);
 			if(!gif)	gr.WriteFrame(buf);
@@ -92,7 +93,8 @@ int main(int narg, char **arg)
 	}
 	else
 	{
-		p.Execute(&gr,str.c_str(),mgl_error_print);
+		p.Execute(&gr,str.c_str());
+		printf("%s\n",gr.Message());
 		gr.WriteFrame(fname);
 	}
 	printf("Write output to %s\n",fname);

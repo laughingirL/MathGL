@@ -567,6 +567,8 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		{	ax=qq.u*cos(tet) - qq.v*sin(tet);	ay=qq.v*cos(tet) + qq.u*sin(tet);	}
 		qq.u = ax;	qq.v = ay;
 
+		if(!get(MGL_ENABLE_RTEXT))	pos[2] = nn.x<0 || (nn.x==0 && nn.y<0) ? 'L':'R';
+
 		if(aa.ch=='c' && aa.txt[i].text[0]==' ')	qq.u = qq.v = NAN;
 		if(!get(MGL_DISABLE_SCALE))	pos[0]=(qq.u*nn.y-qq.v*nn.x>0) ? 'T':'t';
 		if(aa.ch=='T' && pos[0]=='T')	pos[0]='t';

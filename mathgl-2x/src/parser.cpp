@@ -892,18 +892,17 @@ int mglParser::FlowExec(mglGraph *, const wchar_t *com, long m, mglArg *a)
 	return n+1;
 }
 //-----------------------------------------------------------------------------
-void mgl_error_print(const char *mess, void *)
-{	if(mess && *mess)	printf("%s\n",mess);	}
 #include <string>
 void mglParser::Execute(mglGraph *gr, FILE *fp, bool print)
 {
 	if(gr==0 || fp==0)	return;
 	std::wstring str;
 	while(!feof(fp))	str.push_back(fgetwc(fp));
-	Execute(gr,str.c_str(),print?mgl_error_print:NULL);
+	Execute(gr,str.c_str());
+	if(print)	printf("%s\n",gr->Message());
 }
 //-----------------------------------------------------------------------------
-void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)(const char *mes, void *par), int high, void *par)
+void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text)
 {
 	if(n<1 || text==0)	return;
 	long i, r;
@@ -913,7 +912,6 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)
 	for(i=0;i<n;i++)
 	{
 		gr->SetWarn(-1, NULL);
-		if(i==high)	gr->Highlight();
 		gr->SetObjId(i+1);
 		r = Parse(gr,text[i],i+1);
 		if(r<0)	{	i = -r-2;	continue;	}
@@ -925,11 +923,9 @@ void mglParser::Execute(mglGraph *gr, int n, const wchar_t **text, void (*error)
 		else *buf=0;
 		if(*buf)	gr->SetWarn(-2,buf);
 	}
-	const char *mess=gr->Message();
-	if(error && mess && *mess)	error(mess,par);
 }
 //-----------------------------------------------------------------------------
-void mglParser::Execute(mglGraph *gr, const wchar_t *text, void (*error)(const char *mes, void *par), int high, void *par)
+void mglParser::Execute(mglGraph *gr, const wchar_t *text)
 {
 	unsigned s = wcslen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
@@ -955,16 +951,16 @@ void mglParser::Execute(mglGraph *gr, const wchar_t *text, void (*error)(const c
 
 		}
 	}
-	Execute(gr, n, str, error, high, par);
+	Execute(gr, n, str);
 	delete []wcs;	free(str);
 }
 //-----------------------------------------------------------------------------
-void mglParser::Execute(mglGraph *gr, const char *text, void (*error)(const char *mes, void *par), int high, void *par)
+void mglParser::Execute(mglGraph *gr, const char *text)
 {
 	unsigned s = strlen(text)+1;
 	wchar_t *wcs = new wchar_t[s];
 	mbstowcs(wcs,text,s);
-	Execute(gr, wcs, error, high, par);
+	Execute(gr, wcs);
 	delete []wcs;
 }
 //-----------------------------------------------------------------------------
@@ -1022,10 +1018,10 @@ int mgl_parse(HMGL gr, HMPR p, const char *str, int pos)
 {	return p->Parse(gr, str, pos);	}
 int mgl_parsew(HMGL gr, HMPR p, const wchar_t *str, int pos)
 {	return p->Parse(gr, str, pos);	}
-void mgl_parse_text(HMGL gr, HMPR p, const char *str, void (*error)(const char *mes, void *par), int high, void *par)
-{	p->Execute(gr, str, error, high, par);	}
-void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str, void (*error)(const char *mes, void *par), int high, void *par)
-{	p->Execute(gr, str, error, high, par);	}
+void mgl_parse_text(HMGL gr, HMPR p, const char *str)
+{	p->Execute(gr, str);	}
+void mgl_parsew_text(HMGL gr, HMPR p, const wchar_t *str)
+{	p->Execute(gr, str);	}
 void mgl_parse_file(HMGL gr, HMPR p, FILE *fp, int print)
 {	p->Execute(gr,fp,print);	}
 void mgl_restore_once(HMPR p)	{	p->RestoreOnce();	}

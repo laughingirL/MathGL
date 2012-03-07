@@ -72,7 +72,7 @@ void mglCanvas::add_prim(mglPrim &a)
 {
 	if(a.n1>=0)
 	{	a.z = Pnt[a.n1].z;	// this is a bit less accurate but simpler for transformation
-		a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);	clr(MGL_FINISHED);	}
+		a.id = ObjId;	MGL_PUSH(Prm,a,mutexPrm);	}
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::DefaultPlotParam()
@@ -90,7 +90,7 @@ int Depth;			///< Depth of the image
 int CurFrameId;		///< Number of automaticle created frames
 GifFileType *gif;*/
 	SetTickRotate(true);	SetTickSkip(true);
-	SetWarn(mglWarnNone);	ObjId = 0;
+	SetWarn(mglWarnNone);	ObjId = -1;
 	SetFunc(0,0);	Stop=false;	CutOff(0);	Ternary(0);
 	SetRanges(mglPoint(-1,-1,-1,-1), mglPoint(1,1,1,1));
 	SetBarWidth(0.7);	SetMarkSize(1);	SetArrowSize(1);
@@ -780,5 +780,5 @@ void mglCanvas::StartAutoGroup (const char *lbl)
 	MGL_PUSH(Grp,mglGroup(lbl,ObjId),mutexGrp);
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::EndGroup()	{	LoadState();	clr(MGL_HIGHLIGHT);	}
+void mglCanvas::EndGroup()	{	LoadState();	}
 //-----------------------------------------------------------------------------

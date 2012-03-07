@@ -31,7 +31,7 @@ const char *mgl_get_mess(HMGL gr);
 long mgl_use_graph(HMGL gr, int inc);
 void mgl_start_group(HMGL gr, const char *);
 void mgl_end_group(HMGL gr);
-void mgl_highlight(HMGL gr);
+void mgl_highlight(HMGL gr, int id);
 
 void mgl_set_palette(HMGL gr, const char *colors);
 void mgl_set_alpha_default(HMGL graph, float alpha);
@@ -75,7 +75,7 @@ void mgl_set_warn_(uintptr_t *gr, int *code, const char *text,int);
 long mgl_use_graph_(uintptr_t *gr, int *inc);
 void mgl_start_group_(uintptr_t *gr, const char *,int);
 void mgl_end_group_(uintptr_t *gr);
-void mgl_highlight_(uintptr_t *gr);
+void mgl_highlight_(uintptr_t *gr, int *id);
 
 void mgl_set_palette_(uintptr_t *gr, const char *colors, int);
 void mgl_set_pal_color_(uintptr_t *graph, int *n, float *r, float *g, float *b);
