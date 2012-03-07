@@ -29,14 +29,33 @@ void mglFillP(long x, const mreal *a,long nx,mreal _p[4]);
 void mglFillP5(long x,long y, const mreal *a,long nx,long ny,mreal _p[6][6]);
 void mglFillP5(long x, const mreal *a,long nx,mreal _p[6]);
 //-----------------------------------------------------------------------------
+#ifdef HAVE_PTHREAD
+#ifdef WIN32
+#include <windows.h>
+#include <process.h>
+#elif defined(__APPLE__) || defined (__FreeBSD__)
+#include <sys/sysctl.h>
+#elif defined(unix) || defined(__unix) || defined(__unix__)
+#include <sys/sysinfo.h>
+#endif
 void mglSetNumThr(int n)
 {
-#ifdef HAVE_PTHREAD
-	mglNumThr = n>0 ? n : sysconf(_SC_NPROCESSORS_CONF);
+#ifdef WIN32
+	SYSTEM_INFO systemInfo;
+	GetSystemInfo(&systemInfo);
+	mglNumThr = n>0 ? n : systemInfo.dwNumberOfProcessors;
+#elif defined (__APPLE__) || defined(__FreeBSD__)
+	int numProcessors = 1;
+	size_t size = sizeof(numProcessors);
+	sysctlbyname("hw.ncpu", &numProcessors, &size, NULL, 0);
+	mglNumThr = n>0 ? n : numProcessors;
 #else
-	mglNumThr = 1;
+	mglNumThr = n>0 ? n : get_nprocs_conf();
 #endif
 }
+#else
+void mglSetNumThr(int)	{	mglNumThr = 1;	}
+#endif
 //-----------------------------------------------------------------------------
 void mglStartThread(void *(*func)(void *), void (*post)(mglThreadD *,mreal *), long n, mreal *a,
 	const mreal *b, const mreal *c, const long *p, void *v, const mreal *d, const mreal *e, char *s)
