@@ -904,6 +904,9 @@ void mgl_get_slice(_mgl_slice &s, HCDT x, HCDT y, HCDT z, HCDT a, char dir, floa
 	s.x.Create(nx,ny);	s.y.Create(nx,ny);
 	s.z.Create(nx,ny);	s.a.Create(nx,ny);
 	p = long(d);	d -= p;
+	if(dir=='x' && p>=n-1)	{	d+=p-n+2;	p=n-2;	}
+	if(dir=='y' && p>=m-1)	{	d+=p-m+2.;	p=m-2;	}
+	if(dir=='z' && p>=l-1)	{	d+=p-l+2;	p=l-2;	}
 	float v;
 
 	if(both)

@@ -57,7 +57,7 @@ mglBase::mglBase()
 	pthread_mutex_init(&mutexPnt,0);
 	pthread_mutex_init(&mutexTxt,0);
 #endif
-	fnt=0;	*FontDef==0;
+	fnt=0;	*FontDef=0;
 	fx=fy=fz=fa=fc=0;
 
 	InUse = 1;
