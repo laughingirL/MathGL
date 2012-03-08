@@ -1,3 +1,37 @@
+@chapter Overview
+
+The set of MathGL features is rather rich -- just the number of basic graphics types
+is larger than 50. Also there are functions for data handling, plot setup and so on. In spite of it I tried to keep a similar style in function names and in the order of arguments. Mostly it is
+used for different drawing functions.
+
+There are six most general (base) concepts:
+@enumerate
+@item
+@strong{Any picture is created in memory first.} The internal (memory) representation can be different: bitmap picture (for @code{SetQuality(MGL_DRAW_LMEM)}) or the list of vector primitives (default). After that the user may decide what he/she want: save to file, display on the screen, run animation, do additional editing and so on. This approach assures a high portability of the program -- the source code will produce exactly the same picture in @emph{any} OS. Another big positive consequence is the ability to create the picture in the console program (using command line, without creating a window)!
+@item
+@strong{Every plot settings (style of lines, font, color scheme) are specified by a string.} It provides convenience for user/programmer -- short string with parameters is more comprehensible than a large set of parameters. Also it provides portability -- the strings are the same in any OS so that it is not necessary to think about argument types.
+@item
+@strong{All functions have ``simplified'' and ``advanced'' forms.} It is done for user's convenience. One needs to specify only one data array in the ``simplified'' form in order to see the result. But one may set parametric dependence of coordinates and produce rather complex curves and surfaces in the ``advanced'' form. In both cases the order of function arguments is the same: first data arrays, second the string with style, and later string with options for additional plot tuning.
+@item
+@strong{All data arrays for plotting are encapsulated in mglData(A) class.} This reduces the number of errors while working with memory and provides a uniform interface for data of different types (float, double and so on) or for formula plotting.
+@item
+@strong{All plots are vector plots.} The MathGL library is intended for handling scientific data which have vector nature (lines, faces, matrices and so on). As a result, vector representation is used in all cases! In addition, the vector representation allows one to scale the plot easily -- change the canvas size by a factor of 2, and the picture will be proportionally scaled.
+@item
+@strong{New drawing never clears things drawn already.} This, in some sense, unexpected, idea allows to create a lot of ``combined'' graphics. For example, to make a surface with contour lines one needs to call the function for surface plotting and the function for contour lines plotting (in any order). Thus the special functions for making this ``combined'' plots (as it is done in Matlab and some other plotting systems) are superfluous. Many more examples of such plots can be found in section @ref{Hints} and in home site (@uref{http://mathgl.sf.net/index.html}).
+@end enumerate
+
+In addition to the general concepts I want to comment on some non-trivial or less commonly used general ideas -- plot positioning, axis specification and curvilinear coordinates, styles for lines, text and color scheme.
+
+@menu
+* Coordinate axes::
+* Line styles::
+* Color scheme::
+* Font styles::
+* Textual formulas::
+* Command options::
+* Interfaces::
+@end menu
+
 @c ------------------------------------------------------------------
 @node Coordinate axes, Line styles, , General concepts
 @subsection Coordinate axes
@@ -181,7 +215,7 @@ There is no difference between lower or upper case in formulas. If argument valu
 
 
 @c ------------------------------------------------------------------
-@node  Command options, , Textual formulas, General concepts
+@node  Command options, Interfaces, Textual formulas, General concepts
 @section Command options
 
 Command options allow the easy setup of the plot by changing of global settings only for this plot. Each option is separated from the previous text by symbol @samp{;}. Options work so that them remember the current settings, change settings as it being set in the option, execute command and return the original settings back. So, the options usage for data handling commands or for graphics setup commands is useless.
@@ -235,3 +269,217 @@ Adds string 'txt' to internal legend accumulator. The style of described line an
 @deffn {MGL option} value @code{val}
 Set the value to be used as additional numeric parameter in plotting command.
 @end deffn
+
+
+
+@node Interfaces, , Command options, General concepts
+@section Interfaces
+
+The MathGL library has interfaces for a set of languages. Most of them are based on the C interface via SWIG tool. There are Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, and Tcl interfaces. Also there is a Fortran interface which has a similar set of functions, but slightly different types of arguments (integers instead of pointers). These functions are marked as [C function].
+@c ++++++++++
+Some of the languages listed above support classes (like C++ or Python). For them, a special wrapper was written.
+@c ++++++++++
+Finally, a special command language MGL was written for a faster access to plotting functions. Corresponding scripts can be executed separately (by UDAV, mgl2png, mgl2eps and so on)
+@ifclear UDAV
+ or from the C/C++/Python/... code (@pxref{mglParse class}).
+@end ifclear
+
+@ifclear UDAV
+@menu
+* C interface::
+* Python interface::
+* MGL interface::
+@end menu
+
+@node C interface, Python interface, , Interfaces
+@subsection C/Fortran interface
+
+The C interface is a base for many other interfaces. It contains the pure C functions for most of the methods of MathGL classes. In distinction to C++ classes, C functions must have an argument HMGL (for graphics) and/or HMDT (for data arrays), which specifies the object for drawing or manipulating (changing). So, firstly, the user has to create this object by the function @code{mgl_create_*()} and has to delete it after the use by function @code{mgl_delete_*()}.
+
+All C functions are described in the header file @code{#include <mgl/mgl_c.h>} and use variables of the following types:
+@itemize
+@item
+@code{HMGL} --- Pointer to class @code{mglGraph} (@pxref{MathGL core}).
+@item
+@code{HMDT} --- Pointer to class @code{mglData} (@pxref{Data processing}).
+@item
+@code{HMPR} --- Pointer to class @code{mglParse} (@pxref{mglParse class}).
+@end itemize
+These variables contain identifiers for graphics drawing objects and for the data objects.
+
+Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of type @code{HMGL, HMDT} must be an integer with sufficient size (@code{integer*4} in the 32-bit operating system or @code{integer*8} in the 64-bit operating system). All C functions are subroutines in Fortran, which are called by operator @code{call}. The exceptions are functions, which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also, one should keep in mind that strings in Fortran are denoted by @code{'} symbol, not the @code{"} symbol.
+
+@node Python interface, MGL interface, C interface, Interfaces
+@subsection C++/Python interface
+
+MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is named in this chapter's title. Exactly the same classes are used for high-level C++ API. Its feature is using only inline member-functions what make high-level API to be independent on compiler even for binary build.
+
+There are 2 classes in:
+@itemize
+@item @code{mglGraph}
+-- provide most plotting functions (@pxref{MathGL core}).
+@item @code{mglData}
+-- provide base data processing (@pxref{Data processing}). It have an additional feature to access data values. You can use a construct like this: @code{dat[i]=sth;} or @code{sth=dat[i]} where flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1). You can also import NumPy arrays as input arguments in Python: @code{mgl_dat = mglData(numpy_dat);}.
+@c @item @code{mglParse} -- practically the same as C++ class @code{MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is denoted in the chapter title.
+@end itemize
+
+
+To use Python classes just execute @samp{import mathgl}. The simplest example will be:
+@verbatim
+import mathgl
+a=mathgl.mglGraph()
+a.Box()
+a.WritePNG("test.png")
+@end verbatim
+Alternatively you can import all classes from @code{mathgl} module and easily access MathGL classes like this:
+@verbatim
+from mathgl import *
+a=mglGraph()
+a.Box()
+a.WritePNG("test.png")
+@end verbatim
+This becomes useful if you create many @code{mglData} objects, for example.
+
+
+@node MGL interface, , Python interface, Interfaces
+@end ifclear
+@subsection MGL interface
+
+MathGL library supports the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of UDAV, mglconv, mglview programs and others, @pxref{Utilities}) or in the frame of the library using.
+
+MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is sufficient, i.e. variables @var{a} and @var{A} are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when @samp{#} is a part of some string. Also options can be specified after symbol @samp{;} (@pxref{Command options}). Symbol @samp{:} starts new command (like new line character) if it is not placed inside a string or inside brackets.
+
+If string contain references to external parameters (substrings @samp{$0}, @samp{$1} ... @samp{$9}) or definitions (substrings @samp{$a}, @samp{$b} ... @samp{$z}) then before execution the values of parameter/definition will be substituted instead of reference. It allows to use the same MGL script for different parameters (filenames, paths, condition and so on).
+
+Argument can be a string, a variable name or a number.
+@itemize @bullet
+@item
+The string is any symbols between ordinary marks @samp{'}.
+
+@item
+Usually variable have a name which is arbitrary combination of symbols (except spaces and @samp{'}) started from a letter and with length less than 64. A temporary array can be used as variable:
+@itemize @bullet
+@item
+sub-arrays (like in @ref{subdata} command) as command argument. For example, @code{a(1)} or @code{a(1,:)} or @code{a(1,:,:)} is second row, @code{a(:,2)} or @code{a(:,2,:)} is third column, @code{a(:,:,0)} is first slice and so on. Also you can extract a part of array from m-th to n-th element by code @code{a(m:n,:,:)} or just @code{a(m:n)}.
+
+@item
+any column combinations defined by formulas, like @code{a('n*w^2/exp(t)')} if names for data columns was specified (by @ref{idset} command or in the file at string started with @code{##}).
+
+@item
+any expression (without spaces) of existed variables produce temporary variable. For example, @samp{sqrt(dat(:,5)+1)} will produce temporary variable with data values equal to @code{tmp[i,j] = sqrt(dat[i,5,j]+1)}.
+
+@item
+temporary variable of higher dimensions by help of []. For example, @samp{[1,2,3]} will produce a temporary vector of 3 elements @{1, 2, 3@}; @samp{[[11,12],[21,22]]} will produce matrix 2*2 and so on. Here you can join even an arrays of the same dimensions by construction like @samp{[v1,v2,...,vn]}.
+
+@item
+result of code for making new data (@pxref{Make another data}) inside @{@}. For example, @samp{@{sum dat 'x'@}} produce temporary variable which contain result of summation of @var{dat} along direction 'x'. This is the same array @var{tmp} as produced by command @samp{sum tmp dat 'x'}. You can use nested constructions, like @samp{@{sum @{max dat 'z'@} 'x'@}}.
+@end itemize
+Temporary variables can not be used as 1st argument for commands which create (return) the data (like @samp{new}, @samp{read}, @samp{hist} and so on).
+
+@item
+Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated as number if they were not redefined by user. Variables with suffixes are treated as numbers (@pxref{Data information}). Names defined by @ref{define} command are treated as number. Also results of formulas with sizes 1x1x1 are treated as number (for example, @samp{pi/dat.nx}).
+@end itemize
+Before the first using all variables must be defined with the help of commands, like, @ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} and so on (see sections @ref{Data constructor}, @ref{Data filling} and @ref{Make another data}).
+
+Command may have several set of possible arguments (for example, @code{plot ydat} and @code{plot xdat ydat}). All command arguments for a selected set must be specified. However, some arguments can have default values. These argument are printed in [], like @code{plot ydat ['stl'='' zval=nan]}. At this, the record @code{[arg1 arg2 arg3 ...]} means @code{[arg1 [arg2 [arg3 ...]]]}, i.e. you can omit only tailing arguments if you agree with its default values. For example, @code{plot ydat '' 1} or @code{plot ydat ''} is correct, but @code{plot ydat 1} is incorrect (argument @code{'stl'} is missed).
+
+Below I show commands to control program flow, like, conditions, cycles, define script arguments and so on. Other commands can be found in chapters @ref{MathGL core} and @ref{Data processing}.
+
+@cindex chdir
+@anchor{chdir}
+@deftypefn {MGL command} {} chdir 'path'
+Changes the current directory to @var{path}.
+@end deftypefn
+
+@cindex define
+@anchor{define}
+@deftypefn {MGL command} {} define $N smth
+Sets @var{N}-th script argument to @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present). Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@deftypefn {MGL command} {} define name smth
+Create scalar variable @code{name} which have the numeric value of @code{smth}. Later you can use this variable as usual number. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@cindex defchr
+@anchor{defchr}
+@deftypefn {MGL command} {} defchr $N smth
+Sets @var{N}-th script argument to character with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@cindex defnum
+@anchor{defnum}
+@deftypefn {MGL command} {} defnum $N smth
+Sets @var{N}-th script argument to number with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@cindex defpal
+@anchor{defpal}
+@deftypefn {MGL command} {} defpal $N smth
+Sets @var{N}-th script argument to palette character at position evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+
+@cindex call
+@anchor{call}
+@deftypefn {MGL command} {} call 'fname' [ARG1 ARG2 ... ARG9]
+Executes function @var{fname} (or script if function is not found). Optional arguments will be passed to functions. See also @ref{func}.
+@end deftypefn
+@cindex func
+@anchor{func}
+@deftypefn {MGL command} {} func 'fname' [narg=0]
+Define the function @var{fname} and number of required arguments. The arguments will be placed in script parameters $1, $2, ... $9. Note, you should stop script execution before function definition(s) by command @ref{stop}. See also @ref{return}.
+@end deftypefn
+@cindex return
+@anchor{return}
+@deftypefn {MGL command} {} return
+Return from the function. See also @ref{func}.
+@end deftypefn
+
+
+@cindex if
+@anchor{if}
+@deftypefn {MGL command} {} if dat 'cond'
+Starts block which will be executed if @var{dat} satisfy to @var{cond}.
+@end deftypefn
+@deftypefn {MGL command} {} if @code{val}
+Starts block which will be executed if @code{val} is nonzero.
+@end deftypefn
+@cindex elseif
+@anchor{elseif}
+@deftypefn {MGL command} {} elseif dat 'cond'
+Starts block which will be executed if previous @code{if} or @code{elseif} is false and @var{dat} satisfy to @var{cond}.
+@end deftypefn
+@deftypefn {MGL command} {} elseif @code{val}
+Starts block which will be executed if previous @code{if} or @code{elseif} is false and @code{val} is nonzero.
+@end deftypefn
+@cindex else
+@anchor{else}
+@deftypefn {MGL command} {} else
+Starts block which will be executed if previous @code{if} or @code{elseif} is false.
+@end deftypefn
+@cindex endif
+@anchor{endif}
+@deftypefn {MGL command} {} endif
+Finishes @code{if/elseif/else} block.
+@end deftypefn
+
+@cindex for
+@anchor{for}
+@deftypefn {MGL command} {} for $N @code{v1 v2 [dv=1]}
+Starts cycle with $@var{N}-th argument changing from @var{v1} to @var{v2} with the step @var{dv}. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@deftypefn {MGL command} {} for $N dat
+Starts cycle with $@var{N}-th argument changing for @var{dat} values. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@cindex next
+@anchor{next}
+@deftypefn {MGL command} {} next
+Finishes @code{for} cycle.
+@end deftypefn
+
+@cindex once
+@anchor{once}
+@deftypefn {MGL command} {} once @code{val}
+The code between @code{once on} and @code{once off} will be executed only once. Useful for large data manipulation in programs like UDAV.
+@end deftypefn
+@cindex stop
+@anchor{stop}
+@deftypefn {MGL command} {} stop
+Terminate execution.
+@end deftypefn

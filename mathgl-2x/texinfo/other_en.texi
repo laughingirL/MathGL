@@ -3,7 +3,6 @@
 @chapter Other classes
 
 @menu
-* mglParse class::              
 * mglFormula class::            
 * mglColor class::              
 * mglPoint class::              
@@ -13,90 +12,9 @@
 * mglArg class::                
 @end menu
 
-@c ------------------------------------------------------------------
-@node mglParse class, mglFormula class, , Other classes
-@section mglParse class
-@cindex mglParse
-
-Class for parsing and executing MGL script. This class is defined in @code{#include <mgl/mgl.h>}.
-
-Class mglParse is the interpreter for MGL scripts (@pxref{MGL interface}). The main function of mglParse class is @code{Parse()}. Exactly this function parses and executes the script string-by-string. Also there are two subservient functions for the finding and creation of a variable. These functions can be useful for displaying values of variables (arrays) in some external program (in window, for example). The variable @var{DataList} contains full list of variables in script. Flag @var{AllowSetSize} allows one to prevent changing the size of the  picture inside the script (forbids the MGL command @code{setsize}). 
-
-@c Note an important feature -- if user defines function @var{func} in variable then it will be called before the destroying of this variable (@pxref{mglVar class}).
-
-@deftypefn {Constructor on @code{mglParse}} @code{} mglParse (@code{bool} setsize=@code{false})
-@deftypefnx {C function} @code{HMPR} mgl_create_parser ()
-Constructor initializes all values with zero and set @var{AllowSetSize} value.
-@end deftypefn
-
-@deftypefn {Destructor on @code{mglParse}} @code{} ~mglParse ()
-@deftypefnx {C function} @code{void} mgl_delete_parser (@code{HMPR} p)
-Destructor delete parser
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{int} Parse (@code{mglGraph *}gr, @code{const char *}str, @code{long} pos=@code{0})
-@deftypefnx {Method on @code{mglParse}} @code{int} Parse (@code{mglGraph *}gr, @code{const wchar_t *}str, @code{long} pos=@code{0})
-@deftypefnx {C function} @code{int} mgl_parse (@code{HMGL} gr, @code{HMPR} p, @code{const char *}str, @code{int} pos)
-@deftypefnx {C function} @code{int} mgl_parsew (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}str, @code{int} pos)
-Main function in the class. It parses the string @var{str} and executes it by  using @var{gr} as a graphics plotter. Returns the value depending on an error presence in the string @var{str}: 0 -- no error, 1 -- wrong command argument(s), 2 -- unknown command, 3 -- string is too long. Optional argument @var{pos} allows to save the string position in the document (or file) for using @code{for|next} command.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{FILE *}fp, @code{bool} print=@code{false})
-@deftypefnx {C function} @code{int} mgl_parsew (@code{HMGL} gr, @code{HMPR} p, @code{FILE *}fp, @code{int} print)
-Function parse and execute line-by-line MGL script in file @var{fp}. If @var{print}=@code{true} then all warnings and information will be printed in stdout.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{const char *}text, @code{void (*} error @code{)(int line, int kind, char *mes)=NULL})
-@deftypefnx{Method on @code{mglParse}} @code{void} Execute (@code{mglGraph *}gr, @code{const wchar_t *}text, @code{void (*} error @code{)(int line, int kind, char *mes)=NULL})
-@deftypefnx {C function} @code{void} mgl_parse_text (@code{HMGL} gr, @code{HMPR} p, @code{const char *}text, @code{void (*} error @code{)(int line, int kind, char *mes)})
-@deftypefnx {C function} @code{void} mgl_parsew_text (@code{HMGL} gr, @code{HMPR} p, @code{const wchar_t *}text, @code{void (*} error @code{)(int line, int kind, char *mes)})
-Function parse and execute line-by-line MGL script in array @var{text}. Lines are separated by newline symbol @samp{\n} as usual. If @var{error} is not @code{NULL} then this function will be called for all warnings, information and other messages.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{bool} AddParam (@code{int} n, @code{const char *}str, @code{bool} isstr=@code{true})
-@deftypefnx {Method on @code{mglParse} (C++)} @code{bool} AddParam (@code{int} n, @code{const wchar_t *}str, @code{bool} isstr=@code{true})
-@deftypefnx {C function} @code{void} mgl_add_param (@code{HMPR} p, @code{int} id, @code{const char *}val)
-@deftypefnx {C function} @code{void} mgl_add_paramw (@code{HMPR} p, @code{int} id, @code{const wchar_t *}val)
-Function set the value of @var{n}-th parameter as string @var{str} (@var{n}=0, 1 ... 9). It return @code{true} for success.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{mglData *} FindVar (@code{const char *}name)
-@deftypefnx {C function} @code{HMDT} mgl_find_var  (@code{HMPR} p, @code{const char *}name)
-Function returns the pointer to variable with name @var{name} or zero if variable is absent. Use this function to put external data array to the script or get the data from the script. You must @strong{not delete} obtained data arrays!
-@end deftypefn
-@deftypefn {Method on @code{mglParse}} @code{mglData *} AddVar (@code{const char *}name)
-@deftypefnx {C function} @code{HMDT} mgl_add_var (@code{HMPR} p, @code{const char *}name)
-Function returns the pointer to variable with name @var{name}. If variable is absent then new variable is created with name @var{name}. Use this function to put external data array to the script or get the data from the script. You must @strong{not delete} obtained data arrays!
-@end deftypefn
-
-@deftypefn{Method on @code{mglParse} (C++)} @code{void} DeleteVar (@code{const char *}name)
-@deftypefnx {C function} @code{void} mgl_del_var (@code{HMPR} p, @code{const char *}name)
-Function delete the variable specified by its name or by its pointer.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{void} RestoreOnce ()
-@deftypefnx {C function} @code{void} mgl_restore_once (@code{HMPR} p)
-Restore Once flag.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{void} AllowSetSize (@code{bool} a)
-@deftypefnx {C function} @code{void} mgl_parser_allow_setsize (@code{HMPR} p, @code{int} a)
-Allow to parse 'setsize' command or not.
-@end deftypefn
-
-@deftypefn {Method on @code{mglParse}} @code{void} Stop ()
-@deftypefnx {C function} @code{void} mgl_parser_stop (@code{HMPR} p)
-Sends stop signal which terminate execution at next command.
-@end deftypefn
-
-
-@deftypefn {Method on @code{mglParse}} @code{void} Stop ()
-@deftypefnx {C function} @code{void} mgl_parser_stop (@code{HMPR} p)
-Sends stop signal which terminate execution at next command.
-@end deftypefn
 
 @c ------------------------------------------------------------------
-@node mglFormula class, mglColor class, mglParse class, Other classes
+@node mglFormula class, mglColor class, , Other classes
 @section mglFormula class
 @cindex mglFormula
 

@@ -68,11 +68,12 @@ supports it in developing GNU and promoting software freedom.''
 @menu
 * Overview::
 * Examples::
+* General concepts::
 * MathGL core::
 * Widget classes::
 * Data processing::
+* MGL scripts::
 * Other classes::
-* Samples::
 * TeX-like symbols::
 * Copying This Manual::
 * Index::
@@ -89,25 +90,28 @@ supports it in developing GNU and promoting software freedom.''
 @node Overview, Examples, , Top
 @include overview_en.texi
 
-@node Examples, MathGL core, Overview, Top
+@node Examples, General concepts, Overview, Top
 @include example_en.texi
 
-@node MathGL core, Widget classes, Examples, Top
+@node General concepts, MathGL core, Examples, Top
+@include concept_en.texi
+
+@node MathGL core, Widget classes, General concepts, Top
 @include core_en.texi
 
 @node Widget classes, Data handling, MathGL core, Top
 @include widget_en.texi
 
-@node Data processing, Other classes, Widget classes, Top
+@node Data processing, MGL scripts, Widget classes, Top
 @include data_en.texi
 
-@node Other classes, Samples, Data handling, Top
+@node MGL scripts, Other classes, Data processing, Top
+@include parse_en.texi
+
+@node Other classes, TeX-like symbols, MGL scripts, Top
 @include other_en.texi
 
-@node Samples, TeX-like symbols, Other classes, Top
-@include samples_en.texi
-
-@node TeX-like symbols, Copying This Manual, Samples, Top
+@node TeX-like symbols, Copying This Manual, Other classes, Top
 @appendix TeX-like symbols
 @include appendix_en.texi
 

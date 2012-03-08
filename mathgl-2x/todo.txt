@@ -128,3 +128,85 @@ Remove other setting if data name is changed.
 
 1. утилиты (mgl2png и пр.) вылетают, если в коментариях русские буквы
 
+========= Docs structure =======
+
+	1. Overview
+		1.1 What is MathGL?
+		1.2 Installation and usage
+		1.3 Quick start
+		1.4 Changes from v.1.*
+		1.5 Utilities
+		1.6 Thanks
+
+	2. Examples
+		2.1 Basic usage (window; file; memory; QMathGL; Fl_MathGL; PyQt)
+		2.2 Advanced usage (subplots; axis; curv.coor; text)
+		2.3 Animation (win.stat; win.update; gif; jpeg/mpeg)
+		2.4 Data handling
+		2.5 1D data plotting
+		2.6 2D data plotting
+		2.7 3D data plotting
+		2.8 Dual data plotting
+		2.9 Multi-threading
+		2.10 Hints
+		2.11 FAQ
+
+	3 General concepts (class-diagram)
+		3.1 Coordinate axes
+		3.2 Line styles
+		3.3 Color scheme
+		3.4 Font styles
+		3.5 Textual formulas
+		3.6 Command options
+		3.7 Interfaces (c++/python; c/fortran; mgl)
+
+	3. MathGL core
+		3.1 Create and delete objects
+		3.2 Graphics setup
+		3.3 Axis settings
+		3.4 Transformation matrix
+		3.5 Export picture
+		3.6 Primitives drawing
+		3.7 Text printing
+		3.8 Axis and Colorbar
+		3.9 Legend
+		3.10 1D plotting
+		3.11 2D plotting
+		3.12 3D plotting
+		3.13 Dual plotting
+		3.14 Vector fields
+		3.15 Other plotting
+		3.16 Nonlinear fitting
+		3.17 Data manipulation
+
+	4. Widget classes
+		4.1 mglWindow class
+		4.2 Fl_MathGL class
+		4.3 QMathGL class
+
+	5. Data processing
+		5.1 Public variables
+		5.2 Data constructor
+		5.3 Data resizing
+		5.4 Data filling
+		5.5 File I/O
+		5.6 Make another data
+		5.7 Data changing
+		5.8 Interpolation
+		5.9 Data information
+		5.10 Operators
+		5.11 Global functions
+
+	6 MGL scripts
+		6.1 MGL definition
+		6.2 mglParse class
+		6.3 Program flow commands
+
+	7. Other classes (c++ only)
+		7.1 mglBase class
+		7.2 mglDataA class
+		7.3 mglCanvas class
+		7.4 mglFormula class
+		7.5 mglColor class
+		7.6 mglPoint class
+		7.7 mglFont class (format)
