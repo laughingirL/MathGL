@@ -62,7 +62,7 @@ int main(int argc,char **argv)
 		case '1':	gr = new mglWindow(0,sample_1,"1D plots");	break;
 		case '2':	gr = new mglWindow(0,sample_2,"2D plots");	break;
 		case '3':	gr = new mglWindow(0,sample_3,"3D plots");	break;
-		case 'd':	gr = new mglWindow(0,sample_d,"Dual plots");	break;
+		case 'd':	gr = new mglWindow(0,sample_d,"Dual plots");break;
 		case 't':	gr = new mglWindow(0,test_wnd,"Testing");	break;
 		default:	gr = new mglWindow(0,sample,"Drop and waves");	break;
 	}

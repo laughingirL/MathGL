@@ -58,10 +58,7 @@ void mgl_mat_pop(HMGL gr)	{	_Gr_->Pop();	}
 void mgl_clf(HMGL gr)	{	_Gr_->Clf();	}
 void mgl_clf_rgb(HMGL gr, float r, float g, float b){	_Gr_->Clf(mglColor(r,g,b));	}
 //-----------------------------------------------------------------------------
-void mgl_subplot(HMGL gr, int nx,int ny,int m)
-{	mgl_subplot_d(gr,nx,ny,m,0,0);	}
-//-----------------------------------------------------------------------------
-void mgl_subplot_d(HMGL gr, int nx,int ny,int m,float dx,float dy)
+void mgl_subplot_d(HMGL gr, int nx,int ny,int m,const char *style,float dx,float dy)
 {
 	float x1,x2,y1,y2;
 	int mx = m%nx, my = m/nx;
@@ -69,17 +66,11 @@ void mgl_subplot_d(HMGL gr, int nx,int ny,int m,float dx,float dy)
 	else	{	dx /= 2;	dy /= 2;	}
 	x1 = (mx+dx)/nx;		x2 = (mx+1+dx)/nx;
 	y2 = 1.f-(my+dy)/ny;	y1 = 1.f-(my+1+dy)/ny;
-	_Gr_->InPlot(x1,x2,y1,y2,false);
-}
-//-----------------------------------------------------------------------------
-void mgl_subplot_s(HMGL gr, int nx,int ny,int m,const char *style)
-{
-	float x1,x2,y1,y2;
-	int mx = m%nx, my = m/nx;
-	x1 = float(mx)/nx;		x2 = float(mx+1)/nx;
-	y2 = 1.f-float(my)/ny;	y1 = 1.f-float(my+1)/ny;
 	_Gr_->InPlot(x1,x2,y1,y2,style);
 }
+//-----------------------------------------------------------------------------
+void mgl_subplot(HMGL gr, int nx,int ny,int m,const char *style)
+{	mgl_subplot_d(gr,nx,ny,m,style,0,0);	}
 //-----------------------------------------------------------------------------
 void mgl_multiplot(HMGL gr, int nx,int ny,int m,int dx,int dy,const char *style)
 {
@@ -155,13 +146,12 @@ void mgl_clf_(uintptr_t *gr)
 void mgl_clf_rgb_(uintptr_t *gr, float *r, float *g, float *b)
 {	_GR_->Clf(mglColor(*r,*g,*b));	}
 //-----------------------------------------------------------------------------
-void mgl_subplot_(uintptr_t *gr, int *nx,int *ny,int *m)
-{	mgl_subplot_d(_GR_,*nx,*ny,*m,0,0);	}
-void mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,float *dx,float *dy)
-{	mgl_subplot_d(_GR_,*nx,*ny,*m,*dx,*dy);	}
-void mgl_subplot_s_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st,int l)
+void mgl_subplot_d_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st,float *dx,float *dy,int l)
 {	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
-	mgl_subplot_s(_GR_,*nx,*ny,*m,s);	delete []s;	}
+	mgl_subplot_d(_GR_,*nx,*ny,*m,s,*dx,*dy);	delete []s;	}
+void mgl_subplot_(uintptr_t *gr, int *nx,int *ny,int *m,const char *st,int l)
+{	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
+	mgl_subplot(_GR_,*nx,*ny,*m,s);	delete []s;	}
 void mgl_multiplot_(uintptr_t *gr, int *nx,int *ny,int *m,int *dx,int *dy,const char *st,int l)
 {	char *s=new char[l+1];	memcpy(s,st,l);	s[l]=0;
 	mgl_multiplot(_GR_,*nx,*ny,*m,*dx,*dy,s);	delete []s;	}
@@ -222,7 +212,7 @@ void mgl_set_axis_stl(HMGL gr, const char *stl, const char *tck, const char *sub
 void mgl_tune_ticks(HMGL gr, int tune, float pos)
 {	_Gr_->SetTuneTicks(tune,pos);	}
 void mgl_adjust_ticks(HMGL gr, const char *dir)
-{	_Gr_->AdjustTicks(dir);	}
+{	_Gr_->AdjustTicks(dir,true);	}
 void mgl_set_ticks(HMGL gr, char dir, float d, int ns, float org)
 {	_Gr_->SetTicks(dir,d,ns,org);	}
 void mgl_set_ticks_str(HMGL gr, char dir, const char *lbl, int add)
@@ -376,8 +366,8 @@ void mgl_set_plotid_(uintptr_t *gr, const char *id,int l)
 //-----------------------------------------------------------------------------
 void mgl_mpi_send(HMGL gr, int id)	{	_Gr_->MPI_Send(id);	}
 void mgl_mpi_recv(HMGL gr, int id)	{	_Gr_->MPI_Recv(id);	}
-void mgl_mpi_send_(uintptr_t *gr, int *id)	{	_GR_->MPI_Send(*id);	}
-void mgl_mpi_recv_(uintptr_t *gr, int *id)	{	_GR_->MPI_Recv(*id);	}
+void mgl_mpi_send_(uintptr_t *gr, int *id)	{	mgl_mpi_send(_GR_, *id);	}
+void mgl_mpi_recv_(uintptr_t *gr, int *id)	{	mgl_mpi_recv(_GR_, *id);	}
 //-----------------------------------------------------------------------------
 void mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt)	{	_GR_->SetDelay(*dt);	}
 void mgl_wnd_set_delay(HMGL gr, mreal dt)	{	_Gr_->SetDelay(dt);	}

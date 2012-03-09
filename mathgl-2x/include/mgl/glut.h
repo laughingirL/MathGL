@@ -22,7 +22,7 @@
 #define _MGL_GLUT_H_
 #ifdef __cplusplus
 #include "mgl/opengl.h"
-#include "mgl/mgl.h"
+#include "mgl/window.h"
 //-----------------------------------------------------------------------------
 extern "C" {
 #endif

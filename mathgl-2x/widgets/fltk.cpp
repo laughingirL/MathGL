@@ -652,7 +652,7 @@ HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, voi
 	g->Window(0,0,draw,title,par);
 	return g;
 }
-void mgl_fltk_run()		{	Fl::run();	}
+int mgl_fltk_run()		{	return Fl::run();	}
 //-----------------------------------------------------------------------------
 uintptr_t mgl_create_graph_fltk_(const char *title, int l)
 {
@@ -660,7 +660,7 @@ uintptr_t mgl_create_graph_fltk_(const char *title, int l)
 	uintptr_t t = uintptr_t(mgl_create_graph_fltk(0,s,0));
 	delete []s;	return t;
 }
-void mgl_fltk_run_()	{	mgl_fltk_run();	}
+int mgl_fltk_run_()	{	return mgl_fltk_run();	}
 //-----------------------------------------------------------------------------
 void *mgl_fl_tmp(void *)	{	Fl::run();	return 0;	}
 /*void mgl_fltk_thread()

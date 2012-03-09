@@ -17,7 +17,7 @@ a library with large and growing set of graphics.
 @menu
 * What is MathGL?::
 * MathGL features::
-* Installation and usage::
+* Installation::
 * Quick guide::
 * Changes from v.1::
 * Utilities::
@@ -31,7 +31,7 @@ A code for making high-quality scientific graphics under Linux and Windows. A  c
 
 At this version (@value{VERSION}) MathGL has more than 50 general types of graphics for 1d, 2d and 3d data arrays. It can export graphics to bitmap and vector (EPS or SVG) files. It has OpenGL interface and can be used from console programs. It has functions for data handling and script MGL language for simplification of data plotting. It also has several types of transparency and smoothed lighting, vector fonts and TeX-like symbol parsing, arbitrary curvilinear coordinate system and many other useful things (see pictures section at @uref{http://mathgl.sf.net/, homepage}). Finally it is platform-independent and free (under GPL v.2.0 or later license).
 
-@node MathGL features, Installation and usage, What is MathGL?, Overview
+@node MathGL features, Installation, What is MathGL?, Overview
 @section MathGL features
 
 MathGL can plot a wide range of graphics. It includes:
@@ -54,7 +54,7 @@ and so on. For details see @pxref{MathGL core}.
 
 In fact, I created the functions for drawing of all the types of scientific plots that I know. The list of plots is growing; if you need some special type of a plot then please email me @email{mathgl.abalakin@@gmail.com, e-mail} and it will appear in the new version.
 
-I tried to make plots as nice looking as possible: e.g., a surface can be transparent and highlighted by several (up to 10) light sources. Most of the drawing functions have 2 variants: simple one for the fast plotting of data, complex one for specifying of the exact position of the plot (including parametric representation). Resulting image can be saved in bitmap PNG, JPEG, TGA, BMP format or in vector EPS, SVG or TeX format, or in IDTF format (with the help of mglGraphIDTF) which can be converted into U3D.
+I tried to make plots as nice looking as possible: e.g., a surface can be transparent and highlighted by several (up to 10) light sources. Most of the drawing functions have 2 variants: simple one for the fast plotting of data, complex one for specifying of the exact position of the plot (including parametric representation). Resulting image can be saved in bitmap PNG, JPEG, TGA, BMP format, or in vector EPS, SVG or TeX format, or in 3D formats OBJ, OFF, STL or X3D, or in IDTF format which can be converted into U3D.
 
 All texts are drawn by vector fonts, which allows for high scalability and portability. Texts may contain commands for: some of the TeX-like symbols, changing index (upper or lower indexes) and the style of font inside the text string (@pxref{Font styles}). Texts of ticks are rotated with axis rotation. It is possible to create a legend of plot and put text in an arbitrary position on the plot. Arbitrary text encoding (by the help of function @code{setlocale()}) and UTF-16 encoding are supported.
 
@@ -62,8 +62,8 @@ Special class mglData is used for data encapsulation (@pxref{Data processing}). 
 
 There is fast evaluation of a textual mathematical expression (@pxref{Textual formulas}). It is based on string precompilation to tree-like code at the creation of class instance. At evaluation stage code performs only fast tree-walk and returns the value of the expression. In addition to changing data values, textual formulas are also used for drawing in @emph{arbitrary} curvilinear coordinates. A set of such curvilinear coordinates is limited only by user's imagination rather than a fixed list like: polar, parabolic, spherical, and so on.
 
-@node Installation and usage, Quick guide, MathGL features, Overview
-@section Installation and usage
+@node Installation, Quick guide, MathGL features, Overview
+@section Installation
 
 MathGL can be installed in 4 different ways.
 @enumerate
@@ -73,26 +73,68 @@ Compile from sources. The standard script for autoconf/automake tool is included
 Script @code{./configure} have several additional options which are switched off by default. They are: @code{--enable-fltk, --enable-glut, --enable-qt} for ebabling FLTK, GLUT and/or Qt windows; @code{--enable-jpeg, --enable-gif, --enable-hdf5} for enabling corresponding file formats; @code{--enable-all} for enabling all additional features. For using @code{double} as base internal data type use option @code{--enable-double}. For enabling language interfaces use @code{--enable-python, --enable-octave} or @code{--enable-langall} for all languages. The full list of options can be viewed by command @code{./configure --help}.
 
 @item
-One can use also CMake for building MathGL library if autoconf/automake tools are absent. For example, it is the typical situation for Windows, MacOS and/or using of non-GNU compilers. You can use WYSIWYG tools to change CMake build options.
+One can use also CMake for building MathGL library if autoconf/automake tools are absent. For example, it is the typical situation for Windows, MacOS and/or using of non-GNU compilers. You can use WYSIWYG tools to change CMake build options. Just specify the features you need and resolve all possible conflicts -- specify the paths for header files or libraries if they are not found automatically. After it run @code{make} and @code{make install} with root/sudo rights.
 
 @item
-Use a precompiled binary. There are binaries for MinGW (platform Win32). For a precompiled variant one needs only to unpack the archive to the location of the compiler (or in any other folder and setup paths). By default, precompiled versions include the support of GSL (www.gsl.org) and PNG. So, one needs to have these libraries installed on system (it can be found, for example, at @uref{http://gnuwin32.sourceforge.net/packages.html})..
+Use a precompiled binary. There are binaries for MinGW (platform Win32). For a precompiled variant one needs only to unpack the archive to the location of the compiler (or in any other folder and setup paths). By default, precompiled versions include the support of GSL (www.gsl.org) and PNG. So, one needs to have these libraries installed on system (it can be found, for example, at @uref{http://gnuwin32.sourceforge.net/packages.html}).
 
 @item
 Install precompiled versions from standard packages (RPM, deb, DevPak and so on, see @uref{http://mathgl.sf.net/download.html, Download} section at homepage).
 @end enumerate
 
-To compile your own program, you need to specify the linker option @code{-lmgl} for a compilation in the console program or with external (non-MathGL) window library. If you want to use FLTK or GLUT windows then you need to add the option @code{-lmgl-fltk} or @code{-lmgl-glut}. Fortran users also should add C++ library by the option @code{-lstdc++}.
-
 
 @c ------------------------------------------------------------------
-@node  Quick guide, Changes from v.1, Installation and usage, Overview
+@node  Quick guide, Changes from v.1, Installation, Overview
 @section Quick guide
+
+There are 3 steps to prepare the plot in MathGL: (1) prepare data to be plotted, (2) setup plot, (3) plot data. Let me show this on the example of surface plotting.
+
+First we need the data. MathGL use its own class @code{mglData} to handle data arrays (see @ref{Data processing}). This class give ability to handle data arrays by more or less format independent way. So, create it
+@verbatim
+    int main()
+    {
+        mglData dat(30,40);	// data to for plotting
+        for(long i=0;i<30;i++)   for(long j=0;j<40;j++)
+            dat.a[i+30*j] = 1/(1+(i-15)*(i-15)/225.+(j-20)*(j-20)/400.);
+@end verbatim
+Here I create matrix 30*40 and initialize it by formula. Note, that I use @code{long} type for indexes @var{i}, @var{j} because data arrays can be really large and @code{long} type will automatically provide proper indexing.
+
+Next step is setup of the plot. The only setup I need is axis rotation and lighting.
+@verbatim
+        mglGraph gr;		// class for plot drawing
+        gr.Rotate(50,60);	// rotate axis
+        gr.Light(true);		// enable lighting
+@end verbatim
+
+Everything is ready. And surface can be plotted.
+@verbatim
+        gr.Surf(dat);		// plot surface
+@end verbatim
+Basically plot is done. But I decide to add yellow (@samp{y} color, see @ref{Color styles}) contour lines on the surface. To do it I can just add:
+@verbatim
+        gr.Cont(dat,"y");	// plot yellow contour lines
+@end verbatim
+This demonstrate one of base MathGL concept (see, @ref{General concepts}) -- ``new drawing never clears things drawn already''. So, you can just consequently call different plotting functions to obtain ``combined'' plot. For example, if one need to draw axis then he can just call one more plotting function 
+@verbatim
+        gr.Axis();			// draw axis
+@end verbatim
+
+Now picture is ready and we can save it in a file.
+@verbatim
+        gr.WriteFrame("sample.png");	// save it
+    }
+@end verbatim
+
+To compile your program, you need to specify the linker option @code{-lmgl}.
+
+This is enough for a compilation of console program or with external (non-MathGL) window library. If you want to use FLTK or Qt windows provided by MathGL then you need to add the option @code{-lmgl-wnd}. Fortran users also should add C++ library by the option @code{-lstdc++}.
+
 @c ------------------------------------------------------------------
 @node  Changes from v.1, Utilities, Quick guide, Overview
 @section Changes from v.1.*
 
-
+* mglGraph class is single plotter class instead of mglGraphZB, mglGraphPS and so on.
+* Text style and text color positions are swapped. I.e. text style @samp{r:C} give red centered text, but not roman dark cyan text as for v.1.*.
 
 
 @c ------------------------------------------------------------------

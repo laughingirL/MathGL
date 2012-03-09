@@ -4,11 +4,16 @@
 This chapter contain information about basic and advanced MathGL, hints and samples for all types of graphics. I recommend you read first 2 sections one after another and at least look on @ref{Hints} section. Also I recommend you to look at @ref{General concepts} and @ref{FAQ}.
 
 @menu
-* Basic usage::                 
-* Advanced usage::              
-* Data handling::               
-* Data plotting::               
-* C/Fortran interface::         
+* Basic usage::
+* Advanced usage::
+* Data handling::
+* Data plotting::
+* 1D samples::
+* 2D samples::
+* 3D samples::
+* Dual samples::
+* More samples::
+* C/Fortran interface::
 * MathGL and PyQt::
 * Hints::
 * FAQ::
@@ -37,22 +42,22 @@ In this case the programmer has more freedom in selecting the window libraries (
 Let me consider the aforesaid in more detail.
 
 @menu
-* Using FLTK/GLUT window::      
-* Drawing to file::             
-* Drawing in memory::           
-* Using QMathGL::               
+* Using MathGL window::
+* Drawing to file::
+* Drawing in memory::
+* Using QMathGL::
 @end menu
 
 
 @c ------------------------------------------------------------------
-@node Using FLTK/GLUT window, Drawing to file, , Basic usage
-@subsection Using FLTK/Qt/GLUT window
+@node Using MathGL window, Drawing to file, , Basic usage
+@subsection Using MathGL window
 @cindex window
 @cindex widgets
 
-The ``interactive'' way of drawing in MathGL consists in window creation  with help of class @code{mglGraphFLTK}, @code{mglGraphQT} or @code{mglGraphGLUT} (@pxref{Widget classes}) and the following drawing in this window. There is a corresponding code:
+The ``interactive'' way of drawing in MathGL consists in window creation  with help of class @code{mglWindow} or @code{mglGLUT} (see @ref{Widget classes}) and the following drawing in this window. There is a corresponding code:
 @verbatim
-    int sample(mglGraph *gr, void *)
+    int sample(mglGraph *gr)
     {
         gr->Rotate(60,40);
         gr->Box();
@@ -61,12 +66,11 @@ The ``interactive'' way of drawing in MathGL consists in window creation  with h
     //-----------------------------------------------------
     int main(int argc,char **argv)
     {
-        mglGraphFLTK gr;
-        gr.Window(argc,argv,sample,"MathGL examples");
-        return mglFlRun();
+        mglWindow gr(0,sample,"MathGL examples");
+        return gr.Run();
     }
 @end verbatim
-Here function @code{sample} is defined. This function does all drawing. Other function @code{main} is entry point function for console program. Arguments of @code{main} should be transfered to @code{Window()} since it may contain OS specific information.
+Here function @code{sample} is defined. This function does all drawing. Other function @code{main} is entry point function for console program.
 
 Alternatively you can create yours own class inherited from class @code{mglDraw} and re-implement the function @code{Draw()} in it:
 @verbatim
@@ -74,7 +78,7 @@ Alternatively you can create yours own class inherited from class @code{mglDraw}
     {
     public:
         int Draw(mglGraph *gr);
-    } foo;
+    };
     //-----------------------------------------------------
     int Foo::Draw(mglGraph *gr)
     {
@@ -85,25 +89,24 @@ Alternatively you can create yours own class inherited from class @code{mglDraw}
     //-----------------------------------------------------
     int main(int argc,char **argv)
     {
-        mglGraphFLTK gr;
-        gr.Window(argc,argv,&foo,"MathGL examples");
-        return mglFlRun();
+        mglDraw foo;
+        mglWindow gr(0,&foo,"MathGL examples");
+        return gr.Run();
     }
 @end verbatim
 
-The similar code can be written for @code{mglGraphQT} or for @code{mglGraphGLUT} window (function @code{sample()} is the same):
+The similar code can be written for @code{mglGLUT} window (function @code{sample()} is the same):
 @verbatim
     int main(int argc,char **argv)
     {
-        mglGraphGLUT gr;
-        gr.Window(argc,argv,sample,"MathGL examples");
+        mglGLUT gr(sample,"MathGL examples");
         return 0;
     }
 @end verbatim
 
-The rotation, shift, zooming, switching on/off transparency and lighting can be done with help of tool-buttons (for @code{mglGraphFLTK} and @code{mglGraphQT}) or by hot-keys: @samp{a}, @samp{d}, @samp{w}, @samp{s} for plot rotation, @samp{r} and @samp{f} switching on/off transparency and lighting. Press @samp{x} for exit (or closing the window).
+The rotation, shift, zooming, switching on/off transparency and lighting can be done with help of tool-buttons (for @code{mglWindow}) or by hot-keys: @samp{a}, @samp{d}, @samp{w}, @samp{s} for plot rotation, @samp{r} and @samp{f} switching on/off transparency and lighting. Press @samp{x} for exit (or closing the window).
 
-In this example function @code{sample} rotates axes (@code{Rotate()}, @pxref{Transformation matrix}) and draws the bounding box (@code{Box()}). Drawing procedure is separated in a function since it will be used on demand when window canvas needs to be redrawn. Widget classes (@code{mglGraphFLTK}, @code{mglGraphGLUT} and so on) support a delayed drawing, when all plotting functions are called once at the beginning of writing to memory lists. Further program displays the saved lists faster. Resulting redrawing will be faster but it requires sufficient memory. Several lists (frames) can be displayed one after another (by pressing @samp{,}, @samp{.}) or run as cinema. To switch these feature on one needs to modify function @code{sample}:
+In this example function @code{sample} rotates axes (@code{Rotate()}, @pxref{Transformation matrix}) and draws the bounding box (@code{Box()}). Drawing procedure is separated in a function since it will be used on demand when window canvas needs to be redrawn. Widget classes (@code{mglWindow}, @code{mglGLUT}) support a delayed drawing, when all plotting functions are called once at the beginning of writing to memory lists. Further program displays the saved lists faster. Resulting redrawing will be faster but it requires sufficient memory. Several lists (frames) can be displayed one after another (by pressing @samp{,}, @samp{.}) or run as cinema. To switch these feature on one needs to modify function @code{sample}:
 @verbatim
     int sample1(mglGraph *gr, void *)
     {
@@ -120,8 +123,45 @@ In this example function @code{sample} rotates axes (@code{Rotate()}, @pxref{Tra
 @end verbatim
 First, the function creates a frame @code{NewFrame()} for rotated axes and draws the bounding box. After the frame drawing the function @code{EndFrame()} @strong{must be} called! The second frame contains the bounding box and axes @code{Axis("xy")} in the initial (unrotated) coordinates. Function @code{sample} returns the number of created frames @code{GetNumFrame()}.
 
+Note, that such kind of animation is rather slow and not well suitable for visualization of running calculations. For the last case one can use @code{Update()} function. The most simple case for doing this is to use @code{mglDraw} class and reimplement its @code{Calc()} method.
+@verbatim
+    class Foo : public mglDraw
+    {
+        mglPoint pnt;  // some result of calculation
+    public:
+        mglGraph *Gr;  // graphics to be updated
+        int Draw(mglGraph *gr);
+        void Calc();
+    } foo;
+    //-----------------------------------------------------
+    int Foo::Calc()
+    {
+        for(int i=0;i<30;i++)   // do calculation
+        {
+            sleep(2);           // which can be very long
+            pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+            Gr.Update();        // update window
+        }
+    }
+    //-----------------------------------------------------
+    int Foo::Draw(mglGraph *gr)
+    {
+        gr.Line(mglPoint(),pnt,"Ar2");
+        gr->Box();
+        return 0;
+    }
+    //-----------------------------------------------------
+    int main(int argc,char **argv)
+    {
+        mglDraw foo;
+        mglWindow gr(0,&foo,"MathGL examples");
+        foo.Gr = &gr;   foo.Run();
+        return gr.Run();
+    }
+@end verbatim
+
 @c ------------------------------------------------------------------
-@node Drawing to file, Drawing in memory, Using FLTK/GLUT window, Basic usage
+@node Drawing to file, Drawing in memory, Using MathGL window, Basic usage
 @subsection Drawing to file
 
 Another way of using MathGL library is the direct picture writing to file. It is most usable for plot creating during calculation or for using of small programs (like Matlab or Scilab scripts) for visualizing repetitive sets of data. But the speed of drawing is much higher in comparison with a script language.
@@ -230,7 +270,7 @@ First of all you have to define the drawing function or inherit a class from @co
         QMainWindow *Wnd = new QMainWindow;
         Wnd->resize(650,480);  // for fill up the QMGL, menu and toolbars
         Wnd->setWindowTitle(title);
-        // here I allow to scroll QMathGL -- the case 
+        // here I allow to scroll QMathGL -- the case
         // then user want to prepare huge picture
         QScrollArea *scroll = new QScrollArea(Wnd);
 
@@ -258,11 +298,11 @@ First of all you have to define the drawing function or inherit a class from @co
 Now I show several non-obvious features of MathGL: several subplots in a single picture, curvilinear coordinates, text printing and so on. Generally you may miss this section at first reading, but I don't recommend it.
 
 @menu
-* Subplots::                    
-* Axis and grids::              
-* Curvilinear coordinates::     
-* Text printing example::       
-* Animation::                   
+* Subplots::
+* Axis and grids::
+* Curvilinear coordinates::
+* Text printing example::
+* Animation::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -543,7 +583,7 @@ Finally, you can use @code{mgl2gif} tool for doing the same with MGL scripts (@p
 Class @code{mglData} contains all functions for the data handling in MathGL (@pxref{Data processing}). There are several matters why I use class @code{mglData} but not a single array: it does not depend on type of data (float or double), sizes of data arrays are kept with data, memory working is simpler and safer.
 
 @menu
-* Array creation::              
+* Array creation::
 * Change data::
 @end menu
 
@@ -680,16 +720,16 @@ Data smoothing (function @code{Smooth()}) is more interesting and important. Thi
 Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@code{SubData()}), summarize along some of direction(s) (@code{Sum()}), find distribution of data elements (@code{Hist()}). Note, that all these functions are not thread-safe because they use static internal variable for output array. In particular, the using of several of them in arguments of the same function will lead to unpredictable result.
 
 @c ------------------------------------------------------------------
-@node Data plotting, C/Fortran interface, Data handling, Examples
+@node Data plotting, 1D samples, Data handling, Examples
 @section Data plotting
 
 Let me now show how to plot the data. MathGL generally has 2 types of plotting functions. Simple variant requires a single data array for plotting, other data (coordinates) are considered uniformly distributed in interval @var{Min}*@var{Max}. Second variant requires data arrays for all coordinates. It allows one to plot rather complex multivalent curves and surfaces (in case of parametric dependencies). Argument setting to default values allows one to plot data in standard form. Manual arguments setting gives possibility for fine tuning of colors, positions and view of graphics. Note, that the call of drawing function adds something to picture but does not clear the previous plots (as it does in Matlab). Another difference from Matlab is that all setup (like transparency, lightning, axis borders and so on) must be specified @strong{before} plotting functions.
 
 @menu
-* Plots for 1D data::           
-* Plots for 2D data::           
-* Plots for 3D data::           
-* Surface transparency::        
+* Plots for 1D data::
+* Plots for 2D data::
+* Plots for 3D data::
+* Surface transparency::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -889,8 +929,31 @@ As example I shall show the variant of plot from @ref{Plots for 2D data} (grid d
 @caption{Example of @code{TranspType=2}.}
 @end float
 
+
+
 @c ------------------------------------------------------------------
-@node C/Fortran interface, MathGL and PyQt, Data plotting, Examples
+@node 1D samples, 2D samples, Data plotting, Examples
+@section 1D samples
+
+@c ------------------------------------------------------------------
+@node 2D samples, 3D samples, 1D samples, Examples
+@section 2D samples
+
+@c ------------------------------------------------------------------
+@node 3D samples, Dual samples, 2D samples, Examples
+@section 3D samples
+
+@c ------------------------------------------------------------------
+@node Dual samples, More samples, 3D samples, Examples
+@section Dual samples
+
+@c ------------------------------------------------------------------
+@node More samples, C/Fortran interface, Dual samples, Examples
+@section More samples
+
+
+@c ------------------------------------------------------------------
+@node C/Fortran interface, MathGL and PyQt, More samples, Examples
 @section C/Fortran interface
 
 The usage of pure C or Fortran or any similar interfaces (@pxref{C interface}) is practically identical to classes usage. But there are some differences. C functions must have argument HMGL (for graphics) and/or HMDT (for data arrays) which specifies the object for drawing or manipulating (changing). Fortran users may regard these variables as integer. So, firstly the user has to create this object by function mgl_create_*() and has to delete it after the using by function mgl_delete_*().
@@ -955,7 +1018,7 @@ The Fortran code have some peculiarities. Exactly it not allow one to send arbit
         call mgl_create_graph_fltk(sample, 'MathGL examples');
         call mgl_fltk_run();
     end program TEST
- 
+
     integer function sample(gr)
     integer*8 gr
         call mgl_rotate(gr,60,40,0);
@@ -983,7 +1046,7 @@ class hfQtPlot(QtGui.QWidget):
         QtGui.QWidget.__init__(self, parent)
         self.img=(QtGui.QImage())
     def setgraph(self,gr):
-        self.buffer='\t' 
+        self.buffer='\t'
         self.buffer=self.buffer.expandtabs(4*gr.GetWidth()*gr.GetHeight())
         gr.GetBGRN(self.buffer,len(self.buffer))
         self.img=QtGui.QImage(self.buffer, gr.GetWidth(),gr.GetHeight(),QtGui.QImage.Format_ARGB32)
@@ -1041,24 +1104,24 @@ qw.raise_()
 @node Hints, , MathGL and PyQt, Examples
 @section Hints
 
-In this section I have included some small hints and advices for the improving of the quality of plots and for the demonstration of some non-trivial features of MathGL library. In contrast to previous examples I showed mostly the idea but not the whole drawing function. More examples with the source code can be find at @uref{http://mathgl.sf.net/} or in section @ref{Samples}.
+In this section I have included some small hints and advices for the improving of the quality of plots and for the demonstration of some non-trivial features of MathGL library. In contrast to previous examples I showed mostly the idea but not the whole drawing function.
 
 @menu
-* ``Compound'' graphics::       
-* Two axes in one plot::        
-* Titles for the plot::         
-* Changing of the color range:: 
+* ``Compound'' graphics::
+* Two axes in one plot::
+* Titles for the plot::
+* Changing of the color range::
 * Management of a point cutting::
-* Vector field visualization::  
-* Several light sources::       
-* CutMin and CutMax features::  
-* Mapping visualization::       
-* Log-scaled plot::             
-* ``Templates''::               
-* Nonlinear fitting hints::     
-* PDE solving hints::           
-* MGL parser using::            
-* Stereo image::                
+* Vector field visualization::
+* Several light sources::
+* CutMin and CutMax features::
+* Mapping visualization::
+* Log-scaled plot::
+* ``Templates''::
+* Nonlinear fitting hints::
+* PDE solving hints::
+* MGL parser using::
+* Stereo image::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -1271,7 +1334,7 @@ The solution of PDE is a bit more complicated. As previous you have to specify t
 
 Next step is specifing the initial conditions at @samp{z}=@code{Min.z}. The function need 2 arrays for real and for imaginary part. Note, that coordinates x,y,z are supposed to be in specified range [Min, Max]. So, the data arrays should have corresponding scales. Finally, you may set the integration step and paramter k0=@math{k_0}. Also keep in mind, that internally the 2 times large box is used (for suppressing numerical reflection from boundaries) and the equation should well defined even in this extended range.
 
-Final comment is concerning the possible form of pseudo-differential operator @math{H}. At this moment, simplified form of operator @math{H} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this operator is effectively @math{H = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed for 3D case. 
+Final comment is concerning the possible form of pseudo-differential operator @math{H}. At this moment, simplified form of operator @math{H} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this operator is effectively @math{H = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed for 3D case.
 
 So, for example let solve the equation for beam deflected from linear layer and absorbed later. The operator will have the form @samp{"p^2+q^2-x-1+i*0.5*(z+x)*(z>-x)"} that correspond to equation @math{ik_0 \partial_z u + \Delta u + x \cdot u + i (x+z)/2 \cdot u = 0}. This is typical equation for Electron Cyclotron (EC) absorption in magnetized plasmas. For initial conditions let me select the beam with plane phase front @math{exp(-48*(x+0.7)^2)}. The corresponding code looks like this (@pxref{PDE sample}):
 @verbatim
@@ -1317,7 +1380,7 @@ So, some simple example at the end. Here I define a data array, create variable,
     mglData &d = (parser->AddVar("dat"))->d;
     d.Set(a,100); // set data to variable
     parser->Execute(gr, "plot dat; xrange 0 1\nbox\naxis");
-    // you may break script at any line do something 
+    // you may break script at any line do something
     // and continue after that
     parser->Execute(gr, "xlabel 'x'\nylabel 'y'");
     // also you may use cycles or conditions in script
@@ -1333,7 +1396,7 @@ The code in C/Fortran looks practically the same:
     HMDT d = mgl_add_var(parser, "dat");
     mgl_data_set_float(d,a,100,1,1);    // set data to variable
     mgl_parse_text(gr, parser, "plot dat; xrange 0 1\nbox\naxis");
-    // you may break script at any line do something 
+    // you may break script at any line do something
     // and continue after that
     mgl_parse_text(gr, parser, "xlabel 'x'\nylabel 'y'");
     // also you may use cycles or conditions in script
@@ -1350,7 +1413,7 @@ One can easily create stereo image in MathGL. Stereo image can be produced by ma
     gr->SubPlot(2,1,0);     // left image
     gr->Rotate(40,60+3);
     // draw something here
-    
+
     gr->SubPlot(2,1,1);     // right image
     gr->Rotate(40,60-3);
     // draw the same here

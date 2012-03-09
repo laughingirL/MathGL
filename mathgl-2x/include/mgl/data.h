@@ -641,6 +641,8 @@ public:
 	inline void operator+=(mreal d)		{	mgl_data_add_num(this,d);	}
 	/// Substract the number
 	inline void operator-=(mreal d)		{	mgl_data_sub_num(this,d);	}
+	/// Direct access to the data cell
+	inline mreal &operator[](long i)	{	return a[i];	}
 	// NOTE see 13.10 for operator(), operator[] -- m.b. I should add it ???
 protected:
 	/// Get the value in given cell of the data without border checking

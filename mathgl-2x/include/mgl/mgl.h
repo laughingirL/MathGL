@@ -203,11 +203,8 @@ public:
 	{	mgl_tune_ticks(gr, tune, fact_pos);	}
 
 	/// Put further plotting in some region of whole frame surface.
-	inline void SubPlot(int nx,int ny,int m, float dx=0, float dy=0)
-	{	mgl_subplot_d(gr, nx, ny, m, dx, dy);	}
-	/// Put further plotting in some region of whole frame surface (adjust size according reservations).
-	inline void SubPlot(int nx,int ny,int m, const char *style)
-	{	mgl_subplot_s(gr, nx, ny, m, style);	}
+	inline void SubPlot(int nx,int ny,int m,const char *style="<>_^", float dx=0, float dy=0)
+	{	mgl_subplot_d(gr, nx, ny, m, style, dx, dy);	}
 	/// Like SubPlot bot "join" several cells
 	inline void MultiPlot(int nx,int ny,int m, int dx, int dy, const char *style="<>_^")
 	{	mgl_multiplot(gr, nx, ny, m, dx, dy, style);	}
@@ -231,7 +228,7 @@ public:
 	inline 	void Title(const wchar_t *title,const char *stl="",float size=-2)
 	{	mgl_titlew(gr,title,stl,size);	}
 	/// Set aspect ratio for further plotting.
-	inline void Aspect(float Ax,float Ay,float Az)
+	inline void Aspect(float Ax,float Ay,float Az=1)
 	{	mgl_aspect(gr, Ax, Ay, Az);		}
 	/// Rotate a further plotting.
 	inline void Rotate(float TetX,float TetZ=0,float TetY=0)
@@ -331,10 +328,10 @@ public:
 	/// Stop writing cinema using GIF format
 	inline void CloseGIF()		{	mgl_close_gif(gr);	}
 	/// Export points and primitives in file using MGLD format
-	inline bool ExportMGLD(const char *fname, const char *descr=0)
+	inline void ExportMGLD(const char *fname, const char *descr=0)
 	{	mgl_export_mgld(gr, fname, descr);	}
 	/// Import points and primitives from file using MGLD format
-	inline bool ImportMGLD(const char *fname, bool add=false)
+	inline void ImportMGLD(const char *fname, bool add=false)
 	{	mgl_import_mgld(gr, fname, add);	}
 
 	/// Copy RGB values into array which is allocated by user

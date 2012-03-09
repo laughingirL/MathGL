@@ -12,8 +12,8 @@ if(use_doc)
 #	set_source_files_properties(${CMAKE_BINARY_DIR}/examples/mgl_example PROPERTIES GENERATED 1)
 #	ADD_CUSTOM_TARGET(gen_all_png DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png)
 #	ADD_DEPENDENCIES(gen_all_png mgl_example)
-	set(list_texi_files_en mathgl_en.texi mgl_en.texi overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi core_en.texi widget_en.texi data_en.texi other_en.texi samples_en.texi appendix_en.texi fdl.texi)
-	set(list_texi_files_ru mathgl_ru.texi mgl_ru.texi overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi core_ru.texi widget_ru.texi data_ru.texi other_ru.texi samples_ru.texi appendix_ru.texi fdl.texi)
+	set(list_texi_files_en mathgl_en.texi mgl_en.texi overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi core_en.texi concept_en.texi widget_en.texi data_en.texi other_en.texi samples_en.texi appendix_en.texi fdl.texi)
+	set(list_texi_files_ru mathgl_ru.texi mgl_ru.texi overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi samples_ru.texi appendix_ru.texi fdl.texi)
 
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
 		COMMAND ${findth} --split=section mathgl_en.texi -o mathgl_en

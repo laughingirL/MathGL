@@ -38,7 +38,7 @@ void mglFillP5(long x, const mreal *a,long nx,mreal _p[6]);
 #elif defined(unix) || defined(__unix) || defined(__unix__)
 #include <sys/sysinfo.h>
 #endif
-void mglSetNumThr(int n)
+void mgl_set_num_thr(int n)
 {
 #ifdef WIN32
 	SYSTEM_INFO systemInfo;
@@ -54,7 +54,7 @@ void mglSetNumThr(int n)
 #endif
 }
 #else
-void mglSetNumThr(int)	{	mglNumThr = 1;	}
+void mgl_set_num_thr(int)	{	mglNumThr = 1;	}
 #endif
 //-----------------------------------------------------------------------------
 void mglStartThread(void *(*func)(void *), void (*post)(mglThreadD *,mreal *), long n, mreal *a,
@@ -62,7 +62,7 @@ void mglStartThread(void *(*func)(void *), void (*post)(mglThreadD *,mreal *), l
 {
 	if(!func)	return;
 #ifdef HAVE_PTHREAD
-	if(mglNumThr<1)	mglSetNumThr(0);
+	if(mglNumThr<1)	mgl_set_num_thr(0);
 	if(mglNumThr>1)
 	{
 		pthread_t *tmp=new pthread_t[mglNumThr];

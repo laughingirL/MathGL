@@ -243,7 +243,7 @@ void mglStartThread(void (mglCanvas::*func)(unsigned long i, unsigned long n, co
 {
 	if(!func || !gr)	return;
 #ifdef HAVE_PTHREAD
-	if(mglNumThr<1)	mglSetNumThr(0);
+	if(mglNumThr<1)	mgl_set_num_thr(0);
 	if(mglNumThr>1)
 	{
 		pthread_t *tmp=new pthread_t[mglNumThr];
@@ -409,6 +409,11 @@ void mglCanvas::Combine(const mglCanvas *gr)
 	if(Width!=gr->Width || Height!=gr->Height)	return;	// wrong sizes
 	mglStartThread(&mglCanvas::pxl_other,this,Width*Height,gr);
 }
+//-----------------------------------------------------------------------------
+#ifndef HAVE_MPI
+void mglCanvas::MPI_Send(int id)	{}	// TODO: add later
+void mglCanvas::MPI_Recv(int id)	{}	// TODO: add later
+#endif
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_plot(long x,long y,float z,const unsigned char ci[4])
 {

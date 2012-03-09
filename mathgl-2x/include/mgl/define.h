@@ -58,7 +58,7 @@ extern mglData s;const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define mglprintf    swprintf
 #endif
 //#define FLT_EPS	1.1920928955078125e-07
-#define MGL_FLT_EPS	(1.+1e-06)
+#define MGL_FLT_EPS	(1.+1e-05)
 //-----------------------------------------------------------------------------
 #ifndef isnan
 #define isnan(a)		((a)!=(a))
@@ -193,25 +193,12 @@ struct mglThreadD
 void mglStartThread(void *(*func)(void *), void (*post)(mglThreadD *,mreal *), long n,
 					mreal *a=0, const mreal *b=0, const mreal *c=0, const long *p=0,
 					void *v=0, const mreal *d=0, const mreal *e=0, char *s=0);
-void mglSetNumThr(int n=0);	///< Set number of thread for plotting and data handling
 extern int mglNumThr;		///< Number of thread for plotting and data handling
-//-----------------------------------------------------------------------------
-class mglGraph;
-class mglBase;
-/// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
-/// Make inherited class and redefine Draw() function if you don't want to use function pointers.
-struct mglDraw
-{
-	virtual int Draw(mglGraph *)=0;
-	virtual void Reload(){}
-};
-int mgl_draw_class(mglBase *gr, void *p);
-void mgl_reload_class(void *p);
-typedef int (*draw_func)(mglGraph *gr);
-int mgl_draw_graph(mglBase *gr, void *p);
 //-----------------------------------------------------------------------------
 extern "C" {
 #endif
+/** Set number of thread for plotting and data handling*/
+void mgl_set_num_thr(int n);
 void mgl_test_txt(const char *str, ...);
 void mgl_set_test_mode(int enable);
 /** Duplicate string (returned pointer must be free() after usage) */

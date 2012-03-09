@@ -1,4 +1,4 @@
-@chapter Overview
+@chapter General concepts
 
 The set of MathGL features is rather rich -- just the number of basic graphics types
 is larger than 50. Also there are functions for data handling, plot setup and so on. In spite of it I tried to keep a similar style in function names and in the order of arguments. Mostly it is
@@ -24,6 +24,7 @@ In addition to the general concepts I want to comment on some non-trivial or les
 
 @menu
 * Coordinate axes::
+* Color styles::
 * Line styles::
 * Color scheme::
 * Font styles::
@@ -33,87 +34,78 @@ In addition to the general concepts I want to comment on some non-trivial or les
 @end menu
 
 @c ------------------------------------------------------------------
-@node Coordinate axes, Line styles, , General concepts
-@subsection Coordinate axes
+@node Coordinate axes, Color styles, , General concepts
+@section Coordinate axes
 
-Two axis representations are used in MathGL. The first one consists of normalizing the data point coordinates in a box @var{Min}x@var{Max} (@pxref{Axis settings}). If @var{Cut} is @code{true} then the outlier points are omitted, otherwise they are projected to the bounding box (@pxref{Cutting}). Also, the point will be omitted if it lies inside the box defined by @var{CutMin} x @var{CutMax} or if the value of formula @code{CutOff}() is nonzero for its coordinates. After that, transformation formulas are applied to the data point. Finally, the data point is plotted by one of the functions.
+Two axis representations are used in MathGL. The first one consists of normalizing coordinates of data points in a box @var{Min} x @var{Max} (see @ref{Axis settings}). If @code{SetCut()} is @code{true} then the outlier points are omitted, otherwise they are projected to the bounding box (see @ref{Cutting}). Also, the point will be omitted if it lies inside the box defined by @code{SetCutBox()} or if the value of formula @code{CutOff()} is nonzero for its coordinates. After that, transformation formulas defined by @code{SetFunc()} or @code{SetCoor()} are applied to the data point (see @ref{Curved coordinates}). Finally, the data point is plotted by one of the functions.
 
-There is a possibility to set members @var{Max}, @var{Min} directly, but one should call @code{RecalcBorder()} function to setup plotting routines. A safer way is to set these values by calling the @code{Axis()} function, which calls @code{RecalcBorder()} automatically. Another way to specify the scaling of the axis is to set it as a minimal or maximal value of the data array. Functions @code{XRange(), YRange(), ZRange()} do it. The second (optional) argument is used to replace the axis range or to join with the existed range.
+The range of @emph{x, y, z}-axis can be specified by @code{SetRange()} or @code{SetRanges()} functions. Its origin is specified by @code{SetOrigin()} function. At this you can you can use @code{NAN} values for selecting axis origin automatically.
 
-The axis origin is defined by the variable @var{Org} and is applied to all consequent calls of axes or grid drawing. By default, if this point lies outside the bounding box then it is projected onto the one (variable @var{AutoOrg} controls it). If one of the values of @var{Org} is equal to NAN then the corresponding value will be selected automatically.
+There is 4-th axis @emph{c} (color axis or colorbar) in addition to the usual axes @emph{x, y, z}. It sets the range of values for the surface coloring. Its borders are automatically set to values of Min.z, Max.z during the call of @code{SetRanges()} function. Also, one can directly set it by call @code{SetRange('c', ...)}. Use @code{Colorbar()} function for drawing the colorbar.
 
-There is 4-th axis @emph{c} (color axis or colorbar) in addition to the usual axes @emph{x, y, z}. It sets the range of values for the surface coloring. Its borders are automatically set to values of Min.z, Max.z during the call of @code{Axis()} function. Also, one can directly change the color range by setting variables @var{Cmax}, @var{Cmax}, or calling functions @code{CAxis()} or @code{CRange()}. Use @code{Colorbar()} function for showing the colorbar.
+The form (appearence) of tick labels is controlled by @code{SetTicks()} function (@pxref{Ticks}). Function @var{SetTuneTicks} switches on/off tick enhancing by factoring out acommon multiplier (for small coordinate values, like 0.001 to 0.002, or large, like from 1000 to 2000) or common component (for narrow range, like from 0.999 to 1.000). Finally, you may use functions @code{SetTickTempl()} for setting templates for tick labels (it supports TeX symbols). Also, there is a possibility to print arbitrary text as tick labels the by help of @code{SetTicksVal()} function.
 
-The form (appearence) of tick labels is controlled by @code{SetTicks()} function (@pxref{Axis settings}). It has 3 arguments: first one @var{d} sets the tick step (if positive) or tick number (if negative) or switches logarithmic ticks on (if zero); the second one, @var{ns}, sets the number of subticks; the last one is the starting point for ticks (default is axis origin). Function @var{SetTuneTicks} switches on/off tick enhancing by factoring out acommon multiplier (for small coordinate values, like 0.001 to 0.002, or large, like from 1000 to 2000) or common component (for narrow range, like from 0.999 to 1.000). Finally, you may use functions @code{SetXTT(), SetYTT(), SetZTT(), SetCTT()} for setting templates for tick labels (it supports TeX symbols). Also, there is a possibility to print arbitrary text as tick labels the by help of @code{SetTicksVal()} function.
 
-@node Line styles, Color scheme, Coordinate axes, General concepts
-@subsection Line styles
+@node Color styles, Line styles, Coordinate axes, General concepts
+@section Color styles
+
+Base colors are defined by one of symbol @samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}.
+@ifhtml
+@html
+The color types are: &lsquo;<samp>k</samp>&rsquo; -- black, &lsquo;<samp>r</samp>&rsquo; -- <span style="color: rgb(255, 0, 0);">red</span>, &lsquo;<samp>R</samp>&rsquo; -- <span style="color: rgb(127, 0, 0);">dark red</span>, &lsquo;<samp>g</samp>&rsquo; -- <span style="color: rgb(0, 255, 0);">green</span>, &lsquo;<samp>G</samp>&rsquo; -- <span style="color: rgb(0, 127, 0);">dark green</span>, &lsquo;<samp>b</samp>&rsquo; -- <span style="color: rgb(0, 0, 255);">blue</span>, &lsquo;<samp>B</samp>&rsquo; -- <span style="color: rgb(0, 0, 127);">dark blue</span>, &lsquo;<samp>c</samp>&rsquo; -- <span style="color: rgb(0, 255, 255);">cyan</span>, &lsquo;<samp>C</samp>&rsquo; -- <span style="color: rgb(0, 127, 127);">dark cyan</span>, &lsquo;<samp>m</samp>&rsquo; -- <span style="color: rgb(255, 0, 255);">magenta</span>, &lsquo;<samp>M</samp>&rsquo; -- <span style="color: rgb(127, 0, 127);">dark magenta</span>, &lsquo;<samp>y</samp>&rsquo; -- <span style="color: rgb(255, 255, 0);">yellow</span>, &lsquo;<samp>Y</samp>&rsquo; -- <span style="color: rgb(127, 127, 0);">dark yellow (gold)</span>, &lsquo;<samp>h</samp>&rsquo; -- <span style="color: rgb(127, 127, 127);">gray</span>, &lsquo;<samp>H</samp>&rsquo; -- <span style="color: rgb(76, 76, 76);">dark gray</span>, &lsquo;<samp>w</samp>&rsquo; -- white, &lsquo;<samp>W</samp>&rsquo; -- <span style="color: rgb(178, 178, 178);">bright gray</span>, &lsquo;<samp>l</samp>&rsquo; -- <span style="color: rgb(0, 255, 127);">green-blue</span>, &lsquo;<samp>L</samp>&rsquo; -- <span style="color: rgb(0, 127, 63);">dark green-blue</span>, &lsquo;<samp>e</samp>&rsquo; -- <span style="color: rgb(127, 255, 0);">green-yellow</span>, &lsquo;<samp>E</samp>&rsquo; -- <span style="color: rgb(63, 127, 0);">dark green-yellow</span>, &lsquo;<samp>n</samp>&rsquo; -- <span style="color: rgb(0, 127, 255);">sky-blue</span>, &lsquo;<samp>N</samp>&rsquo; -- <span style="color: rgb(0, 63, 127);">dark sky-blue</span>, &lsquo;<samp>u</samp>&rsquo; -- <span style="color: rgb(127, 0, 255);">blue-violet</span>, &lsquo;<samp>U</samp>&rsquo; -- <span style="color: rgb(63, 0, 127);">dark blue-violet</span>, &lsquo;<samp>p</samp>&rsquo; -- <span style="color: rgb(255, 0, 127);">purple</span>, &lsquo;<samp>P</samp>&rsquo; -- <span style="color: rgb(127, 0, 63);">dark purple</span>, &lsquo;<samp>q</samp>&rsquo; -- <span style="color: rgb(255, 127, 0);">orange</span>, &lsquo;<samp>Q</samp>&rsquo; -- <span style="color: rgb(127, 63, 0);">dark orange (brown)</span>.</p>
+@end html
+@end ifhtml
+@ifnothtml
+The color types are: @samp{k} -- black, @samp{r} -- red, @samp{R} -- dark red, @samp{g} -- green, @samp{G} -- dark green, @samp{b} -- blue, @samp{B} -- dark blue, @samp{c} -- cyan, @samp{C} -- dark cyan, @samp{m} -- magenta, @samp{M} -- dark magenta, @samp{y} -- yellow, @samp{Y} -- dark yellow (gold), @samp{h} -- gray, @samp{H} -- dark gray, @samp{w} -- white, @samp{W} -- bright gray, @samp{l} -- green-blue, @samp{L} -- dark green-blue, @samp{e} -- green-yellow, @samp{E} -- dark green-yellow, @samp{n} -- sky-blue, @samp{N} -- dark sky-blue, @samp{u} -- blue-violet, @samp{U} -- dark blue-violet, @samp{p} -- purple, @samp{P} -- dark purple, @samp{q} -- orange, @samp{Q} -- dark orange (brown).
+@end ifnothtml
+
+You can also use ``bright'' colors. The ``bright'' color contain 2 symbols in brackets @samp{@{cN@}}: first one is the usual symbol for color id, the second one is a digit for its brightness. The digit can be in range @samp{1}...@samp{9}. Number @samp{5} corresponds to a normal color, @samp{1} is a very dark version of the color (practically black), and @samp{9} is a very bright version of the color (practically white). For example, the colors can be @samp{@{b2@}} @samp{@{b7@}} @samp{@{r7@}} and so on.
+
+
+@node Line styles, Color scheme, Color styles, General concepts
+@section Line styles
 
 @cindex Line style
 @cindex Mark style
 @cindex Arrows
 
-The line style is defined by the string which may contain specifications for color (@samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}), dashing style (@samp{-|;:ji} or space), width (@samp{0123456789}) and marks (@samp{o+xsd.^v} and @samp{#} modifier). If one of the type of information is omitted then default values used with the previous color or one from palette (for @pxref{1D plotting}) are adopted. 
+The line style is defined by the string which may contain specifications for color (@samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}), dashing style (@samp{-|;:ji=} or space), width (@samp{123456789}) and marks (@samp{*o+xsd.^v<>} and @samp{#} modifier). If one of the type of information is omitted then default values used with next color from palette (see @ref{Palette and colors}).
 @ifhtml
 @html
 By default palette contain following colors: <span style="color: rgb(76, 76, 76);">dark gray</span> &lsquo;<samp>H</samp>&rsquo;, <span style="color: rgb(0, 0, 255);">blue</span> &lsquo;<samp>b</samp>&rsquo;, <span style="color: rgb(0, 255, 0);">green</span> &lsquo;<samp>g</samp>&rsquo;, <span style="color: rgb(255, 0, 0);">red</span> &lsquo;<samp>r</samp>&rsquo;, <span style="color: rgb(0, 255, 255);">cyan</span> &lsquo;<samp>c</samp>&rsquo;, <span style="color: rgb(255, 0, 255);">magenta</span> &lsquo;<samp>m</samp>&rsquo;, <span style="color: rgb(255, 255, 0);">yellow</span> &lsquo;<samp>y</samp>&rsquo;, <span style="color: rgb(127, 127, 127);">gray</span> &lsquo;<samp>h</samp>&rsquo;, <span style="color: rgb(0, 255, 127);">green-blue</span> &lsquo;<samp>l</samp>&rsquo;, <span style="color: rgb(0, 127, 255);">sky-blue</span> &lsquo;<samp>n</samp>&rsquo;, <span style="color: rgb(255, 127, 0);">orange</span> &lsquo;<samp>q</samp>&rsquo;, <span style="color: rgb(127, 255, 0);">green-yellow</span> &lsquo;<samp>e</samp>&rsquo;, <span style="color: rgb(127, 0, 255);">blue-violet</span> &lsquo;<samp>u</samp>&rsquo;, <span style="color: rgb(255, 0, 127);">purple</span> &lsquo;<samp>p</samp>&rsquo;.
 
-<p>The color types are: &lsquo;<samp>k</samp>&rsquo; -- black, &lsquo;<samp>r</samp>&rsquo; -- <span style="color: rgb(255, 0, 0);">red</span>, &lsquo;<samp>R</samp>&rsquo; -- <span style="color: rgb(127, 0, 0);">dark red</span>, &lsquo;<samp>g</samp>&rsquo; -- <span style="color: rgb(0, 255, 0);">green</span>, &lsquo;<samp>G</samp>&rsquo; -- <span style="color: rgb(0, 127, 0);">dark green</span>, &lsquo;<samp>b</samp>&rsquo; -- <span style="color: rgb(0, 0, 255);">blue</span>, &lsquo;<samp>B</samp>&rsquo; -- <span style="color: rgb(0, 0, 127);">dark blue</span>, &lsquo;<samp>c</samp>&rsquo; -- <span style="color: rgb(0, 255, 255);">cyan</span>, &lsquo;<samp>C</samp>&rsquo; -- <span style="color: rgb(0, 127, 127);">dark cyan</span>, &lsquo;<samp>m</samp>&rsquo; -- <span style="color: rgb(255, 0, 255);">magenta</span>, &lsquo;<samp>M</samp>&rsquo; -- <span style="color: rgb(127, 0, 127);">dark magenta</span>, &lsquo;<samp>y</samp>&rsquo; -- <span style="color: rgb(255, 255, 0);">yellow</span>, &lsquo;<samp>Y</samp>&rsquo; -- <span style="color: rgb(127, 127, 0);">dark yellow (gold)</span>, &lsquo;<samp>h</samp>&rsquo; -- <span style="color: rgb(127, 127, 127);">gray</span>, &lsquo;<samp>H</samp>&rsquo; -- <span style="color: rgb(76, 76, 76);">dark gray</span>, &lsquo;<samp>w</samp>&rsquo; -- white, &lsquo;<samp>W</samp>&rsquo; -- <span style="color: rgb(178, 178, 178);">bright gray</span>, &lsquo;<samp>l</samp>&rsquo; -- <span style="color: rgb(0, 255, 127);">green-blue</span>, &lsquo;<samp>L</samp>&rsquo; -- <span style="color: rgb(0, 127, 63);">dark green-blue</span>, &lsquo;<samp>e</samp>&rsquo; -- <span style="color: rgb(127, 255, 0);">green-yellow</span>, &lsquo;<samp>E</samp>&rsquo; -- <span style="color: rgb(63, 127, 0);">dark green-yellow</span>, &lsquo;<samp>n</samp>&rsquo; -- <span style="color: rgb(0, 127, 255);">sky-blue</span>, &lsquo;<samp>N</samp>&rsquo; -- <span style="color: rgb(0, 63, 127);">dark sky-blue</span>, &lsquo;<samp>u</samp>&rsquo; -- <span style="color: rgb(127, 0, 255);">blue-violet</span>, &lsquo;<samp>U</samp>&rsquo; -- <span style="color: rgb(63, 0, 127);">dark blue-violet</span>, &lsquo;<samp>p</samp>&rsquo; -- <span style="color: rgb(255, 0, 127);">purple</span>, &lsquo;<samp>P</samp>&rsquo; -- <span style="color: rgb(127, 0, 63);">dark purple</span>, &lsquo;<samp>q</samp>&rsquo; -- <span style="color: rgb(255, 127, 0);">orange</span>, &lsquo;<samp>Q</samp>&rsquo; -- <span style="color: rgb(127, 63, 0);">dark orange (brown)</span>.</p>
-@end html
-@end ifhtml
-
-
-You can also use ``lighted'' colors. The ``lighted'' color contain 2 symbols in brackets @samp{@{cN@}}: first one is the usual symbol for color specification, the second one is a digit for its brightness. The digit can be in range @samp{1}...@samp{9}.
-Number @samp{5} corresponds to a normal color, @samp{1} is a very dark version of the color (practically black), and @samp{9} is a very bright version of the color (practically white). For example, the colors can be @samp{@{b2@}} @samp{@{b7@}} @samp{@{r7@}} and so on.
-
-@float
-@image{../png/colors, 7cm}
-@caption{Colors and its ids.}
-@end float
-
-
-
-@ifhtml
-@html
-Dashing style has the following meaning: space -- no line (usable for plotting only marks), &lsquo;<samp>-</samp>&rsquo; -- solid line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;), &lsquo;<samp>|</samp>&rsquo; -- long dashed line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>;</samp>&rsquo; -- dashed line (&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>=</samp>&rsquo; -- small dashed line (&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;), &lsquo;<samp>:</samp>&rsquo; -- dotted line (&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;), &lsquo;<samp>j</samp>&rsquo; -- dash-dotted line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>i</samp>&rsquo; -- small dash-dotted line (&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;).
+<p>Dashing style has the following meaning: space -- no line (usable for plotting only marks), &lsquo;<samp>-</samp>&rsquo; -- solid line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;), &lsquo;<samp>|</samp>&rsquo; -- long dashed line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>;</samp>&rsquo; -- dashed line (&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>=</samp>&rsquo; -- small dashed line (&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;&#9632;&#9632;&#9633;&#9633;), &lsquo;<samp>:</samp>&rsquo; -- dotted line (&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;), &lsquo;<samp>j</samp>&rsquo; -- dash-dotted line (&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9633;&#9633;&#9633;&#9633;&#9632;&#9633;&#9633;&#9633;&#9633;), &lsquo;<samp>i</samp>&rsquo; -- small dash-dotted line (&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;&#9632;&#9632;&#9632;&#9633;&#9633;&#9632;&#9633;&#9633;).</p>
 @end html
 @end ifhtml
 @ifnothtml
 The line style is defined by the string which may contain specifications for color (@samp{wkrgbcymhRGBCYMHWlenupqLENUPQ}), dashing style (@samp{-|;:ji} or space), width (@samp{0123456789}) and marks (@samp{o+xsd.^v} and @samp{#} modifier). If one of the type of information is omitted then default values used with the previous color or one from palette (for @pxref{1D plotting}) are adopted. By default palette contain following colors: dark gray @samp{H}, blue @samp{b}, green @samp{g}, red @samp{r}, cyan @samp{c}, magenta @samp{m}, yellow @samp{y}, gray @samp{h}, blue-green @samp{l}, sky-blue @samp{n}, orange @samp{q}, yellow-green @samp{e}, blue-violet @samp{u}, purple @samp{p}.
-
-The color types are: @samp{k} -- black, @samp{r} -- red, @samp{R} -- dark red, @samp{g} -- green, @samp{G} -- dark green, @samp{b} -- blue, @samp{B} -- dark blue, @samp{c} -- cyan, @samp{C} -- dark cyan, @samp{m} -- magenta, @samp{M} -- dark magenta, @samp{y} -- yellow, @samp{Y} -- dark yellow (gold), @samp{h} -- gray, @samp{H} -- dark gray, @samp{w} -- white, @samp{W} -- bright gray, @samp{l} -- green-blue, @samp{L} -- dark green-blue, @samp{e} -- green-yellow, @samp{E} -- dark green-yellow, @samp{n} -- sky-blue, @samp{N} -- dark sky-blue, @samp{u} -- blue-violet, @samp{U} -- dark blue-violet, @samp{p} -- purple, @samp{P} -- dark purple, @samp{q} -- orange, @samp{Q} -- dark orange (brown).
 
 Dashing style has the following meaning: space -- no line (usable for plotting only marks), @samp{-} -- solid line (################), @samp{|} -- long dashed line (########________), @samp{;} -- dashed line (####____####____), @samp{=} -- small dashed line (##__##__##__##__), @samp{:} -- dotted line (#___#___#___#___), @samp{j} -- dash-dotted line (#######____#____), @samp{i} -- small dash-dotted line (###__#__###__#__).
 @end ifnothtml
 
 Marker types are: @samp{o} -- circle, @samp{+} -- cross, @samp{x} -- skew cross, @samp{s} - square, @samp{d} - rhomb (or diamond), @samp{.} -- dot (point), @samp{^} -- triangle up, @samp{v} -- triangle down, @samp{<} -- triangle left, @samp{>} -- triangle right, @samp{#*} -- Y sign, @samp{#+} -- squared cross, @samp{#x} -- squared skew cross, @samp{#.} -- circled dot. If string contain symbol @samp{#} then the solid versions of markers are used.
 
-@float
-@image{../png/sample5, 7cm}
-@caption{Styles of lines and marks.}
-@end float
-
 One may specify to draw a special symbol (an arrow) at the beginning and at the end of line. This is done if the specification string contains one of the following symbols: @samp{A} -- outer arrow, @samp{V} -- inner arrow, @samp{I} -- transverse hatches, @samp{K} -- arrow with hatches, @samp{T} -- triangle, @samp{S} -- square, @samp{D} -- rhombus, @samp{O} -- circle, @samp{_} -- nothing (the default). The following rule applies: the first symbol specifies the arrow at the end of line, the second specifies the arrow at the beginning of the line. For example, @samp{r-A} defines a red solid line with usual arrow at the end, @samp{b|AI} defines a blue dash line with an arrow at the end and with hatches at the beginning, @samp{_O} defines a line with the current style and with a circle at the beginning. These styles are applicable during the graphics plotting as well (for example, @ref{1D plotting}).
 
 @float
-@image{../png/sampled, 7cm}
-@caption{Arrow styles.}
+@image{../png/style, 11cm}
+@caption{Color and line styles.}
 @end float
 
 @c ------------------------------------------------------------------
 @node Color scheme, Font styles, Line styles, General concepts
-@subsection Color scheme
+@section Color scheme
 
 @cindex Color scheme
 
-The color scheme is used for determining the color of surfaces, isolines, isosurfaces and so on. The color scheme is defined by the string, which may contain several characters that are color id (@pxref{Line styles}) or characters @samp{d#:|}. Symbol @samp{d} denotes the interpolation by 3d position instead of the coloring by amplitude. Symbol @samp{#} switches to mesh drawing or to a wire plot. Symbol @samp{|} disables color interpolation in color scheme, which can be useful, for example, for sharp colors during matrix plotting. Symbol @samp{:} finishes the color scheme parsing. Following it, the user may put styles for the text, rotation axis for curves/isocontours, and so on. Color scheme may contain up to 32 color values.
+The color scheme is used for determining the color of surfaces, isolines, isosurfaces and so on. The color scheme is defined by the string, which may contain several characters that are color id (@pxref{Line styles}) or characters @samp{#:|}. Symbol @samp{#} switches to mesh drawing or to a wire plot. Symbol @samp{|} disables color interpolation in color scheme, which can be useful, for example, for sharp colors during matrix plotting. Symbol @samp{:} terminate the color scheme parsing. Following it, the user may put styles for the text, rotation axis for curves/isocontours, and so on. Color scheme may contain up to 32 color values.
 
-For coloring by @emph{amplitude} (most common) the final color is a linear interpolation of color array. The color array is constructed from the string ids. The argument is the amplitude normalized between @var{Cmin} -- @var{Cmax} (@pxref{Axis settings}). For example, string containing 4 characters @samp{bcyr} corresponds to a colorbar from blue (lowest value) through cyan (next value) through yellow (next value) to the red (highest value). String @samp{kw} corresponds to a colorbar from black (lowest value) to white (highest value). String @samp{m} corresponds to a simple magenta color.
+The final color is a linear interpolation of color array. The color array is constructed from the string ids (including ``bright'' colors, see @ref{Color styles}). The argument is the amplitude normalized between @var{Cmin} -- @var{Cmax} (see @ref{Axis settings}). For example, string containing 4 characters @samp{bcyr} corresponds to a colorbar from blue (lowest value) through cyan (next value) through yellow (next value) to the red (highest value). String @samp{kw} corresponds to a colorbar from black (lowest value) to white (highest value). String @samp{m} corresponds to a simple magenta color.
 
 There are several useful combinations. String @samp{kw} corresponds to the simplest gray color scheme where higher values are brighter. String @samp{wk} presents the inverse gray color scheme where higher value is darker. Strings @samp{kRryw}, @samp{kGgw}, @samp{kBbcw} present the well-known @emph{hot}, @emph{summer} and @emph{winter} color schemes. Strings @samp{BbwrR} and @samp{bBkRr} allow to view bi-color figure on white or black background, where negative values are blue and positive values are red. String @samp{BbcyrR} gives a color scheme similar to the well-known @emph{jet} color scheme.
 
 @float
-@image{../png/color_schemes, 7cm}
+@image{../png/schemes, 11cm}
 @caption{Most popular color schemes.}
 @end float
 
@@ -122,16 +114,15 @@ When coloring by @emph{coordinate} (used in @ref{map}), the final color is deter
 
 @c ------------------------------------------------------------------
 @node Font styles, Textual formulas, Color scheme, General concepts
-@subsection Font styles
+@section Font styles
 
 @cindex Font styles
 
-Text style is specified by the string which may contain several characters of font (@samp{ribwou}) and/or alignment (@samp{LRC}) specifications. The string also may contain the color id characters @samp{wkrgbcymhRGBCYMHW} (@pxref{Line styles}) after the symbol @samp{:}. For example, @samp{r:iCb} sets the bold italic font text aligned at the center and with red color.
+Text style is specified by the string which may contain: color id characters @samp{wkrgbcymhRGBCYMHW} (see @ref{Color styles}), and font style (@samp{ribwou}) and/or alignment (@samp{LRC}) specifications. At this, font style and alignment begin after the separator @samp{:}. For example, @samp{r:iCb} sets the bold (@samp{b}) italic (@samp{i}) font text aligned at the center (@samp{C}) and with red color (@samp{r}).
 
-The font types are: @samp{r} -- roman (or regular) font, @samp{i} -- italic style, @samp{b} -- bold style. By default roman roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Additional font effects are: @samp{w} -- wired, @samp{o} -- over-lined, @samp{u} -- underlined. 
-@c Also a parsing of the LaTeX-like syntax is provided (for detail, @pxref{mglFont class} and @ref{Font settings}).
+The font styles are: @samp{r} -- roman (or regular) font, @samp{i} -- italic style, @samp{b} -- bold style. By default roman roman font is used. The align types are: @samp{L} -- align left (default), @samp{C} -- align center, @samp{R} -- align right. Additional font effects are: @samp{w} -- wired, @samp{o} -- over-lined, @samp{u} -- underlined.
 
-Also a parsing of the LaTeX-like syntax is provided. There are commands for the font style changing inside the string (for example, use \b for bold font): \a or \overline -- over-lined, \b or \textbf -- bold, \i or \textit -- italic, \r or \textrm -- roman (disable bold and italic attributes), \u or \underline -- underlined, \w or \wire -- wired, \big -- bigger size, @@ -- smaller size. The lower and upper indexes are specified by @samp{_} and @samp{^} symbols. At this the changed font style is applied only on next symbol or symbols in braces @{@}. The text in braces @{@} are treated as single symbol that allow one to print the index of index. For example, compare the strings @samp{sin (x^@{2^3@})} and @samp{sin (x^2^3)}. You may also change text color inside string by command #? or by \color? where @samp{?} is symbolic id of the color (@pxref{Line styles}). For example, words @samp{Blue} and @samp{red} will be colored in the string @samp{#b@{Blue@} and \colorr@{red@} text}. The most of functions understand the newline symbol @samp{\n} and allows to print multi-line text. Finally, you can use arbitrary UTF codes by command @code{\utf0x????}. For example, @code{\utf0x3b1} will produce
+Also a parsing of the LaTeX-like syntax is provided. There are commands for the font style changing inside the string (for example, use \b for bold font): \a or \overline -- over-lined, \b or \textbf -- bold, \i or \textit -- italic, \r or \textrm -- roman (disable bold and italic attributes), \u or \underline -- underlined, \w or \wire -- wired, \big -- bigger size, @@ -- smaller size. The lower and upper indexes are specified by @samp{_} and @samp{^} symbols. At this the changed font style is applied only on next symbol or symbols in braces @{@}. The text in braces @{@} are treated as single symbol that allow one to print the index of index. For example, compare the strings @samp{sin (x^@{2^3@})} and @samp{sin (x^2^3)}. You may also change text color inside string by command #? or by \color? where @samp{?} is symbolic id of the color (@pxref{Color styles}). For example, words @samp{blue} and @samp{red} will be colored in the string @samp{#b@{blue@} and \colorr@{red@} text}. The most of functions understand the newline symbol @samp{\n} and allows to print multi-line text. Finally, you can use arbitrary (if it was defined in font-face) UTF codes by command @code{\utf0x????}. For example, @code{\utf0x3b1} will produce
 @ifhtml
 @html
  &alpha; symbol.
@@ -148,26 +139,26 @@ The most of commands for special TeX or AMSTeX symbols, the commands for font st
 In particular, the Greek letters are recognizable special symbols: &alpha; &ndash; \alpha, &beta; &ndash; \beta, &gamma; &ndash; \gamma, &delta; &ndash; \delta, &epsilon; &ndash; \epsilon, &eta; &ndash; \eta, &iota; &ndash; \iota, &chi; &ndash; \chi, &kappa; &ndash; \kappa, &lambda; &ndash; \lambda, &mu; &ndash; \mu, &nu; &ndash; \nu, o &ndash; \o, &omega; &ndash; \omega, &#981; &ndash; \phi, &pi; &ndash; \pi, &psi; &ndash; \psi, &rho; &ndash; \rho, &sigma; &ndash; \sigma, &theta; &ndash; \theta, &tau; &ndash; \tau, &upsilon; &ndash; \upsilon, &xi; &ndash; \xi, &zeta; &ndash; \zeta, &sigmaf; &ndash; \varsigma, &#603; &ndash; \varepsilon, &thetasym; &ndash; \vartheta, &phi; &ndash; \varphi, &#1008; &ndash; \varkappa; A &ndash; \Alpha, B &ndash; \Beta, &Gamma; &ndash; \Gamma, &Delta; &ndash; \Delta, E &ndash; \Epsilon, H &ndash; \Eta, I &ndash; \Iota, C &ndash; \Chi, K &ndash; \Kappa, &Lambda; &ndash; \Lambda, M &ndash; \Mu, N &ndash; \Nu, O &ndash; \O, &Omega; &ndash; \Omega, &Phi; &ndash; \Phi, &Pi; &ndash; \Pi, &Psi; &ndash; \Psi, R &ndash; \Rho, &Sigma; &ndash; \Sigma, &Theta; &ndash; \Theta, T &ndash; \Tau, &Upsilon; &ndash; \Upsilon, &Xi; &ndash; \Xi, Z &ndash; \Zeta.
 
 <p>The small part of most common special TeX symbols are: &ang; &ndash; \angle, &sdot; &ndash; \cdot, &clubs; &ndash; \clubsuit, &#10003; &ndash; \checkmark, &cup; &ndash; \cup, &cap; &ndash; \cap, &#9826; &ndash; \diamondsuit, &#9671; &ndash; \diamond, &divide;
- &ndash; \div, 
+ &ndash; \div,
 &darr; &ndash; \downarrow, &dagger; &ndash; \dag, &Dagger; &ndash; \ddag, &equiv; &ndash; \equiv, &exist; &ndash; \exists, &#8994; &ndash; \frown, &#9837; &ndash; \flat, &ge; &ndash; \ge, &ge; &ndash; \geq, &#8807; &ndash; \geqq, &larr; &ndash; \gets, &#9825; &ndash; \heartsuit, &infin; &ndash; \infty, &int; &ndash; \int, \Int, &image;  &ndash; \Im, &#9826; &ndash; \lozenge, &#10216; &ndash; \langle, &le; &ndash; \le, &le; &ndash; \leq, &#8806; &ndash; \leqq, &larr; &ndash; \leftarrow, &#8723; &ndash; \mp, &nabla; &ndash; \nabla, &ne; &ndash; \ne, &ne; &ndash; \neq, &#9838; &ndash; \natural, &#8750; &ndash; \oint, &#8857; &ndash; \odot, &oplus; &ndash; \oplus, &part; &ndash; \partial, &#8741; &ndash; \parallel, &perp; &ndash;\perp, &plusmn; &ndash; \pm, &prop; &ndash; \propto, &prod; &ndash; \prod, &real; &ndash; \Re, &rarr; &ndash; \rightarrow, &#10217; &ndash; \rangle, &spades; &ndash; \spadesuit, ~ &ndash; \sim, &#8995; &ndash; \smile, &sub;  &ndash; \subset, &sup; &ndash; \supset, &radic; &ndash; \sqrt or \surd, &sect; &ndash; \S, &#9839; &ndash; \sharp, &sum; &ndash; \sum, &times; &ndash; \times, &rarr; &ndash; \to, &there4; &ndash; \therefore, &uarr; &ndash; \uparrow, &weierp; &ndash; \wp. </p>
 @end html
 @end ifhtml
 @ifnothtml
 In particular, the Greek letters are recognizable special symbols: @math{\alpha} -- \alpha, @math{\beta} -- \beta, @math{\gamma} -- \gamma, @math{\delta} -- \delta, @math{\epsilon} -- \epsilon, @math{\eta} -- \eta, @math{\iota} -- \iota, @math{\chi} -- \chi, @math{\kappa} -- \kappa, @math{\lambda} -- \lambda, @math{\mu} -- \mu, @math{\nu} -- \nu, @math{o} -- \o, @math{\omega} -- \omega, @math{\phi} -- \phi, @math{\pi} -- \pi, @math{\psi} -- \psi, @math{\rho} -- \rho, @math{\sigma} -- \sigma, @math{\theta} -- \theta, @math{\tau} -- \tau, @math{\upsilon} -- \upsilon, @math{\xi} -- \xi, @math{\zeta} -- \zeta, @math{\varsigma} -- \varsigma, @math{\varepsilon} -- \varepsilon, @math{\vartheta} -- \vartheta, @math{\varphi} -- \varphi, A -- \Alpha, B -- \Beta, @math{\Gamma} -- \Gamma, @math{\Delta} -- \Delta, E -- \Epsilon, H -- \Eta, I -- \Iota, C -- \Chi, K -- \Kappa, @math{\Lambda} -- \Lambda, M -- \Mu, N -- \Nu, O -- \O, @math{\Omega} -- \Omega, @math{\Phi} -- \Phi, @math{\Pi} -- \Pi, @math{\Psi} -- \Psi, R -- \Rho, @math{\Sigma} -- \Sigma, @math{\Theta} -- \Theta, T -- \Tau, @math{\Upsilon} -- \Upsilon, @math{\Xi} -- \Xi, Z -- \Zeta.
 
-The small part of most common special TeX symbols are: @math{\angle} -- \angle, @math{\aleph} -- \aleph, @math{\cdot} -- \cdot, @math{\clubsuit} -- \clubsuit, @math{\cup} -- \cup, @math{\cap} -- \cap, @math{\diamondsuit} -- \diamondsuit, @math{\diamond} -- \diamond, @math{\div} -- \div, @math{\downarrow} -- \downarrow, @math{\dag} -- \dag, @math{\ddag} -- \ddag, @math{\equiv} -- \equiv, @math{\exists} -- \exists, @math{\frown} -- \frown, @math{\flat} -- \flat, @math{\ge} -- \ge, @math{\geq} -- \geq, @math{\gets} -- \gets, @math{\heartsuit} -- \heartsuit, @math{\infty} -- \infty, @math{\in} -- \in, @math{\int} -- \int, @math{\Im} -- \Im, @math{\langle} -- \langle, @math{\le} -- \le, @math{\leq} -- \leq, @math{\leftarrow} -- \leftarrow, @math{\mp} -- \mp, @math{\nabla} -- \nabla, @math{\ne} -- \ne, @math{\neq} -- \neq, @math{\natural} -- \natural, @math{\oint} -- \oint, @math{\odot} -- \odot, @math{\oplus} -- \oplus, @math{\partial} -- \partial, @math{\parallel} -- \parallel, @math{\perp} -- \perp, @math{\pm} -- \pm, @math{\propto} -- \propto, @math{\prod} -- \prod, @math{\Re} -- \Re, @math{\rightarrow} -- \rightarrow, @math{\rangle} -- \rangle, @math{\spadesuit} -- \spadesuit, @math{\sim} -- \sim, @math{\smile} -- \smile, @math{\subset} -- \subset, @math{\supset} -- \supset, @math{\surd} -- \sqrt or \surd, @math{\S} -- \S, @math{\sharp} -- \sharp, @math{\sum} -- \sum, @math{\times} -- \times, @math{\to} -- \to, @math{\uparrow} -- \uparrow, @math{\wp} -- \wp and so on. 
+The small part of most common special TeX symbols are: @math{\angle} -- \angle, @math{\aleph} -- \aleph, @math{\cdot} -- \cdot, @math{\clubsuit} -- \clubsuit, @math{\cup} -- \cup, @math{\cap} -- \cap, @math{\diamondsuit} -- \diamondsuit, @math{\diamond} -- \diamond, @math{\div} -- \div, @math{\downarrow} -- \downarrow, @math{\dag} -- \dag, @math{\ddag} -- \ddag, @math{\equiv} -- \equiv, @math{\exists} -- \exists, @math{\frown} -- \frown, @math{\flat} -- \flat, @math{\ge} -- \ge, @math{\geq} -- \geq, @math{\gets} -- \gets, @math{\heartsuit} -- \heartsuit, @math{\infty} -- \infty, @math{\in} -- \in, @math{\int} -- \int, @math{\Im} -- \Im, @math{\langle} -- \langle, @math{\le} -- \le, @math{\leq} -- \leq, @math{\leftarrow} -- \leftarrow, @math{\mp} -- \mp, @math{\nabla} -- \nabla, @math{\ne} -- \ne, @math{\neq} -- \neq, @math{\natural} -- \natural, @math{\oint} -- \oint, @math{\odot} -- \odot, @math{\oplus} -- \oplus, @math{\partial} -- \partial, @math{\parallel} -- \parallel, @math{\perp} -- \perp, @math{\pm} -- \pm, @math{\propto} -- \propto, @math{\prod} -- \prod, @math{\Re} -- \Re, @math{\rightarrow} -- \rightarrow, @math{\rangle} -- \rangle, @math{\spadesuit} -- \spadesuit, @math{\sim} -- \sim, @math{\smile} -- \smile, @math{\subset} -- \subset, @math{\supset} -- \supset, @math{\surd} -- \sqrt or \surd, @math{\S} -- \S, @math{\sharp} -- \sharp, @math{\sum} -- \sum, @math{\times} -- \times, @math{\to} -- \to, @math{\uparrow} -- \uparrow, @math{\wp} -- \wp and so on.
 @end ifnothtml
 
-The font size can be defined explicitly (if @var{size}>0) or relative to a base font size as |@var{size}|*@var{FontSize} (if @var{size}<0). The value @var{size}=0 specifies that the string will not be printed. The base font size is measured in internal ``MathGL'' units. Special functions @code{SetFontSizePT(), SetFontSizeCM(), SetFontSizeIN()} allow one to set it in more ``common'' variables for a given dpi value of the picture.
+The font size can be defined explicitly (if @var{size}>0) or relatively to a base font size as |@var{size}|*@var{FontSize} (if @var{size}<0). The value @var{size}=0 specifies that the string will not be printed. The base font size is measured in internal ``MathGL'' units. Special functions @code{SetFontSizePT(), SetFontSizeCM(), SetFontSizeIN()} (see @ref{Font settings}) allow one to set it in more ``common'' variables for a given dpi value of the picture.
 
 
 @c ------------------------------------------------------------------
 @node Textual formulas, Command options, Font styles, General concepts
-@subsection Textual formulas
+@section Textual formulas
 
 @cindex Textual formulas
 
-MathGL have the fast variant of textual formula evaluation 
+MathGL have the fast variant of textual formula evaluation
 @ifclear UDAV
  (@pxref{mglFormula class})
 @end ifclear
@@ -209,7 +200,7 @@ Elliptic integrals are: @samp{ee(k)} -- complete elliptic integral is denoted by
 
 Jacobi elliptic functions are: @samp{sn(u,m)}, @samp{cn(u,m)}, @samp{dn(u,m)}, @samp{sc(u,m)}, @samp{sd(u,m)}, @samp{ns(u,m)}, @samp{cs(u,m)}, @samp{cd(u,m)}, @samp{nc(u,m)}, @samp{ds(u,m)}, @samp{dc(u,m)}, @samp{nd(u,m)}.
 
-Note, some of these functions are unavailable if NO_GSL is defined during compilation of MathGL library. 
+Note, some of these functions are unavailable if MathGL was compiled without GSL support.
 
 There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN.
 
@@ -218,7 +209,7 @@ There is no difference between lower or upper case in formulas. If argument valu
 @node  Command options, Interfaces, Textual formulas, General concepts
 @section Command options
 
-Command options allow the easy setup of the plot by changing of global settings only for this plot. Each option is separated from the previous text by symbol @samp{;}. Options work so that them remember the current settings, change settings as it being set in the option, execute command and return the original settings back. So, the options usage for data handling commands or for graphics setup commands is useless.
+Command options allow the easy setup of the selected plot by changing global settings only for this plot. Each option start from symbol @samp{;}. Options work so that MathGL remember the current settings, change settings as it being set in the option, execute function and return the original settings back. So, the options are most usable for plotting functions.
 
 The most useful options are @code{xrange, yrange, zrange}. They sets the boundaries for data change. This boundaries are used for automatically filled variables. So, these options allow one to change the position of some plots. For example, in command @code{Plot(y,"","xrange 0.1 0.9");} or @code{plot y; xrange 0.1 0.9} the x coordinate will be equidistantly distributed in range 0.1 ... 0.9.
 
@@ -226,13 +217,17 @@ The full list of options are:
 @cindex alpha
 @cindex alphadef
 @deffn {MGL option} alpha @code{val}
-@deffnx {MGL option} alphadef @code{val}
 Sets alpha value (transparency) of the plot. The value should be in range [0, 1]. See also @ref{alphadef}.
 @end deffn
 @cindex ambient
 @deffn {MGL option} ambient @code{val}
 Sets brightness of ambient light for the plot. The value should be in range [0, 1]. See also @ref{ambient}.
 @end deffn
+@cindex diffuse
+@deffn {MGL option} diffuse @code{val}
+Sets brightness of diffuse light for the plot. The value should be in range [0, 1]. See also @ref{diffuse}.
+@end deffn
+
 @cindex xrange
 @deffn {MGL option} xrange @code{val1 val2}
 Sets boundaries of x coordinate change for the plot. See also @ref{xrange}.
@@ -245,22 +240,20 @@ Sets boundaries of y coordinate change for the plot. See also @ref{yrange}.
 @deffn {MGL option} zrange @code{val1 val2}
 Sets boundaries of z coordinate change for the plot. See also @ref{zrange}.
 @end deffn
+
 @cindex cut
 @deffn {MGL option} cut @code{val}
 Sets whether to cut or to project the plot points lying outside the bounding box. See also @ref{cut}.
 @end deffn
 @cindex fontsize
-@deffn {MGL option} fontsize @code{val}
-Sets the size of text. See also @ref{font}.
-@end deffn
-@cindex marksize
-@deffn {MGL option} marksize @code{val}
-Sets the size of marks. See also @ref{marksize}.
+@deffn {MGL option} size @code{val}
+Sets the size of text, marks and arrows. See also @ref{font}, @ref{marksize}, @ref{arrowsize}.
 @end deffn
 @cindex meshnum
 @deffn {MGL option} meshnum @code{val}
 Work like @ref{meshnum} command.
 @end deffn
+
 @cindex legend
 @deffn {MGL option} legend 'txt'
 Adds string 'txt' to internal legend accumulator. The style of described line and mark is taken from arguments of the last @ref{1D plotting} command. See also @ref{legend}.
@@ -276,10 +269,10 @@ Set the value to be used as additional numeric parameter in plotting command.
 @section Interfaces
 
 The MathGL library has interfaces for a set of languages. Most of them are based on the C interface via SWIG tool. There are Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, and Tcl interfaces. Also there is a Fortran interface which has a similar set of functions, but slightly different types of arguments (integers instead of pointers). These functions are marked as [C function].
-@c ++++++++++
-Some of the languages listed above support classes (like C++ or Python). For them, a special wrapper was written.
-@c ++++++++++
-Finally, a special command language MGL was written for a faster access to plotting functions. Corresponding scripts can be executed separately (by UDAV, mgl2png, mgl2eps and so on)
+
+Some of the languages listed above support classes (like C++ or Python). The name of functions for them is the same as in C++ (see @ref{MathGL core} and @ref{Data processing}) and marked like [Method on mglGraph].
+
+Finally, a special command language MGL (see @ref{MGL scripts}) was written for a faster access to plotting functions. Corresponding scripts can be executed separately (by UDAV, mglconv, mglview and so on)
 @ifclear UDAV
  or from the C/C++/Python/... code (@pxref{mglParse class}).
 @end ifclear
@@ -287,11 +280,11 @@ Finally, a special command language MGL was written for a faster access to plott
 @ifclear UDAV
 @menu
 * C interface::
-* Python interface::
-* MGL interface::
+* C++ interface::
 @end menu
+@end ifclear
 
-@node C interface, Python interface, , Interfaces
+@node C interface, C++ interface, , Interfaces
 @subsection C/Fortran interface
 
 The C interface is a base for many other interfaces. It contains the pure C functions for most of the methods of MathGL classes. In distinction to C++ classes, C functions must have an argument HMGL (for graphics) and/or HMDT (for data arrays), which specifies the object for drawing or manipulating (changing). So, firstly, the user has to create this object by the function @code{mgl_create_*()} and has to delete it after the use by function @code{mgl_delete_*()}.
@@ -309,18 +302,19 @@ These variables contain identifiers for graphics drawing objects and for the dat
 
 Fortran functions/subroutines have the same names as C functions. However, there is a difference. Variable of type @code{HMGL, HMDT} must be an integer with sufficient size (@code{integer*4} in the 32-bit operating system or @code{integer*8} in the 64-bit operating system). All C functions are subroutines in Fortran, which are called by operator @code{call}. The exceptions are functions, which return variables of types @code{HMGL} or @code{HMDT}. These functions should be declared as integer in Fortran code. Also, one should keep in mind that strings in Fortran are denoted by @code{'} symbol, not the @code{"} symbol.
 
-@node Python interface, MGL interface, C interface, Interfaces
+@node C++ interface, , C interface, Interfaces
 @subsection C++/Python interface
 
 MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is named in this chapter's title. Exactly the same classes are used for high-level C++ API. Its feature is using only inline member-functions what make high-level API to be independent on compiler even for binary build.
 
-There are 2 classes in:
+There are 3 classes in:
 @itemize
 @item @code{mglGraph}
--- provide most plotting functions (@pxref{MathGL core}).
+-- provide most plotting functions (see @ref{MathGL core}).
 @item @code{mglData}
--- provide base data processing (@pxref{Data processing}). It have an additional feature to access data values. You can use a construct like this: @code{dat[i]=sth;} or @code{sth=dat[i]} where flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1). You can also import NumPy arrays as input arguments in Python: @code{mgl_dat = mglData(numpy_dat);}.
-@c @item @code{mglParse} -- practically the same as C++ class @code{MathGL provides the interface to a set of languages via SWIG library. Some of these languages support classes. The typical example is Python -- which is denoted in the chapter title.
+-- provide base data processing (see @ref{Data processing}). It have an additional feature to access data values. You can use a construct like this: @code{dat[i]=sth;} or @code{sth=dat[i]} where flat representation of data is used (i.e., @var{i} can be in range 0...nx*nx*nz-1). You can also import NumPy arrays as input arguments in Python: @code{mgl_dat = mglData(numpy_dat);}.
+@item @code{mglParse}
+-- provide functions for parsing MGL scripts (see @ref{MGL scripts}).
 @end itemize
 
 
@@ -339,147 +333,3 @@ a.Box()
 a.WritePNG("test.png")
 @end verbatim
 This becomes useful if you create many @code{mglData} objects, for example.
-
-
-@node MGL interface, , Python interface, Interfaces
-@end ifclear
-@subsection MGL interface
-
-MathGL library supports the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of UDAV, mglconv, mglview programs and others, @pxref{Utilities}) or in the frame of the library using.
-
-MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is sufficient, i.e. variables @var{a} and @var{A} are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when @samp{#} is a part of some string. Also options can be specified after symbol @samp{;} (@pxref{Command options}). Symbol @samp{:} starts new command (like new line character) if it is not placed inside a string or inside brackets.
-
-If string contain references to external parameters (substrings @samp{$0}, @samp{$1} ... @samp{$9}) or definitions (substrings @samp{$a}, @samp{$b} ... @samp{$z}) then before execution the values of parameter/definition will be substituted instead of reference. It allows to use the same MGL script for different parameters (filenames, paths, condition and so on).
-
-Argument can be a string, a variable name or a number.
-@itemize @bullet
-@item
-The string is any symbols between ordinary marks @samp{'}.
-
-@item
-Usually variable have a name which is arbitrary combination of symbols (except spaces and @samp{'}) started from a letter and with length less than 64. A temporary array can be used as variable:
-@itemize @bullet
-@item
-sub-arrays (like in @ref{subdata} command) as command argument. For example, @code{a(1)} or @code{a(1,:)} or @code{a(1,:,:)} is second row, @code{a(:,2)} or @code{a(:,2,:)} is third column, @code{a(:,:,0)} is first slice and so on. Also you can extract a part of array from m-th to n-th element by code @code{a(m:n,:,:)} or just @code{a(m:n)}.
-
-@item
-any column combinations defined by formulas, like @code{a('n*w^2/exp(t)')} if names for data columns was specified (by @ref{idset} command or in the file at string started with @code{##}).
-
-@item
-any expression (without spaces) of existed variables produce temporary variable. For example, @samp{sqrt(dat(:,5)+1)} will produce temporary variable with data values equal to @code{tmp[i,j] = sqrt(dat[i,5,j]+1)}.
-
-@item
-temporary variable of higher dimensions by help of []. For example, @samp{[1,2,3]} will produce a temporary vector of 3 elements @{1, 2, 3@}; @samp{[[11,12],[21,22]]} will produce matrix 2*2 and so on. Here you can join even an arrays of the same dimensions by construction like @samp{[v1,v2,...,vn]}.
-
-@item
-result of code for making new data (@pxref{Make another data}) inside @{@}. For example, @samp{@{sum dat 'x'@}} produce temporary variable which contain result of summation of @var{dat} along direction 'x'. This is the same array @var{tmp} as produced by command @samp{sum tmp dat 'x'}. You can use nested constructions, like @samp{@{sum @{max dat 'z'@} 'x'@}}.
-@end itemize
-Temporary variables can not be used as 1st argument for commands which create (return) the data (like @samp{new}, @samp{read}, @samp{hist} and so on).
-
-@item
-Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated as number if they were not redefined by user. Variables with suffixes are treated as numbers (@pxref{Data information}). Names defined by @ref{define} command are treated as number. Also results of formulas with sizes 1x1x1 are treated as number (for example, @samp{pi/dat.nx}).
-@end itemize
-Before the first using all variables must be defined with the help of commands, like, @ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} and so on (see sections @ref{Data constructor}, @ref{Data filling} and @ref{Make another data}).
-
-Command may have several set of possible arguments (for example, @code{plot ydat} and @code{plot xdat ydat}). All command arguments for a selected set must be specified. However, some arguments can have default values. These argument are printed in [], like @code{plot ydat ['stl'='' zval=nan]}. At this, the record @code{[arg1 arg2 arg3 ...]} means @code{[arg1 [arg2 [arg3 ...]]]}, i.e. you can omit only tailing arguments if you agree with its default values. For example, @code{plot ydat '' 1} or @code{plot ydat ''} is correct, but @code{plot ydat 1} is incorrect (argument @code{'stl'} is missed).
-
-Below I show commands to control program flow, like, conditions, cycles, define script arguments and so on. Other commands can be found in chapters @ref{MathGL core} and @ref{Data processing}.
-
-@cindex chdir
-@anchor{chdir}
-@deftypefn {MGL command} {} chdir 'path'
-Changes the current directory to @var{path}.
-@end deftypefn
-
-@cindex define
-@anchor{define}
-@deftypefn {MGL command} {} define $N smth
-Sets @var{N}-th script argument to @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present). Here @var{N} is digit (0...9) or alpha (a...z).
-@end deftypefn
-@deftypefn {MGL command} {} define name smth
-Create scalar variable @code{name} which have the numeric value of @code{smth}. Later you can use this variable as usual number. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deftypefn
-@cindex defchr
-@anchor{defchr}
-@deftypefn {MGL command} {} defchr $N smth
-Sets @var{N}-th script argument to character with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deftypefn
-@cindex defnum
-@anchor{defnum}
-@deftypefn {MGL command} {} defnum $N smth
-Sets @var{N}-th script argument to number with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deftypefn
-@cindex defpal
-@anchor{defpal}
-@deftypefn {MGL command} {} defpal $N smth
-Sets @var{N}-th script argument to palette character at position evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deftypefn
-
-@cindex call
-@anchor{call}
-@deftypefn {MGL command} {} call 'fname' [ARG1 ARG2 ... ARG9]
-Executes function @var{fname} (or script if function is not found). Optional arguments will be passed to functions. See also @ref{func}.
-@end deftypefn
-@cindex func
-@anchor{func}
-@deftypefn {MGL command} {} func 'fname' [narg=0]
-Define the function @var{fname} and number of required arguments. The arguments will be placed in script parameters $1, $2, ... $9. Note, you should stop script execution before function definition(s) by command @ref{stop}. See also @ref{return}.
-@end deftypefn
-@cindex return
-@anchor{return}
-@deftypefn {MGL command} {} return
-Return from the function. See also @ref{func}.
-@end deftypefn
-
-
-@cindex if
-@anchor{if}
-@deftypefn {MGL command} {} if dat 'cond'
-Starts block which will be executed if @var{dat} satisfy to @var{cond}.
-@end deftypefn
-@deftypefn {MGL command} {} if @code{val}
-Starts block which will be executed if @code{val} is nonzero.
-@end deftypefn
-@cindex elseif
-@anchor{elseif}
-@deftypefn {MGL command} {} elseif dat 'cond'
-Starts block which will be executed if previous @code{if} or @code{elseif} is false and @var{dat} satisfy to @var{cond}.
-@end deftypefn
-@deftypefn {MGL command} {} elseif @code{val}
-Starts block which will be executed if previous @code{if} or @code{elseif} is false and @code{val} is nonzero.
-@end deftypefn
-@cindex else
-@anchor{else}
-@deftypefn {MGL command} {} else
-Starts block which will be executed if previous @code{if} or @code{elseif} is false.
-@end deftypefn
-@cindex endif
-@anchor{endif}
-@deftypefn {MGL command} {} endif
-Finishes @code{if/elseif/else} block.
-@end deftypefn
-
-@cindex for
-@anchor{for}
-@deftypefn {MGL command} {} for $N @code{v1 v2 [dv=1]}
-Starts cycle with $@var{N}-th argument changing from @var{v1} to @var{v2} with the step @var{dv}. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deftypefn
-@deftypefn {MGL command} {} for $N dat
-Starts cycle with $@var{N}-th argument changing for @var{dat} values. Here @var{N} is digit (0...9) or alpha (a...z).
-@end deftypefn
-@cindex next
-@anchor{next}
-@deftypefn {MGL command} {} next
-Finishes @code{for} cycle.
-@end deftypefn
-
-@cindex once
-@anchor{once}
-@deftypefn {MGL command} {} once @code{val}
-The code between @code{once on} and @code{once off} will be executed only once. Useful for large data manipulation in programs like UDAV.
-@end deftypefn
-@cindex stop
-@anchor{stop}
-@deftypefn {MGL command} {} stop
-Terminate execution.
-@end deftypefn

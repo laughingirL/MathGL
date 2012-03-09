@@ -175,9 +175,9 @@ using mglBase::Light;
 	/// Combine plots from 2 canvases. Result will be saved into this.
 	void Combine(const mglCanvas *gr);
 	/// Send graphical information to node id using MPI
-	void MPI_Send(int /*id*/)	{}	// TODO: add later
+	void MPI_Send(int id);
 	/// Receive graphical information from node id using MPI
-	void MPI_Recv(int /*id*/)	{}	// TODO: add later
+	void MPI_Recv(int id);
 	inline float GetDelay()	{	return Delay;	}
 	inline void SetDelay(float d)	{	Delay=d;	}
 

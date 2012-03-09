@@ -120,9 +120,8 @@ void mgl_mat_push(HMGL gr);
 void mgl_clf(HMGL graph);
 void mgl_clf_rgb(HMGL gr, float r, float g, float b);
 
-void mgl_subplot(HMGL gr, int nx,int ny,int m);
-void mgl_subplot_d(HMGL gr, int nx,int ny,int m, float dx, float dy);
-void mgl_subplot_s(HMGL gr, int nx,int ny,int m,const char *style);
+void mgl_subplot_d(HMGL gr, int nx,int ny,int m,const char *style, float dx, float dy);
+void mgl_subplot(HMGL gr, int nx,int ny,int m,const char *style);
 void mgl_multiplot(HMGL gr, int nx,int ny,int m,int dx,int dy,const char *style);
 void mgl_inplot(HMGL gr, float x1,float x2,float y1,float y2);
 void mgl_relplot(HMGL gr, float x1,float x2,float y1,float y2);
@@ -139,6 +138,7 @@ void mgl_zoom(HMGL gr, float x1, float y1, float x2, float y2);
 void mgl_rotate_vector(HMGL gr, float Tet,float x,float y,float z);
 void mgl_perspective(HMGL gr, float val);
 
+void mgl_draw_thr(void *);
 /*****************************************************************************/
 uintptr_t mgl_create_graph_(int *width, int *height);
 void mgl_delete_graph_(uintptr_t *graph);
@@ -255,13 +255,13 @@ void mgl_perspective_(uintptr_t *graph, float val);
 int mgl_fortran_func(HMGL gr, void *);
 HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par);
 HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par);
-void mgl_fltk_run();
-void mgl_qt_run();
+int mgl_fltk_run();
+int mgl_qt_run();
 /*****************************************************************************/
 uintptr_t mgl_create_graph_qt_(const char *title, int);
 uintptr_t mgl_create_graph_fltk_(const char *title, int);
-void mgl_fltk_run_();
-void mgl_qt_run_();
+int mgl_fltk_run_();
+int mgl_qt_run_();
 /*****************************************************************************/
 void mgl_wnd_set_delay(HMGL gr, float dt);
 void mgl_setup_window(HMGL gr, int autoclf, int showpos, int clf_upd);

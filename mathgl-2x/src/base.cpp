@@ -752,7 +752,7 @@ float mglBase::GetA(float a)
 {
 	if(fa)		a = fa->Calc(0,0,0,a);
 	a = (a-FMin.c)/(FMax.c-FMin.c);
-	a = a<1?(a>0?a:0):1/MGL_FLT_EPS;	// for texture a must be <1 always!!!
+	a = (a<1?(a>0?a:0):1)/MGL_FLT_EPS;	// for texture a must be <1 always!!!
 	return a;
 }
 //-----------------------------------------------------------------------------
@@ -856,9 +856,6 @@ float mglBase::SaveState(const char *opt)
 		else if(!strcmp(a,"light"))		Light(ff!=0);
 		else if(!strcmp(a,"ambient"))	SetAmbient(ff);
 		else if(!strcmp(a,"diffuse"))	SetDifLight(ff);
-		else if(!strcmp(a,"marksize"))	SetMarkSize(ff);
-		else if(!strcmp(a,"fontsize"))	SetFontSize(ff);
-		else if(!strcmp(a,"arrowsize"))	SetArrowSize(ff);
 		else if(!strcmp(a,"size"))
 		{	SetMarkSize(ff);	SetFontSize(ff);	SetArrowSize(ff);	}
 		else if(!strcmp(a,"num") || !strcmp(a,"number") || !strcmp(a,"value"))	return ff;

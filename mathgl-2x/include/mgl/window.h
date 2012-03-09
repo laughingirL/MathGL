@@ -23,6 +23,26 @@
 /*****************************************************************************/
 #include "mgl/mgl.h"
 //-----------------------------------------------------------------------------
+/// Class for drawing in windows (like, mglCanvasFL, mglCanvasQT and so on)
+/// Make inherited class and redefine Draw() function if you don't want to use function pointers.
+struct mglDraw
+{
+#ifdef HAVE_PTHREAD
+	pthread_t thr;
+	bool running;
+	mglDraw()	{	running=false;	}
+	virtual void Calc()	{}	///< Function for calculations
+	inline void Run()		///< Run calculations in other thread
+	{	mgl_draw_thr(this);	}
+#endif
+	virtual int Draw(mglGraph *)=0;	///< Function for drawing
+	virtual void Reload()	{}	///< Function for reloading data
+};
+int mgl_draw_class(mglBase *gr, void *p);
+void mgl_reload_class(void *p);
+typedef int (*draw_func)(mglGraph *gr);
+int mgl_draw_graph(mglBase *gr, void *p);
+//-----------------------------------------------------------------------------
 class mglWindow : public mglGraph
 {
 protected:
@@ -46,8 +66,8 @@ public:
 		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_class,title,dr);
 		else		gr = mgl_create_graph_fltk(mgl_draw_class,title,dr);
 	}
-	inline void Run()			///< Run main loop for event handling
-	{	if(wnd==1)	mgl_qt_run();	else	mgl_fltk_run();	}
+	inline int Run()			///< Run main loop for event handling
+	{	return (wnd==1)? mgl_qt_run() : mgl_fltk_run();	}
 
 	inline 	void ToggleAlpha()	///< Switch on/off transparency (do not overwrite user settings)
 	{	mgl_wnd_toggle_alpha(gr);	}

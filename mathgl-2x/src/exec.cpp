@@ -2024,19 +2024,15 @@ void mglc_surf3a(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt
 //-----------------------------------------------------------------------------
 int mgls_subplot(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
-		gr->SubPlot(iint(a[0].v), iint(a[1].v), iint(a[2].v), a[3].s.c_str());
-	else if(k[0]==3 && k[1]==3 && k[2]==3)
-		gr->SubPlot(iint(a[0].v), iint(a[1].v), iint(a[2].v), k[3]==3?a[3].v:0, k[4]==3?a[4].v:0);
+	if(k[0]==3 && k[1]==3 && k[2]==3)
+		gr->SubPlot(iint(a[0].v), iint(a[1].v), iint(a[2].v), k[3]==2?a[3].s.c_str():"<>_^", k[4]==3?a[3].v:0, k[5]==3?a[4].v:0);
 	else	return 1;
 	return 0;
 }
 void mglc_subplot(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==3 && k[1]==3 && k[2]==3 && k[3]==2)
-		mglprintf(out,1024,L"gr->SubPlot(%d, %d, %d, \"%s\");", iint(a[0].v), iint(a[1].v), iint(a[2].v), a[3].s.c_str());
-	else if(k[0]==3 && k[1]==3 && k[2]==3)
-		mglprintf(out,1024,L"gr->SubPlot(%d, %d, %d, %g, %g);", iint(a[0].v), iint(a[1].v), iint(a[2].v), k[3]==3?a[3].v:0, k[4]==3?a[4].v:0);
+	if(k[0]==3 && k[1]==3 && k[2]==3)
+		mglprintf(out,1024,L"gr->SubPlot(%d, %d, %d, \"%s\", %g, %g);", iint(a[0].v), iint(a[1].v), iint(a[2].v), k[3]==2?a[3].s.c_str():"<>_^", k[4]==3?a[3].v:0, k[5]==3?a[4].v:0);
 }
 //-----------------------------------------------------------------------------
 int mgls_multiplot(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -2054,7 +2050,7 @@ void mglc_multiplot(wchar_t out[1024], long , mglArg *a, int k[10], const char *
 //-----------------------------------------------------------------------------
 int mgls_title(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==2)	gr->Title(a[0].w.c_str(), k[1]==2?a[1].s.c_str():"#", k[2]==2?a[2].v:-2);
+	if(k[0]==2)	gr->Title(a[0].w.c_str(), k[1]==2?a[1].s.c_str():"", k[2]==2?a[2].v:-2);
 	else	return 1;
 	return 0;
 }
@@ -3685,7 +3681,7 @@ mglCommand mgls_base_cmd[] = {
 	{"stickplot","Set position of plot inside cell of stick", "stickplot num ind tet phi", mgls_stickplot, mglc_stickplot,5},
 	{"stop","Stop execution","stop", 0, 0, 6},
 	{"subdata","Extract sub-array","subdata Res Dat nx [ny nz]", mgls_subdata, mglc_subdata,4},
-	{"subplot","Set position of plot","subplot m n pos [dx dy]|m n pos 'style'", mgls_subplot, mglc_subplot,5},
+	{"subplot","Set position of plot","subplot m n pos ['style' dx dy]", mgls_subplot, mglc_subplot,5},
 	{"subto","Subtract data or number","subto Var Dat|Var num", mgls_subto, mglc_subto,3},
 	{"sum","Find summation over direction","sum Res Dat 'dir'", mgls_sum, mglc_sum,4},
 	{"surf","Draw solid surface","surf Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_surf, mglc_surf,0},
@@ -3701,7 +3697,7 @@ mglCommand mgls_base_cmd[] = {
 	{"text","Draw text at some position or along curve","text x y 'txt' ['fmt' size]|x y z 'txt' ['fmt' size]|x y dx dy 'txt' ['fmt' size]|x y z dx dy dz 'txt' ['fmt' size]|Ydat 'txt' ['font' sise]|Xdat Ydat 'txt' ['font' sise]", mgls_text, mglc_text,0},
 	{"textmark","Draw TeX mark at point position","textmark Ydat Rdat 'text' ['fmt']|Xdat Ydat Rdat 'text' ['fmt']|Xdat Ydat Zdat Rdat 'text' ['fmt']", mgls_textmark, mglc_textmark,0},
 	{"ticklen","Set tick length","ticklen val [stt]", mgls_ticklen, mglc_ticklen,2},
-	{"ticktime","Set ticks in time format","timetick 'dir' [dv 'tmpl']", mgls_ticktime, mglc_ticktime,2},
+	{"ticktime","Set ticks in time format","ticktime 'dir' [dv 'tmpl']", mgls_ticktime, mglc_ticktime,2},
 	{"tile","Draw horizontal tiles","tile Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_tile, mglc_tile,0},
 	{"tiles","Draw horizontal tiles with variable size","tiles Zdat Rdat ['fmt']|Xdat Ydat Zdat Rdat ['fmt']", mgls_tiles, mglc_tiles,0},
 	{"title","Add title for current subplot/inplot","title 'txt' ['fmt' size]", mgls_title, mglc_title,0},
@@ -3731,16 +3727,4 @@ mglCommand mgls_base_cmd[] = {
 	{"zrange","Set range for z-axis","yrange Dat [add] | z1 z2", mgls_zrange, mglc_zrange,2},
 	{"ztick","Set ticks for z-axis","ztick dz [sz tz] | 'tmpl' | Zdat 'lbl' [add] | v1 'lbl1' ...", mgls_ztick, mglc_ztick,2},
 {"","","",NULL,NULL,0}};
-//-----------------------------------------------------------------------------
-int mgl_draw_class(mglBase *gr, void *p)
-{	mglGraph g(gr);	return p ? ((mglDraw *)p)->Draw(&g) : 0;	}
-void mgl_reload_class(void *p)
-{	if(p)	((mglDraw *)p)->Reload();	}
-//-----------------------------------------------------------------------------
-int mgl_draw_graph(mglBase *gr, void *p)
-{
-	mglGraph g(gr);
-	draw_func func = (draw_func)(p);
-	return func ? func(&g) : 0;
-}
 //-----------------------------------------------------------------------------

@@ -2,12 +2,163 @@
 @c ------------------------------------------------------------------
 @chapter MGL scripts
 
+MathGL library supports the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of UDAV, mglconv, mglview programs and others, @pxref{Utilities}) or in the frame of the library using.
+
 @menu
+* MGL definition::
+* Program flow commands::
 * mglParse class::
 @end menu
 
+
 @c ------------------------------------------------------------------
-@node mglParse class, , , MGL scripts
+@node MGL definition, Program flow commands, , MGL scripts
+@section MGL definition
+
+MGL script language is rather simple. Each string is a command. First word of string is the name of command. Other words are command arguments. Command may have up to 1000 arguments (at least for now). Words are separated from each other by space or tabulation symbol. The upper or lower case of words is sufficient, i.e. variables @var{a} and @var{A} are different variables. Symbol @samp{#} starts the comment (all characters after # will be ignored). The exception is situation when @samp{#} is a part of some string. Also options can be specified after symbol @samp{;} (@pxref{Command options}). Symbol @samp{:} starts new command (like new line character) if it is not placed inside a string or inside brackets.
+
+If string contain references to external parameters (substrings @samp{$0}, @samp{$1} ... @samp{$9}) or definitions (substrings @samp{$a}, @samp{$b} ... @samp{$z}) then before execution the values of parameter/definition will be substituted instead of reference. It allows to use the same MGL script for different parameters (filenames, paths, condition and so on).
+
+Argument can be a string, a variable name or a number.
+@itemize @bullet
+@item
+The string is any symbols between ordinary marks @samp{'}.
+
+@item
+Usually variable have a name which is arbitrary combination of symbols (except spaces and @samp{'}) started from a letter and with length less than 64. A temporary array can be used as variable:
+@itemize @bullet
+@item
+sub-arrays (like in @ref{subdata} command) as command argument. For example, @code{a(1)} or @code{a(1,:)} or @code{a(1,:,:)} is second row, @code{a(:,2)} or @code{a(:,2,:)} is third column, @code{a(:,:,0)} is first slice and so on. Also you can extract a part of array from m-th to n-th element by code @code{a(m:n,:,:)} or just @code{a(m:n)}.
+
+@item
+any column combinations defined by formulas, like @code{a('n*w^2/exp(t)')} if names for data columns was specified (by @ref{idset} command or in the file at string started with @code{##}).
+
+@item
+any expression (without spaces) of existed variables produce temporary variable. For example, @samp{sqrt(dat(:,5)+1)} will produce temporary variable with data values equal to @code{tmp[i,j] = sqrt(dat[i,5,j]+1)}.
+
+@item
+temporary variable of higher dimensions by help of []. For example, @samp{[1,2,3]} will produce a temporary vector of 3 elements @{1, 2, 3@}; @samp{[[11,12],[21,22]]} will produce matrix 2*2 and so on. Here you can join even an arrays of the same dimensions by construction like @samp{[v1,v2,...,vn]}.
+
+@item
+result of code for making new data (@pxref{Make another data}) inside @{@}. For example, @samp{@{sum dat 'x'@}} produce temporary variable which contain result of summation of @var{dat} along direction 'x'. This is the same array @var{tmp} as produced by command @samp{sum tmp dat 'x'}. You can use nested constructions, like @samp{@{sum @{max dat 'z'@} 'x'@}}.
+@end itemize
+Temporary variables can not be used as 1st argument for commands which create (return) the data (like @samp{new}, @samp{read}, @samp{hist} and so on).
+
+@item
+Special names @code{nan=#QNAN, pi=3.1415926..., on=1, off=0, :=-1} are treated as number if they were not redefined by user. Variables with suffixes are treated as numbers (@pxref{Data information}). Names defined by @ref{define} command are treated as number. Also results of formulas with sizes 1x1x1 are treated as number (for example, @samp{pi/dat.nx}).
+@end itemize
+Before the first using all variables must be defined with the help of commands, like, @ref{new}, @ref{var}, @ref{list}, @ref{copy}, @ref{read}, @ref{hist}, @ref{sum} and so on (see sections @ref{Data constructor}, @ref{Data filling} and @ref{Make another data}).
+
+Command may have several set of possible arguments (for example, @code{plot ydat} and @code{plot xdat ydat}). All command arguments for a selected set must be specified. However, some arguments can have default values. These argument are printed in [], like @code{plot ydat ['stl'='' zval=nan]}. At this, the record @code{[arg1 arg2 arg3 ...]} means @code{[arg1 [arg2 [arg3 ...]]]}, i.e. you can omit only tailing arguments if you agree with its default values. For example, @code{plot ydat '' 1} or @code{plot ydat ''} is correct, but @code{plot ydat 1} is incorrect (argument @code{'stl'} is missed).
+
+
+@c ------------------------------------------------------------------
+@node Program flow commands, MGL definition, MGL scripts
+@section Program flow commands
+
+Below I show commands to control program flow, like, conditions, cycles, define script arguments and so on. Other commands can be found in chapters @ref{MathGL core} and @ref{Data processing}.
+
+@cindex chdir
+@anchor{chdir}
+@deftypefn {MGL command} {} chdir 'path'
+Changes the current directory to @var{path}.
+@end deftypefn
+
+@cindex define
+@anchor{define}
+@deftypefn {MGL command} {} define $N smth
+Sets @var{N}-th script argument to @var{smth}. Note, that @var{smth} is used as is (with @samp{'} symbols if present). Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@deftypefn {MGL command} {} define name smth
+Create scalar variable @code{name} which have the numeric value of @code{smth}. Later you can use this variable as usual number. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@cindex defchr
+@anchor{defchr}
+@deftypefn {MGL command} {} defchr $N smth
+Sets @var{N}-th script argument to character with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@cindex defnum
+@anchor{defnum}
+@deftypefn {MGL command} {} defnum $N smth
+Sets @var{N}-th script argument to number with value evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@cindex defpal
+@anchor{defpal}
+@deftypefn {MGL command} {} defpal $N smth
+Sets @var{N}-th script argument to palette character at position evaluated from @var{smth}. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+
+@cindex call
+@anchor{call}
+@deftypefn {MGL command} {} call 'fname' [ARG1 ARG2 ... ARG9]
+Executes function @var{fname} (or script if function is not found). Optional arguments will be passed to functions. See also @ref{func}.
+@end deftypefn
+@cindex func
+@anchor{func}
+@deftypefn {MGL command} {} func 'fname' [narg=0]
+Define the function @var{fname} and number of required arguments. The arguments will be placed in script parameters $1, $2, ... $9. Note, you should stop script execution before function definition(s) by command @ref{stop}. See also @ref{return}.
+@end deftypefn
+@cindex return
+@anchor{return}
+@deftypefn {MGL command} {} return
+Return from the function. See also @ref{func}.
+@end deftypefn
+
+
+@cindex if
+@anchor{if}
+@deftypefn {MGL command} {} if dat 'cond'
+Starts block which will be executed if @var{dat} satisfy to @var{cond}.
+@end deftypefn
+@deftypefn {MGL command} {} if @code{val}
+Starts block which will be executed if @code{val} is nonzero.
+@end deftypefn
+@cindex elseif
+@anchor{elseif}
+@deftypefn {MGL command} {} elseif dat 'cond'
+Starts block which will be executed if previous @code{if} or @code{elseif} is false and @var{dat} satisfy to @var{cond}.
+@end deftypefn
+@deftypefn {MGL command} {} elseif @code{val}
+Starts block which will be executed if previous @code{if} or @code{elseif} is false and @code{val} is nonzero.
+@end deftypefn
+@cindex else
+@anchor{else}
+@deftypefn {MGL command} {} else
+Starts block which will be executed if previous @code{if} or @code{elseif} is false.
+@end deftypefn
+@cindex endif
+@anchor{endif}
+@deftypefn {MGL command} {} endif
+Finishes @code{if/elseif/else} block.
+@end deftypefn
+
+@cindex for
+@anchor{for}
+@deftypefn {MGL command} {} for $N @code{v1 v2 [dv=1]}
+Starts cycle with $@var{N}-th argument changing from @var{v1} to @var{v2} with the step @var{dv}. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@deftypefn {MGL command} {} for $N dat
+Starts cycle with $@var{N}-th argument changing for @var{dat} values. Here @var{N} is digit (0...9) or alpha (a...z).
+@end deftypefn
+@cindex next
+@anchor{next}
+@deftypefn {MGL command} {} next
+Finishes @code{for} cycle.
+@end deftypefn
+
+@cindex once
+@anchor{once}
+@deftypefn {MGL command} {} once @code{val}
+The code between @code{once on} and @code{once off} will be executed only once. Useful for large data manipulation in programs like UDAV.
+@end deftypefn
+@cindex stop
+@anchor{stop}
+@deftypefn {MGL command} {} stop
+Terminate execution.
+@end deftypefn
+
+@c ------------------------------------------------------------------
+@node mglParse class, , Program flow commands, MGL scripts
 @section mglParse class
 @cindex mglParse
 

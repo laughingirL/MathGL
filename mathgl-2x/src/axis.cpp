@@ -282,6 +282,7 @@ void mglCanvas::SetTickTime(char dir, float d, const char *t)
 //-----------------------------------------------------------------------------
 void mglCanvas::AdjustTicks(const char *dir, bool force)
 {
+	if(force)	SetTuneTicks(true);
 	UpdateAxis();	//TuneTicks = true;
 	if(strchr(dir,'x'))
 	{	if(force)	ax.d=0;	AdjustTicks(ax,fx);	}

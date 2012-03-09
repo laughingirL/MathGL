@@ -180,3 +180,28 @@ uintptr_t mgl_create_graph_qt_(const char *title, int l)
 void mgl_qt_run_()	{	mgl_qt_run();	}
 #endif
 //-----------------------------------------------------------------------------
+int mgl_draw_class(mglBase *gr, void *p)
+{	mglGraph g(gr);	return p ? ((mglDraw *)p)->Draw(&g) : 0;	}
+void mgl_reload_class(void *p)
+{	if(p)	((mglDraw *)p)->Reload();	}
+//-----------------------------------------------------------------------------
+int mgl_draw_graph(mglBase *gr, void *p)
+{
+	mglGraph g(gr);
+	draw_func func = (draw_func)(p);
+	return func ? func(&g) : 0;
+}
+//-----------------------------------------------------------------------------
+void *mgl_draw_calc(void *p)
+{	((mglDraw *)p)->Calc();	}
+//-----------------------------------------------------------------------------
+void mgl_draw_thr(void *p)
+{
+#ifdef HAVE_PTHREAD
+	mglDraw *d = (mglDraw *)p;
+	if(!d || d->running)	return;
+	pthread_create(&(d->thr),0,mgl_draw_calc,d);
+	pthread_detach(d->thr);
+#endif
+}
+//-----------------------------------------------------------------------------

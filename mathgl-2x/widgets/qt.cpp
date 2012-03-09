@@ -802,7 +802,7 @@ HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void 
 	g->Window(0,0,draw,title,par);
 	return g;
 }
-void mgl_qt_run()	{	if(qApp) qApp->exec();	}
+int mgl_qt_run()	{	return (qApp)?qApp->exec():-1;	}
 //-----------------------------------------------------------------------------
 uintptr_t mgl_create_graph_qt_(const char *title, int l)
 {
@@ -810,7 +810,7 @@ uintptr_t mgl_create_graph_qt_(const char *title, int l)
 	uintptr_t t = uintptr_t(mgl_create_graph_qt(0,s,0));
 	delete []s;	return t;
 }
-void mgl_qt_run_()	{	mgl_qt_run();	}
+int mgl_qt_run_()	{	return mgl_qt_run();	}
 //-----------------------------------------------------------------------------
 void *mgl_qt_tmp(void *)	{	mgl_qt_run();	return 0;	}
 /*void mgl_qt_thread()
