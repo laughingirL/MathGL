@@ -155,7 +155,8 @@ void mgl_wnd_animation_(uintptr_t *gr)
 #ifndef HAVE_FLTK
 HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *)
 {	return NULL;	}
-void mgl_fltk_run(){}
+int mgl_fltk_run(){return 0;}
+#endif
 //-----------------------------------------------------------------------------
 uintptr_t mgl_create_graph_fltk_(const char *title, int l)
 {
@@ -163,13 +164,13 @@ uintptr_t mgl_create_graph_fltk_(const char *title, int l)
 	uintptr_t t = uintptr_t(mgl_create_graph_fltk(0,s,0));
 	delete []s;	return t;
 }
-void mgl_fltk_run_()	{	mgl_fltk_run();	}
-#endif
+int mgl_fltk_run_()	{	return mgl_fltk_run();	}
 //-----------------------------------------------------------------------------
 #ifndef HAVE_QT
 HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *)
 {	return NULL;	}
-void mgl_qt_run(){}
+int mgl_qt_run(){return 0;}
+#endif
 //-----------------------------------------------------------------------------
 uintptr_t mgl_create_graph_qt_(const char *title, int l)
 {
@@ -177,8 +178,7 @@ uintptr_t mgl_create_graph_qt_(const char *title, int l)
 	uintptr_t t = uintptr_t(mgl_create_graph_qt(0,s,0));
 	delete []s;	return t;
 }
-void mgl_qt_run_()	{	mgl_qt_run();	}
-#endif
+int mgl_qt_run_()	{	return mgl_qt_run();	}
 //-----------------------------------------------------------------------------
 int mgl_draw_class(mglBase *gr, void *p)
 {	mglGraph g(gr);	return p ? ((mglDraw *)p)->Draw(&g) : 0;	}
@@ -193,7 +193,11 @@ int mgl_draw_graph(mglBase *gr, void *p)
 }
 //-----------------------------------------------------------------------------
 void *mgl_draw_calc(void *p)
-{	((mglDraw *)p)->Calc();	}
+{
+#ifdef HAVE_PTHREAD
+	((mglDraw *)p)->Calc();
+#endif
+}
 //-----------------------------------------------------------------------------
 void mgl_draw_thr(void *p)
 {

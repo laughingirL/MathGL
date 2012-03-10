@@ -132,7 +132,7 @@ void mgl_data_sort(HMDT dat, long idx, long idy);
 void mgl_data_hankel(HMDT dat, const char *dir);
 void mgl_data_sinfft(HMDT dat, const char *dir);
 void mgl_data_cosfft(HMDT dat, const char *dir);
-void mgl_data_fill_sample(HMDT dat, long num, const char *how);
+void mgl_data_fill_sample(HMDT dat, const char *how);
 
 float mgl_data_spline(HCDT dat, float x,float y,float z);
 float mgl_data_linear(HCDT dat, float x,float y,float z);
@@ -245,7 +245,7 @@ void mgl_data_sort_(uintptr_t *dat, int *idx, int *idy);
 void mgl_data_hankel_(uintptr_t *dat, const char *dir,int);
 void mgl_data_sinfft_(uintptr_t *dat, const char *dir,int);
 void mgl_data_cosfft_(uintptr_t *dat, const char *dir,int);
-void mgl_data_fill_sample_(uintptr_t *dat, int *num, const char *how,int);
+void mgl_data_fill_sample_(uintptr_t *dat, const char *how,int);
 
 float mgl_data_spline_(uintptr_t *dat, float *x,float *y,float *z);
 float mgl_data_linear_(uintptr_t *dat, float *x,float *y,float *z);
@@ -564,8 +564,8 @@ public:
 	/// Cos-Fourier transform
 	inline void CosFFT(const char *dir)	{	mgl_data_cosfft(this,dir);	}
 	/// Fill data by 'x'/'k' samples for Hankel ('h') or Fourier ('f') transform
-	inline void FillSample(long n, const char *how)
-	{	mgl_data_fill_sample(this,n,how);	}
+	inline void FillSample(const char *how)
+	{	mgl_data_fill_sample(this,how);	}
 
 	/// Interpolate by qubic splain the data to given point x=[0...nx-1], y=[0...ny-1], z=[0...nz-1]
 	inline mreal Spline(mreal x,mreal y=0,mreal z=0) const
@@ -623,8 +623,8 @@ public:
 	/// Copy data from other mglData variable
 	inline mglData &operator=(const mglData &d)
 	{	if(this!=&d)	Set(d.a,d.nx,d.ny,d.nz);	return *this;	}
-	inline mglData &operator=(mreal val)
-	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return *this;	}
+	inline mreal operator=(mreal val)
+	{	for(long i=0;i<nx*ny*nz;i++)	a[i]=val;	return val;	}
 	/// Multiplicate the data by other one for each element
 	inline void operator*=(const mglData &d)	{	mgl_data_mul_dat(this,&d);	}
 	/// Divide the data by other one for each element

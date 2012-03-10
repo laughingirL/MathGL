@@ -47,7 +47,6 @@ Flag to use external data, i.e. don't delete it.
 
 @deftypefn {Method on @code{mglData}} @code{float} GetVal (@code{long} i)
 @deftypefnx {Method on @code{mglData}} @code{void} SetVal (@code{float} val, @code{long} i)
-@deftypefnx {Method on @code{mglData}} @code{float} vthr (@code{long} i)
 Gets or sets the value in by "flat" index @var{i} without border checking. Index @var{i} should be in range [0, nx*ny*nz].
 @end deftypefn
 
@@ -60,20 +59,13 @@ Gets or sets the value in by "flat" index @var{i} without border checking. Index
 Gets the x-, y-, z-size of the data.
 @end deftypefn
 
-@deftypefn {Method on @code{mglData}} @code{float} v (@code{long} i, @code{long} j=@code{0}, @code{long} k=@code{0})
-@deftypefnx {C function} @code{float} mgl_data_get_value (@code{HCDT} dat, @code{int} i, @code{int} j, @code{int} k)
+@deftypefn {C function} @code{float} mgl_data_get_value (@code{HCDT} dat, @code{int} i, @code{int} j, @code{int} k)
 @deftypefnx {C function} @code{float *} mgl_data_value (@code{HMDT} dat, @code{int} i, @code{int} j, @code{int} k)
 @deftypefnx {C function} @code{void} mgl_data_set_value (@code{HMDT} dat, @code{float} v, @code{int} i, @code{int} j, @code{int} k)
 Gets or sets the value in specified cell of the data with border checking.
 @end deftypefn
 @deftypefn {C function} @code{const float *} mgl_data_data (@code{HCDT} dat)
 Returns pointer to internal data array.
-@end deftypefn
-
-@deftypefn {Method on @code{mglData}} @code{float} dvx (@code{long} i, @code{long} j=@code{0}, @code{long} k=@code{0})
-@deftypefnx {Method on @code{mglData}} @code{float} dvy (@code{long} i, @code{long} j=@code{0}, @code{long} k=@code{0})
-@deftypefnx {Method on @code{mglData}} @code{float} dvz (@code{long} i, @code{long} j=@code{0}, @code{long} k=@code{0})
-Returns numerical derivate along x-, y- or z-direction.
 @end deftypefn
 @end ifclear
 
@@ -103,7 +95,6 @@ Default constructor. Allocates the memory for data array and initializes it by z
 @deftypefnx {MGL command} {} copy @sc{dat} @code{val}
 @ifclear UDAV
 @deftypefnx {Constructor on @code{mglData}} {} mglData (@code{const mglData &}dat2)
-@deftypefnx {Constructor on @code{mglData}} {} mglData (@code{const mglData *}dat2)
 @deftypefnx {Constructor on @code{mglData}} {} mglData (@code{const mglDataA *}dat2)
 @deftypefnx {Constructor on @code{mglData}} {} mglData (@code{int} size, @code{const float *}dat2)
 @deftypefnx {Constructor on @code{mglData}} {} mglData (@code{int} size, @code{int} cols, @code{const float *}dat2)
@@ -228,6 +219,17 @@ Insert @var{num} slices along @var{dir}-direction at position @var{pos} and fill
 Delete @var{num} slices along @var{dir}-direction at position @var{pos}.
 @end deftypefn
 
+@anchor{sort}
+@deftypefn {MGL command} {} sort dat @code{idx [idy=-1]}
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{void} Sort (@code{lond} idx, @code{long} idy=@code{-1})
+@deftypefnx {C function} @code{void} mgl_data_sort (@code{HMDT} dat, @code{lond} idx, @code{long} idy)
+@end ifclear
+Sort data rows (or slices in 3D case) by values of specified column @var{idx} (or cell @{@var{idx},@var{idy}@} for 3D case). Note, this function is not thread safe!
+@end deftypefn
+
+
+
 @c ------------------------------------------------------------------
 @node Data filling, File I/O, Data resizing, Data processing
 @section Data filling
@@ -276,8 +278,9 @@ Allocates memory and copies the data from the @code{gsl_vector *} structure.
 Allocates memory and copies the data from the @code{gsl_matrix *} structure.
 @end deftypefn
 @deftypefn {Method on @code{mglData}} @code{void} Set (@code{const mglData &}from)
+@deftypefnx {Method on @code{mglData}} @code{void} Set (@code{HCDT} from)
 @deftypefnx {C function} @code{void} mgl_data_set (@code{HMDT} dat, @code{HCDT} from)
-Copies the data from mglData instance @var{from}.
+Copies the data from @code{mglData} (or @code{mglDataA}) instance @var{from}.
 @end deftypefn
 
 @deftypefn {Method on @code{mglData}} @code{void} Set (@code{const std::vector<int> &}d)
@@ -337,6 +340,16 @@ Fills the value of array according to the formula in string @var{eq}. Formula is
 @end ifclear
 The same as previous ones but coordinates @samp{x}, @samp{y}, @samp{z} are supposed to be normalized in range [0,1]. If @var{dim}>0 is specified then modification will be fulfilled only for slices >=@var{dim}.
 @end deftypefn
+
+@anchor{fillsample}
+@deftypefn {MGL command} {} fillsample dat 'how'
+@ifclear UDAV
+@deftypefnx {Method on @code{mglData}} @code{void} FillSample (@code{const char *}how)
+@deftypefnx mglData @code{void} mgl_data_fill_sample (@code{HMDT} a, @code{const char *}how)
+@end ifclear
+Fills data by 'x' or 'k' samples for Hankel ('h') or Fourier ('f') transform.
+@end deftypefn
+
 
 @anchor{put}
 @deftypefn {MGL command} {} put dat @code{val [i=: j=: k=:]}
@@ -929,17 +942,27 @@ Gets approximated (interpolated) position of maximum to variables @var{i}, @var{
 Gets zero-momentum (energy, @math{I=\sum dat_i}) and write first momentum (median, @math{a = \sum \xi_i dat_i/I}), second momentum (width, @math{w^2 = \sum (\xi_i-a)^2 dat_i/I}), third momentum (skewness, @math{s = \sum (\xi_i-a)^3 dat_i/ I w^3}) and fourth momentum (kurtosis, @math{k = \sum (\xi_i-a)^4 dat_i / 3 I w^4}) to variables. Here @math{\xi} is corresponding coordinate if @var{dir} is @samp{'x'}, @samp{'y'} or @samp{'z'}. Otherwise median is @math{a = \sum dat_i/N}, width is @math{w^2 = \sum (dat_i-a)^2/N} and so on.
 @end deftypefn
 
+@anchor{.fst}
+@deftypefn {MGL suffix} {(dat)} .fst
 @ifclear UDAV
 @cindex Find
-@deftypefn {Method on @code{mglData}} @code{float} Find (@code{const char *}cond, @code{int} &i, @code{int} &j, @code{int} &k) @code{const}
+@deftypefnx {Method on @code{mglData}} @code{float} Find (@code{const char *}cond, @code{int} &i, @code{int} &j, @code{int} &k) @code{const}
 @deftypefnx {C function} @code{float} mgl_data_first (@code{HCDT} dat, @code{const char *}cond, @code{int} *i, @code{int} *j, @code{int} *k)
+@end ifclear
 Find position (after specified in @var{i}, @var{j}, @var{k}) of first nonzero value of formula @var{cond}. Function return the data value at found position.
 @end deftypefn
+
+@anchor{.lst}
+@deftypefn {MGL suffix} {(dat)} .lst
+@ifclear UDAV
 @cindex Last
-@deftypefn {Method on @code{mglData}} @code{float} Last (@code{const char *}cond, @code{int} &i, @code{int} &j, @code{int} &k) @code{const}
+@deftypefnx {Method on @code{mglData}} @code{float} Last (@code{const char *}cond, @code{int} &i, @code{int} &j, @code{int} &k) @code{const}
 @deftypefnx {C function} @code{float} mgl_data_last (@code{HCDT} dat, @code{const char *}cond, @code{int} *i, @code{int} *j, @code{int} *k)
+@end ifclear
 Find position (before specified in @var{i}, @var{j}, @var{k}) of last nonzero value of formula @var{cond}. Function return the data value at found position.
 @end deftypefn
+
+@ifclear UDAV
 @deftypefn {Method on @code{mglData}} @code{int} Find (@code{const char *}cond, @code{char} dir, @code{int} i=@code{0}, @code{int} j=@code{0}, @code{int} k=@code{0}) @code{const}
 @deftypefnx {C function} @code{float} mgl_data_find (@code{HCDT} dat, @code{const char *}cond, @code{int} i, @code{int} j, @code{int} k)
 Return position of first in direction @var{dir} nonzero value of formula @var{cond}. The search is started from point @{i,j,k@}.
@@ -951,11 +974,9 @@ Determines if any nonzero value of formula in the data array.
 @end deftypefn
 @end ifclear
 
-@anchor{.a} @anchor{.fst} @anchor{.lst}
+@anchor{.a}
 @deftypefn {MGL suffix} {(dat)} .a
-@deftypefnx {MGL suffix} {(dat)} .fst
-@deftypefnx {MGL suffix} {(dat)} .lst
-Give first (for @code{.a}, i.e. @code{dat->a[0]}), first nonzero (for @code{.fst}) or last nonzero (for @code{.lst}) value of data array.
+Give first (for @code{.a}, i.e. @code{dat->a[0]}).
 @end deftypefn
 
 
@@ -963,11 +984,19 @@ Give first (for @code{.a}, i.e. @code{dat->a[0]}), first nonzero (for @code{.fst
 @node Operators, Global functions, Data information, Data processing
 @section Operators
 
+@anchor{copy}
 @deftypefn {MGL command} {} copy @sc{dat} dat2 ['eq'='']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} operator= (@code{const mglData &}d)
 @end ifclear
 Copies data from other variable.
+@end deftypefn
+
+@deftypefn {MGL command} {} copy dat [val]
+@ifclear UDAV
+@deftypefnx {Method on @code{float}} @code{void} operator= (@code{float} val)
+@end ifclear
+Set all data values equal to @var{val}.
 @end deftypefn
 
 @anchor{multo}
@@ -1089,7 +1118,7 @@ These functions are not methods of @code{mglData} class. However it provide addi
 @deftypefnx {Global function} @code{mglData} mglTransform (@code{const mglData &}real, @code{const mglData &}imag, @code{const char *}type)
 @deftypefnx {C function} @code{HMDT} mgl_transform (@code{HCDT} real, @code{HCDT} imag, @code{const char *}type)
 @end ifclear
-Do integral transformation of complex data @var{real}, @var{imag} on specified direction. The order of transformations is specified in string @var{type}: first character for x-dimension, second one for y-dimension, third one for z-dimension. The possible character are: @samp{f} is forward Fourier transformation, @samp{i} is inverse Fourier transformation, @samp{s} is Sine transform, @samp{c} is Cosine transform, @samp{h} is Hankel transform, @samp{n} or @samp{ } is no transformation.
+Does integral transformation of complex data @var{real}, @var{imag} on specified direction. The order of transformations is specified in string @var{type}: first character for x-dimension, second one for y-dimension, third one for z-dimension. The possible character are: @samp{f} is forward Fourier transformation, @samp{i} is inverse Fourier transformation, @samp{s} is Sine transform, @samp{c} is Cosine transform, @samp{h} is Hankel transform, @samp{n} or @samp{ } is no transformation.
 @end deftypefn
 
 @anchor{transforma}
@@ -1099,6 +1128,15 @@ Do integral transformation of complex data @var{real}, @var{imag} on specified d
 @deftypefnx {C function} @code{HMDT} mgl_transform_a @code{HCDT} ampl, @code{HCDT} phase, @code{const char *}type)
 @end ifclear
 The same as previous but with specified amplitude @var{ampl} and phase @var{phase} of complex numbers.
+@end deftypefn
+
+@anchor{fourier}
+@deftypefn {MGL command} {} fourier reDat imDat 'dir'
+@ifclear UDAV
+@deftypefnx {Global function} @code{void} mglFourier @code{const mglData &}re, @code{const mglData &}im, @code{const char *}dir)
+@deftypefnx {C function} @code{void} mgl_data_fourier @code{HCDT} re, @code{HCDT} im, @code{const char *}dir)
+@end ifclear
+Does Fourier transform of complex data @var{re}+i*@var{im} in directions @var{dir}. Result is placed back into @var{re} and @var{im} data arrays.
 @end deftypefn
 
 @anchor{stfad}

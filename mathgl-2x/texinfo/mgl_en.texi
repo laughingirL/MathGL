@@ -68,37 +68,40 @@ supports it in developing GNU and promoting software freedom.''
 @menu
 * Overview::
 * Examples::
+* MGL scripts::
+* General concepts::
 * MathGL core::
 * Data processing::
-* Samples::
 * Copying This Manual::
 * Index::
 @end menu
 
 @rmacro sref {arg}
-@xref{\arg\}, for sample code and picture.
 @end rmacro
 @macro tdref{nam}
-@uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
 @end macro
 @set UDAV
+
 
 @node Overview, Examples, , Top
 @include overview_en.texi
 
-@node Examples, MathGL core, Overview, Top
+@node Examples, MGL scripts, Overview, Top
 @include ex_mgl_en.texi
 
-@node MathGL core, Data handling, Examples, Top
+@node MGL scripts, General concepts, Examples, Top
+@include parse_en.texi
+
+@node General concepts, MathGL core, MGL scripts, Top
+@include concept_en.texi
+
+@node MathGL core, Data processing, General concepts, Top
 @include core_en.texi
 
-@node Data processing, Samples, MathGL core, Top
+@node Data processing, Copying This Manual, MathGL core, Top
 @include data_en.texi
 
-@node Samples, Copying This Manual, Data handling, Top
-@include samples_en.texi
-
-@node Copying This Manual, Index, Samples, Top
+@node Copying This Manual, Index, Data processing, Top
 @appendix GNU Free Documentation License
 @include fdl.texi
 

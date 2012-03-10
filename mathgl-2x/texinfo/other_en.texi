@@ -7,9 +7,6 @@
 * mglColor class::              
 * mglPoint class::              
 * mglFont class::
-* mglVar class::                
-* mglCommand class::            
-* mglArg class::                
 @end menu
 
 
@@ -79,6 +76,18 @@ Gets maximal of spectral component.
 @deftypemethod mglColor @code{bool} operator== (@code{const mglColor &}c)
 @deftypemethodx mglColor @code{bool} operator!= (@code{const mglColor &}c)
 Compare with another color
+@end deftypemethod
+
+@deftypemethod mglColor @code{bool} operator*= (@code{float} v)
+Multiplies color components by number @var{v}.
+@end deftypemethod
+
+@deftypemethod mglColor @code{bool} operator+= (@code{const mglColor &}c)
+Adds color @var{c} component by component.
+@end deftypemethod
+
+@deftypemethod mglColor @code{bool} operator-= (@code{const mglColor &}c)
+Subtracts color @var{c} component by component.
 @end deftypemethod
 
 
@@ -174,7 +183,7 @@ Return true if points are different.
 @end deftypefn
 
 @c ------------------------------------------------------------------
-@node mglFont class, mglVar class, mglPoint class, Other classes
+@node mglFont class, , mglPoint class, Other classes
 @section mglFont class
 @cindex mglFont
 
@@ -276,85 +285,4 @@ The end of file contains the buffer with point coordinates at lines or triangles
 Each font file can be compressed by gzip.
 
 Note: the closing contour line  is done automatically (so the last segment may be absent). For starting new contour use a point with coordinates @code{@{0x3fff, 0x3fff@}}.
-
-@c ------------------------------------------------------------------
-@node mglVar class, mglCommand class, mglFont class, Other classes
-@section mglVar class
-@cindex mglVar
-
-Structure describes variable of type @code{mglData} and its name in MGL script. This structure is used by @code{mglParse} and is defined in @code{#include <mgl/parser.h>}. This class is accessible only from C++ (and only from GNU compilers in default binary files).
-
-@deftypecv {Parameter} mglVar @code{mglData} d
-Data itself
-@end deftypecv
-@deftypecv {Parameter} mglVar @code{std::wstring} s
-Data name
-@end deftypecv
-@deftypecv {Parameter} mglVar @code{void *} o
-Pointer to external object for function @var{func}.
-@end deftypecv
-@deftypecv {Parameter} mglVar @code{mglVar *} next
-Pointer to next instance in list
-@end deftypecv
-@deftypecv {Parameter} mglVar @code{mglVar *} prev
-Pointer to prev instance in list
-@end deftypecv
-@deftypecv {Parameter} mglVar @code{bool} temp
-Flag for temporar variable. Temporal variables will be destroyed after script execution.
-@end deftypecv
-@deftypecv {Parameter} mglVar @code{void (*} func @code{)(void *)}
-Callback function for destroying non-temporal variable.
-@end deftypecv
-
-@deftypemethod mglVar @code{void} MoveAfter (@code{mglVar *}var)
-Move variable after @var{var} and copy @code{func} from @code{var} (if @code{func} is not 0)
-@end deftypemethod
-
-
-@c ------------------------------------------------------------------
-@node mglCommand class, mglArg class, mglVar class, Other classes
-@section mglCommand class
-@cindex mglCommand
-
-Structure describes MGL command, its name, short description, executable and export functions. The structure is used by @code{mglParse} and is defined in @code{#include <mgl/parser.h>}. This class is accessible only from C++ (and only from GNU compilers in default binary files).
-
-@deftypecv {Parameter} mglCommand @code{const wchar_t *} name
-Name of command.
-@end deftypecv
-@deftypecv {Parameter} mglCommand @code{const wchar_t *} desc
-Short command description (can be NULL).
-@end deftypecv
-@deftypecv {Parameter} mglCommand @code{const wchar_t *} form
-Format of command arguments (can be NULL).
-@end deftypecv
-@deftypecv {Parameter} mglCommand @code{int (*} exec @code{)(mglGraph *gr, long n, mglArg *a, int k[10])const wchar_t *}
-Function for executing (plotting) the command using grapher @var{gr} and having @var{n}-th arguments @var{a}. Function must return 0 if all is OK; or 1 if arguments are wrong.
-@end deftypecv
-@deftypecv {Parameter} mglCommand @code{void (*} save @code{)(wchar_t out[1024], long n, mglArg *a, int k[10])const wchar_t *}
-Function for exporting in C++ (can be NULL).
-@end deftypecv
-
-
-@c ------------------------------------------------------------------
-@node mglArg class, , mglCommand class, Other classes
-@section mglArg class
-@cindex mglArg
-
-Structure describes arguments of functions in the stucture @code{mglCommand}. It is defined in @code{#include <mgl/parser.h>}. This class is accessible only from C++ (and only from GNU compilers in default binary files).
-
-@deftypecv {Parameter} mglArg @code{int} type
-Type of argument: 0-data, 1-string, 2-number.
-@end deftypecv
-@deftypecv {Parameter} mglArg @code{mglData *} d
-Pointer to data (used if type=0).
-@end deftypecv
-@deftypecv {Parameter} mglArg @code{std::wstring} w
-String with parameters (used if type=1 or if type=0 as variable name).
-@end deftypecv
-@deftypecv {Parameter} mglArg @code{std::string} s
-String with parameters (used if type=1).
-@end deftypecv
-@deftypecv {Parameter} mglArg @code{float} v
-Numerical value (used if type==2)
-@end deftypecv
 

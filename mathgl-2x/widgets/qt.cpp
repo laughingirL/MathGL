@@ -804,14 +804,6 @@ HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void 
 }
 int mgl_qt_run()	{	return (qApp)?qApp->exec():-1;	}
 //-----------------------------------------------------------------------------
-uintptr_t mgl_create_graph_qt_(const char *title, int l)
-{
-	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
-	uintptr_t t = uintptr_t(mgl_create_graph_qt(0,s,0));
-	delete []s;	return t;
-}
-int mgl_qt_run_()	{	return mgl_qt_run();	}
-//-----------------------------------------------------------------------------
 void *mgl_qt_tmp(void *)	{	mgl_qt_run();	return 0;	}
 /*void mgl_qt_thread()
  * {

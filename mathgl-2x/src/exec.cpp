@@ -444,11 +444,7 @@ int mgls_copy(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 		if(k[2]==2 && (k[3]!=3 || a[3].v!=0))	gr->Fill(*(a[0].d), a[2].s.c_str());
 		else if(k[2]==2)	a[0].d->Modify(a[2].s.c_str());
 	}
-	else if(k[0]==1 && k[1]==2)
-	{
-		a[0].d->Create(1,1,1);
-		a[0].d->a[0] = a[1].v;
-	}
+	else if(k[0]==1 && k[1]==3)		*(a[0].d) = a[1].v;
 	else	return 1;
 	return 0;
 }
@@ -460,8 +456,8 @@ void mglc_copy(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 		mglprintf(out,1024,L"%s.Set(%s);\t%s.Modify(\"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str());
 	else if(k[0]==1 && k[1]==1)
 		mglprintf(out,1024,L"%s.Set(%s);", a[0].s.c_str(), a[1].s.c_str());
-	else if(k[0]==1 && k[1]==2)
-		mglprintf(out,1024,L"%s.Create();\t%s.a[0]=%g;", a[0].s.c_str(), a[0].s.c_str(), a[1].v);
+	else if(k[0]==1 && k[1]==3)
+		mglprintf(out,1024,L"%s = %g;", a[0].s.c_str(), a[1].v);
 }
 //-----------------------------------------------------------------------------
 int mgls_cont(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
@@ -1168,14 +1164,14 @@ void mglc_fill(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 //-----------------------------------------------------------------------------
 int mgls_fillsample(mglGraph *, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==1 && k[1]==3 && k[2]==2)	a[0].d->FillSample(iint(a[1].v), a[2].s.c_str());
+	if(k[0]==1 && k[1]==2)	a[0].d->FillSample(a[1].s.c_str());
 	else	return 1;
 	return 0;
 }
 void mglc_fillsample(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==1 && k[1]==3 && k[2]==2)
-		mglprintf(out,1024,L"%s.FillSample(%d, \"%s\");", a[0].s.c_str(), iint(a[1].v), a[2].s.c_str());
+	if(k[0]==1 && k[1]==2)
+		mglprintf(out,1024,L"%s.FillSample(\"%s\");", a[0].s.c_str(), a[1].s.c_str());
 }
 //-----------------------------------------------------------------------------
 int mgls_fog(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -2192,6 +2188,19 @@ int mgls_transptype(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 void mglc_transptype(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
 	if(k[0]==3)	mglprintf(out,1024,L"gr->SetTranspType(%d);", iint(a[0].v));
+}
+//-----------------------------------------------------------------------------
+int mgls_fourier(mglGraph *, long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==1 && k[1]==1 && k[2]==2)
+		mglFourier(*(a[0].d),*(a[1].d),a[2].s.c_str());
+	else	return 1;
+	return 0;
+}
+void mglc_fourier(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+{
+	if(k[0]==1 && k[1]==1 && k[2]==2)
+		mglprintf(out,1024,L"mglFourier(%s, %s, \"%s\");",a[0].s.c_str(),  a[1].s.c_str(), a[2].s.c_str());
 }
 //-----------------------------------------------------------------------------
 int mgls_transform(mglGraph *, long , mglArg *a, int k[10], const char *)
@@ -3590,7 +3599,7 @@ mglCommand mgls_base_cmd[] = {
 	{"fall","Draw waterfalls","fall Zdat ['fmt']|Xdat Ydat Zdat ['fmt']", mgls_fall, mglc_fall,0},
 	{"fgets","Print string from file","fgets x y z 'fname' [pos=0 'fmt' size]|x y z 'fname' [pos=0 'fmt' size]", mgls_fgets, mglc_fgets,1},
 	{"fill","Fill data linearly in range [v1, v2]","fill Var v1 v2 ['dir'] | Var 'eq' [Vdat Wdat]", mgls_fill, mglc_fill,3},
-	{"fillsample","Fill x-,k-samples for transforms","fillsample Var num 'how'", mgls_fillsample, mglc_fillsample,4},
+	{"fillsample","Fill x-,k-samples for transforms","fillsample Var 'how'", mgls_fillsample, mglc_fillsample,3},
 	{"fit","Fit data to formula","fit Res A 'eq' 'var' [Ini]|Res X A 'eq' 'var' [Ini]|Res X Y A 'eq' 'var' [Ini]|Res X Y Z A 'eq' 'var' [Ini]", mgls_fit, mglc_fit,4},
 	{"fits","Fit data to formula","fits Res A S 'eq' 'var' [Ini]|Res X A S 'eq' 'var' [Ini]|Res X Y A S 'eq' 'var' [Ini]|Res X Y Z A S 'eq' 'var' [Ini]", mgls_fits, mglc_fits,4},
 	{"flow","Draw flow threads for vector field","flow Udat Vdat ['fmt' num]|Xdat Ydat Udat Vdat ['fmt' num]|Udat Vdat Wdat ['fmt' num]|Xdat Ydat Zdat Udat Vdat ['fmt' num]|\
@@ -3598,6 +3607,7 @@ mglCommand mgls_base_cmd[] = {
 	{"fog","Switch on/off fog","fog val [pos]", mgls_fog, mglc_fog,2},
 	{"font","Setup font","font 'fmt' [size]", mgls_font, mglc_font,2},
 	{"for","For cycle","for $N v1 v2 [dv] | $N Dat", 0, 0, 6},
+	{"fourier","In-place Fourier transform","fourier ReDat ImDat 'dir'", mgls_fourier, mglc_fourier, 3},
 	{"fplot","Plot curve by formula","fplot 'y(x)' ['fmt' num]|'x(t)' 'y(t)' 'z(t)' ['fmt' num]", mgls_fplot, mglc_fplot,1},
 	{"fsurf","Plot surface by formula","fsurf 'z(x,y)' ['fmt' num]|'x(u,v)' 'y(u,v)' 'z(u,v)' ['fmt' num]", mgls_fsurf, mglc_fsurf,1},
 	{"func","Start function definition and stop execution of main script","func 'name' [narg]", 0, 0, 6},

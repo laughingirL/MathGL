@@ -135,7 +135,7 @@ This is enough for a compilation of console program or with external (non-MathGL
 
 * mglGraph class is single plotter class instead of mglGraphZB, mglGraphPS and so on.
 * Text style and text color positions are swapped. I.e. text style @samp{r:C} give red centered text, but not roman dark cyan text as for v.1.*.
-
+* ColumnPlot() indexing is reverted.
 
 @c ------------------------------------------------------------------
 @node  Utilities, Thanks, Changes from v.1, Overview

@@ -743,29 +743,30 @@ HMDT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir)
 uintptr_t mgl_data_stfa_(uintptr_t *re, uintptr_t *im, int *dn, char *dir, int)
 {	return uintptr_t(mgl_data_stfa(_DA_(re),_DA_(im),*dn,*dir));	}
 //-----------------------------------------------------------------------------
-void mgl_data_fill_sample(HMDT d, long n, const char *how)
+void mgl_data_fill_sample(HMDT d, const char *how)
 {
 	bool xx = strchr(how,'x');
-	mgl_data_create(d,n,1,1);
-	register long i;
+	register long i,n=d->nx;
+	mreal *aa=d->a;
 	if(strchr(how,'h'))	// Hankel
 	{
 #ifndef NO_GSL
 		gsl_dht *dht = gsl_dht_new(n,0,1);
 		for(i=0;i<n;i++)
-			d->a[i] = xx ? gsl_dht_x_sample(dht, i) : gsl_dht_k_sample(dht, i);
+			aa[i] = xx ? gsl_dht_x_sample(dht, i) : gsl_dht_k_sample(dht, i);
 		gsl_dht_free(dht);
 #endif
 	}
 	else	// Fourier
 	{
-		if(xx)	for(i=0;i<n;i++)	d->a[i] = mreal(2*i-n)/n;
-		else	for(i=0;i<n;i++)	d->a[i] = M_PI*(i<n/2 ? i:i-n);
+		if(xx)	for(i=0;i<n;i++)	aa[i] = mreal(2*i-n)/n;
+		else	for(i=0;i<n;i++)	aa[i] = M_PI*(i<n/2 ? i:i-n);
 	}
+	for(i=1;i<d->ny*d->nz;i++)	memcpy(aa+i*n,aa,n*sizeof(mreal));
 }
-void mgl_data_fill_sample_(uintptr_t *d, int *num, const char *how,int l)
+void mgl_data_fill_sample_(uintptr_t *d, const char *how,int l)
 {	char *s=new char[l+1];	memcpy(s,how,l);	s[l]=0;
-	mgl_data_fill_sample(_DT_,*num,s);	delete []s;	}
+	mgl_data_fill_sample(_DT_,s);	delete []s;	}
 //-----------------------------------------------------------------------------
 void mgl_data_hankel(HMDT d, const char *dir)
 {

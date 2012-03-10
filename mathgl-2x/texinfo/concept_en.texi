@@ -22,6 +22,7 @@ There are six most general (base) concepts:
 
 In addition to the general concepts I want to comment on some non-trivial or less commonly used general ideas -- plot positioning, axis specification and curvilinear coordinates, styles for lines, text and color scheme.
 
+@ifclear UDAV
 @menu
 * Coordinate axes::
 * Color styles::
@@ -32,6 +33,19 @@ In addition to the general concepts I want to comment on some non-trivial or les
 * Command options::
 * Interfaces::
 @end menu
+@end ifclear
+
+@ifset UDAV
+@menu
+* Coordinate axes::
+* Color styles::
+* Line styles::
+* Color scheme::
+* Font styles::
+* Textual formulas::
+* Command options::
+@end menu
+@end ifset
 
 @c ------------------------------------------------------------------
 @node Coordinate axes, Color styles, , General concepts
@@ -265,6 +279,8 @@ Set the value to be used as additional numeric parameter in plotting command.
 
 
 
+@ifclear UDAV
+
 @node Interfaces, , Command options, General concepts
 @section Interfaces
 
@@ -272,17 +288,12 @@ The MathGL library has interfaces for a set of languages. Most of them are based
 
 Some of the languages listed above support classes (like C++ or Python). The name of functions for them is the same as in C++ (see @ref{MathGL core} and @ref{Data processing}) and marked like [Method on mglGraph].
 
-Finally, a special command language MGL (see @ref{MGL scripts}) was written for a faster access to plotting functions. Corresponding scripts can be executed separately (by UDAV, mglconv, mglview and so on)
-@ifclear UDAV
- or from the C/C++/Python/... code (@pxref{mglParse class}).
-@end ifclear
+Finally, a special command language MGL (see @ref{MGL scripts}) was written for a faster access to plotting functions. Corresponding scripts can be executed separately (by UDAV, mglconv, mglview and so on) or from the C/C++/Python/... code (@pxref{mglParse class}).
 
-@ifclear UDAV
 @menu
 * C interface::
 * C++ interface::
 @end menu
-@end ifclear
 
 @node C interface, C++ interface, , Interfaces
 @subsection C/Fortran interface
@@ -333,3 +344,5 @@ a.Box()
 a.WritePNG("test.png")
 @end verbatim
 This becomes useful if you create many @code{mglData} objects, for example.
+
+@end ifclear

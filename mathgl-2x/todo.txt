@@ -5,6 +5,7 @@
 3. Check export to MGLD/TeX/OBJ/XGL/X3D/STL.
 4. add XInitThreads() from #include <X11/Xlib.h> into all GUI
 5. Check MGLD in mglview
+6. check Hankel()
 
 ============= NEW  =============
 
@@ -93,28 +94,23 @@ Remove other setting if data name is changed.
 6. Add help about cmake and GIF/JPEG to the "Installation and using"
 7. On which things the subplot influence
 8. About unrotated text
+9. Add mglBase, mglCanvas in other_en.texi + small comments about developing new plots.
 10. New samples + update old ones
 11. Parallelization:
-	* user level -- SetDrawReg(), PutDrawReg() -- remove!?!
 	* MPI level -- Combine()
 	* MathGL level -- pthread in mglData, ???
 12. Boxs() styles: '#' for wire, '@' for full box.
-13. mglData::SetVal(), GetVal()
-14. Add mgl_label_xyz(), mgl_label_xy(), mgl_label_y(). Possible numbers are: "%x" for x-coor, "%y" for y-coor, "%z" for z-coor.
+13. Add mgl_label_xyz(), mgl_label_xy(), mgl_label_y(). Possible numbers are: "%x" for x-coor, "%y" for y-coor, "%z" for z-coor.
 15. Check mglData::Insert(): now copy values from original array (x[i] -> x[2*i], x[2*i+1], ...)
 16. Symbol '!' denote sharp colors even in 1d plots (like different colors for points)
 17. Check export to LaTeX.
 18. mglview can preview MGLD files too -- check it
 19. Handle mglBase::Stop everywhere
 20. Number of frames can be changed at reload + manual call of draw_func if number of frames is 0.
-21. Symbol '\' at the end continue string in MGL script
-22. Add mgl_data_sort(HMDT dat, long idx); -- sort rows of x-y table (or slices of 3D data) by value of idx-column (and idy-row for nz>1). Not thread safe!!!
 23. Add mgl_tape_*(), Tape() -- draw tapes which rotate as (bi)normale of curve. Width by value or depend on BarWidth
 24. Flow() and FlowP() draw tape of (bi)normales if character 'x' and/or 'z' is specified.
-25. Add MGL command "ask $N 'question'" -- like interactive "define". User (UDAV) must set mgl_ask_func to some non-zero value
-26. Cones() -- like Bars() but by Cone(). Support 'a' for above.
+25. Cones() -- like Bars() but by Cone(). Support 'a' for above.
 27. Add Class diagram for MathGL core
-28. Add mglBase, mglCanvas in other_en.texi + small comments about developing new plots.
 
 ============= BUGS =============
 
@@ -174,34 +170,34 @@ Remove other setting if data name is changed.
 		4.17 Data manipulation
 ?		4.18 IDTF
 
-	5. Widget classes
-		5.1 mglWindow class
-		5.2 Fl_MathGL class
-		5.3 QMathGL class
++	5. Widget classes
++		5.1 mglWindow class
++		5.2 Fl_MathGL class
++		5.3 QMathGL class
 
-	6. Data processing
-		6.1 Public variables
-		6.2 Data constructor
-		6.3 Data resizing
-		6.4 Data filling
-		6.5 File I/O
-		6.6 Make another data
-		6.7 Data changing
-		6.8 Interpolation
-		6.9 Data information
-		6.10 Operators
-		6.11 Global functions
++	6. Data processing
++		6.1 Public variables
++		6.2 Data constructor
++		6.3 Data resizing
++		6.4 Data filling
++		6.5 File I/O
++		6.6 Make another data
++		6.7 Data changing
++		6.8 Interpolation
++		6.9 Data information
++		6.10 Operators
++		6.11 Global functions
 
-	7. MGL scripts
-		7.1 MGL definition
-		7.2 Program flow commands
-		7.3 mglParse class
++	7. MGL scripts
++		7.1 MGL definition
++		7.2 Program flow commands
++		7.3 mglParse class
 
 	8. Other classes (c++ only)
 		8.1 mglBase class
 		8.2 mglDataA class
 		8.3 mglCanvas class
-		8.4 mglFormula class
-		8.5 mglColor class
-		8.6 mglPoint class
-		8.7 mglFont class (format)
++		8.4 mglFormula class
++		8.5 mglColor class
++		8.6 mglPoint class
++		8.7 mglFont class (format)

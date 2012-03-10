@@ -99,7 +99,7 @@ supports it in developing GNU and promoting software freedom.''
 @node MathGL core, Widget classes, General concepts, Top
 @include core_en.texi
 
-@node Widget classes, Data handling, MathGL core, Top
+@node Widget classes, Data processing, MathGL core, Top
 @include widget_en.texi
 
 @node Data processing, MGL scripts, Widget classes, Top
