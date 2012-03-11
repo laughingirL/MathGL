@@ -34,9 +34,10 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("TriPlot",cgid++);
-	mglPoint p1,p2,p3,q;
+	mglPoint p1,p2,p3,q=mglPoint(NAN,NAN);
 
 	register long i,k1,k2,k3;
+	bool wire = sch && strchr(sch,'#');
 	long nc = a->GetNx();
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
@@ -50,7 +51,7 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 			p2 = mglPoint(x->v(k2), y->v(k2), z->v(k2));
 			k3 = long(nums->v(2,i)+0.5);
 			p3 = mglPoint(x->v(k3), y->v(k3), z->v(k3));
-			q = (p2-p1) ^ (p3-p1);
+			if(!wire)	q = (p2-p1) ^ (p3-p1);
 			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
 			k2 = gr->AddPnt(p2,gr->GetC(ss,a->v(k2)),q);
 			k3 = gr->AddPnt(p3,gr->GetC(ss,a->v(k3)),q);
@@ -68,7 +69,9 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 			k1 = long(nums->v(0,i)+0.5);
 			k2 = long(nums->v(1,i)+0.5);
 			k3 = long(nums->v(2,i)+0.5);
-			q = mglPoint(x->v(k2)-x->v(k1), y->v(k2)-y->v(k1), z->v(k2)-z->v(k1)) ^ mglPoint(x->v(k3)-x->v(k1), y->v(k3)-y->v(k1), z->v(k3)-z->v(k1));
+			if(!wire)
+				q = mglPoint(x->v(k2)-x->v(k1), y->v(k2)-y->v(k1), z->v(k2)-z->v(k1)) ^
+					mglPoint(x->v(k3)-x->v(k1), y->v(k3)-y->v(k1), z->v(k3)-z->v(k1));
 			// try be sure that in the same direction ... but it is so slow :(
 			if(pp[k1]*q<0) q*=-1;	pp[k1] += q;
 			if(pp[k2]*q<0) q*=-1;	pp[k2] += q;
@@ -86,7 +89,12 @@ void mgl_triplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const 
 			k1 = long(nums->v(0,i)+0.5);
 			k2 = long(nums->v(1,i)+0.5);
 			k3 = long(nums->v(2,i)+0.5);
-			gr->trig_plot(kk[k1],kk[k2],kk[k3]);
+			if(wire)
+			{
+				gr->line_plot(kk[k1],kk[k2]);	gr->line_plot(kk[k1],kk[k3]);
+				gr->line_plot(kk[k3],kk[k2]);
+			}
+			else	gr->trig_plot(kk[k1],kk[k2],kk[k3]);
 		}
 		delete []kk;	delete []pp;
 	}
@@ -132,10 +140,11 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 	long ss=gr->AddTexture(sch);
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("QuadPlot",cgid++);
-	mglPoint p1,p2,p3,p4,q;
+	mglPoint p1,p2,p3,p4,q=mglPoint(NAN,NAN);
 
 	register long i,k1,k2,k3,k4;
 	long nc = a->GetNx();
+	bool wire = sch && strchr(sch,'#');
 	if(nc!=n && nc>=m)	// colors per triangle
 	{
 		gr->Reserve(m*4);
@@ -150,7 +159,7 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 			p3 = mglPoint(x->v(k3), y->v(k3), z->v(k3));
 			k4 = floor(nums->v(3,i)+0.5);
 			p4 = mglPoint(x->v(k4), y->v(k4), z->v(k4));
-			q = (p2-p1) ^ (p3-p1);
+			if(!wire)	q = (p2-p1) ^ (p3-p1);
 			k1 = gr->AddPnt(p1,gr->GetC(ss,a->v(k1)),q);
 			k2 = gr->AddPnt(p2,gr->GetC(ss,a->v(k2)),q);
 			k3 = gr->AddPnt(p3,gr->GetC(ss,a->v(k3)),q);
@@ -175,10 +184,14 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 			k4 = floor(nums->v(3,i)+0.5);
 			p4 = mglPoint(x->v(k4), y->v(k4), z->v(k4));
 
-			q = (p2-p1) ^ (p3-p1);	if(pp[k1]*q<0) q*=-1;	pp[k1] += q;
-			q = (p2-p4) ^ (p3-p4);	if(pp[k2]*q<0) q*=-1;	pp[k2] += q;
-			q = (p1-p2) ^ (p4-p2);	if(pp[k3]*q<0) q*=-1;	pp[k3] += q;
-			q = (p1-p4) ^ (p4-p3);	if(pp[k4]*q<0) q*=-1;	pp[k4] += q;
+			if(wire)	pp[k1]=pp[k2]=pp[k3]=pp[k4]=mglPoint(NAN,NAN);
+			else
+			{
+				q = (p2-p1) ^ (p3-p1);	if(pp[k1]*q<0) q*=-1;	pp[k1] += q;
+				q = (p2-p4) ^ (p3-p4);	if(pp[k2]*q<0) q*=-1;	pp[k2] += q;
+				q = (p1-p2) ^ (p4-p2);	if(pp[k3]*q<0) q*=-1;	pp[k3] += q;
+				q = (p1-p4) ^ (p4-p3);	if(pp[k4]*q<0) q*=-1;	pp[k4] += q;
+			}
 		}
 		for(i=0;i<n;i++)	// add points
 		{
@@ -193,7 +206,12 @@ void mgl_quadplot_xyzc(HMGL gr, HCDT nums, HCDT x, HCDT y, HCDT z, HCDT a, const
 			k2 = floor(nums->v(1,i)+0.5);
 			k3 = floor(nums->v(2,i)+0.5);
 			k4 = floor(nums->v(3,i)+0.5);
-			gr->quad_plot(kk[k1],kk[k2],kk[k3],kk[k4]);
+			if(wire)
+			{
+				gr->line_plot(kk[k1],kk[k2]);	gr->line_plot(kk[k1],kk[k3]);
+				gr->line_plot(kk[k4],kk[k2]);	gr->line_plot(kk[k4],kk[k3]);
+			}
+			else	gr->quad_plot(kk[k1],kk[k2],kk[k3],kk[k4]);
 		}
 		delete []kk;	delete []pp;
 	}

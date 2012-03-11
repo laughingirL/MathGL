@@ -400,7 +400,7 @@ void QMathGL::exportOFF(QString fname)
 	else
 	{
 		setlocale(LC_ALL, "C");
-		mgl_write_off(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
+		mgl_write_off(gr,setExtension(fname,"svg").toAscii(), appName.toAscii(),0);
 		setlocale(LC_ALL, "");
 	}
 }

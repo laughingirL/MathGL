@@ -954,17 +954,17 @@ Exports current frame to XYZ/XYZL/XYZF files using vector representation (see @u
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} WriteSTL (@code{const char *}fname, @code{const char *}descr=@code{""})
-@deftypefnx {C function} @code{void} mgl_write_obj (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
+@deftypefnx {C function} @code{void} mgl_write_stl (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
 Exports current frame to STL file using vector representation (see @url{http://en.wikipedia.org/wiki/STL_(file_format), STL format} for details). Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
 @end deftypefn
 
-@deftypefn {Method on @code{mglGraph}} @code{void} WriteOFF (@code{const char *}fname, @code{const char *}descr=@code{""})
-@deftypefnx {C function} @code{void} mgl_write_obj (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
+@deftypefn {Method on @code{mglGraph}} @code{void} WriteOFF (@code{const char *}fname, @code{const char *}descr=@code{""}, @code{bool} colored=@code{false})
+@deftypefnx {C function} @code{void} mgl_write_off (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr, @code{bool} colored)
 Exports current frame to OFF file using vector representation (see @url{http://people.sc.fsu.edu/~jburkardt/data/off/off.html, OFF format} for details). Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
 @end deftypefn
 
 @deftypefn {Method on @code{mglGraph}} @code{void} WriteX3D (@code{const char *}fname, @code{const char *}descr=@code{""})
-@deftypefnx {C function} @code{void} mgl_write_obj (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
+@deftypefnx {C function} @code{void} mgl_write_x3d (@code{HMGL} gr, @code{const char *}fname, @code{const char *}descr)
 Exports current frame to OBJ/MTL file using vector representation (see @url{http://en.wikipedia.org/wiki/X3d, X3D format} for details). Note, the output file may be too large for graphic of large data array (especially for surfaces). It is better to use bitmap format (for example PNG or JPEG). However, program has no internal limitations for size of output file. Parameter @var{fname} specifies the file name, @var{descr} adds description to file (default is file name).
 @end deftypefn
 

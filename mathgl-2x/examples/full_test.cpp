@@ -49,27 +49,27 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData a(256,2);	a.Fill(-1,1);
-	gr->SubPlot(2,10,0,NULL,0.2);	gr->Dens(a,"kw");		gr->Puts(0.07, 0.92, "kw", "A");
-	gr->SubPlot(2,10,1,NULL,0.2);	gr->Dens(a,"wk");		gr->Puts(0.57, 0.92, "wk", "A");
-	gr->SubPlot(2,10,2,NULL,0.2);	gr->Dens(a,"kHCcw");	gr->Puts(0.07, 0.82, "kHCcw", "A");
-	gr->SubPlot(2,10,3,NULL,0.2);	gr->Dens(a,"kBbcw");	gr->Puts(0.57, 0.82, "kBbcw", "A");
-	gr->SubPlot(2,10,4,NULL,0.2);	gr->Dens(a,"kRryw");	gr->Puts(0.07, 0.72, "kRryw", "A");
-	gr->SubPlot(2,10,5,NULL,0.2);	gr->Dens(a,"kGgew");	gr->Puts(0.57, 0.72, "kGgew", "A");
-	gr->SubPlot(2,10,6,NULL,0.2);	gr->Dens(a,"BbwrR");	gr->Puts(0.07, 0.62, "BbwrR", "A");
-	gr->SubPlot(2,10,7,NULL,0.2);	gr->Dens(a,"BbwgG");	gr->Puts(0.57, 0.62, "BbwgG", "A");
-	gr->SubPlot(2,10,8,NULL,0.2);	gr->Dens(a,"GgwmM");	gr->Puts(0.07, 0.52, "GgwmM", "A");
-	gr->SubPlot(2,10,9,NULL,0.2);	gr->Dens(a,"UuwqR");	gr->Puts(0.57, 0.52, "UuwqR", "A");
-	gr->SubPlot(2,10,10,NULL,0.2);	gr->Dens(a,"QqwcC");	gr->Puts(0.07, 0.42, "QqwcC", "A");
-	gr->SubPlot(2,10,11,NULL,0.2);	gr->Dens(a,"CcwyY");	gr->Puts(0.57, 0.42, "CcwyY", "A");
-	gr->SubPlot(2,10,12,NULL,0.2);	gr->Dens(a,"bcwyr");	gr->Puts(0.07, 0.32, "bcwyr", "A");
-	gr->SubPlot(2,10,13,NULL,0.2);	gr->Dens(a,"bwr");		gr->Puts(0.57, 0.32, "bwr", "A");
-	gr->SubPlot(2,10,14,NULL,0.2);	gr->Dens(a,"BbcyrR");	gr->Puts(0.07, 0.22, "BbcyrR", "A");
-	gr->SubPlot(2,10,15,NULL,0.2);	gr->Dens(a,"UbcyqR");	gr->Puts(0.57, 0.22, "UbcyqR", "A");
-	gr->SubPlot(2,10,16,NULL,0.2);	gr->Dens(a,"BbcwyrR");	gr->Puts(0.07, 0.12, "BbcwyrR", "A");
-	gr->SubPlot(2,10,17,NULL,0.2);	gr->Dens(a,"bcyr");		gr->Puts(0.57, 0.12, "bcyr", "A");
-	gr->SubPlot(2,10,18,NULL,0.2);	gr->Dens(a,"BbcyrR|");	gr->Puts(0.07, 0.02, "BbcyrR|", "A");
-	gr->SubPlot(2,10,19,NULL,0.2);	gr->Dens(a,"bgr");		gr->Puts(0.57, 0.02, "bgr", "A");
+	float q[] = {0,1,2,3, 4,5,6,7, 0,2,4,6, 1,3,5,7, 0,4,1,5, 2,6,3,7};
+	float xc[] = {-1,1,-1,1,-1,1,-1,1}, yc[] = {-1,-1,1,1,-1,-1,1,1}, zc[] = {-1,-1,-1,-1,1,1,1,1};
+	mglData qq(6,4,q), xx(8,xc), yy(8,yc), zz(8,zc);
+	gr->Light(true);	//gr->Alpha(true);
+	gr->SubPlot(2,1,0);	gr->Title("QuadPlot sample");	gr->Rotate(50,60);
+	gr->QuadPlot(qq,xx,yy,zz,"yr");
+	gr->QuadPlot(qq,xx,yy,zz,"k#");
+
+	float t[] = {0,1,2, 0,1,3, 0,2,3, 1,2,3};
+	float xt[] = {-1,1,0,0}, yt[] = {-1,-1,1,0}, zt[] = {-1,-1,-1,1};
+	mglData tt(4,3,t), uu(4,xt), vv(4,yt), ww(4,zt);
+	gr->SubPlot(2,1,1);	gr->Title("TriPlot_sample");	gr->Rotate(50,60);
+	gr->TriPlot(tt,uu,vv,ww,"b");
+	gr->TriPlot(tt,uu,vv,ww,"k#");
+
+	gr->WriteXYZ("test.xyz");
+	gr->WriteSTL("test.stl");
+	gr->WriteOFF("test.off");
+	gr->WriteTEX("test.tex");
+	gr->WriteOBJ("test.obj");
+	gr->WriteOBJ("test1.obj","",true);
 	return;
 
 	mglParse par;
@@ -1762,6 +1762,31 @@ void smgl_ternary(mglGraph *gr)	// flag #
 	gr->Label('y',"C",1);	gr->Label('z',"Z",1);
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_triplot="list q 0 1 2 3 | 4 5 6 7 | 0 2 4 6 | 1 3 5 7 | 0 4 1 5 | 2 6 3 7\n"
+"list xq -1 1 -1 1 -1 1 -1 1\nlist yq -1 -1 1 1 -1 -1 1 1\nlist zq -1 -1 -1 -1 1 1 1 1\nlight on\n"
+"subplot 2 1 0:title 'QuadPlot sample':rotate 50 60\n"
+"quadplot q xq yq zq 'yr'\nquadplot q xq yq zq '#k'\n"
+"list t 0 1 2 | 0 1 3 | 0 2 3 | 1 2 3\n"
+"list xq -1 1 0 0\nlist yq -1 -1 1 0\nlist zq -1 -1 -1 1\n"
+"subplot 2 1 1:title 'TriPlot sample':rotate 50 60\n"
+"triplot t xt yt zt 'b'\ntriplot t xt yt zt '#k'\n";
+void smgl_triplot(mglGraph *gr)
+{
+	float q[] = {0,1,2,3, 4,5,6,7, 0,2,4,6, 1,3,5,7, 0,4,1,5, 2,6,3,7};
+	float xc[] = {-1,1,-1,1,-1,1,-1,1}, yc[] = {-1,-1,1,1,-1,-1,1,1}, zc[] = {-1,-1,-1,-1,1,1,1,1};
+	mglData qq(6,4,q), xx(8,xc), yy(8,yc), zz(8,zc);
+	gr->Light(true);	//gr->Alpha(true);
+	gr->SubPlot(2,1,0);	gr->Title("QuadPlot sample");	gr->Rotate(50,60);
+	gr->QuadPlot(qq,xx,yy,zz,"yr");
+	gr->QuadPlot(qq,xx,yy,zz,"k#");
+
+	float t[] = {0,1,2, 0,1,3, 0,2,3, 1,2,3};
+	float xt[] = {-1,1,0,0}, yt[] = {-1,-1,1,0}, zt[] = {-1,-1,-1,1};
+	mglData tt(4,3,t), uu(4,xt), vv(4,yt), ww(4,zt);
+	gr->SubPlot(2,1,1);	gr->Title("TriPlot sample");	gr->Rotate(50,60);
+	gr->TriPlot(tt,uu,vv,ww,"b");
+	gr->TriPlot(tt,uu,vv,ww,"k#");
+}
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -2051,6 +2076,7 @@ mglSample samp[] = {
 	{"tiles", smgl_tiles},
 	{"torus", smgl_torus},
 	{"traj", smgl_traj},
+	{"triplot", smgl_triplot},
 	{"tube", smgl_tube},
 	{"type0", smgl_type0},
 	{"type1", smgl_type1},

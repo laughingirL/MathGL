@@ -302,8 +302,8 @@ public:
 	inline void WriteSTL(const char *fname,const char *descr="")
 	{	mgl_write_stl(gr, fname, descr);	}
 	/// Write the frame in file using OFF format
-	inline void WriteOFF(const char *fname,const char *descr="")
-	{	mgl_write_off(gr, fname, descr);	}
+	inline void WriteOFF(const char *fname,const char *descr="", bool colored=false)
+	{	mgl_write_off(gr, fname, descr,colored);	}
 	/// Write the frame in file using STL format (faces only)
 	inline void WriteWRL(const char *fname,const char *descr="")
 	{	mgl_write_wrl(gr, fname, descr);	}

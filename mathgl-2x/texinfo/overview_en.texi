@@ -136,6 +136,14 @@ This is enough for a compilation of console program or with external (non-MathGL
 * mglGraph class is single plotter class instead of mglGraphZB, mglGraphPS and so on.
 * Text style and text color positions are swapped. I.e. text style @samp{r:C} give red centered text, but not roman dark cyan text as for v.1.*.
 * ColumnPlot() indexing is reverted.
+* Move most of arguments of plotting functions into the string parameter and/or options.
+* ``Bright'' colors (like @{b8@}) can be used in color schemes and line styles.
+* Intensively use pthread internally for parallelization of drawing and data processing.
+* Add tick labels rotation and skipping. Add ticks in time/date format.
+* New kinds of plots (Tape(), Label(), ...). Extend existing plots. New primitives (Circle(), Ellipse(), Rhomb(), ...).
+* Improve MGL scripts. Add 'ask' command and allow string concatenation from different lines.
+* Export to LaTeX and to 3D formats (OBJ, OFF, STL, X3D).
+
 
 @c ------------------------------------------------------------------
 @node  Utilities, Thanks, Changes from v.1, Overview

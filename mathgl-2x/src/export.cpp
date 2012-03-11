@@ -198,7 +198,7 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 
 	void *fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n",w,h);
-	mgl_printf(fp, gz, "%%%%Creator: MathGL library\n%%%%Title: %s\n", fname);
+	mgl_printf(fp, gz, "%%%%Created by MathGL library\n%%%%Title: %s\n", fname);
 	mgl_printf(fp, gz, "%%%%CreationDate: %s\n",ctime(&now));
 	mgl_printf(fp, gz, "%d %d 8 [1 0 0 1 0 0] {currentfile %d string readhexstring pop} false 3 colorimage\n",
 			w,h,1+w*h/40);

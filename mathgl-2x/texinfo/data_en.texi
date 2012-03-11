@@ -984,7 +984,6 @@ Give first (for @code{.a}, i.e. @code{dat->a[0]}).
 @node Operators, Global functions, Data information, Data processing
 @section Operators
 
-@anchor{copy}
 @deftypefn {MGL command} {} copy @sc{dat} dat2 ['eq'='']
 @ifclear UDAV
 @deftypefnx {Method on @code{mglData}} @code{void} operator= (@code{const mglData &}d)

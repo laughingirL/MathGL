@@ -58,7 +58,7 @@ bool mgl_is_same(HMGL gr, const mglPrim &pr,float wp,mglColor cp,int st)
 	return (cp==c);
 }
 //-----------------------------------------------------------------------------
-void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, const char *ifmt, const char *nfmt, bool neg)
+void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, const char *ifmt, const char *nfmt, bool neg, float fc)
 {
 	const mglPnt pp = gr->GetPnt(gr->GetPrm(i).n1);
 	float x0=pp.x, y0=pp.y;
@@ -92,7 +92,7 @@ void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, 
 		mglPrim &q = gr->GetPrm(j);
 		if(q.type==-2)	q.type = 1;
 	}
-	mgl_printf(fp, gz, ifmt,x0,neg?_Gr_->GetHeight()-y0:y0);	ok=true;
+	mgl_printf(fp, gz, ifmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);	ok=true;
 	long m=1;
 	while(ok)
 	{
@@ -107,14 +107,14 @@ void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, 
 				if(p1.x==x0 && p1.y==y0)
 				{
 					k=j;	q.type = -1;	x0 = p2.x;	y0=p2.y;
-					mgl_printf(fp, gz, nfmt,x0,neg?_Gr_->GetHeight()-y0:y0);
+					mgl_printf(fp, gz, nfmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);
 					if(m>10)	{	m=0;	mgl_printf(fp, gz, "\n");	}
 					ok=true;	m++;
 				}
 				else if(p2.x==x0 && p2.y==y0)
 				{
 					k=j;	q.type = -1;	x0 = p1.x;	y0=p1.y;
-					mgl_printf(fp, gz, nfmt,x0,neg?_Gr_->GetHeight()-y0:y0);
+					(fp, gz, nfmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);
 					if(m>10)	{	m=0;	mgl_printf(fp, gz, "\n");	}
 					ok=true;	m++;
 				}
@@ -191,7 +191,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	void *fp = gz ? (void*)gzopen(fname,"wt") : (void*)fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
 	mgl_printf(fp, gz, "%%!PS-Adobe-3.0 EPSF-3.0\n%%%%BoundingBox: 0 0 %d %d\n", _Gr_->GetWidth(), _Gr_->GetHeight());
-	mgl_printf(fp, gz, "%%%%Creator: MathGL library\n%%%%Title: %s\n",descr ? descr : fname);
+	mgl_printf(fp, gz, "%%%%Created by MathGL library\n%%%%Title: %s\n",descr ? descr : fname);
 	mgl_printf(fp, gz, "%%%%CreationDate: %s\n",ctime(&now));
 	mgl_printf(fp, gz, "/lw {setlinewidth} def\n/rgb {setrgbcolor} def\n");
 	mgl_printf(fp, gz, "/np {newpath} def\n/cp {closepath} def\n");
@@ -322,7 +322,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 		{
 			sprintf(str,"%.2g lw %.2g %.2g %.2g rgb ", q.w>1 ? q.w:1., cp.r,cp.g,cp.b);
 			wp = q.w>1  ? q.w:1;	st = q.n3;
-			put_line(gr,fp,gz,i,wp,cp,st, "np %g %g mt ", "%g %g ll ", false);
+			put_line(gr,fp,gz,i,wp,cp,st, "np %g %g mt ", "%g %g ll ", false, 1);
 			const char *sd = mgl_get_dash(q.n3,q.w);
 			if(sd && sd[0])	mgl_printf(fp, gz, "%s [%s] %g sd dr\n",str,sd,q.w*q.s);
 			else			mgl_printf(fp, gz, "%s d0 dr\n",str);
@@ -373,7 +373,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	mgl_printf(fp, gz, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20000303 Stylable//EN\" \"http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd\">\n");
 	mgl_printf(fp, gz, "<svg width=\"%d\" height=\"%d\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n", _Gr_->GetWidth(), hh);
 
-	mgl_printf(fp, gz, "<!--Creator: MathGL library-->\n");
+	mgl_printf(fp, gz, "<!--Created by MathGL library-->\n");
 	mgl_printf(fp, gz, "<!--Title: %s-->\n<!--CreationDate: %s-->\n\n",descr?descr:fname,ctime(&now));
 
 	// write definition for all glyphs
@@ -468,7 +468,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 			}
 			if(q.w>1)	mgl_printf(fp, gz, " stroke-width=\"%g\"", q.w);
 			wp = q.w>1  ? q.w:1;	st = q.n3;
-			put_line(gr,fp,gz,i,wp,cp,st, "><path d=\" M %g %g", " L %g %g", true);
+			put_line(gr,fp,gz,i,wp,cp,st, "><path d=\" M %g %g", " L %g %g", true, 1);
 			mgl_printf(fp, gz, "\"/> </g>\n");
 		}
 		else if(q.type==4)
@@ -510,157 +510,235 @@ void mgl_write_svg_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 /// Color names easely parsed by LaTeX
 struct mglSVGName	{	const char *name;	float r,g,b;	};
 mglSVGName mgl_names[]={{"AliceBlue",.94,.972,1},
-{"AntiqueWhite",.98,.92,.844},
-{"Aqua",0,1,1},
-{"Aquamarine",.498,1,.83},
-{"Azure",.94,1,1},
-{"Beige",.96,.96,.864},
-{"Bisque",1,.894,.77},
-{"Black",0,0,0},
-{"BlanchedAlmond",1,.92,.804},
-{"Blue",0,0,1},
-{"BlueViolet",.54,.17,.888},
-{"Brown,.648",.165,.165},
-{"BurlyWood",.87,.72,.53},
-{"CadetBlue",.372,.62,.628},
-{"Chartreuse",.498,1,0},
-{"Chocolate",.824,.41,.116},
-{"Coral",1,.498,.312},
-{"CornflowerBlue",.392,.585,.93},
-{"Cornsilk",1,.972,.864},
-{"Crimson",.864,.08,.235},
-{"Cyan",0,1,1},
-{"DarkBlue",0,0,.545},
-{"DarkCyan",0,.545,.545},
-{"DarkGoldenrod",.72,.525,.044},
-{"DarkGray",.664,.664,.664},
-{"DarkGreen",0,.392,0},
-{"DarkGrey",.664,.664,.664},
-{"DarkKhaki",.74,.716,.42},
-{"DarkMagenta",.545,0,.545},
-{"DarkOliveGreen",.332,.42,.185},
-{"DarkOrange",1,.55,0},
-{"DarkOrchid",.6,.196,.8},
-{"DarkRed",.545,0,0},
-{"DarkSalmon",.912,.59,.48},
-{"DarkSeaGreen",.56,.736,.56},
-{"DarkSlateBlue",.284,.24,.545},
-{"DarkSlateGray",.185,.31,.31},
-{"DarkSlateGrey",.185,.31,.31},
-{"DarkTurquoise",0,.808,.82},
-{"DarkViolet",.58,0,.828},
-{"DeepPink",1,.08,.576},
-{"DeepSkyBlue",0,.75,1},
-{"DimGray",.41,.41,.41},
-{"DimGrey",.41,.41,.41},
-{"DodgerBlue",.116,.565,1},
-{"FireBrick",.698,.132,.132},
-{"FloralWhite",1,.98,.94},
-{"ForestGreen",.132,.545,.132},
-{"Fuchsia",1,0,1},
-{"Gainsboro",.864,.864,.864},
-{"GhostWhite",.972,.972,1},
-{"Gold",1,.844,0},
-{"Goldenrod",.855,.648,.125},
-{"Gray",.5,.5,.5},
-{"Green",0,.5,0},
-{"GreenYellow",.68,1,.185},
-{"Grey",.5,.5,.5},
-{"Honeydew",.94,1,.94},
-{"HotPink",1,.41,.705},
-{"IndianRed",.804,.36,.36},
-{"Indigo",.294,0,.51},
-{"Ivory",1,1,.94},
-{"Khaki",.94,.9,.55},
-{"Lavender",.9,.9,.98},
-{"LavenderBlush",1,.94,.96},
-{"LawnGreen",.488,.99,0},
-{"LemonChiffon",1,.98,.804},
-{"LightBlue",.68,.848,.9},
-{"LightCoral",.94,.5,.5},
-{"LightCyan",.88,1,1},
-{"LightGoldenrod",.933,.867,.51},
-{"LightGoldenrodYellow",.98,.98,.824},
-{"LightGray",.828,.828,.828},
-{"LightGreen",.565,.932,.565},
-{"LightGrey",.828,.828,.828},
-{"LightPink",1,.712,.756},
-{"LightSalmon",1,.628,.48},
-{"LightSeaGreen",.125,.698,.668},
-{"LightSkyBlue",.53,.808,.98},
-{"LightSlateBlue",.518,.44,1},
-{"LightSlateGray",.468,.532,.6},
-{"LightSlateGrey",.468,.532,.6},
-{"LightSteelBlue",.69,.77,.87},
-{"LightYellow",1,1,.88},
-{"Lime",0,1,0},
-{"LimeGreen",.196,.804,.196},
-{"Linen",.98,.94,.9},
-{"Magenta",1,0,1},
-{"Maroon",.5,0,0},
-{"MediumAquamarine",.4,.804,.668},
-{"MediumBlue",0,0,.804},
-{"MediumOrchid",.73,.332,.828},
-{"MediumPurple",.576,.44,.86},
-{"MediumSeaGreen",.235,.7,.444},
-{"MediumSlateBlue",.484,.408,.932},
-{"MediumSpringGreen",0,.98,.604},
-{"MediumTurquoise",.284,.82,.8},
-{"MediumVioletRed",.78,.084,.52},
-{"MidnightBlue",.098,.098,.44},
-{"MintCream",.96,1,.98},
-{"MistyRose",1,.894,.884},
-{"Moccasin",1,.894,.71},
-{"NavajoWhite",1,.87,.68},
-{"Navy",0,0,.5},
-{"NavyBlue",0,0,.5},
-{"OldLace",.992,.96,.9},
-{"Olive",.5,.5,0},
-{"OliveDrab",.42,.556,.136},
-{"Orange",1,.648,0},
-{"OrangeRed",1,.27,0},
-{"Orchid",.855,.44,.84},
-{"PaleGoldenrod",.932,.91,.668},
-{"PaleGreen",.596,.985,.596},
-{"PaleTurquoise",.688,.932,.932},
-{"PaleVioletRed",.86,.44,.576},
-{"PapayaWhip",1,.936,.835},
-{"PeachPuff",1,.855,.725},
-{"Peru",.804,.52,.248},
-{"Pink",1,.752,.796},
-{"Plum",.868,.628,.868},
-{"PowderBlue",.69,.88,.9},
-{"Purple",.5,0,.5},
-{"Red",1,0,0},
-{"RosyBrown",.736,.56,.56},
-{"RoyalBlue",.255,.41,.884},
-{"SaddleBrown",.545,.27,.075},
-{"Salmon",.98,.5,.448},
-{"SandyBrown",.956,.644,.376},
-{"SeaGreen",.18,.545,.34},
-{"Seashell",1,.96,.932},
-{"Sienna",.628,.32,.176},
-{"Silver",.752,.752,.752},
-{"SkyBlue",.53,.808,.92},
-{"SlateBlue",.415,.352,.804},
-{"SlateGray",.44,.5,.565},
-{"SlateGrey",.44,.5,.565},
-{"Snow",1,.98,.98},
-{"SpringGreen",0,1,.498},
-{"SteelBlue",.275,.51,.705},
-{"Tan",.824,.705,.55},
-{"Teal",0,.5,.5},
-{"Thistle",.848,.75,.848},
-{"Tomato",1,.39,.28},
-{"Turquoise",.25,.88,.815},
-{"Violet",.932,.51,.932},
-{"VioletRed",.816,.125,.565},
-{"Wheat",.96,.87,.7},
-{"White",1,1,1},
-{"WhiteSmoke",.96,.96,.96},
-{"Yellow",1,1,0},
-{"YellowGreen",.604,.804,.196},
+{"Apricot", 0.984, 0.725, 0.51},
+{"Aquamarine", 0, 0.71, 0.745},
+{"Bittersweet", 0.753, 0.31, 0.0902},
+{"Black", 0.133, 0.118, 0.122},
+{"Blue", 0.176, 0.184, 0.573},
+{"BlueGreen", 0, 0.702, 0.722},
+{"BlueViolet", 0.278, 0.224, 0.573},
+{"BrickRed", 0.714, 0.196, 0.11},
+{"Brown", 0.475, 0.145, 0},
+{"BurntOrange", 0.969, 0.573, 0.114},
+{"CadetBlue", 0.455, 0.447, 0.604},
+{"CarnationPink", 0.949, 0.51, 0.706},
+{"Cerulean", 0, 0.635, 0.89},
+{"CornflowerBlue", 0.255, 0.69, 0.894},
+{"Cyan", 0, 0.682, 0.937},
+{"Dandelion", 0.992, 0.737, 0.259},
+{"DarkOrchid", 0.643, 0.325, 0.541},
+{"Emerald", 0, 0.663, 0.616},
+{"ForestGreen", 0, 0.608, 0.333},
+{"Fuchsia", 0.549, 0.212, 0.549},
+{"Goldenrod", 1, 0.875, 0.259},
+{"Gray", 0.58, 0.588, 0.596},
+{"Green", 0, 0.651, 0.31},
+{"GreenYellow", 0.875, 0.902, 0.455},
+{"JungleGreen", 0, 0.663, 0.604},
+{"Lavender", 0.957, 0.62, 0.769},
+{"LimeGreen", 0.553, 0.78, 0.243},
+{"Magenta", 0.925, 0, 0.549},
+{"Mahogany", 0.663, 0.204, 0.122},
+{"Maroon", 0.686, 0.196, 0.208},
+{"Melon", 0.973, 0.62, 0.482},
+{"MidnightBlue", 0, 0.404, 0.584},
+{"Mulberry", 0.663, 0.235, 0.576},
+{"NavyBlue", 0, 0.431, 0.722},
+{"OliveGreen", 0.235, 0.502, 0.192},
+{"Orange", 0.961, 0.506, 0.216},
+{"OrangeRed", 0.929, 0.0745, 0.353},
+{"Orchid", 0.686, 0.447, 0.69},
+{"Peach", 0.969, 0.588, 0.353},
+{"Periwinkle", 0.475, 0.467, 0.722},
+{"PineGreen", 0, 0.545, 0.447},
+{"Plum", 0.573, 0.149, 0.561},
+{"ProcessBlue", 0, 0.69, 0.941},
+{"Purple", 0.6, 0.278, 0.608},
+{"RawSienna", 0.592, 0.251, 0.0235},
+{"Red", 0.929, 0.106, 0.137},
+{"RedOrange", 0.949, 0.376, 0.208},
+{"RedViolet", 0.631, 0.141, 0.42},
+{"Rhodamine", 0.937, 0.333, 0.624},
+{"RoyalBlue", 0, 0.443, 0.737},
+{"RoyalPurple", 0.38, 0.247, 0.6},
+{"RubineRed", 0.929, 0.00392, 0.49},
+{"Salmon", 0.965, 0.573, 0.537},
+{"SeaGreen", 0.247, 0.737, 0.616},
+{"Sepia", 0.404, 0.0941, 0},
+{"SkyBlue", 0.275, 0.773, 0.867},
+{"SpringGreen", 0.776, 0.863, 0.404},
+{"Tan", 0.855, 0.616, 0.463},
+{"TealBlue", 0, 0.682, 0.702},
+{"Thistle", 0.847, 0.514, 0.718},
+{"Turquoise", 0, 0.706, 0.808},
+{"Violet", 0.345, 0.259, 0.608},
+{"VioletRed", 0.937, 0.345, 0.627},
+{"White", 0.6, 0.6, 0.6},
+{"WildStrawberry", 0.933, 0.161, 0.404},
+{"Yellow", 1, 0.949, 0},
+{"YellowGreen", 0.596, 0.8, 0.439},
+{"YellowOrange", 0.98, 0.635, 0.102},
+{"white", 1,1,1},
+{"black", 0,0,0},
+{"red", 1,0,0},
+{"green", 0,1,0},
+{"blue", 0,0,1},
+{"cyan", 0,1,1},
+{"magenta", 1,0,1},
+{"yellow", 1,1,0},
 {"",-1,-1,-1}};
+/*mglSVGName mgl_names[]={{"AliceBlue",.94,.972,1},
+ * {"AntiqueWhite",.98,.92,.844},
+ * {"Aqua",0,1,1},
+ * {"Aquamarine",.498,1,.83},
+ * {"Azure",.94,1,1},
+ * {"Beige",.96,.96,.864},
+ * {"Bisque",1,.894,.77},
+ * {"Black",0,0,0},
+ * {"BlanchedAlmond",1,.92,.804},
+ * {"Blue",0,0,1},
+ * {"BlueViolet",.54,.17,.888},
+ * {"Brown,.648",.165,.165},
+ * {"BurlyWood",.87,.72,.53},
+ * {"CadetBlue",.372,.62,.628},
+ * {"Chartreuse",.498,1,0},
+ * {"Chocolate",.824,.41,.116},
+ * {"Coral",1,.498,.312},
+ * {"CornflowerBlue",.392,.585,.93},
+ * {"Cornsilk",1,.972,.864},
+ * {"Crimson",.864,.08,.235},
+ * {"Cyan",0,1,1},
+ * {"DarkBlue",0,0,.545},
+ * {"DarkCyan",0,.545,.545},
+ * {"DarkGoldenrod",.72,.525,.044},
+ * {"DarkGray",.664,.664,.664},
+ * {"DarkGreen",0,.392,0},
+ * {"DarkGrey",.664,.664,.664},
+ * {"DarkKhaki",.74,.716,.42},
+ * {"DarkMagenta",.545,0,.545},
+ * {"DarkOliveGreen",.332,.42,.185},
+ * {"DarkOrange",1,.55,0},
+ * {"DarkOrchid",.6,.196,.8},
+ * {"DarkRed",.545,0,0},
+ * {"DarkSalmon",.912,.59,.48},
+ * {"DarkSeaGreen",.56,.736,.56},
+ * {"DarkSlateBlue",.284,.24,.545},
+ * {"DarkSlateGray",.185,.31,.31},
+ * {"DarkSlateGrey",.185,.31,.31},
+ * {"DarkTurquoise",0,.808,.82},
+ * {"DarkViolet",.58,0,.828},
+ * {"DeepPink",1,.08,.576},
+ * {"DeepSkyBlue",0,.75,1},
+ * {"DimGray",.41,.41,.41},
+ * {"DimGrey",.41,.41,.41},
+ * {"DodgerBlue",.116,.565,1},
+ * {"FireBrick",.698,.132,.132},
+ * {"FloralWhite",1,.98,.94},
+ * {"ForestGreen",.132,.545,.132},
+ * {"Fuchsia",1,0,1},
+ * {"Gainsboro",.864,.864,.864},
+ * {"GhostWhite",.972,.972,1},
+ * {"Gold",1,.844,0},
+ * {"Goldenrod",.855,.648,.125},
+ * {"Gray",.5,.5,.5},
+ * {"Green",0,.5,0},
+ * {"GreenYellow",.68,1,.185},
+ * {"Grey",.5,.5,.5},
+ * {"Honeydew",.94,1,.94},
+ * {"HotPink",1,.41,.705},
+ * {"IndianRed",.804,.36,.36},
+ * {"Indigo",.294,0,.51},
+ * {"Ivory",1,1,.94},
+ * {"Khaki",.94,.9,.55},
+ * {"Lavender",.9,.9,.98},
+ * {"LavenderBlush",1,.94,.96},
+ * {"LawnGreen",.488,.99,0},
+ * {"LemonChiffon",1,.98,.804},
+ * {"LightBlue",.68,.848,.9},
+ * {"LightCoral",.94,.5,.5},
+ * {"LightCyan",.88,1,1},
+ * {"LightGoldenrod",.933,.867,.51},
+ * {"LightGoldenrodYellow",.98,.98,.824},
+ * {"LightGray",.828,.828,.828},
+ * {"LightGreen",.565,.932,.565},
+ * {"LightGrey",.828,.828,.828},
+ * {"LightPink",1,.712,.756},
+ * {"LightSalmon",1,.628,.48},
+ * {"LightSeaGreen",.125,.698,.668},
+ * {"LightSkyBlue",.53,.808,.98},
+ * {"LightSlateBlue",.518,.44,1},
+ * {"LightSlateGray",.468,.532,.6},
+ * {"LightSlateGrey",.468,.532,.6},
+ * {"LightSteelBlue",.69,.77,.87},
+ * {"LightYellow",1,1,.88},
+ * {"Lime",0,1,0},
+ * {"LimeGreen",.196,.804,.196},
+ * {"Linen",.98,.94,.9},
+ * {"Magenta",1,0,1},
+ * {"Maroon",.5,0,0},
+ * {"MediumAquamarine",.4,.804,.668},
+ * {"MediumBlue",0,0,.804},
+ * {"MediumOrchid",.73,.332,.828},
+ * {"MediumPurple",.576,.44,.86},
+ * {"MediumSeaGreen",.235,.7,.444},
+ * {"MediumSlateBlue",.484,.408,.932},
+ * {"MediumSpringGreen",0,.98,.604},
+ * {"MediumTurquoise",.284,.82,.8},
+ * {"MediumVioletRed",.78,.084,.52},
+ * {"MidnightBlue",.098,.098,.44},
+ * {"MintCream",.96,1,.98},
+ * {"MistyRose",1,.894,.884},
+ * {"Moccasin",1,.894,.71},
+ * {"NavajoWhite",1,.87,.68},
+ * {"Navy",0,0,.5},
+ * {"NavyBlue",0,0,.5},
+ * {"OldLace",.992,.96,.9},
+ * {"Olive",.5,.5,0},
+ * {"OliveDrab",.42,.556,.136},
+ * {"Orange",1,.648,0},
+ * {"OrangeRed",1,.27,0},
+ * {"Orchid",.855,.44,.84},
+ * {"PaleGoldenrod",.932,.91,.668},
+ * {"PaleGreen",.596,.985,.596},
+ * {"PaleTurquoise",.688,.932,.932},
+ * {"PaleVioletRed",.86,.44,.576},
+ * {"PapayaWhip",1,.936,.835},
+ * {"PeachPuff",1,.855,.725},
+ * {"Peru",.804,.52,.248},
+ * {"Pink",1,.752,.796},
+ * {"Plum",.868,.628,.868},
+ * {"PowderBlue",.69,.88,.9},
+ * {"Purple",.5,0,.5},
+ * {"Red",1,0,0},
+ * {"RosyBrown",.736,.56,.56},
+ * {"RoyalBlue",.255,.41,.884},
+ * {"SaddleBrown",.545,.27,.075},
+ * {"Salmon",.98,.5,.448},
+ * {"SandyBrown",.956,.644,.376},
+ * {"SeaGreen",.18,.545,.34},
+ * {"Seashell",1,.96,.932},
+ * {"Sienna",.628,.32,.176},
+ * {"Silver",.752,.752,.752},
+ * {"SkyBlue",.53,.808,.92},
+ * {"SlateBlue",.415,.352,.804},
+ * {"SlateGray",.44,.5,.565},
+ * {"SlateGrey",.44,.5,.565},
+ * {"Snow",1,.98,.98},
+ * {"SpringGreen",0,1,.498},
+ * {"SteelBlue",.275,.51,.705},
+ * {"Tan",.824,.705,.55},
+ * {"Teal",0,.5,.5},
+ * {"Thistle",.848,.75,.848},
+ * {"Tomato",1,.39,.28},
+ * {"Turquoise",.25,.88,.815},
+ * {"Violet",.932,.51,.932},
+ * {"VioletRed",.816,.125,.565},
+ * {"Wheat",.96,.87,.7},
+ * {"White",1,1,1},
+ * {"WhiteSmoke",.96,.96,.96},
+ * {"Yellow",1,1,0},
+ * {"YellowGreen",.604,.804,.196},
+ * {"",-1,-1,-1}};*/
 //-----------------------------------------------------------------------------
 const char *mglColorName(mglColor c)	// return closest SVG color
 {
@@ -679,18 +757,23 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 {
 	if(gr->GetPrmNum()<1)	return;
 	_Gr_->Finish();
-	FILE *fp = fopen(fname,"wt");
+	FILE *fp=fopen("mglcolors.tex","wt");
+	register int ii,jj,kk;	// save colors which can be required at output
+	for(ii=0;ii<6;ii++)	for(jj=0;jj<6;jj++)	for(kk=0;kk<6;kk++)
+		fprintf(fp,"\\definecolor{mgl_%d}{RGB}{%d,%d,%d}\n",ii+6*(jj+6*kk),51*ii,51*jj,51*kk);
+	fclose(fp);
+	fp = fopen(fname,"wt");
 	if(!fp)		{	gr->SetWarn(mglWarnOpen,fname);	return;	}
-	fprintf(fp, "%% Creator: MathGL library\n%% Title: %s\n\\begin{tikzpicture}\n",descr?descr:fname);
-	fprintf(fp, "\\providecommand{mgl1}{%g}\n",0.4*gr->mark_size());
-	fprintf(fp, "\\providecommand{mgl2}{%g}\n",0.2*gr->mark_size());
+	fprintf(fp, "%% Created by MathGL library\n%% Title: %s\n",descr?descr:fname);
+	fprintf(fp, "\\input{mglcolors.tex}\n\\begin{tikzpicture}\n");
+	float ms=0.4*gr->mark_size()/100;
 
 	// write primitives
 	float wp=-1;
 	register unsigned long i;
 	int st=0;
 	mglColor cp;
-	const char *cname;
+	char cname[16];
 
 	// add mark definition if present
 	bool m_p=false,m_x=false,m_d=false,m_v=false,m_t=false,
@@ -714,34 +797,40 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 	}
 	if(m_P)	{	m_p=true;	m_s=true;	}
 	if(m_X)	{	m_x=true;	m_s=true;	}
-	if(m_p)	fprintf(fp, "\\providecommand{mglp}[3]{\\draw[#3] (#1-\\mgl1, #2) -- (#1+\\mgl1,#2) (#1,#2-\\mgl1) -- (#1,#2+\\mgl1);}\n");
-	if(m_x)	fprintf(fp, "\\providecommand{mglx}[3]{\\draw[#3] (#1-\\mgl1, #2-\\mgl1) -- (#1+\\mgl1,#2+\\mgl1) (#1+\\mgl1,#2-\\mgl1) -- (#1-\\mgl1,#2+\\mgl1);}\n");
-	if(m_s)	fprintf(fp, "\\providecommand{mgls}[3]{\\draw[#3] (#1-\\mgl1, #2-\\mgl1) -- (#1+\\mgl1,#2-\\mgl1) -- (#1+\\mgl1,#2+\\mgl1) -- (#1-\\mgl1,#2+\\mgl1) -- cycle;}\n");
-	if(m_S)	fprintf(fp, "\\providecommand{mglS}[3]{\\fill[#3] (#1-\\mgl1, #2-\\mgl1) -- (#1+\\mgl1,#2-\\mgl1) -- (#1+\\mgl1,#2+\\mgl1) -- (#1-\\mgl1,#2+\\mgl1) -- cycle;}\n");
-	if(m_d)	fprintf(fp, "\\providecommand{mgld}[3]{\\draw[#3] (#1, #2-\\mgl1) -- (#1+\\mgl1,#2) -- (#1,#2+\\mgl1) -- (#1-\\mgl1,#2) -- cycle;}\n");
-	if(m_D)	fprintf(fp, "\\providecommand{mglD}[3]{\\fill[#3] (#1, #2-\\mgl1) -- (#1+\\mgl1,#2) -- (#1,#2+\\mgl1) -- (#1-\\mgl1,#2) -- cycle;}\n");
-	if(m_v)	fprintf(fp, "\\providecommand{mglv}[3]{\\draw[#3] (#1-\\mgl1, #2+\\mgl2) -- (#1+\\mgl1,#2+\\mgl2) -- (#1,#2-\\mgl1) -- cycle;}\n");
-	if(m_V)	fprintf(fp, "\\providecommand{mglV}[3]{\\fill[#3] (#1-\\mgl1, #2+\\mgl2) -- (#1+\\mgl1,#2+\\mgl2) -- (#1,#2-\\mgl1) -- cycle;}\n");
-	if(m_t)	fprintf(fp, "\\providecommand{mglt}[3]{\\draw[#3] (#1-\\mgl1, #2-\\mgl2) -- (#1+\\mgl1,#2-\\mgl2) -- (#1,#2+\\mgl1) -- cycle;}\n");
-	if(m_T)	fprintf(fp, "\\providecommand{mglT}[3]{\\fill[#3] (#1-\\mgl1, #2-\\mgl2) -- (#1+\\mgl1,#2-\\mgl2) -- (#1,#2+\\mgl1) -- cycle;}\n");
-	if(m_l)	fprintf(fp, "\\providecommand{mgll}[3]{\\draw[#3] (#1+\\mgl2, #2-\\mgl1) -- (#1+\\mgl2,#2+\\mgl1) -- (#1-\\mgl1,#2) -- cycle;}\n");
-	if(m_L)	fprintf(fp, "\\providecommand{mglL}[3]{\\fill[#3] (#1+\\mgl2, #2-\\mgl1) -- (#1+\\mgl2,#2+\\mgl1) -- (#1-\\mgl1,#2) -- cycle;}\n");
-	if(m_r)	fprintf(fp, "\\providecommand{mglr}[3]{\\draw[#3] (#1-\\mgl2, #2-\\mgl1) -- (#1-\\mgl2,#2+\\mgl1) -- (#1+\\mgl1,#2) -- cycle;}\n");
-	if(m_R)	fprintf(fp, "\\providecommand{mglR}[3]{\\fill[#3] (#1-\\mgl2, #2-\\mgl1) -- (#1-\\mgl2,#2+\\mgl1) -- (#1+\\mgl1,#2) -- cycle;}\n");
-	if(m_Y)	fprintf(fp, "\\providecommand{mglR}[3]{\\draw[#3] (#1, #2-\\mgl1) -- (#1,#2) -- (#1-\\mgl1,#2+\\mgl1) (#1,#2) -- (#1+\\mgl1,#2+\\mgl1);}\n");
-	if(m_a)	fprintf(fp, "\\providecommand{mgla}[3]{\\draw[#3] (#1-\\mgl1, #2) -- (#1+\\mgl1,#2) (#1-0.6*\\mgl1,#2-0.8*\\mgl1) -- (#1+0.6*\\mgl1,#2+0.8*\\mgl1) (#1-0.6*\\mgl1,#2+0.8*\\mgl1) -- (#1+0.6*\\mgl1,#2-0.8*\\mgl1);}\n");
-	if(m_o)	fprintf(fp, "\\providecommand{mglo}[3]{\\draw[#3] (#1, #2) circle (\\mgl1);}\n");
-	if(m_O)	fprintf(fp, "\\providecommand{mglO}[3]{\\fill[#3] (#1, #2) circle (\\mgl1);}\n");
+	if(m_p)	fprintf(fp, "\\providecommand{\\mglp}[3]{\\draw[#3] (#1-%g, #2) -- (#1+%g,#2) (#1,#2-%g) -- (#1,#2+%g);}\n",ms,ms,ms,ms);
+	if(m_x)	fprintf(fp, "\\providecommand{\\mglx}[3]{\\draw[#3] (#1-%g, #2-%g) -- (#1+%g,#2+%g) (#1+%g,#2-%g) -- (#1-%g,#2+%g);}\n", ms,ms,ms,ms, ms,ms,ms,ms);
+	if(m_s)	fprintf(fp, "\\providecommand{\\mgls}[3]{\\draw[#3] (#1-%g, #2-%g) -- (#1+%g,#2-%g) -- (#1+%g,#2+%g) -- (#1-%g,#2+%g) -- cycle;}\n", ms,ms,ms,ms, ms,ms,ms,ms);
+	if(m_S)	fprintf(fp, "\\providecommand{\\mglS}[3]{\\fill[#3] (#1-%g, #2-%g) -- (#1+%g,#2-%g) -- (#1+%g,#2+%g) -- (#1-%g,#2+%g) -- cycle;}\n", ms,ms,ms,ms, ms,ms,ms,ms);
+	if(m_d)	fprintf(fp, "\\providecommand{\\mgld}[3]{\\draw[#3] (#1, #2-%g) -- (#1+%g,#2) -- (#1,#2+%g) -- (#1-%g,#2) -- cycle;}\n", ms,ms,ms,ms);
+	if(m_D)	fprintf(fp, "\\providecommand{\\mglD}[3]{\\fill[#3] (#1, #2-%g) -- (#1+%g,#2) -- (#1,#2+%g) -- (#1-%g,#2) -- cycle;}\n", ms,ms,ms,ms);
+	if(m_v)	fprintf(fp, "\\providecommand{\\mglv}[3]{\\draw[#3] (#1-%g, #2+%g) -- (#1+%g,#2+%g) -- (#1,#2-%g) -- cycle;}\n", ms,ms/2,ms,ms/2, ms);
+	if(m_V)	fprintf(fp, "\\providecommand{\\mglV}[3]{\\fill[#3] (#1-%g, #2+%g) -- (#1+%g,#2+%g) -- (#1,#2-%g) -- cycle;}\n", ms,ms/2,ms,ms/2, ms);
+	if(m_t)	fprintf(fp, "\\providecommand{\\mglt}[3]{\\draw[#3] (#1-%g, #2-%g) -- (#1+%g,#2-%g) -- (#1,#2+%g) -- cycle;}\n", ms,ms/2,ms,ms/2, ms);
+	if(m_T)	fprintf(fp, "\\providecommand{\\mglT}[3]{\\fill[#3] (#1-%g, #2-%g) -- (#1+%g,#2-%g) -- (#1,#2+%g) -- cycle;}\n", ms,ms/2,ms,ms/2, ms);
+	if(m_l)	fprintf(fp, "\\providecommand{\\mgll}[3]{\\draw[#3] (#1+%g, #2-%g) -- (#1+%g,#2+%g) -- (#1-%g,#2) -- cycle;}\n", ms/2,ms,ms/2,ms, ms);
+	if(m_L)	fprintf(fp, "\\providecommand{\\mglL}[3]{\\fill[#3] (#1+%g, #2-%g) -- (#1+%g,#2+%g) -- (#1-%g,#2) -- cycle;}\n", ms/2,ms,ms/2,ms, ms);
+	if(m_r)	fprintf(fp, "\\providecommand{\\mglr}[3]{\\draw[#3] (#1-%g, #2-%g) -- (#1-%g,#2+%g) -- (#1+%g,#2) -- cycle;}\n", ms/2,ms,ms/2,ms, ms);
+	if(m_R)	fprintf(fp, "\\providecommand{\\mglR}[3]{\\fill[#3] (#1-%g, #2-%g) -- (#1-%g,#2+%g) -- (#1+%g,#2) -- cycle;}\n", ms/2,ms,ms/2,ms, ms);
+	if(m_Y)	fprintf(fp, "\\providecommand{\\mglR}[3]{\\draw[#3] (#1, #2-%g) -- (#1,#2) -- (#1-%g,#2+%g) (#1,#2) -- (#1+%g,#2+%g);}\n", ms,ms,ms,ms, ms);
+	if(m_a)	fprintf(fp, "\\providecommand{\\mgla}[3]{\\draw[#3] (#1-%g, #2) -- (#1+%g,#2) (#1-0.6*%g,#2-0.8*%g) -- (#1+0.6*%g,#2+0.8*%g) (#1-0.6*%g,#2+0.8*%g) -- (#1+0.6*%g,#2-0.8*%g);}\n", ms,ms,ms,ms, ms,ms,ms,ms, ms,ms);
+	if(m_o)	fprintf(fp, "\\providecommand{\\mglo}[3]{\\draw[#3] (#1, #2) circle (%g);}\n", ms);
+	if(m_O)	fprintf(fp, "\\providecommand{\\mglO}[3]{\\fill[#3] (#1, #2) circle (%g);}\n", ms);
 	// dots command is provided in any case
-	fprintf(fp, "\\providecommand{mglc}[3]{\\draw[#3] (#1, #2) circle (0.1*\\mgl1);}\n\n");
+	fprintf(fp, "\\providecommand{\\mglc}[3]{\\draw[#3] (#1, #2) circle (%g);}\n\n", 0.1*ms);
 
 	for(i=0;i<gr->GetPrmNum();i++)
 	{
 		const mglPrim &q = gr->GetPrm(i);
 		if(q.type<0)	continue;	// q.n1>=0 always
-		cp = _Gr_->GetColor(q);	cname = mglColorName(cp);
+		cp = _Gr_->GetColor(q);
+
+		ii = (cp.r*255+25)/51;
+		jj = (cp.g*255+25)/51;
+		kk = (cp.b*255+25)/51;
+		sprintf(cname,"mgl_%d",ii+6*(jj+6*kk));
+//		cname = mglColorName(cp);
 		const mglPnt p1=gr->GetPnt(q.n1);
-		float x=p1.x,y=p1.y,s=0.4*gr->FontFactor()*q.s;
+		float x=p1.x/100,y=p1.y/100,s=0.4*gr->FontFactor()*q.s/100;
 		if(q.type==0)
 		{
 			if(!strchr("xsSoO",q.n4))	s *= 1.1;
@@ -778,12 +867,12 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 		else if(q.type==2 && cp.a>0)
 		{
 			const mglPnt p2=gr->GetPnt(q.n2), p3=gr->GetPnt(q.n3);
-			fprintf(fp, "\\fill[%s, fill opacity=%g] (%g,%g) -- (%g,%g) -- (%g,%g) -- cycle;\n", cname,cp.a, x,y, p2.x,p2.y, p3.x,p3.y);
+			fprintf(fp, "\\fill[%s, fill opacity=%g] (%g,%g) -- (%g,%g) -- (%g,%g) -- cycle;\n", cname,cp.a, x,y, p2.x/100,p2.y/100, p3.x/100,p3.y/100);
 		}
 		else if(q.type==3 && cp.a>0)
 		{
 			const mglPnt p2=gr->GetPnt(q.n2), p3=gr->GetPnt(q.n3), p4=gr->GetPnt(q.n4);
-			fprintf(fp, "\\fill[%s, fill opacity=%g] (%g,%g) -- (%g,%g) -- (%g,%g) -- (%g,%g) -- cycle;\n", cname,cp.a, x,y, p2.x,p2.y, p3.x,p3.y, p4.x,p4.y);
+			fprintf(fp, "\\fill[%s, fill opacity=%g] (%g,%g) -- (%g,%g) -- (%g,%g) -- (%g,%g) -- cycle;\n", cname,cp.a, x,y, p2.x/100,p2.y/100, p4.x/100,p4.y/100, p3.x/100,p3.y/100);
 		}
 		else if(q.type==1)	// lines
 		{
@@ -794,7 +883,7 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 			else		fprintf(fp,"\\draw[%s,%s] ",cname,w[iw]);
 			// TODO: add line dashing
 			wp = q.w>1  ? q.w:1;	st = q.n3;
-			put_line(gr,fp,false,i,wp,cp,st, "(%g,%g)", " -- (%g,%g)", false);
+			put_line(gr,fp,false,i,wp,cp,st, "(%g,%g)", " -- (%g,%g)", false, 0.01);
 			fprintf(fp, ";\n");
 		}
 		else if(q.type==6)	// text
@@ -806,10 +895,10 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 			if((a&3)==2)	ss.append(",west");	if((a&3)==0)	ss.append(",east");
 			if(f&MGL_FONT_ITAL)	ss.append(",font=\\itshape");
 			if(f&MGL_FONT_BOLD)	ss.append(",font=\\bfshape");
-			if(t.text.find('\\')!=std::string::npos)
-				fprintf(fp,"\\draw[%s] (%g,%g) node[rotate=%.2g] $%ls$;\n", ss.c_str(),x,y, ftet, t.text.c_str());
+			if(t.text.find('\\')!=std::string::npos || t.text.find('{')!=std::string::npos || t.text.find('_')!=std::string::npos || t.text.find('^')!=std::string::npos)
+				fprintf(fp,"\\draw[%s] (%g,%g) node[rotate=%.2g]{$%ls$};\n", ss.c_str(),x,y, ftet, t.text.c_str());
 			else
-				fprintf(fp,"\\draw[%s] (%g,%g) node[rotate=%.2g] %ls;\n", ss.c_str(),x,y, ftet, t.text.c_str());
+				fprintf(fp,"\\draw[%s] (%g,%g) node[rotate=%.2g]{%ls};\n", ss.c_str(),x,y, ftet, t.text.c_str());
 		}
 	}
 	fprintf(fp, "\\end{tikzpicture}\n");
