@@ -111,6 +111,7 @@ void mgl_vect_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, con
 	bool both = x->GetNx()==n && y->GetNx()==n && x->GetNy()==m && y->GetNy()==m;
 	if(!(both || (x->GetNx()==n && y->GetNx()==m)))	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
 
+	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Vect",cgid++);
 	bool dot = sch && strchr(sch,'.');
 	bool fix = sch && strchr(sch,'f');
@@ -197,6 +198,8 @@ void mgl_vect_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, HCDT ax, HCDT ay, HCDT az, co
 	bool both = x->GetNx()*x->GetNy()*x->GetNz()==n*m*l && y->GetNx()*y->GetNy()*y->GetNz()==n*m*l && z->GetNx()*z->GetNy()*z->GetNz()==n*m*l;
 	if(!(both || (x->GetNx()==n && y->GetNx()==m && z->GetNx()==l)))
 	{	gr->SetWarn(mglWarnDim,"Vect");	return;	}
+
+	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Vect3",cgid++);
 	bool dot = sch && strchr(sch,'.');
 	bool fix = sch && strchr(sch,'f');

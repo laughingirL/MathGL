@@ -48,6 +48,30 @@ void mglTexture::GetRGBA(unsigned char *f)
 	}
 }
 //-----------------------------------------------------------------------------
+// I'm not sure that it is good idea -- a lot of memory used, but gain only for small files
+/*void mgl_rearrange_pnt(HMGL gr, std::vector<size_t> &on, std::vector<size_t> &no, bool coor=false)
+{
+	// on -- for old-to-new index;	no -- for new-to-old index
+	on.clear();	on.resize(gr->GetPntNum(),-1);	no.clear();
+	register size_t i,j;
+	for(i=0;i<gr->GetPntNum();i++)	// collect data for groups
+	// it is rather expensive (extra 4b per primitive) but need for export to 3D
+	{
+		const mglPnt &q = gr->GetPnt(i);
+		if(coor)	for(j=0;j<no.size();j++)
+		{
+			const mglPnt &p = gr->GetPnt(no[j]);
+			if(p.x==q.x && p.y==q.y && p.z==q.z)	on[i]=j;
+		}
+		else	for(j=0;j<no.size();j++)
+		{
+			const mglPnt &p = gr->GetPnt(no[j]);
+			if(p.x==q.x && p.y==q.y && p.z==q.z && p.c==q.c && p.t==q.t)	on[i]=j;
+		}
+		if(on[j]<0)		{	no.push_back(i);	on[j]=no.size()-1;	}
+	}
+}*/
+//-----------------------------------------------------------------------------
 void mgl_obj_prim(const mglPrim &q, const mglPnt &p, FILE *fp, float size)
 {
 	char type = q.n4;	float ss=size*0.35;
@@ -190,16 +214,16 @@ void mgl_obj_prim(const mglPrim &q, const mglPnt &p, FILE *fp, float size)
 				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);
 				fprintf(fp,"l -1/%ld -3/%ld\n", i,i);	break;
 			case 'O':
-				for(long j=0;j<=20;j++)
+				for(j=0;j<=20;j++)
 					fprintf(fp,"v %g %g %g\n",p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
-				for(long j=0;j<20;j++)
+				for(j=0;j<20;j++)
 					fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", j-21,i, j-20,i, i,i);
 				break;
 			case 'C':	fprintf(fp,"p %ld\n", i);
 			case 'o':
-				for(long j=0;j<=20;j++)
+				for(j=0;j<=20;j++)
 					fprintf(fp,"v %g %g %g\n",p.x+ss*cos(j*M_PI/10),p.y+ss*sin(j*M_PI/10),p.z);
-				for(long j=0;j<20;j++)
+				for(j=0;j<20;j++)
 					fprintf(fp,"l %ld/%ld %ld/%ld\n", j-21,i, j-20,i);
 				break;
 			}
@@ -218,13 +242,13 @@ void mgl_obj_prim(const mglPrim &q, const mglPnt &p, FILE *fp, float size)
 void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 {
 	if(gr->GetPrmNum()<=0)	return;	// nothing to do
-	register unsigned long i,j;
+	register size_t i,j;
 	long m1=0,m2=0,m;
 	for(i=0;i<gr->Grp.size();i++)	// prepare array of indirect indexing
 	{	m = gr->Grp[i].Id;	if(m<m1) m1=m;	if(m>m2) m2=m;	}
 	long *ng = new long[m2-m1+1];
 	for(i=0;i<gr->Grp.size();i++)	ng[gr->Grp[i].Id-m1] = i;
-	for(i=0;i<gr->GetPrmNum();i++)	// collect data for groups
+	for(i=0;i<size_t(gr->GetPrmNum());i++)	// collect data for groups
 	// it is rather expensive (extra 4b per primitive) but need for export to 3D
 	{
 		m = gr->GetPrm(i).id-m1;
@@ -237,7 +261,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	FILE *fp=fopen(fname,"wt");
 	// vertices definition
 	fprintf(fp,"# Created by MathGL library\n# Title: %s\n",descr ? descr : fname);
-	for(i=0;i<gr->GetPntNum();i++)
+	for(i=0;i<size_t(gr->GetPrmNum());i++)
 	{
 		mglPnt pp = gr->GetPnt(i);
 		fprintf(fp,"v %g %g %g\n",pp.x,pp.y,pp.z);
@@ -248,13 +272,12 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	// primitive definition in groups
 	tname[len-4]=0;	fprintf(fp,"# Primitives Definitions\nusemtl %s.mtl\n",tname);
 	std::vector<long> p;
-	mglPrim q;
 	for(i=0;i<gr->Grp.size();i++)
 	{
 		fprintf(fp,"g %s\n",gr->Grp[i].Lbl.c_str());	p = gr->Grp[i].p;
 		for(j=0;j<p.size();j++)
 		{
-			const mglPrim q=gr->GetPrm(p[j]);
+			const mglPrim &q=gr->GetPrm(p[j]);
 			mgl_obj_prim(q, gr->GetPnt(q.n1), fp, q.s*gr->FontFactor());
 		}
 		gr->Grp[i].p.clear();	// we don't need indexes anymore
@@ -454,8 +477,8 @@ bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 	if(Pnt.size()<1 || Prm.size()<1)	return true;
 	FILE *fp=fopen(fname,"wt");
 	if(!fp)	return true;
-	fprintf(fp,"MGLD %ld %ld\n# %s\n", Pnt.size(), Prm.size(), descr ? descr : fname);
-	register long i;
+	fprintf(fp,"MGLD %lu %lu\n# %s\n", Pnt.size(), Prm.size(), descr ? descr : fname);
+	register size_t i;
 	fprintf(fp,"# Vertexes: x y z c t u v w r g b a\n");
 	for(i=0;i<Pnt.size();i++)
 	{
@@ -484,23 +507,24 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	FILE *fp=fopen(fname,"rt");
 	if(!fp)	return true;
 	char *buf=new char[512];
-	fgets(buf,512,fp);
+	if(!fgets(buf,512,fp))	*buf=0;
 	if(strncmp(buf,"MGLD",4))	{	delete []buf;	fclose(fp);	return true;	}
-	register long i,n,m;
-	sscanf(buf+5,"%ld%ld",&n,&m);
+	register size_t i;
+	size_t n,m;
+	sscanf(buf+5,"%lu%lu",&n,&m);
 	if(n<=0 || m<=0)	{	delete []buf;	fclose(fp);	return true;	}
 	if(!add)	{	Pnt.clear();	Prm.clear();	}
 	Pnt.reserve(n);	Prm.reserve(m);
 	mglPnt p;	mglPrim q;
 	for(i=0;i<n;)
 	{
-		do {	fgets(buf,512,fp);	mgl_strtrim(buf);	} while(*buf=='#');
+		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
 		sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g", &p.x, &p.y, &p.z, &p.c, &p.t, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
 		Pnt.push_back(p);	i++;
 	}
 	for(i=0;i<m;)
 	{
-		do {	fgets(buf,512,fp);	mgl_strtrim(buf);	} while(*buf=='#');
+		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
 		sscanf(buf,"%d%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
 		Prm.push_back(q);	i++;
 	}
@@ -877,13 +901,4 @@ void mgl_write_x3d_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
 char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
 mgl_write_x3d(_GR_,s,d);	delete []s;		delete []d;	}
-//-----------------------------------------------------------------------------
-void mgl_write_wrl(HMGL gr, const char *fname,const char *descr)
-{
-	// TODO: Add export to X3D
-}
-void mgl_write_wrl_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
-{	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;
-char *d=new char[n+1];	memcpy(d,descr,n);	d[n]=0;
-mgl_write_wrl(_GR_,s,d);	delete []s;		delete []d;	}
 //-----------------------------------------------------------------------------

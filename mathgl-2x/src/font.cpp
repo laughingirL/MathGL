@@ -111,7 +111,7 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float col)
 {
 	if(numg==0)	return 0;
 	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0;
-	unsigned size = wcslen(str)+1,i,num=0;
+	size_t size = wcslen(str)+1,i,num=0;
 	if(parse)
 	{
 		unsigned *wcs = new unsigned[size], *buf=wcs;
@@ -132,16 +132,16 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float col)
 	else
 	{
 		int s = (font/MGL_FONT_BOLD)&3;
-		long i,j;
+		long j;
 		h *= fact[0]/fact[s];
-		for(i=0;i<int(size);i++)		// find width
+		for(i=0;i<size;i++)		// find width
 		{
 			j = str[i]!=' ' ? Internal(str[i]) : Internal('!');
 			if(j==-1)	continue;
 			w+= width[s][j]/fact[s];
 		}
 		ww = w;		w *= -(align&3)/2.f;
-		if(gr)	for(i=0;i<int(size);i++)		// draw it
+		if(gr)	for(i=0;i<size;i++)		// draw it
 		{
 			if(str[i]!=' ')
 			{
@@ -177,9 +177,9 @@ float mglFont::Width(const wchar_t *str,int font)
 	}
 	else
 	{
-		long i,j;
+		long j;
 		int s = (font/MGL_FONT_BOLD)&3;
-		for(i=0;i<int(size);i++)
+		for(i=0;i<size;i++)
 		{
 			j = str[i]!=' ' ? Internal(str[i]) : Internal('!');
 			if(j==-1)	continue;

@@ -339,18 +339,18 @@ float mglCanvas::text_plot(long p,const wchar_t *text,const char *font,float siz
 	RotateN(ftet,0,0,1);
 	if(strchr(font,'@'))	// draw box around text
 	{
-		long k1,k2,k3,k4;	mglPnt pt;	mglPoint p;
+		long k1,k2,k3,k4;	mglPnt pt;	mglPoint pp;
 		w = fnt->Width(text,font);	h = fnt->Height(font);
 		int align;	mglGetStyle(font,0,&align);	align = align&3;
 		float d=-w*align/2.-h*0.2;	w+=h*0.4;
-		pt = q;	p = mglPoint(d,-h*0.4);		PostScale(p);
-		pt.x=pt.xx=p.x;	pt.y=pt.yy=p.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k1=Pnt.size()-1;
-		pt = q;	p = mglPoint(w+d,-h*0.4);	PostScale(p);
-		pt.x=pt.xx=p.x;	pt.y=pt.yy=p.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k2=Pnt.size()-1;
-		pt = q;	p = mglPoint(d,h*1.2);	PostScale(p);
-		pt.x=pt.xx=p.x;	pt.y=pt.yy=p.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k3=Pnt.size()-1;
-		pt = q;	p = mglPoint(w+d,h*1.2);	PostScale(p);
-		pt.x=pt.xx=p.x;	pt.y=pt.yy=p.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k4=Pnt.size()-1;
+		pt = q;	pp = mglPoint(d,-h*0.4);		PostScale(pp);
+		pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k1=Pnt.size()-1;
+		pt = q;	pp = mglPoint(w+d,-h*0.4);		PostScale(pp);
+		pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k2=Pnt.size()-1;
+		pt = q;	pp = mglPoint(d,h*1.2);			PostScale(pp);
+		pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k3=Pnt.size()-1;
+		pt = q;	pp = mglPoint(w+d,h*1.2);		PostScale(pp);
+		pt.x=pt.xx=pp.x;	pt.y=pt.yy=pp.y;	MGL_PUSH(Pnt,pt,mutexPnt);	k4=Pnt.size()-1;
 		line_plot(k1,k2);	line_plot(k1,k3);	line_plot(k4,k2);	line_plot(k4,k3);
 	}
 	fsize *= fnt->Puts(text,font,col)/2;

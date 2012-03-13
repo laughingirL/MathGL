@@ -63,7 +63,7 @@ void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, 
 	const mglPnt pp = gr->GetPnt(gr->GetPrm(i).n1);
 	float x0=pp.x, y0=pp.y;
 	bool ok=true;
-	register unsigned long k = i,j;	// first point
+	register long k = i,j;	// first point
 	while(ok)
 	{
 		for(ok=false,j=i+1;j<gr->GetPrmNum();j++)
@@ -114,7 +114,7 @@ void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, 
 				else if(p2.x==x0 && p2.y==y0)
 				{
 					k=j;	q.type = -1;	x0 = p1.x;	y0=p1.y;
-					(fp, gz, nfmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);
+					mgl_printf(fp, gz, nfmt,fc*x0,(neg?_Gr_->GetHeight()-y0:y0)*fc);
 					if(m>10)	{	m=0;	mgl_printf(fp, gz, "\n");	}
 					ok=true;	m++;
 				}
@@ -127,7 +127,7 @@ void put_line(HMGL gr, void *fp, bool gz, long i, float wp, mglColor cp,int st, 
 //"np %d %d mt ", "%d %d ll ", "cp dr\n", "} def")
 void put_desc(HMGL gr, void *fp, bool gz, const char *pre, const char *ln1, const char *ln2, const char *ln3, const char *suf)
 {
-	register unsigned long i,j,n;
+	register long i,j,n;
 	wchar_t *g;
 	int *s;
 	for(n=i=0;i<gr->GetPrmNum();i++)	if(gr->GetPrm(i).type==4)	n++;
@@ -207,7 +207,7 @@ void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 	m_s=false,m_a=false,m_o=false,m_T=false,
 	m_V=false,m_S=false,m_D=false,m_Y=false,m_l=false,
 	m_L=false,m_r=false,m_R=false,m_X=false,m_P=false;
-	register unsigned long i;
+	register long i;
 	// add mark definition if present
 	for(i=0;i<gr->GetPrmNum();i++)
 	{
@@ -383,7 +383,7 @@ void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 	mgl_printf(fp, gz, "<g fill=\"none\" stroke=\"none\" stroke-width=\"0.5\">\n");
 	// write primitives
 	float wp=-1;
-	register unsigned long i;
+	register long i;
 	int st=0;
 	mglColor cp;
 
@@ -770,7 +770,7 @@ void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 
 	// write primitives
 	float wp=-1;
-	register unsigned long i;
+	register long i;
 	int st=0;
 	mglColor cp;
 	char cname[16];

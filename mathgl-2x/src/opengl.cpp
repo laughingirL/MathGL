@@ -242,7 +242,6 @@ void mglCanvasGL::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *)
 void mglCanvasGL::line_draw(long k1, long k2, mglDrawReg *)
 {
 	if(k1<0 || k2<0 || PDef==0)	return;
-	mglPnt p1=Pnt[k1], p2=Pnt[k2];
 /*	unsigned long pdef = PDef*0x10001;
 	pdef = pdef << (int(100*pPos+0.5)%16);
 	set_pen(pdef&0xffff,PenWidth);*/

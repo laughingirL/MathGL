@@ -1617,7 +1617,7 @@ void mgl_tape_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char *
 	float ll, rr = gr->SaveState(opt);
 	if(rr==0 || isnan(rr))	rr = mgl_norm(gr->Max-gr->Min)*gr->BarWidth/25;
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
-	char mk=gr->SetPenPal(pen,&pal);	gr->Reserve(4*n*m);
+	gr->SetPenPal(pen,&pal);	gr->Reserve(4*n*m);
 	mglPoint p1,p2,q1,q2,l,nn,qn=mglPoint(NAN,NAN);
 	long n1=-1,n2=-1,n3=-1,n4=-1, m1=-1,m2=-1,m3=-1,m4=-1;
 	bool sh = pen && strchr(pen,'!'), xo = pen && strchr(pen,'x'), zo = pen && strchr(pen,'z'), wire = pen && strchr(pen,'#');

@@ -574,7 +574,7 @@ float mgl_data_linear(HCDT d, float x,float y,float z)
 	const mglData *dd=dynamic_cast<const mglData *>(d);
 	if(dd)
 	{
-		long nx=dd->nx, ny=dd->ny, nz=dd->nz, d=ny>1?nx:0;
+		long nx=dd->nx, ny=dd->ny, nz=dd->nz, dn=ny>1?nx:0;
 		kx = kx<nx-1 ? kx:nx-2;	kx = kx>=0 ? kx:0;
 		ky = ky<ny-1 ? ky:ny-2;	ky = ky>=0 ? ky:0;
 		kz = kz<nz-1 ? kz:nz-2;	kz = kz>=0 ? kz:0;
@@ -583,8 +583,8 @@ float mgl_data_linear(HCDT d, float x,float y,float z)
 		z -= kz;	if(nz==1)	z=0;
 
 		const mreal *aa=dd->a+kx+nx*(ky+ny*kz), *bb = aa+(nz>1?nx*ny:0);
-		b0 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[d] + x*y*aa[1+d];
-		b1 = bb[0]*(1-x-y+x*y) + x*(1-y)*bb[1] + y*(1-x)*bb[d] + x*y*bb[1+d];
+		b0 = aa[0]*(1-x-y+x*y) + x*(1-y)*aa[1] + y*(1-x)*aa[dn] + x*y*aa[1+dn];
+		b1 = bb[0]*(1-x-y+x*y) + x*(1-y)*bb[1] + y*(1-x)*bb[dn] + x*y*bb[1+dn];
 	}
 	else
 	{

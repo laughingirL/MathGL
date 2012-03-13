@@ -156,7 +156,6 @@ long mglCanvas::ProjScale(int nf, long id)
 //-----------------------------------------------------------------------------
 void mglCanvas::LightScale()
 {
-	register float xx,yy,zz;
 	register long i;
 	for(i=0;i<10;i++)
 	{
@@ -411,8 +410,8 @@ void mglCanvas::Combine(const mglCanvas *gr)
 }
 //-----------------------------------------------------------------------------
 #ifndef HAVE_MPI
-void mglCanvas::MPI_Send(int id)	{}	// TODO: add later
-void mglCanvas::MPI_Recv(int id)	{}	// TODO: add later
+void mglCanvas::MPI_Send(int /*id*/)	{}	// TODO: add later
+void mglCanvas::MPI_Recv(int /*id*/)	{}	// TODO: add later
 #endif
 //-----------------------------------------------------------------------------
 void mglCanvas::pnt_plot(long x,long y,float z,const unsigned char ci[4])
@@ -609,8 +608,8 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 	mglPoint n2 = mglPoint(p2.x-p4.x,p2.y-p4.y,p2.z-p4.z)^mglPoint(p3.x-p4.x,p3.y-p4.y,p3.z-p4.z);
 	mglPoint nr = (n1+n2)*0.5;
 
-	register long i,j,g;
-	register float u,v,s,xx,yy,q;
+	register long i,j;
+	register float u,v,s,xx,yy,qu,qv;
 	float x0 = p1.x, y0 = p1.y;
 	for(i=x1;i<=x2;i++)	for(j=y1;j<=y2;j++)
 	{
@@ -618,19 +617,25 @@ void mglCanvas::quad_draw(long k1, long k2, long k3, long k4, mglDrawReg *d)
 		s = dsx*xx + dsy*yy + (dd+d3.y*xx-d3.x*yy)*(dd+d3.y*xx-d3.x*yy);
 		if(s<0)	continue;	// no solution
 		s = sqrt(s);
-		q = d3.x*yy - d3.y*xx + dd + s;
-		u = q ? 2.f*(d2.y*xx - d2.x*yy)/q : -1.f;
-		q = d3.y*xx - d3.x*yy + dd + s;
-		v = q ? 2.f*(d1.x*yy - d1.y*xx)/q : -1.f;
-		g = u<0.f || u>1.f || v<0.f || v>1.f;
-		if(g)	// first root bad
+		qu = d3.x*yy - d3.y*xx + dd + s;
+		qv = d3.y*xx - d3.x*yy + dd + s;
+		u = v = -1.f;
+		if(qu && qv)
 		{
-			q = d3.x*yy - d3.y*xx + dd - s;
-			u = q ? 2.f*(d2.y*xx - d2.x*yy)/q : -1.f;
-			q = d3.y*xx - d3.x*yy + dd - s;
-			v = q ? 2.f*(d1.x*yy - d1.y*xx)/q : -1.f;
-			g = u<0.f || u>1.f || v<0.f || v>1.f;
-			if(g)	continue;	// second root bad
+			u = 2.f*(d2.y*xx - d2.x*yy)/qu;
+			v = 2.f*(d1.x*yy - d1.y*xx)/qv;
+		}
+		if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	// first root bad
+		{
+			qu = d3.x*yy - d3.y*xx + dd - s;
+			qv = d3.y*xx - d3.x*yy + dd - s;
+			u = v = -1.f;
+			if(qu && qv)
+			{
+				u = 2.f*(d2.y*xx - d2.x*yy)/qu;
+				v = 2.f*(d1.x*yy - d1.y*xx)/qv;
+			}
+			if(u*(1.f-u)<0.f || v*(1.f-v)<0.f)	continue;	// second root bad
 		}
 		p = p1+d1*u+d2*v+d3*(u*v);
 		if(isnan(p.u) && !isnan(p.v))

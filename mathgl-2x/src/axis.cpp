@@ -35,8 +35,8 @@ inline struct tm* mgl_localtime_r (const time_t *clock, struct tm *result)
 //-----------------------------------------------------------------------------
 long mgl_have_color(const char *stl)
 {
-	register long i,j;
-	if(stl)	for(i=j=0;stl[i];i++)	if(strchr(MGL_COLORS,stl[i]))	j++;
+	register long i,j=0;
+	if(stl)	for(i=0;stl[i];i++)	if(strchr(MGL_COLORS,stl[i]))	j++;
 	return j;
 }
 //-----------------------------------------------------------------------------
@@ -273,7 +273,7 @@ void mglCanvas::SetTickTime(char dir, float d, const char *t)
 	{	v1 = aa.v1;		v0 = v0 - aa.dv*floor((v0-aa.v2)/aa.dv+1e-3);	}
 	if(v0+aa.dv!=v0 && v1+aa.dv!=v1)	for(v=v0;v<=v1;v+=aa.dv)
 	{
-		time_t tt = v;	tm tp;		mgl_localtime_r(&tt,&tp);
+		tt = v;	tm tp;		mgl_localtime_r(&tt,&tp);
 		wcsftime(buf,64,aa.t,&tp);	aa.AddLabel(buf,v);
 	}
 }
@@ -561,10 +561,10 @@ void mglCanvas::DrawLabels(mglAxis &aa)
 		if(c>aa.v1 && c<aa.v2 && i%k!=0)	continue;
 		p = o+d*c;	nn = s-o;	ScalePoint(p,nn);
 		mglPnt &qq = Pnt[kk[i]];
-		float ax=qq.u*cos(tet) + qq.v*sin(tet), ay=qq.v*cos(tet) - qq.u*sin(tet);
-		if(qq.u*nn.x+qq.v*nn.y < ax*nn.x+ay*nn.y)
-		{	ax=qq.u*cos(tet) - qq.v*sin(tet);	ay=qq.v*cos(tet) + qq.u*sin(tet);	}
-		qq.u = ax;	qq.v = ay;
+		float ux=qq.u*cos(tet) + qq.v*sin(tet), uy=qq.v*cos(tet) - qq.u*sin(tet);
+		if(qq.u*nn.x+qq.v*nn.y < ux*nn.x+uy*nn.y)
+		{	ux=qq.u*cos(tet) - qq.v*sin(tet);	uy=qq.v*cos(tet) + qq.u*sin(tet);	}
+		qq.u = ux;	qq.v = uy;
 
 		if(!get(MGL_ENABLE_RTEXT))	pos[2] = nn.x<0 || (nn.x==0 && nn.y<0) ? 'L':'R';
 
@@ -764,27 +764,27 @@ void mglCanvas::Box(const char *col, bool ticks)
 		if(col && strchr(col,'@'))
 		{
 			// edge points
-			mglPoint p[8]={Min,Min,Min,Min,Max,Max,Max,Max},nan=mglPoint(NAN),o[8];
+			mglPoint p[8]={Min,Min,Min,Min,Max,Max,Max,Max},nan=mglPoint(NAN),oo[8];
 			p[1].x=Max.x;	p[2].y=Max.y;	p[3].z=Max.z;
 			p[4].x=Min.x;	p[5].y=Min.y;	p[6].z=Min.z;
 			float zm=1e5;	int im=0;
-			memcpy(o,p,8*sizeof(mglPoint));
+			memcpy(oo,p,8*sizeof(mglPoint));
 			for(int i=0;i<8;i++)	// find deepest point
 			{
 				ScalePoint(p[i],nan,false);
 				if(p[i].z<zm)	{	zm=p[i].z;	im=i;	}
 			}
 			// now draw faces
-			char clr[5]="{y9}";
+			char color[5]="{y9}";
 			register int i;	// first color used for faces, last one for edges
 			for(i=0;col[i];i++)	if(strchr(MGL_COLORS,col[i]))
 			{
-				if(i>1 && col[i-1]=='{')	{	clr[1]=col[i];	clr[2]=col[i+1];	break;	}
-				else	{	clr[0]=col[i];	clr[1]=0;	break;	}
+				if(i>1 && col[i-1]=='{')	{	color[1]=col[i];	color[2]=col[i+1];	break;	}
+				else	{	color[0]=col[i];	color[1]=0;	break;	}
 			}
-			mgl_facex(this, o[im].x, Min.y, Min.z, Max.y-Min.y, Max.z-Min.z, clr,0,0);
-			mgl_facey(this, Min.x, o[im].y, Min.z, Max.x-Min.x, Max.z-Min.z, clr,0,0);
-			mgl_facez(this, Min.x, Min.y, o[im].z, Max.x-Min.x, Max.y-Min.y, clr,0,0);
+			mgl_facex(this, oo[im].x, Min.y, Min.z, Max.y-Min.y, Max.z-Min.z, color,0,0);
+			mgl_facey(this, Min.x, oo[im].y, Min.z, Max.x-Min.x, Max.z-Min.z, color,0,0);
+			mgl_facez(this, Min.x, Min.y, oo[im].z, Max.x-Min.x, Max.y-Min.y, color,0,0);
 		}
 	}
 	Org=o;	TickLen=tl;

@@ -66,7 +66,7 @@ Remove other setting if data name is changed.
 10. Add primitives by mouse at beginning of script + change its size/position by mouse + "attraction" points
 11. Drag&drop plot/group between inplots
 12. Create default plot dependently of selected row/column/range in data table
-13. Show plot at creation stage (if option is enabled -- can be long process!!!)
+13. Show plot at creation stage (if option is enabled -- can be size_t process!!!)
 14. Rotate/perspective/lighting/... of primitive list (without script re-execution)
 
 15. QTreeWidgetItem -- ICON (if,for,once,subplot,...); Cmd text; LINE - POS in group/line. After editing/changing --> put text to editor.

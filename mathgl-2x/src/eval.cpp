@@ -503,6 +503,13 @@ typedef double (*func_2)(double, double);
 // evaluation of embedded (included) expressions
 mreal mglFormula::CalcIn(const mreal *a1) const
 {
+	float z2[22] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,0
+#ifndef NO_GSL
+			,3,NAN, 3,NAN, 0,0,3,1
+#else
+			,0,0,0,0,0,0,0,0
+#endif
+		};
 	func_2 f2[22] = {clt,cgt,ceq,cor,cand,add,sub,mul,div,ipw,pow,fmod,llg,arg
 #ifndef NO_GSL
 			,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
@@ -536,6 +543,8 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 	{
 		if(Kod<EQ_SIN)
 		{
+			// try to bypass calc b if a==0
+			if(a==0 && z2[Kod-EQ_LT]!=3)	return z2[Kod-EQ_LT];
 			double b = Right->CalcIn(a1);
 			return !isnan(b) ? f2[Kod-EQ_LT](a,b) : NAN;
 		}

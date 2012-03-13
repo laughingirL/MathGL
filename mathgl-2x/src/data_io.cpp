@@ -732,7 +732,6 @@ void *mgl_modify(void *par)
 }
 void mgl_data_modify(HMDT d, const char *eq,long dim)
 {
-mglNumThr=1;
 	long nx=d->nx, ny=d->ny, nz=d->nz, par[3]={nx,ny,nz};
 	mglFormula f(eq);
 	if(dim<0)	dim=0;

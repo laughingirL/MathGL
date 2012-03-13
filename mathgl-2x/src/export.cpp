@@ -340,7 +340,7 @@ void mglCanvas::EndFrame()
 #define _GR_	((mglCanvas *)(*gr))
 #define _Gr_	((mglCanvas *)(gr))
 //-----------------------------------------------------------------------------
-void mgl_write_png(HMGL gr, const char *fname,const char *descr)
+void mgl_write_png(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f,true);
@@ -357,7 +357,7 @@ void mgl_write_png_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_png(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_write_png_solid(HMGL gr, const char *fname,const char *descr)
+void mgl_write_png_solid(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f);
@@ -391,7 +391,7 @@ void mgl_write_jpg_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_jpg(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_write_tga(HMGL gr, const char *fname,const char *descr)
+void mgl_write_tga(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f,true);
@@ -408,7 +408,7 @@ void mgl_write_tga_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_tga(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_write_bmp(HMGL gr, const char *fname,const char *descr)
+void mgl_write_bmp(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f);
@@ -425,7 +425,7 @@ void mgl_write_bmp_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_bmp(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_write_bps(HMGL gr, const char *fname,const char *descr)
+void mgl_write_bps(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f);
@@ -442,7 +442,7 @@ void mgl_write_bps_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_bps(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
-void mgl_write_gif(HMGL gr, const char *fname,const char *descr)
+void mgl_write_gif(HMGL gr, const char *fname,const char *)
 {
 	long w,h;	unsigned char *f=0, **p=0;
 	p =_Gr_->GetRGBLines(w,h,f);

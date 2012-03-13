@@ -686,7 +686,7 @@ void mgl_puts_fit_(uintptr_t* gr, mreal *x, mreal *y, mreal *z, const char *pref
 //-----------------------------------------------------------------------------
 void mgl_labelw_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const wchar_t *text, const char *fnt, const char *opt)
 {
-	long j,m,mx,my,mz,mr,n=y->GetNx();
+	long j,m,mx,my,mz,n=y->GetNx();
 	if(x->GetNx()!=n || z->GetNx()!=n)
 	{	gr->SetWarn(mglWarnDim,"Label");	return;	}
 	if(n<2)	{	gr->SetWarn(mglWarnLow,"Label");	return;	}

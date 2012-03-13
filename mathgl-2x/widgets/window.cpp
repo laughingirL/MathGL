@@ -197,6 +197,7 @@ void *mgl_draw_calc(void *p)
 #ifdef HAVE_PTHREAD
 	((mglDraw *)p)->Calc();
 #endif
+	return 0;
 }
 //-----------------------------------------------------------------------------
 void mgl_draw_thr(void *p)

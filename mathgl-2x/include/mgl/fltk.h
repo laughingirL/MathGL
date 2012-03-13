@@ -53,8 +53,8 @@ public:
 	inline void set_flag(int f)	{	flag = f;	}
 	/// Set flags for handling mouse
 	void set_graph(mglCanvas *gr);	///< Set grapher object
-	inline void set_graph(mglGraph *gr)
-	{	set_graph(dynamic_cast<mglCanvas *>(gr->Self()));	}
+	inline void set_graph(mglGraph *Gr)
+	{	set_graph(dynamic_cast<mglCanvas *>(Gr->Self()));	}
 	/// Get pointer to grapher
 	inline HMGL get_graph()	{	return gr;	}
 	/// Set drawing functions and its parameter

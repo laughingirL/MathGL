@@ -96,18 +96,18 @@ void Fl_MathGL::set_graph(mglCanvas *GR)
 void Fl_MathGL::draw()
 {
 	const unsigned char *g = gr ? gr->GetBits() : 0;
-	int i, h=gr->GetHeight(), w=gr->GetWidth();
-	if(g)	fl_draw_image(g, x(), y(), w, h, 3);
+	int i, hh=gr->GetHeight(), ww=gr->GetWidth();
+	if(g)	fl_draw_image(g, x(), y(), ww, hh, 3);
 	if(flag&4)
 	{
 		char str[5]="0.0";
 		fl_color(192,192,192);
 		for(i=1;i<10;i++)
 		{
-			str[2] = '0'+10-i;	fl_draw(str,30,30+i*h/10);
-			fl_line(30,30+i*h/10,30+w,30+i*h/10);
-			str[2] = '0'+i;	fl_draw(str,30+i*w/10,30+h);
-			fl_line(30+i*w/10,30,30+i*w/10,30+h);
+			str[2] = '0'+10-i;	fl_draw(str,30,30+i*hh/10);
+			fl_line(30,30+i*hh/10,30+ww,30+i*hh/10);
+			str[2] = '0'+i;	fl_draw(str,30+i*ww/10,30+hh);
+			fl_line(30+i*ww/10,30,30+i*ww/10,30+hh);
 		}
 //		if(*MouseBuf)	fl_draw(MouseBuf,30,50);
 	}
@@ -506,7 +506,7 @@ Fl_Menu_Item mgl_menuitems[] = {
 	{ 0,0,0,0,0,0,0,0,0 }
 };
 //-----------------------------------------------------------------------------
-Fl_MGLView::Fl_MGLView(int x, int y, int w, int h, char *label) : Fl_Window(x,y,w,h,label)
+Fl_MGLView::Fl_MGLView(int xx, int yy, int ww, int hh, char *lbl) : Fl_Window(xx,yy,ww,hh,lbl)
 {
 	alpha = light = sshow = 0;	menu = 0;
 	next = prev = reload = NULL;	delay = NULL;

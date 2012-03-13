@@ -115,25 +115,21 @@ struct mglPnt
 	mglPnt()	{	xx=yy=zz=x=y=z=c=t=u=v=w=r=g=b=a=0;	}
 };
 inline mglPnt operator+(const mglPnt &a, const mglPnt &b)
-{	mglPnt c;
-	c.x=a.x+b.x;	c.y=a.y+b.y;	c.z=a.z+b.z;	c.c=a.c+b.c;
-	c.t=a.t+b.t;	c.u=a.u+b.u;	c.v=a.v+b.v;	c.w=a.w+b.w;
-	c.r=a.r+b.r;	c.g=a.g+b.g;	c.b=a.b+b.b;	c.a=a.a+b.a;	return c;	}
+{	mglPnt c=a;
+	c.x+=b.x;	c.y+=b.y;	c.z+=b.z;	c.u+=b.u;	c.v+=b.v;	c.w+=b.w;
+	c.r+=b.r;	c.g+=b.g;	c.b+=b.b;	c.a+=b.a;	return c;	}
 inline mglPnt operator-(const mglPnt &a, const mglPnt &b)
-{	mglPnt c;
-	c.x=a.x-b.x;	c.y=a.y-b.y;	c.z=a.z-b.z;	c.c=a.c-b.c;
-	c.t=a.t-b.t;	c.u=a.u-b.u;	c.v=a.v-b.v;	c.w=a.w-b.w;
-	c.r=a.r-b.r;	c.g=a.g-b.g;	c.b=a.b-b.b;	c.a=a.a-b.a;	return c;	}
+{	mglPnt c=a;
+	c.x-=b.x;	c.y-=b.y;	c.z-=b.z;	c.u-=b.u;	c.v-=b.v;	c.w-=b.w;
+	c.r-=b.r;	c.g-=b.g;	c.b-=b.b;	c.a-=b.a;	return c;	}
 inline mglPnt operator*(const mglPnt &a, float b)
-{	mglPnt c;
-	c.x=a.x*b;	c.y=a.y*b;	c.z=a.z*b;	c.c=a.c*b;
-	c.t=a.t*b;	c.u=a.u*b;	c.v=a.v*b;	c.w=a.w*b;
-	c.r=a.r*b;	c.g=a.g*b;	c.b=a.b*b;	c.a=a.a*b;	return c;	}
+{	mglPnt c=a;
+	c.x*=b;	c.y*=b;	c.z*=b;	c.u*=b;	c.v*=b;	c.w*=b;
+	c.r*=b;	c.g*=b;	c.b*=b;	c.a*=b;	return c;	}
 inline mglPnt operator*(float b, const mglPnt &a)
-{	mglPnt c;
-	c.x=a.x*b;	c.y=a.y*b;	c.z=a.z*b;	c.c=a.c*b;
-	c.t=a.t*b;	c.u=a.u*b;	c.v=a.v*b;	c.w=a.w*b;
-	c.r=a.r*b;	c.g=a.g*b;	c.b=a.b*b;	c.a=a.a*b;	return c;	}
+{	mglPnt c=a;
+	c.x*=b;	c.y*=b;	c.z*=b;	c.u*=b;	c.v*=b;	c.w*=b;
+	c.r*=b;	c.g*=b;	c.b*=b;	c.a*=b;	return c;	}
 //-----------------------------------------------------------------------------
 struct mglTexture
 {
