@@ -38,8 +38,8 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 //-----------------------------------------------------------------------------
 int type = 0;
 int dotest  = 0;
-int width  = 1000;
-int height = 750;
+int width  = 800;
+int height = 600;
 int mini = 0;
 int big  = 0;
 int srnd = 0;
@@ -49,28 +49,42 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	float q[] = {0,1,2,3, 4,5,6,7, 0,2,4,6, 1,3,5,7, 0,4,1,5, 2,6,3,7};
-	float xc[] = {-1,1,-1,1,-1,1,-1,1}, yc[] = {-1,-1,1,1,-1,-1,1,1}, zc[] = {-1,-1,-1,-1,1,1,1,1};
-	mglData qq(6,4,q), xx(8,xc), yy(8,yc), zz(8,zc);
-	gr->Light(true);	//gr->Alpha(true);
-	gr->SubPlot(2,1,0);	gr->Title("QuadPlot sample");	gr->Rotate(50,60);
-	gr->QuadPlot(qq,xx,yy,zz,"yr");
-	gr->QuadPlot(qq,xx,yy,zz,"k#");
-
-	float t[] = {0,1,2, 0,1,3, 0,2,3, 1,2,3};
-	float xt[] = {-1,1,0,0}, yt[] = {-1,-1,1,0}, zt[] = {-1,-1,-1,1};
-	mglData tt(4,3,t), uu(4,xt), vv(4,yt), ww(4,zt);
-	gr->SubPlot(2,1,1);	gr->Title("TriPlot_sample");	gr->Rotate(50,60);
-	gr->TriPlot(tt,uu,vv,ww,"b");
-	gr->TriPlot(tt,uu,vv,ww,"k#");
-
-	gr->WriteXYZ("test.xyz");
-	gr->WriteSTL("test.stl");
-	gr->WriteOFF("test.off");
-	gr->WriteTEX("test.tex");
-	gr->WriteOBJ("test.obj");
-	gr->WriteOBJ("test1.obj","",true);
-	return;
+	//double v [5] = {0.000001, 10.000001, 20.000001, 30.000001, 39.999999}, *vv, Value;
+	// ERROR ERROR ERROR
+	//-----------------------------------------------------------------
+	double v [5] = {0.0, 10.0, 20.0, 30.0, 40.0}, *vv, Value;
+	//-----------------------------------------------------------------
+	double x [4] = {0, 10, 20, 30}, *xx;
+	double y [5] = {0, 10, 20, 30, 40}, *yy;
+	int
+	iy,ix,iz;
+	mglData Z(4,5), V(6), X(5), Y(4);
+	for (ix=0;ix<4;ix++){
+		for (iy=0;iy<5;iy++) {
+			Z.Put(iy*10,ix,iy);
+		}
+	}
+	Z.Save ("A.txt");
+	vv = &v[0];
+	V.Set(vv, 5);
+	V.Save ("V.txt");
+	xx = &x[0];
+	X.Set(xx, 4);
+	yy = &y[0];
+	Y.Set(yy, 5);
+	gr->DefaultPlotParam();
+	gr->InPlot(0.0, 0.7, 0.0, 1.0);
+	gr->SetRanges(0,30,-5,45,-80,70);
+//	gr->Axis(mglPoint(0,-5),mglPoint(30,45));
+	gr->SetTicks('x', 5, 4); // sets tick step to 5
+	gr->SetTicks('y', 5, 4); // and draws 4 subticks
+	gr->Axis("xy");
+	gr->Box();
+	gr->Colorbar();
+	gr->Dens(X,Y,Z);
+	// Color Gradient
+	gr->Cont(V,X,Y,Z,"tk");
+	// Without Color	ERROR ERROR ERROR
 
 	mglParse par;
 	par.AllowSetSize(true);
@@ -335,7 +349,8 @@ void smgl_text(mglGraph *gr)	// text drawing
 	if(mini)	return;
 
 	gr->SubPlot(2,2,1,"");
-	gr->Puts(mglPoint(0), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", "@", -4);
+	gr->Puts(mglPoint(0,0.5), "\\sqrt{\\frac{\\alpha^{\\gamma^2}+\\overset 1{\\big\\infty}}{\\sqrt3{2+b}}}", "@", -4);
+	gr->Puts(mglPoint(0,-0.5),"Text can be printed\non several lines");
 
 	gr->SubPlot(2,2,2,"");
 	mglData y;	mgls_prepare1d(&y);
@@ -1473,29 +1488,29 @@ void smgl_axis(mglGraph *gr)
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_ticks="subplot 3 2 0:title 'Usual axis':axis\n"
-"subplot 3 2 2:title 'Too big/small range':ranges -1000 1000 0 0.001:axis\n"
+"subplot 3 2 1:title 'Too big/small range':ranges -1000 1000 0 0.001:axis\n"
 "subplot 3 2 3:title 'Too narrow range':ranges 100 100.1 10 10.01:axis\n"
 "subplot 3 2 4:title 'Disable ticks tuning':tuneticks off:axis\n"
-"subplot 3 2 1:title 'Manual ticks':ranges -pi pi 0 2:\nxtick -pi '\\pi' -pi/2 '-\\pi/2' 0 '0' 0.886 'x^*' pi/2 '\\pi/2' pi 'pi':axis\n"
+"subplot 3 2 2:title 'Manual ticks':ranges -pi pi 0 2:\nxtick -pi '\\pi' -pi/2 '-\\pi/2' 0 '0' 0.886 'x^*' pi/2 '\\pi/2' pi 'pi':axis\n"
 "# or you can use: list v -pi -pi/2 0 0.886 pi/2 pi:xtick v '-\\pi\n-\\pi/2\n0\nx^*\n\\pi/2\n\\pi':axis\n"
 "subplot 3 2 5:title 'Time ticks':xrange 0 3e5:ticktime 'x':axis\n";
 void smgl_ticks(mglGraph *gr)
 {
 	gr->SubPlot(3,2,0);	gr->Title("Usual axis");	gr->Axis();
-	gr->SubPlot(3,2,2);	gr->Title("Too big/small range");
+	gr->SubPlot(3,2,1);	gr->Title("Too big/small range");
 	gr->SetRanges(-1000,1000,0,0.001);	gr->Axis();
 	gr->SubPlot(3,2,3);	gr->Title("Too narrow range");
 	gr->SetRanges(100,100.1,10,10.01);	gr->Axis();
 	gr->SubPlot(3,2,4);	gr->Title("Disable ticks tuning");
-	gr->SetTuneTicks(false);	gr->Axis();
+	gr->SetTuneTicks(0);	gr->Axis();
 
-	gr->SubPlot(3,2,1);	gr->Title("Manual ticks");	gr->SetRanges(-M_PI,M_PI, 0, 2);
+	gr->SubPlot(3,2,2);	gr->Title("Manual ticks");	gr->SetRanges(-M_PI,M_PI, 0, 2);
 	float val[]={-M_PI, -M_PI/2, 0, 0.886, M_PI/2, M_PI};
 	gr->SetTicksVal('x', mglData(6,val), "-\\pi\n-\\pi/2\n0\nx^*\n\\pi/2\n\\pi");
 	gr->Axis();	gr->Grid();	gr->FPlot("2*cos(x^2)^2", "r2");
 
 	gr->SubPlot(3,2,5);	gr->Title("Time ticks");	gr->SetRange('x',0,3e5);
-	gr->SetTickTime('x',0);	gr->Axis();
+	gr->SetTicksTime('x',0);	gr->Axis();
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_box="subplot 2 2 0:title 'Box (default)':rotate 50 60:box\n"
@@ -1513,7 +1528,7 @@ void smgl_box(mglGraph *gr)
 const char *mmgl_loglog="subplot 2 2 0 '<_':title 'Semi-log axis':ranges 0.01 100 -1 1:axis 'lg(x)' ''\n"
 "axis:fplot 'sin(1/x)':xlabel 'x':ylabel 'y = sin 1/x'\n"
 "subplot 2 2 1 '<_':title 'Log-log axis':ranges 0.01 100 0.1 100:axis 'lg(x)' 'lg(y)'\n"
-"axis:fplot 'sqrt(1+x^2)':xlabel 'x':ylabel 'y = \\sqrt{1+x^2}'\n"
+"axis:grid 'xy' 'g':fplot 'sqrt(1+x^2)':xlabel 'x':ylabel 'y = \\sqrt{1+x^2}'\n"
 "subplot 2 2 2 '<_':title 'Minus-log axis':ranges -100 -0.01 -100 -0.1:axis '-lg(-x)' '-lg(-y)'\n"
 "axis:fplot '-sqrt(1+x^2)':xlabel 'x':ylabel 'y = -\\sqrt{1+x^2}'\n"
 "subplot 2 2 3 '<_':title 'Log-ticks':ranges 0.01 100 0 100:axis 'sqrt(x)' ''\n"
@@ -1521,7 +1536,7 @@ const char *mmgl_loglog="subplot 2 2 0 '<_':title 'Semi-log axis':ranges 0.01 10
 void smgl_loglog(mglGraph *gr)	// log-log axis
 {
 	gr->SubPlot(2,2,0,"<_");	gr->Title("Semi-log axis");	gr->SetRanges(0.01,100,-1,1);	gr->SetFunc("lg(x)","");
-	gr->Axis();	gr->FPlot("sin(1/x)");	gr->Label('x',"x",0); gr->Label('y', "y = sin 1/x",0);
+	gr->Axis();	gr->Grid("xy","g");	gr->FPlot("sin(1/x)");	gr->Label('x',"x",0); gr->Label('y', "y = sin 1/x",0);
 	gr->SubPlot(2,2,1,"<_");	gr->Title("Log-log axis");	gr->SetRanges(0.01,100,0.1,100);	gr->SetFunc("lg(x)","lg(y)");
 	gr->Axis();	gr->FPlot("sqrt(1+x^2)");	gr->Label('x',"x",0); gr->Label('y', "y = \\sqrt{1+x^2}",0);
 	gr->SubPlot(2,2,2,"<_");	gr->Title("Minus-log axis");	gr->SetRanges(-100,-0.01,-100,-0.1);	gr->SetFunc("-lg(-x)","-lg(-y)");

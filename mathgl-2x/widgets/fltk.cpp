@@ -122,7 +122,7 @@ void Fl_MathGL::update()
 		gr->Alpha(flag&1);	gr->Light(flag&2);
 		if(tet_val)	tet = tet_val->value();
 		if(phi_val)	phi = phi_val->value();
-		gr->View(tet,phi);	gr->Zoom(x1,y1,x2,y2);	gr->Clf();
+		gr->Zoom(x1,y1,x2,y2);	gr->View(tet,phi);	gr->Clf();
 		draw_func(gr, draw_par);	// drawing itself
 		const char *buf = gr->Mess.c_str();
 		if(*buf)	fl_message("%s",buf);
@@ -299,6 +299,7 @@ void mgl_norm_cb(Fl_Widget*, void* v)
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	e->setoff_rotate();			e->setoff_zoom();
 	e->FMGL->tet_val->value(0);	e->FMGL->phi_val->value(0);
+	e->FMGL->set_zoom(0,0,1,1);
 	e->update();
 }
 void mglCanvasFL::ToggleNo()	{	Fl::lock();	mgl_norm_cb(0,mgl);	Fl::unlock();	}
@@ -374,7 +375,7 @@ void mgl_su_cb(Fl_Widget*, void* v)
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	mreal x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
-	d = (y2-y1)/3;	y1 += d;	y2 += d;
+	d = (y2-y1)/3;	y1 -= d;	y2 -= d;
 	e->FMGL->set_zoom(x1,y1,x2,y2);
 }
 //-----------------------------------------------------------------------------
@@ -383,7 +384,7 @@ void mgl_sd_cb(Fl_Widget*, void* v)
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	mreal x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
-	d = (y2-y1)/3;	y1 -= d;	y2 -= d;
+	d = (y2-y1)/3;	y1 += d;	y2 += d;
 	e->FMGL->set_zoom(x1,y1,x2,y2);
 }
 //-----------------------------------------------------------------------------
@@ -392,7 +393,7 @@ void mgl_sr_cb(Fl_Widget*, void* v)
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	mreal x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
-	d = (x2-x1)/3;	x1 += d;	x2 += d;
+	d = (x2-x1)/3;	x1 -= d;	x2 -= d;
 	e->FMGL->set_zoom(x1,y1,x2,y2);
 }
 //-----------------------------------------------------------------------------
@@ -401,7 +402,7 @@ void mgl_sl_cb(Fl_Widget*, void* v)
 	Fl_MGLView *e = (Fl_MGLView*)v;	if(!e)	return;
 	mreal x1,x2,y1,y2,d;
 	e->FMGL->get_zoom(&x1,&y1,&x2,&y2);
-	d = (x2-x1)/3;	x1 -= d;	x2 -= d;
+	d = (x2-x1)/3;	x1 += d;	x2 += d;
 	e->FMGL->set_zoom(x1,y1,x2,y2);
 }
 //-----------------------------------------------------------------------------

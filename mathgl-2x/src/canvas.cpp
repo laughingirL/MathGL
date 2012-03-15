@@ -98,7 +98,7 @@ GifFileType *gif;*/
 	SetTranspType(0);		SetMeshNum(0);	// NOTE: default MeshNum=0
 	SetRotatedText(true);	CurrPal = 0;
 	SetLegendMarks();		SetFontSize(4);
-	SetTuneTicks(true);	SetAmbient();
+	SetTuneTicks(-1);	SetAmbient();
 	PlotId = "frame";		clr(MGL_DISABLE_SCALE);
 	SetDefScheme("BbcyrR");	SetPalette(MGL_DEF_PAL);
 	SetPenPal("k-1");
@@ -534,10 +534,9 @@ void mglCanvas::Zoom(float x1, float y1, float x2, float y2)
 {
 	Bp.clear();		ClfZB();
 	if(x1==x2 || y1==y2)	{	x1=y1=0;	x2=y2=1;	}
-	if(x1<x2)	{	Bp.x=x1;	Bp.b[0]=x2-x1;	}
-	else		{	Bp.x=x2;	Bp.b[0]=x1-x2;	}
-	if(y1<y2)	{	Bp.y=y1;	Bp.b[4]=y2-y1;	}
-	else		{	Bp.y=y2;	Bp.b[4]=y1-y2;	}
+	x1=2*x1-1;	x2=2*x2-1;	y1=2*y1-1;	y2=2*y2-1;
+	Bp.b[0]=2/fabs(x2-x1);	Bp.b[4]=2/fabs(y2-y1);
+	Bp.x=(x1+x2)/2/Bp.b[0];	Bp.y=(y1+y2)/2/Bp.b[4];
 }
 //-----------------------------------------------------------------------------
 int mglCanvas::GetSplId(long x,long y)

@@ -37,9 +37,9 @@ You should inherit yours class from @code{mglDraw} and re-implement one or both 
 
 This class is derived from mglGraph class (@pxref{MathGL core}). It provide methods for handling window with MathGL graphics.
 
-@deftypefn {Constructor on @code{mglWindow}} {} mglWindow (@code{int} kind=@code{0}, @code{int} (*draw)(@code{HMGL} gr, @code{void *}p)=@code{NULL}, @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL})
-@deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} kind=@code{0}, @code{int} (*draw)(@code{mglGraph *}gr), @code{const char *}title=@code{"MathGL"})
-@deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} kind=@code{0}, @code{mglDraw *}draw, @code{const char *}title=@code{"MathGL"})
+@deftypefn {Constructor on @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p)=@code{NULL}, @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{int} kind=@code{0})
+@deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{mglGraph *}gr), @code{const char *}title=@code{"MathGL"}, @code{int} kind=@code{0})
+@deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{mglDraw *}draw, @code{const char *}title=@code{"MathGL"}, @code{int} kind=@code{0})
 @deftypefnx {C function} @code{HMGL} mgl_create_graph_qt (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par)
 @deftypefnx {C function} @code{HMGL} mgl_create_graph_fltk (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par)
 @deftypefnx {C function} @code{HMGL} mgl_create_graph_glut (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par)

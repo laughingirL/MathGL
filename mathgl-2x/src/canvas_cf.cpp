@@ -227,7 +227,7 @@ void mgl_set_tick_templ(HMGL gr, char dir, const char *templ)
 {	_Gr_->SetTickTempl(dir,templ);	}
 void mgl_set_tick_templw(HMGL gr, char dir, const wchar_t *templ)
 {	_Gr_->SetTickTempl(dir,templ);	}
-void mgl_set_tick_time(HMGL gr, char dir, float d, const char *t)
+void mgl_set_ticks_time(HMGL gr, char dir, float d, const char *t)
 {	_Gr_->SetTickTime(dir,d,t);	}
 //-----------------------------------------------------------------------------
 void mgl_box(HMGL gr)	{	_Gr_->Box();	}
@@ -302,7 +302,7 @@ void mgl_tune_ticks_(uintptr_t *gr, int *tune, float *fact_pos)
 void mgl_set_tick_templ_(uintptr_t *gr, const char *dir, const char *templ,int,int l)
 {	char *s=new char[l+1];	memcpy(s,templ,l);	s[l]=0;
 	_GR_->SetTickTempl(*dir,s);	delete []s;	}
-void mgl_set_tick_time_(uintptr_t *gr, const char *dir, float *d, const char *t,int,int l)
+void mgl_set_ticks_time_(uintptr_t *gr, const char *dir, float *d, const char *t,int,int l)
 {	char *s=new char[l+1];	memcpy(s,t,l);	s[l]=0;
 	_GR_->SetTickTime(*dir,*d,s);	delete []s;	}
 //-----------------------------------------------------------------------------

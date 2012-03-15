@@ -1671,7 +1671,7 @@ void mglc_tuneticks(wchar_t out[1024], long , mglArg *a, int k[10], const char *
 //-----------------------------------------------------------------------------
 int mgls_ticktime(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==2)	gr->SetTickTime(a[0].s[0],k[1]==3?a[1].v:0,k[2]==2?a[2].s.c_str():"");
+	if(k[0]==2)	gr->SetTicksTime(a[0].s[0],k[1]==3?a[1].v:0,k[2]==2?a[2].s.c_str():"");
 	else	return 1;
 	return 0;
 }

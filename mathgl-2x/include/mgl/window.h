@@ -27,44 +27,52 @@
 /// Make inherited class and redefine Draw() function if you don't want to use function pointers.
 struct mglDraw
 {
+	virtual int Draw(mglGraph *){}	///< Function for drawing
+	virtual void Reload()	{}		///< Function for reloading data
 #ifdef HAVE_PTHREAD
 	pthread_t thr;
 	bool running;
 	mglDraw()	{	running=false;	}
-	virtual void Calc()	{}	///< Function for calculations
-	inline void Run()		///< Run calculations in other thread
+	virtual void Calc()	{}			///< Function for calculations
+	inline void Run()				///< Run calculations in other thread
 	{	mgl_draw_thr(this);	}
 #endif
-	virtual int Draw(mglGraph *)=0;	///< Function for drawing
-	virtual void Reload()	{}	///< Function for reloading data
 };
-int mgl_draw_class(mglBase *gr, void *p);
 void mgl_reload_class(void *p);
 typedef int (*draw_func)(mglGraph *gr);
 int mgl_draw_graph(mglBase *gr, void *p);
+// NOTE: mgl_draw_class() use mglWindow* only. Don't use it with inherited classes
+int mgl_draw_class(mglBase *gr, void *p);
 //-----------------------------------------------------------------------------
+#ifndef HAVE_QT
+#define MGL_WND_KIND	0
+#else
+#define MGL_WND_KIND	1
+#endif
 class mglWindow : public mglGraph
 {
+friend int mgl_draw_class(mglBase *gr, void *p);
 protected:
+	mglDraw *dr;
 	int wnd;	///< Type of window
 public:
-	mglWindow(int kind=0, int (*draw)(HMGL gr, void *p)=NULL, const char *title="MathGL", void *par=NULL) : mglGraph(-1)
+	mglWindow(int (*draw)(HMGL gr, void *p)=NULL, const char *title="MathGL", void *par=NULL, int kind=MGL_WND_KIND) : mglGraph(-1)
 	{
-		wnd=kind;
+		wnd=kind;	dr=0;
 		if(wnd==1)	gr = mgl_create_graph_qt(draw,title,par);
 		else		gr = mgl_create_graph_fltk(draw,title,par);
 	}
-	mglWindow(int kind, int (*draw)(mglGraph *gr), const char *title="MathGL") : mglGraph(-1)
+	mglWindow(int (*draw)(mglGraph *gr), const char *title="MathGL", int kind=MGL_WND_KIND) : mglGraph(-1)
 	{
-		wnd=kind;
+		wnd=kind;	dr=0;
 		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_graph,title,(void*)draw);
 		else		gr = mgl_create_graph_fltk(mgl_draw_graph,title,(void*)draw);
 	}
-	mglWindow(int kind=0, mglDraw *dr=NULL, const char *title="MathGL") : mglGraph(-1)
+	mglWindow(mglDraw *draw, const char *title="MathGL", int kind=MGL_WND_KIND) : mglGraph(-1)
 	{
-		wnd=kind;
-		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_class,title,dr);
-		else		gr = mgl_create_graph_fltk(mgl_draw_class,title,dr);
+		wnd=kind;	dr=draw;
+		if(wnd==1)	gr = mgl_create_graph_qt(mgl_draw_class,title,this);
+		else		gr = mgl_create_graph_fltk(mgl_draw_class,title,this);
 	}
 	inline int Run()			///< Run main loop for event handling
 	{	return (wnd==1)? mgl_qt_run() : mgl_fltk_run();	}

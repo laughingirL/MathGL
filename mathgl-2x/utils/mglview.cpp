@@ -70,7 +70,7 @@ int main(int narg, char **arg)
 		if(j>0)	fclose(fp);
 	}
 #if defined(HAVE_FLTK) || defined(HAVE_QT)
-	mglWindow gr(kind, mgld?NULL:show ,j>0?arg[j]:"mglview");
+	mglWindow gr(mgld?NULL:show, j>0?arg[j]:"mglview", kind);
 	if(mgld)
 	{	gr.ImportMGLD(arg[j]);	gr.Update();	}
 	gr.Run();

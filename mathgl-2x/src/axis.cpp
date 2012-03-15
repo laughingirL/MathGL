@@ -280,8 +280,8 @@ void mglCanvas::SetTickTime(char dir, float d, const char *t)
 //-----------------------------------------------------------------------------
 void mglCanvas::AdjustTicks(const char *dir, bool force)
 {
-	if(force)	SetTuneTicks(true);
-	UpdateAxis();	//TuneTicks = true;
+	if(force)	SetTuneTicks(-1);
+	UpdateAxis();
 	if(strchr(dir,'x'))
 	{	if(force)	ax.d=0;	AdjustTicks(ax,fx);	}
 	if(strchr(dir,'y'))
@@ -422,6 +422,8 @@ void mglCanvas::LabelTicks(mglAxis &aa)
 		int kind=0;
 		wchar_t s[32]=L"";
 		if(aa.t[0]==0 && TuneTicks) kind = mgl_tick_ext(aa.v2, aa.v1, s, w);
+		if((TuneTicks&1)==0 && kind==2)	kind=0;
+		if((TuneTicks&2)==0 && kind!=2)	kind=0;
 
 		v0 = isnan(aa.o) ? aa.v0 : aa.o;
 		if(aa.v2>aa.v1)
@@ -503,7 +505,7 @@ void mglCanvas::DrawAxis(mglAxis &aa, bool text, char arr,const char *stl)
 	{
 		v = aa.txt[i].val;	u = fabs(v);
 		if(v>=aa.v1 && v<=aa.v2)	tick_draw(o+d*v, da, db, 0, stl);
-		else	tick_draw(o+d*v, da, db, 0, " ");
+//		else	tick_draw(o+d*v, da, db, 0, " ");
 		if(aa.dv==0 && fabs(u-exp(M_LN10*floor(0.1+log10(u))))<0.01*u)
 			for(j=2;j<10 && v*j<aa.v2;j++)	tick_draw(o+d*(v*j),da,db,1,stl);
 	}
@@ -701,7 +703,7 @@ void mglCanvas::Labelw(char dir, const wchar_t *text, float pos, float shift)
 	if(pos<-0.2)	ff[1]='L';	if(pos>0.2)	ff[1]='R';
 	strcpy(font,FontDef);	strcat(font,ff);
 	strcat(font,nn.y>1e-5 || nn.x<0 ? "T":"t");
-	text_plot(AddPnt(p,-1,q,0,7),text,font,-1.4,0.3+shift);
+	text_plot(AddPnt(p,-1,q,0,7),text,font,-1.4,0.35+shift);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Label(float x, float y, const char *str, const char *font, bool rel)
@@ -815,7 +817,7 @@ void mglCanvas::Colorbar(const char *sch, float x, float y, float w, float h)
 	mglData v(n);
 	if(ac.d || Min.c*Max.c<=0)	v.Fill(Min.c,Max.c);
 	else if(Max.c>Min.c && Min.c>0)
-	{	v.Fill(log(Min.c), log(Max.c));	v.Modify("exp(u)");		}
+	{	v.Fill(log(Min.c), log(Max.c));		v.Modify("exp(u)");		}
 	else if(Min.c<Max.c && Max.c<0)
 	{	v.Fill(log(-Min.c), log(-Max.c));	v.Modify("-exp(u)");	}
 	float *c=new float[n];

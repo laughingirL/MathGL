@@ -286,7 +286,7 @@ void QMathGL::mouseMoveEvent(QMouseEvent *ev)
 		{
 			mreal ff = 1./sqrt(mreal(width()*height()));
 			mreal dx = (x0-xe)*ff*(x2-x1), dy = (y0-ye)*ff*(y2-y1);
-			x1 -= dx;	x2 -= dx;	y1 += dy;	y2 += dy;
+			x1 += dx;	x2 += dx;	y1 -= dy;	y2 -= dy;
 		}
 		x0 = xe;	y0 = ye;
 		refresh();
@@ -610,7 +610,7 @@ void mglCanvasQT::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 		a->connect(a, SIGNAL(lastWindowClosed()), a, SLOT(quit()));
 	}
 
-	Wnd = new QMainWindow;	Wnd->resize(650,480);
+	Wnd = new QMainWindow;	Wnd->resize(850,680);
 	Wnd->setWindowTitle(title);
 	scroll = new QScrollArea(Wnd);
 
@@ -649,7 +649,6 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 		o->addMenu(oo);		popup->addMenu(oo);
 		oo = new QMenu(TR("&Export as 3D ..."),Wnd);
 		oo->addAction(TR("X3D"), QMGL, SLOT(exportX3D()));
-		oo->addAction(TR("WRL"), QMGL, SLOT(exportWRL()));
 		oo->addAction(TR("XYZ"), QMGL, SLOT(exportXYZ()));
 		oo->addAction(TR("OBJ"), QMGL, SLOT(exportOBJ()));
 		oo->addAction(TR("STL"), QMGL, SLOT(exportSTL()));

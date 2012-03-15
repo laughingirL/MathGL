@@ -20,6 +20,7 @@
 #ifndef _MGL_H_
 #define _MGL_H_
 
+#include "mgl/define.h"
 #include "mgl/mgl_cf.h"
 #include "mgl/data.h"
 #ifndef NO_OPENGL
@@ -175,8 +176,8 @@ public:
 	{	mgl_set_axis_stl(gr, stl, tck, sub);	}
 
 	/// Set time templates for ticks
-	inline void SetTickTime(char dir, float d=0, const char *t="")
-	{	mgl_set_tick_time(gr,dir,d,t);	}
+	inline void SetTicksTime(char dir, float d=0, const char *t="")
+	{	mgl_set_ticks_time(gr,dir,d,t);	}
 	/// Set ticks text (\n separated). Use "" to disable this feature.
 	inline void SetTicksVal(char dir, const char *lbl, bool add=false)
 	{	mgl_set_ticks_str(gr,dir,lbl,add);	}

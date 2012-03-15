@@ -181,7 +181,12 @@ uintptr_t mgl_create_graph_qt_(const char *title, int l)
 int mgl_qt_run_()	{	return mgl_qt_run();	}
 //-----------------------------------------------------------------------------
 int mgl_draw_class(mglBase *gr, void *p)
-{	mglGraph g(gr);	return p ? ((mglDraw *)p)->Draw(&g) : 0;	}
+{
+	mglGraph g(gr);
+	mglWindow *w = (mglWindow *)p;	// so stupid way to save mglDraw class inheritance :(
+	return (w && w->dr) ? w->dr->Draw(&g) : 0;
+}
+//return p ? ((mglDraw *)p)->Draw(&g) : 0;	}
 void mgl_reload_class(void *p)
 {	if(p)	((mglDraw *)p)->Reload();	}
 //-----------------------------------------------------------------------------

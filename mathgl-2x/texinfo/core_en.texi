@@ -260,7 +260,7 @@ Sets approximate number of lines in @ref{mesh}, @ref{fall}, @ref{grid} and also 
 @end ifclear
 @cindex Cut
 
-These variables and functions set the condition when the points are excluded (cutted) from the drawing. Note, that a point with NAN value(s) of coordinate or amplitude will be automatically excluded from the drawing. @sref{Cut sample}
+These variables and functions set the condition when the points are excluded (cutted) from the drawing. Note, that a point with NAN value(s) of coordinate or amplitude will be automatically excluded from the drawing. @sref{Cutting sample}
 
 @anchor{cut}
 @deftypefn {MGL command} {} cut @code{val}
@@ -626,16 +626,16 @@ Set template @var{templ} for x-,y-,z-axis ticks or colorbar ticks. It may contai
 
 @deftypefn {MGL command} {} ticktime 'dir' [@code{dv} 'tmpl']
 @ifclear UDAV
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetTickTime (@code{char} dir, @code{float} val, @code{const char *}templ)
-@deftypefnx {C function} @code{void} mgl_set_tick_time (@code{HMGL} gr, @code{float} val, @code{const char *}templ)
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetTicksTime (@code{char} dir, @code{float} val, @code{const char *}templ)
+@deftypefnx {C function} @code{void} mgl_set_ticks_time (@code{HMGL} gr, @code{float} val, @code{const char *}templ)
 @end ifclear
 Set time labels with step @var{val} and template @var{templ} for x-,y-,z-axis ticks or colorbar ticks. It may contain TeX symbols also. The format of template @var{templ} is the same as described in @url{http://www.manpagez.com/man/3/strftime/}. Most common variants are @samp{%X} for national representation of time, @samp{%x} for national representation of date, @samp{%Y} for year with century. If @var{val}=0 and/or @var{templ}="" then automatic tick step and/or template will be selected.
 @end deftypefn
 
 @deftypefn {MGL command} {} tuneticks @code{val} [@code{pos=1.15}]
-@deftypefnx {Method on @code{mglGraph}} @code{void} SetTuneTicks (@code{bool} tune, @code{float} pos=@code{1.15})
-@deftypefnx {C function} @code{void} mgl_tune_ticks (@code{HMGL} gr, @code{bool} tune, @code{float} pos)
-Switch on/off ticks enhancing by factoring common multiplier (for small, like from 0.001 to 0.002, or large, like from 1000 to 2000, coordinate values) or common component (for narrow range, like from 0.999 to 1.000). Also set the position @var{pos} of common multiplier/component on the axis: =0 at minimal axis value, =1 at maximal axis value. Default value is 1.15.
+@deftypefnx {Method on @code{mglGraph}} @code{void} SetTuneTicks (@code{int} tune, @code{float} pos=@code{1.15})
+@deftypefnx {C function} @code{void} mgl_tune_ticks (@code{HMGL} gr, @code{int} tune, @code{float} pos)
+Switch on/off ticks enhancing by factoring common multiplier (for small, like from 0.001 to 0.002, or large, like from 1000 to 2000, coordinate values -- enabled if @var{tune}&1 is nonzero) or common component (for narrow range, like from 0.999 to 1.000 -- enabled if @var{tune}&2 is nonzero). Also set the position @var{pos} of common multiplier/component on the axis: =0 at minimal axis value, =1 at maximal axis value. Default value is 1.15.
 @end deftypefn
 
 @ifclear UDAV
@@ -684,7 +684,7 @@ The line style of axis, (@var{stl}) ticks (@var{tck}) and subticks (@var{sub}). 
 @cindex Push
 @cindex Pop
 
-These functions control how and where further plotting will be placed. There is a certain calling order of these functions for the better plot appearance. First one should be @ref{subplot}, @ref{multiplot} or @ref{inplot} for specifying the place. Second one can be @ref{title} for adding title for the subplot. After it a @ref{rotate} and @ref{aspect}. And finally any other plotting functions may be called. Alternatively you can use @ref{columnplot}, @ref{gridplot}, @ref{stickplot} or relative @ref{inplot} for positioning plots in the column (or grid, or stick) one by another without gap between plot axis (bounding boxes). @sref{InPlot sample}
+These functions control how and where further plotting will be placed. There is a certain calling order of these functions for the better plot appearance. First one should be @ref{subplot}, @ref{multiplot} or @ref{inplot} for specifying the place. Second one can be @ref{title} for adding title for the subplot. After it a @ref{rotate} and @ref{aspect}. And finally any other plotting functions may be called. Alternatively you can use @ref{columnplot}, @ref{gridplot}, @ref{stickplot} or relative @ref{inplot} for positioning plots in the column (or grid, or stick) one by another without gap between plot axis (bounding boxes). @sref{Subplots}
 
 @anchor{subplot}
 @deftypefn {MGL command} {} subplot @code{nx ny m ['stl'='<>_^' dx=0 dy=0]}
@@ -1397,7 +1397,7 @@ These functions draw the ``things for measuring'', like axis with ticks, colorba
 @deftypefnx {Method on @code{mglGraph}} @code{void} Axis (@code{const char *}dir=@code{"xyz"}, @code{const char *}stl=@code{""})
 @deftypefnx {C function} @code{void} mgl_axis (@code{HMGL} gr, @code{const char *}dir, @code{const char *}stl)
 @end ifclear
-Draws axes with ticks (see @ref{Axis settings}) in directions determined by string parameter @var{dir}.If string contain the symbol @samp{_} then tick labels are not printed. Font for ticks labels is determined by @var{FontDef} (see @ref{Font settings}). Ticks will be adjusted if @var{stl} contain @samp{a} (by call of @code{AdjustTicks()}). You can specified an arrow at the end of axis (see see @ref{Line styles}). Styles of ticks and axis can be overrided by using @var{stl} string.
+Draws axes with ticks (see @ref{Axis settings}) in directions determined by string parameter @var{dir}.If string contain the symbol @samp{_} then tick labels are not printed. Font for ticks labels is determined by @var{FontDef} (see @ref{Font settings}). Ticks will be adjusted if @var{stl} contain @samp{a} (by call of @code{AdjustTicks()}). You can specified an arrow at the end of axis (see see @ref{Line styles}). Styles of ticks and axis can be overrided by using @var{stl} string. @sref{Axis and ticks}
 @end deftypefn
 
 @anchor{colorbar}
@@ -1406,7 +1406,7 @@ Draws axes with ticks (see @ref{Axis settings}) in directions determined by stri
 @deftypefnx {Method on @code{mglGraph}} @code{void} Colorbar (@code{const char *}sch=@code{""})
 @deftypefnx {C function} @code{void} mgl_colorbar (@code{HMGL} gr, @code{const char *}sch)
 @end ifclear
-Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=""}) at edge of plot. If string @var{sch} contains @samp{<>^_} then the colorbar is placed at left, at right, at top or at bottom correspondingly. If string have @samp{I} then colorbar will be located near bounding box otherwise at the edge of the subplot. If string have @samp{A} then absolute (relative to picture) coordinates is used. @sref{Dens sample}
+Draws colorbar with color scheme @var{sch} (current scheme if @code{sch=""}) at edge of plot. If string @var{sch} contains @samp{<>^_} then the colorbar is placed at left, at right, at top or at bottom correspondingly. If string have @samp{I} then colorbar will be located near bounding box otherwise at the edge of the subplot. If string have @samp{A} then absolute (relative to picture) coordinates is used. @sref{Colorbars}
 @end deftypefn
 
 @deftypefn {MGL command} {} colorbar vdat ['sch'='']

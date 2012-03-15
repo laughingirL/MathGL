@@ -9,8 +9,7 @@
 
 ============= NEW  =============
 
-2. Export to X3D and VRML
-3. Sample for TriPlot (piramid) and QuadPlot (cube)
+1.Export to X3D and VRML
 
 ============= FOR V.2.1 ========
 
@@ -37,6 +36,7 @@
 19. line segment losses in EPS ???
 
 20. ReadHDF5 -- add string argument for handling lowest dimension (like complex numbers): "sum" - sum, "arg" - arg, "0...9" read slice 0...9, "abs" - sqrt(sum []^2)
+21. Change if possible long to size_t (be very accurate!!!)
 
 ============= UDAV =============
 
@@ -101,9 +101,7 @@ Remove other setting if data name is changed.
 	* MathGL level -- pthread in mglData, ???
 12. Boxs() styles: '#' for wire, '@' for full box.
 13. Add mgl_label_xyz(), mgl_label_xy(), mgl_label_y(). Possible numbers are: "%x" for x-coor, "%y" for y-coor, "%z" for z-coor.
-15. Check mglData::Insert(): now copy values from original array (x[i] -> x[2*i], x[2*i+1], ...)
 16. Symbol '!' denote sharp colors even in 1d plots (like different colors for points)
-17. Check export to LaTeX.
 18. mglview can preview MGLD files too -- check it
 19. Handle mglBase::Stop everywhere
 20. Number of frames can be changed at reload + manual call of draw_func if number of frames is 0.
@@ -126,19 +124,18 @@ Remove other setting if data name is changed.
 		1.5 Utilities
 		1.6 Thanks
 
-	2. Examples
-		2.1 Basic usage (window; file; memory; QMathGL; Fl_MathGL; PyQt)
-		2.2 Advanced usage (subplots; axis; curv.coor; text)
-		2.3 Animation (win.stat; win.update; gif; jpeg/mpeg)
-		2.4 Data handling
-		2.5 1D data plotting
-		2.6 2D data plotting
-		2.7 3D data plotting
-		2.8 Dual data plotting
-		2.9 More samples
-		2.10 Multi-threading
-		2.11 Hints
-		2.12 FAQ
++	2. Examples
++		2.1 Basic usage (window; file; memory; QMathGL; Fl_MathGL; PyQt)
++		2.2 Advanced usage (subplots; axis; curv.coor; text)
+		2.3 Data handling
+		2.4 1D data plotting
+		2.5 2D data plotting
+		2.6 3D data plotting
+		2.7 Dual data plotting
+		2.8 More samples
+		2.9 Multi-threading
+		2.10 Hints
+		2.11 FAQ
 
 +	3. General concepts (class-diagram)
 +		3.1 Coordinate axes

@@ -38,7 +38,7 @@
 #define chdir	_chdir // BORLAND has chdir
 #include <float.h>
 
-extern mglData s;const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
+const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define NANd	(*(double*)mgl_nan)
 #define NANf	(*(float*)&(mgl_nan[1]))
 #if (MGL_USE_DOUBLE==1)

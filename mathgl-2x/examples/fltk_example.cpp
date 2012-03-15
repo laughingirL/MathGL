@@ -59,12 +59,12 @@ int main(int argc,char **argv)
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
 	switch(key)
 	{
-		case '1':	gr = new mglWindow(0,sample_1,"1D plots");	break;
-		case '2':	gr = new mglWindow(0,sample_2,"2D plots");	break;
-		case '3':	gr = new mglWindow(0,sample_3,"3D plots");	break;
-		case 'd':	gr = new mglWindow(0,sample_d,"Dual plots");break;
-		case 't':	gr = new mglWindow(0,test_wnd,"Testing");	break;
-		default:	gr = new mglWindow(0,sample,"Drop and waves");	break;
+		case '1':	gr = new mglWindow(sample_1,"1D plots",0);	break;
+		case '2':	gr = new mglWindow(sample_2,"2D plots",0);	break;
+		case '3':	gr = new mglWindow(sample_3,"3D plots",0);	break;
+		case 'd':	gr = new mglWindow(sample_d,"Dual plots",0);break;
+		case 't':	gr = new mglWindow(test_wnd,"Testing",0);	break;
+		default:	gr = new mglWindow(sample,"Drop and waves",0);	break;
 	}
 	gr->Run();	return 0;
 #endif

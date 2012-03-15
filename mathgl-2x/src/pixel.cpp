@@ -315,8 +315,8 @@ void mglCanvas::pxl_transform(unsigned long id, unsigned long n, const void *)
 	{
 		mglPnt &p=Pnt[i];
 		x = p.xx-Width/2.;	y = p.yy-Height/2.;	z = p.zz-Depth/2.;
-		p.x = Bp.x*Width + Width/2 + Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z;
-		p.y = Bp.y*Height+ Height/2+ Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z;
+		p.x = Width/2 - Bp.x*Width/2 + Bp.b[0]*x + Bp.b[1]*y + Bp.b[2]*z;
+		p.y = Height/2- Bp.y*Height/2+ Bp.b[3]*x + Bp.b[4]*y + Bp.b[5]*z;
 		p.z = Depth/2. + Bp.b[6]*x + Bp.b[7]*y + Bp.b[8]*z;
 		if(Bp.pf)
 		{

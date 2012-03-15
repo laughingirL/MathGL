@@ -32,6 +32,19 @@ int sample_d(mglGraph *gr);
 mglPoint pnt;  // some global variable for changable data
 void *mgl_qt_tmp(void *);
 //-----------------------------------------------------------------------------
+class Foo : public mglDraw
+{
+public:
+	int Draw(mglGraph *gr);
+} foo;
+//-----------------------------------------------------
+int Foo::Draw(mglGraph *gr)
+{
+	gr->Rotate(60,40);
+	gr->Box();
+	return 0;
+}
+//-----------------------------------------------------
 int main(int argc,char **argv)
 {
 #ifdef PTHREAD_SAMPLE
@@ -58,12 +71,12 @@ int main(int argc,char **argv)
 	else	printf("You may specify argument '1', '2', '3' or 'd' for viewing examples of 1d, 2d, 3d or dual plotting\n");
 	switch(key)
 	{
-	case '1':	gr = new mglWindow(1,sample_1,"1D plots");	break;
-	case '2':	gr = new mglWindow(1,sample_2,"2D plots");	break;
-	case '3':	gr = new mglWindow(1,sample_3,"3D plots");	break;
-	case 'd':	gr = new mglWindow(1,sample_d,"Dual plots");	break;
-	case 't':	gr = new mglWindow(1,test_wnd,"Testing");	break;
-	default:	gr = new mglWindow(1,sample,"Drop and waves");	break;
+	case '1':	gr = new mglWindow(sample_1,"1D plots",1);	break;
+	case '2':	gr = new mglWindow(sample_2,"2D plots",1);	break;
+	case '3':	gr = new mglWindow(sample_3,"3D plots",1);	break;
+	case 'd':	gr = new mglWindow(sample_d,"Dual plots",1);	break;
+	case 't':	gr = new mglWindow(test_wnd,"Testing",1);	break;
+	default:	gr = new mglWindow(&foo,"Drop and waves",1);	break;
 	}
 	gr->Run();	return 0;
 #endif
