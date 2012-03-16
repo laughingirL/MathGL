@@ -1,27 +1,21 @@
-if(use_gsl)
+if(MGL_HAVE_GSL)
 #	target_link_libraries(mgl ${GSL_LIB} ${GSL_CBLAS_LIB} )
-	add_definitions(-DHAVE_GSL)
 	include_directories(${GSL_INCLUDE_DIR})
-else(use_gsl)
-	add_definitions(-DNO_GSL)
-endif(use_gsl)
+endif(MGL_HAVE_GSL)
 
-if(use_fltk)
-	add_definitions(-DHAVE_FLTK)
+if(MGL_HAVE_FLTK)
 	include_directories(${FLTK_INCLUDE_DIR})
 	set(mgl_wnd_src ${mgl_wnd_src} fltk.cpp)
-endif(use_fltk)
-if(use_wx)
+endif(MGL_HAVE_FLTK)
+if(MGL_HAVE_WX)
 	include(${wxWidgets_USE_FILE})
-	add_definitions(-DHAVE_WX)
 	set(mgl_wnd_src ${mgl_wnd_src} wx.cpp)
-endif(use_wx)
-if(use_qt)
+endif(MGL_HAVE_WX)
+if(MGL_HAVE_QT)
 	include(${QT_USE_FILE})
-	add_definitions(-DHAVE_QT)
 	qt_wrap_cpp(mgl-qt MGL_MOC_FILES ../include/mgl/mgl_qt.h)
 	set(mgl_wnd_src ${mgl_wnd_src} qt.cpp ${MGL_MOC_FILES})
-endif(use_qt)
+endif(MGL_HAVE_QT)
 
 
 
@@ -32,12 +26,11 @@ install(
 	RUNTIME DESTINATION bin
 )
 
-if(use_fltk OR use_qt)
+if(MGL_HAVE_FLTK OR MGL_HAVE_QT)
 add_executable(mglview mglview.cpp)
 target_link_libraries(mglview mgl-wnd)
 install(
 	TARGETS mglview
 	RUNTIME DESTINATION bin
 )
-endif(use_fltk OR use_qt)
-
+endif(MGL_HAVE_FLTK OR MGL_HAVE_QT)

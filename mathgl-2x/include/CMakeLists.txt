@@ -1,10 +1,4 @@
-if(use_double)
-	set(MGL_USE_DOUBLE 1)
-else(use_double)
-	set(MGL_USE_DOUBLE 0)
-endif(use_double)
-
-configure_file(${CMAKE_SOURCE_DIR}/include/config.h.in ${CMAKE_SOURCE_DIR}/include/mgl/config.h)
+configure_file(${MathGL_SOURCE_DIR}/include/config.h.in ${MathGL_BINARY_DIR}/include/mgl/config.h)
 
 set(MGL_INCLUDE_PATH "${CMAKE_INSTALL_PREFIX}/include/mgl")
 install(DIRECTORY mgl/ DESTINATION ${MGL_INCLUDE_PATH}
@@ -18,15 +12,16 @@ install(DIRECTORY mgl/ DESTINATION ${MGL_INCLUDE_PATH}
                         PATTERN "*.pas"
                         PATTERN "*.h")
 
-if(use_fltk)
+install(FILES ${MathGL_BINARY_DIR}/include/mgl/config.h DESTINATION ${MGL_INCLUDE_PATH})
+if(MGL_HAVE_FLTK)
 	install(FILES mgl/fltk.h DESTINATION ${MGL_INCLUDE_PATH})
-endif(use_fltk)
-if(use_glut)
+endif(MGL_HAVE_FLTK)
+if(MGL_HAVE_GLUT)
 	install(FILES mgl/glut.h DESTINATION ${MGL_INCLUDE_PATH})
-endif(use_glut)
-if(use_wx)
+endif(MGL_HAVE_GLUT)
+if(MGL_HAVE_WX)
 	install(FILES mgl/wx.h DESTINATION ${MGL_INCLUDE_PATH})
-endif(use_wx)
-if(use_qt)
+endif(MGL_HAVE_WX)
+if(MGL_HAVE_QT)
 	install(FILES mgl/qt.h DESTINATION ${MGL_INCLUDE_PATH})
-endif(use_qt)
+endif(MGL_HAVE_QT)

@@ -2,23 +2,18 @@ set(mgl_wnd_hdr ../include/mgl/window.h)
 set(mgl_wnd_src window.cpp)
 #set(mgl_wnd_src )
 
-if(use_gsl)
+if(MGL_HAVE_GSL)
 #	target_link_libraries(mgl ${GSL_LIB} ${GSL_CBLAS_LIB} )
-	add_definitions(-DHAVE_GSL)
 	include_directories(${GSL_INCLUDE_DIR})
-else(use_gsl)
-	add_definitions(-DNO_GSL)
-endif(use_gsl)
+endif(MGL_HAVE_GSL)
 
-if(use_fltk)
-	add_definitions(-DHAVE_FLTK)
+if(MGL_HAVE_FLTK)
 	include_directories(${FLTK_INCLUDE_DIR})
 	set(mgl_wnd_src ${mgl_wnd_src} fltk.cpp)
 	set(mgl_wnd_hdr ${mgl_wnd_hdr} ../include/mgl/fltk.h)
-endif(use_fltk)
+endif(MGL_HAVE_FLTK)
 
-if(use_glut)
-	add_definitions(-DHAVE_GLUT)
+if(MGL_HAVE_GLUT)
 	include_directories(${GLUT_INCLUDE_DIR})
 	set(mgl_glut_src glut.cpp window.cpp)
 	set(mgl_glut_hdr ../include/mgl/glut.h ../include/mgl/window.h)
@@ -32,10 +27,9 @@ if(use_glut)
 	target_link_libraries(mgl-glut mgl)
 	target_link_libraries(mgl-glut ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
 
-	if(use_pthread)
+	if(MGL_HAVE_PTHREAD)
 		target_link_libraries(mgl-glut ${CMAKE_THREAD_LIBS_INIT})
-		add_definitions(-DHAVE_PTHREAD)
-	endif(use_pthread)
+	endif(MGL_HAVE_PTHREAD)
 
 	install(
 		TARGETS mgl-glut mgl-glut-static
@@ -43,23 +37,21 @@ if(use_glut)
 		ARCHIVE DESTINATION lib
 		LIBRARY DESTINATION lib
 	)
-endif(use_glut)
+endif(MGL_HAVE_GLUT)
 
-if(use_wx)
+if(MGL_HAVE_WX)
 	include(${wxWidgets_USE_FILE})
-	add_definitions(-DHAVE_WX)
 	set(mgl_wnd_src ${mgl_wnd_src} wx.cpp)
 	set(mgl_wnd_hdr ${mgl_wnd_hdr} ../include/mgl/fltk.h)
-endif(use_wx)
+endif(MGL_HAVE_WX)
 
-if(use_qt)
+if(MGL_HAVE_QT)
 	include(${QT_USE_FILE})
-	add_definitions(-DHAVE_QT)
 #	qt_wrap_cpp(mgl-wnd MGL_MOC_FILES ../include/mgl/qt.h)
 	qt4_wrap_cpp(MGL_MOC_FILES ../include/mgl/qt.h)
 	set(mgl_wnd_src ${mgl_wnd_src} qt.cpp ${MGL_MOC_FILES})
 	set(mgl_wnd_hdr ${mgl_wnd_hdr} ../include/mgl/qt.h)
-endif(use_qt)
+endif(MGL_HAVE_QT)
 
 add_library(mgl-wnd SHARED ${mgl_wnd_src} ${mgl_wnd_hdr})
 add_library(mgl-wnd-static STATIC ${mgl_wnd_src} ${mgl_wnd_hdr})
@@ -70,22 +62,21 @@ set_target_properties(mgl-wnd PROPERTIES SOVERSION 6.0.0)
 target_link_libraries(mgl-wnd mgl)
 
 
-if(use_pthread)
+if(MGL_HAVE_PTHREAD)
 	target_link_libraries(mgl-wnd ${CMAKE_THREAD_LIBS_INIT})
-	add_definitions(-DHAVE_PTHREAD)
-endif(use_pthread)
+endif(MGL_HAVE_PTHREAD)
 
-if(use_fltk)
+if(MGL_HAVE_FLTK)
 	target_link_libraries(mgl-wnd ${FLTK_LIBRARIES})
-endif(use_fltk)
+endif(MGL_HAVE_FLTK)
 
-if(use_wx)
+if(MGL_HAVE_WX)
 	target_link_libraries(mgl-wnd ${wxWidgets_LIBRARIES})
-endif(use_wx)
+endif(MGL_HAVE_WX)
 
-if(use_qt)
+if(MGL_HAVE_QT)
 	target_link_libraries(mgl-wnd ${QT_LIBRARIES})
-endif(use_qt)
+endif(MGL_HAVE_QT)
 
 install(
 	TARGETS mgl-wnd mgl-wnd-static

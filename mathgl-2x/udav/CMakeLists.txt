@@ -1,5 +1,4 @@
-if(use_qt)
-
+if(MGL_HAVE_QT)
 
 #set(mgl_wnd_src window.cpp)
 set(udav_src anim_dlg.cpp find_dlg.cpp mem_pnl.cpp prop_dlg.cpp textedit.cpp args_dlg.cpp
@@ -13,31 +12,25 @@ set(udav_moc_hdr anim_dlg.h files_dlg.h info_dlg.h opt_dlg.h qmglsyntax.h text_p
 
 set(udav_rc udav.qrc)
 
-if(use_gsl)
+if(MGL_HAVE_GSL)
 #	target_link_libraries(mgl ${GSL_LIB} ${GSL_CBLAS_LIB} )
-	add_definitions(-DHAVE_GSL)
 	include_directories(${GSL_INCLUDE_DIR})
-else(use_gsl)
-	add_definitions(-DNO_GSL)
-endif(use_gsl)
-
+endif(MGL_HAVE_GSL)
 
 include(${QT_USE_FILE})
-add_definitions(-DHAVE_QT)
 qt4_add_resources(udav_rc_src ${udav_rc} )
 #qt_wrap_cpp(udav udav_moc_src ${udav_moc_hdr} )
 qt4_wrap_cpp(udav_moc_src ${udav_moc_hdr} )
 add_executable(udav ${udav_src} ${udav_moc_src} ${udav_rc_src})
 target_link_libraries(udav mgl-wnd ${QT_LIBRARIES})
 
-if(use_pthread)
+if(MGL_HAVE_PTHREAD)
 	target_link_libraries(udav ${CMAKE_THREAD_LIBS_INIT})
-	add_definitions(-DHAVE_PTHREAD)
-endif(use_pthread)
+endif(MGL_HAVE_PTHREAD)
 
 install(
 	TARGETS udav
 	RUNTIME DESTINATION bin
 )
 
-endif(use_qt)
+endif(MGL_HAVE_QT)

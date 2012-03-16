@@ -2,7 +2,7 @@
 # Warning!!!!!
 # new files and destination for html docs.
 
-if(use_doc)
+if(MGL_HAVE_DOC)
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 		COMMAND LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/mgl ${CMAKE_BINARY_DIR}/examples/mgl_example
 		COMMAND touch ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
@@ -57,4 +57,4 @@ if(use_doc)
 			PATTERN "*/*.html"
 			PATTERN "./mathgl*.info*"
 			PATTERN "./mathgl*.pdf")
-endif(use_doc)
+endif(MGL_HAVE_DOC)
