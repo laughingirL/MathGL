@@ -459,11 +459,16 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
 
-	for(i=0,xm=0;i<m*n*ax->GetNz();i++)
+	for(k=0;k<ax->GetNz();k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
+	{
+		ym = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k));
+		xm = xm>ym ? xm : ym;
+	}
+/*	for(i=0,xm=0;i<m*n*ax->GetNz();i++)
 	{
 		ym = hypot(ax->vthr(i),ay->vthr(i));
 		xm = xm>ym ? xm : ym;
-	}
+	}*/
 	xm = 1./MGL_FLT_EPS/(xm==0 ? 1:xm);
 	mglPoint p,q;
 

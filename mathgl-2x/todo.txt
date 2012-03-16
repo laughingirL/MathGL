@@ -1,11 +1,12 @@
 ============= TEST =============
 
-1. MGL testing system
+1. MGL testing system ???
 2. test pthread for windows
-3. Check export to MGLD/TeX/OBJ/XGL/X3D/STL.
+3. Check export to MGLD/X3D.
 4. add XInitThreads() from #include <X11/Xlib.h> into all GUI
 5. Check MGLD in mglview
 6. check Hankel()
+7. check Chart() -- '#' style + missing face!!!
 
 ============= NEW  =============
 
@@ -14,7 +15,7 @@
 ============= FOR V.2.1 ========
 
 1. MPI_Send(), MPI_Recv()
-2. Use Hershey as built-in font ???
+2. Use Hershey as built-in font ?!!
 3. Import/Export via GIF (as 3d data) ???
 4. Read DICOM files.
 5. Export to JavaScript (WebGL)
@@ -37,6 +38,7 @@
 
 20. ReadHDF5 -- add string argument for handling lowest dimension (like complex numbers): "sum" - sum, "arg" - arg, "0...9" read slice 0...9, "abs" - sqrt(sum []^2)
 21. Change if possible long to size_t (be very accurate!!!)
+22. Add mglDataC for complex data -- main diff is reading/saving data
 
 ============= UDAV =============
 
@@ -126,16 +128,17 @@ Remove other setting if data name is changed.
 
 +	2. Examples
 +		2.1 Basic usage (window; file; memory; QMathGL; Fl_MathGL; PyQt)
+----add sample for window in python/octave (like pthread)
 +		2.2 Advanced usage (subplots; axis; curv.coor; text)
-		2.3 Data handling
-		2.4 1D data plotting
-		2.5 2D data plotting
-		2.6 3D data plotting
-		2.7 Dual data plotting
-		2.8 More samples
-		2.9 Multi-threading
++		2.3 Data handling
++   2.4 Data plotting
++		2.5 1D data plotting
++		2.6 2D data plotting
++		2.7 3D data plotting
+		2.8 Dual data plotting
+		2.9 More samples
 		2.10 Hints
-		2.11 FAQ
+		2.12 FAQ
 
 +	3. General concepts (class-diagram)
 +		3.1 Coordinate axes

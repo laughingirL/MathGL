@@ -545,7 +545,7 @@ Sets one of the predefined transformation formulas for curvilinear coordinate. P
 @deftypefnx {Method on @code{mglGraph}} @code{void} Ternary (@code{int} tern)
 @deftypefnx {C function} @code{void} mgl_set_ternary (@code{HMGL} gr, @code{int} tern)
 @end ifclear
-The function sets to draws Ternary or Quaternary plot. Ternary plot is special plot for 3 dependent coordinates (components) @var{a}, @var{b}, @var{c} so that @var{a}+@var{b}+@var{c}=1. MathGL uses only 2 independent coordinates @var{a}=x and @var{b}=y since it is enough to plot everything. At this third coordinate z act as another parameter to produce contour lines, surfaces and so on. Correspondingly Quaternary plot is plot for 4 dependent coordinates @var{a}, @var{b}, @var{c} and @var{d} so that @var{a}+@var{b}+@var{c}+@var{d}=1. Use @code{Ternary(0)} for returning to usual axis. @sref{Ternary plot sample}
+The function sets to draws Ternary or Quaternary plot. Ternary plot is special plot for 3 dependent coordinates (components) @var{a}, @var{b}, @var{c} so that @var{a}+@var{b}+@var{c}=1. MathGL uses only 2 independent coordinates @var{a}=x and @var{b}=y since it is enough to plot everything. At this third coordinate z act as another parameter to produce contour lines, surfaces and so on. Correspondingly Quaternary plot is plot for 4 dependent coordinates @var{a}, @var{b}, @var{c} and @var{d} so that @var{a}+@var{b}+@var{c}+@var{d}=1. Use @code{Ternary(0)} for returning to usual axis. @sref{Ternary axis}
 @end deftypefn
 
 @c ------------------------------------------------------------------
@@ -732,7 +732,7 @@ Puts further plotting in @var{ind}-th cell of column with @var{num} cells. The p
 @deftypefnx {C function} @code{void} mgl_gridplot (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} ind)
 @deftypefnx {C function} @code{void} mgl_gridplot_d (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} ind, @code{float} d)
 @end ifclear
-Puts further plotting in @var{ind}-th cell of @var{nx}*@var{ny} grid. The position is relative to previous @ref{subplot} (or @ref{inplot} with @var{rel}=@code{false}). Parameter @var{d} set extra gap between cells. @sref{ColumnPlot sample}
+Puts further plotting in @var{ind}-th cell of @var{nx}*@var{ny} grid. The position is relative to previous @ref{subplot} (or @ref{inplot} with @var{rel}=@code{false}). Parameter @var{d} set extra gap between cells.
 @end deftypefn
 
 @anchor{stickplot}
@@ -1550,7 +1550,7 @@ Set the number of marks in the legend. By default 1 mark is used.
 
 These functions perform plotting of 1D data. 1D means that data depended from only 1 parameter like parametric curve @{x[i],y[i],z[i]@}, i=1...n. By default (if absent) values of @var{x}[i] are equidistantly distributed in axis range, and @var{z}[i]=@var{Min}.z. The plots are drawn for each row if one of the data is the matrix. By any case the sizes of 1st dimension @strong{must be equal} for all arrays @code{x.nx=y.nx=z.nx}.
 
-String @var{pen} specifies the color and style of line and marks (see @ref{Line styles}). By default (@code{pen=""}) solid line with color from palette is used (see @ref{Palette and colors}). String @var{opt} contain command options (see @ref{Command options}). @sref{1D plot sample}
+String @var{pen} specifies the color and style of line and marks (see @ref{Line styles}). By default (@code{pen=""}) solid line with color from palette is used (see @ref{Palette and colors}). String @var{opt} contain command options (see @ref{Command options}). @sref{1D samples}
 
 @anchor{plot}
 @deftypefn {MGL command} {} plot ydat ['stl'='']
@@ -1712,8 +1712,7 @@ These functions draw boxplot (also known as a box-and-whisker diagram) at points
 @deftypefnx {C function} @code{void} mgl_candle_yv (@code{HMGL} gr, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_candle_xyv (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} v1, @code{HCDT} v2, @code{HCDT} y1, @code{HCDT} y2, @code{const char *}pen, @code{const char *}opt)
 @end ifclear
-These functions draw candlestick chart at points @var{x}[i]. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. Wire (or white) candle correspond to price growth @var{v1}[i]<@var{v2}[i], opposite case -- solid (or dark) candle. "Shadows" show the minimal @var{y1} and maximal @var{y2} prices. If @var{v2} is absent then it is determined as @var{v2}[i]=@var{v1}[i+1]. See also @ref{plot}, @ref{bars}, @ref{barwidth}.
-@c TODO @sref{Candle sample}
+These functions draw candlestick chart at points @var{x}[i]. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. Wire (or white) candle correspond to price growth @var{v1}[i]<@var{v2}[i], opposite case -- solid (or dark) candle. "Shadows" show the minimal @var{y1} and maximal @var{y2} prices. If @var{v2} is absent then it is determined as @var{v2}[i]=@var{v1}[i+1]. See also @ref{plot}, @ref{bars}, @ref{barwidth}. @sref{Candle sample}
 @end deftypefn
 
 
@@ -1824,7 +1823,7 @@ These functions draw surface which is result of curve @{@var{r}, @var{z}@} rotat
 @cindex Grid
 
 
-These functions perform plotting of 2D data. 2D means that data depend from 2 independent parameters like matrix @math{f(x_i,y_j), i=1...n, j=1...m}.  By default (if absent) values of @var{x}, @var{y} are equidistantly distributed in axis range. The plots are drawn for each z slice of the data. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @code{x.nx=z.nx && y.nx=z.ny} or @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). String @var{sch} sets the color scheme (see @ref{Color scheme}) for plot. Previous color scheme is used by default. String @var{opt} contain command options (see @ref{Command options}). @sref{2D plot sample}
+These functions perform plotting of 2D data. 2D means that data depend from 2 independent parameters like matrix @math{f(x_i,y_j), i=1...n, j=1...m}.  By default (if absent) values of @var{x}, @var{y} are equidistantly distributed in axis range. The plots are drawn for each z slice of the data. The minor dimensions of arrays @var{x}, @var{y}, @var{z} should be equal @code{x.nx=z.nx && y.nx=z.ny} or @code{x.nx=y.nx=z.nx && x.ny=y.ny=z.ny}. Arrays @var{x} and @var{y} can be vectors (not matrices as @var{z}). String @var{sch} sets the color scheme (see @ref{Color scheme}) for plot. Previous color scheme is used by default. String @var{opt} contain command options (see @ref{Command options}). @sref{2D samples}
 
 @anchor{surf}
 @deftypefn {MGL command} {} surf zdat ['sch'='']
@@ -2049,7 +2048,7 @@ The function draws grid lines for density plot of surface specified parametrical
 @cindex Cloud
 @cindex Beam
 
-These functions perform plotting of 3D data. 3D means that data depend from 3 independent parameters like matrix @math{f(x_i,y_j,z_k), i=1...n, j=1...m, k=1...l}.By default (if absent) values of @var{x}, @var{y}, @var{z} are equidistantly distributed in axis range. The minor dimensions of arrays @var{x}, @var{y}, @var{z}, @var{a} should be equal @code{x.nx=a.nx && y.nx=a.ny && z.nz=a.nz} or @code{x.nx=y.nx=z.nx=a.nx && x.ny=y.ny=z.ny=a.ny && x.nz=y.nz=z.nz=a.nz}. Arrays @var{x}, @var{y} and @var{z} can be vectors (not matrices as @var{a}). String @var{sch} sets the color scheme (see @ref{Color scheme}) for plot. Previous color scheme is used by default. String @var{opt} contain command options (see @ref{Command options}). @sref{3D plot sample}
+These functions perform plotting of 3D data. 3D means that data depend from 3 independent parameters like matrix @math{f(x_i,y_j,z_k), i=1...n, j=1...m, k=1...l}.By default (if absent) values of @var{x}, @var{y}, @var{z} are equidistantly distributed in axis range. The minor dimensions of arrays @var{x}, @var{y}, @var{z}, @var{a} should be equal @code{x.nx=a.nx && y.nx=a.ny && z.nz=a.nz} or @code{x.nx=y.nx=z.nx=a.nx && x.ny=y.ny=z.ny=a.ny && x.nz=y.nz=z.nz=a.nz}. Arrays @var{x}, @var{y} and @var{z} can be vectors (not matrices as @var{a}). String @var{sch} sets the color scheme (see @ref{Color scheme}) for plot. Previous color scheme is used by default. String @var{opt} contain command options (see @ref{Command options}). @sref{3D samples}
 
 @anchor{surf3}
 @deftypefn {MGL command} {} surf3 adat @code{val} ['sch'='']
@@ -2522,7 +2521,7 @@ gr->ContFX(c.Sum("x"),"BbcyrR",-1);
 gr->ContFY(c.Sum("y"),0,1);
 gr->ContFZ(c.Sum("z"),0,-1);
 @end example
-will produce the following picture. See also @ref{ContFXYZ}, @ref{DensXYZ}, @ref{cont}, @ref{Data manipulation}. @sref{Cont projection sample}
+will produce the following picture. See also @ref{ContFXYZ}, @ref{DensXYZ}, @ref{cont}, @ref{Data manipulation}. @sref{ContF projection sample}
 @end deftypefn
 
 @ifclear UDAV
@@ -2582,7 +2581,7 @@ Draws command parametrical surface @{@samp{x(u,v)}, @samp{y(u,v)}, @samp{z(u,v)}
 @deftypefnx {C function} @code{void} mgl_triplot_xyz (@code{HMGL} gr, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_triplot_xyzc (@code{HMGL} gr, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws the surface of triangles. Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. Parameter @var{c} set the colors of triangles (if @var{id}.ny=@var{c}.nx) or colors of vertexes (if @var{x}.nx=@var{c}.nx). See also @ref{dots}, @ref{crust}, @ref{quadplot}.
+The function draws the surface of triangles. Triangle vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 3 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. Parameter @var{c} set the colors of triangles (if @var{id}.ny=@var{c}.nx) or colors of vertexes (if @var{x}.nx=@var{c}.nx). See also @ref{dots}, @ref{crust}, @ref{quadplot}. @sref{TriPlot and QuadPlot}
 @end deftypefn
 
 @anchor{tricont}
@@ -2614,7 +2613,7 @@ The function draws contour lines for surface of triangles at @var{z}=@var{v}[k] 
 @deftypefnx {C function} @code{void} mgl_quadplot_xyz (@code{HMGL} gr, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_quadplot_xyzc (@code{HMGL} gr, @code{HCDT} id, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{HCDT} c, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws the surface of quadrangles. Quadrangles vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 4 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. Parameter @var{c} set the colors of quadrangles (if @var{id}.ny=@var{c}.nx) or colors of vertexes (if @var{x}.nx=@var{c}.nx). See also @ref{triplot}.
+The function draws the surface of quadrangles. Quadrangles vertexes are set by indexes @var{id} of data points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. First dimensions of @var{id} must be 4 or greater. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. Parameter @var{c} set the colors of quadrangles (if @var{id}.ny=@var{c}.nx) or colors of vertexes (if @var{x}.nx=@var{c}.nx). See also @ref{triplot}. @sref{TriPlot and QuadPlot}
 @end deftypefn
 
 @anchor{dots}

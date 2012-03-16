@@ -49,43 +49,19 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	//double v [5] = {0.000001, 10.000001, 20.000001, 30.000001, 39.999999}, *vv, Value;
-	// ERROR ERROR ERROR
-	//-----------------------------------------------------------------
-	double v [5] = {0.0, 10.0, 20.0, 30.0, 40.0}, *vv, Value;
-	//-----------------------------------------------------------------
-	double x [4] = {0, 10, 20, 30}, *xx;
-	double y [5] = {0, 10, 20, 30, 40}, *yy;
-	int
-	iy,ix,iz;
-	mglData Z(4,5), V(6), X(5), Y(4);
-	for (ix=0;ix<4;ix++){
-		for (iy=0;iy<5;iy++) {
-			Z.Put(iy*10,ix,iy);
-		}
+	int i, n=1000;
+	mglData x(n),y(n),z(n);
+	for(i=0;i<n;i++)
+	{
+		float t=M_PI*(mgl_rnd()-0.5), f=2*M_PI*mgl_rnd();
+		x.a[i] = 0.9*cos(t)*cos(f);
+		y.a[i] = 0.9*cos(t)*sin(f);
+		z.a[i] = 0.6*sin(t);
 	}
-	Z.Save ("A.txt");
-	vv = &v[0];
-	V.Set(vv, 5);
-	V.Save ("V.txt");
-	xx = &x[0];
-	X.Set(xx, 4);
-	yy = &y[0];
-	Y.Set(yy, 5);
-	gr->DefaultPlotParam();
-	gr->InPlot(0.0, 0.7, 0.0, 1.0);
-	gr->SetRanges(0,30,-5,45,-80,70);
-//	gr->Axis(mglPoint(0,-5),mglPoint(30,45));
-	gr->SetTicks('x', 5, 4); // sets tick step to 5
-	gr->SetTicks('y', 5, 4); // and draws 4 subticks
-	gr->Axis("xy");
-	gr->Box();
-	gr->Colorbar();
-	gr->Dens(X,Y,Z);
-	// Color Gradient
-	gr->Cont(V,X,Y,Z,"tk");
-	// Without Color	ERROR ERROR ERROR
-
+	if(!mini)	gr->Title("Dots sample");
+	gr->Rotate(50,60);	gr->Box();	gr->Dots(x,y,z);
+	return;
+	
 	mglParse par;
 	par.AllowSetSize(true);
 	FILE *fp=fopen("/home/balakin/mgl/att/put.mgl","rt");
@@ -439,7 +415,8 @@ void smgl_area(mglGraph *gr)
 	gr->Area(xc,yc,z,"r");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_plot="subplot 2 2 0 '':title 'Plot plot (default)':box:plot y\nsubplot 2 2 2 '':title ''!' style; 'rgb' palette':box:plot y 'o!rgb'\n"
+const char *mmgl_plot="subplot 2 2 0 '':title 'Plot plot (default)':box:plot y\n"
+"subplot 2 2 2 '':title ''!' style; 'rgb' palette':box:plot y 'o!rgb'\nsubplot 2 2 3 '':title 'just markers':box:plot y ' +'\n"
 "new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 2 2 1:title '3d variant':rotate 50 60:box:plot xc yc z 'rs'\n";
 void smgl_plot(mglGraph *gr)
 {
@@ -448,18 +425,19 @@ void smgl_plot(mglGraph *gr)
 	gr->Box();	gr->Plot(y);
 	if(mini)	return;
 	gr->SubPlot(2,2,2,"");	gr->Title("'!' style; 'rgb' palette");	gr->Box();	gr->Plot(y,"o!rgb");
+	gr->SubPlot(2,2,3,"");	gr->Title("just markers");	gr->Box();	gr->Plot(y," +");
 	gr->SubPlot(2,2,1);	gr->Title("3d variant");	gr->Rotate(50,60);	gr->Box();
 	mglData yc(30), xc(30), z(30);	z.Modify("2*x-1");
 	yc.Modify("sin(pi*(2*x-1))");	xc.Modify("cos(pi*2*x-pi)");
 	gr->Plot(xc,yc,z,"rs");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_tens="subplot 2 2 0 '':title 'Plot plot (default)':box:tens y(:.0) y(:,1)\nsubplot 2 2 1 '':title '' ' style':box:plot y(:.0) y(:,1) 'o '\n"
+const char *mmgl_tens="subplot 2 2 0 '':title 'Tens plot (default)':box:tens y(:.0) y(:,1)\nsubplot 2 2 1 '':title '' ' style':box:plot y(:.0) y(:,1) 'o '\n"
 "new yc 30 'sin(pi*x)':new xc 30 'cos(pi*x)':new z 30 'x'\nsubplot 2 2 1:title '3d variant':rotate 50 60:box:tens xc yc z z 's'\n";
 void smgl_tens(mglGraph *gr)
 {
 	mglData y;	mgls_prepare1d(&y);	gr->SetOrigin(0,0,0);
-	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Plot plot (default)");	}
+	if(!mini)	{	gr->SubPlot(2,2,0,"");	gr->Title("Tens plot (default)");	}
 	gr->Box();	gr->Tens(y.SubData(-1,0), y.SubData(-1,1));
 	if(mini)	return;
 	gr->SubPlot(2,2,2,"");	gr->Title("' ' style");	gr->Box();	gr->Tens(y.SubData(-1,0), y.SubData(-1,1),"o ");
@@ -1241,7 +1219,7 @@ void smgl_surfa(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2d(&a,&b);
 	if(!mini)	gr->Title("SurfA plot");	gr->Rotate(50,60);
-	gr->Light(true);	gr->Box();	gr->SurfA(a,b);
+	gr->Alpha(true);	gr->Light(true);	gr->Box();	gr->SurfA(a,b);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_tile="title 'Tile plot':rotate 50 60:box:tile a\n";
@@ -1256,7 +1234,7 @@ const char *mmgl_tiles="title 'Tiles plot':box:tiles a b\n";
 void smgl_tiles(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2d(&a,&b);
-	if(!mini)	{gr->SubPlot(1,1,0,"");	gr->Title("Tile plot");}
+	if(!mini)	{gr->SubPlot(1,1,0,"");	gr->Title("TileS plot");}
 	gr->Box();	gr->TileS(a,b);
 }
 //-----------------------------------------------------------------------------
@@ -1700,7 +1678,7 @@ void smgl_dat_diff(mglGraph *gr)	// differentiate
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_data_extra="";		// TODO add later
-void smgl_dat_exta(mglGraph *gr)	// differentiate
+void smgl_dat_extra(mglGraph *gr)	// differentiate
 {
 	gr->SubPlot(2,2,0,"");	gr->Title("Envelop sample");
 	mglData d1(1000);	gr->Fill(d1,"exp(-8*x^2)*sin(10*pi*x)");
@@ -1803,6 +1781,25 @@ void smgl_triplot(mglGraph *gr)
 	gr->TriPlot(tt,uu,vv,ww,"k#");
 }
 //-----------------------------------------------------------------------------
+const char *mmgl_dots="new t 1000 'pi*(rnd-0.5)':new f 1000 '2*pi*rnd'\n"
+"copy x 0.9*cos(t)*cos(f):copy y 0.9*cos(t)*sin(f):copy z 0.6*sin(t)\n"
+"title 'Dots sample':rotate 50 60\nbox:dots x y z\n";
+void smgl_dots(mglGraph *gr)
+{
+	int i, n=1000;
+	mglData x(n),y(n),z(n);
+	for(i=0;i<n;i++)
+	{
+		float t=M_PI*(mgl_rnd()-0.5), f=2*M_PI*mgl_rnd();
+		x.a[i] = 0.9*cos(t)*cos(f);
+		y.a[i] = 0.9*cos(t)*sin(f);
+		z.a[i] = 0.6*sin(t);
+	}
+	if(!mini)	gr->Title("Dots sample");
+	gr->Rotate(50,60);	gr->Box();	gr->Dots(x,y,z);
+}
+//-----------------------------------------------------------------------------
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -2038,11 +2035,12 @@ mglSample samp[] = {
 	{"curvcoor", smgl_curvcoor},
 	{"cut", smgl_cut},
 	{"dat_diff", smgl_dat_diff},
-	{"dat_exta", smgl_dat_exta},
+	{"dat_extra", smgl_dat_extra},
 	{"dens", smgl_dens},
 	{"dens_xyz", smgl_dens_xyz},
 	{"densa", smgl_densa},
 	{"dew", smgl_dew},
+	{"dots", smgl_dots},
 	{"error", smgl_error},
 	{"fall", smgl_fall},
 	{"fit", smgl_fit},

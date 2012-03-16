@@ -1265,12 +1265,12 @@ void mgl_error_exy(HMGL gr, HCDT x, HCDT y, HCDT ex, HCDT ey, const char *pen, c
 		{
 			if(mk)	gr->mark_plot(gr->AddPnt(mglPoint(x->v(i,mx),y->v(i,my),zVal)), mk);
 
-			n1 = gr->AddPnt(mglPoint(x->v(i,mx), y->v(i,my)+ey->v(i,m2), zVal));
-			n2 = gr->AddPnt(mglPoint(x->v(i,mx), y->v(i,my)-ey->v(i,m2), zVal));
+			n1 = gr->AddPnt(mglPoint(x->v(i,mx), y->v(i,my)+ey->v(i,m2), zVal),-1,q,-1,11);
+			n2 = gr->AddPnt(mglPoint(x->v(i,mx), y->v(i,my)-ey->v(i,m2), zVal),-1,q,-1,11);
 			gr->line_plot(n1,n2);	gr->arrow_plot(n1,n2,'I');	gr->arrow_plot(n2,n1,'I');
 
-			n1 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1), y->v(i,my), zVal));
-			n2 = gr->AddPnt(mglPoint(x->v(i,mx)-ex->v(i,m1), y->v(i,my), zVal));
+			n1 = gr->AddPnt(mglPoint(x->v(i,mx)+ex->v(i,m1), y->v(i,my), zVal),-1,q,-1,11);
+			n2 = gr->AddPnt(mglPoint(x->v(i,mx)-ex->v(i,m1), y->v(i,my), zVal),-1,q,-1,11);
 			gr->line_plot(n1,n2);	gr->arrow_plot(n1,n2,'I');	gr->arrow_plot(n2,n1,'I');
 			if(sh)	gr->NextColor(pal);
 		}

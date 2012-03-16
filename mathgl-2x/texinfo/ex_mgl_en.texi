@@ -641,7 +641,7 @@ It is an interesting result, is not it?
 @node Vector field visualization, Several light sources, Management of a point cutting, Hints
 @subsection Vector field visualization
 
-Vector field visualization (especially in 3d case @code{vect3} or @code{vectc}) may look tangly -- there are too many overlapping lines. I may suggest 2 ways to solve this problem. The first one is to change @code{meshnum} for decreasing the number of hachures. The second way is to use the flow thread chart @code{Flow}. Unfortunately, I don't know any other methods to visualize 3d vector field. If you know any, e-mail me and I shall add it to MatGL.
+Vector field visualization (especially in 3d case @code{vect3} or @code{vectc}) may look tangly -- there are too many overlapping lines. I may suggest 2 ways to solve this problem. The first one is to change @code{meshnum} for decreasing the number of hachures. The second way is to use the flow thread chart @code{Flow}. Unfortunately, I don't know any other methods to visualize 3d vector field. If you know any, e-mail me and I shall add it to MathGL.
 
 @c ------------------------------------------------------------------
 @node Several light sources, CutMin and CutMax features, Vector field visualization, Hints

@@ -633,8 +633,7 @@ void mgl_contf_xy(HMGL gr, HCDT x, HCDT y, HCDT z, const char *sch, const char *
 	float r = gr->SaveState(opt);
 	long Num = isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
-	mglData v(Num+2);
-	for(long i=0;i<=Num+1;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
+	mglData v(Num+2);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf_xy_val(gr,&v,x,y,z,sch,0);
 }
 //-----------------------------------------------------------------------------
@@ -643,8 +642,7 @@ void mgl_contf(HMGL gr, HCDT z, const char *sch, const char *opt)
 	float r = gr->SaveState(opt);
 	long Num = isnan(r)?7:long(r+0.5);
 	if(Num<1)	{	gr->SetWarn(mglWarnCnt,"Cont");	return;	}
-	mglData v(Num+2);
-	for(long i=0;i<=Num+1;i++)	v.a[i] = gr->Min.c + (gr->Max.c-gr->Min.c)*float(i+1)/(Num+1);
+	mglData v(Num+2);	v.Fill(gr->Min.c, gr->Max.c);
 	mgl_contf_val(gr,&v,z,sch,0);
 }
 //-----------------------------------------------------------------------------

@@ -11,8 +11,7 @@ This chapter contain information about basic and advanced MathGL, hints and samp
 * 1D samples::
 * 2D samples::
 * 3D samples::
-* Dual samples::
-* More samples::
+* Vector field samples::
 * Hints::
 * FAQ::
 @end menu
@@ -470,6 +469,7 @@ Now I show several non-obvious features of MathGL: several subplots in a single 
 * Colorbars::
 * Ternary axis::
 * Text features::
+* Legend sample::
 * Cutting sample::
 @end menu
 
@@ -775,7 +775,7 @@ int sample(mglGraph *gr)
 @end float
 
 @c ------------------------------------------------------------------
-@node Text features, Cutting sample, Ternary axis, Advanced usage
+@node Text features, Legend sample, Ternary axis, Advanced usage
 @subsection Text features
 
 MathGL prints text by vector font. There are functions for manual specifying of text position (like @code{Puts}) and for its automatic selection (like @code{Label}, @code{Legend} and so on). MathGL prints text always in specified position even if it lies outside the bounding box. The default size of font is specified by functions @var{SetFontSize*} (see @ref{Font settings}). However, the actual size of output string depends on subplot size (depends on functions @code{SubPlot}, @code{InPlot}). The switching of the font style (italic, bold, wire and so on) can be done for the whole string (by function parameter) or inside the string. By default MathGL parses TeX-like commands for symbols and indexes (see @ref{Font styles}).
@@ -824,7 +824,45 @@ int sample(mglGraph *gr)
 @end float
 
 @c ------------------------------------------------------------------
-@node Cutting sample, , Text features, Advanced usage
+@node Legend sample, Cutting sample, Text features, Advanced usage
+@subsection Legend sample
+
+Legend is one of standard ways to show plot annotations. Basically you need to connect the plot style (line style, marker and color) with some text. In MathGL, you can do it by 2 methods: manually using @code{AddLegend} function (see @ref{Legend}); or use @samp{legend} option (see @ref{Command options}), which will use last plot style. In both cases, legend entries will be added into internal accumulator, which later used for legend drawing itself. @code{ClearLegend} function allow you to remove all saved legend entries.
+
+There are 2 features. If plot style is empty then text will be printed without indent. If you want to plot the text with indent but without plot sample then you need to use space @samp{ } as plot style. Such style @samp{ } will draw a plot sample (line with marker(s)) which is invisible line (i.e. nothing) and print the text with indent as usual one.
+
+Function @code{Legend} draw legend on the plot. The position of the legend can be selected automatic or manually. You can change the size and style of text labels, as well as setup the plot sample. The sample code demonstrating legend features is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  gr->AddLegend("sin(\\pi {x^2})","b");
+  gr->AddLegend("sin(\\pi x)","g*");
+  gr->AddLegend("sin(\\pi \\sqrt{x})","rd");
+  gr->AddLegend("just text"," ");
+  gr->AddLegend("no indent for this","");
+
+  gr->SubPlot(2,2,0,""); gr->Title("Legend (default)");
+  gr->Box();  gr->Legend();
+
+  gr->Legend(3,"A#");
+  gr->Puts(mglPoint(0.75,0.65),"Absolute position","A");
+
+  gr->SubPlot(2,2,2,"");  gr->Title("coloring");  gr->Box();
+  gr->Legend(0,"r#"); gr->Legend(1,"Wb#");  gr->Legend(2,"ygr#");
+
+  gr->SubPlot(2,2,3,"");  gr->Title("manual position");
+  gr->Box();  gr->Legend(0.5,0.5);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/legend, 11cm}
+@caption{Example of legend}
+@end float
+
+@c ------------------------------------------------------------------
+@node Cutting sample, , Legend sample, Advanced usage
 @subsection Cutting sample
 
 The last common thing which I want to show in this section is how one can cut off points from plot. There are 4 mechanism for that.
@@ -967,304 +1005,1719 @@ The only non-obvious thing here is using multidimensional arrays in C/C++, i.e. 
 @node Linking array, Change data, Array creation, Data handling
 @subsection Linking array
 
-Sometimes the data arrays are so large, that one don't need to copy its values to another array (i.e. into mglData).
+Sometimes the data arrays are so large, that one couldn't' copy its values to another array (i.e. into mglData). In this case, he can define its own class derived from @code{mglDataA} (see @ref{User defined types}) or can use @code{Link} function.
 
+In last case, MathGL just save the link to an external data array, but not copy it. You should provide the existence of this data array for whole time during which MathGL can use it. Another point is that MathGL will automatically create new array if you'll try to modify data values by any of @code{mglData} functions. So, you should use only function with @code{const} modifier if you want still using link to the original data array.
 
+Creating the link is rather simple -- just the same as using @code{Set} function
+@verbatim
+  double *a = new double[50];
+  for(int i=0;i<50;i++)   a[i] = sin(M_PI*i/49.);
 
+  mglData y;
+  y.Link(a,50);
+@end verbatim
 
 @c ------------------------------------------------------------------
 @node Change data, User defined types, Linking array, Data handling
 @subsection Change data
 
-MathGL has functions for data processing: differentiating, integrating, smoothing and so on (for more detail, @pxref{Data processing}). Let us consider some examples. The simplest ones are integration and differentiation. The direction in which operation will be performed is specified by textual string, which may contain symbols @samp{x}, @samp{y} or @samp{z}. For example, the call of @code{Diff("x")} will differentiate data along @samp{x} direction; the call of @code{Integral("xy")} perform the double integration of data along @samp{x} and @samp{y} directions; the call of @code{Diff2("xyz")} will apply 3d Laplace operator to data and so on. Example of this operations on 2d array a=x*y is presented in code:
+MathGL has functions for data processing: differentiating, integrating, smoothing and so on (for more detail, see @ref{Data processing}). Let us consider some examples. The simplest ones are integration and differentiation. The direction in which operation will be performed is specified by textual string, which may contain symbols @samp{x}, @samp{y} or @samp{z}. For example, the call of @code{Diff("x")} will differentiate data along @samp{x} direction; the call of @code{Integral("xy")} perform the double integration of data along @samp{x} and @samp{y} directions; the call of @code{Diff2("xyz")} will apply 3d Laplace operator to data and so on. Example of this operations on 2d array a=x*y is presented in code:
 @verbatim
-    int sample(mglGraph *gr)
-    {
-        mglData a(30,40);   a.Modify("x*y");
-        gr->Axis(mglPoint(0,0,0),mglPoint(1,1,1));
-        gr->SubPlot(2,2,0); gr->Rotate(60,40);
-        gr->Surf(a);        gr->Box();
-        gr->Puts(mglPoint(0.7,1,1.2),"a(x,y)");
-        gr->SubPlot(2,2,1); gr->Rotate(60,40);
-        a.Diff("x");        gr->Surf(a);      gr->Box();
-        gr->Puts(mglPoint(0.7,1,1.2),"da/dx");
-        gr->SubPlot(2,2,2); gr->Rotate(60,40);
-        a.Integral("xy");   gr->Surf(a);      gr->Box();
-        gr->Puts(mglPoint(0.7,1,1.2),"\\int da/dx dxdy");
-        gr->SubPlot(2,2,3); gr->Rotate(60,40);
-        a.Diff2("y");       gr->Surf(a);      gr->Box();
-        gr->Puts(mglPoint(0.7,1,1.2),"\\int {d^2}a/dxdy dx");
-        return 0;
-    }
+int sample(mglGraph *gr)
+{
+  gr->SetRanges(0,1,0,1,0,1);
+  mglData a(30,40); a.Modify("x*y");
+  gr->SubPlot(2,2,0); gr->Rotate(60,40);
+  gr->Surf(a);    gr->Box();
+  gr->Puts(mglPoint(0.7,1,1.2),"a(x,y)");
+  gr->SubPlot(2,2,1); gr->Rotate(60,40);
+  a.Diff("x");    gr->Surf(a);  gr->Box();
+  gr->Puts(mglPoint(0.7,1,1.2),"da/dx");
+  gr->SubPlot(2,2,2); gr->Rotate(60,40);
+  a.Integral("xy"); gr->Surf(a);  gr->Box();
+  gr->Puts(mglPoint(0.7,1,1.2),"\\int da/dx dxdy");
+  gr->SubPlot(2,2,3); gr->Rotate(60,40);
+  a.Diff2("y"); gr->Surf(a);  gr->Box();
+  gr->Puts(mglPoint(0.7,1,1.2),"\\int {d^2}a/dxdy dx");
+  return 0;
+}
 @end verbatim
 
 @float
-@image{../png/sample6, 7cm}
+@image{../png/dat_diff, 11cm}
 @caption{Example of data differentiation and integration}
 @end float
 
-Data smoothing (function @code{Smooth()}) is more interesting and important. This function has 2 main arguments: type of smoothing and its direction. Now 4 methods are supported: @code{SMOOTH_NONE} does nothing for delta=0 or approaches data to zero with the step delta, @code{SMOOTH_LINE_3} linear averaging by 3 points, @code{SMOOTH_LINE_5} linear averaging by 5 points, @code{SMOOTH_QUAD_5} quadratic averaging by 5 points. Let me demonstrate it for 1d case:
+Data smoothing (function @code{Smooth()}) is more interesting and important. This function has single argument which define type of smoothing and its direction. Now 3 methods are supported: @samp{3} -- linear averaging by 3 points, @samp{5} -- linear averaging by 5 points, and default one -- quadratic averaging by 5 points.
+
+MathGL also have some amazing functions which is not so important for data processing as useful for data plotting. There are functions for finding envelope (useful for plotting rapidly oscillating data), for data sewing (useful to removing jumps on the phase), for data resizing (interpolation). Let me demonstrate it:
 @verbatim
-    int sample(mglGraph *gr)
-    {
-        mglData y0(30),y1,y2,y3;
-        y0.Modify("0.4*sin(2*pi*x)+0.3*cos(3*pi*x)-0.4*sin(4*pi*x)+0.2*rnd");
+int sample(mglGraph *gr)
+{
+  gr->SubPlot(2,2,0,"");  gr->Title("Envelop sample");
+  mglData d1(1000); gr->Fill(d1,"exp(-8*x^2)*sin(10*pi*x)");
+  gr->Axis();     gr->Plot(d1, "b");
+  d1.Envelop('x');  gr->Plot(d1, "r");
 
-        y1=y0;  y1.Smooth(SMOOTH_LINE_3);
-        y2=y0;  y2.Smooth(SMOOTH_LINE_5);
-        y3=y0;  y3.Smooth(SMOOTH_QUAD_5);
+  gr->SubPlot(2,2,1,"");  gr->Title("Smooth sample");
+  mglData y0(30),y1,y2,y3;
+  gr->SetRanges(0,1,0,1);
+  gr->Fill(y0, "0.4*sin(pi*x) + 0.3*cos(1.5*pi*x) - 0.4*sin(2*pi*x)+0.5*rnd");
 
-        gr->Plot(y0,"k");   gr->AddLegend("NONE","k");
-        gr->Plot(y1,"r");   gr->AddLegend("LINE_3","r");
-        gr->Plot(y2,"g");   gr->AddLegend("LINE_5","g");
-        gr->Plot(y3,"b");   gr->AddLegend("QUAD_5","b");
-        gr->Legend();       gr->Box();
-        return 0;
-    }
+  y1=y0;  y1.Smooth("x3");
+  y2=y0;  y2.Smooth("x5");
+  y3=y0;  y3.Smooth("x");
+
+  gr->Plot(y0,"{m7}:s", "legend 'none'"); //gr->AddLegend("none","k");
+  gr->Plot(y1,"r", "legend ''3' style'");
+  gr->Plot(y2,"g", "legend ''5' style'");
+  gr->Plot(y3,"b", "legend 'default'");
+  gr->Legend();   gr->Box();
+
+  gr->SubPlot(2,2,2);   gr->Title("Sew sample");
+  mglData d2(100, 100); gr->Fill(d2, "mod((y^2-(1-x)^2)/2,0.1)");
+  gr->Rotate(50, 60);   gr->Light(true);  gr->Alpha(true);
+  gr->Box();            gr->Surf(d2, "b");
+  d2.Sew("xy", 0.1);  gr->Surf(d2, "r");
+
+  gr->SubPlot(2,2,3);   gr->Title("Resize sample (interpolation)");
+  mglData x0(10), v0(10), x1, v1;
+  gr->Fill(x0,"rnd");     gr->Fill(v0,"rnd");
+  x1 = x0.Resize(100);    v1 = v0.Resize(100);
+  gr->Plot(x0,v0,"b+ ");  gr->Plot(x1,v1,"r-");
+  gr->Label(x0,v0,"%n");
+  return 0;
+}
 @end verbatim
 
 @float
-@image{../png/sample7, 7cm}
+@image{../png/dat_extra, 11cm}
 @caption{Example of data smoothing}
 @end float
 
-Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@code{SubData()}), summarize along some of direction(s) (@code{Sum()}), find distribution of data elements (@code{Hist()}). Note, that all these functions are not thread-safe because they use static internal variable for output array. In particular, the using of several of them in arguments of the same function will lead to unpredictable result.
+Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@code{SubData()}), summarize along a direction(s) (@code{Sum()}), find distribution of data elements (@code{Hist()}) and so on.
+
+@c ------------------------------------------------------------------
+@node User defined types, , Change data, Data handling
+@subsection User defined types
+
+@code{mglData} class have abstract predecessor class @code{mglDataA}. Exactly the pointers to @code{mglDataA} instances are used in all plotting functions and some of data processing functions. This was done for taking possibility to define yours own class, which will handle yours own data (for example, complex numbers, or differently organized data). And this new class will be almost the same as @code{mglData} for plotting purposes.
+
+However, the most of data processing functions will be slower as if you used @code{mglData} instance. This is more or less understandable -- I don't know how data in yours particular class will be organized, and couldn't optimize the these functions generally.
+
+There are few virtual functions which must be provided in derived classes. This functions give:
+@itemize @bullet
+@item
+the sizes of the data (@code{GetNx}, @code{GetNy}, @code{GetNz}),
+@item
+give data value and numerical derivatives for selected cell (@code{v}, @code{dvx}, @code{dvy}, @code{dvz}),
+@item
+give maximal and minimal values (@code{Maximal}, @code{Minimal}) -- you can use provided functions (like @code{mgl_data_max} and @code{mgl_data_min}), but yours own realization can be more efficient,
+@item
+give access to all element as in single array (@code{vthr}) -- you need this only if you want using MathGL's data processing functions.
+@end itemize
+
+Let me, for example define class @code{mglComplex} which will handle complex number and draw its amplitude or phase, depending on flag @var{use_abs}:
+@verbatim
+#include <complex>
+#include <mgl/mgl.h>
+#define dual std::complex<double>
+class mglComplex : public mglDataA
+{
+public:
+  long nx;      ///< number of points in 1st dimensions ('x' dimension)
+  long ny;      ///< number of points in 2nd dimensions ('y' dimension)
+  long nz;      ///< number of points in 3d dimensions ('z' dimension)
+  dual *a;   ///< data array
+  bool use_abs; ///< flag to use abs() or arg()
+
+  inline mglComplex(long xx=1,long yy=1,long zz=1)
+  { a=0;  use_abs=true; Create(xx,yy,zz); }
+  virtual ~mglComplex()  { if(a)  delete []a; }
+
+  /// Get sizes
+  inline long GetNx() const { return nx;  }
+  inline long GetNy() const { return ny;  }
+  inline long GetNz() const { return nz;  }
+  /// Create or recreate the array with specified size and fill it by zero
+  inline void Create(long mx,long my=1,long mz=1)
+  { nx=mx;  ny=my;  nz=mz;  if(a) delete []a;
+  a = new dual[nx*ny*nz]; }
+  /// Get maximal value of the data
+  inline float Maximal() const  { return mgl_data_max(this);  }
+  /// Get minimal value of the data
+  inline float Minimal() const  { return mgl_data_min(this);  }
+
+protected:
+  inline mreal v(long i,long j=0,long k=0) const
+  { return use_abs ? abs(a[i+nx*(j+ny*k)]) : arg(a[i+nx*(j+ny*k)]);  }
+  inline mreal vthr(long i) const
+  { return use_abs ? abs(a[i]) : arg(a[i]);  }
+  inline mreal dvx(long i,long j=0,long k=0) const
+  { register long i0=i+nx*(j+ny*k);
+    std::complex<double> res=i>0? (i<nx-1? (a[i0+1]-a[i0-1])/2.:a[i0]-a[i0-1]) : a[i0+1]-a[i0];
+    return use_abs? abs(res) : arg(res);  }
+  inline mreal dvy(long i,long j=0,long k=0) const
+  { register long i0=i+nx*(j+ny*k);
+    std::complex<double> res=j>0? (j<ny-1? (a[i0+nx]-a[i0-nx])/2.:a[i0]-a[i0-nx]) : a[i0+nx]-a[i0];
+    return use_abs? abs(res) : arg(res);  }
+  inline mreal dvz(long i,long j=0,long k=0) const
+  { register long i0=i+nx*(j+ny*k), n=nx*ny;
+    std::complex<double> res=k>0? (k<nz-1? (a[i0+n]-a[i0-n])/2.:a[i0]-a[i0-n]) : a[i0+n]-a[i0];
+    return use_abs? abs(res) : arg(res);  }
+};
+int main()
+{
+  mglComplex dat(20);
+  for(long i=0;i<20;i++)
+    dat.a[i] = 3*exp(-0.05*(i-10)*(i-10))*dual(cos(M_PI*i*0.3), sin(M_PI*i*0.3));
+  mglGraph gr;
+  gr.SetRange('y', -M_PI, M_PI);  gr.Box();
+
+  gr.Plot(dat,"r","legend 'abs'");
+  dat.use_abs=false;
+  gr.Plot(dat,"b","legend 'arg'");
+  gr.Legend();
+  gr.WritePNG("complex.png");
+  return 0;
+}
+@end verbatim
+
 
 @c ------------------------------------------------------------------
 @node Data plotting, 1D samples, Data handling, Examples
 @section Data plotting
 
-Let me now show how to plot the data. MathGL generally has 2 types of plotting functions. Simple variant requires a single data array for plotting, other data (coordinates) are considered uniformly distributed in interval @var{Min}*@var{Max}. Second variant requires data arrays for all coordinates. It allows one to plot rather complex multivalent curves and surfaces (in case of parametric dependencies). Argument setting to default values allows one to plot data in standard form. Manual arguments setting gives possibility for fine tuning of colors, positions and view of graphics. Note, that the call of drawing function adds something to picture but does not clear the previous plots (as it does in Matlab). Another difference from Matlab is that all setup (like transparency, lightning, axis borders and so on) must be specified @strong{before} plotting functions.
+Let me now show how to plot the data. Next section will give much more examples for all plotting functions. Here I just show some basics. MathGL generally has 2 types of plotting functions. Simple variant requires a single data array for plotting, other data (coordinates) are considered uniformly distributed in axis range. Second variant requires data arrays for all coordinates. It allows one to plot rather complex multivalent curves and surfaces (in case of parametric dependencies). Usually each function have one textual argument for plot style and another textual argument for options (see @ref{Command options}).
 
-@menu
-* Plots for 1D data::
-* Plots for 2D data::
-* Plots for 3D data::
-* Surface transparency::
-@end menu
+Note, that the call of drawing function adds something to picture but does not clear the previous plots (as it does in Matlab). Another difference from Matlab is that all setup (like transparency, lightning, axis borders and so on) must be specified @strong{before} plotting functions.
 
-@c ------------------------------------------------------------------
-@node Plots for 1D data, Plots for 2D data, , Data plotting
-@subsection Plots for 1D data
-
-Term ``1D data'' means that data depend on single index (parameter) like curve in parametric form @{x(i),y(i),z(i)@}, i=1...n. There are 5 generally different types of data representations: simple line plot, line plot with filling under it, stairs plot, bar plot and vertical lines (@pxref{1D plotting}). Each type of plotting has similar interface. There are 3D version and two 2D versions. One of last requires single array. The parameters of line and marks (@pxref{Line styles}) are specified by the string argument. If the string parameter is @code{NULL} then solid line with color from palette is used (@pxref{Palette and colors}).
+Let start for plots for 1D data. Term ``1D data'' means that data depend on single index (parameter) like curve in parametric form @{x(i),y(i),z(i)@}, i=1...n. The textual argument allow you specify styles of line and marks (see @ref{Line styles}). If this parameter is @code{NULL} or empty then solid line with color from palette is used (see @ref{Palette and colors}).
 
 Below I shall show the features of 1D plotting on base of @code{Plot()} function (see @ref{plot}). Let us start from sinus plot:
 @verbatim
-    int sample(mglGraph *gr)
-    {
-        mglData y0(50); 	y0.Modify("sin(pi*(2*x-1))");
-        gr->SubPlot(2,2,0);
-        gr->Plot(y0);   	gr->Box();
+int sample(mglGraph *gr)
+{
+  mglData y0(50); 	y0.Modify("sin(pi*(2*x-1))");
+  gr->SubPlot(2,2,0);
+  gr->Plot(y0);   	gr->Box();
 @end verbatim
 Style of line is not specified in @code{Plot()} function. So MathGL uses the solid line with first color of palette (this is blue). Next subplot shows array @var{y1} with 2 rows:
 @verbatim
-        gr->SubPlot(2,2,1);
-        mglData y1(50,2);
-        y1.Modify("sin(pi*2*x-pi)");
-        y1.Modify("cos(pi*2*x-pi)/2",1);
-        gr->Plot(y1);   	gr->Box();
+  gr->SubPlot(2,2,1);
+  mglData y1(50,2);
+  y1.Modify("sin(pi*2*x-pi)");
+  y1.Modify("cos(pi*2*x-pi)/2",1);
+  gr->Plot(y1);   	gr->Box();
 @end verbatim
 As previously I did not specify the style of lines. As a result, MathGL again uses solid line with next colors in palette (there are green and red). Now let us plot a circle on the same subplot. The circle is parametric curve @math{x=cos(\pi t), y=sin(\pi t)}. I will set the color of the circle (dark yellow, @samp{Y}) and put marks @samp{+} at point position:
 @verbatim
-        mglData x(50);  	x.Modify("cos(pi*2*x-pi)");
-        gr->Plot(x,y0,"Y+");
+  mglData x(50);  	x.Modify("cos(pi*2*x-pi)");
+  gr->Plot(x,y0,"Y+");
 @end verbatim
 Note that solid line is used because I did not specify the type of line. The same picture can be achieved by @code{Plot()} and @code{SubData())} functions. Let us draw ellipse by orange dash line:
 @verbatim
-        gr->Plot(y1.SubData(-1,0),y1.SubData(-1,1),"q|");
+  gr->Plot(y1.SubData(-1,0),y1.SubData(-1,1),"q|");
 @end verbatim
 
 Drawing in 3D space is mostly the same. Let us draw spiral with default line style. Now its color is 4-th color from palette (this is cyan):
 @verbatim
-        gr->SubPlot(2,2,2);	gr->Rotate(60,40);
-        mglData z(50);  	z.Modify("2*x-1");
-        gr->Plot(x,y0,z);	gr->Box();
+  gr->SubPlot(2,2,2);	gr->Rotate(60,40);
+  mglData z(50);  	z.Modify("2*x-1");
+  gr->Plot(x,y0,z);	gr->Box();
 @end verbatim
 Functions @code{Plot()} and @code{SubData())} make 3D curve plot but for single array. Use it to put circle marks on the previous plot:
 @verbatim
-        mglData y2(10,3);	y2.Modify("cos(pi*(2*x-1+y))");
-        y2.Modify("2*x-1",2);
-        gr->Plot(y2.SubData(-1,0),y2.SubData(-1,1),y2.SubData(-1,2),"bo ");
+  mglData y2(10,3);	y2.Modify("cos(pi*(2*x-1+y))");
+  y2.Modify("2*x-1",2);
+  gr->Plot(y2.SubData(-1,0),y2.SubData(-1,1),y2.SubData(-1,2),"bo ");
 @end verbatim
 Note that line style is empty @samp{ } here. Usage of other 1D plotting functions looks similar:
 @verbatim
-        gr->SubPlot(2,2,3);	gr->Rotate(60,40);
-        gr->Bars(x,y0,z,"r");	gr->Box();
-        return 0;
-    }
+  gr->SubPlot(2,2,3);	gr->Rotate(60,40);
+  gr->Bars(x,y0,z,"r");	gr->Box();
+  return 0;
+}
 @end verbatim
 
-@float
-@image{../png/sample8, 7cm}
-@caption{Example of 1D data plot}
-@end float
-
-@c ------------------------------------------------------------------
-@node Plots for 2D data, Plots for 3D data, Plots for 1D data, Data plotting
-@subsection Plots for 2D data
-
-Surfaces @code{Surf()} and other 2D plots (@pxref{2D plotting}) are drown the same simpler as 1D one. The difference is that the string parameter specifies not by line style but by the color scheme of the plot (@pxref{Color scheme}). Here I draw attention on 4 most interesting color schemes. There is gray scheme where color is changed from black to white (string @samp{kw}) or from white to black (string @samp{wk}). Another scheme is useful for accentuation of negative (by blue color) and positive (by red color) regions on plot (string @samp{"BbwrR"}). Last one is the popular ``jet'' scheme (string @samp{"BbcyrR"}).
+Surfaces @code{Surf()} and other 2D plots (@pxref{2D plotting}) are drown the same simpler as 1D one. The difference is that the string parameter specifies not the line style but the color scheme of the plot (see @ref{Color scheme}). Here I draw attention on 4 most interesting color schemes. There is gray scheme where color is changed from black to white (string @samp{kw}) or from white to black (string @samp{wk}). Another scheme is useful for accentuation of negative (by blue color) and positive (by red color) regions on plot (string @samp{"BbwrR"}). Last one is the popular ``jet'' scheme (string @samp{"BbcyrR"}).
 
 Now I shall show the example of a surface drawing. At first let us switch lightning on
 @verbatim
-    int sample(mglGraph *gr)
-    {
-        gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
+int sample(mglGraph *gr)
+{
+  gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
 @end verbatim
 and draw the surface, considering coordinates x,y to be uniformly distributed in interval @var{Min}*@var{Max}
 @verbatim
-        mglData a0(50,40);
-        a0.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
-        gr->SubPlot(2,2,0);	gr->Rotate(60,40);
-        gr->Surf(a0);		gr->Box();
+  mglData a0(50,40);
+  a0.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+  gr->SubPlot(2,2,0);	gr->Rotate(60,40);
+  gr->Surf(a0);		gr->Box();
 @end verbatim
 Color scheme was not specified. So previous color scheme is used. In this case it is default color scheme (``jet'') for the first plot. Next example is a sphere. The sphere is parametrically specified surface:
 @verbatim
-        mglData x(50,40),y(50,40),z(50,40);
-        x.Modify("0.8*sin(2*pi*x)*sin(pi*y)");
-        y.Modify("0.8*cos(2*pi*x)*sin(pi*y)");
-        z.Modify("0.8*cos(pi*y)");
-        gr->SubPlot(2,2,1);	gr->Rotate(60,40);
-        gr->Surf(x,y,z,"BbwrR");gr->Box();
+  mglData x(50,40),y(50,40),z(50,40);
+  x.Modify("0.8*sin(2*pi*x)*sin(pi*y)");
+  y.Modify("0.8*cos(2*pi*x)*sin(pi*y)");
+  z.Modify("0.8*cos(pi*y)");
+  gr->SubPlot(2,2,1);	gr->Rotate(60,40);
+  gr->Surf(x,y,z,"BbwrR");gr->Box();
 @end verbatim
 I set color scheme to @code{"BbwrR"} that corresponds to red top and blue bottom of the sphere.
 
 Surfaces will be plotted for each of slice of the data if @var{nz}>1. Next example draws surfaces for data arrays with @var{nz}=3:
 @verbatim
-        mglData a1(50,40,3);
-        a1.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
-        a1.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*sin(3*pi*(x*y))",1);
-        a1.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))",2);
-        gr->SubPlot(2,2,2);	gr->Rotate(60,40);
-        gr->Alpha(true);
-        gr->Surf(a1);		gr->Box();
+  mglData a1(50,40,3);
+  a1.Modify("0.6*sin(2*pi*x)*sin(3*pi*y)+0.4*cos(3*pi*(x*y))");
+  a1.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*sin(3*pi*(x*y))",1);
+  a1.Modify("0.6*cos(2*pi*x)*cos(3*pi*y)+0.4*cos(3*pi*(x*y))",2);
+  gr->SubPlot(2,2,2);	gr->Rotate(60,40);
+  gr->Alpha(true);
+  gr->Surf(a1);		gr->Box();
 @end verbatim
 Note, that it may entail a confusion. However, if one will use density plot then the picture will look better:
 @verbatim
-        gr->SubPlot(2,2,3);	gr->Rotate(60,40);
-        gr->Dens(a1);		gr->Box();
-        return 0;
-    }
+  gr->SubPlot(2,2,3);	gr->Rotate(60,40);
+  gr->Dens(a1);		gr->Box();
+  return 0;
+}
 @end verbatim
-Note, that the previous color scheme is used in last plots because there are no direct specification of the one.
-
-@float
-@image{../png/sample9, 7cm}
-@caption{Example of surface plot for 2D data}
-@end float
 
 Drawing of other 2D plots is analogous. The only peculiarity is the usage of flag @samp{#}. By default this flag switches on the drawing of a grid on plot (@code{Grid()} or @code{Mesh()} for plots in plain or in volume). However, for isosurfaces (including surfaces of rotation @code{Axial()}) this flag switches the  face drawing off. Figure becomes wired. The following code gives example of flag @samp{#} using (compare with normal function drawing as in its description):
 @verbatim
-    int sample(mglGraph *gr)
-    {
-        gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
-        mglData a(30,20);
-        a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
+int sample(mglGraph *gr)
+{
+  gr->Alpha(true);	gr->Light(true);	gr->Light(0,mglPoint(0,0,1));
+  mglData a(30,20);
+  a.Modify("0.6*sin(2*pi*x)*sin(3*pi*y) + 0.4*cos(3*pi*(x*y))");
 
-        gr->SubPlot(2,2,0);	gr->Rotate(40,60);
-        gr->Surf(a,"BbcyrR#");		gr->Box();
-        gr->SubPlot(2,2,1);	gr->Rotate(40,60);
-        gr->Dens(a,"BbcyrR#");		gr->Box();
-        gr->SubPlot(2,2,2);	gr->Rotate(40,60);
-        gr->Cont(a,"BbcyrR#");		gr->Box();
-        gr->SubPlot(2,2,3);	gr->Rotate(40,60);
-        gr->Axial(a,"BbcyrR#");		gr->Box();
-        return 0;
-    }
+  gr->SubPlot(2,2,0);	gr->Rotate(40,60);
+  gr->Surf(a,"BbcyrR#");		gr->Box();
+  gr->SubPlot(2,2,1);	gr->Rotate(40,60);
+  gr->Dens(a,"BbcyrR#");		gr->Box();
+  gr->SubPlot(2,2,2);	gr->Rotate(40,60);
+  gr->Cont(a,"BbcyrR#");		gr->Box();
+  gr->SubPlot(2,2,3);	gr->Rotate(40,60);
+  gr->Axial(a,"BbcyrR#");		gr->Box();
+  return 0;
+}
 @end verbatim
-
-@float
-@image{../png/samplea, 7cm}
-@caption{Example of 2D data plot with color scheme contained @samp{#} symbol}
-@end float
-
-@c ------------------------------------------------------------------
-@node Plots for 3D data, Surface transparency, Plots for 2D data, Data plotting
-@subsection Plots for 3D data
-
-Drawing procedures for 3D plot looks similarly to 1D and 2D plots described above. There are 3 general types of 3D plots (@pxref{3D plotting}): (i) plots on slices or on projections, (ii) isosurfaces, (iii) cloud-like plots. Plots on slice are clear enough -- one specifies a slice (as its index or as coordinate value) and MathGL draws contour lines or density plot on slice plane. Isosurface gives more information. Isosurface is 3D analogue of the contour line @code{Cont()}. It shows the region where data array values exceed specified isosurface level. Plot becomes more informative if one adds transparency, lightning or sets color scheme depending on coordinates. Generalization of isosurface is the cloud-like plot. For this plot the darker color and less transparent regions correspond to higher values of data. Contrary, the regions with low values are transparent. For plotting of the phase of fields (or beams or pulses) one can use isosurface which transparency depends on the other data array (see function @code{Surf3A()}). As example of 3D data plots let us draw the Gaussian beam diffraction in space. Beam propagates along @var{x} axis:
-@verbatim
-    int sample(mglGraph *gr)
-    {
-        gr->Alpha(true);    gr->Light(true);
-        gr->Light(0,mglPoint(0,0,1));
-        mglData a(30,30,30),b(30,30,30);
-        a.Modify("exp(-16*((z-0.5)^2+(y-0.5)^2)/(1+4*x^2))");
-        b.Modify("16*((z-0.5)^2+(y-0.5)^2)*(x)/(1+4*x^2)");
-        gr->CAxis(0,1);
-
-        gr->SubPlot(2,2,0); gr->Rotate(40,60);
-        gr->Surf3(a,"wgk"); gr->Box();
-        gr->SubPlot(2,2,1); gr->Rotate(40,60);
-        gr->DensA(a);       gr->Box();  gr->Axis();
-        gr->SubPlot(2,2,2); gr->Rotate(40,60);
-        gr->CloudQ(a);      gr->Box();
-        gr->SubPlot(2,2,3); gr->Rotate(40,60);
-        gr->Surf3A(b,a,"q");gr->Box();
-        return 0;
-    }
-@end verbatim
-
-@float
-@image{../png/sampleb, 7cm}
-@caption{Example of Gaussian beam diffraction (3D data)}
-@end float
-
-
-@c ------------------------------------------------------------------
-@node Surface transparency, , Plots for 3D data, Data plotting
-@subsection Surface transparency
-
-MathGL library has advanced features for setting and handling the surface transparency. The simplest way to add transparency is the using of function @code{Alpha()}. As a result, all further surfaces (and isosurfaces, density plots and so on) become transparent. However, their  look can be additionally improved.
-
-First, the selected surface will be non-transparent if one sets the flag @code{Transparent} before the surface drawing and sets it off after the drawing.
-
-Second, the value of transparency can be different from surface to surface. To do it just change the value of @code{AlphaDef} before the drawing of the selected surface. If its value is close to 0 then the surface becomes more and more transparent. Contrary, if its value is close to 1 then the surface becomes practically non-transparent. This is some analogue of @code{Transparent=true}.
-
-Third feature is the changing of the way how the light goes through overlapped surfaces. The variable @code{TranspType} defines it. By default the usual transparency is used (@code{TranspType=0}) -- surfaces below is less visible than the upper ones. A ``glass-like'' transparency (@code{TranspType=1}) has a different look when the surface just decreases the background light (the surfaces are commutable in this case).
-
-A ``neon-like'' transparency (@code{TranspType=2}) has more interesting look. In this case a surface is the light source (like a lamp on the dark background) and just adds some intensity to the color. At this, the library sets automatically the black color for the background and changes the default line color to white.
-
-As example I shall show the variant of plot from @ref{Plots for 2D data} (grid drawing is disabled) for different types of transparency.
-@float
-@image{../png/type0, 7cm}
-@caption{Example of @code{TranspType=0}.}
-@end float
-@float
-@image{../png/type1, 7cm}
-@caption{Example of @code{TranspType=1}.}
-@end float
-@float
-@image{../png/type2, 7cm}
-@caption{Example of @code{TranspType=2}.}
-@end float
-
-
 
 @c ------------------------------------------------------------------
 @node 1D samples, 2D samples, Data plotting, Examples
 @section 1D samples
 
+This section is devoted to visualization of 1D data arrays. 1D means the data which depend on single index (parameter) like curve in parametric form @{x(i),y(i),z(i)@}, i=1...n. Most of samples will use the same data for plotting. So, I put its initialization in separate function
+@verbatim
+void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0)
+{
+  register long i,n=50;
+  if(y) y->Create(n,3);
+  if(x1)  x1->Create(n);    if(x2)  x2->Create(n);
+  if(y1)  y1->Create(n);    if(y2)  y2->Create(n);
+  float xx;
+  for(i=0;i<n;i++)
+  {
+    xx = i/(n-1.);
+    if(y)
+    {
+      y->a[i] = 0.7*sin(2*M_PI*xx) + 0.5*cos(3*M_PI*xx) + 0.2*sin(M_PI*xx);
+      y->a[i+n] = sin(2*M_PI*xx);
+      y->a[i+2*n] = cos(2*M_PI*xx);
+    }
+    if(y1)  y1->a[i] = 0.5+0.3*cos(2*M_PI*xx);
+    if(y2)  y2->a[i] = 0.3*sin(2*M_PI*xx);
+    if(x1)  x1->a[i] = xx*2-1;
+    if(x2)  x2->a[i] = 0.05+0.03*cos(2*M_PI*xx);
+  }
+}
+@end verbatim
+or using C functions
+@verbatim
+void mgls_prepare1d(HMDT y, HMDT y1=0, HMDT y2=0, HMDT x1=0, HMDT x2=0)
+{
+  register long i,n=50;
+  if(y)   mgl_data_create(y,n,3,1);
+  if(x1)  mgl_data_create(x1,n,1,1);
+  if(x2)  mgl_data_create(x2,n,1,1);
+  if(y1)  mgl_data_create(y1,n,1,1);
+  if(y2)  mgl_data_create(y2,n,1,1);
+  float xx;
+  for(i=0;i<n;i++)
+  {
+    xx = i/(n-1.);
+    if(y)
+    {
+      mgl_data_set_value(y, 0.7*sin(2*M_PI*xx) + 0.5*cos(3*M_PI*xx) + 0.2*sin(M_PI*xx), i,0,0);
+      mgl_data_set_value(y, sin(2*M_PI*xx), i,1,0);
+      mgl_data_set_value(y, cos(2*M_PI*xx), i,2,0);
+    }
+    if(y1)  mgl_data_set_value(y1, 0.5+0.3*cos(2*M_PI*xx), i,0,0);
+    if(y2)  mgl_data_set_value(y2, 0.3*sin(2*M_PI*xx), i,0,0);
+    if(x1)  mgl_data_set_value(x1, xx*2-1, i,0,0);
+    if(x2)  mgl_data_set_value(x2, 0.05+0.03*cos(2*M_PI*xx), i,0,0);
+  }
+}
+@end verbatim
+
+@menu
+* Plot sample::
+* Radar sample::
+* Step sample::
+* Tens sample::
+* Area sample::
+* Region sample::
+* Stem sample::
+* Bars sample::
+* Barh sample::
+* Chart sample::
+* BoxPlot sample::
+* Candle sample::
+* Error sample::
+* Mark sample::
+* TextMark sample::
+* Label sample::
+* Tube sample::
+* Tape sample::
+* Torus sample::
+@end menu
+
+
+@c ------------------------------------------------------------------
+@node Plot sample, Radar sample, , 1D samples
+@subsection Plot sample
+
+@code{Plot} is most standard way to visualize 1D data array. By default, @code{Plot} use colors from palette. However, you can specify manual color/palette, and even set to use new color for each points by using @samp{!} style. Another feature is @samp{ } style which draw only markers without line between points. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y;  mgls_prepare1d(&y); gr->SetOrigin(0,0,0);
+  gr->SubPlot(2,2,0,"");  gr->Title("Plot plot (default)");
+  gr->Box();  gr->Plot(y);
+
+  gr->SubPlot(2,2,2,"");  gr->Title("'!' style; 'rgb' palette");
+  gr->Box();  gr->Plot(y,"o!rgb");
+
+  gr->SubPlot(2,2,3,"");  gr->Title("just markers");
+  gr->Box();  gr->Plot(y," +");
+
+  gr->SubPlot(2,2,1); gr->Title("3d variant");
+  gr->Rotate(50,60);  gr->Box();
+  mglData yc(30), xc(30), z(30);  z.Modify("2*x-1");
+  yc.Modify("sin(pi*(2*x-1))"); xc.Modify("cos(pi*2*x-pi)");
+  gr->Plot(xc,yc,z,"rs");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/plot, 11cm}
+@caption{Example of Plot()}
+@end float
+
+
+@c ------------------------------------------------------------------
+@node Radar sample, Step sample, Plot sample, 1D samples
+@subsection Radar sample
+
+@code{Radar} plot is variant of @code{Plot} one, which make plot in polar coordinates and draw radial rays in point directions. If you just need a plot in polar coordinates then I recommend to use @ref{Curvilinear coordinates} or @code{Plot} in parabolic form with @code{x=r*cos(fi); y=r*sin(fi);}. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData yr(10,3); yr.Modify("0.4*sin(pi*(2*x+y))+0.1*rnd");
+  gr->SubPlot(1,1,0,"");  gr->Title("Radar plot (with grid, '\\#')");
+  gr->Radar(yr,"#");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/radar, 11cm}
+@caption{Example of Radar()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Step sample, Tens sample, Radar sample, 1D samples
+@subsection Step sample
+
+@code{Step} plot data as stairs. It have the same options as @code{Plot}. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y;  mgls_prepare1d(&y); gr->SetOrigin(0,0,0);
+  mglData yc(30), xc(30), z(30);  z.Modify("2*x-1");
+  yc.Modify("sin(pi*(2*x-1))"); xc.Modify("cos(pi*2*x-pi)");
+
+  gr->SubPlot(2,2,0,"");  gr->Title("Step plot (default)");
+  gr->Box();  gr->Step(y);
+
+  gr->SubPlot(2,2,1); gr->Title("3d variant");  gr->Rotate(50,60);
+  gr->Box();  gr->Step(xc,yc,z,"r");
+
+  gr->SubPlot(2,2,2,"");  gr->Title("'!' style");
+  gr->Box();  gr->Step(y,"s!rgb");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/step, 11cm}
+@caption{Example of Step()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Tens sample, Area sample, Step sample, 1D samples
+@subsection Tens sample
+
+@code{Tens} is variant of @code{Plot} with smooth coloring along the curves. At this, color is determined as for surfaces (see @ref{Color scheme}). The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y;  mgls_prepare1d(&y); gr->SetOrigin(0,0,0);
+  gr->SubPlot(2,2,0,"");  gr->Title("Tens plot (default)");
+  gr->Box();  gr->Tens(y.SubData(-1,0), y.SubData(-1,1));
+
+  gr->SubPlot(2,2,2,"");  gr->Title("' ' style");
+  gr->Box();  gr->Tens(y.SubData(-1,0), y.SubData(-1,1),"o ");
+
+  gr->SubPlot(2,2,1); gr->Title("3d variant");  gr->Rotate(50,60);  gr->Box();
+  mglData yc(30), xc(30), z(30);  z.Modify("2*x-1");
+  yc.Modify("sin(pi*(2*x-1))"); xc.Modify("cos(pi*2*x-pi)");
+  gr->Tens(xc,yc,z,z,"s");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/tens, 11cm}
+@caption{Example of Tens()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Area sample, Region sample, Tens sample, 1D samples
+@subsection Area sample
+
+@code{Area} fill the area between curve and axis plane. It support gradient filling if 2 colors per curve is specified. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y;  mgls_prepare1d(&y); gr->SetOrigin(0,0,0);
+  gr->SubPlot(2,2,0,"");  gr->Title("Area plot (default)");
+  gr->Box();  gr->Area(y);
+
+  gr->SubPlot(2,2,1,"");  gr->Title("2 colors");
+  gr->Box();  gr->Area(y,"cbgGyr");
+
+  gr->SubPlot(2,2,2,"");  gr->Title("'!' style");
+  gr->Box();  gr->Area(y,"!");
+
+  gr->SubPlot(2,2,3); gr->Title("3d variant");
+  gr->Rotate(50,60);  gr->Box();
+  mglData yc(30), xc(30), z(30);  z.Modify("2*x-1");
+  yc.Modify("sin(pi*(2*x-1))"); xc.Modify("cos(pi*2*x-pi)");
+  gr->Area(xc,yc,z,"r");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/area, 11cm}
+@caption{Example of Area()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Region sample, Stem sample, Area sample, 1D samples
+@subsection Region sample
+
+@code{Region} fill the area between 2 curves. It support gradient filling if 2 colors per curve is specified. Also it can fill only the region y1<y<y2 if style @samp{i} is used. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y;  mgls_prepare1d(&y);
+  mglData y1 = y.SubData(-1,1), y2 = y.SubData(-1,2); gr->SetOrigin(0,0,0);
+  gr->SubPlot(2,2,0,"");  gr->Title("Region plot (default)");
+  gr->Box();  gr->Region(y1,y2);  gr->Plot(y1,"k2");  gr->Plot(y2,"k2");
+
+  gr->SubPlot(2,2,1,"");  gr->Title("2 colors");
+  gr->Box();  gr->Region(y1,y2,"yr"); gr->Plot(y1,"k2");  gr->Plot(y2,"k2");
+
+  gr->SubPlot(2,2,2,"");  gr->Title("'!' style");
+  gr->Box();  gr->Region(y1,y2,"!");  gr->Plot(y1,"k2");  gr->Plot(y2,"k2");
+
+  gr->SubPlot(2,2,3,"");  gr->Title("'i' style");
+  gr->Box();  gr->Region(y1,y2,"ir"); gr->Plot(y1,"k2");  gr->Plot(y2,"k2");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/region, 11cm}
+@caption{Example of Region()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Stem sample, Bars sample, Region sample, 1D samples
+@subsection Stem sample
+
+@code{Stem} draw vertical bars. It is most attractive if markers are drawn too. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y;  mgls_prepare1d(&y); gr->SetOrigin(0,0,0);
+  mglData yc(30), xc(30), z(30);  z.Modify("2*x-1");
+  yc.Modify("sin(pi*(2*x-1))"); xc.Modify("cos(pi*2*x-pi)");
+  gr->SubPlot(2,2,0,"");  gr->Title("Stem plot (default)");
+  gr->Box();  gr->Stem(y);
+
+  gr->SubPlot(2,2,1); gr->Title("3d variant");  gr->Rotate(50,60);
+  gr->Box();  gr->Stem(xc,yc,z,"rx");
+
+  gr->SubPlot(2,2,2,"");  gr->Title("'!' style");
+  gr->Box();  gr->Stem(y,"o!rgb");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/stem, 11cm}
+@caption{Example of Stem()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Bars sample, Barh sample, Stem sample, 1D samples
+@subsection Bars sample
+
+@code{Bars} draw vertical bars. It have a lot of options: bar-above-bar (@samp{a} style), fall like (@samp{f} style), 2 colors for positive and negative values, wired bars (@samp{#} style), 3D variant. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData ys(10,3); ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+  gr->SetOrigin(0,0,0);
+  gr->SubPlot(3,2,0,"");  gr->Title("Bars plot (default)");
+  gr->Box();  gr->Bars(ys);
+
+  gr->SubPlot(3,2,1,"");  gr->Title("2 colors");
+  gr->Box();  gr->Bars(ys,"cbgGyr");
+
+  gr->SubPlot(3,2,4,"");  gr->Title("'\\#' style");
+  gr->Box();  gr->Bars(ys,"#");
+
+  gr->SubPlot(3,2,5); gr->Title("3d variant");
+  gr->Rotate(50,60);  gr->Box();
+  mglData yc(30), xc(30), z(30);  z.Modify("2*x-1");
+  yc.Modify("sin(pi*(2*x-1))"); xc.Modify("cos(pi*2*x-pi)");
+  gr->Bars(xc,yc,z,"r");
+
+  gr->SetRanges(-1,1,-3,3);
+  gr->SubPlot(3,2,2,"");  gr->Title("'a' style");
+  gr->Box();  gr->Bars(ys,"a");
+
+  gr->SubPlot(3,2,3,"");  gr->Title("'f' style");
+  gr->Box();  gr->Bars(ys,"f");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/bars, 11cm}
+@caption{Example of Bars()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Barh sample, Chart sample, Bars sample, 1D samples
+@subsection Barh sample
+
+@code{Barh} is the similar to @code{Bars} but draw horizontal bars. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData ys(10,3); ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+  gr->SetOrigin(0,0,0);
+  gr->SubPlot(2,2,0,"");  gr->Title("Barh plot (default)");
+  gr->Box();  gr->Barh(ys);
+
+  gr->SubPlot(2,2,1,"");  gr->Title("2 colors");
+  gr->Box();  gr->Barh(ys,"cbgGyr");
+
+  gr->SetRanges(-3,3,-1,1);
+  gr->SubPlot(2,2,2,"");  gr->Title("'a' style");
+  gr->Box();  gr->Barh(ys,"a");
+
+  gr->SubPlot(2,2,3,"");  gr->Title("'f' style");
+  gr->Box();  gr->Barh(ys,"f");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/barh, 11cm}
+@caption{Example of Barh()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Chart sample, BoxPlot sample, Barh sample, 1D samples
+@subsection Chart sample
+
+@code{Chart} draw colored boxes with width proportional to data values. Use @samp{ } for empty box. Plot looks most attractive in polar coordinates -- well known pie chart. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData ch(7,2);  for(int i=0;i<7*2;i++)  ch.a[i]=mgl_rnd()+0.1;
+  gr->SubPlot(2,2,0); gr->Title("Chart plot (default)");
+  gr->Light(true);  gr->Rotate(50,60);  gr->Box();  gr->Chart(ch);
+
+  gr->SubPlot(2,2,1); gr->Title("'\\#' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Chart(ch,"#");
+
+  gr->SubPlot(2,2,2); gr->Title("Pie chart; ' ' color");
+  gr->SetFunc("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)","");
+  gr->Rotate(50,60);  gr->Box();  gr->Chart(ch,"bgr cmy#");
+
+  gr->SubPlot(2,2,3); gr->Title("Ring chart; ' ' color");
+  gr->SetFunc("(y+2)/3*cos(pi*x)","(y+2)/3*sin(pi*x)","");
+  gr->Rotate(50,60);  gr->Box();  gr->Chart(ch,"bgr cmy#");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/chart, 11cm}
+@caption{Example of Chart()}
+@end float
+
+@c ------------------------------------------------------------------
+@node BoxPlot sample, Candle sample, Chart sample, 1D samples
+@subsection BoxPlot sample
+
+@code{BoxPlot} draw box-and-whisker diagram. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a(10,7);  a.Modify("(2*rnd-1)^3/2");
+  gr->SubPlot(1,1,0,"");  gr->Title("Boxplot plot");
+  gr->Box();  gr->BoxPlot(a);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/boxplot, 11cm}
+@caption{Example of BoxPlot()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Candle sample, Error sample, BoxPlot sample, 1D samples
+@subsection Candle sample
+
+@code{Candle} draw candlestick chart. This is a combination of a line-chart and a bar-chart, in that each bar represents the range of price movement over a given time interval. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y(30);  gr->Fill(y,"sin(2*pi*x)^2");
+  mglData y1(30); gr->Fill(y1,"v/2",y);
+  mglData y2(30); gr->Fill(y2,"(1+v)/2",y);
+  gr->SubPlot(1,1,0,"");  gr->Title("Candle plot (default)");
+  gr->SetRange('y',0,1);  gr->Box();  gr->Candle(y,y1,y2);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/candle, 11cm}
+@caption{Example of Candle()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Error sample, Mark sample, Candle sample, 1D samples
+@subsection Error sample
+
+@code{Error} draw error boxes around the points. You can draw default boxes or semi-transparent symbol (like marker, see @ref{Line styles}). Also you can set individual color for each box. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y;  mgls_prepare1d(&y);
+  mglData x0(10), y0(10), ex0(10), ey0(10);
+  float x;
+  for(int i=0;i<10;i++)
+  {
+    x = i/9.;
+    x0.a[i] = 2*x-1 + 0.1*mgl_rnd()-0.05;
+    y0.a[i] = 0.7*sin(2*M_PI*x)+0.5*cos(3*M_PI*x)+0.2*sin(M_PI*x)+0.2*mgl_rnd()-0.1;
+    ey0.a[i]=0.2; ex0.a[i]=0.1;
+  }
+
+  gr->SubPlot(2,2,0,"");  gr->Title("Error plot (default)");
+  gr->Box();  gr->Plot(y.SubData(-1,0));  gr->Error(x0,y0,ex0,ey0,"ko");
+
+  gr->SubPlot(2,2,1,"");  gr->Title("'!' style; no e_x");
+  gr->Box();  gr->Plot(y.SubData(-1,0));  gr->Error(x0,y0,ey0,"o!rgb");
+
+  gr->SubPlot(2,2,2,"");  gr->Title("'\\@' style");
+  gr->Box();  gr->Plot(y.SubData(-1,0));  gr->Error(x0,y0,ex0,ey0,"@","alpha 0.5");
+
+  gr->SubPlot(2,2,3); gr->Title("3d variant");  gr->Rotate(50,60);
+  for(int i=0;i<10;i++)
+    gr->Error(mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1,2*mgl_rnd()-1),
+              mglPoint(0.2,0.2,0.2),"bo");
+  gr->Axis();
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/error, 11cm}
+@caption{Example of Error()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Mark sample, TextMark sample, Error sample, 1D samples
+@subsection Mark sample
+
+@code{Mark} draw markers at points. It is mostly the same as @code{Plot} but marker size can be variable. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y,y1; mgls_prepare1d(&y,&y1);
+  gr->SubPlot(1,1,0,"");  gr->Title("Mark plot (default)");
+  gr->Box();  gr->Mark(y,y1,"s");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/mark, 11cm}
+@caption{Example of Mark()}
+@end float
+
+@c ------------------------------------------------------------------
+@node TextMark sample, Label sample, Mark sample, 1D samples
+@subsection TextMark sample
+
+@code{TextMark} like @code{Mark} but draw text instead of markers. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y,y1; mgls_prepare1d(&y,&y1);
+  gr->SubPlot(1,1,0,"");  gr->Title("TextMark plot (default)");
+  gr->Box();  gr->TextMark(y,y1,"\\gamma","r");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/textmark, 11cm}
+@caption{Example of TextMark()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Label sample, Tube sample, TextMark sample, 1D samples
+@subsection Label sample
+
+@code{Label} print text at data points. The string may contain @samp{%x}, @samp{%y}, @samp{%z} for x-, y-, z-coordinates of points, @samp{%n} for point index. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData ys(10); ys.Modify("0.8*sin(pi*2*x)+0.2*rnd");
+  gr->SubPlot(1,1,0,"");  gr->Title("Label plot");
+  gr->Box();  gr->Plot(ys," *");  gr->Label(ys,"y=%y");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/label, 11cm}
+@caption{Example of Label()}
+@end float
+
+
+@c ------------------------------------------------------------------
+@node Tube sample, Tape sample, Label sample, 1D samples
+@subsection Tube sample
+
+@code{Tube} draw tube with variable radius. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y,y1,y2;  mgls_prepare1d(&y,&y1,&y2); y1/=20;
+  gr->SubPlot(2,2,0,"");  gr->Title("Tube plot (default)");
+  gr->Light(true);  gr->Box();  gr->Tube(y,0.05);
+
+  gr->SubPlot(2,2,1,"");  gr->Title("variable radius");
+  gr->Box();  gr->Tube(y,y1);
+
+  gr->SubPlot(2,2,2,"");  gr->Title("'\\#' style");
+  gr->Box();  gr->Tube(y,0.05,"#");
+  mglData yc(50), xc(50), z(50);  z.Modify("2*x-1");
+  yc.Modify("sin(pi*(2*x-1))"); xc.Modify("cos(pi*2*x-pi)");
+
+  gr->SubPlot(2,2,3); gr->Title("3d variant");  gr->Rotate(50,60);
+  gr->Box();  gr->Tube(xc,yc,z,y2,"r");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/tube, 11cm}
+@caption{Example of Tube()}
+@end float
+
+
+@c ------------------------------------------------------------------
+@node Tape sample, Torus sample, Tube sample, 1D samples
+@subsection Tape sample
+
+@code{Tape} draw tapes which rotate around the curve as normal and binormal. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y;  mgls_prepare1d(&y);
+  mglData xc(50), yc(50), z(50);
+  yc.Modify("sin(pi*(2*x-1))");
+  xc.Modify("cos(pi*2*x-pi)");  z.Fill(-1,1);
+  gr->SubPlot(2,2,0,"");  gr->Title("Tape plot (default)");
+  gr->Box();  gr->Tape(y);  gr->Plot(y,"k");
+
+  gr->SubPlot(2,2,1); gr->Title("3d variant, 2 colors");
+  gr->Rotate(50,60);  gr->Light(true);
+  gr->Box();  gr->Plot(xc,yc,z,"k");  gr->Tape(xc,yc,z,"rg");
+
+  gr->SubPlot(2,2,2); gr->Title("3d variant, x only");  gr->Rotate(50,60);
+  gr->Box();  gr->Plot(xc,yc,z,"k");
+  gr->Tape(xc,yc,z,"xr"); gr->Tape(xc,yc,z,"xr#");
+
+  gr->SubPlot(2,2,3); gr->Title("3d variant, z only");  gr->Rotate(50,60);
+  gr->Box();  gr->Plot(xc,yc,z,"k");
+  gr->Tape(xc,yc,z,"zg"); gr->Tape(xc,yc,z,"zg#");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/tape, 11cm}
+@caption{Example of Tape()}
+@end float
+
+
+@c ------------------------------------------------------------------
+@node Torus sample, , Tape sample, 1D samples
+@subsection Torus sample
+
+@code{Torus} draw surface of the curve rotation. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData y1,y2;  mgls_prepare1d(0,&y1,&y2);
+  gr->SubPlot(2,2,0); gr->Title("Torus plot (default)");
+  gr->Light(true);  gr->Rotate(50,60);  gr->Box();  gr->Torus(y1,y2);
+  if(mini)  return;
+
+  gr->SubPlot(2,2,1); gr->Title("'x' style"); gr->Rotate(50,60);
+  gr->Box();  gr->Torus(y1,y2,"x");
+
+  gr->SubPlot(2,2,2); gr->Title("'z' style"); gr->Rotate(50,60);
+  gr->Box();  gr->Torus(y1,y2,"z");
+
+  gr->SubPlot(2,2,3); gr->Title("'\\#' style"); gr->Rotate(50,60);
+  gr->Box();  gr->Torus(y1,y2,"#");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/torus, 11cm}
+@caption{Example of Torus()}
+@end float
+
+
 @c ------------------------------------------------------------------
 @node 2D samples, 3D samples, 1D samples, Examples
 @section 2D samples
 
+This section is devoted to visualization of 2D data arrays. 2D means the data which depend on 2 indexes (parameters) like matrix z(i,j)=z(x(i),y(j)), i=1...n, j=1...m or in parametric form @{x(i,j),y(i,j),z(i,j)@}. Most of samples will use the same data for plotting. So, I put its initialization in separate function
+@verbatim
+void mgls_prepare2d(mglData *a, mglData *b=0, mglData *v=0)
+{
+  register long i,j,n=50,m=40,i0;
+  if(a) a->Create(n,m);   if(b) b->Create(n,m);
+  if(v) { v->Create(9); v->Fill(-1,1);  }
+  float x,y;
+  for(i=0;i<n;i++)  for(j=0;j<m;j++)
+  {
+    x = i/(n-1.); y = j/(m-1.); i0 = i+n*j;
+    if(a) a->a[i0] = 0.6*sin(2*M_PI*x)*sin(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
+    if(b) b->a[i0] = 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y);
+  }
+}
+@end verbatim
+or using C functions
+@verbatim
+void mgls_prepare2d(HMDT a, HMDT b=0, HMDT v=0)
+{
+  register long i,j,n=50,m=40,i0;
+  if(a) mgl_data_create(a,n,m,1);
+  if(b) mgl_data_create(b,n,m,1);
+  if(v) { mgl_data_create(v,9,1,1); mgl_data_fill(v,-1,1,'x');  }
+  float x,y;
+  for(i=0;i<n;i++)  for(j=0;j<m;j++)
+  {
+    x = i/(n-1.); y = j/(m-1.); i0 = i+n*j;
+    if(a) mgl_data_set_value(a, 0.6*sin(2*M_PI*x)*sin(3*M_PI*y)+0.4*cos(3*M_PI*x*y), i,j,0);
+    if(b) mgl_data_set_value(b, 0.6*cos(2*M_PI*x)*cos(3*M_PI*y)+0.4*cos(3*M_PI*x*y), i,j,0);
+  }
+}
+@end verbatim
+
+@menu
+* Surf sample::
+* SurfC sample::
+* SurfA sample::
+* Mesh sample::
+* Fall sample::
+* Belt sample::
+* Boxs sample::
+* Tile sample::
+* TileS sample::
+* Dens sample::
+* Cont sample::
+* ContF sample::
+* ContD sample::
+* ContV sample::
+* Axial sample::
+@end menu
+
 @c ------------------------------------------------------------------
-@node 3D samples, Dual samples, 2D samples, Examples
+@node Surf sample, SurfC sample, , 2D samples
+@subsection Surf sample
+
+@code{Surf} is most standard way to visualize 2D data array. @code{Surf} use color scheme for coloring (see @ref{Color scheme}). You can use @samp{#} style for drawing black meshes on the surface. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a;  mgls_prepare2d(&a);
+  gr->SubPlot(2,2,0); gr->Title("Surf plot (default)");
+  gr->Light(true);  gr->Rotate(50,60);  gr->Box();  gr->Surf(a);
+
+  gr->SubPlot(2,2,1); gr->Title("'\\#' style; meshnum 10");
+  gr->Rotate(50,60);  gr->Box();  gr->Surf(a,"#","meshnum 10");
+
+  gr->SubPlot(2,2,2); gr->Title("'|' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Surf(a,"|");
+
+  gr->SubPlot(2,2,3); gr->Title("parametric form");
+  mglData x(50,40),y(50,40),z(50,40);
+  gr->Fill(x,"0.8*sin(pi*x)*sin(pi*(y+1)/2)");
+  gr->Fill(y,"0.8*cos(pi*x)*sin(pi*(y+1)/2)");
+  gr->Fill(z,"0.8*cos(pi*(y+1)/2)");
+  gr->Rotate(50,60);  gr->Box();  gr->Surf(x,y,z,"BbwrR");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/surf, 11cm}
+@caption{Example of Surf()}
+@end float
+
+@c ------------------------------------------------------------------
+@node SurfC sample, SurfA sample, Surf sample, 2D samples
+@subsection SurfC sample
+
+@code{SurfC} is similar to @code{Surf} but its coloring is determined by another data. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a,b;  mgls_prepare2d(&a,&b);
+  gr->Title("SurfC plot");  gr->Rotate(50,60);
+  gr->Light(true);  gr->Box();  gr->SurfC(a,b);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/surfc, 11cm}
+@caption{Example of SurfC()}
+@end float
+
+@c ------------------------------------------------------------------
+@node SurfA sample, Mesh sample, SurfC sample, 2D samples
+@subsection SurfA sample
+
+@code{SurfA} is similar to @code{Surf} but its transparency is determined by another data. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a,b;  mgls_prepare2d(&a,&b);
+  gr->Title("SurfA plot");  gr->Rotate(50,60);
+  gr->Alpha(true);  gr->Light(true);
+  gr->Box();  gr->SurfA(a,b);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/surfa, 11cm}
+@caption{Example of SurfA()}
+@end float
+
+
+@c ------------------------------------------------------------------
+@node Mesh sample, Fall sample, SurfA sample, 2D samples
+@subsection Mesh sample
+
+@code{Mesh} draw wired surface. You can use @code{SetMeshNum} for changing number of lines to be drawn. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a;  mgls_prepare2d(&a);
+  gr->Title("Mesh plot"); gr->Rotate(50,60);
+  gr->Box();  gr->Mesh(a);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/mesh, 11cm}
+@caption{Example of Mesh()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Fall sample, Belt sample, Mesh sample, 2D samples
+@subsection Fall sample
+
+@code{Fall} draw waterfall surface. You can use @code{SetMeshNum} for changing number of lines to be drawn. Also you can use @samp{x} style for drawing lines in other direction. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a;  mgls_prepare2d(&a);
+  gr->Title("Fall plot"); gr->Rotate(50,60);
+  gr->Box();  gr->Fall(a);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/fall, 11cm}
+@caption{Example of Fall()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Belt sample, Boxs sample, Fall sample, 2D samples
+@subsection Belt sample
+
+@code{Belt} draw surface by belts. You can use @samp{x} style for drawing lines in other direction. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a;  mgls_prepare2d(&a);
+  gr->Title("Belt plot"); gr->Rotate(50,60);
+  gr->Box();  gr->Belt(a);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/belt, 11cm}
+@caption{Example of Belt()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Boxs sample, Tile sample, Fall sample, 2D samples
+@subsection Boxs sample
+
+@code{Boxs} draw surface by boxes. You can use @samp{#} for drawing wire plot. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a;  mgls_prepare2d(&a);
+  gr->SetOrigin(0,0,0); gr->Light(true);
+  gr->SubPlot(2,2,0);  gr->Title("Boxs plot (default)");
+  gr->Rotate(40,60);  gr->Box();  gr->Boxs(a);
+
+  gr->SubPlot(2,2,1); gr->Title("'\\@' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Boxs(a,"@");
+
+  gr->SubPlot(2,2,2); gr->Title("'\\#' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Boxs(a,"#");
+
+  gr->SubPlot(2,2,3); gr->Title("compare with Tile");
+  gr->Rotate(50,60);  gr->Box();  gr->Tile(a);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/boxs, 11cm}
+@caption{Example of Boxs()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Tile sample, TileS sample, Boxs sample, 2D samples
+@subsection Tile sample
+
+@code{Tile} draw surface by tiles. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a;  mgls_prepare2d(&a);
+  gr->Title("Tile plot");
+  gr->Rotate(40,60);  gr->Box();  gr->Tile(a);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/tile, 11cm}
+@caption{Example of Tile()}
+@end float
+
+@c ------------------------------------------------------------------
+@node TileS sample, Dens sample, Tile sample, 2D samples
+@subsection TileS sample
+
+@code{TileS} is similar to @code{Tile} but tile sizes is determined by another data. This allows one to simulate transparency of the plot. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a,b;  mgls_prepare2d(&a,&b);
+  gr->SubPlot(1,1,0,""); gr->Title("TileS plot");
+  gr->Box();  gr->TileS(a,b);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/tiles, 11cm}
+@caption{Example of TileS()}
+@end float
+
+
+@c ------------------------------------------------------------------
+@node Dens sample, Cont sample, TileS sample, 2D samples
+@subsection Dens sample
+
+@code{Dens} draw density plot for surface. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a,a1(30,40,3);  mgls_prepare2d(&a);
+  gr->Fill(a1,"0.6*sin(2*pi*x+pi*(z+1)/2)*sin(3*pi*y+pi*z) + 0.4*cos(3*pi*(x*y)+pi*(z+1)^2/2)");
+  gr->SubPlot(2,2,0,""); gr->Title("Dens plot (default)");
+  gr->Box();  gr->Dens(a);
+
+  gr->SubPlot(2,2,1); gr->Title("3d variant");
+  gr->Rotate(50,60);  gr->Box();  gr->Dens(a);
+
+  gr->SubPlot(2,2,2,"");  gr->Title("'\\#' style; meshnum 10");
+  gr->Box();  gr->Dens(a,"#","meshnum 10");
+
+  gr->SubPlot(2,2,3); gr->Title("several slices");
+  gr->Rotate(50,60);    gr->Box();  gr->Dens(a1);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/dens, 11cm}
+@caption{Example of Dens()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Cont sample, ContF sample, Dens sample, 2D samples
+@subsection Cont sample
+
+@code{Cont} draw contour lines for surface. You can select automatic (default) or manual levels for contours, print contour labels, draw it on the surface (default) or at plane (as @code{Dens}). The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a,v(5); mgls_prepare2d(&a); v.a[0]=-0.5;  v.a[1]=-0.15; v.a[2]=0; v.a[3]=0.15;  v.a[4]=0.5;
+  gr->SubPlot(2,2,0); gr->Title("Cont plot (default)");
+  gr->Rotate(50,60);  gr->Box();  gr->Cont(a);
+
+  gr->SubPlot(2,2,1); gr->Title("manual levels");
+  gr->Rotate(50,60);  gr->Box();  gr->Cont(v,a);
+
+  gr->SubPlot(2,2,2); gr->Title("'\\_' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Cont(a,"_");
+
+  gr->SubPlot(2,2,3,"");  gr->Title("'t' style");
+  gr->Box();  gr->Cont(a,"t");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/cont, 11cm}
+@caption{Example of Cont()}
+@end float
+
+@c ------------------------------------------------------------------
+@node ContF sample, ContD sample, Cont sample, 2D samples
+@subsection ContF sample
+
+@code{ContF} draw filled contours.  You can select automatic (default) or manual levels for contours. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a,v(5),a1(30,40,3); mgls_prepare2d(&a); v.a[0]=-0.5;
+  v.a[1]=-0.15; v.a[2]=0; v.a[3]=0.15;  v.a[4]=0.5;
+  gr->SubPlot(2,2,0); gr->Title("ContF plot (default)");
+  gr->Rotate(50,60);  gr->Box();  gr->ContF(a);
+
+  gr->SubPlot(2,2,1); gr->Title("manual levels");
+  gr->Rotate(50,60);  gr->Box();  gr->ContF(v,a);
+
+  gr->SubPlot(2,2,2); gr->Title("'\\_' style");
+  gr->Rotate(50,60);  gr->Box();  gr->ContF(a,"_");
+
+  gr->Fill(a1,"0.6*sin(2*pi*x+pi*(z+1)/2)*sin(3*pi*y+pi*z) + 0.4*cos(3*pi*(x*y)+pi*(z+1)^2/2)");
+  gr->SubPlot(2,2,3); gr->Title("several slices");
+  gr->Rotate(50,60);  gr->Box();  gr->ContF(a1);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/contf, 11cm}
+@caption{Example of ContF()}
+@end float
+
+@c ------------------------------------------------------------------
+@node ContD sample, ContV sample, ContF sample, 2D samples
+@subsection ContD sample
+
+@code{ContD} is similar to @code{ContF} but with manual contour colors. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a,v(5),a1(30,40,3); mgls_prepare2d(&a); v.a[0]=-0.5;
+  v.a[1]=-0.15; v.a[2]=0; v.a[3]=0.15;  v.a[4]=0.5;
+  gr->SubPlot(2,2,0); gr->Title("ContD plot (default)");
+  gr->Rotate(50,60);  gr->Box();  gr->ContD(a);
+
+  gr->SubPlot(2,2,1); gr->Title("manual levels");
+  gr->Rotate(50,60);  gr->Box();  gr->ContD(v,a);
+
+  gr->SubPlot(2,2,2); gr->Title("'\\_' style");
+  gr->Rotate(50,60);  gr->Box();  gr->ContD(a,"_");
+
+  gr->Fill(a1,"0.6*sin(2*pi*x+pi*(z+1)/2)*sin(3*pi*y+pi*z) + 0.4*cos(3*pi*(x*y)+pi*(z+1)^2/2)");
+  gr->SubPlot(2,2,3); gr->Title("several slices");
+  gr->Rotate(50,60);  gr->Box();  gr->ContD(a1);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/contd, 11cm}
+@caption{Example of ContD()}
+@end float
+
+@c ------------------------------------------------------------------
+@node ContV sample, Axial sample, ContD sample, 2D samples
+@subsection ContV sample
+
+@code{ContV} draw vertical cylinders (belts) at contour lines. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a,v(5); mgls_prepare2d(&a); v.a[0]=-0.5;
+  v.a[1]=-0.15; v.a[2]=0; v.a[3]=0.15;  v.a[4]=0.5;
+  gr->SubPlot(2,2,0); gr->Title("ContV plot (default)");
+  gr->Rotate(50,60);  gr->Box();  gr->ContV(a);
+
+  gr->SubPlot(2,2,1); gr->Title("manual levels");
+  gr->Rotate(50,60);  gr->Box();  gr->ContV(v,a);
+
+  gr->SubPlot(2,2,2); gr->Title("'\\_' style");
+  gr->Rotate(50,60);  gr->Box();  gr->ContV(a,"_");
+
+  gr->SubPlot(2,2,3); gr->Title("ContV and ContF");
+  gr->Rotate(50,60);  gr->Box();  gr->Light(true);
+  gr->ContV(a); gr->ContF(a); gr->Cont(a,"k");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/contv, 11cm}
+@caption{Example of ContV()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Axial sample, , ContV sample, 2D samples
+@subsection Axial sample
+
+@code{Axial} draw surfaces of rotation for contour lines. You can draw wire surfaces (@samp{#} style) or ones rotated in other directions (@samp{x}, @samp{z} styles). The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData a;  mgls_prepare2d(&a);
+  gr->SubPlot(2,2,0); gr->Title("Axial plot (default)");
+  gr->Light(true);  gr->Alpha(true);  gr->Rotate(50,60);
+  gr->Box();  gr->Axial(a);
+
+  gr->SubPlot(2,2,1); gr->Title("'x' style"); gr->Rotate(50,60);
+  gr->Box();  gr->Axial(a,"x");
+
+  gr->SubPlot(2,2,2); gr->Title("'z' style"); gr->Rotate(50,60);
+  gr->Box();  gr->Axial(a,"z");
+
+  gr->SubPlot(2,2,3); gr->Title("'\\#' style"); gr->Rotate(50,60);
+  gr->Box();  gr->Axial(a,"#");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/axial, 11cm}
+@caption{Example of Axial()}
+@end float
+
+
+@c ------------------------------------------------------------------
+@node 3D samples, Vector field samples, 2D samples, Examples
 @section 3D samples
 
-@c ------------------------------------------------------------------
-@node Dual samples, More samples, 3D samples, Examples
-@section Dual samples
+This section is devoted to visualization of 3D data arrays. 3D means the data which depend on 3 indexes (parameters) like tensor a(i,j,k)=a(x(i),y(j),x(k)), i=1...n, j=1...m, k=1...l or in parametric form @{x(i,j,k),y(i,j,k),z(i,j,k),a(i,j,k)@}. Most of samples will use the same data for plotting. So, I put its initialization in separate function
+@verbatim
+void mgls_prepare3d(mglData *a, mglData *b=0)
+{
+  register long i,j,k,n=61,m=50,l=40,i0;
+  if(a) a->Create(n,m,l);   if(b) b->Create(n,m,l);
+  float x,y,z;
+  for(i=0;i<n;i++)  for(j=0;j<m;j++)  for(k=0;k<l;k++)
+  {
+    x=2*i/(n-1.)-1; y=2*j/(m-1.)-1; z=2*k/(l-1.)-1; i0 = i+n*(j+m*k);
+    if(a) a->a[i0] = -2*(x*x + y*y + z*z*z*z - z*z - 0.1);
+    if(b) b->a[i0] = 1-2*tanh((x+y)*(x+y));
+  }
+}
+@end verbatim
+or using C functions
+@verbatim
+void mgls_prepare3d(HMDT a, HMDT b=0)
+{
+  register long i,j,k,n=61,m=50,l=40,i0;
+  if(a) mgl_data_create(a,n,m,l);
+  if(b) mgl_data_create(b,n,m,l);
+  float x,y,z;
+  for(i=0;i<n;i++)  for(j=0;j<m;j++)  for(k=0;k<l;k++)
+  {
+    x=2*i/(n-1.)-1; y=2*j/(m-1.)-1; z=2*k/(l-1.)-1; i0 = i+n*(j+m*k);
+    if(a) mgl_data_set_value(a, -2*(x*x + y*y + z*z*z*z - z*z - 0.1), i,j,k);
+    if(b) mgl_data_set_value(b, 1-2*tanh((x+y)*(x+y)), i,j,k);
+  }
+}
+@end verbatim
+
+@menu
+* Surf3 sample::
+* Surf3C sample::
+* Surf3A sample::
+* Cloud sample::
+* Dens3 sample::
+* Cont3 sample::
+* ContF3 sample::
+* Dens projection sample::
+* Cont projection sample::
+* ContF projection sample::
+* TriPlot and QuadPlot::
+* Dots sample::
+@end menu
 
 @c ------------------------------------------------------------------
-@node More samples, Hints, Dual samples, Examples
-@section More samples
+@node Surf3 sample, Surf3C sample, , 3D samples
+@subsection ContV sample
+
+@code{Surf3} is one of most suitable (for my opinion) functions to visualize 3D data. It draw the isosurface(s) -- surface(s) of constant amplitude (3D analogue of contour lines). You can draw wired isosurfaces if specify @samp{#} style. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData c;  mgls_prepare3d(&c);
+  gr->Title("Surf3 plot");  gr->Rotate(50,60);
+  gr->Light(true);  gr->Alpha(true);
+  gr->Box();  gr->Surf3(c);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/surf3, 11cm}
+@caption{Example of Surf3()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Surf3C sample, Surf3A sample, Surf3 sample, 3D samples
+@subsection Surf3C sample
+
+@code{Surf3C} is similar to @code{Surf3} but its coloring is determined by another data. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData c,d;  mgls_prepare3d(&c,&d);
+  gr->Title("Surf3C plot"); gr->Rotate(50,60);
+  gr->Light(true);  gr->Alpha(true);
+  gr->Box();  gr->Surf3C(c,d);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/surf3c, 11cm}
+@caption{Example of Surf3C()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Surf3A sample, Cloud sample, Surf3C sample, 3D samples
+@subsection Surf3A sample
+
+@code{Surf3A} is similar to @code{Surf3} but its transparency is determined by another data. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData c,d;  mgls_prepare3d(&c,&d);
+  gr->Title("Surf3A plot"); gr->Rotate(50,60);
+  gr->Light(true);  gr->Alpha(true);
+  gr->Box();  gr->Surf3A(c,d);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/surf3a, 11cm}
+@caption{Example of Surf3A()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Cloud sample, Dens3 sample, Surf3A sample, 3D samples
+@subsection Cloud sample
+
+@code{Cloud} draw cloud-like object which is less transparent for higher data values. Similar plot can be created using many (about 10-20) @code{Surf3A(a,a)} isosurfaces. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData c;  mgls_prepare3d(&c);
+  gr->SubPlot(2,2,0); gr->Title("Cloud plot");
+  gr->Rotate(50,60);  gr->Alpha(true);
+  gr->Box();  gr->Cloud(c,"wyrRk");
+
+  gr->SubPlot(2,2,1); gr->Title("'!' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Cloud(c,"!wyrRk");
+
+  gr->SubPlot(2,2,2); gr->Title("'.' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Cloud(c,".wyrRk");
+
+  gr->SubPlot(2,2,3); gr->Title("meshnum 10");
+  gr->Rotate(50,60);  gr->Box();  gr->Cloud(c,"wyrRk","meshnum 10");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/cloud, 11cm}
+@caption{Example of Cloud()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Dens3 sample, Cont3 sample, Cloud sample, 3D samples
+@subsection Dens3 sample
+
+@code{Dens3} draw just usual density plot but at slices of 3D data. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData c;  mgls_prepare3d(&c);
+  gr->Title("Dens3 sample");  gr->Rotate(50,60);
+  gr->Alpha(true);  gr->SetAlphaDef(0.7);
+  gr->SetOrigin(0,0,0); gr->Axis("_xyz"); gr->Box();
+  gr->Dens3(c,"x"); gr->Dens3(c); gr->Dens3(c,"z");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/densa, 11cm}
+@caption{Example of Dens3()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Cont3 sample, ContF3 sample, Dens3 sample, 3D samples
+@subsection Cont3 sample
+
+@code{Cont3} draw just usual contour lines but at slices of 3D data. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData c;  mgls_prepare3d(&c);
+  gr->Title("Cont3 sample");  gr->Rotate(50,60);
+  gr->Alpha(true);  gr->SetAlphaDef(0.7);
+  gr->SetOrigin(0,0,0); gr->Axis("_xyz"); gr->Box();
+  gr->Cont3(c,"x"); gr->Cont3(c); gr->Cont3(c,"z");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/conta, 11cm}
+@caption{Example of Cont3()}
+@end float
+
+@c ------------------------------------------------------------------
+@node ContF3 sample, Dens projection sample, Cont3 sample, 3D samples
+@subsection ContF3 sample
+
+@code{ContF3} draw just usual filled contours but at slices of 3D data. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData c;  mgls_prepare3d(&c);
+  gr->Title("ContF3 sample");  gr->Rotate(50,60);
+  gr->Alpha(true);  gr->SetAlphaDef(0.7);
+  gr->SetOrigin(0,0,0); gr->Axis("_xyz"); gr->Box();
+  gr->ContF3(c,"x");  gr->ContF3(c);    gr->ContF3(c,"z");
+  gr->Cont3(c,"kx");  gr->Cont3(c,"k"); gr->Cont3(c,"kz");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/contfa, 11cm}
+@caption{Example of ContF3()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Dens projection sample, Cont projection sample, ContF3 sample, 3D samples
+@subsection Dens projection sample
+
+@code{Dens[XYZ]} draw density plot on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData c;  mgls_prepare3d(&c);
+  gr->Title("Dens[XYZ] sample");  gr->Rotate(50,60);
+  gr->Box();  gr->DensX(c.Sum("x"),0,-1);
+  gr->DensY(c.Sum("y"),0,1);  gr->DensZ(c.Sum("z"),0,-1);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/dens_xyz, 11cm}
+@caption{Example of DensX(), DensY(), DensZ()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Cont projection sample, ContF projection sample, Dens projection sample, 3D samples
+@subsection Cont projection sample
+
+@code{Cont[XYZ]} draw contour lines on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData c;  mgls_prepare3d(&c);
+  gr->Title("Cont[XYZ] sample");  gr->Rotate(50,60);
+  gr->Box();  gr->ContX(c.Sum("x"),"",-1);
+  gr->ContY(c.Sum("y"),"",1); gr->ContZ(c.Sum("z"),"",-1);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/cont_xyz, 11cm}
+@caption{Example of ContX(), ContY(), ContZ()}
+@end float
+
+@c ------------------------------------------------------------------
+@node ContF projection sample, TriPlot and QuadPlot, Cont projection sample, 3D samples
+@subsection ContF projection sample
+
+@code{Dens[XYZ]} draw filled contours on plane perpendicular to corresponding axis. One of possible application is drawing projections of 3D field. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  mglData c;  mgls_prepare3d(&c);
+  gr->Title("Cont[XYZ] sample");  gr->Rotate(50,60);
+  gr->Box();  gr->ContFX(c.Sum("x"),"",-1);
+  gr->ContFY(c.Sum("y"),"",1);  gr->ContFZ(c.Sum("z"),"",-1);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/contf_xyz, 11cm}
+@caption{Example of ContFX(), ContFY(), ContFZ()}
+@end float
+
+@c ------------------------------------------------------------------
+@node TriPlot and QuadPlot, Axial sample, ContF projection sample, 3D samples
+@subsection TriPlot and QuadPlot
+
+@code{TriPlot} and @code{QuadPlot} draw set of triangles (or quadrangles for @code{QuadPlot}) for irregular data arrays. Note, that you have to provide not only vertexes, but also the indexes of triangles or quadrangles. I.e. perform triangulation by some other library. The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  float q[] = {0,1,2,3, 4,5,6,7, 0,2,4,6, 1,3,5,7, 0,4,1,5, 2,6,3,7};
+  float xc[] = {-1,1,-1,1,-1,1,-1,1}, yc[] = {-1,-1,1,1,-1,-1,1,1}, zc[] = {-1,-1,-1,-1,1,1,1,1};
+  mglData qq(6,4,q), xx(8,xc), yy(8,yc), zz(8,zc);
+  gr->Light(true);  //gr->Alpha(true);
+  gr->SubPlot(2,1,0); gr->Title("QuadPlot sample"); gr->Rotate(50,60);
+  gr->QuadPlot(qq,xx,yy,zz,"yr");
+  gr->QuadPlot(qq,xx,yy,zz,"k#");
+
+  float t[] = {0,1,2, 0,1,3, 0,2,3, 1,2,3};
+  float xt[] = {-1,1,0,0}, yt[] = {-1,-1,1,0}, zt[] = {-1,-1,-1,1};
+  mglData tt(4,3,t), uu(4,xt), vv(4,yt), ww(4,zt);
+  gr->SubPlot(2,1,1); gr->Title("TriPlot sample");  gr->Rotate(50,60);
+  gr->TriPlot(tt,uu,vv,ww,"b");
+  gr->TriPlot(tt,uu,vv,ww,"k#");
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/triplot, 11cm}
+@caption{Example of TriPlot() and QuadPlot()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Dots sample, , TriPlot and QuadPlot, 3D samples
+@subsection Dots sample
+
+@code{Dots} is another way to draw irregular points. @code{Dots} use color scheme for coloring (see @ref{Color scheme}). The sample code is:
+@verbatim
+int sample(mglGraph *gr)
+{
+  int i, n=1000;
+  mglData x(n),y(n),z(n);
+  for(i=0;i<n;i++)
+  {
+    float t=M_PI*(mgl_rnd()-0.5), f=2*M_PI*mgl_rnd();
+    x.a[i] = 0.9*cos(t)*cos(f);
+    y.a[i] = 0.9*cos(t)*sin(f);
+    z.a[i] = 0.6*sin(t);
+  }
+  gr->Title("Dots sample"); gr->Rotate(50,60);
+  gr->Box();  gr->Dots(x,y,z);
+  return 0;
+}
+@end verbatim
+
+@float
+@image{../png/dots, 11cm}
+@caption{Example of Dots()}
+@end float
+
+@c ------------------------------------------------------------------
+@node Vector field samples, Hints, 3D samples, Examples
+@section Vector field samples
+
+Vector field visualization (especially in 3d case) may look tangly -- there are too many overlapping lines. I may suggest 2 ways to solve this problem. The first one is to change @code{MeshNum} for decreasing the number of hachures. The second way is to use the flow thread chart @code{Flow}. Unfortunately, I don't know any other methods to visualize 3d vector field. If you know any, e-mail me and I shall add it to MathGL.
 
 
 @c ------------------------------------------------------------------
-@node Hints, , More samples, Examples
+@node Hints, FAQ, Vector field samples, Examples
 @section Hints
 
 In this section I have included some small hints and advices for the improving of the quality of plots and for the demonstration of some non-trivial features of MathGL library. In contrast to previous examples I showed mostly the idea but not the whole drawing function.
@@ -1377,7 +2830,7 @@ It is an interesting result, is not it?
 @node Vector field visualization, Several light sources, Management of a point cutting, Hints
 @subsection Vector field visualization
 
-Vector field visualization (especially in 3d case @code{Vect3} or @code{VectC}) may look tangly -- there are too many overlapping lines. I may suggest 2 ways to solve this problem. The first one is to change @code{MeshNum} for decreasing the number of hachures. The second way is to use the flow thread chart @code{Flow}. Unfortunately, I don't know any other methods to visualize 3d vector field. If you know any, e-mail me and I shall add it to MatGL.
+Vector field visualization (especially in 3d case @code{Vect3} or @code{VectC}) may look tangly -- there are too many overlapping lines. I may suggest 2 ways to solve this problem. The first one is to change @code{MeshNum} for decreasing the number of hachures. The second way is to use the flow thread chart @code{Flow}. Unfortunately, I don't know any other methods to visualize 3d vector field. If you know any, e-mail me and I shall add it to MathGL.
 
 @c ------------------------------------------------------------------
 @node Several light sources, CutMin and CutMax features, Vector field visualization, Hints
@@ -1625,7 +3078,7 @@ The standard way is to use Unicode encoding for the text output. But the MathGL 
 There are 3 general ways. First, the point with @code{NAN} value as one of the coordinates will never be plotted. Second, special variables @var{CutMin}, @var{CutMax} or function @code{CutOff}() define the condition when the points should be omitted (@pxref{Cutting}). Last, you may change the transparency of a part of the plot by the help of functions @code{SurfA()}, @code{Surf3A()} (@pxref{Dual plotting}). In this last case the transparency is switched on smoothly.
 
 @item I use VisualStudio, CBuilder or some other compiler (not MinGW/gcc). How can I link the MathGL library?
-In version 2.0, the recomended class @code{mglGraph} (header file @code{#include <mgl/mgl.h>}) contains only @code{inline} functions and is acceptable for any compiler with the same binary files. However, if you plan to access low-level features (i.e. classes mglBase, mglCanvas and so on) then you have to recompile MathGL by yours compiler.
+In version 2.0, the recommended class @code{mglGraph} (header file @code{#include <mgl/mgl.h>}) contains only @code{inline} functions and is acceptable for any compiler with the same binary files. However, if you plan to access low-level features (i.e. classes mglBase, mglCanvas and so on) then you have to recompile MathGL by yours compiler.
 
 @c @strong{Finally!} Please @emph{do not} ask me Windows-specific questions. I do not use Windows. I know nothing about Visual Basic, Visual C++, CBuiled or .NET. Please find the appropriate Usenet discussion group and ask your question there.
 
@@ -1711,3 +3164,34 @@ First, you should download new font files from @uref{http://mathgl.sourceforge.n
 Just set a negative value in @var{SetTickLen}. For example, use @code{gr->SetTickLen(-0.1);}.
 
 @end table
+
+
+
+@c ------------------------------------------------------------------
+@node Surface transparency, , Plots for 3D data, Data plotting
+@subsection Surface transparency
+
+MathGL library has advanced features for setting and handling the surface transparency. The simplest way to add transparency is the using of function @code{Alpha()}. As a result, all further surfaces (and isosurfaces, density plots and so on) become transparent. However, their  look can be additionally improved.
+
+First, the selected surface will be non-transparent if one sets the flag @code{Transparent} before the surface drawing and sets it off after the drawing.
+
+Second, the value of transparency can be different from surface to surface. To do it just change the value of @code{AlphaDef} before the drawing of the selected surface. If its value is close to 0 then the surface becomes more and more transparent. Contrary, if its value is close to 1 then the surface becomes practically non-transparent. This is some analogue of @code{Transparent=true}.
+
+Third feature is the changing of the way how the light goes through overlapped surfaces. The variable @code{TranspType} defines it. By default the usual transparency is used (@code{TranspType=0}) -- surfaces below is less visible than the upper ones. A ``glass-like'' transparency (@code{TranspType=1}) has a different look when the surface just decreases the background light (the surfaces are commutable in this case).
+
+A ``neon-like'' transparency (@code{TranspType=2}) has more interesting look. In this case a surface is the light source (like a lamp on the dark background) and just adds some intensity to the color. At this, the library sets automatically the black color for the background and changes the default line color to white.
+
+As example I shall show the variant of plot from @ref{Plots for 2D data} (grid drawing is disabled) for different types of transparency.
+@float
+@image{../png/type0, 7cm}
+@caption{Example of @code{TranspType=0}.}
+@end float
+@float
+@image{../png/type1, 7cm}
+@caption{Example of @code{TranspType=1}.}
+@end float
+@float
+@image{../png/type2, 7cm}
+@caption{Example of @code{TranspType=2}.}
+@end float
+

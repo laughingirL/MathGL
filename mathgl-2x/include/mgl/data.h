@@ -330,11 +330,11 @@ public:
 	inline mglData(long xx=1,long yy=1,long zz=1)	{	a=0;	Create(xx,yy,zz);	}
 	/// Delete the array
 	virtual ~mglData()	{	if(id && a)	delete []id;	if(!link && a)	delete []a;	}
-	/// Get sizes
 	inline mreal GetVal(long i, long j=0, long k=0)
 	{	return mgl_data_get_value(this,i,j,k);}
 	inline void SetVal(mreal f, long i, long j=0, long k=0)
 	{	mgl_data_set_value(this,f,i,j,k);	}
+	/// Get sizes
 	inline long GetNx() const	{	return nx;	}
 	inline long GetNy() const	{	return ny;	}
 	inline long GetNz() const	{	return nz;	}
@@ -657,13 +657,13 @@ protected:
 	// add for speeding up !!!
 	inline mreal dvx(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k);
-	return i>0? (i<nx-1? (a[i0+1]-a[i0-1])/2:a[i0]-a[i0-1]) : a[i0+1]-a[i0];	}
+		return i>0? (i<nx-1? (a[i0+1]-a[i0-1])/2:a[i0]-a[i0-1]) : a[i0+1]-a[i0];	}
 	inline mreal dvy(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k);
-	return j>0? (j<ny-1? (a[i0+nx]-a[i0-nx])/2:a[i0]-a[i0-nx]) : a[i0+nx]-a[i0];}
+		return j>0? (j<ny-1? (a[i0+nx]-a[i0-nx])/2:a[i0]-a[i0-nx]) : a[i0+nx]-a[i0];}
 	inline mreal dvz(long i,long j=0,long k=0) const
 	{   register long i0=i+nx*(j+ny*k), n=nx*ny;
-	return k>0? (k<nz-1? (a[i0+n]-a[i0-n])/2:a[i0]-a[i0-n]) : a[i0+n]-a[i0];	}
+		return k>0? (k<nz-1? (a[i0+n]-a[i0-n])/2:a[i0]-a[i0-n]) : a[i0+n]-a[i0];	}
 };
 //-----------------------------------------------------------------------------
 inline mglData operator*(const mglData &b, const mglData &d)
