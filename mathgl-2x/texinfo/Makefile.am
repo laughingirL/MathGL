@@ -6,7 +6,7 @@ mathgl_ru.info mathgl_ru.info-1 mathgl_ru.info-2 mathgl_ru.info-3 mathgl_ru.info
 MAKEINFOHTML		= texi2html
 TEXI2PDF			= texi2pdf
 
-AM_MAKEINFOHTMLFLAGS	= --split=chapter
+#AM_MAKEINFOHTMLFLAGS	= --split=chapter
 AM_MAKEINFOFLAGS	= --no-validate
 
 info_TEXINFOS		= mathgl_en.texi
