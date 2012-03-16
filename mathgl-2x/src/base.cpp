@@ -53,7 +53,7 @@ mglBase::mglBase()
 {
 //	memset(this,0,sizeof(mglBase));	// since mglBase is abstract then I can do it?!!
 	Flag=0;	saved=false;
-#ifdef HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD
 	pthread_mutex_init(&mutexPnt,0);
 	pthread_mutex_init(&mutexTxt,0);
 #endif

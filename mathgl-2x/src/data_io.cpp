@@ -22,14 +22,6 @@
 #include <math.h>
 #include <string.h>
 #include <zlib.h>
-#ifdef HAVE_HDF5
-#include <hdf5.h>
-#endif
-#ifdef HAVE_HDF4
-#define intf hdf4_intf
-#include <hdf/mfhdf.h>
-#undef intf
-#endif
 
 #ifndef WIN32
 #include <glob.h>
@@ -37,6 +29,15 @@
 
 #include "mgl/data.h"
 #include "mgl/eval.h"
+
+#if MGL_HAVE_HDF5
+#include <hdf5.h>
+#endif
+#if MGL_HAVE_HDF4
+#define intf hdf4_intf
+#include <hdf/mfhdf.h>
+#undef intf
+#endif
 
 //#define isn(ch)		((ch)<' ' && (ch)!='\t')
 #define isn(ch)		((ch)=='\n')
@@ -119,7 +120,7 @@ void mgl_data_set_values_(uintptr_t *d, const char *val, int *nx, int *ny, int *
 //-----------------------------------------------------------------------------
 void mgl_data_set_vector(HMDT d, gsl_vector *v)
 {
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	if(!v || v->size<1)	return;
 	mgl_data_create(d, v->size,1,1);
 	for(long i=0;i<d->nx;i++)	d->a[i] = v->data[i*v->stride];
@@ -128,7 +129,7 @@ void mgl_data_set_vector(HMDT d, gsl_vector *v)
 //-----------------------------------------------------------------------------
 void mgl_data_set_matrix(HMDT d, gsl_matrix *m)
 {
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	if(!m || m->size1<1 || m->size2<1)	return;
 	mgl_data_create(d, m->size1,m->size2,1);
 	register long i,j;
@@ -141,7 +142,7 @@ void mgl_data_set_float(HMDT d, const float *A,long NX,long NY,long NZ)
 {
 	if(NX<=0 || NY<=0 || NZ<=0)	return;
 	mgl_data_create(d, NX,NY,NZ);	if(!A)	return;
-#if(MGL_USE_DOUBLE==1)
+#if MGL_USE_DOUBLE
 	for(long i=0;i<NX*NY*NZ;i++)	d->a[i] = A[i];
 #else
 	memcpy(d->a,A,NX*NY*NZ*sizeof(float));
@@ -152,7 +153,7 @@ void mgl_data_set_double(HMDT d, const double *A,long NX,long NY,long NZ)
 {
 	if(NX<=0 || NY<=0 || NZ<=0)	return;
 	mgl_data_create(d, NX,NY,NZ);	if(!A)	return;
-#if(MGL_USE_DOUBLE==1)
+#if MGL_USE_DOUBLE
 	memcpy(d->a,A,NX*NY*NZ*sizeof(double));
 #else
 	for(long i=0;i<NX*NY*NZ;i++)	d->a[i] = A[i];
@@ -163,7 +164,7 @@ void mgl_data_set_float2(HMDT d, const float **A,long N1,long N2)
 {
 	if(N1<=0 || N2<=0)	return;
 	mgl_data_create(d, N2,N1,1);	if(!A)	return;
-#if(MGL_USE_DOUBLE==1)
+#if MGL_USE_DOUBLE
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	d->a[j+i*N2] = A[i][j];
 #else
 	for(long i=0;i<N1;i++)	memcpy(d->a+i*N2,A[i],N2*sizeof(float));
@@ -174,7 +175,7 @@ void mgl_data_set_double2(HMDT d, const double **A,long N1,long N2)
 {
 	if(N1<=0 || N2<=0)	return;
 	mgl_data_create(d, N2,N1,1);	if(!A)	return;
-#if(MGL_USE_DOUBLE==1)
+#if MGL_USE_DOUBLE
 	for(long i=0;i<N1;i++)	memcpy(d->a+i*N2,A[i],N2*sizeof(double));
 #else
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	d->a[j+i*N2] = A[i][j];
@@ -185,7 +186,7 @@ void mgl_data_set_float3(HMDT d, const float ***A,long N1,long N2,long N3)
 {
 	if(N1<=0 || N2<=0 || N3<=0)	return;
 	mgl_data_create(d, N3,N2,N1);	if(!A)	return;
-#if(MGL_USE_DOUBLE==1)
+#if MGL_USE_DOUBLE
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)	for(long k=0;k<N3;k++)
 		d->a[k+N3*(j+i*N2)] = A[i][j][k];
 #else
@@ -198,7 +199,7 @@ void mgl_data_set_double3(HMDT d, const double ***A,long N1,long N2,long N3)
 {
 	if(N1<=0 || N2<=0 || N3<=0)	return;
 	mgl_data_create(d, N3,N2,N1);	if(!A)	return;
-#if(MGL_USE_DOUBLE==1)
+#if MGL_USE_DOUBLE
 	for(long i=0;i<N1;i++)	for(long j=0;j<N2;j++)
 		memcpy(d->a+N3*(j+i*N2),A[i][j],N3*sizeof(double));
 #else
@@ -802,7 +803,7 @@ void mgl_data_fill_eq_(uintptr_t *gr, uintptr_t *d, const char *eq, uintptr_t *v
 	char *o=new char[lo+1];	memcpy(o,opt,lo);	o[lo]=0;
 	mgl_data_fill_eq(_GR_,_DT_,s,_DA_(v),_DA_(w),o);	delete []o;	delete []s;	}
 //-----------------------------------------------------------------------------
-#ifdef HAVE_HDF4
+#if MGL_HAVE_HDF4
 void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 {
 	int32 sd = SDstart(fname,DFACC_READ), nn, i;
@@ -843,14 +844,14 @@ void mgl_data_read_hdf4(HMDT d,const char *fname,const char *data)
 void mgl_data_read_hdf4(HMDT ,const char *,const char *){}
 #endif
 //-----------------------------------------------------------------------------
-#ifdef HAVE_HDF5
+#if MGL_HAVE_HDF5
 void mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 {
 	const mglData *d = dynamic_cast<const mglData *>(dat);	// NOTE: only for mglData
 	hid_t hf,hd,hs;
 	hsize_t dims[3];
 	long rank = 3, res;
-#ifndef H5_USE_16_API
+#if MGL_HAVE_HDF5_18
 	H5Eset_auto(H5E_DEFAULT,0,0);
 #else
 	H5Eset_auto(0,0);
@@ -863,16 +864,16 @@ void mgl_data_save_hdf(HCDT dat,const char *fname,const char *data,int rewrite)
 	else if(d->nz==1)	{	rank=2;	dims[0]=d->ny;	dims[1]=d->nx;	}
 	else	{	rank=3;	dims[0]=d->nz;	dims[1]=d->ny;	dims[2]=d->nx;	}
 	hs = H5Screate_simple(rank, dims, 0);
-#if(MGL_USE_DOUBLE==1)
+#if MGL_USE_DOUBLE
 	hid_t mem_type_id = H5T_NATIVE_DOUBLE;
 #else
 	hid_t mem_type_id = H5T_NATIVE_FLOAT;
 #endif
-#ifndef H5_USE_16_API
+#if MGL_HAVE_HDF5_18
 	hd = H5Dcreate(hf, data, mem_type_id, hs, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-#else  /* ! HAVE_HDF5_18 */
+#else
 	hd = H5Dcreate(hf, data, mem_type_id, hs, H5P_DEFAULT);
-#endif /* HAVE_HDF5_18 */
+#endif
 	H5Dwrite(hd, mem_type_id, hs, hs, H5P_DEFAULT, d->a);
 	H5Dclose(hd);	H5Sclose(hs);	H5Fclose(hf);
 }
@@ -885,7 +886,7 @@ int mgl_data_read_hdf(HMDT d,const char *fname,const char *data)
 	if(res<=0)	{	mgl_data_read_hdf4(d,fname,data);	return false;	}
 	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
 	if(hf<0)	return false;
-#ifndef H5_USE_16_API
+#if MGL_HAVE_HDF5_18
 	hd = H5Dopen(hf,data,H5P_DEFAULT);
 #else
 	hd = H5Dopen(hf,data);
@@ -900,7 +901,7 @@ int mgl_data_read_hdf(HMDT d,const char *fname,const char *data)
 		else if(rank==2)	{	dims[2]=dims[1];	dims[1]=dims[0];	dims[0]=1;	}
 //		else if(rank>3)		continue;
 		mgl_data_create(d,dims[2],dims[1],dims[0]);
-#if(MGL_USE_DOUBLE==1)
+#if MGL_USE_DOUBLE
 		H5Dread(hd, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, d->a);
 #else
 		H5Dread(hd, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, d->a);
@@ -916,7 +917,7 @@ int mgl_datas_hdf(const char *fname, char *buf, long size)
 	buf[0]=0;
 	hf = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
 	if(!hf)	return 0;
-#ifndef H5_USE_16_API
+#if MGL_HAVE_HDF5_18
 	hg = H5Gopen(hf,"/",H5P_DEFAULT);
 #else
 	hg = H5Gopen(hf,"/");
@@ -929,7 +930,7 @@ int mgl_datas_hdf(const char *fname, char *buf, long size)
 	{
 		if(H5Gget_objtype_by_idx(hg, i)!=H5G_DATASET)	continue;
 		H5Gget_objname_by_idx(hg, i, name, 256);
-#ifndef H5_USE_16_API
+#if MGL_HAVE_HDF5_18
 		hd = H5Dopen(hf,name,H5P_DEFAULT);
 #else
 		hd = H5Dopen(hf,name);

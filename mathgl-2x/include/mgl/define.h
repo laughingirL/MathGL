@@ -41,7 +41,7 @@
 const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 #define NANd	(*(double*)mgl_nan)
 #define NANf	(*(float*)&(mgl_nan[1]))
-#if (MGL_USE_DOUBLE==1)
+#if MGL_USE_DOUBLE
 #define NAN		NANd
 #else
 #define NAN		NANd
@@ -66,7 +66,7 @@ const unsigned long mgl_nan[2] = {0xffffffff, 0x7fffffff};
 //-----------------------------------------------------------------------------
 #include <mgl/config.h>
 //-----------------------------------------------------------------------------
-#if (MGL_USE_DOUBLE==1)
+#if MGL_USE_DOUBLE
 typedef double mreal;
 #else
 typedef float mreal;
@@ -212,7 +212,7 @@ void mgl_strlwr(char *str);
 #ifdef __cplusplus
 }
 #endif
-#ifdef HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD
 #include <pthread.h>
 #define MGL_PUSH(a,v,m)		{pthread_mutex_lock(&m);	a.push_back(v);	pthread_mutex_unlock(&m);}
 #else

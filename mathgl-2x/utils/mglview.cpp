@@ -57,9 +57,9 @@ int main(int narg, char **arg)
 		if(arg[i][0]!='-' && j<0)	j=i;
 	}
 	mgl_ask_func = mgl_ask_gets;
-#if defined(HAVE_QT)
+#if MGL_HAVE_QT
 	int kind=1;		mgl_ask_func = mgl_ask_qt;
-#elif defined(HAVE_FLTK)
+#else
 	int kind=0;		mgl_ask_func = mgl_ask_fltk;
 #endif
 	bool mgld=(j>0 && arg[j][strlen(arg[j])]=='d');
@@ -69,12 +69,10 @@ int main(int narg, char **arg)
 		while(!feof(fp))	str.push_back(fgetwc(fp));
 		if(j>0)	fclose(fp);
 	}
-#if defined(HAVE_FLTK) || defined(HAVE_QT)
 	mglWindow gr(mgld?NULL:show, j>0?arg[j]:"mglview", kind);
 	if(mgld)
 	{	gr.ImportMGLD(arg[j]);	gr.Update();	}
 	gr.Run();
-#endif
 	return 0;
 }
 //-----------------------------------------------------------------------------

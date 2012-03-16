@@ -22,17 +22,17 @@
 #include <math.h>
 #include <string.h>
 
-#ifndef NO_GSL
+#include "mgl/data.h"
+
+#if MGL_HAVE_GSL
 #include <gsl/gsl_fft_complex.h>
 #include <gsl/gsl_dht.h>
 #include <gsl/gsl_sf.h>
 #endif
-
-#include "mgl/data.h"
 //-----------------------------------------------------------------------------
 void mgl_data_envelop(HMDT d, char dir)
 {
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	register long i,j,k,i0;
 	long nx=d->nx,ny=d->ny,nz=d->nz,nn=nx*ny*nz;
 	double *b = new double[2*nn];
@@ -626,7 +626,7 @@ uintptr_t mgl_data_evaluate_(uintptr_t *d, uintptr_t *idat, uintptr_t *jdat, uin
 //-----------------------------------------------------------------------------
 void mgl_data_fourier(HMDT re, HMDT im, const char *dir)
 {
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	long nx = re->nx, ny = re->ny, nz = re->nz;
 	if(nx*ny*nz != im->nx*im->ny*im->nz || !dir || dir[0]==0)	return;
 	double *a = new double[2*nx*ny*nz];
@@ -673,7 +673,7 @@ void mgl_data_fourier_(uintptr_t *re, uintptr_t *im, const char *dir, int l)
 HMDT mgl_data_stfa(HCDT re, HCDT im, long dn, char dir)
 {
 	mglData *d=new mglData;
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	if(dn<2)	return d;
 	dn = 2*(dn/2);
 	long nx = re->GetNx(), ny = re->GetNy();
@@ -750,7 +750,7 @@ void mgl_data_fill_sample(HMDT d, const char *how)
 	mreal *aa=d->a;
 	if(strchr(how,'h'))	// Hankel
 	{
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 		gsl_dht *dht = gsl_dht_new(n,0,1);
 		for(i=0;i<n;i++)
 			aa[i] = xx ? gsl_dht_x_sample(dht, i) : gsl_dht_k_sample(dht, i);
@@ -770,7 +770,7 @@ void mgl_data_fill_sample_(uintptr_t *d, const char *how,int l)
 //-----------------------------------------------------------------------------
 void mgl_data_hankel(HMDT d, const char *dir)
 {
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	double *ai=0, *af=0, mm;
 	gsl_dht *dht=0;
 	register long i,j,k;
@@ -821,7 +821,7 @@ void mgl_data_hankel_(uintptr_t *d, const char *dir,int l)
 //-----------------------------------------------------------------------------
 void mgl_data_cosfft(HMDT d, const char *dir)
 {
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	double *b = 0;
 	gsl_fft_complex_wavetable *wt=0;
 	gsl_fft_complex_workspace *ws=0;
@@ -879,7 +879,7 @@ void mgl_data_cosfft_(uintptr_t *d, const char *dir,int l)
 //-----------------------------------------------------------------------------
 void mgl_data_sinfft(HMDT d, const char *dir)
 {
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	double *b = 0;
 	gsl_fft_complex_wavetable *wt=0;
 	gsl_fft_complex_workspace *ws=0;

@@ -21,7 +21,7 @@
 #include <complex>
 #define dual	std::complex<double>
 #define GAMMA	0.1
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 #include <gsl/gsl_fft_complex.h>
 #endif
 //-----------------------------------------------------------------------------
@@ -86,7 +86,7 @@ HMDT mgl_pde_solve(HMGL gr, const char *ham, HCDT ini_re, HCDT ini_im, float dz,
 	if(ini_im->GetNx()*ini_im->GetNy() != nx*ny)// Wrong dimensions
 	{	gr->SetWarn(mglWarnDim,"PDE");	return res;	}
 	mgl_data_create(res, nz, nx, ny);
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	mglFormula eqs(ham);
 	dual *a = new dual[4*nx*ny], hh0;	// Add "damping" area
 	dual *hxy = new dual[4*nx*ny], *hxv = new dual[4*nx*ny];
@@ -183,7 +183,7 @@ HMDT mgl_ray_trace(const char *ham, float x0, float y0, float z0, float px, floa
 	int nt = int(tmax/dt)+1;
 	mgl_data_create(res,7,nt,1);
 	mgl_data_set_id(res,"xyzpqvt");
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	mreal x[6], k1[6], k2[6], k3[6], hh=dt/2;
 	mglFormula eqs(ham);
 	// initial conditions
@@ -321,7 +321,7 @@ HMDT mgl_qo2d_solve(const char *ham, HCDT ini_re, HCDT ini_im, HCDT ray_dat, flo
 	int nx=ini_re->GetNx(), nt=ray->ny;
 	if(nx<2 || ini_im->GetNx()!=nx || nt<2)	return res;
 	mgl_data_create(res,nx,nt,1);
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	dual *a=new dual[2*nx], *hu=new dual[2*nx],  *hx=new dual[2*nx], h0;
 	double *ru=new double[2*nx],	*rx=new double[2*nx],	*dmp=new double[2*nx],
 			*pu=new double[2*nx],	*px=new double[2*nx];

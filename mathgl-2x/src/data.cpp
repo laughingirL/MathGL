@@ -29,7 +29,7 @@ void mglFillP(long x, const mreal *a,long nx,mreal _p[4]);
 void mglFillP5(long x,long y, const mreal *a,long nx,long ny,mreal _p[6][6]);
 void mglFillP5(long x, const mreal *a,long nx,mreal _p[6]);
 //-----------------------------------------------------------------------------
-#ifdef HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD
 #ifdef WIN32
 #include <windows.h>
 #include <process.h>
@@ -61,7 +61,7 @@ void mglStartThread(void *(*func)(void *), void (*post)(mglThreadD *,mreal *), l
 	const mreal *b, const mreal *c, const long *p, void *v, const mreal *d, const mreal *e, char *s)
 {
 	if(!func)	return;
-#ifdef HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD
 	if(mglNumThr<1)	mgl_set_num_thr(0);
 	if(mglNumThr>1)
 	{

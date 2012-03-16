@@ -22,7 +22,7 @@
 #include <math.h>
 #include <wchar.h>
 #include "mgl/parser.h"
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 #include <gsl/gsl_sf.h>
 #include <gsl/gsl_errno.h>
 #endif
@@ -116,7 +116,7 @@ void mgl_wcstombs(char *dst, const wchar_t *src, int size)
 // NOTE: the speed is not a goal (mglFormula is faster). It is true interpreter!
 mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 {
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	gsl_set_error_handler_off();
 #endif
 	mglData res;
@@ -347,7 +347,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 			else if(!wcscmp(name+1,L"bs"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = fabs(res.a[i]);	}
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 			else if(!wcscmp(name+1,L"i"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
@@ -392,7 +392,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 			else if(!wcscmp(name+1,L"osh") || !wcscmp(name+1,L"h"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = cosh(res.a[i]);	}
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 			else if(!wcscmp(name+1,L"i"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
@@ -432,7 +432,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 			if(!wcscmp(name+1,L"xp"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = exp(res.a[i]);	}
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 			else if(!wcscmp(name+1,L"rf"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
@@ -498,7 +498,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 			else if(!wcscmp(name+1,L"n"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = log(res.a[i]);	}
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 			else if(!wcscmp(name+1,L"i2"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
@@ -530,7 +530,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 			else if(!wcscmp(name+1,L"inh") || !wcscmp(name+1,L"h"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = sinh(res.a[i]);	}
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 			else if(!wcscmp(name+1,L"i"))
 			{	res=mglFormulaCalc(Buf, arg);
 				for(i=0;i<res.nx*res.ny*res.nz;i++)
@@ -567,7 +567,7 @@ mglData mglFormulaCalc(const wchar_t *string, mglParser *arg)
 		else if(!wcscmp(name+1,L"int"))
 		{	res=mglFormulaCalc(Buf, arg);
 			for(i=0;i<res.nx*res.ny*res.nz;i++)	res.a[i] = floor(res.a[i]);	}
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 		else if(!wcscmp(name,L"i"))
 		{
 			n=mglFindInText(Buf,",");

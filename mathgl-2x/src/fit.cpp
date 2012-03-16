@@ -17,14 +17,15 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef NO_GSL
-#include <gsl/gsl_multifit_nlin.h>
-#include <gsl/gsl_blas.h>
-#endif
 #include <ctype.h>
 #include "mgl/fit.h"
 #include "mgl/eval.h"
 #include "mgl/data.h"
+
+#if MGL_HAVE_GSL
+#include <gsl/gsl_multifit_nlin.h>
+#include <gsl/gsl_blas.h>
+#endif
 //-----------------------------------------------------------------------------
 int mglFitPnts=100;		///< Number of output points in fitting
 char mglFitRes[1024];	///< Last fitted formula
@@ -43,7 +44,7 @@ struct mglFitData
 	const char *var;	///< variables for fitting
 };
 //-----------------------------------------------------------------------------
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 int	mgl_fit__f (const gsl_vector *x, void *data, gsl_vector *f)
 {
 	mglFitData *fd = (mglFitData *)data;
@@ -88,7 +89,7 @@ int mgl_fit__fdf (const gsl_vector * x, void *data, gsl_vector * f, gsl_matrix *
 /// GSL based fitting procedure for formula/arguments specified by string
 mreal mgl_fit_base(mglFitData *fd, mreal *ini)
 {
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	register long i,m=fd->m,n=fd->n,iter=0;
 	if(n<1 || fd==0 || ini==0)	return -1;
 	// setup data

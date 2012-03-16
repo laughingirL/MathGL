@@ -34,7 +34,7 @@ mglCanvas::mglCanvas(int w, int h) : mglBase()
 	ax.dir = mglPoint(1,0,0);	ax.a = mglPoint(0,1,0);	ax.b = mglPoint(0,0,1);	ax.ch='x';
 	ay.dir = mglPoint(0,1,0);	ay.a = mglPoint(1,0,0);	ay.b = mglPoint(0,0,1);	ay.ch='y';
 	az.dir = mglPoint(0,0,1);	az.a = mglPoint(0,1,0);	az.b = mglPoint(1,0,0);	az.ch='z';
-#ifdef HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD
 	pthread_mutex_init(&mutexSub,0);	pthread_mutex_init(&mutexLeg,0);
 	pthread_mutex_init(&mutexPrm,0);	pthread_mutex_init(&mutexPtx,0);
 	pthread_mutex_init(&mutexStk,0);	pthread_mutex_init(&mutexGrp,0);

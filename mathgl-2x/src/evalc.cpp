@@ -24,16 +24,16 @@
 #include "mgl/evalc.h"
 #include "mgl/addon.h"
 #include "mgl/data.h"
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 #include <gsl/gsl_sf.h>
 #endif
 //-----------------------------------------------------------------------------
-//	константы для распознования выражения
+//	пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 enum{
 EQ_NUM=0,	// a variable substitution
 EQ_RND,		// random number
 EQ_A,		// numeric constant
-// двуместные функции
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 EQ_ADD,		// addition x+y
 EQ_SUB,		// substraction x-y
 EQ_MUL,		// multiplication x*y
@@ -41,7 +41,7 @@ EQ_DIV,		// division x/y
 EQ_IPOW,	// power x^n for integer n
 EQ_POW,		// power x^y
 EQ_LOG,		// logarithm of x on base a, log_a(x) = ln(x)/ln(a)
-// одноместные функции
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 EQ_SIN,		// sine function \sin(x).			!!! MUST BE FIRST 1-PLACE FUNCTION
 EQ_COS,		// cosine function \cos(x).
 EQ_TAN,		// tangent function \tan(x).
@@ -66,14 +66,14 @@ int mglFormulaC::Error=0;
 bool mglCheck(char *str,int n);
 int mglFindInText(char *str,const char *lst);
 //-----------------------------------------------------------------------------
-// деструктор формулы
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 mglFormulaC::~mglFormulaC()
 {
 	if(Left) delete Left;
 	if(Right) delete Right;
 }
 //-----------------------------------------------------------------------------
-// конструктор формулы (автоматически распознает и "компилирует" формулу)
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
 mglFormulaC::mglFormulaC(const char *string)
 {
 	Error=0;
@@ -89,14 +89,14 @@ mglFormulaC::mglFormulaC(const char *string)
 	mgl_strlwr(str);
 	len=strlen(str);
 	if(str[0]==0) {	delete []str;	return;	}
-	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// если все выражение в скобах, то убираем  их
+	if(str[0]=='(' && mglCheck(&(str[1]),len-2))	// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ  пїЅпїЅ
 	{
 		strcpy(Buf,str+1);
 		len-=2;	Buf[len]=0;
 		strcpy(str,Buf);
 	}
 	len=strlen(str);
-	n=mglFindInText(str,"+-");				// меньший приоритет - сложение, вычитание
+	n=mglFindInText(str,"+-");				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	if(n>=0)
 	{
 		if(str[n]=='+') Kod=EQ_ADD; else Kod=EQ_SUB;
@@ -106,7 +106,7 @@ mglFormulaC::mglFormulaC(const char *string)
 		delete []str;
 		return;
 	}
-	n=mglFindInText(str,"*/");				// средний приоритет - умножение, деление
+	n=mglFindInText(str,"*/");				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	if(n>=0)
 	{
 		if(str[n]=='*') Kod=EQ_MUL; else Kod=EQ_DIV;
@@ -116,7 +116,7 @@ mglFormulaC::mglFormulaC(const char *string)
 		delete []str;
 		return;
 	}
-	n=mglFindInText(str,"^");				// высокий приоритет - возведение в степень
+	n=mglFindInText(str,"^");				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	if(n>=0)
 	{
 		Kod=EQ_IPOW;
@@ -128,16 +128,16 @@ mglFormulaC::mglFormulaC(const char *string)
 	}
 
 	for(n=0;n<len;n++)	if(str[n]=='(')	break;
-	if(n>=len)							// это число или переменная
+	if(n>=len)							// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	{
 		Kod = EQ_NUM;
 //		Left = Right = 0;
-		if(str[1]==0 && str[0]>='a' && str[0]<='z')	// доступные перемнные
+		if(str[1]==0 && str[0]>='a' && str[0]<='z')	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		{	Kod=EQ_A;	Res = str[0]-'a';	}
 		else if(!strcmp(str,"rnd")) Kod=EQ_RND;
 		else if(!strcmp(str,"pi")) Res=M_PI;
 		else if(str[0]=='i')	Res = dual(0,atof(str+1));
-		else Res=atof(str);				// это число
+		else Res=atof(str);				// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 	}
 	else
 	{

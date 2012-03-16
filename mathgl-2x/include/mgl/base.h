@@ -379,7 +379,7 @@ protected:
 	std::vector<mglText> Ptx;	///< Text labels for mglPrim
 	std::vector<mglText> Leg;	///< Text labels for legend
 	std::vector<mglTexture> Txt;///< Pointer to textures
-#ifdef HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD
 	pthread_mutex_t mutexPnt, mutexTxt, mutexLeg;
 #endif
 

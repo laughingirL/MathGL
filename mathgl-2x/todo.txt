@@ -136,9 +136,8 @@ Remove other setting if data name is changed.
 +		2.6 2D data plotting
 +		2.7 3D data plotting
 		2.8 Dual data plotting
-		2.9 More samples
-		2.10 Hints
-		2.12 FAQ
+		2.9 Hints
+		2.10 FAQ
 
 +	3. General concepts (class-diagram)
 +		3.1 Coordinate axes

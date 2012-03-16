@@ -22,12 +22,14 @@
 #include <math.h>
 #include <ctype.h>
 #include <string.h>
-#ifndef NO_GSL
+
+#include "mgl/eval.h"
+
+#if MGL_HAVE_GSL
 #include <gsl/gsl_sf.h>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_errno.h>
 #endif
-#include "mgl/eval.h"
 //-----------------------------------------------------------------------------
 //	constants for expression parsing
 enum{
@@ -134,12 +136,12 @@ int mglFormula::Error=0;
 bool mglCheck(char *str,int n);
 int mglFindInText(char *str,const char *lst);
 //-----------------------------------------------------------------------------
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 gsl_rng *mgl_rng=0;
 #endif
 void mgl_srnd(long seed)
 {
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	if(mgl_rng==0)
 	{
 		gsl_rng_env_setup();
@@ -152,7 +154,7 @@ void mgl_srnd(long seed)
 }
 double mgl_rnd()
 {
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	if(mgl_rng==0)
 	{
 		gsl_rng_env_setup();
@@ -175,7 +177,7 @@ mglFormula::~mglFormula()
 // Formula constructor (automatically parse and "compile" formula)
 mglFormula::mglFormula(const char *string)
 {
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 	gsl_set_error_handler_off();
 #endif
 	Error=0;
@@ -476,7 +478,7 @@ double mul(double a,double b)	{return a&&b?a*b:0;}
 double div(double a,double b)	{return b?a/b:NAN;}
 double ipw(double a,double b)	{return fabs(b-int(b))<1e-5 ? mgl_ipow(a,int(b)) : pow(a,b);}
 double llg(double a,double b)	{return log(a)/log(b);}
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 double gslEllE(double a,double b)	{return gsl_sf_ellint_E(a,b,GSL_PREC_SINGLE);}
 double gslEllF(double a,double b)	{return gsl_sf_ellint_F(a,b,GSL_PREC_SINGLE);}
 double gslLegP(double a,double b)	{return gsl_sf_legendre_Pl(int(a),b);}
@@ -504,14 +506,14 @@ typedef double (*func_2)(double, double);
 mreal mglFormula::CalcIn(const mreal *a1) const
 {
 	float z2[22] = {3,3,3,3,0,3,3,0,0,0,0,0,NAN,0
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 			,3,NAN, 3,NAN, 0,0,3,1
 #else
 			,0,0,0,0,0,0,0,0
 #endif
 		};
 	func_2 f2[22] = {clt,cgt,ceq,cor,cand,add,sub,mul,div,ipw,pow,fmod,llg,arg
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 			,gsl_sf_bessel_Jnu,gsl_sf_bessel_Ynu,
 			gsl_sf_bessel_Inu,gsl_sf_bessel_Knu,
 			gslEllE,gslEllF,gslLegP,gsl_sf_beta
@@ -521,7 +523,7 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 		};
 	func_1 f1[42] = {sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,
 					asinh,acosh,atanh,sqrt,exp,log,log10,sgn,stp,floor,fabs
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 			,gsl_sf_dilog,gslEllEc,gslEllFc,gslAi,gslBi,gsl_sf_erf,
 			gsl_sf_expint_3,gsl_sf_expint_Ei,gsl_sf_expint_E1,gsl_sf_expint_E2,
 			gsl_sf_Si,gsl_sf_Ci,gsl_sf_gamma,gsl_sf_psi,gsl_sf_lambert_W0,
@@ -549,7 +551,7 @@ mreal mglFormula::CalcIn(const mreal *a1) const
 			return !isnan(b) ? f2[Kod-EQ_LT](a,b) : NAN;
 		}
 		else if(Kod<EQ_SN)	return f1[Kod-EQ_SIN](a);
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 		else if(Kod<=EQ_DC)
 		{
 			double sn=0,cn=0,dn=0,b = Right->CalcIn(a1);
@@ -607,7 +609,7 @@ double ci_d(double a)	{return cos(a)/a;}
 double exp3_d(double a)	{return exp(-a*a*a);}
 double e1_d(double a)	{return exp(-a)/a;}
 double sinc_d(double a)	{return a ? (cos(M_PI*a)/a-sin(M_PI*a)/(M_PI*a*a)) : 0;}
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 double e2_d(double a)	{return -gsl_sf_expint_E1(a);}
 double gslJnuD(double a,double b)	{return 0.5*(gsl_sf_bessel_Jnu(a-1,b)-gsl_sf_bessel_Jnu(a+1,b));}
 double gslYnuD(double a,double b)	{return 0.5*(gsl_sf_bessel_Ynu(a-1,b)-gsl_sf_bessel_Ynu(a+1,b));}
@@ -626,14 +628,14 @@ double gamma_d(double a)	{return gsl_sf_psi(a)*gsl_sf_gamma(a);}
 mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 {
 	func_2 f21[22] = {mgz2,mgz2,mgz2, mgz2,mgz2,mgp, mgp,mul1,div1, ipw1,pow1,mgp,llg1, mgz2
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 			,mgz2,mgz2,mgz2, mgz2,gslEllE1,gslEllF2, mgz2,mgz2
 #else
 			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
 #endif
 		};
 		func_2 f22[22] = {mgz2,mgz2,mgz2,mgz2,mgz2,mgp,mgm,mul2,div2,pow2,pow2,mgz2,llg2, mgz2
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 			,gslJnuD,gslYnuD,gslInuD,gslKnuD,gslEllE2,gslEllF2,mgz2/*gslLegP*/,mgz2
 #else
 			,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2,mgz2
@@ -641,7 +643,7 @@ mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 		};
 	func_1 f11[42] = {cos,cos_d,tan_d,asin_d,acos_d,atan_d,cosh,sinh,tanh_d,
 					asinh_d,acosh_d,atanh_d,sqrt_d,exp,log_d,log10_d,mgz1,mgz1,mgz1,sgn
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 			,dilog_d,gslE_d,gslK_d,gslAi_d,gslBi_d,erf_d,exp3_d,ei_d,e1_d,e2_d,
 			si_d,ci_d,gamma_d,gsl_sf_psi_1,mgz1,mgz1,sinc_d,mgz1,mgz1,mgz1,mgz1,mgz1
 #else
@@ -661,7 +663,7 @@ mreal mglFormula::CalcDIn(int id, const mreal *a1) const
 			return !isnan(b) ? (d?f21[Kod-EQ_LT](a,b)*d:0) + (c?f22[Kod-EQ_LT](a,b)*c:0) : NAN;
 		}
 		else if(Kod<EQ_SN)	return (d?f11[Kod-EQ_SIN](a)*d:0);
-#ifndef NO_GSL
+#if MGL_HAVE_GSL
 		else if(Kod<=EQ_DC)
 		{
 			double sn=0,cn=0,dn=0,b = Right->CalcIn(a1);

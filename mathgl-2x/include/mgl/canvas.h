@@ -25,7 +25,7 @@
 #define MGL_STACK_ENTRY	10
 #endif
 //-----------------------------------------------------------------------------
-#ifdef HAVE_GIF
+#if MGL_HAVE_GIF
 #include <gif_lib.h>
 #else
 struct GifFileType;
@@ -300,7 +300,7 @@ protected:
 	unsigned char *G4;	///< Final picture in RGBA format. Prepared in Finish().
 	unsigned char *G;	///< Final picture in RGB format. Prepared in Finish().
 	std::vector<mglDrawDat> DrwDat;	///< Set of ALL drawing data for each frames
-#ifdef HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD
 	pthread_mutex_t mutexSub, mutexPrm, mutexPtx, mutexStk, mutexGrp;
 #endif
 

@@ -23,21 +23,19 @@
 #include <time.h>
 #include <zlib.h>
 #include <stdarg.h>
-#ifndef NO_PNG
 #include <png.h>
-#endif
-#ifdef HAVE_JPEG
+
+#include "mgl/canvas.h"
+#include "mgl/canvas_cf.h"
+
+#if MGL_HAVE_JPEG
 extern "C" {
 #include <jpeglib.h>
 }
 #endif
-
-#include "mgl/canvas.h"
-#include "mgl/canvas_cf.h"
 //-----------------------------------------------------------------------------
 int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 {
-#ifndef NO_PNG
 	FILE *fp = fopen(fname, "wb");
 	if (!fp)	return 1;
 
@@ -61,14 +59,10 @@ int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p)
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);
 	return 0;
-#else
-	return 1;
-#endif
 }
 //-----------------------------------------------------------------------------
 int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 {
-#ifndef NO_PNG
 	FILE *fp = fopen(fname, "wb");
 	if (!fp)	return 1;
 
@@ -92,9 +86,6 @@ int mgl_png_save(const char *fname, int w, int h, unsigned char **p)
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);
 	return 0;
-#else
-	return 1;
-#endif
 }
 //-----------------------------------------------------------------------------
 int mgl_bmp_save(const char *fname, int w, int h, unsigned char **p)
@@ -154,7 +145,7 @@ int mgl_tga_save(const char *fname, int w, int h, unsigned char **p)
 //-----------------------------------------------------------------------------
 int mgl_jpeg_save(const char *fname, int w, int h, unsigned char **p)
 {
-#ifdef HAVE_JPEG
+#if MGL_HAVE_JPEG
 	struct jpeg_compress_struct cinfo;
 	struct jpeg_error_mgr jerr;
 	FILE * outfile;
@@ -214,7 +205,7 @@ int mgl_bps_save(const char *fname, int w, int h, unsigned char **p)
 //-----------------------------------------------------------------------------
 int mgl_gif_save(const char *fname, int w, int h, unsigned char **l)
 {
-#ifdef HAVE_GIF
+#if MGL_HAVE_GIF
 	GifFileType *fg = EGifOpenFileName(fname, 0);
 	// define colormap
 	GifColorType col[256];
@@ -257,7 +248,7 @@ int mgl_gif_save(const char *fname, int w, int h, unsigned char **l)
 //-----------------------------------------------------------------------------
 void mglCanvas::StartGIF(const char *fname, int ms)
 {
-#ifdef HAVE_GIF
+#if MGL_HAVE_GIF
 	if(gif)	EGifCloseFile(gif);
 	EGifSetGifVersion("89a");
 	std::string fn=fname;
@@ -295,7 +286,7 @@ void mglCanvas::StartGIF(const char *fname, int ms)
 //-----------------------------------------------------------------------------
 void mglCanvas::CloseGIF()
 {
-#ifdef HAVE_GIF
+#if MGL_HAVE_GIF
 	if(gif)	EGifCloseFile(gif);
 #endif
 	gif = 0;
@@ -309,7 +300,7 @@ int mglCanvas::NewFrame()
 //-----------------------------------------------------------------------------
 void mglCanvas::EndFrame()
 {
-#ifdef HAVE_GIF
+#if MGL_HAVE_GIF
 	long width, height, n;
 	unsigned char *f=0, **l=0;
 	l = GetRGBLines(width, height, f);

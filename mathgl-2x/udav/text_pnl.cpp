@@ -244,7 +244,7 @@ void TextPanel::newCmd()
 	newCmdDlg->show();
 }
 //-----------------------------------------------------------------------------
-#ifndef HAVE_HDF5
+#if MGL_HAVE_HDF5==0
 void TextPanel::saveHDF5(const QString &fileName){}
 void TextPanel::loadHDF5(const QString &fileName){}
 //-----------------------------------------------------------------------------

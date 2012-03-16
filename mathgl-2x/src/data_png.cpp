@@ -19,9 +19,7 @@
  ***************************************************************************/
 #include <stdlib.h>
 #include <zlib.h>
-#ifndef NO_PNG
 #include <png.h>
-#endif
 #include "mgl/data.h"
 //-----------------------------------------------------------------------------
 long mgl_col_dif(unsigned char *c1,unsigned char *c2,bool sum)
@@ -70,7 +68,6 @@ void mgl_data_import(HMDT d, const char *fname, const char *scheme,float v1,floa
 {
 	if(v1>=v2)	return;
 	long num=0;
-#ifndef NO_PNG
 	FILE *fp = fopen(fname, "rb");
 	if (!fp)	return;
 	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
@@ -109,7 +106,6 @@ void mgl_data_import(HMDT d, const char *fname, const char *scheme,float v1,floa
 	delete []c;
 	png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
 	fclose(fp);
-#endif
 }
 //-----------------------------------------------------------------------------
 void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,float v2,long ns)
@@ -126,7 +122,6 @@ void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,flo
 		{	vv = dd->vthr(i);	if(vv<v1)	v1=vv;	if(vv>v2)	v2=vv;	}
 	}
 	if(v1==v2)	return;
-#ifndef NO_PNG
 	long num=0;
 	unsigned char *c = mgl_create_scheme(scheme,num);
 	if(num<2)	{	delete []c;		return;		}
@@ -159,7 +154,6 @@ void mgl_data_export(HCDT dd, const char *fname, const char *scheme,float v1,flo
 	png_write_end(png_ptr, info_ptr);
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);	free(p);	free(d);
-#endif
 }
 //-----------------------------------------------------------------------------
 void mgl_data_export_(uintptr_t *d, const char *fname, const char *scheme,float *v1,float *v2,int *ns,int l,int n)

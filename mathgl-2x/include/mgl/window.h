@@ -29,7 +29,7 @@ struct mglDraw
 {
 	virtual int Draw(mglGraph *){}	///< Function for drawing
 	virtual void Reload()	{}		///< Function for reloading data
-#ifdef HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD
 	pthread_t thr;
 	bool running;
 	mglDraw()	{	running=false;	}
@@ -44,10 +44,10 @@ int mgl_draw_graph(mglBase *gr, void *p);
 // NOTE: mgl_draw_class() use mglWindow* only. Don't use it with inherited classes
 int mgl_draw_class(mglBase *gr, void *p);
 //-----------------------------------------------------------------------------
-#ifndef HAVE_QT
-#define MGL_WND_KIND	0
-#else
+#if MGL_HAVE_QT
 #define MGL_WND_KIND	1
+#else
+#define MGL_WND_KIND	0
 #endif
 class mglWindow : public mglGraph
 {

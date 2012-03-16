@@ -152,7 +152,7 @@ void mgl_wnd_animation_(uintptr_t *gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
 	if(g)	g->Animation();	}
 //-----------------------------------------------------------------------------
-#ifndef HAVE_FLTK
+#if MGL_HAVE_FLTK==0
 HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *)
 {	return NULL;	}
 int mgl_fltk_run(){return 0;}
@@ -166,7 +166,7 @@ uintptr_t mgl_create_graph_fltk_(const char *title, int l)
 }
 int mgl_fltk_run_()	{	return mgl_fltk_run();	}
 //-----------------------------------------------------------------------------
-#ifndef HAVE_QT
+#if MGL_HAVE_QT==0
 HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *)
 {	return NULL;	}
 int mgl_qt_run(){return 0;}
@@ -199,7 +199,7 @@ int mgl_draw_graph(mglBase *gr, void *p)
 //-----------------------------------------------------------------------------
 void *mgl_draw_calc(void *p)
 {
-#ifdef HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD
 	((mglDraw *)p)->Calc();
 #endif
 	return 0;
@@ -207,7 +207,7 @@ void *mgl_draw_calc(void *p)
 //-----------------------------------------------------------------------------
 void mgl_draw_thr(void *p)
 {
-#ifdef HAVE_PTHREAD
+#if MGL_HAVE_PTHREAD
 	mglDraw *d = (mglDraw *)p;
 	if(!d || d->running)	return;
 	pthread_create(&(d->thr),0,mgl_draw_calc,d);
