@@ -28,7 +28,7 @@
 #include "mgl/mgl.h"
 #include "mgl/eval.h"
 //#include <mgl/mgl_idtf.h>
-#include "mgl/parser.h"
+//#include "mgl/parser.h"
 //-----------------------------------------------------------------------------
 void mgls_prepare1d(mglData *y, mglData *y1=0, mglData *y2=0, mglData *x1=0, mglData *x2=0);
 void mgls_prepare2d(mglData *a, mglData *b=0, mglData *v=0);
@@ -49,17 +49,10 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	int i, n=1000;
-	mglData x(n),y(n),z(n);
-	for(i=0;i<n;i++)
-	{
-		float t=M_PI*(mgl_rnd()-0.5), f=2*M_PI*mgl_rnd();
-		x.a[i] = 0.9*cos(t)*cos(f);
-		y.a[i] = 0.9*cos(t)*sin(f);
-		z.a[i] = 0.6*sin(t);
-	}
-	if(!mini)	gr->Title("Dots sample");
-	gr->Rotate(50,60);	gr->Box();	gr->Dots(x,y,z);
+	gr->SubPlot(1,1,0); gr->Title("Venn-like diagram");	gr->Alpha(true);
+	gr->Circle(mglPoint(-0.3,0.3),0.7,"rr@");
+	gr->Circle(mglPoint(0,-0.3),0.7,"gg@");
+	gr->Circle(mglPoint( 0.3,0.3),0.7,"bb@");
 	return;
 	
 	mglParse par;
@@ -1276,7 +1269,7 @@ void smgl_fit(mglGraph *gr)	// nonlinear fitting
 	gr->Puts(mglPoint(-0.9, -1.3), "fitted:", "r:L");
 	gr->PutsFit(mglPoint(0, -1.8), "y = ", "r");
 	gr->Puts(mglPoint(0, 2.2), "initial: y = 0.3+sin(2\\pi x)", "b");
-	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));	gr->SetOrigin(0,0,0);
+//	gr->SetRanges(mglPoint(-1,-1,-1),mglPoint(1,1,1));	gr->SetOrigin(0,0,0);
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_vect="subplot 3 2 0 '':title 'Vect plot (default)':box:vect a b\n"

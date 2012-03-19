@@ -12,7 +12,7 @@ The core of MathGL is @strong{mglGraph} class defined in @code{#include <mgl/mgl
 * Axis settings::
 * Transformation matrix::
 * Export picture::
-* Primitives drawing::
+* Primitives::
 * Text printing::
 * Axis and Colorbar::
 * Legend::
@@ -95,7 +95,7 @@ Sets name of plot for saving filename (in FLTK window for example).
 @cindex AlphaDef
 @cindex TranspType
 
-There are several functions and variables for setup transparency. The general function is @ref{alpha} which switch on/off the transparency for overall plot. It influence only for graphics which created after @ref{alpha} call (with one exception, OpenGL). Function @ref{alphadef} specify the default value of alpha-channel. Finally, function @ref{transptype} set the kind of transparency. @sref{Transparent surface sample}
+There are several functions and variables for setup transparency. The general function is @ref{alpha} which switch on/off the transparency for overall plot. It influence only for graphics which created after @ref{alpha} call (with one exception, OpenGL). Function @ref{alphadef} specify the default value of alpha-channel. Finally, function @ref{transptype} set the kind of transparency. @sref{Transparency and lighting}
 
 @anchor{alpha}
 @deftypefn {MGL command} {} alpha @code{[val=on]}
@@ -119,9 +119,18 @@ Sets default value of alpha channel (transparency) for all plotting functions. I
 @deftypefn {MGL command} {} transptype @code{val}
 @ifclear UDAV
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetTranspType (@code{int} type)
-@deftypefnx {C function} @code{void} mgl_set_transp_type (@code{HMGL} gr, @code{int} enable)
+@deftypefnx {C function} @code{void} mgl_set_transp_type (@code{HMGL} gr, @code{int} type)
 @end ifclear
-Set the transparency type. Normal transparency (@samp{0}) -- below things is less visible than upper ones. It does not look well in OpenGL mode (mglGraphGL) for several surfaces. Glass-like transparency (@samp{1}) -- below and upper things are commutable and just decrease intensity of light by RGB channel. Lamp-like transparency (@samp{2}) -- below and upper things are commutable and are the source of some additional light. I recommend to set @code{SetAlphaDef(0.3)} or less for lamp-like transparency. @xref{Normal transparency}, @ref{Glass-like transparency}, @ref{Lamp-like transparency}.
+Set the type of transparency. Possible values are:
+@itemize @bullet
+@item
+Normal transparency (@samp{0}) -- below things is less visible than upper ones. It does not look well in OpenGL mode (mglGraphGL) for several surfaces.
+@item
+Glass-like transparency (@samp{1}) -- below and upper things are commutable and just decrease intensity of light by RGB channel.
+@item
+Lamp-like transparency (@samp{2}) -- below and upper things are commutable and are the source of some additional light. I recommend to set @code{SetAlphaDef(0.3)} or less for lamp-like transparency.
+@end itemize
+@sref{Types of transparency}.
 @end deftypefn
 
 @c ==================================================================
@@ -193,7 +202,7 @@ Sets the brightness of ambient light. The value should be in range [0,1].
 @deftypefnx {Method on @code{mglGraph}} @code{void} Fog (@code{float} d, @code{float} dz=@code{0.25})
 @deftypefnx {C function} @code{void} mgl_set_fog (@code{HMGL} gr, @code{float} d, @code{float} dz)
 @end ifclear
-Function imitate a fog in the plot. Fog start from relative distance @var{dz} from view point and its density growths exponentially in depth. So that the fog influence is determined by law ~ 1-exp(-@emph{d*z}). Here @emph{z} is normalized to 1 depth of the plot. If value @var{d}=@code{0} then the fog is absent. Note, that fog was applied at stage of image creation, not at stage of drawing. @sref{Surface in fog sample}
+Function imitate a fog in the plot. Fog start from relative distance @var{dz} from view point and its density growths exponentially in depth. So that the fog influence is determined by law ~ 1-exp(-@emph{d*z}). Here @emph{z} is normalized to 1 depth of the plot. If value @var{d}=@code{0} then the fog is absent. Note, that fog was applied at stage of image creation, not at stage of drawing. @sref{Adding fog}
 @end deftypefn
 
 @c ==================================================================
@@ -237,7 +246,7 @@ Sets size of marks for @ref{1D plotting}. Default value is @code{0.02}.
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetArrowSize (@code{float} val)
 @deftypefnx {C function} @code{void} mgl_set_arrow_size (@code{HMGL} gr, @code{float} val)
 @end ifclear
-Sets size of arrows for @ref{1D plotting}, lines and curves (see @ref{Primitives drawing}). Default value is @code{0.03}.
+Sets size of arrows for @ref{1D plotting}, lines and curves (see @ref{Primitives}). Default value is @code{0.03}.
 @end deftypefn
 
 @anchor{meshnum}
@@ -693,7 +702,18 @@ These functions control how and where further plotting will be placed. There is 
 @deftypefnx {C function} @code{void} mgl_subplot (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{const char *}stl)
 @deftypefnx {C function} @code{void} mgl_subplot_d (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{const char *}stl, @code{float} dx, @code{float} dy)
 @end ifclear
-Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. This function set off any aspects or rotations. So it should be used first for creating the subplot. Extra space will be reserved for axis/colorbar if @var{stl} contain: @samp{L} or @samp{<} -- at left side, @samp{R} or @samp{>} -- at right side, @samp{A} or @samp{^} -- at top side, @samp{U} or @samp{_} -- at bottom side. From the aesthetical point of view it is not recommended to use this function with different matrices in the same frame. The position of the cell can be shifted from its default position by relative size @var{dx}, @var{dy}.
+Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. This function set off any aspects or rotations. So it should be used first for creating the subplot. Extra space will be reserved for axis/colorbar if @var{stl} contain:
+@itemize @bullet
+@item
+@samp{L} or @samp{<} -- at left side,
+@item
+@samp{R} or @samp{>} -- at right side,
+@item
+@samp{A} or @samp{^} -- at top side,
+@item
+@samp{U} or @samp{_} -- at bottom side.
+@end itemize
+From the aesthetical point of view it is not recommended to use this function with different matrices in the same frame. The position of the cell can be shifted from its default position by relative size @var{dx}, @var{dy}.
 @end deftypefn
 
 @anchor{multiplot}
@@ -702,7 +722,17 @@ Puts further plotting in a @var{m}-th cell of @var{nx}*@var{ny} grid of the whol
 @deftypefnx {Method on @code{mglGraph}} @code{void} MultiPlot (@code{int} nx, @code{int} ny, @code{int} m, @code{int} dx, @code{int} dy, @code{const char *}stl=@code{"<>_^"})
 @deftypefnx {C function} @code{void} mgl_multiplot (@code{HMGL} gr, @code{int} nx, @code{int} ny, @code{int} m, @code{int} dx, @code{int} dy, @code{const char *}stl)
 @end ifclear
-Puts further plotting in a rectangle of @var{dx}*@var{dy} cells starting from @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. This function set off any aspects or rotations.  So it should be used first for creating subplot. Extra space will be reserved for axis/colorbar if @var{stl} contain: @samp{L} or @samp{<} -- at left side, @samp{R} or @samp{>} -- at right side, @samp{A} or @samp{^} -- at top side, @samp{U} or @samp{_} -- at bottom side.
+Puts further plotting in a rectangle of @var{dx}*@var{dy} cells starting from @var{m}-th cell of @var{nx}*@var{ny} grid of the whole frame area. This function set off any aspects or rotations.  So it should be used first for creating subplot. Extra space will be reserved for axis/colorbar if @var{stl} contain:
+@itemize @bullet
+@item
+@samp{L} or @samp{<} -- at left side,
+@item
+@samp{R} or @samp{>} -- at right side,
+@item
+@samp{A} or @samp{^} -- at top side,
+@item
+@samp{U} or @samp{_} -- at bottom side.
+@end itemize
 @end deftypefn
 
 @anchor{inplot}
@@ -817,7 +847,7 @@ The function changes the scale of graphics that correspond to zoom in/out of the
 @end ifclear
 
 @c ##################################################################
-@node Export picture, Primitives drawing, Transformation matrix, MathGL core
+@node Export picture, Primitives, Transformation matrix, MathGL core
 @section Export picture
 @cindex SetSize
 
@@ -1146,8 +1176,8 @@ Receive graphical information from node @var{id} using MPI. The width and height
 
 
 @c ##################################################################
-@node Primitives drawing, Text printing, Export picture, MathGL core
-@section Primitives drawing
+@node Primitives, Text printing, Export picture, MathGL core
+@section Primitives
 @cindex Ball
 @cindex Clf
 @cindex Line
@@ -1167,7 +1197,7 @@ Receive graphical information from node @var{id} using MPI. The width and height
 @end ifclear
 
 
-These functions draw some simple objects like line, point, sphere, drop, cone and so on. @sref{Primitives sample}
+These functions draw some simple objects like line, point, sphere, drop, cone and so on. @sref{Using primitives}
 
 @anchor{clf}
 @deftypefn {MGL command} {} clf
@@ -1257,7 +1287,7 @@ Draw the sphere with radius @var{r} and center at point @var{p}=@{@var{x0}, @var
 @deftypefnx {Method on @code{mglGraph}} @code{void} Drop (@code{mglPoint} p, @code{mglPoint} d, @code{float} r, @code{const char *}stl=@code{"r"}, @code{float} shift=@code{1}, @code{float} ap=@code{1})
 @deftypefnx {C function} @code{void} mgl_drop (@code{HMGL} gr, @code{float} x0, @code{float} y0, @code{float} z0, @code{float} dx, @code{float} dy, @code{float} dz, @code{float} r, @code{const char *}col, @code{float} shift, @code{float} ap)
 @end ifclear
-Draw the drop with radius @var{r} at point @var{p} elongated in direction @var{d} and with color @var{col}. Parameter @var{shift} set the degree of drop oblongness: @samp{0} is sphere, @samp{1} is maximally oblongness drop. Parameter @var{ap} set relative width of the drop (this is analogue of ``ellipticity'' for the sphere). @sref{Drops sample}
+Draw the drop with radius @var{r} at point @var{p} elongated in direction @var{d} and with color @var{col}. Parameter @var{shift} set the degree of drop oblongness: @samp{0} is sphere, @samp{1} is maximally oblongness drop. Parameter @var{ap} set relative width of the drop (this is analogue of ``ellipticity'' for the sphere).
 @end deftypefn
 
 @anchor{cone}
@@ -1299,7 +1329,7 @@ Draw the rhombus with width @var{r} and edge points @var{p1}, @var{p2} by color 
 @end deftypefn
 
 @c ##################################################################
-@node Text printing, Axis and Colorbar, Primitives drawing, MathGL core
+@node Text printing, Axis and Colorbar, Primitives, MathGL core
 @section Text printing
 @ifclear UDAV
 @cindex Puts
@@ -1315,7 +1345,7 @@ The font parameters are described by string. This string may set the text color 
 
 If string contains symbols @samp{aA} then text is printed at arbitrary position @{@var{x}, @var{y}@} (supposed to be in range [0,1]) of subplot (for @samp{a}) or picture (for @samp{A}). If string contains symbol @samp{@@} then box around text is drawn.
 
-@sref{Text sample}
+@sref{Text features}
 
 @anchor{text}
 @deftypefn {MGL command} {} text @code{x y} 'text' ['fnt'='' @code{size=-1}]
@@ -1449,7 +1479,7 @@ Draws grid lines perpendicular to direction determined by string parameter @var{
 @deftypefnx {C function} @code{void} mgl_box (@code{HMGL} gr, @code{int} ticks)
 @deftypefnx {C function} @code{void} mgl_box_str (@code{HMGL} gr, @code{const char *}col, @code{int} ticks)
 @end ifclear
-Draws bounding box outside the plotting volume with color @var{col}. If @var{col} contain @samp{@@} then filled faces are drawn. At this first color is used for faces (default is light yellow), last one for edges. @sref{Box sample}
+Draws bounding box outside the plotting volume with color @var{col}. If @var{col} contain @samp{@@} then filled faces are drawn. At this first color is used for faces (default is light yellow), last one for edges. @sref{Bounding box}
 @end deftypefn
 
 @anchor{xlabel}
@@ -2274,7 +2304,7 @@ The function draws horizontal tiles for surface specified parametrically @{@var{
 @deftypefnx {C function} @code{void} mgl_map (@code{HMGL} gr, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @deftypefnx {C function} @code{void} mgl_map_xy (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} ax, @code{HCDT} ay, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function draws mapping plot for matrices @{@var{ax}, @var{ay} @} which parametrically depend on coordinates @var{x}, @var{y}. The initial position of the cell (point) is marked by color. Height is proportional to Jacobian(ax,ay). This plot is like Arnold diagram ???. If string @var{sch} contain symbol @samp{.} then the color ball at matrix knots are drawn otherwise face is drawn. @sref{Map sample}
+The function draws mapping plot for matrices @{@var{ax}, @var{ay} @} which parametrically depend on coordinates @var{x}, @var{y}. The initial position of the cell (point) is marked by color. Height is proportional to Jacobian(ax,ay). This plot is like Arnold diagram ???. If string @var{sch} contain symbol @samp{.} then the color ball at matrix knots are drawn otherwise face is drawn. @sref{Mapping visualization}
 @end deftypefn
 
 @anchor{stfa}
@@ -2448,7 +2478,7 @@ This is 3D version of the first functions. Here arrays @var{ax}, @var{ay}, @var{
 @cindex QuadPlot
 @cindex Plots by formula
 
-These functions perform miscellaneous plotting. There is unstructured data points plots (Dots), surface reconstruction (Crust), surfaces on the triangular mesh (TriPlot), textual formula plotting (Plots by formula), data plots at edges (Dens[XYZ], Cont[XYZ], ContF[XYZ]), simple plot (SimplePlot). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
+These functions perform miscellaneous plotting. There is unstructured data points plots (Dots), surface reconstruction (Crust), surfaces on the triangular or quadrangular mesh (TriPlot, TriCont, QuadPlot), textual formula plotting (Plots by formula), data plots at edges (Dens[XYZ], Cont[XYZ], ContF[XYZ]). Each type of plotting has similar interface. There are 2 kind of versions which handle the arrays of data and coordinates or only single data array. Parameters of color scheme are specified by the string argument. @xref{Color scheme}.
 
 @anchor{densz} @anchor{densy} @anchor{densx} @anchor{DensXYZ}
 @deftypefn {MGL command} {} densx dat ['sch'='' @code{sval=nan}]
@@ -2634,7 +2664,7 @@ The function draws the arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}
 @deftypefnx {Method on @code{mglGraph}} @code{void} Crust (@code{const mglData &}x, @code{const mglData &}y, @code{const mglData &}z, @code{const char *}sch=@code{""}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{void} mgl_crust (@code{HMGL} gr, @code{HCDT} x, @code{HCDT} y, @code{HCDT} z, @code{const char *}sch, @code{const char *}opt)
 @end ifclear
-The function reconstruct and draws the surface for arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also @ref{dots}, @ref{triplot}. @sref{Crust sample}
+The function reconstruct and draws the surface for arbitrary placed points @{@var{x}[i], @var{y}[i], @var{z}[i]@}. String @var{sch} sets the color scheme. Previous color scheme is used by default. If string contain @samp{#} then wire plot is produced. Arrays @var{x}, @var{y}, @var{z} must have equal sizes. See also @ref{dots}, @ref{triplot}. @c @sref{Crust sample}
 @end deftypefn
 
 @c ##################################################################
@@ -2649,7 +2679,7 @@ The function reconstruct and draws the surface for arbitrary placed points @{@va
 
 These functions fit data to formula. Fitting goal is to find formula parameters for the best fit the data points, i.e. to minimize the sum @math{\sum_i (f(x_i, y_i, z_i) - a_i)^2/s_i^2}. At this, approximation function @samp{f} can depend only on one argument @samp{x} (1D case), on two arguments @samp{x,y} (2D case) and on three arguments @samp{x,y,z} (3D case). The function @samp{f} also may depend on parameters. Normally the list of fitted parameters is specified by @var{var} string (like, @samp{abcd}). Usually user should supply initial values for fitted parameters by @var{ini} variable. But if he/she don't supply it then the zeros are used. Parameter @var{print}=@code{true} switch on printing the found coefficients to @var{Message} (see @ref{Error handling}).
 
-Functions Fit() and FitS() do not draw the obtained data themselves. They fill the data @var{fit} by formula @samp{f} with found coefficients and return it. At this, the @samp{x,y,z} coordinates are equidistantly distributed in the axis range. Number of points in @var{fit} is selected as maximal value of @var{fit} size and the value of @var{mglFitPnts}. Note, that this functions use GSL library and do something only if MathGL was compiled with GSL support. @sref{Fitting sample}
+Functions Fit() and FitS() do not draw the obtained data themselves. They fill the data @var{fit} by formula @samp{f} with found coefficients and return it. At this, the @samp{x,y,z} coordinates are equidistantly distributed in the axis range. Number of points in @var{fit} is selected as maximal value of @var{fit} size and the value of @var{mglFitPnts}. Note, that this functions use GSL library and do something only if MathGL was compiled with GSL support. @sref{Nonlinear fitting sample}
 
 @anchor{fits}
 @deftypefn {MGL command} {} fits res adat sdat 'func' 'var' [ini=0]
@@ -2761,15 +2791,12 @@ Fills the value of array according to the formula in string @var{eq}. Formula is
 @deftypefnx {Method on @code{mglGraph}} @code{mglData} PDE (@code{const char *}ham, @code{const mglData &}ini_re, @code{const mglData &}ini_im, @code{float} dz=@code{0.1}, @code{float} k0=@code{100}, @code{const char *}opt=@code{""})
 @deftypefnx {C function} @code{HMDT} mgl_pde_solve (@code{HMGL} gr, @code{const char *}ham, @code{HCDT} ini_re, @code{HCDT} ini_im, @code{float} dz, @code{float} k0, @code{const char *}opt)
 @end ifclear
-Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{Min}, @var{Max} set the bounding box for the solution. Note, that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for field amplitude |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham="p^2 + q^2 - u^2"}. You may specify imaginary part for wave absorption, like @code{ham = "p^2 + i*x*(x>0)"}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}). @sref{PDE sample}  @sref{PDE sample}
+Solves equation du/dz = i*k0*@var{ham}(p,q,x,y,z,|u|)[u], where p=-i/k0*d/dx, q=-i/k0*d/dy are pseudo-differential operators. Parameters @var{ini_re}, @var{ini_im} specify real and imaginary part of initial field distribution. Parameters @var{Min}, @var{Max} set the bounding box for the solution. Note, that really this ranges are increased by factor 3/2 for purpose of reducing reflection from boundaries. Parameter @var{dz} set the step along evolutionary coordinate z. At this moment, simplified form of function @var{ham} is supported -- all ``mixed'' terms (like @samp{x*p}->x*d/dx) are excluded. For example, in 2D case this function is effectively @math{ham = f(p,z) + g(x,z,u)}. However commutable combinations (like @samp{x*q}->x*d/dy) are allowed. Here variable @samp{u} is used for field amplitude |u|. This allow one solve nonlinear problems -- for example, for nonlinear Shrodinger equation you may set @code{ham="p^2 + q^2 - u^2"}. You may specify imaginary part for wave absorption, like @code{ham = "p^2 + i*x*(x>0)"}, but only if dependence on variable @samp{i} is linear (i.e. @math{ham = hre+i*him}). @sref{PDE solving hints}
 @end deftypefn
 
 @c ##################################################################
 @node IDTF functions, , Data manipulation, MathGL core
 @section IDTF functions
-@cindex NewFrame
-@cindex EndFrame
-@cindex GetNumFrame
 
 These functions provide IDTF specific features. In all other cases they do nothing.
 

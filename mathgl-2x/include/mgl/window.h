@@ -27,7 +27,7 @@
 /// Make inherited class and redefine Draw() function if you don't want to use function pointers.
 struct mglDraw
 {
-	virtual int Draw(mglGraph *){}	///< Function for drawing
+	virtual int Draw(mglGraph *)=0;	///< Function for drawing
 	virtual void Reload()	{}		///< Function for reloading data
 #if MGL_HAVE_PTHREAD
 	pthread_t thr;

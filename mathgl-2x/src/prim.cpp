@@ -149,8 +149,8 @@ void mgl_face(HMGL gr, float x0, float y0, float z0, float x1, float y1, float z
 	q2 = (p1-p2)^(p4-p2);	q3 = (p1-p3)^(p4-p3);
 	gr->Reserve(4);
 	long k1,k2,k3,k4;
-	k1 = gr->AddPnt(p1,c1,q1,-1,3);	k2 = gr->AddPnt(p2,c2,q2,-1,3);
-	k3 = gr->AddPnt(p3,c3,q3,-1,3);	k4 = gr->AddPnt(p4,c4,q4,-1,3);
+	k1 = gr->AddPnt(p1,c1,q1,-1,11);	k2 = gr->AddPnt(p2,c2,q2,-1,11);
+	k3 = gr->AddPnt(p3,c3,q3,-1,11);	k4 = gr->AddPnt(p4,c4,q4,-1,11);
 	gr->quad_plot(k1,k2,k3,k4);
 	if(strchr(stl,'#'))
 	{
@@ -329,22 +329,24 @@ void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, floa
 	const int n = 41;
 	long pal=0,n0,n1=-1,n2,m1=-1,m2;
 	gr->SetPenPal(stl,&pal);
-	float c=gr->NextColor(pal);
+	float c=gr->NextColor(pal), d;
 	float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
 	bool fill = !(stl && strchr(stl,'#')), box = (stl && strchr(stl,'@')) || !fill;
 	if(!fill)	k=c;
 
 	gr->Reserve(2*n+1);
-	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), v=p2-p1, u=mglPoint(0,0,1)^v, q=u^v, p, s;
-	u = (r/u.norm())*u;	s = (p1+p2)/2.;	v *=0.5+r/v.norm();
+	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), v=p2-p1;
+	d = v.norm();
+	if(d==0)	v = mglPoint(r);	else	v *= r/d;
+	mglPoint u=(mglPoint(0,0,1)^v)*sqrt(d*d/r/r+1), q=u^v, p, s=(p1+p2)/2.;
 	// central point first
-	n0 = gr->AddPnt(p1,c,q,-1,3);
+	n0 = gr->AddPnt(p1,c,q,-1,11);
 	for(long i=0;i<n;i++)
 	{
 		if(gr->Stop)	return;
 		float t = i*2*M_PI/(n-1.);
 		p = s+v*cos(t)+u*sin(t);
-		n2 = n1;	n1 = gr->AddPnt(p,c,q,-1,3);
+		n2 = n1;	n1 = gr->AddPnt(p,c,q,-1,11);
 		m2 = m1;	m1 = gr->CopyNtoC(n1,k);
 		if(i>0)
 		{
@@ -366,10 +368,10 @@ void mgl_rhomb(HMGL gr, float x1, float y1, float z1, float x2, float y2, float 
 	gr->Reserve(8);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), u=mglPoint(0,0,1)^(p1-p2), q=u^(p1-p2), p, s,qq;
 	u = (r/u.norm())*u;	s = (p1+p2)/2.;
-	p = p1;	q = qq;	n1 = gr->AddPnt(p,c,qq,-1,3);
-	p = s+u;q = qq;	n2 = gr->AddPnt(p,b==c?c:k,qq,-1,3);
-	p = p2;	q = qq;	n3 = gr->AddPnt(p,b,qq,-1,3);
-	p = s-u;q = qq;	n4 = gr->AddPnt(p,b==c?c:k,qq,-1,3);
+	p = p1;	q = qq;	n1 = gr->AddPnt(p,c,qq,-1,11);
+	p = s+u;q = qq;	n2 = gr->AddPnt(p,b==c?c:k,qq,-1,11);
+	p = p2;	q = qq;	n3 = gr->AddPnt(p,b,qq,-1,11);
+	p = s-u;q = qq;	n4 = gr->AddPnt(p,b==c?c:k,qq,-1,11);
 	if(fill)	gr->quad_plot(n1,n2,n4,n3);
 	n1 = gr->CopyNtoC(n1,k);	n2 = gr->CopyNtoC(n2,k);
 	n3 = gr->CopyNtoC(n3,k);	n4 = gr->CopyNtoC(n4,k);

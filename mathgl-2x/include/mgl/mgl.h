@@ -1126,4 +1126,21 @@ public:
 	inline void Stop()	{	mgl_parser_stop(pr);	}
 };
 //-----------------------------------------------------------------------------
+/// Wrapper class expression evaluating
+class mglExpr
+{
+	HMEX ex;
+public:
+	mglExpr(const char *expr)		{	ex = mgl_create_expr(expr);	}
+	~mglExpr()	{	mgl_delete_expr(ex);	}
+	inline mreal Eval(mreal x, mreal y=0, mreal z=0)
+	{	return mgl_expr_eval(ex,x,y,z);	}
+	inline mreal Eval(mreal var[26])
+	{	return mgl_expr_eval_v(ex,var);	}
+	inline mreal Diff(char dir, mreal x, mreal y=0, mreal z=0)
+	{	return mgl_expr_diff(ex,dir, x,y,z);	}
+	inline mreal Diff(char dir, mreal var[26])
+	{	return mgl_expr_diff_v(ex,dir, var);	}
+};
+//-----------------------------------------------------------------------------
 #endif

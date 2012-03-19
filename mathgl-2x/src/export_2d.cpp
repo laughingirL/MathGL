@@ -184,7 +184,7 @@ mglColor mglCanvas::GetColor(const mglPrim &p)
 void mgl_write_eps(HMGL gr, const char *fname,const char *descr)
 {
 	if(gr->GetPrmNum()<1)	return;
-	_Gr_->Finish();
+	_Gr_->Finish(false);
 	time_t now;	time(&now);
 
 	bool gz = fname[strlen(fname)-1]=='z';
@@ -362,7 +362,7 @@ void mgl_write_eps_(uintptr_t *gr, const char *fname,const char *descr,int l,int
 void mgl_write_svg(HMGL gr, const char *fname,const char *descr)
 {
 	if(gr->GetPrmNum()<1)	return;
-	_Gr_->Finish();
+	_Gr_->Finish(false);
 	time_t now;	time(&now);
 
 	bool gz = fname[strlen(fname)-1]=='z';
@@ -756,7 +756,7 @@ const char *mglColorName(mglColor c)	// return closest SVG color
 void mgl_write_tex(HMGL gr, const char *fname,const char *descr)
 {
 	if(gr->GetPrmNum()<1)	return;
-	_Gr_->Finish();
+	_Gr_->Finish(false);
 	FILE *fp=fopen("mglcolors.tex","wt");
 	register int ii,jj,kk;	// save colors which can be required at output
 	for(ii=0;ii<6;ii++)	for(jj=0;jj<6;jj++)	for(kk=0;kk<6;kk++)

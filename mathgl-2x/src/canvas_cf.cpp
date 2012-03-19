@@ -372,3 +372,24 @@ void mgl_mpi_recv_(uintptr_t *gr, int *id)	{	mgl_mpi_recv(_GR_, *id);	}
 void mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt)	{	_GR_->SetDelay(*dt);	}
 void mgl_wnd_set_delay(HMGL gr, mreal dt)	{	_Gr_->SetDelay(dt);	}
 //-----------------------------------------------------------------------------
+HMEX mgl_create_expr(const char *expr)	{	return new mglFormula(expr);	}
+void mgl_delete_expr(HMEX ex)	{	delete ex;	}
+mreal mgl_expr_eval(HMEX ex, mreal x, mreal y,mreal z)
+{	return ex->Calc(x,y,z);	}
+mreal mgl_expr_eval_v(HMEX ex, mreal *var)
+{	return ex->Calc(var);	}
+mreal mgl_expr_diff(HMEX ex, char dir, mreal x, mreal y,mreal z)
+{	return ex->CalcD(dir,x,y,z);	}
+mreal mgl_expr_diff_v(HMEX ex, char dir, mreal *var)
+{	return ex->CalcD(var, dir);		}
+//-----------------------------------------------------------------------------
+uintptr_t mgl_create_expr_(const char *expr, int l)
+{	char *s=new char[l+1];	memcpy(s,expr,l);	s[l]=0;
+	uintptr_t res = uintptr_t(mgl_create_expr(s));
+	delete []s;	return res;	}
+void mgl_delete_expr_(uintptr_t *ex)	{	mgl_delete_expr((HMEX)ex);	}
+float mgl_eval_expr_(uintptr_t *ex, float *x, float *y,float *z)
+{	return mgl_expr_eval((HMEX) ex, *x,*y,*z);		}
+float mgl_diff_expr_(uintptr_t *ex, const char *dir, float *x, float *y,float *z, int)
+{	return mgl_expr_diff((HMEX) ex, *dir,*x,*y,*z);	}
+//-----------------------------------------------------------------------------

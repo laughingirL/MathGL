@@ -7,6 +7,7 @@
 5. Check MGLD in mglview
 6. check Hankel()
 7. check Chart() -- '#' style + missing face!!!
+8. check Dew() !!!
 
 ============= NEW  =============
 
@@ -17,7 +18,7 @@
 1. MPI_Send(), MPI_Recv()
 2. Use Hershey as built-in font ?!!
 3. Import/Export via GIF (as 3d data) ???
-4. Read DICOM files.
+4. Read DICOM files ???
 5. Export to JavaScript (WebGL)
 6. GTK and WX window/widgets
 7. Labels at TriCont()
@@ -89,28 +90,22 @@ Remove other setting if data name is changed.
 
 ============= DOCS =============
 
-1. Write "Quick start" userguide
-2. FAQ about sizes of plot (parametrical+inverted, or Min*Max)
+1. Add mglBase, mglCanvas in other_en.texi + small comments about developing new plots.
+2. Add Class diagram for MathGL core
 3. FAQ about MinGW -- http://www.mingw.org/wiki/FAQ
-4. MGL docs -- text what formulas are applicable for scalars too.
-6. Add help about cmake and GIF/JPEG to the "Installation and using"
-7. On which things the subplot influence
-8. About unrotated text
-9. Add mglBase, mglCanvas in other_en.texi + small comments about developing new plots.
-10. New samples + update old ones
-11. Parallelization:
-	* MPI level -- Combine()
-	* MathGL level -- pthread in mglData, ???
+4. Add help about cmake and GIF/JPEG to the "Installation and using"
+5. On which things the subplot influence
+6. About unrotated text
 12. Boxs() styles: '#' for wire, '@' for full box.
 13. Add mgl_label_xyz(), mgl_label_xy(), mgl_label_y(). Possible numbers are: "%x" for x-coor, "%y" for y-coor, "%z" for z-coor.
-16. Symbol '!' denote sharp colors even in 1d plots (like different colors for points)
-18. mglview can preview MGLD files too -- check it
-19. Handle mglBase::Stop everywhere
-20. Number of frames can be changed at reload + manual call of draw_func if number of frames is 0.
-23. Add mgl_tape_*(), Tape() -- draw tapes which rotate as (bi)normale of curve. Width by value or depend on BarWidth
-24. Flow() and FlowP() draw tape of (bi)normales if character 'x' and/or 'z' is specified.
-25. Cones() -- like Bars() but by Cone(). Support 'a' for above.
-27. Add Class diagram for MathGL core
+14. Symbol '!' denote sharp colors even in 1d plots (like different colors for points)
+15. mglview can preview MGLD files too -- check it
+16. Handle mglBase::Stop everywhere
+17. Number of frames can be changed at reload + manual call of draw_func if number of frames is 0.
+18. Add mgl_tape_*(), Tape() -- draw tapes which rotate as (bi)normale of curve. Width by value or depend on BarWidth
+19. Flow() and FlowP() draw tape of (bi)normales if character 'x' and/or 'z' is specified.
+20. Cones() -- like Bars() but by Cone(). Support 'a' for above.
+21. Add mgl_create_expr(cchar*), mgl_eval_expr(x,y,z), mgl_eval_expr_v(float *), mgl_diff_expr(x,y,z), mgl_diff_expr_v(float *), mglExpr in mgl.h -- at the end of mglData
 
 ============= BUGS =============
 
@@ -135,9 +130,9 @@ Remove other setting if data name is changed.
 +		2.5 1D data plotting
 +		2.6 2D data plotting
 +		2.7 3D data plotting
-		2.8 Dual data plotting
-		2.9 Hints
-		2.10 FAQ
++		2.8 Dual data plotting
++		2.9 Hints
++		2.10 FAQ
 
 +	3. General concepts (class-diagram)
 +		3.1 Coordinate axes
@@ -164,9 +159,9 @@ Remove other setting if data name is changed.
 		4.12 3D plotting
 		4.13 Dual plotting
 		4.14 Vector fields
-		4.15 Other plotting
-		4.16 Nonlinear fitting
-		4.17 Data manipulation
++		4.15 Other plotting
++		4.16 Nonlinear fitting
++		4.17 Data manipulation
 ?		4.18 IDTF
 
 +	5. Widget classes

@@ -436,13 +436,16 @@ private:
 //-----------------------------------------------------------------------------
 class mglData;
 class mglParser;
+class mglFormula;
 typedef mglBase*  HMGL;
 typedef mglData* HMDT;
 typedef mglParser* HMPR;
+typedef mglFormula* HMEX;
 typedef const mglDataA* HCDT;
 #else
 typedef void *HMGL;
 typedef void *HMDT;
+typedef void *HMEX;
 typedef void *HMPR;
 typedef const void *HCDT;
 #endif

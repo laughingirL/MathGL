@@ -67,6 +67,12 @@ void mgl_legend_pos(HMGL gr, float x, float y, const char *font, float size, flo
 void mgl_legend(HMGL gr, int where, const char *font, float size, float llen);
 void mgl_set_legend_marks(HMGL gr, int num);
 
+HMEX mgl_create_expr(const char *expr);
+void mgl_delete_expr(HMEX ex);
+mreal mgl_expr_eval(HMEX ex, mreal x, mreal y,mreal z);
+mreal mgl_expr_eval_v(HMEX ex, mreal *var);
+mreal mgl_expr_diff(HMEX ex, char dir, mreal x, mreal y,mreal z);
+mreal mgl_expr_diff_v(HMEX ex, char dir, mreal *var);
 
 void mgl_show_image(HMGL gr, const char *viewer, int keep);
 void mgl_write_frame(HMGL gr, const char *fname,const char *descr);
@@ -175,6 +181,10 @@ void mgl_legend_pos_(uintptr_t *gr, float *x, float *y, const char *font, float 
 void mgl_legend_(uintptr_t *gr, int *where, const char *font, float *size, float *llen,int l);
 void mgl_set_legend_marks_(uintptr_t *gr, int *num);
 
+uintptr_t mgl_create_expr_(const char *expr, int);
+void mgl_delete_expr_(uintptr_t *ex);
+float mgl_eval_expr_(uintptr_t *ex, float *x, float *y,float *z);
+float mgl_diff_expr_(uintptr_t *ex, const char *dir, float *x, float *y,float *z, int);
 
 void mgl_show_image_(uintptr_t *graph, const char *viewer, int *keep, int);
 void mgl_write_frame_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
@@ -189,7 +199,7 @@ void mgl_write_idtf_(uintptr_t *graph, const char *fname,const char *descr,int l
 void mgl_write_gif_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_start_gif_(uintptr_t *graph, const char *fname,int *ms,int l);
 void mgl_close_gif_(uintptr_t *graph);
-void mgl_write_obj_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
+void mgl_write_obj_(uintptr_t *graph, const char *fname,const char *descr, int *use_png,int lf,int ld);
 void mgl_write_stl_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
 void mgl_write_off_(uintptr_t *graph, const char *fname,const char *descr,int *colored,int lf,int ld);
 void mgl_write_xyz_(uintptr_t *graph, const char *fname,const char *descr,int lf,int ld);
