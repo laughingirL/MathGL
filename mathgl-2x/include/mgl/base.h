@@ -328,12 +328,12 @@ public:
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}
 	inline float GetClrC(long i)	{	return Pnt[i].c;	}
 	inline long GetPntNum()			{	return Pnt.size();	}
-	inline mglPnt GetPnt(long i)	{	return Pnt[i];		}
+	inline mglPnt &GetPnt(long i)	{	return Pnt[i];		}
 	inline mglPrim &GetPrm(long i)	{	return Prm[i];		}
 	inline long GetPrmNum()			{	return Prm.size();	}
-	inline mglText GetPtx(long i)	{	return Ptx[i];		}
+	inline mglText &GetPtx(long i)	{	return Ptx[i];		}
 	inline long GetPtxNum()			{	return Ptx.size();	}
-	inline mglTexture GetTxt(long i){	return Txt[i];		}
+	inline mglTexture &GetTxt(long i){	return Txt[i];		}
 	inline long GetTxtNum()			{	return Txt.size();	}
 	/// Scale coordinates and cut off some points
 	virtual bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true);

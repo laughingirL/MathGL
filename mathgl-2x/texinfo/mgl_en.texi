@@ -66,8 +66,8 @@ supports it in developing GNU and promoting software freedom.''
 @end ifnottex
 
 @menu
-* Overview::
-* Examples::
+@c * Overview::
+@c * Examples::
 * MGL scripts::
 * General concepts::
 * MathGL core::
@@ -83,13 +83,13 @@ supports it in developing GNU and promoting software freedom.''
 @set UDAV
 
 
-@node Overview, Examples, , Top
-@include overview_en.texi
+@c @node Overview, Examples, , Top
+@c @include overview_en.texi
 
-@node Examples, MGL scripts, Overview, Top
-@include ex_mgl_en.texi
+@c @node Examples, MGL scripts, Overview, Top
+@c @include ex_mgl_en.texi
 
-@node MGL scripts, General concepts, Examples, Top
+@node MGL scripts, General concepts, , Top
 @include parse_en.texi
 
 @node General concepts, MathGL core, MGL scripts, Top

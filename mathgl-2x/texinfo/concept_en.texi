@@ -17,12 +17,11 @@ There are six most general (base) concepts:
 @item
 @strong{All plots are vector plots.} The MathGL library is intended for handling scientific data which have vector nature (lines, faces, matrices and so on). As a result, vector representation is used in all cases! In addition, the vector representation allows one to scale the plot easily -- change the canvas size by a factor of 2, and the picture will be proportionally scaled.
 @item
-@strong{New drawing never clears things drawn already.} This, in some sense, unexpected, idea allows to create a lot of ``combined'' graphics. For example, to make a surface with contour lines one needs to call the function for surface plotting and the function for contour lines plotting (in any order). Thus the special functions for making this ``combined'' plots (as it is done in Matlab and some other plotting systems) are superfluous. Many more examples of such plots can be found in section @ref{Hints} and in home site (@uref{http://mathgl.sf.net/index.html}).
+@strong{New drawing never clears things drawn already.} This, in some sense, unexpected, idea allows to create a lot of ``combined'' graphics. For example, to make a surface with contour lines one needs to call the function for surface plotting and the function for contour lines plotting (in any order). Thus the special functions for making this ``combined'' plots (as it is done in Matlab and some other plotting systems) are superfluous.
 @end enumerate
 
 In addition to the general concepts I want to comment on some non-trivial or less commonly used general ideas -- plot positioning, axis specification and curvilinear coordinates, styles for lines, text and color scheme.
 
-@ifclear UDAV
 @menu
 * Coordinate axes::
 * Color styles::
@@ -33,19 +32,6 @@ In addition to the general concepts I want to comment on some non-trivial or les
 * Command options::
 * Interfaces::
 @end menu
-@end ifclear
-
-@ifset UDAV
-@menu
-* Coordinate axes::
-* Color styles::
-* Line styles::
-* Color scheme::
-* Font styles::
-* Textual formulas::
-* Command options::
-@end menu
-@end ifset
 
 @c ------------------------------------------------------------------
 @node Coordinate axes, Color styles, , General concepts
@@ -174,7 +160,7 @@ The font size can be defined explicitly (if @var{size}>0) or relatively to a bas
 
 MathGL have the fast variant of textual formula evaluation
 @ifclear UDAV
- (@pxref{mglFormula class})
+(@pxref{Evaluate expression})
 @end ifclear
 . There are a lot of functions and operators available. The operators are: @samp{+} -- addition, @samp{-} -- subtraction, @samp{*} -- multiplication, @samp{/} -- division, @samp{^} -- integer power. Also there are logical ``operators'': @samp{<} -- true if x<y, @samp{>} -- true if x>y, @samp{=} -- true if x=y, @samp{&} -- true if x and y both nonzero, @samp{|} -- true if x or y nonzero. These logical operators have lowest priority and return 1 if true or 0 if false.
 
@@ -279,10 +265,14 @@ Set the value to be used as additional numeric parameter in plotting command.
 
 
 
-@ifclear UDAV
-
 @node Interfaces, , Command options, General concepts
 @section Interfaces
+
+@ifset UDAV
+You can use @code{mglParse} class for executing MGL scripts from different languages.
+@end ifset
+
+@ifclear UDAV
 
 The MathGL library has interfaces for a set of languages. Most of them are based on the C interface via SWIG tool. There are Python, Java, Octave, Lisp, C#, Guile, Lua, Modula 3, Ocaml, Perl, PHP, Pike, R, Ruby, and Tcl interfaces. Also there is a Fortran interface which has a similar set of functions, but slightly different types of arguments (integers instead of pointers). These functions are marked as [C function].
 

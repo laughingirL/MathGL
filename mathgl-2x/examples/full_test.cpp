@@ -49,10 +49,13 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	gr->SubPlot(1,1,0); gr->Title("Venn-like diagram");	gr->Alpha(true);
-	gr->Circle(mglPoint(-0.3,0.3),0.7,"rr@");
-	gr->Circle(mglPoint(0,-0.3),0.7,"gg@");
-	gr->Circle(mglPoint( 0.3,0.3),0.7,"bb@");
+	mglData ch(7,2);	for(int i=0;i<7*2;i++)	ch.a[i]=mgl_rnd()+0.1;
+	gr->SubPlot(2,2,2);	gr->Title("Pie chart; ' ' color");
+	gr->SetFunc("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)","");
+	gr->Rotate(50,60);	gr->Box();	gr->Chart(ch,"bgr cmy#");
+	gr->SubPlot(2,2,3);	gr->Title("Ring chart; ' ' color");
+	gr->SetFunc("(y+2)/3*cos(pi*x)","(y+2)/3*sin(pi*x)","");
+	gr->Rotate(50,60);	gr->Box();	gr->Chart(ch,"bgr cmy#");
 	return;
 	
 	mglParse par;

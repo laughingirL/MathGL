@@ -2,7 +2,10 @@
 @c ------------------------------------------------------------------
 @chapter MGL scripts
 
-MathGL library supports the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of UDAV, mglconv, mglview programs and others, @pxref{Utilities}) or in the frame of the library using.
+MathGL library supports the simplest scripts for data handling and plotting. These scripts can be used independently (with the help of UDAV, mglconv, mglview programs and others
+@ifclear UDAV
+, @pxref{Utilities}) or in the frame of the library using.
+@end ifclear
 
 @ifclear UDAV
 @menu

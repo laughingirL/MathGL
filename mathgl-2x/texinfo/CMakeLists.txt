@@ -4,7 +4,8 @@
 
 if(MGL_HAVE_DOC)
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
-		COMMAND LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/mgl ${CMAKE_BINARY_DIR}/examples/mgl_example
+#		COMMAND LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/mgl ${CMAKE_BINARY_DIR}/examples/mgl_example
+		COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example
 		COMMAND touch ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 #		MAIN_DEPENDENCY ${CMAKE_BINARY_DIR}/examples/mgl_example
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/png
@@ -17,7 +18,7 @@ if(MGL_HAVE_DOC)
 
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
 		COMMAND ${findth} --split=section mathgl_en.texi -o mathgl_en
-		COMMAND ${findth} --split=section mgl_en.texi -o mgl_en
+		COMMAND ${findth} --split=no mgl_en.texi -o mgl_en.html
 		COMMAND ${findmi} --no-validate mathgl_en.texi
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 		DEPENDS ${list_texi_files_en}
@@ -25,7 +26,7 @@ if(MGL_HAVE_DOC)
 	)
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.info
 		COMMAND ${findth} --split=section mathgl_ru.texi -o mathgl_ru
-		COMMAND ${findth} --split=section mgl_ru.texi -o mgl_ru
+		COMMAND ${findth} --split=no mgl_ru.texi -o mgl_ru.html
 		COMMAND ${findmi} --no-validate mathgl_ru.texi
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 		DEPENDS ${list_texi_files_ru}
@@ -37,7 +38,7 @@ if(MGL_HAVE_DOC)
 		COMMAND ${findtp} mathgl_en.texi
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 		DEPENDS ${list_texi_files_en}
-		DEPENDS ${list_texi_files_ru}
+#		DEPENDS ${list_texi_files_ru}
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
 	)
 	add_custom_target(documentation ALL

@@ -37,7 +37,7 @@ int mgls_addlegend(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 	return 0;
 }
 void mglc_addlegend(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
-{	if(k[0]==2 && k[1]==2)	mglprintf(out,1024,L"gr->AddLegend(\"%s\", \"%s\");",a[0].s.c_str(),a[1].s.c_str());	}
+{	if(k[0]==2 && k[1]==2)	mglprintf(out,1024,L"gr->AddLegend(\"%ls\", \"%s\");",a[0].w.c_str(),a[1].s.c_str());	}
 //-----------------------------------------------------------------------------
 int mgls_addto(mglGraph *, long , mglArg *a, int k[10], const char *)
 {
@@ -2469,17 +2469,29 @@ void mglc_tlabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 	if(k[0]==2)	mglprintf(out,1024,L"gr->Label('t', L\"%ls\", %g, %g);", a[0].w.c_str(), k[1]==3?a[1].v:1, k[2]==3?a[2].v:0);
 }
 //-----------------------------------------------------------------------------
-int mgls_label(mglGraph *gr, long , mglArg *a, int k[10], const char *)
+int mgls_label(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==2)
 		gr->Label(a[0].v, a[1].v, a[2].w.c_str(), k[3]==2?a[3].s.c_str():"");
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
+		gr->Label(*(a[0].d), *(a[1].d), *(a[2].d), a[3].w.c_str(), k[4]==2?a[4].s.c_str():"", opt);
+	else if(k[0]==1 && k[1]==1 && k[2]==2)
+		gr->Label(*(a[0].d), *(a[1].d), a[2].w.c_str(), k[3]==2?a[3].s.c_str():"", opt);
+	else if(k[0]==1 && k[1]==2)
+		gr->Label(*(a[0].d), a[1].w.c_str(), k[2]==2?a[2].s.c_str():"", opt);
 	else	return 1;
 	return 0;
 }
-void mglc_label(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
+void mglc_label(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
 	if(k[0]==3 && k[1]==3 && k[2]==2)
-		mglprintf(out,1024,L"gr->Label(%g, %g, \"%s\", \"%s\");", a[0].v, a[1].v, a[2].w.c_str(), k[3]==2?a[3].s.c_str():"");
+		mglprintf(out,1024,L"gr->Label(%g, %g, \"%ls\", \"%s\");", a[0].v, a[1].v, a[2].w.c_str(), k[3]==2?a[3].s.c_str():"");
+	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
+		mglprintf(out,1024,L"gr->Label(%s, %s, %s, \"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].w.c_str(), k[4]==2?a[4].s.c_str():"", opt);
+	else if(k[0]==1 && k[1]==1 && k[2]==2)
+		mglprintf(out,1024,L"gr->Label(%s, %s, \"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].w.c_str(), k[3]==2?a[3].s.c_str():"", opt);
+	else if(k[0]==1 && k[1]==2)
+		mglprintf(out,1024,L"gr->Label(%s, \"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), a[1].w.c_str(), k[2]==2?a[2].s.c_str():"", opt);
 }
 //-----------------------------------------------------------------------------
 int mgls_xrange(mglGraph *gr, long , mglArg *a, int k[10], const char *)
@@ -3626,7 +3638,7 @@ mglCommand mgls_base_cmd[] = {
 	{"insert","Insert slice of data","insert Dat 'dir' [pos=0 num=1]", mgls_insert, mglc_insert,3},
 	{"integrate","Integrate data","integrate Dat 'dir'", mgls_integrate, mglc_integrate,3},
 	{"jacobian","Get Jacobian","jacobian Res Xdat Ydat [Zdat]", mgls_jacobian, mglc_jacobian,4},
-	{"label","Draw label at arbitrary position","label x y 'txt' ['fmt' size]", mgls_label, mglc_label,1},
+	{"label","Draw label at arbitrary position","label ydat 'txt' ['stl'='']|xdat ydat 'txt' ['stl'='']|xdat ydat zdat 'txt' ['stl'='']|x y 'txt' ['fmt' size]", mgls_label, mglc_label,1},
 	{"legend","Draw legend","legend [pos 'fmt' size llen]|x y ['fmt' size llen]", mgls_legend, mglc_legend,1},
 	{"legendmarks","Set number of marks in the legend","legendmarks val", mgls_legendmarks, mglc_legendmarks,2},
 	{"light","Setup light","light [val] | val num | num xpos ypos zpos ['fmt' br]", mgls_light, mglc_light,2},

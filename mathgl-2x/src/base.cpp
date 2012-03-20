@@ -212,9 +212,13 @@ void mglBase::RecalcBorder()
 			SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Min.x);
 			SetFBord(Min.x+i*(Max.x-Min.x)/n, Min.y+j*(Max.y-Min.y)/n, Max.z);
 		}
+		float d;
 		if(!fx)	{	FMin.x = Min.x;	FMax.x = Max.x;	}
+		else	{	d=0.01*(FMax.x-FMin.x);	FMin.x-=d;	FMax.x+=d;	}
 		if(!fy)	{	FMin.y = Min.y;	FMax.y = Max.y;	}
+		else	{	d=0.01*(FMax.y-FMin.y);	FMin.y-=d;	FMax.y+=d;	}
 		if(!fz)	{	FMin.z = Min.z;	FMax.z = Max.z;	}
+		else	{	d=0.01*(FMax.z-FMin.z);	FMin.z-=d;	FMax.z+=d;	}
 	}
 	RecalcCRange();
 }

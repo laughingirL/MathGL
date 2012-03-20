@@ -2,8 +2,22 @@
 @c ------------------------------------------------------------------
 @chapter Other classes
 
+There are only 5 end-user classes: @code{mglGraph} (see @ref{MathGL core}), @code{mglWindow} and @code{mglGLUT} (see @ref{Widget classes}), @code{mglData} (see @ref{Data processing}), @code{mglParse} (see @ref{MGL scripts}). Exactly these classes I recommend to use in most of user programs. All methods in all of these classes are inline and have exact C/Fortran analogue functions. This give compiler independent binary libraries for MathGL.
+
+However, sometimes you may need to extend MathGL by writing yours own plotting functions or handling yours own data structures. In these cases you may need to use low-level API. This chapter describes it.
+
+@float
+@image{../classes, 11cm}
+@caption{Class diagram for MathGL}
+@end float
+
+The internal structure of MathGL is rather complicated. There are C++ classes @code{mglBase}, @code{mglCanvas}, ... for drawing primitives and positioning the plot (blue ones in the figure). There is a layer of C functions, which include interface for most important methods of these classes. Also most of plotting functions are implemented as C functions. After it, there are ``inline'' front-end classes which are created for user convenience (yellow ones in the figure). Also there are 2 classes which are widgets for FLTK and Qt libraries (green ones in the figure).
+
+Below I show how this internal classes can be used.
+
 @menu
-* mglFormula class::            
+* mglBase class::
+* mglDataA class::
 * mglColor class::              
 * mglPoint class::              
 * mglFont class::
@@ -11,36 +25,271 @@
 
 
 @c ------------------------------------------------------------------
-@node mglFormula class, mglColor class, , Other classes
-@section mglFormula class
-@cindex mglFormula
+@node mglBase class, mglDataA class, , Other classes
+@subsection Define new kind of plot (mglBase class)
 
-Class for evaluating of formula specified by the string. This class is defined in @code{#include <mgl/eval.h>}. This class is accessible only from C++ (and only from GNU compilers in default binary files).
+Basically most of new kinds of plot can be created using just MathGL primitives (see @ref{Primitives}). However the usage of @code{mglBase} methods can give you higher speed of drawing and better control of plot settings. 
 
-It is the fast variant of formula evaluation. At creation it will be recognized and compiled to tree-like internal code. At evaluation stage only fast calculations are performed. There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN. @xref{Textual formulas}.
+All plotting functions should use a pointer to @code{mglBase} class (or @code{HMGL} type in C functions) due to compatibility issues. Exactly such type of pointers are used in front-end classes (@code{mglGraph, mglWindow}) and in widgets (@code{QMathGL, Fl_MathGL}).
 
-@deftypemethod mglFormula @code{} mglFormula (@code{const char *}str)
-Parses the formula @var{str} and creates formula-tree. Constructor recursively parses the formula and creates a tree-like structure containing functions and operators for fast further evaluating by @code{Calc()} or @code{CalcD()} functions.
-@end deftypemethod
-@deftypemethod mglFormula @code{float} Calc (@code{float} x, @code{float} y=@code{0}, @code{float} z=@code{0}, @code{float} u=@code{0})
-Evaluates the formula for @code{'x','r'}=@var{x}, @code{'y','n'}=@var{y}, @code{'z','t'}=@var{z}, @code{'a','u'}=@var{u}. Error code (if one) can be obtained from function @code{GetError()}.
-@end deftypemethod
-@deftypemethod mglFormula @code{float} Calc (@code{float} x, @code{float} y, @code{float} z, @code{float} u, @code{float} v, @code{float} w)
-Evaluates the formula for @code{'x'}=@var{x}, @code{'y'}=@var{y}, @code{'z'}=@var{z}, @code{'u'}=@var{u}, @code{'v'}=@var{v}, @code{'w'}=@var{w}. Error code (if one) can be obtained from function @code{GetError()}.
-@end deftypemethod
-@deftypemethod mglFormula @code{float} Calc (@code{float} var@code{['z'-'a'+1]})
-Evaluates the formula for variables in array @var{var}['z'-'a']. Error code (if one) can be obtained from function @code{GetError()}.
-@end deftypemethod
-@deftypemethod mglFormula @code{float} CalcD (@code{float} var@code{['z'-'a'+1]}, @code{char} diff)
-Evaluates the formula derivation respect to @var{diff} for variables in array @var{var}['z'-'a']. Error code (if one) can be obtained from function @code{GetError()}.
-@end deftypemethod
-@deftypemethod mglFormula @code{int} GetError ()
-Returns error code: @code{0} means no error; @code{ERR_LOG} means error in logarithm or power functions; @code{ERR_ARC} means error in inverse functions (like asin); @code{ERR_SQRT} means error in sqrt function.
-@end deftypemethod
+MathGL tries to remember all vertexes and all primitives and plot creation stage, and to use them for making final picture by demand. Basically for making plot, you need to add vertexes by @code{AddPnt()} function, which return index for new vertex, and call one of primitive drawing function (like @code{mark_plot(), arrow_plot(), line_plot(), trig_plot(), quad_plot(), text_plot()}), using vertex indexes as argument(s). @code{AddPnt()} function use 2 float numbers for color specification. First one is positioning in textures -- integer part is texture index, fractional part is relative coordinate in the texture. Second number is like a transparency of plot (or second coordinate in the 2D texture).
+
+I don't want to put here detailed description of @code{mglBase} class. It was rather well documented in @code{mgl/base.h} file. I just show and example of its usage on the base of circle drawing.
+
+First, we should prototype new function @code{circle()} as C function.
+@verbatim
+#ifdef __cplusplus
+extern "C" {
+#endif
+void circle(HMGL gr, float x, float y, float z, float r, const char *stl, const char *opt);
+#ifdef __cplusplus
+}
+#endif
+@end verbatim
+This is done for generating compiler independent binary. Because only C-functions have standard naming mechanism, the same for any compilers.
+
+Now, we create a C++ file and put the code of function. I'll write it line by line and try to comment all important points.
+@verbatim
+void circle(HMGL gr, float x, float y, float z, float r, const char *stl, const char *opt)
+{
+@end verbatim
+First, we need to check all input arguments and send warnings if something is wrong. In our case it is negative value of @var{r} argument. We just send warning, since it is not critical situation -- other plot still can be drawn.
+@verbatim
+  if(r<=0)  { gr->SetWarn(mglWarnNeg,"Circle"); return; }
+@end verbatim
+Next step is creating a group. Group keep some general setting for plot (like options) and useful for export in 3d files.
+@verbatim
+  static int cgid=1;  gr->StartGroup("Circle",cgid++);
+@end verbatim
+Now let apply options. Options are rather useful things, generally, which allow one easily redefine axis range(s), transparency and other settings (see @ref{Command options}).
+@verbatim
+  gr->SaveState(opt);
+@end verbatim
+I use global setting for determining the number of points in circle approximation. Note, that user can change @code{MeshNum} by options easily.
+@verbatim
+  const int n = gr->MeshNum>1?gr->MeshNum : 41;
+@end verbatim
+Let try to determine plot specific flags. MathGL functions expect that most of flags will be sent in string. In our case it is symbol @samp{@@} which set to draw filled circle instead of border only (last will be default). Note, you have to handle @code{NULL} as string pointer.
+@verbatim
+  bool fill = stl && strchr(stl,'@');
+@end verbatim
+Now, time for coloring. I use palette mechanism because circle have few colors: one for filling and another for border. @code{SetPenPal()} function parse input string and write resulting texture index in @var{pal}. Function return the character for marker, which can be specified in string @var{str}. Marker will be plotted at the center of circle. I'll show on next sample how you can use color schemes (smooth colors) too.
+@verbatim
+  long pal=0;
+  char mk=gr->SetPenPal(stl,&pal);
+@end verbatim
+Next step, is determining colors for filling and for border. First one for filling.
+@verbatim
+  float c=gr->NextColor(pal), d;
+@end verbatim
+Second one for border. I use black color (call @code{gr->AddTexture('k')}) if second color is not specified.
+@verbatim
+  float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
+@end verbatim
+If user want draw only border (@code{fill=false}) then I use first color for border.
+@verbatim
+  if(!fill) k=c;
+@end verbatim
+Now we should reserve space for vertexes. This functions need @code{n} for border, @code{n+1} for filling and @code{1} for marker. So, maximal number of vertexes is @code{2*n+2}. Note, that such reservation is not required for normal work but can sufficiently speed up the plotting.
+@verbatim
+  gr->Reserve(2*n+2);
+@end verbatim
+We've done with setup and ready to start drawing. First, we need to add vertex(es). Let define NAN as normals, since I don't want handle lighting for this plot,
+@verbatim
+  mglPoint q(NAN,NAN);
+@end verbatim
+and start adding vertexes. First one for central point of filling. I use @code{-1} if I don't need this point. The arguments of @code{AddPnt()} function is: @code{mglPoint(x,y,z)} -- coordinate of vertex, @code{c} -- vertex color, @code{q} -- normal at vertex, @code{-1} -- vertex transparency (@code{-1} for default), @code{3} bitwise flag which show that coordinates will be scaled (@code{0x1}) and will not be cutted (@code{0x2}).
+@verbatim
+  long n0,n1,n2,m1,m2,i;
+  n0 = fill ? gr->AddPnt(mglPoint(x,y,z),c,q,-1,3):-1;
+@end verbatim
+Similar for marker, but we use different color @var{k}.
+@verbatim
+  n2 = mk ? gr->AddPnt(mglPoint(x,y,z),k,q,-1,3):-1;
+@end verbatim
+Draw marker.
+@verbatim
+  if(mk)  gr->mark_plot(n2,mk);
+@end verbatim
+Time for drawing circle itself. I use @code{-1} for @var{m1}, @var{n1} as sign that primitives shouldn't be drawn for first point @code{i=0}.
+@verbatim
+  for(i=0,m1=n1=-1;i<n;i++)
+  {
+@end verbatim
+Each function should check @code{Stop} variable and return if it is non-zero. It is done for interrupting drawing for system which don't support multi-threading.
+@verbatim
+    if(gr->Stop)  return;
+@end verbatim
+Let find coordinates of vertex.
+@verbatim
+    float t = i*2*M_PI/(n-1.);
+    mglPoint p(x+r*cos(t), y+r*sin(t), z);
+@end verbatim
+Save previous vertex and add next one
+@verbatim
+    n2 = n1;  n1 = gr->AddPnt(p,c,q,-1,3);
+@end verbatim
+and copy it for border but with different color. Such copying is much faster than adding new vertex using @code{AddPnt()}.
+@verbatim
+    m2 = m1;  m1 = gr->CopyNtoC(n1,k);
+@end verbatim
+Now draw triangle for filling internal part
+@verbatim
+    if(fill)  gr->trig_plot(n0,n1,n2);
+@end verbatim
+and draw line for border.
+@verbatim
+    gr->line_plot(m1,m2);
+  }
+@end verbatim
+Drawing is done. Let close group and return.
+@verbatim
+  gr->EndGroup();
+}
+@end verbatim
+
+Another sample I want to show is exactly the same function but with smooth coloring using color scheme. So, I'll add comments only in the place of difference.
+
+@verbatim
+void circle(HMGL gr, float x, float y, float z, float r, const char *stl, const char *opt)
+{
+@end verbatim
+In this case let allow negative radius too. Formally it is not the problem for plotting (formulas the same) and this allow us to handle all color range.
+@verbatim
+//if(r<=0)  { gr->SetWarn(mglWarnNeg,"Circle"); return; }
+
+  static int cgid=1;  gr->StartGroup("Circle",cgid++);
+  gr->SaveState(opt);
+  const int n = gr->MeshNum>1?gr->MeshNum : 41;
+  bool fill = stl && strchr(stl,'@');
+@end verbatim
+
+TODO!!!
+
+Here is main difference.
+@verbatim
+  long pal=0;
+  char mk=gr->SetPenPal(stl,&pal);
+@end verbatim
+Next step, is determining colors for filling and for border. First one for filling.
+@verbatim
+  float c=gr->NextColor(pal), d;
+@end verbatim
+Second one for border. I use black color (call @code{gr->AddTexture('k')}) if second color is not specified.
+@verbatim
+  float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
+  if(!fill) k=c;
+
+  gr->Reserve(2*n+2);
+  mglPoint q(NAN,NAN);
+  long n0,n1,n2,m1,m2,i;
+  n0 = fill ? gr->AddPnt(mglPoint(x,y,z),c,q,-1,3):-1;
+  n2 = mk ? gr->AddPnt(mglPoint(x,y,z),k,q,-1,3):-1;
+  if(mk)  gr->mark_plot(n2,mk);
+  for(i=0,m1=n1=-1;i<n;i++)
+  {
+    if(gr->Stop)  return;
+    float t = i*2*M_PI/(n-1.);
+    mglPoint p(x+r*cos(t), y+r*sin(t), z);
+    n2 = n1;  n1 = gr->AddPnt(p,c,q,-1,3);
+    m2 = m1;  m1 = gr->CopyNtoC(n1,k);
+    if(fill)  gr->trig_plot(n0,n1,n2);
+    gr->line_plot(m1,m2);
+  }
+  gr->EndGroup();
+}
+@end verbatim
 
 
 @c ------------------------------------------------------------------
-@node mglColor class, mglPoint class, mglFormula class, Other classes
+@node mglDataA class, mglColor class, mglBase class, Other classes
+@subsection User defined types (mglDataA class)
+
+@code{mglData} class have abstract predecessor class @code{mglDataA}. Exactly the pointers to @code{mglDataA} instances are used in all plotting functions and some of data processing functions. This was done for taking possibility to define yours own class, which will handle yours own data (for example, complex numbers, or differently organized data). And this new class will be almost the same as @code{mglData} for plotting purposes.
+
+However, the most of data processing functions will be slower as if you used @code{mglData} instance. This is more or less understandable -- I don't know how data in yours particular class will be organized, and couldn't optimize the these functions generally.
+
+There are few virtual functions which must be provided in derived classes. This functions give:
+@itemize @bullet
+@item
+the sizes of the data (@code{GetNx}, @code{GetNy}, @code{GetNz}),
+@item
+give data value and numerical derivatives for selected cell (@code{v}, @code{dvx}, @code{dvy}, @code{dvz}),
+@item
+give maximal and minimal values (@code{Maximal}, @code{Minimal}) -- you can use provided functions (like @code{mgl_data_max} and @code{mgl_data_min}), but yours own realization can be more efficient,
+@item
+give access to all element as in single array (@code{vthr}) -- you need this only if you want using MathGL's data processing functions.
+@end itemize
+
+Let me, for example define class @code{mglComplex} which will handle complex number and draw its amplitude or phase, depending on flag @var{use_abs}:
+@verbatim
+#include <complex>
+#include <mgl/mgl.h>
+#define dual std::complex<double>
+class mglComplex : public mglDataA
+{
+public:
+  long nx;      ///< number of points in 1st dimensions ('x' dimension)
+  long ny;      ///< number of points in 2nd dimensions ('y' dimension)
+  long nz;      ///< number of points in 3d dimensions ('z' dimension)
+  dual *a;   ///< data array
+  bool use_abs; ///< flag to use abs() or arg()
+
+  inline mglComplex(long xx=1,long yy=1,long zz=1)
+  { a=0;  use_abs=true; Create(xx,yy,zz); }
+  virtual ~mglComplex()  { if(a)  delete []a; }
+
+  /// Get sizes
+  inline long GetNx() const { return nx;  }
+  inline long GetNy() const { return ny;  }
+  inline long GetNz() const { return nz;  }
+  /// Create or recreate the array with specified size and fill it by zero
+  inline void Create(long mx,long my=1,long mz=1)
+  { nx=mx;  ny=my;  nz=mz;  if(a) delete []a;
+  a = new dual[nx*ny*nz]; }
+  /// Get maximal value of the data
+  inline float Maximal() const  { return mgl_data_max(this);  }
+  /// Get minimal value of the data
+  inline float Minimal() const  { return mgl_data_min(this);  }
+
+protected:
+  inline mreal v(long i,long j=0,long k=0) const
+  { return use_abs ? abs(a[i+nx*(j+ny*k)]) : arg(a[i+nx*(j+ny*k)]);  }
+  inline mreal vthr(long i) const
+  { return use_abs ? abs(a[i]) : arg(a[i]);  }
+  inline mreal dvx(long i,long j=0,long k=0) const
+  { register long i0=i+nx*(j+ny*k);
+    std::complex<double> res=i>0? (i<nx-1? (a[i0+1]-a[i0-1])/2.:a[i0]-a[i0-1]) : a[i0+1]-a[i0];
+    return use_abs? abs(res) : arg(res);  }
+  inline mreal dvy(long i,long j=0,long k=0) const
+  { register long i0=i+nx*(j+ny*k);
+    std::complex<double> res=j>0? (j<ny-1? (a[i0+nx]-a[i0-nx])/2.:a[i0]-a[i0-nx]) : a[i0+nx]-a[i0];
+    return use_abs? abs(res) : arg(res);  }
+  inline mreal dvz(long i,long j=0,long k=0) const
+  { register long i0=i+nx*(j+ny*k), n=nx*ny;
+    std::complex<double> res=k>0? (k<nz-1? (a[i0+n]-a[i0-n])/2.:a[i0]-a[i0-n]) : a[i0+n]-a[i0];
+    return use_abs? abs(res) : arg(res);  }
+};
+int main()
+{
+  mglComplex dat(20);
+  for(long i=0;i<20;i++)
+    dat.a[i] = 3*exp(-0.05*(i-10)*(i-10))*dual(cos(M_PI*i*0.3), sin(M_PI*i*0.3));
+  mglGraph gr;
+  gr.SetRange('y', -M_PI, M_PI);  gr.Box();
+
+  gr.Plot(dat,"r","legend 'abs'");
+  dat.use_abs=false;
+  gr.Plot(dat,"b","legend 'arg'");
+  gr.Legend();
+  gr.WritePNG("complex.png");
+  return 0;
+}
+@end verbatim
+
+
+@c ------------------------------------------------------------------
+@node mglColor class, mglPoint class, mglDataA class, Other classes
 @section mglColor class
 @cindex mglColor
 

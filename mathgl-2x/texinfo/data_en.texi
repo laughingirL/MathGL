@@ -1,7 +1,15 @@
 @c ------------------------------------------------------------------
 @chapter Data processing
 
+@ifset UDAV
+This chapter describe commands for allocation, resizing, loading and saving, modifying of data arrays. Also it can numerically differentiate and integrate data, interpolate, fill data by formula and so on. Class supports data with dimensions up to 3 (like function of 3 variables -- x,y,z). The internal representation of numbers is float. Float type was chosen because it has smaller size in memory and usually it has enough precision in plotting purposes. Data arrays are denoted by Small Caps (like @sc{dat}) if it can be (re-)created by MGL commands.
+@end ifset
+
+@ifclear UDAV
 Class for working with data array. This class is defined in @code{#include <mgl/data.h>}. The class has functions for easy and safe allocation, resizing, loading and saving, modifying of data arrays. Also it can numerically differentiate and integrate data, interpolate, fill data by formula and so on. Class supports data with dimensions up to 3 (like function of 3 variables -- x,y,z). The internal representation of numbers is float. Float type was chosen because it has smaller size in memory and usually it has enough precision in plotting purposes. You can change it by selecting option @code{--enable-double} at the library configuring (see @ref{Installation}). Data arrays are denoted by Small Caps (like @sc{dat}) if it can be (re-)created by MGL commands.
+@end ifclear
+
+
 
 @menu
 * Public variables::
@@ -15,6 +23,7 @@ Class for working with data array. This class is defined in @code{#include <mgl/
 * Data information::
 * Operators::
 * Global functions::
+* Evaluate expression::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -1106,7 +1115,7 @@ Divides by the number.
 @end ifclear
 
 @c ------------------------------------------------------------------
-@node Global functions, , Operators, Data processing
+@node Global functions, Evaluate expression, Operators, Data processing
 @section Global functions
 
 These functions are not methods of @code{mglData} class. However it provide additional functionality to handle data. So I put it in this chapter.
@@ -1197,3 +1206,48 @@ Computes the Jacobian for transformation @{i,j,k@} to @{@var{x},@var{y},@var{z}@
 @end ifclear
 Computes triangulation for arbitrary placed points with coordinates @{@var{x},@var{y},@var{z}@} (i.e. finds triangles which connect points). The sizes of 1st dimension @strong{must be equal} for all arrays @code{x.nx=y.nx=z.nx}. Resulting array can be used in @ref{triplot} or @ref{tricont} functions for visualization of reconstructed surface.
 @end deftypefn
+
+
+@c ------------------------------------------------------------------
+@node Evaluate expression, , Global functions, Data processing
+@section Evaluate expression
+
+@ifset UDAV
+You can use arbitrary formulas of existed data arrays or constants as any argument of data processing or data plotting commands. There are only 2 limitations: formula shouldn't contain spaces, and formula cannot be used as argument which will be (re)created by MGL command.
+@end ifset
+
+@ifclear UDAV
+MathGL have a special class @code{mglExpr} for evaluating of formula specified by the string. This class is defined in @code{#include <mgl/mgl.h>}. It is the fast variant of formula evaluation. At creation it will be recognized and compiled to tree-like internal code. At evaluation stage only fast calculations are performed. There is no difference between lower or upper case in formulas. If argument value lie outside the range of function definition then function returns NaN. @xref{Textual formulas}.
+
+@deftypefn {Constructor on @code{mglExpr}} @code{} mglExpr (@code{const char *}expr)
+@deftypefnx {C function} @code{HMEX} mgl_create_expr (@code{const char *}expr)
+Parses the formula @var{expr} and creates formula-tree. Constructor recursively parses the formula and creates a tree-like structure containing functions and operators for fast further evaluating by @code{Calc()} or @code{CalcD()} functions.
+@end deftypefn
+
+@deftypefn {Destructor on @code{mglExpr}} @code{} ~mglExpr ()
+@deftypefnx {C function} @code{HMEX} mgl_delete_expr (@code{HMEX} ex)
+Deletes the instance of class  mglExpr.
+@end deftypefn
+
+@deftypefn {Method on @code{mglExpr}} @code{float} Eval (@code{float} x, @code{float} y, @code{float} z)
+@deftypefnx {C function} @code{float} mgl_expr_eval (@code{HMEX} ex, @code{float} x, @code{float} y, @code{float} z)
+Evaluates the formula for @code{'x','r'}=@var{x}, @code{'y','n'}=@var{y}, @code{'z','t'}=@var{z}, @code{'a','u'}=@var{u}.
+@end deftypefn
+
+@deftypefn {Method on @code{mglExpr}} @code{float} Eval (@code{float} var[26])
+@deftypefnx {C function} @code{float} mgl_expr_eval_v (@code{HMEX} ex, @code{float *}var)
+Evaluates the formula for variables in array @var{var}[0,...,'z'-'a'].
+@end deftypefn
+
+
+@deftypefn {Method on @code{mglExpr}} @code{float} Diff (@code{char} dir, @code{float} x, @code{float} y, @code{float} z)
+@deftypefnx {C function} @code{float} mgl_expr_diff (@code{HMEX} ex, @code{char} dir, @code{float} x, @code{float} y, @code{float} z)
+Evaluates the formula derivation respect to @var{dir} for @code{'x','r'}=@var{x}, @code{'y','n'}=@var{y}, @code{'z','t'}=@var{z}, @code{'a','u'}=@var{u}.
+@end deftypefn
+
+@deftypefn {Method on @code{mglExpr}} @code{float} Diff (@code{char} dir, @code{float} var[26])
+@deftypefnx {C function} @code{float} mgl_expr_diff_v (@code{HMEX} ex, @code{char} dir, @code{float *}var)
+Evaluates the formula derivation respect to @var{dir} for variables in array @var{var}[0,...,'z'-'a'].
+@end deftypefn
+
+@end ifclear

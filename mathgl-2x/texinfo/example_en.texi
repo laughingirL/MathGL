@@ -138,7 +138,7 @@ int main(int argc,char **argv)
 
 The rotation, shift, zooming, switching on/off transparency and lighting can be done with help of tool-buttons (for @code{mglWindow}) or by hot-keys: @samp{a}, @samp{d}, @samp{w}, @samp{s} for plot rotation, @samp{r} and @samp{f} switching on/off transparency and lighting. Press @samp{x} for exit (or closing the window).
 
-In this example function @code{sample} rotates axes (@code{Rotate()}, @pxref{Transformation matrix}) and draws the bounding box (@code{Box()}). Drawing is placed in separate function since it will be used on demand when window canvas needs to be redrawn.
+In this example function @code{sample} rotates axes (@code{Rotate()}, @pxref{Subplots and rotation}) and draws the bounding box (@code{Box()}). Drawing is placed in separate function since it will be used on demand when window canvas needs to be redrawn.
 
 @c ------------------------------------------------------------------
 @node Drawing to file, Animation, Using MathGL window, Basic usage
@@ -478,7 +478,7 @@ Now I show several non-obvious features of MathGL: several subplots in a single 
 @node Subplots, Axis and ticks, , Advanced usage
 @subsection Subplots
 
-Let me demonstrate possibilities of plot positioning and rotation. MathGL has a set of functions: @code{SubPlot}, @code{InPlot}, @code{Title}, @code{Aspect} and @code{Rotate} and so on (see @ref{Transformation matrix}). The order of their calling is strictly determined. First, one changes the position of plot in image area (functions @code{SubPlot}, @code{InPlot} and @code{MultiPlot}). Secondly, you can add the title of plot by @code{Title} function. After that one may rotate the plot (function @code{Rotate}). Finally, one may change aspects of axes (function @code{Aspect}). The following code illustrates the aforesaid it:
+Let me demonstrate possibilities of plot positioning and rotation. MathGL has a set of functions: @code{SubPlot}, @code{InPlot}, @code{Title}, @code{Aspect} and @code{Rotate} and so on (see @ref{Subplots and rotation}). The order of their calling is strictly determined. First, one changes the position of plot in image area (functions @code{SubPlot}, @code{InPlot} and @code{MultiPlot}). Secondly, you can add the title of plot by @code{Title} function. After that one may rotate the plot (function @code{Rotate}). Finally, one may change aspects of axes (function @code{Aspect}). The following code illustrates the aforesaid it:
 @verbatim
 int sample(mglGraph *gr)
 {
@@ -948,7 +948,6 @@ Class @code{mglData} contains all functions for the data handling in MathGL (@px
 * Array creation::
 * Linking array::
 * Change data::
-* User defined types::
 @end menu
 
 @c ------------------------------------------------------------------
@@ -1032,7 +1031,7 @@ The only non-obvious thing here is using multidimensional arrays in C/C++, i.e. 
 @node Linking array, Change data, Array creation, Data handling
 @subsection Linking array
 
-Sometimes the data arrays are so large, that one couldn't' copy its values to another array (i.e. into mglData). In this case, he can define its own class derived from @code{mglDataA} (see @ref{User defined types}) or can use @code{Link} function.
+Sometimes the data arrays are so large, that one couldn't' copy its values to another array (i.e. into mglData). In this case, he can define its own class derived from @code{mglDataA} (see @ref{mglDataA class}) or can use @code{Link} function.
 
 In last case, MathGL just save the link to an external data array, but not copy it. You should provide the existence of this data array for whole time during which MathGL can use it. Another point is that MathGL will automatically create new array if you'll try to modify data values by any of @code{mglData} functions. So, you should use only function with @code{const} modifier if you want still using link to the original data array.
 
@@ -1046,7 +1045,7 @@ Creating the link is rather simple -- just the same as using @code{Set} function
 @end verbatim
 
 @c ------------------------------------------------------------------
-@node Change data, User defined types, Linking array, Data handling
+@node Change data, , Linking array, Data handling
 @subsection Change data
 
 MathGL has functions for data processing: differentiating, integrating, smoothing and so on (for more detail, see @ref{Data processing}). Let us consider some examples. The simplest ones are integration and differentiation. The direction in which operation will be performed is specified by textual string, which may contain symbols @samp{x}, @samp{y} or @samp{z}. For example, the call of @code{Diff("x")} will differentiate data along @samp{x} direction; the call of @code{Integral("xy")} perform the double integration of data along @samp{x} and @samp{y} directions; the call of @code{Diff2("xyz")} will apply 3d Laplace operator to data and so on. Example of this operations on 2d array a=x*y is presented in code:
@@ -1124,92 +1123,6 @@ int sample(mglGraph *gr)
 @end float
 
 Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@code{SubData()}), summarize along a direction(s) (@code{Sum()}), find distribution of data elements (@code{Hist()}) and so on.
-
-@c ------------------------------------------------------------------
-@node User defined types, , Change data, Data handling
-@subsection User defined types
-
-@code{mglData} class have abstract predecessor class @code{mglDataA}. Exactly the pointers to @code{mglDataA} instances are used in all plotting functions and some of data processing functions. This was done for taking possibility to define yours own class, which will handle yours own data (for example, complex numbers, or differently organized data). And this new class will be almost the same as @code{mglData} for plotting purposes.
-
-However, the most of data processing functions will be slower as if you used @code{mglData} instance. This is more or less understandable -- I don't know how data in yours particular class will be organized, and couldn't optimize the these functions generally.
-
-There are few virtual functions which must be provided in derived classes. This functions give:
-@itemize @bullet
-@item
-the sizes of the data (@code{GetNx}, @code{GetNy}, @code{GetNz}),
-@item
-give data value and numerical derivatives for selected cell (@code{v}, @code{dvx}, @code{dvy}, @code{dvz}),
-@item
-give maximal and minimal values (@code{Maximal}, @code{Minimal}) -- you can use provided functions (like @code{mgl_data_max} and @code{mgl_data_min}), but yours own realization can be more efficient,
-@item
-give access to all element as in single array (@code{vthr}) -- you need this only if you want using MathGL's data processing functions.
-@end itemize
-
-Let me, for example define class @code{mglComplex} which will handle complex number and draw its amplitude or phase, depending on flag @var{use_abs}:
-@verbatim
-#include <complex>
-#include <mgl/mgl.h>
-#define dual std::complex<double>
-class mglComplex : public mglDataA
-{
-public:
-  long nx;      ///< number of points in 1st dimensions ('x' dimension)
-  long ny;      ///< number of points in 2nd dimensions ('y' dimension)
-  long nz;      ///< number of points in 3d dimensions ('z' dimension)
-  dual *a;   ///< data array
-  bool use_abs; ///< flag to use abs() or arg()
-
-  inline mglComplex(long xx=1,long yy=1,long zz=1)
-  { a=0;  use_abs=true; Create(xx,yy,zz); }
-  virtual ~mglComplex()  { if(a)  delete []a; }
-
-  /// Get sizes
-  inline long GetNx() const { return nx;  }
-  inline long GetNy() const { return ny;  }
-  inline long GetNz() const { return nz;  }
-  /// Create or recreate the array with specified size and fill it by zero
-  inline void Create(long mx,long my=1,long mz=1)
-  { nx=mx;  ny=my;  nz=mz;  if(a) delete []a;
-  a = new dual[nx*ny*nz]; }
-  /// Get maximal value of the data
-  inline float Maximal() const  { return mgl_data_max(this);  }
-  /// Get minimal value of the data
-  inline float Minimal() const  { return mgl_data_min(this);  }
-
-protected:
-  inline mreal v(long i,long j=0,long k=0) const
-  { return use_abs ? abs(a[i+nx*(j+ny*k)]) : arg(a[i+nx*(j+ny*k)]);  }
-  inline mreal vthr(long i) const
-  { return use_abs ? abs(a[i]) : arg(a[i]);  }
-  inline mreal dvx(long i,long j=0,long k=0) const
-  { register long i0=i+nx*(j+ny*k);
-    std::complex<double> res=i>0? (i<nx-1? (a[i0+1]-a[i0-1])/2.:a[i0]-a[i0-1]) : a[i0+1]-a[i0];
-    return use_abs? abs(res) : arg(res);  }
-  inline mreal dvy(long i,long j=0,long k=0) const
-  { register long i0=i+nx*(j+ny*k);
-    std::complex<double> res=j>0? (j<ny-1? (a[i0+nx]-a[i0-nx])/2.:a[i0]-a[i0-nx]) : a[i0+nx]-a[i0];
-    return use_abs? abs(res) : arg(res);  }
-  inline mreal dvz(long i,long j=0,long k=0) const
-  { register long i0=i+nx*(j+ny*k), n=nx*ny;
-    std::complex<double> res=k>0? (k<nz-1? (a[i0+n]-a[i0-n])/2.:a[i0]-a[i0-n]) : a[i0+n]-a[i0];
-    return use_abs? abs(res) : arg(res);  }
-};
-int main()
-{
-  mglComplex dat(20);
-  for(long i=0;i<20;i++)
-    dat.a[i] = 3*exp(-0.05*(i-10)*(i-10))*dual(cos(M_PI*i*0.3), sin(M_PI*i*0.3));
-  mglGraph gr;
-  gr.SetRange('y', -M_PI, M_PI);  gr.Box();
-
-  gr.Plot(dat,"r","legend 'abs'");
-  dat.use_abs=false;
-  gr.Plot(dat,"b","legend 'arg'");
-  gr.Legend();
-  gr.WritePNG("complex.png");
-  return 0;
-}
-@end verbatim
 
 
 @c ------------------------------------------------------------------

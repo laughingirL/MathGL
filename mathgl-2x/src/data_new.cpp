@@ -990,7 +990,7 @@ HMDT mgl_transform(HCDT re, HCDT im, const char *tr)
 		if(tr[1]=='c')	{	rr.CosFFT("y");	ii.CosFFT("y");	}
 		if(tr[2]=='c')	{	rr.CosFFT("z");	ii.CosFFT("z");	}
 	}
-	else if(strchr(tr,'s'))	// do Fourier only once for speeding up
+	else if(strchr(tr,'h'))	// do Fourier only once for speeding up
 	{
 		if(tr[0]=='h')	{	rr.Hankel("x");	ii.Hankel("x");	}
 		if(tr[1]=='h')	{	rr.Hankel("y");	ii.Hankel("y");	}

@@ -149,8 +149,9 @@ void mgl_face(HMGL gr, float x0, float y0, float z0, float x1, float y1, float z
 	q2 = (p1-p2)^(p4-p2);	q3 = (p1-p3)^(p4-p3);
 	gr->Reserve(4);
 	long k1,k2,k3,k4;
-	k1 = gr->AddPnt(p1,c1,q1,-1,11);	k2 = gr->AddPnt(p2,c2,q2,-1,11);
-	k3 = gr->AddPnt(p3,c3,q3,-1,11);	k4 = gr->AddPnt(p4,c4,q4,-1,11);
+	double a = gr->get(MGL_ENABLE_ALPHA)?-1:1;
+	k1 = gr->AddPnt(p1,c1,q1,a,11);	k2 = gr->AddPnt(p2,c2,q2,a,11);
+	k3 = gr->AddPnt(p3,c3,q3,a,11);	k4 = gr->AddPnt(p4,c4,q4,a,11);
 	gr->quad_plot(k1,k2,k3,k4);
 	if(strchr(stl,'#'))
 	{
@@ -461,7 +462,7 @@ void mgl_dew_xy(HMGL gr, HCDT x, HCDT y, HCDT ax, HCDT ay, const char *sch, cons
 	if(gr->MeshNum>1)	{	tx=(n-1)/(gr->MeshNum-1);	ty=(m-1)/(gr->MeshNum-1);	}
 	if(tx<1)	tx=1;	if(ty<1)	ty=1;
 
-	for(k=0;k<ax->GetNz();k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
+	for(k=0,xm=0;k<ax->GetNz();k++)	for(j=0;j<m;j++)	for(i=0;i<n;i++)
 	{
 		ym = sqrt(ax->v(i,j,k)*ax->v(i,j,k)+ay->v(i,j,k)*ay->v(i,j,k));
 		xm = xm>ym ? xm : ym;

@@ -257,7 +257,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	}
 	delete []ng;
 
-	unsigned len=strlen(fname);
+	unsigned len=strlen(fname),ntxt=gr->GetTxtNum();
 	char *tname = new char[len+1];	strcpy(tname,fname);
 	FILE *fp=fopen(fname,"wt");
 	// vertices definition
@@ -266,7 +266,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	{
 		mglPnt pp = gr->GetPnt(i);
 		fprintf(fp,"v %g %g %g\n",pp.x,pp.y,pp.z);
-		fprintf(fp,"vt %g %g\n",256*pp.t,256*pp.c);
+		fprintf(fp,"vt %g %g\n",pp.t,pp.c/ntxt);
 //		if(isnan(pp.u))	fprintf(fp,"vn 0 0 0\n");
 //		else fprintf(fp,"vn %g %g %g\n",pp.u,pp.v,pp.w);
 	}

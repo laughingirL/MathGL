@@ -1323,7 +1323,10 @@ void face_plot(mglBase *gr, mglPoint o, mglPoint d1, mglPoint d2, float c, bool 
 	long *id=new long[n*n];
 	gr->Reserve(n*n);
 	for(j=0;j<n;j++)	for(i=0;i<n;i++)
-	{	p = o+d1*i+d2*j;	id[i+n*j] = gr->AddPnt(p,c,nn);	}
+	{	p = o+d1*i+d2*j;	id[i+n*j] = gr->AddPnt(p,c,nn);
+		if(id[i+n*j]<0)
+		{	printf("q");	gr->AddPnt(p,c,nn);	}
+	}
 	for(i=0;i<num;i++)	for(j=0;j<num;j++)
 	{
 		if(gr->Stop)	{	delete []id;	return;	}
@@ -1358,7 +1361,7 @@ void mgl_chart(HMGL gr, HCDT a, const char *cols, const char *opt)
 	if(a->Minimal()<0)	{	gr->SetWarn(mglWarnNeg,"Chart");	return;	}
 	gr->SaveState(opt);
 	static int cgid=1;	gr->StartGroup("Chart",cgid++);
-	bool wire = cols && !strcmp(cols,"#");	// draw edges
+	bool wire = cols && strchr(cols,'#');	// draw edges
 	register long n=a->GetNx(),i,j=0;
 	if(cols)	for(i=0;i<long(strlen(cols));i++)
 		if(strchr("wkrgbcymhRGBCYMHWlenuqpLENUQP ",cols[i]))	j++;
