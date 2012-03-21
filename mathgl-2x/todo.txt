@@ -8,10 +8,6 @@
 http://ubuntuforums.org/showthread.php?t=1862084
 Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
-@itemize @bullet
-@item
-@end itemize
-
 ============= NEW  =============
 
 1.Export to X3D and VRML
@@ -40,10 +36,8 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 18. emulate fog in EPS/SVG
 19. line segment losses in EPS ???
 
-20. ReadHDF5 -- add string argument for handling lowest dimension (like complex numbers): "sum" - sum, "arg" - arg, "0...9" read slice 0...9, "abs" - sqrt(sum []^2)
-21. Change if possible long to size_t (be very accurate!!!)
-22. Add mglDataC for complex data -- main diff is reading/saving data
-23. MGL testing system ???
+20. Add mglDataC for complex data -- main diff is reading/saving data
+21. MGL testing system ???
 
 ============= UDAV =============
 
@@ -187,8 +181,8 @@ Remove other setting if data name is changed.
 +		7.2 Program flow commands
 +		7.3 mglParse class
 
-	8. Other classes (c++ only)
-		8.1 mglBase class
++	8. Other classes (c++ only)
++		8.1 mglBase class
 +		8.2 mglDataA class
 +		8.3 mglColor class
 +		8.4 mglPoint class

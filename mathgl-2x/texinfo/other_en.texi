@@ -6,10 +6,7 @@ There are only 5 end-user classes: @code{mglGraph} (see @ref{MathGL core}), @cod
 
 However, sometimes you may need to extend MathGL by writing yours own plotting functions or handling yours own data structures. In these cases you may need to use low-level API. This chapter describes it.
 
-@float
-@image{../classes, 11cm}
-@caption{Class diagram for MathGL}
-@end float
+@fig{classes, Class diagram for MathGL}
 
 The internal structure of MathGL is rather complicated. There are C++ classes @code{mglBase}, @code{mglCanvas}, ... for drawing primitives and positioning the plot (blue ones in the figure). There is a layer of C functions, which include interface for most important methods of these classes. Also most of plotting functions are implemented as C functions. After it, there are ``inline'' front-end classes which are created for user convenience (yellow ones in the figure). Also there are 2 classes which are widgets for FLTK and Qt libraries (green ones in the figure).
 
@@ -151,33 +148,43 @@ Drawing is done. Let close group and return.
 Another sample I want to show is exactly the same function but with smooth coloring using color scheme. So, I'll add comments only in the place of difference.
 
 @verbatim
-void circle(HMGL gr, float x, float y, float z, float r, const char *stl, const char *opt)
+void circle_cs(HMGL gr, float x, float y, float z, float r, const char *stl, const char *opt)
 {
 @end verbatim
 In this case let allow negative radius too. Formally it is not the problem for plotting (formulas the same) and this allow us to handle all color range.
 @verbatim
 //if(r<=0)  { gr->SetWarn(mglWarnNeg,"Circle"); return; }
 
-  static int cgid=1;  gr->StartGroup("Circle",cgid++);
+  static int cgid=1;  gr->StartGroup("CircleCS",cgid++);
   gr->SaveState(opt);
   const int n = gr->MeshNum>1?gr->MeshNum : 41;
   bool fill = stl && strchr(stl,'@');
 @end verbatim
-
-TODO!!!
-
-Here is main difference.
+Here is main difference. We need to create texture for color scheme specified by user
+@verbatim
+  long ss = gr->AddTexture(stl);
+@end verbatim
+But we need also get marker and color for it (if filling is enabled). Let suppose that marker and color is specified after @samp{:}. This is standard delimiter which stop color scheme entering. So, just lets find it and use for setting pen.
+@verbatim
+  const char *pen=0;
+  if(stl) pen = strchr(stl,':');
+  if(pen) pen++;
+@end verbatim
+The substring is placed in @var{pen} and it will be used as line style.
 @verbatim
   long pal=0;
-  char mk=gr->SetPenPal(stl,&pal);
+  char mk=gr->SetPenPal(pen,&pal);
 @end verbatim
 Next step, is determining colors for filling and for border. First one for filling.
 @verbatim
-  float c=gr->NextColor(pal), d;
+  float c=gr->GetC(ss,r);
 @end verbatim
-Second one for border. I use black color (call @code{gr->AddTexture('k')}) if second color is not specified.
+Second one for border.
 @verbatim
-  float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
+  float k=gr->NextColor(pal);
+@end verbatim
+The rest part is the same as in previous function.
+@verbatim
   if(!fill) k=c;
 
   gr->Reserve(2*n+2);
@@ -199,6 +206,122 @@ Second one for border. I use black color (call @code{gr->AddTexture('k')}) if se
   gr->EndGroup();
 }
 @end verbatim
+
+The last thing which we can do is derive our own class with new plotting functions. Good idea is to derive it from @code{mglGraph} (if you don't need extended window), or from @code{mglWindow} (if you need to extend window). So, in our case it will be
+@verbatim
+class MyGraph : public mglGraph
+{
+public:
+  inline void Circle(mglPoint p, float r, const char *stl="", const char *opt="")
+  { circle(p.x,p.y,p.z, r, stl, opt); }
+  inline void CircleCS(mglPoint p, float r, const char *stl="", const char *opt="")
+  { circle_cs(p.x,p.y,p.z, r, stl, opt); }
+};
+@end verbatim
+Note, that I use @code{inline} modifier for using the same binary code with different compilers. 
+
+So, the complete sample will be
+@verbatim
+#include <mgl/mgl.h>
+//---------------------------------------------------------
+#ifdef __cplusplus
+extern "C" {
+#endif
+void circle(HMGL gr, float x, float y, float z, float r, const char *stl, const char *opt);
+void circle_cs(HMGL gr, float x, float y, float z, float r, const char *stl, const char *opt);
+#ifdef __cplusplus
+}
+#endif
+//---------------------------------------------------------
+class MyGraph : public mglGraph
+{
+public:
+  inline void CircleCF(mglPoint p, float r, const char *stl="", const char *opt="")
+  { circle(p.x,p.y,p.z, r, stl, opt); }
+  inline void CircleCS(mglPoint p, float r, const char *stl="", const char *opt="")
+  { circle_cs(p.x,p.y,p.z, r, stl, opt); }
+};
+//---------------------------------------------------------
+void circle(HMGL gr, float x, float y, float z, float r, const char *stl, const char *opt)
+{
+  if(r<=0)  { gr->SetWarn(mglWarnNeg,"Circle"); return; }
+  static int cgid=1;  gr->StartGroup("Circle",cgid++);
+  gr->SaveState(opt);
+  const int n = gr->MeshNum>1?gr->MeshNum : 41;
+  bool fill = stl && strchr(stl,'@');
+  long pal=0;
+  char mk=gr->SetPenPal(stl,&pal);
+  float c=gr->NextColor(pal), d;
+  float k=(gr->GetNumPal(pal)>1)?gr->NextColor(pal):gr->AddTexture('k');
+  if(!fill) k=c;
+  gr->Reserve(2*n+2);
+  mglPoint q(NAN,NAN);
+  long n0,n1,n2,m1,m2,i;
+  n0 = fill ? gr->AddPnt(mglPoint(x,y,z),c,q,-1,3):-1;
+  n2 = mk ? gr->AddPnt(mglPoint(x,y,z),k,q,-1,3):-1;
+  if(mk)  gr->mark_plot(n2,mk);
+  for(i=0,m1=n1=-1;i<n;i++)
+  {
+    if(gr->Stop)  return;
+    float t = i*2*M_PI/(n-1.);
+    mglPoint p(x+r*cos(t), y+r*sin(t), z);
+    n2 = n1;  n1 = gr->AddPnt(p,c,q,-1,3);
+    m2 = m1;  m1 = gr->CopyNtoC(n1,k);
+    if(fill)  gr->trig_plot(n0,n1,n2);
+    gr->line_plot(m1,m2);
+  }
+  gr->EndGroup();
+}
+//---------------------------------------------------------
+void circle_cs(HMGL gr, float x, float y, float z, float r, const char *stl, const char *opt)
+{
+  static int cgid=1;  gr->StartGroup("CircleCS",cgid++);
+  gr->SaveState(opt);
+  const int n = gr->MeshNum>1?gr->MeshNum : 41;
+  bool fill = stl && strchr(stl,'@');
+  long ss = gr->AddTexture(stl);
+  const char *pen=0;
+  if(stl) pen = strchr(stl,':');
+  if(pen) pen++;
+  long pal=0;
+  char mk=gr->SetPenPal(pen,&pal);
+  float c=gr->GetC(ss,r);
+  float k=gr->NextColor(pal);
+  if(!fill) k=c;
+
+  gr->Reserve(2*n+2);
+  mglPoint q(NAN,NAN);
+  long n0,n1,n2,m1,m2,i;
+  n0 = fill ? gr->AddPnt(mglPoint(x,y,z),c,q,-1,3):-1;
+  n2 = mk ? gr->AddPnt(mglPoint(x,y,z),k,q,-1,3):-1;
+  if(mk)  gr->mark_plot(n2,mk);
+  for(i=0,m1=n1=-1;i<n;i++)
+  {
+    if(gr->Stop)  return;
+    float t = i*2*M_PI/(n-1.);
+    mglPoint p(x+r*cos(t), y+r*sin(t), z);
+    n2 = n1;  n1 = gr->AddPnt(p,c,q,-1,3);
+    m2 = m1;  m1 = gr->CopyNtoC(n1,k);
+    if(fill)  gr->trig_plot(n0,n1,n2);
+    gr->line_plot(m1,m2);
+  }
+  gr->EndGroup();
+}
+//---------------------------------------------------------
+int main()
+{
+  MyGraph gr;
+  gr.Box();
+  // first let draw circles with fixed colors
+  for(int i=0;i<10;i++)
+    gr.CircleCF(mglPoint(2*mgl_rnd()-1, 2*mgl_rnd()-1), mgl_rnd());
+  // now let draw circles with color scheme
+  for(int i=0;i<10;i++)
+    gr.CircleCS(mglPoint(2*mgl_rnd()-1, 2*mgl_rnd()-1), 2*mgl_rnd()-1);
+}
+@end verbatim
+
+
 
 
 @c ------------------------------------------------------------------

@@ -17,25 +17,26 @@ if(MGL_HAVE_DOC)
 	set(list_texi_files_ru mathgl_ru.texi mgl_ru.texi overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi samples_ru.texi appendix_ru.texi fdl.texi)
 
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
-		COMMAND ${findth} --split=section mathgl_en.texi -o mathgl_en
-		COMMAND ${findth} --split=no mgl_en.texi -o mgl_en.html
+		COMMAND ${findth} -I=png --split=section mathgl_en.texi -o mathgl_en
+		COMMAND ${findth} -I=png --split=node --frames -o mgl_web_en mathgl_en.texi
+		COMMAND ${findth} -I=png --split=no mgl_en.texi -o mgl_en.html
 		COMMAND ${findmi} --no-validate mathgl_en.texi
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 		DEPENDS ${list_texi_files_en}
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
 	)
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.info
-		COMMAND ${findth} --split=section mathgl_ru.texi -o mathgl_ru
-		COMMAND ${findth} --split=no mgl_ru.texi -o mgl_ru.html
-		COMMAND ${findmi} --no-validate mathgl_ru.texi
+		COMMAND ${findth} -I=png --split=section mathgl_ru.texi -o mathgl_ru
+		COMMAND ${findth} -I=png --split=no mgl_ru.texi -o mgl_ru.html
+		COMMAND ${findmi} -I png --no-validate mathgl_ru.texi
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 		DEPENDS ${list_texi_files_ru}
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
 	)
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.pdf
-		COMMAND ${findtp} mathgl_en.texi
-		COMMAND ${findtp} mathgl_en.texi
-		COMMAND ${findtp} mathgl_en.texi
+		COMMAND ${findtp} -I png mathgl_en.texi
+		COMMAND ${findtp} -I png mathgl_en.texi
+		COMMAND ${findtp} -I png mathgl_en.texi
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png
 		DEPENDS ${list_texi_files_en}
 #		DEPENDS ${list_texi_files_ru}
@@ -43,7 +44,7 @@ if(MGL_HAVE_DOC)
 	)
 	add_custom_target(documentation ALL
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
-#		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.pdf
+		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.pdf
 #		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.info
 #		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.pdf
 	)

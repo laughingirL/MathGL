@@ -79,6 +79,19 @@ supports it in developing GNU and promoting software freedom.''
 * Index::
 @end menu
 
+@ifhtml
+@macro fig {fname,text}
+@center @image{../\fname\, 11cm, , \text\, .png}
+@end macro
+@end ifhtml
+
+@ifnothtml
+@macro fig {fname,text}
+@center @image{\fname\, 11cm, , \text\, .png}
+@end macro
+@end ifnothtml
+
+
 @rmacro sref {arg}
 @xref{\arg\}, for sample code and picture.
 @end rmacro

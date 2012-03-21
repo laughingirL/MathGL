@@ -131,10 +131,7 @@ Gets last position of mouse click.
 
 Class is FLTK widget which display MathGL graphics (defined in @code{#include <mgl/fltk.h>}).
 
-@float
-@image{../fltk, 7cm}
-@caption{Example of FLTK window with MathGL plot.}
-@end float
+@fig{fltk, Example of FLTK window with MathGL plot.}
 
 @deftypemethod Fl_MathGL @code{void} set_draw (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p))
 @deftypemethodx Fl_MathGL @code{void} set_draw (@code{int} (*draw)(@code{mglGraph *}gr))
@@ -190,10 +187,7 @@ Pointer to external phi-angle validator.
 
 Class is Qt widget which display MathGL graphics (defined in @code{#include <mgl/qt.h>}).
 
-@float
-@image{../qt, 7cm}
-@caption{Example of Qt window with MathGL plot.}
-@end float
+@fig{qt, Example of Qt window with MathGL plot.}
 
 @deftypemethod QMathGL @code{void} setDraw (@code{mglDraw *}dr)
 Sets drawing functions from a class inherited from @code{mglDraw}.

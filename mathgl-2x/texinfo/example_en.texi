@@ -497,10 +497,7 @@ int sample(mglGraph *gr)
 @end verbatim
 Here I used function @code{Puts} for printing the text in arbitrary position of picture (see @ref{Text printing}). Text coordinates and size are connected with axes. However, text coordinates may be everywhere, including the outside the bounding box. I'll show its features later in @ref{Text features}.
 
-@float
-@image{../png/aspect, 11cm}
-@caption{Example of several subplots on the single picture.}
-@end float
+@fig{png/aspect, Example of several subplots on the single picture.}
 
 More complicated sample show how to use most of positioning functions:
 @verbatim
@@ -526,10 +523,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/inplot, 11cm}
-@caption{Example for most of positioning functions.}
-@end float
+@fig{png/inplot, Example for most of positioning functions.}
 
 
 @c ------------------------------------------------------------------
@@ -553,11 +547,14 @@ int sample(mglGraph *gr)
 
   gr->SubPlot(2,2,3); gr->Title("More axis");
   gr->SetOrigin(NAN,NAN); gr->SetRange('x',-1,1);
-  gr->Axis(); gr->Label('x',"x",0); gr->Label('y',"y_1",0); gr->FPlot("x^2","k");
+  gr->Axis(); gr->Label('x',"x",0); gr->Label('y',"y_1",0);
+  gr->FPlot("x^2","k");
   gr->SetRanges(-1,1,-1,1); gr->SetOrigin(-1.3,-1); // second axis
-  gr->Axis("y","r");  gr->Label('y',"#r{y_2}",0.2); gr->FPlot("x^3","r");
+  gr->Axis("y","r");  gr->Label('y',"#r{y_2}",0.2);
+  gr->FPlot("x^3","r");
 
-  gr->SubPlot(2,2,2); gr->Title("4 segments, inverted axis");   gr->SetOrigin(0,0);
+  gr->SubPlot(2,2,2); gr->Title("4 segments, inverted axis");
+  gr->SetOrigin(0,0);
   gr->InPlot(0.5,1,0.5,1);  gr->SetRanges(0,10,0,2);  gr->Axis();
   gr->FPlot("sqrt(x/2)");   gr->Label('x',"W",1); gr->Label('y',"U",1);
   gr->InPlot(0,0.5,0.5,1);  gr->SetRanges(1,0,0,2); gr->Axis("x");
@@ -571,10 +568,7 @@ int sample(mglGraph *gr)
 
 Note, that MathGL can draw not only single axis (which is default). But also several axis on the plot (see right plots). The idea is that the change of settings does not influence on the already drawn graphics. So, for 2-axes I setup the first axis and draw everything concerning it. Then I setup the second axis and draw things for the second axis. Generally, the similar idea allows one to draw rather complicated plot of 4 axis with different ranges (see bottom left plot).
 
-@float
-@image{../png/axis, 11cm}
-@caption{Example of axis.}
-@end float
+@fig{png/axis, Example of axis.}
 
 Another MathGL feature is fine ticks tunning. By default (if it is not changed by @code{SetTicks} function), MathGL try to adjust ticks positioning, so that they looks most human readable. At this, MathGL try to extract common factor for too large or too small axis ranges, as well as for too narrow ranges. Last one is non-common notation and can be disabled by @code{SetTuneTicks} function.
 
@@ -603,10 +597,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/ticks, 11cm}
-@caption{Features of axis ticks.}
-@end float
+@fig{png/ticks, Features of axis ticks.}
 
 The last sample I want to show in this subsection is Log-axis. From MathGL's point of vew, the log-axis is particular case of general curvilinear coordinates. So, we need first define new coordinates (see also @ref{Curvilinear coordinates}) by help of @code{SetFunc} or @code{SetCoor} functions. At this one should wary about proper axis range. So the code looks as following:
 @verbatim
@@ -635,10 +626,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/loglog, 11cm}
-@caption{Features of axis ticks.}
-@end float
+@fig{png/loglog, Features of axis ticks.}
 
 You can see that MathGL automatically switch to log-ticks as we define log-axis formula (in difference from v.1.*). Moreover, it switch to log-ticks for any formula if axis range will be large enough (see right bottom plot). Another interesting feature is that you not necessary define usual log-axis (i.e. when coordinates are positive), but you can define ``minus-log'' axis when coordinate is negative (see left bottom plot).
 
@@ -675,10 +663,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/curvcoor, 11cm}
-@caption{Example of curvilinear coordinates}
-@end float
+@fig{png/curvcoor, Example of curvilinear coordinates}
 
 
 @c ------------------------------------------------------------------
@@ -714,10 +699,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/colorbar, 11cm}
-@caption{Example of colorbars}
-@end float
+@fig{png/colorbar, Example of colorbars}
 
 
 @c ------------------------------------------------------------------
@@ -740,10 +722,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/box, 11cm}
-@caption{Example of Box()}
-@end float
+@fig{png/box, Example of Box()}
 
 
 @c ------------------------------------------------------------------
@@ -796,10 +775,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/ternary, 11cm}
-@caption{Example of colorbars}
-@end float
+@fig{png/ternary, Example of colorbars}
 
 @c ------------------------------------------------------------------
 @node Text features, Legend sample, Ternary axis, Advanced usage
@@ -845,10 +821,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/text, 11cm}
-@caption{Example of text printing}
-@end float
+@fig{png/text, Example of text printing}
 
 @c ------------------------------------------------------------------
 @node Legend sample, Cutting sample, Text features, Advanced usage
@@ -883,10 +856,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/legend, 11cm}
-@caption{Example of legend}
-@end float
+@fig{png/legend, Example of legend}
 
 @c ------------------------------------------------------------------
 @node Cutting sample, , Legend sample, Advanced usage
@@ -931,10 +901,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/cut, 11cm}
-@caption{Example of point cutting}
-@end float
+@fig{png/cut, Example of point cutting}
 
 
 
@@ -1070,10 +1037,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/dat_diff, 11cm}
-@caption{Example of data differentiation and integration}
-@end float
+@fig{png/dat_diff, Example of data differentiation and integration}
 
 Data smoothing (function @code{Smooth()}) is more interesting and important. This function has single argument which define type of smoothing and its direction. Now 3 methods are supported: @samp{3} -- linear averaging by 3 points, @samp{5} -- linear averaging by 5 points, and default one -- quadratic averaging by 5 points.
 
@@ -1117,10 +1081,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/dat_extra, 11cm}
-@caption{Example of data smoothing}
-@end float
+@fig{png/dat_extra, Example of data smoothing}
 
 Finally one can create new data arrays on base of the existing one: extract slice, row or column of data (@code{SubData()}), summarize along a direction(s) (@code{Sum()}), find distribution of data elements (@code{Hist()}) and so on.
 
@@ -1353,10 +1314,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/plot, 11cm}
-@caption{Example of Plot()}
-@end float
+@fig{png/plot, Example of Plot()}
 
 
 @c ------------------------------------------------------------------
@@ -1374,10 +1332,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/radar, 11cm}
-@caption{Example of Radar()}
-@end float
+@fig{png/radar, Example of Radar()}
 
 @c ------------------------------------------------------------------
 @node Step sample, Tens sample, Radar sample, 1D samples
@@ -1403,10 +1358,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/step, 11cm}
-@caption{Example of Step()}
-@end float
+@fig{png/step, Example of Step()}
 
 @c ------------------------------------------------------------------
 @node Tens sample, Area sample, Step sample, 1D samples
@@ -1431,10 +1383,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/tens, 11cm}
-@caption{Example of Tens()}
-@end float
+@fig{png/tens, Example of Tens()}
 
 @c ------------------------------------------------------------------
 @node Area sample, Region sample, Tens sample, 1D samples
@@ -1463,10 +1412,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/area, 11cm}
-@caption{Example of Area()}
-@end float
+@fig{png/area, Example of Area()}
 
 @c ------------------------------------------------------------------
 @node Region sample, Stem sample, Area sample, 1D samples
@@ -1493,10 +1439,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/region, 11cm}
-@caption{Example of Region()}
-@end float
+@fig{png/region, Example of Region()}
 
 @c ------------------------------------------------------------------
 @node Stem sample, Bars sample, Region sample, 1D samples
@@ -1521,10 +1464,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/stem, 11cm}
-@caption{Example of Stem()}
-@end float
+@fig{png/stem, Example of Stem()}
 
 @c ------------------------------------------------------------------
 @node Bars sample, Barh sample, Stem sample, 1D samples
@@ -1561,10 +1501,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/bars, 11cm}
-@caption{Example of Bars()}
-@end float
+@fig{png/bars, Example of Bars()}
 
 @c ------------------------------------------------------------------
 @node Barh sample, Cones sample, Bars sample, 1D samples
@@ -1592,10 +1529,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/barh, 11cm}
-@caption{Example of Barh()}
-@end float
+@fig{png/barh, Example of Barh()}
 
 @c ------------------------------------------------------------------
 @node Cones sample, Chart sample, Bars sample, 1D samples
@@ -1613,10 +1547,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/cones, 11cm}
-@caption{Example of Cones()}
-@end float
+@fig{png/cones, Example of Cones()}
 
 @c ------------------------------------------------------------------
 @node Chart sample, BoxPlot sample, Cones sample, 1D samples
@@ -1644,10 +1575,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/chart, 11cm}
-@caption{Example of Chart()}
-@end float
+@fig{png/chart, Example of Chart()}
 
 @c ------------------------------------------------------------------
 @node BoxPlot sample, Candle sample, Chart sample, 1D samples
@@ -1664,10 +1592,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/boxplot, 11cm}
-@caption{Example of BoxPlot()}
-@end float
+@fig{png/boxplot, Example of BoxPlot()}
 
 @c ------------------------------------------------------------------
 @node Candle sample, Error sample, BoxPlot sample, 1D samples
@@ -1686,10 +1611,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/candle, 11cm}
-@caption{Example of Candle()}
-@end float
+@fig{png/candle, Example of Candle()}
 
 @c ------------------------------------------------------------------
 @node Error sample, Mark sample, Candle sample, 1D samples
@@ -1728,10 +1650,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/error, 11cm}
-@caption{Example of Error()}
-@end float
+@fig{png/error, Example of Error()}
 
 @c ------------------------------------------------------------------
 @node Mark sample, TextMark sample, Error sample, 1D samples
@@ -1748,10 +1667,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/mark, 11cm}
-@caption{Example of Mark()}
-@end float
+@fig{png/mark, Example of Mark()}
 
 @c ------------------------------------------------------------------
 @node TextMark sample, Label sample, Mark sample, 1D samples
@@ -1768,10 +1684,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/textmark, 11cm}
-@caption{Example of TextMark()}
-@end float
+@fig{png/textmark, Example of TextMark()}
 
 @c ------------------------------------------------------------------
 @node Label sample, Tube sample, TextMark sample, 1D samples
@@ -1788,10 +1701,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/label, 11cm}
-@caption{Example of Label()}
-@end float
+@fig{png/label, Example of Label()}
 
 
 @c ------------------------------------------------------------------
@@ -1820,10 +1730,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/tube, 11cm}
-@caption{Example of Tube()}
-@end float
+@fig{png/tube, Example of Tube()}
 
 
 @c ------------------------------------------------------------------
@@ -1856,10 +1763,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/tape, 11cm}
-@caption{Example of Tape()}
-@end float
+@fig{png/tape, Example of Tape()}
 
 
 @c ------------------------------------------------------------------
@@ -1887,10 +1791,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/torus, 11cm}
-@caption{Example of Torus()}
-@end float
+@fig{png/torus, Example of Torus()}
 
 
 @c ------------------------------------------------------------------
@@ -1978,10 +1879,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/surf, 11cm}
-@caption{Example of Surf()}
-@end float
+@fig{png/surf, Example of Surf()}
 
 @c ------------------------------------------------------------------
 @node SurfC sample, SurfA sample, Surf sample, 2D samples
@@ -1998,10 +1896,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/surfc, 11cm}
-@caption{Example of SurfC()}
-@end float
+@fig{png/surfc, Example of SurfC()}
 
 @c ------------------------------------------------------------------
 @node SurfA sample, Mesh sample, SurfC sample, 2D samples
@@ -2019,10 +1914,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/surfa, 11cm}
-@caption{Example of SurfA()}
-@end float
+@fig{png/surfa, Example of SurfA()}
 
 
 @c ------------------------------------------------------------------
@@ -2040,10 +1932,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/mesh, 11cm}
-@caption{Example of Mesh()}
-@end float
+@fig{png/mesh, Example of Mesh()}
 
 @c ------------------------------------------------------------------
 @node Fall sample, Belt sample, Mesh sample, 2D samples
@@ -2060,10 +1949,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/fall, 11cm}
-@caption{Example of Fall()}
-@end float
+@fig{png/fall, Example of Fall()}
 
 @c ------------------------------------------------------------------
 @node Belt sample, Boxs sample, Fall sample, 2D samples
@@ -2080,10 +1966,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/belt, 11cm}
-@caption{Example of Belt()}
-@end float
+@fig{png/belt, Example of Belt()}
 
 @c ------------------------------------------------------------------
 @node Boxs sample, Tile sample, Fall sample, 2D samples
@@ -2110,10 +1993,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/boxs, 11cm}
-@caption{Example of Boxs()}
-@end float
+@fig{png/boxs, Example of Boxs()}
 
 @c ------------------------------------------------------------------
 @node Tile sample, TileS sample, Boxs sample, 2D samples
@@ -2130,10 +2010,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/tile, 11cm}
-@caption{Example of Tile()}
-@end float
+@fig{png/tile, Example of Tile()}
 
 @c ------------------------------------------------------------------
 @node TileS sample, Dens sample, Tile sample, 2D samples
@@ -2150,10 +2027,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/tiles, 11cm}
-@caption{Example of TileS()}
-@end float
+@fig{png/tiles, Example of TileS()}
 
 
 @c ------------------------------------------------------------------
@@ -2181,10 +2055,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/dens, 11cm}
-@caption{Example of Dens()}
-@end float
+@fig{png/dens, Example of Dens()}
 
 @c ------------------------------------------------------------------
 @node Cont sample, ContF sample, Dens sample, 2D samples
@@ -2210,10 +2081,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/cont, 11cm}
-@caption{Example of Cont()}
-@end float
+@fig{png/cont, Example of Cont()}
 
 @c ------------------------------------------------------------------
 @node ContF sample, ContD sample, Cont sample, 2D samples
@@ -2241,10 +2109,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/contf, 11cm}
-@caption{Example of ContF()}
-@end float
+@fig{png/contf, Example of ContF()}
 
 @c ------------------------------------------------------------------
 @node ContD sample, ContV sample, ContF sample, 2D samples
@@ -2272,10 +2137,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/contd, 11cm}
-@caption{Example of ContD()}
-@end float
+@fig{png/contd, Example of ContD()}
 
 @c ------------------------------------------------------------------
 @node ContV sample, Axial sample, ContD sample, 2D samples
@@ -2303,10 +2165,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/contv, 11cm}
-@caption{Example of ContV()}
-@end float
+@fig{png/contv, Example of ContV()}
 
 @c ------------------------------------------------------------------
 @node Axial sample, Grad sample, ContV sample, 2D samples
@@ -2333,10 +2192,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/axial, 11cm}
-@caption{Example of Axial()}
-@end float
+@fig{png/axial, Example of Axial()}
 
 @c ------------------------------------------------------------------
 @node Grad sample, , Axial sample, 2D samples
@@ -2353,10 +2209,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/grad, 11cm}
-@caption{Example of Grad()}
-@end float
+@fig{png/grad, Example of Grad()}
 
 
 @c ------------------------------------------------------------------
@@ -2426,10 +2279,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/surf3, 11cm}
-@caption{Example of Surf3()}
-@end float
+@fig{png/surf3, Example of Surf3()}
 
 @c ------------------------------------------------------------------
 @node Surf3C sample, Surf3A sample, Surf3 sample, 3D samples
@@ -2447,10 +2297,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/surf3c, 11cm}
-@caption{Example of Surf3C()}
-@end float
+@fig{png/surf3c, Example of Surf3C()}
 
 @c ------------------------------------------------------------------
 @node Surf3A sample, Cloud sample, Surf3C sample, 3D samples
@@ -2468,10 +2315,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/surf3a, 11cm}
-@caption{Example of Surf3A()}
-@end float
+@fig{png/surf3a, Example of Surf3A()}
 
 @c ------------------------------------------------------------------
 @node Cloud sample, Dens3 sample, Surf3A sample, 3D samples
@@ -2498,10 +2342,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/cloud, 11cm}
-@caption{Example of Cloud()}
-@end float
+@fig{png/cloud, Example of Cloud()}
 
 @c ------------------------------------------------------------------
 @node Dens3 sample, Cont3 sample, Cloud sample, 3D samples
@@ -2520,10 +2361,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/densa, 11cm}
-@caption{Example of Dens3()}
-@end float
+@fig{png/densa, Example of Dens3()}
 
 @c ------------------------------------------------------------------
 @node Cont3 sample, ContF3 sample, Dens3 sample, 3D samples
@@ -2542,10 +2380,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/conta, 11cm}
-@caption{Example of Cont3()}
-@end float
+@fig{png/conta, Example of Cont3()}
 
 @c ------------------------------------------------------------------
 @node ContF3 sample, Dens projection sample, Cont3 sample, 3D samples
@@ -2565,10 +2400,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/contfa, 11cm}
-@caption{Example of ContF3()}
-@end float
+@fig{png/contfa, Example of ContF3()}
 
 @c ------------------------------------------------------------------
 @node Dens projection sample, Cont projection sample, ContF3 sample, 3D samples
@@ -2586,10 +2418,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/dens_xyz, 11cm}
-@caption{Example of DensX(), DensY(), DensZ()}
-@end float
+@fig{png/dens_xyz, {Example of DensX(), DensY(), DensZ()}}
 
 @c ------------------------------------------------------------------
 @node Cont projection sample, ContF projection sample, Dens projection sample, 3D samples
@@ -2607,10 +2436,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/cont_xyz, 11cm}
-@caption{Example of ContX(), ContY(), ContZ()}
-@end float
+@fig{png/cont_xyz, {Example of ContX(), ContY(), ContZ()}}
 
 @c ------------------------------------------------------------------
 @node ContF projection sample, TriPlot and QuadPlot, Cont projection sample, 3D samples
@@ -2628,10 +2454,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/contf_xyz, 11cm}
-@caption{Example of ContFX(), ContFY(), ContFZ()}
-@end float
+@fig{png/contf_xyz, {Example of ContFX(), ContFY(), ContFZ()}}
 
 @c ------------------------------------------------------------------
 @node TriPlot and QuadPlot, Axial sample, ContF projection sample, 3D samples
@@ -2659,10 +2482,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/triplot, 11cm}
-@caption{Example of TriPlot() and QuadPlot()}
-@end float
+@fig{png/triplot, Example of TriPlot() and QuadPlot()}
 
 @c ------------------------------------------------------------------
 @node Dots sample, , TriPlot and QuadPlot, 3D samples
@@ -2687,10 +2507,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/dots, 11cm}
-@caption{Example of Dots()}
-@end float
+@fig{png/dots, Example of Dots()}
 
 @c ------------------------------------------------------------------
 @node Vector field samples, Hints, 3D samples, Examples
@@ -2806,10 +2623,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/vect, 11cm}
-@caption{Example of Vect()}
-@end float
+@fig{png/vect, Example of Vect()}
 
 @c ------------------------------------------------------------------
 @node Traj sample, Flow sample, Vect sample, Vector field samples
@@ -2826,10 +2640,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/traj, 11cm}
-@caption{Example of Traj()}
-@end float
+@fig{png/traj, Example of Traj()}
 
 
 @c ------------------------------------------------------------------
@@ -2857,10 +2668,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/flow, 11cm}
-@caption{Example of Flow()}
-@end float
+@fig{png/flow, Example of Flow()}
 
 @c ------------------------------------------------------------------
 @node Pipe sample, Dew sample, Flow sample, Vector field samples
@@ -2887,10 +2695,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/pipe, 11cm}
-@caption{Example of Pipe()}
-@end float
+@fig{png/pipe, Example of Pipe()}
 
 @c ------------------------------------------------------------------
 @node Dew sample, , Pipe sample, Vector field samples
@@ -2907,10 +2712,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/dew, 11cm}
-@caption{Example of Dew()}
-@end float
+@fig{png/dew, Example of Dew()}
 
 
 @c ------------------------------------------------------------------
@@ -2993,10 +2795,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/combined, 11cm}
-@caption{Example of ``combined'' plots}
-@end float
+@fig{png/combined, Example of ``combined'' plots}
 
 @c ------------------------------------------------------------------
 @node Transparency and lighting, Types of transparency, ``Compound'' graphics, Hints
@@ -3022,10 +2821,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/alpha, 11cm}
-@caption{Example of transparency and lightings}
-@end float
+@fig{png/alpha, Example of transparency and lightings}
 
 @c ------------------------------------------------------------------
 @node Types of transparency, Adding fog, Transparency and lighting, Hints
@@ -3054,18 +2850,9 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/type0, 11cm}
-@caption{Example of @code{SetTranspType(0)}.}
-@end float
-@float
-@image{../png/type1, 11cm}
-@caption{Example of @code{SetTranspType(1)}.}
-@end float
-@float
-@image{../png/type2, 11cm}
-@caption{Example of @code{SetTranspType(2)}.}
-@end float
+@fig{png/type0, Example of @code{SetTranspType(0)}.}
+@fig{png/type1, Example of @code{SetTranspType(1)}.}
+@fig{png/type2, Example of @code{SetTranspType(2)}.}
 
 
 @c ------------------------------------------------------------------
@@ -3084,10 +2871,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/fog, 11cm}
-@caption{Example of @code{Fog()}.}
-@end float
+@fig{png/fog, Example of @code{Fog()}.}
 
 @c ------------------------------------------------------------------
 @node Several light sources, Using primitives, Adding fog, Hints
@@ -3108,10 +2892,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/several_light, 11cm}
-@caption{Example of several light sources.}
-@end float
+@fig{png/several_light, Example of several light sources.}
 
 @c ------------------------------------------------------------------
 @node Using primitives, STFA sample, Several light sources, Hints
@@ -3119,10 +2900,7 @@ int sample(mglGraph *gr)
 
 MathGL provide a set of functions for drawing primitives (see @ref{Primitives}). Primitives are low level object, which used by most of plotting functions. Picture below demonstrate some of commonly used primitives.
 
-@float
-@image{../png/primitives, 11cm}
-@caption{Primitives in MathGL.}
-@end float
+@fig{png/primitives, Primitives in MathGL.}
 
 Generally, you can create arbitrary new kind of plot using primitives. For example, MathGL don't provide any special functions for drawing molecules. However, you can do it using only one type of primitives @code{Drop}. The sample code is:
 @verbatim
@@ -3188,10 +2966,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/molecule, 11cm}
-@caption{Example of molecules drawing.}
-@end float
+@fig{png/molecule, Example of molecules drawing.}
 
 Moreover, some of special plots can be more easily produced by primitives rather than by specialized function. For example, Venn diagram can be produced by @code{Error} plot:
 @verbatim
@@ -3217,10 +2992,7 @@ int sample(mglGraph *gr)
 @end verbatim
 Of course, the first variant is more suitable if you need to plot a lot of circles. But for few ones the usage of primitives looks easy.
 
-@float
-@image{../png/venn, 11cm}
-@caption{Example of Venn diagram.}
-@end float
+@fig{png/venn, Example of Venn diagram.}
 
 @c ------------------------------------------------------------------
 @node STFA sample, Mapping visualization, Using primitives, Hints
@@ -3249,10 +3021,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/stfa, 11cm}
-@caption{Example of STFA().}
-@end float
+@fig{png/stfa, Example of STFA().}
 
 @c ------------------------------------------------------------------
 @node Mapping visualization, Making histogram, STFA sample, Hints
@@ -3284,10 +3053,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/map, 11cm}
-@caption{Example of Map().}
-@end float
+@fig{png/map, Example of Map().}
 
 @c ------------------------------------------------------------------
 @node Making histogram, Nonlinear fitting sample, Mapping visualization, Hints
@@ -3315,10 +3081,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/hist, 11cm}
-@caption{Example of Hist().}
-@end float
+@fig{png/hist, Example of Hist().}
 
 
 @c ------------------------------------------------------------------
@@ -3376,10 +3139,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/fit, 11cm}
-@caption{Example of nonlinear fitting.}
-@end float
+@fig{png/fit, Example of nonlinear fitting.}
 
 @c ------------------------------------------------------------------
 @node PDE solving hints, MGL parser using, Nonlinear fitting sample, Hints
@@ -3418,10 +3178,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/pde, 11cm}
-@caption{Example of PDE solving.}
-@end float
+@fig{png/pde, Example of PDE solving.}
 
 The last example is example of beam tracing. Beam tracing equation is special kind of PDE equation written in coordinates accompanied to a ray. Generally this is the same parameters and limitation as for PDE solving but the coordinates are defined by the ray and by parameter of grid width @var{w} in direction transverse the ray. So, you don't need to specify the range of coordinates. @strong{BUT} there is limitation. The accompanied coordinates are well defined only for smooth enough rays, i.e. then the ray curvature @math{K} (which is defined as @math{1/K^2 = (|\ddot r|^2 |\dot r|^2 - (\ddot r, \dot r)^2)/|\dot r|^6}) is much large then the grid width: @math{K>>w}. So, you may receive incorrect results if this condition will be broken.
 
@@ -3448,10 +3205,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/qo2d, 11cm}
-@caption{Example of beam tracing.}
-@end float
+@fig{png/qo2d, Example of beam tracing.}
 
 
 @c ------------------------------------------------------------------
@@ -3506,10 +3260,7 @@ int sample(HMGL gr)
 }
 @end verbatim
 
-@float
-@image{../png/parser, 11cm}
-@caption{Example of MGL script parsing.}
-@end float
+@fig{png/parser, Example of MGL script parsing.}
 
 @c ------------------------------------------------------------------
 @node ``Templates'', Nonlinear fitting sample, MGL parser using, Hints
@@ -3562,10 +3313,7 @@ int sample(mglGraph *gr)
 }
 @end verbatim
 
-@float
-@image{../png/stereo, 11cm}
-@caption{Example of stereo image.}
-@end float
+@fig{png/stereo, Example of stereo image.}
 
 @node FAQ, , Hints, Examples
 @section FAQ
