@@ -1,7 +1,0 @@
-rotate 50 60
-box
-fsurf 'x*y'
-fsurf 'x^2'
-fplot 't' 't' '1-t^2' 'r'
-
-

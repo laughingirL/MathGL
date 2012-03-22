@@ -49,35 +49,6 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-// 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-// 	gr->SetOrigin(0,0,0);
-// 	if(!mini)	{	gr->SubPlot(3,2,0,"");	gr->Title("Bars plot (default)");	}
-// 	gr->Box();	gr->Bars(ys);
-// 	if(mini)	return;
-// 	gr->SubPlot(3,2,1,"");	gr->Title("2 colors");	gr->Box();	gr->Bars(ys,"cbgGyr");
-// 	gr->SubPlot(3,2,4,"");	gr->Title("'\\#' style");	gr->Box();	gr->Bars(ys,"#");
-// 	gr->SubPlot(3,2,5);	gr->Title("3d variant");	gr->Rotate(50,60);	gr->Box();
-// 	mglData yc(30), xc(30), z(30);	z.Modify("2*x-1");
-// 	yc.Modify("sin(pi*(2*x-1))");	xc.Modify("cos(pi*2*x-pi)");
-// 	gr->Bars(xc,yc,z,"r");
-// 	gr->SetRanges(-1,1,-3,3);	// increase range since summation can exceed [-1,1]
-// 	gr->SubPlot(3,2,2,"");	gr->Title("'a' style");	gr->Box();	gr->Bars(ys,"a");
-// 	gr->SubPlot(3,2,3,"");	gr->Title("'f' style");	gr->Box();	gr->Bars(ys,"f");
-
-	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-	gr->Light(true);	gr->SetOrigin(0,0,0);
-	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Cones plot");	}
-	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys);
-	if(mini)	return;
-	gr->SubPlot(2,2,1);	gr->Title("2 colors");
-	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"cbgGyr");
-	gr->SubPlot(2,2,2);	gr->Title("'#' style");
-	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"#");
-	gr->SubPlot(2,2,3);	gr->Title("'a' style");
-	gr->SetRange('z',-2,2);	// increase range since summation can exceed [-1,1]
-	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"a");
-	return;
-	
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
