@@ -5,11 +5,12 @@ try:
 	source_dir="${SRC_INC}"
 	binary_dir="${BIN_INC}"
 	mgl_i="${MGL_I}"
-	mgl_dir="${MGL_LIB}"
+	mgl_lib="${MGL_LIB}"
+	mgl_lib_wnd="${MGL_LIB_WND}"
 except KeyError:
 	source_dir="."
 	binary_dir="."
-	mgl_dir="src/.libs/libmgl.so"
+#	mgl_dir="src/.libs/libmgl.so"
 
 mgl_module = Extension('_mathgl',
     sources=[mgl_i],
@@ -19,7 +20,7 @@ mgl_module = Extension('_mathgl',
 	'-c++',
 	"-I%s" % binary_dir,
 	"-I%s" % source_dir],
-    extra_objects=[mgl_dir]
+    extra_objects=[mgl_lib,mgl_lib_wnd]
     )
 
 setup (

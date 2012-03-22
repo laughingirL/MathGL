@@ -1,6 +1,12 @@
 if(MGL_HAVE_PYTHON)
 	configure_file(${MathGL_SOURCE_DIR}/lang/mgl.i ${MathGL_BINARY_DIR}/lang/mgl.i COPYONLY)
 	configure_file(${MathGL_SOURCE_DIR}/lang/numpy.i ${MathGL_BINARY_DIR}/lang/numpy.i COPYONLY)
+	SET(dep_libs mgl)
+	if(MGL_HAVE_FLTK)
+		get_property(path_to_mglwnd TARGET mgl-wnd PROPERTY LOCATION)
+		file(TO_NATIVE_PATH ${path_to_mglwnd} MGL_LIB_WND)
+		SET(dep_libs ${dep_libs} mgl-wnd)
+	endif(MGL_HAVE_FLTK)
 	get_property(path_to_mgl TARGET mgl PROPERTY LOCATION)
 	file(TO_NATIVE_PATH ${path_to_mgl} MGL_LIB)
 	file(TO_NATIVE_PATH ${MathGL_BINARY_DIR}/lang/mgl.i MGL_I)
@@ -24,7 +30,7 @@ if(MGL_HAVE_PYTHON)
 # 	)
  	add_custom_command(OUTPUT _mathgl.so mathgl.py
 		COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/lang/setup.py build
-		DEPENDS mgl ${CMAKE_BINARY_DIR}/lang/mgl.i ${CMAKE_BINARY_DIR}/lang/numpy.i
+		DEPENDS ${dep_libs} ${CMAKE_BINARY_DIR}/lang/mgl.i ${CMAKE_BINARY_DIR}/lang/numpy.i
 		IMPLICIT_DEPENDS CXX ${CMAKE_SOURCE_DIR}/include/mgl/type.h ${CMAKE_SOURCE_DIR}/include/mgl/data.h ${CMAKE_SOURCE_DIR}/include/mgl/mgl.h
  		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lang
  	)
