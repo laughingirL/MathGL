@@ -2,15 +2,23 @@ from distutils.core import setup, Extension
 import os
 
 try:
-	source_dir=os.environ["CMAKE_SOURCE_DIR"]
-	mgl_dir="src/libmgl.so"
+	source_dir="${SRC_INC}"
+	binary_dir="${BIN_INC}"
+	mgl_i="${MGL_I}"
+	mgl_dir="${MGL_LIB}"
 except KeyError:
 	source_dir="."
+	binary_dir="."
 	mgl_dir="src/.libs/libmgl.so"
 
 mgl_module = Extension('_mathgl',
-    sources=["lang/mgl_python.cpp"],
-    include_dirs=["%s/include" % source_dir],
+    sources=[mgl_i],
+    include_dirs=[binary_dir, source_dir],
+    swig_opts=[
+#	"-outdir %s/lang" % binary_dir,
+	'-c++',
+	"-I%s" % binary_dir,
+	"-I%s" % source_dir],
     extra_objects=[mgl_dir]
     )
 
@@ -32,7 +40,7 @@ setup (
  interface based on GLUT. This provides high compatibility with \
  any operating system (really any which has OpenGL-like libraries). \
  Python interface for MathGL",
-    package_dir = {"": "lang"},
+    package_dir = {"": ""},
     py_modules = ["mathgl"],
     ext_modules = [mgl_module]
     )
