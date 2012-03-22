@@ -1539,10 +1539,20 @@ int sample(mglGraph *gr)
 @verbatim
 int sample(mglGraph *gr)
 {
-  mglData ys(10,3); ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-  gr->Title("Cones plot");  gr->Rotate(50,60);
-  gr->Light(true);  gr->SetOrigin(0,0,0);
-  gr->Box();  gr->Cones(ys);
+  mglData ys(10,3);   ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+  gr->Light(true);    gr->SetOrigin(0,0,0);
+  gr->SubPlot(2,2,0); gr->Title("Cones plot");
+  gr->Rotate(50,60);  gr->Box();  gr->Cones(ys);
+
+  gr->SubPlot(2,2,1); gr->Title("2 colors");
+  gr->Rotate(50,60);  gr->Box();  gr->Cones(ys,"cbgGyr");
+
+  gr->SubPlot(2,2,2); gr->Title("'#' style");
+  gr->Rotate(50,60);  gr->Box();  gr->Cones(ys,"#");
+
+  gr->SubPlot(2,2,3); gr->Title("'a' style");
+  gr->SetRange('z',-2,2); // increase range since summation can exceed [-1,1]
+  gr->Rotate(50,60);  gr->Box();  gr->Cones(ys,"a");
   return 0;
 }
 @end verbatim
@@ -1602,7 +1612,7 @@ int sample(mglGraph *gr)
 @verbatim
 int sample(mglGraph *gr)
 {
-  mglData y(30);  gr->Fill(y,"sin(2*pi*x)^2");
+  mglData y(30);  gr->Fill(y,"sin(pi*x/2)^2");
   mglData y1(30); gr->Fill(y1,"v/2",y);
   mglData y2(30); gr->Fill(y2,"(1+v)/2",y);
   gr->SubPlot(1,1,0,"");  gr->Title("Candle plot (default)");
@@ -3369,6 +3379,12 @@ First, you should download new font files from @uref{http://mathgl.sourceforge.n
 
 @item How can I draw tick out of a bounding box?
 Just set a negative value in @var{SetTickLen}. For example, use @code{gr->SetTickLen(-0.1);}.
+
+@item How can I prevent text rotation?
+Just use @code{SetRotatedText(false)}.
+
+@item What is @code{*.so}? What is @code{gcc}? How I can use @code{make}?
+This standard GNU tool. There is special FAQ about its usage under Windows -- @uref{http://www.mingw.org/wiki/FAQ}.
 
 @end table
 

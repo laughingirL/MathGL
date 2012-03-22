@@ -21,15 +21,12 @@
 //-----------------------------------------------------------------------------
 mglCanvasW::mglCanvasW() : mglCanvas()
 {
-	Setup(true,false,true);
-	LoadFunc=0;	FuncPar=0;	DrawFunc=0;
+	Setup();	LoadFunc=0;	FuncPar=0;	DrawFunc=0;
 	GG = 0;		NumFig = 0;	CurFig = -1;
 //	set(MGL_USEDRWDAT);	// TODO: experimental feature -- test later
 }
 //-----------------------------------------------------------------------------
 mglCanvasW::~mglCanvasW()	{	if(GG) free(GG);	}
-//-----------------------------------------------------------------------------
-void mglCanvasW::Clf(mglColor Back)	{	if(get(MGL_AUTO_CLF))	mglCanvas::Clf(Back);	}
 //-----------------------------------------------------------------------------
 void mglCanvasW::SetCurFig(int c)	{	CurFig=c;	if(get(MGL_USEDRWDAT))	GetDrwDat(c);	}
 //-----------------------------------------------------------------------------
@@ -117,6 +114,8 @@ void mgl_wnd_prev_frame(HMGL gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->PrevFrame();	}
 void mgl_wnd_animation(HMGL gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->Animation();	}
+void mgl_setup_window(HMGL gr, int clf_upd, int showpos)
+{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->Setup(clf_upd, showpos);	}
 //-----------------------------------------------------------------------------
 void mgl_wnd_toggle_alpha_(uintptr_t *gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
@@ -151,6 +150,9 @@ void mgl_wnd_prev_frame_(uintptr_t *gr)
 void mgl_wnd_animation_(uintptr_t *gr)
 {	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
 	if(g)	g->Animation();	}
+void mgl_setup_window_(uintptr_t *gr, int *clf_upd, int *showpos)
+{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+	if(g)	g->Setup(*clf_upd, *showpos);	}
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_FLTK==0
 HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *)

@@ -167,7 +167,7 @@ enum{	// Codes for warnings/messages
 // flags for internal use only
 #define MGL_DISABLE_SCALE	0x000200	///< Temporary flag for disable scaling (used for axis)
 #define MGL_FINISHED		0x000400	///< Flag that final picture (i.e. mglCanvas::G) is ready
-#define MGL_AUTO_CLF		0x000800	///< Clear canvas between drawing
+//#define MGL_AUTO_CLF		0x000800	///< Clear canvas between drawing
 #define MGL_SHOW_POS		0x001000	///< Switch to show or not mouse click position
 #define MGL_CLF_ON_UPD		0x002000	///< Clear plot before Update()
 //#define MGL_HIGHLIGHT		0x004000	///< Highlight plot

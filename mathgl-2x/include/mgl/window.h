@@ -102,8 +102,8 @@ public:
 
 	inline void SetDelay(float dt)	///< Delay for animation in seconds
 	{	mgl_wnd_set_delay(gr, dt);	}
-	inline void Setup(bool autoclf, bool showpos, bool clf_upd)
-	{	mgl_setup_window(gr, autoclf, showpos, clf_upd);	}
+	inline void Setup(bool clf_upd=true, bool showpos=false)
+	{	mgl_setup_window(gr, clf_upd, showpos);	}
 	inline mglPoint LastMousePos()	///< Last mouse position
 	{	mglPoint p;	mgl_get_last_mouse_pos(gr,&p.x,&p.y,&p.z);	return p;	}
 };
@@ -118,15 +118,14 @@ public:
 	void SetSize(int w,int h);
 	void EndFrame();
 	const unsigned char *GetBits();
-	void Clf(mglColor Back=NC);
 	inline int GetNumFig()	{	return NumFig;	}
 	inline int GetCurFig()	{	return CurFig;	}
 	void SetCurFig(int c);
 	void ClearFrames();
 	inline mglPoint GetMousePos()	{	return LastMousePos;}	// stupid thing to pass G++ bug
 	inline void SetMousePos(mglPoint p)	{	LastMousePos=p;	}
-	inline void Setup(bool autoclf, bool showpos, bool clf_upd)
-	{	set(autoclf,MGL_AUTO_CLF);	set(showpos,MGL_SHOW_POS);	set(clf_upd,MGL_CLF_ON_UPD);	}
+	inline void Setup(bool clf_upd=true, bool showpos=false)
+	{	set(showpos,MGL_SHOW_POS);	set(clf_upd,MGL_CLF_ON_UPD);	}
 
 	virtual void ToggleAlpha()=0;	///< Switch on/off transparency (do not overwrite user settings)
 	virtual void ToggleLight()=0;	///< Switch on/off lighting (do not overwrite user settings)

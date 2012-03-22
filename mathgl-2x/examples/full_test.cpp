@@ -49,18 +49,39 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
-	mglData ch(7,2);	for(int i=0;i<7*2;i++)	ch.a[i]=mgl_rnd()+0.1;
-	gr->SubPlot(2,2,2);	gr->Title("Pie chart; ' ' color");
-	gr->SetFunc("(y+1)/2*cos(pi*x)","(y+1)/2*sin(pi*x)","");
-	gr->Rotate(50,60);	gr->Box();	gr->Chart(ch,"bgr cmy#");
-	gr->SubPlot(2,2,3);	gr->Title("Ring chart; ' ' color");
-	gr->SetFunc("(y+2)/3*cos(pi*x)","(y+2)/3*sin(pi*x)","");
-	gr->Rotate(50,60);	gr->Box();	gr->Chart(ch,"bgr cmy#");
+// 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+// 	gr->SetOrigin(0,0,0);
+// 	if(!mini)	{	gr->SubPlot(3,2,0,"");	gr->Title("Bars plot (default)");	}
+// 	gr->Box();	gr->Bars(ys);
+// 	if(mini)	return;
+// 	gr->SubPlot(3,2,1,"");	gr->Title("2 colors");	gr->Box();	gr->Bars(ys,"cbgGyr");
+// 	gr->SubPlot(3,2,4,"");	gr->Title("'\\#' style");	gr->Box();	gr->Bars(ys,"#");
+// 	gr->SubPlot(3,2,5);	gr->Title("3d variant");	gr->Rotate(50,60);	gr->Box();
+// 	mglData yc(30), xc(30), z(30);	z.Modify("2*x-1");
+// 	yc.Modify("sin(pi*(2*x-1))");	xc.Modify("cos(pi*2*x-pi)");
+// 	gr->Bars(xc,yc,z,"r");
+// 	gr->SetRanges(-1,1,-3,3);	// increase range since summation can exceed [-1,1]
+// 	gr->SubPlot(3,2,2,"");	gr->Title("'a' style");	gr->Box();	gr->Bars(ys,"a");
+// 	gr->SubPlot(3,2,3,"");	gr->Title("'f' style");	gr->Box();	gr->Bars(ys,"f");
+
+	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
+	gr->Light(true);	gr->SetOrigin(0,0,0);
+	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Cones plot");	}
+	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys);
+	if(mini)	return;
+	gr->SubPlot(2,2,1);	gr->Title("2 colors");
+	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"cbgGyr");
+	gr->SubPlot(2,2,2);	gr->Title("'#' style");
+	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"#");
+	gr->SubPlot(2,2,3);	gr->Title("'a' style");
+	gr->SetRange('z',-2,2);	// increase range since summation can exceed [-1,1]
+	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"a");
 	return;
 	
 	mglParse par;
 	par.AllowSetSize(true);
-	FILE *fp=fopen("/home/balakin/mgl/att/put.mgl","rt");
+	setlocale(LC_CTYPE, "");
+	FILE *fp=fopen("/home/balakin/progr/sfnet/mathgl/mathgl-2x/examples/test.mgl","r");
 	par.Execute(gr,fp,true);
 	fclose(fp);
 }
@@ -698,11 +719,11 @@ void smgl_radar(mglGraph *gr)
 	gr->Radar(yr,"#");
 }
 //-----------------------------------------------------------------------------
-const char *mmgl_candle="new y 30 'sin(2*pi*x)^2':copy y1 y/2:copy y2 (y+1)/2\n"
+const char *mmgl_candle="new y 30 'sin(pi*x/2)^2':copy y1 y/2:copy y2 (y+1)/2\n"
 "subplot 1 1 0 '':title 'Candle plot (with grid, \\\'\\#\\\')'\nyrange 0 1:box:candle y y1 y2\n";
 void smgl_candle(mglGraph *gr)
 {
-	mglData y(30);	gr->Fill(y,"sin(2*pi*x)^2");
+	mglData y(30);	gr->Fill(y,"sin(pi*x/2)^2");
 	mglData y1(30);	gr->Fill(y1,"v/2",y);
 	mglData y2(30);	gr->Fill(y2,"(1+v)/2",y);
 	if(!mini)	{	gr->SubPlot(1,1,0,"");	gr->Title("Candle plot (default)");	}
@@ -1351,9 +1372,17 @@ const char *mmgl_cones="new ys 10 3 '0.8*sin(pi*(x+y/4+1.25))+0.2*rnd'"
 void smgl_cones(mglGraph *gr)
 {
 	mglData ys(10,3);	ys.Modify("0.8*sin(pi*(2*x+y/2))+0.2*rnd");
-	if(!mini)	gr->Title("Cones plot");
-	gr->Rotate(50,60);	gr->Light(true);
-	gr->SetOrigin(0,0,0);	gr->Box();	gr->Cones(ys);
+	gr->Light(true);	gr->SetOrigin(0,0,0);
+	if(!mini)	{	gr->SubPlot(2,2,0);	gr->Title("Cones plot");	}
+	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys);
+	if(mini)	return;
+	gr->SubPlot(2,2,1);	gr->Title("2 colors");
+	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"cbgGyr");
+	gr->SubPlot(2,2,2);	gr->Title("'#' style");
+	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"#");
+	gr->SubPlot(2,2,3);	gr->Title("'a' style");
+	gr->SetRange('z',-2,2);	// increase range since summation can exceed [-1,1]
+	gr->Rotate(50,60);	gr->Box();	gr->Cones(ys,"a");
 }
 //-----------------------------------------------------------------------------
 const char *mmgl_aspect="subplot 2 2 0:box:text -1 1.1 'Just box' ':L'\ninplot 0.2 0.5 0.7 1:box:text 0 1.2 'InPlot example'\n"

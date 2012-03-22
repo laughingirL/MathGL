@@ -261,7 +261,7 @@ int main(int argc, char **argv)
 	pref.get("internal_font",internal_font,0);
 	pref.get("auto_exec",auto_exec,1);
 #ifdef USE_GETTEXT
-//	setlocale (LC_ALL, "");
+//	setlocale (LC_NUMERIC, "");
 //	bindtextdomain (PACKAGE, LOCALEDIR);
 //	textdomain (PACKAGE);
 #endif

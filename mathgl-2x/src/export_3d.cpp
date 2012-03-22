@@ -262,7 +262,7 @@ void mgl_write_obj(HMGL gr, const char *fname,const char *descr, int use_png)
 	FILE *fp=fopen(fname,"wt");
 	// vertices definition
 	fprintf(fp,"# Created by MathGL library\n# Title: %s\n",(descr && *descr) ? descr : fname);
-	for(i=0;i<size_t(gr->GetPrmNum());i++)
+	for(i=0;i<size_t(gr->GetPntNum());i++)
 	{
 		mglPnt pp = gr->GetPnt(i);
 		fprintf(fp,"v %g %g %g\n",pp.x,pp.y,pp.z);
@@ -473,24 +473,43 @@ void mgl_write_idtf_(uintptr_t *gr, const char *fname,const char *descr,int l,in
 	char *f=new char[n+1];	memcpy(f,descr,n);	f[n]=0;
 	mgl_write_idtf(_GR_,s,f);	delete []s;		delete []f;	}
 //-----------------------------------------------------------------------------
+/*struct mglPrim
+{
+	// NOTE: n4 is used as mark; n3 -- as pen style for type=0,1,4
+	// NOTE: n3 is used as position of txt,font in Ptxt for type=6
+	long n1,n2,n3,n4;	///< coordinates of corners
+	int type;	///< primitive type (0-point, 1-line, 2-trig, 3-quad, 4-glyph, 6-text)
+	int id;		///< object id
+	float z;	///< z-position
+	float s;	///< size (if applicable) or fscl
+	float w;	///< width (if applicable) or ftet
+	float p;
+};*/
 bool mglCanvas::ExportMGLD(const char *fname, const char *descr)
 {
 	if(Pnt.size()<1 || Prm.size()<1)	return true;
 	FILE *fp=fopen(fname,"wt");
 	if(!fp)	return true;
-	fprintf(fp,"MGLD %lu %lu\n# %s\n", Pnt.size(), Prm.size(), (descr && *descr) ? descr : fname);
-	register size_t i;
+	// NOTE: I'll save Ptx. So prim type=6 is useless,and no LaTeX
+	fprintf(fp,"MGLD %lu %lu %lu\n# %s\n", Pnt.size(), Prm.size(), Txt.size(), (descr && *descr) ? descr : fname);
+	register size_t i,j;
 	fprintf(fp,"# Vertexes: x y z c t u v w r g b a\n");
 	for(i=0;i<Pnt.size();i++)
 	{
 		const mglPnt &q=Pnt[i];
-		fprintf(fp,"%g %g %g %g %g %g %g %g %g %g %g %g\n", q.x, q.y, q.z, q.c, q.t, q.u, q.v, q.w, q.r, q.g, q.b, q.a);
+		fprintf(fp,"%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\t%.4g\n", q.xx, q.yy, q.zz, q.c, q.t, q.u, q.v, q.w, q.r, q.g, q.b, q.a);
 	}
 	fprintf(fp,"# Primitives: type n1 n2 n3 n4 id s w p\n");
 	for(i=0;i<Prm.size();i++)
 	{
-		const mglPrim &q=Prm[i];
-		fprintf(fp,"%d %ld %ld %ld %ld %d %g %g %g\n", q.type, q.n1, q.n2, q.n3, q.n4, q.id, q.s, q.w, q.p);
+		const mglPrim &p=Prm[i];
+		fprintf(fp,"%d\t%ld\t%ld\t%ld\t%ld\t%d\t%g\t%g\t%g\n", p.type, p.n1, p.n2, p.n3, p.n4, p.id, p.s, p.w, p.p);
+	}
+	fprintf(fp,"# Textures: smooth alpha colors\n");
+	for(i=0;i<Txt.size();i++)
+	{
+		const mglTexture &t=Txt[i];
+		fprintf(fp,"%d\t%.4g\t%s\n",t.Smooth,t.Alpha,t.Sch);
 	}
 	fclose(fp);
 	return false;
@@ -511,23 +530,42 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	if(!fgets(buf,512,fp))	*buf=0;
 	if(strncmp(buf,"MGLD",4))	{	delete []buf;	fclose(fp);	return true;	}
 	register size_t i;
-	size_t n,m;
-	sscanf(buf+5,"%lu%lu",&n,&m);
-	if(n<=0 || m<=0)	{	delete []buf;	fclose(fp);	return true;	}
-	if(!add)	{	Pnt.clear();	Prm.clear();	}
-	Pnt.reserve(n);	Prm.reserve(m);
-	mglPnt p;	mglPrim q;
-	for(i=0;i<n;)
+	size_t n,m,l;
+	sscanf(buf+5,"%lu%lu%lu",&n,&m,&l);
+	if(n<=0 || m<=0 || l<=0)	{	delete []buf;	fclose(fp);	return true;	}
+	if(!add)	{	Clf();	Txt.clear();	}
+	else	ClfZB();
+	Pnt.reserve(n);	Prm.reserve(m);	Txt.reserve(l);
+	mglPnt p;
+	for(i=0;i<n;i++)
 	{
 		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
-		sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g", &p.x, &p.y, &p.z, &p.c, &p.t, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
-		Pnt.push_back(p);	i++;
+		sscanf(buf,"%g%g%g%g%g%g%g%g%g%g%g%g", &p.xx, &p.yy, &p.zz, &p.c, &p.t, &p.u, &p.v, &p.w, &p.r, &p.g, &p.b, &p.a);
+		Pnt.push_back(p);
 	}
-	for(i=0;i<m;)
+	mglPrim q;
+	for(i=0;i<m;i++)
 	{
 		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
 		sscanf(buf,"%d%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
-		Prm.push_back(q);	i++;
+		if(q.type>4)	continue;
+		Prm.push_back(q);
+	}
+	mglTexture t;
+	for(i=0;i<l;i++)
+	{
+		int sm=0;	float a;
+		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
+		register unsigned j,k=0;
+		for(j=0;buf[j];j++)
+		{
+			if(buf[j]<=' ' && k)	{	sm++;	k=0;	}
+			if(buf[j]>' ')	k=1;
+			if(sm==2 && k)	break;
+		}
+		sscanf(buf,"%d%g", &sm, &a);
+		t.Set(buf+j, sm, a);
+		Txt.push_back(t);
 	}
 	delete []buf;	fclose(fp);	return false;
 }

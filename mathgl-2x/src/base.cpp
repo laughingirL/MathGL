@@ -558,6 +558,8 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 {
 	// NOTE: New syntax -- colors are CCCCC or {CNCNCCCN}; options inside []
 	if(!s || !s[0])	return;
+	strncpy(Sch,s,259);	Smooth=smooth;	Alpha=alpha;
+
 	register long i,j=0,m=0,l=strlen(s);
 	const char *cols = MGL_COLORS;
 	for(i=0;i<l;i++)		// find number of colors
@@ -609,7 +611,7 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 		if(!sm || j==n-1)
 		{	col[2*i] = c[2*j];	col[2*i+1] = c[2*j+1];	}
 		else if(j>n-1)	// NOTE: never should be here!
-		{	col[2*i] = c[2*n-2];col[2*i+1] = c[2*n-1];	printf("AddTexture -- out of bounds");	}
+		{	col[2*i] = c[2*n-2];col[2*i+1] = c[2*n-1];	/*printf("AddTexture -- out of bounds");*/	}
 		else
 		{
 			col[2*i] = c[2*j]*(1-u)+c[2*j+2]*u;
@@ -638,10 +640,10 @@ long mglBase::AddTexture(const char *cols, int smooth)
 {
 	mglTexture t(cols,smooth);
 	if(t.n==0)	return smooth<0 ? 0:1;
+	if(smooth<0)	CurrPal=0;
 	// check if already exist
 	for(unsigned long i=0;i<Txt.size();i++)	if(t.IsSame(Txt[i]))	return i;
 	// create new one
-	if(smooth<0)	CurrPal=0;
 	MGL_PUSH(Txt,t,mutexTxt);	return Txt.size()-1;
 }
 //-----------------------------------------------------------------------------

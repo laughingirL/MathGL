@@ -21,7 +21,6 @@ a library with large and growing set of graphics.
 * Quick guide::
 * Changes from v.1::
 * Utilities::
-* Thanks::
 @end menu
 
 @node What is MathGL?, MathGL features, , Overview
@@ -73,7 +72,7 @@ Compile from sources. The standard script for autoconf/automake tool is included
 Script @code{./configure} have several additional options which are switched off by default. They are: @code{--enable-fltk, --enable-glut, --enable-qt} for ebabling FLTK, GLUT and/or Qt windows; @code{--enable-jpeg, --enable-gif, --enable-hdf5} for enabling corresponding file formats; @code{--enable-all} for enabling all additional features. For using @code{double} as base internal data type use option @code{--enable-double}. For enabling language interfaces use @code{--enable-python, --enable-octave} or @code{--enable-langall} for all languages. The full list of options can be viewed by command @code{./configure --help}.
 
 @item
-One can use also CMake for building MathGL library if autoconf/automake tools are absent. For example, it is the typical situation for Windows, MacOS and/or using of non-GNU compilers. You can use WYSIWYG tools to change CMake build options. Just specify the features you need and resolve all possible conflicts -- specify the paths for header files or libraries if they are not found automatically. After it run @code{make} and @code{make install} with root/sudo rights.
+One can use also CMake (@uref{http://www.cmake.org/}) for building MathGL library if autoconf/automake tools are absent. For example, it is the typical situation for Windows, MacOS and/or using of non-GNU compilers. You can use WYSIWYG tools to change CMake build options. Just specify the features you need and resolve all possible conflicts -- specify the paths for header files or libraries if they are not found automatically. After it run @code{make} and @code{make install} with root/sudo rights.
 
 @item
 Use a precompiled binary. There are binaries for MinGW (platform Win32). For a precompiled variant one needs only to unpack the archive to the location of the compiler (or in any other folder and setup paths). By default, precompiled versions include the support of GSL (www.gsl.org) and PNG. So, one needs to have these libraries installed on system (it can be found, for example, at @uref{http://gnuwin32.sourceforge.net/packages.html}).
@@ -133,43 +132,57 @@ This is enough for a compilation of console program or with external (non-MathGL
 @node  Changes from v.1, Utilities, Quick guide, Overview
 @section Changes from v.1.*
 
-* mglGraph class is single plotter class instead of mglGraphZB, mglGraphPS and so on.
-* Text style and text color positions are swapped. I.e. text style @samp{r:C} give red centered text, but not roman dark cyan text as for v.1.*.
-* ColumnPlot() indexing is reverted.
-* Move most of arguments of plotting functions into the string parameter and/or options.
-* ``Bright'' colors (like @{b8@}) can be used in color schemes and line styles.
-* Intensively use pthread internally for parallelization of drawing and data processing.
-* Add tick labels rotation and skipping. Add ticks in time/date format.
-* New kinds of plots (Tape(), Label(), ...). Extend existing plots. New primitives (Circle(), Ellipse(), Rhomb(), ...).
-* Improve MGL scripts. Add 'ask' command and allow string concatenation from different lines.
-* Export to LaTeX and to 3D formats (OBJ, OFF, STL, X3D).
-
-
-@c ------------------------------------------------------------------
-@node  Utilities, Thanks, Changes from v.1, Overview
-@section Utilities for parsing MGL
-
-MathGL library provides several tools for parsing MGL scripts. There is tools saving it to bitmap or vectorial images (@code{mgl2conv}). Tool @code{mglview} show MGL script and allow to rotate and setup the image. Also you can translate MGL script to C++ file by help of @code{mgl2cpp} tool.
-
-All of this tools have similar set of arguments. First argument is name of script file, next argument is optional output file name, last arguments are options. There are options for setting script parameters (it is @code{$0, $1, ... $9}) and locale settings. The script parameters have format @samp{-Nval}. Here N=0,1...9 is parameter ID and val is its value. For example, option @samp{-1test} set to substitute @samp{test} instead of @code{$1} in the script. Option -Lval set locale to val. For example, @samp{-Lutf8} will set UTF-8 locale for script.
-
-Both tools expect stdin input if script file is not specified. This allows to use Linux pipes to send script and produce plot.
-
-Additionally you can create animated GIF file or a set of JPEG files with names @samp{frameNNNN.jpg} (here @samp{NNNN} is frame index). You should use @code{mgl2gif} tool and specify the values of @code{$0} parameter for making animation. Values of the parameter @code{$0} can be specified inside the script by comment @code{##a val} for each value @code{val} (one comment for one value) or by option(s) @samp{-Aval}. Also you can specify a cycle for animation by comment @code{##c v1 v2 dv} or by option @code{-Cn1:n2}. Tool @code{mgl2gif} will execute script several times (once for each specified value of @code{$0}) and save result in animated GIF file. For saving each frame in JPEG just add command @code{write ''} at the end of the script.
-
-
-@node Thanks, , Utilities, Overview
-@section Thanks
-
+There are a lot of changes for v.2. Here I denote only main of them.
 @itemize @bullet
 @item
-My special thanks to Marina Balakina for the patience during the writing of this library and for the help in documentation writing and spelling.
+mglGraph class is single plotter class instead of mglGraphZB, mglGraphPS and so on.
 @item
-I'm thankful to D. Kulagin and S.M. Plis for making Debian packages.
+Text style and text color positions are swapped. I.e. text style @samp{r:C} give red centered text, but not roman dark cyan text as for v.1.*.
 @item
-I'm thankful to M. Vidassov for the help in handling solid UTF-8 fonts.
+ColumnPlot() indexing is reverted.
 @item
-I'm thankful to N. Troickiy and V. Lipatov for making RPM packages.
+Move most of arguments of plotting functions into the string parameter and/or options.
 @item
-I'm thankful to S. Skobelev, A. Korotkevich, V. Onuchin, S.M. Plis, R. Kiselev, A. Ivanov, M. Vidiassov and V. Lipatov for fruitful comments.
+``Bright'' colors (like @{b8@}) can be used in color schemes and line styles.
+@item
+Intensively use pthread internally for parallelization of drawing and data processing.
+@item
+Add tick labels rotation and skipping. Add ticks in time/date format.
+@item
+New kinds of plots (Tape(), Label(), Cones(), ContV()). Extend existing plots. New primitives (Circle(), Ellipse(), Rhomb(), ...). New plot positioning (MultiPlot(), GridPlot())
+@item
+Improve MGL scripts. Add 'ask' command and allow string concatenation from different lines.
+@item
+Export to LaTeX and to 3D formats (OBJ, OFF, STL, X3D).
+@item
+Add pipes support in utilities (@code{mglconv, mglview}).
 @end itemize
+
+@c ------------------------------------------------------------------
+@node  Utilities, , Changes from v.1, Overview
+@section Utilities for parsing MGL
+
+MathGL library provides several tools for parsing MGL scripts. There is tools saving it to bitmap or vectorial images (@code{mglconv}). Tool @code{mglview} show MGL script and allow to rotate and setup the image. Another feature of @code{mglview} is loading *.mgld files (see @code{ExportMGLD()}) for quick viewing 3d pictures.
+
+Both tools have similar set of arguments. They can be name of script file or options. You can use @samp{-} as script name for using standard input (i.e. pipes). Options are:
+@itemize
+@item @strong{-1} @var{str}
+set @var{str} as argument $1 for script;
+@item ...
+...
+@item @strong{-9} @var{str}
+set @var{str} as argument $9 for script;
+@item @strong{-A} @var{val}
+add @var{val} into the list of animation parameters;
+@item @strong{-C} @var{v1}:@var{v2}[:@var{dv}]
+add values from @var{v1} ot @var{v2} with step @var{dv} (default is 1) into the list of animation parameters;
+@item @strong{-L} @var{loc}
+set locale to @var{loc};
+@item @strong{-o} @var{name}
+set output file name;
+@item @strong{-h}
+print help message.
+@end itemize
+
+Additionally you can create animated GIF file or a set of JPEG files with names @samp{frameNNNN.jpg} (here @samp{NNNN} is frame index). Values of the parameter @code{$0} for making animation can be specified inside the script by comment @code{##a val} for each value @code{val} (one comment for one value) or by option(s) @samp{-A val}. Also you can specify a cycle for animation by comment @code{##c v1 v2 dv} or by option @code{-C v1:v2:dv}. In the case of found/specified animation parameters, tool will execute script several times -- once for each value of @code{$0}.
+

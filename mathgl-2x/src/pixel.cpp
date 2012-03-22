@@ -373,6 +373,7 @@ void mglCanvas::ClfZB()
 	register long i,n=Width*Height;
 	memset(C,0,12*n);	memset(OI,0,n*sizeof(int));
 	for(i=0;i<3*n;i++)	Z[i] = -1e20f;	// TODO: Parallelization ?!?
+	clr(MGL_FINISHED);
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::Clf(mglColor Back)
@@ -383,7 +384,7 @@ void mglCanvas::Clf(mglColor Back)
 	if(Back==0)			Back = 'w';
 	if((Flag&3)==2)	Back = 'k';
 	BDef[0]=Back.r*255;	BDef[1]=Back.g*255;BDef[2]=Back.b*255;	BDef[3]=0;
-	ClfZB();		clr(MGL_FINISHED);
+	ClfZB();
 }
 //-----------------------------------------------------------------------------
 void mglCanvas::pxl_other(unsigned long id, unsigned long n, const void *p)

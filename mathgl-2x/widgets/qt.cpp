@@ -203,9 +203,9 @@ void QMathGL::update()
 		if(gr->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
 		gr->Alpha(alpha);	gr->Light(light);
 		if(!isHidden())	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-		setlocale(LC_ALL, "C");	// NOTE: I'm not sure what I should selocale manually???
+		setlocale(LC_NUMERIC, "C");	// NOTE: I'm not sure what I should selocale manually???
 		draw_func(gr, draw_par);
-		setlocale(LC_ALL, "");
+		setlocale(LC_NUMERIC, "");
 		if(!isHidden())	QApplication::restoreOverrideCursor();
 		emit refreshData();
 
@@ -343,9 +343,9 @@ void QMathGL::exportBPS(QString fname)
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
-		setlocale(LC_ALL, "C");
+		setlocale(LC_NUMERIC, "C");
 		mgl_write_bps(gr,setExtension(fname,"eps").toAscii(), appName.toAscii());
-		setlocale(LC_ALL, "");
+		setlocale(LC_NUMERIC, "");
 	}
 }
 //-----------------------------------------------------------------------------
@@ -355,9 +355,9 @@ void QMathGL::exportEPS(QString fname)
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
-		setlocale(LC_ALL, "C");
+		setlocale(LC_NUMERIC, "C");
 		mgl_write_eps(gr,setExtension(fname,"eps").toAscii(), appName.toAscii());
-		setlocale(LC_ALL, "");
+		setlocale(LC_NUMERIC, "");
 	}
 }
 //-----------------------------------------------------------------------------
@@ -367,9 +367,9 @@ void QMathGL::exportSVG(QString fname)
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
-		setlocale(LC_ALL, "C");
+		setlocale(LC_NUMERIC, "C");
 		mgl_write_svg(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
-		setlocale(LC_ALL, "");
+		setlocale(LC_NUMERIC, "");
 	}
 }
 //-----------------------------------------------------------------------------
@@ -379,9 +379,9 @@ void QMathGL::exportXYZ(QString fname)
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
-		setlocale(LC_ALL, "C");
+		setlocale(LC_NUMERIC, "C");
 		mgl_write_xyz(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
-		setlocale(LC_ALL, "");
+		setlocale(LC_NUMERIC, "");
 	}
 }
 //-----------------------------------------------------------------------------
@@ -391,9 +391,9 @@ void QMathGL::exportTEX(QString fname)
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
-		setlocale(LC_ALL, "C");
+		setlocale(LC_NUMERIC, "C");
 		mgl_write_tex(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
-		setlocale(LC_ALL, "");
+		setlocale(LC_NUMERIC, "");
 	}
 }
 //-----------------------------------------------------------------------------
@@ -403,9 +403,9 @@ void QMathGL::exportOFF(QString fname)
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
-		setlocale(LC_ALL, "C");
+		setlocale(LC_NUMERIC, "C");
 		mgl_write_off(gr,setExtension(fname,"svg").toAscii(), appName.toAscii(),0);
-		setlocale(LC_ALL, "");
+		setlocale(LC_NUMERIC, "");
 	}
 }
 //-----------------------------------------------------------------------------
@@ -415,9 +415,9 @@ void QMathGL::exportOBJ(QString fname)
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
-		setlocale(LC_ALL, "C");
+		setlocale(LC_NUMERIC, "C");
 		mgl_write_obj(gr,setExtension(fname,"svg").toAscii(), appName.toAscii(),0);
-		setlocale(LC_ALL, "");
+		setlocale(LC_NUMERIC, "");
 	}
 }
 //-----------------------------------------------------------------------------
@@ -427,9 +427,9 @@ void QMathGL::exportSTL(QString fname)
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
-		setlocale(LC_ALL, "C");
+		setlocale(LC_NUMERIC, "C");
 		mgl_write_stl(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
-		setlocale(LC_ALL, "");
+		setlocale(LC_NUMERIC, "");
 	}
 }
 //-----------------------------------------------------------------------------
@@ -439,9 +439,9 @@ void QMathGL::exportX3D(QString fname)
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
-		setlocale(LC_ALL, "C");
+		setlocale(LC_NUMERIC, "C");
 		mgl_write_x3d(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
-		setlocale(LC_ALL, "");
+		setlocale(LC_NUMERIC, "");
 	}
 }
 //-----------------------------------------------------------------------------
@@ -451,9 +451,9 @@ void QMathGL::exportTGA(QString fname)
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
-		setlocale(LC_ALL, "C");
+		setlocale(LC_NUMERIC, "C");
 		mgl_write_tga(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
-		setlocale(LC_ALL, "");
+		setlocale(LC_NUMERIC, "");
 	}
 }
 //-----------------------------------------------------------------------------
@@ -463,9 +463,9 @@ void QMathGL::exportIDTF(QString fname)
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
 	else
 	{
-		setlocale(LC_ALL, "C");
+		setlocale(LC_NUMERIC, "C");
 		mgl_write_idtf(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
-		setlocale(LC_ALL, "");
+		setlocale(LC_NUMERIC, "");
 	}
 }
 //-----------------------------------------------------------------------------

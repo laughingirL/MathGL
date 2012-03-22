@@ -81,7 +81,7 @@ Update window contents. This is very useful function for manual updating the plo
 @end deftypefn
 @deftypefn {Method on @code{mglWindow}} @code{void} ReLoad ()
 @deftypefnx {C function} @code{int} mgl_wnd_reload (@code{HMGL} gr)
-Reload user data and update picture.
+Reload user data and update picture. This function also update number of frames which drawing function can create.
 @end deftypefn
 @deftypefn {Method on @code{mglWindow}} @code{void} Adjust ()
 @deftypefnx {C function} @code{int} mgl_wnd_adjust (@code{HMGL} gr)
@@ -105,16 +105,14 @@ Run/stop slideshow (animation) of frames.
 Sets delay for animation in seconds. Default value is 1 sec.
 @end deftypefn
 
-@deftypefn {Method on @code{mglWindow}} @code{void} Setup (@code{bool} autoclf, @code{bool} showpos, @code{bool} clfupd)
-@deftypefnx {C function} @code{int} mgl_setup_window (@code{HMGL} gr, @code{bool} autoclf, @code{bool} showpos, @code{bool} clfupd)
+@deftypefn {Method on @code{mglWindow}} @code{void} Setup (@code{bool} clfupd=@code{true}, @code{bool} showpos=@code{false})
+@deftypefnx {C function} @code{int} mgl_setup_window (@code{HMGL} gr, @code{bool} clfupd, @code{bool} showpos)
 Enable/disable flags for:
 @itemize @bullet
 @item
-clearing canvas between drawing. You may switch it off for accumulate previous drawing (for example some points or parts of a picture).
+clearing plot before Update();
 @item
 showing the last mouse click position in the widget.
-@item
-clearing plot before Update().
 @end itemize
 @end deftypefn
 

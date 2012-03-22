@@ -273,7 +273,7 @@ int mgl_fltk_run_();
 int mgl_qt_run_();
 /*****************************************************************************/
 void mgl_wnd_set_delay(HMGL gr, float dt);
-void mgl_setup_window(HMGL gr, int autoclf, int showpos, int clf_upd);
+void mgl_setup_window(HMGL gr, int clf_upd, int showpos);
 void mgl_wnd_toggle_alpha(HMGL gr);
 void mgl_wnd_toggle_light(HMGL gr);
 void mgl_wnd_toggle_zoom(HMGL gr);
@@ -289,7 +289,7 @@ void mgl_get_last_mouse_pos(HMGL gr, float *x, float *y, float *z);
 /*****************************************************************************/
 void mgl_get_last_mouse_pos_(uintptr_t *gr, float *x, float *y, float *z);
 void mgl_wnd_set_delay_(uintptr_t *gr, float *dt);
-void mgl_setup_window_(uintptr_t *gr, int *autoclf, int *showpos, int *clf_upd);
+void mgl_setup_window_(uintptr_t *gr, int *clf_upd, int *showpos);
 void mgl_wnd_toggle_alpha_(uintptr_t *gr);
 void mgl_wnd_toggle_light_(uintptr_t *gr);
 void mgl_wnd_toggle_zoom_(uintptr_t *gr);

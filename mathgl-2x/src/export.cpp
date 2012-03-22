@@ -474,6 +474,7 @@ void mgl_write_frame(HMGL gr, const char *fname,const char *descr)
 	if(!strcmp(fname+len-4,".gif"))	mgl_write_gif(gr,fname,descr);
 	if(!strcmp(fname+len-4,".bmp"))	mgl_write_bmp(gr,fname,descr);
 	if(!strcmp(fname+len-4,".tga"))	mgl_write_tga(gr,fname,descr);
+	if(!strcmp(fname+len-5,".mgld"))mgl_export_mgld(gr,fname,descr);
 }
 void mgl_write_frame_(uintptr_t *gr, const char *fname,const char *descr,int l,int n)
 {	char *s=new char[l+1];	memcpy(s,fname,l);	s[l]=0;

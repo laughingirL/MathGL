@@ -86,16 +86,24 @@ supports it in developing GNU and promoting software freedom.''
 @end ifhtml
 
 @ifnothtml
+@iftex
 @macro fig {fname,text}
 @center @image{\fname\, 11cm, , \text\, .png}
 @end macro
+@end iftex
+
+@ifnottex
+@macro fig {fname,text}
+@c @center @image{\fname\, 11cm, , \text\, .png}
+@end macro
+@end ifnottex
 @end ifnothtml
 
 
 @rmacro sref {arg}
 @xref{\arg\}, for sample code and picture.
 @end rmacro
-@macro tdref{nam}
+@macro tdref {nam}
 @uref{http://mathgl.sourceforge.net/pdf_u3d/\nam\.pdf, 3D pdf}
 @end macro
 

@@ -380,7 +380,7 @@ Restore font data to default typeface.
 @deftypefnx {Method on @code{mglGraph}} @code{void} SetPalette (@code{const char *}@var{colors})
 @deftypefnx {C function} @code{void} mgl_set_palette (@code{HMGL} gr, @code{const char *}@var{colors})
 @end ifclear
-Sets the palette as selected colors. Default value is @code{"Hbgrcmyhlnqeup"} that corresponds to colors: dark gray @samp{H}, blue @samp{b}, green @samp{g}, red @samp{r}, cyan @samp{c}, magenta @samp{m}, yellow @samp{y}, gray @samp{h}, blue-green @samp{l}, sky-blue @samp{n}, orange @samp{q}, yellow-green @samp{e}, blue-violet @samp{u}, purple @samp{p}. The palette is used mostly in 1D plots (see @ref{1D plotting}) for curves which styles are not specified.
+Sets the palette as selected colors. Default value is @code{"Hbgrcmyhlnqeup"} that corresponds to colors: dark gray @samp{H}, blue @samp{b}, green @samp{g}, red @samp{r}, cyan @samp{c}, magenta @samp{m}, yellow @samp{y}, gray @samp{h}, blue-green @samp{l}, sky-blue @samp{n}, orange @samp{q}, yellow-green @samp{e}, blue-violet @samp{u}, purple @samp{p}. The palette is used mostly in 1D plots (see @ref{1D plotting}) for curves which styles are not specified. Internal color counter will be nullified by any change of palette. This includes even hidden change (for example, by @code{Box()} or @code{Axis()} functions).
 @end deftypefn
 
 @c ==================================================================

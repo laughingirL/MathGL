@@ -133,8 +133,13 @@ inline mglPnt operator*(float b, const mglPnt &a)
 //-----------------------------------------------------------------------------
 struct mglTexture
 {
-	mglColor col[514];
-	long n;			///< Number of initial colors along u
+	mglColor col[514];	///< Colors itself
+	long n;				///< Number of initial colors along u
+
+	char Sch[260];		///< Color scheme used
+	int Smooth;			///< Type of texture (smoothing and so on)
+	float Alpha;		///< Transparency
+	
 	mglTexture()	{	n=0;	}
 	mglTexture(const char *cols, int smooth=0,float alpha=1)
 	{	n=0;	Set(cols,smooth,alpha);	}
@@ -366,7 +371,8 @@ public:
 	virtual float text_plot(long p,const wchar_t *text,const char *fnt,float size=-1,float sh=0,float  col=-('k'),bool rot=true)=0;
 	void vect_plot(long p1, long p2, float s=1);
 	inline float mark_size()	{	return MarkSize*font_factor;	}
-	inline char last_color()	{	return *last_style;	}
+//	inline char last_color()	{	return last_style[1];	}
+	inline const char *last_line()	{	return last_style;	}
 
 protected:
 	mglPoint FMin;		///< Actual lower edge after transformation formulas.

@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <locale.h>
+#include <unistd.h>
 #include "mgl/window.h"
 #include "mgl/parser.h"
 //-----------------------------------------------------------------------------
@@ -36,42 +37,57 @@ int show(mglGraph *gr)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-int main(int narg, char **arg)
+int main(int argc, char **argv)
 {
-	long i,j=-1;
-	for(i=1;i<narg;i++)	// add arguments for the script
+	char ch, iname[256]="";
+	
+	while(1)
 	{
-		if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
-			p.AddParam(arg[i][1]-'0',arg[i]+2);
-		if(arg[i][0]=='-' && arg[i][1]=='L')
-			setlocale(LC_CTYPE, arg[i]+2);
-		if(arg[i][0]=='-' && (arg[i][1]=='h' || (arg[i][1]=='-' && arg[i][2]=='h')))
+		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:");
+		if(ch>='1' && ch<='9')	p.AddParam(ch-'0', optarg);
+		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
+		else if(ch=='h' || (ch==-1 && optind>=argc))
 		{
-			printf("mglview show MGL script and MGLD files in a window.\n");
-			printf("Current version is 2.%g\n",MGL_VER2);
-			printf("Usage:\tmgl2png scriptfile [outputfile parameter(s)]\n");
-			printf("\tParameters have format \"-Nval\".\n");
-			printf("\tHere N=0,1...9 is parameter ID and val is its value.\n");
-			printf("\tOption -Lval set locale to val.\n");
+			printf("mglconv convert mgl script to bitmap png file.\nCurrent version is 2.%g\n",MGL_VER2);
+			printf("Usage:\tmglview [parameter(s)] scriptfile\n");
+			printf(
+				"\t-1 str       set str as argument $1 for script\n"
+				"\t...          ...\n"
+				"\t-9 str       set str as argument $9 for script\n"
+				"\t-L loc       set locale to loc\n"
+				"\t-            get script from standard input\n"
+				"\t-h           print this message\n" );
+			ch = 'h';	break;
 		}
-		if(arg[i][0]!='-' && j<0)	j=i;
+		else if(ch==-1 && optind<argc)
+		{	strcpy(iname, argv[optind][0]=='-'?"":argv[optind]);	break;	}
 	}
+	if(ch=='h')	return 0;
+
+	long i;
 	mgl_ask_func = mgl_ask_gets;
 #if MGL_HAVE_QT
 	int kind=1;		mgl_ask_func = mgl_ask_qt;
 #else
 	int kind=0;		mgl_ask_func = mgl_ask_fltk;
 #endif
-	bool mgld=(j>0 && arg[j][strlen(arg[j])]=='d');
+	bool mgld=(*iname && iname[strlen(iname)-1]=='d');
 	if(!mgld)
 	{
-		FILE *fp = j>0?fopen(arg[j],"r"):stdin;
+		setlocale(LC_CTYPE, "");
+		FILE *fp = *iname?fopen(iname,"r"):stdin;
 		while(!feof(fp))	str.push_back(fgetwc(fp));
-		if(j>0)	fclose(fp);
+		if(*iname)	fclose(fp);
 	}
-	mglWindow gr(mgld?NULL:show, j>0?arg[j]:"mglview", kind);
+	mglWindow gr(mgld?NULL:show, *iname?iname:"mglview", kind);
 	if(mgld)
-	{	gr.ImportMGLD(arg[j]);	gr.Update();	}
+	{
+		gr.Setup(false);
+		setlocale(LC_NUMERIC, "C");
+		gr.ImportMGLD(iname);
+		setlocale(LC_NUMERIC, "");
+		gr.Update();
+	}
 	gr.Run();
 	return 0;
 }

@@ -207,27 +207,37 @@ void mgl_cone(HMGL gr, float x1, float y1, float z1, float x2, float y2, float z
 	float c1=gr->GetC(ss,p1.z), c2=gr->GetC(ss,p2.z);
 	long *kk=new long[164],k1=-1,k2=-1;
 	bool edge = stl && strchr(stl,'@');
+	bool wire = stl && strchr(stl,'#');
 	gr->Reserve(edge?166:82);
-	if(edge)
+	if(edge && !wire)
 	{
 		k1=gr->AddPnt(p1,c1,d,-1,3);
 		k2=gr->AddPnt(p2,c2,d,-1,3);
 	}
 	float f,si,co, dr=r2-r1;
 	register long i;
-	for(i=0;i<41;i++)
+	for(i=0;i<(wire?13:41);i++)
 	{
 		if(gr->Stop)	{	delete []kk;	return;	}
-		f = i*M_PI/20;	co = cos(f);	si = sin(f);
+		f = i*M_PI/(wire?6:20);	co = cos(f);	si = sin(f);
 		p = p1+(r1*co)*a+(r1*si)*b;
 		q = (si*a-co*b)^(d + (dr*co)*a + (dr*si)*b);
+		if(wire)	q.x=q.y=NAN;
 		kk[i] = gr->AddPnt(p,c1,q,-1,3);
-		if(edge)	kk[i+82] = gr->AddPnt(p,c1,d,-1,3);
+		if(edge && !wire)	kk[i+82] = gr->AddPnt(p,c1,d,-1,3);
 		p = p2+(r2*co)*a+(r2*si)*b;
-		kk[i+41] = gr->AddPnt(p,c2,q,-1,3);
-		if(edge)	kk[i+123] = gr->AddPnt(p,c2,d,-1,3);
+		kk[i+(wire?13:41)] = gr->AddPnt(p,c2,q,-1,3);
+		if(edge && !wire)	kk[i+123] = gr->AddPnt(p,c2,d,-1,3);
 	}
-	for(i=0;i<40;i++)
+	if(wire)	for(i=0;i<12;i++)
+	{
+		if(gr->Stop)	{	delete []kk;	return;	}
+		gr->line_plot(kk[i],kk[i+1]);
+		gr->line_plot(kk[i],kk[i+13]);
+		gr->line_plot(kk[i+14],kk[i+1]);
+		gr->line_plot(kk[i+14],kk[i+13]);
+	}
+	else	for(i=0;i<40;i++)
 	{
 		if(gr->Stop)	{	delete []kk;	return;	}
 		gr->quad_plot(kk[i],kk[i+1],kk[i+41],kk[i+42]);
@@ -257,19 +267,24 @@ void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char 
 	static int cgid=1;	gr->StartGroup("Cones",cgid++);
 	m = x->GetNy() > y->GetNy() ? x->GetNy() : y->GetNy();	m = z->GetNy() > m ? z->GetNy() : m;
 
-	bool above = pen && strchr(pen,'a');
+	bool above= pen && strchr(pen,'a');
+	bool wire = pen && strchr(pen,'#');
 	float *dd=new float[2*n], x1,z0,zz,d;
 	memset(dd,0,n*sizeof(float));
 
 	gr->SetPenPal(pen,&pal);
-	char cols[4]={'@',0,0.0};
+	char c1[7];	memset(c1,0,7);	c1[0] ='@';
+	char c2[7];	memset(c2,0,7);	c2[0] ='@';
+	if(wire)	c1[5]=c2[5]='#';
 	memset(dd,0,2*n*sizeof(float));
 	z0 = gr->GetOrgZ('x');
 	for(i=0;i<n;i++)	for(j=0;j<m;j++)	dd[i] += z->v(i, j<z->GetNy() ? j:0);
 	for(j=0;j<m;j++)
 	{
-		gr->NextColor(pal);		cols[1]=gr->last_color();
-		if(gr->GetNumPal(pal)==2*m)	{	gr->NextColor(pal);	cols[2]=gr->last_color();	}
+		gr->NextColor(pal);		memcpy(c1+1,gr->last_line(),4);
+		if(gr->GetNumPal(pal)==2*m)
+		{	gr->NextColor(pal);	memcpy(c2+1,gr->last_line(),4);	}
+		else	memcpy(c2,c1,7);
 		mx = j<x->GetNy() ? j:0;	my = j<y->GetNy() ? j:0;	mz = j<z->GetNy() ? j:0;
 		for(i=0;i<n;i++)
 		{
@@ -281,9 +296,9 @@ void mgl_cones_xyz(HMGL gr, HCDT x, HCDT y, HCDT z, const char *pen, const char 
 				zz = j>0?dd[i+n]:z0;	dd[i+n] += z->v(i,mz);
 				mgl_cone(gr, x1,y->v(i,0),zz, x1,y->v(i,0),dd[i+n],
 						 0.7*gr->BarWidth*d*(dd[i]-zz)/(dd[i]-z0),
-						 0.7*gr->BarWidth*d*(dd[i]-dd[i+n])/(dd[i]-z0), cols);
+						 0.7*gr->BarWidth*d*(dd[i]-dd[i+n])/(dd[i]-z0), c1);
 			}
-			else	mgl_cone(gr, x1,y->v(i,my),z0, x1,y->v(i,my),z->v(i,mz), 0.7*gr->BarWidth*d,0, cols);
+			else	mgl_cone(gr, x1,y->v(i,my),z0, x1,y->v(i,my),z->v(i,mz), 0.7*gr->BarWidth*d,0, z->v(i,mz)<0?c1:c2);
 		}
 	}
 	gr->EndGroup();	delete []dd;

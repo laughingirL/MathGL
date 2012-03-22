@@ -180,9 +180,9 @@ void CalcDialog::evaluate()
 	if(sel.isEmpty())	return;
 	wchar_t *txt=new wchar_t[sel.length()+1];
 	sel.toWCharArray(txt);	txt[sel.length()]=0;
-	setlocale(LC_ALL, "C");
+	setlocale(LC_NUMERIC, "C");
 	mglData res=mglFormulaCalc(txt, &parser);
-	setlocale(LC_ALL, "");
+	setlocale(LC_NUMERIC, "");
 //	result->setText(QString::fromWCharArray(txt));
 	delete []txt;
 	result->setText(QString::number(res.GetVal(0)));

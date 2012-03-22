@@ -20,42 +20,75 @@
 #include <stdio.h>
 #include <string.h>
 #include <locale.h>
+#include <unistd.h>
 #include "mgl/mgl.h"
 void mgl_error_print(const char *Message, void *par);
 void mgl_ask_gets(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
-int main(int narg, char **arg)
+int main(int argc, char *argv[])
 {
 	mglGraph gr;
 	mglParse p(true);
-
-	long i,j=-1,k=-1;
-	unsigned long n;
-	for(i=1;i<narg;i++)	// add arguments for the script
+	char ch, buf[2048], iname[256]="", oname[256]="";
+	std::vector<std::wstring> var;
+	
+	register long i,n;
+	while(1)
 	{
-		if(arg[i][0]=='-' && arg[i][1]>='0' && arg[i][1]<='9')
-			p.AddParam(arg[i][1]-'0',arg[i]+2);
-		if(arg[i][0]=='-' && arg[i][1]=='L')
-			setlocale(LC_CTYPE, arg[i]+2);
-		if(arg[i][0]=='-' && (arg[i][1]=='h' || (arg[i][1]=='-' && arg[i][2]=='h')))
+		ch = getopt(argc, argv, "1:2:3:4:5:6:7:8:9:ho:L:C:A:");
+		if(ch>='1' && ch<='9')	p.AddParam(ch-'0', optarg);
+		else if(ch=='L')	setlocale(LC_CTYPE, optarg);
+		else if(ch=='A')
 		{
-			printf("mglconv convert mgl script to bitmap png file.\n");
-			printf("Current version is 2.%g\n",MGL_VER2);
-			printf("Usage:\tmglconv scriptfile [outputfile parameter(s)]\n");
-			printf("\tParameters have format \"-Nval\".\n");
-			printf("\tHere N=0,1...9 is parameter ID and val is its value.\n");
-			printf("\tOption -Lval set locale to val.\n");
+			std::wstring str;
+			for(i=0;optarg[i];i++)	str.push_back(optarg[i]);
+			var.push_back(str);
 		}
-		if(arg[i][0]!='-' && j<0)	j=i;
-		if(arg[i][0]!='-' && j>0)	k=i;
+		else if(ch=='C')
+		{
+			double v1,v2,dv=1,v;
+			int res=sscanf(optarg,"%lg:%lg:%lg",&v1,&v2,&dv);
+			if(res<3)	dv=1;
+			wchar_t num[64];
+			for(v=v1;v<=v2;v+=dv)
+			{
+				mglprintf(num,64,L"%g",v);
+				var.push_back(num);
+			}
+		}
+		else if(ch=='h' || (ch==-1 && optind>=argc))
+		{
+			printf("mglconv convert mgl script to bitmap png file.\nCurrent version is 2.%g\n",MGL_VER2);
+			printf("Usage:\tmglconv [parameter(s)] scriptfile\n");
+			printf(
+				"\t-1 str       set str as argument $1 for script\n"
+				"\t...          ...\n"
+				"\t-9 str       set str as argument $9 for script\n"
+				"\t-L loc       set locale to loc\n"
+				"\t-o name      set output file name\n"
+				"\t-            get script from standard input\n"
+				"\t-A val       add animation value val\n"
+				"\t-C n1:n2:dn  add animation value in range [n1,n2] with step dn\n"
+				"\t-C n1:n2     add animation value in range [n1,n2] with step 1\n"
+				"\t-            get script from standard input\n"
+				"\t-h           print this message\n" );
+			ch = 'h';	break;
+		}
+		else if(ch=='o')	strcpy(oname, optarg);
+		else if(ch==-1 && optind<argc)
+		{	strcpy(iname, argv[optind][0]=='-'?"":argv[optind]);	break;	}
 	}
+	if(ch=='h')	return 0;
+	if(*oname==0)	{	strcpy(oname,*iname?iname:"out");	strcat(oname,".png");	}
+	
 	mgl_ask_func = mgl_ask_gets;
 	// prepare for animation
 	std::wstring str;
-	FILE *fp = j>0?fopen(arg[j],"r"):stdin;
+	setlocale(LC_CTYPE, "");
+	FILE *fp = *iname?fopen(iname,"r"):stdin;
 	while(!feof(fp))	str.push_back(fgetwc(fp));
-	if(j>0)	fclose(fp);
-	std::vector<std::wstring> var;
+	if(*iname)	fclose(fp);
+
 	for(i=0;;)	// collect exact values
 	{
 		n = str.find(L"##a ",i);
@@ -71,22 +104,19 @@ int main(int narg, char **arg)
 		for(v=v1;v<=v2;v+=dv)
 		{	mglprintf(ss,64,L"%g",v);	var.push_back(ss);	}
 	}
-	char buf[2048],fname[256];
-	if(k>0)	strcpy(fname,arg[k]);
-	else
-	{	strcpy(fname,j>0?arg[j]:"out");	strcat(fname,".png");	}
-	bool gif= !strcmp(fname+strlen(fname)-4,".gif");
+	bool gif = !strcmp(oname+strlen(oname)-4,".gif");
 	if(var.size()>1)	// there is animation
 	{
-		if(gif)	gr.StartGIF(fname);
-		for(i=0;i!=var.size()-1;i++)
+		if(gif)	gr.StartGIF(oname);
+		for(i=0;i<var.size();i++)
 		{
 			gr.NewFrame();
+			printf("frame %d for $0 = \"%ls\"\n",i,var[i].c_str());
 			p.AddParam(0,var[i].c_str());
 			p.Execute(&gr,str.c_str());
-			printf("%s\n",gr.Message());
+			if(gr.Message()[0])	printf("%s\n",gr.Message());
 			gr.EndFrame();
-			sprintf(buf,"%s-%ld",fname,i);
+			sprintf(buf,"%s-%ld",oname,i);
 			if(!gif)	gr.WriteFrame(buf);
 		}
 		if(gif)	gr.CloseGIF();
@@ -95,9 +125,9 @@ int main(int narg, char **arg)
 	{
 		p.Execute(&gr,str.c_str());
 		printf("%s\n",gr.Message());
-		gr.WriteFrame(fname);
+		gr.WriteFrame(oname);
 	}
-	printf("Write output to %s\n",fname);
+	printf("Write output to %s\n",oname);
 	return 0;
 }
 //-----------------------------------------------------------------------------
