@@ -353,8 +353,9 @@ void mgl_ellipse(HMGL gr, float x1, float y1, float z1, float x2, float y2, floa
 	gr->Reserve(2*n+1);
 	mglPoint p1(x1,y1,z1), p2(x2,y2,z2), v=p2-p1;
 	d = v.norm();
-	if(d==0)	v = mglPoint(r);	else	v *= r/d;
-	mglPoint u=(mglPoint(0,0,1)^v)*sqrt(d*d/r/r+1), q=u^v, p, s=(p1+p2)/2.;
+	if(d==0)	v = mglPoint(1);	else	v /= d;
+	mglPoint u=mglPoint(0,0,1)^v, q=u^v, p, s=(p1+p2)/2.;
+	u *= r;		v *= sqrt(d*d/4+r*r);
 	// central point first
 	n0 = gr->AddPnt(p1,c,q,-1,11);
 	for(long i=0;i<n;i++)

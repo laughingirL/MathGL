@@ -85,7 +85,7 @@ Alternatively you can create yours own class inherited from class @code{mglDraw}
     int main(int argc,char **argv)
     {
         mglGraphFLTK gr;
-        gr.Window(argc,argv,&foo,"MathGL examples");
+        gr.Window(argc,argv,"MathGL examples",&foo);
         return mglFlRun();
     }
 @end verbatim

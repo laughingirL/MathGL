@@ -10,11 +10,23 @@ if(MGL_HAVE_DOC)
 #		MAIN_DEPENDENCY ${CMAKE_BINARY_DIR}/examples/mgl_example
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/png
 	)
+  add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/small/all.png
+    COMMAND ${CMAKE_BINARY_DIR}/examples/mgl_example -mini
+    COMMAND touch ${CMAKE_SOURCE_DIR}/texinfo/small/all.png
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo/small
+  )
 #	set_source_files_properties(${CMAKE_BINARY_DIR}/examples/mgl_example PROPERTIES GENERATED 1)
 #	ADD_CUSTOM_TARGET(gen_all_png DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/png/all.png)
 #	ADD_DEPENDENCIES(gen_all_png mgl_example)
 	set(list_texi_files_en mathgl_en.texi mgl_en.texi overview_en.texi example_en.texi ex_mgl_en.texi parse_en.texi core_en.texi concept_en.texi widget_en.texi data_en.texi other_en.texi appendix_en.texi fdl.texi)
 	set(list_texi_files_ru mathgl_ru.texi mgl_ru.texi overview_ru.texi example_ru.texi ex_mgl_ru.texi parse_ru.texi core_ru.texi concept_ru.texi widget_ru.texi data_ru.texi other_ru.texi appendix_ru.texi fdl.texi)
+
+  add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/web_en.pdf
+    COMMAND ${findtp} -I ${CMAKE_SOURCE_DIR}/texinfo/png web_en.texi
+    COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=section web_en.texi -o web_en
+    DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/small/all.png web_en.texi
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/texinfo
+  )
 
 	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
 		COMMAND ${findth} -I=${CMAKE_SOURCE_DIR}/texinfo/png --split=section mathgl_en.texi -o mathgl_en
@@ -45,6 +57,7 @@ if(MGL_HAVE_DOC)
 	add_custom_target(documentation ALL
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.info
 		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_en.pdf
+    DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/web_en.pdf
 #		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.info
 #		DEPENDS ${CMAKE_SOURCE_DIR}/texinfo/mathgl_ru.pdf
 	)

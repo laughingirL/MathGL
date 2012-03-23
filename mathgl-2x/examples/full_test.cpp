@@ -49,6 +49,47 @@ void smgl_combined(mglGraph *gr);
 void save(mglGraph *gr,const char *name,const char *suf);
 void test(mglGraph *gr)
 {
+	gr->SubPlot(2,2,0,"");	gr->Title("Line, Curve, Rhomb, Ellipse");
+	gr->Line(mglPoint(-1,-1),mglPoint(-0.5,1),"qAI");
+	gr->Curve(mglPoint(-0.6,-1),mglPoint(1,1),mglPoint(0,1),mglPoint(1,1),"rA");
+	gr->Rhomb(mglPoint(0,0.4),mglPoint(1,0.9),0.2,"b#");
+	gr->Rhomb(mglPoint(0,0),mglPoint(1,0.4),0.2,"cg@");
+	gr->Ellipse(mglPoint(0,-0.5),mglPoint(1,-0.1),0.2,"u#");
+	gr->Ellipse(mglPoint(0,-1),mglPoint(1,-0.6),0.2,"m@");
+	gr->Mark(mglPoint(0,-0.5),"*");	gr->Mark(mglPoint(1,-0.1),"*");
+	
+	gr->Light(true);
+	gr->SubPlot(2,2,1);	gr->Title("Face[xyz]");	gr->Rotate(50,60);	gr->Box();
+	gr->FaceX(mglPoint(1,0,-1),1,1,"r");
+	gr->FaceY(mglPoint(-1,-1,-1),1,1,"g");
+	gr->FaceZ(mglPoint(1,-1,-1),-1,1,"b");
+	gr->Face(mglPoint(-1,-1,1),mglPoint(-1,1,1),mglPoint(1,-1,0),mglPoint(1,1,1),"m");
+	
+	gr->SubPlot(2,2,3,"");	gr->Title("Cone");
+	gr->Cone(mglPoint(-0.7,-0.3),mglPoint(-0.7,0.7,0.5),0.2,0.1,"b");
+	gr->Puts(mglPoint(-0.7,-0.7),"no edges\n(default)");
+	gr->Cone(mglPoint(0,-0.3),mglPoint(0,0.7,0.5),0.2,0.1,"g@");
+	gr->Puts(mglPoint(0,-0.7),"with edges\n('\\@' style)");
+	gr->Cone(mglPoint(0.7,-0.3),mglPoint(0.7,0.7,0.5),0.2,0,"ry");
+	gr->Puts(mglPoint(0.7,-0.7),"'arrow' with\ngradient");
+	
+	gr->SubPlot(2,2,2,"");	gr->Title("Sphere and Drop");
+	gr->Alpha(false);
+	gr->Puts(mglPoint(-0.9,-0.7),"sh=0");
+	gr->Drop(mglPoint(-0.9,0),mglPoint(0,1),0.5,"r",0);
+	gr->Puts(mglPoint(-0.3,-0.7),"sh=0.33");
+	gr->Drop(mglPoint(-0.3,0),mglPoint(0,1),0.5,"r",0.33);
+	gr->Puts(mglPoint(0.3,-0.7),"sh=0.67");
+	gr->Drop(mglPoint(0.3,0),mglPoint(0,1),0.5,"r",0.67);
+	gr->Puts(mglPoint(0.9,-0.7),"sh=1");
+	gr->Drop(mglPoint(0.9,0),mglPoint(0,1),0.5,"r",1);
+	gr->Ball(mglPoint(-0.9,0,1),'k');
+	gr->Ball(mglPoint(-0.3,0,1),'k');
+	gr->Ball(mglPoint(0.3,0,1),'k');
+	gr->Ball(mglPoint(0.9,0,1),'k');
+	gr->Line(mglPoint(-0.9,0,1),mglPoint(0.9,0,1),"b");
+	return;
+
 	mglParse par;
 	par.AllowSetSize(true);
 	setlocale(LC_CTYPE, "");
@@ -1962,7 +2003,7 @@ int main(int argc,char **argv)
 	gr = new mglGraph;
 //	if(type==5 || type==9 || type==10)	{	u3d.unrotate_flag = true;	gr = &u3d;	}
 
-	if(mini)		{	gr->SetSize(200,150);	suf = "_sm";	}
+	if(mini)		{	gr->SetSize(190,145);	suf = "_sm";	}
 	else if(big)
 	{	gr->SetSize(1920,1440);	suf = "_lg";	}
 	else	gr->SetSize(width,height);

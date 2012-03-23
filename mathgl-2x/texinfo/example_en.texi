@@ -2275,7 +2275,7 @@ void mgls_prepare3d(HMDT a, HMDT b=0)
 
 @c ------------------------------------------------------------------
 @node Surf3 sample, Surf3C sample, , 3D samples
-@subsection ContV sample
+@subsection Surf3 sample
 
 @code{Surf3} is one of most suitable (for my opinion) functions to visualize 3D data. It draw the isosurface(s) -- surface(s) of constant amplitude (3D analogue of contour lines). You can draw wired isosurfaces if specify @samp{#} style. The sample code is:
 @verbatim
