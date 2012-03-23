@@ -29,8 +29,6 @@ extern "C" {
 /*****************************************************************************/
 void _mgl_key_up(unsigned char ch,int ,int );
 HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par);
-/*int mgl_fortran_func(HMGL gr, void *);
-uintptr_t mgl_create_graph_glut_(const char *title, int);*/
 /*****************************************************************************/
 #ifdef __cplusplus
 }

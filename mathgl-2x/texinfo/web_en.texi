@@ -67,7 +67,6 @@ supports it in developing GNU and promoting software freedom.''
 * Pictures::
 * MGL scripts::
 * Download::
-* Documentation::
 * Other projects::
 @end menu
 
@@ -415,7 +414,7 @@ For more details see @uref{../mathgl_en/mathgl_en_64.html#MGL-scripts, MathGL do
 
 @external
 
-@node Download, Documentation, MGL scripts, Top
+@node Download, Other projects, MGL scripts, Top
 @section Download
 
 @strong{Stable version (v.2.0)}
@@ -486,18 +485,7 @@ There are a set of @uref{http://sourceforge.net/project/showfiles.php?group_id=1
 
 @external
 
-@node Documentation, Other projects, Download, Top
-@section Documentation
-
-Here you can view and download latest version of documentation. This documentation is just compiled version of @uref{https://sourceforge.net/svn/?group_id=152187,SVN} documentation.
-
-There are @uref{../mathgl_en/mathgl_en.html,English} and @uref{../mathgl_ru/mathgl_ru.html,Russian} versions. It also include @uref{../mathgl_en/mathgl_en_18.html#FAQ,FAQ} about MathGL.
-
-Another variant is download single @uref{mathgl_en.pdf,PDF} (about 7 Mb).
-
-@external
-
-@node Other projects, , Documentation, Top
+@node Other projects, , Download, Top
 @section Other projects
 
 Except scientific (non public) projects I also have some general interest projects:

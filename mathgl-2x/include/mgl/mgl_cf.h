@@ -21,7 +21,7 @@
 #define _MGL_CF_H_
 /*****************************************************************************/
 #include "mgl/base_cf.h"
-#include "mgl/data.h"
+#include "mgl/data_cf.h"
 #include "mgl/cont.h"
 #include "mgl/fit.h"
 #include "mgl/plot.h"

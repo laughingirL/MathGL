@@ -261,10 +261,10 @@ void mgl_zoom_(uintptr_t *graph, float *x1, float *y1, float *x2, float *y2);
 void mgl_rotate_vector_(uintptr_t *graph, float *Tet,float *x,float *y,float *z);
 void mgl_perspective_(uintptr_t *graph, float val);
 /*****************************************************************************/
-int mgl_fortran_func(HMGL gr, void *);
-HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par);
-HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par);
+HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
+HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
 int mgl_fltk_run();
+int mgl_fltk_thr();
 int mgl_qt_run();
 /*****************************************************************************/
 uintptr_t mgl_create_graph_qt_(const char *title, int);

@@ -533,13 +533,13 @@ void QMathGL::print()
 //-----------------------------------------------------------------------------
 void QMathGL::nextSlide()
 {
-	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);
+	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);
 	if(g && g->GetNumFig()>1)	g->NextFrame();
 	emit frameChanged(+1);
 }
 void QMathGL::prevSlide()
 {
-	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);
+	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);
 	if(g && g->GetNumFig()>1)	g->PrevFrame();
 	emit frameChanged(-1);
 }
@@ -561,7 +561,7 @@ void QMathGL::adjust()
 //		class mglCanvasQT
 //
 //-----------------------------------------------------------------------------
-mglCanvasQT::mglCanvasQT() : mglCanvasW()
+mglCanvasQT::mglCanvasQT() : mglCanvasWnd()
 {	Wnd = 0;	}
 //-----------------------------------------------------------------------------
 void mglCanvasQT::GotoFrame(int d)
@@ -792,19 +792,11 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 	o->addAction(TR("About &Qt"), QMGL, SLOT(aboutQt()));
 }
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par)
+HMGL mgl_create_graph_qt(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
 {
 	mglCanvasQT *g = new mglCanvasQT;
-	g->Window(0,0,draw,title,par);
+	g->Window(0,0,draw,title,par,load);
 	return g;
 }
 int mgl_qt_run()	{	return (qApp)?qApp->exec():-1;	}
-//-----------------------------------------------------------------------------
-void *mgl_qt_tmp(void *)	{	mgl_qt_run();	return 0;	}
-/*void mgl_qt_thread()
- * {
- *	static pthread_t tmp;
- *	pthread_create(&tmp, 0, mgl_qt_tmp, 0);
- *	pthread_detach(tmp);
- }*/
 //-----------------------------------------------------------------------------

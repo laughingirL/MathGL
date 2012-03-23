@@ -22,7 +22,7 @@
 #define _MGL_FLTK_H_
 /*****************************************************************************/
 #ifdef __cplusplus
-#include "mgl/window.h"
+#include "mgl/canvas_wnd.h"
 //-----------------------------------------------------------------------------
 #ifdef __MWERKS__
 # define FL_DLL
@@ -76,7 +76,7 @@ public:
 	{	popup = pmenu;	wpar = wdg;	vpar = v;	}
 protected:
 	mglCanvas *gr;		///< pointer to grapher
-	void *draw_par;		///< Parameters for drawing function mglCanvasW::DrawFunc.
+	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);
 
@@ -136,10 +136,10 @@ protected:
 //-----------------------------------------------------------------------------
 /// Class allows the window creation for displaying plot bitmap with the help of FLTK library
 /** NOTE!!! All frames are saved in memory. So animation with many frames require a lot memory and CPU time (for example, for mouse rotation).*/
-class mglCanvasFL : public mglCanvasW
+class mglCanvasFL : public mglCanvasWnd
 {
 public:
-using mglCanvasW::Window;
+using mglCanvasWnd::Window;
 	Fl_Window *Wnd;		///< Pointer to window
 	Fl_MGLView *mgl;	///< Pointer to MGL widget with buttons
 

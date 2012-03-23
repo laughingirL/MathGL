@@ -31,7 +31,7 @@ if(MGL_HAVE_PYTHON)
  	add_custom_command(OUTPUT _mathgl.so mathgl.py
 		COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/lang/setup.py build
 		DEPENDS ${dep_libs} ${CMAKE_BINARY_DIR}/lang/mgl.i ${CMAKE_BINARY_DIR}/lang/numpy.i
-		IMPLICIT_DEPENDS CXX ${CMAKE_SOURCE_DIR}/include/mgl/type.h ${CMAKE_SOURCE_DIR}/include/mgl/data.h ${CMAKE_SOURCE_DIR}/include/mgl/mgl.h
+		IMPLICIT_DEPENDS CXX ${CMAKE_SOURCE_DIR}/include/mgl/type.h ${CMAKE_SOURCE_DIR}/include/mgl/data.h ${CMAKE_SOURCE_DIR}/include/mgl/mgl.h ${CMAKE_SOURCE_DIR}/include/mgl/window.h
  		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lang
  	)
 	add_custom_target(mgl_python_module ALL DEPENDS _mathgl.so mathgl.py)

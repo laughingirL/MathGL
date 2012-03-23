@@ -39,6 +39,9 @@
 #include "mgl/type.h"
 #include "mgl/data.h"
 #include "mgl/mgl.h"
+#if MGL_HAVE_FLTK
+#include "mgl/window.h"
+#endif
 %}
 
 #ifdef SWIGOCTAVE
@@ -82,6 +85,9 @@ import_array();
 %include "mgl/type.h"
 %include "mgl/data.h"
 %include "mgl/mgl.h"
+#if MGL_HAVE_FLTK
+%include "mgl/window.h"
+#endif
 %extend mglData
 {
 	float __getitem__( int i)	{	return self->GetVal(i);	};

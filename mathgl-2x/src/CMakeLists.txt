@@ -7,14 +7,14 @@ plot.cpp prim.cpp surf.cpp tex_table.cpp vect.cpp volume.cpp evalc.cpp #window.c
 )
 
 set(mgl_hdr
-../include/mgl/base_cf.h    ../include/mgl/fit.h     ../include/mgl/plot.h
-../include/mgl/base.h       ../include/mgl/prim.h    ../include/mgl/canvas_cf.h
-../include/mgl/font.h       ../include/mgl/canvas.h  ../include/mgl/surf.h
-${MathGL_BINARY_DIR}/include/mgl/config.h     ../include/mgl/mgl_cf.h  ../include/mgl/type.h
-../include/mgl/cont.h       ../include/mgl/mgl.h     ../include/mgl/vect.h
-../include/mgl/data.h       ../include/mgl/volume.h
-../include/mgl/define.h     ../include/mgl/other.h   ../include/mgl/eval.h
-../include/mgl/parser.h     ../include/mgl/addon.h   ../include/mgl/evalc.h )
+../include/mgl/base_cf.h	../include/mgl/fit.h	../include/mgl/plot.h
+../include/mgl/base.h		../include/mgl/prim.h	../include/mgl/canvas_cf.h
+../include/mgl/font.h		../include/mgl/canvas.h	../include/mgl/surf.h
+../include/mgl/mgl_cf.h		../include/mgl/type.h	${MathGL_BINARY_DIR}/include/mgl/config.h
+../include/mgl/cont.h		../include/mgl/mgl.h	../include/mgl/vect.h
+../include/mgl/data.h		../include/mgl/volume.h	../include/mgl/data_cf.h
+../include/mgl/define.h		../include/mgl/other.h	../include/mgl/eval.h
+../include/mgl/parser.h		../include/mgl/addon.h	../include/mgl/evalc.h )
 
 if(MGL_HAVE_OPENGL)
 	set(mgl_src ${mgl_src} opengl.cpp )

@@ -22,7 +22,7 @@
 /*****************************************************************************/
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
-#include "mgl/window.h"
+#include "mgl/canvas_wnd.h"
 #include <QtGui/QWidget>
 #include <QtGui/QPixmap>
 //-----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ protected:
 	void mouseMoveEvent(QMouseEvent *);
 
 	mglCanvas *gr;		///< Built-in mglCanvasQT-er instance (used by default)
-	void *draw_par;		///< Parameters for drawing function mglCanvasW::DrawFunc.
+	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);
 	QString mousePos;	///< Last mouse position
@@ -163,10 +163,10 @@ private:
 };
 //-----------------------------------------------------------------------------
 /// Base class for windows containing MathGL graphics
-class mglCanvasQT : public mglCanvasW
+class mglCanvasQT : public mglCanvasWnd
 {
 public:
-using mglCanvasW::Window;
+using mglCanvasWnd::Window;
 	int sshow;		///< Current state of animation switch (toggle button)
 	QMathGL *QMGL;	///< Control which draw graphics
 	QMainWindow *Wnd;	///< Pointer to window
@@ -206,7 +206,7 @@ struct mglDrawScript : public mglDraw
 	{	gr->Highlight(line+1);	mgl_parse_text(gr->Self(),par,text.toAscii());	return 0;	}
 };
 //-----------------------------------------------------------------------------
-/// Convert bitmap from mglCanvasW to QPixmap
+/// Convert bitmap from mglCanvasWnd to QPixmap
 void mglConvertFromGraph(QPixmap &pic, mglCanvas *gr, uchar **buf);
 /// Make menu, toolbars and return popup menu for MainWindow
 QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi);

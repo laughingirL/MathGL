@@ -17,34 +17,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "mgl/window.h"
+#include "mgl/canvas_wnd.h"
 //-----------------------------------------------------------------------------
-mglCanvasW::mglCanvasW() : mglCanvas()
+mglCanvasWnd::mglCanvasWnd() : mglCanvas()
 {
 	Setup();	LoadFunc=0;	FuncPar=0;	DrawFunc=0;
 	GG = 0;		NumFig = 0;	CurFig = -1;
 //	set(MGL_USEDRWDAT);	// TODO: experimental feature -- test later
 }
 //-----------------------------------------------------------------------------
-mglCanvasW::~mglCanvasW()	{	if(GG) free(GG);	}
+mglCanvasWnd::~mglCanvasWnd()	{	if(GG) free(GG);	}
 //-----------------------------------------------------------------------------
-void mglCanvasW::SetCurFig(int c)	{	CurFig=c;	if(get(MGL_USEDRWDAT))	GetDrwDat(c);	}
+void mglCanvasWnd::SetCurFig(int c)	{	CurFig=c;	if(get(MGL_USEDRWDAT))	GetDrwDat(c);	}
 //-----------------------------------------------------------------------------
-void mglCanvasW::ClearFrames()
+void mglCanvasWnd::ClearFrames()
 {
 	if(GG)	free(GG);	GG = 0;
 	CurFrameId = NumFig = CurFig = 0;
 	DrwDat.clear();
 }
 //-----------------------------------------------------------------------------
-void mglCanvasW::SetSize(int w,int h)
+void mglCanvasWnd::SetSize(int w,int h)
 {
 	ClearFrames();
 	mglCanvas::SetSize(w,h);
 //	if(Wnd)	Wnd->size(w,h);
 }
 //-----------------------------------------------------------------------------
-void mglCanvasW::EndFrame()
+void mglCanvasWnd::EndFrame()
 {
 	CurFig = CurFrameId-1;
 	if(!GG)
@@ -62,7 +62,7 @@ void mglCanvasW::EndFrame()
 	CurFig++;
 }
 //-----------------------------------------------------------------------------
-void mglCanvasW::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, void (*reload)(void *p))
+void mglCanvasWnd::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, void (*reload)(void *p))
 {
 	ClearFrames();
 	int n = draw ? draw(this,par) : 0;
@@ -71,7 +71,7 @@ void mglCanvasW::SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par, void 
 	LoadFunc = reload;
 }
 //-----------------------------------------------------------------------------
-const unsigned char *mglCanvasW::GetBits()
+const unsigned char *mglCanvasWnd::GetBits()
 {
 	const unsigned char *g = mglCanvas::GetBits();
 	if(GG && NumFig>0 && CurFig<NumFig && CurFig>=0)
@@ -79,7 +79,7 @@ const unsigned char *mglCanvasW::GetBits()
 	return g;
 }
 //-----------------------------------------------------------------------------
-void mglCanvasW::ReLoad()
+void mglCanvasWnd::ReLoad()
 {
 	if(LoadFunc)
 	{
@@ -93,69 +93,69 @@ void mglCanvasW::ReLoad()
 }
 //-----------------------------------------------------------------------------
 void mgl_wnd_toggle_alpha(HMGL gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleAlpha();	}
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ToggleAlpha();	}
 void mgl_wnd_toggle_light(HMGL gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleLight();	}
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ToggleLight();	}
 void mgl_wnd_toggle_zoom(HMGL gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleZoom();	}
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ToggleZoom();	}
 void mgl_wnd_toggle_rotate(HMGL gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleRotate();	}
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ToggleRotate();	}
 void mgl_wnd_toggle_no(HMGL gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ToggleNo();	}
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ToggleNo();	}
 void mgl_wnd_update(HMGL gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->Update();	}
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->Update();	}
 void mgl_wnd_reload(HMGL gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->ReLoad();	}
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->ReLoad();	}
 void mgl_wnd_adjust(HMGL gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->Adjust();	}
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->Adjust();	}
 void mgl_wnd_next_frame(HMGL gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->NextFrame();	}
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->NextFrame();	}
 void mgl_wnd_prev_frame(HMGL gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->PrevFrame();	}
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->PrevFrame();	}
 void mgl_wnd_animation(HMGL gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->Animation();	}
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->Animation();	}
 void mgl_setup_window(HMGL gr, int clf_upd, int showpos)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>(gr);	if(g)	g->Setup(clf_upd, showpos);	}
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);	if(g)	g->Setup(clf_upd, showpos);	}
 //-----------------------------------------------------------------------------
 void mgl_wnd_toggle_alpha_(uintptr_t *gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->ToggleAlpha();	}
 void mgl_wnd_toggle_light_(uintptr_t *gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->ToggleLight();	}
 void mgl_wnd_toggle_zoom_(uintptr_t *gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->ToggleZoom();	}
 void mgl_wnd_toggle_rotate_(uintptr_t *gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->ToggleRotate();	}
 void mgl_wnd_toggle_no_(uintptr_t *gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->ToggleNo();	}
 void mgl_wnd_update_(uintptr_t *gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->Update();	}
 void mgl_wnd_reload_(uintptr_t *gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->ReLoad();	}
 void mgl_wnd_adjust_(uintptr_t *gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->Adjust();	}
 void mgl_wnd_next_frame_(uintptr_t *gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->NextFrame();	}
 void mgl_wnd_prev_frame_(uintptr_t *gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->PrevFrame();	}
 void mgl_wnd_animation_(uintptr_t *gr)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->Animation();	}
 void mgl_setup_window_(uintptr_t *gr, int *clf_upd, int *showpos)
-{	mglCanvasW *g = dynamic_cast<mglCanvasW *>((HMGL)(*gr));
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->Setup(*clf_upd, *showpos);	}
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_FLTK==0
-HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *)
+HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
 {	return NULL;	}
 int mgl_fltk_run(){return 0;}
 #endif
@@ -163,13 +163,25 @@ int mgl_fltk_run(){return 0;}
 uintptr_t mgl_create_graph_fltk_(const char *title, int l)
 {
 	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
-	uintptr_t t = uintptr_t(mgl_create_graph_fltk(0,s,0));
+	uintptr_t t = uintptr_t(mgl_create_graph_fltk(0,s,0,0));
 	delete []s;	return t;
 }
 int mgl_fltk_run_()	{	return mgl_fltk_run();	}
 //-----------------------------------------------------------------------------
+void *mgl_fltk_tmp(void *)
+{	mgl_fltk_run();	return 0;	}
+//-----------------------------------------------------------------------------
+int mgl_fltk_thr()		// NOTE: Qt couldn't be running in non-primary thread
+{
+	static pthread_t thr;
+	pthread_create(&thr,0,mgl_fltk_tmp,0);
+	pthread_detach(thr);
+	return 0;	// stupid, but I don't want keep result returned by Fl::Run()
+}
+//-----------------------------------------------------------------------------
+
 #if MGL_HAVE_QT==0
-HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *)
+HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
 {	return NULL;	}
 int mgl_qt_run(){return 0;}
 #endif
@@ -177,10 +189,14 @@ int mgl_qt_run(){return 0;}
 uintptr_t mgl_create_graph_qt_(const char *title, int l)
 {
 	char *s = new char[l+1];	memcpy(s,title,l);	s[l]=0;
-	uintptr_t t = uintptr_t(mgl_create_graph_qt(0,s,0));
+	uintptr_t t = uintptr_t(mgl_create_graph_qt(0,s,0,0));
 	delete []s;	return t;
 }
 int mgl_qt_run_()	{	return mgl_qt_run();	}
+//-----------------------------------------------------------------------------
+//
+//	mglDraw class handling
+//
 //-----------------------------------------------------------------------------
 int mgl_draw_class(mglBase *gr, void *p)
 {
@@ -188,9 +204,11 @@ int mgl_draw_class(mglBase *gr, void *p)
 	mglWindow *w = (mglWindow *)p;	// so stupid way to save mglDraw class inheritance :(
 	return (w && w->dr) ? w->dr->Draw(&g) : 0;
 }
-//return p ? ((mglDraw *)p)->Draw(&g) : 0;	}
 void mgl_reload_class(void *p)
-{	if(p)	((mglDraw *)p)->Reload();	}
+{
+	mglWindow *w = (mglWindow *)p;	// so stupid way to save mglDraw class inheritance :(
+	if(w && w->dr)	w->dr->Reload();
+}
 //-----------------------------------------------------------------------------
 int mgl_draw_graph(mglBase *gr, void *p)
 {

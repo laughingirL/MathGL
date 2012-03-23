@@ -1580,3 +1580,7 @@ float mgl_data_get_value_(uintptr_t *d, int *i, int *j, int *k)
 //-----------------------------------------------------------------------------
 mreal *mgl_data_data(HMDT dat)	{	return dat->a;	}
 //-----------------------------------------------------------------------------
+mreal *mgl_data_value(HMDT dat, long i,long j,long k)
+{	register long ii=i*dat->nx*(j+dat->ny*k);
+	return	ii>=0 && ii<dat->GetNN() ? dat->a+ii : 0;	}
+//-----------------------------------------------------------------------------

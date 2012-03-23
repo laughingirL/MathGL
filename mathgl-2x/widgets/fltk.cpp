@@ -598,7 +598,7 @@ Fl_MGLView::~Fl_MGLView()	{}
 //		class mglCanvasFL
 //
 //-----------------------------------------------------------------------------
-mglCanvasFL::mglCanvasFL() : mglCanvasW()	{	Wnd=0;	}
+mglCanvasFL::mglCanvasFL() : mglCanvasWnd()	{	Wnd=0;	}
 mglCanvasFL::~mglCanvasFL()		{	if(Wnd)	delete Wnd;	}
 //-----------------------------------------------------------------------------
 void mglCanvasFL::GotoFrame(int d)
@@ -609,10 +609,10 @@ void mglCanvasFL::GotoFrame(int d)
 	if(GetNumFig()>0 && d)	{	SetCurFig(f);	mgl->FMGL->redraw();	}
 }
 //-----------------------------------------------------------------------------
-void mgl_fl_next(void *v)	{	((mglCanvasW*)v)->NextFrame();	}	///< Callback function for next frame
-void mgl_fl_prev(void *v)	{	((mglCanvasW*)v)->PrevFrame();	}	///< Callback function for prev frame
-void mgl_fl_reload(void *v)	{	((mglCanvasW*)v)->ReLoad();	}		///< Callback function for reloading
-float mgl_fl_delay(void *v)	{	return ((mglCanvasW*)v)->GetDelay();	}	///< Callback function for delay
+void mgl_fl_next(void *v)	{	((mglCanvasWnd*)v)->NextFrame();	}	///< Callback function for next frame
+void mgl_fl_prev(void *v)	{	((mglCanvasWnd*)v)->PrevFrame();	}	///< Callback function for prev frame
+void mgl_fl_reload(void *v)	{	((mglCanvasWnd*)v)->ReLoad();	}		///< Callback function for reloading
+float mgl_fl_delay(void *v)	{	return ((mglCanvasWnd*)v)->GetDelay();	}	///< Callback function for delay
 //-----------------------------------------------------------------------------
 void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p), const char *title, void *par, void (*reload)(void *p), bool maximize)
 {
@@ -647,19 +647,11 @@ void mglCanvasFL::Window(int argc, char **argv, int (*draw)(mglBase *gr, void *p
 	delete []tmp[0];
 }
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par)
+HMGL mgl_create_graph_fltk(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
 {
 	mglCanvasFL *g = new mglCanvasFL;
-	g->Window(0,0,draw,title,par);
+	g->Window(0,0,draw,title,par,load);
 	return g;
 }
 int mgl_fltk_run()		{	return Fl::run();	}
-//-----------------------------------------------------------------------------
-void *mgl_fl_tmp(void *)	{	Fl::run();	return 0;	}
-/*void mgl_fltk_thread()
- * {
- *	static pthread_t tmp;
- *	pthread_create(&tmp, 0, mgl_fl_tmp, 0);
- *	pthread_detach(tmp);
- * }*/
 //-----------------------------------------------------------------------------

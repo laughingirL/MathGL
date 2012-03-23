@@ -196,13 +196,13 @@ HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, voi
 mglCanvasGLUT::mglCanvasGLUT() : mglCanvasGL()	{}
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_FLTK
-HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *)
+HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
 {	return NULL;	}
 int mgl_fltk_run(){return 0;}
 #endif
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_QT
-HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *)
+HMGL mgl_create_graph_qt(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))
 {	return NULL;	}
 int mgl_qt_run(){return 0;}
 #endif
