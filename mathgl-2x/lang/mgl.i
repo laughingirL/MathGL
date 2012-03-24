@@ -36,6 +36,7 @@
 
 %{
 #define SWIG_FILE_WITH_INIT
+#include "mgl/config.h"
 #include "mgl/type.h"
 #include "mgl/data.h"
 #include "mgl/mgl.h"
@@ -87,6 +88,7 @@ import_array();
 %apply (int DIM1, int DIM2, int DIM3, double* IN_ARRAY3) {(int rows, int cols, int slc, const double* d)};
 #endif
 
+%include "mgl/config.h"
 %include "mgl/type.h"
 %include "mgl/data.h"
 %include "mgl/mgl.h"

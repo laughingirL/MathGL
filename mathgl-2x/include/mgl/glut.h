@@ -28,7 +28,7 @@ extern "C" {
 #endif
 /*****************************************************************************/
 void _mgl_key_up(unsigned char ch,int ,int );
-HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par);
+HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p));
 /*****************************************************************************/
 #ifdef __cplusplus
 }
@@ -80,12 +80,12 @@ private:
 class mglGLUT: public mglGraph
 {
 public:
-	mglGLUT(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL) : mglGraph(-1)
-	{	gr = mgl_create_graph_glut(draw,title,par);	}
+	mglGLUT(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=0, void (*load)(void *p)=0) : mglGraph(-1)
+	{	gr = mgl_create_graph_glut(draw,title,par,load);	}
 	mglGLUT(int (*draw)(mglGraph *gr), const char *title="MathGL") : mglGraph(-1)
-	{	gr = mgl_create_graph_glut(mgl_draw_graph,title,(void*)draw);	}
-	mglGLUT(mglDraw *dr=NULL, const char *title="MathGL") : mglGraph(-1)
-	{	mgl_create_graph_glut(mgl_draw_class,title,dr);	}
+	{	gr = mgl_create_graph_glut(mgl_draw_graph,title,(void*)draw,0);	}
+	mglGLUT(mglDraw *dr=0, const char *title="MathGL") : mglGraph(-1)
+	{	mgl_create_graph_glut(mgl_draw_class,title,dr,0);	}
 };
 //-----------------------------------------------------------------------------
 #endif

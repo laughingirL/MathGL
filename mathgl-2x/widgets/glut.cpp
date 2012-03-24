@@ -186,10 +186,10 @@ void mglCanvasGLUT::Window(int argc, char **argv,int (*draw)(mglBase *gr, void *
 	glDeleteLists(1,NumFig);
 }
 //-----------------------------------------------------------------------------
-HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par)
+HMGL mgl_create_graph_glut(int (*draw)(HMGL gr, void *p), const char *title, void *par, void (*load)(void *p))
 {
 	mglCanvasGLUT *g = new mglCanvasGLUT;
-	g->Window(0,0,draw,title,par);
+	g->Window(0,0,draw,title,par, load);
 	return g;
 }
 //-----------------------------------------------------------------------------

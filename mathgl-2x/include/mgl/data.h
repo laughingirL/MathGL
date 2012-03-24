@@ -423,8 +423,10 @@ inline bool operator==(const mglData &b, const mglData &d)
 	return !memcmp(b.a,d.a,b.nx*b.ny*b.nz*sizeof(mreal));	}
 #endif
 //-----------------------------------------------------------------------------
+#ifndef SWIG
 mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
 mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx=0, mreal *dy=0, mreal *dz=0);
+#endif
 //-----------------------------------------------------------------------------
 /// Integral data transformation (like Fourier 'f' or 'i', Hankel 'h' or None 'n') for amplitude and phase
 inline mglData mglTransformA(const mglDataA &am, const mglDataA &ph, const char *tr)

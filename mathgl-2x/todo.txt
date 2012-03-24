@@ -6,6 +6,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 1. Add sample for window in python/octave (like pthread) -- Docs
 2. Add help about cmake into the "Installation and using" -- after build system will be ready
 3. Export to X3D
+4. Check RunThr()
 
 ============= FOR V.2.1 ========
 

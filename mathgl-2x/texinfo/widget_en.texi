@@ -38,12 +38,12 @@ You should inherit yours class from @code{mglDraw} and re-implement one or both 
 This class is derived from mglGraph class (@pxref{MathGL core}). It provide methods for handling window with MathGL graphics.
 
 @deftypefn {Constructor on @code{mglWindow}} {} mglWindow (@code{const char *}title=@code{"MathGL"})
-@deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{int} kind=@code{0})
+@deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{int} kind=@code{0}, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p)=0)
 @deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{mglGraph *}gr), @code{const char *}title=@code{"MathGL"}, @code{int} kind=@code{0})
 @deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{mglDraw *}draw, @code{const char *}title=@code{"MathGL"}, @code{int} kind=@code{0})
-@deftypefnx {C function} @code{HMGL} mgl_create_graph_qt (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par)
-@deftypefnx {C function} @code{HMGL} mgl_create_graph_fltk (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par)
-@deftypefnx {C function} @code{HMGL} mgl_create_graph_glut (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par)
+@deftypefnx {C function} @code{HMGL} mgl_create_graph_qt (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p))
+@deftypefnx {C function} @code{HMGL} mgl_create_graph_fltk (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p))
+@deftypefnx {C function} @code{HMGL} mgl_create_graph_glut (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par, @code{void} (*reload)(@code{HMGL} gr, @code{void *}p))
 
 Creates a window for plotting. Parameter @var{draw} sets a pointer to drawing function (this is the name of function) or instance of @code{mglDraw} class. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides). Parameter @var{title} sets the title of the window. Parameter @var{par} contains pointer to data for the plotting function @var{draw}. Parameter @var{kind} may have following values: @samp{0} -- use FLTK window, @samp{1} -- use Qt window.
 
