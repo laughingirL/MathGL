@@ -153,6 +153,14 @@ void mgl_wnd_animation_(uintptr_t *gr)
 void mgl_setup_window_(uintptr_t *gr, int *clf_upd, int *showpos)
 {	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
 	if(g)	g->Setup(*clf_upd, *showpos);	}
+void mgl_get_last_mouse_pos_(uintptr_t *gr, float *x, float *y, float *z)
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>((HMGL)(*gr));
+	mglPoint p;	if(g)	g->GetMousePos();
+	*x=p.x;	*y=p.y;	*z=p.z;	}	
+void mgl_get_last_mouse_pos(HMGL gr, float *x, float *y, float *z)
+{	mglCanvasWnd *g = dynamic_cast<mglCanvasWnd *>(gr);
+	mglPoint p;	if(g)	g->GetMousePos();
+	*x=p.x;	*y=p.y;	*z=p.z;	}
 //-----------------------------------------------------------------------------
 #if MGL_HAVE_FLTK==0
 HMGL mgl_create_graph_fltk(int (*)(HMGL gr, void *p), const char *, void *, void (*)(void *p))

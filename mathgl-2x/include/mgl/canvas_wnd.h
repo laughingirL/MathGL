@@ -37,7 +37,7 @@ public:
 	inline int GetCurFig()	{	return CurFig;	}
 	void SetCurFig(int c);
 	void ClearFrames();
-	inline mglPoint GetMousePos()	{	return LastMousePos;}	// stupid thing to pass G++ bug
+	inline mglPoint GetMousePos()	{	return LastMousePos;}
 	inline void SetMousePos(mglPoint p)	{	LastMousePos=p;	}
 	inline void Setup(bool clf_upd=true, bool showpos=false)
 	{	set(showpos,MGL_SHOW_POS);	set(clf_upd,MGL_CLF_ON_UPD);	}

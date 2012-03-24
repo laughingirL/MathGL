@@ -58,13 +58,12 @@ protected:
 	mglDraw *dr;
 	int wnd;	///< Type of window
 public:
-#ifdef SWIG
 	mglWindow(const char *title="MathGL") : mglGraph(-1)
-	{	wnd=0;	dr=0;	gr = mgl_create_graph_fltk(0,title,this);	}
-	inline int Run()			///< Run main loop for event handling
-	{	return mgl_fltk_thr();	}
-#else
-	mglWindow(const char *title="MathGL", int (*draw)(HMGL gr, void *p)=NULL, void *par=NULL, int kind=MGL_WND_KIND, void (*load)(void *p)=0) : mglGraph(-1)
+	{	wnd=0;	dr=0;	gr = mgl_create_graph_fltk(0,title,0,0);	}
+	inline int RunThr()		///< Run main loop for event handling in separate thread (for FLTK only)
+	{	return wnd==0 ? mgl_fltk_thr():0;	}
+#ifndef SWIG
+	mglWindow(int (*draw)(HMGL gr, void *p), const char *title="MathGL", void *par=NULL, int kind=MGL_WND_KIND, void (*load)(void *p)=0) : mglGraph(-1)
 	{
 		wnd=kind;	dr=0;
 		if(wnd==1)	gr = mgl_create_graph_qt(draw,title,par,load);

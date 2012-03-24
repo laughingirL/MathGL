@@ -37,7 +37,8 @@ You should inherit yours class from @code{mglDraw} and re-implement one or both 
 
 This class is derived from mglGraph class (@pxref{MathGL core}). It provide methods for handling window with MathGL graphics.
 
-@deftypefn {Constructor on @code{mglWindow}} {} mglWindow (@code{const char *}title=@code{"MathGL"}, @code{int} (*draw)(@code{HMGL} gr, @code{void *}p)=@code{NULL}, @code{void *}par=@code{NULL}, @code{int} kind=@code{0})
+@deftypefn {Constructor on @code{mglWindow}} {} mglWindow (@code{const char *}title=@code{"MathGL"})
+@deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title=@code{"MathGL"}, @code{void *}par=@code{NULL}, @code{int} kind=@code{0})
 @deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{int} (*draw)(@code{mglGraph *}gr), @code{const char *}title=@code{"MathGL"}, @code{int} kind=@code{0})
 @deftypefnx {Constructor on @code{mglWindow}} {} mglWindow (@code{mglDraw *}draw, @code{const char *}title=@code{"MathGL"}, @code{int} kind=@code{0})
 @deftypefnx {C function} @code{HMGL} mgl_create_graph_qt (@code{int} (*draw)(@code{HMGL} gr, @code{void *}p), @code{const char *}title, @code{void *}par)
@@ -47,6 +48,12 @@ This class is derived from mglGraph class (@pxref{MathGL core}). It provide meth
 Creates a window for plotting. Parameter @var{draw} sets a pointer to drawing function (this is the name of function) or instance of @code{mglDraw} class. There is support of a list of plots (frames). So as one can prepare a set of frames at first and redraw it fast later (but it requires more memory). Function should return positive number of frames for the list or zero if it will plot directly. Note, that @var{draw} can be @code{NULL} for displaying static bitmaps only (no animation or slides). Parameter @var{title} sets the title of the window. Parameter @var{par} contains pointer to data for the plotting function @var{draw}. Parameter @var{kind} may have following values: @samp{0} -- use FLTK window, @samp{1} -- use Qt window.
 
 There are some keys handles for manipulating by the plot: 'a', 'd', 'w', 's' for the rotating; ',', '.' for viewing of the previous or next frames in the list; 'r' for the switching of transparency; 'f' for the switching of lightning; 'x' for hiding (closing) the window.
+@end deftypefn
+
+@deftypefn {Method on @code{mglWindow}} @code{void} RunThr ()
+@c @deftypefnx {C function} @code{HMGL} mgl_qt_run ()
+@deftypefnx {C function} @code{HMGL} mgl_fltk_thr ()
+Run main loop for event handling in separate thread. Note, right now it work for FLTK windows only.
 @end deftypefn
 
 @deftypefn {Method on @code{mglWindow}} @code{void} Run ()

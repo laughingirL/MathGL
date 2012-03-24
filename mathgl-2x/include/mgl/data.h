@@ -26,9 +26,6 @@
 //-----------------------------------------------------------------------------
 #include <vector>
 //-----------------------------------------------------------------------------
-const mreal Pi = M_PI;
-const mreal NaN = NAN;
-//-----------------------------------------------------------------------------
 /// Class for working with data array
 class mglData : public mglDataA
 {
@@ -371,9 +368,11 @@ public:
 	inline void operator+=(mreal d)		{	mgl_data_add_num(this,d);	}
 	/// Substract the number
 	inline void operator-=(mreal d)		{	mgl_data_sub_num(this,d);	}
+#ifndef SWIG
 	/// Direct access to the data cell
 	inline mreal &operator[](long i)	{	return a[i];	}
 	// NOTE see 13.10 for operator(), operator[] -- m.b. I should add it ???
+#endif
 protected:
 	/// Get the value in given cell of the data without border checking
 	inline mreal v(long i,long j=0,long k=0) const
@@ -396,6 +395,7 @@ protected:
 		return k>0? (k<nz-1? (a[i0+n]-a[i0-n])/2:a[i0]-a[i0-n]) : a[i0+n]-a[i0];	}
 };
 //-----------------------------------------------------------------------------
+#ifndef SWIG
 inline mglData operator*(const mglData &b, const mglData &d)
 {	mglData a(b);	a*=d;	return a;	}
 inline mglData operator*(mreal b, const mglData &d)
@@ -421,6 +421,7 @@ inline mglData operator/(const mglData &d, mreal b)
 inline bool operator==(const mglData &b, const mglData &d)
 {	if(b.nx!=d.nx || b.ny!=d.ny || b.ny!=d.ny)	return false;
 	return !memcmp(b.a,d.a,b.nx*b.ny*b.nz*sizeof(mreal));	}
+#endif
 //-----------------------------------------------------------------------------
 mreal mglLinear(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z);
 mreal mglSpline3(const mreal *a, long nx, long ny, long nz, mreal x, mreal y, mreal z,mreal *dx=0, mreal *dy=0, mreal *dz=0);

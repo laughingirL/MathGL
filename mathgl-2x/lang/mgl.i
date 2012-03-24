@@ -21,7 +21,6 @@
  ***************************************************************************/
 
 %module mathgl
-#define MGL_NO_WIDGET
 #ifdef SWIGOCTAVE
 %feature("autodoc", 1);
 #endif // SWIGOCTAVE
@@ -33,16 +32,22 @@
 %ignore *::operator-=;
 %ignore *::operator*=;
 %ignore *::operator/=;
+//%ignore mglDataA
 
 %{
 #define SWIG_FILE_WITH_INIT
 #include "mgl/type.h"
 #include "mgl/data.h"
 #include "mgl/mgl.h"
-#if MGL_HAVE_FLTK
 #include "mgl/window.h"
-#endif
 %}
+
+#if MGL_USE_DOUBLE
+typedef double mreal;
+#else
+typedef float mreal;
+#endif
+
 
 #ifdef SWIGOCTAVE
 %rename(__add) operator+;
@@ -85,9 +90,7 @@ import_array();
 %include "mgl/type.h"
 %include "mgl/data.h"
 %include "mgl/mgl.h"
-#if MGL_HAVE_FLTK
 %include "mgl/window.h"
-#endif
 %extend mglData
 {
 	float __getitem__( int i)	{	return self->GetVal(i);	};

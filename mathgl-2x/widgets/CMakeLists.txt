@@ -1,4 +1,4 @@
-set(mgl_wnd_hdr ../include/mgl/window.h)
+set(mgl_wnd_hdr ../include/mgl/window.h ../include/mgl/canvas_wnd.h)
 set(mgl_wnd_src window.cpp)
 #set(mgl_wnd_src )
 

@@ -25,6 +25,9 @@
 #endif
 #include "mgl/define.h"
 //-----------------------------------------------------------------------------
+const mreal Pi = M_PI;
+const mreal NaN = NAN;
+//-----------------------------------------------------------------------------
 /// Class for incapsulating point in space
 struct mglPoint
 {
@@ -42,6 +45,7 @@ struct mglPoint
 	inline void operator*=(float a)	{	x*=a;	y*=a;	z*=a;	}
 	inline void operator/=(float a)	{	x/=a;	y/=a;	z/=a;	}
 };
+#ifndef SWIG
 inline mglPoint operator+(const mglPoint &a, const mglPoint &b)
 {	return mglPoint(a.x+b.x, a.y+b.y, a.z+b.z, a.c+b.c);	}
 inline mglPoint operator-(const mglPoint &a, const mglPoint &b)
@@ -72,6 +76,7 @@ inline bool operator!=(const mglPoint &a, const mglPoint &b)
 {	return memcmp(&a, &b, sizeof(mglPoint));	}
 inline float mgl_norm(const mglPoint &p)
 {	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);	}
+#endif
 //-----------------------------------------------------------------------------
 /// Class for incapsulating color
 struct mglColor
@@ -109,6 +114,7 @@ struct mglColor
 	inline void operator+=(const mglColor &c)	{	r+=c.r;	g+=c.g;	b+=c.b;	}
 	inline void operator-=(const mglColor &c)	{	r-=c.r;	g-=c.g;	b-=c.b;	}
 };
+#ifndef SWIG
 inline mglColor operator+(const mglColor &a, const mglColor &b)
 {	return mglColor(a.r+b.r, a.g+b.g, a.b+b.b, a.a+b.a);	}
 inline mglColor operator-(const mglColor &a, const mglColor &b)
@@ -121,5 +127,6 @@ inline mglColor operator/(const mglColor &a, float b)
 {	return mglColor(a.r/b, a.g/b, a.b/b, a.a/b);	}
 inline mglColor operator!(const mglColor &a)
 {	return mglColor(1-a.r, 1-a.g, 1-a.b, a.a);	}
+#endif
 //-----------------------------------------------------------------------------
 #endif
