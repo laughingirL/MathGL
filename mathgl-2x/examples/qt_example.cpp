@@ -34,36 +34,37 @@ void *mgl_qt_tmp(void *);
 //-----------------------------------------------------------------------------
 class Foo : public mglDraw
 {
+	mglPoint pnt;  // some result of calculation
 public:
+	mglWindow *Gr;  // graphics to be updated
 	int Draw(mglGraph *gr);
+	void Calc();
 } foo;
+//-----------------------------------------------------
+void Foo::Calc()
+{
+	for(int i=0;i<30;i++)   // do calculation
+  {
+	  sleep(1);           // which can be very long
+	  pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+	  Gr->Update();        // update window
+  }
+}
 //-----------------------------------------------------
 int Foo::Draw(mglGraph *gr)
 {
-	gr->Rotate(60,40);
+	gr->Line(mglPoint(),pnt,"Ar2");
 	gr->Box();
 	return 0;
 }
 //-----------------------------------------------------
+//#define PTHREAD_SAMPLE
 int main(int argc,char **argv)
 {
 #ifdef PTHREAD_SAMPLE
-	mglWindow gr(1,NULL,"test");  // create window
-	gr.ClfOnUpdate = false;
-	static pthread_t tmp;
-	pthread_create(&tmp, 0, mgl_qt_tmp, 0);
-	pthread_detach(tmp);    // run window handling in the separate thread
-	for(int i=0;i<10;i++)   // do calculation
-	{
-		sleep(2);             // which can be very long
-		pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-		gr.Clf();             // make new drawing
-		gr.Line(mglPoint(),pnt,"Ar2");
-		char str[10] = "i=0";	str[3] = '0'+i;
-		gr.Text(mglPoint(),"");
-		gr.Update();       // update window
-	}
-	return 0;   // finish calculations and close the window
+	mglWindow gr(&foo,"MathGL examples");
+	foo.Gr = &gr;   foo.Run();
+	return gr.Run();
 #else
 	mglWindow *gr;
 	char key = 0;

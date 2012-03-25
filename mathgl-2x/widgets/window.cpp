@@ -181,9 +181,11 @@ void *mgl_fltk_tmp(void *)
 //-----------------------------------------------------------------------------
 int mgl_fltk_thr()		// NOTE: Qt couldn't be running in non-primary thread
 {
+#if MGL_HAVE_PTHREAD
 	static pthread_t thr;
 	pthread_create(&thr,0,mgl_fltk_tmp,0);
 	pthread_detach(thr);
+#endif
 	return 0;	// stupid, but I don't want keep result returned by Fl::Run()
 }
 //-----------------------------------------------------------------------------

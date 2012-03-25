@@ -96,7 +96,7 @@ void mgl_obj_prim(const mglPrim &q, const mglPnt &p, FILE *fp, float size)
 			case '+':
 				fprintf(fp,"v %g %g %g\n",p.x-ss,p.y,p.z);
 				fprintf(fp,"v %g %g %g\n",p.x+ss,p.y,p.z);
-				fprintf(fp,"v %g %g %g\n",p.x,p.y+ss,p.z);
+				fprintf(fp,"v %g %g %g\n",p.x,p.y-ss,p.z);
 				fprintf(fp,"v %g %g %g\n",p.x,p.y+ss,p.z);
 				fprintf(fp,"l -4/%ld -3/%ld\n", i,i);
 				fprintf(fp,"l -2/%ld -1/%ld\n", i,i);	break;
@@ -229,13 +229,11 @@ void mgl_obj_prim(const mglPrim &q, const mglPnt &p, FILE *fp, float size)
 			}
 			break;
 		case 1:	fprintf(fp,"l %ld/%ld %ld/%ld\n", n1,n1, n2,n2);	break;
-		case 2:	fprintf(fp,"f %ld/%ld/%ld %ld/%ld/%ld %ld/%ld/%ld\n",
-			n1,n1,n1, n2,n2,n2, n3,n3,n3);	break;
+		case 2:
+			fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n1,n1, n2,n2, n3,n3);	break;
 		case 3:
-			fprintf(fp,"f %ld/%ld/%ld %ld/%ld/%ld %ld/%ld/%ld\n",
-					n1,n1,n1, n2,n2,n2, n3,n3,n3);
-			fprintf(fp,"f %ld/%ld/%ld %ld/%ld/%ld %ld/%ld/%ld\n",
-					n4,n4,n4, n2,n2,n2, n3,n3,n3);break;
+			fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n1,n1, n2,n2, n3,n3);
+			fprintf(fp,"f %ld/%ld %ld/%ld %ld/%ld\n", n4,n4, n2,n2, n3,n3);	break;
 		case 4:	break;	// TODO: add glyphs export later
 	}
 }
@@ -837,7 +835,7 @@ void mgl_x3d_mdef(HMGL gr, void *fp, bool gz)
 	if(m_P)	{	m_p=true;	m_s=true;	}
 	if(m_X)	{	m_x=true;	m_s=true;	}
 	if(m_p)	mgl_printf(fp, gz, "<ProtoDeclare name='m_p'><ProtoInterface/>\n<ProtoBody>"
-		"<LineSet vertexCount=''>\n<Coordinate point='-1 0 0, 1 0 0, 0 -1 0, 0 1 0'/>"
+		"<LineSet vertexCount='0,1,2,3'>\n<Coordinate point='-1 0 0, 1 0 0, 0 -1 0, 0 1 0'/>"
 		"\n</LineSet></ProtoBody></ProtoDeclare>\n");
 	/*if(m_x)	mgl_printf(fp, gz, "/m_x {sm sm rm s2 s2 rl 0 sm 2 mul rm sm 2 mul s2 rl d0} def\n");	// TODO
 	 *	if(m_s)	mgl_printf(fp, gz, "/m_s {sm sm rm 0 s2 rl s2 0 rl 0 sm 2 mul rl cp d0} def\n");
@@ -863,6 +861,7 @@ void mgl_x3d_mdef(HMGL gr, void *fp, bool gz)
 //-----------------------------------------------------------------------------
 void mgl_x3d_prim(const mglPrim &q, const mglPnt &p, const long *pnt, void *fp,bool gz, float size)
 {
+	// <ProtoInstance name='EmissiveMaterial'/>
 /*		if(q.type==0)	// mark
 		{
 			float x0 = p1.x,y0 = p1.y;

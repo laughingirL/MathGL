@@ -208,12 +208,12 @@ class Foo : public mglDraw
 {
   mglPoint pnt;  // some result of calculation
 public:
-  mglGraph *Gr;  // graphics to be updated
+  mglWindow *Gr;  // graphics to be updated
   int Draw(mglGraph *gr);
   void Calc();
 } foo;
 //-----------------------------------------------------
-int Foo::Calc()
+void Foo::Calc()
 {
   for(int i=0;i<30;i++)   // do calculation
   {
