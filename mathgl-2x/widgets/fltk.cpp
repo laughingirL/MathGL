@@ -122,7 +122,7 @@ void Fl_MathGL::update()
 		gr->Alpha(flag&1);	gr->Light(flag&2);
 		if(tet_val)	tet = tet_val->value();
 		if(phi_val)	phi = phi_val->value();
-		gr->Zoom(x1,y1,x2,y2);	gr->View(tet,phi);
+		gr->Zoom(x1,y1,x2,y2);	gr->View(phi,tet);
 		draw_func(gr, draw_par);	// drawing itself
 		const char *buf = gr->Mess.c_str();
 		if(*buf)	fl_message("%s",buf);
@@ -142,14 +142,14 @@ int Fl_MathGL::handle(int code)
 		const Fl_Menu_Item *m = popup->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
 		if(m)	m->do_callback(wpar, vpar);
 	}
-	if(gr->get(MGL_SHOW_POS) && !zoom && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
+	else if(gr->get(MGL_SHOW_POS) && !zoom && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
 	{
 		mglPoint p = gr->CalcXYZ(Fl::event_x()-x(), Fl::event_y()-y());
 		char s[128];
 		sprintf(s,"x=%g, y=%g, z=%g",p.x,p.y,p.z);
 		draw();	fl_color(FL_BLACK);		fl_draw(s,40,70);
 	}
-	if((!rotate && !zoom) || Fl::event_button()!=FL_LEFT_MOUSE)
+	else if((!rotate && !zoom) || Fl::event_button()!=FL_LEFT_MOUSE)
 	{
 		if(code==FL_FOCUS || code==FL_UNFOCUS)	return 1;
 		if(code==FL_KEYUP)
@@ -210,23 +210,25 @@ int Fl_MathGL::handle(int code)
 		}
 		return 0;
 	}
-	if(code==FL_PUSH)	{	xe=x0=Fl::event_x();	ye=y0=Fl::event_y();	}
-	if(code==FL_DRAG)
+	else if(code==FL_PUSH)	{	xe=x0=Fl::event_x();	ye=y0=Fl::event_y();	}
+	else if(code==FL_DRAG)
 	{
 		xe=Fl::event_x();	ye=Fl::event_y();
-		mreal ff = 240/sqrt(mreal(w()*h()));
+		mreal ff = 240./sqrt(w()*h());
 		if(rotate)
 		{
-			phi += int((x0-xe)*ff);
-			tet += int((y0-ye)*ff);
+			phi += (x0-xe)*ff;
+			tet += (y0-ye)*ff;
 			if(phi>180)	phi-=360;		if(phi<-180)	phi+=360;
 			if(tet>180)	tet-=360;		if(tet<-180)	tet+=360;
+			if(tet_val)	tet_val->value(tet);
+			if(phi_val)	phi_val->value(phi);
 			x0 = xe;	y0 = ye;
 			update();
 		}
 		redraw();
 	}
-	if(code==FL_RELEASE)
+	else if(code==FL_RELEASE)
 	{
 		if(zoom)
 		{

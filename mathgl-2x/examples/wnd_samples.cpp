@@ -34,30 +34,7 @@ void mgls_prepare3v(mglData *ex, mglData *ey, mglData *ez);
 int test_wnd(mglGraph *gr)
 {
 mgl_set_test_mode(true);
-
-	gr->SubPlot(2,2,0);
-	gr->Rotate(60,70);	gr->Ternary(2);
-	gr->Axis();
 	gr->Box();
-//	gr->SetRotatedText(false);
-	gr->Label('t',"A",1);	gr->Label('x',"B",1);
-	gr->Label('y',"C",1);	gr->Label('z',"D",1);
-
-	gr->SubPlot(2,2,1);
-	gr->Rotate(60,70);	gr->Ternary(1);
-	gr->Axis();
-	gr->Box();
-	gr->Label('x',"x comp.");
-	gr->Label('y',"y comp.");
-	gr->Label('t',"t comp.");
-
-	gr->SubPlot(2,2,3);
-	gr->Rotate(60,70);	gr->Ternary(0);
-	gr->Axis();
-	gr->Box();
-//	gr->SetRotatedText(false);
-	gr->Label('t',"A",1);	gr->Label('x',"X",1);
-	gr->Label('y',"Y",1);	gr->Label('z',"Z",1);
 	return 0;
 }
 //-----------------------------------------------------------------------------
