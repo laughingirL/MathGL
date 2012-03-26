@@ -303,9 +303,9 @@ public:
 	/// Write the frame in file using OFF format
 	inline void WriteOFF(const char *fname,const char *descr="", bool colored=false)
 	{	mgl_write_off(gr, fname, descr,colored);	}
-	/// Write the frame in file using X3D format
-	inline void WriteX3D(const char *fname,const char *descr="")
-	{	mgl_write_x3d(gr, fname, descr);	}
+//	/// Write the frame in file using X3D format
+//	inline void WriteX3D(const char *fname,const char *descr="")
+//	{	mgl_write_x3d(gr, fname, descr);	}
 	/// Write the frame in file using IDTF format
 	inline void WriteIDTF(const char *fname,const char *descr="")
 	{	mgl_write_idtf(gr, fname, descr);	}

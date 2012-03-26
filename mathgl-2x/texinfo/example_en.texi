@@ -3,6 +3,52 @@
 
 This chapter contain information about basic and advanced MathGL, hints and samples for all types of graphics. I recommend you read first 2 sections one after another and at least look on @ref{Hints} section. Also I recommend you to look at @ref{General concepts} and @ref{FAQ}.
 
+Note, that MathGL v.2.* have only 2 end-user interfaces: one for C/Fortran and similar languages which don't support classes, another one for C++/Python/Octave and similar languages which support classes. So, most of samples placed in this chapter can be run as is (after minor changes due to different syntaxes for different languages). For example, the C++ code
+@verbatim
+#include <mgl/mgl.h>
+int main()
+{
+  mglGraph gr;
+  gr.FPlot("sin(pi*x)");
+  gr.WriteFrame("test.png");
+}
+@end verbatim
+in Python will be as
+@verbatim
+from mathgl import *
+gr = mglGraph();
+gr.FPlot("sin(pi*x)");
+gr.WriteFrame("test.png");
+@end verbatim
+in Octave will be as (you need first install MathGL package by command @code{octave:1> pkg install /usr/share/mathgl/octave/mathgl.tar.gz} from @code{sudo octave})
+@verbatim
+gr = mglGraph();
+gr.FPlot("sin(pi*x)");
+gr.WriteFrame("test.png");
+@end verbatim
+in C will be as
+@verbatim
+#include <mgl/mgl_cf.h>
+int main()
+{
+  HMGL gr = mgl_create_graph(600,400);
+  mgl_fplot(gr,"sin(pi*x)","","");
+  mgl_write_frame(gr,"test.png","");
+  mgl_delete_graph(gr);
+}
+@end verbatim
+in Fortran will be as
+@verbatim
+integer gr, mgl_create_graph
+gr = mgl_create_graph(600,400);
+call mgl_fplot(gr,'sin(pi*x)','','');
+call mgl_write_frame(gr,'test.png','');
+call mgl_delete_graph(gr);
+@end verbatim
+and so on.
+
+
+
 @menu
 * Basic usage::
 * Advanced usage::
@@ -238,8 +284,28 @@ int main(int argc,char **argv)
 }
 @end verbatim
 
+Previous sample can be run in C++ only since it use C++ class mglDraw. However similar idea can be used even in Fortran or SWIG-based (Python/Octave/...) if one use FLTK window. Such limitation come from the Qt requirement to be run in the primary thread only. The sample code will be:
+@verbatim
+int main(int argc,char **argv)
+{
+  mglWindow gr("test");   // create window
+  gr.RunThr();            // run event loop in separate thread
+  for(int i=0;i<10;i++)   // do calculation
+  {
+    sleep(1);             // which can be very long
+    pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+    gr.Clf();             // make new drawing
+    gr.Line(mglPoint(),pnt,"Ar2");
+    char str[10] = "i=0"; str[3] = '0'+i;
+    gr.Puts(mglPoint(),"");
+    gr.Update();          // update window when you need it
+  }
+  return 0;   // finish calculations and close the window
+}
+@end verbatim
 
-Pictures with animation can be saved in file(s) as well. You can: export in animated GIF, or save each frame in separate file (usually JPEG) and convert these files into the movie (for example, by help of ImageMagic). Let me show both methods.
+
+Pictures with @strong{animation can be saved in file(s)} as well. You can: export in animated GIF, or save each frame in separate file (usually JPEG) and convert these files into the movie (for example, by help of ImageMagic). Let me show both methods.
 
 The simplest methods is making animated GIF. There are 3 steps: (1) open GIF file by @code{StartGIF()} function; (2) create the frames by calling @code{NewFrame()} before and @code{EndFrame()} after plotting; (3) close GIF by @code{CloseGIF()} function. So the simplest code for ``running'' sinusoid will look like this:
 @verbatim

@@ -364,9 +364,9 @@ Export current picture to STL file.
 @deftypefn {Slot on @code{QMathGL}} @code{void} exportOFF (@code{QString} fname=@code{""})
 Export current picture to OFF file.
 @end deftypefn
-@deftypefn {Slot on @code{QMathGL}} @code{void} exportX3D (@code{QString} fname=@code{""})
-Export current picture to X3D file.
-@end deftypefn
+@c @deftypefn {Slot on @code{QMathGL}} @code{void} exportX3D (@code{QString} fname=@code{""})
+@c Export current picture to X3D file.
+@c @end deftypefn
 
 @deftypefn {Slot on @code{QMathGL}} @code{void} exportIDTF (@code{QString} fname=@code{""})
 Export current picture to IDTF file.

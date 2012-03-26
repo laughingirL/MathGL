@@ -618,26 +618,26 @@ void mglCanvas::arrow_plot(long n1, long n2,char st)
 		q3.xx=q3.x=p1.x+lx;		q3.yy=q3.y=p1.y+ly;		k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
 		trig_plot(k1,k2,k3);	break;
 	case 'A':
-		q1.xx=q1.x=p1.x;			q1.yy=q1.y=p1.y;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
+//		q1.xx=q1.x=p1.x;			q1.yy=q1.y=p1.y;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
 		q2.xx=q2.x=p1.x-kx-2*lx;	q2.yy=q2.y=p1.y-ky-2*ly;	k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
 		q3.xx=q3.x=p1.x-1.5*lx;		q3.yy=q3.y=p1.y-1.5*ly;		k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
 		q4.xx=q4.x=p1.x+kx-2*lx;	q4.yy=q4.y=p1.y+ky-2*ly;	k4=Pnt.size();	MGL_PUSH(Pnt,q4,mutexPnt);
-		quad_plot(k1,k2,k4,k3);	break;
+		trig_plot(n1,k2,k3);		trig_plot(n1,k4,k3);	break;
 	case 'K':
-		q1.xx=q1.x=p1.x;			q1.yy=q1.y=p1.y;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
+//		q1.xx=q1.x=p1.x;			q1.yy=q1.y=p1.y;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
 		q2.xx=q2.x=p1.x-kx-2*lx;	q2.yy=q2.y=p1.y-ky-2*ly;	k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
 		q3.xx=q3.x=p1.x-1.5*lx;		q3.yy=q3.y=p1.y-1.5*ly;		k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
 		q4.xx=q4.x=p1.x+kx-2*lx;	q4.yy=q4.y=p1.y+ky-2*ly;	k4=Pnt.size();	MGL_PUSH(Pnt,q4,mutexPnt);
-		quad_plot(k1,k2,k4,k3);
+		trig_plot(n1,k2,k3);		trig_plot(n1,k4,k3);
 		q1.xx=q1.x=p1.x+kx;			q1.yy=q1.y=p1.y+ky;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
 		q2.xx=q2.x=p1.x-kx;			q2.yy=q2.y=p1.y-ky;			k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
 		line_plot(k1,k2);	break;
 	case 'V':
-		q1.xx=q1.x=p1.x;			q1.yy=q1.y=p1.y;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
+//		q1.xx=q1.x=p1.x;			q1.yy=q1.y=p1.y;			k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
 		q2.xx=q2.x=p1.x-kx+2*lx;	q2.yy=q2.y=p1.y-ky+2*ly;	k2=Pnt.size();	MGL_PUSH(Pnt,q2,mutexPnt);
 		q3.xx=q3.x=p1.x+1.5*lx;		q3.yy=q3.y=p1.y+1.5*ly;		k3=Pnt.size();	MGL_PUSH(Pnt,q3,mutexPnt);
 		q4.xx=q4.x=p1.x+kx+2*lx;	q4.yy=q4.y=p1.y+ky+2*ly;	k4=Pnt.size();	MGL_PUSH(Pnt,q4,mutexPnt);
-		quad_plot(k1,k2,k4,k3);	break;
+		trig_plot(n1,k2,k3);		trig_plot(n1,k4,k3);	break;
 	case 'O':
 		{
 			q1.xx=q1.x=p1.x;	q1.yy=q1.y=p1.y;	k1=Pnt.size();	MGL_PUSH(Pnt,q1,mutexPnt);
