@@ -18,6 +18,7 @@ mgl_module = Extension('_mathgl',
     swig_opts=[
 #	"-outdir %s/lang" % binary_dir,
 	'-c++',
+	'-threads',
 	"-I%s" % binary_dir,
 	"-I%s" % source_dir],
     extra_objects=[mgl_lib,mgl_lib_wnd]
