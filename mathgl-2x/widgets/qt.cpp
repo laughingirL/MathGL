@@ -73,7 +73,7 @@ QMathGL::QMathGL(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f)
 {
 	autoResize = false;	draw_par = 0;	draw_func = 0;
 	gr = new mglCanvas;		appName = "MathGL";
-	popup = 0;		grBuf = 0;
+	popup = 0;		grBuf = 0;	draw = 0;
 	phi = tet = per = 0;
 	x1 = y1 = 0;	x2 = y2 = 1;
 	alpha = light = zoom = rotate = grid = false;
@@ -198,13 +198,14 @@ void QMathGL::update()
 	else	while(thr->isRunning())	qApp->processEvents();
 	if(warnMGL)	warnMGL->setText(thr->warn);*/
 
-	if(draw_func)
+	if(draw_func || draw)
 	{
 		if(gr->get(MGL_CLF_ON_UPD))	gr->DefaultPlotParam();
 		gr->Alpha(alpha);	gr->Light(light);
 		if(!isHidden())	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 		setlocale(LC_NUMERIC, "C");	// NOTE: I'm not sure what I should selocale manually???
-		draw_func(gr, draw_par);
+		if(draw_func)	draw_func(gr, draw_par);
+		else	{	mglGraph g(gr);	draw->Draw(&g);	}
 		setlocale(LC_NUMERIC, "");
 		if(!isHidden())	QApplication::restoreOverrideCursor();
 		emit refreshData();

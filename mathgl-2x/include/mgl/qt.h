@@ -55,7 +55,7 @@ public:
 	inline void setDraw(int (*func)(mglBase *gr, void *par), void *par=0)
 	{	draw_func = func;	draw_par = par;	}
 	inline void setDraw(mglDraw *dr)
-	{	setDraw(mgl_draw_class,(void*)dr);	}
+	{	draw = dr;	}
 	inline void setDraw(int (*draw)(mglGraph *gr))
 	{	setDraw(mgl_draw_graph,(void*)draw);	}
 
@@ -144,6 +144,7 @@ protected:
 	void *draw_par;		///< Parameters for drawing function mglCanvasWnd::DrawFunc.
 	/// Drawing function for window procedure. It should return the number of frames.
 	int (*draw_func)(mglBase *gr, void *par);
+	mglDraw *draw;		///< Class for drawing -- need to call directly due to inheritance mechanism
 	QString mousePos;	///< Last mouse position
 	QPixmap pic;		///< Pixmap for drawing (changed by update)
 	double tet, phi;	///< Rotation angles

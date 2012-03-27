@@ -202,9 +202,9 @@ void type_cmd_cb(Fl_Widget *w, void *v)
 		static char str[300];	// load help for command
 		char *docdir;	get_doc_dir(docdir);
 #ifdef WIN32
-		sprintf(str,"%s\\mgl_en.html\\mgl_en_1.html#%s",docdir,first[val]);
+		sprintf(str,"%s\\mgl_en.html#%s",docdir,first[val]);
 #else
-		sprintf(str,"%s/mgl_en.html/mgl_en_1.html#%s",docdir,first[val]);
+		sprintf(str,"%s/mgl_en.html#%s",docdir,first[val]);
 #endif
 		free(docdir);	cmd_dlg.help->load(str);
 	}
@@ -220,9 +220,9 @@ void desc_cmd_cb(Fl_Widget *w, void *v)
 	static char str[300];	// load help for command
 	char *docdir;	get_doc_dir(docdir);
 #ifdef WIN32
-	sprintf(str,"%s\\mgl_en.html\\mgl_en_1.html#%s",docdir,name);
+	sprintf(str,"%s\\mgl_en.html#%s",docdir,name);
 #else
-	sprintf(str,"%s/mgl_en.html/mgl_en_1.html#%s",docdir,name);
+	sprintf(str,"%s/mgl_en.html#%s",docdir,name);
 #endif
 	free(docdir);	cmd_dlg.help->load(str);
 }

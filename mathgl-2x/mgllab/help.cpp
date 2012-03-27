@@ -26,9 +26,9 @@ void get_doc_dir(char *&docdir)
 	static char str[300];
 	pref.get("help_dir",docdir,"");
 #ifdef WIN32
-	sprintf(str,"%s\\mgl_en.html\\mgl_en_1.html",docdir);
+	sprintf(str,"%s\\mgl_en.html",docdir);
 #else
-	sprintf(str,"%s/mgl_en.html/mgl_en_1.html",docdir);
+	sprintf(str,"%s/mgl_en.html",docdir);
 #endif
 	FILE *fp = fopen(str,"r");
 	if(fp)	fclose(fp);
@@ -54,9 +54,9 @@ void help_cb(Fl_Widget*, void*v)
 	free(buf);
 	get_doc_dir(buf);
 #ifdef WIN32
-	sprintf(str,"%s\\mgl_en.html\\mgl_en_1.html#%s",buf,s);
+	sprintf(str,"%s\\mgl_en.html#%s",buf,s);
 #else
-	sprintf(str,"%s/mgl_en.html/mgl_en_1.html#%s",buf,s);
+	sprintf(str,"%s/mgl_en.html#%s",buf,s);
 #endif
 	free(buf);	e->hd->load(str);
 	if(e->rtab)	e->rtab->value(e->ghelp);
@@ -69,9 +69,9 @@ void link_cb(Fl_Widget*, void*v)
 	char *docdir;
 	get_doc_dir(docdir);
 #ifdef WIN32
-	sprintf(str,"%s\\mgl_en.html\\mgl_en_1.html#%s",docdir,e->link_cmd->value());
+	sprintf(str,"%s\\mgl_en.html#%s",docdir,e->link_cmd->value());
 #else
-	sprintf(str,"%s/mgl_en.html/mgl_en_1.html#%s",docdir,e->link_cmd->value());
+	sprintf(str,"%s/mgl_en.html#%s",docdir,e->link_cmd->value());
 #endif
 	free(docdir);	e->hd->load(str);
 	if(e->rtab)	e->rtab->value(e->ghelp);

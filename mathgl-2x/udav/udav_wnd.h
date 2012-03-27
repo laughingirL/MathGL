@@ -92,7 +92,7 @@ private slots:
 	void setAsterix();
 	void warnChanged();
 	void showHint()	{	udavShowHint(this);	}
-	void showExamples()	{	showExMGL(hlp);	}
+//	void showExamples()	{	showExMGL(hlp);	}
 
 	void setCurrentFile(const QString &);
 	void setStatus(const QString &txt);

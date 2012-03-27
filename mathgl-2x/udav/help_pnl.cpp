@@ -30,7 +30,7 @@ void raisePanel(QWidget *w);
 //-----------------------------------------------------------------------------
 QWidget *createHlpPanel(QWidget *p)		{	return new HelpPanel(p);	}
 void showHelpMGL(QWidget *hlp,QString s){	((HelpPanel *)hlp)->showHelp(s);	}
-void showExMGL(QWidget *hlp)			{	((HelpPanel *)hlp)->showExamples();	}
+//void showExMGL(QWidget *hlp)			{	((HelpPanel *)hlp)->showExamples();	}
 //-----------------------------------------------------------------------------
 HelpPanel::HelpPanel(QWidget *parent) : QWidget(parent)
 {
@@ -48,8 +48,8 @@ HelpPanel::HelpPanel(QWidget *parent) : QWidget(parent)
 	connect(entry, SIGNAL(returnPressed()), this, SLOT(showHelp()));
 	b = new QPushButton(QPixmap(":/xpm/go-next.png"), tr("Forward"));
 	connect(b, SIGNAL(clicked()), help, SLOT(forward()));	a->addWidget(b);
-	b = new QPushButton(QPixmap(":/xpm/help-faq.png"), tr("&Examples"));
-	connect(b, SIGNAL(clicked()), this, SLOT(showExamples()));	a->addWidget(b);
+//	b = new QPushButton(QPixmap(":/xpm/help-faq.png"), tr("&Examples"));
+//	connect(b, SIGNAL(clicked()), this, SLOT(showExamples()));	a->addWidget(b);
 	t = new QToolButton(this);	t->setIcon(QPixmap(":/xpm/zoom-in.png"));
 	connect(t, SIGNAL(clicked()), this, SLOT(zoomIn()));	a->addWidget(t);
 	t = new QToolButton(this);	t->setIcon(QPixmap(":/xpm/zoom-out.png"));
@@ -57,23 +57,23 @@ HelpPanel::HelpPanel(QWidget *parent) : QWidget(parent)
 	setWindowTitle(tr("Help"));
 }
 //-----------------------------------------------------------------------------
-void HelpPanel::showExamples()
-{
-	QStringList s;	s<<(pathHelp+"/"+tr("mgl_en")+".html/");
-	help->setSearchPaths(s);
-	setWindowTitle("Examples");	raisePanel(this);
-	help->setSource(tr("mgl_en")+"_2.html");
-}
+// void HelpPanel::showExamples()
+// {
+// 	QStringList s;	s<<(pathHelp);
+// 	help->setSearchPaths(s);
+// 	setWindowTitle("Examples");	raisePanel(this);
+// 	help->setSource(tr("mgl_en")+"_2.html");
+// }
 //-----------------------------------------------------------------------------
 void HelpPanel::showHelp(const QString &txt)
 {
 	QString cmd=txt;
 	raisePanel(this);
-	QStringList s;	s<<(pathHelp+"/"+tr("mgl_en")+".html/");
+	QStringList s;	s<<(pathHelp);
 	help->setSearchPaths(s);
 	if(cmd.isEmpty())	cmd = entry->text().trimmed();
-	if(cmd.isEmpty())	help->setSource(tr("mgl_en")+"_1.html");
-	else	help->setSource(tr("mgl_en")+"_1.html#"+cmd);
+	if(cmd.isEmpty())	help->setSource(tr("mgl_en")+".html");
+	else	help->setSource(tr("mgl_en")+".html#"+cmd);
 	setWindowTitle("Help");
 }
 //-----------------------------------------------------------------------------

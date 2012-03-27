@@ -30,7 +30,7 @@ Q_OBJECT
 public:
 	HelpPanel(QWidget *parent = 0);
 public slots:
-	void showExamples();
+//	void showExamples();
 	void showHelp(const QString &cmd=QString::null);
 	void zoomIn();
 	void zoomOut();

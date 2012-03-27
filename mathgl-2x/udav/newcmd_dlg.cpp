@@ -231,9 +231,9 @@ void NewCmdDialog::nameChanged(int s)
 	QString n=name->itemText(s), par, a;
 	int k;
 	if(n.isEmpty())	return;
-	QStringList ss;	ss<<(pathHelp+"/"+tr("mgl_en")+".html/");
+	QStringList ss;	ss<<(pathHelp);
 	help->setSearchPaths(ss);
-	help->setSource(tr("mgl_en")+"_1.html#"+n);
+	help->setSource(tr("mgl_en")+".html#"+n);
 	// clear old
 	kind->clear();	kinds.clear();	for(k=0;k<NUM_CH;k++)	argn[k].clear();
 	// try to find the keyword

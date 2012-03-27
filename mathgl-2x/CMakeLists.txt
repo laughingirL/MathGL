@@ -297,6 +297,7 @@ endif(WIN32)
 if(NOT WIN32)
 set(MGL_DATA_PATH "${CMAKE_INSTALL_PREFIX}/share/mathgl")
 set(MGL_DOC_PATH "${CMAKE_INSTALL_PREFIX}/share/doc/mathgl")
+set(MGL_MAN_PATH "${CMAKE_INSTALL_PREFIX}/share/man")
 set(MGL_FONT_PATH "${MGL_DATA_PATH}/fonts")
 install(DIRECTORY fonts/ DESTINATION ${MGL_FONT_PATH}
 		PATTERN ".svn" EXCLUDE

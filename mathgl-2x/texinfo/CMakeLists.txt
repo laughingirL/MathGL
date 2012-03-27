@@ -69,7 +69,22 @@ if(MGL_HAVE_DOC)
 			FILES_MATCHING PATTERN ".svn" EXCLUDE
 			PATTERN "CMakeFiles" EXCLUDE
 			PATTERN "*.png"
+			PATTERN "*.html"
 			PATTERN "*/*.html"
 			PATTERN "./mathgl*.info*"
 			PATTERN "./mathgl*.pdf")
+	install(DIRECTORY ./ DESTINATION ${MGL_MAN_PATH}/man1
+			FILES_MATCHING PATTERN ".svn" EXCLUDE
+			PATTERN "CMakeFiles" EXCLUDE
+			PATTERN "*_en" EXCLUDE
+			PATTERN "png" EXCLUDE
+			PATTERN "small" EXCLUDE
+			PATTERN "*.1")
+	install(DIRECTORY ./ DESTINATION ${MGL_MAN_PATH}/man5
+			FILES_MATCHING PATTERN ".svn" EXCLUDE
+			PATTERN "CMakeFiles" EXCLUDE
+			PATTERN "*_en" EXCLUDE
+			PATTERN "png" EXCLUDE
+			PATTERN "small" EXCLUDE
+			PATTERN "*.5")
 endif(MGL_HAVE_DOC)
