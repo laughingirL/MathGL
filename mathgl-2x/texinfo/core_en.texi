@@ -843,6 +843,11 @@ Push transformation matrix into stack. Later you can restore its current state b
 Pop (restore last 'pushed') transformation matrix into stack.
 @end deftypefn
 
+@deftypefn {Method on @code{mglGraph}} @code{void} SetPlotFactor (@code{float} val)
+@deftypefnx {C function} @code{void} mgl_set_plotfactor (@code{HMGL} gr, @code{float} val)
+Sets the factor of plot size. It is not recommended to set it lower then 1.5. This is some analogue of function Zoom() but applied not to overall image but for each InPlot. Use negative value or zero to enable automatic selection.
+@end deftypefn
+
 There are 2 functions @code{View()} and @code{Zoom()} which transform whole image. I.e. they act as secondary transformation matrix. They were introduced for rotating/zooming the whole plot by mouse.
 
 @deftypefn {Method on @code{mglGraph}} @code{void} View (@code{float} TetX, @code{float} TetZ, @code{float} TetY=@code{0})

@@ -221,6 +221,14 @@ public:
 	inline void StickPlot(int num, int i, float tet, float phi)
 	{	mgl_stickplot(gr,num,i,tet,phi);	}
 
+	/// Set PlotFactor
+	inline void SetPlotFactor(float val)
+	{	mgl_set_plotfactor(gr,val);	}
+	/// Push transformation matrix into stack
+	inline void Push()	{	mgl_mat_push(gr);	}
+	/// Pop transformation matrix from stack
+	inline void Pop()	{	mgl_mat_pop(gr);	}
+	
 	/// Add title for current subplot/inplot
 	inline 	void Title(const char *title,const char *stl="",float size=-2)
 	{	mgl_title(gr,title,stl,size);	}

@@ -35,7 +35,7 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 21. MGL testing system ???
 22. Export to X3D
 23. Try libtcc (TinyCC) as alternative to MGL -- in mgllab???
-24. Use OI & Z for determening {x,y,z} from {xs,ys}. Try to find closest.
+24. Use OI & Z for determining {x,y,z} from {xs,ys}. Try to find closest.
 
 ============= UDAV =============
 

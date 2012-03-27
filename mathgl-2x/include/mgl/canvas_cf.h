@@ -135,6 +135,7 @@ void mgl_gridplot(HMGL gr, int nx, int ny, int m, float d);
 void mgl_stickplot(HMGL gr, int num, int ind, float tet, float phi);
 void mgl_title(HMGL gr, const char *title, const char *stl, float size);
 void mgl_titlew(HMGL gr, const wchar_t *title, const char *stl, float size);
+void mgl_set_plotfactor(HMGL gr, float val);
 
 void mgl_aspect(HMGL gr, float Ax,float Ay,float Az);
 void mgl_rotate(HMGL gr, float TetX,float TetZ,float TetY);
@@ -252,6 +253,7 @@ void mgl_relplot_(uintptr_t *graph, float *x1,float *x2,float *y1,float *y2);
 void mgl_columnplot_(uintptr_t *graph, int *num, int *i, float *d);
 void mgl_gridplot_(uintptr_t *graph, int *nx, int *ny, int *i, float *d);
 void mgl_stickplot_(uintptr_t *graph, int *num, int *i, float *tet, float *phi);
+void mgl_set_plotfactor_(uintptr_t *graph, float *val);
 
 void mgl_title_(uintptr_t *gr, const char *title, const char *stl, float *size, int,int);
 void mgl_aspect_(uintptr_t *graph, float *Ax,float *Ay,float *Az);

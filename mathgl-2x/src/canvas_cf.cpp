@@ -393,3 +393,8 @@ float mgl_eval_expr_(uintptr_t *ex, float *x, float *y,float *z)
 float mgl_diff_expr_(uintptr_t *ex, const char *dir, float *x, float *y,float *z, int)
 {	return mgl_expr_diff((HMEX) ex, *dir,*x,*y,*z);	}
 //-----------------------------------------------------------------------------
+void mgl_set_plotfactor(HMGL gr, float val)
+{	_Gr_->SetPlotFactor(val);	}
+void mgl_set_plotfactor_(uintptr_t *gr, float *val)
+{	_GR_->SetPlotFactor(*val);	}
+//-----------------------------------------------------------------------------
