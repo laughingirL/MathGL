@@ -5,7 +5,6 @@ Device 0 (VID=0502 and PID=337d) is UNKNOWN.
 
 2. Add help about cmake into the "Installation and using" -- after build system will be ready
 
-3. UDAV drawing !!! 
 4. Check RunThr() in python
 
 ============= FOR V.2.1 ========

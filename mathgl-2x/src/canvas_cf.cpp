@@ -370,7 +370,7 @@ void mgl_mpi_send_(uintptr_t *gr, int *id)	{	mgl_mpi_send(_GR_, *id);	}
 void mgl_mpi_recv_(uintptr_t *gr, int *id)	{	mgl_mpi_recv(_GR_, *id);	}
 //-----------------------------------------------------------------------------
 void mgl_wnd_set_delay_(uintptr_t *gr, mreal *dt)	{	_GR_->SetDelay(*dt);	}
-void mgl_wnd_set_delay(HMGL gr, mreal dt)	{	_Gr_->SetDelay(dt);	}
+void mgl_wnd_set_delay(HMGL gr, float dt)	{	_Gr_->SetDelay(dt);	}
 //-----------------------------------------------------------------------------
 HMEX mgl_create_expr(const char *expr)	{	return new mglFormula(expr);	}
 void mgl_delete_expr(HMEX ex)	{	delete ex;	}
