@@ -1317,7 +1317,7 @@ void smgl_vect(mglGraph *gr)
 //-----------------------------------------------------------------------------
 const char *mmgl_flow="subplot 2 2 0 '':title 'Flow plot (default)':box:flow a b\n"
 "subplot 2 2 1 '':title '\\\'v\\\' style':box:flow a b 'v'\n"
-"subplot 2 2 2 '':title 'from edges only':box:flow a b; value -5\n"
+"subplot 2 2 2 '':title 'from edges only':box:flow a b '#'\n"
 "subplot 2 2 3:title '3d variant':rotate 50 60:box:flow ex ey ez\n";
 void smgl_flow(mglGraph *gr)
 {
@@ -1326,7 +1326,7 @@ void smgl_flow(mglGraph *gr)
 	gr->Box();	gr->Flow(a,b);
 	if(mini)	return;
 	gr->SubPlot(2,2,1,"");	gr->Title("'v' style");	gr->Box();	gr->Flow(a,b,"v");
-	gr->SubPlot(2,2,2,"");	gr->Title("from edges only");	gr->Box();	gr->Flow(a,b,"","value -5");
+	gr->SubPlot(2,2,2,"");	gr->Title("'\\#' style");	gr->Box();	gr->Flow(a,b,"#");
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
 	gr->SubPlot(2,2,3);	gr->Title("3d variant");	gr->Rotate(50,60);
 	gr->Box();	gr->Flow(ex,ey,ez);
@@ -1334,16 +1334,16 @@ void smgl_flow(mglGraph *gr)
 //-----------------------------------------------------------------------------
 const char *mmgl_pipe="subplot 2 2 0 '':title 'Pipe plot (default)':light on:box:pipe a b\n"
 "subplot 2 2 1 '':title '\\\'i\\\' style':box:pipe a b 'i'\n"
-"subplot 2 2 2 '':title 'from edges only':box:pipe a b; value -5\n"
+"subplot 2 2 2 '':title 'from edges only':box:pipe a b '#'\n"
 "subplot 2 2 3:title '3d variant':rotate 50 60:box:pipe ex ey ez '' 0.1\n";
 void smgl_pipe(mglGraph *gr)
 {
 	mglData a,b;	mgls_prepare2v(&a,&b);
-	if(!mini)	{gr->SubPlot(2,2,0,"");	gr->Title("Flow plot (default)");}
+	if(!mini)	{gr->SubPlot(2,2,0,"");	gr->Title("Pipe plot (default)");}
 	gr->Light(true);	gr->Box();	gr->Pipe(a,b);
 	if(mini)	return;
 	gr->SubPlot(2,2,1,"");	gr->Title("'i' style");	gr->Box();	gr->Pipe(a,b,"i");
-	gr->SubPlot(2,2,2,"");	gr->Title("from edges only");	gr->Box();	gr->Pipe(a,b,"",0.05,"value -5");
+	gr->SubPlot(2,2,2,"");	gr->Title("'\\#' style");	gr->Box();	gr->Pipe(a,b,"#");
 	mglData ex,ey,ez;	mgls_prepare3v(&ex,&ey,&ez);
 	gr->SubPlot(2,2,3);	gr->Title("3d variant");	gr->Rotate(50,60);
 	gr->Box();	gr->Pipe(ex,ey,ez,"",0.1);
@@ -1560,9 +1560,9 @@ void smgl_stereo(mglGraph *gr)
 {
 	mglData a;	mgls_prepare2d(&a);
 	gr->Light(true);
-	gr->SubPlot(2,1,0);	gr->Rotate(50,60+3);
+	gr->SubPlot(2,1,0);	gr->Rotate(50,60+1);
 	gr->Box();	gr->Surf(a);
-	gr->SubPlot(2,1,1);	gr->Rotate(50,60-3);
+	gr->SubPlot(2,1,1);	gr->Rotate(50,60-1);
 	gr->Box();	gr->Surf(a);
 }
 //-----------------------------------------------------------------------------

@@ -461,11 +461,6 @@ public:
 	{	mgl_putsw_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, text, font, size);	}
 	inline void Puts(mglPoint p, mglPoint d, const char *text, const char *font=":L", float size=-1)
 	{	mgl_puts_dir(gr, p.x, p.y, p.z, d.x, d.y, d.z, text, font, size);	}
-	/// Print the label \a text at arbitrary position {x,y} of plot.
-	void Label(double x, double y, const char *text, const char *fnt=0)
-	{	mgl_label_pos(gr,x,y,text,fnt);	}
-	void Label(double x, double y, const wchar_t *text, const char *fnt=0)
-	{	mgl_labelw_pos(gr,x,y,text,fnt);	}
 
 	/// Print text along the curve
 	inline void Text(const mglDataA &x, const mglDataA &y, const mglDataA &z, const char *text, const char *font="", const char *opt="")

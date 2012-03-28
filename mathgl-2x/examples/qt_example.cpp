@@ -44,11 +44,15 @@ public:
 void Foo::Calc()
 {
 	for(int i=0;i<30;i++)   // do calculation
-  {
-	  sleep(1);           // which can be very long
-	  pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
-	  Gr->Update();        // update window
-  }
+	{
+#ifdef WIN32
+		Sleep(1000);
+#else
+		sleep(1);           // which can be very long
+#endif
+		pnt = mglPoint(2*mgl_rnd()-1,2*mgl_rnd()-1);
+		Gr->Update();        // update window
+	}
 }
 //-----------------------------------------------------
 int Foo::Draw(mglGraph *gr)
@@ -75,9 +79,9 @@ int main(int argc,char **argv)
 	case '1':	gr = new mglWindow(sample_1,"1D plots",1);	break;
 	case '2':	gr = new mglWindow(sample_2,"2D plots",1);	break;
 	case '3':	gr = new mglWindow(sample_3,"3D plots",1);	break;
-	case 'd':	gr = new mglWindow(sample_d,"Dual plots",1);	break;
+	case 'd':	gr = new mglWindow(sample_d,"Dual plots",1);break;
 	case 't':	gr = new mglWindow(test_wnd,"Testing",1);	break;
-	default:	gr = new mglWindow(&foo,"Drop and waves",1);	break;
+	default:	gr = new mglWindow(sample,"Drop and waves",1);	break;
 	}
 	gr->Run();	return 0;
 #endif

@@ -2471,9 +2471,7 @@ void mglc_tlabel(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_label(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==3 && k[1]==3 && k[2]==2)
-		gr->Label(a[0].v, a[1].v, a[2].w.c_str(), k[3]==2?a[3].s.c_str():"");
-	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
 		gr->Label(*(a[0].d), *(a[1].d), *(a[2].d), a[3].w.c_str(), k[4]==2?a[4].s.c_str():"", opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==2)
 		gr->Label(*(a[0].d), *(a[1].d), a[2].w.c_str(), k[3]==2?a[3].s.c_str():"", opt);
@@ -2484,9 +2482,7 @@ int mgls_label(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)
 }
 void mglc_label(wchar_t out[1024], long , mglArg *a, int k[10], const char *opt)
 {
-	if(k[0]==3 && k[1]==3 && k[2]==2)
-		mglprintf(out,1024,L"gr->Label(%g, %g, \"%ls\", \"%s\");", a[0].v, a[1].v, a[2].w.c_str(), k[3]==2?a[3].s.c_str():"");
-	else if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
+	if(k[0]==1 && k[1]==1 && k[2]==1 && k[3]==2)
 		mglprintf(out,1024,L"gr->Label(%s, %s, %s, \"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].s.c_str(), a[3].w.c_str(), k[4]==2?a[4].s.c_str():"", opt);
 	else if(k[0]==1 && k[1]==1 && k[2]==2)
 		mglprintf(out,1024,L"gr->Label(%s, %s, \"%ls\", \"%s\", \"%s\");", a[0].s.c_str(), a[1].s.c_str(), a[2].w.c_str(), k[3]==2?a[3].s.c_str():"", opt);
@@ -3226,14 +3222,12 @@ void mglc_export(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 //-----------------------------------------------------------------------------
 int mgls_write(mglGraph *gr, long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==2)	gr->WriteFrame(a[0].s.c_str(), "MathGL");
-	else	return 1;
+	gr->WriteFrame(k[0]==2?a[0].s.c_str():"", "MathGL");
 	return 0;
 }
 void mglc_write(wchar_t out[1024], long , mglArg *a, int k[10], const char *)
 {
-	if(k[0]==2)
-		mglprintf(out,1024,L"gr->WriteFrame(\"%s\", \"MathGL\");", a[0].s.c_str());
+	mglprintf(out,1024,L"gr->WriteFrame(\"%s\", \"MathGL\");", k[0]==2?a[0].s.c_str():"");
 }
 //-----------------------------------------------------------------------------
 int mgls_region(mglGraph *gr, long , mglArg *a, int k[10], const char *opt)

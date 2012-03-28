@@ -2734,8 +2734,8 @@ int sample(mglGraph *gr)
   gr->SubPlot(2,2,1,"");  gr->Title("'v' style");
   gr->Box();  gr->Flow(a,b,"v");
 
-  gr->SubPlot(2,2,2,"");  gr->Title("from edges only");
-  gr->Box();  gr->Flow(a,b,"","value -5");
+  gr->SubPlot(2,2,2,"");  gr->Title("'\\#' style");
+  gr->Box();  gr->Flow(a,b,"#");
 
   mglData ex,ey,ez; mgls_prepare3v(&ex,&ey,&ez);
   gr->SubPlot(2,2,3); gr->Title("3d variant");  gr->Rotate(50,60);
@@ -2755,14 +2755,14 @@ int sample(mglGraph *gr)
 int sample(mglGraph *gr)
 {
   mglData a,b;  mgls_prepare2v(&a,&b);
-  gr->SubPlot(2,2,0,""); gr->Title("Flow plot (default)");
+  gr->SubPlot(2,2,0,""); gr->Title("Pipe plot (default)");
   gr->Light(true);  gr->Box();  gr->Pipe(a,b);
 
   gr->SubPlot(2,2,1,"");  gr->Title("'i' style");
   gr->Box();  gr->Pipe(a,b,"i");
 
-  gr->SubPlot(2,2,2,"");  gr->Title("from edges only");
-  gr->Box();  gr->Pipe(a,b,"",0.05,"value -5");
+  gr->SubPlot(2,2,2,"");  gr->Title("'\\#' style");
+  gr->Box();  gr->Pipe(a,b,"#");
 
   mglData ex,ey,ez; mgls_prepare3v(&ex,&ey,&ez);
   gr->SubPlot(2,2,3); gr->Title("3d variant");  gr->Rotate(50,60);
@@ -3380,10 +3380,10 @@ int sample(mglGraph *gr)
   mglData a;  mgls_prepare2d(&a);
   gr->Light(true);
 
-  gr->SubPlot(2,1,0); gr->Rotate(50,60+3);
+  gr->SubPlot(2,1,0); gr->Rotate(50,60+1);
   gr->Box();  gr->Surf(a);
 
-  gr->SubPlot(2,1,1); gr->Rotate(50,60-3);
+  gr->SubPlot(2,1,1); gr->Rotate(50,60-1);
   gr->Box();  gr->Surf(a);
   return 0;
 }

@@ -528,11 +528,11 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	if(!fgets(buf,512,fp))	*buf=0;
 	if(strncmp(buf,"MGLD",4))	{	delete []buf;	fclose(fp);	return true;	}
 	register size_t i;
-	size_t n,m,l;
+	size_t n,m,l, npnt;
 	sscanf(buf+5,"%lu%lu%lu",&n,&m,&l);
 	if(n<=0 || m<=0 || l<=0)	{	delete []buf;	fclose(fp);	return true;	}
 	if(!add)	{	Clf();	Txt.clear();	}
-	else	ClfZB();
+	else	{	ClfZB();	npnt=Pnt.size();	}
 	Pnt.reserve(n);	Prm.reserve(m);	Txt.reserve(l);
 	mglPnt p;
 	for(i=0;i<n;i++)
@@ -546,8 +546,14 @@ bool mglCanvas::ImportMGLD(const char *fname, bool add)
 	{
 		do {	if(!fgets(buf,512,fp))	*buf=0;	mgl_strtrim(buf);	} while(*buf=='#');
 		sscanf(buf,"%d%ld%ld%ld%ld%d%g%g%g", &q.type, &q.n1, &q.n2, &q.n3, &q.n4, &q.id, &q.s, &q.w, &q.p);
-		if(q.type>4)	continue;
-		Prm.push_back(q);
+		q.n1 = q.n1>=0?q.n1+npnt:-1;
+		q.n2 = q.n2>=0?q.n2+npnt:-1;
+		if(q.type==2 || q.type==3)
+		{
+			q.n3 = q.n3>=0?q.n3+npnt:-1;
+			q.n4 = q.n4>=0?q.n4+npnt:-1;
+		}
+		if(q.type<5)	Prm.push_back(q);
 	}
 	mglTexture t;
 	for(i=0;i<l;i++)

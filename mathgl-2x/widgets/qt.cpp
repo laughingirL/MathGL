@@ -434,7 +434,7 @@ void QMathGL::exportSTL(QString fname)
 	}
 }
 //-----------------------------------------------------------------------------
-void QMathGL::exportX3D(QString fname)
+/*void QMathGL::exportX3D(QString fname)
 {
 	if(fname.isEmpty())	fname = gr->PlotId.c_str();
 	if(fname.isEmpty())	QMessageBox::critical(this, appName, tr("No filename."),QMessageBox::Ok,0,0);
@@ -444,7 +444,7 @@ void QMathGL::exportX3D(QString fname)
 		mgl_write_x3d(gr,setExtension(fname,"svg").toAscii(), appName.toAscii());
 		setlocale(LC_NUMERIC, "");
 	}
-}
+}*/
 //-----------------------------------------------------------------------------
 void QMathGL::exportTGA(QString fname)
 {
