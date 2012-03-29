@@ -27,18 +27,20 @@
 class mglCanvasWnd : public mglCanvas
 {
 public:
+	mglPoint LastMousePos;			///< Last mouse position
 	void (*ClickFunc)(void *par);	///< Callback function on click
+
 	mglCanvasWnd();
 	virtual ~mglCanvasWnd();
 
 	void SetSize(int w,int h);
 	void EndFrame();
 	const unsigned char *GetBits();
-	inline int GetNumFig()	{	return NumFig;	}
-	inline int GetCurFig()	{	return CurFig;	}
+	inline int GetNumFig() const	{	return NumFig;	}
+	inline int GetCurFig() const	{	return CurFig;	}
 	void SetCurFig(int c);
 	void ClearFrames();
-	inline mglPoint GetMousePos()	{	return LastMousePos;}
+	inline mglPoint GetMousePos() const	{	return LastMousePos;}
 	inline void SetMousePos(mglPoint p)	{	LastMousePos=p;	}
 	inline void Setup(bool clf_upd=true, bool showpos=false)
 	{	set(showpos,MGL_SHOW_POS);	set(clf_upd,MGL_CLF_ON_UPD);	}
@@ -62,7 +64,6 @@ public:
 	void SetDrawFunc(int (*draw)(mglBase *gr, void *p), void *par=NULL, void (*reload)(void *p)=NULL);
 	
 private:
-	mglPoint LastMousePos;	///< Last mouse position
 	int CurFig;		///< Current figure in the list.
 
 	unsigned char *GG;	///< images for all frames (may be too LARGE !!!)

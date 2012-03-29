@@ -142,12 +142,18 @@ int Fl_MathGL::handle(int code)
 		const Fl_Menu_Item *m = popup->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
 		if(m)	m->do_callback(wpar, vpar);
 	}
-	else if(gr->get(MGL_SHOW_POS) && !zoom && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
+	else if(!zoom && !rotate && code==FL_PUSH && Fl::event_button()==FL_LEFT_MOUSE)
 	{
-		mglPoint p = gr->CalcXYZ(Fl::event_x()-x(), Fl::event_y()-y());
-		char s[128];
-		sprintf(s,"x=%g, y=%g, z=%g",p.x,p.y,p.z);
-		draw();	fl_color(FL_BLACK);		fl_draw(s,40,70);
+		mglCanvasWnd *g=dynamic_cast<mglCanvasWnd *>(gr);
+		if(g && g->ClickFunc)	g->ClickFunc(draw_par);
+		if(gr->get(MGL_SHOW_POS))
+		{
+			mglPoint p = gr->CalcXYZ(Fl::event_x()-x(), Fl::event_y()-y());
+			if(g)	g->LastMousePos = p;
+			char s[128];
+			sprintf(s,"x=%g, y=%g, z=%g",p.x,p.y,p.z);
+			draw();	fl_color(FL_BLACK);		fl_draw(s,40,70);
+		}
 	}
 	else if((!rotate && !zoom) || Fl::event_button()!=FL_LEFT_MOUSE)
 	{
@@ -207,11 +213,6 @@ int Fl_MathGL::handle(int code)
 			{	flag = (flag&2) + ((~(flag&1))&1);	update();	return 1;	}
 			if(key=='f')
 			{	flag = (flag&1) + ((~(flag&2))&2);	update();	return 1;	}
-		}
-		else if(code==FL_PUSH)
-		{
-			mglCanvasWnd *g=dynamic_cast<mglCanvasWnd *>(gr);
-			if(g && g->ClickFunc)	g->ClickFunc(draw_par);
 		}
 		return 0;
 	}

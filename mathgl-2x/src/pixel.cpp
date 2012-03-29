@@ -56,7 +56,7 @@ void mglCanvas::PutDrawReg(mglDrawReg *d, const mglCanvas *gr)
 	}
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::PostScale(mglPoint &p)
+void mglCanvas::PostScale(mglPoint &p) const
 {
 	mglPoint q=p/(2*B.pf);
 	p.x = B.x + q.x*B.b[0] + q.y*B.b[1] + q.z*B.b[2];
@@ -70,7 +70,7 @@ void mglCanvas::PostScale(mglPoint &p)
 	}*/
 }
 //-----------------------------------------------------------------------------
-bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
+bool mglCanvas::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 {
 	bool res = get(MGL_DISABLE_SCALE) || mglBase::ScalePoint(p,n,use_nan);
 	if(TernAxis&4)	return res;
@@ -167,7 +167,7 @@ void mglCanvas::LightScale()
 }
 //-----------------------------------------------------------------------------
 // NOTE: Perspective, transformation formulas and lists are not support just now !!! Also it use LAST InPlot parameters!!!
-mglPoint mglCanvas::CalcXYZ(int xs, int ys)
+mglPoint mglCanvas::CalcXYZ(int xs, int ys) const
 {
 	float s3 = 2*B.pf, x, y, z;	// TODO: Take into account z-value of z-buffer
 	ys = Height - ys;
@@ -191,13 +191,12 @@ mglPoint mglCanvas::CalcXYZ(int xs, int ys)
 		x = s3*(B.b[5]*xx-B.b[2]*yy)/d3;
 		z = s3*(B.b[0]*yy-B.b[3]*xx)/d3;
 	}
-	LastMousePos = mglPoint(Min.x + (Max.x-Min.x)*(x+1)/2,
+	return mglPoint(Min.x + (Max.x-Min.x)*(x+1)/2,
 					Min.y + (Max.y-Min.y)*(y+1)/2,
 					Min.z + (Max.z-Min.z)*(z+1)/2);
-	return LastMousePos;
 }
 //-----------------------------------------------------------------------------
-void mglCanvas::CalcScr(mglPoint p, int *xs, int *ys)
+void mglCanvas::CalcScr(mglPoint p, int *xs, int *ys) const
 {
 	mglPoint n;
 	ScalePoint(p,n);
@@ -205,7 +204,7 @@ void mglCanvas::CalcScr(mglPoint p, int *xs, int *ys)
 	if(ys)	*ys=int(p.y);
 }
 //-----------------------------------------------------------------------------
-mglPoint mglCanvas::CalcScr(mglPoint p)
+mglPoint mglCanvas::CalcScr(mglPoint p) const
 {	int x,y;	CalcScr(p,&x,&y);	return mglPoint(x,y);	}
 //-----------------------------------------------------------------------------
 //mglCanvas *mgl_tmp_gr;

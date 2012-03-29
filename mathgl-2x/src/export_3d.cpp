@@ -29,7 +29,7 @@ int mgl_tga_save(const char *fname, int w, int h, unsigned char **p);
 int mgl_pnga_save(const char *fname, int w, int h, unsigned char **p);
 void mgl_printf(void *fp, bool gz, const char *str, ...);
 //-----------------------------------------------------------------------------
-void mglTexture::GetRGBA(unsigned char *f)
+void mglTexture::GetRGBA(unsigned char *f) const
 {
 	register long i,j,i0;
 	mglColor c1,c2,c;

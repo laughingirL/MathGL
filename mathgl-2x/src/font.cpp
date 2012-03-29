@@ -69,7 +69,7 @@ char mglGetStyle(const char *how, int *font, int *align)
 	return col;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Puts(const char *str,const char *how,float col)
+float mglFont::Puts(const char *str,const char *how,float col) const
 {
 	int font=0, align=1;
 	char cc=mglGetStyle(how,&font,&align);
@@ -81,7 +81,7 @@ float mglFont::Puts(const char *str,const char *how,float col)
 	return w;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Width(const char *str,const char *how)
+float mglFont::Width(const char *str,const char *how) const
 {
 	int font=0;
 	mglGetStyle(how,&font);
@@ -93,21 +93,21 @@ float mglFont::Width(const char *str,const char *how)
 	return w;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Puts(const wchar_t *str,const char *how,float col)
+float mglFont::Puts(const wchar_t *str,const char *how,float col) const
 {
 	int font=0, align=1;
 	char cc=mglGetStyle(how,&font,&align);
 	return Puts(str, font, align,cc?-cc:col);
 }
 //-----------------------------------------------------------------------------
-float mglFont::Width(const wchar_t *str,const char *how)
+float mglFont::Width(const wchar_t *str,const char *how) const
 {
 	int font=0;
 	mglGetStyle(how,&font);
 	return Width(str, font);
 }
 //-----------------------------------------------------------------------------
-float mglFont::Puts(const wchar_t *str,int font,int align, float col)
+float mglFont::Puts(const wchar_t *str,int font,int align, float col) const
 {
 	if(numg==0)	return 0;
 	float ww=0,w=0,h = (align&4) ? 500./fact[0] : 0;
@@ -156,7 +156,7 @@ float mglFont::Puts(const wchar_t *str,int font,int align, float col)
 	return ww;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Width(const wchar_t *str,int font)
+float mglFont::Width(const wchar_t *str,int font) const
 {
 	if(numg==0)	return 0;
 	float ww=0,w=0;
@@ -189,14 +189,14 @@ float mglFont::Width(const wchar_t *str,int font)
 	return w;
 }
 //-----------------------------------------------------------------------------
-float mglFont::Height(int font)
+float mglFont::Height(int font) const
 {
 	if(numg==0)	return 0;
 	int s = (font/MGL_FONT_BOLD)&3;
 	return (500.f)/fact[s];
 }
 //-----------------------------------------------------------------------------
-float mglFont::Height(const char *how)
+float mglFont::Height(const char *how) const
 {
 	if(numg==0)	return 0;
 	int s=0;
@@ -208,7 +208,7 @@ float mglFont::Height(const char *how)
 	return (500.f)/fact[s];
 }
 //-----------------------------------------------------------------------------
-long mglFont::Internal(unsigned s)
+long mglFont::Internal(unsigned s) const
 {
 	register long i,i1=0,i2=numg-1;
 	register wchar_t j = wchar_t(s & MGL_FONT_MASK);
@@ -236,7 +236,7 @@ int mgl_tex_symb_cmp(const void *a, const void *b)
 }
 //-----------------------------------------------------------------------------
 // parse LaTeX commands (mostly symbols and acents, and some font-style commands)
-unsigned mglFont::Parse(const wchar_t *s)
+unsigned mglFont::Parse(const wchar_t *s) const
 {
 	register long k;
 	unsigned res = unsigned(-2);		// Default is no symbol
@@ -286,7 +286,7 @@ unsigned mglFont::Parse(const wchar_t *s)
 	return res;
 }
 //-----------------------------------------------------------------------------
-void mglFont::Convert(const wchar_t *str, unsigned *res)
+void mglFont::Convert(const wchar_t *str, unsigned *res) const
 {
 	register unsigned r,i,j,k,i0;
 	wchar_t s[128], ch;		// TeX command and current char
@@ -325,7 +325,7 @@ void mglFont::Convert(const wchar_t *str, unsigned *res)
 	res[j] = 0;
 }
 //-----------------------------------------------------------------------------
-float mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float &w1,float &w2, float f1, float f2, int st)
+float mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float &w1,float &w2, float f1, float f2, int st) const
 {
 	static unsigned s1[2]={0,0}, s2[2]={0,0};
 	register long k;
@@ -358,7 +358,7 @@ float mglFont::get_ptr(long &i,unsigned *str, unsigned **b1, unsigned **b2,float
 	return w1>w2 ? w1 : w2;
 }
 //-----------------------------------------------------------------------------
-void mglFont::draw_ouline(int st, float x, float y, float f, float g, float ww, float ccol)
+void mglFont::draw_ouline(int st, float x, float y, float f, float g, float ww, float ccol) const
 {
 	if(st&MGL_FONT_OLINE)
 		gr->Glyph(x,y+499*f/g, ww*g, (st&MGL_FONT_WIRE)?12:8, 0, ccol);
@@ -367,7 +367,7 @@ void mglFont::draw_ouline(int st, float x, float y, float f, float g, float ww, 
 }
 //-----------------------------------------------------------------------------
 #define MGL_CLEAR_STYLE {st = style;	yy = y;	ff = f;	ccol=col;	a = (st/MGL_FONT_BOLD)&3;}
-float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,float col)
+float mglFont::Puts(const unsigned *text, float x,float y,float f,int style,float col) const
 {
 	if(numg==0)	return 0;
 	register long j,k;

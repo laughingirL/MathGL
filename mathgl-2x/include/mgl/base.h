@@ -145,9 +145,9 @@ struct mglTexture
 	{	n=0;	Set(cols,smooth,alpha);	}
 	void Clear()	{	n=0;	}
 	void Set(const char *cols, int smooth=0,float alpha=1);
-	void GetC(float u,float v,mglPnt &p);
-	bool IsSame(mglTexture &t);
-	void GetRGBA(unsigned char *f);	// Write as BGRA for fastest export to TGA
+	void GetC(float u,float v,mglPnt &p) const;
+	bool IsSame(mglTexture &t) const;
+	void GetRGBA(unsigned char *f) const;	// Write as BGRA for fastest export to TGA
 };
 //-----------------------------------------------------------------------------
 const mglColor NC(-1,-1,-1);
@@ -188,7 +188,7 @@ public:
 	long InUse;			///< Smart pointer (number of users)
 	long Flag;			///< Flags for controlling drawing
 
-	inline bool get(long fl)	{	return Flag&fl;	}
+	inline bool get(long fl) const	{	return Flag&fl;	}
 	inline void set(long fl)	{	Flag |= fl;	}
 	inline void clr(long fl)	{	Flag &=~fl;	}
 	inline void set(bool v,long fl)	{	Flag = v ? Flag|fl : Flag&(~fl);	}
@@ -250,7 +250,7 @@ public:
 	/// Set default palette
 	inline void SetPalette(const char *colors)
 	{	Txt[0].Set(mgl_have_color(colors)?colors:MGL_DEF_PAL,-1);	}
-	inline long GetNumPal(long id)	{	return Txt[abs(id)/256].n;	}
+	inline long GetNumPal(long id) const	{	return Txt[abs(id)/256].n;	}
 	/// Set default color scheme
 	inline void SetDefScheme(const char *colors)
 	{	Txt[1].Set(mgl_have_color(colors)?colors:"BbcyrR");	}
@@ -266,7 +266,7 @@ public:
 
 	/// Set warning code ant fill Message
 	void SetWarn(int code, const char *who="");
-	int inline GetWarn()	{	return WarnCode;	}
+	int inline GetWarn() const	{	return WarnCode;	}
 
 	virtual void StartAutoGroup (const char *)=0;
 	void StartGroup(const char *name, int id);
@@ -293,10 +293,10 @@ public:
 	inline void CopyFont(mglBase *gr)	{	fnt->Copy(gr->GetFont());	}
 	/// Set default font size
 	inline void SetFontSize(float val)	{	FontSize=val>0 ? val:FontSize*val;	}
-	inline float GetFontSize()		{	return FontSize;	};
-	inline float TextWidth(const wchar_t *text, const char *font, float size)
+	inline float GetFontSize() const	{	return FontSize;	};
+	inline float TextWidth(const wchar_t *text, const char *font, float size) const
 	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Width(text,(font&&*font)?font:FontDef)/8;	}
-	inline float TextHeight(const char *font, float size)
+	inline float TextHeight(const char *font, float size) const
 	{	return (size<0?-size*FontSize:size)*font_factor*fnt->Height(font?font:FontDef)/8; }
 	inline float FontFactor()	{	return font_factor;	}
 	virtual float GetRatio();
@@ -317,7 +317,7 @@ public:
 
 	/// Set plot quality
 	virtual void SetQuality(int qual=MGL_DRAW_NORM)	{	Quality=qual;	}
-	inline int GetQuality()	{	return Quality;	}
+	inline int GetQuality() const	{	return Quality;	}
 
 	// ~~~~~~~~~~~~~~~~~~~~~~ Developer functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/// Add point to the pntN and return its position
@@ -329,29 +329,29 @@ public:
 	inline void SetReduceAcc(bool val)	{	set(val, MGL_REDUCEACC);	}
 
 //	inline long GetPos()	{	return Pnt.size()-1;	}
-	inline mglPoint GetPntP(long i)
+	inline mglPoint GetPntP(long i) const
 	{	const mglPnt &p=Pnt[i];	return mglPoint(p.x,p.y,p.z);	}
-	inline float GetClrC(long i)	{	return Pnt[i].c;	}
-	inline long GetPntNum()			{	return Pnt.size();	}
-	inline mglPnt &GetPnt(long i)	{	return Pnt[i];		}
-	inline mglPrim &GetPrm(long i)	{	return Prm[i];		}
-	inline long GetPrmNum()			{	return Prm.size();	}
-	inline mglText &GetPtx(long i)	{	return Ptx[i];		}
-	inline long GetPtxNum()			{	return Ptx.size();	}
-	inline mglTexture &GetTxt(long i){	return Txt[i];		}
-	inline long GetTxtNum()			{	return Txt.size();	}
+	inline float GetClrC(long i) const	{	return Pnt[i].c;	}
+	inline long GetPntNum() const		{	return Pnt.size();	}
+	inline mglPnt &GetPnt(long i)		{	return Pnt[i];		}
+	inline mglPrim &GetPrm(long i)		{	return Prm[i];		}
+	inline long GetPrmNum() const		{	return Prm.size();	}
+	inline mglText &GetPtx(long i)		{	return Ptx[i];		}
+	inline long GetPtxNum() const		{	return Ptx.size();	}
+	inline mglTexture &GetTxt(long i)	{	return Txt[i];		}
+	inline long GetTxtNum() const		{	return Txt.size();	}
 	/// Scale coordinates and cut off some points
-	virtual bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true);
+	virtual bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true) const;
 
-	virtual float GetOrgX(char dir)=0;	///< Get Org.x (parse NAN value)
-	virtual float GetOrgY(char dir)=0;	///< Get Org.y (parse NAN value)
-	virtual float GetOrgZ(char dir)=0;	///< Get Org.z (parse NAN value)
+	virtual float GetOrgX(char dir) const=0;	///< Get Org.x (parse NAN value)
+	virtual float GetOrgY(char dir) const=0;	///< Get Org.y (parse NAN value)
+	virtual float GetOrgZ(char dir) const=0;	///< Get Org.z (parse NAN value)
 
 	/// Get color depending on single variable z, which should be scaled if scale=true
-	inline float GetC(long s,float z,bool scale = true)
+	inline float GetC(long s,float z,bool scale = true) const
 	{	return s+(scale?GetA(z):(z>0?z/MGL_FLT_EPS:0));	}
 	/// Get alpha value depending on single variable \a a
-	float GetA(float a);
+	float GetA(float a) const;
 	/// Set pen/palette
 	char SetPenPal(const char *stl, long *id=0);
 	/// Add texture (like color scheme) and return the position of first color

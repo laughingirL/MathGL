@@ -245,7 +245,7 @@ void mglBase::SetFBord(float x,float y,float z)
 	}
 }
 //-----------------------------------------------------------------------------
-bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan)
+bool mglBase::ScalePoint(mglPoint &p, mglPoint &n, bool use_nan) const
 {
 	float &x=p.x, &y=p.y, &z=p.z;
 	if(isnan(x) || isnan(y) || isnan(z))	{	x=NAN;	return false;	}
@@ -622,18 +622,18 @@ void mglTexture::Set(const char *s, int smooth, float alpha)
 	delete []c;
 }
 //-----------------------------------------------------------------------------
-void mglTexture::GetC(float u,float v,mglPnt &p)
+void mglTexture::GetC(float u,float v,mglPnt &p) const
 {
 	u -= long(u);
 	register long i=long(256*u);	u = u*256-i;
-	mglColor *s=col+2*i;
+	const mglColor *s=col+2*i;
 	p.r = (s[0].r*(1-u)+s[2].r*u)*(1-v) + (s[1].r*(1-u)+s[3].r*u)*v;
 	p.g = (s[0].g*(1-u)+s[2].g*u)*(1-v) + (s[1].g*(1-u)+s[3].g*u)*v;
 	p.b = (s[0].b*(1-u)+s[2].b*u)*(1-v) + (s[1].b*(1-u)+s[3].b*u)*v;
 	p.a = (s[0].a*(1-u)+s[2].a*u)*v + (s[1].a*(1-u)+s[3].a*u)*(1-v);	// for alpha use inverted
 }
 //-----------------------------------------------------------------------------
-bool mglTexture::IsSame(mglTexture &t)
+bool mglTexture::IsSame(mglTexture &t) const
 {	return n==t.n && !memcmp(col,t.col,514*sizeof(mglColor));	}
 //-----------------------------------------------------------------------------
 long mglBase::AddTexture(const char *cols, int smooth)
@@ -754,9 +754,9 @@ char mglBase::SetPenPal(const char *p, long *Id)
 	return mk;
 }
 //-----------------------------------------------------------------------------
-float mglBase::GetA(float a)
+float mglBase::GetA(float a) const
 {
-	if(fa)		a = fa->Calc(0,0,0,a);
+	if(fa)	a = fa->Calc(0,0,0,a);
 	a = (a-FMin.c)/(FMax.c-FMin.c);
 	a = (a<1?(a>0?a:0):1)/MGL_FLT_EPS;	// for texture a must be <1 always!!!
 	return a;

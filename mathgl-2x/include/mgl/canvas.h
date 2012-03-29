@@ -112,7 +112,6 @@ class mglCanvas : public mglBase
 friend struct mglPrim;
 public:
 using mglBase::Light;
-	mglPoint LastMousePos;	///< Last mouse position
 
 	mglCanvas(int w=800, int h=600);
 	virtual ~mglCanvas();
@@ -161,7 +160,7 @@ using mglBase::Light;
 	/// Set size of frame in pixels. Normally this function is called internaly.
 	virtual void SetSize(int w,int h);
 	/// Get ratio (float width)/(float height).
-	float GetRatio();
+	float GetRatio() const;
 	/// Get bitmap data prepared for saving to file
 	virtual unsigned char **GetRGBLines(long &w, long &h, unsigned char *&f, bool alpha=false);
 	/// Get RGB bitmap of current state image.
@@ -169,36 +168,36 @@ using mglBase::Light;
 	/// Get RGBA bitmap of current state image.
 	const unsigned char *GetRGBA()	{	Finish();	return G4;	}
 	/// Get width of the image
-	int GetWidth()	{	return Width;	}
+	int GetWidth() const	{	return Width;	}
 	/// Get height of the image
-	int GetHeight()	{	return Height;	}
+	int GetHeight() const	{	return Height;	}
 	/// Combine plots from 2 canvases. Result will be saved into this.
 	void Combine(const mglCanvas *gr);
 	/// Send graphical information to node id using MPI
 	void MPI_Send(int id);
 	/// Receive graphical information from node id using MPI
 	void MPI_Recv(int id);
-	inline float GetDelay()	{	return Delay;	}
+	inline float GetDelay() const	{	return Delay;	}
 	inline void SetDelay(float d)	{	Delay=d;	}
 
 	/// Calculate 3D coordinate {x,y,z} for screen point {xs,ys}
-	mglPoint CalcXYZ(int xs, int ys);
+	mglPoint CalcXYZ(int xs, int ys) const;
 	/// Calculate screen point {xs,ys} for 3D coordinate {x,y,z}
-	void CalcScr(mglPoint p, int *xs, int *ys);
-	mglPoint CalcScr(mglPoint p);
+	void CalcScr(mglPoint p, int *xs, int *ys) const;
+	mglPoint CalcScr(mglPoint p) const;
 	/// Set object/subplot id
 	inline void SetObjId(long id)	{	ObjId = id;	}
 	/// Get object id
-	inline int GetObjId(long x,long y)	{	return OI[x+Width*y];	}
+	inline int GetObjId(long x,long y) const	{	return OI[x+Width*y];	}
 	/// Get subplot id
-	int GetSplId(long x,long y);
+	int GetSplId(long x,long y) const;
 
 	/// Create new frame.
 	virtual int NewFrame();
 	/// Finish frame drawing
 	virtual void EndFrame();
 	/// Get the number of created frames
-	inline int GetNumFrame()	{	return CurFrameId;	}
+	inline int GetNumFrame() const	{	return CurFrameId;	}
 	/// Reset frames counter (start it from zero)
 	inline void ResetFrames()	{	CurFrameId=0;	DrwDat.clear();	}
 
@@ -345,7 +344,7 @@ protected:
 	/// Clear ZBuffer only
 	void ClfZB();
 	/// Scale coordinates and cut off some points
-	bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true);
+	bool ScalePoint(mglPoint &p, mglPoint &n, bool use_nan=true) const;
 	void LightScale();	///< Additionally scale positions of light sources
 
 	/// Push drawing data (for frames only). NOTE: can be VERY large
@@ -353,9 +352,9 @@ protected:
 	/// Get drawing data for i-th frame.
 	void GetDrwDat(long i);
 
-	float GetOrgX(char dir);	///< Get Org.x (parse NAN value)
-	float GetOrgY(char dir);	///< Get Org.y (parse NAN value)
-	float GetOrgZ(char dir);	///< Get Org.z (parse NAN value)
+	float GetOrgX(char dir) const;	///< Get Org.x (parse NAN value)
+	float GetOrgY(char dir) const;	///< Get Org.y (parse NAN value)
+	float GetOrgZ(char dir) const;	///< Get Org.z (parse NAN value)
 
 	void mark_plot(long p, char type, float size=1);	// position in pntC
 	void arrow_plot(long p1, long p2, char st);			// position in pntC
@@ -390,7 +389,7 @@ private:
 	void tick_draw(mglPoint o, mglPoint d1, mglPoint d2, int f, const char *stl);
 	/// Plot point \a p with color \a c
 	void pnt_plot(long x,long y,float z,const unsigned char c[4]);
-	float FindOptOrg(char dir, int ind);
+	float FindOptOrg(char dir, int ind) const;
 	/// Transform float color and alpha to bits format
 	unsigned char* col2int(const mglPnt &p, unsigned char *r);
 	/// Combine colors in 2 plane.
@@ -399,10 +398,10 @@ private:
 	void fast_draw(long p1, long p2, mglDrawReg *d);
 
 	/// Additionally scale points \a p for positioning in image
-	void PostScale(mglPoint &p);
+	void PostScale(mglPoint &p) const;
 	/// Scale points \a p for projection to the face number \a nface in image
 	long ProjScale(int nface, long p);
-	inline void PostScale(mglPoint *p,long n)	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
+	inline void PostScale(mglPoint *p,long n) const	{	for(long i=0;i<n;i++)	PostScale(p[i]);	}
 
 	// functions for glyph drawing
 	void glyph_fill(const mglPnt &p, float f, int nt, const short *trig, mglDrawReg *d);

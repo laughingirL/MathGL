@@ -66,7 +66,7 @@ void mglCanvas::GetDrwDat(long i)
 //-----------------------------------------------------------------------------
 const unsigned char *mglCanvas::GetBits()	{	Finish();	return G;	}
 //-----------------------------------------------------------------------------
-float mglCanvas::GetRatio()	{	return inW/inH;	}
+float mglCanvas::GetRatio() const	{	return inW/inH;	}
 //-----------------------------------------------------------------------------
 void mglCanvas::add_prim(mglPrim &a)
 {
@@ -81,7 +81,6 @@ void mglCanvas::DefaultPlotParam()
 std::vector<mglTexture> Txt;	///< Pointer to textures
 char *Message;		///< Buffer for receiving messages
 long InUse;			///< Smart pointer (number of users)
-mglPoint LastMousePos;	///< Last mouse position
 mglFont *fnt;		///< Class for printing vector text
 int Quality;		///< Quality of plot (0x0-pure, 0x1-fast; 0x2-fine; 0x4 - low memory)
 int Width;			///< Width of the image
@@ -114,7 +113,7 @@ GifFileType *gif;*/
 //-----------------------------------------------------------------------------
 //	Optimal axis position
 //-----------------------------------------------------------------------------
-float mglCanvas::FindOptOrg(char dir, int ind)
+float mglCanvas::FindOptOrg(char dir, int ind) const
 {
 	static mglPoint px, py, pz, m1, m2;
 	static mglMatrix bb;	bb.b[0]=1e30;
@@ -179,7 +178,7 @@ float mglCanvas::FindOptOrg(char dir, int ind)
 	return res;
 }
 //-----------------------------------------------------------------------------
-float mglCanvas::GetOrgX(char dir)
+float mglCanvas::GetOrgX(char dir) const
 {
 	float res = Org.x;
 	if(isnan(res))
@@ -191,7 +190,7 @@ float mglCanvas::GetOrgX(char dir)
 	return res;
 }
 //-----------------------------------------------------------------------------
-float mglCanvas::GetOrgY(char dir)
+float mglCanvas::GetOrgY(char dir) const
 {
 	float res = Org.y;
 	if(isnan(res))
@@ -203,7 +202,7 @@ float mglCanvas::GetOrgY(char dir)
 	return res;
 }
 //-----------------------------------------------------------------------------
-float mglCanvas::GetOrgZ(char dir)
+float mglCanvas::GetOrgZ(char dir) const
 {
 	float res = Org.z;
 	if(isnan(res))
@@ -539,7 +538,7 @@ void mglCanvas::Zoom(float x1, float y1, float x2, float y2)
 	Bp.x=(x1+x2)/2/Bp.b[0];	Bp.y=(y1+y2)/2/Bp.b[4];
 }
 //-----------------------------------------------------------------------------
-int mglCanvas::GetSplId(long x,long y)
+int mglCanvas::GetSplId(long x,long y) const
 {
 	register long i,id=-1;
 	for(i=Sub.size()-1;i>=0;i--)
