@@ -23,6 +23,7 @@
 #ifdef __cplusplus
 //-----------------------------------------------------------------------------
 #include "mgl/canvas_wnd.h"
+#if MGL_HAVE_QT
 #include <QtGui/QWidget>
 #include <QtGui/QPixmap>
 //-----------------------------------------------------------------------------
@@ -214,5 +215,6 @@ QMenu *mglMakeMenu(QMainWindow *Wnd, QMathGL *QMGL, QSpinBox *tet, QSpinBox *phi
 //-----------------------------------------------------------------------------
 void mgl_ask_qt(const wchar_t *quest, wchar_t *res);
 //-----------------------------------------------------------------------------
+#endif
 #endif
 #endif
