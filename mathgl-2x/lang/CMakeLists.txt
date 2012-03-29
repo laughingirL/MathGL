@@ -1,6 +1,6 @@
 if(MGL_HAVE_PYTHON)
-	configure_file(${MathGL_SOURCE_DIR}/lang/mgl.i ${MathGL_BINARY_DIR}/lang/mgl.i COPYONLY)
-	configure_file(${MathGL_SOURCE_DIR}/lang/numpy.i ${MathGL_BINARY_DIR}/lang/numpy.i COPYONLY)
+	configure_file(${MathGL_SOURCE_DIR}/lang/mgl.i.in ${MathGL_BINARY_DIR}/lang/mgl.i COPYONLY)
+	configure_file(${MathGL_SOURCE_DIR}/lang/numpy.i.in ${MathGL_BINARY_DIR}/lang/numpy.i COPYONLY)
 	SET(dep_libs mgl)
 #	if(MGL_HAVE_FLTK)
 		get_property(path_to_mglwnd TARGET mgl-wnd PROPERTY LOCATION)
